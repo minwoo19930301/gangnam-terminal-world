@@ -778,7 +778,8 @@ export function build(K) {
     box(x,0,z,30,h,23,{tex:'apt',color:0xaab7bd});
     box(x,h,z,21,2,18,0x8c9ba7);
   }
-  K.dome({x:-700,y:-5,z:-2550,rx:310,ry:165,rz:180,seg:32,rings:10,mat:0x839a92});
+  // 남산 backdrop: dark forest green so it still reads as a hill through the distance fog
+  K.dome({x:-700,y:-5,z:-2550,rx:310,ry:165,rz:180,seg:32,rings:10,mat:0x48663f});
   K.cyl({x:-700,y:150,z:-2550,r:3,h:68,seg:12,mat:0xc4ccd0,solid:false});
   K.cyl({x:-700,y:206,z:-2550,r:12,h:10,seg:16,mat:0xc9d0d3,solid:false});
   K.cyl({x:-700,y:216,z:-2550,r:.65,h:27,seg:8,mat:0xd8dedf,solid:false});

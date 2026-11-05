@@ -135,7 +135,8 @@ export function createMap({ THREE, K, osm, player, phys, spawns, places, contain
   for (const s of spawns) if (!placeIndex.has(s.place)) placeIndex.set(s.place, { id: s.place, name: s.group || s.name, zones: [], floors: [], spawns: [], x: s.x, z: s.z });
   const zoneRecords = zones.filter(z => z.poly?.length >= 3).map(z => {
     const r = Object.assign(record(z.poly), { source: z, place: z.place, floor: z.floor || '1F', y0: z.y0, y1: z.y1 });
-    r.label = label(z.sub ? `${z.name} · ${z.sub}` : z.name, r.x, r.z, 12, true);
+    // name only on the plan (the sub line is long; it stays in search results and the HUD)
+    r.label = label(z.name, r.x, r.z, 12, true);
     const p = placeIndex.get(z.place); p.zones.push(r);
     if (!p.floors.some(f => f.label === (z.floor || '1F'))) p.floors.push({ label: z.floor || '1F', y: z.y0 });
     return r;
@@ -238,6 +239,10 @@ export function createMap({ THREE, K, osm, player, phys, spawns, places, contain
     ctx.save(); ctx.translate(x, y); if (angle) ctx.rotate(angle);
     ctx.font = l.font; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.lineJoin = 'round'; ctx.lineWidth = 3.5; ctx.strokeStyle = '#ffffff'; ctx.strokeText(l.text, 0, 0); ctx.fillStyle = color; ctx.fillText(l.text, 0, 0); ctx.restore(); return true;
   }
+  // bigger rooms claim label space first, so a crowded floor shows its main halls rather than random shop units
+  zoneRecords.sort((p, q) => q.area - p.area);
+  // a room label is drawn only when the room is at least about as big on screen as its text
+  const zoneFits = (r, v) => r.area * v.scale * v.scale > r.label.width * r.label.size * 0.9;
   function activeZone(r, isMini) {
     if (isMini) return player.y < -1 ? r.y0 <= player.y && player.y < r.y1 : miniPlace === r.place && r.y0 <= player.y && player.y < r.y1;
     return layer === 'underground' ? r.y0 <= -6 && -6 < r.y1 : layer === 'floor' && floorPlace?.id === r.place && r.floor === floorLabel;
@@ -269,7 +274,7 @@ export function createMap({ THREE, K, osm, player, phys, spawns, places, contain
     pixelTransform(ctx, v); rectCount = 0; labelFrame++;
     // Reserve the live position marker before placing text.
     reserve(sx(v, player.x, player.z), sy(v, player.x, player.z), 24, 28, v);
-    if (indoor) for (const r of zoneRecords) if (activeZone(r, isMini) && visible(r, v)) textLabel(ctx, v, r.label, '#176d60');
+    if (indoor) for (const r of zoneRecords) if (activeZone(r, isMini) && visible(r, v) && zoneFits(r, v)) textLabel(ctx, v, r.label, '#176d60');
     for (const p of placeMarks) if (!indoor || v.scale > 1) textLabel(ctx, v, p.label, indoor ? '#637873' : '#98663e');
     for (const e of exitRecords) {
       const x = sx(v, e.x, e.z), y = sy(v, e.x, e.z), radius = isMini ? 8 : 10;
