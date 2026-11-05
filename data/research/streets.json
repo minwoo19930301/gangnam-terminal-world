@@ -1,0 +1,357 @@
+{
+ "id": "streets",
+ "name": "중간 도로들",
+ "updated": "2026-11-06",
+ "sources": [
+  {
+   "url": "https://www.asiae.co.kr/en/article/2024121008343423332",
+   "title": "Asiae: Banpo-dong Intersection crosswalk (Goter)",
+   "year": 2024
+  },
+  {
+   "url": "https://mediahub.seoul.go.kr/archives/2011689",
+   "title": "서울시 미디어허브 반포한강공원 지하보행로",
+   "year": 2024
+  },
+  {
+   "url": "https://www.openstreetmap.org/node/357825656",
+   "title": "OSM 고속터미널(중) 정류장 22020",
+   "year": 2021
+  },
+  {
+   "url": "https://mediahub.seoul.go.kr/archives/2005907",
+   "title": "서울시 미디어허브 서리풀 코스",
+   "year": 2024
+  },
+  {
+   "url": "https://www.twig24.com/news/2025/12/10/20251210500170",
+   "title": "Twig24 고터 사거리 횡단보도",
+   "year": 2025
+  },
+  {
+   "url": "data/osm.json",
+   "title": "로컬 OSM 추출(도로·정류장·따릉이·횡단보도)",
+   "year": 2026
+  }
+ ],
+ "building": {
+  "floors_above": 0,
+  "floors_below": 0,
+  "height_m": 0,
+  "floor_height_m": "n/a (outdoor)",
+  "facade": "n/a",
+  "signage": "파란 도로명판, 초록 안내표지 (추정)",
+  "entrances": "n/a"
+ },
+ "floors": [
+  {
+   "floor": "road",
+   "use": "도로 구조물",
+   "tenants": [],
+   "layout": "지상 도로 + 고가(layer1) + 지하도로(layer -2) + 보도육교(layer1)",
+   "source": "data/osm.json (local OSM extract)",
+   "guess": false
+  }
+ ],
+ "elements": [
+  {
+   "name": "신반포로",
+   "what": "터미널 앞 간선도로 (OSM secondary, 일방 4차로 폭 14.2m 구간 다수 + 양방향 구간)",
+   "where": "고속터미널·센트럴시티 앞을 지나 반포대교/반포한강공원 방향으로 이어짐",
+   "details": "OSM: 218913527/523344143/828782197/828782198/1033191355 = lanes 4, width 14.2, oneway, asphalt. 사이드워크 831108561~563/1497710490 = paving_stones 폭 2~3m. 일부 구간(218722037/038)은 layer1 bridge. 중앙분리대·가로수 종은 미확인(분리대는 가드레일 추정).",
+   "source": "data/osm.json (local OSM extract) ; https://www.openstreetmap.org/node/357825656",
+   "guess": false
+  },
+  {
+   "name": "신반포로 중앙버스전용차로",
+   "what": "고속터미널~반포역 구간 중앙버스전용차로 연결",
+   "where": "고속터미널(중) 정류장(22020) ↔ 반포역(22018)",
+   "details": "OSM 메모 '고속터미널-신반포로 중앙버스전용차로 연결'. 중앙정류장은 도로 중앙 섬형. 버스전용 포장은 서울 표준 붉은/푸른 도색(파랑은 간선 노선색)으로 추정.",
+   "source": "https://www.openstreetmap.org/node/357825656",
+   "guess": true
+  },
+  {
+   "name": "사평대로",
+   "what": "경부선 방향 대로 (OSM primary, 폭 20m 양방 / 일방 4차로 14.2m, 3차로 10.9m 구간)",
+   "where": "터미널 북동~동쪽, 서초IC/강남역 방향",
+   "details": "OSM: 498559927, 921681811 lanes 4 width 14.2 oneway; 309355890 lanes 3 width 10.9 oneway. 나머지는 폭 20m 양방(차로수 태그 없음 → 편도 3~4차로 추정). 중앙버스전용차로 존재 여부 미확인.",
+   "source": "data/osm.json (local OSM extract)",
+   "guess": true
+  },
+  {
+   "name": "사평지하도로",
+   "what": "사평대로 지하차도 (OSM 폭 20m, 일방)",
+   "where": "사평대로 71105531 외 6개 way",
+   "details": "터널/로 입구 램프 groundHole 필요. 실제 입출구 위치·길이는 미확인. 포털 벽면은 콘크리트 + 노란 도색 가드 추정.",
+   "source": "data/osm.json (local OSM extract)",
+   "guess": true
+  },
+  {
+   "name": "강남터미널고가도로",
+   "what": "터미널 위 고가 (OSM primary layer1 bridge, 4차로 폭 14.2m, 양방)",
+   "where": "480856735/736, 1420100037/038",
+   "details": "상판·교각·방음벽 필요. 철거 계획은 2025-09 서울시 서부간선 관련 기사만 있고 이 고가 관련 확인 못함. 현재 존재 가정.",
+   "source": "data/osm.json (local OSM extract)",
+   "guess": true
+  },
+  {
+   "name": "반포대로",
+   "what": "반포대교 방면 대로",
+   "where": "터미널 서쪽~남쪽 (반포대로 폭 20m 양방/일방, 일부 4차로 14.2m)",
+   "details": "37928409/674432572 는 hangang 담당(반포대교 접속 고가 layer2). 지상부: 480856737/741, 522946367/368, 523344135/137 등 폭 20. 532858556 = tunnel layer-2, 2차로 7.6m. 547990887/816395060 = 1차로 4.3m 램프/연락로.",
+   "source": "data/osm.json (local OSM extract)",
+   "guess": false
+  },
+  {
+   "name": "잠원로",
+   "what": "터미널 남동 방면 도로",
+   "where": "218870939 lanes 6 width 20.8 양방; 나머지 secondary 폭 14 양방, residential 폭 7",
+   "details": "양방 6차로(218870939) 확인. 잠원동~반포 아파트단지 사이. 가로수 종은 미확인(은행나무·느티나무·양버즘 중 서울 일반, 추정).",
+   "source": "data/osm.json (local OSM extract)",
+   "guess": true
+  },
+  {
+   "name": "센트럴씨티보도육교",
+   "what": "센트럴시티 앞 신반포로를 건너는 보도육교",
+   "where": "OSM way 301889788, layer 1 bridge, 폭 2.5m",
+   "details": "시민기자: 고속터미널역에서 센트럴시티 보도육교를 건너 서리풀공원/미도산 참나무 숲길로 연결. 계단 양단 필요(엘리베이터 여부 미확인).",
+   "source": "https://mediahub.seoul.go.kr/archives/2005907",
+   "guess": false
+  },
+  {
+   "name": "반포동 교차로 횡단보도",
+   "what": "고터 앞 사거리, 2024-12-09 남·동쪽 횡단보 신설로 □형 횡단 완성",
+   "where": "고투몰 앞 반포동 교차로 (터미널 앞 신반포로 교차)",
+   "details": "15년간 상가 반대로 막혔다가 합의. 교통섬에 '서초형 AI 횡단보도'(대형차 접근 경고) 설치. OSM에도 이 근방 marked crossing 다수 (x -183~-99, z 261~362 부근 서울성모병원 쪽).",
+   "source": "https://www.asiae.co.kr/en/article/2024121008343423332 ; https://www.twig24.com/news/2025/12/10/20251210500170",
+   "guess": false
+  },
+  {
+   "name": "반포한강공원 지하보행로",
+   "what": "고투몰 G2 출구에서 한강공원으로 가는 지하 통로",
+   "where": "고투몰 G2 게이트 오른쪽 출구 → 반포한강공원",
+   "details": "'서울의 24시간' 벽화 약 360m, 이어서 피카소 벽화 구간. 중간에 의자·테이블, 관광안내센터. 반포나들목 지하도에는 한강 풍경 벽화.",
+   "source": "https://mediahub.seoul.go.kr/archives/2011689",
+   "guess": false
+  },
+  {
+   "name": "버스정류장 고속터미널(중)",
+   "what": "OSM bus_stop 노드",
+   "where": "local x=-70.45 z=-96.0",
+   "details": "정류소번호: 22020 (OSM 메모). 5자리 ID는 서울 열린데이터 광장 확인 필요.",
+   "source": "data/osm.json (local OSM extract)",
+   "guess": false
+  },
+  {
+   "name": "버스정류장 고속터미널",
+   "what": "OSM bus_stop 노드",
+   "where": "local x=6.35 z=-131.03",
+   "details": "정류소번호: 번호 미확인. 5자리 ID는 서울 열린데이터 광장 확인 필요.",
+   "source": "data/osm.json (local OSM extract)",
+   "guess": true
+  },
+  {
+   "name": "버스정류장 고속터미널",
+   "what": "OSM bus_stop 노드",
+   "where": "local x=-89.24 z=-115.7",
+   "details": "정류소번호: 강남고속터미널 표기. 5자리 ID는 서울 열린데이터 광장 확인 필요.",
+   "source": "data/osm.json (local OSM extract)",
+   "guess": false
+  },
+  {
+   "name": "버스정류장 고속터미널",
+   "what": "OSM bus_stop 노드",
+   "where": "local x=-113.55 z=-69.6",
+   "details": "정류소번호: 미확인. 5자리 ID는 서울 열린데이터 광장 확인 필요.",
+   "source": "data/osm.json (local OSM extract)",
+   "guess": true
+  },
+  {
+   "name": "버스정류장 호남고속.신세계",
+   "what": "OSM bus_stop 노드",
+   "where": "local x=-145.79 z=-94.99",
+   "details": "정류소번호: 미확인. 5자리 ID는 서울 열린데이터 광장 확인 필요.",
+   "source": "data/osm.json (local OSM extract)",
+   "guess": true
+  },
+  {
+   "name": "버스정류장 고속터미널호남선",
+   "what": "OSM bus_stop 노드",
+   "where": "local x=-171.44 z=-45.71",
+   "details": "정류소번호: 미확인. 5자리 ID는 서울 열린데이터 광장 확인 필요.",
+   "source": "data/osm.json (local OSM extract)",
+   "guess": true
+  },
+  {
+   "name": "버스정류장 고속터미널",
+   "what": "OSM bus_stop 노드",
+   "where": "local x=-324.84 z=72.22",
+   "details": "정류소번호: 미확인. 5자리 ID는 서울 열린데이터 광장 확인 필요.",
+   "source": "data/osm.json (local OSM extract)",
+   "guess": true
+  },
+  {
+   "name": "버스정류장 고속터미널",
+   "what": "OSM bus_stop 노드",
+   "where": "local x=407.01 z=-117.03",
+   "details": "정류소번호: 미확인. 5자리 ID는 서울 열린데이터 광장 확인 필요.",
+   "source": "data/osm.json (local OSM extract)",
+   "guess": true
+  },
+  {
+   "name": "버스정류장 고속터미널역3번출구",
+   "what": "OSM bus_stop 노드",
+   "where": "local x=137.14 z=155.74",
+   "details": "정류소번호: 미확인. 5자리 ID는 서울 열린데이터 광장 확인 필요.",
+   "source": "data/osm.json (local OSM extract)",
+   "guess": true
+  },
+  {
+   "name": "버스정류장 서울성모병원.서울지방조달청",
+   "what": "OSM bus_stop 노드",
+   "where": "local x=-70.52 z=518.16",
+   "details": "정류소번호: 미확인. 5자리 ID는 서울 열린데이터 광장 확인 필요.",
+   "source": "data/osm.json (local OSM extract)",
+   "guess": true
+  },
+  {
+   "name": "버스정류장 반포역",
+   "what": "OSM bus_stop 노드",
+   "where": "local x=559.18 z=-333.88",
+   "details": "정류소번호: 22018 (OSM 메모). 5자리 ID는 서울 열린데이터 광장 확인 필요.",
+   "source": "data/osm.json (local OSM extract)",
+   "guess": false
+  },
+  {
+   "name": "버스정류장 뉴코아백화점",
+   "what": "OSM bus_stop 노드",
+   "where": "local x=276.63 z=-248.21",
+   "details": "정류소번호: 미확인. 5자리 ID는 서울 열린데이터 광장 확인 필요.",
+   "source": "data/osm.json (local OSM extract)",
+   "guess": true
+  },
+  {
+   "name": "버스정류장 반포대교남단.한강시민공원입구",
+   "what": "OSM bus_stop 노드",
+   "where": "local x=-400.22 z=-210.78",
+   "details": "정류소번호: 미확인. 5자리 ID는 서울 열린데이터 광장 확인 필요.",
+   "source": "data/osm.json (local OSM extract)",
+   "guess": true
+  },
+  {
+   "name": "따릉이 고속터미널역 3번출구",
+   "what": "자전거 대여소(OSM)",
+   "where": "local x=90.17 z=152.41",
+   "details": "대여소 번호 4316 (OSM ref).",
+   "source": "data/osm.json (local OSM extract)",
+   "guess": false
+  },
+  {
+   "name": "따릉이 고속터미널역 5번출구 앞",
+   "what": "자전거 대여소(OSM)",
+   "where": "local x=-235.25 z=310.12",
+   "details": "대여소 번호 2213 (OSM ref).",
+   "source": "data/osm.json (local OSM extract)",
+   "guess": false
+  },
+  {
+   "name": "따릉이 고속터미널역 8-1,8-2번 출구 사이",
+   "what": "자전거 대여소(OSM)",
+   "where": "local x=-86.35 z=-128.43",
+   "details": "대여소 번호 2219 (OSM ref).",
+   "source": "data/osm.json (local OSM extract)",
+   "guess": false
+  },
+  {
+   "name": "따릉이 고투몰 gate 15옆",
+   "what": "자전거 대여소(OSM)",
+   "where": "local x=400.1 z=-242.7",
+   "details": "대여소 번호 4307 (OSM ref).",
+   "source": "data/osm.json (local OSM extract)",
+   "guess": false
+  },
+  {
+   "name": "따릉이 반포쇼핑타운 2동 앞",
+   "what": "자전거 대여소(OSM)",
+   "where": "local x=-244.01 z=-63.06",
+   "details": "대여소 번호 2525 (OSM ref).",
+   "source": "data/osm.json (local OSM extract)",
+   "guess": false
+  },
+  {
+   "name": "따릉이 반포쇼핑타운 8동 앞",
+   "what": "자전거 대여소(OSM)",
+   "where": "local x=273.44 z=-255.77",
+   "details": "대여소 번호 2524 (OSM ref).",
+   "source": "data/osm.json (local OSM extract)",
+   "guess": false
+  },
+  {
+   "name": "따릉이 반포미도2차아파트 옆",
+   "what": "자전거 대여소(OSM)",
+   "where": "local x=142.06 z=202.59",
+   "details": "대여소 번호 4312 (OSM ref).",
+   "source": "data/osm.json (local OSM extract)",
+   "guess": false
+  },
+  {
+   "name": "따릉이 서래공원 앞",
+   "what": "자전거 대여소(OSM)",
+   "where": "local x=-127.45 z=390.24",
+   "details": "대여소 번호 4306 (OSM ref).",
+   "source": "data/osm.json (local OSM extract)",
+   "guess": false
+  },
+  {
+   "name": "따릉이 반포역 4번출구",
+   "what": "자전거 대여소(OSM)",
+   "where": "local x=453.32 z=-316.07",
+   "details": "대여소 번호 4345 (OSM ref).",
+   "source": "data/osm.json (local OSM extract)",
+   "guess": false
+  },
+  {
+   "name": "따릉이 뉴코아 킴스클럽 앞",
+   "what": "자전거 대여소(OSM)",
+   "where": "local x=206.06 z=-569.92",
+   "details": "대여소 번호 2523 (OSM ref).",
+   "source": "data/osm.json (local OSM extract)",
+   "guess": false
+  },
+  {
+   "name": "택시 승강장",
+   "what": "터미널 앞 택시 승차 구역",
+   "where": "미확인",
+   "details": "위치 조사 못함 → 모델링 시 1층 승하차장 부근 가정",
+   "source": "data/osm.json (local OSM extract)",
+   "guess": true
+  },
+  {
+   "name": "도로 표지·가로시설",
+   "what": "표준 서울 도로 시설",
+   "where": "전 구간",
+   "details": "파란 도로명판(예: 신반포로 / 반포대로), 초록 안내표지(반포대교·한강공원·강남역·서초IC·동작대교) 방향, 신호등·보행신호, 가로등 — 서울 표준 가정",
+   "source": "",
+   "guess": true
+  }
+ ],
+ "connections": [
+  "고속터미널 → 반포한강공원: 고투몰 G2 출구 → 지하보행로(서울의 24시간 벽화 360m → 피카소 벽화) → 반포나들목 지하도 → 한강공원 (서울시 기사 기준)",
+  "지상 대안: 신반포로 따라 서쪽 반포대교 남단 방향, 한강공원입구(OSM D-2) 부근 나들목 (추정)",
+  "센트럴씨티보도육교: 고속터미널역/센트럴시티 → 신반포로 건너 서리풀공원 방면"
+ ],
+ "parking": "n/a",
+ "notes": [
+  "차선·중앙분리대·가로수 종·인도 폭 등 현장 세부는 웹에서 확인 못함: OSM 값을 근거로 하고 나머지는 추정",
+  "OSM 태그 폭: 4차로 14.2m, 3차로 10.9m, 폭 20m 양방, 사이드워크 2~3m paving_stones",
+  "로컬 OSM에 bus_stop 89개, 따릉이 25개, crossing 130, traffic_signals 39 있음"
+ ],
+ "unresolved": [
+  "정류소 5자리 ID 대부분(고속터미널(중) 22020, 반포역 22018 외)",
+  "차로별 방향·중앙분리대 종류·버스전용차로 색",
+  "가로수 종",
+  "사평지하도로 입출구 위치와 길이",
+  "택시 승강장 위치",
+  "고가도로 철거 여부"
+ ]
+}

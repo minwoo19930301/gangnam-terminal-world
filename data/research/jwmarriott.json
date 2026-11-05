@@ -1,0 +1,213 @@
+{
+ "id": "jwmarriott",
+ "name": "JW 메리어트 호텔 서울",
+ "updated": "2026-11-06",
+ "sources": [
+  {
+   "url": "https://ko.wikipedia.org/wiki/JW_메리어트_호텔_서울",
+   "title": "ko.wikipedia JW 메리어트 호텔 서울",
+   "year": 2025
+  },
+  {
+   "url": "https://www.marriott.com/ko/hotels/seljw-jw-marriott-hotel-seoul/dining/",
+   "title": "Marriott 공식 다이닝 페이지",
+   "year": 2025
+  },
+  {
+   "url": "https://www.etoday.co.kr/news/view/1654095",
+   "title": "JW 메리어트 서울, 리뉴얼 후 재오픈 (이투데이)",
+   "year": 2018
+  },
+  {
+   "url": "https://www.stayfolio.com/findstay/jw-marriott-hotel-seoul",
+   "title": "stayfolio JW 메리어트 호텔 서울",
+   "year": 2024
+  },
+  {
+   "url": "https://www.trvlogue.com/ko/jw-marriott-seoul-fitness-guide",
+   "title": "trvlogue 블로그(검색 스니펫만 확인)",
+   "year": 2024
+  },
+  {
+   "url": "https://middleeasttraveller.com/jw-marriott-hotel-seoul-review/",
+   "title": "Middle East Traveller 리뷰 (체크인 8F, 플레이버즈 2F, 더 마고 그릴·모보 바·JW 가든 7F, 신세계 2F 불가리 옆 연결, 오토니엘 목걸이 조형물 15m)",
+   "year": 2019
+  },
+  {
+   "url": "https://www.roomertravel.com/featured/jw-marriott-hotel-seoul.h23561",
+   "title": "Roomer (체크인 8층, 1층은 컨시어지)",
+   "year": 2020
+  },
+  {
+   "url": "https://www.flyertalk.com/forum/35458733-post134.html",
+   "title": "FlyerTalk (공항버스 하차 후 쇼핑센터 2층 경유 호텔 진입)",
+   "year": 2019
+  },
+  {
+   "url": "https://commons.wikimedia.org/wiki/File:메리어트호텔.jpg",
+   "title": "Wikimedia Commons 메리어트호텔.jpg (2009-01-24, 반포동 센트럴시티 쪽에서 올려다본 타워 사진)",
+   "year": 2009
+  }
+ ],
+ "building": {
+  "floors_above": 33,
+  "floors_below": 4,
+  "height_m": 150,
+  "floor_height_m": "객실층 약 3.5~4 (추정)",
+  "facade": "타워: 크림색 스팬드럴 띠와 짙은 청색 유리 리본창이 층마다 번갈아 가는 수평 띠 외관(펀치창 아님). 상부 약 2개 층은 단색 크림 석재 크라운, 좁은 면 중앙에 사각 금색 명판과 그 아래로 짙은 세로 띠. 포디움: 회베이지 화강석, 얇은 분홍빛 줄눈, 작은 정사각 펀치창, 옥상 정원 수목. (Commons 2009 사진 확인, 2018 리뉴얼은 실내 공사)",
+  "signage": "긴 면 최상부에 남색 'JW MARRIOTT' 글자(2009 사진). 좁은 면 명판은 금색 사각 명판(도안 미확인 → 텍스트 'JW MARRIOTT'로 대체).",
+  "entrances": "반고속터미널역·신세계 강남점과 실내 직결(공식/stayfolio). 정면 현관·차량 진입로 위치 미확인. 프론트 24시간"
+ },
+ "floors": [
+  {
+   "floor": "B2-B4",
+   "use": "마르퀴스 스파 & 피트니스 클럽 (지하2~4층, 약 14,212㎡, 장비 350여개, 85m 조깅트랙, 한식 스파 레스토랑)",
+   "tenants": [
+    "마르퀴스 스파 & 피트니스 클럽"
+   ],
+   "layout": "3개 층 (위키는 3개층이라 하고 기사는 B2~4라 함, 층수 모순)",
+   "source": "https://www.etoday.co.kr/news/view/1654095",
+   "guess": false
+  },
+  {
+   "floor": "2F",
+   "use": "레스토랑",
+   "tenants": [
+    "플레이버즈(218석 뷔페)",
+    "타마유라(일식, 룸 7실)"
+   ],
+   "layout": "미확인",
+   "source": "https://www.marriott.com/ko/hotels/seljw-jw-marriott-hotel-seoul/dining/",
+   "guess": false
+  },
+  {
+   "floor": "3F",
+   "use": "연회 살롱 6개",
+   "tenants": [],
+   "layout": "미확인",
+   "source": "https://ko.wikipedia.org/wiki/JW_메리어트_호텔_서울",
+   "guess": false
+  },
+  {
+   "floor": "5F",
+   "use": "그랜드 볼룸 (천고 7m, 버진로드 21m)",
+   "tenants": [],
+   "layout": "미확인",
+   "source": "https://ko.wikipedia.org/wiki/JW_메리어트_호텔_서울",
+   "guess": false
+  },
+  {
+   "floor": "7F",
+   "use": "레스토랑 + JW 가든(블로그) ; 더 마고 그릴 7층(검색 요약)",
+   "tenants": [
+    "더 마고 그릴",
+    "모보 바(야외 테라스, 층 미확인 추정 7F)"
+   ],
+   "layout": "정원이 둘러싼 형태",
+   "source": "https://www.marriott.com/ko/hotels/seljw-jw-marriott-hotel-seoul/dining/",
+   "guess": true
+  },
+  {
+   "floor": "8F",
+   "use": "더 라운지(딤섬, 애프터눈 티)",
+   "tenants": [
+    "더 라운지"
+   ],
+   "layout": "미확인",
+   "source": "https://www.marriott.com/ko/hotels/seljw-jw-marriott-hotel-seoul/dining/",
+   "guess": false
+  },
+  {
+   "floor": "9F",
+   "use": "이그제큐티브 라운지(리뷰 한 건, 면적 2배 확장)",
+   "tenants": [],
+   "layout": "미확인",
+   "source": "https://www.etoday.co.kr/news/view/1654095",
+   "guess": true
+  },
+  {
+   "floor": "12F-33F",
+   "use": "객실층 379실(펜트하우스 2 최상층 복층·전용 엘리베이터, 스위트 32)",
+   "tenants": [],
+   "layout": "미확인",
+   "source": "https://www.etoday.co.kr/news/view/1654095",
+   "guess": false
+  }
+ ],
+ "elements": [
+  {
+   "name": "실내 수영장",
+   "what": "넓은 실내 수영장, 온수 욕조, 사우나, 06~22시",
+   "where": "층 미확인(스파 B2~B4 추정)",
+   "details": "",
+   "source": "https://www.stayfolio.com/findstay/jw-marriott-hotel-seoul",
+   "guess": true
+  },
+  {
+   "name": "더 마고 그릴",
+   "what": "스테이크 하우스",
+   "where": "7F 추정",
+   "details": "와인셀러 약 3,500병",
+   "source": "https://www.etoday.co.kr/news/view/1654095",
+   "guess": false
+  },
+  {
+   "name": "파티세리/티 바/카페 원",
+   "what": "베이커리·델리",
+   "where": "플레이버즈 입구(파티세리)",
+   "details": "",
+   "source": "https://ko.wikipedia.org/wiki/JW_메리어트_호텔_서울",
+   "guess": false
+  }
+ ],
+ "connections": [
+  "신세계백화점 강남점 실내 연결통로",
+  "고속터미널역 직결",
+  "센트럴시티 건물 상부"
+ ],
+ "parking": "높이 제한 있음, 상세 미확인",
+ "notes": [
+  "대규모 리뉴얼은 2023이 아닌 2018년 8월 재오픈(8개월 공사). 2023 리뉴얼은 확인 못함",
+  "로비 층은 문서로 확인 못함(체크인 로비 5층 추정 근거 없음)",
+  "객실 번호 체계 미확인"
+ ],
+ "unresolved": [
+  "정확한 외관(커튼월 색·크라운)과 간판 위치",
+  "차량 진입로 실제 위치",
+  "9~11F 실제 용도",
+  "마르퀴스 층별 시설 배분",
+  "객실 번호 체계",
+  "카페 원 층",
+  "B1 주차장 구조와 진입 램프"
+ ],
+ "findings_2026_11_06": [
+  "체크인 프런트·로비는 8F (리뷰 2건 일치). 더 라운지도 8F (Marriott 다이닝 페이지 '더 라운지 (8층)'). 1F는 현관·컨시어지.",
+  "로비에 장-미셸 오토니엘의 약 15m 아이보리 목걸이 조형물이 천장에서 늘어져 있음 → 8F 로비를 12F 아래까지 터진 아트리움으로 모델링(9~11F 층 용도는 추정).",
+  "플레이버즈·타마유라 2F (공식). 신세계 쪽 진입은 2F 불가리 매장 옆(리뷰) → 2F 북측 연결통로(닫힌 유리문)로 표현, 실제 통행은 계약상 1F J5.",
+  "더 마고 그릴 7F, JW 가든 옆, 모보 바 바로 옆(리뷰) → 7F 포디움 옥상 정원 + 타워 저층부 파빌리온.",
+  "마르퀴스: 25m 6레인 수영장, 치료용 풀, 자쿠지, 스쿠버 풀, 골프, 스쿼시, 농구장, 필라테스, 트리트먼트룸 9 + 커플룸 1, 스파 레스토랑 (위키·리뷰) → B2 스파/리셉션, B3 수영장, B4 피트니스로 배치(층 배분은 추정).",
+  "OSM POI: THE LOUNGE·Flavors가 블록 남측 중앙, 호텔 POI도 남측 → 타워를 블록 남쪽 절반에 배치. 차량 진입로는 확인 못해 동측 서비스 도로(경부선 방면)에 포르트코셰르로 추정.",
+  "OSM 높이 144m = 33F(펜트하우스 복층 7.2m) 지붕 135.8m + 크라운 8.2m 로 맞춤.",
+  "외관 확정(Commons 메리어트호텔.jpg, 2009): 타워 = 수평 리본창, 크라운 = 평탄한 석재 띠 + 금색 명판, 포디움 = 화강석 + 작은 사각창. 리뷰어의 '근거 없는 베이지 펀치창' 지적 반영.",
+  "codex/astra CLI는 이 환경에 설치되어 있지 않아 웹 검색과 Commons API로 직접 조사함."
+ ],
+ "model_floors": {
+  "B4": "피트니스 데스크·카디오(러닝머신·사이클)·프리웨이트(파워랙·덤벨)·스트레칭/터프·농구장·스쿼시·스크린골프·GX·85m 조깅트랙(추정 배치)",
+  "B3": "수영장 25m 6레인·키즈풀·자쿠지·스쿠버풀·사우나",
+  "B2": "마르퀴스 리셉션·남/여 라커(사물함·파우더룸·샤워·건식 사우나)·트리트먼트 9+커플 스위트(각 실 샤워 포함)·스파 레스토랑",
+  "B1": "호텔 주차장(추정)",
+  "1F": "호텔 현관·컨시어지·벨데스크 + 센트럴시티 연결 아케이드(쉐이크쉑·순대실록·101번지남산돈까스 OSM POI)",
+  "2F": "플레이버즈·타마유라(룸7)·파티세리·티 바·카페 원(층 추정)·신세계 연결",
+  "3F": "살롱 1~6",
+  "4F": "웨딩 상담실 1·2·연회 예약실·연회 사무실·신부 메이크업실·드레스룸·웨딩 쇼케이스(추정)",
+  "5F": "그랜드 볼룸(천고 7m, 버진로드 21m)·신부 대기실",
+  "6F": "직원 구역: 연회 창고·린넨실·연회 조정실·직원 탈의실·세탁물 집하장·직원 식당(추정)",
+  "7F": "JW 가든·더 마고 그릴·와인 셀러·모보 바",
+  "8F": "로비·프런트·더 라운지·목걸이 조형물",
+  "9F": "이그제큐티브 라운지 + 비즈니스 센터(추정)",
+  "10F": "미팅룸 1001–1004 + 미팅 라운지(추정)",
+  "11F": "세일즈·마케팅·객실부·인사부·총지배인실·임원 회의실(추정)",
+  "12F-32F": "객실 (층당 17실, 01~19 번호 체계는 추정). 2006(디럭스 킹, 서측)·2014(디럭스 트윈, 동측) 실내 완전 모델링",
+  "33F": "펜트하우스 복층"
+ }
+}

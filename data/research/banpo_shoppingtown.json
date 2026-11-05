@@ -1,0 +1,59 @@
+{
+  "id": "banpo_shoppingtown",
+  "name": "반포쇼핑타운 1~8동",
+  "updated": "2026-11-06",
+  "sources": [
+    {"url": "https://www.localnaeil.com/News/View/640227", "title": "고속터미널 반포쇼핑타운 맛집 투어 (지역내일)", "year": 2024},
+    {"url": "https://www.localnaeil.com/News/View/650226", "title": "부담 없는 술자리, 반포 맛집 일번지육개장 (지역내일)", "year": 2025},
+    {"url": "https://www.goodoc.co.kr/hospitals/22651", "title": "반포좋은치과의원 (굿닥, 6동 3층)", "year": 2025},
+    {"url": "https://www.goodoc.co.kr/hospitals/13473", "title": "봄치과의원 (굿닥, 3동 3층 310호)", "year": 2025},
+    {"url": "https://realty.daangn.com/biz-profiles/4109041", "title": "뉴스타공인중개사사무소 (신반포로 195 5동 1층 15호)", "year": 2025},
+    {"url": "https://polle.com/place/10gAJu/%ED%95%98%EC%96%80%EC%A7%91", "title": "하얀집 (4동 지하, 신반포로 189)", "year": 2024}
+  ],
+  "building": {
+    "floors_above": 7, "floors_below": 1, "height_m": 24,
+    "floor_height_m": "지하 1층 약 3.6, 지상 약 3.3 (추정). OSM 2동 L6 25m 기준으로 6~7층 가정",
+    "facade": "1970년대 상가아파트형 노후 건물(추정). 탁한 베이지/회색 타일 또는 페인트 마감, 상층부는 아파트 창+에어컨 실외기, 저층은 간판 밀집 (추정, 미확인)",
+    "signage": "1층·2층 가로형 돌출/벽면 간판 빽빽, 상층 세로형 의원·학원 간판 (추정). 확인된 간판명은 floors/elements 참고",
+    "entrances": "신반포로 면 각 동 1층 정면 출입구 + 지하 1층으로 내려가는 계단. 고속터미널역 8-1(3동 앞), 8-2(5·6동 방면) 출구 인근. 각 동 번지: 2동=165, 3동=177, 4동=189, 5동=195, 6동=205 (확인), 1·7·8동 번지 미확인"
+  },
+  "floors": [
+    {"floor": "B1 (2동)", "use": "식당 상가", "tenants": ["병천토종순대"], "layout": "신반포로 165, 지하 1층 점포", "source": "https://www.localnaeil.com/News/View/640227", "guess": false},
+    {"floor": "B1 (3동)", "use": "식당·술집 상가", "tenants": ["만끽치킨", "배부장찌개", "온유월식당(20호)", "우고집"], "layout": "신반포로 177, 8-1번 출구 바로 앞. 호수 20호까지 있어 지하 복도 양측 점포 구조(추정)", "source": "https://www.localnaeil.com/News/View/640227", "guess": false},
+    {"floor": "3F (3동)", "use": "의원", "tenants": ["봄치과의원(310호)"], "layout": "3층에 300번대 호수, 복도 양쪽 의원(추정)", "source": "https://www.goodoc.co.kr/hospitals/13473", "guess": false},
+    {"floor": "B1 (4동)", "use": "식당·주점", "tenants": ["정선 감자탕(6~9호)", "하얀집(치킨·떡볶이·오뎅탕)", "막걸리 전문 주점(상호 미확인)"], "layout": "신반포로 189", "source": "https://www.localnaeil.com/News/View/640227", "guess": false},
+    {"floor": "B1 (5동)", "use": "식당", "tenants": ["일번지육개장"], "layout": "신반포로 195, 8-2번 출구 인근. 낙곱전골 대표(소 39,000/대 45,000원), 11~23시", "source": "https://www.localnaeil.com/News/View/650226", "guess": false},
+    {"floor": "1F (5동)", "use": "상가·부동산", "tenants": ["뉴스타공인중개사사무소(15호)"], "layout": "1층 호수 15호 이상 -> 1층 점포 15개 이상", "source": "https://realty.daangn.com/biz-profiles/4109041", "guess": false},
+    {"floor": "B1 (6동)", "use": "식당", "tenants": ["유메(일식 덮밥·이자카야)"], "layout": "신반포로 205, 8-2번 출구 방면", "source": "https://www.localnaeil.com/News/View/640227", "guess": false},
+    {"floor": "3F (6동)", "use": "의원", "tenants": ["반포좋은치과의원"], "layout": "3층 의원 구역", "source": "https://www.goodoc.co.kr/hospitals/22651", "guess": false},
+    {"floor": "1F 전 동", "use": "가로변 생활상가", "tenants": ["미용실", "부동산", "세탁소", "수선집", "반찬가게", "떡집", "정육점 (일반 업종 가정, 상호 미확인)"], "layout": "신반포로 면 1층 연속 점포", "source": "", "guess": true},
+    {"floor": "2F 전 동", "use": "학원·미용실·사무실 (추정)", "tenants": [], "layout": "복도 양측 호실", "source": "", "guess": true},
+    {"floor": "4F~7F 전 동", "use": "주거(상가아파트) 또는 오피스 (미확인, 추정)", "tenants": [], "layout": "중복도형 복도+호실 문, 계단실, 엘리베이터 유무 불명", "source": "", "guess": true},
+    {"floor": "B1 (1동, 7동, 8동)", "use": "식당·상가 (추정)", "tenants": [], "layout": "미확인", "source": "", "guess": true}
+  ],
+  "elements": [
+    {"name": "지하 1층 식당가", "what": "각 동 B1 먹자골목, 치킨·감자탕·순대·구이·일식", "where": "2~6동 지하 1층 (신반포로 165~205)", "details": "고속터미널역 8-1, 8-2 출구에서 가까운 직장인·여행객 대상 술집/식당 클러스터", "source": "https://www.localnaeil.com/News/View/640227", "guess": false},
+    {"name": "의원 층", "what": "치과 등 의원이 3층에 입점", "where": "3동 3층, 6동 3층", "details": "대기실+진료실, 세로 의원 간판", "source": "https://www.goodoc.co.kr/hospitals/22651", "guess": false},
+    {"name": "프랜차이즈 간판", "what": "만끽치킨, 배부장찌개 등 체인 간판", "where": "3동 지하 입구 주변", "details": "계단 입구 입간판+벽면 돌출간판", "source": "https://www.localnaeil.com/News/View/640227", "guess": false},
+    {"name": "미용실/식당 POI 군집", "what": "OSM에서 미용실·식당 POI 다수 (브리프 좌표 (-121,-133), (65,-204), (148,-236), (288,-282))", "where": "동 전면", "details": "상호는 data/osm.json에서 확인 필요", "source": "", "guess": true}
+  ],
+  "connections": [
+    "고속터미널역 8-1번 출구 -> 3동 지하/앞",
+    "고속터미널역 8-2번 출구 -> 5·6동 방면",
+    "동 간 연결: 신반포로 인도 따라 1층 연속 (지하 연결 여부 미확인)"
+  ],
+  "parking": "미확인. 동 뒤편 반포 아파트 단지 쪽 주차장/이면 진입로 추정",
+  "notes": [
+    "검색 결과가 얇음: 동별 층수, 준공년도, 재건축 정보는 웹에서 확인되지 않음",
+    "서울시가 2022년 반포아파트지구를 지구단위계획구역으로 전환, 상가 재건축 규제 완화 (반포쇼핑타운 직접 언급 없음)",
+    "충무할매김밥, 하트타임이 반포쇼핑타운 입점이라는 언급이 있으나 동·층 미확인"
+  ],
+  "unresolved": [
+    "동별 지상 층수와 높이 (OSM 기준만)",
+    "준공연도(1970년대 추정)와 상층부가 아파트인지 오피스인지",
+    "1동·7동·8동 입점 상가 및 번지",
+    "반찬가게·떡집·정육점·세탁소 상호",
+    "엘리베이터 유무, 외벽 색상/타일",
+    "재건축 정비구역 지정 여부와 2024~2026 상황"
+  ]
+}

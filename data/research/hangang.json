@@ -1,0 +1,58 @@
+{
+ "id":"hangang","name":"반포한강공원 · 세빛섬 · 반포대교/잠수교 · 달빛무지개분수","updated":"2026-11-06",
+ "sources":[
+  {"url":"https://mediahub.seoul.go.kr/archives/2002598","title":"아는 만큼 달라 보이는 한강다리 TMI (서울시 미디어허브)","year":2024},
+  {"url":"https://mediahub.seoul.go.kr/archives/2014254","title":"서초 분수쇼 명소 3곳 (서울시 미디어허브)","year":2025},
+  {"url":"https://hangang.seoul.go.kr/archives/46727","title":"반포한강공원 (서울시 한강공원)","year":2025},
+  {"url":"https://mediahub.seoul.go.kr/archives/2008745","title":"세빛섬 옥상 세빛마루 (서울시 미디어허브)","year":2023},
+  {"url":"https://www.telltrip.com/domestic-travel/sebitseom-han-river-floating-islands/","title":"세빛섬 야간 산책 (telltrip)","year":2025},
+  {"url":"https://www.mt.co.kr/estate/2014/12/27/2014122400441651139","title":"서울의 랜드마크 꿈꾸는 세빛섬 (머니투데이)","year":2014},
+  {"url":"https://www.heraldk.com/article/2026100906243422978","title":"잠수교 50년만 보행전용교 변신 (헤럴드경제)","year":2026},
+  {"url":"https://mediahub.seoul.go.kr/archives/2010487","title":"세빛섬 관련 (서울시 미디어허브)","year":2024}
+ ],
+ "building":{
+  "floors_above":3,"floors_below":0,"height_m":27,
+  "floor_height_m":"추정 약 4.5~5m (가빛섬 27m/3층 보도 기준, 옥상 세빛마루 4~5층 표기와 불일치) ",
+  "facade":"꽃잎 모양 유리 외피(추정: 확인된 기록 없음), 외벽 전체 LED 조명. 3개 섬은 '세빛'=빨강·파랑·초록 의미, 예빛섬은 대형 LED 스크린+수상무대",
+  "signage":"'세빛섬' 로고, 각 섬 이름(가빛섬·채빛섬·솔빛섬·예빛섬), 입점 브랜드 간판",
+  "entrances":"반포한강공원 쪽 부교(보행 연결)로 진입; 세빛섬나들목이 올림픽대로 아래로 연결 (고속터미널 8-1번 출구에서 약 650m, 도보 약 15분)"
+ },
+ "floors":[
+  {"floor":"가빛섬 1F","use":"수상레저·카페·편의점(추정)","tenants":["튜브스터(수상 튜브, 30분 3.5만원, 계절 운영)","카페돌체","골든블루마리나(요트, 2020 기준)"],"layout":"수면과 맞닿은 층, 수상 계류장 쪽 접안 (추정)","source":"https://www.telltrip.com/domestic-travel/sebitseom-han-river-floating-islands/","guess":false},
+  {"floor":"가빛섬 2F~3F","use":"컨벤션홀(700석)·레스토랑·펍","tenants":["FIC 컨벤션홀","이솔라(이탈리안, 개장 당시 '올라')","비스타(캐주얼 펍)","CNN카페(개장 당시)"],"layout":"가장 큰 섬(연면적 5,478㎡, 높이 27m). 컨벤션홀은 중심, 레스토랑은 한강 쪽 창가 (추정)","source":"https://www.mt.co.kr/estate/2014/12/27/2014122400441651139","guess":false},
+  {"floor":"가빛섬 옥상(4~5F 표기)","use":"세빛마루 옥상 개방 전망 공간","tenants":["세빛마루(상시 개방, 10~22시)"],"layout":"한강·반포대교 분수 조망 옥상 데크","source":"https://mediahub.seoul.go.kr/archives/2008745","guess":false},
+  {"floor":"채빛섬 1F~3F","use":"뷔페 레스토랑·공연","tenants":["채빛퀴진(뷔페)"],"layout":"3층 건물, 높이 21m, 연면적 3,419㎡, 최대 1,700명 수용 보도","source":"https://www.mt.co.kr/estate/2014/12/27/2014122400441651139","guess":false},
+  {"floor":"솔빛섬","use":"전시공간·수상레포츠 지원시설","tenants":[],"layout":"가장 낮고 작은 섬(추정), 층수 미확인","source":"https://www.smarttoday.co.kr/ko-kr/articles/29643","guess":true},
+  {"floor":"예빛섬","use":"미디어아트갤러리·수상무대","tenants":[],"layout":"대형 LED 스크린과 야외 수상무대 (층수 미확인, 1층 규모 추정)","source":"https://www.telltrip.com/domestic-travel/sebitseom-han-river-floating-islands/","guess":true}
+ ],
+ "elements":[
+  {"name":"달빛무지개분수","what":"반포대교 양측 교량분수","where":"반포대교 상류·하류 난간 아래, 각 570m","details":"총길이 1,140m, 노즐 380개, 분당 190톤 양수, 수면 방향 최대 약 20m 방수, 2008 기네스 최장 교량분수. 4~10월 운영(2025 기사는 연중 표기), 회당 20분, 하루 3~7회 가동, 야간 무지개색 LED","source":"https://mediahub.seoul.go.kr/archives/2002598","guess":false},
+  {"name":"반포대교","what":"2층 중 상층","where":"잠수교 바로 위","details":"길이 약 1,490m·폭 약 25m (출처에 따라 다름), 1982 준공","source":"https://mediahub.seoul.go.kr/archives/2014254","guess":false},
+  {"name":"잠수교","what":"하층 낮은 다리, 홍수 시 침수","where":"반포대교 아래, 수면과 가장 가까움","details":"길이 765~795m, 폭 약 18m, 1976 개통. 2008년 4차로 중 2차로를 보행·자전거로 전환. 2026-10-26부터 차량 전면 통제로 보행전용화 공사(2027 하반기 완료 예정). 수면 위 높이는 미확인(2~3m 추정)","source":"https://www.heraldk.com/article/2026100906243422978","guess":false},
+  {"name":"교각","what":"반포대교 상층 지지 교각","where":"잠수교 위 일정 간격","details":"개수·간격 미확인. 교각 사이 천정 웨이브 타공판 단장 계획 보도","source":"https://www.gqkorea.co.kr/?p=241442","guess":true},
+  {"name":"세빛섬 나들목","what":"올림픽대로 아래 보행 통로","where":"반포2동주민센터 앞 골목 끝 -> 올림픽대로 하부","details":"한강 62번째 나들목. OSM '반포나들목' 두 곳과 별개일 수 있음","source":"https://mediahub.seoul.go.kr/archives/2014026","guess":false},
+  {"name":"달빛광장·수변무대","what":"분수 관람 광장","where":"반포대교 남단 한강 쪽","details":"분수 관람 중심 잔디·계단형 광장","source":"https://hangang.seoul.go.kr/archives/46727","guess":false},
+  {"name":"세빛섬 편의점·카페·수상계류장","what":"세빛섬 쪽 편의시설","where":"세빛섬","details":"편의점, 선상레스토랑, 베이커리카페, 웨딩&컨벤션, 자전거 복합문화공간, 요트·카약 계류장","source":"https://hangang.seoul.go.kr/archives/46727","guess":false},
+  {"name":"공원 편의시설","what":"화장실·음수대·매점·카페·순환관람차(해치카)·따릉이 대여·물방울놀이터·체육시설","where":"반포한강공원 전역","details":"7.2km 자전거도로·산책로 분리, 여의도·잠원 방면 연결","source":"https://hangang.seoul.go.kr/archives/46727","guess":false},
+  {"name":"한강달빛야시장(밤도깨비)","what":"푸드트럭 39팀·공예 60팀(2022)","where":"반포한강공원 달빛광장 일대","details":"2025 개최 여부 미확인, 봄~가을 시즌","source":"https://mediahub.seoul.go.kr/archives/2005481","guess":false},
+  {"name":"서래섬·텐트존·무지개놀이터·수상택시","what":"기타 시설","where":"공원 서쪽(서래섬), 나머지 위치 미확인","details":"출처 없음","source":"","guess":true}
+ ],
+ "connections":[
+  "고속터미널 8-1번 출구 -> 반포2동주민센터 앞 골목 직진 -> 세빛섬나들목(올림픽대로 하부) -> 반포한강공원 -> 세빛섬 보행 부교, 약 650m/15분",
+  "잠수교 남단~올림픽대로 연결로 존재(보행 가능 여부 미확인)",
+  "세빛섬 섬 간 연결은 부교/도교(구조 미확인)"
+ ],
+ "parking":"반포한강공원 2주차장, 세빛섬 내 음식점 이용 시 3시간 무료(2024 기사)",
+ "notes":[
+  "세빛섬 운영 11~21시(동절기 20시), 세빛마루 10~22시",
+  "세빛섬 이름 '세빛'=빨강·파랑·초록",
+  "입점 매장은 2014~2020 기사 기준, 현재와 다를 수 있음"
+ ],
+ "unresolved":[
+  "각 섬 정확한 층수·층별 배치, 솔빛섬·예빛섬 층수",
+  "꽃잎 형태 여부 및 LED 색상 연출 패턴",
+  "잠수교 수면 위 높이, 교각 개수·간격, 반포대교 상판 높이",
+  "수상택시 승강장·텐트존·무지개놀이터·CU 위치",
+  "섬 간 부교 구조, 2025 야시장 일정"
+ ]
+}
