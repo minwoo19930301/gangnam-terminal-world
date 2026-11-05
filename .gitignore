@@ -4,3 +4,4 @@ shots/
 .codex-jobs/*.log
 .codex-jobs/*.done
 .claude/
+refs/
