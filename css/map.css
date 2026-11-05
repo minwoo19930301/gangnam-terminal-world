@@ -71,7 +71,7 @@
   color: #556960;
 }
 #map-full.gt-map .gt-close:hover { background: #e9f0eb; }
-.gt-close kbd { font: 10px inherit; color: #8b9892; }
+.gt-close kbd { font-size: 10px; font-family: inherit; color: #8b9892; }
 .gt-sidebar {
   display: flex;
   flex-direction: column;
@@ -162,7 +162,7 @@
 .gt-attribution { color: #7c8e7b; font-size: 9px; text-shadow: 0 1px 3px #fff; text-align: right; }
 .gt-attribution a { color: inherit; text-decoration: none; pointer-events: auto; }
 .gt-attribution a:hover { text-decoration: underline; }
-.gt-tip { position: absolute; top: 25px; left: 50%; transform: translateX(-50%); color: #7b8c7e; font-size: 10px; pointer-events: none; }
+.gt-tip { position: absolute; bottom: 22px; left: 50%; transform: translateX(-50%); color: #7b8c7e; font-size: 10px; white-space: nowrap; pointer-events: none; }
 .gt-selection { position: absolute; bottom: 126px; left: 50%; transform: translateX(-50%); width: 300px; max-width: calc(100% - 100px); padding: 19px; border: 1px solid #dce6db; border-radius: 16px; background: #fff; box-shadow: 0 8px 30px #22443720; }
 #map-full.gt-map .gt-dismiss { position: absolute; top: 8px; right: 8px; width: 32px; height: 32px; border-radius: 50%; padding: 0; background: transparent; color: #8a9b8d; font-size: 20px; }
 #map-full.gt-map .gt-dismiss:hover { background: #f1f6ef; }
