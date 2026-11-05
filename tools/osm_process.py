@@ -13,12 +13,12 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LAT0, LON0 = 37.504905, 127.004958  # refined below from station node if present
 KX = 111320 * math.cos(math.radians(37.5049))
 KZ = 110540
-BBOX = (-950, -1450, 1000, 700)  # x0,z0,x1,z1 in meters
+BBOX = (-1900, -2100, 1000, 700)  # x0,z0,x1,z1 in meters
 
 def load(p):
     return json.load(open(os.path.join(ROOT, p)))['elements']
 
-els = load('data/raw/osm-core.json') + load('data/raw/osm-extra.json')
+els = load('data/raw/osm-core.json') + load('data/raw/osm-extra.json') + load('data/raw/osm-river.json')
 nodes, ways, rels = {}, {}, {}
 for e in els:
     t = e['type']

@@ -24,9 +24,9 @@ def render(fn, xr, zr, label_all=False, size=16):
         xs = [p[0] for p in b['poly']]; zs = [p[1] for p in b['poly']]
         cx, cz = sum(xs) / len(xs), sum(zs) / len(zs)
         if xr[0] < cx < xr[1] and zr[0] < cz < zr[1] and (b['name'] or label_all):
-            ax.text(cx, cz, f"{b['name'] or ''}\n#{b['id']} L{b['levels'] or '?'} H{b['height']}", fontsize=6, ha='center', zorder=6)
+            ax.text(cx, cz, f"{b['name'] or ''}\n#{b['id']} L{b['levels'] or '?'} H{b['height']}", fontsize=6, ha='center', zorder=6, clip_on=True)
     for e in d['exits']:
-        ax.plot(e['x'], e['z'], 'o', color='#e46f1d', zorder=7); ax.text(e['x'] + 3, e['z'], e['ref'], fontsize=8, color='#c40', zorder=7)
+        ax.plot(e['x'], e['z'], 'o', color='#e46f1d', zorder=7, clip_on=True); ax.text(e['x'] + 3, e['z'], e['ref'], fontsize=8, color='#c40', zorder=7, clip_on=True)
     named = {}
     for r in d['roads']:
         if r['name'] and r['hw'] in ('primary', 'secondary', 'trunk', 'tertiary') and r['name'] not in named:
@@ -36,6 +36,6 @@ def render(fn, xr, zr, label_all=False, size=16):
     ax.set_xlim(*xr); ax.set_ylim(zr[1], zr[0]); ax.set_aspect('equal'); ax.grid(True, lw=0.3)
     ax.set_title(f'x=east, z=south (north=up), meters, origin=고속터미널역  {fn}')
     fig.savefig(os.path.join(ROOT, 'docs', fn), dpi=110, bbox_inches='tight'); plt.close(fig)
-render('overview.png', (-900, 950), (-1400, 650))
+render('overview.png', (-1900, 1000), (-2100, 700))
 render('overview-core.png', (-350, 400), (-330, 330), label_all=True, size=18)
-render('overview-park.png', (-900, 300), (-1300, -500), label_all=False)
+render('overview-park.png', (-1300, 100), (-1800, -450), label_all=False)

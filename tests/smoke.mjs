@@ -61,12 +61,25 @@ for (const el of K._.elevators) for (const f of el.floors) {
   if (!ok) warnings.push(`${el.place}: elevator "${el.name}" floor ${f.label}: no floor found just outside the car`);
 }
 // junction checks
-const { JUNCTIONS } = await import('../js/places/_junctions.js');
+const { JUNCTIONS, WELLS } = await import('../js/places/_junctions.js');
 for (const j of JUNCTIONS) {
   if (!loaded.has(j.a) || !loaded.has(j.b)) continue;
   for (const [px, pz] of [j.pa || [j.x, j.z], j.pb || [j.x, j.z]]) {
     const sup = phys.support(px, pz, j.y + 0.5);
     if (Math.abs(sup.y - j.y) > 0.6) problems.push(`junction ${j.id} (${j.a}<->${j.b}) at (${px},${pz}) y=${j.y}: no walkable floor (found ${sup.y})`);
+  }
+}
+for (const w of WELLS) {
+  const [x0, z0, x1, z1] = w.rect; const cx = (x0 + x1) / 2, cz = (z0 + z1) / 2;
+  if (loaded.has(w.floorOwner) && !loaded.has(w.wellOwner)) {
+    // floor owner must leave a hole: no floor at `top` in the middle of the well
+    const s = phys.support(cx, cz, w.top + 0.3);
+    if (Math.abs(s.y - w.top) < 0.2) problems.push(`well ${w.id}: ${w.floorOwner} must leave a hole at y=${w.top} inside rect ${w.rect} (found floor)`);
+  }
+  if (loaded.has(w.wellOwner)) {
+    // something walkable must exist inside the well between top and bottom, and floor at bottom near the well
+    let ok = false; for (let k = 0; k <= 10 && !ok; k++) { const t = k / 10; const s = phys.support(x0 + (x1 - x0) * t, z0 + (z1 - z0) * t, w.top + 0.3); if (s.y < w.top - 0.3 && s.y >= w.bottom - 0.3) ok = true; }
+    if (!ok) problems.push(`well ${w.id}: ${w.wellOwner} must build stairs/escalators inside rect ${w.rect} from y=${w.top} down to ${w.bottom}`);
   }
 }
 K._.finalize();
