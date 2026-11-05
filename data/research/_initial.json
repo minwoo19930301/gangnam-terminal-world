@@ -1,0 +1,118 @@
+{
+  "meta": {
+    "note": "WebSearch/WebFetch 약 30분 이내 조사. 웹에서 확인된 것은 source 표기, 확인 못한 값은 guess:true. 방위·거리는 전부 대략 추정(지도 미확인). 기준점=지하철 고속터미널역(3·7·9호선), 지도 방위는 북=위.",
+    "origin": "고속터미널역 (서초구 신반포로 일대, 대략 37.505N 127.005E)",
+    "sources": [
+      "ko.wikipedia 서울고속버스터미널", "ko.wikipedia 센트럴시티(건축물)", "ko.wikipedia JW 메리어트 호텔 서울",
+      "sisul.or.kr 강남터미널지하도상가 안내", "koreatodo.com GOTO MALL", "mediahub.seoul.go.kr / hangang 기사들",
+      "ktriptips 다이소 강남고속터미널점", "bizwatch/hankyung 2016 신세계 강남 증축 기사", "mt.co.kr 2025-08 식품관 리뉴얼 기사"
+    ]
+  },
+  "shinsegae_gangnam": {
+    "floors": {"above": 11, "below": 2, "guess": true, "basis": "신관 6~11층 증축(2014~16) 확인. 지하 2층 가정은 추정"},
+    "area": "영업면적 약 86,500㎡ (증축 후, bizwatch 2016)",
+    "floor_md": [
+      {"floor": "B1", "md": "식품관 신세계마켓(약 600평, 서울 백화점 최대급), 델리 전문관(약 1200평, 2025 오픈), 스위트파크 디저트, 면세점 강남점 입구 (파미에스테이션 연결)", "guess": false},
+      {"floor": "1F", "md": "럭셔리 화장품·잡화(국내 최대급), 명품 브랜드", "guess": false},
+      {"floor": "2F~3F", "md": "여성 패션·명품·컨템포러리", "guess": true},
+      {"floor": "4F", "md": "슈즈 전문관 그랜드 슈(약 1000평)", "guess": false},
+      {"floor": "5F", "md": "카페(페이야드) 등", "guess": false},
+      {"floor": "6F~7F", "md": "남성 전문관/럭셔리, 7F 골프 전문관·스타벅스", "guess": false},
+      {"floor": "8F", "md": "팝업 공간(더 스테이지), 리빙/아동 추정", "guess": true},
+      {"floor": "9F~11F", "md": "식당가·문화/가구 등", "guess": true}
+    ],
+    "extra": "5층 서울고속버스터미널 건물 내에 신세계백화점 본사(터미널 쪽 5층, 별개 건물)",
+    "position": {"bearing": "터미널역 기준 서~북서(역에서 센트럴시티 쪽)", "dist_m": 150, "guess": true}
+  },
+  "jw_marriott_seoul": {
+    "floors": {"above": 33, "below": 4, "source": "ko.wikipedia"},
+    "height_m": {"value": 150, "guess": true, "basis": "미확인, 33층 기준 추정"},
+    "rooms": "379실(펜트하우스 2, 스위트 32), 뷰 객실 12~33층",
+    "lobby_floor": {"value": "5F 인근", "guess": true, "basis": "문서에 로비 층 명시 없음. The Lounge는 리셉션 로비 내"},
+    "facilities": [
+      {"name": "플레이버즈(올데이 뷔페)", "floor": "2F(2019 기사, 현재 다를 수 있음)", "guess": false},
+      {"name": "더 마고 그릴", "floor": "미확인", "guess": true},
+      {"name": "타마유라(일식)", "floor": "미확인", "guess": true},
+      {"name": "모보 바, 카페원, 파티세리(플레이버즈 입구), 더 라운지(로비)", "floor": "미확인", "guess": true},
+      {"name": "마키스 피트니스 클럽", "floor": "B2~B4", "guess": false},
+      {"name": "연회: 그랜드볼룸 5F(천고7m), 살롱 6개 3F", "floor": "3F/5F", "guess": false}
+    ],
+    "note": "센트럴시티 건물 위에 바로 올라간 구조. 호텔은 건물 상부 타워. 모수는 이 호텔 소속 아님(확인 불가).",
+    "position": {"bearing": "서북서", "dist_m": 150, "guess": true}
+  },
+  "seoul_express_bus_terminal_gyeongbu_yeongdong": {
+    "floors": {"above": 5, "below": 0, "guess": true, "basis": "1F 승강장, 3F 화훼상가, 5F 신세계 본사 확인. 4F는 미확인"},
+    "floor_use": [
+      {"floor": "B1", "use": "고투몰 지하상가·역 연결", "guess": false},
+      {"floor": "1F", "use": "매표소(제1·2·3)·무인발권기·승차홈 1~43번·하차장", "guess": false},
+      {"floor": "2F", "use": "과거 승차장(현재 미사용), 용도 불명", "guess": true},
+      {"floor": "3F", "use": "꽃도매상가(생화/조화) - 전국 최대 규모 화훼 도매", "guess": false},
+      {"floor": "4F", "use": "미확인(사무·창고 추정)", "guess": true},
+      {"floor": "5F", "use": "신세계백화점 본사(구 웨딩홀, 2017 종료)", "guess": false}
+    ],
+    "flower_market": {
+      "location": "3F",
+      "hours": "생화 월~토 자정~오후 1시, 일요일 휴무 / 조화 자정~오후 6시(과거 자료, 현재 변동 가능)",
+      "zones": {"fresh": "생화 도매 구역", "artificial": "조화 별도 구역", "guess": true, "note": "생화/조화 세부 배치는 확인 못함"},
+      "retail": "지하상가(고투몰) 안에 소매 꽃가게 구역 별도 존재"
+    },
+    "position": {"bearing": "북서~서(신반포로 194, 역과 센트럴시티 사이/건너편)", "dist_m": 150, "guess": true}
+  },
+  "central_city_honam": {
+    "address": "신반포로 176",
+    "composition": "호남선 고속버스터미널, 메가박스 센트럴, 신세계백화점 강남점, JW메리어트, 우리은행, 신세계면세점 강남점, 밀레니엄홀(6F)",
+    "floor_use": [
+      {"floor": "1F", "use": "호남선 매표·승차장(추정)", "guess": true},
+      {"floor": "B1", "use": "파미에스테이션(파미에 파크/플라자) 지하 통로, 신세계 연결, 면세점 입구", "guess": false},
+      {"floor": "6F", "use": "센트럴시티 밀레니엄홀", "guess": false}
+    ],
+    "pamiestation": "지하 통로/광장 형태로 7호선 역과 서울고속터미널 연결, 미용실·식당·카페·패션",
+    "marriott_economy": {"floor": "미확인", "guess": true, "note": "문서 근거 없음. 호텔은 건물 위에 위치한 것으로 가정"},
+    "youngpoong": {"floor": "B1", "guess": true, "note": "강남점 영풍문고 위치 미확인. 파미에스테이션 일대로 추정"}
+  },
+  "gotomall": {
+    "length_m": "약 880m 통로 2줄(한 자료는 총 길이 880m)",
+    "stores": 620,
+    "area_m2": 31566,
+    "hours": "10:00~22:00, 통로 24시간, 매월 셋째주 목요일 휴무",
+    "categories": "의류, 액세서리, 화장품, 침구, 식기, 가구/인테리어, 화분·꽃, 식당(끝쪽에 식음료·화장실)",
+    "east_west": {"east": "의류·패션 위주", "west": "인테리어·꽃·생활용품 위주", "guess": true, "note": "동/서 구역 구분 출처 없음. 프로젝트용 임의 분할"},
+    "exits": "8-1, 8-2(연결 확인), 16개 출구 및 반포역 연결 통로 언급(영문 자료)",
+    "position": {"bearing": "역에서 북·북동 방향 지하(신반포로 아래 길게 연장)", "dist_m": 0, "guess": true}
+  },
+  "daiso_nobrand": {
+    "daiso": {"place": "다이소 강남고속터미널점 신반포로 194 B1(10~22시)", "guess": false, "note": "지하 1층"},
+    "nobrand": {"place": "마트 위치 미확인. 노브랜드 버거 고속터미널점 터미널 1F는 확인", "guess": true, "note": "마트는 파미에스테이션 인근 B1로 추정"}
+  },
+  "banpo_shopping_town": {
+    "address": "신반포로 189 (잠원동), 역에서 약 223m",
+    "buildings": "1~5동 이상 확인(4동 69-1, 5동 신반포로 195). 6~7동 여부 미확인",
+    "building_count_guess": 5,
+    "floors": {"value": "지상 5층 내외(5동 5층 호실 존재)", "guess": true},
+    "businesses": {"value": "이불·침구, 가구/인테리어, 의류, 식당, 학원 등 재건축 앞둔 오래된 상가", "guess": true},
+    "position": {"bearing": "동~남동 (신반포로변, 터미널 맞은편 방향)", "dist_m": 220, "guess": true}
+  },
+  "parking": {
+    "gyeongbu": {"place": "터미널 건물 지하/인접 지상 주차장", "guess": true},
+    "honam_central_city": {"place": "센트럴시티 지하 다층 주차장(파미에스테이션 주차장 존재 확인)", "guess": true},
+    "note": "층·형태 근거 자료 없음. 게임용 가정으로 지하 3~4층 램프형 추정"
+  },
+  "roads": [
+    {"name": "신반포로", "bearing": "동서 방향 메인, 터미널·센트럴시티·쇼핑타운 면함", "guess": false},
+    {"name": "사평대로", "bearing": "남북(고속터미널 앞을 가로지르는 간선)", "guess": true},
+    {"name": "반포대로", "bearing": "남북, 서초 방향 북쪽으로 이어짐/한강 방향 남쪽", "guess": true},
+    {"name": "올림픽대로", "bearing": "한강변 남쪽 동서 고가·진출입", "guess": true},
+    {"name": "고속터미널→반포한강공원", "route": "신반포로/반포대로를 따라 남쪽 약 650m(8-1 출구 기준, 도보 15분) 지하차도·육교 통과", "guess": false},
+    {"name": "반포 나들목(IC)", "bearing": "올림픽대로 연결, 한강공원 앞 남쪽", "guess": true}
+  ],
+  "banpo_hangang_park": {
+    "distance_from_station": "세빛섬까지 약 650m, 도보 15분 (8-1 출구)",
+    "elements": [
+      {"name": "달빛무지개분수", "note": "잠수교 위 세계 최장 교량분수(기네스), 4~10월 저녁 가동", "guess": false},
+      {"name": "세빛섬", "note": "인공섬 3개(가빛·채빛·솔빛) 조명 야경", "guess": false},
+      {"name": "잠수교", "note": "한강 하부 보행·차량교, 달빛분수 설치 구간", "guess": false},
+      {"name": "반포대교", "note": "잠수교 위쪽 상부 교량", "guess": false}
+    ],
+    "bus": "740번 세빛섬 앞 하차, 405번 반포한강공원"
+  }
+}

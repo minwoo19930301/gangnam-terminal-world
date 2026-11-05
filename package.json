@@ -1,0 +1,14 @@
+{
+  "name": "gangnam-terminal-world",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "smoke": "node tests/smoke.mjs",
+    "shot": "node tests/shot.mjs",
+    "serve": "node tests/serve.mjs"
+  },
+  "devDependencies": {
+    "three": "0.160.0",
+    "playwright": "1.64.1"
+  }
+}
