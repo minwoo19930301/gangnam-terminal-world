@@ -37,12 +37,14 @@ async function boot() {
   const sky = new THREE.Mesh(skyGeo, new THREE.MeshBasicMaterial({ vertexColors: true, side: THREE.BackSide, fog: false, depthWrite: false }));
   sky.renderOrder = -1; scene.add(sky);
   scene.fog = new THREE.Fog(0xcfe0ee, 350, 2600);
-  const hemi = new THREE.HemisphereLight(0xf4f8ff, 0x8a8576, 1.55); scene.add(hemi);
+  const hemi = new THREE.HemisphereLight(0xf4f8ff, 0xb3ad9f, 1.55); scene.add(hemi); // bright ground colour so ceilings and slab undersides do not read muddy
   const sun = new THREE.DirectionalLight(0xfff4e0, 1.5); sun.position.set(-300, 600, 400); scene.add(sun);
   const amb = new THREE.AmbientLight(0xffffff, 0.25); scene.add(amb);
 
   const phys = createPhysics();
   const K = createKit(THREE, scene, { osm, phys, maxAniso: renderer.capabilities.getMaxAnisotropy() });
+  // modules may register night handlers while they build, so this must exist before any build()
+  const nightFns = []; K.onNight = fn => nightFns.push(fn);
 
   // ---- places ----
   const want = Q.get('places') ? Q.get('places').split(',') : PLACES;
@@ -171,7 +173,6 @@ async function boot() {
     cols.needsUpdate = true; scene.fog.color.setHex(v ? 0x1a2238 : 0xcfe0ee);
     for (const f of nightFns) f(v);
   }
-  const nightFns = []; K.onNight = fn => nightFns.push(fn);
   if (night) setNight(true);
 
   // ---- loop ----

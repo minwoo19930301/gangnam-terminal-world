@@ -1125,7 +1125,8 @@ export function build(K) {
       K.zone({ name: name.split('|').pop(), floor: 'B1', sub: `${cat} · 신세계 강남점 연결통로`, poly: [[x0, z0], [x1, z0], [x1, z1], [x0, z1]], y0: y, y1: top, priority: 3 });
       K.hpoly({ tex: 'wood', color: 0xd8c4a8 }, [[x0 + 0.1, z0 + 0.1], [x1 - 0.1, z0 + 0.1], [x1 - 0.1, z1 - 0.1], [x0 + 0.1, z1 - 0.1]], y + 0.012);
     };
-    const wN = -82.4, wS = -40.2, eN = -87.4, eS = -44.6;
+    // west row starts at z=-76: the station's 3·9호선 transfer lift opens onto the corridor at z≈-80.75
+    const wN = -76, wS = -40.2, eN = -87.4, eS = -44.6;
     const W = [['신세계 상품권 · 사은행사', 'counter', '고객 서비스'], ['SSG 팝업 스토어', 'popup', '팝업'], ['플라워 숍', 'flower', '꽃'], ['스위트파크 테이크아웃', 'counter', '디저트']];
     const E = [['신세계 팝업 갤러리', 'popup', '팝업'], ['스위트파크 픽업 존', 'counter', '디저트'], ['델리 테이크아웃', 'counter', '델리'], ['물품 보관함 · 수유실', 'counter', '편의시설']];
     W.forEach(([n, k, c], i) => { const z0 = wN + i * (wS - wN) / W.length, z1 = wN + (i + 1) * (wS - wN) / W.length; unit(xs[0], xs[1], z0, z1, 'E', n, k, c); });

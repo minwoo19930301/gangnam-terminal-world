@@ -203,8 +203,12 @@ export function build(K) {
     ['5',-185.64,276.89,.89,-.455,[-174,261],'서래마을 방면'],
     ['6',-195.26,261.52,.89,-.455,[-173,255],'반포대로 방면'],
   ];
-  const publicOpen=[{x:-133,z:249,w:12},{x:-45,z:191,w:12},{x:20,z:156,w:13},{x:-122,z:242,w:13},...exitSpecs.map(e=>({x:e[5][0],z:e[5][1],w:14}))];
+  // the concourse's north wall borders 파미에스테이션 B1 (센트럴시티): two open fronts into the food street
+  const publicOpen=[{x:-42.6,z:177.2,w:8},{x:-61.3,z:184.4,w:8},{x:-133,z:249,w:12},{x:-45,z:191,w:12},{x:20,z:156,w:13},{x:-122,z:242,w:13},...exitSpecs.map(e=>({x:e[5][0],z:e[5][1],w:14}))];
   const b1=hall(b1Path,14,B1,{floor:'B1',name:'고속터미널역 연결 대합실',sub:'2~7번 출구 · 파미에스테이션 · 센트럴시티 · 신세계',label:'2–7 출구  |  센트럴시티 · 신세계 · JW메리어트',holes:b1Voids,openings:publicOpen});
+  // bridge the seam between this concourse and the 파미에스테이션 B1 floor at the two open fronts
+  // (slightly raised finish so it does not z-fight either floor; ceiling strip closes the slot above)
+  for(const q of [[-42.6,177.2],[-61.3,184.4]]){const ux=.9314,uz=-.3639,nx=-uz,nz=ux;const Q=(a,b)=>[q[0]+ux*a+nx*b,q[1]+uz*a+nz*b];const r=[Q(-4.3,-2.2),Q(4.3,-2.2),Q(4.3,2.2),Q(-4.3,2.2)];K.slab(r,B1+.015,{mat:'station-granite',thick:.05,under:false,edge:false,ceil:false});K.hpoly('ceiling',r,B1+4.69,false);}
   for(let s=15;s<b1.length-5;s+=18){const p=b1.at(s,5.7);K.cyl({x:p.x,z:p.z,y:B1,r:.36,h:4.45,mat:'station-ceramic'});localSign(b1,s,5.2,B1+1.8,'고속터미널',1.1,.3,true);}
   ticketBank(b1,29,5.7,B1);room(b1,62,5.7,B1,'역무실 · 고객안내');
   localSign(b1,101,0,B1+2.7,'파미에스테이션  ↑    3번 출구',9,.65);
@@ -500,7 +504,10 @@ export function build(K) {
 
   // Mall-side B1 galleries end at the wells; their small footprint avoids
   // duplicating the neighbouring module's entire shopping mall slab.
-  hall([[-79,-106],[-79,-113],[-5,-113],[-5,-132]],5,B1,{floor:'B1',name:'고속터미널역 3·9호선 연결부',sub:'고투몰 · 1·8·8-1·8-2번 출구',label:'1·8·8-1·8-2 출구 → 고투몰 / 경부선',jointFinish:true,openings:[{x:-79,z:-106,w:8},{x:-5,z:-132,w:8}]});
+  // When 고투몰 (built earlier in PLACES order) already owns this B1 floor, its own fare-gate halls
+  // stand here, so the station adds no walls/ceilings of its own inside the mall.
+  const mallHere=(()=>{const s=K.phys.support(-40,-110,B1+.5);return Math.abs(s.y-B1)<.3;})();
+  if(!mallHere)hall([[-79,-106],[-79,-113],[-5,-113],[-5,-132]],5,B1,{floor:'B1',name:'고속터미널역 3·9호선 연결부',sub:'고투몰 · 1·8·8-1·8-2번 출구',label:'1·8·8-1·8-2 출구 → 고투몰 / 경부선',jointFinish:true,openings:[{x:-79,z:-106,w:8},{x:-5,z:-132,w:8}]});
   sign('9호선 열차 안내  |  일반 · 급행',-26,B1+2.8,-113,7,.65,0,'#152e33','#d6bd72');
 
   // 3↔7: a continuous paid passage around the east side of the main complex.
@@ -566,11 +573,11 @@ export function build(K) {
   }
   lift(-76,-82,0,[{label:'B1',y:B1,name:'고투몰 연결'},{label:'B2',y:B2,name:'3호선 승강장'},{label:'B4',y:B4,name:'9호선 연결'}],'3·9호선 환승 엘리베이터');
   // B1 lift landing reaches the W3 gallery; B4 landing reaches Line 9's south side.
-  hall([[-79,-79],[-70,-79],[-70,-106],[-79,-106]],5,B1,{label:'3·9호선 엘리베이터',openings:[{x:-76,z:-80.75,w:3},{x:-79,z:-106,w:10}]});
+  if(!mallHere)hall([[-79,-79],[-70,-79],[-70,-106],[-79,-106]],5,B1,{label:'3·9호선 엘리베이터',openings:[{x:-76,z:-80.75,w:3},{x:-79,z:-106,w:10}]});
   hall([[-79,-79],[-69,-79],[-69,-90]],5,B4,{label:'9호선 타는 곳',openings:[{x:-76,z:-80.75,w:3},{x:-69,z:-86,w:11,full:true}]});
-  for(const y of [B1,B4])K.wall(-79,-81.5,-79,-76.5,y,y+4.7,{mat:'station-ceramic'});
+  for(const y of mallHere?[B4]:[B1,B4])K.wall(-79,-81.5,-79,-76.5,y,y+4.7,{mat:'station-ceramic'});
   lift(36,-124,0,[{label:'B1',y:B1,name:'고투몰 연결'},{label:'B4',y:B4,name:'9호선 승강장'}],'9호선 엘리베이터');
-  hall([[-5,-132],[-5,-121],[36,-121]],5,B1,{label:'9호선 엘리베이터 →',openings:[{x:-5,z:-132,w:8},{x:36,z:-122.75,w:3.5}]});
+  if(!mallHere)hall([[-5,-132],[-5,-121],[36,-121]],5,B1,{label:'9호선 엘리베이터 →',openings:[{x:-5,z:-132,w:8},{x:36,z:-122.75,w:3.5}]});
   lift(-136,248,Math.PI/2,[{label:'지상',y:0,name:'4번 출구'},{label:'B1',y:B1,name:'연결 대합실'},{label:'B2',y:B2,name:'7호선 대합실'},{label:'B3',y:B3,name:'7호선 승강장'}],'4번 출구 · 7호선 엘리베이터');
   hall([[-136,248],[-130,248]],5,B2,{label:'7호선 대합실',openings:[{x:-123,z:248,w:10}]});
   hall([[-136,248],[-130,248]],5,B3,{label:'7호선 타는 곳',openings:[{x:-123,z:248,w:10}]});

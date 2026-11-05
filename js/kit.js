@@ -27,7 +27,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8 } = {}) {
     else if (key === 'glass') m = new THREE.MeshLambertMaterial({ vertexColors: true, transparent: true, opacity: 0.32, depthWrite: false, side: THREE.DoubleSide });
     else if (key === 'emit') m = new THREE.MeshBasicMaterial({ vertexColors: true });
     else if (key === 'water') { const s = T.surface('water'); m = new THREE.MeshLambertMaterial({ map: s.tex, vertexColors: true, transparent: true, opacity: 0.92 }); }
-    else if (key.startsWith('sign:')) { const p = atlas.pages[+key.slice(5)]; m = new THREE.MeshBasicMaterial({ map: p.t, side: THREE.FrontSide }); }
+    else if (key.startsWith('sign:')) { const p = atlas.pages[+key.slice(5)]; m = new THREE.MeshBasicMaterial({ map: p.t, side: THREE.FrontSide, alphaTest: 0.35 }); }
     else if (key.startsWith('tex:')) { const s = T.surface(key.slice(4)); m = new THREE.MeshLambertMaterial({ map: s.tex, vertexColors: true }); }
     else if (key.startsWith('ctex:')) { const s = customTex.get(key.slice(5)); m = new THREE.MeshLambertMaterial({ map: s.tex, vertexColors: true, transparent: !!s.transparent, alphaTest: s.transparent ? 0.3 : 0, side: s.doubleSide ? THREE.DoubleSide : THREE.FrontSide }); }
     else throw new Error('unknown material key ' + key);
@@ -192,16 +192,24 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8 } = {}) {
     if (L < 0.01) return;
     const ux = (bx - ax) / L, uz = (bz - az) / L, nx = -uz, nz = ux;
     const sp = spec(o.mat ?? 0xe6e2da), sp2 = o.mat2 !== undefined ? spec(o.mat2) : sp;
-    const ops = (o.openings || []).map(p => ({ a: Math.max(0, p.at - p.w / 2), b: Math.min(L, p.at + p.w / 2), y0: p.y0 ?? y0, y1: p.y1 ?? Math.min(y1, y0 + 2.4) })).sort((p, q) => p.a - q.a);
-    // build list of pieces [s,e,ya,yb]
-    const pieces = []; let s = 0;
-    for (const p of ops) {
-      if (p.a > s) pieces.push([s, p.a, y0, y1]);
-      if (p.y0 > y0) pieces.push([p.a, p.b, y0, p.y0]);
-      if (p.y1 < y1) pieces.push([p.a, p.b, p.y1, y1]);
-      s = Math.max(s, p.b);
+    const ops = (o.openings || []).map(p => ({ a: Math.max(0, p.at - p.w / 2), b: Math.min(L, p.at + p.w / 2), y0: Math.max(y0, p.y0 ?? y0), y1: Math.min(y1, p.y1 ?? Math.min(y1, y0 + 2.4)) })).filter(p => p.b > p.a && p.y1 > p.y0);
+    // build list of pieces [s,e,ya,yb]: cut the wall at every opening edge, then per interval
+    // subtract the union of all openings covering it (so stacked openings at the same `at` all stay open)
+    const xs = [...new Set([0, L, ...ops.flatMap(p => [p.a, p.b])])].sort((p, q) => p - q);
+    const pieces = [];
+    for (let i = 0; i < xs.length - 1; i++) {
+      const s0 = xs[i], s1 = xs[i + 1]; if (s1 - s0 < 1e-4) continue;
+      const mid = (s0 + s1) / 2;
+      const gaps = ops.filter(p => p.a <= mid && p.b >= mid).map(p => [p.y0, p.y1]).sort((p, q) => p[0] - q[0]);
+      let cy = y0; const solids = [];
+      for (const [g0, g1] of gaps) { if (g0 > cy) solids.push([cy, g0]); cy = Math.max(cy, g1); }
+      if (cy < y1) solids.push([cy, y1]);
+      for (const [ya, yb] of solids) {
+        if (yb - ya < 1e-3) continue;
+        let last = null; for (let k = pieces.length - 1; k >= 0; k--) { const q = pieces[k]; if (Math.abs(q[1] - s0) < 1e-6 && Math.abs(q[2] - ya) < 1e-6 && Math.abs(q[3] - yb) < 1e-6) { last = q; break; } }
+        if (last) last[1] = s1; else pieces.push([s0, s1, ya, yb]);
+      }
     }
-    if (s < L) pieces.push([s, L, y0, y1]);
     const glass = o.mat === 'glass' || (o.mat && o.mat.tex === 'glass');
     for (const [s0, s1, ya, yb] of pieces) {
       const x0 = ax + ux * s0, z0 = az + uz * s0, x1 = ax + ux * s1, z1 = az + uz * s1;
@@ -245,6 +253,15 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8 } = {}) {
       wall(a[0] + ix, a[1] + iz, b[0] + ix, b[1] + iz, y0, y1, oo);
     }
   }
+  // side collision for sloped runs (escalators, stair rails): short vertical pieces that follow the slope,
+  // so the floor below the run stays walkable wherever there is head room.
+  function slopedWall(ax, az, bx, bz, ya, yb, top) {
+    const L = Math.hypot(bx - ax, bz - az), n = Math.max(1, Math.ceil(L / 1.0));
+    for (let i = 0; i < n; i++) {
+      const t0 = i / n, t1 = (i + 1) / n, y0 = ya + (yb - ya) * t0, y1 = ya + (yb - ya) * t1;
+      phys.addWall(ax + (bx - ax) * t0, az + (bz - az) * t0, ax + (bx - ax) * t1, az + (bz - az) * t1, Math.min(y0, y1) - 1.3, Math.max(y0, y1) + top, 0.05, current);
+    }
+  }
   // ramp / stairs. A at height ya to B at height yb, width w.
   function ramp(ax, az, bx, bz, o = {}) {
     const w = o.w ?? 2, ya = o.ya ?? 0, yb = o.yb ?? 1, L = Math.hypot(bx - ax, bz - az);
@@ -266,6 +283,11 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8 } = {}) {
         quad(ss, [[cx0 + nx, yLow, cz0 + nz], [cx1 + nx, yLow, cz1 + nz], [cx1 + nx, stepY, cz1 + nz], [cx0 + nx, stepY, cz0 + nz]], [nx, 0, nz], [[0, 0], [1, 0], [1, 1], [0, 1]]);
         quad(ss, [[cx1 - nx, yLow, cz1 - nz], [cx0 - nx, yLow, cz0 - nz], [cx0 - nx, stepY, cz0 - nz], [cx1 - nx, stepY, cz1 - nz]], [-nx, 0, -nz], [[0, 0], [1, 0], [1, 1], [0, 1]]);
       }
+      // close the block: bottom face and the back face at the high end
+      const ss = spec(o.sideMat ?? 0x8c8882), yLow = Math.min(ya, yb) - 0.2, yHigh = Math.max(ya, yb);
+      quad(ss, [[ax - nx, yLow, az - nz], [bx - nx, yLow, bz - nz], [bx + nx, yLow, bz + nz], [ax + nx, yLow, az + nz]], [0, -1, 0], [[0, 0], [1, 0], [1, 1], [0, 1]]);
+      const ex = yb >= ya ? bx : ax, ez = yb >= ya ? bz : az, es = yb >= ya ? 1 : -1;
+      quad(ss, [[ex - nx, yLow, ez - nz], [ex + nx, yLow, ez + nz], [ex + nx, yHigh, ez + nz], [ex - nx, yHigh, ez - nz]], [ux * es, 0, uz * es], [[0, 0], [1, 0], [1, 1], [0, 1]]);
     } else {
       quad(sp, [[ax + nx, ya, az + nz], [bx + nx, yb, bz + nz], [bx - nx, yb, bz - nz], [ax - nx, ya, az - nz]], [0, 1, 0], [[0, 0], [L / sp.scale[0], 0], [L / sp.scale[0], w / sp.scale[1]], [0, w / sp.scale[1]]]);
       quad(spec(o.under ?? 0x9a968f), [[ax - nx, ya - 0.25, az - nz], [bx - nx, yb - 0.25, bz - nz], [bx + nx, yb - 0.25, bz + nz], [ax + nx, ya - 0.25, az + nz]], [0, -1, 0], [[0, 0], [1, 0], [1, 1], [0, 1]]);
@@ -275,7 +297,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8 } = {}) {
       for (const sgn of [1, -1]) {
         const ox = nx * sgn, oz = nz * sgn;
         quad(rm, [[ax + ox, ya + 0.9, az + oz], [bx + ox, yb + 0.9, bz + oz], [bx + ox, yb + 1.0, bz + oz], [ax + ox, ya + 1.0, az + oz]], [ox, 0, oz], [[0, 0], [1, 0], [1, 1], [0, 1]]);
-        if (o.railWalls !== false) phys.addWall(ax + ox, az + oz, bx + ox, bz + oz, Math.min(ya, yb) - 3, Math.max(ya, yb) + 1.0, 0.05, current);
+        if (o.railWalls !== false) slopedWall(ax + ox, az + oz, bx + ox, bz + oz, ya, yb, 1.0);
       }
     }
     const mv = o.move ? [ux * o.move, uz * o.move] : null;
@@ -292,7 +314,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8 } = {}) {
       const ox = nx * s, oz = nz * s;
       quad(gl, [[ax + ox, ya, az + oz], [bx + ox, yb, bz + oz], [bx + ox, yb + 0.95, bz + oz], [ax + ox, ya + 0.95, az + oz]], [ox, 0, oz], [[0, 0], [1, 0], [1, 1], [0, 1]]);
       quad(hr, [[ax + ox, ya + 0.95, az + oz], [bx + ox, yb + 0.95, bz + oz], [bx + ox, yb + 1.05, bz + oz], [ax + ox, ya + 1.05, az + oz]], [ox, 0, oz], [[0, 0], [1, 0], [1, 1], [0, 1]]);
-      phys.addWall(ax + ox, az + oz, bx + ox, bz + oz, Math.min(ya, yb) - 6, Math.max(ya, yb) + 1.05, 0.05, current);
+      slopedWall(ax + ox, az + oz, bx + ox, bz + oz, ya, yb, 1.05);
     }
     // underside truss
     const tb = spec(o.truss ?? 0xb9bec4); const dx = -uz * w / 2, dz = ux * w / 2;
@@ -410,7 +432,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8 } = {}) {
         slab(poly, f.y, { mat: 'metal', thick: 0.05, edge: false, ceil: false });
       }
       // front wall (door side) with openings at each floor
-      wall(poly[2][0], poly[2][1], poly[3][0], poly[3][1], bot, top, { mat: o.doorMat ?? 0x9aa3ab, thick: 0.15, openings: floors.map(f => ({ at: w / 2, w: Math.min(1.2, w - 0.3), y0: f.y, y1: f.y + 2.2 })) });
+      wall(poly[2][0], poly[2][1], poly[3][0], poly[3][1], bot, top, { mat: o.doorMat ?? 0x9aa3ab, thick: 0.15, openings: floors.map(f => ({ at: w / 2, w: Math.min(1.2, w - 0.3), y0: f.y, y1: f.y + 2.4 })) });
     }
     interact({ x, z, y: null, r: Math.max(w, d) * 0.8 + 0.6, label: name, elevator: el, place: current });
     return el;

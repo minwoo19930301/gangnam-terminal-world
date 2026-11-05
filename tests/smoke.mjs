@@ -96,4 +96,5 @@ console.log(`meshes ${meshes.length}, triangles ~${Math.round(tris / 1000)}k, si
 for (const w of warnings) console.log('WARN', w);
 for (const p of problems) console.log('FAIL', p);
 console.log(problems.length ? `\n${problems.length} problem(s)` : '\nOK');
-process.exit(problems.length ? 1 : 0);
+// exitCode (not process.exit) so large --dump lines are fully flushed when stdout is a pipe
+process.exitCode = problems.length ? 1 : 0;

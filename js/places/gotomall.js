@@ -312,11 +312,11 @@ export function build(K) {
     }
   }
   // 3호선 (W3, entry north): gate line z=-106.4, paid area down to the well
-  fareGates('x', -106.4, -84.5, -73.5, 12, LINE[3], 3);
+  fareGates('x', -106.4, -84.5, -73.5, 10, LINE[3], 3); // ~1.0 m passages: wide enough for the player capsule
   railXZ(-84.6, -106.4, -84.6, -104); railXZ(-84.6, -104, W3[0], -104);
   railXZ(-73.4, -106.4, -73.4, -104); railXZ(-73.4, -104, W3[2], -104);
   // 9호선 (W9, entry west): gate line x=-2.5
-  fareGates('z', -2.5, -136.5, -126.4, 11, LINE[9], 9);
+  fareGates('z', -2.5, -136.5, -126.4, 9, LINE[9], 9);
   railXZ(-2.5, -136.6, 0, -136.6); railXZ(0, -136.6, 0, W9[1]);
   railXZ(-2.5, -126.3, 0, -126.3); railXZ(0, -126.3, 0, W9[3]);
   // header beams + platform direction signs

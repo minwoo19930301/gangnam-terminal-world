@@ -183,34 +183,51 @@ export function createTextures(THREE, { maxAniso = 8 } = {}) {
 
 // ---- text atlas: shelf packer on 2048^2 pages ----
 export function createSignAtlas(THREE) {
-  const SIZE = 2048;
+  const SIZE = 2048, GAP = 4;
+  // Global resolution policy. Signs are drawn at pxPerM * QUALITY, and one text line never gets more
+  // than LINE_PX pixels of height (big rooftop letters do not need 300 px). Identical signs (same text
+  // and look, different position) share one atlas slot.
+  const QUALITY = 0.72, LINE_PX = 72;
   const pages = [];
+  const cache = new Map();
   function newPage() {
     const c = makeCanvas(SIZE, SIZE); const g = c.getContext('2d');
-    g.fillStyle = '#000'; g.fillRect(0, 0, SIZE, SIZE);
+    g.clearRect(0, 0, SIZE, SIZE); // transparent: bg:null signs are letters only (material uses alphaTest)
     const t = tex(THREE, c, { repeat: false }); t.generateMipmaps = true; t.minFilter = THREE.LinearMipmapLinearFilter;
-    const p = { c, g, t, x: 0, y: 0, rowH: 0, index: pages.length, dirty: true };
+    const p = { c, g, t, shelves: [], nextY: 0, index: pages.length, dirty: true };
     pages.push(p); return p;
   }
+  // shelf best-fit over all pages: put the rect on the shelf whose height wastes least, else open a shelf
   function alloc(w, h) {
-    let p = pages[pages.length - 1] || newPage();
-    if (p.x + w > SIZE) { p.x = 0; p.y += p.rowH + 2; p.rowH = 0; }
-    if (p.y + h > SIZE) { p = newPage(); }
-    const r = { page: p, x: p.x, y: p.y, w, h };
-    p.x += w + 2; p.rowH = Math.max(p.rowH, h); p.dirty = true;
+    let best = null, bw = Infinity;
+    for (const p of pages) for (const sh of p.shelves) {
+      if (sh.h < h || sh.h > h * 1.5 + 6 || sh.x + w > SIZE) continue;
+      const waste = (sh.h - h) * w; if (waste < bw) { bw = waste; best = { p, sh }; }
+    }
+    if (!best) {
+      let p = pages.find(q => q.nextY + h <= SIZE) || newPage();
+      const sh = { y: p.nextY, h, x: 0 }; p.shelves.push(sh); p.nextY += h + GAP; best = { p, sh };
+    }
+    const { p, sh } = best; const r = { page: p, x: sh.x, y: sh.y, w, h };
+    sh.x += w + GAP; p.dirty = true;
     return r;
   }
   // draw text block; returns uv rect + page
-  function draw(lines, { w = 2, h = 0.5, bg = '#222', fg = '#fff', bold = true, align = 'center', pxPerM = 96, border = null, italic = false, font = FONT, sub = null, subFg = null, icon = null, padding = 0.08 } = {}) {
+  function draw(lines, o = {}) {
     lines = [].concat(lines).map(String);
-    let pw = Math.max(16, Math.min(1024, Math.round(w * pxPerM))), ph = Math.max(8, Math.min(512, Math.round(h * pxPerM)));
-    const s = Math.min(1024 / pw, 512 / ph, 1); pw = Math.round(pw * s); ph = Math.round(ph * s);
+    const { w = 2, h = 0.5, bg = '#222', fg = '#fff', bold = true, align = 'center', pxPerM = 96, border = null, italic = false, font = FONT, sub = null, subFg = null, icon = null, padding = 0.08 } = o;
+    const key = JSON.stringify([lines, w, h, bg, fg, bold, align, pxPerM, border, italic, font, sub, subFg, icon, padding]);
+    const hit = cache.get(key); if (hit) return hit;
+    const n = lines.length + (sub ? 0.6 : 0);
+    let pw = w * pxPerM * QUALITY, ph = h * pxPerM * QUALITY;
+    // one scale for both axes keeps the letters' aspect (clamping each axis separately squashed wide signs)
+    const s = Math.min(1, (LINE_PX * n * 1.25 + 8) / ph, 1024 / pw, 512 / ph);
+    pw = Math.max(16, Math.round(pw * s)); ph = Math.max(8, Math.round(ph * s));
     const r = alloc(pw, ph); const g = r.page.g;
     g.save(); g.beginPath(); g.rect(r.x, r.y, pw, ph); g.clip();
     if (bg) { g.fillStyle = bg; g.fillRect(r.x, r.y, pw, ph); }
     if (border) { g.strokeStyle = border; g.lineWidth = Math.max(2, ph * 0.04); g.strokeRect(r.x + 1, r.y + 1, pw - 2, ph - 2); }
     const pad = Math.round(Math.min(pw, ph) * padding);
-    const n = lines.length + (sub ? 0.6 : 0);
     let fs = (ph - pad * 2) / n * 0.82;
     const wt = bold ? '700' : '400';
     g.font = `${italic ? 'italic ' : ''}${wt} ${fs}px ${font}`;
@@ -222,8 +239,10 @@ export function createSignAtlas(THREE) {
     lines.forEach((l, i) => g.fillText(l, ax, r.y + pad + lh * (i + 0.5)));
     if (sub) { g.font = `400 ${fs * 0.5}px ${font}`; g.fillStyle = subFg || fg; g.fillText(sub, ax, r.y + pad + lh * (lines.length + 0.3)); }
     g.restore();
-    const u0 = r.x / SIZE, u1 = (r.x + pw) / SIZE, v0 = 1 - (r.y + ph) / SIZE, v1 = 1 - r.y / SIZE;
-    return { page: r.page, uv: [u0, v0, u1, v1] };
+    // half-texel inset so mipmaps/filtering do not pull in the neighbour's pixels
+    const u0 = (r.x + 0.5) / SIZE, u1 = (r.x + pw - 0.5) / SIZE, v0 = 1 - (r.y + ph - 0.5) / SIZE, v1 = 1 - (r.y + 0.5) / SIZE;
+    const out = { page: r.page, uv: [u0, v0, u1, v1] };
+    cache.set(key, out); return out;
   }
   return { pages, draw, SIZE };
 }

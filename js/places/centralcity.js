@@ -707,7 +707,8 @@ export function build(K) {
         const a = B1POLY[i], b = B1POLY[(i + 1) % B1POLY.length], L = Math.hypot(b[0] - a[0], b[1] - a[1]);
         if (L < 0.05) continue;
         const ops = [];
-        for (const [q, w] of [[J4, 8.4], [J3P, 10.4]]) {
+        // the last two are the open fronts onto the 7호선 B1 concourse (station module opens its wall at the same points)
+        for (const [q, w] of [[J4, 8.4], [J3P, 10.4], [[-42.6, 177.2], 8.4], [[-61.3, 184.4], 8.4]]) {
           const at = atOn(a, b, q[0], q[1]); const ux = (b[0] - a[0]) / L, uz = (b[1] - a[1]) / L;
           const d = Math.abs((q[0] - a[0]) * uz - (q[1] - a[1]) * ux);
           if (d < 2.5 && at > -1 && at < L + 1) ops.push({ at, w, y0: YB1, y1: YB1 + 3.4 });

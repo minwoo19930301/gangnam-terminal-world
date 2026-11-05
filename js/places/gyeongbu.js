@@ -1476,7 +1476,8 @@ export function build(K) {
         break;
       }
       case 'kitchen': {
-        for (const v of [r.v0 + 6, r.v0 + 16, r.v0 + 26]) { if (v > r.v1 - 2) continue; rbox(6, v - 0.6, 70, v + 0.6, y, 0.9, { tex: 'metal', color: 0xc9ccd0 }); rbox(10, v - 0.7, 66, v + 0.7, top - 0.9, 0.5, { tex: 'metal', color: 0xb5b9be }, { solid: false }); }
+        // cooking lines stop at u=48: the S2 stair core (u 52-56) and the EL3 elevator door (u 61.5) stay clear
+        for (const v of [r.v0 + 6, r.v0 + 16, r.v0 + 26]) { if (v > r.v1 - 2) continue; rbox(6, v - 0.6, 48, v + 0.6, y, 0.9, { tex: 'metal', color: 0xc9ccd0 }); rbox(10, v - 0.7, 46, v + 0.7, top - 0.9, 0.5, { tex: 'metal', color: 0xb5b9be }, { solid: false }); }
         break;
       }
     }
