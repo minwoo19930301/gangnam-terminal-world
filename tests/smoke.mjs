@@ -15,7 +15,7 @@ const { PLACES } = await import('../js/places/index.js');
 const osm = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/osm.json'), 'utf8'));
 
 const args = process.argv.slice(2);
-const withCity = args.includes('--city'); const quiet = args.includes('--quiet');
+const withCity = args.includes('--city'); const quiet = args.includes('--quiet'); const dump = args.includes('--dump');
 let ids = args.filter(a => !a.startsWith('--')); if (!ids.length) ids = PLACES;
 const phys = createPhysics(); const scene = new THREE.Scene();
 const K = createKit(THREE, scene, { osm, phys });
@@ -86,6 +86,12 @@ K._.finalize();
 const meshes = scene.children.filter(o => o.isMesh || o.isInstancedMesh);
 const tris = meshes.reduce((a, m) => a + (m.geometry.index ? m.geometry.index.count / 3 : 0) * (m.isInstancedMesh ? m.count : 1), 0);
 if (!quiet) console.table(report);
+if (dump) {
+  const r = v => Math.round(v * 10) / 10;
+  console.log('SPAWNS', JSON.stringify(K._.spawns.map(s => ({ place: s.place, name: s.name, x: r(s.x), y: r(s.y ?? 0), z: r(s.z), yawDeg: Math.round((s.yaw || 0) * 180 / Math.PI) }))));
+  console.log('ZONES', JSON.stringify(K._.zonesList.map(z => { const bb = K.polyBBox(z.poly); return { place: z.place, name: z.name, floor: z.floor, sub: z.sub, y0: z.y0, y1: z.y1, center: [r((bb[0] + bb[2]) / 2), r((bb[1] + bb[3]) / 2)], size: [r(bb[2] - bb[0]), r(bb[3] - bb[1])] }; })));
+  console.log('ELEVATORS', JSON.stringify(K._.elevators.map(e => ({ place: e.place, name: e.name, x: r(e.x), z: r(e.z), floors: e.floors.map(f => f.label + '@' + f.y) }))));
+}
 console.log(`meshes ${meshes.length}, triangles ~${Math.round(tris / 1000)}k, sign atlas pages ${K._.atlas.pages.length}, walls ${phys.stats.walls}, surfaces ${phys.stats.surfaces}, zones ${phys.stats.zones}`);
 for (const w of warnings) console.log('WARN', w);
 for (const p of problems) console.log('FAIL', p);

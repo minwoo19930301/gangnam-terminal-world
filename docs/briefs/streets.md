@@ -1,0 +1,11 @@
+# streets — 중간 도로들 (신반포로·사평대로·반포대로·잠원로·고가·지하차도·보도육교)
+Engine: Codex. Claim the road ways you render in detail (city.js then skips them; every claimed way MUST be rendered by you): 신반포로 (131326713 218722041 218722042 218722043 218913526 218913527 523344143 525738546 562661077 799014371 799014372 828782197 828782198 831108561 831108562 831108563 831108564 1033191355 1252436243 1497710490 1497710491 1532298610 218722037 218722038), 사평대로 (97847428 218870945 309355890 473798788 480856742 498559927 498559932 523144216 523341064 691602197 921261337 921681811 1472739714 1499902350 1499902355), 반포대로 ground parts (not 37928409 / 674432572 which belong to hangang), 잠원로, 강남터미널고가도로 (480856735 480856736 1420100037 1420100038), 사평지하도로 (71105531 71105555 473798790 1499902351 1499902352 1499902353 1499902354), 센트럴씨티보도육교 (301889788). Use `osm.roads` to get geometry (pts, width, lanes, oneway, bridge, tunnel, layer).
+
+## Research questions (data/research/streets.json)
+- For each road: lane counts by direction, median type (guard rail/planted/중앙버스전용차로?), bus-only lanes (blue), sidewalk width/material, 가로수 species, typical street furniture, notable signage (도로명 표지 blue plates, green overhead guide signs and their destinations e.g. 반포대교·한강공원·강남역·서초IC·동작대교), crossing locations, 지하차도/고가 look.
+- Bus stops near the terminal (names + 5-digit IDs; OSM has many platforms with refs), taxi stands, 따릉이 대여소 (OSM bicycle_rental POIs), 센트럴씨티 보도육교 look.
+- Walking route 고속터미널 → 반포한강공원 (which streets, crossings, 나들목).
+
+## Modeling
+- Detailed road surfaces for all claimed ways: correct lanes, centre lines (double yellow), lane dashes, bus-lane paint, stop lines, turn arrows, crosswalk zebras at the OSM crossing ways/nodes, curbs (raised sidewalks 0.15 m with walkable surfaces) or flush where real, median guard rails/planters, 가로수 + 보호대, street lamps, traffic signals with heads facing traffic, pedestrian signals, overhead green guide signs with real destinations, blue 도로명 plates at intersections, bus shelters with real names/IDs and LED arrival boards, 따릉이 stations with bikes, taxi stand signs, 고가도로 deck/piers/sound walls, 지하차도 portals with ramps down (groundHole), the 보도육교 with stairs both ends.
+- Zones naming each road segment (e.g. "신반포로", sub "고속터미널 ↔ 반포쇼핑타운"). Spawns at key intersections and on the 보도육교.

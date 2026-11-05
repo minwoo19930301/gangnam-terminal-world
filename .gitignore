@@ -2,3 +2,4 @@ node_modules/
 shots/
 .DS_Store
 .codex-jobs/*.log
+.codex-jobs/*.done
