@@ -387,20 +387,27 @@
    "호남선 야드·승차홈 앞·데크 주변 진입로는 concrete 텍스처/#9a9890로 밝힘. 기존 asphalt 원본#3b3c3f에 tint#8d8d8f를 곱해 검게 되던 원인 제거. 중간회색 목표는 항공사진/리뷰 근거, 새 렌더 픽셀90..105 달성 여부는 샌드박스에서 미측정. 샘플 지점의 중복 OSM 영역/동일 높이 어두운 폴리곤은 확인되지 않음.",
    "최신2026년 실내 자료는 cc_hall/cc_famille, 북측 외관은2026-06 로드뷰, 야드는 항공사진, 최신 근접자료 없는 원형관/남측 외관은2009 사진 우선순위. 블로그 게시일은 촬영일을 보장하지 않음.",
    "파미에스테이션의1F 층 지정은 FP103 주소로 확인했으나 식당의 정확한 순서·방향·점포 경계·거리 좌표는 미확인. 남측 OSM 풋프린트와 기존 연결/계단/엘리베이터에 맞춘 배치이며 실제 전체 평면을 복원했다는 뜻은 아님.",
-   "파미에 거리 폭약5–8 m·천장5–6 m, 점포 전면폭4–7 m/간판0.7 m, 내부3–4 m·모던눌랑6 m 이상은 notes 사진 비례 추정. 2F y5/옥상 y9는 유지하면서 거리와 고천장 식당 위 개방부를 둔 형상도 실측 미확인.",
    "호호식당 낮은 진입단·목재 슬랫, Cha R 체크 타일/적색 부스, 일상정원 수로, Agra 아치 벽감, 모던눌랑 기차 객실형 좌석/펜던트 등은 개별 사진 근거. 정확한 가구 수·간격·수로 길이·식물 종·주방/후면 배치는 확인되지 않아 사진에 보이는 범위로 단순화.",
-   "B1 폭9 m·약4 m 금장 코퍼 천장, 크림 대리석/검은 띠와 짙은 대리석/목재 전면은 cc_famille22–23의 재료·비례를 기존 연결축에 적용한 것. 사진의 신세계 문 번호, 점포 정체·연속 배열·각 코퍼 길이/조명 밝기는 미확인. 이전 체크 바닥·뾰족 리브 볼트 해석은 이 구역에서 폐기.",
-   "메가박스24는 입구 사진으로 크림 아치·짙은 목재·청록 MEGABOX·파란 포스터 일부만 확인. 게시물에 다른 지점도 함께 등장하며2025 개편 전 사진일 가능성은 notes에 남아 있음. 최신 로비/매점/매표/상영관 평면과8관 여부를 확정하지 않고 입구 뒤는 평범하게 처리.",
    "승차홈 전체 번호 순서·간격·매표소 구간과 번호별 노선 배정은 미확인. 최신 사진으로1/11/13의 문틀·시계·LED 형식을 확인했고 실제 출발시간·가격·미확인 광고는 만들지 않음.",
    "호남선 홀 기둥/흰 강관 트러스의 위치와 접합·천장 높이/회색 패널 반복·흑백 다이아몬드 간격·벤치/화분 수는 사진비례 근사. 유리 난간2F 발코니·초록/빨강 네온·작은 실명 점포는 cc_hall02–06 근거이며 정확한 인접 순서는 미확인.",
    "매표소 목재 파시아/카운터·파란 LED 보드·검은 대기줄·점자블록은 cc_hall08/16 근거. 창구 수·기기 수·약15 m 길이·정확한 위치는 미확인. LED는 판독 가능한 한국어 안내와 노선명 위주로 처리하며 실시간 운행표가 아님.",
-   "하차장 안내판/벽돌 아치 복도/노란 점자블록은 cc_hall17–21에 근거. 하차장과 복도의 정확한 방향·폭·계단 연계 및 곡면 벽 반경은 미확인. 공통 J3/J4/J6/J7 좌표와 레벨이 우선.",
    "기존2F 식당가의2016/2018 입점 목록은 현재 점포 위치 확인 자료가 아님. cc_famille26 모던샤브하우스는 정확한 층 불명으로 새로운 특정 층 배정 근거로 사용하지 않음. OSM 점포 POI도 실제 층/실내 경계로 해석하지 않음.",
    "인물·가구·식물의 수·위치, 네온/백라이트 밝기, 대리석 반사/목재 색은 사진과 정적 키트의 표현 범위에서 단순화. 새 렌더 비교는 운영자에게 남아 있으며 실내 시각 일치를 검증했다고 주장하지 않음.",
-   "Round5 배치/높이 상세는 modeling.round5.modeled_layout에 기록. 1F 거리s181.2..188.8/t-85..15·천장6.2 m, 남측2F 갤러리s188.8..192·연결부t-26..-16, 호호식당0.45 m 진입단, B1폭9 m/높이4.15 m, 메가박스s177.4/t-28/폭10 m는 사진 비례와 기존 동선을 조정한 모델 값이며 실측이 아님. 점포 폭이 notes의 대표4–7 m보다 넓은 일부 구간은 내부 좌석/전면을 담는 단순화된 공간 배정으로 실제 임대 경계를 뜻하지 않음.",
-   "게이트 순서는 기존12개 베이를1..8,10..13으로 표기하고9번 자리는 기존 매표소 변환 가정을 유지. 사진만으로 전체번호·간격은 확정할 수 없음. 시계 바늘은 정적인 예시이며 실제 시각/운행안내를 나타내지 않음. 창업의 시간/신용보증기금 광고 문구는 cc_hall13/14/16에서 읽히는 범위만 사용."
+   "Round6: 홀 평천장 구간은 사진21/02/07을 따라 s3..38, y5.2로 근사. 사진13의1번 게이트는 트러스가 보여 북단 s<3은 곡선 아치를 유지. 북측2–4번 LED는5.2m 천장 아래로 축소하고 나머지는8.8×3.3m 헤드로 구현하며 실제 구간 경계/치수는 미확인.",
+   "E2 에스컬레이터는 매표소 앞 사진08/16의 열린 바닥을 위해 s85..95.5에서 s50..60.5, t17.4로 이동. B1 연결 레벨은 유지하며 실제 현장 위치가 이 좌표라고 확인된 것은 아님. s56 식재 섬은 에스컬레이터 구멍과 겹쳐 생략.",
+   "게이트 순서는 기존12개 베이1..8,10..13 및9번 자리의 매표소 가정을 유지. 각 게이트 광고/시계/전광표는 정지 예시이며 실제 운행정보가 아님. 창업의 시작·신용보증기금,11번 Trip.com/인스파이어 문구는 제공 사진/리뷰 근거. 전체 게이트 순서와 실시간 광고는 미확인.",
+   "공탕/버스도착안내/點點心의2층 높이 전면은 s76..86,t23..28 중층 구멍과 t27.8 전면으로 근사. 사진03의 가시성과 상대적 층위를 우선했으며 점포 실측 위치/유리창 치수는 미확인.",
+   "파미에 거리는 폭7.6m, 천장8.55m의2층 높이로 수정; 2F 북측전면178.8과 난간181.2 사이2.4m 갤러리 유지. 기존 거리높이6.2m 해석은 폐기. 실측 높이/임대경계/보행교 길이는 미확인.",
+   "모던눌랑은2F/옥상 구멍 s192..201.35,t-63.85..-52.15 및 유리지붕9.3m로 수정. 사진15의 입구가 실외일 가능성이 있고 정확한 배치 미확인. 동일 공간을 OSM 풋프린트/층수 안에 수용한 모델상 선택; 겹치는 옥상 주차선·차량·설비만 제거.",
+   "파미에 빈 전면은 이름 없는 크림/벽돌 벽과 유리 상단으로 연결. 검증되지 않은 점포 이름은 추가하지 않음. 호호·차알·붓다스벨리·일상정원·Agra·LEJARDIN 가구/장식 수와 각 출입문 위치는 사진에 맞춘 비례 근사.",
+   "하차장 복도는 cc_hall20의 평면 벽돌벽/긴 발광 천장판/회색 타일/이중 점자선으로 변경. cc_hall11/17은 파미에1F 거리로 재분류하여 하차장 벽돌 아치를 제거. 복도 정확한 위치/폭·출입구 대응은 미측정.",
+   "하차장 안내판은 cc_hall19의 INFORMATION/긴급번호/SHINSEGAE CENTRAL을 재현. 작은 평면도는 회색 도형 요약으로서 실제 위치안내 지도로 해석하면 안 됨.",
+   "신세계 Gate8은 사용자 리뷰에 따라 기존 J4 B1 좌표에 배치; 사진 촬영 위치/문 번호의 실제 대응은 미측량. 세 개의1.8m 상시 개구부는 연결 보행을 위한 모델 표현.",
+   "B1 메가박스 복도10m 간격 무명 유리 진열창과 로비의 호박색 원형등/파란 발권기/101–105 상영관 표기는 사진24 및 리뷰에 근거한 단순화. 전체 로비 평면/기기 수/현재 운영 상태는 미확인; 상영관 내부는 만들지 않음.",
+   "Round6 수정 모델의 렌더 비교는 운영자 확인 대기. 사용자 지시에 따라 tests/shot.mjs를 실행하지 않았으며 시각적 일치가 확인됐다고 주장하지 않음.",
+   "cc_hall11/17의 시계·배너를 파미에 거리에 재분류하여 배치했으나 투영 시계의 위치/간격과 배너가 걸리는 구간은 미확인. 2F 보행교3곳(-87/-21/17)은1F 전면을 유지하면서 위층에 통로 개구부를 확보한 모델상 연결이다."
   ],
-  "megabox": "B1 메가박스 입구는 cc_famille24의 짙은 목재 포털·크림 석재 아치·청록 MEGABOX와 파란 포스터 일부를 재현. 미확인8관/리클라이너/단차/매점·매표소 평면은 제거; 안쪽은 평범하게 남김.",
+  "megabox": "B1 메가박스24: 짙은 목재/크림 포털·청록 MEGABOX·평판 장식·유리 진열창·호박색 원형등·파란 발권기. 깊은 로비/상영관 평면은 미확인으로 단순화.",
   "reference_implementation": {
    "gate_plaza": "cc_01/01: 불투명 원판+크림C+금색중심, 0.75 민트 입체랜턴·경사지붕10.2..10.6 m, 전폭 검은 파시아/후퇴한 어두운 문, 스팬드럴. cc_01: 전방8 m 간격 구체(중앙 청동)·확장 화강석·검은난간·U자 거치대·볼라드·남색 안내판.",
    "hall": "Round5 cc_hall01–21: 흰 강관 트러스/회색 패널, 대리석 기둥, 흑백 다이아몬드/띠 바닥, 붉은 아치 게이트의 번호 LED/시계, 우드톤 TICKETS 카운터, 벤치/큰 화분·작은 점포,2F 유리 난간.",
@@ -419,10 +426,16 @@
    "famille_1f": "Round5 cc_famille01–21: 1F 남측 실내 거리, 점포별 크림 아치/벽돌/흰 벽돌/검은 철제 유리 전면과 실제 사진에 나온 내부 재료·가구. 연회색 타일과 높은 밝은 채광 천장. 실제 점포 순서/좌표는 추정."
   },
   "validation": {
-   "status": "Round5 required combined smoke and full-world walk passed; operator render review pending",
+   "status": "Passed required smoke and full-world walk; updated visual renders pending operator review",
    "smoke_command": "node tests/smoke.mjs centralcity shinsegae jwmarriott station gotomall",
+   "smoke_result": "OK",
    "walk_command": "node tests/walk.mjs",
+   "walk_result": "331 ok, 0 blocked",
    "budget_quads": 140000,
+   "centralcity_quads": 107857,
+   "spawns": 12,
+   "zones": 33,
+   "elevators": 5,
    "preserved_connections": [
     "J3",
     "J4 1F/B1",
@@ -430,47 +443,30 @@
     "J7"
    ],
    "wells": "No WELLS entry names centralcity.",
-   "visual_review": "Provided individual photos inspected; tests/shot.mjs not run per user sandbox restriction. Operator render comparison pending.",
-   "centralcity_smoke_command": "node tests/smoke.mjs centralcity",
-   "centralcity_smoke_result": "OK",
-   "centralcity_quads": 72931,
-   "spawns": 12,
-   "zones": 33,
-   "elevators": 5,
-   "floors": [
-    "B1",
-    "1F",
-    "2F",
-    "R"
-   ],
-   "metrics_note": "부모가 전달한 통합 전 수치. 최종 홀 수정/연결검사 후 변경 가능.",
-   "centralcity_walk_command": "node tests/walk.mjs centralcity --no-city",
-   "centralcity_walk_result": "29 ok, 0 blocked",
    "additional_routes": {
-    "method": "Existing walk BFS evaluated in memory; no test files edited",
-    "result": "All checked routes passed",
-    "passed": [
-     "J3",
-     "J4 1F/B1",
-     "J6",
-     "J7",
+    "method": "Existing walk BFS evaluated in memory; no test file created or edited",
+    "result": "20 ok,0 blocked",
+    "coverage": [
      "1F street end-to-end",
-     "All seven restaurant entrances",
-     "B1 hall to relocated Megabox entrance and vestibule",
-     "2F gallery to both stair cores and elevator",
-     "E1/E2/E4/E5 escalator ascents"
+     "all7 restaurant entries",
+     "both2F galleries end-to-end",
+     "all3 north/south bridge crossings",
+     "main hall aisle",
+     "ticket approach",
+     "gate11 approach",
+     "E2 relocated",
+     "E3/E4/E5"
     ],
-    "headroom": "E1/E2/E4/E5 sampled; no ceiling intersections. Modern glasshouse trusses moved inside floor void."
+    "bridge_geometry_samples": "All3 bridge crossings: floor5,0 blocked,headroom>=1.75m",
+    "ceiling_samples": "Modern interior ceiling9.3,roof glazing support9.31,north lobby slot ceiling8.6; no old modern2F slab"
    },
-   "smoke_result": "OK",
-   "walk_result": "walk: 330 ok, 0 blocked",
-   "concurrent_edit_note": "중간 검사에서 jwmarriott ATRIUM 미정의 및 gotomall/J1 경로 실패가 있었으나 다른 모듈 편집 완료 후 요청된 동일 명령을 재실행하여 smoke OK, 전체 walk330 ok/0 blocked 확인. 타 모듈/엔진/테스트는 수정하지 않음.",
-   "geometry_scope": "Only js/places/centralcity.js and data/research/centralcity.json edited. Claims and exterior envelope/roof/parking/round pavilion geometry preserved. 12 spawns; all five elevators and floor lists retained; J3/J4(1F,B1)/J6/J7 and all floors preserved.",
    "final_checks": [
-    "node --check js/places/centralcity.js: passed",
-    "Research JSON parse: passed",
-    "git diff --check on both owned files: passed"
-   ]
+    "node --check js/places/centralcity.js passed",
+    "owned-file git diff --check passed",
+    "research JSON parsed"
+   ],
+   "visual_review": "Inspected supplied contact sheets and selected individual reference photos. Per user instruction tests/shot.mjs was not run. No claim of updated-render visual verification.",
+   "concurrent_edit_note": "Early combined checks encountered station duplicate mallHere declaration and gotomall unknown material during other jobs. Those errors cleared on later required smoke/full-world walk runs without editing those modules."
   },
   "round2_issues": {
    "1–2": "사진01: 독립13m 파일런·6.6m 순폭·6m 날개/열린 상부·반원통 지붕·4.9x2.7 간판·금속 필라스터·4짝 유리문·확대 눈 조형.",
@@ -1143,7 +1139,7 @@
      "note": "벽돌/아치/노란 점자블록. 폭과 위치는 기존 동선에 맞춘 추정."
     }
    },
-   "implementation_status": "완료: 최신 실내 사진 기반 재구성, 연결/추가 보행/에스컬레이터 머리 위 여유 검사 완료. 전체 smoke OK/walk330 ok,0 blocked. 운영자 렌더 비교는 미수행.",
+   "implementation_status": "Historical round5 implementation; superseded by round6 interior review corrections.",
    "operator_views": [
     {
      "name": "hall",
@@ -1192,6 +1188,294 @@
     }
    ],
    "operator_views_note": "모델 로컬 프레임에서 계산한 운영자 렌더 확인용 시점. tests/shot.mjs는 실행하지 않았음."
+  },
+  "round6": {
+   "scope": "Interior review fixes only; exterior preserved except requested north lobby closure and modern glasshouse roof opening/overlapping parking details.",
+   "reference_corrections": [
+    {
+     "notes_file": "10_long_corridor_clocks.jpg",
+     "actual_file": "refs/interior/cc_hall/11_long_corridor_clocks.jpg",
+     "area": "cc_famille"
+    },
+    {
+     "notes_file": "11_column_curved_wall_sign.jpg",
+     "actual_file": "refs/interior/cc_hall/12_column_curved_wall_sign.jpg",
+     "area": "cc_hall"
+    },
+    {
+     "notes_file": "12_gate1_red_arch.jpg",
+     "actual_file": "refs/interior/cc_hall/13_gate1_red_arch.jpg",
+     "area": "cc_hall"
+    },
+    {
+     "notes_file": "13_gate11_red_arch_hall.jpg",
+     "actual_file": "refs/interior/cc_hall/14_gate11_red_arch_hall.jpg",
+     "area": "cc_hall"
+    },
+    {
+     "notes_file": "14_long_hall_benches_planters.jpg",
+     "actual_file": "refs/interior/cc_hall/15_long_hall_benches_planters.jpg",
+     "area": "cc_hall"
+    },
+    {
+     "notes_file": "15_ticket_counter_wide.jpg",
+     "actual_file": "refs/interior/cc_hall/16_ticket_counter_wide.jpg",
+     "area": "cc_hall"
+    },
+    {
+     "notes_file": "16_brick_corridor_shops.jpg",
+     "actual_file": "refs/interior/cc_hall/17_brick_corridor_shops.jpg",
+     "area": "cc_famille"
+    },
+    {
+     "notes_file": "17_platform_sign_escalator.jpg",
+     "actual_file": "refs/interior/cc_hall/18_platform_sign_escalator.jpg",
+     "area": "cc_hall"
+    },
+    {
+     "notes_file": "18_dropoff_info_board.jpg",
+     "actual_file": "refs/interior/cc_hall/19_dropoff_info_board.jpg",
+     "area": "cc_hall"
+    },
+    {
+     "notes_file": "19_brick_corridor_lower.jpg",
+     "actual_file": "refs/interior/cc_hall/20_brick_corridor_lower.jpg",
+     "area": "cc_hall"
+    },
+    {
+     "notes_file": "20_lobby_hall_wide.jpg",
+     "actual_file": "refs/interior/cc_hall/21_lobby_hall_wide.jpg",
+     "area": "cc_hall"
+    }
+   ],
+   "reference_correction_note": "refs/interior/*/notes.json is outside the two-file edit scope. Correct indices and cc_famille reclassification are stored here instead of editing those files.",
+   "trace_sources": {
+    "hall_gate_platform": [
+     "cc_hall/01",
+     "cc_hall/05",
+     "cc_hall/13",
+     "cc_hall/14",
+     "cc_hall/15",
+     "cc_hall/21"
+    ],
+    "hall_soffit_signs_gongtang": [
+     "cc_hall/02",
+     "cc_hall/03",
+     "cc_hall/04",
+     "cc_hall/07",
+     "cc_hall/12"
+    ],
+    "hall_ticket_floor_seating": [
+     "cc_hall/05",
+     "cc_hall/06",
+     "cc_hall/08",
+     "cc_hall/09",
+     "cc_hall/15",
+     "cc_hall/16"
+    ],
+    "arrival_passage": [
+     "cc_hall/19",
+     "cc_hall/20"
+    ],
+    "famille_street": [
+     "cc_famille/01",
+     "cc_famille/05",
+     "cc_famille/06",
+     "cc_famille/09",
+     "cc_famille/11",
+     "cc_hall/11",
+     "cc_hall/17"
+    ],
+    "hoho": [
+     "cc_famille/01",
+     "cc_famille/02",
+     "cc_famille/03",
+     "cc_famille/04"
+    ],
+    "cha_r": [
+     "cc_famille/05",
+     "cc_famille/07",
+     "cc_famille/08"
+    ],
+    "buddhas_belly": [
+     "cc_famille/09",
+     "cc_famille/10",
+     "cc_famille/11"
+    ],
+    "garden": [
+     "cc_famille/12",
+     "cc_famille/13",
+     "cc_famille/14"
+    ],
+    "modern_nulang": [
+     "cc_famille/15",
+     "cc_famille/16",
+     "cc_famille/17"
+    ],
+    "agra": [
+     "cc_famille/18",
+     "cc_famille/19"
+    ],
+    "lejardin": [
+     "cc_famille/20",
+     "cc_famille/21"
+    ],
+    "b1_link_shinsegae_megabox": [
+     "cc_famille/22",
+     "cc_famille/23",
+     "cc_famille/24"
+    ]
+   },
+   "validation": {
+    "status": "Passed required smoke and full-world walk; updated visual renders pending operator review",
+    "smoke_command": "node tests/smoke.mjs centralcity shinsegae jwmarriott station gotomall",
+    "smoke_result": "OK",
+    "walk_command": "node tests/walk.mjs",
+    "walk_result": "331 ok, 0 blocked",
+    "budget_quads": 140000,
+    "centralcity_quads": 107857,
+    "spawns": 12,
+    "zones": 33,
+    "elevators": 5,
+    "preserved_connections": [
+     "J3",
+     "J4 1F/B1",
+     "J6",
+     "J7"
+    ],
+    "wells": "No WELLS entry names centralcity.",
+    "additional_routes": {
+     "method": "Existing walk BFS evaluated in memory; no test file created or edited",
+     "result": "20 ok,0 blocked",
+     "coverage": [
+      "1F street end-to-end",
+      "all7 restaurant entries",
+      "both2F galleries end-to-end",
+      "all3 north/south bridge crossings",
+      "main hall aisle",
+      "ticket approach",
+      "gate11 approach",
+      "E2 relocated",
+      "E3/E4/E5"
+     ],
+     "bridge_geometry_samples": "All3 bridge crossings: floor5,0 blocked,headroom>=1.75m",
+     "ceiling_samples": "Modern interior ceiling9.3,roof glazing support9.31,north lobby slot ceiling8.6; no old modern2F slab"
+    },
+    "final_checks": [
+     "node --check js/places/centralcity.js passed",
+     "owned-file git diff --check passed",
+     "research JSON parsed"
+    ],
+    "visual_review": "Inspected supplied contact sheets and selected individual reference photos. Per user instruction tests/shot.mjs was not run. No claim of updated-render visual verification.",
+    "concurrent_edit_note": "Early combined checks encountered station duplicate mallHere declaration and gotomall unknown material during other jobs. Those errors cleared on later required smoke/full-world walk runs without editing those modules."
+   },
+   "implemented": {
+    "cc_hall": [
+     "north roof slot and upper wall closed",
+     "charcoal shop-band soffit and downlights",
+     "curved white lattice ribs, single column row and dark capitals",
+     "low northern slat lobby, wall sconces and chevron floor",
+     "E2 moved away from ticket frontage",
+     "double-height gongtang/departure/Dimdimsum stack",
+     "5.2m platform canopy, granite piers and hanging blue bay numbers",
+     "red kiosks fill gate gaps, opaque transom",
+     "long planted stone seating islands and hanging bell lamps",
+     "deep mezzanine fascia, vents, subway signs and red/green wash",
+     "enlarged varied LED heads with corrected Korean copy",
+     "hall zone extended to t28",
+     "broad floor bands and ticket diamond/corner inlays",
+     "open ticket counters, cream arch portals, clocks, paired boards, landscape display and kiosks",
+     "emart24/Lotto plus small flower buckets and dark-green Snowfox fascia",
+     "slim column-mounted directory signs",
+     "flat brick arrival passage and pillar-mounted information poster"
+    ],
+    "cc_famille": [
+     "two-storey street ceiling at8.55m",
+     "continuous unnamed facade infill with upper windows/cornices",
+     "plaster/black soffits and warm floor, grey tile only by ChaR",
+     "arrival brick geometry removed from restaurant interiors",
+     "north2F fronts set back to178.8 with clear gallery and no floating menu boards",
+     "three2F bridge crossings kept open through infill",
+     "modern roof-level void at9.3m, white frame/ducts/pendants and solid2F enclosure",
+     "modern brick entry, low arch and timber/glass doors",
+     "hoho oak slats/lights, rounded yellow logo and larger fascia",
+     "ChaR steel/glass front, mustard/green partitions, red booths and white ceiling",
+     "garden peach wall, narrow doors/TV and rear plants/lattice",
+     "Agra white glass/arched entrance and cream interior",
+     "Famille brick corner and English pink neon/plaque",
+     "Buddha navy fascia/blue glow and timber/dark interior",
+     "Megabox glass bays, flat panels, amber discs, blue kiosks and auditorium header",
+     "J4 B1 Gate8 open glass doors, dark ceiling and grey threshold",
+     "warm beige street and varied menus",
+     "LeJardin larger sign/fluted column/lit seasonal trees and stocked coolers"
+    ]
+   },
+   "geometry_scope": {
+    "edited": [
+     "js/places/centralcity.js",
+     "data/research/centralcity.json"
+    ],
+    "preserved": [
+     "OSM claims and footprint",
+     "floor levels B1/1F/2F/R",
+     "12 spawns",
+     "all5 elevators and floor lists",
+     "J3/J4(1F,B1)/J6/J7",
+     "exterior shell, parking structures, round pavilion"
+    ],
+    "necessary_exterior_exceptions": [
+     "north lobby upper-wall/ceiling slot closure",
+     "modern skylight roof opening with walkable glazed cap; overlapping road paint/parking vehicles/HVAC removed"
+    ],
+    "engine_or_test_edits": false,
+    "commits_or_pushes": false
+   },
+   "modeled_layout": {
+    "street_ceiling_y": 8.55,
+    "modern_glasshouse_roof_y": 9.3,
+    "modern_roof_walk_surface_y": 9.31,
+    "north2f_front_s": 178.8,
+    "north2f_gallery_s": [
+     178.8,
+     181.2
+    ],
+    "middle_bridge_t": [
+     -26,
+     -16
+    ],
+    "north_lobby_flat_s": [
+     3,
+     38
+    ],
+    "north_lobby_ceiling_y": 5.2,
+    "platform_ceiling_y": 5.2,
+    "E2": {
+     "s": [
+      50,
+      60.5
+     ],
+     "t": [
+      17.4,
+      18.9
+     ],
+     "levels": [
+      -6,
+      0
+     ]
+    },
+    "gongtang_double_height_recess": {
+     "s": [
+      76,
+      86
+     ],
+     "t": [
+      23,
+      28
+     ]
+    },
+    "arrival_passage_wall_s": 171.6,
+    "note": "Photo/reviewer-based model dimensions, not surveyed geometry."
+   }
   }
  },
  "source_hierarchy": {

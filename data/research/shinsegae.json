@@ -375,16 +375,16 @@
       "glass bay": "7~20 및 24~40.6; y20~24는 검은 후퇴 띠",
       "slot parapet": 48
     },
-    "circulation": "기존 중앙 아트리움(u27.6~39.4,v35~47), B1~11F 에스컬레이터, 남쪽 엘리베이터 3대(B2~11F와 1M 전체 층 목록), 북동·남서 계단, 1F~1M 계단을 유지한다. 실측 위치가 아닌 접근성용 배치 가정이다. Round5에 별도 하우스 오브 신세계 B1→1F 보이드/에스컬레이터를 추가한다. 식품관/스위트파크→폭4m 리브 복도→목재 게이트→라운지/바→1F 와인 구역의 관계는 notes.layout을 따른다. 실제 방위와 OSM 내 좌표는 도면 미확인 근사다.",
+    "circulation": "중앙 ATR(u27.6~39.4,v35~47), B1~11F 에스컬레이터, 엘리베이터3대×14개 층(B2~11F 및1M), 양쪽 계단, 1F~1M 계단을 유지한다. HOS 별도 B1→1F 에스컬레이터와 보이드에 1M 슬래브 구멍을 추가하고 기존 퍼퓸 집기를 동측 실바닥으로 옮긴다. 식품관/스위트파크→v51 게이트→흰 리브 복도→B1 라운지/바→1F 와인 구역을 연결한다. 실측 방위·좌표는 미확인이다.",
     "connections": "J1 소유 통로의 8m 중앙 동선과 바닥/천장을 유지하고 양옆에 중립적 상품군 쇼윈도를 둔다. 서북쪽 첫 점포 자리는 역 모듈 환승 엘리베이터(-76,-82)의 B1 출입을 위해 비워 둔다. J4 1F/B1 센트럴시티 개구, J5 1F JW 개구 유지. 이 모듈을 지칭하는 WELLS는 없다.",
     "osm_pois_placed": "Johnny Rockets(B1 북측), 스타벅스 센트럴시티점(1F 서측). Round5 사진 추적 구역에서는 과거 도쿄밀크치즈팩토리/바위파스타바 추정 배치를 제거하고 사진으로 확인한 Standard Bread·한정선·SEASONIQUE 및 푸드홀 바를 구현한다. OSM 건물 claim159117108은 유지한다.",
     "brand_placement_note": "기사·기존 POI 조사에서 근거를 찾은 실내 브랜드의 허용 목록을 유지하고 나머지는 한국어 상품군/시설 표기를 쓴다. 출처가 있는 브랜드도 현재 입점·위치·상품 구성은 확정되지 않았으며 매장 배치는 추정이다. 외부는 ssg_06/cc_01의 SHINSEGAE·PIAGET·CHANEL과 ssg_02/manifest의 POLO CLUB·SHINSEGAE 표기만 근거로 삼는다. 광고 인물·상품은 단순화이며 실제 캠페인의 정밀 복제로 주장하지 않는다. 판독되지 않는 측면 배너 문구는 추가하지 않는다. Round5 사진으로 Standard Bread(13),한정선(11/12/14),SEASONIQUE(15),Blue Butterfly(19),Superstar(07),KATSU & TAPAS(09),HOUSE OF SHINSEGAE(02/04)의 실제 표기와 집기 형식을 추가 확인했다. 정확 좌표·점포 순서·상품 품목은 사진으로 확인되지 않는다.",
     "massing": "OSM 159117108 외곽선과 v33 본관/신관 분할, 본관 8F 옥상 40.6m와 신관 11F 옥상 55m를 유지한다. 북측 양끝 타워는 각각 18.5×18.5m 정사각 평면으로 좁히고 서측 상단 55m, 동측 상단 57.4m로 높였다. 타워 사이 낮은 석재 어깨는 y40.6m다. 중앙 곡면 유리는 폭 12m, 반경 6m, 중심 v8, 최전면 v2로 석재 전면보다 후퇴하며 y7~20m와 y24~40.6m로 나뉜다. 그 뒤 u18.5~48.5/v8~33에는 y40.6~48m 평면 커튼월 볼륨, 더 뒤 v33에는 y40.6~55.65m 신관 북면 커튼월이 놓인다. 전체 층고와 타워 상단 높이는 사진 비례를 모델 층고에 맞춘 가정이며 실측값이 아니다.",
     "map_detail": "모든 층·주차장·화장실·승강기·에스컬레이터·연결통로 존과 OSM159117108 claim 유지. 정문 승하차장/동측 지상주차장/추정 B2 차량 램프 존을 추가한다. 존 경계는 모델 배치다.",
-    "reference_priority": "Round5 실내는 refs/interior/ssg_food/01~21 및 notes.json을 최우선한다. 게시일은2026-10-27~11-06이나16~18 홍보사진과20~21 모델사진의 촬영일은 미확인이다.22~23은 한시적 홀리데이 마켓이라 상설 모델에서 생략한다. 외관은 Round4의2026-06 ssg_05/06·cc_01,2025-06 ssg_01~04를 유지하되 북측 두 타워 석재색만 사용자 최신 비교에 따라 정정한다. 구 사진은 새 사진에 없는 부분만 보조하며 미측량 좌표·치수는 guesses에 남긴다.",
+    "reference_priority": "Round6 실내는 refs/interior/ssg_food/01~21·notes.json과 사용자 리뷰를 최우선한다. 사진01/02의 두 발코니를 따라 1M 보이드를 열며 notes의 약8~9m 높이와의 충돌은 guesses에 명시한다.16~18 홍보사진·20~21 모델사진의 실제 촬영일은 미확인이다.22~23 계절 팝업은 생략한다. Round5 외관은 변경하지 않는다.",
     "entrance": "2025 ssg_01/02: 북측 검은 철골·유리 격자 캐노피 폭25.4m, 외부 돌출6.8m부터 v5 후퇴 문까지 이어지는 총깊이11.8m는 유지하며 높이를 약5.9m로 올린다. 원형 검정 기둥2개·검은 격자 트랜섬·유리 출입부 폭약12m/상단약5.7m. 문 상부 띠 y2.9m와 추가 가로 멀리언 y4.55m를 둔다. 문 양옆 쇼윈도는 무발광 #1c1a19 배경에 단일 작은 시계/보석 전시와 국소 발광부, 약25도 경사진 #a8202c 천 차양과 작은 흰 SHINSEGAE를 둔다. 정문 앞 v-7.4~0/슬롯v0~5는 #4a4744 차콜 판석·#3a3836 줄눈. 차로v-14.6~-7.6, 바깥 광장v-22~-14.6의 밝은 포장·경계석·흰선·콘은 유지한다. 서측 탑 북면에는 cc_01의 쇼윈도4칸·낮은 화단/산울타리·2층 사각창을 반영한다. 입구 옆 서측 큰 쇼윈도는 새4칸과 겹치지 않도록 u19.8/폭5.2m로 조정하고 동측은 u48.2/폭6.5m를 유지한다. POLO CLUB은 이 두 전시창 안에만 둔다. 동측은 v18.5/21.5의 폭2.5m 차양2개(0.5m 간격), 위끝y3.0m로 낮춘다.",
     "surface_parking": "2025 ssg_03/04와 항공사진: A열u70.7~75.7/B열u85.6~90.6, 주차장v-12~55와 두 열 사이 열린 OSM301889794 통로를 유지한다. B열 i4~7에 파란 장애인 주차면4개를 두고 i5에만 차량을 놓아3면의 도색을 드러낸다. 이4면의 펜스 쪽 u90.1에 황흑 바퀴멈춤을 둔다. 북단 u약71~75/v-11에 정산기2개와 노란 차단기 받침·흰 바를 추가하며 공용차로를 막지 않는다. 외곽 녹색 펜스/관목·동측 출입 틈·등주를 유지한다. 동측 퍼골라를 v8~30으로 옮기고 그 북쪽 u69.2/v1·3.5·6에 소나무를 보강한다. 전체 소나무는 v-20/-16/-5/1/3.5/6이며 기존v0은 가까운 수관 중복을 피하려고 교체한다. 주차 구획/차량/설비의 정확 수량·좌표는 실측값이 아니다.",
-    "interior_simplification": "B1은 사진별 마감을 구분한다: 하우스 오브 신세계의 허니오렌지 목재·업라이트·라운지/러그·2개층 보이드,4m 복도의 흰 스텝 리브·점상 인레이 다크 마블 파케, 스위트파크/인접 식품관의 크림 리브 볼트·코브등·검정 링 구형 샹들리에·흑백 체커 대리석·팔각 유리 쇼케이스, Blue Butterfly의 목재/황동 카운터·검정 캐노피.1F는 사진20~21의 베이지 대리석·원형 기둥·회색 사인벽·밝은 핸드백 진열벽을 반영한다. 미확인 신선식품 핵심 라인·화장품/에르메스 내부는 구체 장식을 만들지 않고 단순화한다. 다른 층과J1/B2는 유지한다. 상품·반사·곡면·벨벳·러그는 정적 저폴리/텍스처 근사다.",
+    "interior_simplification": "사진01~10을 따라 HOS B1 전체 허니벽·두 발코니 보이드·회색 헤링본 라운지·다크 마블 측면통로·흰 스텝 아치·낮은 부채꼴 리브·개별 바/U자 다이닝/오픈키친을 표현한다. 사진11~18은 크림 리브 볼트·코브·구형 샹들리에·체크 대리석·2단 팔각 쇼케이스와 직원, 사진19는 Blue Butterfly 뒤 주방/메뉴·로제트 캐노피, 사진20~21은 1F 천장까지 닿는 회색 석재 모서리벽과4단 흰 조명니치로 근사한다. 실측하지 않은 평면·좌석·상품수·재료무늬·폰트·출력색은 guesses를 따른다.",
     "guesses": [
       {
         "element": "본관/신관분할·높이",
@@ -447,53 +447,76 @@
         "detail": "프로젝트 brief와 Round2 요청에 따라 J1 측면에 중립적 상품군 쇼윈도7개를 둔다. 실제 종류·순서·치수는 미확인이다. 8m 중앙 동선과 역 환승 엘리베이터 접근을 유지한다. 1M 스폰은v61→64로3m 물리고 표지 폭을5m로 축소했다. 제안11F(-62,2)는 보이드 내부여서 local(26,49.5) 접근부를 선택했다. 지도 존은 실측 경계가 아니다."
       },
       {
-        "element": "Round5 B1 공간배치·보이드",
-        "detail": "사진은 식품관/스위트파크→복도→목재 게이트→푸드홀 라운지와B1↔1F 보이드의 연결 관계만 입증한다. 스위트파크 local u8.5~26.8/v32~51, 인접 식품관 볼트 u42~59/v12~45, 하우스 오브 신세계 u6.4~26.8/v59~84.4는 기존 동선·J1/J4/J5·코어를 보존하기 위한 근사다.1F 구멍 u8.6~23.5/v60~74.5, 에스컬레이터 u21.15/22.7,v60.8~74.7는 실측이 아니다. B1 -6m부터1M 밑면3.2m까지9.2m 보이드는 사진의약8~9m를 기존 층고에 맞춘 값이며1M 영업층을 보존한다."
+        "element": "Round6 B1 공간배치·두 발코니 보이드",
+        "detail": "홀 위치·방위·실측 평면은 미확인이다. 기존 OSM 외곽과 J1/J4/J5·계단·엘리베이터 접근을 보존하며 스위트파크 u8.5~26.8/v31.7~51, 델리 u41.5~60/v10.5~47.5, HOS u6.4~26.8/v59~84.45로 근사한다. 사진01/02의1F·1M 두 발코니를 우선해 HOS_VOID(u8.6~23.5/v60~74.5)를1M까지 열고2F 밑면y6.5에 닫는다. 기존층고 보존 때문에 B1부터12.5m이며 notes의약8~9m와 상충한다. 추가 영업층은 만들지 않는다. 1F 유리난간을 가리지 않도록 상부 허니 페시아는y1.10~3.6에 둔다. 에스컬레이터 위치u21.15/22.7,v60.8~74.7와 퍼퓸 집기 이전 좌표는 모델 가정이다."
       },
       {
-        "element": "Round5 스위트파크 치수·재료",
-        "detail": "사진11~18/notes.typical_dimensions에 따라 체커 한칸0.65m, 크림 볼트 정점4.85m/스프링3.5m, 검정 링 샹들리에 지름약1.2m, 쇼케이스 높이1.1m를 선택했다. 전부 사진 추정 범위이며 실측이 아니다. 볼트 베이 수·리브 곡률·조명 강도·팔각 진열대 수·대기줄 길이·아치 점포 순서는 근사다.16~18은 홍보사진으로 실제 촬영 시점과 현재 배치 동일 여부가 미확인이다."
+        "element": "Round6 스위트파크·델리 치수·배치",
+        "detail": "사진11~18에 따라 체크0.65m·크림 볼트정점4.85m/스프링3.5m·검정 링 구형 샹들리에·팔각 진열대를 유지한다. 3열 델리 볼트와 6×1.9m 아일랜드12대, 경계 아치 페시아, 빵·케이크 진열수와 흰모자 직원수는 리뷰에 따른 배치 근사다. 서쪽 베이커리의 실제 상호는 판독되지 않아 무명 전면으로 두고 J4 연결부는 열린 아케이드로 유지한다. Standard Bread를u10.2로 옮기고 SEASONIQUE는카운터1개만 둔다.16~18은 홍보사진이어서 현재 배열과 동일한지는 미확인이다. 매장겹침을 피하려 한정선 중심을u14.1로, 분홍 판매대를u11.1로 소폭 옮기고 서남 모서리 진열대를 좁혔다. Blue Butterfly 메뉴는 판독되지 않아 한국어 메뉴 표제만 표현한다."
       },
       {
-        "element": "Round5 푸드홀 재료·가구",
-        "detail": "사진01~10의 #C98A3E 허니오렌지 판넬·약1.5m 업라이트 간격·폭4m/천장3~3.3m 복도·다크 마블 파케/점상 인레이/우드 테두리·적갈/올리브 약70cm 원형 암체어·페르시안풍 러그를 따른다. 목리·마블 무늬·러그 문양·병/상품 구성·U자 카운터 세부·좌석 수는 저폴리 근사이며 실제 물품 복제가 아니다. Superstar 필기체와 게이트 세리프 간판은 사용 가능한 폰트 범위에서 근사한다."
+        "element": "Round6 푸드홀 재료·식당·가구",
+        "detail": "사진01~10의 허니우드·호박 업라이트·회색 헤링본 라운지·다크 인레이 마블 통로·러그와 암체어·화이트 스텝 리브를 따른다. 포털·U자 스시바·U자 오픈키친·부채꼴 리브·조명·좌석·병/상품의 수와 치수는 사진과 리뷰를 이용한 저폴리 근사다. 서쪽 포털 상호의 관찰 근거와 정확 위치는 구분한다. Superstar 필기체 및 세리프 글꼴은 실행 환경의 폰트에 따라 달라진다. 천장색/emissive는 리뷰 목표에 맞춘 입력값이며 최종 출력색은 미측정이다. 서쪽 포털은 사진10의 타치바나, 기존 입점 조사에 있는 스시도쿠·프루니에를 사용하지만 v62/67/72 대응은 추정이다. 오픈키친을u25.4~26.6으로 줄여 에스컬레이터옆 약2.05m를 확보하며 좁은 U 안쪽에는 고객 좌석을 두지 않고 접근 가능한 북동쪽(26.15,63.5)1개·남쪽(25.65/26.3,72.2)2개로 줄였다. 키친 폭과 좌석 수는 통행 확보를 위한 근사다. 중앙 스시카운터 때문에 남측 바2개를v81.5로 옮긴 상대배치는 리뷰에 따른 가정이다."
       },
       {
-        "element": "Round5 1F와 미확인 구역",
-        "detail": "20~21은 부분 장면으로 베이지 광택 대리석·약1.2m 원형 석재 기둥·회색 SHINSEGAE/GANGNAM 사인벽·밝은 진열장만 근거다. 정확 벽 위치·매장 규모·화장품/에르메스 내부는 미확인이다.22~23 HOLIDAY MARKET은11~12월 한시적 팝업이라 상설 공간에 만들지 않으며 위치도 추정하지 않는다. 정육·수산·청과 핵심 사진이 없어 해당 부분은 단순하게 유지한다."
+        "element": "Round6 1F와 미확인 구역",
+        "detail": "사진20~21은 부분 장면이다. 기존 층고를 유지하며 석재벽높이6.45m·깊이1.2m·2.5m 꺾임·사인중심y4.7·4단 조명니치로 근사했으나 정확 위치·규모는 실측되지 않았다. 화장품·에르메스 내부와 신선식품 세부는 근거 부족으로 기존 단순 표현을 유지한다.22~23 계절 HOLIDAY MARKET은 상설 모델에서 생략한다."
       }
     ],
     "validation": {
-      "round": "Round5",
-      "status": "Round5 구현 및 통합 smoke/전체 walk 완료. 렌더 비교는 사용자 지시에 따라 운영자 수행.",
+      "round": "Round6",
+      "status": "passed",
       "required_smoke": "node tests/smoke.mjs shinsegae gotomall centralcity jwmarriott",
       "required_walk": "node tests/walk.mjs",
       "budget_quads": 140000,
-      "visual_check": "사용자 지시에 따라 tests/shot.mjs는 실행하지 않는다. 제공 사진/notes.json을 기준으로 추적하며 구현 후 렌더 비교는 운영자가 수행한다.",
+      "visual_check": "사용자가 제공한 Round5 리뷰 렌더·접촉시트와 원본 사진을 대조했다. 사용자 지시에 따라 tests/shot.mjs는 실행하지 않는다. Round6 렌더 결과의 색·가독성·원근은 운영자 후속 렌더 확인이 필요하다.",
       "smoke": {
         "command": "node tests/smoke.mjs shinsegae gotomall centralcity jwmarriott",
         "result": "OK",
-        "shinsegae_quads": 92660,
+        "shinsegae_quads": 113017,
         "budget_quads": 140000,
         "spawns": 11,
+        "zones": 433,
         "elevators": 3
       },
-      "focused_walk": {
-        "command": "node tests/walk.mjs shinsegae gotomall centralcity --no-city",
-        "result": "walk: 124 ok, 0 blocked"
-      },
-      "interior_routes": {
-        "method": "tests/walk.mjs의 실제 kit/physics/BFS를 메모리에서 재사용. 파일 수정 없이 신세계만 로드하고 스위트파크→복도→게이트→라운지→바 및 B1→1F 와인 연결 경로 추가",
-        "result": "walk: 59 ok, 0 blocked; 별도 에스컬레이터 중심선 122 samples 모두 통과",
-        "timing": "최종 남측 바 U자 리턴과 진열 유리 조정 후 동일 경로 재검사."
-      },
-      "preserved": "OSM159117108; B2/B1/1F/1M/2F~11F; J1/J4/J5; 3 elevators × 14 floor entries. 11 spawns, 433 zones.",
-      "scope": "js/places/shinsegae.js와 data/research/shinsegae.json만 수정. 엔진·테스트·이웃 모듈 수정 및 git commit/push 없음.",
+      "preserved": "OSM159117108; B2/B1/1F/1M/2F~11F; J1/J4/J5; 11 spawns; 433 zones; 3 elevators ×14 floor entries. 외관·주차장·차량램프 코드 블록은 Round5와 동일.",
+      "scope": "js/places/shinsegae.js와 data/research/shinsegae.json만 수정. 엔진·테스트·이웃 모듈 변경 및 git commit/push 없음.",
+      "walk_attempts": [
+        {
+          "command": "node tests/walk.mjs",
+          "result": "station.js:839 SyntaxError: Identifier mallHere has already been declared",
+          "note": "다른 작업이 수정 중인 모듈의 구문 오류로 전체 월드 생성 전에 중단됨. 이 파일은 수정하지 않았다."
+        }
+      ],
       "walk": {
         "command": "node tests/walk.mjs",
-        "result": "walk: 330 ok, 0 blocked",
-        "note": "첫 실행은 동시 작업 중인 jwmarriott.js의 ATRIUM 미정의로 중단됐으나 해당 작업 수정 후 통합 검사 통과. 이 모듈에서 이웃 파일은 수정하지 않았다."
-      }
+        "result": "walk: 331 ok, 0 blocked",
+        "timing": "최종 키친 좌석 접근 수정 이후 재실행. 앞선 station.js 중복 선언은 타 작업에서 수정되어 전체 월드 검사를 완료했다."
+      },
+      "focused_walk": {
+        "command": "node tests/walk.mjs shinsegae gotomall centralcity jwmarriott",
+        "result": "walk: 174 ok, 0 blocked",
+        "standalone": "node tests/walk.mjs shinsegae --no-city: walk: 53 ok, 0 blocked (최종 키친 수정 후)"
+      },
+      "interior_routes": {
+        "environment": "real kit/physics, stdin-only harness; no test files modified",
+        "routes": 14,
+        "result": "all passed",
+        "paths": "연결복도↔라운지, SW계단v62.9/75.1, 키친서측, 엘리베이터접근, 남/서HOS통로, 1M계단↔엘리베이터/보이드동측, 델리중앙, 스위트파크서측, 키친북/남좌석, 스시/하이테이블횡단",
+        "hos_escalators": {
+          "samples": 282,
+          "blocked": 0,
+          "unsupported": 0,
+          "head_clearance_failures": 0
+        },
+        "kitchen_west_aisle": {
+          "samples": 111,
+          "blocked": 0,
+          "geometric_clearance_m": 2.045
+        }
+      },
+      "static_checks": "node --check js/places/shinsegae.js 및 JSON 파싱, git diff --check 통과. 외관·주차장·램프 코드 블록은 HEAD와 동일.",
+      "geometry_review": "1M 보이드 위 매장 집기를 실바닥으로 이동하고 매장별 존을 유지했다. B1 안내판과 키친 겹침 제거, 서쪽 계단문 두 개구 보존. 좁은 U키친 안에 갇혔던 좌석을 접근 가능한 북동/남측으로 이동했다. 흰 플루팅 뒷판을 허니벽 앞에 두어 가림을 해소했다. 중앙 스시바와 Superstar 하이테이블의 겹침이 없고 횡단 동선이 통과한다."
     },
     "roof": "항공사진의 기존 설비 단순화는 유지한다. 2026 ssg_06 유리 볼륨 지붕선 위 두 무더기 수관에 근거해 y48m/u20~47/v9~16 범위에 높이0.6m 화단2개와 높이3.5~4.3m 수목6그루를 추가하며 u24~30·42~46 쪽에 모은다. 녹지의 존재는 확인되나 수종·화단 형태·나무 수량과 높이는 근사다. 본관 막지붕·중앙 기계실·냉각탑7기·실외기16기·신관 자갈지붕의 기존 배치도 항공 명암을 따른 추정이며 일시적 증기는 생략한다.",
     "cross_module_coordination": {
@@ -602,6 +625,93 @@
           }
         },
         "geometry_review": "독립 코드 검토로 글자 캔버스 실폭, 창 아랫변/중심높이, 사인 방향/투명 재질, 차양 법선, 쇼윈도 겹침, 동측 캐노피/기둥 간섭을 확인했다. 동측 짧은 캐노피 연장부를 v30~33.2/같은 높이로 정리하고 접근축 기둥을 생략했으며 중앙 유리의 수평 띠 기준을 vBase7로 통일했다. 최종 형상으로 이웃을 포함한 smoke와 전체 walk를 다시 실행했다."
+      },
+      "Round5": {
+        "round": "Round5",
+        "status": "Round5 구현 및 통합 smoke/전체 walk 완료. 렌더 비교는 사용자 지시에 따라 운영자 수행.",
+        "required_smoke": "node tests/smoke.mjs shinsegae gotomall centralcity jwmarriott",
+        "required_walk": "node tests/walk.mjs",
+        "budget_quads": 140000,
+        "visual_check": "사용자 지시에 따라 tests/shot.mjs는 실행하지 않는다. 제공 사진/notes.json을 기준으로 추적하며 구현 후 렌더 비교는 운영자가 수행한다.",
+        "smoke": {
+          "command": "node tests/smoke.mjs shinsegae gotomall centralcity jwmarriott",
+          "result": "OK",
+          "shinsegae_quads": 92660,
+          "budget_quads": 140000,
+          "spawns": 11,
+          "elevators": 3
+        },
+        "focused_walk": {
+          "command": "node tests/walk.mjs shinsegae gotomall centralcity --no-city",
+          "result": "walk: 124 ok, 0 blocked"
+        },
+        "interior_routes": {
+          "method": "tests/walk.mjs의 실제 kit/physics/BFS를 메모리에서 재사용. 파일 수정 없이 신세계만 로드하고 스위트파크→복도→게이트→라운지→바 및 B1→1F 와인 연결 경로 추가",
+          "result": "walk: 59 ok, 0 blocked; 별도 에스컬레이터 중심선 122 samples 모두 통과",
+          "timing": "최종 남측 바 U자 리턴과 진열 유리 조정 후 동일 경로 재검사."
+        },
+        "preserved": "OSM159117108; B2/B1/1F/1M/2F~11F; J1/J4/J5; 3 elevators × 14 floor entries. 11 spawns, 433 zones.",
+        "scope": "js/places/shinsegae.js와 data/research/shinsegae.json만 수정. 엔진·테스트·이웃 모듈 수정 및 git commit/push 없음.",
+        "walk": {
+          "command": "node tests/walk.mjs",
+          "result": "walk: 330 ok, 0 blocked",
+          "note": "첫 실행은 동시 작업 중인 jwmarriott.js의 ATRIUM 미정의로 중단됐으나 해당 작업 수정 후 통합 검사 통과. 이 모듈에서 이웃 파일은 수정하지 않았다."
+        }
+      },
+      "Round6": {
+        "round": "Round6",
+        "status": "passed",
+        "required_smoke": "node tests/smoke.mjs shinsegae gotomall centralcity jwmarriott",
+        "required_walk": "node tests/walk.mjs",
+        "budget_quads": 140000,
+        "visual_check": "사용자가 제공한 Round5 리뷰 렌더·접촉시트와 원본 사진을 대조했다. 사용자 지시에 따라 tests/shot.mjs는 실행하지 않는다. Round6 렌더 결과의 색·가독성·원근은 운영자 후속 렌더 확인이 필요하다.",
+        "smoke": {
+          "command": "node tests/smoke.mjs shinsegae gotomall centralcity jwmarriott",
+          "result": "OK",
+          "shinsegae_quads": 113017,
+          "budget_quads": 140000,
+          "spawns": 11,
+          "zones": 433,
+          "elevators": 3
+        },
+        "preserved": "OSM159117108; B2/B1/1F/1M/2F~11F; J1/J4/J5; 11 spawns; 433 zones; 3 elevators ×14 floor entries. 외관·주차장·차량램프 코드 블록은 Round5와 동일.",
+        "scope": "js/places/shinsegae.js와 data/research/shinsegae.json만 수정. 엔진·테스트·이웃 모듈 변경 및 git commit/push 없음.",
+        "walk_attempts": [
+          {
+            "command": "node tests/walk.mjs",
+            "result": "station.js:839 SyntaxError: Identifier mallHere has already been declared",
+            "note": "다른 작업이 수정 중인 모듈의 구문 오류로 전체 월드 생성 전에 중단됨. 이 파일은 수정하지 않았다."
+          }
+        ],
+        "walk": {
+          "command": "node tests/walk.mjs",
+          "result": "walk: 331 ok, 0 blocked",
+          "timing": "최종 키친 좌석 접근 수정 이후 재실행. 앞선 station.js 중복 선언은 타 작업에서 수정되어 전체 월드 검사를 완료했다."
+        },
+        "focused_walk": {
+          "command": "node tests/walk.mjs shinsegae gotomall centralcity jwmarriott",
+          "result": "walk: 174 ok, 0 blocked",
+          "standalone": "node tests/walk.mjs shinsegae --no-city: walk: 53 ok, 0 blocked (최종 키친 수정 후)"
+        },
+        "interior_routes": {
+          "environment": "real kit/physics, stdin-only harness; no test files modified",
+          "routes": 14,
+          "result": "all passed",
+          "paths": "연결복도↔라운지, SW계단v62.9/75.1, 키친서측, 엘리베이터접근, 남/서HOS통로, 1M계단↔엘리베이터/보이드동측, 델리중앙, 스위트파크서측, 키친북/남좌석, 스시/하이테이블횡단",
+          "hos_escalators": {
+            "samples": 282,
+            "blocked": 0,
+            "unsupported": 0,
+            "head_clearance_failures": 0
+          },
+          "kitchen_west_aisle": {
+            "samples": 111,
+            "blocked": 0,
+            "geometric_clearance_m": 2.045
+          }
+        },
+        "static_checks": "node --check js/places/shinsegae.js 및 JSON 파싱, git diff --check 통과. 외관·주차장·램프 코드 블록은 HEAD와 동일.",
+        "geometry_review": "1M 보이드 위 매장 집기를 실바닥으로 이동하고 매장별 존을 유지했다. B1 안내판과 키친 겹침 제거, 서쪽 계단문 두 개구 보존. 좁은 U키친 안에 갇혔던 좌석을 접근 가능한 북동/남측으로 이동했다. 흰 플루팅 뒷판을 허니벽 앞에 두어 가림을 해소했다. 중앙 스시바와 Superstar 하이테이블의 겹침이 없고 횡단 동선이 통과한다."
       }
     },
     "round4_resolutions": {
@@ -766,6 +876,62 @@
           "refs/interior/ssg_food/23_holidaymarket_arch_ceiling.jpg"
         ],
         "change": "한시적 HOLIDAY MARKET은 위치 미확인으로 상설 모델에서 생략한다."
+      }
+    },
+    "round5_resolutions_status": "과거 Round5 기록이다. 외관은 유지하며 실내 재료·통로·점포·보이드 수정은 round6_resolutions와 현재 guesses를 따른다.",
+    "round6_resolutions": {
+      "hos_shell": {
+        "photos": [
+          "01",
+          "02",
+          "03",
+          "10"
+        ],
+        "change": "B1 허니벽·반원 식당 포털·1.5m 업라이트, 크림 천장, 유리/허니 에스컬레이터, 1F·1M 발코니와 2F 밑면 코퍼."
+      },
+      "hos_gate_corridor": {
+        "photos": [
+          "04",
+          "05",
+          "06"
+        ],
+        "change": "게이트를 스위트파크 쪽v51로 이동, 남단은 문틀만 유지, 흰 석고벽·걸레받이·1.1m 리브·유리창/구형등."
+      },
+      "hos_counters_floor": {
+        "photos": [
+          "03",
+          "06",
+          "07",
+          "08",
+          "09"
+        ],
+        "change": "회색 헤링본/허니 보더·다크 마블 통로·곧은 오크, Superstar 주황 백라이트/하이테이블, KATSU 검은 루버/흰글자/월넛상판, U자 오픈키친과 스시카운터, 유리 아포테케리 케이스, 부채꼴 천장리브."
+      },
+      "sweetpark_deli": {
+        "photos": [
+          "11",
+          "12",
+          "13",
+          "14",
+          "15",
+          "16",
+          "17",
+          "18"
+        ],
+        "change": "중앙 통로에서 기둥을 양쪽으로 이동,3열 볼트·촘촘한 긴 아일랜드·2단 상품/직원·경계 페시아·아케이드·Standard Bread 석재/오븐/분홍판매대·SEASONIQUE 중복 제거·홀 사이 마블/낮은 코브 천장."
+      },
+      "blue_butterfly": {
+        "photos": [
+          "19"
+        ],
+        "change": "주방 뒷벽·메뉴 라이트박스·2단유리선반·흰 원형 로제트."
+      },
+      "first_floor": {
+        "photos": [
+          "20",
+          "21"
+        ],
+        "change": "밝은크림천장·천장까지 닿는 석재 모서리벽·높은 흰 사인·4단 조명니치, 와인셀러 허니 포털/금색 세리프, 작은 브라운/금색 안내표지."
       }
     }
   },

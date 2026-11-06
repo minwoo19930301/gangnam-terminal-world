@@ -71,7 +71,7 @@ const CORES = [
   { uL: 0.25, uR: 5.8, v0: 61.8, v1: 76.2, door: 'E', lanes: [3.6, 1.4], top: '11F' },    // 신관 core
 ];
 const MEZZ = [8, 58, 60, 84.45];
-// 01/02/10: separate B1 food-hall void, capped by the retained 1M slab (9.2 m clear).
+// 01/02/10: B1 food-hall void through 1F and 1M, capped at the 2F underside.
 // The SW plan position is approximate; the shared junctions and main escalator stack stay fixed.
 const HOS_VOID = [8.6, 60, 23.5, 74.5];
 // Two volumes inside the one OSM rectangle (namu: 적갈색 부분 = 백화점 본체, 그 남쪽 JW 쪽 회색 저층 = 옛 마르퀴스 플라자,
@@ -95,7 +95,7 @@ export function build(K) {
   const rnd = K.rand(20001003);
   const FULL = rect(0, 0, UW, VD);
   // Plain warm gypsum: the retail interiors have no acoustic-tile grid.
-  K.material('ssg_ceil', new K.THREE.MeshLambertMaterial({ color: 0xeee7dd, emissive: 0x554f46 }));
+  K.material('ssg_ceil', new K.THREE.MeshLambertMaterial({ color: 0xf6f1e8, emissive: 0x9a9286 }));
   const CEIL = 'ssg_ceil';
   K.texture('ssg_marble', 512, 512, (g, w, h) => {
     g.fillStyle = '#d8cbb8'; g.fillRect(0, 0, w, h);
@@ -728,7 +728,7 @@ export function build(K) {
     box(u, v, 1.2, 1.2, YB + 0.1, 1, 0xc9ccc8, { solid: false, top: 0x7c8581 });
   }
   // mezzanine slab
-  K.slab(rect(...MEZZ), LV['1M'], { mat: { tex: 'wood', color: 0xe6d2b8 }, thick: TH['1M'], holes: elvHoles, edge: true, edgeMat: 0xf4efe6, under: CEIL });
+  K.slab(rect(...MEZZ), LV['1M'], { mat: { tex: 'wood', color: 0xe6d2b8 }, thick: TH['1M'], holes: [...elvHoles, rect(...HOS_VOID)], edge: true, edgeMat: 0xf4efe6, under: CEIL });
 
   // ------------------------------------------------------------ escalators (zigzag in the stacked atrium)
   const escH = 0.95;
@@ -890,7 +890,7 @@ export function build(K) {
       const openings = [{ at: Wf / 2, w: dw, y0: y, y1: y + Math.min(3.4, H - 0.6) }];
       if (Wf > 9) openings.push({ at: Wf * 0.17, w: ww, y0: y + 0.5, y1: y + Math.min(3.2, H - 0.8) }, { at: Wf * 0.83, w: ww, y0: y + 0.5, y1: y + Math.min(3.2, H - 0.8) });
       fwall(0, 0.15, Wf, 0.15, y, y + H, { mat: portal, thick: 0.3, openings });
-      fsign(signText, Wf / 2, -0.01, y + Math.min(3.4, H - 0.6) + (H - Math.min(3.4, H - 0.6)) / 2, Math.min(Wf * 0.7, 9), Math.min(0.75, (H - Math.min(3.4, H - 0.6)) * 0.7), { bg: portalDark ? '#1d1c1b' : '#efe9df', fg: portalDark ? '#f1e7d2' : '#1d1d1d', bold: false });
+      fsign(signText, Wf / 2, -0.01, y + Math.min(3.4, H - 0.6) + (H - Math.min(3.4, H - 0.6)) / 2, Math.min(Wf * 0.7, 9), o.signH ?? Math.min(0.75, (H - Math.min(3.4, H - 0.6)) * 0.7), { bg: sigBg, fg: sigFg, bold: false, ...o.signStyle });
       if (Wf > 9) for (const s of [Wf * 0.17, Wf * 0.83]) { fb(s, 0.9, ww - 0.2, 0.9, y, 0.45, 0xf5f0e6); person(s, 0.9, { shirt: GARMENT[(seed + s | 0) % GARMENT.length] }); }
     } else if (kind === 'cos') {
       // Counter identity lives on the display back, not on a suspended blade.
@@ -1137,10 +1137,13 @@ export function build(K) {
   }
   function elevatorHall(id, y, H) {
     // lobby facing north: directory board + bench + floor label
-    sign(DIRECTORY, 25.6, 63.6, y + 1.55, 'E', 1.8, 2.7, { bg: '#2d241c', fg: '#f3e6c8', bold: false, pxPerM: 130, align: 'left' });
-    box(25.3, 63.6, 0.3, 2.0, y, 0.25, 0x2d241c, { solid: false });
-    sign([id, '신세계 강남점'], 28.45, 64.66, y + Math.min(2.4, H - 0.6), 'N', 1.5, 0.5, { bg: '#2d241c', fg: '#f3e6c8' });
-    sign('엘리베이터', 38.55, 64.66, y + Math.min(2.4, H - 0.6), 'N', 1.5, 0.5, { bg: '#2d241c', fg: '#f3e6c8' });
+    if (id !== 'B1') {
+      sign(DIRECTORY, 25.6, 63.6, y + 1.55, 'E', 1.8, 2.7, { bg: '#2d241c', fg: '#f3e6c8', bold: false, pxPerM: 130, align: 'left' });
+      box(25.3, 63.6, 0.3, 2.0, y, 0.25, 0x2d241c, { solid: false });
+    }
+    const hallSign = { bg: '#3c3129', fg: '#e5c389', font: 'Georgia, "Noto Serif KR", serif', bold: false };
+    sign(`${id} · 신세계 강남점`, 28.45, 64.66, y + Math.min(2.4, H - 0.6), 'N', 1.5, 0.35, hallSign);
+    sign('엘리베이터', 38.55, 64.66, y + Math.min(2.4, H - 0.6), 'N', 1.5, 0.35, hallSign);
     for (const u of [28.5, 38.5]) box(u, 58.5, 2.0, 0.6, y, 0.45, 0x8a6a4a);
     zone('엘리베이터 홀', id, '고객 엘리베이터 1~3호기 · 층별 안내', [24.4, 57.6, 42.6, 64.8], y, y + H, 2);
     if (id !== 'B2') zone('에스컬레이터', id, `중앙 아트리움 에스컬레이터 · ${id}`, ATR, y, y + H, 2);
@@ -1316,6 +1319,15 @@ export function build(K) {
       for(let i=0;i<6;i++){const a=i*PI/3,uu=u+Math.cos(a)*.46,vv=v+Math.sin(a)*.46; cyl(uu,vv,yy-.18,.018,.4,BRASS,false,6);globe(uu,vv,yy+(i%2?.22:-.19),.16);}
       globe(u,v,yy-.34,.18);
     }
+    K.texture('ssg_fieldstone',512,256,(g,w,h)=>{
+      g.fillStyle='#8a8a8a';g.fillRect(0,0,w,h);
+      const sr=K.rand(1306);
+      for(let row=-1;row<5;row++)for(let col=-1;col<8;col++){
+        const xx=col*78+(row%2)*39,zz=row*64;
+        g.fillStyle=['#4a4a4a','#3d4040','#535451','#454949'][(col+row+20)%4];
+        g.beginPath();g.moveTo(xx+4,zz+12+sr()*8);g.lineTo(xx+55+sr()*16,zz+3);g.lineTo(xx+75,zz+39+sr()*9);g.lineTo(xx+43+sr()*12,zz+61);g.lineTo(xx+3,zz+53);g.closePath();g.fill();
+      }
+    },[1.2,.6]);
     function vault(u0,v0,u1,v1,withLamp=true) {
       const n=12,cu=(u0+u1)/2,cv=(v0+v1)/2,hu=(u1-u0)/2,hv=(v1-v0)/2;
       const height=(a,b)=>y+3.5+1.35*Math.sqrt(Math.max(0,1-Math.min(a*a,b*b)));
@@ -1335,44 +1347,95 @@ export function build(K) {
       box(u,v,.58,.58,y,3.45,'ssg_cream_brick');
       for(const yy of [.08,3.16,3.35])box(u,v,.7,.7,y+yy,.07,yy===3.16?0x453a2a:BRASS,{solid:false});
     }
+    // The plaster above each perimeter arch joins the vault to the slab, so no roof floats.
+    function vaultFascia(u0,v0,u1,v1,sides=['n','e','s','w']) {
+      const edges={n:[[u0,v0],[u1,v0]],e:[[u1,v0],[u1,v1]],s:[[u1,v1],[u0,v1]],w:[[u0,v1],[u0,v0]]};
+      for(const edge of sides){
+        const[a,b]=edges[edge];
+        const du=b[0]-a[0],dv=b[1]-a[1],len=Math.hypot(du,dv),nx=-dv/len,nz=du/len;
+        for(let i=0;i<24;i++){
+          const t0=i/24,t1=(i+1)/24,low=t=>y+3.45+1.35*Math.sqrt(Math.max(0,1-(2*t-1)**2));
+          const p=(t,yy)=>{const[x,z]=P(a[0]+du*t,a[1]+dv*t);return[x,yy,z];};
+          const points=[p(t0,low(t0)),p(t1,low(t1)),p(t1,y+5),p(t0,y+5)],n=[nx*CA+nz*SA,0,-nx*SA+nz*CA];
+          K.quad(CREAM,points,n);K.quad(CREAM,points,n.map(q=>-q));
+          const line=[[a[0]+du*t0,low(t0)-.025,a[1]+dv*t0],[a[0]+du*t1,low(t1)-.025,a[1]+dv*t1]];
+          ribbon(line,.06,glow);
+        }
+      }
+    }
     const oct=(u,v,w,d,c=.24)=>[[u-w/2+c,v-d/2],[u+w/2-c,v-d/2],[u+w/2,v-d/2+c],[u+w/2,v+d/2-c],[u+w/2-c,v+d/2],[u-w/2+c,v+d/2],[u-w/2,v+d/2-c],[u-w/2,v-d/2+c]];
-    function vitrine(u,v,w=2.4,d=1.2,seed=0,name='') {
-      const shape=(ww,dd)=>oct(u,v,ww,dd).map(q=>P(...q));
+    function vitrine(u,v,w=2.4,d=1.2,seed=0,name='',face='N') {
+      const at=(s,t)=>face==='E'?[u-t,v+s]:[u+s,v+t];
+      const bb=(s,t,ww,dd,yy,hh,mat)=>{const[uu,vv]=at(s,t);box(uu,vv,face==='E'?dd:ww,face==='E'?ww:dd,yy,hh,mat,{solid:false});};
+      const shape=(ww,dd)=>oct(0,0,ww,dd).map(q=>P(...at(...q)));
       K.prism(shape(w,d),y,y+.69,{mat:0x63422a});
       K.prism(shape(w+.12,d+.12),y+.69,y+.79,{mat:'ssg_marble',solid:false});
       K.prism(shape(w-.04,d-.04),y+.8,y+1.13,{mat:'glass',solid:false});
       for(const yy of [.08,.66,1.13])K.prism(shape(w+.02,d+.02),y+yy,y+yy+.025,{mat:BRASS,solid:false,top:false,bottom:false});
-      for(const [uu,vv] of oct(u,v,w-.04,d-.04))box(uu,vv,.022,.022,y+.79,.36,BRASS,{solid:false});
+      for(const [s,t] of oct(0,0,w-.04,d-.04))bb(s,t,.022,.022,y+.79,.36,BRASS);
+      bb(0,.05,w-.3,d*.5,y+.95,.016,'glass');
+      for(const t of [-d*.2,d*.3])bb(0,t,w-.3,.02,y+.95,.02,BRASS);
+      bb(0,d*.32,w-.32,.035,y+1.12,.015,{tex:'emit',color:0xfff2d6});
+      const productRnd=K.rand(1306+seed+Math.round(u*31+v*17));
       for(let i=0;i<Math.floor(w/.24);i++)for(let j=0;j<2;j++){
-        const uu=u-w/2+.2+i*.24,vv=v+(j?1:-1)*d*.22;
-        box(uu,vv,.20,.22,y+.80,.025,0xe8dec7,{solid:false});
-        box(uu,vv,.16,.17,y+.83,.075,[0xd7a05b,0xe4c58b,0x7e452c,0xf0dec0,0xa4bb76][(i+j+seed)%5],{solid:false});
-        if(i%3===0)sign('₩',uu,vv-d*.16,y+.94,'N',.08,.07,{bg:'#fffdf4',fg:'#4a3b2c',bold:false});
+        const s=-w/2+.2+i*.24,t=(j?1:-1)*d*.22;
+        bb(s,t,.20,.22,y+.80,.025,0xe8dec7);
+        bb(s,t,.16,.17,y+.83,.06+productRnd()*.08,[0xd7a05b,0xe4c58b,0x7e452c,0xf0dec0,0xa4bb76][(i+j+seed)%5]);
+        if(i%3===0){const[uu,vv]=at(s,t-d*.16);sign('₩',uu,vv,y+.94,face,.08,.07,{bg:'#fffdf4',fg:'#4a3b2c',bold:false});}
       }
-      for(let i=0;i<Math.floor(w/.18);i++)box(u-w/2+.15+i*.18,v-d/2-.012,.035,.018,y+.16,.43,0x99754b,{solid:false});
-      if(name)sign(name,u,v-d/2-.03,y+.48,'N',Math.min(w-.3,2.8),.22,{bg:null,fg:'#e6d5ad',bold:false});
+      for(let i=0;i<Math.floor((w-.4)/.3);i++){
+        const s=-w/2+.28+i*.3;bb(s,.05,.24,.22,y+.97,.06+productRnd()*.08,[0xf1d3aa,0xb58253,0x784e39,0xc5b17d][i%4]);
+        if(i%3===1){const[uu,vv]=at(s,-.11);sign('₩',uu,vv,y+1.08,face,.08,.06,{bg:'#fffdf4',fg:'#4a3b2c',bold:false});}
+      }
+      for(let i=0;i<Math.floor(w/.18);i++)bb(-w/2+.15+i*.18,-d/2-.012,.035,.018,y+.16,.43,0x99754b);
+      if(name){const[uu,vv]=at(0,-d/2-.03);sign(name,uu,vv,y+.48,face,Math.min(w-.3,2.8),.22,{bg:null,fg:'#e6d5ad',bold:false});}
+      const staff=Math.max(1,Math.floor(w/2.4));
+      for(let i=0;i<staff;i++){
+        const s=(i-(staff-1)/2)*1.7,t=d/2+.5,[uu,vv]=at(s,t),[x,z]=P(uu,vv);
+        K.person(x,y,z,{shirt:0xf1eee5,pants:0x4b4945,h:1.65,rotY:FACE[face]});
+        cyl(uu,vv,y+1.63,.12,.12,0xfffdf5);bb(s,t-.13,.3,.045,y+.48,.48,0xdfd8c6);
+      }
     }
     function queue(u,v,w=3.6,d=3.5) {
       for(const du of [-w/2,w/2])for(const dv of [-d/2,0,d/2]){cyl(u+du,v+dv,y,.14,.035,0x262322);cyl(u+du,v+dv,y,.025,.91,0x242222);}
       for(const du of [-w/2,w/2])box(u+du,v,.025,d,y+.83,.065,0xcfc4ab,{solid:false});
       box(u,v+d/2,w,.025,y+.83,.065,0xcfc4ab,{solid:false});
     }
-    function archStall(u,v,name,w=5) {
+    function archStall(u,v,name,w=5,face='N',openPassage=false) {
       // 13: arched timber transom, dark masonry below, inset sign and full counter.
-      box(u,v,w,.35,y,2.75,0x3a332b);
-      for(const du of [-w/2,w/2])box(u+du,v,.24,.55,y,3.6,HONEY);
-      box(u,v-.2,w,.18,y+2.45,.6,HONEY,{solid:false});
-      sign(name,u,v-.31,y+2.76,'N',w*.68,.38,{...serif,bg:'#25302b',fg:'#f5e4b5',font:name==='Standard Bread'?'"Comic Sans MS", cursive':serif.font});
+      const at=(s,t)=>face==='E'?[u-t,v+s]:[u+s,v+t];
+      const bb=(s,t,ww,dd,yy,hh,mat,solid=false)=>{const[uu,vv]=at(s,t);box(uu,vv,face==='E'?dd:ww,face==='E'?ww:dd,yy,hh,mat,{solid});};
+      const qp=(s,yy,t=0)=>{const[x,z]=P(...at(s,t));return[x,yy,z];};
+      const normal=face==='E'?[CA,0,-SA]:[-SA,0,-CA];
+      if(!openPassage){
+        bb(0,.65,w,.24,y,2.75,0x3a332b,true);
+        for(const side of [-1,1])bb(side*(w/2-.3),0,.6,.32,y,2.65,'ssg_fieldstone',true);
+        bb(0,0,w,.32,y+2.15,.45,'ssg_fieldstone');
+        bb(-.95,.38,1.2,.6,y+.65,1.4,0x2b2b2b);
+        bb(-.95,.065,.84,.025,y+1.1,.38,{tex:'emit',color:0xff5a3a});
+        for(let row=0;row<3;row++){
+          bb(.65,.2,1.3,.45,y+.75+row*.42,.06,0xb08a5a);
+          for(let i=0;i<5;i++)bb(.15+i*.23,.15,.18,.24,y+.82+row*.42,.12,[0xd9aa66,0xbf8b47,0xe0bd7b][(row+i)%3]);
+        }
+      }
+      for(const du of [-w/2,w/2])bb(du,0,.24,.55,y+(openPassage?2.65:0),openPassage?.95:3.6,HONEY,!openPassage);
+      bb(0,-.2,w,.18,y+2.65,.4,HONEY);
+      if(name){const[uu,vv]=at(0,-.31);sign(name,uu,vv,y+2.82,face,w*.68,.32,{...serif,bg:'#25302b',fg:'#f5e4b5',font:name==='Standard Bread'?'"Comic Sans MS", cursive':serif.font});}
       for(let i=0;i<20;i++){
         const a=PI*i/20,b=PI*(i+1)/20;
-        const pp=(ang,r)=>{const [x,z]=P(u+Math.cos(ang)*r,v);return[x,y+3.0+Math.sin(ang)*1.1,z];};
-        K.quad(0xb5935a,[pp(a,w/2),pp(b,w/2),pp(b,w/2-.15),pp(a,w/2-.15)],[-SA,0,-CA]);
+        const pp=(ang,r)=>qp(Math.cos(ang)*r,y+3.0+Math.sin(ang)*1.1*r/(w/2));
+        K.quad(HONEY,[pp(a,w/2),pp(b,w/2),pp(b,w/2-.15),pp(a,w/2-.15)],normal);
+        K.quad('glass',[qp(0,y+3),pp(a,w/2-.15),pp(b,w/2-.15),qp(0,y+3)],normal);
       }
-      box(u,v,w-.3,.12,y+3.02,.08,HONEY,{solid:false});
-      for(const du of [-1.7,-.85,0,.85,1.7]){const hh=Math.sqrt(Math.max(0,1-du*du/(w*w/4)))*.95;box(u+du,v,.07,.14,y+3.05,hh,HONEY,{solid:false});}
-      vitrine(u,v-1.1,w-.7,1.15,2);
-      for(let k=0;k<3;k++)box(u-w/2+.6+k*.5,v-.4,.38,.33,y+1.25,.24,[0xb5b19c,0xd1bba3,0xf2e7cd][k],{solid:false});
-      zone(name,fl,'스위트파크',[u-w/2,v-2,u+w/2,v+.4],y,y+4.9,3);
+      bb(0,0,w-.3,.12,y+3.02,.04,HONEY);
+      for(let du=-w/2+.35;du<w/2-.2;du+=.35){const hh=Math.sqrt(Math.max(0,1-du*du/((w/2-.15)**2)))*.98;bb(du,0,.04,.1,y+3.05,hh,HONEY);}
+      for(let dh=.35;dh<1;dh+=.35){const ww=2*(w/2-.15)*Math.sqrt(1-(dh/1.1)**2);bb(0,0,ww,.1,y+3+dh,.04,HONEY);}
+      if(!openPassage){
+        // Leave the corner in front of Standard Bread clear of the perpendicular counter.
+        const corner=face==='E'&&v>44,[uu,vv]=at(corner?-.5:0,-1.1);
+        vitrine(uu,vv,w-(corner?1.8:.7),1.15,2,'',face);
+      }
+      if(name)zone(name,fl,'스위트파크',[u-w/2,v-2,u+w/2,v+.8],y,y+4.9,3);
     }
     zone('신세계백화점 강남점',fl,'식품관 · 신세계 마켓 · 스위트파크 · 하우스 오브 신세계',[0,0,UW,VD],y,0,1);
     zone('신세계 마켓',fl,'신선식품 · 그로서리 · 델리',[.25,.25,26.8,31.5],y,y+H,2);
@@ -1390,31 +1453,63 @@ export function build(K) {
     sign('신세계 마켓',12,1.1,y+2.8,'S',4,.5,{bg:null,fg:'#5e503b',bold:false});
     // Keep the J1 northern vestibule at u35.2..44.1 and the J4 cross aisle v38..47 open.
     for(const [u0,u1,name,kind] of [[24.1,35,'INTELLIGENTSIA COFFEE|인텔리젠시아 커피','cafe'],[44.3,53,'JOHNNY ROCKETS|조니 로켓','rest'],[53,61.4,'오설록','cafe']])shop({u0,u1,v0:.25,v1:8.25,f:'S',name,kind,y,H:3.8,floor:fl,sub:'식품관'});
-    sign('신세계 강남점 식품관',39.65,.45,y+3.1,'S',5.2,.6,{bg:'#3c3129',fg:'#f3e6c8'});
-    sign('고투몰 · 고속터미널역',43.8,4.3,y+1.55,'W',3.6,.4,{bg:'#e4d7c2',fg:'#544536'});
-    sign('← 센트럴시티 · 호남선 터미널',.7,46.4,y+1.55,'E',3.8,.4,{bg:'#e4d7c2',fg:'#544536'});
+    sign('신세계 강남점 식품관',39.65,.45,y+3.1,'S',5.2,.38,{...serif,bg:'#3c3129'});
+    sign('고투몰 · 고속터미널역',43.8,4.3,y+1.55,'W',3.6,.38,{...serif,bg:'#3c3129'});
+    sign('← 센트럴시티 · 호남선 터미널',.7,46.4,y+1.55,'E',3.8,.38,{...serif,bg:'#3c3129'});
     // 11–18: two linked halls, checker marble, rib coves, low octagonal pastry counters.
     for(const r of [[8.5,31.7,26.8,51],[41.5,10.5,60,47.5]])finish(r,y+.016,'ssg_checker_gloss');
-    for(const u0 of [9,17.5])for(const v0 of [32.5,41.5])vault(u0,v0,u0+8.5,v0+9);
-    for(const u0 of [42,50.5])for(const v0 of [12,23,34])vault(u0,v0,u0+8.5,v0+11);
-    for(const u of [9,17.5,26])for(const v of [32.5,41.5,50.5])if(!(u===9&&v===41.5))pillar(u,v);
-    for(const u of [42,50.5,59])for(const v of [12,23,34,45])pillar(u,v);
-    archStall(12,49.5,'Standard Bread',5.5);archStall(21.8,49.5,'SEASONIQUE',5.5);
-    vitrine(12.3,36.1,4.7,2.0,1,'한정선');vitrine(22.1,36.1,4.7,2.0,3,'시즈니크');
+    for(const [u0,u1] of [[8.5,17.5],[17.5,26.8]])for(const [v0,v1] of [[31.7,41.5],[41.5,51]]){
+      vault(u0,v0,u1,v1);vaultFascia(u0,v0,u1,v1,[...(v0===31.7?['n']:[]),...(v1===51?['s']:[]),...(u0===8.5?['w']:[]),...(u1===26.8?['e']:[])]);
+    }
+    for(const [u0,u1] of [[41.5,47.5],[47.5,53.5],[53.5,60]])for(const v0 of [12,23,34])vault(u0,v0,u1,v0+11);
+    for(const u of [8.5,17.5,26.8])for(const v of [31.7,41.5,51])if(!(u===8.5&&v===41.5))pillar(u,v);
+    for(const u of [41.5,47.5,53.5,60])for(const v of [12,23,34,45])pillar(u,v);
+    // Deli perimeter closes the gap above the vault edge while leaving the cross aisle open.
+    for(const u of [41.5,60]){
+      wall(u,10.5,u,47.5,y+3.45,y+5,{mat:CREAM,thick:.14,solid:false});
+      box(u,29,.06,37,y+3.43,.06,glow,{solid:false});
+    }
+    for(const v of [10.5,47.5]){
+      wall(41.5,v,60,v,y+3.45,y+5,{mat:CREAM,thick:.14,solid:false});
+      box(50.75,v,18.5,.06,y+3.43,.06,glow,{solid:false});
+    }
+    // The shallow arch soffit over v38..47 remains above 2.8 m at its piers.
+    for(let i=0;i<32;i++){
+      const a=PI*i/32,b=PI*(i+1)/32,pp=t=>{const[x,z]=P(41.5,42.5+Math.cos(t)*3);return[x,y+2.8+Math.sin(t)*.65,z];};
+      const lo=pp(a),hi=pp(b);K.quad(CREAM,[lo,hi,[hi[0],y+3.46,hi[2]],[lo[0],y+3.46,lo[2]]],[CA,0,-SA]);
+      ribbon([[41.5,lo[1]-.02,42.5+Math.cos(a)*3],[41.5,hi[1]-.02,42.5+Math.cos(b)*3]],.08,glow);
+    }
+    archStall(10.2,49.5,'Standard Bread',4.6);
+    // Names on these distant fronts are unreadable; the middle upper arcade preserves J4.
+    archStall(8.8,35.5,'',4.8,'E');archStall(8.8,41,'',4.8,'E',true);archStall(8.8,46.5,'',4.8,'E');
+    box(11.1,47.6,2.4,.8,y,1.0,0xf2b9c8);
+    sign('Love The Sweet Moment',11.1,47.17,y+.53,'N',2.15,.42,{bg:null,fg:'#d0336a',font:'Georgia, serif',bold:true});
+    vitrine(14.1,36.1,4.7,2.0,1,'한정선');vitrine(22.1,36.1,4.7,2.0,3,'시즈니크');
     vitrine(12.2,44.5,2.4,1.2,4);vitrine(22.2,44.5,2.4,1.2,1);
     queue(12.4,39.4,3.8,3.8);queue(22,39.2,3.6,3.6);
     box(14.65,38.3,.09,.55,y,1.18,0x262322,{solid:false});
     sign(['한정선','대기 안내'],14.65,38.0,y+1.1,'N',.64,.74,{bg:'#65493c',fg:'#e1c7a7',bold:false});
     for(const [u,v] of [[10.8,38],[11.3,39],[12.2,40],[13.1,39.2],[20.8,38.7],[21.4,40.1],[23.1,39],[16,44.1],[19,47.1]]){const [x,z]=P(u,v);K.person(x,y,z,{shirt:0x45433d});}
     // Seasonique's small brass stand and green packaging, not a suspended directory sign.
-    for(const du of [-.65,.65])cyl(23+du,46.2,y,.025,1.4,BRASS,false,8);
-    box(23,46.2,1.4,.07,y+.96,.57,BRASS,{solid:false});
-    sign('SEASONIQUE',23,46.14,y+1.25,'N',1.3,.44,{...serif,bg:'#25282a',fg:'#eee9d9'});
-    for(let k=0;k<4;k++)box(25.1,48.5,.65,.5,y+k*.26,.24,0x294f3e,{solid:false});
-    for(const v of [17.3,28.3,39.3])for(const u of [43.8,57.2])vitrine(u,v,3.2,1.6,Math.round(v));
-    // The 6–8 m central market aisle remains open between the two counter rows.
-    for(const u of [46.1,54.9])finish([u,12,u+.22,45],y+.022,'ssg_parquet',1.4);
-    for(const [u,v] of [[45.4,17.3],[55.6,28.3],[45.4,39.3],[49,19.4],[52,31.5],[48.2,40.8]]){const [x,z]=P(u,v);K.person(x,y,z,{shirt:u===45.4?0xf1eee5:0x454943});}
+    for(const du of [-.65,.65])cyl(23+du,34.9,y,.025,1.4,BRASS,false,8);
+    box(23,34.9,1.4,.07,y+.96,.57,BRASS,{solid:false});
+    sign('SEASONIQUE',23,34.84,y+1.25,'N',1.3,.44,{...serif,bg:'#25282a',fg:'#eee9d9'});
+    for(let k=0;k<4;k++)box(25.1,36.9,.65,.5,y+k*.26,.24,0x294f3e,{solid:false});
+    for(const v of [15.5,21.5,27.5,33.5,39.5,45])for(const u of [44.6,56.8])vitrine(u,v,6.0,1.9,Math.round(v));
+    // White marble bands and thin black edges frame the clear centre aisle.
+    for(const u of [47.3,53.7]){
+      finish([u-.25,10.5,u+.25,47.5],y+.022,0xeeeae2);
+      for(const edge of [-.31,.31])finish([u+edge-.06,10.5,u+edge+.06,47.5],y+.024,0x242326);
+    }
+    for(const [u,v] of [[49,19.4],[52,31.5],[49.2,40.8]]){const [x,z]=P(u,v);K.person(x,y,z,{shirt:0x454943});}
+    // 16–18: the link between halls continues the marble/cove vocabulary at a lower scale.
+    finish([27,9,41,47],y+.017,0xefebe4);
+    for(const rr of [[27,9,41,9.8],[27,46.2,41,47],[27,9.8,27.8,46.2],[40.2,9.8,41,46.2]])finish(rr,y+.021,'ssg_checker_gloss');
+    for(const rr of [[27,9,41,34.5],[27,34.5,27.45,47],[39.65,34.5,41,47]]){
+      hq(...rr,y+3.6,CREAM,false);
+      const[u0,v0,u1,v1]=rr;for(const u of [u0+.08,u1-.08])box(u,(v0+v1)/2,.06,v1-v0,y+3.56,.03,glow,{solid:false});
+    }
+    for(const v of [15,21,27,33])for(const u of [29.1,39])vitrine(u,v,2.4,1.2,Math.round(u+v));
     // 19: Blue Butterfly dark canopy, brass inlaid mahogany base and illuminated ornament.
     finish([44,51,53,56.3],y+.016,'ssg_checker_gloss');
     // 19: small wine-red/cream tile band immediately in front of the deli base.
@@ -1424,18 +1519,36 @@ export function build(K) {
       const u=45.65+i*1.9;box(u,53.35,1.65,.035,y+.13,.66,BRASS,{solid:false});box(u,53.32,1.55,.035,y+.19,.54,0x56372c,{solid:false});
     }
     box(48.5,54,7.8,1.4,y+.94,.08,0x272625,{solid:false});
-    box(48.5,54,5.7,1.05,y+1.03,.4,'glass',{solid:false});
-    for(const yy of [1.04,1.42])box(48.5,53.46,5.75,.025,y+yy,.025,BRASS,{solid:false});
-    for(const u of [45.65,48.5,51.35])box(u,53.46,.025,.025,y+1.03,.41,BRASS,{solid:false});
+    box(48.5,55.7,7.8,.2,y,2.7,0x3b2a20);
+    for(const u of [46.5,48.5,50.5]){
+      box(u,55.57,1.5,.08,y+1.88,.6,BRASS,{solid:false});
+      box(u,55.51,1.4,.025,y+1.93,.5,{tex:'emit',color:0xfff4dc},{solid:false});
+      sign(['블루 버터플라이','메뉴'],u,55.48,y+2.18,'N',1.24,.35,{bg:null,fg:'#4b3829',bold:false});
+    }
+    box(48.5,54,5.7,1.05,y+1.03,.78,'glass',{solid:false});
+    box(48.5,54,5.5,.74,y+1.45,.02,'glass',{solid:false});
+    for(const yy of [1.04,1.45,1.8])box(48.5,53.46,5.75,.025,y+yy,.025,BRASS,{solid:false});
+    for(const u of [45.65,48.5,51.35])box(u,53.46,.025,.025,y+1.03,.78,BRASS,{solid:false});
+    box(48.5,54.35,5.4,.04,y+1.77,.025,{tex:'emit',color:0xfff2d6},{solid:false});
     for(let i=0;i<18;i++)for(let j=0;j<2;j++){
       const u=45.9+i*.3,v=53.77+j*.42;
       box(u,v,.26,.32,y+1.03,.025,0xb19469,{solid:false});
       box(u,v,.21,.25,y+1.055,.13,[0xe1bb6b,0x87a65d,0xb4783f,0xedd29c][(i+j)%4],{solid:false});
     }
+    for(let i=0;i<18;i++){
+      const u=45.9+i*.3;box(u,54,.26,.32,y+1.47,.025,0xb19469,{solid:false});
+      box(u,54,.21,.25,y+1.495,.12,[0xe1bb6b,0x87a65d,0xb4783f,0xedd29c][i%4],{solid:false});
+    }
     for(const u of [44.65,52.35])box(u,54,.075,.075,y+1.05,1.9,0x423c30,{solid:false});
     box(48.5,54,8.0,1.8,y+2.72,.42,0x292825,{solid:false});
     sign('Blue Butterfly',48.5,53.08,y+2.93,'N',2.3,.28,{bg:null,fg:'#fff4dc',font:'Georgia, serif',italic:true});
-    for(const u of [45,45.45,45.9,51.1,51.55,52]){box(u,53.08,.23,.02,y+2.79,.26,glow,{solid:false});box(u,53.06,.10,.02,y+2.86,.12,0x393731,{solid:false});}
+    for(const side of [-1,1])for(let i=0;i<8;i++){
+      const u=48.5+side*(1.45+i*.3);
+      for(const radius of [.11,.073])for(let j=0;j<12;j++){
+        const a=j*PI/6,b=(j+1)*PI/6,p=(t,r)=>{const[x,z]=P(u+Math.cos(t)*r,53.075);return[x,y+2.93+Math.sin(t)*r,z];};
+        K.quad({tex:'emit',color:0xf4efe4},[p(a,radius),p(b,radius),p(b,radius-.014),p(a,radius-.014)],[-SA,0,-CA]);
+      }
+    }
     for(const u of [46.7,50.3]){const [x,z]=P(u,55.2);K.person(x,y,z,{shirt:0xf1eee5});cyl(u,55.2,y+1.63,.14,.13,0xfffdf4);}
     zone('블루 버터플라이',fl,'베트남 델리',[44,51,53,56.3],y,y+H,3);
     // Remaining deli bays have low neutral counters; unseen tenant arrangement is not invented.
@@ -1446,8 +1559,11 @@ export function build(K) {
     finish([12.7,51,17.3,60],y+.025,'ssg_wood_parquet',1.4);
     finish([13.2,51,16.8,60],y+.03,'ssg_parquet',1.4);
     hq(12.7,51,17.3,60,y+3.35,0xf1ece4,false);
-    for(const u of [12.7,17.3])wall(u,51,u,59.7,y,y+3.35,{mat:HONEY,thick:.16});
-    for(let v=51.2;v<59.5;v+=.7){
+    for(const u of [12.7,17.3]){
+      wall(u,51,u,59.7,y,y+3.35,{mat:0xf3ede3,thick:.16});
+      box(u,55.35,.20,8.7,y,.3,HONEY,{solid:false});
+    }
+    for(let v=51.2;v<59.5;v+=1.1){
       // Rounded shoulders with a flat crown, like the stepped plaster portals in photo 05.
       const path=[[13,y+.45,v],[13,y+2.65,v],[13.05,y+2.88,v],[13.2,y+3.06,v],[13.4,y+3.18,v],[13.7,y+3.23,v],[16.3,y+3.23,v],[16.6,y+3.18,v],[16.8,y+3.06,v],[16.95,y+2.88,v],[17,y+2.65,v],[17,y+.45,v]];
       for(let i=0;i<path.length-1;i++){
@@ -1456,7 +1572,7 @@ export function build(K) {
         K.quad(0xf5eee4,[q(a,-.10),q(a,.10),q(b,.10),q(b,-.10)],[dy*CA/ll,-du/ll,-dy*SA/ll]);
         // Front/back reveals give each plaster rib visible depth, including its vertical legs.
         const outer=p=>[p[0]-dy/ll*.09,p[1]+du/ll*.09,p[2]];
-        for(const side of [-1,1])K.quad(0xe8e0d5,[q(a,side*.10),q(b,side*.10),q(outer(b),side*.10),q(outer(a),side*.10)],[side*SA,0,side*CA]);
+        for(const side of [-1,1])K.quad(0xf7f1e7,[q(a,side*.10),q(b,side*.10),q(outer(b),side*.10),q(outer(a),side*.10)],[-side*SA,0,-side*CA]);
       }
     }
     for(const v of [52,55.2,58.2])for(const u of [12.95,17.05]){cyl(u,v,y,.22,.32,HONEY);cyl(u,v,y+.32,.075,2.55,HONEY);globe(u,v,y+2.05,.15);}
@@ -1468,16 +1584,78 @@ export function build(K) {
       for(const yy of [.45,1.5,2.7])box(17.12,v,.08,2.2,y+yy,.07,HONEY,{solid:false});
     }
     // 04: timber gate, gold serif lettering, paired 30 cm white globes and directory.
-    for(const u of [12.4,17.6])box(u,59.5,1.2,.55,y,3.65,HONEY);
-    box(15,59.5,6.4,.6,y+2.95,.7,HONEY,{solid:false});
-    sign('HOUSE OF SHINSEGAE',15,59.17,y+3.2,'N',5.2,.37,{...serif,fg:'#edd4a0'});
-    for(const u of [13,17]){cyl(u,59.12,y,.2,.3,HONEY);cyl(u,59.12,y+.3,.075,2.65,HONEY);globe(u,59.02,y+2.1,.15);}
-    box(18.5,59.2,.8,.3,y,.1,0x252525,{solid:false});box(18.5,59.2,.055,.055,y,1.7,0x252525,{solid:false});
-    sign(['HOUSE OF','SHINSEGAE','식음 공간 안내'],18.5,59.13,y+1.13,'N',.7,1.25,{...serif,bg:'#f0dfbf',fg:'#604b35'});
-    // 01/02/03/10: warm wood lounge and real two-level opening to the wine level.
-    finish([6.4,60,26.8,84.4],y+.02,'ssg_wood_parquet',1.4);
-    finish([9,61,12,74],y+.025,'ssg_parquet',1.4);
-    finish([18.6,61,20.4,74],y+.025,'ssg_parquet',1.4);
+    for(const u of [12.4,17.6])box(u,51,1.2,.55,y,3.65,HONEY);
+    box(15,51,6.4,.6,y+2.95,.7,HONEY,{solid:false});
+    for(const [u0,u1] of [[9,12.4],[17.6,21]])boxR(u0,50.73,u1,51.27,y,3.65,HONEY);
+    sign('HOUSE OF SHINSEGAE',15,50.67,y+3.2,'N',5.2,.37,{...serif,fg:'#edd4a0'});
+    for(const u of [13,17]){cyl(u,50.62,y,.2,.3,HONEY);cyl(u,50.62,y+.3,.075,2.65,HONEY);globe(u,50.52,y+2.1,.15);}
+    box(18.5,50.7,.8,.3,y,.1,0x252525,{solid:false});box(18.5,50.7,.055,.055,y,1.7,0x252525,{solid:false});
+    sign(['HOUSE OF','SHINSEGAE','식음 공간 안내'],18.5,50.53,y+1.13,'N',.7,1.25,{...serif,bg:'#f0dfbf',fg:'#604b35'});
+    // The lounge end is only a timber-lined opening, not a second entrance sign.
+    for(const u of [12.6,17.4])box(u,59.5,.32,.45,y,3.5,HONEY);
+    box(15,59.5,5.1,.45,y+3.15,.35,HONEY,{solid:false});
+    // 01/02/03/10: stone herringbone lounge within a honey-oak border.
+    K.texture('ssg_herringbone',512,512,(g,w,h)=>{
+      g.fillStyle='#a9a399';g.fillRect(0,0,w,h);
+      g.save();g.translate(w/2,h/2);g.rotate(PI/4);
+      // Interlocked 4:1 blocks = 0.60 x 0.15 m, rather than basketweave wood.
+      const s=w/(8*Math.SQRT2);
+      for(let i=-18;i<18;i++)for(let j=-18;j<18;j++)if((i+j)%8===0){
+        const xx=i*s,zz=j*s;g.fillStyle=((i-j)/2)%2?'#cfcac2':'#c2bcb3';
+        g.fillRect(xx+1,zz+1,s*4-2,s-2);g.fillRect(xx+1,zz+s*4+1,s-2,s*4-2);
+      }
+      g.restore();
+    },[1.2*Math.SQRT2,1.2*Math.SQRT2]);
+    K.texture('ssg_oak_boards',256,512,(g,w,h)=>{
+      g.fillStyle='#d9b585';g.fillRect(0,0,w,h);
+      for(let i=0;i<6;i++){
+        const xx=i*w/6;g.fillStyle=i%2?'#d9b585':'#ddbd92';g.fillRect(xx,0,w/6-1,h);
+        g.strokeStyle='rgba(132,89,42,.22)';g.lineWidth=.7;
+        for(let j=0;j<6;j++){g.beginPath();g.moveTo(xx+4+j*6,0);g.bezierCurveTo(xx+j*6,180,xx+9+j*6,320,xx+3+j*6,h);g.stroke();}
+      }
+    },[1.2,3]);
+    finish([6.4,59,26.8,84.4],y+.02,'ssg_parquet',1.4);
+    finish([8.4,60.4,24.1,74.6],y+.025,0xc99a62);
+    finish([9,61,23.5,74],y+.03,'ssg_herringbone',1.2*Math.SQRT2);
+    for(const r of [[6.4,74.5,26.8,75],[6.4,78.8,26.8,79.3]])finish(r,y+.03,0xc99a62);
+    finish([23.5,59.5,26.8,74.5],y+.035,'ssg_oak_boards',[1.2,3]);
+    // B1 honey panelling continues down to the floor, with real core exits left open.
+    wall(6.4,59,6.4,84.45,y,-1,{mat:HONEY,thick:.15,openings:[
+      {at:3,w:3,y0:y,y1:y+3.2},{at:8,w:3,y0:y,y1:y+3.2},{at:13,w:3,y0:y,y1:y+3.2},
+      {at:16.1,w:2.2,y0:y,y1:y+2.6},
+    ]});
+    wall(6.4,84.45,26.8,84.45,y,-1,{mat:HONEY,thick:.15});
+    wall(26.8,59,26.8,72,y,-1,{mat:HONEY,thick:.15});
+    // Shallow arch reveals preserve access behind the first portal to the SW stair.
+    for(const [vv,name] of [[62,'타치바나'],[67,'스시도쿠'],[72,'프루니에']]){
+      for(const sg of [-1,1])box(6.58,vv+sg*1.5,.42,.16,y,1.7,HONEY,{solid:false});
+      for(let i=0;i<18;i++){
+        const a=i*PI/18,b=(i+1)*PI/18;
+        const q=(t,r,uu)=>{const [x,z]=P(uu,vv+Math.cos(t)*r);return[x,y+1.7+Math.sin(t)*r,z];};
+        K.quad(HONEY,[q(a,1.5,6.8),q(b,1.5,6.8),q(b,1.68,6.8),q(a,1.68,6.8)],[CA,0,-SA]);
+        K.quad(HONEY,[q(a,1.5,6.4),q(b,1.5,6.4),q(b,1.5,6.8),q(a,1.5,6.8)],[Math.sin((a+b)/2)*CA,-Math.cos((a+b)/2),-Math.sin((a+b)/2)*SA]);
+        // Fill the square wall cut above the arch with matching wood spandrels.
+        const p0=q(a,1.68,6.49),p1=q(b,1.68,6.49);
+        K.quad(HONEY,[p0,p1,[p1[0],y+3.42,p1[2]],[p0[0],y+3.42,p0[2]]],[CA,0,-SA]);
+      }
+      lightPanel(6.15,vv,y+2.9,.4,1.8,0xffd9a0);
+      sign(name,6.82,vv,y+3.52,'E',2.1,.24,{...serif,fg:'#e5c389'});
+    }
+    // The observed amber wash is carried on shallow planes, with a floor fixture at each bay.
+    function woodWash(u0,v0,u1,v1,lo,hi,skip=()=>false){
+      const len=Math.hypot(u1-u0,v1-v0),du=(u1-u0)/len,dv=(v1-v0)/len,nu=-dv,nv=du;
+      for(let t=.6;t<len;t+=1.5){const u=u0+du*t,v=v0+dv*t;if(skip(u,v))continue;
+        for(const sg of [-1,1]){
+          const a=P(u-du*.32+nu*.09*sg,v-dv*.32+nv*.09*sg),b=P(u+du*.32+nu*.09*sg,v+dv*.32+nv*.09*sg);
+          K.quad('ssg_uplight',[[a[0],lo,a[1]],[b[0],lo,b[1]],[b[0],hi,b[1]],[a[0],hi,a[1]]],[sg*(nu*CA+nv*SA),0,sg*(-nu*SA+nv*CA)]);
+        }
+        cyl(u+nu*.13,v+nv*.13,lo-.01,.075,.035,glow,false,8);
+      }
+    }
+    woodWash(6.4,59,6.4,84.45,y+.1,y+2.3,(u,v)=>[62,67,72].some(c=>Math.abs(v-c)<1.7)||Math.abs(v-75.1)<1.2);
+    woodWash(6.4,84.45,26.8,84.45,y+.1,y+2.3);
+    woodWash(26.8,59,26.8,72,y+.1,y+2.3);
+    for(const r of [[6.4,59,8.6,74.5],[8.6,59,26.8,60],[23.5,60,26.8,74.5]])hq(...r,-1.025,0xf3ece0,false);
     // High amber balcony fascia from the photos; no opaque wall across the void.
     for(const [u0,v0,u1,v1] of [[8.6,60,8.6,74.5],[23.5,60,23.5,74.5],[8.6,60,23.5,60],[8.6,74.5,23.5,74.5]]){
       const len=Math.hypot(u1-u0,v1-v0),nx=-(v1-v0)/len,nv=(u1-u0)/len;
@@ -1486,6 +1664,12 @@ export function build(K) {
       wall(u0,v0,endU,v1,-2.5,0,{mat:HONEY,thick:.12,solid:false});
       wall(u0,v0,endU,v1,0,1.03,{mat:'glass',thick:.035});
       box((u0+endU)/2,(v0+v1)/2,Math.max(.06,Math.abs(endU-u0)),Math.max(.06,Math.abs(v1-v0)),1.03,.055,BRASS,{solid:false});
+      // The photo shows a second timber/uplight tier below the 1M glass gallery.
+      // Start above the 1F rail so both balcony levels remain visible from B1.
+      wall(u0,v0,u1,v1,1.12,3.6,{mat:HONEY,thick:.12,solid:false});
+      wall(u0,v0,u1,v1,3.6,4.65,{mat:'glass',thick:.035});
+      box((u0+u1)/2,(v0+v1)/2,Math.max(.06,Math.abs(u1-u0)),Math.max(.06,Math.abs(v1-v0)),4.65,.055,BRASS,{solid:false});
+      woodWash(u0,v0,u1,v1,1.14,3.32);
       for(let i=.6;i<len;i+=1.5){
         const u=u0+(u1-u0)*i/len,v=v0+(v1-v0)*i/len;
         if (landingEdge && u > 20.4) continue;
@@ -1496,12 +1680,12 @@ export function build(K) {
         cyl(u,v,-2.49,.07,.04,glow,false,8);
       }
     }
-    // Ceiling above the void is the underside of 1M, with a white cove perimeter.
-    coffer(8.8,60.2,23.3,74.3,3.18);
-    for(const [u,v] of [[10,61.2],[10,72.8],[22.1,61.2],[22.1,72.8]])downlight(u,v,3.12,.065);
+    // 01/02 resolve two gallery tiers: the 2F underside closes the void at y6.5.
+    coffer(8.8,60.2,23.3,74.3,6.48);
+    for(const [u,v] of [[10,61.2],[10,72.8],[22.1,61.2],[22.1,72.8]])downlight(u,v,6.42,.065);
     // Mirror-clad pier at the lounge's far end; the seating remains visible from the gate.
-    box(8.1,67.2,.6,.6,y,9.15,0xc3b89b,{solid:false});
-    for(const u of [7.75,8.45])box(u,67.2,.055,.7,y,9.15,BRASS,{solid:false});
+    box(8.1,67.2,.6,.6,y,12.45,0xc3b89b,{solid:false});
+    for(const u of [7.75,8.45])box(u,67.2,.055,.7,y,12.45,BRASS,{solid:false});
     function armchair(u,v,rot,col) {
       const c=Math.cos(rot),s=Math.sin(rot),pt=(a,b)=>[u+a*c+b*s,v-a*s+b*c];
       cyl(u,v,y,.30,.18,0x7b746a);cyl(u,v,y+.18,.35,.28,col,true,14);
@@ -1518,7 +1702,7 @@ export function build(K) {
     // The two glass escalators climb beside the lounge; the upper landings remain on 1F.
     // Terminate before v74.5 so the slab edge becomes the landing at the flight's end.
     for(const [u,dir] of [[21.15,'up'],[22.7,'down']]){
-      const a=P(u,60.8),b=P(u,74.7);K.escalator(a[0],a[1],b[0],b[1],{ya:y,yb:0,w:1.15,dir,speed:.6});
+      const a=P(u,60.8),b=P(u,74.7);K.escalator(a[0],a[1],b[0],b[1],{ya:y,yb:0,w:1.15,dir,speed:.6,sideMat:HONEY,truss:0xb07a3c});
     }
     sign(['HOUSE OF','SHINSEGAE'],20.2,60.7,y+.85,'N',.85,.7,{...serif,bg:'#e8d6b8',fg:'#5f4530'});
     // 03: apothecary cabinet with circular pulls, next to the lounge rather than in its path.
@@ -1533,19 +1717,33 @@ export function build(K) {
       }
       box(19.055,v,.03,.045,yy-.015,.03,BRASS,{solid:false});
     }
-    box(18.4,67.5,1.3,2.9,y+.82,.06,'ssg_marble',{solid:false});
+    box(18.4,67.5,1.3,2.9,y,.035,BRASS,{solid:false});
+    box(18.4,67.5,1.3,2.9,y+1.25,.025,'glass',{solid:false});
+    for(const u of [17.75,19.05]){
+      box(u,67.5,.025,2.9,y+.04,1.21,'glass',{solid:false});
+      for(const v of [66.05,68.95])box(u,v,.03,.03,y,1.28,BRASS,{solid:false});
+    }
+    for(const v of [66.05,68.95])box(18.4,v,1.3,.025,y+.04,1.21,'glass',{solid:false});
+    for(const yy of [y+.04,y+1.25]){
+      for(const u of [17.75,19.05])box(u,67.5,.03,2.9,yy,.03,BRASS,{solid:false});
+      for(const v of [66.05,68.95])box(18.4,v,1.3,.03,yy,.03,BRASS,{solid:false});
+    }
+    // A few display pieces sit inside the glass case, as in photograph 03.
+    for(const [u,v,w,d,col] of [[18.3,66.8,.6,.45,0x9b744e],[18.4,67.65,.55,.55,0xb69c7c],[18.45,68.3,.7,.35,0xe1d3af]])box(u,v,w,d,y+.83,.11,col,{solid:false});
     // 07/09: two distinct real bar fronts along the southern perimeter.
     function bar(u,v,w,name,superstar=false) {
       box(u,v+2,w,1,y,2.9,superstar?0x302928:HONEY);
+      if(superstar)box(u,v+1.49,w-.4,.025,y+1,1.5,{tex:'emit',color:0xd2552e},{solid:false});
       for(let k=0;k<3;k++){
-        box(u,v+1.45,w-.4,.18,y+1.1+k*.47,.035,glow,{solid:false});
+        box(u,v+1.45,w-.4,.18,y+1.1+k*.47,.035,superstar?{tex:'emit',color:0xff7a3c}:glow,{solid:false});
         for(let i=0;i<Math.floor(w/.18)-2;i++){const uu=u-w/2+.3+i*.18;cyl(uu,v+1.32,y+1.14+k*.47,.045,.22,[0x365440,0x8e532b,0xb09148,0x452e22][(i+k)%4],false,6);cyl(uu,v+1.32,y+1.36+k*.47,.022,.10,0x493924,false,6);}
       }
-      box(u,v,w,1.0,y,.95,superstar?0x943e2d:0x513523);
-      box(u,v,w+.15,1.12,y+.95,.08,superstar?0xa95635:'ssg_marble',{solid:false});
+      box(u,v,w,1.0,y,.95,superstar?0xc2482c:0x513523);
+      box(u,v,w+.15,1.12,y+.95,.08,superstar?0xa95635:0x3e2a1c,{solid:false});
+      if(superstar)box(u,v-.505,w,.025,y+.84,.1,{tex:'emit',color:0xff8c4a},{solid:false});
       for(const du of [-w/2+.4,w/2-.4]){
         box(u+du,v+1,.8,2,y,.95,superstar?0x943e2d:0x513523);
-        box(u+du,v+1,.9,2.12,y+.95,.08,superstar?0xa95635:'ssg_marble',{solid:false});
+        box(u+du,v+1,.9,2.12,y+.95,.08,superstar?0xa95635:0x3e2a1c,{solid:false});
       }
       for(let i=0;i<Math.floor(w/.75);i++){
         const uu=u-w/2+.45+i*.75;
@@ -1556,23 +1754,90 @@ export function build(K) {
           wall(uu+Math.cos(a)*.25,v-1+Math.sin(a)*.25,uu+Math.cos(b)*.25,v-1+Math.sin(b)*.25,y+.82,y+1.12,{mat:superstar?0x9d4936:0x493026,thick:.055,solid:false});
         }
       }
-      box(u,v,w+.35,1.45,y+2.6,.32,superstar?0xe9dec8:0xe7dcc3,{solid:false});
-      if(!superstar)for(let k=0;k<8;k++)box(u,v-.75,w+.25,.025,y+2.62+k*.038,.014,0x413a2e,{solid:false});
-      sign(name,u,v-.79,y+2.82,'N',w*.70,.32,{bg:null,fg:superstar?'#fff6dd':'#332d27',font:superstar?'"Brush Script MT", cursive':'Georgia, serif',italic:superstar,bold:false});
+      box(u,v,w+.35,1.45,y+2.6,.6,superstar?0xf3ece0:0x1d1c1b,{solid:false});
+      if(superstar){
+        sign('Superstar★',u,v-.85,y+3,'N',2.6,.55,{bg:null,fg:'#ffffff',font:'"Brush Script MT", cursive',bold:true});
+        for(let i=0;i<4;i++){const uu=u-2.4+i*1.6;cyl(uu,v-2,y,.25,.035,0x171717);cyl(uu,v-2,y,.04,1.05,0x171717);cyl(uu,v-2,y+1.05,.3,.05,0x1d1c1b);}
+        for(const sg of [-1,1]){
+          const [x,z]=P(u+sg*(w/2-.3),v+1.43);
+          K.dome({x,z,y:y+2.05,rx:.12,ry:.12,rz:.12,hemi:false,seg:10,rings:5,mat:{tex:'emit',color:0xff9a55}});
+        }
+      }else{
+        // Slats sit behind the white lettering on three suspended lantern boxes.
+        for(const du of [-2.4,0,2.4]){
+          box(u+du,v-.44,1.6,.5,y+2.4,.45,0x1d1c1b,{solid:false});
+          for(let k=0;k<7;k++)box(u+du,v-.70,1.54,.025,y+2.43+k*.055,.025,0x2b2a28,{solid:false});
+          sign(name,u+du,v-.76,y+2.64,'N',1.52,.34,{bg:null,fg:'#f4efe4',font:'Helvetica, Arial, sans-serif',bold:true});
+          for(const uu of [u+du-.68,u+du+.68])box(uu,v-.44,.025,.025,y+2.85,.47,0x292826,{solid:false});
+        }
+      }
+      box(u,v-.73,w,.05,y+2.3,.05,glow,{solid:false});
       zone(superstar?'Superstar':'KATSU & TAPAS',fl,'하우스 오브 신세계',[u-w/2,v-1.8,u+w/2,v+2.5],y,y+3.6,3);
       const [x,z]=P(u,v+.9);K.person(x,y,z,{shirt:0xf1eee4});
     }
-    bar(11.9,80.5,7.6,'Superstar',true);bar(22,80.5,7.6,'KATSU & TAPAS');
-    // 08/10 open kitchen under a low pale coffer, timber seats and metal-framed pelmet.
-    box(25.6,66.6,1.1,8.8,y,.95,HONEY);box(25.6,66.6,1.25,9,y+.95,.08,'ssg_marble',{solid:false});
-    for(const v of [63,64.5,66,67.5,69,70.5]){cyl(24.5,v,y,.08,.65,0x59412e);cyl(24.5,v,y+.65,.24,.08,0x6c4e32,true);}
-    box(25.6,66.6,2.2,9.8,y+2.9,.16,0xe9dec5,{solid:false});
-    for(const v of [62,66.5,71]){box(26.4,v,.045,.045,y+.95,2,0x3e382e,{solid:false});globe(25.5,v,y+2.45,.13);}
-    for(const v of [63.8,68.5]){
-      box(26.4,v,.035,3,y+1.85,.72,'glass',{solid:false});
-      for(const yy of [1.85,2.57])box(26.4,v,.05,3,y+yy,.035,0x4e493c,{solid:false});
+    bar(11.9,81.5,7.6,'Superstar',true);bar(22,81.5,7.6,'KATSU & TAPAS');
+    // 06/07: low ivory fan ribs spread over the bar aisle and its side seating.
+    hq(6.5,74.6,26.7,84.4,y+3.4,0xf6f0e6,false);
+    for(const cu of [11.9,22])for(let i=0;i<12;i++){
+      const a=(-60+i*120/11)*PI/180;
+      const path=Array.from({length:13},(_,j)=>{const r=.4+j*.58;return[Math.max(6.65,Math.min(26.55,cu+Math.sin(a)*r)),y+3.22+.12*(j/12),82-Math.cos(a)*r];});
+      ribbon(path,.32,0xf6f0e6);
+      for(const off of [-.16,.16])for(let j=0;j<path.length-1;j++){
+        const a=path[j],b=path[j+1],du=b[0]-a[0],dv=b[2]-a[2],ll=Math.hypot(du,dv),nu=-dv/ll,nv=du/ll;
+        const q=(p,yy)=>{const [x,z]=P(p[0]+nu*off,p[2]+nv*off);return[x,yy,z];};
+        K.quad(0xf6f0e6,[q(a,a[1]),q(b,b[1]),q(b,b[1]+.18),q(a,a[1]+.18)],[(off<0?-1:1)*(nu*CA+nv*SA),0,(off<0?-1:1)*(-nu*SA+nv*CA)]);
+      }
     }
-    // Plain surroundings and circulation remain open around the researched features.
+    // 03: U-shaped chef counter south of the lounge; the bar fronts remain one bay behind.
+    for(const [u,v,w,d] of [[13,75.45,6,.7],[10.35,77,.7,2.4],[15.65,77,.7,2.4]]){
+      box(u,v,w,d,y,.97,HONEY);box(u,v,w+.08,d+.08,y+.97,.08,0x2a2a2c,{solid:false});
+    }
+    K.texture('ssg_green_tile',256,256,(g,w,h)=>{
+      g.fillStyle='#6f7a72';g.fillRect(0,0,w,h);g.strokeStyle='#a1a69b';g.lineWidth=1;
+      for(let x=0;x<w;x+=w/6)for(let z=0;z<h;z+=h/2)g.strokeRect(x,z,w/6,h/2);
+    },[.6,.6]);
+    box(13,78.6,6,.16,y,1.4,'ssg_green_tile');
+    const chef=(u,v)=>{const [x,z]=P(u,v);K.person(x,y,z,{shirt:0xf4f4f2,pants:0x33312d,h:1.65,rotY:FACE.N});cyl(u,v,y+1.65,.12,.14,0xfffdf7);};
+    for(const u of [11.35,13,14.65])chef(u,77.15);
+    function diningStool(u,v,rot=0){
+      cyl(u,v,y,.25,.12,0xb67936);cyl(u,v,y+.12,.07,.54,0x77502b);cyl(u,v,y+.66,.24,.08,0x88592e,true);
+      const c=Math.cos(rot),s=Math.sin(rot),pt=(a,b)=>[u+a*c+b*s,v-a*s+b*c];
+      for(let i=0;i<6;i++){const a=PI+i*PI/6,b=PI+(i+1)*PI/6,p=pt(Math.cos(a)*.26,Math.sin(a)*.26),q=pt(Math.cos(b)*.26,Math.sin(b)*.26);wall(...p,...q,y+.84,y+1.05,{mat:0xa76d31,thick:.06,solid:false});}
+    }
+    for(let u=10.4;u<16;u+=.75)diningStool(u,74.6);
+    for(let v=76;v<78.3;v+=.75){diningStool(9.5,v,PI/2);diningStool(16.5,v,-PI/2);}
+    // 08/10: compact U island keeps 2.05 m beside the escalator skirt (u23.35).
+    // The narrow service recess is not seating: customers reach the NE and south ends.
+    for(const [u,v,w,d] of [[25.6,68,.4,7],[26,64.75,1.2,.5],[26,71.25,1.2,.5]]){
+      box(u,v,w,d,y,.95,HONEY);box(u,v,w+.04,d+.04,y+.95,.08,'ssg_marble',{solid:false});
+    }
+    diningStool(26.15,63.5);
+    for(const u of [25.65,26.3])diningStool(u,72.2,PI);
+    wall(26.73,62,26.73,72,y,y+3.2,{mat:0xf1ece2,thick:.08});
+    for(let v=62.05;v<72;v+=.3)box(26.68,v,.12,.12,y,3.2,0xf1ece2,{solid:false});
+    box(25.8,67.2,1.8,10,y+3.1,.1,0xf3ece0,{solid:false});
+    K.material('ssg_kitchen_glass',new K.THREE.MeshLambertMaterial({color:0xfff0d0,emissive:0xfff0d0,emissiveIntensity:.3,transparent:true,opacity:.3,depthWrite:false,side:K.THREE.DoubleSide}));
+    for(const v of [64.5,68,71.5])box(25.55,v,.045,.045,y+1.02,1.75,0x4e493c,{solid:false});
+    for(const u of [25.45,26.55]){
+      box(u,68,.025,7,y+2.1,.6,'ssg_kitchen_glass',{solid:false});
+      for(const yy of [2.1,2.7])box(u,68,.05,7,y+yy,.035,0x4e493c,{solid:false});
+    }
+    for(const v of [64.5,71.5]){
+      box(26,v,1.1,.025,y+2.1,.6,'ssg_kitchen_glass',{solid:false});
+      for(const yy of [2.1,2.7])box(26,v,1.1,.05,y+yy,.035,0x4e493c,{solid:false});
+    }
+    for(const yy of [1.35,1.75]){
+      box(25.58,68,.27,6.6,y+yy,.035,0x866135,{solid:false});
+      for(let v=65;v<71;v+=.3){cyl(25.58,v,y+yy+.035,.045,.23,[0x4a603e,0xa47537,0x60402c][Math.round(v*10)%3],false,6);cyl(25.58,v,y+yy+.265,.022,.08,0x564127,false,6);}
+    }
+    for(const v of [65.4,68.2,70.7])globe(25.95,v,y+2.32,.1);
+    // Marble and a low cove ceiling carry the department-store finish into the lift approach.
+    finish([27,57,43,64.45],y+.025,'ssg_checker_gloss',1.3);
+    finish([27.8,57.8,42.2,63.65],y+.03,0xefebe4);
+    hq(27,57,43,64.45,y+3.6,0xefe5cf,false);
+    coffer(27,57,43,64.45,y+3.6);
+    for(const [u,v] of [[29,59],[33.5,59],[40.5,59]])downlight(u,v,y+3.53,.06);
+    // Circulation remains open around the researched features.
     restrooms(fl,y,H);elevatorHall(fl,y,H);
     for(const r of [[.3,.3,26.8,31.5],[27,9,40,31],[40,47,66.5,84]]){
       for(let u=r[0]+3;u<r[2];u+=5)for(let v=r[1]+3;v<r[3];v+=5)if(!inR(u,v,[27,64,40,73]))downlight(u,v,y+H-.04,.075);
@@ -1601,10 +1866,12 @@ export function build(K) {
     shop({ u0: 0.25, u1: 8.25, v0: 47, v1: 61.8, f: 'E', name: 'LE LABO|르 라보', kind: 'cos', y, ...S('향수'), H: 4.4 });
     sign(['← 센트럴시티 중앙광장', '호남선 터미널 · 메가박스'], 0.7, 46.4, 1.55, 'E', 3.8, 0.6, { bg: '#e4d7c2', fg: '#544536' });
     // south band (under the mezzanine): 하우스 오브 신세계 와인 셀라, J5 to JW
-    shop({ u0: 5.8, u1: 30.6, v0: 76.5, v1: 84.45, f: 'N', name: 'HOUSE OF SHINSEGAE WINE CELLAR|하우스 오브 신세계 와인 셀라', kind: 'wine', y, ...S('하우스 오브 신세계'), H: 3.2 });
+    shop({ u0: 5.8, u1: 30.6, v0: 76.5, v1: 84.45, f: 'N', name: 'HOUSE OF SHINSEGAE · WINE CELLAR|하우스 오브 신세계 와인 셀라', kind: 'wine', y, ...S('하우스 오브 신세계'), H: 3.2,
+      portal: 'ssg_honey', fascia: 'ssg_honey', bg: null, fg: '#e5c389', signH: .3, signStyle: { bg: null, font: 'Georgia, serif' } });
     shop({ u0: 36.8, u1: 51, v0: 76.5, v1: 84.45, f: 'N', name: 'BYREDO|바이레도', kind: 'cos', y, ...S('향수'), H: 3.2 });
     shop({ u0: 51, u1: 66.75, v0: 76.5, v1: 84.45, f: 'N', name: 'DIPTYQUE|딥티크', kind: 'cos', y, ...S('향수'), H: 3.2 });
-    sign(['JW 메리어트 호텔 서울 →', '하우스 오브 신세계 연결'], 33.7, 76.3, 2.75, 'N', 3.8, 0.7, { bg: '#2d241c', fg: '#e9dcc0', twoSided: true });
+    const wayfinding = { bg: '#3c3129', fg: '#e5c389', font: 'Georgia, "Noto Serif KR", serif', bold: false, twoSided: true };
+    sign('JW 메리어트 호텔 서울 →', 33.7, 76.3, 2.75, 'N', 3.8, 0.38, wayfinding);
     // cosmetics islands
     const cos = ['DIOR BEAUTY|디올 뷰티', 'ESTĒE LAUDER|에스티 로더', 'LANCÔME|랑콤', '설화수', 'SISLEY|시슬리', 'LA MER|라 메르', 'YSL BEAUTY|입생로랑 뷰티', 'TOM FORD BEAUTY|톰 포드 뷰티',
       'GUERLAIN|겔랑', 'ARMANI BEAUTY|아르마니 뷰티', 'CLÉ DE PEAU BEAUTÉ|끌레드뽀 보떼', 'HERA|헤라', 'M·A·C|맥', 'BOBBI BROWN|바비 브라운', 'CHANEL BEAUTY|샤넬 뷰티', 'NARS|나스', '후', 'KIEHL\'S|키엘', 'CLINIQUE|크리니크', 'SHISEIDO|시세이도', 'AESOP|이솝', 'HOURGLASS|아워글래스'];
@@ -1623,8 +1890,8 @@ export function build(K) {
     sign('안내', 26.3, 10.25, 1.3, 'N', 1.1, 0.3, { bg: '#2d241c', fg: '#f3e6c8' });
     // grand stairs up to the 1M mezzanine
     for (const u of [15.2, 52.2]) { const a = P(u, 50.7), b = P(u, 58); K.stairs(a[0], a[1], b[0], b[1], { w: 3.6, ya: 0, yb: LV['1M'], mat: 'marble', railMat: 0xb9a77f }); }
-    sign(['1M 메자닌 ↑', '하우스 오브 신세계 · 버건디& · 퍼퓸'], 15.2, 50.4, 2.9, 'N', 3.4, 0.7, { bg: '#2d241c', fg: '#e9dcc0', twoSided: true });
-    sign(['1M 메자닌 ↑', '분더샵 메자닌 · 퍼스널 쇼퍼룸'], 52.2, 50.4, 2.9, 'N', 3.4, 0.7, { bg: '#2d241c', fg: '#e9dcc0', twoSided: true });
+    sign('1M · 버건디& · 퍼퓸 ↑', 15.2, 50.4, 2.9, 'N', 3.4, 0.38, wayfinding);
+    sign('1M · 분더샵 메자닌 ↑', 52.2, 50.4, 2.9, 'N', 3.4, 0.38, wayfinding);
     columns(id, y, H, (u, v) => inR(u, v, HOS_VOID, .7));
     lights(y + H - 0.02, [HOS_VOID]);
     for (let u = 9.5; u < 60; u += 5) for (let v = 60.5; v < 84; v += 5) if (!inR(u, v, [27.6, 64.5, 39.4, 72.5], 0.3) && !inR(u, v, HOS_VOID)) downlight(u, v, LV['1M'] - TH['1M'] - 0.02);
@@ -1632,20 +1899,25 @@ export function build(K) {
     coffer(9, 32, 58, 34.6, y + H); coffer(9, 47.4, 58, 50, y + H);
     coffer(31, 12.4, 37, 31.3, y + H);
     restrooms(id, y, 3.2); elevatorHall(id, y, 3.2);
-    sign('1F  화장품 · 해외유명브랜드', 25.4, 33, 3.4, 'N', 3.2, 0.5, { bg: '#2d241c', fg: '#f3e6c8', twoSided: true });
+    sign('1F  화장품 · 해외유명브랜드', 25.4, 33, 3.4, 'N', 3.2, 0.38, wayfinding);
     // 20/21: quiet bright stone hall, white-lit bag wall and the observed wall-mounted wordmark.
-    box(25.1,29.2,.42,5.1,0,4.5,{tex:'marble',color:0xb4afa5});
-    sign(['SHINSEGAE','GANGNAM'],25.34,29.2,3.15,'E',3.5,.85,{bg:null,fg:'#f5f4ff',bold:false});
-    box(25.38,29.2,.13,4.8,.25,1.75,0xe5dccd,{solid:false});
-    for(let j=0;j<3;j++){
-      box(25.48,29.2,.08,4.6,.55+j*.48,.025,{tex:'emit',color:0xfff2d8},{solid:false});
+    const signStone = { tex:'marble', color:0xb4afa5 };
+    box(25.1,29.2,1.2,5.1,0,6.45,signStone);
+    // The return recedes into the retail volume, leaving the east aisle open.
+    box(24.05,31.8,2.5,.25,0,6.45,signStone);
+    sign(['SHINSEGAE','GANGNAM'],25.72,29.2,4.7,'E',3.8,.85,{bg:null,fg:'#f5f4ff',font:'Helvetica, Arial, sans-serif',bold:false});
+    box(25.72,29.2,.04,4.6,.25,1.95,{tex:'emit',color:0xfff8ee},{solid:false});
+    for(const v of [26.79,31.61])box(25.83,v,.3,.12,.25,1.95,signStone,{solid:false});
+    for(let j=0;j<4;j++){
+      box(25.83,29.2,.3,4.6,.45+j*.48,.035,0xf4efe6,{solid:false});
+      box(25.98,29.2,.025,4.6,.43+j*.48,.018,{tex:'emit',color:0xfff8ee},{solid:false});
       for(let k=0;k<6;k++){
-        const v=27.3+k*.72,yy=.58+j*.48;
-        box(25.57,v,.22,.38,yy,.25,[0x302e29,0xb79f77,0xe8ddc8,0x75584a][(j+k)%4],{solid:false});
-        box(25.57,v,.08,.18,yy+.25,.09,0x9c8a6b,{solid:false});
+        const v=27.3+k*.72,yy=.49+j*.48;
+        box(25.85,v,.22,.38,yy,.25,[0x302e29,0xb79f77,0xe8ddc8,0x75584a][(j+k)%4],{solid:false});
+        box(25.85,v,.08,.18,yy+.25,.09,0x9c8a6b,{solid:false});
       }
     }
-    for(const r of [[26,12,40,32],[9,32,26,34.6],[40,32,58,34.6]]){
+    for(const r of [[9,32,26,34.6],[40,32,58,34.6]]){
       hq(...r,4.5,CEIL,false);for(let u=r[0]+1;u<r[2];u+=2.5)for(let v=r[1]+1;v<r[3];v+=2.5)downlight(u,v,4.46,.055);
     }
     zone('하우스 오브 신세계 와인 연결 홀',fl,'푸드홀 라운지 보이드 · 와인셀러',[8,58,27,76.5],0,3.2,2);
@@ -1660,7 +1932,16 @@ export function build(K) {
     shop({ u0: 8, u1: 27, v0: 76.5, v1: 84.45, f: 'N', name: 'BOON THE SHOP MEZZANINE|분더샵 메자닌', kind: 'lux', y, ...S('THE ROW · 가브리엘라 허스트 · 체사레 아톨리니'), portal: 0x2a2420 });
     shop({ u0: 27, u1: 40, v0: 76.5, v1: 84.45, f: 'N', name: 'PERSONAL SHOPPER ROOM|퍼스널 쇼퍼룸', kind: 'lounge', y, ...S('PSR 337㎡') });
     shop({ u0: 40, u1: 60, v0: 76.5, v1: 84.45, f: 'N', name: 'BURGUNDY &|버건디&', kind: 'wine', y, ...S('부르고뉴 와인') });
-    island(['ACQUA DI PARMA|아쿠아 디 파르마#cos', 'BULY 1803|불리 1803#cos', 'MAISON FRANCIS KURKDJIAN|메종 프란시스 커정#cos', 'ASTIER DE VILLATTE|아스티에 드 빌라트#home'], 12.25, 24.1, 61, 73, y, S('퍼퓸 · 리빙'));
+    // Relocate the small perfume displays to the solid east landing of the new void.
+    // Shallow counters keep both the void rail and elevator approach usable.
+    for(const [v,name,ko] of [[60.8,'ACQUA DI PARMA','아쿠아 디 파르마'],[63.0,'BULY 1803','불리 1803'],[69.0,'MAISON FRANCIS KURKDJIAN','메종 프란시스 커정'],[71.2,'ASTIER DE VILLATTE','아스티에 드 빌라트']]) {
+      box(25.5,v,.75,1.5,y,.85,0xd7c4a3);
+      box(25.5,v,.78,1.53,y+.85,.05,0xf3ece0,{solid:false});
+      for(let i=0;i<5;i++)box(25.5,v-.55+i*.27,.16,.13,y+.9,.13+(i%3)*.045,[0xd8bf7b,0xd5b5a5,0xe3ded1][i%3],{solid:false});
+      sign(name,25.91,v,y+1.18,'E',1.4,.19,{bg:null,fg:'#4d3a29',font:'Georgia, serif',bold:false});
+      zone(ko,fl,'퍼퓸 · 리빙 · 하우스 오브 신세계 메자닌',[25.05,v-.95,26.2,v+.95],y,6.5,4);
+    }
+    zone('퍼퓸 · 리빙',fl,'아쿠아 디 파르마 · 불리 1803 · 메종 프란시스 커정 · 아스티에 드 빌라트',[24.7,59.8,26.3,72.5],y,6.5,3);
     island(['POIRAY|뽀아레#jewel', 'SWISS PERFECTION|스위스퍼펙션#cos', '다니엘라 그레지스#lux', '하우스 오브 신세계 라운지#cafe'], 42.9, 54.75, 61, 73, y, S('하우스 오브 신세계'));
     // balcony rail along the north edge (gaps at the two grand stairs) and the open sides
     const railY = y;
@@ -1670,7 +1951,7 @@ export function build(K) {
     sign('하우스 오브 신세계', 33.5, 58.3, 6.0, 'N', 5, 0.5, { bg: '#e7dcc9', fg: '#493c30', bold: false, twoSided: true });
     aisleBorders(y, true);
     coffer(24.9, 59.1, 42.1, 63.9, 6.5); coffer(9, 73.6, 59, 76.2, 6.5);
-    for (const u of [26, 41]) { box(u, 70, 2.2, 0.8, y, 0.45, 0x6a5444); }
+    box(41,70,2.2,.8,y,.45,0x6a5444);
     sign(['1M', '하우스 오브 신세계'], 28.45, 64.6, y + 2.0, 'N', 1.5, 0.5, { bg: '#2d241c', fg: '#f3e6c8', twoSided: true });
     K.crowd(rect(25, 59, 42, 64), y, 5, { seed: 77 }); K.crowd(rect(9, 74.6, 59, 76.3), y, 5, { seed: 78 });
   }
