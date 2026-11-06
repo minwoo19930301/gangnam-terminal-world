@@ -2,7 +2,7 @@
   "id": "banwon",
   "name": "반원상가 · 한신치킨호프",
   "updated": "2026-11-07",
-  "round": 13,
+  "round": 15,
   "address": "서울 서초구 신반포로23길 30, 잠원동 72-2. 한신치킨호프 1층 111호는 사용자 제공 위치 정보.",
   "sources": [
     {
@@ -317,6 +317,17 @@
       "source": "https://m.blog.naver.com/fewlove11/224458808662",
       "basis": "감사 JSON에 수록된 2026-10-30 본문 요약",
       "customer_parking": "한신치킨 손님용 주차 불가라는 본문 요약; 표식은 주차 가능 안내가 아님"
+    },
+    "entrance_tower_round15": {
+      "local_u": -0.65,
+      "local_v_range": [
+        16.6,
+        23
+      ],
+      "width_m": 6.4,
+      "top_y_m": 11.2,
+      "door_width_m": 3.2,
+      "basis": "2025-06 로드뷰와 2025-08 KFygWqMvrY8_60의 좁은 출입탑 비례. 실측값이 아니라 사진 추정. 인접 지붕/난간보다 약2.15m 높으며 추가 점유층은 아님."
     }
   },
   "modeling": {
@@ -327,13 +338,18 @@
         "photos": [
           "refs/roadview/banwon_01_front.jpg"
         ],
-        "x": -154.1,
+        "x": -159.33,
         "y": 0,
-        "z": -397.76,
+        "z": -389.76,
         "yawDeg": 289.48,
-        "pitchDeg": 10,
-        "expected_subject": "검은 출입탑·BAN WON·3개 흰 핀, 우리은행/약국 간판, 계단과 경사로",
-        "coordinate_basis": "사진 구도를 모듈에 맞춘 추정 카메라. GPS 또는 실측 촬영점이 아님."
+        "pitchDeg": 8,
+        "expected_subject": "중앙 왼쪽의 검은 BAN WON 출입탑, 전면 계단·오른쪽 경사로, 약국→우리은행과 가까운 은행나무·생울타리",
+        "coordinate_basis": "2025-06 원본 로드뷰를 직접 대조. 너무 가까웠던 u-9,v20에서 u-16.6,v25.8로 후퇴·우측 이동하여 출입탑 전체와 오른쪽 점포열/나무가 함께 보이도록 수정. y0은 지상 바닥, 촬영GPS/렌즈는 추정.",
+        "local_uv": [
+          -16.6,
+          25.8
+        ],
+        "round": 15
       },
       {
         "spot": "신반포로23길 건너편 로드뷰",
@@ -842,23 +858,10 @@
         "y": 0,
         "z": -397.83,
         "yawDeg": 289.48,
-        "pitchDeg": 12,
-        "expected_subject": "두 점유층의 낮은 상가, 회색 패널 출입포탈·BAN WON·3개 밝은 핀, 의원/약국/은행 간판과 스테인리스 계단 난간",
-        "coordinate_basis": "OSM기준 로컬u-8.8,v20의 지상 비교 카메라. y는 눈높이가 아니라 바닥0m. 실제 촬영GPS/렌즈는 미확인."
-      },
-      {
-        "spot": "round13 반원상가 녹색 방수 옥상 비교",
-        "photos": [
-          "refs/aerial/newcore_banwon.jpg",
-          "refs/walk/s9_jamwon/KFygWqMvrY8_5.jpg"
-        ],
-        "x": -104.78,
-        "y": 8.4,
-        "z": -399.3,
-        "yawDeg": 65,
-        "pitchDeg": -25,
-        "expected_subject": "녹색 지붕 표면·기존 옥상 설비·계단실. 확인되지 않은 운동장 기능/필드 라인 없음",
-        "coordinate_basis": "KFygWqMvrY8_5와 항공사진의 재질 비교용 옥상 바닥 카메라. y8.4는 실제 모델 옥상 바닥이며 항공 촬영 높이가 아니다. 공개 옥상 스폰은 등록하지 않았다."
+        "pitchDeg": 20,
+        "expected_subject": "좁은 흑색 출입탑·작은 3개 밝은 핀, 2층 점포열과 계단 양쪽 스테인리스 난간",
+        "coordinate_basis": "u-8.8,v20의 계단 앞 지상 카메라 유지. 원본 영상의 올려다보는 각도에 맞춰 pitch12→20도. y0은 바닥 높이.",
+        "round": 15
       }
     ],
     "guesses": [
@@ -1322,6 +1325,194 @@
         "verified_on": "2026-11-07"
       },
       "scope": "이 작업은 js/places/jamwon_hangang.js, js/places/banwon.js, data/research/jamwon_hangang.json, data/research/banwon.json만 수정. 엔진·tests·_junctions·_meta 미수정. commit/push 없음."
+    },
+    "reference_views": [
+      {
+        "spot": "round13 반원상가 녹색 방수 옥상 비교",
+        "photos": [
+          "refs/aerial/newcore_banwon.jpg",
+          "refs/walk/s9_jamwon/KFygWqMvrY8_5.jpg"
+        ],
+        "x": -104.78,
+        "y": 8.4,
+        "z": -399.3,
+        "yawDeg": 65,
+        "pitchDeg": -25,
+        "expected_subject": "녹색 지붕 표면·기존 옥상 설비·계단실. 확인되지 않은 운동장 기능/필드 라인 없음",
+        "coordinate_basis": "KFygWqMvrY8_5와 항공사진의 재질 비교용 옥상 바닥 카메라. y8.4는 실제 모델 옥상 바닥이며 항공 촬영 높이가 아니다. 공개 옥상 스폰은 등록하지 않았다.",
+        "walk_comparison": false,
+        "exclude_from_walk_comparison": true,
+        "exclusion_reason": "newcore_banwon.jpg는 항공 정사영상이고 KFygWqMvrY8_5도 항공 장면. 보행 프레임이 아니므로 modeling.trace에서 제외해 modeling.reference_views로 보존. 바닥 높이 y=8.4인 옥상 카메라를 드론 촬영점으로 오인하지 않음."
+      }
+    ],
+    "decisions_round15": {
+      "evidence_opened": [
+        "shots/walk13all/banwon_1.png",
+        "shots/walk13all/banwon_2.png",
+        "refs/roadview/banwon_01_front.jpg",
+        "refs/roadview/banwon_02_across_towers.jpg",
+        "refs/aerial/newcore_banwon.jpg",
+        "refs/walk/s9_jamwon/KFygWqMvrY8_60.jpg"
+      ],
+      "coordinate_system": "P(u,v)=(-152.28+u*cosR+v*sinR,-419.62-u*sinR+v*cosR), R=atan2(14.39,40.68). u=ENE, v=SSE; front is u<0. y is floor height.",
+      "priority_order": [
+        "bad_cameras",
+        "layout",
+        "design",
+        "details"
+      ],
+      "camera_changes": [
+        {
+          "row": "banwon_00",
+          "before": [
+            -154.1,
+            0,
+            -397.76,
+            289.48,
+            10
+          ],
+          "after": [
+            -159.33,
+            0,
+            -389.76,
+            289.48,
+            8
+          ],
+          "local_uv": [
+            -16.6,
+            25.8
+          ],
+          "reason": "원본 로드뷰는 전면 계단·우측 경사로·우리은행과 가까운 은행나무까지 보여준다. u-9,v20 근접 정중앙 시점은 이들을 잘랐다."
+        },
+        {
+          "row": "banwon_02",
+          "position": [
+            -153.91,
+            0,
+            -397.83
+          ],
+          "yawDeg": 289.48,
+          "pitchDeg_before": 12,
+          "pitchDeg_after": 20,
+          "reason": "가까운 계단 아래에서 올려다보는 실제 영상. 위치/바닥은 유지하고 올려보는 각도 수정."
+        },
+        {
+          "row": "banwon_03",
+          "action": "modeling.trace에서 제거하고 modeling.reference_views로 보존",
+          "reason": "항공 정사영상과 항공 클립이며 보행 프레임이 아님. y250~300 드론 위치를 floor-y 보행 trace로 넣지 않음. 기존 녹색 옥상과 설비도 그대로 보존."
+        }
+      ],
+      "review_decisions": [
+        {
+          "item": "layout[0] portal proportions",
+          "status": "부분 적용",
+          "changes": "포탈 u-.65,v16.6..23: 폭9.8→6.4m, 상단9.4→11.2m. 문폭3.6→3.2m. u-.9..5,v18.3..21.7,y4.02의 짙은 전실 천장과 측벽으로 밝은 복도의 직접 노출 축소. 1F통로 유지.",
+          "rejected": "사진상 포탈은 측면 지붕보다 약20~25% 높고 +5m가 아니다. 5m폭/12m높이 비례를 그대로 적용하지 않음. 흰 핀3개는 실제 원본에도 있으므로 제거하지 않고 1.8→1.18m로 단축."
+        },
+        {
+          "item": "layout[1] stairs/railings/planters",
+          "status": "적용",
+          "changes": "u-6.7→-3.1,v20 계단 폭5.4m, 길이3.6m, y0→1.2. 양측 v17.3/22.7 난간 높이.94m, 밝은 스테인리스 gloss.5. 오른쪽 긴 경사로 유지. 계단 앞 u-9.7..-6.7,v15.9..23.8 평탄 보도. u-8.95,v.8..15.5 및24.4..39 생울타리.",
+          "correction": "난간과 은행나무는 없었던 것이 아니라 기존에 존재했으며 근접 카메라로 안 보이던 부분이 크다. 보존하면서 재배치/보강."
+        },
+        {
+          "item": "layout[2] pharmacy/bank/red post",
+          "status": "부분 적용",
+          "changes": "약국v26.7 폭6.4m→우리은행v34.8 폭9.3m, 파랑 바탕/흰 문자. 태권도는 실제처럼 상층v33.2 유지. 창문 안내판과 유리 포스터 추가.",
+          "rejected": "2025 사진의 우리은행은 청색 바탕 흰 글자여서 제안된 흰 간판으로 바꾸지 않음. 빨간 입간판은 영상에서 출입구 오른쪽에 실제 보이므로 계단 왼쪽으로 옮기지 않음."
+        },
+        {
+          "item": "layout[3] video facade / ground-floor arcade",
+          "status": "부분 적용",
+          "changes": "같은 좁은 출입탑·계단 수정, 좌측 조현(v4.8)/이비(v12.2)와 포탈 인후과+(v19.8)를 흰색 연속 간판대로 정리.",
+          "rejected": "원본은 조현으로 읽히며 리뷰의 조연으로 바꾸지 않음. 1층 전체가 공통 높이의 기단 위에 있으므로 좌측 점포를 길바닥 y0로 내리는 제안은 사진과 기존 보행 동선에 모순."
+        },
+        {
+          "item": "layout[4] opposite sidewalk/hedge/lamp/towers",
+          "status": "부분 적용",
+          "changes": "실제 도로 A(-145.36,-365.39)→Z(-169.16,-427.87) 좌표계에서 t5..61,o-7.15..-9.6 보도와 o-9.7 생울타리, o-7.35 난간. t32,o-7.85 높이6.3m 가로등. 중간 출입 간격 보존.",
+          "deferred": "아파트 외피는 city.js가 생성하며 이번 모듈의 OSM claim이 아니다. 타워 재질/발코니와 기존 도시 수목 크기 수정은 금지된 엔진/다른 소유 geometry 범위이므로 보류."
+        },
+        {
+          "item": "design[0] portal/facade colours",
+          "status": "적용",
+          "changes": "흑색 #17191d/#25292e 패널+gloss.3, 흰 BAN WON. 측면 #d9dadc 패널, 청색 약국/은행 간판. 1F 타일 gloss.3.",
+          "deferred": "전역 하늘/헤이즈는 엔진 소유이며 모듈에서 전역 날씨를 덮어쓰지 않음."
+        },
+        {
+          "item": "design[1] sign density",
+          "status": "부분 적용",
+          "changes": "실제로 읽히는 조현/이비/인후과, 약국, 우리은행 안내를 연속 띠와 작은 창 안내판으로 표현.",
+          "rejected": "10~12개 새 간판이나 격점 돌출간판은 사진 근거/상호가 확인되지 않아 임의 추가하지 않음."
+        },
+        {
+          "item": "design[2] red road/markings",
+          "status": "부분 적용",
+          "changes": "짙은 공유 asphalt에 색을 곱하던 표현을 #c45b4d 바탕의 직접 채색 골재 텍스처로 교체. 도로 중앙선/백선 아래 기존 y.0345 유지. 기존 어린이 보호구역 글자 보존.",
+          "rejected": "원본의 큰 신반포로 글자와 흰 방향 화살표는 네이버 로드뷰 UI 오버레이. 도로 도색으로 복제하지 않음. 중앙 황색선은 city-owned 두줄 도색이므로 중복 덧칠하지 않음."
+        },
+        {
+          "item": "design[3] trees",
+          "status": "부분 적용",
+          "changes": "건너편 t7..59,o-11.1에 높이7.3~7.8m 수목10그루를 약5.8m 간격으로 추가. 기존 전면 은행나무 보존.",
+          "deferred": "기존 도시 아파트 수목 축소/삭제는 소유 범위 밖. 새 가로수 줄과 울타리로 실제 거리의 녹지층을 보강."
+        },
+        {
+          "item": "details[0] street clutter/people",
+          "status": "부분 적용",
+          "changes": "기존 경고삼각형을 계단 왼쪽 u-8.35,v15.9로 옮기고 축소. 스테인리스 난간/창 포스터 보강. K.detail에서 계단참 u-2.1,v18.1,y1.2 및 보도 u-7.4,v25.2,y0에 옷/방향이 다른 보행자2명과 가방 추가.",
+          "rejected": "6~8개 실외기 집단은 해당 원본 프레임에 확인되지 않는다. A 지도마커·로드뷰 화살표·UI도 만들지 않음. 사진은 비교적 한산하므로 바깥에 혼잡한 군중을 만들지 않음."
+        },
+        {
+          "item": "details[1] black car / tower stripes",
+          "status": "부분 적용",
+          "changes": "도로 t22,o-5.5에 검은 승용차 한 대를 K.detail로 추가해 화면 왼쪽 가장자리 차량을 표현. 움직임/주차 여부는 단정하지 않음.",
+          "deferred": "타워 발코니 줄무늬는 city-owned 건물 외피 범위."
+        },
+        {
+          "item": "details[2] aerial empty plane",
+          "status": "보행 비교에서 제외",
+          "reason": "bad_cameras 처리로 항공 참조를 별도 보존. 주변 학교·아파트를 옥상 사진에 맞춰 이 모듈에 중복 모델링하지 않음."
+        }
+      ],
+      "preserved": "OSM footprint/claims, 1F1.2/2F4.8/roof8.4, 승강기·계단·식당/야장/약국/은행 실내와 이전 stock/detail 전부 유지. 새 detail는 근접 그룹이며 큰 기능 동선은 그룹 밖.",
+      "junctions": "_junctions.js의 JUNCTIONS/WELLS에 banwon 이름이 없음을 확인. 공유 파일 수정 없음."
+    },
+    "validation_round15": {
+      "smoke": {
+        "command": "node tests/smoke.mjs banwon",
+        "result": "OK"
+      },
+      "module_walk": {
+        "command": "node tests/walk.mjs banwon",
+        "result": "11 ok, 0 blocked"
+      },
+      "targeted_physics": {
+        "method": "tests/walk.mjs를 메모리에서만 읽어 실제 kit/physics/city로 검사. 파일 작성/테스트 수정 없음.",
+        "result": "조정된 지상 카메라2개 floor0/free=true; 전면 계단→1F복도 및 오른쪽 경사로→1F복도 모두 보행 가능."
+      },
+      "diff_check": "git diff --check -- js/places/banwon.js data/research/banwon.json 통과",
+      "screenshots": {
+        "executed": false,
+        "reason": "사용자 지시로 tests/shot.mjs 실행하지 않음. 첨부 시트 및 원본 사진은 모두 직접 열어 확인했으나 변경 후 렌더는 미확인."
+      },
+      "combined_checks": "상위 작업자가 jamwon_hangang banwon hangang 스모크 및 전체 walk를 최종 확인한다.",
+      "scope": "이 작업의 변경은 지정된4개 JS/JSON파일만. 엔진/tests/_junctions 변경·shot.mjs·commit/push 없음.",
+      "combined_smoke": {
+        "command": "node tests/smoke.mjs jamwon_hangang banwon hangang",
+        "result": "OK"
+      },
+      "walk_all": {
+        "command": "node tests/walk.mjs",
+        "result": "687 ok, 0 blocked",
+        "user_routes": "사용자 루트1~7을 포함한 전체 검사 통과",
+        "note": "전체검사 실행 중 최종 카메라바닥높이·전시벽·수목이격을 보정함. 그 보정은 최종 실제kit/physics 카메라37개 및 보행폭8835표본으로 별도재검증했고 최종세모듈 보행검사도 수행."
+      },
+      "final_combined_walk": {
+        "command": "node tests/walk.mjs jamwon_hangang banwon hangang",
+        "result": "69 ok, 0 blocked",
+        "state": "마지막geometry수정 이후 검사"
+      }
     }
   }
 }

@@ -1295,7 +1295,7 @@
     "s9 합성 문서의 근거0은 원본52프레임과 불일치하여 채택하지 않음. HF_65 사각 콘크리트와 구잠원 금속아치는 서로 다른 나들목으로 분리. rJp_760 아치교각이라는 로그 설명도 실제 프레임에 없어 배치 근거에서 제외."
   ],
   "modeling": {
-    "round": 13,
+    "round": 15,
     "trace": [
       {
         "spot": "잠원나들목 · 공원측 아치 입구",
@@ -1583,14 +1583,22 @@
         "photos": [
           "refs/interior/jamsugyo_wave/wave_03_sfac_exterior.jpg"
         ],
-        "x": 166,
+        "x": 165.5,
         "y": 0.12,
         "z": -1536,
         "yawDeg": 0,
         "pitchDeg": 0,
         "eyeY": 1.74,
         "coordinate_status": "모델 검수 카메라, 원본 사진GPS아님",
-        "note": "서울문화재단의 전시공간 설명에서 유도한 흰 벽 공간. 사진에 없는 평면은 추정이며 전시작품 복제는 하지 않음."
+        "note": "서울문화재단의 전시공간 설명에서 유도한 흰 벽 공간. 사진에 없는 평면은 추정이며 전시작품 복제는 하지 않음.",
+        "round15_previous_pose": {
+          "x": 166,
+          "y": 0.12,
+          "z": -1536,
+          "yawDeg": 0,
+          "pitchDeg": 0
+        },
+        "round15_note": "중층하부로 정렬한 전시벽과 .25m 겹치던 기존 카메라를 서쪽 .5m 이동. 바닥높이 유지."
       },
       {
         "spot": "마레보 인 웨이브 · 2F벨라홀",
@@ -1641,14 +1649,22 @@
         "photos": [
           "refs/walk/s9_jamwon/HF1iiczAe6M_65.jpg"
         ],
-        "x": 344.24,
-        "y": 0.025,
-        "z": -1268.03,
+        "x": 350.4,
+        "y": 0.04,
+        "z": -1258.3,
         "yawDeg": 43.38,
-        "pitchDeg": -8,
-        "eyeY": 1.645,
+        "pitchDeg": 5,
+        "eyeY": 1.66,
         "coordinate_status": "모델 검수 카메라; 원본 GPS가 아니며 y는 바닥/발 높이",
-        "note": "보행축/램프높이 보존. 별도 구잠원 금속아치와 구분."
+        "note": "보행축/램프높이 보존. 별도 구잠원 금속아치와 구분.",
+        "round15_previous_pose": {
+          "x": 344.24,
+          "y": 0.025,
+          "z": -1268.03,
+          "yawDeg": 43.38,
+          "pitchDeg": -8
+        },
+        "round15_note": "터널 지붕 아래에서 거리측 포장 앞쪽으로 이동. 구조물은 건물로 단정하지 않고 방음벽/격자로 읽음."
       },
       {
         "round": 13,
@@ -1657,14 +1673,22 @@
           "refs/walk/s9_jamwon/HF1iiczAe6M_90.jpg",
           "refs/walk/s9_jamwon/HF1iiczAe6M_110.jpg"
         ],
-        "x": 274.175,
+        "x": 276.95,
         "y": 0.065,
-        "z": -1348.755,
+        "z": -1350.25,
         "yawDeg": 28.33,
         "pitchDeg": 0,
         "eyeY": 1.685,
         "coordinate_status": "모델 검수 카메라; 원본 GPS가 아니며 y는 바닥/발 높이",
-        "note": "OSM408858834 축; 넓이와 분리선 추정."
+        "note": "OSM408858834 축; 넓이와 분리선 추정.",
+        "round15_previous_pose": {
+          "x": 274.175,
+          "y": 0.065,
+          "z": -1348.755,
+          "yawDeg": 28.33,
+          "pitchDeg": 0
+        },
+        "round15_note": "자전거길 중심에서 우측 보행띠로 이동. 원본 왼쪽에 노란 중앙선이 실제 보이므로 유지."
       },
       {
         "round": 13,
@@ -1672,14 +1696,22 @@
         "photos": [
           "refs/walk/s9_jamwon/HF1iiczAe6M_130.jpg"
         ],
-        "x": 240,
+        "x": 264.3,
         "y": 0.065,
-        "z": -1388.65,
-        "yawDeg": 245,
+        "z": -1373.3,
+        "yawDeg": 47.5,
         "pitchDeg": 0,
         "eyeY": 1.685,
         "coordinate_status": "모델 검수 카메라; 원본 GPS가 아니며 y는 바닥/발 높이",
-        "note": "횡단도색·안내판의 정확한 위치는 추정."
+        "note": "횡단도색·안내판의 정확한 위치는 추정.",
+        "round15_previous_pose": {
+          "x": 240,
+          "y": 0.065,
+          "z": -1388.65,
+          "yawDeg": 245,
+          "pitchDeg": 0
+        },
+        "round15_note": "역방향 카메라를 터널→공원 진행방향 보행띠로 변경. 횡단보도는 좌측 자전거길을 가로지름."
       },
       {
         "round": 13,
@@ -1702,14 +1734,22 @@
         "photos": [
           "refs/walk/s9_jamwon/HF1iiczAe6M_215.jpg"
         ],
-        "x": 243,
-        "y": 0.065,
+        "x": 236,
+        "y": 0.07,
         "z": -1453,
-        "yawDeg": 13,
-        "pitchDeg": 0,
-        "eyeY": 1.685,
+        "yawDeg": 85,
+        "pitchDeg": -8,
+        "eyeY": 1.69,
         "coordinate_status": "모델 검수 카메라; 원본 GPS가 아니며 y는 바닥/발 높이",
-        "note": "원본 흙길의 실제GPS미상; 실제부교 노드로 이어지는 경로."
+        "note": "원본 흙길의 실제GPS미상; 실제부교 노드로 이어지는 경로.",
+        "round15_previous_pose": {
+          "x": 243,
+          "y": 0.065,
+          "z": -1453,
+          "yawDeg": 13,
+          "pitchDeg": 0
+        },
+        "round15_note": "부교 정면 대신 서측 수변 합류 흙길과 큰 나무를 바라봄. GPS는 추정."
       },
       {
         "round": 13,
@@ -1720,14 +1760,22 @@
           "refs/walk/s9_jamwon/HF1iiczAe6M_305.jpg",
           "refs/walk/s9_jamwon/zykZqEnfdl4_21.jpg"
         ],
-        "x": 225.399,
-        "y": 0.12,
-        "z": -1483.586,
-        "yawDeg": 46.6,
-        "pitchDeg": 5,
-        "eyeY": 1.74,
+        "x": 182,
+        "y": 0,
+        "z": -1437,
+        "yawDeg": 5,
+        "pitchDeg": 3,
+        "eyeY": 1.62,
         "coordinate_status": "모델 검수 카메라; 원본 GPS가 아니며 y는 바닥/발 높이",
-        "note": "공식주소와 OSM부교 고정; 새간판/부교 조명/구명환 반영."
+        "note": "공식주소와 OSM부교 고정; 새간판/부교 조명/구명환 반영.",
+        "round15_previous_pose": {
+          "x": 225.399,
+          "y": 0.12,
+          "z": -1483.586,
+          "yawDeg": 46.6,
+          "pitchDeg": 5
+        },
+        "round15_note": "부교 위에서 육지 잔디로 이동하여 물 너머 남측 긴 물결 입면을 봄. OSM 부교 양끝 고정으로 실제 거리/화각은 미확정."
       },
       {
         "round": 13,
@@ -1735,14 +1783,22 @@
         "photos": [
           "refs/walk/s9_jamwon/HF1iiczAe6M_285.jpg"
         ],
-        "x": 212,
+        "x": 210,
         "y": 0.065,
-        "z": -1449,
-        "yawDeg": 55,
-        "pitchDeg": 0,
+        "z": -1443,
+        "yawDeg": 100,
+        "pitchDeg": -12,
         "eyeY": 1.685,
         "coordinate_status": "모델 검수 카메라; 원본 GPS가 아니며 y는 바닥/발 높이",
-        "note": "수변 식물패치와 안전띠 extent는 추정."
+        "note": "수변 식물패치와 안전띠 extent는 추정.",
+        "round15_previous_pose": {
+          "x": 212,
+          "y": 0.065,
+          "z": -1449,
+          "yawDeg": 55,
+          "pitchDeg": 0
+        },
+        "round15_note": "건물을 화면 밖으로 보내고 잎·안전띠·강을 향함."
       },
       {
         "round": 13,
@@ -1750,14 +1806,22 @@
         "photos": [
           "refs/walk/s9_jamwon/HF1iiczAe6M_360.jpg"
         ],
-        "x": 178,
+        "x": 177.3,
         "y": 0.12,
-        "z": -1528,
-        "yawDeg": 0,
-        "pitchDeg": 8,
+        "z": -1524.7,
+        "yawDeg": 345,
+        "pitchDeg": 10,
         "eyeY": 1.74,
         "coordinate_status": "모델 검수 카메라; 원본 GPS가 아니며 y는 바닥/발 높이",
-        "note": "1M는1F내 중층해석이며2F웨딩홀 유지. 정확한 높이/평면은 추정."
+        "note": "1M는1F내 중층해석이며2F웨딩홀 유지. 정확한 높이/평면은 추정.",
+        "round15_previous_pose": {
+          "x": 178,
+          "y": 0.12,
+          "z": -1528,
+          "yawDeg": 0,
+          "pitchDeg": 8
+        },
+        "round15_note": "진열대를 등지고 있던 위치에서 입구쪽으로 후퇴. 우측 MD와 상부 갤러리, 노출 천장을 함께 봄."
       },
       {
         "round": 13,
@@ -1765,14 +1829,22 @@
         "photos": [
           "refs/walk/s9_jamwon/zykZqEnfdl4_14.jpg"
         ],
-        "x": 190.5,
+        "x": 155.3,
         "y": 0.12,
-        "z": -1535,
-        "yawDeg": 270,
-        "pitchDeg": 10,
+        "z": -1537,
+        "yawDeg": 112,
+        "pitchDeg": 14,
         "eyeY": 1.74,
         "coordinate_status": "모델 검수 카메라; 원본 GPS가 아니며 y는 바닥/발 높이",
-        "note": "프레임 형태만 확인. 실내 방향은 복원 배치."
+        "note": "프레임 형태만 확인. 실내 방향은 복원 배치.",
+        "round15_previous_pose": {
+          "x": 190.5,
+          "y": 0.12,
+          "z": -1535,
+          "yawDeg": 270,
+          "pitchDeg": 10
+        },
+        "round15_note": "육지/마리나 쪽 동창 대신 서측 강창을 비스듬히 바라봄. 원본 창의 정확한 방위는 미확정."
       },
       {
         "round": 13,
@@ -1780,14 +1852,22 @@
         "photos": [
           "refs/walk/s9_jamwon/g6lNHxLOEEA_13.jpg"
         ],
-        "x": 184,
+        "x": 182.8,
         "y": 0.12,
         "z": -1520.3,
-        "yawDeg": 68,
+        "yawDeg": 57,
         "pitchDeg": 5,
         "eyeY": 1.74,
         "coordinate_status": "모델 검수 카메라; 원본 GPS가 아니며 y는 바닥/발 높이",
-        "note": "밝은 홀→검정 유리문→테라조 카페 순서."
+        "note": "밝은 홀→검정 유리문→테라조 카페 순서.",
+        "round15_previous_pose": {
+          "x": 184,
+          "y": 0.12,
+          "z": -1520.3,
+          "yawDeg": 68,
+          "pitchDeg": 5
+        },
+        "round15_note": "승강기축 정면을 피하고 슬랫 간판·카페 유리문 중심으로 시선 조정."
       },
       {
         "round": 13,
@@ -1795,14 +1875,22 @@
         "photos": [
           "refs/walk/s9_jamwon/HF1iiczAe6M_400.jpg"
         ],
-        "x": 155,
+        "x": 150.6,
         "y": 0.12,
         "z": -1532,
         "yawDeg": 90,
         "pitchDeg": 0,
         "eyeY": 1.74,
         "coordinate_status": "모델 검수 카메라; 원본 GPS가 아니며 y는 바닥/발 높이",
-        "note": "외부 송전탑 위치를 이 프레임으로 확정하지 않음. 기존 창밖 수역 검수."
+        "note": "외부 송전탑 위치를 이 프레임으로 확정하지 않음. 기존 창밖 수역 검수.",
+        "round15_previous_pose": {
+          "x": 155,
+          "y": 0.12,
+          "z": -1532,
+          "yawDeg": 90,
+          "pitchDeg": 0
+        },
+        "round15_note": "창 기둥 뒤에서 외부 갑판 가장자리로 이동해 강 시야 확보. 송전탑 지점은 미확정."
       },
       {
         "round": 13,
@@ -1810,14 +1898,22 @@
         "photos": [
           "refs/walk/s9_jamwon/HF1iiczAe6M_500.jpg"
         ],
-        "x": 152.8,
+        "x": 153.35,
         "y": 0.12,
-        "z": -1537,
-        "yawDeg": 25,
-        "pitchDeg": 0,
+        "z": -1542.2,
+        "yawDeg": 90,
+        "pitchDeg": -5,
         "eyeY": 1.74,
         "coordinate_status": "모델 검수 카메라; 원본 GPS가 아니며 y는 바닥/발 높이",
-        "note": "보트는 서측 외부데크 추정배치; 실내 통행선 밖."
+        "note": "보트는 서측 외부데크 추정배치; 실내 통행선 밖.",
+        "round15_previous_pose": {
+          "x": 152.8,
+          "y": 0.12,
+          "z": -1537,
+          "yawDeg": 25,
+          "pitchDeg": 0
+        },
+        "round15_note": "서측 갑판에서 난간 옆 보트를 옆으로 바라보며 건물벽을 화면 밖으로 보냄."
       },
       {
         "round": 13,
@@ -1825,29 +1921,22 @@
         "photos": [
           "refs/walk/s9_jamwon/rTgYwFjfd5U_1650.jpg"
         ],
-        "x": 400,
+        "x": 403.66,
         "y": 0.065,
         "z": -1649.508,
         "yawDeg": 135.9,
         "pitchDeg": 0,
         "eyeY": 1.685,
         "coordinate_status": "모델 검수 카메라; 원본 GPS가 아니며 y는 바닥/발 높이",
-        "note": "기존 수목열 유지, 강쪽 낮은 로프 추가. 실제촬영GPS미상."
-      },
-      {
-        "round": 13,
-        "spot": "회색 한강남자전거길",
-        "photos": [
-          "refs/walk/s9_jamwon/rJp8H31kdjY_60.jpg"
-        ],
-        "x": 86.32,
-        "y": 0.065,
-        "z": -1238.5,
-        "yawDeg": 343,
-        "pitchDeg": 0,
-        "eyeY": 1.685,
-        "coordinate_status": "모델 검수 카메라; 원본 GPS가 아니며 y는 바닥/발 높이",
-        "note": "회색 아스팔트만 대응. 주차장/대여천막의 원본 촬영위치는 미확정."
+        "note": "기존 수목열 유지, 강쪽 낮은 로프 추가. 실제촬영GPS미상.",
+        "round15_previous_pose": {
+          "x": 400,
+          "y": 0.065,
+          "z": -1649.508,
+          "yawDeg": 135.9,
+          "pitchDeg": 0
+        },
+        "round15_note": "양끝 (321,-1568)/(447,-1698)은 고정하고 완만한 곡선을 준 회색길 위로 카메라 이동. 수목·로프는 같은 곡선을 따름."
       }
     ],
     "guesses": [
@@ -1891,6 +1980,13 @@
           "refs/interior/jamwon_park/13_floating_deck_cafe.jpg"
         ],
         "reason": "CU압구정크루즈3F로 귀속 확정. 잘못된 세븐일레븐 옥상 검수점 제거; CU정확좌표 미확인."
+      },
+      {
+        "photos": [
+          "refs/walk/s9_jamwon/rJp8H31kdjY_60.jpg"
+        ],
+        "round": 15,
+        "reason": "현재 잔디 분기점 대응은 틀림. 천막 왼쪽/주차장 오른쪽 위치는 원본과 인접 프레임·항공사진으로도 지오로케이션되지 않음. 임의 위치 시설 생성 대신 trace에서 제외하여 잘못된 매칭을 반복하지 않음."
       }
     ],
     "validation": {
@@ -3255,6 +3351,234 @@
         "result": "69 ok, 0 blocked"
       },
       "scope": "이 작업은 js/places/jamwon_hangang.js, js/places/banwon.js, data/research/jamwon_hangang.json, data/research/banwon.json만 수정. 엔진·tests·_junctions·_meta 미수정. commit/push 없음."
+    },
+    "reference_views": [
+      {
+        "round": 13,
+        "spot": "회색 한강남자전거길",
+        "photos": [],
+        "x": 86.32,
+        "y": 0.065,
+        "z": -1238.5,
+        "yawDeg": 343,
+        "pitchDeg": 0,
+        "eyeY": 1.685,
+        "coordinate_status": "원본 촬영위치 미확정: 프레임 비교에서 제외한 기존 경로 검수점",
+        "note": "회색 아스팔트만 대응. 주차장/대여천막의 원본 촬영위치는 미확정.",
+        "round15_previous_photos": [
+          "refs/walk/s9_jamwon/rJp8H31kdjY_60.jpg"
+        ],
+        "round15_note": "rJp60은 흰 천막 왼쪽·주차장 오른쪽. 현 잔디 분기점과 같다는 근거가 없어 잘못된 매칭 해제; 주차장/천막 위치를 임의 생성하지 않음.",
+        "walk_comparison": false
+      }
+    ],
+    "round15_review": {
+      "review_file": ".codex-jobs/evidence/review_walk13.json",
+      "checked_on": "2026-11-07",
+      "method": "첨부5개비교시트와 실제원본14프레임을 직접 열어 대조; 독립agent도 원본·인접프레임·항공사진 확인. 리뷰의 숫자나 색판정을 그대로 사실로 채택하지 않음.",
+      "sheets": [
+        "shots/walk13all/jamwon_hangang_1.png",
+        "shots/walk13all/jamwon_hangang_2.png",
+        "shots/walk13all/jamwon_hangang_3.png",
+        "shots/walk13all/jamwon_hangang_4.png",
+        "shots/walk13all/jamwon_hangang_5.png"
+      ],
+      "layout": [
+        {
+          "camera": "jamwon_hangang_00",
+          "status": "partially_applied",
+          "decision": "HF65 실제 원본 확인. 카메라를 (350.4,.04,-1258.3)으로 후퇴. 보행/차도 OSM축은 보존하고 거리측 15.7×13.4m 포장·경사옹벽·상부 금속 방음패널과 격자 추가. 리뷰의 25m 후퇴 및 점유 건물은 근거 없어 채택하지 않음."
+        },
+        {
+          "camera": "jamwon_hangang_01",
+          "status": "corrected_reviewer",
+          "decision": "HF90 왼쪽에 노란 중앙선이 실제 있다. 이를 보존하고 카메라를 우측 보행띠 (276.95,.065,-1350.25)로 이동. 자전거3.8m+보행1.85m, 양측 5.5m 간격 관목/수목. 하늘·도시·체력단련장 삭제 안함."
+        },
+        {
+          "camera": "jamwon_hangang_02",
+          "status": "applied",
+          "decision": "역방향 카메라를 (264.3,.065,-1373.3),yaw47.5로 수정. OSM259.74,-1376.82→251.9,-1384.26 구간에 폭3.56m/두께.46m 줄6개를 횡방향 배치. 안내판(256.8,-1389),콘(256.1,-1382.5),가로등 추가. 기존 OSM 곡선 보존."
+        },
+        {
+          "camera": "jamwon_hangang_03",
+          "status": "applied",
+          "decision": "기존 (238.65,-1389.18)→(289.49,-1501.82) 직선 연결을 보행로 서편 (241.2,-1404)/(240,-1430)/(236,-1453)으로 돌리고 y=.05로 내려 보행길 y=.065와의 겹침 제거. 보행로는 젖은 암회색, 수목 두줄5.8m간격."
+        },
+        {
+          "camera": "jamwon_hangang_04",
+          "status": "applied",
+          "decision": "(243,-1453)→(236,-1453)→(227,-1456)→(219,-1453) 1.6m흙길 추가. 큰나무 (222.5,-1452), 카메라(236,.07,-1453),yaw85,pitch-8. 강 방향·GPS는 추정."
+        },
+        {
+          "camera": "jamwon_hangang_05",
+          "status": "applied_with_uncertainty",
+          "decision": "부교 카메라를 육지 (182,0,-1437),yaw5로 옮겨 남측 긴 입면을 물너머 봄. 기존 OSM부교 약60m라 15m거리 가정은 거절. 실제 촬영화각/좌표 미확정."
+        },
+        {
+          "camera": "jamwon_hangang_06",
+          "status": "applied",
+          "decision": "카메라(210,.065,-1443),yaw100,pitch-12로 건물에서 서쪽을 바라봄. 기존 덩굴패치를 보존하고 240장 잎·잎맥·덩굴을 겹침 추가."
+        },
+        {
+          "camera": "jamwon_hangang_07",
+          "status": "corrected_reviewer",
+          "decision": "중층·원형 MD는 이미 있었으나 카메라/높은 전시칸막이에 가려짐. 카메라(177.3,.12,-1524.7),yaw345,pitch10. 전시칸막이 x169.5→166.15,상단4.02→2.49로 중층 아래에 정렬. 중층 y2.65와 계단·승강기 연결 보존. 원본 천장은 밝은 노출형이므로 검정/목재천장은 채택하지 않음."
+        },
+        {
+          "camera": "jamwon_hangang_08",
+          "status": "partially_applied",
+          "decision": "강을 보는 서측 창으로 카메라 (155.3,.12,-1537),yaw112,pitch14 이동. 1F동서 창살을 폭.054m 검정으로,상부 흰핀과 물결 스팬드럴은 보존. 원본 방위 미확정. 실제 배경을 삭제하지 않음."
+        },
+        {
+          "camera": "jamwon_hangang_09",
+          "status": "applied",
+          "decision": "선체 데크 slab에서 실내 inner구멍을 빼고 선체 prism상면을 제거하여 목재/실내 바닥 중첩 해결. 1F밝은 콘크리트 gloss.5, 실내테라조gloss.5. 카메라시선을 문쪽으로 옮기고 승강기구조는 보존."
+        },
+        {
+          "camera": "jamwon_hangang_10",
+          "status": "partially_applied",
+          "decision": "카메라(150.6,.12,-1532)로 창앞 핀/난간과 충돌 없이 강 시야 확보. 원본 송전탑은 가까운 수목 둔덕에 있으나 정확핀 미확정. 60m/700m 추정탑은 생성하지 않음. 전역물색은 엔진/도시영역."
+        },
+        {
+          "camera": "jamwon_hangang_11",
+          "status": "applied",
+          "decision": "서측 보트는 x150.35..151.95,z-1540.8..-1544.4, 길이3.6m의 둥근 선수로 보정. 난간 옆 체인과 튜브거치대 추가. 카메라(153.35,.12,-1542.2),yaw90. 실제사진 오른쪽에도 벽 일부가 있으므로 벽 자체는 보존."
+        },
+        {
+          "camera": "jamwon_hangang_12",
+          "status": "applied",
+          "decision": "포플러길 양끝 고정, (350,-1593)/(379,-1621)/(411,-1658) 곡선 추가. 수목/로프도 동일축 따라감. 강쪽수관 폭약2.1~2.5m,밝은녹색,높이약12m,6m간격. 육지쪽수목은 삭제하지 않고 offset7.7→13.5로 후퇴/수관축소."
+        },
+        {
+          "camera": "jamwon_hangang_13",
+          "status": "unmatched_reference",
+          "decision": "rJp60 실제는 왼쪽흰천막·오른쪽보행로/주차장. 기존 (86.32,-1238.5) 잔디분기점과 다른 장면. 인접프레임/항공근거에도 위치확정 못해 trace에서 제외하고 reference_views에 보존. 임의 주차장·천막·군중을 만들지 않음."
+        }
+      ],
+      "design": [
+        {
+          "camera": "jamwon_hangang_01..13",
+          "status": "partial_scope_limit",
+          "decision": "공원 잔디를 자체 muted 녹갈색 텍스처로 바꾸고 젖은 보행/주황포장 gloss.3. 하늘/안개/도시스카이라인은 공유엔진 소유, 맑은 다른 원본도 있어 전역날씨 변경하지 않음."
+        },
+        {
+          "camera": "jamwon_hangang_01, jamwon_hangang_02",
+          "status": "corrected_reviewer",
+          "decision": "주황포장을 직접색 #c58b68/#cfa181 및 gloss.3으로 변경. 흰 보행분리선 .12m. 실제 존재하는 노란 중앙선은 유지."
+        },
+        {
+          "camera": "jamwon_hangang_07",
+          "status": "corrected_reviewer",
+          "decision": "사진 흰 노출천장에 맞춰 2F슬래브 하면을 따뜻한 밝은 패널로 바꾸고 옅은청회색 보/배관·따뜻한 펜던트 추가. 테라조칩 대비·밀도 보강. 검정천장/임의8~10 pointlight 대신 기존 렌더API 발광등 사용."
+        },
+        {
+          "camera": "jamwon_hangang_10, jamwon_hangang_11",
+          "status": "scope_limit",
+          "decision": "본 장면의 한강 수면은 city.js의 공유water. 이 모듈에서 겹치는 거대 평면을 덧씌우거나 전역텍스처를 바꾸지 않음. 흐린날 색/잔물결 차이는 후속 엔진 항목."
+        },
+        {
+          "camera": "jamwon_hangang_12",
+          "status": "applied",
+          "decision": "포플러 수관 폭2.1~2.5m/높이약12m,6m간격 및 #6a884a/#78974e/#829c51. 강쪽 시야를 가리는 넓은 수관은 축소하고 육지쪽 실제 수목 보존."
+        }
+      ],
+      "details": [
+        {
+          "camera": "jamwon_hangang_00",
+          "status": "applied",
+          "decision": "신잠원 거리측 갈색격자 배수덮개1.05×.68m,갈색 나들목간판3×.68m,청색보행안내표지 및 상부 금속격자. 기존5m간격 형광등 보존."
+        },
+        {
+          "camera": "jamwon_hangang_02",
+          "status": "applied",
+          "decision": "콘(256.1,-1382.5),가로등(265,-1378)/(278,-1353),횡단표시 재배치."
+        },
+        {
+          "camera": "jamwon_hangang_05",
+          "status": "applied_as_text",
+          "decision": "남측 2F 흰띠(x172,y7.05,z-1517.65)에 지름1.16m녹색 원형 문자표지. API 지침에 맞춰 인어로고를 복제하지 않고 스타벅스 실명표시. 실제 MAREVO IN WAVE 청색문자는 기존 유지."
+        },
+        {
+          "camera": "jamwon_hangang_07",
+          "status": "applied",
+          "decision": "기존 카페2인 보존하고 1F12인(추가직원1·주문대기2·MD2·좌석6·이동1),출입구2인,중층좌석4인 추가. 비앉은 일부 손님 가방. 원형 MD계단진열18상자/텀블러2서가32개 추가. 사람은 모두 K.detail/K.person."
+        },
+        {
+          "camera": "jamwon_hangang_09",
+          "status": "applied",
+          "decision": "주의표지 높이.72→.60m,문가 z-1522.25로 이동. 유리문 작은초록화살표,문안팎손님2인. 기존안내대 유지."
+        },
+        {
+          "camera": "jamwon_hangang_13",
+          "status": "unmatched_reference",
+          "decision": "rJp60은 약10명이 보이지만 장소핀 미확정. 오매칭을 제거하여 다른 잔디에 천막/주차차량/군중을 임의 생성하지 않음. 기존피크닉·대여소·포플러산책객 보존; 조용한비영상 산책길은 작은쌍5인만 추가."
+        }
+      ],
+      "bad_cameras": {
+        "00": "outside_portal",
+        "04": "muddy_spur",
+        "05": "land_bank",
+        "06": "west_river",
+        "13": "unmatched_frame_removed_from_trace"
+      },
+      "preserved": "모든 OSM외곽/claims/공유접점, 두나들목 램프/차도, 부교, 기존가구/수목/보트, 카페1M·계단·승강기,2F/3F웨딩홀 유지. _junctions/엔진/tests/_meta 변경없음.",
+      "uncertainty": "원본프레임은 GPS/렌즈값 없음. modeling.trace는 재구성 검수시점이며 실측촬영좌표로 주장하지 않음. 기존시설 중 모순없는 상세 삭제하지 않음."
+    },
+    "round15_validation": {
+      "smoke_module": {
+        "command": "node tests/smoke.mjs jamwon_hangang",
+        "result": "OK"
+      },
+      "screenshots": "사용자 지시로 tests/shot.mjs 실행하지 않음. 수정후 새 PNG 렌더 검증을 주장하지 않음. 원본/기존 비교시트와 실제kit/physics로 검증.",
+      "combined_smoke": {
+        "command": "node tests/smoke.mjs jamwon_hangang banwon hangang",
+        "result": "OK"
+      },
+      "walk_all": {
+        "command": "node tests/walk.mjs",
+        "result": "687 ok, 0 blocked",
+        "user_routes": "사용자 루트1~7을 포함한 전체 검사 통과",
+        "note": "전체검사 실행 중 최종 카메라바닥높이·전시벽·수목이격을 보정함. 그 보정은 최종 실제kit/physics 카메라37개 및 보행폭8835표본으로 별도재검증했고 최종세모듈 보행검사도 수행."
+      },
+      "module_walk": {
+        "command": "node tests/walk.mjs jamwon_hangang hangang",
+        "result": "58 ok, 0 blocked"
+      },
+      "physical_validation": {
+        "method": "실제kit/physics + hangang/jamwon_hangang/streets/city + 모든detail,독립agent검증",
+        "trace_cameras": {
+          "checked": 37,
+          "passed": 37,
+          "floor_mismatch": 0,
+          "collision": 0,
+          "low_headroom": 0
+        },
+        "path_samples": {
+          "total": 8835,
+          "waveWalk": 1791,
+          "bikeLink": 2886,
+          "dirtSpur": 513,
+          "poplar": 3645,
+          "scope": "중앙과양쪽유효폭 가장자리",
+          "missing_floors": 0,
+          "unintended_ground_fallback": 0,
+          "collision": 0,
+          "low_headroom": 0
+        },
+        "other_routes": "거리측광장,신잠원램프전체,부교→카페,계단참중앙을거친1F→1M→2F→3F,중층양날개,상층홀,카페순환동선 통과",
+        "detail_errors": 0,
+        "max_detail_group_quads": 22728,
+        "new_park_detail_quads": 16423,
+        "cafe_detail_quads": 1584,
+        "gallery_detail_quads": 272,
+        "corrections": "기존전시 카메라x166→165.5,나무두그루의길가침범을발견하여모든신규수목에보행로폭+.78m이격을적용후재검증"
+      },
+      "final_combined_walk": {
+        "command": "node tests/walk.mjs jamwon_hangang banwon hangang",
+        "result": "69 ok, 0 blocked",
+        "state": "마지막geometry수정 이후 검사"
+      },
+      "scope": "이 작업의 변경은 지정된4개 JS/JSON파일만. 엔진/tests/_junctions 변경·shot.mjs·commit/push 없음."
     }
   }
 }

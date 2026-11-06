@@ -356,8 +356,8 @@
     "round13: 현행3·9호선 표시 층 전체의 원문 공식 도면은 확보하지 못함. 공유월드 층·좌표는 유지하며물리 깊이와 구분."
   ],
   "modeling": {
-    "round": 13,
-    "scope": "가상 보행 round13: 층·개찰구·상업 연결부·환승 순서를 우선 정리한 뒤 영상의 색상·재료·집기를 반영. 공식 층명과 물리 깊이를 구별하며 W3/W9·J7 공유계약 보존. ENTER6는 station 비유료 B1 연결부의 임시 소형 전면으로 표현하고 전체 매장 경계는 미확인으로 기록. 최종 좌표·trace·검증은 구현 후 round13에 추가.",
+    "round": 15,
+    "scope": "round15: 비교 시트와 2025+ 원본 프레임을 재대조하고 카메라→배치→재질/안내→집기/군중 순서로 보정. 실제 B1 띠벽과 7호선 검정 안내판은 보존. W3/W9/J7 및 이웃 모듈 경계 유지. 새 상업 전면과 환승 홀 치수는 사진을 공유 좌표계에 맞춘 추정이며 측량값이 아니다.",
     "guesses": [
       "B1=-6, B2=-11, B3=-16, B4=-21m는 K.LEVELS/공유 월드 계약이며 실제 역의 실측 심도가 아니다. 특히 깊은 9호선을 B4=-21m에 맞췄다.",
       "환승통로 꺾임, 출구 계단 방향, 승강장 길이와 위치는 기존 OSM/공유 연결을 보존한 추정 배치다. 3호선 약 200m 및 3호선 10량·7호선 8량·9호선 6량 모델을 유지한다.",
@@ -711,14 +711,14 @@
         "photos": [
           "refs/walk/s4_enter6_subway/zPXe32QRyJo_16.jpg"
         ],
-        "x": -102.5,
+        "x": -99.5,
         "y": -11,
-        "z": -138,
-        "yawDeg": 90,
-        "pitchDeg": 3,
+        "z": -136.5,
+        "yawDeg": 78,
+        "pitchDeg": 0,
         "floor": "B2",
         "view_id": "r13_zPXe32QRyJo_16",
-        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다.",
+        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다. round15: 원본은 역명 타원·벽면 벤치·도착 전광판을 보는 벽면 사선 구도다. 3호선 PSD를 요구한 검토 의견은 원본에 없어 채택하지 않음. 광고에 가려진 타원을 보도록 후퇴·사선 조정.",
         "validation": {
           "standalone": {
             "support_y": -11,
@@ -728,6 +728,32 @@
             "support_y": -11,
             "capsule_push_m": 0
           },
+          "rendered": false,
+          "scope": "round15 final station.js: actual support/capsule checked standalone and full PLACES; opaque rays exclude people and transparent PSD"
+        },
+        "previous_pose_round13": {
+          "x": -102.5,
+          "y": -11,
+          "z": -138,
+          "yawDeg": 90,
+          "pitchDeg": 3,
+          "validation": {
+            "standalone": {
+              "support_y": -11,
+              "capsule_push_m": 0
+            },
+            "integrated": {
+              "support_y": -11,
+              "capsule_push_m": 0
+            },
+            "rendered": false
+          }
+        },
+        "round15_camera": {
+          "sheet_camera": "station_00",
+          "reason": "원본은 역명 타원·벽면 벤치·도착 전광판을 보는 벽면 사선 구도다. 3호선 PSD를 요구한 검토 의견은 원본에 없어 채택하지 않음. 광고에 가려진 타원을 보도록 후퇴·사선 조정.",
+          "raw_frame_opened": true,
+          "support_check": "passed: actual support y, capsule_push_m=0 standalone/full PLACES",
           "rendered": false
         }
       },
@@ -755,7 +781,8 @@
             "support_y": -11,
             "capsule_push_m": 0
           },
-          "rendered": false
+          "rendered": false,
+          "scope": "round15 final station.js: actual support/capsule checked standalone and full PLACES; opaque rays exclude people and transparent PSD"
         }
       },
       {
@@ -782,7 +809,8 @@
             "support_y": -11,
             "capsule_push_m": 0
           },
-          "rendered": false
+          "rendered": false,
+          "scope": "round15 final station.js: actual support/capsule checked standalone and full PLACES; opaque rays exclude people and transparent PSD"
         }
       },
       {
@@ -793,22 +821,48 @@
           "refs/walk/s4_enter6_subway/zPXe32QRyJo_27.jpg"
         ],
         "x": -98.2,
-        "y": -11,
-        "z": -67,
+        "y": -9.887888889,
+        "z": -62,
         "yawDeg": 180,
-        "pitchDeg": 10,
+        "pitchDeg": 7,
         "floor": "B2",
         "view_id": "r13_zPXe32QRyJo_27",
-        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다.",
+        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다. round15: 원본은 하부 착지점이 아니라 상승 에스컬레이터 탑승 중의 가까운 난간 구도다. 실제 경사 지지면으로 5m 전진하고 y는 물리 지지 높이로 기록.",
         "validation": {
           "standalone": {
-            "support_y": -11,
+            "support_y": -9.887888889,
             "capsule_push_m": 0
           },
           "integrated": {
-            "support_y": -11,
+            "support_y": -9.887888889,
             "capsule_push_m": 0
           },
+          "rendered": false,
+          "scope": "round15 final station.js: actual support/capsule checked standalone and full PLACES; opaque rays exclude people and transparent PSD"
+        },
+        "previous_pose_round13": {
+          "x": -98.2,
+          "y": -11,
+          "z": -67,
+          "yawDeg": 180,
+          "pitchDeg": 10,
+          "validation": {
+            "standalone": {
+              "support_y": -11,
+              "capsule_push_m": 0
+            },
+            "integrated": {
+              "support_y": -11,
+              "capsule_push_m": 0
+            },
+            "rendered": false
+          }
+        },
+        "round15_camera": {
+          "sheet_camera": "station_03",
+          "reason": "원본은 하부 착지점이 아니라 상승 에스컬레이터 탑승 중의 가까운 난간 구도다. 실제 경사 지지면으로 5m 전진하고 y는 물리 지지 높이로 기록.",
+          "raw_frame_opened": true,
+          "support_check": "passed: actual support y, capsule_push_m=0 standalone/full PLACES",
           "rendered": false
         }
       },
@@ -819,14 +873,14 @@
         "photos": [
           "refs/walk/s4_enter6_subway/zPXe32QRyJo_40.jpg"
         ],
-        "x": -90,
+        "x": -90.5,
         "y": -6,
-        "z": -56,
-        "yawDeg": 0,
+        "z": -60.6,
+        "yawDeg": 180,
         "pitchDeg": 0,
         "floor": "B1",
         "view_id": "r13_zPXe32QRyJo_40",
-        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다.",
+        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다. round15: 정면 개찰구 대신 B1 남향 보행 공간·기둥·난간을 바라보도록 반전. 공유 계단 위치를 유지한 동선 구도.",
         "validation": {
           "standalone": {
             "support_y": -6,
@@ -836,6 +890,32 @@
             "support_y": -6,
             "capsule_push_m": 0
           },
+          "rendered": false,
+          "scope": "round15 final station.js: actual support/capsule checked standalone and full PLACES; opaque rays exclude people and transparent PSD"
+        },
+        "previous_pose_round13": {
+          "x": -90,
+          "y": -6,
+          "z": -56,
+          "yawDeg": 0,
+          "pitchDeg": 0,
+          "validation": {
+            "standalone": {
+              "support_y": -6,
+              "capsule_push_m": 0
+            },
+            "integrated": {
+              "support_y": -6,
+              "capsule_push_m": 0
+            },
+            "rendered": false
+          }
+        },
+        "round15_camera": {
+          "sheet_camera": "station_04",
+          "reason": "정면 개찰구 대신 B1 남향 보행 공간·기둥·난간을 바라보도록 반전. 공유 계단 위치를 유지한 동선 구도.",
+          "raw_frame_opened": true,
+          "support_check": "passed: actual support y, capsule_push_m=0 standalone/full PLACES",
           "rendered": false
         }
       },
@@ -846,14 +926,14 @@
         "photos": [
           "refs/walk/s4_enter6_subway/xmLYPNlwtkU_40.jpg"
         ],
-        "x": -90,
+        "x": -88.6,
         "y": -6,
-        "z": -55,
-        "yawDeg": 0,
-        "pitchDeg": 2,
+        "z": -50.7,
+        "yawDeg": 340,
+        "pitchDeg": 0,
         "floor": "B1",
         "view_id": "r13_xmLYPNlwtkU_40",
-        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다.",
+        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다. round15: 개찰구에서 뒤로 물러나 사선으로 조정하여 열린 전경과 기둥을 함께 포함.",
         "validation": {
           "standalone": {
             "support_y": -6,
@@ -863,6 +943,32 @@
             "support_y": -6,
             "capsule_push_m": 0
           },
+          "rendered": false,
+          "scope": "round15 final station.js: actual support/capsule checked standalone and full PLACES; opaque rays exclude people and transparent PSD"
+        },
+        "previous_pose_round13": {
+          "x": -90,
+          "y": -6,
+          "z": -55,
+          "yawDeg": 0,
+          "pitchDeg": 2,
+          "validation": {
+            "standalone": {
+              "support_y": -6,
+              "capsule_push_m": 0
+            },
+            "integrated": {
+              "support_y": -6,
+              "capsule_push_m": 0
+            },
+            "rendered": false
+          }
+        },
+        "round15_camera": {
+          "sheet_camera": "station_05",
+          "reason": "개찰구에서 뒤로 물러나 사선으로 조정하여 열린 전경과 기둥을 함께 포함.",
+          "raw_frame_opened": true,
+          "support_check": "passed: actual support y, capsule_push_m=0 standalone/full PLACES",
           "rendered": false
         }
       },
@@ -875,12 +981,12 @@
         ],
         "x": -82.1,
         "y": -6,
-        "z": -65.8,
-        "yawDeg": 180,
-        "pitchDeg": -14,
+        "z": -66.8,
+        "yawDeg": 182,
+        "pitchDeg": -2,
         "floor": "B1",
         "view_id": "r13_zPXe32QRyJo_52",
-        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다.",
+        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다. round15: 하행부에서 1m 후퇴하고 과한 하향 피치를 줄여 상부 착지·벽면·표지를 눈높이에서 함께 본다. 공유 계단에 따른 좌우 차이는 남음.",
         "validation": {
           "standalone": {
             "support_y": -6,
@@ -890,6 +996,32 @@
             "support_y": -6,
             "capsule_push_m": 0
           },
+          "rendered": false,
+          "scope": "round15 final station.js: actual support/capsule checked standalone and full PLACES; opaque rays exclude people and transparent PSD"
+        },
+        "previous_pose_round13": {
+          "x": -82.1,
+          "y": -6,
+          "z": -65.8,
+          "yawDeg": 180,
+          "pitchDeg": -14,
+          "validation": {
+            "standalone": {
+              "support_y": -6,
+              "capsule_push_m": 0
+            },
+            "integrated": {
+              "support_y": -6,
+              "capsule_push_m": 0
+            },
+            "rendered": false
+          }
+        },
+        "round15_camera": {
+          "sheet_camera": "station_06",
+          "reason": "하행부에서 1m 후퇴하고 과한 하향 피치를 줄여 상부 착지·벽면·표지를 눈높이에서 함께 본다. 공유 계단에 따른 좌우 차이는 남음.",
+          "raw_frame_opened": true,
+          "support_check": "passed: actual support y, capsule_push_m=0 standalone/full PLACES",
           "rendered": false
         }
       },
@@ -900,14 +1032,14 @@
         "photos": [
           "refs/walk/s4_enter6_subway/zPXe32QRyJo_64.jpg"
         ],
-        "x": 33,
+        "x": -50.78326,
         "y": -11,
-        "z": 137,
-        "yawDeg": 135,
+        "z": 172.913233,
+        "yawDeg": 128.079998,
         "pitchDeg": 0,
         "floor": "B2",
         "view_id": "r13_zPXe32QRyJo_64",
-        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다. x=40의 좁은 접근 통로 안에서 옆벽을 보지 않도록 하부 대합실 내부로 시점을 옮겼다.",
+        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다. x=40의 좁은 접근 통로 안에서 옆벽을 보지 않도록 하부 대합실 내부로 시점을 옮겼다. round15: 계단의 막힌 측면을 정면으로 보던 135도에서 7호선 홀 축 109도로 회전하고 계단 앞쪽으로 이동. 최종 통합 가림 검증: 기존 시야의 회색 덩어리는 station 계단이 아니라 JW메리어트 지하 외피로 확인됨. 이웃을 수정하지 않고 같은 7호선 대합실의 호텔 서쪽 구간으로 비교 시점을 옮겨 광고함·기둥·긴 홀을 촬영. 원본의 실측 좌표를 주장하지 않음.",
         "validation": {
           "standalone": {
             "support_y": -11,
@@ -917,6 +1049,32 @@
             "support_y": -11,
             "capsule_push_m": 0
           },
+          "rendered": false,
+          "scope": "round15 final station.js: actual support/capsule checked standalone and full PLACES; opaque rays exclude people and transparent PSD"
+        },
+        "previous_pose_round13": {
+          "x": 33,
+          "y": -11,
+          "z": 137,
+          "yawDeg": 135,
+          "pitchDeg": 0,
+          "validation": {
+            "standalone": {
+              "support_y": -11,
+              "capsule_push_m": 0
+            },
+            "integrated": {
+              "support_y": -11,
+              "capsule_push_m": 0
+            },
+            "rendered": false
+          }
+        },
+        "round15_camera": {
+          "sheet_camera": "station_07",
+          "reason": "기존 시야의 회색 덩어리는 station 계단이 아니라 JW메리어트 지하 외피로 확인됨. 이웃을 수정하지 않고 같은 7호선 대합실의 호텔 서쪽 구간으로 비교 시점을 옮겨 광고함·기둥·긴 홀을 촬영. 원본의 실측 좌표를 주장하지 않음.",
+          "raw_frame_opened": true,
+          "support_check": "passed: actual support y, capsule_push_m=0 standalone/full PLACES",
           "rendered": false
         }
       },
@@ -927,14 +1085,14 @@
         "photos": [
           "refs/walk/s4_enter6_subway/zPXe32QRyJo_77.jpg"
         ],
-        "x": 30,
+        "x": -51.805596,
         "y": -11,
-        "z": 140,
-        "yawDeg": 135,
+        "z": 181.336702,
+        "yawDeg": 128.079998,
         "pitchDeg": 0,
         "floor": "B2",
         "view_id": "r13_zPXe32QRyJo_77",
-        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다. x=40의 좁은 접근 통로 안에서 옆벽을 보지 않도록 하부 대합실 내부로 시점을 옮겼다.",
+        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다. x=40의 좁은 접근 통로 안에서 옆벽을 보지 않도록 하부 대합실 내부로 시점을 옮겼다. round15: 동일 계단 코어를 피해 홀 축 방향으로 후속 시점을 이동. 기둥과 긴 홀의 원근을 비교하도록 함. 최종 통합 가림 검증: 기존 시야의 회색 덩어리는 station 계단이 아니라 JW메리어트 지하 외피로 확인됨. 이웃을 수정하지 않고 같은 7호선 대합실의 호텔 서쪽 구간으로 비교 시점을 옮겨 광고함·기둥·긴 홀을 촬영. 원본의 실측 좌표를 주장하지 않음.",
         "validation": {
           "standalone": {
             "support_y": -11,
@@ -944,6 +1102,32 @@
             "support_y": -11,
             "capsule_push_m": 0
           },
+          "rendered": false,
+          "scope": "round15 final station.js: actual support/capsule checked standalone and full PLACES; opaque rays exclude people and transparent PSD"
+        },
+        "previous_pose_round13": {
+          "x": 30,
+          "y": -11,
+          "z": 140,
+          "yawDeg": 135,
+          "pitchDeg": 0,
+          "validation": {
+            "standalone": {
+              "support_y": -11,
+              "capsule_push_m": 0
+            },
+            "integrated": {
+              "support_y": -11,
+              "capsule_push_m": 0
+            },
+            "rendered": false
+          }
+        },
+        "round15_camera": {
+          "sheet_camera": "station_08",
+          "reason": "기존 시야의 회색 덩어리는 station 계단이 아니라 JW메리어트 지하 외피로 확인됨. 이웃을 수정하지 않고 같은 7호선 대합실의 호텔 서쪽 구간으로 비교 시점을 옮겨 광고함·기둥·긴 홀을 촬영. 원본의 실측 좌표를 주장하지 않음.",
+          "raw_frame_opened": true,
+          "support_check": "passed: actual support y, capsule_push_m=0 standalone/full PLACES",
           "rendered": false
         }
       },
@@ -971,7 +1155,8 @@
             "support_y": -6,
             "capsule_push_m": 0
           },
-          "rendered": false
+          "rendered": false,
+          "scope": "round15 final station.js: actual support/capsule checked standalone and full PLACES; opaque rays exclude people and transparent PSD"
         }
       },
       {
@@ -998,7 +1183,8 @@
             "support_y": -6,
             "capsule_push_m": 0
           },
-          "rendered": false
+          "rendered": false,
+          "scope": "round15 final station.js: actual support/capsule checked standalone and full PLACES; opaque rays exclude people and transparent PSD"
         }
       },
       {
@@ -1008,14 +1194,14 @@
         "photos": [
           "refs/walk/s4_enter6_subway/w7cLZSedgT4_90.jpg"
         ],
-        "x": -89.7,
+        "x": -85.4,
         "y": -6,
-        "z": -65.5,
+        "z": -66.5,
         "yawDeg": 0,
-        "pitchDeg": 5,
+        "pitchDeg": 2,
         "floor": "B1",
         "view_id": "r13_w7cLZSedgT4_90",
-        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다.",
+        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다. round15: LOVE N SHOW 정면에서 엔터식스 연결 보행 진입부의 중심 x=-85.4로 이동해 북쪽을 봄.",
         "validation": {
           "standalone": {
             "support_y": -6,
@@ -1025,6 +1211,32 @@
             "support_y": -6,
             "capsule_push_m": 0
           },
+          "rendered": false,
+          "scope": "round15 final station.js: actual support/capsule checked standalone and full PLACES; opaque rays exclude people and transparent PSD"
+        },
+        "previous_pose_round13": {
+          "x": -89.7,
+          "y": -6,
+          "z": -65.5,
+          "yawDeg": 0,
+          "pitchDeg": 5,
+          "validation": {
+            "standalone": {
+              "support_y": -6,
+              "capsule_push_m": 0
+            },
+            "integrated": {
+              "support_y": -6,
+              "capsule_push_m": 0
+            },
+            "rendered": false
+          }
+        },
+        "round15_camera": {
+          "sheet_camera": "station_11",
+          "reason": "LOVE N SHOW 정면에서 엔터식스 연결 보행 진입부의 중심 x=-85.4로 이동해 북쪽을 봄.",
+          "raw_frame_opened": true,
+          "support_check": "passed: actual support y, capsule_push_m=0 standalone/full PLACES",
           "rendered": false
         }
       },
@@ -1052,7 +1264,8 @@
             "support_y": -6,
             "capsule_push_m": 0
           },
-          "rendered": false
+          "rendered": false,
+          "scope": "round15 final station.js: actual support/capsule checked standalone and full PLACES; opaque rays exclude people and transparent PSD"
         }
       },
       {
@@ -1062,14 +1275,14 @@
         "photos": [
           "refs/walk/s4_enter6_subway/w7cLZSedgT4_30.jpg"
         ],
-        "x": -68,
+        "x": -67,
         "y": -11,
-        "z": -50,
-        "yawDeg": 0,
-        "pitchDeg": 2,
+        "z": -49.2,
+        "yawDeg": 315,
+        "pitchDeg": 0,
         "floor": "B2",
         "view_id": "r13_w7cLZSedgT4_30",
-        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다. 프레임의 우측 3호선 분기는 모델에서 서측(시점 왼쪽)으로 맞췄다. 이웃 경계 때문에 실제 좌우와 정확한 방향 일치를 주장하지 않는다.",
+        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다. 프레임의 우측 3호선 분기는 모델에서 서측(시점 왼쪽)으로 맞췄다. 이웃 경계 때문에 실제 좌우와 정확한 방향 일치를 주장하지 않는다. round15: 긴 통로 정면을 피하고 3·9호선 분기의 우측 벽 모서리와 세로 안내판 쪽으로 사선 조정. 원본의 분기 기능을 비교하는 추정 시점. 최종 안내판 방향: 분기 세로 안내판의 최종 위치(-64.65,-51.6)를 향해 북동쪽 315도로 조정. 서쪽을 향한 표지의 전면과 흰색 모서리 패널을 함께 본다.",
         "validation": {
           "standalone": {
             "support_y": -11,
@@ -1079,6 +1292,32 @@
             "support_y": -11,
             "capsule_push_m": 0
           },
+          "rendered": false,
+          "scope": "round15 final station.js: actual support/capsule checked standalone and full PLACES; opaque rays exclude people and transparent PSD"
+        },
+        "previous_pose_round13": {
+          "x": -68,
+          "y": -11,
+          "z": -50,
+          "yawDeg": 0,
+          "pitchDeg": 2,
+          "validation": {
+            "standalone": {
+              "support_y": -11,
+              "capsule_push_m": 0
+            },
+            "integrated": {
+              "support_y": -11,
+              "capsule_push_m": 0
+            },
+            "rendered": false
+          }
+        },
+        "round15_camera": {
+          "sheet_camera": "station_13",
+          "reason": "분기 세로 안내판의 최종 위치(-64.65,-51.6)를 향해 북동쪽 315도로 조정. 서쪽을 향한 표지의 전면과 흰색 모서리 패널을 함께 본다.",
+          "raw_frame_opened": true,
+          "support_check": "passed: actual support y, capsule_push_m=0 standalone/full PLACES",
           "rendered": false
         }
       },
@@ -1089,14 +1328,14 @@
         "photos": [
           "refs/walk/s4_enter6_subway/xmLYPNlwtkU_56.jpg"
         ],
-        "x": -89.4,
+        "x": -90.2,
         "y": -6,
-        "z": -59,
+        "z": -54.7,
         "yawDeg": 0,
         "pitchDeg": 0,
         "floor": "B1",
         "view_id": "r13_xmLYPNlwtkU_56",
-        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다.",
+        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다. round15: 개찰구에서 약4m 후퇴해 좌측 기둥과 B구역·점자 유도블록을 함께 포함하며 근접 인물 가림을 줄임.",
         "validation": {
           "standalone": {
             "support_y": -6,
@@ -1106,6 +1345,32 @@
             "support_y": -6,
             "capsule_push_m": 0
           },
+          "rendered": false,
+          "scope": "round15 final station.js: actual support/capsule checked standalone and full PLACES; opaque rays exclude people and transparent PSD"
+        },
+        "previous_pose_round13": {
+          "x": -89.4,
+          "y": -6,
+          "z": -59,
+          "yawDeg": 0,
+          "pitchDeg": 0,
+          "validation": {
+            "standalone": {
+              "support_y": -6,
+              "capsule_push_m": 0
+            },
+            "integrated": {
+              "support_y": -6,
+              "capsule_push_m": 0
+            },
+            "rendered": false
+          }
+        },
+        "round15_camera": {
+          "sheet_camera": "station_14",
+          "reason": "개찰구에서 약4m 후퇴해 좌측 기둥과 B구역·점자 유도블록을 함께 포함하며 근접 인물 가림을 줄임.",
+          "raw_frame_opened": true,
+          "support_check": "passed: actual support y, capsule_push_m=0 standalone/full PLACES",
           "rendered": false
         }
       },
@@ -1116,14 +1381,14 @@
         "photos": [
           "refs/walk/s4_enter6_subway/xmLYPNlwtkU_72.jpg"
         ],
-        "x": -87,
+        "x": -88.3,
         "y": -6,
-        "z": -57,
+        "z": -59.2,
         "yawDeg": 270,
         "pitchDeg": 0,
         "floor": "B1",
         "view_id": "r13_xmLYPNlwtkU_72",
-        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다.",
+        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다. round15: 동쪽 계단 가장자리(x=-86.15)로 옮긴 주변 지도·출구 목록·보라색 광고 패널을 열린 중앙 통로에서 약2.15m 거리로 마주보는 근접 구도.",
         "validation": {
           "standalone": {
             "support_y": -6,
@@ -1133,6 +1398,32 @@
             "support_y": -6,
             "capsule_push_m": 0
           },
+          "rendered": false,
+          "scope": "round15 final station.js: actual support/capsule checked standalone and full PLACES; opaque rays exclude people and transparent PSD"
+        },
+        "previous_pose_round13": {
+          "x": -87,
+          "y": -6,
+          "z": -57,
+          "yawDeg": 270,
+          "pitchDeg": 0,
+          "validation": {
+            "standalone": {
+              "support_y": -6,
+              "capsule_push_m": 0
+            },
+            "integrated": {
+              "support_y": -6,
+              "capsule_push_m": 0
+            },
+            "rendered": false
+          }
+        },
+        "round15_camera": {
+          "sheet_camera": "station_15",
+          "reason": "동쪽 계단 가장자리(x=-86.15)로 옮긴 주변 지도·출구 목록·보라색 광고 패널을 열린 중앙 통로에서 약2.15m 거리로 마주보는 근접 구도.",
+          "raw_frame_opened": true,
+          "support_check": "passed: actual support y, capsule_push_m=0 standalone/full PLACES",
           "rendered": false
         }
       },
@@ -1143,14 +1434,14 @@
         "photos": [
           "refs/walk/s4_enter6_subway/xmLYPNlwtkU_88.jpg"
         ],
-        "x": -86.7,
+        "x": -91.5,
         "y": -6,
-        "z": -65.5,
-        "yawDeg": 270,
-        "pitchDeg": -2,
+        "z": -63.9,
+        "yawDeg": 60,
+        "pitchDeg": -3,
         "floor": "B1",
         "view_id": "r13_xmLYPNlwtkU_88",
-        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다.",
+        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다. round15: 구호용품함을 측면에서 보던 시점을 전면을 향한 북동 사선으로 조정. 보관함 확장과 함께 확인 필요. 최종 배치 대응: 확대한 구호용품함을 서측 계단 옆 x=-94.2,z=-65.6으로 배치함에 맞춰 남동쪽 열린 착지점에서 서북향 사선으로 관찰. 원본처럼 보관함 왼쪽에 계단 난간이 놓임.",
         "validation": {
           "standalone": {
             "support_y": -6,
@@ -1160,6 +1451,32 @@
             "support_y": -6,
             "capsule_push_m": 0
           },
+          "rendered": false,
+          "scope": "round15 final station.js: actual support/capsule checked standalone and full PLACES; opaque rays exclude people and transparent PSD"
+        },
+        "previous_pose_round13": {
+          "x": -86.7,
+          "y": -6,
+          "z": -65.5,
+          "yawDeg": 270,
+          "pitchDeg": -2,
+          "validation": {
+            "standalone": {
+              "support_y": -6,
+              "capsule_push_m": 0
+            },
+            "integrated": {
+              "support_y": -6,
+              "capsule_push_m": 0
+            },
+            "rendered": false
+          }
+        },
+        "round15_camera": {
+          "sheet_camera": "station_16",
+          "reason": "확대한 구호용품함을 서측 계단 옆 x=-94.2,z=-65.6으로 배치함에 맞춰 남동쪽 열린 착지점에서 서북향 사선으로 관찰. 원본처럼 보관함 왼쪽에 계단 난간이 놓임.",
+          "raw_frame_opened": true,
+          "support_check": "passed: actual support y, capsule_push_m=0 standalone/full PLACES",
           "rendered": false
         }
       },
@@ -1187,7 +1504,8 @@
             "support_y": -6,
             "capsule_push_m": 0
           },
-          "rendered": false
+          "rendered": false,
+          "scope": "round15 final station.js: actual support/capsule checked standalone and full PLACES; opaque rays exclude people and transparent PSD"
         }
       },
       {
@@ -1199,12 +1517,12 @@
         ],
         "x": -90,
         "y": -6,
-        "z": -56,
+        "z": -53.6,
         "yawDeg": 0,
-        "pitchDeg": -27,
+        "pitchDeg": -60,
         "floor": "B1",
         "view_id": "r13_AlqE1LnWVr0_252",
-        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다.",
+        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다. round15: 원본은 바닥 근접 구도다. 기존 파랑 원형 화살표(z=-55)를 내려다보도록 뒤로 이동하고 피치 -60도로 조정.",
         "validation": {
           "standalone": {
             "support_y": -6,
@@ -1214,6 +1532,32 @@
             "support_y": -6,
             "capsule_push_m": 0
           },
+          "rendered": false,
+          "scope": "round15 final station.js: actual support/capsule checked standalone and full PLACES; opaque rays exclude people and transparent PSD"
+        },
+        "previous_pose_round13": {
+          "x": -90,
+          "y": -6,
+          "z": -56,
+          "yawDeg": 0,
+          "pitchDeg": -27,
+          "validation": {
+            "standalone": {
+              "support_y": -6,
+              "capsule_push_m": 0
+            },
+            "integrated": {
+              "support_y": -6,
+              "capsule_push_m": 0
+            },
+            "rendered": false
+          }
+        },
+        "round15_camera": {
+          "sheet_camera": "station_18",
+          "reason": "원본은 바닥 근접 구도다. 기존 파랑 원형 화살표(z=-55)를 내려다보도록 뒤로 이동하고 피치 -60도로 조정.",
+          "raw_frame_opened": true,
+          "support_check": "passed: actual support y, capsule_push_m=0 standalone/full PLACES",
           "rendered": false
         }
       },
@@ -1241,7 +1585,8 @@
             "support_y": -11,
             "capsule_push_m": 0
           },
-          "rendered": false
+          "rendered": false,
+          "scope": "round15 final station.js: actual support/capsule checked standalone and full PLACES; opaque rays exclude people and transparent PSD"
         }
       },
       {
@@ -1251,23 +1596,49 @@
         "photos": [
           "refs/walk/s4_enter6_subway/AlqE1LnWVr0_142.jpg"
         ],
-        "x": -26.478062,
-        "y": -16,
-        "z": 146.505768,
-        "yawDeg": 207.634765,
-        "pitchDeg": 15,
+        "x": -29.158721,
+        "y": -15.022437395,
+        "z": 152.082741,
+        "yawDeg": 214.711795,
+        "pitchDeg": -18,
         "floor": "B3",
         "view_id": "r13_AlqE1LnWVr0_142",
-        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다. 경사면 위 v=12 대신 바닥이 정확히 B3인 하부 착지점 v=13.8에서 상승 방향을 본다.",
+        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다. 경사면 위 v=12 대신 바닥이 정확히 B3인 하부 착지점 v=13.8에서 상승 방향을 본다. round15: 계단 아래 시점에서 실제 상승 에스컬레이터(l7 s=78.7,v=10.3)로 이동해 근접 난간 표식을 내려다봄. y는 경사면의 물리 지지 높이이며 눈높이가 아님.",
         "validation": {
           "standalone": {
-            "support_y": -16,
+            "support_y": -15.022437395,
             "capsule_push_m": 0
           },
           "integrated": {
-            "support_y": -16,
+            "support_y": -15.022437395,
             "capsule_push_m": 0
           },
+          "rendered": false,
+          "scope": "round15 final station.js: actual support/capsule checked standalone and full PLACES; opaque rays exclude people and transparent PSD"
+        },
+        "previous_pose_round13": {
+          "x": -26.478062,
+          "y": -16,
+          "z": 146.505768,
+          "yawDeg": 207.634765,
+          "pitchDeg": 15,
+          "validation": {
+            "standalone": {
+              "support_y": -16,
+              "capsule_push_m": 0
+            },
+            "integrated": {
+              "support_y": -16,
+              "capsule_push_m": 0
+            },
+            "rendered": false
+          }
+        },
+        "round15_camera": {
+          "sheet_camera": "station_20",
+          "reason": "계단 아래 시점에서 실제 상승 에스컬레이터(l7 s=78.7,v=10.3)로 이동해 근접 난간 표식을 내려다봄. y는 경사면의 물리 지지 높이이며 눈높이가 아님.",
+          "raw_frame_opened": true,
+          "support_check": "passed: actual support y, capsule_push_m=0 standalone/full PLACES",
           "rendered": false
         }
       },
@@ -1280,12 +1651,12 @@
         ],
         "x": -66,
         "y": -11,
-        "z": -54,
+        "z": -55.7,
         "yawDeg": 0,
-        "pitchDeg": -12,
+        "pitchDeg": -38,
         "floor": "B2",
         "view_id": "r13_AHB7dR-5aOU_107",
-        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다.",
+        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다. round15: 원본의 검정 삼각 측판은 무빙워크가 아니라 개찰구 몸체다. 피사체는 유지하고 두 개찰기 사이로 진입해 바닥·우측 몸체를 내려다봄.",
         "validation": {
           "standalone": {
             "support_y": -11,
@@ -1295,6 +1666,32 @@
             "support_y": -11,
             "capsule_push_m": 0
           },
+          "rendered": false,
+          "scope": "round15 final station.js: actual support/capsule checked standalone and full PLACES; opaque rays exclude people and transparent PSD"
+        },
+        "previous_pose_round13": {
+          "x": -66,
+          "y": -11,
+          "z": -54,
+          "yawDeg": 0,
+          "pitchDeg": -12,
+          "validation": {
+            "standalone": {
+              "support_y": -11,
+              "capsule_push_m": 0
+            },
+            "integrated": {
+              "support_y": -11,
+              "capsule_push_m": 0
+            },
+            "rendered": false
+          }
+        },
+        "round15_camera": {
+          "sheet_camera": "station_21",
+          "reason": "원본의 검정 삼각 측판은 무빙워크가 아니라 개찰구 몸체다. 피사체는 유지하고 두 개찰기 사이로 진입해 바닥·우측 몸체를 내려다봄.",
+          "raw_frame_opened": true,
+          "support_check": "passed: actual support y, capsule_push_m=0 standalone/full PLACES",
           "rendered": false
         }
       },
@@ -1322,7 +1719,8 @@
             "support_y": -10.975,
             "capsule_push_m": 0
           },
-          "rendered": false
+          "rendered": false,
+          "scope": "round15 final station.js: actual support/capsule checked standalone and full PLACES; opaque rays exclude people and transparent PSD"
         }
       },
       {
@@ -1335,11 +1733,11 @@
         "x": -68,
         "y": -11,
         "z": -77,
-        "yawDeg": 0,
+        "yawDeg": 320,
         "pitchDeg": -3,
         "floor": "B2",
         "view_id": "r13_AHB7dR-5aOU_157",
-        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다.",
+        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다. round15: 무빙워크 끝에서 동쪽으로 넓어진 중간 홀을 사선으로 바라보아 중앙 기둥 정면에 막히던 시야를 바꿈. 로프 안내와 하행 착지점으로 이어지는 넓이를 확인.",
         "validation": {
           "standalone": {
             "support_y": -11,
@@ -1349,6 +1747,32 @@
             "support_y": -11,
             "capsule_push_m": 0
           },
+          "rendered": false,
+          "scope": "round15 final station.js: actual support/capsule checked standalone and full PLACES; opaque rays exclude people and transparent PSD"
+        },
+        "previous_pose_round13": {
+          "x": -68,
+          "y": -11,
+          "z": -77,
+          "yawDeg": 0,
+          "pitchDeg": -3,
+          "validation": {
+            "standalone": {
+              "support_y": -11,
+              "capsule_push_m": 0
+            },
+            "integrated": {
+              "support_y": -11,
+              "capsule_push_m": 0
+            },
+            "rendered": false
+          }
+        },
+        "round15_camera": {
+          "sheet_camera": "station_23",
+          "reason": "무빙워크 끝에서 동쪽으로 넓어진 중간 홀을 사선으로 바라보아 중앙 기둥 정면에 막히던 시야를 바꿈. 로프 안내와 하행 착지점으로 이어지는 넓이를 확인.",
+          "raw_frame_opened": true,
+          "support_check": "passed: actual support y, capsule_push_m=0 standalone/full PLACES",
           "rendered": false
         }
       },
@@ -1376,7 +1800,8 @@
             "support_y": -11,
             "capsule_push_m": 0
           },
-          "rendered": false
+          "rendered": false,
+          "scope": "round15 final station.js: actual support/capsule checked standalone and full PLACES; opaque rays exclude people and transparent PSD"
         }
       },
       {
@@ -1386,14 +1811,14 @@
         "photos": [
           "refs/walk/s4_enter6_subway/AHB7dR-5aOU_207.jpg"
         ],
-        "x": -6.244231,
+        "x": -8.768152657,
         "y": -21,
-        "z": -133.83029,
+        "z": -132.871217178,
         "yawDeg": 110.806437,
-        "pitchDeg": 8,
+        "pitchDeg": 16,
         "floor": "B4",
         "view_id": "r13_AHB7dR-5aOU_207",
-        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다.",
+        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다. round15: 원본 전광판 근접 구도에 맞춰 도착 안내판 6m 전방에서 3.3m 전방으로 접근. 앞쪽 노선 방향판의 가림을 줄이고 실제 전광판을 확대.",
         "validation": {
           "standalone": {
             "support_y": -21,
@@ -1403,6 +1828,32 @@
             "support_y": -21,
             "capsule_push_m": 0
           },
+          "rendered": false,
+          "scope": "round15 final station.js: actual support/capsule checked standalone and full PLACES; opaque rays exclude people and transparent PSD"
+        },
+        "previous_pose_round13": {
+          "x": -6.244231,
+          "y": -21,
+          "z": -133.83029,
+          "yawDeg": 110.806437,
+          "pitchDeg": 8,
+          "validation": {
+            "standalone": {
+              "support_y": -21,
+              "capsule_push_m": 0
+            },
+            "integrated": {
+              "support_y": -21,
+              "capsule_push_m": 0
+            },
+            "rendered": false
+          }
+        },
+        "round15_camera": {
+          "sheet_camera": "station_25",
+          "reason": "원본 전광판 근접 구도에 맞춰 도착 안내판 6m 전방에서 3.3m 전방으로 접근. 앞쪽 노선 방향판의 가림을 줄이고 실제 전광판을 확대.",
+          "raw_frame_opened": true,
+          "support_check": "passed: actual support y, capsule_push_m=0 standalone/full PLACES",
           "rendered": false
         }
       },
@@ -1413,14 +1864,14 @@
         "photos": [
           "refs/walk/s4_enter6_subway/AHB7dR-5aOU_257.jpg"
         ],
-        "x": -146.685759,
+        "x": -147.418684775,
         "y": -21,
-        "z": -61.267903,
+        "z": -63.235850575,
         "yawDeg": 20.426925,
-        "pitchDeg": 0,
+        "pitchDeg": -12,
         "floor": "B4",
         "view_id": "r13_AHB7dR-5aOU_257",
-        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다.",
+        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다. round15: 원본은 6-2 스크린도어와 휠체어 표식의 근접 구도다. PSD 앞 4m 이상 시점에서 약1.63m 전방으로 이동해 대기 승객 뒤 원경 구도를 수정.",
         "validation": {
           "standalone": {
             "support_y": -21,
@@ -1430,6 +1881,32 @@
             "support_y": -21,
             "capsule_push_m": 0
           },
+          "rendered": false,
+          "scope": "round15 final station.js: actual support/capsule checked standalone and full PLACES; opaque rays exclude people and transparent PSD"
+        },
+        "previous_pose_round13": {
+          "x": -146.685759,
+          "y": -21,
+          "z": -61.267903,
+          "yawDeg": 20.426925,
+          "pitchDeg": 0,
+          "validation": {
+            "standalone": {
+              "support_y": -21,
+              "capsule_push_m": 0
+            },
+            "integrated": {
+              "support_y": -21,
+              "capsule_push_m": 0
+            },
+            "rendered": false
+          }
+        },
+        "round15_camera": {
+          "sheet_camera": "station_26",
+          "reason": "원본은 6-2 스크린도어와 휠체어 표식의 근접 구도다. PSD 앞 4m 이상 시점에서 약1.63m 전방으로 이동해 대기 승객 뒤 원경 구도를 수정. 회보라 문 가로띠의 높이1.08m에 맞춰 최종 pitch=-12°.",
+          "raw_frame_opened": true,
+          "support_check": "passed: actual support y, capsule_push_m=0 standalone/full PLACES",
           "rendered": false
         }
       },
@@ -1440,14 +1917,14 @@
         "photos": [
           "refs/walk/s4_enter6_subway/w7cLZSedgT4_90.jpg"
         ],
-        "x": -85.5,
+        "x": -85.4,
         "y": -6,
-        "z": -71,
-        "yawDeg": 180,
+        "z": -68,
+        "yawDeg": 0,
         "pitchDeg": 0,
         "floor": "B1",
         "view_id": "r13_w7cLZSedgT4_90_entry",
-        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다. _90의 자막은 연결 상업 구간의 근거이며 이 전면의 실제 위치·문 형태를 직접 보여 준 것으로 취급하지 않는다.",
+        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다. _90의 자막은 연결 상업 구간의 근거이며 이 전면의 실제 위치·문 형태를 직접 보여 준 것으로 취급하지 않는다. round15: 매장 집기 안쪽·역방향 180도 시점을 제거하고 엔터식스 진입부 앞의 열린 바닥에서 북향으로 조정.",
         "validation": {
           "standalone": {
             "support_y": -6,
@@ -1457,6 +1934,32 @@
             "support_y": -6,
             "capsule_push_m": 0
           },
+          "rendered": false,
+          "scope": "round15 final station.js: actual support/capsule checked standalone and full PLACES; opaque rays exclude people and transparent PSD"
+        },
+        "previous_pose_round13": {
+          "x": -85.5,
+          "y": -6,
+          "z": -71,
+          "yawDeg": 180,
+          "pitchDeg": 0,
+          "validation": {
+            "standalone": {
+              "support_y": -6,
+              "capsule_push_m": 0
+            },
+            "integrated": {
+              "support_y": -6,
+              "capsule_push_m": 0
+            },
+            "rendered": false
+          }
+        },
+        "round15_camera": {
+          "sheet_camera": "station_27",
+          "reason": "매장 집기 안쪽·역방향 180도 시점을 제거하고 엔터식스 진입부 앞의 열린 바닥에서 북향으로 조정.",
+          "raw_frame_opened": true,
+          "support_check": "passed: actual support y, capsule_push_m=0 standalone/full PLACES",
           "rendered": false
         }
       }
@@ -1579,7 +2082,7 @@
       "note": "kit stats.quads 기준. hpoly 삼각형 및 instanced people 삼각형은 이 값에 포함되지 않는다. smoke 표는 lazy detail 전의 eager 값만 표시하므로 별도 callback 전후 계측을 사용."
     },
     "load_order_note": "월드의 실제 PLACES 순서인 gotomall → station에서 검증. station을 먼저 짓는 임의 walk 순서에서는 mallHere 사전 감지가 불가능하여 독립 B1 홀과 몰이 중복되는 기존 설계 한계가 있다. 요구된 station-first smoke는 통과.",
-    "previous_round": 10,
+    "previous_round": 13,
     "exit_destination_audit": [
       {
         "exit": "1",
@@ -2634,6 +3137,205 @@
       "diff_check": "passed",
       "scope": "이번 작업은 js/places/station.js 및 data/research/station.json만 수정. tests/shot.mjs, _junctions.js, 엔진, 이웃 모듈, git commit/push 미실행.",
       "station_sha256": "c7851b332c964764cdea6dbf085249fd45737d51381ad3a1ea09fff03b93b23d"
+    },
+    "round15": {
+      "evidence": {
+        "review": ".codex-jobs/evidence/review_walk13.json → station",
+        "sheets": [
+          "shots/walk13all/station_1.png",
+          "shots/walk13all/station_2.png",
+          "shots/walk13all/station_3.png",
+          "shots/walk13all/station_4.png",
+          "shots/walk13all/station_5.png",
+          "shots/walk13all/station_6.png",
+          "shots/walk13all/station_7.png",
+          "shots/walk13all/station_8.png",
+          "shots/walk13all/station_9.png",
+          "shots/walk13all/station_10.png"
+        ],
+        "raw_frames": "refs/walk/s4_enter6_subway/ (28 matched entries, raw frames opened directly by parent/auditors)",
+        "secondary_frame": "refs/interior/station/14_line9_platform_wide.jpg",
+        "method": "Original pixels checked before accepting reviewer claims; no new external tenant names inferred."
+      },
+      "step1_cameras": {
+        "changed_count": 19,
+        "poses": "modeling.trace; previous_pose_round13 preserves original pose/validation",
+        "specifics": [
+          "03/20: actual escalator surface y, not eye height.",
+          "07/08: original solid gray occluder belongs to jwmarriott. Shift to hotel-clear Line7 hall stations s108/v6 and s114/v0; same module/level, schematic image-matching location.",
+          "11/27: north-facing open ENTER6 approach instead of inside stocked kiosk.",
+          "13/15/16/23: aim at new split board/map/rescue cabinet/open middle hall.",
+          "18: pitch -60°, blue round decal.",
+          "21: down -38° between fare gates; subject retained.",
+          "25/26: close arrival display/PSD crossbar."
+        ]
+      },
+      "step2_layout": [
+        {
+          "area": "3호선 승강장 B2",
+          "positions": "west x≈-106.9, z=-121..-103 diagonal wall; oval centres z=-138/-112",
+          "changes": "Relocate overlapping ad panels to s80.8 and118.4. Move only the bench contradicted by _24 froms112 tos126; preserve/add low bench at _16 oval. Purifier s109 and rescue cabinet s112."
+        },
+        {
+          "area": "3호선 B1 상업 연결부",
+          "positions": "LOVE N SHOW x=-94.3,z=-70.35; front8.1m,depth2.9m; open ENTER6 aisle x=-87.4..-81.0,z=-68.5..-71.8",
+          "changes": "Replace the photographed mismatching goods kiosk with glass clothing boutique/racks/mannequins/staff and clear entrance. Coffer centre(-90,-66.8), ~8×5.3m, raised ceiling3.4m. Consolidate overlapping column; W3/W9/J7 unchanged. No new link across neighbour boundary."
+        },
+        {
+          "area": "9호선 B2 중간 환승홀",
+          "positions": "x=-72..-59.5,z=-85..-74.5",
+          "changes": "Remove solid return hiding _157. Local chamber width12.5m; clear west-to-stair path; slab/roof exclude existing flight x=-63..-33,z=-86..-78. Keep all escalator endpoints and10m level difference."
+        },
+        {
+          "area": "보관함·지도",
+          "positions": "rescue cabinet(-94.1,-65.65) facing south; map/list/violet assembly x=-86.15,z=-60/-58.6/-57.2",
+          "changes": "Full-height .94×2.02m glass cabinet near west stair rail; white title/red text/blue base. Local map and numbered exit list at stair-side viewing distance."
+        }
+      ],
+      "step3_design": [
+        "Cool grey fine-fleck granite (.6m squares, gloss.5), cooler veined marble(gloss.7), neutral ceiling panels; retain actual B1 warm horizontal stripes(.3m).",
+        "Dedicated broad cream/brown diagonal platform texture, separate from grey pier texture. Reduce only oversized warm ceiling bay width7.4→3.2m.",
+        "White/light PSD fascia and thin orange line retained; add small red LED. Do not infer unseen train livery from PSD-only frame.",
+        "Commercial approach blue/white terminal destinations and yellow 나가는 곳 tabs; keep black/green metro signs where photographed. Number1 is exit/terminal destination, not subway Line1.",
+        "Brushed stainless opaque 3호선 escalator sides with inward/outward faces and hazard edge; moving-walk sides retain glass above stainless bases and black handrails. Stairs and physics retained.",
+        "Light pink campaign field and spaced picture panels; preserve unidentified ad copy as abstract imagery.",
+        "Arrival display black with orange/green message and white side list; relocate obstructing white direction banner behind it."
+      ],
+      "step4_details_people": [
+        "Small TV and low bench by _16 oval; purifier/safety cabinet at _24.",
+        "Three portrait1.2×1.9m lightboxes and steel-clad columns in hotel-clear7호선 hall.",
+        "Door-height1.08m 6-2 grey-purple panel, yellow ♿→5m and Korean safety text; existing floor numbers retained.",
+        "Four approximately .12m yellow warning discs together on the actual7호선 up-escalator handrail; quads follow rail slope instead of standing vertically.",
+        "Flat .6m-diameter blue floor decals at3m spacing; remove only mismatching oversized blue arrow.",
+        "K.person in lazy room groups: clothing colours, opposing walking directions, clusters, bags/backpacks, some masks/puffer seams, store staff, escalator and moving-walk riders. Added passengers use final support/collision checks. Busy transfer path now about3people/10m combined with retained figures."
+      ],
+      "skipped_or_qualified": [
+        {
+          "claim": "Remove all brown walls / all black signs",
+          "reason": "Raw zPXe_40,xmLYPN_40/56/88,AlqE_232 show horizontal brown/cream walls;7호선 _64/_77 show black/green metro signage. Local white panels/blue-yellow commercial directions only."
+        },
+        {
+          "claim": "00 must show PSD doors",
+          "reason": "Raw _16 contains oval, low bench and TV/wall; no PSD. Preserve actual subject."
+        },
+        {
+          "claim": "21 is a moving-walk close-up",
+          "reason": "AHB7_107 clearly shows two fare-gate housings. Keep gate subject and correct pitch."
+        },
+        {
+          "claim": "Shorten9호선 escalator30m→15m",
+          "reason": "Photo gives no measured length;15m cannot justify changing fixed10m drop/landings and shared route. Keep geometry, improve lining/light."
+        },
+        {
+          "claim": "Dark2.8m exposed-duct9호선 ceiling",
+          "reason": "_257 has no ceiling in frame; existing14_line9_platform_wide image confirms light panel ceiling."
+        },
+        {
+          "claim": "Add subway1 roundel",
+          "reason": "1 경부선·영동선 is terminal/exit direction, not a1호선 interchange."
+        },
+        {
+          "claim": "Delete most7호선 ads based on AlqE_212",
+          "reason": "Black bars hide most of frame. Preserve campaign walls and add only visible white service-door segment; no wholesale detail deletion."
+        },
+        {
+          "claim": "Exactly3 E gates,12m boutique,12 people within6m",
+          "reason": "Exact counts/dimensions are not recoverable from occluded frames. Retain gate bank; fit boutique/open approach inside existing24m shell and add clusters with clear paths."
+        },
+        {
+          "claim": "Mango-style red/yellow storefront brand",
+          "reason": "Shop name is not legible enough to verify. Use researched LOVE N SHOW/ENTER6, no invented tenant."
+        },
+        {
+          "claim": "Flip all mirrored6-2 floor numbers",
+          "reason": "Raw _257 shows PSD crossbar, not floor. Add correct door plate; no evidence to invert opposite-platform boarding numbers."
+        },
+        {
+          "claim": "Three warning discs1m apart / move every person5m away",
+          "reason": "Raw _142 shows four closely spaced discs, and many frames have close passengers. Correct discs and relocate only figures obscuring fixtures."
+        }
+      ],
+      "remaining_limits": [
+        "06 camera pitch corrected; gate/stair left-right relation remains a fitted-layout difference. No unsupported core mirroring.",
+        "07/08 are hotel-clear matching views farther along the same7호선 hall, not claimed as surveyed original camera locations.",
+        "ENTER6 local entrance stops at existing module boundary; actual full tenant footprint remains unverified.",
+        "New rendered PNGs unavailable: tests/shot.mjs not run as requested; local preview server returned EPERM binding127.0.0.1. Ray checks establish structural clearance, not pixel-level appearance."
+      ]
+    },
+    "qa_round15": {
+      "station_sha256": "f9f2dc7cad2129424f8437718590d482cbe5347214197a5282f980acbf594c76",
+      "syntax": {
+        "command": "node --check js/places/station.js",
+        "result": "passed"
+      },
+      "smoke": {
+        "command": "node tests/smoke.mjs station gotomall centralcity shinsegae",
+        "result": "OK",
+        "exit_code": 0,
+        "final_recheck": "same arguments plus --quiet after cosmetic refinement; OK",
+        "warnings": "Existing centralcity/shinsegae elevator-apron warnings; no station warnings or detail callback errors."
+      },
+      "station_walk": {
+        "command": "node tests/walk.mjs station --no-city",
+        "result": "25 ok, 0 blocked",
+        "exit_code": 0,
+        "snapshot": "After structural/column consolidation; later changes only passenger rotation, flat-walk glass cladding and sloped safety-sticker faces (no physics changes)."
+      },
+      "global_walk": {
+        "command": "node tests/walk.mjs",
+        "status": "passed",
+        "snapshot": "after structural layout changes, before final cosmetic/column-consolidation pass; final refinements independently checked by current station-only walk",
+        "result": "687 ok, 0 blocked",
+        "exit_code": 0,
+        "user_routes": "사용자 루트1–7 모든 구간 통과",
+        "final_changes": "After this snapshot: merged overlapping columns (removed blocker), noncolliding furnishings/people and surface normals, glass upper balustrades and flat warning decals; current station-only walk and smoke checked refinements."
+      },
+      "camera_checks": {
+        "camera_count": 28,
+        "contexts": [
+          "station standalone",
+          "full PLACES module order"
+        ],
+        "support_checks": 56,
+        "capsule_checks": 56,
+        "result": "all support y matched trace, all push=0",
+        "opaque_rays": "five per camera; clear of unintended foreground boxes for corrected views. Excludes instanced people and transparent panels; no claim of pixel matching.",
+        "key_distances_m": {
+          "station_07_center": 94.66,
+          "station_08_center": 93.11,
+          "station_13_board": 3.22,
+          "station_15_map": 2.11,
+          "station_16_cabinet": 2.94,
+          "station_23_center": 11.76,
+          "station_25_display": 3.37,
+          "station_27_center": 3.85
+        }
+      },
+      "detail_groups": {
+        "count": 10,
+        "budget_per_group_quads": 120000,
+        "largest_group_quads": 26887,
+        "standalone_quads": [
+          13566,
+          5336,
+          3362,
+          26887,
+          7109,
+          15423,
+          22574,
+          16619,
+          288,
+          2101
+        ],
+        "people_standalone": 645,
+        "people_integrated": 627,
+        "detail_errors": [],
+        "snapshot_note": "Counts before final four glass faces/four sloped sticker replacements; final upper bound per group unchanged (<27k, budget120k). People unchanged."
+      },
+      "rendered": false,
+      "render_limitation": "tests/shot.mjs not run per task. Attempted node tests/serve.mjs8765; bind127.0.0.1 failed EPERM. No rendered-after screenshots created or claimed.",
+      "diff_check": "passed",
+      "scope": "Only js/places/station.js and data/research/station.json modified by this task; no engine/test/junction/neighbour edits, no commit/push."
     }
   },
   "interiors_round6": {

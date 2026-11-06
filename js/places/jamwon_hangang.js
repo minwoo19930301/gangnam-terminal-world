@@ -30,6 +30,11 @@ export function build(K){
   function subtract(poly,h){let rem=poly,out=[];const ar=h.reduce((s,p,i)=>{const q=h[(i+1)%h.length];return s+p[0]*q[1]-q[0]*p[1];},0),sg=ar>=0?1:-1;function clip(p,a,b,side){const d=q=>sg*((b[0]-a[0])*(q[1]-a[1])-(b[1]-a[1])*(q[0]-a[0]));let r=[];for(let i=0;i<p.length;i++){const u=p[i],v=p[(i+1)%p.length],du=d(u),dv=d(v),iu=du*side>=-1e-7,iv=dv*side>=-1e-7;if(iu)r.push(u);if(iu!==iv)r.push(mix(u,v,du/(du-dv)));}return r;}for(let i=0;i<h.length&&rem.length>2;i++){const a=h[i],b=h[(i+1)%h.length],p=clip(rem,a,b,-1);if(p.length>2)out.push(p);rem=clip(rem,a,b,1);}return out;}
   function ground(poly,y,mat){let ps=[poly];for(const h of cutouts)ps=ps.flatMap(p=>subtract(p,h));for(const p of ps)K.hpoly(mat,p,y);}
   const park=area(981963451).poly,paths=[],reserved=[];
+  // Direct colours avoid multiplying an already dark asphalt/green grass map.
+  for(const[key,col]of[['jamwon_orange','#c58b68'],['jamwon_walk_orange','#cfa181'],['jamwon_wet_path','#555951'],['jamwon_mud','#81735e'],['jamwon_lawn','#78865a']])K.texture(key,256,256,(g,w,h)=>{
+    g.fillStyle=col;g.fillRect(0,0,w,h);const r=K.rand(1509);
+    for(let i=0;i<4200;i++){g.fillStyle=i%3?'#d9cbb91a':'#25362519';g.fillRect(r()*w,r()*h,1+r()*2,1+r()*2);}
+  },[2,2]);
   // Pedestrian tunnel beside the separately mapped vehicle bore. Ramps start
   // outside both motorway ribbons; all pedestrian coordinates follow the OSM.
   K.texture('jamwon_hex_revetment',512,512,(g,w,h)=>{
@@ -167,36 +172,85 @@ export function build(K){
   }
   // Cover the old open ramps while leaving every existing floor endpoint intact.
   tunnel(access[0],access[1],3.25,'신잠원나들목',true);tunnel(access[2],access[3],3.25,'신잠원나들목',true);levee(access,3.25,'신잠원나들목');
+  // HF_65: street-side apron and tall acoustic-panel screen, not an invented
+  // occupied building. Keep both surveyed bores and their ramp levels intact.
+  {
+    const u=[.692,.722],n=[-.722,.692],P=(s,t,h=0)=>[344.24+u[0]*s+n[0]*t,h,-1268.03+u[1]*s+n[1]*t],p=(s,t)=>{const q=P(s,t);return[q[0],q[2]];},a=Math.atan2(u[0],u[1]);
+    slab([p(.6,-3),p(14,-3),p(14,12.7),p(.6,12.7)],0,{tex:'sidewalk',color:0xd2c7b9});
+    for(const side of[-1,1]){const t=side<0?-2.1:12.7;K.quad({tex:'concrete',color:0xc7c9c3},[P(0,t,0),P(8,t,0),P(8,t,1.05),P(0,t,4.91)],[u[0],0,u[1]]);}
+    K.detail({name:'신잠원나들목 광장과 방음벽',floor:'1F',rect:[322,-1286,365,-1240],y0:0,y1:12},()=>{
+      for(let t=-2;t<13;t+=1.5){
+        for(let row=0;row<4;row++)K.quad({tex:'metal',color:row%2?0xa09a8c:0xb4b0a4},[P(-.3,t,4.95+row*1.1),P(-.3,t+1.48,4.95+row*1.1),P(-.3,t+1.48,6.03+row*1.1),P(-.3,t,6.03+row*1.1)],[u[0],0,u[1]]);
+        beam(P(-.18,t,4.9),P(-.18,t,10.8),.045,0x776e5c);
+        beam(P(-.18,t,10.8),P(-2.3,t,11.3),.035,0x8a8e85);
+      }
+      for(const h of[5,6.1,7.2,8.3,9.4,10.8])beam(P(-.16,-2,h),P(-.16,13,h),.04,0x7c7b70);
+      const s=P(.14,6.2,5.42);sign('신잠원나들목',s[0],s[1],s[2],3,.68,a,'#806150','#f0e7d2');
+      const g=P(6.6,.1,.018);box(g[0],g[1],g[2],1.05,.035,.68,0x5c5044,false,a);
+      for(let t=-.42;t<=.43;t+=.12)beam(P(6.3,t,.06),P(6.9,t,.06),.012,0x8d8171);
+      const sticker=P(.3,-1.58,1.5);sign(['한강공원','보행자 통로'],sticker[0],sticker[1],sticker[2],.5,.45,a,'#327a99');
+    });
+  }
   zone('잠원한강공원',park,0,'1F','한강 산책로 · 잔디 쉼터',12);
   const manual=new Set([1497710475,1497710499,1497710500,949348575,949348576,408858834]);
   for(const id of PATHS)if(!manual.has(id))for(const r of road(id))for(let i=1;i<r.pts.length;i++){const a=r.pts[i-1],b=r.pts[i],cy=r.hw==='cycleway',w=cy?Math.max(2,r.width):Math.max(2.5,r.width);strip(a,b,w,.065,cy?0x777c78:'sidewalk');paths.push([a,b,w]);if(cy){const L=Math.hypot(b[0]-a[0],b[1]-a[1]);for(let s=0;s<L-.5;s+=6)paint(mix(a,b,s/L),mix(a,b,Math.min(L,s+2)/L),.09,.074,0xffe5a3);}}
   // HF_90/110/130: paired cycle and walking lanes continue out of the tunnel.
   // Their surveyed axis is fixed; widths and the exact crossing paint are inferred.
   for(const r of road(408858834))for(let i=1;i<r.pts.length;i++){
-    const a=r.pts[i-1],b=r.pts[i];strip(a,b,4.2,.065,0xbc8061);
-    slab(band(a,b,1.8,3.15),.065,0xcb9676);paths.push([a,b,9]);
-    paint(a,b,.1,.081,0xe8c264);const p=band(a,b,4.2);paint(p[1],p[2],.1,.081);
+    const a=r.pts[i-1],b=r.pts[i];strip(a,b,3.8,.065,{tex:'jamwon_orange',gloss:.3});
+    slab(band(a,b,1.85,2.85),.065,{tex:'jamwon_walk_orange',gloss:.3});paths.push([a,b,9]);
+    paint(a,b,.09,.081,0xd8ba70);const p=band(a,b,3.8);paint(p[1],p[2],.12,.081);
   }
   // A separate tree-lined walking path reaches Wave's shore gangway. It never
   // cuts across the water to the cafe (HF_185/215); both ends meet mapped paths.
   const waveWalk=[[253.4,-1385.7],[248,-1404],[247,-1430],[243,-1453],[238.4,-1472.59]];
-  for(let i=1;i<waveWalk.length;i++){strip(waveWalk[i-1],waveWalk[i],2.5,.065,i<3?0x797970:0x91856c);paths.push([waveWalk[i-1],waveWalk[i],5.5]);}
+  for(let i=1;i<waveWalk.length;i++){strip(waveWalk[i-1],waveWalk[i],2.5,.065,i<3?{tex:'jamwon_wet_path',gloss:.3}:'jamwon_mud');paths.push([waveWalk[i-1],waveWalk[i],5.5]);}
+  const dirtSpur=[[243,-1453],[236,-1453],[227,-1456],[219,-1453]];
+  for(let i=1;i<dirtSpur.length;i++){strip(dirtSpur[i-1],dirtSpur[i],1.6,.07,'jamwon_mud');paths.push([dirtSpur[i-1],dirtSpur[i],3.5]);}
+  // Keep trunks outside the whole adjoining walking/cycle width, including bends.
+  // Invoked by lazy detail only, after bikeLink below has been initialized.
+  function vergePoint(x,z){
+    for(let pass=0;pass<5;pass++)for(const[route,w]of[[waveWalk,2.5],[bikeLink,3],[dirtSpur,1.6]])for(let i=1;i<route.length;i++){
+      const a=route[i-1],b=route[i],dx=b[0]-a[0],dz=b[1]-a[1],l2=dx*dx+dz*dz,t=Math.max(0,Math.min(1,((x-a[0])*dx+(z-a[1])*dz)/l2)),qx=a[0]+t*dx,qz=a[1]+t*dz,L=Math.hypot(x-qx,z-qz),clear=w/2+.78;
+      if(L<clear){const nx=L>.001?(x-qx)/L:-dz/Math.sqrt(l2),nz=L>.001?(z-qz)/L:dx/Math.sqrt(l2);x=qx+nx*clear;z=qz+nz*clear;}
+    }
+    return[x,z];
+  }
   K.detail({name:'신잠원 출구와 서울웨이브 산책길',floor:'1F',rect:[190,-1480,290,-1330],y0:0,y1:7},()=>{
-    const crossingA=[244.6,-1383.4],crossingB=[251,-1384.5];
-    for(let i=0;i<7;i++){const p=mix(crossingA,crossingB,i/6);paint([p[0]-.6,p[1]-1.3],[p[0]+.6,p[1]+1.3],.34,.09);}
-    sign(['한강공원','서울웨이브아트센터 →'],257,2,-1383.5,3.3,.8,.4,'#386b8a');
-    cone(258,-1385,.065);
+    const a=[259.74,-1376.82],b=[251.9,-1384.26],L=Math.hypot(b[0]-a[0],b[1]-a[1]),nx=-(b[1]-a[1])/L,nz=(b[0]-a[0])/L;
+    for(let i=0;i<6;i++){const p=mix(a,b,(3+i*.8)/L);paint([p[0]-nx*1.78,p[1]-nz*1.78],[p[0]+nx*1.78,p[1]+nz*1.78],.46,.09);}
+    sign(['한강공원','서울웨이브아트센터 →'],256.8,2,-1389,2.3,.75,.8,'#386b8a');
+    cone(256.1,-1382.5,.065);lamp(265,-1378);lamp(278,-1353);
+    for(const r of road(408858834))for(let i=1;i<r.pts.length;i++){
+      const a=r.pts[i-1],b=r.pts[i],L=Math.hypot(b[0]-a[0],b[1]-a[1]),nx=-(b[1]-a[1])/L,nz=(b[0]-a[0])/L;
+      for(let s=3;s<L;s+=5.5)for(const side of[-1,1]){const p=mix(a,b,s/L),off=side<0?-5.1:5.9,[x,z]=vergePoint(p[0]+nx*off,p[1]+nz*off);
+        shadeTree(x,z,7.5+(i%2));K.dome({x,y:.1,z,rx:1.6,ry:1.05,rz:1.4,mat:0x687b4d,seg:8,rings:4});}
+    }
+    // Autumn canopy flanks the walking path; trunks leave its full 2.5 m clear.
+    for(let i=0;i<12;i++){const z=-1396-i*5.8,j=waveWalk.findIndex((p,k)=>k>0&&p[1]<=z),a=waveWalk[j-1],b=waveWalk[j],x=a[0]+(b[0]-a[0])*(z-a[1])/(b[1]-a[1]);
+      for(const side of[-1,1]){const[xx,zz]=vergePoint(x+side*3.5,z),h=8+(i%3)*.45;K.cyl({x:xx,y:0,z:zz,r:.18,h:h*.75,mat:{tex:'wood',color:0x8d8b7e},seg:8});
+        for(let k=0;k<3;k++)K.dome({x:xx+Math.sin(i+k)*.7,y:h*.65+k*.5,z:zz+Math.cos(i+k)*.7,rx:1.65,ry:2.4,rz:2,mat:side>0?[0x947b47,0xb58c4c,0x8c8c4d][i%3]:0x6d8051,seg:10,rings:6,hemi:false});}
+    }
     for(const[x,z]of[[253,-1405],[252,-1429],[248,-1451]]){K.tree(x,z,{h:8.7,kind:'ginkgo'});bench(x+3,z,Math.PI/2);}
+    shadeTree(222.5,-1452,10.5);
     // HF_285's riverside leaves and temporary striped tape; extent is inferred.
     for(let i=0;i<45;i++){
       const x=196+(i*13%23)*.55,z=-1442-(i*7%17)*.55,y=.12+(i%5)*.1;
       K.dome({x,y,z,rx:.6,ry:.12,rz:.53,mat:[0x46793d,0x608f48,0x739c4c][i%3],seg:6,rings:2,hemi:false});
     }
     for(let i=0;i<18;i++){const x=196+i*.6,z=-1447-i*.43;beam([x,.84,z],[x+.6,.84,z-.43],.025,i%2?0xece3cd:0xdd8b49);}
+    for(let i=0;i<240;i++){
+      const x=195+(i*17%107)*.12,z=-1441-(i*19%79)*.12,y=.32+(i%7)*.065,a=i*2.4;
+      beam([x,.08,z],[x+.16,y,z+.1],.009,0x6c874d);
+      const tip=[x+Math.cos(a)*.4,y-.03,z+Math.sin(a)*.4],left=[x+Math.cos(a+1.7)*.3,y-.08,z+Math.sin(a+1.7)*.3],right=[x+Math.cos(a-1.7)*.3,y-.08,z+Math.sin(a-1.7)*.3];
+      K.quad([0x518444,0x6c984b,0x83a453][i%3],[[x,y,z],left,tip,right],[0,1,0]);beam([x,y+.01,z],tip,.007,0xa8b877);
+    }
+    // Rainy walking clip is quiet; populate small pairs, not a festival crowd.
+    for(const[x,z,a]of[[250,-1419,0],[250.6,-1420,3.1],[244,-1440,.2],[272,-1359,3.5],[273,-1360,3.2]])K.person(x,.065,z,{rotY:a,shirt:0x7f8b7c,pants:0x3e4745});
   });
   // Complete ways above preserve the three western paths across the Banpo edge.
   strip([226.35,-1384.83],[238.65,-1389.18],3,.065,{tex:'asphalt',color:C.red});strip([222.75,-1391.13],[238.65,-1389.18],2,.065,{tex:'asphalt',color:C.red});
-  const promenade=[[289.49,-1501.82],[321,-1568],[447,-1698],[598,-1872],[687,-1967],[791,-2085]];
+  const promenade=[[289.49,-1501.82],[321,-1568],[350,-1593],[379,-1621],[411,-1658],[447,-1698],[598,-1872],[687,-1967],[791,-2085]];
   function parkWay(pts){for(let i=1;i<pts.length;i++){
     const a=pts[i-1],b=pts[i],poplar=a[0]>=289&&b[0]<=447&&a[1]<=-1500&&b[1]>=-1699;
     // The shaded poplar stretch is grey asphalt with white paint, unlike the
@@ -207,7 +261,11 @@ export function build(K){
     for(let s=2;s<L-2;s+=poplar?5:7)paint(mix(a,b,s/L),mix(a,b,Math.min(L,s+2)/L),.1,.08,poplar?0xf3f2e5:C.yellow);
     if(poplar){const e=band(a,b,2.85);paint(e[0],e[3],.07,.08);paint(e[1],e[2],.07,.08);}
   }}
-  parkWay(promenade);strip([238.65,-1389.18],[289.49,-1501.82],3,.065,{tex:'asphalt',color:C.red});
+  parkWay(promenade);
+  // This inferred connector used to cut diagonally through waveWalk at the
+  // same height, producing the brown wedge in HF_185. Follow its west side.
+  const bikeLink=[[238.65,-1389.18],[241.2,-1404],[240,-1430],[236,-1453],[238.4,-1472.59],[262,-1486],[289.49,-1501.82]];
+  for(let i=1;i<bikeLink.length;i++){strip(bikeLink[i-1],bikeLink[i],3,.05,'jamwon_wet_path');paths.push([bikeLink[i-1],bikeLink[i],4]);}
   for(const id of[949348575,949348576])for(const r of road(id)){strip(r.pts[0],r.pts[1],3.2,.12,id===949348576?{tex:'wood',color:0xa6aba4}:'wood');const p=band(r.pts[0],r.pts[1],3.2);rail(p[0],p[3],.12);rail(p[1],p[2],.12);
     if(id===949348576)for(const[a,b]of[[p[0],p[3]],[p[1],p[2]]]){
       for(const h of[.28,.8,1.27])beam([a[0],h,a[1]],[b[0],h,b[1]],.035,0xe5e8e1);
@@ -264,7 +322,7 @@ export function build(K){
   });
   buildFacilities();
   // Grass is last so every sunken facility can register its exact cutout.
-  ground(park,.012,{tex:'grass',color:0xb9caa0});
+  ground(park,.012,'jamwon_lawn');
   for(let n=0,g=0;n<155&&g<5000;g++){const x=-45+rnd()*975,z=-1110-rnd()*990;if(!K.pointInPoly(x,z,park)||park.some((a,i)=>dist(x,z,a,park[(i+1)%park.length])<7)||paths.some(([a,b,w])=>dist(x,z,a,b)<w/2+6)||cutouts.some(p=>K.pointInPoly(x,z,p))||reserved.some(p=>K.pointInPoly(x,z,p))||K.pointInPoly(x,z,fitness))continue;K.tree(x,z,{h:5+rnd()*5,kind:n%5===0?'ginkgo':'zelkova'});n++;if(n%10===0){bench(x+2,z+2);lamp(x+4,z+3,true);}}
   function buildFacilities(){
     // One vessel: Seoul Wave's 2020 exterior, Marebo's 2025 2F/3F fit-out.
@@ -304,13 +362,14 @@ export function build(K){
     pool();
     // Photo17: tall poplars on the river side, spreading trees on the land side.
     // Clustered foliage, exposed trunks and low ropes keep the route legible.
-    const popA=[321,-1568],popB=[447,-1698],popL=Math.hypot(126,130),px=126/popL,pz=-130/popL,pxn=-pz,pzn=px;
-    const popP=(s,o)=>[popA[0]+px*s+pxn*o,popA[1]+pz*s+pzn*o];
+    const popA=[321,-1568],popB=[447,-1698],popRoute=promenade.slice(1,6);
+    const popP=(s,o)=>{for(let i=1;i<popRoute.length;i++){const a=popRoute[i-1],b=popRoute[i],L=Math.hypot(b[0]-a[0],b[1]-a[1]);if(s<=L||i===popRoute.length-1){const ux=(b[0]-a[0])/L,uz=(b[1]-a[1])/L;return[a[0]+ux*s-uz*o,a[1]+uz*s+ux*o];}s-=L;}};
     for(let i=0;i<30;i++){
-      const p=popP(i*6,-4.6),h=13+(i%4)*.65;
+      const p=popP(i*6,-4.6),h=12+(i%4)*.3;
       K.cyl({x:p[0],z:p[1],y:0,r:.24,h:h-4,seg:8,mat:{tex:'wood',color:0x777a68}});
-      for(let j=0;j<5;j++){const yy=4+j*1.65,dx=Math.sin(i*2+j)*.5,dz=Math.cos(i+j*2)*.5;K.dome({x:p[0]+dx,z:p[1]+dz,y:yy,rx:1.25+(j===1?.4:0),ry:2.7-(j===4?.7:0),rz:1.45,seg:8,rings:5,hemi:false,mat:[0x41623b,0x527c43,0x648c4c][(i+j)%3]});}
-      if(i%2===0){const q=popP(i*6,7.7);if(!reserved.some(r=>K.pointInPoly(q[0],q[1],r))){K.tree(q[0],q[1],{h:9+(i%3),kind:'zelkova'});for(const off of[-1.9,1.9])K.dome({x:q[0]+off,z:q[1],y:5.5,rx:2.9,ry:2.6,rz:3.1,mat:0x4d743d,seg:8,rings:5,hemi:false});}}
+      for(let j=0;j<5;j++){const yy=4.5+j*1.45,dx=Math.sin(i*2+j)*.25,dz=Math.cos(i+j*2)*.25;K.dome({x:p[0]+dx,z:p[1]+dz,y:yy,rx:1.05+(j===1?.2:0),ry:2.1-(j===4?.4:0),rz:1.15,seg:10,rings:6,hemi:false,mat:[0x6a884a,0x78974e,0x829c51][(i+j)%3]});}
+      // The source also has landward trees, set back from the narrow poplar row.
+      if(i%2===0){const q=popP(i*6,13.5);if(!reserved.some(r=>K.pointInPoly(q[0],q[1],r))){K.tree(q[0],q[1],{h:7+(i%3),kind:'zelkova'});for(const off of[-1.2,1.2])K.dome({x:q[0]+off,z:q[1],y:5.5,rx:1.6,ry:1.8,rz:1.9,mat:0x627a49,seg:8,rings:5,hemi:false});}}
       const r=popP(i*6,5.1);box(r[0],.02,r[1],.07,.72,.07,0xe1dec8);
       const q=popP((i+1)*6,5.1),m=popP(i*6+3,5.1);beam([r[0],.66,r[1]],[m[0],.44,m[1]],.017,0xd3d2bf);beam([m[0],.44,m[1]],[q[0],.66,q[1]],.017,0xd3d2bf);
       const riverPost=popP(i*6,-3.05),riverNext=popP((i+1)*6,-3.05);box(riverPost[0],.02,riverPost[1],.06,.54,.06,0xbcbba2);beam([riverPost[0],.48,riverPost[1]],[riverNext[0],.48,riverNext[1]],.012,0xe1dfcb);
@@ -378,12 +437,17 @@ export function build(K){
     const roofLight=rect(166,-1548,191,-1524),white=0xeeeede,bronze=0x9c7b42,black=0x242722;
     const marble={tex:'marble',color:0xf1f0e6,gloss:.7},gold={color:0xb5944c,gloss:.5};
     K.texture('wave_terrazzo',512,512,(g,w,h)=>{
-      const r=K.rand(1310360);g.fillStyle='#777973';g.fillRect(0,0,w,h);
-      for(let i=0;i<10500;i++){const x=r()*w,z=r()*h,s=.7+r()*2.7;g.fillStyle=['#d3d5c9','#ecece2','#b6b7ad','#454b47'][i%4];g.beginPath();g.moveTo(x,z);g.lineTo(x+s,z+.5);g.lineTo(x+s*.4,z+s);g.closePath();g.fill();}
-    },[1.8,1.8]);
-    const terrazzo={tex:'wave_terrazzo',gloss:.3};
+      const r=K.rand(1310360);g.fillStyle='#615d54';g.fillRect(0,0,w,h);
+      for(let i=0;i<16500;i++){const x=r()*w,z=r()*h,s=1.1+r()*3.2;g.fillStyle=['#d8d2bf','#eee9d8','#aaa493','#383b35'][i%4];g.beginPath();g.moveTo(x,z);g.lineTo(x+s,z+.5);g.lineTo(x+s*.4,z+s);g.closePath();g.fill();}
+    },[1.25,1.25]);
+    K.texture('wave_exposed_soffit',512,256,(g,w,h)=>{
+      g.fillStyle='#d5d2c7';g.fillRect(0,0,w,h);
+      for(let x=0;x<w;x+=64){g.fillStyle='#b9bcb6';g.fillRect(x,0,3,h);g.fillStyle='#e8e5da';g.fillRect(x+4,0,5,h);}
+      g.strokeStyle='#bebfb7';g.lineWidth=2;g.beginPath();g.moveTo(0,128);g.lineTo(w,128);g.stroke();
+    },[4,5]);
+    const terrazzo={tex:'wave_terrazzo',gloss:.5};
     K.prism(hull,-1.75,-.45,{mat:0x334f52,solid:false});
-    K.prism(hull,-.45,.12,{mat:0x969f98,top:'wood',solid:false});slab(hull,.12,{tex:'wood',color:0xc6c3ae});
+    K.prism(hull,-.45,.12,{mat:0x969f98,top:false,solid:false});slab(hull,.12,{tex:'wood',color:0xc6c3ae},[inner]);
     reserved.push(rect(147,-1556,199,-1510));
     // Rubber fenders, tall guide piles and tether cleats make the waterborne base visible.
     for(const [x,z]of[[150,-1546],[150,-1520],[196,-1546],[196,-1522]]){
@@ -396,15 +460,16 @@ export function build(K){
     for(let i=0;i<hull.length;i++){const a=hull[i],b=hull[(i+1)%hull.length];if(a[1]===-1514&&b[1]===-1514){rail([153,-1514],[181.8,-1514],.12);continue;}rail(a,b,.12);}
     // HF_500: a secured white tender on the outer deck, outside cafe circulation.
     K.detail({name:'서울웨이브 외부 갑판',floor:'1F',rect:[150,-1549,154,-1518],y0:0,y1:4},()=>{
-      const tender=[[150.8,-1540.8],[152.2,-1540.8],[152.5,-1543.7],[151.5,-1545.7],[150.5,-1543.7]];
-      K.prism(tender,.18,.65,{mat:0xe7e9df,solid:false});K.hpoly(0x65736f,[[151,-1541.3],[152,-1541.3],[152.1,-1543.6],[151.5,-1544.7],[150.9,-1543.6]],.655);
-      for(const z of[-1542,-1543.2])box(151.5,.65,z,1.1,.08,.22,0xdde0d6);
-      for(const z of[-1541,-1544])beam([150.2,.25,z],[152.7,.72,z],.02,0x7f8981);
+      const tender=[[150.55,-1540.8],[151.75,-1540.8],[151.95,-1541.3],[151.94,-1543.2],[151.7,-1543.9],[151.15,-1544.4],[150.6,-1543.9],[150.36,-1543.2],[150.35,-1541.3]];
+      K.prism(tender,.18,.65,{mat:0xe7e9df,solid:false});K.hpoly(0x65736f,[[150.65,-1541.2],[151.65,-1541.2],[151.65,-1543.2],[151.15,-1543.9],[150.65,-1543.2]],.655);
+      for(const z of[-1541.8,-1542.9])box(151.15,.65,z,1.1,.08,.22,0xdde0d6);
+      for(const z of[-1541,-1543.6]){beam([150.2,.25,z],[152,.72,z],.02,0x7f8981);for(let k=0;k<7;k++)beam([150,.8-k*.055,z],[150.12,.77-k*.055,z+.025],.012,0x454f4b);}
+      for(const z of[-1540.8,-1544.4]){beam([150.15,.25,z],[150.15,1.05,z],.035,0xdce2da);beam([150.15,1.05,z],[151.65,1.05,z],.035,0xdce2da);}
     });
     strip([188.22,-1515.03],[184,-1518],4.2,.12,'wood');
     for(let f=0;f<3;f++){
       const y=ys[f],top=ys[f+1],h=top-y;
-      K.slab(inner,y,{mat:f===1?{tex:'darkstone',color:0x4b4b43,gloss:.5}:marble,holes:f?[stairHole]:[],thick:.18});
+      K.slab(inner,y,{mat:f===0?{tex:'concrete',color:0xd6d0c4,gloss:.5}:f===1?{tex:'darkstone',color:0x4b4b43,gloss:.5}:marble,under:f===1?'wave_exposed_soffit':'ceiling',holes:f?[stairHole]:[],thick:.18});
       K.polyWalls(inner,y,top,{mat:{tex:'glass',color:0xd8e5db},thick:.08,openings:f?[]:[{x:184,z:-1518,w:4,y0:y,y1:y+3.3}]});
       // Closely spaced fins and varying opaque spandrels, not a generic glass box.
       for(let edge=0;edge<4;edge++){
@@ -415,7 +480,10 @@ export function build(K){
           const wave=t=>Math.sin(t*Math.PI*2+(edge%2)*.7+f*.75),lo=t=>y+.32+(f===0?.65:.25)*(wave(t)+1),hi=t=>top-.65-(wave(t)+1)*.65;
           if(!door)K.quad(white,[P(t,y),P(u,y),P(u,lo(u)),P(t,lo(t))],[nx,0,nz]);
           K.quad(white,[P(t,Math.max(hi(t),door?y+3.35:y)),P(u,Math.max(hi(u),door?y+3.35:y)),P(u,top),P(t,top)],[nx,0,nz]);
-          if(!door)beam(P(t,y+.12),P(t,top),.048,white);
+          if(!door){
+            if(f===0&&(edge===1||edge===3)){beam(P(t,y+.12),P(t,3.4),.027,0x303936);beam(P(t,3.4),P(t,top),.048,white);}
+            else beam(P(t,y+.12),P(t,top),.048,white);
+          }
           beam(P(t,hi(t)),P(u,hi(u)),.035,0xd6d9d0);
         }
         beam(P(0,top-.04),P(1,top-.04),.07,white);
@@ -440,7 +508,9 @@ export function build(K){
       sign('계단 · 승강기',162.5,y+2.1,-1521.5,2.4,.45,0,'#e4e3d6','#4b5346');
     }
     K.slab(inner,ys[3],{mat:{tex:'wood',color:0xbaa58a},holes:[stairHole,roofLight],thick:.18});
-    K.wall(169.5,-1548,169.5,-1534,ys[0],ys[0]+3.9,{mat:0xf1f0e8,thick:.16,openings:[{at:10,w:2,y0:ys[0],y1:ys[0]+2.8},{at:3,w:5.8,y0:2.65,y1:4.02}]});
+    // The exhibition partition belongs beneath the west gallery. Its previous
+    // full-height position inside the cafe concealed the observed left mezzanine.
+    K.wall(166.15,-1548,166.15,-1534,ys[0],2.49,{mat:0xe1ddcf,thick:.16,openings:[{at:10,w:2,y0:ys[0],y1:2.49}]});
     const gallery=[[161.2,-1548],[191,-1548],[191,-1542],[166,-1542],[166,-1519.35],[161.2,-1519.35]];
     K.slab(gallery,2.65,{mat:terrazzo,under:0xe5e7e2,thick:.16});
     rail([166,-1542],[191,-1542],2.65);rail([166,-1542],[166,-1535.8],2.65);
@@ -461,13 +531,16 @@ export function build(K){
     sign('MAREVO IN WAVE',174,13.98,-1517.7,14,1,0,null,'#246572');
     sign('서울웨이브아트센터',174,13.35,-1517.68,5,.35,0,null,'#246572');
     sign('STARBUCKS',178,3.92,-1517.65,8,.72,0,'#eeeede','#205e48');
+    // Text-only round brand marker at the observed middle white spandrel.
+    for(let i=0;i<32;i++){const a=i*Math.PI/16,b=(i+1)*Math.PI/16;K.quad(0x26634c,[[172,7.05,-1517.65],[172+Math.cos(a)*.58,7.05+Math.sin(a)*.58,-1517.65],[172+Math.cos(b)*.58,7.05+Math.sin(b)*.58,-1517.65],[172,7.05,-1517.65]],[0,0,1]);}
+    sign('스타벅스',172,7.05,-1517.62,.9,.22,0,null,'#f0eee1');
     sign(['서울웨이브아트센터','스타벅스 · 마레보 인 웨이브'],235,1.8,-1473.5,4.8,.85,.7);
     // 2025 entrance frame: pale slatted timber fascia, dark shop glazing, then
     // speckled cafe paving beyond the light tiled public vestibule.
-    K.hpoly(terrazzo,rect(169.6,-1548.8,191.8,-1523.1),.126);
+    K.hpoly(terrazzo,rect(166.3,-1548.8,191.8,-1523.1),.126);
     box(178.5,3.43,-1522.91,25,1.22,.13,{tex:'wood',color:0xc9a781});
     for(let x=166.2;x<191;x+=.22)box(x,3.43,-1522.82,.035,1.22,.035,0xb59978);
-    sign('STARBUCKS',178,4.04,-1522.75,8,.67,0,null,'#c7ddee');
+    sign('STARBUCKS',178,4.04,-1522.75,8,.67,0,null,'#f6f4e9');
     for(const x of[166,169.1,172,175.7,180.3,184,188,191])box(x,.12,-1523,.07,3.3,.10,0x252c2b);
     box(178.5,3.33,-1523,25,.09,.1,0x252c2b);
     for(let z=-1541;z<=-1525;z+=1.5){box(191.93,.12,z,.1,4.48,.065,0x2c3331);box(191.85,1.1,z+.045,.06,.24,.03,0x313b37);}
@@ -480,8 +553,12 @@ export function build(K){
       K.cyl({x:182,y:y+.035,z:-1528.2,r:1.38,h:.06,mat:{tex:'emit',color:0xffe7b2},seg:24});
       K.cyl({x:182,y:y+.78,z:-1528.2,r:1.4,h:.06,mat:0xd3b693,seg:24});
       for(let i=0;i<16;i++){const a=i*Math.PI/8,xx=182+Math.cos(a)*.9,zz=-1528.2+Math.sin(a)*.9;box(xx,y+.84,zz,.28,.2+(i%3)*.16,.23,[0xc4bfaf,0xa8b9ba,0xddd1b5,0x605e6a][i%4]);}
+      // Tiered seasonal boxes and taller tumbler shelves behind the round table.
+      for(let row=0;row<3;row++)for(let col=0;col<6;col++)box(181.15+col*.33,y+.86+row*.22,-1528.8-row*.1,.29,.19,.34,[0xb5a1bb,0xd9b9cb,0xe7c962,0xdfd5bc][(row+col)%4]);
+      for(const x of[184.3,185.5]){box(x,y,-1529.6,1.04,1.7,.5,0x3d4039);for(let row=0;row<4;row++){box(x,y+.27+row*.38,-1529.28,1,.045,.5,'wood');for(let col=0;col<4;col++)K.cyl({x:x-.36+col*.24,y:y+.3+row*.38,z:-1529.25,r:.075,h:.24+(col%2)*.06,mat:[0xd7ccad,0xa1b2ad,0xd9c4d4][col%3],seg:8});}}
       for(const x of[171,179,187]){box(x,4.49,-1533,.14,.14,18,0xe1e5e0);for(const z of[-1539,-1533,-1527]){box(x,4.46,z,.22,.055,.22,0x636d68);box(x,4.44,z,.14,.025,.14,'emit');}}
-      for(const z of[-1540,-1534,-1527]){box(178,4.52,z,25,.14,.16,0xe1e5e0);beam([166,4.39,z+.3],[191,4.39,z+.3],.055,0xd4dcd6);}
+      for(const z of[-1540,-1534,-1527]){box(178,4.38,z,25,.28,.18,0xb9c9c7);beam([166,4.28,z+.3],[191,4.28,z+.3],.055,0xd4dcd6);}
+      for(const x of[170.2,173.8,181.3,187.5]){beam([x,4.48,-1541],[x,4.48,-1524],.07,0xb6c3bd);for(const z of[-1537,-1530]){beam([x,4.45,z],[x,4.12,z],.016,0x525c56);K.cyl({x,y:4.02,z,r:.11,h:.14,mat:0x7f8172,seg:10});box(x,4.005,z,.16,.025,.16,{tex:'emit',color:0xffdda3});}}
       for(const x of[173,180]){box(x,y,-1541.05,3.6,.45,.65,{tex:'wood',color:0x9b7954});box(x,y+.45,-1541.3,3.6,.65,.12,0x846b50);}
       for(let i=0;i<3;i++){box(161.4,y+.7,-1545+i*3.2,.12,1.8,2.1,0xd5d0bf);box(161.48,y+.8,-1545+i*3.2,.06,1.6,1.8,[0x879f9d,0xc6ac8e,0x8f927c][i]);}
       sign('전시공간',164,y+2.65,-1535.3,3,.5,0,'#eeede3','#4c6259');
@@ -497,14 +574,20 @@ export function build(K){
       }
       for(const x of[169,177,185])for(const z of[-1543,-1535,-1527])box(x,4.61,z,1.3,.045,.3,{tex:'emit',color:0xffefd2});
       K.person(186,.12,-1545.8,{shirt:0x244c39,pants:0x353c33});K.person(174.1,.12,-1538,{sit:true,shirt:0xc2bca3,pants:0x4d5147});
-      for(const x of[174.6,181.5]){
-        box(x,.12,-1521.7,.42,.04,.55,0xe7bb2a);beam([x-.2,.16,-1521.95],[x-.2,.84,-1521.7],.035,0xe7bb2a);beam([x+.2,.16,-1521.95],[x+.2,.84,-1521.7],.035,0xe7bb2a);
-        sign(['주의','미끄럼'],x,.57,-1521.65,.42,.45,0,'#edc43b','#34352d');
+      for(const[x,z,a,sit,col]of[[188.5,-1545.7,.2,false,0x315e46],[185.7,-1542.3,3.1,false,0xe0d2bd],[186.3,-1540.9,3,false,0x8c7464],[181,-1526.8,2,false,0xc1a5a2],[183.9,-1527.6,1.2,false,0x657b79],[174,-1544,1.5,true,0xd8cdb7],[182,-1538,4.7,true,0x717b8b],[188,-1532,1.5,true,0xafa585],[173,-1530,4.7,true,0xd3ba9f],[176,-1547.1,3.1,true,0x7e8e85],[178.2,-1547.1,3.1,true,0xafa0a4],[180,-1534.8,.7,false,0xada38e]]){
+        K.person(x,y,z,{rotY:a,sit,shirt:col,pants:0x3e4443});if(!sit&&x<186)box(x+.24,y+.55,z,.19,.3,.1,0xc8b18b,false,a);
       }
+      for(const x of[174.6,181.5]){
+        box(x,.12,-1522.25,.33,.035,.4,0xe7bb2a);beam([x-.16,.16,-1522.45],[x-.16,.72,-1522.25],.028,0xe7bb2a);beam([x+.16,.16,-1522.45],[x+.16,.72,-1522.25],.028,0xe7bb2a);
+        sign(['주의','미끄럼'],x,.45,-1522.2,.33,.35,0,'#edc43b','#34352d');
+      }
+      sign('←',175.8,1.35,-1522.93,.22,.19,0,'#307b58','#ffffff');
+      for(const[x,z,a,col]of[[176.8,-1522,2.7,0xbca891],[179.3,-1524,1.1,0x6b7a73]])K.person(x,y,z,{rotY:a,shirt:col,pants:0x404843});
       box(171.5,.12,-1522,.55,1.3,.08,0xeee8dc);sign(['스타벅스','매장 안내'],171.5,1.15,-1521.94,.5,.45,0,'#eee8dc','#266447');
     });
     K.detail({name:'스타벅스 중층 좌석',floor:'1M',poly:gallery,y0:2.65,y1:4.74},()=>{
       for(const x of[172,178,184,189]){table(x,2.65,-1546.25);chair(x-.95,2.65,-1546.25,Math.PI/2,0x968166);chair(x+.95,2.65,-1546.25,-Math.PI/2,0x968166);}
+      for(const[x,a,col]of[[171.05,1.57,0xb7a38c],[178.95,4.71,0xa8aaa1],[183.05,1.57,0x7b8c89],[189.95,4.71,0xd0b8a3]])K.person(x,2.65,-1546.25,{rotY:a,sit:true,shirt:col,pants:0x434a45});
     });
     function floral(x,y,z,tall=false){
       if(tall){box(x,y,z,.75,.8,.75,{color:0xe3e1d5,gloss:.5});for(const dx of[-.18,.18])beam([x+dx,y+.75,z],[x+dx*.8,y+2.3,z],.035,0x899379);}

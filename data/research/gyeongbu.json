@@ -874,7 +874,7 @@
   "ROUND13: 1F→3F·B1→1F 전환 구간은 새 보행 영상에서 끊김. 이전 조사 기반 보행 연결을 보존했다."
  ],
  "modeling": {
-  "reference_priority": "ROUND13: 위치·층은 공식 경부선 층별 안내와 OSM/공유 연결 계약 우선. 이후 2025–2026 보행 프레임의 직접 확인(seen), 설명/자막(stated), 추정(inferred)을 구분. 새 영상과 구사진의 디자인 차이는 새 영상 우선; 영상에 없는 기존 세부는 보존. 좌표 미확정은 modeling.guesses에 기록.",
+  "reference_priority": "ROUND15: 비교 시트 _1..10의28개 프레임과 각 원본 jpg를 직접 확인해 reviewer 항목을 검증. 위치·층은 공식 경부선 층별 안내와 OSM/공유 연결 계약 우선. 카메라→배치→마감→집기·인물 순으로 보강. 새 영상과 구사진 차이는 새 영상 우선, 사진에 없는 기존 상세는 보존. 이전 라운드 기록은 이력이며 현재 변경/검증/보류 사유는 modeling.round15.",
   "frame": "로컬 u=북측 긴 동을 따라 동북쪽, v=서측 높은 동을 따라 남동쪽. W(u,v)=(2.3,-59.24)+u*(0.9348,-0.3552)+v*(0.3552,0.9348).",
   "claims": {
    "buildings": [
@@ -944,71 +944,91 @@
    "merged_kit_quads": 174663,
    "expanded_triangles": 2143098
   },
-  "render_review": "비교 시트13장과 원본을 검토. tests/shot.mjs는 사용자 지시대로 실행하지 않음. 최종 외관 이미지는 operator가 modeling.trace로 렌더하여 확인해야 함.",
+  "render_review": "ROUND15: 비교 시트10장에 대응하는 원본28개 jpg를 직접 대조. tests/shot.mjs는 사용자 지시로 실행하지 않음. 최종28카메라의 바닥/캡슐과 CPU 중앙 시선검사 완료. 최종 외관 이미지는 operator가 modeling.trace로 렌더하여 확인해야 함.",
   "validation": {
-   "round": 13,
+   "round": 15,
    "smoke": {
     "command": "node tests/smoke.mjs gyeongbu gotomall station gyeongbu_east",
-    "result": "OK; final round13 geometry and all lazy detail groups built"
+    "result": "OK"
    },
    "walk": {
     "command": "node tests/walk.mjs",
-    "result": "689 ok, 0 blocked; final fresh full-world snapshot, all user routes walkable",
-    "exit_code": 0
+    "result": "687 ok, 0 blocked",
+    "exit_code": 0,
+    "user_routes": "사용자 루트 1–7 모든 구간 통과"
    },
-   "walk_layout_stage": {
-    "command": "node tests/walk.mjs gyeongbu gotomall station gyeongbu_east",
-    "result": "138 ok, 0 blocked before design/detail additions"
-   },
-   "trace_cameras": {
-    "round13_count": 28,
-    "all_recorded": 104,
-    "floor_failures": 0,
-    "capsule_collisions": 0,
-    "method": "Real kit, all detail and city built; physics support within0.035m and radius0.32/height1.75 capsule resolution within0.03m. Every referenced frame exists.",
-    "historical_checked": 76,
-    "all_cameras_checked": 104,
-    "historical_floor_failures": 0,
-    "historical_capsule_collisions": 0,
-    "historical_method": "Independent final gyeongbu real-kit/all-detail check: support tolerance0.15m, capsule radius0.32,height1.75,step0.5."
-   },
-   "new_routes": {
-    "passed": 6,
-    "blocked": 0,
-    "routes": [
-     "1F new portal",
-     "1F entry to wave corridor",
-     "B1 factory open mouth",
-     "3F lifts to market",
-     "3F supply to packing",
-     "boarding pier passage"
+   "camera_physics": {
+    "count": 28,
+    "passed": 28,
+    "changed_poses": 25,
+    "unchanged_cameras": [
+     "gyeongbu_07",
+     "gyeongbu_19",
+     "gyeongbu_21"
     ],
-    "method": "In-memory tests/walk.mjs BFS; repository tests unchanged."
+    "method": "최종 geometry+city+모든detail. 실제physics floor support ±0.2m, capsule r0.32/h1.75 resolve push<0.03m. _09 기둥 회피 후 전체28개 재검사, 마지막 _17 미세보정도 실제kit로 support0.14/push0 재확인.",
+    "errors": []
    },
-   "lifts": {
-    "floors_checked": 22,
-    "blocked": 0,
-    "note": "Two main lifts across all B1~10F floors, face-aware keepouts; read-only independent real-kit walk-out check."
+   "detail_groups": {
+    "count": 31,
+    "errors": [],
+    "max_kit_quads": 121477,
+    "max_kit_group": "B1 다이소 긴 매장",
+    "note": "≈120k 지침에 비해1.23% 높음; 재고 단순화하지 않음. K.person/flower instanced mesh는 kit quad 통계 밖이므로 expanded triangles 별도 기록.",
+    "daiso_people": 40,
+    "daiso_people_triangles": 20040,
+    "daiso_expanded_triangles": 357052,
+    "largest_inherited_instance_group": "생화 동편 남단",
+    "largest_inherited_instance_group_triangles": 405036
    },
    "render": {
-    "result": "Not run per user instruction; operator_pending. No visual render verification claimed."
+    "executed": false,
+    "reason": "사용자 지시로 tests/shot.mjs 미실행. 원본/기존 비교시트 대조, CPU 시선 ray 검사만 실행."
    },
-   "git_diff_check": "Passed for the two authorized files.",
-   "concurrent_neighbour_checks": {
-    "older_full_snapshots": [
-     "683 ok, 2 blocked",
-     "687 ok, 2 blocked"
-    ],
-    "blocked_then_fixed": [
-     "J1 gotomall→shinsegae B1",
-     "사용자 루트4 [3→4] 신세계 B1→1F"
-    ],
-    "latest_targeted_checks": "Both earlier failures were resolved in the concurrent workspace; fresh required full command passes689 ok,0 blocked. No neighbour file edits by this job."
+   "camera_rays": {
+    "count": 28,
+    "method": "CPU THREE.Raycaster, 눈높이y+1.65m, trace yaw/pitch 중앙 광선, 반경100m, 투명재질 제외. 완전한 렌더/화각 검증을 대체하지 않음.",
+    "fixed": "_09의 기존 기둥(u51,v78)이1.10m 앞을 가리므로 카메라v77.8→79.3. 이후 첫 불투명면24.54m.",
+    "selected_first_opaque_distances_m": {
+     "00": 28.61,
+     "01": 8.1,
+     "02": 7.2,
+     "06": 33.3,
+     "08": 23.94,
+     "09": 24.54,
+     "10": 23.81,
+     "13": 1.41,
+     "14": 0.82,
+     "15": 1.0,
+     "16": 0.93,
+     "17": 6.95,
+     "18": 3.04,
+     "19": 28.11,
+     "20": 7.15
+    },
+    "interpretation": "1F 문/팩토리 전면 접근의 근접 장애물 제거 확인. _13..16은 의도한 상품 근접면. _17은 오른쪽 경사 기둥 너머 버스측면6.95m, _18은 가까운 버스앞면3.04m, _20은 빨간 측면버스7.15m. 복도 중앙은 장거리 시선 확보."
    },
-   "metadata": {
-    "method": "tools/gen_meta.mjs executed with writeFileSync captured in memory; no repository or temporary file written",
-    "result": "gyeongbu claims, roads, areas, box, heights, floors, cells, junctions and all80 entrance entries exactly match current js/places/_meta.json",
-    "requires_update": false
+   "people": {
+    "before": 212,
+    "after": 293,
+    "added": 81,
+    "method": "HEAD와최종 모듈 각각 실제kit로 모든 detail 생성 후 K._.people 집계. 기존 인물 축소삭제 없이 군집/방향 조정과 추가."
+   },
+   "scope": {
+    "edited": [
+     "js/places/gyeongbu.js",
+     "data/research/gyeongbu.json"
+    ],
+    "meta_or_junctions_edited": false,
+    "committed": false,
+    "note": "존 변경은 기존 건물/기존3F존 내부의 서비스복도 범위 조정이며 외곽/claims/접속계약 유지."
+   },
+   "syntax_and_whitespace": {
+    "commands": [
+     "node --check js/places/gyeongbu.js",
+     "git diff --check"
+    ],
+    "result": "passed"
    }
   },
   "round2": {
@@ -2855,17 +2875,29 @@
     "photos": [
      "refs/walk/s3_gyeongbu/Zq_7eC75nBI_60.jpg"
     ],
-    "x": 63.4736,
+    "x": 71.9432,
     "y": 0,
-    "z": -95.3216,
-    "yawDeg": 200.806,
+    "z": -112.4468,
+    "yawDeg": 198.76,
     "pitchDeg": 0,
     "local": {
-     "u": 70,
-     "v": -12
+     "u": 84,
+     "v": -25
     },
     "floor": "1F",
-    "note": "프레임의 형태·동선 관계 비교용. 공식 약도/보존 구조에 맞춘 위치이며 촬영 지점의 측량 좌표가 아님. y는 눈높이가 아니라 모델 바닥 높이."
+    "note": "ROUND15: 비교 시트와 원본 프레임으로 시선 보정. y는 발밑 바닥 높이. OSM/기존 연결 구조 안에서 추정한 촬영 위치이며 측량 좌표 아님. 최종 operator 렌더 대기.",
+    "round15_previous_pose": {
+     "x": 63.4736,
+     "y": 0,
+     "z": -95.3216,
+     "yawDeg": 200.806,
+     "pitchDeg": 0,
+     "local": {
+      "u": 70,
+      "v": -12
+     }
+    },
+    "revised_round": 15
    },
    {
     "round": 13,
@@ -2873,17 +2905,29 @@
     "photos": [
      "refs/walk/s3_gyeongbu/Zq_7eC75nBI_80.jpg"
     ],
-    "x": 66.6704,
+    "x": 68.8952,
     "y": 0,
-    "z": -86.9084,
-    "yawDeg": 200.806,
-    "pitchDeg": 6,
+    "z": -86.684,
+    "yawDeg": 186.769,
+    "pitchDeg": 0,
     "local": {
-     "u": 70,
-     "v": -3
+     "u": 72,
+     "v": -2
     },
     "floor": "1F",
-    "note": "프레임의 형태·동선 관계 비교용. 공식 약도/보존 구조에 맞춘 위치이며 촬영 지점의 측량 좌표가 아님. y는 눈높이가 아니라 모델 바닥 높이."
+    "note": "ROUND15: 비교 시트와 원본 프레임으로 시선 보정. y는 발밑 바닥 높이. OSM/기존 연결 구조 안에서 추정한 촬영 위치이며 측량 좌표 아님. 최종 operator 렌더 대기.",
+    "round15_previous_pose": {
+     "x": 66.6704,
+     "y": 0,
+     "z": -86.9084,
+     "yawDeg": 200.806,
+     "pitchDeg": 6,
+     "local": {
+      "u": 70,
+      "v": -3
+     }
+    },
+    "revised_round": 15
    },
    {
     "round": 13,
@@ -2891,17 +2935,29 @@
     "photos": [
      "refs/walk/s3_gyeongbu/Zq_7eC75nBI_100.jpg"
     ],
-    "x": 77.3826,
+    "x": 76.919,
     "y": 0,
-    "z": -62.095,
-    "yawDeg": 200.806,
-    "pitchDeg": 7,
+    "z": -55.1505,
+    "yawDeg": 290.806,
+    "pitchDeg": 0,
     "local": {
-     "u": 71.2,
-     "v": 24
+     "u": 68.3,
+     "v": 30.326952
     },
     "floor": "1F",
-    "note": "프레임의 형태·동선 관계 비교용. 공식 약도/보존 구조에 맞춘 위치이며 촬영 지점의 측량 좌표가 아님. y는 눈높이가 아니라 모델 바닥 높이."
+    "note": "ROUND15: 비교 시트와 원본 프레임으로 시선 보정. y는 발밑 바닥 높이. OSM/기존 연결 구조 안에서 추정한 촬영 위치이며 측량 좌표 아님. 최종 operator 렌더 대기.",
+    "round15_previous_pose": {
+     "x": 77.3826,
+     "y": 0,
+     "z": -62.095,
+     "yawDeg": 200.806,
+     "pitchDeg": 7,
+     "local": {
+      "u": 71.2,
+      "v": 24
+     }
+    },
+    "revised_round": 15
    },
    {
     "round": 13,
@@ -2909,17 +2965,29 @@
     "photos": [
      "refs/walk/s3_gyeongbu/Zq_7eC75nBI_120.jpg"
     ],
-    "x": 86.5243,
+    "x": 87.5899,
     "y": 0,
-    "z": -37.7547,
-    "yawDeg": 57.675,
+    "z": -34.9503,
+    "yawDeg": 20.806,
     "pitchDeg": 0,
     "local": {
      "u": 71.1,
-     "v": 50
+     "v": 53
     },
     "floor": "1F",
-    "note": "프레임의 형태·동선 관계 비교용. 공식 약도/보존 구조에 맞춘 위치이며 촬영 지점의 측량 좌표가 아님. y는 눈높이가 아니라 모델 바닥 높이."
+    "note": "ROUND15: 비교 시트와 원본 프레임으로 시선 보정. y는 발밑 바닥 높이. OSM/기존 연결 구조 안에서 추정한 촬영 위치이며 측량 좌표 아님. 최종 operator 렌더 대기.",
+    "round15_previous_pose": {
+     "x": 86.5243,
+     "y": 0,
+     "z": -37.7547,
+     "yawDeg": 57.675,
+     "pitchDeg": 0,
+     "local": {
+      "u": 71.1,
+      "v": 50
+     }
+    },
+    "revised_round": 15
    },
    {
     "round": 13,
@@ -2930,14 +2998,26 @@
     "x": 102.1718,
     "y": 0,
     "z": 2.2996,
-    "yawDeg": 200.806,
+    "yawDeg": 20.806,
     "pitchDeg": 0,
     "local": {
      "u": 71.5,
      "v": 93
     },
     "floor": "1F",
-    "note": "프레임의 형태·동선 관계 비교용. 공식 약도/보존 구조에 맞춘 위치이며 촬영 지점의 측량 좌표가 아님. y는 눈높이가 아니라 모델 바닥 높이."
+    "note": "ROUND15: 비교 시트와 원본 프레임으로 시선 보정. y는 발밑 바닥 높이. OSM/기존 연결 구조 안에서 추정한 촬영 위치이며 측량 좌표 아님. 최종 operator 렌더 대기.",
+    "round15_previous_pose": {
+     "x": 102.1718,
+     "y": 0,
+     "z": 2.2996,
+     "yawDeg": 200.806,
+     "pitchDeg": 0,
+     "local": {
+      "u": 71.5,
+      "v": 93
+     }
+    },
+    "revised_round": 15
    },
    {
     "round": 13,
@@ -2948,14 +3028,26 @@
     "x": 109.9862,
     "y": 0,
     "z": 22.8652,
-    "yawDeg": 200.806,
-    "pitchDeg": 7,
+    "yawDeg": 20.806,
+    "pitchDeg": 0,
     "local": {
      "u": 71.5,
      "v": 115
     },
     "floor": "1F",
-    "note": "프레임의 형태·동선 관계 비교용. 공식 약도/보존 구조에 맞춘 위치이며 촬영 지점의 측량 좌표가 아님. y는 눈높이가 아니라 모델 바닥 높이."
+    "note": "ROUND15: 비교 시트와 원본 프레임으로 시선 보정. y는 발밑 바닥 높이. OSM/기존 연결 구조 안에서 추정한 촬영 위치이며 측량 좌표 아님. 최종 operator 렌더 대기.",
+    "round15_previous_pose": {
+     "x": 109.9862,
+     "y": 0,
+     "z": 22.8652,
+     "yawDeg": 200.806,
+     "pitchDeg": 7,
+     "local": {
+      "u": 71.5,
+      "v": 115
+     }
+    },
+    "revised_round": 15
    },
    {
     "round": 13,
@@ -2963,17 +3055,29 @@
     "photos": [
      "refs/walk/s3_gyeongbu/69BNJ7tHUhI_8.jpg"
     ],
-    "x": 76.6534,
+    "x": 76.3358,
     "y": 0,
-    "z": -62.8878,
-    "yawDeg": 51.769,
+    "z": -71.3252,
+    "yawDeg": 110.806,
     "pitchDeg": 0,
     "local": {
-     "u": 70.8,
-     "v": 23
+     "u": 73.5,
+     "v": 15
     },
     "floor": "1F",
-    "note": "프레임의 형태·동선 관계 비교용. 공식 약도/보존 구조에 맞춘 위치이며 촬영 지점의 측량 좌표가 아님. y는 눈높이가 아니라 모델 바닥 높이."
+    "note": "ROUND15: 비교 시트와 원본 프레임으로 시선 보정. y는 발밑 바닥 높이. OSM/기존 연결 구조 안에서 추정한 촬영 위치이며 측량 좌표 아님. 최종 operator 렌더 대기.",
+    "round15_previous_pose": {
+     "x": 76.6534,
+     "y": 0,
+     "z": -62.8878,
+     "yawDeg": 51.769,
+     "pitchDeg": 0,
+     "local": {
+      "u": 70.8,
+      "v": 23
+     }
+    },
+    "revised_round": 15
    },
    {
     "round": 13,
@@ -2991,7 +3095,19 @@
      "v": 88
     },
     "floor": "1F",
-    "note": "프레임의 형태·동선 관계 비교용. 공식 약도/보존 구조에 맞춘 위치이며 촬영 지점의 측량 좌표가 아님. y는 눈높이가 아니라 모델 바닥 높이."
+    "note": "ROUND15: 비교 시트와 원본 프레임으로 시선 보정. y는 발밑 바닥 높이. OSM/기존 연결 구조 안에서 추정한 촬영 위치이며 측량 좌표 아님. 최종 operator 렌더 대기.",
+    "round15_previous_pose": {
+     "x": 100.5828,
+     "y": 0,
+     "z": -2.4454,
+     "yawDeg": 200.806,
+     "pitchDeg": 0,
+     "local": {
+      "u": 71.7,
+      "v": 88
+     }
+    },
+    "revised_round": 15
    },
    {
     "round": 13,
@@ -2999,17 +3115,29 @@
     "photos": [
      "refs/walk/s3_gyeongbu/J0LLdN5rPnI_2.jpg"
     ],
-    "x": 80.6624,
+    "x": 76.9232,
     "y": -6,
-    "z": -5.039,
+    "z": -3.6182,
     "yawDeg": 290.806,
     "pitchDeg": 0,
     "local": {
-     "u": 54,
+     "u": 50,
      "v": 78.5
     },
     "floor": "B1",
-    "note": "프레임의 형태·동선 관계 비교용. 공식 약도/보존 구조에 맞춘 위치이며 촬영 지점의 측량 좌표가 아님. y는 눈높이가 아니라 모델 바닥 높이."
+    "note": "ROUND15: 비교 시트와 원본 프레임으로 시선 보정. y는 발밑 바닥 높이. OSM/기존 연결 구조 안에서 추정한 촬영 위치이며 측량 좌표 아님. 최종 operator 렌더 대기.",
+    "round15_previous_pose": {
+     "x": 80.6624,
+     "y": -6,
+     "z": -5.039,
+     "yawDeg": 290.806,
+     "pitchDeg": 0,
+     "local": {
+      "u": 54,
+      "v": 78.5
+     }
+    },
+    "revised_round": 15
    },
    {
     "round": 13,
@@ -3017,17 +3145,29 @@
     "photos": [
      "refs/walk/s3_gyeongbu/J0LLdN5rPnI_6.jpg"
     ],
-    "x": 81.9992,
+    "x": 76.74,
     "y": -6,
-    "z": -7.1516,
-    "yawDeg": 282.275,
+    "z": -2.6928,
+    "yawDeg": 296.182,
     "pitchDeg": 0,
     "local": {
-     "u": 56,
-     "v": 77
+     "u": 49.5,
+     "v": 79.3
     },
     "floor": "B1",
-    "note": "프레임의 형태·동선 관계 비교용. 공식 약도/보존 구조에 맞춘 위치이며 촬영 지점의 측량 좌표가 아님. y는 눈높이가 아니라 모델 바닥 높이."
+    "note": "ROUND15: 복도에서 전면 8.5m 밖. 기존 기둥(u51,v78)이 화면 중앙을 가리지 않도록 v79.3으로 보정. y는 발밑 바닥 높이. 시점은 사진 비례 추정이며 최종 operator 렌더 대기.",
+    "round15_previous_pose": {
+     "x": 81.9992,
+     "y": -6,
+     "z": -7.1516,
+     "yawDeg": 282.275,
+     "pitchDeg": 0,
+     "local": {
+      "u": 56,
+      "v": 77
+     }
+    },
+    "revised_round": 15
    },
    {
     "round": 13,
@@ -3035,17 +3175,29 @@
     "photos": [
      "refs/walk/s3_gyeongbu/J0LLdN5rPnI_10.jpg"
     ],
-    "x": 86.2712,
+    "x": 77.3233,
     "y": -6,
-    "z": -7.1702,
-    "yawDeg": 290.806,
+    "z": -3.1284,
+    "yawDeg": 295.204,
     "pitchDeg": 0,
     "local": {
-     "u": 60,
-     "v": 78.5
+     "u": 50.2,
+     "v": 79.1
     },
     "floor": "B1",
-    "note": "프레임의 형태·동선 관계 비교용. 공식 약도/보존 구조에 맞춘 위치이며 촬영 지점의 측량 좌표가 아님. y는 눈높이가 아니라 모델 바닥 높이."
+    "note": "ROUND15: 비교 시트와 원본 프레임으로 시선 보정. y는 발밑 바닥 높이. OSM/기존 연결 구조 안에서 추정한 촬영 위치이며 측량 좌표 아님. 최종 operator 렌더 대기.",
+    "round15_previous_pose": {
+     "x": 86.2712,
+     "y": -6,
+     "z": -7.1702,
+     "yawDeg": 290.806,
+     "pitchDeg": 0,
+     "local": {
+      "u": 60,
+      "v": 78.5
+     }
+    },
+    "revised_round": 15
    },
    {
     "round": 13,
@@ -3057,13 +3209,25 @@
     "y": -6,
     "z": -130.9334,
     "yawDeg": 290.806,
-    "pitchDeg": 4,
+    "pitchDeg": 0,
     "local": {
      "u": 240,
      "v": 14.5
     },
     "floor": "B1",
-    "note": "프레임의 형태·동선 관계 비교용. 공식 약도/보존 구조에 맞춘 위치이며 촬영 지점의 측량 좌표가 아님. y는 눈높이가 아니라 모델 바닥 높이."
+    "note": "ROUND15: 다이소 원본 프레임과 진열면을 대조해 카메라를 통로/상품 전면으로 보정. y는 발밑 바닥 높이. 촬영 위치·제품 진열 치수는 추정. 최종 operator 렌더 대기.",
+    "round15_previous_pose": {
+     "x": 231.8024,
+     "y": -6,
+     "z": -130.9334,
+     "yawDeg": 290.806,
+     "pitchDeg": 4,
+     "local": {
+      "u": 240,
+      "v": 14.5
+     }
+    },
+    "revised_round": 15
    },
    {
     "round": 13,
@@ -3075,13 +3239,25 @@
     "y": -6,
     "z": -134.4854,
     "yawDeg": 110.806,
-    "pitchDeg": 3,
+    "pitchDeg": 0,
     "local": {
      "u": 250,
      "v": 14.5
     },
     "floor": "B1",
-    "note": "프레임의 형태·동선 관계 비교용. 공식 약도/보존 구조에 맞춘 위치이며 촬영 지점의 측량 좌표가 아님. y는 눈높이가 아니라 모델 바닥 높이."
+    "note": "ROUND15: 다이소 원본 프레임과 진열면을 대조해 카메라를 통로/상품 전면으로 보정. y는 발밑 바닥 높이. 촬영 위치·제품 진열 치수는 추정. 최종 operator 렌더 대기.",
+    "round15_previous_pose": {
+     "x": 241.1504,
+     "y": -6,
+     "z": -134.4854,
+     "yawDeg": 110.806,
+     "pitchDeg": 3,
+     "local": {
+      "u": 250,
+      "v": 14.5
+     }
+    },
+    "revised_round": 15
    },
    {
     "round": 13,
@@ -3089,71 +3265,119 @@
     "photos": [
      "refs/walk/s3_gyeongbu/zHONiMorRm0_12.jpg"
     ],
-    "x": 226.474,
+    "x": 226.5273,
     "y": -6,
-    "z": -128.9088,
-    "yawDeg": 207.931,
-    "pitchDeg": 0,
+    "z": -128.7685,
+    "yawDeg": 200.806,
+    "pitchDeg": -6,
     "local": {
      "u": 234.3,
-     "v": 14.5
+     "v": 14.65
     },
     "floor": "B1",
-    "note": "프레임의 형태·동선 관계 비교용. 공식 약도/보존 구조에 맞춘 위치이며 촬영 지점의 측량 좌표가 아님. y는 눈높이가 아니라 모델 바닥 높이."
+    "note": "ROUND15: 다이소 원본 프레임과 진열면을 대조해 카메라를 통로/상품 전면으로 보정. y는 발밑 바닥 높이. 촬영 위치·제품 진열 치수는 추정. 최종 operator 렌더 대기.",
+    "round15_previous_pose": {
+     "x": 226.474,
+     "y": -6,
+     "z": -128.9088,
+     "yawDeg": 207.931,
+     "pitchDeg": 0,
+     "local": {
+      "u": 234.3,
+      "v": 14.5
+     }
+    },
+    "revised_round": 15
    },
    {
     "round": 13,
-    "spot": "다이소 펫 포장상품",
+    "spot": "다이소 투명 파우치 흰 선반 근접",
     "photos": [
      "refs/walk/s3_gyeongbu/zHONiMorRm0_22.jpg"
     ],
-    "x": 227.1415,
+    "x": 228.984,
     "y": -6,
-    "z": -128.8414,
-    "yawDeg": 183.703,
-    "pitchDeg": -4,
+    "z": -129.0601,
+    "yawDeg": 200.806,
+    "pitchDeg": -20,
     "local": {
-     "u": 234.9,
-     "v": 14.8
+     "u": 236.7,
+     "v": 15.25
     },
     "floor": "B1",
-    "note": "프레임의 형태·동선 관계 비교용. 공식 약도/보존 구조에 맞춘 위치이며 촬영 지점의 측량 좌표가 아님. y는 눈높이가 아니라 모델 바닥 높이."
+    "note": "ROUND15: 다이소 원본 프레임과 진열면을 대조해 카메라를 통로/상품 전면으로 보정. y는 발밑 바닥 높이. 촬영 위치·제품 진열 치수는 추정. 최종 operator 렌더 대기.",
+    "round15_previous_pose": {
+     "x": 227.1415,
+     "y": -6,
+     "z": -128.8414,
+     "yawDeg": 183.703,
+     "pitchDeg": -4,
+     "local": {
+      "u": 234.9,
+      "v": 14.8
+     }
+    },
+    "revised_round": 15
    },
    {
     "round": 13,
-    "spot": "다이소 캐릭터 파우치",
+    "spot": "다이소 반려동물 옷·캔 진열 근접",
     "photos": [
      "refs/walk/s3_gyeongbu/69BNJ7tHUhI_28.jpg"
     ],
-    "x": 246.7592,
+    "x": 246.9901,
     "y": -6,
-    "z": -136.6166,
+    "z": -136.009,
     "yawDeg": 200.806,
-    "pitchDeg": -4,
+    "pitchDeg": -12,
     "local": {
      "u": 256,
-     "v": 14.5
+     "v": 15.15
     },
     "floor": "B1",
-    "note": "프레임의 형태·동선 관계 비교용. 공식 약도/보존 구조에 맞춘 위치이며 촬영 지점의 측량 좌표가 아님. y는 눈높이가 아니라 모델 바닥 높이."
+    "note": "ROUND15: 다이소 원본 프레임과 진열면을 대조해 카메라를 통로/상품 전면으로 보정. y는 발밑 바닥 높이. 촬영 위치·제품 진열 치수는 추정. 최종 operator 렌더 대기.",
+    "round15_previous_pose": {
+     "x": 246.7592,
+     "y": -6,
+     "z": -136.6166,
+     "yawDeg": 200.806,
+     "pitchDeg": -4,
+     "local": {
+      "u": 256,
+      "v": 14.5
+     }
+    },
+    "revised_round": 15
    },
    {
     "round": 13,
-    "spot": "다이소 여행·건강 상품",
+    "spot": "다이소 흰 병·튜브 진열 근접",
     "photos": [
      "refs/walk/s3_gyeongbu/69BNJ7tHUhI_33.jpg"
     ],
-    "x": 252.368,
+    "x": 252.6344,
     "y": -6,
-    "z": -138.7478,
+    "z": -138.0467,
     "yawDeg": 200.806,
-    "pitchDeg": -4,
+    "pitchDeg": -20,
     "local": {
      "u": 262,
-     "v": 14.5
+     "v": 15.25
     },
     "floor": "B1",
-    "note": "프레임의 형태·동선 관계 비교용. 공식 약도/보존 구조에 맞춘 위치이며 촬영 지점의 측량 좌표가 아님. y는 눈높이가 아니라 모델 바닥 높이."
+    "note": "ROUND15: 다이소 원본 프레임과 진열면을 대조해 카메라를 통로/상품 전면으로 보정. y는 발밑 바닥 높이. 촬영 위치·제품 진열 치수는 추정. 최종 operator 렌더 대기.",
+    "round15_previous_pose": {
+     "x": 252.368,
+     "y": -6,
+     "z": -138.7478,
+     "yawDeg": 200.806,
+     "pitchDeg": -4,
+     "local": {
+      "u": 262,
+      "v": 14.5
+     }
+    },
+    "revised_round": 15
    },
    {
     "round": 13,
@@ -3161,17 +3385,29 @@
     "photos": [
      "refs/walk/s3_gyeongbu/jpOjc7GGnDo_5.jpg"
     ],
-    "x": 109.0294,
+    "x": 106.055,
     "y": 0.14,
-    "z": 4.7218,
-    "yawDeg": 290.806,
+    "z": -0.9945,
+    "yawDeg": 289.551,
     "pitchDeg": 0,
     "local": {
-     "u": 77.05,
-     "v": 97.7
+     "u": 76.3,
+     "v": 91.3
     },
     "floor": "1F",
-    "note": "프레임의 형태·동선 관계 비교용. 공식 약도/보존 구조에 맞춘 위치이며 촬영 지점의 측량 좌표가 아님. y는 눈높이가 아니라 모델 바닥 높이."
+    "note": "ROUND15: 흰 승차홈 지지대를 오른쪽에 두고 버스 측면을 보는 local(76.3,91.3)→(90,91.6) 시점. 중앙 첫 버스6.95m. y0.14는 승차장 바닥, physics push0. 최종 operator 렌더 대기.",
+    "round15_previous_pose": {
+     "x": 109.0294,
+     "y": 0.14,
+     "z": 4.7218,
+     "yawDeg": 290.806,
+     "pitchDeg": 0,
+     "local": {
+      "u": 77.05,
+      "v": 97.7
+     }
+    },
+    "revised_round": 15
    },
    {
     "round": 13,
@@ -3179,17 +3415,29 @@
     "photos": [
      "refs/walk/s3_gyeongbu/jpOjc7GGnDo_80.jpg"
     ],
-    "x": 109.0892,
+    "x": 108.6218,
     "y": 0.14,
-    "z": 5.02,
-    "yawDeg": 6.769,
+    "z": 5.1976,
+    "yawDeg": 305.426,
     "pitchDeg": 0,
     "local": {
-     "u": 77,
+     "u": 76.5,
      "v": 98
     },
     "floor": "1F",
-    "note": "프레임의 형태·동선 관계 비교용. 공식 약도/보존 구조에 맞춘 위치이며 촬영 지점의 측량 좌표가 아님. y는 눈높이가 아니라 모델 바닥 높이."
+    "note": "ROUND15: 비교 시트와 원본 프레임으로 시선 보정. y는 발밑 바닥 높이. OSM/기존 연결 구조 안에서 추정한 촬영 위치이며 측량 좌표 아님. 최종 operator 렌더 대기.",
+    "round15_previous_pose": {
+     "x": 109.0892,
+     "y": 0.14,
+     "z": 5.02,
+     "yawDeg": 6.769,
+     "pitchDeg": 0,
+     "local": {
+      "u": 77,
+      "v": 98
+     }
+    },
+    "revised_round": 15
    },
    {
     "round": 13,
@@ -3207,7 +3455,19 @@
      "v": 104.84
     },
     "floor": "1F",
-    "note": "프레임의 형태·동선 관계 비교용. 공식 약도/보존 구조에 맞춘 위치이며 촬영 지점의 측량 좌표가 아님. y는 눈높이가 아니라 모델 바닥 높이."
+    "note": "ROUND15: 비교 시트와 원본 프레임으로 시선 보정. y는 발밑 바닥 높이. OSM/기존 연결 구조 안에서 추정한 촬영 위치이며 측량 좌표 아님. 최종 operator 렌더 대기.",
+    "round15_previous_pose": {
+     "x": 111.6122,
+     "y": 0.14,
+     "z": 11.3785,
+     "yawDeg": 290.806,
+     "pitchDeg": 0,
+     "local": {
+      "u": 77.1,
+      "v": 104.84
+     }
+    },
+    "revised_round": 15
    },
    {
     "round": 13,
@@ -3218,14 +3478,26 @@
     "x": 116.9036,
     "y": 0.14,
     "z": 25.5856,
-    "yawDeg": 20.806,
+    "yawDeg": 300.671,
     "pitchDeg": 0,
     "local": {
      "u": 77,
      "v": 120
     },
     "floor": "1F",
-    "note": "프레임의 형태·동선 관계 비교용. 공식 약도/보존 구조에 맞춘 위치이며 촬영 지점의 측량 좌표가 아님. y는 눈높이가 아니라 모델 바닥 높이."
+    "note": "ROUND15: 비교 시트와 원본 프레임으로 시선 보정. y는 발밑 바닥 높이. OSM/기존 연결 구조 안에서 추정한 촬영 위치이며 측량 좌표 아님. 최종 operator 렌더 대기.",
+    "round15_previous_pose": {
+     "x": 116.9036,
+     "y": 0.14,
+     "z": 25.5856,
+     "yawDeg": 20.806,
+     "pitchDeg": 0,
+     "local": {
+      "u": 77,
+      "v": 120
+     }
+    },
+    "revised_round": 15
    },
    {
     "round": 13,
@@ -3251,17 +3523,29 @@
     "photos": [
      "refs/walk/s3_gyeongbu/Rq5bLTg7xPI_300.jpg"
     ],
-    "x": 118.6628,
+    "x": 119.1358,
     "y": 0,
-    "z": -54.2456,
-    "yawDeg": 94.106,
+    "z": -55.816,
+    "yawDeg": 288.515,
     "pitchDeg": 0,
     "local": {
-     "u": 107,
-     "v": 46
+     "u": 108,
+     "v": 44.7
     },
     "floor": "1F",
-    "note": "프레임의 형태·동선 관계 비교용. 공식 약도/보존 구조에 맞춘 위치이며 촬영 지점의 측량 좌표가 아님. y는 눈높이가 아니라 모델 바닥 높이."
+    "note": "ROUND15: 비교 시트와 원본 프레임으로 시선 보정. y는 발밑 바닥 높이. OSM/기존 연결 구조 안에서 추정한 촬영 위치이며 측량 좌표 아님. 최종 operator 렌더 대기.",
+    "round15_previous_pose": {
+     "x": 118.6628,
+     "y": 0,
+     "z": -54.2456,
+     "yawDeg": 94.106,
+     "pitchDeg": 0,
+     "local": {
+      "u": 107,
+      "v": 46
+     }
+    },
+    "revised_round": 15
    },
    {
     "round": 13,
@@ -3269,17 +3553,29 @@
     "photos": [
      "refs/walk/s3_gyeongbu/Zq_7eC75nBI_230.jpg"
     ],
-    "x": 63.472,
+    "x": 62.0512,
     "y": 11,
-    "z": -25.7862,
-    "yawDeg": 236.023,
+    "z": -29.5254,
+    "yawDeg": 200.806,
     "pitchDeg": 0,
     "local": {
      "u": 45.3,
-     "v": 53
+     "v": 49
     },
     "floor": "3F",
-    "note": "프레임의 형태·동선 관계 비교용. 공식 약도/보존 구조에 맞춘 위치이며 촬영 지점의 측량 좌표가 아님. y는 눈높이가 아니라 모델 바닥 높이."
+    "note": "ROUND15: 꽃시장 원본 프레임의 복도 방향·좌우 관계로 보정. y는 발밑 바닥 높이. 실재 승강기/외벽을 유지하며 복도 치수는 프레임 비례로 추정. 최종 operator 렌더 대기.",
+    "round15_previous_pose": {
+     "x": 63.472,
+     "y": 11,
+     "z": -25.7862,
+     "yawDeg": 236.023,
+     "pitchDeg": 0,
+     "local": {
+      "u": 45.3,
+      "v": 53
+     }
+    },
+    "revised_round": 15
    },
    {
     "round": 13,
@@ -3287,17 +3583,29 @@
     "photos": [
      "refs/walk/s3_gyeongbu/Zq_7eC75nBI_260.jpg"
     ],
-    "x": 70.9784,
+    "x": 72.6367,
     "y": 11,
-    "z": -24.8942,
-    "yawDeg": 179.768,
+    "z": -23.0638,
+    "yawDeg": 20.806,
     "pitchDeg": -3,
     "local": {
-     "u": 52,
-     "v": 56.5
+     "u": 52.9,
+     "v": 58.8
     },
     "floor": "3F",
-    "note": "프레임의 형태·동선 관계 비교용. 공식 약도/보존 구조에 맞춘 위치이며 촬영 지점의 측량 좌표가 아님. y는 눈높이가 아니라 모델 바닥 높이."
+    "note": "ROUND15: 꽃시장 원본 프레임의 복도 방향·좌우 관계로 보정. y는 발밑 바닥 높이. 실재 승강기/외벽을 유지하며 복도 치수는 프레임 비례로 추정. 최종 operator 렌더 대기.",
+    "round15_previous_pose": {
+     "x": 70.9784,
+     "y": 11,
+     "z": -24.8942,
+     "yawDeg": 179.768,
+     "pitchDeg": -3,
+     "local": {
+      "u": 52,
+      "v": 56.5
+     }
+    },
+    "revised_round": 15
    },
    {
     "round": 13,
@@ -3308,14 +3616,26 @@
     "x": 89.7188,
     "y": 11,
     "z": 72.2872,
-    "yawDeg": 275.874,
+    "yawDeg": 290.806,
     "pitchDeg": 0,
     "local": {
      "u": 35,
      "v": 154
     },
     "floor": "3F",
-    "note": "프레임의 형태·동선 관계 비교용. 공식 약도/보존 구조에 맞춘 위치이며 촬영 지점의 측량 좌표가 아님. y는 눈높이가 아니라 모델 바닥 높이."
+    "note": "ROUND15: 꽃시장 원본 프레임의 복도 방향·좌우 관계로 보정. y는 발밑 바닥 높이. 실재 승강기/외벽을 유지하며 복도 치수는 프레임 비례로 추정. 최종 operator 렌더 대기.",
+    "round15_previous_pose": {
+     "x": 89.7188,
+     "y": 11,
+     "z": 72.2872,
+     "yawDeg": 275.874,
+     "pitchDeg": 0,
+     "local": {
+      "u": 35,
+      "v": 154
+     }
+    },
+    "revised_round": 15
    },
    {
     "round": 13,
@@ -3323,17 +3643,29 @@
     "photos": [
      "refs/walk/s3_gyeongbu/Zq_7eC75nBI_1250.jpg"
     ],
-    "x": 59.7589,
+    "x": 63.4642,
     "y": 11,
-    "z": 64.9503,
-    "yawDeg": 184.106,
+    "z": 74.561,
+    "yawDeg": 20.806,
     "pitchDeg": 0,
     "local": {
-     "u": 9.6,
-     "v": 136.5
+     "u": 9.65,
+     "v": 146.8
     },
     "floor": "3F",
-    "note": "프레임의 형태·동선 관계 비교용. 공식 약도/보존 구조에 맞춘 위치이며 촬영 지점의 측량 좌표가 아님. y는 눈높이가 아니라 모델 바닥 높이."
+    "note": "ROUND15: 꽃시장 원본 프레임의 복도 방향·좌우 관계로 보정. y는 발밑 바닥 높이. 실재 승강기/외벽을 유지하며 복도 치수는 프레임 비례로 추정. 최종 operator 렌더 대기.",
+    "round15_previous_pose": {
+     "x": 59.7589,
+     "y": 11,
+     "z": 64.9503,
+     "yawDeg": 184.106,
+     "pitchDeg": 0,
+     "local": {
+      "u": 9.6,
+      "v": 136.5
+     }
+    },
+    "revised_round": 15
    },
    {
     "round": 13,
@@ -3341,17 +3673,29 @@
     "photos": [
      "refs/walk/s3_gyeongbu/Zq_7eC75nBI_1780.jpg"
     ],
-    "x": 64.8928,
+    "x": 66.8464,
     "y": 11,
-    "z": -22.047,
+    "z": -16.9056,
     "yawDeg": 20.806,
     "pitchDeg": 0,
     "local": {
      "u": 45.3,
-     "v": 57
+     "v": 62.5
     },
     "floor": "3F",
-    "note": "프레임의 형태·동선 관계 비교용. 공식 약도/보존 구조에 맞춘 위치이며 촬영 지점의 측량 좌표가 아님. y는 눈높이가 아니라 모델 바닥 높이."
+    "note": "ROUND15: 꽃시장 원본 프레임의 복도 방향·좌우 관계로 보정. y는 발밑 바닥 높이. 실재 승강기/외벽을 유지하며 복도 치수는 프레임 비례로 추정. 최종 operator 렌더 대기.",
+    "round15_previous_pose": {
+     "x": 64.8928,
+     "y": 11,
+     "z": -22.047,
+     "yawDeg": 20.806,
+     "pitchDeg": 0,
+     "local": {
+      "u": 45.3,
+      "v": 57
+     }
+    },
+    "revised_round": 15
    }
   ],
   "round7": {
@@ -4858,6 +5202,590 @@
     "result": "new-camera sample clearance verified; quiet checkout camera moved 0.5m from shelf"
    },
    "git_diff_check": "passed for the four authorized files"
+  },
+  "round15": {
+   "status": "완료: smoke OK, 전체 walk 687 ok / 0 blocked, 28개 카메라 바닥·충돌 통과. 신규 렌더는 사용자 지시로 미실행.",
+   "sequence": [
+    "카메라 보정",
+    "배치",
+    "재질·간판",
+    "집기·인물"
+   ],
+   "evidence": [
+    ".codex-jobs/evidence/review_walk13.json",
+    "shots/walk13all/gyeongbu_1.png–gyeongbu_10.png",
+    "refs/walk/s3_gyeongbu/"
+   ],
+   "camera_convention": "y는 발밑 바닥 높이, yawDeg 0=북/90=서/180=남/270=동. round13 프레임의 trace 순서 28개를 유지하며 revised_round=15로 보정 기록.",
+   "skipped_or_corrected_review": [
+    {
+     "item": "비교 시트 _11–15 누락",
+     "reason": "비교 시트 _1–10은 28개 프레임 전부 포함. _11–27은 개별 렌더 파일로 실제 존재하므로 누락 카메라를 새로 만들지 않음."
+    },
+    {
+     "item": "정문 중앙 에스컬레이터 제거",
+     "reason": "사진과 모델 중앙 경사물은 외관을 지지하는 구조 부재이며 에스컬레이터가 아님. 부재를 보존하고 카메라와 문 배치를 조정."
+    },
+    {
+     "item": "팩토리 _08/_09 매장 안 카메라",
+     "reason": "u58 전면 기준 기존 _08 u54/_09 u56은 이미 복도 쪽이지만 거리가 짧음. _10 u60만 매장 안. 셋 모두 복도 7.8–8.5m 밖으로 이동."
+    },
+    {
+     "item": "_04/_05/_07에 같은 복도 방향 적용",
+     "reason": "Zq145/170는 승차장 유리가 오른쪽이므로 -v로 반전. 69B13는 세로 광고 화면이 오른쪽이므로 기존 +v 유지. 서로 다른 구도를 개별 대조함."
+    },
+    {
+     "item": "Zq1780 승강기는 오른쪽만",
+     "reason": "원본에는 양쪽 벽의 스테인리스 승강기 문이 보인다. 실제 마주 보는 두 승강기를 보존하고 복도 벽·운반 재고로 시야를 구성."
+    },
+    {
+     "item": "PET STREET 흰 글씨",
+     "reason": "zHON12 실제 표지는 주황판에 짙은 붉은 글씨. 원본 색과 세로 방향을 적용."
+    },
+    {
+     "item": "69B33 비타민/건강 상품",
+     "reason": "원본 상단에서 수성 페인트 문구 확인. 비타민으로 단정하지 않고 흰 페인트 병·튜브·색상 캡 형태와 공예용품으로 수정."
+    },
+    {
+     "item": "하차장 분리수거함 5칸",
+     "reason": "Rq100은 검정 분리수거함 4칸이 확인됨. 실제 4칸을 유지."
+    },
+    {
+     "item": "9380을 버스 노선번호로 적용",
+     "reason": "jp80에서 9380은 차량 앞 유리에 적힌 차량번호. 확인된 차량 하나에만 넣고 목적지 노선번호를 창작하지 않음."
+    },
+    {
+     "item": "복도 인물 전부 축소/전경 삭제",
+     "reason": "K.person 기본 인체는 약 1.6–1.85m. Zq120에는 붉은 옷의 사람이 전경 오른쪽에 실제로 있으므로 중앙 시야만 비우고 인물은 위치·방향으로 조정."
+    },
+    {
+     "item": "전역 하늘 변경/배경 아파트 확대",
+     "reason": "젖은 광장과 맑은 승차장 영상은 촬영 조건이 다름. 모듈 밖 엔진 하늘·OSM 아파트 크기는 수정 범위 밖이며 측량 근거 없이 확대하지 않음."
+    },
+    {
+     "item": "BEST OFFER 영문 판촉 문구",
+     "reason": "브랜드명 외 인월드 문구는 한국어라는 작업 규칙에 따라 30–80% 특별 혜택으로 재현. SHINSEGAE FACTORY STORE 브랜드명은 실물 그대로 유지."
+    },
+    {
+     "item": "젖은 광장에 펼친 우산 여러개 추가",
+     "reason": "원본에서 젖은 바닥은 확인되지만 펼친 우산 여러개는 확인되지 않음. 젖은 포장/보행자를 구현하고, Zq120 붉은 옷 인물이 실제로 든 접은 검정 우산만 추가."
+    }
+   ],
+   "verified_frames": [
+    {
+     "camera": "gyeongbu_00",
+     "source": "refs/walk/s3_gyeongbu/Zq_7eC75nBI_60.jpg",
+     "verified": "원본 jpg와 제공된 비교 시트 직접 대조"
+    },
+    {
+     "camera": "gyeongbu_01",
+     "source": "refs/walk/s3_gyeongbu/Zq_7eC75nBI_80.jpg",
+     "verified": "원본 jpg와 제공된 비교 시트 직접 대조"
+    },
+    {
+     "camera": "gyeongbu_02",
+     "source": "refs/walk/s3_gyeongbu/Zq_7eC75nBI_100.jpg",
+     "verified": "원본 jpg와 제공된 비교 시트 직접 대조"
+    },
+    {
+     "camera": "gyeongbu_03",
+     "source": "refs/walk/s3_gyeongbu/Zq_7eC75nBI_120.jpg",
+     "verified": "원본 jpg와 제공된 비교 시트 직접 대조"
+    },
+    {
+     "camera": "gyeongbu_04",
+     "source": "refs/walk/s3_gyeongbu/Zq_7eC75nBI_145.jpg",
+     "verified": "원본 jpg와 제공된 비교 시트 직접 대조"
+    },
+    {
+     "camera": "gyeongbu_05",
+     "source": "refs/walk/s3_gyeongbu/Zq_7eC75nBI_170.jpg",
+     "verified": "원본 jpg와 제공된 비교 시트 직접 대조"
+    },
+    {
+     "camera": "gyeongbu_06",
+     "source": "refs/walk/s3_gyeongbu/69BNJ7tHUhI_8.jpg",
+     "verified": "원본 jpg와 제공된 비교 시트 직접 대조"
+    },
+    {
+     "camera": "gyeongbu_07",
+     "source": "refs/walk/s3_gyeongbu/69BNJ7tHUhI_13.jpg",
+     "verified": "원본 jpg와 제공된 비교 시트 직접 대조"
+    },
+    {
+     "camera": "gyeongbu_08",
+     "source": "refs/walk/s3_gyeongbu/J0LLdN5rPnI_2.jpg",
+     "verified": "원본 jpg와 제공된 비교 시트 직접 대조"
+    },
+    {
+     "camera": "gyeongbu_09",
+     "source": "refs/walk/s3_gyeongbu/J0LLdN5rPnI_6.jpg",
+     "verified": "원본 jpg와 제공된 비교 시트 직접 대조"
+    },
+    {
+     "camera": "gyeongbu_10",
+     "source": "refs/walk/s3_gyeongbu/J0LLdN5rPnI_10.jpg",
+     "verified": "원본 jpg와 제공된 비교 시트 직접 대조"
+    },
+    {
+     "camera": "gyeongbu_11",
+     "source": "refs/walk/s3_gyeongbu/69BNJ7tHUhI_18.jpg",
+     "verified": "원본 jpg와 제공된 비교 시트 직접 대조"
+    },
+    {
+     "camera": "gyeongbu_12",
+     "source": "refs/walk/s3_gyeongbu/69BNJ7tHUhI_23.jpg",
+     "verified": "원본 jpg와 제공된 비교 시트 직접 대조"
+    },
+    {
+     "camera": "gyeongbu_13",
+     "source": "refs/walk/s3_gyeongbu/zHONiMorRm0_12.jpg",
+     "verified": "원본 jpg와 제공된 비교 시트 직접 대조"
+    },
+    {
+     "camera": "gyeongbu_14",
+     "source": "refs/walk/s3_gyeongbu/zHONiMorRm0_22.jpg",
+     "verified": "원본 jpg와 제공된 비교 시트 직접 대조"
+    },
+    {
+     "camera": "gyeongbu_15",
+     "source": "refs/walk/s3_gyeongbu/69BNJ7tHUhI_28.jpg",
+     "verified": "원본 jpg와 제공된 비교 시트 직접 대조"
+    },
+    {
+     "camera": "gyeongbu_16",
+     "source": "refs/walk/s3_gyeongbu/69BNJ7tHUhI_33.jpg",
+     "verified": "원본 jpg와 제공된 비교 시트 직접 대조"
+    },
+    {
+     "camera": "gyeongbu_17",
+     "source": "refs/walk/s3_gyeongbu/jpOjc7GGnDo_5.jpg",
+     "verified": "원본 jpg와 제공된 비교 시트 직접 대조"
+    },
+    {
+     "camera": "gyeongbu_18",
+     "source": "refs/walk/s3_gyeongbu/jpOjc7GGnDo_80.jpg",
+     "verified": "원본 jpg와 제공된 비교 시트 직접 대조"
+    },
+    {
+     "camera": "gyeongbu_19",
+     "source": "refs/walk/s3_gyeongbu/jpOjc7GGnDo_130.jpg",
+     "verified": "원본 jpg와 제공된 비교 시트 직접 대조"
+    },
+    {
+     "camera": "gyeongbu_20",
+     "source": "refs/walk/s3_gyeongbu/jpOjc7GGnDo_155.jpg",
+     "verified": "원본 jpg와 제공된 비교 시트 직접 대조"
+    },
+    {
+     "camera": "gyeongbu_21",
+     "source": "refs/walk/s3_gyeongbu/Rq5bLTg7xPI_100.jpg",
+     "verified": "원본 jpg와 제공된 비교 시트 직접 대조"
+    },
+    {
+     "camera": "gyeongbu_22",
+     "source": "refs/walk/s3_gyeongbu/Rq5bLTg7xPI_300.jpg",
+     "verified": "원본 jpg와 제공된 비교 시트 직접 대조"
+    },
+    {
+     "camera": "gyeongbu_23",
+     "source": "refs/walk/s3_gyeongbu/Zq_7eC75nBI_230.jpg",
+     "verified": "원본 jpg와 제공된 비교 시트 직접 대조"
+    },
+    {
+     "camera": "gyeongbu_24",
+     "source": "refs/walk/s3_gyeongbu/Zq_7eC75nBI_260.jpg",
+     "verified": "원본 jpg와 제공된 비교 시트 직접 대조"
+    },
+    {
+     "camera": "gyeongbu_25",
+     "source": "refs/walk/s3_gyeongbu/Zq_7eC75nBI_1050.jpg",
+     "verified": "원본 jpg와 제공된 비교 시트 직접 대조"
+    },
+    {
+     "camera": "gyeongbu_26",
+     "source": "refs/walk/s3_gyeongbu/Zq_7eC75nBI_1250.jpg",
+     "verified": "원본 jpg와 제공된 비교 시트 직접 대조"
+    },
+    {
+     "camera": "gyeongbu_27",
+     "source": "refs/walk/s3_gyeongbu/Zq_7eC75nBI_1780.jpg",
+     "verified": "원본 jpg와 제공된 비교 시트 직접 대조"
+    }
+   ],
+   "evidence_limits": [
+    "사진의 카메라 절대 위치·렌즈·복도 폭은 측량되지 않았으며 로컬 좌표는 기존 OSM 건물과 연결 규약 내에서 추정.",
+    "원본과 기존 렌더의 구도 차이를 수정하되 tests/shot.mjs는 사용자 지시로 실행하지 않음. 최종 새 렌더의 시각 검증은 operator 작업으로 남음.",
+    "비교 시트 번호(_1..10)와 개별 카메라 번호(_00..27)를 구분해 모든 28개 원본을 검토."
+   ],
+   "review_verification": {
+    "layout": [
+     {
+      "cameras": [
+       "00"
+      ],
+      "confirmed": "젖은 넓은 광장과 좌측 긴 저층 외관. 기존 카메라가 벽/나무에 너무 가까움.",
+      "action": "카메라 후퇴, 광장 포장·안내선 확장"
+     },
+     {
+      "cameras": [
+       "01"
+      ],
+      "confirmed": "유리 출입문 왼쪽과 갈색 수평 슬랫/유니클로 표지 오른쪽. 경사 지지대는 실제 구조.",
+      "action": "외부 접근 구도로 카메라 이동, 문/슬랫/정보판 상대 위치 보정"
+     },
+     {
+      "cameras": [
+       "02"
+      ],
+      "confirmed": "넓은 로비, 중앙 유리 문열, 목재 상부 띠, 우측 보라 광고 화면.",
+      "action": "실재 16번홈 문축을 향해 +u 회전하고 로비 마감·광고 화면 보강"
+     },
+     {
+      "cameras": [
+       "06"
+      ],
+      "confirmed": "곡면 코브 너머 유니클로 전면, 여러 보행자.",
+      "action": "유니클로 정면 -u 구도로 회전, 낮은 흰 코브와 보행자 보강"
+     },
+     {
+      "cameras": [
+       "08",
+       "09",
+       "10"
+      ],
+      "confirmed": "세 프레임 모두 복도에서 보이는 같은 팩토리스토어 전체 입구.",
+      "action": "세 카메라를 전면 밖 7.8–8.5m로 통일, 개방 입구·진열·좌우 홍보·바닥 점검구"
+     },
+     {
+      "cameras": [
+       "13",
+       "14"
+      ],
+      "confirmed": "PET STREET 주황 세로 표지는 왼쪽, 이어지는 프레임은 투명 파우치 흰 선반 근접.",
+      "action": "PET 표지와 청록 기둥을 가장자리로, 파우치용 선반·근접 시점 분리"
+     },
+     {
+      "cameras": [
+       "15",
+       "16"
+      ],
+      "confirmed": "반려동물 옷/캔 및 흰 페인트병/튜브 근접 프레임.",
+      "action": "기존 계절 진열은 유지하고 각각 다른 근접 진열면·카메라로 보정"
+     },
+     {
+      "cameras": [
+       "17",
+       "18",
+       "19",
+       "20"
+      ],
+      "confirmed": "승차장 기둥 사이로 외부 버스 앞/옆면을 보며 유리문과 평행한 시선이 아님.",
+      "action": "카메라를 외부 마당으로 돌리고 근접 버스 한 대 이동, 밝은 차체/직원/줄"
+     },
+     {
+      "cameras": [
+       "22"
+      ],
+      "confirmed": "좌측 건물 돌출 하부 세차구역과 곡선 경계, 우측 버스 대기열.",
+      "action": "차로를 따라 +u로 회전, 오버행과 방호 경계·콘/차량 줄"
+     },
+     {
+      "cameras": [
+       "23",
+       "27"
+      ],
+      "confirmed": "초록 바닥의 좁은 승강기 복도이며 1780 프레임에는 양쪽 승강기가 보임.",
+      "action": "기존 승강기 앞을 실제 복도로 둘러싸고 문·자판기·박스/대차"
+     },
+     {
+      "cameras": [
+       "24",
+       "25",
+       "26"
+      ],
+      "confirmed": "꽃 진열/백색 벽 복도, 좌측 상자와 우측 긴 작업대, 좌측 안내문/배관과 우측 물품.",
+      "action": "원래 외벽과 재고를 보존하며 카메라 방향·복도 경계·포장 작업대 보강"
+     }
+    ],
+    "design": [
+     {
+      "cameras": [
+       "00",
+       "01"
+      ],
+      "confirmed": "젖은 회색 포장, 파랑선·노랑 점자블록, 수평 갈색 슬랫.",
+      "action": "gloss 바닥과 안내선·슬랫 마감"
+     },
+     {
+      "cameras": [
+       "03",
+       "04",
+       "05",
+       "06",
+       "07"
+      ],
+      "confirmed": "회백색/크림 대형 타일과 회색 사각 띠, 흰 곡면 천장, 검은 세로 광고면.",
+      "action": "프레임별 밝기·천장 높이·바닥 띠·광고판 보정"
+     },
+     {
+      "cameras": [
+       "11",
+       "12"
+      ],
+      "confirmed": "다이소 흰 선반, 밝은 타일, 작은 가격표와 다채로운 재고.",
+      "action": "흰 선반·채도·분홍 가격표·매장 안내 보강"
+     },
+     {
+      "cameras": [
+       "17",
+       "18",
+       "19",
+       "20"
+      ],
+      "confirmed": "밝은 크림/은색 차체 다수, 금색 차량 및 빨간 버스도 실제 존재.",
+      "action": "차량 재도색/재배치, 빨간 측면 버스는 보존; 하늘/아파트는 범위 밖"
+     },
+     {
+      "cameras": [
+       "23",
+       "24",
+       "25",
+       "26",
+       "27"
+      ],
+      "confirmed": "진한 초록 에폭시 반사 바닥, 크림벽과 회백색 형광등 천장.",
+      "action": "gloss 에폭시와 밝은 천장/크림벽"
+     }
+    ],
+    "details": [
+     {
+      "cameras": [
+       "00",
+       "01"
+      ],
+      "confirmed": "젖은 날씨와 우산 휴대 보행자.",
+      "action": "광장 사람·우산·젖은 포장"
+     },
+     {
+      "cameras": [
+       "03",
+       "04",
+       "05"
+      ],
+      "confirmed": "좌측 발권기, 오른쪽 붉은 옷/접은 우산 인물, 복도 깊이 방향 보행.",
+      "action": "중앙 시야 확보하며 인물 위치/방향, 4대 발권기 보존"
+     },
+     {
+      "cameras": [
+       "11",
+       "12"
+      ],
+      "confirmed": "좁은 다이소 통로의 여러 쇼핑객, 빨간 장바구니.",
+      "action": "군집·가방·직원과 바구니 보강"
+     },
+     {
+      "cameras": [
+       "18",
+       "20"
+      ],
+      "confirmed": "검정 벨트 은색 봉, 노랑 점자선, jp80 차량번호9380.",
+      "action": "기존 대기줄 보존, 점자선과 실제 차량번호 보강"
+     },
+     {
+      "cameras": [
+       "21"
+      ],
+      "confirmed": "4칸 검정 분리수거함, 승객 여러명, 오른쪽 둥근 기둥.",
+      "action": "4칸 유지, 승객/짐 보강"
+     },
+     {
+      "cameras": [
+       "24",
+       "25",
+       "26",
+       "27"
+      ],
+      "confirmed": "꽃다발·박스·대차·현장 작업자.",
+      "action": "재고와 통로를 보존하며 불규칙 포장재/꽃/대차/직원 추가"
+     }
+    ]
+   },
+   "changes": {
+    "camera": "28개 trace 순서/원본 연결 보존, 원본 기준 실제 포즈25개 변경. _07/_19/_21은 유지. 1F 복도 방향을 원본별로 분리, 팩토리3개를 복도 밖, 다이소4개를 상품면, 승차장을 외부 마당,3F를 실제 복도로 이동.",
+    "layout": [
+     "정문 u70,v6 유지. 광장 카메라(84,-25), 정문 접근(72,-2), 기존 나무u68→59 이동. 구조 지지대 보존.",
+     "1F 로비 카메라(68.3,30.326952)에서 실재16번홈(u75.7,30.326952) 정면, 우측 LED(u72,v34.66). 유니클로 접근(73.5,15)→u66 전면.",
+     "팩토리 전면u58,v78.5 입구 폭8.8m, 카메라u49.5..50.2. 기존 의류행거 보존/뒤로 이동, 검정 입구와 좌우 홍보/4개 상품 선반.",
+     "다이소 PET235.45,16.09; 파우치236.7,16.15; 의류/캔256,16.15; 페인트262,16.15. 진열은v16.05 이후, 통로v13..16 보존.",
+     "승차장6번홈 버스는(u85.3,약v106)→(130,141) 이동하여 대수 보존.4번 빨간 버스는 측면,7번 금색 차량과9380 표시. 세차 오버행u98..125,v34.7..40.7,y4.5.",
+     "3F 승강기 복도u43.45..47.15,v47..65.5, 기존v55 문 폭2.6m. 꽃 진열 복도 우측벽u54.12,v43.5..60.2. 포장 작업대u33.9..49.1,v156.15, 공지/배관v145대."
+    ],
+    "design": [
+     "광장 젖은 회색 포장gloss0.7, 파랑 안내선/노랑 점자블록.",
+     "1F 크림/회색 타일gloss0.5, 둥근 코브·광고면, 정문 수평 목재슬랫.",
+     "팩토리 검정 프레임·붉은 발광선과 기존 브랜드명, 한국어 판촉.",
+     "다이소 흰 철제선반·흰회색타일gloss0.5·선명한 재고/분홍 가격표.",
+     "꽃시장 초록 에폭시#2f8a5c gloss0.5, 회백색 천장/크림벽, 스테인리스 승강기·작업대."
+    ],
+    "details": [
+     "사람212→293(+81), 모두 기존/추가 K.detail 그룹. 각자 방향·가방·대기열·직원·여행짐 분산.",
+     "다이소30명 군집+계산대6명+직원3명, 새 빨간 장바구니11개, 파우치·옷·캔·페인트병/튜브.",
+     "3F 기존90명 군중 유지+운반/서비스10명, 상자·대차·비정형 꽃다발·게시물·적색 배관.",
+     "승차장 기존 줄막이와4칸 분리수거함 유지, 추가 승객/짐·직원·방호 경계/콘."
+    ]
+   },
+   "validation": {
+    "smoke": {
+     "command": "node tests/smoke.mjs gyeongbu gotomall station gyeongbu_east",
+     "result": "OK"
+    },
+    "walk": {
+     "command": "node tests/walk.mjs",
+     "result": "687 ok, 0 blocked",
+     "exit_code": 0,
+     "user_routes": "사용자 루트 1–7 모든 구간 통과"
+    },
+    "camera_physics": {
+     "count": 28,
+     "passed": 28,
+     "changed_poses": 25,
+     "unchanged_cameras": [
+      "gyeongbu_07",
+      "gyeongbu_19",
+      "gyeongbu_21"
+     ],
+     "method": "최종 geometry+city+모든detail. 실제physics floor support ±0.2m, capsule r0.32/h1.75 resolve push<0.03m. _09 기둥 회피 후 전체28개 재검사, 마지막 _17 미세보정도 실제kit로 support0.14/push0 재확인.",
+     "errors": []
+    },
+    "detail_groups": {
+     "count": 31,
+     "errors": [],
+     "max_kit_quads": 121477,
+     "max_kit_group": "B1 다이소 긴 매장",
+     "note": "≈120k 지침에 비해1.23% 높음; 재고 단순화하지 않음. K.person/flower instanced mesh는 kit quad 통계 밖이므로 expanded triangles 별도 기록.",
+     "daiso_people": 40,
+     "daiso_people_triangles": 20040,
+     "daiso_expanded_triangles": 357052,
+     "largest_inherited_instance_group": "생화 동편 남단",
+     "largest_inherited_instance_group_triangles": 405036
+    },
+    "render": {
+     "executed": false,
+     "reason": "사용자 지시로 tests/shot.mjs 미실행. 원본/기존 비교시트 대조, CPU 시선 ray 검사만 실행."
+    },
+    "camera_rays": {
+     "count": 28,
+     "method": "CPU THREE.Raycaster, 눈높이y+1.65m, trace yaw/pitch 중앙 광선, 반경100m, 투명재질 제외. 완전한 렌더/화각 검증을 대체하지 않음.",
+     "fixed": "_09의 기존 기둥(u51,v78)이1.10m 앞을 가리므로 카메라v77.8→79.3. 이후 첫 불투명면24.54m.",
+     "selected_first_opaque_distances_m": {
+      "00": 28.61,
+      "01": 8.1,
+      "02": 7.2,
+      "06": 33.3,
+      "08": 23.94,
+      "09": 24.54,
+      "10": 23.81,
+      "13": 1.41,
+      "14": 0.82,
+      "15": 1.0,
+      "16": 0.93,
+      "17": 6.95,
+      "18": 3.04,
+      "19": 28.11,
+      "20": 7.15
+     },
+     "interpretation": "1F 문/팩토리 전면 접근의 근접 장애물 제거 확인. _13..16은 의도한 상품 근접면. _17은 오른쪽 경사 기둥 너머 버스측면6.95m, _18은 가까운 버스앞면3.04m, _20은 빨간 측면버스7.15m. 복도 중앙은 장거리 시선 확보."
+    },
+    "people": {
+     "before": 212,
+     "after": 293,
+     "added": 81,
+     "method": "HEAD와최종 모듈 각각 실제kit로 모든 detail 생성 후 K._.people 집계. 기존 인물 축소삭제 없이 군집/방향 조정과 추가."
+    },
+    "scope": {
+     "edited": [
+      "js/places/gyeongbu.js",
+      "data/research/gyeongbu.json"
+     ],
+     "meta_or_junctions_edited": false,
+     "committed": false,
+     "note": "존 변경은 기존 건물/기존3F존 내부의 서비스복도 범위 조정이며 외곽/claims/접속계약 유지."
+    },
+    "syntax_and_whitespace": {
+     "commands": [
+      "node --check js/places/gyeongbu.js",
+      "git diff --check"
+     ],
+     "result": "passed"
+    }
+   }
+  },
+  "validation_round13": {
+   "round": 13,
+   "smoke": {
+    "command": "node tests/smoke.mjs gyeongbu gotomall station gyeongbu_east",
+    "result": "OK; final round13 geometry and all lazy detail groups built"
+   },
+   "walk": {
+    "command": "node tests/walk.mjs",
+    "result": "689 ok, 0 blocked; final fresh full-world snapshot, all user routes walkable",
+    "exit_code": 0
+   },
+   "walk_layout_stage": {
+    "command": "node tests/walk.mjs gyeongbu gotomall station gyeongbu_east",
+    "result": "138 ok, 0 blocked before design/detail additions"
+   },
+   "trace_cameras": {
+    "round13_count": 28,
+    "all_recorded": 104,
+    "floor_failures": 0,
+    "capsule_collisions": 0,
+    "method": "Real kit, all detail and city built; physics support within0.035m and radius0.32/height1.75 capsule resolution within0.03m. Every referenced frame exists.",
+    "historical_checked": 76,
+    "all_cameras_checked": 104,
+    "historical_floor_failures": 0,
+    "historical_capsule_collisions": 0,
+    "historical_method": "Independent final gyeongbu real-kit/all-detail check: support tolerance0.15m, capsule radius0.32,height1.75,step0.5."
+   },
+   "new_routes": {
+    "passed": 6,
+    "blocked": 0,
+    "routes": [
+     "1F new portal",
+     "1F entry to wave corridor",
+     "B1 factory open mouth",
+     "3F lifts to market",
+     "3F supply to packing",
+     "boarding pier passage"
+    ],
+    "method": "In-memory tests/walk.mjs BFS; repository tests unchanged."
+   },
+   "lifts": {
+    "floors_checked": 22,
+    "blocked": 0,
+    "note": "Two main lifts across all B1~10F floors, face-aware keepouts; read-only independent real-kit walk-out check."
+   },
+   "render": {
+    "result": "Not run per user instruction; operator_pending. No visual render verification claimed."
+   },
+   "git_diff_check": "Passed for the two authorized files.",
+   "concurrent_neighbour_checks": {
+    "older_full_snapshots": [
+     "683 ok, 2 blocked",
+     "687 ok, 2 blocked"
+    ],
+    "blocked_then_fixed": [
+     "J1 gotomall→shinsegae B1",
+     "사용자 루트4 [3→4] 신세계 B1→1F"
+    ],
+    "latest_targeted_checks": "Both earlier failures were resolved in the concurrent workspace; fresh required full command passes689 ok,0 blocked. No neighbour file edits by this job."
+   },
+   "metadata": {
+    "method": "tools/gen_meta.mjs executed with writeFileSync captured in memory; no repository or temporary file written",
+    "result": "gyeongbu claims, roads, areas, box, heights, floors, cells, junctions and all80 entrance entries exactly match current js/places/_meta.json",
+    "requires_update": false
+   }
   }
  }
 }

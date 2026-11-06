@@ -203,13 +203,49 @@
       "title": "사용자 제공 하우스오브신세계 공식 B1 확대 안내도",
       "year": 2026,
       "priority": "round12_primary"
+    },
+    {
+      "url": ".codex-jobs/evidence/walk_s7_central_famille.json",
+      "title": "Round14 실제 보행 로그: 호남선·파미에, 2025~2026"
+    },
+    {
+      "url": "refs/walk/s7_central_famille/HgbY_flKpMI_29.jpg",
+      "title": "호남선에서 파미에 단차: B1 전체 하강으로 해석하지 않음"
+    },
+    {
+      "url": "refs/official/centralcity/famille_floor_2_ko_map.png",
+      "title": "파미에 2F 공식 번호 셀"
+    },
+    {
+      "url": "refs/walk/s7_central_famille/MMwnXpMqkZ0_85.jpg",
+      "title": "파미에 1·2·3층 안내판"
+    },
+    {
+      "url": "refs/walk/s7_central_famille/FeFx7kfWgdo_181.jpg",
+      "title": "Round14 보행 프레임: 재질·집기·사람 밀도 근거"
+    },
+    {
+      "url": "refs/walk/s7_central_famille/MMwnXpMqkZ0_15.jpg",
+      "title": "Round14 보행 프레임: 재질·집기·사람 밀도 근거"
+    },
+    {
+      "url": "refs/walk/s7_central_famille/MMwnXpMqkZ0_65.jpg",
+      "title": "Round14 보행 프레임: 재질·집기·사람 밀도 근거"
+    },
+    {
+      "url": "refs/walk/s7_central_famille/MMwnXpMqkZ0_125.jpg",
+      "title": "Round14 보행 프레임: 재질·집기·사람 밀도 근거"
+    },
+    {
+      "url": "refs/walk/s5_ssg_b1/8xxIIvP9uAY_10.jpg",
+      "title": "Round14 보행 프레임: 재질·집기·사람 밀도 근거"
     }
   ],
   "building": {
     "floors_above": 2,
     "floors_below": 1,
     "height_m": 9,
-    "floor_height_m": "B1=-6 m, 1F=0 m, 2F=5 m, R=9 m 유지. 호남선 홀은 2F 동측 발코니 옆 높은 트러스 공간. 파미에스테이션 실내 거리는 1F 남측 블록의 5–6 m 높이 개방부, 식당 내부는 약3–4 m; 모던눌랑은6 m 이상 유리 지붕 분위기로 표현. 2F는 거리/고천장 점포 위 개방부를 제외한 기존 높이를 유지. 모든 치수와 개방부 평면은 사진 비례 근사.",
+    "floor_height_m": "B1=-6m, 1F=0m, HOS 1M=3.6m, 터미널·파미에 2F=5m, R=9m. 파미에 1F 거리 조명 8.2m·지붕 하부 8.6m, 점포 내부 높이는 유형별 근사. 별도 원형관 2F=4.2m·지붕 정상 22.6m는 유지. 층고와 수직 정합은 실측이 아닌 모델 치수다.",
     "round_pavilion": {
       "osm_id": 593858530,
       "floors_above": 2,
@@ -292,14 +328,24 @@
     },
     {
       "floor": "2F",
-      "use": "센트럴시티몰 식당가, 파미에스테이션 2층 가성비 맛집 11곳(2018.1 오픈), 터미널 매표 연결",
+      "use": "공식 파미에스테이션 2F 매장 셀 및 호남선 중층 식당가",
       "tenants": [
+        "하프커피",
+        "카츠8",
+        "매우매오",
+        "빈브라더스",
+        "이비티 피자",
+        "무월식탁",
+        "빗경 · 루경 · 담꽃 · 위치네일스",
+        "케르반 레스토랑",
+        "신세계아카데미",
         "소이연남",
-        "팔도국수 면주방",
-        "명동교자 센트럴시티점"
+        "서초구 육아나눔터",
+        "차알",
+        "딤딤섬"
       ],
-      "layout": "기존 y=5 m 2F와 수직 이동을 유지. 홀 동측 유리 난간 발코니는 cc_hall04 근거. 남측1F 거리/고천장 식당 위에 개방부를 둠. 기존2016/2018 기사 점포와 현재2F의 정확한 대응·경계는 미확인; cc_famille26 모던샤브하우스 사진은 층 불명으로 특정 층 점포를 새로 확정하지 않음. Round7: photo26의 곡선 간접조명·베이지 부스·샤브 식탁을 기존2F 빈 베이(s109..134,t28..38)에 참고 배치. 층과 위치는 여전히 미확정. Round10: 쉐이크쉑은 공식1F14번, 아웃백·딤딤섬은 공식파미에M1F로 정정. 그 밖의상층은 이번범위밖으로 보존.",
-      "source": "기존2016/2018 식당가 연구; refs/interior/cc_hall/04_upper_corridor_neon_balcony.jpg; refs/interior/cc_famille/26_modern_shabu_window_hall.jpg (층 불명)",
+      "layout": "공식 2F 지도 1~13번 주평면 셀의 상대 위치 유지. M1F 아웃백·딤딤섬은 별도 남측 날개에 유지. 터미널 중층 y5와 연결하며 실측 등록이 아닌 지역 변환이다.",
+      "source": "refs/official/centralcity/famille_floor_2_ko_map.png; famille_M1F.png; famille.html",
       "guess": true
     },
     {
@@ -499,11 +545,12 @@
     "1F -> JW 메리어트 (J6)",
     "1F -> 신세계 두 번째 연결 (J8, 1게이트 방면; 위치는 지역 도면 정합 추정)",
     "2F y7 -> 신세계 남서측 코어 (J9)",
-    "공식 도면으로 확인한 상업 출입구 주변 수직 동선만 유지. 근거 없는 문 앞 계단 철거."
+    "공식 도면으로 확인한 상업 출입구 주변 수직 동선만 유지. 근거 없는 문 앞 계단 철거.",
+    "HOS B1 푸드홀 ↔ 1F 와인·라운지 ↔ 1M 아트·카페: 공식 각층 엘리베이터 목적지 연결. B1과 상층의 수평 오프셋은 명시적이며 같은 실측 샤프트로 주장하지 않는다."
   ],
   "parking": "호남선 지상 버스 야드 1173096801, 터미널·601356623·1173096805의 옥상 승용차 주차를 항공사진과 OSM으로 재현. OSM layer 도로를 기준으로 연결교·진입 경로를 유지하며 중간층 높이와 램프 경사는 추정. 백화점·호텔 지하 1~3층 공용 주차는 문헌 맥락으로 별도 구역.",
   "notes": [
-    "웹 자료가 층별 구조를 거의 제공하지 않아 층 배치 상당수는 추정",
+    "Round14는 제공된 공식 HOS·파미에 층별 도면을 위치 기준으로 사용한다. 실측 축척·북쪽 정합·층고·미촬영 점포 내부와 일부 수직 연결은 추정이며 modeling.guesses와 round14.decisions에 구분했다.",
     "소이연남·팔도국수 면주방은 2018 기사 근거",
     "파미에스테이션: 2014.11 개장, 약 4,500평, 10개국 30여 식음 브랜드 51개 매장(2014 기준). 2018.1.16 2층에 11곳 확장(주차장에서 도보 1분), 확인된 이름은 홍대만뽀·소이연남·팔도국수 면주방",
     "2016 센트럴시티 터미널 쪽 '캐쥬얼 다이닝&라이프' 존: 101번지 남산돈까스, 르사이공, 순대실록, 우마이도, 스노우폭스, 서대문 한옥집",
@@ -535,7 +582,7 @@
   ],
   "modeling": {
     "frame": "local s(남쪽, 서측 파사드 방향)/t(동쪽) 축. 스트립 s -22..151 · t 0..38.5, 남측 블록 s 151..204 · t -98..38",
-    "floors": "B1 -6(신세계·지하철 연결통로/메가박스 입구), 1F0(호남선 트러스 홀/남측 파미에스테이션 실내 거리), 2F5(홀 동측 및 남측 기존 식당가,1F 거리/고천장 식당 위 개방부), R9(주차). 원형관 B1/1F/2F4.2와 지붕 정상22.6 m는 Round4 유지. 정문 파일런은 별도 조형 높이.",
+    "floors": "B1 -6m: 신세계·지하철 연결, 스위트파크와 HOS 푸드홀. 1F 0m: 호남선 대합실·파미에스테이션·HOS 와인/식당 및 보이드 라운지. HOS 1M 3.6m: 아트·카페. 2F 5m: 터미널 중층 식당과 공식 파미에 13개 셀; 별도 M1F 아웃백·딤딤섬 유지. R 9m: 주차. 원형관 B1/1F/2F4.2m·지붕22.6m 유지. 메가박스와 영풍문고는 신세계 B1 모듈 소유다.",
     "bays": "번호별 붉은 아치 문틀·흰 숫자/푸른 LED·아날로그 시계는 cc_hall05/13/14 기준. 승차홈1/11/13 사진이 있으나 전체 연속 배치·간격·번호별 버스 배정은 미확인.",
     "station_band": "B1 남측 경계는 역 모듈의 7호선 B1 대합실(경로 (45,150)->(-45,186)->(-68,195)->(-88,220)->(-175,262), 폭 14 m)에서 7.6 m 이상 떨어지도록 잘라냄",
     "guesses": [
@@ -585,13 +632,26 @@
       "Full terminal1F1..42 numbering does not map to saved storelist1..33; only matched cells receive brands.26Gongtang hexagon assignment follows official number mapping despite photo showing a deeper restaurant.",
       "Fixtures, furniture counts, glass door widths, ceiling bays,tenant material choices except photos, simplified car geometry and all exact indoor dimensions are inferred.",
       "Existing roundpavilionStarbucks floor claim, J6ground connection, unverified exterior pavilion andB1network retained as guesses.",
-      "Operator3Drender comparison is pending. tests/shot.mjs deliberately not run per user sandbox instruction."
+      "Operator3Drender comparison is pending. tests/shot.mjs deliberately not run per user sandbox instruction.",
+      "Round14: walk_s7 원본 로그와 refs/walk/s7_central_famille의 프레임이 실제 존재한다. synthesis의 프레임 없음 진술을 폐기하고 HgbY_flKpMI, FeFx7kfWgdo, MMwnXpMqkZ0를 직접 확인했다.",
+      "Round14 층 충돌: 공식 HOS 도면은 B1 푸드홀, 1F 와인셀러/레스토랑, 1M 아트/카페다. B1~2F라는 서술의 2F를 HOS 독립층으로 만들지 않았다. 1F 도면의 2F 화살표는 파미에스테이션 신세계아카데미 연결이다.",
+      "Round14 수직 정합: HOS 상부 기존 엘리베이터와 공식 B1 푸드홀 엘리베이터를 명시적 수평 오프셋 목적지로 연결했다. 같은 실측 수직 샤프트라고 주장하지 않는다. 1F 슬래브·기존 에스컬레이터 우물은 추가/변경하지 않았다.",
+      "Round14 스위트파크는 공식 floor_B1/hos_B1가 지하1층으로 명시하므로 B1 유지. srYQ3WmKlEI_30의 하강 장면만으로 스위트파크 전체를 1F로 옮기지 않는다.",
+      "Round14 HgbY_flKpMI_29에서 약한 단차 하강은 보이나 공식 파미에 1F 도면은 터미널 Gate1/2와 연결된다. 단차를 B1 전체 층 하강으로 오독하지 않고 기존 수평 1F 연결을 유지했다. 정확한 경사 높이·좌표는 사용자 영상 필요.",
+      "Round14 파미에 2F: 공식 famille_floor_2_ko_map과 HTML 번호대조로 1~13 셀을 F2_BANDS 단조 구간별 변환에 배치. 일정축척에서 마주보는 셀 사이가 0.17~0.76m로 줄어드는 문제를 확인해 도면의 흰 통로 폭은 최소 2.4m로 보정했다. 소스셀·행·순서는 동일하며 metric depth는 추정. 별도 M1F 아웃백·딤딤섬 유지.",
+      "Round14 MMwnXpMqkZ0_85의 3층 스타벅스 표기와 _200의 새 조형 유리돔은 확인했으나, 저장된 공식 3F 도면에는 해당 브랜드/경계가 없다. 기존 OSM 원형관 스타벅스와 같은 공간인지 확정할 수 없어 3F를 임의로 생성하거나 두 곳을 동일시하지 않았다. 정확한 3F 위치와 접근계단은 사용자 영상 필요.",
+      "Round14 오픈스테이지는 공식 hos_1F 도면이 호남선 대합실 옆 신세계 연결 광장으로 특정한다. 파미에 광장 팝업과 동일 공간으로 합치지 않았다. 렉서스는 2026-11-05~08 한시 팝업이며 기초 건축물이 아니다.",
+      "Round14 경부선 연결 충돌: 공식 HOS1F 도면에 경부선 방향 화살표가 있으나 두 건물 사이 연속 실내 통로의 정확한 선형/문은 프레임에서 보이지 않는다. 기존 지상 외부 횡단 경로와 신세계 연결만 유지하고 가상의 스타벅스 옆 직결 관통로는 만들지 않았다.",
+      "Round14 HOS 라운지의 촬영층은 8xxIIvP9uAY_10만으로 확정 불가다. 기존 공식1F/1M 보이드 아래1F 공간에만24석을 배치했으며 12개 원형테이블·3열 러그·황동기둥 간격은 비례추정이다. B1라운지라고 주장하지 않는다.",
+      "Round14 조명은 실제lux측정/물리조명계산이 아닌 재질·발광색 표현이다. HOS는앰버/월넛/황동, 스위트파크통로는밝은크림 대리석으로 구분했다.",
+      "Round14 MMwnXpMqkZ0_170 카운터 및 _200 새장식돔은 위치·층 확정 전에 원형관으로 복제하지 않았다. 기존 원형관의 확인되지 않은 내부를 최신3F스타벅스로 잘못 주장하지 않기 위해 유지하되 한계를 기록한다.",
+      "Round14 쉐이크쉑119호와3대키오스크는사용자제공블로그(stated)근거이며 기기의매장내정확한위치는미측정이다. 메뉴·가격·실시간승차정보는만들지않았다."
     ],
     "megabox": "Round12: official southwestern round plaza/Megabox tenant is built by shinsegae. The former distant centralcity B1 cinema at local s178,t-28 was removed. Cinema auditorium depths remain unknown.",
     "reference_implementation": {
       "gate_plaza": "cc_01/01: 불투명 원판+크림C+금색중심, 0.75 민트 입체랜턴·경사지붕10.2..10.6 m, 전폭 검은 파시아/후퇴한 어두운 문, 스팬드럴. cc_01: 전방8 m 간격 구체(중앙 청동)·확장 화강석·검은난간·U자 거치대·볼라드·남색 안내판.",
       "hall": "Round5 cc_hall01–21: 흰 강관 트러스/회색 패널, 대리석 기둥, 흑백 다이아몬드/띠 바닥, 붉은 아치 게이트의 번호 LED/시계, 우드톤 TICKETS 카운터, 벤치/큰 화분·작은 점포,2F 유리 난간.",
-      "b1": "Round5 cc_famille22–24: 폭9 m 크림 대리석·검은 띠 연결통로, 짙은 대리석/목재 전면, 금장 코퍼와 발광 패널, 청록 MEGABOX 목재 포털. 이전2009 체크 바닥/뾰족 리브 볼트 해석을 대체.",
+      "b1": "Round12 공식 HOS/스위트파크 평면을 유지하고 Round14 흑백 마름모 바닥·검정 무광 진입부·청록 포인트·배스앤바디웍스 체크 전면을 반영. 옛 CC 메가박스 포털 설명은 폐기; 영화관은 shinsegae B1 소유다.",
       "round_south": "11: 가파른16각 두 단 녹청색 지붕·넓은r4.6 랜턴·22.6 m 캡; 남측0.6 m 회색 석재 줄눈·4.5 m 간격 큰 어두운 창·창 위 흰 CENTRAL CITY.",
       "parking": "항공사진/OSM: 밝은 콘크리트 데크와 회색 통로·흰 구획·층당14대 희박한 차 배치·타워55% 점유/둥근 경계 연석·옥상 연결교.",
       "fleet_shelter": "항공사진/03/09: 흰색·아이보리 고속버스와 운수사 띠, 소수 짙은 프리미엄/적백 관광버스;09 곡면 캐노피·V자 지지·스테인리스 난간/쌍등.",
@@ -602,97 +662,47 @@
       "forecourt_pavilion": "cc_01 우측/cc_02 좌측/항공: 별도18×7.5 m 금속기단·녹색유리·흰 곡면지붕. 고투몰 현 exit/groundHole와 중복 없음. 미확인 지하 목적지로 연결하지 않고 보이는 계단만 구현.",
       "north_canopy_bridge": "cc_02/09:40 m 반투명 곡면지붕·흰 경사 지지대. cc_01:파빌리온 뒤8..10 m 수목열. OSM 모듈 소유 연결교0.65 m 슬래브/직경0.6 m 기둥. 별도 city 자동생성15 m 보행교는 범위밖.",
       "yard_surface": "항공사진: 중간회색 지면. 승차홈 앞/회차로/YARD 모두 concrete+#9a9890, 흰색·노란색 구획 유지.",
-      "hall_plain_closure": "critic hn_hall_w: 확인 안 된 방 전면만 s108..119/t28 평벽으로 마감, J6 통로 개방 유지.",
+      "hall_plain_closure": "Round11 HOS 중앙 보이드·연결 광장 배치를 유지. 이전 s108..119/t28 막음벽 설명은 폐기. J6 접근과 기존 1F 슬래브·우물 형상은 그대로 유지했다.",
       "famille_1f": "Round5 cc_famille01–21: 1F 남측 실내 거리, 점포별 크림 아치/벽돌/흰 벽돌/검은 철제 유리 전면과 실제 사진에 나온 내부 재료·가구. 연회색 타일과 높은 밝은 채광 천장. 실제 점포 순서/좌표는 추정.",
       "south_surface_parking": "Round8: aerial-based south asphalt apron, road-clipped bays/70% cars, green booth canopy, barriers and 550원 fee board, rear pedestrian routes and brick/arch entrance details."
     },
     "validation": {
-      "round": 11,
+      "round": 14,
       "date": "2026-11-07",
-      "status": "requested scope passed;3 newly-added unrelated route failures remain outside allowed files; operator render pending",
+      "status": "required smoke and full-world walk passed; visual render not run as instructed",
       "smoke": {
         "command": "node tests/smoke.mjs shinsegae centralcity gotomall jwmarriott station",
         "result": "OK",
-        "warnings": "10 source-car radial-adjacency advisories for remote elevator destinations. Destination floor checks and all-floor exits pass."
+        "nonfatal_warnings": 17,
+        "warning_explanation": "수평 오프셋 목적지 메뉴에 대한 출발 엘리베이터 주변 바닥 검사 경고. 실제 목적지 지지면·출구 동선은 별도 검사 및 전체 walk로 확인했다."
       },
       "walk": {
         "command": "node tests/walk.mjs",
-        "result": "walk:589 ok,0 blocked",
-        "snapshot_start_KST": "2026-11-07 04:23:41",
-        "scope": "all modules+city+all detail; original requested suite before concurrent route additions"
+        "result": "walk: 687 ok, 0 blocked",
+        "started_UTC": "2026-11-06 20:47",
+        "completed_by_UTC": "2026-11-06 20:55:53",
+        "scope": "all modules + city + all deferred details; includes 1F 동선 and 사용자 루트",
+        "source_sha256": {
+          "js/places/shinsegae.js": "1ef1cbd895530543b2484c56f42921e897896bbb0425fc75f370c1527c34bd1d",
+          "js/places/centralcity.js": "0b20322d083aa652ee85aa569731f31dfcf2bd290facd317ebcf0953b3779032",
+          "tests/walk.mjs": "c908af6e1fa86bc7beb786d087c931755b4420a3c21958de80a5b054ccdaa7d8"
+        }
       },
-      "connected_walk": {
-        "command": "node tests/walk.mjs shinsegae centralcity gotomall jwmarriott station --no-city --verbose",
-        "result": "walk:287 ok,0 blocked",
-        "required_1F_routes": "9/9segments pass"
-      },
-      "concurrent_test_additions": {
-        "test_file_mtime_KST": "2026-11-07 04:24:01",
-        "audit_copy_KST": "2026-11-07 04:26:02",
-        "audit_finished_KST": "2026-11-07 04:28:27",
-        "method": "/tmp copy with same all-module/city/full-detail physics+BFS; filtered only7new사용자루트; repository tests untouched",
-        "result": "22 passed,3 blocked",
-        "scope_related_routes4and5": "9/9passed including B1→1F and Honam hall exit",
-        "outside_scope_failures": [
-          {
-            "route": "추가 루트1 [2→3] 거리→고투몰 동편",
-            "from_xzy": [
-              330,
-              -300,
-              0
-            ],
-            "to_xzy": [
-              345.3,
-              -257.8,
-              -6
-            ]
-          },
-          {
-            "route": "추가 루트6 [2→3] 달빛광장→세빛섬",
-            "from_xzy": [
-              -629,
-              -736,
-              0.1
-            ],
-            "to_xzy": [
-              -882,
-              -723,
-              0
-            ]
-          },
-          {
-            "route": "추가 루트7 [1→2] 공원→잠수교",
-            "from_xzy": [
-              -704.5,
-              -793.1,
-              0.065
-            ],
-            "to_xzy": [
-              -700,
-              -934,
-              1.6
-            ]
-          }
-        ],
-        "note": "Current expanded complete suite is NOT claimed to have0blocked. All3 failed searchbboxes lie outside shinsegae/centralcity. No unauthorized edits to repair them."
-      },
-      "scene_audit": {
-        "trace_cameras": 91,
-        "opaque_forward_blockers_within_2_5m": 0,
-        "HOS_phantom_floor_samples": 88,
-        "HOS_phantom_floor_hits": 0,
-        "shinsegae_lanes": "4central+NW1M and6NWlift1F/1M/2Fexits pass support/collision/headroom/actualmeshrays"
-      },
-      "floormap": {
-        "command": "node tests/floormap.mjs 0 -175 -65 20 230 /tmp/f1r11-floormap.png -75 -10 shinsegae,centralcity,jwmarriott",
-        "result": "PNG generated and opened; J4/HOS/Famille approach green;3JW BOH blocks intentionallywhite",
-        "limitation": "stock floormap excludes lazy furniture; detailed walk verifies furnishings"
+      "static_checks": {
+        "node --check js/places/shinsegae.js": "passed",
+        "node --check js/places/centralcity.js": "passed",
+        "git diff --check": "passed"
       },
       "metadata": {
         "command": "node tools/gen_meta.mjs",
         "result": "generated successfully after final geometry"
       },
-      "visual_render": "tests/shot.mjs not run as instructed. modeling.trace ready for operator render."
+      "visual_render": {
+        "tests/shot.mjs": "not run as instructed",
+        "trace_cameras_total": 208,
+        "trace_cameras_added_round14": 17,
+        "limitation": "새 카메라는 실제 kit 전체 상세의 바닥·충돌·머리 공간으로 검증했다. WebGL 화면 비교나 실제 렌더 성능 검증은 아니다."
+      }
     },
     "round2_issues": {
       "3": "사진07:8.5m 볼트·4m급 역피라미드 주두/업라이트·곡선 쌍관 트러스·밝은 선형 금속 패널. 2F는 동측 유지.",
@@ -3934,7 +3944,7 @@
         "pitchDeg": 0,
         "floor": "1M",
         "local_st": [
-          37.0,
+          37,
           26.4
         ],
         "photos": [
@@ -3963,7 +3973,7 @@
         "spot": "3게이트에서 오른쪽 · 쉐이크쉑 우리은행 스타벅스 SKT",
         "x": -103.841,
         "y": 0,
-        "z": 20.0,
+        "z": 20,
         "yawDeg": 17.253,
         "pitchDeg": 0,
         "floor": "1F",
@@ -6193,6 +6203,404 @@
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 2,
         "camera_selection": "plan frontage"
+      },
+      {
+        "round": 14,
+        "spot": "하우스 푸드홀 연결 엘리베이터",
+        "local_st": [
+          107.802,
+          18.47
+        ],
+        "x": -79.269,
+        "y": -6,
+        "z": 103.591,
+        "yawDeg": 156.953,
+        "pitchDeg": 0,
+        "floor": "B1",
+        "look_at_local_st": [
+          109.1,
+          17.2
+        ],
+        "photos": [
+          "refs/official/shinsegae/hos_B1.png"
+        ],
+        "camera_qa": "Real kit + all five connected modules + all detail:0.38m clearance, correct floor,1.85m headroom; nearest clear position. Not rendered.",
+        "nudge_m": 0.2
+      },
+      {
+        "round": 14,
+        "spot": "하우스1F·1M 엘리베이터와 중앙 보이드",
+        "local_st": [
+          95.1,
+          22.1
+        ],
+        "x": -80.51,
+        "y": 0,
+        "z": 90.439,
+        "yawDeg": 111.334,
+        "pitchDeg": 0,
+        "floor": "1F",
+        "look_at_local_st": [
+          95.1,
+          19.5
+        ],
+        "photos": [
+          "refs/official/shinsegae/hos_1F.jpg",
+          "refs/official/shinsegae/hos_1M.jpg"
+        ],
+        "camera_qa": "Real kit + all five connected modules + all detail:0.38m clearance, correct floor,1.85m headroom; nearest clear position. Not rendered.",
+        "nudge_m": 0
+      },
+      {
+        "round": 14,
+        "spot": "하우스 무광검정·청록 진입부",
+        "local_st": [
+          96,
+          15
+        ],
+        "x": -86.796,
+        "y": 0,
+        "z": 93.861,
+        "yawDeg": 291.343,
+        "pitchDeg": 0,
+        "floor": "1F",
+        "look_at_local_st": [
+          96,
+          19
+        ],
+        "photos": [
+          "refs/walk/s5_ssg_b1/srYQ3WmKlEI_30.jpg"
+        ],
+        "camera_qa": "Real kit + all five connected modules + all detail:0.38m clearance, correct floor,1.85m headroom; nearest clear position. Not rendered.",
+        "nudge_m": 0
+      },
+      {
+        "round": 14,
+        "spot": "하우스 라운지24석과 황동·월넛",
+        "local_st": [
+          97.3,
+          27.5
+        ],
+        "x": -74.68,
+        "y": 0,
+        "z": 90.523,
+        "yawDeg": 201.34,
+        "pitchDeg": 0,
+        "floor": "1F",
+        "look_at_local_st": [
+          108,
+          27.5
+        ],
+        "photos": [
+          "refs/walk/s5_ssg_b1/8xxIIvP9uAY_10.jpg"
+        ],
+        "camera_qa": "Real kit + all five connected modules + all detail:0.38m clearance, correct floor,1.85m headroom; nearest clear position. Not rendered.",
+        "nudge_m": 0
+      },
+      {
+        "round": 14,
+        "spot": "하우스1M에서 내려다본 라운지",
+        "local_st": [
+          97.3,
+          27.5
+        ],
+        "x": -74.68,
+        "y": 3.6,
+        "z": 90.523,
+        "yawDeg": 201.34,
+        "pitchDeg": -20,
+        "floor": "1M",
+        "look_at_local_st": [
+          108,
+          27.5
+        ],
+        "photos": [
+          "refs/walk/s5_ssg_b1/8xxIIvP9uAY_10.jpg"
+        ],
+        "camera_qa": "Real kit + all five connected modules + all detail:0.38m clearance, correct floor,1.85m headroom; nearest clear position. Not rendered.",
+        "nudge_m": 0
+      },
+      {
+        "round": 14,
+        "spot": "파미에2F 소이연남·아카데미",
+        "local_st": [
+          173.4,
+          -73
+        ],
+        "x": -140.599,
+        "y": 5,
+        "z": 197.976,
+        "yawDeg": 181.685,
+        "pitchDeg": 0,
+        "floor": "2F",
+        "look_at_local_st": [
+          179,
+          -75
+        ],
+        "photos": [
+          "refs/official/centralcity/famille_floor_2_ko_map.png",
+          "refs/walk/s7_central_famille/MMwnXpMqkZ0_105.jpg"
+        ],
+        "camera_qa": "Real kit + all five connected modules + all detail:0.38m clearance, correct floor,1.85m headroom; nearest clear position. Not rendered.",
+        "nudge_m": 0
+      },
+      {
+        "round": 14,
+        "spot": "파미에2F 케르반",
+        "local_st": [
+          177,
+          -62
+        ],
+        "x": -129.043,
+        "y": 5,
+        "z": 197.326,
+        "yawDeg": 201.334,
+        "pitchDeg": 0,
+        "floor": "2F",
+        "look_at_local_st": [
+          180,
+          -62
+        ],
+        "photos": [
+          "refs/official/centralcity/famille_floor_2_ko_map.png",
+          "refs/walk/s7_central_famille/MMwnXpMqkZ0_65.jpg"
+        ],
+        "camera_qa": "Real kit + all five connected modules + all detail:0.38m clearance, correct floor,1.85m headroom; nearest clear position. Not rendered.",
+        "nudge_m": 0
+      },
+      {
+        "round": 14,
+        "spot": "파미에2F 이비티피자·무월식탁",
+        "local_st": [
+          177,
+          -47
+        ],
+        "x": -115.071,
+        "y": 5,
+        "z": 191.868,
+        "yawDeg": 201.33,
+        "pitchDeg": 0,
+        "floor": "2F",
+        "look_at_local_st": [
+          180,
+          -47
+        ],
+        "photos": [
+          "refs/official/centralcity/famille_floor_2_ko_map.png",
+          "refs/walk/s7_central_famille/MMwnXpMqkZ0_125.jpg"
+        ],
+        "camera_qa": "Real kit + all five connected modules + all detail:0.38m clearance, correct floor,1.85m headroom; nearest clear position. Not rendered.",
+        "nudge_m": 0
+      },
+      {
+        "round": 14,
+        "spot": "파미에2F 카츠8·매우매오",
+        "local_st": [
+          177.3,
+          -36
+        ],
+        "x": -104.716,
+        "y": 5,
+        "z": 188.145,
+        "yawDeg": 75.712,
+        "pitchDeg": 0,
+        "floor": "2F",
+        "look_at_local_st": [
+          173,
+          -42
+        ],
+        "photos": [
+          "refs/official/centralcity/famille_floor_2_ko_map.png"
+        ],
+        "camera_qa": "Real kit + all five connected modules + all detail:0.38m clearance, correct floor,1.85m headroom; nearest clear position. Not rendered.",
+        "nudge_m": 0
+      },
+      {
+        "round": 14,
+        "spot": "파미에2F 하프커피·빈브라더스",
+        "local_st": [
+          180.801,
+          -8
+        ],
+        "x": -77.362,
+        "y": 5,
+        "z": 181.217,
+        "yawDeg": 21.339,
+        "pitchDeg": 0,
+        "floor": "2F",
+        "look_at_local_st": [
+          175,
+          -8
+        ],
+        "photos": [
+          "refs/official/centralcity/famille_floor_2_ko_map.png"
+        ],
+        "camera_qa": "Real kit + all five connected modules + all detail:0.38m clearance, correct floor,1.85m headroom; nearest clear position. Not rendered.",
+        "nudge_m": 0
+      },
+      {
+        "round": 14,
+        "spot": "호남선→파미에1F→4번출구",
+        "local_st": [
+          167,
+          19
+        ],
+        "x": -57.235,
+        "y": 0,
+        "z": 158.538,
+        "yawDeg": 238.212,
+        "pitchDeg": 0,
+        "floor": "1F",
+        "look_at_local_st": [
+          171,
+          22
+        ],
+        "photos": [
+          "refs/walk/s7_central_famille/HgbY_flKpMI_16.jpg",
+          "refs/walk/s7_central_famille/HgbY_flKpMI_29.jpg",
+          "refs/walk/s7_central_famille/HgbY_flKpMI_36.jpg"
+        ],
+        "camera_qa": "Real kit + all five connected modules + all detail:0.38m clearance, correct floor,1.85m headroom; nearest clear position. Not rendered.",
+        "nudge_m": 0
+      },
+      {
+        "round": 14,
+        "spot": "파미에4번출구 방향",
+        "local_st": [
+          194,
+          25.2
+        ],
+        "x": -41.635,
+        "y": 0,
+        "z": 181.431,
+        "yawDeg": 201.339,
+        "pitchDeg": 0,
+        "floor": "1F",
+        "look_at_local_st": [
+          199,
+          25.2
+        ],
+        "photos": [
+          "refs/walk/s7_central_famille/HgbY_flKpMI_50.jpg"
+        ],
+        "camera_qa": "Real kit + all five connected modules + all detail:0.38m clearance, correct floor,1.85m headroom; nearest clear position. Not rendered.",
+        "nudge_m": 0
+      },
+      {
+        "round": 14,
+        "spot": "파미에1F 부다스벨리 황갈색 전면",
+        "local_st": [
+          189.4,
+          -63.5
+        ],
+        "x": -125.928,
+        "y": 0,
+        "z": 209.422,
+        "yawDeg": 201.336,
+        "pitchDeg": 0,
+        "floor": "1F",
+        "look_at_local_st": [
+          195,
+          -63.5
+        ],
+        "photos": [
+          "refs/walk/s7_central_famille/MMwnXpMqkZ0_15.jpg"
+        ],
+        "camera_qa": "Real kit + all five connected modules + all detail:0.38m clearance, correct floor,1.85m headroom; nearest clear position. Not rendered.",
+        "nudge_m": 0
+      },
+      {
+        "round": 14,
+        "spot": "파미에1F 층별안내판",
+        "local_st": [
+          189.4,
+          -44
+        ],
+        "x": -107.765,
+        "y": 0,
+        "z": 202.327,
+        "yawDeg": 21.333,
+        "pitchDeg": 0,
+        "floor": "1F",
+        "look_at_local_st": [
+          187.3,
+          -44
+        ],
+        "photos": [
+          "refs/walk/s7_central_famille/MMwnXpMqkZ0_85.jpg"
+        ],
+        "camera_qa": "Real kit + all five connected modules + all detail:0.38m clearance, correct floor,1.85m headroom; nearest clear position. Not rendered.",
+        "nudge_m": 0
+      },
+      {
+        "round": 14,
+        "spot": "쉐이크쉑119호·우리은행ATM",
+        "local_st": [
+          8.7,
+          24.2
+        ],
+        "x": -109.993,
+        "y": 0,
+        "z": 9.198,
+        "yawDeg": 291.344,
+        "pitchDeg": 0,
+        "floor": "1F",
+        "look_at_local_st": [
+          8.7,
+          28
+        ],
+        "photos": [
+          "refs/official/centralcity/terminal_floor_1_ko.png"
+        ],
+        "camera_qa": "Real kit + all five connected modules + all detail:0.38m clearance, correct floor,1.85m headroom; nearest clear position. Not rendered.",
+        "nudge_m": 0
+      },
+      {
+        "round": 14,
+        "spot": "오픈스테이지 교체형 행사바닥",
+        "local_st": [
+          58,
+          18.6
+        ],
+        "x": -97.27,
+        "y": 0,
+        "z": 57.156,
+        "yawDeg": 172.527,
+        "pitchDeg": 0,
+        "floor": "1F",
+        "look_at_local_st": [
+          66,
+          14.2
+        ],
+        "photos": [
+          "refs/official/shinsegae/hos_1F.jpg",
+          "refs/walk/s7_central_famille/FeFx7kfWgdo_233.jpg"
+        ],
+        "camera_qa": "Real kit + all five connected modules + all detail:0.38m clearance, correct floor,1.85m headroom; nearest clear position. Not rendered.",
+        "nudge_m": 0
+      },
+      {
+        "round": 14,
+        "spot": "B1 배스앤바디웍스·흑백마름모 통로",
+        "local_st": [
+          35,
+          31.2
+        ],
+        "x": -93.903,
+        "y": -6,
+        "z": 31.148,
+        "yawDeg": 329.499,
+        "pitchDeg": 0,
+        "floor": "B1",
+        "look_at_local_st": [
+          31.7,
+          35.4
+        ],
+        "photos": [
+          "refs/walk/s7_central_famille/FeFx7kfWgdo_181.jpg"
+        ],
+        "camera_qa": "Real kit + all five connected modules + all detail:0.38m clearance, correct floor,1.85m headroom; nearest clear position. Not rendered.",
+        "nudge_m": 0
       }
     ],
     "round7": {
@@ -8766,6 +9174,94 @@
           "note": "Entries count detectable zone-outline opening fragments; a single physical gate may produce two entries."
         },
         "details": "See modeling.round10.validation for final audit details; validation_history preserves earlier rounds."
+      },
+      "round11_before_round14": {
+        "round": 11,
+        "date": "2026-11-07",
+        "status": "requested scope passed;3 newly-added unrelated route failures remain outside allowed files; operator render pending",
+        "smoke": {
+          "command": "node tests/smoke.mjs shinsegae centralcity gotomall jwmarriott station",
+          "result": "OK",
+          "warnings": "10 source-car radial-adjacency advisories for remote elevator destinations. Destination floor checks and all-floor exits pass."
+        },
+        "walk": {
+          "command": "node tests/walk.mjs",
+          "result": "walk:589 ok,0 blocked",
+          "snapshot_start_KST": "2026-11-07 04:23:41",
+          "scope": "all modules+city+all detail; original requested suite before concurrent route additions"
+        },
+        "connected_walk": {
+          "command": "node tests/walk.mjs shinsegae centralcity gotomall jwmarriott station --no-city --verbose",
+          "result": "walk:287 ok,0 blocked",
+          "required_1F_routes": "9/9segments pass"
+        },
+        "concurrent_test_additions": {
+          "test_file_mtime_KST": "2026-11-07 04:24:01",
+          "audit_copy_KST": "2026-11-07 04:26:02",
+          "audit_finished_KST": "2026-11-07 04:28:27",
+          "method": "/tmp copy with same all-module/city/full-detail physics+BFS; filtered only7new사용자루트; repository tests untouched",
+          "result": "22 passed,3 blocked",
+          "scope_related_routes4and5": "9/9passed including B1→1F and Honam hall exit",
+          "outside_scope_failures": [
+            {
+              "route": "추가 루트1 [2→3] 거리→고투몰 동편",
+              "from_xzy": [
+                330,
+                -300,
+                0
+              ],
+              "to_xzy": [
+                345.3,
+                -257.8,
+                -6
+              ]
+            },
+            {
+              "route": "추가 루트6 [2→3] 달빛광장→세빛섬",
+              "from_xzy": [
+                -629,
+                -736,
+                0.1
+              ],
+              "to_xzy": [
+                -882,
+                -723,
+                0
+              ]
+            },
+            {
+              "route": "추가 루트7 [1→2] 공원→잠수교",
+              "from_xzy": [
+                -704.5,
+                -793.1,
+                0.065
+              ],
+              "to_xzy": [
+                -700,
+                -934,
+                1.6
+              ]
+            }
+          ],
+          "note": "Current expanded complete suite is NOT claimed to have0blocked. All3 failed searchbboxes lie outside shinsegae/centralcity. No unauthorized edits to repair them."
+        },
+        "scene_audit": {
+          "trace_cameras": 91,
+          "opaque_forward_blockers_within_2_5m": 0,
+          "HOS_phantom_floor_samples": 88,
+          "HOS_phantom_floor_hits": 0,
+          "shinsegae_lanes": "4central+NW1M and6NWlift1F/1M/2Fexits pass support/collision/headroom/actualmeshrays"
+        },
+        "floormap": {
+          "command": "node tests/floormap.mjs 0 -175 -65 20 230 /tmp/f1r11-floormap.png -75 -10 shinsegae,centralcity,jwmarriott",
+          "result": "PNG generated and opened; J4/HOS/Famille approach green;3JW BOH blocks intentionallywhite",
+          "limitation": "stock floormap excludes lazy furniture; detailed walk verifies furnishings"
+        },
+        "metadata": {
+          "command": "node tools/gen_meta.mjs",
+          "result": "generated successfully after final geometry"
+        },
+        "visual_render": "tests/shot.mjs not run as instructed. modeling.trace ready for operator render."
       }
     },
     "trace_before_round11": [
@@ -10699,7 +11195,7 @@
         "pitchDeg": 0,
         "floor": "1M",
         "local_st": [
-          37.0,
+          37,
           26.4
         ],
         "photos": [
@@ -11023,7 +11519,7 @@
       },
       "visual_geometry_fix": "Explicit east2 slab and ceiling polygons replace invalid edge-touching HOS hole. Earcut had drawn an opaque y5 floor triangle over a physics-open void; source fixed without engine edits."
     },
-    "trace_note": "121 trace cameras. Round11 revised J4/J8/plaza/right-hand brands/HOS/Famille close views. y is player foot (renderer adds eye height); screenshot verification pending operator.",
+    "trace_note": "208 cameras total; 17 added in Round14. y is player foot height. New cameras pass support, 0.38m capsule and 1.85m headroom checks with all connected details. tests/shot.mjs was not run as instructed; this is not visual render validation.",
     "trace_before_round12": [
       {
         "spot": "신세계 연결 유리문",
@@ -11733,7 +12229,7 @@
             1036,
             848,
             1085,
-            860.0
+            860
           ],
           "rect_original_px": [
             1132.2,
@@ -11777,7 +12273,7 @@
             1094,
             848,
             1130,
-            860.0
+            860
           ],
           "rect_original_px": [
             1195.831,
@@ -13712,7 +14208,7 @@
           "counter_rect_display": [
             1603.6,
             349.4,
-            1618.0,
+            1618,
             362.6
           ],
           "rect_original_px": [
@@ -14176,7 +14672,7 @@
           "counter_rect_display": [
             1603.6,
             349.4,
-            1618.0,
+            1618,
             362.6
           ]
         },
@@ -14288,10 +14784,343 @@
         "reason": "The final gate/core fit placed an existing required through-route arrival inside a table/counter cluster."
       }
     },
-    "junctions_to_add": []
+    "junctions_to_add": [],
+    "round14": {
+      "date": "2026-11-07",
+      "priority_order": [
+        "layout",
+        "design",
+        "details"
+      ],
+      "layout": {
+        "hos_levels": [
+          "B1",
+          "1F",
+          "1M"
+        ],
+        "hos_B1_lift_display": [
+          1544,
+          459
+        ],
+        "hos_upper_lift_local_st": [
+          95.1,
+          19.5
+        ],
+        "lift_alignment": "explicit remote landing offsets, not surveyed continuous shaft",
+        "famille_2F_source": "refs/official/centralcity/famille_floor_2_ko_map.png + famille.html floor-2",
+        "famille_2F_transform": "t=-96+px*132/1238; s=piecewise linear F2_BANDS(py), reserving 2.4m aisle gaps",
+        "famille_2F_cells": [
+          {
+            "id": 1,
+            "name": "하프커피",
+            "rect_px": [
+              777,
+              78,
+              1188,
+              225
+            ],
+            "front": "S",
+            "kind": "cafe"
+          },
+          {
+            "id": 2,
+            "name": "카츠8",
+            "rect_px": [
+              376,
+              104,
+              596,
+              225
+            ],
+            "front": "S",
+            "kind": "food"
+          },
+          {
+            "id": 3,
+            "name": "매우매오",
+            "rect_px": [
+              531,
+              10,
+              640,
+              95
+            ],
+            "front": "N",
+            "kind": "food"
+          },
+          {
+            "id": 4,
+            "name": "빈브라더스",
+            "rect_px": [
+              758,
+              37,
+              900,
+              76
+            ],
+            "front": "N",
+            "kind": "cafe"
+          },
+          {
+            "id": 5,
+            "name": "이비티 피자",
+            "rect_px": [
+              421,
+              51,
+              492,
+              98
+            ],
+            "front": "N",
+            "kind": "food"
+          },
+          {
+            "id": 6,
+            "name": "무월식탁",
+            "rect_px": [
+              342,
+              51,
+              421,
+              98
+            ],
+            "front": "N",
+            "kind": "food"
+          },
+          {
+            "id": 7,
+            "name": "빗경 · 루경 · 담꽃 · 위치네일스",
+            "rect_px": [
+              331,
+              99,
+              375,
+              137
+            ],
+            "front": "W",
+            "kind": "store"
+          },
+          {
+            "id": 8,
+            "name": "케르반 레스토랑",
+            "rect_px": [
+              293,
+              51,
+              342,
+              98
+            ],
+            "front": "N",
+            "kind": "food"
+          },
+          {
+            "id": 9,
+            "name": "신세계아카데미",
+            "rect_px": [
+              245,
+              51,
+              290,
+              134
+            ],
+            "front": "N",
+            "kind": "office"
+          },
+          {
+            "id": 10,
+            "name": "소이연남",
+            "rect_px": [
+              169,
+              51,
+              220,
+              134
+            ],
+            "front": "N",
+            "kind": "food"
+          },
+          {
+            "id": 11,
+            "name": "서초구 육아나눔터",
+            "rect_px": [
+              202,
+              177,
+              375,
+              225
+            ],
+            "front": "S",
+            "kind": "office"
+          },
+          {
+            "id": 12,
+            "name": "차알",
+            "rect_px": [
+              95,
+              177,
+              201,
+              215
+            ],
+            "front": "S",
+            "kind": "food"
+          },
+          {
+            "id": 13,
+            "name": "딤딤섬",
+            "rect_px": [
+              36,
+              177,
+              94,
+              215
+            ],
+            "front": "S",
+            "kind": "food"
+          }
+        ],
+        "preserved": [
+          "all 1F slab/holes",
+          "terminal numbered gates and shop cells",
+          "HOS 1F/1M square void",
+          "M1F Outback/DimDimSum wing",
+          "J3/J4/J6/J7/J8/J9"
+        ],
+        "famille_2F_y_knots": [
+          [
+            0,
+            187.4
+          ],
+          [
+            10,
+            186.6
+          ],
+          [
+            37,
+            185
+          ],
+          [
+            51,
+            184
+          ],
+          [
+            76,
+            182
+          ],
+          [
+            78,
+            179.6
+          ],
+          [
+            95,
+            178.6
+          ],
+          [
+            98,
+            178.4
+          ],
+          [
+            104,
+            176
+          ],
+          [
+            134,
+            174.7
+          ],
+          [
+            137,
+            174.5
+          ],
+          [
+            177,
+            172.1
+          ],
+          [
+            226,
+            168.5
+          ]
+        ]
+      },
+      "decisions": [
+        "Round14: walk_s7 원본 로그와 refs/walk/s7_central_famille의 프레임이 실제 존재한다. synthesis의 프레임 없음 진술을 폐기하고 HgbY_flKpMI, FeFx7kfWgdo, MMwnXpMqkZ0를 직접 확인했다.",
+        "Round14 층 충돌: 공식 HOS 도면은 B1 푸드홀, 1F 와인셀러/레스토랑, 1M 아트/카페다. B1~2F라는 서술의 2F를 HOS 독립층으로 만들지 않았다. 1F 도면의 2F 화살표는 파미에스테이션 신세계아카데미 연결이다.",
+        "Round14 수직 정합: HOS 상부 기존 엘리베이터와 공식 B1 푸드홀 엘리베이터를 명시적 수평 오프셋 목적지로 연결했다. 같은 실측 수직 샤프트라고 주장하지 않는다. 1F 슬래브·기존 에스컬레이터 우물은 추가/변경하지 않았다.",
+        "Round14 스위트파크는 공식 floor_B1/hos_B1가 지하1층으로 명시하므로 B1 유지. srYQ3WmKlEI_30의 하강 장면만으로 스위트파크 전체를 1F로 옮기지 않는다.",
+        "Round14 HgbY_flKpMI_29에서 약한 단차 하강은 보이나 공식 파미에 1F 도면은 터미널 Gate1/2와 연결된다. 단차를 B1 전체 층 하강으로 오독하지 않고 기존 수평 1F 연결을 유지했다. 정확한 경사 높이·좌표는 사용자 영상 필요.",
+        "Round14 파미에 2F: 공식 famille_floor_2_ko_map과 HTML 번호대조로 1~13 셀을 F2_BANDS 단조 구간별 변환에 배치. 일정축척에서 마주보는 셀 사이가 0.17~0.76m로 줄어드는 문제를 확인해 도면의 흰 통로 폭은 최소 2.4m로 보정했다. 소스셀·행·순서는 동일하며 metric depth는 추정. 별도 M1F 아웃백·딤딤섬 유지.",
+        "Round14 MMwnXpMqkZ0_85의 3층 스타벅스 표기와 _200의 새 조형 유리돔은 확인했으나, 저장된 공식 3F 도면에는 해당 브랜드/경계가 없다. 기존 OSM 원형관 스타벅스와 같은 공간인지 확정할 수 없어 3F를 임의로 생성하거나 두 곳을 동일시하지 않았다. 정확한 3F 위치와 접근계단은 사용자 영상 필요.",
+        "Round14 오픈스테이지는 공식 hos_1F 도면이 호남선 대합실 옆 신세계 연결 광장으로 특정한다. 파미에 광장 팝업과 동일 공간으로 합치지 않았다. 렉서스는 2026-11-05~08 한시 팝업이며 기초 건축물이 아니다.",
+        "Round14 경부선 연결 충돌: 공식 HOS1F 도면에 경부선 방향 화살표가 있으나 두 건물 사이 연속 실내 통로의 정확한 선형/문은 프레임에서 보이지 않는다. 기존 지상 외부 횡단 경로와 신세계 연결만 유지하고 가상의 스타벅스 옆 직결 관통로는 만들지 않았다.",
+        "Round14 HOS 라운지의 촬영층은 8xxIIvP9uAY_10만으로 확정 불가다. 기존 공식1F/1M 보이드 아래1F 공간에만24석을 배치했으며 12개 원형테이블·3열 러그·황동기둥 간격은 비례추정이다. B1라운지라고 주장하지 않는다.",
+        "Round14 조명은 실제lux측정/물리조명계산이 아닌 재질·발광색 표현이다. HOS는앰버/월넛/황동, 스위트파크통로는밝은크림 대리석으로 구분했다.",
+        "Round14 MMwnXpMqkZ0_170 카운터 및 _200 새장식돔은 위치·층 확정 전에 원형관으로 복제하지 않았다. 기존 원형관의 확인되지 않은 내부를 최신3F스타벅스로 잘못 주장하지 않기 위해 유지하되 한계를 기록한다.",
+        "Round14 쉐이크쉑119호와3대키오스크는사용자제공블로그(stated)근거이며 기기의매장내정확한위치는미측정이다. 메뉴·가격·실시간승차정보는만들지않았다."
+      ],
+      "validation": {
+        "layout_connected_smoke": "OK",
+        "layout_connected_walk": "351 ok, 0 blocked",
+        "shots": "not run as requested",
+        "entrance_audit": "13/13 Famille2F shop doorways: inside and outside free, floor y5,1.75m headroom, reachable from south lift lobby (s163,t-6).0.25m BFS explored68,358cells.",
+        "ground_floor_preservation": "All3y=0slab calls and4groundHole polygons match HEAD/round12 baseline exactly.",
+        "post_detail_smoke": "node tests/smoke.mjs shinsegae centralcity gotomall jwmarriott station: OK",
+        "post_detail_connected_walk": "node tests/walk.mjs shinsegae centralcity gotomall jwmarriott station --no-city:351ok,0blocked",
+        "camera_audit": {
+          "total": 17,
+          "nudges": 1,
+          "failed": []
+        },
+        "round": 14,
+        "date": "2026-11-07",
+        "status": "required smoke and full-world walk passed; visual render not run as instructed",
+        "smoke": {
+          "command": "node tests/smoke.mjs shinsegae centralcity gotomall jwmarriott station",
+          "result": "OK",
+          "nonfatal_warnings": 17,
+          "warning_explanation": "수평 오프셋 목적지 메뉴에 대한 출발 엘리베이터 주변 바닥 검사 경고. 실제 목적지 지지면·출구 동선은 별도 검사 및 전체 walk로 확인했다."
+        },
+        "walk": {
+          "command": "node tests/walk.mjs",
+          "result": "walk: 687 ok, 0 blocked",
+          "started_UTC": "2026-11-06 20:47",
+          "completed_by_UTC": "2026-11-06 20:55:53",
+          "scope": "all modules + city + all deferred details; includes 1F 동선 and 사용자 루트",
+          "source_sha256": {
+            "js/places/shinsegae.js": "1ef1cbd895530543b2484c56f42921e897896bbb0425fc75f370c1527c34bd1d",
+            "js/places/centralcity.js": "0b20322d083aa652ee85aa569731f31dfcf2bd290facd317ebcf0953b3779032",
+            "tests/walk.mjs": "c908af6e1fa86bc7beb786d087c931755b4420a3c21958de80a5b054ccdaa7d8"
+          }
+        },
+        "static_checks": {
+          "node --check js/places/shinsegae.js": "passed",
+          "node --check js/places/centralcity.js": "passed",
+          "git diff --check": "passed"
+        },
+        "metadata": {
+          "command": "node tools/gen_meta.mjs",
+          "result": "generated successfully after final geometry"
+        },
+        "visual_render": {
+          "tests/shot.mjs": "not run as instructed",
+          "trace_cameras_total": 208,
+          "trace_cameras_added_round14": 17,
+          "limitation": "새 카메라는 실제 kit 전체 상세의 바닥·충돌·머리 공간으로 검증했다. WebGL 화면 비교나 실제 렌더 성능 검증은 아니다."
+        }
+      },
+      "design": [
+        "FeFx7kfWgdo_181/193의 밝은 대리석과 작은 검정 마름모·크림 코브·황동 유지",
+        "배스 앤 바디 웍스 공식 셀 안 기존 카운터에 청백 체크 유리전면·목재 프레임·회색 캡",
+        "HOS 무광 검정 진입부·짙은 광택석·청록 업라이트, 중앙 보이드 월넛/황동거울/앰버",
+        "MMwnXpMqkZ0_15 부다스벨리 황갈색 벽돌·남색 영문간판",
+        "2F 이비티 피자 크림석재/적백 줄무늬 어닝, 케르반·소이연남 검정 노출천장",
+        "오픈스테이지 건축과 2026-11-05~08 렉서스 행사 레이어 분리"
+      ],
+      "details": [
+        "HOS 중앙 하부 라운지에 원형 대리석 테이블12개, 자주·올리브 안락의자24개, 착석객24명, 붉은 러그3줄·찻잔/받침",
+        "케르반 색유리 펜던트와 황동 경계, 이비티 흰 접이의자·빨간 대기줄, 소이연남 천장 식물과 한산한 착석객",
+        "쉐이크쉑 원래119호 셀 안 주문기3대와 우리은행 ATM 안내",
+        "파미에1F 층별 안내판과 4번출구/서울성모병원 동선표지"
+      ],
+      "superseded_current_fields": {
+        "building.floor_height_m": "B1=-6 m, 1F=0 m, 2F=5 m, R=9 m 유지. 호남선 홀은 2F 동측 발코니 옆 높은 트러스 공간. 파미에스테이션 실내 거리는 1F 남측 블록의 5–6 m 높이 개방부, 식당 내부는 약3–4 m; 모던눌랑은6 m 이상 유리 지붕 분위기로 표현. 2F는 거리/고천장 점포 위 개방부를 제외한 기존 높이를 유지. 모든 치수와 개방부 평면은 사진 비례 근사.",
+        "modeling.floors": "B1 -6(신세계·지하철 연결통로/메가박스 입구), 1F0(호남선 트러스 홀/남측 파미에스테이션 실내 거리), 2F5(홀 동측 및 남측 기존 식당가,1F 거리/고천장 식당 위 개방부), R9(주차). 원형관 B1/1F/2F4.2와 지붕 정상22.6 m는 Round4 유지. 정문 파일런은 별도 조형 높이.",
+        "modeling.reference_implementation.b1": "Round5 cc_famille22–24: 폭9 m 크림 대리석·검은 띠 연결통로, 짙은 대리석/목재 전면, 금장 코퍼와 발광 패널, 청록 MEGABOX 목재 포털. 이전2009 체크 바닥/뾰족 리브 볼트 해석을 대체.",
+        "modeling.reference_implementation.hall_plain_closure": "critic hn_hall_w: 확인 안 된 방 전면만 s108..119/t28 평벽으로 마감, J6 통로 개방 유지.",
+        "modeling.trace_note": "121 trace cameras. Round11 revised J4/J8/plaza/right-hand brands/HOS/Famille close views. y is player foot (renderer adds eye height); screenshot verification pending operator.",
+        "notes[0]": "웹 자료가 층별 구조를 거의 제공하지 않아 층 배치 상당수는 추정"
+      }
+    }
   },
   "source_hierarchy": {
     "priority": [
+      "Round14: saved official floorplans win relative cells/floor names; actual 2025–2026 s7 frames win observed finish and newer shop character. The synthesis statement that no s7frames exist is superseded by the original log and inspected files.",
       "Round10: official2026 floorplans and number-to-nameHTML win floors/relativecells; supplied photos win architecturalfinish and anywiki/photo contradiction. Metricfit remains expressly inferred.",
       "data/osm.json 접지 풋프린트/소유 범위와 _junctions.js 좌표·레벨 유지",
       "실내는 refs/interior/cc_hall 및 cc_famille의 제공2026 사진·notes 우선; 파미에1F 정정 적용",
@@ -14304,9 +15133,10 @@
     "missing": [
       "B1 전체 통로 경로·점포 경계",
       "2025년 이후 메가박스 로비와 상영관 내부",
-      "현재2F 점포 전체배치",
       "수정 모델의 운영자 렌더 비교",
-      "1F/1M도면은확보;계측된도면세계좌표제어점·층고·문폭미확보"
+      "1F/1M도면은확보;계측된도면세계좌표제어점·층고·문폭미확보",
+      "파미에2F 지역축척과 실측 출입구·계단 정합",
+      "MMwnXpMqkZ0_85/_200의 3F 스타벅스 정확한 footprint와 층 연결"
     ],
     "excluded": [
       {
