@@ -112,7 +112,7 @@ export function build(K) {
   const zone = (name, floor, sub, r, y0, y1, priority = 1) => K.zone({ name, floor, sub, poly: rect(...r), y0, y1, priority });
 
   // ------------------------------------------------------------ surveyed exterior palette
-  // 2026 ssg_05/06: one dusty red-brown stone tone with fine, staggered horizontal joints.
+  // 2026 ssg_05/06: rose-taupe stone with staggered 0.3 m courses.
   // Close-up 2025 ssg_03 resolves the same stone above the low dark pergola.
   const lcg = (s => () => (s = (s * 16807) % 2147483647) / 2147483647)(777);
   function stone(key, color) {
@@ -124,21 +124,21 @@ export function build(K) {
       }
       for (let row = 0; row < 4; row++) {
         const yy = row * h / 4;
-        g.fillStyle = 'rgba(54,40,36,0.18)'; g.fillRect(0, yy, w, 1.5);
-        g.fillStyle = 'rgba(231,215,202,0.15)'; g.fillRect(0, yy + 1.5, w, 1);
-        g.fillStyle = 'rgba(54,40,36,0.13)';
-        for (let x = (row % 2) * w / 4; x < w; x += w / 2) g.fillRect(x, yy, 1, h / 4);
+        g.fillStyle = 'rgba(54,40,36,0.35)'; g.fillRect(0, yy, w, 2);
+        g.fillStyle = 'rgba(239,229,231,0.35)'; g.fillRect(0, yy + 2, w, 1.5);
+        g.fillStyle = 'rgba(54,40,36,0.35)';
+        for (let x = (row % 2) * w / 4; x < w; x += w / 2) g.fillRect(x, yy, 1.5, h / 4);
       }
     }, [2.4, 1.2]);
   }
-  stone('ssg_granite', '#9b8179');
+  stone('ssg_granite', '#c2abaf');
   K.texture('ssg_glass', 128, 256, (g, w, h) => {
-    const reflection = g.createLinearGradient(0, 0, w, h);
-    reflection.addColorStop(0, '#80999a'); reflection.addColorStop(0.5, '#71898a'); reflection.addColorStop(1, '#627c7e');
+    const reflection = g.createLinearGradient(0, 0, 0, h);
+    reflection.addColorStop(0, '#a9bcc4'); reflection.addColorStop(0.5, '#9cb0b9'); reflection.addColorStop(1, '#8ea3ac');
     g.fillStyle = reflection; g.fillRect(0, 0, w, h);
-    g.fillStyle = 'rgba(194,212,208,0.13)'; g.fillRect(w * 0.17, 0, w * 0.18, h);
-    g.fillStyle = '#a1b1ad'; g.fillRect(0, 0, 2, h); g.fillRect(0, h - 3, w, 3);
-    g.fillStyle = '#4e6668'; g.fillRect(2, 0, 1, h); g.fillRect(0, h - 5, w, 2);
+    g.fillStyle = 'rgba(76,90,96,0.25)'; g.fillRect(0, 0, 1, h);
+    g.fillStyle = '#c4cdd1'; g.fillRect(0, h - 8, w, 2);
+    g.fillStyle = '#4c5a60'; g.fillRect(0, h - 6, w, 6);
   }, [1.7, 1], { facade: true });
   K.texture('ssg_rack', 128, 64, (g, w, h) => {
     g.fillStyle = '#bdbdbd'; g.fillRect(0, 0, w, h);
@@ -148,9 +148,9 @@ export function build(K) {
     }
     g.fillStyle = '#777'; g.fillRect(0, 0, w, 3);
   }, [1.5, 1]);
-  // The flower and facade wordmark are diffuse, not self-lit giant lettering.
+  // ssg_06/cc_01: red flower and legible white capitals, only on the west tower's north face.
   K.texture('ssg_flower', 256, 256, (g, w, h) => {
-    g.clearRect(0, 0, w, h); g.fillStyle = '#b12b38';
+    g.clearRect(0, 0, w, h); g.fillStyle = '#d7192d';
     // Rounded curling petals, separated tips and a small centre: a flower, never a star polygon.
     for (let i = 0; i < 6; i++) {
       g.save(); g.translate(w / 2, h / 2); g.rotate(i * PI / 3);
@@ -161,10 +161,21 @@ export function build(K) {
     g.beginPath(); g.arc(w / 2, h / 2, 13, 0, PI * 2); g.fill();
   }, [1, 1], { transparent: true });
   K.texture('ssg_wordmark', 1024, 128, (g, w, h) => {
-    g.clearRect(0, 0, w, h); g.fillStyle = '#f4f2ed';
-    g.font = '500 104px Arial,sans-serif';
-    g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('SHINSEGAE', w / 2, h / 2, w - 16);
+    g.clearRect(0, 0, w, h); g.fillStyle = '#ffffff';
+    g.font = '800 112px Arial,sans-serif';
+    const metrics = g.measureText('SHINSEGAE');
+    const ascent = metrics.actualBoundingBoxAscent || 82, descent = metrics.actualBoundingBoxDescent || 0;
+    // maxWidth alone only shrinks text; scale the actual glyphs to fill the panel.
+    g.save(); g.translate(w / 2, h / 2);
+    g.scale((w - 16) / metrics.width, (h - 16) / (ascent + descent));
+    g.textAlign = 'center'; g.textBaseline = 'alphabetic';
+    g.fillText('SHINSEGAE', 0, (ascent - descent) / 2, metrics.width); g.restore();
   }, [1, 1], { transparent: true });
+  const wordmarkMap = K.T.surface('ssg_wordmark').tex;
+  K.material('ssg_wordmark_white', new K.THREE.MeshLambertMaterial({
+    map: wordmarkMap, color: 0xffffff, emissive: 0xffffff, emissiveMap: wordmarkMap,
+    emissiveIntensity: 0.25, transparent: true, alphaTest: 0.3,
+  }));
   const PLANE = { N: 0, S: VD, E: UW, W: 0 };
   function faceQuad(mat, f, c, y, w, h, off = 0.12, plane = PLANE[f], tiled = false) {
     let a, b;
@@ -211,7 +222,7 @@ export function build(K) {
   // Ground contact follows OSM; the central portal alone is set back into the slot.
   exWall('N', 0, 0, 23, 0, 7, { mat: 'ssg_granite' });
   exWall('N', 0, 44, UW, 0, 7, { mat: 'ssg_granite' });
-  exWall('N', 5, 23, 44, 0, 7, { mat: 'ssg_granite', openings: [dOp(ENTRY, 10.4)] });
+  exWall('N', 5, 23, 44, 0, 7, { mat: 'ssg_granite', openings: [{ ...dOp(ENTRY, 12), y1: 5.7 }] });
   for (const u of [23, 44]) wall(u, 0, u, 5, 0, 11, { mat: 'ssg_granite', thick: 0.22 });
   exWall('E', UW, 0, VS, 0, 7, { mat: 'ssg_granite', openings: [{ ...dOp(30), y1: 3.45 }] });
   exWall('E', UW, VS, VD, 0, 7, { mat: 'ssg_granite' });
@@ -243,14 +254,14 @@ export function build(K) {
     bay.push([ENTRY - 6 * Math.cos(theta), BAY_BACK - 6 * Math.sin(theta)]);
   }
   const bayPlan = bay.map(p => P(...p));
-  exWall('N', BAY_BACK, 23, 44, 7, BAY_TOP, { mat: 'ssg_glass', floorH: 3.2 });
+  exWall('N', BAY_BACK, 23, 44, 7, BAY_TOP, { mat: 'ssg_glass', floorH: 3.2, vBase: 7 });
   for (const [y0, y1] of [[7, 20], [24, BAY_TOP]]) {
     for (let i = 0; i < bay.length - 1; i++) {
       wall(...bay[i], ...bay[i + 1], y0, y1, { mat: 'ssg_glass', thick: 0.06, floorH: 3.2, vBase: 7 });
-      if (i % 2 === 0) box(bay[i][0], bay[i][1], 0.055, 0.07, y0, y1 - y0, 0x9aaba8, { solid: false });
+      if (i % 2 === 0) box(bay[i][0], bay[i][1], 0.04, 0.06, y0, y1 - y0, 0x9caeb7, { solid: false });
     }
     const end = bay.at(-1);
-    box(end[0], end[1], 0.055, 0.07, y0, y1 - y0, 0x9aaba8, { solid: false });
+    box(end[0], end[1], 0.04, 0.06, y0, y1 - y0, 0x9caeb7, { solid: false });
     // The 2F slab and main roof already cap y7/YB. Only cap the two recess edges here.
     for (const yy of [y0, y1].filter(yy => yy !== 7 && yy !== BAY_TOP)) K.slab(bayPlan, yy, {
       mat: 0x748783, under: 0x202a28, thick: 0.16, edgeMat: 0x85948e, walk: false, ceil: false,
@@ -264,6 +275,14 @@ export function build(K) {
     mat: 'ssg_glass', floorH: 3.2, vBase: 7, top: 0x74817a, bottom: false, solid: false,
   });
   faceBox('N', ENTRY, UW - 2 * TOWER_W, 0.03, 0.15, GLASS_TOP, 0.16, 0x929d95, BAY_BACK);
+  // Two low clusters of rooftop greenery break the glass roofline in ssg_06.
+  for (const [u0, u1] of [[20, 32], [40, 47]]) {
+    boxR(u0, 9, u1, 16, GLASS_TOP, 0.6, 0x5d5a55, { solid: false });
+    boxR(u0 + 0.25, 9.25, u1 - 0.25, 15.75, GLASS_TOP + 0.6, 0.5, 0x3f593c, { solid: false });
+  }
+  for (const [u, v, h] of [[24, 11, 3.5], [27, 12.5, 4.2], [30, 11, 3.7], [42, 11, 3.6], [44, 13, 4.3], [46, 10.5, 3.8]]) {
+    const [x, z] = P(u, v); K.tree(x, z, { y: GLASS_TOP + 0.6, h, kind: 'zelkova' });
+  }
   for (const f of ['E', 'W']) exWall(f, f === 'E' ? UW : 0, 0, VS, 7, YB, { mat: 'ssg_granite' });
   // Only the north-facing upper extension is resolved as glazing; unseen sides stay plain.
   for (const [f, pl, s0, s1] of [['E', UW, VS, VD], ['W', 0, VS, VD], ['S', VD, 0, UW]])
@@ -274,37 +293,43 @@ export function build(K) {
     faceBox(f, c, len, 0, 0.12, LV.RF + 0.65, 0.12, 0xa48e84, pl);
   // Occasional thin pale courses, not alternating metre-high stripes.
   for (const yy of [7, 16.6, 26.2, 35.8]) {
-    for (const [f, c, len] of [['N', 11.5, 23], ['N', 55.5, 23], ['E', VD / 2, VD], ['W', VD / 2, VD]])
-      faceBox(f, c, len, 0.015, 0.025, yy, 0.045, 0xac958b);
+    for (const [f, c, len] of [['N', 11.5, 23], ['N', 55.5, 23], ['W', VD / 2, VD]])
+      faceBox(f, c, len, 0.015, 0.025, yy, 0.045, 0xd2c3c0);
   }
-  function squareWindow(f, c, y, size = 1.35, raised = false, plane = PLANE[f]) {
-    faceBox(f, c, size + 0.22, 0.07, raised ? 0.25 : 0.08, y - 0.11, size + 0.22, 0x8f776d, plane);
-    faceQuad(0x253130, f, c, y, size, size, raised ? 0.22 : 0.135, plane);
-    faceBox(f, c, 0.045, raised ? 0.23 : 0.145, 0.025, y, size, 0x68685f, plane);
+  for (const yy of [8, 10.5]) faceBox('E', VS / 2, VS, 0.015, 0.025, yy, 0.07, 0xd2c3c0);
+  // y is the bottom of the aperture; width and height are independent.
+  function squareWindow(f, c, y, w = 1.35, h = w, raised = false, plane = PLANE[f]) {
+    faceBox(f, c, w + 0.22, 0.07, raised ? 0.25 : 0.08, y - 0.11, h + 0.22, 0xb09b9e, plane);
+    faceQuad(0x253130, f, c, y, w, h, raised ? 0.22 : 0.135, plane);
+    faceBox(f, c, 0.045, raised ? 0.23 : 0.145, 0.025, y, h, 0x68685f, plane);
   }
-  for (const [u0, u1, top] of TOWERS) for (let i = 0; i < 6; i++) {
-    const c = 2.1 + i * (TOWER_W - 4.2) / 5;
-    squareWindow('N', u0 + c, top - 4, 1.35);
-    squareWindow(u0 === 0 ? 'W' : 'E', c, top - 4, 1.35);
+  for (const [u0, u1, top] of TOWERS) for (let i = 0; i < 5; i++) {
+    const c = 2.6 + i * (TOWER_W - 5.2) / 4;
+    squareWindow('N', u0 + c, top - 3.6 - 1.05, 1.5, 2.1);
+    squareWindow(u0 === 0 ? 'W' : 'E', c, top - 3.6 - 1.05, 1.5, 2.1);
   }
-  // Square window columns beside the atrium and on the exposed corner faces.
+  // ssg_06 confirms the small north-face apertures beside the glass bay only.
   for (let i = 0; i < 6; i++) {
-    for (const u of [21.3, 45.7]) squareWindow('N', u, 10 + i * 4.8, 0.78, true);
-    for (const f of ['W', 'E']) squareWindow(f, 2.2, 10 + i * 4.8, 0.78, true);
+    for (const u of [21.3, 45.7]) squareWindow('N', u, 10 + i * 4.8, 0.78, 0.78, true);
   }
-  for (const v of [8, 14]) squareWindow('E', v, 5.4, 1.2, true);
-  // The brief explicitly locates the current signs on east/north and west/west faces.
+  squareWindow('N', 2.5, 8.5, 1.6, 1.6, true);
+  for (const v of [18.5, 21.5]) {
+    squareWindow('E', v, 4.0, 1.3, 1.3, true);
+    for (const s of [-0.3, 0.3]) faceBox('E', v + s, 0.035, 0.245, 0.025, 4, 1.3, STEEL);
+    for (const yy of [4.4, 4.85]) faceBox('E', v, 1.3, 0.245, 0.025, yy, 0.035, STEEL);
+  }
+  squareWindow('E', 28, 10, 0.6, 0.6, true); // lone south-side vent in ssg_03
+  // Piaget is on the west tower NORTH face; its west face has no confirmed logo.
   // North-face u increases to viewer-left; west-face v increases to viewer-right.
   function towerLogo(f, c, y) {
     const left = f === 'N' ? 1 : -1;
-    faceQuad('ssg_flower', f, c + left * 6.5, y - 0.35, 2.2, 2.2, 0.18);
-    faceQuad('ssg_wordmark', f, c - left * 1.1, y, 11.7, 1.5, 0.18);
+    faceQuad('ssg_flower', f, c + left * 6.9, y - 0.45, 2.8, 2.8, 0.18);
+    faceQuad('ssg_wordmark_white', f, c - left * 1.4, y, 13, 1.9, 0.18);
   }
-  towerLogo('N', UW - TOWER_W / 2, TOWERS[1][2] - 8.5);
-  towerLogo('W', TOWER_W / 2, TOWERS[0][2] - 8.5);
+  towerLogo('N', TOWER_W / 2, TOWERS[0][2] - 8.5);
 
-  // Generic fashion artwork follows only the composition/colour of the 2026 billboards.
-  // No campaign, real model likeness, advertiser name or product claim is reproduced.
+  // Simplified artwork follows the 2026 billboards' composition, with observed brand captions.
+  // The portrait and fashion figures are approximations, not copies of campaign photography.
   K.texture('ssg_portrait_poster', 512, 768, (g, w, h) => {
     const bg = g.createLinearGradient(0, 0, w, h);
     bg.addColorStop(0, '#aa674c'); bg.addColorStop(0.65, '#b97c59'); bg.addColorStop(1, '#663c31');
@@ -330,6 +355,7 @@ export function build(K) {
     g.strokeStyle = '#bf987d'; g.lineWidth = 3;
     for (let i = 0; i < 3; i++) { g.beginPath(); g.moveTo(210 + i * 8, 433 + i * 5); g.lineTo(298 + i * 4, 410 + i * 6); g.stroke(); }
     g.fillStyle = '#f0eee7'; g.fillRect(0, 708, w, 60);
+    g.fillStyle = '#696861'; g.font = '32px Georgia,serif'; g.textAlign = 'center'; g.fillText('PIAGET', w / 2, 749);
   }, [1, 1]);
   K.texture('ssg_fashion_poster', 512, 768, (g, w, h) => {
     g.fillStyle = '#c6cbca'; g.fillRect(0, 0, w, h);
@@ -348,6 +374,7 @@ export function build(K) {
       g.strokeStyle = '#7f8078'; g.lineWidth = 3; g.beginPath(); g.moveTo(x, yy + 90); g.lineTo(x + lean, yy + 313); g.stroke();
     }
     g.fillStyle = '#ecece6'; g.fillRect(0, 708, w, 60);
+    g.fillStyle = '#41484b'; g.font = '500 32px Arial,sans-serif'; g.textAlign = 'center'; g.fillText('CHANEL', w / 2, 749);
   }, [1, 1]);
   function billboard(f, c, y, w, h, artwork) {
     faceBox(f, c, w + 0.42, 0.12, 0.18, y - 0.21, h + 0.42, 0x646660);
@@ -356,10 +383,11 @@ export function build(K) {
   }
   billboard('N', TOWER_W / 2, 12.8, 9.1, 14.4, 'ssg_portrait_poster');
   billboard('N', UW - TOWER_W / 2, 16.2, 9.1, 14.4, 'ssg_fashion_poster');
-  billboard('W', TOWER_W / 2, 15.3, 9.1, 14.4, 'ssg_portrait_poster');
+  // cc_01: a narrow pale vertical banner on the west face, not a second portrait.
+  billboard('W', TOWER_W / 2, 15.3, 3, 14, 0xd9dde0);
 
   // ------------------------------------------------------------ entrance (2025 roadview 01/02)
-  function gridCanopy(f, c, width, depth, y) {
+  function gridCanopy(f, c, width, depth, y, paired = false, columns = true) {
     const along = f === 'N', back = along ? -5 : 0.05, run = depth - back, middle = (depth + back) / 2;
     const B = (s, t, w, d, yy, h, mat, solid = false) => along
       ? box(c + s, -t, w, d, yy, h, mat, { solid })
@@ -371,27 +399,35 @@ export function build(K) {
     // Glass material is double-sided; transverse grid, deeper beams and outer columns below it.
     for (let s = -width / 2; s <= width / 2 + 0.01; s += 1.1) B(s, middle, 0.075, run, y, 0.2, STEEL);
     for (let t = back; t <= depth; t += 0.9) B(0, t, width, 0.08, y, 0.2, STEEL);
-    for (const t of [back, depth]) B(0, t, width + 0.2, 0.24, y - (along ? 0.5 : 0.12), along ? 0.7 : 0.36, STEEL);
-    for (const ss of [-width / 2, width / 2]) B(ss, middle, 0.24, run, y - (along ? 0.5 : 0.12), along ? 0.7 : 0.36, STEEL);
+    for (const t of [back, depth]) B(0, t, width + 0.2, 0.24, y - (along ? 0.2 : 0.12), along ? 0.4 : 0.36, STEEL);
+    for (const ss of [-width / 2, width / 2]) B(ss, middle, 0.24, run, y - (along ? 0.2 : 0.12), along ? 0.4 : 0.36, STEEL);
     for (const ss of [-width * 0.32, width * 0.32]) {
-      B(ss, middle, 0.24, run, y - 0.28, 0.5, STEEL);
+      B(ss, middle, 0.24, run, y - 0.18, 0.38, STEEL);
+      if (!columns) continue;
       if (along) {
         const [x, z] = P(c + ss, -depth + 0.2);
         K.cyl({ x, z, y: 0, r: 0.21, h: y, mat: STEEL, seg: 16 });
-      } else B(ss, depth - 0.2, 0.24, 0.24, 0, y, STEEL, true);
+      } else for (const offset of paired ? [-0.3, 0.3] : [0])
+        B(ss + offset, depth - 0.2, 0.16, 0.16, 0, y, STEEL, true);
     }
   }
-  gridCanopy('N', ENTRY, 25.4, 6.8, 4.65);
-  gridCanopy('E', 13, 22, 3.4, 3.55);
+  gridCanopy('N', ENTRY, 25.4, 6.8, 5.9);
+  gridCanopy('E', 19, 22, 3.4, 3.8, true);
   // Door side lights and upper transom. Two clear open passages remain through the glass doors.
   function entrance(f, c, width, plane = PLANE[f]) {
-    const east = f === 'E', doorTop = east ? 2.65 : 3.2, fasciaH = east ? 0.5 : 0.66;
-    const transomBase = doorTop + fasciaH, top = east ? 3.45 : 5.86;
+    const east = f === 'E', doorTop = east ? 2.65 : 2.9, fasciaH = east ? 0.5 : 0.55;
+    const transomBase = doorTop + fasciaH, top = east ? 3.45 : 5.7;
     faceBox(f, c, width, 0.06, 0.18, doorTop, fasciaH, STEEL, plane);
-    faceQuad({ tex: 'glass', color: 0x9eaaa0 }, f, c, transomBase, width, top - transomBase, 0.08, plane);
+    faceQuad({ tex: 'glass', color: 0xa4b0b7 }, f, c, transomBase, width, top - transomBase, 0.08, plane);
     for (const ss of [-width / 2, -width / 4, 0, width / 4, width / 2])
       faceBox(f, c + ss, 0.085, 0.1, 0.16, 0, top, STEEL, plane);
     faceBox(f, c, width, 0.1, 0.16, top, 0.1, STEEL, plane);
+    if (!east) {
+      for (let ss = -width / 2 + 1.2; ss < width / 2; ss += 1.2)
+        faceBox(f, c + ss, 0.065, 0.13, 0.12, transomBase, top - transomBase, STEEL, plane);
+      faceBox(f, c, width, 0.13, 0.12, 2.86, 0.08, STEEL, plane);
+      faceBox(f, c, width, 0.13, 0.12, 4.55, 0.065, STEEL, plane);
+    }
     for (const ss of [-width * 0.39, width * 0.39]) faceQuad({ tex: 'glass', color: 0x6f847b }, f, c + ss, 0.1, width * 0.2, doorTop - 0.15, 0.1, plane);
     if (f === 'N') for (const u of [c - 2.6, c + 2.6]) {
       wall(u, plane - 0.1, u, plane + 1.2, 0.05, doorTop, { mat: 'glass', thick: 0.04 });
@@ -402,27 +438,62 @@ export function build(K) {
     const flowerSize = east ? 0.33 : 0.44;
     faceQuad('ssg_flower', f, c + 1.45, doorTop + (fasciaH - flowerSize) / 2, flowerSize, flowerSize, 0.2, plane);
   }
-  entrance('N', ENTRY, 10.4, 5);
+  entrance('N', ENTRY, 12, 5);
   entrance('E', 30, 6);
-  // v20 intersects the preserved NE stair core; retain the v30 door with its own small canopy.
-  gridCanopy('E', 30, 6.4, 2.4, 3.55);
-  function awningWindow(f, c, width = 6.5) {
-    const top = f === 'E' ? 3.3 : 4.05, front = top - 0.55, frameH = f === 'E' ? 2.3 : 3.4;
-    // Projecting bronze surround, pale lit backing, neutral display plinths and transparent front glass.
+  // v20 intersects the preserved NE stair core; retain the v30 door. Its south
+  // canopy return meets the pergola at v30 instead of stacking two grid roofs.
+  // The short wall-supported return has no extra posts across the door approach.
+  gridCanopy('E', 31.6, 3.2, 2.4, 3.8, false, false);
+  K.texture('ssg_watch_display', 128, 128, (g, w, h) => {
+    g.clearRect(0, 0, w, h);
+    g.fillStyle = '#77736d'; g.fillRect(49, 0, 30, h);
+    g.fillStyle = '#d6cdb9'; g.beginPath(); g.arc(w / 2, h / 2, 34, 0, PI * 2); g.fill();
+    g.fillStyle = '#e8e4db'; g.beginPath(); g.arc(w / 2, h / 2, 28, 0, PI * 2); g.fill();
+    g.strokeStyle = '#37332e'; g.lineWidth = 3;
+    g.beginPath(); g.moveTo(48, 50); g.lineTo(64, 64); g.lineTo(80, 43); g.stroke();
+  }, [1, 1], { transparent: true });
+  K.material('ssg_lit_watch', new K.THREE.MeshBasicMaterial({
+    map: K.T.surface('ssg_watch_display').tex, transparent: true, alphaTest: 0.3,
+  }));
+  function awningWindow(f, c, width = 6.5, branded = false) {
+    const top = f === 'E' ? 3.0 : 4.05, front = top - Math.tan(25 * PI / 180) * 0.8;
+    const frameH = f === 'E' ? 2.3 : 3.4;
+    // ssg_02/03: recessed dark display, one lit watch and a sloping red fabric awning.
     const frame = 0x3b3530;
-    faceQuad({ tex: 'emit', color: 0xe8e2d6 }, f, c, 0.67, width - 0.4, frameH - 0.45, 0.035);
+    faceQuad(0x1c1a19, f, c, 0.67, width - 0.4, frameH - 0.45, 0.035);
     for (const side of [-1, 1]) faceBox(f, c + side * (width / 2 - 0.1), 0.2, 0.15, 0.3, 0.45, frameH, frame);
     for (const yy of [0.45, 0.45 + frameH - 0.18]) faceBox(f, c, width, 0.15, 0.3, yy, 0.18, frame);
-    for (let i = 0; i < 3; i++) faceBox(f, c + (i - 1) * width * 0.24, 0.65, 0.18, 0.22, 0.65, 0.45 + i * 0.18, 0xbab4a7);
-    faceQuad({ tex: 'glass', color: 0x53584e }, f, c, 0.65, width - 0.4, frameH - 0.4, 0.32);
-    faceBox(f, c, width, 0.45, 0.9, top - 0.08, 0.08, 0x8f2639);
-    faceBox(f, c, width, 0.84, 0.12, front, 0.55, 0x8f2639);
-    for (const side of [-1, 1]) faceBox(f, c + side * (width / 2 - 0.05), 0.1, 0.45, 0.9, front, 0.55, 0x8f2639);
+    // Deep red outer reveal and a thin pale inner frame also continue under the west tower (cc_01).
+    for (const side of [-1, 1]) {
+      faceBox(f, c + side * (width / 2 - 0.21), 0.06, 0.31, 0.025, 0.63, frameH - 0.36, 0xa8202c);
+      faceBox(f, c + side * (width / 2 - 0.28), 0.025, 0.3, 0.025, 0.67, frameH - 0.44, 0xd0c5c2);
+    }
+    faceBox(f, c, 0.85, 0.15, 0.2, 0.67, 0.45, 0x4a4744);
+    faceQuad('ssg_lit_watch', f, c, 1.13, 0.5, 0.5, 0.25);
+    if (branded) {
+      const [u, v] = f === 'N' ? [c, -0.29] : [UW + 0.29, c];
+      sign('POLO CLUB', u, v, 2.12, f, Math.min(width - 0.7, 2.2), 0.26, { bg: null, fg: '#ffffff', bold: false });
+    }
+    faceQuad({ tex: 'glass', color: 0x3e4244 }, f, c, 0.65, width - 0.4, frameH - 0.4, 0.34);
+    const ap = (s, t, yy) => {
+      const [x, z] = f === 'N' ? P(c + s, -t) : P(UW + t, c + s);
+      return [x, yy, z];
+    };
+    const slope = 25 * PI / 180, out = f === 'N' ? [-SA, -CA] : [CA, -SA];
+    const awning = [ap(-width / 2, 0.1, top), ap(width / 2, 0.1, top), ap(width / 2, 0.9, front), ap(-width / 2, 0.9, front)];
+    const normal = [out[0] * Math.sin(slope), Math.cos(slope), out[1] * Math.sin(slope)];
+    K.quad(0xa8202c, awning, normal);
+    K.quad(0x781c28, awning, normal.map(n => -n));
+    faceBox(f, c, width, 0.9, 0.05, front - 0.24, 0.24, 0xa8202c);
     const [u, v] = f === 'N' ? [c, -0.92] : [UW + 0.92, c];
-    sign('SHINSEGAE', u, v, front + 0.28, f, 2.2, 0.19, { bg: null, fg: '#f2e9e1', bold: false });
+    sign('SHINSEGAE', u, v, front - 0.12, f, Math.min(width - 0.3, 2.2), 0.19, { bg: null, fg: '#ffffff', bold: false });
   }
-  for (const u of [18.8, 48.2]) awningWindow('N', u);
-  for (const v of [8, 14]) awningWindow('E', v, 4.4);
+  for (const u of [3.5, 7.5, 11.5, 15]) awningWindow('N', u, 3.2);
+  awningWindow('N', 19.8, 5.2, true);
+  awningWindow('N', 48.2, 6.5, true);
+  for (const v of [18.5, 21.5]) awningWindow('E', v, 2.5);
+  boxR(0, -1.6, 17, -0.2, 0.012, 0.6, 'ssg_granite');
+  boxR(0.15, -1.5, 16.85, -0.3, 0.612, 1, 0x3f593c, { solid: false });
   // Local tapered primitive: K.cyl has no top radius; avoids the kit's spherical pine crown.
   function taper(u, v, y, r0, r1, h, mat, seg = 10) {
     for (let i = 0; i < seg; i++) {
@@ -437,10 +508,13 @@ export function build(K) {
     box(u, -1.5, 1.45, 1.4, 0.6, 0.5, 0x304333, { solid: false });
     for (const [du, dv, hh] of [[-0.35, 0.12, 2.6], [0.35, 0.1, 2.4], [0, -0.35, 2.8]]) taper(u + du, -1.5 + dv, 0.75, 0.45, 0.02, hh, 0x26402a);
   }
-  K.texture('ssg_paving', 256, 128, (g, w, h) => {
-    g.fillStyle = '#9d9a94'; g.fillRect(0, 0, w, h);
-    for (let i = 0; i < 1200; i++) { g.fillStyle = lcg() < 0.5 ? '#96938d' : '#a5a29c'; g.fillRect(lcg() * w, lcg() * h, 1, 1); }
-    g.fillStyle = '#807d77'; g.fillRect(0, 0, w, 1); g.fillRect(0, 0, 1, h);
+  for (const [key, base, dark, light, joint] of [
+    ['ssg_paving', '#4a4744', '#43413e', '#514e4b', '#3a3836'],
+    ['ssg_plaza_paving', '#9d9a94', '#96938d', '#a5a29c', '#807d77'],
+  ]) K.texture(key, 256, 128, (g, w, h) => {
+    g.fillStyle = base; g.fillRect(0, 0, w, h);
+    for (let i = 0; i < 1200; i++) { g.fillStyle = lcg() < 0.5 ? dark : light; g.fillRect(lcg() * w, lcg() * h, 1, 1); }
+    g.fillStyle = joint; g.fillRect(0, 0, w, 1); g.fillRect(0, 0, 1, h);
   }, [1.2, 0.6]);
   K.slab(rect(0, -7.4, UW, 0), 0.012, { mat: 'ssg_paving', uvRot: RA, thick: 0.12, ceil: false });
   K.slab(rect(23, 0, 44, 5), 0.012, { mat: 'ssg_paving', uvRot: RA, thick: 0.12, ceil: false });
@@ -452,7 +526,7 @@ export function build(K) {
     taper(u, -7.02, 0.072, 0.17, 0.025, 0.62, 0x242728);
     taper(u, -7.02, 0.33, 0.11, 0.08, 0.13, 0xe5e3dc);
   }
-  K.slab(rect(-10, -22, 77, -14.6), 0.012, { mat: 'ssg_paving', uvRot: RA, thick: 0.12, ceil: false });
+  K.slab(rect(-10, -22, 77, -14.6), 0.012, { mat: 'ssg_plaza_paving', uvRot: RA, thick: 0.12, ceil: false });
   for (const u of [-3, 18, 49, 64]) {
     box(u, -18.5, 2.7, 2.7, 0.012, 0.12, 0xb8b4ac, { solid: false });
     hq(u - 1.2, -19.7, u + 1.2, -17.3, 0.14, 0x4a483d);
@@ -474,20 +548,33 @@ export function build(K) {
     for (let i = 0; i < count; i++) {
       const v = -5.75 + i * 2.5; // drop-off lane v-14.6..-7.6 remains entirely open
       if (row === 'B' && v > 25 && v < 33) continue; // east-side vehicle access
-      const accessible = row === 'A' && i < 3;
+      const accessible = row === 'B' && i >= 4 && i < 8;
       if (accessible) hq(u0, v - 1.2, u1, v + 1.2, LOT_Y + 0.008, 0x326f99);
       for (const vv of [v - 1.25, v + 1.25]) hq(u0, vv - 0.045, u1, vv + 0.045, LOT_Y + 0.012, 0xe5e7e1);
       hq(row === 'A' ? u0 : u1 - 0.08, v - 1.25, row === 'A' ? u0 + 0.08 : u1, v + 1.25, LOT_Y + 0.012, 0xe5e7e1);
       if (accessible) {
         const [x, z] = P((u0 + u1) / 2, v);
         K.floorText('♿', { x, z, y: LOT_Y + 0.018, w: 1.9, h: 1.9, rotY: RA + PI / 2, fg: '#fff' });
+        // ssg_04: yellow/black wheel stops at the fence end, not in the aisle.
+        box(90.1, v, 0.15, 1.6, LOT_Y, 0.15, 0x222222, { solid: false });
+        for (const dv of [-0.5, 0, 0.5]) box(90.1, v + dv, 0.16, 0.22, LOT_Y + 0.01, 0.15, 0xe2c23a, { solid: false });
       }
-      if ((i + (row === 'B' ? 1 : 0)) % 4 !== 0) {
+      if (accessible ? i === 5 : (i + (row === 'B' ? 1 : 0)) % 4 !== 0) {
         const [x, z] = P((u0 + u1) / 2, v);
         K.vehicle({ x, z, y: LOT_Y, kind: 'car', rotY: RA + (row === 'A' ? -PI / 2 : PI / 2), color: parkedColors[(i + (row === 'B' ? 3 : 0)) % parkedColors.length] });
       }
     }
   }
+  // ssg_04 shows compact payment/barrier equipment at the north end of the lot.
+  // Keep it on the building-side apron; the shared service-road aisle stays clear.
+  for (const u of [71.2, 74.8]) {
+    box(u, -11, 0.6, 0.6, LOT_Y, 0.18, 0xe2c23a, { solid: false });
+    box(u, -11, 0.4, 0.4, LOT_Y + 0.18, 1.6, 0x2f3533);
+    box(u, -11.23, 0.24, 0.035, 1.17, 0.3, 0x171c1b, { solid: false });
+    for (const du of [-0.21, 0.21]) box(u + du, -11, 0.13, 0.62, LOT_Y + 0.18, 0.04, 0x222222, { solid: false });
+  }
+  box(71.2, -10.3, 0.48, 0.5, LOT_Y, 0.95, 0xe2c23a);
+  box(72.7, -10.3, 3, 0.09, 1.0, 0.1, 0xf2f2eb, { solid: false });
   // Flat, layered red-pine silhouettes: K.tree(kind:'pine') produces a rounded
   // crown, so short offset cylinder sections give the module its own leaned trunks.
   function layeredPine(u, v) {
@@ -500,12 +587,12 @@ export function build(K) {
       K.cyl({ x, z, y: yy + 0.45, r: w / 2, h: 0.45, mat: 0x2f4a30, seg: 12, solid: false });
     }
   }
-  // Leave the forecourt's drop-off continuation clear; no trees south of v6.
+  // Leave the forecourt's drop-off continuation clear; pines screen the NE wall (ssg_03).
   for (const [v0, v1] of [[-22, -14.9], [-7.2, 6.5]]) {
     boxR(68.2, v0, 70.4, v1, 0, 0.45, 'ssg_granite');
     hq(68.3, v0 + 0.1, 70.3, v1 - 0.1, 0.46, 0x47573d);
   }
-  for (const v of [-20, -16, -5, 0]) layeredPine(69.2, v);
+  for (const v of [-20, -16, -5, 1, 3.5, 6]) layeredPine(69.2, v);
   // Roadview's low stone planter masks only the south part of the pergola.
   box(70.6, 19, 0.3, 10, 0, 1.1, 'ssg_granite');
   boxR(68.8, 14, 70.45, 24, 0, 0.5, 'ssg_granite');
@@ -1181,7 +1268,7 @@ export function build(K) {
     const id = '1F', y = 0, H = clearH('1F'), fl = '1F';
     const S = (cat, o = {}) => ({ floor: fl, H, sub: `${cat} · 신세계백화점 강남점 1F`, ...o });
     zone('신세계백화점 강남점', fl, '화장품 · 해외유명브랜드 · 잡화 (국내 최대 화장품관)', [0, 0, UW, VD], y, LV['2F'], 1);
-    // Main entrance has a clear 10.4 m vestibule axis (the old two invented door locations are closed).
+    // Main entrance has a clear 12 m vestibule axis (the old two invented door locations are closed).
     shop({ u0: 0.25, u1: 14.6, v0: 0.25, v1: 8.25, f: 'S', name: 'HERMÈS|에르메스', kind: 'lux', y, ...S('해외유명브랜드'), H: 6.5, portal: 0xe8dcc8 });
     shop({ u0: 14.6, u1: 22.7, v0: 2.2, v1: 8.25, f: 'S', name: 'CHANEL|샤넬', kind: 'lux', y, ...S('해외유명브랜드'), H: 6.5, portal: 0x1d1c1b });
     shop({ u0: 44.3, u1: 53.4, v0: 2.2, v1: 8.25, f: 'S', name: 'LOUIS VUITTON|루이 비통', kind: 'lux', y, ...S('해외유명브랜드'), H: 6.5, portal: 0x3a2f28 });

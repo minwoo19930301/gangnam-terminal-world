@@ -3,57 +3,483 @@
   "name": "반포쇼핑타운 1~8동",
   "updated": "2026-11-06",
   "sources": [
-    {"url": "https://www.localnaeil.com/News/View/640227", "title": "고속터미널 반포쇼핑타운 맛집 투어 (지역내일)", "year": 2024},
-    {"url": "https://www.localnaeil.com/News/View/650226", "title": "부담 없는 술자리, 반포 맛집 일번지육개장 (지역내일)", "year": 2025},
-    {"url": "https://www.goodoc.co.kr/hospitals/22651", "title": "반포좋은치과의원 (굿닥, 6동 3층)", "year": 2025},
-    {"url": "https://www.goodoc.co.kr/hospitals/13473", "title": "봄치과의원 (굿닥, 3동 3층 310호)", "year": 2025},
-    {"url": "https://realty.daangn.com/biz-profiles/4109041", "title": "뉴스타공인중개사사무소 (신반포로 195 5동 1층 15호)", "year": 2025},
-    {"url": "https://polle.com/place/10gAJu/%ED%95%98%EC%96%80%EC%A7%91", "title": "하얀집 (4동 지하, 신반포로 189)", "year": 2024}
+    {
+      "url": "https://www.localnaeil.com/News/View/640227",
+      "title": "고속터미널 반포쇼핑타운 맛집 투어 (지역내일)",
+      "year": 2024
+    },
+    {
+      "url": "https://www.localnaeil.com/News/View/650226",
+      "title": "부담 없는 술자리, 반포 맛집 일번지육개장 (지역내일)",
+      "year": 2025
+    },
+    {
+      "url": "https://www.goodoc.co.kr/hospitals/22651",
+      "title": "반포좋은치과의원 (굿닥, 6동 3층)",
+      "year": 2025
+    },
+    {
+      "url": "https://www.goodoc.co.kr/hospitals/13473",
+      "title": "봄치과의원 (굿닥, 3동 3층 310호)",
+      "year": 2025
+    },
+    {
+      "url": "https://realty.daangn.com/biz-profiles/4109041",
+      "title": "뉴스타공인중개사사무소 (신반포로 195 5동 1층 15호)",
+      "year": 2025
+    },
+    {
+      "url": "https://polle.com/place/10gAJu/%ED%95%98%EC%96%80%EC%A7%91",
+      "title": "하얀집 (4동 지하, 신반포로 189)",
+      "year": 2024
+    },
+    {
+      "url": "https://www.mk.co.kr/news/economy/501214",
+      "title": "1981년 반포쇼핑타운 건설 기사 — 현 모듈 선행 조사에서 지하 1층·지상 5층 확인",
+      "year": 1981
+    },
+    {
+      "url": "https://v.daum.net/v/20110829170931770",
+      "title": "2011년 기존 반포쇼핑타운 기사 — 현 모듈 선행 조사에서 지하 1층·지상 5층 확인",
+      "year": 2011
+    },
+    {
+      "url": "https://www.lge.co.kr/support/find-service-center-136",
+      "title": "LG전자 서초서비스센터 — 현 모듈의 2동 입점 근거"
+    },
+    {
+      "url": "https://bestshop.lge.co.kr/shop/detail-ST00003065",
+      "title": "LG전자 베스트샵 — 현 모듈의 2동 입점 근거"
+    },
+    {
+      "url": "https://lewellclinic.com/",
+      "title": "르웰의원 — 현 모듈의 7동 입점 근거"
+    },
+    {
+      "url": "https://marupsy.imweb.me/index",
+      "title": "마루정신건강의학과 — 현 모듈 선행 조사에서 4동 5층 510호 및 승강기 확인"
+    },
+    {
+      "url": "https://www.gangmom.kr/institute/65b7afadb836838137326fa4",
+      "title": "학원 입점 자료 — 현 모듈의 7·8동 상층 학원 조사 출처"
+    },
+    {
+      "url": "https://www.gangmom.kr/institute/65b7af58b8368381372f0c24",
+      "title": "학원 입점 자료 — 현 모듈의 7·8동 상층 학원 조사 출처"
+    },
+    {
+      "url": "https://allhakwon.com/academy/15345",
+      "title": "학원 입점 자료 — 현 모듈의 7·8동 상층 학원 조사 출처"
+    },
+    {
+      "path": "data/osm.json",
+      "title": "8개 동 건물 윤곽 및 상호 POI. 층 미상 POI의 정확한 층·점포 경계는 확정하지 않음"
+    },
+    {
+      "path": "refs/roadview/manifest.json",
+      "title": "운영자 촬영 2025/2026 카카오 로드뷰 설명과 검토자 정정. 과거 사진보다 우선"
+    },
+    {
+      "path": "refs/roadview/viewpoints.json",
+      "title": "검토용 카메라 좌표. 일부 동 식별 설명과 카메라 좌표가 어긋나므로 실측 좌표로 간주하지 않음"
+    },
+    {
+      "path": "refs/roadview/bp_01_banpo_shoppingtown_exit82_north.jpg",
+      "title": "bp01: 분홍 타일, 동쪽 측벽 창, 후퇴한 작은 계단실, 겹친 간판, 회색 보도",
+      "capture_date": "2026-06"
+    },
+    {
+      "path": "refs/roadview/bp_02_banpo_shoppingtown_gotomall_canopy_west.jpg",
+      "title": "bp02: 분홍 타일과 수직 기둥, 낮은 층의 연속 간판, 옥상 흰 통신 안테나",
+      "capture_date": "2026-06"
+    },
+    {
+      "path": "refs/roadview/bp_03_sinbanporo_east_banpo_6_8dong_red_brick.jpg",
+      "title": "bp03: 6~8동 적벽돌, 작은 흰 창틀, 7동 하층 흰 간판 띠, 측벽 창, 옥상 마스트",
+      "capture_date": "2026-06"
+    },
+    {
+      "path": "refs/roadview/gb_05_sinbanporo_east_bus_shelters_terminal_side.jpg",
+      "title": "gb05: 북쪽 6~8동 적벽돌 외관 재확인",
+      "capture_date": "2026-06"
+    },
+    {
+      "path": "refs/roadview/cc_02_sinbanporo_west_from_main_gate_tan_block_led.jpg",
+      "title": "cc02: 서쪽 1·2동 계열의 밝은 회색·흰 외벽과 상가 간판",
+      "capture_date": "2026-06"
+    },
+    {
+      "path": "refs/aerial/bp_34.jpg",
+      "title": "3·4동 부근 배치, 녹색 방수 옥상, 출입구와 보도"
+    },
+    {
+      "path": "refs/aerial/bp_west.jpg",
+      "title": "서쪽 상가열 및 3·4동 녹색 옥상 보완"
+    },
+    {
+      "path": "refs/aerial/bp_67.jpg",
+      "title": "6동 녹색/7동 밝은 회색 옥상, 두 동 사이 주차 차량, 7동 앞 낮은 파빌리온"
+    },
+    {
+      "path": "refs/aerial/bp_east.jpg",
+      "title": "5·7동 밝은 회색/6·8동 녹색 옥상, 동별 배치와 지붕 설비"
+    },
+    {
+      "path": "refs/aerial/bp_far.jpg",
+      "title": "1동 밝은 지붕, 2동 어두운 회색 지붕"
+    },
+    {
+      "path": "shots/verify/banpo_shoppingtown/",
+      "title": "수정 전 비교 렌더. 회베이지 외벽·수평 띠·빈 측벽·부족한 간판을 확인하는 진단 자료이며 실물 근거는 아님"
+    }
   ],
   "building": {
-    "floors_above": 7, "floors_below": 1, "height_m": 24,
-    "floor_height_m": "지하 1층 약 3.6, 지상 약 3.3 (추정). OSM 2동 L6 25m 기준으로 6~7층 가정",
-    "facade": "1970년대 상가아파트형 노후 건물(추정). 탁한 베이지/회색 타일 또는 페인트 마감, 상층부는 아파트 창+에어컨 실외기, 저층은 간판 밀집 (추정, 미확인)",
-    "signage": "1층·2층 가로형 돌출/벽면 간판 빽빽, 상층 세로형 의원·학원 간판 (추정). 확인된 간판명은 floors/elements 참고",
-    "entrances": "신반포로 면 각 동 1층 정면 출입구 + 지하 1층으로 내려가는 계단. 고속터미널역 8-1(3동 앞), 8-2(5·6동 방면) 출구 인근. 각 동 번지: 2동=165, 3동=177, 4동=189, 5동=195, 6동=205 (확인), 1·7·8동 번지 미확인"
+    "floors_above": 5,
+    "floors_below": 1,
+    "height_m": 18,
+    "floor_height_m": {
+      "B1_to_1F": 6,
+      "1F_to_2F": 4,
+      "upper_floors": 3.5
+    },
+    "height_basis": "B1+5F는 현 모듈의 1981/2011 기사 조사와 2026 로드뷰를 따른다. 18m 주지붕 높이와 각 층고는 재구성 추정치. B1=-6m는 K.LEVELS 공통 연결 좌표이며 지하 실측 층고가 아니다. OSM 2동 levels=6과 25.2m는 이전 6~7층 추정의 근거로 사용하지 않는다.",
+    "facade": "1·2동: cc02의 밝은 회색/흰 타일 계열. 3·4동: bp01/bp02의 분홍·모브 정사각 타일. 5동: 별도 근접 확인 전 분홍 타일 기본값. 6·7·8동: bp03 및 gb05의 주황 적벽돌, 짙은 벽돌 수직 기둥, 작은 흰 창틀.",
+    "signage": "신반포로 면 1~3층의 밀집 가로 간판, 일부 4층 간판 및 모서리 세로 간판. 실물에서 확인되지 않은 대형 녹색 건물명 띠·중앙 캐노피·옥상 부근 동 번호판은 제거. 입구 옆 소형 동 안내판은 위치 추정.",
+    "entrances": "각 동 기존 1층 정면/후면 출입구와 B1~5층 보행 동선 유지. 역 출구·버스 정류장·고투몰 유리 계단 덮개는 다른 모듈 소유. manifest는 bp01/02를 3동 동단 8-1 출구로 정정한다. 출입구 폭과 중앙 위치는 기존 접근성 재구성값이며 실측은 아님."
   },
   "floors": [
-    {"floor": "B1 (2동)", "use": "식당 상가", "tenants": ["병천토종순대"], "layout": "신반포로 165, 지하 1층 점포", "source": "https://www.localnaeil.com/News/View/640227", "guess": false},
-    {"floor": "B1 (3동)", "use": "식당·술집 상가", "tenants": ["만끽치킨", "배부장찌개", "온유월식당(20호)", "우고집"], "layout": "신반포로 177, 8-1번 출구 바로 앞. 호수 20호까지 있어 지하 복도 양측 점포 구조(추정)", "source": "https://www.localnaeil.com/News/View/640227", "guess": false},
-    {"floor": "3F (3동)", "use": "의원", "tenants": ["봄치과의원(310호)"], "layout": "3층에 300번대 호수, 복도 양쪽 의원(추정)", "source": "https://www.goodoc.co.kr/hospitals/13473", "guess": false},
-    {"floor": "B1 (4동)", "use": "식당·주점", "tenants": ["정선 감자탕(6~9호)", "하얀집(치킨·떡볶이·오뎅탕)", "막걸리 전문 주점(상호 미확인)"], "layout": "신반포로 189", "source": "https://www.localnaeil.com/News/View/640227", "guess": false},
-    {"floor": "B1 (5동)", "use": "식당", "tenants": ["일번지육개장"], "layout": "신반포로 195, 8-2번 출구 인근. 낙곱전골 대표(소 39,000/대 45,000원), 11~23시", "source": "https://www.localnaeil.com/News/View/650226", "guess": false},
-    {"floor": "1F (5동)", "use": "상가·부동산", "tenants": ["뉴스타공인중개사사무소(15호)"], "layout": "1층 호수 15호 이상 -> 1층 점포 15개 이상", "source": "https://realty.daangn.com/biz-profiles/4109041", "guess": false},
-    {"floor": "B1 (6동)", "use": "식당", "tenants": ["유메(일식 덮밥·이자카야)"], "layout": "신반포로 205, 8-2번 출구 방면", "source": "https://www.localnaeil.com/News/View/640227", "guess": false},
-    {"floor": "3F (6동)", "use": "의원", "tenants": ["반포좋은치과의원"], "layout": "3층 의원 구역", "source": "https://www.goodoc.co.kr/hospitals/22651", "guess": false},
-    {"floor": "1F 전 동", "use": "가로변 생활상가", "tenants": ["미용실", "부동산", "세탁소", "수선집", "반찬가게", "떡집", "정육점 (일반 업종 가정, 상호 미확인)"], "layout": "신반포로 면 1층 연속 점포", "source": "", "guess": true},
-    {"floor": "2F 전 동", "use": "학원·미용실·사무실 (추정)", "tenants": [], "layout": "복도 양측 호실", "source": "", "guess": true},
-    {"floor": "4F~7F 전 동", "use": "주거(상가아파트) 또는 오피스 (미확인, 추정)", "tenants": [], "layout": "중복도형 복도+호실 문, 계단실, 엘리베이터 유무 불명", "source": "", "guess": true},
-    {"floor": "B1 (1동, 7동, 8동)", "use": "식당·상가 (추정)", "tenants": [], "layout": "미확인", "source": "", "guess": true}
+    {
+      "floor": "B1 (2동)",
+      "use": "식당 상가",
+      "tenants": [
+        "병천토종순대"
+      ],
+      "layout": "신반포로 165, 지하 1층 점포",
+      "source": "https://www.localnaeil.com/News/View/640227",
+      "guess": false
+    },
+    {
+      "floor": "B1 (3동)",
+      "use": "식당·술집 상가",
+      "tenants": [
+        "만끽치킨",
+        "배부장찌개",
+        "온유월식당(20호)",
+        "우고집"
+      ],
+      "layout": "신반포로 177, 8-1번 출구 바로 앞. 호수 20호까지 있어 지하 복도 양측 점포 구조(추정)",
+      "source": "https://www.localnaeil.com/News/View/640227",
+      "guess": false
+    },
+    {
+      "floor": "3F (3동)",
+      "use": "의원",
+      "tenants": [
+        "봄치과의원(310호)"
+      ],
+      "layout": "3층에 300번대 호수, 복도 양쪽 의원(추정)",
+      "source": "https://www.goodoc.co.kr/hospitals/13473",
+      "guess": false
+    },
+    {
+      "floor": "B1 (4동)",
+      "use": "식당·주점",
+      "tenants": [
+        "정선 감자탕(6~9호)",
+        "하얀집(치킨·떡볶이·오뎅탕)",
+        "막걸리 전문 주점(상호 미확인)"
+      ],
+      "layout": "신반포로 189",
+      "source": "https://www.localnaeil.com/News/View/640227",
+      "guess": false
+    },
+    {
+      "floor": "B1 (5동)",
+      "use": "식당",
+      "tenants": [
+        "일번지육개장"
+      ],
+      "layout": "신반포로 195, 8-2번 출구 인근. 낙곱전골 대표(소 39,000/대 45,000원), 11~23시",
+      "source": "https://www.localnaeil.com/News/View/650226",
+      "guess": false
+    },
+    {
+      "floor": "1F (5동)",
+      "use": "상가·부동산",
+      "tenants": [
+        "뉴스타공인중개사사무소(15호)"
+      ],
+      "layout": "1층 호수 15호 이상 -> 1층 점포 15개 이상",
+      "source": "https://realty.daangn.com/biz-profiles/4109041",
+      "guess": false
+    },
+    {
+      "floor": "B1 (6동)",
+      "use": "식당",
+      "tenants": [
+        "유메(일식 덮밥·이자카야)"
+      ],
+      "layout": "신반포로 205, 8-2번 출구 방면",
+      "source": "https://www.localnaeil.com/News/View/640227",
+      "guess": false
+    },
+    {
+      "floor": "3F (6동)",
+      "use": "의원",
+      "tenants": [
+        "반포좋은치과의원"
+      ],
+      "layout": "3층 의원 구역",
+      "source": "https://www.goodoc.co.kr/hospitals/22651",
+      "guess": false
+    },
+    {
+      "floor": "1F 전 동",
+      "use": "가로변 생활상가",
+      "tenants": [
+        "미용실",
+        "부동산",
+        "세탁소",
+        "수선집",
+        "반찬가게",
+        "떡집",
+        "정육점 (일반 업종 가정, 상호 미확인)"
+      ],
+      "layout": "신반포로 면 1층 연속 점포",
+      "source": "",
+      "guess": true
+    },
+    {
+      "floor": "2F 전 동",
+      "use": "학원·미용실·사무실 (추정)",
+      "tenants": [],
+      "layout": "복도 양측 호실. 3동 생명의말씀사 2F 간판은 bp01/02 및 검토자 판독에 근거",
+      "source": "",
+      "guess": true
+    },
+    {
+      "floor": "4F~5F 전 동",
+      "use": "학원·사무실·일부 의원",
+      "tenants": [],
+      "layout": "기존 중앙 복도와 계단·승강기 동선. 확인된 입점 외 세부 배치 추정",
+      "source": "",
+      "guess": true
+    },
+    {
+      "floor": "B1 (1동, 7동, 8동)",
+      "use": "식당·상가 (추정)",
+      "tenants": [],
+      "layout": "미확인",
+      "source": "",
+      "guess": true
+    },
+    {
+      "floor": "2F (3동)",
+      "use": "서점",
+      "tenants": [
+        "생명의말씀사"
+      ],
+      "layout": "동쪽 끝에 가까운 남색 가로 간판. 개별 점포 경계는 미확인",
+      "source": "refs/roadview/bp_02_banpo_shoppingtown_gotomall_canopy_west.jpg",
+      "guess": false
+    },
+    {
+      "floor": "5F (4동)",
+      "use": "의원·상담실",
+      "tenants": [
+        "마루정신건강의학과(510호)"
+      ],
+      "layout": "현 모듈의 공식 안내 조사에서 입점 층·호수와 승강기 확인. 실내 구획은 추정",
+      "source": "https://marupsy.imweb.me/index",
+      "guess": false
+    },
+    {
+      "floor": "4F (7동)",
+      "use": "학원",
+      "tenants": [
+        "샤크에듀"
+      ],
+      "layout": "현 모듈의 교육 디렉터리 조사 유지. 정확한 호실 경계 추정",
+      "source": "현 모듈 meta.sources의 교육 디렉터리",
+      "guess": false
+    },
+    {
+      "floor": "5F (8동)",
+      "use": "학원",
+      "tenants": [
+        "반포대학나무학원(1~4호)",
+        "네오스터디학원(18·19호)"
+      ],
+      "layout": "현 모듈의 교육 디렉터리 조사 유지. 정확한 호실 경계 추정",
+      "source": "현 모듈 meta.sources의 교육 디렉터리",
+      "guess": false
+    }
   ],
   "elements": [
-    {"name": "지하 1층 식당가", "what": "각 동 B1 먹자골목, 치킨·감자탕·순대·구이·일식", "where": "2~6동 지하 1층 (신반포로 165~205)", "details": "고속터미널역 8-1, 8-2 출구에서 가까운 직장인·여행객 대상 술집/식당 클러스터", "source": "https://www.localnaeil.com/News/View/640227", "guess": false},
-    {"name": "의원 층", "what": "치과 등 의원이 3층에 입점", "where": "3동 3층, 6동 3층", "details": "대기실+진료실, 세로 의원 간판", "source": "https://www.goodoc.co.kr/hospitals/22651", "guess": false},
-    {"name": "프랜차이즈 간판", "what": "만끽치킨, 배부장찌개 등 체인 간판", "where": "3동 지하 입구 주변", "details": "계단 입구 입간판+벽면 돌출간판", "source": "https://www.localnaeil.com/News/View/640227", "guess": false},
-    {"name": "미용실/식당 POI 군집", "what": "OSM에서 미용실·식당 POI 다수 (브리프 좌표 (-121,-133), (65,-204), (148,-236), (288,-282))", "where": "동 전면", "details": "상호는 data/osm.json에서 확인 필요", "source": "", "guess": true}
+    {
+      "name": "지하 1층 식당가",
+      "what": "각 동 B1 먹자골목, 치킨·감자탕·순대·구이·일식",
+      "where": "2~6동 지하 1층 (신반포로 165~205)",
+      "details": "고속터미널역 8-1, 8-2 출구에서 가까운 직장인·여행객 대상 술집/식당 클러스터",
+      "source": "https://www.localnaeil.com/News/View/640227",
+      "guess": false
+    },
+    {
+      "name": "의원 층",
+      "what": "치과 등 의원이 3층에 입점",
+      "where": "3동 3층, 6동 3층",
+      "details": "대기실+진료실, 세로 의원 간판",
+      "source": "https://www.goodoc.co.kr/hospitals/22651",
+      "guess": false
+    },
+    {
+      "name": "프랜차이즈 간판",
+      "what": "만끽치킨, 배부장찌개 등 체인 간판",
+      "where": "3동 지하 입구 주변",
+      "details": "계단 입구 입간판+벽면 돌출간판",
+      "source": "https://www.localnaeil.com/News/View/640227",
+      "guess": false
+    },
+    {
+      "name": "미용실/식당 POI 군집",
+      "what": "OSM에서 미용실·식당 POI 다수 (브리프 좌표 (-121,-133), (65,-204), (148,-236), (288,-282))",
+      "where": "동 전면",
+      "details": "상호는 data/osm.json에서 확인 필요",
+      "source": "",
+      "guess": true
+    }
   ],
   "connections": [
-    "고속터미널역 8-1번 출구 -> 3동 지하/앞",
-    "고속터미널역 8-2번 출구 -> 5·6동 방면",
-    "동 간 연결: 신반포로 인도 따라 1층 연속 (지하 연결 여부 미확인)"
+    "js/places/_junctions.js에 banpo_shoppingtown을 지명하는 JUNCTIONS/WELLS 없음. 기존 OSM claims 및 B1~5층 동선 보존.",
+    "동 간 지상 연결은 신반포로 보도. 확인되지 않은 지하 직결 통로는 추가하지 않음.",
+    "역 출구와 고투몰 계단 덮개는 해당 소유 모듈의 형상에 맡김. gotomall과 함께 smoke 검사."
   ],
-  "parking": "미확인. 동 뒤편 반포 아파트 단지 쪽 주차장/이면 진입로 추정",
+  "parking": "refs/aerial/bp_67.jpg에서 6동 동쪽과 7동 서쪽 사이 약 x160~183,z-245~-222의 지상 주차장과 약 8~10대 차량 확인. 차선·차량의 정확한 위치는 추정. 7동 앞에는 약 15×7m 낮은 파빌리온이 보이며 중심 약(209.5,-228.5), 높이3.2m와 재료 치수는 검토자 추정. 상호는 판독되지 않아 띠를 무기명으로 둔다.",
   "notes": [
-    "검색 결과가 얇음: 동별 층수, 준공년도, 재건축 정보는 웹에서 확인되지 않음",
-    "서울시가 2022년 반포아파트지구를 지구단위계획구역으로 전환, 상가 재건축 규제 완화 (반포쇼핑타운 직접 언급 없음)",
-    "충무할매김밥, 하트타임이 반포쇼핑타운 입점이라는 언급이 있으나 동·층 미확인"
+    "이번 round 4는 제공된 2025/2026 카카오 로드뷰와 항공사진을 우선 근거로 삼았다. 기존 조사에 있던 회베이지 일괄 마감·6~7층·주거층 가정은 폐기한다.",
+    "1·2동은 cc02에서 밝은 회색 계열을 확인했으므로 분홍 기본값 예외로 둔다. 5동만 별도 확인 전 분홍 기본값이다.",
+    "6동은 bp03과 gb05 및 manifest가 적벽돌로 확인하므로 7·8동과 함께 벽돌을 적용한다.",
+    "사용자가 지정한 bp01/02 동 이름과 viewpoints의 좌표는 완전히 일치하지 않을 수 있다. 이번 수정은 3·4동 모두에 확인된 외관 특성을 반영하고 건물은 OSM 윤곽을 유지한다.",
+    "refs/photos/banpo_shoppingtown 및 data/research/banpo_shoppingtown_visual.json은 이번 작업 환경에서 제공 여부를 확인하지 못했으며 새 근거로 사용하지 않았다.",
+    "실물 상호는 기존 TENANTS와 제공 로드뷰 판독을 유지. 판독되지 않은 간판은 일반 업종 또는 빈 띠로 표현하며 가공의 고유 상호를 만들지 않는다."
   ],
   "unresolved": [
-    "동별 지상 층수와 높이 (OSM 기준만)",
-    "준공연도(1970년대 추정)와 상층부가 아파트인지 오피스인지",
-    "1동·7동·8동 입점 상가 및 번지",
-    "반찬가게·떡집·정육점·세탁소 상호",
-    "엘리베이터 유무, 외벽 색상/타일",
-    "재건축 정비구역 지정 여부와 2024~2026 상황"
-  ]
+    "5동 외벽의 근접 색상·재료 확인",
+    "각 동 실측 높이, 창 간격, 계단실 후퇴 치수와 실제 내부 평면",
+    "1·2동의 상세 타일 모듈·색 편차 및 뒤/측면 외관",
+    "간판별 정확한 상호·층·폭·위치, 단층 파빌리온 상호",
+    "4동 외 각 동 실제 승강기 설치 여부와 위치",
+    "옥상 안테나·실외기·물탱크의 개수와 위치",
+    "새 렌더를 이용한 수정 후 시각 검증: 사용자 안내에 따라 tests/shot.mjs는 이 샌드박스에서 실행 불가"
+  ],
+  "modeling": {
+    "round": 4,
+    "decisions": [
+      {
+        "element": "외벽 마감",
+        "implementation": "banpo-tile: base #cdb7b5, 변주 #d4bfbd/#c8b0ae/#c1aaa9/#d0bcb8, 줄눈 #e3d8d6, 약0.2m 모듈. 1·2동은 별도 밝은 회색, 3·4·5동은 분홍. 6~8동은 #b5603f/#a8513a/#bf6a48 벽돌과 #caa58c 모르타르, 0.23m 길이·0.075m 켜의 엇갈림 쌓기.",
+        "references": [
+          "bp01",
+          "bp02",
+          "bp03",
+          "gb05",
+          "cc02"
+        ]
+      },
+      {
+        "element": "수직 기둥과 창",
+        "implementation": "짙은 수평 층 띠와 돌출 창턱 제거. 약7m 베이마다 전층 기둥, 베이당 창2개. 타일동 창 약2.2×1.5m와 짙은 알루미늄 틀, 벽돌동 약1.3m 정방형 창과 흰 틀.",
+        "references": [
+          "bp02",
+          "bp03",
+          "gb05"
+        ]
+      },
+      {
+        "element": "간판",
+        "implementation": "약4.5m 베이마다 1~3층 돌출0.15m 가로 간판 및 4층 일부 간판. 남색·주황·흰색·녹색·빨강 배경, 확인 상호와 일반 업종. 3동 동쪽 2층 생명의말씀사 2F 남색 띠, 모서리 세로 간판, 7동 1층 연속 밝은 띠. 대형 중앙 캐노피·건물명 띠·고층 동 번호판 제거.",
+        "references": [
+          "bp01",
+          "bp02",
+          "bp03"
+        ]
+      },
+      {
+        "element": "측벽과 계단실",
+        "implementation": "짧은 실제 OSM 변에 창과 1·2층 간판 돌림. 3·4동 동쪽 마지막4.5m를 전면보다1m 물려 작은 계단실 볼륨으로 표현. 기존 내부 코어 보존.",
+        "references": [
+          "bp01",
+          "bp03"
+        ]
+      },
+      {
+        "element": "옥상",
+        "implementation": "3·4·6·8동 녹색 #5f9a6e, 5·7동 밝은 회색 #c9c9c3. 1·2동 기존 처리 유지. 기존 동일 대형 기계실을3×3×2.6m 계단실로 축소. 끝단 흰3m 마스트와 패널, 제한된 실외기·단순 물탱크.",
+        "references": [
+          "bp02",
+          "bp03",
+          "refs/aerial/bp_34.jpg",
+          "refs/aerial/bp_west.jpg",
+          "refs/aerial/bp_67.jpg",
+          "refs/aerial/bp_east.jpg",
+          "refs/aerial/bp_far.jpg"
+        ]
+      },
+      {
+        "element": "주차장과 단층동",
+        "implementation": "6·7동 사이 아스팔트와 두 줄 주차, 7동 앞15×7×3.2m 단층동 및 짙은 평지붕·밝은 전면 띠. 상호는 미확인으로 무기명.",
+        "references": [
+          "refs/aerial/bp_67.jpg",
+          "bp03"
+        ]
+      },
+      {
+        "element": "보도",
+        "implementation": "약0.3m 회색 콘크리트 블록 #b9b8b2/#a5a49e와 폭0.6m 짙은 회색 띠 #8f8e89. 노란 점형/선형 표현은 출입구 부근만 유지.",
+        "references": [
+          "bp01",
+          "bp02"
+        ]
+      }
+    ],
+    "guesses": [
+      "지상5층과 B1은 기존 기사·로드뷰 근거가 있지만, 주지붕18m와 층고4/3.5m는 실측값이 아니다. 지하 바닥-6m는 공통 K.LEVELS 좌표다.",
+      "1·2동 밝은 회색은 cc02 원경 관찰에 따른 동별 대응이다. 가까운 타일 질감과 정확한 색은 미확인. 5동 분홍 타일은 사용자 지정 기본값으로 남는다.",
+      "6동 적벽돌은 bp03/gb05로 확인했다. 6동의 세부 창 치수와 간격은 더 선명한 7·8동 계열을 적용한 추정이다.",
+      "전층 기둥 및 창2개 반복은 보이는 수직 리듬을 간소화한 것이다. 모든 동·후면에 동일 간격을 반복하는 것은 실측 배치가 아니다.",
+      "3동 동쪽 측벽과 8동 서쪽 측벽의 창은 확인된다. 나머지 짧은 변의 창 개수·높이와 간판 돌림은 사용자 지침에 따른 보수적 재구성이다.",
+      "3·4동 동단 후퇴 폭4.5m·깊이1m 및0.9×1.2m 계단실 창은 bp01의 좁은 후퇴 볼륨을 근사한다. OSM 윤곽에는 이 작은 후퇴가 표현되어 있지 않다.",
+      "간판 밀도·색 계열은 로드뷰 근거지만 개별 상호 위치·베이 폭은 다수 미확인이다. 일반 업종 치과·학원·미용실·부동산 등은 실제 상호를 주장하지 않는다. 기존 OSM TENANTS 중 층 미상인 이름은 용도에 따라 배치한 추정이다.",
+      "입구 옆2.5×0.5m 동 안내판은 사용자 제안 크기이며 사진 속 특정 안내판 복제가 아니다. 중앙 출입구는 기존8m 개구부를2.6m로 축소했고, 4동만 전층 기둥 사이에 들어가도록 중심을1m 동쪽으로 조정했다. 이 치수·위치 및 내부 복도·점포·화장실·계단·승강기는 실측값이 아닌 접근성 재구성이다.",
+      "옥상 색은 항공사진에 근거한다. 작은 계단실의 정확한 위치·치수, 반복한 안테나 개수와 패널 방향, 실외기·물탱크 위치는 확정되지 않았다. 물탱크는 사용자 요청을 단순한 형태로 표현하며 특정 실물 탱크를 식별한 것은 아니다.",
+      "6·7동 사이 주차장 경계, 차량8~10대의 정확한 위치·색·방향은 항공사진에 맞춘 근사다. 7동 앞 단층동의15×7m 평면·3.2m 높이는 검토자 추정치이며 상호는 판독되지 않아 쓰지 않는다.",
+      "회색 보도 블록 크기0.3m 및 짙은 띠 폭0.6m는 사용자 지침에 따른 근사다. 황색 유도표시는 실제 횡단보도 전체 배치의 복제가 아니라 기존 출입구 접근성 표현만 유지한다.",
+      "4동 승강기 존재는 마루 공식 안내의 선행 조사로 확인했으나 다른 동의 실제 승강기 존재와 모든 위치는 미확인. 기존 모든 층 접근 기능을 유지한다.",
+      "내부 접수·대기·상담·학습실 가구, 점포 구획, 인물 등 기존 세부 실내는 실측 자료 없이 용도별로 단순화한 것이며 이번 외관 수정에서 확정 사실로 격상하지 않는다."
+    ],
+    "validation": {
+      "smoke": {
+        "command": "node tests/smoke.mjs banpo_shoppingtown gotomall",
+        "result": "OK",
+        "quads": 120776,
+        "quad_limit": 130000,
+        "spawns": 8,
+        "zones": 48,
+        "elevators": 8,
+        "floors_per_elevator": 6
+      },
+      "walk": {
+        "command": "node tests/walk.mjs",
+        "result": "318 ok, 0 blocked",
+        "note": "모든 최종 모듈 변경 후 전체 월드 검사 통과. 동시에 편집 중인 이웃 모듈이 포함된 현재 작업 트리 결과."
+      },
+      "visual": "제공된 수정 전 비교 이미지와 실물 사진을 검토함. 사용자 지시에 따라 tests/shot.mjs는 샌드박스에서 실행하지 않으며 수정 후 새 PNG 검증은 미실시.",
+      "isolated_walk": {
+        "command": "node tests/walk.mjs banpo_shoppingtown --no-city",
+        "result": "56 ok, 0 blocked"
+      },
+      "geometry_review": "실제 OSM 변에 측창을 연결하고, 6·7동 주차장 및 10대 차량이 주변 건물 윤곽과 겹치지 않음을 독립 검토. 7동 단층동 뒤 약1.19m 간격 보존. 3동 동쪽 서점 간판이 끝 베이에 생성됨을 확인. 벽·지붕에서 뜬 프레임·기둥·설비를 보정.",
+      "syntax_and_diff": "node --check js/places/banpo_shoppingtown.js 및 git diff --check 통과"
+    }
+  }
 }

@@ -7,7 +7,7 @@
 // Local frame: the strip runs along OSM's west facade (-135.7,9.9)->(-80.7,150.7).
 //   s = distance south along that facade, t = distance east (toward 신세계/JW). P(s,t) -> world [x,z].
 //   strip:        s -22..151, t 0..38.5   (1F vaulted hall t6..23; 2F dining east of t23)
-// Photo 11 / review supersede the round roof's unreliable OSM H8.4: roof apex 16.5m, wall footprint unchanged.
+// Photo 11 / review supersede the round roof's unreliable OSM H8.4: two tiers and lantern to 22.6m, wall footprint unchanged.
 //   south block:  s 151..204, t -98..38   (파미에스테이션 1F/2F, 하차장, 메가박스 B1)
 export const meta = {
   id: 'centralcity',
@@ -154,7 +154,8 @@ export function build(K) {
   const M = {
     hallFloor: { tex: 'ccPolishedMarble', scale: [1.2,1.2] }, b1Floor: { tex: 'tile', color: 0xc9b9a3 }, f2Floor: { tex: 'tile', color: 0xe2ddd3 },
     ceil: { tex: 'ceiling', color: 0xf4f2ee }, wallIn: 0xeeebe4, wallB1: 0xe4ddd0, part: 0xf3f0ea, dark: 0x2b2d30,
-    steel: 0x6f767d, col: 0xe9ebe6, glass: 'glass', roof: 0xa9a7a0, asphalt: { tex: 'asphalt', color: 0x8d8d8f },
+    // Aerial medium-grey yard: avoid multiplying the kit's near-black asphalt twice.
+    steel: 0x6f767d, col: 0xe9ebe6, glass: 'glass', roof: 0xa9a7a0, asphalt: { tex: 'concrete', color: 0x9a9890, scale: [6,6] },
     wood: { tex: 'wood', color: 0xc8a27a }, platform: { tex: 'sidewalk', color: 0xd9d4ca },
   };
   // Photo 01: granite pylon panels, 1.0 x 0.5 m (four courses per repeat).
@@ -489,6 +490,9 @@ export function build(K) {
     [108, 119, '수유실 · 물품보관함', 'office'], [129, 140, '고객센터 · 유실물', 'office'],
   ];
   for (const [u0, u1, name, kind, sub] of EAST1) shop({ axis: 's', u0, u1, f: 28, b: 38.2, y: Y1, h: 4.1, name, kind, sub, seed: u0, noBack: true });
+  // Critic hn_hall_w: this unverified bay had no shop() frontage. Close it plainly;
+  // the J6 cross passage at s119..129 stays open, with no invented room/tenant sign.
+  lwall(108,28,119,28,Y1,C1,{mat:0xc5c4be,thick:.15});
   // J4 / J6 passages through the east band (openings in the shared wall)
   lsign(['신세계백화점 강남점  →', 'SHINSEGAE · 신세계면세점'], 21, 27.8, 3.55, 5.6, 0.8, 'W', { bg: '#2b2b2b', fg: '#ffffff' });
   lsign(['JW 메리어트 호텔 서울  →', 'JW MARRIOTT SEOUL'], 124, 27.8, 3.55, 5.6, 0.8, 'W', { bg: '#4b3a2a', fg: '#f3e3c3' });
@@ -806,6 +810,18 @@ export function build(K) {
       K.wall(a[0] + ix, a[1] + iz, b[0] + ix, b[1] + iz, y0, y1, o);
     }
     const BAND = { tex: 'ccBand' };
+    // Photo 11: grey stone courses remain visible across the south podium;
+    // four 0.6 m courses per repeat, aligned across both floor envelopes.
+    K.texture('ccSouthStone',256,128,(g,w,h)=>{
+      g.fillStyle='#a9a8a2';g.fillRect(0,0,w,h);
+      for(let row=0;row<4;row++)for(let col=-1;col<5;col++){
+        const x=col*64+(row%2)*32,y=row*32;
+        g.fillStyle=['#a9a8a2','#aaa9a3','#a5a49e','#adaca6'][(row+col+5)%4];
+        g.fillRect(x+1,y+1,63,31);
+        g.strokeStyle='#8f8e88';g.lineWidth=1;g.strokeRect(x,y,64,32);
+      }
+    },[7.2,2.4]);
+    const SOUTH_STONE={tex:'ccSouthStone'};
     const P1 = (s, t) => P(s, t);
     // B1 (only where B1POLY follows the TERM edges; the clipped south side gets its own wall below)
     const J4 = [-92, 15.5];
@@ -838,12 +854,12 @@ export function build(K) {
     const D7 = [-80, -62, -44, -30].map(t => { const p = P1(168.2, t); return [p[0], p[1], 4.2, Y1, 3.0]; });
     edge(6,Y1,C1,'ccBand',M.wallIn);
     edge(7,Y1,C1,'ccBand',M.wallIn,D7);
-    edge(8, Y1, C1, 0x9a968f, M.wallIn, [[...P1(186, -98.6), 4, Y1, 3.0]]);
+    edge(8, Y1, C1, SOUTH_STONE, M.wallIn, [[...P1(186, -98.6), 4, Y1, 3.0]],{vBase:0});
     const D9 = [[-81, 4], [-10, 6], [2, 8], [14, 4]].map(([t, w]) => { const s = 204.1 - (t + 98.9) * (1.3 / 135.8); const p = P1(s, t); return [p[0], p[1], w, Y1, 3.2]; });
     const southGlass = [-24,-16,-6,6,18,26].map(t => {
       const s=204.1-(t+98.9)*(1.3/135.8); return [...P1(s,t),3.6,0.65,3.25];
     });
-    edge(9,Y1,C1,0x9a968f,M.wallIn,[...D9,...southGlass]);
+    edge(9,Y1,C1,SOUTH_STONE,M.wallIn,[...D9,...southGlass],{vBase:0});
     edge(10, Y1, C1, 0x9a968f, M.wallIn);
     // Photo 11: a dark plinth and glazed shops where the podium faces the round hall.
     for(const i of [8,9,10]) edge(i,0,0.55,0x595955,M.wallIn,i===9?D9:[]);
@@ -861,7 +877,7 @@ export function build(K) {
         for(const d of [-w/2,w/2]) K.box({x:x+Math.cos(face)*d,z:z-Math.sin(face)*d,y:0,w:0.13,h:2.8,d:0.16,rotY:face,mat:0xaeb5b1,solid:false});
       }
     }
-    // Photo 11 podium and aerial west band: square south windows and horizontal
+    // Photo 11 podium and aerial west band: larger dark south openings and horizontal
     // west glazing. North wings stop at 6m below the separate 11.8m entrance pylons.
     for (let i = 0; i < TERM.length; i++) {
       if(i===12) { edge(i,C1,6,'ccGateBrick',M.wallIn,[[...N1,6.6,0,8.5]]); continue; }
@@ -870,12 +886,13 @@ export function build(K) {
       if(i===5) for(let s=1.8;s<149;s+=3.6) windows.push([...P(s,0),3.22,5.6,7.6]);
       if([8,9,10].includes(i)) {
         const a=TERM[i],b=TERM[(i+1)%TERM.length],L=Math.hypot(b[0]-a[0],b[1]-a[1]);
-        for(let d=2.4;d<L-1.5;d+=3.6) windows.push([a[0]+(b[0]-a[0])*d/L,a[1]+(b[1]-a[1])*d/L,1.2,5.25,6.45]);
+        if(i===8||i===9) for(let d=2.8;d<L-1.5;d+=4.5) windows.push([a[0]+(b[0]-a[0])*d/L,a[1]+(b[1]-a[1])*d/L,2.2,5.6,7.2]);
+        else for(let d=2.4;d<L-1.5;d+=3.6) windows.push([a[0]+(b[0]-a[0])*d/L,a[1]+(b[1]-a[1])*d/L,1.2,5.25,6.45]);
       }
-      edge(i,C1,YR,[8,9,10].includes(i)?0x9a968f:BAND,M.wallIn,windows);
+      edge(i,C1,YR,(i===8||i===9)?SOUTH_STONE:i===10?0x9a968f:BAND,M.wallIn,windows,(i===8||i===9)?{vBase:0}:{});
       const face=Math.atan2(ns[i][0],ns[i][1]),ux=Math.cos(face),uz=-Math.sin(face);
       for(const [x,z,w,y0,y1] of windows) K.wall(x-ux*w/2,z-uz*w/2,x+ux*w/2,z+uz*w/2,y0,y1,
-        {mat:{tex:'glass',color:0x3d4a52},thick:0.04});
+        {mat:(i===8||i===9)?0x303b38:{tex:'glass',color:0x3d4a52},thick:0.04});
     }
     for (let i=0;i<TERM.length;i++) {
       const a=TERM[i],b=TERM[(i+1)%TERM.length],L=Math.hypot(b[0]-a[0],b[1]-a[1]);
@@ -884,42 +901,63 @@ export function build(K) {
       });
       if(i>2&&i!==12) edge(i,YR,YR+1.1,0xc7c3b9,0xbab5ad,mouths,{thick:0.25});
     }
-    // cc_01 (June 2026): short brown pylons, transparent canopy and a circular C
-    // above a dark CENTRAL CITY fascia. The inherited north-tip opening remains
+    // cc_01 (June 2026): short brown pylons, a mint glazed lantern and a solid C
+    // medallion above the full-width dark entrance. The north-tip opening remains
     // between Shinsegae's west tower (east) and the separate GOTO MALL cover (west).
     const gateStone={tex:'ccGateBrick'};
     const gateS=-23.5,gateT=19.5;
+    const gateFront=gateS-3,gateBack=gateS+3,doorS=gateFront+1.7;
     for(const t of [13.2,25.8])lbox(gateS,t,6,6,0,11.8,gateStone);
-    // Recessed entry: stone spandrel, compact black sign, metal-framed glass doors.
-    lbox(gateS,gateT,.3,6.6,3.3,2.7,gateStone,{solid:false});
-    lbox(gateS-.2,gateT,.16,4.9,2.92,.58,0x1d2523,{solid:false});
-    lsign('CENTRAL CITY',gateS-.3,gateT,3.2,4.1,.27,'N',{bg:null,fg:'#f0eee6'});
-    for(const t of [16.75,22.25])lbox(gateS,t,.35,.18,0,3.3,0x7e8580,{solid:false});
+    // The roadview lettering's first word is blurred; SHINSEGAE is the review's
+    // probable transcription, recorded in modeling.guesses rather than confirmed.
+    lbox(gateFront+.12,gateT,.24,6.6,3.6,2.4,gateStone,{solid:false});
+    lbox(gateFront+.04,gateT,.24,6.6,2.9,.7,0x1c1f1e,{solid:false});
+    lsign('SHINSEGAE CENTRAL CITY',gateFront-.10,gateT,3.25,6.1,.32,'N',{bg:null,fg:'#f0eee6',bold:false});
+    for(const t of [16.28,22.72])lwall(gateFront,t,gateBack,t,0,3.6,{mat:0x1c1f1e,thick:.16});
+    K.hpoly(0x242b28,RECT(gateFront,16.36,gateBack,22.64),2.9,false);
+    K.phys.addCeiling(RECT(gateFront,16.36,gateBack,22.64),2.9,{});
+    K.hpoly(0x535650,RECT(gateFront,16.36,gateBack,22.64),.021,true);
+    K.material('ccEntryDoors',new K.THREE.MeshLambertMaterial({color:0x2a3230,transparent:true,opacity:.88,side:K.THREE.DoubleSide}));
     // Four glazed leaves: the centre pair is held open, preserving the walk-in route.
-    for(const [t0,t1] of [[17.05,18.275],[20.725,21.95]]){
-      lwall(gateS,t0,gateS,t1,0,2.72,{mat:'glass',thick:.04});
-      for(const t of [t0,t1])entryTube([gateS-.04,t,0],[gateS-.04,t,2.72],.06,0x9fa6a1);
+    for(const [t0,t1] of [[16.36,18.275],[20.725,22.64]]){
+      lwall(doorS,t0,doorS,t1,0,2.72,{mat:'ccEntryDoors',thick:.04});
+      for(const t of [t0,t1])entryTube([doorS-.04,t,0],[doorS-.04,t,2.72],.06,0x646d66);
     }
     for(const t of [18.275,20.725]){
-      lwall(gateS,t,gateS+1.225,t,0,2.72,{mat:'glass',thick:.04});
-      entryTube([gateS+1.225,t,0],[gateS+1.225,t,2.72],.055,0x9fa6a1);
-      entryTube([gateS+1.08,t,.85],[gateS+1.08,t,1.4],.035,0x9fa6a1);
+      lwall(doorS,t,doorS+1.225,t,0,2.72,{mat:'ccEntryDoors',thick:.04});
+      entryTube([doorS+1.225,t,0],[doorS+1.225,t,2.72],.055,0x646d66);
+      entryTube([doorS+1.08,t,.85],[doorS+1.08,t,1.4],.035,0x9fa6a1);
     }
-    for(const y of [.05,2.72,2.9])entryTube([gateS,17.05,y],[gateS,21.95,y],.065,0x9fa6a1);
-    lwall(gateS,17.05,gateS,21.95,2.75,2.92,{mat:'glass',thick:.04,solid:false});
-    // The emblem sits on a gridded glass panel, not on the superseded green directory.
-    lwall(gateS,16.2,gateS,22.8,6,9.3,{mat:{tex:'glass',color:0xa9c1b9},thick:.04,solid:false});
-    for(const t of [16.2,17.85,19.5,21.15,22.8])entryTube([gateS,t,6],[gateS,t,9.3],.075,0x3b4d46);
-    for(const y of [6,7.1,8.2,9.3])entryTube([gateS,16.2,y],[gateS,22.8,y],.075,0x3b4d46);
-    // Shallow annular relief: dark circular rim and pale C with its opening to the
-    // viewer's right. Explicit arc thickness makes the letter legible at oblique angles.
+    for(const y of [.05,2.72,2.9])entryTube([doorS,16.36,y],[doorS,22.64,y],.065,0x646d66);
+    lwall(doorS,16.36,doorS,22.64,2.75,2.9,{mat:'ccEntryDoors',thick:.04,solid:false});
+    // Three visible glass faces plus a rear closure and sloped roof make a volume.
+    K.material('ccEntryRoof',new K.THREE.MeshLambertMaterial({color:0xa8cbbf,transparent:true,opacity:.75,side:K.THREE.DoubleSide,depthWrite:false}));
+    const gateRoofY=ss=>10.2+(ss-gateFront)/6*.4;
+    const gateAt=(ss,t,yy)=>{const[x,z]=P(ss,t);return[x,yy,z];};
+    for(const ss of [gateFront,gateBack]){
+      // One pane per face: custom transparent wall materials otherwise get two
+      // double-sided faces from K.wall, making opacity .75 accumulate to .94.
+      K.quad('ccEntryRoof',[gateAt(ss,16.2,6),gateAt(ss,22.8,6),gateAt(ss,22.8,gateRoofY(ss)),gateAt(ss,16.2,gateRoofY(ss))],ss===gateFront?[-AX,0,-AZ]:[AX,0,AZ]);
+      for(const t of [16.2,17.85,21.15,22.8])entryTube([ss,t,6],[ss,t,gateRoofY(ss)],.075,0x3b4d46);
+      // The centre upright starts above the emblem; no bar crosses its face.
+      entryTube([ss,19.5,9.1],[ss,19.5,gateRoofY(ss)],.075,0x3b4d46);
+      for(const yy of [6,7.6,9.2])entryTube([ss,16.2,yy],[ss,22.8,yy],.075,0x3b4d46);
+    }
+    for(const t of [16.2,22.8]){
+      K.quad('ccEntryRoof',[gateAt(gateFront,t,6),gateAt(gateBack,t,6),gateAt(gateBack,t,gateRoofY(gateBack)),gateAt(gateFront,t,gateRoofY(gateFront))],[t<gateT?-EX:EX,0,t<gateT?-EZ:EZ]);
+      for(let ss=gateFront;ss<=gateBack+.01;ss+=1.5)entryTube([ss,t,6],[ss,t,gateRoofY(ss)],.075,0x3b4d46);
+      for(const yy of [6,7.6,9.2])entryTube([gateFront,t,yy],[gateBack,t,yy],.075,0x3b4d46);
+    }
+    // Solid dark disc, thick cream C opening to the viewer's right (-t), gold core.
+    // Each relief face is ≥0.35 m ahead of the glazing; the centre is never hollow.
     const emblemArc=(outer,inner,a0,a1,mat,depth)=>{
       const n=Math.ceil((a1-a0)*20),at=(r,a,ss)=>{const q=P(ss,gateT-r*Math.cos(a));return[q[0],7.55+r*Math.sin(a),q[1]];};
-      const front=gateS-.28-depth,back=gateS-.18;
+      const front=gateFront-.35-depth,back=front+.08;
       for(let i=0;i<n;i++){
         const a=a0+(a1-a0)*i/n,b=a0+(a1-a0)*(i+1)/n;
         K.quad(mat,[at(outer,a,front),at(outer,b,front),at(inner,b,front),at(inner,a,front)],[-AX,0,-AZ]);
         for(const [r,side] of [[outer,1],[inner,-1]]){
+          if(!r)continue;
           const m=(a+b)/2;
           K.quad(mat,[at(r,a,front),at(r,b,front),at(r,b,back),at(r,a,back)],[-EX*Math.cos(m)*side,Math.sin(m)*side,-EZ*Math.cos(m)*side]);
         }
@@ -927,11 +965,10 @@ export function build(K) {
       if(a1-a0<2*PI-.01)for(const [a,side] of [[a0,-1],[a1,1]])
         K.quad(mat,[at(inner,a,front),at(outer,a,front),at(outer,a,back),at(inner,a,back)],[EX*Math.sin(a)*side,Math.cos(a)*side,EZ*Math.sin(a)*side]);
     };
-    emblemArc(1.46,1.1,0,2*PI,0x252e2b,.02);
-    emblemArc(1.1,.77,PI*.23,PI*1.85,0xd5d4c5,.09);
-    K.material('ccEntryRoof',new K.THREE.MeshLambertMaterial({color:0xb7cfca,transparent:true,opacity:.38,side:K.THREE.DoubleSide,depthWrite:false}));
-    // cc_01 shows a shallow pitched glass canopy, below the two pylon tops.
-    const gateRoofY=ss=>9.3+(ss+26.5)/6*.65;
+    emblemArc(1.46,0,0,2*PI,0x262c2a,0);
+    emblemArc(1.25,.6,PI*.18,PI*1.82,0xe8e4d6,.09);
+    emblemArc(.55,0,0,2*PI,0x7d6d3a,.10);
+    // cc_01: visible pale sloped roof remains below the 11.8 m pylon tops.
     const roofAt=(ss,t)=>{const[x,z]=P(ss,t);return[x,gateRoofY(ss),z];};
     for(let ss=-26.5;ss<-20.51;ss+=1.5)for(let t=16.2;t<22.79;t+=1.65)
       K.quad('ccEntryRoof',[roofAt(ss,t),roofAt(ss,t+1.65),roofAt(ss+1.5,t+1.65),roofAt(ss+1.5,t)],[0,1,0]);
@@ -947,7 +984,7 @@ export function build(K) {
       g.strokeStyle='#8b8981';g.lineWidth=1;
       for(let q=0;q<=256;q+=64){g.beginPath();g.moveTo(q,0);g.lineTo(q,h);g.moveTo(0,q);g.lineTo(w,q);g.stroke();}
     },[2.4,2.4]);
-    K.hpoly('ccPlazaGranite',RECT(-45,0,-26.6,38.5),.018,true);
+    K.hpoly('ccPlazaGranite',RECT(-50,0,-26.6,38.5),.018,true);
     for(const [t0,t1] of [[0,14],[25,38]]){
       lbox(-27.5,(t0+t1)/2,1.8,t1-t0,0,.42,gateStone);
       lbox(-27.5,(t0+t1)/2,1.4,t1-t0-.4,.43,.22,0x40533b,{solid:false});
@@ -965,9 +1002,17 @@ export function build(K) {
         g.fillRect(noise()*w,noise()*h,1+noise()*2,1+noise()*2);
       }
     },[1,1]);
-    for(const t of [19,23,27]){
-      const [x,z]=P(-38,t),r=1.02;
-      K.dome({x,z,y:.018+r,rx:r,ry:r,rz:r,hemi:false,seg:36,rings:20,mat:'ccPlazaStone'});
+    K.texture('ccPlazaBronze',256,128,(g,w,h)=>{
+      g.fillStyle='#6e5040';g.fillRect(0,0,w,h);
+      const noise=K.rand(919);
+      for(let i=0;i<5200;i++){
+        g.fillStyle=['#8e6a52','#795641','#59473a','#80604c'][Math.floor(noise()*4)];
+        g.fillRect(noise()*w,noise()*h,1+noise()*3,1+noise()*3);
+      }
+    },[1,1]);
+    for(const t of [11,19,27]){
+      const [x,z]=P(-45,t),r=1.02;
+      K.dome({x,z,y:.018+r,rx:r,ry:r,rz:r,hemi:false,seg:36,rings:20,mat:t===19?'ccPlazaBronze':'ccPlazaStone'});
       // K.dome's collision starts at its equator; register the complete ground-level
       // footprint locally so the lower half also blocks the player.
       const circle=Array.from({length:20},(_,i)=>[x+Math.cos(i*PI/10)*r,z+Math.sin(i*PI/10)*r]);
@@ -977,6 +1022,112 @@ export function build(K) {
     const benchCurve=[[-3,.55],[-1.2,.55],[-.7,.75],[-.25,1.15],[.2,1.22],[.65,.85],[1.1,.55],[3,.55]];
     for(let i=0;i<benchCurve.length-1;i++)entryTubeWorld(benchAt(...benchCurve[i]),benchAt(...benchCurve[i+1]),.24,0xb62436);
     for(const u of [-2.2,2.2])entryTubeWorld(benchAt(u,0),benchAt(u,.55),.16,0xb62436);
+
+    // cc_01: black tubular street railing, with crossing and west entrance gaps.
+    const plazaRail=(s0,t0,s1,t1)=>{
+      const L=Math.hypot(s1-s0,t1-t0),n=Math.ceil(L/2);
+      for(let i=0;i<=n;i++){
+        const s=s0+(s1-s0)*i/n,t=t0+(t1-t0)*i/n;
+        lcyl(s,t,.018,.035,1,0x25282a,{seg:8});
+      }
+      for(const y of [.52,1.018])entryTube([s0,t0,y],[s1,t1,y],.055,0x25282a);
+      const a=P(s0,t0),b=P(s1,t1);K.phys.addWall(...a,...b,.018,1.018,.06,'centralcity');
+    };
+    plazaRail(-49.3,0,-49.3,14.5);plazaRail(-49.3,24,-49.3,38.5);
+    plazaRail(-49.3,0,-41,0);plazaRail(-33,0,-28.7,0);
+    // Inverted-U stands by the western end, clear of the east-facing stair mouth.
+    for(const t of [2.5,4,5.5]){
+      entryTube([-46.8,t,.05],[-46.8,t,.7],.055,0x454c49);
+      entryTube([-45.6,t,.05],[-45.6,t,.7],.055,0x454c49);
+      for(let k=0;k<8;k++){
+        const a=PI*k/8,b=PI*(k+1)/8;
+        entryTube([-46.2+.6*Math.cos(a),t,.7+.25*Math.sin(a)],[-46.2+.6*Math.cos(b),t,.7+.25*Math.sin(b)],.055,0x454c49);
+      }
+    }
+    lcyl(-49.3,15.1,.018,.09,.95,0xe5e4df,{seg:12});
+    for(const y of [.2,.58])lcyl(-49.3,15.1,y,.095,.18,0xb82736,{seg:12,solid:false});
+    for(const t of [1.5,2.5])entryTube([-29.1,t,0],[-29.1,t,2.2],.065,0x474e4c);
+    lbox(-29.1,2,.12,1.2,.4,1.8,0x1e3545,{solid:false});
+    // Directory content stays simple: reference confirms board, not a legible map.
+    lsign(['센트럴시티','안내'], -29.18,2,1.88,1,.42,'N',{bg:null,fg:'#e6e9e7'});
+
+    // cc_01 right edge + cc_02 + aerial: one separate barrel-vaulted stair head.
+    // gotomall.js has no exit at this footprint; do not duplicate the photo03 pavilion.
+    const head={s0:-40.56,s1:-33.06,t0:-29.3,t1:-11.3},sc=(head.s0+head.s1)/2;
+    K.material('ccStairGlass',new K.THREE.MeshLambertMaterial({color:0x9fbfb4,transparent:true,opacity:.68,side:K.THREE.DoubleSide,depthWrite:false}));
+    const headGlass=(s0,t0,s1,t1,y0,y1,normal)=>{
+      const a=P(s0,t0),b=P(s1,t1);
+      K.quad('ccStairGlass',[[a[0],y0,a[1]],[b[0],y0,b[1]],[b[0],y1,b[1]],[a[0],y1,a[1]]],normal);
+      K.phys.addWall(...a,...b,y0,y1,.035,'centralcity');
+    };
+    for(const ss of [head.s0,head.s1]){
+      lwall(ss,head.t0,ss,head.t1,0,1.6,{mat:0x8d9294,thick:.12});
+      headGlass(ss,head.t0,ss,head.t1,1.6,3.4,ss===head.s0?[-AX,0,-AZ]:[AX,0,AZ]);
+      for(let t=head.t0;t<=head.t1+.01;t+=1.2){
+        entryTube([ss,t,0],[ss,t,1.6],.025,0x686f70);
+        entryTube([ss,t,1.6],[ss,t,3.5],.055,0x596563);
+      }
+      for(const y of [1.6,3.4])entryTube([ss,head.t0,y],[ss,head.t1,y],.075,0x687472);
+    }
+    for(const t of [head.t0,head.t1]){
+      const ops=t===head.t1?[{at:3.75,w:3.2,y0:0,y1:2.8}]:[];
+      lwall(head.s0,t,head.s1,t,0,1.6,{mat:0x8d9294,thick:.12,openings:ops});
+      if(t===head.t0)headGlass(head.s0,t,head.s1,t,1.6,3.5,[-EX,0,-EZ]);
+      else{
+        headGlass(head.s0,t,sc-1.6,t,1.6,3.5,[EX,0,EZ]);
+        headGlass(sc+1.6,t,head.s1,t,1.6,3.5,[EX,0,EZ]);
+        headGlass(sc-1.6,t,sc+1.6,t,2.8,3.5,[EX,0,EZ]);
+      }
+      for(let ss=head.s0;ss<=head.s1+.01;ss+=1.2){
+        if(t===head.t1&&Math.abs(ss-sc)<1.6)continue;
+        entryTube([ss,t,0],[ss,t,1.6],.025,0x686f70);
+        entryTube([ss,t,1.6],[ss,t,3.5],.055,0x596563);
+      }
+    }
+    for(const ss of [sc-1.6,sc+1.6])entryTube([ss,head.t1,0],[ss,head.t1,2.8],.09,0x64716e);
+    entryTube([sc-1.6,head.t1,2.8],[sc+1.6,head.t1,2.8],.09,0x64716e);
+    const half=4.05,barrelR=(half*half+1)/2;
+    const headRoofY=ss=>3.5+Math.sqrt(barrelR*barrelR-(ss-sc)*(ss-sc))-(barrelR-1);
+    const headRoofAt=(ss,t)=>{const q=P(ss,t);return[q[0],headRoofY(ss),q[1]];};
+    for(let k=0;k<18;k++){
+      const sa=sc-half+k*half/9,sb=sc-half+(k+1)*half/9;
+      const poly=[headRoofAt(sa,head.t0-.3),headRoofAt(sb,head.t0-.3),headRoofAt(sb,head.t1+.3),headRoofAt(sa,head.t1+.3)];
+      const ds=(sa+sb)/2-sc,n=[AX*ds/barrelR,Math.sqrt(barrelR*barrelR-ds*ds)/barrelR,AZ*ds/barrelR];
+      K.quad(0xd9dcda,poly,n);K.quad(0xc4ccca,poly,n.map(v=>-v));
+    }
+    // Glazed gables close the curved ends; the entrance remains open below y2.8.
+    for(const t of [head.t0,head.t1]){
+      const normal=t===head.t0?[-EX,0,-EZ]:[EX,0,EZ];
+      for(let k=0;k<16;k++){
+        const sa=head.s0+(head.s1-head.s0)*k/16,sb=head.s0+(head.s1-head.s0)*(k+1)/16;
+        const a=P(sa,t),b=P(sb,t);
+        K.quad('ccStairGlass',[[a[0],3.5,a[1]],[b[0],3.5,b[1]],headRoofAt(sb,t),headRoofAt(sa,t)],normal);
+      }
+      for(let ss=head.s0;ss<=head.s1+.01;ss+=1.2)entryTube([ss,t,3.5],[ss,t,headRoofY(ss)],.055,0x596563);
+    }
+    for(const ss of [head.s0,head.s1])lbox(ss,(head.t0+head.t1)/2,.13,18,3.4,headRoofY(ss)-3.4,0x8d9294,{solid:false});
+    for(let t=head.t0;t<=head.t1+.01;t+=1.2)for(let k=0;k<18;k++){
+      const sa=sc-half+k*half/9,sb=sc-half+(k+1)*half/9;
+      entryTube([sa,t,headRoofY(sa)+.035],[sb,t,headRoofY(sb)+.035],.055,0xe2e5e1);
+    }
+    for(const ss of [sc-half,sc,sc+half])entryTube([ss,head.t0-.3,headRoofY(ss)],[ss,head.t1+.3,headRoofY(ss)],.10,0xaeb9b5);
+    // Only the visible stair descent is evidenced. Stop at a plain lower closure;
+    // no speculative underground corridor, destination label or portal is added.
+    const stairHole=RECT(sc-1.5,-18.8,sc+1.5,-12.1);
+    K.groundHole(stairHole);
+    K.slab(RECT(head.s0,head.t0,head.s1,head.t1),0,{mat:0x9b9d97,holes:[stairHole],thick:.12,under:0x7d8581});
+    const sa=P(sc,-17.4),sb=P(sc,-12.1);
+    K.stairs(...sa,...sb,{w:2.8,ya:-1.4,yb:0,mat:0x7e8581,railMat:0x66716c});
+    K.slab(RECT(sc-1.5,-18.8,sc+1.5,-17.3),-1.4,{mat:0x737d77,thick:.12,ceil:false});
+    for(const ss of [sc-1.5,sc+1.5])lwall(ss,-18.8,ss,-12.1,-1.4,.15,{mat:0x626d66,thick:.12});
+    lwall(sc-1.5,-18.8,sc+1.5,-18.8,-1.4,2.8,{mat:0x303b34,thick:.12});
+
+    // cc_02 / photo09: long translucent kerb cover, clear of OSM service drives.
+    canopy(-47,-43,-45,-5,3.5);
+    // Leafy 8–10 m trees behind the stair head screen the roof-access bridge.
+    lbox(-30,-17,1.6,31,0,.35,gateStone);
+    lbox(-30,-17,1.25,30.6,.35,.2,0x40533b,{solid:false});
+    for(const [i,t] of [-31,-24,-17,-10,-3].entries())K.tree(...P(-30,t),{y:.4,h:[8.5,9,10,9.4,8.8][i],kind:'zelkova'});
 
     // Photo 03 street escalator pavilion. Position is a documented approximation near (-140,-5).
     // The OSM footprint stays authoritative; openings are cut in existing slabs, not stacked over them.
@@ -1011,7 +1162,7 @@ export function build(K) {
     lsign('센트럴시티터미널',70,-0.2,7.8,20,1.4,'W',{bg:null,fg:'#ffffff'});
     const sf=Math.atan2(ns[9][0],ns[9][1]);
     const sAt=t=>{const ss=204.1-(t+98.9)*(1.3/135.8);return P1(ss+0.25,t);};
-    let p=sAt(-55); sign('CENTRAL CITY',{x:p[0],z:p[1],y:7.2,w:17,h:1.4,rotY:sf,bg:null,fg:'#ffffff'});
+    let p=sAt(-55); sign('CENTRAL CITY',{x:p[0],z:p[1],y:8.15,w:17,h:1.15,rotY:sf,bg:null,fg:'#ffffff'});
     p=sAt(2);sign('파미에스테이션',{x:p[0],z:p[1],y:3.6,w:7,h:0.65,rotY:sf,bg:'#27423b',fg:'#ffffff'});
     // Photo 09: translucent barrel shelter, inclined round struts, curb rails and double-globe lamps.
     const hf = Math.atan2(ns[7][0], ns[7][1]);
@@ -1115,20 +1266,27 @@ export function build(K) {
   const bridge = (pts, w = 6.4, y = YR + 0.01) => {
     for (let i = 0; i < pts.length - 1; i++) {
       const [ax, az] = pts[i], [bx, bz] = pts[i + 1];
-      K.ramp(ax, az, bx, bz, { w, ya: y, yb: y, mat: 0x8e8c86, railMat: 0xb0aca4 });
       const L = Math.hypot(bx - ax, bz - az), nx = -(bz - az) / L * w / 2, nz = (bx - ax) / L * w / 2;
-      for (const sg of [1, -1]) K.quad({ tex: 'concrete', color: 0xc8c4bc }, [[ax + nx * sg, y - 1.3, az + nz * sg], [bx + nx * sg, y - 1.3, bz + nz * sg], [bx + nx * sg, y + 1.0, bz + nz * sg], [ax + nx * sg, y + 1.0, az + nz * sg]], [nx * sg, 0, nz * sg]);
-      K.quad(0x9a968f, [[ax - nx, y - 1.3, az - nz], [bx - nx, y - 1.3, bz - nz], [bx + nx, y - 1.3, bz + nz], [ax + nx, y - 1.3, az + nz]], [0, -1, 0]);
-      for (let k = 6; k < L - 3; k += 12) K.cyl({ x: ax + (bx - ax) * k / L, z: az + (bz - az) * k / L, y: 0, r: 0.7, h: y - 1.3, mat: { tex: 'concrete', color: 0xc8c4bc }, seg: 10 });
+      // Retain the OSM roof road at y9, but use a 0.65 m slab and Ø0.6 m piers.
+      // The separate city-owned footway 1185035515 is not this bridge.
+      K.slab([[ax+nx,az+nz],[bx+nx,bz+nz],[bx-nx,bz-nz],[ax-nx,az-nz]],y,
+        {mat:0x8e8c86,under:0xa4a69f,thick:.65});
+      for(const sg of [-1,1]){
+        const a=[ax+nx*sg,az+nz*sg],b=[bx+nx*sg,bz+nz*sg];
+        for(const yy of [y+.5,y+1])entryTubeWorld([a[0],yy,a[1]],[b[0],yy,b[1]],.065,0x767d77);
+        for(let k=0;k<=L;k+=2)entryTubeWorld([a[0]+(b[0]-a[0])*k/L,y,a[1]+(b[1]-a[1])*k/L],
+          [a[0]+(b[0]-a[0])*k/L,y+1,a[1]+(b[1]-a[1])*k/L],.065,0x767d77);
+        K.phys.addWall(...a,...b,y,y+1,.05,'centralcity');
+      }
+      for (let k = 6; k < L - 3; k += 12) K.cyl({ x: ax + (bx - ax) * k / L, z: az + (bz - az) * k / L, y: 0, r: 0.3, h: y - .65, mat: 0xa9aaa4, seg: 12 });
     }
   };
   bridge([[-136.4, 6.9], [-159, 15], [-172.6, 19.6]]);
   bridge([[-177.3, 54.9], [-170.4, 75.3]]);
-  sign(['타워주차장 · 버스주차장 데크', '← P'], { x: -150, z: 12.5, y: YR + 3.2, w: 4.6, h: 0.9, rotY: Math.atan2(22.6, 8.1) + PI / 2, bg: '#1d3557', fg: '#fff', twoSided: true });
 
   // ================================================================= 파미에스테이션 원형관 (round pavilion, B1 + 1F + 2F)
   if (ROUND) {
-    const cx = -47, cz = 214.6, y2 = 4.2, yr2 = 16.5;
+    const cx = -47, cz = 214.6, y2 = 4.2, yr2 = 22.6;
     const ring = (r, n = 16) => Array.from({ length: n }, (_, i) => [cx + Math.cos(i * PI * 2 / n) * r, cz + Math.sin(i * PI * 2 / n) * r]);
     // Keep the OSM contact outline; the upper gallery sits inward where the sloped roof has headroom.
     const GALLERY = ring(14), ATRIUM = ring(6);
@@ -1175,7 +1333,7 @@ export function build(K) {
       for (let rr = 0; rr < 18; rr += 0.025) if (K.pointInPoly(cx + dx * rr, cz + dz * rr, ROUND)) r = rr;
       K.box({ x: cx + dx * r, z: cz + dz * r, y: 0.35, w: 0.16, d: 0.16, h: 5.15, rotY: -a, mat: 0x2f4a40, solid: false });
     }
-    const roofRings = [[18.5,5.5],[9,11],[9,11.8],[2,15.5]];
+    const roofRings = [[18.5,5.5],[12,10.5],[12,11.1],[4.6,19.5]];
     const roofPt = (i, r) => [cx + Math.cos(i * PI / 8) * r[0], r[1], cz + Math.sin(i * PI / 8) * r[0]];
     for (let j = 0; j < roofRings.length - 1; j++) for (let i = 0; i < 16; i++) {
       const A = roofPt(i,roofRings[j]), B = roofPt(i+1,roofRings[j]), C = roofPt(i+1,roofRings[j+1]), D = roofPt(i,roofRings[j+1]);
@@ -1186,14 +1344,17 @@ export function build(K) {
       if (j !== 1) K.quad(0xd4ded8,[A,B,C,D],normal.map(v=>-v));
       const nx = -Math.sin(i*PI/8)*0.055, nz = Math.cos(i*PI/8)*0.055;
       K.quad(0x3c6558,[[A[0]-nx,A[1]+0.035,A[2]-nz],[A[0]+nx,A[1]+0.035,A[2]+nz],[D[0]+nx,D[1]+0.035,D[2]+nz],[D[0]-nx,D[1]+0.035,D[2]-nz]],normal);
-      if(j===1) K.box({x:D[0],z:D[2],y:11,w:0.12,d:0.12,h:0.8,mat:0x2f4a40,solid:false});
+      if(j===1) K.box({x:D[0],z:D[2],y:10.5,w:0.12,d:0.12,h:0.6,mat:0x2f4a40,solid:false});
     }
-    // Small glazed lantern with a shallow metal cap at y=16.5.
-    K.polyWalls(ring(2),15.5,16.15,{mat:{tex:'glass',color:0xb4c8bc},thick:0.04,solid:false});
+    // Photo 11: a broad dark glazed drum above the steep upper tier, with a low cap.
+    // Its 4.6 m radius is about one quarter of the eave radius; no invented upper floor.
+    K.material('ccRoundLanternGlass',new K.THREE.MeshStandardMaterial({color:0x3b4a45,roughness:.28,metalness:.16,side:K.THREE.DoubleSide}));
+    K.polyWalls(ring(4.6),19.5,22,{mat:'ccRoundLanternGlass',thick:0.04,solid:false});
+    for(const y of [19.5,21.88])K.prism(ring(4.68),y,y+.12,{mat:0x2f4a40,holes:[ring(4.49)],solid:false});
     for(let i=0;i<16;i++) {
-      const A=roofPt(i,[2.2,16.15]),B=roofPt(i+1,[2.2,16.15]),C=[cx,16.5,cz];
+      const A=roofPt(i,[4.78,22]),B=roofPt(i+1,[4.78,22]),C=[cx,22.6,cz];
       K.quad(0x5d8a7e,[A,B,C,C],[0,1,0]);
-      const [x,z]=ring(2)[i];K.box({x,z,y:15.5,w:0.1,d:0.1,h:0.65,mat:0x2f4a40,solid:false});
+      const [x,z]=ring(4.6)[i];K.box({x,z,y:19.5,w:0.12,d:0.12,h:2.5,mat:0x2f4a40,solid:false});
     }
     sign('파미에스테이션',{x:cx,z:197.65,y:3.8,w:6.6,h:0.65,rotY:PI,bg:'#385147',fg:'#f0eee3'});
     sign(['지하철 7호선 고속터미널역 ↓', '센트럴시티 · 신세계 연결'], { x: -51, z: 219.75, y: 3.3, w: 4.4, h: 0.8, rotY: PI / 2, bg: '#747F00', fg: '#fff', twoSided: true });

@@ -138,13 +138,13 @@
   "round_pavilion": {
    "osm_id": 593858530,
    "floors_above": 2,
-   "height_m": 16.5,
-   "note": "접지 외벽은 OSM 593858530 그대로. 사진11의 높은 두 단 경사 지붕과 리뷰 치수를 우선하여 지붕 정상16.5 m로 재구성. OSM H8.4와 차이는 미확인 높이 태그/사진 해석의 불일치이며 2층 용도는 유지.",
+   "height_m": 22.6,
+   "note": "OSM 접지 외벽과 B1/1F/2F 유지. 사진11/round4 비례 지시: r18.5/y5.5→r12/y10.5, 0.6 m 유리띠, r4.6/y19.5, 넓은 짙은 랜턴 y19.5..22, 캡22.6 m. 2009년 원경 사진의 미측정 비례이며 OSM H8.4와의 차이는 미확인.",
    "osm_height_m": 8.4
   },
-  "facade": "북단 정문은 2026-06 cc_01의 갈색 벽돌형 석재 줄눈·짧은 쌍파일런·유리 캐노피. 남측/서측은 기존 사진11의 회색 화강석 포디움·짙은 기단·CENTRAL CITY 흰 글자·사각창 및 항공사진 기반 수평창 유지.",
-  "signage": "정문은 cc_01의 검은 띠 위 흰 CENTRAL CITY와 유리 패널 앞 원형 C 표장. 2009년 녹색 다층 안내판·은행 표기·금색 눈 모양은 교체. 홀의 붉은 승차홈 번호와 한국어 매표소/무인발권기 안내 유지.",
-  "entrances": "북측 정문 중심P(-23.5,19.5), 세계 약(-126.09,-19.08)를 유지. 6x6x11.8 m 갈색 쌍파일런 중심t13.2/25.8, 사이6.6 m; 신세계 서탑(동측)과 고투몰 덮개(서측) 사이. 유리문 중앙2.45 m 개방. 크기/좌표는 사진·OSM에 맞춘 근사. 북서측 옛 사진03 파빌리온과 지하 연결은 유지.",
+  "facade": "북단은 2026-06 cc_01의 갈색 쌍파일런·민트색 입체 유리 랜턴·불투명 원판 C. 남측 8/9번 면은 사진11의 회색 석재 0.6 m 줄눈과 규칙적인 큰 어두운 창. 서측 띠창/OSM 풋프린트 유지.",
+  "signage": "정문 전체 6.6 m 검은 파시아 위 흰 SHINSEGAE CENTRAL CITY(첫 단어는 흐린 로드뷰의 추정 판독). 불투명 짙은 원판·두꺼운 크림 C·올리브금색 중심. 옛 녹색 다층 안내판은 제외. 홀의 붉은 승차홈 번호와 한국어 안내 유지.",
+  "entrances": "쌍파일런 중심s=-23.5/t13.2·25.8, 정면s=-26.5. 정문 전폭6.6 m 검은 전실, 문은 정면에서1.7 m 후퇴·중앙2.45 m 개방. 서측 신규18×7.5 m 곡면 지붕 파빌리온 중심세계(-168,-17), 동측 계단입구. gotomall 현 코드에 같은 위치 출입구 없음; 지하 목적지 미확인으로 보이는 얕은 계단과 하단 평범한 마감만 구현. 기존 사진03 출입구는 별개로 보존.",
   "scope": "이 모듈은 터미널 포디움, 원형관, 서측 주차 구조물과 호남선 버스 야드. 33층·150 m 수치는 JW 호텔 타워 문헌 맥락으로 이 모듈 높이와 무관. 백화점·호텔 상층 및 별도 6F 밀레니엄홀은 이 9 m 풋프린트의 층으로 만들지 않음."
  },
  "floors": [
@@ -225,7 +225,7 @@
    "name": "파미에스테이션 원형 건물",
    "what": "OSM 외벽을 유지한 2층 원형 상업동, 녹청색 16각 두 단 지붕",
    "where": "고속터미널 단지 남동쪽(-47,215)",
-   "details": "원형 유리 외벽5.5 m, 처마 r18.5/y5.5, 하단 경사 r9/y11, 수직 채광띠0.8 m, 상단 경사 r2/y15.5, 작은 정상부16.5 m. 사진11/리뷰 근사. 내부 2F 부분 갤러리와 중앙 개방부, 1F 스타벅스 카운터.",
+   "details": "11: 가파른16각 두 단 녹청색 지붕·넓은r4.6 랜턴·22.6 m 캡; 남측0.6 m 회색 석재 줄눈·4.5 m 간격 큰 어두운 창·창 위 흰 CENTRAL CITY. OSM 접지·B1/1F/2F·계단/엘리베이터 유지.",
    "source": "data/osm.json; refs/photos/centralcity/11_banpo_overview.jpg; 기존 개장 연구",
    "guess": true
   },
@@ -257,7 +257,7 @@
    "name": "외관",
    "what": "단지 길이 약 250m 남북 장축 터미널 매스(OSM 높이 9m 저층부) 위에 백화점·호텔 타워",
    "where": "터미널 폴리곤 356127040",
-   "details": "cc_01의 갈색 정문 쌍파일런·유리 패널/C·검은 CENTRAL CITY 간판·석재 구체3개·여름 수목·밝은 화강석 광장. 남측은 사진11 저층 포디움 유지. 실측 치수는 미확인.",
+   "details": "cc_01/01: 불투명 원판+크림C+금색중심, 0.75 민트 입체랜턴·경사지붕10.2..10.6 m, 전폭 검은 파시아/후퇴한 어두운 문, 스팬드럴. cc_01: 전방8 m 간격 구체(중앙 청동)·확장 화강석·검은난간·U자 거치대·볼라드·남색 안내판. 11: 가파른16각 두 단 녹청색 지붕·넓은r4.6 랜턴·22.6 m 캡; 남측0.6 m 회색 석재 줄눈·4.5 m 간격 큰 어두운 창·창 위 흰 CENTRAL CITY.",
    "source": "refs/roadview/cc_01_main_gate_plaza_spheres_shinsegae_west_tower.jpg; refs/photos/centralcity/11_banpo_overview.jpg; data/osm.json",
    "guess": true
   },
@@ -265,7 +265,7 @@
    "name": "호남선 버스 야드",
    "what": "OSM 주차 영역 1173096801 직접 모델링",
    "where": "x -209..-99, z 57..185; 로컬 s 약40..150, t 약-98..-18",
-   "details": "항공사진의 서측 병렬 버스열(t 약-85/-64)과 동측 열(t 약-18), 어두운 포장·흰 구획. 정확한 대수·빈자리·번호는 추정.",
+   "details": "항공사진 기반 서측 병렬 버스열과 동측 열. 검게 보이던 지면을 중간회색 재질로 교체; 흰 구획·노란 선·버스 위치 보존. 정확한 대수·배정은 추정.",
    "source": "refs/aerial/shinsegae_centralcity.jpg; data/osm.json",
    "guess": true
   },
@@ -283,6 +283,14 @@
    "where": "1F 대합실",
    "details": "1.1 m 사각 백색 대리석 기둥, 4 m 높이 역피라미드 주두, 업라이트, 약9.5 m 반복 곡선 쌍관 트러스와 웹. 밝은 금속 패널 볼트 정상8.5 m, 광택 대리석과6 m 격자 검은 줄, 금속 벤치. 사진02/07/08과 리뷰 치수 적용.",
    "source": "refs/photos/centralcity/02_dropoff.jpg; refs/photos/centralcity/07_honam_boarding.jpg; refs/photos/centralcity/08_arcade.jpg",
+   "guess": true
+  },
+  {
+   "name": "정문 서측 곡면 지붕 파빌리온",
+   "what": "금속기단·녹색유리·흰 배럴볼트 지붕의 계단 덮개",
+   "where": "중심세계(-168,-17), 18×7.5 m",
+   "details": "cc_01 우측/cc_02 좌측/항공: 별도18×7.5 m 금속기단·녹색유리·흰 곡면지붕. 고투몰 현 exit/groundHole와 중복 없음. 미확인 지하 목적지로 연결하지 않고 보이는 계단만 구현.",
+   "source": "refs/roadview/cc_01_main_gate_plaza_spheres_shinsegae_west_tower.jpg; refs/roadview/cc_02_sinbanporo_west_from_main_gate_tan_block_led.jpg; refs/aerial/cc_all.jpg",
    "guess": true
   }
  ],
@@ -304,7 +312,8 @@
   "사진의 옛 영풍문고·Cinus·은행 광고와 현재 연구의 매장명이 섞이지 않도록 역사적 사진은 구조·재료 위주로 사용. 현재 확인되지 않은 상점 전면은 평범하게 유지.",
   "사진06 경부선 별관 외관은 제외. 사진04 밀레니엄홀은 기존 6F 용도 확인에만 사용.",
   "Round3는 운영자가 제공한 cc_01/cc_02·manifest 및 비교 이미지 직접 검토. 북측 외관은 2026-06 로드뷰가 2009년 사진보다 우선; 새 외부 웹검색으로 현황을 확인했다고 주장하지 않음.",
-  "cc_02의 8층 베이지/옥상 LED 건물은 OSM 413280002 르본시티로 판별. 중앙시티 claims 밖이므로 이 모듈에 중복 건물/LED를 추가하지 않음."
+  "cc_02의 8층 베이지/옥상 LED 건물은 OSM 413280002 르본시티로 판별. 중앙시티 claims 밖이므로 이 모듈에 중복 건물/LED를 추가하지 않음.",
+  "Round4: 제공된 로드뷰·항공·검증용 렌더와 코드 대조. 사용자 제한에 따라 tests/shot.mjs 미실행. 새 외부 웹검증이나 변경 후 렌더 검증을 주장하지 않음."
  ],
  "unresolved": [
   "정문·구체의 정확한 실측 좌표/치수, 유리 캐노피 경사·C 표장 단면·벽돌 줄눈 모듈",
@@ -313,7 +322,10 @@
   "호남선 승차홈 전체 번호 범위·배정·행선지, 하차장 정확한 위치",
   "타워주차장·버스 야드 데크 중간층수·수용대수·램프 종단",
   "파미에스테이션 원형관 가까운 외관과 지붕 단차·창 상세",
-  "OSM 점포 POI의 실제 층·현재 입점 목록, 식당·영화관 내부 평면"
+  "OSM 점포 POI의 실제 층·현재 입점 목록, 식당·영화관 내부 평면",
+  "정문 간판 첫 단어 SHINSEGAE의 선명한 사진 확인",
+  "광장 서측 파빌리온 실제 지하 연결/소속과 계단 방향·실측 높이",
+  "새 렌더에서 야드 밝기 RGB90..105, C 가독성, 파빌리온/캐노피/수목 배치의 대조 검증"
  ],
  "modeling": {
   "frame": "local s(남쪽, 서측 파사드 방향)/t(동쪽) 축. 스트립 s -22..151 · t 0..38.5, 남측 블록 s 151..204 · t -98..38",
@@ -322,21 +334,21 @@
   "station_band": "B1 남측 경계는 역 모듈의 7호선 B1 대합실(경로 (45,150)->(-45,186)->(-68,195)->(-88,220)->(-175,262), 폭 14 m)에서 7.6 m 이상 떨어지도록 잘라냄",
   "guesses": [
    "cc_01의 정문을6x6x11.8 m 쌍파일런·순폭6.6 m로 근사. 중심P(-23.5,13.2/25.8), 정면s=-26.5는 기존 OSM 북단 출입구 정렬을 유지한 추정이며 실측값이 아님. 신세계 서탑 동측·고투몰 덮개 서측의 상대 위치를 우선.",
-   "cc_01 유리 캐노피는 깊이6 m, 앞9.3 m/뒤9.95 m의 얕은 경사. 유리 뒤판 y6..9.3 m, C 중심7.55 m/바깥반경1.46 m, 검은 간판4.9x0.58 m와4짝 문은 사진 비례 근사. C 오른쪽 개방·밝은 띠와 어두운 외곽은 관찰 기반이나 세부 단면/유리 불투명도는 추정.",
-   "갈색 정문 석재는 벽돌처럼 보이는0.8x0.2 m 교차 줄눈으로 근사. 정확한 석종/패널 치수·색은 촬영/조명 차이로 미확인. 남측 포디움 재료는 이전 라운드 유지.",
-   "cc_01의 석재 구체3개는 지름2.04 m, 중심P(-38,19/23/27), 중심높이1.038 m, 중심간격4 m로 근사. 수량/둥근 형태/짙은 회녹색 석재는 사진 근거; 실제 배치·간격은 미측정. 이중 검은 tint를 없애 명암이 남도록 했으며 전체 하부 충돌은 모듈 내부에서 등록.",
-   "광장0.6 m 화강석 줄눈, 낮은 화단, 잎 있는4그루의 느티나무형 수관, 서측 빨간 곡선 튜브 벤치는 cc_01을 단순화. 정확한 나무 종/수량/높이·벤치 위치/단면·지면 경사는 미확인. 옛 나목·단일3.2 m 망 구체·녹색 안내판·쌍등은 북측 광장에서 제거.",
+   "cc_01 유리 랜턴 깊이6 m·앞10.2/뒤10.6 m·y6부터 네 면과 경사지붕·색#a8cbbf/불투명도0.75는 사진 비례 근사. 정면은 파일런 앞s=-26.5에 정렬. C 중심y7.55, 불투명 원판r1.46/#262c2a가 유리보다0.35 m 앞, 크림 띠r1.25..0.6/#e8e4d6와 올리브금색 중심r0.55/#7d6d3a. 단면과 치수는 미측정.",
+   "갈색 정문 석재는0.8×0.2 m 교차 줄눈 근사. 정확한 석종/패널 치수·색은 촬영/조명 차이로 미확인. 남측은 사진11에 따라 회색 석재 줄눈으로 별도 수정.",
+   "cc_01 구체3개 지름2.04 m, 중심P(-45,11/19/27), 간격8 m·중심높이1.038 m. 양옆은 회녹색 석재, 가운데는 갈색/청동 얼룩. 사진의 수량/색 차이와 리뷰 지시 기반이며 정확한 간격·좌표·재료는 미측정.",
+   "cc_01 화강석 광장(s=-50까지)·낮은 화단·여름 수목·빨간 튜브 벤치·검은1 m 관형 난간·자전거 거치대3개·적백 볼라드·1.2×1.8 m 남색 안내판을 반영. 난간 간격2 m 이하와 횡단 개구부·수량·좌표·보드 한국어 제목은 근사, 판독 불가 지도/광고는 그리지 않음.",
    "cc_02의 베이지8층·LED 건물은 OSM413280002(르본시티,8F/H38,x-260.03..-204.13,z-5.03..45.49)로 판별하며 centralcity 소유 아님. 광고 내용·LED 치수는 추정하여 만들지 않음.",
-   "cmp 둘째 행의 회색 고가 구조는 city.js가 미소유 보행로1185035515(layer2)를15 m 높이와두꺼운 측벽으로 자동 생성한 결과로 판단. 정확한 실물 높이는 미확인. 엔진/claims 변경 없이 보고; 항공사진에 근거한 본 모듈의9 m 옥상 연결교는 보존.",
+   "모듈 소유 OSM1128012726 및 타워→데크 연결교는 높이9 m 유지, 두께0.65 m 슬래브·직경0.6 m 단일 원기둥·얇은 난간으로 단순화. 정확한 단면은 미측정. 별도 미소유 보행로1185035515는 city.js가 layer2→15 m로 생성하여 여전히 높은 구조가 보일 수 있음. claims/엔진 변경 없이 보고.",
    "사진03의 곡면 은색 출입 파빌리온은 북서측 세계 약(-138,-5), 로컬s-20.5..-9.5/t0.5..6.5의 기존 추정 배치를 유지. 2026 cc_01 우측 고투몰 덮개와 별개이며 현 존치/접지 위치는 미확인.",
-   "북측 정문은2026-06 로드뷰를 우선했고, 홀/야드/남측은 항공사진과2009년 사진에 기반한 라운드1–2 결과를 보존. 전체 단지 모든 점포/시설의2026 현황을 검증한 것은 아님.",
+   "북측은2026-06 cc_01/cc_02 우선, 야드는 항공사진, 홀·남측은2009 사진. Round4에서 지붕·남측 창·야드 재질도 보정했으나 전체 점포/시설의2026 현황을 새로 검증한 것은 아님.",
    "승차홈1~12 연속 배열·간격·매표소 구간·번호별 행선지 매핑은 미확인. 사진02의2/3/4/5와07의12로 번호 표현만 확인. 실제 운행시간이나 광고 문구는 만들지 않고 광고 화면은 센트럴시티 브랜드로 단순화.",
    "호남선 홀 기둥9.5 m 간격·4 m 주두·네 갈래 곡선 팔·쌍관 트러스 간격/웹·8.5 m 천장은 사진07의 비례와 리뷰 치수로 재구성. 2F를 t23..38.5로 한정하고 E3/엘리베이터를 동측으로 옮긴 내부 평면은 실측 미확인.",
    "사진07/08의 광택 대리석 바닥·6 m 어두운 띠·금속 좌석·유리 에스컬레이터 난간은 시각 근거. 줄눈/가구 수/업라이트 위치/금속 부속의 치수는 근사. E3 고체 측판은 밝은 대리석으로 마감.",
    "B1 사진05의 폭9 m 통로(t13..22), 3 m 간격 뾰족 리브·대각 교차 리브·중앙 조명·양측 유리 상점·6 m 대리석 필라스터는 리뷰 근사. 확인 안 된 점포 전면은 무명으로 유지; 알려진 브랜드도 정확한 점포 경계/층은 미측정.",
-   "사진11 원형관 지붕은16각 두 단/r18.5→9→2, 처마5.5 m/채광띠11..11.8 m/정상16.5 m로 추정. OSM H8.4보다 사진 비례/리뷰 높이를 우선했으며 벽체의 OSM 풋프린트는 변경하지 않음.",
+   "사진11 원형관 지붕은16각 두 단: [반경,높이]=[18.5,5.5]→[12,10.5]→[12,11.1]→[4.6,19.5], 어두운 유리 랜턴r4.6/y19.5..22, 낮은캡22.6 m. 2009 원경 사진/리뷰 비례 추정이며 현재 근접사진은 없음; OSM 접지/실내 층수 보존.",
    "원형관 스타벅스는 OSM level0/기존 연구 근거. 2F 부분 갤러리 반경14 m·중앙 개방부 반경6 m, 카운터·커피기기·가구·문·창 배치는 미확인 내부 구성. 두 층과 엘리베이터/계단/B1 연결을 보존.",
-   "남측 회색 화강석·짙은 기단·흰 CENTRAL CITY 글자·사각창은 사진11 근거. 창1.2 m/반복간격·1F 유리상점/캐노피·서측3.6 m 간격 띠창 y5.6..7.6은 미측정. 일부 사진 포디움은 JW에 속할 가능성이 있어 centralcity OSM 범위에만 적용.",
+   "사진11 남측 TERM8/9번 면: 회색 석재#a9a8a2·줄눈#8f8e88/0.6 m, 창2.2×1.6 m(y5.6..7.2)·4.5 m 반복, 흰 CENTRAL CITY 중심y8.15. 정확한 치수와1F 상점/캐노피는 미측정; JW 소유 범위는 건드리지 않음.",
    "항공사진이 보여주는 데크의 밝은 콘크리트/흰 주차선/낮은 점유를 재현. 데크2F/R 각각14대(북측11대),2.5x5 m 4열과6 m 통로, 타워주차장 약55% 점유·0.3 m 연석은 리뷰 기반 근사. 정확한 주차 구획 수·층별 차 배치는 미확인.",
    "타워주차장/야드 데크의 중간층4.5 m·층수·나선/직선 램프 종단은 기존 추정. 옥상 연결교와 순환 경로는 OSM 서비스도로에 근거하며 layer 숫자를 높이로 해석하지 않음.",
    "버스 야드3열과 서측 접안 방향은 항공사진/OSM 근거. 약80% 흰색/아이보리+운수사 띠, 약10% 짙은 프리미엄, 소수 은하수고속관광 적백 차체는 사진03/09/리뷰에 맞춘 정적 구성. 실제 운수사별 색/대수/배정은 미확인.",
@@ -345,37 +357,37 @@
    "매표소·무인발권기 존재는 기존 연구/사진07 근거. 창구 수·기기 수·정확한 위치·한국어 안내 문구는 단순 구성. 실제 시간표·가격·메뉴는 만들지 않음.",
    "B1 영화관과8관 구성·로비·매표/매점·스크린·좌석 단차는 기존 연구 기반 근사. 상충하는 문헌이 있어 실측 확정 평면으로 취급하지 않으며 가상 영화 제목/상영시간/가격은 표시하지 않음.",
    "OSM POI 일부가 JW 풋프린트 안에 있어 기존 터미널쪽 조사 브랜드 배치 유지. 점포별 경계·층 배정·화장실·설비 및 공유 연결 외 계단/엘리베이터 위치는 미확인.",
-   "인물의 수·위치·복장, 가구/차량의 정적 배치는 사진의 사용 상황을 단순 재현. 계절 장식이나 확인되지 않은 브랜드·광고·시설은 임의 추가하지 않음."
+   "인물의 수·위치·복장, 가구/차량의 정적 배치는 사진의 사용 상황을 단순 재현. 계절 장식이나 확인되지 않은 브랜드·광고·시설은 임의 추가하지 않음.",
+   "정문 검은 파시아는폭6.6 m/y2.9..3.6, 갈색 스팬드럴y3.6..6. SHINSEGAE CENTRAL CITY는 사용자 판독 지시를 반영했으며 ref_sign_zoom에서 첫 단어는 독립 확인 불가. 문 후퇴1.7 m·어두운 전실/유리색#2a3230·깊이6 m는 외관에 맞춘 단순화.",
+   "신규 광장 파빌리온은 cc_01 오른쪽·cc_02 왼쪽·항공사진의 같은 구조물로 취급. RECT(s-40.56..-33.06,t-29.3..-11.3), 18×7.5 m, 회색 금속 기단0..1.6 m·녹색 유리1.6..3.4 m·1.2 m 리브/줄눈·처마3.5 m/상승1 m/돌출0.3 m. 고투몰·지하철 중 정확한 소속/지하 연결 미확인. 임의 연결통로 대신1.4 m 내려가는 짧은 계단과 무표기 하단 마감; 기능적 B1 출입구로 주장하지 않음.",
+   "광장 서쪽40×4 m 반투명 캐노피는cc_02/사진09의 흰 곡선·경사 지지대 근거. 로컬s-47..-43,t-45..-5로 근사하여 OSM 서비스 진입로를 피함. 파빌리온 뒤s=-30의8.5..10 m 나무5그루는cc_01 울창한 수목을 단순화; 종/간격·화단 길이는 미측정.",
+   "호남선 야드·승차홈 앞·데크 주변 진입로는 concrete 텍스처/#9a9890로 밝힘. 기존 asphalt 원본#3b3c3f에 tint#8d8d8f를 곱해 검게 되던 원인 제거. 중간회색 목표는 항공사진/리뷰 근거, 새 렌더 픽셀90..105 달성 여부는 샌드박스에서 미측정. 샘플 지점의 중복 OSM 영역/동일 높이 어두운 폴리곤은 확인되지 않음.",
+   "critic hn_hall_w의 빈 방은 동측 점포 띠s108..119,t28..38.2. 실사용이 확인되지 않아 전면을 무표기 평벽으로 닫음. 사진07의 평범한 내부 마감에 맞춘 보수적 처리이며 실측 폐쇄벽이라는 주장은 아님. 바로 옆J6 통로s119..129 유지."
   ],
   "megabox": "B1 영화관과 기존 연결 동선을 보존. 조사된 메가박스 이름, 로비·매표소·매점·중립 좌석·상영관을 단순화하며 개별 집기 위치·상영관 평면은 추정. 가상 영화 제목·상영시간·가격은 표시하지 않음.",
   "reference_implementation": {
-   "gate_plaza": "2026 cc_01:11.8 m 갈색 쌍파일런·얕은 유리 캐노피·격자 유리 패널 앞 입체 C·낮은 검은 CENTRAL CITY 간판·열린 중앙 유리문. 밝은 화강석·석재 구체3개(2.04 m)·여름 수목·서측 빨간 벤치.",
+   "gate_plaza": "cc_01/01: 불투명 원판+크림C+금색중심, 0.75 민트 입체랜턴·경사지붕10.2..10.6 m, 전폭 검은 파시아/후퇴한 어두운 문, 스팬드럴. cc_01: 전방8 m 간격 구체(중앙 청동)·확장 화강석·검은난간·U자 거치대·볼라드·남색 안내판.",
    "hall": "02/07: 일대일 붉은 승차홈 숫자·LED 화면·상부 유리, 8.5m 밝은 금속 볼트·흰 쌍관 곡선 트러스·주두와 업라이트·대리석·금속 좌석. 08: E3 유리 난간/스테인리스/대리석.",
    "b1": "05: t13..22 좁은 체크 바닥 상가·양측 쇼윈도/대리석 필라스터·뾰족 리브와 대각 리브·연속 중앙 조명; 타일 평천장 제거.",
-   "round_south": "11: 높고 가파른 녹청색16각 두 단 지붕·처마·유리 드럼, 회색 포디움/CENTRAL CITY/사각창. OSM level0/기존 연구: 스타벅스.",
+   "round_south": "11: 가파른16각 두 단 녹청색 지붕·넓은r4.6 랜턴·22.6 m 캡; 남측0.6 m 회색 석재 줄눈·4.5 m 간격 큰 어두운 창·창 위 흰 CENTRAL CITY.",
    "parking": "항공사진/OSM: 밝은 콘크리트 데크와 회색 통로·흰 구획·층당14대 희박한 차 배치·타워55% 점유/둥근 경계 연석·옥상 연결교.",
    "fleet_shelter": "항공사진/03/09: 흰색·아이보리 고속버스와 운수사 띠, 소수 짙은 프리미엄/적백 관광버스;09 곡면 캐노피·V자 지지·스테인리스 난간/쌍등.",
    "pavilion": "03: 곡면 은색 캐노피·굽은 금속 지지·청록 루버유리·흰 루버탑·분홍 화강석·B1 에스컬레이터. 북서측 위치는 추정.",
    "neutral_details": "사진/연구로 확인 안 된 상점은 무명 전면. 항공/철도식 번호판·그룹 번호·가상 운행표 없음. 기존 OSM claims/공유 연결/층수 유지.",
    "west_frontage": "cc_02+OSM:8층 베이지/LED는 르본시티413280002로 중앙시티 외 범위. 본 터미널 높이/OSM claims/야드/옥상/홀은 보존.",
-   "grey_structure": "cmp 행2:미소유 OSM1185035515 보행로 layer2→city.js 15 m 고가 자동 생성으로 판단. 이 모듈 소유 구조가 아니므로 삭제/엔진 변경 없음."
+   "grey_structure": "cmp 행2:미소유 OSM1185035515 보행로 layer2→city.js 15 m 고가 자동 생성으로 판단. 이 모듈 소유 구조가 아니므로 삭제/엔진 변경 없음.",
+   "forecourt_pavilion": "cc_01 우측/cc_02 좌측/항공: 별도18×7.5 m 금속기단·녹색유리·흰 곡면지붕. 고투몰 현 exit/groundHole와 중복 없음. 미확인 지하 목적지로 연결하지 않고 보이는 계단만 구현.",
+   "north_canopy_bridge": "cc_02/09:40 m 반투명 곡면지붕·흰 경사 지지대. cc_01:파빌리온 뒤8..10 m 수목열. OSM 모듈 소유 연결교0.65 m 슬래브/직경0.6 m 기둥. 별도 city 자동생성15 m 보행교는 범위밖.",
+   "yard_surface": "항공사진: 중간회색 지면. 승차홈 앞/회차로/YARD 모두 concrete+#9a9890, 흰색·노란색 구획 유지.",
+   "hall_plain_closure": "critic hn_hall_w: 확인 안 된 방 전면만 s108..119/t28 평벽으로 마감, J6 통로 개방 유지."
   },
   "validation": {
-   "status": "Round3 smoke and full-world walk passed; rendered visual review pending",
+   "status": "Round4 smoke, full-world walk, six local routes and independent geometry review passed; fresh rendered review not available",
    "smoke_command": "node tests/smoke.mjs centralcity shinsegae jwmarriott station gotomall",
+   "smoke_result": "OK",
    "walk_command": "node tests/walk.mjs",
    "budget_quads": 130000,
-   "preserved_connections": [
-    "J3",
-    "J4 1F/B1",
-    "J6",
-    "J7"
-   ],
-   "wells": "No WELLS entry names centralcity.",
-   "visual_review": "cc_01/cc_02·항공사진·cmp 직접 검토 및 독립 코드 검토. 사용자 지시에 따라 tests/shot.mjs 미실행; 변경 후 실제 렌더 이미지 검증은 미수행.",
-   "smoke_result": "OK",
-   "centralcity_quads": 103159,
-   "walk_result": "walk: 320 ok, 0 blocked",
+   "centralcity_quads": 109289,
    "spawns": 12,
    "zones": 32,
    "elevators": 5,
@@ -385,23 +397,36 @@
     "2F",
     "R"
    ],
-   "additional_routes": {
-    "method": "Existing tests/walk.mjs BFS reused in memory with centralcity + four neighbours + city; no test files changed",
-    "passed": [
-     "도로→세 구체 사이→정문→홀",
-     "광장 동서 횡단",
-     "정문 스폰→홀"
-    ],
-    "result": "3 ok,0 blocked"
-   },
-   "render_review_targets": [
-    "cc01(-150,0,-62,yaw215):갈색 쌍파일런·유리/C·CENTRAL CITY·석재구체3개·잎 있는 나무·빨간 벤치",
-    "정문 가까이:문/유리/C 깊이·구체 입체감과 석재 명암; 렌더 확인 필요",
-    "기존 홀/버스 야드/옥상/원형관 변경 없음; 회색city 자동생성 보행교는 별도 엔진 수정 대상"
+   "preserved_connections": [
+    "J3",
+    "J4 1F/B1",
+    "J6",
+    "J7"
    ],
-   "centralcity_walk_command": "node tests/walk.mjs centralcity --no-city",
-   "centralcity_walk_result": "walk:29 ok,0 blocked",
-   "concurrent_edit_note": "첫 전체 walk 시도는 편집 중인 gyeongbu의 buildNorthArcade 미정의로 중단. 해당 함수가 저장된 후 동일한 node tests/walk.mjs를 다시 실행하여320 ok,0 blocked 확인."
+   "wells": "No WELLS entry names centralcity.",
+   "visual_review": "Provided reference/critic PNGs inspected. tests/shot.mjs not run per user sandbox limitation; new render and exact RGB sampling not performed.",
+   "additional_routes": {
+    "method": "Existing tests/walk.mjs BFS reused in memory with centralcity + four neighbours + city; no test files written",
+    "passed": [
+     "도로 횡단부→구체 사이→정문→홀",
+     "광장 동서 횡단",
+     "파빌리온 계단 하강",
+     "파빌리온 계단→광장 복귀",
+     "9 m 옥상 연결교 통과",
+     "닫은 빈 점포 옆 J6 통로"
+    ],
+    "result": "6 ok, 0 blocked"
+   },
+   "geometry_review": {
+    "method": "Independent review plus real-kit THREE raycasts; no rendered screenshots",
+    "emblem": "cc01 관측점에서 C 좌측/상단은 #e8e4d6, 중심은 #7d6d3a, 오른쪽 개구/테두리는 #262c2a가 첫 교차면. 유리/멀리언은 원판 뒤 최소0.32 m.",
+    "glass": "정문 랜턴/신규 파빌리온은 면당 단일 유리 quad로 변경하여 투명벽 중복 합성 방지.",
+    "pavilion": "곡선 박공 유리와 지붕 높이까지 닫힌 금속 처마판; 계단/홀/하단 마감 일치.",
+    "yard": "샘플(-140,40),(-200,90)에 추가 OSM 도로 중첩 없음; 주차영역1173096801 claim 유지.",
+    "claims": "claims/claimRoads/claimAreas lists unchanged"
+   },
+   "walk_result": "walk: 318 ok, 0 blocked",
+   "concurrent_edit_note": "다른 모듈 동시 편집 중. 최종 전체 walk의318건 모두 통과; 이전320건 결과보다 검사 수가 달라졌지만 blocked는0. centralcity의12 spawns/32 zones/5 elevators 및 claims는 유지."
   },
   "round2_issues": {
    "1–2": "사진01: 독립13m 파일런·6.6m 순폭·6m 날개/열린 상부·반원통 지붕·4.9x2.7 간판·금속 필라스터·4짝 유리문·확대 눈 조형.",
@@ -440,6 +465,78 @@
      "owner": "js/city.js",
      "note": "layer2가15 m 보행교/급경사 끝단으로 생성되어 cmp의 회색 구조와 부합. 실제 높이 재검토 필요."
     }
+   ],
+   "validation": {
+    "status": "Round3 smoke and full-world walk passed; rendered visual review pending",
+    "smoke_command": "node tests/smoke.mjs centralcity shinsegae jwmarriott station gotomall",
+    "walk_command": "node tests/walk.mjs",
+    "budget_quads": 130000,
+    "preserved_connections": [
+     "J3",
+     "J4 1F/B1",
+     "J6",
+     "J7"
+    ],
+    "wells": "No WELLS entry names centralcity.",
+    "visual_review": "cc_01/cc_02·항공사진·cmp 직접 검토 및 독립 코드 검토. 사용자 지시에 따라 tests/shot.mjs 미실행; 변경 후 실제 렌더 이미지 검증은 미수행.",
+    "smoke_result": "OK",
+    "centralcity_quads": 103159,
+    "walk_result": "walk: 320 ok, 0 blocked",
+    "spawns": 12,
+    "zones": 32,
+    "elevators": 5,
+    "floors": [
+     "B1",
+     "1F",
+     "2F",
+     "R"
+    ],
+    "additional_routes": {
+     "method": "Existing tests/walk.mjs BFS reused in memory with centralcity + four neighbours + city; no test files changed",
+     "passed": [
+      "도로→세 구체 사이→정문→홀",
+      "광장 동서 횡단",
+      "정문 스폰→홀"
+     ],
+     "result": "3 ok,0 blocked"
+    },
+    "render_review_targets": [
+     "cc01(-150,0,-62,yaw215):갈색 쌍파일런·유리/C·CENTRAL CITY·석재구체3개·잎 있는 나무·빨간 벤치",
+     "정문 가까이:문/유리/C 깊이·구체 입체감과 석재 명암; 렌더 확인 필요",
+     "기존 홀/버스 야드/옥상/원형관 변경 없음; 회색city 자동생성 보행교는 별도 엔진 수정 대상"
+    ],
+    "centralcity_walk_command": "node tests/walk.mjs centralcity --no-city",
+    "centralcity_walk_result": "walk:29 ok,0 blocked",
+    "concurrent_edit_note": "첫 전체 walk 시도는 편집 중인 gyeongbu의 buildNorthArcade 미정의로 중단. 해당 함수가 저장된 후 동일한 node tests/walk.mjs를 다시 실행하여320 ok,0 blocked 확인."
+   }
+  },
+  "round4": {
+   "reference_date": "2026-06 (north); 2009 (south/hall)",
+   "issue_status": {
+    "C_emblem": "solid disc, cream C and olive-gold core",
+    "missing_pavilion": "one 18×7.5m forecourt headhouse; no duplicate gotomall exit",
+    "yard": "all three ground regions use medium-grey material; no duplicate dark area found",
+    "lantern": "four glazed faces and sloped roof10.2..10.6m",
+    "entry": "6.6m dark recess/0.7m fascia/1.7m door setback",
+    "spheres": "s-45,t11/19/27; centre bronze",
+    "round_roof": "steeper two tiers, broad dark lantern22m/cap22.6m",
+    "bridge_canopy": "owned bridge slimmed and tree screen/40m curved canopy added; engine-owned15m footway remains",
+    "south_facade": "stone courses, larger dark windows, raised letters",
+    "furniture": "rail gaps, bike stands, bollard, blue directory",
+    "hall": "unverified blank bay closed; J6 clear"
+   },
+   "claims_unchanged": true,
+   "out_of_scope": [
+    {
+     "osm_id": 1185035515,
+     "owner": "js/city.js",
+     "issue": "layer2 automatically makes a separate15m bridge; no engine/claim edits authorized"
+    },
+    {
+     "osm_id": 413280002,
+     "owner": "generic city building",
+     "issue": "cc_02 tan/LED block belongs to 르본시티, outside centralcity"
+    }
    ]
   }
  },
@@ -451,7 +548,7 @@
    "기존 웹 연구는 용도/브랜드 근거; 미확인 배치는 추정으로 분리"
   ],
   "aerial_caution": "북쪽 위, x 동쪽·z 남쪽. 10 m 격자/50 m 라벨. 사선 촬영으로 고층부 지붕이 접지 풋프린트에서 어긋나므로 지붕 투영을 외벽 위치로 사용하지 않음.",
-  "photo_dates": "북측 정문·광장:2026-06 cc_01.서측 소유확인:2026-06 cc_02.야드/옥상:제공 항공사진.홀/남측/파빌리온:2009년 사진 기반 유지.",
+  "photo_dates": "북측정문·파빌리온·캐노피·수목:2026-06 cc_01/cc_02. 야드/옥상:제공 항공사진. 홀/남측:2009년 사진; 최신 남측 근접사진 없음.",
   "missing": [],
   "excluded": [
    {

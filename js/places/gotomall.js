@@ -88,9 +88,9 @@ const EXITS = [
   { id: 'G4', side: 'N', u: -272, a: [1, 0], kind: 'mall', dest: '반포쇼핑타운 1·2동 · 한신6차' },
   { id: 'G5', side: 'S', u: -248, a: [1, 0], kind: 'mall', dest: '센트럴시티 · 신세계면세점 · 호남선' },
   { id: 'G6', side: 'N', u: -206, a: [1, 0], kind: 'mall', dest: '반포쇼핑타운 2·3동 · 한신6차' },
-  { id: '8-1', side: 'N', u: -97.3, a: [1, 0], kind: 'metro', gate: 'G8-1', dest: '반포쇼핑타운 3동 · 9호선' },
+  { id: '8-1', side: 'N', u: -97.3, a: [1, 0], kind: 'metro', gate: 'G8-1', dest: '반포쇼핑타운 3동 · 9호선', elevator: true },
   { id: '8', side: 'S', top: [-64.3, 20.0], a: [1, 0], kind: 'metro', dest: '신세계백화점 · 센트럴시티' },
-  { id: '8-2', side: 'N', u: -29.0, a: [1, 0], kind: 'metro', gate: 'G8-2', dest: '반포쇼핑타운 4동 · 신반포로23길', elevator: true },
+  { id: '8-2', side: 'N', u: -29.0, a: [1, 0], kind: 'metro', gate: 'G8-2', dest: '반포쇼핑타운 4동 · 신반포로23길', wheelchairLift: false },
   { id: '1', side: 'S', top: [40.9, 37.3], a: [0, -1], kind: 'metro', gate: 'G9', dest: '경부선 터미널 · 반포지구대' },
   { id: 'G10', side: 'N', u: 60, a: [1, 0], kind: 'mall', dest: '한신4차 · 반포쇼핑타운 5동' },
   { id: 'G11', side: 'N', u: 96, a: [1, 0], kind: 'mall', dest: '올에이수입상가 · 반포쇼핑타운 6동' },
@@ -212,6 +212,9 @@ export function build(K) {
   // ---------- materials ----------
   // ceiling: unlit so the white panels read bright underground (Lambert faces pointing down get only ground light)
   K.material('gt_ceil_u', new K.THREE.MeshBasicMaterial({ map: K.T.custom('gt_ceil').tex, color: 0xdedcd6 }));
+  // bp_01: pale frosted lift glazing, much less transparent than the stair canopy.
+  K.material('gt_lift_glass', new K.THREE.MeshLambertMaterial({ color: 0xc9d4d1, transparent: true, opacity: 0.78, depthWrite: false, side: K.THREE.DoubleSide }));
+  K.material('gt_canopy_collision', new K.THREE.MeshBasicMaterial({ visible: false }));
   const M = {
     floor: { tex: 'gt_floor' }, ceil: { tex: 'gt_ceil_u', scale: [1.2, 1.2] }, wall: { tex: 'gt_wall' }, fascia: 0xf6f3ee, part: 0xece8e1,
     col: { tex: 'marble', color: 0xf3f0ea }, spine: 0xe9e4dc, led: { tex: 'emit', color: 0xfffdf4 }, ledWarm: { tex: 'emit', color: 0xfff1d6 },
@@ -773,6 +776,10 @@ export function build(K) {
     const faceA = a[0] === 1 ? '+u' : a[0] === -1 ? '-u' : a[1] === 1 ? '+v' : '-v';
     const faceNA = { '+u': '-u', '-u': '+u', '+v': '-v', '-v': '+v' }[faceA];
     const HOLE = 9.0, L0 = 11.5, L1 = 14.5, END = X.elevator ? 16.9 : L1;
+    const northCanopy = X.side === 'N';
+    // bp_02: 8-1 extends west of the bus shelter, leaving the lift freestanding at its east end.
+    // bp_34 aerial: 8-2 roof instead covers the full eastward run. Keep B1 geometry unchanged.
+    const CAN0 = X.id === '8-1' ? -7 : -0.1, CAN1 = CAN0 + 16;
     const metro = X.kind === 'metro';
     const title = metro ? `${X.id}번 출구` : `${X.id} 출구`;
     // stairs (two flights) + landings
@@ -787,14 +794,14 @@ export function build(K) {
     fq(M.led, ...rect(HOLE + 0.6, END - 0.4, -0.15, 0.15), CY - 0.012, false);
     // ground hole over the open stairwell
     K.groundHole(polyOf(rect(-0.1, HOLE, -1.85, 1.85)));
-    // walls: open part (parapet to +1.0), covered part to the ceiling
+    // Underground walls; north-side surface plinths are built separately below.
     const passAlong = a[1] === 0; // passage leaves through a side wall (else through the end)
     for (const sgn of [-1, 1]) {
       const toBand = passAlong && sgn === X.bandSideAc;
-      wallAlong(-0.1, HOLE, sgn * 1.75, -6.3, 1.0, { mat: sgn > 0 ? M.granite : M.wall, mat2: sgn > 0 ? M.wall : M.granite, thick: 0.2, capMat: 0xcfc9bf });
+      wallAlong(-0.1, HOLE, sgn * 1.75, -6.3, northCanopy ? 0 : 1.0, { mat: sgn > 0 ? M.granite : M.wall, mat2: sgn > 0 ? M.wall : M.granite, thick: 0.2, capMat: 0xcfc9bf });
       wallAlong(HOLE, END, sgn * 1.75, -6.3, CY, { mat: M.wall, thick: 0.2, openings: toBand ? [{ at: (L0 + L1) / 2 - HOLE, w: 3.0, y0: FL, y1: -3.25 }] : [] });
     }
-    wallAcross(HOLE, -1.85, 1.85, CY, 1.0, { mat: M.wall, mat2: M.granite, thick: 0.2, capMat: 0xcfc9bf });
+    wallAcross(HOLE, -1.85, 1.85, CY, northCanopy ? 0 : 1.0, { mat: M.wall, mat2: M.granite, thick: 0.2, capMat: 0xcfc9bf });
     if (passAlong) wallAcross(END, -1.85, 1.85, -6.3, CY, { mat: M.wall, thick: 0.2 });
     // passage to the band
     const [pu0, pv0, pu1, pv1] = X.pass;
@@ -820,6 +827,51 @@ export function build(K) {
     sg('GOTO MALL 고투몰', X.uc, front - inward * 0.06, -2.62, 3.0, 0.55, inward > 0 ? '-v' : '+v', { bg: '#1f2a3d', fg: '#ffffff', sub: inward > 0 ? '← EAST ZONE · 9호선    WEST ZONE · 3호선 →' : '← WEST ZONE · 3호선    EAST ZONE · 9호선 →' });
     K.box({ x: P(X.uc, front)[0], z: P(X.uc, front)[1], y: -2.95, w: 3.1, d: 0.1, h: 0.66, rotY: ROT, mat: 0x1f2a3d, solid: false, skip: [] });
     // ---- street level: canopy, glass, header sign ----
+    if (northCanopy) {
+      // 2026 bp_02: low grey stone, almost full-height green glass and fine light steel.
+      const BASE = 0.45, TOP = 2.8, RAKE = CAN1 - 0.75, FRAME = 0xa3a8ab;
+      const glass = { tex: 'glass', color: 0x9fbfae };
+      const cbx = (al0, al1, ac0, ac1, y, h, mat) => { const r = rect(al0, al1, ac0, ac1); bx(r[0], r[2], r[1], r[3], y, h, mat, { solid: false, skip: [] }); };
+      const vertex = (al, ac, y) => { const [x, z] = P(...E(al, ac)); return [x, y, z]; };
+      // Solid-looking 80 mm fins, sloping in the length/height plane (no dark outline).
+      const fin = (al0, y0, al1, y1, ac) => {
+        const da = al1 - al0, dy = y1 - y0, len = Math.hypot(da, dy), oa = dy * 0.04 / len, oy = -da * 0.04 / len;
+        const section = [[al0 - oa, y0 - oy], [al1 - oa, y1 - oy], [al1 + oa, y1 + oy], [al0 + oa, y0 + oy]];
+        const p = side => section.map(([al, y]) => vertex(al, ac + side * 0.04, y));
+        const left = p(-1), right = p(1);
+        K.quad(FRAME, left, [-DV[0], 0, -DV[1]]); K.quad(FRAME, right, [DV[0], 0, DV[1]]);
+        for (let i = 0; i < 4; i++) {
+          const j = (i + 1) % 4, na = section[i][1] - section[j][1], ny = section[j][0] - section[i][0], nl = Math.hypot(na, ny);
+          K.quad(FRAME, [left[i], left[j], right[j], right[i]], [DU[0] * na / nl, ny / nl, DU[1] * na / nl]);
+        }
+      };
+      for (const side of [-1, 1]) {
+        wallAlong(CAN0, CAN1, side * 1.75, 0, BASE, { mat: 0x8e8f8c, thick: 0.2, capMat: 0x8e8f8c });
+        wallAlong(CAN0, RAKE, side * 1.75, BASE, TOP, { mat: glass, thick: 0.03 });
+        const n = [DV[0] * side, 0, DV[1] * side];
+        K.quad(glass, [vertex(RAKE, side * 1.75, BASE), vertex(CAN1, side * 1.75, BASE), vertex(RAKE, side * 1.75, TOP), vertex(RAKE, side * 1.75, TOP)], n);
+        for (let al = CAN0; al < RAKE - 0.04; al += 1.5) cbx(al - 0.04, al + 0.04, side * 1.75 - 0.04, side * 1.75 + 0.04, BASE, TOP - BASE, FRAME);
+        cbx(RAKE - 0.04, RAKE + 0.04, side * 1.75 - 0.04, side * 1.75 + 0.04, BASE, TOP - BASE, FRAME);
+        cbx(CAN0, RAKE, side * 1.75 - 0.04, side * 1.75 + 0.04, TOP - 0.08, 0.08, FRAME);
+        for (let al = CAN0 + 4.5; al < RAKE; al += 4.5) fin(al, BASE, al - 0.65, TOP, side * 1.75);
+        fin(CAN1, BASE, RAKE, TOP, side * 1.75);
+      }
+      wallAcross(CAN1, -1.85, 1.85, 0, BASE, { mat: 0x8e8f8c, thick: 0.2, capMat: 0x8e8f8c });
+      // Flush roof and raked glazed closed end; transverse roof ribs at 2.5 m centres.
+      K.quad(glass, [vertex(CAN0, -1.75, TOP), vertex(RAKE, -1.75, TOP), vertex(RAKE, 1.75, TOP), vertex(CAN0, 1.75, TOP)], [0, 1, 0]);
+      K.quad(glass, [vertex(RAKE, -1.75, TOP), vertex(CAN1, -1.75, BASE), vertex(CAN1, 1.75, BASE), vertex(RAKE, 1.75, TOP)], [DU[0] * (TOP - BASE) / Math.hypot(TOP - BASE, 0.75), 0.75 / Math.hypot(TOP - BASE, 0.75), DU[1] * (TOP - BASE) / Math.hypot(TOP - BASE, 0.75)]);
+      for (let al = CAN0; al < RAKE; al += 2.5) cbx(al - 0.04, al + 0.04, -1.75, 1.75, TOP - 0.08, 0.08, FRAME);
+      for (const al of [CAN0, RAKE]) cbx(al, al + 0.08, -1.75, 1.75, TOP - 0.15, 0.15, FRAME);
+      // Collision stays just inside the sloping end, without adding a visible vertical glass panel.
+      wallAcross(RAKE, -1.75, 1.75, BASE, TOP, { mat: 'gt_canopy_collision', thick: 0.02 });
+      const hp = ac => E(CAN0 - 0.06, ac);
+      cbx(CAN0 - 0.07, CAN0 - 0.02, -1.3, 1.3, 2.18, 0.4, FRAME);
+      if (metro) {
+        sg(X.id, ...hp(-1.02), 2.38, 0.42, 0.3, faceNA, { bg: '#f5c400', fg: '#111', pxPerM: 110 });
+        sg('고속터미널역', ...hp(-0.04), 2.38, 1.3, 0.25, faceNA, { bg: '#e5e9e6', fg: '#303a36', pxPerM: 110 });
+        [3, 7, 9].forEach((ln, i) => sg(String(ln), ...hp(0.78 + i * 0.19), 2.38, 0.17, 0.21, faceNA, { bg: LINE[ln], fg: '#fff', pxPerM: 110 }));
+      } else sg(`고투몰 ${X.id}`, ...hp(0), 2.38, 2.3, 0.28, faceNA, { bg: '#e5e9e6', fg: '#303a36', pxPerM: 110 });
+    } else {
     for (const al of [-0.1, HOLE / 2, HOLE]) for (const sgn of [-1, 1]) { const [u, v] = E(al, sgn * 1.75); const [x, z] = P(u, v); K.box({ x, z, y: 1.0, w: 0.12, d: 0.12, h: 1.78, rotY: ROT, mat: 0x4c5258, solid: false }); }
     for (const sgn of [-1, 1]) wallAlong(-0.1, HOLE, sgn * 1.75, 1.0, 2.6, { mat: 'glass', thick: 0.03 });
     wallAcross(HOLE, -1.75, 1.75, 1.0, 2.6, { mat: 'glass', thick: 0.03 });
@@ -838,53 +890,57 @@ export function build(K) {
     }
     // side sign on the parapet (outer face) for pedestrians walking along the sidewalk
     { const side = (X.side === 'N' ? -1 : 1) * (a[1] === 0 ? 1 : 0); if (side) { const p = E(HOLE / 2, side * 1.87); sg(metro ? `고속터미널역 ${X.id}` : `GOTO MALL ${X.id}`, p[0], p[1], 0.55, 2.6, 0.32, side > 0 ? '+v' : '-v', { bg: '#2b3038', fg: '#fff', sub: X.dest }); } }
+    }
     // ---- step-free access ----
     const Q = (al, ac) => P(...E(al, ac));
     const ebx = (al0, al1, ac0, ac1, y, h, mat, o) => { const r = rect(al0, al1, ac0, ac1); bx(r[0], r[2], r[1], r[3], y, h, mat, o); };
     const cvec = (sgn) => { const cu = c[0] * sgn, cv = c[1] * sgn; return [DU[0] * cu + DV[0] * cv, DU[1] * cu + DV[1] * cv]; };
     const faceC = sgn => (c[0] !== 0 ? (c[0] * sgn > 0 ? '+u' : '-u') : (c[1] * sgn > 0 ? '+v' : '-v'));
     if (X.elevator) {
-      // 8-2: glass-walled station elevator (1F sidewalk ↔ B1 landing). Built here with shaft:false because the kit's
-      // shaft front wall fills stacked door openings (see research json / engine note); doors face the stairs (-a).
-      const e0 = L1 + 0.25, e1 = e0 + 2.0, ew = 1.0, dw = 0.6, TOPY = 3.0;
-      const steel = 0xc3c8cd, frame = 0x3c4248;
+      // bp_01 + corrected manifest: the freestanding glass lift is beside 8-1, not 8-2.
+      // Keep the B1 cabin at the existing passage end; the small horizontal offset is recorded as a guess.
+      const e0 = L1 + 0.25, e1 = e0 + 2.0, ew = 1.0, dw = 0.6;
+      const steel = 0xc3c8cd, frame = 0x6b7075;
       K.slab(polyOf(rect(e0, e1, -ew, ew)), FL, { mat: { tex: 'metal', color: 0xb0b5ba }, ceil: false, edge: false });
-      ebx(e0 + 0.05, e1 - 0.05, -ew + 0.05, ew - 0.05, -0.03, 0.045, { tex: 'metal', color: 0xb0b5ba }, { solid: false });
-      // underground shaft (B1 → street): stainless panels
-      wallAcross(e1, -ew, ew, FL, 0, { mat: steel, thick: 0.12 });
-      for (const sgn of [-1, 1]) wallAlong(e0, e1, sgn * ew, FL, 0, { mat: steel, thick: 0.12 });
-      // front wall: two piers + door column only where there is no door (B1 door -6..-3.8, 1F door 0..2.2)
-      for (const [p0, p1] of [[-ew, -dw], [dw, ew]]) wallAcross(e0, p0, p1, FL, TOPY, { mat: steel, thick: 0.12 });
-      wallAcross(e0, -dw, dw, FL + 2.2, 0, { mat: steel, thick: 0.12 });
-      wallAcross(e0, -dw, dw, 2.2, TOPY, { mat: steel, thick: 0.12 });
-      // above ground: glass cab enclosure, steel corner posts, roof
-      wallAcross(e1, -ew, ew, 0, TOPY, { mat: 'glass', thick: 0.03 });
-      for (const sgn of [-1, 1]) wallAlong(e0, e1, sgn * ew, 0, TOPY, { mat: 'glass', thick: 0.03 });
-      for (const al of [e0, e1]) for (const ac of [-ew, ew]) ebx(al - 0.06, al + 0.06, ac - 0.06, ac + 0.06, 0, TOPY, frame, { solid: false });
-      for (const al of [e0, e1]) ebx(al - 0.05, al + 0.05, -ew, ew, 1.0, 0.06, frame, { solid: false });
-      ebx(e0 - 0.45, e1 + 0.15, -ew - 0.18, ew + 0.18, TOPY, 0.24, frame, { solid: false, skip: [] });
-      sg('엘리베이터', ...E(e0 - 0.45, 0), TOPY + 0.12, 1.5, 0.2, faceNA, { bg: '#3c4248', fg: '#ffffff', pxPerM: 120 });
-      sg(`${X.id}`, ...E(e0 - 0.45, -0.98), TOPY + 0.12, 0.4, 0.2, faceNA, { bg: '#f5c400', fg: '#111', pxPerM: 120 });
-      [3, 7, 9].forEach((ln, i) => sg(String(ln), ...E(e0 - 0.45, 0.85 + i * 0.25), TOPY + 0.12, 0.2, 0.2, faceNA, { bg: LINE[ln], fg: '#fff', pxPerM: 120 }));
-      for (const [fy, ly, lab] of [[FL, CY, 'B1'], [0, TOPY, '1F']]) {
-        // hall side: stainless door frame, floor indicator, call button
-        for (const sgn of [-1, 1]) ebx(e0 - 0.08, e0 - 0.06, sgn * dw - 0.06, sgn * dw + 0.06, fy, 2.25, 0xdfe3e7, { solid: false, skip: [] });
-        ebx(e0 - 0.08, e0 - 0.06, -dw - 0.06, dw + 0.06, fy + 2.2, 0.1, 0xdfe3e7, { solid: false, skip: [] });
-        sg(`${lab}  ▲▼`, ...E(e0 - 0.08, 0), fy + 2.5, 0.62, 0.2, faceNA, { bg: '#111111', fg: '#ff5a2a', pxPerM: 120, offset: 0.01 });
-        ebx(e0 - 0.1, e0 - 0.06, dw + 0.16, dw + 0.3, fy + 0.95, 0.3, 0x2b2f34, { solid: false, skip: [] });
-        sg('▲▼', ...E(e0 - 0.1, dw + 0.23), fy + 1.1, 0.12, 0.22, faceNA, { bg: '#2b2f34', fg: '#9ad7ff', pxPerM: 160, offset: 0.005 });
-        // cab: handrail, control panel, light
-        ebx(e1 - 0.16, e1 - 0.1, -0.8, 0.8, fy + 0.88, 0.05, 0xd5d9dd, { solid: false, skip: [] });
-        ebx(e0 + 0.3, e0 + 0.62, ew - 0.08, ew - 0.06, fy + 0.85, 0.55, 0x2b2f34, { solid: false, skip: [] });
-        ebx(e0 + 0.3, e1 - 0.3, -0.55, 0.55, ly - 0.035, 0.02, M.led, { solid: false, skip: [] });
+      wallAcross(e1, -ew, ew, FL, CY, { mat: steel, thick: 0.12 });
+      for (const side of [-1, 1]) wallAlong(e0, e1, side * ew, FL, CY, { mat: steel, thick: 0.12 });
+      for (const [p0, p1] of [[-ew, -dw], [dw, ew]]) wallAcross(e0, p0, p1, FL, CY, { mat: steel, thick: 0.12 });
+      wallAcross(e0, -dw, dw, FL + 2.2, CY, { mat: steel, thick: 0.12 });
+      sg('엘리베이터', ...E(e0 - 0.08, 0), FL + 2.5, 1.1, 0.22, faceNA, { bg: '#e1e5e5', fg: '#303a36' });
+      // 2.6 × 2.6 m, 4 m high; north/east/west glazing and south-facing doors.
+      const ex = -84, ez = -113, HALF = 1.25, TOPY = 4.0, ROOF = TOPY - 0.06;
+      const x0 = ex - HALF, x1 = ex + HALF, z0 = ez - HALF, z1 = ez + HALF;
+      const footprint = [[x0, z0], [x1, z0], [x1, z1], [x0, z1]];
+      const sides = [[x0, z0, x1, z0], [x0, z0, x0, z1], [x1, z0, x1, z1]];
+      K.slab(footprint, 0, { mat: 0x8e8f8c, thick: 0.06, ceil: false, edge: false });
+      for (const edge of sides) {
+        K.wall(...edge, 0, 0.4, { mat: 0x8e8f8c, thick: 0.1 });
+        K.wall(...edge, 0.4, ROOF, { mat: 'gt_lift_glass', thick: 0.025 });
       }
-      ebx(e1 - 0.08, e1 - 0.065, -0.85, 0.85, FL + 1.0, 1.1, { tex: 'glass', color: 0xdfe6ec }, { solid: false });
-      sg(['엘리베이터 →', '지상 1F · 신반포로 보도'], ...E(e0 - 1.4, -1.64), FL + 1.75, 1.1, 0.42, faceC(1), { bg: '#1f2a3d', fg: '#ffffff', bold: false, offset: 0.01 });
-      const [ex, ez] = Q((e0 + e1) / 2, 0);
-      K.elevator({ name: `${title} 엘리베이터`, x: ex, z: ez, rotY: FACE[faceNA], w: 2.0, d: 2.0, shaft: false, floors: [{ label: '1F', y: 0, name: `신반포로 보도 · ${title}` }, { label: 'B1', y: FL, name: '고투몰 · 3·7·9호선 고속터미널역' }] });
-      K.zone({ name: `${title} 엘리베이터`, floor: 'B1', sub: '지상 1F ↔ B1 · 휠체어·유모차', poly: polyOf(rect(e0, e1, -ew, ew)), y0: FL - 0.5, y1: 3.0, priority: 4 });
-    } else {
-      // 휠체어리프트 (inclined platform lift) on the inner stair wall — every street entrance has one (2011 리모델링).
+      for (const [a0, a1] of [[x0, ex - 0.65], [ex + 0.65, x1]]) {
+        K.wall(a0, z1, a1, z1, 0, 0.4, { mat: 0x8e8f8c, thick: 0.1 });
+        K.wall(a0, z1, a1, z1, 0.4, ROOF, { mat: 'gt_lift_glass', thick: 0.025 });
+      }
+      K.wall(ex - 0.65, z1, ex + 0.65, z1, 2.25, ROOF, { mat: 'gt_lift_glass', thick: 0.025 });
+      for (const x of [x0, x1]) for (const z of [z0, z1]) K.box({ x, z, y: 0.4, w: 0.1, d: 0.1, h: ROOF - 0.4, mat: frame, solid: false });
+      for (const y of [0.4, 2.25]) {
+        for (const z of [z0, z1]) K.box({ x: ex, z, y, w: 2.5, d: 0.06, h: 0.06, mat: frame, solid: false });
+        for (const x of [x0, x1]) K.box({ x, z: ez, y, w: 0.06, d: 2.5, h: 0.06, mat: frame, solid: false });
+      }
+      // Open, flush threshold; thin glass door leaves are visual only, as with the other elevator cars.
+      for (const side of [-1, 1]) {
+        K.box({ x: ex + side * 0.65, z: z1, y: 0, w: 0.06, d: 0.08, h: 2.25, mat: frame, solid: false });
+        K.box({ x: ex + side * 0.325, z: z1, y: 0.02, w: 0.63, d: 0.018, h: 2.17, mat: 'gt_lift_glass', solid: false });
+      }
+      K.box({ x: ex, z: ez, y: ROOF, w: 2.6, d: 2.6, h: 0.06, mat: frame, solid: false });
+      const [bx1, bz1] = Q((e0 + e1) / 2, 0);
+      const elevator = K.elevator({ name: `${title} 엘리베이터`, x: ex, z: ez, rotY: 0, w: 2.6, d: 2.6, shaft: false,
+        floors: [{ label: '1F', y: 0, name: '신반포로 보도 · 8-1번 출구' }, { label: 'B1', y: FL, name: '고투몰 · 고속터미널역', dx: bx1 - ex, dz: bz1 - ez }] });
+      K.interact({ x: bx1, z: bz1, y: FL, r: 1.5, label: elevator.name, elevator });
+      K.zone({ name: elevator.name, floor: '1F', sub: 'B1 고투몰 연결', poly: footprint, y0: -0.1, y1: TOPY, priority: 4 });
+      K.zone({ name: elevator.name, floor: 'B1', sub: '지상 1F · 8-1번 출구', poly: polyOf(rect(e0, e1, -ew, ew)), y0: FL - 0.5, y1: CY, priority: 4 });
+    } else if (X.wheelchairLift !== false) {
+      // Existing inclined lifts use the 2011 general reference; do not invent a replacement lift at 8-2.
       const ls = passAlong ? -X.bandSideAc : 1, acR = ls * 1.58, yel = 0xf2c300;
       const n = cvec(-ls), prof = [[-0.45, 0], [0, 0], [5, -3], [6.5, -3], [L0, FL], [L0 + 0.9, FL]];
       for (const [hy, hh, col] of [[0.82, 0.07, 0x9aa1a8], [0.22, 0.05, 0x7d858e]]) for (let i = 0; i < prof.length - 1; i++) {
@@ -955,7 +1011,7 @@ export function build(K) {
         const v = X.side === 'N' ? X.eV - 3.0 : X.eV + 3.0, [x, y] = px(X.uc, v);
         g.beginPath(); g.arc(x, y, X.id.length > 2 ? 22 : 19, 0, 6.2832); g.fillStyle = X.kind === 'metro' ? '#f5c400' : '#1f3b5a'; g.fill(); g.lineWidth = 2; g.strokeStyle = '#ffffff'; g.stroke();
         g.font = `700 ${X.id.length > 2 ? 17 : 20}px ${FONTS}`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillStyle = X.kind === 'metro' ? '#111111' : '#ffffff'; g.fillText(X.id, x, y + 1);
-        text(g, X.elevator ? '엘리베이터' : '휠체어리프트', X.uc + 6.5, v, 15, '#1f3b5a');
+        if (X.elevator || X.wheelchairLift !== false) text(g, X.elevator ? '엘리베이터' : '휠체어리프트', X.uc + 6.5, v, 15, '#1f3b5a');
       }
       // junction corridors to the neighbouring buildings
       for (const J of JUNC) {

@@ -7,7 +7,7 @@
 // Height audit: data/raw/osm-core.json has NO height tag for 2동. Its 25.2m
 // in osm.json is tools/osm_process.py's commercial fallback: 6 * 4.2m.
 // Do not turn that derived value into two invented floors. Retain the 18m
-// main roof (+0.65m parapet / +2.16m plant room) pending a measured survey.
+// main roof (+0.65m parapet / +2.6m stair penthouse) pending a measured survey.
 // 18.0m roof, interior room positions, stair/elevator cores, and unlabelled units
 // are reconstructions, not surveyed facts. Lifts are accessibility provisions;
 // 4동's lift is confirmed by 마루's directions, others/positions unconfirmed. No JUNCTIONS
@@ -40,6 +40,14 @@ export const meta = {
     'https://www.gangmom.kr/institute/65b7af58b8368381372f0c24',
     'https://allhakwon.com/academy/15345',
     'https://www.openstreetmap.org/',
+    'refs/roadview/manifest.json',
+    'refs/roadview/bp_01_banpo_shoppingtown_exit82_north.jpg',
+    'refs/roadview/bp_02_banpo_shoppingtown_gotomall_canopy_west.jpg',
+    'refs/roadview/bp_03_sinbanporo_east_banpo_6_8dong_red_brick.jpg',
+    'refs/roadview/gb_05_sinbanporo_east_bus_shelters_terminal_side.jpg',
+    'refs/roadview/cc_02_sinbanporo_west_from_main_gate_tan_block_led.jpg',
+    'refs/aerial/bp_34.jpg', 'refs/aerial/bp_67.jpg',
+    'refs/aerial/bp_east.jpg', 'refs/aerial/bp_far.jpg', 'refs/aerial/bp_west.jpg',
   ],
 };
 
@@ -47,7 +55,7 @@ const PI = Math.PI;
 const TENANTS = {
   1: { b: [], g: [], h: [] },
   2: { b: ['병천토종순대', '서초전집', '미락', '범주당', '하시무'], g: ['LG전자 베스트샵', 'IBK기업은행'], h: ['LG전자 서초서비스센터', '쎄븐미용실'] },
-  3: { b: ['만끽치킨', '배부장찌개', '온유월식당', '우고집', '반포대교', '명불허전 원조골뱅이'], g: ['지니 헤어', '네일스토리 잠원점', '꽃보다 남자'], h: [], clinic: '봄치과의원' },
+  3: { b: ['만끽치킨', '배부장찌개', '온유월식당', '우고집', '반포대교', '명불허전 원조골뱅이'], g: ['지니 헤어', '네일스토리 잠원점', '꽃보다 남자'], h: ['생명의말씀사'], clinic: '봄치과의원' },
   4: { b: ['정선 감자탕', '하얀집'], g: ['KFC'], h: ['혜원미용실', '라시앤느헤어'], fifth: ['마루정신건강의학과'] },
   5: { b: ['일번지육개장', '서래곱창', '백채 김치찌개 반포점', '블루'], g: ['뉴스타공인중개사사무소', 'GS25'], h: ['재임헤어', '킴스 헤어', '헤라 스킨앤바디'] },
   6: { b: ['유메', '그집'], g: ['최옥현헤어아뜨리에', '이쌤헤어', '아름다운 선택'], h: ['우리 피부', '안나민 반포점', '명동심 미용실', '김은제헤어', '눈썹쟁이'], clinic: '반포좋은치과의원' },
@@ -55,18 +63,41 @@ const TENANTS = {
   8: { b: [], g: [], h: ['명품 피부', '모네'], fourth: ['에꼴드미용실'], fifth: ['반포대학나무학원', '네오스터디학원'] },
 };
 const PALETTE = ['#174a4b', '#953d32', '#41494e', '#79553a', '#354f70', '#875961'];
+const SIGN_COLORS = ['#263d8c', '#e2662c', '#f2f2ee', '#2e6b46', '#b8322c'];
 
 export function build(K) {
   // Finishes have a small physical grain; windows are actual openings, not
   // pictures of inaccessible floors on a solid exterior prism.
-  K.texture('banpo-tile', 256, 256, (g, w, h) => {
-    g.fillStyle = '#c9c4b6'; g.fillRect(0, 0, w, h);
+  const tile = (key, base, colors, grout) => K.texture(key, 256, 256, (g, w, h) => {
+    g.fillStyle = base; g.fillRect(0, 0, w, h);
     for (let j = 0; j < 8; j++) for (let i = 0; i < 8; i++) {
-      g.fillStyle = ['#d5d0c4', '#ccc7ba', '#c4c1b8', '#d1cabb'][(i * 13 + j * 7) % 4];
-      g.fillRect(i * 32 + 1, j * 32 + 1, 30, 30);
-      g.fillStyle = 'rgba(85,79,66,.08)'; g.fillRect(i * 32 + 2, j * 32 + 27, 28, 3);
+      g.fillStyle = colors[(i * 13 + j * 7 + i * j) % colors.length];
+      g.fillRect(i * 32, j * 32, 32, 32);
+      g.fillStyle = grout; g.fillRect(i * 32, j * 32, 32, 1); g.fillRect(i * 32, j * 32, 1, 32);
     }
   }, [1.6, 1.6]);
+  // bp01/bp02: 20cm pink glazed squares, not beige checkerboard. cc02
+  // separately confirms light western blocks; 5 retains the unverified default.
+  tile('banpo-tile', '#cdb7b5', ['#d4bfbd', '#c8b0ae', '#c1aaa9', '#d0bcb8'], '#e3d8d6');
+  tile('banpo-tile-pier', '#d8c5c3', ['#d8c5c3', '#d7c3c1'], '#e3d8d6');
+  tile('banpo-light-tile', '#d8d6d0', ['#d8d6d0', '#d3d2cd', '#deddd7'], '#e8e7e1');
+  const brick = (key, colors, mortar) => K.texture(key, 368, 120, (g, w, h) => {
+    g.fillStyle = mortar; g.fillRect(0, 0, w, h);
+    // Four 230mm bricks by four 75mm courses, half-brick running bond.
+    for (let row = 0; row < 4; row++) for (let col = -1; col < 4; col++) {
+      g.fillStyle = colors[((col + 1) * 7 + row * 5) % colors.length];
+      g.fillRect(col * 92 + (row % 2) * 46 + 2, row * 30 + 2, 88, 26);
+    }
+  }, [0.92, 0.30]);
+  brick('banpo-brick', ['#b5603f', '#a8513a', '#bf6a48'], '#caa58c');
+  brick('banpo-brick-pier', ['#8e4430', '#914832', '#89422f'], '#ad8067');
+  K.texture('banpo-pavers', 240, 240, (g, w, h) => {
+    g.fillStyle = '#92918c'; g.fillRect(0, 0, w, h);
+    for (let j = 0; j < 4; j++) for (let i = 0; i < 4; i++) {
+      g.fillStyle = (i * 3 + j * 7) % 5 === 0 ? '#a5a49e' : '#b9b8b2';
+      g.fillRect(i * 60 + 1, j * 60 + 1, 58, 58);
+    }
+  }, [1.2, 1.2]);
   K.texture('banpo-terrazzo', 256, 256, (g, w, h) => {
     g.fillStyle = '#b9b4a5'; g.fillRect(0, 0, w, h);
     const rnd = K.rand(1983);
@@ -85,7 +116,9 @@ export function build(K) {
   meta.claims.forEach((id, blockIndex) => {
     const n = blockIndex + 1, b = K.osmBuilding(id)[0];
     if (!b) throw new Error(`반포쇼핑타운 ${n}동 OSM footprint missing`);
-    const poly = b.poly, tenant = TENANTS[n];
+    let poly = b.poly;
+    const tenant = TENANTS[n], isBrick = n >= 6;
+    const facadeMat = isBrick ? 'banpo-brick' : n <= 2 ? 'banpo-light-tile' : 'banpo-tile';
     // Long axis points east; the positive v axis points toward 신반포로.
     let long = [0, 0], length = 0;
     for (let i = 0; i < poly.length; i++) {
@@ -97,11 +130,34 @@ export function build(K) {
     const u0 = (Math.min(...us) + Math.max(...us)) / 2, v0 = (Math.min(...vs) + Math.max(...vs)) / 2;
     const W = Math.max(...us) - Math.min(...us), D = Math.max(...vs) - Math.min(...vs), front = D / 2, back = -D / 2;
     const P = (u, v) => [(u + u0) * c + (v + v0) * s, -(u + u0) * s + (v + v0) * c];
+    const local = p => [p[0] * c - p[1] * s - u0, p[0] * s + p[1] * c - v0];
+    const recessedEnd = n === 3 || n === 4, recessU = W / 2 - 4.5;
+    // bp01: narrow east stair volume behind the main shopfront. The OSM
+    // envelope stays the source; only this 1m inward notch is reconstructed.
+    if (recessedEnd) {
+      const [a, b] = poly.slice(0, 2).map(local);
+      const v = a[1] + (b[1] - a[1]) * (recessU - a[0]) / (b[0] - a[0]);
+      poly = [poly[0], P(recessU, v), P(recessU, v - 1), P(b[0], b[1] - 1), ...poly.slice(2)];
+    }
+    const frontAt = u => front - (recessedEnd && u > recessU ? 1 : 0);
     const rect = (a, v, q, t) => [P(a, v), P(q, v), P(q, t), P(a, t)];
     const box = (u, y, v, w, h, d, mat, extra = {}) => { const [x, z] = P(u, v); return K.box({ x, y, z, w, h, d, rotY: angle, mat, ...extra }); };
     const sign = (text, u, y, v, w, h, bg = '#294744', extra = {}) => { const [x, z] = P(u, v); K.sign(text, { x, y, z, w, h, rotY: angle, bg, fg: '#fff9ed', offset: 0.10, ...extra }); };
     const wall = (a, v, q, t, ya, yb, opts = {}) => { const p = P(a, v), r = P(q, t); K.wall(...p, ...r, ya, yb, opts); };
     const face = (u, y, v, w, h, mat) => { const a = P(u - w / 2, v), b = P(u + w / 2, v); const pts = [[...a.slice(0, 1), y, a[1]], [b[0], y, b[1]], [b[0], y + h, b[1]], [a[0], y + h, a[1]]]; K.quad(mat, pts, [s, 0, c]); K.quad(mat, pts, [-s, 0, -c]); };
+    const edges = poly.map((a, i) => {
+      const b = poly[(i + 1) % poly.length], L = Math.hypot(b[0] - a[0], b[1] - a[1]);
+      const [nx, nz] = K.orient(poly)[i];
+      return { a, b, L, nx, nz, rotY: Math.atan2(nx, nz), tx: (b[0] - a[0]) / L, tz: (b[1] - a[1]) / L, edge: i };
+    });
+    const endEdges = edges.filter(e => Math.abs(e.nx * c - e.nz * s) > 0.65 && e.L > 2);
+    const edgePoint = (e, at, out = 0) => [e.a[0] + e.tx * at + e.nx * out, e.a[1] + e.tz * at + e.nz * out];
+    function endWindow(e, at, y, w, h) {
+      const [x, z] = edgePoint(e, at), frame = isBrick ? 0xe8e8e2 : 0x4a4f52;
+      K.box({ x, y, z, w, h, d: 0.035, rotY: e.rotY, mat: { tex: 'glass', color: 0x91aaa7 }, solid: true });
+      for (const du of [-w / 2, w / 2]) K.box({ x: x + Math.cos(e.rotY) * du, y: y - 0.035, z: z - Math.sin(e.rotY) * du, w: 0.065, h: h + 0.07, d: 0.06, rotY: e.rotY, mat: frame, solid: false });
+      for (const yy of [y, y + h]) K.box({ x, y: yy - 0.035, z, w: w + 0.07, h: 0.07, d: 0.06, rotY: e.rotY, mat: frame, solid: false });
+    }
     const person = (u, y, v, extra = {}) => { const [x, z] = P(u, v); K.person(x, y, z, { rotY: angle, ...extra }); };
     const floorYs = [K.LEVELS.B1, 0, 4, 7.5, 11, 14.5], roof = 18;
     const labels = ['지하 1층', '1층', '2층', '3층', '4층', '5층'];
@@ -225,28 +281,41 @@ export function build(K) {
 
     // A continuous shopfront forecourt is deliberately confined to the frontage;
     // the station, arterial road and their stairs are not duplicated here.
+    // 4동's entrance sits between piers; do not draw a pier through the door.
+    const entryU = n === 4 ? -0.5 : -1.5;
     const fore = rect(-W / 2 + (n === 1 ? 8 : 0.4), front + 0.15, W / 2 - 1, front + 3.8);
-    K.slab(fore, 0.025, { mat: 'sidewalk', thick: 0.06, ceil: false });
-    box(-1.3, 3.05, front + 0.55, 9.1, 0.18, 2.0, 0x525952, { solid: false });
-    sign(`반포쇼핑타운 ${n}동`, -1.3, 3.58, front + 0.35, 10.3, 0.82, n === 2 ? '#6b7270' : '#284d49');
-    sign(`${n}동`, n === 1 ? -1.5 : -W / 2 + 2.3, 16.75, front + 0.24, 2.7, 1.3, '#e5e0d3', { fg: '#324f4d' });
-    sign('지하 식당가 ↓', -4.7, 2.5, front + 0.9, 1.5, 0.65, '#985138', { rotY: angle + PI / 2, twoSided: true });
-    if (tenant.b.length) sign(tenant.b.slice(0, 4), -W / 2 + (n === 1 ? 8 : 2.2), 2, front + 0.6, 2.0, 2.05, '#f0e7ce', { fg: '#793b2e' });
+    K.slab(fore, 0.025, { mat: 'banpo-pavers', uvRot: angle, thick: 0.06, ceil: false });
+    K.hpoly(0x8f8e89, rect(-W / 2 + (n === 1 ? 8 : 0.4), front + 2.4, W / 2 - 1, front + 3.0), 0.028);
+    sign(`반포쇼핑타운 ${n}동`, entryU + 2.9, 2.1, front + 0.15, 2.5, 0.5, '#eeebe5', { fg: '#484746' });
     // Slender tactile strip and threshold stay flat enough for the player capsule.
-    for (let u = -4.8; u < 1.5; u += 0.26) box(u, 0.027, front + 0.9, 0.14, 0.025, 0.6, 0xd2ad54, { solid: false });
+    for (let u = entryU - 0.9; u < entryU + 1; u += 0.26) box(u, 0.027, front + 0.9, 0.14, 0.025, 0.6, 0xd2ad54, { solid: false });
     const gutterU = Math.max(...us.filter((_, i) => vs[i] - v0 > front - 0.2)) - u0 - 0.35;
-    box(gutterU, 0.1, front + 0.13, 0.09, roof - 0.3, 0.12, 0x777c72, { solid: false });
+    box(gutterU, 0.1, frontAt(gutterU) + 0.07, 0.09, roof - 0.3, 0.12, 0x777c72, { solid: false });
+
+    // Full-height piers establish the vertical rhythm visible in bp01/bp02.
+    // The brick blocks use the same approximately 7m structural bays, with
+    // narrower dark brick piers (bp03). Windows sit in pairs between them.
+    const mainRight = recessedEnd ? recessU : W / 2;
+    const pierCount = Math.max(3, Math.round((mainRight + W / 2) / 7));
+    const pierStep = (mainRight + W / 2) / pierCount;
+    for (let k = 0; k <= pierCount; k++) {
+      const u = -W / 2 + k * pierStep;
+      if (!K.pointInPoly(...P(u + (k === 0 ? 0.35 : -0.35), front - 0.4), poly)) continue;
+      const width = isBrick ? 0.5 : 0.6, depth = isBrick ? 0.15 : 0.25;
+      box(u, 0, front + depth / 2, width, roof + 0.65, depth,
+        isBrick ? 'banpo-brick-pier' : n <= 2 ? 'banpo-light-tile' : 'banpo-tile-pier', { solid: false });
+    }
 
     floorYs.forEach((y, f) => {
       const next = f === 5 ? roof : floorYs[f + 1], height = next - y;
       const ceiling = f === 0 ? y + 3.15 : next - 0.27;
-      K.slab(poly, y, { mat: 'banpo-terrazzo', thick: 0.24, holes: f === 0 ? [] : [stairHole] });
+      K.slab(poly, y, { mat: 'banpo-terrazzo', thick: 0.24, edge: false, holes: f === 0 ? [] : [stairHole] });
       if (f === 0) K.hpoly('ceiling', poly, ceiling, false, [stairHole]);
       const names = f === 0 ? tenant.b : f === 1 ? tenant.g : f === 2 ? tenant.h : f === 3 && tenant.clinic ? [tenant.clinic] : f === 4 ? tenant.fourth || [] : f === 5 ? tenant.fifth || [] : [];
       K.zone({ name: `반포쇼핑타운 ${n}동`, floor: labels[f], sub: [...names, uses[f]].join(' · '), poly, y0: y, y1: next - 0.03, priority: 2 });
 
       const openings = [];
-      if (f === 1) for (const v of [front, back]) { const p = P(-1.5, v); openings.push({ x: p[0], z: p[1], w: v === front ? 8 : 2.6, y0: y, y1: y + 2.9 }); }
+      if (f === 1) for (const v of [front, back]) { const p = P(v === front ? entryU : -1.5, v); openings.push({ x: p[0], z: p[1], w: 2.6, y0: y, y1: y + 2.9 }); }
       if (f === 1) {
         const spans = [[-W / 2 + (n === 1 ? 7.8 : 0.65), -6.15], [6.15, W / 2 - (n === 8 ? 2.6 : 0.65)]];
         for (const [a, b] of spans) {
@@ -267,36 +336,92 @@ export function build(K) {
           }
         }
       }
-      // Actual glazing apertures, frame and sill on front/back at every upper floor.
+      // Actual apertures: paired flush windows, without continuous floor stripes
+      // or projecting concrete sills. Brick windows are small punched squares.
       const bays = [];
-      for (let u = -W / 2 + 2.1; u < W / 2 - 1.7; u += 4.5) {
+      const windowUs = [];
+      for (let k = 0; k < pierCount; k++) for (const t of [0.25, 0.75]) windowUs.push(-W / 2 + (k + t) * pierStep);
+      for (const u of windowUs) {
         for (const v of [front, back]) {
           // Avoid the truncated west corner of block 1 and east corner of block 8.
           if (!K.pointInPoly(...P(u, v > 0 ? v - 0.45 : v + 0.45), poly)) continue;
           if (f === 1 && (v === front || Math.abs(u + 1.5) < 5.5)) continue;
-          const p = P(u, v); const winW = f === 1 ? 2.5 : 2.35;
+          const p = P(u, v); const winW = f === 1 ? 2.5 : isBrick ? 1.3 : 2.2;
           if (![u - winW / 2 - 0.1, u + winW / 2 + 0.1].every(t => K.pointInPoly(...P(t, v > 0 ? v - 0.10 : v + 0.10), poly))) continue;
           if (f > 0) {
-            openings.push({ x: p[0], z: p[1], w: winW, y0: y + (f === 1 ? 0.18 : 0.95), y1: y + (f === 1 ? 2.65 : 2.65) });
-            bays.push({ u, v, w: winW });
+            const low = f === 1 ? 0.18 : 1, high = f === 1 ? 2.65 : isBrick ? 2.3 : 2.5;
+            openings.push({ x: p[0], z: p[1], w: winW, y0: y + low, y1: y + high });
+            bays.push({ u, v, w: winW, low, high });
           }
         }
       }
-      K.polyWalls(poly, y, next, { mat: f === 0 ? 0xa29c8b : n === 2 ? 0xbfc2bc : 'banpo-tile', inner: f === 0 ? 0xd9ccb3 : 0xe6e2d5, thick: 0.24, openings });
-      bays.forEach(({ u, v, w }, wi) => {
-        const sg = Math.sign(v), low = f === 1 ? 0.18 : 0.95, high = 2.65;
-        box(u, y + low, v - sg * 0.09, w, high - low, 0.035, { tex: 'glass', color: 0x88a8a5 }, { solid: true });
-        for (const du of [-w / 2, 0, w / 2]) face(u + du, y + low - 0.04, v, 0.06, high - low + 0.08, 0x5b675f);
-        for (const h of [low, high]) face(u, y + h - 0.025, v, w + 0.10, 0.05, 0x56615c);
-        box(u, y + low - 0.10, v + sg * 0.12, w + 0.22, 0.10, 0.42, 0xa5a79d, { solid: false });
-        if (f >= 2 && wi % 3 === 0) {
-          // Mount above the window so the sign band below stays unobstructed.
-          box(u + 0.7, y + 2.75, v + sg * 0.43, 0.88, 0.55, 0.50, 0xd4d3c6, { solid: false });
-          face(u + 0.7, y + 2.82, v + sg * 0.7, 0.7, 0.35, 'banpo-shutter');
+      if (f > 0 && recessedEnd) {
+        const u = W / 2 - 2.25, v = frontAt(u), p = P(u, v);
+        openings.push({ x: p[0], z: p[1], w: 0.9, y0: y + 1, y1: y + 2.2 });
+        bays.push({ u, v, w: 0.9, low: 1, high: 2.2 });
+      }
+      if (f > 0) for (const e of endEdges) {
+        const count = e.L > 11 ? 2 : 1;
+        for (let j = 0; j < count; j++) {
+          const at = e.L * (j + 1) / (count + 1);
+          openings.push({ edge: e.edge, at, w: 1.4, y0: y + 1, y1: y + 2.4 });
+          endWindow(e, at, y + 1, 1.4, 1.4);
+        }
+      }
+      K.polyWalls(poly, y, next, { mat: f === 0 ? 0xa29c8b : facadeMat, inner: f === 0 ? 0xd9ccb3 : 0xe6e2d5, thick: 0.24, openings });
+      bays.forEach(({ u, v, w, low, high }, wi) => {
+        const sg = Math.sign(v), frame = isBrick ? 0xe8e8e2 : 0x4a4f52;
+        box(u, y + low, v - sg * 0.04, w, high - low, 0.035, { tex: 'glass', color: 0x88a8a5 }, { solid: true });
+        for (const du of (isBrick || w < 1 ? [-w / 2, w / 2] : [-w / 2, 0, w / 2])) face(u + du, y + low - 0.04, v + sg * 0.015, 0.065, high - low + 0.08, frame);
+        for (const h of [low, high]) face(u, y + h - 0.035, v + sg * 0.015, w + 0.10, 0.07, frame);
+        if (f >= 2 && wi % 7 === 0) {
+          // Sparse condensers beside the window, below the upper signbox.
+          box(u + w / 2 + 0.43, y + 1.05, v + sg * 0.21, 0.64, 0.50, 0.40, 0xd4d3cc, { solid: false });
+          face(u + w / 2 + 0.43, y + 1.12, v + sg * 0.42, 0.53, 0.33, 'banpo-shutter');
         }
       });
-      if (f > 0) {
-        K.polyWalls(poly.map(([x, z]) => { const o = P(0, 0); return [o[0] + (x - o[0]) * 1.007, o[1] + (z - o[1]) * 1.007]; }), next - 0.16, next - 0.025, { mat: n === 2 ? 0x777f7d : 0x8c9181, thick: 0.38, solid: false });
+      // bp01/bp02: stacked individual signboxes dominate floors 1–3; the
+      // building name is only a small door plaque. Unknown lettering uses the
+      // reviewer-approved shop categories, never invented proper names.
+      if (f >= 1 && f <= 4) {
+        const left = -W / 2 + (n === 1 ? 7.8 : 0.3), right = mainRight - (n === 8 ? 5.6 : 0.3);
+        const count = Math.max(1, Math.round((right - left) / 4.5)), step = (right - left) / count;
+        const sy = [0, 3.25, 6.9, 10.4, 13.8][f], sh = f === 1 ? 0.8 : f === 4 ? 0.6 : 0.7;
+        const generic = f === 1 ? ['안경', '미용실', '부동산', '생활상가'] : ['치과', '학원', '미용실', '부동산'];
+        if (n === 7 && f === 1) box((left + right) / 2, 2.9, front + 0.225, right - left, 1.3, 0.15, 0xf2f2ee, { solid: false });
+        for (let j = 0; j < count; j++) {
+          if (f === 4 && j % 3 !== 0) continue;
+          const u = left + (j + 0.5) * step;
+          if (![u - step / 2 + 0.2, u + step / 2 - 0.2].every(t => K.pointInPoly(...P(t, front - 0.15), poly))) continue;
+          let text = names[j] || generic[(j + n + f) % generic.length];
+          let bg = n === 7 && f === 1 ? '#f2f2ee' : SIGN_COLORS[(j * 3 + n + f) % SIGN_COLORS.length];
+          // The legible east-corner bands in bp01/bp02 are deliberately placed
+          // here instead of repeating the bookshop on a guessed western bay.
+          if (n === 3 && f === 2) {
+            text = j === count - 1 ? '생명의말씀사 2F' : generic[j % generic.length];
+            if (j === count - 1) bg = '#263d8c';
+          }
+          if (n === 3 && f === 1 && j === count - 1) { text = 'JEWELRY'; bg = '#2e6b46'; }
+          if (n === 3 && f === 3 && j === 0) bg = '#e2662c';
+          const standOff = isBrick ? 0.15 : 0.25, signV = front + standOff + 0.075;
+          for (const du of [-1, 1]) box(u + du * (step - 0.55) / 2, sy - 0.04, front + standOff / 2, 0.05, 0.08, standOff, 0x666867, { solid: false });
+          if (!(n === 7 && f === 1)) box(u, sy - sh / 2, signV, step - 0.3, sh, 0.15, Number(bg.replace('#', '0x')), { solid: false });
+          sign(text, u, sy, signV + 0.085, step - 0.3, sh, bg, { fg: bg === '#f2f2ee' ? '#303638' : '#ffffff', offset: 0.01 });
+          if (n === 3 && f === 2 && j === count - 1) box(u, sy - sh / 2 - 0.12, signV, step - 0.3, 0.12, 0.15, 0xb8322c, { solid: false });
+        }
+        // Short-edge signs use actual OSM edge normals, including the 8동
+        // chamfer. These wrap the first 3m of each end at floors 1 and 2.
+        if (f <= 2) for (const e of endEdges) {
+          const frontStart = local(e.a)[1] > local(e.b)[1], at = frontStart ? 1.65 : e.L - 1.65;
+          const [x, z] = edgePoint(e, at, 0.23), bg = n === 3 && f === 2 ? '#263d8c' : f === 1 ? '#f2f2ee' : '#2e6b46';
+          const text = n === 3 ? f === 2 ? '생명의말씀사 2F' : 'JEWELRY' : names[0] || (f === 1 ? '생활상가' : '미용실');
+          for (const du of [-1.3, 1.3]) {
+            const [bx, bz] = edgePoint(e, at + du, 0.0775);
+            K.box({ x: bx, y: sy - 0.04, z: bz, w: 0.05, h: 0.08, d: 0.155, rotY: e.rotY, mat: 0x666867, solid: false });
+          }
+          K.box({ x, y: sy - sh / 2, z, w: 3, h: sh, d: 0.15, rotY: e.rotY, mat: Number(bg.replace('#', '0x')), solid: false });
+          K.sign(text, { x, y: sy, z, w: 3, h: sh, rotY: e.rotY, bg, fg: bg === '#f2f2ee' ? '#303638' : '#ffffff', offset: 0.085 });
+        }
       }
       // Shared two-sided shopping corridor, with no random crowd on stairs.
       for (let u = -W / 2 + 2; u < W / 2 - 1.5; u += 4.5) {
@@ -376,6 +501,7 @@ export function build(K) {
             else if (/GS25/.test(name)) kind = 'grocery';
             else if (/서비스센터/.test(name)) kind = 'office';
             else if (/학원|어학|에듀/.test(name)) kind = 'classroom';
+            else if (/말씀사/.test(name)) kind = 'bookshop';
             else if (name) kind = 'salon';
             else kind = f === 1 ? ['grocery', 'laundry', 'grocery', 'estate'][serial % 4] : f === 3 && tenant.clinic ? 'clinic' : f >= 4 && serial % 2 === 0 ? 'classroom' : 'office';
             if (!name) name = f === 0 ? '식당' : kind === 'grocery' ? ['반찬 · 식품', '떡 · 한과', '정육'][serial % 3] : kind === 'laundry' ? '세탁 · 수선' : kind === 'estate' ? '부동산' : kind === 'classroom' ? '학원' : '사무실';
@@ -405,13 +531,7 @@ export function build(K) {
             sign(name === '온유월식당' ? '지하 20호' : name === '봄치과의원' ? '310호' : name === '마루정신건강의학과' ? '510호' : name === '반포대학나무학원' ? '1~4호' : name === '네오스터디학원' ? '18·19호' : name === '뉴스타공인중개사사무소' ? '1층 15호' : name === '정선 감자탕' ? '지하 6~9호' : room, a + 0.5, y + 1.45, atCorridor, 0.75, 0.3, '#e4ddc9', { fg: '#514d40', rotY: inwardRot, twoSided: true });
             fixtures(kind, a + 0.15, q - 0.15, minV + 0.1, maxV - 0.1, y, name, serial, side);
             box(mid, ceiling - 0.07, (minV + maxV) / 2, 0.85, 0.05, 0.45, { tex: 'emit', color: 0xffe8bd }, { solid: false });
-            if (side > 0 && f >= 1 && (hasTenant || f === 1)) {
-              sign(name, mid, y + (f === 1 ? 3.12 : 0.47), front + 0.2, q - a - 0.18, f === 1 ? 0.65 : 0.69, name === 'LG전자 베스트샵' ? '#727a78' : PALETTE[(serial + n) % PALETTE.length]);
-              if (f === 1) {
-                // Each storefront has its own open doorway and short canopy.
-                box(mid, 2.75, front + 0.35, q - a - 0.12, 0.12, 0.9, 0x6d8074, { solid: false });
-              }
-            }
+            if (side > 0 && f === 5 && hasTenant) sign(name, mid, y + 2.9, front + 0.2, Math.min(q - a - 0.3, 4.2), 0.55, '#f2f2ee', { fg: '#303638' });
             serial++;
           }
           // The east tip of block 8 is chamfered; do not extend an unused
@@ -424,9 +544,16 @@ export function build(K) {
       // than available reconstructed units (many OSM pins share one coordinate).
       const guide = [labels[f] + '  층별안내', ...names, uses[f]];
       sign(guide, 4.4, y + 1.65, front - 0.7, 2.1, 2.3, '#ece4cf', { fg: '#31534b', rotY: angle + PI });
-      if (f === 1) { sign(['반포쇼핑타운', `${n}동`, '지하 식당가', '2층 미용 · 업무', '3층 의원 · 업무', '4·5층 학원 · 업무'], 3.3, 1.65, front + 0.18, 2.2, 2.3, '#e3decb', { fg: '#34574e' }); }
       for (let u = -W / 2 + 4; u < W / 2 - 2; u += 12) if (Math.abs(u) > 6) person(u, y, 0.7, { shirt: [0x877459, 0x405969, 0x657959][(f + n) % 3] });
     });
+
+    for (const end of [-1, 1]) {
+      const u = end < 0 ? -W / 2 + (n === 1 ? 8 : 0.7) : mainRight - (n === 8 ? 5.8 : 0.7);
+      const v = front + 0.65;
+      for (const yy of [8, 10.5]) box(u, yy, front + 0.3, 0.05, 0.06, 0.6, 0x666867, { solid: false });
+      box(u, 7.8, v, 0.15, 3, 0.6, 0xf2f2ee, { solid: false });
+      sign(end < 0 ? ['미', '용', '실'] : ['치', '과'], u, 9.3, v, 0.6, 3, end < 0 ? '#2e6b46' : '#e2662c', { rotY: angle + PI / 2, offset: 0.09, twoSided: true });
+    }
 
     // One continuous switchback stair links every level. Its midpoint landing
     // is inside the floor hole. Near landings are intact pieces of the main slab.
@@ -451,8 +578,7 @@ export function build(K) {
     const lift = P(2.4, 3.1);
     K.elevator({ name: `${n}동 승강기`, x: lift[0], z: lift[1], rotY: angle + PI, w: 2.25, d: 2.4, shaft: false,
       floors: floorYs.map((y, f) => ({ label: labels[f], y, name: uses[f] })) });
-    // K.wall cannot union vertically stacked openings (kit elevator bug).
-    // Build one doorway wall per storey; retain K.elevator's real interaction.
+    // Retain the existing per-storey doorways and K.elevator interaction.
     for (let f = 0; f < floorYs.length; f++) {
       const y = floorYs[f], top = f === 5 ? roof : floorYs[f + 1];
       wall(1.275, 4.3, 3.525, 4.3, y, top, { mat: 0xb6beb4, thick: 0.15 });
@@ -463,19 +589,59 @@ export function build(K) {
       sign(labels[f], 2.4, y + 2.47, 1.80, 0.75, 0.29, '#20312c', { fg: '#f1c781', rotY: angle + PI });
       box(3.72, y + 1.0, 1.82, 0.12, 0.22, 0.06, 0x5c6a60, { solid: false });
     }
-    K.slab(poly, roof, { mat: 'roofgravel', under: 'ceiling', thick: 0.25 });
-    K.polyWalls(poly, roof, roof + 0.65, { mat: n === 2 ? 0xb5bab2 : 'banpo-tile', thick: 0.2 });
-    box(-0.2, roof, -3.8, 9.7, 2.0, 5.2, 0xa7ada1);
-    box(-0.2, roof + 2, -3.8, 10.1, 0.16, 5.6, 0x667465);
-    for (let u = -W / 2 + 6; u < W / 2 - 3; u += 8) {
-      if (Math.abs(u) < 6) continue;
-      box(u, roof + 0.18, 2.2, 1.8, 0.9, 1.2, 0xbac0b6, { solid: false });
-      for (let j = 0; j < 4; j++) box(u, roof + 0.3 + j * 0.13, 2.82, 1.6, 0.04, 0.03, 0x606e63, { solid: false });
+    // Roof paint is read from bp_west/bp_34/bp_67/bp_east. 1/2 retain
+    // their existing roof finish, pending an unambiguous closer aerial.
+    const roofMat = [3, 4, 6, 8].includes(n) ? 0x5f9a6e : [5, 7].includes(n) ? 0xc9c9c3 : 'roofgravel';
+    K.slab(poly, roof, { mat: roofMat, under: 'ceiling', thick: 0.25, edge: false });
+    K.polyWalls(poly, roof, roof + 0.65, { mat: facadeMat, thick: 0.2 });
+    box(0, roof, -4, 3, 2.6, 3, 0xd0ceca);
+    box(0, roof + 2.6, -4, 3.15, 0.10, 3.15, roofMat, { solid: false });
+    // Plain condensers and a compact tank: fixture identities/positions cannot
+    // be resolved in the aerials, so their repeated layout remains a guess.
+    for (const [u, v] of [[-W / 2 + 5, -1.8], [W / 2 - 6, -2.7], [W / 2 - 8, -2.7]]) {
+      if (!rect(u - 0.7, v - 0.5, u + 0.7, v + 0.5).every(p => K.pointInPoly(...p, poly))) continue;
+      box(u, roof, v, 1.1, 0.1, 0.7, 0xa8aaa5, { solid: false });
+      box(u, roof + 0.1, v, 1.25, 0.7, 0.85, 0xd8d8d1, { solid: false });
+      face(u, roof + 0.21, v + 0.43, 1.05, 0.42, 'banpo-shutter');
     }
-    // Plant pots, stools and parked delivery clutter stay out of the 3m entry.
-    for (const u of [-6.3, 6.5]) {
-      box(u, 0, front + 2.7, 0.65, 0.55, 0.6, 0x84775f);
-      const p = P(u, front + 2.7); K.dome({ x: p[0], y: 0.54, z: p[1], rx: 0.43, ry: 0.55, rz: 0.4, seg: 8, rings: 3, mat: 0x5e7953 });
+    const tank = P(3.1, -4);
+    K.cyl({ x: tank[0], y: roof, z: tank[1], r: 0.65, h: 1.15, seg: 10, mat: 0xb7bdbb, solid: false });
+    for (const end of [-1, 1]) {
+      const count = n === 3 && end > 0 ? 6 : 3;
+      const endU = end * (W / 2 - (n === 1 && end < 0 ? 8 : n === 8 && end > 0 ? 7 : 3));
+      for (let j = 0; j < count; j++) {
+        const u = endU - end * (j % 3) * 1.1, v = frontAt(u) - 1.2 - Math.floor(j / 3) * 1.1;
+        const p = P(u, v);
+        if (!K.pointInPoly(...p, poly)) continue;
+        K.cyl({ x: p[0], y: roof, z: p[1], r: 0.05, h: 3, seg: 6, mat: 0xeeeeea, solid: false });
+        for (let k = 0; k < 1 + j % 3; k++) {
+          const a = angle + k * 2 * PI / 3, px = p[0] + Math.sin(a) * 0.18, pz = p[1] + Math.cos(a) * 0.18;
+          K.box({ x: px, y: roof + 1.55, z: pz, w: 0.3, h: 1.3, d: 0.1, rotY: a, mat: 0xeeeeea, solid: false });
+        }
+      }
+    }
+
+    if (n === 7) {
+      // bp_67: detached 15×7m single-storey pavilion in front of 7동.
+      // The 1.19m passage behind it is left clear; signage is unreadable.
+      const [pu, pv] = local([209.5, -228.5]);
+      K.slab(rect(pu - 7.5, pv - 3.5, pu + 7.5, pv + 3.5), 0.025, { mat: 0xb9b8b2, thick: 0.06, ceil: false });
+      const door = P(pu, pv + 3.5);
+      K.polyWalls(rect(pu - 7.5, pv - 3.5, pu + 7.5, pv + 3.5), 0, 3.05,
+        { mat: 0xb9bbb7, thick: 0.15, openings: [{ x: door[0], z: door[1], w: 1.8, y0: 0, y1: 2.45 }] });
+      box(pu, 3.05, pv, 15, 0.15, 7, 0x4a4d4f, { solid: false });
+      box(pu, 2.5, pv + 3.6, 15, 0.55, 0.15, 0xd8d8d2, { solid: false });
+      // Light sign band only; no invented shop name or canopy.
+      const lotCenter = local([171.5, -233.5]), [lu, lv] = lotCenter;
+      K.slab(rect(lu - 9.5, lv - 9, lu + 9.5, lv + 9), 0.02, { mat: 'asphalt', thick: 0.05, ceil: false });
+      for (const side of [-1, 1]) {
+        for (let j = 0; j <= 5; j++) box(lu + side * 6.5, 0.024, lv - 6.75 + j * 2.7, 5, 0.008, 0.07, 0xe1dfd4, { solid: false });
+        for (let j = 0; j < 5; j++) {
+          const p = P(lu + side * 6.5, lv - 5.4 + j * 2.7);
+          K.vehicle({ x: p[0], y: 0.02, z: p[1], kind: 'car', rotY: angle + side * PI / 2,
+            color: [0xe4e4e1, 0x303438, 0xb1b3b3, 0xeeeeea, 0x6c7478][(j + (side > 0 ? 1 : 0)) % 5] });
+        }
+      }
     }
     person(-2.6, 0.025, front + 2.7); person(9.8, 0.025, front + 1.7, { shirt: 0x9e7055 });
     const spawn = (name, u, y, v, yaw = angle) => { const p = P(u, v); K.spawn({ name, x: p[0], y, z: p[1], yaw }); };

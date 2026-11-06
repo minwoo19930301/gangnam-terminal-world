@@ -1,6 +1,6 @@
 {
  "id": "streets",
- "name": "중간 도로들",
+ "name": "고속터미널 거리 · 신반포로와 사평대로",
  "updated": "2026-11-06",
  "sources": [
   {
@@ -31,6 +31,71 @@
   {
    "url": "data/osm.json",
    "title": "로컬 OSM 추출(도로·정류장·따릉이·횡단보도)",
+   "year": 2026
+  },
+  {
+   "url": "refs/roadview/manifest.json",
+   "title": "2025/2026 운영자 로드뷰 설명 및 bp_01 위치 정정",
+   "year": 2026
+  },
+  {
+   "url": "refs/roadview/viewpoints.json",
+   "title": "리뷰어 보정 카메라 좌표",
+   "year": 2026
+  },
+  {
+   "url": "refs/roadview/cc_02_sinbanporo_west_from_main_gate_tan_block_led.jpg",
+   "title": "르본시티 황갈색 외벽·옥상 LED·세로 간판, CC 서쪽 긴 유리 정류장",
+   "year": 2026
+  },
+  {
+   "url": "refs/roadview/gb_03_front_plaza_arch_canopy_shelters.jpg",
+   "title": "좁은 잔디 분리대, 검은 정류장과 광고판",
+   "year": 2026
+  },
+  {
+   "url": "refs/roadview/gb_04_west_wing_stepped_tiers_terracotta_end_from_sinbanporo.jpg",
+   "title": "경계석 위 잔디, 서비스 차로와 정류장 보도 단면",
+   "year": 2026
+  },
+  {
+   "url": "refs/roadview/gb_05_sinbanporo_east_bus_shelters_terminal_side.jpg",
+   "title": "동쪽으로 이어지는 잔디와 정류장",
+   "year": 2026
+  },
+  {
+   "url": "refs/roadview/gb_01_north_wing_plaza_lot_from_sinbanporo.jpg",
+   "title": "터미널 울타리 쪽 붉은 벽돌 보도",
+   "year": 2026
+  },
+  {
+   "url": "refs/roadview/ssg_03_east_parking_wall.jpg",
+   "title": "동측 주차장 아스팔트와 흰 주차선",
+   "year": 2025
+  },
+  {
+   "url": "refs/roadview/ssg_04_east_lot_north_view.jpg",
+   "title": "반포지구대 위치의 파랑·베이지 패널 및 동측 낮은 유리 동",
+   "year": 2025
+  },
+  {
+   "url": "refs/roadview/bp_01_banpo_shoppingtown_exit82_north.jpg",
+   "title": "3동 뒤 청회색 고층과 황갈색 구형 아파트; manifest 정정 우선",
+   "year": 2026
+  },
+  {
+   "url": "refs/roadview/bp_02_banpo_shoppingtown_gotomall_canopy_west.jpg",
+   "title": "분홍 체크가 아닌 회색 소형 보도블록",
+   "year": 2026
+  },
+  {
+   "url": "refs/aerial/gyeongbu_lots.jpg",
+   "title": "실제 서비스 도로와 횡단보도 위치",
+   "year": 2026
+  },
+  {
+   "url": "refs/aerial/cc_all.jpg",
+   "title": "르본시티 건물 위치와 평지붕",
    "year": 2026
   }
  ],
@@ -342,16 +407,119 @@
  ],
  "parking": "n/a",
  "notes": [
-  "차선·중앙분리대·가로수 종·인도 폭 등 현장 세부는 웹에서 확인 못함: OSM 값을 근거로 하고 나머지는 추정",
+  "2025/2026 운영자 로드뷰를 우선 반영: 터미널 앞 좁은 잔디 분리대·회색 보도·울타리 쪽 붉은 벽돌·참조 건물 외관. 이번 범위 밖 추정은 modeling.guesses에 기록.",
   "OSM 태그 폭: 4차로 14.2m, 3차로 10.9m, 폭 20m 양방, 사이드워크 2~3m paving_stones",
   "로컬 OSM에 bus_stop 89개, 따릉이 25개, crossing 130, traffic_signals 39 있음"
  ],
  "unresolved": [
   "정류소 5자리 ID 대부분(고속터미널(중) 22020, 반포역 22018 외)",
-  "차로별 방향·중앙분리대 종류·버스전용차로 색",
+  "이번 로드뷰 확인 구간 밖 차로별 방향·중앙분리대 종류·버스전용차로 색",
   "가로수 종",
   "사평지하도로 입출구 위치와 길이",
   "택시 승강장 위치",
   "고가도로 철거 여부"
- ]
+ ],
+ "modeling": {
+  "round": 4,
+  "scope": "streets 소유 거리 시설 및 미선점 OSM 건물의 외관만 수정. 다른 모듈의 건물·내부·정류장은 수정하지 않음.",
+  "claims": [
+   413280002,
+   886400346,
+   413367405,
+   413367408,
+   1137867801
+  ],
+  "added_road_claims": [
+   831108565,
+   831108569
+  ],
+  "changes": [
+   {
+    "element": "르본시티",
+    "osm": 413280002,
+    "reference": "cc_02",
+    "details": "OSM 외곽, 높이38m·8개 창문층, #c8a77a 석재와 독립된 어두운 창, 1층 유리 상가 띠. 북동쪽 옥상 안쪽의11×6.5m 발광 LED, 동측1.8×12m 세로판."
+   },
+   {
+    "element": "터미널 앞 분리대",
+    "osm": 828782198,
+    "reference": "gb_03/gb_04/gb_05 및 gyeongbu_lots aerial",
+    "details": "본선 남쪽 가장자리부터 경계석 포함1.5m, 잔디1.2m, 경계석 높이0.2m. x60..330, 횡단부x137..148 제외. 기존3.7m 체크 보도와 그 위 가로수·가로등 생성을 제외. 가로등은 정류장 보도(114.2336,-130.6556),(184.344,-157.296)로 이동."
+   },
+   {
+    "element": "터미널측 붉은 벽돌 띠",
+    "reference": "gb_01/gb_02",
+    "details": "터미널 로컬 좌표의 울타리·정류장 보도에 폭2m만 적용; 주 차도와 잔디 분리대에는 적용하지 않음. 실제 서비스 도로 리본을 빼서 차로 위에는 포장이 남지 않게 했다."
+   },
+   {
+    "element": "일반 보도",
+    "reference": "bp_02/cc_02",
+    "details": "streets가 만드는 보도·정류장 바닥은0.3m 회색블록(#a9a59c, 미세색차). CC 남측 보행로831108565도 선점하여 generic city 체크 무늬를 제거."
+   },
+   {
+    "element": "신세계 동측 주차장 포장 간섭",
+    "reference": "ssg_03/ssg_04",
+    "details": "원인은 서비스301889794가 아닌 미선점 보행로831108569. 이를 선점하고 신세계 bilinear rect(70.7,-12,91.2,55) 내부 보도만 기하학적으로 제외. 서비스 도로의 아스팔트와 신세계 주차선은 유지."
+   },
+   {
+    "element": "CC 서쪽 정류장",
+    "reference": "cc_02",
+    "details": "22220 정류장 기존 동쪽 위치에서 신반포로 접선 방향 서쪽으로36m 연속 유리 지붕. 높이3.2m, 가는 회백색 지지대와 절제된 광고박스. 기존 짧은 정류장은 생성하지 않음. 차로 위 OSM 정류장 노드에서 남쪽 법선으로3.2m 물려 설치하고 캐노피에 겹치는 자동 가로수·가로등은 제외했다."
+   },
+   {
+    "element": "반포지구대",
+    "osm": 886400346,
+    "reference": "ssg_04",
+    "details": "원래 OSM 외곽에3층·9m, 1.2m 파랑(#2f6db3)·베이지(#e2d6bd) 패널. 동측에 낮은 단층 유리 동. 사진에서 식별 불가능한 표장·업무간판은 추가하지 않음."
+   },
+   {
+    "element": "배경 주거건물",
+    "osm": [
+     413367405,
+     413367408,
+     1137867801
+    ],
+    "reference": "bp_01, manifest 위치 정정",
+    "details": "201/202동은 원래12층·34.8m 높이를 유지하고 #d9a26b 외벽과 흰 발코니 띠. 고층은 새로 추가하지 않고 실제3동 북쪽 OSM1137867801(34층101m)을 청회색 유리 외관으로 교체."
+   }
+  ],
+  "ownership": {
+   "terminal_shelters": "gyeongbu.buildForecourt 소유. 병행 round4에서 검은 프레임·지붕, 짙은 유리, 발광 파랑/얼굴 광고, 연속 배치와 u163 아치 틈을 수정한 것을 코드로 확인. streets에서 중복 정류장이나 겹쳐씌우는 외관을 생성하지 않음.",
+   "junctions_wells": "_junctions.js에서 streets를 직접 지정한 항목 없음. gotomall 지하 연결과 우물은 건드리지 않음.",
+   "gameplay": "기존8개 스폰, 육교 지상/육교 두 층 승강기, 구역과 도로 구조물 유지. 새 건물은 거리에서 보이는 외관만 복원하며 확인되지 않은 내부는 만들지 않음."
+  },
+  "guesses": [
+   "중복 지적의 폭1.2m/1.5m·높이0.18m/0.2m는 잔디1.2m+경계석 포함1.5m, 높이0.2m로 통합했다. 치수는 사진 기준 근사치다.",
+   "독립된 서비스 차로와 섬이 확실한 구간은 x약90..198이며 서비스 길은(207.26,-195.53)에서 본선으로 합류한다. 요청한 x330까지의 동쪽 잔디 연장은 낮은 가장자리 녹지의 길이 추정이다. 그 뒤에 새 서비스 차로는 만들지 않았다.",
+   "르본시티 LED 광고의 글자·정확한 영상은 판독되지 않아 사진의 녹색·노랑·분홍 색 덩어리를 단순화했다. 세로판은 실제 세입자 문구 대신 확인된 건물명만 사용했다.",
+   "르본시티 창문 간격, 석재 줄눈, 지붕 LED의 정확한 치수·후퇴량은 시각적 근사치다. 8개층과38m 외곽 높이는 유지했다.",
+   "반포지구대 패널 배치와 단층 동측 유리 부속동 폭5m는 흐린 ssg_04로 추정했다. 미확인 창·로고·간판은 생략했다.",
+   "201/202동은 사진 설명의 약15층 대신 OSM의12층을 유지했다. bp_01의 고층 위치는 manifest 정정에 따라3동 뒤 기존34층101m 타워로 판단했다.",
+   "CC 유리 캐노피의36m 길이, 지지대 간격6m, 정확한 광고판 도안은 추정이다. 보이는 유리·회백색 프레임 및 단순 색면만 표현했다.",
+   "보도블록 줄눈, 터미널 붉은 띠의 단부, 옮긴 가로등 두 개의 정확한 간격은 사진과 서비스 도로에 맞춘 근사치다.",
+   "이번 범위 밖 기존 가로수 수종, 신호기·안내판 세부, 고가 상판6.5m, 육교 상판6.2m와 주탑·승강기 존재, 지하차도 단면과 일부 택시 대기 위치는 기존 추정을 유지한다."
+  ],
+  "verification": {
+   "smoke_streets_gotomall": "OK; streets75,836quads(제한130,000),8spawns,1elevator(지상·육교 전층)",
+   "render": "기존 shots/verify/centralcity/cmp_1.png, critic/sheetA.png, gyeongbu/gb04.png 확인. 새 렌더용 로컬 서버가 listen EPERM으로 거부됨. tests/shot.mjs는 실행하지 않음.",
+   "walk": "node tests/walk.mjs: 320 ok, 0 blocked (최종 좌표·간섭 보정 후 재검사)",
+   "claims": "전체 PLACES meta.claims 검사: 중복 건물 선점0건",
+   "syntax_and_format": "node --check js/places/streets.js; git diff --check; JSON 파싱 통과",
+   "geometry_audit": {
+    "method": "실제 K 생성 호출 계측 및 폴리곤 교차 검사; 이미지 렌더 아님",
+    "median_x": [
+     60,
+     330
+    ],
+    "crossing_overlap_m2": 0,
+    "median_trees_or_poles": 0,
+    "parking_paver_overlap_m2": 0,
+    "pavement_pieces_checked": 2468,
+    "west_canopy_road_overlap_m2": 0,
+    "west_canopy_min_sampled_curb_clearance_m": 0.27,
+    "west_canopy_trees_or_poles": 0,
+    "red_paving_service_road_overlap_m2": 0
+   }
+  }
+ }
 }
