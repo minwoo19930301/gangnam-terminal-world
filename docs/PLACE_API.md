@@ -98,9 +98,12 @@ fabric, plaster. Not for glass/transparent textures. Each gloss level is its own
 A page load builds one AREA, not the whole world: an outdoor district (고속터미널 일대 / 잠원·뉴코아 / 반포한강공원) or one
 building's interior (고투몰+고속터미널역 are one area). Walking into a building, out of it, or across a district edge reloads
 the page at the new address with a loading screen. Inside the area everything is built as before; around it:
-- other building modules near the area are built but only their above-ground part (y > -1.5; plus the mouth of every
-  junction into the area and the top of entrance stairs), and their lazy detail groups are skipped (outdoor districts keep
-  ground-floor groups so shop windows stay furnished);
+- a building page builds that building only; modules it connects to underground are built for walking, but only the first
+  ~28 m of each connecting corridor is shown; the street right outside the doors (40 m) is kept, other buildings are blocks;
+- an outdoor page builds the district's buildings above ground only (plus the top of entrance stairs), with lazy detail only
+  for ground floors (shop windows stay furnished);
+- the page switches only on a clear move: into a building = under a roof and 3.5 m deep inside its zones for 1.2 s; out of it =
+  3 m away from all its zones for 1 s; another district = 25 m past its edge. Floors of one building never reload;
 - buildings of modules further away stand as plain OSM blocks (far massing); generic city ground clutter (roads,
   markings, trees) is kept ~220 m beyond the area, building walls/roofs everywhere (skyline).
 What this means for a module: register zones for every indoor space you build (the zone's place decides which area the

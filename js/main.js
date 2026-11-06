@@ -5,7 +5,7 @@ import { buildCity, createTraffic } from './city.js';
 import { PLACES } from './places/index.js';
 import { createMap } from './map.js';
 import { FONT } from './textures.js';
-import { planArea, areaIdAt, areaIdForKey, areaName } from './areas.js';
+import { planArea, areaIdAt, areaIdForKey, areaName, districtAt, OUTDOOR } from './areas.js';
 import { JUNCTIONS } from './places/_junctions.js';
 
 const Q = new URLSearchParams(location.search);
@@ -93,10 +93,10 @@ async function boot() {
   if (META && AREA.id !== 'all') {
     K._.setCurrent('lod');
     for (const [mid, v] of Object.entries(META)) {
-      if (AREA.modules.includes(mid) || mid === 'streets' || mid === 'hangang' || mid === 'jamwon_hangang') continue;
+      if ((AREA.modules.includes(mid) && !(AREA.id.startsWith('in:') && !AREA.id.slice(3).split('+').includes(mid))) || mid === 'streets' || mid === 'hangang' || mid === 'jamwon_hangang') continue;
       for (const bid of v.claims) for (const b of osm.buildings.filter(b => b.id === bid)) {
         const h = b.height || (b.levels ? b.levels * 3.6 : 12);
-        try { K.prism(b.poly, b.minHeight || 0, h, { mat: { tex: 'concrete', color: 0xd3cbbf }, holes: b.holes }); } catch (e) { }
+        try { K.prism(b.poly, b.minHeight || 0, h, { mat: { tex: 'concrete', color: 0xd3cbbf }, holes: b.holes, solid: AREA.lodSolid !== false }); } catch (e) { }
       }
     }
   }
@@ -305,14 +305,36 @@ async function boot() {
     else if (f > 57 && pixelRatio < MAX_PR) np = Math.min(MAX_PR, pixelRatio * 1.08);
     if (Math.abs(np - pixelRatio) > 0.01) { pixelRatio = np; renderer.setPixelRatio(pixelRatio); }
   }
-  // walked into another area? (same area for 0.7 s, not in the first 1.5 s after loading)
+  // Walked into another area? Only on a clear move, never while brushing past a door, an arcade or a plaza edge:
+  //  - into a building: standing under a roof, at least 3.5 m deep inside that building's zones (8 points around you
+  //    all belong to it), for 1.2 s;
+  //  - out of the building this page shows: at least 3 m away from all of its zones, for 1 s;
+  //  - into another outdoor district: 25 m past the district edge.
+  // Floors of the same building never reload (elevators, stairs and escalators stay inside the page).
   let areaPending = null, areaSince = 0; const bootT = performance.now();
+  const OWN = AREA.id.startsWith('in:') ? new Set(AREA.id.slice(3).split('+')) : null;
+  const bldgAt = (x, y, z) => { const zn = phys.zoneAt(x, y + 0.1, z); return zn && zn.place && zn.place !== 'city' && !OUTDOOR.has(zn.place) ? zn.place : null; };
+  const ring = (x, y, z, r, test) => { for (let k = 0; k < 8; k++) { const a = k * Math.PI / 4; if (!test(bldgAt(x + Math.cos(a) * r, y, z + Math.sin(a) * r))) return false; } return test(bldgAt(x, y, z)); };
+  const sameArea = (a, b) => a && b && areaIdAt({ place: a }, 0, 0, 0) === areaIdAt({ place: b }, 0, 0, 0);
+  function wantedArea(zn) {
+    const x = player.x, y = player.y, z = player.z, here = bldgAt(x, y, z);
+    if (OWN) { // inside a building page: stay unless clearly out of it
+      if (here && OWN.has(here)) return AREA.id;
+      if (!ring(x, y, z, 3, p => !p || !OWN.has(p))) return AREA.id;
+      if (here && ring(x, y, z, 3.5, p => sameArea(p, here)) && phys.ceilingAbove(x, z, y + 0.5, y + 15) < Infinity) return areaIdAt({ place: here }, x, y, z);
+      return 'out:' + districtAt(x, z).id;
+    }
+    if (here && ring(x, y, z, 3.5, p => sameArea(p, here)) && phys.ceilingAbove(x, z, y + 0.5, y + 15) < Infinity) return areaIdAt({ place: here }, x, y, z);
+    const d = districtAt(x, z);
+    if ('out:' + d.id !== AREA.id && districtAt(x + 25, z).id === d.id && districtAt(x - 25, z).id === d.id && districtAt(x, z + 25).id === d.id && districtAt(x, z - 25).id === d.id) return 'out:' + d.id;
+    return AREA.id;
+  }
   function areaWatch(zn) {
-    if (AREA.id === 'all' || leaving || menuOpen || performance.now() - bootT < 1500) return;
-    const id = areaIdAt(zn, player.x, player.y, player.z);
+    if (AREA.id === 'all' || leaving || menuOpen || performance.now() - bootT < 2000) return;
+    const id = wantedArea(zn);
     if (id === AREA.id) { areaPending = null; return; }
     if (id !== areaPending) { areaPending = id; areaSince = performance.now(); return; }
-    if (performance.now() - areaSince < 700) return;
+    if (performance.now() - areaSince < (id.startsWith('in:') ? 1200 : 1000)) return;
     const key = zn && zn.place ? `${zn.place}/${zn.floor || '1F'}` : (player.y < -2 ? 'underground' : 'street');
     reloadAt(key, player.x, player.y, player.z, player.yaw * 180 / Math.PI, areaName(id, META));
   }
@@ -363,7 +385,7 @@ async function boot() {
   if (SHOT) { await signFonts; K._.atlas.flushAll(); for (const p of K._.atlas.pages) p.t.needsUpdate = true; }
   else signFonts.then(() => { signsGo = true; });
   mark('ready');
-  Object.assign(window.__world, { ready: true, area: AREA.id, K, phys, player, camera, scene, renderer, map, places: placeInfo, stats: { ...K._.stats, phys: phys.stats, draw: () => renderer.info.render }, setNight });
+  Object.assign(window.__world, { ready: true, area: AREA.id, wantedArea: () => wantedArea(phys.zoneAt(player.x, player.y + 0.1, player.z)), K, phys, player, camera, scene, renderer, map, places: placeInfo, stats: { ...K._.stats, phys: phys.stats, draw: () => renderer.info.render }, setNight });
   frame();
 }
 boot().catch(e => { fail('boot', e); status('오류: ' + e.message); });

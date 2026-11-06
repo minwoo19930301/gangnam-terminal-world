@@ -446,7 +446,8 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     quad(sp, [P(-w / 2, h / 2), P(w / 2, h / 2), P(w / 2, -h / 2), P(-w / 2, -h / 2)], [0, 1, 0], [[u0, v0], [u1, v0], [u1, v1], [u0, v1]]);
   }
   // instanced things
-  function tree(x, z, o = {}) { if (keep && !keep(current, x, o.y ?? 0, z, 0)) return; trees.push({ place: current, x, z, y: o.y ?? 0, h: o.h ?? (6 + ((x * 13.7 + z * 7.3) % 3)), kind: o.kind ?? 'zelkova' }); }
+  // trees count as ground clutter (ny 1) for area filtering
+  function tree(x, z, o = {}) { if (keep && !keep(current, x, o.y ?? 0, z, 1)) return; trees.push({ place: current, x, z, y: o.y ?? 0, h: o.h ?? (6 + ((x * 13.7 + z * 7.3) % 3)), kind: o.kind ?? 'zelkova' }); }
   function person(x, y, z, o = {}) { if (keep && !keep(current, x, y, z, 1)) return; people.push({ place: current, x, y, z, rotY: o.rotY ?? ((x * 7 + z * 3) % 6.28), shirt: o.shirt, pants: o.pants, h: o.h ?? (1.6 + ((x * 31 + z * 17) % 0.25)), sit: !!o.sit }); }
   function crowd(poly, y, n, o = {}) { const rnd = rand(o.seed ?? (poly[0][0] * 1000 + poly[0][1])); const bb = polyBBox(poly); let k = 0, guard = 0; while (k < n && guard++ < n * 30) { const x = bb[0] + rnd() * (bb[2] - bb[0]), z = bb[1] + rnd() * (bb[3] - bb[1]); if (pointInPoly(x, z, poly)) { person(x, y, z, { rotY: rnd() * 6.28 }); k++; } } }
   // vehicle (static, merged). kind: car|taxi|bus|cityBus|truck|van

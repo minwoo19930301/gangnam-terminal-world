@@ -81,17 +81,20 @@ export function planArea(id, META, JUNCTIONS = []) {
   const own = id.slice(3).split('+'), ownSet = new Set(own);
   let B = null; for (const m of own) { const b = META[m]?.box; if (!b) continue; B = B ? [Math.min(B[0], b[0]), Math.min(B[1], b[1]), Math.max(B[2], b[2]), Math.max(B[3], b[3])] : b.slice(); }
   B = B || [-200, -200, 200, 200];
-  const modules = all.filter(m => ownSet.has(m) || touches(META[m], B, EXT_MARGIN));
-  // junction mouths of neighbours stay (you see down the corridor you are about to walk into)
+  // A building page builds that building only. Modules it connects to underground are built too (their floors and walls
+  // make the corridors walkable up to the reload), but only the first ~28 m of each connecting corridor is shown.
+  // The street right outside the doors (40 m) is kept so the entrances look right; every other building is a plain block.
+  const neigh = new Set(); for (const m of own) for (const j of META[m]?.junctions || []) if (!ownSet.has(j.other)) neigh.add(j.other);
+  const modules = all.filter(m => ownSet.has(m) || neigh.has(m) || (m === 'streets' && touches(META[m], B, 40)));
   const mouths = []; for (const m of own) for (const j of META[m]?.junctions || []) if (!ownSet.has(j.other)) mouths.push([j.x, j.z, j.y, j.also || []]);
   const nearMouth = (x, y, z) => mouths.some(([mx, mz, my, also]) => Math.hypot(mx - x, mz - z) < 28 && [my, ...also].some(yy => Math.abs(yy - y) < 7));
   return {
-    id, name: own.map(m => META[m]?.name || m).join(' · '), modules, box: B,
+    id, name: own.map(m => META[m]?.name || m).join(' · '), modules, box: B, lodSolid: false,
     keep(owner, x, y, z, ny) {
       if (ownSet.has(owner) || owner === 'ground' || owner === 'lod') return true;
-      if (owner === 'city' || owner === 'main') return inBox(B, x, z, CITY_MARGIN) || Math.abs(ny) < 0.5 || y > 2.5;
-      if (OUTDOOR.has(owner)) return inBox(B, x, z, EXT_MARGIN) && (y >= UNDER || nearMouth(x, y, z));
-      return y >= UNDER || nearMouth(x, y, z); // neighbours' exteriors (modules beyond EXT_MARGIN are not loaded: far massing)
+      if (owner === 'city' || owner === 'main') return inBox(B, x, z, 40) || ((Math.abs(ny) < 0.5 || y > 2.5) && inBox(B, x, z, 900)); // walls/roofs: what you see out of the windows
+      if (owner === 'streets') return inBox(B, x, z, 40) && (y > -3.2 || nearMouth(x, y, z));
+      return nearMouth(x, y, z);
     },
     keepDetail(g) { return ownSet.has(g.owner); },
   };
