@@ -1241,87 +1241,140 @@
       {
         "round": 13,
         "frame": "refs/walk/s8_onebailey_banpo/F9MdeqY0Rro_4.jpg",
-        "spot": "G2 모듈 경계 뒤 분홍 길찾기",
-        "x": -295.5,
+        "spot": "고투몰 북측 통로 · 반포한강공원 분홍 길찾기",
+        "x": -261.991,
         "y": -6,
-        "z": -48,
-        "yawDeg": 54.246,
+        "z": -33.2043,
+        "yawDeg": 110.5309,
         "pitchDeg": 0,
         "eyeY": 1.62,
         "floor": "B1",
         "photos": [
           "refs/walk/s8_onebailey_banpo/F9MdeqY0Rro_4.jpg"
         ],
-        "coordinate_status": "모델 검수 카메라. y는 바닥 높이; 원본 촬영의 GPS/실측 위치 아님.",
-        "note": "원본은 gotomall 내부. 이 모듈의 접속부에 색/화살표만 이어 붙인 부분 재현; 상점은 수정 범위 밖."
+        "coordinate_status": "round15 원본 구도와 모듈 기하에 맞춘 검수 카메라. y는 바닥 높이. 실측 GPS가 아니며 새 렌더는 실행하지 않음.",
+        "note": "실제 고투몰 북측 쇼핑 통로에서 서쪽 분홍 길찾기 사인을 향함. 다른 모듈 식당을 삭제하지 않음. gotomall 동시 로딩 필요.",
+        "previous_round13_pose": {
+          "x": -295.5,
+          "y": -6,
+          "z": -48,
+          "yawDeg": 54.246,
+          "pitchDeg": 0
+        },
+        "updated_round": 15,
+        "camera_id": "onebailey_00",
+        "requires_places": [
+          "gotomall",
+          "onebailey"
+        ]
       },
       {
         "round": 13,
         "frame": "refs/walk/s8_onebailey_banpo/F9MdeqY0Rro_7.jpg",
-        "spot": "G2 모듈 경계 뒤 분홍 길찾기",
-        "x": -295.5,
+        "spot": "고투몰 북측 통로 · 반포한강공원 분홍 길찾기",
+        "x": -268.5275,
         "y": -6,
-        "z": -48,
-        "yawDeg": 54.246,
+        "z": -30.6987,
+        "yawDeg": 110.5309,
         "pitchDeg": 0,
         "eyeY": 1.62,
         "floor": "B1",
         "photos": [
           "refs/walk/s8_onebailey_banpo/F9MdeqY0Rro_7.jpg"
         ],
-        "coordinate_status": "모델 검수 카메라. y는 바닥 높이; 원본 촬영의 GPS/실측 위치 아님.",
-        "note": "원본은 gotomall 내부. 이 모듈의 접속부에 색/화살표만 이어 붙인 부분 재현; 상점은 수정 범위 밖."
+        "coordinate_status": "round15 원본 구도와 모듈 기하에 맞춘 검수 카메라. y는 바닥 높이. 실측 GPS가 아니며 새 렌더는 실행하지 않음.",
+        "note": "실제 고투몰 북측 쇼핑 통로에서 서쪽 분홍 길찾기 사인을 향함. 다른 모듈 식당을 삭제하지 않음. gotomall 동시 로딩 필요.",
+        "previous_round13_pose": {
+          "x": -295.5,
+          "y": -6,
+          "z": -48,
+          "yawDeg": 54.246,
+          "pitchDeg": 0
+        },
+        "updated_round": 15,
+        "camera_id": "onebailey_01",
+        "requires_places": [
+          "gotomall",
+          "onebailey"
+        ]
       },
       {
         "round": 13,
         "frame": "refs/walk/s8_onebailey_banpo/F9MdeqY0Rro_10.jpg",
         "spot": "유리 입구와 노천 계단",
-        "x": -332,
+        "x": -323,
         "y": -6,
-        "z": -66,
-        "yawDeg": 203.629,
+        "z": -68,
+        "yawDeg": 160.6,
         "pitchDeg": 0,
         "eyeY": 1.62,
         "floor": "B1",
         "photos": [
           "refs/walk/s8_onebailey_banpo/F9MdeqY0Rro_10.jpg"
         ],
-        "coordinate_status": "모델 검수 카메라. y는 바닥 높이; 원본 촬영의 GPS/실측 위치 아님.",
-        "note": "층·입구 좌표 추정. 화면의 왼쪽 계단은 상승 방향임."
+        "coordinate_status": "round15 원본 구도와 모듈 기하에 맞춘 검수 카메라. y는 바닥 높이. 실측 GPS가 아니며 새 렌더는 실행하지 않음.",
+        "note": "B1에서 상승 계단 왼쪽과 색유리 구조물 오른쪽을 봄. 리뷰의 하행 계단 지시는 원본과 모순되어 적용하지 않음.",
+        "previous_round13_pose": {
+          "x": -332,
+          "y": -6,
+          "z": -66,
+          "yawDeg": 203.629,
+          "pitchDeg": 0
+        },
+        "updated_round": 15,
+        "camera_id": "onebailey_02"
       },
       {
         "round": 13,
         "frame": "refs/walk/s8_onebailey_banpo/wvUnarSte1A_3.jpg",
         "spot": "유리 입구와 노천 계단",
-        "x": -332,
+        "x": -320.5,
         "y": -6,
-        "z": -66,
-        "yawDeg": 203.629,
+        "z": -66.5,
+        "yawDeg": 154,
         "pitchDeg": 0,
         "eyeY": 1.62,
         "floor": "B1",
         "photos": [
           "refs/walk/s8_onebailey_banpo/wvUnarSte1A_3.jpg"
         ],
-        "coordinate_status": "모델 검수 카메라. y는 바닥 높이; 원본 촬영의 GPS/실측 위치 아님.",
-        "note": "층·입구 좌표 추정. 화면의 왼쪽 계단은 상승 방향임."
+        "coordinate_status": "round15 원본 구도와 모듈 기하에 맞춘 검수 카메라. y는 바닥 높이. 실측 GPS가 아니며 새 렌더는 실행하지 않음.",
+        "note": "B1에서 상승 계단 왼쪽과 색유리 구조물 오른쪽을 봄. 리뷰의 하행 계단 지시는 원본과 모순되어 적용하지 않음.",
+        "previous_round13_pose": {
+          "x": -332,
+          "y": -6,
+          "z": -66,
+          "yawDeg": 203.629,
+          "pitchDeg": 0
+        },
+        "updated_round": 15,
+        "camera_id": "onebailey_03"
       },
       {
         "round": 13,
         "frame": "refs/walk/s8_onebailey_banpo/F9MdeqY0Rro_13.jpg",
         "spot": "사각 파랑 기둥·풍선·벤치",
-        "x": -519.4647,
+        "x": -533.13,
         "y": -6,
-        "z": -324.3179,
-        "yawDeg": 21.209,
+        "z": -358.7032,
+        "yawDeg": 201.209,
         "pitchDeg": 0,
         "eyeY": 1.62,
         "floor": "B1",
         "photos": [
           "refs/walk/s8_onebailey_banpo/F9MdeqY0Rro_13.jpg"
         ],
-        "coordinate_status": "모델 검수 카메라. y는 바닥 높이; 원본 촬영의 GPS/실측 위치 아님.",
-        "note": ""
+        "coordinate_status": "round15 원본 구도와 모듈 기하에 맞춘 검수 카메라. y는 바닥 높이. 실측 GPS가 아니며 새 렌더는 실행하지 않음.",
+        "note": "기둥을 피한 반대방향 구도: 흰 설명패널이 우측에 오는 F9_13 프레임에 대응.",
+        "previous_round13_pose": {
+          "x": -519.4647,
+          "y": -6,
+          "z": -324.3179,
+          "yawDeg": 21.209,
+          "pitchDeg": 0
+        },
+        "updated_round": 15,
+        "camera_id": "onebailey_04"
       },
       {
         "round": 13,
@@ -1344,18 +1397,27 @@
         "round": 13,
         "frame": "refs/walk/s8_onebailey_banpo/F9MdeqY0Rro_19.jpg",
         "spot": "공원 마지막 하행 계단",
-        "x": -566.36,
+        "x": -566.7286,
         "y": 1.2,
-        "z": -586.0506,
+        "z": -586.9802,
         "yawDeg": 21.632,
-        "pitchDeg": 0,
+        "pitchDeg": -15,
         "eyeY": 1.62,
         "floor": "1F",
         "photos": [
           "refs/walk/s8_onebailey_banpo/F9MdeqY0Rro_19.jpg"
         ],
-        "coordinate_status": "모델 검수 카메라. y는 바닥 높이; 원본 촬영의 GPS/실측 위치 아님.",
-        "note": "참 높이와 접속부 배치는 추정; 바닥1.2m, 카메라 눈높이는 별도."
+        "coordinate_status": "round15 원본 구도와 모듈 기하에 맞춘 검수 카메라. y는 바닥 높이. 실측 GPS가 아니며 새 렌더는 실행하지 않음.",
+        "note": "기존 +1.2m 참의 계단 머리에서 아래로15도. 원본의 내려가는 마지막 계단, 왼쪽 난간, 오른쪽 벽을 포함. 참 높이는 지형 근사.",
+        "previous_round13_pose": {
+          "x": -566.36,
+          "y": 1.2,
+          "z": -586.0506,
+          "yawDeg": 21.632,
+          "pitchDeg": 0
+        },
+        "updated_round": 15,
+        "camera_id": "onebailey_06"
       },
       {
         "round": 13,
@@ -1395,52 +1457,79 @@
         "round": 13,
         "frame": "refs/walk/s8_onebailey_banpo/wvUnarSte1A_27.jpg",
         "spot": "야외무대 명판·출입구",
-        "x": -432.3326,
+        "x": -434.3238,
         "y": -6,
-        "z": -94.257,
-        "yawDeg": 66.209,
+        "z": -97.4532,
+        "yawDeg": 111.209,
         "pitchDeg": 0,
         "eyeY": 1.62,
         "floor": "B1",
         "photos": [
           "refs/walk/s8_onebailey_banpo/wvUnarSte1A_27.jpg"
         ],
-        "coordinate_status": "모델 검수 카메라. y는 바닥 높이; 원본 촬영의 GPS/실측 위치 아님.",
-        "note": ""
+        "coordinate_status": "round15 원본 구도와 모듈 기하에 맞춘 검수 카메라. y는 바닥 높이. 실측 GPS가 아니며 새 렌더는 실행하지 않음.",
+        "note": "",
+        "previous_round13_pose": {
+          "x": -432.3326,
+          "y": -6,
+          "z": -94.257,
+          "yawDeg": 66.209,
+          "pitchDeg": 0
+        },
+        "updated_round": 15,
+        "camera_id": "onebailey_09"
       },
       {
         "round": 13,
         "frame": "refs/walk/s8_onebailey_banpo/wvUnarSte1A_35.jpg",
         "spot": "노천 석재 계단 객석",
-        "x": -443.0467,
+        "x": -449.4056,
         "y": -6,
-        "z": -99.7532,
-        "yawDeg": 111.209,
+        "z": -113.3754,
+        "yawDeg": 151,
         "pitchDeg": 0,
         "eyeY": 1.62,
         "floor": "B1",
         "photos": [
           "refs/walk/s8_onebailey_banpo/wvUnarSte1A_35.jpg"
         ],
-        "coordinate_status": "모델 검수 카메라. y는 바닥 높이; 원본 촬영의 GPS/실측 위치 아님.",
-        "note": ""
+        "coordinate_status": "round15 원본 구도와 모듈 기하에 맞춘 검수 카메라. y는 바닥 높이. 실측 GPS가 아니며 새 렌더는 실행하지 않음.",
+        "note": "",
+        "previous_round13_pose": {
+          "x": -443.0467,
+          "y": -6,
+          "z": -99.7532,
+          "yawDeg": 111.209,
+          "pitchDeg": 0
+        },
+        "updated_round": 15,
+        "camera_id": "onebailey_10"
       },
       {
         "round": 13,
         "frame": "refs/walk/s8_onebailey_banpo/wvUnarSte1A_43.jpg",
         "spot": "원목 라운지·흰 의자",
-        "x": -450.9501,
+        "x": -453.23207595170396,
         "y": -6,
-        "z": -125.6479,
-        "yawDeg": 79.602,
-        "pitchDeg": 0,
+        "z": -120.47176696557527,
+        "yawDeg": 110,
+        "pitchDeg": 3,
         "eyeY": 1.62,
         "floor": "B1",
         "photos": [
           "refs/walk/s8_onebailey_banpo/wvUnarSte1A_43.jpg"
         ],
-        "coordinate_status": "모델 검수 카메라. y는 바닥 높이; 원본 촬영의 GPS/실측 위치 아님.",
-        "note": ""
+        "coordinate_status": "round15 원본 구도와 모듈 기하에 맞춘 검수 카메라. y는 바닥 높이. 실측 GPS가 아니며 새 렌더는 실행하지 않음.",
+        "note": "5m 천장, 왼쪽 흰 블라인드, 오른쪽 목재 벽과 테이블 군집을 바라봄.",
+        "previous_round13_pose": {
+          "x": -450.9501,
+          "y": -6,
+          "z": -125.6479,
+          "yawDeg": 79.602,
+          "pitchDeg": 0
+        },
+        "updated_round": 15,
+        "camera_id": "onebailey_11"
       },
       {
         "round": 13,
@@ -1474,15 +1563,15 @@
           "refs/walk/s8_onebailey_banpo/wvUnarSte1A_67.jpg"
         ],
         "coordinate_status": "모델 검수 카메라. y는 바닥 높이; 원본 촬영의 GPS/실측 위치 아님.",
-        "note": ""
+        "note": "북향 yaw21.209 유지. 조각들을 v+ 왼쪽으로 옮기고 v- 오른쪽 벽화 유지."
       },
       {
         "round": 13,
         "frame": "refs/walk/s8_onebailey_banpo/wvUnarSte1A_75.jpg",
         "spot": "파스텔 포스터·점무늬 조각",
-        "x": -533.809,
+        "x": -537.3516,
         "y": -6,
-        "z": -361.2822,
+        "z": -359.9075,
         "yawDeg": 111.209,
         "pitchDeg": 0,
         "eyeY": 1.62,
@@ -1490,16 +1579,25 @@
         "photos": [
           "refs/walk/s8_onebailey_banpo/wvUnarSte1A_75.jpg"
         ],
-        "coordinate_status": "모델 검수 카메라. y는 바닥 높이; 원본 촬영의 GPS/실측 위치 아님.",
-        "note": "정면 포스터, 뒤편 벽측에 조각. 날짜는 공식4.27~11.15 적용."
+        "coordinate_status": "round15 원본 구도와 모듈 기하에 맞춘 검수 카메라. y는 바닥 높이. 실측 GPS가 아니며 새 렌더는 실행하지 않음.",
+        "note": "정면 포스터, 뒤편 벽측에 조각. 날짜는 공식4.27~11.15 적용.",
+        "previous_round13_pose": {
+          "x": -533.809,
+          "y": -6,
+          "z": -361.2822,
+          "yawDeg": 111.209,
+          "pitchDeg": 0
+        },
+        "updated_round": 15,
+        "camera_id": "onebailey_14"
       },
       {
         "round": 13,
         "frame": "refs/walk/s8_onebailey_banpo/wvUnarSte1A_83.jpg",
         "spot": "당신의 오늘을 그려주세요",
-        "x": -530.1649,
+        "x": -532.7752,
         "y": -6,
-        "z": -349.1273,
+        "z": -348.1143,
         "yawDeg": 111.209,
         "pitchDeg": 0,
         "eyeY": 1.62,
@@ -1507,8 +1605,17 @@
         "photos": [
           "refs/walk/s8_onebailey_banpo/wvUnarSte1A_83.jpg"
         ],
-        "coordinate_status": "모델 검수 카메라. y는 바닥 높이; 원본 촬영의 GPS/실측 위치 아님.",
-        "note": ""
+        "coordinate_status": "round15 원본 구도와 모듈 기하에 맞춘 검수 카메라. y는 바닥 높이. 실측 GPS가 아니며 새 렌더는 실행하지 않음.",
+        "note": "",
+        "previous_round13_pose": {
+          "x": -530.1649,
+          "y": -6,
+          "z": -349.1273,
+          "yawDeg": 111.209,
+          "pitchDeg": 0
+        },
+        "updated_round": 15,
+        "camera_id": "onebailey_15"
       },
       {
         "round": 13,
@@ -1530,7 +1637,7 @@
       {
         "round": 13,
         "frame": "refs/walk/s8_onebailey_banpo/PN3QyVXbUNg_17.jpg",
-        "spot": "궁궐·불꽃·곰 모티프",
+        "spot": "궁궐·불꽃·주황 모자 인물",
         "x": -413.4647,
         "y": -6,
         "z": -51.1641,
@@ -1548,9 +1655,9 @@
         "round": 13,
         "frame": "refs/walk/s8_onebailey_banpo/PN3QyVXbUNg_60.jpg",
         "spot": "청백 인물 모티프",
-        "x": -455.4306,
+        "x": -457.7612,
         "y": -6,
-        "z": -159.3069,
+        "z": -158.4025,
         "yawDeg": 111.209,
         "pitchDeg": 0,
         "eyeY": 1.62,
@@ -1558,8 +1665,17 @@
         "photos": [
           "refs/walk/s8_onebailey_banpo/PN3QyVXbUNg_60.jpg"
         ],
-        "coordinate_status": "모델 검수 카메라. y는 바닥 높이; 원본 촬영의 GPS/실측 위치 아님.",
-        "note": "로그 모티프 오프셋을 실제 프레임으로 정정. 기존 24시간/피카소 원작 모티프는 보존. 새 그림의 벽측·거리 추정."
+        "coordinate_status": "round15 원본 구도와 모듈 기하에 맞춘 검수 카메라. y는 바닥 높이. 실측 GPS가 아니며 새 렌더는 실행하지 않음.",
+        "note": "로그 모티프 오프셋을 실제 프레임으로 정정. 기존 24시간/피카소 원작 모티프는 보존. 새 그림의 벽측·거리 추정.",
+        "previous_round13_pose": {
+          "x": -455.4306,
+          "y": -6,
+          "z": -159.3069,
+          "yawDeg": 111.209,
+          "pitchDeg": 0
+        },
+        "updated_round": 15,
+        "camera_id": "onebailey_18"
       },
       {
         "round": 13,
@@ -1599,9 +1715,9 @@
         "round": 13,
         "frame": "refs/walk/s8_onebailey_banpo/PN3QyVXbUNg_105.jpg",
         "spot": "책상 인물 모티프",
-        "x": -408.3998,
+        "x": -411.0102,
         "y": -6,
-        "z": -38.1124,
+        "z": -37.0994,
         "yawDeg": 111.209,
         "pitchDeg": 0,
         "eyeY": 1.62,
@@ -1609,16 +1725,25 @@
         "photos": [
           "refs/walk/s8_onebailey_banpo/PN3QyVXbUNg_105.jpg"
         ],
-        "coordinate_status": "모델 검수 카메라. y는 바닥 높이; 원본 촬영의 GPS/실측 위치 아님.",
-        "note": "로그 모티프 오프셋을 실제 프레임으로 정정. 기존 24시간/피카소 원작 모티프는 보존. 새 그림의 벽측·거리 추정."
+        "coordinate_status": "round15 원본 구도와 모듈 기하에 맞춘 검수 카메라. y는 바닥 높이. 실측 GPS가 아니며 새 렌더는 실행하지 않음.",
+        "note": "로그 모티프 오프셋을 실제 프레임으로 정정. 기존 24시간/피카소 원작 모티프는 보존. 새 그림의 벽측·거리 추정.",
+        "previous_round13_pose": {
+          "x": -408.3998,
+          "y": -6,
+          "z": -38.1124,
+          "yawDeg": 111.209,
+          "pitchDeg": 0
+        },
+        "updated_round": 15,
+        "camera_id": "onebailey_21"
       },
       {
         "round": 13,
         "frame": "refs/walk/s8_onebailey_banpo/PN3QyVXbUNg_122.jpg",
         "spot": "지하철 모티프",
-        "x": -499.2053,
+        "x": -501.536,
         "y": -6,
-        "z": -272.111,
+        "z": -271.2066,
         "yawDeg": 111.209,
         "pitchDeg": 0,
         "eyeY": 1.62,
@@ -1626,8 +1751,17 @@
         "photos": [
           "refs/walk/s8_onebailey_banpo/PN3QyVXbUNg_122.jpg"
         ],
-        "coordinate_status": "모델 검수 카메라. y는 바닥 높이; 원본 촬영의 GPS/실측 위치 아님.",
-        "note": "로그 모티프 오프셋을 실제 프레임으로 정정. 기존 24시간/피카소 원작 모티프는 보존. 새 그림의 벽측·거리 추정."
+        "coordinate_status": "round15 원본 구도와 모듈 기하에 맞춘 검수 카메라. y는 바닥 높이. 실측 GPS가 아니며 새 렌더는 실행하지 않음.",
+        "note": "로그 모티프 오프셋을 실제 프레임으로 정정. 기존 24시간/피카소 원작 모티프는 보존. 새 그림의 벽측·거리 추정.",
+        "previous_round13_pose": {
+          "x": -499.2053,
+          "y": -6,
+          "z": -272.111,
+          "yawDeg": 111.209,
+          "pitchDeg": 0
+        },
+        "updated_round": 15,
+        "camera_id": "onebailey_22"
       }
     ],
     "trace_coordinates": "x east,z south,y floor. Screenshot camera adds eye height1.62. yaw0 north,90 west. 모든 참조 기반 모델 지점 및24시간/12조각별 시점 기록.",
@@ -2166,6 +2300,222 @@
       "status": "NOT RUN: user sandbox instruction",
       "command": "node tests/shot.mjs --places onebailey,hangang,gotomall --city 0 --out shots/onebailey --views \"F9MdeqY0Rro_4:-295.5,-6,-48,54.246,0;F9MdeqY0Rro_7:-295.5,-6,-48,54.246,0;F9MdeqY0Rro_10:-332,-6,-66,203.629,0;wvUnarSte1A_3:-332,-6,-66,203.629,0;F9MdeqY0Rro_13:-519.4647,-6,-324.3179,21.209,0;F9MdeqY0Rro_16:-538.0983,-6,-528.3506,21.632,0;F9MdeqY0Rro_19:-566.36,1.2,-586.0506,21.632,0;wvUnarSte1A_11:-452.5364,-6,-151.8488,57.151,0;wvUnarSte1A_19:-425.4589,-6,-76.544,111.209,0;wvUnarSte1A_27:-432.3326,-6,-94.257,66.209,0;wvUnarSte1A_35:-443.0467,-6,-99.7532,111.209,0;wvUnarSte1A_43:-450.9501,-6,-125.6479,79.602,0;wvUnarSte1A_59:-473.2132,-6,-199.603,90.653,0;wvUnarSte1A_67:-511.2969,-6,-306.0344,21.209,0;wvUnarSte1A_75:-533.809,-6,-361.2822,111.209,0;wvUnarSte1A_83:-530.1649,-6,-349.1273,111.209,0;wvUnarSte1A_99:-504.2701,-6,-285.1627,65.238,0;PN3QyVXbUNg_17:-413.4647,-6,-51.1641,111.209,0;PN3QyVXbUNg_60:-455.4306,-6,-159.3069,111.209,0;PN3QyVXbUNg_75:-461.2189,-6,-174.2231,111.209,0;PN3QyVXbUNg_90:-492.3316,-6,-254.398,111.209,0;PN3QyVXbUNg_105:-408.3998,-6,-38.1124,111.209,0;PN3QyVXbUNg_122:-499.2053,-6,-272.111,111.209,0\"",
       "note": "shot 도구의 eye-height 오프셋을 사용. trace y를 눈높이로 바꾸지 않는다. 원본은 frame/photos로 대응."
+    },
+    "round15": {
+      "priority": "카메라 → 연결·입구·실내 구조 → 재질·간판 → 전시·벽화·사람",
+      "camera_changes": {
+        "00": {
+          "x": -261.991,
+          "y": -6,
+          "z": -33.2043,
+          "yawDeg": 110.5309,
+          "pitchDeg": 0
+        },
+        "01": {
+          "x": -268.5275,
+          "y": -6,
+          "z": -30.6987,
+          "yawDeg": 110.5309,
+          "pitchDeg": 0
+        },
+        "02": {
+          "x": -323,
+          "y": -6,
+          "z": -68,
+          "yawDeg": 160.6,
+          "pitchDeg": 0
+        },
+        "03": {
+          "x": -320.5,
+          "y": -6,
+          "z": -66.5,
+          "yawDeg": 154,
+          "pitchDeg": 0
+        },
+        "04": {
+          "x": -533.13,
+          "y": -6,
+          "z": -358.7032,
+          "yawDeg": 201.209,
+          "pitchDeg": 0
+        },
+        "06": {
+          "x": -566.7286,
+          "y": 1.2,
+          "z": -586.9802,
+          "yawDeg": 21.632,
+          "pitchDeg": -15
+        },
+        "09": {
+          "x": -434.3238,
+          "y": -6,
+          "z": -97.4532,
+          "yawDeg": 111.209,
+          "pitchDeg": 0
+        },
+        "10": {
+          "x": -449.4056,
+          "y": -6,
+          "z": -113.3754,
+          "yawDeg": 151,
+          "pitchDeg": 0
+        },
+        "14": {
+          "x": -537.3516,
+          "y": -6,
+          "z": -359.9075,
+          "yawDeg": 111.209,
+          "pitchDeg": 0
+        },
+        "15": {
+          "x": -532.7752,
+          "y": -6,
+          "z": -348.1143,
+          "yawDeg": 111.209,
+          "pitchDeg": 0
+        },
+        "18": {
+          "x": -457.7612,
+          "y": -6,
+          "z": -158.4025,
+          "yawDeg": 111.209,
+          "pitchDeg": 0
+        },
+        "21": {
+          "x": -411.0102,
+          "y": -6,
+          "z": -37.0994,
+          "yawDeg": 111.209,
+          "pitchDeg": 0
+        },
+        "22": {
+          "x": -501.536,
+          "y": -6,
+          "z": -271.2066,
+          "yawDeg": 111.209,
+          "pitchDeg": 0
+        },
+        "11": {
+          "x": -453.23207595170396,
+          "y": -6,
+          "z": -120.47176696557527,
+          "yawDeg": 110,
+          "pitchDeg": 3
+        }
+      },
+      "layout": [
+        "G2 공개공지: 기존 B1→지상 상승 계단(-330,-59)→(-318,-38) 유지. 계단 축 local v+3.3…6.5에 있던 색유리 구조물을 v-3.3…-6.5로 옮겨 사진상 오른쪽 배치. 둥근 32각 천창 개구, 어두운 소핏과 지하 벽 추가.",
+        "주통로 P(s,v)=(-410,-45)+s*(-130,-335)/L+v*(-335,130)/L, L=hypot(130,335). 공유 G2 및 공원 접점 좌표와 등고 유지.",
+        "야외무대 s48…80, v7…40: 바닥·15단 객석·별도 보행계단 유지, v7…15에 소핏, s48 측면 돌난간. 식재는 상단 v44 뒤쪽으로 이동.",
+        "라운지 s80…110,v7…29: 천장높이3.8→5m, 흰 블라인드와 우측 목재벽, 회색 카펫, 원탁5개·흰 의자30개.",
+        "관광센터 앞 유리점포 s162…175로 집약, 중앙 출입 s166…168 2m 확보. 주변은 회색 석재. 기존 룸·리플릿·직원·키오스크 유지.",
+        "전시 조각12점 v-5.3→+5.3. 파란 기둥 r0.4m 원형. 벤치3개 v2.8 앞쪽 배치. 포스터 s339.65와 점무늬 벤치 정렬, 참여벽 s327 앞 가리는 설명판 제거.",
+        "공원쪽 흰 통로 local s64…len-40: 벽간4.2m, 흰 곡면 천장2.84m, 양끝 경사로 폭으로 벌어짐. 마지막 +1.2m 참에 왼쪽 난간/오른쪽 벽/짧은 소핏. 공원 및 무장애 연결 유지.",
+        "G2 승강기 지상 접근 슬래브 동단 x=-319→-321.2로 후퇴. 기존 계단 상부 y=-0.84…-0.54에 낮은 천장을 만들던 중첩을 제거하고, 상부 횡단참과 1.8m 연결 폭 유지."
+      ],
+      "design": [
+        "회색 화강석 바닥 gloss0.5, 흰 타일 gloss0.5/천장gloss0.3. 일반 통로 천장 연회색, 분홍 배관. 전시 원형 기둥 연한파랑과 분홍 띠.",
+        "클라이밍 세로 남색 배너0.65×1.8m, 검정/금속 이중문틀과 접힌 유리문(보행 개구 유지). 야외무대 작은 석재명판·0.45×0.22m 비상구 표시.",
+        "관광센터 간판4.8×0.35m 및 원형 안내 아이콘, 유리창 포스터16장(0.45×0.63m). 큰 주황/청록 홍보판을 사진의 작은 인쇄물로 대체.",
+        "흰 통로 큰 청록 배너는 앞 구간만 유지, s88에1.5×0.24m 흰 세빛섬 사인."
+      ],
+      "details": [
+        "서울의24시간 기존24점/피카소5점 유지. 추가 영상벽화: s7 궁궐과모자인물, s123 청백인물+호출판3, s139 단일보라캐릭터, s225 겹친달리기인물3, s244 서로다른지하철승객, s-7 두책상인물; 높이를 F+.06…C-.06으로 확대.",
+        "시장벽화 s251…277 26m에 인물12명·과일·토끼·가판대. 참여벽 s327에 얼굴80개·낙서, 포스터 s339.65 크기1.2×1.7m.",
+        "전시12점 보존. 선명한 사진의 노란 종이배/생쥐 조각, 작은 천장원판168개, 바닥도형은 규모 조정. 신규 보행자·관람객은 구간별 K.detail에 배치, 방향·옷색·가방·동행 군집과 라운지 좌석/안내센터 대기 포함. 전시구간 약3명/10m."
+      ],
+      "skipped": [
+        {
+          "item": "00/01 식당삭제·원베일리에쇼핑통로복제",
+          "reason": "카메라가 gotomall 식당에 있었음. 올바른 쇼핑통로로 카메라만 이동; gotomall은 편집 범위 밖."
+        },
+        {
+          "item": "02/03 하행계단으로뒤집기",
+          "reason": "원본 두 프레임은 B1에서 위로 올라가는 계단. 기존 상승 등고 보존."
+        },
+        {
+          "item": "04/13 오른쪽다색벽화삭제·풍선25개제한·바닥도형전체삭제",
+          "reason": "segye_20260427_52.jpg와 herald_wonder_20260424.jpg에서 오른쪽벽화·많은천장원판·바닥도형이 보임. 유지하고 크기/채도 조정."
+        },
+        {
+          "item": "13 바나나벤치",
+          "reason": "segye_20260427_55.jpg의 실제 조각은 접힌 노란 종이배와 생쥐형상. 그 형태로 보강."
+        },
+        {
+          "item": "10 계단정상나무전체삭제",
+          "reason": "wvUnarSte1A_35.jpg 상단 식재 확인. 낮추고 뒤로 이동."
+        },
+        {
+          "item": "08 닫힌유리문으로통로봉쇄",
+          "reason": "유리문틀/손잡이/접힌문을 재현하되 플레이어의 실제 출입 가능 개구 유지."
+        },
+        {
+          "item": "영문전시제목·Seoul Subway 신규표기",
+          "reason": "사용자 저장소 규칙의 한국어 텍스트에 맞춰 원더스트리트/당신의오늘을그려주세요/서울지하철로 표기."
+        },
+        {
+          "item": "전시날짜추정변경",
+          "reason": "작은 영상문구는 불명확. 기존 공식2026.4.27~11.15 근거 유지."
+        }
+      ],
+      "verification": {
+        "render": "사용자 지시로 tests/shot.mjs 미실행. 기존 비교시트와 원본 프레임 직접 검토.",
+        "status": "완료: 필수 smoke와 전체 walk 통과. 수정 후 스크린샷은 사용자 지시로 미실행.",
+        "camera": "전체 월드+city+all detail에서 원베일리 영상카메라23개 바닥/캡슐/머리공간 통과. 흰 통로3개 횡단선0.25m 간격 및 실내문4개 연속 검사 통과.",
+        "smoke": "최종 node tests/smoke.mjs onebailey hangang gotomall jamwon_hangang streets: OK; detail 오류 없음",
+        "stair": "최종 계단 중심 및 좌우1m 303샘플 머리 공간·캡슐 충돌0. 머리공간을 고려한 BFS로 B1광장→1F계단상단, 상단→1F승강기, B1승강기→계단하단 통과.",
+        "details": {
+          "people": 77,
+          "groups": 56,
+          "largest_group_quads_equivalent": 11897,
+          "errors": 0
+        },
+        "full_walk": "최종 node tests/walk.mjs: 687 ok, 0 blocked; 사용자 루트 포함. 최종 계단 슬래브 수정 후 실행.",
+        "required_smoke": "node tests/smoke.mjs onebailey hangang gotomall jamwon_hangang streets: OK"
+      },
+      "verified_against": {
+        "sheets": [
+          "shots/walk13all/onebailey_1.png",
+          "shots/walk13all/onebailey_2.png",
+          "shots/walk13all/onebailey_3.png",
+          "shots/walk13all/onebailey_4.png",
+          "shots/walk13all/onebailey_5.png",
+          "shots/walk13all/onebailey_6.png",
+          "shots/walk13all/onebailey_7.png",
+          "shots/walk13all/onebailey_8.png"
+        ],
+        "video_frames": [
+          "refs/walk/s8_onebailey_banpo/F9MdeqY0Rro_4.jpg",
+          "refs/walk/s8_onebailey_banpo/F9MdeqY0Rro_7.jpg",
+          "refs/walk/s8_onebailey_banpo/F9MdeqY0Rro_10.jpg",
+          "refs/walk/s8_onebailey_banpo/wvUnarSte1A_3.jpg",
+          "refs/walk/s8_onebailey_banpo/F9MdeqY0Rro_13.jpg",
+          "refs/walk/s8_onebailey_banpo/F9MdeqY0Rro_16.jpg",
+          "refs/walk/s8_onebailey_banpo/F9MdeqY0Rro_19.jpg",
+          "refs/walk/s8_onebailey_banpo/wvUnarSte1A_11.jpg",
+          "refs/walk/s8_onebailey_banpo/wvUnarSte1A_19.jpg",
+          "refs/walk/s8_onebailey_banpo/wvUnarSte1A_27.jpg",
+          "refs/walk/s8_onebailey_banpo/wvUnarSte1A_35.jpg",
+          "refs/walk/s8_onebailey_banpo/wvUnarSte1A_43.jpg",
+          "refs/walk/s8_onebailey_banpo/wvUnarSte1A_59.jpg",
+          "refs/walk/s8_onebailey_banpo/wvUnarSte1A_67.jpg",
+          "refs/walk/s8_onebailey_banpo/wvUnarSte1A_75.jpg",
+          "refs/walk/s8_onebailey_banpo/wvUnarSte1A_83.jpg",
+          "refs/walk/s8_onebailey_banpo/wvUnarSte1A_99.jpg",
+          "refs/walk/s8_onebailey_banpo/PN3QyVXbUNg_17.jpg",
+          "refs/walk/s8_onebailey_banpo/PN3QyVXbUNg_60.jpg",
+          "refs/walk/s8_onebailey_banpo/PN3QyVXbUNg_75.jpg",
+          "refs/walk/s8_onebailey_banpo/PN3QyVXbUNg_90.jpg",
+          "refs/walk/s8_onebailey_banpo/PN3QyVXbUNg_105.jpg",
+          "refs/walk/s8_onebailey_banpo/PN3QyVXbUNg_122.jpg"
+        ],
+        "additional_sharp_references": [
+          "refs/interior/onebailey_walk/segye_20260427_52.jpg",
+          "refs/interior/onebailey_walk/segye_20260427_55.jpg",
+          "refs/interior/onebailey_walk/herald_wonder_20260424.jpg"
+        ],
+        "method": "비교 시트와 원본 프레임 직접 열람. 영상 자막/UI를 현장 간판으로 오인하지 않음. 증거와 다른 리뷰는 skipped에 근거 기록."
+      }
     }
   },
   "walk_evidence_round13": {

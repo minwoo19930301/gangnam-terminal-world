@@ -330,7 +330,7 @@
     "기존 동쪽 반포나들목: OSM 560449165 축 (-213.15,-657.14) → (-282.96,-767.44), 모델의 공원측 경사로는 (-297.9343,-791.0995)까지 연장. 이름과 기존 지하 구조는 유지; 새 나들목의 8×3×85m 수치를 이곳에 적용하지 않는다."
   ],
   "modeling": {
-    "round": 13,
+    "round": 15,
     "guesses": [
       "평탄한 공원 지면 y=0에서 보행자 머리 높이와 잠수교 하부가 겹치지 않도록 남단 강변 구간의 잠수교 상면을 y=3.6m로 조정했다. (-614,-710)부터 교축 방향 120m 구간이며 하부 여유 높이는 3.35m, 등기구 아래는 약 3.19m이다. 실측 고도·단면 자료는 확보하지 못했다.",
       "강 쪽 (-694.02,-920.79)에서 기존 y=1.6m 하층 교면으로 완만하게 낮아진다. 기존 잠수교 스폰과 수상 구간, 상층 반포대교 y=15m는 유지했다.",
@@ -677,7 +677,8 @@
         ],
         "coordinate_status": "모델 검수 카메라. y는 발이 닿는 바닥 높이(m), 사진 GPS 아님.",
         "note": "주황색 확장 바닥과 푸른 빈백을 본다. 2026년 공사 중 상태와 완성안을 혼동하지 않도록 계획 안내판과 일부 폐쇄 구간을 함께 둔 재구성이다.",
-        "round10_jamsugyo": true
+        "round10_jamsugyo": true,
+        "query": "proposal=1"
       },
       {
         "spot": "잠수교 · 첫 번째 투명 바닥",
@@ -695,7 +696,8 @@
         ],
         "coordinate_status": "모델 검수 카메라. y는 발이 닿는 바닥 높이(m), 사진 GPS 아님.",
         "note": "항로 융기 구간의 첫 번째 14×18m 투명 패치. 불투명 교면과 자전거 도색을 실제로 빼서 바닥 아래 수면이 보인다. 패치 위치와 치수는 추정이다.",
-        "round10_jamsugyo": true
+        "round10_jamsugyo": true,
+        "query": "proposal=1"
       },
       {
         "spot": "잠수교 · 두 번째 투명 바닥",
@@ -713,7 +715,8 @@
         ],
         "coordinate_status": "모델 검수 카메라. y는 발이 닿는 바닥 높이(m), 사진 GPS 아님.",
         "note": "두 번째 투명 패치. 2027년 계획의 두 곳을 모델에 미리 표현하되 전체 조성 계획 표지로 구분한다. 정확한 항로 배치와 강선 통행은 구현하지 않았다.",
-        "round10_jamsugyo": true
+        "round10_jamsugyo": true,
+        "query": "proposal=1"
       },
       {
         "spot": "잠수교 · 차량 통제와 임시 공사 펜스",
@@ -731,7 +734,8 @@
         ],
         "coordinate_status": "모델 검수 카메라. y는 발이 닿는 바닥 높이(m), 사진 GPS 아님.",
         "note": "2026.10.26 차량 통제 안내와 측면 임시 공사 펜스. 중앙 보행축은 끝까지 유지한다. 작업차 자체는 새로 추가하지 않았다.",
-        "round10_jamsugyo": true
+        "round10_jamsugyo": true,
+        "query": "proposal=1"
       },
       {
         "spot": "반포 남단 · 강변길 교각 하부 동서 연결",
@@ -794,25 +798,27 @@
         "y": 0,
         "z": -795,
         "yawDeg": 8,
-        "pitchDeg": 3,
+        "pitchDeg": 4,
         "eyeY": 1.62,
         "coordinate_status": "모델 검수용 바닥 높이. 촬영 GPS와 실측 방위가 아니다.",
-        "round13_walk": true
+        "round13_walk": true,
+        "note": "round 15: 도교 방향과 OSM 솔빛 위치 유지. 원본은 솔빛이며 채빛이 아님. 낮은 원통 외피를 둥근 씨앗형 브론즈 외피로 보정."
       },
       {
-        "spot": "세빛섬 앞 도교 · 오리배와 배너",
+        "spot": "세빛섬 앞 강변 보행로 · 도교와 오리배",
         "frame": "F9MdeqY0Rro_21.jpg",
         "photos": [
           "refs/walk/s8_onebailey_banpo/F9MdeqY0Rro_21.jpg"
         ],
-        "x": -832.68,
-        "y": 0,
-        "z": -680.16,
-        "yawDeg": 40,
-        "pitchDeg": 0,
-        "eyeY": 1.62,
+        "x": -821.1,
+        "y": 0.034555,
+        "z": -662.2,
+        "yawDeg": 38,
+        "pitchDeg": 3,
+        "eyeY": 1.654555,
         "coordinate_status": "모델 검수용 바닥 높이. 촬영 GPS와 실측 방위가 아니다.",
-        "round13_walk": true
+        "round13_walk": true,
+        "note": "round 15: 도교 위에서 강변 접속부로 후퇴. 원본 오른쪽 세로 배너와 왼쪽 계류장을 함께 프레이밍."
       },
       {
         "spot": "달빛광장 · 황토색 포장",
@@ -820,14 +826,15 @@
         "photos": [
           "refs/walk/s8_onebailey_banpo/hTkViN9S1vg_1900.jpg"
         ],
-        "x": -638,
-        "y": 0.09,
-        "z": -710,
-        "yawDeg": 200,
+        "x": -707,
+        "y": 0.065,
+        "z": -755.5,
+        "yawDeg": 197,
         "pitchDeg": 0,
-        "eyeY": 1.71,
+        "eyeY": 1.685,
         "coordinate_status": "모델 검수용 바닥 높이. 촬영 GPS와 실측 방위가 아니다.",
-        "round13_walk": true
+        "round13_walk": true,
+        "note": "round 15: 교량 서측 강변길에서 남쪽 광장·원베일리 스카이라인을 본다. 교량을 이동하지 않고 시점을 수정."
       },
       {
         "spot": "잠수교 남단 · 반복 교각",
@@ -869,10 +876,11 @@
         "y": 1.6,
         "z": -1036.9742,
         "yawDeg": 120,
-        "pitchDeg": 0,
+        "pitchDeg": 3,
         "eyeY": 3.22,
         "coordinate_status": "모델 검수용 바닥 높이. 촬영 GPS와 실측 방위가 아니다.",
-        "round13_walk": true
+        "round13_walk": true,
+        "note": "round 15: 기본 2025 영상 장면은 계획 전망쉼터가 없는 물결 난간. 기존 2027 계획 형상은 proposal=1에서 보존."
       },
       {
         "spot": "잠수교 남단 접근 · 회백색 난간",
@@ -881,11 +889,11 @@
           "refs/walk/s8_onebailey_banpo/hTkViN9S1vg_1250.jpg"
         ],
         "x": -683.004,
-        "y": 2.5932,
+        "y": 2.59322,
         "z": -868.9486,
         "yawDeg": 201,
         "pitchDeg": 0,
-        "eyeY": 4.2132,
+        "eyeY": 4.21322,
         "coordinate_status": "모델 검수용 바닥 높이. 촬영 GPS와 실측 방위가 아니다.",
         "round13_walk": true
       },
@@ -896,14 +904,19 @@
           "refs/walk/s8_onebailey_banpo/MQ3DaFYo2R8_2320.jpg"
         ],
         "x": -671,
-        "y": 0,
+        "y": 0.075,
         "z": -808,
         "yawDeg": 15,
         "pitchDeg": 6,
-        "eyeY": 1.62,
+        "eyeY": 1.695,
         "coordinate_status": "모델 검수용 바닥 높이. 촬영 GPS와 실측 방위가 아니다.",
         "round13_walk": true,
-        "query": "night=1"
+        "query": "night=1",
+        "render_requirements": {
+          "apply_query": "night=1",
+          "time_of_day": "dusk",
+          "note": "비교 시트 생성기가 trace.query를 누락했음. festival=1 및 night=1을 URL에 전달해야 한다. 엔진의 전역 하늘/태양은 이 모듈에서 덮어쓰지 않는다."
+        }
       },
       {
         "spot": "축제 · 초록 자전거 포장",
@@ -919,7 +932,12 @@
         "eyeY": 5.255,
         "coordinate_status": "모델 검수용 바닥 높이. 촬영 GPS와 실측 방위가 아니다.",
         "round13_walk": true,
-        "query": "festival=1"
+        "query": "festival=1",
+        "render_requirements": {
+          "apply_query": "festival=1",
+          "time_of_day": "late afternoon",
+          "note": "비교 시트 생성기가 trace.query를 누락했음. festival=1 및 night=1을 URL에 전달해야 한다. 엔진의 전역 하늘/태양은 이 모듈에서 덮어쓰지 않는다."
+        }
       },
       {
         "spot": "축제 · 횡단보도와 노란 볼라드",
@@ -935,7 +953,12 @@
         "eyeY": 5.22,
         "coordinate_status": "모델 검수용 바닥 높이. 촬영 GPS와 실측 방위가 아니다.",
         "round13_walk": true,
-        "query": "festival=1"
+        "query": "festival=1",
+        "render_requirements": {
+          "apply_query": "festival=1",
+          "time_of_day": "late afternoon",
+          "note": "비교 시트 생성기가 trace.query를 누락했음. festival=1 및 night=1을 URL에 전달해야 한다. 엔진의 전역 하늘/태양은 이 모듈에서 덮어쓰지 않는다."
+        }
       },
       {
         "spot": "축제 · 주황 콘과 휴식 매트",
@@ -951,7 +974,12 @@
         "eyeY": 3.22,
         "coordinate_status": "모델 검수용 바닥 높이. 촬영 GPS와 실측 방위가 아니다.",
         "round13_walk": true,
-        "query": "festival=1"
+        "query": "festival=1",
+        "render_requirements": {
+          "apply_query": "festival=1",
+          "time_of_day": "late afternoon",
+          "note": "비교 시트 생성기가 trace.query를 누락했음. festival=1 및 night=1을 URL에 전달해야 한다. 엔진의 전역 하늘/태양은 이 모듈에서 덮어쓰지 않는다."
+        }
       },
       {
         "spot": "축제 · 푸드트럭과 빈백",
@@ -962,12 +990,18 @@
         "x": -725.5136,
         "y": 1.6,
         "z": -1002.5584,
-        "yawDeg": 201,
+        "yawDeg": 21,
         "pitchDeg": 0,
         "eyeY": 3.22,
         "coordinate_status": "모델 검수용 바닥 높이. 촬영 GPS와 실측 방위가 아니다.",
         "round13_walk": true,
-        "query": "festival=1"
+        "query": "festival=1",
+        "render_requirements": {
+          "apply_query": "festival=1",
+          "time_of_day": "late afternoon",
+          "note": "비교 시트 생성기가 trace.query를 누락했음. festival=1 및 night=1을 URL에 전달해야 한다. 엔진의 전역 하늘/태양은 이 모듈에서 덮어쓰지 않는다."
+        },
+        "note": "round 15: 푸드트럭이 왼쪽, 휴식 매트가 오른쪽인 원본과 맞게 북향으로 수정. 이전 남향은 좌우 관계를 뒤집었음."
       },
       {
         "spot": "가빛 1층 이솔라 · 공식 층 정정",
@@ -985,7 +1019,7 @@
         "note": "공식 1층은 확인. 실내 구획 및 식탁 위치는 추정."
       }
     ],
-    "screenshot_status": "round 13: 사용자 제한으로 tests/shot.mjs 미실행. 재구성 프레임 13개 + 공식 층 정정 1개의 추가 trace를 기록했고 기존 trace도 보존. 카메라 y는 바닥 높이.",
+    "screenshot_status": "round 15: 기존 비교 시트/원본 프레임 직접 확인; tests/shot.mjs는 사용자 제한으로 실행하지 않음. 수정 후 시각 검증은 운영자 렌더 필요.",
     "verification": {
       "smoke": {
         "command": "node tests/smoke.mjs hangang jamwon_hangang streets",
@@ -2563,6 +2597,162 @@
         "decision": "2026-10-26 차량 통제 및 보행·자전거 통행 유지; 2027년 완성 조감도는 계획으로 구분"
       },
       "visual_verification": "지정 프레임을 직접 열람했다. tests/shot.mjs는 사용자 제한으로 실행하지 않았고 실제 모델 렌더는 미확인. 모든 새 재구성 프레임에 floor-y trace를 제공한다."
+    },
+    "walk_round15": {
+      "verified_against": {
+        "sheets": [
+          "shots/walk13all/hangang_1.png",
+          "shots/walk13all/hangang_2.png",
+          "shots/walk13all/hangang_3.png",
+          "shots/walk13all/hangang_4.png",
+          "shots/walk13all/hangang_5.png"
+        ],
+        "frames": [
+          "refs/walk/s8_onebailey_banpo/hTkViN9S1vg_1340.jpg",
+          "refs/walk/s8_onebailey_banpo/hTkViN9S1vg_1500.jpg",
+          "refs/walk/s8_onebailey_banpo/F9MdeqY0Rro_21.jpg",
+          "refs/walk/s8_onebailey_banpo/hTkViN9S1vg_1900.jpg",
+          "refs/walk/s8_onebailey_banpo/hTkViN9S1vg_560.jpg",
+          "refs/walk/s8_onebailey_banpo/hTkViN9S1vg_800.jpg",
+          "refs/walk/s8_onebailey_banpo/hTkViN9S1vg_1050.jpg",
+          "refs/walk/s8_onebailey_banpo/hTkViN9S1vg_1250.jpg",
+          "refs/walk/s8_onebailey_banpo/MQ3DaFYo2R8_2320.jpg",
+          "refs/walk/s8_onebailey_banpo/MQ3DaFYo2R8_20.jpg",
+          "refs/walk/s8_onebailey_banpo/MQ3DaFYo2R8_240.jpg",
+          "refs/walk/s8_onebailey_banpo/MQ3DaFYo2R8_900.jpg",
+          "refs/walk/s8_onebailey_banpo/MQ3DaFYo2R8_1100.jpg"
+        ],
+        "method": "첨부 비교 시트 및 원본 jpg 13장 직접 열람. 작은 원본의 비디오 영역만 판단하고 자막·UI는 공간 요소로 복제하지 않음."
+      },
+      "camera_changes": [
+        {
+          "camera": "hangang_02",
+          "position_xz": [
+            -821.1,
+            -662.2
+          ],
+          "yawDeg": 38,
+          "pitchDeg": 3,
+          "reason": "강변 접속 경사로에서 도교와 가빛을 보도록 후퇴; 왼쪽 계류와 오른쪽 배너 관계 복원",
+          "floor_y": 0.034555
+        },
+        {
+          "camera": "hangang_03",
+          "position_xz": [
+            -707,
+            -755.5
+          ],
+          "floor_y": 0.065,
+          "yawDeg": 197,
+          "reason": "교량 서측 산책길로 이동. 머리 위 상판과 큰 진입표지가 사진에 끼어들던 오류 수정"
+        },
+        {
+          "camera": "hangang_06",
+          "pitchDeg": 3,
+          "reason": "난간 너머 강·남쪽 스카이라인"
+        },
+        {
+          "camera": "hangang_08",
+          "floor_y": 0.075,
+          "query": "night=1",
+          "reason": "새 돌 포장 수변의 실제 바닥 y; 분수 야경 query 유지"
+        },
+        {
+          "camera": "hangang_12",
+          "yawDeg": 21,
+          "query": "festival=1",
+          "reason": "푸드트럭 왼쪽·휴식 매트 오른쪽이 되는 북향 수정"
+        }
+      ],
+      "layout": [
+        "ISLETS, PIERS, 양층 교량 실좌표, 공동 J_ONEBAILEY_PARK 도착점 (-592,-625) 유지.",
+        "솔빛 (-890,-828)의 낮은 원통·평평한 장식 캡을 높이 18.9m 둥근 씨앗형 브론즈 루버 외피로 보정. 기존 0/6m 실내·11m 천장과 승강기·계단 보존.",
+        "잠수교 양측 ±9m에 연속 난간, 2m마다 기둥, 0.28m 간격 곡선 패널 추가. 필요한 계단/경사로 게이트는 유지.",
+        "2025 영상과 모순되는 2027 주황 전망대·투명 바닥·공사 펜스는 삭제하지 않고 proposal=1 검수 장면에 보존.",
+        "남측 수변 (-689,-811),(-666,-822),(-655,-800),(-678,-790) 돌포장 .075m 추가. 서측 광장 산책길 (-735,-741)→(-677,-774), 7m 폭 유지.",
+        "기존 축제 장면의 트럭은 교축거리 s=270..438m, 서측 offset -6.8m에 8대; 횡단보도 s=144..153m, 녹색 휴식구역 offset +6.5m 유지."
+      ],
+      "design": [
+        "외부 도교·섬 데크를 저대비 회갈색 전용 목재 텍스처로 변경; 기존 wood 텍스처 곱셈의 주황색 제거.",
+        "광장 1m 크기 회황토 포장, 가빛 녹청색 유리, 교량 하부 밝은 따뜻한 회색 0xa8a39b, 교각 밝은 콘크리트, 붉은 자전거 포장 전용 텍스처.",
+        "주간 분수는 기본 꺼짐. night=1 또는 fountain=1에서 보존, 야간 흰색 중심의 넓어진 낙수 띠로 수정.",
+        "축제/야간의 기존 trace.query를 그대로 전달해야 함을 각 카메라 render_requirements에 명시. 전역 하늘·태양·강물 색은 엔진/시티 소유이므로 덮어쓰지 않음."
+      ],
+      "details": [
+        "도교 방문객 9명, 계류 오리배 8대, 폭 .58m 세로 배너 3개를 진입교 오른쪽으로 이동.",
+        "서측 광장 잎 없는 나무 4그루·돌 가장자리·가로등 2개·보행자 3명.",
+        "잠수교 보행자 쌍, 가방과 방향 변화, 남단 백색 승용차 1대·자전거 1대, 분수 관람객 8명·정박 보트 3대.",
+        "festival=1 기존 인원 160명을 동행 3명 단위로 재배치하고 횡단 인원 52명·트럭 대기/직원 40명 추가. 8대 트럭, 텐트, 신호등, 분홍 풍선, 교각 번호 23/15.",
+        "추가 인물·가방·행사 집기 및 조밀한 물결 난간은 K.detail. 기본 기하 약 94.8k quads; 각 난간 구간 그룹은 120k quads 미만."
+      ],
+      "skipped_with_reasons": [
+        {
+          "items": [
+            "layout hangang_00: 한쪽 지주/폭 4m/섬 이동·40m 증축",
+            "details hangang_00: 흰 지주 삭제"
+          ],
+          "reason": "원본 hTk_1340에는 양측 흰 케이블 지주가 명확하며, 4m 폭·12m 지주·110~130m 이동·40m 높이는 저해상도 영상에서 검증 불가. OSM 섬과 도교 외곽 및 기존 내부 층을 유지. 큰 배너만 줄이고 오른쪽으로 옮김."
+        },
+        {
+          "items": [
+            "layout hangang_01: 채빛 돔",
+            "layout hangang_01: 반포대교 600m 이동"
+          ],
+          "reason": "접속 도교와 OSM으로 작은 돔은 솔빛이다. 솔빛 디자인은 수정했지만 채빛 실내는 변경하지 않았다. 실제 교량을 화면 밖으로 이동시키지 않음."
+        },
+        {
+          "items": [
+            "layout hangang_03/07: 기존 주택동 대체",
+            "layout hangang_06: 남쪽/맞은편 타워 추가"
+          ],
+          "reason": "실제 스카이라인은 onebailey 등 다른 모듈의 OSM 건물이다. 동일 위치에 허구의 150~250m 유리 타워를 중복 생성하지 않음. camera 03을 먼저 수정."
+        },
+        {
+          "items": [
+            "layout hangang_04/07: 공원 잔디를 모두 강으로",
+            "layout hangang_05: 강 수면 2m 낮춤"
+          ],
+          "reason": "남단은 실제 공원과 물가를 함께 보는 구간이며 공원·강 경계는 OSM이다. 기존 수면 -1.4m, 본선 +1.6m로 이미 3m 차이가 난다. 수위를 다시 낮추지 않고 난간과 수변 포장을 보정."
+        },
+        {
+          "items": [
+            "design hangang_08~12: 전역 황혼 하늘/태양 강제",
+            "design hangang_00/05/06: 전역 강물색 변경"
+          ],
+          "reason": "비교 생성기가 query를 누락하여 야경/축제 장면이 주간·비축제로 렌더됨. 본 모듈에서는 축제와 night query 요구를 기록하고 물줄기를 시간대에 맞게 켰다. 전역 하늘/태양/강물은 금지된 main.js/city.js 소유이므로 변경하지 않음. MQ20/240/900/1100은 원본에 대체로 밝은 늦은 오후이며 MQ2320만 뚜렷한 야경."
+        },
+        {
+          "items": [
+            "details hangang_02: 빨간 사과 로고"
+          ],
+          "reason": "세빛섬 사과는 영상 제작자의 반복 오버레이로 건물 배너 실물로 확인되지 않는다. 현장 세로 배너는 보존."
+        },
+        {
+          "items": [
+            "layout/details hangang_01: 정확히 6~8단 계단",
+            "details hangang_06: 20m 관광선/80m 언덕"
+          ],
+          "reason": "작은 원본만으로 계단 수·높이 및 특정 관광선을 확인할 수 없다. 실제 OSM 도교 접속을 끊는 임의 계단을 추가하지 않음. 기존 남산·원경 건물과 수변 보트 디테일은 유지."
+        }
+      ],
+      "validation": {
+        "syntax": "node --check js/places/hangang.js 통과",
+        "smoke": "node tests/smoke.mjs hangang jamwon_hangang streets: OK",
+        "screenshot": "사용자 지시대로 tests/shot.mjs 미실행. 기존 시트와 원본 프레임은 열람했고 수정 후 렌더 확인은 하지 못함.",
+        "scene_queries": "festival=1 및 proposal=1 실제 kit smoke 각각 OK",
+        "trace": "기본+festival=1 장면 실제 kit/physics로 13개 frame trace 전부 바닥 y 일치(오차 <0.00003m), 캡슐 밀림 0, 1.75m 머리 공간 장애 0. 기본 장면은 generic city 포함 검사.",
+        "walk_modules": "node tests/walk.mjs hangang jamwon_hangang: 58 ok, 0 blocked",
+        "details": {
+          "default_people": 183,
+          "festival_people": 455,
+          "largest_group_quads": 10912,
+          "group_errors": 0
+        },
+        "diff": "git diff --check 통과",
+        "full_walk": "최종 node tests/walk.mjs: 687 ok, 0 blocked; 사용자 루트 포함. 최종 계단 슬래브 수정 후 실행.",
+        "required_smoke": "node tests/smoke.mjs onebailey hangang gotomall jamwon_hangang streets: OK",
+        "status": "완료: 필수 smoke와 전체 walk 통과. 수정 후 스크린샷은 사용자 지시로 미실행."
+      }
     }
   },
   "parking": "반포한강공원 2주차장, 세빛섬 내 음식점 이용 시 3시간 무료(2024 기사)",
