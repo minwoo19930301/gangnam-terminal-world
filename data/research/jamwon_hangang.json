@@ -1,0 +1,1448 @@
+{
+  "id": "jamwon_hangang",
+  "name": "잠원한강공원 · 나들목 · 수영장 · 한남대교 하부",
+  "updated": "2026-11-06",
+  "sources": [
+    {
+      "path": "data/osm.json",
+      "title": "프로젝트 OSM 원본: 잠원한강공원 981963451 및 보행·자전거 경로",
+      "role": "공원 경계, 신잠원나들목 축, 부교 위치 및 반포 경계의 기준",
+      "extent_world": [
+        -1900,
+        -2100,
+        1000,
+        700
+      ]
+    },
+    {
+      "path": "refs/aerial/jamwon_park.jpg",
+      "title": "10m 월드 좌표 격자 항공사진",
+      "role": "공원 남서쪽 잔디·수변·아파트 사이 형상 참고; 수영장·한남대교 전체를 포함하지 않음"
+    },
+    {
+      "path": "refs/interior/jamwon_park/notes.json",
+      "title": "잠원한강공원 참고사진 조사 노트",
+      "role": "2025-07~2026-11 사진의 외형 참고. 블로그 방향 설명·미확정 장소를 측량 위치로 취급하지 않음"
+    },
+    {
+      "url": "https://m.blog.naver.com/sulmingg/224452014318",
+      "title": "잠원나들목 굴다리 입구 (배달존 쪽) 참고사진",
+      "date": "2026-10-24",
+      "role": "사용자가 제공한 사진·노트에서 읽음; 게시물 본문을 별도로 검증했다는 의미는 아님"
+    },
+    {
+      "url": "https://m.blog.naver.com/lo_luckyne_ve/224434868101",
+      "title": "잔디 둔치 참고사진",
+      "date": "2026-10-08",
+      "role": "사용자가 제공한 사진·노트에서 읽음; 게시물 본문을 별도로 검증했다는 의미는 아님"
+    },
+    {
+      "url": "https://m.blog.naver.com/pila_writer/224262975913",
+      "title": "한남대교 하부 자전거/보행 분리로 참고사진",
+      "date": "2026-04-23",
+      "role": "사용자가 제공한 사진·노트에서 읽음; 게시물 본문을 별도로 검증했다는 의미는 아님"
+    },
+    {
+      "url": "https://m.blog.naver.com/relord_man_/224463798286",
+      "title": "동호대교 아래 길 참고사진",
+      "date": "2026-11-03",
+      "role": "사용자가 제공한 사진·노트에서 읽음; 게시물 본문을 별도로 검증했다는 의미는 아님"
+    },
+    {
+      "url": "https://m.blog.naver.com/saygoodhouse/224270996977",
+      "title": "주차장 진입로 참고사진",
+      "date": "2026-04-30",
+      "role": "사용자가 제공한 사진·노트에서 읽음; 게시물 본문을 별도로 검증했다는 의미는 아님"
+    },
+    {
+      "url": "https://m.blog.naver.com/soheekimmy/224246380670",
+      "title": "한남대교 아래 4공영주차장 자전거 대여소 참고사진",
+      "date": "2026-04-09",
+      "role": "사용자가 제공한 사진·노트에서 읽음; 게시물 본문을 별도로 검증했다는 의미는 아님"
+    },
+    {
+      "url": "https://m.blog.naver.com/su_yogi/224349774576",
+      "title": "강변 난간 산책로 참고사진",
+      "date": "2026-07-17",
+      "role": "사용자가 제공한 사진·노트에서 읽음; 게시물 본문을 별도로 검증했다는 의미는 아님"
+    },
+    {
+      "url": "https://m.blog.naver.com/choiyj2020/224415280697",
+      "title": "세븐일레븐 한강 선상 건물 참고사진",
+      "date": "2026-09-17",
+      "role": "사용자가 제공한 사진·노트에서 읽음; 게시물 본문을 별도로 검증했다는 의미는 아님"
+    },
+    {
+      "url": "https://m.blog.naver.com/choonsdailypaper/223931851551",
+      "title": "잠원 야외수영장 참고사진",
+      "date": "2025-07-13",
+      "role": "사용자가 제공한 사진·노트에서 읽음; 게시물 본문을 별도로 검증했다는 의미는 아님"
+    },
+    {
+      "url": "https://m.blog.naver.com/ez_swim/224388752805",
+      "title": "수영장 레인 참고사진",
+      "date": "2026-08-24",
+      "role": "사용자가 제공한 사진·노트에서 읽음; 게시물 본문을 별도로 검증했다는 의미는 아님"
+    },
+    {
+      "url": "https://m.blog.naver.com/gam_log/224295974174",
+      "title": "포플러 가로수 자전거길 참고사진",
+      "date": "2026-05-25",
+      "role": "사용자가 제공한 사진·노트에서 읽음; 게시물 본문을 별도로 검증했다는 의미는 아님"
+    },
+    {
+      "url": "https://m.blog.naver.com/khsgudtn1919/224460884712",
+      "title": "마리나 요트 계류장 참고사진",
+      "date": "2026-11-01",
+      "role": "사용자가 제공한 사진·노트에서 읽음; 게시물 본문을 별도로 검증했다는 의미는 아님"
+    },
+    {
+      "url": "https://kpa1959.or.kr/file/E110.pdf",
+      "title": "서울시 공유 자전거 따릉이 대여 이력 분석을 통한 한강시민공원 이용자 접근성 평가",
+      "publisher": "대한국토·도시계획학회 2021 추계학술대회",
+      "authors": [
+        "조민경",
+        "권영상"
+      ],
+      "year": 2021,
+      "locator": "PDF page16 / 논문 표2 한강공원 출입구 특성",
+      "role": "신잠원나들목과 잠원나들목의 서로 다른 좌표. 저자가 Google Earth에서 추출한 연구 좌표이며 서울시 공식 위치 핀·현장 측량으로 과장하지 않음"
+    },
+    {
+      "url": "https://www.data.go.kr/data/15135350/fileData.do",
+      "title": "서울특별시 하천 이용 시설 현황",
+      "publisher": "서울특별시 / 공공데이터포털",
+      "role": "수영장 및 한남대교 남측 교상계단 좌표의 원 데이터셋. 포털 원본 다운로드는 이번 세션에서 확보하지 못함"
+    },
+    {
+      "url": "https://kaienpolice.tistory.com/entry/공공데이터-서울특별시-하천-이용-시설-현황?category=937478",
+      "title": "공공데이터 서울특별시 하천 이용 시설 현황 재게시",
+      "role": "공공데이터15135350의 표 행을 읽어 잠원수영장·한남대교 남측 교상계단 좌표 변환",
+      "source_type": "secondary_republication"
+    },
+    {
+      "url": "https://hangang.seoul.go.kr/www/contents/748.do?mid=456",
+      "title": "잠원한강공원 주차정보",
+      "publisher": "서울특별시 미래한강본부",
+      "updated": "2025-04-03",
+      "role": "잠원 제4주차장은 한남대교 남단·압구정동386, 제6주차장은 신잠원나들목 부근임을 확인. 번호를 사진만으로 추정하지 않음"
+    },
+    {
+      "url": "https://findby.co.kr/details/06000-116802121004-st-6729743fe0a7dff872561bc5",
+      "title": "압구정동 올림픽대로2395 주소·위경도·업소 정보",
+      "source_type": "secondary_address_directory",
+      "role": "세븐일레븐 한강르네상스 잠원1호점1층 및 땅땅치킨 잠원1호점 주소, 위경도. 좌표는 도로명주소 기준점이며 선상 footprint 도면이 아님"
+    },
+    {
+      "url": "https://www.marevo-in-wave.com/?action=SiteComp&module=Html&sSubNo=2",
+      "title": "마레보인 웨이브 공식 오시는 길",
+      "source_type": "venue_official",
+      "role": "잠원로145-35, 서울웨이브아트센터2·3층 소재 확인"
+    },
+    {
+      "url": "https://www.royalmarina.kr/",
+      "title": "서울로얄마리나 공식 홈페이지",
+      "source_type": "venue_official",
+      "role": "사진19의 상호와 한강남자전거길2351 주소 확인"
+    },
+    {
+      "url": "https://japanese.visitkorea.or.kr/svc/contents/contentsView.do?vcontsId=200841",
+      "title": "한국관광공사 잠원한강공원 안내",
+      "source_type": "official_tourism",
+      "role": "한강잠원2호점과 자전거대여소 지도 링크. 사진12의1호점과 다른 지점이므로 사진 건물 위치로 사용하지 않음"
+    },
+    {
+      "url": "https://jusoga.com/b/1165010600101210009000001/서울특별시-서초구-한강남자전거길-2351-잠원동",
+      "title": "한강남자전거길2351 도로명주소 좌표",
+      "source_type": "secondary_address_directory",
+      "role": "서울로얄마리나 공식 주소를 월드 좌표로 배치할 기준점"
+    },
+    {
+      "url": "https://luma.com/4g4w1ue5",
+      "title": "잠원한강공원 행사 동선 안내",
+      "source_type": "event_host",
+      "role": "세븐일레븐1호점 만남 지점의 지도 좌표를 주소 소스와 대조; CU압구정크루즈 루프탑을 별도 종료 지점으로 설명하므로 두 장소를 합치지 않음"
+    }
+  ],
+  "geometry": {
+    "coordinate_system": {
+      "x": "동쪽, m",
+      "z": "남쪽, m",
+      "y": "위쪽, m",
+      "street_y": 0,
+      "river_water_y": -1.4,
+      "origin": {
+        "lat": 37.5050371,
+        "lon": 127.0049222,
+        "kx": 88310.29798005632,
+        "kz": 110540
+      }
+    },
+    "park": {
+      "osm_id": 981963451,
+      "polygon": [
+        [
+          227.39,
+          -1244.7
+        ],
+        [
+          344.88,
+          -1369.81
+        ],
+        [
+          522.06,
+          -1559.83
+        ],
+        [
+          616.96,
+          -1675.73
+        ],
+        [
+          690.36,
+          -1769.65
+        ],
+        [
+          748.31,
+          -1859.04
+        ],
+        [
+          812.26,
+          -1951.35
+        ],
+        [
+          891.89,
+          -2058.25
+        ],
+        [
+          931.51,
+          -2096.29
+        ],
+        [
+          935.67,
+          -2100
+        ],
+        [
+          775.9,
+          -2100
+        ],
+        [
+          670.77,
+          -1984.55
+        ],
+        [
+          582.49,
+          -1889.34
+        ],
+        [
+          431.76,
+          -1716.72
+        ],
+        [
+          430.2,
+          -1714.6
+        ],
+        [
+          313.61,
+          -1588.75
+        ],
+        [
+          281.6,
+          -1551.78
+        ],
+        [
+          266.2,
+          -1534.42
+        ],
+        [
+          191.99,
+          -1454.08
+        ],
+        [
+          146.34,
+          -1409.06
+        ],
+        [
+          137.23,
+          -1401.21
+        ],
+        [
+          120.82,
+          -1392.93
+        ],
+        [
+          103.99,
+          -1389.86
+        ],
+        [
+          68.23,
+          -1386.34
+        ],
+        [
+          48.81,
+          -1383.29
+        ],
+        [
+          31.75,
+          -1377.64
+        ],
+        [
+          13.99,
+          -1368.46
+        ],
+        [
+          -3.06,
+          -1354.36
+        ],
+        [
+          -10.89,
+          -1342.13
+        ],
+        [
+          -14.44,
+          -1328.72
+        ],
+        [
+          -21.07,
+          -1251.11
+        ],
+        [
+          -26.76,
+          -1225.95
+        ],
+        [
+          -33.86,
+          -1207.85
+        ],
+        [
+          -65.13,
+          -1156.58
+        ],
+        [
+          69.1,
+          -1084.33
+        ]
+      ],
+      "holes": [],
+      "bbox": [
+        -65.13,
+        -2100,
+        935.67,
+        -1084.33
+      ],
+      "source": "data/osm.json",
+      "clipped": true
+    },
+    "claims": {
+      "buildings": [],
+      "areas": [
+        981963451,
+        1532626249
+      ],
+      "roads": [
+        305677075,
+        919393789,
+        919393790,
+        697678242,
+        697678244,
+        697678248,
+        892370125,
+        892370126,
+        892370127,
+        408858834,
+        1497710475,
+        1497710499,
+        1497710500,
+        949348575,
+        949348576
+      ],
+      "note": "대상 공원 폴리곤 안에 OSM 건물 footprint·명명 POI가 없다. 선상시설은 출처 위치와 사진을 바탕으로 복원하며 존재하지 않는 OSM 건물 ID를 만들어 claim하지 않는다."
+    },
+    "river": {
+      "osm_id": 152336,
+      "owner": "generic city",
+      "surface_y": -1.4,
+      "note": "반포한강공원과 같은 수면. 원본 수역과 반포 claim은 변경하지 않는다."
+    },
+    "osm_gangways": [
+      {
+        "id": 949348576,
+        "name": "서울웨이브아트센터",
+        "river_end": [
+          188.22,
+          -1515.03
+        ],
+        "bank_end": [
+          234.12,
+          -1476.21
+        ],
+        "width_m_osm": 2
+      },
+      {
+        "id": 949348575,
+        "name": null,
+        "river_end": [
+          265.45,
+          -1563.27
+        ],
+        "bank_end": [
+          283.48,
+          -1546.43
+        ],
+        "width_m_osm": 2
+      }
+    ],
+    "fitness_area": {
+      "id": 1532626249,
+      "polygon": [
+        [
+          288.71,
+          -1374.77
+        ],
+        [
+          279.44,
+          -1389.28
+        ],
+        [
+          260.14,
+          -1394.25
+        ],
+        [
+          274.19,
+          -1365.61
+        ]
+      ]
+    },
+    "preservation": "반포에까지 이어진 305677075·919393789·919393790은 ID 전체를 claim하므로 OSM way 전체를 재구성한다. 두 부분으로 저장된 892370125도 모두 유지한다. 한강 수면과 올림픽대로는 generic city 소유이다.",
+    "source_pins": [
+      {
+        "name": "잠원수영장",
+        "lat": 37.51929801,
+        "lon": 127.0097098,
+        "x": 422.79,
+        "z": -1576.4,
+        "source": "공공데이터15135350 재게시 표",
+        "confidence": "시설 기준점 높음, basin footprint/배치 미확인"
+      },
+      {
+        "name": "잠원나들목",
+        "lat": 37.5213691,
+        "lon": 127.0126052,
+        "x": 678.49,
+        "z": -1805.34,
+        "source": "KPA2021 표2",
+        "confidence": "명명된 출입구 좌표, 입구측·터널축·고도 추정"
+      },
+      {
+        "name": "신잠원나들목",
+        "lat": 37.517136,
+        "lon": 127.008113,
+        "x": 281.78,
+        "z": -1337.41,
+        "source": "KPA2021 표2",
+        "confidence": "OSM 신잠원 공원측 접근로와 근접한 독립 대조 좌표"
+      },
+      {
+        "name": "한남대교 남측 교상계단",
+        "lat": 37.52445,
+        "lon": 127.015797,
+        "x": 960.36,
+        "z": -2145.9,
+        "source": "공공데이터15135350 재게시 표",
+        "confidence": "시설 기준점 높음, 계단형태·교면높이 추정"
+      },
+      {
+        "name": "세븐일레븐 한강르네상스 잠원1호점",
+        "lat": 37.5283695,
+        "lon": 127.0204858,
+        "x": 1374.43,
+        "z": -2579.16,
+        "source": "findby 도로명주소 올림픽대로2395",
+        "confidence": "사진12 잠원1호 표지와 상호 대응, 주소 기준점이며 선상건물 중심 미측량"
+      },
+      {
+        "name": "세븐일레븐 한강잠원2호점",
+        "lat": 37.526544,
+        "lon": 127.017468,
+        "x": 1107.923,
+        "z": -2377.373,
+        "source": "한국관광공사 지도링크",
+        "used_for_photo12": false,
+        "note": "사진12의 잠원1호점과 구별하기 위한 대조 근거"
+      },
+      {
+        "name": "잠원 자전거대여소",
+        "lat": 37.52645,
+        "lon": 127.017468,
+        "x": 1107.923,
+        "z": -2366.982,
+        "source": "한국관광공사 지도링크",
+        "confidence": "관광공사 대여소 핀이나 사진09 한남교각 하부 대여소와 동일 시설인지는 미확정"
+      },
+      {
+        "name": "서울로얄마리나",
+        "lat": 37.5192603044676,
+        "lon": 127.007842970729,
+        "x": 257.93,
+        "z": -1572.23,
+        "source": "공식 주소 한강남자전거길2351 + jusoga 주소좌표",
+        "confidence": "사진19 외관의 상호와 대응. 주소 기준점이며 정확한 계류장 footprint·방향·폭은 추정"
+      }
+    ],
+    "modeled_facilities": [
+      {
+        "name": "서울웨이브아트센터 · 마레보인 웨이브",
+        "x": 173,
+        "z": -1533,
+        "width_m": 38,
+        "depth_m": 29,
+        "floors": [
+          "1F",
+          "2F",
+          "3F",
+          "4F"
+        ],
+        "floor_y": [
+          0.12,
+          3.92,
+          7.72,
+          11.52
+        ],
+        "note": "공식 웨딩홀2·3층 주소 및 OSM부교 참고.1F카페·4F옥상 동선과 실내·승강기는 추정"
+      },
+      {
+        "name": "서울로얄마리나",
+        "x": 257.93,
+        "z": -1572.23,
+        "width_m": 25,
+        "depth_m": 23,
+        "floors": [
+          "1F",
+          "2F",
+          "3F",
+          "4F"
+        ],
+        "floor_y": [
+          0.12,
+          3.92,
+          7.72,
+          11.52
+        ],
+        "tenants": [
+          "서울로얄마리나",
+          "MONARCH BISTRO"
+        ],
+        "note": "사진의3F MONARCH BISTRO 표지.4F옥상 표기·배치·승강기는 복원 편의상 추정"
+      },
+      {
+        "name": "잠원수영장",
+        "x": 422.79,
+        "z": -1576.4,
+        "rotation_rad": 0.74,
+        "main_basin_m": [
+          50,
+          25,
+          1.25
+        ],
+        "deck_y": 0.035,
+        "basin_y": -1.25,
+        "note": "시설 핀 외 풀50m규모·회전각·어린이풀·탈의실·샤워실·캐노피·경계는 추정"
+      },
+      {
+        "name": "한남대교 하부 · 제4주차장",
+        "bridge_axis": [
+          [
+            993,
+            -2110
+          ],
+          [
+            881,
+            -2365
+          ]
+        ],
+        "deck_y": 8.4,
+        "parking_rect": [
+          977,
+          -2190,
+          1041,
+          -2124
+        ],
+        "note": "교상계단 위치와 주차장 명칭만 출처로 확인.교축·수직높이·직사각 주차장 외곽·주차면 수 추정"
+      },
+      {
+        "name": "세븐일레븐 한강르네상스잠원1호점",
+        "x": 1374.43,
+        "z": -2579.16,
+        "width_m": 26,
+        "depth_m": 18,
+        "floors": [
+          "1F",
+          "2F",
+          "3F"
+        ],
+        "floor_y": [
+          0.12,
+          3.92,
+          7.72
+        ],
+        "tenants": [
+          "7-ELEVEN",
+          "땅땅치킨"
+        ],
+        "note": "사진12 상호·외형과 주소좌표 기반.3F옥상 노란의자 배치·승강기·실내 평면은 추정; 사진13 동일건물 여부 미확정"
+      }
+    ],
+    "upstream_extension": {
+      "reason": "한남대교 남단과 사진12 잠원1호점의 확인된 위치는 OSM bbox 밖이다.",
+      "bank": [
+        [
+          775.9,
+          -2100
+        ],
+        [
+          850,
+          -2190
+        ],
+        [
+          965,
+          -2318
+        ],
+        [
+          1080,
+          -2425
+        ],
+        [
+          1200,
+          -2480
+        ],
+        [
+          1330,
+          -2610
+        ],
+        [
+          1450,
+          -2670
+        ]
+      ],
+      "water_y": -1.4,
+      "footprints_and_shoreline": "출처 시설 핀 외 북동쪽 호안·도로·교량 축과 시설 외곽은 추정이며 OSM 원본이라고 주장하지 않는다.",
+      "ground": "bbox 밖 수역은 물리 ground만 제거한다. 원본 terrain triangulation에 범위 밖 hole을 추가하지 않는다."
+    }
+  },
+  "connections": [
+    {
+      "id": "banpo-promenade",
+      "name": "반포한강공원 수변 보행로 접점",
+      "osm_road": 305677075,
+      "point": {
+        "x": -26.4955,
+        "y": 0.065,
+        "z": -1135.7848
+      },
+      "source": "OSM 두 공원 공통 경계와 보행로의 교점",
+      "guess": false
+    },
+    {
+      "id": "banpo-cycle-east",
+      "name": "반포한강공원 한강남자전거길 접점",
+      "osm_road": 919393789,
+      "point": {
+        "x": 2.8896,
+        "y": 0.065,
+        "z": -1119.9681
+      },
+      "source": "OSM 두 공원 공통 경계와 자전거길의 교점",
+      "guess": false
+    },
+    {
+      "id": "banpo-cycle-west",
+      "name": "반포한강공원 한강남자전거길 접점",
+      "osm_road": 919393790,
+      "point": {
+        "x": -0.6597,
+        "y": 0.065,
+        "z": -1121.8785
+      },
+      "source": "OSM 두 공원 공통 경계와 자전거길의 교점",
+      "guess": false
+    },
+    {
+      "id": "sinjamwon-underpass",
+      "name": "신잠원나들목 보행 통로",
+      "osm_roads": [
+        1497710475,
+        1497710500,
+        1497710499,
+        408858834
+      ],
+      "source_endpoints": {
+        "street_portal": {
+          "x": 334.76,
+          "z": -1275.72
+        },
+        "park_portal": {
+          "x": 297.31,
+          "z": -1315.35
+        },
+        "source": "OSM 1497710500; y 미수록"
+      },
+      "modeled_street_side": {
+        "x": 344.24,
+        "y": 0,
+        "z": -1268.03
+      },
+      "modeled_park_side": {
+        "x": 283.79,
+        "y": 0,
+        "z": -1330.92
+      },
+      "walk_route": [
+        [
+          399.9,
+          0.025,
+          -1250.4
+        ],
+        [
+          344.24,
+          0,
+          -1268.03
+        ],
+        [
+          334.76,
+          -4,
+          -1275.72
+        ],
+        [
+          297.31,
+          -4,
+          -1315.35
+        ],
+        [
+          283.79,
+          0,
+          -1330.92
+        ],
+        [
+          264.56,
+          0.065,
+          -1366.59
+        ],
+        [
+          259.74,
+          0.065,
+          -1376.82
+        ],
+        [
+          251.9,
+          0.065,
+          -1384.26
+        ],
+        [
+          238.65,
+          0.065,
+          -1389.18
+        ],
+        [
+          190.22,
+          0.065,
+          -1424.12
+        ]
+      ],
+      "route_coordinate_order": "[x,y,z]",
+      "dimensions_guess": true,
+      "note": "차도 터널 OSM 282194888(신잠원나들목) 옆 별도 보행 터널이다. 올림픽대로 두 차로 리본 아래를 통과하도록 깊이 -4m, 양쪽 접근 경사를 모델링했다. 원본 터널 길이는 54.526m이며 블로그가 부르는 잠원나들목과 구분한다."
+    },
+    {
+      "id": "jamwon-underpass",
+      "name": "잠원나들목 보행 통로",
+      "source_pin": {
+        "x": 678.49,
+        "z": -1805.34,
+        "lat": 37.5213691,
+        "lon": 127.0126052,
+        "source": "https://kpa1959.or.kr/file/E110.pdf 표2",
+        "side": "명명된 출입구 기준점; 정확한 문턱·입구측은 미확정"
+      },
+      "modeled_street_side": {
+        "x": 770,
+        "y": 0,
+        "z": -1675
+      },
+      "modeled_park_side": {
+        "x": 678.49,
+        "y": 0,
+        "z": -1805.34
+      },
+      "walk_route": [
+        [
+          806,
+          0,
+          -1650
+        ],
+        [
+          770,
+          0,
+          -1675
+        ],
+        [
+          741,
+          -4,
+          -1708
+        ],
+        [
+          698,
+          -4,
+          -1779
+        ],
+        [
+          680.75,
+          -0.477,
+          -1802.15
+        ],
+        [
+          679.5,
+          0,
+          -1806.3
+        ],
+        [
+          620,
+          0.065,
+          -1820
+        ],
+        [
+          566,
+          0.065,
+          -1835
+        ],
+        [
+          538,
+          0,
+          -1835
+        ]
+      ],
+      "route_coordinate_order": "[x,y,z]",
+      "guess": true,
+      "note": "공원측 기준점은 연구 표 좌표에 고정하고 잠원로 보도 (806,-1650)까지 보행축·램프를 추정했다. 지하 문턱 두 곳(741,-1708),(698,-1779)은 모델링 위치이며 측량·OSM 입력점이 아니다. 기록 경로는 중앙 볼라드를 옆으로 피한다."
+    },
+    {
+      "id": "wave-gangway",
+      "name": "서울웨이브아트센터 강변 부교",
+      "osm_road": 949348576,
+      "walk_route": [
+        [
+          234.12,
+          0.12,
+          -1476.21
+        ],
+        [
+          188.22,
+          0.12,
+          -1515.03
+        ]
+      ],
+      "route_coordinate_order": "[x,y,z]",
+      "guess": false,
+      "height_guess": true,
+      "note": "planar 위치는 OSM. 수면 위 높이와 부교 폭은 복원 추정."
+    },
+    {
+      "id": "marina-gangway",
+      "name": "서울로얄마리나 강변 부교",
+      "osm_road": 949348575,
+      "walk_route": [
+        [
+          283.48,
+          0.12,
+          -1546.43
+        ],
+        [
+          265.45,
+          0.12,
+          -1563.27
+        ]
+      ],
+      "route_coordinate_order": "[x,y,z]",
+      "guess": false,
+      "height_guess": true,
+      "note": "부교 위치는 OSM. 상호 대응은 가까운 공식 주소 기준점으로 대조했으며 출입구의 정확한 형상·계류장 폭은 추정."
+    },
+    {
+      "id": "hannam-stairs",
+      "name": "한남대교 남단 보도에서 제4주차장으로",
+      "source_pin": {
+        "x": 960.36,
+        "z": -2145.9,
+        "lat": 37.52445,
+        "lon": 127.015797,
+        "source": "공공데이터15135350 재게시 표",
+        "name": "한남대교 남측 교상계단"
+      },
+      "modeled_bridge_landing": {
+        "x": 960.36,
+        "y": 8.4,
+        "z": -2145.9
+      },
+      "modeled_park_landing": {
+        "x": 980,
+        "y": 0.025,
+        "z": -2145.9
+      },
+      "walk_route": [
+        [
+          960.36,
+          8.4,
+          -2145.9
+        ],
+        [
+          960.36,
+          4.2,
+          -2159
+        ],
+        [
+          960.36,
+          4.2,
+          -2160
+        ],
+        [
+          980,
+          4.2,
+          -2160
+        ],
+        [
+          980,
+          4.2,
+          -2159
+        ],
+        [
+          980,
+          0.025,
+          -2145.9
+        ],
+        [
+          980,
+          0.025,
+          -2145.3
+        ],
+        [
+          985,
+          0.025,
+          -2145.3
+        ]
+      ],
+      "route_coordinate_order": "[x,y,z]",
+      "guess": true,
+      "note": "계단 기준점 외 꺾임·폭·높이는 추정. 승강기는 접근성 확보를 위해 추가한 모델 시설이며 현장 존재를 확인하지 못했다."
+    }
+  ],
+  "photo_references": [
+    {
+      "file": "refs/interior/jamwon_park/01_najeulmok_tunnel_entrance.jpg",
+      "source_url": "https://m.blog.naver.com/sulmingg/224452014318",
+      "source_date": "2026-10-24",
+      "recorded_location": "잠원나들목 굴다리 입구 (배달존 쪽)",
+      "visible": "underpass tunnel through levee embankment, stone-patterned side stairs, bollards, no-entry signs",
+      "used": true
+    },
+    {
+      "file": "refs/interior/jamwon_park/02_lawn_banner_pole.jpg",
+      "source_url": "https://m.blog.naver.com/lo_luckyne_ve/224434868101",
+      "source_date": "2026-10-08",
+      "recorded_location": "잔디 둔치",
+      "visible": "open lawn, trees, benches, light pole with banner",
+      "used": true
+    },
+    {
+      "file": "refs/interior/jamwon_park/03_bike_path_under_bridge_clock.jpg",
+      "source_url": "https://m.blog.naver.com/lo_luckyne_ve/224434868101",
+      "source_date": "2026-10-08",
+      "recorded_location": "교량 하부 자전거길",
+      "visible": "bike lane under bridge deck with round clock on pole (bridge unconfirmed: Hannam or Dongho)",
+      "used": true
+    },
+    {
+      "file": "refs/interior/jamwon_park/04_bike_path_under_bridge_red_green.jpg",
+      "source_url": "https://m.blog.naver.com/pila_writer/224262975913",
+      "source_date": "2026-04-23",
+      "recorded_location": "한남대교 하부 자전거/보행 분리로",
+      "visible": "red bike lane + green walking lane, steel truss railing, white arrows, orange cones",
+      "used": true
+    },
+    {
+      "file": "refs/interior/jamwon_park/05_ramp_entrance_hannam_side.jpg",
+      "source_url": "https://m.blog.naver.com/pila_writer/224262975913",
+      "source_date": "2026-04-23",
+      "recorded_location": "한남 나들목 진입 경사로",
+      "visible": "ramp with no-bicycle sign, yellow tactile strip, brick-wall rails, hazard bollard, parking visible beyond",
+      "used": true
+    },
+    {
+      "file": "refs/interior/jamwon_park/06_donghodaegyo_sign_path.jpg",
+      "source_url": "https://m.blog.naver.com/relord_man_/224463798286",
+      "source_date": "2026-11-03",
+      "recorded_location": "동호대교 아래 길",
+      "visible": "blue Donghodaegyo bridge sign on pier, asphalt bike path with yellow line",
+      "used": false
+    },
+    {
+      "file": "refs/interior/jamwon_park/07_parking_lot_entrance_lane.jpg",
+      "source_url": "https://m.blog.naver.com/saygoodhouse/224270996977",
+      "source_date": "2026-04-30",
+      "recorded_location": "주차장 진입로",
+      "visible": "one-way lane with white arrow, orange bollards, guardrail, fee booth, apartments behind",
+      "used": true
+    },
+    {
+      "file": "refs/interior/jamwon_park/08_parking_lot_wide.jpg",
+      "source_url": "https://m.blog.naver.com/saygoodhouse/224270996977",
+      "source_date": "2026-04-30",
+      "recorded_location": "주차장 전경",
+      "visible": "wide asphalt lot, perpendicular parking, trees along edge",
+      "used": true
+    },
+    {
+      "file": "refs/interior/jamwon_park/09_bike_rental_under_bridge.jpg",
+      "source_url": "https://m.blog.naver.com/soheekimmy/224246380670",
+      "source_date": "2026-04-09",
+      "recorded_location": "한남대교 아래 4공영주차장 자전거 대여소",
+      "visible": "rental kiosk, rows of bikes, painted panda mural on pier, green elevated bridge deck",
+      "used": true
+    },
+    {
+      "file": "refs/interior/jamwon_park/10_riverside_railing_namsan.jpg",
+      "source_url": "https://m.blog.naver.com/su_yogi/224349774576",
+      "source_date": "2026-07-17",
+      "recorded_location": "강변 난간 산책로",
+      "visible": "metal railing, river, Namsan tower in background, bike and walkers",
+      "used": true
+    },
+    {
+      "file": "refs/interior/jamwon_park/11_lawn_tents.jpg",
+      "source_url": "https://m.blog.naver.com/sulmingg/224452014318",
+      "source_date": "2026-10-24",
+      "recorded_location": "잔디 텐트 구역",
+      "visible": "tents on grass, large trees, apartments behind",
+      "used": true
+    },
+    {
+      "file": "refs/interior/jamwon_park/12_seveneleven_floating_building.jpg",
+      "source_url": "https://m.blog.naver.com/choiyj2020/224415280697",
+      "source_date": "2026-09-17",
+      "recorded_location": "세븐일레븐 한강 선상 건물",
+      "visible": "white 2-3 story boat-like building, 7-Eleven sign, picnic tables, umbrellas",
+      "used": true
+    },
+    {
+      "file": "refs/interior/jamwon_park/13_floating_deck_cafe.jpg",
+      "source_url": "https://m.blog.naver.com/choiyj2020/224415280697",
+      "source_date": "2026-09-17",
+      "recorded_location": "선상 루프탑 데크",
+      "visible": "yellow chairs, string lights, river view",
+      "used": true
+    },
+    {
+      "file": "refs/interior/jamwon_park/14_outdoor_pool_umbrellas.jpg",
+      "source_url": "https://m.blog.naver.com/choonsdailypaper/223931851551",
+      "source_date": "2025-07-13",
+      "recorded_location": "잠원 야외수영장",
+      "visible": "blue pool, white umbrellas, loungers, string lights",
+      "used": true
+    },
+    {
+      "file": "refs/interior/jamwon_park/15_pedestrian_tunnel_interior.jpg",
+      "source_url": "https://m.blog.naver.com/choonsdailypaper/223931851551",
+      "source_date": "2025-07-13",
+      "recorded_location": "보행 터널 내부",
+      "visible": "curved metal wall panels, red-brown walkway, long tunnel",
+      "used": true
+    },
+    {
+      "file": "refs/interior/jamwon_park/16_pool_lanes_overcast.jpg",
+      "source_url": "https://m.blog.naver.com/ez_swim/224388752805",
+      "source_date": "2026-08-24",
+      "recorded_location": "수영장 레인",
+      "visible": "pink/blue pool edge, lane ropes, tent canopies",
+      "used": true
+    },
+    {
+      "file": "refs/interior/jamwon_park/17_poplar_bike_path.jpg",
+      "source_url": "https://m.blog.naver.com/gam_log/224295974174",
+      "source_date": "2026-05-25",
+      "recorded_location": "포플러 가로수 자전거길",
+      "visible": "asphalt path with dashed center line, poplars and green grass",
+      "used": true
+    },
+    {
+      "file": "refs/interior/jamwon_park/18_pool_basin_empty.jpg",
+      "source_url": "https://m.blog.naver.com/gam_log/224295974174",
+      "source_date": "2026-05-25",
+      "recorded_location": "수영장 비수기 전경",
+      "visible": "pool basin with white tent canopies, high-rise apartments behind",
+      "used": true
+    },
+    {
+      "file": "refs/interior/jamwon_park/19_marina_yachts.jpg",
+      "source_url": "https://m.blog.naver.com/khsgudtn1919/224460884712",
+      "source_date": "2026-11-01",
+      "recorded_location": "마리나 요트 계류장",
+      "visible": "floating restaurant/cafe building, yachts, river",
+      "used": true
+    }
+  ],
+  "notes": [
+    "사진의 물성·배색을 따르되 OSM 좌표 및 별도로 확인한 공공기관 위치 핀을 블로그의 서→동 설명보다 우선한다.",
+    "원본 공원은 세계 범위 z=-2100에서 잘린다. 한남대교 남단 계단 기준점은 이 경계 밖이므로 시설을 공원 남서쪽으로 압축하여 옮기지 않는다.",
+    "원본에 수영장·선상 건물의 footprint가 없다. 건물 외곽·방 배치·층고·가구는 사진을 바탕으로 재구성한 것이며 측량 도면이 아니다.",
+    "수영장은 18번 비수기 사진을 따라 물이 빠진 청색 풀 바닥, 분홍색 가장자리와 흰 캐노피로 표현한다. 여름 사진의 가구·레인 형태는 외형 참고이다.",
+    "03번 원형 시계 사진의 교량은 한남/동호 여부 미확정이다. 시계·포장 요소만 한남 하부 장면의 추정 디테일로 사용한다.",
+    "06번은 표지판에 동호대교가 명시되어 있으므로 한남대교로 바꾸어 사용하지 않는다. 모듈 범위 밖 참고사진으로 제외했다.",
+    "도로뷰 manifest에는 잠원한강공원 자체 카메라 프레임이 없다. 잠원로 교차로 사진들은 streets 모듈 범위여서 이 모듈의 촬영 근거로 사용하지 않았다.",
+    "모든 modeling.trace 좌표는 모델을 검수하기 위한 재구성 카메라 위치이다. 원본 사진의 GPS나 실제 촬영자의 위치를 측량한 값이 아니다. y는 tests/shot.mjs와 같은 발높이이며 실제 카메라 눈높이는 eyeY=y+1.62이다.",
+    "사진12 원본의 지붕 청색 표지에는 잠원1호가 읽힌다. 따라서 관광공사 잠원2호점 지도 핀으로 이 흰 선박형 건물을 배치하지 않는다.",
+    "사진19 원본 상호는 서울로얄마리나와 MONARCH BISTRO다. 공식 주소의 주소좌표는 (257.93,-1572.23)으로 OSM949348575 강변 부교 가까이이며, 최종 모델의 선상 건물 중심 (257.93,-1572.23)에 반영했다. 건물과 잔교 외곽은 추정이다.",
+    "마레보인 웨이브2·3층 표기는 공식 업체 주소에서 확인했다. OSM 서울웨이브아트센터 gangway는 건물의 정확한 outline을 제공하지 않는다.",
+    "사진13 노란 의자 데크의 상호는 사진 자체로 확정되지 않는다. 행사 동선 자료는 세븐일레븐1호점과 CU압구정크루즈 루프탑을 별도 장소로 구분한다. 사용자 요청으로 노란 의자·전구줄을 모델에 반영하더라도1호점의 검증된 옥상 배치라고 주장할 수 없다."
+  ],
+  "modeling": {
+    "round": 8,
+    "trace": [
+      {
+        "spot": "잠원나들목 · 공원측 아치 입구",
+        "photos": [
+          "refs/interior/jamwon_park/01_najeulmok_tunnel_entrance.jpg"
+        ],
+        "x": 673,
+        "y": 0,
+        "z": -1811,
+        "yawDeg": 214,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "coordinate_status": "모델 검수 카메라, 원본 사진 GPS 아님",
+        "note": "연구 좌표에 고정한 공원측 접근부. 사진의 정확한 촬영좌표·문턱높이는 미확정."
+      },
+      {
+        "spot": "잠원 잔디 · 배너 가로등",
+        "photos": [
+          "refs/interior/jamwon_park/02_lawn_banner_pole.jpg"
+        ],
+        "x": 58,
+        "y": 0,
+        "z": -1218,
+        "yawDeg": 32,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "coordinate_status": "모델 검수 카메라, 원본 사진 GPS 아님",
+        "note": "항공사진 남서 잔디 구역의 재구성 가로등을 바라보는 시점."
+      },
+      {
+        "spot": "한남대교 하부 · 원형 시계",
+        "photos": [
+          "refs/interior/jamwon_park/03_bike_path_under_bridge_clock.jpg"
+        ],
+        "x": 930,
+        "y": 0.065,
+        "z": -2191,
+        "yawDeg": 39,
+        "pitchDeg": 8,
+        "eyeY": 1.685,
+        "coordinate_status": "모델 검수 카메라, 원본 사진 GPS 아님",
+        "note": "사진03의 실제 교량은 미확정. 원형 시계 요소를 한남대교 하부에 재구성한 비교 시점."
+      },
+      {
+        "spot": "한남대교 하부 · 적색 자전거길과 녹색 보행로",
+        "photos": [
+          "refs/interior/jamwon_park/04_bike_path_under_bridge_red_green.jpg"
+        ],
+        "x": 959,
+        "y": 0.065,
+        "z": -2192.14,
+        "yawDeg": 65,
+        "pitchDeg": 0,
+        "eyeY": 1.685,
+        "coordinate_status": "모델 검수 카메라, 원본 사진 GPS 아님",
+        "note": "트러스 난간·분리 포장·콘. 교축과 하부 높이·간격은 추정."
+      },
+      {
+        "spot": "한남대교 남단 · 공원 계단 상부",
+        "photos": [
+          "refs/interior/jamwon_park/05_ramp_entrance_hannam_side.jpg"
+        ],
+        "x": 960.36,
+        "y": 8.4,
+        "z": -2145.9,
+        "yawDeg": 0,
+        "pitchDeg": -12,
+        "eyeY": 10.02,
+        "coordinate_status": "모델 검수 카메라, 원본 사진 GPS 아님",
+        "note": "공공데이터 교상계단 기준점. 사진05의 경사로와 완전히 같은 평면으로 확인되지 않아 접근시설 외형 참고로 사용."
+      },
+      {
+        "spot": "잠원 제4주차장 · 진입로와 요금소",
+        "photos": [
+          "refs/interior/jamwon_park/07_parking_lot_entrance_lane.jpg"
+        ],
+        "x": 990,
+        "y": 0.025,
+        "z": -2117,
+        "yawDeg": 0,
+        "pitchDeg": 0,
+        "eyeY": 1.645,
+        "coordinate_status": "모델 검수 카메라, 원본 사진 GPS 아님",
+        "note": "공식 제4주차장 명칭을 사용한 추정 외곽. 사진07의 주차장 번호는 확정되지 않음."
+      },
+      {
+        "spot": "잠원 제4주차장 · 주차면 전경",
+        "photos": [
+          "refs/interior/jamwon_park/08_parking_lot_wide.jpg"
+        ],
+        "x": 1008,
+        "y": 0.025,
+        "z": -2126,
+        "yawDeg": 0,
+        "pitchDeg": 0,
+        "eyeY": 1.645,
+        "coordinate_status": "모델 검수 카메라, 원본 사진 GPS 아님",
+        "note": "직각주차·가로수·회색 포장 참고. 실제 주차면 배치·차량수는 추정."
+      },
+      {
+        "spot": "한남대교 하부 · 대여 자전거와 교각 장식",
+        "photos": [
+          "refs/interior/jamwon_park/09_bike_rental_under_bridge.jpg"
+        ],
+        "x": 984,
+        "y": 0.03,
+        "z": -2188,
+        "yawDeg": 55,
+        "pitchDeg": 3,
+        "eyeY": 1.65,
+        "coordinate_status": "모델 검수 카메라, 원본 사진 GPS 아님",
+        "note": "사진09에서 가져온 소형 하부 자전거 열. 관광공사 핀의 별도 대여소(1107.923,-2366.982)와 동일 시설 여부는 불명."
+      },
+      {
+        "spot": "잠원 수변 · 난간과 한강",
+        "photos": [
+          "refs/interior/jamwon_park/10_riverside_railing_namsan.jpg"
+        ],
+        "x": 70,
+        "y": 0.065,
+        "z": -1367.3,
+        "yawDeg": 5,
+        "pitchDeg": 0,
+        "eyeY": 1.685,
+        "coordinate_status": "모델 검수 카메라, 원본 사진 GPS 아님",
+        "note": "OSM305677075 수변길과 강변 난간. 남산 원경의 세부 건물 재현은 이 모듈 범위에 포함하지 않음."
+      },
+      {
+        "spot": "잠원 잔디 · 텐트와 그늘",
+        "photos": [
+          "refs/interior/jamwon_park/11_lawn_tents.jpg"
+        ],
+        "x": 41,
+        "y": 0,
+        "z": -1192,
+        "yawDeg": 60,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "coordinate_status": "모델 검수 카메라, 원본 사진 GPS 아님",
+        "note": "남서쪽 잔디 공간에 사진의 텐트·피크닉 구성을 재구성."
+      },
+      {
+        "spot": "세븐일레븐 잠원1호점 · 흰 선박형 외관",
+        "photos": [
+          "refs/interior/jamwon_park/12_seveneleven_floating_building.jpg"
+        ],
+        "x": 1396,
+        "y": 0,
+        "z": -2557,
+        "yawDeg": 45,
+        "pitchDeg": 7,
+        "eyeY": 1.62,
+        "coordinate_status": "모델 검수 카메라, 원본 사진 GPS 아님",
+        "note": "사진 지붕의 잠원1호 표지를 식별하여 올림픽대로2395 주소좌표에 배치.2호점과 구별."
+      },
+      {
+        "spot": "세븐일레븐 모델 옥상 · 노란 의자 데크",
+        "photos": [
+          "refs/interior/jamwon_park/13_floating_deck_cafe.jpg"
+        ],
+        "x": 1381.5,
+        "y": 7.72,
+        "z": -2576,
+        "yawDeg": 90,
+        "pitchDeg": 0,
+        "eyeY": 9.34,
+        "coordinate_status": "모델 검수 카메라, 원본 사진 GPS 아님",
+        "note": "노란 의자·초록 바닥·전구줄만 참고. 사진13이 사진12의 실제 옥상이라는 근거는 없으며 CU압구정크루즈 등 별도 장소일 가능성이 있다."
+      },
+      {
+        "spot": "잠원수영장 · 흰 파라솔과 휴게 의자",
+        "photos": [
+          "refs/interior/jamwon_park/14_outdoor_pool_umbrellas.jpg"
+        ],
+        "x": 445.137,
+        "y": 0.035,
+        "z": -1569.722,
+        "yawDeg": 42.4,
+        "pitchDeg": 0,
+        "eyeY": 1.655,
+        "coordinate_status": "모델 검수 카메라, 원본 사진 GPS 아님",
+        "note": "여름 사진의 파라솔·라운저를 외형 참고하되 모델은 빈 수조 비수기 상태."
+      },
+      {
+        "spot": "잠원나들목 · 금속 아치 보행 터널 내부",
+        "photos": [
+          "refs/interior/jamwon_park/15_pedestrian_tunnel_interior.jpg"
+        ],
+        "x": 719.5,
+        "y": -4,
+        "z": -1743.5,
+        "yawDeg": 31.2,
+        "pitchDeg": 0,
+        "eyeY": -2.38,
+        "coordinate_status": "모델 검수 카메라, 원본 사진 GPS 아님",
+        "note": "터널 중앙에서 공원측 출구 방향. 금속 패널·황색 선·적갈색 보행띠를 참고, 정확한 촬영 터널은 사진만으로 확정하지 않음."
+      },
+      {
+        "spot": "잠원수영장 · 레인과 분홍색 가장자리",
+        "photos": [
+          "refs/interior/jamwon_park/16_pool_lanes_overcast.jpg"
+        ],
+        "x": 402.851,
+        "y": 0.035,
+        "z": -1558.194,
+        "yawDeg": 312.4,
+        "pitchDeg": -6,
+        "eyeY": 1.655,
+        "coordinate_status": "모델 검수 카메라, 원본 사진 GPS 아님",
+        "note": "사진의 레인·풀 가장자리 색상 참고. 수조는 물이 빠진 상태이며 풀 길이50m·폭25m·깊이1.25m는 추정."
+      },
+      {
+        "spot": "잠원 강변길 · 가로수와 중앙 점선",
+        "photos": [
+          "refs/interior/jamwon_park/17_poplar_bike_path.jpg"
+        ],
+        "x": 327,
+        "y": 0.065,
+        "z": -1574.19,
+        "yawDeg": 315.89,
+        "pitchDeg": 0,
+        "eyeY": 1.685,
+        "coordinate_status": "모델 검수 카메라, 원본 사진 GPS 아님",
+        "note": "사진17의 가늘고 키 큰 포플러 실루엣을 (335,-1568)부터 (467,-1711)까지 재구성한 줄 옆 자전거길. 상세 경로와 수목 위치는 추정이며 공공기관 측량값이 아니다."
+      },
+      {
+        "spot": "잠원수영장 · 비수기 빈 수조와 흰 캐노피",
+        "photos": [
+          "refs/interior/jamwon_park/18_pool_basin_empty.jpg"
+        ],
+        "x": 445.716,
+        "y": 0.035,
+        "z": -1551.292,
+        "yawDeg": 42.4,
+        "pitchDeg": -4,
+        "eyeY": 1.655,
+        "coordinate_status": "모델 검수 카메라, 원본 사진 GPS 아님",
+        "note": "모델 수영장 운영 상태의 직접 참고사진. 수조·캐노피 치수와 위치는 추정."
+      },
+      {
+        "spot": "서울로얄마리나 · 선상 건물과 요트",
+        "photos": [
+          "refs/interior/jamwon_park/19_marina_yachts.jpg"
+        ],
+        "x": 272,
+        "y": 0.12,
+        "z": -1603,
+        "yawDeg": 80,
+        "pitchDeg": 0,
+        "eyeY": 1.74,
+        "coordinate_status": "모델 검수 카메라, 원본 사진 GPS 아님",
+        "note": "사진19의 SEOUL ROYAL MARINA 및 MONARCH BISTRO 표지를 확인. 주소좌표와 OSM 부교를 함께 사용; 건물·계류잔교 평면은 추정."
+      }
+    ],
+    "guesses": [
+      "세계의 거리·공원 기준면은 y=0, 물은 y=-1.4이다. 실제 제방 고저차를 확보하지 못했으므로 터널 높이·접근 경사를 이 기준면에 맞춰 복원한다.",
+      "OSM에 신잠원나들목 축은 있지만 보행 터널 높이·폭은 없다. 보행 폭 3.25m, 바닥 -4m, 아치·금속 패널·조명·유도선은 시각 자료 기반 추정이다.",
+      "실측되지 않은 시설의 footprint, 계류장 형태, 요트 수, 천막 수, 테이블·진열대·노란 의자 배치와 층고는 사진을 닮게 만드는 재구성이다.",
+      "OSM park의 북동쪽 경로는 지도에 상세 way가 없다. 강변 경계와 확인된 시설을 잇는 적색 자전거길·녹색 보행로는 추정 연결 경로이다.",
+      "공원 수목 종류·높이·위치, 텐트·벤치·가로등·배너, 사방치기 및 교각 장식의 위치와 수량은 사진 분위기에 따른 추정이다.",
+      "03번 시계와 한남대교 하부 트러스·교각 간격 및 높이는 특정 사진의 정확한 측량값이 아니다.",
+      "선상 세븐일레븐은 사진 외형과 확인 가능한 위치 근거의 확실성을 분리해 기록한다. 외형이 비슷하다는 이유로 서울웨이브아트센터 또는 수영장 위치로 옮기지 않는다.",
+      "서울웨이브아트센터·마리나·편의점 내부는 실제 평면도가 없다. 문 위치·계단·승강기·옥상 접근과 층높이3.8m는 플레이 가능한 복원 계획이다. 승강기 실재 여부는 미확인이다.",
+      "사진13의 노란 의자·인조잔디·전구줄은 옥상 분위기 참고이며 이를 사진12 편의점 옥상에 결합하는 것은 사용자의 요청을 따른 재구성이다. 두 사진이 같은 실제 건물의 외부와 옥상이라고 확인되지 않았다.",
+      "제4주차장이라는 명칭과 한남대교 남단 소재는 서울시 근거가 있으나 모델의 직사각형 주차장 외곽·주차면 수·차량배치는 측량하지 않았다. 사진07·08의 정확한 주차장 번호도 원본 노트에서 불확실하다.",
+      "한남대교 상판y=8.4m와 보행계단·승강기의1F/2F 표기는 모델 동선용이다. 현장 안내에서 층 번호와 승강기 실재를 확인하지 못했다.",
+      "원본 데이터의 z=-2100 경계 밖 한남대교·잠원1호점까지 이어진 둔치와 수역은 확인된 시설 핀 사이를 연결하기 위한 추정 경계다. OSM981963451의 원본 경계를 변경하거나 실제 강변을 측량했다고 주장하지 않는다.",
+      "OSM bbox 밖의 한강 호안과 잔디 띠는 출처 좌표의 시설을 연결하기 위한 추정 확장이다. 한남대교 상판의 계단 개구부·부재 배치는 보행 가능성에 맞춰 조정했다."
+    ],
+    "excluded_references": [
+      {
+        "photos": [
+          "refs/interior/jamwon_park/06_donghodaegyo_sign_path.jpg"
+        ],
+        "reason": "동호대교 교명판이 명확한 별도 교량. 한남대교 재구성에는 사용하지 않음."
+      }
+    ],
+    "validation": {
+      "screenshot": "사용자 지시에 따라 tests/shot.mjs 미실행. operator가 modeling.trace로 렌더링 예정.",
+      "smoke": {
+        "command": "node tests/smoke.mjs jamwon_hangang",
+        "result": "OK",
+        "reported_by": "root"
+      },
+      "walk_module_and_neighbor": {
+        "command": "node tests/walk.mjs jamwon_hangang hangang",
+        "result": "44 ok, 0 blocked",
+        "reported_by": "root"
+      },
+      "walk_all": {
+        "command": "node tests/walk.mjs",
+        "result": "428 ok, 0 blocked",
+        "note": "병행 newcore 작업의 임시 build 미정의 상태가 해소된 뒤 전체 명령을 다시 실행하여 통과."
+      },
+      "long_tunnel_routes": {
+        "result": "PASS",
+        "method": "실제 kit/physics, generic city, 전체 detail, 캡슐 반경0.32m/키1.75m/step0.5m; 0.2m 간격 바닥·벽·천장 검사 및 국소 BFS",
+        "routes": [
+          "신잠원: 잠원로 보도399.9,-1250.4 → 보행 터널 → 공원 접근로 → 수변길190.22,-1424.12",
+          "잠원: 잠원로 보도806,-1650 → 터널 → 입구 볼라드 옆 우회 → 강변538,-1835"
+        ],
+        "note": "잠원 입구 중앙 볼라드를 피해 아래 walk_route의 옆길 좌표를 사용."
+      },
+      "smoke_with_neighbor_and_city": {
+        "command": "node tests/smoke.mjs jamwon_hangang hangang --city",
+        "result": "OK",
+        "reported_by": "root"
+      },
+      "counts": {
+        "spawns": 12,
+        "zones": 25,
+        "elevators": 4,
+        "triangles_after_all_detail": "약95,000",
+        "reported_by": "root"
+      },
+      "building_access": {
+        "result": "PASS",
+        "method": "가구 포함 출입구→계단 BFS, 0.2m 간격 계단·상부참·층별 출구·머리공간 검사",
+        "facilities": [
+          "서울웨이브아트센터",
+          "서울로얄마리나",
+          "세븐일레븐 잠원1호"
+        ]
+      },
+      "hannam_stairs": {
+        "result": "PASS 양방향",
+        "method": "상판 계단 개구부, 중간참 z=-2160 우회, 공원측 z=-2145.3 우회 경로의 바닥/캡슐/천장 검증",
+        "fixes": [
+          "상판에서 첫 계단 비우기",
+          "계단참 겹침 제거",
+          "보행 개구부를 가로지르던 비충돌 보도 s40..65에서 절단"
+        ]
+      }
+    },
+    "traceCoordinateConvention": {
+      "position": "trace.x,trace.y,trace.z는 tests/shot.mjs --views에 직접 넣을 player 발 위치, m",
+      "camera_eye": "실제 눈높이=trace.y+1.62; eyeY를 별도로 기록",
+      "yawDeg": "0 북(-z),90 서(-x),180 남(+z),270 동(+x)",
+      "pitchDeg": "양수 위, 음수 아래",
+      "original_photo_gps": false
+    }
+  }
+}

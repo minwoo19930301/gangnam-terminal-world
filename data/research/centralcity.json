@@ -140,6 +140,26 @@
    "title": "Round5 cc_famille: 운영자 제공 2026년 블로그 실내 사진 설명·배치·치수 추정",
    "date_range": "2026-03-19..2026-11-06",
    "provenance": "블로그 원문을 새로 검색하지 않고 제공된 사진·notes.json을 사용"
+  },
+  {
+   "url": "refs/aerial/famille_back.jpg",
+   "title": "Round8 남측 항공 격자: 복개주차장 근사 범위와 도로·원형관 접지 확인"
+  },
+  {
+   "url": "refs/interior/famille_back/16_parking_entrance_booth_pine_sign.jpg",
+   "title": "초록 곡면 캐노피·흰 부스·소나무·검은 방향 안내·유도봉: 부스의 정확한 위치는 미확인"
+  },
+  {
+   "url": "refs/interior/famille_back/23_parking_fee_sign.jpg",
+   "title": "사진 속 파미에주차장 요금 5분당 550원; 본관 요금과 구분"
+  },
+  {
+   "url": "refs/interior/famille_back/notes.json",
+   "title": "위치 추론을 그대로 채택하지 않음: 07–09의 데블스도어 외관, 17–22의 다른 주차시설을 구분"
+  },
+  {
+   "url": "shots/trace7/centralcity_1.png",
+   "title": "Round7 운영자 비교 시트 1–12 전체 검토: 홀·파미에 점포·지하 연결·2층 보완"
   }
  ],
  "building": {
@@ -423,18 +443,19 @@
    "north_canopy_bridge": "cc_02/09:40 m 반투명 곡면지붕·흰 경사 지지대. cc_01:파빌리온 뒤8..10 m 수목열. OSM 모듈 소유 연결교0.65 m 슬래브/직경0.6 m 기둥. 별도 city 자동생성15 m 보행교는 범위밖.",
    "yard_surface": "항공사진: 중간회색 지면. 승차홈 앞/회차로/YARD 모두 concrete+#9a9890, 흰색·노란색 구획 유지.",
    "hall_plain_closure": "critic hn_hall_w: 확인 안 된 방 전면만 s108..119/t28 평벽으로 마감, J6 통로 개방 유지.",
-   "famille_1f": "Round5 cc_famille01–21: 1F 남측 실내 거리, 점포별 크림 아치/벽돌/흰 벽돌/검은 철제 유리 전면과 실제 사진에 나온 내부 재료·가구. 연회색 타일과 높은 밝은 채광 천장. 실제 점포 순서/좌표는 추정."
+   "famille_1f": "Round5 cc_famille01–21: 1F 남측 실내 거리, 점포별 크림 아치/벽돌/흰 벽돌/검은 철제 유리 전면과 실제 사진에 나온 내부 재료·가구. 연회색 타일과 높은 밝은 채광 천장. 실제 점포 순서/좌표는 추정.",
+   "south_surface_parking": "Round8: aerial-based south asphalt apron, road-clipped bays/70% cars, green booth canopy, barriers and 550원 fee board, rear pedestrian routes and brick/arch entrance details."
   },
   "validation": {
-   "status": "Passed required smoke and full-world walk; updated visual renders pending operator review",
-   "smoke_command": "node tests/smoke.mjs centralcity shinsegae jwmarriott station gotomall",
+   "status": "Passed required combined smoke and full-world walk; operator render comparison pending.",
+   "smoke_command": "node tests/smoke.mjs centralcity station gotomall",
    "smoke_result": "OK",
    "walk_command": "node tests/walk.mjs",
-   "walk_result": "331 ok, 0 blocked",
+   "walk_result": "428 ok, 0 blocked",
    "budget_quads": 140000,
-   "centralcity_quads": 107857,
-   "spawns": 12,
-   "zones": 33,
+   "centralcity_quads": 209604,
+   "spawns": 13,
+   "zones": 35,
    "elevators": 5,
    "preserved_connections": [
     "J3",
@@ -465,8 +486,10 @@
     "owned-file git diff --check passed",
     "research JSON parsed"
    ],
-   "visual_review": "Inspected supplied contact sheets and selected individual reference photos. Per user instruction tests/shot.mjs was not run. No claim of updated-render visual verification.",
-   "concurrent_edit_note": "Early combined checks encountered station duplicate mallHere declaration and gotomall unknown material during other jobs. Those errors cleared on later required smoke/full-world walk runs without editing those modules."
+   "visual_review": "All twelve supplied comparison sheets reviewed by delegated hall/Famille audits; selected original back photos inspected. tests/shot.mjs not run as instructed. New render verification remains with operator.",
+   "concurrent_edit_note": "Initial full-world walk was interrupted by concurrent newcore edits. Final full-world run passed after its build export returned; no other module was edited by this task.",
+   "base_quads": 89009,
+   "latest_detail": "See modeling.round8.validation for current check results; older additional_routes fields describe prior-round audits."
   },
   "round2_issues": {
    "1–2": "사진01: 독립13m 파일런·6.6m 순폭·6m 날개/열린 상부·반원통 지붕·4.9x2.7 간판·금속 필라스터·4짝 유리문·확대 눈 조형.",
@@ -1481,8 +1504,38 @@
    {
     "spot": "붉은 승차홈 게이트",
     "photos": [
-     "refs/interior/cc_hall/05_hall_seating_gate13_truss.jpg",
-     "refs/interior/cc_hall/13_gate1_red_arch.jpg",
+     "refs/interior/cc_hall/05_hall_seating_gate13_truss.jpg"
+    ],
+    "x": -70.85,
+    "y": 0,
+    "z": 119.839,
+    "yawDeg": 144.45,
+    "floor": "1F",
+    "local_st": [
+     126,
+     20.4
+    ],
+    "reviewed_trace7_index": 0
+   },
+   {
+    "spot": "붉은 승차홈 게이트",
+    "photos": [
+     "refs/interior/cc_hall/13_gate1_red_arch.jpg"
+    ],
+    "x": -124.032,
+    "y": 0,
+    "z": 4.59,
+    "yawDeg": 91.283,
+    "floor": "1F",
+    "local_st": [
+     -0.7,
+     12.8
+    ],
+    "reviewed_trace7_index": 0
+   },
+   {
+    "spot": "붉은 승차홈 게이트",
+    "photos": [
      "refs/interior/cc_hall/14_gate11_red_arch_hall.jpg"
     ],
     "x": -80.645,
@@ -1493,13 +1546,47 @@
     "local_st": [
      117,
      13.4
-    ]
+    ],
+    "reviewed_trace7_index": 0
    },
    {
     "spot": "유리문 밖 승차장",
     "photos": [
-     "refs/interior/cc_hall/01_red_kiosk_aisle_platform_edge.jpg",
-     "refs/interior/cc_hall/25_glass_doors_platform_board_seoulexpress.jpg",
+     "refs/interior/cc_hall/01_red_kiosk_aisle_platform_edge.jpg"
+    ],
+    "x": -91.961,
+    "y": 0,
+    "z": 112.519,
+    "yawDeg": 208.098,
+    "floor": "1F",
+    "local_st": [
+     111.5,
+     3.4
+    ],
+    "uncertainty": "25번은 경부선 비교 사진. 호남선 배차 시간표·승차홈 전체 번호는 미확인.",
+    "reviewed_trace7_index": 1
+   },
+   {
+    "spot": "유리문 밖 승차장",
+    "photos": [
+     "refs/interior/cc_hall/25_glass_doors_platform_board_seoulexpress.jpg"
+    ],
+    "x": -85.861,
+    "y": 0,
+    "z": 116.041,
+    "yawDeg": 111.339,
+    "floor": "1F",
+    "local_st": [
+     117,
+     7.8
+    ],
+    "uncertainty": "25번은 경부선 비교 사진. 호남선 배차 시간표·승차홈 전체 번호는 미확인.",
+    "reviewed_trace7_index": 1,
+    "reference_scope": "comparison-only; exact terminal identity uncertain, not Honam-specific sign/number evidence"
+   },
+   {
+    "spot": "유리문 밖 승차장",
+    "photos": [
      "refs/interior/cc_hall/18_platform_sign_escalator.jpg"
     ],
     "x": -85.861,
@@ -1511,125 +1598,173 @@
      117,
      7.8
     ],
-    "uncertainty": "25번은 경부선 비교 사진. 호남선 배차 시간표·승차홈 전체 번호는 미확인."
+    "uncertainty": "25번은 경부선 비교 사진. 호남선 배차 시간표·승차홈 전체 번호는 미확인.",
+    "reviewed_trace7_index": 1,
+    "reference_scope": "comparison-only; exact terminal identity uncertain, not Honam-specific sign/number evidence"
    },
    {
     "spot": "트러스 중앙홀",
     "photos": [
-     "refs/interior/cc_hall/06_central_hall_wide_marble.jpg",
-     "refs/interior/cc_hall/09_crowded_hall_truss.jpg",
-     "refs/interior/cc_hall/15_long_hall_benches_planters.jpg"
+     "refs/interior/cc_hall/06_central_hall_wide_marble.jpg"
     ],
-    "x": -90.016,
+    "x": -90.716,
     "y": 0,
-    "z": 67.205,
-    "yawDeg": 21.339,
+    "z": 73.383,
+    "yawDeg": 24.241,
     "floor": "1F",
     "local_st": [
-     70,
-     21.7
-    ]
+     75.5,
+     18.8
+    ],
+    "reviewed_trace7_index": 2
+   },
+   {
+    "spot": "트러스 중앙홀",
+    "photos": [
+     "refs/interior/cc_hall/09_crowded_hall_truss.jpg"
+    ],
+    "x": -79.165,
+    "y": 0,
+    "z": 103.226,
+    "yawDeg": 188.254,
+    "floor": "1F",
+    "local_st": [
+     107.5,
+     18.7
+    ],
+    "reviewed_trace7_index": 2
+   },
+   {
+    "spot": "트러스 중앙홀",
+    "photos": [
+     "refs/interior/cc_hall/15_long_hall_benches_planters.jpg"
+    ],
+    "x": -74.183,
+    "y": 0,
+    "z": 107.184,
+    "yawDeg": 176.928,
+    "floor": "1F",
+    "local_st": [
+     113,
+     21.9
+    ],
+    "reviewed_trace7_index": 2
    },
    {
     "spot": "대합실 좌석 구역 · 청동 동상 벤치",
     "photos": [
-     "refs/interior/cc_hall/22_statue_bench_truss_gate4.jpg",
-     "refs/interior/cc_hall/05_hall_seating_gate13_truss.jpg",
-     "refs/interior/cc_hall/15_long_hall_benches_planters.jpg"
+     "refs/interior/cc_hall/22_statue_bench_truss_gate4.jpg"
     ],
-    "x": -103.2,
+    "x": -104.132,
     "y": 0,
-    "z": 32.632,
+    "z": 32.996,
     "yawDeg": 111.339,
     "floor": "1F",
     "local_st": [
      33,
-     22
-    ]
+     21
+    ],
+    "reviewed_trace7_index": 3
    },
    {
     "spot": "매표소 카운터",
     "photos": [
-     "refs/interior/cc_hall/08_ticket_counter.jpg",
-     "refs/interior/cc_hall/16_ticket_counter_wide.jpg"
+     "refs/interior/cc_hall/08_ticket_counter.jpg"
     ],
-    "x": -82.866,
+    "x": -83.705,
     "y": 0,
-    "z": 90.178,
+    "z": 90.506,
     "yawDeg": 111.339,
     "floor": "1F",
     "local_st": [
      94,
-     20
-    ]
+     19.1
+    ],
+    "reviewed_trace7_index": 4
    },
    {
-    "spot": "키오스크 무인발권기",
+    "spot": "매표소 카운터",
     "photos": [
-     "refs/interior/cc_hall/01_red_kiosk_aisle_platform_edge.jpg",
-     "refs/interior/cc_hall/22_statue_bench_truss_gate4.jpg"
+     "refs/interior/cc_hall/16_ticket_counter_wide.jpg"
     ],
-    "x": -109.534,
+    "x": -81.056,
     "y": 0,
-    "z": 41.978,
-    "yawDeg": 111.339,
+    "z": 95.913,
+    "yawDeg": 79.333,
     "floor": "1F",
     "local_st": [
-     39.4,
-     12.7
-    ]
+     100,
+     19.6
+    ],
+    "reviewed_trace7_index": 4
    },
    {
     "spot": "팥붕슈붕 매대",
     "photos": [
      "refs/interior/cc_hall/23_patboong_kiosk_hall.jpg"
     ],
-    "x": -99.841,
+    "x": -99.328,
     "y": 0,
-    "z": 42.056,
-    "yawDeg": 111.339,
+    "z": 45.291,
+    "yawDeg": 78.719,
     "floor": "1F",
     "local_st": [
-     43,
-     21.7
-    ]
+     46.2,
+     21
+    ],
+    "reviewed_trace7_index": 6
    },
    {
     "spot": "전광판 상가 처마 · 공탕",
     "photos": [
-     "refs/interior/cc_hall/02_green_neon_hall_shopfront.jpg",
-     "refs/interior/cc_hall/03_gongtang_sign_departure_board.jpg",
-     "refs/interior/cc_hall/04_upper_corridor_neon_balcony.jpg"
+     "refs/interior/cc_hall/02_green_neon_hall_shopfront.jpg"
     ],
-    "x": -86.852,
+    "x": -89.414,
     "y": 0,
-    "z": 77.778,
+    "z": 61.602,
+    "yawDeg": 205.628,
+    "floor": "1F",
+    "local_st": [
+     65,
+     24.3
+    ],
+    "reviewed_trace7_index": 7
+   },
+   {
+    "spot": "전광판 상가 처마 · 공탕",
+    "photos": [
+     "refs/interior/cc_hall/03_gongtang_sign_departure_board.jpg"
+    ],
+    "x": -88.156,
+    "y": 0,
+    "z": 78.288,
     "yawDeg": 291.339,
     "floor": "1F",
     "local_st": [
      81,
-     20.8
-    ]
+     19.4
+    ],
+    "reviewed_trace7_index": 7
    },
    {
-    "spot": "2F 발코니 · 네온 처마",
+    "spot": "전광판 상가 처마 · 공탕",
     "photos": [
      "refs/interior/cc_hall/04_upper_corridor_neon_balcony.jpg"
     ],
-    "x": -95.002,
+    "x": -92.815,
     "y": 0,
-    "z": 63.785,
-    "yawDeg": 291.339,
+    "z": 68.835,
+    "yawDeg": 342.049,
     "floor": "1F",
     "local_st": [
-     65,
-     18.3
-    ]
+     70.5,
+     18.5
+    ],
+    "reviewed_trace7_index": 7
    },
    {
     "spot": "벽돌 복도(하차·이동)",
     "photos": [
-     "refs/interior/cc_hall/19_dropoff_info_board.jpg",
      "refs/interior/cc_hall/20_brick_corridor_lower.jpg"
     ],
     "x": -148.356,
@@ -1640,44 +1775,92 @@
     "local_st": [
      170,
      -80
-    ]
+    ],
+    "reviewed_trace7_index": 9
    },
    {
     "spot": "기둥 안내 사인",
     "photos": [
-     "refs/interior/cc_hall/07_marble_column_signage.jpg",
-     "refs/interior/cc_hall/12_column_curved_wall_sign.jpg"
+     "refs/interior/cc_hall/07_marble_column_signage.jpg"
     ],
-    "x": -93.975,
+    "x": -87.802,
     "y": 0,
-    "z": 72.187,
-    "yawDeg": 332.799,
+    "z": 69.024,
+    "yawDeg": 57.946,
     "floor": "1F",
     "local_st": [
-     73.2,
-     16.2
-    ]
+     72.5,
+     23.1
+    ],
+    "reviewed_trace7_index": 10
+   },
+   {
+    "spot": "기둥 안내 사인",
+    "photos": [
+     "refs/interior/cc_hall/12_column_curved_wall_sign.jpg"
+    ],
+    "x": -74.554,
+    "y": 0,
+    "z": 104.86,
+    "yawDeg": 267.478,
+    "floor": "1F",
+    "local_st": [
+     110.7,
+     22.4
+    ],
+    "reviewed_trace7_index": 10
    },
    {
     "spot": "낮은 로비",
     "photos": [
      "refs/interior/cc_hall/21_lobby_hall_wide.jpg"
     ],
-    "x": -108.032,
+    "x": -108.962,
     "y": 0,
-    "z": 21.637,
-    "yawDeg": 21.339,
+    "z": 26.402,
+    "yawDeg": 17.43,
     "floor": "1F",
     "local_st": [
-     21,
-     21.5
-    ]
+     25.1,
+     18.9
+    ],
+    "reviewed_trace7_index": 11
    },
    {
     "spot": "호호식당 입구 · 계단 · 노란 로고",
     "photos": [
-     "refs/interior/cc_famille/01_hoho_entrance_queue_hall_skylight.jpg",
-     "refs/interior/cc_famille/02_hoho_sign_slat_ceiling_from_outside.jpg",
+     "refs/interior/cc_famille/01_hoho_entrance_queue_hall_skylight.jpg"
+    ],
+    "x": -139.638,
+    "y": 0,
+    "z": 210.054,
+    "yawDeg": 21.339,
+    "floor": "1F",
+    "local_st": [
+     185,
+     -76.5
+    ],
+    "reviewed_trace7_index": 12
+   },
+   {
+    "spot": "호호식당 입구 · 계단 · 노란 로고",
+    "photos": [
+     "refs/interior/cc_famille/02_hoho_sign_slat_ceiling_from_outside.jpg"
+    ],
+    "x": -139.638,
+    "y": 0,
+    "z": 210.054,
+    "yawDeg": 21.339,
+    "floor": "1F",
+    "local_st": [
+     185,
+     -76.5
+    ],
+    "reviewed_trace7_index": 12
+   },
+   {
+    "spot": "호호식당 입구 · 계단 · 노란 로고",
+    "photos": [
      "refs/interior/cc_famille/04_hoho_dark_fascia_signage.jpg"
     ],
     "x": -139.638,
@@ -1688,7 +1871,8 @@
     "local_st": [
      185,
      -76.5
-    ]
+    ],
+    "reviewed_trace7_index": 12
    },
    {
     "spot": "호호식당 목재 격자와 식탁",
@@ -1703,7 +1887,8 @@
     "local_st": [
      179.3,
      -76.5
-    ]
+    ],
+    "reviewed_trace7_index": 13
    },
    {
     "spot": "Cha R 파사드",
@@ -1718,28 +1903,60 @@
     "local_st": [
      185,
      -58
-    ]
+    ],
+    "reviewed_trace7_index": 14
    },
    {
     "spot": "Cha R 체크 바닥과 붉은 부스",
     "photos": [
-     "refs/interior/cc_famille/07_chaR_booths_red_green.jpg",
-     "refs/interior/cc_famille/08_chaR_interior_wide.jpg"
+     "refs/interior/cc_famille/07_chaR_booths_red_green.jpg"
     ],
-    "x": -124.298,
+    "x": -122.698,
     "y": 0,
-    "z": 198.479,
-    "yawDeg": 21.339,
+    "z": 195.706,
+    "yawDeg": 111.339,
     "floor": "1F",
     "local_st": [
-     179.8,
-     -58
-    ]
+     177.8,
+     -55.5
+    ],
+    "reviewed_trace7_index": 15
+   },
+   {
+    "spot": "Cha R 체크 바닥과 붉은 부스",
+    "photos": [
+     "refs/interior/cc_famille/08_chaR_interior_wide.jpg"
+    ],
+    "x": -122.698,
+    "y": 0,
+    "z": 195.706,
+    "yawDeg": 111.339,
+    "floor": "1F",
+    "local_st": [
+     177.8,
+     -55.5
+    ],
+    "reviewed_trace7_index": 15
    },
    {
     "spot": "BUDDHA’S BELLY 파사드와 테라스",
     "photos": [
-     "refs/interior/cc_famille/09_buddhas_belly_front_brick.jpg",
+     "refs/interior/cc_famille/09_buddhas_belly_front_brick.jpg"
+    ],
+    "x": -105.64,
+    "y": 0,
+    "z": 196.773,
+    "yawDeg": 21.339,
+    "floor": "1F",
+    "local_st": [
+     185,
+     -40
+    ],
+    "reviewed_trace7_index": 16
+   },
+   {
+    "spot": "BUDDHA’S BELLY 파사드와 테라스",
+    "photos": [
      "refs/interior/cc_famille/11_brick_terrace_plants.jpg"
     ],
     "x": -105.64,
@@ -1750,7 +1967,8 @@
     "local_st": [
      185,
      -40
-    ]
+    ],
+    "reviewed_trace7_index": 16
    },
    {
     "spot": "BUDDHA’S BELLY 식당 내부",
@@ -1765,38 +1983,56 @@
     "local_st": [
      179.3,
      -40
-    ]
+    ],
+    "reviewed_trace7_index": 17
    },
    {
     "spot": "모던눌랑 흰 벽돌 아치",
     "photos": [
      "refs/interior/cc_famille/15_modern_nulang_brick_arch_entrance.jpg"
     ],
-    "x": -122.406,
+    "x": -121.933,
     "y": 0,
-    "z": 203.323,
+    "z": 204.533,
     "yawDeg": 201.339,
     "floor": "1F",
     "local_st": [
-     185,
+     186.3,
      -58
-    ]
+    ],
+    "reviewed_trace7_index": 18
    },
    {
     "spot": "모던눌랑 열차형 부스와 유리 지붕",
     "photos": [
-     "refs/interior/cc_famille/16_modern_nulang_glass_roof_train_theme.jpg",
-     "refs/interior/cc_famille/17_modern_nulang_truss_pendants.jpg"
+     "refs/interior/cc_famille/16_modern_nulang_glass_roof_train_theme.jpg"
     ],
-    "x": -113.775,
+    "x": -114.478,
     "y": 0,
-    "z": 213.049,
+    "z": 210.425,
     "yawDeg": 111.339,
     "floor": "1F",
     "local_st": [
-     197.2,
-     -53.5
-    ]
+     194.5,
+     -53.2
+    ],
+    "reviewed_trace7_index": 19
+   },
+   {
+    "spot": "모던눌랑 열차형 부스와 유리 지붕",
+    "photos": [
+     "refs/interior/cc_famille/17_modern_nulang_truss_pendants.jpg"
+    ],
+    "x": -114.478,
+    "y": 0,
+    "z": 210.425,
+    "yawDeg": 111.339,
+    "floor": "1F",
+    "local_st": [
+     194.5,
+     -53.2
+    ],
+    "reviewed_trace7_index": 19
    },
    {
     "spot": "Agra 벽돌 입구",
@@ -1811,37 +2047,40 @@
     "local_st": [
      185,
      -41
-    ]
+    ],
+    "reviewed_trace7_index": 20
    },
    {
     "spot": "Agra 크림 아치와 부스",
     "photos": [
      "refs/interior/cc_famille/19_agra_interior_arches.jpg"
     ],
-    "x": -101.121,
+    "x": -104.186,
     "y": 0,
-    "z": 209.715,
+    "z": 202.968,
     "yawDeg": 201.339,
     "floor": "1F",
     "local_st": [
-     198.7,
-     -40.5
-    ]
+     191.3,
+     -40.9
+    ],
+    "reviewed_trace7_index": 21
    },
    {
     "spot": "일상정원 파사드",
     "photos": [
      "refs/interior/cc_famille/12_ilsangjungwon_front.jpg"
     ],
-    "x": -69.314,
+    "x": -73.93,
     "y": 0,
-    "z": 182.581,
+    "z": 183.955,
     "yawDeg": 201.339,
     "floor": "1F",
     "local_st": [
-     185,
-     -1
-    ]
+     184.6,
+     -5.8
+    ],
+    "reviewed_trace7_index": 22
    },
    {
     "spot": "일상정원 수로와 금빛 천장",
@@ -1856,7 +2095,8 @@
     "local_st": [
      189.55,
      -5.5
-    ]
+    ],
+    "reviewed_trace7_index": 23
    },
    {
     "spot": "일상정원 측면 부스 복도",
@@ -1871,22 +2111,24 @@
     "local_st": [
      190.6,
      -9.5
-    ]
+    ],
+    "reviewed_trace7_index": 24
    },
    {
     "spot": "LEJARDIN 파사드",
     "photos": [
      "refs/interior/cc_famille/20_lejardin_storefront.jpg"
     ],
-    "x": -59.534,
+    "x": -60.931,
     "y": 0,
-    "z": 178.761,
+    "z": 179.307,
     "yawDeg": 21.339,
     "floor": "1F",
     "local_st": [
      185,
-     9.5
-    ]
+     8
+    ],
+    "reviewed_trace7_index": 25
    },
    {
     "spot": "LEJARDIN 꽃 냉장고와 진열대",
@@ -1901,7 +2143,8 @@
     "local_st": [
      179.5,
      9.5
-    ]
+    ],
+    "reviewed_trace7_index": 26
    },
    {
     "spot": "파미에스테이션 벽돌 간판",
@@ -1916,12 +2159,28 @@
     "local_st": [
      184,
      -18
-    ]
+    ],
+    "reviewed_trace7_index": 27
    },
    {
     "spot": "파미에스테이션 시계 거리",
     "photos": [
-     "refs/interior/cc_hall/11_long_corridor_clocks.jpg",
+     "refs/interior/cc_hall/11_long_corridor_clocks.jpg"
+    ],
+    "x": -146.624,
+    "y": 0,
+    "z": 212.783,
+    "yawDeg": 291.339,
+    "floor": "1F",
+    "local_st": [
+     185,
+     -84
+    ],
+    "reviewed_trace7_index": 28
+   },
+   {
+    "spot": "파미에스테이션 시계 거리",
+    "photos": [
      "refs/interior/cc_hall/17_brick_corridor_shops.jpg"
     ],
     "x": -146.624,
@@ -1932,7 +2191,8 @@
     "local_st": [
      185,
      -84
-    ]
+    ],
+    "reviewed_trace7_index": 28
    },
    {
     "spot": "하차장 안내판",
@@ -1947,7 +2207,8 @@
     "local_st": [
      174.5,
      -30
-    ]
+    ],
+    "reviewed_trace7_index": 29
    },
    {
     "spot": "신세계 연결 유리문",
@@ -1962,7 +2223,8 @@
     "local_st": [
      21,
      31
-    ]
+    ],
+    "reviewed_trace7_index": 30
    },
    {
     "spot": "B1 대리석·금테 격자 천장 통로",
@@ -1977,7 +2239,8 @@
     "local_st": [
      110,
      17.2
-    ]
+    ],
+    "reviewed_trace7_index": 31
    },
    {
     "spot": "메가박스 센트럴 입구",
@@ -1992,7 +2255,8 @@
     "local_st": [
      171.6,
      -31
-    ]
+    ],
+    "reviewed_trace7_index": 32
    },
    {
     "spot": "2F 식당가 · 모던샤브하우스 참고 공간",
@@ -2008,7 +2272,150 @@
      122.8,
      32.6
     ],
-    "uncertainty": "사진의 실제 층·점포 좌표 미확정. 기존 2F 빈 베이에 천장/부스/집기 특성을 적용했으며 외벽과 외부 조망은 변경하지 않음."
+    "uncertainty": "사진의 실제 층·점포 좌표 미확정. 기존 2F 빈 베이에 천장/부스/집기 특성을 적용했으며 외벽과 외부 조망은 변경하지 않음.",
+    "reviewed_trace7_index": 33
+   },
+   {
+    "spot": "무인발권기 · 모델 점검",
+    "photos": [],
+    "x": -109.534,
+    "y": 0,
+    "z": 41.978,
+    "yawDeg": 111.339,
+    "floor": "1F",
+    "local_st": [
+     39.4,
+     12.7
+    ],
+    "reference_scope": "모델 기능 점검. 외부 승차장 사진01과 잘못 연결했던 비교를 해제."
+   },
+   {
+    "spot": "파미에 주차장 · 주차열",
+    "photos": [
+     "refs/aerial/famille_back.jpg"
+    ],
+    "x": -129.092,
+    "y": 0.06,
+    "z": 249.415,
+    "yawDeg": 244.79,
+    "floor": "1F",
+    "local_st": [
+     225.5,
+     -81
+    ],
+    "reference_scope": "항공사진의 지상 비교 시점. 부지와 도로 제외 범위는 항공/OSM, 구획 배열은 근사."
+   },
+   {
+    "spot": "파미에 주차장 · 초록 지붕 부스",
+    "photos": [
+     "refs/interior/famille_back/16_parking_entrance_booth_pine_sign.jpg"
+    ],
+    "x": -99.759,
+    "y": 0,
+    "z": 250.302,
+    "yawDeg": 354.774,
+    "floor": "1F",
+    "local_st": [
+     237,
+     -54
+    ],
+    "reference_scope": "시설 형태는 사진16; 정확한 부스 위치는 추정."
+   },
+   {
+    "spot": "파미에 주차장 · 5분당 550원",
+    "photos": [
+     "refs/interior/famille_back/23_parking_fee_sign.jpg"
+    ],
+    "x": -94.291,
+    "y": 0,
+    "z": 240.114,
+    "yawDeg": 55.029,
+    "floor": "1F",
+    "local_st": [
+     229.5,
+     -45.2
+    ],
+    "reference_scope": "사진23 요금 문구를 야외 안내판에 옮긴 모델 표현; 원본 촬영 장소는 실내 카운터."
+   },
+   {
+    "spot": "파미에 후문 · 벽돌과 유리 캐노피",
+    "photos": [
+     "refs/interior/famille_back/07_famille_building_glass_roof_lawn.jpg"
+    ],
+    "x": -130.366,
+    "y": 0.06,
+    "z": 246.155,
+    "yawDeg": 336.339,
+    "floor": "1F",
+    "local_st": [
+     222,
+     -81
+    ],
+    "reference_scope": "원본은 다른 위치의 DEVIL'S DOOR 건물. 요청한 벽돌/곡면 유리 모티프만 적용; 현 후면의 확정 외관 아님."
+   },
+   {
+    "spot": "파미에 후면 · 아치창",
+    "photos": [
+     "refs/interior/famille_back/08_famille_facade_arched_windows_night.jpg"
+    ],
+    "x": -134.893,
+    "y": 0.06,
+    "z": 231.82,
+    "yawDeg": 301.958,
+    "floor": "1F",
+    "local_st": [
+     207,
+     -80
+    ],
+    "reference_scope": "다른 위치 건물의 아치창 모티프. 이곳 창 수/간격은 추정."
+   },
+   {
+    "spot": "파미에 후문 · 처마 아래 보행로",
+    "photos": [
+     "refs/interior/famille_back/09_brick_wall_walkway_hedge_night.jpg"
+    ],
+    "x": -146.288,
+    "y": 0.06,
+    "z": 235.627,
+    "yawDeg": 291.339,
+    "floor": "1F",
+    "local_st": [
+     206.4,
+     -92
+    ],
+    "reference_scope": "다른 위치 사진의 벽돌/처마 보행로 모티프; 주 출입문과 원형관 연결 확보."
+   },
+   {
+    "spot": "파미에 주차장 · 관목과 주차열",
+    "photos": [
+     "refs/interior/famille_back/05_back_parking_lot_trees_apartments.jpg"
+    ],
+    "x": -129.274,
+    "y": 0.06,
+    "z": 248.95,
+    "yawDeg": 149.214,
+    "floor": "1F",
+    "local_st": [
+     225,
+     -81
+    ],
+    "reference_scope": "주차장/관목 디테일 참고; 원본 매장 앞 좌표와 이곳의 동일성은 미확인."
+   },
+   {
+    "spot": "파미에 주차장 · 장애인 구획",
+    "photos": [
+     "refs/interior/famille_back/06_back_parking_lot_handicap_hedge.jpg"
+    ],
+    "x": -131.167,
+    "y": 0.06,
+    "z": 230.364,
+    "yawDeg": 256.993,
+    "floor": "1F",
+    "local_st": [
+     207,
+     -76
+    ],
+    "reference_scope": "장애인 구획/화단의 형태 참고; 실제 지정 구획 위치는 미확인."
    }
   ],
   "round7": {
@@ -2142,6 +2549,184 @@
     "max_detail_group_quads": 18607,
     "per_group_budget": 120000
    }
+  },
+  "round8": {
+   "scope": "Only js/places/centralcity.js and data/research/centralcity.json; preserve all existing interiors, OSM footprints, levels, junctions and parking decks. Add south surface parking and rear entrance details; refine all round7 interior comparison views.",
+   "source_corrections": [
+    "famille_back/07 visibly carries DEVIL'S DOOR. 07–09 are architectural motifs only, not proof of this rear facade. Actual Devil's Door POI is (371.8,8.1) in the east parking job; no shop, steel door or brewery was placed here.",
+    "Photo17 has a public-parking notice reading 5분 400원; 17–18 location is unconfirmed and was not used for this fee sign or building. Photo23 explicitly lists 파미에주차장 5분당550원 and is used as requested.",
+    "Photos19–22 of decks/elevator tower are not verified for the south lot and were not copied here.",
+    "No south amenity:parking area exists in data/osm.json; the large landuse:retail polygon is not drawn by city.js and does not need claiming."
+   ],
+   "parking": {
+    "envelope_world_xz": [
+     [
+      -153,
+      239
+     ],
+     [
+      -71,
+      207
+     ],
+     [
+      -64,
+      224
+     ],
+     [
+      -51,
+      234
+     ],
+     [
+      -35,
+      233
+     ],
+     [
+      -19,
+      225
+     ],
+     [
+      -5,
+      238
+     ],
+     [
+      -32,
+      255
+     ],
+     [
+      -65,
+      270
+     ],
+     [
+      -83,
+      291
+     ],
+     [
+      -114,
+      305
+     ],
+     [
+      -127,
+      309
+     ],
+     [
+      -140,
+      282
+     ],
+     [
+      -153,
+      261
+     ],
+     [
+      -160,
+      247
+     ]
+    ],
+    "basis": "Approximate paved apron traced against aerial; individual stall placement clips 9 sample points per 2.5×5m space against all nearby surface roads/footways plus 0.7m and OSM building footprints.",
+    "claimRoads_added": [
+     816395056,
+     1262591320
+    ],
+    "claimRoads_method": "Both service ways redrawn over their full OSM paths, with original widths. All primary roads, links, cycleway and public sidewalks stay city-owned.",
+    "claimAreas_added": [],
+    "occupancy": "round(valid ordinary spaces × 0.70), deterministic exact count; 2 additional accessible spaces remain empty.",
+    "booth_local_st": [
+     228,
+     -49.5
+    ],
+    "booth_features": [
+     "white office/dark window",
+     "green shallow curved translucent roof",
+     "entrance open barrier / exit horizontal barrier",
+     "payment terminals",
+     "5분당 550원 board",
+     "black direction totem",
+     "convex mirror",
+     "orange flex posts",
+     "pine planter"
+    ],
+    "walking": "3.6m facade apron s204.6..208.2,t-97..-33; 4m rear-door link s207..227.4,t-83..-79; 2.2m path around west/south of round pavilion to existing south entrance. All slot sample points within 1.5m of the round-pavilion connector centerline are excluded.",
+    "ordinary_spaces": 80,
+    "parked_cars": 56,
+    "accessible_spaces": 2,
+    "ordinary_occupancy_percent": 70,
+    "total_occupancy_percent": 68.29,
+    "booth_world_xz": [
+     -98.842,
+     240.282
+    ]
+   },
+   "rear_facade": {
+    "local_st": "Existing terminal edge9, t=-96..-35, s=sE9(t); 10 additional arched windows in the existing footprint, brick facing below y4.7, existing stone/upper glazing/doors kept.",
+    "canopy": "Shallow curved glass roof over rear walkway, s204.2..208.6, t-96..-35, y4.72..5.54. Kept below roof parking; not a new building or a replacement rooftop.",
+    "uncertainty": "Brick/arch/canopy motif requested by user but supplied source building is elsewhere; exact rear facade finish and window sequence here remain an inference.",
+    "endpoints_world_xz": [
+     [
+      -150.861,
+      234.915
+     ],
+     [
+      -94.256,
+      212.174
+     ]
+    ]
+   },
+   "interior": [
+    "Soft irregular pale green-grey polished marble replaces visibly repeated wave grain; hall column cladding uses the same quiet stone.",
+    "Platform ceiling seams and door hardware, hall X braces and suspended lights, ticket counter slats/service fixtures, populated kiosks, sculpture bench detail and balcony rail/soffit mesh.",
+    "Famille tenant-specific ceiling structures, brick/wood fixtures, restaurant furnishings, B1 cornices and entrance detail, upper dining detail; preserve all existing stock, tables, passages and vertical access.",
+    "Hall roof X-brace spacing, café pendant/table placement, kiosk stock, service counter numbering/microphones are photo-informed estimates; existing structural footprints and circulation remain."
+   ],
+   "uncertainties": [
+    "South lot extent, stall count, bay angles, occupancy, lamp/planter/booth positions and new entrance spur are photo/aerial approximations, not a measured parking plan.",
+    "Booth location cannot be fixed from photo16. Fee follows supplied photo23/request; no independent live-price claim.",
+    "Interior dimensions, store sequence and exact furniture quantities remain inferred within existing module envelopes.",
+    "No screenshots produced in sandbox as instructed. Updated modeling.trace is supplied for operator comparison; final visual verification is pending."
+   ],
+   "validation": {
+    "smoke_command": "node tests/smoke.mjs centralcity station gotomall",
+    "smoke_result": "OK; all lazy detail groups built without errors",
+    "full_walk_command": "node tests/walk.mjs",
+    "full_walk_result": "428 ok, 0 blocked; final unmodified node tests/walk.mjs run passed after concurrent newcore build export was restored.",
+    "isolated_full_world": "Current PLACES excluding only newcore: 399 ok, 0 blocked (city included). No module or test files altered for this check.",
+    "subset_note": "Loading only centralcity/station/gotomall/shinsegae/jwmarriott leaves four unrelated gotomall/J1 routes blocked because other world modules are omitted; all-current-modules-except-newcore diagnostic clears these.",
+    "new_parking_routes": "5/5 BFS routes pass: lot→rear door, rear door→Famille street, rear path→round south door, south door→round interior, booth→rear walking apron.",
+    "interior_routes": "8/8 entrance-to-interior BFS routes pass: Hoho, Cha R, Buddha, Modern, Agra, garden, florist, 2F reference restaurant.",
+    "trace_audit": "57/57 have nearby supporting floor and zero capsule displacement with centralcity plus station/gotomall/shinsegae/JW and generic city. Before correction, ticket-wide camera touched column s97.5; shifted to s100,t19.6.",
+    "trace_near_ray_audit": "Original revised camera set: no eye-level foreground intersection within 1.2m; remaining ticket-wide capsule issue subsequently corrected.",
+    "detail_groups": 14,
+    "detail_errors": [],
+    "base_quads": 89009,
+    "spawns": 13,
+    "zones": 35,
+    "elevators": 5,
+    "preserved_connections": [
+     "J3",
+     "J4 1F/B1",
+     "J6",
+     "J7"
+    ],
+    "syntax": "node --check js/places/centralcity.js passed",
+    "diff_check": "git diff --check for both owned files passed",
+    "visual": "All twelve supplied comparison sheets reviewed by delegated hall/Famille audits; selected original back photos inspected. tests/shot.mjs not run as instructed. New render verification remains with operator.",
+    "status": "Passed required combined smoke and full-world walk; operator render comparison pending.",
+    "total_quads": 209604,
+    "lazy_detail_quads": 120595,
+    "final_checks": [
+     "node --check passed",
+     "owned-file git diff --check passed",
+     "research JSON parsed",
+     "57 trace entries reference 56 existing files"
+    ]
+   },
+   "trace_notes": "57 entries: one photo each for 56 unique provided reference files, plus one model-only kiosk checkpoint. y is player-foot height. Every referenced file exists; floor/capsule checks pass for all57.",
+   "preserved": [
+    "all previous furnishing groups and objects retained or repositioned",
+    "OSM building footprints and upper parking decks",
+    "B1/1F/2F/R elevations and all five elevators",
+    "J3/J4/J6/J7",
+    "public primary roads and sidewalks",
+    "only two specified files written; no commit or screenshots generated"
+   ]
   }
  },
  "source_hierarchy": {

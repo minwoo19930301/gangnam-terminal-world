@@ -1,0 +1,957 @@
+{
+  "id": "newcore",
+  "name": "뉴코아아울렛 강남점",
+  "updated": "2026-11-06",
+  "sources": [
+    {
+      "url": "https://www.elandretail.com/store02.do?BDID=0003001B&branchID=00110001&lang=000600KO",
+      "title": "이랜드리테일 공식 뉴코아 강남점 1관 층별안내",
+      "accessed": "2026-11-06",
+      "type": "official"
+    },
+    {
+      "url": "https://www.elandretail.com/store02.do?BDID=0003002B&branchID=00110001&lang=000600KO",
+      "title": "이랜드리테일 공식 뉴코아 강남점 2관 층별안내",
+      "accessed": "2026-11-06",
+      "type": "official"
+    },
+    {
+      "url": "https://www.elandretail.com/store02.do?BDID=0003003B&branchID=00110001&lang=000600KO",
+      "title": "이랜드리테일 공식 뉴코아 강남점 3관 층별안내",
+      "accessed": "2026-11-06",
+      "type": "official"
+    },
+    {
+      "url": "https://www.elandretail.com/m/store/store_08.do?branchID=00110001&lang=000600KO",
+      "title": "이랜드리테일 공식 뉴코아 강남점 식당가",
+      "accessed": "2026-11-06",
+      "type": "official"
+    },
+    {
+      "url": "https://eland.com/",
+      "title": "이랜드 2026-10-20 뉴코아 강남점 3관 옥상 주차장 환경개선 공사 공고",
+      "accessed": "2026-11-06",
+      "type": "official"
+    },
+    {
+      "url": "data/osm.json",
+      "title": "실제 건물 폴리곤·자전거 대여소·정류장 노드",
+      "type": "geometry"
+    },
+    {
+      "url": "refs/aerial/newcore_banwon.jpg",
+      "title": "10m 좌표 격자 항공사진; 건물열과 잠원로 방향",
+      "type": "aerial"
+    },
+    {
+      "url": "refs/roadview/manifest.json",
+      "title": "2026-06 카카오 로드뷰 위치·방향 설명",
+      "type": "operator_reference"
+    },
+    {
+      "url": "refs/interior/newcore/notes.json",
+      "title": "2026-11 블로그 참조 메모; 방향 추론은 OSM과 사진으로 재검토",
+      "type": "operator_reference"
+    },
+    {
+      "url": "refs/roadview/newcore_01_front.jpg",
+      "title": "newcore_01_front.jpg",
+      "capture_date": "2026-06",
+      "type": "roadview"
+    },
+    {
+      "url": "refs/roadview/newcore_02_across_xi.jpg",
+      "title": "newcore_02_across_xi.jpg",
+      "capture_date": "2026-06",
+      "type": "roadview"
+    },
+    {
+      "url": "refs/roadview/newcore_03_along_SW.jpg",
+      "title": "newcore_03_along_SW.jpg",
+      "capture_date": "2026-06",
+      "type": "roadview"
+    },
+    {
+      "url": "https://m.blog.naver.com/letslookandeat/224466455531",
+      "local": "refs/interior/newcore/01_exterior_jamwonro_facade_wide.jpg",
+      "title": "흰 석재 아치(원형 아치창) 연속 파사드, 1층 가로수, 적색/청록 어닝 매장, 도로변 자전거 거치대",
+      "post_date": "2026-11 (게시 11/5 전후)",
+      "type": "provided_blog_photo"
+    },
+    {
+      "url": "https://m.blog.naver.com/letslookandeat/224466455531",
+      "local": "refs/interior/newcore/02_exterior_corner_signpole.jpg",
+      "title": "표지판(잠원역/남부터미널·고속터미널/반원초교), 건물 상단 파란 'P' 주차 표시 탑, 파란 유리 수직 계단탑, 3관 아치",
+      "post_date": "2026-11",
+      "type": "provided_blog_photo"
+    },
+    {
+      "url": "https://m.blog.naver.com/letslookandeat/224466455531",
+      "local": "refs/interior/newcore/03_exterior_kimsclub_awning_gwan3.jpg",
+      "title": "검은 어닝 'KIM'S CLUB' 간판, 아치 위 '3' 표기",
+      "post_date": "2026-11",
+      "type": "provided_blog_photo"
+    },
+    {
+      "url": "https://m.blog.naver.com/love__lover/224464082861",
+      "local": "refs/interior/newcore/04_exterior_crosswalk_view.jpg",
+      "title": "흰 건물 매스와 상단 탑, 하늘 비중 큼(원경 참고용)",
+      "post_date": "2026-11-03",
+      "type": "provided_blog_photo"
+    },
+    {
+      "url": "https://m.blog.naver.com/love__lover/224464082861",
+      "local": "refs/interior/newcore/05_exterior_gwan1_side.jpg",
+      "title": "줄무늬(회색/크림) 상부 벽에 'NEWCORE' 로고, 아치 2개 아래 검은 'NEWCORE OUTLET' 어닝, 아치 안 '1 뉴코아1관', 우리은행 신반포금융센터 간판, 우측 유리 수직 계단탑, 앞 보도 파란 장애인 주차면·바닥 벽돌 포장",
+      "post_date": "2026-11-03",
+      "type": "provided_blog_photo"
+    },
+    {
+      "url": "https://m.blog.naver.com/letslookandeat/224466455531",
+      "local": "refs/interior/newcore/06_gwan3_1f_corridor_chai797.jpg",
+      "title": "층고 높은 오픈 천장, 밝은 석재/타일 바닥, 검은 유리 매장 전면",
+      "post_date": "2026-11",
+      "type": "provided_blog_photo"
+    },
+    {
+      "url": "https://m.blog.naver.com/love__lover/224464082861",
+      "local": "refs/interior/newcore/07_b1_stair_sign_1gwan_foodstreet.jpg",
+      "title": "'1관 B1 / 킴스 푸드 스트리트 / KIM'S CLUB' 방향 표지",
+      "post_date": "2026-11-03",
+      "type": "provided_blog_photo"
+    },
+    {
+      "url": "https://m.blog.naver.com/love__lover/224464082861",
+      "local": "refs/interior/newcore/08_foodstreet_map.jpg",
+      "title": "'KIM'S FOOD STREET' 배치도와 입점 업체(레스토랑 포함)",
+      "post_date": "2026-11-03",
+      "type": "provided_blog_photo"
+    },
+    {
+      "url": "https://m.blog.naver.com/love__lover/224464082861",
+      "local": "refs/interior/newcore/09_b1_foodstreet_aisle.jpg",
+      "title": "매장 오픈형 카운터가 통로 한쪽에 연속, 타일 바닥, 어두운 노출 천장",
+      "post_date": "2026-11-03",
+      "type": "provided_blog_photo"
+    },
+    {
+      "url": "https://m.blog.naver.com/love__lover/224464082861",
+      "local": "refs/interior/newcore/10_b1_foodstreet_sotnaeum_front.jpg",
+      "title": "오픈형 매장, 목재 격자 파티션과 식물 화분, 메뉴 스탠드 간판",
+      "post_date": "2026-11-03",
+      "type": "provided_blog_photo"
+    },
+    {
+      "url": "https://m.blog.naver.com/love__lover/224464082861",
+      "local": "refs/interior/newcore/11_b1_sotnaeum_signage.jpg",
+      "title": "돌출 간판 '솥내음 정갈한 한끼 Tradition', 아래 주방 카운터",
+      "post_date": "2026-11-03",
+      "type": "provided_blog_photo"
+    },
+    {
+      "url": "https://m.blog.naver.com/cherish37/224465298452",
+      "local": "refs/interior/newcore/12_b1_foodstreet_wide_shops.jpg",
+      "title": "오픈형 매장 열, 연한 목재 파티션과 화분 난간, 헤링본 느낌 바닥",
+      "post_date": "2026-11-04",
+      "type": "provided_blog_photo"
+    },
+    {
+      "url": "https://m.blog.naver.com/cherish37/224465298452",
+      "local": "refs/interior/newcore/13_b1_foodstreet_seating.jpg",
+      "title": "연한 목재 테이블·의자 배열, 천장 노출 덕트와 조명",
+      "post_date": "2026-11-04",
+      "type": "provided_blog_photo"
+    },
+    {
+      "url": "https://m.blog.naver.com/jinheelp/224465459283",
+      "local": "refs/interior/newcore/14_b1_foodstreet_row.jpg",
+      "title": "매장 줄, 세로 LED 메뉴 사인, 목재 격자 전면",
+      "post_date": "2026-11 (11/4~5 전후)",
+      "type": "provided_blog_photo"
+    },
+    {
+      "url": "https://m.blog.naver.com/jinheelp/224465459283",
+      "local": "refs/interior/newcore/15_b1_foodstreet_hall_ceiling.jpg",
+      "title": "낮은 검은 노출 천장·덕트·트랙조명, 중앙 통로, 테이블 구역",
+      "post_date": "2026-11",
+      "type": "provided_blog_photo"
+    },
+    {
+      "url": "https://m.blog.naver.com/chlgpdus07/224462815205",
+      "local": "refs/interior/newcore/16_foodstreet_directory_board.jpg",
+      "title": "'KIM'S FOOD STREET' 9개국 57개국 음식 소개 보드, 입점 로고 목록(스타벅스·프랑제리 등)",
+      "post_date": "2026-11-02",
+      "type": "provided_blog_photo"
+    },
+    {
+      "url": "https://m.blog.naver.com/chlgpdus07/224462815205",
+      "local": "refs/interior/newcore/17_bonghyeja_storefront.jpg",
+      "title": "화이트 입체 간판, 다크 목재 전면 인테리어",
+      "post_date": "2026-11-02",
+      "type": "provided_blog_photo"
+    },
+    {
+      "url": "https://m.blog.naver.com/love__lover/224464082861",
+      "local": "refs/interior/newcore/18_b1_foodstreet_tables.jpg",
+      "title": "테이블 배치, 기둥 표지(화장실 표시), 오픈 매장",
+      "post_date": "2026-11-03",
+      "type": "provided_blog_photo"
+    }
+  ],
+  "buildings": [
+    {
+      "osm": 413372929,
+      "name": "뉴코아아울렛강남점(1관)",
+      "poly": [
+        [
+          271.95,
+          -316.32
+        ],
+        [
+          302.67,
+          -328.87
+        ],
+        [
+          267.83,
+          -413.02
+        ],
+        [
+          237.1,
+          -400.49
+        ]
+      ],
+      "osm_height_m": 9,
+      "osm_height_status": "9m은 일괄 기본값이므로 실제 층수 근거로 대체",
+      "use": "뉴코아아울렛강남점(1관)"
+    },
+    {
+      "osm": 413372930,
+      "name": "뉴코아아울렛강남점(2관)",
+      "poly": [
+        [
+          217.32,
+          -421.12
+        ],
+        [
+          257.91,
+          -438.1
+        ],
+        [
+          232.46,
+          -498.09
+        ],
+        [
+          191.87,
+          -481.11
+        ]
+      ],
+      "osm_height_m": 9,
+      "osm_height_status": "9m은 일괄 기본값이므로 실제 층수 근거로 대체",
+      "use": "뉴코아아울렛강남점(2관)"
+    },
+    {
+      "osm": 413372931,
+      "name": "뉴코아아울렛 강남점",
+      "poly": [
+        [
+          181.88,
+          -502.15
+        ],
+        [
+          219.19,
+          -517.42
+        ],
+        [
+          208.85,
+          -542.33
+        ],
+        [
+          171.54,
+          -527.07
+        ]
+      ],
+      "osm_height_m": 9,
+      "osm_height_status": "9m은 일괄 기본값이므로 실제 층수 근거로 대체",
+      "use": "주차 건물 (OSM amenity=parking)"
+    },
+    {
+      "osm": 443718139,
+      "name": "킴스클럽뉴코아아울렛강남점",
+      "poly": [
+        [
+          172.67,
+          -538.69
+        ],
+        [
+          201.44,
+          -549.74
+        ],
+        [
+          180.01,
+          -604.74
+        ],
+        [
+          151.25,
+          -593.69
+        ]
+      ],
+      "osm_height_m": 9,
+      "osm_height_status": "9m은 일괄 기본값이므로 실제 층수 근거로 대체",
+      "use": "킴스클럽뉴코아아울렛강남점"
+    }
+  ],
+  "floors": [
+    {
+      "building": "1관",
+      "floor": "B1",
+      "use": "킴스클럽·푸드스트리트",
+      "source": "이랜드리테일 공식 층별안내",
+      "guess": false
+    },
+    {
+      "building": "1관",
+      "floor": "1F",
+      "use": "아웃도어·화장품",
+      "source": "이랜드리테일 공식 층별안내",
+      "guess": false
+    },
+    {
+      "building": "1관",
+      "floor": "2F",
+      "use": "여성·마담·란제리",
+      "source": "이랜드리테일 공식 층별안내",
+      "guess": false
+    },
+    {
+      "building": "1관",
+      "floor": "3F",
+      "use": "아동·유아휴게실",
+      "source": "이랜드리테일 공식 층별안내",
+      "guess": false
+    },
+    {
+      "building": "1관",
+      "floor": "4F",
+      "use": "모던하우스",
+      "source": "이랜드리테일 공식 층별안내",
+      "guess": false
+    },
+    {
+      "building": "1관",
+      "floor": "5F",
+      "use": "전문식당가·문화센터·VIP라운지",
+      "source": "이랜드리테일 공식 층별안내",
+      "guess": false
+    },
+    {
+      "building": "2관",
+      "floor": "B1",
+      "use": "킴스클럽·델리",
+      "source": "이랜드리테일 공식 층별안내",
+      "guess": false
+    },
+    {
+      "building": "2관",
+      "floor": "1F",
+      "use": "수입명품·패션잡화 전문관",
+      "source": "이랜드리테일 공식 층별안내",
+      "guess": false
+    },
+    {
+      "building": "2관",
+      "floor": "2F",
+      "use": "컨템포러리·영캐주얼",
+      "source": "이랜드리테일 공식 층별안내",
+      "guess": false
+    },
+    {
+      "building": "2관",
+      "floor": "3F",
+      "use": "여성 전문관",
+      "source": "이랜드리테일 공식 층별안내",
+      "guess": false
+    },
+    {
+      "building": "2관",
+      "floor": "4F",
+      "use": "스포츠·캐주얼",
+      "source": "이랜드리테일 공식 층별안내",
+      "guess": false
+    },
+    {
+      "building": "2관",
+      "floor": "5F",
+      "use": "남성·골프",
+      "source": "이랜드리테일 공식 층별안내",
+      "guess": false
+    },
+    {
+      "building": "3관",
+      "floor": "1F",
+      "use": "푸드",
+      "source": "이랜드리테일 공식 층별안내",
+      "guess": false
+    }
+  ],
+  "notes": [
+    "사진·Kakao 위치·OSM을 블로그 방향 설명보다 우선했다. 1관은 남쪽 413372929, 2관은 중간 413372930, 별도 주차 건물413372931, 북쪽 킴스클럽443718139는 3관 저층 푸드동으로 대응한다.",
+    "OSM relation6169292는 413372929·413372930·413372931과 똑같은 세 외곽을 중복 수록한다. generic city의 중복 벽을 막기 위해 relation id도 선점하고 실제 건물은 한 번씩만 만든다.",
+    "2관 앞 뉴코아아울렛 버스정류장 노드(250.47,-461.17), 맞은편 뉴코아백화점(278.45,-472.23). 남쪽 신반포로 쪽 뉴코아백화점(276.63,-248.21)과 혼동하지 않는다.",
+    "따릉이 뉴코아 킴스클럽 앞: OSM12372983635, ref2523, (206.06,-569.92).",
+    "사진02 도로표지에는 잠원로4길이 적혀 있다. 블로그 메모의 신반포로 교차 코너 추론은 사진과 맞지 않으므로 북쪽 3관 주차탑 장면으로 대응했다.",
+    "로드뷰03 파일명 along_SW보다 실제 남동 화살표를 우선. 2관에서 1관 쪽 SSE를 보는 장면으로 대응했다.",
+    "1관·2관은 공식 층별안내상 B1 및 지상5층이다. 3관 공식 안내는1F 푸드만 있으며 사진상 높은 아치+옥상 주차장; 임의의 지상3개 매장층을 만들 근거가 없다.",
+    "사진16의 문구는 전세계9개국,57개국 맛집으로 인쇄되어 있으나 본 모델은 음식점명·관·층만 사용한다.",
+    "사진08 안내도는 1관B1 점포들의 상대 배치, 두 끝 계단·승강기, 중앙 에스컬레이터, 킴스클럽 연결 방향을 보여주지만 북쪽 화살표가 없다.",
+    "사진09 통로 바닥은 회갈색 작은 직사각 타일의 헤링본, 좌석 구역은 큰 밝은 회색 정사각 타일. 천장은 검은 노출 철골·덕트·트랙등·황동 펜던트; 솥내음은 밝은 오크 격자 하부 패널과 길게 이어진 화분, 밝은 테이블·의자.",
+    "사진06 3관 복도는 밝은 대형 타일·검은 메쉬/노출 천장·검은 유리 차이797 전면·검은 메뉴 스탠드. 실내 끝 표지는2관 방향이다.",
+    "외관은 크림 석재 기둥·돌림띠·아치 몰딩, 청회색 타일 인필, 검은 어닝과 목높이 유리 쇼윈도, 상부 크림/회색 세로 띠. 3관은 청록·적색·검은 어닝과 파란P/유리 세로줄 주차탑.",
+    "2관 하나은행은 로컬 OSM POI2103907404(247.55,-445.61)로 확인했다. 점포 존재·대략 위치는 OSM 근거이며 전면 bay 폭과 간판 위치는 근사 배치다."
+  ],
+  "modeling": {
+    "round": 8,
+    "scope": "실제 OSM 네 건물의 외관과 지상 출입구, 1·2관 1F 및 1관 B1 푸드스트리트, 3관 1F 식당가, 나머지 상층 슬래브·입면과 수직 동선. 잠원로 도로 본체는 공용 도시 모듈 소유.",
+    "claims": [
+      413372929,
+      413372930,
+      413372931,
+      443718139,
+      6169292
+    ],
+    "trace": [
+      {
+        "spot": "로드뷰_2관_디자이너스_정면",
+        "photos": [
+          "refs/roadview/newcore_01_front.jpg"
+        ],
+        "x": 257,
+        "y": 0,
+        "z": -474,
+        "yawDeg": 113,
+        "note": "사진 특징을 OSM 외곽에 대응시킨 근사 비교 카메라; 실측 카메라 아님"
+      },
+      {
+        "spot": "로드뷰_잠원로_맞은편_신반포자이",
+        "photos": [
+          "refs/roadview/newcore_02_across_xi.jpg"
+        ],
+        "x": 257,
+        "y": 0,
+        "z": -474,
+        "yawDeg": 293,
+        "note": "동일 로드뷰 위치에서 잠원로 건너편을 봄. 도로와 아파트는 공용 도시 모듈 소유; newcore는 보도 접점만 구현."
+      },
+      {
+        "spot": "로드뷰_2관에서_1관_방향",
+        "photos": [
+          "refs/roadview/newcore_03_along_SW.jpg"
+        ],
+        "x": 257,
+        "y": 0,
+        "z": -474,
+        "yawDeg": 202.5,
+        "note": "파일명 SW 대신 사진 남동 방향 표시와 OSM 건물열을 따라 SSE(+u)로 판독. yaw203은 남쪽에서 동쪽으로23도이며157은 반대쪽 SSW이므로 사용하지 않는다."
+      },
+      {
+        "spot": "3관_연속아치_맞은편",
+        "photos": [
+          "refs/interior/newcore/01_exterior_jamwonro_facade_wide.jpg"
+        ],
+        "x": 218,
+        "y": 0,
+        "z": -572,
+        "yawDeg": 112,
+        "note": "사진 특징을 OSM 외곽에 대응시킨 근사 비교 카메라; 실측 카메라 아님"
+      },
+      {
+        "spot": "3관_북쪽_주차탑",
+        "photos": [
+          "refs/interior/newcore/02_exterior_corner_signpole.jpg"
+        ],
+        "x": 204,
+        "y": 0,
+        "z": -612,
+        "yawDeg": 138,
+        "note": "사진 특징을 OSM 외곽에 대응시킨 근사 비교 카메라; 실측 카메라 아님"
+      },
+      {
+        "spot": "3관_킴스클럽_어닝",
+        "photos": [
+          "refs/interior/newcore/03_exterior_kimsclub_awning_gwan3.jpg"
+        ],
+        "x": 195,
+        "y": 0,
+        "z": -587,
+        "yawDeg": 111,
+        "note": "사진 특징을 OSM 외곽에 대응시킨 근사 비교 카메라; 실측 카메라 아님"
+      },
+      {
+        "spot": "1관_남측_횡단보도_원경",
+        "photos": [
+          "refs/interior/newcore/04_exterior_crosswalk_view.jpg"
+        ],
+        "x": 308,
+        "y": 0,
+        "z": -292,
+        "yawDeg": 20,
+        "note": "사진 특징을 OSM 외곽에 대응시킨 근사 비교 카메라; 실측 카메라 아님"
+      },
+      {
+        "spot": "1관_남측_이중아치_유리탑",
+        "photos": [
+          "refs/interior/newcore/05_exterior_gwan1_side.jpg"
+        ],
+        "x": 292,
+        "y": 0,
+        "z": -306,
+        "yawDeg": 21,
+        "note": "사진 특징을 OSM 외곽에 대응시킨 근사 비교 카메라; 실측 카메라 아님"
+      },
+      {
+        "spot": "3관_차이797_유리전면",
+        "photos": [
+          "refs/interior/newcore/06_gwan3_1f_corridor_chai797.jpg"
+        ],
+        "x": 172.78,
+        "y": 0,
+        "z": -584.74,
+        "yawDeg": 353.12,
+        "note": "실제 실내 사진의 방위·세계좌표는 미측량. 구현 평면에 대응한 비교 시점. 3관 첫 번째 CHAI797 Plus 전면을 복도에서 비스듬히 본다.",
+        "local_frame": {
+          "building": "3관",
+          "u": -13.5,
+          "v": 14,
+          "target_u": -20.41,
+          "target_v": 10.3
+        }
+      },
+      {
+        "spot": "1관_지하계단_안내",
+        "photos": [
+          "refs/interior/newcore/07_b1_stair_sign_1gwan_foodstreet.jpg"
+        ],
+        "x": 249.34,
+        "y": -6,
+        "z": -388.7,
+        "yawDeg": 112.49,
+        "note": "실제 실내 사진의 방위·세계좌표는 미측량. 구현 평면에 대응한 비교 시점. B1 계단·승강기 로비의 계단 안내사인(ci.b+4,vW-1.4)을 본다. 원사진은 계단 중간 높이이고 모델 비교는 B1 로비바닥에서 촬영하므로 실제 카메라 높이와는 다르다.",
+        "local_frame": {
+          "building": "1관",
+          "u": -30.139,
+          "v": 26.384,
+          "target_u": -30.139,
+          "target_v": 31.784
+        }
+      },
+      {
+        "spot": "B1_푸드스트리트_안내도",
+        "photos": [
+          "refs/interior/newcore/08_foodstreet_map.jpg"
+        ],
+        "x": 255.72,
+        "y": -6,
+        "z": -400.43,
+        "yawDeg": 292.49,
+        "note": "실제 실내 사진의 방위·세계좌표는 미측량. 구현 평면에 대응한 비교 시점. B1 안내도 전면(u=-L/2+7,v12.2)을 통로에서 정면 비교.",
+        "local_frame": {
+          "building": "1관",
+          "u": -38.539,
+          "v": 16,
+          "target_u": -38.539,
+          "target_v": 12.2
+        }
+      },
+      {
+        "spot": "B1_포보아_카운터_통로",
+        "photos": [
+          "refs/interior/newcore/09_b1_foodstreet_aisle.jpg"
+        ],
+        "x": 279.65,
+        "y": -6,
+        "z": -342.65,
+        "yawDeg": 336.55,
+        "note": "실제 실내 사진의 방위·세계좌표는 미측량. 구현 평면에 대응한 비교 시점. PhởVua 중심u18, 스테인리스 카운터v9.8와 검은 스툴v11.1을 통로에서 비스듬히 비교.",
+        "local_frame": {
+          "building": "1관",
+          "u": 24,
+          "v": 16,
+          "target_u": 18,
+          "target_v": 9.8
+        }
+      },
+      {
+        "spot": "B1_솥내음_정면",
+        "photos": [
+          "refs/interior/newcore/10_b1_foodstreet_sotnaeum_front.jpg"
+        ],
+        "x": 268.78,
+        "y": -6,
+        "z": -366.29,
+        "yawDeg": 327.55,
+        "note": "실제 실내 사진의 방위·세계좌표는 미측량. 구현 평면에 대응한 비교 시점. 솥내음 중심u=-6, 전면v11.3; 통로v17에서 본다.",
+        "local_frame": {
+          "building": "1관",
+          "u": -2,
+          "v": 17,
+          "target_u": -6,
+          "target_v": 11.3
+        }
+      },
+      {
+        "spot": "B1_솥내음_돌출간판",
+        "photos": [
+          "refs/interior/newcore/11_b1_sotnaeum_signage.jpg"
+        ],
+        "x": 269.28,
+        "y": -6,
+        "z": -370.83,
+        "yawDeg": 292.49,
+        "note": "실제 실내 사진의 방위·세계좌표는 미측량. 구현 평면에 대응한 비교 시점. 솥내음 간판의 정면 근접 비교.",
+        "local_frame": {
+          "building": "1관",
+          "u": -6,
+          "v": 14.8,
+          "target_u": -6,
+          "target_v": 11.3
+        }
+      },
+      {
+        "spot": "B1_오픈매장_열",
+        "photos": [
+          "refs/interior/newcore/12_b1_foodstreet_wide_shops.jpg"
+        ],
+        "x": 272.76,
+        "y": -6,
+        "z": -359.28,
+        "yawDeg": 1.1,
+        "note": "실제 실내 사진의 방위·세계좌표는 미측량. 구현 평면에 대응한 비교 시점. 솥내음과 이웃 점포열·화분 파티션을 길게 본다.",
+        "local_frame": {
+          "building": "1관",
+          "u": 6,
+          "v": 16,
+          "target_u": -6,
+          "target_v": 11.3
+        }
+      },
+      {
+        "spot": "B1_솥내음_좌석",
+        "photos": [
+          "refs/interior/newcore/13_b1_foodstreet_seating.jpg"
+        ],
+        "x": 273.51,
+        "y": -6,
+        "z": -374.2,
+        "yawDeg": 238.28,
+        "note": "실제 실내 사진의 방위·세계좌표는 미측량. 구현 평면에 대응한 비교 시점. 솥내음 점포 안(v<11.3)에서 목재 테이블v7.6와 주방 뒤편을 비교.",
+        "local_frame": {
+          "building": "1관",
+          "u": -7.5,
+          "v": 9.6,
+          "target_u": -3.2,
+          "target_v": 6.5
+        }
+      },
+      {
+        "spot": "B1_메뉴판_화분_매장열",
+        "photos": [
+          "refs/interior/newcore/14_b1_foodstreet_row.jpg"
+        ],
+        "x": 271.23,
+        "y": -6,
+        "z": -362.98,
+        "yawDeg": 352.06,
+        "note": "실제 실내 사진의 방위·세계좌표는 미측량. 구현 평면에 대응한 비교 시점. 메뉴 스탠드와 솥내음 전면 화분의 사선 비교.",
+        "local_frame": {
+          "building": "1관",
+          "u": 2,
+          "v": 16,
+          "target_u": -6,
+          "target_v": 11.3
+        }
+      },
+      {
+        "spot": "B1_중앙홀_노출천장",
+        "photos": [
+          "refs/interior/newcore/15_b1_foodstreet_hall_ceiling.jpg"
+        ],
+        "x": 264.81,
+        "y": -6,
+        "z": -379.8,
+        "yawDeg": 202.49,
+        "note": "실제 실내 사진의 방위·세계좌표는 미측량. 구현 평면에 대응한 비교 시점. v13..17.5 중앙 통로를 남동쪽으로 보며 노출 천장과 테이블열 비교.",
+        "local_frame": {
+          "building": "1관",
+          "u": -16,
+          "v": 15.5,
+          "target_u": 18,
+          "target_v": 15.5
+        }
+      },
+      {
+        "spot": "B1_입점_안내판",
+        "photos": [
+          "refs/interior/newcore/16_foodstreet_directory_board.jpg"
+        ],
+        "x": 255.42,
+        "y": -6,
+        "z": -401.17,
+        "yawDeg": 22.49,
+        "note": "실제 실내 사진의 방위·세계좌표는 미측량. 구현 평면에 대응한 비교 시점. B1 북서측 큰 입점 안내판(u=-L/2+1,v16, +u방향)을 통로 끝에서 정면 비교.",
+        "local_frame": {
+          "building": "1관",
+          "u": -39.339,
+          "v": 16,
+          "target_u": -44.539,
+          "target_v": 16
+        }
+      },
+      {
+        "spot": "B1_봉혜자_전면",
+        "photos": [
+          "refs/interior/newcore/17_bonghyeja_storefront.jpg"
+        ],
+        "x": 262.66,
+        "y": -6,
+        "z": -381.07,
+        "yawDeg": 292.49,
+        "note": "실제 실내 사진의 방위·세계좌표는 미측량. 구현 평면에 대응한 비교 시점. 봉혜자 중심u=-18, 전면v11.3을 통로에서 정면 비교.",
+        "local_frame": {
+          "building": "1관",
+          "u": -18,
+          "v": 17,
+          "target_u": -18,
+          "target_v": 11.3
+        }
+      },
+      {
+        "spot": "B1_밝은목재_좌석_통로",
+        "photos": [
+          "refs/interior/newcore/18_b1_foodstreet_tables.jpg"
+        ],
+        "x": 263.01,
+        "y": -6,
+        "z": -367.15,
+        "yawDeg": 217.75,
+        "note": "실제 실내 사진의 방위·세계좌표는 미측량. 구현 평면에 대응한 비교 시점. 중앙 목재 테이블v19와 이어지는 보행 통로 비교.",
+        "local_frame": {
+          "building": "1관",
+          "u": -5,
+          "v": 22,
+          "target_u": 6,
+          "target_v": 19
+        }
+      }
+    ],
+    "trace_convention": "x 동쪽, z 남쪽, m; yaw0 북/-z,90 서,180 남,270 동. y는 카메라의 눈높이가 아닌 바닥 높이. 실내 사진은 위치 측량이 없어 모델 내 대응 장면을 찍는 비교 좌표다.",
+    "guesses": [
+      "모든 건물의 높이·층고·몰딩 두께·아치 폭과 곡률은 사진과5개층 안내에 맞춘 시각적 근사치이며 실측 건축도면이 아니다.",
+      "1·2관 상층은 공식 층수·용도만 검증되었으며 내부 평면은 단순 슬래브와 공용 수직 동선으로 표현한다.",
+      "별도 주차 건물413372931의 층수·난간·램프 위치는 항공사진과 주변 형상에서 추정한다.",
+      "실내 음식점의 정확한 세계 좌표·점포 폭·주방 깊이·좌석 수·기둥 간격은 사진에서 확정 불가하다. 푸드스트리트 안내도와 사진의 특징을 보행 가능한 평면으로 근사 배치한다.",
+      "3관 홀 층고, 옥상 주차장 층명·진입 동선, 실제 식품 판매대 배치는 사진이 충분하지 않아 추정한다.",
+      "지하 관간 연결은 실내 안내의 존재와 방향만 알려져 실제 벽선·굴절·폭은 미확정이다.",
+      "가로수 수종·정확한 수량, 버스정류장 캐노피 치수, 난간 단절부와 보도 시설 간격은 로드뷰 기반 근사치다.",
+      "로드뷰·블로그 카메라의 위치와 화각은 측량하지 못했다. 각 trace는 대응 특징을 비교하기 위한 근사 시점이며 도로 카메라3개는 동일 기준점을 사용한다.",
+      "1관B1 안내판·보관함·승강기·계단은 접근성을 확보하는 모델 내 위치이며 실제 시설 좌표·개수는 미확정이다. 보관함은40칸을 표현했고 블로그의 약100칸 서술 전체를 재현한 것은 아니다.",
+      "1·2관 바닥고0/5/9.8/14.2/18.6m와지붕23m, 3관지붕10.8m, 주차동3.2m 간격4개층/지붕12.8m는 사진 기반 모델 치수다. 3관 옥상으로 가는 실제 계단의 중간 참수·승강기 위치는 확인하지 못했다.",
+      "3관 북쪽P탑은 사진02에 대응한다.1·2관의 유리탑 위치·높이·창살 간격과 가로변 반복bay 간격은 근사치다.",
+      "사진의 솥내음·봉혜자·차이797 특징을 재현하되 모든 식당에 같은 평면·치수를 부여한 부분과 후면점포의 매장간 상대 순서는 추정이다. 세계좌표는 해당 지점·관 외곽 안에 배치한 모델 좌표이지 실제 매장 측량 좌표가 아니다."
+    ],
+    "verification": {
+      "render": "운영자 지시에 따라 tests/shot.mjs 미실행. modeling.trace를 후속 렌더 비교에 사용.",
+      "smoke": "node tests/smoke.mjs newcore: OK (모든 K.detail 그룹 생성 포함)",
+      "smoke_neighbors_city": "node tests/smoke.mjs newcore banwon --city: OK",
+      "walk_newcore": "newcore targeted walk:29ok,0blocked",
+      "walk_full_world": "node tests/walk.mjs:428ok,0blocked",
+      "geometry_audit": {
+        "all_details_quads": 39492,
+        "boxes": 6832,
+        "signs": 159,
+        "detail_groups": 14,
+        "nonfinite": 0,
+        "detail_errors": 0,
+        "frontage_doors_to_aisles_passed": 23,
+        "floor_transitions_with_head_clearance_passed": 14,
+        "note": "독립 geometry_review의 보행·머리 위 여유공간 검사. 이미지 렌더 검증은 아님."
+      },
+      "inventory": {
+        "elevators": 4,
+        "spawns": 11,
+        "zones": 24
+      },
+      "research_json": "python3 -m json.tool 및 git diff --check 통과",
+      "engine_limitation": "js/kit.js:491 INDOOR 집합에 newcore가 없어 B1 지하 전용 가시성 최적화가 적용되지 않는다. 보행·지오메트리 오류는 아니며 성능 최적화 누락이다. 작업 범위에 따라 엔진 파일은 수정하지 않았다."
+    },
+    "dimensions": {
+      "1관": {
+        "floors_above": 5,
+        "floors_below": 1,
+        "roof_y_m": 23,
+        "height_guess": true
+      },
+      "2관": {
+        "floors_above": 5,
+        "floors_below": 1,
+        "roof_y_m": 23,
+        "height_guess": true
+      },
+      "3관": {
+        "floor_labels": [
+          "1F",
+          "옥상"
+        ],
+        "roof_y_m": 10.8,
+        "roof_use": "접근 가능한 옥상 주차장",
+        "height_guess": true
+      },
+      "주차동413372931": {
+        "decks": 4,
+        "deck_spacing_m": 3.2,
+        "roof_y_m": 12.8,
+        "guess": true
+      }
+    },
+    "interior_layout": {
+      "basis": "사진 특징을 재현한 모델 평면이며 실측 점포선이 아님",
+      "local_frame": "각 건물 동측 전면 edge중점이 원점. u는남동(+poly[1]),v는건물 안쪽 남서. P=(ox+ux*u-uz*v,oz+uz*u+ux*v).",
+      "1관B1": {
+        "shop_u": [
+          -30,
+          -18,
+          -6,
+          6,
+          18,
+          30
+        ],
+        "front_v": 11.3,
+        "bonghyeja_u": -18,
+        "sotnaeum_u": -6,
+        "aisle_v": [
+          13,
+          17.5
+        ],
+        "table_v": 19,
+        "rear_shop_v": 30.184,
+        "phovua_u": 18,
+        "phovua_counter_v": 9.8,
+        "guide_map": {
+          "u": -38.539,
+          "v": 12.2,
+          "faces": "+v"
+        },
+        "directory": {
+          "u": -44.539,
+          "v": 16,
+          "faces": "+u"
+        },
+        "stair_sign": {
+          "u": -30.139,
+          "v": 31.784,
+          "faces": "-v"
+        },
+        "sotnaeum_tables_v": 7.6
+      },
+      "3관1F": {
+        "chai_u": -20.411,
+        "front_v": 10.3,
+        "aisle_v": 13.6
+      }
+    },
+    "architecture": {
+      "shells": "OSM 원본 폴리곤 그대로4건물. relation6169292 중복3외곽은meta.claims로 제외.",
+      "floors_y": {
+        "1관·2관": {
+          "B1": -6,
+          "1F": 0,
+          "2F": 5,
+          "3F": 9.8,
+          "4F": 14.2,
+          "5F": 18.6,
+          "roof": 23
+        },
+        "주차동": {
+          "1F": 0,
+          "2F": 3.2,
+          "3F": 6.4,
+          "4F": 9.6,
+          "roof": 12.8
+        },
+        "3관": {
+          "1F": 0,
+          "옥상": 10.8
+        }
+      },
+      "elevators": 4,
+      "spawns": 11,
+      "detail_groups": 14,
+      "zones": 24,
+      "above_ground_circulation": "각 건물 스위치백 계단과 승강기. 1·2관 상층2F..5F는 조명·공식 용도 사인만 있는 단순 슬래브.",
+      "upper_floor_content": "확인되지 않은 상층 점포 평면·진열대는 만들지 않음.",
+      "between_buildings": "각 관은 지상 출입구를 통해 잠원로 보도에 연결. 실제 위치 미확정인 지하 관간 연결 통로는 구현하지 않음.",
+      "three_roof": "10.8m 옥상 주차장, 계단·승강기로 접근. 북쪽 끝 주차 표지탑은 사진02 방향에 맞춤.",
+      "furnishing": "1관B1 개방형6매장, 솥내음·봉혜자·PhởVua의 서로 다른 전면, 중앙 좌석·후면4점포·메뉴판·노출천장·40개 보관함. 2관B1 선반·델리. 1·2관1F 화장품·의류·명품·은행·제과 진열. 3관1F5매장 유리전면·킴스클럽 판매대."
+    }
+  },
+  "tenants": [
+    {
+      "building": "1관",
+      "floor": "1F",
+      "names": [
+        "OLIVE YOUNG",
+        "우리은행",
+        "더벤티"
+      ],
+      "evidence": "사진05에서 올리브영·우리은행 확인, 공식 식당가에서 더벤티1관1F 확인",
+      "placement": "매장 세부 점포선은 사진만으로 확정 불가"
+    },
+    {
+      "building": "2관",
+      "floor": "1F",
+      "names": [
+        "DESIGNERS",
+        "luxury gallery",
+        "Black&White",
+        "FRANGERIE",
+        "폴바셋",
+        "하나은행"
+      ],
+      "evidence": "로드뷰01: 디자이너스·럭셔리갤러리·블랙앤화이트; 사진16: 프랑제리2관1F; 공식 식당가: 폴바셋2관1F; OSM POI2103907404 하나은행(247.55,-445.61)"
+    },
+    {
+      "building": "1관",
+      "floor": "B1",
+      "names": [
+        "솥내음",
+        "봉혜자 별미요릿집",
+        "오근내 닭갈비",
+        "RIMINI",
+        "STEAK US",
+        "PhởVua",
+        "PizzaMall",
+        "한성돈까스",
+        "반궁",
+        "평양옥",
+        "신룽푸 마라탕",
+        "Perché no!!",
+        "두끼",
+        "육된장"
+      ],
+      "evidence": "제공 사진08 안내도·16 입점 안내판; 사진09~18 실제 매장",
+      "placement": "안내도는 상대 이웃 관계만 확정; 방위·점포 좌표는 추정"
+    },
+    {
+      "building": "3관",
+      "floor": "1F",
+      "names": [
+        "CHAI797 Plus",
+        "CAFÉ MAMAS",
+        "STARBUCKS",
+        "밀도",
+        "백미당",
+        "버거킹"
+      ],
+      "evidence": "사진06 차이797; 사진16 업체별 관·층; 사진01 적색 버거킹 어닝과 공식 식당가 버거킹3관1F",
+      "placement": "세부 점포 폭·순서는 부분 추정"
+    }
+  ]
+}

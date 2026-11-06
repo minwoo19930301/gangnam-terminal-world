@@ -5,14 +5,15 @@
 // envelope, inferred four lanes, -6 m invert and 4.6 m clearance instead.
 // Inferred: street tree species, furnishing styles, flyover 6.5 m deck, footbridge
 // 6.2 m deck/pylon silhouette, accessible south lift, taxi queue, bus-lane paint.
-// No invented stop IDs or live arrival times. Station/exits remain station-owned.
+// No invented stop IDs or live arrival times. Exit shafts remain gotomall/station-owned.
 const ROAD_IDS = [37402467,71105531,71105555,97847428,131326713,131327735,218681382,218722041,218722042,218722043,218870939,218870945,218913526,218913527,301889788,309355890,443523921,473798788,473798790,480856735,480856736,480856737,480856741,480856742,498559927,498559932,498559933,522783547,522946367,522946368,523144216,523341064,523344135,523344137,523344143,525738543,525738544,525738545,525738546,547990887,547990890,547990891,547990895,562661077,623304593,655403256,674432577,674432580,691602197,799014370,799014371,799014372,816395058,816395059,816395060,828782197,828782198,831108561,831108562,831108563,831108564,845497255,868689632,921261337,921681811,1011881496,1033191354,1033191355,1252436243,1263366775,1389238182,1389238183,1389238184,1389238185,1420100037,1420100038,1472739714,1497710490,1497710491,1498239506,1499902350,1499902351,1499902352,1499902353,1499902354,1499902355,1532298610,218722037,218722038,282194887,418110854,799014358,799014359,1252436244];
 const WALK_IDS = [301889787,301889789,308003937,606009741,665106093,665106094,665106095,665106096,665106097,816395057,845497271,845497273,1213763241,1213763242,1213763243,1232132158,1232132177,1232132196,1232132199,1481658419,1481658421,1481658423,1481658424,1481658425,1497710483,1497710484,1497710485,1497710486,1497710487,1497710488,1497710489,1497710492,1497710493,1497710494,1497710495,309355888,845497252,845497256,845497259,845497272];
 export const meta = {
   id: 'streets', name: '고속터미널 거리 · 신반포로와 사평대로',
   claims: [413280002, 886400346, 413367405, 413367408, 1137867801],
   // 831108569 is the footway through the east parking aisle, not service301889794.
-  claimRoads: [...ROAD_IDS, ...WALK_IDS, 831108565, 831108569],
+  claimRoads: [...ROAD_IDS, ...WALK_IDS, 831108565, 831108569, 1420100042, 1420100043,
+    1213763244, 1232132157, 1232132198, 1232132167, 1232132156], // crossing paint replaced here, avoiding city duplicates
   sources: ['data/osm.json', 'data/research/streets.json', 'refs/roadview/manifest.json',
     'refs/roadview/cc_02_sinbanporo_west_from_main_gate_tan_block_led.jpg',
     'refs/roadview/gb_03_front_plaza_arch_canopy_shelters.jpg',
@@ -21,6 +22,11 @@ export const meta = {
     'refs/roadview/ssg_04_east_lot_north_view.jpg',
     'refs/roadview/bp_01_banpo_shoppingtown_exit82_north.jpg',
     'refs/roadview/bp_02_banpo_shoppingtown_gotomall_canopy_west.jpg',
+    'refs/roadview/police_01_front.jpg', 'refs/roadview/police_02_box_and_exit3_W.jpg',
+    'refs/roadview/street_01_sinbanpo_median_busstop_E.jpg',
+    'refs/roadview/junction_01_jamwonro_N.jpg', 'refs/roadview/junction_02_jamwonro_E.jpg',
+    'refs/roadview/junction_03_jamwonro_S.jpg', 'refs/aerial/police_islands.jpg',
+    'refs/interior/police_box/notes.json', 'refs/interior/taxi/notes.json',
     'https://mediahub.seoul.go.kr/archives/2005907',
     'https://mediahub.seoul.go.kr/archives/2011689',
     'https://www.seocho.go.kr/site/seocho/ex/bbs/internet/fun/BbsCustomFView.do?bcIdx=367637',
@@ -31,7 +37,7 @@ export const meta = {
 
 export function build(K) {
   const PI = Math.PI, ROAD = 0.04, WALK = 0.15, BRIDGE = 6.2;
-  const C = { steel: 0x48545d, silver: 0x9daab0, yellow: 0xf2c53b, white: 0xe8e5d7, blue: 0x2387c9, green: 0x075847 };
+  const C = { steel: 0x48545d, silver: 0x9daab0, yellow: 0xf2c329, white: 0xf4f1e6, blue: 0x238bd2, green: 0x075847 };
   const byId = new Map(K.osm.roads.map(r => [r.id, r]));
   const roads = meta.claimRoads.map(id => byId.get(id)).filter(Boolean);
   const flyIds = new Set([480856735,480856736,1420100037,1420100038]);
@@ -79,19 +85,47 @@ export function build(K) {
       K.phys.addWall(mix(a[0],b[0],t),mix(a[1],b[1],t),mix(a[0],b[0],t1),mix(a[1],b[1],t1),Math.min(mix(ya,yb,t),mix(ya,yb,t1)),Math.max(mix(ya,yb,t),mix(ya,yb,t1))+height,.045,'streets');}
   }
   function line(p,offset,width,start,end,y,color) { const a=at(p,start,offset),b=at(p,end,offset);flat([a.x,a.z],[b.x,b.z],width,y,color); }
-  function arrow(p,s,off,y,reverse=false,turn=false) {
+  function arrow(p,s,off,y,reverse=false,turn='straight') {
     const q=at(p,s,off),u=q.u*(reverse?-1:1),v=q.v*(reverse?-1:1),P=(t,n)=>[q.x+u*t-v*n,q.z+v*t+u*n];
-    const poly=[P(-2,-.13),P(1,-.13),P(.3,-.62),P(.6,-.85),P(2,.0),P(.6,.85),P(.3,.62),P(1,.13),P(-2,.13)];K.hpoly(C.white,poly,y);
-    if(turn) {flat(P(-.6,0),P(-.6,1),.22,y,C.white);K.hpoly(C.white,[P(-1,1),P(-.6,1.7),P(-.2,1)],y);}
+    if(turn===true)turn='left';
+    flat(P(-2.3,0),P(turn==='left'||turn==='right'?.4:1.45,0),.22,y,C.white);
+    if(turn!=='left'&&turn!=='right')K.hpoly(C.white,[P(.65,-.65),P(2.3,0),P(.65,.65),P(1.1,0)],y);
+    if(turn&&turn!=='straight') {const side=turn==='left'?-1:1;
+      flat(P(.3,0),P(.3,side*.95),.22,y,C.white);
+      K.hpoly(C.white,[P(-.3,side*.65),P(.3,side*1.5),P(.9,side*.65),P(.3,side*.9)],y);
+    }
   }
   function markings(r,p,height=()=>ROAD) {
-    const lanes=r.lanes||Math.max(2,Math.min(r.oneway?4:6,Math.round(r.width/3.4)));const laneW=r.width/lanes;
-    for(let k=1;k<lanes;k++)for(let s=2;s<p.L-2;s+=9){const off=-r.width/2+k*laneW,center=!r.oneway&&k===Math.floor(lanes/2),len=center?8.8:4;
-      const a=at(p,s,off),b=at(p,Math.min(p.L-.5,s+len),off);K.ramp(a.x,a.z,b.x,b.z,{w:center?.12:.14,ya:height(s)+.014,yb:height(Math.min(p.L,s+len))+.014,mat:center?C.yellow:C.white,rails:false});
-      if(center){const aa=at(p,s,off+.3),bb=at(p,Math.min(p.L-.5,s+len),off+.3);K.ramp(aa.x,aa.z,bb.x,bb.z,{w:.12,ya:height(s)+.014,yb:height(Math.min(p.L,s+len))+.014,mat:C.yellow,rails:false});}
+    if(r.hw==='busway')return;
+    const lanes=laneCount(r),laneW=r.width/lanes,ground=surfaceRoads.includes(r);
+    // Paint is a face, not a walkable ramp. Clip actual polygons at the stop
+    // lines, crossing aprons and OSM busways; no asphalt cover-up over old paint.
+    function stroke(off,width,s,e,color) {
+      for(let t=s;t<e-.001;){const i=p.cum.findIndex(v=>v>t+.001),end=Math.min(e,i<0?e:p.cum[i]);
+        const a=at(p,t,off),b=at(p,end,off),poly=stripPoly([a.x,a.z],[b.x,b.z],width);
+        if(ground)paint(poly,color,ROAD+.02);else {
+          const ny=(height(end)-height(t))/(end-t||1);
+          K.quad(color,poly.map(([x,z])=>[x,height(t)+.02+((x-a.x)*a.u+(z-a.z)*a.v)*ny,z]),[0,1,0]);
+        }t=end;
+      }
     }
-    for(const off of [-r.width/2+.22,r.width/2-.22])for(let s=0;s<p.L;s+=10){const a=at(p,s,off),b=at(p,Math.min(p.L,s+10),off);K.quad(C.white,[[a.x-.05,height(s)+.012,a.z],[b.x-.05,height(Math.min(p.L,s+10))+.012,b.z],[b.x+.05,height(Math.min(p.L,s+10))+.012,b.z],[a.x+.05,height(s)+.012,a.z]],[0,1,0]);}
-    for(let s=22;s<p.L-10;s+=68)for(let k=0;k<lanes;k++) arrow(p,s,-r.width/2+(k+.5)*laneW,height(s)+.026,!r.oneway&&k<lanes/2,k===0);
+    for(let k=1;k<lanes;k++){
+      if(!r.oneway&&k===lanes/2)continue;
+      const off=-r.width/2+k*laneW;
+      for(let s=0;s<p.L;s+=8)stroke(off,.15,s,Math.min(p.L,s+3),C.white);
+      if(ground)for(let s=0;s<p.L;s+=1){const q=at(p,Math.min(p.L,s+.5),off);
+        if(approaches.some(a=>{const t=(q.x-a.x)*a.u+(q.z-a.z)*a.v,n=-(q.x-a.x)*a.v+(q.z-a.z)*a.u;
+          return t>=5.2&&t<=35.2&&Math.abs(n)<a.r.width/2+.2;}))stroke(off,.15,s,Math.min(p.L,s+1),C.white);
+      }
+    }
+    if(!r.oneway)for(const off of [-.15,.15])stroke(off,.15,0,p.L,C.yellow);
+    // In Korea traffic keeps right: a one-way carriageway's median is its
+    // negative offset side. Use a yellow edge only where an opposing way exists.
+    for(const off of [-r.width/2+.22,r.width/2-.22]){
+      const q=at(p,p.L/2),paired=ground&&r.oneway&&roadNetwork.some(b=>{if(b.id===r.id||!b.oneway||b.name!==r.name)return false;const n=nearest(q.x,q.z,[b]);return n.d<r.width+12&&n.u*q.u+n.v*q.v<-.65;});
+      stroke(off,.15,0,p.L,paired&&off<0?C.yellow:C.white);
+      if(paired&&off<0)stroke(off+.3,.15,0,p.L,C.yellow);
+    }
   }
   // Reusable tactile surface: one material for every raised yellow warning strip.
   // bp_02 / cc_02: small grey concrete pavers, without the stock pink checker.
@@ -115,7 +149,10 @@ export function build(K) {
   // Ground holes do not clip previously registered road surfaces. Subtract the
   // open cuts from our ground geometry before submitting it to the real kit.
   const cutPaths = [[[-433.45,473.1],[-211.18,362.25]],[[-79.33,301.845],[85.2,217.68]]];
-  const cuts=cutPaths.map(([a,b])=>stripPoly(a,b,18));
+  // The police-front mouth is line 3's numbered exit 1, built by gotomall.
+  // Do not cap its descending stairs with a road or island slab.
+  const exitOneHole=[[49.686,-104.971],[53.151,-106.269],[49.960,-114.791],[46.495,-113.493]];
+  const cuts=[...cutPaths.map(([a,b])=>stripPoly(a,b,18)),exitOneHole];
   const inCut=(x,z)=>cuts.some(q=>K.pointInPoly(x,z,q));
   function half(poly,a,b,inside) {
     const cross=p=>(b[0]-a[0])*(p[1]-a[1])-(b[1]-a[1])*(p[0]-a[0]);
@@ -134,6 +171,98 @@ export function build(K) {
   K.slab=(poly,y,o={})=>{if(y>=0&&y<=.2){for(const p of clipped(poly))real.slab(p,y,o);}else real.slab(poly,y,o);};
   K.hpoly=(mat,poly,y,up=true,holes)=>{if(y>=0&&y<=.2){for(const p of clipped(poly))real.hpoly(mat,p,y,up,holes);}else real.hpoly(mat,poly,y,up,holes);};
   K.ramp=(ax,az,bx,bz,o={})=>{if(o.ya>=0&&o.yb>=0&&o.ya<=.2&&Math.abs(o.ya-o.yb)<.001){for(const p of clipped(stripPoly([ax,az],[bx,bz],o.w||2)))real.slab(p,o.ya,{mat:o.mat,thick:.05,under:false,edge:false,ceil:false});}else real.ramp(ax,az,bx,bz,o);};
+  const laneCount=r=>r.lanes||Math.max(r.oneway?1:2,Math.min(r.oneway?4:6,Math.round(r.width/3.4/(!r.oneway?2:1))*(!r.oneway?2:1)));
+  const roadNetwork=K.osm.roads.filter(r=>['primary','secondary','tertiary','residential','unclassified','service','busway'].includes(r.hw)&&!r.bridge&&!r.tunnel&&r.layer<=0&&!flyIds.has(r.id)&&!tunnelIds.has(r.id));
+  const owned=new Set(meta.claimRoads),crossings=roads.filter(r=>r.footway==='crossing');
+  const surveyedCrossings=K.osm.roads.filter(r=>r.footway==='crossing');
+  const junctions=[],approaches=[],crosswalks=[],paintMasks=[];
+  // OSM splits a junction into several ways and several signal nodes. Treat
+  // their cluster as ONE junction, including the otherwise unmarked Banpo box.
+  const signalGroups=[];
+  for(const n of K.osm.nodes.filter(n=>n.k==='traffic_signals')){
+    const q=nearest(n.x,n.z);if(!q.r||q.d>q.r.width/2+3)continue;
+    const g=signalGroups.find(g=>g.some(a=>Math.hypot(a.x-n.x,a.z-n.z)<52));
+    if(g)g.push(n);else signalGroups.push([n]);
+  }
+  signalGroups.push([{x:-342,z:7,name:'반포대로'}]);
+  function frame(j,p){const x=p[0]-j.x,z=p[1]-j.z;return [x*j.u+z*j.v,-x*j.v+z*j.u];}
+  function framePoly(j,pad=0){return [[-j.hu-pad,-j.hv-pad],[j.hu+pad,-j.hv-pad],[j.hu+pad,j.hv+pad],[-j.hu-pad,j.hv+pad]].map(([a,b])=>[j.x+j.u*a-j.v*b,j.z+j.v*a+j.u*b]);}
+  function insideJ(j,x,z,pad=0){const [a,b]=frame(j,[x,z]);return Math.abs(a)<j.hu+pad&&Math.abs(b)<j.hv+pad;}
+  function segmentCross(a,b,c,d){const ux=b[0]-a[0],uz=b[1]-a[1],vx=d[0]-c[0],vz=d[1]-c[1],den=ux*vz-uz*vx;
+    if(Math.abs(den)<1e-6)return null;const dx=c[0]-a[0],dz=c[1]-a[1],t=(dx*vz-dz*vx)/den,s=(dx*uz-dz*ux)/den;
+    return t>=0&&t<=1&&s>=0&&s<=1?[a[0]+ux*t,a[1]+uz*t]:null;
+  }
+  for(const g of signalGroups){
+    let x=g.reduce((s,n)=>s+n.x,0)/g.length,z=g.reduce((s,n)=>s+n.z,0)/g.length;
+    const q=nearest(x,z,surfaceRoads.filter(major));if(!q.r)continue;
+    const j={x,z,u:q.u,v:q.v,hu:10,hv:10,name:g.find(n=>n.name)?.name||q.r.name,arms:[]};
+    for(const n of g){const [a,b]=frame(j,[n.x,n.z]);j.hu=Math.max(j.hu,Math.abs(a)+4);j.hv=Math.max(j.hv,Math.abs(b)+4);}
+    if(Math.hypot(x-360,z+263)<45)Object.assign(j,{x:358,z:-261,u:.934,v:-.357,hu:18,hv:21,name:'고속터미널교차로'});
+    if(x===-342)Object.assign(j,{u:.934,v:-.357,hu:25,hv:25,name:'반포대로'});
+    // Small signalised crossings still need room for the road width, but the
+    // surrounding box never extends into the next block as a giant rectangle.
+    const norm=Math.hypot(j.u,j.v);j.u/=norm;j.v/=norm;
+    junctions.push(j);paintMasks.push(framePoly(j,4.5));
+    const perimeter=framePoly(j,4.5);
+    for(const r of roadNetwork.filter(r=>['primary','secondary','tertiary'].includes(r.hw))){
+      for(let i=1;i<r.pts.length;i++)for(let e=0;e<4;e++){
+        const a=r.pts[i-1],b=r.pts[i],hit=segmentCross(a,b,perimeter[e],perimeter[(e+1)%4]);if(!hit)continue;
+        const L=Math.hypot(b[0]-a[0],b[1]-a[1]),tx=(b[0]-a[0])/L,tz=(b[1]-a[1])/L;
+        const dir=(hit[0]-j.x)*tx+(hit[1]-j.z)*tz>0?1:-1;
+        if(j.arms.some(a=>Math.hypot(a.x-hit[0],a.z-hit[1])<3&&Math.abs(a.u*tx+a.v*tz)>.9))continue;
+        const arm={x:hit[0],z:hit[1],u:tx*dir,v:tz*dir,r,j,incoming:!r.oneway||dir<0,owned:owned.has(r.id)};
+        const surveyed=surveyedCrossings.map(c=>{const a=c.pts[0],b=c.pts[c.pts.length-1],dx=b[0]-a[0],dz=b[1]-a[1],L=Math.hypot(dx,dz),x=(a[0]+b[0])/2,z=(a[1]+b[1])/2;
+          return {c,x,z,L,d:Math.hypot(x-arm.x,z-arm.z),dot:Math.abs((dx*arm.u+dz*arm.v)/L)};})
+          .filter(c=>c.L>=r.width*.65&&c.d<13&&c.dot<.4).sort((a,b)=>a.d-b.d)[0];
+        if(surveyed){const t=(surveyed.x-arm.x)*arm.u+(surveyed.z-arm.z)*arm.v;arm.x+=arm.u*t;arm.z+=arm.v*t;arm.crossing=surveyed.c.id;}
+        j.arms.push(arm);if(!arm.owned)continue;
+        // The full crossing strip, the 2.5m clearance and approach stop line
+        // form one exclusion for every kind of longitudinal paint.
+        const end=[arm.x+arm.u*5.45,arm.z+arm.v*5.45],start=[arm.x-arm.u*2.5,arm.z-arm.v*2.5];
+        paintMasks.push(stripPoly(start,end,r.width+.3));
+        crosswalks.push({a:[arm.x+arm.v*r.width/2,arm.z-arm.u*r.width/2],b:[arm.x-arm.v*r.width/2,arm.z+arm.u*r.width/2],w:5,arm});
+        if(arm.incoming)approaches.push(arm);
+      }
+    }
+  }
+  // Node-only and footway crossings are projected square to the road being
+  // crossed. Diagonal OSM footway links are pedestrian routing, not paint.
+  function addCrossing(pts,w=4.5,allowJunction=false){
+    const a=pts[0],b=pts[pts.length-1],x=(a[0]+b[0])/2,z=(a[1]+b[1])/2;
+    if(!allowJunction&&junctions.some(j=>insideJ(j,x,z,14)))return;
+    if(crosswalks.some(c=>Math.hypot((c.a[0]+c.b[0])/2-x,(c.a[1]+c.b[1])/2-z)<8))return;
+    let best=null;
+    for(const r of roadNetwork)for(let i=1;i<r.pts.length;i++){
+      const hit=segmentCross(a,b,r.pts[i-1],r.pts[i]);if(!hit)continue;
+      const n=nearest(hit[0],hit[1],[r]),score=Math.abs(n.u*(b[1]-a[1])-n.v*(b[0]-a[0]));
+      if(!best||score>best.score)best={...n,score};
+    }
+    const q=best||nearest(x,z);if(!q.r)return;
+    const length=Math.max(q.r.width,Math.abs(-(b[0]-a[0])*q.v+(b[1]-a[1])*q.u));
+    const aa=[x+q.v*length/2,z-q.u*length/2],bb=[x-q.v*length/2,z+q.u*length/2];
+    crosswalks.push({a:aa,b:bb,w:Math.max(4,Math.min(6,w))});paintMasks.push(stripPoly(aa,bb,Math.max(4,Math.min(6,w))+.5));
+  }
+  for(const r of crossings){const a=r.pts[0],b=r.pts[r.pts.length-1],x=(a[0]+b[0])/2,z=(a[1]+b[1])/2;
+    // A module-owned zebra may cross a city-owned approach (Samho south).
+    // The city reuses this claimed way, so this module must still paint it.
+    const shared=junctions.some(j=>j.arms.some(a=>!a.owned&&Math.hypot(a.x-x,a.z-z)<14));
+    addCrossing(r.pts,r.width,shared);
+  }
+  for(const n of K.osm.nodes.filter(n=>n.k==='crossing')){
+    const q=nearest(n.x,n.z);if(!q.r||q.d>q.r.width/2||!major(q.r))continue;
+    addCrossing([[q.x+q.v*q.r.width/2,q.z-q.u*q.r.width/2],[q.x-q.v*q.r.width/2,q.z+q.u*q.r.width/2]]);
+  }
+  // The buses' surveyed ribbons replace the overlapping generic car paint.
+  const medianBusWays=K.osm.roads.filter(r=>[1420100042,1420100043].includes(r.id));
+  const busMasks=medianBusWays.flatMap(r=>r.pts.slice(1).map((b,i)=>stripPoly(r.pts[i],b,6.2)));
+  const medianPlatforms=[[-70.27,-95.53,1420100043],[6.55,-132.2,1420100042]].map(([x,z,id])=>{
+    const q=nearest(x,z,[byId.get(id)]);return stripPoly([x-q.u*13,z-q.v*13],[x+q.u*13,z+q.v*13],3.2);
+  });
+  const indexedMasks=[...paintMasks,...busMasks,...medianPlatforms].map(poly=>({poly,bb:K.polyBBox(poly)}));
+  function paint(poly,mat,y,includeBus=true){const bb=K.polyBBox(poly),list=includeBus?indexedMasks:indexedMasks.slice(0,paintMasks.length);
+    const overlaps=list.filter(({bb:b})=>bb[0]<=b[2]&&bb[2]>=b[0]&&bb[1]<=b[3]&&bb[3]>=b[1]).map(m=>m.poly);
+    for(const piece of clipped(poly,overlaps))K.hpoly(mat,piece,y);
+  }
   // Every claimed ordinary road, including residential branches, is rendered here.
   for(const r of roads) {
     if(r.id===301889788||r.id===301889787||flyIds.has(r.id)||tunnelIds.has(r.id))continue;
@@ -149,10 +278,11 @@ export function build(K) {
     const hs=s=>r.bridge?ROAD+3*(r.pts[0][0]>990?1-s/p.L:s/p.L):ROAD;
     for(let i=1;i<r.pts.length;i++)K.ramp(...r.pts[i-1],...r.pts[i],{w:r.width,ya:hs(p.cum[i-1]),yb:hs(p.cum[i]),mat:'asphalt',rails:false});
     markings(r,p,hs);
-    for(let s=40;s<p.L-8;s+=70){const q=at(p,s);if(q.x<-650||q.x>650||q.z<-750||q.z>600)continue;const k=Math.floor(rnd()*(r.lanes||3)),off=-r.width/2+(k+.5)*r.width/(r.lanes||3);const v=at(p,s,off);if(inCut(v.x,v.z))continue;K.vehicle({x:v.x,z:v.z,y:hs(s),rotY:v.rot+(r.oneway||k>0?0:PI),kind:rnd()<.14?'taxi':'car'});}
+    if(r.hw!=='busway')for(let s=40;s<p.L-8;s+=70){const q=at(p,s);if(q.x<-650||q.x>650||q.z<-750||q.z>600)continue;const lanes=laneCount(r),k=Math.floor(rnd()*lanes),off=-r.width/2+(k+.5)*r.width/lanes,v=at(p,s,off);
+      if(inCut(v.x,v.z)||indexedMasks.some(m=>K.pointInPoly(v.x,v.z,m.poly))||medianBusWays.some(b=>nearest(v.x,v.z,[b]).d<7))continue;
+      K.vehicle({x:v.x,z:v.z,y:hs(s),rotY:v.rot+(r.oneway||k>=lanes/2?0:PI),kind:rnd()<.14?'taxi':'car'});}
     if(major(r))for(let i=1;i<r.pts.length;i++)K.zone({name:r.name,floor:'지상',sub:r.name==='신반포로'?'고속터미널 · 반포쇼핑타운':r.name==='사평대로'?'서울성모병원 · 서리풀공원':r.name==='잠원로'?'잠원동 · 반포역':'반포대교 · 반포한강공원',poly:stripPoly(r.pts[i-1],r.pts[i],r.width+14),y0:-.2,y1:4,priority:1});
   }
-  const crossings=roads.filter(r=>r.footway==='crossing');
   const stops=K.osm.nodes.filter(n=>n.k==='bus_stop'&&n.x>-460&&n.x<620&&n.z>-600&&n.z<560);
   const exits=K.osm.exits||[];
   const bboxes=K.osm.buildings.map(b=>({b,bb:K.polyBBox(b.poly)}));
@@ -164,17 +294,17 @@ export function build(K) {
     return along>-38&&along<2&&across>.2&&across<6.3;
   };
   function inBuilding(x,z) {return bboxes.some(({b,bb})=>x>bb[0]-1&&x<bb[2]+1&&z>bb[1]-1&&z<bb[3]+1&&K.pointInPoly(x,z,b.poly));}
-  function clearFurniture(x,z) {return !inCut(x,z)&&!inBuilding(x,z)&&!inWestCanopy(x,z)&&!stops.some(p=>Math.hypot(p.x-x,p.z-z)<10)&&!exits.some(p=>Math.hypot(p.x-x,p.z-z)<5)&&!crossings.some(r=>nearest(x,z,[r]).d<4);}
+  function clearFurniture(x,z) {return !inCut(x,z)&&!inBuilding(x,z)&&!inWestCanopy(x,z)&&!inTaxiStand(x,z)&&!indexedMasks.some(m=>K.pointInPoly(x,z,m.poly))&&!stops.some(p=>Math.hypot(p.x-x,p.z-z)<10)&&!exits.some(p=>Math.hypot(p.x-x,p.z-z)<5)&&!crossings.some(r=>nearest(x,z,[r]).d<4);}
   const furniture=[];
   function lamp(x,z,rot,y=WALK) {
-    if(y===WALK&&(onTerminalMedian(x,z)||inWestCanopy(x,z)))return;
+    if(y===WALK&&(onTerminalMedian(x,z)||inWestCanopy(x,z)||inTaxiStand(x,z)))return;
     K.cyl({x,z,y,r:.11,h:7.5,seg:8,mat:C.steel});const dx=Math.sin(rot),dz=Math.cos(rot);
     beam([x,y+7.3,z],[x+dx*1.7,y+7.5,z+dz*1.7],.07);
     K.box({x:x+dx*1.8,z:z+dz*1.8,y:y+7.42,w:.5,h:.15,d:1.1,rotY:rot,mat:C.steel,solid:false});
     K.box({x:x+dx*1.8,z:z+dz*1.8,y:y+7.4,w:.4,h:.025,d:.9,rotY:rot,mat:emit(0xffedc2),solid:false});
   }
   function treePit(x,z,y=WALK) {
-    if(onTerminalMedian(x,z)||inWestCanopy(x,z))return;
+    if(onTerminalMedian(x,z)||inWestCanopy(x,z)||inTaxiStand(x,z))return;
     K.box({x,z,y:y+.005,w:1.55,h:.08,d:1.55,mat:0x666d64,top:'streets-grate',solid:false});K.tree(x,z,{y:y+.07,h:6.5+rnd()*2,kind:rnd()<.55?'ginkgo':'zelkova'});
     for(const dx of [-.58,.58])for(const dz of [-.58,.58])K.box({x:x+dx,z:z+dz,y:y+.1,w:.045,h:.8,d:.045,mat:C.steel,solid:false});
   }
@@ -235,45 +365,148 @@ export function build(K) {
   for(const [a,b] of fenceRuns)for(const poly of clipped(stripPoly(a,b,2),serviceCuts))
     K.slab(poly,WALK,{mat:'streets-kerb-brick',thick:.15,ceil:false});
   for(const [x,z] of [[114.2336,-130.6556],[184.344,-157.296]])lamp(x,z,PI+.365);
-  function zebra(pts,w=4.2) {
-    const p=path(pts);
-    for(let s=.35;s<p.L-.2;s+=1.25){const a=at(p,s),b=at(p,Math.min(p.L,s+.62));flat([a.x,a.z],[b.x,b.z],w,ROAD+.034,C.white);}
-    for(const s of [0,p.L]) {const q=at(p,s);K.box({x:q.x,z:q.z,y:WALK+.003,w:w,h:.012,d:.6,rotY:q.rot,mat:'streets-tactile',solid:false});}
+  // Raised granite-edged island wrapping the existing line-3 exit 1 shaft.
+  // The SE mouth remains paved and open; gotomall owns stairs and balustrades.
+  const policeIsland=[[39.7,-121.3],[44.7,-124],[48.4,-121.5],[55.7,-108.1],[57.2,-103.6],[53.6,-100],[49.2,-101.9],[44,-113]];
+  K.slab(policeIsland,.18,{mat:'streets-pavers',thick:.18,ceil:false}); // proxy clips exitOneHole once
+  for(let i=0;i<policeIsland.length;i++){
+    if(i===4||i===5)continue; // step-free mouth landing
+    const a=policeIsland[i],b=policeIsland[(i+1)%policeIsland.length];K.wall(...a,...b,0,.18,{thick:.22,mat:0xc2c4bd,solid:false});
   }
-  for(const r of crossings)zebra(r.pts,Math.max(3.2,r.width));
-  // Crossings represented only as nodes in the extract still receive zebras.
-  for(const n of K.osm.nodes.filter(n=>n.k==='crossing')){
-    const r=nearest(n.x,n.z);if(!r.r||r.d>r.r.width/2||!major(r.r)||crossings.some(c=>nearest(n.x,n.z,[c]).d<7))continue;
-    if(n.x<-620||n.x>650||n.z<-650||n.z>600)continue;
-    zebra([[r.x+r.v*(r.r.width/2+1),r.z-r.u*(r.r.width/2+1)],[r.x-r.v*(r.r.width/2+1),r.z+r.u*(r.r.width/2+1)]],4.5);
+  K.hpoly({tex:'grass',color:0x81964e},[[40.1,-121],[44.5,-123.4],[47.4,-121.7],[43.6,-119.8]],.186);
+  for(const [x,z] of [[41.7,-121.1],[43.4,-121.8],[45.1,-122.1]])K.dome({x,z,y:.18,rx:.65,ry:.45,rz:.48,seg:8,rings:4,mat:0x617a3f});
+  flat([52.2,-102],[53.8,-103.2],.6,.19,'streets-tactile');
+  // A small slip-road island at Samho Garden. OSM road envelopes leave this
+  // corner clear; the crossing's north landing is paving rather than shrubs.
+  const slipIsland=[[466,53],[472,52],[476,57],[473,61],[468,58],[464,55]];
+  K.slab(slipIsland,.18,{mat:'streets-pavers',thick:.18,ceil:false});
+  K.hpoly({tex:'grass',color:0x78944d},[[467,55],[471.8,54],[474,57],[472.5,59],[468.5,57]],.185);
+  for(const [x,z] of [[469,55.5],[471.5,56],[472,58]])K.dome({x,z,y:.18,rx:.65,ry:.45,rz:.6,seg:8,rings:4,mat:0x56753e});
+  flat([469.8,53],[472.5,53],.6,.19,'streets-tactile');
+  const pavement=(x,z)=>medianPlatforms.some(p=>K.pointInPoly(x,z,p))||roadNetwork.every(r=>nearest(x,z,[r]).d>r.width/2+.3);
+  function curbSite(x,z,dx,dz){for(let t=0;t<=32;t+=.5){const xx=x+dx*t,zz=z+dz*t;if(pavement(xx,zz)&&!inBuilding(xx,zz)&&!inCut(xx,zz))return [xx,zz];}return null;}
+  const pedestrianSites=[];
+  function bollard(x,z,y=WALK){
+    K.cyl({x,z,y,r:.085,h:.82,seg:8,mat:0x34393a});
+    for(const h of [.54,.68])K.cyl({x,z,y:y+h,r:.089,h:.055,seg:8,mat:C.yellow,solid:false});
   }
-  function signal(x,z,rot,name) {
-    K.cyl({x,z,y:WALK,r:.1,h:5.9,mat:C.steel,seg:8});const u=Math.cos(rot),v=-Math.sin(rot),nx=Math.sin(rot),nz=Math.cos(rot);
-    beam([x,5.8,z],[x+u*5.2,5.8,z+v*5.2],.09);const cx=x+u*4,cz=z+v*4;
-    K.box({x:cx,z:cz,y:5.24,w:1.7,h:.46,d:.25,rotY:rot,mat:0x181f22,solid:false});
-    for(let i=0;i<4;i++)K.box({x:cx+u*(i-1.5)*.37+nx*.14,z:cz+v*(i-1.5)*.37+nz*.14,y:5.32,w:.24,h:.25,d:.03,rotY:rot,mat:i===0?emit(0xf24f3b):0x22332b,solid:false});
-    K.box({x:x+nx*.16,z:z+nz*.16,y:2.2,w:.36,h:.68,d:.22,rotY:rot,mat:0x161e23,solid:false});
-    K.sign('보행', {x:x+nx*.3,z:z+nz*.3,y:2.5,w:.24,h:.22,rotY:rot,bg:'#11251a',fg:'#53e998'});
-    if(name)K.sign(name,{x:x+u*1.5,z:z+v*1.5,y:4.6,w:2.6,h:.55,rotY:rot,bg:'#155b9c',fg:'#fff',twoSided:true,box:.08});
+  function pedestrianSignal(x,z,ux,uz){
+    const site=curbSite(x,z,-ux,-uz);if(!site)return;[x,z]=site;
+    if(pedestrianSites.some(p=>Math.hypot(p[0]-x,p[1]-z)<1.4))return;pedestrianSites.push(site);
+    const rot=Math.atan2(ux,uz),side=[uz,-ux],P=(a,y,b=.135)=>[x+side[0]*a+ux*b,y,z+side[1]*a+uz*b];
+    K.cyl({x,z,y:WALK,r:.055,h:2.95,seg:8,mat:C.steel});
+    K.box({x,z,y:2.18,w:.32,h:.68,d:.23,rotY:rot,mat:0x171d21,solid:false});
+    for(const [cy,green] of [[2.68,false],[2.36,true]]){
+      const col=emit(green?0x1f5e48:0xff4a3b),pt=P(0,cy+.072);
+      K.dome({x:pt[0],y:pt[1],z:pt[2],rx:.042,ry:.042,rz:.025,seg:8,rings:4,hemi:false,mat:col});
+      beam(P(0,cy+.025),P(0,cy-.055),.019,col);
+      for(const side of [-1,1]){
+        beam(P(0,cy-.05),P(side*.05,cy-.13),.015,col);
+        beam(P(0,cy+.015),P(side*(green?.07:.04),cy-.035),.014,col);
+      }
+    }
   }
-  for(const n of K.osm.nodes.filter(n=>n.k==='traffic_signals')){
-    const q=nearest(n.x,n.z);if(!q.r||q.d>q.r.width/2+2||n.x<-600||n.x>650||n.z<-700||n.z>600)continue;
-    const x=q.x-q.v*(q.r.width/2+1),z=q.z+q.u*(q.r.width/2+1);signal(x,z,q.rot+PI,q.r.name);
-    // Stop line uses the actual local approach tangent.
-    flat([q.x-q.v*(q.r.width/2-.4)-q.u*5,q.z+q.u*(q.r.width/2-.4)-q.v*5],[q.x+q.v*(q.r.width/2-.4)-q.u*5,q.z-q.u*(q.r.width/2-.4)-q.v*5],.45,ROAD+.025,C.white);
+  function zebra(a,b,w=5){
+    const p=path([a,b]);
+    for(let s=.24;s<p.L-.2;s+=.96){const q=at(p,s),r=at(p,Math.min(p.L-.15,s+.48));flat([q.x,q.z],[r.x,r.z],w,ROAD+.034,C.white);}
+    for(const [end,sgn] of [[0,-1],[p.L,1]]){
+      const q=at(p,end),x=q.x+q.u*sgn*.6,z=q.z+q.v*sgn*.6;
+      // Warning tiles follow the walking axis; the 0.15m curb is stepable.
+      if(pavement(x,z))K.box({x,z,y:WALK+.003,w:w,h:.012,d:.6,rotY:q.rot,mat:'streets-tactile',solid:false});
+      const px=x-q.v*(w/2+.4),pz=z+q.u*(w/2+.4);
+      pedestrianSignal(px,pz,-q.u*sgn,-q.v*sgn);
+      const bx=x+q.v*(w/2-.2),bz=z-q.u*(w/2-.2);if(pavement(bx,bz))bollard(bx,bz);
+    }
   }
-  // Use a transparent custom stencil: the kit's sign atlas material is opaque.
+  for(const c of crosswalks)zebra(c.a,c.b,c.w);
+  function signal(a){
+    const far=a.j.arms.filter(b=>b!==a&&b.u*a.u+b.v*a.v<-.55&&(!a.r.oneway||!b.incoming))
+      .sort((b,c)=>Number(c.r.name===a.r.name)-Number(b.r.name===a.r.name))[0];
+    const base=far||{x:a.j.x-a.u*18,z:a.j.z-a.v*18,r:a.r};
+    const nx=a.v,nz=-a.u,rot=Math.atan2(a.u,a.v),reach=Math.max(6,Math.min(12,a.r.width*.65+1));
+    let x=base.x+nx*(base.r.width/2+1),z=base.z+nz*(base.r.width/2+1);
+    // OSM parallel carriageway widths sometimes overlap: find actual pavement
+    // beyond their union before placing the mast's collision base.
+    let site=curbSite(x,z,nx,nz);
+    if(!site)for(const t of [4,8,12]){site=curbSite(x-a.u*t,z-a.v*t,nx,nz);if(site)break;}
+    if(!site)return;[x,z]=site;
+    K.cyl({x,z,y:WALK,r:.14,h:6.8,seg:10,mat:C.silver});
+    K.box({x,z,y:WALK,w:.42,h:.22,d:.42,mat:0x8d9290});
+    beam([x,6.85,z],[x-nx*reach,6.85,z-nz*reach],.105,C.silver);
+    beam([x,6.3,z],[x-nx*2,6.85,z-nz*2],.065,C.silver);
+    const hx=x-nx*(reach-.65),hz=z-nz*(reach-.65);
+    beam([hx,6.85,hz],[hx,6.27,hz],.045,C.steel);
+    K.box({x:hx,z:hz,y:6.03,w:1.35,h:.4,d:.28,rotY:rot,mat:0x20272b,solid:false});
+    for(let i=0;i<4;i++){
+      const px=hx+nx*(i-1.5)*.31+a.u*.155,pz=hz+nz*(i-1.5)*.31+a.v*.155;
+      K.box({x:px,z:pz,y:6.09,w:.245,h:.28,d:.11,rotY:rot,mat:0x10181b,solid:false});
+      if(i===2)K.sign('←',{x:px+a.u*.061,z:pz+a.v*.061,y:6.23,w:.19,h:.19,rotY:rot,bg:'#101b18',fg:'#274b37'});
+      else K.dome({x:px+a.u*.066,z:pz+a.v*.066,y:6.23,rx:.088,ry:.088,rz:.088,seg:10,rings:5,hemi:false,mat:i===0?emit(0xf73c35):i===1?0x493e22:0x214e38});
+    }
+    K.sign(a.r.name||'고속터미널',{x:x-nx*2.5,z:z-nz*2.5,y:6.23,w:3.2,h:.55,rotY:rot,bg:'#155b9c',fg:'#fff',twoSided:true,box:.08});
+  }
+  for(const a of approaches){
+    const r=a.r,lanes=laneCount(r),lw=r.width/lanes;
+    // Outward-coordinate normal is the left side of approaching traffic.
+    const P=(t,n)=>[a.x+a.u*t-a.v*n,a.z+a.v*t+a.u*n];
+    const lo=-r.width/2+.15,hi=r.oneway?r.width/2-.15:-.3;
+    flat(P(5.2,lo),P(5.2,hi),.45,ROAD+.036,C.white);
+    const count=r.oneway?lanes:lanes/2;
+    for(let k=0;k<count;k++)for(const t of [13.2,30.2]){
+      const n=r.oneway?-r.width/2+(k+.5)*lw:-r.width/2+(k+.5)*lw;
+      const point=P(t,n),q=nearest(point[0],point[1],surfaceRoads);
+      if(!q.r||q.d>q.r.width/2||junctions.some(j=>insideJ(j,...point,5))||[...busMasks,...medianPlatforms].some(p=>K.pointInPoly(...point,p)))continue;
+      const destinations=a.j.arms.filter(b=>b!==a&&(!b.r.oneway||!b.incoming));
+      const hasLeft=destinations.some(b=>a.u*b.v-a.v*b.u>.55),hasRight=destinations.some(b=>a.u*b.v-a.v*b.u<-.55);
+      const route=path([P(t+3,n),P(t-3,n)]),turn=k===count-1&&count>1&&hasLeft?'left':k===0&&hasRight?'straightRight':'straight';
+      arrow(route,3,0,ROAD+.037,false,turn);
+    }
+    signal(a);
+  }
+  // Only colour guidance crosses the large junction boxes. Cubic paths join
+  // the incoming lane to the real opposite/right/left road arm, width 0.45m.
+  function guideCurve(a,b,color,left=false){
+    const inn=left?(a.r.oneway?a.r.width/2-1.8:-1.8):-a.r.width/2+1.8,out=left?(b.r.oneway?-b.r.width/2+1.8:1.8):b.r.width/2-1.8;
+    const start=[a.x-a.u*2.8-a.v*inn,a.z-a.v*2.8+a.u*inn];
+    const end=[b.x-b.u*2.8-b.v*out,b.z-b.v*2.8+b.u*out];
+    const d=Math.hypot(end[0]-start[0],end[1]-start[1])*.4;
+    const c=[start[0]-a.u*d,start[1]-a.v*d],e=[end[0]-b.u*d,end[1]-b.v*d];let prev=start;
+    for(let i=1;i<=24;i++){const t=i/24,s=1-t,next=[s*s*s*start[0]+3*s*s*t*c[0]+3*s*t*t*e[0]+t*t*t*end[0],s*s*s*start[1]+3*s*s*t*c[1]+3*s*t*t*e[1]+t*t*t*end[1]];
+      flat(prev,next,.45,ROAD+.03,color);prev=next;
+    }
+  }
+  for(const j of junctions.filter(j=>j.arms.length>=4&&j.hu+j.hv>31)){
+    const incoming=j.arms.filter(a=>a.owned&&a.incoming);
+    for(const a of incoming.slice(0,4)){
+      const exits=j.arms.filter(b=>b!==a&&(!b.r.oneway||!b.incoming));
+      const straight=exits.find(b=>a.u*b.u+a.v*b.v<-.8);
+      const left=exits.find(b=>a.u*b.v-a.v*b.u>.65);
+      if(straight)guideCurve(a,straight,0x50cbb1);if(left)guideCurve(a,left,0xe477a1,true);
+    }
+  }
   K.texture('streets-bus-stencil',256,512,(g,w,h)=>{g.clearRect(0,0,w,h);g.fillStyle='#e8e5d7';g.font='bold 105px "Apple SD Gothic Neo", "Malgun Gothic", sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText('버스',128,170);g.fillText('전용',128,340);},[2,5],{transparent:true});
-  // Inner blue demarcation on Shinbanpo-ro.
-
-  for(const id of [218913527,828782197,828782198,523344143,218722042,218722043]) {
-    const r=byId.get(id),p=path(r.pts),off=-r.width/2+1.7;
-    for(let s=0;s<p.L;s+=9){line(p,off-1.5,.16,s,Math.min(p.L,s+8.7),ROAD+.028,C.blue);line(p,off+1.5,.16,s,Math.min(p.L,s+8.7),ROAD+.028,C.blue);}
-    for(let s=35;s<p.L;s+=140){const q=at(p,s,off);const r=q.rot+PI,c=Math.cos(r),sn=Math.sin(r),P=(x,z)=>[q.x+x*c+z*sn,ROAD+.031,q.z-x*sn+z*c];K.quad('streets-bus-stencil',[P(-1,2.5),P(1,2.5),P(1,-2.5),P(-1,-2.5)],[0,1,0]);}
+  // Two surveyed busways take precedence at the median stops. Beyond them the
+  // innermost lane of each Sinbanpo carriageway continues the bus demarcation.
+  const blueRoads=surfaceRoads.filter(r=>r.name==='신반포로'&&major(r)&&r.oneway);
+  for(const r of [...blueRoads,...medianBusWays]){
+    const p=path(r.pts),bus=r.hw==='busway';
+    const lane=bus?0:-r.width/2+r.width/laneCount(r)/2;
+    const bounds=bus?[-2.8,2.8]:[-r.width/2+.9,-r.width/2+r.width/laneCount(r)];
+    for(const edge of bounds)for(let s=0;s<p.L;s+=8){
+      const q=at(p,s),nearStop=[[-70.27,-95.53],[6.55,-132.2],[559.18,-333.88]].some(([x,z])=>Math.hypot(q.x-x,q.z-z)<25);
+      for(const delta of nearStop?[-.14,.14]:[0]){
+        const end=Math.min(p.L,s+(nearStop?8:3));
+        for(let t=s;t<end;t+=2){const a=at(p,t,edge+delta),b=at(p,Math.min(end,t+2),edge+delta);paint(stripPoly([a.x,a.z],[b.x,b.z],.15),C.blue,ROAD+.027,!bus);}
+      }
+    }
+    for(let s=35;s<p.L;s+=100){const q=at(p,s,lane);if(junctions.some(j=>insideJ(j,q.x,q.z,22))||(!bus&&medianBusWays.some(b=>nearest(q.x,q.z,[b]).d<7)))continue;
+      const rot=q.rot+PI,c=Math.cos(rot),sn=Math.sin(rot),P=(x,z)=>[q.x+x*c+z*sn,ROAD+.032,q.z-x*sn+z*c];
+      K.quad('streets-bus-stencil',[P(-1,2.5),P(1,2.5),P(1,-2.5),P(-1,-2.5)],[0,1,0]);
+    }
   }
-  function shelter(x,z,name,id='',island=false) {
-    const near=nearest(x,z),rot=near.rot-PI/2,c=Math.cos(rot),s=Math.sin(rot),P=(u,v)=>({x:x+u*c+v*s,z:z-u*s+v*c});
-    K.box({x,z,y:ROAD,w:island?26:8,h:WALK-ROAD,d:island?3.2:3.1,rotY:rot,mat:'streets-pavers'});
+  function shelter(x,z,name,id='',island=false,roadId) {
+    const near=nearest(x,z,roadId?[byId.get(roadId)]:surfaceRoads),rot=near.rot-PI/2+(island?PI:0),c=Math.cos(rot),s=Math.sin(rot),P=(u,v)=>({x:x+u*c+v*s,z:z-u*s+v*c});
+    K.box({x,z,y:0,w:island?26:8,h:WALK,d:island?3.2:3.1,rotY:rot,mat:'streets-pavers'});
     const tactile=P(0,1.35);K.box({...tactile,y:WALK+.006,w:island?25:7.7,h:.014,d:.35,rotY:rot,mat:'streets-tactile',solid:false});
     K.box({x,z,y:2.9,w:6.6,h:.16,d:2.7,rotY:rot,mat:C.steel,solid:false});K.box({x,z,y:2.86,w:6.2,h:.025,d:1.9,rotY:rot,mat:emit(0xfff0d2),solid:false});
     for(const u of [-3,0,3]) {const p=P(u,-.95);K.box({...p,y:WALK,w:.1,h:2.77,d:.1,mat:C.steel});}
@@ -284,11 +517,31 @@ export function build(K) {
     const bench=P(-.4,-.6);K.box({...bench,y:.57,w:2.9,h:.09,d:.48,rotY:rot,mat:'wood'});for(const u of [-1.5,.8]){const p=P(u,-.6);K.box({...p,y:WALK,w:.12,h:.42,d:.4,mat:C.steel});}
     for(let i=0;i<4;i++){const p=P(-1.8+i*1.15,.4+(i%2)*.2);K.person(p.x,WALK,p.z,{shirt:[0xf1e3cc,0x283e55,0x914d3d,0x5e7967][i]});}
     const pole=P(4,0);K.cyl({...pole,y:WALK,r:.075,h:3.6,mat:C.steel});K.sign(['버스',id||name],{...pole,y:3.05,w:.9,h:.9,rotY:rot,bg:'#1768a5',fg:'#fff',twoSided:true});
+    if(island){
+      // street_01: paired narrow dark-steel shelters, upright information
+      // screens, granite platform edge and black post-and-rail fencing.
+      const second=P(-8.3,0);
+      K.box({...second,y:2.9,w:6.6,h:.16,d:2.7,rotY:rot,mat:0x2e383b,solid:false});
+      for(const u of [-11.3,-8.3,-5.3]){const a=P(u,-.95);K.box({...a,y:WALK,w:.09,h:2.77,d:.09,mat:C.steel});}
+      for(const u of [-9.8,-6.8]){const a=P(u,-.98);K.box({...a,y:.55,w:2.85,h:2.12,d:.035,rotY:rot,mat:'glass',solid:false});}
+      const seat=P(-8.3,-.55);K.box({...seat,y:.57,w:3.1,h:.09,d:.48,rotY:rot,mat:'wood'});
+      for(const u of [-11.4,2.9]){
+        const a=P(u,-.55);K.box({...a,y:.2,w:.8,h:2.45,d:.16,rotY:rot,mat:0x202c31,solid:false});
+        const screen=P(u,-.43);K.sign(['서울','버스 안내','고속터미널'],{...screen,y:1.55,w:.65,h:1.9,rotY:rot,bg:'#acd4dd',fg:'#183a50'});
+      }
+      function fence(start,end,v){const a=P(start,v),b=P(end,v);
+        for(const y of [.48,.85,1.12])beam([a.x,y,a.z],[b.x,y,b.z],.028,0x293b3a);
+        for(let u=start;u<=end+.01;u+=1.7){const q=P(u,v);K.box({...q,y:WALK,w:.085,h:1.04,d:.085,mat:0x293b3a,solid:false});K.box({...q,y:1.13,w:.16,h:.06,d:.16,mat:0x293b3a,solid:false});}
+        K.phys.addWall(a.x,a.z,b.x,b.z,WALK,1.18,.035,'streets');
+      }
+      fence(-12.7,12.7,-1.49);for(const [a,b] of [[-12.7,-11.9],[-4.7,-3.6],[4.8,12.7]])fence(a,b,1.49);
+      for(const v of [-1.6,1.6]){const a=P(-13,v),b=P(13,v);K.wall(a.x,a.z,b.x,b.z,0,WALK,{thick:.18,mat:0xbfc2bc,solid:false});}
+    }
     K.zone({name,floor:'지상',sub:id?'버스정류장 · '+id:'버스정류장',poly:rect(x,z,30,10),y0:0,y1:4,priority:4});
     return {rot,P};
   }
-  const stopSpecs=[[-70.45,-96,'고속터미널(중)','22020',true],[6.35,-131.03,'고속터미널','',false],[-89.24,-115.7,'고속터미널','',false],[-145.79,-94.99,'호남고속·신세계','',false],[-171.44,-45.71,'고속터미널호남선','22220',false],[137.14,155.74,'고속터미널역 3번출구','',false],[407.01,-117.03,'고속터미널','',false],[559.18,-333.88,'반포역','22018',true],[-400.22,-210.78,'반포대교남단·한강공원입구','',false],[-70.52,518.16,'서울성모병원·서울지방조달청','',false]];
-  for(const [x,z,n,id,isl] of stopSpecs)if(id!=='22220')shelter(x,z,n,id,isl===true);
+  const stopSpecs=[[-70.27,-95.53,'고속터미널(중)','22020',true,1420100043],[6.55,-132.2,'고속터미널','',true,1420100042],[-89.24,-115.7,'고속터미널','',false],[-145.79,-94.99,'호남고속·신세계','',false],[-171.44,-45.71,'고속터미널호남선','22220',false],[137.14,155.74,'고속터미널역 3번출구','',false],[407.01,-117.03,'고속터미널','',false],[559.18,-333.88,'반포역','22018',true],[-400.22,-210.78,'반포대교남단·한강공원입구','',false],[-70.52,518.16,'서울성모병원·서울지방조달청','',false]];
+  for(const [x,z,n,id,isl,roadId] of stopSpecs)if(id!=='22220')shelter(x,z,n,id,isl===true,roadId);
   // cc_02: continuous pale-frame glass canopy west of the CC forecourt. The
   // OSM stop is its east end; extend 36m west along the surveyed curb tangent.
   {
@@ -323,8 +576,9 @@ export function build(K) {
     const label=P(14,-1.71);K.sign('고속터미널호남선',{...label,y:2.94,w:4.1,h:.28,rotY:rot+PI,bg:'#56645f',fg:'#eee'});
     K.zone({name:'고속터미널호남선',floor:'지상',sub:'버스정류장 · 22220',poly:stripPoly([P(-18,0).x,P(-18,0).z],[P(18,0).x,P(18,0).z],4),y0:0,y1:4,priority:4});
   }
-  const busRoad=byId.get(218913527),bq=nearest(-69,-92,[busRoad]);
-  K.vehicle({x:bq.x-(-bq.v)*3.0,z:bq.z-bq.u*3.0,y:ROAD,rotY:bq.rot,kind:'cityBus',color:0x2367ac,label:'고속터미널'});
+  const busRoad=byId.get(1420100043),bq=nearest(-69,-96,[busRoad]);
+  K.vehicle({x:bq.x,z:bq.z,y:ROAD,rotY:bq.rot,kind:'cityBus',color:0x2367ac,label:'142 고속터미널'});
+  const westBus=nearest(8,-132,[byId.get(1420100042)]);K.vehicle({x:westBus.x,z:westBus.z,y:ROAD,rotY:westBus.rot,kind:'cityBus',color:0x2367ac,label:'360 고속터미널'});
   const bus2=at(path(byId.get(523344143).pts),190,-5.3);K.vehicle({x:bus2.x,z:bus2.z,y:ROAD,rotY:bus2.rot,kind:'cityBus',color:0x4d9c50,label:'반포역'});
   // Rental stations retain OSM locations and verified station numbers.
   function bike(x,z,rot) {
@@ -352,9 +606,96 @@ export function build(K) {
   guide(-274,-11,PI/2+.36,['↑ 반포대교 · 한강공원','← 동작대교     강남역 →']);
   guide(235,137,PI/2+.46,['↑ 강남역','서초IC · 경부고속도로']);
   guide(-365,-134,-.36,['↑ 반포대교','반포한강공원']);
-  const taxi=nearest(-113,-69.6),tr=taxi.rot-PI/2;
-  K.cyl({x:-113,z:-69.6,y:0,r:.07,h:3.1,mat:C.steel});K.sign(['택시','승차장'],{x:-113,z:-69.6,y:2.5,w:.75,h:.8,rotY:tr,bg:'#d99a2c',fg:'#182c32',twoSided:true});
-  for(let i=0;i<3;i++)K.vehicle({x:-126+taxi.u*i*6.2,z:-58+taxi.v*i*6.2,y:ROAD,rotY:taxi.rot,kind:'taxi'});
+  // Round 8: photo taxi/06 supplies the white arch, clear roof and dark sign beam.
+  // No taxi POI is present in this OSM extract. Both curb positions are inferred;
+  // the terminal service-lane stand stays west of the surveyed arch crossing.
+  // Hoisted so earlier automatic street furniture can reserve these footprints.
+  function inTaxiStand(x,z) {
+    for(const [cx,cz,a] of [[-111.887,-61.999,.371006],[103.774,-133.587,-.047950]]) {
+      const dx=x-cx,dz=z-cz,c=Math.cos(a),s=Math.sin(a);
+      if(Math.abs(dx*c-dz*s)<11&&Math.abs(dx*s+dz*c)<3.6)return true;
+    }
+    return Math.hypot(x+118,z+44)<3.3;
+  }
+  function taxiStand(roadId,anchor,name) {
+    const r=byId.get(roadId),p=path(r.pts),q=nearest(...anchor,[r]),off=r.width/2+2.2;
+    const rot=Math.atan2(-q.v,q.u),cx=q.x-q.v*off,cz=q.z+q.u*off;
+    const P=(u,v,y=0)=>[cx+q.u*u-q.v*v,y,cz+q.v*u+q.u*v];
+    const B=(u,v,y,w,d,h,mat,solid=false)=>{const a=P(u,v,y);K.box({x:a[0],y,z:a[2],w,d,h,rotY:rot,mat,solid});};
+    const poly=[P(-9.4,-1.9),P(9.4,-1.9),P(9.4,2.2),P(-9.4,2.2)].map(a=>[a[0],a[2]]);
+    K.slab(poly,WALK,{mat:'streets-pavers',thick:.15,ceil:false});
+    // Clear 1.4m rear walking aisle; kerb rails break at the boarding opening.
+    B(0,.85,WALK+.006,18,.35,.014,'streets-tactile');
+    B(5.6,-.35,WALK+.006,.65,2.75,.014,'streets-tactile');
+    const roofY=v=>3.15+.36*Math.cos(v/1.85*PI/2);
+    for(let u=-9;u<9;u+=1.5)for(let v=-1.85;v<1.84;v+=.925){
+      K.quad({tex:'glass',color:0xc7dedf},[P(u,v,roofY(v)),P(u+1.5,v,roofY(v)),P(u+1.5,v+.925,roofY(v+.925)),P(u,v+.925,roofY(v+.925))],[0,1,0]);
+      beam(P(u,v,roofY(v)),P(u,v+.925,roofY(v+.925)),.035,0x56656b);
+    }
+    for(const v of [-1.85,0,1.85])beam(P(-9,v,roofY(v)),P(9,v,roofY(v)),.055,0x536067);
+    for(const u of [-9,-4.5,0,4.5,9])for(const side of [-1,1]){
+      const base=P(u,side*1.62,WALK);
+      K.cyl({x:base[0],z:base[2],y:WALK,r:.19,h:.7,seg:10,mat:0xf0efea});
+      let prev=base;
+      for(let k=1;k<=12;k++){
+        const t=k/12,point=P(u,side*(1.62-.58*t*t),WALK+(3.2-WALK)*t);
+        beam(prev,point,.18,0xf0efea);prev=point;
+      }
+      beam(prev,P(u,0,roofY(0)),.12,0xf0efea);
+    }
+    // A dark street-facing fascia carries the same sign on both visible faces.
+    B(0,-1.88,2.73,18,.14,.48,0x242a2e);
+    const signP=P(0,-1.88,2.97);
+    for(const face of [rot,rot+PI])K.sign(['TAXI','택시승차'],{x:signP[0],z:signP[2],y:2.97,w:2.9,h:.4,rotY:face,bg:'#242a2e',fg:'#eeeeea',offset:.09});
+    function queueRail(a,b,v,glass=false){
+      const pa=P(a,v),pb=P(b,v);
+      for(let u=a;u<=b+.01;u+=1.8)B(u,v,WALK,.055,.055,1.08,0x303b3e,true);
+      for(const y of [.45,1.12])beam(P(a,v,y),P(b,v,y),.035,0x303b3e);
+      K.phys.addWall(pa[0],pa[2],pb[0],pb[2],WALK,1.15,.025,'streets');
+      if(glass)K.quad({tex:'glass',color:0xc4d3cd},[P(a,v,.47),P(b,v,.47),P(b,v,1.08),P(a,v,1.08)],[-q.v,0,q.u]);
+    }
+    queueRail(-8.6,3.8,-1.7,true);queueRail(7.4,8.6,-1.7,true);
+    queueRail(-6.8,2.5,-.32);
+    for(const u of [-5.7,-3.1,.5]){const a=P(u,.22,WALK);K.person(a[0],WALK,a[2],{rotY:rot+PI,shirt:u<0?0x354251:0xddd7c7});}
+    for(const u of [-6.4,.05]){
+      B(u,.28,WALK,.33,.25,.48,0x5f4e59);beam(P(u-.1,.28,.62),P(u-.1,.28,.93),.018,C.silver);beam(P(u+.1,.28,.62),P(u+.1,.28,.93),.018,C.silver);beam(P(u-.1,.28,.93),P(u+.1,.28,.93),.024,C.steel);
+    }
+    // Decorative twin lantern, as in the canopy photo, set behind the queue.
+    const lp=P(-7.5,2.6,WALK);K.cyl({x:lp[0],z:lp[2],y:WALK,r:.105,h:3.7,seg:10,mat:0x303a3e});
+    for(const u of [-8.1,-6.9]){
+      beam(P(-7.5,2.6,3.35),P(u,2.6,3.55),.06,0x303a3e);
+      const a=P(u,2.6,3.75);K.dome({x:a[0],z:a[2],y:a[1],rx:.18,ry:.25,rz:.18,mat:emit(0xe7e9df),hemi:false,seg:8,rings:5});
+      beam(P(u,2.6,3.55),P(u,2.6,4.03),.035,0x303a3e);
+    }
+    let station=0,best=Infinity;
+    for(let i=1;i<r.pts.length;i++){
+      const a=r.pts[i-1],b=r.pts[i],dx=b[0]-a[0],dz=b[1]-a[1],len=p.cum[i]-p.cum[i-1],t=Math.max(0,Math.min(1,((q.x-a[0])*dx+(q.z-a[1])*dz)/(len*len)));
+      const dist=Math.hypot(q.x-a[0]-dx*t,q.z-a[1]-dz*t);if(dist<best){best=dist;station=p.cum[i-1]+len*t;}
+    }
+    for(let i=0;i<3;i++){
+      const a=at(p,station-7+i*6.6,r.width/2-1.15),col=[0xe77b31,0xf1f1e8,0xf5cf29][i];
+      K.vehicle({x:a.x,z:a.z,y:ROAD,rotY:a.rot,kind:'taxi',color:col});
+      const nx=Math.cos(a.rot),nz=-Math.sin(a.rot);
+      for(const side of [-1,1])K.sign(i===2?'카카오 T':'서울 택시',{x:a.x+nx*side*.944,z:a.z+nz*side*.944,y:.78,w:1.25,h:.24,rotY:a.rot+side*PI/2,bg:i===2?'#f5cf29':i===0?'#e77b31':'#f1f1e8',fg:'#25323b',offset:.015});
+    }
+    K.zone({name,floor:'1F',sub:'택시 승차장',poly,y0:0,y1:4,priority:5});
+    const sp=P(5.6,1.45,WALK);K.spawn({name,x:sp[0],z:sp[2],y:WALK,yaw:rot,group:'고속터미널 거리'});
+  }
+  taxiStand(218913527,[-115,-70],'호남선 · 센트럴시티 택시 승차장');
+  taxiStand(1065783063,[104,-138.3],'경부선 터미널 택시 승차장');
+  // taxi/05 shows a glass smoking booth beside the plaza. This small enclosure's
+  // position is inferred in the east edge of the existing forecourt, off its door axis.
+  {
+    const x=-118,z=-44,rot=.3724,c=Math.cos(rot),s=Math.sin(rot),P=(u,v)=>[x+c*u+s*v,z-s*u+c*v];
+    const poly=[P(-1.8,-1.2),P(1.8,-1.2),P(1.8,1.2),P(-1.8,1.2)];
+    K.slab(poly,.15,{mat:'streets-pavers',thick:.15,ceil:false});
+    K.polyWalls(poly,.15,2.55,{mat:{tex:'glass',color:0xa9bfc2},thick:.04,openings:[{x:x+s*1.2,z:z+c*1.2,w:1.15,y0:.15,y1:2.3}]});
+    for(const [px,pz] of poly)K.box({x:px,z:pz,y:.15,w:.08,h:2.5,d:.08,rotY:rot,mat:0x5c686e});
+    K.box({x,z,y:2.6,w:3.75,h:.15,d:2.55,rotY:rot,mat:0x667278,solid:false});
+    K.sign('흡연부스',{x:x+s*1.23,z:z+c*1.23,y:2.4,w:2.6,h:.3,rotY:rot,bg:'#5c686e',fg:'#f3f2ea'});
+    for(const u of [-1.35,1.35]){const p=P(u,-.55);K.cyl({x:p[0],z:p[1],y:.15,r:.13,h:.85,seg:10,mat:C.silver});K.cyl({x:p[0],z:p[1],y:1,r:.15,h:.035,seg:10,mat:0x333b3d,solid:false});}
+    for(const u of [-1,0,1]){const p=P(u,-.95);K.box({x:p[0],z:p[1],y:2.36,w:.62,h:.16,d:.08,rotY:rot,mat:0x323b3e,solid:false});}
+  }
   K.sign(['반포한강공원 가는 길','← 고투몰 출구 · 반포대로'],{x:-297,z:-30,y:2.1,w:3.1,h:.85,rotY:.36,bg:'#234d40',fg:'#fff',box:.1});
 
   // Flyover: approach ways tagged layer=0 are real ramps, not flat end stubs.
@@ -551,26 +892,158 @@ function buildRoadviewBuildings(K) {
     K.zone({name:'르본시티',floor:'지상',sub:'신반포로',poly:p,y0:0,y1:38,priority:2});
   }
 
-  // ssg_04: blue / beige square panels; the image is blurred, so there is no
-  // guessed police emblem, banner, office lettering, or detailed glazing.
-  K.texture('streets-police-panels',256,256,(g,w,h)=>{
-    g.fillStyle='#e2d6bd';g.fillRect(0,0,w,h);g.fillStyle='#2f6db3';g.fillRect(0,0,w/2,h/2);g.fillRect(w/2,h/2,w/2,h/2);
-    g.strokeStyle='#acb4b6';g.lineWidth=2;g.strokeRect(0,0,w/2,h/2);g.strokeRect(w/2,0,w/2,h/2);g.strokeRect(0,h/2,w/2,h/2);g.strokeRect(w/2,h/2,w/2,h/2);
-  },[2.4,2.4]);
+  // Round 8: the police-specific roadviews supersede the blurred ssg_04
+  // checkerboard inference. The OSM footprint stays authoritative. Local u
+  // follows the west facade toward the south; v points into the building.
+  K.texture('streets-police-stone',256,256,(g,w,h)=>{
+    g.fillStyle='#a5aaa2';g.fillRect(0,0,w,h);g.strokeStyle='#707c78';g.lineWidth=2;
+    for(let x=0;x<=w;x+=128){g.beginPath();g.moveTo(x,0);g.lineTo(x,h);g.stroke();}
+    for(let y=0;y<=h;y+=64){g.beginPath();g.moveTo(0,y);g.lineTo(w,y);g.stroke();}
+  },[3,3]);
+  K.texture('streets-police-frit',256,256,(g,w,h)=>{
+    g.clearRect(0,0,w,h);g.fillStyle='rgba(67,87,89,.55)';
+    for(let j=0;j<3;j++)for(let i=0;i<3;i++){g.beginPath();g.arc(42+i*85,42+j*85,34-(i+j)%2*5,0,PI*2);g.fill();}
+  },[2.1,2.1],{transparent:true});
   for(const b of K.osmBuilding(886400346)){
-    const p=b.poly;
-    K.prism(p,0,9,{mat:'streets-police-panels',top:0xc8c7bc});
-    band(p,8.8,.2,0xc8c7bc);
-    // East annex follows the main footprint's east wall and stays off the road.
-    const a=p[2],c=p[3],n=K.orient(p)[2],d=5;
-    const annex=[a,c,[c[0]+n[0]*d,c[1]+n[1]*d],[a[0]+n[0]*d,a[1]+n[1]*d]];
-    K.prism(annex,0,3.8,{mat:0x506b71,top:0xc4c9c4});
-    for(let e=1;e<4;e++){
-      const aa=annex[e],bb=annex[(e+1)%4],L=Math.hypot(bb[0]-aa[0],bb[1]-aa[1]);
-      surface(annex,e,L/2,.35,L-.12,3.1,{tex:'glass',color:0x92b5bc},.07);
-      for(let t=.1;t<L;t+=1.7)surface(annex,e,t,.2,.07,3.5,0xaeb9b6,.1);
+    const p=b.poly,L=Math.hypot(p[1][0]-p[0][0],p[1][1]-p[0][1]),D=Math.hypot(p[3][0]-p[0][0],p[3][1]-p[0][1]);
+    const ux=(p[1][0]-p[0][0])/L,uz=(p[1][1]-p[0][1])/L,vx=-uz,vz=ux;
+    // v is east/northeast, the opposite of the west outward normal.
+    const P=(u,v)=>[p[0][0]+ux*u-vx*v,p[0][1]+uz*u-vz*v];
+    const pos=(u,v)=>{const q=P(u,v);return {x:q[0],z:q[1]};};
+    const rot=Math.atan2(vx,vz),frame=0x465555,stone='streets-police-stone',glass={tex:'glass',color:0x7faaa5};
+    const localBox=(u,v,y,w,h,d,mat,solid=true)=>K.box({...pos(u,v),y,w,h,d,rotY:rot,mat,solid});
+    const localRect=(u0,v0,u1,v1)=>[P(u0,v0),P(u1,v0),P(u1,v1),P(u0,v1)];
+    const localWall=(u0,v0,u1,v1,y0,y1,opts)=>{const a=P(u0,v0),c=P(u1,v1);K.wall(...a,...c,y0,y1,opts);};
+    const face=(uvys,mat,normal=[vx,0,vz])=>K.quad(mat,uvys.map(([u,v,y])=>{const q=P(u,v);return [q[0],y,q[1]];}),normal);
+    const apron=localRect(-1,-10.6,L+1,0);
+    K.slab(apron,.15,{mat:'streets-pavers',thick:.15,ceil:false});
+    K.slab(p,0,{mat:{tex:'tile',color:0xd4d4c9},thick:.2});
+    const stairHole=localRect(1.1,D-2.15,L-1.3,D-.55);
+    K.slab(p,4.05,{mat:0xd3d3ca,under:'ceiling',thick:.22,holes:[stairHole]});
+    K.slab(p,8.05,{mat:'roofgravel',under:'ceiling',thick:.23});
+    // The door is a genuine 2.2 m opening through the curtain wall, with the
+    // glass leaves parked to either side. Nothing spans the entrance at foot level.
+    localWall(0,0,L,0,0,8.05,{mat:glass,thick:.06,openings:[{at:9.3,w:2.2,y0:0,y1:2.9}]});
+    localWall(0,0,0,D,0,8.05,{mat:glass,thick:.06});
+    localWall(L,0,L,D,0,8.05,{mat:stone,mat2:0xe0dfd4,thick:.2});
+    localWall(0,D,L,D,0,8.05,{mat:stone,mat2:0xe0dfd4,thick:.2});
+    const st0=P(1.25,D-1.35),st1=P(L-1.5,D-1.35);
+    K.stairs(...st0,...st1,{w:1.45,ya:0,yb:4.05,mat:0xc5c8c1,rails:true});
+    for(const y of [.2,3.05,4.05,5.0,7.98])localBox(L/2,-.065,y,L,.085,.12,frame,false);
+    for(let u=.08;u<L;u+=1.72){
+      if(u>8.15&&u<10.45){localBox(u,-.07,2.9,.075,5.15,.14,frame,false);continue;}
+      localBox(u,-.07,0,.075,8.05,.14,frame,false);
     }
-    K.zone({name:'반포지구대',floor:'지상',sub:'신반포로',poly:p,y0:0,y1:9,priority:2});
+    for(const [u0,u1] of [[.1,8.15],[10.45,L-.1]]){
+      face([[u0,-.09,.6],[u1,-.09,.6],[u1,-.09,2.7],[u0,-.09,2.7]],'streets-police-frit');
+      face([[u0,-.09,4.17],[u1,-.09,4.17],[u1,-.09,5.0],[u0,-.09,5.0]],'streets-police-frit');
+    }
+    // North road face: broad grey stone panels with dark glass bays, an oblique
+    // glass/stone boundary, and slender metal mullions visible in police_01.
+    const nn=[-ux,0,-uz];
+    face([[0,-.02,.2],[0,3.1,.2],[0,4.55,7.95],[0,-.02,7.95]],stone,nn);
+    face([[0,7.1,.2],[0,9.45,.2],[0,11.25,7.95],[0,8.9,7.95]],stone,nn);
+    for(let v=4.7;v<D;v+=1.4){
+      const a=P(-.045,v);K.box({x:a[0],z:a[1],y:.2,w:.08,h:7.85,d:.08,mat:frame,solid:false});
+    }
+    for(const y of [.25,4.03,7.95]){
+      const a=P(-.04,0),c=P(-.04,D);K.wall(...a,...c,y,y+.08,{mat:frame,thick:.08,solid:false});
+    }
+    // Lean the near-corner glass pane back 0.7 m at its top, preserving the
+    // footprint below. These faces are decorative over the north envelope.
+    face([[-.12,3.15,.25],[-.12,4.8,.25],[.58,6.1,7.9],[.58,4.6,7.9]],glass,nn);
+    // Low east glass annex from the previous model remains, with finer frames.
+    const annex=localRect(0,D,L,D+5);
+    K.slab(annex,0,{mat:'tile',thick:.18});K.slab(annex,3.8,{mat:0xc4c9c4,thick:.15});
+    K.polyWalls(annex,0,3.8,{mat:glass,thick:.06});
+    for(let u=.1;u<L;u+=1.7)localBox(u,D+5,.1,.07,3.65,.1,frame,false);
+    localBox(L/2,D+5,3.6,L,.14,.1,frame,false);
+    // Entrance canopy, blue police sign and small division lettering.
+    localBox(9.3,-1.2,3.05,3.7,.15,2.5,0x9ba5a1,false);
+    localBox(9.3,-1.2,3.2,3.45,.045,2.2,glass,false);
+    for(const u of [7.6,11.0])localBox(u,-2.25,.15,.095,2.9,.095,0xb9c1ba);
+    K.sign('경찰 POLICE',{...pos(9.3,-2.48),y:3.86,w:3.75,h:1.02,rotY:rot,bg:'#1749a1',fg:'#fff',box:.08});
+    K.sign('서울서초경찰서 | 반포지구대',{...pos(9.3,-2.54),y:4.24,w:3.48,h:.18,rotY:rot,bg:'#1749a1',fg:'#fff'});
+    K.sign(['잘못 건 112신고전화','긴급출동의 발목을 잡습니다'],{...pos(L/2,-.16),y:6.4,w:L-1,h:2.35,rotY:rot,bg:'#174a9d',fg:'#fff',box:.06});
+    K.sign('112는 긴급범죄신고 전화입니다',{...pos(L/2,-.22),y:5.48,w:L-2,h:.28,rotY:rot,bg:'#174a9d',fg:'#ffe882'});
+    for(const u of [8.1,10.5])localBox(u,.12,.08,.08,2.82,.12,0xb4bfb9,false);
+    for(const u of [8.55,10.05])localBox(u,.3,.12,.72,2.55,.035,glass,false);
+    localBox(9.3,-.38,.015,2.25,.025,.8,0x545b57,false);
+    // Three flags are compact static cloth panels; no guessed agency insignia.
+    for(let i=0;i<3;i++){
+      const u=11.8+i*.72,q=pos(u,-.85);K.cyl({...q,y:.15,r:.038,h:6.4,seg:8,mat:0xbfc6bf});
+      K.sign(i===1?'대한민국':'경찰',{...pos(u+.31,-.85),y:5.7,w:.6,h:1.0,rotY:rot,bg:i===1?'#eee9dd':'#353b74',fg:i===1?'#3c4c60':'#d9bf71',twoSided:true});
+    }
+    // Forecourt boundary and parking remain fully inside the service-road curb.
+    for(let u=0;u<=L;u+=1.8){
+      if(u>7.5&&u<11)continue;
+      const q=pos(u,-10.1);K.cyl({...q,y:.15,r:.09,h:.73,seg:8,mat:0x323a39});
+      K.cyl({...q,y:.64,r:.095,h:.12,seg:8,mat:0xe8be35,solid:false});
+    }
+    for(let u=1;u<7;u+=2){
+      const a=P(u,-3),c=P(u,-5);K.wall(...a,...c,.78,.83,{mat:0x9ba9a6,thick:.05,solid:false});
+      for(const v of [-3,-5])K.cyl({...pos(u,v),y:.15,r:.035,h:.68,mat:0x9ba9a6,seg:6});
+    }
+    for(const u of [2.5,6]){
+      const q=pos(u,-7.2),a=rot+PI;
+      K.vehicle({...q,y:.15,rotY:a,kind:'car',color:0xf1f2ec});
+      const c=Math.cos(a),s=Math.sin(a),CP=(x,z)=>({x:q.x+x*c+z*s,z:q.z-x*s+z*c});
+      for(const side of [-1,1]){
+        K.box({...CP(side*.94,0),y:.67,w:.025,h:.25,d:3.4,rotY:a,mat:0x164b96,solid:false});
+        K.box({...CP(side*.96,0),y:.51,w:.025,h:.11,d:3.8,rotY:a,mat:0xe7db30,solid:false});
+        K.sign('경찰',{...CP(side*.97,0),y:.8,w:1.1,h:.22,rotY:a+side*PI/2,bg:'#164b96',fg:'#fff'});
+      }
+      K.box({...q,y:1.57,w:1.2,h:.1,d:.32,rotY:a,mat:0x9da9ac,solid:false});
+      for(const side of [-1,1])K.box({...CP(side*.36,0),y:1.67,w:.45,h:.12,d:.28,rotY:a,mat:{tex:'emit',color:side<0?0xd63b32:0x326fbf},solid:false});
+      const a0=P(u-1.35,-9.8),a1=P(u-1.35,-4.5);K.wall(...a0,...a1,.155,.16,{thick:.1,mat:0xe1e2d5,solid:false});
+    }
+    localBox(12.75,-3,.15,2.45,1.8,.18,0x7c8f83);
+    K.sign('게시판',{...pos(12.75,-3.12),y:1.78,w:2.3,h:.34,rotY:rot,bg:'#eeeadd',fg:'#233c38'});
+    for(const u of [12.05,12.8,13.55])K.sign(['주민 안내','생활 안전'],{...pos(u,-3.14),y:1.13,w:.61,h:.83,rotY:rot,bg:'#e4e1c9',fg:'#425c52'});
+    // Running officer: a shallow extruded, two-sided silhouette, as in the
+    // rooftop photo, with an extended arm, bent lead knee, cap and dark uniform.
+    const silhouette=(poly,mat)=>{
+      const vv=-.12,depth=.24,triangles=K.THREE.ShapeUtils.triangulateShape(poly.map(([u,y])=>new K.THREE.Vector2(u,y)),[]);
+      for(const [v,normal] of [[vv,[vx,0,vz]],[vv+depth,[-vx,0,-vz]]]){
+        for(const [a,b,c] of triangles)face([[poly[a][0],v,poly[a][1]],[poly[b][0],v,poly[b][1]],[poly[c][0],v,poly[c][1]],[poly[c][0],v,poly[c][1]]],mat,normal);
+      }
+      for(let i=0;i<poly.length;i++){const a=poly[i],c=poly[(i+1)%poly.length];face([[a[0],vv,a[1]],[c[0],vv,c[1]],[c[0],vv+depth,c[1]],[a[0],vv+depth,a[1]]],mat,[uz,0,-ux]);}
+    };
+    silhouette([[1.2,8.1],[2.2,8.2],[4.0,9.0],[5.4,9.7],[5.9,9.35],[5.7,8.45],[6.6,8.3],[6.65,8.05],[5.2,8.07],[4.95,8.35],[5.05,9.0],[4.0,8.5],[2.0,7.9]],0x27333c);
+    silhouette([[3.2,9.1],[3.55,10.2],[4.8,10.85],[5.7,10.48],[5.45,9.7],[4.35,9.3]],0x1d4c67);
+    silhouette([[4.8,10.2],[5.5,10.25],[6.0,9.9],[7.6,9.7],[7.7,9.4],[5.8,9.5],[4.8,9.9]],0x235b78);
+    silhouette([[3.8,10.2],[2.9,10.55],[2.0,10.2],[1.4,9.8],[1.55,9.5],[2.35,10.0],[3.1,10.0],[3.55,9.8]],0x28546e);
+    silhouette([[5.0,10.65],[5.12,11.32],[5.72,11.3],[5.88,11.0],[6.12,10.88],[5.8,10.78],[5.6,10.43]],0xc7a184);
+    silhouette([[4.95,11.2],[4.88,11.65],[5.9,11.58],[5.98,11.33],[6.22,11.27],[6.05,11.16],[5.56,11.24]],0x172b3c);
+    silhouette([[7.55,9.72],[7.85,9.9],[8.06,10.08],[8.16,9.98],[7.99,9.72],[8.28,9.77],[8.3,9.58],[7.72,9.43]],0xc7a184);
+    silhouette([[1.52,9.8],[1.25,9.72],[1.08,9.48],[1.21,9.32],[1.4,9.51],[1.62,9.47]],0xc7a184);
+    localBox(4.0,-.1,9.35,1.3,.1,.3,0x1d2428,false);
+    localBox(5.63,-.16,11.34,.14,.16,.035,0xd6bc64,false);
+    K.zone({name:'반포지구대',floor:'1F',sub:'민원 안내',poly:p,y0:0,y1:4.05,priority:8});
+    K.zone({name:'반포지구대',floor:'2F',sub:'업무 공간',poly:p,y0:4.05,y1:8.05,priority:8});
+    const outside=pos(9.3,-5.2);K.spawn({name:'반포지구대 앞',...outside,y:.15,yaw:rot,group:'고속터미널 거리'});
+    // Interior furniture uses the desk/CCTV photos, not the unrelated shopping
+    // arcade images in the source folder. Room arrangement is a modest inference.
+    K.detail({name:'반포지구대 민원실',floor:'1F',poly:p,y0:0,y1:4.05},K=>{
+      const box=(u,v,y,w,h,d,mat,solid=true)=>K.box({...pos(u,v),y,w,h,d,rotY:rot,mat,solid});
+      box(7,4.4,0,8.6,.95,.8,0xb1a28a);box(7,4.4,.95,8.7,.06,.95,0x6f9f6b);
+      K.sign('민원 안내',{...pos(7,3.94),y:.66,w:2,h:.34,rotY:rot,bg:'#e1dfd1',fg:'#2e4b58'});
+      K.sign('반포지구대',{...pos(7,8.0),y:2.5,w:3.2,h:.55,rotY:rot,bg:'#e6e2d5',fg:'#2c4958'});
+      for(const u of [3.8,6.8,9.8]){
+        box(u,4.42,1.05,.9,.64,.09,0x192528);box(u,4.05,1.02,.7,.025,.22,0x394344);
+        box(u,5.4,.45,.6,.12,.6,0x27353b);box(u,5.65,.55,.6,.75,.1,0x263941);
+        box(u,7.6,.7,2.0,.12,.85,0xc9c2af);box(u,7.62,.83,1.7,.015,.65,0x61925e);
+        box(u,7.78,.95,.85,.55,.08,0x24343d);
+      }
+      for(const u of [2.4,4.1,5.8]){box(u,1.55,.43,1.35,.12,.55,0x5f6c6d);box(u,1.83,.55,1.35,.62,.08,0x7c8988);}
+      for(const u of [2.4,4.6,6.8])for(const y of [1.95,2.75]){
+        box(u,10.3,y,1.95,.7,.08,0x19292d);
+        for(let a=0;a<3;a++)for(let c=0;c<2;c++)box(u-.6+a*.6,10.24,y+.07+c*.29,.54,.23,.015,[0x608778,0x83969b,0x596c7c][(a+c)%3],false);
+      }
+      box(11.8,7.6,0,.85,2.15,.65,0xe0e1d7);for(let y=1.3;y<1.8;y+=.12)box(11.8,7.24,y,.66,.025,.02,0x84918f,false);
+      for(const u of [3,7,11])for(const v of [3,7.5])box(u,v,3.77,1.6,.035,.55,{tex:'emit',color:0xf7f2df},false);
+      K.person(...[pos(6.8,5.4).x,0,pos(6.8,5.4).z],{rotY:rot,shirt:0x294b61,pants:0x24323a,sit:true});
+    });
   }
 
   // bp_01's older slabs: tan end walls, broad dark balcony openings and white

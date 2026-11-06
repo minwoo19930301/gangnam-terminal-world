@@ -13,9 +13,13 @@ export const meta = {
   id: 'centralcity',
   name: '센트럴시티 (호남선 터미널 · 파미에스테이션)',
   claims: [356127040, 593858530, 601356623, 1173096805],
-  claimRoads: [593858534, 593858536, 593858537, 1128012726, 1128012724, 1185035520, 1065783056, 1185035521],
+  claimRoads: [593858534, 593858536, 593858537, 1128012726, 1128012724, 1185035520, 1065783056, 1185035521, 816395056, 1262591320],
   claimAreas: [1173096801],
   sources: [
+    'refs/aerial/famille_back.jpg',
+    'refs/interior/famille_back/notes.json (location corrections in data/research/centralcity.json)',
+    'refs/interior/famille_back/16_parking_entrance_booth_pine_sign.jpg',
+    'refs/interior/famille_back/23_parking_fee_sign.jpg',
     'refs/interior/cc_hall/notes.json',
     'refs/interior/cc_famille/notes.json',
     'refs/roadview/cc_01_main_gate_plaza_spheres_shinsegae_west_tower.jpg',
@@ -151,16 +155,26 @@ export function build(K) {
   // Photo 07: a polished, pale marble surface; custom material keeps specular response
   // instead of the kit's default matte Lambert material (all geometry still merged).
   K.texture('ccQuietMarble',256,256,(g,w,h)=>{
-    g.fillStyle='#eeeee9';g.fillRect(0,0,w,h);
-    // Very low-contrast mineral bands, rather than the default angular crack network.
-    for(let i=0;i<9;i++){
-      g.strokeStyle=i%2?'rgba(188,190,184,.16)':'rgba(255,255,251,.5)';g.lineWidth=2+i%3;
-      g.beginPath();g.moveTo(-30,i*35-30);g.bezierCurveTo(65,i*35+5,165,i*35-40,w+25,i*35+25);g.stroke();
+    g.fillStyle='#e7e7df';g.fillRect(0,0,w,h);
+    // The trace7 floor read as woodgrain. Soft irregular mineral clouds and a few
+    // branching diagonal veins replace the evenly spaced parallel waves.
+    const marbleRand=K.rand(8038);
+    for(let i=0;i<36;i++){
+      const x=marbleRand()*w,y=marbleRand()*h,r=18+marbleRand()*64;
+      const shade=g.createRadialGradient(x,y,1,x,y,r);
+      shade.addColorStop(0,i%3?'rgba(151,166,155,.085)':'rgba(255,255,250,.34)');shade.addColorStop(1,'rgba(239,239,230,0)');
+      g.fillStyle=shade;g.fillRect(x-r,y-r,r*2,r*2);
     }
-    g.strokeStyle='rgba(156,158,151,.16)';g.lineWidth=.7;g.strokeRect(0,0,w,h);
+    for(let i=0;i<5;i++){
+      const x=-60+i*76,y=-25+marbleRand()*65;
+      g.strokeStyle='rgba(117,142,133,.15)';g.lineWidth=.6+marbleRand()*1.1;
+      g.beginPath();g.moveTo(x,y);g.bezierCurveTo(x+55,y+57,x+18,y+109,x+159,y+250);g.stroke();
+      if(i%2){g.beginPath();g.moveTo(x+52,y+114);g.bezierCurveTo(x+78,y+129,x+116,y+140,x+153,y+165);g.stroke();}
+    }
+    g.strokeStyle='rgba(139,146,136,.16)';g.lineWidth=.6;g.strokeRect(0,0,w,h);
   },[1.2,1.2]);
   K.material('ccPolishedMarble', new K.THREE.MeshStandardMaterial({
-    color: 0xf4f3ee, map: K.T.surface('ccQuietMarble').tex, roughness: 0.18, metalness: 0.04,
+    color: 0xf4f3ee, map: K.T.surface('ccQuietMarble').tex, roughness: 0.14, metalness: 0.04,
   }));
   const M = {
     hallFloor: { tex: 'ccPolishedMarble', scale: [1.2,1.2] }, b1Floor: { tex: 'tile', color: 0xc9b9a3 }, f2Floor: { tex: 'tile', color: 0xe2ddd3 },
@@ -205,6 +219,7 @@ export function build(K) {
     }
   },[1.04,.52]);
   brickTexture('ccFamBrick',['#b77b55','#be8259','#ab6d47','#c28a62'],'#ded1bb');
+  brickTexture('ccBackBrick',['#985c47','#a16b50','#89513e','#b17b5a'],'#b0a18d');
   brickTexture('ccWhiteBrick',['#e0ded5','#cdcfc6','#e8e5dc','#c4c8c0'],'#666b66');
   K.texture('ccGreyTile',256,128,(g,w,h)=>{
     g.fillStyle='#d1cdc6';g.fillRect(0,0,w,h);
@@ -538,10 +553,29 @@ export function build(K) {
     // Photo01: low slatted platform canopy, granite piers and two-sided suspended blue numbers.
     const platformRoof=RECT(-10,-1.5,149,6);
     K.hpoly({tex:'metal',color:0x5d6166},platformRoof,5.2,false);K.phys.addCeiling(platformRoof,5.2,{});
-    for(let ss=-9;ss<149;ss+=1.8)lbox(ss,2.25,.08,6,5.16,.025,{tex:'emit',color:0xf2f4f0},{solid:false});
+    for(let ss=-9;ss<149;ss+=1.8)lbox(ss,2.25,.045,4.6,5.16,.025,{tex:'emit',color:0xf2f4f0},{solid:false});
+    // Round 8 / photo01: closely spaced metal seams, granite caps and a glazed
+    // boarding elevation remain visible along the platform instead of a blank opening.
+    for(let ss=-9.8;ss<149;ss+=.32)lbox(ss,2.25,.017,7.35,5.145,.018,0x454b50,{solid:false});
+    for(let ss=-4;ss<149;ss+=6)lcyl(ss,2.4,5.10,.13,.035,0xebe8db,{solid:false});
     for(const bb of bays){
       lbox(bb.s,4.5,4.0,3,0,.12,M.platform);
-      if(bb.s+6<149)lbox(bb.s+6,.6,1.1,1.1,0,5.2,'ccStone');
+      if(bb.s+6<149){
+        lbox(bb.s+6,.6,1.1,1.1,0,5.2,'ccStone');
+        lbox(bb.s+6,.6,1.16,1.16,5.02,.18,0xc5bcb1,{solid:false});
+        for(const yy of [1.1,2.2,3.3,4.4])lbox(bb.s+6,.6,1.115,1.115,yy,.018,0x8a8178,{solid:false});
+      }
+      hallFurnish(()=>{
+        // Photo01: open sliding leaves, stainless sill and door handles; the full
+        // central 3.2 m walking aperture stays unobstructed.
+        for(const side of [-1,1]){
+          lbox(bb.s+side*1.87,5.87,.07,.08,.12,2.56,0xa8b0b1,{solid:false});
+          lbox(bb.s+side*2.35,5.87,.86,.07,1.02,.055,0xa8b0b1,{solid:false});
+          hallTube([bb.s+side*1.84,5.82,.93],[bb.s+side*1.84,5.82,1.62],.032,0xcbd0ce);
+        }
+        lbox(bb.s,5.88,3.26,.13,.075,.018,0xc6c8c3,{solid:false});
+        lsign('승차장',bb.s+2.30,5.80,2.28,.77,.20,'W',{bg:'#80343a',fg:'#f5eee7',pxPerM:100});
+      });
       lbox(bb.s-1.5,3.2,.12,.7,3.5,.9,0x1b3b8f,{solid:false});
       for(const tt of [2.96,3.44])hallTube([bb.s-1.5,tt,4.4],[bb.s-1.5,tt,5.2],.035,0x535a61);
       lsign(String(bb.p),bb.s-1.58,3.2,3.95,.6,.72,'N',{bg:'#1b3b8f',fg:'#fff',twoSided:true,offset:.02,pxPerM:100});
@@ -562,9 +596,22 @@ export function build(K) {
   // ---- 08/16: two cream rounded portals, open staffed counter and paired departure screens.
   K.texture('ccHallLandscape',512,192,(g,w,h)=>{
     const sky=g.createLinearGradient(0,0,0,h);sky.addColorStop(0,'#5cbbec');sky.addColorStop(1,'#d9e8e1');g.fillStyle=sky;g.fillRect(0,0,w,h);
-    for(const [yy,col]of[[.48,'#789f88'],[.62,'#397f63']]){g.fillStyle=col;g.beginPath();g.moveTo(0,h);for(let k=0;k<=16;k++)g.lineTo(k*w/16,h*(yy-.13*Math.sin(k*1.7)));g.lineTo(w,h);g.closePath();g.fill();}
-    g.fillStyle='#68b7ca';g.beginPath();g.moveTo(w*.54,h*.58);g.lineTo(w*.64,h*.58);g.lineTo(w*.85,h);g.lineTo(w*.31,h);g.closePath();g.fill();
-    for(let k=0;k<28;k++){const x=(k*53)%w,y=h*.63+(k%4)*h*.06;g.fillStyle=['#ded9bd','#c9c6b5','#e4e5d1'][k%3];g.fillRect(x,y,11+(k%3)*4,8+(k%4)*3);}
+    // Photo08's scenic LED is soft foliage and flower colour, not geometric city blocks.
+    for(const [yy,col]of[[.48,'#9ab9aa'],[.55,'#638c75'],[.65,'#3f745c']]){
+      g.fillStyle=col;g.beginPath();g.moveTo(0,h);
+      for(let k=0;k<=64;k++)g.lineTo(k*w/64,h*(yy-.055*Math.sin(k*.34)-.025*Math.sin(k*.91)));
+      g.lineTo(w,h);g.closePath();g.fill();
+    }
+    const r=K.rand(2408);
+    for(let k=0;k<380;k++){
+      const x=r()*w,y=h*(.47+r()*.34),sz=1.3+r()*4;
+      g.fillStyle=['#346342','#548252','#70925f','#92a66b'][k%4];g.beginPath();g.arc(x,y,sz,0,2*PI);g.fill();
+    }
+    g.fillStyle='#86bcc6';g.beginPath();g.moveTo(w*.54,h*.56);g.bezierCurveTo(w*.58,h*.70,w*.49,h*.78,w*.39,h);g.lineTo(w*.75,h);g.bezierCurveTo(w*.59,h*.80,w*.61,h*.69,w*.59,h*.56);g.closePath();g.fill();
+    for(let k=0;k<300;k++){
+      const x=r()*w,y=h*(.75+r()*.25);if(x>w*.38&&x<w*.76)continue;
+      g.fillStyle=['#e9b8cf','#dd89ac','#f2d8de','#cfa1c3','#cdd2a0'][k%5];g.beginPath();g.arc(x,y,1+r()*2.2,0,2*PI);g.fill();
+    }
   },[1,1]);
   const ticketArch=(s,t,w)=>{
     const spring=2.2,rise=.9,edge=.17,at=(u,outer)=>{const q=PI*u,[x,z]=P(s+Math.cos(q)*(w/2+outer*edge),t);return[x,spring+Math.sin(q)*(rise+outer*edge),z];};
@@ -574,12 +621,12 @@ export function build(K) {
   {
     const s0=TICKET.s0,s1=TICKET.s1,sc=(s0+s1)/2;
     lwall(s0,6,s0,12.6,Y1,4.15,{mat:M.wallIn});lwall(s1,6,s1,12.6,Y1,4.15,{mat:M.wallIn});
-    lwall(s0,10.8,s1,10.8,Y1,3.25,{mat:0x242c2b,thick:.14});
+    lwall(s0,10.8,s1,10.8,Y1,3.25,{mat:0x2b2925,thick:.14});
     hallFurnish(()=>{
-    for(let s=s0+.1;s<s1;s+=.22)lbox(s,10.92,.055,.05,.2,2.85,0x414b45,{solid:false});
+    for(let s=s0+.1;s<s1;s+=.22)lbox(s,10.92,.055,.05,.2,2.85,0x5b5246,{solid:false});
     for(const c of [s0+3.65,s1-3.65]){ticketArch(c,11.02,6.6);lsign('13:07',c,11.10,2.75,.72,.20,'E',{bg:'#111111',fg:'#ff3b2f',pxPerM:110});}
-    lbox(sc,12.3,s1-s0,.72,Y1,1.03,0x716a58,{top:0x242b2a});
-    for(let s=s0+.1;s<s1;s+=.18)lbox(s,12.68,.045,.025,.1,.78,0xa49b84,{solid:false});
+    lbox(sc,12.3,s1-s0,.72,Y1,1.03,0xa39d91,{top:0x353a38});
+    for(let s=s0+.1;s<s1;s+=.18)lbox(s,12.68,.045,.025,.1,.78,0xc4bcac,{solid:false});
     lbox(sc,12.20,s1-s0,.55,2.98,.72,0xc2a078,{solid:false});
     for(let yy=3.04;yy<3.7;yy+=.14)lbox(sc,12.50,s1-s0,.035,yy,.038,0xe4c99e,{solid:false});
     lsign('TICKETS 표사는곳',sc-.35,12.55,3.33,5.5,.52,'E',{bg:null,fg:'#ffffff',pxPerM:90});
@@ -589,6 +636,10 @@ export function build(K) {
       lperson(ss,11.4,Y1,{rotY:F.E,shirt:0x202a29,sit:true});
       lbox(ss,11.82,.48,.22,1.03,.36,0x1e2528,{solid:false});
       lbox(ss,12.20,.34,.22,1.04,.02,0xece8dd,{solid:false});
+      hallTube([ss+.42,12.12,1.05],[ss+.42,12.12,1.31],.025,0x6f7771);
+      hallTube([ss+.42,12.12,1.31],[ss+.35,12.24,1.35],.025,0x6f7771);
+      lsign(String(k+1),ss+.55,12.70,.82,.20,.18,'E',{bg:null,fg:'#454740',pxPerM:150});
+      lbox(ss-.35,12.36,.12,.07,1.04,.16,0x536169,{solid:false});
     }
     for(const ds of [-5.5,5.5])for(const off of [-.98,.98])hallBoard(sc+ds+off,12.30,4.33,1.9,1.22);
     lbox(sc-.5,11.6,7.5,.20,4.9,2.4,0x222a2c,{solid:false});
@@ -657,6 +708,15 @@ export function build(K) {
       lsign(label,kc,8.19,3.10,kw-.35,.44,'E',{bg:emart?'#2a2a2a':'#eee9dc',fg:emart?'#ffffff':'#942b32',pxPerM:90});
       if(emart)lbox(kc,8.2,kw-.2,.025,2.80,.10,0xf39a1e,{solid:false});
       for(let k=0;k<9;k++)lbox(kc-kw*.4+k*kw*.09,7.6,.25,.3,.8,.16,[0xc5ac6e,0x8fa899,0x986d64][k%3],{solid:false});
+      // Fine shop fittings make the glass read as a lit occupied kiosk.
+      for(const yy of [1.25,1.82]){
+        lbox(kc,6.65,kw-.48,.30,yy,.045,0xd2c4ad,{solid:false});
+        for(let k=0;k<10;k++)lbox(kc-kw*.39+k*kw*.077,6.70,.17,.13,yy+.045,.17+(k%3)*.05,[0xd5ba84,0x7eaa9f,0xb98077,0xd4d2be][k%4],{solid:false});
+      }
+      lbox(kc,7.2,kw-.4,.45,2.76,.035,{tex:'emit',color:0xffe3b0},{solid:false});
+      lbox(kc-kw*.29,7.88,.40,.18,.83,.32,0x303b40,{solid:false});
+      hallFace({tex:'emit',color:0x789cb0},kc-kw*.29,7.99,1.03,.32,.19);
+      for(const ds of [-kw*.42,kw*.42])lbox(kc+ds,8.19,.018,.025,.83,1.91,0xb9bbb3,{solid:false});
       if(i===9){
         lsign('●',kc+1.5,8.22,2.15,.7,.7,'E',{bg:null,fg:'#c92937',pxPerM:140,padding:0});
         lsign('Lotto',kc+1.5,8.25,2.15,.55,.18,'E',{bg:null,fg:'#ffffff',pxPerM:160});
@@ -690,6 +750,14 @@ export function build(K) {
       ell(ss,tt,hip+.24,.235,.34,.145);ell(ss,tt,neck+.19,.15,.20,.16);
       ell(ss,tt-dir*.025,neck+.28,.157,.12,.15,0x665337);
       ell(ss,tt+dir*.15,neck+.18,.035,.043,.045);
+      // Subtle cheeks, ears and coat folds retain the full-size bronze silhouettes
+      // but avoid the smooth toy-like heads in the round-7 comparison.
+      for(const side of [-1,1]){
+        ell(ss+side*.145,tt,neck+.17,.035,.065,.045);
+        limb([ss+side*.16,tt+dir*.14,hip+.32],[ss+side*.20,tt+dir*.17,hip+.03],.018);
+        limb([ss+side*.075,tt+dir*.155,neck+.23],[ss+side*.035,tt+dir*.17,neck+.22],.012);
+      }
+      limb([ss-.05,tt+dir*.16,neck+.10],[ss+.05,tt+dir*.16,neck+.10],.012);
       lcyl(ss,tt,neck-.06,.075,.14,bronze,{solid:false});
       for(const side of [-1,1]){
         const kneeT=tt+dir*(standing?.04:.42),kneeY=standing?.52:.52;
@@ -747,6 +815,20 @@ export function build(K) {
     for(const [ds,dt]of[[1.7,1.35],[-1.6,1.2]])lcyl(ks+ds,kt+dt,0,.08,.24,0xe4e1d8,{solid:false});
     lsign(['팥붕슈붕','따뜻한 붕어빵'],ks+1.60,kt,1.7,1.6,.7,'S',{bg:'#ede0c0',fg:'#693c2d',box:.035});
     lperson(ks+.3,kt-.7,0,{shirt:0xe8d4b0,rotY:F.E});
+    // Photo23: the oblique side has a cream menu wrap, ribbed lower panels,
+    // preparation trays and a low leaning menu board beside the little kiosk.
+    lbox(ks+1.59,kt,.035,2.28,.98,1.48,0xeee0c4,{solid:false});
+    lsign(['팥붕슈붕','따뜻한 붕어빵'],ks+1.62,kt,1.85,1.75,.72,'S',{bg:null,fg:'#704439',pxPerM:110});
+    for(let tt=kt-1.05;tt<kt+1.08;tt+=.12)lbox(ks+1.60,tt,.035,.04,.07,.82,0x4e2e28,{solid:false});
+    for(const ds of [-.2,.35,.8]){
+      lcyl(ks+ds,kt-.65,1.02,.07,.21,0xd7cfb8,{solid:false});
+      for(let n=0;n<3;n++)hallTube([ks+ds+.025*n,kt-.65,1.22],[ks+ds+.025*n,kt-.65,1.39],.012,0x655143);
+    }
+    lwall(ks-.25,kt+1.06,ks+1.25,kt+1.06,1.02,1.44,{mat:'glass',thick:.018,solid:false});
+    for(const ds of [-.25,1.25])lbox(ks+ds,kt+1.07,.025,.025,1.02,.44,0xb4a58c,{solid:false});
+    lbox(ks+2.02,kt+.30,.52,.08,.03,1.05,0xd9cdb2,{solid:false});
+    lsign(['팥붕슈붕','붕어빵'],ks+2.02,kt+.355,.63,.43,.73,'E',{bg:'#e8dbc0',fg:'#795443',pxPerM:120});
+    lbox(ks+2.02,kt+.30,.65,.48,.015,.035,0x8b7b64,{solid:false});
     // Ticket machines are modelled as four independent terminals, not a painted kiosk wall.
     for(let n=0;n<4;n++){
       const ss=38.1+n*.86;
@@ -787,6 +869,23 @@ export function build(K) {
     for(const yy of [1.3,1.9]){lbox(c,37.3,b-a-1.5,.4,yy,.06,0x806950,{solid:false});for(let k=0;k<10;k++)lbox(a+1+k*(b-a-2)/10,37.3,.15,.18,yy+.06,.22,[0xf2eee4,0xc4ae89,0x66785b][k%3],{solid:false});}
     for(const ss of [a+1.2,b-1.2]){lcyl(ss,26.7,0,.43,.65,0xe8e5da);const[x,z]=P(ss,26.7);K.tree(x,z,{y:.6,h:2.1});}
     lperson(c,31.3,0,{shirt:0x282e2b});
+    // Visible warm pendant light, joinery and occupied side tables behind the glazing.
+    for(const ss of [a+1.45,b-1.45]){
+      lbox(ss,35.2,1.45,.8,.72,.07,{tex:'wood',color:0xc4a16a},{solid:false});
+      for(const side of [-1,1]){
+        lbox(ss+side*.48,35.2,.06,.65,0,.72,0x343a36,{solid:false});
+        lbox(ss+side*.42,34.4,.49,.49,.43,.06,0x795e43,{solid:false});
+        lbox(ss+side*.42,34.15,.49,.055,.48,.53,0x795e43,{solid:false});
+      }
+      hallTube([ss,35.2,3.68],[ss,35.2,2.65],.018,0x4b443b);
+      const[x,z]=P(ss,35.2);K.dome({x,z,y:2.48,rx:.25,ry:.18,rz:.25,seg:10,rings:4,mat:0xad8c5c});
+      lcyl(ss,35.2,2.45,.17,.02,{tex:'emit',color:0xffd995},{solid:false});
+      lperson(ss+.35,35.65,0,{sit:true,shirt:0x76624f,rotY:F.W});
+    }
+    for(const ss of [a+.3,b-.3]){
+      lbox(ss,27.96,.72,.60,3.16,.15,0xb19c83,{solid:false});
+      lbox(ss,27.96,.72,.60,.06,.13,0x7b6b5c,{solid:false});
+    }
     });
   };
   hallCafe(7,16,'STARBUCKS',0x453d33,'#f7f3e6',0x00bd62);
@@ -815,12 +914,23 @@ export function build(K) {
   for(const [a,b]of[[-18,39.4],[48.8,76],[86,150]]){
     lbox((a+b)/2,23.08,b-a,.18,3.45,1.6,0xf1efe8,{solid:false});
     for(let ss=a+.8;ss<b;ss+=2.4)hallFace('ccHallVent',ss,22.97,4.55,.36,.36,'W');
+    // Photo04: silver glass clamps/posts and panel joints remain legible from 1F.
+    for(let ss=a+.45;ss<b;ss+=2.5){
+      lbox(ss,22.94,.055,.065,4.91,1.16,0xa9ada8,{solid:false});
+      for(const yy of [5.18,5.86])lbox(ss,22.90,.14,.035,yy,.065,0xbcc0ba,{solid:false});
+      lbox(ss,22.965,.018,.018,3.50,1.45,0xd8d7ce,{solid:false});
+    }
+    hallTube([a,22.94,6.08],[b,22.94,6.08],.075,0xc7cac3);
+    lbox((a+b)/2,22.96,b-a,.055,5.04,.045,0xaaa99f,{solid:false});
   }
   for(const ss of [12,65,132])lsign(['지하철 3·7·9호선 타는곳 ↑','SUBWAY LINE 3·7·9'],ss,22.95,4.10,7.5,.65,'W',{bg:null,fg:'#1e2221',pxPerM:90});
   const hallCeilingPanels=[[-18,23,39.4,28],[39.4,26.3,48.8,28],[48.8,23,76,28],[86,23,151,28]];
   for(const r of hallCeilingPanels){
     const poly=RECT(...r);K.hpoly(0x2b2e31,poly,4.68,false,H.f2.filter(h=>K.pointInPoly(h.reduce((v,p)=>v+p[0],0)/h.length,h.reduce((v,p)=>v+p[1],0)/h.length,poly)));
     for(let ss=r[0]+1.2;ss<r[2];ss+=2.4)for(let tt=r[1]+1.2;tt<r[3];tt+=2.4)if(!H.f2.some(h=>K.pointInPoly(...P(ss,tt),h)))lcyl(ss,tt,4.66,.09,.02,{tex:'emit',color:0xfff4dc},{solid:false});
+    // Photo02: a fine dark ceiling grid breaks up the previously featureless soffit.
+    for(let ss=r[0]+.12;ss<r[2];ss+=.45)lbox(ss,(r[1]+r[3])/2,.018,r[3]-r[1],4.645,.018,0x464a49,{solid:false});
+    for(let tt=r[1]+.12;tt<r[3];tt+=.45)lbox((r[0]+r[2])/2,tt,r[2]-r[0],.018,4.645,.018,0x464a49,{solid:false});
   }
   K.material('ccHallGreenWash',new K.THREE.MeshBasicMaterial({color:0x18d070,transparent:true,opacity:.18,depthWrite:false,side:K.THREE.DoubleSide}));
   K.material('ccHallRedWash',new K.THREE.MeshBasicMaterial({color:0xff3a30,transparent:true,opacity:.18,depthWrite:false,side:K.THREE.DoubleSide}));
@@ -838,7 +948,8 @@ export function build(K) {
   for(let ss=-7;ss<=145;ss+=9.5){
     colS.push(ss);
     const t=20.5,lowLobby=ss>=2&&ss<27;
-    lbox(ss,t,1.0,1.0,0,lowLobby?5.2:3.65,{tex:'marble',color:0xe9ebe6});
+    lbox(ss,t,1.0,1.0,0,lowLobby?5.2:3.65,'ccPolishedMarble');
+    for(let yy=1.15;yy<(lowLobby?5.1:3.6);yy+=1.15)lbox(ss,t,1.004,1.004,yy,.012,0xd4d5cc,{solid:false});
     lbox(ss,t,1.04,1.04,0,.15,0x202725,{solid:false});
     if(lowLobby){
       for(const side of [-1,1])lbox(ss,t+side*.56,.20,.12,2.6,.35,{tex:'emit',color:0xffd9a0},{solid:false});
@@ -851,7 +962,7 @@ export function build(K) {
       for(const dir of [-1,1]){const endT=t+dir*1.8,endY=4.4+Math.sqrt(156.25-Math.pow(endT-14.6,2))-Math.sqrt(156.25-16.8*16.8/4);hallCurve(u=>[ss,t+dir*(.72+u*1.08),4.45+(endY-4.45)*Math.sin(u*PI/2)],6,.16,0xeeeee3);}
     }
     if(Math.round(ss)%3===0)lsign(['← 화장실','지하철 · 식당가 ↑'],ss,19.91,2.65,.98,.38,'W',{bg:'#353435',fg:'#ffffff',pxPerM:110});
-    if(ss<76||ss>86)lbox(ss,27.2,.75,.75,Y2,C2-Y2,{tex:'marble',color:0xe9ebe6});
+    if(ss<76||ss>86)lbox(ss,27.2,.75,.75,Y2,C2-Y2,'ccPolishedMarble');
   }
   hallFurnish(()=>{
     // cc_hall07/12: small black directions wrap the marble pier at eye level.
@@ -873,6 +984,16 @@ export function build(K) {
     const a=colS[i],b=colS[i+1];if(a<27&&b>3)continue;
     twinArch([a,20.5],[b,20.5],4.4,9);
     twinArch([a,6.2],[b,6.2],4.4,9);
+    // Photos05/06/08: the upper X lattice and suspended warm lamps carry across
+    // the broad roof bays; keep every existing curved rib and its lower branch.
+    hallTube([a,6.4,6.4],[b,20.3,7.68],.18,0xe5e2d2);
+    hallTube([a,20.3,7.68],[b,6.4,6.4],.18,0xe5e2d2);
+    hallTube([a,13.35,8.12],[b,13.35,8.12],.14,0xe5e2d2);
+    for(const ss of [a+2.4,a+7.1]){
+      hallTube([ss,13.35,8.12],[ss,13.35,7.43],.026,0x9fa397);
+      lcyl(ss,13.35,7.30,.17,.10,0xddd8c4,{solid:false});
+      lcyl(ss,13.35,7.28,.115,.025,{tex:'emit',color:0xfff1cc},{solid:false});
+    }
   }
   for(const [s0,s1]of[[-10,3],[27,149]])for(let tt=6;tt<23;tt+=.5){
     const a=P(s0,tt),b=P(s1,tt),c=P(s1,tt+.5),d=P(s0,tt+.5);
@@ -927,6 +1048,7 @@ export function build(K) {
   // ================================================================= B1 — Shinsegae / subway / cinema LINK, not Famille's 1F street.
   // cc_famille 22–24: cream marble, paired dark bands, dark timber/marble fronts,
   // gilded rectangular coffers. Store names / bay ordering are not readable, so left plain.
+  K.material('ccB1MosaicGloss',new K.THREE.MeshStandardMaterial({map:K.T.surface('ccLinkMosaic').tex,color:0xcfc6b4,roughness:.25,metalness:.025}));
   const b1Furnish=[];
   const b1Fixture=fn=>b1Furnish.push(fn);
   const b1WellBounds=()=>H.f1.concat(H.b1).map(poly=>{
@@ -952,6 +1074,13 @@ export function build(K) {
       lbox(s,t+edge*(dt/2-.15),ds-.3,.045,YB1+3.84,.05,0xb39a62,{solid:false});
     }
     lbox(s,t,ds-.75,dt-.75,YB1+4.05,.035,{tex:'emit',color:0xfff5dc},{solid:false});
+    // Photo23: layered plaster and fine gilt dentils surround each lightwell.
+    for(const edge of [-1,1]){
+      lbox(s+edge*(ds/2+.12),t,.08,dt+.45,YB1+3.78,.08,0xf0e7d3,{solid:false});
+      lbox(s,t+edge*(dt/2+.12),ds+.45,.08,YB1+3.78,.08,0xf0e7d3,{solid:false});
+      for(let u=-ds/2+.22;u<ds/2;u+=.25)lbox(s+u,t+edge*(dt/2-.06),.09,.07,YB1+3.77,.08,0xc5ac79,{solid:false});
+      for(let u=-dt/2+.22;u<dt/2;u+=.25)lbox(s+edge*(ds/2-.06),t+u,.07,.09,YB1+3.77,.08,0xc5ac79,{solid:false});
+    }
     for(let a=-ds/2+.4;a<=ds/2-.3;a+=(ds-.8)/3)lbox(s+a,t,.055,dt-.65,YB1+4.0,.065,0x443a30,{solid:false});
     for(let a=-dt/2+.4;a<=dt/2-.3;a+=(dt-.8)/3)lbox(s,t+a,ds-.65,.055,YB1+4.0,.065,0x443a30,{solid:false});
   };
@@ -962,7 +1091,7 @@ export function build(K) {
       if(alongS)lbox((s0+s1)/2,side<0?t0+offset:t1-offset,s1-s0,.1,YB1+.016,.008,0x292724,{solid:false});
       else lbox(side<0?s0+offset:s1-offset,(t0+t1)/2,.1,t1-t0,YB1+.016,.008,0x292724,{solid:false});
     }
-    K.hpoly('ccLinkMosaic',RECT(s0+(alongS?.2:1.15),t0+(alongS?1.15:.2),s1-(alongS?.2:1.15),t1-(alongS?1.15:.2)),YB1+.018,true);
+    K.hpoly({tex:'ccB1MosaicGloss',scale:[1.2,1.2]},RECT(s0+(alongS?.2:1.15),t0+(alongS?1.15:.2),s1-(alongS?.2:1.15),t1-(alongS?1.15:.2)),YB1+.018,true);
   };
   {
     linkFloor(-19,13,151,22);b1Ceiling(-19,13,151,22);
@@ -991,6 +1120,11 @@ export function build(K) {
       }
       lbox((a+b)/2,t,b-a,.35,YB1+2.95,.65,{tex:'wood',color:0x574231},{solid:false});
       lbox((a+b)/2,t-inside*.2,b-a-.9,.035,YB1+3.04,.025,0xb39a62,{solid:false});
+      b1Fixture(()=>{
+        for(const hh of [3.12,3.48])lbox((a+b)/2,t-inside*.205,b-a-.65,.025,YB1+hh,.035,0xb29b70,{solid:false});
+        for(const ss of [a+.4,(a+b)/2,b-.4])lbox(ss,t-inside*.205,.03,.025,YB1+3.12,.36,0xb29b70,{solid:false});
+        for(const ss of [a+.25,b-.25])lbox(ss,t-inside*.34,.12,.06,YB1+.15,2.7,0x9c8a6b,{solid:false});
+      });
       b1Fixture(()=>{
         const sc=(a+b)/2,ct=t+inside*2.65,wood={tex:'wood',color:0x62452f};
         // A staffed dark timber counter, pastry/glass display and small payment screen.
@@ -1269,7 +1403,7 @@ export function build(K) {
       }
       // Floors, stairs, ceilings, roof void and room walls must exist before lazy furnishing.
       if(type!=='modern'){
-        K.hpoly(type==='cha'?0xf2efe8:type==='buddha'?{tex:'wood',color:0x8a6a48}:0xeee8dc,poly,y+3.65,false);K.phys.addCeiling(poly,y+3.65,{});
+        K.hpoly(type==='cha'?0xcbbca1:type==='buddha'?0xd9d3c4:0xeee8dc,poly,y+3.65,false);K.phys.addCeiling(poly,y+3.65,{});
       }
       if(type==='hoho'){
         // Three broad low steps, leaving the eight-metre street clear beyond the approach.
@@ -1316,6 +1450,18 @@ export function build(K) {
           else lbox(at(dep/2),tt,dep-.4,.05,y+3.45,.12,0xd6b07e,{solid:false});
         }
         for(const tt of panelT)lbox(at(3.7),tt,.6,1.2,y+3.58,.025,{tex:'emit',color:0xfff6e6},{solid:false});
+        // Round 8 / photo03: the battens hang below substantial cream cross-beams,
+        // with broad ceiling recesses and a timber service wall beyond the tables.
+        for(const v of [1.1,4.8,8.2]){
+          lbox(at(v),tc,.24,w-.45,y+3.16,.25,0xe7ddc8,{solid:false});
+          for(const tt of [t0+.45,t1-.45])lbox(at(v),tt,.5,.48,y+2.7,.46,0xe7ddc8,{solid:false});
+        }
+        for(const tt of [t0+.18,t1-.18])for(const v of [2.2,5.6,8]){
+          lbox(at(v),tt,2.35,.05,y+.95,1.65,0xd6c8ae,{solid:false});
+          lbox(at(v),tt+Math.sign(tc-tt)*.035,2.08,.025,y+1.1,1.33,0xe8ddc7,{solid:false});
+        }
+        lbox(back+dir*.13,tc,.13,w-1.4,y+2.38,.5,0xc8b48f,{solid:false});
+        lbox(back+dir*.21,tc,.06,w-1.5,y+2.83,.035,{tex:'emit',color:0xffe5b6},{solid:false});
         // A rounded glowing square sits behind separate K.sign lettering (photo02).
         const logoS=front+dir*.21,logoT=t0+1.3,logoY=y+2.02;
         const logoPoint=(dt,dy)=>{const q=P(logoS,logoT+dt);return[q[0],logoY+dy,q[1]];};
@@ -1344,6 +1490,22 @@ export function build(K) {
         for(const tt of [t0+2,t1-2])arch(front+dir*.1,tt,2.2,0,3.65,.65,0xe9dfc9);
       }
       if(type==='cha'){
+        // Photos05/07/08: an open dark beam grid, warm bar shelves and fluted leather.
+        for(const v of [.4,2.5,4.7,6.9,8.5]){
+          lbox(at(v),tc,.10,w-.2,3.42,.18,0x3c342a,{solid:false});
+          for(const tt of [t0+.8,t1-.8])lcyl(at(v),tt,3.36,.07,.06,{tex:'emit',color:0xffe0a5},{solid:false,seg:8});
+        }
+        for(const tt of [t0+.2,tc,t1-.2])lbox(at(dep/2),tt,dep-.3,.08,3.42,.18,0x3c342a,{solid:false});
+        lbox(back+dir*.45,tc,.6,w-1.3,0,.96,0x4b3023,{top:0x77705b});
+        for(const hh of [1.25,1.9,2.55]){
+          lbox(back+dir*.2,tc,.33,w-1.4,hh,.075,0x493526,{solid:false});
+          lbox(back+dir*.37,tc,.035,w-1.6,hh+.075,.035,{tex:'emit',color:0xffcf83},{solid:false});
+          for(let tt=t0+.9;tt<t1-.8;tt+=.32){
+            const tint=[0x6a7653,0xac8152,0x82928b][Math.abs(Math.round(tt*10))%3];
+            lcyl(back+dir*.23,tt,hh+.09,.06,.26,tint,{solid:false,seg:8});
+            lcyl(back+dir*.23,tt,hh+.35,.025,.09,0x594b30,{solid:false,seg:6});
+          }
+        }
         for(const tt of [t0+.12,t1-.12]){
           lbox(at(dep/2),tt,dep-.4,.035,.9,1.7,'glass',{solid:false});
           for(const hh of [.9,2.6])lbox(at(dep/2),tt,dep-.35,.065,hh,.07,0x2f6b4f,{solid:false});
@@ -1385,8 +1547,21 @@ export function build(K) {
         for(const v of [2,4.5,7]){const q=P(at(v),tc);K.dome({x:q[0],z:q[1],y:.44,rx:.35,ry:.28,rz:.28,mat:0x75766a,seg:8,rings:4});lcyl(at(v)+.35,tc+.4,.45,.3,.02,0x3e865b,{solid:false});}
         for(const tt of [t0+.5,t1-.5])lbox(at(dep/2),tt,dep-.4,.14,3.45,.06,{tex:'emit',color:0xd5f5f1},{solid:false});
         // Photo13's reflective gold centre, narrow white pendants, hot-pot place settings.
-        K.material('ccGardenGold',new K.THREE.MeshStandardMaterial({color:0xc7a56b,metalness:.82,roughness:.17}));
+        K.material('ccGardenGold',new K.THREE.MeshStandardMaterial({color:0xe4c58c,metalness:.24,roughness:.22}));
         K.hpoly('ccGardenGold',RECT(Math.min(at(1),at(dep-1)),tc-1.25,Math.max(at(1),at(dep-1)),tc+1.25),3.6,false);
+        // The source's bronze ripples need visible warm faces without an environment map.
+        for(let v=1;v<dep-1;v+=.24){
+          lbox(at(v),tc,.09,2.48,3.54+.025*Math.sin(v*4),.045,v%1<.5?0xc9a56e:0xe6c892,{solid:false});
+        }
+        for(const tt of [t0+.12,t1-.12])for(const v of [1.8,4.8,8.1,10.8]){
+          lbox(at(v),tt,2.1,.1,.52,2.43,0xe5dbcb,{solid:false});
+          lbox(at(v),tt+Math.sign(tc-tt)*.075,1.72,.025,.65,2.1,0xf5f1e8,{solid:false});
+          lbox(at(v),tt+Math.sign(tc-tt)*.1,.035,.05,.68,2.05,{tex:'emit',color:0xd9efdf},{solid:false});
+        }
+        for(const v of [2.8,6.3,9.6])for(const tt of [t0+.35,t1-.35]){
+          lbox(at(v),tt,1.45,.42,.65,.25,0xe6ddcc);
+          for(let k=0;k<6;k++)beam([at(v)-.6+k*.24,tt,.9],[at(v)-.62+k*.24,tt+Math.sin(k)*.14,1.55+(k%3)*.12],.055,0x6d8b54);
+        }
         for(let v=1.8;v<dep-1;v+=1.45){
           for(const dt of [-1.4,1.4]){setting(at(v),tc+dt,.825,true);lbox(at(v)+.26,tc+dt,.04,.18,.84,.17,0x242d2d,{solid:false});}
           lcyl(at(v),tc,1.65,.018,1.93,0xf3f1e7,{solid:false,seg:6});
@@ -1411,6 +1586,17 @@ export function build(K) {
         }
       }
       if(type==='buddha'){
+        // Photo10 has pale inset ceiling fields between timber beams, not an all-wood lid.
+        for(const v of [.4,3,5.8,8.6]){
+          lbox(at(v),tc,.21,w-.2,3.42,.22,{tex:'wood',color:0x8a6947},{solid:false});
+          lbox(at(v)-dir*.13,tc,.035,w-.45,3.44,.05,{tex:'emit',color:0xffe6b5},{solid:false});
+        }
+        for(const tt of [t0+.15,tc,t1-.15])lbox(at(dep/2),tt,dep-.15,.18,3.42,.22,{tex:'wood',color:0x8a6947},{solid:false});
+        for(const tt of [t0+.12,t1-.12])for(const v of [2.2,5,7.8]){
+          lbox(at(v),tt,2.25,.04,.95,1.82,0xc3c1ae,{solid:false});
+          for(const edge of [-1,1])lbox(at(v)+edge*1.14,tt,.055,.08,.88,1.98,0x373b34,{solid:false});
+          lbox(at(v),tt,2.3,.08,2.79,.065,0x373b34,{solid:false});
+        }
         for(const tt of [t0+1.6,t1-1.6]){lbox(front-dir*.4,tt,.65,2.1,0,.7,0x3b322b);lbox(front-dir*.4,tt,.65,2.1,.7,.55,'glass',{solid:false});}
         for(let tt=t0+.5;tt<t1;tt+=.8)lbox(back+dir*.11,tt,.025,.04,.4,2.7,0x6b6258,{solid:false});
         for(let tt=t0+.7;tt<t1-.5;tt+=.55)for(let yy=1.4;yy<3.1;yy+=.4){
@@ -1437,6 +1623,11 @@ export function build(K) {
           for(const off of [.07,.17])arch(back+dir*(.17+off),tt,1.45-off,0,1.7,.65-off,0xe9dfce);
           for(let dt=-.65;dt<.7;dt+=.18)lbox(back+dir*.32,tt+dt,.012,.014,.56,.79,0xbcaf97,{solid:false});
           lcyl(back+dir*.42,tt,3.02,.08,.03,{tex:'emit',color:0xffe6bb},{solid:false,seg:8});
+          // Photo19: each alcove contains a proper dark table and brass condiments.
+          lbox(back+dir*1.38,tt,1.12,1.25,.71,.075,0x6a4e33);
+          lbox(back+dir*1.38,tt,.1,.1,0,.71,0x463c31,{solid:false});
+          setting(back+dir*1.38,tt-.35,.79);setting(back+dir*1.38,tt+.35,.79);
+          for(const dt of [-.1,.1])lcyl(back+dir*1.63,tt+dt,.79,.045,.23,0xb18b4d,{solid:false,seg:8});
         }
         for(let tt=t0+1.8;tt<t1-1;tt+=2.7)for(const v of [3.3,6.8]){
           lcyl(at(v)+.24,tt,.78,.13,.13,0xb27c4b,{solid:false,seg:12});
@@ -1445,6 +1636,17 @@ export function build(K) {
       }
       if(type==='modern'){
         arch(front-dir*.1,tc,clear,0,1.9,.85,'ccWhiteBrick');
+        // Photo17's lower service trusses and ducts remain visible from a walking camera.
+        for(const tt of [t0+1.4,t0+5.6,t1-1.4]){
+          hallTube([192.4,tt,5.9],[200.7,tt,5.9],.09,0xc4cbc7);
+          for(let ss=192.4;ss<200.3;ss+=1.4){
+            hallTube([ss,tt,5.9],[ss+.7,tt,6.65],.07,0xc4cbc7);
+            hallTube([ss+.7,tt,6.65],[Math.min(ss+1.4,200.7),tt,5.9],.07,0xc4cbc7);
+          }
+          hallTube([192.4,tt,6.65],[200.7,tt,6.65],.09,0xc4cbc7);
+        }
+        hallTube([193.1,t0+.6,6.97],[193.1,t1-.6,6.97],.48,0xaeb4b0);
+        for(let tt=t0+.7;tt<t1-.6;tt+=2)hallTube([193.1,tt,6.97],[193.1,tt,6.5],.22,0xaeb4b0);
         // The timber-and-glass doors are swung inward to keep the 1.8 m entry passable.
         for(const sg of [-1,1]){
           lbox(front-dir*.42,tc+sg*.87,.8,.09,0,2.6,0x6b3f24,{solid:false});
@@ -1523,12 +1725,24 @@ export function build(K) {
           lbox(ss,tt,1.25,1.35,0,.46,0xece3d1);
           for(const ds of [-.3,.3])for(const dt of [-.35,.35])bouquet(ss+ds,tt+dt,.46,Math.abs(Math.round(tt)));
         }
+        // Photo21: continuous side displays, illuminated skirtings, wrapped stems and shelves.
+        for(const tt of [t0+.32,t1-.32]){
+          lbox(at(dep/2),tt,dep-1,.55,0,.72,0xf1eadc,{top:0xfcf8ec});
+          lbox(at(dep/2),tt+Math.sign(tc-tt)*.29,dep-1,.025,.08,.035,{tex:'emit',color:0xffdfaa},{solid:false});
+          for(const yy of [1.42,2.25])lbox(at(dep/2),tt,dep-1,.44,yy,.045,0x8a6a48,{solid:false});
+          for(let v=1;v<dep-1;v+=1.05){
+            bouquet(at(v),tt,.73,Math.round(v*3));
+            bouquet(at(v),tt,1.47,Math.round(v*5));
+          }
+        }
+        for(const tt of [t0+.55,t1-.55])lbox(front-dir*.18,tt,.12,.12,0,2.85,0x785036,{solid:false});
+        lbox(front-dir*.18,tc,.14,w-1.1,2.75,.12,0x785036,{solid:false});
 
         for(let tt=t0+.6;tt<t1;tt+=.18)lbox(front,tt,.04,.055,4.07,.35,0xbcb4a2,{solid:false});
         lcyl(front,14.6,0,.35,4.4,0xe9dfc9,{seg:16});
         for(let k=0;k<12;k++){const a=k*PI/6;lcyl(front+Math.cos(a)*.35,14.6+Math.sin(a)*.35,.15,.025,4.1,0xcfc4ac,{solid:false,seg:6});}
-        for(const tt of [7.5,9.5,11.5]){
-          const ss=front+dir*1.2,q=P(ss,tt);
+        for(const [tt,offset] of [[11.3,.7],[12.5,.85],[13.1,2]]){
+          const ss=front+dir*offset,q=P(ss,tt);
           for(let j=0;j<5;j++)K.dome({x:q[0],z:q[1],y:.2+j*.36,rx:.7-j*.11,ry:.7,rz:.7-j*.11,mat:0x2f4a32,seg:8,rings:3});
           for(let j=0;j<12;j++){const a=j*2.4,hh=.45+j*.12,rr=.62-j*.035;lcyl(ss+Math.cos(a)*rr,tt+Math.sin(a)*rr,hh,.025,.04,{tex:'emit',color:0xffe2a0},{solid:false,seg:6});}
           lbox(ss+.4,tt+.35,.3,.3,0,.3,0xa3192b);lbox(ss-.25,tt+.45,.35,.3,0,.22,0xb92a36);
@@ -1653,8 +1867,13 @@ export function build(K) {
     }
     streetDetail(()=>{
     for(let tt=-88.5;tt<-25;tt+=1){
-      lbox(170,tt,3.1,.9,3.72,.03,{tex:'emit',color:0xfff3e0},{solid:false});
+      lbox(170,tt,3.1,.9,3.72,.03,0xdad7cf,{solid:false});
+      if(Math.round(tt+.5)%4===0)lcyl(170,tt,3.68,.11,.03,{tex:'emit',color:0xffedcf},{solid:false,seg:8});
       for(const ss of [169.35,169.75])lbox(ss,tt,.24,.98,.029,.012,0xc9a64d,{solid:false});
+    }
+    for(const tt of [-84,-74,-58,-41]){
+      lbox(171.39,tt,.1,.52,2.45,.13,0x3c3932,{solid:false});
+      lbox(171.31,tt,.045,.4,2.42,.045,{tex:'emit',color:0xffd9a1},{solid:false});
     }
     });
     // Framed information poster is attached to a red pier, clear of the planting.
@@ -1732,8 +1951,8 @@ export function build(K) {
       for(const tt of [29.2,33.4,37.1]){
         for(let ss=a+.3;ss<b-.3;ss+=.5){
           const bend=.28*Math.sin((ss-a)*PI/12),yy=y+3.35+.10*Math.cos((ss-a)*PI/12);
-          lbox(ss,tt+bend,.52,.18,yy,.16,0xd8c8aa,{solid:false});
-          lbox(ss,tt+bend-.11,.52,.035,yy+.03,.045,{tex:'emit',color:0xffe6b5},{solid:false});
+          lbox(ss,tt+bend,.52,.48,yy-.1,.28,0xd8c8aa,{solid:false});
+          lbox(ss,tt+bend-.25,.52,.035,yy+.03,.045,{tex:'emit',color:0xffe6b5},{solid:false});
         }
       }
       for(const ss of [113,120.5,128.5])for(const tt of [30.6,35.5]){
@@ -1755,7 +1974,34 @@ export function build(K) {
           }
         }
         lbox(ss-.15,tt+.65,.28,.07,y+.79,.23,0x252d32,{solid:false});
+        // Photo26: frosted tabletop dividers and warm under-seat strips.
+        lbox(ss,tt,.06,1.48,y+.8,.45,0x5b5144,{solid:false});
+        lbox(ss,tt,.065,1.36,y+.86,.31,0xe7ddc6,{solid:false});
+        for(const ds of [-1.03,1.03])lbox(ss+ds,tt,.43,1.58,y+.06,.035,{tex:'emit',color:0xffdeb0},{solid:false});
         lperson(ss+1,tt-.3,y,{sit:true,shirt:0x59544d,rotY:F.N});
+      }
+      for(const ss of [117,123.6]){
+        const tt=30.6;
+        lbox(ss,tt,1.05,1.35,y+.72,.07,0xcbb68f);
+        for(const ds of [-.78,.78]){
+          lbox(ss+ds,tt,.48,.5,y+.43,.08,0xc2b395);
+          lbox(ss+ds*1.24,tt,.08,.5,y+.51,.51,0xc2b395,{solid:false});
+          for(const d of [-.18,.18])lbox(ss+ds,tt+d,.04,.04,y,.43,0x4a453c,{solid:false});
+        }
+        lcyl(ss,tt,y+.8,.21,.02,0x282b29,{solid:false,seg:12});
+        lcyl(ss,tt,y+.82,.145,.13,0x99948a,{solid:false,seg:12});
+        for(const ds of [-.35,.35])lcyl(ss+ds,tt+.35,y+.8,.11,.025,0xf0eadc,{solid:false,seg:12});
+      }
+      for(const ss of [115.5,124.4,130.8]){
+        lcyl(ss,37.2,y,.23,.58,0xd9d1bd,{seg:10});
+        for(let k=0;k<7;k++){
+          const a=k*2.4;
+          beam([ss,37.2,y+.5],[ss+Math.sin(a)*.3,37.2+Math.cos(a)*.24,y+1.25+(k%3)*.12],.055,0x68734e);
+        }
+        for(const tt of [30,34]){
+          lcyl(ss,tt,y+2.65,.012,.78,0x8a7b61,{solid:false,seg:6});
+          const q=P(ss,tt);K.dome({x:q[0],z:q[1],y:y+2.64,rx:.11,ry:.11,rz:.11,hemi:false,mat:{tex:'emit',color:0xffe4af},seg:10,rings:5});
+        }
       }
       for(const ss of [111,123,132]){
         lcyl(ss,36.7,y,.35,3.5,0xe8e3d7,{seg:18});
@@ -1834,7 +2080,32 @@ export function build(K) {
     const southGlass = [-24,-16,-6,6,18,26].map(t => {
       const s=204.1-(t+98.9)*(1.3/135.8); return [...P1(s,t),3.6,0.65,3.25];
     });
-    edge(9,Y1,C1,SOUTH_STONE,M.wallIn,[...D9,...southGlass],{vBase:0});
+    // Round 8: a brick-faced rear entrance stretch inside the existing podium footprint.
+    // The supplied brick/glass-roof photos include Devil's Door elsewhere: use their
+    // architectural vocabulary only, never move that shop or its separate building here.
+    const rearArchTs=[-92,-86.8,-75,-69.8,-64.6,-59.4,-54.2,-49,-43.8,-38.6];
+    const rearArches=rearArchTs.map(t=>[...P1(sE9(t),t),2.1,.65,3.9]);
+    edge(9,Y1,C1,SOUTH_STONE,M.wallIn,[...D9,...southGlass,...rearArches],{vBase:0});
+    const rearA=P(sE9(-96)+.18,-96),rearB=P(sE9(-35)+.18,-35);
+    K.wall(...rearA,...rearB,.55,C1,{mat:'ccBackBrick',thick:.14,
+      openings:[...rearArches,...D9].map(([x,z,w,y0,y1])=>({at:atOn(rearA,rearB,x,z),w,y0,y1}))});
+    for(const t of rearArchTs){
+      const c=P(sE9(t)+.27,t),ux=Math.cos(R),uz=-Math.sin(R);
+      const at=(u,y,off=0)=>[c[0]+ux*u+AX*off,y,c[1]+uz*u+AZ*off];
+      const n=[AX,0,AZ],r=1.05,spring=2.85,top=spring+r;
+      K.quad({tex:'glass',color:0x91aaa2},[at(-r,.65),at(r,.65),at(r,spring),at(-r,spring)],n);
+      for(let i=0;i<12;i++){
+        const a=PI*i/12,b=PI*(i+1)/12;
+        const u0=r*Math.cos(a),u1=r*Math.cos(b),y0=spring+r*Math.sin(a),y1=spring+r*Math.sin(b);
+        K.quad({tex:'glass',color:0x91aaa2},[at(0,spring),at(u0,y0),at(u1,y1),at(0,spring)],n);
+        K.quad('ccBackBrick',[at(u0,y0),at(u1,y1),at(u1,top),at(u0,top)],n);
+        entryTubeWorld(at(u0,y0,.035),at(u1,y1,.035),.085,0x263c35);
+      }
+      for(const u of [-r,0,r])entryTubeWorld(at(u,.65,.035),at(u,u===0?top:spring,.035),.065,0x263c35);
+      for(const y of [.65,1.65,2.85])entryTubeWorld(at(-r,y,.035),at(r,y,.035),.065,0x263c35);
+      for(const a of [PI/4,3*PI/4])entryTubeWorld(at(0,spring,.035),at(r*Math.cos(a),spring+r*Math.sin(a),.035),.055,0x263c35);
+      lbox(sE9(t)+.32,t,.48,2.45,.5,.13,0xbdb29e,{solid:false});
+    }
     edge(10, Y1, C1, 0x9a968f, M.wallIn);
     // Photo 11: a dark plinth and glazed shops where the podium faces the round hall.
     for(const i of [8,9,10]) edge(i,0,0.55,0x595955,M.wallIn,i===9?D9:[]);
@@ -2521,6 +2792,159 @@ export function build(K) {
     K.zone({ name: '타워주차장', floor: '1F', sub: '주차장 입구 · 나선형 램프', poly: TOWER, y0: -0.5, y1: y2 - 0.4, priority: 2 });
     K.zone({ name: '타워주차장', floor: '2F', sub: '승용차 주차', poly: TOWER, y0: y2 - 0.4, y1: y3 - 0.4, priority: 2 });
     K.zone({ name: '타워주차장', floor: 'R', sub: '옥상 주차 · 센트럴시티 옥상/데크 연결교', poly: TOWER, y0: y3 - 0.4, y1: y3 + 5, priority: 2 });
+  }
+
+  // ================================================================= Round 8 — 파미에 주차장 / 반포천 복개주차장
+  {
+    // No amenity:parking polygon exists here in this OSM extract. The aerial gives
+    // this conservative apron; primary roads, cycleway and sidewalks remain city-owned.
+    // All spaces/cars are tested against their full road widths and building footprints.
+    const LOT=[[-153,239],[-71,207],[-64,224],[-51,234],[-35,233],[-19,225],[-5,238],
+      [-32,255],[-65,270],[-83,291],[-114,305],[-127,309],[-140,282],[-153,261],[-160,247]];
+    const roadSurface={tex:'asphalt',color:0xe0dfdb,scale:[5,5]};
+    K.hpoly(roadSurface,LOT,.008,true);
+    const segDistance=(q,a,b)=>{
+      const dx=b[0]-a[0],dz=b[1]-a[1],den=dx*dx+dz*dz;
+      const u=den?Math.max(0,Math.min(1,((q[0]-a[0])*dx+(q[1]-a[1])*dz)/den)):0;
+      return Math.hypot(q[0]-a[0]-u*dx,q[1]-a[1]-u*dz);
+    };
+    const groundRoads=K.osm.roads.filter(r=>!r.tunnel&&!r.bridge&&r.layer<=0&&r.hw!=='corridor'&&!String(r.level||'').startsWith('-'));
+    const nearbyRoads=groundRoads.filter(r=>r.pts.some(p=>p[0]>-240&&p[0]<100&&p[1]>175&&p[1]<365));
+    const nearRoad=(q,pad=.7)=>nearbyRoads.some(r=>r.pts.slice(1).some((b,i)=>segDistance(q,r.pts[i],b)<r.width/2+pad));
+    const nearbyBuildings=K.osm.buildings.filter(b=>b.poly.some(p=>p[0]>-180&&p[0]<30&&p[1]>185&&p[1]<325));
+    const line=(a,b,w,y,mat)=>{
+      const dx=b[0]-a[0],dz=b[1]-a[1],d=Math.hypot(dx,dz),nx=-dz/d*w/2,nz=dx/d*w/2;
+      K.quad(mat,[[a[0]+nx,y,a[1]+nz],[b[0]+nx,y,b[1]+nz],[b[0]-nx,y,b[1]-nz],[a[0]-nx,y,a[1]-nz]],[0,1,0]);
+    };
+    // Replace both claimed service ways over their ENTIRE OSM paths, not just the lot.
+    for(const id of [816395056,1262591320]){
+      const road=K.osm.roads.find(r=>r.id===id);if(!road)continue;
+      for(let i=1;i<road.pts.length;i++){
+        const a=road.pts[i-1],b=road.pts[i];line(a,b,road.width,.037,roadSurface);
+        const d=Math.hypot(b[0]-a[0],b[1]-a[1]),nx=-(b[1]-a[1])/d,nz=(b[0]-a[0])/d;
+        for(const side of [-1,1])line([a[0]+nx*(road.width/2-.15)*side,a[1]+nz*(road.width/2-.15)*side],
+          [b[0]+nx*(road.width/2-.15)*side,b[1]+nz*(road.width/2-.15)*side],.09,.044,0xe5d9b3);
+      }
+    }
+    // Inferred short entrance spur: stops at the building-side pedestrian apron.
+    line(P(248,-55),P(209,-55),7,.036,roadSurface);
+    for(const t of [-58.15,-51.85])line(P(247,t),P(211,t),.10,.045,0xf1ede2);
+    lfloorText('입구 ↑',234,-56.6,.049,2.6,2.1,'S',{fg:'#ffffff'});
+    lfloorText('출구 ↓',234,-53.4,.049,2.6,2.1,'N',{fg:'#ffffff'});
+    // A clear crossing follows the retained public sidewalk; barriers stand north of it.
+    for(let t=-58;t<-52;t+=.9)lbox(240.2,t,.46,.55,.055,.005,0xf3f2e8,{solid:false});
+    const rearWalkSegments=[[P(206.5,-33),[-69,230]],[[-69,230],[-47,235]],[[-47,235],[-47,230.4]]];
+    const slots=[];
+    for(const [row,s] of [216.5,221.5,232.5,237.5,253.5,258.5,274.5,279.5].entries()){
+      for(let t=-110;t<=40;t+=2.5){
+        if(s<250&&Math.abs(t+55)<6.1)continue; // gate lanes, booth and pedestrian gate
+        if(s>226&&s<235&&t>-53&&t<-43.5)continue; // booth canopy / directory / mirror
+        if(s<224&&t>-86&&t<-77)continue; // direct 4 m rear-door walking link
+        const points=[];for(const ds of [-2.5,0,2.5])for(const dt of [-1.25,0,1.25])points.push(P(s+ds,t+dt));
+        if(!points.every(q=>K.pointInPoly(...q,LOT)))continue;
+        if(points.some(q=>nearRoad(q)||nearbyBuildings.some(b=>K.pointInPoly(...q,b.poly))))continue;
+        if(points.some(q=>rearWalkSegments.some(([a,b])=>segDistance(q,a,b)<1.5)))continue;
+        for(const dt of [-1.25,1.25])lbox(s,t+dt,5,.10,.024,.005,0xf4f3ec,{solid:false});
+        lbox(s+(row%2?2.5:-2.5),t,.1,2.5,.024,.005,0xf4f3ec,{solid:false});
+        // Wheel stops and small stall numbers remain even in empty spaces.
+        const stopS=s+(row%2?1.85:-1.85);
+        lbox(stopS,t,.16,1.4,.03,.1,0x30352f,{solid:false});
+        for(const dt of [-.45,.45])lbox(stopS,t+dt,.18,.24,.131,.006,0xe8bc54,{solid:false});
+        slots.push({s,t,rot:row%2?F.S:F.N});
+      }
+    }
+    // Deterministic exact occupancy, approximately 70%; no random cars in drive aisles.
+    const occupied=Math.round(slots.length*.7),chosen=new Set();
+    for(let k=0;k<occupied;k++)chosen.add(Math.floor((k+.5)*slots.length/occupied));
+    slots.forEach((q,i)=>{
+      if(!chosen.has(i))return;const[x,z]=P(q.s,q.t);
+      K.vehicle({x,z,y:.025,rotY:q.rot,kind:'car',color:[0xeeeae2,0x292d30,0xbec5c6,0x4f5961,0xe6e5e0,0x383f49,0x88776b][i%7]});
+    });
+    // Two accessible spaces on the north apron; a hatched transfer strip stays empty.
+    for(const t of [-72,-67.8]){
+      lbox(211.1,t,5,3.3,.026,.006,0x28567b,{solid:false});
+      for(const dt of [-1.65,1.65])lbox(211.1,t+dt,5,.11,.035,.006,0xf0f0e8,{solid:false});
+      for(const ds of [-2.5,2.5])lbox(211.1+ds,t,.11,3.3,.035,.006,0xf0f0e8,{solid:false});
+      lfloorText('장애인 전용',211.1,t,.045,2.8,1.6,'N',{fg:'#ffffff'});
+    }
+    for(let s=209;s<213.5;s+=.7)lbox(s,-69.9,.1,.9,.04,.006,0xeeeeda,{solid:false});
+    // Green translucent barrel canopy and white parking office from photo16.
+    const boothS=228,boothT=-49.5;
+    lbox(boothS,boothT,3.5,2.5,.03,2.6,0xdeddd3,{top:0xa8aaa2});
+    for(const t of [boothT-1.26,boothT+1.26]){
+      lbox(boothS,t,2.75,.035,1.05,1.1,0x253a38,{solid:false});
+      for(const s of [boothS-.8,boothS+.8])lbox(s,t,.06,.05,1.02,1.16,0xd1d6cc,{solid:false});
+    }
+    lsign('주차 안내',boothS-1.78,boothT,2.1,2.2,.35,'N',{bg:'#314f44',fg:'#ffffff'});
+    const canopyY=s=>3.3+.55*Math.sin((s-225.5)/5*PI);
+    for(let i=0;i<12;i++){
+      const a=225.5+i*5/12,b=225.5+(i+1)*5/12,at=(s,t)=>{const[x,z]=P(s,t);return[x,canopyY(s),z];};
+      K.quad({tex:'glass',color:0x6eaea1},[at(a,-51.3),at(b,-51.3),at(b,-47.7),at(a,-47.7)],[0,1,0]);
+      for(const t of [-51.3,-47.7])entryTube([a,t,canopyY(a)],[b,t,canopyY(b)],.08,0x2d544b);
+    }
+    for(const s of [225.5,230.5])for(const t of [-51.3,-47.7])lcyl(s,t,0,.07,3.3,0x294b43);
+    lbox(228,-49.5,1.1,.9,2.65,.62,0xc3c6bb,{solid:false});
+    lsign(['파미에 주차장','반포천 복개주차장','5분당 550원'],226.2,-47.4,1.65,2.1,1.3,'S',{bg:'#25332c',fg:'#f4ead3',twoSided:true});
+    lcyl(226.2,-47.4,0,.075,1.2,0x37453b);
+    lbox(232,-45,.32,1.1,0,3.6,0x25382e);
+    lsign(['↑','반포천 공영주차장','(파미에)','← 사평대로 방향 출구'],232.18,-45,2.05,1.02,2.6,'S',{bg:'#25382e',fg:'#f0efe5'});
+    for(const t of [-58.5,-51.5])for(const s of [235.5,237.5]){
+      lcyl(s,t,0,.08,.85,0xc86942);lcyl(s,t,.56,.083,.12,0xe1e0d1,{solid:false});
+    }
+    const mirror=P(230.8,-45.5);
+    K.cyl({x:mirror[0],z:mirror[1],y:0,r:.055,h:2.5,mat:0x6e746a,seg:8});
+    K.dome({x:mirror[0],z:mirror[1],y:2.55,rx:.42,ry:.42,rz:.13,hemi:false,seg:16,rings:8,mat:0xb66d3e});
+    K.dome({x:mirror[0],z:mirror[1]+.05,y:2.55,rx:.36,ry:.36,rz:.13,hemi:false,seg:16,rings:8,mat:0xafc3bc});
+    // Open entrance barrier / closed exit barrier, each confined to its vehicle lane.
+    for(const [t,open] of [[-58,true],[-55,false]]){
+      lbox(229,t,.55,.45,0,1.05,0xd8d8c9);
+      if(open)entryTube([229,t,1.05],[229,t+1.05,3.75],.09,0xeeeade);
+      else{
+        lbox(229,t+1.35,.10,2.7,1.04,.12,0xe9e8dd,{solid:false});
+        for(let dt=.25;dt<2.7;dt+=.55)lbox(229,t+dt,.12,.22,1.04,.13,0xc54738,{solid:false});
+      }
+      lbox(230.7,t,.4,.32,0,1.05,0x343e38);
+      lsign('정산',230.9,t,.8,.28,.16,'S',{bg:'#1c2526',fg:'#e7dbb7'});
+    }
+    // Preserve an unobstructed walking route from the lot along the south facade.
+    const walkMat={tex:'sidewalk',color:0xe7ded0,scale:[2,2]};
+    K.slab(RECT(204.6,-97,208.2,-33),.06,{mat:walkMat,thick:.08,ceil:false});
+    K.slab(RECT(207,-83,227.4,-79),.06,{mat:walkMat,thick:.08,ceil:false});
+    for(const [a,b] of rearWalkSegments){
+      line(a,b,2.2,.06,walkMat);
+    }
+    lsign(['파미에스테이션 ↑','지하철 · 센트럴시티'],217,-80.8,2.2,3.1,.8,'S',{bg:'#324c42',fg:'#ffffff',twoSided:true});
+    lcyl(217,-80.8,0,.065,1.8,0x344c40);
+    lsign('파미에스테이션',204.45,-81,3.45,5.3,.55,'S',{bg:'#2f493d',fg:'#fff9e8'});
+    // A shallow curved glass roof shelters the new brick entrance stretch. Its scale
+    // is deliberately a canopy: the existing roof parking and building height remain.
+    const roofY=s=>4.72+.82*Math.sin((s-204.2)/4.4*PI);
+    for(let i=0;i<14;i++){
+      const a=204.2+i*4.4/14,b=204.2+(i+1)*4.4/14,at=(s,t)=>{const[x,z]=P(s,t);return[x,roofY(s),z];};
+      K.quad({tex:'glass',color:0xa0bcb2},[at(a,-96),at(b,-96),at(b,-35),at(a,-35)],[0,1,0]);
+      for(let t=-96;t<=-35;t+=3.05)entryTube([a,t,roofY(a)],[b,t,roofY(b)],.055,0x8a9a8e);
+    }
+    for(const s of [204.2,208.6])entryTube([s,-96,roofY(s)],[s,-35,roofY(s)],.13,0x3d584c);
+    for(const t of [-94,-88,-74,-62,-50,-36]){
+      lcyl(208.5,t,.06,.085,4.6,0x3c5045);
+      lbox(204.9,t,.3,.45,3.8,.07,0x2e3d32,{solid:false});
+      lbox(205,t,.26,.32,3.76,.035,{tex:'emit',color:0xffdba2},{solid:false});
+    }
+    // Stone planters, pine and lamps: leave door/gate approaches and public paths clear.
+    for(const [s,t] of [[209.4,-92],[209.4,-62],[209.4,-42],[225,-45]]){
+      lbox(s,t,1.2,5.5,.02,.45,{tex:'ccStone',color:0xe5d9bd});
+      lbox(s,t,1.05,5.25,.47,.48,0x536849,{solid:false});
+      K.tree(...P(s,t),{y:.5,h:5.8,kind:'pine'});
+    }
+    for(const [s,t] of [[225,-90],[225,-72],[225,-38],[230,-17],[268,-94],[268,-69]]){
+      const q=P(s,t);if(nearRoad(q,.7))continue;
+      lcyl(s,t,0,.09,6.4,0x525b56);
+      entryTube([s,t,6.1],[s,t+1.4,6.4],.07,0x525b56);
+      lbox(s,t+1.4,.45,.8,6.32,.14,0x35463b,{solid:false});
+      lbox(s,t+1.4,.36,.65,6.30,.025,{tex:'emit',color:0xffe4ae},{solid:false});
+    }
+    K.zone({name:'파미에 주차장',floor:'1F',sub:'반포천 복개주차장 · 파미에스테이션 후문',poly:LOT,y0:-.2,y1:5,priority:3});
+    K.spawn({name:'파미에 주차장 · 후문 보행로',x:P(218,-81)[0],z:P(218,-81)[1],y:.06,yaw:R});
   }
 
   // ================================================================= zones

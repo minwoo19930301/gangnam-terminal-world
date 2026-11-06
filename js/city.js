@@ -3,6 +3,8 @@ import { pointInPoly, polyBBox, polyArea } from './physics.js';
 
 const CAR = new Set(['motorway', 'trunk', 'trunk_link', 'primary', 'primary_link', 'secondary', 'secondary_link', 'tertiary', 'tertiary_link', 'residential', 'unclassified', 'service', 'busway', 'living_street', 'construction']);
 const MAJOR = new Set(['trunk', 'primary', 'secondary', 'motorway']);
+const SIGNAL_ROADS = new Set(['primary', 'secondary', 'tertiary']);
+const PAINT = { white: 0xf4f1e6, yellow: 0xf2c329, blue: 0x238bd2, pink: 0xe477a1, mint: 0x50cbb1 };
 const LAYER_H = 7.5;
 
 export function buildCity(K, osm, { claimedBuildings = new Set(), claimedRoads = new Set(), claimedAreas = new Set(), log = () => {} } = {}) {
@@ -45,6 +47,19 @@ export function buildCity(K, osm, { claimedBuildings = new Set(), claimedRoads =
     }
     return null;
   };
+
+  // Include claimed roads in topology/clearance, but never paint their approaches.
+  const layout = roadLayout(osm, claimedRoads);
+  const roadStats = { junctions: layout.junctions.length, signalised: layout.junctions.filter(j => j.signal).length,
+    renderedSignalised: 0, approaches: 0, crosswalks: 0, reusedCrosswalks: 0, signalAssemblies: 0,
+    pedestrianSignals: 0, guidePaths: 0, dualCarriagewayWays: 0, quads: 0 };
+  const countRoadDetail = fn => { const before = K._.stats.quads; fn(); roadStats.quads += K._.stats.quads - before; };
+  const poleSites = [], crossingSites = [];
+  const clearFurniture = (x, z, pad = 0.45) => !onRoad(x, z, true, pad) && !layout.allCarAt(x, z, pad) && !buildingAt(x, z, pad);
+  K.texture('city-tactile', 64, 64, (g, w, h) => {
+    g.fillStyle = '#d4ae32'; g.fillRect(0, 0, w, h); g.fillStyle = '#f6ce52';
+    for (let x = 8; x < w; x += 16) for (let y = 8; y < h; y += 16) { g.beginPath(); g.arc(x, y, 3, 0, Math.PI * 2); g.fill(); }
+  }, [0.4, 0.4]);
 
   // ---------- elevation for bridges / flyovers ----------
   const endCount = new Map(); const ek = p => Math.round(p[0] * 2) + ',' + Math.round(p[1] * 2);
@@ -138,8 +153,8 @@ export function buildCity(K, osm, { claimedBuildings = new Set(), claimedRoads =
     const w = r.footway === 'crossing' ? 0 : (car ? r.width : Math.max(1.5, r.width));
     if (mat && w > 0) ribbon(r.pts, hs, w, mat, y0, elevated);
     if (elevated) elevatedExtras(r, hs, w || r.width);
-    if (car && !elevated && (MAJOR.has(r.hw) || r.hw === 'tertiary')) markings(r, y0 + 0.006);
-    if (r.footway === 'crossing') zebra(r.pts, hs);
+    if (car && !elevated && layout.byRoad.has(r.id) && r.width >= 6) countRoadDetail(() => markings(r, y0 + 0.012));
+    if (r.footway === 'crossing') countRoadDetail(() => zebra(r.pts, hs));
     if (MAJOR.has(r.hw) && !elevated && !r.bridge) streetside(r);
   }
   function ribbon(pts, hs, w, mat, y0, elevated) {
@@ -186,19 +201,66 @@ export function buildCity(K, osm, { claimedBuildings = new Set(), claimedRoads =
     }
   }
   function markings(r, y) {
-    const lanes = r.lanes || Math.max(2, Math.round(r.width / 3.3));
-    const w = r.width; const lw = w / lanes;
-    walk(r.pts, (x, z, dx, dz, segL, t) => {
-      const nx = -dz, nz = dx;
-      // center double yellow for two-way roads
-      if (!r.oneway) {
-        for (const off of [-0.12, 0.12]) strip(x, z, dx, dz, nx * off, nz * off, segL, 0.1, 0xf2c200, y);
+    const lanes = laneCount(r), w = r.width, lw = w / lanes;
+    const centre = -w / 2 + Math.floor(lanes / 2) * lw;
+    const edges = layout.byRoad.get(r.id);
+    if (edges.some(e => e.medianSide)) roadStats.dualCarriagewayWays++;
+    for (const e of edges) {
+      if (!r.oneway) for (const delta of [-0.15, 0.15]) paintRange(e, 0, e.L, centre + delta, 0.15, PAINT.yellow, y);
+      else if (e.medianSide) for (const inset of [0.22, 0.52]) paintRange(e, 0, e.L, e.medianSide * (w / 2 - inset), 0.15, PAINT.yellow, y);
+      for (const side of [-1, 1]) {
+        if (r.oneway && side === e.medianSide) continue;
+        if (r.hw === 'busway') {
+          const nearStop = osm.pois.some(p => (p.kind === 'platform' || p.kind === 'stop') && segDist(p.x, p.z, e.a, e.b) < 12);
+          for (const inset of nearStop ? [0.22, 0.52] : [0.22]) {
+            if (nearStop) paintRange(e, 0, e.L, side * (w / 2 - inset), 0.15, PAINT.blue, y);
+            else dashed(e, side * (w / 2 - inset), PAINT.blue, y);
+          }
+        } else paintRange(e, 0, e.L, side * (w / 2 - 0.18), 0.15, PAINT.white, y);
       }
       for (let k = 1; k < lanes; k++) {
-        const off = -w / 2 + k * lw; if (!r.oneway && Math.abs(off) < 0.5) continue;
-        for (let s = 0; s < segL - 3; s += 8) strip(x + dx * s, z + dz * s, dx, dz, nx * off, nz * off, 3, 0.12, 0xf4f4f4, y);
+        const off = -w / 2 + k * lw;
+        if (!r.oneway && k === Math.floor(lanes / 2)) continue;
+        dashed(e, off, PAINT.white, y);
       }
-    });
+      if (r.hw === 'busway') for (let s = 35 - e.start % 90; s + 3 < e.L; s += 90) {
+        if (e.cuts.some(([a, b]) => s + 3 > a && s - 3 < b)) continue;
+        K.floorText(['버스', '전용'], { x: e.a[0] + e.dx * s, z: e.a[1] + e.dz * s, y: y + 0.005,
+          w: 2, h: 5, rotY: Math.atan2(-e.dx, -e.dz), fg: '#f4f1e6' });
+      }
+    }
+  }
+  function laneCount(r) {
+    return r.lanes || (r.oneway ? Math.max(1, Math.round(r.width / 3.3)) : Math.max(2, Math.round(r.width / 6.6) * 2));
+  }
+  function subtractRanges(a, b, cuts) {
+    let spans = [[a, b]];
+    for (const [lo, hi] of cuts) spans = spans.flatMap(([s, t]) => hi <= s || lo >= t ? [[s, t]] : [[s, Math.min(t, lo)], [Math.max(s, hi), t]].filter(([u, v]) => v - u > 0.02));
+    return spans;
+  }
+  function paintRange(e, a, b, off, width, color, y, extraCuts = []) {
+    if (e.claimed || b - a < 0.02) return;
+    // Offset lines must also stay outside the circle, including on acute corners.
+    const cuts = [...e.cuts, ...extraCuts], x = e.a[0] - e.dz * off, z = e.a[1] + e.dx * off;
+    for (const j of e.nearJunctions || (e.nearJunctions = layout.junctions.filter(j => segDist(j.x, j.z, e.a, e.b) < j.radius + e.r.width))) {
+      const along = (j.x - x) * e.dx + (j.z - z) * e.dz, across = (j.x - x) * -e.dz + (j.z - z) * e.dx;
+      const r = j.radius + width / 2;
+      if (Math.abs(across) < r) { const d = Math.sqrt(r * r - across * across); cuts.push([along - d, along + d]); }
+    }
+    for (const [s, t] of subtractRanges(a, b, cuts)) strip(x + e.dx * s, z + e.dz * s, e.dx, e.dz, 0, 0, t - s, width, color, y);
+  }
+  function dashed(e, off, color, y) {
+    // Continuous 3 m / 5 m phase over every vertex of an OSM way.
+    for (let s = -e.start % 8; s < e.L; s += 8) paintRange(e, Math.max(0, s), Math.min(e.L, s + 3), off, 0.15, color, y, e.solid);
+    for (const [a, b] of mergeRanges(e.solid)) paintRange(e, Math.max(0, a), Math.min(e.L, b), off, 0.15, color, y);
+  }
+  function mergeRanges(ranges) {
+    const merged = [];
+    for (const [a, b] of [...ranges].sort((a, b) => a[0] - b[0])) {
+      const last = merged[merged.length - 1];
+      if (last && a <= last[1]) last[1] = Math.max(last[1], b); else merged.push([a, b]);
+    }
+    return merged;
   }
   function strip(x, z, dx, dz, ox, oz, len, wd, col, y) {
     const nx = -dz * wd / 2, nz = dx * wd / 2; const sx = x + ox, sz = z + oz;
@@ -234,20 +296,224 @@ export function buildCity(K, osm, { claimedBuildings = new Set(), claimedRoads =
     }
   }
 
-  // ---------- signals, bus stops ----------
-  for (const nd of osm.nodes) {
-    if (nd.k === 'traffic_signals') {
-      const s = onRoad(nd.x, nd.z, true, 3); let dx = 1, dz = 0; if (s) { const L = Math.hypot(s.b[0] - s.a[0], s.b[1] - s.a[1]) || 1; dx = (s.b[0] - s.a[0]) / L; dz = (s.b[1] - s.a[1]) / L; }
-      const w = s ? s.r.width : 10; const px = nd.x + -dz * (w / 2 + 1.2), pz = nd.z + dx * (w / 2 + 1.2);
-      if (buildingAt(px, pz)) continue;
-      K.cyl({ x: px, z: pz, r: 0.13, h: 6.2, mat: 0xa8adb2, seg: 8, solid: true });
-      const ax = px - (-dz) * 3, az = pz - dx * 3;
-      K.box({ x: (px + ax) / 2, y: 5.8, z: (pz + az) / 2, w: 0.14, h: 0.14, d: 6, rotY: Math.atan2(-dz, dx) + Math.PI / 2, mat: 0xa8adb2, solid: false });
-      K.box({ x: ax, y: 5.2, z: az, w: 1.25, h: 0.42, d: 0.35, rotY: Math.atan2(dx, dz), mat: 0x22262a, solid: false });
-      const lx = Math.cos(Math.atan2(dx, dz)), lz = -Math.sin(Math.atan2(dx, dz));
-      [0xff3b30, 0xffb000, 0x30d158].forEach((c, k) => K.box({ x: ax + lx * (k - 1) * 0.38 + dx * 0.19, y: 5.27, z: az + lz * (k - 1) * 0.38 + dz * 0.19, w: 0.26, h: 0.26, d: 0.04, rotY: Math.atan2(dx, dz), mat: 'emit', color: k === 2 ? c : (c & 0x3f3f3f), solid: false }));
+  // ---------- junction approaches / signals ----------
+  countRoadDetail(() => {
+    for (const j of layout.junctions) {
+      if (!j.signal) continue;
+      const arms = j.arms.filter(a => !a.claimed && SIGNAL_ROADS.has(a.r.hw));
+      if (!arms.length) continue;
+      roadStats.renderedSignalised++;
+      for (const a of arms) {
+        if (a.crosswalk !== false) junctionCrossing(j, a);
+        if (!a.incoming || a.length < a.stopS + 0.5) continue;
+        roadStats.approaches++;
+        const p = a.at(a.stopS), band = incomingBand(a);
+        strip(p.x, p.z, -p.dz, p.dx, -p.dz * band[0], p.dx * band[0], band[1] - band[0], 0.45, PAINT.white, 0.061);
+        const n = Math.max(1, Math.round((band[1] - band[0]) / (a.r.width / laneCount(a.r))));
+        const destinations = j.arms.filter(b => b !== a && (!b.r.oneway || !b.incoming));
+        const hasLeft = destinations.some(b => { const q = b.at(0); return p.dx * q.dz - p.dz * q.dx > 0.45; });
+        const hasRight = destinations.some(b => { const q = b.at(0); return p.dx * q.dz - p.dz * q.dx < -0.45; });
+        for (const back of [8, 25]) for (let k = 0; k < n; k++) {
+          if (a.stopS + back + 3 > a.length) continue;
+          const arrowS = a.stopS + back;
+          if (a.legs.some(leg => leg.edge.cuts.some(([lo, hi]) => {
+            const dir = Math.sign(leg.to - leg.from), s = leg.start + dir * (lo - leg.from), t = leg.start + dir * (hi - leg.from);
+            return Math.max(leg.start, Math.min(s, t)) < arrowS + 2.7 && Math.min(leg.start + leg.length, Math.max(s, t)) > arrowS - 2.7;
+          }))) continue;
+          const q = a.at(a.stopS + back), off = band[0] + (k + 0.5) * (band[1] - band[0]) / n;
+          if (layout.junctions.some(other => other !== j && Math.hypot(q.x - other.x, q.z - other.z) < other.radius + 3)) continue;
+          const kind = k === n - 1 && n > 1 && hasLeft ? 'left' : k === 0 && hasRight ? (n > 2 ? 'right' : 'straightRight') : 'straight';
+          roadArrow(q.x - q.dz * off, q.z + q.dx * off, -q.dx, -q.dz, kind);
+        }
+        mastSignal(j, a);
+      }
+      guideLines(j);
+    }
+    crossingNodes();
+  });
+  function incomingBand(a) {
+    const lanes = laneCount(a.r), w = a.r.width;
+    return [-w / 2 + 0.2, a.r.oneway ? w / 2 - 0.2 : (-w / 2 + Math.floor(lanes / 2) * w / lanes) * a.dir - 0.22];
+  }
+  function roadArrow(x, z, dx, dz, kind) {
+    // Arrow polygons, not fonts: readable at grazing roadview angles.
+    const nx = -dz, nz = dx, P = (u, v) => [x + nx * u + dx * v, 0.064, z + nz * u + dz * v];
+    const quad = ps => K.quad(PAINT.white, ps.map(([u, v]) => P(u, v)), [0, 1, 0]);
+    quad([[-0.13, -2.5], [0.13, -2.5], [0.13, 0.6], [-0.13, 0.6]]);
+    if (kind.startsWith('straight')) {
+      quad([[-0.13, 0.6], [0.13, 0.6], [0.13, 1.45], [-0.13, 1.45]]);
+      quad([[-0.65, 1.2], [0, 2.65], [0.65, 1.2], [0, 1.45]]);
+    }
+    if (kind !== 'straight') {
+      const side = kind === 'left' ? -1 : 1;
+      quad([[0, 0.35], [side * 0.9, 0.35], [side * 0.9, 0.65], [0, 0.65]]);
+      quad([[side * 0.65, -0.02], [side * 1.35, 0.5], [side * 0.65, 1.02], [side * 0.8, 0.5]]);
     }
   }
+  function junctionCrossing(j, a) {
+    if (!a.crossing && a.length < a.crossS + 2.5) return;
+    const p = a.at(a.crossS);
+    if (a.crossing) roadStats.reusedCrosswalks++;
+    else {
+      roadStats.crosswalks++;
+      for (let off = -a.r.width / 2 + 0.2; off + 0.48 < a.r.width / 2 - 0.1; off += 0.96)
+        strip(p.x - p.dx * 2.5, p.z - p.dz * 2.5, p.dx, p.dz, -p.dz * (off + 0.24), p.dx * (off + 0.24), 5, 0.48, PAINT.white, 0.06);
+    }
+    crossingSites.push({ x: p.x, z: p.z, dx: p.dx, dz: p.dz, width: a.r.width });
+    const green = signalGreen(j, a);
+    for (const side of [-1, 1]) {
+      // Leave the 5 m pedestrian path open; furniture stands beside its landing.
+      landing: for (const inset of [1.1, 2.1, 3.1, 4.1]) for (const back of [3.2, -3.2, 4.2, -4.2, 5.2, -5.2]) {
+        const x = p.x - p.dz * side * (a.r.width / 2 + inset) + p.dx * back;
+        const z = p.z + p.dx * side * (a.r.width / 2 + inset) + p.dz * back;
+        if (!clearFurniture(x, z) || poleSites.some(q => Math.hypot(q.x - x, q.z - z) < 0.8)) continue;
+        pedestrianSignal(x, z, p.dz * side, -p.dx * side, !green);
+        break landing;
+      }
+      const tx = p.x - p.dz * side * (a.r.width / 2 + 0.8), tz = p.z + p.dx * side * (a.r.width / 2 + 0.8);
+      if ([-2.5, 2.5].every(t => clearFurniture(tx + p.dx * t, tz + p.dz * t, 0.1))) {
+        K.box({ x: tx, z: tz, y: 0, w: 1.1, h: 0.15, d: 5.3, rotY: Math.atan2(p.dx, p.dz), mat: 0xb6b4ab, solid: false });
+        const P = (u, v) => [tx + p.dx * u - p.dz * v, 0.157, tz + p.dz * u + p.dx * v];
+        K.quad('city-tactile', [P(-2.35, -0.275), P(2.35, -0.275), P(2.35, 0.275), P(-2.35, 0.275)], [0, 1, 0], [[0, 0], [11.75, 0], [11.75, 1.375], [0, 1.375]]);
+        for (const end of [-3, 3]) {
+          const x = tx + p.dx * end, z = tz + p.dz * end;
+          if (!clearFurniture(x, z)) continue;
+          K.cyl({ x, z, y: 0.15, r: 0.07, h: 0.85, seg: 6, mat: 0x626b70, solid: false });
+          K.cyl({ x, z, y: 0.77, r: 0.074, h: 0.12, seg: 6, mat: PAINT.yellow, solid: false });
+        }
+      }
+    }
+  }
+  function signalGreen(j, a) {
+    const main = j.arms.find(b => SIGNAL_ROADS.has(b.r.hw)) || a, p = main.at(0), q = a.at(0);
+    return Math.abs(p.dx * q.dx + p.dz * q.dz) > 0.72;
+  }
+  function mastSignal(j, a) {
+    const p = a.at(0), nx = -p.dz, nz = p.dx, band = incomingBand(a);
+    // Anchor the head over the actual far-side receiving carriageway first.
+    // A radial corner estimate alone can leave heads hanging above a verge.
+    const far = j.arms.filter(b => b !== a && (!b.r.oneway || !b.incoming) && b.length > 2)
+      .map(b => ({ b, dot: b.dx * p.dx + b.dz * p.dz })).filter(v => v.dot < -0.65).sort((a, b) => a.dot - b.dot)[0]?.b;
+    const targets = [];
+    if (far) for (const s of [j.midblock ? 4 : 1, 3, -1, 5, 8, 11, 14, 17]) for (const offset of far.r.oneway ? [0, 0.25, -0.25] : [0.25, 0.38, 0.12]) {
+      const q = far.at(s), off = far.r.width * offset;
+      targets.push({ x: q.x - q.dz * off, z: q.z + q.dx * off });
+    }
+    // A T junction has no opposite arm. Its far-side signal spans the box.
+    for (const distance of [j.radius, j.radius - 3, j.radius - 6, 3].filter(v => v > 0)) for (const off of [(band[0] + band[1]) / 2, band[0] + 1, band[1] - 1])
+      targets.push({ x: j.x - p.dx * distance + nx * off, z: j.z - p.dz * distance + nz * off });
+    let pole;
+    search: for (const target of targets) {
+      if (!layout.allCarAt(target.x, target.z, -0.6)) continue;
+      for (const angle of [0, 0.25, 0.5, 0.75, 1]) for (const side of [-1, 1]) for (const reach of [6, 7.5, 9, 10.5, 12]) {
+        // Skewed/T junctions need a diagonal cantilever from the far curb;
+        // head facing remains independent of the steel arm's bearing.
+        const ux = -nx * side * Math.cos(angle) + p.dx * Math.sin(angle), uz = -nz * side * Math.cos(angle) + p.dz * Math.sin(angle);
+        const x = target.x - ux * (reach - 0.65), z = target.z - uz * (reach - 0.65);
+        if (!clearFurniture(x, z, 0.7) || poleSites.some(q => Math.hypot(q.x - x, q.z - z) < 0.8)) continue;
+        pole = { x, z, ux, uz, reach }; break search;
+      }
+    }
+    if (!pole) return;
+    a.signalPole = { x: pole.x, z: pole.z };
+    poleSites.push({ x: pole.x, z: pole.z, kind: 'mast' });
+    roadStats.signalAssemblies++;
+    const { ux, uz } = pole;
+    const reach = pole.reach;
+    K.cyl({ x: pole.x, z: pole.z, r: 0.14, h: 6.9, seg: 8, mat: 0x929ca3, solid: false });
+    K.box({ x: pole.x + ux * reach / 2, z: pole.z + uz * reach / 2, y: 6.55, w: 0.16, h: 0.2, d: reach,
+      rotY: Math.atan2(ux, uz), mat: 0x929ca3, solid: false });
+    const green = signalGreen(j, a), rotY = Math.atan2(p.dx, p.dz);
+    const headAt = reach - 0.65;
+    for (const t of a.r.width >= 12 ? [headAt, Math.max(1.1, headAt - 3)] : [headAt]) {
+      const x = pole.x + ux * t, z = pole.z + uz * t;
+      if (!layout.allCarAt(x, z, -0.6)) continue;
+      K.box({ x, z, y: 6.08, w: 1.28, h: 0.42, d: 0.3, rotY, mat: 0x242a2d, solid: false });
+      for (let k = 0; k < 4; k++) {
+        const off = (k - 1.5) * 0.3, hx = x + p.dz * off + p.dx * 0.16, hz = z - p.dx * off + p.dz * 0.16;
+        const color = k === 0 ? (green ? 0x421e1b : 0xff4135) : k === 1 ? 0x493b16 : k === 2 ? 0x163c2a : (green ? 0x39e88a : 0x163c2a);
+        if (k === 2) K.sign('←', { x: hx, z: hz, y: 6.29, w: 0.23, h: 0.23, rotY, bg: '#101a17', fg: '#265b3d' });
+        else lens(hx, 6.29, hz, p.dx, p.dz, 0.105, { tex: 'emit', color });
+      }
+      K.box({ x: x + p.dx * 0.12, z: z + p.dz * 0.12, y: 6.49, w: 1.32, h: 0.05, d: 0.55, rotY, mat: 0x242a2d, solid: false });
+    }
+    if (a.r.name) K.sign(a.r.name, { x: pole.x + ux * 1.5, z: pole.z + uz * 1.5, y: 5.85, w: 2.2, h: 0.46,
+      rotY, bg: '#175f9a', fg: '#fff', box: 0.08 });
+  }
+  function lens(x, y, z, dx, dz, radius, mat) {
+    // Eight-sided lens, two triangles per quad; all heads share the emit bucket.
+    for (let k = 0; k < 4; k++) {
+      const ps = [k * Math.PI / 2, (k * 2 + 1) * Math.PI / 4, (k + 1) * Math.PI / 2].map(a => [x + dz * Math.cos(a) * radius, y + Math.sin(a) * radius, z - dx * Math.cos(a) * radius]);
+      K.quad(mat, [[x, y, z], ...ps], [dx, 0, dz]);
+    }
+  }
+  function pedestrianSignal(x, z, dx, dz, green) {
+    roadStats.pedestrianSignals++; poleSites.push({ x, z, kind: 'pedestrian' });
+    const rotY = Math.atan2(dx, dz);
+    K.cyl({ x, z, r: 0.065, h: 3.2, seg: 6, mat: 0x737e85, solid: false });
+    K.box({ x: x + dx * 0.13, z: z + dz * 0.13, y: 2.35, w: 0.3, h: 0.65, d: 0.22, rotY, mat: 0x202629, solid: false });
+    for (const [walking, cy, lit] of [[false, 2.83, !green], [true, 2.52, green]]) {
+      const mat = { tex: 'emit', color: lit ? (walking ? 0x42ed96 : 0xff4439) : 0x17322b };
+      const P = (u, v) => [x + dx * 0.251 + dz * u, cy + v, z + dz * 0.251 - dx * u];
+      lens(...P(0, 0.078), dx, dz, 0.032, mat);
+      const limb = (u, v, a, b, width = 0.025) => {
+        const L = Math.hypot(a - u, b - v), ox = -(b - v) / L * width / 2, oy = (a - u) / L * width / 2;
+        K.quad(mat, [P(u + ox, v + oy), P(a + ox, b + oy), P(a - ox, b - oy), P(u - ox, v - oy)], [dx, 0, dz]);
+      };
+      limb(0, 0.035, 0, -0.035, 0.045);
+      limb(0, 0.02, walking ? -0.075 : -0.045, walking ? -0.015 : -0.045);
+      limb(0, 0.02, walking ? 0.075 : 0.045, walking ? 0.045 : -0.045);
+      limb(-0.012, -0.03, walking ? -0.06 : -0.025, -0.105);
+      limb(0.012, -0.03, walking ? 0.075 : 0.025, -0.105);
+    }
+  }
+  function guideLines(j) {
+    // Never draw a guide into a module-owned arm. Select connected destinations,
+    // with a maximum of two painted paths per inbound arm.
+    const big = j.arms.filter(a => ['primary', 'secondary'].includes(a.r.hw));
+    const directions = [];
+    for (const a of big) { const p = a.at(0); if (!directions.some(q => q.dx * p.dx + q.dz * p.dz > 0.88)) directions.push(p); }
+    if (directions.length < 4) return;
+    for (const a of big.filter(a => !a.claimed && a.incoming)) {
+      const p = a.at(0), band = incomingBand(a);
+      const choices = big.filter(b => b !== a && !b.claimed && (!b.r.oneway || !b.incoming));
+      for (const turn of ['left', 'through']) {
+        const b = choices.find(b => { const q = b.at(0), dot = p.dx * q.dx + p.dz * q.dz, cross = p.dx * q.dz - p.dz * q.dx; return turn === 'left' ? cross > 0.55 : dot < -0.75; }) || (turn === 'through' ? choices.find(b => { const q = b.at(0); return p.dx * q.dz - p.dz * q.dx < -0.55; }) : null);
+        if (!b) continue;
+        const q = b.at(0), inOff = turn === 'left' ? band[1] - 1.2 : band[0] + 1.2;
+        const outOff = b.r.oneway ? 0 : b.r.width / 4;
+        const A = [p.x - p.dz * inOff, p.z + p.dx * inOff], D = [q.x - q.dz * outOff, q.z + q.dx * outOff];
+        const handle = Math.min(24, Math.hypot(D[0] - A[0], D[1] - A[1]) * 0.48);
+        const B = [A[0] - p.dx * handle, A[1] - p.dz * handle], C = [D[0] - q.dx * handle, D[1] - q.dz * handle];
+        let prev = A;
+        for (let k = 1; k <= 20; k++) {
+          const t = k / 20, u = 1 - t, next = [0, 1].map(i => u ** 3 * A[i] + 3 * u * u * t * B[i] + 3 * u * t * t * C[i] + t ** 3 * D[i]);
+          const dx = next[0] - prev[0], dz = next[1] - prev[1], len = Math.hypot(dx, dz);
+          if (len > 0.01) strip(prev[0], prev[1], dx / len, dz / len, 0, 0, len, 0.45, turn === 'left' ? PAINT.pink : PAINT.mint, 0.065);
+          prev = next;
+        }
+        roadStats.guidePaths++;
+      }
+    }
+  }
+  function crossingNodes() {
+    // OSM often records a crossing node without a footway. Use the road normal,
+    // never a diagonal zebra through the junction box.
+    for (const nd of osm.nodes.filter(n => n.k === 'crossing')) {
+      if (layout.crossings.some(r => r.pts.slice(1).some((b, i) => segDist(nd.x, nd.z, r.pts[i], b) < 7))) continue;
+      if (crossingSites.some(p => Math.hypot(nd.x - p.x, nd.z - p.z) < 10)) continue;
+      let e, dist = 3;
+      for (const candidate of layout.edges) { const d = segDist(nd.x, nd.z, candidate.a, candidate.b); if (d < dist) { e = candidate; dist = d; } }
+      if (!e || e.claimed || layout.junctions.some(j => Math.hypot(nd.x - j.x, nd.z - j.z) < j.radius)) continue;
+      const s = Math.max(0, Math.min(e.L, (nd.x - e.a[0]) * e.dx + (nd.z - e.a[1]) * e.dz));
+      const x = e.a[0] + e.dx * s, z = e.a[1] + e.dz * s;
+      zebra([[x + e.dz * e.r.width / 2, z - e.dx * e.r.width / 2], [x - e.dz * e.r.width / 2, z + e.dx * e.r.width / 2]], [0, 0]);
+      roadStats.crosswalks++;
+      crossingSites.push({ x, z, dx: e.dx, dz: e.dz, width: e.r.width });
+    }
+  }
+
+  // ---------- bus stops (existing shelters retained) ----------
   const stopNames = new Map();
   for (const p of osm.pois) if ((p.kind === 'platform' || p.kind === 'stop') && p.ref && /^\d{5}$/.test(p.ref)) stopNames.set(Math.round(p.x / 3) + ',' + Math.round(p.z / 3), p);
   for (const p of stopNames.values()) {
@@ -327,8 +593,8 @@ export function buildCity(K, osm, { claimedBuildings = new Set(), claimedRoads =
   }
   // OSM trees
   for (const [x, z] of osm.trees) K.tree(x, z, { kind: 'zelkova' });
-  log(`city: ${nb} buildings, ${roads.length} roads`);
-  return { buildingAt, onRoad, roads };
+  log(`city: ${nb} buildings, ${roads.length} roads; ${roadStats.junctions} junctions, ${roadStats.signalised} signalised (${roadStats.renderedSignalised} unclaimed), ${roadStats.quads} road-detail quads`);
+  return { buildingAt, onRoad, roads, roadStats, junctions: layout.junctions, poleSites, crossingSites };
 }
 
 function norm(x, z) { const l = Math.hypot(x, z) || 1; return [x / l, z / l]; }
@@ -375,4 +641,274 @@ export function createTraffic(K, roadsInfo, n = 160) {
   }
   update(0);
   return { update };
+}
+
+// Geometry-only road graph. Claimed ways participate in topology/clearance, but
+// the caller owns rendering and must only draw unclaimed edges and approaches.
+function roadLayout(osm, claimedRoads) {
+  const SIGNAL = new Set(['primary', 'secondary', 'tertiary']);
+  const surface = r => !r.tunnel && !r.bridge && !(r.layer > 0) && !(r.level && String(r.level).startsWith('-'));
+  const crossings = osm.roads.filter(r => surface(r) && r.footway === 'crossing');
+  const edges = [], byRoad = new Map(), vertices = [], vertexGrid = new Map(), edgeGrid = new Map();
+  const cell = 32, key = (x, z) => x + ',' + z;
+  function vertex(p, layer) {
+    const ix = Math.floor(p[0] * 2), iz = Math.floor(p[1] * 2);
+    for (let x = ix - 1; x <= ix + 1; x++) for (let z = iz - 1; z <= iz + 1; z++) {
+      for (const v of vertexGrid.get(key(x, z)) || []) if (v.layer === layer && Math.hypot(v.x - p[0], v.z - p[1]) <= 0.5) return v;
+    }
+    const v = { x: p[0], z: p[1], layer, roads: new Set(), out: [] };
+    vertices.push(v); const k = key(ix, iz);
+    if (!vertexGrid.has(k)) vertexGrid.set(k, []); vertexGrid.get(k).push(v);
+    return v;
+  }
+  for (const r of osm.roads) {
+    if (!CAR.has(r.hw) || !surface(r)) continue;
+    const list = []; let start = 0;
+    for (let i = 0; i < r.pts.length - 1; i++) {
+      const a = r.pts[i], b = r.pts[i + 1], L = Math.hypot(b[0] - a[0], b[1] - a[1]);
+      if (L < 0.01) { start += L; continue; }
+      const av = vertex(a, r.layer || 0), bv = vertex(b, r.layer || 0);
+      const e = { r, i, a, b, L, dx: (b[0] - a[0]) / L, dz: (b[1] - a[1]) / L, start,
+        claimed: claimedRoads.has(r.id), cuts: [], traceCuts: [], solid: [], medianSide: 0, av, bv };
+      edges.push(e); list.push(e); start += L;
+      av.roads.add(r); bv.roads.add(r); av.out.push({ edge: e, dir: 1 }); bv.out.push({ edge: e, dir: -1 });
+      const pad = r.width / 2 + 1;
+      for (let x = Math.floor((Math.min(a[0], b[0]) - pad) / cell); x <= Math.floor((Math.max(a[0], b[0]) + pad) / cell); x++) {
+        for (let z = Math.floor((Math.min(a[1], b[1]) - pad) / cell); z <= Math.floor((Math.max(a[1], b[1]) + pad) / cell); z++) {
+          const k = key(x, z); if (!edgeGrid.has(k)) edgeGrid.set(k, []); edgeGrid.get(k).push(e);
+        }
+      }
+    }
+    byRoad.set(r.id, list);
+  }
+  function nearby(x, z, radius = 0) {
+    const found = new Set();
+    for (let i = Math.floor((x - radius) / cell); i <= Math.floor((x + radius) / cell); i++) {
+      for (let j = Math.floor((z - radius) / cell); j <= Math.floor((z + radius) / cell); j++) {
+        for (const e of edgeGrid.get(key(i, j)) || []) found.add(e);
+      }
+    }
+    return found;
+  }
+  function project(e, x, z) { return Math.max(0, Math.min(e.L, (x - e.a[0]) * e.dx + (z - e.a[1]) * e.dz)); }
+  function allCarAt(x, z, pad = 0.5) {
+    for (const e of nearby(x, z, Math.max(0, pad))) if (segDist(x, z, e.a, e.b) < e.r.width / 2 + pad) return e;
+    return null;
+  }
+  function merged(ranges) {
+    const result = [];
+    for (const v of ranges.sort((a, b) => a[0] - b[0])) {
+      if (v[1] - v[0] < 0.001) continue;
+      const last = result[result.length - 1];
+      if (last && v[0] <= last[1] + 0.02) last[1] = Math.max(last[1], v[1]); else result.push(v.slice());
+    }
+    return result;
+  }
+  // A way split is not a physical junction. Count distinct outward bearings,
+  // including interior vertices, instead of simply counting OSM way IDs.
+  const seeds = [];
+  for (const v of vertices) {
+    if (v.roads.size < 2) continue;
+    const dirs = [];
+    for (const o of v.out) {
+      const d = [o.edge.dx * o.dir, o.edge.dz * o.dir];
+      if (!dirs.some(q => q[0] * d[0] + q[1] * d[1] > 0.985)) dirs.push(d);
+    }
+    if (dirs.length < 3) continue;
+    seeds.push({ x: v.x, z: v.z, layer: v.layer, width: Math.max(...[...v.roads].map(r => r.width)), roads: v.roads });
+  }
+  // Opposite carriageways have separate OSM intersections. Join short,
+  // connected clusters, with a diameter cap to avoid swallowing whole blocks.
+  const groups = [];
+  for (const s of seeds.sort((a, b) => b.width - a.width)) {
+    const g = groups.find(g => g.layer === s.layer && g.seeds.every(q => Math.hypot(s.x - q.x, s.z - q.z) <= 25)
+      && g.seeds.some(q => Math.hypot(s.x - q.x, s.z - q.z) <= Math.min(25, (s.width + q.width) / 2 + 3)
+        && [...s.roads].some(r => q.roads.has(r))));
+    if (g) g.seeds.push(s); else groups.push({ layer: s.layer, seeds: [s] });
+  }
+  const junctions = groups.map(g => {
+    const x = g.seeds.reduce((sum, s) => sum + s.x, 0) / g.seeds.length;
+    const z = g.seeds.reduce((sum, s) => sum + s.z, 0) / g.seeds.length;
+    return { x, z, layer: g.layer, radius: Math.max(...g.seeds.map(s => Math.hypot(s.x - x, s.z - z) + s.width / 2 + 2.5)),
+      signal: false, midblock: false, arms: [], eligible: g.seeds.some(s => [...s.roads].some(r => SIGNAL.has(r.hw))) };
+  });
+  const cross2 = (ax, az, bx, bz) => ax * bz - az * bx;
+  function crossingNear(x, z, dx, dz, wanted = 3.5, reach = 10) {
+    let best = null, score = Infinity;
+    for (const r of crossings) for (let i = 1; i < r.pts.length; i++) {
+      const a = r.pts[i - 1], b = r.pts[i], cx = b[0] - a[0], cz = b[1] - a[1], L = Math.hypot(cx, cz);
+      if (L < 0.1 || Math.abs((cx * dx + cz * dz) / L) > 0.55) continue;
+      const den = cross2(dx, dz, cx, cz), px = a[0] - x, pz = a[1] - z;
+      const s = cross2(px, pz, cx, cz) / den, u = cross2(px, pz, dx, dz) / den;
+      if (u < -0.12 || u > 1.12 || Math.abs(s - wanted) > reach) continue;
+      const d = Math.abs(s - wanted); if (d < score) { score = d; best = { r, s, x: x + dx * s, z: z + dz * s }; }
+    }
+    return best;
+  }
+  const signalNodes = osm.nodes.filter(nd => nd.k === 'traffic_signals' || (nd.k === 'crossing' && nd.crossing === 'traffic_signals'))
+    .sort((a, b) => Number(b.k === 'traffic_signals') - Number(a.k === 'traffic_signals'));
+  for (const nd of signalNodes) {
+    // Crossing nodes at the outer edge of a wide box describe the same signal
+    // installation as the carriageway nodes already associated with that box.
+    if (nd.k === 'crossing' && junctions.some(j => j.signal && !j.midblock
+      && Math.hypot(nd.x - j.x, nd.z - j.z) <= j.radius + 14)) continue;
+    let nearest = null, distance = 25;
+    for (const j of junctions) if (j.eligible && !j.midblock) {
+      const d = Math.hypot(nd.x - j.x, nd.z - j.z); if (d < distance) { distance = d; nearest = j; }
+    }
+    if (nearest) { nearest.signal = true; continue; }
+    let road = null, at = 0; distance = 25;
+    for (const e of nearby(nd.x, nd.z, 25)) {
+      if (!SIGNAL.has(e.r.hw)) continue;
+      const t = project(e, nd.x, nd.z), d = Math.hypot(e.a[0] + e.dx * t - nd.x, e.a[1] + e.dz * t - nd.z);
+      if (d < distance) { distance = d; road = e; at = t; }
+    }
+    if (!road || distance > road.r.width / 2 + 3) continue;
+    let x = road.a[0] + road.dx * at, z = road.a[1] + road.dz * at;
+    const cross = crossingNear(x, z, road.dx, road.dz, 0, 12);
+    if (cross) { x = cross.x; z = cross.z; }
+    const mouthOwner = cross && junctions.filter(j => !j.midblock && j.eligible
+      && Math.hypot(x - j.x, z - j.z) <= j.radius + 14
+      && (byRoad.get(road.r.id) || []).some(e => segDist(j.x, j.z, e.a, e.b) < j.radius + 0.5))
+      .sort((a, b) => Math.hypot(x - a.x, z - a.z) - a.radius - (Math.hypot(x - b.x, z - b.z) - b.radius))[0];
+    if (mouthOwner) { mouthOwner.signal = true; continue; }
+    if (junctions.some(j => j.midblock && Math.hypot(j.x - x, j.z - z) < 20
+      && Math.abs((j.x - x) * -road.dz + (j.z - z) * road.dx) < 1)) continue;
+    junctions.push({ x, z, layer: road.r.layer || 0, radius: 0, signal: true, midblock: true, eligible: true, crossing: cross?.r, arms: [] });
+  }
+  // Circle intersections clip every road through a junction, including short
+  // connector ways. Boundary crossings, not individual OSM nodes, define arms.
+  for (const j of junctions) {
+    const mouths = [];
+    for (const e of nearby(j.x, j.z, j.radius + 1)) {
+      if ((e.r.layer || 0) !== j.layer) continue;
+      const along = (j.x - e.a[0]) * e.dx + (j.z - e.a[1]) * e.dz;
+      const side = (j.x - e.a[0]) * -e.dz + (j.z - e.a[1]) * e.dx;
+      if (j.midblock) {
+        if (Math.abs(side) > 0.5 || along < -0.02 || along > e.L + 0.02) continue;
+        const t = Math.max(0, Math.min(e.L, along));
+        if (t > 0.02) mouths.push({ edge: e, from: t, dir: -1 });
+        if (t < e.L - 0.02) mouths.push({ edge: e, from: t, dir: 1 });
+        continue;
+      }
+      if (Math.abs(side) >= j.radius) continue;
+      const half = Math.sqrt(j.radius * j.radius - side * side), lo = along - half, hi = along + half;
+      if (hi < 0 || lo > e.L) continue;
+      const interval = [Math.max(0, lo), Math.min(e.L, hi)];
+      e.cuts.push(interval); if (j.signal) e.traceCuts.push(interval.slice());
+      if (lo > 0.02 && lo <= e.L + 0.02) mouths.push({ edge: e, from: Math.min(e.L, lo), dir: -1 });
+      if (hi >= -0.02 && hi < e.L - 0.02) mouths.push({ edge: e, from: Math.max(0, hi), dir: 1 });
+    }
+    mouths.sort((a, b) => Number(b.edge.claimed) - Number(a.edge.claimed) || b.edge.r.width - a.edge.r.width);
+    for (const m of mouths) {
+      const e = m.edge, x = e.a[0] + e.dx * m.from, z = e.a[1] + e.dz * m.from;
+      if (j.arms.some(a => Math.hypot(a.x - x, a.z - z) < 1 && a.dx * e.dx * m.dir + a.dz * e.dz * m.dir > 0.985)) continue;
+      j.arms.push({ r: e.r, claimed: e.claimed, dir: m.dir, incoming: !e.r.oneway || m.dir < 0,
+        x, z, dx: e.dx * m.dir, dz: e.dz * m.dir, first: m, legs: [], length: 0,
+        crossS: j.midblock ? 0 : 3.5, stopS: j.midblock ? 5 : 8.5, crosswalk: true });
+    }
+  }
+  for (const e of edges) { e.cuts = merged(e.cuts); e.traceCuts = merged(e.traceCuts); }
+  function trace(arm) {
+    let { edge: e, from, dir } = arm.first; const seen = new Set();
+    while (e && arm.length < 85 && !seen.has(e)) {
+      seen.add(e); let to = dir > 0 ? e.L : 0;
+      // Minor access junctions still clip paint, but do not truncate the whole
+      // approach route. The renderer can reject arrows in their clipped areas.
+      for (const cut of e.traceCuts) {
+        if (dir > 0 && cut[1] > from + 0.05 && cut[0] < to) to = Math.max(from, cut[0]);
+        if (dir < 0 && cut[0] < from - 0.05 && cut[1] > to) to = Math.min(from, cut[1]);
+      }
+      const available = Math.abs(to - from), length = Math.min(available, 85 - arm.length);
+      if (length > 0.01) {
+        arm.legs.push({ edge: e, from, to: from + dir * length, start: arm.length, length }); arm.length += length;
+      }
+      if (length < available - 0.01 || (dir > 0 ? to < e.L - 0.02 : to > 0.02)) break;
+      const v = dir > 0 ? e.bv : e.av, old = e, dx = e.dx * dir, dz = e.dz * dir;
+      let next = null, score = -Infinity;
+      for (const o of v.out) {
+        const q = o.edge; if (seen.has(q) || q.claimed !== arm.claimed || q.r.oneway !== arm.r.oneway) continue;
+        if (q.r.oneway && (o.dir < 0) !== arm.incoming) continue;
+        const dot = dx * q.dx * o.dir + dz * q.dz * o.dir;
+        if (dot < 0.65 || Math.abs(q.r.width - old.r.width) > 4) continue;
+        const sameWay = q.r.id === old.r.id, sameName = q.r.name && q.r.name === old.r.name;
+        if (!sameWay && !sameName && q.r.hw !== old.r.hw) continue;
+        const value = dot + (sameWay ? 3 : sameName ? 1 : 0);
+        if (value > score) { score = value; next = o; }
+      }
+      if (!next) break;
+      e = next.edge; dir = next.dir; from = dir > 0 ? 0 : e.L;
+    }
+    arm.at = s => {
+      const leg = arm.legs.find(l => s <= l.start + l.length + 0.001) || arm.legs[arm.legs.length - 1];
+      if (!leg) return { x: arm.x, z: arm.z, dx: arm.dx, dz: arm.dz, r: arm.r };
+      const dir = Math.sign(leg.to - leg.from), t = leg.from + dir * (Math.min(arm.length, s) - leg.start), e = leg.edge;
+      return { x: e.a[0] + e.dx * t, z: e.a[1] + e.dz * t, dx: e.dx * dir, dz: e.dz * dir, r: e.r };
+    };
+    delete arm.first;
+  }
+  for (const j of junctions) for (const a of j.arms) trace(a);
+  function onLegs(arm, from, to, field) {
+    for (const leg of arm.legs) {
+      const lo = Math.max(from, leg.start), hi = Math.min(to, leg.start + leg.length); if (hi <= lo) continue;
+      const dir = Math.sign(leg.to - leg.from), x = leg.from + dir * (lo - leg.start), y = leg.from + dir * (hi - leg.start);
+      leg.edge[field].push([Math.min(x, y), Math.max(x, y)]);
+    }
+  }
+  for (const j of junctions) {
+    if (!j.signal) continue;
+    let crossingOwner = false;
+    for (const a of j.arms) {
+      if (!SIGNAL.has(a.r.hw)) continue;
+      const cross = j.midblock ? null : crossingNear(a.x, a.z, a.dx, a.dz);
+      if (j.crossing) a.crossing = j.crossing;
+      else if (cross && cross.s >= -1) { a.crossing = cross.r; a.crossS = Math.max(0, cross.s); a.stopS = a.crossS + 5; }
+      if (j.midblock && !a.claimed) { a.crosswalk = !crossingOwner; crossingOwner = true; }
+      onLegs(a, 0, a.stopS, 'cuts');
+      if (a.incoming) onLegs(a, a.stopS, a.stopS + 30, 'solid');
+    }
+  }
+  // A paired carriageway's median lies toward its opposite-direction partner.
+  // Exclude embedded busways and same-lane overlaps from the pairing search.
+  for (const e of edges) {
+    if (!e.r.oneway || e.r.hw === 'busway') continue;
+    const x = (e.a[0] + e.b[0]) / 2, z = (e.a[1] + e.b[1]) / 2; let best = 25;
+    for (const q of nearby(x, z, 25)) {
+      if (q.r.id === e.r.id || !q.r.oneway || q.r.hw === 'busway' || (q.r.layer || 0) !== (e.r.layer || 0)) continue;
+      if (e.dx * q.dx + e.dz * q.dz > -0.9 || (e.r.name && q.r.name && e.r.name !== q.r.name)) continue;
+      const t = (x - q.a[0]) * q.dx + (z - q.a[1]) * q.dz; if (t < 0 || t > q.L) continue;
+      const px = q.a[0] + q.dx * t - x, pz = q.a[1] + q.dz * t - z, d = Math.hypot(px, pz);
+      const side = px * -e.dz + pz * e.dx;
+      if (d < Math.max(3, (e.r.width + q.r.width) * 0.35) || d >= best || Math.abs(side) < d * 0.9) continue;
+      best = d; e.medianSide = Math.sign(side);
+    }
+  }
+  // Keep centre/lane/edge paint clear of mapped zebras even at unsignalised
+  // crossings. Do this after tracing so a crossing does not sever an approach.
+  for (const r of crossings) for (let i = 1; i < r.pts.length; i++) {
+    const a = r.pts[i - 1], b = r.pts[i], dx = b[0] - a[0], dz = b[1] - a[1], L = Math.hypot(dx, dz);
+    if (L < 0.1) continue;
+    for (const e of nearby((a[0] + b[0]) / 2, (a[1] + b[1]) / 2, L / 2 + 3)) {
+      if (Math.abs((dx * e.dx + dz * e.dz) / L) > 0.55) continue;
+      const den = cross2(e.dx, e.dz, dx, dz), px = a[0] - e.a[0], pz = a[1] - e.a[1];
+      const s = cross2(px, pz, dx, dz) / den, u = cross2(px, pz, e.dx, e.dz) / den;
+      if (u < 0 || u > 1 || s < -2.5 || s > e.L + 2.5) continue;
+      e.cuts.push([Math.max(0, s - 2.5), Math.min(e.L, s + 2.5)]);
+    }
+  }
+  for (const nd of osm.nodes) {
+    if (nd.k !== 'crossing') continue;
+    const candidates = [...nearby(nd.x, nd.z, 3)]; let nearest = null, distance = 3;
+    for (const e of candidates) {
+      const d = segDist(nd.x, nd.z, e.a, e.b); if (d <= distance) { distance = d; nearest = e; }
+    }
+    if (!nearest) continue;
+    for (const e of candidates) {
+      if (Math.abs(e.dx * nearest.dx + e.dz * nearest.dz) < 0.9 || segDist(nd.x, nd.z, e.a, e.b) > distance + 0.1) continue;
+      const s = (nd.x - e.a[0]) * e.dx + (nd.z - e.a[1]) * e.dz;
+      if (s >= -2.5 && s <= e.L + 2.5) e.cuts.push([Math.max(0, s - 2.5), Math.min(e.L, s + 2.5)]);
+    }
+  }
+  for (const e of edges) { e.cuts = merged(e.cuts); e.solid = merged(e.solid); }
+  return { edges, byRoad, junctions, crossings, allCarAt };
 }

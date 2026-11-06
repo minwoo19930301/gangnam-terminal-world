@@ -1,0 +1,561 @@
+{
+  "id": "banwon",
+  "name": "반원상가 · 한신치킨호프",
+  "updated": "2026-11-06",
+  "round": 8,
+  "address": "서울 서초구 신반포로23길 30, 잠원동 72-2. 한신치킨호프 1층 111호는 사용자 제공 위치 정보.",
+  "sources": [
+    {
+      "path": "data/osm.json",
+      "title": "반원상가 413354848 실제 윤곽, 반원어린이공원 413360475 경계, 신반포로23길 523344140 중심선 및 점포 POI"
+    },
+    {
+      "path": "refs/aerial/newcore_banwon.jpg",
+      "title": "10m 좌표격자 항공사진: 서측 도로, 북·동측 공원, 동북동측 한신교회 배치 확인"
+    },
+    {
+      "path": "refs/roadview/manifest.json",
+      "title": "운영자가 제공한 카카오 로드뷰 위치·시기·외관 설명"
+    },
+    {
+      "path": "refs/roadview/banwon_01_front.jpg",
+      "capture_date": "2025-06",
+      "title": "정면 검은 돌 출입탑, BAN WON, 세 흰 핀, 약국·은행·의원 간판, 높은 기단·계단·긴 난간 경사로"
+    },
+    {
+      "path": "refs/roadview/banwon_02_across_towers.jpg",
+      "capture_date": "2025-06",
+      "title": "서측 도로 건너 고층 아파트, 적색 어린이보호구역 노면"
+    },
+    {
+      "path": "refs/interior/banwon/notes.json",
+      "title": "제공된 2026-10 블로그 사진 메타데이터. 사진·간판을 직접 대조했고 블로그 본문을 새로 조회하지 않음"
+    },
+    {
+      "path": "refs/interior/streets_islands/notes.json",
+      "title": "13~19번 한신치킨 사진만 사용. 데블스도어·지하상가 자료는 이 모듈 근거에서 제외"
+    },
+    {
+      "path": "refs/interior/banwon/01_gamiok_row_street.jpg",
+      "url": "https://m.blog.naver.com/chloe_ponggee/224455066913",
+      "post_date": "2026-10-27",
+      "title": "반원상가 1층 감미옥 줄 정면, 광장 쪽에서 본 길쭉한 1층 상가 + 주황 천막 + 빨간 플라스틱 의자",
+      "basis": "제공된 로컬 사진 및 notes.json의 출처 메타데이터"
+    },
+    {
+      "path": "refs/interior/banwon/02_park_side_tables_trees.jpg",
+      "url": "https://m.blog.naver.com/chloe_ponggee/224455066913",
+      "post_date": "2026-10-27",
+      "title": "천막 밖 공원 쪽 원형 철제 테이블+빨간 의자, 뒤로 가로수·광장",
+      "basis": "제공된 로컬 사진 및 notes.json의 출처 메타데이터"
+    },
+    {
+      "path": "refs/interior/banwon/03_gamiok_front.jpg",
+      "url": "https://m.blog.naver.com/dktjtidnj/224459455661",
+      "post_date": "2026-10-30",
+      "title": "감미옥 간판(빨강/파랑 간판 위 2층 간판들)과 주황 차양",
+      "basis": "제공된 로컬 사진 및 notes.json의 출처 메타데이터"
+    },
+    {
+      "path": "refs/interior/banwon/04_gamiok_front_closeup.jpg",
+      "url": "https://m.blog.naver.com/dktjtidnj/224459455661",
+      "post_date": "2026-10-30",
+      "title": "감미옥 점포 앞 세로 입간판(순대국 육칼국수 만두찜)",
+      "basis": "제공된 로컬 사진 및 notes.json의 출처 메타데이터"
+    },
+    {
+      "path": "refs/interior/banwon/05_park_from_tent.jpg",
+      "url": "https://m.blog.naver.com/dktjtidnj/224459455661",
+      "post_date": "2026-10-30",
+      "title": "천막 안에서 본 공원: 놀이터와 단풍 가로수",
+      "basis": "제공된 로컬 사진 및 notes.json의 출처 메타데이터"
+    },
+    {
+      "path": "refs/interior/banwon/06_hansin_kalguksu_sign.jpg",
+      "url": "https://m.blog.naver.com/dltmfgml4088/224450891474",
+      "post_date": "2026-10-23",
+      "title": "한신치킨 호프/반원 칼국수 T.596-5997 간판 + 2층 비에이블 스터디카페",
+      "basis": "제공된 로컬 사진 및 notes.json의 출처 메타데이터"
+    },
+    {
+      "path": "refs/interior/banwon/07_hansin_neon_night.jpg",
+      "url": "https://m.blog.naver.com/dltmfgml4088/224450891474",
+      "post_date": "2026-10-23",
+      "title": "한신치킨 원형 네온 간판 + 한식당, 2층 카페24H",
+      "basis": "제공된 로컬 사진 및 notes.json의 출처 메타데이터"
+    },
+    {
+      "path": "refs/interior/banwon/08_queue_park_church.jpg",
+      "url": "https://m.blog.naver.com/dltmfgml4088/224450891474",
+      "post_date": "2026-10-23",
+      "title": "천막 옆 대기줄, 뒤로 교회 건물과 가로등",
+      "basis": "제공된 로컬 사진 및 notes.json의 출처 메타데이터"
+    },
+    {
+      "path": "refs/interior/banwon/09_tent_inside_graffiti.jpg",
+      "url": "https://m.blog.naver.com/dltmfgml4088/224450891474",
+      "post_date": "2026-10-23",
+      "title": "비닐 천막 안 야장 내부(낙서 비닐, 테이블 가득)",
+      "basis": "제공된 로컬 사진 및 notes.json의 출처 메타데이터"
+    },
+    {
+      "path": "refs/interior/banwon/10_hansin_front_night.jpg",
+      "url": "https://m.blog.naver.com/dockdm12/224444904805",
+      "post_date": "2026-10-17",
+      "title": "한신치킨 정면 반원 칼국수 간판, 주황 차양+비닐",
+      "basis": "제공된 로컬 사진 및 notes.json의 출처 메타데이터"
+    },
+    {
+      "path": "refs/interior/banwon/11_tent_edge_park.jpg",
+      "url": "https://m.blog.naver.com/dockdm12/224444904805",
+      "post_date": "2026-10-17",
+      "title": "천막 가장자리와 공원 나무",
+      "basis": "제공된 로컬 사진 및 notes.json의 출처 메타데이터"
+    },
+    {
+      "path": "refs/interior/banwon/12_interior_counter.jpg",
+      "url": "https://m.blog.naver.com/dockdm12/224444904805",
+      "post_date": "2026-10-17",
+      "title": "한신치킨 실내: 카운터, TV, 메뉴 벽판",
+      "basis": "제공된 로컬 사진 및 notes.json의 출처 메타데이터"
+    },
+    {
+      "path": "refs/interior/banwon/13_alley_night.jpg",
+      "url": "https://m.blog.naver.com/fewlove11/224458808662",
+      "post_date": "2026-10-30",
+      "title": "상가 안 통로(좁은 골목) 야간: 좌우 점포, 한신 원형 간판, 맥주 냉장고, 뒤로 아파트",
+      "basis": "제공된 로컬 사진 및 notes.json의 출처 메타데이터"
+    },
+    {
+      "path": "refs/interior/banwon/14_corner_exterior_night.jpg",
+      "url": "https://m.blog.naver.com/fewlove11/224458808662",
+      "post_date": "2026-10-30",
+      "title": "상가 모서리 외관 야간: 비닐 천막 코너, 2층 간판(비에이블 스터디카페, 한신 칼국수)",
+      "basis": "제공된 로컬 사진 및 notes.json의 출처 메타데이터"
+    },
+    {
+      "path": "refs/interior/banwon/15_hansin_sign_alley.jpg",
+      "url": "https://m.blog.naver.com/h99578/224460314042",
+      "post_date": "2026-10-31",
+      "title": "통로에서 본 한신치킨 원형 네온 간판과 빌딩 외벽",
+      "basis": "제공된 로컬 사진 및 notes.json의 출처 메타데이터"
+    },
+    {
+      "path": "refs/interior/streets_islands/13_hanshin_yajang_night_street.jpg",
+      "url": "https://m.blog.naver.com/a_a_____y/224447364934",
+      "post_date": "2026-10-20",
+      "title": "한신치킨 야장 야간 거리 전경",
+      "basis": "제공된 로컬 사진 및 notes.json의 출처 메타데이터"
+    },
+    {
+      "path": "refs/interior/streets_islands/14_hanshin_yajang_row_night.jpg",
+      "url": "https://m.blog.naver.com/a_a_____y/224447364934",
+      "post_date": "2026-10-20",
+      "title": "야장 줄지은 테이블 야경",
+      "basis": "제공된 로컬 사진 및 notes.json의 출처 메타데이터"
+    },
+    {
+      "path": "refs/interior/streets_islands/15_hanshin_terrace_apartments_backdrop.jpg",
+      "url": "https://m.blog.naver.com/qkrthwjd655/224448552779",
+      "post_date": "2026-10-21",
+      "title": "한신치킨 천막 옆 보행로, 파란 플라스틱 의자 줄, 뒤로 신반포 아파트 고층",
+      "basis": "제공된 로컬 사진 및 notes.json의 출처 메타데이터"
+    },
+    {
+      "path": "refs/interior/streets_islands/16_hanshin_alley_sign_night.jpg",
+      "url": "https://m.blog.naver.com/tlsghk6545/224449169489",
+      "post_date": "2026-10-23",
+      "title": "골목 입구 간판 \"한신\" 원형 간판 야경",
+      "basis": "제공된 로컬 사진 및 notes.json의 출처 메타데이터"
+    },
+    {
+      "path": "refs/interior/streets_islands/17_bancheon_noodle_stall_front.jpg",
+      "url": "https://m.blog.naver.com/tlsghk6545/224449169489",
+      "post_date": "2026-10-23",
+      "title": "반원 칼국수 간판 앞 천막 좌석",
+      "basis": "제공된 로컬 사진 및 notes.json의 출처 메타데이터"
+    },
+    {
+      "path": "refs/interior/streets_islands/18_hanshin_banwon_signs_night.jpg",
+      "url": "https://m.blog.naver.com/h99578/224460314042",
+      "post_date": "2026-10-31",
+      "title": "반원 칼국수/한신치킨호프 간판 야경",
+      "basis": "제공된 로컬 사진 및 notes.json의 출처 메타데이터"
+    },
+    {
+      "path": "refs/interior/streets_islands/19_hanshin_yajang_tables.jpg",
+      "url": "https://m.blog.naver.com/h99578/224460314042",
+      "post_date": "2026-10-31",
+      "title": "야장 테이블 내부",
+      "basis": "제공된 로컬 사진 및 notes.json의 출처 메타데이터"
+    }
+  ],
+  "notes": [
+    "실제 OSM 건물 413354848만 claim한다. 윤곽은 [-138.96,-382.48],[-98.27,-396.88],[-111.6,-434.01],[-152.28,-419.62]이며 x는 동쪽, z는 남쪽, 단위는 m이다.",
+    "로컬 기준점은 북서 모서리 (-152.28,-419.62). u는 동북동, v는 남남동. 폭 43.15m, 깊이39.45m, 회전각 약19.48도이다. 도로는 서측, 공원은 북·동측이며 출입구와 상가는 이 방향에 맞춘다.",
+    "정면은 카카오 로드뷰의 검은 돌 출입탑·BAN WON·세 흰 핀, 회색 패널, 밀집 간판, 기단·계단·경사로, 은행·약국 전면을 따른다. 조현은 읽히는 단편만 사용하며 의원 전체 이름을 새로 만들지 않았다.",
+    "야장은 북동 모서리를 감싸는 배치로 해석했다. 북측 사진에서 건물은 남쪽, 공원은 북쪽이고 서남서쪽으로 보이는 고층 아파트가 도로 건너 반포르엘 단지 방향과 맞는다. 북측 대기줄 사진의 한신교회는 동북동쪽에 있다. 정확한 점포 경계는 사진 추정이다.",
+    "한신치킨호프는 로컬 u34.3..43.15,v0..13, 한식당은 u23.2..34.2,v0..9.3, 감미옥은 u34.3..43.15,v22.2..34로 재구성한다. 북측 야장에는 파란 의자, 동측 감미옥 줄에는 빨간 의자와 원형 금속 테이블을 둔다.",
+    "실제 사진의 반원 칼국수·한신 치킨호프·한식당·감미옥·비에이블 스터디카페·반원 E&I 피아노·PICNIC STORAGE·문구/도장/열쇠 간판을 사용한다. 내부 복도의 아빠의마음·파더스 김밥·동대문엽기떡볶이는 해당 OSM POI 명칭을 사용한다.",
+    "사진12에서 확인한 낮은 크림색 천장, 형광등, 나무 직사각 테이블, 검은 의자, 회색 바닥, 뒤쪽 카운터·메뉴판, 오른쪽 TV·냉장고와 맥주통을 1층 detail에 반영했다.",
+    "반원어린이공원 413360475 전체는 만들거나 claim하지 않는다. 건물에 접한 북·동쪽 보행 가장자리의 난간·나무·벤치·가로등만 추가하며 공원 면·나머지 수목·주변 건물은 일반 도시가 소유한다. 사진05의 놀이기구 전체를 이 모듈의 구현으로 주장하지 않는다.",
+    "신반포로23길 523344140은 claim하지 않는다. 실제 중심선 (-145.36,-365.39)→(-169.16,-427.87)을 따라 낮은 적색 표면과 어린이/보호구역 글씨를 보강하며 일반 도시 차선의 통로를 남긴다.",
+    "외벽·문·바닥·경사로·계단·승강기·층별 zone은 항상 존재한다. 실내 집기와 야장 의자/테이블은 별도 K.detail 그룹이다. 1F~4F 계단 및 승강기 연결은 보행을 위한 추정 배치이다.",
+    "제공된 banwon/16_hangang_park_tree.jpg는 잠원한강공원으로 분류된 별개 장소이므로 사용하지 않았다. streets_islands/01~12 데블스도어와20 지하상가도 이 모듈에서 사용하지 않았다.",
+    "야장 바깥 통로도 북측 u24..48.35,v-6.2..-3.4 및 동측 u46.5..48.35,v-3.5..35에서 y1.2m로 이어진다. 북측 u30의 계단과 동측 v20의 계단으로 지상0m 보도에 연결한다. 철제 난간은 개방된 가로대 표현이다."
+  ],
+  "building": {
+    "osm_id": 413354848,
+    "claims": [
+      413354848
+    ],
+    "claimRoads": [],
+    "claimAreas": [],
+    "floor_tops_m": {
+      "1F": 1.2,
+      "2F": 4.8,
+      "3F": 8.4,
+      "4F": 12
+    },
+    "roof_m": 15.6,
+    "floor_to_floor_m": 3.6,
+    "basement_built": false,
+    "height_basis": "지상4층은 round8 사용자 지시를 따른다. 로드뷰와 블로그의 층수 해석이 충돌하므로 측정값 또는 검증된 현황으로 간주하지 않는다."
+  },
+  "modeling": {
+    "trace_coordinate_convention": "x/z는 프로젝트 월드 좌표(m). y는 카메라 눈높이가 아니라 tests/shot.mjs가 받는 보행 바닥 높이이며 지상0, 기단/1층/야장 데크1.2이다. yaw0=북(-z),90=서,180=남,270=동. 모든 trace는 GPS 없는 사진 구도 추정값이다.",
+    "trace": [
+      {
+        "spot": "반원상가 정면 로드뷰",
+        "photos": [
+          "refs/roadview/banwon_01_front.jpg"
+        ],
+        "x": -154.1,
+        "y": 0,
+        "z": -397.76,
+        "yawDeg": 289.48,
+        "pitchDeg": 10,
+        "expected_subject": "검은 출입탑·BAN WON·3개 흰 핀, 우리은행/약국 간판, 계단과 경사로",
+        "coordinate_basis": "사진 구도를 모듈에 맞춘 추정 카메라. GPS 또는 실측 촬영점이 아님."
+      },
+      {
+        "spot": "신반포로23길 건너편 로드뷰",
+        "photos": [
+          "refs/roadview/banwon_02_across_towers.jpg"
+        ],
+        "x": -152.76,
+        "y": 0,
+        "z": -393.99,
+        "yawDeg": 109.48,
+        "pitchDeg": 8,
+        "expected_subject": "적색 어린이보호구역과 일반 도시 모듈이 만드는 건너편 아파트",
+        "coordinate_basis": "사진 구도를 모듈에 맞춘 추정 카메라. GPS 또는 실측 촬영점이 아님."
+      },
+      {
+        "spot": "감미옥에서 한신치킨으로 이어지는 동측 점포열",
+        "photos": [
+          "refs/interior/banwon/01_gamiok_row_street.jpg"
+        ],
+        "x": -95.69,
+        "y": 1.2,
+        "z": -403.57,
+        "yawDeg": 31.25,
+        "pitchDeg": 5,
+        "expected_subject": "감미옥·문구점·반원칼국수 간판, 주황 차양·빨간 의자",
+        "coordinate_basis": "사진 구도를 모듈에 맞춘 추정 카메라. GPS 또는 실측 촬영점이 아님."
+      },
+      {
+        "spot": "감미옥 공원 쪽 테이블열",
+        "photos": [
+          "refs/interior/banwon/02_park_side_tables_trees.jpg"
+        ],
+        "x": -98.55,
+        "y": 1.2,
+        "z": -402.35,
+        "yawDeg": 19.48,
+        "pitchDeg": 0,
+        "expected_subject": "원형 금속 테이블·빨간 의자와 공원 수목",
+        "coordinate_basis": "사진 구도를 모듈에 맞춘 추정 카메라. GPS 또는 실측 촬영점이 아님."
+      },
+      {
+        "spot": "감미옥 전면",
+        "photos": [
+          "refs/interior/banwon/03_gamiok_front.jpg"
+        ],
+        "x": -97.26,
+        "y": 1.2,
+        "z": -408.32,
+        "yawDeg": 109.48,
+        "pitchDeg": 6,
+        "expected_subject": "빨간 감미옥 간판, 주황 차양, 메뉴 사진을 대신한 한글 메뉴 패널",
+        "coordinate_basis": "사진 구도를 모듈에 맞춘 추정 카메라. GPS 또는 실측 촬영점이 아님."
+      },
+      {
+        "spot": "감미옥 세로 메뉴판",
+        "photos": [
+          "refs/interior/banwon/04_gamiok_front_closeup.jpg"
+        ],
+        "x": -100.26,
+        "y": 1.2,
+        "z": -411.4,
+        "yawDeg": 143.6,
+        "pitchDeg": 2,
+        "expected_subject": "순대국·육칼국수·만두찜 세로 간판과 빨간 의자",
+        "coordinate_basis": "사진 구도를 모듈에 맞춘 추정 카메라. GPS 또는 실측 촬영점이 아님."
+      },
+      {
+        "spot": "감미옥 천막에서 공원 쪽",
+        "photos": [
+          "refs/interior/banwon/05_park_from_tent.jpg"
+        ],
+        "x": -100.44,
+        "y": 1.2,
+        "z": -407.41,
+        "yawDeg": 289.48,
+        "pitchDeg": 0,
+        "expected_subject": "천막의 주황 가장자리와 공원 나무·경계 보행로. 사진의 놀이터 전체는 구현 범위 밖",
+        "coordinate_basis": "사진 구도를 모듈에 맞춘 추정 카메라. GPS 또는 실측 촬영점이 아님."
+      },
+      {
+        "spot": "북측 한신치킨·반원칼국수 간판",
+        "photos": [
+          "refs/interior/banwon/06_hansin_kalguksu_sign.jpg"
+        ],
+        "x": -117.53,
+        "y": 1.2,
+        "z": -437.43,
+        "yawDeg": 199.48,
+        "pitchDeg": 11,
+        "expected_subject": "한신 치킨호프, 반원칼국수 및 비에이블 스터디카페 간판의 겹친 높이",
+        "coordinate_basis": "사진 구도를 모듈에 맞춘 추정 카메라. GPS 또는 실측 촬영점이 아님."
+      },
+      {
+        "spot": "한신치킨 원형 간판 야경",
+        "photos": [
+          "refs/interior/banwon/07_hansin_neon_night.jpg"
+        ],
+        "x": -125.06,
+        "y": 1.2,
+        "z": -434.13,
+        "yawDeg": 255.55,
+        "pitchDeg": 9,
+        "expected_subject": "골목에 돌출한 흰 원형 한신치킨·반원칼국수 간판",
+        "coordinate_basis": "사진 구도를 모듈에 맞춘 추정 카메라. GPS 또는 실측 촬영점이 아님."
+      },
+      {
+        "spot": "북측 야장 옆에서 한신교회 방향",
+        "photos": [
+          "refs/interior/banwon/08_queue_park_church.jpg"
+        ],
+        "x": -130.51,
+        "y": 1.2,
+        "z": -433.05,
+        "yawDeg": 283.87,
+        "pitchDeg": 2,
+        "expected_subject": "오른쪽 주황 비닐 천막, 왼쪽 공원 가장자리, 일반 도시의 한신교회 방향",
+        "coordinate_basis": "사진 구도를 모듈에 맞춘 추정 카메라. GPS 또는 실측 촬영점이 아님."
+      },
+      {
+        "spot": "한신치킨 천막 비닐과 테이블",
+        "photos": [
+          "refs/interior/banwon/09_tent_inside_graffiti.jpg"
+        ],
+        "x": -107.11,
+        "y": 1.2,
+        "z": -426.26,
+        "yawDeg": 11.96,
+        "pitchDeg": 0,
+        "expected_subject": "주황 하단막·투명 비닐 주름·낙서, 야장 테이블과 식기",
+        "coordinate_basis": "사진 구도를 모듈에 맞춘 추정 카메라. GPS 또는 실측 촬영점이 아님."
+      },
+      {
+        "spot": "반원칼국수·한신치킨 동측 정면 야경",
+        "photos": [
+          "refs/interior/banwon/10_hansin_front_night.jpg"
+        ],
+        "x": -105.29,
+        "y": 1.2,
+        "z": -430.73,
+        "yawDeg": 109.48,
+        "pitchDeg": 4,
+        "expected_subject": "반원칼국수 간판, 열린 동측 출입구, 비닐 천막과 식당 실내",
+        "coordinate_basis": "사진 구도를 모듈에 맞춘 추정 카메라. GPS 또는 실측 촬영점이 아님."
+      },
+      {
+        "spot": "한신치킨 천막과 공원 경계",
+        "photos": [
+          "refs/interior/banwon/11_tent_edge_park.jpg"
+        ],
+        "x": -105.84,
+        "y": 1.2,
+        "z": -422.68,
+        "yawDeg": 289.48,
+        "pitchDeg": 0,
+        "expected_subject": "주황 천막 프레임, 식탁, 공원 가장자리 나무",
+        "coordinate_basis": "사진 구도를 모듈에 맞춘 추정 카메라. GPS 또는 실측 촬영점이 아님."
+      },
+      {
+        "spot": "한신치킨호프 111호 실내 카운터",
+        "photos": [
+          "refs/interior/banwon/12_interior_counter.jpg"
+        ],
+        "x": -114.82,
+        "y": 1.2,
+        "z": -429.48,
+        "yawDeg": 202.31,
+        "pitchDeg": 0,
+        "expected_subject": "낮은 크림색 천장·형광등, 나무 테이블과 검은 의자, 메뉴판·카운터·TV·냉장고·맥주통",
+        "coordinate_basis": "사진 구도를 모듈에 맞춘 추정 카메라. GPS 또는 실측 촬영점이 아님."
+      },
+      {
+        "spot": "한신치킨 북측 좁은 통로",
+        "photos": [
+          "refs/interior/banwon/13_alley_night.jpg"
+        ],
+        "x": -113.91,
+        "y": 1.2,
+        "z": -438.29,
+        "yawDeg": 109.48,
+        "pitchDeg": 4,
+        "expected_subject": "원형 간판, 파란 냉장고와 적재 의자, 길게 이어지는 야장; 서측 고층 아파트 방향",
+        "coordinate_basis": "사진 구도를 모듈에 맞춘 추정 카메라. GPS 또는 실측 촬영점이 아님."
+      },
+      {
+        "spot": "한신치킨 북동 모서리 천막",
+        "photos": [
+          "refs/interior/banwon/14_corner_exterior_night.jpg"
+        ],
+        "x": -108.63,
+        "y": 1.2,
+        "z": -440.15,
+        "yawDeg": 154.48,
+        "pitchDeg": 5,
+        "expected_subject": "북·동 양면으로 감긴 주황 비닐 천막, 반원칼국수와 스터디카페 간판",
+        "coordinate_basis": "사진 구도를 모듈에 맞춘 추정 카메라. GPS 또는 실측 촬영점이 아님."
+      },
+      {
+        "spot": "북측 통로 원형 간판 가까이",
+        "photos": [
+          "refs/interior/banwon/15_hansin_sign_alley.jpg"
+        ],
+        "x": -116.17,
+        "y": 1.2,
+        "z": -437.48,
+        "yawDeg": 153.76,
+        "pitchDeg": 15,
+        "expected_subject": "한신치킨 원형 돌출 간판과 상층 간판",
+        "coordinate_basis": "사진 구도를 모듈에 맞춘 추정 카메라. GPS 또는 실측 촬영점이 아님."
+      },
+      {
+        "spot": "북동 모서리 야장 야간 거리",
+        "photos": [
+          "refs/interior/streets_islands/13_hanshin_yajang_night_street.jpg"
+        ],
+        "x": -108.47,
+        "y": 1.2,
+        "z": -440.31,
+        "yawDeg": 156.82,
+        "pitchDeg": 3,
+        "expected_subject": "모서리에 연속하는 주황 차양·비닐 야장과 테이블",
+        "coordinate_basis": "사진 구도를 모듈에 맞춘 추정 카메라. GPS 또는 실측 촬영점이 아님."
+      },
+      {
+        "spot": "한신치킨 북측 야장 테이블열",
+        "photos": [
+          "refs/interior/streets_islands/14_hanshin_yajang_row_night.jpg"
+        ],
+        "x": -114.67,
+        "y": 1.2,
+        "z": -438.33,
+        "yawDeg": 120.99,
+        "pitchDeg": 0,
+        "expected_subject": "처마 아래 가로로 늘어선 금속 테이블과 파란 의자",
+        "coordinate_basis": "사진 구도를 모듈에 맞춘 추정 카메라. GPS 또는 실측 촬영점이 아님."
+      },
+      {
+        "spot": "아파트를 향한 파란 의자 보도",
+        "photos": [
+          "refs/interior/streets_islands/15_hanshin_terrace_apartments_backdrop.jpg"
+        ],
+        "x": -116.17,
+        "y": 1.2,
+        "z": -437.48,
+        "yawDeg": 109.48,
+        "pitchDeg": 5,
+        "expected_subject": "왼쪽 천막, 파란 의자 줄과 서측 아파트 방향",
+        "coordinate_basis": "사진 구도를 모듈에 맞춘 추정 카메라. GPS 또는 실측 촬영점이 아님."
+      },
+      {
+        "spot": "한신치킨 골목 입구 원형 간판",
+        "photos": [
+          "refs/interior/streets_islands/16_hanshin_alley_sign_night.jpg"
+        ],
+        "x": -125.63,
+        "y": 1.2,
+        "z": -434.24,
+        "yawDeg": 255.79,
+        "pitchDeg": 10,
+        "expected_subject": "흰 원형 한신 간판과 북측 통로",
+        "coordinate_basis": "사진 구도를 모듈에 맞춘 추정 카메라. GPS 또는 실측 촬영점이 아님."
+      },
+      {
+        "spot": "반원칼국수 전면 천막",
+        "photos": [
+          "refs/interior/streets_islands/17_bancheon_noodle_stall_front.jpg"
+        ],
+        "x": -105.4,
+        "y": 1.2,
+        "z": -431.32,
+        "yawDeg": 109.48,
+        "pitchDeg": 5,
+        "expected_subject": "반원 칼국수 간판, 주황 차양과 천막 안 좌석",
+        "coordinate_basis": "사진 구도를 모듈에 맞춘 추정 카메라. GPS 또는 실측 촬영점이 아님."
+      },
+      {
+        "spot": "한신치킨 간판과 파란 냉장고",
+        "photos": [
+          "refs/interior/streets_islands/18_hanshin_banwon_signs_night.jpg"
+        ],
+        "x": -120.47,
+        "y": 1.2,
+        "z": -435.86,
+        "yawDeg": 222.53,
+        "pitchDeg": 9,
+        "expected_subject": "한신 치킨호프·반원칼국수 간판, 스터디카페 간판, 파란 조명 냉장고",
+        "coordinate_basis": "사진 구도를 모듈에 맞춘 추정 카메라. GPS 또는 실측 촬영점이 아님."
+      },
+      {
+        "spot": "한신치킨 북측 천막 테이블 내부",
+        "photos": [
+          "refs/interior/streets_islands/19_hanshin_yajang_tables.jpg"
+        ],
+        "x": -117.57,
+        "y": 1.2,
+        "z": -433.65,
+        "yawDeg": 109.48,
+        "pitchDeg": 0,
+        "expected_subject": "원형 테이블의 식기·맥주, 파란 플라스틱 의자와 주황 비닐 프레임",
+        "coordinate_basis": "사진 구도를 모듈에 맞춘 추정 카메라. GPS 또는 실측 촬영점이 아님."
+      }
+    ],
+    "guesses": [
+      "가장 큰 자료 불일치: 사용자 round8 지시는 4층 상가이지만 제공된 블로그 notes와 공원 측 사진은 낮은 2층 상가로 해석되며 OSM의 height=9m도 낮은 매스다. 이번 모듈은 지시를 우선해 4개 보행층을 만들었다. 실제 층수와 높이는 후속 현장 검토가 필요하다.",
+      "정면 기단은 로드뷰에서 약1.2m로 추정했다. 이를 1F 전체 및 북·동측 야장 데크 높이에 적용했으므로 실제 뒷면 지형 높이·경사와 다를 수 있다. 주변 도시는 평지0m여서 북·동측에 긴 접근 경사로를 추가했다.",
+      "층고3.6m, 층 바닥1.2/4.8/8.4/12m, 주지붕15.6m, 출입탑 상부·옥상 계단실·설비 높이는 재구성값이다. B1은 근거가 부족해 만들지 않았다.",
+      "중앙 십자형 복도, 계단의 위치와 왕복형 구조, 승강기 위치, 실내 점포 깊이·방 경계·문폭은 실측 도면이 없다. 이동 가능한 실내를 제공하기 위한 추정 배치이다.",
+      "상층의 이비인후과·스터디카페·학원·태권도 층 배정 및 방의 구분, 책상·열람석·의자·수련실 집기 배치는 간판의 실재와 별개로 추정이다. 검증된 층별 입점표로 사용하면 안 된다.",
+      "우리은행 OSM POI (-118.08,-423.09)는 건물 내부 북동쪽에 있지만 로드뷰 은행 간판은 도로변에 있다. POI를 정확한 출입면이나 점포 외곽으로 확대 해석하지 않고 정면 간판과 은행실을 따로 재구성했다.",
+      "한식당 OSM POI (-113.96,-414.81) 및 인근 음식점 점들은 건물 내부 점포 존재의 근거이다. 한신치킨의 북동 모서리 배치, 감미옥 동측 배치와 서로의 순서·폭은 사진 배경·교회·아파트 방향을 대조한 추정이다.",
+      "조현은 정면 간판에서 보이는 일부 글자이며 전체 상호를 알 수 없다. 추가 성명이나 의원명을 만들지 않았다. 진료 안내·진료 상담·학원 교습실 등의 글자는 장소 탐색을 위한 일반 안내이며 확인된 개별 상호가 아니다.",
+      "비닐 낙서 문구, 메뉴의 일부 한글 항목, TV 야구 화면, 식기·음료·손님 수, 조명과 원형 간판 치수, 가구 위치는 사진 분위기를 재구성한 근사 표현이다. 실제 가격·전화번호·특정 손님의 모습은 복제하지 않는다.",
+      "학교구역 붉은 칠의 구간 길이·색·문자 배치, 공원 난간·가로수·벤치·가로등 위치는 사진/OSM에 맞춘 시각적 근사이며 별도 도로·조경 실측이 없다. 차도 및 공원은 claim하지 않는다.",
+      "모든 modeling.trace는 모듈 안에서 대응 물체가 보이도록 정한 비교용 카메라이다. 원본 카카오/블로그 사진의 정확한 좌표·렌즈·눈높이와 일치한다는 의미가 아니다."
+    ],
+    "operator_review": [
+      "4층 지시와 2층으로 보이는 자료의 높이 불일치를 우선 검토",
+      "정면의 실제 계단·은행/약국 간판 순서와 한신치킨 북동 모서리 배치 비교",
+      "일반 도시 렌더와 함께 붉은 노면·차선 높이 및 공원 경계 겹침 확인",
+      "tests/shot.mjs는 작업 샌드박스에서 실행하지 않고 위 trace로 운영자가 렌더"
+    ]
+  }
+}

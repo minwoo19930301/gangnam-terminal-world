@@ -488,7 +488,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
   // 'o' = everything else. cull() hides 'U' from far above ground and far outdoor tiles while you are deep inside
   // an enclosed underground space. (An upper-floor interior class was tried and dropped: from the street it
   // hid facade glass, terraces and interiors seen through glass.)
-  const INDOOR = new Set(['gotomall', 'station', 'shinsegae', 'centralcity', 'gyeongbu', 'jwmarriott', 'banpo_shoppingtown']);
+  const INDOOR = new Set(['gotomall', 'station', 'shinsegae', 'centralcity', 'gyeongbu', 'jwmarriott', 'banpo_shoppingtown', 'newcore', 'banwon', 'gyeongbu_east']);
   const CELL_TILE = 128;
   function classify(cx, cy, cz, owner) {
     if (cy >= -1.5 || !INDOOR.has(owner)) return 'o';

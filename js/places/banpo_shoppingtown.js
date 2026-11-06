@@ -44,6 +44,8 @@ export const meta = {
     'refs/roadview/bp_01_banpo_shoppingtown_exit82_north.jpg',
     'refs/roadview/bp_02_banpo_shoppingtown_gotomall_canopy_west.jpg',
     'refs/roadview/bp_03_sinbanporo_east_banpo_6_8dong_red_brick.jpg',
+    'refs/roadview/street_01_sinbanpo_median_busstop_E.jpg',
+    'refs/roadview/police_02_box_and_exit3_W.jpg',
     'refs/roadview/gb_05_sinbanporo_east_bus_shelters_terminal_side.jpg',
     'refs/roadview/cc_02_sinbanporo_west_from_main_gate_tan_block_led.jpg',
     'refs/aerial/bp_34.jpg', 'refs/aerial/bp_67.jpg',
@@ -71,12 +73,47 @@ function buildPhotoRestaurant(K, C) {
   const darkBar = /주점|호프|유메|범주당|하시무/.test(name) || serial % 7 === 6;
   const wood = { tex: 'wood', color: damun ? 0x956843 : arisu ? 0x715039 : 0x9f744d };
   const round = beef || hof || heart, seatColor = hof ? 0xa62f32 : ilbon ? 0xc78d3e : 0x453e37;
+  // Photo22/06/32: stone floors are distinct from the timber-floored bars.
+  // Finish overlays do not change the existing walkable slab or room boundary.
+  if (beef || fish || hof || ilbon) {
+    K.texture('banpo-restaurant-stone', 256, 256, (g, w, h) => {
+      g.fillStyle = '#b8b6af'; g.fillRect(0, 0, w, h);
+      for (let i = 0; i < 650; i++) {
+        const x = (i * 73 + i * i * 3) % w, z = (i * 47 + i * i * 7) % h;
+        g.fillStyle = i % 3 ? 'rgba(248,246,235,0.13)' : 'rgba(78,81,77,0.10)';
+        g.fillRect(x, z, 2 + i % 9, 1 + i % 5);
+      }
+      g.strokeStyle = '#999b94'; g.lineWidth = 1;
+      g.strokeRect(0.5, 0.5, w - 1, h - 1);
+    }, [0.6, 0.6]);
+    B(mid, y + 0.014, depth / 2, width - 0.12, 0.008, depth - 0.14,
+      { tex: 'banpo-restaurant-stone', color: beef ? 0xb3b6b3 : hof ? 0xe5d7bb : 0xd3cec0 }, { solid: false });
+  }
+  if (beef || arisu) {
+    // Black exposed soffit in 우고집; charcoal tray ceiling in 아리수.
+    B(mid, ceiling - 0.038, depth / 2, width - 0.08, 0.022, depth - 0.08, beef ? 0x202321 : 0x625f59, { solid: false });
+    for (let d = 0.8; d < depth - 0.2; d += 1.55) {
+      B(mid, ceiling - 0.16, d, width - 0.1, 0.12, 0.10, beef ? 0x282b29 : 0x8b8982, { solid: false });
+      B(mid, ceiling - 0.19, d + 0.19, width - 0.4, 0.025, 0.025, 0x343a37, { solid: false });
+      for (const u of [a + 0.55, q - 0.55]) {
+        B(u, ceiling - 0.28, d + 0.19, 0.065, 0.10, 0.065, 0x222a26, { solid: false });
+        cyl(u, ceiling - 0.30, d + 0.19, 0.052, 0.025, { tex: 'emit', color: 0xffe4b8 }, 10);
+      }
+    }
+    B(mid, ceiling - 0.14, Math.max(1.4, depth * 0.58), 0.78, 0.13, 0.78, 0xc9c9bc, { solid: false });
+    for (let k = 0; k < 9; k++) B(mid - 0.28 + k * 0.07, ceiling - 0.15, Math.max(1.4, depth * 0.58), 0.02, 0.015, 0.54, 0x5f6560, { solid: false });
+  }
   // Rear wall treatments and low timber wainscot reproduce the room's palette.
   B(mid, y + 0.05, depth - 0.06, width - 0.12, 2.3, 0.055,
     beef ? 0x77766e : damun ? 0xa9ada4 : galbi || hof ? wood : 0xe9e4d8, { solid: false });
   B(mid, y + 0.04, depth - 0.10, width - 0.15, damun ? 0.9 : 0.72, 0.04,
     beef ? { tex: 'darkstone', color: 0x8a8c87 } : wood, { solid: false });
-  for (const u of [a + 0.05, q - 0.05]) B(u, y + 0.05, depth / 2, 0.05, 0.76, depth - 0.1, wood, { solid: false });
+  for (const u of [a + 0.05, q - 0.05]) {
+    B(u, y + 0.05, depth / 2, 0.05, beef ? 0.91 : 0.76, depth - 0.1,
+      beef ? { tex: 'darkstone', color: 0x9ca09b } : wood, { solid: false });
+    if (beef || damun) B(u, y + (beef ? 0.97 : 0.83), depth / 2, 0.055, ceiling - y - 1.02, depth - 0.1,
+      { tex: 'concrete', color: beef ? 0x93958c : 0xc0c5ba }, { solid: false });
+  }
   // Kitchen occupies the back edge, leaving both the central door and aisle open.
   const counterW = Math.min(width - 1.5, 3.5), cu = mid - 0.25, cd = depth - 0.48;
   B(cu, y, cd, counterW, 0.87, 0.66, galbi ? 0x35434a : fish ? 0xc6aa80 : wood);
@@ -115,6 +152,13 @@ function buildPhotoRestaurant(K, C) {
     cyl(u, y + 0.04, d, 0.22, 0.41, beef ? 0x292d2c : 0x858985);
     cyl(u, y + 0.45, d, 0.235, 0.065, red ? 0xb6383a : beef ? 0x9c8465 : 0x835736);
     if (back) B(u, y + 0.53, d + 0.16, 0.40, 0.35, 0.055, 0x292d2b, { solid: false });
+    if (beef) {
+      for (let k = 0; k < 12; k++) {
+        const t = k * Math.PI / 6;
+        B(u + Math.cos(t) * 0.218, y + 0.06, d + Math.sin(t) * 0.218, 0.018, 0.37, 0.018, 0x171d1b, { solid: false });
+      }
+      B(u, y + 0.80, d + 0.128, 0.14, 0.035, 0.025, 0x9f9d8d, { solid: false });
+    }
   };
   for (const u of cols) for (const d of rows) {
     if (d + 0.85 > depth - 1.0) continue;
@@ -147,7 +191,9 @@ function buildPhotoRestaurant(K, C) {
   // Ordinary dining menus remain compact; the photo-specific rooms get their
   // observed sign, fittings and lighting rather than a single generic template.
   const menu = damun ? ['DAMUN', '담은  ·  팔도막걸리와 전통주'] : fish ? ['동해횟집', '회 · 매운탕'] : beef ? ['소고기구이전문점', '우고집'] : galbi ? ['반포갈비', '갈비 · 식사'] : ilbon ? ['일번지육개장', '육개장 · 낙곱전골'] : arisu ? ['아리수 포차', '안주 · 식사'] : hof ? ['치킨 · 호프 · 닭발', '골뱅이 · 안주'] : [name, '식사 · 안주'];
-  if (!arisu) S(menu, mid, y + 2.0, depth - 0.13, Math.min(2.65, width - 1.2), 0.50, beef ? '#222725' : damun ? '#9a673c' : '#eee5d0', { fg: beef ? '#f5eedb' : '#342b23' });
+  if (!arisu) S(menu, damun ? a + 0.55 : mid, y + (damun ? 1.1 : 2.0), depth - 0.13,
+    damun ? 0.85 : Math.min(2.65, width - 1.2), damun ? 0.25 : 0.50,
+    beef ? '#222725' : damun ? '#9a673c' : '#eee5d0', { fg: beef ? '#f5eedb' : '#342b23' });
   if (damun) {
     // Wide backlit timber plaque and small framed bottle illustrations (09).
     B(mid, y + 1.62, depth - 0.12, 2.85, 0.78, 0.06, { tex: 'emit', color: 0xf1dba8 }, { solid: false });
@@ -157,15 +203,42 @@ function buildPhotoRestaurant(K, C) {
       S('우리 술', u, y + 1.9, depth - 0.13, 0.40, 0.49, '#eee9da', { fg: '#82876e' });
       B(u, y + 1.18, depth - 0.2, 0.34, 0.31, 0.15, { tex: 'emit', color: 0xffd68a }, { solid: false });
     }
+    // 09 is a side-wall dining view: a second timber plaque, framed pottery
+    // prints and lit timber dado belong beside the tables, not just at the bar.
+    const wallD = Math.min(depth - 1.0, Math.max(1.7, depth * 0.47));
+    B(q - 0.085, y + 1.35, wallD, 0.035, 0.87, Math.min(2.8, depth - 1.8), { tex: 'emit', color: 0xf8e6b9 }, { solid: false });
+    B(q - 0.12, y + 1.40, wallD, 0.05, 0.77, Math.min(2.68, depth - 1.92), wood, { solid: false });
+    S('DAMUN', q - 0.17, y + 1.80, wallD, Math.min(2.0, depth - 2.1), 0.49, null, { rotY: angle - Math.PI / 2, fg: '#27251f', offset: 0.01 });
+    B(q - 0.1, y + 0.84, depth / 2, 0.025, 0.045, depth - 0.25, { tex: 'emit', color: 0xffe0a0 }, { solid: false });
+    for (let j = 0; j < 3; j++) {
+      const d = 0.45 + j * 0.38;
+      B(q - 0.12, y + 1.43 + j % 2 * 0.1, d, 0.035, 0.43, 0.30, 0xf1efdc, { solid: false });
+      S('우리 술', q - 0.15, y + 1.63 + j % 2 * 0.1, d, 0.24, 0.30, '#eeead7', { rotY: angle - Math.PI / 2, fg: '#758b85', offset: 0.01 });
+    }
   }
   if (beef || galbi || fish || darkBar) {
     const ductCol = galbi || fish ? 0xaab4b2 : 0x303433;
     for (const u of [a + 0.65, q - 0.65]) {
-      B(u, ceiling - 0.31, depth / 2, 0.24, 0.22, depth - 0.3, ductCol, { solid: false });
-      for (let d = 0.5; d < depth - 0.2; d += 0.42) B(u, ceiling - 0.32, d, 0.26, 0.24, 0.025, 0x7c8583, { solid: false });
+      B(u, ceiling - 0.31, fish ? depth - 0.65 : depth / 2, 0.24, 0.22, fish ? 0.9 : depth - 0.3, ductCol, { solid: false });
+      for (let d = 0.5; d < depth - 0.2; d += 0.42) B(u, ceiling - 0.32, fish ? depth - 1.1 + d / depth * 0.9 : d, 0.26, 0.24, 0.025, 0x7c8583, { solid: false });
     }
-    B(mid, ceiling - 0.34, 0.64, width - 0.3, 0.23, 0.23, ductCol, { solid: false });
-    if (galbi) for (let u = a + 0.3; u < q; u += 0.48) B(u, ceiling - 0.06, depth / 2, 0.44, 0.04, depth - 0.15, wood, { solid: false });
+    B(mid, ceiling - 0.34, fish ? depth - 0.75 : 0.64, width - 0.3, 0.23, 0.23, ductCol, { solid: false });
+    if (galbi) {
+      for (let u = a + 0.3; u < q; u += 0.48) B(u, ceiling - 0.06, depth / 2, 0.44, 0.04, depth - 0.15, wood, { solid: false });
+      for (const u of [a + 0.16, q - 0.16]) for (const d of [0.27, depth - 0.25]) {
+        B(u, y, d, 0.21, ceiling - y, 0.21, wood, { solid: false });
+        B(u, ceiling - 0.34, d, 0.40, 0.29, 0.42, wood, { solid: false });
+      }
+      // Metal collars and vertical extraction drops read round at eye height.
+      for (const u of cols) for (const d of rows) {
+        if (d + 0.85 > depth - 1.0) continue;
+        cyl(u, y + 1.52, d, 0.065, ceiling - y - 1.65, 0xc2c7c0, 12);
+        cyl(u, y + 1.46, d, 0.11, 0.08, 0x9fa9a5, 12);
+        for (const yy of [1.63, 1.86, 2.10]) cyl(u, y + yy, d, 0.071, 0.025, 0x727d79, 12);
+      }
+      B(a + 0.63, y, 0.40, 0.72, 0.98, 0.46, 0x42525d, { solid: false });
+      S(['반포갈비', '갈비 · 식사'], a + 0.63, y + 0.58, 0.14, 0.57, 0.47, '#3c596b', { fg: '#e5f3ec', offset: 0.01 });
+    }
   }
   if (ilbon || arisu) {
     const glow = ilbon ? 0x344bff : 0xee424e;
@@ -176,17 +249,34 @@ function buildPhotoRestaurant(K, C) {
     }
   }
   if (arisu) {
-    for (const u of cols) for (const d of [2.16]) B(u, y, d, 1.60, 1.15, 0.08, wood);
-    S(['스포츠', '생중계'], mid, y + 2.05, depth - 0.20, 0.95, 0.53, '#32649a', { fg: '#e8ede4' });
+    for (const u of cols) for (const d of [2.16]) {
+      B(u, y, d, 1.60, 1.15, 0.08, wood);
+      B(u, y + 0.90, d, 1.62, 0.27, 0.10, 0x39312c, { solid: false });
+      B(u + 0.42, y + 0.76, d - 0.12, 0.35, 0.035, 0.22, wood, { solid: false });
+      B(u + 0.42, y + 0.79, d - 0.10, 0.29, 0.22, 0.035, 0x242b2c, { solid: false });
+      S('주문', u + 0.42, y + 0.90, d - 0.13, 0.24, 0.17, '#286da2', { fg: '#edf3ef', offset: 0.01 });
+    }
+    B(mid, y + 1.79, depth - 0.13, 1.12, 0.66, 0.075, 0x222b28, { solid: false });
+    S(['스포츠', '생중계'], mid, y + 2.12, depth - 0.20, 1.02, 0.56, '#32649a', { fg: '#e8ede4', offset: 0.01 });
     for (let u = a + 0.6; u < q - 0.35; u += 1.2) for (let k = 0; k < 3; k++) {
       B(u, y + 1.42 + k * 0.11, depth - 0.18, 0.42, 0.025, 0.03, 0x785138, { solid: false });
       B(u - 0.13 + k * 0.13, y + 1.4, depth - 0.18, 0.025, 0.35, 0.03, 0x785138, { solid: false });
+    }
+    for (const u of cols) for (const d of rows) {
+      if (d + 0.85 > depth - 1.0) continue;
+      // Parquet-style inlay on the photographed brown tables.
+      for (let j = 0; j < 5; j++) B(u - 0.44 + j * 0.22, y + 0.803, d, 0.18, 0.012, 0.66, { tex: 'wood', color: j % 2 ? 0x9d7c59 : 0x74563e }, { solid: false });
     }
   }
   if (fish) {
     // Navy split noren at the service opening; pale wood base cabinets (06).
     for (let j = 0; j < 4; j++) B(a + 0.40 + j * 0.42, y + 1.65, depth - 0.3, 0.39, 0.58, 0.035, 0x284e77, { solid: false });
     S('鮮', a + 1.03, y + 1.97, depth - 0.34, 0.58, 0.43, null, { fg: '#e35e49' });
+    for (const u of [a + 0.16, a + 2.0]) B(u, y, depth - 0.35, 0.13, 2.28, 0.13, wood, { solid: false });
+    B(a + 1.08, y + 2.23, depth - 0.35, 2.0, 0.14, 0.14, wood, { solid: false });
+    B(a + 0.53, y, depth - 1.32, 0.88, 0.72, 0.54, { tex: 'wood', color: 0xc8b58b }, { solid: false });
+    cyl(a + 0.53, y + 0.75, depth - 1.32, 0.19, 0.23, 0xe5e5db, 12);
+    B(a + 0.53, y + 0.81, depth - 1.61, 0.18, 0.11, 0.025, 0x535f5c, { solid: false });
   }
   // Downlights, pendants and ceiling pipes sit above the walking head envelope.
   for (const u of cols) for (const d of rows) {
@@ -201,17 +291,70 @@ function buildPhotoRestaurant(K, C) {
     B(q - 0.7, y + 1.95, depth - 0.19, 0.29, 0.29, 0.08, 0xdbddd2, { solid: false });
     for (const du of [-0.10, 0, 0.10]) B(q - 0.7 + du, y + 1.98, depth - 0.24, 0.015, 0.23, 0.025, 0x929b90, { solid: false });
   }
+  if (beef) {
+    // 22: projector screen, meat-menu posters, wall-lit name and floor AC.
+    B(a + 0.085, y + 1.25, Math.min(1.25, depth / 3), 0.035, 0.97, 1.43, 0x343c37, { solid: false });
+    B(a + 0.11, y + 1.30, Math.min(1.25, depth / 3), 0.025, 0.86, 1.32, 0xb1b8bd, { solid: false });
+    for (let j = 0; j < 3; j++) S(['우고집', j ? '소고기구이' : '차돌박이'], a + 0.13, y + 1.70, 2.35 + j * 0.62, 0.48, 0.72, '#3b352e', { rotY: angle + Math.PI / 2, fg: '#f6e4bf', offset: 0.01 });
+    B(q - 0.10, y + 1.28, Math.min(depth - 0.9, 2.7), 0.04, 0.79, 1.55, { tex: 'emit', color: 0xffe5ad }, { solid: false });
+    S(['소고기구이전문점', '우고집'], q - 0.15, y + 1.67, Math.min(depth - 0.9, 2.7), 1.45, 0.67, '#232824', { rotY: angle - Math.PI / 2, fg: '#f6efda', offset: 0.01 });
+    B(a + 0.33, y, depth - 0.45, 0.48, 1.87, 0.31, 0xe1e0d5, { solid: false });
+    for (let j = 0; j < 11; j++) B(a + 0.33, y + 0.45 + j * 0.095, depth - 0.62, 0.39, 0.013, 0.025, 0xa7aca2, { solid: false });
+  }
+  if (hof) {
+    // 32: the wall bench and timber menu strip are retained alongside stools.
+    B(a + 0.23, y + 0.11, depth / 2, 0.34, 0.36, depth - 1.1, 0x823d35, { solid: false });
+    B(a + 0.10, y + 0.48, depth / 2, 0.12, 0.43, depth - 1.1, 0x9c4c41, { solid: false });
+    B(a + 0.09, y + 1.13, depth / 2, 0.04, 1.15, depth - 0.3, wood, { solid: false });
+    S('치킨 · 호프 · 골뱅이', a + 0.14, y + 1.22, depth / 2, Math.min(depth - 0.5, 3.2), 0.18, '#2a2722', { rotY: angle + Math.PI / 2, fg: '#f5e0ac', offset: 0.01 });
+    for (let k = 0; k < 8; k++) {
+      const t = k * Math.PI / 4;
+      B(a + 0.18, y + 1.93 + Math.sin(t) * 0.14, depth * 0.7 + Math.cos(t) * 0.14, 0.04, 0.035, 0.035, 0xd5d5c8, { solid: false });
+    }
+    B(a + 0.20, y + 1.81, depth * 0.7, 0.04, 0.24, 0.025, 0xb9c2b6, { solid: false });
+  }
   // Shopfront panels never cover the open centre doorway. All loose furniture
   // stays in the edge strip, at most 0.45m into the 3.3m shared corridor.
   const panelW = Math.max(0.45, (width - 1.55) / 2), panelUs = [a + panelW / 2, q - panelW / 2];
   if (beef) for (const u0 of panelUs) for (let u = u0 - panelW / 2; u < u0 + panelW / 2; u += 0.085) B(u, y + 0.05, -0.04, 0.045, 2.25, 0.08, 0x3b302b, { solid: false });
+  if (beef) {
+    const pu = q - panelW / 2;
+    B(pu, y + 1.15, -0.10, Math.min(0.90, panelW - 0.1), 0.89, 0.045, { tex: 'emit', color: 0xffe5ad }, { solid: false });
+    S(['소고기구이전문점', '우고집'], pu, y + 1.60, -0.14, Math.min(0.84, panelW - 0.16), 0.80, '#222623', { fg: '#f4e6c7', offset: 0.01 });
+  }
   if (arisu) for (const u of panelUs) {
     B(u, y, -0.045, panelW, 0.65, 0.055, 0x9c452b, { solid: false });
     for (let du = -panelW / 2; du < panelW / 2; du += 0.055) B(u + du, y + 0.02, -0.085, 0.012, 0.60, 0.015, 0xc0633b, { solid: false });
-    B(u, y + 0.69, -0.035, panelW - 0.08, 1.35, 0.03, { tex: 'glass', color: 0x72aaa3 }, { solid: false });
+    B(u, y + 0.69, -0.035, panelW - 0.08, 1.35, 0.03, 0x7baca9, { solid: false });
+    B(u, y + 0.69, -0.065, panelW - 0.08, 1.35, 0.018, { tex: 'glass', color: 0x9cc5ba }, { solid: false });
     B(u, y + 1.25, -0.07, panelW, 0.055, 0.055, 0x604931, { solid: false });
+    for (const du of [-panelW / 2, 0, panelW / 2]) B(u + du, y + 0.66, -0.095, 0.055, 1.42, 0.045, 0x5b4936, { solid: false });
   }
+  if (arisu) S(['아리수', '포', '차'], a + panelW / 2, y + 1.26, -0.16, Math.min(0.70, panelW - 0.12), 1.68, '#cec4a8', { fg: '#8e2b24', offset: 0.01 });
   if (damun || heart) for (const u of panelUs) B(u, y + 0.02, -0.03, panelW, 2.20, 0.04, heart ? 'banpo-brick' : 'banpo-white-brick', { solid: false });
+  if (heart) {
+    for (const u of panelUs) {
+      const ww = Math.max(0.25, panelW - 0.38);
+      B(u, y + 0.80, -0.065, ww, 1.10, 0.04, 0x303b35, { solid: false });
+      B(u, y + 0.86, -0.09, ww - 0.11, 0.98, 0.02, { tex: 'glass', color: 0x658579 }, { solid: false });
+      for (const du of [-ww / 2, 0, ww / 2]) B(u + du, y + 0.78, -0.11, 0.055, 1.16, 0.05, 0x303532, { solid: false });
+      S('하트타임', u, y + 1.30, -0.14, Math.max(0.25, ww - 0.2), 0.23, null, { fg: '#d5cfb2', offset: 0.01 });
+    }
+    B(mid, y + 2.20, -0.1, width, 0.035, 0.055, 0x3c3b32, { solid: false });
+    for (let u = a + 0.15; u < q; u += 0.32) {
+      B(u, y + 2.13, -0.14, 0.018, 0.09, 0.018, 0x363e32, { solid: false });
+      cyl(u, y + 2.08, -0.14, 0.027, 0.055, { tex: 'emit', color: 0xffbf63 }, 7);
+    }
+    S(['호프 · 소주', '커피 · 식사'], q - panelW / 2, y + 1.86, -0.16, Math.min(1.4, panelW - 0.12), 0.46, '#e6cf20', { fg: '#7e2020', offset: 0.01 });
+  }
+  if (kimbap || fish || hof || umaru) {
+    B(mid, y + 2.12, -0.055, width - 0.04, 0.27, 0.16, { tex: 'wood', color: fish ? 0x755032 : 0x9a6a3c }, { solid: false });
+    for (const u of [mid - 0.80, mid + 0.80]) B(u, y + 0.02, -0.055, 0.11, 2.18, 0.14, wood, { solid: false });
+    if (kimbap) for (let u = a + 0.17; u < q; u += 0.30) {
+      B(u, y + 1.90, -0.065, 0.20, 0.28, 0.025, { tex: 'glass', color: 0xd7ceae }, { solid: false });
+      B(u + 0.12, y + 1.88, -0.09, 0.045, 0.31, 0.035, 0x806039, { solid: false });
+    }
+  }
   if (damun) {
     B(mid, y + 2.18, -0.04, width - 0.05, 0.24, 0.24, wood, { solid: false });
     S(['너는 지금', '막걸리가', '땡긴다.', '담 은'], q - panelW / 2, y + 1.25, -0.08, Math.min(0.8, panelW - 0.1), 1.1, '#b68c53', { fg: '#3c3a2d' });
@@ -333,6 +476,10 @@ function buildPhotoUpper(K, C) {
     // Door furniture stays alongside the existing 1.45m opening, never across it.
     B(mid, 0.01, 0.65, 1.42, 0.012, 0.85, 0x191d1c, { solid: false });
     for (const sg of [-1, 1]) {
+      // Photo03 has broad white swung-open leaves, not a bare doorway.
+      B(mid + sg * 1.10, 0.03, 0.51, 0.065, 2.19, 1.03, 0xf0f0ea, { solid: false });
+      B(mid + sg * 1.10, 2.20, 0.14, 0.10, 0.09, 0.31, 0x8f9892, { solid: false });
+      B(mid + sg * 1.06, 0.91, 0.88, 0.07, 0.08, 0.08, 0x9caaa6, { solid: false });
       B(mid + sg * 0.82, 0, 0.15, 0.08, 2.28, 0.45, 0xf4f3ef, { solid: false });
       B(mid + sg * 0.87, 1.05, 0.23, 0.035, 0.40, 0.035, 0x949b99, { solid: false });
       S(sg < 0 ? ['장솔학원', '수준별 맞춤 수업', '학습 점검 · 상담'] : ['장솔학원', '학생을 사랑합니다'], mid + sg * 1.4, 1.5, -0.06, 0.9, 1.15, '#b8dcda', { fg: '#34524d' });
@@ -370,19 +517,32 @@ function buildPhotoUpper(K, C) {
     K.hpoly({ tex: 'wood', color: 0xc5a477, scale: [2.0, 2.0] }, rect(a, va, q, vb), y + 0.008);
     trim();
     for (const sg of [-1, 1]) {
-      B(mid + sg * 0.88, 0, 0.015, 0.18, 2.35, 0.12, 0xd2bca2, { solid: false });
+      B(mid + sg * 1.03, 0, 0.015, 0.22, 2.35, 0.12, { tex: 'wood', color: 0xd9c4ac }, { solid: false });
       const span = Math.max(0, width / 2 - 1.04), pu = mid + sg * (1.04 + span / 2);
       if (span > 0.1) {
+        B(pu, 0.96, -0.075, span, 1.66, 0.04, 0xecebe3, { solid: false });
+        B(pu, 0.94, -0.105, span, 0.065, 0.055, { tex: 'wood', color: 0xcbb99d }, { solid: false });
         B(pu, 0.02, -0.08, span, 0.91, 0.035, 0xa8b7a1, { solid: false });
         for (let row = 0; row < 7; row++) for (let col = 0; col < Math.ceil(span / 0.27); col++) {
           const uu = mid + sg * (1.05 + col * 0.27 + 0.12);
           if (Math.abs(uu - mid) < width / 2 - 0.1) B(uu, 0.08 + row * 0.11, -0.11, 0.23, 0.085, 0.025, [0x89bcb8, 0xc2bd8a, 0x6f9290, 0xcbd6c5][(col + row * 3) % 4], { solid: false });
         }
+        if (span > 0.65) {
+          B(pu, 1.18, -0.12, Math.min(span - 0.12, 1.25), 1.02, 0.045, { tex: 'wood', color: 0xbca27e }, { solid: false });
+          for (let j = 0; j < 3; j++) S(['학습 안내', ['개념 정리', '문제 풀이', '수업 시간'][j]], pu + (j - 1) * Math.min(0.31, span / 4), 1.69, -0.16, Math.min(0.27, span / 4), 0.68, j === 1 ? '#cddce1' : '#f2eee4', { fg: '#364b5b', offset: 0.015 });
+        }
       }
       B(mid + sg * 1.0, 0.15, 0.19, 0.22, 1.95, 0.035, { tex: 'glass', color: 0xaad2d2 }, { solid: false });
-      B(mid + sg * 0.88, 0.87, 0.11, 0.035, 0.75, 0.035, 0x96572c, { solid: false });
+      // Frosted double leaves are open inward beside the passage. Full-width
+      // closed glass would hide the classroom and create an unusable doorway.
+      B(mid + sg * 0.98, 0.03, 0.57, 0.035, 2.16, 1.02, { tex: 'glass', color: 0xc3dedb }, { solid: false });
+      B(mid + sg * 0.974, 0.12, 0.57, 0.042, 1.39, 0.98, 0xb4cfca, { solid: false });
+      for (const dd of [0.07, 1.07]) B(mid + sg * 0.98, 0.03, dd, 0.045, 2.19, 0.035, 0x9da8a5, { solid: false });
+      for (const hh of [0.035, 2.18]) B(mid + sg * 0.98, hh, 0.57, 0.045, 0.035, 1.04, 0x9da8a5, { solid: false });
+      B(mid + sg * 0.94, 0.87, 0.89, 0.035, 0.75, 0.035, 0x96572c, { solid: false });
+      S(name === '표준수학' ? '표준수학' : '강의실', mid + sg * 0.947, 1.43, 0.57, 0.71, 0.20, null, { fg: '#55a6ad', rotY: angle - sg * PI / 2, twoSided: true, offset: 0.015 });
     }
-    B(mid, 2.32, 0.01, 1.95, 0.22, 0.12, 0xd2bca2, { solid: false });
+    B(mid, 2.32, 0.01, 2.28, 0.29, 0.12, { tex: 'wood', color: 0xd9c4ac }, { solid: false });
     S(name === '표준수학' ? ['표준수학', '수업 안내'] : ['강의실', '학습 안내'], mid + 1.55, 1.53, -0.05, 0.83, 0.7, '#e8eee6', { fg: '#489d9d' });
     const boardW = Math.min(3.8, width - 1.0);
     B(mid, 1.04, depth - 0.10, boardW + 0.12, 1.43, 0.09, 0xc4b197, { solid: false });
@@ -394,6 +554,10 @@ function buildPhotoUpper(K, C) {
     for (let k = 0; k < 3; k++) B(acU, 2.41 + k * 0.035, depth - 0.405, 1.04, 0.014, 0.018, 0xb6bcb7, { solid: false });
     B(acU + 0.48, 1.07, depth - 0.12, 0.018, 1.3, 0.025, 0xd9d9d1, { solid: false });
     B(acU + 0.48, 1.02, depth - 0.15, 0.11, 0.13, 0.025, 0xeae9e2, { solid: false });
+    // Photos26/27: pale timber cornice and plain white ceiling, wall clock.
+    for (const u of [a + 0.04, q - 0.04]) B(u, ceiling - y - 0.15, depth / 2, 0.06, 0.12, depth, 0xc9b79e, { solid: false });
+    B(mid, ceiling - y - 0.15, depth - 0.05, width - 0.06, 0.12, 0.06, 0xc9b79e, { solid: false });
+    S('◷', a + 0.43, 2.27, depth - 0.14, 0.31, 0.31, '#f5f4ee', { fg: '#74817e', offset: 0.02 });
     // Paired desks separated by a central walking aisle from the doorway.
     const cols = width >= 4.6 ? 2 : 1, rows = depth >= 5.7 ? 4 : depth >= 4.4 ? 3 : 2;
     const colOffset = Math.min(1.65, width / 2 - 0.9), rowStep = Math.min(1.1, (depth - 2.0) / Math.max(1, rows - 1));
@@ -419,30 +583,55 @@ function buildPhotoUpper(K, C) {
 
   if (kind === 'optical') {
     // 38: dense eyewear trays in an L of glass cases, five black chrome chairs.
+    // The shop's road-facing glazing is at depth; display cabinetry belongs
+    // on the side wall rather than covering that entire glazed elevation.
+    const opticalCeiling = Math.min(ceiling - y - 0.04, 2.91);
+    B(mid, opticalCeiling, depth / 2, width, 0.09, depth, 0xf0eee6, { solid: false });
+    for (const u of [a + 0.18, q - 0.18]) B(u, opticalCeiling - 0.17, depth / 2, 0.35, 0.17, depth, 0xe4e3dc, { solid: false });
     const caseU = q - 0.63, longStart = 0.8, longEnd = depth - 0.65, longL = longEnd - longStart;
     const glassCase = (u, d, w, dd) => {
       B(u, 0.08, d, w, 0.60, dd, 0xd8d7cb);
       B(u, 0.68, d, w + 0.035, 0.055, dd + 0.035, 0x303c3b, { solid: false });
-      B(u, 0.74, d, w, 0.28, dd, { tex: 'glass', color: 0xc5e1dc }, { solid: false });
-      for (const du of [-w / 2, w / 2]) B(u + du, 0.73, d, 0.025, 0.30, dd, 0xaeb9b5, { solid: false });
-      for (const dp of [-dd / 2, dd / 2]) B(u, 1.01, d + dp, w, 0.025, 0.025, 0xaeb9b5, { solid: false });
-      B(u, 0.735, d, w - 0.05, 0.012, dd - 0.05, 0xe4e3d5, { solid: false });
-    };
-    const glasses = (u, h, d, col = 0x303b3d) => {
-      // Each pair has two open rims, a bridge and two temples on the white tray.
-      for (const sg of [-1, 1]) {
-        const lensU = u + sg * 0.036;
-        for (const dd of [-0.024, 0.024]) B(lensU, h, d + dd, 0.058, 0.009, 0.006, col, { solid: false });
-        for (const du of [-0.028, 0.028]) B(lensU + du, h, d, 0.006, 0.009, 0.048, col, { solid: false });
-        B(u + sg * 0.067, h, d + 0.06, 0.006, 0.009, 0.10, col, { solid: false });
+      B(u, 0.74, d, w, 0.21, dd, { tex: 'glass', color: 0xe2eeea }, { solid: false });
+      for (const du of [-w / 2, w / 2]) B(u + du, 0.73, d, 0.025, 0.23, dd, 0xaeb9b5, { solid: false });
+      for (const dp of [-dd / 2, dd / 2]) B(u, 0.95, d + dp, w, 0.025, 0.025, 0xaeb9b5, { solid: false });
+      B(u, 0.87, d, w - 0.05, 0.012, dd - 0.05, 0xe4e3d5, { solid: false });
+      const divisions = Math.max(1, Math.round(Math.max(w, dd) / 0.75));
+      for (let i = 0; i < divisions; i++) {
+        const off = ((i + 0.5) / divisions - 0.5) * Math.max(w, dd);
+        if (dd > w) {
+          B(u - w / 2 - 0.008, 0.12, d + off, 0.016, 0.48, dd / divisions - 0.035, 0xe4e0d1, { solid: false });
+          B(u - w / 2 - 0.025, 0.54, d + off, 0.025, 0.025, 0.17, 0xa5aaa6, { solid: false });
+        } else {
+          B(u + off, 0.12, d - dd / 2 - 0.008, w / divisions - 0.035, 0.48, 0.016, 0xe4e0d1, { solid: false });
+          B(u + off, 0.54, d - dd / 2 - 0.025, 0.17, 0.025, 0.025, 0xa5aaa6, { solid: false });
+        }
       }
-      B(u, h, d, 0.022, 0.009, 0.008, col, { solid: false });
+    };
+    const glasses = (u, h, d, col = 0x303b3d, turned = false) => {
+      // Each pair has two open rims, a bridge and two temples on the white tray.
+      const G = (du, hh, dd, w, thick, deep) => turned
+        ? B(u + dd, hh, d + du, deep, thick, w, col, { solid: false })
+        : B(u + du, hh, d + dd, w, thick, deep, col, { solid: false });
+      for (const sg of [-1, 1]) {
+        for (const dd of [-0.024, 0.024]) G(sg * 0.036, h, dd, 0.058, 0.009, 0.006);
+        for (const du of [-0.028, 0.028]) G(sg * 0.036 + du, h, 0, 0.006, 0.009, 0.048);
+        G(sg * 0.067, h, 0.06, 0.006, 0.009, 0.10);
+      }
+      G(0, h, 0, 0.022, 0.009, 0.008);
     };
     glassCase(caseU, (longStart + longEnd) / 2, 0.75, longL);
     const rearW = width - 1.3, rearU = a + rearW / 2 + 0.2, rearD = depth - 0.65;
     glassCase(rearU, rearD, rearW, 0.75);
-    for (let d = longStart + 0.2; d < longEnd - 0.15; d += 0.23) for (const du of [-0.22, 0, 0.22]) glasses(caseU + du, 0.76, d, [0x343639, 0x775946, 0x777f7a][Math.round(d * 10) % 3]);
-    for (let u = a + 0.38; u < q - 1.25; u += 0.22) for (const dd of [-0.20, 0.03, 0.26]) glasses(u, 0.76, rearD + dd);
+    for (let d = longStart + 0.14; d < longEnd - 0.11; d += 0.17) for (const du of [-0.22, 0, 0.22]) glasses(caseU + du, 0.89, d, [0x343639, 0x775946, 0x777f7a][Math.round(d * 10) % 3]);
+    for (let u = a + 0.38; u < q - 1.25; u += 0.18) for (const dd of [-0.20, 0.03, 0.26]) glasses(u, 0.89, rearD + dd);
+    // Black table mirrors and pale consultation terminals break the long
+    // glass plane, with bases kept on the case beyond the row of chairs.
+    for (const d of [longStart + 0.7, longEnd - 0.65]) {
+      B(caseU + 0.14, 0.98, d, 0.26, 0.035, 0.35, 0x242c2b, { solid: false });
+      B(caseU + 0.21, 1.015, d, 0.035, 0.38, 0.31, 0x222b2a, { solid: false });
+      B(caseU + 0.187, 1.05, d, 0.018, 0.30, 0.25, 0xa7bcb7, { solid: false });
+    }
     for (let i = 0; i < 5; i++) {
       const d = longStart + 0.38 + i * Math.max(0.60, (longL - 0.75) / 4), u = caseU - 0.90;
       // Chairs face the long side counter, with padded black backs and chrome sleds.
@@ -453,21 +642,28 @@ function buildPhotoUpper(K, C) {
         for (const du of [-0.18, 0.18]) B(u + du, 0.04, d + dd, 0.025, 0.41, 0.025, 0xabb5b4, { solid: false });
       }
     }
-    // Rear wall shelves and left display islands keep the centre aisle clear.
-    B(mid, 0.15, depth - 0.08, width - 0.25, 2.40, 0.10, 0x242d2c, { solid: false });
+    // The original four shelf rows are retained on a lacquered side cabinet;
+    // no opaque wall is placed across the shop's street windows.
+    const rackLength = depth - 0.50, rackD = depth / 2;
+    B(a + 0.05, 0.15, rackD, 0.10, 2.48, rackLength, 0x171d1d, { solid: false });
     for (let row = 0; row < 4; row++) {
       const h = 1.18 + row * 0.29;
-      B(mid, h, depth - 0.26, width - 0.45, 0.025, 0.35, 0xbfc9c3, { solid: false });
-      for (let u = a + 0.4; u < q - 0.3; u += 0.23) glasses(u, h + 0.03, depth - 0.29, row % 2 ? 0x9c7e51 : 0x313a3a);
+      B(a + 0.24, h, rackD, 0.35, 0.025, rackLength - 0.15, 0xbfc9c3, { solid: false });
+      B(a + 0.20, h + 0.23, rackD, 0.025, 0.018, rackLength - 0.2, { tex: 'emit', color: 0xf0e9cd }, { solid: false });
+      const pairs = Math.ceil((width - 0.7) / 0.23);
+      for (let k = 0; k < pairs; k++) glasses(a + 0.28, h + 0.03, 0.42 + k * (depth - 0.84) / Math.max(1, pairs - 1), row % 2 ? 0x9c7e51 : 0x313a3a, true);
     }
     B(a + 0.45, 0.15, depth / 2, 0.55, 0.72, 1.30, 0xd0d3ca);
     B(a + 0.45, 0.87, depth / 2, 0.55, 0.45, 1.30, 'glass', { solid: false });
     for (let k = 0; k < 6; k++) glasses(a + 0.45, 0.91, depth / 2 - 0.50 + k * 0.18);
-    S('리스본 안경', mid, 2.70, depth - 0.14, 2.40, 0.35, '#252e2d', { fg: '#eae5ce' });
-    S(['정밀 시력검사', '안경 · 콘택트렌즈'], a + 0.8, 1.75, depth - 0.14, 1.2, 0.6, '#f0eee4', { fg: '#39515a' });
+    S('리스본 안경', a + 0.12, 2.58, rackD, Math.min(2.40, rackLength), 0.30, '#171d1d', { fg: '#eae5ce', rotY: angle + PI / 2, offset: 0.02 });
+    S(['정밀 시력검사', '안경 · 콘택트렌즈'], a + 0.13, 1.76, 0.55, 0.6, 0.65, '#f0eee4', { fg: '#39515a', rotY: angle + PI / 2, offset: 0.02 });
     B(rearU - 0.6, 1.04, rearD, 0.47, 0.35, 0.045, 0x333d3e, { solid: false });
     S('안내', rearU - 0.6, 1.2, rearD - 0.04, 0.42, 0.27, '#bfcfc8', { fg: '#395354' });
-    for (const u of [a + 1.1, mid, q - 1.0]) for (const d of [0.9, depth / 2, depth - 0.9]) cylinder(u, ceiling - y - 0.04, d, 0.11, 0.025, { tex: 'emit', color: 0xfff5db }, 12);
+    for (const u of [a + 1.1, mid, q - 1.0]) for (const d of [0.9, depth / 2, depth - 0.9]) {
+      cylinder(u, opticalCeiling - 0.045, d, 0.14, 0.035, 0xb8bfbb, 12);
+      cylinder(u, opticalCeiling - 0.052, d, 0.10, 0.025, { tex: 'emit', color: 0xfff5db }, 12);
+    }
     person(a + 0.75, y, V(depth - 1.45), { shirt: 0xe1ded4 });
     return true;
   }
@@ -486,10 +682,19 @@ export function build(K) {
     }
   }, [1.6, 1.6]);
   // bp01/bp02: 20cm pink glazed squares, not beige checkerboard. cc02
-  // separately confirms light western blocks; 5 retains the unverified default.
+  // separately confirms light western blocks; photo23 resolves 5동 below.
   tile('banpo-tile', '#cdb7b5', ['#d4bfbd', '#c8b0ae', '#c1aaa9', '#d0bcb8'], '#e3d8d6');
   tile('banpo-tile-pier', '#d8c5c3', ['#d8c5c3', '#d7c3c1'], '#e3d8d6');
   tile('banpo-light-tile', '#d8d6d0', ['#d8d6d0', '#d3d2cd', '#deddd7'], '#e8e7e1');
+  // Photo23 resolves 5동: small ochre/brown ceramic tiles, distinct from
+  // both 3·4동's pink squares and the eastern blocks' running-bond brick.
+  K.texture('banpo-ochre-tile', 192, 256, (g, w, h) => {
+    g.fillStyle = '#78654f'; g.fillRect(0, 0, w, h);
+    for (let j = 0; j < 16; j++) for (let i = 0; i < 16; i++) {
+      g.fillStyle = ['#a57c54', '#9b7049', '#b08a5f', '#98734f', '#ac8053'][(i * 7 + j * 3) % 5];
+      g.fillRect(i * 12 + 1, j * 16 + 1, 10, 14);
+    }
+  }, [0.96, 1.28]);
   const brick = (key, colors, mortar) => K.texture(key, 368, 120, (g, w, h) => {
     g.fillStyle = mortar; g.fillRect(0, 0, w, h);
     // Four 230mm bricks by four 75mm courses, half-brick running bond.
@@ -524,11 +729,18 @@ export function build(K) {
 
   // Interior finishes traced independently of the retained exterior textures.
   K.texture('banpo-b1-tile', 256, 256, (g, w, h) => {
-    g.fillStyle = '#d6d3c7'; g.fillRect(0, 0, w, h);
+    g.fillStyle = '#c7c2ae'; g.fillRect(0, 0, w, h);
     const rnd = K.rand(6025);
-    for (let i = 0; i < 3000; i++) { g.fillStyle = ['#999e95', '#e9e7df', '#b8b8ad', '#c9c7bc'][i % 4]; g.fillRect(rnd() * w, rnd() * h, 1, 1); }
+    for (let i = 0; i < 6500; i++) { g.fillStyle = ['#8c8b7b', '#e8e3d0', '#b0ad99', '#d6d2bd'][i % 4]; g.fillRect(rnd() * w, rnd() * h, 1 + rnd(), 1 + rnd()); }
     g.strokeStyle = '#a7a79e'; g.lineWidth = 1; g.strokeRect(0, 0, w, h);
   }, [0.6, 0.6]);
+  // Photos07/28/29: polished aggregate tile has a modest specular response.
+  // Emissive fixtures are geometry, so this is not a simulated reflected ceiling.
+  // Keep the restaurant overlays separate (우고집 is matte grey concrete).
+  K.material('banpo-polished-tile', new K.THREE.MeshPhongMaterial({
+    map: K.T.surface('banpo-b1-tile').tex, color: 0xffffff,
+    specular: 0x78756b, shininess: 42,
+  }));
   K.texture('banpo-upper-tile', 128, 128, (g, w, h) => {
     g.fillStyle = '#e1dcd0'; g.fillRect(0, 0, w, h); g.strokeStyle = '#b3afa7'; g.strokeRect(0, 0, w, h);
   }, [0.6, 0.6]);
@@ -544,6 +756,15 @@ export function build(K) {
       const x = 36 + i * 29; g.fillStyle = ['#f6df59', '#f4b8b6', '#a4d7e9'][Math.floor(i / 8)];
       g.fillRect(x, 122, 25, 38); g.fillRect(x, 189, 25, 39);
     }
+    // Reproduce the dense diagram hierarchy without inventing tenant names.
+    g.strokeStyle = '#6e7581'; g.lineWidth = 2; g.strokeRect(200, 56, 325, 42);
+    g.font = '16px sans-serif'; g.fillStyle = '#aeb5bd'; g.fillText('지상 출입구', 312, 82);
+    for (const x of [98, 276, 510, 660]) {
+      g.fillStyle = '#f5df62'; g.fillRect(x, 96, 24, 24); g.fillRect(x, 230, 24, 24);
+      g.fillStyle = '#3f4249'; g.font = 'bold 20px sans-serif'; g.fillText('↑', x + 3, 115); g.fillText('↓', x + 3, 250);
+    }
+    g.fillStyle = '#3d4857'; g.font = '12px sans-serif';
+    for (let i = 0; i < 24; i++) { const x = 38 + i * 29; g.fillText(String(i + 1).padStart(2, '0'), x, 146); }
     g.fillStyle = '#e14b4f'; g.beginPath(); g.arc(375, 176, 14, 0, PI * 2); g.fill();
     g.fillStyle = '#ffffff'; g.font = '18px sans-serif'; g.fillText('현위치', 352, 263); g.fillText('← 출구', 37, 294); g.fillText('출구 →', 650, 294);
   }, [2.4, 1.05]);
@@ -553,7 +774,7 @@ export function build(K) {
     if (!b) throw new Error(`반포쇼핑타운 ${n}동 OSM footprint missing`);
     let poly = b.poly;
     const tenant = TENANTS[n], isBrick = n >= 6;
-    const facadeMat = isBrick ? 'banpo-brick' : n <= 2 ? 'banpo-light-tile' : 'banpo-tile';
+    const facadeMat = isBrick ? 'banpo-brick' : n === 5 ? 'banpo-ochre-tile' : n <= 2 ? 'banpo-light-tile' : 'banpo-tile';
     // Long axis points east; the positive v axis points toward 신반포로.
     let long = [0, 0], length = 0;
     for (let i = 0; i < poly.length; i++) {
@@ -734,6 +955,32 @@ export function build(K) {
       }
       for (let j = 0; j < 3; j++) box(entryU, 0.025 + j * 0.025, front + 0.25 + (2 - j) * 0.28, 2.7, 0.025, 0.28, 0xa7aaa3, { solid: false });
     }
+    // Entrance assembly, distinct from shop awnings. Photo11's vertical
+    // charcoal battens and stainless pilasters must remain visible around
+    // the 4동 metal nameplate, rather than behind unrelated shop signboxes.
+    for (const [a, b] of [[-5.95, entryU - 1.35], [entryU + 1.35, 5.95]]) {
+      if (b - a < 0.1) continue;
+      box((a + b) / 2, 0.08, front + 0.045, b - a, 2.7, 0.09, n === 4 || n === 5 ? 0x555952 : facadeMat, { solid: false });
+      if (n === 4 || n === 5) for (let u = a + 0.07; u < b; u += 0.11) box(u, 0.12, front + 0.105, 0.037, 2.63, 0.07, 0x91938a, { solid: false });
+    }
+    for (const du of [-1.37, 1.37]) {
+      box(entryU + du, 0.03, front + 0.14, 0.18, 2.84, 0.23, 0xc0c2b9, { solid: false });
+      box(entryU + du, 0.04, front + 0.26, 0.045, 2.80, 0.025, 0xe0e0d6, { solid: false });
+    }
+    if (n !== 4 && n !== 5) {
+      box(entryU, 2.93, front + 0.26, 3.1, 0.50, 0.58, 0xbdbcb3, { solid: false });
+      sign(`반포쇼핑타운 ${n}동`, entryU, 3.18, front + 0.565, 2.9, 0.34, '#d1cec1', { fg: '#575349', offset: 0.01 });
+    }
+    sign(['지하상가', '식당가 ↓'], entryU - 2.05, 1.66, front + 0.18, 0.92, 0.82, '#efe8ce', { fg: '#7a3b30', offset: 0.02 });
+    // Furniture is at the shop edge, wholly on our north-side forecourt.
+    const benchU = Math.max(-W / 2 + (n === 1 ? 9 : 1.8), -12);
+    box(benchU, 0.43, front + 0.76, 1.35, 0.075, 0.4, { tex: 'wood', color: 0x8c7557 });
+    for (const du of [-0.5, 0.5]) box(benchU + du, 0.03, front + 0.76, 0.06, 0.4, 0.3, 0x3e4844, { solid: false });
+    for (const u of [entryU - 3.5, entryU + 4.6]) {
+      box(u, 0.03, front + 0.58, 0.48, 0.43, 0.48, 0x646b5e);
+      box(u, 0.46, front + 0.58, 0.42, 0.035, 0.42, 0x504535, { solid: false });
+      for (let j = 0; j < 5; j++) box(u + Math.sin(j * 2.4) * 0.13, 0.5 + j * 0.085, front + 0.58 + Math.cos(j * 2.4) * 0.10, 0.30, 0.13, 0.22, [0x527149, 0x698058][j % 2], { solid: false });
+    }
     const gutterU = Math.max(...us.filter((_, i) => vs[i] - v0 > front - 0.2)) - u0 - 0.35;
     box(gutterU, 0.1, frontAt(gutterU) + 0.07, 0.09, roof - 0.3, 0.12, 0x777c72, { solid: false });
 
@@ -743,12 +990,19 @@ export function build(K) {
     const mainRight = recessedEnd ? recessU : W / 2;
     const pierCount = Math.max(3, Math.round((mainRight + W / 2) / 7));
     const pierStep = (mainRight + W / 2) / pierCount;
+    const streetDoorUs = [entryU];
+    for (const [a, b] of [[-W / 2 + (n === 1 ? 7.8 : 0.65), -6.15], [6.15, W / 2 - (n === 8 ? 2.6 : 0.65)]]) {
+      if (b - a < 2.1) continue;
+      const count = Math.max(1, Math.round((b - a) / 6.2));
+      for (let j = 0; j < count; j++) streetDoorUs.push(a + (j + 0.5) * (b - a) / count);
+    }
     for (let k = 0; k <= pierCount; k++) {
       const u = -W / 2 + k * pierStep;
       if (!K.pointInPoly(...P(u + (k === 0 ? 0.35 : -0.35), front - 0.4), poly)) continue;
       const width = isBrick ? 0.5 : 0.6, depth = isBrick ? 0.15 : 0.25;
-      box(u, 0, front + depth / 2, width, roof + 0.65, depth,
-        isBrick ? 'banpo-brick-pier' : n <= 2 ? 'banpo-light-tile' : 'banpo-tile-pier', { solid: false });
+      const pierBottom = streetDoorUs.some(door => Math.abs(door - u) < 1.08) ? 2.73 : 0;
+      box(u, pierBottom, front + depth / 2, width, roof + 0.65 - pierBottom, depth,
+        isBrick ? 'banpo-brick-pier' : n === 5 ? 'banpo-ochre-tile' : n <= 2 ? 'banpo-light-tile' : 'banpo-tile-pier', { solid: false });
     }
 
     floorYs.forEach((y, f) => {
@@ -756,7 +1010,7 @@ export function build(K) {
       const ceiling = f === 0 ? y + 2.4 : f >= 2 ? y + 2.75 : next - 0.27;
       const furnish = [];
       const corridorHalf = f >= 2 ? 1.05 : f === 0 ? 1.6 : 1.75;
-      K.slab(poly, y, { mat: f === 0 ? 'banpo-b1-tile' : 'banpo-upper-tile', thick: 0.24, edge: false, holes: f === 0 ? [] : [stairHole] });
+      K.slab(poly, y, { mat: f === 0 ? { tex: 'banpo-polished-tile', scale: [0.6, 0.6] } : 'banpo-upper-tile', thick: 0.24, edge: false, holes: f === 0 ? [] : [stairHole] });
       if (f === 0 || f >= 2) K.hpoly('banpo-acoustic', poly, ceiling, false, [stairHole]);
       const names = f === 0 ? (PHOTO_B1[n] || tenant.b) : f === 1 ? tenant.g : f === 2 ? (n === 4 ? ['장솔학원', '표준수학', ...tenant.h] : tenant.h) : f === 3 && tenant.clinic ? [tenant.clinic] : f === 4 ? tenant.fourth || [] : f === 5 ? tenant.fifth || [] : [];
       K.zone({ name: `반포쇼핑타운 ${n}동`, floor: labels[f], sub: [...names, uses[f]].join(' · '), poly, y0: y, y1: next - 0.03, priority: 2 });
@@ -764,10 +1018,12 @@ export function build(K) {
       const openings = [];
       if (f === 1) for (const v of [front, back]) { const p = P(v === front ? entryU : -1.5, v); openings.push({ x: p[0], z: p[1], w: 2.6, y0: y, y1: y + 2.9 }); }
       if (f === 1) {
+        if (n === 7) box(0, 2.85, front + 0.10, W - 0.8, 1.10, 0.12, 0xf2f2ee, { solid: false });
         const spans = [[-W / 2 + (n === 1 ? 7.8 : 0.65), -6.15], [6.15, W / 2 - (n === 8 ? 2.6 : 0.65)]];
         for (const [a, b] of spans) {
           if (b - a < 2.1) continue;
-          const count = Math.max(1, Math.round((b - a) / (n === 5 ? 3.6 : 6.2)));
+          // Match the real door openings to the furnished shop partitions.
+          const count = Math.max(1, Math.round((b - a) / 6.2));
           for (let j = 0; j < count; j++) {
             const left = a + (b - a) * j / count, right = a + (b - a) * (j + 1) / count, mid = (left + right) / 2;
             if (!rect(left + 0.2, 1.85, right - 0.2, front - 0.45).every(p => K.pointInPoly(...p, poly))) continue;
@@ -830,7 +1086,7 @@ export function build(K) {
       // bp01/bp02: stacked individual signboxes dominate floors 1–3; the
       // building name is only a small door plaque. Unknown lettering uses the
       // reviewer-approved shop categories, never invented proper names.
-      if (f >= 1 && f <= 4) {
+      if (f >= 2 && f <= 4) {
         const left = -W / 2 + (n === 1 ? 7.8 : 0.3), right = mainRight - (n === 8 ? 5.6 : 0.3);
         const count = Math.max(1, Math.round((right - left) / 4.5)), step = (right - left) / count;
         const sy = [0, 3.25, 6.9, 10.4, 13.8][f], sh = f === 1 ? 0.8 : f === 4 ? 0.6 : 0.7;
@@ -850,6 +1106,7 @@ export function build(K) {
           }
           if (n === 3 && f === 1 && j === count - 1) { text = 'JEWELRY'; bg = '#2e6b46'; }
           if (n === 3 && f === 3 && j === 0) bg = '#e2662c';
+          if (n === 5 && f === 3 && j === 0) { text = '경희나은한의원 3층'; bg = '#263640'; }
           const standOff = isBrick ? 0.15 : 0.25, signV = front + standOff + 0.075;
           for (const du of [-1, 1]) box(u + du * (step - 0.55) / 2, sy - 0.04, front + standOff / 2, 0.05, 0.08, standOff, 0x666867, { solid: false });
           if (!(n === 7 && f === 1)) box(u, sy - sh / 2, signV, step - 0.3, sh, 0.15, Number(bg.replace('#', '0x')), { solid: false });
@@ -869,6 +1126,14 @@ export function build(K) {
           K.box({ x, y: sy - sh / 2, z, w: 3, h: sh, d: 0.15, rotY: e.rotY, mat: Number(bg.replace('#', '0x')), solid: false });
           K.sign(text, { x, y: sy, z, w: 3, h: sh, rotY: e.rotY, bg, fg: bg === '#f2f2ee' ? '#303638' : '#ffffff', offset: 0.085 });
         }
+      }
+      // Retain the previously identified ground-floor return signs after
+      // moving the long-front signs onto their corresponding shop bays.
+      if (f === 1) for (const e of endEdges) {
+        const at = local(e.a)[1] > local(e.b)[1] ? 1.65 : e.L - 1.65;
+        const [x, z] = edgePoint(e, at, 0.23);
+        K.box({ x, y: 2.85, z, w: 3, h: 0.8, d: 0.15, rotY: e.rotY, mat: 0xf2f2ee, solid: false });
+        K.sign(n === 3 ? 'JEWELRY' : tenant.g[0] || '생활상가', { x, y: 3.25, z, w: 2.85, h: 0.65, rotY: e.rotY, bg: '#f2f2ee', fg: '#303638', offset: 0.085 });
       }
       // Structural cores, partitions and guarded wells exist before lazy furnishing.
       if (f > 0) {
@@ -903,6 +1168,15 @@ export function build(K) {
             if (f === 0 && n === 4 && start > 0) name = (side > 0 ? ['하얀집', '정선 감자탕', '식당'] : ['충무할매김밥', '하림', '장터순대국'])[j] || name;
             if (f === 0 && n === 5 && side < 0 && start > 0 && j === 0) name = '주점';
             if (f === 1 && n === 5 && side > 0 && j === 0 && start < 0) name = '리스본 안경';
+            if (f === 1 && n === 3 && side > 0 && start > 0 && j === count - 1) name = 'JEWELRY';
+            // Ground-floor pins override blog-relative directions: KFC is in
+            // the eastern half of 4동, GS25 in the eastern half of 5동.
+            if (f === 1 && n === 4 && side > 0) {
+              name = start > 0 && j === 1 ? 'KFC' : start < 0 && j === count - 1 ? 'KT' : '';
+            }
+            if (f === 1 && n === 5 && side > 0 && !(j === 0 && start < 0)) {
+              name = start > 0 && j === 1 ? 'GS25' : start > 0 && j === 0 ? '뉴스타공인중개사사무소' : '';
+            }
             const hasTenant = !!name;
             if (f === 0) kind = /노래/.test(name) ? 'karaoke' : 'restaurant';
             else if (/안경/.test(name)) kind = 'optical';
@@ -912,6 +1186,7 @@ export function build(K) {
             else if (/공인중개/.test(name)) kind = 'estate';
             else if (/KFC/.test(name)) kind = 'restaurant';
             else if (/GS25/.test(name)) kind = 'grocery';
+            else if (name === 'JEWELRY') kind = 'jewelry';
             else if (/서비스센터/.test(name)) kind = 'office';
             else if (/학원|어학|에듀|수학/.test(name)) kind = 'classroom';
             else if (/말씀사/.test(name)) kind = 'bookshop';
@@ -923,17 +1198,53 @@ export function build(K) {
             const frontMat = f === 0 ? name === '담은' ? 'banpo-white-brick' : name === '하트타임' ? 'banpo-brick' : name === '우고집' ? 0x25282a : /노래/.test(name) ? 0x403d3b : 'glass' : kind === 'classroom' ? 0xeeeae3 : 'glass';
             wall(a, minV, a, maxV, y, ceiling, { mat: f === 0 ? 0xd5c8b6 : 0xeceae5, thick: 0.12 });
             wall(a, atCorridor, q, atCorridor, y, ceiling, { mat: frontMat, thick: 0.08, openings: [{ at: (q - a) / 2, w: kind === 'classroom' ? 1.8 : 1.5, y0: y, y1: y + 2.15 }] });
+            if (f === 0) {
+              // Local pier and shallow dropped beam frame the narrow arcade.
+              // Keep the full 3.2m public corridor and every doorway clear.
+              box(a + 0.11, y, atCorridor + side * 0.06, 0.22, ceiling - y, 0.24,
+                name === '담은' ? 'banpo-white-brick' : name === '하트타임' ? 'banpo-brick' : 0xbdb9aa);
+              box(mid, ceiling - 0.13, atCorridor + side * 0.11, q - a, 0.13, 0.24, 0xc5c2b4, { solid: false });
+            }
             if (kind === 'clinic') wall(q - 1.7, minV + 0.2, q - 1.7, maxV - 1.5, y, ceiling, { mat: 0xe5e9e4, openings: [{ at: 1.4, w: 1.2, y0: y, y1: y + 2.2 }] });
             const C = { n, f, y, ceiling, a: a + 0.15, q: q - 0.15, va: minV + 0.1, vb: maxV - 0.1, side, name, kind, serial, angle, P, rect, box, sign, person, seat };
             rooms.push({ ...C, room, mid, atCorridor, inwardRot, hasTenant });
+            if (f === 1 && side > 0) {
+              // Each sign belongs to the same bay as its door and interior.
+              // Shallow individual awnings and piers form the street arcade;
+              // the outer 2m of the forecourt stays a continuous walking route.
+              const width = q - a - 0.18, fv = frontAt(mid);
+              const bg = name === 'KFC' ? '#b92228' : name === 'GS25' ? '#f6f6ed' : /LG전자/.test(name) ? '#9b2344' : /기업은행/.test(name) ? '#185788' : /르웰|리스본/.test(name) ? '#eeeae0' : PALETTE[(serial + n) % PALETTE.length];
+              const fg = name === 'GS25' ? '#187caa' : /르웰|리스본/.test(name) ? '#333937' : '#fff7e9';
+              box(mid, 2.82, fv + 0.18, width, 0.72, 0.24, Number(bg.replace('#', '0x')), { solid: false });
+              sign(name, mid + (kind === 'optical' ? 0.28 : 0), 3.18, fv + 0.315, width - (kind === 'optical' ? 0.75 : 0.14), 0.55, bg, { fg, offset: 0.015 });
+              const awning = name === 'KFC' ? 0x8d2225 : n <= 2 ? 0x6b7773 : n === 5 ? 0x595c55 : 0x3e4945;
+              box(mid, 2.73, fv + 0.50, width, 0.10, 1.02, awning, { solid: false });
+              box(mid, 2.57, fv + 1.00, width, 0.18, 0.07, awning, { solid: false });
+              box(mid, 2.70, fv + 0.50, width - 0.35, 0.025, 0.55, 0xb8b7a6, { solid: false });
+              box(mid, 2.675, fv + 0.35, Math.min(1.15, width - 0.5), 0.025, 0.11, { tex: 'emit', color: 0xfff4db }, { solid: false });
+              for (const u of [a + 0.03, q - 0.03]) {
+                box(u, 0, fv + 0.24, 0.20, 2.73, 0.42, n === 5 ? 'banpo-ochre-tile' : isBrick ? 'banpo-brick-pier' : 'banpo-light-tile');
+                box(u, 0.02, fv + 0.24, 0.24, 0.25, 0.47, 0x757972, { solid: false });
+              }
+              for (const du of [-0.79, 0.79]) {
+                box(mid + du, 0.08, fv - 0.23, 0.04, 2.43, 0.41, 'glass', { solid: false });
+                box(mid + du, 0.92, fv - 0.07, 0.025, 0.55, 0.04, 0xc5c9c4, { solid: false });
+              }
+              box(mid, 0.018, fv + 0.13, 1.49, 0.014, 0.50, 0x969b93, { solid: false });
+              if (kind === 'optical') K.hpoly({ tex: 'wood', color: 0xa38a68 }, rect(a + 0.15, fv + 0.05, q - 0.15, fv + 0.95), 0.032);
+              if (name === 'KFC' || name === 'GS25' || name === 'KT') {
+                sign(name === 'KFC' ? ['KFC', '치킨 · 버거'] : name === 'KT' ? ['KT', '휴대폰 상담'] : ['GS25', '생활 속 편의점'], a + 0.68, 1.41, fv + 0.05, 0.88, 1.25, bg, { fg, offset: 0.02 });
+                box(q - 0.55, 0.03, fv + 0.5, 0.45, 0.04, 0.48, 0x3c4140, { solid: false });
+                sign(name === 'KFC' ? ['KFC', '메뉴 안내'] : [name, '어서오세요'], q - 0.55, 0.82, fv + 0.6, 0.48, 1.15, bg, { fg, box: 0.055 });
+              } else if (kind === 'estate') for (let k = 0; k < 3; k++) sign(['매매 · 임대', '상담 안내'], a + 0.55 + k * 0.40, 1.45, fv + 0.04, 0.34, 0.50, '#f3ecd6', { fg: '#465c55', offset: 0.01 });
+            }
             if (kind === 'optical') {
-              box(mid, 2.6, front + 0.06, q - a - 0.12, 0.4, 0.1, 0xe7e7df, { solid: false });
-              sign('리스본 안경', mid, 2.8, front + 0.13, q - a - 0.3, 0.32, '#ecece6', { fg: '#313739', offset: 0.02 });
-              for (const du of [-0.14, 0.14]) { const pp = P(mid - (q-a)/2 + 0.55 + du, front + 0.19); K.dome({ x: pp[0], y: 2.81, z: pp[1], rx: 0.12, ry: 0.1, rz: 0.02, mat: 0xb52632, seg: 10, rings: 4 }); }
+              // Relocate the retained red optical mark onto the unified fascia.
+              for (const du of [-0.14, 0.14]) { const pp = P(mid - (q-a)/2 + 0.55 + du, front + 0.35); K.dome({ x: pp[0], y: 3.18, z: pp[1], rx: 0.12, ry: 0.1, rz: 0.02, mat: 0xb52632, seg: 10, rings: 4 }); }
             }
             // Interior floor finish and low ceiling are structural, not lazy.
             if (f === 0) {
-              const timber = /아리수|담은|숙이네|동해/.test(name);
+              const timber = /아리수|담은|숙이네/.test(name);
               K.hpoly(timber ? { tex: 'wood', color: 0xb79363 } : 'banpo-b1-tile', rect(a + 0.12, minV + 0.1, q - 0.12, maxV - 0.1), y + 0.008);
             }
             serial++;
@@ -963,8 +1274,9 @@ export function build(K) {
         for (const R of rooms) {
           const { a, q, mid, side, name, kind, room, atCorridor, inwardRot, hasTenant, serial } = R;
           const facing = { rotY: inwardRot, twoSided: true };
-          for (const u of [mid - 0.8, mid + 0.8]) box(u, y, atCorridor, 0.05, 2.15, 0.08, f === 0 ? 0x504638 : 0xb8bab6, { solid: false });
-          box(mid, y + 2.12, atCorridor, 1.65, 0.045, 0.08, 0xb6b7af, { solid: false });
+          const jamb = kind === 'classroom' ? 0.93 : 0.8;
+          for (const u of [mid - jamb, mid + jamb]) box(u, y, atCorridor, 0.05, 2.15, 0.08, f === 0 ? 0x504638 : 0xb8bab6, { solid: false });
+          box(mid, y + 2.12, atCorridor, jamb * 2 + 0.05, 0.045, 0.08, 0xb6b7af, { solid: false });
           if (!(f === 0 || kind === 'optical' || kind === 'classroom')) sign(hasTenant ? name : [room, name], mid, y + 2.4, atCorridor, q - a - 0.15, 0.45, PALETTE[(serial + n) % PALETTE.length], facing);
           sign(room, a + 0.42, y + 1.4, atCorridor, 0.6, 0.22, '#e5e1d7', { fg: '#494b48', ...facing });
           if (f === 0) buildPhotoRestaurant(K, R);
@@ -980,10 +1292,23 @@ export function build(K) {
         if (f === 1) {
           // Photo10: six individually ruled storeys; known names only, not filler text.
           const guideNames = n === 4 ? [ ['5F', '마루정신건강의학과'], ['4F', '학원 · 사무실'], ['3F', '학원 · 사무실'], ['2F', '장솔학원'], ['1F', 'KFC  ·  라시앤느헤어'], ['B1', '동해횟집  ·  담은  ·  반포갈비', '하얀집  ·  반포교집  ·  하림'] ] : [['5F', ...(tenant.fifth || [])], ['4F', ...(tenant.fourth || [])], ['3F', tenant.clinic || '학원 · 사무실'], ['2F', ...tenant.h], ['1F', ...tenant.g], ['B1', ...names]];
-          box(-2.15, y + 0.2, front - 0.2, 2.25, 2.6, 0.07, 0xd7d9d7, { solid: false });
-          sign(`${n}동 층별 안내`, -2.15, y + 2.64, front - 0.25, 2.12, 0.26, '#efefeb', { fg: '#243971', rotY: angle + PI });
-          guideNames.forEach((row, i) => sign(row, -2.15, y + 2.3 - i * 0.37, front - 0.26, 2.12, 0.34, i % 2 ? '#e6e9e7' : '#f7f7f1', { fg: '#293a50', rotY: angle + PI }));
-          box(-2.15, y + 2.85, front - 0.6, 1, 0.05, 0.3, { tex: 'emit', color: 0xfcfff1 }, { solid: false });
+          const guideU = -4.4;
+          box(guideU, y + 0.2, front - 0.2, 2.25, 2.6, 0.07, 0xe2e2d9, { solid: false });
+          sign(`${n}동 층별 안내`, guideU, y + 2.64, front - 0.25, 2.12, 0.26, '#efefeb', { fg: '#243971', rotY: angle + PI });
+          guideNames.forEach(([floor, ...shops], i) => {
+            sign(floor, guideU + 0.91, y + 2.3 - i * 0.37, front - 0.26, 0.28, 0.34, '#e7e9e7', { fg: '#233b72', rotY: angle + PI });
+            sign(shops.length ? shops : ['입주 안내'], guideU - 0.17, y + 2.3 - i * 0.37, front - 0.26, 1.75, 0.34, i % 2 ? '#d7dfdf' : '#f7f7f1', { fg: '#293a50', rotY: angle + PI });
+          });
+          box(guideU, y + 2.85, front - 0.6, 1, 0.05, 0.3, { tex: 'emit', color: 0xfcfff1 }, { solid: false });
+          // Photo19 is the sign over the stair entrance, not a view looking
+          // down the whole flight. Preserve the lower landing directory too.
+          const stairNames = n === 5 ? ['노래방', '하트타임', '숙이네', '우고집', '서래곱창', '터미널포차', '일번지'] : n === 6 ? ['아리수포차', '그집', '유메'] : n === 4 ? ['동해횟집', '담은', '반포갈비', '하얀집', '반포교집', '하림'] : PHOTO_B1[n];
+          if (stairNames.length) {
+            const sv = -1.67, sw = 4.0;
+            box(-1.0, 2.25, sv, sw + 0.1, 1.15, 0.10, 0x7e8177, { solid: false });
+            sign('지하상가 안내', -1.0, 3.23, sv + 0.07, sw, 0.27, '#af6044', { offset: 0.01 });
+            stairNames.forEach((text, i) => sign(Array.from(text), -3.0 + (i + 0.5) * sw / stairNames.length, 2.73, sv + 0.07, sw / stairNames.length - 0.025, 0.72, i === 3 && n === 5 ? '#b32b32' : '#eee8d8', { fg: i === 3 && n === 5 ? '#fff6dc' : ['#333e40', '#294c57', '#9d3936'][i % 3], offset: 0.01 }));
+          }
         }
         if (f === 0) {
           const dirNames = n === 4 ? ['동해횟집', '4동노래방', '장터순대국', '5092호프', '반포교집', '담은', '하얀집', '하림', '반포갈비'] : n === 6 ? ['아리수포차', '그집', '기린부동산', '아리수포차', '싼타페', '미용실'] : n === 5 ? ['노래방', '하트타임', '숙이네', '우고집', '서래곱창', '터미널포차', '일번지'] : ['충무할매김밥', '만끽치킨', '배부장찌개', '온유월식당', '우고집', '반포대교', '명불허전'];
@@ -995,10 +1320,24 @@ export function build(K) {
           // Additional low arrival directory gives each basement an identifiable landing.
           if (n !== 7) sign([`${n}동 지하상가 안내`, ...dirNames], -2.25, y + 1.45, front - 0.22, 2.6, 1.8, '#edece4', { fg: '#343d40', rotY: angle + PI });
           if (n === 7) {
-            box(-4.65, y, front - 0.2, 1.9, 2.4, 0.12, 'banpo-b1-tile', { solid: false });
-            sign(['반포쇼핑 7동 지하상가 안내', '01  지하상가', '02  우마루', '03  식당가'], -4.65, y + 1.65, front - 0.29, 1.7, 0.95, '#2b3135', { rotY: angle + PI });
+            box(-4.65, y, front - 0.2, 1.9, 2.4, 0.12, 'banpo-terrazzo', { solid: false });
+            for (const u of [-5.68, -3.62]) box(u, y, front - 0.34, 0.17, 2.4, 0.40, 'banpo-terrazzo', { solid: false });
+            box(-4.65, y + 2.25, front - 0.34, 2.15, 0.15, 0.40, 'banpo-terrazzo', { solid: false });
+            box(-4.65, y + 1.03, front - 0.30, 1.8, 1.16, 0.04, 0x292f31, { solid: false });
+            sign('반포쇼핑 7동 지하상가 안내', -4.65, y + 2.04, front - 0.34, 1.73, 0.23, '#2b3135', { rotY: angle + PI, offset: 0.01 });
+            for (let j = 0; j < 10; j++) {
+              const u = -4.65 + (j < 5 ? 0.43 : -0.43), yy = y + 1.84 - j % 5 * 0.16;
+              sign(j === 1 ? '02  우마루' : String(j + 1).padStart(2, '0'), u, yy, front - 0.345, 0.83, 0.15, j === 1 ? '#efd554' : '#eeece0', { fg: '#343c3e', rotY: angle + PI, offset: 0.01 });
+            }
+            box(-4.65, y + 2.21, front - 0.28, 1.42, 0.15, 0.055, 0x93a29c, { solid: false });
+            box(-4.65, y + 2.21, front - 0.32, 0.045, 0.15, 0.035, 0x454e4b, { solid: false });
+            box(-4.65, y + 0.03, front - 0.29, 1.9, 0.10, 0.06, 0x252b29, { solid: false });
             sign('← 출구', -4.65, y + 0.35, front - 0.3, 0.4, 0.16, '#32886e', { rotY: angle + PI });
-            face(-1.7, y + 0.85, front - 0.3, 2.4, 1.05, 'banpo-plan');
+            box(-1.7, y + 0.76, front - 0.23, 2.62, 1.23, 0.12, 'banpo-terrazzo', { solid: false });
+            // The map faces inward (-v); reverse the horizontal vertex order
+            // as well as the normal, otherwise its Korean lettering mirrors.
+            const ma = P(-0.5, front - 0.31), mb = P(-2.9, front - 0.31);
+            K.quad('banpo-plan', [[ma[0], y + 0.85, ma[1]], [mb[0], y + 0.85, mb[1]], [mb[0], y + 1.90, mb[1]], [ma[0], y + 1.90, ma[1]]], [-s, 0, -c]);
           }
         }
         for (let u = -W / 2 + 5; u < W / 2 - 2; u += 14) if (Math.abs(u) > 8 && K.pointInPoly(...P(u, 0.55), poly)) person(u, y, 0.55, { shirt: [0xe5e0d7, 0x445a6b, 0x313438][(f + n) % 3] });

@@ -1,0 +1,768 @@
+{
+  "id": "gyeongbu_east",
+  "name": "경부선 동측 주차빌딩 · 데블스도어",
+  "updated": "2026-11-06",
+  "round": 8,
+  "sources": [
+    {
+      "url": "data/osm.json",
+      "type": "geometry",
+      "title": "OSM414891734 외곽, 데블스도어 POI9797826019, 보행로1067157370, 차고지1173093432/1173093434"
+    },
+    {
+      "url": "refs/roadview/manifest.json",
+      "type": "operator_reference",
+      "title": "카카오 로드뷰 위치 설명 및 관찰 내용"
+    },
+    {
+      "url": "refs/roadview/gbeast_01_parking_deck.jpg",
+      "type": "roadview",
+      "capture_date": "2026-06"
+    },
+    {
+      "url": "refs/roadview/gbeast_02_bus_yard_road.jpg",
+      "type": "roadview",
+      "capture_date": "2026-06"
+    },
+    {
+      "url": "refs/roadview/gbeast_03_bus_yard_hedge.jpg",
+      "type": "roadview",
+      "capture_date": "2026-06"
+    },
+    {
+      "url": "refs/interior/famille_back/notes.json",
+      "type": "operator_reference",
+      "title": "사진별 출처·관찰·추정 메모"
+    },
+    {
+      "url": "refs/interior/streets_islands/notes.json",
+      "type": "operator_reference",
+      "title": "데블스도어 실내외 중복 앵글"
+    },
+    {
+      "url": "https://m.blog.naver.com/snfl_djaakal/224463231656",
+      "local": "refs/interior/famille_back/01_dd_entrance_steel_door_panel.jpg",
+      "title": "녹슨 청동/청색 철판 쌍여닫이문 입구, 오른쪽 붉은 벽돌 벽, 입간판",
+      "post_date": "2026-11-03",
+      "type": "provided_blog_photo"
+    },
+    {
+      "url": "https://m.blog.naver.com/hyei_00_/224422655113",
+      "local": "refs/interior/famille_back/02_dd_entrance_door_standee_street.jpg",
+      "title": "문 앞 회색 포장 보도, 둥근 철기둥, 입간판, 'DEVIL's DOOR' 글자가 문 위 철판에 입체로 붙음",
+      "post_date": "2026-09-25",
+      "type": "provided_blog_photo"
+    },
+    {
+      "url": "https://m.blog.naver.com/jinny__bear/224446735960",
+      "local": "refs/interior/famille_back/03_dd_door_closeup_signage.jpg",
+      "title": "철판 문 상단 아치형 창 2개, 로고 글자 위치, 문 옆 벽돌",
+      "post_date": "2026-10-19",
+      "type": "provided_blog_photo"
+    },
+    {
+      "url": "https://m.blog.naver.com/drtitan/224368004162",
+      "local": "refs/interior/famille_back/04_dd_door_brick_facade.jpg",
+      "title": "문 위 처마 아래 조명(붉은 빛), 문 좌측 철판 기둥, 우측 벽돌",
+      "post_date": "2026-08-05",
+      "type": "provided_blog_photo"
+    },
+    {
+      "url": "https://m.blog.naver.com/104204303/224461513301",
+      "local": "refs/interior/famille_back/07_famille_building_glass_roof_lawn.jpg",
+      "title": "붉은 벽돌 단층 긴 건물, 곡면 유리 지붕이 중앙에 솟음, 앞 잔디밭과 소나무",
+      "post_date": "2026-11-01",
+      "type": "provided_blog_photo"
+    },
+    {
+      "url": "https://m.blog.naver.com/drtitan/224368004162",
+      "local": "refs/interior/famille_back/08_famille_facade_arched_windows_night.jpg",
+      "title": "벽돌 입면에 아치형 창 6개 일정 간격, 지붕 처마, 아래 주차선",
+      "post_date": "2026-08-05",
+      "type": "provided_blog_photo"
+    },
+    {
+      "url": "https://m.blog.naver.com/drtitan/224368004162",
+      "local": "refs/interior/famille_back/09_brick_wall_walkway_hedge_night.jpg",
+      "title": "벽돌 벽, 처마 아래 좁은 포장 보행로, 바깥쪽 관목 울타리, 가로등, 아파트",
+      "post_date": "2026-08-05",
+      "type": "provided_blog_photo"
+    },
+    {
+      "url": "https://m.blog.naver.com/jinny__bear/224446735960",
+      "local": "refs/interior/famille_back/10_dd_side_glass_door_brick.jpg",
+      "title": "검정 프레임 격자 유리창 + 목재 문, 데크 바닥, 오른쪽 안쪽 타일 복도, 벽돌 벽",
+      "post_date": "2026-10-19",
+      "type": "provided_blog_photo"
+    },
+    {
+      "url": "https://m.blog.naver.com/jinny__bear/224446735960",
+      "local": "refs/interior/famille_back/11_dd_interior_wide_brewery.jpg",
+      "title": "유리 지붕 아래 높은 층고, 긴 원목 테이블과 스툴, 중앙 양조 탱크, 구리 배관",
+      "post_date": "2026-10-19",
+      "type": "provided_blog_photo"
+    },
+    {
+      "url": "https://m.blog.naver.com/hyei_00_/224422655113",
+      "local": "refs/interior/famille_back/12_dd_interior_glass_roof_long_tables.jpg",
+      "title": "트러스 지붕, 유리 천창, 줄 전구, 긴 원목 테이블 배열, 아치창",
+      "post_date": "2026-09-25",
+      "type": "provided_blog_photo"
+    },
+    {
+      "url": "https://m.blog.naver.com/snfl_djaakal/224463231656",
+      "local": "refs/interior/famille_back/13_dd_interior_tanks_tables.jpg",
+      "title": "기둥(검정 철), 긴 테이블과 높은 스툴, 안쪽 양조 탱크 유리 벽, 천창",
+      "post_date": "2026-11-03",
+      "type": "provided_blog_photo"
+    },
+    {
+      "url": "https://m.blog.naver.com/104204303/224461513301",
+      "local": "refs/interior/famille_back/14_dd_interior_wide_banners.jpg",
+      "title": "천창과 줄 전구, 붉은 쓱데이 현수막, 긴 테이블, 사람들",
+      "post_date": "2026-11-01",
+      "type": "provided_blog_photo"
+    },
+    {
+      "url": "https://m.blog.naver.com/jinny__bear/224446735960",
+      "local": "refs/interior/famille_back/15_dd_exterior_stair_2f_standee.jpg",
+      "title": "벽돌 벽에 붙은 간판, 2층 프라이빗 대관 입간판, 낮은 계단",
+      "post_date": "2026-10-19",
+      "type": "provided_blog_photo"
+    },
+    {
+      "url": "https://m.blog.naver.com/papanui/224467009381",
+      "local": "refs/interior/famille_back/16_parking_entrance_booth_pine_sign.jpg",
+      "title": "초록 지붕 정산/관리 부스, 안내 표지 기둥(화살표), 큰 소나무, 잔디 화단",
+      "post_date": "2026-11(추정, 글 날짜 미표시)",
+      "type": "provided_blog_photo"
+    },
+    {
+      "url": "https://m.blog.naver.com/alpakad/224437321953",
+      "local": "refs/interior/famille_back/17_parking_booth_office_building.jpg",
+      "title": "작은 흰 안내사무실 부스, 뒤 유리벽 건물, 빨간 라바콘",
+      "post_date": "2026-10-10",
+      "type": "provided_blog_photo"
+    },
+    {
+      "url": "https://m.blog.naver.com/cha4se/224461100051",
+      "local": "refs/interior/famille_back/19_parking_access_road_night.jpg",
+      "title": "바닥 글자와 분홍/파랑 유도 선, 안내 기둥, 석재 옹벽, 오른쪽에 주차 데크",
+      "post_date": "2026-11-01",
+      "type": "provided_blog_photo"
+    },
+    {
+      "url": "https://m.blog.naver.com/cha4se/224461100051",
+      "local": "refs/interior/famille_back/20_parking_deck_exterior_night.jpg",
+      "title": "다층 개방형 주차 데크, 노란 연속 창, 주황 라바콘 줄, 왼쪽에 위로 지나가는 고가",
+      "post_date": "2026-11-01",
+      "type": "provided_blog_photo"
+    },
+    {
+      "url": "https://m.blog.naver.com/cha4se/224461100051",
+      "local": "refs/interior/famille_back/21_parking_tower_glass_elevator.jpg",
+      "title": "유리 외피 계단/엘리베이터 탑에 P 표지, 데크 연결 통로",
+      "post_date": "2026-11-01",
+      "type": "provided_blog_photo"
+    },
+    {
+      "url": "https://m.blog.naver.com/cha4se/224461100051",
+      "local": "refs/interior/famille_back/22_parking_deck_exit_ramp.jpg",
+      "title": "데크 내부 출구 차로, 출구 표지(잠원·논현·신사 방면), 노란 정지선",
+      "post_date": "2026-11-01",
+      "type": "provided_blog_photo"
+    },
+    {
+      "url": "https://m.blog.naver.com/snfl_djaakal/224463231656",
+      "local": "refs/interior/famille_back/23_parking_fee_sign.jpg",
+      "title": "주차요금 정산 안내판(본관 15분당 1500원, 파미에 5분당 550원)",
+      "post_date": "2026-11-03",
+      "type": "provided_blog_photo"
+    },
+    {
+      "url": "https://m.blog.naver.com/104204303/224461513301",
+      "local": "refs/interior/streets_islands/01_devilsdoor_ext_glass_roof_side.jpg",
+      "title": "센트럴시티 건물 외벽 전경, 소나무, 낮은 화단 난간",
+      "post_date": "2026-11-01",
+      "type": "provided_blog_photo"
+    },
+    {
+      "url": "https://m.blog.naver.com/104204303/224461513301",
+      "local": "refs/interior/streets_islands/02_devilsdoor_steel_door_brick.jpg",
+      "title": "녹청 철판문+벽돌",
+      "post_date": "2026-11-01",
+      "type": "provided_blog_photo"
+    },
+    {
+      "url": "https://m.blog.naver.com/drtitan/224368004162",
+      "local": "refs/interior/streets_islands/03_devilsdoor_facade_night_parking.jpg",
+      "title": "주차장이 건물 바로 앞",
+      "post_date": "2026-08-05",
+      "type": "provided_blog_photo"
+    },
+    {
+      "url": "https://m.blog.naver.com/drtitan/224368004162",
+      "local": "refs/interior/streets_islands/04_devilsdoor_brick_arcade_walkway_night.jpg",
+      "title": "한강공원 방향 보행로 느낌",
+      "post_date": "2026-08-05",
+      "type": "provided_blog_photo"
+    },
+    {
+      "url": "https://m.blog.naver.com/drtitan/224368004162",
+      "local": "refs/interior/streets_islands/05_devilsdoor_entrance_door_night.jpg",
+      "title": "철판 대문 2짝",
+      "post_date": "2026-08-05",
+      "type": "provided_blog_photo"
+    },
+    {
+      "url": "https://m.blog.naver.com/hyei_00_/224422655113",
+      "local": "refs/interior/streets_islands/06_devilsdoor_entrance_signboard.jpg",
+      "title": "간판 읽힘",
+      "post_date": "2026-09-25",
+      "type": "provided_blog_photo"
+    },
+    {
+      "url": "https://m.blog.naver.com/hyei_00_/224422655113",
+      "local": "refs/interior/streets_islands/07_devilsdoor_door_closeup.jpg",
+      "title": "입구",
+      "post_date": "2026-09-25",
+      "type": "provided_blog_photo"
+    },
+    {
+      "url": "https://m.blog.naver.com/104204303/224461513301",
+      "local": "refs/interior/streets_islands/08_devilsdoor_interior_hall.jpg",
+      "title": "트러스+전구 조명",
+      "post_date": "2026-11-01",
+      "type": "provided_blog_photo"
+    },
+    {
+      "url": "https://m.blog.naver.com/104204303/224461513301",
+      "local": "refs/interior/streets_islands/09_devilsdoor_interior_tables.jpg",
+      "title": "",
+      "post_date": "2026-11-01",
+      "type": "provided_blog_photo"
+    },
+    {
+      "url": "https://m.blog.naver.com/hyei_00_/224422655113",
+      "local": "refs/interior/streets_islands/10_devilsdoor_interior_long_hall.jpg",
+      "title": "유리 천장",
+      "post_date": "2026-09-25",
+      "type": "provided_blog_photo"
+    },
+    {
+      "url": "https://m.blog.naver.com/hyei_00_/224422655113",
+      "local": "refs/interior/streets_islands/11_devilsdoor_interior_arch_windows.jpg",
+      "title": "복층",
+      "post_date": "2026-09-25",
+      "type": "provided_blog_photo"
+    },
+    {
+      "url": "https://m.blog.naver.com/104204303/224461513301",
+      "local": "refs/interior/streets_islands/12_devilsdoor_parking_fee_sign.jpg",
+      "title": "파미에·본관 주차장 기본요금",
+      "post_date": "2026-11-01",
+      "type": "provided_blog_photo"
+    }
+  ],
+  "notes": [
+    "외곽은 OSM414891734의 네 꼭짓점을 그대로 사용한다. 약104.86×17.18m, x333.85..435.49 z-30.33..31.65. 주차장은1F(0m),2F(3.8m),3F(7.6m), 지붕11.8m로 구성한다.",
+    "로드뷰의 개방형 하부2개 층, 흰 철골V가새, 주황 기둥 하부, 은색 난간, 청회색 상부 유리·리브 철판, 흰 지붕 테두리를 양쪽 긴 입면에 반영했다.",
+    "데블스도어는 POI(371.8,8.1)를 포함하는 벽돌 홀에 배치. 주출입문 중심은 약(371.8,11.9), 측면 출입구도 열려 있다. 녹슨 청색/주황 철판문·아치창·곡면 유리천창·철골/목재 트러스·탱크·구리배관·원목 테이블·스툴·소파·전구줄·메뉴판을 구성한다.",
+    "홀1F와 북측2F 대관 갤러리를 별도zone으로 등록. 주차층3개와 차고지 경계까지 총6개zone,9개spawn,5개K.detail 그룹,1개3층 승강기. 계단/램프/난간/출입구/바닥은 지연 로딩 밖에 둔다.",
+    "OSM 보행로1067157370이 지나는 local u≈53에 폭3m의 북측·남측 출입구와 실내 통로를 뚫었다. 지도상의2.5m 통로에 탱크/테이블/소파가 들어가지 않는다.",
+    "차고지1173093434 남동측 외곽선(349.86,-16.63)→(425.07,-53.16) 밖에 생울타리·낮은 철망·8그루 가로수. 차고지 포장·버스·면적claim은 gyeongbu에 남긴다. 1173093432/3434 내부에는 새 경계 물체를 넣지 않는다.",
+    "claimRoads와claimAreas는 비워 두었다. 도로/교차로/신호등은 이 모듈이 재시공하지 않으며 보도와 건물1F는y=0에서 연결한다.",
+    "참고 사진의 촬영 UI·지도·개인정보는 월드 텍스처에 넣지 않았다. 실제 사진파일을 그대로 투사하지 않고 관찰한 재료와 구조를 기하/절차적 텍스처로 만들었다.",
+    "블로그는 제공된 로컬 사진·notes 내용으로 사용했으며 게시물 URL을 새로 조회한 것으로 표기하지 않는다. 요금 안내판에는 현재 요금으로 오인될 숫자를 싣지 않았다."
+  ],
+  "modeling": {
+    "coordinate_frame": {
+      "origin": [
+        333.85,
+        16.3
+      ],
+      "u": [
+        0.895682485801366,
+        -0.44469414728404705
+      ],
+      "v": [
+        0.44469414728404705,
+        0.895682485801366
+      ],
+      "rotYDeg": 26.403772,
+      "units": "m",
+      "y_up": true
+    },
+    "footprint": [
+      [
+        341.57,
+        31.65
+      ],
+      [
+        435.49,
+        -14.99
+      ],
+      [
+        427.77,
+        -30.33
+      ],
+      [
+        333.85,
+        16.3
+      ]
+    ],
+    "floors": [
+      {
+        "label": "1F",
+        "y": 0,
+        "rooms": [
+          "개방 주차장",
+          "데블스도어 브루어리"
+        ]
+      },
+      {
+        "label": "2F",
+        "y": 3.8,
+        "rooms": [
+          "개방 주차 데크",
+          "데블스도어 대관 갤러리"
+        ]
+      },
+      {
+        "label": "3F",
+        "y": 7.6,
+        "rooms": [
+          "유리·철판 외피 주차 데크"
+        ]
+      }
+    ],
+    "trace_convention": "각 항목은 실제 카메라 좌표를 측량한 값이 아니라 모델과 제공사진을 나란히 비교하기 위한 추정 촬영점. x/z는월드좌표,y는카메라 눈높이(지상1.7m),yaw0=북90=서180=남270=동. 같은 사진은 독립trace 항목에1장씩 기록.",
+    "trace": [
+      {
+        "spot": "로드뷰01 · 북측 도로에서 주차빌딩",
+        "photos": [
+          "refs/roadview/gbeast_01_parking_deck.jpg"
+        ],
+        "x": 381.81,
+        "y": 1.7,
+        "z": -22.026,
+        "yawDeg": 206.404
+      },
+      {
+        "spot": "로드뷰02 · 차고지 생울타리 남서 방향",
+        "photos": [
+          "refs/roadview/gbeast_02_bus_yard_road.jpg"
+        ],
+        "x": 402.862,
+        "y": 1.7,
+        "z": -33.594,
+        "yawDeg": 116.404
+      },
+      {
+        "spot": "로드뷰03 · 차고지 생울타리 북동 방향",
+        "photos": [
+          "refs/roadview/gbeast_03_bus_yard_hedge.jpg"
+        ],
+        "x": 367.034,
+        "y": 1.7,
+        "z": -15.806,
+        "yawDeg": 296.404
+      },
+      {
+        "spot": "파미에 참고01 · 데블스도어 정문 앞",
+        "photos": [
+          "refs/interior/famille_back/01_dd_entrance_steel_door_panel.jpg"
+        ],
+        "x": 373.877,
+        "y": 1.7,
+        "z": 15.965,
+        "yawDeg": 26.404
+      },
+      {
+        "spot": "파미에 참고02 · 정문 앞 보도",
+        "photos": [
+          "refs/interior/famille_back/02_dd_entrance_door_standee_street.jpg"
+        ],
+        "x": 370.25,
+        "y": 1.7,
+        "z": 17.655,
+        "yawDeg": 6.404
+      },
+      {
+        "spot": "파미에 참고03 · 정문 근접",
+        "photos": [
+          "refs/interior/famille_back/03_dd_door_closeup_signage.jpg"
+        ],
+        "x": 372.898,
+        "y": 1.7,
+        "z": 13.995,
+        "yawDeg": 26.404
+      },
+      {
+        "spot": "파미에 참고04 · 정문 정면(밤)",
+        "photos": [
+          "refs/interior/famille_back/04_dd_door_brick_facade.jpg"
+        ],
+        "x": 374.321,
+        "y": 1.7,
+        "z": 16.861,
+        "yawDeg": 26.404
+      },
+      {
+        "spot": "파미에 참고07 · 파미에스테이션 건물 바깥 잔디에서 본 모습",
+        "photos": [
+          "refs/interior/famille_back/07_famille_building_glass_roof_lawn.jpg"
+        ],
+        "x": 360.645,
+        "y": 1.7,
+        "z": 29.792,
+        "yawDeg": 351.404
+      },
+      {
+        "spot": "파미에 참고08 · 주차장 쪽에서 본 건물 입면(밤)",
+        "photos": [
+          "refs/interior/famille_back/08_famille_facade_arched_windows_night.jpg"
+        ],
+        "x": 386.175,
+        "y": 1.7,
+        "z": 16,
+        "yawDeg": 26.404
+      },
+      {
+        "spot": "파미에 참고09 · 건물 벽을 따라 난 보행로(밤)",
+        "photos": [
+          "refs/interior/famille_back/09_brick_wall_walkway_hedge_night.jpg"
+        ],
+        "x": 360.136,
+        "y": 1.7,
+        "z": 19.773,
+        "yawDeg": 296.404
+      },
+      {
+        "spot": "파미에 참고10 · 매장 옆면(가까운 보조 출입구)",
+        "photos": [
+          "refs/interior/famille_back/10_dd_side_glass_door_brick.jpg"
+        ],
+        "x": 350.303,
+        "y": 1.7,
+        "z": 17.956,
+        "yawDeg": 296.404
+      },
+      {
+        "spot": "파미에 참고11 · 내부 전경",
+        "photos": [
+          "refs/interior/famille_back/11_dd_interior_wide_brewery.jpg"
+        ],
+        "x": 370.23,
+        "y": 1.7,
+        "z": 8.621,
+        "yawDeg": 296.404
+      },
+      {
+        "spot": "파미에 참고12 · 내부 전경",
+        "photos": [
+          "refs/interior/famille_back/12_dd_interior_glass_roof_long_tables.jpg"
+        ],
+        "x": 355.855,
+        "y": 1.7,
+        "z": 15.646,
+        "yawDeg": 296.404
+      },
+      {
+        "spot": "파미에 참고13 · 내부 전경",
+        "photos": [
+          "refs/interior/famille_back/13_dd_interior_tanks_tables.jpg"
+        ],
+        "x": 387.705,
+        "y": 1.7,
+        "z": -3.405,
+        "yawDeg": 26.404
+      },
+      {
+        "spot": "파미에 참고14 · 내부 전경",
+        "photos": [
+          "refs/interior/famille_back/14_dd_interior_wide_banners.jpg"
+        ],
+        "x": 367.095,
+        "y": 1.7,
+        "z": 10.177,
+        "yawDeg": 296.404
+      },
+      {
+        "spot": "파미에 참고15 · 매장 바깥 모서리 계단",
+        "photos": [
+          "refs/interior/famille_back/15_dd_exterior_stair_2f_standee.jpg"
+        ],
+        "x": 352.494,
+        "y": 1.7,
+        "z": 17.873,
+        "yawDeg": 296.404
+      },
+      {
+        "spot": "파미에 참고16 · 주차장 진입로 입구",
+        "photos": [
+          "refs/interior/famille_back/16_parking_entrance_booth_pine_sign.jpg"
+        ],
+        "x": 430.521,
+        "y": 1.7,
+        "z": -9.366,
+        "yawDeg": 26.404
+      },
+      {
+        "spot": "파미에 참고17 · 주차장 안내사무실 앞",
+        "photos": [
+          "refs/interior/famille_back/17_parking_booth_office_building.jpg"
+        ],
+        "x": 431.426,
+        "y": 1.7,
+        "z": -13.165,
+        "yawDeg": 26.404
+      },
+      {
+        "spot": "파미에 참고19 · 주차장 진입 도로(밤)",
+        "photos": [
+          "refs/interior/famille_back/19_parking_access_road_night.jpg"
+        ],
+        "x": 429.174,
+        "y": 1.7,
+        "z": -7.581,
+        "yawDeg": 116.404
+      },
+      {
+        "spot": "파미에 참고20 · 주차 데크 바깥 도로",
+        "photos": [
+          "refs/interior/famille_back/20_parking_deck_exterior_night.jpg"
+        ],
+        "x": 400.951,
+        "y": 1.7,
+        "z": 9.781,
+        "yawDeg": 26.404
+      },
+      {
+        "spot": "파미에 참고21 · 주차 데크 끝 계단·엘리베이터 탑",
+        "photos": [
+          "refs/interior/famille_back/21_parking_tower_glass_elevator.jpg"
+        ],
+        "x": 352.596,
+        "y": 1.7,
+        "z": 29.322,
+        "yawDeg": 351.404
+      },
+      {
+        "spot": "파미에 참고22 · 주차 데크 출구",
+        "photos": [
+          "refs/interior/famille_back/22_parking_deck_exit_ramp.jpg"
+        ],
+        "x": 425.794,
+        "y": 1.7,
+        "z": -14.388,
+        "yawDeg": 296.404
+      },
+      {
+        "spot": "파미에 참고23 · 데블스도어 내부 카운터 안내판",
+        "photos": [
+          "refs/interior/famille_back/23_parking_fee_sign.jpg"
+        ],
+        "x": 361.867,
+        "y": 1.7,
+        "z": 8.642,
+        "yawDeg": 26.404
+      },
+      {
+        "spot": "거리 참고01 · 사평대로 쪽 데블스도어 외관(유리 아치 지붕+적벽돌), 앞 잔디·보행로",
+        "photos": [
+          "refs/interior/streets_islands/01_devilsdoor_ext_glass_roof_side.jpg"
+        ],
+        "x": 360.645,
+        "y": 1.7,
+        "z": 29.792,
+        "yawDeg": 351.404
+      },
+      {
+        "spot": "거리 참고02 · 데블스도어 측면 벽돌 외벽, 강철 대문",
+        "photos": [
+          "refs/interior/streets_islands/02_devilsdoor_steel_door_brick.jpg"
+        ],
+        "x": 373.877,
+        "y": 1.7,
+        "z": 15.965,
+        "yawDeg": 26.404
+      },
+      {
+        "spot": "거리 참고03 · 밤 데블스도어 정면 아치창+앞 지상 주차면",
+        "photos": [
+          "refs/interior/streets_islands/03_devilsdoor_facade_night_parking.jpg"
+        ],
+        "x": 386.175,
+        "y": 1.7,
+        "z": 16,
+        "yawDeg": 26.404
+      },
+      {
+        "spot": "거리 참고04 · 벽돌 기둥 아케이드 보행로 야경, 뒤로 고층 아파트",
+        "photos": [
+          "refs/interior/streets_islands/04_devilsdoor_brick_arcade_walkway_night.jpg"
+        ],
+        "x": 360.136,
+        "y": 1.7,
+        "z": 19.773,
+        "yawDeg": 296.404
+      },
+      {
+        "spot": "거리 참고05 · 출입문 야경",
+        "photos": [
+          "refs/interior/streets_islands/05_devilsdoor_entrance_door_night.jpg"
+        ],
+        "x": 374.321,
+        "y": 1.7,
+        "z": 16.861,
+        "yawDeg": 26.404
+      },
+      {
+        "spot": "거리 참고06 · 외관/간판",
+        "photos": [
+          "refs/interior/streets_islands/06_devilsdoor_entrance_signboard.jpg"
+        ],
+        "x": 370.25,
+        "y": 1.7,
+        "z": 17.655,
+        "yawDeg": 6.404
+      },
+      {
+        "spot": "거리 참고07 · 외관",
+        "photos": [
+          "refs/interior/streets_islands/07_devilsdoor_door_closeup.jpg"
+        ],
+        "x": 372.898,
+        "y": 1.7,
+        "z": 13.995,
+        "yawDeg": 26.404
+      },
+      {
+        "spot": "거리 참고08 · 내부 쓱토버 현수막 홀",
+        "photos": [
+          "refs/interior/streets_islands/08_devilsdoor_interior_hall.jpg"
+        ],
+        "x": 367.095,
+        "y": 1.7,
+        "z": 10.177,
+        "yawDeg": 296.404
+      },
+      {
+        "spot": "거리 참고09 · 내부 테이블 홀",
+        "photos": [
+          "refs/interior/streets_islands/09_devilsdoor_interior_tables.jpg"
+        ],
+        "x": 370.23,
+        "y": 1.7,
+        "z": 8.621,
+        "yawDeg": 296.404
+      },
+      {
+        "spot": "거리 참고10 · 내부 긴 홀",
+        "photos": [
+          "refs/interior/streets_islands/10_devilsdoor_interior_long_hall.jpg"
+        ],
+        "x": 355.855,
+        "y": 1.7,
+        "z": 15.646,
+        "yawDeg": 296.404
+      },
+      {
+        "spot": "거리 참고11 · 내부 아치창",
+        "photos": [
+          "refs/interior/streets_islands/11_devilsdoor_interior_arch_windows.jpg"
+        ],
+        "x": 387.705,
+        "y": 1.7,
+        "z": -3.405,
+        "yawDeg": 26.404
+      },
+      {
+        "spot": "거리 참고12 · 주차요금 안내판",
+        "photos": [
+          "refs/interior/streets_islands/12_devilsdoor_parking_fee_sign.jpg"
+        ],
+        "x": 361.867,
+        "y": 1.7,
+        "z": 8.642,
+        "yawDeg": 26.404
+      }
+    ],
+    "guesses": [
+      {
+        "topic": "데블스도어의 위치와 건물 형식 충돌",
+        "evidence": "블로그는 파미에스테이션 끝의 독립 벽돌·곡면유리 건물로 설명하지만, 지정된 카카오 핀과 OSM pub POI는414891734에 있다.",
+        "decision": "사용자 지시대로 핀/OSM을 우선해 이 주차빌딩 내부에 벽돌·유리 홀을 삽입했다. 실제 건물 내부 평면의 실측 재현이라는 뜻은 아니다."
+      },
+      {
+        "topic": "층수·층고·높이",
+        "evidence": "OSM height=9m, levels=null. 로드뷰는 개방 하부와 상부 유리/철판 띠를 보여주나 층표기는 확인되지 않는다.",
+        "decision": "1F/2F/3F,0/3.8/7.6m,평지붕11.8m,홀 유리지붕 정점11.95m로 추정. 층번호는 모델의 관례이며 현장 층별 안내판 검증은 안 됨."
+      },
+      {
+        "topic": "동선과 평면",
+        "decision": "서측 왕복 계단·유리 승강기,동측30m 차량램프2개,2F 북측 대관 갤러리·실내 가구·탱크 개수/정확한 위치는 통행 가능한 모델링 배치. 지도상의u≈53 관통보행로만 원래 좌표를 보존."
+      },
+      {
+        "topic": "블로그 주차장 사진19~22",
+        "decision": "같은 구간인지 불확실하므로 흰 가새·유리 승강기·출구안내·주황콘의 형태 참고로만 사용했다. 다른 건물이나 파미에 주차장 면적을 새로claim하지 않는다."
+      },
+      {
+        "topic": "차고지 경계 도로",
+        "decision": "사진의 생울타리 남서/북동 방향을3434 남동경계에 맞춘다. 이곳 도로 자체는OSM에 없으므로폭/정확한 차선은 복제하지 않고 경계의 좁은 분홍색/노란색 도색만 추가. 분홍색 띠를 자전거 전용도로라고 단정하지 않는다."
+      },
+      {
+        "topic": "식재와 차량",
+        "decision": "잎 모양과 수형은 kit의 은행나무로 근사. 수종·주차 차량·구획 수·배치는 사진의 분위기를 위한 추정이며 버스는 이 모듈에서 추가하지 않는다."
+      },
+      {
+        "topic": "출입문과 간판",
+        "decision": "브랜드 문자 DEVIL'S DOOR는 사진 표기를 사용. 문 폭·아치창 치수·조명 위치·주차 안내 문구는 사진에 맞춘 근사. 현재 영업시간·가격·주차요금 숫자는 추정해서 싣지 않음."
+      },
+      {
+        "topic": "미반영 사진 영역",
+        "decision": "famille_back05/06/18의 외부 승용차 주차장·잔디·아파트와 미확인 사무동은 이 건물 외곽과 담당 범위를 벗어나 독립 재구성하지 않았다."
+      },
+      {
+        "topic": "렌더링 확인",
+        "decision": "사용자 지시로 tests/shot.mjs는 실행하지 않음. operator가 trace에 기록한 촬영점에서 후속 시각 검증해야 한다."
+      }
+    ],
+    "validation": {
+      "smoke": {
+        "command": "node tests/smoke.mjs gyeongbu_east gyeongbu",
+        "result": "OK"
+      },
+      "walk_without_city": {
+        "command": "node tests/walk.mjs gyeongbu_east gyeongbu --no-city",
+        "result": "59 ok, 0 blocked"
+      },
+      "additional_routes": {
+        "method": "tests/walk.mjs의BFS를메모리에서재사용;테스트파일변경없음",
+        "routes": [
+          "차량램프1F→2F",
+          "차량램프2F→3F",
+          "계단1F→2F",
+          "계단2F→3F",
+          "OSM건물관통로",
+          "정문→홀",
+          "홀→측면문",
+          "2F대관갤러리"
+        ],
+        "result": "20 ok, 0 blocked (spawn/승강기 포함)"
+      },
+      "full_world": {
+        "command": "node tests/walk.mjs",
+        "result": "전체 월드 검사 중단: 병행 수정 중인 js/places/newcore.js가 meta만 export하고 build 함수가 없어 tests/walk.mjs:24에서 TypeError: m.build is not a function. 이 모듈과 gyeongbu는 city 포함 검사59 ok,0 blocked.",
+        "prior_attempt": "첫 실행은 병행 수정 중 js/city.js:52 roadLayout 미정의로 중단. 이후 해당 오류가 없어져 두 모듈+city 검사는 통과."
+      },
+      "screenshots": "사용자지시로생략;trace35개를operator렌더링용으로기록",
+      "walk_with_city": {
+        "command": "node tests/walk.mjs gyeongbu_east gyeongbu",
+        "result": "59 ok, 0 blocked"
+      },
+      "independent_review": "두 램프·두 계단·주출입구·u53 관통로·2F 갤러리를0.25m 간격으로 검사: 바닥 지지·캡슐 충돌·1.75m 머리 공간 통과. 램프 상단 연결 바닥과 홀 바닥의 중복 면 수정 완료."
+    }
+  }
+}
