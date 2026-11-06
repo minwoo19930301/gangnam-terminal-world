@@ -5,3 +5,4 @@ shots/
 .codex-jobs/*.done
 .claude/
 refs/
+.codex-jobs/*.images
