@@ -11,17 +11,27 @@ const SHOT = Q.has('shot');
 const $ = id => document.getElementById(id);
 const status = t => { const el = $('loading-text'); if (el) el.textContent = t; };
 const errors = [];
-window.__world = { ready: false, errors };
+window.__world = { ready: false, errors, timing: {} };
+const mark = (k) => { window.__world.timing[k] = Math.round(performance.now()); };
 const fail = (where, e) => { console.error(where, e); errors.push(`${where}: ${e && e.message || e}`); };
 
 async function boot() {
-  status('폰트 불러오는 중…');
-  try { await Promise.race([Promise.all(['400', '700'].map(w => document.fonts.load(`${w} 32px "Noto Sans KR"`, '가나다'))), new Promise(r => setTimeout(r, 4000))]); } catch { }
+  // Fonts are only needed when sign text is painted (after the world is up), so they load in parallel with the
+  // map data and the place modules instead of blocking them.
   status('지도 데이터 불러오는 중…');
-  const osm = await (await fetch('data/osm.json')).json();
+  const fontsReady = Promise.race([Promise.all(['400', '700'].map(w => document.fonts.load(`${w} 32px "Noto Sans KR"`, '가나다'))), new Promise(r => setTimeout(r, 4000))]).catch(() => { }).then(() => mark('fonts'));
+  const osmP = fetch('data/osm.json').then(r => r.json());
+  const wantIds = Q.get('places') ? Q.get('places').split(',') : PLACES;
+  const modP = wantIds.map(id => import(`./places/${id}.js`).then(m => ({ id, m }), e => ({ id, e })));
+  const osm = await osmP; mark('osm');
 
-  const renderer = new THREE.WebGLRenderer({ antialias: !SHOT, logarithmicDepthBuffer: true, preserveDrawingBuffer: SHOT });
-  renderer.setPixelRatio(Math.min(devicePixelRatio, SHOT ? 1 : 2));
+  // Quality: ?q=low forces the light path (no MSAA, lower pixel-ratio ceiling); phones and small-memory devices
+  // pick it automatically. Geometry is never reduced — only the render resolution adapts (see adaptResolution).
+  const LOW = Q.get('q') === 'low' || (!Q.get('q') && ((navigator.deviceMemory && navigator.deviceMemory <= 4) || /Android|iPhone|iPad|Mobile/i.test(navigator.userAgent)));
+  const renderer = new THREE.WebGLRenderer({ antialias: !SHOT && !LOW, logarithmicDepthBuffer: true, preserveDrawingBuffer: SHOT, powerPreference: 'high-performance' });
+  const MAX_PR = SHOT ? 1 : Math.min(devicePixelRatio, LOW ? 1.25 : 2);
+  let pixelRatio = MAX_PR;
+  renderer.setPixelRatio(pixelRatio);
   renderer.setSize(innerWidth, innerHeight);
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   $('app').prepend(renderer.domElement);
@@ -42,18 +52,15 @@ async function boot() {
   const amb = new THREE.AmbientLight(0xffffff, 0.25); scene.add(amb);
 
   const phys = createPhysics();
-  const K = createKit(THREE, scene, { osm, phys, maxAniso: renderer.capabilities.getMaxAnisotropy() });
+  const K = createKit(THREE, scene, { osm, phys, maxAniso: renderer.capabilities.getMaxAnisotropy(), maxTex: renderer.capabilities.maxTextureSize, low: LOW });
+  K._.atlas.start(); // sign rects are reserved during the build; text is painted once the fonts are in
   // modules may register night handlers while they build, so this must exist before any build()
   const nightFns = []; K.onNight = fn => nightFns.push(fn);
 
   // ---- places ----
   const want = Q.get('places') ? Q.get('places').split(',') : PLACES;
   const mods = [];
-  for (const id of want) {
-    status(`장소 모듈 불러오는 중… ${id}`);
-    try { const m = await import(`./places/${id}.js`); mods.push({ id, m }); }
-    catch (e) { fail(`load ${id}`, e); }
-  }
+  for (const r of await Promise.all(modP)) { if (r.e) fail(`load ${r.id}`, r.e); else mods.push(r); }
   const claimedBuildings = new Set(), claimedRoads = new Set(), claimedAreas = new Set();
   for (const { m } of mods) { for (const id of m.meta?.claims || []) claimedBuildings.add(id); for (const id of m.meta?.claimRoads || []) claimedRoads.add(id); for (const id of m.meta?.claimAreas || []) claimedAreas.add(id); }
   const placeInfo = [];
@@ -68,7 +75,7 @@ async function boot() {
   K._.setCurrent('city');
   let roadsInfo = null;
   if (Q.get('city') !== '0') {
-    status('도시(OSM) 짓는 중…'); await new Promise(r => setTimeout(r, 0));
+    mark('places'); status('도시(OSM) 짓는 중…'); await new Promise(r => setTimeout(r, 0));
     try { roadsInfo = buildCity(K, osm, { claimedBuildings, claimedRoads, claimedAreas, log: s => console.log(s) }); } catch (e) { fail('city', e); }
   }
   // ground with holes
@@ -76,8 +83,9 @@ async function boot() {
   const holes = K._.groundHoles.map(h => h.poly);
   try { K.hpoly({ tex: 'concrete', color: 0xc9c6bf }, [[bx0, bz0], [bx1, bz0], [bx1, bz1], [bx0, bz1]], -0.04, true, holes); }
   catch (e) { fail('ground', e); K.hpoly({ tex: 'concrete', color: 0xc9c6bf }, [[bx0, bz0], [bx1, bz0], [bx1, bz1], [bx0, bz1]], -0.04, true); }
-  status('메시 합치는 중…'); await new Promise(r => setTimeout(r, 0));
-  K._.finalize();
+  mark('city'); status('메시 합치는 중…'); await new Promise(r => setTimeout(r, 0));
+  K._.finalize(); mark('finalize');
+  K._.cull(6, 1.6, -125, true);
   const traffic = roadsInfo && Q.get('traffic') !== '0' ? createTraffic(K, roadsInfo, 180) : null;
 
   // ---- player ----
@@ -176,7 +184,36 @@ async function boot() {
   if (night) setNight(true);
 
   // ---- loop ----
-  const clock = new THREE.Clock(); let t = 0, frames = 0, fpsT = 0, fps = 0;
+  const clock = new THREE.Clock(); let t = 0, frames = 0, fpsT0 = performance.now(), fps = 0;
+  let signsGo = false;
+  const gl = renderer.getContext(), scratch = document.createElement('canvas'), sctx = scratch.getContext('2d');
+  function uploadSignRects(jobs) {
+    const byPage = new Map();
+    for (const j of jobs) { if (!byPage.has(j.r.page)) byPage.set(j.r.page, []); byPage.get(j.r.page).push(j); }
+    for (const [page, list] of byPage) {
+      const props = renderer.properties.get(page.t);
+      if (!props.__webglTexture || page.t.version === 0 || page.t.needsUpdate) { page.t.needsUpdate = true; continue; } // not uploaded yet: full upload next render
+      renderer.state.bindTexture(gl.TEXTURE_2D, props.__webglTexture);
+      gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true); gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
+      gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1); gl.pixelStorei(gl.UNPACK_COLORSPACE_CONVERSION_WEBGL, gl.NONE);
+      const S = K._.atlas.SIZE;
+      for (const j of list) {
+        scratch.width = j.pw; scratch.height = j.ph; sctx.clearRect(0, 0, j.pw, j.ph);
+        sctx.drawImage(page.c, j.r.x, j.r.y, j.pw, j.ph, 0, 0, j.pw, j.ph);
+        gl.texSubImage2D(gl.TEXTURE_2D, 0, j.r.x, S - j.r.y - j.ph, gl.RGBA, gl.UNSIGNED_BYTE, scratch);
+      }
+      gl.generateMipmap(gl.TEXTURE_2D);
+    }
+  }
+  // Dynamic resolution: drop the pixel ratio while the frame rate is low, raise it again when there is headroom.
+  // Skipped for screenshots, ?fixedres, and while the tab is hidden (browsers throttle hidden tabs to ~1 fps).
+  function adaptResolution(f) {
+    if (SHOT || Q.has('fixedres') || document.hidden || f < 3) return;
+    let np = pixelRatio;
+    if (f < 40) np = Math.max(0.5, pixelRatio * (f < 25 ? 0.75 : 0.88));
+    else if (f > 57 && pixelRatio < MAX_PR) np = Math.min(MAX_PR, pixelRatio * 1.08);
+    if (Math.abs(np - pixelRatio) > 0.01) { pixelRatio = np; renderer.setPixelRatio(pixelRatio); }
+  }
   function frame() {
     const dt = Math.min(clock.getDelta(), 0.05); t += dt;
     const input = {
@@ -200,14 +237,23 @@ async function boot() {
     for (const it of K._.interactables) { const d = Math.hypot(it.x - player.x, it.z - player.z); if (d < it.r && d < bd && (it.y == null || Math.abs(it.y - player.y) < 2.5)) { if (it.elevator && !it.elevator.floors.some(f => Math.abs(f.y - player.y) < 1.5)) continue; bd = d; nearIt = it; } }
     hudPrompt.textContent = nearIt ? `E · ${nearIt.label}` : ''; hudPrompt.classList.toggle('show', !!nearIt);
     $('btn-use').classList.toggle('show', !!nearIt);
-    frames++; fpsT += dt; if (fpsT > 1) { fps = frames / fpsT; frames = 0; fpsT = 0; }
-    hudCoord.textContent = `x ${player.x.toFixed(0)}  z ${player.z.toFixed(0)}  높이 ${player.y.toFixed(1)}m  ${player.fly ? '✈ ' : ''}${fps.toFixed(0)}fps`;
+    frames++; { const now = performance.now(); if (now - fpsT0 > 1000) { fps = frames * 1000 / (now - fpsT0); frames = 0; fpsT0 = now; adaptResolution(fps); } }
+    hudCoord.textContent = `x ${player.x.toFixed(0)}  z ${player.z.toFixed(0)}  높이 ${player.y.toFixed(1)}m  ${player.fly ? '✈ ' : ''}${fps.toFixed(0)}fps${pixelRatio < Math.min(devicePixelRatio, 2) - 0.01 ? ` · 해상도 ${Math.round(pixelRatio / Math.min(devicePixelRatio, 2) * 100)}%` : ''}`;
     map.update(dt);
+    K._.cull(camera.position.x, camera.position.y, camera.position.z);
+    // progressive sign painting (≈5 ms per frame); only the painted rectangles are uploaded (texSubImage2D)
+    if (signsGo && K._.atlas.pending()) uploadSignRects(K._.atlas.flush(5, player.x, player.z));
     renderer.render(scene, camera);
     requestAnimationFrame(frame);
   }
   $('loading').classList.add('hidden');
   if (SHOT || start) $('start').classList.add('hidden');
+  // Noto Sans KR is served in unicode-range slices; load the slices for every character the signs use, otherwise
+  // canvas text silently falls back to another font for glyphs whose slice is not loaded yet.
+  const signFonts = fontsReady.then(() => { const txt = K._.atlas.chars(); return Promise.race([Promise.all(['400', '700'].map(w => document.fonts.load(`${w} 32px "Noto Sans KR"`, txt))), new Promise(r => setTimeout(r, 8000))]).catch(() => { }); }).then(() => mark('signFonts'));
+  if (SHOT) { await signFonts; K._.atlas.flushAll(); for (const p of K._.atlas.pages) p.t.needsUpdate = true; }
+  else signFonts.then(() => { signsGo = true; });
+  mark('ready');
   Object.assign(window.__world, { ready: true, K, phys, player, camera, scene, renderer, map, places: placeInfo, stats: { ...K._.stats, phys: phys.stats, draw: () => renderer.info.render }, setNight });
   frame();
 }

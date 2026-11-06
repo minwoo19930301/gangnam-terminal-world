@@ -182,12 +182,12 @@ export function createTextures(THREE, { maxAniso = 8 } = {}) {
 }
 
 // ---- text atlas: shelf packer on 2048^2 pages ----
-export function createSignAtlas(THREE) {
-  const SIZE = 2048, GAP = 4;
+export function createSignAtlas(THREE, { size = 2048, quality = 0.72 } = {}) {
+  const SIZE = size, GAP = 4;
   // Global resolution policy. Signs are drawn at pxPerM * QUALITY, and one text line never gets more
   // than LINE_PX pixels of height (big rooftop letters do not need 300 px). Identical signs (same text
   // and look, different position) share one atlas slot.
-  const QUALITY = 0.72, LINE_PX = 72;
+  const QUALITY = quality, LINE_PX = 72;
   const pages = [];
   const cache = new Map();
   function newPage() {
@@ -212,7 +212,10 @@ export function createSignAtlas(THREE) {
     sh.x += w + GAP; p.dirty = true;
     return r;
   }
-  // draw text block; returns uv rect + page
+  // draw text block; returns uv rect + page. The rect is reserved immediately; the pixels are painted by paint(),
+  // either right away or later (start() → deferred; flush() paints nearest-first within a time budget) so the
+  // world can appear before ~7000 signs are rasterised.
+  let deferred = false, sorted = false; const queue = [];
   function draw(lines, o = {}) {
     lines = [].concat(lines).map(String);
     const { w = 2, h = 0.5, bg = '#222', fg = '#fff', bold = true, align = 'center', pxPerM = 96, border = null, italic = false, font = FONT, sub = null, subFg = null, icon = null, padding = 0.08 } = o;
@@ -223,7 +226,16 @@ export function createSignAtlas(THREE) {
     // one scale for both axes keeps the letters' aspect (clamping each axis separately squashed wide signs)
     const s = Math.min(1, (LINE_PX * n * 1.25 + 8) / ph, 1024 / pw, 512 / ph);
     pw = Math.max(16, Math.round(pw * s)); ph = Math.max(8, Math.round(ph * s));
-    const r = alloc(pw, ph); const g = r.page.g;
+    const r = alloc(pw, ph);
+    const job = { r, pw, ph, lines, n, bg, fg, bold, align, border, italic, font, sub, subFg, padding, x: o.x ?? 0, z: o.z ?? 0 };
+    if (deferred) queue.push(job); else paint(job);
+    // half-texel inset so mipmaps/filtering do not pull in the neighbour's pixels
+    const u0 = (r.x + 0.5) / SIZE, u1 = (r.x + pw - 0.5) / SIZE, v0 = 1 - (r.y + ph - 0.5) / SIZE, v1 = 1 - (r.y + 0.5) / SIZE;
+    const out = { page: r.page, uv: [u0, v0, u1, v1] };
+    cache.set(key, out); return out;
+  }
+  function paint({ r, pw, ph, lines, n, bg, fg, bold, align, border, italic, font, sub, subFg, padding }) {
+    const g = r.page.g;
     g.save(); g.beginPath(); g.rect(r.x, r.y, pw, ph); g.clip();
     if (bg) { g.fillStyle = bg; g.fillRect(r.x, r.y, pw, ph); }
     if (border) { g.strokeStyle = border; g.lineWidth = Math.max(2, ph * 0.04); g.strokeRect(r.x + 1, r.y + 1, pw - 2, ph - 2); }
@@ -239,10 +251,17 @@ export function createSignAtlas(THREE) {
     lines.forEach((l, i) => g.fillText(l, ax, r.y + pad + lh * (i + 0.5)));
     if (sub) { g.font = `400 ${fs * 0.5}px ${font}`; g.fillStyle = subFg || fg; g.fillText(sub, ax, r.y + pad + lh * (lines.length + 0.3)); }
     g.restore();
-    // half-texel inset so mipmaps/filtering do not pull in the neighbour's pixels
-    const u0 = (r.x + 0.5) / SIZE, u1 = (r.x + pw - 0.5) / SIZE, v0 = 1 - (r.y + ph - 0.5) / SIZE, v1 = 1 - (r.y + 0.5) / SIZE;
-    const out = { page: r.page, uv: [u0, v0, u1, v1] };
-    cache.set(key, out); return out;
   }
-  return { pages, draw, SIZE };
+  function start() { deferred = true; }
+  function flush(ms, x = 0, z = 0) {
+    if (!queue.length) return [];
+    if (!sorted) { queue.sort((a, b) => Math.hypot(b.x - x, b.z - z) - Math.hypot(a.x - x, a.z - z)); sorted = true; }
+    const t0 = performance.now(), done = [];
+    while (queue.length && performance.now() - t0 < ms) { const j = queue.pop(); paint(j); done.push(j); }
+    return done; // painted jobs (rect + page) so the caller can upload just those rectangles
+  }
+  function flushAll() { while (queue.length) paint(queue.pop()); }
+  // every character still to be painted, so the page can fetch exactly the web-font subsets it needs first
+  function chars() { const set = new Set(); for (const j of queue) for (const t of [...j.lines, j.sub || '']) for (const ch of t) set.add(ch); return [...set].join(''); }
+  return { pages, draw, SIZE, start, flush, flushAll, chars, pending: () => queue.length };
 }

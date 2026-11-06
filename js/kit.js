@@ -4,11 +4,14 @@ import { createTextures, createSignAtlas } from './textures.js';
 import { pointInPoly, polyBBox, polyArea } from './physics.js';
 
 export const LEVELS = { B1: -6, B2: -11, B3: -16, B4: -21, B5: -26, B6: -31 };
-const TILE = 160;
+const TILE = 320;
 
-export function createKit(THREE, scene, { osm, phys, maxAniso = 8 } = {}) {
+export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096, low = false } = {}) {
   const T = createTextures(THREE, { maxAniso });
-  const atlas = createSignAtlas(THREE);
+  // big atlas pages mean fewer materials → fewer draw calls (the bottleneck on slow CPUs); low tier draws signs
+  // at a lower pixel density (resolution only — every sign is still there)
+  const PAGE = Math.min(4096, maxTex);
+  const atlas = createSignAtlas(THREE, { size: PAGE, quality: low ? 0.55 : 0.72 });
   const buckets = new Map();
   const materials = new Map();
   const tmpC = new THREE.Color();
@@ -28,6 +31,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8 } = {}) {
     else if (key === 'emit') m = new THREE.MeshBasicMaterial({ vertexColors: true });
     else if (key === 'water') { const s = T.surface('water'); m = new THREE.MeshLambertMaterial({ map: s.tex, vertexColors: true, transparent: true, opacity: 0.92 }); }
     else if (key.startsWith('sign:')) { const p = atlas.pages[+key.slice(5)]; m = new THREE.MeshBasicMaterial({ map: p.t, side: THREE.FrontSide, alphaTest: 0.35 }); }
+    else if (key.startsWith('arr:')) { m = new THREE.MeshLambertMaterial({ map: dummyMap, vertexColors: true }); m.userData.arr = texArrays[+key.slice(4)]; addBounce(m, '', true); materials.set(key, m); return m; }
     else if (key.startsWith('tex:')) { const s = T.surface(key.slice(4)); m = new THREE.MeshLambertMaterial({ map: s.tex, vertexColors: true }); }
     else if (key.startsWith('ctex:')) { const s = customTex.get(key.slice(5)); m = new THREE.MeshLambertMaterial({ map: s.tex, vertexColors: true, transparent: !!s.transparent, alphaTest: s.transparent ? 0.3 : 0, side: s.doubleSide ? THREE.DoubleSide : THREE.FrontSide }); }
     else throw new Error('unknown material key ' + key);
@@ -39,15 +43,26 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8 } = {}) {
   // diffuse term scaled by how much the surface faces down (world space). bounce.value is set by main.js
   // (lower at night).
   const bounce = { value: 0.55 };
-  function addBounce(m) {
+  // Texture arrays: textures of the same size share one sampler2DArray (one material, one draw call per tile);
+  // each vertex carries its layer. Repeat wrapping and mipmaps work per layer exactly as with separate textures.
+  const ARRAY_MAP = `#ifdef USE_MAP
+  vec4 sampledDiffuseColor = texture(uTexArr, vec3(vMapUv, vLayer));
+  diffuseColor *= sampledDiffuseColor;
+#endif`;
+  function addBounce(m, extra = '', isAtlas = false) {
     m.onBeforeCompile = (sh) => {
       sh.uniforms.uBounce = bounce;
+      if (isAtlas) {
+        sh.uniforms.uTexArr = { value: m.userData.arr };
+        sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nattribute float layer;\nvarying float vLayer;').replace('#include <uv_vertex>', '#include <uv_vertex>\nvLayer = layer;');
+        sh.fragmentShader = sh.fragmentShader.replace('#include <common>', '#include <common>\nprecision highp sampler2DArray;\nuniform sampler2DArray uTexArr;\nvarying float vLayer;').replace('#include <map_fragment>', ARRAY_MAP);
+      }
       sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nvarying float vDown;')
         .replace('#include <beginnormal_vertex>', '#include <beginnormal_vertex>\nvDown = -normalize(mat3(modelMatrix) * objectNormal).y;');
       sh.fragmentShader = sh.fragmentShader.replace('#include <common>', '#include <common>\nvarying float vDown;\nuniform float uBounce;')
-        .replace('#include <opaque_fragment>', 'outgoingLight += diffuseColor.rgb * uBounce * smoothstep(0.35, 0.95, vDown);\n#include <opaque_fragment>');
+        .replace('#include <opaque_fragment>', 'outgoingLight += diffuseColor.rgb * uBounce * smoothstep(0.35, 0.95, vDown);\n' + extra + '#include <opaque_fragment>');
     };
-    m.customProgramCacheKey = () => 'bounce1';
+    m.customProgramCacheKey = () => 'bounce1' + (extra ? 'g' : '') + (isAtlas ? 'arr' : '');
   }
   const customTex = new Map();
   const customMats = new Map();
@@ -73,7 +88,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8 } = {}) {
   function bucket(key, x, z) {
     const tk = key + '|' + Math.floor(x / TILE) + ',' + Math.floor(z / TILE);
     let b = buckets.get(tk);
-    if (!b) { b = { key, pos: [], nor: [], uv: [], col: [], idx: [] }; buckets.set(tk, b); }
+    if (!b) { b = { key, pos: [], nor: [], uv: [], col: [], idx: [], prim: [], own: [] }; buckets.set(tk, b); }
     return b;
   }
   // emit a quad. p: 4 points [x,y,z], n: intended normal, uvs: 4 [u,v]
@@ -91,6 +106,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8 } = {}) {
     }
     if (flip) b.idx.push(base, base + 2, base + 1, base, base + 3, base + 2);
     else b.idx.push(base, base + 1, base + 2, base, base + 2, base + 3);
+    b.prim.push(4); b.own.push(current);
     stats.quads++;
   }
   function tri(sp, p, n, uvs) {
@@ -101,7 +117,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8 } = {}) {
     const flip = cx * n[0] + cy * n[1] + cz * n[2] < 0;
     const base = b.pos.length / 3;
     for (let i = 0; i < 3; i++) { b.pos.push(p[i][0], p[i][1], p[i][2]); b.nor.push(n[0], n[1], n[2]); b.uv.push(uvs[i][0], uvs[i][1]); b.col.push(sp.c[0], sp.c[1], sp.c[2]); }
-    if (flip) b.idx.push(base, base + 2, base + 1); else b.idx.push(base, base + 1, base + 2);
+    if (flip) b.idx.push(base, base + 2, base + 1); else b.idx.push(base, base + 1, base + 2); b.prim.push(3); b.own.push(current);
   }
   // vertical face from (ax,az)->(bx,bz), y0..y1, normal given. u along length from uOff.
   function vface(sp, ax, az, bx, bz, y0, y1, nx, nz, uOff = 0, floorH = 0, vBase = 0) {
@@ -395,8 +411,8 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8 } = {}) {
     quad(sp, [P(-w / 2, h / 2), P(w / 2, h / 2), P(w / 2, -h / 2), P(-w / 2, -h / 2)], [0, 1, 0], [[u0, v0], [u1, v0], [u1, v1], [u0, v1]]);
   }
   // instanced things
-  function tree(x, z, o = {}) { trees.push({ x, z, y: o.y ?? 0, h: o.h ?? (6 + ((x * 13.7 + z * 7.3) % 3)), kind: o.kind ?? 'zelkova' }); }
-  function person(x, y, z, o = {}) { people.push({ x, y, z, rotY: o.rotY ?? ((x * 7 + z * 3) % 6.28), shirt: o.shirt, pants: o.pants, h: o.h ?? (1.6 + ((x * 31 + z * 17) % 0.25)), sit: !!o.sit }); }
+  function tree(x, z, o = {}) { trees.push({ place: current, x, z, y: o.y ?? 0, h: o.h ?? (6 + ((x * 13.7 + z * 7.3) % 3)), kind: o.kind ?? 'zelkova' }); }
+  function person(x, y, z, o = {}) { people.push({ place: current, x, y, z, rotY: o.rotY ?? ((x * 7 + z * 3) % 6.28), shirt: o.shirt, pants: o.pants, h: o.h ?? (1.6 + ((x * 31 + z * 17) % 0.25)), sit: !!o.sit }); }
   function crowd(poly, y, n, o = {}) { const rnd = rand(o.seed ?? (poly[0][0] * 1000 + poly[0][1])); const bb = polyBBox(poly); let k = 0, guard = 0; while (k < n && guard++ < n * 30) { const x = bb[0] + rnd() * (bb[2] - bb[0]), z = bb[1] + rnd() * (bb[3] - bb[1]); if (pointInPoly(x, z, poly)) { person(x, y, z, { rotY: rnd() * 6.28 }); k++; } } }
   // vehicle (static, merged). kind: car|taxi|bus|cityBus|truck|van
   function vehicle(o) {
@@ -455,7 +471,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8 } = {}) {
   }
   function groundHole(poly, inner) { phys.addGroundHole(poly, inner); groundHoles.push({ poly, inner }); }
   function onFrame(fn) { frameFns.push(fn); }
-  function addMesh(mesh) { scene.add(mesh); return mesh; }
+  function addMesh(mesh) { mesh.userData.owner ??= current; scene.add(mesh); return mesh; }
   function texture(key, w, h, draw, scale = [1, 1], opts = {}) { if (!customTex.has(key)) { const r = T.custom(key, w, h, draw, scale, opts); customTex.set(key, { ...r, transparent: !!opts.transparent, doubleSide: !!opts.doubleSide }); } return key; }
   function material(key, m) { customMats.set(key, m); materials.set('cm:' + key, m); return key; }
   function mapMark(o) { mapMarks.push({ place: current, ...o }); }
@@ -465,64 +481,193 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8 } = {}) {
   function rand(seed = 1) { let s = Math.abs(Math.floor(seed * 9301 + 49297)) % 233280 || 1; return () => (s = (s * 9301 + 49297) % 233280) / 233280; }
 
   // ---------- finalize ----------
+  // ---------- render cells ----------
+  // Every face is sorted into a cell so the renderer can skip what the camera cannot see, without removing any
+  // geometry: 'U' = enclosed underground space of an indoor place (face centre below -1.5 m, a ceiling above it,
+  // built by one of the INDOOR modules — open road underpasses, river passages and open ramps stay outside),
+  // 'o' = everything else. cull() hides 'U' from far above ground and far outdoor tiles while you are deep inside
+  // an enclosed underground space. (An upper-floor interior class was tried and dropped: from the street it
+  // hid facade glass, terraces and interiors seen through glass.)
+  const INDOOR = new Set(['gotomall', 'station', 'shinsegae', 'centralcity', 'gyeongbu', 'jwmarriott', 'banpo_shoppingtown']);
+  const CELL_TILE = 128;
+  function classify(cx, cy, cz, owner) {
+    if (cy >= -1.5 || !INDOOR.has(owner)) return 'o';
+    return phys.ceilingAbove(cx, cz, cy + 0.05, cy + 9) < Infinity ? 'U' : 'o';
+  }
+  const cullList = [];
+  function track(m, cell) {
+    if (!m.geometry.boundingBox) m.geometry.computeBoundingBox();
+    let bb = m.geometry.boundingBox;
+    if (m.isInstancedMesh) { m.computeBoundingBox(); m.computeBoundingSphere(); bb = m.boundingBox; }
+    m.userData.cell = cell; m.userData.bb = [bb.min.x, bb.min.z, bb.max.x, bb.max.z];
+    cullList.push(m);
+  }
+  let last = { x: 1e9, y: 1e9, z: 1e9, n: 0 }, under = false;
+  // x, y, z = camera (eye) position. "Underground" means: eye below -1 m, a ceiling over the head and standing in a
+  // zone of an indoor place — so stairs, open ramps and road underpasses never count.
+  function cull(x, y, z, force = false) {
+    if (!force && Math.abs(x - last.x) + Math.abs(y - last.y) + Math.abs(z - last.z) < 1.5 && ++last.n < 30) return;
+    last = { x, y, z, n: 0 };
+    let u = false;
+    if (y < -1) { const zn = phys.zoneAt(x, y - 1.5, z); u = !!zn && INDOOR.has(zn.place) && phys.ceilingAbove(x, z, y, y + 8) < Infinity; }
+    under = u;
+    for (const m of cullList) {
+      const d = m.userData, bb = d.bb;
+      if (d.cell === 'o' && !u) { m.visible = true; continue; }
+      const dx = x < bb[0] ? bb[0] - x : x > bb[2] ? x - bb[2] : 0, dz = z < bb[1] ? bb[1] - z : z > bb[3] ? z - bb[3] : 0, dist = Math.hypot(dx, dz);
+      m.visible = d.cell === 'o' ? dist < 120 : (u ? dist < 320 : dist < 100);
+    }
+  }
+  // ---------- texture arrays for opaque textures ----------
+  const texArrays = [];
+  const dummyMap = new THREE.DataTexture(new Uint8Array([255, 255, 255, 255]), 1, 1); dummyMap.needsUpdate = true;
+  function buildTexArrays(keys) {
+    const groups = new Map(), layers = new Map();
+    for (const k of keys) {
+      let src;
+      if (k.startsWith('tex:')) src = T.surface(k.slice(4)).tex;
+      else if (k.startsWith('ctex:')) { const c = customTex.get(k.slice(5)); if (!c || c.transparent || c.doubleSide) continue; src = c.tex; }
+      else continue;
+      const img = src.image; if (!img || !img.width || src.wrapS !== THREE.RepeatWrapping) continue;
+      const gk = img.width + 'x' + img.height; if (!groups.has(gk)) groups.set(gk, []); groups.get(gk).push({ k, img });
+    }
+    for (const [, list] of groups) {
+      if (list.length < 3) continue; // tiny groups gain nothing; they keep their own texture
+      const w = list[0].img.width, h = list[0].img.height, data = new Uint8Array(w * h * 4 * list.length);
+      list.forEach(({ k, img }, li) => {
+        const px = img.getContext('2d').getImageData(0, 0, w, h).data;
+        if (px.length === w * h * 4) for (let r = 0; r < h; r++) data.set(px.subarray(r * w * 4, (r + 1) * w * 4), (li * h + (h - 1 - r)) * w * 4); // flip: canvas top = v 1
+        layers.set(k, { arr: texArrays.length, layer: li });
+      });
+      const t = new THREE.DataArrayTexture(data, w, h, list.length);
+      t.wrapS = t.wrapT = THREE.RepeatWrapping; t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = maxAniso;
+      t.generateMipmaps = true; t.minFilter = THREE.LinearMipmapLinearFilter; t.magFilter = THREE.LinearFilter; t.needsUpdate = true;
+      texArrays.push(t);
+    }
+    return layers;
+  }
   function finalize() {
     for (const p of atlas.pages) p.t.needsUpdate = true;
-    const out = [];
+    const usedKeys = new Set(); for (const [, b] of buckets) usedKeys.add(b.key);
+    const aLayers = buildTexArrays(usedKeys);
+    // two passes: classify every primitive and count, then fill typed arrays directly (no big JS arrays)
+    const subs = new Map(), plan = [];
     for (const [, b] of buckets) {
       if (!b.idx.length) continue;
-      const g = new THREE.BufferGeometry();
-      g.setAttribute('position', new THREE.Float32BufferAttribute(b.pos, 3));
-      g.setAttribute('normal', new THREE.Float32BufferAttribute(b.nor, 3));
-      g.setAttribute('uv', new THREE.Float32BufferAttribute(b.uv, 2));
-      g.setAttribute('color', new THREE.Float32BufferAttribute(b.col, 3));
-      g.setIndex(b.pos.length / 3 > 65535 ? new THREE.Uint32BufferAttribute(b.idx, 1) : new THREE.Uint16BufferAttribute(b.idx, 1));
-      g.computeBoundingSphere(); g.computeBoundingBox();
-      const key = b.key.startsWith('cm:') ? b.key : b.key;
-      const m = new THREE.Mesh(g, matFor(key));
-      if (b.key === 'glass' || b.key === 'water') m.renderOrder = 2;
-      m.matrixAutoUpdate = false; m.updateMatrix();
-      scene.add(m); out.push(m);
+      const P = b.pos, N = b.nor, ar = aLayers.get(b.key) || null, which = new Array(b.prim.length);
+      let vo = 0, pi = 0;
+      for (const nv of b.prim) {
+        let cx = 0, cy = 0, cz = 0; for (let k = 0; k < nv; k++) { cx += P[(vo + k) * 3]; cy += P[(vo + k) * 3 + 1]; cz += P[(vo + k) * 3 + 2]; }
+        cx /= nv; cy /= nv; cz /= nv;
+        const cell = classify(cx, cy, cz, b.own[pi]);
+        const T2 = cell === 'o' ? TILE : CELL_TILE, mk = ar ? 'arr:' + ar.arr : b.key, sk = mk + '|' + cell + '|' + Math.floor(cx / T2) + ',' + Math.floor(cz / T2);
+        let s = subs.get(sk); if (!s) { s = { key: mk, cell, nv: 0, ni: 0, rect: !!ar }; subs.set(sk, s); }
+        s.nv += nv; s.ni += nv === 4 ? 6 : 3; which[pi++] = s; vo += nv;
+      }
+      plan.push({ b, ar, which });
+    }
+    for (const [, s] of subs) {
+      s.pos = new Float32Array(s.nv * 3); s.nor = new Float32Array(s.nv * 3); s.uv = new Float32Array(s.nv * 2); s.col = new Float32Array(s.nv * 3);
+      s.idx = s.nv > 65535 ? new Uint32Array(s.ni) : new Uint16Array(s.ni); if (s.rect) s.rect = new Float32Array(s.nv);
+      s.v = 0; s.i = 0;
+    }
+    for (const { b, ar, which } of plan) {
+      const P = b.pos, N = b.nor, U = b.uv, C = b.col, I = b.idx;
+      let vo = 0, io = 0, pi = 0;
+      for (const nv of b.prim) {
+        const s = which[pi++], ni = nv === 4 ? 6 : 3, base = s.v;
+        for (let k = 0; k < nv; k++) {
+          const v = vo + k, d = s.v++;
+          s.pos[d * 3] = P[v * 3]; s.pos[d * 3 + 1] = P[v * 3 + 1]; s.pos[d * 3 + 2] = P[v * 3 + 2];
+          s.nor[d * 3] = N[v * 3]; s.nor[d * 3 + 1] = N[v * 3 + 1]; s.nor[d * 3 + 2] = N[v * 3 + 2];
+          s.uv[d * 2] = U[v * 2]; s.uv[d * 2 + 1] = U[v * 2 + 1];
+          s.col[d * 3] = C[v * 3]; s.col[d * 3 + 1] = C[v * 3 + 1]; s.col[d * 3 + 2] = C[v * 3 + 2];
+          if (ar) s.rect[d] = ar.layer;
+        }
+        for (let k = 0; k < ni; k++) s.idx[s.i++] = I[io + k] - vo + base;
+        vo += nv; io += ni;
+      }
     }
     buckets.clear();
+    const out = [];
+    for (const [, s] of subs) {
+      const g = new THREE.BufferGeometry();
+      g.setAttribute('position', new THREE.BufferAttribute(s.pos, 3));
+      g.setAttribute('normal', new THREE.BufferAttribute(s.nor, 3));
+      g.setAttribute('uv', new THREE.BufferAttribute(s.uv, 2));
+      g.setAttribute('color', new THREE.BufferAttribute(s.col, 3));
+      if (s.rect) g.setAttribute('layer', new THREE.BufferAttribute(s.rect, 1));
+      g.setIndex(new THREE.BufferAttribute(s.idx, 1));
+      g.computeBoundingSphere(); g.computeBoundingBox();
+      const m = new THREE.Mesh(g, matFor(s.key));
+      if (s.key === 'glass' || s.key === 'water') m.renderOrder = 2;
+      m.matrixAutoUpdate = false; m.updateMatrix();
+      scene.add(m); out.push(m); track(m, s.cell);
+    }
+    splitModuleInstances();
     buildInstanced();
     return out;
   }
+  // group instances by cell + tile so each group can be frustum-culled and cell-culled on its own
+  function groupBy(n, at) {
+    const groups = new Map();
+    for (let i = 0; i < n; i++) {
+      const [x, y, z, owner] = at(i); const cell = classify(x, y + 0.9, z, owner), T2 = cell === 'o' ? TILE : CELL_TILE;
+      const k = cell + '|' + Math.floor(x / T2) + ',' + Math.floor(z / T2); if (!groups.has(k)) groups.set(k, { cell, idx: [] }); groups.get(k).idx.push(i);
+    }
+    return [...groups.values()];
+  }
+  function splitModuleInstances() {
+    const M = new THREE.Matrix4(), C = new THREE.Color();
+    for (const im of scene.children.filter(o => o.isInstancedMesh && o.count >= 64 && !o.userData.dynamic)) {
+      const e = im.instanceMatrix.array;
+      for (const g of groupBy(im.count, i => [e[i * 16 + 12], e[i * 16 + 13], e[i * 16 + 14], im.userData.owner])) {
+        const nm = new THREE.InstancedMesh(im.geometry, im.material, g.idx.length);
+        g.idx.forEach((src, j) => { im.getMatrixAt(src, M); nm.setMatrixAt(j, M); if (im.instanceColor) { im.getColorAt(src, C); nm.setColorAt(j, C); } });
+        nm.instanceMatrix.needsUpdate = true; if (nm.instanceColor) nm.instanceColor.needsUpdate = true;
+        nm.frustumCulled = im.frustumCulled; nm.renderOrder = im.renderOrder; scene.add(nm); track(nm, g.cell);
+      }
+      scene.remove(im);
+    }
+  }
   function buildInstanced() {
+    const M = new THREE.Matrix4(), Q = new THREE.Quaternion(), S = new THREE.Vector3(), V = new THREE.Vector3(), C = new THREE.Color();
     if (trees.length) {
       const trunk = new THREE.CylinderGeometry(0.12, 0.2, 1, 6); trunk.translate(0, 0.5, 0);
       const crown = new THREE.IcosahedronGeometry(1, 1); crown.translate(0, 0, 0);
       const mt = new THREE.MeshLambertMaterial({ color: 0x5b4636 });
       const mc = new THREE.MeshLambertMaterial({ color: 0xffffff });
-      const it = new THREE.InstancedMesh(trunk, mt, trees.length), ic = new THREE.InstancedMesh(crown, mc, trees.length);
-      const M = new THREE.Matrix4(), Q = new THREE.Quaternion(), S = new THREE.Vector3(), V = new THREE.Vector3(), C = new THREE.Color();
       const pal = { zelkova: [0x4f7f3a, 0x5c8a40, 0x46733a], ginkgo: [0x8fae3c, 0x9db845, 0x7fa035], pine: [0x2f5a35, 0x36603a], cherry: [0x6f9a4a, 0x7da653], maple: [0x7a8f3a, 0x8a5a2a] };
-      trees.forEach((t, i) => {
-        const h = t.h; M.compose(V.set(t.x, t.y, t.z), Q.identity(), S.set(1, h * 0.45, 1)); it.setMatrixAt(i, M);
-        const cr = t.kind === 'pine' ? [1.6, h * 0.35, 1.6] : t.kind === 'ginkgo' ? [1.5, h * 0.42, 1.5] : [h * 0.33, h * 0.3, h * 0.33];
-        M.compose(V.set(t.x, t.y + h * 0.62, t.z), Q.setFromAxisAngle(V.clone().set(0, 1, 0), (t.x * 3 + t.z) % 6), S.set(...cr)); ic.setMatrixAt(i, M);
-        const p = pal[t.kind] || pal.zelkova; ic.setColorAt(i, C.setHex(p[Math.abs(Math.round(t.x * 7 + t.z * 3)) % p.length]));
-      });
-      it.instanceMatrix.needsUpdate = ic.instanceMatrix.needsUpdate = true; if (ic.instanceColor) ic.instanceColor.needsUpdate = true;
-      scene.add(it, ic);
+      for (const g of groupBy(trees.length, i => [trees[i].x, trees[i].y, trees[i].z, trees[i].place])) {
+        const it = new THREE.InstancedMesh(trunk, mt, g.idx.length), ic = new THREE.InstancedMesh(crown, mc, g.idx.length);
+        g.idx.forEach((ti, i) => {
+          const t = trees[ti], h = t.h; M.compose(V.set(t.x, t.y, t.z), Q.identity(), S.set(1, h * 0.45, 1)); it.setMatrixAt(i, M);
+          const cr = t.kind === 'pine' ? [1.6, h * 0.35, 1.6] : t.kind === 'ginkgo' ? [1.5, h * 0.42, 1.5] : [h * 0.33, h * 0.3, h * 0.33];
+          M.compose(V.set(t.x, t.y + h * 0.62, t.z), Q.setFromAxisAngle(V.clone().set(0, 1, 0), (t.x * 3 + t.z) % 6), S.set(...cr)); ic.setMatrixAt(i, M);
+          const p = pal[t.kind] || pal.zelkova; ic.setColorAt(i, C.setHex(p[Math.abs(Math.round(t.x * 7 + t.z * 3)) % p.length]));
+        });
+        it.instanceMatrix.needsUpdate = ic.instanceMatrix.needsUpdate = true; if (ic.instanceColor) ic.instanceColor.needsUpdate = true;
+        scene.add(it, ic); track(it, g.cell); track(ic, g.cell);
+      }
     }
     if (people.length) {
       const body = new THREE.CylinderGeometry(0.17, 0.2, 1, 8); body.translate(0, 0.5, 0);
       const head = new THREE.SphereGeometry(0.11, 8, 6);
-      const mb = new THREE.MeshLambertMaterial({ color: 0xffffff }), mh = new THREE.MeshLambertMaterial({ color: 0xe0b896 });
-      const ib = new THREE.InstancedMesh(body, mb, people.length), ih = new THREE.InstancedMesh(head, mh, people.length);
-      const ip = new THREE.InstancedMesh(body, new THREE.MeshLambertMaterial({ color: 0xffffff }), people.length);
-      const M = new THREE.Matrix4(), Q = new THREE.Quaternion(), S = new THREE.Vector3(), V = new THREE.Vector3(), C = new THREE.Color();
+      const mb = new THREE.MeshLambertMaterial({ color: 0xffffff }), mh = new THREE.MeshLambertMaterial({ color: 0xe0b896 }), mp = new THREE.MeshLambertMaterial({ color: 0xffffff });
       const shirts = [0x2b3a55, 0xf2f2f2, 0x9b2c2c, 0x1d1d1d, 0xc9b28a, 0x4a6b3a, 0x7a5aa0, 0xe8a0a0, 0x3b6ea8, 0x6a6a6a];
       const pants = [0x1e2430, 0x2b2b2b, 0x4a4a55, 0x22314f, 0x7a6a55];
-      people.forEach((p, i) => {
-        const h = p.h, legH = p.sit ? 0.45 : h * 0.47, torso = h * 0.36;
-        M.compose(V.set(p.x, p.y, p.z), Q.identity(), S.set(0.85, legH, 0.7)); ip.setMatrixAt(i, M);
-        ip.setColorAt(i, C.setHex(p.pants ?? pants[i % pants.length]));
-        M.compose(V.set(p.x, p.y + legH, p.z), Q.identity(), S.set(1.1, torso, 0.85)); ib.setMatrixAt(i, M);
-        ib.setColorAt(i, C.setHex(p.shirt ?? shirts[(i * 7) % shirts.length]));
-        M.compose(V.set(p.x, p.y + legH + torso + 0.12, p.z), Q.identity(), S.set(1, 1.15, 1)); ih.setMatrixAt(i, M);
-      });
-      for (const m of [ib, ih, ip]) { m.instanceMatrix.needsUpdate = true; if (m.instanceColor) m.instanceColor.needsUpdate = true; scene.add(m); }
+      for (const g of groupBy(people.length, i => [people[i].x, people[i].y, people[i].z, people[i].place])) {
+        const n = g.idx.length, ib = new THREE.InstancedMesh(body, mb, n), ih = new THREE.InstancedMesh(head, mh, n), ip = new THREE.InstancedMesh(body, mp, n);
+        g.idx.forEach((pi, i) => {
+          const p = people[pi], h = p.h, legH = p.sit ? 0.45 : h * 0.47, torso = h * 0.36;
+          M.compose(V.set(p.x, p.y, p.z), Q.identity(), S.set(0.85, legH, 0.7)); ip.setMatrixAt(i, M);
+          ip.setColorAt(i, C.setHex(p.pants ?? pants[pi % pants.length]));
+          M.compose(V.set(p.x, p.y + legH, p.z), Q.identity(), S.set(1.1, torso, 0.85)); ib.setMatrixAt(i, M);
+          ib.setColorAt(i, C.setHex(p.shirt ?? shirts[(pi * 7) % shirts.length]));
+          M.compose(V.set(p.x, p.y + legH + torso + 0.12, p.z), Q.identity(), S.set(1, 1.15, 1)); ih.setMatrixAt(i, M);
+        });
+        for (const m of [ib, ih, ip]) { m.instanceMatrix.needsUpdate = true; if (m.instanceColor) m.instanceColor.needsUpdate = true; scene.add(m); track(m, g.cell); }
+      }
     }
   }
 
@@ -533,7 +678,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8 } = {}) {
     osmBuilding, osmFind, claim, rand, quad: (mat, p, n, uvs) => quad(spec(mat), p, n, uvs || [[0, 0], [1, 0], [1, 1], [0, 1]]), hpoly: (mat, poly, y, up = true, holes) => hpoly(spec(mat), poly, y, up, holes),
     pointInPoly, polyBBox, polyArea, orient,
     // internals for engine
-    _: { bounce, finalize, frameFns, interactables, spawns, zonesList, elevators, claims, mapMarks, groundHoles, stats, atlas, trees, people, setCurrent: (id, meta) => { current = id; if (meta) perPlace[id] = meta; } },
+    _: { bounce, cull, cullList, finalize, frameFns, interactables, spawns, zonesList, elevators, claims, mapMarks, groundHoles, stats, atlas, trees, people, setCurrent: (id, meta) => { current = id; if (meta) perPlace[id] = meta; } },
   };
   return K;
 }

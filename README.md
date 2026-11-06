@@ -19,3 +19,8 @@
 - `node tests/walk.mjs`: 연결 통로, 엘리베이터 각 층 출입, 스폰, 지하상가 장거리 경로를 실제로 걸어서(경로 탐색) 확인합니다.
 - `node tests/shot.mjs --gpu --out shots/x --views "이름:x,y,z,yaw,pitch"`: 1인칭 스크린샷을 찍습니다.
 - 디버그: `tests/floormap.mjs`(층 평면 통행 지도), `tests/walls_near.mjs`(어떤 코드가 벽을 세웠는지), `tests/atlas_stats.mjs`(간판 텍스처 사용량).
+- 성능: `node tests/perf.mjs [--cpu 4]`(실제 GPU, CPU 감속으로 저사양 흉내), 화면 회귀: `tests/regress_views.txt` 시점을 `shot.mjs`로 찍어 이전 결과와 비교.
+
+## 저사양 대응
+
+디테일(지오메트리)은 줄이지 않고 그리는 방식만 바꿉니다. 지하 실내 칸은 지상에서 멀면 그리지 않고, 깊은 지하에 있을 때는 먼 바깥을 그리지 않습니다. 같은 크기 텍스처는 텍스처 배열로 묶어 드로우콜을 줄였고, 간판 글자는 첫 화면 뒤에 가까운 것부터 채웁니다. 프레임이 떨어지면 렌더 해상도만 자동으로 낮춥니다(HUD에 % 표시). `?q=low`는 MSAA를 끄고 해상도 상한을 낮춥니다(폰·메모리 4GB 이하는 자동).
