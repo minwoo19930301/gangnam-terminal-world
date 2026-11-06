@@ -7,6 +7,7 @@ import { createMap } from './map.js';
 import { FONT } from './textures.js';
 import { planArea, areaIdAt, areaIdForKey, areaName, districtAt, OUTDOOR } from './areas.js';
 import { JUNCTIONS } from './places/_junctions.js';
+import { LANDMARKS } from './landmarks.js';
 
 const Q = new URLSearchParams(location.search);
 const SHOT = Q.has('shot');
@@ -110,6 +111,94 @@ async function boot() {
   K._.finalize(); mark('finalize');
   K._.cull(6, 1.6, -125, true);
   const traffic = roadsInfo && Q.get('traffic') !== '0' ? createTraffic(K, roadsInfo, 180) : null;
+
+  // ---- virtual doors: every way into another page is a visible door with a sign (js/places/_meta.json entrances/junctions) ----
+  // Walking through one reloads straight into the page behind it (no waiting). Outdoors: a door at every building entrance
+  // ("<building> 들어가기"); inside a building: doors out ("밖으로 · <district>") and into the buildings its corridors lead to.
+  const portals = [];
+  if (META && AREA.id !== 'all') {
+    const OWNP = AREA.id.startsWith('in:') ? new Set(AREA.id.slice(3).split('+')) : null;
+    const add = (x, z, y, w, nx, nz, target, label, key) => portals.push({ x, z, y, w, nx, nz, tx: -nz, tz: nx, target, label, key });
+    for (const [mid, v] of Object.entries(META)) {
+      if (OUTDOOR.has(mid)) continue;
+      const inArea = !OWNP && AREA.box && v.box && !(v.box[2] < AREA.box[0] - 150 || v.box[0] > AREA.box[2] + 150 || v.box[3] < AREA.box[1] - 150 || v.box[1] > AREA.box[3] + 150);
+      for (const e of v.entrances || []) {
+        if (OWNP && OWNP.has(mid)) { // a door out of this building: walking along +n leaves
+          const tgt = e.other && !OWNP.has(e.other) ? areaIdAt({ place: e.other }, 0, 0, 0) : 'out:' + districtAt(e.x + e.nx * 3, e.z + e.nz * 3).id;
+          if (tgt === AREA.id) continue;
+          add(e.x, e.z, e.y, e.w, e.nx, e.nz, tgt, e.other && !OWNP.has(e.other) ? `${META[e.other]?.name || e.other} 가기` : `밖으로 · ${areaName(tgt, META)}`, `${e.other || 'street'}/1F`);
+        } else if (!OWNP && inArea) { // outdoors: a door into this building (walking against n enters)
+          add(e.x, e.z, e.y, e.w, -e.nx, -e.nz, areaIdAt({ place: mid }, 0, 0, 0), `${v.name} 들어가기`, `${mid}/1F`);
+        }
+      }
+      if (OWNP && OWNP.has(mid)) for (const j of v.junctions || []) { // corridors to the next building
+        if (OWNP.has(j.other) || j.nx == null) continue;
+        add(j.x, j.z, j.y, 7, j.nx, j.nz, areaIdAt({ place: j.other }, 0, 0, 0), `${META[j.other]?.name || j.other} 가기`, `${j.other}/${j.y < -1 ? 'B1' : '1F'}`);
+      }
+    }
+    // the visible door: thin glowing frame, a light curtain and a sign above (one sign per 18 m cluster of doors to the same place)
+    const frameMat = new THREE.MeshBasicMaterial({ color: 0x9fd8ff, transparent: true, opacity: 0.85, fog: false });
+    const curtainMat = new THREE.MeshBasicMaterial({ color: 0x6fc3ff, transparent: true, opacity: 0.16, depthWrite: false, side: THREE.DoubleSide });
+    const signed = [];
+    for (const p of portals) {
+      const g = new THREE.Group(); g.position.set(p.x, p.y, p.z); g.rotation.y = Math.atan2(p.tx, p.tz) - Math.PI / 2;
+      const h = 2.7, w = Math.min(p.w, 12);
+      const bar = (bw, bh, x, y) => { const m = new THREE.Mesh(new THREE.BoxGeometry(bw, bh, 0.06), frameMat); m.position.set(x, y, 0); g.add(m); };
+      bar(0.07, h, -w / 2, h / 2); bar(0.07, h, w / 2, h / 2); bar(w, 0.07, 0, h);
+      const c = new THREE.Mesh(new THREE.PlaneGeometry(w, h), curtainMat); c.position.y = h / 2; g.add(c);
+      if (!signed.some(s => s.label === p.label && Math.hypot(s.x - p.x, s.z - p.z) < 18)) {
+        signed.push(p);
+        const cv = document.createElement('canvas'); cv.width = 512; cv.height = 112; const cx = cv.getContext('2d');
+        cx.fillStyle = 'rgba(16,40,70,0.88)'; cx.beginPath(); cx.roundRect ? cx.roundRect(4, 4, 504, 104, 22) : cx.rect(4, 4, 504, 104); cx.fill();
+        cx.fillStyle = '#fff'; cx.font = `700 44px ${FONT}`; cx.textAlign = 'center'; cx.textBaseline = 'middle'; cx.fillText(p.label + ' ▸', 256, 58, 480);
+        const tex = new THREE.CanvasTexture(cv); tex.colorSpace = THREE.SRGBColorSpace;
+        const sm = new THREE.Mesh(new THREE.PlaneGeometry(3.2, 0.7), new THREE.MeshBasicMaterial({ map: tex, transparent: true, side: THREE.DoubleSide, fog: false }));
+        sm.position.set(0, h - 0.5, 0.45); g.add(sm); // inside the top of the frame, a little toward the side you approach from
+      }
+      g.renderOrder = 3; scene.add(g); p.mesh = g;
+    }
+  }
+  // walked through a door this frame? (segment from the last position crosses the door line, inside its width/height)
+  let lastPos = null; let portalArmed = false;
+  function portalCheck() {
+    const P = { x: player.x, y: player.y, z: player.z };
+    if (!lastPos) { lastPos = P; return; }
+    if (!portalArmed) { if (performance.now() - bootT > 2500) portalArmed = true; lastPos = P; return; }
+    for (const p of portals) {
+      if (Math.abs(P.y - p.y) > 3.5) continue;
+      const a = (lastPos.x - p.x) * p.nx + (lastPos.z - p.z) * p.nz, b = (P.x - p.x) * p.nx + (P.z - p.z) * p.nz;
+      if (!(a < 0 && b >= 0)) continue; // must cross along the door's direction (into the next page)
+      const t = a / (a - b), cx = lastPos.x + (P.x - lastPos.x) * t, cz = lastPos.z + (P.z - lastPos.z) * t;
+      if (Math.abs((cx - p.x) * p.tx + (cz - p.z) * p.tz) > p.w / 2 + 0.4) continue;
+      reloadAt(p.key, P.x + p.nx * 1.5, P.y, P.z + p.nz * 1.5, player.yaw * 180 / Math.PI, areaName(p.target, META));
+      return;
+    }
+    lastPos = P;
+  }
+  // ---- 3D pins over the key places (outdoors only) ----
+  const pins = [];
+  if (!SHOT && (AREA.id === 'all' || AREA.id.startsWith('out:'))) {
+    for (const L of LANDMARKS) {
+      const cv = document.createElement('canvas'); cv.width = 512; cv.height = 160; const cx = cv.getContext('2d');
+      cx.font = `700 46px ${FONT}`; const tw = Math.min(470, cx.measureText(L.name).width + 60);
+      cx.fillStyle = L.color || '#2a5d9f'; cx.beginPath(); cx.roundRect ? cx.roundRect(256 - tw / 2, 6, tw, 84, 20) : cx.rect(256 - tw / 2, 6, tw, 84); cx.fill();
+      cx.beginPath(); cx.moveTo(240, 88); cx.lineTo(272, 88); cx.lineTo(256, 118); cx.closePath(); cx.fill();
+      cx.fillStyle = '#fff'; cx.textAlign = 'center'; cx.textBaseline = 'middle'; cx.fillText(L.name, 256, 50, 450);
+      if (L.sub) { cx.font = `500 30px ${FONT}`; cx.fillStyle = '#20303a'; cx.fillText(L.sub, 256, 140, 470); }
+      const tex = new THREE.CanvasTexture(cv); tex.colorSpace = THREE.SRGBColorSpace;
+      const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, depthTest: false, fog: false, transparent: true }));
+      sp.position.set(L.x, (L.y || 10) + 6, L.z); sp.renderOrder = 10; scene.add(sp); pins.push({ L, sp });
+    }
+  }
+  function pinUpdate() {
+    if (!pins.length) return;
+    const indoor = player.y < -2 || (currentZone && currentZone.place && !OUTDOOR.has(currentZone.place) && phys.ceilingAbove(player.x, player.z, player.y + 0.5, player.y + 12) < Infinity);
+    for (const { L, sp } of pins) {
+      const d = Math.hypot(L.x - player.x, L.z - player.z);
+      sp.visible = !indoor && d > 30 && d < 1600;
+      const s = Math.max(10, Math.min(170, d * 0.11)); sp.scale.set(s, s * 160 / 512, 1); // ~6° wide: readable at any distance
+    }
+  }
 
   // ---- player ----
   const player = createPlayer(phys, { respawn: { x: 6, y: 0, z: -125, yaw: 0 } });
@@ -355,7 +444,7 @@ async function boot() {
     // zone + interactables
     currentZone = phys.zoneAt(player.x, player.y + 0.1, player.z);
     route.update(currentZone);
-    areaWatch(currentZone);
+    areaWatch(currentZone); portalCheck(); pinUpdate();
     const zname = currentZone ? currentZone.name : (player.y < -2 ? '지하' : '거리');
     hudZone.textContent = zname + (currentZone && currentZone.floor ? ` · ${currentZone.floor}` : '');
     hudSub.textContent = currentZone ? currentZone.sub : '';

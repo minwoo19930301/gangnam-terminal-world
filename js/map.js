@@ -1,3 +1,4 @@
+import { LANDMARKS } from './landmarks.js';
 // Vector map. Geometry, label metrics and collision storage are prepared once;
 // the full-map base is invalidated only by view/layer changes, not player motion.
 export function createMap(opts) {
@@ -189,6 +190,7 @@ export function createMap(opts) {
     const key = `${item.name}/${item.x}/${item.z}/${item.y}`; if (searchKeys.has(key)) return; searchKeys.add(key);
     item.match = `${item.name} ${item.group || ''} ${item.floor || ''} ${item.sub || ''}`.normalize('NFKC').toLocaleLowerCase().replace(/\s/g, ''); searchItems.push(item);
   }
+  for (const L of LANDMARKS) addSearch({ name: L.name, sub: L.sub, x: L.x, z: L.z, y: L.floorY ?? 0, type: '핵심 지점', exact: true });
   for (const s of spawns) addSearch({ ...s, type: '출발 지점', exact: true });
   for (const p of placeMarks) addSearch({ name: p.name, x: p.x, z: p.z, y: p.y, place: p.id, type: '탐색 장소' });
   for (const r of zoneRecords) addSearch({ name: r.source.name, sub: r.source.sub, floor: r.floor, x: r.x, z: r.z, y: r.y0, place: r.place, type: '층별 공간', group: placeIndex.get(r.place)?.name });
@@ -309,6 +311,15 @@ export function createMap(opts) {
       const x = sx(v, p.x, p.z), y = sy(v, p.x, p.z); if (x < 0 || y < 0 || x > v.w || y > v.h) continue;
       if (!reserve(x, y, 6, 6, v)) continue;
       ctx.beginPath(); ctx.arc(x, y, 3.5, 0, TAU); ctx.fillStyle = p.color; ctx.fill(); textLabel(ctx, v, p.label, p.color, 18);
+    }
+    // key places: pins (always drawn, labels when there is room)
+    for (const L of LANDMARKS) {
+      const x = sx(v, L.x, L.z), y = sy(v, L.x, L.z); if (x < -20 || y < -20 || x > v.w + 20 || y > v.h + 20) continue;
+      const r = isMini ? 5 : 8;
+      ctx.beginPath(); ctx.moveTo(x, y); ctx.bezierCurveTo(x - r * 1.2, y - r * 1.4, x - r, y - r * 2.6, x, y - r * 2.6); ctx.bezierCurveTo(x + r, y - r * 2.6, x + r * 1.2, y - r * 1.4, x, y);
+      ctx.fillStyle = L.color || '#2a5d9f'; ctx.fill(); ctx.lineWidth = 1.6; ctx.strokeStyle = '#fff'; ctx.stroke();
+      ctx.beginPath(); ctx.arc(x, y - r * 1.75, r * 0.38, 0, TAU); ctx.fillStyle = '#fff'; ctx.fill();
+      if (!isMini && reserve(x, y - r * 4, 60, 14, v)) { ctx.save(); ctx.translate(x, y - r * 3.6); ctx.font = `700 13px ${FONT}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.lineJoin = 'round'; ctx.lineWidth = 3.5; ctx.strokeStyle = '#fff'; ctx.strokeText(L.name, 0, 0); ctx.fillStyle = L.color || '#2a5d9f'; ctx.fillText(L.name, 0, 0); ctx.restore(); }
     }
   }
   function drawPlayer(ctx, v, isMini) {
