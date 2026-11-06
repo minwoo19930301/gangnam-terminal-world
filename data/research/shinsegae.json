@@ -440,10 +440,10 @@
       "glass bay": "7~20 및 24~40.6; y20~24는 검은 후퇴 띠",
       "slot parapet": 48
     },
-    "circulation": "Round10현재:1F/1M공식도면상NW코어와남동엘리베이터,중앙기존B1/상층에스컬레이터,3게이트J4,1게이트방면J8,센트럴시티2F에스컬레이터J9. 이전round의HOS메자닌/남측대계단기록은폐기.",
+    "circulation": "Round11현재: 1F 중앙축 양끝 병렬뱅크2곳(각2F상승/B1하강),사이팝업3개. 엘리베이터는 실제북서벽u0,1M상승은u10.6. 남동1F리프트/기존1F중앙스택제거. J1/J4/J5/J8/J9유지,2F이상 기존스택보존. 북서1M도착에서 멤버스바,남쪽링에베키아에누보.",
     "connections": "J1 소유 통로의 8m 중앙 동선과 바닥/천장을 유지하고 양옆에 중립적 상품군 쇼윈도를 둔다. 서북쪽 첫 점포 자리는 역 모듈 환승 엘리베이터(-76,-82)의 B1 출입을 위해 비워 둔다. J4 1F/B1 센트럴시티 개구, J5 1F JW 개구 유지. 이 모듈을 지칭하는 WELLS는 없다.",
     "osm_pois_placed": "OSM159117108 윤곽과 J1/J4/J5 연결 유지. 실내 점포 위치는 공식1F 안내도·사진을 기존 건물 좌표에 맞춘 추정 배치다.",
-    "brand_placement_note": "사진·공식 도면에서 판독한 화장품 브랜드, Nespresso, Standard Bread, 한정선, SEASONIQUE, Blue Butterfly, Superstar, KATSU & TAPAS, BY THE GLASS, 金寿司, TACHIBANA, K2, le coq sportif, Dr. Martens 표기를 쓴다. 기존 연구로 확인한 상층 브랜드는 유지하며 미확인 목록은 한국어 상품군 표기를 유지한다. 실제 현재 입점 위치까지 측량한 것은 아니다.",
+    "brand_placement_note": "1F는 .codex-jobs/evidence/shinsegae_1f_official_brands.json의47화장품·14액세서리·5선글라스·다이슨·타사키·케이스스터디·에르메스파빌리온 전종을 도면셀에 배치. 부기된 LV뷰티/페로즈만 도면추가허용. B1/상층은 기존조사브랜드보존. 세부집기·팝업은추정.",
     "massing": "OSM 159117108 외곽선과 v33 본관/신관 분할, 본관 8F 옥상 40.6m와 신관 11F 옥상 55m를 유지한다. 북측 양끝 타워는 각각 18.5×18.5m 정사각 평면으로 좁히고 서측 상단 55m, 동측 상단 57.4m로 높였다. 타워 사이 낮은 석재 어깨는 y40.6m다. 중앙 곡면 유리는 폭 12m, 반경 6m, 중심 v8, 최전면 v2로 석재 전면보다 후퇴하며 y7~20m와 y24~40.6m로 나뉜다. 그 뒤 u18.5~48.5/v8~33에는 y40.6~48m 평면 커튼월 볼륨, 더 뒤 v33에는 y40.6~55.65m 신관 북면 커튼월이 놓인다. 전체 층고와 타워 상단 높이는 사진 비례를 모델 층고에 맞춘 가정이며 실측값이 아니다.",
     "map_detail": "모든 층·주차장·화장실·승강기·에스컬레이터·연결통로 존과 OSM159117108 claim 유지. 정문 승하차장/동측 지상주차장/추정 B2 차량 램프 존을 추가한다. 존 경계는 모델 배치다.",
     "reference_priority": "Round10공식floor_1F.png/floor_1M.jpg의입점층/셀배치우선. 사진은재료/높이관계및GATE2북측정문근거. 이전미확인Gate7표기와층미상HOS사진배치는공식도면에따라수정.",
@@ -545,38 +545,92 @@
       }
     ],
     "validation": {
-      "round": 10,
-      "status": "passed; operator WebGL comparison pending",
+      "round": 11,
+      "date": "2026-11-07",
+      "status": "requested scope passed;3 newly-added unrelated route failures remain outside allowed files; operator render pending",
       "smoke": {
         "command": "node tests/smoke.mjs shinsegae centralcity gotomall jwmarriott station",
         "result": "OK",
-        "date": "2026-11-07"
+        "warnings": "10 source-car radial-adjacency advisories for remote elevator destinations. Destination floor checks and all-floor exits pass."
       },
       "walk": {
         "command": "node tests/walk.mjs",
-        "result": "walk: 494 ok, 0 blocked",
-        "date": "2026-11-07",
-        "scope": "All current repository modules plus city; every lazy detail group built."
+        "result": "walk:589 ok,0 blocked",
+        "snapshot_start_KST": "2026-11-07 04:23:41",
+        "scope": "all modules+city+all detail; original requested suite before concurrent route additions"
       },
-      "targeted_routes": {
-        "checked": 36,
-        "blocked": 0,
-        "detail_errors": []
+      "connected_walk": {
+        "command": "node tests/walk.mjs shinsegae centralcity gotomall jwmarriott station --no-city --verbose",
+        "result": "walk:287 ok,0 blocked",
+        "required_1F_routes": "9/9segments pass"
       },
-      "trace_cameras": {
-        "ground_middle_checked": 98,
-        "failed": 0,
-        "total_current_trace_entries": 119,
-        "rendered": false
+      "concurrent_test_additions": {
+        "test_file_mtime_KST": "2026-11-07 04:24:01",
+        "audit_copy_KST": "2026-11-07 04:26:02",
+        "audit_finished_KST": "2026-11-07 04:28:27",
+        "method": "/tmp copy with same all-module/city/full-detail physics+BFS; filtered only7new사용자루트; repository tests untouched",
+        "result": "22 passed,3 blocked",
+        "scope_related_routes4and5": "9/9passed including B1→1F and Honam hall exit",
+        "outside_scope_failures": [
+          {
+            "route": "추가 루트1 [2→3] 거리→고투몰 동편",
+            "from_xzy": [
+              330,
+              -300,
+              0
+            ],
+            "to_xzy": [
+              345.3,
+              -257.8,
+              -6
+            ]
+          },
+          {
+            "route": "추가 루트6 [2→3] 달빛광장→세빛섬",
+            "from_xzy": [
+              -629,
+              -736,
+              0.1
+            ],
+            "to_xzy": [
+              -882,
+              -723,
+              0
+            ]
+          },
+          {
+            "route": "추가 루트7 [1→2] 공원→잠수교",
+            "from_xzy": [
+              -704.5,
+              -793.1,
+              0.065
+            ],
+            "to_xzy": [
+              -700,
+              -934,
+              1.6
+            ]
+          }
+        ],
+        "note": "Current expanded complete suite is NOT claimed to have0blocked. All3 failed searchbboxes lie outside shinsegae/centralcity. No unauthorized edits to repair them."
+      },
+      "scene_audit": {
+        "trace_cameras": 91,
+        "opaque_forward_blockers_within_2_5m": 0,
+        "HOS_phantom_floor_samples": 88,
+        "HOS_phantom_floor_hits": 0,
+        "shinsegae_lanes": "4central+NW1M and6NWlift1F/1M/2Fexits pass support/collision/headroom/actualmeshrays"
+      },
+      "floormap": {
+        "command": "node tests/floormap.mjs 0 -175 -65 20 230 /tmp/f1r11-floormap.png -75 -10 shinsegae,centralcity,jwmarriott",
+        "result": "PNG generated and opened; J4/HOS/Famille approach green;3JW BOH blocks intentionallywhite",
+        "limitation": "stock floormap excludes lazy furniture; detailed walk verifies furnishings"
       },
       "metadata": {
         "command": "node tools/gen_meta.mjs",
-        "result": "generated successfully",
-        "shinsegae_entrance_fragments": 8,
-        "centralcity_entrance_fragments": 28,
-        "note": "Entries count detectable zone-outline opening fragments; a single physical gate may produce two entries."
+        "result": "generated successfully after final geometry"
       },
-      "details": "See modeling.round10.validation for final audit details; validation_history preserves earlier rounds."
+      "visual_render": "tests/shot.mjs not run as instructed. modeling.trace ready for operator render."
     },
     "roof": "항공사진의 기존 설비 단순화는 유지한다. 2026 ssg_06 유리 볼륨 지붕선 위 두 무더기 수관에 근거해 y48m/u20~47/v9~16 범위에 높이0.6m 화단2개와 높이3.5~4.3m 수목6그루를 추가하며 u24~30·42~46 쪽에 모은다. 녹지의 존재는 확인되나 수종·화단 형태·나무 수량과 높이는 근사다. 본관 막지붕·중앙 기계실·냉각탑7기·실외기16기·신관 자갈지붕의 기존 배치도 항공 명암을 따른 추정이며 일시적 증기는 생략한다.",
     "cross_module_coordination": {
@@ -875,6 +929,40 @@
           "method": "실제 kit/physics로 지연 디테일 전부 생성 후 지지면·capsule 충돌 검사. Superstar/Standard Bread/김수사 3개 시점은 가구를 피해 이동 후 재검사.",
           "direction_check": "1F 사인벽·상층 식음·K2·닥터마틴 전면 방향 확인.르꼬끄 시점을 북측으로 옮겨 전면 로고를 보게 했고,한정선/시즈니크 카운터 전면을 대기줄 쪽인 남쪽으로 회전했다."
         }
+      },
+      "round10_before_round11": {
+        "round": 10,
+        "status": "passed; operator WebGL comparison pending",
+        "smoke": {
+          "command": "node tests/smoke.mjs shinsegae centralcity gotomall jwmarriott station",
+          "result": "OK",
+          "date": "2026-11-07"
+        },
+        "walk": {
+          "command": "node tests/walk.mjs",
+          "result": "walk: 494 ok, 0 blocked",
+          "date": "2026-11-07",
+          "scope": "All current repository modules plus city; every lazy detail group built."
+        },
+        "targeted_routes": {
+          "checked": 36,
+          "blocked": 0,
+          "detail_errors": []
+        },
+        "trace_cameras": {
+          "ground_middle_checked": 98,
+          "failed": 0,
+          "total_current_trace_entries": 119,
+          "rendered": false
+        },
+        "metadata": {
+          "command": "node tools/gen_meta.mjs",
+          "result": "generated successfully",
+          "shinsegae_entrance_fragments": 8,
+          "centralcity_entrance_fragments": 28,
+          "note": "Entries count detectable zone-outline opening fragments; a single physical gate may produce two entries."
+        },
+        "details": "See modeling.round10.validation for final audit details; validation_history preserves earlier rounds."
       }
     },
     "round4_resolutions": {
@@ -1410,2108 +1498,372 @@
         "note": "11F 직접 참조사진 없음. 기존 조사 식당명과 목재·석재·식탁·대기석으로 보강한 추정 공간."
       },
       {
-        "spot": "1F · 프레데릭 말",
+        "id": "hall_a",
+        "spot": "1층 브랜드 셀 격자 · 북쪽 팝업",
         "photos": [
           "refs/official/shinsegae/floor_1F.png"
         ],
-        "x": -45.909,
+        "x": -50.352,
         "y": 0,
-        "z": -27.151,
-        "yawDeg": 200.804,
+        "z": -4.666,
+        "yawDeg": 110.785,
         "pitchDeg": 0,
         "local_uv": [
-          58.191,
-          19.054
+          46,
+          38.5
         ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_cell_1823x1367": [
-          143,
-          548,
-          176,
-          608
+        "target_local_uv": [
+          32,
+          38.5
         ],
-        "construction": "벽 없는 독립 카운터, 높이0.94m",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        "round": 11,
+        "note": "보행바닥 높이 y. 렌더러가 눈높이를 더함. 내부 집기/마감은 도면과 사용자 설명에 따른 도식적 복원.",
+        "camera_qa": "지지바닥/캡슐/머리공간 통과; 정면2.5m불투명차폐없음"
       },
       {
-        "spot": "1F · 로라 메르시에",
+        "id": "hall_b",
+        "spot": "1층 중앙 팝업과 양끝 에스컬레이터",
         "photos": [
           "refs/official/shinsegae/floor_1F.png"
         ],
-        "x": -47.926,
+        "x": -70.542,
         "y": 0,
-        "z": -26.385,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          56.03,
-          19.054
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_cell_1823x1367": [
-          177,
-          548,
-          208,
-          608
-        ],
-        "construction": "벽 없는 독립 카운터, 높이0.94m",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F · 조르지오 아르마니",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -51.93,
-        "y": 0,
-        "z": -24.865,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          51.74,
-          19.054
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_cell_1823x1367": [
-          234,
-          548,
-          282,
-          608
-        ],
-        "construction": "벽 없는 독립 카운터, 높이0.94m",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F · 에르메스 퍼퓸",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -55.659,
-        "y": 0,
-        "z": -23.449,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          47.745,
-          19.054
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_cell_1823x1367": [
-          283,
-          548,
-          355,
-          608
-        ],
-        "construction": "벽 없는 독립 카운터, 높이0.94m",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F · 연작",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -62.121,
-        "y": 0,
-        "z": -22.317,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          41.294,
-          17.819
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_cell_1823x1367": [
-          388,
-          548,
-          447,
-          587
-        ],
-        "construction": "벽 없는 독립 카운터, 높이0.94m",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F · 클라랑스",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -65.851,
-        "y": 0,
-        "z": -20.901,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          37.299,
-          17.819
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_cell_1823x1367": [
-          449,
-          548,
-          508,
-          587
-        ],
-        "construction": "벽 없는 독립 카운터, 높이0.94m",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F · 에이피 뷰티",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -70.864,
-        "y": 0,
-        "z": -18.998,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          31.928,
-          17.819
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_cell_1823x1367": [
-          530,
-          548,
-          591,
-          587
-        ],
-        "construction": "벽 없는 독립 카운터, 높이0.94m",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F · SK-II",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -74.654,
-        "y": 0,
-        "z": -17.559,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          27.868,
-          17.819
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_cell_1823x1367": [
-          592,
-          548,
-          653,
-          587
-        ],
-        "construction": "벽 없는 독립 카운터, 높이0.94m",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F · 헤라",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -79.97,
-        "y": 0,
-        "z": -14.346,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          21.744,
-          18.937
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_cell_1823x1367": [
-          682,
-          546,
-          750,
-          608
-        ],
-        "construction": "벽 없는 독립 카운터, 높이0.94m",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F · 라프레리",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -83.455,
-        "y": 0,
-        "z": -13.023,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          18.011,
-          18.937
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_cell_1823x1367": [
-          752,
-          546,
-          794,
-          608
-        ],
-        "construction": "벽 없는 독립 카운터, 높이0.94m",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F · 바비 브라운",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -44.353,
-        "y": 0,
-        "z": -20.129,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          57.143,
-          26.172
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_cell_1823x1367": [
-          143,
-          609,
-          208,
-          668
-        ],
-        "construction": "벽 없는 독립 카운터, 높이0.94m",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F · 구찌뷰티",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -49.373,
-        "y": 0,
-        "z": -18.161,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          51.74,
-          26.23
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_cell_1823x1367": [
-          234,
-          609,
-          282,
-          669
-        ],
-        "construction": "벽 없는 독립 카운터, 높이0.94m",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F · 겔랑",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -53.1,
-        "y": 0,
-        "z": -16.746,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          47.745,
-          26.23
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_cell_1823x1367": [
-          283,
-          609,
-          355,
-          669
-        ],
-        "construction": "벽 없는 독립 카운터, 높이0.94m",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F · 키엘",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -59.501,
-        "y": 0,
-        "z": -14.819,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          41.065,
-          25.76
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_cell_1823x1367": [
-          388,
-          608,
-          454,
-          662
-        ],
-        "construction": "벽 없는 독립 카운터, 높이0.94m",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F · 산타마리아노벨라",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -63.565,
-        "y": 0,
-        "z": -13.276,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          36.709,
-          25.76
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_cell_1823x1367": [
-          455,
-          608,
-          520,
-          662
-        ],
-        "construction": "벽 없는 독립 카운터, 높이0.94m",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F · 시세이도",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -67.628,
-        "y": 0,
-        "z": -11.734,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          32.354,
-          25.76
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_cell_1823x1367": [
-          521,
-          608,
-          587,
-          662
-        ],
-        "construction": "벽 없는 독립 카운터, 높이0.94m",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F · 랑콤",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -71.691,
-        "y": 0,
-        "z": -10.191,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          27.999,
-          25.76
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_cell_1823x1367": [
-          588,
-          608,
-          653,
-          662
-        ],
-        "construction": "벽 없는 독립 카운터, 높이0.94m",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F · 시슬리",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -77.338,
-        "y": 0,
-        "z": -7.482,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          21.744,
-          26.289
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_cell_1823x1367": [
-          682,
-          610,
-          750,
-          669
-        ],
-        "construction": "벽 없는 독립 카운터, 높이0.94m",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F · 끌레드뽀보떼",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -80.821,
-        "y": 0,
-        "z": -6.16,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          18.011,
-          26.289
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_cell_1823x1367": [
-          752,
-          610,
-          794,
-          669
-        ],
-        "construction": "벽 없는 독립 카운터, 높이0.94m",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F · 맥",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -41.003,
-        "y": 0,
-        "z": -11.524,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          57.209,
-          35.406
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_cell_1823x1367": [
-          142,
-          688,
-          207,
-          746
-        ],
-        "construction": "벽 없는 독립 카운터, 높이0.94m",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F · 나스",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -46.103,
-        "y": 0,
-        "z": -9.588,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          51.74,
-          35.406
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_cell_1823x1367": [
-          234,
-          688,
-          282,
-          746
-        ],
-        "construction": "벽 없는 독립 카운터, 높이0.94m",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F · 톰포드 뷰티",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -49.859,
-        "y": 0,
-        "z": -8.163,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          47.712,
-          35.406
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_cell_1823x1367": [
-          284,
-          688,
-          355,
-          746
-        ],
-        "construction": "벽 없는 독립 카운터, 높이0.94m",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F · 샤넬 코스메틱",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -75.418,
-        "y": 0,
-        "z": 1.539,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          20.303,
-          35.406
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_cell_1823x1367": [
-          682,
-          688,
-          794,
-          746
-        ],
-        "construction": "벽 없는 독립 카운터, 높이0.94m",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F · 디올",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -37.076,
-        "y": 0,
-        "z": -1.125,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          57.176,
-          46.523
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_cell_1823x1367": [
-          143,
-          782,
-          207,
-          841
-        ],
-        "construction": "벽 없는 독립 카운터, 높이0.94m",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F · 아베다",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -42.142,
-        "y": 0,
-        "z": 0.798,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          51.74,
-          46.523
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_cell_1823x1367": [
-          234,
-          782,
-          282,
-          841
-        ],
-        "construction": "벽 없는 독립 카운터, 높이0.94m",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F · 에스티로더",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -45.864,
-        "y": 0,
-        "z": 2.211,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          47.745,
-          46.523
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_cell_1823x1367": [
-          283,
-          782,
-          355,
-          841
-        ],
-        "construction": "벽 없는 독립 카운터, 높이0.94m",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F · 프라다 뷰티",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -70.211,
-        "y": 0,
-        "z": 11.83,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          21.482,
-          46.876
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_cell_1823x1367": [
-          690,
-          786,
-          750,
-          843
-        ],
-        "construction": "벽 없는 독립 카운터, 높이0.94m",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F · 바이레도",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -73.69,
-        "y": 0,
-        "z": 13.15,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          17.749,
-          46.876
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_cell_1823x1367": [
-          752,
-          786,
-          802,
-          843
-        ],
-        "construction": "벽 없는 독립 카운터, 높이0.94m",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F · 메이크업포에버",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -32.665,
-        "y": 0,
-        "z": 7.518,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          58.224,
-          56.17
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_cell_1823x1367": [
-          143,
-          861,
-          175,
-          926
-        ],
-        "construction": "벽 없는 독립 카운터, 높이0.94m",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F · 베네피트",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -34.709,
-        "y": 0,
-        "z": 8.294,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          56.03,
-          56.17
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_cell_1823x1367": [
-          177,
-          861,
-          208,
-          926
-        ],
-        "construction": "벽 없는 독립 카운터, 높이0.94m",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F · 오휘/후",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -38.704,
-        "y": 0,
-        "z": 9.81,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          51.74,
-          56.17
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_cell_1823x1367": [
-          234,
-          861,
-          282,
-          926
-        ],
-        "construction": "벽 없는 독립 카운터, 높이0.94m",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F · 설화수",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -42.425,
-        "y": 0,
-        "z": 11.223,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          47.745,
-          56.17
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_cell_1823x1367": [
-          283,
-          861,
-          355,
-          926
-        ],
-        "construction": "벽 없는 독립 카운터, 높이0.94m",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F · 로에베 퍼퓸",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -48.372,
-        "y": 0,
-        "z": 13.48,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          41.359,
-          56.17
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_cell_1823x1367": [
-          388,
-          861,
-          445,
-          926
-        ],
-        "construction": "벽 없는 독립 카운터, 높이0.94m",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F · 크리드",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -51.604,
-        "y": 0,
-        "z": 14.707,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          37.888,
-          56.17
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_cell_1823x1367": [
-          447,
-          861,
-          492,
-          926
-        ],
-        "construction": "벽 없는 독립 카운터, 높이0.94m",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F · 킬리안",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -54.654,
-        "y": 0,
-        "z": 15.865,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          34.613,
-          56.17
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_cell_1823x1367": [
-          495,
-          861,
-          544,
-          926
-        ],
-        "construction": "벽 없는 독립 카운터, 높이0.94m",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F · 아쿠아 디 파르마",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -57.856,
-        "y": 0,
-        "z": 17.08,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          31.175,
-          56.17
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_cell_1823x1367": [
-          546,
-          861,
-          598,
-          926
-        ],
-        "construction": "벽 없는 독립 카운터, 높이0.94m",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F · 탬버린즈",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -61.18,
-        "y": 0,
-        "z": 18.341,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          27.606,
-          56.17
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_cell_1823x1367": [
-          600,
-          861,
-          653,
-          926
-        ],
-        "construction": "벽 없는 독립 카운터, 높이0.94m",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F · 케이스스터디",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -67.982,
-        "y": 0,
-        "z": 20.923,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          20.303,
-          56.17
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_cell_1823x1367": [
-          682,
-          861,
-          794,
-          926
-        ],
-        "construction": "벽 없는 독립 카운터, 높이0.94m",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F · 다이슨 뷰티",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -31.285,
-        "y": 0,
-        "z": 14.165,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          57.143,
-          62.875
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_cell_1823x1367": [
-          143,
-          933,
-          208,
-          968
-        ],
-        "construction": "벽 없는 독립 카운터, 높이0.94m",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F · 메종 프란시스 커정",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -86.297,
-        "y": 0,
-        "z": -9.113,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          13.95,
-          21.584
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_cell_1823x1367": [
-          820,
-          575,
-          850,
-          624
-        ],
-        "construction": "벽 없는 독립 카운터, 높이0.94m",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F · 샤넬 코스메틱",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -83.19,
-        "y": 0,
-        "z": 1.344,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          13.099,
-          32.465
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_cell_1823x1367": [
-          820,
-          664,
-          876,
-          720
-        ],
-        "construction": "벽 없는 독립 카운터, 높이0.94m",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F · 톰포드 · 레이밴 · 페라가모 · 구찌 선글라스",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -73.655,
-        "y": 0,
-        "z": 23.893,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          13.917,
-          56.934
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_cell_1823x1367": [
-          820,
-          863,
-          851,
-          937
-        ],
-        "construction": "벽 없는 독립 카운터, 높이0.94m",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F 외곽 부티크 · 루이비통 뷰티 & 프래그런스 스토어",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -42.212,
-        "y": 0,
-        "z": -23.832,
-        "yawDeg": 290.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          60.468,
-          23.469
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_cell_1823x1367": [
-          25,
-          515,
-          111,
-          688
-        ],
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F 외곽 부티크 · 딥티크",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -54.396,
-        "y": 0,
-        "z": -29.128,
-        "yawDeg": 20.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          50.954,
-          14.193
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_cell_1823x1367": [
-          220,
-          432,
-          320,
-          515
-        ],
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F 외곽 부티크 · 파빌리온 에르메스",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -61.306,
-        "y": 0,
-        "z": -26.505,
-        "yawDeg": 20.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          43.553,
-          14.193
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_cell_1823x1367": [
-          321,
-          403,
-          445,
-          515
-        ],
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F 외곽 부티크 · 뽀아레",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -75.799,
-        "y": 0,
-        "z": -21.003,
-        "yawDeg": 20.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          28.031,
-          14.193
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_cell_1823x1367": [
-          595,
-          426,
-          645,
-          515
-        ],
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F 외곽 부티크 · 스위스퍼펙션",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -79.1,
-        "y": 0,
-        "z": -19.749,
-        "yawDeg": 20.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          24.495,
-          14.193
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_cell_1823x1367": [
-          646,
-          426,
-          702,
-          515
-        ],
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F 외곽 부티크 · 라메르",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -82.617,
-        "y": 0,
-        "z": -18.415,
-        "yawDeg": 20.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          20.729,
-          14.193
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_cell_1823x1367": [
-          703,
-          426,
-          760,
-          515
-        ],
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F 외곽 부티크 · 데코르테",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -90.646,
-        "y": 0,
-        "z": -12.366,
-        "yawDeg": 110.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          11.052,
-          16.999
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_cell_1823x1367": [
-          893,
-          508,
-          944,
-          585
-        ],
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F 외곽 부티크 · 샤넬 코스메틱",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -85.935,
-        "y": 0,
-        "z": -3.02,
-        "yawDeg": 110.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          12.099,
-          27.41
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_cell_1823x1367": [
-          877,
-          586,
-          951,
-          684
-        ],
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F 외곽 부티크 · 르라보",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -85.082,
-        "y": 0,
-        "z": 8.439,
-        "yawDeg": 20.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          8.776,
-          38.427
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_cell_1823x1367": [
-          877,
-          686,
-          951,
-          721
-        ],
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F 외곽 부티크 · 이솝",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -89.478,
-        "y": 0,
-        "z": 10.107,
-        "yawDeg": 20.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          4.061,
-          38.427
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_cell_1823x1367": [
-          952,
-          618,
-          1020,
-          721
-        ],
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F 외곽 부티크 · 입생로랑 뷰티",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -79.626,
-        "y": 0,
-        "z": 15.262,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          11.429,
-          46.744
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_cell_1823x1367": [
-          820,
-          807,
-          927,
-          861
-        ],
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F 외곽 부티크 · 조말론 런던",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -86.614,
-        "y": 0,
-        "z": 17.915,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          3.93,
-          46.744
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_cell_1823x1367": [
-          929,
-          807,
-          1047,
-          861
-        ],
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F 외곽 부티크 · 디올",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -28.963,
-        "y": 0,
-        "z": 10.96,
-        "yawDeg": 290.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          60.468,
-          60.702
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_cell_1823x1367": [
-          45,
-          842,
-          111,
-          994
-        ],
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F 곡선 주얼리 · 타사키",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -32.895,
-        "y": 0,
-        "z": 20.466,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          53.377,
-          68.195
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_point_1823x1367": [
-          233,
-          997
-        ],
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F 곡선 주얼리 · 포멜라토",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -34.81,
-        "y": 0,
-        "z": 26.604,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          49.382,
-          73.254
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_point_1823x1367": [
-          294,
-          1040
-        ],
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F 곡선 주얼리 · 아크레도",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -36.787,
-        "y": 0,
-        "z": 32.386,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          45.453,
-          77.959
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_point_1823x1367": [
-          354,
-          1080
-        ],
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F 곡선 주얼리 · 메시카",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -40.935,
-        "y": 0,
-        "z": 35.219,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          40.541,
-          79.136
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_point_1823x1367": [
-          429,
-          1090
-        ],
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F 곡선 주얼리 · 키린",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -47.969,
-        "y": 0,
-        "z": 38.895,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          32.616,
-          80.077
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_point_1823x1367": [
-          550,
-          1098
-        ],
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F 곡선 주얼리 · 스피넬리킬콜린",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -53.049,
-        "y": 0,
-        "z": 40.57,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          27.245,
-          79.841
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_point_1823x1367": [
-          632,
-          1096
-        ],
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F 곡선 주얼리 · 골든듀",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -56.959,
-        "y": 0,
-        "z": 40.923,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          23.447,
-          78.783
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_point_1823x1367": [
-          690,
-          1087
-        ],
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F 곡선 주얼리 · 스와로브스키",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -62.262,
-        "y": 0,
-        "z": 39.287,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          19.059,
-          75.371
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_point_1823x1367": [
-          757,
-          1058
-        ],
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F 곡선 주얼리 · 누니",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -41.368,
-        "y": 0,
-        "z": 19.657,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          45.715,
-          64.431
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_point_1823x1367": [
-          350,
-          965
-        ],
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F 곡선 주얼리 · 반조애",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -44.977,
-        "y": 0,
-        "z": 21.906,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          41.523,
-          65.254
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_point_1823x1367": [
-          414,
-          972
-        ],
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F 곡선 주얼리 · 페르즈",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -48.943,
-        "y": 0,
-        "z": 23.034,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          37.397,
-          64.901
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_point_1823x1367": [
-          477,
-          969
-        ],
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F 곡선 주얼리 · 타니바이미네타니",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -52.414,
-        "y": 0,
-        "z": 24.729,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          33.533,
-          65.254
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_point_1823x1367": [
-          536,
-          972
-        ],
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F 곡선 주얼리 · 세그먼트 A",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -54.571,
-        "y": 0,
-        "z": 25.296,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          31.306,
-          65.019
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_point_1823x1367": [
-          570,
-          970
-        ],
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F 곡선 주얼리 · 프릿",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -46.744,
-        "y": 0,
-        "z": 28.239,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          37.593,
-          70.548
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_point_1823x1367": [
-          474,
-          1017
-        ],
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F 곡선 주얼리 · 아르투스 베르트랑",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -49.688,
-        "y": 0,
-        "z": 29.483,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          34.384,
-          70.666
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_point_1823x1367": [
-          523,
-          1018
-        ],
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F 곡선 주얼리 · 리오레",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -52.956,
-        "y": 0,
-        "z": 30.974,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          30.782,
-          70.901
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "plan_point_1823x1367": [
-          578,
-          1020
-        ],
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F 팝업1 · 설화수",
-        "photos": [
-          "refs/interior/ssg_research/1f_cosmetics_popup_ionic_column_striped_marble_clodugirl.jpg"
-        ],
-        "x": -53.684,
-        "y": 0,
-        "z": -5.006,
-        "yawDeg": 110.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          43,
-          37
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F 팝업2 · 안내데스크",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -49.541,
-        "y": 0,
-        "z": 3.047,
-        "yawDeg": 110.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          44,
-          46
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F 줄무늬 대리석 · 이오니아식 기둥",
-        "photos": [
-          "refs/interior/ssg_research/1f_ionic_column_capital_closeup_clodugirl.jpg"
-        ],
-        "x": -51.256,
-        "y": 0,
-        "z": -0.045,
-        "yawDeg": 37.503,
-        "pitchDeg": 0,
-        "local_uv": [
-          43.5,
-          42.5
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F 젠틀몬스터 · 곡선 주얼리길",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -63.025,
-        "y": 0,
-        "z": 26.346,
-        "yawDeg": 200.804,
+        "z": 6.741,
+        "yawDeg": 290.788,
         "pitchDeg": 0,
         "local_uv": [
           23,
-          63
+          42
         ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        "target_local_uv": [
+          36,
+          42
+        ],
+        "round": 11,
+        "note": "보행바닥 높이 y. 렌더러가 눈높이를 더함. 내부 집기/마감은 도면과 사용자 설명에 따른 도식적 복원.",
+        "camera_qa": "지지바닥/캡슐/머리공간 통과; 정면2.5m불투명차폐없음"
       },
       {
-        "spot": "2게이트 · 북측 정문",
+        "id": "hall_c",
+        "spot": "1층 팝업 · 안내데스크",
         "photos": [
-          "refs/roadview/ssg_01_main_entrance_canopy.jpg"
+          "refs/official/shinsegae/floor_1F.png"
         ],
-        "x": -72.906,
+        "x": -48.747,
         "y": 0,
-        "z": -28.724,
-        "yawDeg": 20.804,
+        "z": -0.463,
+        "yawDeg": 134.497,
+        "pitchDeg": 0,
+        "local_uv": [
+          46,
+          43
+        ],
+        "target_local_uv": [
+          38,
+          46.5
+        ],
+        "round": 11,
+        "note": "보행바닥 높이 y. 렌더러가 눈높이를 더함. 내부 집기/마감은 도면과 사용자 설명에 따른 도식적 복원.",
+        "camera_qa": "지지바닥/캡슐/머리공간 통과; 정면2.5m불투명차폐없음"
+      },
+      {
+        "id": "ssg_00",
+        "spot": "1게이트 · 동측 평탄 출입구",
+        "photos": [
+          "refs/official/shinsegae/floor_1F.png"
+        ],
+        "x": -34.531,
+        "y": 0,
+        "z": -6.554,
+        "yawDeg": 290.788,
+        "pitchDeg": 0,
+        "local_uv": [
+          61.5,
+          42.35
+        ],
+        "target_local_uv": [
+          67,
+          42.35
+        ],
+        "round": 11,
+        "note": "보행바닥 높이 y. 렌더러가 눈높이를 더함. 내부 집기/마감은 도면과 사용자 설명에 따른 도식적 복원.",
+        "camera_qa": "지지바닥/캡슐/머리공간 통과; 정면2.5m불투명차폐없음"
+      },
+      {
+        "id": "ssg_01",
+        "spot": "3게이트 · 센트럴시티 열린 연결",
+        "photos": [
+          "refs/official/shinsegae/floor_1F.png"
+        ],
+        "x": -84.864,
+        "y": 0,
+        "z": 12.551,
+        "yawDeg": 110.787,
+        "pitchDeg": 0,
+        "local_uv": [
+          7.5,
+          42.35
+        ],
+        "target_local_uv": [
+          -4,
+          42.35
+        ],
+        "round": 11,
+        "note": "보행바닥 높이 y. 렌더러가 눈높이를 더함. 내부 집기/마감은 도면과 사용자 설명에 따른 도식적 복원.",
+        "camera_qa": "지지바닥/캡슐/머리공간 통과; 정면2.5m불투명차폐없음"
+      },
+      {
+        "id": "ssg_02",
+        "spot": "1게이트 방면 두번째 호남선 연결",
+        "photos": [
+          "refs/official/shinsegae/floor_1F.png"
+        ],
+        "x": -73.58,
+        "y": 0,
+        "z": 40.512,
+        "yawDeg": 81.376,
+        "pitchDeg": 0,
+        "local_uv": [
+          8,
+          72.5
+        ],
+        "target_local_uv": [
+          0,
+          68
+        ],
+        "round": 11,
+        "note": "보행바닥 높이 y. 렌더러가 눈높이를 더함. 내부 집기/마감은 도면과 사용자 설명에 따른 도식적 복원.",
+        "camera_qa": "지지바닥/캡슐/머리공간 통과; 정면2.5m불투명차폐없음"
+      },
+      {
+        "id": "ssg_03",
+        "spot": "실제 북서벽 엘리베이터 로비",
+        "photos": [
+          "refs/official/shinsegae/floor_1F.png"
+        ],
+        "x": -99.388,
+        "y": 0,
+        "z": -23.27,
+        "yawDeg": 110.791,
+        "pitchDeg": 0,
+        "local_uv": [
+          6.8,
+          3.7
+        ],
+        "target_local_uv": [
+          1.35,
+          3.7
+        ],
+        "round": 11,
+        "note": "보행바닥 높이 y. 렌더러가 눈높이를 더함. 내부 집기/마감은 도면과 사용자 설명에 따른 도식적 복원.",
+        "camera_qa": "지지바닥/캡슐/머리공간 통과; 정면2.5m불투명차폐없음"
+      },
+      {
+        "id": "ssg_04",
+        "spot": "북서측 중층 에스컬레이터 · 유리 난간",
+        "photos": [
+          "refs/official/shinsegae/floor_1F.png"
+        ],
+        "x": -92.323,
+        "y": 0,
+        "z": -26.059,
+        "yawDeg": 175.3,
+        "pitchDeg": 0,
+        "local_uv": [
+          14.4,
+          3.6
+        ],
+        "target_local_uv": [
+          10.6,
+          11.5
+        ],
+        "round": 11,
+        "note": "보행바닥 높이 y. 렌더러가 눈높이를 더함. 내부 집기/마감은 도면과 사용자 설명에 따른 도식적 복원.",
+        "camera_qa": "지지바닥/캡슐/머리공간 통과; 정면2.5m불투명차폐없음"
+      },
+      {
+        "id": "ssg_05",
+        "spot": "2게이트 북측 정문에서 홀",
+        "photos": [
+          "refs/official/shinsegae/floor_1F.png"
+        ],
+        "x": -72.834,
+        "y": 0,
+        "z": -28.538,
+        "yawDeg": 203.376,
         "pitchDeg": 0,
         "local_uv": [
           33.5,
-          8
+          8.2
         ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        "target_local_uv": [
+          34.6,
+          34
+        ],
+        "round": 11,
+        "note": "보행바닥 높이 y. 렌더러가 눈높이를 더함. 내부 집기/마감은 도면과 사용자 설명에 따른 도식적 복원.",
+        "camera_qa": "지지바닥/캡슐/머리공간 통과; 정면2.5m불투명차폐없음"
       },
       {
-        "spot": "1게이트 · 동측 평탄한 출입구",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -33.133,
-        "y": 0,
-        "z": -7.085,
-        "yawDeg": 290.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          63,
-          42.35
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "3게이트 · 센트럴시티 연결",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -87.195,
-        "y": 0,
-        "z": 13.436,
-        "yawDeg": 110.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          5,
-          42.35
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "호남선 두번째 연결 · 1게이트 방면",
-        "photos": [
-          "refs/official/centralcity/terminal_floor_1_ko.png"
-        ],
-        "x": -77.987,
-        "y": 0,
-        "z": 37.372,
-        "yawDeg": 110.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          5,
-          68
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "guess": true,
-        "reason": "두 연결의 존재는 도면/사용자 확인, 이 좁은 OSM 공유벽상의 두번째 문 좌표는 보정 추정",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "북서측 엘리베이터",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -90.511,
-        "y": 0,
-        "z": -18.832,
-        "yawDeg": 20.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          13.5,
-          11
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "북서측 중층 에스컬레이터",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -90.563,
-        "y": 0,
-        "z": -15.069,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          12.1,
-          14.5
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "남동측 엘리베이터",
-        "photos": [
-          "refs/official/shinsegae/floor_1F.png"
-        ],
-        "x": -20.408,
-        "y": 0,
-        "z": 25.786,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          63.2,
-          77.6
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1M 곡선 보이드 · 난간 아치",
+        "id": "ssg_06",
+        "spot": "신세계 본관 중층 곡선 난간과 화장품관",
         "photos": [
           "refs/official/shinsegae/floor_1M.jpg"
         ],
         "x": -52.36,
         "y": 3.6,
         "z": 31.923,
-        "yawDeg": 20.804,
-        "pitchDeg": 0,
+        "yawDeg": 15.436,
+        "pitchDeg": -10,
         "local_uv": [
           31,
           72
         ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        "target_local_uv": [
+          34,
+          41
+        ],
+        "round": 11,
+        "note": "보행바닥 높이 y. 렌더러가 눈높이를 더함. 내부 집기/마감은 도면과 사용자 설명에 따른 도식적 복원.",
+        "camera_qa": "지지바닥/캡슐/머리공간 통과; 정면2.5m불투명차폐없음"
       },
       {
-        "spot": "1M 중층 에스컬레이터 도착",
+        "id": "ssg_07",
+        "spot": "중층 도착 · 멤버스바 커피 카운터",
         "photos": [
           "refs/official/shinsegae/floor_1M.jpg"
         ],
-        "x": -85.185,
+        "x": -88.8,
         "y": 3.6,
-        "z": -1.069,
-        "yawDeg": 20.804,
+        "z": -8.253,
+        "yawDeg": 96.982,
         "pitchDeg": 0,
         "local_uv": [
-          12.1,
-          29.5
+          11.3,
+          21.5
         ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        "target_local_uv": [
+          5.6,
+          20.1
+        ],
+        "round": 11,
+        "note": "보행바닥 높이 y. 렌더러가 눈높이를 더함. 내부 집기/마감은 도면과 사용자 설명에 따른 도식적 복원.",
+        "camera_qa": "지지바닥/캡슐/머리공간 통과; 정면2.5m불투명차폐없음"
       },
       {
-        "spot": "1M · 어퍼하우스",
+        "id": "ssg_08",
+        "spot": "중층 링 · 베키아에누보와 어퍼하우스",
         "photos": [
           "refs/official/shinsegae/floor_1M.jpg"
         ],
-        "x": -42.735,
+        "x": -53.04,
         "y": 3.6,
-        "z": 29.007,
-        "yawDeg": 200.804,
+        "z": 34.32,
+        "yawDeg": 185.766,
         "pitchDeg": 0,
         "local_uv": [
-          41.08,
-          72.689
+          29.5,
+          74
         ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        "target_local_uv": [
+          28,
+          79.5
+        ],
+        "round": 11,
+        "note": "보행바닥 높이 y. 렌더러가 눈높이를 더함. 내부 집기/마감은 도면과 사용자 설명에 따른 도식적 복원.",
+        "camera_qa": "지지바닥/캡슐/머리공간 통과; 정면2.5m불투명차폐없음"
       },
       {
-        "spot": "1M · 베키아에누보",
+        "id": "ssg_09",
+        "spot": "북쪽 병렬 뱅크 · 2층 상승과 지하 1층 하강",
         "photos": [
-          "refs/official/shinsegae/floor_1M.jpg"
+          "refs/official/shinsegae/floor_1F.png"
         ],
-        "x": -62.101,
-        "y": 3.6,
-        "z": 36.357,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          20.265,
-          72.689
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1M · 스킨케어룸",
-        "photos": [
-          "refs/official/shinsegae/floor_1M.jpg"
-        ],
-        "x": -94.845,
-        "y": 3.6,
-        "z": -17.175,
-        "yawDeg": 110.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          8.855,
-          11.011
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1M · 멤버스바",
-        "photos": [
-          "refs/official/shinsegae/floor_1M.jpg"
-        ],
-        "x": -91.553,
-        "y": 3.6,
-        "z": -8.612,
-        "yawDeg": 110.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          8.855,
-          20.187
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1M · 비아신세계 트래블 컨시어지",
-        "photos": [
-          "refs/official/shinsegae/floor_1M.jpg"
-        ],
-        "x": -88.261,
-        "y": 3.6,
-        "z": -0.048,
-        "yawDeg": 110.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          8.855,
-          29.363
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1M 주얼리 · 스톤헨지",
-        "photos": [
-          "refs/official/shinsegae/floor_1M.jpg"
-        ],
-        "x": -84.143,
-        "y": 3.6,
-        "z": 13.224,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          7.933,
-          43.235
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1M 주얼리 · 제이에스티나",
-        "photos": [
-          "refs/official/shinsegae/floor_1M.jpg"
-        ],
-        "x": -87.657,
-        "y": 3.6,
-        "z": 14.558,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          4.163,
-          43.235
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1M 주얼리 · 디디에두보",
-        "photos": [
-          "refs/official/shinsegae/floor_1M.jpg"
-        ],
-        "x": -83.231,
-        "y": 3.6,
-        "z": 15.596,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          7.933,
-          45.776
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1M 주얼리 · 어니스트서울",
-        "photos": [
-          "refs/official/shinsegae/floor_1M.jpg"
-        ],
-        "x": -86.745,
-        "y": 3.6,
-        "z": 16.929,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          4.163,
-          45.776
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1M 주얼리 · 판도라",
-        "photos": [
-          "refs/official/shinsegae/floor_1M.jpg"
-        ],
-        "x": -82.32,
-        "y": 3.6,
-        "z": 17.967,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          7.933,
-          48.317
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1M 주얼리 · 에떼르노",
-        "photos": [
-          "refs/official/shinsegae/floor_1M.jpg"
-        ],
-        "x": -85.832,
-        "y": 3.6,
-        "z": 19.3,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          4.163,
-          48.317
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1M 주얼리 · 장폴클라리쎄",
-        "photos": [
-          "refs/official/shinsegae/floor_1M.jpg"
-        ],
-        "x": -81.408,
-        "y": 3.6,
-        "z": 20.338,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          7.933,
-          50.858
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1M 주얼리 · 알로드",
-        "photos": [
-          "refs/official/shinsegae/floor_1M.jpg"
-        ],
-        "x": -84.92,
-        "y": 3.6,
-        "z": 21.671,
-        "yawDeg": 200.804,
-        "pitchDeg": 0,
-        "local_uv": [
-          4.163,
-          50.858
-        ],
-        "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
-      },
-      {
-        "spot": "1F 동측 무번호측문 · LV뷰티셀 후면 개방",
-        "photos": [
-          "refs/roadview/ssg_03_east_parking_wall.jpg"
-        ],
-        "x": -37.06,
+        "x": -74.984,
         "y": 0,
-        "z": -18.803,
-        "yawDeg": 290.804,
+        "z": -0.386,
+        "yawDeg": 290.783,
         "pitchDeg": 0,
         "local_uv": [
-          63.5,
-          30
+          21.4,
+          33.76
         ],
-        "note": "기존사진기반문유지. Gate7명칭은현재공식1F도면과모순되어제거. 바닥높이카메라.",
-        "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        "target_local_uv": [
+          34.6,
+          33.76
+        ],
+        "round": 11,
+        "note": "보행바닥 높이 y. 렌더러가 눈높이를 더함. 내부 집기/마감은 도면과 사용자 설명에 따른 도식적 복원.",
+        "camera_qa": "지지바닥/캡슐/머리공간 통과; 정면2.5m불투명차폐없음"
+      },
+      {
+        "id": "ssg_10",
+        "spot": "남쪽 병렬 뱅크 · 2층 상승과 지하 1층 하강",
+        "photos": [
+          "refs/official/shinsegae/floor_1F.png"
+        ],
+        "x": -68.876,
+        "y": 0,
+        "z": 15.541,
+        "yawDeg": 290.785,
+        "pitchDeg": 0,
+        "local_uv": [
+          21.4,
+          50.82
+        ],
+        "target_local_uv": [
+          34.6,
+          50.82
+        ],
+        "round": 11,
+        "note": "보행바닥 높이 y. 렌더러가 눈높이를 더함. 내부 집기/마감은 도면과 사용자 설명에 따른 도식적 복원.",
+        "camera_qa": "지지바닥/캡슐/머리공간 통과; 정면2.5m불투명차폐없음"
+      },
+      {
+        "id": "ssg_11",
+        "spot": "주얼리 곡선 · 누니 반조애 페로즈 타니바이",
+        "photos": [
+          "refs/official/shinsegae/floor_1F.png"
+        ],
+        "x": -45.803,
+        "y": 0,
+        "z": 19.809,
+        "yawDeg": 182.917,
+        "pitchDeg": 0,
+        "local_uv": [
+          41.5,
+          63
+        ],
+        "target_local_uv": [
+          40,
+          67.6
+        ],
+        "round": 11,
+        "note": "보행바닥 높이 y. 렌더러가 눈높이를 더함. 내부 집기/마감은 도면과 사용자 설명에 따른 도식적 복원.",
+        "camera_qa": "지지바닥/캡슐/머리공간 통과; 정면2.5m불투명차폐없음"
+      },
+      {
+        "id": "ssg_12",
+        "spot": "중층 스킨케어룸 · 여행 컨시어지",
+        "photos": [
+          "refs/official/shinsegae/floor_1M.jpg"
+        ],
+        "x": -85.744,
+        "y": 3.6,
+        "z": 0.533,
+        "yawDeg": 96.74,
+        "pitchDeg": 0,
+        "local_uv": [
+          11,
+          30.8
+        ],
+        "target_local_uv": [
+          5,
+          29.3
+        ],
+        "round": 11,
+        "note": "보행바닥 높이 y. 렌더러가 눈높이를 더함. 내부 집기/마감은 도면과 사용자 설명에 따른 도식적 복원.",
+        "camera_qa": "지지바닥/캡슐/머리공간 통과; 정면2.5m불투명차폐없음"
       }
     ],
     "trace_convention": "x/z는 OSM 월드 좌표(m), y는 발 높이; 렌더러가 눈높이를 더한다. yawDeg 0=북,90=서,180=남,270=동. local_uv는 모듈 검증용. pitchDeg는 선택적 상향 시선.",
@@ -4107,6 +2459,2112 @@
           ],
           "note": "11F 직접 참조사진 없음. 기존 조사 식당명과 목재·석재·식탁·대기석으로 보강한 추정 공간."
         }
+      ],
+      "round10_before_round11": [
+        {
+          "spot": "1F · 프레데릭 말",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -45.909,
+          "y": 0,
+          "z": -27.151,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            58.191,
+            19.054
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_cell_1823x1367": [
+            143,
+            548,
+            176,
+            608
+          ],
+          "construction": "벽 없는 독립 카운터, 높이0.94m",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F · 로라 메르시에",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -47.926,
+          "y": 0,
+          "z": -26.385,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            56.03,
+            19.054
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_cell_1823x1367": [
+            177,
+            548,
+            208,
+            608
+          ],
+          "construction": "벽 없는 독립 카운터, 높이0.94m",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F · 조르지오 아르마니",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -51.93,
+          "y": 0,
+          "z": -24.865,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            51.74,
+            19.054
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_cell_1823x1367": [
+            234,
+            548,
+            282,
+            608
+          ],
+          "construction": "벽 없는 독립 카운터, 높이0.94m",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F · 에르메스 퍼퓸",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -55.659,
+          "y": 0,
+          "z": -23.449,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            47.745,
+            19.054
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_cell_1823x1367": [
+            283,
+            548,
+            355,
+            608
+          ],
+          "construction": "벽 없는 독립 카운터, 높이0.94m",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F · 연작",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -62.121,
+          "y": 0,
+          "z": -22.317,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            41.294,
+            17.819
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_cell_1823x1367": [
+            388,
+            548,
+            447,
+            587
+          ],
+          "construction": "벽 없는 독립 카운터, 높이0.94m",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F · 클라랑스",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -65.851,
+          "y": 0,
+          "z": -20.901,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            37.299,
+            17.819
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_cell_1823x1367": [
+            449,
+            548,
+            508,
+            587
+          ],
+          "construction": "벽 없는 독립 카운터, 높이0.94m",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F · 에이피 뷰티",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -70.864,
+          "y": 0,
+          "z": -18.998,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            31.928,
+            17.819
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_cell_1823x1367": [
+            530,
+            548,
+            591,
+            587
+          ],
+          "construction": "벽 없는 독립 카운터, 높이0.94m",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F · SK-II",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -74.654,
+          "y": 0,
+          "z": -17.559,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            27.868,
+            17.819
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_cell_1823x1367": [
+            592,
+            548,
+            653,
+            587
+          ],
+          "construction": "벽 없는 독립 카운터, 높이0.94m",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F · 헤라",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -79.97,
+          "y": 0,
+          "z": -14.346,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            21.744,
+            18.937
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_cell_1823x1367": [
+            682,
+            546,
+            750,
+            608
+          ],
+          "construction": "벽 없는 독립 카운터, 높이0.94m",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F · 라프레리",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -83.455,
+          "y": 0,
+          "z": -13.023,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            18.011,
+            18.937
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_cell_1823x1367": [
+            752,
+            546,
+            794,
+            608
+          ],
+          "construction": "벽 없는 독립 카운터, 높이0.94m",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F · 바비 브라운",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -44.353,
+          "y": 0,
+          "z": -20.129,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            57.143,
+            26.172
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_cell_1823x1367": [
+            143,
+            609,
+            208,
+            668
+          ],
+          "construction": "벽 없는 독립 카운터, 높이0.94m",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F · 구찌뷰티",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -49.373,
+          "y": 0,
+          "z": -18.161,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            51.74,
+            26.23
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_cell_1823x1367": [
+            234,
+            609,
+            282,
+            669
+          ],
+          "construction": "벽 없는 독립 카운터, 높이0.94m",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F · 겔랑",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -53.1,
+          "y": 0,
+          "z": -16.746,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            47.745,
+            26.23
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_cell_1823x1367": [
+            283,
+            609,
+            355,
+            669
+          ],
+          "construction": "벽 없는 독립 카운터, 높이0.94m",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F · 키엘",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -59.501,
+          "y": 0,
+          "z": -14.819,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            41.065,
+            25.76
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_cell_1823x1367": [
+            388,
+            608,
+            454,
+            662
+          ],
+          "construction": "벽 없는 독립 카운터, 높이0.94m",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F · 산타마리아노벨라",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -63.565,
+          "y": 0,
+          "z": -13.276,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            36.709,
+            25.76
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_cell_1823x1367": [
+            455,
+            608,
+            520,
+            662
+          ],
+          "construction": "벽 없는 독립 카운터, 높이0.94m",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F · 시세이도",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -67.628,
+          "y": 0,
+          "z": -11.734,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            32.354,
+            25.76
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_cell_1823x1367": [
+            521,
+            608,
+            587,
+            662
+          ],
+          "construction": "벽 없는 독립 카운터, 높이0.94m",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F · 랑콤",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -71.691,
+          "y": 0,
+          "z": -10.191,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            27.999,
+            25.76
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_cell_1823x1367": [
+            588,
+            608,
+            653,
+            662
+          ],
+          "construction": "벽 없는 독립 카운터, 높이0.94m",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F · 시슬리",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -77.338,
+          "y": 0,
+          "z": -7.482,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            21.744,
+            26.289
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_cell_1823x1367": [
+            682,
+            610,
+            750,
+            669
+          ],
+          "construction": "벽 없는 독립 카운터, 높이0.94m",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F · 끌레드뽀보떼",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -80.821,
+          "y": 0,
+          "z": -6.16,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            18.011,
+            26.289
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_cell_1823x1367": [
+            752,
+            610,
+            794,
+            669
+          ],
+          "construction": "벽 없는 독립 카운터, 높이0.94m",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F · 맥",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -41.003,
+          "y": 0,
+          "z": -11.524,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            57.209,
+            35.406
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_cell_1823x1367": [
+            142,
+            688,
+            207,
+            746
+          ],
+          "construction": "벽 없는 독립 카운터, 높이0.94m",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F · 나스",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -46.103,
+          "y": 0,
+          "z": -9.588,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            51.74,
+            35.406
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_cell_1823x1367": [
+            234,
+            688,
+            282,
+            746
+          ],
+          "construction": "벽 없는 독립 카운터, 높이0.94m",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F · 톰포드 뷰티",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -49.859,
+          "y": 0,
+          "z": -8.163,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            47.712,
+            35.406
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_cell_1823x1367": [
+            284,
+            688,
+            355,
+            746
+          ],
+          "construction": "벽 없는 독립 카운터, 높이0.94m",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F · 샤넬 코스메틱",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -75.418,
+          "y": 0,
+          "z": 1.539,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            20.303,
+            35.406
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_cell_1823x1367": [
+            682,
+            688,
+            794,
+            746
+          ],
+          "construction": "벽 없는 독립 카운터, 높이0.94m",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F · 디올",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -37.076,
+          "y": 0,
+          "z": -1.125,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            57.176,
+            46.523
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_cell_1823x1367": [
+            143,
+            782,
+            207,
+            841
+          ],
+          "construction": "벽 없는 독립 카운터, 높이0.94m",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F · 아베다",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -42.142,
+          "y": 0,
+          "z": 0.798,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            51.74,
+            46.523
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_cell_1823x1367": [
+            234,
+            782,
+            282,
+            841
+          ],
+          "construction": "벽 없는 독립 카운터, 높이0.94m",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F · 에스티로더",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -45.864,
+          "y": 0,
+          "z": 2.211,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            47.745,
+            46.523
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_cell_1823x1367": [
+            283,
+            782,
+            355,
+            841
+          ],
+          "construction": "벽 없는 독립 카운터, 높이0.94m",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F · 프라다 뷰티",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -70.211,
+          "y": 0,
+          "z": 11.83,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            21.482,
+            46.876
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_cell_1823x1367": [
+            690,
+            786,
+            750,
+            843
+          ],
+          "construction": "벽 없는 독립 카운터, 높이0.94m",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F · 바이레도",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -73.69,
+          "y": 0,
+          "z": 13.15,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            17.749,
+            46.876
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_cell_1823x1367": [
+            752,
+            786,
+            802,
+            843
+          ],
+          "construction": "벽 없는 독립 카운터, 높이0.94m",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F · 메이크업포에버",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -32.665,
+          "y": 0,
+          "z": 7.518,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            58.224,
+            56.17
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_cell_1823x1367": [
+            143,
+            861,
+            175,
+            926
+          ],
+          "construction": "벽 없는 독립 카운터, 높이0.94m",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F · 베네피트",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -34.709,
+          "y": 0,
+          "z": 8.294,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            56.03,
+            56.17
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_cell_1823x1367": [
+            177,
+            861,
+            208,
+            926
+          ],
+          "construction": "벽 없는 독립 카운터, 높이0.94m",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F · 오휘/후",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -38.704,
+          "y": 0,
+          "z": 9.81,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            51.74,
+            56.17
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_cell_1823x1367": [
+            234,
+            861,
+            282,
+            926
+          ],
+          "construction": "벽 없는 독립 카운터, 높이0.94m",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F · 설화수",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -42.425,
+          "y": 0,
+          "z": 11.223,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            47.745,
+            56.17
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_cell_1823x1367": [
+            283,
+            861,
+            355,
+            926
+          ],
+          "construction": "벽 없는 독립 카운터, 높이0.94m",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F · 로에베 퍼퓸",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -48.372,
+          "y": 0,
+          "z": 13.48,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            41.359,
+            56.17
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_cell_1823x1367": [
+            388,
+            861,
+            445,
+            926
+          ],
+          "construction": "벽 없는 독립 카운터, 높이0.94m",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F · 크리드",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -51.604,
+          "y": 0,
+          "z": 14.707,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            37.888,
+            56.17
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_cell_1823x1367": [
+            447,
+            861,
+            492,
+            926
+          ],
+          "construction": "벽 없는 독립 카운터, 높이0.94m",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F · 킬리안",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -54.654,
+          "y": 0,
+          "z": 15.865,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            34.613,
+            56.17
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_cell_1823x1367": [
+            495,
+            861,
+            544,
+            926
+          ],
+          "construction": "벽 없는 독립 카운터, 높이0.94m",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F · 아쿠아 디 파르마",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -57.856,
+          "y": 0,
+          "z": 17.08,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            31.175,
+            56.17
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_cell_1823x1367": [
+            546,
+            861,
+            598,
+            926
+          ],
+          "construction": "벽 없는 독립 카운터, 높이0.94m",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F · 탬버린즈",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -61.18,
+          "y": 0,
+          "z": 18.341,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            27.606,
+            56.17
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_cell_1823x1367": [
+            600,
+            861,
+            653,
+            926
+          ],
+          "construction": "벽 없는 독립 카운터, 높이0.94m",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F · 케이스스터디",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -67.982,
+          "y": 0,
+          "z": 20.923,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            20.303,
+            56.17
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_cell_1823x1367": [
+            682,
+            861,
+            794,
+            926
+          ],
+          "construction": "벽 없는 독립 카운터, 높이0.94m",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F · 다이슨 뷰티",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -31.285,
+          "y": 0,
+          "z": 14.165,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            57.143,
+            62.875
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_cell_1823x1367": [
+            143,
+            933,
+            208,
+            968
+          ],
+          "construction": "벽 없는 독립 카운터, 높이0.94m",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F · 메종 프란시스 커정",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -86.297,
+          "y": 0,
+          "z": -9.113,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            13.95,
+            21.584
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_cell_1823x1367": [
+            820,
+            575,
+            850,
+            624
+          ],
+          "construction": "벽 없는 독립 카운터, 높이0.94m",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F · 샤넬 코스메틱",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -83.19,
+          "y": 0,
+          "z": 1.344,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            13.099,
+            32.465
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_cell_1823x1367": [
+            820,
+            664,
+            876,
+            720
+          ],
+          "construction": "벽 없는 독립 카운터, 높이0.94m",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F · 톰포드 · 레이밴 · 페라가모 · 구찌 선글라스",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -73.655,
+          "y": 0,
+          "z": 23.893,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            13.917,
+            56.934
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_cell_1823x1367": [
+            820,
+            863,
+            851,
+            937
+          ],
+          "construction": "벽 없는 독립 카운터, 높이0.94m",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F 외곽 부티크 · 루이비통 뷰티 & 프래그런스 스토어",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -42.212,
+          "y": 0,
+          "z": -23.832,
+          "yawDeg": 290.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            60.468,
+            23.469
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_cell_1823x1367": [
+            25,
+            515,
+            111,
+            688
+          ],
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F 외곽 부티크 · 딥티크",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -54.396,
+          "y": 0,
+          "z": -29.128,
+          "yawDeg": 20.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            50.954,
+            14.193
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_cell_1823x1367": [
+            220,
+            432,
+            320,
+            515
+          ],
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F 외곽 부티크 · 파빌리온 에르메스",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -61.306,
+          "y": 0,
+          "z": -26.505,
+          "yawDeg": 20.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            43.553,
+            14.193
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_cell_1823x1367": [
+            321,
+            403,
+            445,
+            515
+          ],
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F 외곽 부티크 · 뽀아레",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -75.799,
+          "y": 0,
+          "z": -21.003,
+          "yawDeg": 20.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            28.031,
+            14.193
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_cell_1823x1367": [
+            595,
+            426,
+            645,
+            515
+          ],
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F 외곽 부티크 · 스위스퍼펙션",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -79.1,
+          "y": 0,
+          "z": -19.749,
+          "yawDeg": 20.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            24.495,
+            14.193
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_cell_1823x1367": [
+            646,
+            426,
+            702,
+            515
+          ],
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F 외곽 부티크 · 라메르",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -82.617,
+          "y": 0,
+          "z": -18.415,
+          "yawDeg": 20.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            20.729,
+            14.193
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_cell_1823x1367": [
+            703,
+            426,
+            760,
+            515
+          ],
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F 외곽 부티크 · 데코르테",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -90.646,
+          "y": 0,
+          "z": -12.366,
+          "yawDeg": 110.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            11.052,
+            16.999
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_cell_1823x1367": [
+            893,
+            508,
+            944,
+            585
+          ],
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F 외곽 부티크 · 샤넬 코스메틱",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -85.935,
+          "y": 0,
+          "z": -3.02,
+          "yawDeg": 110.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            12.099,
+            27.41
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_cell_1823x1367": [
+            877,
+            586,
+            951,
+            684
+          ],
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F 외곽 부티크 · 르라보",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -85.082,
+          "y": 0,
+          "z": 8.439,
+          "yawDeg": 20.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            8.776,
+            38.427
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_cell_1823x1367": [
+            877,
+            686,
+            951,
+            721
+          ],
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F 외곽 부티크 · 이솝",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -89.478,
+          "y": 0,
+          "z": 10.107,
+          "yawDeg": 20.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            4.061,
+            38.427
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_cell_1823x1367": [
+            952,
+            618,
+            1020,
+            721
+          ],
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F 외곽 부티크 · 입생로랑 뷰티",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -79.626,
+          "y": 0,
+          "z": 15.262,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            11.429,
+            46.744
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_cell_1823x1367": [
+            820,
+            807,
+            927,
+            861
+          ],
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F 외곽 부티크 · 조말론 런던",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -86.614,
+          "y": 0,
+          "z": 17.915,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            3.93,
+            46.744
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_cell_1823x1367": [
+            929,
+            807,
+            1047,
+            861
+          ],
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F 외곽 부티크 · 디올",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -28.963,
+          "y": 0,
+          "z": 10.96,
+          "yawDeg": 290.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            60.468,
+            60.702
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_cell_1823x1367": [
+            45,
+            842,
+            111,
+            994
+          ],
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F 곡선 주얼리 · 타사키",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -32.895,
+          "y": 0,
+          "z": 20.466,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            53.377,
+            68.195
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_point_1823x1367": [
+            233,
+            997
+          ],
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F 곡선 주얼리 · 포멜라토",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -34.81,
+          "y": 0,
+          "z": 26.604,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            49.382,
+            73.254
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_point_1823x1367": [
+            294,
+            1040
+          ],
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F 곡선 주얼리 · 아크레도",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -36.787,
+          "y": 0,
+          "z": 32.386,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            45.453,
+            77.959
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_point_1823x1367": [
+            354,
+            1080
+          ],
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F 곡선 주얼리 · 메시카",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -40.935,
+          "y": 0,
+          "z": 35.219,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            40.541,
+            79.136
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_point_1823x1367": [
+            429,
+            1090
+          ],
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F 곡선 주얼리 · 키린",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -47.969,
+          "y": 0,
+          "z": 38.895,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            32.616,
+            80.077
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_point_1823x1367": [
+            550,
+            1098
+          ],
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F 곡선 주얼리 · 스피넬리킬콜린",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -53.049,
+          "y": 0,
+          "z": 40.57,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            27.245,
+            79.841
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_point_1823x1367": [
+            632,
+            1096
+          ],
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F 곡선 주얼리 · 골든듀",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -56.959,
+          "y": 0,
+          "z": 40.923,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            23.447,
+            78.783
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_point_1823x1367": [
+            690,
+            1087
+          ],
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F 곡선 주얼리 · 스와로브스키",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -62.262,
+          "y": 0,
+          "z": 39.287,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            19.059,
+            75.371
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_point_1823x1367": [
+            757,
+            1058
+          ],
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F 곡선 주얼리 · 누니",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -41.368,
+          "y": 0,
+          "z": 19.657,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            45.715,
+            64.431
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_point_1823x1367": [
+            350,
+            965
+          ],
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F 곡선 주얼리 · 반조애",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -44.977,
+          "y": 0,
+          "z": 21.906,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            41.523,
+            65.254
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_point_1823x1367": [
+            414,
+            972
+          ],
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F 곡선 주얼리 · 페르즈",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -48.943,
+          "y": 0,
+          "z": 23.034,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            37.397,
+            64.901
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_point_1823x1367": [
+            477,
+            969
+          ],
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F 곡선 주얼리 · 타니바이미네타니",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -52.414,
+          "y": 0,
+          "z": 24.729,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            33.533,
+            65.254
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_point_1823x1367": [
+            536,
+            972
+          ],
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F 곡선 주얼리 · 세그먼트 A",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -54.571,
+          "y": 0,
+          "z": 25.296,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            31.306,
+            65.019
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_point_1823x1367": [
+            570,
+            970
+          ],
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F 곡선 주얼리 · 프릿",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -46.744,
+          "y": 0,
+          "z": 28.239,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            37.593,
+            70.548
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_point_1823x1367": [
+            474,
+            1017
+          ],
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F 곡선 주얼리 · 아르투스 베르트랑",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -49.688,
+          "y": 0,
+          "z": 29.483,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            34.384,
+            70.666
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_point_1823x1367": [
+            523,
+            1018
+          ],
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F 곡선 주얼리 · 리오레",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -52.956,
+          "y": 0,
+          "z": 30.974,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            30.782,
+            70.901
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "plan_point_1823x1367": [
+            578,
+            1020
+          ],
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F 팝업1 · 설화수",
+          "photos": [
+            "refs/interior/ssg_research/1f_cosmetics_popup_ionic_column_striped_marble_clodugirl.jpg"
+          ],
+          "x": -53.684,
+          "y": 0,
+          "z": -5.006,
+          "yawDeg": 110.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            43,
+            37
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F 팝업2 · 안내데스크",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -49.541,
+          "y": 0,
+          "z": 3.047,
+          "yawDeg": 110.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            44,
+            46
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F 줄무늬 대리석 · 이오니아식 기둥",
+          "photos": [
+            "refs/interior/ssg_research/1f_ionic_column_capital_closeup_clodugirl.jpg"
+          ],
+          "x": -51.256,
+          "y": 0,
+          "z": -0.045,
+          "yawDeg": 37.503,
+          "pitchDeg": 0,
+          "local_uv": [
+            43.5,
+            42.5
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F 젠틀몬스터 · 곡선 주얼리길",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -63.025,
+          "y": 0,
+          "z": 26.346,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            23,
+            63
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "2게이트 · 북측 정문",
+          "photos": [
+            "refs/roadview/ssg_01_main_entrance_canopy.jpg"
+          ],
+          "x": -72.906,
+          "y": 0,
+          "z": -28.724,
+          "yawDeg": 20.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            33.5,
+            8
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1게이트 · 동측 평탄한 출입구",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -33.133,
+          "y": 0,
+          "z": -7.085,
+          "yawDeg": 290.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            63,
+            42.35
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "3게이트 · 센트럴시티 연결",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -87.195,
+          "y": 0,
+          "z": 13.436,
+          "yawDeg": 110.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            5,
+            42.35
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "호남선 두번째 연결 · 1게이트 방면",
+          "photos": [
+            "refs/official/centralcity/terminal_floor_1_ko.png"
+          ],
+          "x": -77.987,
+          "y": 0,
+          "z": 37.372,
+          "yawDeg": 110.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            5,
+            68
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "guess": true,
+          "reason": "두 연결의 존재는 도면/사용자 확인, 이 좁은 OSM 공유벽상의 두번째 문 좌표는 보정 추정",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "북서측 엘리베이터",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -90.511,
+          "y": 0,
+          "z": -18.832,
+          "yawDeg": 20.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            13.5,
+            11
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "북서측 중층 에스컬레이터",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -90.563,
+          "y": 0,
+          "z": -15.069,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            12.1,
+            14.5
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "남동측 엘리베이터",
+          "photos": [
+            "refs/official/shinsegae/floor_1F.png"
+          ],
+          "x": -20.408,
+          "y": 0,
+          "z": 25.786,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            63.2,
+            77.6
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1M 곡선 보이드 · 난간 아치",
+          "photos": [
+            "refs/official/shinsegae/floor_1M.jpg"
+          ],
+          "x": -52.36,
+          "y": 3.6,
+          "z": 31.923,
+          "yawDeg": 20.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            31,
+            72
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1M 중층 에스컬레이터 도착",
+          "photos": [
+            "refs/official/shinsegae/floor_1M.jpg"
+          ],
+          "x": -85.185,
+          "y": 3.6,
+          "z": -1.069,
+          "yawDeg": 20.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            12.1,
+            29.5
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1M · 어퍼하우스",
+          "photos": [
+            "refs/official/shinsegae/floor_1M.jpg"
+          ],
+          "x": -42.735,
+          "y": 3.6,
+          "z": 29.007,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            41.08,
+            72.689
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1M · 베키아에누보",
+          "photos": [
+            "refs/official/shinsegae/floor_1M.jpg"
+          ],
+          "x": -62.101,
+          "y": 3.6,
+          "z": 36.357,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            20.265,
+            72.689
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1M · 스킨케어룸",
+          "photos": [
+            "refs/official/shinsegae/floor_1M.jpg"
+          ],
+          "x": -94.845,
+          "y": 3.6,
+          "z": -17.175,
+          "yawDeg": 110.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            8.855,
+            11.011
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1M · 멤버스바",
+          "photos": [
+            "refs/official/shinsegae/floor_1M.jpg"
+          ],
+          "x": -91.553,
+          "y": 3.6,
+          "z": -8.612,
+          "yawDeg": 110.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            8.855,
+            20.187
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1M · 비아신세계 트래블 컨시어지",
+          "photos": [
+            "refs/official/shinsegae/floor_1M.jpg"
+          ],
+          "x": -88.261,
+          "y": 3.6,
+          "z": -0.048,
+          "yawDeg": 110.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            8.855,
+            29.363
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1M 주얼리 · 스톤헨지",
+          "photos": [
+            "refs/official/shinsegae/floor_1M.jpg"
+          ],
+          "x": -84.143,
+          "y": 3.6,
+          "z": 13.224,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            7.933,
+            43.235
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1M 주얼리 · 제이에스티나",
+          "photos": [
+            "refs/official/shinsegae/floor_1M.jpg"
+          ],
+          "x": -87.657,
+          "y": 3.6,
+          "z": 14.558,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            4.163,
+            43.235
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1M 주얼리 · 디디에두보",
+          "photos": [
+            "refs/official/shinsegae/floor_1M.jpg"
+          ],
+          "x": -83.231,
+          "y": 3.6,
+          "z": 15.596,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            7.933,
+            45.776
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1M 주얼리 · 어니스트서울",
+          "photos": [
+            "refs/official/shinsegae/floor_1M.jpg"
+          ],
+          "x": -86.745,
+          "y": 3.6,
+          "z": 16.929,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            4.163,
+            45.776
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1M 주얼리 · 판도라",
+          "photos": [
+            "refs/official/shinsegae/floor_1M.jpg"
+          ],
+          "x": -82.32,
+          "y": 3.6,
+          "z": 17.967,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            7.933,
+            48.317
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1M 주얼리 · 에떼르노",
+          "photos": [
+            "refs/official/shinsegae/floor_1M.jpg"
+          ],
+          "x": -85.832,
+          "y": 3.6,
+          "z": 19.3,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            4.163,
+            48.317
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1M 주얼리 · 장폴클라리쎄",
+          "photos": [
+            "refs/official/shinsegae/floor_1M.jpg"
+          ],
+          "x": -81.408,
+          "y": 3.6,
+          "z": 20.338,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            7.933,
+            50.858
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1M 주얼리 · 알로드",
+          "photos": [
+            "refs/official/shinsegae/floor_1M.jpg"
+          ],
+          "x": -84.92,
+          "y": 3.6,
+          "z": 21.671,
+          "yawDeg": 200.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            4.163,
+            50.858
+          ],
+          "note": "카메라 y는 눈높이가 아니라 보행 바닥 높이. 공식 도면 위치 대조용이며 사진의 원래 촬영 좌표는 미측량.",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        },
+        {
+          "spot": "1F 동측 무번호측문 · LV뷰티셀 후면 개방",
+          "photos": [
+            "refs/roadview/ssg_03_east_parking_wall.jpg"
+          ],
+          "x": -37.06,
+          "y": 0,
+          "z": -18.803,
+          "yawDeg": 290.804,
+          "pitchDeg": 0,
+          "local_uv": [
+            63.5,
+            30
+          ],
+          "note": "기존사진기반문유지. Gate7명칭은현재공식1F도면과모순되어제거. 바닥높이카메라.",
+          "camera_qa": "지지바닥/캡슐간섭/머리공간 통과"
+        }
       ]
     },
     "plan_transform": {
@@ -4187,7 +4645,7 @@
         "J8": "서벽u0,v68; width8; 1게이트방면두번째연결위치는추정",
         "J9": "2F서벽u0,v75.1,기존계단코어남측참을사용하는1.8m문. 센트럴시티백화점2층에스컬레이터직접연결"
       },
-      "tenant_placement": "각매장은BEAUTY_CELLS/EDGE_BOUTIQUES/JEWELLERY에공식도면셀좌표를그대로보유. 가구크기/진열수량은추정. 기존중앙B1/상층에스컬레이터와겹치는팝업가구만피하고브랜드셀위치는이동하지않음."
+      "tenant_placement": "도면 셀 경계 픽셀을 PLAN으로 변환. 공식 브랜드 목록 이름을 사용하며 47개 화장품 및 액세서리·선글라스 전종의 실제 사인 생성 확인. 중앙 두 뱅크의 상승·하강로를 피하고 팝업은 사이의 두 도면 밴드에 3개 배치."
     },
     "round10": {
       "scope": "신세계1F/1M만공식안내도기준교체. 외관/상층/B1보존. 예외는1F출입을가로막는추정램프·SW하부계단·중앙승강기샤프트, 1F에스컬레이터접속을위한2F문, 공식8F확인후명칭만정정.",
@@ -4336,7 +4794,292 @@
         ]
       }
     ],
-    "trace_history_status": "before_round10의1F/1M/HOS카메라는폐기된배치에대한과거기록;현재render대상은modeling.trace만사용한다."
+    "trace_history_status": "before_round10의1F/1M/HOS카메라는폐기된배치에대한과거기록;현재render대상은modeling.trace만사용한다.",
+    "round11": {
+      "date": "2026-11-07",
+      "priority": "사용자 현장 설명 및 공식 평면도 > 썸네일 기반 리뷰 추정",
+      "escalators": {
+        "banks": [
+          {
+            "plan_icon": [
+              520,
+              689
+            ],
+            "local_uv": [
+              34.6,
+              33.76
+            ],
+            "world_xz": [
+              -62.674,
+              -5.058
+            ],
+            "up_1F_to_2F": {
+              "from": [
+                25.6,
+                32.81,
+                0
+              ],
+              "to": [
+                43.6,
+                32.81,
+                7
+              ]
+            },
+            "down_1F_to_B1": {
+              "from": [
+                25.6,
+                34.71,
+                0
+              ],
+              "to": [
+                43.6,
+                34.71,
+                -6
+              ]
+            }
+          },
+          {
+            "plan_icon": [
+              520,
+              834
+            ],
+            "local_uv": [
+              34.6,
+              50.82
+            ],
+            "world_xz": [
+              -56.578,
+              10.873
+            ],
+            "up_1F_to_2F": {
+              "from": [
+                25.6,
+                49.87,
+                0
+              ],
+              "to": [
+                43.6,
+                49.87,
+                7
+              ]
+            },
+            "down_1F_to_B1": {
+              "from": [
+                25.6,
+                51.77,
+                0
+              ],
+              "to": [
+                43.6,
+                51.77,
+                -6
+              ]
+            }
+          }
+        ],
+        "note": "구 중앙 스택의 B1→1F 및1F→2F는 제거. 2F 이상 기존 스택 유지. 1F에는 하강 차로만 개구부/groundHole,1M에는 기존 곡선 보이드,2F에는 상승 차로 구멍. 유리 난간/검정 손잡이/금속 스커트."
+      },
+      "northwest_lobby": {
+        "lift_centers_uv": [
+          [
+            1.35,
+            2
+          ],
+          [
+            1.35,
+            5.3
+          ]
+        ],
+        "world_xz": [
+          [
+            -105.09,
+            -22.923
+          ],
+          [
+            -103.905,
+            -19.844
+          ]
+        ],
+        "back_wall": "u=0 실제 북서 공유벽",
+        "door_direction": "local+u (동북동)",
+        "escalator_uv": [
+          [
+            10.6,
+            6.5
+          ],
+          [
+            10.6,
+            18.5
+          ]
+        ],
+        "coffee_arrival": "멤버스바 u3.3..7.9,v15.2..25.1; 베키아에누보는 공식1M 남쪽 링 셀 유지",
+        "all_floor_menu": "모든 은행에서 B2/B1/1F/1M/2F..11F 선택 가능. 1F/1M은 북서 로비, 기존 상층/지하 은행 도착점은 보존. 연속 샤프트의 실측 복원 아닌 목적지 매핑."
+      },
+      "counters": {
+        "cosmetics": 47,
+        "accessories": 14,
+        "sunglasses": 5,
+        "additional": [
+          "에르메스 파빌리온",
+          "타사키",
+          "케이스스터디",
+          "다이슨 뷰티"
+        ],
+        "plan_note_only": [
+          "루이비통 뷰티 & 프래그런스 스토어",
+          "페로즈"
+        ],
+        "staff": 88,
+        "shoppers": 116,
+        "total_1F_people": 204,
+        "detail_groups": true,
+        "props": [
+          "테스터",
+          "거울",
+          "발광 선반",
+          "쇼핑백"
+        ],
+        "popups": [
+          "설화수",
+          "프라다 뷰티",
+          "다이슨 뷰티"
+        ]
+      },
+      "mezzanine_finish": "크림 플라스터 측면과 소핏, 연속 간접조명, 기존 유리 난간. 멤버스바/베키아에누보/어퍼하우스 커피기기·메뉴·좌석·손님.",
+      "preservation": "J1/J4/J5/J8/J9와 외관,2F이상 스택 유지. 북서 도착부 확보를 위해 B1 진열대1개/2F 기둥1개/북서2F 로비 내 집기만 제거.",
+      "guesses": [
+        "평면도 방향·척도 부재로 gate-constrained mirrored PLAN 기존 변환 유지. 절대 위치 실측 아님.",
+        "에스컬레이터 도면 아이콘 중심은 근거가 있으나 길이18m와 폭/주행방향은 추정.",
+        "북서 코어 미터 좌표·층별 도착점 연결은 사용자 설명과 기존 외피에 맞춘 추정.",
+        "브랜드별 색/집기/팝업 브랜드·사람 배치·카페 인테리어는 연출이며 실제 현행 행사 주장 아님.",
+        "베키아에누보는 공식 남쪽 셀 유지. 북서에서 제공되는 커피는 멤버스바로 해석."
+      ],
+      "validation": {
+        "status": "requested scope passed;3 newly-added unrelated route failures remain outside allowed files; operator render pending",
+        "screenshots": "요청대로 tests/shot.mjs 실행 안 함. modeling.trace 업데이트 후 지지바닥/캡슐/시선 검사.",
+        "camera_QA": "16/16 real-kit full-detail floor/capsule/headroom OK; no forward opaque hit within2.5m",
+        "escalator_QA": "4 central lanes +3m approaches/landings and NW1M ramp clear; B1 vitrine/2F column fixed",
+        "floormap_command": "node tests/floormap.mjs 0 -175 -65 20 230 /tmp/f1r11-floormap.png -75 -10 shinsegae,centralcity,jwmarriott",
+        "floormap_result": "PNG opened. J4/HOS/Famille green;3JW BOH blocks intentionally white. Does not include lazy detail; walk does.",
+        "smoke": {
+          "command": "node tests/smoke.mjs shinsegae centralcity gotomall jwmarriott station",
+          "result": "OK",
+          "warnings": "10 source-car radial-adjacency advisories for remote elevator destinations. Destination floor checks and all-floor exits pass."
+        },
+        "smoke_warnings": "10 advisory no-floor-near-car warnings are from all-floor remote destinations: smoke secondary radial check probes physical source car, while primary destination support passes. Existing upper landing coordinates preserved.",
+        "connected_walk": {
+          "command": "node tests/walk.mjs shinsegae centralcity gotomall jwmarriott station --no-city --verbose",
+          "result": "walk:287 ok,0 blocked",
+          "required_1F_routes": "9/9segments pass"
+        },
+        "new_route4": "외부에서추가된 사용자루트4: 경부선→고투몰→신세계B1→1F, allmodules+city+detail4/4legs통과.",
+        "metadata": {
+          "command": "node tools/gen_meta.mjs",
+          "result": "generated successfully after final geometry"
+        },
+        "round": 11,
+        "date": "2026-11-07",
+        "walk": {
+          "command": "node tests/walk.mjs",
+          "result": "walk:589 ok,0 blocked",
+          "snapshot_start_KST": "2026-11-07 04:23:41",
+          "scope": "all modules+city+all detail; original requested suite before concurrent route additions"
+        },
+        "concurrent_test_additions": {
+          "test_file_mtime_KST": "2026-11-07 04:24:01",
+          "audit_copy_KST": "2026-11-07 04:26:02",
+          "audit_finished_KST": "2026-11-07 04:28:27",
+          "method": "/tmp copy with same all-module/city/full-detail physics+BFS; filtered only7new사용자루트; repository tests untouched",
+          "result": "22 passed,3 blocked",
+          "scope_related_routes4and5": "9/9passed including B1→1F and Honam hall exit",
+          "outside_scope_failures": [
+            {
+              "route": "추가 루트1 [2→3] 거리→고투몰 동편",
+              "from_xzy": [
+                330,
+                -300,
+                0
+              ],
+              "to_xzy": [
+                345.3,
+                -257.8,
+                -6
+              ]
+            },
+            {
+              "route": "추가 루트6 [2→3] 달빛광장→세빛섬",
+              "from_xzy": [
+                -629,
+                -736,
+                0.1
+              ],
+              "to_xzy": [
+                -882,
+                -723,
+                0
+              ]
+            },
+            {
+              "route": "추가 루트7 [1→2] 공원→잠수교",
+              "from_xzy": [
+                -704.5,
+                -793.1,
+                0.065
+              ],
+              "to_xzy": [
+                -700,
+                -934,
+                1.6
+              ]
+            }
+          ],
+          "note": "Current expanded complete suite is NOT claimed to have0blocked. All3 failed searchbboxes lie outside shinsegae/centralcity. No unauthorized edits to repair them."
+        },
+        "scene_audit": {
+          "trace_cameras": 91,
+          "opaque_forward_blockers_within_2_5m": 0,
+          "HOS_phantom_floor_samples": 88,
+          "HOS_phantom_floor_hits": 0,
+          "shinsegae_lanes": "4central+NW1M and6NWlift1F/1M/2Fexits pass support/collision/headroom/actualmeshrays"
+        },
+        "floormap": {
+          "command": "node tests/floormap.mjs 0 -175 -65 20 230 /tmp/f1r11-floormap.png -75 -10 shinsegae,centralcity,jwmarriott",
+          "result": "PNG generated and opened; J4/HOS/Famille approach green;3JW BOH blocks intentionallywhite",
+          "limitation": "stock floormap excludes lazy furniture; detailed walk verifies furnishings"
+        },
+        "visual_render": "tests/shot.mjs not run as instructed. modeling.trace ready for operator render.",
+        "new_route4_and5": "allmodules+city+detail9/9segments passed"
+      },
+      "critic_status": {
+        "1": "done centralcity: J4 축의 회색 덩어리는 엘리베이터 샤프트; 북쪽 벽측으로 이동.",
+        "2": "skipped intentional: 흰 블록3개는 JW메리어트 BOH. 새 평면 지도에서도 보존; 홀/파미에와 무관.",
+        "3": "done: J4(-92,15.5),J8(-82.64,39.14) 8m 열린 통로·유리틀·바닥선·홀 방향 사인 유지.",
+        "4": "done centralcity: HOS12x16m 사각보이드·병렬 에스컬레이터·L셀러·상대위치 매장.",
+        "5": "done: 공식 도면 좌표 브랜드 셀,47개 화장품 전종,2밴드3팝업,안내데스크. 직원88+쇼핑객116.",
+        "6": "done centralcity: 출구 오른쪽 쉐이크쉑/우리은행/스타벅스/SKT;14/15곡선블록/20/21게이트 사이.",
+        "7": "done centralcity: 파미에1/2게이트·벽돌 아치·1..32점포 전면. 불명확 이름은 번호로 유지.",
+        "8": "done: 실제 북서벽u0에 엘리베이터,중층 에스컬레이터u10.6. 남동측 중층 리프트/이전 중앙1F스택 삭제.",
+        "9": "done: 본관1M 곡선링·3카페·서비스·주얼리;HOS 직선링·지정 전층 매장;바디프랜드 centralcity 보존.",
+        "10": "done centralcity: 윤해운대갈비/고량주관 HOS 북측 지상 매장.",
+        "11": "done centralcity: 근거없는 파빌리온1.4m내림계단과구멍 제거.",
+        "12": "kept documented: ssg_02 너머 유리계단은 도면상 백화점2F에스컬레이터 및J9. 임의B1내림계단이 아니므로 유지.",
+        "13": "done centralcity: 카페/식당 매장전면·이웃 셀·사인 유지/보강.",
+        "14": "done centralcity: HOS금속 가림판/접근부NPC정리,파미에 안내판 정면 카메라 재배치.",
+        "15": "done:신세계16개 1F/1M카메라 지지바닥·캡슐·천장·정면2.5m시선검사 통과.센트럴 카메라 별도연구기록.",
+        "16": "done:Gate2/뱅크2개/주얼리아크/카페카메라 추가.스테이지/파미에/HOS1M은 centralcity trace.",
+        "17": "done for requested scope: floormap regenerated/opened; original fullwalk589ok0blocked; both1F routes pass. Later external7user-route delta22ok3blocked entirely outside allowed module scope; documented, not silently marked passed."
+      },
+      "sources": [
+        ".codex-jobs/evidence/review_1f_r10.json",
+        ".codex-jobs/evidence/shinsegae_1f_official_brands.json",
+        "refs/official/shinsegae/floor_1F.png",
+        "refs/official/shinsegae/floor_1M.jpg",
+        "refs/official/shinsegae/user_1f_screenshot.webp",
+        "2026-11-07 사용자 현장 설명"
+      ]
+    },
+    "junctions_to_add": [],
+    "guesses_status": "위 guesses 배열은 과거라운드 판단의 누적기록이다. 1F/1M 계단·리프트·브랜드·1F개구부에 대한 현재값은 round11 및 plan_transform이 우선하며 B1_WELL/남동리프트/구HOS메자닌 기록은 폐기됐다."
   },
   "visual_sources": [
     {
