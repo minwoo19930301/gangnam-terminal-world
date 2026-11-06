@@ -2,7 +2,7 @@
   "id": "lebon",
   "name": "르본시티 · 강남귀금속타운",
   "updated": "2026-11-07",
-  "round": 10,
+  "round": 13,
   "source_research": ".codex-jobs/evidence/research_lebon.json",
   "sources": [
     {
@@ -159,6 +159,31 @@
       "reference": "refs/interior/lebon/blog_2026-09_yeboh_resetting_01.jpg (2026-09 photo of the facade, see top-left of banner)",
       "topic": "redevelopment banner",
       "access": "제공된 조사 파일에서 승계. 새 온라인 조회를 수행하지 않음."
+    },
+    {
+      "reference": ".codex-jobs/evidence/walk_s7_central_famille.json",
+      "topic": "round13 walk scope",
+      "access": "로컬 원문 확인. s7 프레임은 호남선/파미에/역 구간이며 르본시티 직접 촬영 없음."
+    },
+    {
+      "reference": ".codex-jobs/evidence/walk_synthesis.md",
+      "topic": "round13 lebon synthesis",
+      "access": "로컬 원문 확인. s7 프레임은 호남선/파미에/역 구간이며 르본시티 직접 촬영 없음."
+    },
+    {
+      "reference": "https://m.blog.naver.com/clairein/224465859879",
+      "topic": "2026-11-05 르본시티 1F · 신반포로162 · 34/41호",
+      "access": "사용자 제공 walk_synthesis 문장만 승계(stated). 원문/사진 추가 열람하지 않음."
+    },
+    {
+      "reference": "https://m.blog.naver.com/clairein/224466219067",
+      "topic": "2026-11-05 르본시티 1F · 신반포로162 · 34/41호",
+      "access": "사용자 제공 walk_synthesis 문장만 승계(stated). 원문/사진 추가 열람하지 않음."
+    },
+    {
+      "reference": "https://m.blog.naver.com/sarajew/224466143835",
+      "topic": "2026-11-05 르본시티 1F · 신반포로162 · 34/41호",
+      "access": "사용자 제공 walk_synthesis 문장만 승계(stated). 원문/사진 추가 열람하지 않음."
     }
   ],
   "reference_directory": {
@@ -298,84 +323,144 @@
       "floor": "1F",
       "booth": "15",
       "basis": "provided_kakao",
-      "position_verified": false
+      "position_verified": false,
+      "modeled_local_uv": [
+        3.3,
+        9
+      ],
+      "modeled_facing": "E"
     },
     {
       "name": "에덴쥬얼리",
       "floor": "1F",
       "booth": "19",
       "basis": "provided_kakao",
-      "position_verified": false
+      "position_verified": false,
+      "modeled_local_uv": [
+        3.3,
+        11.2
+      ],
+      "modeled_facing": "E"
     },
     {
       "name": "홍보석",
       "floor": "1F",
       "booth": "21",
       "basis": "photo",
-      "position_verified": false
+      "position_verified": false,
+      "modeled_local_uv": [
+        17.9,
+        9
+      ],
+      "modeled_facing": "E"
     },
     {
       "name": "그랑프리",
       "floor": "1F",
       "booth": "25",
       "basis": "provided_kakao",
-      "position_verified": false
+      "position_verified": false,
+      "modeled_local_uv": [
+        3.3,
+        15.6
+      ],
+      "modeled_facing": "E"
     },
     {
       "name": "승보주얼리",
       "floor": "1F",
       "booth": "31",
       "basis": "provided_kakao",
-      "position_verified": false
+      "position_verified": false,
+      "modeled_local_uv": [
+        3.3,
+        21
+      ],
+      "modeled_facing": "E"
     },
     {
       "name": "에스더",
       "floor": "1F",
       "booth": "32",
       "basis": "provided_kakao",
-      "position_verified": false
+      "position_verified": false,
+      "modeled_local_uv": [
+        3.3,
+        23.2
+      ],
+      "modeled_facing": "E"
     },
     {
       "name": "사라쥬얼리",
       "floor": "1F",
       "booth": "34",
       "basis": "provided_kakao",
-      "position_verified": false
+      "position_verified": false,
+      "modeled_local_uv": [
+        3.3,
+        25.4
+      ],
+      "modeled_facing": "E"
     },
     {
       "name": "영쥬얼리",
       "floor": "1F",
       "booth": "37",
       "basis": "photo",
-      "position_verified": false
+      "position_verified": false,
+      "modeled_local_uv": [
+        17.9,
+        13.4
+      ],
+      "modeled_facing": "W"
     },
     {
       "name": "쥬얼리예보",
       "floor": "1F",
       "booth": "41",
       "basis": "photo",
-      "position_verified": false
+      "position_verified": false,
+      "modeled_local_uv": [
+        12.6,
+        11.2
+      ],
+      "modeled_facing": "W"
     },
     {
       "name": "삼보사",
       "floor": "1F",
       "booth": "43",
       "basis": "photo",
-      "position_verified": false
+      "position_verified": false,
+      "modeled_local_uv": [
+        12.6,
+        9
+      ],
+      "modeled_facing": "W"
     },
     {
       "name": "예성쥬얼리",
       "floor": "1F",
       "booth": "69",
       "basis": "provided_kakao",
-      "position_verified": false
+      "position_verified": false,
+      "modeled_local_uv": [
+        12.6,
+        13.4
+      ],
+      "modeled_facing": "W"
     },
     {
       "name": "보다쥬얼리",
       "floor": "1F",
       "booth": "122",
       "basis": "provided_kakao",
-      "position_verified": false
+      "position_verified": false,
+      "modeled_local_uv": [
+        12.6,
+        15.6
+      ],
+      "modeled_facing": "W"
     },
     {
       "name": "러브스톤",
@@ -552,10 +637,11 @@
     "샴푸 나이트 5F 및 강남꽃직매장 B1은 제공 Kakao 주소 중복 가능성이 있어 안내판과 충돌하는 신규 입점으로 확정하지 않음.",
     "르본시티상가 재개발 대상지 선정 현수막은 제공 조사/사진상 문구이며 공적 사업 확정 사실로 취급하지 않음.",
     "사진은 2024~2026의 기록이며 영업시간·금시세·주차요금은 현재 값으로 검증하지 않음.",
-    "사용자 지시에 따라 tests/shot.mjs는 실행하지 않음. 기록된 trace를 운영자가 렌더링하여 외관/가구 밀도/텍스트 가독성을 추가 확인해야 함."
+    "사용자 지시에 따라 tests/shot.mjs는 실행하지 않음. 기록된 trace를 운영자가 렌더링하여 외관/가구 밀도/텍스트 가독성을 추가 확인해야 함.",
+    "Round13: s7에는 르본시티 직접 프레임 없음. 첨부영상으로 입구·점포 순서·상층부·신세계 실내연결을 확정할 수 없음. modeling.guesses에 적용/제외 판정을 기록."
   ],
   "modeling": {
-    "round": 10,
+    "round": 13,
     "coordinate_frame": {
       "origin": [
         -260.03,
@@ -585,12 +671,12 @@
       "8F": 33.4
     },
     "roof_y": 38,
-    "layout_basis": "중앙 6m 복도, v=17.8 및 30.5 가로통로, u=W/2 정문, 동측 u=W v=17.8 후문, 전면 u7/11.3 v3.1 승강기 두 기, 안내판 u16.4 v4.45, 남동측 u34.6~45 v23~37.5 계단실을 보행 가능한 OSM 건물 안에 배치. 실측 도면 아님.",
+    "layout_basis": "OSM 외곽·모든 층고·중앙6m복도·v17.8/30.5가로통로·u=W/2정문·동측후문·계단 코어 보존. 사진06/07의 점포 상대배치만 수정하고 1F 승강기 사이 안내판을 추가. 상세 모델 좌표는 guesses/booths 참조; 실측 평면 아님.",
     "junctions_to_add": [],
     "connections": "_junctions.js에서 lebon을 지명하는 항목 없음. 정문/동측 후문/보도로만 연결하며 센트럴시티와 확인되지 않은 실내·지하 연결을 만들지 않음.",
     "removed": "새 stub를 전체 건물로 대체. streets의 이전 중복 블록은 사용자가 이미 비활성화했으며 이 작업에서 streets나 엔진을 수정하지 않음.",
-    "preservation": "사진에서 확인한 귀금속 상가·복도·부스·꽃시장을 제거/축약할 근거 없음. 확인된 실명·재료·기둥·차양·표지를 새 모듈에 반영.",
-    "uncertainty_policy": "확인된 고유 상호와 번호는 증거대로 사용하고, 미확인 부스는 일반 상품/업종 안내를 사용한다. 모든 부스 배치는 추정임을 연구자료에 명시한다.",
+    "preservation": "기존59개 카운터·20개 실명 상호·금 진열·스툴·천장·기둥·꽃시장·계단·승강기·출입구 보존. 한 점포(37호)의 진열 방향을 사진 점포군 관계에 맞춰 수정. 근거 없이 결합했던 번호는 업종 표지로 정정.",
+    "uncertainty_policy": "호수는 확인된12개 상호만 사용. 모든 절대 점포 좌표·거리·미관찰 내부는 추정으로 표시. 첨부 s7영상의 다른 건물 장식을 르본시티에 전용하지 않음.",
     "detail_policy": "B1 및 1F~8F에 각각 K.detail; 구조·문·슬라브·계단·승강기·zone은 지연 detail 밖.",
     "spawn_limit": 12,
     "trace_convention": "x/z 월드미터, y는 해당 층 바닥 높이(눈높이 아님). yawDeg 0=북,90=서,180=남,270=동. 로컬 u/v도 함께 보관. 비교용 카메라는 사진 원촬영점의 측량값이 아님. 구현 부스·승강기·계단·외부 통로 좌표에 맞추고 실 kit 전층 detail의 바닥·캡슐·머리공간 검증을 수행.",
@@ -803,32 +889,32 @@
       {
         "spot": "1층 가로통로의 쇼케이스·번호패",
         "floor": "1F",
-        "x": -232.815,
+        "x": -246.299,
         "y": 0,
-        "z": 18.19,
+        "z": 22.48,
         "yawDeg": 107.652,
         "pitchDeg": 0,
         "local_uv": [
-          23.15,
+          9,
           17
         ],
         "photos": [
           "refs/interior/lebon/blog_2026-09_yeboh_resetting_07.jpg"
         ],
         "basis": "provided_photo",
-        "note": "사진과 비교할 모델 촬영점. 실측 촬영점이 아니며 세부 위치는 추정."
+        "note": "사진07 점포군으로 접근하는 모델 가로통로. 흰 정사각 타일 구역을 보며 실제 타일 경계/카메라 방위는 추정."
       },
       {
         "spot": "홍보석 21호 유리 진열장·빨간 테두리 금반지 트레이",
         "floor": "1F",
-        "x": -249.487,
+        "x": -237.385,
         "y": 0,
-        "z": 19.717,
+        "z": 11.249,
         "yawDeg": 107.652,
         "pitchDeg": -25,
         "local_uv": [
-          6.8,
-          13.4
+          20.9,
+          9
         ],
         "photos": [
           "refs/interior/lebon/blog_2026-06_hongbo_goldring_02.jpg",
@@ -836,25 +922,25 @@
           "refs/interior/lebon/blog_2026-06_hongbo_goldring_04.jpg"
         ],
         "basis": "provided_photo",
-        "note": "홍보석 21호는 사진으로 확인. 모델 부스 u3.3,v13.4 앞 통로에서 촬영. 실물 점포 좌표와 카운터 치수는 미확인."
+        "note": "홍보석21을 중앙복도 서측 u17.9,v9로 옮김. 대향 러브스톤은 u28.4,v9. 사진06 관계를 반영한 추정 좌표."
       },
       {
-        "spot": "금시세 LED 안내판",
+        "spot": "홍보석21 금시세 LED 상담 안내판",
         "floor": "1F",
-        "x": -250.821,
+        "x": -237.385,
         "y": 0,
-        "z": 15.524,
+        "z": 11.249,
         "yawDeg": 107.652,
         "pitchDeg": 10,
         "local_uv": [
-          6.8,
+          20.9,
           9
         ],
         "photos": [
           "refs/interior/lebon/blog_2026-06_hongbo_goldring_00.jpg"
         ],
         "basis": "provided_photo",
-        "note": "모델 아뜨리에주얼리15호 u3.3,v9의 금시세 상담 안내판을 비교. 사진의 실제 상점·위치나 현재 숫자 시세를 복제한 것은 아님."
+        "note": "홍보석21 앞 금시세 상담안내. 숫자 현재시세는 표시하지 않으며 실제 촬영점은 미확인."
       },
       {
         "spot": "삼보사43·쥬얼리예보41 상가열",
@@ -872,18 +958,18 @@
           "refs/interior/lebon/blog_2026-09_yeboh_resetting_07.jpg"
         ],
         "basis": "provided_photo",
-        "note": "모델 u12.6,v9/11.2 부스를 함께 보는 위치. 사진에서 인접한 실명/호수는 확인했으나 점포 실측 배치는 미확인. 영쥬얼리37은 모델 u3.3,v27.6에 있음."
+        "note": "동쪽을 보면 삼보사43은 u12.6,v9(왼쪽), 쥬얼리예보41은 u12.6,v11.2(오른쪽), 영쥬얼리37은 u17.9,v13.4(뒤/오른쪽). 사진의 상대 관계를 선택한 모델 열에 대응; 절대위치 미확인."
       },
       {
         "spot": "입구 로비의 스테인리스 승강기·층별 안내판",
         "floor": "1F",
-        "x": -249.175,
+        "x": -249.128,
         "y": 0,
-        "z": 13.112,
+        "z": 13.096,
         "yawDeg": 17.652,
         "pitchDeg": 0,
         "local_uv": [
-          9.1,
+          9.15,
           7.2
         ],
         "photos": [
@@ -892,7 +978,7 @@
           "refs/interior/lebon/blog_2026-09_yeboh_resetting_05.jpg"
         ],
         "basis": "provided_photo",
-        "note": "모델 승강기 중심 u7/11.3,v3.1; 두 기의 남쪽 대기공간에서 촬영. 모델 층별 안내판은 u16.4,v4.45에 따로 위치하며 실측 로비 평면은 미확인."
+        "note": "승강기 두 문 u7/11.3,v3.1 사이에 안내판 기둥 u9.15,v4.15와 패널v4.4. 기존 별도 입구 안내판u16.4,v4.45는 보존."
       },
       {
         "spot": "승강기 층별 꽃시장 안내",
@@ -1319,150 +1405,254 @@
       {
         "spot": "영쥬얼리37 진열장",
         "floor": "1F",
-        "x": -245.181,
+        "x": -241.482,
         "y": 0,
-        "z": 33.248,
-        "yawDeg": 107.652,
+        "z": 17.17,
+        "yawDeg": 287.652,
         "pitchDeg": 0,
         "local_uv": [
-          6.8,
-          27.6
+          15.2,
+          13.4
         ],
         "photos": [
           "refs/interior/lebon/blog_2026-09_yeboh_resetting_07.jpg"
         ],
         "basis": "provided_photo",
-        "note": "제공사진의 간판/재료/장식을 모델에 대응시킨 비교점. 실물 내부 좌표는 추정."
+        "note": "영쥬얼리37은 쥬얼리예보41 뒤/오른쪽의 u17.9,v13.4에서 서쪽을 향한다. 사진07의 관계에 맞춘 절대위치 추정."
+      },
+      {
+        "spot": "러브스톤 · 중앙복도 동측",
+        "floor": "1F",
+        "x": -233.097,
+        "y": 0,
+        "z": 9.884,
+        "yawDeg": 287.652,
+        "pitchDeg": 0,
+        "local_uv": [
+          25.4,
+          9
+        ],
+        "photos": [
+          "refs/interior/lebon/blog_2026-09_yeboh_resetting_06.jpg"
+        ],
+        "basis": "provided_photo_relative_layout",
+        "note": "홍보석21과 마주보는 사진06 좌우관계. 러브스톤 호수는 확정하지 않음."
+      },
+      {
+        "spot": "사진07 흰 정사각 타일·번호패·CCTV",
+        "floor": "1F",
+        "x": -246.966,
+        "y": 0,
+        "z": 20.384,
+        "yawDeg": 17.652,
+        "pitchDeg": 12,
+        "local_uv": [
+          9,
+          14.8
+        ],
+        "photos": [
+          "refs/interior/lebon/blog_2026-09_yeboh_resetting_07.jpg"
+        ],
+        "basis": "provided_photo_relative_layout",
+        "note": "선택한 서측 점포군 통로. CCTV는 천장에 붙이고 보행높이와 바닥은 변경하지 않음."
       }
     ],
-    "validation": {
-      "status": "Lebon implementation complete; combined smoke OK, local/neighbour walk clear, stair/entrance/trace audits clear. Full-world walk finished with three failures entirely in concurrently edited other modules.",
-      "syntax": "node --check js/places/lebon.js: pass",
-      "diff_check": "git diff --check -- js/places/lebon.js data/research/lebon.json: pass",
-      "smoke_command": "node tests/smoke.mjs lebon streets centralcity",
-      "smoke_result": "OK; no detail errors. Shared _meta.json still omits lebon because task writes are restricted to the two owned files.",
-      "local_walk": "node tests/walk.mjs lebon --no-city: 29 ok, 0 blocked",
-      "neighbour_walk": "node tests/walk.mjs lebon streets centralcity --no-city: 74 ok, 0 blocked",
-      "stairs": "All 8 B1→8F BFS transitions passed; 2,080 route samples have correct support, zero capsule collision and zero headroom failures.",
-      "elevator_routes": "Both elevators connect to each floor stair lobby: 18 / 18 routes passed.",
-      "public_routes": "Street→main entry, entry→arcade rear, arcade→east exit, entry→stair lobby: 4 / 4 passed.",
-      "trace": "41 / 41 supporting-floor, capsule-clearance and headroom checks passed; see trace_audit.",
-      "initial_full_world": "node tests/walk.mjs initially aborted in concurrently edited js/places/gyeongbu.js:1240: buildRound10BasementRetail is not defined. No other module edited to bypass this.",
-      "screenshots": "Not run: user explicitly states tests/shot.mjs cannot run in this sandbox. 41 modeling.trace cameras provided for operator rendering; source photos visually inspected.",
-      "metadata": "Generator passed, detects two open street doors; generated lebon entry stored in modeling.generated_area_metadata without modifying shared metadata.",
-      "junctions": "No existing lebon junction/well; no new connection required.",
-      "exterior_stairs": "Both street→2F stair routes passed: 344 samples, ending y5.5, zero support/capsule/headroom failures. Turn inward after reaching the landing beyond the handrail ends.",
-      "full_world_command": "node tests/walk.mjs",
-      "full_world_result": "481 ok, 3 blocked; exit 1",
-      "full_world_blocked": [
-        {
-          "test": "junction J6 centralcity→jwmarriott",
-          "y": 0,
-          "result": "no path (28645 cells searched)"
-        },
-        {
-          "test": "elevator centralcity 센트럴시티 터미널 엘리베이터",
-          "floor": "1M",
-          "result": "no path (37 cells searched)"
-        },
-        {
-          "test": "elevator gyeongbu 북측 동 엘리베이터",
-          "floor": "지하 1층",
-          "result": "no path (35 cells searched)"
-        }
-      ],
-      "external_failure_scope": "All three failures are in other modules under concurrent editing; none concerns lebon. User explicitly prohibits editing those modules/engine/tests. Earlier combined neighbour-only walk passed74/0 before concurrent centralcity changes. No tests or other modules were changed to force a pass."
-    },
     "booths": {
       "count_modeled": 59,
-      "basis": "제공 Kakao 조사 60여 점포 및 15~122호 범위를 근거로 밀집 상가를 재구성. 59개는 실측 점포 수가 아님. 번호 순서·점포 좌표·미확인 호수는 추정.",
+      "basis": "기존59개 진열대를 보존; 실제 전체 점포 수/경계는 미확인. 자동 번호 생성 제거; 확인된12개 호수만 상호에 결합.",
       "verified_names_and_numbers": [
         {
           "name": "아뜨리에주얼리",
           "floor": "1F",
           "booth": "15",
           "basis": "provided_kakao",
-          "position_verified": false
+          "position_verified": false,
+          "modeled_local_uv": [
+            3.3,
+            9
+          ],
+          "modeled_facing": "E"
         },
         {
           "name": "에덴쥬얼리",
           "floor": "1F",
           "booth": "19",
           "basis": "provided_kakao",
-          "position_verified": false
+          "position_verified": false,
+          "modeled_local_uv": [
+            3.3,
+            11.2
+          ],
+          "modeled_facing": "E"
         },
         {
           "name": "홍보석",
           "floor": "1F",
           "booth": "21",
           "basis": "photo",
-          "position_verified": false
+          "position_verified": false,
+          "modeled_local_uv": [
+            17.9,
+            9
+          ],
+          "modeled_facing": "E"
         },
         {
           "name": "그랑프리",
           "floor": "1F",
           "booth": "25",
           "basis": "provided_kakao",
-          "position_verified": false
+          "position_verified": false,
+          "modeled_local_uv": [
+            3.3,
+            15.6
+          ],
+          "modeled_facing": "E"
         },
         {
           "name": "승보주얼리",
           "floor": "1F",
           "booth": "31",
           "basis": "provided_kakao",
-          "position_verified": false
+          "position_verified": false,
+          "modeled_local_uv": [
+            3.3,
+            21
+          ],
+          "modeled_facing": "E"
         },
         {
           "name": "에스더",
           "floor": "1F",
           "booth": "32",
           "basis": "provided_kakao",
-          "position_verified": false
+          "position_verified": false,
+          "modeled_local_uv": [
+            3.3,
+            23.2
+          ],
+          "modeled_facing": "E"
         },
         {
           "name": "사라쥬얼리",
           "floor": "1F",
           "booth": "34",
           "basis": "provided_kakao",
-          "position_verified": false
+          "position_verified": false,
+          "modeled_local_uv": [
+            3.3,
+            25.4
+          ],
+          "modeled_facing": "E"
         },
         {
           "name": "영쥬얼리",
           "floor": "1F",
           "booth": "37",
           "basis": "photo",
-          "position_verified": false
+          "position_verified": false,
+          "modeled_local_uv": [
+            17.9,
+            13.4
+          ],
+          "modeled_facing": "W"
         },
         {
           "name": "쥬얼리예보",
           "floor": "1F",
           "booth": "41",
           "basis": "photo",
-          "position_verified": false
+          "position_verified": false,
+          "modeled_local_uv": [
+            12.6,
+            11.2
+          ],
+          "modeled_facing": "W"
         },
         {
           "name": "삼보사",
           "floor": "1F",
           "booth": "43",
           "basis": "photo",
-          "position_verified": false
+          "position_verified": false,
+          "modeled_local_uv": [
+            12.6,
+            9
+          ],
+          "modeled_facing": "W"
         },
         {
           "name": "예성쥬얼리",
           "floor": "1F",
           "booth": "69",
           "basis": "provided_kakao",
-          "position_verified": false
+          "position_verified": false,
+          "modeled_local_uv": [
+            12.6,
+            13.4
+          ],
+          "modeled_facing": "W"
         },
         {
           "name": "보다쥬얼리",
           "floor": "1F",
           "booth": "122",
           "basis": "provided_kakao",
-          "position_verified": false
+          "position_verified": false,
+          "modeled_local_uv": [
+            12.6,
+            15.6
+          ],
+          "modeled_facing": "W"
         }
       ],
-      "arrangement": "서쪽과 중앙 세로열, 동쪽 세로열, 남쪽·북쪽 가로열. 사진의 중앙 6m 통로와 교차통로 형식을 OSM 윤곽 안에 맞춤."
+      "arrangement": "사진06의 러브스톤/홍보석 대향 중앙열, 사진07의43/41 인접열과37 뒤쪽 열. 나머지 기존 서쪽·동쪽·남북열 보존.",
+      "photo_groups": {
+        "photo06": {
+          "러브스톤": {
+            "local_uv": [
+              28.4,
+              9
+            ],
+            "face": "W",
+            "booth": null
+          },
+          "홍보석": {
+            "local_uv": [
+              17.9,
+              9
+            ],
+            "face": "E",
+            "booth": 21
+          }
+        },
+        "photo07": {
+          "삼보사": {
+            "local_uv": [
+              12.6,
+              9
+            ],
+            "face": "W",
+            "booth": 43
+          },
+          "쥬얼리예보": {
+            "local_uv": [
+              12.6,
+              11.2
+            ],
+            "face": "W",
+            "booth": 41
+          },
+          "영쥬얼리": {
+            "local_uv": [
+              17.9,
+              13.4
+            ],
+            "face": "W",
+            "booth": 37
+          }
+        }
+      }
     },
     "elevators": {
       "count": 2,
@@ -1499,10 +1689,10 @@
       "basis": "제공사진의 반투명 곡면 차양·벽돌 화단·회백색 화분을 동쪽 외벽에 재구성. 정확한 실제 위치와 폭은 미확인."
     },
     "trace_audit": {
-      "count": 41,
-      "result": "41 / 41 clear",
-      "method": "실 createKit/createPhysics + lebon.build + buildAllDetail; 외부 y=0 바닥 추가(건물·계단 hole 보존). 각 trace의 support 오차 <=0.1m, 반경0.32m/키1.75m capsule 이동 <0.03m, 바닥+0.05..1.75m의 천장 없음. 연구JSON 외 파일 변경 없음.",
-      "scope": "lebon 단독 + 외부 평면. 주변 모듈/도시 충돌 및 렌더 픽셀 검증은 포함하지 않음."
+      "count": 43,
+      "result": "43 / 43 clear",
+      "scope": "lebon standalone, full detail, floor/capsule/headroom. Pixel render not performed.",
+      "method": "실 createKit/createPhysics + lebon.build + buildAllDetail; support 오차<=0.1m, r0.32m/h1.75m capsule 이동<0.03m, 바닥+0.05..1.75m 머리공간 확인. node inline audit; 저장 테스트 수정 없음."
     },
     "generated_area_metadata": {
       "name": "르본시티 · 강남귀금속타운",
@@ -1586,16 +1776,202 @@
         ]
       ],
       "height_m": 38,
-      "base_quads": 11682,
-      "detail_quads": 84420,
-      "total_quads": 96102,
+      "base_quads": 11686,
+      "detail_quads": 84559,
+      "total_quads": 96245,
       "detail_groups": 9,
-      "max_group_quads": 20681,
+      "max_group_quads": 20820,
       "spawns": 11,
       "zones": 10,
       "elevators": 2,
       "modeled_jewelry_booths": 59,
-      "booth_numbers": "Selected numbers spanning 15..122; 41 used for 쥬얼리예보 following the 2026 photograph, conflicting Kakao20-1 preserved in evidence. Exact count/order is inferred."
+      "booth_numbers": "12 confirmed names/numbers only (15,19,21,25,31,32,34,37,41,43,69,122). Unverified plaques retain category text without fabricated numbers."
+    },
+    "previous_validation_round10": {
+      "status": "Lebon implementation complete; combined smoke OK, local/neighbour walk clear, stair/entrance/trace audits clear. Full-world walk finished with three failures entirely in concurrently edited other modules.",
+      "syntax": "node --check js/places/lebon.js: pass",
+      "diff_check": "git diff --check -- js/places/lebon.js data/research/lebon.json: pass",
+      "smoke_command": "node tests/smoke.mjs lebon streets centralcity",
+      "smoke_result": "OK; no detail errors. Shared _meta.json still omits lebon because task writes are restricted to the two owned files.",
+      "local_walk": "node tests/walk.mjs lebon --no-city: 29 ok, 0 blocked",
+      "neighbour_walk": "node tests/walk.mjs lebon streets centralcity --no-city: 74 ok, 0 blocked",
+      "stairs": "All 8 B1→8F BFS transitions passed; 2,080 route samples have correct support, zero capsule collision and zero headroom failures.",
+      "elevator_routes": "Both elevators connect to each floor stair lobby: 18 / 18 routes passed.",
+      "public_routes": "Street→main entry, entry→arcade rear, arcade→east exit, entry→stair lobby: 4 / 4 passed.",
+      "trace": "41 / 41 supporting-floor, capsule-clearance and headroom checks passed; see trace_audit.",
+      "initial_full_world": "node tests/walk.mjs initially aborted in concurrently edited js/places/gyeongbu.js:1240: buildRound10BasementRetail is not defined. No other module edited to bypass this.",
+      "screenshots": "Not run: user explicitly states tests/shot.mjs cannot run in this sandbox. 41 modeling.trace cameras provided for operator rendering; source photos visually inspected.",
+      "metadata": "Generator passed, detects two open street doors; generated lebon entry stored in modeling.generated_area_metadata without modifying shared metadata.",
+      "junctions": "No existing lebon junction/well; no new connection required.",
+      "exterior_stairs": "Both street→2F stair routes passed: 344 samples, ending y5.5, zero support/capsule/headroom failures. Turn inward after reaching the landing beyond the handrail ends.",
+      "full_world_command": "node tests/walk.mjs",
+      "full_world_result": "481 ok, 3 blocked; exit 1",
+      "full_world_blocked": [
+        {
+          "test": "junction J6 centralcity→jwmarriott",
+          "y": 0,
+          "result": "no path (28645 cells searched)"
+        },
+        {
+          "test": "elevator centralcity 센트럴시티 터미널 엘리베이터",
+          "floor": "1M",
+          "result": "no path (37 cells searched)"
+        },
+        {
+          "test": "elevator gyeongbu 북측 동 엘리베이터",
+          "floor": "지하 1층",
+          "result": "no path (35 cells searched)"
+        }
+      ],
+      "external_failure_scope": "All three failures are in other modules under concurrent editing; none concerns lebon. User explicitly prohibits editing those modules/engine/tests. Earlier combined neighbour-only walk passed74/0 before concurrent centralcity changes. No tests or other modules were changed to force a pass."
+    },
+    "validation": {
+      "status": "Round13 implementation and full-world walk complete: 687 ok, 0 blocked. Exact three-module smoke still requires shinsegae floors used by centralcity remote elevators; four-module smoke OK.",
+      "screenshots": "사용자 지시대로 tests/shot.mjs 실행하지 않음. 직접 확인한 사진과 modeling.trace로 비교점을 제공.",
+      "smoke_command": "node tests/smoke.mjs lebon streets centralcity",
+      "smoke_result": "36 failures, all centralcity remote elevator destination floors requiring shinsegae. lebon failures: 0.",
+      "full_world_command": "node tests/walk.mjs",
+      "full_world_result": "687 ok, 0 blocked; exit0 (final lebon implementation)",
+      "syntax": "node --check js/places/lebon.js: pass",
+      "diff_check": "git diff --check -- js/places/lebon.js data/research/lebon.json: pass",
+      "local_walk": "node tests/walk.mjs lebon --no-city: 29 ok, 0 blocked",
+      "dependency_smoke_command": "node tests/smoke.mjs lebon streets centralcity shinsegae --quiet",
+      "dependency_smoke_result": "OK; centralcity의 원격 도착층 바닥을 제공하는 shinsegae 로딩시36문제 해소. 기존 승강기 외부 바닥 샘플 경고는 남음.",
+      "stairs": "B1→8F 계단8전이 BFS 통과;2080샘플 support/capsule/headroom failures0",
+      "elevator_routes": "두 승강기에서 각층 계단 로비까지18/18통과",
+      "public_routes": "보도→정문, 정문→복도, 복도→동측후문, 정문→계단4/4통과",
+      "exterior_stairs": "전면 양쪽0→2F계단344샘플 통과",
+      "trace": "43/43 support/capsule/headroom 통과; 렌더 픽셀 검증 제외",
+      "scope": "js/places/lebon.js와data/research/lebon.json만 수정. 엔진/테스트/다른모듈/공유메타데이터 미수정.",
+      "baseline_full_world": {
+        "result": "688 ok, 1 blocked; exit1",
+        "blocked": [
+          "route 센트럴시티 B1→파미에 B1→7호선 [0→1] (-93.4,57.8)→(-60.5,169.5): no path (2 cells searched)"
+        ],
+        "user_routes": "첫 전체 검사에서는 사용자 루트1~7 모두 통과. 수정후 전체 검사는 별도 진행중.",
+        "scope": "편집전 스냅샷. lebon외 모듈은 작업 중 동시 변경됨."
+      },
+      "user_route5": {
+        "result": "5 ok, 0 blocked; exit0",
+        "scope": "全modules+city+buildAllDetail 최종 르본시티 모델",
+        "method": "현재 tests/walk.mjs 원문을 stdin 실행. import/ROOT를 절대경로로 바꾸고 사용자 루트5만 검사하도록 메모리에서 필터링. BFS·physics·좌표·층고·goal허용치·maxCells는 원본 그대로. 파일 수정 없음. 필수 전체 테스트의 대체가 아닌 보충검사."
+      },
+      "independent_review": "Read-only audit: 59 counters, 20 distinct tenants, 12 verified booth numbers preserved; 43 trace local/world transforms coherent; no actionable regression.",
+      "full_world_blocked": [],
+      "user_routes": "Final unchanged node tests/walk.mjs passed all included 사용자 루트 1~7. Supplemental final route5 also passed all5legs.",
+      "smoke_failure_examples": [
+        "FAIL centralcity: elevator \"스위트 파크 엘리베이터\" floor B2 (y=-11) not walkable at car position (found -Infinity)",
+        "FAIL centralcity: elevator \"스위트 파크 엘리베이터\" floor 1M (y=3.6) not walkable at car position (found 0)",
+        "FAIL centralcity: elevator \"스위트 파크 엘리베이터\" floor 2F (y=7) not walkable at car position (found 0)"
+      ],
+      "integration_note": "첫 전체검사689건(688통과/1막힘)과 최종687건(687통과/0막힘)은 동시작업 중인 월드의 서로 다른 실행 스냅샷이다. 대상수 차이의 개별 원인은 확정하지 않았다. 첫 센트럴시티 경로 막힘은 최종검사에서 재현되지 않음. 이 작업에서는 다른모듈·테스트를 수정하지 않음."
+    },
+    "walk_review": {
+      "walk_log": ".codex-jobs/evidence/walk_s7_central_famille.json",
+      "synthesis": ".codex-jobs/evidence/walk_synthesis.md#lebon",
+      "excluded_frames": [
+        "refs/walk/s7_central_famille/HgbY_flKpMI_16.jpg",
+        "refs/walk/s7_central_famille/HgbY_flKpMI_23.jpg",
+        "refs/walk/s7_central_famille/HgbY_flKpMI_29.jpg",
+        "refs/walk/s7_central_famille/HgbY_flKpMI_36.jpg",
+        "refs/walk/s7_central_famille/HgbY_flKpMI_50.jpg",
+        "refs/walk/s7_central_famille/FeFx7kfWgdo_135.jpg",
+        "refs/walk/s7_central_famille/FeFx7kfWgdo_145.jpg",
+        "refs/walk/s7_central_famille/FeFx7kfWgdo_169.jpg"
+      ],
+      "reason": "첨부8장은 터미널·파미에·4번출구·지하철·신세계 입구를 보여준다. 르본시티에 그 벽돌 아치/승차장/지하철 출구를 복제할 근거가 없다.",
+      "stated_facts": [
+        "신반포로162 르본시티1F 강남귀금속타운",
+        "34호/41호처럼 번호가 있는 소형 점포"
+      ],
+      "newer_walk_override": "르본시티를 직접 찍은2025+ 영상이 없으므로 기존2024~2026 르본 사진의 배치/재료를 폐기하지 않음.",
+      "photos_inspected_round13": [
+        "blog_2026-09_yeboh_resetting_05.jpg",
+        "blog_2026-09_yeboh_resetting_06.jpg",
+        "blog_2026-09_yeboh_resetting_07.jpg",
+        "blog_2024-11_flower_lebon_02.jpg",
+        "blog_2026-09_honamseon_flower_02.jpg",
+        "blog_2026-09_honamseon_flower_01.jpg",
+        "blog_2026-01_gyeolgeum_landscape_02.jpg"
+      ]
+    },
+    "guesses": [
+      {
+        "topic": "꽃시장 충돌1의 적용 범위",
+        "decision": "르본시티3~6F 강남꽃도매상가는 보존. 경부선3F 꽃시장과 별개이며 고투몰 배치 주장과 혼동하지 않는다.",
+        "basis": "현장 층별 안내판 사진(2026-09 honamseon_flower_02, yeboh_resetting_05)이3~6F 강남꽃도매를 직접 표기.",
+        "confidence": "seen"
+      },
+      {
+        "topic": "신세계/센트럴시티와 방향·연결",
+        "decision": "OSM413280002의 좌표(-260..-204, -5..45)를 유지한다. 르본시티는 신세계/센트럴시티 서쪽. 정문은 신반포로 측, 후문은 기존 동측 모델 위치. 지상 보도를 통해 접근한다.",
+        "basis": "OSM 및 기존 로드뷰 조사; 후문 사진에 SHINSEGAE CENTRAL이 보임. lebon 지명 junction/well 없음.",
+        "confidence": "OSM footprint confirmed; 후문의 정확한 좌표·폭 inferred; 실내/지하 연결 unverified"
+      },
+      {
+        "topic": "사진06 중앙 복도 상호",
+        "decision": "모델 +v를 보는 카메라 기준 왼쪽 러브스톤(u28.4,v9,W향), 오른쪽 홍보석21(u17.9,v9,E향)을 배치.",
+        "basis": "사진06에서 양쪽 상호와21호를 직접 확인.",
+        "confidence": "좌우 대향 관계 seen; 실제 방위·절대 좌표·진열대 치수 inferred"
+      },
+      {
+        "topic": "사진07 점포군",
+        "decision": "삼보사43(u12.6,v9,W향)·쥬얼리예보41(u12.6,v11.2,W향)을 같은 열에, 영쥬얼리37(u17.9,v13.4,W향)을 뒤/오른쪽에 둔다.",
+        "basis": "사진07에서43/41은 인접,37은 뒤/오른쪽에 같은 쪽을 향한 간판.",
+        "confidence": "상호·호수·인접 seen; 열 간 거리와 방향·좌표 inferred"
+      },
+      {
+        "topic": "쥬얼리예보41 대20-1",
+        "decision": "2026-09 사진 및2026-11-05 제공 문장과 맞는41호 유지.",
+        "basis": "사진07과 최신 synthesis.20-1은 기존 Kakao 조사와 충돌.",
+        "confidence": "41 seen; 이전/복수 점포 여부 unverified"
+      },
+      {
+        "topic": "미확인 점포 번호",
+        "decision": "12개 확인된 상호/번호만 결합한다. 나머지 실명8개 및 일반 부스의 표지판은 귀금속 업종으로 유지한다.",
+        "basis": "research의 booth:null인 상호에 기존 nums[i]가 임의 호수를 부여하던 불일치를 정정.",
+        "confidence": "59개 카운터는 기존 밀도 재구성 값; 실제 점포 수·미확인 번호 inferred"
+      },
+      {
+        "topic": "승강기 로비 안내판",
+        "decision": "1F 두 승강기 사이 u9.15,v4.15 기둥, v4.4 안내판을 추가. 기존 별도 입구 안내판은 유지.",
+        "basis": "2024-11 flower_lebon_02의 승강기 사이 안내판과2026-09 yeboh_resetting_05의 입구 안내판은 서로 다른 촬영 대상.",
+        "confidence": "문 사이 배치 seen; 승강기 전체 위치·기둥 치수 inferred"
+      },
+      {
+        "topic": "색·재료와 디테일",
+        "decision": "사진07 점포군 앞 흰 정사각 타일, 측면 통로 붉은 바닥, 남색 마름모 번호패, 검은 CCTV를 반영. 중앙 복도 베이지 석재·검정 정사각2열은 보존.",
+        "basis": "yeboh_resetting_06/07, honamseon_flower_01.",
+        "confidence": "재료/형태 seen; 타일 영역 경계·CCTV 좌표 inferred"
+      },
+      {
+        "topic": "나머지 전역 충돌2~6",
+        "decision": "경부선↔센트럴1F, 한강출구 번호, UNIQLO, 스위트파크 층, 오픈스테이지는 르본시티 밖이다. 이 모듈에서 위치·층을 새로 추정하지 않는다.",
+        "confidence": "out_of_scope"
+      },
+      {
+        "topic": "실측 없는 부분",
+        "decision": "후문·측면 통로의 정확한 위치, 계단/승강기 치수, B1·2F·7F·8F 내부 평면과 층고는 기존 추정을 유지. 1F 전체 실측 도면·점포 순서·상층 영상은 사용자 영상 필요.",
+        "confidence": "inferred/unverified"
+      }
+    ],
+    "changes_round13": {
+      "priority1_layout": [
+        "러브스톤↔홍보석21을 중앙복도 양쪽으로 재배치",
+        "삼보사43↔쥬얼리예보41 인접, 영쥬얼리37 뒤/오른쪽 같은 방향",
+        "1F 승강기 문 사이 안내판 기둥 추가",
+        "1F y0·8층+B1·북측 정문·동측 후문·보도 연결 보존"
+      ],
+      "priority2_design": [
+        "사진07 점포군 통로에 흰색60cm정사각 광택타일 영역",
+        "동측 캐노피 통로 바닥 적갈색",
+        "확인 번호패를 남색 마름모/금색 숫자로 변경"
+      ],
+      "priority3_details": [
+        "검은 천장 CCTV3개",
+        "홍보석21 금시세 상담안내(실시간 금액 없음)",
+        "59개 진열대와20개 실명상호 유지, 미확인 호수 생성 중단"
+      ]
     }
   }
 }

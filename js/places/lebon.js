@@ -1,4 +1,5 @@
-// 르본시티, round 10. Surveyed shell; photograph-informed interiors, NOT a measured shop plan.
+// 르본시티, round 13. OSM shell; photo-relative shop groups, NOT a measured shop plan.
+// s7's terminal/subway frames do not depict this building. Keep its separate 3F–6F flower market.
 // Local u runs east along the 신반포로 frontage, v runs into the building (south).
 export const meta = {
   id: 'lebon', name: '르본시티 · 강남귀금속타운', claims: [413280002],
@@ -6,7 +7,9 @@ export const meta = {
     'refs/interior/lebon/kakao_roadview_20260625_left.jpg',
     'refs/interior/lebon/blog_2026-09_yeboh_resetting_06.jpg',
     'refs/interior/lebon/blog_2026-09_yeboh_resetting_07.jpg',
-    'refs/interior/lebon/blog_2026-09_honamseon_flower_02.jpg'],
+    'refs/interior/lebon/blog_2026-09_honamseon_flower_02.jpg',
+    '.codex-jobs/evidence/walk_s7_central_famille.json',
+    '.codex-jobs/evidence/walk_synthesis.md'],
 };
 
 export function build(K) {
@@ -48,6 +51,10 @@ export function build(K) {
     g.fillStyle='#34bdd1';g.fillRect(0,0,w,h);g.fillStyle='#152c43';
     for(let x=-24;x<w;x+=32){g.beginPath();g.moveTo(x,0);g.lineTo(x+9,0);g.lineTo(x+33,h);g.lineTo(x+24,h);g.fill();}
   },[2.3,.65]);
+  K.texture('lebon-white-tile',128,128,(g,w,h)=>{
+    g.fillStyle='#eeece5';g.fillRect(0,0,w,h);
+    g.strokeStyle='#b4b1a8';g.lineWidth=1.5;g.strokeRect(0,0,w,h);
+  },[.6,.6]);
   const polish={tex:'lebon-travertine',gloss:.5};
   const floors=[
     {label:'B1',y:K.LEVELS.B1,name:'토다이 반포점 · 영업 종료 / 기전실'},
@@ -110,6 +117,9 @@ export function build(K) {
   K.slab(footprint,38,{mat:'roofgravel',under:white});
   // Lobby elevators as seen in the 2024 photo: paired stainless doors with a directory between.
   for(const u of [7,11.3]){const [x,z]=P(u,3.1);K.elevator({name:'르본시티 승강기',x,z,rotY:R,w:2.5,d:2.5,floors,mat:0xd5d1c5,doorMat:metal});}
+  // Photo flower_lebon_02: the lobby directory belongs on the pier BETWEEN the doors.
+  // The pair's absolute position remains inferred; neither 1.2 m elevator opening is narrowed.
+  box(9.15,4.15,0,1.3,.4,3.15,stone);
   // Closed B1 premises; the circulation lobby and stairs remain accessible.
   wall(.7,12,31.8,12,-6,-.3,{mat:0x888984,openings:[]});
   // Animal hospital rooms are a restrained schematic; its actual plan is unavailable.
@@ -164,7 +174,7 @@ export function build(K) {
   sign(['강남귀금속타운','후문 입구'],W+.21,17.8,3.7,4.8,.9,'E',{bg:'#555956',fg:'#fff'});
   sign(['강남 귀금속 타운','← 후문 입구'],W+2.1,19.9,1.25,2,1.8,'E',{bg:'#f2eee4',fg:'#25487c',twoSided:true,box:.1});
   // Photo01's planted, translucent side passage; this side assignment is inferred.
-  slab(W,1.5,W+3.5,14.5,0,{mat:'sidewalk',thick:.08});
+  slab(W,1.5,W+3.5,14.5,0,{mat:{tex:'concrete',color:0x9b625b},thick:.08});
   box(W+3.05,8,0,.65,12,.7,'brick');
   for(let j=0;j<8;j++){
     const a=W+j*3.5/8,b=W+(j+1)*3.5/8,yy=u=>3.1+.48*Math.sin((u-W)/3.5*PI);
@@ -200,20 +210,24 @@ export function build(K) {
     }
   };
   const lamp=(u,v,y)=>{cyl(u,v,y,.14,.035,metal,{solid:false,seg:8});cyl(u,v,y-.012,.105,.02,{tex:'emit',color:0xf6f5de},{solid:false,seg:8});};
-  const directory=(u,v,y,face='S')=>{
-    sign('르본시티  REBORN CITY',u,v,y+2.85,3.3,.42,face,{fg:'#8a713a'});
-    sign(['층별 안내','8층  사무실','7층  학원 · 한의원 · 사무실','6층  조화 · 프리저브드플라워','5층  조화 · 생화 · 화환','4층  생화 · 소재 · 바구니','3층  생화 · 소재 · 바구니','2층  헬릭스동물메디컬센터','1층  강남귀금속타운 · 공주방','지하1층  토다이 · 기전실'],u,v,y+1.65,3.1,2.1,face,{bg:'#e0dfd3',fg:'#283b5b',box:.08});
+  const directory=(u,v,y,face='S',w=3.1)=>{
+    sign('르본시티  REBORN CITY',u,v,y+2.85,w+.2,.42,face,{fg:'#8a713a'});
+    sign(['층별 안내','8층  사무실','7층  학원 · 한의원 · 사무실','6층  조화 · 프리저브드플라워','5층  조화 · 생화 · 화환','4층  생화 · 소재 · 바구니','3층  생화 · 소재 · 바구니','2층  헬릭스동물메디컬센터','1층  강남귀금속타운 · 공주방','지하1층  토다이 · 기전실'],u,v,y+1.65,w,2.1,face,{bg:'#e0dfd3',fg:'#283b5b',box:.08});
   };
   const named=new Map([[15,'아뜨리에주얼리'],[19,'에덴쥬얼리'],[21,'홍보석'],[25,'그랑프리'],[31,'승보주얼리'],[32,'에스더'],[34,'사라쥬얼리'],[37,'영쥬얼리'],[41,'쥬얼리예보'],[43,'삼보사'],[69,'예성쥬얼리'],[122,'보다쥬얼리']]);
-  const extra=['러브스톤','삼정보석','윤보석','비비드','금보사','실비아쥬얼리','코아주얼리','라보떼주얼리'];
   const booths=[];
   for(const [u,face] of [[3.3,'E'],[12.6,'W'],[17.9,'E'],[28.4,'W']])for(const v of [9,11.2,13.4,15.6,21,23.2,25.4,27.6])booths.push({u,v,face});
   for(const [u,face] of [[34.6,'E'],[43.1,'W']])for(const v of [9,11.2,13.4,21])booths.push({u,v,face});
   for(const u of [2.4,5.5,8.6,11.7,14.8,17.9,21,24.1,27.2,30.3])booths.push({u,v:35.2,face:'N'});
   for(const u of [2.4,15.9,19,27.5,30.6,33.7,36.8,39.9,43])booths.push({u,v:2.5,face:'S'});
-  // 59 model booths spanning the evidenced address range. Exact count/order is unverified.
-  const nums=[15,19,21,25,31,32,34,37,41,43,69,122];
-  for(let n=16;nums.length<booths.length;n++)if(!nums.includes(n))nums.push(n);
+  // Preserve all 59 counters. Only assign shop numbers that actually occur in the research.
+  // Photo06: looking into the modeled main aisle, 러브스톤 is left and 홍보석21 right.
+  // Photo07: 삼보사43 beside 쥬얼리예보41, 영쥬얼리37 behind/right, facing the same aisle.
+  // These relations are seen; choosing these rows and the photo heading is an inference.
+  const numbered=[[0,15],[1,19],[16,21],[3,25],[4,31],[5,32],[6,34],[18,37],[9,41],[8,43],[10,69],[11,122]];
+  for(const [i,num] of numbered)Object.assign(booths[i],{num,name:named.get(num)});
+  for(const [i,name] of [[24,'러브스톤'],[12,'삼정보석'],[13,'윤보석'],[14,'비비드'],[15,'금보사'],[17,'실비아쥬얼리'],[19,'코아주얼리'],[2,'라보떼주얼리']])booths[i].name=name;
+  booths[18].face='W';
   const booth=(b,i)=>{
     const {u,v,face}=b, ns=face==='E'?1:face==='W'?-1:0, vs=face==='S'?1:face==='N'?-1:0;
     const cu=u+ns*1.15,cv=v+vs*1.15,wide=ns?1.7:2.65;
@@ -234,16 +248,21 @@ export function build(K) {
       box(u-ns*.7+du,v-vs*.7+dv,1.1,ns?.05:.44,ns?.36:.05,.9,0xf1eee2,{solid:false});
       for(let k=0;k<2;k++)ring(u-ns*.66+du+(k-.5)*.14,v-vs*.66+dv,1.57,.13,gold,true);
     }
-    const nm=named.get(nums[i])??(i<20?extra[i-12]:['순금 · 예물','보석 · 귀금속','금 · 은 · 시계'][i%3]);
+    const nm=b.name??['순금 · 예물','보석 · 귀금속','금 · 은 · 시계'][i%3];
     sign(nm,cu+ns*.45,cv+vs*.45,2.8,wide+.1,.36,face,{bg:'#e9e7de',fg:'#272726'});
-    sign(`${nums[i]}호`,cu+ns*.46,cv+vs*.46,2.47,.5,.25,face,{bg:'#273445',fg:'#dec377'});
+    if(b.num){
+      // Photo07: gold number on a navy diamond, not a rectangular numbered label.
+      const bu=cu+ns*.46,bv=cv+vs*.46,by=2.47,sz=.23;
+      K.quad(0x273445,[at(bu,bv,by-sz),at(bu+vs*sz,bv-ns*sz,by),at(bu,bv,by+sz),at(bu-vs*sz,bv+ns*sz,by)],[ns*C+vs*S,0,-ns*S+vs*C]);
+      sign(String(b.num),bu,bv,by,.27,.19,face,{fg:'#dec377'});
+    }else sign('귀금속',cu+ns*.46,cv+vs*.46,2.47,.5,.25,face,{bg:'#273445',fg:'#dec377'});
     for(const t of [-.43,.43]){
       const su=cu+ns*.84+(ns?0:t),sv=cv+vs*.84+(ns?t:0);
       cyl(su,sv,.72,.25,.1,0x965e4c);cyl(su,sv,0,.035,.72,0x2c2926);
       ring(su,sv,.26,.19,metal);
     }
     lamp(cu,cv,3.12);
-    if(i%9===0)sign(['오늘의 금 시세','순금 · 상담 문의'],u-ns*.5,v-vs*.5,2.17,wide,.45,face,{bg:'#101013',fg:'#f55b48'});
+    if(b.num===21||i%9===0)sign(['오늘의 금 시세','순금 · 상담 문의'],u-ns*.5,v-vs*.5,2.17,wide,.45,face,{bg:'#101013',fg:'#f55b48'});
   };
   const flower=(u,v,y,color,artificial=false)=>{
     cyl(u,v,y,.22,.42,artificial?0xe2dfd3:0x444a42,{seg:7});
@@ -269,7 +288,18 @@ export function build(K) {
         cyl(u,v,y,.34,1.5,wood,{solid:false});
       }
       if(fi===1){
+        directory(9.15,4.4,0,'S',1.18);
         booths.forEach(booth);
+        // Photo07's white square tiles belong to the wider shop-group aisle;
+        // photo06's beige main aisle and both black inlay lines remain intact.
+        K.hpoly({tex:'lebon-white-tile',gloss:.5},rect(5.7,7,10.3,16.8),.006,true);
+        K.hpoly({tex:'lebon-white-tile',gloss:.5},rect(5.7,16.8,U-3.3,19.2),.006,true);
+        // Small ceiling cameras seen in the same photo, above the walking space.
+        for(const [u,v] of [[8,8],[8,15],[U,17.8]]){
+          const cy=u===U?4.5:top-.37;
+          cyl(u,v,cy,.14,.07,0x292b2c,{solid:false,seg:8});
+          const [x,z]=P(u,v);K.dome({x,z,y:cy-.03,rx:.105,ry:.12,rz:.105,hemi:false,seg:8,rings:4,mat:0x14171c});
+        }
         // Photo06: TWO aligned black-square inlay lines; not a guessed single diamond stripe.
         for(const u of [U-1.8,U+1.8])for(let v=2;v<33;v+=1.3)box(u,v,.007,.22,.22,.012,{color:0x333734,gloss:.5},{solid:false});
         // Barrel ceiling and stepped cove, above the 6m main passage.

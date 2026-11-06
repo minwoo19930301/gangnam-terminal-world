@@ -92,12 +92,20 @@ const ROUTES = [
   { name: '고터→르본시티 1F 귀금속타운', y: 0, pts: [[-150, -40], [-232, -8], [-232, 20]], need: ['streets', 'lebon'] },
   { name: '1F 동선: 신세계 홀→3게이트→센트럴시티 광장→쉐이크쉑→하우스오브신세계→파미에', y: 0, pts: [[-75, -10], [-87.2, 13.4], [-102.9, 19.6], [-102.1, 52.0], [-90.6, 54.5], [-77.0, 86.0], [-36.2, 173.2]], need: ['shinsegae', 'centralcity'] },
   { name: '1F 동선: 신세계 홀→1게이트 방면 두번째 연결→호남선', y: 0, pts: [[-75, -10], [-78.0, 37.4], [-90.0, 41.7], [-102.1, 52.0]], need: ['shinsegae', 'centralcity'] },
+  // ---- the user's own route (2026-11-07): every leg must be walkable ----
+  { name: '사용자 루트 1: 반포역→뉴코아 1관→고투몰 동편', y: 0, pts: [[453, -316], [295.2, -362.1], [330, -300], [400, -243], [345.3, -257.8, -6]], need: ['newcore', 'gotomall'], pad: 60 },
+  { name: '사용자 루트 2: 고투몰 동편→G11→다이소 GATE4→매장→GATE1', y: -6, pts: [[345.3, -257.8], [189.5, -190.5], [138.2, -170.7], [141.7, -109], [225.8, -118.5], [258.1, -150.2]], need: ['gotomall', 'gyeongbu'] },
+  { name: '사용자 루트 3: 다이소 GATE1→경부선 1F 대합실→3F 꽃시장', y: null, pts: [[258.1, -150.2, -6], [149, -132.1, 0], [99.8, -1.1, 0], [70.5, 21.8, 11]], need: ['gyeongbu'] },
+  { name: '사용자 루트 4: 경부선 정문→고투몰 중앙→신세계 B1→1F 홀', y: null, pts: [[149, -132.1, 0], [-2.3, -121.2, -6], [-70, -89, -6], [-70, -35, -6], [-75, -10, 0]], need: ['gyeongbu', 'gotomall', 'shinsegae'] },
+  { name: '사용자 루트 5: 호남선 홀→르본시티 귀금속타운→고투몰 G2→원베일리', y: null, pts: [[-102.1, 52.0, 0], [-209.1, 11.5, 0], [-239.5, -2.8, 0], [-235.8, 8.7, 0], [-332, -66, -6], [-411.8, -49.7, -6]], need: ['centralcity', 'lebon', 'gotomall', 'onebailey'] },
+  { name: '사용자 루트 6: 원베일리→반포한강공원→달빛광장→세빛섬 가빛섬', y: null, pts: [[-536.6, -371.3, -6], [-568, -603.7, 0], [-629, -736, 0.1], [-882, -723, 0]], need: ['onebailey', 'hangang'], pad: 160 },
+  { name: '사용자 루트 7: 세빛섬→잠수교', y: null, pts: [[-882, -723, 0], [-704.5, -793.1, 0.065], [-700, -934, 1.6]], need: ['hangang'], pad: 200 },
   { name: '고터→반포한강공원 (반포대로·반포나들목)', y: 0, pts: [[-371, -136], [-345, -450], [-330, -620], [-297.9, -791.1], [-629, -736]], need: ['streets', 'hangang'] },
 ];
 for (const rt of ROUTES) {
   if (!rt.need.every(n => ids.includes(n))) continue;
   for (let i = 0; i < rt.pts.length - 1; i++) {
-    const [ax, az, ay = rt.y] = rt.pts[i], [bx, bz, by = rt.y] = rt.pts[i + 1]; const pad = 40;
+    const [ax, az, ay = rt.y] = rt.pts[i], [bx, bz, by = rt.y] = rt.pts[i + 1]; const pad = rt.pad || 40;
     const bb = [Math.min(ax, bx) - pad, Math.min(az, bz) - pad, Math.max(ax, bx) + pad, Math.max(az, bz) + pad];
     const r = search(ax, az, ay, (x, z, yy) => Math.hypot(x - bx, z - bz) < 1.0 && Math.abs(yy - by) < 0.7, bb, 2500000);
     (r.ok ? oks : fails).push(`route ${rt.name} [${i}→${i + 1}] (${ax},${az})→(${bx},${bz}): ${r.ok ? 'walkable' : r.why}`);

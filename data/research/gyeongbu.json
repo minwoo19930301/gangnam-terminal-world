@@ -484,6 +484,70 @@
    "url": "https://blog.naver.com/eun_bib/224395084303",
    "title": "GATE1/2 포털·회전문·22/33/34번홈 위치 사진",
    "local": "refs/interior/daiso/125–136"
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=69BNJ7tHUhI",
+   "title": "서울에서 두번째 규모 다이소 고속터미널점 가는길 (Shorts, 신세계백화점→다이소)",
+   "year": 2025,
+   "upload_date": "2025-09-14",
+   "local_evidence": ".codex-jobs/evidence/walk_s3_gyeongbu.json",
+   "use": "제공된 보행 로그와 저장 프레임을 읽음. 이번 작업에서 원본 영상을 재검색한 것은 아님."
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=msbxB25V6JQ",
+   "title": "고속터미널 다이소 여행용품 급할 때 여기! (Shorts, 2호점)",
+   "year": 2026,
+   "upload_date": "2026-03-08",
+   "local_evidence": ".codex-jobs/evidence/walk_s3_gyeongbu.json",
+   "use": "제공된 보행 로그와 저장 프레임을 읽음. 이번 작업에서 원본 영상을 재검색한 것은 아님."
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=zHONiMorRm0",
+   "title": "고터 다이소 감 (Shorts)",
+   "year": 2025,
+   "upload_date": "2025-09-28",
+   "local_evidence": ".codex-jobs/evidence/walk_s3_gyeongbu.json",
+   "use": "제공된 보행 로그와 저장 프레임을 읽음. 이번 작업에서 원본 영상을 재검색한 것은 아님."
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=J0LLdN5rPnI",
+   "title": "subway(3) EXPRESS BUS TERMINAL [SHINSEGAE FACTORY STORE] (Shorts)",
+   "year": 2025,
+   "upload_date": "2025-11-17",
+   "local_evidence": ".codex-jobs/evidence/walk_s3_gyeongbu.json",
+   "use": "제공된 보행 로그와 저장 프레임을 읽음. 이번 작업에서 원본 영상을 재검색한 것은 아님."
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=jpOjc7GGnDo",
+   "title": "서울고속버스터미널 경부선 (1F 승차홈)",
+   "year": 2025,
+   "upload_date": "2025-02-10",
+   "local_evidence": ".codex-jobs/evidence/walk_s3_gyeongbu.json",
+   "use": "제공된 보행 로그와 저장 프레임을 읽음. 이번 작업에서 원본 영상을 재검색한 것은 아님."
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=Rq5bLTg7xPI",
+   "title": "서울고속버스터미널 경부선하차장",
+   "year": 2025,
+   "upload_date": "2025-11-25",
+   "local_evidence": ".codex-jobs/evidence/walk_s3_gyeongbu.json",
+   "use": "제공된 보행 로그와 저장 프레임을 읽음. 이번 작업에서 원본 영상을 재검색한 것은 아님."
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=Bldy3KZh7R4",
+   "title": "서울성모병원 길찾기 완전정복! 고속버스터미널 경부선 (하차장→호남선 방향 1F 이동)",
+   "year": 2025,
+   "upload_date": "2025-05-15",
+   "local_evidence": ".codex-jobs/evidence/walk_s3_gyeongbu.json",
+   "use": "제공된 보행 로그와 저장 프레임을 읽음. 이번 작업에서 원본 영상을 재검색한 것은 아님."
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=Zq_7eC75nBI",
+   "title": "[고속터미널 꽃도매상가] Seoul Walking Tour 4K (촬영 2025-07-18 08:49, 소리만)",
+   "year": 2026,
+   "upload_date": "2026-06-02",
+   "local_evidence": ".codex-jobs/evidence/walk_s3_gyeongbu.json",
+   "use": "제공된 보행 로그와 저장 프레임을 읽음. 이번 작업에서 원본 영상을 재검색한 것은 아님."
   }
  ],
  "building": {
@@ -541,7 +605,7 @@
     "가챠샵",
     "다이소"
    ],
-   "layout": "ROUND10: 본관 B1를 서측 건물 아래까지 확장. 다이소는 부속 B1 u142..282,v8..30의 긴 한 층 매장. GATE1 이중 유리 출입문·한가람 접근, GATE2 1F 계단/하행 에스컬레이터·회전문, GATE4 고투몰 G11 연결·디즈니 짧은 가지를 분리. 3개 계산구역, 1–3구역, 상품검색대, 장바구니/카트. 좌표/길이는 모델 추정.",
+   "layout": "ROUND10: 본관 B1를 서측 건물 아래까지 확장. 다이소는 부속 B1 u142..282,v8..30의 긴 한 층 매장. GATE1 이중 유리 출입문·한가람 접근, GATE2 1F 계단/하행 에스컬레이터·회전문, GATE4 고투몰 G11 연결·디즈니 짧은 가지를 분리. 3개 계산구역, 1–3구역, 상품검색대, 장바구니/카트. 좌표/길이는 모델 추정. ROUND13: 팩토리 #19 중앙 전면을 11.8m 개방하고 붉은 영문 간판 적용. 다이소 주통로 안내판과 펫/여행 상품 추가; 문/계단 위치는 유지.",
    "source": "refs/official/gyeongbu/exterminal_directory_parsed.json",
    "guess": false,
    "photo_source": "refs/interior/gb_hall/17–20",
@@ -607,7 +671,7 @@
     "효도치킨",
     "이마트24(5호점)"
    ],
-   "layout": "ROUND10 공식 호실 목록으로 기존 점포를 재배치/재명명하고 집기 유지. 본관35 유니클로 u34..66,v6..23; 노브랜드버거 인접, 이디야는 본관→부속 전환부. GATE1 계단 u274,v7..21(22번홈), GATE2 u206.5..214.5,v7..21(33/34번홈). 매표·승차홈·기존 사진 기반 대합실 디테일 유지. 공식 약도와 보존 승차홈 번호 방향 차이는 round10.guesses 참조.",
+   "layout": "ROUND10 공식 호실 목록으로 기존 점포를 재배치/재명명하고 집기 유지. 본관35 유니클로 u34..66,v6..23; 노브랜드버거 인접, 이디야는 본관→부속 전환부. GATE1 계단 u274,v7..21(22번홈), GATE2 u206.5..214.5,v7..21(33/34번홈). 매표·승차홈·기존 사진 기반 대합실 디테일 유지. 공식 약도와 보존 승차홈 번호 방향 차이는 round10.guesses 참조. ROUND13: 유니클로 옆 u70,v6 출입문과 긴 접근 복도 마감/발권기4대 보강. 승차홈은 1F 야외이며 경사 흰 기둥과 검정 하단을 추가.",
    "source": "refs/official/gyeongbu/exterminal_directory_parsed.json",
    "guess": false,
    "photo_source": "refs/interior/gb_hall/01–16",
@@ -658,7 +722,7 @@
     "제185호 박테라리움",
     "제197호 모어라브르"
    ],
-   "layout": "ROUND6 gb_flower01–22: 3F y11·천장13.8m, 건물 축에 정렬한 600 텍스 T바와 통로별 연속 쌍형광등, 얼룩·마모가 있는 녹색 에폭시. 5.8m 점포 피치를 넓게 연장하고 코어·승강기 착지/입구만 비워 좁은 통로를 연속 형성. 생화는 검정/파랑 양동이의 계단식 3단과 작은 꽃송이·포장지·검정 포트, 조화는 철망/줄기 군집·팜파스, 크리스마스는 통로향 개방 목재 기둥/묶은 흰 커튼·벨벳 배경/다층 트리/장식/전구, 식물은 크기가 다른 화분·2.6m 수관·상자, 부자재는 얕은 흰 선반/화병·매달린 바구니. 모든 점포의 녹색 판을 재고 밖 통로 가장자리에 걸고 판독되는 상호만 표기. 2F 접근과 3F 에스컬레이터 상단은 벽으로 둘러싼 타일 로비/연속 유리 전면. 사진 시즌의 밀도·보행자·흰 비닐봉지를 반영하며 정확한 평면도는 미확인.",
+   "layout": "ROUND6 gb_flower01–22: 3F y11·천장13.8m, 건물 축에 정렬한 600 텍스 T바와 통로별 연속 쌍형광등, 얼룩·마모가 있는 녹색 에폭시. 5.8m 점포 피치를 넓게 연장하고 코어·승강기 착지/입구만 비워 좁은 통로를 연속 형성. 생화는 검정/파랑 양동이의 계단식 3단과 작은 꽃송이·포장지·검정 포트, 조화는 철망/줄기 군집·팜파스, 크리스마스는 통로향 개방 목재 기둥/묶은 흰 커튼·벨벳 배경/다층 트리/장식/전구, 식물은 크기가 다른 화분·2.6m 수관·상자, 부자재는 얕은 흰 선반/화병·매달린 바구니. 모든 점포의 녹색 판을 재고 밖 통로 가장자리에 걸고 판독되는 상호만 표기. 2F 접근과 3F 에스컬레이터 상단은 벽으로 둘러싼 타일 로비/연속 유리 전면. 사진 시즌의 밀도·보행자·흰 비닐봉지를 반영하며 정확한 평면도는 미확인. ROUND13: 중앙 승강기 두 문을 마주 보게 재배치하고 후면 포장 구역/설비벽/운반 집기 보강. 공식 3F와 기존 재고 유지; 절대좌표는 추정.",
    "source": "https://www.ktriptips.com/kor/shopping/132230",
    "guess": false,
    "photo_source": "refs/interior/gb_flower/notes.json",
@@ -804,10 +868,13 @@
   "14188630 타원 공간의 실제 용도와 단차. 최신 로드뷰로 높이를 확인할 수 없어 임의 상부 구조물은 제거.",
   "공식 본관/부속 평면은 비축척 약도. 현 OSM 승차홈 번호 방향과 상점 약도 방향이 다르므로 승차홈을 그대로 두고 동선과 인접 관계를 근사. 한가람문구는 공식 약도 서단이지만 본 모델에서는 보존22번홈의 GATE1에 맞춰 동단 접근부에 배치했다. 실제 절대위치 보정 필요.",
   "다이소 실제 길이/면적·1층 계단 위치 오프셋·G9 접근 단차와 G11 올라가는 계단의 정확한 표고는 미측량.",
-  "사진과 공식 목록으로 확인된 용도 외 상층 실별 평면과 가구는 추정/미구현. 렌더 비교는 operator 작업."
+  "사진과 공식 목록으로 확인된 용도 외 상층 실별 평면과 가구는 추정/미구현. 렌더 비교는 operator 작업.",
+  "ROUND13: 별도 다이소2호점 층/문과 센트럴시티 스타벅스 쪽 실내 연결의 연속 영상 필요.",
+  "ROUND13: 새 프레임의 정밀 촬영 위치·승강기 코어 측량·하차장 끝 세차구역 절대위치 미확인.",
+  "ROUND13: 1F→3F·B1→1F 전환 구간은 새 보행 영상에서 끊김. 이전 조사 기반 보행 연결을 보존했다."
  ],
  "modeling": {
-  "reference_priority": "ROUND8: shots/trace7/gyeongbu_1.png~13.png와 refs/interior/gb_hall·gb_flower 원본 사진을 비교. 위치는 기존 OSM 윤곽/POI와 연결 계약을 우선. 사진 기반 마감과 카메라 가림을 수정하며 기존 층간 구멍·버스·상층 상세를 보존. 이전 라운드 기록은 이력.",
+  "reference_priority": "ROUND13: 위치·층은 공식 경부선 층별 안내와 OSM/공유 연결 계약 우선. 이후 2025–2026 보행 프레임의 직접 확인(seen), 설명/자막(stated), 추정(inferred)을 구분. 새 영상과 구사진의 디자인 차이는 새 영상 우선; 영상에 없는 기존 세부는 보존. 좌표 미확정은 modeling.guesses에 기록.",
   "frame": "로컬 u=북측 긴 동을 따라 동북쪽, v=서측 높은 동을 따라 남동쪽. W(u,v)=(2.3,-59.24)+u*(0.9348,-0.3552)+v*(0.3552,0.9348).",
   "claims": {
    "buildings": [
@@ -853,7 +920,19 @@
    "한가람문구 서단↔동단 좌표 타협: 위 충돌 설명 참조.",
    "유니클로 내부2층 존재는 블로그 근거; 내부 계단/진열 위치와 층고6m는 추정.",
    "G9 접근 -1.5m 단차와 G11 -6→-4.5→-6 연결은 사진상 오르내림을 맞춘 추정, 실제표고로 주장하지 않음.",
-   "상층 미확인 실내 구조는 유지. 3F 주차장 연결은 unverified 유지."
+   "상층 미확인 실내 구조는 유지. 3F 주차장 연결은 unverified 유지.",
+   "ROUND13 꽃시장: 공식 3F와 Zq_200~1780의 초록 바닥 꽃도매상가를 채택. 고투몰 동쪽 끝이라는 2차 글은 채택하지 않으며, 고투몰에 꽃시장을 신설하지 않음.",
+   "ROUND13 유니클로: 공식 본관1F #35 [u34..66,v6..23] 유지. 69BNJ7tHUhI_8/13에는 B1 층 표기나 연속 하강 장면이 없으므로 영상의 코브·긴 통로는 1F 접근부에 대응. B1 유니클로나 새 매장은 추가하지 않음. 그 대응 위치는 추정.",
+   "ROUND13 센트럴시티 연결: Bldy_55/80/110의 외부 횡단보도 경로를 유지. 2026-09-23 스타벅스 오른쪽 통로 글은 별도 경로 공존 가능성만 기록. 두 건물 사이 연속 영상/측량이 없으므로 새 실내 연결 또는 junction을 생성하지 않음.",
+   "ROUND13 다이소2호점: 영상 설명의 별도 지점 주장은 보존하지만 msbx_2에는 해당 매장 문·층표지가 보이지 않고 타코벨 전면이 보임. 공식 목록과 round10 배치를 우선해 2호점의 층·입구는 사용자 영상 필요로 남김. GATE1/2/4는 같은 기존 긴 매장 출입구로 보존.",
+   "ROUND13 5F: 공식 f5_pop.png의 입점 준비중을 유지. 위키 기반 신세계 본사는 stated 근거이고 2025+ 프레임 확인이 아니므로 덮어쓰지 않음.",
+   "ROUND13 엘리베이터: Zq_230/1780의 마주 보는 문을 실제 양쪽 승강기로 구현. 중앙 코어를 u42와48.6,v55로 옮겨 각각 +u/-u를 향하게 하고 모든 층 구멍·도어 여유폭도 이동. 4.4m 사이 복도와 모든 층 같은 축 적용은 모델 추정이며 실측 아님.",
+   "ROUND13 정문은 유니클로 옆 u70,v6의 기존 유리 전면에 4m 문을 추가. 이전 입구와 공식 매장 윤곽은 유지. 정문→목재 띠→긴 코브 복도 u68.2..75.25는 영상 디자인을 공식/기존 동선에 등록한 추정이며 연속 촬영 경로의 완전한 복원이 아님.",
+   "ROUND13 승차홈 경사 기둥은 기존 홈 사이 중간값에 놓음. 흰 기둥/검정 하단/청색 표지/줄서기 봉의 존재는 seen이나 피치·각도·정밀 좌표는 추정. 하차장 네 칸 쓰레기통은 u116.92 부근의 기존 출입문 옆에 등록.",
+   "ROUND13 세차구역은 하차장 끝이라는 인접 관계만 확인. 모델의 u98.5..106,v37..52는 빈 지상 작업구역에 맞춘 낮은 확신 배치. 실제 세차동 크기·방향·버스 위치는 미확인; 새 세차동 건물이나 확정 차량 배치는 만들지 않음.",
+   "ROUND13 꽃시장 생화→소품/화기→포장 순서는 유지/보강. 포장 작업대는 v153..158.5 후면, 설비벽은 u8.14..11.5,v137..141, 승강기 옆 재고는 v57.8..58.4로 근사. 기존 생화·조화·크리스마스 재고와 사람은 촬영 시각 차이만으로 삭제하지 않음.",
+   "ROUND13 다이소 PET STREET/여행/건강/캐릭터 상품과 노선도는 기존 선반 끝과 긴 주통로에 보강. 상품 구역의 정확한 u값과 문구 배치는 추정. 가격·운행 시간은 새로 주장하지 않음.",
+   "ROUND13 공통 충돌 중 한강 G2/8-1, 스위트파크 층, 오픈스테이지 위치는 이 모듈의 소유 범위 밖이며 이 작업에서 판정하거나 옮기지 않음."
   ],
   "implemented_counts": {
    "round": 8,
@@ -867,53 +946,70 @@
   },
   "render_review": "비교 시트13장과 원본을 검토. tests/shot.mjs는 사용자 지시대로 실행하지 않음. 최종 외관 이미지는 operator가 modeling.trace로 렌더하여 확인해야 함.",
   "validation": {
+   "round": 13,
    "smoke": {
     "command": "node tests/smoke.mjs gyeongbu gotomall station gyeongbu_east",
-    "result": "OK (final geometry, all detail built)"
+    "result": "OK; final round13 geometry and all lazy detail groups built"
    },
    "walk": {
     "command": "node tests/walk.mjs",
-    "result": "final rerun: 494 ok, 0 blocked",
-    "initial_failures_resolved": "initial run: centralcity/J6/1M and north-wing B1 elevator blocked; owned elevator opening fixed, final shared-workspace rerun has no blocked routes"
+    "result": "689 ok, 0 blocked; final fresh full-world snapshot, all user routes walkable",
+    "exit_code": 0
    },
-   "render": {
-    "result": "tests/shot.mjs not run per user sandbox instruction; trace cameras recorded at floor level"
-   },
-   "ground_floor": {
-    "command": "node tests/visfloor.mjs 0 -15 -185 315 100 /tmp/round10-gyeongbu-floor.png gyeongbu,gotomall,station,gyeongbu_east",
-    "result": "rendered and opened; red floor apertures confined to circulation wells, no broad missing ground floor"
-   },
-   "new_routes": {
-    "daiso_g11": "8 ok, 0 blocked: exact proposed junction, GATE4 branch, long store, both GATE1 doors",
-    "uniqlo_and_stairs": "13/13 pass: Uniqlo both ways/common hall, GATE1 both ways/store, GATE2 stair and escalator via bottom pocket/turnstiles into store",
-    "entry_only": "south→north allowed, reverse north→south clamped at v3.97; side u217 unaffected",
-    "elevator": "북측 동 B1→store and rear aisle pass after frontwall opening fix",
-    "trace": "30 round10 cameras support/capsule checked; 1 counter-view camera moved 0.5m clear of shelf; all now at actual modeled floor height",
-    "g9_dip": "2 narrow-bounds routes +23 support/capsule samples pass; y=-6→-7.5→-6 and zones continuous"
-   },
-   "metadata": {
-    "command": "NODE_OPTIONS='--import=/tmp/round10-meta-redirect.mjs' node tools/gen_meta.mjs",
-    "result": "completed; generated /tmp/round10-meta.json without writing js/places/_meta.json, respecting four-file-only scope",
-    "pending": "coordinating registry job must add J_G11_DAISO from modeling.junctions_to_add then regenerate/apply shared metadata",
-    "gyeongbu_box": [
-     0.8,
-     -221.7,
-     425.1,
-     95
-    ]
-   },
-   "walk_scoped": {
+   "walk_layout_stage": {
     "command": "node tests/walk.mjs gyeongbu gotomall station gyeongbu_east",
-    "result": "129 ok, 0 blocked"
+    "result": "138 ok, 0 blocked before design/detail additions"
    },
    "trace_cameras": {
-    "new": 30,
-    "all_recorded": 76,
+    "round13_count": 28,
+    "all_recorded": 104,
     "floor_failures": 0,
     "capsule_collisions": 0,
-    "result": "new-camera sample clearance verified; quiet checkout camera moved 0.5m from shelf"
+    "method": "Real kit, all detail and city built; physics support within0.035m and radius0.32/height1.75 capsule resolution within0.03m. Every referenced frame exists.",
+    "historical_checked": 76,
+    "all_cameras_checked": 104,
+    "historical_floor_failures": 0,
+    "historical_capsule_collisions": 0,
+    "historical_method": "Independent final gyeongbu real-kit/all-detail check: support tolerance0.15m, capsule radius0.32,height1.75,step0.5."
    },
-   "git_diff_check": "passed for the four authorized files"
+   "new_routes": {
+    "passed": 6,
+    "blocked": 0,
+    "routes": [
+     "1F new portal",
+     "1F entry to wave corridor",
+     "B1 factory open mouth",
+     "3F lifts to market",
+     "3F supply to packing",
+     "boarding pier passage"
+    ],
+    "method": "In-memory tests/walk.mjs BFS; repository tests unchanged."
+   },
+   "lifts": {
+    "floors_checked": 22,
+    "blocked": 0,
+    "note": "Two main lifts across all B1~10F floors, face-aware keepouts; read-only independent real-kit walk-out check."
+   },
+   "render": {
+    "result": "Not run per user instruction; operator_pending. No visual render verification claimed."
+   },
+   "git_diff_check": "Passed for the two authorized files.",
+   "concurrent_neighbour_checks": {
+    "older_full_snapshots": [
+     "683 ok, 2 blocked",
+     "687 ok, 2 blocked"
+    ],
+    "blocked_then_fixed": [
+     "J1 gotomall→shinsegae B1",
+     "사용자 루트4 [3→4] 신세계 B1→1F"
+    ],
+    "latest_targeted_checks": "Both earlier failures were resolved in the concurrent workspace; fresh required full command passes689 ok,0 blocked. No neighbour file edits by this job."
+   },
+   "metadata": {
+    "method": "tools/gen_meta.mjs executed with writeFileSync captured in memory; no repository or temporary file written",
+    "result": "gyeongbu claims, roads, areas, box, heights, floors, cells, junctions and all80 entrance entries exactly match current js/places/_meta.json",
+    "requires_update": false
+   }
   },
   "round2": {
    "1_south_end": {
@@ -2752,6 +2848,510 @@
     ],
     "round": 10,
     "guess": "absolute pose inferred; operator render pending"
+   },
+   {
+    "round": 13,
+    "spot": "정문 광장 파랑·노랑 안내선",
+    "photos": [
+     "refs/walk/s3_gyeongbu/Zq_7eC75nBI_60.jpg"
+    ],
+    "x": 63.4736,
+    "y": 0,
+    "z": -95.3216,
+    "yawDeg": 200.806,
+    "pitchDeg": 0,
+    "local": {
+     "u": 70,
+     "v": -12
+    },
+    "floor": "1F",
+    "note": "프레임의 형태·동선 관계 비교용. 공식 약도/보존 구조에 맞춘 위치이며 촬영 지점의 측량 좌표가 아님. y는 눈높이가 아니라 모델 바닥 높이."
+   },
+   {
+    "round": 13,
+    "spot": "유니클로 옆 정면 유리문",
+    "photos": [
+     "refs/walk/s3_gyeongbu/Zq_7eC75nBI_80.jpg"
+    ],
+    "x": 66.6704,
+    "y": 0,
+    "z": -86.9084,
+    "yawDeg": 200.806,
+    "pitchDeg": 6,
+    "local": {
+     "u": 70,
+     "v": -3
+    },
+    "floor": "1F",
+    "note": "프레임의 형태·동선 관계 비교용. 공식 약도/보존 구조에 맞춘 위치이며 촬영 지점의 측량 좌표가 아님. y는 눈높이가 아니라 모델 바닥 높이."
+   },
+   {
+    "round": 13,
+    "spot": "정문 안 목재 슬랫 띠와 코브",
+    "photos": [
+     "refs/walk/s3_gyeongbu/Zq_7eC75nBI_100.jpg"
+    ],
+    "x": 77.3826,
+    "y": 0,
+    "z": -62.095,
+    "yawDeg": 200.806,
+    "pitchDeg": 7,
+    "local": {
+     "u": 71.2,
+     "v": 24
+    },
+    "floor": "1F",
+    "note": "프레임의 형태·동선 관계 비교용. 공식 약도/보존 구조에 맞춘 위치이며 촬영 지점의 측량 좌표가 아님. y는 눈높이가 아니라 모델 바닥 높이."
+   },
+   {
+    "round": 13,
+    "spot": "긴 복도 한쪽 무인발권기 네 대",
+    "photos": [
+     "refs/walk/s3_gyeongbu/Zq_7eC75nBI_120.jpg"
+    ],
+    "x": 86.5243,
+    "y": 0,
+    "z": -37.7547,
+    "yawDeg": 57.675,
+    "pitchDeg": 0,
+    "local": {
+     "u": 71.1,
+     "v": 50
+    },
+    "floor": "1F",
+    "note": "프레임의 형태·동선 관계 비교용. 공식 약도/보존 구조에 맞춘 위치이며 촬영 지점의 측량 좌표가 아님. y는 눈높이가 아니라 모델 바닥 높이."
+   },
+   {
+    "round": 13,
+    "spot": "크림 바닥·점자블록·화분 나무",
+    "photos": [
+     "refs/walk/s3_gyeongbu/Zq_7eC75nBI_145.jpg"
+    ],
+    "x": 102.1718,
+    "y": 0,
+    "z": 2.2996,
+    "yawDeg": 200.806,
+    "pitchDeg": 0,
+    "local": {
+     "u": 71.5,
+     "v": 93
+    },
+    "floor": "1F",
+    "note": "프레임의 형태·동선 관계 비교용. 공식 약도/보존 구조에 맞춘 위치이며 촬영 지점의 측량 좌표가 아님. y는 눈높이가 아니라 모델 바닥 높이."
+   },
+   {
+    "round": 13,
+    "spot": "긴 복도의 흰 곡선 천장",
+    "photos": [
+     "refs/walk/s3_gyeongbu/Zq_7eC75nBI_170.jpg"
+    ],
+    "x": 109.9862,
+    "y": 0,
+    "z": 22.8652,
+    "yawDeg": 200.806,
+    "pitchDeg": 7,
+    "local": {
+     "u": 71.5,
+     "v": 115
+    },
+    "floor": "1F",
+    "note": "프레임의 형태·동선 관계 비교용. 공식 약도/보존 구조에 맞춘 위치이며 촬영 지점의 측량 좌표가 아님. y는 눈높이가 아니라 모델 바닥 높이."
+   },
+   {
+    "round": 13,
+    "spot": "공식 1F 유니클로 이후 연결부",
+    "photos": [
+     "refs/walk/s3_gyeongbu/69BNJ7tHUhI_8.jpg"
+    ],
+    "x": 76.6534,
+    "y": 0,
+    "z": -62.8878,
+    "yawDeg": 51.769,
+    "pitchDeg": 0,
+    "local": {
+     "u": 70.8,
+     "v": 23
+    },
+    "floor": "1F",
+    "note": "프레임의 형태·동선 관계 비교용. 공식 약도/보존 구조에 맞춘 위치이며 촬영 지점의 측량 좌표가 아님. y는 눈높이가 아니라 모델 바닥 높이."
+   },
+   {
+    "round": 13,
+    "spot": "물결형 조명과 검정 세로 화면",
+    "photos": [
+     "refs/walk/s3_gyeongbu/69BNJ7tHUhI_13.jpg"
+    ],
+    "x": 100.5828,
+    "y": 0,
+    "z": -2.4454,
+    "yawDeg": 200.806,
+    "pitchDeg": 0,
+    "local": {
+     "u": 71.7,
+     "v": 88
+    },
+    "floor": "1F",
+    "note": "프레임의 형태·동선 관계 비교용. 공식 약도/보존 구조에 맞춘 위치이며 촬영 지점의 측량 좌표가 아님. y는 눈높이가 아니라 모델 바닥 높이."
+   },
+   {
+    "round": 13,
+    "spot": "B1 팩토리스토어 개방형 전면",
+    "photos": [
+     "refs/walk/s3_gyeongbu/J0LLdN5rPnI_2.jpg"
+    ],
+    "x": 80.6624,
+    "y": -6,
+    "z": -5.039,
+    "yawDeg": 290.806,
+    "pitchDeg": 0,
+    "local": {
+     "u": 54,
+     "v": 78.5
+    },
+    "floor": "B1",
+    "note": "프레임의 형태·동선 관계 비교용. 공식 약도/보존 구조에 맞춘 위치이며 촬영 지점의 측량 좌표가 아님. y는 눈높이가 아니라 모델 바닥 높이."
+   },
+   {
+    "round": 13,
+    "spot": "팩토리스토어 붉은 영문 간판",
+    "photos": [
+     "refs/walk/s3_gyeongbu/J0LLdN5rPnI_6.jpg"
+    ],
+    "x": 81.9992,
+    "y": -6,
+    "z": -7.1516,
+    "yawDeg": 282.275,
+    "pitchDeg": 0,
+    "local": {
+     "u": 56,
+     "v": 77
+    },
+    "floor": "B1",
+    "note": "프레임의 형태·동선 관계 비교용. 공식 약도/보존 구조에 맞춘 위치이며 촬영 지점의 측량 좌표가 아님. y는 눈높이가 아니라 모델 바닥 높이."
+   },
+   {
+    "round": 13,
+    "spot": "팩토리스토어 입구와 흰 진열대",
+    "photos": [
+     "refs/walk/s3_gyeongbu/J0LLdN5rPnI_10.jpg"
+    ],
+    "x": 86.2712,
+    "y": -6,
+    "z": -7.1702,
+    "yawDeg": 290.806,
+    "pitchDeg": 0,
+    "local": {
+     "u": 60,
+     "v": 78.5
+    },
+    "floor": "B1",
+    "note": "프레임의 형태·동선 관계 비교용. 공식 약도/보존 구조에 맞춘 위치이며 촬영 지점의 측량 좌표가 아님. y는 눈높이가 아니라 모델 바닥 높이."
+   },
+   {
+    "round": 13,
+    "spot": "다이소 경부선방면 노선도",
+    "photos": [
+     "refs/walk/s3_gyeongbu/69BNJ7tHUhI_18.jpg"
+    ],
+    "x": 231.8024,
+    "y": -6,
+    "z": -130.9334,
+    "yawDeg": 290.806,
+    "pitchDeg": 4,
+    "local": {
+     "u": 240,
+     "v": 14.5
+    },
+    "floor": "B1",
+    "note": "프레임의 형태·동선 관계 비교용. 공식 약도/보존 구조에 맞춘 위치이며 촬영 지점의 측량 좌표가 아님. y는 눈높이가 아니라 모델 바닥 높이."
+   },
+   {
+    "round": 13,
+    "spot": "다이소 고투몰방면 긴 통로",
+    "photos": [
+     "refs/walk/s3_gyeongbu/69BNJ7tHUhI_23.jpg"
+    ],
+    "x": 241.1504,
+    "y": -6,
+    "z": -134.4854,
+    "yawDeg": 110.806,
+    "pitchDeg": 3,
+    "local": {
+     "u": 250,
+     "v": 14.5
+    },
+    "floor": "B1",
+    "note": "프레임의 형태·동선 관계 비교용. 공식 약도/보존 구조에 맞춘 위치이며 촬영 지점의 측량 좌표가 아님. y는 눈높이가 아니라 모델 바닥 높이."
+   },
+   {
+    "round": 13,
+    "spot": "다이소 PET STREET·청록 기둥",
+    "photos": [
+     "refs/walk/s3_gyeongbu/zHONiMorRm0_12.jpg"
+    ],
+    "x": 226.474,
+    "y": -6,
+    "z": -128.9088,
+    "yawDeg": 207.931,
+    "pitchDeg": 0,
+    "local": {
+     "u": 234.3,
+     "v": 14.5
+    },
+    "floor": "B1",
+    "note": "프레임의 형태·동선 관계 비교용. 공식 약도/보존 구조에 맞춘 위치이며 촬영 지점의 측량 좌표가 아님. y는 눈높이가 아니라 모델 바닥 높이."
+   },
+   {
+    "round": 13,
+    "spot": "다이소 펫 포장상품",
+    "photos": [
+     "refs/walk/s3_gyeongbu/zHONiMorRm0_22.jpg"
+    ],
+    "x": 227.1415,
+    "y": -6,
+    "z": -128.8414,
+    "yawDeg": 183.703,
+    "pitchDeg": -4,
+    "local": {
+     "u": 234.9,
+     "v": 14.8
+    },
+    "floor": "B1",
+    "note": "프레임의 형태·동선 관계 비교용. 공식 약도/보존 구조에 맞춘 위치이며 촬영 지점의 측량 좌표가 아님. y는 눈높이가 아니라 모델 바닥 높이."
+   },
+   {
+    "round": 13,
+    "spot": "다이소 캐릭터 파우치",
+    "photos": [
+     "refs/walk/s3_gyeongbu/69BNJ7tHUhI_28.jpg"
+    ],
+    "x": 246.7592,
+    "y": -6,
+    "z": -136.6166,
+    "yawDeg": 200.806,
+    "pitchDeg": -4,
+    "local": {
+     "u": 256,
+     "v": 14.5
+    },
+    "floor": "B1",
+    "note": "프레임의 형태·동선 관계 비교용. 공식 약도/보존 구조에 맞춘 위치이며 촬영 지점의 측량 좌표가 아님. y는 눈높이가 아니라 모델 바닥 높이."
+   },
+   {
+    "round": 13,
+    "spot": "다이소 여행·건강 상품",
+    "photos": [
+     "refs/walk/s3_gyeongbu/69BNJ7tHUhI_33.jpg"
+    ],
+    "x": 252.368,
+    "y": -6,
+    "z": -138.7478,
+    "yawDeg": 200.806,
+    "pitchDeg": -4,
+    "local": {
+     "u": 262,
+     "v": 14.5
+    },
+    "floor": "B1",
+    "note": "프레임의 형태·동선 관계 비교용. 공식 약도/보존 구조에 맞춘 위치이며 촬영 지점의 측량 좌표가 아님. y는 눈높이가 아니라 모델 바닥 높이."
+   },
+   {
+    "round": 13,
+    "spot": "야외 승차홈 흰 기둥과 버스",
+    "photos": [
+     "refs/walk/s3_gyeongbu/jpOjc7GGnDo_5.jpg"
+    ],
+    "x": 109.0294,
+    "y": 0.14,
+    "z": 4.7218,
+    "yawDeg": 290.806,
+    "pitchDeg": 0,
+    "local": {
+     "u": 77.05,
+     "v": 97.7
+    },
+    "floor": "1F",
+    "note": "프레임의 형태·동선 관계 비교용. 공식 약도/보존 구조에 맞춘 위치이며 촬영 지점의 측량 좌표가 아님. y는 눈높이가 아니라 모델 바닥 높이."
+   },
+   {
+    "round": 13,
+    "spot": "승차홈 경사 기둥·은색 봉·검정 줄",
+    "photos": [
+     "refs/walk/s3_gyeongbu/jpOjc7GGnDo_80.jpg"
+    ],
+    "x": 109.0892,
+    "y": 0.14,
+    "z": 5.02,
+    "yawDeg": 6.769,
+    "pitchDeg": 0,
+    "local": {
+     "u": 77,
+     "v": 98
+    },
+    "floor": "1F",
+    "note": "프레임의 형태·동선 관계 비교용. 공식 약도/보존 구조에 맞춘 위치이며 촬영 지점의 측량 좌표가 아님. y는 눈높이가 아니라 모델 바닥 높이."
+   },
+   {
+    "round": 13,
+    "spot": "6번홈 주변 기둥·버스",
+    "photos": [
+     "refs/walk/s3_gyeongbu/jpOjc7GGnDo_130.jpg"
+    ],
+    "x": 111.6122,
+    "y": 0.14,
+    "z": 11.3785,
+    "yawDeg": 290.806,
+    "pitchDeg": 0,
+    "local": {
+     "u": 77.1,
+     "v": 104.84
+    },
+    "floor": "1F",
+    "note": "프레임의 형태·동선 관계 비교용. 공식 약도/보존 구조에 맞춘 위치이며 촬영 지점의 측량 좌표가 아님. y는 눈높이가 아니라 모델 바닥 높이."
+   },
+   {
+    "round": 13,
+    "spot": "지붕 아래 승차홈 줄",
+    "photos": [
+     "refs/walk/s3_gyeongbu/jpOjc7GGnDo_155.jpg"
+    ],
+    "x": 116.9036,
+    "y": 0.14,
+    "z": 25.5856,
+    "yawDeg": 20.806,
+    "pitchDeg": 0,
+    "local": {
+     "u": 77,
+     "v": 120
+    },
+    "floor": "1F",
+    "note": "프레임의 형태·동선 관계 비교용. 공식 약도/보존 구조에 맞춘 위치이며 촬영 지점의 측량 좌표가 아님. y는 눈높이가 아니라 모델 바닥 높이."
+   },
+   {
+    "round": 13,
+    "spot": "하차장 유리문 옆 검정 쓰레기통 네 칸",
+    "photos": [
+     "refs/walk/s3_gyeongbu/Rq5bLTg7xPI_100.jpg"
+    ],
+    "x": 123.8512,
+    "y": 0.14,
+    "z": -68.5194,
+    "yawDeg": 20.806,
+    "pitchDeg": 0,
+    "local": {
+     "u": 116.92,
+     "v": 34.5
+    },
+    "floor": "1F",
+    "note": "프레임의 형태·동선 관계 비교용. 공식 약도/보존 구조에 맞춘 위치이며 촬영 지점의 측량 좌표가 아님. y는 눈높이가 아니라 모델 바닥 높이."
+   },
+   {
+    "round": 13,
+    "spot": "하차장 끝 세차 작업 구역",
+    "photos": [
+     "refs/walk/s3_gyeongbu/Rq5bLTg7xPI_300.jpg"
+    ],
+    "x": 118.6628,
+    "y": 0,
+    "z": -54.2456,
+    "yawDeg": 94.106,
+    "pitchDeg": 0,
+    "local": {
+     "u": 107,
+     "v": 46
+    },
+    "floor": "1F",
+    "note": "프레임의 형태·동선 관계 비교용. 공식 약도/보존 구조에 맞춘 위치이며 촬영 지점의 측량 좌표가 아님. y는 눈높이가 아니라 모델 바닥 높이."
+   },
+   {
+    "round": 13,
+    "spot": "꽃시장 승강기 복도·음료 자판기",
+    "photos": [
+     "refs/walk/s3_gyeongbu/Zq_7eC75nBI_230.jpg"
+    ],
+    "x": 63.472,
+    "y": 11,
+    "z": -25.7862,
+    "yawDeg": 236.023,
+    "pitchDeg": 0,
+    "local": {
+     "u": 45.3,
+     "v": 53
+    },
+    "floor": "3F",
+    "note": "프레임의 형태·동선 관계 비교용. 공식 약도/보존 구조에 맞춘 위치이며 촬영 지점의 측량 좌표가 아님. y는 눈높이가 아니라 모델 바닥 높이."
+   },
+   {
+    "round": 13,
+    "spot": "꽃시장 핸드카트·포장 다발",
+    "photos": [
+     "refs/walk/s3_gyeongbu/Zq_7eC75nBI_260.jpg"
+    ],
+    "x": 70.9784,
+    "y": 11,
+    "z": -24.8942,
+    "yawDeg": 179.768,
+    "pitchDeg": -3,
+    "local": {
+     "u": 52,
+     "v": 56.5
+    },
+    "floor": "3F",
+    "note": "프레임의 형태·동선 관계 비교용. 공식 약도/보존 구조에 맞춘 위치이며 촬영 지점의 측량 좌표가 아님. y는 눈높이가 아니라 모델 바닥 높이."
+   },
+   {
+    "round": 13,
+    "spot": "부자재 뒤 포장 작업대와 파랑 상자",
+    "photos": [
+     "refs/walk/s3_gyeongbu/Zq_7eC75nBI_1050.jpg"
+    ],
+    "x": 89.7188,
+    "y": 11,
+    "z": 72.2872,
+    "yawDeg": 275.874,
+    "pitchDeg": 0,
+    "local": {
+     "u": 35,
+     "v": 154
+    },
+    "floor": "3F",
+    "note": "프레임의 형태·동선 관계 비교용. 공식 약도/보존 구조에 맞춘 위치이며 촬영 지점의 측량 좌표가 아님. y는 눈높이가 아니라 모델 바닥 높이."
+   },
+   {
+    "round": 13,
+    "spot": "꽃시장 설비벽·붉은 배관·쪽지",
+    "photos": [
+     "refs/walk/s3_gyeongbu/Zq_7eC75nBI_1250.jpg"
+    ],
+    "x": 59.7589,
+    "y": 11,
+    "z": 64.9503,
+    "yawDeg": 184.106,
+    "pitchDeg": 0,
+    "local": {
+     "u": 9.6,
+     "v": 136.5
+    },
+    "floor": "3F",
+    "note": "프레임의 형태·동선 관계 비교용. 공식 약도/보존 구조에 맞춘 위치이며 촬영 지점의 측량 좌표가 아님. y는 눈높이가 아니라 모델 바닥 높이."
+   },
+   {
+    "round": 13,
+    "spot": "서로 마주 보는 꽃시장 엘리베이터",
+    "photos": [
+     "refs/walk/s3_gyeongbu/Zq_7eC75nBI_1780.jpg"
+    ],
+    "x": 64.8928,
+    "y": 11,
+    "z": -22.047,
+    "yawDeg": 20.806,
+    "pitchDeg": 0,
+    "local": {
+     "u": 45.3,
+     "v": 57
+    },
+    "floor": "3F",
+    "note": "프레임의 형태·동선 관계 비교용. 공식 약도/보존 구조에 맞춘 위치이며 촬영 지점의 측량 좌표가 아님. y는 눈높이가 아니라 모델 바닥 높이."
    }
   ],
   "round7": {
@@ -3343,25 +3943,7 @@
     "group_splits": "생화 동편 남쪽 v66, 조화 v110에서 분할; 입구 생화 두 열은 북쪽 조화 그룹에 한 번만 생성."
    }
   },
-  "junctions_to_add": [
-   {
-    "id": "J_G11_DAISO",
-    "a": "gotomall",
-    "b": "gyeongbu",
-    "y": -6,
-    "pa": [
-     140.6504,
-     -132
-    ],
-    "pb": [
-     140.6504,
-     -111.8096
-    ],
-    "width": 5.6,
-    "owner": "gyeongbu",
-    "note": "G11 남측 문·상행 계단 이후 gotomall 소유 복도는 pa까지. gyeongbu는 pa부터 GATE4/디즈니 짧은 가지까지. 높이/절대위치 추정; _junctions.js 담당 작업이 등록할 정확한 엔트리."
-   }
-  ],
+  "junctions_to_add": [],
   "round10": {
    "date": "2026-11-07",
    "reference_priority": [
@@ -4065,6 +4647,217 @@
    },
    "detail_exceptions": [],
    "git_diff_check": "허용 두 파일 통과"
+  },
+  "round13": {
+   "date": "2026-11-07",
+   "priority": [
+    "1 레이아웃·층·연결",
+    "2 색상·디자인",
+    "3 집기·상품"
+   ],
+   "evidence": [
+    ".codex-jobs/evidence/walk_s3_gyeongbu.json",
+    ".codex-jobs/evidence/walk_synthesis.md",
+    "refs/official/gyeongbu/exterminal_floor/n_floor011.jpg",
+    "refs/official/gyeongbu/exterminal_floor/n_floorb01.jpg",
+    "refs/official/gyeongbu/exterminal_floor/f5_pop.png",
+    "refs/official/gyeongbu/exterminal_directory_parsed.json"
+   ],
+   "layout": {
+    "official_preserved": [
+     "유니클로 본관1F #35 및 기존 내부2F",
+     "꽃시장 본관3F",
+     "5F 입점 준비 중",
+     "B1 팩토리 #19",
+     "다이소 GATE1/2/4·J2·J_G11_DAISO",
+     "승차홈 1F 야외·OSM 위치/기존 번호"
+    ],
+    "main_entry": {
+     "local": [
+      70,
+      6
+     ],
+     "floor": "1F",
+     "width": 4,
+     "reason": "공식 유니클로 옆 열린 홀로 이어지는 유리문"
+    },
+    "main_lifts": [
+     {
+      "local": [
+       42,
+       55
+      ],
+      "face": "+u"
+     },
+     {
+      "local": [
+       48.6,
+       55
+      ],
+      "face": "-u"
+     }
+    ],
+    "lift_corridor": {
+     "local_rect": [
+      43.1,
+      49,
+      47.5,
+      58.7
+     ],
+     "floor": "3F",
+     "clear_width": 4.4,
+     "note": "shaft/holes/clearance follow all B1~10F landings"
+    },
+    "factory_front": {
+     "local_u": 58,
+     "local_v_center": 78.5,
+     "opening_width": 11.8,
+     "floor": "B1"
+    },
+    "packing": {
+     "local_rect": [
+      26,
+      153,
+      50,
+      158.5
+     ],
+     "floor": "3F"
+    },
+    "wash_area": {
+     "local_rect": [
+      98.5,
+      37,
+      106,
+      52
+     ],
+     "floor": "1F",
+     "confidence": "inferred low; adjacency only"
+    },
+    "new_junctions": []
+   },
+   "design": [
+    "1F 정문 짙은 회색 포털·외부 붉은 UNIQLO 표지, 파랑 안내선/노란 점자",
+    "1F 크림 큰 타일·회색 인레이·흰 곡선 코브·목재 상부 띠",
+    "승차홈 흰 경사 기둥·검정 받침·벽돌무늬 포장; 기존 철골 차양 유지",
+    "B1 팩토리스토어 검정 프레임/붉은 SHINSEGAE FACTORY STORE; 연베이지 타일",
+    "다이소 청록 기둥·흰/파랑/분홍 선반 끝; 3F 기존 초록 에폭시·형광등 보존"
+   ],
+   "details": [
+    "1F 복도 발권기4대·화분 나무1그루·검정 디지털 화면·일부 상부 셔터",
+    "하차문 옆 검정 쓰레기통4칸·흰 원기둥, 승차홈 은색 스탠션과 검정 줄",
+    "다이소 주통로 양방향 노선도·PET STREET·펫/캐릭터 파우치/여행·건강 상품",
+    "3F 음료 자판기·핸드카트·파란 통·진로/포장 상자·생수통·스테인리스 작업대·붉은 배관/회색 분전함/쪽지"
+   ],
+   "conflicts": [
+    "ROUND13 꽃시장: 공식 3F와 Zq_200~1780의 초록 바닥 꽃도매상가를 채택. 고투몰 동쪽 끝이라는 2차 글은 채택하지 않으며, 고투몰에 꽃시장을 신설하지 않음.",
+    "ROUND13 유니클로: 공식 본관1F #35 [u34..66,v6..23] 유지. 69BNJ7tHUhI_8/13에는 B1 층 표기나 연속 하강 장면이 없으므로 영상의 코브·긴 통로는 1F 접근부에 대응. B1 유니클로나 새 매장은 추가하지 않음. 그 대응 위치는 추정.",
+    "ROUND13 센트럴시티 연결: Bldy_55/80/110의 외부 횡단보도 경로를 유지. 2026-09-23 스타벅스 오른쪽 통로 글은 별도 경로 공존 가능성만 기록. 두 건물 사이 연속 영상/측량이 없으므로 새 실내 연결 또는 junction을 생성하지 않음.",
+    "ROUND13 다이소2호점: 영상 설명의 별도 지점 주장은 보존하지만 msbx_2에는 해당 매장 문·층표지가 보이지 않고 타코벨 전면이 보임. 공식 목록과 round10 배치를 우선해 2호점의 층·입구는 사용자 영상 필요로 남김. GATE1/2/4는 같은 기존 긴 매장 출입구로 보존.",
+    "ROUND13 5F: 공식 f5_pop.png의 입점 준비중을 유지. 위키 기반 신세계 본사는 stated 근거이고 2025+ 프레임 확인이 아니므로 덮어쓰지 않음.",
+    "ROUND13 엘리베이터: Zq_230/1780의 마주 보는 문을 실제 양쪽 승강기로 구현. 중앙 코어를 u42와48.6,v55로 옮겨 각각 +u/-u를 향하게 하고 모든 층 구멍·도어 여유폭도 이동. 4.4m 사이 복도와 모든 층 같은 축 적용은 모델 추정이며 실측 아님.",
+    "ROUND13 정문은 유니클로 옆 u70,v6의 기존 유리 전면에 4m 문을 추가. 이전 입구와 공식 매장 윤곽은 유지. 정문→목재 띠→긴 코브 복도 u68.2..75.25는 영상 디자인을 공식/기존 동선에 등록한 추정이며 연속 촬영 경로의 완전한 복원이 아님.",
+    "ROUND13 승차홈 경사 기둥은 기존 홈 사이 중간값에 놓음. 흰 기둥/검정 하단/청색 표지/줄서기 봉의 존재는 seen이나 피치·각도·정밀 좌표는 추정. 하차장 네 칸 쓰레기통은 u116.92 부근의 기존 출입문 옆에 등록.",
+    "ROUND13 세차구역은 하차장 끝이라는 인접 관계만 확인. 모델의 u98.5..106,v37..52는 빈 지상 작업구역에 맞춘 낮은 확신 배치. 실제 세차동 크기·방향·버스 위치는 미확인; 새 세차동 건물이나 확정 차량 배치는 만들지 않음.",
+    "ROUND13 꽃시장 생화→소품/화기→포장 순서는 유지/보강. 포장 작업대는 v153..158.5 후면, 설비벽은 u8.14..11.5,v137..141, 승강기 옆 재고는 v57.8..58.4로 근사. 기존 생화·조화·크리스마스 재고와 사람은 촬영 시각 차이만으로 삭제하지 않음.",
+    "ROUND13 다이소 PET STREET/여행/건강/캐릭터 상품과 노선도는 기존 선반 끝과 긴 주통로에 보강. 상품 구역의 정확한 u값과 문구 배치는 추정. 가격·운행 시간은 새로 주장하지 않음.",
+    "ROUND13 공통 충돌 중 한강 G2/8-1, 스위트파크 층, 오픈스테이지 위치는 이 모듈의 소유 범위 밖이며 이 작업에서 판정하거나 옮기지 않음."
+   ],
+   "not_rebuilt": [
+    {
+     "frames": [
+      "69BNJ7tHUhI_3.jpg",
+      "Bldy3KZh7R4_110.jpg",
+      "Bldy3KZh7R4_140.jpg",
+      "Bldy3KZh7R4_175.jpg"
+     ],
+     "reason": "신세계/센트럴시티 소유 공간; 동시 작업 범위 침범 없음"
+    },
+    {
+     "frames": [
+      "msbxB25V6JQ_2.jpg"
+     ],
+     "reason": "2호점의 입구와 층 미확인. 기존 공식 1F 홀과 비교하는 자료로만 사용"
+    },
+    {
+     "frames": [
+      "Bldy3KZh7R4_30.jpg",
+      "Bldy3KZh7R4_55.jpg",
+      "Bldy3KZh7R4_80.jpg"
+     ],
+     "reason": "기존 대합실/외부 통로 유지. 보행 로그만으로 추가 실내 연결의 위치를 확정하지 않음"
+    }
+   ],
+   "trace_frames": 28,
+   "render": {
+    "status": "operator_pending",
+    "reason": "사용자 지시대로 tests/shot.mjs 실행하지 않음. 모든 재현 프레임의 바닥 높이 카메라를 modeling.trace에 저장.",
+    "operator_command": "node tests/shot.mjs --places gyeongbu --city 0 --out shots/gyeongbu --views \"Zq_7eC75nBI_60:63.4736,0,-95.3216,200.806,0;Zq_7eC75nBI_80:66.6704,0,-86.9084,200.806,6;Zq_7eC75nBI_100:77.3826,0,-62.095,200.806,7;Zq_7eC75nBI_120:86.5243,0,-37.7547,57.675,0;Zq_7eC75nBI_145:102.1718,0,2.2996,200.806,0;Zq_7eC75nBI_170:109.9862,0,22.8652,200.806,7;69BNJ7tHUhI_8:76.6534,0,-62.8878,51.769,0;69BNJ7tHUhI_13:100.5828,0,-2.4454,200.806,0;J0LLdN5rPnI_2:80.6624,-6,-5.039,290.806,0;J0LLdN5rPnI_6:81.9992,-6,-7.1516,282.275,0;J0LLdN5rPnI_10:86.2712,-6,-7.1702,290.806,0;69BNJ7tHUhI_18:231.8024,-6,-130.9334,290.806,4;69BNJ7tHUhI_23:241.1504,-6,-134.4854,110.806,3;zHONiMorRm0_12:226.474,-6,-128.9088,207.931,0;zHONiMorRm0_22:227.1415,-6,-128.8414,183.703,-4;69BNJ7tHUhI_28:246.7592,-6,-136.6166,200.806,-4;69BNJ7tHUhI_33:252.368,-6,-138.7478,200.806,-4;jpOjc7GGnDo_5:109.0294,0.14,4.7218,290.806,0;jpOjc7GGnDo_80:109.0892,0.14,5.02,6.769,0;jpOjc7GGnDo_130:111.6122,0.14,11.3785,290.806,0;jpOjc7GGnDo_155:116.9036,0.14,25.5856,20.806,0;Rq5bLTg7xPI_100:123.8512,0.14,-68.5194,20.806,0;Rq5bLTg7xPI_300:118.6628,0,-54.2456,94.106,0;Zq_7eC75nBI_230:63.472,11,-25.7862,236.023,0;Zq_7eC75nBI_260:70.9784,11,-24.8942,179.768,-3;Zq_7eC75nBI_1050:89.7188,11,72.2872,275.874,0;Zq_7eC75nBI_1250:59.7589,11,64.9503,184.106,0;Zq_7eC75nBI_1780:64.8928,11,-22.047,20.806,0\"",
+    "operator_command_executed": false,
+    "camera_validation": "28/28 pass: real physics support/capsule checked with city and all details; y is floor height."
+   },
+   "preserved": [
+    "기존 꽃시장 계절 진열/인원",
+    "OSM 외피/승차홈/버스/주차",
+    "공식 점포/기존 매표기/집기",
+    "다이소 GATE1/2/4와 한가람 접근 단차",
+    "사용자 루트 수직동선"
+   ],
+   "scope": [
+    "js/places/gyeongbu.js",
+    "data/research/gyeongbu.json"
+   ],
+   "junction_registry_note": "기존 J_G11_DAISO가 _junctions.js에 등록된 것을 읽기 확인하여 과거 pending 목록에서 제거. registry 파일은 수정하지 않음. 미확인 센트럴시티 실내 연결은 pending 제안도 생성하지 않음.",
+   "prior_reference_priority": "ROUND8: shots/trace7/gyeongbu_1.png~13.png와 refs/interior/gb_hall·gb_flower 원본 사진을 비교. 위치는 기존 OSM 윤곽/POI와 연결 계약을 우선. 사진 기반 마감과 카메라 가림을 수정하며 기존 층간 구멍·버스·상층 상세를 보존. 이전 라운드 기록은 이력.",
+   "completion": "Completed priority1 layout, priority2 design, priority3 detail. Only js/places/gyeongbu.js and data/research/gyeongbu.json edited by this job. Required smoke OK and whole-world walk689 ok,0 blocked. No commits. Rendering remains operator-side by explicit instruction."
+  },
+  "validation_round10": {
+   "smoke": {
+    "command": "node tests/smoke.mjs gyeongbu gotomall station gyeongbu_east",
+    "result": "OK (final geometry, all detail built)"
+   },
+   "walk": {
+    "command": "node tests/walk.mjs",
+    "result": "final rerun: 494 ok, 0 blocked",
+    "initial_failures_resolved": "initial run: centralcity/J6/1M and north-wing B1 elevator blocked; owned elevator opening fixed, final shared-workspace rerun has no blocked routes"
+   },
+   "render": {
+    "result": "tests/shot.mjs not run per user sandbox instruction; trace cameras recorded at floor level"
+   },
+   "ground_floor": {
+    "command": "node tests/visfloor.mjs 0 -15 -185 315 100 /tmp/round10-gyeongbu-floor.png gyeongbu,gotomall,station,gyeongbu_east",
+    "result": "rendered and opened; red floor apertures confined to circulation wells, no broad missing ground floor"
+   },
+   "new_routes": {
+    "daiso_g11": "8 ok, 0 blocked: exact proposed junction, GATE4 branch, long store, both GATE1 doors",
+    "uniqlo_and_stairs": "13/13 pass: Uniqlo both ways/common hall, GATE1 both ways/store, GATE2 stair and escalator via bottom pocket/turnstiles into store",
+    "entry_only": "south→north allowed, reverse north→south clamped at v3.97; side u217 unaffected",
+    "elevator": "북측 동 B1→store and rear aisle pass after frontwall opening fix",
+    "trace": "30 round10 cameras support/capsule checked; 1 counter-view camera moved 0.5m clear of shelf; all now at actual modeled floor height",
+    "g9_dip": "2 narrow-bounds routes +23 support/capsule samples pass; y=-6→-7.5→-6 and zones continuous"
+   },
+   "metadata": {
+    "command": "NODE_OPTIONS='--import=/tmp/round10-meta-redirect.mjs' node tools/gen_meta.mjs",
+    "result": "completed; generated /tmp/round10-meta.json without writing js/places/_meta.json, respecting four-file-only scope",
+    "pending": "coordinating registry job must add J_G11_DAISO from modeling.junctions_to_add then regenerate/apply shared metadata",
+    "gyeongbu_box": [
+     0.8,
+     -221.7,
+     425.1,
+     95
+    ]
+   },
+   "walk_scoped": {
+    "command": "node tests/walk.mjs gyeongbu gotomall station gyeongbu_east",
+    "result": "129 ok, 0 blocked"
+   },
+   "trace_cameras": {
+    "new": 30,
+    "all_recorded": 76,
+    "floor_failures": 0,
+    "capsule_collisions": 0,
+    "result": "new-camera sample clearance verified; quiet checkout camera moved 0.5m from shelf"
+   },
+   "git_diff_check": "passed for the four authorized files"
   }
  }
 }

@@ -208,6 +208,39 @@
       "title": "Round 10 evidence audit; Naver 원문 접근 실패 시 evidence_found 발췌문으로 확인",
       "accessed": "2026-11-07",
       "type": "provided_audit"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=NbbPKOMGFL4",
+      "title": "반포역 대합실·승강장 영상; 뉴코아 연결통로 증거로 사용하지 않음",
+      "type": "provided_walk_frames",
+      "reviewed": "2026-11-07",
+      "access_note": "저장된 프레임과 제공 walk_log를 직접 대조. 영상 원문을 새로 재생하거나 설명란을 독립 검증한 것은 아님."
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=vu1hLaN4BTY",
+      "title": "반포역 덕후역 전시; newcore 범위 밖",
+      "type": "provided_walk_frames",
+      "reviewed": "2026-11-07",
+      "access_note": "저장된 프레임과 제공 walk_log를 직접 대조. 영상 원문을 새로 재생하거나 설명란을 독립 검증한 것은 아님."
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=qZYgbakp2UA",
+      "title": "킴스클럽 보행: 조미료 선반·포장식품·노출 천장 식품매장",
+      "type": "provided_walk_frames",
+      "reviewed": "2026-11-07",
+      "access_note": "저장된 프레임과 제공 walk_log를 직접 대조. 영상 원문을 새로 재생하거나 설명란을 독립 검증한 것은 아님."
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=T92eDMIb3vE",
+      "title": "뉴코아에서 고속터미널 보행: NEWCORE 상부 줄무늬 외벽",
+      "type": "provided_walk_frames",
+      "reviewed": "2026-11-07",
+      "access_note": "저장된 프레임과 제공 walk_log를 직접 대조. 영상 원문을 새로 재생하거나 설명란을 독립 검증한 것은 아님."
+    },
+    {
+      "url": ".codex-jobs/evidence/walk_s1_banpo_newcore.json",
+      "title": "완성된 s1 보행 로그; 초기 synthesis의 근거 0 문구를 대체",
+      "type": "provided_walk_log"
     }
   ],
   "buildings": [
@@ -424,11 +457,14 @@
     "R10: 1·2관 B1을 뉴코아 내부 통로로 연결했다. 같은 모듈이므로 양끝 및 통로 zone의 place는 newcore/B1이다. 고투몰·지하철 및 3관으로 이어지는 지하 통로는 추가하지 않았다. 고터 접근은 기존 공용 잠원로 지상 경로를 유지한다.",
     "R10 사진 우선: audit의 5F 피자몰 추가 제안은 사진08·16 및 공식 식당가의 1관 B1F 표기와 모순되어 적용하지 않았다. 피자몰은 B1 보존, 애슐리 퀸즈만 5F 안내에 추가했다.",
     "R10: 3관 1F는 공식 푸드 용도에 맞춰 근거 없는 농산물 판매대 12개만 제거했다. 기존 매장 전면·가구·조명·차이797 세부 및 사진03의 외부 KIM'S CLUB 어닝은 보존했다.",
-    "R10: 솥내음 전체 집기를 후면 u15/v23.884 전면으로 회전 이동했다. PhởVua도 같은 쪽 u4/v21.884 블록으로 옮겨 사진08의 인접 관계와 메인통로에서 오른쪽(+v) 지선 진입을 반영했다. 간섭한 RIMINI·신차이 집기는 옛 솥내음·PhởVua bay로 옮기고 중앙 테이블 2개는 남쪽 빈 좌석 구역으로 보존했다. 치수·점포선·세계 방위는 여전히 추정이다."
+    "R10: 솥내음 전체 집기를 후면 u15/v23.884 전면으로 회전 이동했다. PhởVua도 같은 쪽 u4/v21.884 블록으로 옮겨 사진08의 인접 관계와 메인통로에서 오른쪽(+v) 지선 진입을 반영했다. 간섭한 RIMINI·신차이 집기는 옛 솥내음·PhởVua bay로 옮기고 중앙 테이블 2개는 남쪽 빈 좌석 구역으로 보존했다. 치수·점포선·세계 방위는 여전히 추정이다.",
+    "R13: 반포역 영상 대부분은 승강장/대합실이며 뉴코아 직결·바로 앞 출구를 보여주지 않는다. 고속터미널 표지와 유리문을 보행통로로 오인하지 않음. 사용자 루트의 지상 반포역→1관→고투몰 동편은 보존·검사한다.",
+    "R13: 2관 B1은 기존 30개 진열대·6개 낮은 식품 카운터를 보존 재배치해 관간 연결 v18에 폭6.3m 주 통로, v30 전후 횡통로를 확보. 1관 푸드스트리트·3관 식당가·상층 용도와 기존 세부는 보존했다.",
+    "R13: 킴스클럽에 회색 광택 타일, 흰 사각 기둥, 검은 노출 격자·회색 덕트·흰 스폿 조명, 어두운 매대, 노랑/크림색 병마개, 전자 라벨과 무침가루 봉지, 낮은 식품 트레이·카트를 추가했다. 1관 상부는 회백색 세로 띠와 금속색 NEWCORE 글자를 보강했다."
   ],
   "modeling": {
-    "round": 10,
-    "scope": "기존 OSM 외곽·사진 세부 보존. 감사 자료에 따라 1·2관 B1 연결, 솥내음 지선, 1관 B1 접근 안내, 3관 식당가 용도, 5F 확인 간판을 수정.",
+    "round": 13,
+    "scope": "보행 로그를 원본 프레임과 재대조. OSM·공식 관별 층과 기존 지상 접근/1·2관 B1 연결 보존; 2관 B1 주 통로 확대·델리 재배치 후 회색 바닥·노출 천장·상품 세부 반영. 반포역 실내 및 미확인 지하 직결은 모델 범위에서 제외.",
     "claims": [
       413372929,
       413372930,
@@ -1025,6 +1061,160 @@
           "target_v": 11.3
         },
         "round": 10
+      },
+      {
+        "spot": "R13_킴스클럽_주통로_1관연결",
+        "round": 13,
+        "photos": [
+          "refs/walk/s1_banpo_newcore/qZYgbakp2UA_800.jpg"
+        ],
+        "x": 228.614,
+        "y": -6,
+        "z": -461.065,
+        "yawDeg": 202.988,
+        "pitchDeg": 0,
+        "local_frame": {
+          "building": "2관",
+          "u": 0,
+          "v": 18,
+          "target_u": 24,
+          "target_v": 18
+        },
+        "note": "기존 연결축 v18; 진열대 사이 6.3m 통로. 프레임의 넓은 매장 공간을 근사. y는 바닥. 실측 촬영 위치가 아닌 모델 내 비교 카메라."
+      },
+      {
+        "spot": "R13_킴스클럽_식품코너_노출천장",
+        "round": 13,
+        "photos": [
+          "refs/walk/s1_banpo_newcore/qZYgbakp2UA_800.jpg"
+        ],
+        "x": 219.52,
+        "y": -6,
+        "z": -451.776,
+        "yawDeg": 112.988,
+        "pitchDeg": 8,
+        "local_frame": {
+          "building": "2관",
+          "u": 5,
+          "v": 30,
+          "target_u": 5,
+          "target_v": 34.998
+        },
+        "note": "흰 사각기둥·노출 덕트·스폿 조명·낮은 식품 트레이. y는 바닥. 실측 촬영 위치가 아닌 모델 내 비교 카메라."
+      },
+      {
+        "spot": "R13_킴스클럽_조미료_전자라벨",
+        "round": 13,
+        "photos": [
+          "refs/walk/s1_banpo_newcore/qZYgbakp2UA_400.jpg"
+        ],
+        "x": 230.093,
+        "y": -6,
+        "z": -470.383,
+        "yawDeg": 22.988,
+        "pitchDeg": -10,
+        "local_frame": {
+          "building": "2관",
+          "u": -8,
+          "v": 13,
+          "target_u": -10.183,
+          "target_v": 13
+        },
+        "note": "어두운 선반, 노랑/크림 뚜껑의 조미료 병과 전자 라벨. 실제 상품별 가격/매대 좌표 미확인. y는 바닥. 실측 촬영 위치가 아닌 모델 내 비교 카메라."
+      },
+      {
+        "spot": "R13_킴스클럽_무침가루",
+        "round": 13,
+        "photos": [
+          "refs/walk/s1_banpo_newcore/qZYgbakp2UA_600.jpg"
+        ],
+        "x": 219.967,
+        "y": -6,
+        "z": -466.087,
+        "yawDeg": 22.988,
+        "pitchDeg": -12,
+        "local_frame": {
+          "building": "2관",
+          "u": -8,
+          "v": 24,
+          "target_u": -10.183,
+          "target_v": 24
+        },
+        "note": "기존 상품 수를 보존하면서 봉지와 봉합선을 구체화. y는 바닥. 실측 촬영 위치가 아닌 모델 내 비교 카메라."
+      },
+      {
+        "spot": "R13_킴스클럽_빨간손잡이_카트",
+        "round": 13,
+        "photos": [
+          "refs/walk/s1_banpo_newcore/qZYgbakp2UA_800.jpg"
+        ],
+        "x": 225.085,
+        "y": -6,
+        "z": -429.696,
+        "yawDeg": 146.899,
+        "pitchDeg": -12,
+        "local_frame": {
+          "building": "2관",
+          "u": 27.5,
+          "v": 33.5,
+          "target_u": 29.583,
+          "target_v": 36.598
+        },
+        "note": "빨간 막대를 카트 손잡이로 판정. 카트는 델리 끝에 추정 배치. y는 바닥. 실측 촬영 위치가 아닌 모델 내 비교 카메라."
+      },
+      {
+        "spot": "R13_1관_회백색_세로띠",
+        "round": 13,
+        "photos": [
+          "refs/walk/s1_banpo_newcore/T92eDMIb3vE_50.jpg"
+        ],
+        "x": 298.185,
+        "y": 0,
+        "z": -376.3,
+        "yawDeg": 112.491,
+        "pitchDeg": 45,
+        "local_frame": {
+          "building": "1관",
+          "u": 0,
+          "v": -14,
+          "target_u": 0,
+          "target_v": 0
+        },
+        "note": "회색/흰색 상부 띠와 금속색 NEWCORE. 기존 아치·어닝·장식 보존. y는 바닥. 실측 촬영 위치가 아닌 모델 내 비교 카메라."
+      },
+      {
+        "spot": "R13_1관_남측_NEWCORE",
+        "round": 13,
+        "photos": [
+          "refs/walk/s1_banpo_newcore/T92eDMIb3vE_50.jpg"
+        ],
+        "x": 291.93,
+        "y": 0,
+        "z": -311.436,
+        "yawDeg": 22.491,
+        "pitchDeg": 48,
+        "local_frame": {
+          "building": "1관",
+          "u": 57.539,
+          "v": 16.592,
+          "target_u": 45.539,
+          "target_v": 16.592
+        },
+        "note": "사진05로 대응한 1관 남측 상부 파사드. 영상에서 관 번호는 미확인. y는 바닥. 실측 촬영 위치가 아닌 모델 내 비교 카메라."
+      },
+      {
+        "spot": "R13_2관_NEWCORE_금속간판",
+        "round": 13,
+        "photos": [
+          "refs/roadview/newcore_01_front.jpg",
+          "refs/walk/s1_banpo_newcore/T92eDMIb3vE_50.jpg"
+        ],
+        "x": 257,
+        "y": 0,
+        "z": -474,
+        "yawDeg": 113,
+        "pitchDeg": 40,
+        "note": "기존 2관 로드뷰 비교점. 금속색 글자/그림자 보강만 적용; 2관 상부 석재와 아치/점포는 보존. 영상50의 관 번호는 미확정이며 기존 사진을 함께 참고. y는 바닥 높이."
       }
     ],
     "trace_convention": "x 동쪽, z 남쪽, m; yaw0 북/-z,90 서,180 남,270 동. y는 카메라의 눈높이가 아닌 바닥 높이. 실내 사진은 위치 측량이 없어 모델 내 대응 장면을 찍는 비교 좌표다.",
@@ -1045,7 +1235,16 @@
       "R10 unverified: 3관과 1·2관의 실제 관간 연결 방식은 미확인. 3관 옥상 주차장의 존재는 공사 공고가 있으나 현재 개방 여부·접근 경로·계단 및 승강기 좌표·높이10.8m는 추정이다. 기존 모델 형상은 유지했다.",
       "R10 likely: 1관의 14개 지상 문에서 기존 공용 계단·엘리베이터로 갈 수 있으나 각 실제 문별 B1 직행계단 위치·정확한 코어 간격은 미확인. 안내사인의 설치 좌표 역시 모델용 추정이다.",
       "R10: 1관 5F의 공식 용도와 애슐리퀸즈 입점은 확인했지만 점포 구획은 미확인. 승강기 앞 간판은 층 안내이며 실제 매장 입구 위치를 나타내지 않는다.",
-      "R10: PhởVua의 u4/v21.884 전면과 솥내음 u15/v23.884는 사진08의 같은 쪽 블록과 지선 관계를 반영한 근사 배치다. 전면 깊이차2m와 점포 순서·회전방향·세계좌표는 실측이 아니다. 신차이 u18은 간섭을 피한 모델 재배치 위치다."
+      "R10: PhởVua의 u4/v21.884 전면과 솥내음 u15/v23.884는 사진08의 같은 쪽 블록과 지선 관계를 반영한 근사 배치다. 전면 깊이차2m와 점포 순서·회전방향·세계좌표는 실측이 아니다. 신차이 u18은 간섭을 피한 모델 재배치 위치다.",
+      "R13 충돌 판정: 초기 walk_synthesis의 newcore 근거 0은 완성 전 기록이다. 완성된 s1 로그와 저장 프레임을 우선하되 로그의 오독은 프레임으로 수정했다.",
+      "R13 충돌 판정: NbbPKOMGFL4_38의 고속터미널 표시는 반포역 승강장 스크린도어 위 열차 진행/인접역 안내다. 보행 연결문으로 읽지 않는다. 설명란의 3·4번출구→뉴코아 지하 통로 주장은 stated만 존재하므로 뉴코아·고투몰 지하 직결을 신설하지 않는다.",
+      "R13 범위 판정: NbbPKOMGFL4_8/14/20/26/32/38/44/50/57/65와 vu1hLaN4BTY_5/30/100/200은 반포역 내부다. 뉴코아 바로 앞 출구를 보여주지 않아 newcore에 대합실·승강장·덕후역·출구를 복제하지 않는다. 반포역4번출구 따릉이 OSM POI(453.32,-316.07)는 사용자 지상 루트 시작점의 참고일 뿐 출구 계단 실측 좌표가 아니다.",
+      "R13 qZYgbakp2UA_800의 식품 진열과 넓은 보행 공간을 공식 2관 B1 마트 용도에 대응했다. 영상 자체로 관·세부 코너·세계 방위를 확정할 수 없다. 매대 30개를 보존하고 v6/13/24로 배열, v18 주 통로 폭6.3m, 델리6개를 v34.998로 이동한 수치는 모델 추정이다.",
+      "R13 qZYgbakp2UA_800 빨간 막대는 카트 손잡이로 판정했다. 고정 난간을 추가하지 않았고 카트1대를 통로 밖 델리 끝 u29.583/v36.598에 배치했다. 카트 보관 위치·치수·흰 기둥3개의 간격·천장3.65m 높이는 추정이다.",
+      "R13 qZYgbakp2UA_400은 참깨/조미료와 짙은 소스 병·전자 가격표, _600은 봉지형 무침가루다. 실제 상품별 품번·현재 가격·브랜드를 판독/확인하지 못해 로고나 가격을 창작하지 않았다. 보이는 상품 종류와 포장 색·형태만 대응했다.",
+      "R13 X2Xt3L_KNYs는 강남점 여부가 미확인이다. _300도 버섯/3990원 델리가 아니라 비비고 냉장식품과 3개9990원 표지다. 해당 영상의 농산물·가격·냉장고를 강남점 위치 근거로 사용하지 않았다.",
+      "R13 qZYgbakp2UA_300의 의류층 해석은 불확실하다. 포장상품·행사기둥이 보이나 관과 층을 특정하지 않았다. _220/235와 T92eDMIb3vE_100/210/240, 0LeZwrml2Gk_15/160은 뉴코아 바로 앞의 측량 가능한 위치 단서가 없어 기존 OSM 정류장·도로를 옮기지 않았다.",
+      "R13 T92eDMIb3vE_50의 금속 NEWCORE 글자·회백색 세로 띠는 확인된다. 영상의 관 번호는 판독 불가하므로 기존 사진05로 대응한 1관 상부 파사드 색을 조정하고 기존 간판에 금속색/그림자를 보강했다. 글자 입체감은 이중 텍스트 패널로 근사했다."
     ],
     "dimensions": {
       "1관": {
@@ -1174,6 +1373,64 @@
         "chai_u": -20.411,
         "front_v": 10.3,
         "aisle_v": 13.6
+      },
+      "2관B1": {
+        "basis": "공식 2관B1 킴스클럽·델리 용도 + qZYgbakp2UA_400/600/800에서 본 진열/넓은 식품 코너. 실제 매장 측량 평면 아님.",
+        "rack_count": 30,
+        "rack_u": "-L/2+5 에서 5.8m 간격 10열",
+        "rack_rows_v": [
+          6,
+          13,
+          24
+        ],
+        "main_aisle": {
+          "center_v": 18,
+          "clear_v": [
+            15.35,
+            21.65
+          ],
+          "width_m": 6.3,
+          "connection": "기존 1관 B1 연결 입구 v18"
+        },
+        "cross_aisle": {
+          "center_v": 30,
+          "clear_centerline": true
+        },
+        "deli": {
+          "count": 6,
+          "u": [
+            0,
+            5,
+            10,
+            15,
+            20,
+            25
+          ],
+          "v": 34.998,
+          "previous_v": 37.998,
+          "customer_side_v": 33.5
+        },
+        "columns": {
+          "u": [
+            -21.583,
+            -2,
+            22.583
+          ],
+          "v": 28.2,
+          "size_m": [
+            0.65,
+            3.65,
+            0.65
+          ]
+        },
+        "ceiling_y": -2.35,
+        "stair_void_preserved": true,
+        "cart": {
+          "u": 29.583,
+          "v": 36.598,
+          "fixed_railing": false
+        },
+        "all_positions_inferred": true
       }
     },
     "architecture": {
@@ -1208,7 +1465,7 @@
       "upper_floor_content": "확인되지 않은 상층 점포 평면·진열대는 만들지 않음.",
       "between_buildings": "1관 B1 푸드스트리트와 2관 B1 킴스클럽을 동일 newcore/B1 zone의 내부 통로로 연결. 3관은 지상 출입구 보행만 유지. 고투몰·지하철 지하 직결 없음.",
       "three_roof": "기존 10.8m 옥상 주차장 및 계단·승강기 유지. 주차장 현재 개방·실제 접근 경로 미확인(guess=true).",
-      "furnishing": "기존 매장·집기 세부 보존. 솥내음·PhởVua 전체 bay를 같은 후면 블록으로 회전 이동하고 솥내음은2m 더 안쪽 지선에 둠. RIMINI·신차이 집기는 옛 솥내음·PhởVua bay로 보존 이전. 중앙 좌석2개 남쪽 재배치. 3관의 추정 농산물 판매대12개만 제거, 기존 식당가·카페와 외부 어닝 유지."
+      "furnishing": "기존 매장·집기 세부 보존. 솥내음·PhởVua 전체 bay를 같은 후면 블록으로 회전 이동하고 솥내음은2m 더 안쪽 지선에 둠. RIMINI·신차이 집기는 옛 솥내음·PhởVua bay로 보존 이전. 중앙 좌석2개 남쪽 재배치. 3관의 추정 농산물 판매대12개만 제거, 기존 식당가·카페와 외부 어닝 유지. R13: 2관B1 기존 매대30개·델리카운터6개 보존 재배치. 조미료열은 병, 건식품열 일부는 봉지 형태로 구체화. 전자 라벨·트레이·카트1대·흰 사각기둥3개 추가. 노출 천장의 기존 계단 구멍 보존. 매대는 동일한 충돌 외곽을 유지하고 받침·얇은 등판·기둥으로 표현해 병과 봉지 진열이 보이도록 했다."
     },
     "junctions_to_add": [],
     "junction_note": "1·2관 연결은 같은 newcore 모듈 내부 통로여서 공용 JUNCTIONS 추가 불필요. 교차 모듈 지하 연결은 생성하지 않음.",
@@ -1378,7 +1635,8 @@
       "research_json": "python3 -m json.tool 및 git diff --check 통과",
       "engine_limitation": "js/kit.js:491 INDOOR 집합에 newcore가 없어 B1 지하 전용 가시성 최적화가 적용되지 않는다. 보행·지오메트리 오류는 아니며 성능 최적화 누락이다. 작업 범위에 따라 엔진 파일은 수정하지 않았다."
     },
-    "verification": {
+    "notes_on_photo_topology": "사진08의 솥내음·PhởVua를 메인통로 같은 쪽 블록에 유지하고 솥내음을 2m 더 안쪽으로 배치했다. 오른쪽 지선 접근과 상대 인접 관계를 반영한 모델 근사이며 실제 점포선·깊이·순서는 미확정.",
+    "verification_round10": {
       "render": "사용자 지시로 tests/shot.mjs 미실행. 모든 수정 지점 modeling.trace 기록(y=바닥).",
       "smoke": "node tests/smoke.mjs newcore: OK",
       "smoke_neighbors_city": "node tests/smoke.mjs newcore banwon --city: OK",
@@ -1416,7 +1674,62 @@
         }
       ]
     },
-    "notes_on_photo_topology": "사진08의 솥내음·PhởVua를 메인통로 같은 쪽 블록에 유지하고 솥내음을 2m 더 안쪽으로 배치했다. 오른쪽 지선 접근과 상대 인접 관계를 반영한 모델 근사이며 실제 점포선·깊이·순서는 미확정."
+    "walk_evidence": {
+      "round": 13,
+      "log": ".codex-jobs/evidence/walk_s1_banpo_newcore.json",
+      "synthesis_status": "newcore 근거 0은 오래된 집계; 본 round에서 완성된 s1과 직접 본 프레임을 우선.",
+      "rebuilt_frames": [
+        "T92eDMIb3vE_50",
+        "qZYgbakp2UA_400",
+        "qZYgbakp2UA_600",
+        "qZYgbakp2UA_800"
+      ],
+      "scope_excluded": {
+        "NbbPKOMGFL4": "반포역 내부; 출구 외부 장면 없음",
+        "vu1hLaN4BTY": "반포역 내부 덕후역",
+        "X2Xt3L_KNYs": "강남점 미확인"
+      },
+      "layout_decisions": [
+        "공식 층수/관별 용도와 OSM 외곽 유지",
+        "1·2관B1 연결 유지; 고투몰/반포역 직결 추가 없음",
+        "기존 지상 사용자 루트 유지",
+        "마트 중앙/식품코너 통로 폭을 넓히고 기존 집기는 보존"
+      ],
+      "remaining_gaps": [
+        "반포역 개찰구→출구→뉴코아 정문 연속 보행",
+        "뉴코아 바로 앞 출구의 존재·형태·위치",
+        "1·2관 지하 연결 실측 위치·길이",
+        "마트 내 부서별 위치와 관 경계",
+        "3관 관간 연결·옥상 접근 현황"
+      ],
+      "common_synthesis_conflicts": "꽃시장·경부선/센트럴시티 연결·한강 출구·UNIQLO·스위트파크·오픈스테이지는 newcore 범위 밖. 다른 모듈에 대한 판정/수정 없음."
+    },
+    "verification": {
+      "render": "사용자 지시로 tests/shot.mjs 미실행. 직접 프레임 열람 완료; 재현한 모든 프레임에 modeling.trace의 바닥 y 카메라 기록.",
+      "layout_before_finishes": "실제 kit/physics + lazy detail: 기존7경로 모두 통과. v18/v30 통로 각각253표본, 막힘0; 주통로→델리 고객면(5,33.5) 통과.",
+      "smoke": "node tests/smoke.mjs newcore streets gotomall: OK (최종 코드·전체 lazy detail 생성, detail errors 없음)",
+      "walk_neighbors": "node tests/walk.mjs newcore streets gotomall: 90 ok, 0 blocked. 사용자 루트1의 네 구간 모두 통과.",
+      "targeted_routes": "실제 kit/physics: 2관B1→1관B1, 각 관 B1주통로→계단·엘리베이터, B1→1F 계단, 주통로→델리 등 8경로 통과. v18/v30 축 506표본, 충돌/바닥오류0.",
+      "geometry_audit": {
+        "all_detail_quads": 73866,
+        "boxes": 8760,
+        "signs": 185,
+        "detail_errors": 0,
+        "round13_B1_trace_cameras": 5,
+        "camera_floor_or_capsule_errors": 0,
+        "spawns": 11,
+        "zones": 26,
+        "elevators": 4,
+        "render_status": "렌더 검증 미실행; 지오메트리·물리 검사 및 프레임 직접 대조 결과"
+      },
+      "research_json": "node --check, python3 -m json.tool, git diff --check 통과",
+      "metadata": "claims·OSM 외곽·zone 경계·층·지상 출입구 불변. _meta.json 및 공유 junction 파일 미수정.",
+      "independent_review": "증거/코드 독립 검토 완료. 매대 불투명 몸체가 상품을 가리는 문제는 얇은 등판/받침/기둥으로 해결. 기존 충돌 footprint 유지. 계단 ceiling hole·덕트 간섭·라벨 방향·외벽 패널 순서 확인.",
+      "walk_full_world": "node tests/walk.mjs: 687 ok, 0 blocked; exit 0. 최종 newcore 코드 기준, 모든 사용자 루트 보행 가능.",
+      "walk_failures": [],
+      "frame_trace_coverage": "재현한 영상 프레임4개 모두 trace 포함. R13 카메라8개(y=바닥), 모든 참조 파일 존재 확인.",
+      "scope": "수정 파일은 js/places/newcore.js와 data/research/newcore.json 두 개. 엔진·공유 junction·tests·다른 모듈·_meta 미수정. 커밋/푸시 없음."
+    }
   },
   "tenants": [
     {

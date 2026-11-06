@@ -207,6 +207,28 @@
    "path": ".codex-jobs/evidence/audit_gotomall.json",
    "title": "2025–2026 근거 감사",
    "date": "2026-11-07"
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=k9yW0vOWPrs",
+   "title": "Driving in Seoul 고투몰 가상 보행: A/B 서행→서편 식당가→C/D 동행",
+   "upload_date": "2026-09-14",
+   "evidence": ".codex-jobs/evidence/walk_s2_gotomall.json",
+   "local_frames": "refs/walk/s2_gotomall/k9yW0vOWPrs_*",
+   "notes": "제공된 로컬 영상 프레임과 보행 로그를 사용. 업로드 날짜는 저장 로그의 값이며 이번 작업에서 온라인 재검증하지 않음. 동·서 식당가와 상대 순서는 영상 관찰, 절대 좌표·복도 방위는 OSM에 맞춘 추정."
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=rLMagJuViqo",
+   "title": "Wandering K 고투몰 가상 보행: G5/G1–G4/G6 사인·휴게홀·타원 조명",
+   "upload_date": "2026-05-29",
+   "evidence": ".codex-jobs/evidence/walk_s2_gotomall.json",
+   "local_frames": "refs/walk/s2_gotomall/rLMagJuViqo_*",
+   "notes": "170 사인은 별도 로컬 크롭으로 판독. 445/860의 절대 위치·중앙광장 여부는 확인되지 않음. 2026-11 현지 사진의 기존 상세도 함께 유지."
+  },
+  {
+   "path": ".codex-jobs/evidence/walk_synthesis.md",
+   "title": "가상 보행 모듈 합성: gotomall 및 충돌 판정",
+   "date": "2026-11-07",
+   "notes": "이 파일의 seen/stated/inferred 구분을 유지하고 미해결 위치는 modeling.guesses에 기록."
   }
  ],
  "building": {
@@ -423,7 +445,8 @@
   "라운드 7: 제공 사진 01–41의 trace_spots 10종을 18개 B1 비교 카메라로 연결. 개별 구도는 기존 OSM 장축·층고·웰·접속을 유지하는 모델 좌표에 배치했다.",
   "notes.json의 layout에 남북으로 적힌 방향과 북/남 구역 색은 세로 안내도를 읽은 도식 설명이다. 실제 고투몰 장축은 OSM상 동북동–서남서이며 파랑 서편/분홍 중앙/초록 동편으로 유지한다.",
   "라운드 7의 명칭 BYC·pang pang·A86 에이팔육·선정아트·숲으로·청년떡볶이·쇼부는 제공 사진에서 판독했다. 모듈의 점포 줄·호수·좌표에 대응하는 실제 점포 목록을 확보한 것은 아니다.",
-  "라운드10: 공식 경부선 층별 목록에 없는 1F 다이소2호점은 추가하지 않는 최신 지시를 적용. 고투몰 자체에는 별도 다이소 매장을 생성하지 않고 경부선의 B1 단일 매장으로 연결한다."
+  "라운드10: 공식 경부선 층별 목록에 없는 1F 다이소2호점은 추가하지 않는 최신 지시를 적용. 고투몰 자체에는 별도 다이소 매장을 생성하지 않고 경부선의 B1 단일 매장으로 연결한다.",
+  "라운드13: 제공 가상보행 프레임을 레이아웃→색상/디자인→집기 순으로 반영. 동단은 반포역 방면 자체 접근부까지만 구축하고 파트너 미구현 끝벽을 유지한다. 기존 최신 상세와 공유접속은 보존; 25개 프레임별 trace와6개 충돌 판정은 modeling.interior_round13 참조."
  ],
  "unresolved": [
   "구역 경계와 정확한 호수 방향(서→동 증가 가정)",
@@ -443,18 +466,21 @@
   "사진 23·35·37은 신세계 측 통로일 가능성. 흰 대리석·팔각 기둥 특징은 고투몰 3호선 홀 남쪽 허용 공간에 근사했고 정확한 소유 경계는 미확인.",
   "새 trace 카메라의 최종 사진 구도 일치·가시성·반사 표현은 운영자 렌더 비교 대기",
   "G11 정확한 절대 좌표, G11에서 매장까지 고저차 및 실제 통로 평면: 현장은 계단 상행 확인, 모델은 -6 기준 보정 왕복 계단을 사용",
-  "새 J_G11_DAISO 메타데이터를 다른 작업의 _junctions.js 변경에 반영해야 면적 전환 연결이 완성됨",
-  "핑크 한강 안내의 실제 위치/갤러리 접속점·노선 미확인"
+  "핑크 한강 안내의 실제 위치/갤러리 접속점·노선 미확인",
+  "라운드13 동단 반포역7호선 대합실의 실제 층·평면·고투몰 접속점, station 파트너 구현과 u414임시끝벽 제거 시점",
+  "라운드13 A/B·C/D 실제 북남 대응, G5/G6 사인 및TONYMOLY 정확한좌표, 고주파체험관·주황식기점·동편꽃가판의 실제호수",
+  "라운드13 580유리문 최종G번호와8-1동일성, 445휴게홀 및860광장의 실제위치, 서편/중앙EDIYA의 지점동일성",
+  "라운드13 25개 trace의 비교렌더·카메라가시성·조명/색상 최종검증"
  ],
  "modeling": {
   "frame": "u=통로 방향(동북동, dz/dx=-0.3745), v=가로(남쪽+). 원점 (0,-126.3). 본체 u -321~368, 서편 돌출부 u<-321(고가 아래), 동편 끝 u 368~404",
   "cross_section": "A 외곽 | 북측 주 통로 5–6m | B 3.3m | 등벽 | C 3.3m | 남측 주 통로 5–6m | D 외곽. OSM 폭에 맞춰 외곽 깊이 조정, 기둥 격자 8.4m와 중앙 블록 가로통로 유지. 대다수 점포는 반 베이 약 4.2m 정면이며 문 없는 개방형. 통로 가장자리 진열물 약 0.2–0.5m 돌출은 사진 비례 근사.",
-  "floor": "B1 FL=-6, 주 통로 AY=FL+3.25, 홀 CY=FL+3.8 유지. 라운드6 의류바닥은 #b59a7c 기반 60cm 타일(2.4m 반복 안4칸), 홀은 짙은 광택 화강석, 원형 벤치섬 #4a4c49/0.25m 중회색 상감. 서편 식당 천장은 FL+3.0, 동편 중앙6m 폭 흰 패널은 FL+3.3. 모두 사진 비례 근사.",
+  "floor": "라운드13 현재: B1 FL=-6·AY=FL+3.25·CY=FL+3.8 유지, 주통로는 밝은 회색베이지 광택석과 흰 천장, 양복도 중앙 황색 점자블록(웰 주위 우회). 기존 식당/홀별 상세와 상감은 보존. 이전 마감 기록: B1 FL=-6, 주 통로 AY=FL+3.25, 홀 CY=FL+3.8 유지. 라운드6 의류바닥은 #b59a7c 기반 60cm 타일(2.4m 반복 안4칸), 홀은 짙은 광택 화강석, 원형 벤치섬 #4a4c49/0.25m 중회색 상감. 서편 식당 천장은 FL+3.0, 동편 중앙6m 폭 흰 패널은 FL+3.3. 모두 사진 비례 근사.",
   "halls": "W3/W9와 연결좌표 유지. 사진03–05 중앙광장 원형 벤치(5.2,7.2), 수경화단(16.1,10.15), 안내대(-0.15,10.4)를 유지하고 남측 경계u1..26.5에 EDIYA·간식2곳·화장품·휴대폰소품5개 얕은 정면을 추가. 화단 뒤는0.72m, 다른곳1.5m 깊이로 근사. EDIYA는u-57에서 벤치옆u1..7로 이동. 유리정면에GOTOMALL 부착, 디지털안내판2개, 식재400잎+늘어진잎30개. 홀은3단 크림색 천장보, 벤치위5개 곡선코브.",
   "exits_real": "OSM 지하철 출구 1(G9 대응 가정), 8, 8-1(G8-1), 8-2(G8-2) 노드를 기준으로 출입구를 배치. 8-1 옆 독립 지상 승강기는 bp_01 및 정정된 manifest로 식별하며 정확한 좌표는 사진 기반 추정. 8-2 승강기는 독립 확인 자료가 없어 모델에서 제거.",
   "exits_guess": "G2·G4·G6·G10·G12(북측 보도), G5(남측), G13·G15(남측 동편)는 위키 G1~G16 목록 순서(서→동)대로 보도 빈 공간에 배치(guess). G1·G3·G14·G16은 고가·잠원로 교차로라 지상 공간이 없어 미구현 G11은 라운드10에서 사진상 남측 실내 출입문으로 교체했으며 아래 indoor_round10의 좌표·레벨 가정을 따른다.",
-  "tenants_placed": "토니모리, 더페이스샵, 오렌즈, 빽다방(T102), 프랭크버거·슈퍼몬스터(OSM POI 위치), 인사동칼국수만두(경부선 연결통로 J2 옆), 주얼리 하우스(C-083), 관리사무소(D-142), 서편 푸드코트 얌샘김밥, 동편 푸드코트 압구정칼국수·Cafe 헤이와(G012, 동편 가장 안쪽). 나머지 점포는 행잉 간판에 호수, 업종은 HUD/지도에 표기(가상 상호 없음) 라운드 5 사진 상호 추가: Bazaar(01), Monologue(16), EDIYA COFFEE(05), COMPOSE COFFEE(02). EDIYA는 사진05의 벤치 옆으로 이동. 네 상호의 정확한 호수·좌표는 근사이며 실측 주소로 주장하지 않음.",
-  "zones": "기존 B1 구역·통로·출구·홀·화장실·점포별 지도/HUD 존을 유지하고 중앙광장 존 추가. 점포별 호수 범위는 현재 분할된 정면에서 생성되며 실제 호수별 지적 경계는 추정.",
+  "tenants_placed": "토니모리, 더페이스샵, 오렌즈, 빽다방(T102), 프랭크버거·슈퍼몬스터(OSM POI 위치), 인사동칼국수만두(경부선 연결통로 J2 옆), 주얼리 하우스(C-083), 관리사무소(D-142), 서편 푸드코트 얌샘김밥, 동편 푸드코트 압구정칼국수·Cafe 헤이와(G012, 동편 가장 안쪽). 나머지 점포는 행잉 간판에 호수, 업종은 HUD/지도에 표기(가상 상호 없음) 라운드 5 사진 상호 추가: Bazaar(01), Monologue(16), EDIYA COFFEE(05), COMPOSE COFFEE(02). EDIYA는 사진05의 벤치 옆으로 이동. 네 상호의 정확한 호수·좌표는 근사이며 실측 주소로 주장하지 않음. 라운드13: TONYMOLY를 B열u=-221로 옮기고, 서편EDIYA(u≈-344.6)·D열u322고주파체험관·C열u346식기점·B열u353작은꽃/화분가판을 추가했다. 중앙EDIYA를 유지하되 두지점의 동일성/별개매장 여부는 미확정. 모든 신규 절대좌표는 추정.",
+  "zones": "기존 B1 구역·통로·출구·홀·화장실·점포별 지도/HUD 존을 유지하고 중앙광장 존 추가. 점포별 호수 범위는 현재 분할된 정면에서 생성되며 실제 호수별 지적 경계는 추정. 라운드13 동단 반포역 방면 연결통로 존은 고투몰 자체구간u398.3..414만 포함한다. 반포역까지의 완성접속을 뜻하지 않는다.",
   "step_free": "8-1 독립 유리 엘리베이터(1F↔B1, shaft:false) + 다른 11개 출입구의 기존 경사형 휠체어리프트 구현(개별 실제 설치 여부는 미확인). 8-2는 독립 승강기뿐 아니라 새 경사형 리프트도 근거가 없어 만들지 않음; B1의 지상 무단차 연결은 8-1 승강기를 이용. 8-1 지상 중심 (-84,-113), B1 중심은 8-1 로컬 Q(15.75,0)≈(-81.77,-112.11)로 기존 계단 랜딩 끝에 배치하여 B1 floor dx≈+2.23, dz≈+0.89로 이동; B1 추가 interact를 등록. 다른 리프트는 1F 층 dx/dz와 위쪽 K.portal을 사용. 사진 06에서 G4 지하 게이트 뒤 에스컬레이터가 확인되어 기존 하부 계단 구간의 한쪽에 폭 0.82m 상행 에스컬레이터를 적용. 지상 상부 계단과 출구 위치는 유지하며 정확한 대수·폭·연결층은 추정.",
   "map": "상점 존 sub = 호수만(지도 라벨 짧게). 통로 존을 약 40m 구간으로 나눠 양쪽 호수 범위 표기(예: A-047~A-056 · B-037~B-047). 가로통로·연결통로 입구·승강장 가는 곳·발매기·물품보관함 존 추가. 엘리베이터·리프트는 지도 아이콘 사진 10·11에 따라 기존 밝은 상세 평면 그래픽을 검정 도식 안내도로 교체하고 분홍 하단 띠의 중앙광장 세로 토템을 추가. 파랑 서편 357m / 분홍 중앙 297m / 초록 동편 229m; 그림 방향·거리 표시는 도식이며 OSM 구역 경계나 개별 출구의 실측 위치를 변경하지 않음.",
   "engine_note": "과거 연구 노트는 K.elevator 기본 앞벽의 같은 at 위치에 겹친 층별 문 구멍이 서로 막히는 문제를 기록했으나, 현재 kit.wall은 겹친 개구부를 합쳐 처리하므로 이 사유는 더 이상 적용되지 않음. 현재 8-1의 shaft:false는 도로뷰에 맞춘 사용자 정의 외관과 B1 카의 수평 위치 근사를 위한 선택이며, B1은 추가 interact로 연결. 엔진 파일은 수정하지 않음.",
@@ -492,7 +518,25 @@
    "특히 G11 계단의 -6→-4.5m 상승과 이후 -6m 복귀는 K.LEVELS.B1을 양쪽 모듈에서 유지하기 위한 레벨 보정 가정이다. 사진은 상승만 보여주며 실제 수치·추가 하행을 확인하지 못했다. 다이소 자체는 경부선의 단일 B1 매장이다.",
    "G9 사진103의 실제 좌/우 계단 분기와 복도 레벨은 실측되지 않았다. 기존 지하철 1번 출구 구조는 유지하고 사진102의 한가람문구 경유 방향 안내를 추가했다. J2 절대 좌표도 미확인으로 유지한다.",
    "핑크라인으로 한강을 안내하는 사실은 2026-01-14 서울시 기사에서 확인했다. 모델의 u=-280,-245,-210 간판 위치·간격은 추정이다. 피카소 벽화/360m 갤러리의 정확한 접속 위치가 없어 해당 통로를 새로 만들지 않았다.",
-   "스냅샷 직접 렌더는 사용자 지시에 따라 실행하지 않았으며 modeling.trace의 바닥 높이 카메라를 운영자 비교용으로 기록했다."
+   "스냅샷 직접 렌더는 사용자 지시에 따라 실행하지 않았으며 modeling.trace의 바닥 높이 카메라를 운영자 비교용으로 기록했다.",
+   "라운드13 충돌1 (꽃시장 위치): 고투몰 동단은 동편 식당가·반포역 접근부로 유지한다. 도매 꽃시장은 경부선 3F라는 합성 결론을 적용하고 고투몰에 도매 꽃시장이나 3F를 만들지 않는다. 기존 사진으로 확인된 선정아트·숲으로 등 소매 꽃·화분 점포와 집기는 보존하고, 영상100의 작은 가판만 동편 의류 경계 B열 u353에 근사한다.",
+   "라운드13 충돌2 (경부선↔센트럴시티 1F 연결): 고투몰 B1 모듈 범위 밖이다. 기존 J2/J3를 보존하며 두 터미널의 1F 실내 연결/외부 횡단보도 공존 여부를 이 모듈에서 판정하거나 새 연결로 만들지 않는다.",
+   "라운드13 충돌3 (9호선·한강공원 유리문과 G2/8-1): 580의 분홍 헤더·G8… 표식·검정 문틀·초록 비상구등·유리 도트가 기존 12_entrance_8-1_doors.jpg와 유사하므로 기존 8-1 전면에 자판기와 관찰된 디자인을 대응시킨다. 최종 숫자는 영상에서 판독 불가하여 동일성은 추정이다. 목적지 자막은 G2=8-1이라는 증거가 아니므로 G2→원베일리 보행로와 지하철8-1 출구를 별도로 유지한다.",
+   "라운드13 충돌4 (UNIQLO의 B1/1F 동일 매장 여부): 경부선 모듈의 층별 매장 판단 사항이며 이 고투몰 작업에서는 UNIQLO 매장을 새로 배치하거나 두 매장으로 단정하지 않는다.",
+   "라운드13 충돌5 (스위트파크 층): 신세계 모듈의 공식 층별 자료와 수직 연결을 통해 확인할 사항이다. 고투몰에는 스위트파크 또는 새 층간 연결을 배치하지 않고 J1 높이 -6을 유지한다.",
+   "라운드13 충돌6 (오픈스테이지 위치): 센트럴시티/신세계/파미에 소유 영역의 식별 사항이다. 고투몰에 오픈스테이지를 만들거나 서로 다른 영상 장소를 합치지 않는다.",
+   "라운드13 A/B=북측, C/D=남측 대응은 기존 OSM 장축과 점포열을 유지한 추정이다. 영상은 두 평행 복도와 동서 식당가에서의 회차를 보여 주지만 지리적 북/남을 확정하지 않는다. 기존 약8.4m 베이와 가로통로 간격도 실측 확정이 아니다.",
+   "라운드13 동단 반포역 접근부는 영상5/20/40/1795의 연속 공간을 기존 OSM 동단에 맞춘 자체 모델 구간이다. 끝벽 중심 u≈403.03, 개구폭6.4m, 바닥R(398.3,-3,414,3)·y=-6은 추정이며 반포역 본체/대합실의 실측 위치나 층고를 확정한 것이 아니다. u414에 끝벽을 유지하여 미구현 파트너 공간으로 추락하지 않게 한다. 반포역까지 이어지는 완성된 연결로 설명하지 않는다.",
+   "라운드13 동단 기존 식당5개를 v=-15.5..-3.7에3개, v=3.7..9.5에2개로 재배치하고 Cafe 헤이와 v10..15.2는 유지한다. 상호·집기는 보존하지만 이 재간격은 접근통로를 확보하기 위한 모델 조정이며 실제 호수 측량이 아니다.",
+   "라운드13 rLMag170의 G5왼쪽/ G1~G4직진·신반포역 /G6오른쪽 문구는 판독된다. 서향으로 읽으면 왼쪽 남측G5·오른쪽 북측G6라는 기존 순서와 맞으므로 사인은 u=-215.825 북측 복도에 둔다. TONYMOLY는 앞 왼쪽 B열u=-221로 옮겼으나 실제 점포 호수·교차통로 좌표는 추정이다.",
+   "라운드13 EDIYA는 영상910에서 서편 식당가 상호가 확인된다. 기존 중앙광장 EDIYA는 더 늦은2026-11 사진05의 상세이므로 보존하고 서편 북측 끝 점포(u≈-344.6)에 영상 대응점을 추가한다. 두 지점이 실제로 서로 다른 지점인지, 이전·촬영 위치 오인인지는 확인되지 않았으며 두 매장 영업을 확정하는 자료가 아니다.",
+   "라운드13 고주파 체험관 D열u322, 주황 벽 식기점 C열u346, 꽃·화분 작은 가판 B열u353은 C/D 동행 및 동편 식당가 경계라는 상대 순서를 반영한 추정 좌표다. 식기점과 작은 꽃가판의 미판독 상호는 만들지 않고 업종명으로 표기한다.",
+   "라운드13 rLMag445의 갈색·금색 대리석/검정 마름모/곡선LED/TV는 기존 서편 휴게포켓u≈-310에, rLMag860의 좌석·정보스크린·유모차는 기존 중앙광장에 대응시킨다. 두 프레임의 실제 위치는 미확정이며 새 광장의 좌표나 실제 중앙광장 식별을 확정한 것이 아니다. 기존 가구·식재를 삭제하지 않는다.",
+   "라운드13 밝은 회색베이지 광택바닥·흰 천장·원형 다운라이트·양복도 중앙 점자블록은 보행 프레임의 공통 외관을 반영한다. 타원 조명의 교차로 대응과 남측u199.874 부근3연속 타원, 사인·페넌트 간격·조도·반사량·타일크기는 모델 근사다. W3/W9 주변 점자블록 우회는 기존 구멍과 보행폭을 지키기 위한 모델 경로이며 실제 점자블록 측량이 아니다.",
+   "라운드13 자판기·CCTV·녹색 크레이트·빨강 스툴·유모차·옷/가방/신발/양말 진열·가격3900/10000·인파 밀도 변화는 보이는 유형을 재현한 것이다. 정확한 수량·점포별 가격·개인 인물·방문 시각별 밀도를 확인한 것은 아니다.",
+   "라운드13 trace는 모든 재현 프레임에 대응하는 모델 바닥높이(y=-6) 카메라다. 촬영자의 실측 위치·렌즈나 최종 가시성은 확인하지 않았으며 사용자 지시에 따라 shot.mjs를 실행하지 않았다. 운영자의 비교 렌더가 필요하다.",
+   "라운드13 점자블록의 W3/W9 홀 우회 굴곡은 기존 웰·기둥·벤치·식재를 피해 캡슐 검사를 통과하도록 맞춘 모델 경로이며 실측 유도선 평면이 아니다. 동편 회차는 단면이 바뀌는 OSM 경계 대신 마지막 점포 베이의 실제 복도 중심에 연결했다.",
+   "라운드13 프레임100은 서향 보행자의 왼쪽에 꽃·화분 가판이 있으므로, A/B 북측 복도라는 기존 가정 안에서 B열 안쪽 전면 u353에 대응했다. A/B의 실제 북남 방위와 정확한 점포 호수는 미확인이다."
   ],
   "interior_round5": {
    "reference_date": "2026-11-05",
@@ -1035,6 +1079,531 @@
     ],
     "view": "서울시 기사 핑크라인 안내를 기존 서편 통로에 적용. 설치 지점은 추정.",
     "round": 10
+   },
+   {
+    "spot": "라운드13 k9yW0vOWPrs_5",
+    "round": 13,
+    "photos": [
+     "refs/walk/s2_gotomall/k9yW0vOWPrs_5.jpg"
+    ],
+    "frame": "k9yW0vOWPrs_5.jpg",
+    "x": 384.8945,
+    "y": -6,
+    "z": -270.443,
+    "yawDeg": 110.531,
+    "pitchDeg": 0,
+    "floor": "B1",
+    "local_uv": [
+     411,
+     0
+    ],
+    "view": "동단 접근부에서 서쪽 식당가를 본다. 흰 타일·원형 기둥·청록 광고의 고투몰 소유 구간만 재현; 반포역 대합실 전체 연결 미구현.",
+    "placement_confidence": "inferred",
+    "render_status": "운영자 비교 렌더 대기; y는 바닥높이"
+   },
+   {
+    "spot": "라운드13 rLMagJuViqo_170",
+    "round": 13,
+    "photos": [
+     "refs/walk/s2_gotomall/rLMagJuViqo_170.jpg"
+    ],
+    "frame": "rLMagJuViqo_170.jpg",
+    "x": -197.0748,
+    "y": -6,
+    "z": -58.6013,
+    "yawDeg": 110.531,
+    "pitchDeg": 0,
+    "floor": "B1",
+    "local_uv": [
+     -208.3,
+     -5.718
+    ],
+    "view": "서향 남색G5/G1~G4/신반포역/G6 사인과 앞 왼쪽TONYMOLY, 교차로 타원등.",
+    "placement_confidence": "inferred",
+    "render_status": "운영자 비교 렌더 대기; y는 바닥높이"
+   },
+   {
+    "spot": "라운드13 k9yW0vOWPrs_580",
+    "round": 13,
+    "photos": [
+     "refs/walk/s2_gotomall/k9yW0vOWPrs_580.png"
+    ],
+    "frame": "k9yW0vOWPrs_580.png",
+    "x": -75.5604,
+    "y": -6,
+    "z": -102.8079,
+    "yawDeg": 70.198,
+    "pitchDeg": 0,
+    "floor": "B1",
+    "local_uv": [
+     -79,
+     -4.5
+    ],
+    "view": "기존8-1 전면의 분홍헤더·유리문과 왼쪽 자판기. 영상의 최종 문번호 및 G2동일성은 미확정.",
+    "placement_confidence": "inferred",
+    "render_status": "운영자 비교 렌더 대기; y는 바닥높이"
+   },
+   {
+    "spot": "라운드13 k9yW0vOWPrs_240",
+    "round": 13,
+    "photos": [
+     "refs/walk/s2_gotomall/k9yW0vOWPrs_240.jpg"
+    ],
+    "frame": "k9yW0vOWPrs_240.jpg",
+    "x": 77.6195,
+    "y": -6,
+    "z": -161.4017,
+    "yawDeg": 110.531,
+    "pitchDeg": 0,
+    "floor": "B1",
+    "local_uv": [
+     85,
+     -5.65
+    ],
+    "view": "u78.105 북측 교차부 큰 타원·흰 천장·중앙 점자블록. 기존 북측 슬랫 구간을 피한 구도이며 실제 위치는 추정.",
+    "placement_confidence": "inferred",
+    "render_status": "운영자 비교 렌더 대기; y는 바닥높이"
+   },
+   {
+    "spot": "라운드13 rLMagJuViqo_860",
+    "round": 13,
+    "photos": [
+     "refs/walk/s2_gotomall/rLMagJuViqo_860.jpg"
+    ],
+    "frame": "rLMagJuViqo_860.jpg",
+    "x": -2.3431,
+    "y": -6,
+    "z": -121.1512,
+    "yawDeg": 290.531,
+    "pitchDeg": 0,
+    "floor": "B1",
+    "local_uv": [
+     -4,
+     4
+    ],
+    "view": "기존 중앙광장 좌석·정보스크린·유모차와 직사각 천장패널. 실제 프레임의 중앙광장 여부는 추정.",
+    "placement_confidence": "inferred",
+    "render_status": "운영자 비교 렌더 대기; y는 바닥높이"
+   },
+   {
+    "spot": "라운드13 rLMagJuViqo_445",
+    "round": 13,
+    "photos": [
+     "refs/walk/s2_gotomall/rLMagJuViqo_445.jpg"
+    ],
+    "frame": "rLMagJuViqo_445.jpg",
+    "x": -276.8975,
+    "y": -6,
+    "z": -15.9814,
+    "yawDeg": 110.531,
+    "pitchDeg": 0,
+    "floor": "B1",
+    "local_uv": [
+     -298,
+     6.2
+    ],
+    "view": "서쪽을 보며 왼쪽 화장실 안내, 오른쪽 기존 벤치·양면 TV·마름모 바닥과 갈색 기둥을 비교. 위치 추정.",
+    "placement_confidence": "inferred",
+    "render_status": "운영자 비교 렌더 대기; y는 바닥높이"
+   },
+   {
+    "spot": "라운드13 k9yW0vOWPrs_20",
+    "round": 13,
+    "photos": [
+     "refs/walk/s2_gotomall/k9yW0vOWPrs_20.jpg"
+    ],
+    "frame": "k9yW0vOWPrs_20.jpg",
+    "x": 383.0216,
+    "y": -6,
+    "z": -269.7416,
+    "yawDeg": 110.531,
+    "pitchDeg": 0,
+    "floor": "B1",
+    "local_uv": [
+     409,
+     0
+    ],
+    "view": "동단 타일 접근부에서 보관함 점포와 식당가 쪽을 본다.",
+    "placement_confidence": "inferred",
+    "render_status": "운영자 비교 렌더 대기; y는 바닥높이"
+   },
+   {
+    "spot": "라운드13 k9yW0vOWPrs_40",
+    "round": 13,
+    "photos": [
+     "refs/walk/s2_gotomall/k9yW0vOWPrs_40.jpg"
+    ],
+    "frame": "k9yW0vOWPrs_40.jpg",
+    "x": 368.9743,
+    "y": -6,
+    "z": -264.4809,
+    "yawDeg": 110.531,
+    "pitchDeg": 0,
+    "floor": "B1",
+    "local_uv": [
+     394,
+     0
+    ],
+    "view": "동편 식당가를 서쪽으로 보며 크림 패널·원목 테이블·빨강 스툴·메뉴배너 확인.",
+    "placement_confidence": "inferred",
+    "render_status": "운영자 비교 렌더 대기; y는 바닥높이"
+   },
+   {
+    "spot": "라운드13 rLMagJuViqo_60",
+    "round": 13,
+    "photos": [
+     "refs/walk/s2_gotomall/rLMagJuViqo_60.jpg"
+    ],
+    "frame": "rLMagJuViqo_60.jpg",
+    "x": 248.5193,
+    "y": -6,
+    "z": -212.5983,
+    "yawDeg": 290.531,
+    "pitchDeg": 0,
+    "floor": "B1",
+    "local_uv": [
+     263,
+     6.342
+    ],
+    "view": "C/D 의류 통로의 옅은 광택석·중앙 노란점자블록·흰 타원패널·개방 진열.",
+    "placement_confidence": "inferred",
+    "render_status": "운영자 비교 렌더 대기; y는 바닥높이"
+   },
+   {
+    "spot": "라운드13 rLMagJuViqo_1520",
+    "round": 13,
+    "photos": [
+     "refs/walk/s2_gotomall/rLMagJuViqo_1520.jpg"
+    ],
+    "frame": "rLMagJuViqo_1520.jpg",
+    "x": 183.9204,
+    "y": -6,
+    "z": -188.3497,
+    "yawDeg": 290.531,
+    "pitchDeg": 0,
+    "floor": "B1",
+    "local_uv": [
+     194,
+     6.3948
+    ],
+    "view": "남측u199.874 부근의3연속 타원등과 긴 의류 통로.",
+    "placement_confidence": "inferred",
+    "render_status": "운영자 비교 렌더 대기; y는 바닥높이"
+   },
+   {
+    "spot": "라운드13 k9yW0vOWPrs_700",
+    "round": 13,
+    "photos": [
+     "refs/walk/s2_gotomall/k9yW0vOWPrs_700.png"
+    ],
+    "frame": "k9yW0vOWPrs_700.png",
+    "x": -137.9117,
+    "y": -6,
+    "z": -81.1119,
+    "yawDeg": 110.531,
+    "pitchDeg": 0,
+    "floor": "B1",
+    "local_uv": [
+     -145,
+     -6.0495
+    ],
+    "view": "A/B 서행 의류·신발 진열과 밀집 인파 구간. 실제 시간대 인구수 재현 아님.",
+    "placement_confidence": "inferred",
+    "render_status": "운영자 비교 렌더 대기; y는 바닥높이"
+   },
+   {
+    "spot": "라운드13 k9yW0vOWPrs_760",
+    "round": 13,
+    "photos": [
+     "refs/walk/s2_gotomall/k9yW0vOWPrs_760.png"
+    ],
+    "frame": "k9yW0vOWPrs_760.png",
+    "x": -245.3584,
+    "y": -6,
+    "z": -40.1154,
+    "yawDeg": 110.531,
+    "pitchDeg": 0,
+    "floor": "B1",
+    "local_uv": [
+     -260,
+     -5.3399
+    ],
+    "view": "A/B 서쪽의 상대적으로 한산한 통로·중앙 점자블록·생활용품 스톨.",
+    "placement_confidence": "inferred",
+    "render_status": "운영자 비교 렌더 대기; y는 바닥높이"
+   },
+   {
+    "spot": "라운드13 k9yW0vOWPrs_910",
+    "round": 13,
+    "photos": [
+     "refs/walk/s2_gotomall/k9yW0vOWPrs_910.jpg"
+    ],
+    "frame": "k9yW0vOWPrs_910.jpg",
+    "x": -326.5699,
+    "y": -6,
+    "z": -15.7456,
+    "yawDeg": 20.531,
+    "pitchDeg": 0,
+    "floor": "B1",
+    "local_uv": [
+     -344.6,
+     -11
+    ],
+    "view": "서편 북측EDIYA 전면과 가까운 셔터·식당 테이블. 기존 중앙EDIYA도 보존하며 중복 지점 식별은 미확정.",
+    "placement_confidence": "inferred",
+    "render_status": "운영자 비교 렌더 대기; y는 바닥높이"
+   },
+   {
+    "spot": "라운드13 k9yW0vOWPrs_970",
+    "round": 13,
+    "photos": [
+     "refs/walk/s2_gotomall/k9yW0vOWPrs_970.jpg"
+    ],
+    "frame": "k9yW0vOWPrs_970.jpg",
+    "x": -320.6839,
+    "y": -6,
+    "z": -13.1448,
+    "yawDeg": 290.531,
+    "pitchDeg": 0,
+    "floor": "B1",
+    "local_uv": [
+     -340,
+     -6.5
+    ],
+    "view": "서편 식당가에서 동쪽 회차부를 보며 왼쪽 목재 식탁·빨강 스툴과 앞쪽 큰 타원등을 비교. 정확한 식당·가구 위치는 추정.",
+    "placement_confidence": "inferred",
+    "render_status": "운영자 비교 렌더 대기; y는 바닥높이"
+   },
+   {
+    "spot": "라운드13 k9yW0vOWPrs_100",
+    "round": 13,
+    "photos": [
+     "refs/walk/s2_gotomall/k9yW0vOWPrs_100.jpg"
+    ],
+    "frame": "k9yW0vOWPrs_100.jpg",
+    "x": 332.3452,
+    "y": -6,
+    "z": -256.7895,
+    "yawDeg": 110.531,
+    "pitchDeg": 0,
+    "floor": "B1",
+    "local_uv": [
+     357,
+     -5.6435
+    ],
+    "view": "동편 식당가에서 의류로 들어가는 B열u353 꽃·화분 가판. 도매 꽃시장이 아님.",
+    "placement_confidence": "inferred",
+    "render_status": "운영자 비교 렌더 대기; y는 바닥높이"
+   },
+   {
+    "spot": "라운드13 k9yW0vOWPrs_1660",
+    "round": 13,
+    "photos": [
+     "refs/walk/s2_gotomall/k9yW0vOWPrs_1660.jpg"
+    ],
+    "frame": "k9yW0vOWPrs_1660.jpg",
+    "x": 296.2593,
+    "y": -6,
+    "z": -230.5397,
+    "yawDeg": 290.531,
+    "pitchDeg": 0,
+    "floor": "B1",
+    "local_uv": [
+     314,
+     6.2832
+    ],
+    "view": "C/D 동행 오른쪽D열 고주파 체험관과 다음 타원등. 점포 베이는 추정.",
+    "placement_confidence": "inferred",
+    "render_status": "운영자 비교 렌더 대기; y는 바닥높이"
+   },
+   {
+    "spot": "라운드13 k9yW0vOWPrs_1730",
+    "round": 13,
+    "photos": [
+     "refs/walk/s2_gotomall/k9yW0vOWPrs_1730.jpg"
+    ],
+    "frame": "k9yW0vOWPrs_1730.jpg",
+    "x": 321.5429,
+    "y": -6,
+    "z": -240.0128,
+    "yawDeg": 290.531,
+    "pitchDeg": 0,
+    "floor": "B1",
+    "local_uv": [
+     341,
+     6.2791
+    ],
+    "view": "C/D 동행 왼쪽C열u346 주황 벽 식기점의 그릇·원목 테이블.",
+    "placement_confidence": "inferred",
+    "render_status": "운영자 비교 렌더 대기; y는 바닥높이"
+   },
+   {
+    "spot": "라운드13 k9yW0vOWPrs_1795",
+    "round": 13,
+    "photos": [
+     "refs/walk/s2_gotomall/k9yW0vOWPrs_1795.jpg"
+    ],
+    "frame": "k9yW0vOWPrs_1795.jpg",
+    "x": 366.1649,
+    "y": -6,
+    "z": -263.4287,
+    "yawDeg": 290.531,
+    "pitchDeg": 0,
+    "floor": "B1",
+    "local_uv": [
+     391,
+     0
+    ],
+    "view": "동편 식당가에서 새 동단 접근부를 본다. 식당좌석·주황배너·화분·녹색크레이트.",
+    "placement_confidence": "inferred",
+    "render_status": "운영자 비교 렌더 대기; y는 바닥높이"
+   },
+   {
+    "spot": "라운드13 k9yW0vOWPrs_1030",
+    "round": 13,
+    "photos": [
+     "refs/walk/s2_gotomall/k9yW0vOWPrs_1030.jpg"
+    ],
+    "frame": "k9yW0vOWPrs_1030.jpg",
+    "x": -273.5515,
+    "y": -6,
+    "z": -15.6007,
+    "yawDeg": 290.531,
+    "pitchDeg": 0,
+    "floor": "B1",
+    "local_uv": [
+     -295,
+     7.73
+    ],
+    "view": "서편 회차 후 C/D 동행 시작: 의류 양측, 붉은 페넌트와 점자블록.",
+    "placement_confidence": "inferred",
+    "render_status": "운영자 비교 렌더 대기; y는 바닥높이"
+   },
+   {
+    "spot": "라운드13 k9yW0vOWPrs_1240",
+    "round": 13,
+    "photos": [
+     "refs/walk/s2_gotomall/k9yW0vOWPrs_1240.jpg"
+    ],
+    "frame": "k9yW0vOWPrs_1240.jpg",
+    "x": 95.8633,
+    "y": -6,
+    "z": -155.4568,
+    "yawDeg": 290.531,
+    "pitchDeg": 0,
+    "floor": "B1",
+    "local_uv": [
+     100,
+     6.3156
+    ],
+    "view": "C/D 의류행거·노랑/빨강 행사표와 쇼핑객이 많은 구간.",
+    "placement_confidence": "inferred",
+    "render_status": "운영자 비교 렌더 대기; y는 바닥높이"
+   },
+   {
+    "spot": "라운드13 k9yW0vOWPrs_340",
+    "round": 13,
+    "photos": [
+     "refs/walk/s2_gotomall/k9yW0vOWPrs_340.jpg"
+    ],
+    "frame": "k9yW0vOWPrs_340.jpg",
+    "x": 250.9329,
+    "y": -6,
+    "z": -226.1126,
+    "yawDeg": 110.531,
+    "pitchDeg": 0,
+    "floor": "B1",
+    "local_uv": [
+     270,
+     -5.4674
+    ],
+    "view": "A/B 의류·가방 개방랙과 가격표를 따라 서행.",
+    "placement_confidence": "inferred",
+    "render_status": "운영자 비교 렌더 대기; y는 바닥높이"
+   },
+   {
+    "spot": "라운드13 rLMagJuViqo_680",
+    "round": 13,
+    "photos": [
+     "refs/walk/s2_gotomall/rLMagJuViqo_680.jpg"
+    ],
+    "frame": "rLMagJuViqo_680.jpg",
+    "x": 170.8067,
+    "y": -6,
+    "z": -183.4477,
+    "yawDeg": 290.531,
+    "pitchDeg": 0,
+    "floor": "B1",
+    "local_uv": [
+     180,
+     6.3863
+    ],
+    "view": "의류 전면의3900 가격표·행거·교차통로 쪽 시야; 실제 점포 위치는 추정.",
+    "placement_confidence": "inferred",
+    "render_status": "운영자 비교 렌더 대기; y는 바닥높이"
+   },
+   {
+    "spot": "라운드13 rLMagJuViqo_620",
+    "round": 13,
+    "photos": [
+     "refs/walk/s2_gotomall/rLMagJuViqo_620.jpg"
+    ],
+    "frame": "rLMagJuViqo_620.jpg",
+    "x": 129.2004,
+    "y": -6,
+    "z": -180.4926,
+    "yawDeg": 110.531,
+    "pitchDeg": 0,
+    "floor": "B1",
+    "local_uv": [
+     140,
+     -5.4382
+    ],
+    "view": "양말 스탠드·옷행거·프로모션배너·중앙 점자블록.",
+    "placement_confidence": "inferred",
+    "render_status": "운영자 비교 렌더 대기; y는 바닥높이"
+   },
+   {
+    "spot": "라운드13 k9yW0vOWPrs_1520",
+    "round": 13,
+    "photos": [
+     "refs/walk/s2_gotomall/k9yW0vOWPrs_1520.jpg"
+    ],
+    "frame": "k9yW0vOWPrs_1520.jpg",
+    "x": 245.7112,
+    "y": -6,
+    "z": -211.5424,
+    "yawDeg": 290.531,
+    "pitchDeg": 0,
+    "floor": "B1",
+    "local_uv": [
+     260,
+     6.346
+    ],
+    "view": "C/D 동행 계단식 신발 선반·의류행거·10000 가격표.",
+    "placement_confidence": "inferred",
+    "render_status": "운영자 비교 렌더 대기; y는 바닥높이"
+   },
+   {
+    "spot": "라운드13 k9yW0vOWPrs_460",
+    "round": 13,
+    "photos": [
+     "refs/walk/s2_gotomall/k9yW0vOWPrs_460.jpg"
+    ],
+    "frame": "k9yW0vOWPrs_460.jpg",
+    "x": 40.1625,
+    "y": -6,
+    "z": -147.367,
+    "yawDeg": 110.531,
+    "pitchDeg": 0,
+    "floor": "B1",
+    "local_uv": [
+     45,
+     -5.6434
+    ],
+    "view": "A/B 중앙 접근의 통로 마감·양측 진열과 천장조명을 확인. 프레임의 절대 위치 미확정.",
+    "placement_confidence": "inferred",
+    "render_status": "운영자 비교 렌더 대기; y는 바닥높이"
    }
   ],
   "trace_coordinates": "x=동쪽, z=남쪽, y=높이(m). y=-6은 B1 보행 바닥 높이이며 눈높이가 아니다. yawDeg: 0=북쪽/-z, 90=서쪽, 180=남쪽, 270=동쪽. local_uv는 기존 OSM 장축의 로컬 좌표. 각 카메라는 모델의 비교 지점이며 사진 촬영자의 실제 측량 위치가 아니다.",
@@ -1305,7 +1874,26 @@
     ],
     "width": 5.6,
     "owner": "gyeongbu",
-    "note": "G11 남측 문/상행 계단은 gotomall 소유. gotomall은 pa까지, gyeongbu는 pa부터 pb 및 GATE 4 북측 가지를 연결. absolute XY/상승량은 모델 맞춤 추정; _junctions.js 별도 작업 반영 필요."
+    "note": "기존 공유 _junctions.js에 반영되어 있음. 본 라운드에서는 위치·층고·소유권을 변경하지 않았다. G11 남측 문/상행 계단과 pa까지는 gotomall, pa부터 pb/GATE4 가지는 gyeongbu 소유. 절대좌표·상승량은 이전 모델 가정.",
+    "status": "already_present_in_shared_junctions"
+   },
+   {
+    "id": "J_GOTOMALL_BANPO_APPROACH",
+    "a": "gotomall",
+    "b": "station",
+    "y": -6,
+    "pa": [
+     384.8945,
+     -270.443
+    ],
+    "pb": [
+     391.4499,
+     -272.898
+    ],
+    "width": 6,
+    "owner": "station",
+    "status": "proposed_unbuilt_partner",
+    "note": "영상5/20/40/1795의 동단→7호선 반포역 연결을 위한 후속 접속 제안. gotomall은 u398.3..414의 접근부만 만들고 u414에 안전 끝벽 유지. station에는 반포역 대합실 파트너가 아직 없으며 pb에는 이 작업의 바닥도 없다. _junctions.js에 즉시 활성화할 완성 접속이 아님: 소유 모듈 구현·반포역 실제 위치/층 확인·끝벽 제거·양쪽 보행검증 후 반영. 기존 고속터미널역7호선 대합실과 다른 목적지."
    }
   ],
   "interior_round10": {
@@ -1410,6 +1998,151 @@
     "walk_final": "node tests/walk.mjs: 494 ok, 0 blocked",
     "walk_scoped": "node tests/walk.mjs gyeongbu gotomall station gyeongbu_east:129 ok,0 blocked"
    }
+  },
+  "interior_round13": {
+   "date": "2026-11-07",
+   "evidence": [
+    ".codex-jobs/evidence/walk_s2_gotomall.json",
+    ".codex-jobs/evidence/walk_synthesis.md",
+    "refs/walk/s2_gotomall/",
+    "refs/interior/gotomall/12_entrance_8-1_doors.jpg",
+    "refs/interior/gotomall/05_central_round_benches.jpg"
+   ],
+   "source_priority": "공식/OSM 평면·기존공유접속 위치를 먼저 유지하고 영상에서 보이는 상대 순서·연결 형태를 반영한다. 영상 업로드는2026-05/09, 기존 현지사진은2026-11이므로 중앙EDIYA·확인된꽃집·가구 등 더 최신 상세를 영상에 없다는 이유로 삭제하지 않는다. 업로드 날짜가 촬영 날짜를 확정하지 않는다.",
+   "priorities": [
+    {
+     "priority": 1,
+     "name": "레이아웃",
+     "changes": [
+      "A/B·C/D 두 평행 통로와 동서 식당가 회차, 기존가로통로·W3/W9·J1/J2/J3·G11·G2 접속 유지.",
+      "동단 식당열을v±3.7에서 나누어6m폭 통로 확보. OSM 끝벽u403.03에6.4m 개구부; R(398.3,-3,414,3) 바닥-6 자체 접근부, u414안전끝벽.",
+      "G5/G1~G4/신반포역/G6 남색사인u=-215.825, TONYMOLY B열u=-221로 상대배치 정정.",
+      "580문은 기존8-1과 시각대응하고G2와 분리; 기존위치/층고 유지.",
+      "서편EDIYA북측u≈-344.6 추가, 중앙EDIYA유지. 동편B열u353작은꽃가판·D열u322고주파체험관·C열u346주황식기점 배치."
+     ],
+     "pending": "반포역 본체/파트너 통로 미구현. proposed seam만 연구파일에 남기며 _junctions.js에는 쓰지 않음."
+    },
+    {
+     "priority": 2,
+     "name": "색상·디자인",
+     "changes": [
+      "주통로 천장을 흰색, 바닥을 옅은 회색베이지 광택석으로 조정. A/B와C/D 양쪽 중앙에 황색 점자블록을 잇고W3/W9를 돌아가게 구성.",
+      "교차통로의 큰 타원 패널과 남측 베이 k62(u204.075)의 가까운 타원 2개+전방 1개, 원형 매입등. 서편 회차부 u=-329에도 큰 타원 패널.",
+      "남색 현수사인·파란G배지·노란역픽토·검정점포번호판·붉은페넌트.",
+      "동단 접근부 흰타일·원형기둥·청록광고, 식당가 크림벽/목재테이블/빨강스툴/주황메뉴/회색셔터.",
+      "기존 서편휴게포켓u≈-310에445갈색금색기둥·검정마름모·곡선LED·TV, 중앙공간에860직사각조명·좌석/스크린을 대응. 홀 위치는 추정."
+     ]
+    },
+    {
+     "priority": 3,
+     "name": "디테일",
+     "changes": [
+      "기존 조밀한 의류·가방·신발·양말·꽃·소품·식재 진열을 보존.",
+      "자판기·CCTV돔·화분·녹색크레이트·유모차·빨강스툴·3900/10000가격표를 프레임유형에 맞춰 보강.",
+      "인파는 의류구간을 조밀하게, 서쪽 일부를 한산하게 구성. 실제인물·연령·인원수의 정확한 재현은 아님."
+     ]
+    }
+   ],
+   "conflicts": [
+    {
+     "id": 1,
+     "topic": "꽃시장 위치",
+     "decision": "고투몰 동단은 동편 식당가·반포역 접근부로 유지한다. 도매 꽃시장은 경부선 3F라는 합성 결론을 적용하고 고투몰에 도매 꽃시장이나 3F를 만들지 않는다. 기존 사진으로 확인된 선정아트·숲으로 등 소매 꽃·화분 점포와 집기는 보존하고, 영상100의 작은 가판만 동편 의류 경계 B열 u353에 근사한다.",
+     "confidence": "도매/소매 구별 및 동편 식당가 seen/stated; 소매 점포 좌표 inferred",
+     "frames": [
+      "k9yW0vOWPrs_40.jpg",
+      "k9yW0vOWPrs_100.jpg",
+      "k9yW0vOWPrs_1795.jpg"
+     ]
+    },
+    {
+     "id": 2,
+     "topic": "경부선↔센트럴시티 1F 연결",
+     "decision": "고투몰 B1 모듈 범위 밖이다. 기존 J2/J3를 보존하며 두 터미널의 1F 실내 연결/외부 횡단보도 공존 여부를 이 모듈에서 판정하거나 새 연결로 만들지 않는다.",
+     "confidence": "미해결·소유 모듈 확인 필요"
+    },
+    {
+     "id": 3,
+     "topic": "9호선·한강공원 유리문과 G2/8-1",
+     "decision": "580의 분홍 헤더·G8… 표식·검정 문틀·초록 비상구등·유리 도트가 기존 12_entrance_8-1_doors.jpg와 유사하므로 기존 8-1 전면에 자판기와 관찰된 디자인을 대응시킨다. 최종 숫자는 영상에서 판독 불가하여 동일성은 추정이다. 목적지 자막은 G2=8-1이라는 증거가 아니므로 G2→원베일리 보행로와 지하철8-1 출구를 별도로 유지한다.",
+     "confidence": "문 디자인 seen; 8-1 대응 inferred; G2 동일성 채택 안 함",
+     "frames": [
+      "k9yW0vOWPrs_580.png",
+      "refs/interior/gotomall/12_entrance_8-1_doors.jpg"
+     ]
+    },
+    {
+     "id": 4,
+     "topic": "UNIQLO의 B1/1F 동일 매장 여부",
+     "decision": "경부선 모듈의 층별 매장 판단 사항이며 이 고투몰 작업에서는 UNIQLO 매장을 새로 배치하거나 두 매장으로 단정하지 않는다.",
+     "confidence": "미해결·범위 밖"
+    },
+    {
+     "id": 5,
+     "topic": "스위트파크 층",
+     "decision": "신세계 모듈의 공식 층별 자료와 수직 연결을 통해 확인할 사항이다. 고투몰에는 스위트파크 또는 새 층간 연결을 배치하지 않고 J1 높이 -6을 유지한다.",
+     "confidence": "미해결·범위 밖"
+    },
+    {
+     "id": 6,
+     "topic": "오픈스테이지 위치",
+     "decision": "센트럴시티/신세계/파미에 소유 영역의 식별 사항이다. 고투몰에 오픈스테이지를 만들거나 서로 다른 영상 장소를 합치지 않는다.",
+     "confidence": "미해결·범위 밖"
+    }
+   ],
+   "junctions_to_add": [
+    "J_GOTOMALL_BANPO_APPROACH"
+   ],
+   "trace_frames": [
+    "k9yW0vOWPrs_5.jpg",
+    "rLMagJuViqo_170.jpg",
+    "k9yW0vOWPrs_580.png",
+    "k9yW0vOWPrs_240.jpg",
+    "rLMagJuViqo_860.jpg",
+    "rLMagJuViqo_445.jpg",
+    "k9yW0vOWPrs_20.jpg",
+    "k9yW0vOWPrs_40.jpg",
+    "rLMagJuViqo_60.jpg",
+    "rLMagJuViqo_1520.jpg",
+    "k9yW0vOWPrs_700.png",
+    "k9yW0vOWPrs_760.png",
+    "k9yW0vOWPrs_910.jpg",
+    "k9yW0vOWPrs_970.jpg",
+    "k9yW0vOWPrs_100.jpg",
+    "k9yW0vOWPrs_1660.jpg",
+    "k9yW0vOWPrs_1730.jpg",
+    "k9yW0vOWPrs_1795.jpg",
+    "k9yW0vOWPrs_1030.jpg",
+    "k9yW0vOWPrs_1240.jpg",
+    "k9yW0vOWPrs_340.jpg",
+    "rLMagJuViqo_680.jpg",
+    "rLMagJuViqo_620.jpg",
+    "k9yW0vOWPrs_1520.jpg",
+    "k9yW0vOWPrs_460.jpg"
+   ],
+   "trace_count": 25,
+   "render_status": "사용자 지시로 tests/shot.mjs 미실행. 각 프레임에 y=-6 바닥높이 카메라 기록; 최종 구도·가시성·재질 비교는 운영자 렌더 대기.",
+   "validation": {
+    "smoke_command": "node tests/smoke.mjs gotomall station gyeongbu onebailey shinsegae",
+    "smoke_result": "OK (고투몰 오류 없음; 신세계의 기존 엘리베이터 외부 바닥 경고는 별도 모듈)",
+    "walk_command": "node tests/walk.mjs",
+    "walk_result": "689 ok, 0 blocked",
+    "required": "0 blocked 및 사용자 루트 유지",
+    "note": "최종 전체 검사 통과. tests/shot.mjs는 지시에 따라 실행하지 않았고 25개 modeling.trace 카메라로 운영자 렌더 비교 대기.",
+    "baseline_walk_result": "655 ok, 2 blocked: centralcity 터미널 엘리베이터 B1 / 센트럴시티 B1→파미에 B1→7호선 첫 구간. 사용자 루트는 전부 통과.",
+    "trace_check": "round13 25개 모두 y=-6 바닥 지지 및 캡슐 충돌 검사 통과",
+    "tactile_check": "181개 유도선의 6,744개 표본(간격≤0.25m) 바닥·캡슐 충돌 이상 0",
+    "detail_errors": [],
+    "diff_check": "git diff --check 통과",
+    "metadata_note": "claims는 동일. 동단 접근부도 기존 _meta.json의 gotomall box/cell 범위 안이며, 아직 미구현인 반포역 proposed seam은 공유 메타에 활성화하지 않음.",
+    "neighbour_walk_command": "node tests/walk.mjs gotomall station gyeongbu onebailey shinsegae --no-city",
+    "neighbour_walk_result": "295 ok, 0 blocked (최신 이웃 모듈로 실행)",
+    "junction_recheck": "최신 gotomall+shinsegae+station+centralcity 및 도시(전체 PLACES claims 적용)에서 J1 중심선 x=-70,z=-89..-33의 y=-6 지지·캡슐 변위0 확인. 신세계 병행 작업이 J1 pb에 겹친 더타코부스 매대를 수정하고 localUV[37.4,-1,39.6,5.5]를 비워 자체 BFS 통과. 고투몰 J1 변경은 불필요.",
+    "flower_side_recheck": "최종 꽃·화분을 B열 u353(B-131)에 정정한 뒤 smoke OK. u350..359 양쪽 통로 74개 표본 및 카메라25개 바닥·충돌 이상0, detailErrors=[]. 전체 재실행은 이 비충돌 진열 좌우 보정 전에 시작한 실행이며 보행 구조 변경 없음.",
+    "prior_full_walk_result": "687 ok, 2 blocked: 병행 수정 중 신세계 J1 및 사용자 루트4의 신세계 B1→1F. 이웃 작업의 매대 수정 후 최신 상태에서 해소.",
+    "user_routes": "전체 tests/walk.mjs의 사용자 루트 모두 통과"
+   },
+   "status": "implemented_and_walk_validated; operator_render_pending; Banpo_station_partner_unbuilt"
   }
  }
 }

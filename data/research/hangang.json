@@ -71,6 +71,39 @@
       "url": "https://www.newsis.com/view/NISX20250403_0003125928",
       "title": "암사초록길·세빛섬 나들목 개통…한강공원 걸어서 10분 (뉴시스, 2025-04-04)",
       "year": 2025
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=F9MdeqY0Rro",
+      "title": "고투몰에서 세빛섬까지 지하로 760m",
+      "published": "2026-10-30",
+      "evidence": "refs/walk/s8_onebailey_banpo/F9MdeqY0Rro_21.jpg"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=hTkViN9S1vg",
+      "title": "반포대교와 세빛섬에서 터미널까지 보행",
+      "published": "2026-02-15",
+      "evidence": ".codex-jobs/evidence/walk_s8_onebailey_banpo.json"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=MQ3DaFYo2R8",
+      "title": "잠수교 뚜벅뚜벅축제와 달빛무지개분수",
+      "published": "2026-06-24",
+      "evidence": ".codex-jobs/evidence/walk_s8_onebailey_banpo.json"
+    },
+    {
+      "url": "https://www.somesevit.co.kr/kr/business/solvit/introduce.do",
+      "title": "세빛섬 공식 솔빛 소개",
+      "verified": "2026-11-07"
+    },
+    {
+      "url": "https://www.somesevit.co.kr/kr/business/chavit/introduce.do",
+      "title": "세빛섬 공식 채빛 소개",
+      "verified": "2026-11-07"
+    },
+    {
+      "url": "https://www.somesevit.co.kr/kr/business/gavit/introduce.do",
+      "title": "세빛섬 공식 가빛 소개 및 층별 내비게이션",
+      "verified": "2026-11-07"
     }
   ],
   "building": {
@@ -85,38 +118,37 @@
   "floors": [
     {
       "floor": "가빛섬 1F",
-      "use": "수상레저·카페·편의점(추정)",
+      "use": "이솔라 · 카페돌체 · 튜브스터 · GS25",
       "tenants": [
+        "이솔라",
         "튜브스터(수상 튜브, 30분 3.5만원, 계절 운영)",
         "카페돌체",
         "골든블루마리나(요트, 2020 기준)"
       ],
-      "layout": "1층 튜브스터는 서울시 2024 기사 확인. 기존 접수대·카페·편의점 위치를 보존. 기사 속 요트·레스토랑·카페·편의점·웨딩홀 목록은 건물 전체 설명으로, 모두 1층이라는 뜻은 아니다.",
-      "source": "https://mediahub.seoul.go.kr/archives/2010487",
+      "layout": "round 13 공식 운영사 안내는 이솔라·카페돌체·GS25를 가빛 1층으로 확인. 기존 카페·수상레저 접수와 가구를 보존하고 남쪽 구획의 (-870,0,-763)에 이솔라 표지 및 식탁 2개를 배치했다. 정확한 구획·가구·층고는 추정.",
+      "source": "https://www.somesevit.co.kr/kr/business/gavit/introduce.do",
       "guess": false,
       "layout_guess": true
     },
     {
       "floor": "가빛섬 2F~3F",
-      "use": "컨벤션홀(700석)·레스토랑·펍",
+      "use": "2F FIC 컨벤션홀 · 3F 비스타 레스토랑",
       "tenants": [
         "FIC 컨벤션홀",
-        "이솔라(이탈리안, 개장 당시 '올라')",
-        "비스타(캐주얼 펍)",
-        "CNN카페(개장 당시)"
+        "비스타 레스토랑"
       ],
-      "layout": "가장 큰 섬(연면적 5,478㎡, 높이 27m). 컨벤션홀은 중심, 레스토랑은 한강 쪽 창가 (추정)",
-      "source": "https://www.mt.co.kr/estate/2014/12/27/2014122400441651139",
+      "layout": "round 13 공식 안내에 따라 3층의 이솔라 명칭을 비스타 레스토랑으로 정정했다. 기존 모든 식탁·바·라운지 유지. FIC 공식 안내는 1,000석이며 기존 700개 극장식 의자는 하나의 추정 배치로 유지하고 700석 확정 안내는 제거했다. y=0/5/18/23m 층고는 실측이 아니다.",
+      "source": "https://www.somesevit.co.kr/kr/business/gavit/introduce.do",
       "guess": false
     },
     {
-      "floor": "가빛섬 옥상(4~5F 표기)",
-      "use": "세빛마루 옥상 개방 전망 공간",
+      "floor": "가빛섬 4F",
+      "use": "비스타 루프탑 바 · 한강 전망",
       "tenants": [
-        "세빛마루(상시 개방, 10~22시)"
+        "비스타 루프탑 바"
       ],
-      "layout": "서울시 2024 기사는 4층 옥상 세빛마루로 표기. 모델의 기존 4층/y=23m를 유지하고 간판에 4층 명시. 2023 기사에는 4~5층 야외공간 표기가 있어 실제 층고·층 구분은 미확정.",
-      "source": "https://mediahub.seoul.go.kr/archives/2010487",
+      "layout": "2026-11-07 재열람한 공식 운영사 층별 내비게이션의 4F 비스타 루프탑 바를 반영. 2024 서울시의 세빛마루 명칭은 이전 운영 기록으로 보존하며 현재 간판·스폰은 비스타 루프탑으로 정정했다. 기존 y=23m 전망층·가구·유리 캐노피를 보존했다.",
+      "source": "https://www.somesevit.co.kr/kr/business/gavit/introduce.do",
       "guess": false,
       "layout_guess": true
     },
@@ -298,7 +330,7 @@
     "기존 동쪽 반포나들목: OSM 560449165 축 (-213.15,-657.14) → (-282.96,-767.44), 모델의 공원측 경사로는 (-297.9343,-791.0995)까지 연장. 이름과 기존 지하 구조는 유지; 새 나들목의 8×3×85m 수치를 이곳에 적용하지 않는다."
   ],
   "modeling": {
-    "round": 10,
+    "round": 13,
     "guesses": [
       "평탄한 공원 지면 y=0에서 보행자 머리 높이와 잠수교 하부가 겹치지 않도록 남단 강변 구간의 잠수교 상면을 y=3.6m로 조정했다. (-614,-710)부터 교축 방향 120m 구간이며 하부 여유 높이는 3.35m, 등기구 아래는 약 3.19m이다. 실측 고도·단면 자료는 확보하지 못했다.",
       "강 쪽 (-694.02,-920.79)에서 기존 y=1.6m 하층 교면으로 완만하게 낮아진다. 기존 잠수교 스폰과 수상 구간, 상층 반포대교 y=15m는 유지했다.",
@@ -311,7 +343,16 @@
       "무드서울의 와인 공간과 2층 라이브는 2024 기사 기록이다. 1층 테이블 (-889.5,0,-828), (-882,0,-835.5), 안내대 (-880,0,-832), 2층 와인바 (-887,6,-835), 무대 (-885.7,6,-822.8), 키보드·마이크·스피커 및 기존 예술 패널·조형물은 현장 사진으로 확인되지 않은 배치다. 층 바닥 y=0/6m 유지도 추정이다.",
       "가빛섬 튜브스터의 1층은 확인되나 접수대 좌표 (-859,0,-744), 카페·편의점 구획, GS25 상호의 해당 구획 대응, 옥상 y=23m 및 층고는 추정이다. 이번 감사는 기존 세부를 반증하지 않아 보존했다.",
       "섬 입구 문·캐노피·난간 치수와 도교의 세부 구조는 unverified다. OSM 위치와 연결 보도 표현은 유지하며 부유식 연결교라고 확정하지 않는다.",
-      "잠수교 round 10 재구현의 계획 베이·투명 바닥·교각 형상 추정과 최신 공사 표현은 modeling.jamsugyo_wave_round10에 별도로 기록했다. 남단 램프는 참 중첩 수정 후 길이 42.3m, 계단은 10.3m이며 기존 메모의 44m/12m를 대체한다."
+      "잠수교 round 10 재구현의 계획 베이·투명 바닥·교각 형상 추정과 최신 공사 표현은 modeling.jamsugyo_wave_round10에 별도로 기록했다. 남단 램프는 참 중첩 수정 후 길이 42.3m, 계단은 10.3m이며 기존 메모의 44m/12m를 대체한다.",
+      "round 13: 공원 접점 J_ONEBAILEY_PARK의 [-592,-625]에서 [-605.62,-619.73]→[-613.23,-614.19]→[-617.45,-620.59]로 이어지는 폭 3.2m 짧은 보행 접속부는 기존 OSM 서비스 진입부·보행로의 관계에 맞춘 추정이다. 영상 편집으로 지하 출구와 수변의 정확한 경로를 확인하지 못했고, 동쪽 반포나들목을 서쪽 통로와 합치지 않았다.",
+      "round 13: hTkViN9S1vg_1500의 작은 황갈색 격자 돔은 가빛 방문 뒤 도교로 접근하는 순서와 OSM 섬 배치상 솔빛섬(320797229)에 대응시켰다. 로그의 채빛섬 계열은 잠정 추정으로 채택하지 않았다. 촬영 GPS와 원본 연속 보행이 없으므로 이 건물 대응도 추정이다. 대나무라고 재료를 확정하지 않고 금속성 황갈색 격자로 표현했다.",
+      "round 13: 가빛 주진입교의 흰 케이블 지주 중심은 OSM 도교 축 [-827.27,-669.485]→[-855.25,-724.8]의 24m 지점, 양옆 3.05m, 높이 4.6m로 추정했다. 기존 섬 외곽과 도교 치수·바닥 높이는 유지했다.",
+      "round 13: F9MdeqY0Rro_21의 오리배 계류장을 가빛 진입교 서쪽 [-847,-677]→[-863,-708]에 배치했다. 오리배 4척과 세로 배너 3개는 프레임의 관계·색을 재구성했으며 수량·좌표·배너 문구는 실측이 아니다.",
+      "round 13: 솔빛 0/6m 층과 내부를 보존하고 지붕을 y=10.7~14.7m의 곡면 격자로 표현했다. 가빛 교차 브레이싱, 데크 색, 난간 치수, 분수의 백색 혼합은 영상 외관에 맞춘 근사이다.",
+      "round 13 충돌 판정: 2026-02 영상의 잠수교 차량과 합성 로그의 차량 통제 미확인은 2026-10-13 서울시 공식 발표(10-15 수정, 11-07 재열람)보다 앞선 상태다. 공식 원문은 10-26 차량 전면 통제와 공사 중 보행·자전거 통행을 확인하므로 기존 통제 표지를 유지했다. 22개 전망쉼터와 투명데크 2곳은 2027년 계획 표현이며 현존 시설이라고 확정하지 않는다.",
+      "round 13: 축제 영상의 초록 포장·노란 볼라드·주황 콘·푸드트럭·빈백·밀집 인원은 ?festival=1에서만 추가된다. 이는 영상의 행사 세부를 검수하는 선택 장면이며 기존 2027년 계획 표현까지 제거한 2026-06 당시의 완전한 시점 복원은 아니다.",
+      "round 13: 터미널 외곽 B1 토다이 간판·구형 조형물·정자와 반포대로 지상 복귀로는 streets/터미널 소유 영역이므로 새로 중복 배치하지 않았다. 8-1번 출구·고투몰 G2·9호선 유리문을 동일 출구라고 단정하지 않는다.",
+      "round 13 공식 층별 정정: 가빛 이솔라는 1F, 비스타 레스토랑은 3F, 비스타 루프탑은 4F다. 이솔라 1층 표시·식탁을 [-870,-763] 부근에 배치했으나 정확한 실내 평면은 영상이 없어 추정이다. 기존 3층 식탁·바·라운지는 비스타 가구로 모두 보존했고 4층 y=23m와 전망 가구도 유지했다. FIC의 공식 1,000석 안내와 기존 700개 의자 배치를 구분해 의자는 보존하고 인월드 700석 확정 안내만 제거했다."
     ],
     "evidence_audit": {
       "file": ".codex-jobs/evidence/audit_hangang.json",
@@ -553,7 +594,7 @@
         "note": "기존 접수대에 튜브스터 접수 명시"
       },
       {
-        "spot": "가빛 4층 세빛마루",
+        "spot": "가빛 4층 비스타 루프탑",
         "x": -881,
         "y": 23,
         "z": -731,
@@ -561,11 +602,12 @@
         "pitchDeg": 0,
         "eyeY": 24.62,
         "sources": [
-          "https://mediahub.seoul.go.kr/archives/2010487"
+          "https://mediahub.seoul.go.kr/archives/2010487",
+          "https://www.somesevit.co.kr/kr/business/gavit/introduce.do"
         ],
         "photos": [],
         "coordinate_status": "모델 검수 카메라. y는 해당 바닥 높이이며 사진 GPS가 아니다.",
-        "note": "옥상 간판의 4층 표기"
+        "note": "round 13 공식 운영사 4F 안내 반영. 기존 전망 가구·층고 보존."
       },
       {
         "spot": "반포나들목 공원 입구 · 개명 미적용 확인",
@@ -726,9 +768,224 @@
         "coordinate_status": "모델 검수 카메라. y는 발이 닿는 바닥 높이(m), 사진 GPS 아님.",
         "note": "기존 남단 접근 위치를 유지했다. 42.3m 경사로와 10.3m 계단이 폭 3.4m인 참의 양끝에서 만나도록 수정해 중첩 단차를 제거했다. 위치와 경사도는 추정이다.",
         "round10_jamsugyo": true
+      },
+      {
+        "spot": "가빛 주진입교 · 흰 케이블 지주",
+        "frame": "hTkViN9S1vg_1340.jpg",
+        "photos": [
+          "refs/walk/s8_onebailey_banpo/hTkViN9S1vg_1340.jpg"
+        ],
+        "x": -830.43,
+        "y": 0,
+        "z": -675.73,
+        "yawDeg": 27,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "coordinate_status": "모델 검수용 바닥 높이. 촬영 GPS와 실측 방위가 아니다.",
+        "round13_walk": true
+      },
+      {
+        "spot": "가빛→솔빛 도교 · 황갈색 격자 돔",
+        "frame": "hTkViN9S1vg_1500.jpg",
+        "photos": [
+          "refs/walk/s8_onebailey_banpo/hTkViN9S1vg_1500.jpg"
+        ],
+        "x": -885.4,
+        "y": 0,
+        "z": -795,
+        "yawDeg": 8,
+        "pitchDeg": 3,
+        "eyeY": 1.62,
+        "coordinate_status": "모델 검수용 바닥 높이. 촬영 GPS와 실측 방위가 아니다.",
+        "round13_walk": true
+      },
+      {
+        "spot": "세빛섬 앞 도교 · 오리배와 배너",
+        "frame": "F9MdeqY0Rro_21.jpg",
+        "photos": [
+          "refs/walk/s8_onebailey_banpo/F9MdeqY0Rro_21.jpg"
+        ],
+        "x": -832.68,
+        "y": 0,
+        "z": -680.16,
+        "yawDeg": 40,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "coordinate_status": "모델 검수용 바닥 높이. 촬영 GPS와 실측 방위가 아니다.",
+        "round13_walk": true
+      },
+      {
+        "spot": "달빛광장 · 황토색 포장",
+        "frame": "hTkViN9S1vg_1900.jpg",
+        "photos": [
+          "refs/walk/s8_onebailey_banpo/hTkViN9S1vg_1900.jpg"
+        ],
+        "x": -638,
+        "y": 0.09,
+        "z": -710,
+        "yawDeg": 200,
+        "pitchDeg": 0,
+        "eyeY": 1.71,
+        "coordinate_status": "모델 검수용 바닥 높이. 촬영 GPS와 실측 방위가 아니다.",
+        "round13_walk": true
+      },
+      {
+        "spot": "잠수교 남단 · 반복 교각",
+        "frame": "hTkViN9S1vg_560.jpg",
+        "photos": [
+          "refs/walk/s8_onebailey_banpo/hTkViN9S1vg_560.jpg"
+        ],
+        "x": -619.6675,
+        "y": 3.615,
+        "z": -743.244,
+        "yawDeg": 21,
+        "pitchDeg": 0,
+        "eyeY": 5.235,
+        "coordinate_status": "모델 검수용 바닥 높이. 촬영 GPS와 실측 방위가 아니다.",
+        "round13_walk": true
+      },
+      {
+        "spot": "잠수교 · 물결 난간과 남쪽 조망",
+        "frame": "hTkViN9S1vg_800.jpg",
+        "photos": [
+          "refs/walk/s8_onebailey_banpo/hTkViN9S1vg_800.jpg"
+        ],
+        "x": -758.2316,
+        "y": 1.6,
+        "z": -1064.9695,
+        "yawDeg": 201,
+        "pitchDeg": 0,
+        "eyeY": 3.22,
+        "coordinate_status": "모델 검수용 바닥 높이. 촬영 GPS와 실측 방위가 아니다.",
+        "round13_walk": true
+      },
+      {
+        "spot": "잠수교 난간 너머 세빛섬",
+        "frame": "hTkViN9S1vg_1050.jpg",
+        "photos": [
+          "refs/walk/s8_onebailey_banpo/hTkViN9S1vg_1050.jpg"
+        ],
+        "x": -747.449,
+        "y": 1.6,
+        "z": -1036.9742,
+        "yawDeg": 120,
+        "pitchDeg": 0,
+        "eyeY": 3.22,
+        "coordinate_status": "모델 검수용 바닥 높이. 촬영 GPS와 실측 방위가 아니다.",
+        "round13_walk": true
+      },
+      {
+        "spot": "잠수교 남단 접근 · 회백색 난간",
+        "frame": "hTkViN9S1vg_1250.jpg",
+        "photos": [
+          "refs/walk/s8_onebailey_banpo/hTkViN9S1vg_1250.jpg"
+        ],
+        "x": -683.004,
+        "y": 2.5932,
+        "z": -868.9486,
+        "yawDeg": 201,
+        "pitchDeg": 0,
+        "eyeY": 4.2132,
+        "coordinate_status": "모델 검수용 바닥 높이. 촬영 GPS와 실측 방위가 아니다.",
+        "round13_walk": true
+      },
+      {
+        "spot": "남단 수변 · 분수와 왼쪽 세빛섬",
+        "frame": "MQ3DaFYo2R8_2320.jpg",
+        "photos": [
+          "refs/walk/s8_onebailey_banpo/MQ3DaFYo2R8_2320.jpg"
+        ],
+        "x": -671,
+        "y": 0,
+        "z": -808,
+        "yawDeg": 15,
+        "pitchDeg": 6,
+        "eyeY": 1.62,
+        "coordinate_status": "모델 검수용 바닥 높이. 촬영 GPS와 실측 방위가 아니다.",
+        "round13_walk": true,
+        "query": "night=1"
+      },
+      {
+        "spot": "축제 · 초록 자전거 포장",
+        "frame": "MQ3DaFYo2R8_20.jpg",
+        "photos": [
+          "refs/walk/s8_onebailey_banpo/MQ3DaFYo2R8_20.jpg"
+        ],
+        "x": -631.5407,
+        "y": 3.635,
+        "z": -738.7367,
+        "yawDeg": 21,
+        "pitchDeg": 0,
+        "eyeY": 5.255,
+        "coordinate_status": "모델 검수용 바닥 높이. 촬영 GPS와 실측 방위가 아니다.",
+        "round13_walk": true,
+        "query": "festival=1"
+      },
+      {
+        "spot": "축제 · 횡단보도와 노란 볼라드",
+        "frame": "MQ3DaFYo2R8_240.jpg",
+        "photos": [
+          "refs/walk/s8_onebailey_banpo/MQ3DaFYo2R8_240.jpg"
+        ],
+        "x": -640.7457,
+        "y": 3.6,
+        "z": -774.8187,
+        "yawDeg": 21,
+        "pitchDeg": 0,
+        "eyeY": 5.22,
+        "coordinate_status": "모델 검수용 바닥 높이. 촬영 GPS와 실측 방위가 아니다.",
+        "round13_walk": true,
+        "query": "festival=1"
+      },
+      {
+        "spot": "축제 · 주황 콘과 휴식 매트",
+        "frame": "MQ3DaFYo2R8_900.jpg",
+        "photos": [
+          "refs/walk/s8_onebailey_banpo/MQ3DaFYo2R8_900.jpg"
+        ],
+        "x": -709.409,
+        "y": 1.6,
+        "z": -955.1808,
+        "yawDeg": 21,
+        "pitchDeg": 0,
+        "eyeY": 3.22,
+        "coordinate_status": "모델 검수용 바닥 높이. 촬영 GPS와 실측 방위가 아니다.",
+        "round13_walk": true,
+        "query": "festival=1"
+      },
+      {
+        "spot": "축제 · 푸드트럭과 빈백",
+        "frame": "MQ3DaFYo2R8_1100.jpg",
+        "photos": [
+          "refs/walk/s8_onebailey_banpo/MQ3DaFYo2R8_1100.jpg"
+        ],
+        "x": -725.5136,
+        "y": 1.6,
+        "z": -1002.5584,
+        "yawDeg": 201,
+        "pitchDeg": 0,
+        "eyeY": 3.22,
+        "coordinate_status": "모델 검수용 바닥 높이. 촬영 GPS와 실측 방위가 아니다.",
+        "round13_walk": true,
+        "query": "festival=1"
+      },
+      {
+        "spot": "가빛 1층 이솔라 · 공식 층 정정",
+        "x": -870,
+        "y": 0,
+        "z": -758,
+        "yawDeg": 0,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "sources": [
+          "https://www.somesevit.co.kr/kr/business/gavit/introduce.do"
+        ],
+        "photos": [],
+        "round13_walk": true,
+        "note": "공식 1층은 확인. 실내 구획 및 식탁 위치는 추정."
       }
     ],
-    "screenshot_status": "사용자 지시대로 tests/shot.mjs는 실행하지 않았다. 기존 감사 11개와 잠수교 사진·계획 8개를 포함한 modeling.trace로 operator가 검수할 수 있다.",
+    "screenshot_status": "round 13: 사용자 제한으로 tests/shot.mjs 미실행. 재구성 프레임 13개 + 공식 층 정정 1개의 추가 trace를 기록했고 기존 trace도 보존. 카메라 y는 바닥 높이.",
     "verification": {
       "smoke": {
         "command": "node tests/smoke.mjs hangang jamwon_hangang streets",
@@ -751,7 +1008,81 @@
       "metadata": "tools/gen_meta.mjs를 hangang 대상으로 실행하고 writeFileSync 결과를 메모리에서 비교. claims/구역 경계/층고/층명은 유지되어 기존 _meta.json의 hangang 항목과 동일. 두 파일 수정 제한 때문에 메타 파일은 쓰지 않음.",
       "diff": "git diff --check -- js/places/hangang.js data/research/hangang.json 통과",
       "screenshots": "사용자 지시로 tests/shot.mjs 미실행; 모델의 렌더링 결과는 미확인. trace에 바닥 높이 기준 검수 카메라 기록.",
-      "previous_validation_note": "이 항목의 기존 검증값은 이전 작업 기록을 보존한다. 최종 두 모듈 합동 및 전체 세계 검증 결과는 modeling.round10_validation을 참조할 것."
+      "previous_validation_note": "이 항목의 기존 검증값은 이전 작업 기록을 보존한다. 최종 두 모듈 합동 및 전체 세계 검증 결과는 modeling.round10_validation을 참조할 것.",
+      "round13_joint_smoke": {
+        "command": "node tests/smoke.mjs onebailey hangang gotomall jamwon_hangang streets",
+        "result": "OK",
+        "final": true
+      },
+      "round13_trace": {
+        "scene": "all modules + city + all lazy detail",
+        "count": 33,
+        "support_capsule_headroom_failures": 0,
+        "floor_y_verified": true,
+        "rendered": false
+      },
+      "round13_full_walk_first": {
+        "command": "node tests/walk.mjs",
+        "result": "687 ok, 2 blocked",
+        "blocked": [
+          "J1 gotomall→shinsegae y=-6",
+          "사용자 루트4 신세계 B1→1F (-70,-35,-6)→(-75,-10,0)"
+        ],
+        "concurrent_edit_note": "검사 도중 shinsegae/centralcity/gotomall 변경. 해당 모듈은 직접 수정하지 않았다."
+      },
+      "round13_failed_paths_latest_recheck": {
+        "result": "2/2 PASS",
+        "scene": "latest all modules + city + all lazy detail",
+        "paths": [
+          "J1 y=-6:33397 cells",
+          "사용자 루트4 B1→1F:67977 cells"
+        ],
+        "full_walk": "최종 전체687 ok,0 blocked"
+      },
+      "round13_full_walk_second": {
+        "command": "node tests/walk.mjs",
+        "result": "688 ok, 1 blocked",
+        "blocked": [
+          "센트럴시티 B1→파미에 B1→7호선 [0→1] (-93.4,57.8)→(-60.5,169.5), 2 cells"
+        ],
+        "user_routes": "사용자 루트 모두 통과",
+        "concurrent_edit_note": "centralcity 코드가 검사 실행 중 재변경됨. 해당 경로는 범위 밖이며 최신 상태 재검사 중."
+      },
+      "round13_last_blocked_path_latest_recheck": {
+        "result": "PASS",
+        "scene": "latest all modules + city + all lazy detail",
+        "path": [
+          [
+            -93.4,
+            57.8,
+            -6
+          ],
+          [
+            -60.5,
+            169.5,
+            -6
+          ]
+        ],
+        "cells": 240842,
+        "note": "센트럴시티 동시 수정 후 이전 실패 해소. 이후 전체687 ok,0 blocked 최종 통과."
+      },
+      "walk": {
+        "command": "node tests/walk.mjs",
+        "result": "687 ok, 0 blocked",
+        "final": true,
+        "scene": "all modules + city + all lazy detail",
+        "user_routes": "사용자 루트 전부 통과",
+        "note": "동시 수정 이후 세 번째 전체 실행. 앞선 실패는 이력으로만 보존."
+      },
+      "round13_final_full_walk": {
+        "command": "node tests/walk.mjs",
+        "result": "687 ok, 0 blocked",
+        "final": true,
+        "scene": "all modules + city + all lazy detail",
+        "user_routes": "사용자 루트 전부 통과",
+        "note": "동시 수정 이후 세 번째 전체 실행. 앞선 실패는 이력으로만 보존."
+      },
+      "final_status": "PASS: requested smoke + full walk + all trace cameras; operator screenshot comparison not run as instructed."
     },
     "jamsugyo_wave_round10": {
       "evidence_file": ".codex-jobs/evidence/research_jamsugyo_wave.json",
@@ -941,7 +1272,7 @@
       }
     },
     "junctions_to_add": [],
-    "junction_note": "추가 junction은 필요하지 않다. 기존 OSM 바닥이 세 접점에서 연속되고 양쪽 outdoor area가 두 모듈을 함께 로드한다. 정확한 접점과 경유 좌표는 jamsugyo_wave_round10에 기록했다.",
+    "junction_note": "round 13: 기존 J_ONEBAILEY_PARK y=0 접점을 보존하고 공원 쪽 짧은 접속로만 추가. 신규 junction 필요 없음. 정확한 지상·지하 경로 대응은 guesses 참조.",
     "riverside_route_round10": {
       "id": "banpo-jamwon-seoulwave-r10",
       "coordinate_order": "[x,y,z], meters, feet/floor height",
@@ -2148,6 +2479,90 @@
         "scope_note": "centralcity, jwmarriott, gyeongbu는 본 작업 수정 범위 밖이며 jwmarriott/gyeongbu는 시작 시점부터 다른 작업의 수정 상태였음. 해당 파일을 수정하지 않음. 전체 세계 0 blocked는 달성하지 못했으나 본 작업 두 모듈과 연결 강변은 통과함."
       },
       "riverside": "1,368.04m 강변→서울웨이브 실내 동선 6,951개 표본, 바닥 누락·충돌·낮은 천장·기본 지면 대체 모두 0. 두 자전거길도 통과. 정확한 수치는 riverside_route_round10.final_validation 참조."
+    },
+    "walk_round13": {
+      "evidence": [
+        ".codex-jobs/evidence/walk_s8_onebailey_banpo.json",
+        ".codex-jobs/evidence/walk_synthesis.md"
+      ],
+      "priority_order": [
+        "layout",
+        "design",
+        "details"
+      ],
+      "layout": [
+        {
+          "element": "원베일리 출구→공원 보행 접속",
+          "points_xz": [
+            [
+              -592,
+              -625
+            ],
+            [
+              -605.62,
+              -619.73
+            ],
+            [
+              -613.23,
+              -614.19
+            ],
+            [
+              -617.45,
+              -620.59
+            ]
+          ],
+          "floor_y": 0.065,
+          "width": 3.2,
+          "status": "inferred connector; mapped service apron and park paths retained"
+        },
+        {
+          "element": "세빛섬 도교·섬 외곽",
+          "status": "OSM ISLETS/PIERS unchanged; Gavit bridge→island→Solvit bridge sequence retained"
+        },
+        {
+          "element": "반포대교 상층·잠수교 하층·공원 동서 횡단",
+          "status": "existing y=15m / river 1.6m / bank 3.6m kept; user routes preserved"
+        },
+        {
+          "element": "동쪽 반포나들목",
+          "status": "separate OSM 560449165 retained; not renamed or relocated to edited short"
+        },
+        {
+          "element": "가빛 현행 공식 층별 안내",
+          "source": "https://www.somesevit.co.kr/kr/business/gavit/introduce.do",
+          "verified": "2026-11-07",
+          "applied": "이솔라1F·비스타3F·비스타루프탑4F 표지/구역/스폰 정정. 기존 3F/4F 가구 보존. 1F 이솔라 작은 식사 구획은 추정."
+        }
+      ],
+      "design": [
+        "hTk_1340의 흰 케이블 지주와 다중 케이블 난간, 회갈색 목재 데크",
+        "hTk_1500의 황갈색 격자 돔을 솔빛 외곽에 대응; 기존 내부·계단·승강기 보존",
+        "F9_21 및 hTk_1340의 가빛 유리 외피에 은색 교차 브레이싱",
+        "hTk_800/1050/1250의 잠수교 물결 난간을 밝은 회백색으로 보정",
+        "hTk_1900의 황토색 광장, MQ_2320의 흰 물줄기와 은은한 야간색"
+      ],
+      "details": [
+        "가빛 주진입교 서쪽 오리배 계류와 세로 배너",
+        "행사 선택 장면의 횡단보도·노란 볼라드·주황 콘·푸드트럭 6대·초록 휴식 매트·빈백·추가 인원 180명",
+        "기존 실내 가구·안내·교각·구조와 2027년 계획 표시는 보존"
+      ],
+      "festival_preview": {
+        "query": "festival=1",
+        "default": false,
+        "reference": "MQ3DaFYo2R8_20/240/900/1100",
+        "note": "추가 행사 세부 검수용, 역사적 모든 시점 조건의 완전 복원 아님"
+      },
+      "scope_deferred": [
+        "streets 지상 복귀 경로와 터미널 외곽 간판·조형물",
+        "정확한 지하 출구→수변 연결 단면·촬영 GPS",
+        "공식 층별 명칭 정정 외 실내 평면 전반의 신규 감사"
+      ],
+      "official_conflict_resolution": {
+        "url": "https://mediahub.seoul.go.kr/archives/2019683",
+        "verified": "2026-11-07",
+        "decision": "2026-10-26 차량 통제 및 보행·자전거 통행 유지; 2027년 완성 조감도는 계획으로 구분"
+      },
+      "visual_verification": "지정 프레임을 직접 열람했다. tests/shot.mjs는 사용자 제한으로 실행하지 않았고 실제 모델 렌더는 미확인. 모든 새 재구성 프레임에 floor-y trace를 제공한다."
     }
   },
   "parking": "반포한강공원 2주차장, 세빛섬 내 음식점 이용 시 3시간 무료(2024 기사)",

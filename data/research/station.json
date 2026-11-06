@@ -15,12 +15,22 @@
       "year": 2026,
       "date": "2026-01-09",
       "event_date": "2025-12",
-      "evidence": "round10 원문 열람. 4번 출구 앞 승강기의 지상·B2 대합실·B3 승강장 연결 및 완만한 외부 램프 확인. 기존 year=2020 정정. 기사 사진은 도구에서 시각 열람하지 못함."
+      "evidence": "round10 원문 열람. 4번 출구 앞 승강기의 지상·B2 대합실·B3 승강장 연결 및 완만한 외부 램프 확인. 기존 year=2020 정정. 기사 사진은 도구에서 시각 열람하지 못함.",
+      "round13_recheck": {
+        "accessed": "2026-11-07",
+        "status": "article_text_opened",
+        "finding": "2026-01-09 기사 본문에서 2025년12월 설치·4번 출구 앞·1F→B2대합실→B3승강장·외부 완경사 램프를 재확인. 기사 사진 픽셀은 이번 도구 결과로 열람하지 못함."
+      }
     },
     {
       "url": "https://mediahub.seoul.go.kr/archives/162098",
       "title": "건축미 돋보이는 9호선 고속터미널역",
-      "year": 2009
+      "year": 2009,
+      "round13_recheck": {
+        "accessed": "2026-11-07",
+        "status": "article_text_opened",
+        "finding": "2009-05-13 기사 본문의 3호선 터널 15cm 아래 통과와 강관 아치 시공 이력 재확인. 현재 층 표기·매장 배치 도면 근거로 사용하지 않음."
+      }
     },
     {
       "url": "https://mediahub.seoul.go.kr/archives/1139258",
@@ -91,6 +101,64 @@
       "title": "사용자 제공 2025–2026 고속터미널역 실내 사진 · 9호선 1번 출구 홀",
       "date": "2026-08-28",
       "evidence": "refs/interior/station/notes.json 및 해당 로컬 사진; 이 작업에서 원문을 새로 열람하지 않음"
+    },
+    {
+      "url": "https://mstore.enter6.co.kr/stores/68/directions",
+      "title": "엔터식스 강남점 공식 오시는길",
+      "accessed": "2026-11-07",
+      "evidence": "round13 검색 색인 본문으로 서울특별시 서초구 신반포로176 고속터미널역 B1, 2번·7번 출구 및 고투몰 G7 접근 확인. 공식 모바일·데스크톱 원문 직접 열기는 HTTP 502로 실패. 개별 점포 좌표·면적·전면은 이 결과에 없음.",
+      "evidence_status": "official_search_excerpt; direct_fetch_failed"
+    },
+    {
+      "url": "https://www.codil.or.kr/filebank/original/RK/OTKCRK230024/OTKCRK230024.pdf",
+      "title": "CODIL 수록 연구보고서의 고속터미널역 입체교통 후보지 설명",
+      "accessed": "2026-11-07",
+      "evidence": "round13 검색 발췌에 안내도의 7호선 B3와 물리 깊이 환산 B4를 구별하는 주석이 있음. PDF 직접 열기는 시간 초과. 문서 전체·도면·발행연도는 이번에 확인하지 못했으며 색인 발췌를 공식 평면도로 취급하지 않음.",
+      "evidence_status": "search_excerpt_only; pdf_fetch_timeout"
+    },
+    {
+      "url": "https://www.si.re.kr/sites/default/files/2020-PR-28.pdf",
+      "title": "서울연구원 서울시 도시철도 교통약자 접근성 평가모형 개발",
+      "accessed": "2026-11-07",
+      "evidence": "round13 검색 발췌의 표3-9 역사 정보 개요에 3호선 대합실 지하1층이 나타남. PDF 직접 열기는 HTTP404. 전체 표·세부 층 대응을 직접 확인한 근거로 사용하지 않음.",
+      "evidence_status": "search_excerpt_only; pdf_fetch_404"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=zPXe32QRyJo",
+      "title": "서울성모병원 길찾기 완전정복! 3호선 고속터미널역 | 서울성모병원",
+      "date": "2025-05-09",
+      "evidence": "사용자 제공 로컬 영상 프레임 refs/walk/s4_enter6_subway/ 및 walk_s4_enter6_subway.json. round13에서 영상 전체를 새로 재생하거나 원문 설명을 직접 재검증하지 않음.",
+      "evidence_status": "supplied_walk_frames_and_log"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=w7cLZSedgT4",
+      "title": "고속터미널역 환승, 고속터미널역 역세권 가는 방법",
+      "date": "2026-03-29",
+      "evidence": "사용자 제공 로컬 영상 프레임 refs/walk/s4_enter6_subway/ 및 walk_s4_enter6_subway.json. round13에서 영상 전체를 새로 재생하거나 원문 설명을 직접 재검증하지 않음.",
+      "evidence_status": "supplied_walk_frames_and_log"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=xmLYPNlwtkU",
+      "title": "#고속터미널역 #ExpressBusTerminal #지하철환승 #3호선 #7호선 #9호선",
+      "date": "2026-02-20",
+      "evidence": "사용자 제공 로컬 영상 프레임 refs/walk/s4_enter6_subway/ 및 walk_s4_enter6_subway.json. round13에서 영상 전체를 새로 재생하거나 원문 설명을 직접 재검증하지 않음.",
+      "evidence_status": "supplied_walk_frames_and_log"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=AHB7dR-5aOU",
+      "title": "고속터미널역 3호선에서 9호선으로 환승",
+      "date": "2025-06-14",
+      "evidence": "사용자 제공 로컬 영상 프레임 refs/walk/s4_enter6_subway/ 및 walk_s4_enter6_subway.json. round13에서 영상 전체를 새로 재생하거나 원문 설명을 직접 재검증하지 않음.",
+      "evidence_status": "supplied_walk_frames_and_log",
+      "recorded_date_from_walk_log": "2025-04-13"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=AlqE1LnWVr0",
+      "title": "고속터미널역 7호선에서 3호선으로 환승",
+      "date": "2026-03-27",
+      "evidence": "사용자 제공 로컬 영상 프레임 refs/walk/s4_enter6_subway/ 및 walk_s4_enter6_subway.json. round13에서 영상 전체를 새로 재생하거나 원문 설명을 직접 재검증하지 않음.",
+      "evidence_status": "supplied_walk_frames_and_log",
+      "recorded_date_from_walk_log": "2026-02-05"
     }
   ],
   "building": {
@@ -282,11 +350,14 @@
     "9호선 열차 외관 상세",
     "round10: 출구 목적지와 다이소의 역·몰·터미널 사이 출입문 월드 좌표는 미확인. 별도 문 사진을 단일 출입구로 합치지 않는다.",
     "round10: station↔gotomall 별도 로딩은 현재 엔진 클러스터 구조와 다르며 두 허용 파일에서 해결할 수 없다.",
-    "round10: 4번 출구의 실제 램프 경사·방향·길이·폭 및 승강기 B1 정차 여부는 미확인."
+    "round10: 4번 출구의 실제 램프 경사·방향·길이·폭 및 승강기 B1 정차 여부는 미확인.",
+    "round13: ENTER6 전체 실제 구역,3호선 개찰구 기준 좌우·거리·정면·현재 내부와 고투몰 경계는 미확인. 신규 소형 전면의 실제 위치 일치를 주장하지 않음.",
+    "round13: 7↔9 직접 환승 영상,7·9호선 개찰구 전체,1·2번 출구 실내 문과8-1/G2/한강공원 연결의 동일성은 미확인.",
+    "round13: 현행3·9호선 표시 층 전체의 원문 공식 도면은 확보하지 못함. 공유월드 층·좌표는 유지하며물리 깊이와 구분."
   ],
   "modeling": {
-    "round": 10,
-    "scope": "증거 감사 round10: 4번 출구 기존 승강기·1F/B2/B3 유지와 외부 경사 접근로 추가, 기존 297m 환승통로·무빙워크 유지와 9호선 도착 안내판 보강. 미확인 출구/매장/문/상부 통로는 형상을 보존하고 추정으로 구분. 이전 사진 디테일 보존.",
+    "round": 13,
+    "scope": "가상 보행 round13: 층·개찰구·상업 연결부·환승 순서를 우선 정리한 뒤 영상의 색상·재료·집기를 반영. 공식 층명과 물리 깊이를 구별하며 W3/W9·J7 공유계약 보존. ENTER6는 station 비유료 B1 연결부의 임시 소형 전면으로 표현하고 전체 매장 경계는 미확인으로 기록. 최종 좌표·trace·검증은 구현 후 round13에 추가.",
     "guesses": [
       "B1=-6, B2=-11, B3=-16, B4=-21m는 K.LEVELS/공유 월드 계약이며 실제 역의 실측 심도가 아니다. 특히 깊은 9호선을 B4=-21m에 맞췄다.",
       "환승통로 꺾임, 출구 계단 방향, 승강장 길이와 위치는 기존 OSM/공유 연결을 보존한 추정 배치다. 3호선 약 200m 및 3호선 10량·7호선 8량·9호선 6량 모델을 유지한다.",
@@ -312,7 +383,21 @@
       "round10: 외부 램프 주 구간 (-127.8,246.1)→(-133.2,246.1), 폭 2.2m·길이 5.4m·y .08→.065는 기존 station .025m 및 centralcity .06m 포장 위에 드러나도록 잡은 모델 값이다. 앞 1m(.025→.08), 뒤 .7m(.065→.025) 접속 경사와 북쪽 회전 착지부 [-134.6,245,-133.2,248.8]도 추정이다. 1F 승강기는 y0 유지. 실제 경사율·방향·치수의 실측 재현이 아니다.",
       "round10: 工자 교차는 개략 배치 힌트다. B2 환승통로의 정확한 두 꺾임과 9↔7 최단 보행거리·3호선 대합실과의 실제 층 대응은 확인하지 못했다.",
       "round10: B2 도착 안내판 (40,2), 크기 4.2×0.7m, 검정 케이스·호박색 표시와 일반 개화 곧 도착 문구는 정적 재현이다. 실시간 도착 정보나 사진에서 판독한 문구가 아니다.",
-      "round10: B1 중앙 홀의 매장 순서·폭·좌표, 타원 대합실 크기와 상부 보행 동선, 벽돌 홀의 정확한 위치는 unverified 그대로 유지한다. 사진16은 유리난간 중층 가장자리의 근거이며 상부 보행로를 확정하지 않는다."
+      "round10: B1 중앙 홀의 매장 순서·폭·좌표, 타원 대합실 크기와 상부 보행 동선, 벽돌 홀의 정확한 위치는 unverified 그대로 유지한다. 사진16은 유리난간 중층 가장자리의 근거이며 상부 보행로를 확정하지 않는다.",
+      "round13: 합성 로그의 3호선 B3급·7호선 B4~5급·9호선 B5급은 안내도 층명과 물리 깊이를 혼용한 2차 서술이다. 프레임에는 층 숫자가 직접 보이지 않는다. 공유 W3/W9·기존 브리프의 3호선 B2=-11, 7호선 B3=-16, 9호선 B4=-21 및 3호선 대합실 B1=-6을 유지한다. 7호선 B2대합실/B3승강장은 서울시 기사로 재확인했으나 3·9호선 월드층을 실측 깊이로 주장하지 않는다.",
+      "round13: 3호선 승강장→에스컬레이터 한 층 위→대합실→4번 출구 안내를 따라 한 층 아래→7호선 하부 홀이라는 순서는 zPXe32QRyJo_27/40/52/64/77로 확인. 실제 동서·남북 방향, 보행 거리, 계단 코어 좌표와 새 B1 대합실 범위는 기존 OSM/공유 연결에 맞춘 추정이다.",
+      "round13: 엔터식스는 공식 주소가 고속터미널역 B1이고 영상에서 개찰구 밖 상업 연결부로 소개되므로 station의 비유료 B1 상업 연결 공간에 귀속시킨다. 실제 전체 임대면적·좌우·개찰구와의 거리·전면 경계는 미확인. 신규 station 소유 B1 대합실의 접근 가능한 소형 전면은 대리 표현이며 실측 매장 평면이 아니다. 기존 식물벽 ENTER6 전면도 삭제하지 않고 이전 추정 표현으로 보존한다.",
+      "round13: w7cLZSedgT4_70의 LOVE N SHOW 간판·팔각 코브와 _90의 엔터식스·고투몰 자막은 확인되지만 해당 점포가 엔터식스 임차 구역인지, 고투몰인지, 별도 통로 점포인지는 미확인. 실제 브랜드명을 사용하되 소속·폭·진열·순서를 확정하지 않는다.",
+      "round13: 3→9의 환승 게이트→핑크 광고 무빙워크 병렬 구간→로프 스탠션 중간 홀→긴 하행 에스컬레이터→9호선 승강장 순서는 제공 프레임 근거다. 길이·방향·새 분기의 월드 좌표는 추정이며 7↔9 직접 보행 영상이나 정확한314m 재현을 확보했다고 주장하지 않는다.",
+      "round13: 4번 출구 서울성모병원은 영상과 서울시 기사로 교차 확인. 나머지 목적지 대응은 제공 walk 로그의 위키 표(stated) 수준이며 출구별 정확한 실내 문·좌표·거리까지 검증한 것이 아니다. 3호선 출구 보드에 1·2번이 안 보이는 것은 두 출구가 없다는 근거가 아니다.",
+      "round13: G2·고투몰의 9호선/한강공원 유리문·지하철8-1번은 서로 다른 번호 체계와 지점으로 유지한다. G2와8-1을 동일 출구로 합치지 않는 보수적 가정이며, 실제 경로상 연계 여부를 부정하거나 확정하는 뜻은 아니다. 기존 역/몰/원베일리/공원 연결 좌표는 유지한다.",
+      "round13: 신규 승강기 시점은 재열람한 서울시 공식 기사(2026-01-09)가 적은2025년12월을 채택한다. 합성 로그의2025년11월은 2차 자료와 상충하는 미확인 날짜로 기록한다. 기존 승강기의 B1 추가 정차·실제 외관·램프 치수는 여전히 추정이다.",
+      "round13: 영상의 기둥·게이트·천장·광고·스탠션은 보이는 재료와 상대 관계를 반영한다. 캠페인 원본·작은 안내문·미관찰 점포 내부는 추정하며, 반대 근거가 없는 기존 사진 디테일과 동선은 보존한다.",
+      "round13 최종 좌표: 새 3호선 B1 대합실 rect[-104,-72,-80,-44], 서측 x=-100.8/-98.2/-96.35 상승 코어, 동측 x=-84.6/-82.1 하행 코어, 승강기(-101,-70)는 기존 지하 경계와 보행 가능성에 맞춘 모델 값이다. 공식 실측 평면이나 현장 신규 승강기의 근거가 아니다.",
+      "round13 직결 한계: 신세계 J1 서벽 x=-79와 고투몰 외벽의 개구는 타 모듈 소관이다. 새 엔터식스 전면/대합실과 기존 비유료 상가의 B1 직결은 이번에 만들지 못했으며, 계단 또는 신설 모델 승강기로 승강장층을 거쳐 접근하는 임시 동선이다. 이 임시 우회를 실제 방문 경로로 주장하지 않는다.",
+      "round13 방위 한계: w7cLZSedgT4_30의 우측 3호선 분기는 기존 이웃 경계를 피하면서 모델의 서측(카메라 왼쪽)으로 맞췄다. 분기 순서·층 관계를 구현했으나 프레임의 실제 좌우 일치는 아직 해결하지 못했다.",
+      "round13 환승 치수: 기존 297m 중심선은 동서 구간을 z=-54로 옮겨 324m가 됐다. 별도 7↔9 통로는 x=-68,z=-46..-85이고 병렬 무빙워크 각15m는 시각·통과성 근사다. 문헌의314m나 실제 시설 길이를 재측정한 결과가 아니다.",
+      "round13 표기 출구: 기존 출구 2/3/4/5/6의 목적지 문구를 walk 근거로 정정했으며 OSM 지상 좌표와 기존 W3/W9/J7은 이동하지 않았다. 1·2번이 특정 보드 사진에 보이지 않아도 제거하지 않는다."
     ],
     "junction_issues": [
       {
@@ -618,9 +703,765 @@
         "pitchDeg": 0,
         "floor": "B2",
         "note": "s157–212: 55m, 3호선과 평행한 구간."
+      },
+      {
+        "round": 13,
+        "frame": "zPXe32QRyJo_16",
+        "spot": "3호선 베이지 벽·주황 타원 역명판·따뜻한 천장",
+        "photos": [
+          "refs/walk/s4_enter6_subway/zPXe32QRyJo_16.jpg"
+        ],
+        "x": -102.5,
+        "y": -11,
+        "z": -138,
+        "yawDeg": 90,
+        "pitchDeg": 3,
+        "floor": "B2",
+        "view_id": "r13_zPXe32QRyJo_16",
+        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다.",
+        "validation": {
+          "standalone": {
+            "support_y": -11,
+            "capsule_push_m": 0
+          },
+          "integrated": {
+            "support_y": -11,
+            "capsule_push_m": 0
+          },
+          "rendered": false
+        }
+      },
+      {
+        "round": 13,
+        "frame": "xmLYPNlwtkU_24",
+        "spot": "3호선 사선 석재 벽면·역명 표기",
+        "photos": [
+          "refs/walk/s4_enter6_subway/xmLYPNlwtkU_24.jpg"
+        ],
+        "x": -102.5,
+        "y": -11,
+        "z": -112,
+        "yawDeg": 90,
+        "pitchDeg": 3,
+        "floor": "B2",
+        "view_id": "r13_xmLYPNlwtkU_24",
+        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다.",
+        "validation": {
+          "standalone": {
+            "support_y": -11,
+            "capsule_push_m": 0
+          },
+          "integrated": {
+            "support_y": -11,
+            "capsule_push_m": 0
+          },
+          "rendered": false
+        }
+      },
+      {
+        "round": 13,
+        "frame": "xmLYPNlwtkU_8",
+        "spot": "3호선 회색 사선 석재 기둥·스크린도어",
+        "photos": [
+          "refs/walk/s4_enter6_subway/xmLYPNlwtkU_8.jpg"
+        ],
+        "x": -103.5,
+        "y": -11,
+        "z": -120,
+        "yawDeg": 210,
+        "pitchDeg": 0,
+        "floor": "B2",
+        "view_id": "r13_xmLYPNlwtkU_8",
+        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다.",
+        "validation": {
+          "standalone": {
+            "support_y": -11,
+            "capsule_push_m": 0
+          },
+          "integrated": {
+            "support_y": -11,
+            "capsule_push_m": 0
+          },
+          "rendered": false
+        }
+      },
+      {
+        "round": 13,
+        "frame": "zPXe32QRyJo_27",
+        "spot": "3호선 승강장→대합실 한 층 상승",
+        "photos": [
+          "refs/walk/s4_enter6_subway/zPXe32QRyJo_27.jpg"
+        ],
+        "x": -98.2,
+        "y": -11,
+        "z": -67,
+        "yawDeg": 180,
+        "pitchDeg": 10,
+        "floor": "B2",
+        "view_id": "r13_zPXe32QRyJo_27",
+        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다.",
+        "validation": {
+          "standalone": {
+            "support_y": -11,
+            "capsule_push_m": 0
+          },
+          "integrated": {
+            "support_y": -11,
+            "capsule_push_m": 0
+          },
+          "rendered": false
+        }
+      },
+      {
+        "round": 13,
+        "frame": "zPXe32QRyJo_40",
+        "spot": "상승 후 별도 3호선 대합실",
+        "photos": [
+          "refs/walk/s4_enter6_subway/zPXe32QRyJo_40.jpg"
+        ],
+        "x": -90,
+        "y": -6,
+        "z": -56,
+        "yawDeg": 0,
+        "pitchDeg": 0,
+        "floor": "B1",
+        "view_id": "r13_zPXe32QRyJo_40",
+        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다.",
+        "validation": {
+          "standalone": {
+            "support_y": -6,
+            "capsule_push_m": 0
+          },
+          "integrated": {
+            "support_y": -6,
+            "capsule_push_m": 0
+          },
+          "rendered": false
+        }
+      },
+      {
+        "round": 13,
+        "frame": "xmLYPNlwtkU_40",
+        "spot": "3호선 대합실 사각 회색 기둥·흰 패널 천장",
+        "photos": [
+          "refs/walk/s4_enter6_subway/xmLYPNlwtkU_40.jpg"
+        ],
+        "x": -90,
+        "y": -6,
+        "z": -55,
+        "yawDeg": 0,
+        "pitchDeg": 2,
+        "floor": "B1",
+        "view_id": "r13_xmLYPNlwtkU_40",
+        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다.",
+        "validation": {
+          "standalone": {
+            "support_y": -6,
+            "capsule_push_m": 0
+          },
+          "integrated": {
+            "support_y": -6,
+            "capsule_push_m": 0
+          },
+          "rendered": false
+        }
+      },
+      {
+        "round": 13,
+        "frame": "zPXe32QRyJo_52",
+        "spot": "4번 출구 안내를 따라 7호선 쪽 한 층 하행",
+        "photos": [
+          "refs/walk/s4_enter6_subway/zPXe32QRyJo_52.jpg"
+        ],
+        "x": -82.1,
+        "y": -6,
+        "z": -65.8,
+        "yawDeg": 180,
+        "pitchDeg": -14,
+        "floor": "B1",
+        "view_id": "r13_zPXe32QRyJo_52",
+        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다.",
+        "validation": {
+          "standalone": {
+            "support_y": -6,
+            "capsule_push_m": 0
+          },
+          "integrated": {
+            "support_y": -6,
+            "capsule_push_m": 0
+          },
+          "rendered": false
+        }
+      },
+      {
+        "round": 13,
+        "frame": "zPXe32QRyJo_64",
+        "spot": "7호선 하부 홀 원형 광택 기둥",
+        "photos": [
+          "refs/walk/s4_enter6_subway/zPXe32QRyJo_64.jpg"
+        ],
+        "x": 33,
+        "y": -11,
+        "z": 137,
+        "yawDeg": 135,
+        "pitchDeg": 0,
+        "floor": "B2",
+        "view_id": "r13_zPXe32QRyJo_64",
+        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다. x=40의 좁은 접근 통로 안에서 옆벽을 보지 않도록 하부 대합실 내부로 시점을 옮겼다.",
+        "validation": {
+          "standalone": {
+            "support_y": -11,
+            "capsule_push_m": 0
+          },
+          "integrated": {
+            "support_y": -11,
+            "capsule_push_m": 0
+          },
+          "rendered": false
+        }
+      },
+      {
+        "round": 13,
+        "frame": "zPXe32QRyJo_77",
+        "spot": "7호선 하부 홀 LED 광고·원형 기둥",
+        "photos": [
+          "refs/walk/s4_enter6_subway/zPXe32QRyJo_77.jpg"
+        ],
+        "x": 30,
+        "y": -11,
+        "z": 140,
+        "yawDeg": 135,
+        "pitchDeg": 0,
+        "floor": "B2",
+        "view_id": "r13_zPXe32QRyJo_77",
+        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다. x=40의 좁은 접근 통로 안에서 옆벽을 보지 않도록 하부 대합실 내부로 시점을 옮겼다.",
+        "validation": {
+          "standalone": {
+            "support_y": -11,
+            "capsule_push_m": 0
+          },
+          "integrated": {
+            "support_y": -11,
+            "capsule_push_m": 0
+          },
+          "rendered": false
+        }
+      },
+      {
+        "round": 13,
+        "frame": "w7cLZSedgT4_50",
+        "spot": "3호선 스테인리스 개찰구와 비유료 상업 연결부",
+        "photos": [
+          "refs/walk/s4_enter6_subway/w7cLZSedgT4_50.jpg"
+        ],
+        "x": -90,
+        "y": -6,
+        "z": -58,
+        "yawDeg": 0,
+        "pitchDeg": -2,
+        "floor": "B1",
+        "view_id": "r13_w7cLZSedgT4_50",
+        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다.",
+        "validation": {
+          "standalone": {
+            "support_y": -6,
+            "capsule_push_m": 0
+          },
+          "integrated": {
+            "support_y": -6,
+            "capsule_push_m": 0
+          },
+          "rendered": false
+        }
+      },
+      {
+        "round": 13,
+        "frame": "w7cLZSedgT4_70",
+        "spot": "개찰구 밖 팔각 조명·LOVE N SHOW 전면",
+        "photos": [
+          "refs/walk/s4_enter6_subway/w7cLZSedgT4_70.jpg"
+        ],
+        "x": -90,
+        "y": -6,
+        "z": -65,
+        "yawDeg": 0,
+        "pitchDeg": 7,
+        "floor": "B1",
+        "view_id": "r13_w7cLZSedgT4_70",
+        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다.",
+        "validation": {
+          "standalone": {
+            "support_y": -6,
+            "capsule_push_m": 0
+          },
+          "integrated": {
+            "support_y": -6,
+            "capsule_push_m": 0
+          },
+          "rendered": false
+        }
+      },
+      {
+        "round": 13,
+        "frame": "w7cLZSedgT4_90",
+        "spot": "비유료 연결 로비·엔터식스 전면의 추정 배치",
+        "photos": [
+          "refs/walk/s4_enter6_subway/w7cLZSedgT4_90.jpg"
+        ],
+        "x": -89.7,
+        "y": -6,
+        "z": -65.5,
+        "yawDeg": 0,
+        "pitchDeg": 5,
+        "floor": "B1",
+        "view_id": "r13_w7cLZSedgT4_90",
+        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다.",
+        "validation": {
+          "standalone": {
+            "support_y": -6,
+            "capsule_push_m": 0
+          },
+          "integrated": {
+            "support_y": -6,
+            "capsule_push_m": 0
+          },
+          "rendered": false
+        }
+      },
+      {
+        "round": 13,
+        "frame": "w7cLZSedgT4_110",
+        "spot": "파란 1 경부선·영동선과 호남선·신세계 방향 안내",
+        "photos": [
+          "refs/walk/s4_enter6_subway/w7cLZSedgT4_110.jpg"
+        ],
+        "x": -90,
+        "y": -6,
+        "z": -63.3,
+        "yawDeg": 0,
+        "pitchDeg": 10,
+        "floor": "B1",
+        "view_id": "r13_w7cLZSedgT4_110",
+        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다.",
+        "validation": {
+          "standalone": {
+            "support_y": -6,
+            "capsule_push_m": 0
+          },
+          "integrated": {
+            "support_y": -6,
+            "capsule_push_m": 0
+          },
+          "rendered": false
+        }
+      },
+      {
+        "round": 13,
+        "frame": "w7cLZSedgT4_30",
+        "spot": "3호선 대합실·9호선 환승 분기",
+        "photos": [
+          "refs/walk/s4_enter6_subway/w7cLZSedgT4_30.jpg"
+        ],
+        "x": -68,
+        "y": -11,
+        "z": -50,
+        "yawDeg": 0,
+        "pitchDeg": 2,
+        "floor": "B2",
+        "view_id": "r13_w7cLZSedgT4_30",
+        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다. 프레임의 우측 3호선 분기는 모델에서 서측(시점 왼쪽)으로 맞췄다. 이웃 경계 때문에 실제 좌우와 정확한 방향 일치를 주장하지 않는다.",
+        "validation": {
+          "standalone": {
+            "support_y": -11,
+            "capsule_push_m": 0
+          },
+          "integrated": {
+            "support_y": -11,
+            "capsule_push_m": 0
+          },
+          "rendered": false
+        }
+      },
+      {
+        "round": 13,
+        "frame": "xmLYPNlwtkU_56",
+        "spot": "3호선 개찰구 B구역·사각 기둥",
+        "photos": [
+          "refs/walk/s4_enter6_subway/xmLYPNlwtkU_56.jpg"
+        ],
+        "x": -89.4,
+        "y": -6,
+        "z": -59,
+        "yawDeg": 0,
+        "pitchDeg": 0,
+        "floor": "B1",
+        "view_id": "r13_xmLYPNlwtkU_56",
+        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다.",
+        "validation": {
+          "standalone": {
+            "support_y": -6,
+            "capsule_push_m": 0
+          },
+          "integrated": {
+            "support_y": -6,
+            "capsule_push_m": 0
+          },
+          "rendered": false
+        }
+      },
+      {
+        "round": 13,
+        "frame": "xmLYPNlwtkU_72",
+        "spot": "3·4·5·6·7·8·8-1·8-2 출구 안내 보드",
+        "photos": [
+          "refs/walk/s4_enter6_subway/xmLYPNlwtkU_72.jpg"
+        ],
+        "x": -87,
+        "y": -6,
+        "z": -57,
+        "yawDeg": 270,
+        "pitchDeg": 0,
+        "floor": "B1",
+        "view_id": "r13_xmLYPNlwtkU_72",
+        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다.",
+        "validation": {
+          "standalone": {
+            "support_y": -6,
+            "capsule_push_m": 0
+          },
+          "integrated": {
+            "support_y": -6,
+            "capsule_push_m": 0
+          },
+          "rendered": false
+        }
+      },
+      {
+        "round": 13,
+        "frame": "xmLYPNlwtkU_88",
+        "spot": "파란 구호용품함·빨간 세로 표지",
+        "photos": [
+          "refs/walk/s4_enter6_subway/xmLYPNlwtkU_88.jpg"
+        ],
+        "x": -86.7,
+        "y": -6,
+        "z": -65.5,
+        "yawDeg": 270,
+        "pitchDeg": -2,
+        "floor": "B1",
+        "view_id": "r13_xmLYPNlwtkU_88",
+        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다.",
+        "validation": {
+          "standalone": {
+            "support_y": -6,
+            "capsule_push_m": 0
+          },
+          "integrated": {
+            "support_y": -6,
+            "capsule_push_m": 0
+          },
+          "rendered": false
+        }
+      },
+      {
+        "round": 13,
+        "frame": "AlqE1LnWVr0_232",
+        "spot": "3호선 E표지·갈색/베이지 가로 벽띠",
+        "photos": [
+          "refs/walk/s4_enter6_subway/AlqE1LnWVr0_232.jpg"
+        ],
+        "x": -87,
+        "y": -6,
+        "z": -65,
+        "yawDeg": 270,
+        "pitchDeg": 0,
+        "floor": "B1",
+        "view_id": "r13_AlqE1LnWVr0_232",
+        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다.",
+        "validation": {
+          "standalone": {
+            "support_y": -6,
+            "capsule_push_m": 0
+          },
+          "integrated": {
+            "support_y": -6,
+            "capsule_push_m": 0
+          },
+          "rendered": false
+        }
+      },
+      {
+        "round": 13,
+        "frame": "AlqE1LnWVr0_252",
+        "spot": "3호선 대합실 바닥의 파랑·주황 방향 화살표",
+        "photos": [
+          "refs/walk/s4_enter6_subway/AlqE1LnWVr0_252.jpg"
+        ],
+        "x": -90,
+        "y": -6,
+        "z": -56,
+        "yawDeg": 0,
+        "pitchDeg": -27,
+        "floor": "B1",
+        "view_id": "r13_AlqE1LnWVr0_252",
+        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다.",
+        "validation": {
+          "standalone": {
+            "support_y": -6,
+            "capsule_push_m": 0
+          },
+          "integrated": {
+            "support_y": -6,
+            "capsule_push_m": 0
+          },
+          "rendered": false
+        }
+      },
+      {
+        "round": 13,
+        "frame": "AlqE1LnWVr0_212",
+        "spot": "7호선에서 3·9호선으로 이어지는 별도 환승통로",
+        "photos": [
+          "refs/walk/s4_enter6_subway/AlqE1LnWVr0_212.jpg"
+        ],
+        "x": 40,
+        "y": -11,
+        "z": 90,
+        "yawDeg": 0,
+        "pitchDeg": 0,
+        "floor": "B2",
+        "view_id": "r13_AlqE1LnWVr0_212",
+        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다.",
+        "validation": {
+          "standalone": {
+            "support_y": -11,
+            "capsule_push_m": 0
+          },
+          "integrated": {
+            "support_y": -11,
+            "capsule_push_m": 0
+          },
+          "rendered": false
+        }
+      },
+      {
+        "round": 13,
+        "frame": "AlqE1LnWVr0_142",
+        "spot": "7호선 상승 난간의 노란 원형 휠체어 표식 네 개",
+        "photos": [
+          "refs/walk/s4_enter6_subway/AlqE1LnWVr0_142.jpg"
+        ],
+        "x": -26.478062,
+        "y": -16,
+        "z": 146.505768,
+        "yawDeg": 207.634765,
+        "pitchDeg": 15,
+        "floor": "B3",
+        "view_id": "r13_AlqE1LnWVr0_142",
+        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다. 경사면 위 v=12 대신 바닥이 정확히 B3인 하부 착지점 v=13.8에서 상승 방향을 본다.",
+        "validation": {
+          "standalone": {
+            "support_y": -16,
+            "capsule_push_m": 0
+          },
+          "integrated": {
+            "support_y": -16,
+            "capsule_push_m": 0
+          },
+          "rendered": false
+        }
+      },
+      {
+        "round": 13,
+        "frame": "AHB7dR-5aOU_107",
+        "spot": "9호선 환승 게이트의 스테인리스 몸체",
+        "photos": [
+          "refs/walk/s4_enter6_subway/AHB7dR-5aOU_107.jpg"
+        ],
+        "x": -66,
+        "y": -11,
+        "z": -54,
+        "yawDeg": 0,
+        "pitchDeg": -12,
+        "floor": "B2",
+        "view_id": "r13_AHB7dR-5aOU_107",
+        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다.",
+        "validation": {
+          "standalone": {
+            "support_y": -11,
+            "capsule_push_m": 0
+          },
+          "integrated": {
+            "support_y": -11,
+            "capsule_push_m": 0
+          },
+          "rendered": false
+        }
+      },
+      {
+        "round": 13,
+        "frame": "AHB7dR-5aOU_132",
+        "spot": "9호선 환승 병렬 무빙워크·핑크 광고 벽",
+        "photos": [
+          "refs/walk/s4_enter6_subway/AHB7dR-5aOU_132.jpg"
+        ],
+        "x": -66,
+        "y": -10.975,
+        "z": -61,
+        "yawDeg": 0,
+        "pitchDeg": 0,
+        "floor": "B2",
+        "view_id": "r13_AHB7dR-5aOU_132",
+        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다.",
+        "validation": {
+          "standalone": {
+            "support_y": -10.975,
+            "capsule_push_m": 0
+          },
+          "integrated": {
+            "support_y": -10.975,
+            "capsule_push_m": 0
+          },
+          "rendered": false
+        }
+      },
+      {
+        "round": 13,
+        "frame": "AHB7dR-5aOU_157",
+        "spot": "무빙워크 뒤 중간 홀·로프 스탠션·입간판",
+        "photos": [
+          "refs/walk/s4_enter6_subway/AHB7dR-5aOU_157.jpg"
+        ],
+        "x": -68,
+        "y": -11,
+        "z": -77,
+        "yawDeg": 0,
+        "pitchDeg": -3,
+        "floor": "B2",
+        "view_id": "r13_AHB7dR-5aOU_157",
+        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다.",
+        "validation": {
+          "standalone": {
+            "support_y": -11,
+            "capsule_push_m": 0
+          },
+          "integrated": {
+            "support_y": -11,
+            "capsule_push_m": 0
+          },
+          "rendered": false
+        }
+      },
+      {
+        "round": 13,
+        "frame": "AHB7dR-5aOU_182",
+        "spot": "9호선 긴 하행 에스컬레이터·검정 스텝·유리 난간",
+        "photos": [
+          "refs/walk/s4_enter6_subway/AHB7dR-5aOU_182.jpg"
+        ],
+        "x": -64.5,
+        "y": -11,
+        "z": -82.2,
+        "yawDeg": 270,
+        "pitchDeg": -18,
+        "floor": "B2",
+        "view_id": "r13_AHB7dR-5aOU_182",
+        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다.",
+        "validation": {
+          "standalone": {
+            "support_y": -11,
+            "capsule_push_m": 0
+          },
+          "integrated": {
+            "support_y": -11,
+            "capsule_push_m": 0
+          },
+          "rendered": false
+        }
+      },
+      {
+        "round": 13,
+        "frame": "AHB7dR-5aOU_207",
+        "spot": "9호선 검정 전광판·개화 행 9103 정적 표시",
+        "photos": [
+          "refs/walk/s4_enter6_subway/AHB7dR-5aOU_207.jpg"
+        ],
+        "x": -6.244231,
+        "y": -21,
+        "z": -133.83029,
+        "yawDeg": 110.806437,
+        "pitchDeg": 8,
+        "floor": "B4",
+        "view_id": "r13_AHB7dR-5aOU_207",
+        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다.",
+        "validation": {
+          "standalone": {
+            "support_y": -21,
+            "capsule_push_m": 0
+          },
+          "integrated": {
+            "support_y": -21,
+            "capsule_push_m": 0
+          },
+          "rendered": false
+        }
+      },
+      {
+        "round": 13,
+        "frame": "AHB7dR-5aOU_257",
+        "spot": "9호선 남색 스크린도어·6-2 승차 위치",
+        "photos": [
+          "refs/walk/s4_enter6_subway/AHB7dR-5aOU_257.jpg"
+        ],
+        "x": -146.685759,
+        "y": -21,
+        "z": -61.267903,
+        "yawDeg": 20.426925,
+        "pitchDeg": 0,
+        "floor": "B4",
+        "view_id": "r13_AHB7dR-5aOU_257",
+        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다.",
+        "validation": {
+          "standalone": {
+            "support_y": -21,
+            "capsule_push_m": 0
+          },
+          "integrated": {
+            "support_y": -21,
+            "capsule_push_m": 0
+          },
+          "rendered": false
+        }
+      },
+      {
+        "round": 13,
+        "frame": "w7cLZSedgT4_90",
+        "spot": "추가 검증: 엔터식스 전면의 열린 보행 진입부",
+        "photos": [
+          "refs/walk/s4_enter6_subway/w7cLZSedgT4_90.jpg"
+        ],
+        "x": -85.5,
+        "y": -6,
+        "z": -71,
+        "yawDeg": 180,
+        "pitchDeg": 0,
+        "floor": "B1",
+        "view_id": "r13_w7cLZSedgT4_90_entry",
+        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다. _90의 자막은 연결 상업 구간의 근거이며 이 전면의 실제 위치·문 형태를 직접 보여 준 것으로 취급하지 않는다.",
+        "validation": {
+          "standalone": {
+            "support_y": -6,
+            "capsule_push_m": 0
+          },
+          "integrated": {
+            "support_y": -6,
+            "capsule_push_m": 0
+          },
+          "rendered": false
+        }
       }
     ],
-    "trace_convention": "x,z는 월드 좌표(m), y는 눈 높이가 아닌 보행 바닥 높이. shot 도구가 눈높이를 추가한다. yaw 0 북쪽, 90 서쪽, 180 남쪽, 270 동쪽. notes.json에 trace_spots가 없으므로 22장의 사진 묶음으로 16개 지점과 W9 긴 에스컬레이터 하부 1개를 도출했다. round10 카메라는 수정·유지 확인 지점 7개를 추가. 모든 y는 바닥 높이이며 화면 렌더는 수행하지 않았다.",
+    "trace_convention": "x,z는 월드 좌표(m), y는 눈 높이가 아닌 보행 바닥 높이. shot 도구가 눈높이를 추가한다. yaw 0 북쪽, 90 서쪽, 180 남쪽, 270 동쪽. notes.json에 trace_spots가 없으므로 22장의 사진 묶음으로 16개 지점과 W9 긴 에스컬레이터 하부 1개를 도출했다. round10 카메라는 수정·유지 확인 지점 7개를 추가. 모든 y는 바닥 높이이며 화면 렌더는 수행하지 않았다. round13: 재현한 27개 프레임의 개별 카메라와 ENTER6 보조 진입 시점 1개를 추가했고 단독/통합에서 56개 바닥·캡슐 검사를 통과했다. pitch 양수는 위, 음수는 아래다.",
     "qa_round7": {
       "rendered": false,
       "reason": "사용자 지시대로 tests/shot.mjs를 실행하지 않음. 개별 사진 열람 및 kit/physics 검사 후 운영자가 trace 카메라를 렌더한다.",
@@ -738,7 +1579,7 @@
       "note": "kit stats.quads 기준. hpoly 삼각형 및 instanced people 삼각형은 이 값에 포함되지 않는다. smoke 표는 lazy detail 전의 eager 값만 표시하므로 별도 callback 전후 계측을 사용."
     },
     "load_order_note": "월드의 실제 PLACES 순서인 gotomall → station에서 검증. station을 먼저 짓는 임의 walk 순서에서는 mallHere 사전 감지가 불가능하여 독립 B1 홀과 몰이 중복되는 기존 설계 한계가 있다. 요구된 station-first smoke는 통과.",
-    "previous_round": 7,
+    "previous_round": 10,
     "exit_destination_audit": [
       {
         "exit": "1",
@@ -1041,6 +1882,43 @@
         ],
         "width": 8,
         "request": "기존 J7 이외 두 개방 전면의 실제 연결 여부·경계·owner를 공동 확인한 뒤 J7에 포함하거나 별도 계약을 정의해야 함. 이번에는 추정 전면을 이동/폐쇄하거나 _junctions.js를 편집하지 않음."
+      },
+      {
+        "id": "station-gotomall-enter6-gatehall-review",
+        "round": 13,
+        "status": "proposal_only_coordinates_unverified",
+        "a": "station",
+        "b": "gotomall",
+        "floor": "B1",
+        "y": -6,
+        "proposed_owner": "station for the unpaid station gate/retail-link hall; gotomall for its continuous mall aisles",
+        "existing_proxy_xz": [
+          -74,
+          -109.4
+        ],
+        "proposed_boundary_xz": null,
+        "request": "3호선 비유료 개찰구 밖 홀·엔터식스 접근부와 고투몰 통로의 실제 경계 및 개구부를 조사하여 공동 소유권 계약을 추가할 것. 기존(-74,-109.4) 식물벽 표현은 실측 경계가 아니다. 이번 신규 station B1 대합실의 소형 접근 가능한 ENTER6 전면도 임시 대리 표현이며 전체 임대 구역을 주장하지 않는다. 연결점·폭은 운영자 검증 전 미정, W3/W9는 보존. _junctions.js는 편집하지 않는다.",
+        "evidence": [
+          "https://mstore.enter6.co.kr/stores/68/directions",
+          "refs/walk/s4_enter6_subway/w7cLZSedgT4_50.jpg",
+          "refs/walk/s4_enter6_subway/w7cLZSedgT4_70.jpg",
+          "refs/walk/s4_enter6_subway/w7cLZSedgT4_90.jpg"
+        ]
+      },
+      {
+        "id": "station-line3-concourse-public-B1-round13",
+        "status": "proposal_only_not_built",
+        "a": "station",
+        "b": "shinsegae",
+        "floor": "B1",
+        "y": -6,
+        "proposed_station_side": [
+          -80,
+          -68
+        ],
+        "neighbor_wall": "신세계 J1 서벽 x=-79",
+        "width": 4,
+        "request": "새 비유료 대합실 동측과 J1 서측 상점 베이의 실제 경계·연결을 공동 확인. station 동벽/J1 서벽 및 베이 진열을 조정할 소유권 합의가 필요. 현실 문 위치는 미확인이고 이번에는 양 벽·타 모듈을 수정하지 않음."
       }
     ],
     "qa_round10": {
@@ -1078,6 +1956,684 @@
           "zones_and_claims": "이번 편집 전후 zone/claims 선언 동일. 추가 실내 공간·지하 타모듈 연결 없음."
         }
       }
+    },
+    "round13": {
+      "task": "virtual_walk_rebuild_layout_then_design_then_details",
+      "evidence_file": ".codex-jobs/evidence/walk_s4_enter6_subway.json",
+      "synthesis_file": ".codex-jobs/evidence/walk_synthesis.md",
+      "prior_modeling_state": {
+        "round": 10,
+        "previous_round": 7,
+        "scope": "증거 감사 round10: 4번 출구 기존 승강기·1F/B2/B3 유지와 외부 경사 접근로 추가, 기존 297m 환승통로·무빙워크 유지와 9호선 도착 안내판 보강. 미확인 출구/매장/문/상부 통로는 형상을 보존하고 추정으로 구분. 이전 사진 디테일 보존."
+      },
+      "priority_rule": "공식 자료의 위치 관계를 우선하고,2025–26 영상에서 확인되는 새 상태는 오래된 사진 메모보다 우선한다. 미실측 좌표는 추정으로 표시하고 반증되지 않은 기존 상세는 삭제하지 않는다.",
+      "source_access": [
+        {
+          "url": "https://mediahub.seoul.go.kr/archives/2016717",
+          "status": "article_text_opened",
+          "publication_date": "2026-01-09",
+          "event_date": "2025-12",
+          "confirmed": "4번 출구 앞 승강기 1F/B2대합실/B3승강장과 외부 완경사 램프. 기사 이미지 픽셀 미열람."
+        },
+        {
+          "url": "https://mediahub.seoul.go.kr/archives/162098",
+          "status": "article_text_opened",
+          "publication_date": "2009-05-13",
+          "confirmed": "9호선 강관 아치 및3호선 터널 아래 시공 이력. 현행 평면·점포 경계 근거가 아님."
+        },
+        {
+          "url": "https://mstore.enter6.co.kr/stores/68/directions",
+          "status": "official_search_excerpt; direct_HTTP_502",
+          "confirmed_at_excerpt_level": "고속터미널역B1, 신반포로176, 지하철2·7번 출구·고투몰G7 접근. 원문 전체·지도·점포평면 미열람."
+        },
+        {
+          "url": "https://store.enter6.co.kr/stores/68/directions",
+          "status": "direct_HTTP_502",
+          "confirmed": false
+        },
+        {
+          "url": "https://store.enter6.co.kr/stores/68/brand-shops",
+          "status": "direct_HTTP_502",
+          "confirmed": false,
+          "note": "입점 브랜드를 이 페이지에서 검증했다고 주장하지 않음."
+        },
+        {
+          "url": "https://www.codil.or.kr/filebank/original/RK/OTKCRK230024/OTKCRK230024.pdf",
+          "status": "search_excerpt_only; PDF_fetch_timeout",
+          "finding": "색인 주석에서7호선 안내도B3와 물리 깊이B4를 구별. 도면·전체 문서·발행연도 미확인."
+        },
+        {
+          "url": "https://www.si.re.kr/sites/default/files/2020-PR-28.pdf",
+          "status": "search_excerpt_only; direct_HTTP_404",
+          "finding": "색인 표3-9에서3호선 대합실B1. 원문 표 전체 미열람."
+        }
+      ],
+      "audit_frames_opened": [
+        "refs/walk/s4_enter6_subway/zPXe32QRyJo_40.jpg",
+        "refs/walk/s4_enter6_subway/zPXe32QRyJo_52.jpg",
+        "refs/walk/s4_enter6_subway/zPXe32QRyJo_77.jpg",
+        "refs/walk/s4_enter6_subway/w7cLZSedgT4_70.jpg",
+        "refs/walk/s4_enter6_subway/w7cLZSedgT4_90.jpg",
+        "refs/walk/s4_enter6_subway/AHB7dR-5aOU_157.jpg",
+        "refs/walk/s4_enter6_subway/zPXe32QRyJo_27.jpg",
+        "refs/walk/s4_enter6_subway/w7cLZSedgT4_50.jpg",
+        "refs/walk/s4_enter6_subway/xmLYPNlwtkU_72.jpg",
+        "refs/walk/s4_enter6_subway/AHB7dR-5aOU_107.jpg",
+        "refs/walk/s4_enter6_subway/w7cLZSedgT4_30.jpg",
+        "refs/walk/s4_enter6_subway/AlqE1LnWVr0_142.jpg",
+        "refs/walk/s4_enter6_subway/zPXe32QRyJo_16.jpg",
+        "refs/walk/s4_enter6_subway/xmLYPNlwtkU_8.jpg",
+        "refs/walk/s4_enter6_subway/xmLYPNlwtkU_40.jpg",
+        "refs/walk/s4_enter6_subway/AlqE1LnWVr0_232.jpg",
+        "refs/walk/s4_enter6_subway/AHB7dR-5aOU_132.jpg",
+        "refs/walk/s4_enter6_subway/xmLYPNlwtkU_56.jpg",
+        "refs/walk/s4_enter6_subway/AHB7dR-5aOU_182.jpg",
+        "refs/walk/s4_enter6_subway/AHB7dR-5aOU_207.jpg",
+        "refs/walk/s4_enter6_subway/AHB7dR-5aOU_257.jpg",
+        "refs/walk/s4_enter6_subway/xmLYPNlwtkU_88.jpg",
+        "refs/walk/s4_enter6_subway/AlqE1LnWVr0_252.jpg",
+        "refs/walk/s4_enter6_subway/AlqE1LnWVr0_212.jpg",
+        "refs/walk/s4_enter6_subway/w7cLZSedgT4_110.jpg",
+        "refs/walk/s4_enter6_subway/xmLYPNlwtkU_24.jpg",
+        "refs/walk/s4_enter6_subway/zPXe32QRyJo_64.jpg"
+      ],
+      "floor_decisions": {
+        "world_labels_retained": {
+          "line3_concourse": {
+            "floor": "B1",
+            "y": -6,
+            "confidence": "shared_contract; indexed_report_support_only"
+          },
+          "line3_platform": {
+            "floor": "B2",
+            "y": -11,
+            "confidence": "shared_W3_contract; physical_depth_unverified"
+          },
+          "line7_concourse": {
+            "floor": "B2",
+            "y": -11,
+            "confidence": "official_label_confirmed"
+          },
+          "line7_platform": {
+            "floor": "B3",
+            "y": -16,
+            "confidence": "official_label_confirmed"
+          },
+          "line9_platform": {
+            "floor": "B4",
+            "y": -21,
+            "confidence": "shared_W9_contract; physical_depth_unverified"
+          }
+        },
+        "depth_count_conflict": "합성 로그의 지하3/4/5층급은 물리 깊이 환산을 포함한다. 표시 층명과 구별하며K.LEVELS와W3/W9 값을 실측 깊이로 취급하지 않는다.",
+        "relative_route_confirmed": "3호선 승강장→한 층 상승→대합실→7호선/4번 출구 방향→한 층 하강→7호선 하부 홀. 정확한 방위·거리·계단 위치는 미실측.",
+        "elevator_date": "2025-12 adopted from official article; 2025-11 secondary claim unresolved"
+      },
+      "enter6": {
+        "scope_decision": "station unpaid B1 retail-link space",
+        "official_address": "서울특별시 서초구 신반포로176 고속터미널역B1",
+        "address_evidence_status": "official_search_excerpt; original_page_direct_fetch_failed",
+        "access": "2번·7번 출구 및 고투몰G7이라는 공식 접근 설명",
+        "implementation_intent": "station 소유 새B1대합실 안에 보행 접근 가능한 소형 전면을 임시 표현하고 기존 식물벽 전면은 보존. 전체 매장 평면·소속 경계를 확정하지 않음.",
+        "coordinate_status": "implemented_provisional_front; not_surveyed",
+        "unknown": [
+          "전체 임대면적과 외곽",
+          "3호선 개찰구 기준 좌우·걸음 수",
+          "현재 정면·내부 전체",
+          "점포 순서와 실제 입점 구역 경계"
+        ],
+        "love_n_show": "w7cLZSedgT4_70에서 간판을 직접 판독. 엔터식스 입점 관계는 불명이며 별도 관찰 매장으로 취급.",
+        "implemented_front_center_xz": [
+          -85.5,
+          -70.3
+        ],
+        "direct_public_B1_connection": false,
+        "connection_limit": "새 상층 홀은 계단·승강기로 역 내부에서 접근 가능하나, 신세계 소유 J1 서벽 x=-79 및 고투몰 외벽을 이번 범위에서 열 수 없어 비유료 B1 직결은 미구현. 기존 W3와 기존 몰 연결은 보존. 직접 공공 연결은 아래 junction proposal로 남김."
+      },
+      "layout_evidence": [
+        {
+          "finding": "3호선 대합실은 개찰구·줄무늬 벽·낮은 흰 천장,7호선 방향으로 한 층 하강하는 순서",
+          "frames": [
+            "zPXe32QRyJo_27",
+            "zPXe32QRyJo_40",
+            "zPXe32QRyJo_52",
+            "zPXe32QRyJo_64",
+            "zPXe32QRyJo_77"
+          ],
+          "confidence": "seen_relative_sequence; inferred_world_alignment"
+        },
+        {
+          "finding": "개찰구 밖 상업 홀→엔터식스/고투몰 소개→경부선·영동선1번 사인→센트럴시티·신세계 방향",
+          "frames": [
+            "w7cLZSedgT4_50",
+            "w7cLZSedgT4_70",
+            "w7cLZSedgT4_90",
+            "w7cLZSedgT4_110",
+            "w7cLZSedgT4_130"
+          ],
+          "confidence": "seen_sequence; exact_boundaries_unverified"
+        },
+        {
+          "finding": "3→9 환승 게이트→무빙워크와 병렬 통행→로프 중간 홀→긴 하행 에스컬레이터→승강장",
+          "frames": [
+            "AHB7dR-5aOU_107",
+            "AHB7dR-5aOU_132",
+            "AHB7dR-5aOU_157",
+            "AHB7dR-5aOU_182",
+            "AHB7dR-5aOU_207",
+            "AHB7dR-5aOU_257"
+          ],
+          "confidence": "supplied_walk_seen; absolute_positions_inferred"
+        },
+        {
+          "finding": "7호선 승강장 상승→환승 통로→E구역3호선 개찰구",
+          "frames": [
+            "AlqE1LnWVr0_142",
+            "AlqE1LnWVr0_212",
+            "AlqE1LnWVr0_232",
+            "AlqE1LnWVr0_292"
+          ],
+          "confidence": "supplied_walk_seen; absolute_positions_inferred"
+        }
+      ],
+      "exit_destinations": [
+        {
+          "exit": "1",
+          "destination": "고투몰·경부선·영동선",
+          "evidence": "walk log wiki table; w7cLZSedgT4_110 bus sign",
+          "confidence": "stated_destination; physical_mouth_unverified"
+        },
+        {
+          "exit": "2",
+          "destination": "반포미도아파트·경부영동선 주차장",
+          "evidence": "walk log wiki table",
+          "confidence": "stated"
+        },
+        {
+          "exit": "3",
+          "destination": "사평대로·JW메리어트·파미에스테이션",
+          "evidence": "walk log wiki table",
+          "confidence": "stated"
+        },
+        {
+          "exit": "4",
+          "destination": "서울성모병원",
+          "evidence": "zPXe32QRyJo_52/64/77/92/106 and Seoul mediahub2016717",
+          "confidence": "seen_and_official"
+        },
+        {
+          "exit": "5",
+          "destination": "국립중앙도서관",
+          "evidence": "walk log wiki table",
+          "confidence": "stated"
+        },
+        {
+          "exit": "6",
+          "destination": "래미안퍼스티지",
+          "evidence": "walk log wiki table",
+          "confidence": "stated"
+        },
+        {
+          "exit": "7",
+          "destination": "JW메리어트",
+          "evidence": "walk log wiki table; official ENTER6 access mentions2/7",
+          "confidence": "stated"
+        },
+        {
+          "exit": "8",
+          "destination": "센트럴시티(호남선)·신세계",
+          "evidence": "walk log wiki table",
+          "confidence": "stated"
+        },
+        {
+          "exit": "8-1",
+          "destination": "반포한강공원 방면",
+          "evidence": "walk log wiki table; separate shorts description says CentralCity access",
+          "confidence": "stated; exact_connection_unresolved"
+        },
+        {
+          "exit": "8-2",
+          "destination": "서울반원초",
+          "evidence": "walk log wiki table",
+          "confidence": "stated"
+        }
+      ],
+      "synthesis_conflict_decisions": [
+        {
+          "id": 1,
+          "topic": "꽃시장 위치",
+          "station_applicability": "no station geometry change",
+          "decision": "제공 영상·기존 자료에 따라 꽃도매상가는 경부선3F/gyeongbu 소관으로 판단. 고투몰이나station에 새 꽃시장 설치하지 않음.",
+          "basis": "synthesis Zq_7eC75nBI_200~1780 and prior research; not newly inspected by this audit",
+          "confidence": "provided_evidence; outside_module"
+        },
+        {
+          "id": 2,
+          "topic": "경부선↔센트럴시티1F 연결",
+          "station_applicability": "outside station",
+          "decision": "2025 외부 횡단보도와2026 실내 연결 설명이 공존할 수 있으나 이 역 프레임으로 확정하지 못함. 해당 두 모듈 공동 검토이며station에서 연결을 신설·폐쇄하지 않음.",
+          "confidence": "unresolved"
+        },
+        {
+          "id": 3,
+          "topic": "한강공원 유리문·G2·8-1 동일성",
+          "station_applicability": "exit signage and shared B1 boundaries",
+          "decision": "세 지점을 동일 출구로 합치지 않음. G2와지하철8-1은 별도 번호 체계로 유지하는 보수적 가정. 실제 연결 경로는 미확정이며 기존J_ONEBAILEY_G2 등은 변경하지 않음.",
+          "confidence": "inferred_non_equivalence; route_unresolved"
+        },
+        {
+          "id": 4,
+          "topic": "UNIQLO B1·경부선1F 동일 매장 여부",
+          "station_applicability": "outside station",
+          "decision": "이 작업의 역 프레임으로 동일 매장 여부를 확인하지 못함. gyeongbu/인접상업모듈의 공식 매장·층별 자료 검토 소관이며station 점포로 새 배치하지 않음.",
+          "confidence": "unresolved_here"
+        },
+        {
+          "id": 5,
+          "topic": "스위트파크 층·하우스오브신세계 하행 장면",
+          "station_applicability": "outside station",
+          "decision": "공식층별도 우선 원칙 유지. 역 프레임은 층 충돌을 해소하지 못하므로shinsegae 소관으로 넘기고station에서 층·연결을 변경하지 않음.",
+          "confidence": "unresolved_here"
+        },
+        {
+          "id": 6,
+          "topic": "오픈스테이지 위치",
+          "station_applicability": "outside station",
+          "decision": "센트럴시티·신세계·파미에 팝업이 같은 공간인지 역 프레임으로 확인 불가. 두 인접모듈 검토 소관이며station에 무대를 만들지 않음.",
+          "confidence": "unresolved"
+        }
+      ],
+      "verification_status": "완료: 지정 smoke OK, 최종 전체 walk 687 ok/0 blocked(사용자 루트 전부 통과), station walk25/0, 추가 환승20/0 및 최종 난간6/0, trace56개 표본 충돌0. 렌더 미실행; 27프레임/28카메라를 운영자 비교용으로 기록. B1 직결·분기 좌우·실측 매장 경계는 추정/미해결로 분리.",
+      "metadata_audit": {
+        "stored_box": [
+          -198.2,
+          -225,
+          60.1,
+          281.7
+        ],
+        "computed_box": [
+          -198.2,
+          -225,
+          60.1,
+          281.7
+        ],
+        "stored_y": [
+          -21,
+          4
+        ],
+        "computed_y": [
+          -21,
+          4
+        ],
+        "added_cells": [],
+        "removed_cells": [],
+        "old_cells": 38,
+        "new_cells": 38,
+        "zone_count": 23,
+        "claims_changed": false,
+        "floors_changed": false,
+        "box_changed": false,
+        "occupancy_cells_changed": false,
+        "internal_zones_changed": true,
+        "gen_meta_run": false,
+        "spatial_export_regeneration_needed": false,
+        "note": "tools/gen_meta.mjs의 경계·40m 셀 산식을 읽기 전용으로 재계산. 추가 내부 구역은 기존 station 공간 범위·층 목록·38개 점유 셀 안에 있어 _meta.json의 공간 export 값은 같다. 두 파일 한정 편집 범위 때문에 _meta.json을 쓰는 generator는 실행하지 않았다."
+      },
+      "implemented_layout": [
+        {
+          "priority": 1,
+          "space": "3호선 별도 대합실",
+          "floor": "B1",
+          "y": -6,
+          "rect_xz": [
+            -104,
+            -72,
+            -80,
+            -44
+          ],
+          "connections": "서측 승강장 B2에서 한 층 상승, 대합실을 가로질러 동측 코어로 B2 환승 연결부에 하강. 고투몰 로드 여부와 무관하게 생성.",
+          "confidence": "relative_sequence_seen; fitted_world_bounds"
+        },
+        {
+          "priority": 1,
+          "space": "대합실 수직 동선",
+          "west_up": {
+            "x": -98.2,
+            "z_bottom": -66,
+            "z_top": -48,
+            "y_bottom": -11,
+            "y_top": -6
+          },
+          "west_stairs_x": -100.8,
+          "east_down": {
+            "x": -82.1,
+            "z_top": -64,
+            "z_bottom": -48,
+            "y_top": -6,
+            "y_bottom": -11
+          },
+          "east_stairs_x": -84.6,
+          "lift": {
+            "x": -101,
+            "z": -70,
+            "floors": [
+              "B1",
+              "B2"
+            ]
+          },
+          "note": "상부 개구부 난간과 1.75m 플레이어의 열린 착지부. 신설 승강기 위치·존재는 접근성을 위한 추정 모델이며 실제 설비 확인값이 아니다."
+        },
+        {
+          "priority": 1,
+          "space": "7호선 연결 주 통로",
+          "floor": "B2",
+          "y": -11,
+          "centerline": [
+            [
+              -79,
+              -54
+            ],
+            [
+              40,
+              -54
+            ],
+            [
+              40,
+              151
+            ]
+          ],
+          "previous_east_west_z": -27,
+          "width": 7,
+          "length_m": 324,
+          "north_concourse_opening": {
+            "x": 40,
+            "z": 117.7,
+            "width": 9
+          },
+          "note": "신세계 B2 영역을 피하도록 기존 동서 구간을 27m 북쪽으로 이동. 314m 문헌 거리와 일치한 실측으로 주장하지 않음. 북벽의 실제 보행 충돌도 수정."
+        },
+        {
+          "priority": 1,
+          "space": "7↔9호선 별도 환승통로",
+          "floor": "B2",
+          "y": -11,
+          "centerline": [
+            [
+              -68,
+              -46
+            ],
+            [
+              -68,
+              -85
+            ]
+          ],
+          "width": 8,
+          "gate_center": [
+            -66,
+            -56
+          ],
+          "moving_walks": [
+            {
+              "x": -68.2,
+              "z_start": -60,
+              "z_end": -75,
+              "y": -10.975
+            },
+            {
+              "x": -66,
+              "z_start": -60,
+              "z_end": -75,
+              "y": -10.975
+            }
+          ],
+          "intermediate_hall_z": [
+            -77,
+            -85
+          ],
+          "descent": "기존 x=-63→-33, z=-84.4/-82.2 에스컬레이터 및 z=-79.5 계단으로 B2→B4. 3호선 승강장 x≤-73을 통과하지 않고 접근 가능."
+        },
+        {
+          "priority": 1,
+          "space": "엔터식스·연결상가 대리 전면",
+          "floor": "B1",
+          "enter6_front_center": [
+            -85.5,
+            -70.3
+          ],
+          "love_n_show_front_center": [
+            -91.2,
+            -70.3
+          ],
+          "entry_probe": [
+            -85.5,
+            -6,
+            -71
+          ],
+          "note": "엔터식스는 station 비유료 B1 상업 연결 공간으로 분류. 폭 약4.7m·깊이 약1.5m의 소형 전면은 전체 점포 평면이 아닌 대리 표현. 기존 식물벽 전면 보존. LOVE N SHOW의 엔터식스 입점 여부는 미확인."
+        }
+      ],
+      "implemented_design": [
+        {
+          "priority": 2,
+          "space": "3호선 B1 대합실",
+          "changes": "갈색·베이지 수평 석재띠, 회색 사각 기둥, 스테인리스 개찰구, 흰 격자 천장과 선형등. 비유료 전면에는 흰 원기둥·팔각 발광 코브·파란 버스와 노란 출구 안내."
+        },
+        {
+          "priority": 2,
+          "space": "3호선 B2 승강장",
+          "changes": "z≈-138/-112에 주황 타원 역명판과 따뜻한 천장 패널. s83–121 일부 기둥을 회색·베이지 사선 석재로 변경하며 다른 기존 노선색 기둥 보존. xmLYPNlwtkU_24의 큰 사선 석재 벽면은 x=-106.88,z=-118..-106에 기존 광고·설비 뒤 마감으로 추가."
+        },
+        {
+          "priority": 2,
+          "space": "7호선 B2 하부 홀 / 9호선 환승",
+          "changes": "7호선 동쪽 진입부 기둥을 광택 회색 원기둥으로 보완. 9호선 새 무빙워크 동쪽 x=-64.12,z=-68.5에 분홍 광고벽. B4 스크린도어 수직 프레임은 남색."
+        }
+      ],
+      "implemented_details": [
+        {
+          "priority": 3,
+          "space": "3호선 B1",
+          "changes": "A·B·E 개찰구 표식, 3/4/5/6/7/8/8-1/8-2 출구 보드, 파란 구호용품함의 유리·물품·빨간 세로 글자, 소화전, 파랑·주황 바닥 화살표와 소수 보행객."
+        },
+        {
+          "priority": 3,
+          "space": "9호선 환승 / 승강장",
+          "changes": "x=-71.25,z=-78..-80.2에 빨간 로프와 입간판, 보행 차선 밖 배치. 개화 행 일반열차(9103)가 전역을 출발하였습니다 문구를 기존 전광판 한 곳에 교체. 6-2 및 휠체어 표시."
+        },
+        {
+          "priority": 3,
+          "space": "7호선 승강장 에스컬레이터",
+          "changes": "기존 s75 상승 코어 측판에 노란 원형 휠체어 안내 4개. 세부 문양·배치는 미실측."
+        }
+      ],
+      "operator_render": {
+        "run_by_agent": false,
+        "y_convention": "floor support height; screenshot tool adds eye height",
+        "views": "r13_zPXe32QRyJo_16:-102.5,-11,-138,90,3;r13_xmLYPNlwtkU_24:-102.5,-11,-112,90,3;r13_xmLYPNlwtkU_8:-103.5,-11,-120,210,0;r13_zPXe32QRyJo_27:-98.2,-11,-67,180,10;r13_zPXe32QRyJo_40:-90,-6,-56,0,0;r13_xmLYPNlwtkU_40:-90,-6,-55,0,2;r13_zPXe32QRyJo_52:-82.1,-6,-65.8,180,-14;r13_zPXe32QRyJo_64:33,-11,137,135,0;r13_zPXe32QRyJo_77:30,-11,140,135,0;r13_w7cLZSedgT4_50:-90,-6,-58,0,-2;r13_w7cLZSedgT4_70:-90,-6,-65,0,7;r13_w7cLZSedgT4_90:-89.7,-6,-65.5,0,5;r13_w7cLZSedgT4_110:-90,-6,-63.3,0,10;r13_w7cLZSedgT4_30:-68,-11,-50,0,2;r13_xmLYPNlwtkU_56:-89.4,-6,-59,0,0;r13_xmLYPNlwtkU_72:-87,-6,-57,270,0;r13_xmLYPNlwtkU_88:-86.7,-6,-65.5,270,-2;r13_AlqE1LnWVr0_232:-87,-6,-65,270,0;r13_AlqE1LnWVr0_252:-90,-6,-56,0,-27;r13_AlqE1LnWVr0_212:40,-11,90,0,0;r13_AlqE1LnWVr0_142:-26.478062,-16,146.505768,207.634765,15;r13_AHB7dR-5aOU_107:-66,-11,-54,0,-12;r13_AHB7dR-5aOU_132:-66,-10.975,-61,0,0;r13_AHB7dR-5aOU_157:-68,-11,-77,0,-3;r13_AHB7dR-5aOU_182:-64.5,-11,-82.2,270,-18;r13_AHB7dR-5aOU_207:-6.244231,-21,-133.83029,110.806437,8;r13_AHB7dR-5aOU_257:-146.685759,-21,-61.267903,20.426925,0;r13_w7cLZSedgT4_90_entry:-85.5,-6,-71,180,0"
+      }
+    },
+    "qa_round13_targeted": {
+      "method": "기존 tests/walk.mjs의 실제 kit/physics, capsule r=.32m/h=1.75m/step=.5m, .25m BFS를 메모리에서 재사용. 테스트 파일 수정 없음. station 단독 및 gotomall→station→centralcity→shinsegae 통합, 모든 lazy detail 로드. 도시 없는 지하 구조 검사이며 전체 월드 walk 결과는 별도 기록.",
+      "routes": {
+        "passed": 20,
+        "blocked": 0,
+        "checks": [
+          "서측 B2 승강장 착지부→새 B1 대합실→중앙 홀→비유료 연결상가",
+          "B1 중앙 홀→동측 하행→B2 연결부→7·9호선 분기",
+          "이동한 z=-54 동서 환승통로→x=40 남북 통로→7호선 북벽 개구부",
+          "환승 게이트→병렬 무빙워크→중간 스탠션→9호선 긴 하행→B4 승강장",
+          "신설(-101,-70) 승강기 B1 중앙 홀/B2 승강장 출입",
+          "추가 3개 엄격 검사: x≥-71.65로 제한한 게이트·무빙워크·하행 입구; x≤-73인 3호선 승강장으로 우회하지 않고 모두 통과"
+        ],
+        "note": "17개 연결 구간과 3개 승강장 우회 금지 구간. BFS가 찾은 경로의 존재 검사이며 실제 현장 거리·모든 가능한 동선의 검증이 아니다."
+      },
+      "trace": {
+        "distinct_frames": 27,
+        "cameras": 28,
+        "world_configurations": 2,
+        "samples": 56,
+        "floor_mismatches": 0,
+        "capsule_collisions": 0,
+        "max_capsule_push_m": 0,
+        "min_ceiling_clearance_m": 2.795,
+        "rendered": false,
+        "note": "27개 재현 프레임에 각 1개 카메라와 ENTER6 진입부 보조 시점 1개. 지지 높이는 정확히 일치; 무빙워크는 y=-10.975. 캡처·렌더 일치는 아직 미검증.",
+        "after_final_well_guards": true,
+        "final_recheck": "28 cameras × 2 configurations: floor mismatches0, capsule push0"
+      },
+      "enter6_entry": {
+        "from": [
+          -90,
+          -6,
+          -65.5
+        ],
+        "to": [
+          -85.5,
+          -6,
+          -71
+        ],
+        "standalone": "walkable; 1184 BFS cells",
+        "integrated": "walkable; 1184 BFS cells",
+        "floor_support_y": -6,
+        "capsule_push_m": 0,
+        "note": "카운터를 측면으로 둔 모델 전면의 실제 보행 가능성 검사. 실매장의 내부 배치를 확인한 뜻이 아니다."
+      },
+      "geometry_budget": {
+        "measurement": "station 단독, base build와 모든 lazy detail을 포함한 K._.stats",
+        "quads": 154203,
+        "boxes": 26209,
+        "signs": 1992,
+        "guideline_quads": 150000,
+        "excess_quads": 4203,
+        "excess_percent": 2.8,
+        "note": "약150k 권장치보다 약2.8% 많다. 반증되지 않은 기존 상세 보존 지시를 우선했으며 디테일을 삭제하지 않았다. 마지막 비충돌 벽 마감 quad 1개 포함."
+      },
+      "screenshots": {
+        "run": false,
+        "reason": "사용자가 sandbox에서 tests/shot.mjs 실행 불가라고 지정했으므로 미실행. modeling.trace에 운영자 렌더용 카메라를 기록."
+      },
+      "final_well_guard_recheck": {
+        "passed": 6,
+        "blocked": 0,
+        "results": [
+          {
+            "ids": [
+              "station"
+            ],
+            "results": [
+              {
+                "name": "west ascent to center",
+                "ok": true,
+                "cells": 9042
+              },
+              {
+                "name": "center to east descent",
+                "ok": true,
+                "cells": 6123
+              },
+              {
+                "name": "upper lift to center",
+                "ok": true,
+                "cells": 2472
+              }
+            ]
+          },
+          {
+            "ids": [
+              "gotomall",
+              "station",
+              "centralcity",
+              "shinsegae"
+            ],
+            "results": [
+              {
+                "name": "west ascent to center",
+                "ok": true,
+                "cells": 9042
+              },
+              {
+                "name": "center to east descent",
+                "ok": true,
+                "cells": 6123
+              },
+              {
+                "name": "upper lift to center",
+                "ok": true,
+                "cells": 2472
+              }
+            ]
+          }
+        ],
+        "note": "최종 B1 유리 난간4구간 및 동측 바닥공백 보정 후 서측 상승→중앙 홀,중앙 홀→동측 하행,승강기→중앙 홀을 단독/통합에서 재검사. 28개 trace도 양쪽에서 모두 재검사했으며 좌표 변경 없이통과."
+      }
+    },
+    "qa_round13": {
+      "smoke": {
+        "command": "node tests/smoke.mjs station gotomall centralcity shinsegae",
+        "result": "OK",
+        "exit_code": 0,
+        "note": "최종 수정은 같은 인수에 --quiet를 덧붙여 재검사. 경고는 인접 모듈 승강기 층에 한정; station 경고 없음."
+      },
+      "station_walk": {
+        "command": "node tests/walk.mjs station --no-city",
+        "result": "25 ok, 0 blocked",
+        "exit_code": 0,
+        "after_final_guard_change": true
+      },
+      "global_walk": {
+        "command": "node tests/walk.mjs",
+        "result": "687 ok, 0 blocked",
+        "exit_code": 0,
+        "status": "passed",
+        "after_final_station_changes": true,
+        "user_routes": "사용자 루트1–7의 모든 구간 통과",
+        "scope_note": "동시 이웃 작업의 최신 재검사 스냅샷. 이 작업의 최종 station.js를 포함한다."
+      },
+      "transient_global_snapshots": [
+        {
+          "result": "655 ok, 2 blocked",
+          "note": "변경 전 기준/동시 작업 중 centralcity B1 승강기와 B1 파미에 접근 실패."
+        },
+        {
+          "result": "687 ok, 2 blocked",
+          "note": "동시 작업 중 J1 및 사용자 루트4 신세계 B1→1F 실패. 이후 현재 코드와 HEAD station으로 각 두 경로를 분리 검사하여 모두 동일하게 통과함."
+        },
+        {
+          "result": "689 ok, 0 blocked",
+          "exit_code": 0,
+          "command": "node tests/walk.mjs",
+          "note": "전체 사용자 루트 통과. 최종 난간 이전 스냅샷; 난간은 별도 6경로/56카메라 및 station walk로 재검증."
+        },
+        {
+          "result": "688 ok, 1 blocked",
+          "exit_code": 1,
+          "command": "node tests/walk.mjs",
+          "failure": "센트럴시티 B1→파미에 B1→7호선 [0→1], (-93.4,57.8)→(-60.5,169.5), 2 cells",
+          "note": "사용자 루트 전부 통과. 이후 최신 centralcity에서 현재/HEAD station 양쪽 모두 같은230004cells로 재통과; 동시 이웃 변경 중의 일시 결과."
+        }
+      ],
+      "neighbor_isolation": {
+        "method": "현재 전체 이웃+city에서 현재 station vs git HEAD station만 메모리로 교체; 파일 변경 없음",
+        "J1": {
+          "current": "pass, 33376 cells",
+          "baseline": "pass, 33376 cells"
+        },
+        "user_route4_B1_to_1F": {
+          "current": "pass, 65519 cells",
+          "baseline": "pass, 65519 cells"
+        },
+        "finding": "검사한 이웃 상태에서 현재/HEAD station의 경로 결과가 동일. 최종 전체 재검사도0blocked로 통과.",
+        "centralcity_B1_to_famille": {
+          "current": "pass, 230004 cells",
+          "baseline": "pass, 230004 cells",
+          "start_support_y": -6,
+          "start_capsule_push_m": 0
+        }
+      },
+      "rendered": false,
+      "diff_check": "passed",
+      "scope": "이번 작업은 js/places/station.js 및 data/research/station.json만 수정. tests/shot.mjs, _junctions.js, 엔진, 이웃 모듈, git commit/push 미실행.",
+      "station_sha256": "c7851b332c964764cdea6dbf085249fd45737d51381ad3a1ea09fff03b93b23d"
     }
   },
   "interiors_round6": {
@@ -1249,8 +2805,8 @@
       }
     },
     "ad_text_evidence": {
-      "04": "Columbia / 깃털급 가벼움 / 히터급 보온력",
       "22": "Sprite / 새로워진 상쾌함!",
+      "04": "Columbia / 깃털급 가벼움 / 히터급 보온력",
       "02": "통증을 피하는 / 유형별 반응"
     },
     "reference_corrections": [

@@ -1,5 +1,6 @@
 // OSM 413354848; local u=ENE, v=SSE. Road on west, park on north/east.
-// Four floors follow the round-8 brief; heights/core/room plan are inferred.
+// Round13: two occupied storeys in KFygWqMvrY8_60 and the 2025 roadview.
+// Floor heights/core/room plan remain inferred; the OSM footprint is unchanged.
 // No JUNCTIONS or WELLS name this module. Park and roads remain city-owned.
 export const meta = {
   id: 'banwon', name: '반원상가 · 한신치킨호프', claims: [413354848], claimRoads: [], claimAreas: [],
@@ -8,13 +9,14 @@ export const meta = {
     'refs/interior/banwon/notes.json', 'refs/interior/streets_islands/notes.json',
     'https://m.blog.naver.com/dockdm12/224444904805', 'https://m.blog.naver.com/fewlove11/224458808662',
     'https://m.blog.naver.com/qkrthwjd655/224448552779', 'https://m.blog.naver.com/chloe_ponggee/224455066913',
-    'https://m.blog.naver.com/dktjtidnj/224459455661', 'https://m.blog.naver.com/h99578/224460314042'],
+    'https://m.blog.naver.com/dktjtidnj/224459455661', 'https://m.blog.naver.com/h99578/224460314042',
+    'https://www.youtube.com/watch?v=KFygWqMvrY8'],
 };
 
 export function build(K) {
   const footprint = K.osmBuilding(413354848)[0]?.poly || [[-138.96,-382.48],[-98.27,-396.88],[-111.6,-434.01],[-152.28,-419.62]];
   const R = Math.atan2(14.39,40.68), C = Math.cos(R), S = Math.sin(R), W = 43.15, D = 39.45;
-  const G = 1.2, FH = 3.6, roof = 15.6, floors = [1.2,4.8,8.4,12];
+  const G = 1.2, FH = 3.6, roof = 8.4, floors = [1.2,4.8];
   const west = R-Math.PI/2, north = R+Math.PI, east = R+Math.PI/2;
   const P = (u,v) => [-152.28+u*C+v*S,-419.62-u*S+v*C];
   const rect = (a,b,c,d) => [P(a,b),P(c,b),P(c,d),P(a,d)];
@@ -41,6 +43,11 @@ export function build(K) {
     g.fillStyle='#b5b6b1';g.fillRect(0,0,w,h);g.strokeStyle='#858c8c';g.lineWidth=3;g.strokeRect(0,0,w,h);
     g.strokeStyle='#cdcec8';g.lineWidth=1;g.strokeRect(4,4,w-8,h-8);
   },[2.4,1.2]);
+  K.texture('banwon-portal',256,256,(g,w,h)=>{
+    g.fillStyle='#353c40';g.fillRect(0,0,w,h);
+    g.fillStyle='#41484c';g.fillRect(3,3,w-6,h-6);
+    g.strokeStyle='#272d31';g.lineWidth=3;g.strokeRect(1,1,w-2,h-2);
+  },[1.35,1.1]);
   K.texture('banwon-vinyl',1024,512,(g,w,h)=>{
     // One cloudy skin, not clear glazing plus floating, mirrored word decals.
     g.fillStyle='rgba(232,224,201,.48)';g.fillRect(0,0,w,h);
@@ -75,6 +82,7 @@ export function build(K) {
   slab(-3.1,0,.1,D,G,{mat:'darkstone',thick:.22});
   for(const [a,b]of [[0,15.5],[24.5,D]])wall(-3.1,a,-3.1,b,0,G,{mat:stone});
   ramp(-8.1,20,-3.1,20,0,G,8.3,{steps:true,rails:false,mat:'darkstone'});
+  rail(-8.1,16,-3.1,16,0,G);rail(-8.1,24,-3.1,24,0,G);
   ramp(-4.35,38,-4.35,22.7,0,G,2,{rails:false});
   slab(-5.35,22,-3,23.3,G,{mat:'darkstone',thick:.12});
   rail(-5.35,38,-5.35,22.7,0,G);
@@ -98,7 +106,7 @@ export function build(K) {
   for(const u of [0,17.5,23.5,34.3,W])for(const v of [.14,D-.14])B(u,G,v,.34,FH,.34,trim);
   for(const v of [0,9.3,16,24,35,D])B(W-.15,G,v,.32,FH,.32,trim);
   const stairHole=rect(5.15,8.8,11.25,17.8);
-  const uses=['은행 · 약국 · 음식점','비에이블 스터디카페 · 의원','학원 · 교습실','반원 태권도 · 학원'];
+  const uses=['은행 · 약국 · 음식점','비에이블 스터디카페 · 의원 · 학원 · 태권도'];
   floors.forEach((y,f)=>{
     K.slab(footprint,y,{mat:tile,holes:f?[stairHole]:[],thick:.24});
     K.zone({name:'반원상가',floor:`${f+1}F`,sub:uses[f],poly:footprint,y0:y,y1:y+FH,priority:8});
@@ -128,7 +136,7 @@ export function build(K) {
     sign([`${f+1}층`,uses[f]],f?16.4:12,y+2.7,18.15,4,.8);sign('계단',8.2,y+2.9,18.14,2,.45,R,'#306655','#fff');
     sign('승강기',21,y+2.7,28,1.8,.45,north);
     if(f){rail(5.15,8.8,5.15,17.65,y,y);rail(11.25,8.8,11.25,17.65,y,y);rail(5.15,8.8,11.25,8.8,y,y);}
-    if(f<3){
+    if(f<floors.length-1){
       ramp(6.7,17.8,6.7,10.4,y,y+FH/2,2.6,{steps:true});
       slab(5.15,8.85,11.25,10.45,y+FH/2,{mat:'darkstone',thick:.16});
       ramp(9.7,10.4,9.7,17.8,y+FH/2,y+FH,2.6,{steps:true});
@@ -136,19 +144,23 @@ export function build(K) {
   });
   const[ex,ez]=P(21,31.4);
   K.elevator({name:'반원상가 승강기',x:ex,z:ez,rotY:north,w:2.5,d:2.5,floors:floors.map((y,i)=>({label:`${i+1}F`,y,name:uses[i]})),mat:0xc8c7bd});
-  K.slab(footprint,roof,{mat:'roofgravel',thick:.24});K.polyWalls(footprint,roof,roof+.65,{mat:'banwon-panel',thick:.25});
+  // KFygWqMvrY8_5 and the georeferenced aerial show a green roof surface.
+  // No playing-field markings or public rooftop sports use are established.
+  K.slab(footprint,roof,{mat:{tex:'concrete',color:0x4c8b68},thick:.24});K.polyWalls(footprint,roof,roof+.65,{mat:'banwon-panel',thick:.25});
   B(8.2,roof,13.2,7.3,2.2,10,'banwon-panel');
   for(const u of [17,23,29,35]){B(u,roof+.12,28,2.6,1,1.9,0xbbbdb8);for(let k=0;k<7;k++)B(u-1+k*.33,roof+.9,28,.09,.23,1.5,0x747e7f,{solid:false});}
 
-  // Black tower with three fins and individual real-world sign bands.
-  wall(-.32,14.9,-.32,24.7,G,roof+1,{mat:{tex:'darkstone',color:0x45494a,gloss:.5},thick:.52,openings:[{at:5.1,w:3.6,y0:G,y1:G+2.8}]});
+  // KFygWqMvrY8_60: charcoal square-panel entrance with three light fins.
+  wall(-.32,14.9,-.32,24.7,G,roof+1,{mat:{tex:'banwon-portal',gloss:.3},thick:.52,openings:[{at:5.1,w:3.6,y0:G,y1:G+2.8}]});
   for(const v of [17,19.8,22.6])B(-.7,roof-.3,v,.33,1.8,.74,0xe5e3d9,{solid:false});
-  sign('BAN WON',-.65,roof-2,19.8,8.1,.9,west,null,'#e6e2d9');
+  sign('BAN WON',-.65,7.55,19.8,6.5,.68,west,null,'#e6e2d9');
   sign('반원상가',-.65,G+2.95,20,4.4,.5,west,'#414744','#e0d6bd');
-  sign('이비인후과  +',-.65,9.1,19.8,9,1.55,west,'#efefdf','#153b43');
-  sign('진료 안내',-.66,7.5,19.8,6.2,.6,west,'#739aaf','#fff');
-  sign('의원 · 약국',-.68,6.6,19.8,6,.46,west,'#648294','#f5f1e5');
-  sign('반원상가',-.68,5.85,19.8,4.9,.42,west,'#74796e','#ede9db');
+  sign('이비인후과  +',-.65,6.3,19.8,9,1.1,west,'#efefdf','#153b43');
+  sign('진료 안내',-.66,5.35,19.8,6.2,.52,west,'#739aaf','#fff');
+  sign('의원 · 약국',-.68,4.84,19.8,6,.36,west,'#648294','#f5f1e5');
+  sign('반원상가',-.68,4.45,19.8,4.9,.32,west,'#74796e','#ede9db');
+  // Red freestanding board visible beside the door; its small type is unreadable.
+  B(-1.3,G,22.7,.11,1.35,.47,0x9e3539,{solid:false});
   for(const v of [9.8,30.7,35]){
     B(-8.15,0,v,.8,.3,4.2,stone);B(-8.15,.3,v,.85,.65,4.3,{tex:'grass',color:0x436238},{solid:false});
   }
@@ -164,10 +176,10 @@ export function build(K) {
   // As seen from the road: black tower, then pharmacy, then the blue bank fascia.
   sign('서초21세기약국',-.25,3.95,27.5,5.5,.85,west,'#2786a6','#f9f5c9');
   sign('우리은행 WOORI BANK',-.24,3.95,35,9.4,.8,west,'#11498a','#fff');
-  sign('반원 태권도 · 합기도',-.24,13.5,32.4,11.8,.9,west);
-  sign('이비인후과',-.23,9,6.9,10.2,1.2,west);sign('조현',-.24,9,1.7,2.5,1.05,west);
-  sign('학원 · 교습실',-.24,12.2,7.5,11.5,.7,west,'#87a8a7','#fff');
-  for(const v of [27,33.6,38])sign('진료 · 상담',-.25,7.5,v,3.5,.65,west,'#46635a','#f4f2e5');
+  sign('반원 태권도 · 합기도',-.24,8,32.4,11.8,.68,west);
+  sign('이비인후과',-.23,6.3,6.9,10.2,1.1,west);sign('조현',-.24,6.3,1.7,2.5,.95,west);
+  sign('학원 · 교습실',-.24,8,7.5,11.5,.6,west,'#87a8a7','#fff');
+  for(const v of [27,33.6,38])sign('진료 · 상담',-.25,6.5,v,3.5,.65,west,'#46635a','#f4f2e5');
   for(const v of [7,20,27.5,33.5])for(const s of [-1,1])B(-.1,G,v+s*(v===20?1.82:v===27.5?1.12:1.22),.14,2.7,.08,0xc2c8c6,{solid:false});
   wall(7.5,22.1,7.5,31,G,G+3.35,{mat:0xe5dfd1});
   wall(.15,31,7.5,31,G,G+3.35,{mat:0xe5dfd1});
@@ -370,23 +382,35 @@ export function build(K) {
     for(const[u,v]of [[W+4.2,17.1],[W+4.1,18.3],[W+4.3,19.7]])person(u,G,v,{rotY:R,shirt:0xbcb9aa});
     for(const u of [8,29]){B(u,.43,-9.1,2.1,.1,.48,'wood');B(u,.55,-9.35,2.1,.43,.065,'wood',{solid:false});for(const dx of [-.8,.8])B(u+dx,0,-9.1,.07,.44,.42,0x4a534b,{solid:false});}
   });
-  floors.slice(1).forEach((y,i)=>{
-    const floor=`${i+2}F`,study=i===0,taekwondo=i===2;
-    zone(study?'비에이블 스터디카페':taekwondo?'반원 태권도':'교습실',floor,23.2,.3,W-.3,17.8,y,y+FH,study?'열람석':taekwondo?'수련실':'학습 공간',20);
-    if(study)zone('이비인후과',floor,.3,22.2,18.7,D-.3,y,y+FH,'대기실 · 상담',20);
-    K.detail({name:`반원상가 ${i+2}층 실내`,floor,y0:y,y1:y+FH,poly:footprint},()=>{
-      sign(study?'비에이블 스터디카페':taekwondo?'반원 태권도':'학원 · 교습실',31,y+2.8,18.14,9,.65);
-      if(taekwondo){
-        for(let u=25;u<41;u+=2.1)for(let v=1.2;v<16;v+=2.1)B(u+1,y+.02,v+1,1.97,.025,1.97,Math.round(u+v)%2?0x7795ac:0x87a8b6,{solid:false});
-        wall(24,1,24,16.5,y+.3,y+2.6,{mat:'glass',solid:false,thick:.015});
-        for(const u of [27,33,39]){cyl(u,y,2,.32,1.7,0x35434f);B(u,y+1.2,2,.55,.6,.55,0xa35044,{solid:false});}
-      }else for(const u of [26,29.6,33.2,36.8,40.4])for(const v of [3,6.5,10,13.5]){
+  floors.slice(1).forEach(y=>{
+    const floor='2F';
+    // These signs exist; the four room assignments are a playable inferred plan.
+    zone('비에이블 스터디카페',floor,23.2,.3,W-.3,17.8,y,y+FH,'열람석',20);
+    zone('이비인후과',floor,.3,22.2,18.7,D-.3,y,y+FH,'대기실 · 상담',20);
+    zone('학원 · 교습실',floor,.3,.3,18.7,17.8,y,y+FH,'학습 공간',20);
+    zone('반원 태권도',floor,23.2,22.2,W-.3,D-.3,y,y+FH,'수련실',20);
+    K.detail({name:'반원상가 2층 실내',floor,y0:y,y1:y+FH,poly:footprint},()=>{
+      sign('비에이블 스터디카페',31,y+2.8,18.14,9,.65);
+      for(const u of [26,29.6,33.2,36.8,40.4])for(const v of [3,6.5,10,13.5]){
         B(u,y+.73,v,1.35,.07,.72,{tex:'wood',color:0xc5ab7a});for(const dx of [-.55,.55])B(u+dx,y,v,.055,.73,.6,0xa5aca3,{solid:false});
-        if(study){B(u,y+.8,v-.33,1.35,.6,.04,0xd7d1bb);B(u-.67,y+.8,v,.04,.6,.72,0xd7d1bb);}chair(u,y,v+.9,0x4f5a55);
+        B(u,y+.8,v-.33,1.35,.6,.04,0xd7d1bb);B(u-.67,y+.8,v,.04,.6,.72,0xd7d1bb);chair(u,y,v+.9,0x4f5a55);
       }
-      sign(study?'이비인후과':'상담실',8,y+2.8,21.86,7.2,.6,north,'#e8eee7','#33645d');
+      // Retain the teaching/training furnishings on the actual upper storey.
+      // The stair bay and cross-corridor stay clear; room allocations are inferred.
+      for(const u of [2,5.4,8.8,12.2,15.6])for(const v of [2.2,5.5]){
+        B(u,y+.73,v,1.35,.07,.72,{tex:'wood',color:0xc5ab7a});for(const dx of [-.55,.55])B(u+dx,y,v,.055,.73,.6,0xa5aca3,{solid:false});chair(u,y,v+.9,0x4f5a55);
+      }
+      for(const u of [13,16.5])for(const v of [9,12.5,16]){
+        B(u,y+.73,v,1.35,.07,.72,{tex:'wood',color:0xc5ab7a});for(const dx of [-.55,.55])B(u+dx,y,v,.055,.73,.6,0xa5aca3,{solid:false});chair(u,y,v+.9,0x4f5a55);
+      }
+      sign('학원 · 교습실',15,y+2.8,18.14,5,.6);
+      for(let u=25;u<41;u+=2.1)for(let v=23;v<37.8;v+=2.1)B(u+1,y+.02,v+1,1.97,.025,1.97,Math.round(u+v)%2?0x7795ac:0x87a8b6,{solid:false});
+      wall(24,23,24,38.2,y+.3,y+2.6,{mat:'glass',solid:false,thick:.015});
+      for(const u of [27,33,39]){cyl(u,y,37.5,.32,1.7,0x35434f);B(u,y+1.2,37.5,.55,.6,.55,0xa35044,{solid:false});}
+      sign('반원 태권도',31,y+2.8,21.86,8,.6,north);
+      sign('이비인후과',8,y+2.8,21.86,7.2,.6,north,'#e8eee7','#33645d');
       B(9,y,34,5.6,1.02,.8,0xc5d2c7);for(const u of [4,8,12,16]){chair(u,y,27,0x577872);chair(u,y,29,0x577872);}
-      for(const u of [28,34,40]){B(u,y+.73,29,2,.08,.85,'wood');chair(u,y,30,0x55584d);B(u,y,37,2.7,2.3,.35,0xb4af99);for(let k=0;k<10;k++)B(u-1.1+k*.24,y+1.3,37.21,.15,.38,.1,[0x9f6d52,0x718c85,0xc1ae72][k%3],{solid:false});}
+      for(const u of [4,10,16]){B(u,y+.73,37.1,2,.08,.85,'wood');chair(u,y,38.1,0x55584d);B(u,y,.55,2.7,2.3,.35,0xb4af99);for(let k=0;k<10;k++)B(u-1.1+k*.24,y+1.3,.76,.15,.38,.1,[0x9f6d52,0x718c85,0xc1ae72][k%3],{solid:false});}
       for(const u of [8,16,27,35])for(const v of [5,14,26,35])B(u,y+3.17,v,1.7,.05,.6,'emit',{solid:false});
       for(const v of [5,13,20,26,36])B(21,y+3.17,v,1.5,.05,.6,'emit',{solid:false});person(31,y,20,{shirt:0x9b977e});
     });
@@ -395,5 +419,5 @@ export function build(K) {
   spawn('신반포로23길 · 어린이 보호구역',-9,0,24,west+Math.PI);
   spawn('반원상가 1층 통로',16.8,G,20,east);spawn('한신치킨호프 111호',38.5,G,7,R);
   spawn('한신치킨 야장 · 공원 쪽',37.8,G,-1.65,north);spawn('반원어린이공원 접면',21,0,-9.4,R);
-  spawn('비에이블 스터디카페',21,floors[1],13,east);spawn('반원상가 3층',16,floors[2],20,R);spawn('반원 태권도',21,floors[3],13,east);
+  spawn('비에이블 스터디카페',21,floors[1],13,east);spawn('반원상가 2층 교습실',16,floors[1],20,R);spawn('반원 태권도',21,floors[1],29,east);
 }

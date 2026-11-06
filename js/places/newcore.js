@@ -12,7 +12,10 @@ export const meta = {
     'https://www.elandretail.com/store02.do?BDID=0003003B&branchID=00110001&lang=000600KO',
     'https://www.elandretail.com/store05.do?branchID=00110001&lang=000600KO',
     'https://m.blog.naver.com/cherish37/224465298452',
-    'https://m.blog.naver.com/love__lover/224464082861'],
+    'https://m.blog.naver.com/love__lover/224464082861',
+    '.codex-jobs/evidence/walk_s1_banpo_newcore.json',
+    'https://www.youtube.com/watch?v=qZYgbakp2UA',
+    'https://www.youtube.com/watch?v=T92eDMIb3vE'],
 };
 const C = { cream: 0xeee8d9, trim: 0xf5efde, stone: 0xc5beae, slate: 0x899297,
   black: 0x222727, glass: 0x8da9a7, wood: { tex: 'wood', color: 0xd9bb87 }, metal: 0x434a4b };
@@ -88,6 +91,35 @@ function textures(K) {
       g.fillStyle = '#fcf9ee'; g.fillRect(x + 4, yy + 3, 184, 2);
     }
   }, [0.8, 0.4]);
+  K.texture('newcore-market-floor', 256, 256, (g, w, h) => {
+    const rand = K.rand(941); g.fillStyle = '#bcbdb7'; g.fillRect(0, 0, w, h);
+    for (let i = 0; i < 5000; i++) {
+      g.fillStyle = i % 2 ? 'rgba(255,255,250,.12)' : 'rgba(52,57,55,.08)';
+      g.fillRect(rand() * w, rand() * h, 2, 2);
+    }
+    g.strokeStyle = '#969b96'; g.lineWidth = 1.5; g.strokeRect(0, 0, w, h);
+  }, [0.6, 0.6]);
+  K.texture('newcore-shelf-label', 384, 160, (g, w, h) => {
+    g.fillStyle = '#e3e5de'; g.fillRect(0, 0, w, h);
+    g.fillStyle = '#fafbf4'; g.fillRect(10, 9, w - 20, h - 18);
+    g.fillStyle = '#353d3c'; g.font = '26px sans-serif'; g.fillText('상품 안내', 24, 44);
+    // Tiny catalogue/barcode marks. Do not invent current grocery prices.
+    for (let i = 0; i < 38; i++) g.fillRect(24 + i * 4, 62, i % 3 ? 2 : 3, 37);
+    for (let i = 0; i < 3; i++) g.fillRect(24, 113 + i * 9, 122 - i * 17, 3);
+    g.font = 'bold 39px sans-serif'; g.fillText('가격표', 195, 110);
+  }, [1, 1]);
+  K.texture('newcore-condiment-label', 256, 256, (g, w, h) => {
+    g.fillStyle = '#e6d7a2'; g.fillRect(0, 0, w, h);
+    g.strokeStyle = '#96905b'; g.lineWidth = 3; g.strokeRect(10, 10, w - 20, h - 20);
+    g.fillStyle = '#3e432d'; g.textAlign = 'center'; g.font = 'bold 62px sans-serif'; g.fillText('조미료', w / 2, 115);
+    for (let i = 0; i < 5; i++) g.fillRect(56, 153 + i * 10, 144 - i * 13, 3);
+  }, [1, 1]);
+  K.texture('newcore-dry-grocery', 256, 384, (g, w, h) => {
+    g.fillStyle = '#e4d6b5'; g.fillRect(0, 0, w, h); g.fillStyle = '#9a3a2e'; g.fillRect(20, 18, 67, 45);
+    g.fillStyle = '#3d352c'; g.textAlign = 'center'; g.font = 'bold 43px sans-serif'; g.fillText('무침가루', w / 2, 120);
+    g.fillStyle = '#cdb58f'; g.beginPath(); g.ellipse(128, 244, 95, 69, 0, 0, Math.PI * 2); g.fill();
+    g.fillStyle = '#786846'; g.font = '24px sans-serif'; g.fillText('간편한 요리', w / 2, 349);
+  }, [1, 1]);
   foodTextures(K);
 }
 
@@ -218,11 +250,15 @@ function streetFront(F, number, roof) {
     B(0, 11.69, -0.24, L + 0.35, 0.12, 0.88, C.cream, { solid: false });
   }
   if (number !== 3) {
+    // T92eDMIb3vE_50 agrees with photo05: cool grey/off-white upper 1관
+    // stripes, separate from the warmer stone arches on the lower floors.
+    if (number === 1) B(0, 10.65, -0.025, L - 0.3, roof - 11.2, 0.08, 0xe8e9e4, { solid: false });
     for (let u = -L / 2 + 2.3; u < L / 2 - 2; u += 5.4) {
-      B(u, 10.7, -0.05, 2.65, roof - 11.6, 0.15, number === 1 ? 0x8b8d86 : C.cream, { solid: false });
+      B(u, 10.7, -0.05, 2.65, roof - 11.6, 0.15, number === 1 ? 0x92969a : C.cream, { solid: false });
       B(u - 2.45, 10.65, -0.22, 0.27, roof - 11.2, 0.4, C.trim, { solid: false });
     }
-    S('NEWCORE', 0, roof - 6, -0.21, 11, 1.7, null, { fg: '#545959' });
+    S('NEWCORE', 0.04, roof - 6.05, -0.21, 11, 1.7, null, { fg: '#4d5355' });
+    S('NEWCORE', 0, roof - 6, -0.27, 11, 1.7, null, { fg: '#c5c9c6' });
   }
   // Photo02's 잠원로4길/P tower is at 3관's NORTH end, not the 1관 end.
   const towerU = number === 3 ? -L / 2 + 2.5 : L / 2 - 2.5;
@@ -251,9 +287,11 @@ function southEnd(F, roof) {
   const { K, L, W, P } = F, origin = P(L / 2, W / 2), angle = F.angle - Math.PI / 2;
   const G = localFrame(K, { ...F, angle, P: (u, v) => [origin[0] + Math.cos(angle) * u + Math.sin(angle) * v, origin[1] - Math.sin(angle) * u + Math.cos(angle) * v] });
   for (const u of [-W * 0.23, W * 0.08]) { arch(G, u, W * 0.30, 'NEWCORE OUTLET'); doors(G, u, 4); }
-  for (let u = -W / 2 + 2; u < W / 2 - 2; u += 4.8) G.B(u, 10.6, -0.05, 2.4, roof - 11.5, 0.17, 0x686b69, { solid: false });
+  G.B(0, 10.6, -0.025, W - 0.3, roof - 11.2, 0.08, 0xe8e9e4, { solid: false });
+  for (let u = -W / 2 + 2; u < W / 2 - 2; u += 4.8) G.B(u, 10.6, -0.05, 2.4, roof - 11.5, 0.17, 0x92969a, { solid: false });
   for (const y of [10, 10.4, roof - 0.6]) G.B(0, y, -0.2, W, 0.25, 0.65, C.trim, { solid: false });
-  G.S('NEWCORE', -3, roof - 5.8, -0.23, 8, 1.4, null, { fg: '#434b4c' });
+  G.S('NEWCORE', -2.96, roof - 5.85, -0.23, 8, 1.4, null, { fg: '#434b4c' });
+  G.S('NEWCORE', -3, roof - 5.8, -0.29, 8, 1.4, null, { fg: '#c5c9c6' });
   G.S(['1', '뉴코아 1관'], W * 0.08, 6.3, -0.3, 1.7, 1.3);
   G.S('우리은행 신반포금융센터', W * 0.32, 3.35, -0.33, 5.9, 0.6, '#305c78');
   K.slab(G.Q(-W / 2, -9, W / 2, 0), 0, { mat: 'sidewalk', thick: 0.08, ceil: false });
@@ -532,19 +570,98 @@ function retail(F, number) {
     for (let u = -L / 2 + 4; u < L / 2 - 2; u += 6) for (const v of [5, 16, W - 2]) B(u, 4.25, v, 2.2, 0.08, 0.5, { tex: 'emit', color: 0xfff0cf }, { solid: false });
   });
 }
-function market(F) {
+function marketStock(F, u, y, v, row) {
+  const { B, cyl } = F;
+  for (let k = -5; k <= 5; k++) for (const side of [-1, 1]) {
+    const uu = u + side * 0.52, vv = v + k * 0.37, turn = side * Math.PI / 2;
+    if (row === 13) {
+      // _400: light sesame/seasoning and dark sauce bottles, cream/yellow caps.
+      cyl(uu, y, vv, 0.095, 0.22, k < 1 ? 0xc5ad74 : 0x383a22, 8);
+      cyl(uu, y + 0.22, vv, 0.048, 0.055, 0x777348, 8);
+      cyl(uu, y + 0.275, vv, 0.055, 0.035, k % 3 ? 0xd8b252 : 0xe3d9ae, 8);
+      panel(F, uu + side * 0.097, y + 0.12, vv, 0.15, 0.15, 'newcore-condiment-label', turn);
+    } else if (row === 24 && k % 2 === 0) {
+      // _600: retain the stock count, replace generic cubes by sealed dry-food bags.
+      B(uu, y, vv, 0.2, 0.27, 0.22, 0xddd0af, { solid: false });
+      B(uu, y + 0.27, vv, 0.12, 0.018, 0.23, 0x9e957e, { solid: false });
+      panel(F, uu + side * 0.102, y + 0.135, vv, 0.22, 0.26, 'newcore-dry-grocery', turn);
+    } else B(uu, y, vv, 0.23, 0.24, 0.23, [0xdab358, 0x698a60, 0xb95a43, 0xe5d9b0][(k + 5) % 4], { solid: false });
+    if (k % 2 === 0) panel(F, u + side * 0.69, y - 0.02, vv, 0.25, 0.105, 'newcore-shelf-label', turn);
+  }
+}
+function shoppingCart(F, u, y, v) {
+  // _800's red foreground bar belongs to a cart, not a fixed queue railing.
+  const { B, cyl } = F, steel = 0xa7adab;
+  B(u, y + 0.36, v, 0.64, 0.025, 0.93, steel, { solid: false });
+  for (const du of [-0.31, 0.31]) {
+    for (let j = 0; j < 8; j++) B(u + du, y + 0.37, v - 0.43 + j * 0.12, 0.016, 0.45, 0.016, steel, { solid: false });
+    for (const yy of [0.48, 0.64, 0.82]) B(u + du, y + yy, v, 0.025, 0.018, 0.95, steel, { solid: false });
+    B(u + du, y + 0.17, v + 0.42, 0.035, 0.84, 0.035, steel, { solid: false });
+    for (const dv of [-0.38, 0.38]) {
+      B(u + du, y + 0.09, v + dv, 0.025, 0.28, 0.025, steel, { solid: false });
+      cyl(u + du, y + 0.03, v + dv, 0.065, 0.1, 0x343838, 8);
+    }
+  }
+  for (const dv of [-0.46, 0.46]) for (const yy of [0.48, 0.64, 0.82]) B(u, y + yy, v + dv, 0.64, 0.018, 0.02, steel, { solid: false });
+  B(u, y + 0.98, v + 0.43, 0.72, 0.055, 0.06, 0xb53732, { solid: false });
+}
+function market(F, ci) {
   const { K, L, W, B, S } = F, y = K.LEVELS.B1;
+  // qZYgbakp2UA_800 shows an open food hall, not a narrow rack maze.
+  // Keep every existing rack/counter. Move the middle/back rack rows to
+  // v=13/24 to leave a 6.3m spine centred on the unchanged v=18 B1 link.
+  // A second open aisle (v=28..32) serves the low deli counters; dimensions
+  // and world orientation are inferred inside the official 2관 B1 footprint.
+  const rackRows = [6, 13, 24], deliV = W - 9;
+  for (const u of [-L / 2 + 11, -2, L / 2 - 10]) {
+    B(u, y, 28.2, 0.65, 3.65, 0.65, 0xe9e8df);
+  }
+  // _800: grey polished floor, white square columns, dark exposed services.
+  // Preserve the real-kit stair void in the lower visual ceiling as well.
+  K.hpoly({ tex: 'newcore-market-floor', gloss: 0.5 }, F.p, y + 0.012, true);
+  K.hpoly(0x292c2c, F.p, y + 3.65, false, [ci.hole]);
   K.detail({ name: '2관 킴스클럽 델리', floor: 'B1', poly: F.p, y0: y, y1: 0 }, () => {
-    for (let u = -L / 2 + 5; u < L / 2 - 4; u += 5.8) for (const v of [6, 14, 22]) {
-      B(u, y, v, 1.15, 1.45, 4.7, 0xdbd6c8);
+    for (let u = -L / 2 + 5; u < L / 2 - 4; u += 5.8) for (const v of rackRows) {
+      // Retain the old collision footprint, but expose stock between shelves.
+      // An opaque full-height cube would bury the bottles and bag fronts.
+      B(u, y, v, 1.15, 1.45, 4.7, 0x303434, { skip: ['top', 'bottom', 'n', 's', 'e', 'w'] });
+      B(u, y, v, 1.15, 0.18, 4.7, 0x303434, { solid: false });
+      B(u, y + 0.18, v, 0.08, 1.27, 4.7, 0x303434, { solid: false });
+      for (const dv of [-2.34, 2.34]) B(u, y, v + dv, 0.1, 1.72, 0.06, 0x505757, { solid: false });
       for (let yy = 0.2; yy < 1.4; yy += 0.38) {
-        B(u, y + yy, v, 1.35, 0.04, 4.8, 0xc4c5bd, { solid: false });
-        for (let k = -5; k <= 5; k++) for (const side of [-1, 1]) B(u + side * 0.52, y + yy + 0.05, v + k * 0.37, 0.23, 0.24, 0.23, [0xdab358, 0x698a60, 0xb95a43, 0xe5d9b0][(k + 5) % 4], { solid: false });
+        B(u, y + yy, v, 1.35, 0.04, 4.8, 0x646b6b, { solid: false });
+        marketStock(F, u, y + yy + 0.05, v, v);
       }
     }
-    S(["KIM'S CLUB", '킴스클럽 · 신선식품 · 델리'], 0, y + 3.2, W - 1, 12, 1.2, '#7c322d');
-    for (let u = 0; u < L / 2 - 5; u += 5) B(u, y, W - 6, 2.8, 0.9, 1.25, 0x9caaa1);
-    for (let u = -L / 2 + 4; u < L / 2 - 3; u += 6) for (const v of [7, 18, 28]) B(u, y + 3.5, v, 2.2, 0.08, 0.6, { tex: 'emit', color: 0xfff1d5 }, { solid: false });
+    S(["KIM'S CLUB", '킴스클럽 · 신선식품 · 델리'], 0, y + 2.65, W - 1, 12, 0.8, '#7c322d');
+    for (let u = 0; u < L / 2 - 5; u += 5) {
+      B(u, y, deliV, 2.8, 0.9, 1.25, 0x9caaa1);
+      B(u, y + 0.9, deliV, 2.9, 0.055, 1.3, 0xd4d6ca, { solid: false });
+      B(u, y + 0.96, deliV - 0.59, 2.8, 0.32, 0.035, 'glass', { solid: false });
+      for (let j = 0; j < 6; j++) {
+        const uu = u - 1.1 + j * 0.44;
+        B(uu, y + 0.965, deliV, 0.37, 0.035, 0.72, 0x373e39, { solid: false });
+        for (const dv of [-0.2, 0, 0.2]) B(uu, y + 1, deliV + dv, 0.27, 0.07, 0.15, [0xb4864b, 0x799054, 0xcfb989][j % 3], { solid: false });
+      }
+    }
+    shoppingCart(F, L / 2 - 3, y, deliV + 1.6);
+    for (let u = -L / 2 + 2; u < L / 2 - 1; u += 6) {
+      const end = u > ci.a - 0.3 && u < ci.b + 3.1 ? ci.v0 - 1.5 : W - 0.5;
+      B(u, y + 3.48, (end + 0.5) / 2, 0.12, 0.16, end - 0.5, 0x161c1d, { solid: false });
+    }
+    for (const v of [7, 18, 30]) B(0, y + 3.4, v, L - 1, 0.14, 0.1, 0x1c2222, { solid: false });
+    for (const v of [10, 31]) {
+      B(0, y + 3.19, v, L - 1, 0.31, 0.65, 0x656b6b, { solid: false });
+      for (let u = -L / 2 + 2; u < L / 2 - 1; u += 3.2) B(u, y + 3.17, v, 0.035, 0.35, 0.69, 0x969c98, { solid: false });
+    }
+    for (let u = -L / 2 + 4; u < L / 2 - 3; u += 6) for (const v of [7, 18, 28]) {
+      B(u, y + 3.36, v, 2.2, 0.07, 0.12, 0x252c2c, { solid: false });
+      B(u, y + 3.34, v, 2.05, 0.02, 0.07, { tex: 'emit', color: 0xf5f7ed }, { solid: false });
+      for (const du of [-0.7, 0.7]) {
+        F.cyl(u + du, y + 3.12, v, 0.075, 0.22, 0x252a29, 8);
+        F.cyl(u + du, y + 3.10, v, 0.065, 0.025, { tex: 'emit', color: 0xfaf9e9 }, 8);
+      }
+    }
   });
 }
 
@@ -743,7 +860,7 @@ export function build(K) {
       // stair/lift lobby. No direct Gotomall or subway tunnel is inferred.
       for (const u of [-20, 8, 33]) F.S(['←  계단 · 엘리베이터', 'B1  킴스 푸드 스트리트'], u, 3.1, 15.3, 4.5, 0.7, '#353b37', { rotY: F.angle });
       F.S(['B1  킴스 푸드 스트리트', '계단 · 엘리베이터'], ci.b + 4, 2.8, F.W - 5.8, 4.1, 0.8, '#353b37');
-    } else market(F);
+    } else market(F, ci);
     // User requested upper floors as simple slabs/facade. Circulation remains
     // reachable on foot and by elevator; only verified category signs added.
     for (let i = 2; i < floors.length; i++) K.detail({ name: num + '관 ' + floors[i].label, floor: floors[i].label, poly: F.p, y0: floors[i].y, y1: floors[i].y + 4.5 }, () => {
