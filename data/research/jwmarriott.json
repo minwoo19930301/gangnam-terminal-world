@@ -277,7 +277,7 @@
   "5F": "그랜드 볼룸(기존 천고 7m, 버진로드 21m)·신부 대기실 + 청회색/크림 추상 카펫·어두운 청동 반사 격자 천장·목재 루버·낮은 데스크·꽃 콘솔의 포이어",
   "6F": "직원 구역: 연회 창고·린넨실·연회 조정실·직원 탈의실·세탁물 집하장·직원 식당(추정)",
   "7F": "JW 가든·더 마고 그릴·와인 셀러·모보 바",
-  "8F": "리셉션·프런트·더 라운지: 구리빛 시어 커튼·그랜드 피아노·테라코타 L자 소파·검은 돌 바·낮은 라운지 가구. 과거 추정 목걸이 조형물과 9–11F 상부 보이드는 제거",
+  "8F": "리셉션·더 라운지: 구리빛 리본/링 베이, 흰 쉬어 앞 피아노와 크림 L자 소파·구리빛 쿠션, 검은 돌 바·밀집 병 니치, 입체 라탄 체어·모브 터브 체어. 방별 배치는 근사.",
   "9F": "이그제큐티브 라운지·비즈니스 센터(층 용도는 사진 07·08 확인; 사진 16의 크림 원형 테이블·탄색 의자·청색 러그·목재 격자·창가 코브조명 반영, 상세 평면은 근사)",
   "10F": "사무실(사진 08의 층 용도; 내부 세부가 사진에 없어 단순하게 유지)",
   "11F": "사무실(사진 08의 층 용도; 내부 세부가 사진에 없어 단순하게 유지)",
@@ -397,20 +397,19 @@
   "atmosphere": "월넛·따뜻한 간접조명·꿀빛 석재·낮은 가구와 커튼을 중심으로 하고, 흰 형광 패널·큰 교통 안내판·과밀 인원은 두지 않는다."
  },
  "modeling": {
-  "round": 6,
+  "round": 7,
   "guesses": [
-   "사진들은 부분 시점이므로 방위·전체 평면·출입구·코어 위치는 확정되지 않았다. OSM 외곽, 기존 층 높이와 J5/J6 공유 연결을 보존하면서 검토자가 지정한 로컬 좌표에 맞췄다.",
-   "1F 홀은 notes.json의 약 8m 추정과 사진 11/15 리뷰의 11–12m 추정이 충돌한다. 이번에는 기존 HALL [-2,42,16.5,55] 보이드와 천장 y=8.15m를 유지하고, 3.3/3.75/5.6/6.0m에서 나뉘는 소핏·슬랫·유리 입면으로 표현했다. 실제 갤러리 층수·높이는 실측 미확인이다.",
-   "1F 기둥 세 쌍의 로컬 좌표, 오크 스크린과 석재 벤치 치수, 조형물 지름 4m 받침대와 세 가닥의 구슬 크기·개수·간격은 사진 비례 및 리뷰 지시를 따른 근사다. 작품명과 실측 높이는 확정하지 않는다.",
-   "사진 13의 복도는 로컬 u -1~3, v 5~24의 약 3.9m 폭으로 닫고 남쪽 끝에서 접근하게 했다. 1.6m 유리 진열 베이, 0.3×0.6m 월넛 블록, 북쪽 액자와 벽의 정확한 위치·패턴은 부분 사진에 근거한 근사다.",
-   "2F 플레이버즈는 리뷰에서 허용한 낮은 층고 대안을 사용했다. 3F 서비스 블록과 슬래브를 보존해 실내 높이 5.2m를 유지하고 어두운 월넛 소핏, 하단 약 3.0–3.6m의 황동 튜브 40개를 적용했다. 튜브는 기존 슬래브 안에 맞도록 약 1.2–2.1m로 제한했으며 사진 17의 추정 8–9m 이중 층고를 재현한 것은 아니다.",
-   "2F 다이닝 테이블 40조(그중 U자 부스 14조), 펜던트 구역 43조, 와인장과 뷔페의 상세 배치는 반복 가구 밀도를 사진에 맞춘 추정이다. 출입구·촬영 지점·스폰 주변은 비워 두었다. v=41.7 남쪽 미관측 구역은 월넛 벽 뒤의 단순 공간으로 남겼다.",
-   "8F는 실내 높이 5.2m와 기존 피아노·바 위치를 유지했다. 서측 u=-7.5, v=6.5~47.8의 연속 커튼, 지름 3.2m 링 두 개와 피콕 체어 네 개의 간격, 바 니치 깊이 0.35m는 사진과 리뷰에 맞춘 근사이며 실측 평면은 아니다.",
-   "광택 석재·목재 하이라이트와 emit 면으로 간접조명을 근사했다. 실제 광선 추적 반사·유리 뒤 광산란·피어 조명의 광도 분포는 재현하지 않는다. 라탄 직조·퀼팅·도자기 표면·U자 부스의 곡률도 단순 기하로 표현했다.",
-   "안내판은 사진 07의 번호 열·작은 시설명·보조 줄·구분선·상단 브랜드를 따르되, 프로젝트의 한글 규칙에 따라 일반 영문 시설명은 한글로 표기하고 실제 브랜드만 원문을 유지했다. 캡 버튼도 작은 한글 캡션으로 단순화했다.",
-   "5F 포이어(사진 09/10)와 9F 라운지(사진 16)의 이전 추적 결과는 유지했다. 볼룸 내부, 비즈니스 센터, 객실·업무층·옥상·서비스 구역의 비촬영 배치는 이번 사진으로 새로 확인한 것이 아니다.",
-   "지하 시설의 층별 배분은 실측 미확인이다. 사진 07의 B3 주차장 표기와 기존 B3 수영장 모델의 불일치는 남아 있다. 기존 실제 층수·전층 엘리베이터와 비촬영 구조를 유지했다.",
-   "이번 환경에서는 사용자 지시에 따라 tests/shot.mjs를 실행하지 않았다. 새 카메라 렌더와 사진 간의 최종 시각 비교는 운영자 렌더 후 확인이 필요하다."
+   "제공된 사진의 가구·마감·구도를 추적했으나 절대 방위·평면과 방 사이 간격은 실측 도면이 없어 OSM 외곽과 기존 코어에 맞춘 근사다.",
+   "1F 천장은 기존 8.15m를 유지했다. 원기둥·갤러리·격자 모듈은 사진 비례에 맞췄다. 네 가닥 구슬(사진 05 확인)의 지름·개수·하단 루프 형상 및 4m 지름 단은 근사다.",
+   "1F 사진 06의 세 번째 승강기 문을 직각 리턴에 배치했다. 기능 승강기 중심과 전층 정지는 유지하며 두 포털은 장식이다. 리턴의 정확한 실제 위치·방위는 미확인이다.",
+   "사진 17의 플레이버즈 높은 공간을 기존 층간 높이 5.5m 안의 5.2m 실내로 압축했다. 흰 크림 천장·40개 긴 튜브는 추적했으나 이중 층고까지 재현하지 않았다. 3F 구조와 전체 층수를 보존했다.",
+   "2F 테이블 83조·그중 U자 부스 14조의 반복 배치, 남측 서비스 영역, 와인장·잔 진열장의 정확한 위치와 메뉴 내용은 근사다. 실제 메뉴 상품명이나 음식 종류를 새로 확정하지 않았다.",
+   "8F 사진 02의 피아노와 소파를 인접시켰고 사진 01의 구리 리본 구역을 분리했다. 사진 04의 병풍 코너와 다섯 번째 라탄 의자는 별도 시점을 만족하도록 추정한 배치이며 실제 좌석 총수는 미확인이다.",
+   "5F 포이어 전체 너비와 접수대·대기 좌석·서비스장 위치, 9F 좌석 수와 서비스장·비즈니스 센터·남측 대기실 배치는 사진 밖 영역을 같은 마감으로 채운 추정이다.",
+   "반사는 기존 광택 재질, 간접조명은 발광 표면으로 근사했다. 실제 거울상이나 광선 추적 조명은 구현하지 않았다. 천·라탄·도자기 재질과 인체는 단순 기하 표현이다.",
+   "사인의 시설명은 프로젝트 규칙에 따라 한글로 쓰고 실제 브랜드명만 원문을 유지했다. 지도 주소는 기존 1F를 유지하며 지상 승강기 현장 표기는 L이다.",
+   "기존 지하 시설 배분(B3 수영장과 사진 07의 B3 주차장 표기 차이), 객실·사무층·옥상·비촬영 서비스 시설은 이번 사진으로 재검증되지 않았다.",
+   "사용자 지시에 따라 tests/shot.mjs는 실행하지 않았다. 실제 렌더와 사진의 최종 시각 비교는 운영자의 modeling.trace 렌더가 필요하다."
   ],
   "implemented_layout": {
    "coordinate_frame": "jwmarriott.js의 P(u,v) 로컬 좌표. x=east, z=south 원점 좌표로 변환하며 미터 단위.",
@@ -498,23 +497,45 @@
      0.22
     ],
     "fret_clear_pocket_m": 0.23,
-    "sculpture_plinth_diameter_m": 4
+    "sculpture_plinth_diameter_m": 4,
+    "bead_strands": 4,
+    "vertical_beads_per_strand": 29,
+    "foot_loop_beads": 14
    },
    "8F_lounge": {
     "floor_y": 35.5,
     "ceiling_above_floor_m": 5.2,
-    "curtains": "흰 쉬어 뒤로 조밀한 구리빛 리본, 상단 물결 밑단과 중간 스팬드럴",
+    "curtains": "구리 리본과 두 링의 짧은 베이; 피아노/소파 베이는 흰 쉬어",
     "old_void": "기존 9F–11F 아트리움 구멍을 닫아 해당 층 바닥을 복원",
     "curtain_v": [
-     6.5,
-     47.8
+     14.1,
+     24.3
     ],
     "bronze_rings": 2,
-    "peacock_chairs": 4,
+    "peacock_chairs": 5,
     "bar_shelves": 3,
     "bottles_per_shelf": 40,
     "sofa_color": "#d8ccb6",
-    "tub_color": "#8a7a80"
+    "tub_color": "#8a7a80",
+    "sheer_v": [
+     6.5,
+     47.8
+    ],
+    "piano_uv": [
+     -4.8,
+     41
+    ],
+    "sofa_main_uv": [
+     -6.35,
+     34.8
+    ],
+    "sofa_return_uv": [
+     -3.6,
+     31.35
+    ],
+    "tub_chairs": 10,
+    "bar_hero_bottles": 3,
+    "handled_pitchers": 4
    },
    "2F_flavors": {
     "rect_uv": [
@@ -524,7 +545,7 @@
      41.7
     ],
     "ceiling_above_floor_m": 5.2,
-    "pendant_strategy": "리뷰의 낮은 층고 대안: 3F 구조 유지, 월넛 소핏과 긴 튜브",
+    "pendant_strategy": "기존 3F 슬래브 유지, 밝은 크림 천장과 워시, 하단 3.0–3.6m의 황동 튜브 40개",
     "pendants": 40,
     "dining_tables": 40,
     "u_booths": 14,
@@ -532,13 +553,29 @@
     "wine_shelves": 5,
     "buffet_displays_per_counter": 24,
     "southern_extension": "v=41.7의 월넛 벽으로 차폐",
-    "lobby_floor": "#a29d96 회색 석재, 0.9m 줄눈"
+    "lobby_floor": "#a29d96 회색 석재, 0.9m 줄눈",
+    "dining_tables_total": 83,
+    "table_covers": 332,
+    "stemware_rack_glasses": 48,
+    "chair_shape": "9분할 곡면 등받이·4개 다리"
    },
    "preserved": "기존 타워 외관·OSM claim 136986976·층별 높이·J5/J6 좌표와 레벨·엘리베이터 전층 접근",
    "status": "실내 위치와 치수는 모델 적합을 위한 근사값이며 실측 도면이 아니다.",
    "5F_foyer": {
     "ceiling_above_floor_m": 3.65,
-    "materials": "청회색/크림 줄무늬 카펫·크림 석재 테두리·브론즈 격자 천장"
+    "materials": "청회색/크림 줄무늬 카펫·크림 석재 테두리·브론즈 격자 천장",
+    "end_console_vases": 9,
+    "reception_desks_uv": [
+     [
+      19,
+      20.8
+     ],
+     [
+      27,
+      20.8
+     ]
+    ],
+    "waiting_groups": 4
    },
    "9F_executive_lounge": {
     "ceiling_above_floor_m": 3.45,
@@ -548,7 +585,12 @@
      15.85,
      24.2
     ],
-    "materials": "셰브런 목재·청색 러그·크림 버킷체어·창가 코브"
+    "materials": "셰브런 목재·청색 러그·크림 버킷체어·창가 코브",
+    "tables": 12,
+    "chairs": 32,
+    "sofa_banks": 3,
+    "business_center": "추정 책상 3개·회의 테이블 1개",
+    "south_waiting": "추정 소파 2개·커피 테이블"
    },
    "1F_lift_approach": {
     "rect_uv": [
@@ -563,17 +605,365 @@
   },
   "validation": {
    "smoke_command": "node tests/smoke.mjs jwmarriott shinsegae centralcity",
-   "smoke_result": "OK",
-   "jwmarriott_quads": 104883,
-   "quad_budget": 140000,
-   "scoped_walk_command": "node tests/walk.mjs jwmarriott shinsegae centralcity",
-   "scoped_walk_result": "134 ok, 0 blocked",
+   "smoke_result": "OK 출력, exit 0. JW detail 오류 0. 동시 편집 중 shinsegae 4F–10F detail에서 ReferenceError: upperRetailCeiling is not defined 기록됨; clean 통합 성공으로 간주하지 않음.",
    "full_walk_command": "node tests/walk.mjs",
-   "full_walk_result": "다른 모듈 편집 중 문법 오류로 시작 불가: station.js의 mallHere 중복 선언",
-   "camera_physics": "제공된 18개 시점(17개 고유 좌표), 모두 해당 층 바닥 지지 및 capsule 충돌 밀림 0. 남쪽 갤러리 S/N은 좌표가 같음.",
-   "render_status": "사용자 지시에 따라 tests/shot.mjs 미실행. 운영자 비교 렌더 대기.",
-   "preserved": "OSM claim 136986976, 외관, 37개 층(B4–33F), 11개 스폰, 558개 존, 전층 기능 엘리베이터, J5/J6"
-  }
+   "full_walk_result": "344 ok, 0 blocked; 동일한 신세계 detail ReferenceError가 먼저 출력됨.",
+   "jwmarriott_eager_quads": 36584,
+   "jwmarriott_detail_quads": 179439,
+   "jwmarriott_total_quads": 216023,
+   "quad_count_note": "실제 K._.stats.quads 차이로 각 detail 콜백 측정. smoke 기본 표는 detail 생성 전 수치여서 총 quads가 아니다. K.hpoly의 삼각형은 quads 카운터에 포함되지 않는다.",
+   "detail_errors": [],
+   "detail_budget_result": "5개 그룹 모두 120000 quads 이하",
+   "camera_physics": "연구 파일에 저장한 소수 3자리 좌표 18개 전부 해당 층 바닥 지지 및 capsule 충돌 이동 0m 확인",
+   "visfloor_command": "node tests/visfloor.mjs 0 -78 29 31 170 /tmp/jwmarriott-visfloor-round7.png jwmarriott",
+   "visfloor_hole_m2": 13.75,
+   "visfloor_result": "PNG 확인 및 빨간 픽셀 좌표 검사: 노출은 전부 기존 벽으로 둘러싼 STH 계단실(로컬 u10.4–15.8,v24.2–30.65) 안. 로비/아케이드의 비의도 지하 노출 없음.",
+   "render_status": "tests/shot.mjs 미실행(사용자 지시); modeling.trace 18시점 운영자 렌더 대기.",
+   "preserved": "OSM 136986976·외관·37층 B4–33F·11개 스폰·558개 존·전층 기능 승강기·J5/J6. JW를 지명하는 WELLS 항목 없음.",
+   "standalone_smoke_command": "node tests/smoke.mjs jwmarriott --quiet",
+   "standalone_smoke_result": "OK; detail 오류 0",
+   "lazy_registration_check": "detail 생성 전후 존 558개·스폰 11개·승강기 37정지 동일; 구조/게임플레이 등록을 지연하지 않음",
+   "engine_test_limitation": "kit.js buildDetail가 예외를 catch해 로그만 남기므로 smoke의 OK만으로 모든 detail 정상 생성을 보장하지 못함. JW는 콜백을 별도 계측해 예외 0을 확인했고, 신세계의 예외는 미해결 외부 모듈 항목으로 기록."
+  },
+  "trace": [
+   {
+    "spot": "더 라운지 구리빛 커튼·창가 피콕 체어",
+    "photos": [
+     "refs/interior/jw/01_lobby_lounge_8f_wide_curtains.jpg"
+    ],
+    "floor": "8F",
+    "x": -15.235,
+    "y": 35.5,
+    "z": 117.115,
+    "yawDeg": 111.039,
+    "pitchDeg": 0,
+    "local_uv": [
+     1.6,
+     19.4
+    ],
+    "built": "10.2m 커튼 구역·두 브론즈 링·창가 라탄 의자 네 개·퀼팅 터브 체어"
+   },
+   {
+    "spot": "더 라운지 피아노·L자 소파",
+    "photos": [
+     "refs/interior/jw/02_lobby_lounge_piano_sofa.jpg"
+    ],
+    "floor": "8F",
+    "x": -9.139,
+    "y": 35.5,
+    "z": 133.52,
+    "yawDeg": 108.176,
+    "pitchDeg": 0,
+    "local_uv": [
+     1.4,
+     36.9
+    ],
+    "built": "같은 옅은 러그 위 검은 그랜드 피아노·크림 L자 소파·테라코타 쿠션·낮은 커피 테이블"
+   },
+   {
+    "spot": "더 라운지 대리석 바",
+    "photos": [
+     "refs/interior/jw/03_lobby_lounge_bar_counter.jpg"
+    ],
+    "floor": "8F",
+    "x": -19.765,
+    "y": 35.5,
+    "z": 115.643,
+    "yawDeg": 21.039,
+    "pitchDeg": 0,
+    "local_uv": [
+     -2.1,
+     16.4
+    ],
+    "built": "월넛 패널·3단 120병 니치·전경 병 3개·피처 4개·잔·홈 파인 전면"
+   },
+   {
+    "spot": "더 라운지 라탄 의자·병풍 코너",
+    "photos": [
+     "refs/interior/jw/04_lobby_lounge_lounge_chairs.jpg"
+    ],
+    "floor": "8F",
+    "x": -16.793,
+    "y": 35.5,
+    "z": 116.964,
+    "yawDeg": 293.901,
+    "pitchDeg": 0,
+    "local_uv": [
+     0.2,
+     18.7
+    ],
+    "built": "안쪽을 향한 입체 라탄 등받이·모브 쿠션·검은 병풍·터브 체어"
+   },
+   {
+    "spot": "현관 홀 구슬 조형물에서 출입문 방향",
+    "photos": [
+     "refs/interior/jw/05_main_hall_sculpture_ground.jpg"
+    ],
+    "floor": "1F",
+    "x": -4.508,
+    "y": 0,
+    "z": 144.167,
+    "yawDeg": 291.039,
+    "pitchDeg": 0,
+    "local_uv": [
+     1.9,
+     48.5
+    ],
+    "built": "네 가닥 세라믹 구슬·두 하단 목걸이 루프·원형 단·보호 로프·짐수레"
+   },
+   {
+    "spot": "트래버틴 승강기 로비",
+    "photos": [
+     "refs/interior/jw/06_elevator_lobby_travertine.jpg"
+    ],
+    "floor": "1F",
+    "x": -7.545,
+    "y": 0,
+    "z": 126.8,
+    "yawDeg": 242.048,
+    "pitchDeg": 0,
+    "local_uv": [
+     5.3,
+     31.2
+    ],
+    "built": "주벽 두 브론즈 포털과 직각 리턴의 세 번째 포털·크림 바닥·천장 코브"
+   },
+   {
+    "spot": "승강기 옆 자주색 층별 안내판",
+    "photos": [
+     "refs/interior/jw/07_floor_directory_sign.jpg"
+    ],
+    "floor": "1F",
+    "x": -5.621,
+    "y": 0,
+    "z": 131.524,
+    "yawDeg": 111.039,
+    "pitchDeg": 0,
+    "local_uv": [
+     5.4,
+     36.3
+    ],
+    "built": "대판 트래버틴·번호와 시설명 열·얇은 구분선·작은 JW MARRIOTT"
+   },
+   {
+    "spot": "승강기 내부 버튼 패널",
+    "photos": [
+     "refs/interior/jw/08_elevator_button_panel.jpg"
+    ],
+    "floor": "1F",
+    "x": -2.821,
+    "y": 0,
+    "z": 126.269,
+    "yawDeg": 21.039,
+    "pitchDeg": 0,
+    "local_uv": [
+     9.9,
+     32.4
+    ],
+    "built": "청동 두 열의 버튼·작은 한글 시설명·5층 선택 테두리·문 열림/닫힘"
+   },
+   {
+    "spot": "그랜드 볼룸 포이어 접수대·에스컬레이터",
+    "photos": [
+     "refs/interior/jw/09_grand_ballroom_foyer_5f.jpg"
+    ],
+    "floor": "5F",
+    "x": 10.081,
+    "y": 21,
+    "z": 123.877,
+    "yawDeg": 21.039,
+    "pitchDeg": 0,
+    "local_uv": [
+     22.8,
+     34.8
+    ],
+    "built": "청회색 카펫·브론즈 반사 패널·두 접수대·방명록·안내 모니터·검은 병풍"
+   },
+   {
+    "spot": "그랜드 볼룸 포이어 꽃 콘솔",
+    "photos": [
+     "refs/interior/jw/10_ballroom_foyer_carpet.jpg"
+    ],
+    "floor": "5F",
+    "x": -21.863,
+    "y": 21,
+    "z": 52.807,
+    "yawDeg": 21.039,
+    "pitchDeg": 0,
+    "local_uv": [
+     18.5,
+     -43
+    ],
+    "built": "크림 프레임 벽·검은 석재 콘솔·아홉 꽃병·푸른 추상 카펫"
+   },
+   {
+    "spot": "현관 홀 기둥·격자 천장 전경",
+    "photos": [
+     "refs/interior/jw/11_lobby_wide_pillars_ceiling.jpg",
+     "refs/interior/jw/15_lobby_hanging_sculpture.jpg"
+    ],
+    "floor": "1F",
+    "x": 7.159,
+    "y": 0,
+    "z": 139.68,
+    "yawDeg": 111.039,
+    "pitchDeg": 12,
+    "local_uv": [
+     14.4,
+     48.5
+    ],
+    "built": "1.2m 지름 원기둥·연속 목재 격자·층진 갤러리·네 구슬 줄"
+   },
+   {
+    "spot": "현관 홀 유리벽·꽃 장식",
+    "photos": [
+     "refs/interior/jw/12_lobby_entrance_wall_flowers.jpg",
+     "refs/interior/jw/14_lobby_glass_wall_plant.jpg"
+    ],
+    "floor": "1F",
+    "x": -3.481,
+    "y": 0,
+    "z": 143.772,
+    "yawDeg": 111.039,
+    "pitchDeg": 0,
+    "local_uv": [
+     3,
+     48.5
+    ],
+    "built": "브론즈 유리 프레임·월넛 블록·검은 원탁·104줄기 꽃과 잎·간접조명"
+   },
+   {
+    "spot": "현관 홀 조명 진열벽 복도",
+    "photos": [
+     "refs/interior/jw/13_corridor_lit_wall.jpg"
+    ],
+    "floor": "1F",
+    "x": -14.294,
+    "y": 0,
+    "z": 120.396,
+    "yawDeg": 21.039,
+    "pitchDeg": 0,
+    "local_uv": [
+     1.3,
+     22.8
+    ],
+    "built": "월넛 입체 블록·유리 진열 베이·맞은편 목재 날개·크림 소핏·작은 다운라이트"
+   },
+   {
+    "spot": "이그제큐티브 라운지 창가 좌석",
+    "photos": [
+     "refs/interior/jw/16_executive_lounge.jpg"
+    ],
+    "floor": "9F",
+    "x": -17.74,
+    "y": 41,
+    "z": 107.257,
+    "yawDeg": 179.237,
+    "pitchDeg": 0,
+    "local_uv": [
+     2.8,
+     9.3
+    ],
+    "built": "12개 원형 테이블·32개 곡면 의자·두꺼운 검정 하부·소파·목재 격자·흰 천장"
+   },
+   {
+    "spot": "플레이버즈 황동 펜던트·원기둥",
+    "photos": [
+     "refs/interior/jw/17_flavors_pendant_lights_column.jpg"
+    ],
+    "floor": "2F",
+    "x": -22.543,
+    "y": 6,
+    "z": 124.855,
+    "yawDeg": 78.134,
+    "pitchDeg": 12,
+    "local_uv": [
+     -8,
+     24
+    ],
+    "built": "높이가 다른 40개 황동 튜브·크림 천장·1.16m 원기둥·짙은 테이블과 식기"
+   },
+   {
+    "spot": "플레이버즈 입구 사인·꽃 테이블",
+    "photos": [
+     "refs/interior/jw/18_flavors_entrance_sign.jpg"
+    ],
+    "floor": "2F",
+    "x": -11.085,
+    "y": 6,
+    "z": 112.304,
+    "yawDeg": 76.047,
+    "pitchDeg": 0,
+    "local_uv": [
+     7.2,
+     16.4
+    ],
+    "built": "작은 금색 FLAVORS·상부 워시·목재 받침·92줄기 마른 꽃"
+   },
+   {
+    "spot": "플레이버즈 뷔페·디저트 진열",
+    "photos": [
+     "refs/interior/jw/19_flavors_dining_room_counter.jpg"
+    ],
+    "floor": "2F",
+    "x": -28.646,
+    "y": 6,
+    "z": 136.845,
+    "yawDeg": 111.039,
+    "pitchDeg": 0,
+    "local_uv": [
+     -18,
+     33
+    ],
+    "built": "유리 디저트 케이스·맥석 카운터 세 개·음식/병 72점·큰 꽃·슬랫 천장"
+   },
+   {
+    "spot": "플레이버즈 부스·식기·목재 스크린",
+    "photos": [
+     "refs/interior/jw/20_flavors_dining_booths.jpg"
+    ],
+    "floor": "2F",
+    "x": -21.682,
+    "y": 6,
+    "z": 129.88,
+    "yawDeg": 132.84,
+    "pitchDeg": 0,
+    "local_uv": [
+     -9,
+     29
+    ],
+    "built": "곡면 탄색 의자·U자 부스·접시와 냅킨·포크/나이프·물잔/와인잔·48잔 진열장"
+   }
+  ],
+  "trace_convention": "x=east, z=south, y=발바닥 높이(shot.mjs와 동일). yaw 0=북/-z, 90=서, 180=남, 270=동. pitchDeg는 선택 참고값(+위). refs/interior/jw/notes.json에 trace_spots가 없어 20개 사진을 18개 비교 시점으로 정리했다.",
+  "detail_groups": [
+   {
+    "floor": "1F",
+    "name": "현관 홀 · 승강기 로비 · 아케이드",
+    "quads": 39112
+   },
+   {
+    "floor": "2F",
+    "name": "플레이버즈 · 파티세리 · 타마유라",
+    "quads": 75669
+   },
+   {
+    "floor": "5F",
+    "name": "그랜드 볼룸 · 포이어",
+    "quads": 24249
+   },
+   {
+    "floor": "8F",
+    "name": "더 라운지 · 프런트",
+    "quads": 30019
+   },
+   {
+    "floor": "9F",
+    "name": "이그제큐티브 라운지 · 비즈니스 센터",
+    "quads": 10390
+   }
+  ],
+  "detail_group_budget_quads": 120000
  },
  "interior_round6": {
   "reference_root": "refs/interior/jw",
@@ -622,5 +1012,19 @@
    }
   ],
   "preserved": "외관·OSM claim·지하4층/지상33층·J5/J6·11개 스폰·558개 존·전층 승강기"
+ },
+ "interior_round7": {
+  "reference_root": "refs/interior/jw",
+  "trace_spots": 18,
+  "reference_photos": 20,
+  "detail_floors": [
+   "1F",
+   "2F",
+   "5F",
+   "8F",
+   "9F"
+  ],
+  "changes": "층별 지연 생성, 네 줄 도자기 구슬·짐수레·승강기 리턴과 2열 버튼, 밝은 플레이버즈 천장·곡면 의자·완전 식기 세팅, 인접한 피아노/소파·구역별 커튼·입체 라탄, 볼룸 접수/꽃/천장, 밀집 이그제큐티브 좌석과 추정 지원 공간",
+  "scope": "js/places/jwmarriott.js 및 data/research/jwmarriott.json만 수정; 커밋/푸시 없음"
  }
 }

@@ -377,14 +377,14 @@
     },
     "circulation": "1F의 B1 개구부를 B1_WELL(u27.8~31.0,v35~47), 중앙 에스컬레이터 A/B 두 줄 폭으로 한정한다. 1.1m 유리 난간과 상부 레일은 양옆·북단에 두고 1F 승하차가 이루어지는 남단 v47을 연다. 2F~11F의 전체 ATR(u27.6~39.4,v35~47)과 기존 에스컬레이터를 유지한다. HOS 별도 B1→1F 에스컬레이터와 1F/1M 보이드는 제거하고 B1 라운지는 중앙 에스컬레이터·계단·엘리베이터로 접근한다. 엘리베이터 3대×14개 층(B2~11F 및 1M), 양쪽 계단, 1F~1M 계단, J1/J4/J5와 기존 스폰·존은 보존한다. 실측 방위·좌표는 미확인이다.",
     "connections": "J1 소유 통로의 8m 중앙 동선과 바닥/천장을 유지하고 양옆에 중립적 상품군 쇼윈도를 둔다. 서북쪽 첫 점포 자리는 역 모듈 환승 엘리베이터(-76,-82)의 B1 출입을 위해 비워 둔다. J4 1F/B1 센트럴시티 개구, J5 1F JW 개구 유지. 이 모듈을 지칭하는 WELLS는 없다.",
-    "osm_pois_placed": "Johnny Rockets(B1 북측), 스타벅스 센트럴시티점(1F 서측). Round5 사진 추적 구역에서는 과거 도쿄밀크치즈팩토리/바위파스타바 추정 배치를 제거하고 사진으로 확인한 Standard Bread·한정선·SEASONIQUE 및 푸드홀 바를 구현한다. OSM 건물 claim159117108은 유지한다.",
-    "brand_placement_note": "기사·기존 POI 조사에서 근거를 찾은 실내 브랜드의 허용 목록을 유지하고 나머지는 한국어 상품군/시설 표기를 쓴다. 출처가 있는 브랜드도 현재 입점·위치·상품 구성은 확정되지 않았으며 매장 배치는 추정이다. 외부는 ssg_06/cc_01의 SHINSEGAE·PIAGET·CHANEL과 ssg_02/manifest의 POLO CLUB·SHINSEGAE 표기만 근거로 삼는다. 광고 인물·상품은 단순화이며 실제 캠페인의 정밀 복제로 주장하지 않는다. 판독되지 않는 측면 배너 문구는 추가하지 않는다. Round5 사진으로 Standard Bread(13),한정선(11/12/14),SEASONIQUE(15),Blue Butterfly(19),Superstar(07),KATSU & TAPAS(09),HOUSE OF SHINSEGAE(02/04)의 실제 표기와 집기 형식을 추가 확인했다. 정확 좌표·점포 순서·상품 품목은 사진으로 확인되지 않는다.",
+    "osm_pois_placed": "OSM159117108 윤곽과 J1/J4/J5 연결 유지. 실내 점포 위치는 공식1F 안내도·사진을 기존 건물 좌표에 맞춘 추정 배치다.",
+    "brand_placement_note": "사진·공식 도면에서 판독한 화장품 브랜드, Nespresso, Standard Bread, 한정선, SEASONIQUE, Blue Butterfly, Superstar, KATSU & TAPAS, BY THE GLASS, 金寿司, TACHIBANA, K2, le coq sportif, Dr. Martens 표기를 쓴다. 기존 연구로 확인한 상층 브랜드는 유지하며 미확인 목록은 한국어 상품군 표기를 유지한다. 실제 현재 입점 위치까지 측량한 것은 아니다.",
     "massing": "OSM 159117108 외곽선과 v33 본관/신관 분할, 본관 8F 옥상 40.6m와 신관 11F 옥상 55m를 유지한다. 북측 양끝 타워는 각각 18.5×18.5m 정사각 평면으로 좁히고 서측 상단 55m, 동측 상단 57.4m로 높였다. 타워 사이 낮은 석재 어깨는 y40.6m다. 중앙 곡면 유리는 폭 12m, 반경 6m, 중심 v8, 최전면 v2로 석재 전면보다 후퇴하며 y7~20m와 y24~40.6m로 나뉜다. 그 뒤 u18.5~48.5/v8~33에는 y40.6~48m 평면 커튼월 볼륨, 더 뒤 v33에는 y40.6~55.65m 신관 북면 커튼월이 놓인다. 전체 층고와 타워 상단 높이는 사진 비례를 모델 층고에 맞춘 가정이며 실측값이 아니다.",
     "map_detail": "모든 층·주차장·화장실·승강기·에스컬레이터·연결통로 존과 OSM159117108 claim 유지. 정문 승하차장/동측 지상주차장/추정 B2 차량 램프 존을 추가한다. 존 경계는 모델 배치다.",
-    "reference_priority": "사용자의 현장 지식에 따른 “신강 1층이 너무 지하랑 뚫려 있다” 수정 요청을 우선한다. 1F는 중앙 B1 에스컬레이터 두 줄의 좁은 개구부만 남기며 HOS의 1F/1M 보이드는 닫는다. refs/interior/ssg_food/01~21·notes.json은 재료·가구·공간 분위기의 근거로 유지하되 사진01/02를 실제 1F/1M 관통 보이드로 해석한 이전 모델 가정은 폐기한다.16~18 홍보사진·20~21 모델사진의 실제 촬영일은 미확인이다.22~23 계절 팝업은 생략한다. 외관은 변경하지 않는다.",
+    "reference_priority": "Round7: refs/interior/ssg_1f, ssg_food, ssg_upper 개별사진과 공식1F도면을 우선. 사진 노트와 실제 픽셀이 다르면 사진을 따른다(사인벽/원형기둥, Gate7 흰 글자). 사용자 요청으로1F는 중앙 B1 에스컬레이터 우물과 밀폐 계단·승강기 코어만 남긴다. 외관은 유지한다.",
     "entrance": "2025 ssg_01/02: 북측 검은 철골·유리 격자 캐노피 폭25.4m, 외부 돌출6.8m부터 v5 후퇴 문까지 이어지는 총깊이11.8m는 유지하며 높이를 약5.9m로 올린다. 원형 검정 기둥2개·검은 격자 트랜섬·유리 출입부 폭약12m/상단약5.7m. 문 상부 띠 y2.9m와 추가 가로 멀리언 y4.55m를 둔다. 문 양옆 쇼윈도는 무발광 #1c1a19 배경에 단일 작은 시계/보석 전시와 국소 발광부, 약25도 경사진 #a8202c 천 차양과 작은 흰 SHINSEGAE를 둔다. 정문 앞 v-7.4~0/슬롯v0~5는 #4a4744 차콜 판석·#3a3836 줄눈. 차로v-14.6~-7.6, 바깥 광장v-22~-14.6의 밝은 포장·경계석·흰선·콘은 유지한다. 서측 탑 북면에는 cc_01의 쇼윈도4칸·낮은 화단/산울타리·2층 사각창을 반영한다. 입구 옆 서측 큰 쇼윈도는 새4칸과 겹치지 않도록 u19.8/폭5.2m로 조정하고 동측은 u48.2/폭6.5m를 유지한다. POLO CLUB은 이 두 전시창 안에만 둔다. 동측은 v18.5/21.5의 폭2.5m 차양2개(0.5m 간격), 위끝y3.0m로 낮춘다.",
     "surface_parking": "2025 ssg_03/04와 항공사진: A열u70.7~75.7/B열u85.6~90.6, 주차장v-12~55와 두 열 사이 열린 OSM301889794 통로를 유지한다. B열 i4~7에 파란 장애인 주차면4개를 두고 i5에만 차량을 놓아3면의 도색을 드러낸다. 이4면의 펜스 쪽 u90.1에 황흑 바퀴멈춤을 둔다. 북단 u약71~75/v-11에 정산기2개와 노란 차단기 받침·흰 바를 추가하며 공용차로를 막지 않는다. 외곽 녹색 펜스/관목·동측 출입 틈·등주를 유지한다. 동측 퍼골라를 v8~30으로 옮기고 그 북쪽 u69.2/v1·3.5·6에 소나무를 보강한다. 전체 소나무는 v-20/-16/-5/1/3.5/6이며 기존v0은 가까운 수관 중복을 피하려고 교체한다. 주차 구획/차량/설비의 정확 수량·좌표는 실측값이 아니다.",
-    "interior_simplification": "HOS B1의 허니우드 벽·낮은 업라이트·회색 헤링본 라운지·러그·암체어·다크 마블 측면통로·흰 스텝 아치·낮은 부채꼴 리브·개별 바/U자 다이닝/오픈키친을 유지한다. 라운지 천장은 연속된 1F 슬래브 밑면 y=-1로 닫고 코퍼·다운라이트·거울 기둥을 B1 높이 안에 둔다. 이전 1F/1M 발코니 난간·페시아·상부 업라이트와 HOS 별도 에스컬레이터는 제거한다. 회복한 1F는 기존 대리석·기둥·다운라이트의 열린 통로, 1M는 기존 목재 바닥과 퍼퓸 집기·조명이 이어지는 공간으로 둔다. 새 브랜드는 추가하지 않는다. 사진11~18의 볼트·샹들리에·체크 대리석·팔각 쇼케이스, 사진19의 델리와 사진20~21의 1F 석재벽·조명니치는 유지한다. 실측하지 않은 평면·좌석·상품수·재료무늬·폰트·출력색은 guesses를 따른다.",
+    "interior_simplification": "1F 저층 화장품 셀·곡선 잡화 통로·빛나는 핸드백 사인벽·타원 천장 코브, B1 크림 볼트·체크/다이아몬드 바닥·샹들리에·목재 푸드홀·네스프레소·홀리데이 마켓, 1M 식음 카운터,7F K2와8F 르꼬끄/닥터마틴을 사진별 재현한다.4~10F 회색0.6×1.2m 바닥·0.6m격자 천장·선형LED,11F 식당가 보강. 모든 영업층 집기·상품·조명은 K.detail 그룹에 분리한다.",
     "guesses": [
       {
         "element": "본관/신관분할·높이",
@@ -461,64 +461,69 @@
       {
         "element": "Round6 1F와 미확인 구역",
         "detail": "사진20~21은 부분 장면이다. 기존 층고를 유지하며 석재벽높이6.45m·깊이1.2m·2.5m 꺾임·사인중심y4.7·4단 조명니치로 근사했으나 정확 위치·규모는 실측되지 않았다. 화장품·에르메스 내부와 신선식품 세부는 근거 부족으로 기존 단순 표현을 유지한다.22~23 계절 HOLIDAY MARKET은 상설 모델에서 생략한다."
+      },
+      {
+        "element": "Round7 도면의 위치/방향",
+        "detail": "1F 도면은 북쪽/축척 없는 안내 그림이므로 OSM 직사각형에 셀과 곡선 통로를 재배치했다. 원형기둥/사인벽/8~10m 주통로·0.4m 선반 등의 치수는 사진 비례 추정."
+      },
+      {
+        "element": "Round7 HOS 층과 수직 공간",
+        "detail": "B1 HOS 사진의8~9m 복층 보이드는 사용자1F폐쇄 지시 때문에5m B1 공간으로 축소.상부 HOS 사진층은 미확정으로1M에 김수사/타치바나/BY THE GLASS를 배치했고 중앙아트리움은1F→1M 발코니 시점으로 구현했다."
+      },
+      {
+        "element": "Round7 위치 불명 사진",
+        "detail": "Gate7은 기존 동문 내부, 네스프레소·타원등·홀리데이마켓은B1 남동측, 층미상코퍼/LED기둥은1F 진입홀에 배치. 겨울 매장은K2 7F,르꼬끄/닥터마틴8F로 추정.1F03~05는 정보카드/스톡사진이므로 브랜드층과 색·집기 형식만 활용."
+      },
+      {
+        "element": "Round7 계절/광학/식당가",
+        "detail": "홀리데이마켓은2026 가을겨울 계절 연출.서로 다른 날짜의 팝업 사진을 상설·동시운영으로 단정하지 않는다.거울/대리석은 반사색·Phong광택 근사이며 실시간 거울반사는 없다.11F 직접사진 없으므로 기존 식당 조사와 일반 식당 집기로 보강했다."
       }
     ],
     "validation": {
-      "round": "1F 개구부 축소",
-      "status": "passed",
+      "round": 7,
       "smoke": {
         "command": "node tests/smoke.mjs shinsegae gotomall centralcity jwmarriott",
-        "result": "OK",
-        "shinsegae_quads": 112075,
-        "spawns": 11,
-        "zones": 433,
-        "elevators": 3
+        "result": "OK; no detail callback exceptions"
       },
       "walk": {
         "command": "node tests/walk.mjs",
-        "result": "walk: 331 ok, 0 blocked"
+        "result": "walk: 345 ok, 0 blocked"
       },
-      "visfloor": {
-        "command": "node tests/visfloor.mjs 0 -115 -55 -5 62 /tmp/vis_ssg.png shinsegae,centralcity,jwmarriott,gotomall",
-        "before_hole_m2": 494.75,
-        "after_hole_m2": 217,
-        "decrease_m2": 277.75,
-        "scope": "출력값은 지정된 전체 사각 범위의 합계이며 신세계 매장 내부만의 면적이 아니다. 외부 차량 램프와 이웃 모듈의 개구부를 포함한다.",
-        "after_store_only_hole_m2": 57,
-        "after_outside_store_hole_m2": 160,
-        "store_only_method": "동일 top 래스터를 메모리에서 재사용하고 OSM159117108 폴리곤의 pointInPoly로 구분했다. 전체217㎡ = 매장 내부57㎡ + 매장 외부160㎡."
+      "visual_floor": {
+        "command": "node tests/visfloor.mjs 0 -108 -49 -13 56 /tmp/ssg-r7-visfloor.png shinsegae",
+        "bbox_hole_m2": 190.25,
+        "inside_osm_footprint_hole_m2": 57,
+        "outside_expected_escalator_enclosed_stair_and_lift_wells_m2": 0,
+        "note": "전체 bounding box는 동측 차량 램프를 포함하므로 내부 바닥개구 지표와 다르다. 출력 PNG를 열어 확인했다."
       },
-      "focused_physics": {
-        "environment": "real kit/physics, stdin-only harness; no test files modified",
-        "points": 203,
-        "checks": 609,
-        "result": "all passed",
-        "checks_per_point": "floor support, capsule clearance (radius0.32m/height1.75m/step0.5m), headroom",
-        "samples": {
-          "B1_to_1F_A_B_flights": 122,
-          "1F_A_B_south_landings": 10,
-          "reclaimed_u33_corridor": 61,
-          "reclaimed_HOS_1F": 5,
-          "reclaimed_HOS_1M": 5
-        },
-        "failures": 0
+      "details": {
+        "groups": 17,
+        "largest_quads": 42075,
+        "total_quads_including_structure": 332867,
+        "base_quads": 31860,
+        "count_method": "K._.details 각 callback의 실제 K._.stats.quads 전후 차이; 전 그룹 실행 예외 없음"
       },
-      "visual_check": {
-        "status": "passed",
-        "shot_attempt": "tests/shot.mjs failed: listen EPERM on 127.0.0.1",
-        "fallback": "현재 소스로 만든 자체 완결 로컬 미리보기를 네이티브 Chrome에서 렌더링하고 스크린샷을 열어 확인했다. 저장소 안에 산출물을 추가하지 않았다.",
-        "preview": "/tmp/shinsegae-close1f/preview.html",
-        "views": [
-          "1F 에스컬레이터 개구부",
-          "B1 하우스 오브 신세계 라운지",
-          "회복된 1F 바닥",
-          "회복된 1M 바닥",
-          "유지된 2F 아트리움"
+      "preserved": {
+        "spawns": 12,
+        "elevators": 3,
+        "floors_per_elevator": 14,
+        "junctions": [
+          "J1",
+          "J4@0",
+          "J4@-6",
+          "J5"
         ],
-        "result": "각 화면 정상 렌더링; __world errors 없음."
+        "exterior": "unchanged"
       },
-      "preserved": "OSM159117108; B2/B1/1F/1M/2F~11F; J1/J4/J5; 11 spawns; 433 zones; 3 elevators ×14 floor entries. 2F 이상 아트리움과 외관·주차장·차량램프는 변경하지 않았다.",
-      "scope": "js/places/shinsegae.js와 data/research/shinsegae.json만 수정. 엔진·테스트·이웃 모듈 변경 및 git commit/push 없음."
+      "visual_check": "사용자 지시대로 tests/shot.mjs는 실행하지 않았다. 개별 참조사진·1F 바닥 분석 PNG 확인, 실물 kit 기반 카메라 지지면/충돌 검사. 사진별 WebGL 비교는 운영자가 modeling.trace로 수행해야 한다.",
+      "trace_cameras": {
+        "count": 32,
+        "correct_floor_support": 32,
+        "clear_body_collision": 32,
+        "source_photos_covered": 54,
+        "method": "실제 kit/physics로 지연 디테일 전부 생성 후 지지면·capsule 충돌 검사. Superstar/Standard Bread/김수사 3개 시점은 가구를 피해 이동 후 재검사.",
+        "direction_check": "1F 사인벽·상층 식음·K2·닥터마틴 전면 방향 확인.르꼬끄 시점을 북측으로 옮겨 전면 로고를 보게 했고,한정선/시즈니크 카운터 전면을 대기줄 쪽인 남쪽으로 회전했다."
+      }
     },
     "roof": "항공사진의 기존 설비 단순화는 유지한다. 2026 ssg_06 유리 볼륨 지붕선 위 두 무더기 수관에 근거해 y48m/u20~47/v9~16 범위에 높이0.6m 화단2개와 높이3.5~4.3m 수목6그루를 추가하며 u24~30·42~46 쪽에 모은다. 녹지의 존재는 확인되나 수종·화단 형태·나무 수량과 높이는 근사다. 본관 막지붕·중앙 기계실·냉각탑7기·실외기16기·신관 자갈지붕의 기존 배치도 항공 명암을 따른 추정이며 일시적 증기는 생략한다.",
     "cross_module_coordination": {
@@ -714,6 +719,63 @@
         },
         "static_checks": "node --check js/places/shinsegae.js 및 JSON 파싱, git diff --check 통과. 외관·주차장·램프 코드 블록은 HEAD와 동일.",
         "geometry_review": "1M 보이드 위 매장 집기를 실바닥으로 이동하고 매장별 존을 유지했다. B1 안내판과 키친 겹침 제거, 서쪽 계단문 두 개구 보존. 좁은 U키친 안에 갇혔던 좌석을 접근 가능한 북동/남측으로 이동했다. 흰 플루팅 뒷판을 허니벽 앞에 두어 가림을 해소했다. 중앙 스시바와 Superstar 하이테이블의 겹침이 없고 횡단 동선이 통과한다."
+      },
+      "pre_round7": {
+        "round": "1F 개구부 축소",
+        "status": "passed",
+        "smoke": {
+          "command": "node tests/smoke.mjs shinsegae gotomall centralcity jwmarriott",
+          "result": "OK",
+          "shinsegae_quads": 112075,
+          "spawns": 11,
+          "zones": 433,
+          "elevators": 3
+        },
+        "walk": {
+          "command": "node tests/walk.mjs",
+          "result": "walk: 331 ok, 0 blocked"
+        },
+        "visfloor": {
+          "command": "node tests/visfloor.mjs 0 -115 -55 -5 62 /tmp/vis_ssg.png shinsegae,centralcity,jwmarriott,gotomall",
+          "before_hole_m2": 494.75,
+          "after_hole_m2": 217,
+          "decrease_m2": 277.75,
+          "scope": "출력값은 지정된 전체 사각 범위의 합계이며 신세계 매장 내부만의 면적이 아니다. 외부 차량 램프와 이웃 모듈의 개구부를 포함한다.",
+          "after_store_only_hole_m2": 57,
+          "after_outside_store_hole_m2": 160,
+          "store_only_method": "동일 top 래스터를 메모리에서 재사용하고 OSM159117108 폴리곤의 pointInPoly로 구분했다. 전체217㎡ = 매장 내부57㎡ + 매장 외부160㎡."
+        },
+        "focused_physics": {
+          "environment": "real kit/physics, stdin-only harness; no test files modified",
+          "points": 203,
+          "checks": 609,
+          "result": "all passed",
+          "checks_per_point": "floor support, capsule clearance (radius0.32m/height1.75m/step0.5m), headroom",
+          "samples": {
+            "B1_to_1F_A_B_flights": 122,
+            "1F_A_B_south_landings": 10,
+            "reclaimed_u33_corridor": 61,
+            "reclaimed_HOS_1F": 5,
+            "reclaimed_HOS_1M": 5
+          },
+          "failures": 0
+        },
+        "visual_check": {
+          "status": "passed",
+          "shot_attempt": "tests/shot.mjs failed: listen EPERM on 127.0.0.1",
+          "fallback": "현재 소스로 만든 자체 완결 로컬 미리보기를 네이티브 Chrome에서 렌더링하고 스크린샷을 열어 확인했다. 저장소 안에 산출물을 추가하지 않았다.",
+          "preview": "/tmp/shinsegae-close1f/preview.html",
+          "views": [
+            "1F 에스컬레이터 개구부",
+            "B1 하우스 오브 신세계 라운지",
+            "회복된 1F 바닥",
+            "회복된 1M 바닥",
+            "유지된 2F 아트리움"
+          ],
+          "result": "각 화면 정상 렌더링; __world errors 없음."
+        },
+        "preserved": "OSM159117108; B2/B1/1F/1M/2F~11F; J1/J4/J5; 11 spawns; 433 zones; 3 elevators ×14 floor entries. 2F 이상 아트리움과 외관·주차장·차량램프는 변경하지 않았다.",
+        "scope": "js/places/shinsegae.js와 data/research/shinsegae.json만 수정. 엔진·테스트·이웃 모듈 변경 및 git commit/push 없음."
       }
     },
     "round4_resolutions": {
@@ -935,7 +997,600 @@
         ],
         "change": "밝은크림천장·천장까지 닿는 석재 모서리벽·높은 흰 사인·4단 조명니치, 와인셀러 허니 포털/금색 세리프, 작은 브라운/금색 안내표지."
       }
-    }
+    },
+    "trace": [
+      {
+        "spot": "Main luxury hall with SHINSEGAE GANGNAM pillars",
+        "photos": [
+          "refs/interior/ssg_1f/01_aisle_marble_shinsegae_sign.jpg",
+          "refs/interior/ssg_1f/02_aisle_marble_shoppingbag.jpg",
+          "refs/interior/ssg_food/20_1f_atrium_shinsegae_sign.jpg",
+          "refs/interior/ssg_food/21_1f_atrium_floor.jpg"
+        ],
+        "x": -64.041,
+        "y": 0,
+        "z": -6.957,
+        "yawDeg": 5.162,
+        "local_uv": [
+          34,
+          31.5
+        ],
+        "pitchDeg": 3,
+        "note": "실제 사진의 넓은 석재 사인벽과 뒤쪽 원형기둥을 구분했다. 1F 배치는 층 미상 사진과 도면의 조합이다."
+      },
+      {
+        "spot": "1F plan and shop-cell ring",
+        "photos": [
+          "refs/interior/ssg_1f/06_floorplan_1F.jpg"
+        ],
+        "x": -72.622,
+        "y": 0,
+        "z": 9.669,
+        "yawDeg": 299.335,
+        "local_uv": [
+          20,
+          44
+        ],
+        "note": "방위·축척 없는 공식 안내도를 OSM 윤곽에 맞춰 재배치. 도면 대응을 보는 보행 시점이며 실제 사진 촬영점이 아니다."
+      },
+      {
+        "spot": "Chanel / Dior / Hermes beauty units",
+        "photos": [
+          "refs/interior/ssg_1f/04_card_chanel_floors.jpg"
+        ],
+        "x": -90.223,
+        "y": 0,
+        "z": -19.476,
+        "yawDeg": 20.804,
+        "local_uv": [
+          14,
+          10.5
+        ]
+      },
+      {
+        "spot": "Hermès beauty pavilion",
+        "photos": [
+          "refs/interior/ssg_1f/03_card_hermes_floors.jpg"
+        ],
+        "x": -98.628,
+        "y": 0,
+        "z": -16.286,
+        "yawDeg": 20.804,
+        "local_uv": [
+          5,
+          10.5
+        ]
+      },
+      {
+        "spot": "Dior beauty unit",
+        "photos": [
+          "refs/interior/ssg_1f/05_card_dior_floors.jpg"
+        ],
+        "x": -94.859,
+        "y": 0,
+        "z": -6.487,
+        "yawDeg": 20.804,
+        "local_uv": [
+          5,
+          21
+        ]
+      },
+      {
+        "spot": "Gate 7 entrance",
+        "photos": [
+          "refs/interior/ssg_1f/07_gate7_entrance_doors.jpg"
+        ],
+        "x": -34.915,
+        "y": 0,
+        "z": -19.617,
+        "yawDeg": 110.804,
+        "local_uv": [
+          65.8,
+          30
+        ],
+        "note": "게이트의 실제 방위 미확인. 기존 동문 안쪽에 재현; 빨간 꽃+흰 SHINSEGAE가 사진 기준이다."
+      },
+      {
+        "spot": "Arched passage with diamond floor",
+        "photos": [
+          "refs/interior/ssg_1f/08_corridor_arched_ceiling_checker.jpg",
+          "refs/interior/ssg_1f/09_vaulted_ceiling_counters.jpg",
+          "refs/interior/ssg_1f/11_checker_floor_tree_arch.jpg"
+        ],
+        "x": -70.543,
+        "y": -6,
+        "z": -25.344,
+        "yawDeg": 200.804,
+        "local_uv": [
+          34.5,
+          12
+        ]
+      },
+      {
+        "spot": "Chandelier hall",
+        "photos": [
+          "refs/interior/ssg_1f/14_chandelier_checker_queue.jpg",
+          "refs/interior/ssg_1f/12_red_carpet_hall_ceiling.jpg",
+          "refs/interior/ssg_food/11_sweetpark_ceiling_queue.jpg",
+          "refs/interior/ssg_food/12_sweetpark_checker_floor.jpg",
+          "refs/interior/ssg_food/14_sweetpark_hanjungsun_hall.jpg"
+        ],
+        "x": -76.572,
+        "y": -6,
+        "z": 9.671,
+        "yawDeg": 20.804,
+        "local_uv": [
+          16.3,
+          42.6
+        ]
+      },
+      {
+        "spot": "Dark arched-window storefront",
+        "photos": [
+          "refs/interior/ssg_1f/15_storefront_arched_glass_door.jpg"
+        ],
+        "x": -42.208,
+        "y": -6,
+        "z": 13.311,
+        "yawDeg": 231.768,
+        "local_uv": [
+          47.2,
+          58.2
+        ]
+      },
+      {
+        "spot": "Atrium with skylight ring",
+        "photos": [
+          "refs/interior/ssg_1f/16_atrium_skylight_tree.jpg"
+        ],
+        "x": -28.121,
+        "y": -6,
+        "z": 12.242,
+        "yawDeg": 200.804,
+        "local_uv": [
+          60.8,
+          62.2
+        ],
+        "pitchDeg": 8,
+        "note": "발광 천장 패널; 실제 외부 천공이나 1층 바닥 개구부가 아니다."
+      },
+      {
+        "spot": "Coffered hall with LED pillars",
+        "photos": [
+          "refs/interior/ssg_1f/13_atrium_screens_floor.jpg"
+        ],
+        "x": -72.439,
+        "y": 0,
+        "z": -28.902,
+        "yawDeg": 200.804,
+        "local_uv": [
+          34,
+          8
+        ],
+        "pitchDeg": 5,
+        "note": "사진의 층 미상. 1F 입구 홀에 코퍼·사인기둥 어휘를 적용한 추정 배치."
+      },
+      {
+        "spot": "Seasonal red carpet popup hall",
+        "photos": [
+          "refs/interior/ssg_1f/10_holiday_market_entrance_B1.jpg",
+          "refs/interior/ssg_1f/17_red_carpet_hall_chandeliers.jpg",
+          "refs/interior/ssg_food/22_holidaymarket_inside.jpg",
+          "refs/interior/ssg_food/23_holidaymarket_arch_ceiling.jpg"
+        ],
+        "x": -36.896,
+        "y": -6,
+        "z": 22.204,
+        "yawDeg": 200.804,
+        "local_uv": [
+          49,
+          68.4
+        ]
+      },
+      {
+        "spot": "하우스 오브 신세계 라운지",
+        "photos": [
+          "refs/interior/ssg_food/01_hos_atrium_wide.jpg",
+          "refs/interior/ssg_food/02_hos_atrium_escalator.jpg"
+        ],
+        "x": -69.406,
+        "y": -6,
+        "z": 26.95,
+        "yawDeg": 189.494,
+        "local_uv": [
+          16.8,
+          61.3
+        ]
+      },
+      {
+        "spot": "푸드홀 셰프 카운터",
+        "photos": [
+          "refs/interior/ssg_food/03_hos_central_bar_floor.jpg"
+        ],
+        "x": -63.517,
+        "y": -6,
+        "z": 37.013,
+        "yawDeg": 162.144,
+        "local_uv": [
+          18.7,
+          72.8
+        ]
+      },
+      {
+        "spot": "하우스 오브 신세계 목재 입구",
+        "photos": [
+          "refs/interior/ssg_food/04_hos_entrance_gate.jpg"
+        ],
+        "x": -75.598,
+        "y": -6,
+        "z": 15.825,
+        "yawDeg": 200.804,
+        "local_uv": [
+          15,
+          48.7
+        ]
+      },
+      {
+        "spot": "푸드홀 리브 복도",
+        "photos": [
+          "refs/interior/ssg_food/05_hos_corridor_ceiling_floor.jpg",
+          "refs/interior/ssg_food/06_hos_side_corridor_seating.jpg"
+        ],
+        "x": -74.558,
+        "y": -6,
+        "z": 18.532,
+        "yawDeg": 200.804,
+        "local_uv": [
+          15,
+          51.6
+        ]
+      },
+      {
+        "spot": "Superstar 바",
+        "photos": [
+          "refs/interior/ssg_food/07_hos_superstar_bar.jpg"
+        ],
+        "x": -67.585,
+        "y": -6,
+        "z": 45.295,
+        "yawDeg": 200.804,
+        "local_uv": [
+          11.9,
+          79.1
+        ]
+      },
+      {
+        "spot": "오픈키친과 홀",
+        "photos": [
+          "refs/interior/ssg_food/08_hos_open_kitchen_counter.jpg",
+          "refs/interior/ssg_food/10_hos_hall_beyond_counters.jpg"
+        ],
+        "x": -63.068,
+        "y": -6,
+        "z": 26.79,
+        "yawDeg": 259.84,
+        "local_uv": [
+          22.8,
+          63.4
+        ]
+      },
+      {
+        "spot": "KATSU & TAPAS",
+        "photos": [
+          "refs/interior/ssg_food/09_hos_katsu_tapas_bar.jpg"
+        ],
+        "x": -58.442,
+        "y": -6,
+        "z": 41.076,
+        "yawDeg": 200.804,
+        "local_uv": [
+          22,
+          78.4
+        ]
+      },
+      {
+        "spot": "Standard Bread",
+        "photos": [
+          "refs/interior/ssg_food/13_sweetpark_standard_bread_front.jpg"
+        ],
+        "x": -80.601,
+        "y": -6,
+        "z": 14.195,
+        "yawDeg": 200.804,
+        "local_uv": [
+          10.9,
+          45.4
+        ]
+      },
+      {
+        "spot": "SEASONIQUE",
+        "photos": [
+          "refs/interior/ssg_food/15_sweetpark_seasonique_ceiling.jpg"
+        ],
+        "x": -73.836,
+        "y": -6,
+        "z": -1.848,
+        "yawDeg": 200.804,
+        "local_uv": [
+          23,
+          32.8
+        ]
+      },
+      {
+        "spot": "신세계마켓 체크 통로와 볼트",
+        "photos": [
+          "refs/interior/ssg_food/16_market_corridor_checker.jpg",
+          "refs/interior/ssg_food/17_market_vaulted_hall.jpg"
+        ],
+        "x": -55.081,
+        "y": -6,
+        "z": -29.93,
+        "yawDeg": 200.804,
+        "local_uv": [
+          50.6,
+          13.2
+        ]
+      },
+      {
+        "spot": "황동 아일랜드 쇼케이스",
+        "photos": [
+          "refs/interior/ssg_food/18_market_counters_wide.jpg"
+        ],
+        "x": -49.577,
+        "y": -6,
+        "z": -18.864,
+        "yawDeg": 127.503,
+        "local_uv": [
+          51.8,
+          25.5
+        ]
+      },
+      {
+        "spot": "Blue Butterfly",
+        "photos": [
+          "refs/interior/ssg_food/19_bluebutterfly_counter.jpg"
+        ],
+        "x": -43.743,
+        "y": -6,
+        "z": 5.659,
+        "yawDeg": 200.804,
+        "local_uv": [
+          48.5,
+          50.5
+        ]
+      },
+      {
+        "spot": "하우스오브신세계 중앙 아트리움",
+        "photos": [
+          "refs/interior/ssg_upper/01_hosn_atrium_mezzanine.jpg"
+        ],
+        "x": -67.178,
+        "y": 0,
+        "z": 18.297,
+        "yawDeg": 200.804,
+        "local_uv": [
+          22,
+          54
+        ],
+        "pitchDeg": 28
+      },
+      {
+        "spot": "BY THE GLASS 와인바",
+        "photos": [
+          "refs/interior/ssg_upper/02_hosn_bythe_glass_marble_bar.jpg"
+        ],
+        "x": -34.785,
+        "y": 3.6,
+        "z": 22.151,
+        "yawDeg": 200.804,
+        "local_uv": [
+          51,
+          69.1
+        ]
+      },
+      {
+        "spot": "김수사 스시홀",
+        "photos": [
+          "refs/interior/ssg_upper/03_hosn_kimsusa_hall_wide.jpg",
+          "refs/interior/ssg_upper/04_hosn_kimsusa_hall_pillars.jpg",
+          "refs/interior/ssg_upper/05_hosn_kimsusa_counter_wide.jpg"
+        ],
+        "x": -64.991,
+        "y": 3.6,
+        "z": 25.809,
+        "yawDeg": 186.768,
+        "local_uv": [
+          21.35,
+          61.8
+        ]
+      },
+      {
+        "spot": "타치바나 라멘 카운터",
+        "photos": [
+          "refs/interior/ssg_upper/06_hosn_tachibana_front_counter.jpg",
+          "refs/interior/ssg_upper/07_hosn_tachibana_counter_ceiling.jpg",
+          "refs/interior/ssg_upper/08_hosn_tachibana_back_wall_sign.jpg"
+        ],
+        "x": -39.391,
+        "y": 3.6,
+        "z": 15.665,
+        "yawDeg": 200.804,
+        "local_uv": [
+          49,
+          61.4
+        ]
+      },
+      {
+        "spot": "신강 겨울 매장층 중앙 통로",
+        "photos": [
+          "refs/interior/ssg_upper/09_floor_lecoq_display_grid_ceiling.jpg",
+          "refs/interior/ssg_upper/10_floor_aisle_mannequin_lecoq.jpg"
+        ],
+        "x": -68.302,
+        "y": 35.8,
+        "z": -12.505,
+        "yawDeg": 200.804,
+        "local_uv": [
+          32,
+          24.8
+        ]
+      },
+      {
+        "spot": "에스컬레이터 앞 팝업 광장",
+        "photos": [
+          "refs/interior/ssg_upper/11_floor_mannequin_escalator_bg.jpg",
+          "refs/interior/ssg_upper/12_floor_drmartens_corner_escalator.jpg"
+        ],
+        "x": -53.834,
+        "y": 35.8,
+        "z": -1.206,
+        "yawDeg": 200.804,
+        "local_uv": [
+          41.5,
+          40.5
+        ]
+      },
+      {
+        "spot": "아웃도어 매장 입구 (K2)",
+        "photos": [
+          "refs/interior/ssg_upper/13_floor_k2_outdoor_shopfront.jpg",
+          "refs/interior/ssg_upper/14_floor_k2_wall_racks.jpg"
+        ],
+        "x": -60.149,
+        "y": 31,
+        "z": -19.129,
+        "yawDeg": 290.804,
+        "local_uv": [
+          42,
+          21.5
+        ]
+      },
+      {
+        "spot": "11F 전문식당가 · S GARDEN",
+        "photos": [],
+        "x": -65.062,
+        "y": 50.2,
+        "z": 12.682,
+        "yawDeg": 290.804,
+        "local_uv": [
+          26,
+          49.5
+        ],
+        "note": "11F 직접 참조사진 없음. 기존 조사 식당명과 목재·석재·식탁·대기석으로 보강한 추정 공간."
+      }
+    ],
+    "trace_convention": "x/z는 OSM 월드 좌표(m), y는 발 높이; 렌더러가 눈높이를 더한다. yawDeg 0=북,90=서,180=남,270=동. local_uv는 모듈 검증용. pitchDeg는 선택적 상향 시선.",
+    "round7_resolutions": {
+      "1F": "1F 도면의 개방형 화장품 셀과 곡선 잡화 통로. HERMÈS/CHANEL/DIOR 1F를 뷰티로 정정. 사인벽 높이·니치·개별 핸드백·옷걸이·코브·저층 다운라이트. Gate7은 기존 동문 안쪽에 추가.",
+      "B1": "4개 큰 방의 K.detail, 신선식품·베이커리 실물 상품 보강, 다이아몬드 바닥 통로·네스프레소·타원 조명·원형 인레이·계절 홀리데이 마켓.",
+      "upper": "1M 와인/스시/라멘 카운터,7F K2 개별 패딩,8F 르꼬끄 진열섬·마네킹·닥터마틴.4~10F 타일/천장격자/선형 LED.11F 식기·의자·대기석.",
+      "structure": "기존 외관·층수·승강기 3대 전층·에스컬레이터·계단·접속 유지.1F B1 관통 대형 보이드 재개방 없음.스폰12개."
+    },
+    "round6_resolutions_status": "과거 기록. 현재 실내 배치와 표면은 round7_resolutions 및 modeling.trace를 따른다.",
+    "detail_groups": [
+      {
+        "floor": "B1",
+        "name": "B1 신세계마켓 신선식품",
+        "quads": 5583,
+        "budget_quads": 120000
+      },
+      {
+        "floor": "B1",
+        "name": "B1 매장 집기",
+        "quads": 128,
+        "budget_quads": 120000
+      },
+      {
+        "floor": "B1",
+        "name": "B1 스위트파크·델리",
+        "quads": 37667,
+        "budget_quads": 120000
+      },
+      {
+        "floor": "B1",
+        "name": "B1 하우스 오브 신세계",
+        "quads": 10834,
+        "budget_quads": 120000
+      },
+      {
+        "floor": "B1",
+        "name": "B1 홀리데이마켓·아케이드",
+        "quads": 23904,
+        "budget_quads": 120000
+      },
+      {
+        "floor": "1F",
+        "name": "1F 매장 집기",
+        "quads": 42075,
+        "budget_quads": 120000
+      },
+      {
+        "floor": "1M",
+        "name": "1M 매장 집기",
+        "quads": 8817,
+        "budget_quads": 120000
+      },
+      {
+        "floor": "2F",
+        "name": "2F 매장 집기",
+        "quads": 27262,
+        "budget_quads": 120000
+      },
+      {
+        "floor": "3F",
+        "name": "3F 매장 집기",
+        "quads": 15990,
+        "budget_quads": 120000
+      },
+      {
+        "floor": "4F",
+        "name": "4F 매장 집기",
+        "quads": 16020,
+        "budget_quads": 120000
+      },
+      {
+        "floor": "5F",
+        "name": "5F 매장 집기",
+        "quads": 26898,
+        "budget_quads": 120000
+      },
+      {
+        "floor": "6F",
+        "name": "6F 매장 집기",
+        "quads": 25562,
+        "budget_quads": 120000
+      },
+      {
+        "floor": "7F",
+        "name": "7F 매장 집기",
+        "quads": 19714,
+        "budget_quads": 120000
+      },
+      {
+        "floor": "8F",
+        "name": "8F 매장 집기",
+        "quads": 27356,
+        "budget_quads": 120000
+      },
+      {
+        "floor": "9F",
+        "name": "9F 매장 집기",
+        "quads": 4366,
+        "budget_quads": 120000
+      },
+      {
+        "floor": "10F",
+        "name": "10F 매장 집기",
+        "quads": 6316,
+        "budget_quads": 120000
+      },
+      {
+        "floor": "11F",
+        "name": "11F 매장 집기",
+        "quads": 2515,
+        "budget_quads": 120000
+      }
+    ]
   },
   "visual_sources": [
     {
@@ -1198,5 +1853,599 @@
       "1층 화장품(샤넬뷰티·디올뷰티)의 매장 내부 사진은 못 찾음 — 층별 안내 이미지뿐. 에르메스 파빌리온 내부 사진 없음.",
       "22/23번은 11~12월 한정 홀리데이 마켓(상설 아님)."
     ]
+  },
+  "interior_round7_sources": {
+    "ssg_1f": {
+      "area": "신세계백화점 강남점 1층 (recent 2025-2026 photos)",
+      "photos": [
+        {
+          "file": "01_aisle_marble_shinsegae_sign.jpg",
+          "post_url": "https://blog.naver.com/keykey1201/224465916788",
+          "post_date": "2026-11-05",
+          "where": "luxury/fashion hall, level not stated in post (likely 1F-2F main aisle)",
+          "shows": "wide marble hall: big cream square pillars with backlit 'SHINSEGAE GANGNAM' sign, glossy pale marble floor with strong reflections, boutique fronts with display shelves on the right, clothes racks on the left, circular void/ceiling band above"
+        },
+        {
+          "file": "02_aisle_marble_shoppingbag.jpg",
+          "post_url": "https://blog.naver.com/keykey1201/224465916788",
+          "post_date": "2026-11-05",
+          "where": "same hall as 01",
+          "shows": "same pillar sign and floor from another angle; shows pillar ~1.2 m wide, sign about 2.5 m above floor, aisle at least 8 m wide"
+        },
+        {
+          "file": "03_card_hermes_floors.jpg",
+          "post_url": "https://blog.naver.com/keykey1201/224465916788",
+          "post_date": "2026-11-05",
+          "where": "info card",
+          "shows": "Hermes: 2F fashion boutique, 1F pavilion, 1F beauty; shows beige/wood boutique interior with open shelves"
+        },
+        {
+          "file": "04_card_chanel_floors.jpg",
+          "post_url": "https://blog.naver.com/keykey1201/224465916788",
+          "post_date": "2026-11-05",
+          "where": "info card",
+          "shows": "Chanel: 2F fashion, 4F shoes, 1F cosmetics; black fascia with white CHANEL letters, handbags on wall shelves"
+        },
+        {
+          "file": "05_card_dior_floors.jpg",
+          "post_url": "https://blog.naver.com/keykey1201/224465916788",
+          "post_date": "2026-11-05",
+          "where": "info card",
+          "shows": "Dior: 2F fashion, 1F cosmetics; gold/cream boutique interior"
+        },
+        {
+          "file": "06_floorplan_1F.jpg",
+          "post_url": "https://blog.naver.com/alljoy_nofun/224447584503",
+          "post_date": "2026-10-20",
+          "where": "official 1F plan",
+          "shows": "1F = cosmetics, overseas luxury brands, accessories, House of Shinsegae (wine and restaurant); central atrium with escalators on the right half, shop cells ringed around a curved aisle on the left"
+        },
+        {
+          "file": "07_gate7_entrance_doors.jpg",
+          "post_url": "https://blog.naver.com/ggm0724/224295786336",
+          "post_date": "2026-05-25",
+          "where": "Gate 7 entrance, night",
+          "shows": "black glass double doors, red 'SHINSEGAE' neon logo with 'GATE 7' in grey, dark frame, warm interior glow"
+        },
+        {
+          "file": "08_corridor_arched_ceiling_checker.jpg",
+          "post_url": "https://blog.naver.com/ggm0724/224295786336",
+          "post_date": "2026-05-25",
+          "where": "underground passage inside the store (B1 area, Find My Local popup)",
+          "shows": "wide corridor with cream arched/vaulted plaster ceiling and arched cornice, black-and-white diamond marble floor, escalators visible at far end, popup booths down the middle"
+        },
+        {
+          "file": "09_vaulted_ceiling_counters.jpg",
+          "post_url": "https://blog.naver.com/ggm0724/224295786336",
+          "post_date": "2026-05-25",
+          "where": "same passage, side",
+          "shows": "cream plaster barrel vault with indirect cove light, white/black diamond floor, low food counters along the walls"
+        },
+        {
+          "file": "10_holiday_market_entrance_B1.jpg",
+          "post_url": "https://blog.naver.com/psyche99/224466947121",
+          "post_date": "2026-10-30",
+          "where": "B1 Holiday Market popup (sign in post says B1)",
+          "shows": "red brick arch gate with warm light bulbs, red tartan carpet, white marble floor with black diamond inlays, two Christmas trees about 3 m"
+        },
+        {
+          "file": "11_checker_floor_tree_arch.jpg",
+          "post_url": "https://blog.naver.com/psyche99/224466947121",
+          "post_date": "2026-10-30",
+          "where": "B1 next to Holiday Market",
+          "shows": "white marble with black diamond inserts, cream arched ceiling edge with warm cove lighting, shop fronts with dark wood and glass"
+        },
+        {
+          "file": "12_red_carpet_hall_ceiling.jpg",
+          "post_url": "https://blog.naver.com/psyche99/224466947121",
+          "post_date": "2026-10-30",
+          "where": "B1 Holiday Market",
+          "shows": "double arch cream ceiling springing from walls, red tartan carpet, low wooden display tables"
+        },
+        {
+          "file": "13_atrium_screens_floor.jpg",
+          "post_url": "https://blog.naver.com/wlskygns1/224466991337",
+          "post_date": "",
+          "where": "a large hall seen from an escalator (post only says B1 for the dessert shop; this hall's level is uncertain)",
+          "shows": "square coffered white ceiling with gold trim, pale marble floor with diagonal inlay, vertical LED pillars, arched colonnade windows in the back wall"
+        },
+        {
+          "file": "14_chandelier_checker_queue.jpg",
+          "post_url": "https://blog.naver.com/wlskygns1/224466991337",
+          "post_date": "",
+          "where": "B1 dessert counter hall",
+          "shows": "black/white diamond marble, cream arches, round chandeliers with white globes, brown wood counters with marble top"
+        },
+        {
+          "file": "15_storefront_arched_glass_door.jpg",
+          "post_url": "https://blog.naver.com/newshin0/224466389372",
+          "post_date": "",
+          "where": "B1 Nespresso shop",
+          "shows": "dark charcoal shopfront with tall arched mirror-glass windows, thin cream trim, white veined marble floor with black bands"
+        },
+        {
+          "file": "16_atrium_skylight_tree.jpg",
+          "post_url": "https://blog.naver.com/newshin0/224466389372",
+          "post_date": "",
+          "where": "B1 atrium",
+          "shows": "oval dropped ceiling ring with a skylight panel and dotted line pattern, floor of black, cream and terracotta circle tiles"
+        },
+        {
+          "file": "17_red_carpet_hall_chandeliers.jpg",
+          "post_url": "https://blog.naver.com/newshin0/224466389372",
+          "post_date": "",
+          "where": "B1 Holiday Market from the front",
+          "shows": "long hall with strings of round lights on the ceiling, red carpet runner, white marble floor with dark diamonds"
+        }
+      ],
+      "layout": "Official 1F plan (06): cosmetics, overseas luxury brands, accessories and House of Shinsegae. Shop cells wrap a curved main aisle on the west half; central atrium with escalators on the east half. Hermes, Chanel and Dior each have a 1F cosmetics/beauty unit; their fashion boutiques are on 2F.",
+      "typical_dimensions": {
+        "main_aisle_width_m": "8-10",
+        "pillar_cm": "110-130 square, cream stone",
+        "pillar_sign_height_m": "about 2.5 to its lower edge",
+        "ceiling_height_m": "about 4.5-5 in main hall",
+        "passage_vault_width_m": "about 7-8, arch rise 1 m",
+        "gate_door_height_m": "about 3"
+      },
+      "palette": [
+        "glossy pale cream marble floor",
+        "black-and-white diamond marble in passages",
+        "cream plaster arches and coffers with warm cove light",
+        "charcoal/black shop fascias with white or gold letters",
+        "brown wood counters with white marble tops",
+        "red tartan carpet only for seasonal popups"
+      ],
+      "not_like_airport": "Warm cream plaster with arches and chandeliers, marble reflecting light, no long straight steel ceiling. Boutiques have dark or cream fascias with open shelves, not glass kiosks.",
+      "old_or_uncertain": [
+        "Almost all blog posts are food and popups on B1; real 1F photos are scarce (only 01, 02 and the plan 06).",
+        "Floor of 01/02 not stated; 13's level uncertain.",
+        "kyoonsun7/224447999762 (LV 'The Reserve') looked like another store, not used.",
+        "Photos 03-05 are ad cards with stock interiors, usable for colours only."
+      ],
+      "trace_spots": [
+        {
+          "spot": "Main luxury hall with SHINSEGAE GANGNAM pillars",
+          "photos": [
+            "01_aisle_marble_shinsegae_sign.jpg",
+            "02_aisle_marble_shoppingbag.jpg"
+          ],
+          "where": "1F main aisle between boutique rows, near central atrium",
+          "what_to_build": "Floor: glossy cream marble, high reflectivity. Pillars 1.2x1.2 m, 4.5 m tall, cream stone, with a backlit white 'SHINSEGAE / GANGNAM' sign 2.4x0.7 m at 2.5 m. Boutique fronts every 8-12 m with 0.4 m deep wall shelves and light strips. Ceiling white with a circular void."
+        },
+        {
+          "spot": "1F plan and shop-cell ring",
+          "photos": [
+            "06_floorplan_1F.jpg"
+          ],
+          "where": "entire 1F",
+          "what_to_build": "Curved aisle 8 m wide, cells 6-10 m wide along both sides, atrium with 2 escalator pairs on the east half, restrooms and info desk beside the central aisle."
+        },
+        {
+          "spot": "Chanel / Dior / Hermes beauty units",
+          "photos": [
+            "04_card_chanel_floors.jpg",
+            "05_card_dior_floors.jpg",
+            "03_card_hermes_floors.jpg"
+          ],
+          "where": "1F, luxury cosmetics side",
+          "what_to_build": "Each unit 8x6 m open front. Chanel: black fascia 0.8 m high with white serif CHANEL. Dior: cream with gold trim. Hermes: beige, wood fixtures, 2 m shelves. Counters 1.1 m high, glass cases, warm 3000K downlights."
+        },
+        {
+          "spot": "Gate 7 entrance",
+          "photos": [
+            "07_gate7_entrance_doors.jpg"
+          ],
+          "where": "outer wall, GATE 7",
+          "what_to_build": "Black-framed glass double doors 2x3 m, red 'SHINSEGAE' neon 1.6 m wide above, grey 'GATE 7' small text to the right, warm light behind."
+        },
+        {
+          "spot": "Arched passage with diamond floor",
+          "photos": [
+            "08_corridor_arched_ceiling_checker.jpg",
+            "09_vaulted_ceiling_counters.jpg",
+            "11_checker_floor_tree_arch.jpg"
+          ],
+          "where": "B1 and passages between 1F stairs and underground",
+          "what_to_build": "Barrel vault 7.5 m wide, cream plaster, 0.5 m cornice band, cove light. Floor: 0.6 m white marble tiles with black diamond inlay on the diagonal. Escalator pair at the far end."
+        },
+        {
+          "spot": "Chandelier hall",
+          "photos": [
+            "14_chandelier_checker_queue.jpg",
+            "12_red_carpet_hall_ceiling.jpg"
+          ],
+          "where": "B1 dessert hall",
+          "what_to_build": "Black/white diamond marble, cream arches springing at 3 m, 4-6 round chandeliers (0.8 m, white globes), wood counters 1 m high with 4 cm white marble tops, stanchion posts 0.9 m."
+        },
+        {
+          "spot": "Dark arched-window storefront",
+          "photos": [
+            "15_storefront_arched_glass_door.jpg"
+          ],
+          "where": "B1 shop row",
+          "what_to_build": "Charcoal fascia 0.9 m, two arched mirror windows 0.8x2.2 m with cream trim, door 1.0 m, white veined marble floor with black stripe."
+        },
+        {
+          "spot": "Atrium with skylight ring",
+          "photos": [
+            "16_atrium_skylight_tree.jpg",
+            "13_atrium_screens_floor.jpg"
+          ],
+          "where": "atrium between escalators",
+          "what_to_build": "Oval dropped ceiling 5x3 m with a lit panel in the middle, dotted line pattern; floor of 0.8 m circle tiles in black/cream/terracotta; coffered ceiling elsewhere with gold trim and LED pillars 0.8x3 m."
+        },
+        {
+          "spot": "Seasonal red carpet popup hall",
+          "photos": [
+            "10_holiday_market_entrance_B1.jpg",
+            "17_red_carpet_hall_chandeliers.jpg"
+          ],
+          "where": "B1 Holiday Market",
+          "what_to_build": "Brick arch gate 6 m wide with bulbs, red tartan carpet 6 m wide, 3 m Christmas trees in pairs, 1 m wood tables, round ceiling lights in strings."
+        }
+      ]
+    },
+    "ssg_food": {
+      "area": "ssg_food",
+      "photos": [
+        {
+          "file": "01_hos_atrium_wide.jpg",
+          "post_url": "https://blog.naver.com/sosoyeongyeong/224460083618",
+          "post_date": "2026-10-31",
+          "where": "B1 하우스오브신세계 푸드홀, 중앙 아트리움(1층 와인셀러·레스토랑과 오픈 보이드로 연결)",
+          "shows": "Warm honey-orange wood-panel walls (~#C98A3E) with uplights every ~1.5m washing amber light up the walls; glass balustrade mezzanine above; lounge area with rust/olive-green velvet round armchairs on red-blue Persian-style rugs over herringbone wood/stone floor; open bar/kitchen counters in background. Void is ~2 floors high (~8-9m)."
+        },
+        {
+          "file": "02_hos_atrium_escalator.jpg",
+          "post_url": "https://blog.naver.com/sosoyeongyeong/224460083618",
+          "post_date": "2026-10-31",
+          "where": "B1 푸드홀 아트리움 가장자리, 에스컬레이터 옆",
+          "shows": "Same wood-panelled void; white curved plaster soffit with glowing cove line; escalator with glass balustrade on right; 'HOUSE OF SHINSEGAE' freestanding sign (white board, serif caps); counter-dining islands with timber stools; blue/orange cushion seating."
+        },
+        {
+          "file": "03_hos_central_bar_floor.jpg",
+          "post_url": "https://blog.naver.com/sosoyeongyeong/224460083618",
+          "post_date": "2026-10-31",
+          "where": "B1 푸드홀 중앙 스시/바 다이닝 카운터 앞",
+          "shows": "Floor = herringbone light wood/stone border with grey-black marble inlay; wooden chest-of-drawers style display cabinet (apothecary look) at front; U-shaped communal counter with stools and chefs inside; ceiling coffered wood with warm downlights ~3.5-4m."
+        },
+        {
+          "file": "04_hos_entrance_gate.jpg",
+          "post_url": "https://blog.naver.com/sosoyeongyeong/224460083618",
+          "post_date": "2026-10-31",
+          "where": "B1 푸드홀 입구 (지하 식품관 쪽에서 들어오는 게이트)",
+          "shows": "Wood portal frame in the same honey wood, serif gold-lettered 'HOUSE OF SHINSEGAE' plaque at ~3m above head, round white globe wall lamps (~30cm) at both sides, black/white mosaic carpet-like floor inside, directory stand beside door."
+        },
+        {
+          "file": "05_hos_corridor_ceiling_floor.jpg",
+          "post_url": "https://blog.naver.com/sosoyeongyeong/224460083618",
+          "post_date": "2026-10-31",
+          "where": "B1 푸드홀 연결 복도 (식품관-푸드홀 사이 통로)",
+          "shows": "MOST USEFUL corridor shot: ~4m wide corridor, stepped white plaster arched ribs forming a tunnel ceiling (~3m high at edge, centre vault ~3.3m), round pillars/wood posts with orange cylindrical bases and white globe sconces, floor = dark grey/black marble 'parquet' pattern with white/yellow dot inlays, wood borders along sides, glass-reeded wood-framed shop windows on the right."
+        },
+        {
+          "file": "06_hos_side_corridor_seating.jpg",
+          "post_url": "https://blog.naver.com/sosoyeongyeong/224460083618",
+          "post_date": "2026-10-31",
+          "where": "B1 푸드홀 가장자리 복도, 레스토랑 옆",
+          "shows": "White ribbed/fluted plaster ceiling radiating like fan; floor same dark inlay marble in centre strip, honey wood at sides; stall fronts open to aisle with high chairs; strip lighting under canopy ~2.3m."
+        },
+        {
+          "file": "07_hos_superstar_bar.jpg",
+          "post_url": "https://blog.naver.com/sosoyeongyeong/224460083618",
+          "post_date": "2026-10-31",
+          "where": "B1 푸드홀 내 Superstar 바 앞",
+          "shows": "Dark charcoal wall + back-lit bottle shelves, orange-red leather bar and stools, 'Superstar' script sign in white neon/cursive on white ceiling soffit; floor with geometric black/white/grey terrazzo pattern."
+        },
+        {
+          "file": "08_hos_open_kitchen_counter.jpg",
+          "post_url": "https://blog.naver.com/sosoyeongyeong/224460083618",
+          "post_date": "2026-10-31",
+          "where": "B1 푸드홀 오픈키친 카운터 구역",
+          "shows": "Low ~3m ceiling in pale cream with grid of warm downlights; open-kitchen counters under white pelmet canopy and thin metal frames; glass pendant/hanging screens; timber counters and stools; escalator at right edge."
+        },
+        {
+          "file": "09_hos_katsu_tapas_bar.jpg",
+          "post_url": "https://blog.naver.com/yangha0987/224455018226",
+          "post_date": "2026-10-27",
+          "where": "B1 푸드홀 'KATSU & TAPAS(keebo)' 바",
+          "shows": "Black frame slatted-louver signboard with white 'KATSU & TAPAS' caps; dark wood round-back stools and curved dark wood counter with red leatherette mats; hanging bottles; pale grey plaster upper wall; warm low light."
+        },
+        {
+          "file": "10_hos_hall_beyond_counters.jpg",
+          "post_url": "https://blog.naver.com/baby_bird_430/224456662467",
+          "post_date": "2026-10-29",
+          "where": "B1 푸드홀 타치바나 쪽에서 본 홀 전경",
+          "shows": "Multi-storey void in background, wood-slatted ceiling lines, pink-veined marble counter tops with timber bar fronts, glass escalator guard, amber lighting: shows how counters face the open void."
+        },
+        {
+          "file": "11_sweetpark_ceiling_queue.jpg",
+          "post_url": "https://blog.naver.com/univ_rabbit/224466718115",
+          "post_date": "2026-11 (~11/5-6)",
+          "where": "B1 스위트파크 한정선 줄서는 구역",
+          "shows": "STRONGEST Sweet Park ceiling shot: cream plaster groin-vaulted ceiling with ribbed stone-like arches (~4.5-5m), warm cove LED line along every rib, round-globe white glass chandeliers (black ring frame) hanging ~1m, floor black/white marble checkerboard (~60cm squares), queue stanchions with black posts and cream belts, small black A-frame brown sign with gold Hanja logo."
+        },
+        {
+          "file": "12_sweetpark_checker_floor.jpg",
+          "post_url": "https://blog.naver.com/univ_rabbit/224466718115",
+          "post_date": "2026-11 (~11/5-6)",
+          "where": "B1 스위트파크 한정선 대기줄",
+          "shows": "Black-and-white checkerboard marble floor (large squares ~60-70cm) with black stanchions; dense crowd; stall fronts have glass dome vitrines with white counter tops, back wall shows arched openings."
+        },
+        {
+          "file": "13_sweetpark_standard_bread_front.jpg",
+          "post_url": "https://blog.naver.com/univ_rabbit/224466718115",
+          "post_date": "2026-11 (~11/5-6)",
+          "where": "B1 스위트파크 스탠다드 브레드",
+          "shows": "Stall front: timber arched-window top frame (cream and brown wood grid), dark green/black sign 'Standard Bread' in white serif caps, cream marble/stone checker floor, character display 'Love The Sweet Moment' pink sign; concept shop-in-vault look."
+        },
+        {
+          "file": "14_sweetpark_hanjungsun_hall.jpg",
+          "post_url": "https://blog.naver.com/bororo319/224465840202",
+          "post_date": "2026-11 (~11/4-5)",
+          "where": "B1 스위트파크 중앙 홀 (한정선 대기)",
+          "shows": "Wide shot: grand ribbed barrel-vault ceiling with chandeliers/cove lighting; central round counter 'hub' with wood-and-glass vitrines; black/white checker floor; low black stanchion lines."
+        },
+        {
+          "file": "15_sweetpark_seasonique_ceiling.jpg",
+          "post_url": "https://blog.naver.com/mandarany_/224466458080",
+          "post_date": "2026-11 (~11/5)",
+          "where": "B1 스위트파크 Seasonique (시즈니크) 카운터",
+          "shows": "Portrait photo: black signboard with white serif 'SEASONIQUE' on brass stand; ceiling cream with scattered tiny recessed stars; a black-metal globe chandelier; stainless/glass chilled vitrine; cream brick-tile column (~15x7cm brick tile) with green boxes."
+        },
+        {
+          "file": "16_market_corridor_checker.jpg",
+          "post_url": "https://blog.naver.com/nyj687/224458843417",
+          "post_date": "2026-10-30",
+          "where": "B1 식품관/스위트파크 중앙 통로 (홍보 사진)",
+          "shows": "Aisle ~6-8m wide, black/white checker marble floor, dark wood and glass pastry vitrines both sides under gold-lit mini domes, clerks behind counters; arch cove ceiling. NOTE: appears to be a press/tour photo (heypop watermark in #17)."
+        },
+        {
+          "file": "17_market_vaulted_hall.jpg",
+          "post_url": "https://blog.naver.com/nyj687/224458843417",
+          "post_date": "2026-10-30",
+          "where": "B1 식품관/스위트파크 대형 홀 (홍보 사진)",
+          "shows": "Hall with ribbed cream vaults and big globe chandelier (~1.2m diameter), cove light along every rib, pale columns with gold capital bands, black/white checker aisle with black-veined marble inlay border, octagon island vitrines (marble top, dark wood skirt, brass-framed glass)."
+        },
+        {
+          "file": "18_market_counters_wide.jpg",
+          "post_url": "https://blog.naver.com/nyj687/224458843417",
+          "post_date": "2026-10-30",
+          "where": "B1 식품관 중앙 아일랜드 정면",
+          "shows": "Same hall viewed from flank: island counters with brass-edged glass, marble tops, staff in aprons; cream ceiling with round recessed lights; sign stalls with small white price-flags."
+        },
+        {
+          "file": "19_bluebutterfly_counter.jpg",
+          "post_url": "https://blog.naver.com/happy_heoni/224466863070",
+          "post_date": "2026-11 (~11/6)",
+          "where": "B1 식품관 블루버터플라이 (베트남 델리) 앞",
+          "shows": "Dark-brown wood/brass framed counter 'Blue Butterfly' with black overhead canopy signage in white decorated letters (~3m above floor), glass vitrines with wood trays, colourful floor tile band (checker/diamond) at base; busy, staff in white caps."
+        },
+        {
+          "file": "20_1f_atrium_shinsegae_sign.jpg",
+          "post_url": "https://blog.naver.com/keykey1201/224465916788",
+          "post_date": "2026-11 (~11/4-5)",
+          "where": "1F 중앙 홀 (에르메스·샤넬 화장품 구역 가는 길), 'SHINSEGAE GANGNAM' 벽 사인",
+          "shows": "1F: polished cream/beige-grey marble floor with high gloss reflecting lights, thick round beige stone columns (~1.2m dia), a wall clad in grey stone with white illuminated sans-serif 'SHINSEGAE / GANGNAM' sign (~2.5m up), brightly lit handbag showcase wall, open atrium void with balconies above, white ceiling with small round downlights. Fashion rack at left. (Blog-photo with model; date approximate.)"
+        },
+        {
+          "file": "21_1f_atrium_floor.jpg",
+          "post_url": "https://blog.naver.com/keykey1201/224465916788",
+          "post_date": "2026-11 (~11/4-5)",
+          "where": "1F 중앙 홀 반대편",
+          "shows": "Wide polished beige marble floor, columns clad in same stone, shop-fronts with white lit portals, gold-lettered brand signs at ~3m; a calm, airy luxury look, low density of people."
+        },
+        {
+          "file": "22_holidaymarket_inside.jpg",
+          "post_url": "https://blog.naver.com/softdayssoft/224466127770",
+          "post_date": "2026-11 (~11/5)",
+          "where": "B1 신세계 홀리데이 마켓 (식품관 한쪽, 11/2026 한정 팝업)",
+          "shows": "Temporary: red carpet, wicker baskets, wood stalls, string lights overhead on white ceiling. Seasonal, not permanent."
+        },
+        {
+          "file": "23_holidaymarket_arch_ceiling.jpg",
+          "post_url": "https://blog.naver.com/sinizzing/224466295092",
+          "post_date": "2026-11 (~11/5)",
+          "where": "B1 홀리데이 마켓 입구 아치",
+          "shows": "Brick-red archway with 'HOLIDAY MARKET' gold sign and bulb string trim, black/white checker floor in front, white cove-lit vault ceiling behind; Christmas trees. Seasonal."
+        }
+      ],
+      "layout": "신세계 강남점 B1: 에스컬레이터/통로로 식품관(신세계마켓, 델리·정육·수산·반찬 카운터)와 스위트파크(체크무늬 대리석 + 둥근 돔 천장 + 샹들리에 + 아일랜드 쇼케이스 유리 진열대)이 이어지고, 한쪽 통로(스텝 아치 화이트 리브 천장, 다크 마블 파케 바닥)를 지나 'HOUSE OF SHINSEGAE' 나무 게이트를 통해 하우스오브신세계 푸드홀(허니우드 벽면 + 업라이트, 2층 높이 보이드, 중앙에 라운지+바 카운터, 가장자리에 개별 식당/오픈키친)로 들어감. 푸드홀은 B1이며 1F 레스토랑·와인 구역과 오픈 보이드/에스컬레이터로 연결. 1F는 화장품(샤넬·디올 뷰티)과 에르메스 뷰티/파빌리온 등이 있고(층별 안내 포스트 기준), 사진상 광택 베이지 마블 바닥, 원형 기둥, 석재 월에 'SHINSEGAE GANGNAM' 사인. 통로 폭은 사진으로 식품관 홀 6~8m, 푸드홀 복도 3.5~4m.",
+      "typical_dimensions": "식품관/스위트파크 천장 아치 정점 약 4.5~5m, 에지 3.5m; 샹들리에 지름 약 1~1.2m(공 6~8개 구, 검은 링 프레임) ~1m 매달림; 체크 타일 한 칸 약 60~70cm; 아일랜드 쇼케이스 약 2.4×1.2m 높이 1.1m, 대리석 상판; 푸드홀 아트리움 높이 8~9m(2개 층), 복도 천장 3~3.3m; 푸드홀 복도 폭 ~4m; 스토어 사인 높이 ~2.5~3m; 의자(라운지 암체어) 지름 약 70cm; 1F 원형 기둥 지름 1~1.3m, 천장 약 4.5m.",
+      "palette": [
+        "#C98A3E honey/amber wood walls (푸드홀)",
+        "#EFE5CF cream plaster vault (스위트파크)",
+        "#1A1A1A / #F2F0EA black-white checker marble",
+        "#3B3A3F dark grey-black veined marble with white dot inlay (푸드홀 바닥)",
+        "#B8452E rust red velvet / rugs",
+        "#6E7B3A olive-green armchairs",
+        "#E8D9B0 warm cove light glow",
+        "#D9CBB4 beige polished marble (1F)",
+        "#2B2B2B black signage frames",
+        "#0F2A4A navy/blue (블루버터플라이 간판 보조색)"
+      ],
+      "not_like_airport": "공항/역사 콘서트와 달리 ①천장이 평평한 격자 타일이 아니라 크림색 리브 볼트와 코브 간접조명+구형 샹들리에, ②바닥이 체크무늬 대리석/마블 인레이이고 반사 광택이 따뜻함, ③사방이 단일 큰 홀이 아니라 개별 부스형 카운터(유리+마블+원목)가 촘촘, ④따뜻한 우드·호박색 업라이트, 서체가 세리프, ⑤줄 세우는 스탠션과 쇼케이스 조명, 포장 케이크/빵 박스가 가득한 상업 공간 느낌, ⑥푸드홀은 호텔 라운지같은 암체어·러그.",
+      "old_or_uncertain": [
+        "모든 사진은 2026-10-27 ~ 2026-11-06 게시 글(2025 이전 없음). 단 16~18번은 홍보/투어 사진으로 촬영일 미확인(heypop 워터마크).",
+        "20/21번은 층별 안내 블로그(keykey1201)의 모델 사진: 촬영 시점 미확인, 1F 구조만 참고.",
+        "스위트파크 천장 높이·샹들리에 크기는 사진에서의 추정치.",
+        "신세계마켓 전용 핵심 사진(정육·수산·야채 라인) 은 못 찾음; 델리 카운터는 블루버터플라이(19번)만 확보.",
+        "1층 화장품(샤넬뷰티·디올뷰티)의 매장 내부 사진은 못 찾음 — 층별 안내 이미지뿐. 에르메스 파빌리온 내부 사진 없음.",
+        "22/23번은 11~12월 한정 홀리데이 마켓(상설 아님)."
+      ]
+    },
+    "ssg_upper": {
+      "area": "신세계백화점 강남점 위층 (주로 하우스오브신세계 식음 구역과 겨울 매장층)",
+      "photos": [
+        {
+          "file": "01_hosn_atrium_mezzanine.jpg",
+          "post_url": "https://m.blog.naver.com/jieun92623/224466155651",
+          "post_date": "2026-11-05",
+          "where": "하우스오브신세계 중앙 아트리움 (정확한 층 불명, 메자닌)",
+          "shows": "올려다본 아트리움: 목재(오크 톤) 패널 난간 벽, 하단 간접조명 슬릿, 유리 난간+황동색 손잡이, 거울 마감 기둥, 흰 천장 매입 다운라이트, 에스컬레이터"
+        },
+        {
+          "file": "02_hosn_bythe_glass_marble_bar.jpg",
+          "post_url": "https://m.blog.naver.com/jieun92623/224466155651",
+          "post_date": "2026-11-05",
+          "where": "하우스오브신세계 BY THE GLASS 와인바",
+          "shows": "대리석(흰 바탕 회색 결) 카운터, 뒤 목재 진열장, 골드 톤 벽, 태블릿 메뉴"
+        },
+        {
+          "file": "03_hosn_kimsusa_hall_wide.jpg",
+          "post_url": "https://m.blog.naver.com/kimsumi83/224466123790",
+          "post_date": "2026-11-05",
+          "where": "하우스오브신세계 김수사",
+          "shows": "아치형 목재 부스벽, 회색 석재 바닥, 금속 질감 천장+곡선 코브 조명, 스시 카운터와 가죽 의자"
+        },
+        {
+          "file": "04_hosn_kimsusa_hall_pillars.jpg",
+          "post_url": "https://m.blog.naver.com/kimsumi83/224466123790",
+          "post_date": "2026-11-05",
+          "where": "하우스오브신세계 김수사 홀",
+          "shows": "넓은 홀: 흰 기둥, 목재 격자벽, 테이블석, 바닥 석재 타일"
+        },
+        {
+          "file": "05_hosn_kimsusa_counter_wide.jpg",
+          "post_url": "https://m.blog.naver.com/kimsumi83/224466123790",
+          "post_date": "2026-11-05",
+          "where": "하우스오브신세계 김수사 카운터",
+          "shows": "ㄷ자 스시 카운터, 기둥 사이 열린 홀, 대기 안내 스탠드"
+        },
+        {
+          "file": "06_hosn_tachibana_front_counter.jpg",
+          "post_url": "https://m.blog.naver.com/rorinoon/224466086426",
+          "post_date": "2026-11-05",
+          "where": "하우스오브신세계 타치바나 라멘",
+          "shows": "오픈 키친 카운터 외관: 낮은 천장, 가로 루버 밴드 조명, 목재 의자"
+        },
+        {
+          "file": "07_hosn_tachibana_counter_ceiling.jpg",
+          "post_url": "https://m.blog.naver.com/rorinoon/224466086426",
+          "post_date": "2026-11-05",
+          "where": "하우스오브신세계 타치바나 라멘 내부",
+          "shows": "원형 팬던트 조명+목재 프레임 지붕 틀, 카운터 스툴 줄지어 배치"
+        },
+        {
+          "file": "08_hosn_tachibana_back_wall_sign.jpg",
+          "post_url": "https://m.blog.naver.com/rorinoon/224466086426",
+          "post_date": "2026-11-05",
+          "where": "타치바나 뒷벽",
+          "shows": "RAMEN 금속 레터 사인, 목재 벽면 벽등(아치 스포트)"
+        },
+        {
+          "file": "09_floor_lecoq_display_grid_ceiling.jpg",
+          "post_url": "https://m.blog.naver.com/teundspacegure/224464960484",
+          "post_date": "2026-11-04",
+          "where": "신강 겨울 매장 통로 (7~8층대, 층 불명 추정)",
+          "shows": "회색 대형 포세린 타일 바닥, 격자 coffered 천장+선형 LED, 통로 옆 시즌 프로모션 섬 진열, 샵 앞 검정 격자 파사드"
+        },
+        {
+          "file": "10_floor_aisle_mannequin_lecoq.jpg",
+          "post_url": "https://m.blog.naver.com/teundspacegure/224464960484",
+          "post_date": "2026-11-04",
+          "where": "같은 층 중앙 통로",
+          "shows": "통로 폭 넓음, 대형 타일 바닥에 백색 마크 사인 바닥 스티커, 멀리 샵들"
+        },
+        {
+          "file": "11_floor_mannequin_escalator_bg.jpg",
+          "post_url": "https://m.blog.naver.com/teundspacegure/224464960484",
+          "post_date": "2026-11-04",
+          "where": "같은 층 에스컬레이터 근처",
+          "shows": "마네킹 진열, 뒤 에스컬레이터 유닛"
+        },
+        {
+          "file": "12_floor_drmartens_corner_escalator.jpg",
+          "post_url": "https://m.blog.naver.com/teundspacegure/224464960484",
+          "post_date": "2026-11-04",
+          "where": "같은 층 에스컬레이터 앞 팝업",
+          "shows": "닥터마틴 팝업(검정 격자 월+노랑 포인트), 뒤로 에스컬레이터"
+        },
+        {
+          "file": "13_floor_k2_outdoor_shopfront.jpg",
+          "post_url": "https://m.blog.naver.com/teundspacegure/224464960484",
+          "post_date": "2026-11-04",
+          "where": "같은 층 K2 매장",
+          "shows": "오픈형 매장 입구, 은색 금속 행거 랙+상단 브랜드 로고, 회색 마감 월"
+        },
+        {
+          "file": "14_floor_k2_wall_racks.jpg",
+          "post_url": "https://m.blog.naver.com/teundspacegure/224464960484",
+          "post_date": "2026-11-04",
+          "where": "K2 벽랙",
+          "shows": "금속 파이프 랙 라인, 천장 선형 조명"
+        }
+      ],
+      "layout": "하우스오브신세계는 메자닌 아트리움을 중심으로 와인바·스시·라멘이 목재 아치 벽과 석재 바닥으로 이어짐. 일반 매장층은 중앙 통로 양쪽에 브랜드 샵이 늘어서고 에스컬레이터 앞에 시즌 팝업이 놓임.",
+      "typical_dimensions": "통로 폭 약 6m, 천장 3.2m(매장층)/2.4m(식음 카운터 위), 바닥 타일 0.6x1.2m, 난간 높이 1.1m, 카운터 높이 1.0~1.05m",
+      "palette": "오크 목재 #a8723a, 회색 석재 #7c7f82, 흰 천장 #f2efe8, 황동 #b59a5e, 대리석 흰+회색 결, 웜화이트 3000K 조명",
+      "not_like_airport": "공항형의 큰 유리 천장과 밝은 흰 조명이 아님. 낮은 천장, 웜 톤 간접조명, 목재+석재로 아늑하고 어두운 분위기.",
+      "old_or_uncertain": "이번 검색은 맛집 글 위주라 2~11층 일반 매장 통로, 에스컬레이터 홀, 11층 식당가 광각 사진을 거의 못 찾음. 하우스오브신세계 층 번호와 겨울 매장층의 정확한 층은 미확인. 게시일은 모두 2026-11-04~05(네이버 날짜 추정).",
+      "trace_spots": [
+        {
+          "spot": "하우스오브신세계 중앙 아트리움",
+          "photos": [
+            "01_hosn_atrium_mezzanine.jpg"
+          ],
+          "where": "하우스오브신세계 메자닌 중앙 에스컬레이터/계단 홀. 층 번호 미확인(1~3층대 추정).",
+          "what_to_build": "층고 2~3개 층 트인 아트리움. 난간 벽 높이 1.1m, 오크 톤(#a8723a) 목재 패널 + 하단 간접조명 슬릿(웜 3000K), 유리 난간+황동 손잡이. 거울 마감 사각 기둥 0.6x0.6m. 천장 흰색, 매입 다운라이트 격자 약 2.5m 간격."
+        },
+        {
+          "spot": "BY THE GLASS 와인바",
+          "photos": [
+            "02_hosn_bythe_glass_marble_bar.jpg"
+          ],
+          "where": "하우스오브신세계 안 와인바. 아트리움에서 도보 접근.",
+          "what_to_build": "흰 대리석 카운터 길이 약 6m, 폭 0.8m, 높이 1.05m. 뒤 벽은 골드 베이지 톤 목재 진열장 3단. 간판 'BY THE GLASS' 벽면 레터."
+        },
+        {
+          "spot": "김수사 스시홀",
+          "photos": [
+            "03_hosn_kimsusa_hall_wide.jpg",
+            "04_hosn_kimsusa_hall_pillars.jpg",
+            "05_hosn_kimsusa_counter_wide.jpg"
+          ],
+          "where": "하우스오브신세계 식음 구역, 웨이팅 스탠드가 입구 앞.",
+          "what_to_build": "홀 약 12x10m. 바닥 회색 석재 타일 0.6m 모듈. 아치형 목재 부스벽 높이 2.6m, 폭 3m, 벽면에 둥근 벽등 3개씩. 스시 카운터 길이 6m, 높이 1.0m, 의자 6개(갈색 가죽+등받이 바구니). 간판 '金寿司' 작은 동판."
+        },
+        {
+          "spot": "타치바나 라멘 카운터",
+          "photos": [
+            "06_hosn_tachibana_front_counter.jpg",
+            "07_hosn_tachibana_counter_ceiling.jpg",
+            "08_hosn_tachibana_back_wall_sign.jpg"
+          ],
+          "where": "하우스오브신세계 내 라멘 구역(고터 방향).",
+          "what_to_build": "개방형 ㅁ자 카운터 12석, 스툴 목재 프레임. 카운터 위 천장 낮게(2.4m) 흰 루버 밴드 + 원형 펜던트 5개. 뒤 벽면에 'RAMEN' 금속 레터, 'TACHIBANA' 간판(검정+백색)."
+        },
+        {
+          "spot": "신강 겨울 매장층 중앙 통로",
+          "photos": [
+            "09_floor_lecoq_display_grid_ceiling.jpg",
+            "10_floor_aisle_mannequin_lecoq.jpg"
+          ],
+          "where": "신강 매장층 중앙 통로(층 번호 미확정, 7~8층대 추정, 에스컬레이터 홀 근처).",
+          "what_to_build": "통로 폭 약 6m. 바닥 회색 포세린 0.6x1.2m, 줄눈 3mm. 천장 높이 3.2m, 격자 coffered(0.6m 모듈)+선형 LED 라인. 통로 가운데 시즌 프로모션 섬(폭 3m x 1.2m, 흰 곡면 베이스 + 로고 레터) 1개씩 약 10m 간격."
+        },
+        {
+          "spot": "에스컬레이터 앞 팝업 광장",
+          "photos": [
+            "11_floor_mannequin_escalator_bg.jpg",
+            "12_floor_drmartens_corner_escalator.jpg"
+          ],
+          "where": "매장층 에스컬레이터 승강장 앞 오픈 공간.",
+          "what_to_build": "에스컬레이터 앞 승강 공간 4x4m. 팝업 부스(검정 격자 월 2.4m + 노랑 포인트) 1~2개. 마네킹 서 있는 진열대 1개."
+        },
+        {
+          "spot": "아웃도어 매장 입구 (K2)",
+          "photos": [
+            "13_floor_k2_outdoor_shopfront.jpg",
+            "14_floor_k2_wall_racks.jpg"
+          ],
+          "where": "신강 매장층 아웃도어 구역.",
+          "what_to_build": "개방형 샵 폭 9m, 입구 문 없음. 상단 브랜드 레터(하늘색 K2)가 달린 회색 월 + 은색 파이프 랙(높이 2.2m, 길이 3m x 3줄). 바닥은 통로와 같은 회색 타일(연속)."
+        }
+      ]
+    }
   }
 }

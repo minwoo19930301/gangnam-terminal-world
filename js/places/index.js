@@ -8,5 +8,9 @@ export const PLACES = [
   'gyeongbu',
   'banpo_shoppingtown',
   'hangang',
+  'gyeongbu_east',
+  'newcore',
+  'banwon',
+  'jamwon_hangang',
   'streets',
 ];

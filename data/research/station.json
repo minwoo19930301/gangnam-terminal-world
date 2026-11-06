@@ -254,8 +254,8 @@
     "9호선 열차 외관 상세"
   ],
   "modeling": {
-    "round": 6,
-    "scope": "천장/벽 틈과 개찰구 충돌 회피, 사진에 따른 사인·개찰구·광고·기둥·조명·마름모 바닥·벽돌·W3 입구·B1 상점 수정. 외부 출구 외관, OSM claims, 4개 지하층, 3개 엘리베이터의 모든 층, J7/W3/W9 계약 좌표 유지.",
+    "round": 7,
+    "scope": "제공 22장 사진별 시선 구성, 17개 trace 카메라, 9개 lazy 실내 detail 그룹. 대리석·유리블록 출구, 식물벽·상품진열·개찰구, 벽돌 홀, 환승 광고벽, 꺾임 노선 기둥, 승강장 대기 열·바닥표식·전광판, 9호선 긴 에스컬레이터와 곡면 분기홀 보강. 외부 출구·공유 W3/W9/J7·B1~B4·엘리베이터 층 유지.",
     "guesses": [
       "B1=-6, B2=-11, B3=-16, B4=-21m는 K.LEVELS/공유 월드 계약이며 실제 역의 실측 심도가 아니다. 특히 깊은 9호선을 B4=-21m에 맞췄다.",
       "환승통로 꺾임, 출구 계단 방향, 승강장 길이와 위치는 기존 OSM/공유 연결을 보존한 추정 배치다. 3호선 약 200m 및 3호선 10량·7호선 8량·9호선 6량 모델을 유지한다.",
@@ -270,7 +270,12 @@
       "7호선 개찰구 s100과 v=-10 우회 점자 동선은 호텔 B2 가구 충돌을 피하기 위한 모델 조정이다. 실제 역사 개찰구 위치를 새로 측량한 값이 아니다. s68도 호텔 여성 탈의실과 겹쳐 리뷰 제안보다 더 이동했다.",
       "W9 B4 개구부 시작 x20은 B1-x/2 경사가 천장 평면을 통과하는 지점의 인체 여유를 고려한 값이다. 제안 x22보다 2m 넓혀 에스컬레이터 몸통을 천장으로 절단하지 않게 했다.",
       "7호선 B2의 약 18m 공공 띠와 호텔 옆 좁은 우회 구간, 7.5m 기둥/9m 광고기둥/4.6m 벽 광고 간격은 제공 사진과 리뷰 비례값이며 실측 평면이 아니다.",
-      "B1 동쪽 계단이 B2의 기존 직선 보행로를 가로막아 (25,150)→(25,163.4)→(16.4,163.4)→(16.4,154)에 폭 2.4m의 닫힌 우회 통로를 추가했다. 호텔 밖·기존 계단 남쪽의 실제 월드 충돌 없는 위치로 정한 모델상 보정이며 사진의 실측 동선은 아니다."
+      "B1 동쪽 계단이 B2의 기존 직선 보행로를 가로막아 (25,150)→(25,163.4)→(16.4,163.4)→(16.4,154)에 폭 2.4m의 닫힌 우회 통로를 추가했다. 호텔 밖·기존 계단 남쪽의 실제 월드 충돌 없는 위치로 정한 모델상 보정이며 사진의 실측 동선은 아니다.",
+      "사진은 실측 평면도가 아니므로 trace 좌표는 기존 역사 존과 공유 동선 위에 매핑한 모델 좌표다. 02·03은 2025년 사진이며 임차 매장 위치·진열 순서는 확정되지 않았다.",
+      "완전한 9호선 긴 에스컬레이터를 보여주는 제공 사진은 없다. 30m 수평 길이·15m 하강은 W9 계약 좌표를 보존하며, 조명·판넬 분절은 주변 환승 사진을 바탕으로 추정했다.",
+      "사진 11의 7호선 올리브 패널은 평벽 부착으로도 해석된다. 기존 승강장 기둥 위치를 보존하면서 꺾임 밴드와 수평 줄눈을 적용했다.",
+      "사진 21의 서비스 출입구는 화장실로 근사했으나 정확한 위치·실 용도는 미확인이다. B1 자판기 옆 벽면에 모델상 배치했다.",
+      "광고의 레이아웃·색상·판독 문구를 재현하며 인물 사진 및 캠페인 원본은 절차적 도형으로 근사한다. 완전한 사진 일치를 주장하지 않는다."
     ],
     "junction_issues": [
       {
@@ -293,7 +298,318 @@
         "station_mitigation": "타원 가장자리와 상부 천장은 항상 생성, 스폰 yaw0. 중앙 홀의 중복 초록 게이트/상점은 생성하지 않음.",
         "needed_from_neighbor": "W9 상부 타원 대합실 영역의 몰 천장/장식과 station 천장 소유권을 공식 연결 계약으로 정리할 필요. 공유 W9 좌표는 변경하지 않음."
       }
-    ]
+    ],
+    "trace": [
+      {
+        "spot": "대리석 출구 안내·유리블록",
+        "photos": [
+          "refs/interior/station/01_line3_exit_sign_marble_pillar.jpg"
+        ],
+        "x": -82.3,
+        "y": -11,
+        "z": -85.3,
+        "yawDeg": 29.1,
+        "floor": "B2"
+      },
+      {
+        "spot": "중앙 대합실 식물벽·초록 개찰구·대형 화면",
+        "photos": [
+          "refs/interior/station/02_central_hall_gate_screen_2025old.jpg",
+          "refs/interior/station/05_line3_gates_green_marble.jpg"
+        ],
+        "x": -79.625,
+        "y": -6,
+        "z": -109.3,
+        "yawDeg": 180,
+        "floor": "B1"
+      },
+      {
+        "spot": "중앙 대합실 상점 통로",
+        "photos": [
+          "refs/interior/station/03_concourse_busy_corridor_2025.jpg"
+        ],
+        "x": -84,
+        "y": -6,
+        "z": -109,
+        "yawDeg": 270,
+        "floor": "B1"
+      },
+      {
+        "spot": "광고벽 환승통로",
+        "photos": [
+          "refs/interior/station/04_ad_wall_hall_crowd.jpg"
+        ],
+        "x": -29,
+        "y": -11,
+        "z": -26,
+        "yawDeg": 270,
+        "floor": "B2"
+      },
+      {
+        "spot": "대리석 체크 바닥·3호선 계단",
+        "photos": [
+          "refs/interior/station/06_marble_floor_escalator_checker.jpg"
+        ],
+        "x": -80.1,
+        "y": -11,
+        "z": -84.5,
+        "yawDeg": 0,
+        "floor": "B2"
+      },
+      {
+        "spot": "센트럴시티 연결 벽돌 기둥",
+        "photos": [
+          "refs/interior/station/07_brick_pier_hall_fixtures.jpg"
+        ],
+        "x": -30.13,
+        "y": -6,
+        "z": 182.96,
+        "yawDeg": 167.21,
+        "floor": "B1"
+      },
+      {
+        "spot": "환승 대합실 개찰구 열",
+        "photos": [
+          "refs/interior/station/08_transfer_concourse_gates_axis.jpg",
+          "refs/interior/station/09_gate_row_tile_floor.jpg"
+        ],
+        "x": -33.4,
+        "y": -11,
+        "z": 167.55,
+        "yawDeg": 124.89,
+        "floor": "B2"
+      },
+      {
+        "spot": "3호선 주황 꺾임 기둥",
+        "photos": [
+          "refs/interior/station/10_pillar_sign_line3_orange.jpg"
+        ],
+        "x": -78.4,
+        "y": -11,
+        "z": -152.1,
+        "yawDeg": 0,
+        "floor": "B2"
+      },
+      {
+        "spot": "7호선 올리브 꺾임 기둥",
+        "photos": [
+          "refs/interior/station/11_pillar_sign_line7_olive.jpg"
+        ],
+        "x": -45.68,
+        "y": -16,
+        "z": 161.95,
+        "yawDeg": 304.71,
+        "floor": "B3"
+      },
+      {
+        "spot": "3호선 스크린도어·마름모 바닥·광고 기둥",
+        "photos": [
+          "refs/interior/station/12_line9_platform_doors.jpg",
+          "refs/interior/station/15_line3_platform_diamond_floor.jpg",
+          "refs/interior/station/22_ad_pillars_platform.jpg"
+        ],
+        "x": -82,
+        "y": -11,
+        "z": -160,
+        "yawDeg": 180,
+        "floor": "B2"
+      },
+      {
+        "spot": "9호선 곡면 천장·양방향 분기홀",
+        "photos": [
+          "refs/interior/station/13_line9_transfer_corridor_gate.jpg"
+        ],
+        "x": 38.49,
+        "y": -21,
+        "z": -142.8,
+        "yawDeg": 110.81,
+        "floor": "B4"
+      },
+      {
+        "spot": "9호선 승강장 대기 열·도착 안내",
+        "photos": [
+          "refs/interior/station/14_line9_platform_wide.jpg"
+        ],
+        "x": -13.12,
+        "y": -21,
+        "z": -112.5,
+        "yawDeg": 110.81,
+        "floor": "B4"
+      },
+      {
+        "spot": "9호선 타원 중층 가장자리",
+        "photos": [
+          "refs/interior/station/16_line9_concourse_oval_ceiling.jpg"
+        ],
+        "x": 10,
+        "y": -6,
+        "z": -125,
+        "yawDeg": 0,
+        "floor": "B1"
+      },
+      {
+        "spot": "9호선 8번 출구·번호 기둥",
+        "photos": [
+          "refs/interior/station/17_line9_concourse_columns_sign.jpg",
+          "refs/interior/station/19_line9_hall_yellow_tactile.jpg",
+          "refs/interior/station/20_line9_hall_pillars_lights.jpg"
+        ],
+        "x": 1,
+        "y": -6,
+        "z": -125.2,
+        "yawDeg": 270,
+        "floor": "B1"
+      },
+      {
+        "spot": "스테인리스 기둥·신세계 방향 연결",
+        "photos": [
+          "refs/interior/station/18_underpass_columns_blue_sign.jpg"
+        ],
+        "x": 15.1,
+        "y": -6,
+        "z": 158.7,
+        "yawDeg": 111.8,
+        "floor": "B1"
+      },
+      {
+        "spot": "9호선 자판기·시설 벽면",
+        "photos": [
+          "refs/interior/station/21_line9_hall_vending_ceiling.jpg"
+        ],
+        "x": 29.5,
+        "y": -6,
+        "z": -125,
+        "yawDeg": 180,
+        "floor": "B1"
+      },
+      {
+        "spot": "9호선 긴 에스컬레이터 하부",
+        "photos": [],
+        "x": 35.5,
+        "y": -21,
+        "z": -134.4,
+        "yawDeg": 90,
+        "floor": "B4"
+      }
+    ],
+    "trace_convention": "x,z는 월드 좌표(m), y는 눈 높이가 아닌 보행 바닥 높이. shot 도구가 눈높이를 추가한다. yaw 0 북쪽, 90 서쪽, 180 남쪽, 270 동쪽. notes.json에 trace_spots가 없으므로 22장의 사진 묶음으로 16개 지점과 W9 긴 에스컬레이터 하부 1개를 도출했다.",
+    "qa_round7": {
+      "rendered": false,
+      "reason": "사용자 지시대로 tests/shot.mjs를 실행하지 않음. 개별 사진 열람 및 kit/physics 검사 후 운영자가 trace 카메라를 렌더한다.",
+      "results": {
+        "smoke": {
+          "command": "node tests/smoke.mjs station gotomall centralcity",
+          "result": "OK",
+          "spawns": 12,
+          "zones": 19,
+          "elevators": 3
+        },
+        "connected_walk": {
+          "command": "node tests/walk.mjs gotomall station centralcity --no-city",
+          "result": "97 ok, 0 blocked"
+        },
+        "full_walk": {
+          "command": "node tests/walk.mjs",
+          "result": "345 ok, 0 blocked",
+          "exit_code": 0,
+          "detail_errors": 0
+        },
+        "trace_audit": {
+          "standalone": "17/17 floor supported, capsule push 0, matching B1/B2/B3/B4 zones",
+          "integrated": "17/17 floor supported, capsule push 0, matching zones; gotomall → station → centralcity 순서",
+          "structure_in_details": 0,
+          "method": "real kit/physics, callback quad delta, no WebGL rendering"
+        },
+        "visfloor": {
+          "command": "node tests/visfloor.mjs 0 -220 -245 70 295 /tmp/station-visfloor-round7.png station",
+          "hole_m2": 213.5,
+          "outside_exit_wells_red_cells": 0,
+          "inspection": "PNG 열람 및 빨간 셀 좌표를 6개 등록 출구 well polygon과 대조. 모든 빨간 셀이 출구2·3·4·5·6·7의 실제 계단 개구부 안에 있음."
+        },
+        "diff_check": "git diff --check passed"
+      }
+    },
+    "detail_groups": [
+      {
+        "floor": "B1",
+        "name": "연결 대합실 · 상점과 벽돌 홀",
+        "quads": 12637,
+        "people": 20,
+        "integrated_quads": 12637,
+        "budget_quads": 120000
+      },
+      {
+        "floor": "B1",
+        "name": "중앙 대합실 · 초록 개찰구",
+        "quads": 5336,
+        "people": 14,
+        "integrated_quads": 18,
+        "budget_quads": 120000
+      },
+      {
+        "floor": "B1",
+        "name": "9호선 상층 · 타원과 출구 홀",
+        "quads": 3202,
+        "people": 4,
+        "integrated_quads": 390,
+        "budget_quads": 120000
+      },
+      {
+        "floor": "B2",
+        "name": "3호선 승강장 · 대리석 출구",
+        "quads": 18753,
+        "people": 96,
+        "integrated_quads": 18753,
+        "budget_quads": 120000
+      },
+      {
+        "floor": "B2",
+        "name": "3·7·9호선 환승통로",
+        "quads": 5190,
+        "people": 47,
+        "integrated_quads": 5190,
+        "budget_quads": 120000
+      },
+      {
+        "floor": "B2",
+        "name": "7호선 대합실 · 개찰구",
+        "quads": 16158,
+        "people": 26,
+        "integrated_quads": 16158,
+        "budget_quads": 120000
+      },
+      {
+        "floor": "B3",
+        "name": "7호선 곡선 승강장",
+        "quads": 18406,
+        "people": 93,
+        "integrated_quads": 18406,
+        "budget_quads": 120000
+      },
+      {
+        "floor": "B4",
+        "name": "9호선 분기홀 · 승강장",
+        "quads": 12403,
+        "people": 118,
+        "integrated_quads": 12403,
+        "budget_quads": 120000
+      },
+      {
+        "floor": "B1",
+        "name": "9호선 긴 에스컬레이터",
+        "quads": 288,
+        "people": 0,
+        "integrated_quads": 288,
+        "budget_quads": 120000
+      }
+    ],
+    "quad_totals": {
+      "eager": 45581,
+      "lazy_standalone": 92373,
+      "total_standalone": 137954,
+      "note": "kit stats.quads 기준. hpoly 삼각형 및 instanced people 삼각형은 이 값에 포함되지 않는다. smoke 표는 lazy detail 전의 eager 값만 표시하므로 별도 callback 전후 계측을 사용."
+    },
+    "load_order_note": "월드의 실제 PLACES 순서인 gotomall → station에서 검증. station을 먼저 짓는 임의 walk 순서에서는 mallHere 사전 감지가 불가능하여 독립 B1 홀과 몰이 중복되는 기존 설계 한계가 있다. 요구된 station-first smoke는 통과."
   },
   "interiors_round6": {
     "reference_directory": "refs/interior/station",
@@ -482,5 +798,47 @@
       "B4 W9 개구부[20,-136.2,36,-127.8], 그 외 격자/곡면 천장과 샤프트 바닥 아래 사선 소핏.",
       "고정 W3/W9/J7, 모든 엘리베이터 층과11개 스폰 보존. 타원 B1 스폰은yaw0."
     ]
+  },
+  "interiors_round7": {
+    "reference_directory": "refs/interior/station",
+    "photos_used": [
+      "01_line3_exit_sign_marble_pillar.jpg",
+      "02_central_hall_gate_screen_2025old.jpg",
+      "03_concourse_busy_corridor_2025.jpg",
+      "04_ad_wall_hall_crowd.jpg",
+      "05_line3_gates_green_marble.jpg",
+      "06_marble_floor_escalator_checker.jpg",
+      "07_brick_pier_hall_fixtures.jpg",
+      "08_transfer_concourse_gates_axis.jpg",
+      "09_gate_row_tile_floor.jpg",
+      "10_pillar_sign_line3_orange.jpg",
+      "11_pillar_sign_line7_olive.jpg",
+      "12_line9_platform_doors.jpg",
+      "13_line9_transfer_corridor_gate.jpg",
+      "14_line9_platform_wide.jpg",
+      "15_line3_platform_diamond_floor.jpg",
+      "16_line9_concourse_oval_ceiling.jpg",
+      "17_line9_concourse_columns_sign.jpg",
+      "18_underpass_columns_blue_sign.jpg",
+      "19_line9_hall_yellow_tactile.jpg",
+      "20_line9_hall_pillars_lights.jpg",
+      "21_line9_hall_vending_ceiling.jpg",
+      "22_ad_pillars_platform.jpg"
+    ],
+    "source_notes": "refs/interior/station/notes.json에는 trace_spots가 없으므로 사진 클러스터로 도출. 사진12는 3697·잠원·주황 문 근거로 3호선으로 정정.",
+    "changes": [
+      "기둥 사선을 사진의 꺾임 밴드로 수정, 수평 줄눈·바닥 금속띠 추가",
+      "일반 금속 게이트의 불필요한 아치 손잡이 제거, 초록 게이트에는 손잡이 유지; 게이트 번호·리더·주황 접촉부",
+      "ENTER6 고밀도 식물벽·늘어진 잎·입구 디렉터리·가방 진열, 상점 선반별 상품 라벨·뚜껑",
+      "대리석 넓은 곡선 무늬·상부 전기함·소화전·나가는 곳 표지",
+      "벽돌 기둥 소화기 받침·호스·라벨·콘센트",
+      "일반 통로 천장 환기 그릴·감지기·카메라·이중 선형 조명",
+      "승강장 위치 번호·화살표·대기 승객·짐, 9호선 검은 띠·도어 LED·매달린 도착 전광판",
+      "9호선 곡면 천장 가는 리브·넓은 금속 덕트·접이식 바리케이드 바퀴·분기 안내·보행객",
+      "9호선 상층 출구 안내·가구·자판기·시설 출입구, W9 경사 천장 분절·측벽 등",
+      "9개 detail 그룹으로 조명·광고·매장 진열·게이트·열차·사람·가구 지연 생성. 구조·바닥·계단·승강기·외부는 즉시 생성.",
+      "9호선 상층 홀을 가로막던 중복 승강기 접근 통로의 내부 벽·천장 제거; 홀 자체로 승강기 접근. W9 하부 평탄 착지부 천장 틈 폐쇄."
+    ],
+    "integrated_limit": "고투몰이 먼저 로드되면 몰이 B1 중앙 게이트/상점/천장을 소유한다. 중복된 station 대합실은 만들지 않는다. 몰 연속 천장이 9호선 타원 가장자리를 가리는 기존 소유권 문제가 남아 있으며 station 단독 trace와 전체 월드 B1 결과가 다를 수 있다."
   }
 }

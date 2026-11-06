@@ -12,6 +12,9 @@ export const meta = {
   claimRoads: [],
   claimAreas: [],
   sources: [
+    'refs/interior/ssg_1f/notes.json',
+    'refs/interior/ssg_1f/06_floorplan_1F.jpg',
+    'refs/interior/ssg_upper/notes.json',
     'refs/interior/ssg_food/notes.json',
     'refs/interior/ssg_food/01_hos_atrium_wide.jpg',
     'refs/interior/ssg_food/05_hos_corridor_ceiling_floor.jpg',
@@ -92,7 +95,7 @@ export function build(K) {
   const yawTo = (du, dv) => { const dx = du * CA + dv * SA, dz = -du * SA + dv * CA; return Math.atan2(-dx, -dz); };
   const rnd = K.rand(20001003);
   const FULL = rect(0, 0, UW, VD);
-  // Plain warm gypsum: the retail interiors have no acoustic-tile grid.
+  // Warm gypsum for luxury/food rooms; sports floors receive a separate open coffer grid.
   K.material('ssg_ceil', new K.THREE.MeshLambertMaterial({ color: 0xf6f1e8, emissive: 0x9a9286 }));
   const CEIL = 'ssg_ceil';
   K.texture('ssg_marble', 512, 512, (g, w, h) => {
@@ -119,6 +122,20 @@ export function build(K) {
   }
   const inR = (u, v, r, m = 0) => u > r[0] - m && u < r[2] + m && v > r[1] - m && v < r[3] + m;
   const zone = (name, floor, sub, r, y0, y1, priority = 1) => K.zone({ name, floor, sub, poly: rect(...r), y0, y1, priority });
+
+  // One deferred furnishing batch per retail floor; structure/zones are registered immediately.
+  // K.detail invokes the same construction kit, so the local survey helpers retain their frame.
+  const furnishings = new Map();
+  function furnish(floor, fn) {
+    if (!furnishings.has(floor)) {
+      const queue = []; furnishings.set(floor, queue);
+      const y = LV[floor] ?? LV.B1;
+      K.detail({ floor, y0: y, y1: floor === '1M' ? LV['2F'] : LV[nextOf(floor)],
+        poly: floor === '1M' ? rect(...MEZZ) : UPPER.has(floor) ? rect(0, VS, UW, VD) : FULL,
+        name: `${floor} 매장 집기` }, () => { for (const build of queue) build(); });
+    }
+    furnishings.get(floor).push(fn);
+  }
 
   // ------------------------------------------------------------ surveyed exterior palette
   // 2026 ssg_05/06: rose-taupe stone with staggered 0.3 m courses.
@@ -691,6 +708,15 @@ export function build(K) {
   for (const u of [67.5, 74.5]) box(u, 40.2, 0.1, 0.1, 1, 2.1, 0xe3ded0, { solid: false });
   zone('신세계 지하주차장 차량 진출입로', 'B2', '지상주차장 ↔ B2 · 높이제한 2.3m', [67.5, 38.5, 87, 84.3], LV.B2, 3.5, 3);
 
+  K.texture('ssg_upper_tile', 512, 256, (g, w, h) => {
+    g.fillStyle = '#8c8e90'; g.fillRect(0, 0, w, h);
+    for (let i = 0; i < 90; i++) {
+      g.strokeStyle = i % 2 ? 'rgba(222,223,222,.10)' : 'rgba(61,63,65,.09)';
+      g.lineWidth = 1 + i % 3; g.beginPath(); g.moveTo(i * 13 % w, 0);
+      g.bezierCurveTo(i * 19 % w, 70, i * 23 % w, 180, i * 17 % w, h); g.stroke();
+    }
+    g.fillStyle = '#626668'; g.fillRect(0, 0, w, 1.3); g.fillRect(0, 0, 1.3, h);
+  }, [1.2, .6]);
   // ------------------------------------------------------------ slabs
   // Match the upper slab contour to the recessed glazing: no shelves protrude outside it.
   const northOutline = (vSouth, y) => {
@@ -705,6 +731,7 @@ export function build(K) {
   const stairHole = (c, s) => { const u = stairLaneU(c, s); return rect(u - 0.85, c.v0 + 2.2, u + 0.85, c.v1 - 2.2); };
   const coreTop = c => MAIN.indexOf(c.top);
   const floorMat = { B2: { tex: 'concrete', color: 0x8c8d89 }, B1: 'ssg_marble', '1F': 'ssg_marble_polished', '2F': 'ssg_marble', '3F': 'ssg_marble', '11F': { tex: 'darkstone', color: 0xd4c5af } };
+  for (const id of ['4F', '5F', '6F', '7F', '8F', '9F', '10F']) floorMat[id] = 'ssg_upper_tile';
   MAIN.forEach((id, s) => {
     const holes = [...elvHoles];
     if (id === '1F') holes.push(rect(...B1_WELL));
@@ -836,6 +863,10 @@ export function build(K) {
   const GARMENT = [0x1d1d1d, 0xf0ece4, 0x8a6a4a, 0x2b3a55, 0xa03030, 0xc9b28a, 0x6a6a6a, 0x3b5a3a, 0xe0c0c8, 0x24324a];
   // Names explicitly present in the supplied research/OSM, not a generic department-store tenant list.
   const knownNames = new Set([
+    '조 말론 런던', '르 라보', '바이레도', '딥티크', '아워글래스', '디올 뷰티', '샤넬 뷰티',
+    '에스티 로더', '랑콤', '설화수', '시슬리', '라 메르', '입생로랑 뷰티', '톰 포드 뷰티', '겔랑',
+    '아르마니 뷰티', '끌레드뽀 보떼', '헤라', '맥', '바비 브라운', '나스', '후', '키엘', '크리니크', '시세이도', '이솝',
+    'K2', '르꼬끄 스포르티브', '닥터마틴', 'BY THE GLASS', '김수사', '타치바나',
     '에르메스', '샤넬', '루이 비통', '펜디', '버버리', '메종 마르지엘라', '백 갤러리',
     '구찌', '디올', '프라다', '보테가 베네타', '셀린느', '몽클레르', '미우미우', '코치', '토즈', '페라가모',
     '디올 옴므', '셀린느 옴므', '로에베', '반클리프 아펠', '오데마 피게', '피아제', 'IWC', '예거 르쿨트르', '파네라이', '랑에 운트 죄네',
@@ -905,7 +936,7 @@ export function build(K) {
     }
     // fixtures
     const fx = FIXTURES[kind] || FIXTURES.fashion;
-    fx({ Wf, Dp, y, H, fb, fsign, fwall, person, r, seed, name: signText, koName: zoneName });
+    furnish(o.floor, () => fx({ Wf, Dp, y, H, fb, fsign, fwall, person, r, seed, name: signText, koName: zoneName }));
     if (o.zone !== false) K.zone({ name: zoneName, floor: o.floor, sub: o.sub ?? '신세계백화점 강남점', poly: rect(Math.min(u0, u1), Math.min(v0, v1), Math.max(u0, u1), Math.max(v0, v1)), y0: y, y1: y + Math.max(2.6, H), priority: 3 });
   }
   const FIXTURES = {
@@ -914,7 +945,14 @@ export function build(K) {
       for (let i = 0; i < n; i++) {
         const s = (i + 0.5) * Wf / n, t = Dp * 0.55;
         fb(s, t, 1.7, 0.06, y + 1.55, 0.05, 0x9a9a9a, { solid: false });
-        fb(s, t, 1.5, 0.45, y + 0.55, 1.0, { tex: 'ssg_rack', color: GARMENT[(seed + i) % GARMENT.length] });
+        for (const end of [-.78,.78]) { fb(s+end,t,.045,.045,y,.0+1.6,0xaeb3b5,{solid:false}); fb(s+end,t,.34,.6,y,.06,0x8b9092,{solid:false}); }
+        for(let garment=0;garment<8;garment++) {
+          const ss=s-.63+garment*.18,col=GARMENT[(seed+i+garment)%GARMENT.length];
+          fb(ss,t,.11,.42,y+.48,.96,col,{solid:false});
+          for(const dt of [-.26,.26])fb(ss,t+dt,.10,.13,y+.61,.72,col,{solid:false});
+          fb(ss,t,.035,.30,y+1.44,.06,0xb4a48b,{solid:false});
+          fb(ss,t,.02,.02,y+1.50,.07,0xbcc1c3,{solid:false});
+        }
       }
       fb(Wf / 2, Dp * 0.25, Math.min(1.6, Wf * 0.4), 0.8, y, 0.82, { tex: 'wood', color: 0xd9c4a8 });
       fb(Wf - 0.75, Dp - 0.75, 1.2, 1.2, y, 2.3, 0xe8e2d8);
@@ -925,6 +963,12 @@ export function build(K) {
     lux({ Wf, Dp, y, fb, person, seed }) {
       fb(Wf / 2, Dp - 0.35, Wf - 0.6, 0.45, y, 2.6, { tex: 'wood', color: 0xe6d6bc });
       for (let k = 0; k < 3; k++) fb(Wf / 2, Dp - 0.6, Wf - 1.2, 0.05, y + 0.7 + k * 0.6, 0.04, { tex: 'emit', color: 0xfff1d6 }, { solid: false });
+      for (let row=0;row<3;row++) for(let k=0;k<Math.floor((Wf-1.4)/.65);k++) {
+        const ss=.8+k*.65,yy=y+.75+row*.6,col=GARMENT[(seed+k+row)%GARMENT.length];
+        fb(ss,Dp-.65,.30,.23,yy,.24,col,{solid:false});
+        for(const ds of [-.08,.08])fb(ss+ds,Dp-.65,.03,.04,yy+.24,.10,col,{solid:false});
+        fb(ss,Dp-.65,.19,.04,yy+.33,.025,col,{solid:false});
+      }
       fb(Wf / 2 - Math.min(2, Wf * 0.18), Dp * 0.45, 1.4, 0.8, y, 0.85, { tex: 'marble', color: 0xf2ece2 }); fb(Wf / 2 + Math.min(2, Wf * 0.18), Dp * 0.45, 1.4, 0.8, y, 0.85, { tex: 'marble', color: 0xf2ece2 });
       for (let k = 0; k < 2; k++) fb(Wf / 2 + (k ? 1 : -1) * Math.min(2, Wf * 0.18), Dp * 0.45, 0.35, 0.25, y + 0.85, 0.22, GARMENT[(seed + k) % GARMENT.length], { solid: false });
       fb(Wf * 0.78, Dp * 0.75, 1.8, 0.8, y, 0.45, 0x5a4a3c); fb(Wf * 0.78, Dp * 0.75 + 0.35, 1.8, 0.15, y + 0.45, 0.45, 0x5a4a3c, { solid: false });
@@ -946,6 +990,12 @@ export function build(K) {
       fsign(name, Wf / 2, Dp - 0.56, y + 2.4, Math.min(Wf - 0.7, 3.1), 0.3, { bg: null, fg: '#453a30', bold: false });
       fb(Wf / 2, Dp * 0.45, Math.max(1.2, Wf - 2.2), 0.6, y, 0.95, seed % 2 ? { tex: 'darkstone', color: 0x3a3634 } : { tex: 'marble', color: 0xf6f1ea });
       fb(Wf / 2, Dp * 0.45, Math.max(1.0, Wf - 2.4), 0.5, y + 0.95, 0.25, 'glass', { solid: false });
+      for(let row=0;row<3;row++)for(let k=0;k<Math.max(4,Math.floor((Wf-.8)/.18));k++) {
+        const ss=.45+k*.18,yy=y+1.24+row*.45;
+        fb(ss,Dp-.46,.10,.12,yy,.14+(k%3)*.045,[0xe7ce9c,0xe3d9cf,0x3c3026,0xc5938f][(seed+k+row)%4],{solid:false});
+        fb(ss,Dp-.46,.07,.08,yy+.14+(k%3)*.045,.04,0x9d865d,{solid:false});
+      }
+      for(let k=0;k<8;k++)fb(Wf*.27+k*Wf*.06,Dp*.45,.11,.12,y+.98,.13+(k%3)*.03,0xb59b75,{solid:false});
       fb(0.45, Dp * 0.5, 0.6, Dp * 0.6, y, 1.1, 0xe9e2d6); fb(Wf - 0.45, Dp * 0.5, 0.6, Dp * 0.6, y, 1.1, 0xe9e2d6);
       for (const s of [Wf * 0.35, Wf * 0.65]) fb(s, Dp * 0.18, 0.4, 0.4, y, 0.65, 0xb8a684);
     },
@@ -1158,7 +1208,7 @@ export function build(K) {
   function stdFloor(id, def) {
     const y = LV[id], H = clearH(id);
     const fl = id, sub = def.sub, up = UPPER.has(id), V0 = up ? VS : 0;
-    const S = (o = {}) => ({ floor: fl, H, sub: `${def.cat} · 신세계백화점 강남점 ${fl}${up ? ' (신관)' : ''}`, ...o });
+    const S = (o = {}) => ({ floor: fl, H: MAIN.indexOf(id) >= MAIN.indexOf('4F') ? 3.2 : H, sub: `${def.cat} · 신세계백화점 강남점 ${fl}${up ? ' (신관)' : ''}`, ...o });
     zone('신세계백화점 강남점', fl, up ? `${sub} · 신관` : sub, [0, V0, UW, VD], y, y + H + thick(nextOf(id)), 1);
     if (!up) {
       const half = Math.ceil(def.N.length / 2);
@@ -1173,13 +1223,18 @@ export function build(K) {
     (def.IE || []).forEach((names, i) => blocks[i] && island(names, 42.9, 54.75, blocks[i][0], blocks[i][1], y, S({ kind: def.kind })));
     if (def.C && !up) shop({ u0: 27.6, u1: 39.4, v0: 14, v1: 29, f: 'S', name: def.C, kind: def.Ckind || 'popup', y, ...S(), sides: false, back: false });
     columns(id, y, H, up ? (u, v) => v < VS : undefined);
-    lights(y + H - 0.02, up ? [[0, 0, UW, VS]] : []);
+    furnish(fl, () => {
+      if (MAIN.indexOf(id) >= MAIN.indexOf('4F')) upperRetailCeiling(id, y);
+      else lights(y + H - 0.02, up ? [[0, 0, UW, VS]] : []);
+    });
     restrooms(id, y, H); elevatorHall(id, y, H);
-    // floor number on the atrium column faces
-    if (!up) sign(`${fl}  ${def.short}`, 25.4, 33, y + 3.2, 'N', 2.4, 0.5, { bg: '#2d241c', fg: '#f3e6c8', twoSided: true });
-    else sign(`${fl}  ${def.short}`, 25.4, 48.4, y + 3.2, 'S', 2.4, 0.5, { bg: '#2d241c', fg: '#f3e6c8', twoSided: true });
-    if (up) windowAisle(id, y, H, def.view);
+    // Labels and people are loaded with this floor's shop stock.
+    furnish(fl, () => {
+    if (!up) sign(`${fl}  ${def.short}`, 25.4, 33, y + 2.85, 'N', 2.4, 0.5, { bg: '#2d241c', fg: '#f3e6c8', twoSided: true });
+    else sign(`${fl}  ${def.short}`, 25.4, 48.4, y + 2.85, 'S', 2.4, 0.5, { bg: '#2d241c', fg: '#f3e6c8', twoSided: true });
     crowdAisles(y, def.people ?? 16, LV[id] * 7 + 3, [], V0);
+    });
+    if (up) windowAisle(id, y, H, def.view);
     if (def.extra) def.extra(y, H);
   }
   // Retain plain circulation along the upper volume, without an invented observation attraction.
@@ -1297,6 +1352,33 @@ export function build(K) {
       g.fillStyle='#e9ddc3';g.fillRect(0,0,w,h);g.strokeStyle='#c2b49c';g.lineWidth=2;
       for(let j=0;j<4;j++){const yy=j*32;g.beginPath();g.moveTo(0,yy);g.lineTo(w,yy);g.stroke();for(let i=-1;i<4;i++)g.strokeRect(i*85+(j%2)*42,yy,85,32);}
     },[.45,.28]);
+    // Round 7: marble inlays and seasonal woven carpet sampled from the close photographs.
+    K.texture('ssg_diamond_marble',512,512,(g,w,h)=>{
+      g.fillStyle='#f0eee7';g.fillRect(0,0,w,h);
+      for(let i=0;i<26;i++){g.strokeStyle=i%4?'rgba(155,151,140,.20)':'rgba(120,119,113,.24)';g.lineWidth=1;g.beginPath();g.moveTo(i*25-90,0);g.bezierCurveTo(i*25+70,150,i*25-60,380,i*25+20,h);g.stroke();}
+      g.strokeStyle='#b7b2a7';g.lineWidth=1;g.strokeRect(0,0,w,h);
+      for(const [x,z] of [[0,0],[w,0],[0,h],[w,h]]){g.fillStyle='#242527';g.beginPath();g.moveTo(x-42,z);g.lineTo(x,z-42);g.lineTo(x+42,z);g.lineTo(x,z+42);g.closePath();g.fill();}
+    },[.65,.65]);
+    K.material('ssg_diamond_gloss',new K.THREE.MeshPhongMaterial({map:K.T.surface('ssg_diamond_marble').tex,shininess:90,specular:0xa8a199}));
+    K.texture('ssg_tartan',512,512,(g,w,h)=>{
+      g.fillStyle='#ad162d';g.fillRect(0,0,w,h);
+      for(let i=0;i<4;i++){const x=i*128;g.fillStyle='rgba(226,88,70,.55)';g.fillRect(x+20,0,25,h);g.fillRect(0,x+20,w,25);g.fillStyle='rgba(92,11,25,.5)';g.fillRect(x+65,0,40,h);g.fillRect(0,x+65,w,40);g.fillStyle='#daaf66';g.fillRect(x+8,0,2,h);g.fillRect(0,x+8,w,2);}
+      for(let i=0;i<w;i+=4){g.fillStyle='rgba(255,192,145,.08)';g.fillRect(i,0,1,h);g.fillRect(0,i,w,1);}
+    },[2.2,2.2]);
+    K.texture('ssg_holiday_brick',256,128,(g,w,h)=>{
+      g.fillStyle='#8a312e';g.fillRect(0,0,w,h);g.strokeStyle='#c49578';g.lineWidth=2;
+      for(let j=0;j<4;j++)for(let i=-1;i<5;i++){const x=i*64+(j%2)*32,z=j*32;g.fillStyle=['#83342e','#943a32','#a4493c','#71302b'][(i+j+8)%4];g.fillRect(x+2,z+2,60,28);g.strokeRect(x,z,64,32);}
+    },[.64,.32]);
+    function christmas(u,v,white=false){
+      const[x,z]=P(u,v);K.tree(x,z,{y:y+.12,h:3,kind:'pine'});
+      cyl(u,v,y,.65,.08,white?0xddd4bc:0x423c2d,false,24);
+      for(let i=0;i<64;i++){
+        const yy=.5+(i%11)*.20,r=.78*(1-yy/3),aa=i*2.399,uu=u+Math.cos(aa)*r,vv=v+Math.sin(aa)*r;
+        const[xx,zz]=P(uu,vv);K.dome({x:xx,z:zz,y:y+yy,rx:.055,ry:.065,rz:.055,hemi:false,seg:8,rings:4,mat:white?(i%3?0xe4d7ba:0xadada5):(i%3?0xad1d2e:0xc4a460)});
+        if(i%2===0)globe(uu,vv,y+yy+.05,.018);
+      }
+      for(let i=0;i<7;i++){const aa=i*PI*2/7;box(u+Math.cos(aa)*.5,v+Math.sin(aa)*.5,.24,.23,y+.08,.18+(i%3)*.08,white?0xe0d9c6:0x8c3f32,{solid:false});}
+    }
     // Thin 3D ribbons follow the actual groin/edge curves instead of a flat tile ceiling.
     function underside(mat, pp) {
       const a=pp[0],b=pp[1],c=pp[2],ab=b.map((n,i)=>n-a[i]),ac=c.map((n,i)=>n-a[i]);
@@ -1365,7 +1447,7 @@ export function build(K) {
     }
     const oct=(u,v,w,d,c=.24)=>[[u-w/2+c,v-d/2],[u+w/2-c,v-d/2],[u+w/2,v-d/2+c],[u+w/2,v+d/2-c],[u+w/2-c,v+d/2],[u-w/2+c,v+d/2],[u-w/2,v+d/2-c],[u-w/2,v-d/2+c]];
     function vitrine(u,v,w=2.4,d=1.2,seed=0,name='',face='N') {
-      const at=(s,t)=>face==='E'?[u-t,v+s]:[u+s,v+t];
+      const at=(s,t)=>face==='E'?[u-t,v+s]:face==='S'?[u-s,v-t]:[u+s,v+t];
       const bb=(s,t,ww,dd,yy,hh,mat)=>{const[uu,vv]=at(s,t);box(uu,vv,face==='E'?dd:ww,face==='E'?ww:dd,yy,hh,mat,{solid:false});};
       const shape=(ww,dd)=>oct(0,0,ww,dd).map(q=>P(...at(...q)));
       K.prism(shape(w,d),y,y+.69,{mat:0x63422a});
@@ -1408,8 +1490,6 @@ export function build(K) {
       const qp=(s,yy,t=0)=>{const[x,z]=P(...at(s,t));return[x,yy,z];};
       const normal=face==='E'?[CA,0,-SA]:[-SA,0,-CA];
       if(!openPassage){
-        bb(0,.65,w,.24,y,2.75,0x3a332b,true);
-        for(const side of [-1,1])bb(side*(w/2-.3),0,.6,.32,y,2.65,'ssg_fieldstone',true);
         bb(0,0,w,.32,y+2.15,.45,'ssg_fieldstone');
         bb(-.95,.38,1.2,.6,y+.65,1.4,0x2b2b2b);
         bb(-.95,.065,.84,.025,y+1.1,.38,{tex:'emit',color:0xff5a3a});
@@ -1435,7 +1515,6 @@ export function build(K) {
         const corner=face==='E'&&v>44,[uu,vv]=at(corner?-.5:0,-1.1);
         vitrine(uu,vv,w-(corner?1.8:.7),1.15,2,'',face);
       }
-      if(name)zone(name,fl,'스위트파크',[u-w/2,v-2,u+w/2,v+.8],y,y+4.9,3);
     }
     zone('신세계백화점 강남점',fl,'식품관 · 신세계 마켓 · 스위트파크 · 하우스 오브 신세계',[0,0,UW,VD],y,0,1);
     zone('신세계 마켓',fl,'신선식품 · 그로서리 · 델리',[.25,.25,26.8,31.5],y,y+H,2);
@@ -1443,6 +1522,64 @@ export function build(K) {
     zone('델리 전문관',fl,'식품관 · 델리 카운터',[41.5,10,UW,76.5],y,y+H,2);
     zone('하우스 오브 신세계 푸드홀',fl,'라운지 · 바 · 오픈키친',[6.4,59,26.8,84.45],y,LV['1F']-TH['1F'],2);
     zone('하우스 오브 신세계 연결 복도',fl,'우드 게이트 · 대리석 파케',[12.7,51,17.3,60],y,y+3.4,3);
+    K.texture('ssg_herringbone',512,512,(g,w,h)=>{
+      g.fillStyle='#a9a399';g.fillRect(0,0,w,h);
+      g.save();g.translate(w/2,h/2);g.rotate(PI/4);
+      // Interlocked 4:1 blocks = 0.60 x 0.15 m, rather than basketweave wood.
+      const s=w/(8*Math.SQRT2);
+      for(let i=-18;i<18;i++)for(let j=-18;j<18;j++)if((i+j)%8===0){
+        const xx=i*s,zz=j*s;g.fillStyle=((i-j)/2)%2?'#cfcac2':'#c2bcb3';
+        g.fillRect(xx+1,zz+1,s*4-2,s-2);g.fillRect(xx+1,zz+s*4+1,s-2,s*4-2);
+      }
+      g.restore();
+    },[1.2*Math.SQRT2,1.2*Math.SQRT2]);
+    K.texture('ssg_oak_boards',256,512,(g,w,h)=>{
+      g.fillStyle='#d9b585';g.fillRect(0,0,w,h);
+      for(let i=0;i<6;i++){
+        const xx=i*w/6;g.fillStyle=i%2?'#d9b585':'#ddbd92';g.fillRect(xx,0,w/6-1,h);
+        g.strokeStyle='rgba(132,89,42,.22)';g.lineWidth=.7;
+        for(let j=0;j<6;j++){g.beginPath();g.moveTo(xx+4+j*6,0);g.bezierCurveTo(xx+j*6,180,xx+9+j*6,320,xx+3+j*6,h);g.stroke();}
+      }
+    },[1.2,3]);
+    K.texture('ssg_green_tile',256,256,(g,w,h)=>{
+      g.fillStyle='#6f7a72';g.fillRect(0,0,w,h);g.strokeStyle='#a1a69b';g.lineWidth=1;
+      for(let x=0;x<w;x+=w/6)for(let z=0;z<h;z+=h/2)g.strokeRect(x,z,w/6,h/2);
+    },[.6,.6]);
+    K.material('ssg_kitchen_glass',new K.THREE.MeshLambertMaterial({color:0xfff0d0,emissive:0xfff0d0,emissiveIntensity:.3,transparent:true,opacity:.3,depthWrite:false,side:K.THREE.DoubleSide}));
+    // B1 honey panelling continues down to the floor, with real core exits left open.
+    wall(6.4,59,6.4,84.45,y,-1,{mat:HONEY,thick:.15,openings:[
+      {at:3,w:3,y0:y,y1:y+3.2},{at:8,w:3,y0:y,y1:y+3.2},{at:13,w:3,y0:y,y1:y+3.2},
+      {at:16.1,w:2.2,y0:y,y1:y+2.6},
+    ]});
+    wall(6.4,84.45,26.8,84.45,y,-1,{mat:HONEY,thick:.15});
+    wall(26.8,59,26.8,72,y,-1,{mat:HONEY,thick:.15});
+    for(const u of [12.7,17.3])wall(u,51,u,59.7,y,y+3.35,{mat:0xf3ede3,thick:.16});
+    wall(26.73,62,26.73,72,y,y+3.2,{mat:0xf1ece2,thick:.08});
+    for(const u of [12.4,17.6])box(u,51,1.2,.55,y,3.65,HONEY);
+    box(15,51,6.4,.6,y+2.95,.7,HONEY,{solid:false});
+    for(const [u0,u1] of [[9,12.4],[17.6,21]])boxR(u0,50.73,u1,51.27,y,3.65,HONEY);
+    for(const u of [8.5,17.5,26.8])for(const v of [31.7,41.5,51])if(!(u===8.5&&v===41.5))pillar(u,v);
+    for(const u of [41.5,47.5,53.5,60])for(const v of [12,23,34,45])pillar(u,v);
+    for(const [u,v,w,f] of [[10.2,49.5,4.6,'N'],[8.8,35.5,4.8,'E'],[8.8,46.5,4.8,'E']]) {
+      const at=(s,t)=>f==='E'?[u-t,v+s]:[u+s,v+t];
+      const shell=(s,t,ww,dd,hh,mat)=>{const[a,b]=at(s,t);box(a,b,f==='E'?dd:ww,f==='E'?ww:dd,y,hh,mat);};
+      shell(0,.65,w,.24,2.75,0x3a332b);
+      for(const side of [-1,1])shell(side*(w/2-.3),0,.6,.32,2.65,'ssg_fieldstone');
+    }
+    zone('블루 버터플라이',fl,'베트남 델리',[44,51,53,56.3],y,y+H,3);
+    zone('Standard Bread',fl,'스위트파크',[7.9,47.5,12.5,50.3],y,y+4.9,3);
+    zone('Superstar',fl,'하우스 오브 신세계',[8.1,79.7,15.7,84],y,y+3.6,3);
+    zone('KATSU & TAPAS',fl,'하우스 오브 신세계',[18.2,79.7,25.8,84],y,y+3.6,3);
+    wall(46,61,46,67,y,y+3.7,{mat:0x3d3935,thick:.15});
+    wall(54,61,54,67,y,y+3.7,{mat:0x3d3935,thick:.15});
+    wall(46,67,54,67,y,y+3.7,{mat:0xe4dfd2,thick:.15});
+    wall(46,61,54,61,y,y+3.7,{mat:0x353431,thick:.16,openings:[{at:4,w:2.6,y0:y,y1:y+2.9}]});
+    wall(43.6,83.9,54.4,83.9,y,y+3.6,{mat:0x6e1727,thick:.15});
+    zone('NESPRESSO',fl,'커피 · 캡슐 · 머신',[46,61,54,67],y,y+H,3);
+    zone('홀리데이 마켓',fl,'시즌 팝업 · 2026 가을·겨울',[43.5,69,54.5,84.2],y,y+H,3);
+    zone('시즌 아트리움',fl,'타원 조명 · 원형 대리석 무늬',[55.5,61,66.3,72],y,y+H,3);
+    restrooms(fl,y,H);elevatorHall(fl,y,H);
+    K.detail({floor:fl,y0:y,y1:0,poly:rect(.25,.25,26.8,31.7),name:'B1 신세계마켓 신선식품'}, K => {
     // Unphotographed fresh-food bays: restrained low fixtures, no invented thematic fitout.
     finish([.3,.3,26.8,31.7],y+.013,'ssg_marble',2.4);
     for(const [u,v,w,name] of [[6,6,7,'청과'],[16,6,7,'그로서리'],[6,17,7,'정육'],[16,17,7,'수산'],[6,27,7,'반찬']]){
@@ -1451,19 +1588,35 @@ export function build(K) {
     for(const [u,v] of [[6,6],[16,6]])for(let i=0;i<10;i++)box(u-2.7+i*.56,v,.44,.75,y+.92,.16,[0x9d9e68,0xceb17f,0xc2b9a7,0x785d44][i%4],{solid:false});
     for(const u of [6,14]){box(u,2,2,.7,y,.9,0xc3b6a2);box(u-.5,2,.4,.3,y+.9,.3,0x2c2a28,{solid:false});}
     sign('신세계 마켓',12,1.1,y+2.8,'S',4,.5,{bg:null,fg:'#5e503b',bold:false});
+    // Repeated grocery shelves, divided produce crates and chilled stock give the unphotographed bays a retail density.
+    for(const [u,vv] of [[5.8,11.4],[14,11.4],[22.2,11.4],[5.8,22],[14,22],[22.2,22],[22.2,28]]){
+      box(u,vv,4.2,.92,y,1.48,0x78654c);
+      for(let level=0;level<3;level++){
+        box(u,vv,4.35,1.1,y+.15+level*.43,.045,0xcbbda1,{solid:false});
+        for(let i=0;i<15;i++)for(const off of [-.3,.3]){
+          const uu=u-1.92+i*.27;box(uu,vv+off,.20,.21,y+.20+level*.43,.23,[0xd1ae67,0x778757,0xcab59a,0x896a49,0xbb6b49][(level+i)%5],{solid:false});
+          box(uu,vv+off-.112,.15,.013,y+.28+level*.43,.09,0xf1e6d1,{solid:false});
+        }
+      }
+    }
+    for(const [u,vv,col] of [[6,17,0xb96055],[16,17,0xb9beb5],[6,27,0x9f8e59]])for(let i=0;i<12;i++){
+      box(u-3+i*.53,vv,.47,.8,y+.93,.03,0xefebe4,{solid:false});
+      box(u-3+i*.53,vv,.40,.64,y+.97,.12,col,{solid:false});
+    }
+
+    });
     // Keep the J1 northern vestibule at u35.2..44.1 and the J4 cross aisle v38..47 open.
     for(const [u0,u1,name,kind] of [[24.1,35,'INTELLIGENTSIA COFFEE|인텔리젠시아 커피','cafe'],[44.3,53,'JOHNNY ROCKETS|조니 로켓','rest'],[53,61.4,'오설록','cafe']])shop({u0,u1,v0:.25,v1:8.25,f:'S',name,kind,y,H:3.8,floor:fl,sub:'식품관'});
     sign('신세계 강남점 식품관',39.65,.45,y+3.1,'S',5.2,.38,{...serif,bg:'#3c3129'});
     sign('고투몰 · 고속터미널역',43.8,4.3,y+1.55,'W',3.6,.38,{...serif,bg:'#3c3129'});
     sign('← 센트럴시티 · 호남선 터미널',.7,46.4,y+1.55,'E',3.8,.38,{...serif,bg:'#3c3129'});
+    K.detail({floor:fl,y0:y,y1:0,poly:rect(8,9,66.5,57),name:'B1 스위트파크·델리'}, K => {
     // 11–18: two linked halls, checker marble, rib coves, low octagonal pastry counters.
     for(const r of [[8.5,31.7,26.8,51],[41.5,10.5,60,47.5]])finish(r,y+.016,'ssg_checker_gloss');
     for(const [u0,u1] of [[8.5,17.5],[17.5,26.8]])for(const [v0,v1] of [[31.7,41.5],[41.5,51]]){
       vault(u0,v0,u1,v1);vaultFascia(u0,v0,u1,v1,[...(v0===31.7?['n']:[]),...(v1===51?['s']:[]),...(u0===8.5?['w']:[]),...(u1===26.8?['e']:[])]);
     }
     for(const [u0,u1] of [[41.5,47.5],[47.5,53.5],[53.5,60]])for(const v0 of [12,23,34])vault(u0,v0,u1,v0+11);
-    for(const u of [8.5,17.5,26.8])for(const v of [31.7,41.5,51])if(!(u===8.5&&v===41.5))pillar(u,v);
-    for(const u of [41.5,47.5,53.5,60])for(const v of [12,23,34,45])pillar(u,v);
     // Deli perimeter closes the gap above the vault edge while leaving the cross aisle open.
     for(const u of [41.5,60]){
       wall(u,10.5,u,47.5,y+3.45,y+5,{mat:CREAM,thick:.14,solid:false});
@@ -1484,11 +1637,11 @@ export function build(K) {
     archStall(8.8,35.5,'',4.8,'E');archStall(8.8,41,'',4.8,'E',true);archStall(8.8,46.5,'',4.8,'E');
     box(11.1,47.6,2.4,.8,y,1.0,0xf2b9c8);
     sign('Love The Sweet Moment',11.1,47.17,y+.53,'N',2.15,.42,{bg:null,fg:'#d0336a',font:'Georgia, serif',bold:true});
-    vitrine(14.1,36.1,4.7,2.0,1,'한정선');vitrine(22.1,36.1,4.7,2.0,3,'시즈니크');
+    vitrine(14.1,36.1,4.7,2.0,1,'한정선','S');vitrine(22.1,36.1,4.7,2.0,3,'시즈니크','S');
     vitrine(12.2,44.5,2.4,1.2,4);vitrine(22.2,44.5,2.4,1.2,1);
     queue(12.4,39.4,3.8,3.8);queue(22,39.2,3.6,3.6);
     box(14.65,38.3,.09,.55,y,1.18,0x262322,{solid:false});
-    sign(['한정선','대기 안내'],14.65,38.0,y+1.1,'N',.64,.74,{bg:'#65493c',fg:'#e1c7a7',bold:false});
+    sign(['한정선','대기 안내'],14.65,38.6,y+1.1,'S',.64,.74,{bg:'#65493c',fg:'#e1c7a7',bold:false});
     for(const [u,v] of [[10.8,38],[11.3,39],[12.2,40],[13.1,39.2],[20.8,38.7],[21.4,40.1],[23.1,39],[16,44.1],[19,47.1]]){const [x,z]=P(u,v);K.person(x,y,z,{shirt:0x45433d});}
     // Seasonique's small brass stand and green packaging, not a suspended directory sign.
     for(const du of [-.65,.65])cyl(23+du,34.9,y,.025,1.4,BRASS,false,8);
@@ -1505,11 +1658,33 @@ export function build(K) {
     // 16–18: the link between halls continues the marble/cove vocabulary at a lower scale.
     finish([27,9,41,47],y+.017,0xefebe4);
     for(const rr of [[27,9,41,9.8],[27,46.2,41,47],[27,9.8,27.8,46.2],[40.2,9.8,41,46.2]])finish(rr,y+.021,'ssg_checker_gloss');
-    for(const rr of [[27,9,41,34.5],[27,34.5,27.45,47],[39.65,34.5,41,47]]){
+    for(const rr of [[27,9,30.6,34.5],[38.4,9,41,34.5],[27,34.5,27.45,47],[39.65,34.5,41,47]]){
       hq(...rr,y+3.6,CREAM,false);
       const[u0,v0,u1,v1]=rr;for(const u of [u0+.08,u1-.08])box(u,(v0+v1)/2,.06,v1-v0,y+3.56,.03,glow,{solid:false});
     }
     for(const v of [15,21,27,33])for(const u of [29.1,39])vitrine(u,v,2.4,1.2,Math.round(u+v));
+    // 1F reference 08/09 belongs downstairs: pale diamond floor and a 7.5 m barrel vault.
+    finish([30.75,9.8,38.25,34.4],y+.032,'ssg_diamond_gloss',.65);
+    const archPoint=(t,vv)=>{const u=34.5+Math.cos(t)*3.75,yy=y+3.35+Math.sin(t)*1.05,[x,z]=P(u,vv);return[x,yy,z];};
+    for(let i=0;i<40;i++){
+      const aa=i*PI/40,bb=(i+1)*PI/40;
+      underside(0xf2eadc,[archPoint(aa,9.8),archPoint(bb,9.8),archPoint(bb,34.4),archPoint(aa,34.4)]);
+    }
+    for(const vv of [10.1,17.9,25.7,33.5]){
+      const path=Array.from({length:41},(_,i)=>[34.5+Math.cos(i*PI/40)*3.75,y+3.31+Math.sin(i*PI/40)*1.05,vv]);
+      ribbon(path,.34,'ssg_cream_brick');
+      for(const off of [-.24,.24])ribbon(path.map(p=>[p[0],p[1]+.025,p[2]]),.035,glow,off);
+    }
+    for(const u of [30.85,38.15]){
+      box(u,22.1,.22,24.6,y+3.22,.15,0xc6b797,{solid:false});box(u,22.1,.05,24.6,y+3.41,.04,glow,{solid:false});
+    }
+    for(const vv of [12,16,20,24,28,32])for(const u of [33,36])downlight(u,vv,y+4.20,.035);
+    // Two rows of small popup counters flank the open promenade; the escalator landing stays empty.
+    for(const [u,vv] of [[29.3,18],[39.1,18],[29.3,26],[39.1,26]]){
+      box(u,vv,1.65,2.4,y,.9,0x80aaa0);box(u,vv,1.75,2.5,y+.9,.045,0xf2e5bf,{solid:false});
+      for(let i=0;i<6;i++)box(u-.55+(i%3)*.5,vv-.55+Math.floor(i/3)*.7,.32,.38,y+.95,.18,[0xe6c46c,0x648763,0xe6d7b5][i%3],{solid:false});
+    }
+    sign('FIND MY LOCAL',34.5,10.3,y+3.02,'S',3.5,.32,{bg:'#779c83',fg:'#fff7dc',bold:true});
     // 19: Blue Butterfly dark canopy, brass inlaid mahogany base and illuminated ornament.
     finish([44,51,53,56.3],y+.016,'ssg_checker_gloss');
     // 19: small wine-red/cream tile band immediately in front of the deli base.
@@ -1550,17 +1725,17 @@ export function build(K) {
       }
     }
     for(const u of [46.7,50.3]){const [x,z]=P(u,55.2);K.person(x,y,z,{shirt:0xf1eee5});cyl(u,55.2,y+1.63,.14,.13,0xfffdf4);}
-    zone('블루 버터플라이',fl,'베트남 델리',[44,51,53,56.3],y,y+H,3);
     // Remaining deli bays have low neutral counters; unseen tenant arrangement is not invented.
-    for(const [u,v,name] of [[61.8,38,'새벽종'],[61.8,48,'수퍼판 델리'],[61.8,59,'화돈점정'],[48,70,'와인하우스']]){
+    for(const [u,v,name] of [[61.8,38,'새벽종'],[61.8,48,'수퍼판 델리'],[62,51,'화돈점정'],[48,70,'와인하우스']]){
       vitrine(u,v,3.5,1.3,1,name);sign(name,u,v-.68,y+1.4,'N',2.6,.3,{bg:'#e6dcc9',fg:'#594631',bold:false});
     }
+    });
+    K.detail({floor:fl,y0:y,y1:0,poly:rect(6.3,50.5,27,84.45),name:'B1 하우스 오브 신세계'}, K => {
     // 05/06: 4 m connecting passage with wood borders and marble parquet dot inlays.
     finish([12.7,51,17.3,60],y+.025,'ssg_wood_parquet',1.4);
     finish([13.2,51,16.8,60],y+.03,'ssg_parquet',1.4);
     hq(12.7,51,17.3,60,y+3.35,0xf1ece4,false);
     for(const u of [12.7,17.3]){
-      wall(u,51,u,59.7,y,y+3.35,{mat:0xf3ede3,thick:.16});
       box(u,55.35,.20,8.7,y,.3,HONEY,{solid:false});
     }
     for(let v=51.2;v<59.5;v+=1.1){
@@ -1584,9 +1759,6 @@ export function build(K) {
       for(const yy of [.45,1.5,2.7])box(17.12,v,.08,2.2,y+yy,.07,HONEY,{solid:false});
     }
     // 04: timber gate, gold serif lettering, paired 30 cm white globes and directory.
-    for(const u of [12.4,17.6])box(u,51,1.2,.55,y,3.65,HONEY);
-    box(15,51,6.4,.6,y+2.95,.7,HONEY,{solid:false});
-    for(const [u0,u1] of [[9,12.4],[17.6,21]])boxR(u0,50.73,u1,51.27,y,3.65,HONEY);
     sign('HOUSE OF SHINSEGAE',15,50.67,y+3.2,'N',5.2,.37,{...serif,fg:'#edd4a0'});
     for(const u of [13,17]){cyl(u,50.62,y,.2,.3,HONEY);cyl(u,50.62,y+.3,.075,2.65,HONEY);globe(u,50.52,y+2.1,.15);}
     box(18.5,50.7,.8,.3,y,.1,0x252525,{solid:false});box(18.5,50.7,.055,.055,y,1.7,0x252525,{solid:false});
@@ -1595,37 +1767,11 @@ export function build(K) {
     for(const u of [12.6,17.4])box(u,59.5,.32,.45,y,3.5,HONEY);
     box(15,59.5,5.1,.45,y+3.15,.35,HONEY,{solid:false});
     // 01/02/03/10: stone herringbone lounge within a honey-oak border.
-    K.texture('ssg_herringbone',512,512,(g,w,h)=>{
-      g.fillStyle='#a9a399';g.fillRect(0,0,w,h);
-      g.save();g.translate(w/2,h/2);g.rotate(PI/4);
-      // Interlocked 4:1 blocks = 0.60 x 0.15 m, rather than basketweave wood.
-      const s=w/(8*Math.SQRT2);
-      for(let i=-18;i<18;i++)for(let j=-18;j<18;j++)if((i+j)%8===0){
-        const xx=i*s,zz=j*s;g.fillStyle=((i-j)/2)%2?'#cfcac2':'#c2bcb3';
-        g.fillRect(xx+1,zz+1,s*4-2,s-2);g.fillRect(xx+1,zz+s*4+1,s-2,s*4-2);
-      }
-      g.restore();
-    },[1.2*Math.SQRT2,1.2*Math.SQRT2]);
-    K.texture('ssg_oak_boards',256,512,(g,w,h)=>{
-      g.fillStyle='#d9b585';g.fillRect(0,0,w,h);
-      for(let i=0;i<6;i++){
-        const xx=i*w/6;g.fillStyle=i%2?'#d9b585':'#ddbd92';g.fillRect(xx,0,w/6-1,h);
-        g.strokeStyle='rgba(132,89,42,.22)';g.lineWidth=.7;
-        for(let j=0;j<6;j++){g.beginPath();g.moveTo(xx+4+j*6,0);g.bezierCurveTo(xx+j*6,180,xx+9+j*6,320,xx+3+j*6,h);g.stroke();}
-      }
-    },[1.2,3]);
     finish([6.4,59,26.8,84.4],y+.02,'ssg_parquet',1.4);
     finish([8.4,60.4,24.1,74.6],y+.025,0xc99a62);
     finish([9,61,23.5,74],y+.03,'ssg_herringbone',1.2*Math.SQRT2);
     for(const r of [[6.4,74.5,26.8,75],[6.4,78.8,26.8,79.3]])finish(r,y+.03,0xc99a62);
     finish([23.5,59.5,26.8,74.5],y+.035,'ssg_oak_boards',[1.2,3]);
-    // B1 honey panelling continues down to the floor, with real core exits left open.
-    wall(6.4,59,6.4,84.45,y,-1,{mat:HONEY,thick:.15,openings:[
-      {at:3,w:3,y0:y,y1:y+3.2},{at:8,w:3,y0:y,y1:y+3.2},{at:13,w:3,y0:y,y1:y+3.2},
-      {at:16.1,w:2.2,y0:y,y1:y+2.6},
-    ]});
-    wall(6.4,84.45,26.8,84.45,y,-1,{mat:HONEY,thick:.15});
-    wall(26.8,59,26.8,72,y,-1,{mat:HONEY,thick:.15});
     // Shallow arch reveals preserve access behind the first portal to the SW stair.
     for(const [vv,name] of [[62,'타치바나'],[67,'스시도쿠'],[72,'프루니에']]){
       for(const sg of [-1,1])box(6.58,vv+sg*1.5,.42,.16,y,1.7,HONEY,{solid:false});
@@ -1743,7 +1889,6 @@ export function build(K) {
         }
       }
       box(u,v-.73,w,.05,y+2.3,.05,glow,{solid:false});
-      zone(superstar?'Superstar':'KATSU & TAPAS',fl,'하우스 오브 신세계',[u-w/2,v-1.8,u+w/2,v+2.5],y,y+3.6,3);
       const [x,z]=P(u,v+.9);K.person(x,y,z,{shirt:0xf1eee4});
     }
     bar(11.9,81.5,7.6,'Superstar',true);bar(22,81.5,7.6,'KATSU & TAPAS');
@@ -1763,10 +1908,6 @@ export function build(K) {
     for(const [u,v,w,d] of [[13,75.45,6,.7],[10.35,77,.7,2.4],[15.65,77,.7,2.4]]){
       box(u,v,w,d,y,.97,HONEY);box(u,v,w+.08,d+.08,y+.97,.08,0x2a2a2c,{solid:false});
     }
-    K.texture('ssg_green_tile',256,256,(g,w,h)=>{
-      g.fillStyle='#6f7a72';g.fillRect(0,0,w,h);g.strokeStyle='#a1a69b';g.lineWidth=1;
-      for(let x=0;x<w;x+=w/6)for(let z=0;z<h;z+=h/2)g.strokeRect(x,z,w/6,h/2);
-    },[.6,.6]);
     box(13,78.6,6,.16,y,1.4,'ssg_green_tile');
     const chef=(u,v)=>{const [x,z]=P(u,v);K.person(x,y,z,{shirt:0xf4f4f2,pants:0x33312d,h:1.65,rotY:FACE.N});cyl(u,v,y+1.65,.12,.14,0xfffdf7);};
     for(const u of [11.35,13,14.65])chef(u,77.15);
@@ -1784,10 +1925,8 @@ export function build(K) {
     }
     diningStool(26.15,63.5);
     for(const u of [25.65,26.3])diningStool(u,72.2,PI);
-    wall(26.73,62,26.73,72,y,y+3.2,{mat:0xf1ece2,thick:.08});
     for(let v=62.05;v<72;v+=.3)box(26.68,v,.12,.12,y,3.2,0xf1ece2,{solid:false});
     box(25.8,67.2,1.8,10,y+3.1,.1,0xf3ece0,{solid:false});
-    K.material('ssg_kitchen_glass',new K.THREE.MeshLambertMaterial({color:0xfff0d0,emissive:0xfff0d0,emissiveIntensity:.3,transparent:true,opacity:.3,depthWrite:false,side:K.THREE.DoubleSide}));
     for(const v of [64.5,68,71.5])box(25.55,v,.045,.045,y+1.02,1.75,0x4e493c,{solid:false});
     for(const u of [25.45,26.55]){
       box(u,68,.025,7,y+2.1,.6,'ssg_kitchen_glass',{solid:false});
@@ -1802,128 +1941,517 @@ export function build(K) {
       for(let v=65;v<71;v+=.3){cyl(25.58,v,y+yy+.035,.045,.23,[0x4a603e,0xa47537,0x60402c][Math.round(v*10)%3],false,6);cyl(25.58,v,y+yy+.265,.022,.08,0x564127,false,6);}
     }
     for(const v of [65.4,68.2,70.7])globe(25.95,v,y+2.32,.1);
+    });
+    K.detail({floor:fl,y0:y,y1:0,poly:rect(27,57,66.5,84.45),name:'B1 홀리데이마켓·아케이드'}, K => {
     // Marble and a low cove ceiling carry the department-store finish into the lift approach.
     finish([27,57,43,64.45],y+.025,'ssg_checker_gloss',1.3);
     finish([27.8,57.8,42.2,63.65],y+.03,0xefebe4);
     hq(27,57,43,64.45,y+3.6,0xefe5cf,false);
     coffer(27,57,43,64.45,y+3.6);
     for(const [u,v] of [[29,59],[33.5,59],[40.5,59]])downlight(u,v,y+3.53,.06);
+    // 1F ref 15: the B1 Nespresso front has charcoal panels, cream scalloped glazing and an open central doorway.
+    finish([44.7,58.1,55.2,67],y+.036,'ssg_marble_polished',2.4);
+    finish([44.7,59.3,55.2,59.52],y+.04,0x252527);
+    box(50,60.86,8.2,.18,y+2.95,.72,0x302f2e,{solid:false});
+    for(const yy of [2.95,3.61])box(50,60.74,8.15,.06,y+yy,.025,BRASS,{solid:false});
+    sign('NESPRESSO',50,60.72,y+3.29,'N',2.35,.36,{font:'Georgia, serif',bg:null,fg:'#fff9e8',bold:false});
+    for(const u of [46.85,48,52,53.15]){
+      box(u,60.88,.92,.09,y+.15,2.72,0x393733,{solid:false});
+      for(const yy of [.18,.62])box(u,60.81,.79,.04,y+yy,.028,0x82725d,{solid:false});
+      for(const du of [-.4,.4])box(u+du,60.81,.025,.04,y+.18,.46,0x82725d,{solid:false});
+      const shape=[];
+      for(let i=0;i<=12;i++){const aa=PI-i*PI/12;shape.push([Math.cos(aa)*.36,2.24+Math.sin(aa)*.42]);}
+      shape.push([.36,.94]);
+      for(let i=0;i<=12;i++){const aa=i*PI/12;shape.push([Math.cos(aa)*.36,.94-Math.sin(aa)*.20]);}
+      shape.push([-.36,2.24]);
+      const world=(du,yy,dv=0)=>{const[x,z]=P(u+du,60.74+dv);return[x,y+yy,z];};
+      const glassPoly=shape.map(q=>world(q[0],q[1],.035));
+      for(let i=0;i<shape.length-1;i++){
+        const aa=shape[i],bb=shape[i+1],scale=1.06;
+        K.quad(0xc9b695,[world(aa[0],aa[1]),world(bb[0],bb[1]),world(bb[0]*scale,1.7+(bb[1]-1.7)*scale),world(aa[0]*scale,1.7+(aa[1]-1.7)*scale)],[-SA,0,-CA]);
+        K.quad(0xa4aba2,[world(0,1.7,.04),glassPoly[i],glassPoly[i+1],world(0,1.7,.04)],[-SA,0,-CA]);
+      }
+      for(let k=0;k<3;k++)box(u,60.73,.62,.018,y+1.1+k*.48,.018,0xd7c7a7,{solid:false});
+    }
+    for(const u of [46.15,48.65,51.35,53.85]){
+      for(const du of [-.07,0,.07])box(u+du,60.65,.025,.07,y+.2,2.65,0x504a40,{solid:false});
+      globe(u,60.60,y+2.77,.075);
+    }
+    for(const u of [47.3,52.7]){
+      box(u,65.8,1.9,.35,y,.72,0xc39b63);box(u,65.8,2,.42,y+.72,.055,0xece5d6,{solid:false});
+      for(let k=0;k<4;k++){
+        box(u,66.68,2.2,.38,y+.6+k*.48,.045,HONEY,{solid:false});
+        for(let i=0;i<12;i++)box(u-1+i*.18,66.6,.13,.20,y+.65+k*.48,.34,[0xc6b97c,0x514337,0x466d63,0xbb7390,0xc9845c][i%5],{solid:false});
+        box(u,66.43,2.1,.025,y+.62+k*.48,.018,glow,{solid:false});
+      }
+    }
+    box(51.1,61.4,.65,.65,y,1.05,0x49775c);
+    box(51.1,61.4,.72,.72,y+1.05,.45,'glass',{solid:false});
+    box(48.62,59.9,.65,.16,y,1.8,0xb56e87,{solid:false});
+    sign(['NESPRESSO','SWAROVSKI'],48.62,59.8,y+1.2,'N',.58,.43,{bg:null,fg:'#6f344b',bold:false});
+    for(const u of [47.3,50,52.7])downlight(u,63.8,y+3.65,.055);
+    // 1F refs 16/13: an enclosed decorative oval light, NOT a hole through the reclaimed 1F slab.
+    finish([55.5,61,66.3,71.3],y+.037,0xe8e3d3);
+    for(let i=0;i<12;i++)for(let j=0;j<12;j++){
+      const u=55.5+i*.9,vv=61+j*.85;
+      if(i%2===0)finish([u,vv,u+.9,vv+.85],y+.039,0x39554e);
+      if((i+j)%2===0){
+        const disc=Array.from({length:24},(_,k)=>P(u+.45+Math.cos(k*PI/12)*.28,vv+.425+Math.sin(k*PI/12)*.28));
+        K.hpoly(i%2?0xb87f53:0xd9d1b7,disc,y+.042,true);
+        const half=[P(u+.45,vv+.425),...Array.from({length:13},(_,k)=>P(u+.45+Math.cos(k*PI/12)*.28,vv+.425+Math.sin(k*PI/12)*.28))];
+        K.hpoly(0x252526,half,y+.043,true);
+      }
+    }
+    const oval=(aa,yy,rx=2.5,rz=1.5)=>{const[x,z]=P(60.8+Math.cos(aa)*rx,65.8+Math.sin(aa)*rz);return[x,yy,z];};
+    for(let i=0;i<64;i++){
+      const aa=i*PI/32,bb=(i+1)*PI/32,mid=(aa+bb)/2,n=[Math.cos(mid)*CA+Math.sin(mid)*SA,0,-Math.cos(mid)*SA+Math.sin(mid)*CA];
+      K.quad(0x544f4a,[oval(aa,y+3.3),oval(bb,y+3.3),oval(bb,y+4.55),oval(aa,y+4.55)],n);
+      K.quad(0xd1c5b5,[oval(aa,y+3.3,2.35,1.35),oval(bb,y+3.3,2.35,1.35),oval(bb,y+3.7,2.35,1.35),oval(aa,y+3.7,2.35,1.35)],n.map(q=>-q));
+      K.quad(0xe4d6bd,[oval(aa,y+3.3),oval(bb,y+3.3),oval(bb,y+3.3,2.35,1.35),oval(aa,y+3.3,2.35,1.35)],[0,-1,0]);
+    }
+    const panel=Array.from({length:64},(_,i)=>{const q=oval(i*PI/32,y+3.69,2.35,1.35);return[q[0],q[2]];});
+    K.hpoly({tex:'emit',color:0xd8edf1},panel,y+3.69,false);
+    // Tiny stitches trace repeated U motifs around the drop, matching the photographed printed ring.
+    for(let sector=0;sector<16;sector++)for(let k=0;k<16;k++){
+      const aa=(sector+(k<5?.17:k<11?.17+(k-5)*.11:.83))*PI/8;
+      const yy=k<5?y+4.35-k*.12:k<11?y+3.86-Math.sin((k-5)*PI/5)*.25:y+3.86+(k-11)*.12;
+      const q=oval(aa,yy,2.51,1.51);K.box({x:q[0],z:q[2],y:yy,w:.018,d:.018,h:.047,mat:{tex:'emit',color:0xd9d1be},solid:false});
+    }
+    christmas(60.8,66.5,true);
+    for(const u of [56,65.8]){
+      box(u,65.4,.22,10,y+4.63,.12,0x655e51,{solid:false});
+      for(const vv of [62,68.5])downlight(u,vv,y+4.55,.045);
+    }
+    for(const [u,vv] of [[57,62.8],[64.5,69.4]]){box(u,vv,1.2,.55,y,1.0,0xd4cbb6);for(let j=0;j<6;j++)box(u-.45+j*.18,vv,.13,.2,y+1,.24,[0xd2996a,0xd4b354,0x5a8976][j%3],{solid:false});}
+    // 1F refs 10/17 and food 22/23: a stocked, temporary brick gateway and red tartan hall.
+    finish([42.8,67.7,55.1,84.2],y+.045,'ssg_diamond_gloss',.65);
+    finish([44.4,73.2,53.6,83.8],y+.05,'ssg_tartan',2.2);
+    for(const u of [45.05,52.95])box(u,73.3,.75,.65,y,3.55,'ssg_holiday_brick');
+    for(let i=0;i<40;i++){
+      const aa=i*PI/40,bb=(i+1)*PI/40;
+      const q=(t,r,yy)=>{const[x,z]=P(49+Math.cos(t)*r,72.94);return[x,y+yy+Math.sin(t)*1.02,z];};
+      K.quad('ssg_holiday_brick',[q(aa,3.55,2.42),q(bb,3.55,2.42),q(bb,4.28,2.66),q(aa,4.28,2.66)],[-SA,0,-CA]);
+      if(i%2===0)globe(49+Math.cos(aa)*3.75,72.88,y+2.56+Math.sin(aa)*1.02,.045);
+    }
+    // Pitched brick gable, with the cream oval sign centered just above its arch.
+    for(const side of [-1,1]){
+      const p0=P(49+side*4.35,73.05),p1=P(49,73.05);
+      K.quad('ssg_holiday_brick',[[p0[0],y+3.55,p0[1]],[p1[0],y+4.32,p1[1]],[p1[0],y+3.62,p1[1]],[p0[0],y+3.2,p0[1]]],[-SA,0,-CA]);
+      for(let i=0;i<=14;i++)globe(49+side*i*4.35/14,72.87,y+4.32-i*.77/14,.045);
+    }
+    sign(['SHINSEGAE','HOLIDAY MARKET'],49,72.76,y+3.79,'N',3.6,.48,{bg:'#d9c497',fg:'#653d2b',font:'Georgia, serif',bold:true});
+    for(const u of [43.8,54.2])christmas(u,72.2);
+    for(const u of [45.15,52.85]){
+      box(u,78.5,1.1,8.3,y,.58,0x783026);
+      box(u,78.5,.12,8.4,y+.6,2.15,0x6e1727,{solid:false});
+      for(let k=0;k<3;k++){
+        box(u,78.5,1.05,8.3,y+.7+k*.66,.06,0xb27f43,{solid:false});
+        for(let i=0;i<18;i++){
+          const vv=74.6+i*.45;box(u,vv,.52,.32,y+.77+k*.66,.25+(i%3)*.055,[0xb94637,0xc6ad70,0x506c43,0xdfc3a1][(i+k)%4],{solid:false});
+          box(u-.28,vv,.014,.2,y+.84+k*.66,.12,0xf4e4c4,{solid:false});
+        }
+      }
+    }
+    for(const [u,vv] of [[47,75.5],[51,78.8],[47,82]]){
+      for(const du of [-.65,.65])for(const dv of [-.65,.65])box(u+du,vv+dv,.085,.085,y,.9,0x805033,{solid:false});
+      box(u,vv,1.6,1.6,y+.9,.075,0x9d6c3f);
+      for(let i=0;i<9;i++)box(u-.5+(i%3)*.5,vv-.5+Math.floor(i/3)*.5,.31,.33,y+.98,.20+(i%2)*.1,[0x9f2630,0x426840,0xcfb27d][i%3],{solid:false});
+      for(const du of [-.7,.7])cyl(u+du,vv+.9,y,.25,.43,0xa5814b,true,14);
+    }
+    for(const vv of [74.1,76.2,78.3,80.4,82.5]){
+      box(49,vv,8.3,.018,y+3.46,.018,0x484036,{solid:false});
+      for(let i=0;i<13;i++){
+        const u=45.1+i*.65,drop=.18+.16*Math.sin(i*PI/12);
+        cyl(u,vv,y+3.46-drop,.008,drop,0x484036,false,6);globe(u,vv,y+3.46-drop,.055);
+      }
+    }
+    for(const [u,vv] of [[48.6,73.1],[50.2,75],[48.8,78.2],[49.5,81.7],[46.6,82.1],[52,72.3],[63.7,65.9]]){const[x,z]=P(u,vv);K.person(x,y,z,{shirt:[0x343a34,0xcbbba2,0x4b3d39][Math.round(vv)%3],rotY:FACE.N});}
     // Circulation remains open around the researched features.
-    restrooms(fl,y,H);elevatorHall(fl,y,H);
     for(const r of [[.3,.3,26.8,31.5],[27,9,40,31],[40,47,66.5,84]]){
       for(let u=r[0]+3;u<r[2];u+=5)for(let v=r[1]+3;v<r[3];v+=5)if(!inR(u,v,[27,64,40,73]))downlight(u,v,y+H-.04,.075);
     }
     for(const [u,v] of [[32,12],[39,5],[28,30],[31.8,49],[33.5,61],[39,75],[55,60],[15,55.8],[16,62.1],[18,73.5]]){const [x,z]=P(u,v);K.person(x,y,z,{shirt:0x645b4b});}
+    });
   }
 
-  // ================================================================= 1F
+  // ================================================================= 1F: photo 06 cosmetics rows + curved accessory aisle
   {
-    const id = '1F', y = 0, H = clearH('1F'), fl = '1F';
+    const id = '1F', y = 0, H = 4.7, fl = '1F';
     const S = (cat, o = {}) => ({ floor: fl, H, sub: `${cat} · 신세계백화점 강남점 1F`, ...o });
-    zone('신세계백화점 강남점', fl, '화장품 · 해외유명브랜드 · 잡화 (국내 최대 화장품관)', [0, 0, UW, VD], y, LV['2F'], 1);
-    // Main entrance has a clear 12 m vestibule axis (the old two invented door locations are closed).
-    shop({ u0: 0.25, u1: 14.6, v0: 0.25, v1: 8.25, f: 'S', name: 'HERMÈS|에르메스', kind: 'lux', y, ...S('해외유명브랜드'), H: 6.5, portal: 0xe8dcc8 });
-    shop({ u0: 14.6, u1: 22.7, v0: 2.2, v1: 8.25, f: 'S', name: 'CHANEL|샤넬', kind: 'lux', y, ...S('해외유명브랜드'), H: 6.5, portal: 0x1d1c1b });
-    shop({ u0: 44.3, u1: 53.4, v0: 2.2, v1: 8.25, f: 'S', name: 'LOUIS VUITTON|루이 비통', kind: 'lux', y, ...S('해외유명브랜드'), H: 6.5, portal: 0x3a2f28 });
-    shop({ u0: 53.4, u1: 66.75, v0: 0.25, v1: 9.6, f: 'S', name: 'FENDI|펜디', kind: 'lux', y, ...S('해외유명브랜드'), H: 6.5, portal: 0xd9cbb3 });
-    // East retail band; the v30 approach to the parking-side entrance stays clear.
-    shop({ u0: 58.75, u1: 66.75, v0: 33.4, v1: 47, f: 'W', name: 'BURBERRY|버버리', kind: 'lux', y, ...S('해외유명브랜드'), H: 6.5, portal: 0xcfb894 });
-    shop({ u0: 58.75, u1: 66.75, v0: 47, v1: 60.6, f: 'W', name: 'MAISON MARGIELA|메종 마르지엘라', kind: 'lux', y, ...S('해외유명브랜드'), H: 6.5, portal: 0xefe9df });
-    shop({ u0: 58.75, u1: 66.75, v0: 67.4, v1: 76.5, f: 'W', name: 'BAG GALLERY|백 갤러리', kind: 'bag', y, ...S('잡화'), H: 6.5, portal: 0x2a2420 });
-    shop({ u0: 58.75, u1: 66.75, v0: 24.2, v1: 26.6, f: 'W', name: '고객 라운지', kind: 'service', y, ...S('서비스'), zone: true });
-    // west band: 스타벅스, 조 말론, (J4 passage), 르 라보
-    shop({ u0: 0.25, u1: 8.25, v0: 8.25, v1: 22, f: 'E', name: 'STARBUCKS|스타벅스 센트럴시티점', kind: 'cafe', y, ...S('카페'), fascia: 0x00704a, bg: '#00704a', fg: '#fff', H: 4.4 });
-    shop({ u0: 0.25, u1: 8.25, v0: 22, v1: 38, f: 'E', name: 'JO MALONE LONDON|조 말론 런던', kind: 'cos', y, ...S('향수'), H: 4.4 });
-    shop({ u0: 0.25, u1: 8.25, v0: 47, v1: 61.8, f: 'E', name: 'LE LABO|르 라보', kind: 'cos', y, ...S('향수'), H: 4.4 });
-    sign(['← 센트럴시티 중앙광장', '호남선 터미널 · 메가박스'], 0.7, 46.4, 1.55, 'E', 3.8, 0.6, { bg: '#e4d7c2', fg: '#544536' });
-    // south band (under the mezzanine): 하우스 오브 신세계 와인 셀라, J5 to JW
-    shop({ u0: 5.8, u1: 30.6, v0: 76.5, v1: 84.45, f: 'N', name: 'HOUSE OF SHINSEGAE · WINE CELLAR|하우스 오브 신세계 와인 셀라', kind: 'wine', y, ...S('하우스 오브 신세계'), H: 3.2,
-      portal: 'ssg_honey', fascia: 'ssg_honey', bg: null, fg: '#e5c389', signH: .3, signStyle: { bg: null, font: 'Georgia, serif' } });
-    shop({ u0: 36.8, u1: 51, v0: 76.5, v1: 84.45, f: 'N', name: 'BYREDO|바이레도', kind: 'cos', y, ...S('향수'), H: 3.2 });
-    shop({ u0: 51, u1: 66.75, v0: 76.5, v1: 84.45, f: 'N', name: 'DIPTYQUE|딥티크', kind: 'cos', y, ...S('향수'), H: 3.2 });
     const wayfinding = { bg: '#3c3129', fg: '#e5c389', font: 'Georgia, "Noto Serif KR", serif', bold: false, twoSided: true };
-    sign('JW 메리어트 호텔 서울 →', 33.7, 76.3, 2.75, 'N', 3.8, 0.38, wayfinding);
-    // cosmetics islands
-    const cos = ['DIOR BEAUTY|디올 뷰티', 'ESTĒE LAUDER|에스티 로더', 'LANCÔME|랑콤', '설화수', 'SISLEY|시슬리', 'LA MER|라 메르', 'YSL BEAUTY|입생로랑 뷰티', 'TOM FORD BEAUTY|톰 포드 뷰티',
-      'GUERLAIN|겔랑', 'ARMANI BEAUTY|아르마니 뷰티', 'CLÉ DE PEAU BEAUTÉ|끌레드뽀 보떼', 'HERA|헤라', 'M·A·C|맥', 'BOBBI BROWN|바비 브라운', 'CHANEL BEAUTY|샤넬 뷰티', 'NARS|나스', '후', 'KIEHL\'S|키엘', 'CLINIQUE|크리니크', 'SHISEIDO|시세이도', 'AESOP|이솝', 'HOURGLASS|아워글래스'];
-    island(cos.slice(0, 4), 12.25, 24.1, 12.25, 31.5, y, S('화장품', { kind: 'cos', H: 6.5 }));
-    island(cos.slice(4, 6), 12.25, 24.1, 35, 47, y, S('화장품', { kind: 'cos', H: 6.5 }));
-    island(cos.slice(6, 10), 42.9, 54.75, 12.25, 31.5, y, S('화장품', { kind: 'cos', H: 6.5 }));
-    island(cos.slice(10, 12), 42.9, 54.75, 35, 47, y, S('화장품', { kind: 'cos', H: 6.5 }));
-    // The former lounge opening is plain marble floor, continuing the wine-cellar approach.
-    island(cos.slice(16, 20), 42.9, 48.8, 60, 72.5, y, S('화장품', { kind: 'cos', H: 3.2 }));
-    shop({ u0: 48.8, u1: 58.4, v0: 64, v1: 72.5, f: 'N', name: 'HOURGLASS|아워글래스', kind: 'cos', y, ...S('화장품'), H: 3.2 });
-    // Keep the documented pop-up use, but a small neutral display at the side preserves the approach.
-    zone('더 스테이지', fl, '팝업 공간', [27.6, 14, 30.5, 26], y, y + H, 2);
-    box(29, 22, 1.8, 3.2, y, 0.65, 0xe7e2d9);
-    sign('더 스테이지', 29, 20.2, y + 1.2, 'N', 1.8, 0.3, { bg: null, fg: '#36332e' });
-    box(26.3, 10.7, 2.2, 0.85, y, 1.0, 0xe8dcc6);
-    sign('안내', 26.3, 10.25, 1.3, 'N', 1.1, 0.3, { bg: '#2d241c', fg: '#f3e6c8' });
-    // grand stairs up to the 1M mezzanine
-    for (const u of [15.2, 52.2]) { const a = P(u, 50.7), b = P(u, 58); K.stairs(a[0], a[1], b[0], b[1], { w: 3.6, ya: 0, yb: LV['1M'], mat: 'marble', railMat: 0xb9a77f }); }
-    sign('1M · 버건디& · 퍼퓸 ↑', 15.2, 50.4, 2.9, 'N', 3.4, 0.38, wayfinding);
-    sign('1M · 분더샵 메자닌 ↑', 52.2, 50.4, 2.9, 'N', 3.4, 0.38, wayfinding);
-    columns(id, y, H);
-    lights(y + H - 0.02);
-    for (let u = 9.5; u < 60; u += 5) for (let v = 60.5; v < 84; v += 5) if (!inR(u, v, [27.6, 64.5, 39.4, 72.5], 0.3)) downlight(u, v, LV['1M'] - TH['1M'] - 0.02);
-    aisleBorders(y);
-    coffer(9, 32, 58, 34.6, y + H); coffer(9, 47.4, 58, 50, y + H);
-    coffer(31, 12.4, 37, 31.3, y + H);
-    restrooms(id, y, 3.2); elevatorHall(id, y, 3.2);
-    sign('1F  화장품 · 해외유명브랜드', 25.4, 33, 3.4, 'N', 3.2, 0.38, wayfinding);
-    // 20/21: quiet bright stone hall, white-lit bag wall and the observed wall-mounted wordmark.
-    const signStone = { tex:'marble', color:0xb4afa5 };
-    box(25.1,29.2,1.2,5.1,0,6.45,signStone);
-    // The return recedes into the retail volume, leaving the east aisle open.
-    box(24.05,31.8,2.5,.25,0,6.45,signStone);
-    sign(['SHINSEGAE','GANGNAM'],25.72,29.2,4.7,'E',3.8,.85,{bg:null,fg:'#f5f4ff',font:'Helvetica, Arial, sans-serif',bold:false});
-    box(25.72,29.2,.04,4.6,.25,1.95,{tex:'emit',color:0xfff8ee},{solid:false});
-    for(const v of [26.79,31.61])box(25.83,v,.3,.12,.25,1.95,signStone,{solid:false});
-    for(let j=0;j<4;j++){
-      box(25.83,29.2,.3,4.6,.45+j*.48,.035,0xf4efe6,{solid:false});
-      box(25.98,29.2,.025,4.6,.43+j*.48,.018,{tex:'emit',color:0xfff8ee},{solid:false});
-      for(let k=0;k<6;k++){
-        const v=27.3+k*.72,yy=.49+j*.48;
-        box(25.85,v,.22,.38,yy,.25,[0x302e29,0xb79f77,0xe8ddc8,0x75584a][(j+k)%4],{solid:false});
-        box(25.85,v,.08,.18,yy+.25,.09,0x9c8a6b,{solid:false});
+    zone('신세계백화점 강남점', fl, '화장품 · 해외유명브랜드 · 잡화 · 하우스 오브 신세계', [0, 0, UW, VD], 0, LV['2F'], 1);
+    zone('화장품관 곡선 통로',fl,'화장품 · 향수 · 잡화',[7,12,40,49],0,4.7,2);
+    // Open beauty pavilions: the photographed cards put fashion on 2F, cosmetics here.
+    function beauty(name, r, f, palette = 'cream') {
+      const [u0,v0,u1,v1] = r, w = u1-u0, d = v1-v0;
+      const black = palette === 'black', honey = palette === 'honey';
+      const base = black ? 0x151515 : honey ? 0xcaaa82 : 0xe9dfce;
+      const trim = black ? 0xb8b4a9 : 0xbca06b;
+      const yy = v0 >= 58 ? 3.15 : 3.7;
+      const front = f === 'N' ? v0 : v1, back = f === 'N' ? v1 : v0;
+      const dir = f === 'N' ? 1 : -1;
+      wall(u0,back,u1,back,0,yy,{mat:base,thick:.14});
+      for(const u of [u0,u1])wall(u,front,u,back,0,2.55,{mat:base,thick:.12});
+      zone(name,fl,'화장품 · 뷰티 상담',r,0,yy,3);
+      furnish(fl,()=>{
+        box((u0+u1)/2,front,w,.28,yy-.62,.62,base,{solid:false});
+        sign(name,(u0+u1)/2,front-dir*.17,yy-.29,f,w*.74,.36,{bg:null,fg:black?'#ffffff':'#a38751',font:'Georgia, serif',bold:false});
+        // Warm illuminated wall bays, 40cm deep; separate bottles and tester boxes.
+        for(let c=0;c<Math.floor(w/1.2);c++) {
+          const u=u0+.7+c*1.2;
+          box(u,back-dir*.18,1.04,.07,.55,2.08,{tex:'emit',color:0xfff4df},{solid:false});
+          for(let row=0;row<4;row++) {
+            const shelf=.58+row*.46;
+            box(u,back-dir*.4,1.10,.4,shelf,.045,trim,{solid:false});
+            for(let k=0;k<6;k++) {
+              const x=u-.43+k*.17, hh=.13+(k%3)*.045;
+              box(x,back-dir*.43,.10,.12,shelf+.05,hh,[0xf3e7d2,0xc6a369,0x322b27,0xd1a28e][(c+k+row)%4],{solid:false});
+              box(x,back-dir*.43,.065,.08,shelf+.05+hh,.045,black?0x161616:0xc1a05e,{solid:false});
+            }
+          }
+        }
+        for(const u of [u0+w*.27,u0+w*.73]) {
+          const v=front+dir*1.65, cw=w*.31;
+          box(u,v,cw,1.1,0,1.05,base);
+          box(u,v,cw+.06,1.16,1.05,.045,'ssg_marble_polished',{solid:false});
+          box(u,v,cw-.14,.86,1.10,.25,'glass',{solid:false});
+          for(let k=0;k<8;k++) {
+            box(u-cw*.4+k*cw*.11,v,.11,.12,1.10,.16+(k%3)*.03,k%2?0xe5c394:0x242322,{solid:false});
+            box(u-cw*.4+k*cw*.11,v-.36,.12,.055,1.11,.03,0xf8f5ed,{solid:false});
+          }
+          box(u,front+dir*3.3,.48,.48,0,.53,black?0x323232:0xc8ad86,{solid:false});
+          const p=P(u,front+dir*2.7);K.person(p[0],0,p[1],{shirt:0x202020,pants:0x222222,rotY:FACE[f]});
+        }
+        for(let u=u0+.8;u<u1;u+=1.6)downlight(u,front+dir*2.5,yy+.08,.07);
+      });
+    }
+    beauty('HERMÈS',[1,1,9,7],'S','honey');
+    beauty('CHANEL',[10,1,18,7],'S','black');
+    beauty('DIOR',[1,13,9,19],'S');
+    shop({u0:44.3,u1:54.5,v0:.25,v1:8.25,f:'S',name:'LOUIS VUITTON|루이 비통',kind:'lux',y,...S('해외유명브랜드'),portal:0x3a2f28});
+    shop({u0:54.5,u1:66.75,v0:.25,v1:9.6,f:'S',name:'FENDI|펜디',kind:'lux',y,...S('해외유명브랜드'),portal:0xd9cbb3});
+    shop({u0:.25,u1:6.8,v0:22,v1:37.8,f:'E',name:'JO MALONE LONDON|조 말론 런던',kind:'cos',y,...S('향수')});
+    shop({u0:.25,u1:8.25,v0:47,v1:61.8,f:'E',name:'LE LABO|르 라보',kind:'cos',y,...S('향수')});
+    shop({u0:58.75,u1:66.75,v0:33.4,v1:47,f:'W',name:'BURBERRY|버버리',kind:'lux',y,...S('해외유명브랜드'),portal:0xcfb894});
+    shop({u0:58.75,u1:66.75,v0:47,v1:60.6,f:'W',name:'MAISON MARGIELA|메종 마르지엘라',kind:'lux',y,...S('해외유명브랜드'),portal:0xefe9df});
+    shop({u0:58.75,u1:66.75,v0:67.4,v1:76.5,f:'W',name:'BAG GALLERY|백 갤러리',kind:'bag',y,...S('잡화'),H:3.2,portal:0x2a2420});
+    // Low rectangular cosmetics cells, closely spaced as the official plan, with cross aisles.
+    for(const [name,r,f,pal] of [
+      ['ESTĒE LAUDER',[10,13,17.5,19],'S','cream'], ['LANCÔME',[19,13,26.5,19],'S','black'],
+      ['설화수',[10,23,17.5,29],'S','honey'],['LA MER',[19,23,26.5,29],'S','cream'],
+      ['SISLEY',[10,33,17.5,39],'N','cream'],['GUERLAIN',[19,33,26.5,39],'N','cream'],
+      ['YSL BEAUTY',[45,13,53,19],'S','black'],['TOM FORD BEAUTY',[45,23,53,29],'S','black'],
+      ['HERA',[44,35,52,41],'S','cream'],['CLÉ DE PEAU BEAUTÉ',[44,45,52,49.5],'N','cream'],
+    ]) beauty(name,r,f,pal);
+    // Southern cells under the retained 1M deck; all former B1 voids have a continuous slab.
+    shop({u0:5.8,u1:30.6,v0:76.5,v1:84.45,f:'N',name:'HOUSE OF SHINSEGAE · WINE CELLAR|하우스 오브 신세계 와인 셀라',kind:'wine',y,...S('와인셀러'),H:3.2,
+      portal:'ssg_honey',bg:null,fg:'#e5c389',signH:.3,signStyle:{font:'Georgia, serif'}});
+    beauty('BYREDO',[42.9,64,50.4,70],'N');beauty('DIPTYQUE',[51,64,58.4,70],'N');
+    shop({u0:36.8,u1:51,v0:76.5,v1:84.45,f:'N',name:'HOURGLASS|아워글래스',kind:'cos',y,...S('뷰티'),H:3.2});
+    shop({u0:51,u1:66.75,v0:76.5,v1:84.45,f:'N',name:'AESOP|이솝',kind:'cos',y,...S('뷰티'),H:3.2});
+    // Structure and circulation are immediate, including J4/J5 and both grand stairs.
+    for(const u of [15.2,52.2]) {const a=P(u,50.7),b=P(u,58);K.stairs(a[0],a[1],b[0],b[1],{w:3.6,ya:0,yb:LV['1M'],mat:'marble',railMat:0xb9a77f});}
+    columns(id,0,4.7,(u,v)=>v>12&&v<48&&u===24.1);
+    restrooms(id,0,3.2);elevatorHall(id,0,3.2);
+    // Actual photo01: a broad stone sign-wall with handbag niche, not a narrow advertising pillar.
+    const signStone={tex:'ssg_marble',color:0xb4afa5};
+    box(42.25,23.5,1.2,5.1,0,4.7,signStone);
+    furnish(fl,()=>{
+      sign(['SHINSEGAE','GANGNAM'],41.63,23.5,2.95,'W',3.3,.74,{bg:null,fg:'#f5f4ff',font:'Helvetica, Arial, sans-serif',bold:false});
+      box(41.62,23.5,.04,4.6,.24,1.95,{tex:'emit',color:0xfff8ee},{solid:false});
+      for(let j=0;j<4;j++) {
+        const yy=.42+j*.46;
+        box(41.47,23.5,.4,4.6,yy,.035,0xf4efe6,{solid:false});
+        for(let k=0;k<7;k++) {
+          const v=21.55+k*.63,col=[0x302e29,0xb79f77,0xe8ddc8,0x75584a][(j+k)%4];
+          box(41.44,v,.24,.36,yy+.04,.23,col,{solid:false});
+          // Narrow handle opening and brass clasp distinguish bags from boxes.
+          for(const dv of [-.09,.09])box(41.44,v+dv,.045,.035,yy+.27,.09,col,{solid:false});
+          box(41.44,v,.045,.21,yy+.35,.025,col,{solid:false});
+          box(41.30,v,.015,.04,yy+.15,.05,0xb89a5c,{solid:false});
+        }
       }
-    }
-    for(const r of [[9,32,26,34.6],[40,32,58,34.6]]){
-      hq(...r,4.5,CEIL,false);for(let u=r[0]+1;u<r[2];u+=2.5)for(let v=r[1]+1;v<r[3];v+=2.5)downlight(u,v,4.46,.055);
-    }
-    zone('하우스 오브 신세계 와인 연결 홀',fl,'와인셀러 · 매장 연결 통로',[8,58,27,76.5],0,3.2,2);
-    for(const r of [[29,6,38,12],[27,13,39,32],[9,32,23,34.5],[40,32,58,34.5],[31,73,36.5,83],[42,48,48,50]])K.crowd(rect(...r),0,3,{seed:Math.round(r[0]*r[1])});
+      // Oval upper cove is a ceiling recess only: the ground slab stays closed.
+      const ellipse=(ru,rv)=>Array.from({length:64},(_,i)=>P(34+ru*Math.cos(i*PI/32),23+rv*Math.sin(i*PI/32)));
+      K.hpoly(CEIL,rect(.2,.2,66.8,50),4.7,false,[ellipse(8.4,9.2),rect(27.2,34.5,39.8,47.6)]);
+      for(let i=0;i<64;i++) {
+        const a=i*PI/32,b=(i+1)*PI/32, p=P(34+8.4*Math.cos(a),23+9.2*Math.sin(a)),q=P(34+8.4*Math.cos(b),23+9.2*Math.sin(b));
+        K.wall(p[0],p[1],q[0],q[1],4.7,5.35,{thick:.10,mat:CEIL,solid:false});
+        const pa=P(34+8.5*Math.cos(a),23+9.3*Math.sin(a)),pb=P(34+8.5*Math.cos(b),23+9.3*Math.sin(b));
+        K.quad({tex:'emit',color:0xfff0d6},[[p[0],4.76,p[1]],[q[0],4.76,q[1]],[pb[0],4.76,pb[1]],[pa[0],4.76,pa[1]]],[0,-1,0]);
+      }
+      for(let u=3;u<64;u+=2.5)for(let v=3;v<49;v+=2.5) {
+        if(inR(u,v,ATR,.8))continue;
+        const inside=((u-34)/8.4)**2+((v-23)/9.2)**2<1;
+        downlight(u,v,inside?6.43:4.66,.055);
+      }
+      for(let u=9.5;u<60;u+=2.5)for(let v=60.5;v<84;v+=3)if(!inR(u,v,[27.6,64.5,39.4,72.5],.3))downlight(u,v,3.16,.06);
+      // The curve is a flush inset line, with a full 8m clear annulus south of the cosmetics rows.
+      const arc=(rx,rz,a)=>[24+rx*Math.cos(a),22+rz*Math.sin(a)];
+      for(const [rx,rz] of [[14,20],[22,28]])for(let i=0;i<64;i++) {
+        const a=.22+i*2.62/64,b=.22+(i+1)*2.62/64;
+        const p=arc(rx,rz,a),q=arc(rx,rz,b),r=arc(rx+.06,rz+.06,b),t=arc(rx+.06,rz+.06,a);
+        K.hpoly(0xb4a48e,[P(...p),P(...q),P(...r),P(...t)],.019);
+      }
+      // Accessory cells follow the inside of the curved row rather than sealing it with a wall.
+      for(let i=0;i<5;i++) {
+        const a=.65+i*.37,u=24+11.1*Math.cos(a),v=22+17.8*Math.sin(a);
+        if((u<28&&v<40)||inR(u,v,ATR,1.6))continue; // keep all escalator flights clear
+        const [x,z]=P(u,v),rot=RA+a-PI/2;
+        K.box({x,z,y:0,w:2.3,d:.8,h:1.0,rotY:rot,mat:0xe1d7c6});
+        K.box({x,z,y:1.0,w:2.2,d:.74,h:.28,rotY:rot,mat:'glass',solid:false});
+        for(let k=0;k<6;k++){const pp=P(u+(k-2.5)*.25*Math.sin(a),v-(k-2.5)*.25*Math.cos(a));K.box({x:pp[0],z:pp[1],y:1.03,w:.18,d:.17,h:.16,rotY:rot,mat:k%2?0xb29b74:0x332b24,solid:false});}
+      }
+      for (const [u,v,a] of [[10.5,44.8,-.55],[19,47.5,-.22],[24,48.5,0],[41.8,44.4,.6]]) {
+        const p=P(u,v);K.box({x:p[0],z:p[1],y:0,w:2.5,d:.78,h:.92,rotY:RA+a,mat:0xc7b79e});
+        K.box({x:p[0],z:p[1],y:.92,w:2.46,d:.74,h:.31,rotY:RA+a,mat:'glass',solid:false});
+        for(let k=0;k<7;k++) {const q=P(u+(k-3)*.28*Math.cos(a),v-(k-3)*.28*Math.sin(a));K.box({x:q[0],z:q[1],y:.96,w:.17,d:.17,h:.12,rotY:RA+a,mat:k%2?0xa7936f:0x29282a,solid:false});}
+      }
+      // Fashion rack at the left of the photo01 view, with individual coats on a metal oval plinth.
+      for(const v of [18,24]) {
+        box(30.2,v,1.25,2.7,0,.13,0xb9b4aa);
+        for(const vv of [v-1.1,v+1.1])box(30.2,vv,.05,.05,.13,1.55,0xc2c4c2,{solid:false});
+        box(30.2,v,.04,2.25,1.67,.045,0xc2c4c2,{solid:false});
+        for(let k=0;k<10;k++) {
+          const vv=v-1+k*.22,col=[0xd8cfc0,0x59534c,0xeae6dd,0x77756c][k%4];
+          box(30.2,vv,.44,.11,.45,1.12,col,{solid:false});
+          for(const du of [-.28,.28])box(30.2+du,vv,.14,.11,.58,.83,col,{solid:false});
+          box(30.2,vv,.04,.02,1.58,.1,0xd0c7b6,{solid:false});
+        }
+      }
+      // Photo13's floor is uncertain: adapt its coffer/LED-column vocabulary to the entrance hall.
+      for(let u=27.5;u<42;u+=4.8)for(let v=6.2;v<13;v+=3.5) {
+        coffer(u,v,u+4.5,v+3.2,4.68);
+        for(const vv of [v+.30,v+2.90])box(u+2.25,vv,3.9,.035,4.43,.025,0xb5a47f,{solid:false});
+      }
+      for(const u of [29.5,40.3]) {
+        box(u,11.7,.86,.68,0,3.65,0x161918);
+        box(u,11.34,.78,.025,.28,2.95,{tex:'emit',color:u<30?0x383956:0x294a5a},{solid:false});
+        sign('SHINSEGAE',u,11.31,2.90,'N',.71,.18,{bg:null,fg:'#f2ece4',bold:false});
+        sign('브랜드 소식',u,11.31,.69,'N',.67,.21,{bg:null,fg:'#efe7dc',bold:false});
+        for(let k=0;k<6;k++)box(u,11.32,.60-k*.055,.014,1+k*.25,.045,[0x8d6b79,0xbda586,0xd9c7b4][k%3],{solid:false});
+      }
+      for(const r of [[27.5,6.6,42.6,6.69],[27.5,13.2,42.6,13.29]])hq(...r,.022,0x685d4d);
+      // Information desk beside the aisle and a low stage on the reclaimed floor.
+      box(25.3,10.5,2.4,.9,0,1.02,0xe8dcc6);sign('안내',25.3,9.99,1.23,'N',1.1,.25,{bg:null,fg:'#615544'});
+      box(33.6,41.5,2.0,2.3,0,.12,0xe5ded2);box(33.6,41.5,1.1,.75,.12,.8,0xd2bc96);
+      sign('더 스테이지',33.6,40.28,1.13,'N',1.9,.26,{bg:null,fg:'#4d4233'});
+      for(const [t,u,v,f] of [['← 센트럴시티',1,46.3,'E'],['JW 메리어트 호텔 서울 →',33.7,76.3,'N'],['1M · 하우스 오브 신세계 ↑',15.2,50.4,'N']])sign(t,u,v,2.7,f,3.4,.34,wayfinding);
+      // Gate7 is reconstructed inside the retained east door: its surveyed outer canopy is unchanged.
+      box(64.6,30,.24,5.8,3.0,.72,0x101411,{solid:false});
+      sign('SHINSEGAE',64.75,29.6,3.39,'E',3.2,.43,{bg:null,fg:'#e4fbff',font:'Arial, sans-serif'});
+      sign('GATE 7',64.76,32.25,3.34,'E',.74,.20,{bg:null,fg:'#a89a7d',bold:false});
+      faceQuad('ssg_flower','E',27.5,3.16,.44,.44,.15,64.6);
+      for(const v of [27.15,28.6,31.4,32.85])box(64.6,v,.17,.12,0,3.0,0x111715);
+      for(const v of [27.85,32.15]){box(64.6,v,.045,1.3,.08,2.9,'glass',{solid:false});box(64.78,v,.06,.05,.9,.72,0x9c8e6c,{solid:false});}
+      for(let u=62.7;u<66.6;u+=.65)for(let v=27.15;v<32.85;v+=.65)hq(u,v,u+.64,v+.64,.02,(Math.round((u-62.7)/.65)+Math.round((v-27.15)/.65))%2?0xbcae8b:0x343730);
+      for(const [u,v] of [[33,13],[37,18],[32,30],[36,32],[12,42],[20,45],[40,49],[33,74],[56,52],[10,56]]) {const p=P(u,v);K.person(p[0],0,p[1],{shirt:[0x302d29,0xd3c9b9,0x575e68][Math.round(u)%3],pants:0x282c30,rotY:u%2?RA:RA+PI});}
+    });
+    zone('더 스테이지',fl,'팝업 공간',[31.8,39.8,35.4,43.2],0,4.7,3);
+    zone('하우스 오브 신세계 와인 연결 홀',fl,'와인셀러 · 메자닌 연결',[8,50,60,76.5],0,3.2,2);
+    zone('신세계 게이트 7',fl,'동측 출입문',[62.6,27.1,67,32.9],0,3.8,3);
   }
 
   // ================================================================= 1M mezzanine (하우스 오브 신세계)
-  {
-    const y = LV['1M'], H = 6.5 - y, fl = '1M';
-    const S = (cat, o = {}) => ({ floor: fl, H, sub: `${cat} · 하우스 오브 신세계 메자닌`, ...o });
-    zone('하우스 오브 신세계 메자닌', fl, '1.5층 중층 475평 · 퍼퓸 · 버건디 와인 · 분더샵 메자닌 · 퍼스널 쇼퍼룸', MEZZ, y, LV['2F'], 2);
-    shop({ u0: 8, u1: 27, v0: 76.5, v1: 84.45, f: 'N', name: 'BOON THE SHOP MEZZANINE|분더샵 메자닌', kind: 'lux', y, ...S('THE ROW · 가브리엘라 허스트 · 체사레 아톨리니'), portal: 0x2a2420 });
-    shop({ u0: 27, u1: 40, v0: 76.5, v1: 84.45, f: 'N', name: 'PERSONAL SHOPPER ROOM|퍼스널 쇼퍼룸', kind: 'lounge', y, ...S('PSR 337㎡') });
-    shop({ u0: 40, u1: 60, v0: 76.5, v1: 84.45, f: 'N', name: 'BURGUNDY &|버건디&', kind: 'wine', y, ...S('부르고뉴 와인') });
-    // Keep the existing perfume displays and the approach to the elevators.
-    for(const [v,name,ko] of [[60.8,'ACQUA DI PARMA','아쿠아 디 파르마'],[63.0,'BULY 1803','불리 1803'],[69.0,'MAISON FRANCIS KURKDJIAN','메종 프란시스 커정'],[71.2,'ASTIER DE VILLATTE','아스티에 드 빌라트']]) {
-      box(25.5,v,.75,1.5,y,.85,0xd7c4a3);
-      box(25.5,v,.78,1.53,y+.85,.05,0xf3ece0,{solid:false});
-      for(let i=0;i<5;i++)box(25.5,v-.55+i*.27,.16,.13,y+.9,.13+(i%3)*.045,[0xd8bf7b,0xd5b5a5,0xe3ded1][i%3],{solid:false});
-      sign(name,25.91,v,y+1.18,'E',1.4,.19,{bg:null,fg:'#4d3a29',font:'Georgia, serif',bold:false});
-      zone(ko,fl,'퍼퓸 · 리빙 · 하우스 오브 신세계 메자닌',[25.05,v-.95,26.2,v+.95],y,6.5,4);
+  // Upper-photo helpers live inside the upper section so independent 1F edits preserve them.
+  function upperBall(u,v,yy,r,mat,ry=r) {
+    const [x,z]=P(u,v);K.dome({x,z,y:yy,rx:r,ry,rz:r,seg:10,rings:6,hemi:false,mat});
+  }
+  function upperCyl(u,v,yy,r,h,mat,solid=false) {
+    const [x,z]=P(u,v);K.cyl({x,z,y:yy,r,h,mat,solid,seg:10});
+  }
+  function upperRetailCeiling(id,y) {
+    const v0=UPPER.has(id)?VS+.2:.2, yy=y+3.2;
+    const omissions=[ATR,[29.2,64.7,37.8,67.3],...CORES.map(c=>[c.uL,c.v0,c.uR,c.v1]),[23,0,44,9]];
+    const runs=(a0,a1,fixed,horizontal)=>{
+      let parts=[[a0,a1]];
+      for(const r of omissions){
+        const cross=horizontal?[r[1],r[3]]:[r[0],r[2]],cut=horizontal?[r[0],r[2]]:[r[1],r[3]];
+        if(fixed<cross[0]-.1||fixed>cross[1]+.1)continue;
+        parts=parts.flatMap(([a,b])=>b<=cut[0]||a>=cut[1]?[[a,b]]:[[a,Math.max(a,cut[0])],[Math.min(b,cut[1]),b]].filter(([c,d])=>d-c>.1));
+      }return parts;
+    };
+    // 0.6 m open-cell ceiling grid; never bridge the atrium or stair openings.
+    for(let u=.5;u<UW-.5;u+=1.2)for(let v=v0+.3;v<VD-.5;v+=1.2) {
+      if(omissions.some(r=>inR(u,v,r,.65)))continue;
+      hq(u-.28,v-.28,u+.88,v+.88,yy+.23,(Math.round(u*5+v*5)%3)?0x687074:0x343d41,false);
     }
-    zone('퍼퓸 · 리빙',fl,'아쿠아 디 파르마 · 불리 1803 · 메종 프란시스 커정 · 아스티에 드 빌라트',[24.7,59.8,26.3,72.5],y,6.5,3);
-    island(['POIRAY|뽀아레#jewel', 'SWISS PERFECTION|스위스퍼펙션#cos', '다니엘라 그레지스#lux', '하우스 오브 신세계 라운지#cafe'], 42.9, 54.75, 61, 73, y, S('하우스 오브 신세계'));
-    // balcony rail along the north edge (gaps at the two grand stairs) and the open sides
-    const railY = y;
-    const rail = (u0, v0, u1, v1) => { wall(u0, v0, u1, v1, railY, railY + 1.1, { mat: 'glass', thick: 0.04 }); boxR(Math.min(u0, u1) - 0.03, Math.min(v0, v1) - 0.03, Math.max(u0, u1) + 0.03, Math.max(v0, v1) + 0.03, railY + 1.1, 0.06, 0xb9a77f, { solid: false }); };
-    rail(8.1, 58.1, 13.3, 58.1); rail(17.1, 58.1, 50.3, 58.1); rail(54.1, 58.1, 59.9, 58.1);
-    rail(8.1, 58.1, 8.1, 84.3); rail(59.9, 58.1, 59.9, 84.3);
-    sign('하우스 오브 신세계', 33.5, 58.3, 6.0, 'N', 5, 0.5, { bg: '#e7dcc9', fg: '#493c30', bold: false, twoSided: true });
-    aisleBorders(y, true);
-    coffer(24.9, 59.1, 42.1, 63.9, 6.5); coffer(9, 73.6, 59, 76.2, 6.5);
-    box(41,70,2.2,.8,y,.45,0x6a5444);
-    sign(['1M', '하우스 오브 신세계'], 28.45, 64.6, y + 2.0, 'N', 1.5, 0.5, { bg: '#2d241c', fg: '#f3e6c8', twoSided: true });
-    K.crowd(rect(25, 59, 42, 64), y, 5, { seed: 77 }); K.crowd(rect(9, 74.6, 59, 76.3), y, 5, { seed: 78 });
+    for(let v=v0;v<VD-.2;v+=.6)for(const[a,b]of runs(.2,UW-.2,v,true))box((a+b)/2,v,b-a,.035,yy,.22,0x8d9396,{solid:false});
+    for(let u=.2;u<UW-.2;u+=.6)for(const[a,b]of runs(v0,VD-.2,u,false))box(u,(a+b)/2,.035,b-a,yy,.22,0x8d9396,{solid:false});
+    for(let u=2;u<UW-1;u+=3)for(let v=v0+1.8;v<VD-1;v+=3.6){
+      if(omissions.some(r=>inR(u,v,r,.8)))continue;
+      box(u,v,.075,1.17,yy+.06,.05,{tex:'emit',color:0xf0f5ff},{solid:false});
+      box(u+.10,v,.045,1.18,yy+.05,.10,0xd5d9da,{solid:false});
+    }
+  }
+  function winterCoat(u,v,y,color=0xc4c4bf,front='N',scale=1) {
+    const sw=front==='E'||front==='W',b=(a,c,w,d,h,hh,m)=>box(u+(sw?c:a),v+(sw?a:c),sw?d:w,sw?w:d,y+h,hh,m,{solid:false});
+    b(0,0,.43*scale,.21*scale,.55*scale,.67*scale,color);
+    for(const side of[-1,1]){b(side*.275*scale,.015,.14*scale,.20*scale,.53*scale,.60*scale,color);b(side*.275*scale,.015,.145*scale,.205*scale,.53*scale,.035*scale,0x6e7070);}
+    for(let j=0;j<6;j++){
+      b(0,-.111*scale,.43*scale,.008,.60*scale+j*.095*scale,.009,0x747776);
+      for(const side of[-1,1])b(side*.275*scale,-.09*scale,.14*scale,.009,.58*scale+j*.09*scale,.009,0x7f8281);
+    }
+    b(0,-.115*scale,.012,.008,.58*scale,.60*scale,0xb6b7b3);
+    b(-.105*scale,0,.14*scale,.23*scale,1.22*scale,.12*scale,color);b(.105*scale,0,.14*scale,.23*scale,1.22*scale,.12*scale,color);
+    b(0,0,.025,.025,1.34*scale,.12*scale,0x8e9394);
+  }
+  function coatRack(u,v,y,length=3,face='N',seed=0) {
+    const sw=face==='E'||face==='W';box(u,v,sw?.7:length,sw?length:.7,y,.045,0x9c9fa0);
+    for(const a of[-length/2+.1,length/2-.1])box(u+(sw?0:a),v+(sw?a:0),.045,.045,y,2.15,0xa5abad,{solid:false});
+    box(u,v,sw?.045:length,sw?length:.045,y+2.1,.045,seed%2?0xc46825:0xaab0b2,{solid:false});
+    const n=Math.floor(length/.36);
+    for(let i=0;i<n;i++){
+      const a=-length/2+.22+i*.36,uu=u+(sw?0:a),vv=v+(sw?a:0);
+      winterCoat(uu,vv,y+.57,[0xd7d7cf,0xaeb2b2,0x222629,0xe9e5d9,0x828785][(seed+i)%5],face);
+      box(uu,vv,.022,.022,y+1.98,.14,0xb5bbbd,{solid:false});
+    }
+  }
+  function upperMannequin(u,v,y,col=0xe7e5dd) {
+    box(u,v,.78,.7,y,.08,0x1d2022);
+    for(const du of[-.12,.12]){box(u+du,v,.14,.18,y+.13,.79,0xdedbd3,{solid:false});box(u+du,v-.08,.17,.34,y+.09,.11,0xf4f3ed,{solid:false});}
+    winterCoat(u,v,y+.28,col,'N',1.1);upperCyl(u,v,y+1.74,.075,.09,0xc5c6c0);upperBall(u,v,y+1.96,.13,0xc4c6c2,.19);upperCyl(u,v,y+2.08,.15,.12,0x797f7e);
+  }
+  function upperShoe(u,v,y,color=0x202326,scale=1) {
+    box(u,v,.19*scale,.34*scale,y,.035*scale,0xafa46c,{solid:false});box(u,v-.045*scale,.18*scale,.27*scale,y+.035*scale,.10*scale,color,{solid:false});
+    box(u,v+.06*scale,.14*scale,.15*scale,y+.09*scale,.10*scale,color,{solid:false});
+    for(let i=0;i<4;i++)box(u,v-.035*scale+i*.029*scale,.09*scale,.009,y+.142*scale,.009,0xddd8c4,{solid:false});
+  }
+  {
+    const y = LV['1M'], H = 6.5-y, fl = '1M', OAK = {tex:'wood',color:0xa8723a}, DARKOAK = {tex:'wood',color:0x65452e}, GOLD=0xb59a5e;
+    const S = (cat,o={})=>({floor:fl,H,sub:`${cat} · 하우스 오브 신세계 메자닌`,...o});
+    zone('하우스 오브 신세계 메자닌',fl,'퍼퓸 · 와인바 · 분더샵 메자닌 · 퍼스널 쇼퍼룸',MEZZ,y,LV['2F'],2);
+    shop({u0:8,u1:27,v0:76.5,v1:84.45,f:'N',name:'BOON THE SHOP MEZZANINE|분더샵 메자닌',kind:'lux',y,...S('THE ROW · 가브리엘라 허스트 · 체사레 아톨리니'),portal:0x2a2420});
+    shop({u0:27,u1:40,v0:76.5,v1:84.45,f:'N',name:'PERSONAL SHOPPER ROOM|퍼스널 쇼퍼룸',kind:'lounge',y,...S('PSR 337㎡')});
+    shop({u0:40,u1:60,v0:76.5,v1:84.45,f:'N',name:'BURGUNDY &|버건디&',kind:'wine',y,...S('부르고뉴 와인')});
+    // The supplied food photographs have no certain level. Their warm dining rooms
+    // occupy the retained mezzanine, which never opens the 1F slab into B1.
+    zone('김수사',fl,'하우스 오브 신세계 · 스시 카운터',[9.2,61.4,23.3,73.5],y,6.5,4);
+    zone('TACHIBANA',fl,'하우스 오브 신세계 · 타치바나 라멘',[43.6,60.6,58.2,67.7],y,6.5,4);
+    zone('BY THE GLASS',fl,'하우스 오브 신세계 · 와인바',[43.6,68.4,58.2,74.4],y,6.5,4);
+    wall(9.3,61.4,9.3,73.5,y,y+H,{mat:0xe5dfd1,thick:.16});
+    wall(9.3,73.5,23.3,73.5,y,y+H,{mat:0xe5dfd1,thick:.16});
+    wall(43.6,67.7,58.2,67.7,y,y+H,{mat:OAK,thick:.16});
+    wall(43.6,74.4,58.2,74.4,y,y+H,{mat:DARKOAK,thick:.16});
+    // Existing stair openings and lift approaches remain structural.
+    const rail=(u0,v0,u1,v1)=>{
+      wall(u0,v0,u1,v1,y,y+1.1,{mat:'glass',thick:.04});
+      boxR(Math.min(u0,u1)-.03,Math.min(v0,v1)-.03,Math.max(u0,u1)+.03,Math.max(v0,v1)+.03,y+1.1,.06,GOLD,{solid:false});
+    };
+    rail(8.1,58.1,13.3,58.1);rail(17.1,58.1,50.3,58.1);rail(54.1,58.1,59.9,58.1);
+    rail(8.1,58.1,8.1,84.3);rail(59.9,58.1,59.9,84.3);
+    for(const [v,name,ko] of [[60.8,'ACQUA DI PARMA','아쿠아 디 파르마'],[63,'BULY 1803','불리 1803'],[69,'MAISON FRANCIS KURKDJIAN','메종 프란시스 커정'],[71.2,'ASTIER DE VILLATTE','아스티에 드 빌라트']]) {
+      zone(ko,fl,'퍼퓸 · 리빙 · 하우스 오브 신세계 메자닌',[25.05,v-.95,26.2,v+.95],y,6.5,4);
+      furnish(fl,()=>{
+        box(25.5,v,.75,1.5,y,.85,0xd7c4a3);box(25.5,v,.78,1.53,y+.85,.05,0xf3ece0,{solid:false});
+        for(let i=0;i<8;i++)box(25.5,v-.62+i*.17,.11,.10,y+.9,.13+(i%3)*.045,[0xd8bf7b,0xd5b5a5,0xe3ded1][i%3],{solid:false});
+        sign(name,25.91,v,y+1.18,'E',1.4,.19,{bg:null,fg:'#4d3a29',font:'Georgia, serif',bold:false});
+      });
+    }
+    furnish(fl,()=>{
+      // Photo 01: oak-panel balcony with amber wash, brass rails and mirror seams.
+      for(const [a,b] of [[8.1,13.3],[17.1,50.3],[54.1,59.9]]) {
+        boxR(a,58.0,b,58.16,y-.40,.7,OAK,{solid:false});
+        boxR(a,57.98,b,58.0,y-.36,.045,{tex:'emit',color:0xffd28b},{solid:false});
+        for(let u=a+.45;u<b;u+=1.5) {
+          box(u,57.97,.035,.04,y-.39,.69,0x80552e,{solid:false});
+          box(u+.45,57.91,.075,.035,y-.29,.19,{tex:'emit',color:0xffc574},{solid:false});
+          box(u,58.08,.035,.035,y+.30,.8,GOLD,{solid:false});
+        }
+        box((a+b)/2,58.08,b-a,.025,y+.72,.025,GOLD,{solid:false});
+      }
+      for(const u of [20.8,46]) {
+        box(u,57.7,.6,.6,0,6.45,0x9da39e,{solid:false});
+        for(let yy=.2;yy<6.4;yy+=1.2)box(u,57.387,.6,.012,yy,.014,0x454d49,{solid:false});
+        box(u-.18,57.382,.10,.015,0,6.45,0xe3e5dc,{solid:false});
+        box(u+.21,57.382,.05,.015,0,6.45,0x535e59,{solid:false});
+      }
+      const globe=(u,v,yy)=>{upperCyl(u,v,yy+.17,.018,.30,GOLD);upperBall(u,v,yy,.15,{tex:'emit',color:0xfff4dd});};
+      const chair=(u,v,face='N',backBasket=false)=>{
+        box(u,v,.52,.50,y+.54,.09,0x593b29);
+        for(const du of [-.21,.21])for(const dv of [-.19,.19])box(u+du,v+dv,.045,.045,y,.58,0x765231,{solid:false});
+        const dv=face==='N'?.25:-.25;
+        box(u,v+dv,.54,.05,y+.63,.36,0x63432f,{solid:false});
+        for(const du of [-.24,.24])box(u+du,v+dv,.045,.045,y+.55,.53,0x94683d,{solid:false});
+        if(backBasket) {
+          box(u,v+dv+.06,.42,.18,y+.08,.38,0x866037,{solid:false});
+          for(let k=0;k<9;k++)box(u-.19+k*.047,v+dv+.16,.013,.015,y+.10,.35,0x483421,{solid:false});
+        }
+      };
+      const setting=(u,v,yy)=>{
+        box(u,v,.38,.28,yy,.012,0xf0e9d7,{solid:false});upperCyl(u,v,yy+.013,.115,.018,0xf9f4e8);
+        upperCyl(u+.2,v,yy,.035,.105,'glass');box(u-.17,v,.012,.25,yy+.014,.01,0x473528,{solid:false});
+      };
+      // 03–05: 12 x 10 m sushi room, stone floor, curved oak booths, six seats.
+      hq(9.45,61.5,23.25,73.4,y+.018,{tex:'ssg_upper_tile',color:0x858681});
+      hq(9.45,61.5,23.25,73.4,y+2.78,{tex:'metal',color:0xac9b7b},false);
+      for(const v of [64,69.4]) {
+        box(9.45,v,.08,4.55,y+.25,2.18,OAK,{solid:false});
+        for(let z=v-2.1;z<v+2.1;z+=.65)box(9.51,z,.04,.025,y+.4,1.87,0x68482c,{solid:false});
+        for(const yy of [.55,1.55,2.32])box(9.56,v,.04,4.35,y+yy,.045,0x855f39,{solid:false});
+        // rounded quarter corners on the opening, in the vertical v/y plane
+        for(const end of [-1,1])for(let i=0;i<10;i++) {
+          const t=(i+.5)*PI/20;
+          box(9.60,v+end*(1.85+.35*Math.sin(t)),.11,.11,y+2.05+.35*Math.cos(t),.13,0xb0814b,{solid:false});
+        }
+        for(const dv of [-1.2,0,1.2]) globe(9.77,v+dv,y+1.65);
+        box(10.05,v,.8,4.2,y,.48,0x33372f);box(9.68,v,.08,4.2,y+.48,.55,0x42483c,{solid:false});
+        for(const dv of [-1.2,1.2]) {
+          box(11.3,v+dv,1.1,.85,y+.73,.06,OAK);upperCyl(11.3,v+dv,y,.055,.73,0x38302b);chair(12.3,v+dv,'N');
+          setting(11.3,v+dv,y+.80);
+        }
+      }
+      for(const [u,v,w,d] of [[18,65.8,6.8,.8],[15,68,.8,3.6],[21,68,.8,3.6]]) {
+        box(u,v,w,d,y,.97,OAK);box(u,v,w+.08,d+.08,y+.97,.07,{tex:'marble',color:0xe8dcc3},{solid:false});
+      }
+      for(let i=0;i<6;i++){const u=15.4+i*1.04;chair(u,64.7,'S',true);setting(u,65.6,y+1.05);}
+      for(const u of [16,18.2,20.1]) {
+        const [x,z]=P(u,68);K.person(x,y,z,{shirt:0xf7f4e9,pants:0x39382f,rotY:FACE.N});upperCyl(u,68,y+1.66,.12,.19,0xfffcf1);
+      }
+      for(const [u,v] of [[15.4,64.7],[17.48,64.7],[20.6,64.7]]){const [x,z]=P(u,v);K.person(x,y,z,{sit:true,shirt:0x252729,rotY:FACE.S});}
+      box(18,72.9,9,.1,y,2.55,DARKOAK,{solid:false});
+      for(let u=14;u<22;u+=.18)box(u,72.83,.023,.035,y+.35,2.1,0x97825b,{solid:false});
+      sign('金寿司',18,72.72,y+1.85,'N',1.1,.36,{bg:'#63462e',fg:'#eee6cf',font:'serif',bold:false});
+      for(const [u,v,w,d] of [[18,64.4,8.3,.1],[18,70.7,8.3,.1],[13.9,67.55,.1,6.4],[22.1,67.55,.1,6.4]])box(u,v,w,d,y+2.62,.035,{tex:'emit',color:0xffe4ae},{solid:false});
+      box(22.3,62.1,.6,.48,y,1.12,DARKOAK);sign(['김수사','대기 안내'],22.3,61.84,y+1.18,'N',.48,.38,{bg:'#f0e4cc',fg:'#4a382a',bold:false});
+      // 06–08: twelve timber chairs, low luminous louver fascia and five globes.
+      hq(43.7,60.7,58.1,67.6,y+.018,{tex:'ssg_upper_tile',color:0x8b8d88});
+      box(51,65.1,10.4,.8,y,.97,OAK);box(51,65.1,10.5,.88,y+.97,.07,{tex:'marble',color:0xebe0ca},{solid:false});
+      for(const u of [46.1,55.9]){box(u,66.2,.65,2.5,y,.97,OAK);box(u,66.2,.72,2.5,y+.97,.07,{tex:'marble',color:0xebe0ca},{solid:false});}
+      for(let i=0;i<12;i++){const u=46.45+i*.82;chair(u,64.08,'S');setting(u,64.95,y+1.05);}
+      box(51,66.45,10.7,2.1,y+2.32,.40,DARKOAK,{solid:false});
+      box(51,65.37,10.7,.04,y+2.32,.27,{tex:'emit',color:0xfff0ce},{solid:false});
+      for(let u=45.7;u<56.4;u+=.115)box(u,65.335,.035,.06,y+2.31,.30,0x715234,{solid:false});
+      sign('RAMEN',51,65.25,y+2.49,'N',1.6,.21,{bg:'#463525',fg:'#c9ae70',font:'serif',bold:false});
+      for(const u of [46.5,48.75,51,53.25,55.5])globe(u,64.8,y+1.92);
+      for(const u of [46.2,48.2,50.2,52.2,54.2,56.2]) {
+        box(u,67.56,1.85,.04,y+.25,1.92,OAK,{solid:false});
+        downlight(u,67.2,y+2.62,.075);
+      }
+      sign('TACHIBANA',51,67.45,y+1.65,'N',1.2,.22,{bg:'#5f4d35',fg:'#fff6dc',bold:true});
+      for(const u of [47.3,49.7,54.6]){const [x,z]=P(u,64.1);K.person(x,y,z,{sit:true,shirt:u<50?0x8e908a:0x292b2c,rotY:FACE.S});}
+      // 02: veined marble bar wraps the foreground; stemware and bottles behind.
+      box(51,71.0,6.3,.83,y,1.05,{tex:'marble',color:0xf6f3e9});
+      box(48.25,72.1,.8,2.8,y,1.05,{tex:'marble',color:0xf6f3e9});
+      box(51,74.24,6.4,.3,y,2.55,DARKOAK,{solid:false});
+      for(let j=0;j<3;j++) {
+        box(51,73.98,6.1,.45,y+.70+j*.57,.05,OAK,{solid:false});
+        box(51,73.85,6,.035,y+.75+j*.57,.025,{tex:'emit',color:0xf5c989},{solid:false});
+        for(let i=0;i<24;i++){
+          const u=48.15+i*.245;upperCyl(u,73.84,y+.78+j*.57,.041,.23,i%3?0x34412d:0x70422d);upperCyl(u,73.84,y+1.01+j*.57,.018,.08,0x493524);
+          box(u,73.79,.055,.012,y+.85+j*.57,.07,0xe1d4ad,{solid:false});
+        }
+      }
+      sign('BY THE GLASS',51,74.01,y+2.36,'N',2.9,.24,{bg:null,fg:'#c9b28a',font:'Georgia, serif',bold:false});
+      box(49.2,70.9,.31,.24,y+1.05,.03,0x202526,{solid:false});box(49.2,70.89,.27,.20,y+1.08,.01,{tex:'emit',color:0xafdbed},{solid:false});
+      for(const u of [50.4,52.2]){upperCyl(u,70.87,y+1.05,.14,.025,0xf3f0df);upperBall(u,70.87,y+1.11,.1,0xedd8b2,.07);}
+      for(let u=49;u<54;u+=1.2)chair(u,69.95,'S');
+      sign('하우스 오브 신세계',33.5,58.3,6,'N',5,.5,{bg:'#e7dcc9',fg:'#493c30',bold:false,twoSided:true});
+      aisleBorders(y,true);coffer(24.9,59.1,42.1,63.9,6.5);coffer(9,74.8,59,76.2,6.5);
+      for(let u=10;u<59;u+=2.5)for(let v=59;v<76;v+=2.5)if(!(u>28.8&&u<38.2&&v>64))downlight(u,v,6.47,.065);
+      sign(['1M','하우스 오브 신세계'],28.45,64.6,y+2,'N',1.5,.5,{bg:'#2d241c',fg:'#f3e6c8',twoSided:true});
+      K.crowd(rect(27,59,42,63.8),y,7,{seed:77});K.crowd(rect(9,74.8,59,76.2),y,6,{seed:78});
+    });
   }
 
   // ================================================================= 2F ~ 10F
@@ -1956,7 +2484,7 @@ export function build(K) {
     IW: [['스타일 컨템포러리', 'TOMBOY|톰보이'], ['ON & ON|온앤온', 'OBZEE|오브제'], ['DEW L|듀엘', 'LÄTT|래트']],
     IE: [['ROGER VIVIER|로저 비비에#shoe', 'TOD\'S|토즈 슈즈#shoe'], ['FERRAGAMO|페라가모 슈즈#shoe', 'STUART WEITZMAN|스튜어트 와이츠먼#shoe'], ['GRAND SHOES|그랜드 슈 편집관#shoe', 'REPETTO|레페토#shoe', 'SALVATORE SHOE CARE|구두 수선실#service', 'UGG|어그#shoe']],
     C: 'GRAND SHOES|그랜드 슈', Ckind: 'shoe', people: 16,
-    extra: (y, H) => { zone('그랜드 슈', '4F', '슈즈 전문관 · 약 3,300㎡ · 43개 브랜드 (2016 증축)', [34, 0, UW, VD], y, y + H, 2); sign(['GRAND SHOES', '그랜드 슈'], 48.8, 33.2, y + 3.4, 'N', 5, 0.8, { bg: '#2d241c', fg: '#f3e6c8', twoSided: true }); },
+    extra: (y, H) => { zone('그랜드 슈', '4F', '슈즈 전문관 · 약 3,300㎡ · 43개 브랜드 (2016 증축)', [34, 0, UW, VD], y, y + H, 2); furnish('4F', () => sign(['GRAND SHOES', '그랜드 슈'], 48.8, 33.2, y + 2.75, 'N', 5, 0.65, { bg: '#2d241c', fg: '#f3e6c8', twoSided: true })); },
   });
   stdFloor('5F', {
     cat: '여성 클래식 · 영캐주얼 · 핸드백', short: '여성 클래식 · 영캐주얼', sub: '여성 클래식 · 영캐주얼 · 핸드백 · 뉴 스테이지(신진 디자이너 팝업)', kind: 'fashion',
@@ -1985,9 +2513,28 @@ export function build(K) {
     W: ['GALAXY|갤럭시#fashion', 'CAMBRIDGE MEMBERS|캠브리지멤버스#fashion', 'DAKS|닥스#fashion', 'MAESTRO|마에스트로#fashion', 'HUGO BOSS|휴고 보스#fashion'],
     S: ['THE NORTH FACE|노스페이스#sport', 'KOLON SPORT|코오롱스포츠#sport', "ARC'TERYX|아크테릭스#sport", 'PATAGONIA|파타고니아#sport', 'SNOW PEAK|스노우피크#sport'],
     IW: [['POLO RALPH LAUREN|폴로 랄프로렌#fashion', 'LACOSTE|라코스테#fashion'], ['TOMMY HILFIGER|타미 힐피거#fashion', 'BEANPOLE|빈폴#fashion'], ['BRICKS|브릭스 남성 캐주얼#fashion', 'TIME HOMME|타임옴므#fashion']],
-    IE: [['SOUTHCAPE|사우스케이프', 'CASTELBAJAC|까스텔바작'], ['ADIDAS GOLF|아디다스 골프', 'FOOTJOY|풋조이'], ['골프 피팅 센터#sim', 'WAAC|왁']],
+    IE: [[], ['ADIDAS GOLF|아디다스 골프', 'FOOTJOY|풋조이'], ['골프 피팅 센터#sim', 'WAAC|왁']],
     C: 'GOLF FAIR|골프 대전', Ckind: 'golf', people: 12,
-    extra: (y, H) => zone('골프 전문관', '7F', '약 100개 골프 브랜드 · 스크린 시타실 (2016 증축)', [0, 0, UW, 31.5], y, y + H, 2),
+    extra: (y,H)=>{
+      zone('골프 전문관','7F','골프 브랜드 · 스크린 시타실',[0,0,UW,31.5],y,y+H,2);
+      zone('K2','7F','아웃도어 · 다운 재킷',[43.2,15,54.5,28],y,y+H,4);
+      wall(54.5,15,54.5,28,y,y+H,{mat:0x81888a,thick:.12});
+      for(const v of [15,28])wall(43.2,v,54.5,v,y,y+H,{mat:0x9da1a0,thick:.12});
+      furnish('7F',()=>{
+        hq(43.2,15,54.45,28,y+.02,'ssg_upper_tile');
+        box(54.36,21.5,.08,10,y+2.1,.75,0x6f787d,{solid:false});
+        sign('K2',54.24,21.5,y+2.55,'W',1.8,.64,{bg:null,fg:'#8ed0ea',bold:true});
+        for(let v=16;v<27;v+=1.2){box(54.29,v,.05,.035,y,3.14,0xadb4b6,{solid:false});}
+        box(54.25,21.5,.04,10.5,y+1.96,.04,{tex:'emit',color:0xd9eff4},{solid:false});
+        for(let j=0;j<3;j++)coatRack(46+j*3,21.5,y,3,'W',j+1);
+        coatRack(53.6,17.6,y,3,'W',7);coatRack(53.6,25.4,y,3,'W',2);
+        box(45.95,21.5,.73,3.05,y+.05,.015,0xa53c16,{solid:false});
+        for(let j=0;j<2;j++)for(let i=0;i<5;i++)upperShoe(53.7,16.6+i*.42,y+.12+j*.34,0xe4e1d7);
+        box(54.3,26.8,.09,1.1,y+.52,1.72,0x121b20,{solid:false});
+        sign(['K2','아웃도어'],54.2,26.8,y+1.38,'W',1.02,1.5,{bg:'#203b4b',fg:'#8acbe3',bold:true});
+        const [x,z]=P(48.4,25.1);K.person(x,y,z,{shirt:0x2e383b,rotY:FACE.W});
+      });
+    },
   });
   stdFloor('8F', {
     cat: '스포츠 · 진 · 스트리트 캐주얼 · 이벤트홀', short: '스포츠 · 진 · 이벤트홀', sub: '스포츠 · 진 · 스트리트 캐주얼 · 이벤트홀(행사장)', kind: 'sport',
@@ -1997,17 +2544,57 @@ export function build(K) {
     S: ['STUSSY|스투시#fashion', 'CARHARTT WIP|칼하트 WIP#fashion', 'MARITHÉ|마리떼#fashion', 'KIRSH|키르시#fashion', 'NERDY|널디#fashion'],
     IW: [['JORDAN|조던', 'CONVERSE|컨버스'], ['VANS|반스', 'REEBOK|리복'], ['UNDER ARMOUR|언더아머', 'MIZUNO|미즈노']],
     IE: [], people: 18,
-    extra: (y, H) => {
-      zone('이벤트홀', '8F', '행사장 · 시즌 대전(모피·아웃도어·골프 대전)', [42.9, 12.25, 54.75, 72.5], y, y + H, 2);
-      sign('8F 이벤트홀 · 시즌 대전', 48.8, 12.4, y + 3.3, 'N', 5.5, 0.8, { bg: '#7a1c1c', fg: '#fff', twoSided: true });
-      for (let i = 0; i < 3; i++) for (let j = 0; j < 8; j++) {
-        const u = 45 + i * 3.8, v = 15 + j * 7;
-        box(u, v, 1.8, 0.06, y + 1.55, 0.05, 0x9a9a9a, { solid: false });
-        box(u, v, 1.6, 0.5, y + 0.55, 1.0, { tex: 'ssg_rack', color: GARMENT[(i * 3 + j) % GARMENT.length] });
-        if (j % 2) box(u, v + 3, 1.6, 1.0, y, 0.85, 0xe8e2d8);
-      }
-      sign('시즌 오프 대전', 48.8, 42, y + 2.9, 'N', 3, 0.8, { bg: '#c01c1c', fg: '#fff', twoSided: true });
-      K.crowd(rect(43.5, 13, 54, 72), y, 10, { seed: 808 });
+    extra: (y,H)=>{
+      zone('이벤트홀','8F','스포츠 · 겨울 의류 · 시즌 팝업',[42.9,12.25,54.75,72.5],y,y+H,2);
+      zone('le coq sportif','8F','겨울 슈즈 · 시즌 디스플레이',[27.5,22,39.2,31.5],y,y+H,4);
+      zone('Dr. Martens','8F','에스컬레이터 앞 슈즈 팝업',[40.2,39,44.8,46.8],y,y+H,4);
+      furnish('8F',()=>{
+        // 09/10: curved ivory promotion plinth, paired boots, padded mannequins.
+        const plinth=[];
+        for(let i=0;i<=12;i++){const u=29.3+i*.43;plinth.push(P(u,27.0+.25*Math.sin(i*PI/6)));}
+        for(let i=12;i>=0;i--){const u=29.3+i*.43;plinth.push(P(u,28.2+.15*Math.cos(i*PI/6)));}
+        K.prism(plinth,y+.08,y+.48,{mat:0xe8e5dc,solid:true});
+        hq(28.6,26.4,35.4,29.1,y+.012,0x242a2e);
+        sign('MIGNON',31.9,28.40,y+.82,'S',2.2,.44,{bg:null,fg:'#242222',bold:true});
+        sign('le coq sportif',32,29.10,y+.17,'S',2.3,.21,{bg:'#242a2e',fg:'#f3f1eb',bold:true});
+        for(const [u,v] of [[30.3,27.5],[31.5,27.5],[32.7,27.5],[33.8,27.5]])upperShoe(u,v,y+.49,0xa39b8f,1.7);
+        for(const u of [30.5,32.4]) {
+          upperCyl(u,28.1,y+.48,.36,.72,0x493a30);box(u,27.78,.6,.8,y+.49,.35,0x493a30,{solid:false});
+          for(let i=0;i<7;i++)box(u,27.55,.39,.02,y+.68+i*.065,.025,0x7d6957,{solid:false});
+        }
+        upperMannequin(28,27.9,y,0xe8e5dc);upperMannequin(36.5,28.0,y,0x343632);
+        coatRack(29.3,23.7,y,3.5,'N',4);coatRack(35,23.7,y,3.5,'N',1);
+        box(38.6,24.1,.1,5.7,y,2.8,0x1b2327,{solid:false});
+        for(let v=21.5;v<26.9;v+=.25)box(38.51,v,.035,.025,y,2.75,0x778183,{solid:false});
+        for(let yy=.1;yy<2.8;yy+=.25)box(38.50,24.1,.035,5.6,y+yy,.025,0x778183,{solid:false});
+        sign('le coq sportif',38.44,24.1,y+2.45,'W',2.4,.33,{bg:'#1f2729',fg:'#ffffff',bold:true});
+        box(27.7,23.5,1.6,.12,y,2.8,0x163851,{solid:false});sign(['le coq sportif','겨울 컬렉션'],27.7,23.62,y+1.5,'S',1.4,2.4,{bg:'#477795',fg:'#e5f3f7',bold:false});
+        // 11/12: open mesh and yellow shelves; escalators remain visible behind it.
+        box(41.7,43.9,1.7,.12,y,2.35,0x1c2022,{solid:false});
+        for(const u of [42.76,44.53])box(u,43.78,.045,.055,y,2.4,0x202729,{solid:false});
+        for(const yy of [0,2.36])box(43.65,43.78,1.82,.055,y+yy,.045,0x202729,{solid:false});
+        sign('Dr. Martens',41.7,43.78,y+1.94,'N',1.5,.33,{bg:null,fg:'#ffe027',bold:true});
+        for(let u=42.8;u<44.5;u+=.16)box(u,43.75,.016,.025,y+.2,2.15,0x737a78,{solid:false});
+        for(let yy=.2;yy<2.35;yy+=.16)box(43.65,43.73,1.7,.025,y+yy,.016,0x737a78,{solid:false});
+        for(let i=0;i<4;i++){
+          const yy=y+.40+i*.46;box(43.6,43.50,.65,.38,yy,.035,0xffd521,{solid:false});
+          upperShoe(43.6,43.44,yy+.04,0x161b1a,1.3);
+        }
+        for(const [u,v,h]of[[41.3,42.8,.6],[42.3,42.9,.92]]){
+          box(u,v,.65,.65,y,h,0x22282a);for(let z=v-.3;z<=v+.3;z+=.12)box(u,z,.66,.018,y+h,.025,0xb6bfbb,{solid:false});upperShoe(u,v,y+h+.04,0x191c1b,1.5);
+        }
+        upperCyl(43.2,41.9,y,.39,.64,0x23292b);upperCyl(43.2,41.9,y+.64,.40,.035,0xffd922);
+        sign('Dr. Martens',43.2,41.50,y+.42,'N',.65,.19,{bg:null,fg:'#ffe32a'});upperShoe(43.2,41.9,y+.68,0x202321,1.5);
+        upperMannequin(40.6,45.8,y,0xd6d9d3);
+        // Dense additional winter stock, while the central 4 m landing stays clear.
+        for(const u of [46.5,51.3])for(const v of [17,24,32,53,60,68])coatRack(u,v,y,3,'N',Math.floor(u+v));
+        for(const v of [17,32,53,68]){
+          box(49, v+2.3,1.5,.85,y,.72,0xe5e3db);
+          for(let i=0;i<5;i++)box(48.45+i*.25,v+2.3,.22,.48,y+.72,.08,[0x393d3f,0xe0e1db,0xacaeaa][i%3],{solid:false});
+        }
+        sign('스포츠 · 겨울 의류',48.8,12.4,y+2.82,'N',3.4,.4,{bg:'#3b4246',fg:'#f4f4ee',twoSided:true});
+        K.crowd(rect(45.2,13,54,38),y,6,{seed:808});K.crowd(rect(45,49,54,72),y,8,{seed:809});
+      });
     },
   });
   stdFloor('9F', {
@@ -2027,7 +2614,7 @@ export function build(K) {
     IW: [['BLUEDOG|블루독', 'MIKI HOUSE|미키하우스', 'BEANPOLE KIDS|빈폴 키즈', 'TOMMY KIDS|타미 키즈'], ['ADIDAS KIDS|아디다스 키즈', 'NEW BALANCE KIDS|뉴발란스 키즈', 'PLAY MOBIL|플레이모빌', 'TOY KINGDOM|토이킹덤']],
     IE: [['MOOMOO|무무', 'ILOVEPANDA|아이러브판다', 'DIESEL KIDS|디젤 키즈', 'MLB KIDS|MLB 키즈'], ['LINGERIE LOUNGE|란제리 라운지#lingerie', 'HOMEWEAR|홈웨어#lingerie']],
     people: 18,
-    extra: (y, H) => { zone('리틀 신세계', '10F', '유아동 전문관 (2016 증축 신관)', [24.2, VS, UW, VD], y, y + H, 1.5); sign(['LITTLE SHINSEGAE', '리틀 신세계'], 48.8, 48.6, y + 3.3, 'S', 6, 0.8, { bg: '#f0c040', fg: '#2a2a2a', twoSided: true }); },
+    extra: (y, H) => { zone('리틀 신세계', '10F', '유아동 전문관 (2016 증축 신관)', [24.2, VS, UW, VD], y, y + H, 1.5); furnish('10F', () => sign(['LITTLE SHINSEGAE', '리틀 신세계'], 48.8, 48.6, y + 2.75, 'S', 6, 0.65, { bg: '#f0c040', fg: '#2a2a2a', twoSided: true })); },
   });
 
   // ================================================================= 11F 전문식당가 + S GARDEN (신관 only)
@@ -2043,16 +2630,43 @@ export function build(K) {
     island(['딤섬 · 누들#rest', '아시안 누들#rest'], 42.9, 54.75, 58, 72.5, y, S('레스토랑', { glass: true }));
     // S GARDEN is in the floor guide; its layout is unknown. Use modest neutral seating only.
     zone('S GARDEN', fl, '전문식당가 · 휴게 공간', [12.25, ATR[1], 54.75, 57.5], y, y + H, 2);
+    furnish(fl, () => {
     sign(['S GARDEN', '에스 가든'], 33.5, 48.6, y + 2.7, 'S', 3.0, 0.55, { bg: '#48483e', fg: '#eae6da', twoSided: true });
     for (const u of [28, 39]) box(u, 53.5, 2.4, 0.6, y, 0.45, { tex: 'wood', color: 0x8a765e });
     // directory of restaurants at the escalator landing
     sign(['11F 전문식당가', '덕인관 · 평양면옥 · 호경전', '더키친 살바토레쿠오모 · 히바린', '꼴라쥬 · 타마린드'], 26.6, 41, y + 1.6, 'W', 2.2, 1.6, { bg: '#2d241c', fg: '#f3e6c8', bold: false, twoSided: true });
+    });
     columns(id, y, H, (u, v) => v < VS);
-    lights(y + H - 0.02, [[0, 0, UW, VS]]);
+    furnish(fl, () => lights(y + H - 0.02, [[0, 0, UW, VS]]));
     restrooms(id, y, H); elevatorHall(id, y, H);
     windowAisle(id, y, H, '전망 다이닝 라운지');
+    furnish(fl, () => {
     sign('11F  전문식당가', 25.4, 48.4, y + 3.2, 'S', 2.4, 0.5, { bg: '#2d241c', fg: '#f3e6c8', twoSided: true });
-    crowdAisles(y, 18, 1111, [], VS);
+    crowdAisles(y,18,1111,[],VS);
+    // No recent 11F photograph is supplied: retain researched restaurants and use
+    // restrained timber waiting areas / table settings, not a claimed exact trace.
+    for(const [u,v,face] of [[10.5,38,'E'],[10.5,49,'E'],[56.4,39,'W'],[56.4,51,'W'],[56.4,63,'W']]) {
+      box(u,v,.6,.42,y,1.05,{tex:'wood',color:0x584936});
+      sign(['메뉴 안내','대기 등록'],u+(face==='E'?.32:-.32),v,y+1.14,face,.42,.52,{bg:'#ece3cf',fg:'#473d30',bold:false});
+      for(let i=0;i<3;i++){
+        const vv=v+1.5+i*.62;box(u,vv,.55,.53,y,.43,0x7c6a53);box(u+(face==='E'?-.23:.23),vv,.075,.53,y+.43,.46,0x8e795d,{solid:false});
+      }
+    }
+    for(const [u,v] of [[17,52.5],[22,52.5],[46,52.5],[51,52.5]]) {
+      upperCyl(u,v,y,.12,.72,0x756048);upperCyl(u,v,y+.72,.58,.055,{tex:'marble',color:0xe9e0cc});
+      for(const du of [-.9,.9]) {
+        box(u+du,v,.5,.5,y,.45,0x75624d);box(u+du,v+.22,.5,.08,y+.45,.42,0x75624d,{solid:false});
+        upperCyl(u+du*.30,v,y+.78,.12,.02,0xf7f1e2);upperCyl(u+du*.30,v+.22,y+.78,.045,.11,'glass');
+      }
+      const [x,z]=P(u+.9,v);K.person(x,y,z,{sit:true,shirt:0x92907b});
+    }
+    for(const [u,v,w,d]of[[18,48.9,14,.15],[49,48.9,14,.15],[18,56.5,14,.15],[49,56.5,14,.15]]) {
+      box(u,v,w,d,y+3.65,.18,0xe6dcc9,{solid:false});box(u,v,w-.08,.045,y+3.64,.03,{tex:'emit',color:0xffe9bf},{solid:false});
+    }
+    for(const [u,v]of[[18,52.5],[49,52.5]]) {
+      upperCyl(u,v,y+2.8,.02,.95,0x9d8762);upperBall(u,v,y+2.75,.23,{tex:'emit',color:0xfff0d3});
+    }
+    });
   }
 
   // ================================================================= J1: 고투몰 ↔ 신세계 B1 연결통로 (owner)
@@ -2108,12 +2722,13 @@ export function build(K) {
   const sp = (name, u, v, y, du, dv) => { const [x, z] = P(u, v); K.spawn({ name, x, y, z, yaw: yawTo(du, dv) }); };
   sp('신세계 강남점 정문 (신반포로)', ENTRY, -9, 0, 0, 1);
   sp('신세계 강남점 동문 (경부선 터미널 방면)', UW + 1.2, 30, 0, -1, 0);
-  sp('1F 화장품 · 해외유명브랜드', 26, 33, 0, 0, 1);
+  sp('1F 화장품 · 해외유명브랜드', 34, 31.5, 0, 0.28, -1);
   sp('1M 하우스 오브 신세계 메자닌', 33.5, 64, LV['1M'], 0, -1);
   sp('B1 스위트파크 · 한정선', 17, 34.8, LV.B1, 0, 1);
   sp('B1 하우스 오브 신세계 라운지', 16.8, 61.3, LV.B1, -.2, 1);
   sp('B1 하우스 오브 신세계 연결 복도', 15, 52, LV.B1, 0, 1);
   sp('B1 식품관 · 블루 버터플라이', 48.5, 50.5, LV.B1, 0, 1);
+  sp('8F 겨울 매장 · 에스컬레이터', 40.8, 49.2, LV['8F'], 1, 0);
   sp('4F 그랜드 슈', 41.2, 41, LV['4F'], 0, 1);
   sp('11F 전문식당가 · S GARDEN', 26, 49.5, LV['11F'], 1, 0);
   K.spawn({ name: 'B1 고투몰 ↔ 신세계 연결통로', x: -70, y: LV.B1, z: -70, yaw: PI });

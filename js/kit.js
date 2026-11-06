@@ -681,7 +681,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
   // people) for one floor area and runs only when the camera comes near — floors stay light until visited.
   // Structure that must exist before you arrive (slabs, walls, stairs, escalators, elevators, zones, spawns,
   // junctions) belongs in the normal build, not in a detail group.
-  const details = [];
+  const details = []; const detailErrors = [];
   function detail(o, fn) {
     let poly = o.poly; if (!poly && o.rect) { const [x0, z0, x1, z1] = o.rect; poly = [[x0, z0], [x1, z0], [x1, z1], [x0, z1]]; }
     const bb = poly ? polyBBox(poly) : [-1e9, -1e9, 1e9, 1e9];
@@ -690,7 +690,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
   function buildDetail(d) {
     if (d.built) return []; d.built = true;
     const prev = current; current = d.owner;
-    try { d.fn(K); } catch (e) { console.error('detail', d.owner, d.floor, e); }
+    try { d.fn(K); } catch (e) { detailErrors.push(`${d.owner} ${d.floor}: ${e.message}`); console.error('detail', d.owner, d.floor, e); }
     current = prev;
     return flush();
   }
@@ -716,7 +716,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     osmBuilding, osmFind, claim, rand, quad: (mat, p, n, uvs) => quad(spec(mat), p, n, uvs || [[0, 0], [1, 0], [1, 1], [0, 1]]), hpoly: (mat, poly, y, up = true, holes) => hpoly(spec(mat), poly, y, up, holes),
     pointInPoly, polyBBox, polyArea, orient,
     // internals for engine
-    _: { bounce, cull, cullList, finalize, details, ensureDetail, buildAllDetail, frameFns, interactables, spawns, zonesList, elevators, claims, mapMarks, groundHoles, stats, atlas, trees, people, setCurrent: (id, meta) => { current = id; if (meta) perPlace[id] = meta; } },
+    _: { bounce, cull, cullList, finalize, details, detailErrors, ensureDetail, buildAllDetail, frameFns, interactables, spawns, zonesList, elevators, claims, mapMarks, groundHoles, stats, atlas, trees, people, setCurrent: (id, meta) => { current = id; if (meta) perPlace[id] = meta; } },
   };
   return K;
 }

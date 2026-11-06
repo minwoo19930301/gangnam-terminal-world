@@ -131,6 +131,10 @@
     {
       "path": "shots/verify/banpo_shoppingtown/",
       "title": "수정 전 비교 렌더. 회베이지 외벽·수평 띠·빈 측벽·부족한 간판을 확인하는 진단 자료이며 실물 근거는 아님"
+    },
+    {
+      "path": "refs/interior/bp_inside/notes.json",
+      "title": "Round7 내부사진39장·trace_spots9개,2025~2026네이버블로그자료.글본문의새온라인조사는아니고제공된사진과메타데이터를직접대조."
     }
   ],
   "building": {
@@ -164,12 +168,12 @@
       "tenants": [
         "만끽치킨",
         "배부장찌개",
-        "온유월식당(20호)",
-        "우고집"
+        "온유월식당(20호)"
       ],
       "layout": "신반포로 177, 8-1번 출구 바로 앞. 호수 20호까지 있어 지하 복도 양측 점포 구조(추정)",
       "source": "https://www.localnaeil.com/News/View/640227",
-      "guess": false
+      "guess": false,
+      "round7_correction": "이전 조사에3동으로묶였던우고집은2026년10월사진18·19의5동현관/안내판근거로5동에배치."
     },
     {
       "floor": "3F (3동)",
@@ -186,22 +190,41 @@
       "use": "식당·주점",
       "tenants": [
         "정선 감자탕(6~9호)",
-        "하얀집(치킨·떡볶이·오뎅탕)",
-        "막걸리 전문 주점(상호 미확인)"
+        "하얀집",
+        "동해횟집",
+        "담은",
+        "반포갈비",
+        "반포교집",
+        "5092 치킨&호프",
+        "하림",
+        "4동 노래연습장"
       ],
       "layout": "신반포로 189",
       "source": "https://www.localnaeil.com/News/View/640227",
-      "guess": false
+      "guess": false,
+      "interior_photo_sources": [
+        "refs/interior/bp_inside/10_directory_board_floors_4dong.jpg",
+        "refs/interior/bp_inside/37_b1_sign_wall_shops.jpg"
+      ]
     },
     {
       "floor": "B1 (5동)",
       "use": "식당",
       "tenants": [
-        "일번지육개장"
+        "일번지육개장",
+        "우고집",
+        "서래곱창",
+        "하트타임",
+        "숙이네",
+        "터미널포차"
       ],
       "layout": "신반포로 195, 8-2번 출구 인근. 낙곱전골 대표(소 39,000/대 45,000원), 11~23시",
       "source": "https://www.localnaeil.com/News/View/650226",
-      "guess": false
+      "guess": false,
+      "interior_photo_sources": [
+        "refs/interior/bp_inside/18_b1_stair_entrance_glass_building.jpg",
+        "refs/interior/bp_inside/19_b1_stair_hanging_sign_directory.jpg"
+      ]
     },
     {
       "floor": "1F (5동)",
@@ -361,7 +384,8 @@
     "6동은 bp03과 gb05 및 manifest가 적벽돌로 확인하므로 7·8동과 함께 벽돌을 적용한다.",
     "사용자가 지정한 bp01/02 동 이름과 viewpoints의 좌표는 완전히 일치하지 않을 수 있다. 이번 수정은 3·4동 모두에 확인된 외관 특성을 반영하고 건물은 OSM 윤곽을 유지한다.",
     "refs/photos/banpo_shoppingtown 및 data/research/banpo_shoppingtown_visual.json은 이번 작업 환경에서 제공 여부를 확인하지 못했으며 새 근거로 사용하지 않았다.",
-    "실물 상호는 기존 TENANTS와 제공 로드뷰 판독을 유지. 판독되지 않은 간판은 일반 업종 또는 빈 띠로 표현하며 가공의 고유 상호를 만들지 않는다."
+    "실물 상호는 기존 TENANTS와 제공 로드뷰 판독을 유지. 판독되지 않은 간판은 일반 업종 또는 빈 띠로 표현하며 가공의 고유 상호를 만들지 않는다.",
+    "Round 7: refs/interior/bp_inside 사진39장에 대응한33개 카메라를 modeling.trace에 기록. 48개 층별 지연 디테일, B1/1F~5F 주소, 가구·재료·입점간판 재구성. 세부 위치의 불확실성은 modeling.interior_guesses 참고."
   ],
   "unresolved": [
     "5동 외벽의 근접 색상·재료 확인",
@@ -373,7 +397,7 @@
     "새 렌더를 이용한 수정 후 시각 검증: 사용자 안내에 따라 tests/shot.mjs는 이 샌드박스에서 실행 불가"
   ],
   "modeling": {
-    "round": 4,
+    "round": 7,
     "decisions": [
       {
         "element": "외벽 마감",
@@ -454,32 +478,1372 @@
       "옥상 색은 항공사진에 근거한다. 작은 계단실의 정확한 위치·치수, 반복한 안테나 개수와 패널 방향, 실외기·물탱크 위치는 확정되지 않았다. 물탱크는 사용자 요청을 단순한 형태로 표현하며 특정 실물 탱크를 식별한 것은 아니다.",
       "6·7동 사이 주차장 경계, 차량8~10대의 정확한 위치·색·방향은 항공사진에 맞춘 근사다. 7동 앞 단층동의15×7m 평면·3.2m 높이는 검토자 추정치이며 상호는 판독되지 않아 쓰지 않는다.",
       "회색 보도 블록 크기0.3m 및 짙은 띠 폭0.6m는 사용자 지침에 따른 근사다. 황색 유도표시는 실제 횡단보도 전체 배치의 복제가 아니라 기존 출입구 접근성 표현만 유지한다.",
-      "4동 승강기 존재는 마루 공식 안내의 선행 조사로 확인했으나 다른 동의 실제 승강기 존재와 모든 위치는 미확인. 기존 모든 층 접근 기능을 유지한다.",
-      "내부 접수·대기·상담·학습실 가구, 점포 구획, 인물 등 기존 세부 실내는 실측 자료 없이 용도별로 단순화한 것이며 이번 외관 수정에서 확정 사실로 격상하지 않는다."
+      "4동 승강기 존재는 마루 공식 안내의 선행 조사로 확인했으나 다른 동의 실제 승강기 존재와 모든 위치는 미확인. 기존 모든 층 접근 기능을 유지한다."
     ],
     "validation": {
       "smoke": {
         "command": "node tests/smoke.mjs banpo_shoppingtown gotomall",
         "result": "OK",
-        "quads": 120776,
-        "quad_limit": 130000,
-        "spawns": 8,
+        "detail_errors": 0,
+        "base_quads": 78310,
+        "all_groups_quads": 691218,
+        "spawns": 12,
         "zones": 48,
         "elevators": 8,
         "floors_per_elevator": 6
       },
       "walk": {
         "command": "node tests/walk.mjs",
-        "result": "318 ok, 0 blocked",
-        "note": "모든 최종 모듈 변경 후 전체 월드 검사 통과. 동시에 편집 중인 이웃 모듈이 포함된 현재 작업 트리 결과."
+        "result": "345 ok, 0 blocked",
+        "note": "최종 banpo_shoppingtown 가구충돌을 포함한 전체월드 검사. 다른작업자의동시편집모듈도이실행시점에통과."
       },
-      "visual": "제공된 수정 전 비교 이미지와 실물 사진을 검토함. 사용자 지시에 따라 tests/shot.mjs는 샌드박스에서 실행하지 않으며 수정 후 새 PNG 검증은 미실시.",
       "isolated_walk": {
         "command": "node tests/walk.mjs banpo_shoppingtown --no-city",
-        "result": "56 ok, 0 blocked"
+        "result": "60 ok, 0 blocked",
+        "note": "최종 원형 식탁·교실 책상 충돌을 포함한 검사."
       },
-      "geometry_review": "실제 OSM 변에 측창을 연결하고, 6·7동 주차장 및 10대 차량이 주변 건물 윤곽과 겹치지 않음을 독립 검토. 7동 단층동 뒤 약1.19m 간격 보존. 3동 동쪽 서점 간판이 끝 베이에 생성됨을 확인. 벽·지붕에서 뜬 프레임·기둥·설비를 보정.",
-      "syntax_and_diff": "node --check js/places/banpo_shoppingtown.js 및 git diff --check 통과"
+      "visual_floor": {
+        "command": "node tests/visfloor.mjs 0 -425 -310 395 -20 /tmp/banpo-floor-round7.png banpo_shoppingtown",
+        "hole_m2": 150.5,
+        "result": "PNG직접열어검토.8개기존계단구멍위치에만빨간노출구역,일반상가바닥추가구멍없음.전체계단슬래브구멍면적은8×36.675=293.4m²이나계단/중간층참이가리는부분은hole통계에서제외됨."
+      },
+      "trace": {
+        "camera_count": 33,
+        "photos_covered": 39,
+        "reference_trace_spots": 9,
+        "collision_failures": 0,
+        "note": "최종 연구파일의33개 카메라 모두 바닥 지지/캡슐 충돌검사 통과. 계단안내벽3개는 같은코어상부참으로조정후재검증. 하향pitch=-22deg."
+      },
+      "visual": "제공접촉시트및개별사진을검토.사용자지시에따라tests/shot.mjs미실행;수정후3D렌더이미지검증은운영자가modeling.trace로진행.",
+      "syntax_and_diff": "node --check 및 git diff --check 통과"
+    },
+    "trace": [
+      {
+        "spot": "지하 통로 본선",
+        "photos": [
+          "07_b1_corridor_damun_sign_long_view.jpg",
+          "28_b1_corridor_long_view_tile_floor.jpg"
+        ],
+        "x": -10.89,
+        "y": -6,
+        "z": -160.094,
+        "yawDeg": 110.242,
+        "block": 4,
+        "floor": "B1",
+        "local": {
+          "u": -7.2,
+          "v": 0
+        },
+        "source_area": "refs/interior/bp_inside"
+      },
+      {
+        "spot": "지하 입구 계단과 안내벽",
+        "photos": [
+          "19_b1_stair_hanging_sign_directory.jpg",
+          "20_b1_stair_down_narrow.jpg"
+        ],
+        "x": 45.707,
+        "y": 0,
+        "z": -187.098,
+        "yawDeg": 291.279,
+        "pitchDeg": -22,
+        "block": 5,
+        "floor": "1F",
+        "local": {
+          "u": -4.3,
+          "v": -5.25
+        },
+        "source_area": "refs/interior/bp_inside"
+      },
+      {
+        "spot": "지하 가게 전면 유형",
+        "photos": [
+          "21_b1_woogojip_frontage_corridor.jpg"
+        ],
+        "x": 65.349,
+        "y": -6,
+        "z": -189.114,
+        "yawDeg": 201.279,
+        "block": 5,
+        "floor": "B1",
+        "local": {
+          "u": 14.735,
+          "v": 0
+        },
+        "source_area": "refs/interior/bp_inside"
+      },
+      {
+        "spot": "지하 식당 내부",
+        "photos": [
+          "22_b1_woogojip_interior.jpg"
+        ],
+        "x": 66.202,
+        "y": -6,
+        "z": -186.924,
+        "yawDeg": 201.279,
+        "block": 5,
+        "floor": "B1",
+        "local": {
+          "u": 14.735,
+          "v": 2.35
+        },
+        "source_area": "refs/interior/bp_inside"
+      },
+      {
+        "spot": "4동 정문과 로비 안내판",
+        "photos": [
+          "11_4dong_entrance_exterior.jpg"
+        ],
+        "x": 0.043,
+        "y": 0.025,
+        "z": -149.809,
+        "yawDeg": 20.242,
+        "block": 4,
+        "floor": "1F",
+        "local": {
+          "u": -0.5,
+          "v": 13.432
+        },
+        "source_area": "refs/interior/bp_inside"
+      },
+      {
+        "spot": "2~5층 학원 복도와 교실",
+        "photos": [
+          "25_2f_academy_corridor_glass_doors.jpg"
+        ],
+        "x": -17.838,
+        "y": 4,
+        "z": -157.532,
+        "yawDeg": 200.242,
+        "block": 4,
+        "floor": "2F",
+        "local": {
+          "u": -14.605,
+          "v": 0
+        },
+        "source_area": "refs/interior/bp_inside"
+      },
+      {
+        "spot": "1층 상가(안경원 등)",
+        "photos": [
+          "38_1f_optical_shop_interior.jpg"
+        ],
+        "x": 33.427,
+        "y": 0,
+        "z": -174.106,
+        "yawDeg": 201.279,
+        "block": 5,
+        "floor": "1F",
+        "local": {
+          "u": -20.458,
+          "v": 2.4
+        },
+        "source_area": "refs/interior/bp_inside"
+      },
+      {
+        "spot": "지하 안내 지도와 알코브",
+        "photos": [
+          "34_b1_map_board.jpg"
+        ],
+        "x": 207.924,
+        "y": -6,
+        "z": -235.92,
+        "yawDeg": 200.975,
+        "block": 7,
+        "floor": "B1",
+        "local": {
+          "u": -1.7,
+          "v": 5.338
+        },
+        "source_area": "refs/interior/bp_inside"
+      },
+      {
+        "spot": "지하 가게 간판 모음",
+        "photos": [
+          "01_b1_corridor_sign_wall_chungmu13.jpg"
+        ],
+        "x": 6.508,
+        "y": -6,
+        "z": -166.51,
+        "yawDeg": 20.242,
+        "block": 4,
+        "floor": "B1",
+        "local": {
+          "u": 11.343,
+          "v": 0
+        },
+        "source_area": "refs/interior/bp_inside"
+      },
+      {
+        "spot": "담은 전면 목판과 액자",
+        "photos": [
+          "08_b1_corridor_damun_wall_boards.jpg"
+        ],
+        "x": -12.549,
+        "y": -6,
+        "z": -159.482,
+        "yawDeg": 20.242,
+        "block": 4,
+        "floor": "B1",
+        "local": {
+          "u": -8.968,
+          "v": 0
+        },
+        "source_area": "refs/interior/bp_inside"
+      },
+      {
+        "spot": "담은 실내",
+        "photos": [
+          "09_b1_damun_interior_wall.jpg"
+        ],
+        "x": -13.414,
+        "y": -6,
+        "z": -161.828,
+        "yawDeg": 20.242,
+        "block": 4,
+        "floor": "B1",
+        "local": {
+          "u": -8.968,
+          "v": -2.5
+        },
+        "source_area": "refs/interior/bp_inside"
+      },
+      {
+        "spot": "동해횟집 수족관 전면",
+        "photos": [
+          "05_b1_donghae_entrance_signs.jpg"
+        ],
+        "x": -23.126,
+        "y": -6,
+        "z": -155.582,
+        "yawDeg": 200.242,
+        "block": 4,
+        "floor": "B1",
+        "local": {
+          "u": -20.241,
+          "v": 0
+        },
+        "source_area": "refs/interior/bp_inside"
+      },
+      {
+        "spot": "동해횟집 실내",
+        "photos": [
+          "06_b1_donghae_interior.jpg"
+        ],
+        "x": -22.279,
+        "y": -6,
+        "z": -153.283,
+        "yawDeg": 200.242,
+        "block": 4,
+        "floor": "B1",
+        "local": {
+          "u": -20.241,
+          "v": 2.45
+        },
+        "source_area": "refs/interior/bp_inside"
+      },
+      {
+        "spot": "반포갈비 실내",
+        "photos": [
+          "12_b1_banpogalbi_interior.jpg"
+        ],
+        "x": -11.702,
+        "y": -6,
+        "z": -157.183,
+        "yawDeg": 200.242,
+        "block": 4,
+        "floor": "B1",
+        "local": {
+          "u": -8.968,
+          "v": 2.45
+        },
+        "source_area": "refs/interior/bp_inside"
+      },
+      {
+        "spot": "일번지육개장 실내",
+        "photos": [
+          "24_b1_ilbonji_interior.jpg"
+        ],
+        "x": 33.427,
+        "y": -6,
+        "z": -174.106,
+        "yawDeg": 201.279,
+        "block": 5,
+        "floor": "B1",
+        "local": {
+          "u": -20.458,
+          "v": 2.4
+        },
+        "source_area": "refs/interior/bp_inside"
+      },
+      {
+        "spot": "아리수포차 전면",
+        "photos": [
+          "14_b1_corridor_arisu_pocha_door.jpg"
+        ],
+        "x": 114.255,
+        "y": -6,
+        "z": -207.528,
+        "yawDeg": 199.927,
+        "block": 6,
+        "floor": "B1",
+        "local": {
+          "u": -21.466,
+          "v": 0
+        },
+        "source_area": "refs/interior/bp_inside"
+      },
+      {
+        "spot": "아리수포차 실내",
+        "photos": [
+          "15_b1_arisu_pocha_interior.jpg"
+        ],
+        "x": 115.073,
+        "y": -6,
+        "z": -205.271,
+        "yawDeg": 199.927,
+        "block": 6,
+        "floor": "B1",
+        "local": {
+          "u": -21.466,
+          "v": 2.4
+        },
+        "source_area": "refs/interior/bp_inside"
+      },
+      {
+        "spot": "하트타임 벽돌 통로",
+        "photos": [
+          "16_b1_corridor_brick_wall_hearttime.jpg",
+          "29_b1_corridor_long_view_mid.jpg"
+        ],
+        "x": 44.91,
+        "y": -6,
+        "z": -181.154,
+        "yawDeg": 111.279,
+        "block": 5,
+        "floor": "B1",
+        "local": {
+          "u": -7.2,
+          "v": 0
+        },
+        "source_area": "refs/interior/bp_inside"
+      },
+      {
+        "spot": "하트타임 노란 돌출간판",
+        "photos": [
+          "17_b1_hearttime_hanging_sign.jpg"
+        ],
+        "x": 43.222,
+        "y": -6,
+        "z": -180.496,
+        "yawDeg": 201.279,
+        "block": 5,
+        "floor": "B1",
+        "local": {
+          "u": -9.012,
+          "v": 0
+        },
+        "source_area": "refs/interior/bp_inside"
+      },
+      {
+        "spot": "숙이네 전면",
+        "photos": [
+          "31_b1_corridor_chicken_hof_signs.jpg"
+        ],
+        "x": 60.017,
+        "y": -6,
+        "z": -187.037,
+        "yawDeg": 201.279,
+        "block": 5,
+        "floor": "B1",
+        "local": {
+          "u": 9.012,
+          "v": 0
+        },
+        "source_area": "refs/interior/bp_inside"
+      },
+      {
+        "spot": "숙이네 실내",
+        "photos": [
+          "32_b1_hof_interior_round_stools.jpg"
+        ],
+        "x": 60.906,
+        "y": -6,
+        "z": -184.754,
+        "yawDeg": 201.279,
+        "block": 5,
+        "floor": "B1",
+        "local": {
+          "u": 9.012,
+          "v": 2.45
+        },
+        "source_area": "refs/interior/bp_inside"
+      },
+      {
+        "spot": "유리 주점 전면과 맥주상자",
+        "photos": [
+          "30_b1_corridor_stools_beer_crates.jpg",
+          "33_b1_corridor_steelhall_frontage.jpg"
+        ],
+        "x": 62.23,
+        "y": -6,
+        "z": -187.899,
+        "yawDeg": 21.279,
+        "block": 5,
+        "floor": "B1",
+        "local": {
+          "u": 11.387,
+          "v": 0
+        },
+        "source_area": "refs/interior/bp_inside"
+      },
+      {
+        "spot": "우마루 전면",
+        "photos": [
+          "36_b1_corridor_sinbo_pocha_frontage.jpg"
+        ],
+        "x": 187.885,
+        "y": -6,
+        "z": -233.955,
+        "yawDeg": 200.975,
+        "block": 7,
+        "floor": "B1",
+        "local": {
+          "u": -21.115,
+          "v": 0
+        },
+        "source_area": "refs/interior/bp_inside"
+      },
+      {
+        "spot": "4동 로비 층별 안내판",
+        "photos": [
+          "10_directory_board_floors_4dong.jpg"
+        ],
+        "x": -3.892,
+        "y": 0,
+        "z": -155.712,
+        "yawDeg": 200.242,
+        "block": 4,
+        "floor": "1F",
+        "local": {
+          "u": -2.15,
+          "v": 6.532
+        },
+        "source_area": "refs/interior/bp_inside"
+      },
+      {
+        "spot": "장솔학원 입구",
+        "photos": [
+          "03_academy_glass_door_entrance.jpg"
+        ],
+        "x": -23.126,
+        "y": 4,
+        "z": -155.582,
+        "yawDeg": 200.242,
+        "block": 4,
+        "floor": "2F",
+        "local": {
+          "u": -20.241,
+          "v": 0
+        },
+        "source_area": "refs/interior/bp_inside"
+      },
+      {
+        "spot": "장솔학원 접수 우편함",
+        "photos": [
+          "04_academy_reception_mailboxes.jpg"
+        ],
+        "x": -21.448,
+        "y": 4,
+        "z": -151.031,
+        "yawDeg": 200.242,
+        "block": 4,
+        "floor": "2F",
+        "local": {
+          "u": -20.241,
+          "v": 4.85
+        },
+        "source_area": "refs/interior/bp_inside"
+      },
+      {
+        "spot": "표준수학 칠판과 책상",
+        "photos": [
+          "26_2f_academy_classroom_blackboard.jpg",
+          "27_2f_academy_classroom_desks.jpg"
+        ],
+        "x": -16.713,
+        "y": 4,
+        "z": -154.483,
+        "yawDeg": 200.242,
+        "block": 4,
+        "floor": "2F",
+        "local": {
+          "u": -14.605,
+          "v": 3.25
+        },
+        "source_area": "refs/interior/bp_inside"
+      },
+      {
+        "spot": "5동 지하 입구 유리 현관",
+        "photos": [
+          "18_b1_stair_entrance_glass_building.jpg",
+          "23_exterior_5dong_facade.jpg"
+        ],
+        "x": 54.799,
+        "y": 0.025,
+        "z": -171.47,
+        "yawDeg": 21.279,
+        "block": 5,
+        "floor": "1F",
+        "local": {
+          "u": -1.5,
+          "v": 12.613
+        },
+        "source_area": "refs/interior/bp_inside"
+      },
+      {
+        "spot": "3동 계단 세로 안내벽",
+        "photos": [
+          "02_b1_entrance_sign_wall_vertical.jpg"
+        ],
+        "x": -141.118,
+        "y": 0,
+        "z": -116.561,
+        "yawDeg": 283.548,
+        "block": 3,
+        "floor": "1F",
+        "local": {
+          "u": -4.3,
+          "v": -5.25
+        },
+        "pitchDeg": -22,
+        "source_area": "refs/interior/bp_inside"
+      },
+      {
+        "spot": "6동 계단 안내벽",
+        "photos": [
+          "13_b1_6dong_stair_sign_arisu.jpg"
+        ],
+        "x": 128.604,
+        "y": 0,
+        "z": -218.314,
+        "yawDeg": 282.527,
+        "block": 6,
+        "floor": "1F",
+        "local": {
+          "u": -4.3,
+          "v": -5.25
+        },
+        "pitchDeg": -22,
+        "source_area": "refs/interior/bp_inside"
+      },
+      {
+        "spot": "4동 지하 계단 안내벽",
+        "photos": [
+          "37_b1_sign_wall_shops.jpg"
+        ],
+        "x": -9.986,
+        "y": 0,
+        "z": -166.023,
+        "yawDeg": 282.842,
+        "block": 4,
+        "floor": "1F",
+        "local": {
+          "u": -4.3,
+          "v": -5.25
+        },
+        "pitchDeg": -22,
+        "source_area": "refs/interior/bp_inside"
+      },
+      {
+        "spot": "7동 지하 안내 알코브",
+        "photos": [
+          "35_b1_7dong_directory_alcove.jpg"
+        ],
+        "x": 205.277,
+        "y": -6,
+        "z": -234.584,
+        "yawDeg": 200.975,
+        "block": 7,
+        "floor": "B1",
+        "local": {
+          "u": -4.65,
+          "v": 5.638
+        },
+        "source_area": "refs/interior/bp_inside"
+      },
+      {
+        "spot": "리스본 안경 거리 전면",
+        "photos": [
+          "39_1f_optical_shop_front.jpg"
+        ],
+        "x": 36.952,
+        "y": 0.025,
+        "z": -165.056,
+        "yawDeg": 21.279,
+        "block": 5,
+        "floor": "1F",
+        "local": {
+          "u": -20.458,
+          "v": 12.113
+        },
+        "source_area": "refs/interior/bp_inside"
+      }
+    ],
+    "trace_camera_convention": "x=east,z=south,metres. y is feet/floor, rendered eye=y+1.62. yaw0=north,90=west,180=south,270=east; pitch+up/-down. Photos resolve relative to refs/interior/bp_inside/. First nine records correspond to the nine trace_spots; following records show individual reference variants.",
+    "interior_decisions": [
+      {
+        "element": "지하 본선과 각 층 구조",
+        "implementation": "B1 통로 폭3.2m·천장2.4m, 60cm 점무늬 타일과60cm 흰 흡음패널,3m 간격2등 형광등. 2~5F 복도2.1m·천장2.75m. 외곽벽·실간벽·층 슬래브·계단·승강기·8개 계단 구멍은 상시 구조에 유지. 층 주소 B1/1F/2F/3F/4F/5F.",
+        "photos": [
+          7,
+          16,
+          28,
+          29
+        ]
+      },
+      {
+        "element": "4동 지하",
+        "implementation": "사진37의4동 안내판과사진07의마주보는시점을 따라 담은 북측·반포갈비 남측을 마주 배치. 담은 흰 벽돌·목재 처마·목판·액자·파란 돌출간판, 동해횟집 수족관·노렌·목재의자, 반포갈비 목재 천장·은색 덕트·접수대, 노래방 노랑/빨강 띠.6개 식탁이 들어가는 깊은 소형식당.",
+        "photos": [
+          1,
+          5,
+          6,
+          7,
+          8,
+          9,
+          12,
+          28,
+          37
+        ]
+      },
+      {
+        "element": "5동 지하",
+        "implementation": "사진18의5동명과19의입점간판을 우선해 우고집을5동으로 보정. 검정 세로슬랫·철제 원형그릴·원통의자, 일번지 파란 간접천장·노란목재의자, 하트타임 벽돌·노랑간판, 숙이네 붉은스툴, 주점 유리전면·청록LED·맥주상자. 식탁별 식기·수저·병, 냉장고 내부병열·선반·주방카운터.",
+        "photos": [
+          16,
+          17,
+          18,
+          19,
+          21,
+          22,
+          24,
+          30,
+          31,
+          32,
+          33
+        ]
+      },
+      {
+        "element": "6·7동 지하",
+        "implementation": "아리수포차 청록간유리·적갈색골판하부·부스칸막이·TV·붉은천장띠. 사진36의간판을우마루로판독.7동검정안내판,별도긴지도판과비상구표지.",
+        "photos": [
+          13,
+          14,
+          15,
+          34,
+          35,
+          36
+        ]
+      },
+      {
+        "element": "계단과로비",
+        "implementation": "기존왕복계단보존,흰벽·금속가드·짙은계단코추가.5동상부에서내려다보는안내벽과동별세로간판.4/5동기존문개구부에금속현관틀·열린유리문짝.4동로비B1~5F개별행안내판.",
+        "photos": [
+          2,
+          10,
+          11,
+          13,
+          18,
+          19,
+          20,
+          23,
+          37
+        ]
+      },
+      {
+        "element": "학원과1층상가",
+        "implementation": "장솔학원청록안내패널·검정매트·2대TV·140칸우편함,표준수학입구목재틀·색타일하부.교실별8개2인용책상·주황의자·빈초록칠판·에어컨·2열형광등.리스본안경5.4m급점포에ㄱ자유리진열대·5개의검정의자·낱개안경진열과벽선반.",
+        "photos": [
+          3,
+          4,
+          25,
+          26,
+          27,
+          38,
+          39
+        ]
+      },
+      {
+        "element": "지연로딩",
+        "implementation": "각동각층1개씩48개K.detail그룹.점포전면장식·식탁·진열상품·조명·소형안내·사람만지연생성.상시구조78,310quads,실내detail총612,908quads,전체691,218quads(kit통계).그룹별최대26,840quads."
+      }
+    ],
+    "interior_evidence": [
+      {
+        "finding": "4동 식당군",
+        "files": [
+          "07_b1_corridor_damun_sign_long_view.jpg",
+          "10_directory_board_floors_4dong.jpg",
+          "37_b1_sign_wall_shops.jpg"
+        ],
+        "confidence": "동 식별 높음 / 세부 호실 좌표는 추정"
+      },
+      {
+        "finding": "5동 우고집·하트타임·숙이네·서래곱창·터미널포차·일번지",
+        "files": [
+          "18_b1_stair_entrance_glass_building.jpg",
+          "19_b1_stair_hanging_sign_directory.jpg"
+        ],
+        "confidence": "5동 현관 글씨와 입점 간판 판독 / 기존 OSM 기반 우고집3동 위치보다 최신사진 우선"
+      },
+      {
+        "finding": "사진25 표준수학 / 사진36 友마루(우마루)",
+        "files": [
+          "25_2f_academy_corridor_glass_doors.jpg",
+          "35_b1_7dong_directory_alcove.jpg",
+          "36_b1_corridor_sinbo_pocha_frontage.jpg"
+        ],
+        "confidence": "사진 글씨 판독"
+      },
+      {
+        "finding": "사진07 담은은 화면 오른쪽, 반포갈비는 맞은편 왼쪽",
+        "files": [
+          "07_b1_corridor_damun_sign_long_view.jpg"
+        ],
+        "confidence": "notes.json의 좌측 표기보다 사진 직접관찰 우선"
+      },
+      {
+        "finding": "아리수포차 사진15 천장은 밝은 트레이와 붉은 간접띠",
+        "files": [
+          "15_b1_arisu_pocha_interior.jpg"
+        ],
+        "confidence": "notes.json의 노출천장 요약을 사진으로 정정"
+      }
+    ],
+    "interior_guesses": [
+      "동별 외곽은 OSM이지만 내부 점포 경계·호실 순서·부엌 위치·인물·가구 간격은 실측 평면 없이 사진의 시야를 맞춘 재구성이다. 확인된4/5동 상호도 정확한 동내좌표는 추정이다.",
+      "리스본안경의5동1층 배치, 표준수학의4동2층 배치, 아리수의6동 배치는 참고노트와 기존구조에 맞춘 배치이며 사진만으로 모두 확정되지 않는다. 충무할매김밥은4동 및 기존1동 예시로 남는다.",
+      "장솔학원은2026년5월 사진의4동2층 설명을 적용.2025년7월 4동안내판2층은엠에스안과로 보여 시점이 다른 자료를 단일 임대현황으로 단정하지 않는다. 이번 로비안내는 판독가능한 최신대표명만 사용한다.",
+      "사진33의상호는 확실하지 않아 이름을 만들지 않고 주점 유형으로 표현. 사진34 지도는 지하상가/교통안내 도식의 색상과 긴 축을 재현했으며 실제 점포별 위치를 주장하는 측량도가 아니다.",
+      "통로는각동내부에길게이어진다. 동사이를가로지르는새지하연결은위치가검증되지않아추가하지않았다. _junctions.js에이모듈을지정한JUNCTIONS/WELLS는현재없다.",
+      "기존코어및K.LEVELS.B1=-6m를보존했으며 실제계단폭/수평길이/층고는근사다. 현관사진3단은전역거리높이0m규약에맞춰낮은문턱3개로표현한다. 새로지면을파거나전면전체층고를올리지않았다.",
+      "상층사진은학원중심이므로미확인2~5층방에는같은계열의학습실을적용했다. 기존확인된의원·미용실·사무실은유지한다. 모든층이실제로학원이라는뜻은아니다.",
+      "식당사진의전체실내경계를알수없어가용폭과깊이에따라4~6개테이블로밀도를조정했다. 상호가없는나머지지하점포는일반식당유형이다."
+    ],
+    "detail_groups": [
+      {
+        "name": "1동 B1 실내",
+        "floor": "B1",
+        "quads": 2738,
+        "boxes": 362,
+        "signs": 27
+      },
+      {
+        "name": "1동 1F 실내",
+        "floor": "1F",
+        "quads": 324,
+        "boxes": 76,
+        "signs": 14
+      },
+      {
+        "name": "1동 2F 실내",
+        "floor": "2F",
+        "quads": 2640,
+        "boxes": 654,
+        "signs": 8
+      },
+      {
+        "name": "1동 3F 실내",
+        "floor": "3F",
+        "quads": 2640,
+        "boxes": 654,
+        "signs": 8
+      },
+      {
+        "name": "1동 4F 실내",
+        "floor": "4F",
+        "quads": 2640,
+        "boxes": 654,
+        "signs": 8
+      },
+      {
+        "name": "1동 5F 실내",
+        "floor": "5F",
+        "quads": 2640,
+        "boxes": 654,
+        "signs": 8
+      },
+      {
+        "name": "2동 B1 실내",
+        "floor": "B1",
+        "quads": 26840,
+        "boxes": 3483,
+        "signs": 142
+      },
+      {
+        "name": "2동 1F 실내",
+        "floor": "1F",
+        "quads": 2104,
+        "boxes": 509,
+        "signs": 68
+      },
+      {
+        "name": "2동 2F 실내",
+        "floor": "2F",
+        "quads": 22440,
+        "boxes": 5567,
+        "signs": 36
+      },
+      {
+        "name": "2동 3F 실내",
+        "floor": "3F",
+        "quads": 25446,
+        "boxes": 6310,
+        "signs": 36
+      },
+      {
+        "name": "2동 4F 실내",
+        "floor": "4F",
+        "quads": 25446,
+        "boxes": 6310,
+        "signs": 36
+      },
+      {
+        "name": "2동 5F 실내",
+        "floor": "5F",
+        "quads": 25446,
+        "boxes": 6310,
+        "signs": 36
+      },
+      {
+        "name": "3동 B1 실내",
+        "floor": "B1",
+        "quads": 23909,
+        "boxes": 2999,
+        "signs": 129
+      },
+      {
+        "name": "3동 1F 실내",
+        "floor": "1F",
+        "quads": 1731,
+        "boxes": 423,
+        "signs": 55
+      },
+      {
+        "name": "3동 2F 실내",
+        "floor": "2F",
+        "quads": 21560,
+        "boxes": 5344,
+        "signs": 34
+      },
+      {
+        "name": "3동 3F 실내",
+        "floor": "3F",
+        "quads": 1380,
+        "boxes": 353,
+        "signs": 64
+      },
+      {
+        "name": "3동 4F 실내",
+        "floor": "4F",
+        "quads": 22997,
+        "boxes": 5701,
+        "signs": 34
+      },
+      {
+        "name": "3동 5F 실내",
+        "floor": "5F",
+        "quads": 22997,
+        "boxes": 5701,
+        "signs": 34
+      },
+      {
+        "name": "4동 B1 실내",
+        "floor": "B1",
+        "quads": 17836,
+        "boxes": 2082,
+        "signs": 91
+      },
+      {
+        "name": "4동 1F 실내",
+        "floor": "1F",
+        "quads": 1203,
+        "boxes": 290,
+        "signs": 41
+      },
+      {
+        "name": "4동 2F 실내",
+        "floor": "2F",
+        "quads": 11312,
+        "boxes": 2801,
+        "signs": 38
+      },
+      {
+        "name": "4동 3F 실내",
+        "floor": "3F",
+        "quads": 14760,
+        "boxes": 3658,
+        "signs": 24
+      },
+      {
+        "name": "4동 4F 실내",
+        "floor": "4F",
+        "quads": 14760,
+        "boxes": 3658,
+        "signs": 24
+      },
+      {
+        "name": "4동 5F 실내",
+        "floor": "5F",
+        "quads": 13425,
+        "boxes": 3330,
+        "signs": 26
+      },
+      {
+        "name": "5동 B1 실내",
+        "floor": "B1",
+        "quads": 16517,
+        "boxes": 1884,
+        "signs": 95
+      },
+      {
+        "name": "5동 1F 실내",
+        "floor": "1F",
+        "quads": 11020,
+        "boxes": 2711,
+        "signs": 57
+      },
+      {
+        "name": "5동 2F 실내",
+        "floor": "2F",
+        "quads": 12202,
+        "boxes": 3028,
+        "signs": 26
+      },
+      {
+        "name": "5동 3F 실내",
+        "floor": "3F",
+        "quads": 16189,
+        "boxes": 4012,
+        "signs": 26
+      },
+      {
+        "name": "5동 4F 실내",
+        "floor": "4F",
+        "quads": 16189,
+        "boxes": 4012,
+        "signs": 26
+      },
+      {
+        "name": "5동 5F 실내",
+        "floor": "5F",
+        "quads": 16189,
+        "boxes": 4012,
+        "signs": 26
+      },
+      {
+        "name": "6동 B1 실내",
+        "floor": "B1",
+        "quads": 16525,
+        "boxes": 2204,
+        "signs": 87
+      },
+      {
+        "name": "6동 1F 실내",
+        "floor": "1F",
+        "quads": 1375,
+        "boxes": 337,
+        "signs": 49
+      },
+      {
+        "name": "6동 2F 실내",
+        "floor": "2F",
+        "quads": 10004,
+        "boxes": 2487,
+        "signs": 26
+      },
+      {
+        "name": "6동 3F 실내",
+        "floor": "3F",
+        "quads": 1052,
+        "boxes": 271,
+        "signs": 48
+      },
+      {
+        "name": "6동 4F 실내",
+        "floor": "4F",
+        "quads": 16929,
+        "boxes": 4197,
+        "signs": 26
+      },
+      {
+        "name": "6동 5F 실내",
+        "floor": "5F",
+        "quads": 16929,
+        "boxes": 4197,
+        "signs": 26
+      },
+      {
+        "name": "7동 B1 실내",
+        "floor": "B1",
+        "quads": 15812,
+        "boxes": 2045,
+        "signs": 92
+      },
+      {
+        "name": "7동 1F 실내",
+        "floor": "1F",
+        "quads": 1232,
+        "boxes": 297,
+        "signs": 44
+      },
+      {
+        "name": "7동 2F 실내",
+        "floor": "2F",
+        "quads": 14984,
+        "boxes": 3715,
+        "signs": 26
+      },
+      {
+        "name": "7동 3F 실내",
+        "floor": "3F",
+        "quads": 16313,
+        "boxes": 4043,
+        "signs": 26
+      },
+      {
+        "name": "7동 4F 실내",
+        "floor": "4F",
+        "quads": 16313,
+        "boxes": 4043,
+        "signs": 26
+      },
+      {
+        "name": "7동 5F 실내",
+        "floor": "5F",
+        "quads": 16313,
+        "boxes": 4043,
+        "signs": 26
+      },
+      {
+        "name": "8동 B1 실내",
+        "floor": "B1",
+        "quads": 13660,
+        "boxes": 1733,
+        "signs": 85
+      },
+      {
+        "name": "8동 1F 실내",
+        "floor": "1F",
+        "quads": 1174,
+        "boxes": 282,
+        "signs": 40
+      },
+      {
+        "name": "8동 2F 실내",
+        "floor": "2F",
+        "quads": 12462,
+        "boxes": 3092,
+        "signs": 24
+      },
+      {
+        "name": "8동 3F 실내",
+        "floor": "3F",
+        "quads": 15232,
+        "boxes": 3776,
+        "signs": 24
+      },
+      {
+        "name": "8동 4F 실내",
+        "floor": "4F",
+        "quads": 13847,
+        "boxes": 3434,
+        "signs": 24
+      },
+      {
+        "name": "8동 5F 실내",
+        "floor": "5F",
+        "quads": 15232,
+        "boxes": 3776,
+        "signs": 24
+      }
+    ],
+    "detail_budget_quads": 120000
+  },
+  "interior_reference_photos": [
+    {
+      "file": "01_b1_corridor_sign_wall_chungmu13.jpg",
+      "post_url": "https://m.blog.naver.com/bpbysm/224132925157",
+      "post_date": "2026-01-03",
+      "where": "지하 통로",
+      "shows": "처마형 노란 돌출간판 \"충무할매김밥 지하 13호\", 목재 문틀 가게, 천장 형광등"
+    },
+    {
+      "file": "02_b1_entrance_sign_wall_vertical.jpg",
+      "post_url": "https://m.blog.naver.com/bpbysm/224132925157",
+      "post_date": "2026-01-03",
+      "where": "지하 계단 하부 입구 벽",
+      "shows": "세로 판 간판 14장이 한 줄로 붙은 안내벽(흰 바탕 빨강·파랑·초록 글씨), 위에 형광등"
+    },
+    {
+      "file": "03_academy_glass_door_entrance.jpg",
+      "post_url": "https://m.blog.naver.com/claykim999/224297919407",
+      "post_date": "2026-05-27",
+      "where": "4동 2층 학원",
+      "shows": "유리 양문 학원 입구, 흰 벽, 검은 매트, 양옆 안내 패널"
+    },
+    {
+      "file": "04_academy_reception_mailboxes.jpg",
+      "post_url": "https://m.blog.naver.com/claykim999/224297919407",
+      "post_date": "2026-05-27",
+      "where": "4동 학원 내부 접수",
+      "shows": "벽걸이 TV 2대, 회색 우편함 칸 벽, 흰 벽"
+    },
+    {
+      "file": "05_b1_donghae_entrance_signs.jpg",
+      "post_url": "https://m.blog.naver.com/cocochanel116/223859829388",
+      "post_date": "2025-05-09",
+      "where": "지하 상가",
+      "shows": "가게 전면 목재 처마+유리 진열, 입구 옆 수족관·냉동고"
+    },
+    {
+      "file": "06_b1_donghae_interior.jpg",
+      "post_url": "https://m.blog.naver.com/cocochanel116/223859829388",
+      "post_date": "2025-05-09",
+      "where": "지하 횟집 내부",
+      "shows": "나무 의자 12석 정도 홀, 주방 카운터, 청색 노렌"
+    },
+    {
+      "file": "07_b1_corridor_damun_sign_long_view.jpg",
+      "post_url": "https://m.blog.naver.com/dailyround_/224444703359",
+      "post_date": "2026-10-17",
+      "where": "지하 통로 긴 시점",
+      "shows": "좌측 흰 벽돌 벽+액자·간판, 파란 돌출간판, 바닥 베이지 석재 무늬 타일, 천장 흰 패널+선형 조명"
+    },
+    {
+      "file": "08_b1_corridor_damun_wall_boards.jpg",
+      "post_url": "https://m.blog.naver.com/dailyround_/224444703359",
+      "post_date": "2026-10-17",
+      "where": "지하 통로 벽",
+      "shows": "목판 대형 간판과 액자 가게 외벽, 통로 폭 감 확인"
+    },
+    {
+      "file": "09_b1_damun_interior_wall.jpg",
+      "post_url": "https://m.blog.naver.com/dailyround_/224444703359",
+      "post_date": "2026-10-17",
+      "where": "지하 한식주점 내부",
+      "shows": "회색 벽+목판 로고, 벽등, 목재 테이블"
+    },
+    {
+      "file": "10_directory_board_floors_4dong.jpg",
+      "post_url": "https://m.blog.naver.com/darrr2/223936759826",
+      "post_date": "2025-07-18",
+      "where": "4동 1층 로비 안내판",
+      "shows": "층별 입주 업체 안내(B1~5F), 4동 출발 안내"
+    },
+    {
+      "file": "11_4dong_entrance_exterior.jpg",
+      "post_url": "https://m.blog.naver.com/darrr2/223936759826",
+      "post_date": "2025-07-18",
+      "where": "4동 외관 정면",
+      "shows": "정면 유리문, 계단 3단+노란 점자블록, 상단 \"반포쇼핑타운4동\" 금속 글씨, 층 간판"
+    },
+    {
+      "file": "12_b1_banpogalbi_interior.jpg",
+      "post_url": "https://m.blog.naver.com/darrr2/223936759826",
+      "post_date": "2025-07-18",
+      "where": "지하 고깃집 내부",
+      "shows": "천장 배기덕트 노출, 목재 천장·기둥, 카운터"
+    },
+    {
+      "file": "13_b1_6dong_stair_sign_arisu.jpg",
+      "post_url": "https://m.blog.naver.com/dkdudrnttit/224455976921",
+      "post_date": "2026-10-27",
+      "where": "6동 지하 계단 입구 벽",
+      "shows": "\"6동 지하상가 안내\" 노랑·흰 판 간판 7장, 흰 벽, 출구 표지"
+    },
+    {
+      "file": "14_b1_corridor_arisu_pocha_door.jpg",
+      "post_url": "https://m.blog.naver.com/dkdudrnttit/224455976921",
+      "post_date": "2026-10-27",
+      "where": "지하 통로+포차 입구",
+      "shows": "바닥 연회색 타일, 철재+초록 간유리 가게 전면, 세로 간판 \"아리수 포차\""
+    },
+    {
+      "file": "15_b1_arisu_pocha_interior.jpg",
+      "post_url": "https://m.blog.naver.com/dkdudrnttit/224455976921",
+      "post_date": "2026-10-27",
+      "where": "지하 포차 내부",
+      "shows": "목재 바닥, 칸막이 부스, 천장 노출, 벽 TV"
+    },
+    {
+      "file": "16_b1_corridor_brick_wall_hearttime.jpg",
+      "post_url": "https://m.blog.naver.com/duran1004/224346567313",
+      "post_date": "2026-07-17",
+      "where": "지하 통로 벽",
+      "shows": "붉은 벽돌 벽 가게 전면, 전구 장식, 긴 통로 시점"
+    },
+    {
+      "file": "17_b1_hearttime_hanging_sign.jpg",
+      "post_url": "https://m.blog.naver.com/duran1004/224346567313",
+      "post_date": "2026-07-17",
+      "where": "지하 가게 간판",
+      "shows": "노랑·초록 돌출 판 \"호프 소주 커피·식사\", 나가는 곳 화살표"
+    },
+    {
+      "file": "18_b1_stair_entrance_glass_building.jpg",
+      "post_url": "https://m.blog.naver.com/ehdgns6370/224437759356",
+      "post_date": "2026-10-11",
+      "where": "지하 계단 입구(지상)",
+      "shows": "유리+스테인리스 현관, 계단이 지하로 내려가는 입구, 간판 열"
+    },
+    {
+      "file": "19_b1_stair_hanging_sign_directory.jpg",
+      "post_url": "https://m.blog.naver.com/ehdgns6370/224437759356",
+      "post_date": "2026-10-11",
+      "where": "지하 입구 간판",
+      "shows": "\"지하상가 안내\" 붉은 띠 간판 아래 세로 간판 판 다수"
+    },
+    {
+      "file": "20_b1_stair_down_narrow.jpg",
+      "post_url": "https://m.blog.naver.com/ehdgns6370/224437759356",
+      "post_date": "2026-10-11",
+      "where": "계단",
+      "shows": "좁은 직선 계단, 철제 난간, 흰 벽, 벽에 간판"
+    },
+    {
+      "file": "21_b1_woogojip_frontage_corridor.jpg",
+      "post_url": "https://m.blog.naver.com/ehdgns6370/224437759356",
+      "post_date": "2026-10-11",
+      "where": "지하 통로 가게 전면",
+      "shows": "검정 목재 슬랫 전면+소 로고 간판, 바닥 회색, 맥주 박스 쌓임"
+    },
+    {
+      "file": "22_b1_woogojip_interior.jpg",
+      "post_url": "https://m.blog.naver.com/ehdgns6370/224437759356",
+      "post_date": "2026-10-11",
+      "where": "지하 고깃집 내부",
+      "shows": "회색 시멘트 마감, 원형 철판 테이블, 검정 철제 의자, 노출 천장"
+    },
+    {
+      "file": "23_exterior_5dong_facade.jpg",
+      "post_url": "https://m.blog.naver.com/ellpiano_/224456489569",
+      "post_date": "2026-10-28",
+      "where": "5동 외관",
+      "shows": "벽돌 외벽, 층별 간판(세로), 1층 유리 입구, 주차"
+    },
+    {
+      "file": "24_b1_ilbonji_interior.jpg",
+      "post_url": "https://m.blog.naver.com/ellpiano_/224456489569",
+      "post_date": "2026-10-28",
+      "where": "지하 식당 내부",
+      "shows": "일반 천장 다운라이트+파란 조명 띠, 노란 목재 의자, 메뉴 보드"
+    },
+    {
+      "file": "25_2f_academy_corridor_glass_doors.jpg",
+      "post_url": "https://m.blog.naver.com/gksxj0516/224441267690",
+      "post_date": "2026-10-14",
+      "where": "2층 학원 복도",
+      "shows": "타일 바닥 베이지, 유리문 학원 입구, 색 타일 벽 포인트"
+    },
+    {
+      "file": "26_2f_academy_classroom_blackboard.jpg",
+      "post_url": "https://m.blog.naver.com/gksxj0516/224441267690",
+      "post_date": "2026-10-14",
+      "where": "학원 교실",
+      "shows": "초록 칠판 벽, 에어컨, 2인 책상, 흰 벽 하단 회색 몰딩"
+    },
+    {
+      "file": "27_2f_academy_classroom_desks.jpg",
+      "post_url": "https://m.blog.naver.com/gksxj0516/224441267690",
+      "post_date": "2026-10-14",
+      "where": "학원 교실",
+      "shows": "2인 책상 3줄, 목재 바닥 시트, 방문, 형광등"
+    },
+    {
+      "file": "28_b1_corridor_long_view_tile_floor.jpg",
+      "post_url": "https://m.blog.naver.com/greemal/224457731080",
+      "post_date": "2026-10-29",
+      "where": "지하 통로 긴 시점",
+      "shows": "석재 무늬 타일 바닥(광택), 한쪽 노랑·빨강 줄무늬 가게 벽, 천장 낮은 흰 패널"
+    },
+    {
+      "file": "29_b1_corridor_long_view_mid.jpg",
+      "post_url": "https://m.blog.naver.com/hehememe/224453788458",
+      "post_date": "2026-10-26",
+      "where": "지하 통로 긴 시점",
+      "shows": "폭 약 3m 통로, 양쪽 가게, 바닥 광택 타일, 멀리 노란 간판"
+    },
+    {
+      "file": "30_b1_corridor_stools_beer_crates.jpg",
+      "post_url": "https://m.blog.naver.com/hehememe/224453788458",
+      "post_date": "2026-10-26",
+      "where": "지하 통로 가게 앞",
+      "shows": "가게 앞 둥근 스툴+맥주 박스 쌓임, 보라 조명, 통로 폭 감"
+    },
+    {
+      "file": "31_b1_corridor_chicken_hof_signs.jpg",
+      "post_url": "https://m.blog.naver.com/hehememe/224453788458",
+      "post_date": "2026-10-26",
+      "where": "지하 통로 가게",
+      "shows": "노란 돌출 간판 \"숙이네 골뱅이·호프·닭발\", 붉은 맥주 간판"
+    },
+    {
+      "file": "32_b1_hof_interior_round_stools.jpg",
+      "post_url": "https://m.blog.naver.com/hehememe/224453788458",
+      "post_date": "2026-10-26",
+      "where": "지하 호프 내부",
+      "shows": "원형 테이블, 빨강 스툴, 목재 벽 메뉴, 벽 선풍기"
+    },
+    {
+      "file": "33_b1_corridor_steelhall_frontage.jpg",
+      "post_url": "https://m.blog.naver.com/hong_en24/224267795321",
+      "post_date": "2026-04-28",
+      "where": "지하 통로 가게 전면",
+      "shows": "유리 전면+네온 문양 로고, 맥주 박스, 스툴, 청록 LED 띠"
+    },
+    {
+      "file": "34_b1_map_board.jpg",
+      "post_url": "https://m.blog.naver.com/inseoapfk/224337072789",
+      "post_date": "2026-07-05",
+      "where": "지하 지도 안내판",
+      "shows": "지하상가 평면 지도 판, 화강석 벽"
+    },
+    {
+      "file": "35_b1_7dong_directory_alcove.jpg",
+      "post_url": "https://m.blog.naver.com/inseoapfk/224337072789",
+      "post_date": "2026-07-05",
+      "where": "7동 지하 안내 코너",
+      "shows": "흑색 판 \"반포쇼핑 7동 지하상가 안내\", 벽 알코브"
+    },
+    {
+      "file": "36_b1_corridor_sinbo_pocha_frontage.jpg",
+      "post_url": "https://m.blog.naver.com/inseoapfk/224337072789",
+      "post_date": "2026-07-05",
+      "where": "지하 통로 가게",
+      "shows": "원형 빨강 간판 가게, 목재 칸막이, 화분, 통로 긴 시점"
+    },
+    {
+      "file": "37_b1_sign_wall_shops.jpg",
+      "post_url": "https://m.blog.naver.com/jinbangii/224362537109",
+      "post_date": "2026-07-30",
+      "where": "지하 입구 벽",
+      "shows": "세로 간판 판 한 줄: 노래연습장·냉삼·치킨&호프·반포갈비 등"
+    },
+    {
+      "file": "38_1f_optical_shop_interior.jpg",
+      "post_url": "https://m.blog.naver.com/yx7wlbw65oj4hg/224467052783",
+      "post_date": "2026-11 (approx)",
+      "where": "1층 안경원 내부",
+      "shows": "유리 진열장 카운터 ㄱ자, 검정 의자, 베이지 타일 바닥, 뒤 선반"
+    },
+    {
+      "file": "39_1f_optical_shop_front.jpg",
+      "post_url": "https://m.blog.naver.com/yx7wlbw65oj4hg/224467052783",
+      "post_date": "2026-11 (approx)",
+      "where": "1층 안경원 외관",
+      "shows": "유리 전면, 빨강 로고 \"리스본 안경\", 나무 데크 바닥"
     }
-  }
+  ]
 }

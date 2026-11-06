@@ -3,6 +3,7 @@
 // Tenant labels follow data/research/hangang.json and named OSM POIs. No current-tenant claim.
 // Solbit retains two plausible walkable levels; its floor count is unresolved in the research.
 // Assumptions: upper bridge +15m, lower +1.6m (water -1.4m), with a navigation hump;
+// the south-bank lower span rises to +3.6m for the mapped ground-level crossings.
 // Gabit's retained 0 / 5 / 18 / 23m levels give the convention hall a 13m volume;
 // the precise floor elevations and 700-seat theatre arrangement are reconstruction choices.
 const PATHS = [305677069,305677070,305677072,305677073,305677074,305692222,305692223,359930728,359930764,532858557,547990902,585895794,697678235,697678236,697678237,697678238,697678239,697678240,697678241,697678250,697678251,697678480,697678481,697678482,697678484,697678486,697678487,697678488,802402467,815547952,815547953,815547954,831122214,838078383,892361591,892361592,892361593,892361594,892361595,892361596,892361597,892361598,892361599,892361600,895877915,895878160,919400909,919400910,919400911,1354859719,1494834732,1494834733,1494834734,1497710480,1497710481,1563032426,1563032427,1563032432,1563032433,1563032434,1563032435,1563032439,1563032440,1563032441,1568503150,1568503151,1568503152,1568503153,1568503154,414267188,697678249,697678489,697678491];
@@ -148,6 +149,12 @@ export function build(K) {
   for(const id of LAWNS)grassAroundTunnel({tex:'grass',color:id%2?0xb4cb8d:0xc0cfa2},area(id).poly,.036);
   K.zone({name:'반포한강공원',floor:'수변',sub:'세빛섬 · 달빛광장 · 한강남자전거길',poly:park,y0:-2,y1:8});
   const parkPaths=[];
+  // Reserve the bridge approaches before planting. The park uses a flat datum,
+  // so this bank profile and the two side approaches are modeling estimates.
+  const accessA=[-614,-710],accessB=[-694.02,-920.79],bankDeckY=3.6;
+  const accessL=Math.hypot(accessB[0]-accessA[0],accessB[1]-accessA[1]);
+  const accessU=[(accessB[0]-accessA[0])/accessL,(accessB[1]-accessA[1])/accessL],accessN=[-accessU[1],accessU[0]];
+  const accessPoint=(s,off=0)=>[accessA[0]+accessU[0]*s+accessN[0]*off,accessA[1]+accessU[1]*s+accessN[1]*off];
   for(const id of PATHS) {
     const r=K.osm.roads.find(r=>r.id===id);if(!r)continue;
     for(let i=1;i<r.pts.length;i++) {
@@ -164,7 +171,7 @@ export function build(K) {
   // Open lawns, rather than a uniform forest. Keep trees off OSM paths and gathering spaces.
   for(let n=0,g=0;n<155&&g<5000;g++) {
     const x=-1110+rnd()*990,z=-1010+rnd()*570;
-    if(facilityPolys.some(p=>K.pointInPoly(x,z,p)||p.some((a,i)=>distSeg(x,z,a,p[(i+1)%p.length])<5))||!inside([x,z],park,9)||parkPaths.some(([a,b,w])=>distSeg(x,z,a,b)<w/2+4)||Math.hypot(x+628,z+707)<65||ISLETS.some(id=>K.pointInPoly(x,z,area(id).poly)))continue;
+    if(facilityPolys.some(p=>K.pointInPoly(x,z,p)||p.some((a,i)=>distSeg(x,z,a,p[(i+1)%p.length])<5))||!inside([x,z],park,9)||parkPaths.some(([a,b,w])=>distSeg(x,z,a,b)<w/2+4)||distSeg(x,z,accessA,accessPoint(90))<25||Math.hypot(x+628,z+707)<65||ISLETS.some(id=>K.pointInPoly(x,z,area(id).poly)))continue;
     K.tree(x,z,{h:4.5+rnd()*3.7,kind:n%4===0?'ginkgo':'zelkova'});n++;
     if(n%4===0){bench(x+3,z+2);lamp(x-3,z+2);}
   }
@@ -548,7 +555,7 @@ export function build(K) {
   const bridge=[[-521.6,-441.74,0],[-552.5,-557.4,15],[-577.9,-624.7,15],[-651.2,-813.2,15],[-779.1,-1140.6,15],[-920.5,-1500.5,15],[-944.5,-1586.4,15],[-1003.65,-1959.55,0]];
   function bridgeSection(a,b) {
     const L=Math.hypot(b[0]-a[0],b[1]-a[1]),ux=(b[0]-a[0])/L,uz=(b[1]-a[1])/L,nx=-uz,nz=ux,rot=Math.atan2(ux,uz);
-    strip(a,b,25,a[2],{tex:'asphalt',color:0xb4b8b7},b[2]);
+    K.ramp(...a.slice(0,2),...b.slice(0,2),{w:25,ya:a[2],yb:b[2],mat:{tex:'asphalt',color:0xb4b8b7},under:0x46565b,rails:false});
     for(const side of [-1,1]) {
       const off=side*11.4,aa=[a[0]+nx*off,a[1]+nz*off],bb=[b[0]+nx*off,b[1]+nz*off];
       strip(aa,bb,2.05,a[2]+.13,'concrete',b[2]+.13);
@@ -577,14 +584,60 @@ export function build(K) {
   }
   for(let i=1;i<bridge.length;i++)bridgeSection(bridge[i-1],bridge[i]);
   // Jamsu Bridge: no cars after 2026-10-26; preserve a pedestrian and cycle route.
-  const lower=[[-590.01,-647.54,0],[-614,-710,1.6],[-694.02,-920.79,1.6],[-762.57,-1098.77,1.6],[-800,-1196,5.3],[-831,-1277,5.3],[-866,-1367,1.6],[-912.02,-1486.06,1.6],[-931.69,-1540.58,0]];
+  // Keep the river deck/spawn at +1.6m, but provide 3.35m of headroom over
+  // both OSM park crossways. Rails and deck fascia never extend to the lawn.
+  const lower=[[-590.01,-647.54,0],[...accessA,bankDeckY],[...accessPoint(120),bankDeckY],[...accessB,1.6],[-762.57,-1098.77,1.6],[-800,-1196,5.3],[-831,-1277,5.3],[-866,-1367,1.6],[-912.02,-1486.06,1.6],[-931.69,-1540.58,0]];
+  const landingS=54,accessW=3.4,gateHalf=accessW/2;
   for(let i=1;i<lower.length;i++) {
     const a=lower[i-1],b=lower[i],L=Math.hypot(b[0]-a[0],b[1]-a[1]),nx=-(b[1]-a[1])/L,nz=(b[0]-a[0])/L;
-    strip(a,b,18,a[2],{tex:'concrete',color:0xd2cbbd},b[2]);
-    for(const side of [-1,1])slopeRail([a[0]+nx*side*9,a[1]+nz*side*9],[b[0]+nx*side*9,b[1]+nz*side*9],a[2],b[2]);
+    K.ramp(...a.slice(0,2),...b.slice(0,2),{w:18,ya:a[2],yb:b[2],mat:{tex:'concrete',color:0xd2cbbd},under:0x45545a,rails:false});
+    for(const side of [-1,1]) {
+      const edge=s=>[a[0]+(b[0]-a[0])*s/L+nx*side*9,a[1]+(b[1]-a[1])*s/L+nz*side*9];
+      const height=s=>a[2]+(b[2]-a[2])*s/L;
+      const spans=i===2?[[0,landingS-gateHalf],[landingS+gateHalf,L]]:[[0,L]];
+      for(const [s,t] of spans)slopeRail(edge(s),edge(t),height(s),height(t));
+      const aa=edge(0),bb=edge(L);
+      K.quad(0x6e7776,[[aa[0],a[2]-.25,aa[1]],[bb[0],b[2]-.25,bb[1]],[bb[0],b[2],bb[1]],[aa[0],a[2],aa[1]]],[nx*side,0,nz*side]);
+      if(a[2]===b[2])K.phys.addCeiling([a.slice(0,2),b.slice(0,2),bb,aa],a[2]-.25);
+    }
     strip([a[0]+nx*6,a[1]+nz*6],[b[0]+nx*6,b[1]+nz*6],3.5,a[2]+.015,{tex:'asphalt',color:0xc69e83},b[2]+.015);
-    for(let s=0;s<L;s+=2.3){const t=s/L;for(const side of [-1,1])box(a[0]+(b[0]-a[0])*t+nx*side*9,a[2]+(b[2]-a[2])*t,a[1]+(b[1]-a[1])*t+nz*side*9,.07,1.05,.07,metal);}
+    for(let s=0;s<L;s+=2.3){if(i===2&&Math.abs(s-landingS)<gateHalf+.15)continue;const t=s/L;for(const side of [-1,1])box(a[0]+(b[0]-a[0])*t+nx*side*9,a[2]+(b[2]-a[2])*t,a[1]+(b[1]-a[1])*t+nz*side*9,.07,1.05,.07,metal);}
   }
+  // Parallel 1:12.4 approaches sit between the plaza and riverside crossways.
+  // Each has a stair shortcut from the river side and an open deck-side gate.
+  for(const side of [-1,1]) {
+    const p=(s,off=15)=>accessPoint(s,side*off),low=p(10),high=p(landingS),stair=p(66);
+    K.ramp(...low,...high,{w:accessW,ya:.065,yb:bankDeckY,mat:'concrete',under:0x45545a,rails:false});
+    K.stairs(...stair,...high,{w:accessW,ya:.065,yb:bankDeckY,mat:'concrete',rails:false});
+    for(const off of [15-gateHalf,15+gateHalf]) {
+      // End the approach rails at the landing edges, leaving its sideways exit open.
+      slopeRail(p(10,off),p(landingS-gateHalf,off),.065,bankDeckY-(bankDeckY-.065)*gateHalf/(landingS-10));
+      slopeRail(p(66,off),p(landingS+gateHalf,off),.065,bankDeckY-(bankDeckY-.065)*gateHalf/(66-landingS));
+      for(let s=10;s<landingS-gateHalf;s+=3) {const q=p(s,off);box(q[0],.065+(bankDeckY-.065)*(s-10)/(landingS-10),q[1],.07,1.12,.07,metal);}
+    }
+    const landing=[p(landingS-gateHalf,8.5),p(landingS+gateHalf,8.5),p(landingS+gateHalf,15+gateHalf),p(landingS-gateHalf,15+gateHalf)];
+    K.slab(landing,bankDeckY,{mat:'concrete',under:0x45545a,thick:.25});
+    for(const s of [landingS-gateHalf,landingS+gateHalf])rail(p(s,9),p(s,15-gateHalf),bankDeckY);
+    rail(p(landingS-gateHalf,15+gateHalf),p(landingS+gateHalf,15+gateHalf),bankDeckY);
+    // Short ground aprons join the existing park paths without enclosing them.
+    strip(p(5),low,5,.065,'sidewalk');strip(stair,p(71),5,.065,'sidewalk');
+    const label=p(6,19);sign(['잠수교 보행로','경사로 · 계단'],label[0],1.8,label[1],3.8,.9,Math.atan2(accessU[0],accessU[1]));
+  }
+  // Paved, lit ground passages follow the actual OSM paths between solid piers.
+  const crossways=[
+    [[-632.25,-712.99],[-587.76,-721.05]],
+    [[-670.45,-786.08],[-647.53,-784.24],[-637.46,-786.19],[-589.48,-798.22]],
+  ];
+  for(const path of crossways) {
+    for(let j=1;j<path.length;j++)strip(path[j-1],path[j],5,.085,{tex:'sidewalk',color:0xc2c5bf});
+    const mid=path.length===2?[-616.7,-715.8]:[-642,-785.3];
+    for(const off of [-7,0,7]) {
+      const x=mid[0]+accessN[0]*off,z=mid[1]+accessN[1]*off;
+      box(x,3.22,z,.9,.08,.24,0x263a40);
+      box(x,3.19,z,.76,.035,.18,{tex:'emit',color:0xffe4ad});
+    }
+  }
+  sign(['교각 사이 보행통로','세빛섬 · 달빛광장'], -596,2.1,-715,4.8,.9,Math.PI/2);
   sign(['잠수교','보행 · 자전거 통행'], -600,2.6,-672,7,1.4,.37);
   sign(['반포대교','용산 · 녹사평 방면'], -621,19,-737,9,1.8,.37,'#18734c');
   K.floorText('보행로',{x:-700,y:1.64,z:-924,w:2.5,h:3.5,rotY:-.37,fg:'#fff4d7'});
