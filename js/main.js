@@ -8,6 +8,7 @@ import { FONT } from './textures.js';
 import { planArea, areaIdAt, areaIdForKey, areaName, districtAt, OUTDOOR } from './areas.js';
 import { JUNCTIONS } from './places/_junctions.js';
 import { LANDMARKS } from './landmarks.js';
+import { pickReModels, reModelStandIns, loadReModels } from './remodels.js';
 
 const Q = new URLSearchParams(location.search);
 const SHOT = Q.has('shot');
@@ -24,6 +25,7 @@ async function boot() {
   status('지도 데이터 불러오는 중…');
   const fontsReady = Promise.race([Promise.all(['400', '700'].map(w => document.fonts.load(`${w} 32px "Noto Sans KR"`, '가나다'))), new Promise(r => setTimeout(r, 4000))]).catch(() => { }).then(() => mark('fonts'));
   const osmP = fetch('data/osm.json').then(r => r.json());
+  const reP = fetch('js/places/_re_models.json').then(r => r.ok ? r.json() : null).catch(() => null);
   // ---- area loading: an address builds only its area (js/areas.js); ?area=all, ?places=… and screenshots build everything
   const META = await fetch('js/places/_meta.json').then(r => r.json()).catch(() => null);
   const hashR = /^#\/([^?]*)(?:\?(.*))?$/.exec(location.hash || '');
@@ -73,6 +75,10 @@ async function boot() {
   for (const r of await Promise.all(modP)) { if (r.e) fail(`load ${r.id}`, r.e); else mods.push(r); }
   const claimedBuildings = new Set(), claimedRoads = new Set(), claimedAreas = new Set();
   for (const { m } of mods) { for (const id of m.meta?.claims || []) claimedBuildings.add(id); for (const id of m.meta?.claimRoads || []) claimedRoads.add(id); for (const id of m.meta?.claimAreas || []) claimedAreas.add(id); }
+  // apartments reused from the user's real-estate map (js/remodels.js): their OSM outlines are not built as generic boxes
+  const RE = await reP;
+  const reModels = SHOT && !Q.has('re') ? [] : pickReModels(RE, AREA.id === 'all' ? null : AREA.box, AREA.id.startsWith('in:') ? 200 : 350);
+  for (const m of reModels) for (const id of m.claims) claimedBuildings.add(id);
   // modules of other areas are not loaded, but what they claim is still theirs (the city must not put generic boxes there)
   if (META && AREA.id !== 'all') for (const v of Object.values(META)) { for (const id of v.claims) claimedBuildings.add(id); for (const id of v.claimRoads) claimedRoads.add(id); for (const id of v.claimAreas) claimedAreas.add(id); }
   const placeInfo = [];
@@ -110,6 +116,7 @@ async function boot() {
   mark('city'); status('메시 합치는 중…'); await new Promise(r => setTimeout(r, 0));
   K._.finalize(); mark('finalize');
   K._.cull(6, 1.6, -125, true);
+  const reStand = reModels.length ? reModelStandIns({ THREE, K, osm, scene, models: reModels }) : new Map();
   const traffic = roadsInfo && Q.get('traffic') !== '0' ? createTraffic(K, roadsInfo, 180) : null;
 
   // ---- virtual doors: every way into another page is a visible door with a sign (js/places/_meta.json entrances/junctions) ----
@@ -445,6 +452,7 @@ async function boot() {
     currentZone = phys.zoneAt(player.x, player.y + 0.1, player.z);
     route.update(currentZone);
     areaWatch(currentZone); portalCheck(); pinUpdate();
+    if (reLive && (frames & 63) === 0) reLive.update(player.x, player.z);
     const zname = currentZone ? currentZone.name : (player.y < -2 ? '지하' : '거리');
     hudZone.textContent = zname + (currentZone && currentZone.floor ? ` · ${currentZone.floor}` : '');
     hudSub.textContent = currentZone ? currentZone.sub : '';
@@ -474,6 +482,9 @@ async function boot() {
   if (SHOT) { await signFonts; K._.atlas.flushAll(); for (const p of K._.atlas.pages) p.t.needsUpdate = true; }
   else signFonts.then(() => { signsGo = true; });
   mark('ready');
+  // real-estate-map apartments stream in after the page is up (nearest first)
+  let reLive = null;
+  if (reModels.length) setTimeout(() => { reLive = loadReModels({ THREE, scene, models: reModels, stand: reStand, from: { x: player.x, z: player.z }, onProgress: (d, n) => { if (d === n) toast(`주변 아파트 ${n}동 불러옴`); } }); }, SHOT ? 0 : 400);
   Object.assign(window.__world, { ready: true, area: AREA.id, wantedArea: () => wantedArea(phys.zoneAt(player.x, player.y + 0.1, player.z)), K, phys, player, camera, scene, renderer, map, places: placeInfo, stats: { ...K._.stats, phys: phys.stats, draw: () => renderer.info.render }, setNight });
   frame();
 }
