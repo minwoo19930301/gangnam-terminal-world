@@ -17,6 +17,8 @@ export const meta = {
     'https://mediahub.seoul.go.kr/archives/2016771',
     'https://www.koreatodo.com/express-bus-terminal-shopping',
     'https://blog.naver.com/s9917104/224463975835',
+    'https://blog.naver.com/marketer_jyh/224465977099',
+    'refs/interior/daiso/106_gotomall_g11_door_stairs_up_marketer_jyh_20261105.jpg',
   ],
 };
 
@@ -102,9 +104,9 @@ const EXITS = [
   { id: '8-1', side: 'N', u: -97.3, a: [1, 0], kind: 'metro', gate: 'G8-1', dest: '반포쇼핑타운 3동 · 9호선', elevator: true },
   { id: '8', side: 'S', top: [-64.3, 20.0], a: [1, 0], kind: 'metro', dest: '신세계백화점 · 센트럴시티' },
   { id: '8-2', side: 'N', u: -29.0, a: [1, 0], kind: 'metro', gate: 'G8-2', dest: '반포쇼핑타운 4동 · 신반포로23길', wheelchairLift: false },
-  { id: '1', side: 'S', top: [40.9, 37.3], a: [0, -1], kind: 'metro', gate: 'G9', dest: '경부선 터미널 · 반포지구대' },
+  { id: '1', side: 'S', top: [40.9, 37.3], a: [0, -1], kind: 'metro', gate: 'G9', dest: '한가람문구 · 다이소 1번 출입구 · 경부선 터미널' },
   { id: 'G10', side: 'N', u: 60, a: [1, 0], kind: 'mall', dest: '한신4차 · 반포쇼핑타운 5동' },
-  { id: 'G11', side: 'N', u: 96, a: [1, 0], kind: 'mall', dest: '올에이수입상가 · 반포쇼핑타운 6동' },
+  // G11 is the photographed terminal-facing indoor door, built separately below.
   { id: 'G12', side: 'N', u: 136, a: [1, 0], kind: 'mall', dest: '한신4차 · 반포쇼핑타운 6·7동' },
   { id: 'G13', side: 'S', u: 248, a: [0, -1], kind: 'mall', dest: '삼호가든 · 경부선 터미널 동측' },
   { id: 'G15', side: 'S', u: 314, a: [0, -1], kind: 'mall', dest: '반포자이 · 잠원로' },
@@ -120,7 +122,7 @@ export function build(K) {
   // Furnishings are queued by contiguous large B1 rooms; structure and gameplay are built immediately.
   // Each callback has a stable local seed so the arrival order never changes shop stock or crowds.
   const detailRooms = [
-    [-410, -320.8, '서편 푸드코트'], [-320.8, -220, 'WEST ZONE 꽃·생활'],
+    [-410, -320.8, '서편 푸드코트'], [-320.8, -220, 'WEST ZONE 서편 통로'],
     [-220, -102.2, 'WEST ZONE 통로'], [-102.2, -10.07, '3호선 홀·중앙 상점'],
     [-10.07, 40.6, '중앙광장'], [40.6, 150, 'EAST ZONE 서쪽'],
     [150, 260, 'EAST ZONE 의류'], [260, 359.6, 'EAST ZONE 동쪽'],
@@ -360,12 +362,18 @@ export function build(K) {
     addKeep(RUV(Math.min(pu0 - 0.5, mapJamb), Math.min(eV, inner), Math.max(pu1 + 0.5, X.mouth[1] + 0.15), Math.max(eV, inner)), 'gate:' + X.id);
   }
   // junction openings in the south wall (owners build the corridors)
-  const JUNC = [{ id: 'J1', p: [-70, -89], to: '신세계백화점 강남점 B1 · 식품관' }, { id: 'J2', p: [120, -159], to: '경부선 터미널 B1 · 다이소' }, { id: 'J3', p: [-150, -57.5], to: '센트럴시티 B1 · 호남선' }];
+  const JUNC = [{ id: 'J1', p: [-70, -89], to: '신세계백화점 강남점 B1 · 식품관' }, { id: 'J2', p: [120, -159], to: '경부선 터미널 B1 · 한가람문구 · 다이소 1번 출입구' }, { id: 'J3', p: [-150, -57.5], to: '센트럴시티 B1 · 호남선' }];
   for (const J of JUNC) {
     const [u] = UV(J.p[0], J.p[1]); const e = vS(u); J.u = u; J.e = e;
     const [ox, oz] = P(u, e); envOpen.push({ x: ox, z: oz, w: 8.4, y0: FL, y1: -3.0 });
     addKeep(RUV(u - 4.8, e - 6.5, u + 4.8, e + 0.5), 'junc:' + J.id);
   }
+  // 2026-11 photo 106/113: G11 is on the terminal side, after G9 in the pink zone.
+  // Its exact survey position is unknown. The accepted J_G11_DAISO seam is recorded
+  // in research JSON for the junction owner; do not silently turn this into a street exit.
+  const G11 = { u: 145, e: vS(145), front: lay(145).fD, seam: [140.6504, -132], width: 5.6 };
+  { const [x, z] = P(G11.u, G11.e); envOpen.push({ x, z, w: 6.4, y0: FL, y1: CY }); }
+  addKeep(RUV(141.05, G11.front - 0.15, 148.0, G11.e + 0.4), 'G11-indoor');
   // toilets / special blocks in the main section (none) — food courts live in the end halls.
 
   // ---------- floor, ceiling, envelope ----------
@@ -419,7 +427,7 @@ export function build(K) {
   K.sign('신세계백화점 · 센트럴시티', { x: -75.6, y: -2.57, z: -106.2, w: 5.6, h: 0.62, rotY: 0, bg: '#24282e', fg: '#fff', sub: '신세계백화점 B1 연결통로 · 8번 출구', pxPerM: 90 });
   K.box({ x: -2.5, z: -132, y: -2.95, w: 0.35, h: 0.75, d: 11.6, mat: 0x30353b, solid: false });
   K.sign('나가는 곳', { x: -2.3, y: -2.57, z: -129.2, w: 5.2, h: 0.62, rotY: Math.PI / 2, bg: '#24282e', fg: '#ffd84a', sub: 'GOTO MALL 고투몰 · 8-2번 · 1번 출구', pxPerM: 90 });
-  K.sign('경부선 터미널 · 다이소', { x: -2.3, y: -2.57, z: -134.6, w: 5.6, h: 0.62, rotY: Math.PI / 2, bg: '#24282e', fg: '#fff', sub: '고투몰 EAST ZONE 경유 · 1번 출구 (G9)', pxPerM: 90 });
+  K.sign('G9 한가람문구 · G11 다이소', { x: -2.3, y: -2.57, z: -134.6, w: 5.6, h: 0.62, rotY: Math.PI / 2, bg: '#24282e', fg: '#fff', sub: 'G9 → 한가람문구 → 1번 출입구 · G11 → 4번 출입구', pxPerM: 90 });
   K.sign('9호선 타는 곳', { x: -2.7, y: -2.57, z: -134.6, w: 5.6, h: 0.62, rotY: -Math.PI / 2, bg: LINE[9], fg: '#1b1b1b', sub: '중앙보훈병원 · 사평 방면 / 개화 · 신반포 방면', pxPerM: 90 });
   K.sign('급행 · 일반 승차', { x: -2.7, y: -2.57, z: -129.2, w: 5.2, h: 0.62, rotY: -Math.PI / 2, bg: '#24282e', fg: '#fff', sub: '9호선 고속터미널역 923 · 1번 출구', pxPerM: 90 });
 
@@ -989,7 +997,7 @@ export function build(K) {
   }
 
   // zone banners at the WEST / EAST ZONE thresholds (both corridors)
-  for (const [u, face, title, sub, col] of [[-101.4, '+u', '서편광장', '인테리어 소품 · 침구 · 그릇 · 조화·꽃 · 여성의류', '#1d6fb8'], [41.4, '-u', '동편광장', '여성의류 · 신발 · 가방 · 액세서리 · 양말', '#3da64a']]) {
+  for (const [u, face, title, sub, col] of [[-101.4, '+u', '서편광장', '서편 통로 · 상점 · 휴게공간', '#1d6fb8'], [41.4, '-u', '동편광장', '여성의류 · 신발 · 가방 · 액세서리 · 양말', '#3da64a']]) {
     const Ly = lay(u);
     furnish(u, () => {
     for (const cm of [(Ly.fA + Ly.fB) / 2, (Ly.fC + Ly.fD) / 2]) {
@@ -1000,7 +1008,7 @@ export function build(K) {
   }
   // corridor / section zones (map + HUD)
   const SECT = [
-    { u0: -320.8, u1: -102.2, name: '고투몰 WEST ZONE', short: 'WEST ZONE', sub: '인테리어·침구·그릇·조화·꽃 · 여성의류' },
+    { u0: -320.8, u1: -102.2, name: '고투몰 WEST ZONE', short: 'WEST ZONE', sub: '서편 통로 · 상점 · 휴게공간' },
     { u0: -102.2, u1: -68.6, name: '3호선 고속터미널역 개찰구 (G7)', short: '3호선 홀', sub: '3호선 · 7호선 환승 · 신세계 연결' },
     { u0: -68.6, u1: -10.07, name: '고투몰 중앙', short: '중앙', sub: '화장품 · 렌즈 · 카페 · 8·8-2번 출구' },
     { u0: -10.07, u1: 40.6, name: '9호선 고속터미널역 개찰구', short: '9호선 홀', sub: '9호선 · 식물 휴게공간 · 1번 출구' },
@@ -1518,6 +1526,7 @@ export function build(K) {
     const faceA = a[0] === 1 ? '+u' : a[0] === -1 ? '-u' : a[1] === 1 ? '+v' : '-v';
     const faceNA = { '+u': '-u', '-u': '+u', '+v': '-v', '-v': '+v' }[faceA];
     const HOLE = 9.0, L0 = 11.5, L1 = 14.5, END = X.elevator ? 16.9 : L1;
+    const onebaileyDoor = X.id === 'G2';
     const northCanopy = X.side === 'N';
     // bp_02: 8-1 extends west of the bus shelter, leaving the lift freestanding at its east end.
     // bp_34 aerial: 8-2 roof instead covers the full eastward run. Keep B1 geometry unchanged.
@@ -1537,6 +1546,9 @@ export function build(K) {
     } else K.stairs(pc[0], pc[1], pd[0], pd[1], { w: 3.2, ya: FL, yb: -3, mat: { tex: 'tile', color: 0xd9d4ca }, sideMat: 0x8c8882 });
     K.slab(polyOf(rect(5, 6.5, -1.65, 1.65)), -3, { mat: { tex: 'tile', color: 0xd9d4ca }, under: 0x9a968f, thick: 0.25, ceil: false });
     K.slab(polyOf(rect(L0, X.elevator ? L1 + 0.25 : END + 0.05, -1.65, 1.65)), FL, { mat: M.floor, under: false });
+    // J_ONEBAILEY_G2: carry the level landing through the outer wall to its boundary.
+    // The owner's corridor starts at E(13,-1.75) = (-289.8764,-36.3812).
+    if (onebaileyDoor) K.slab(polyOf(rect(L0, L1, -1.85, -1.55)), FL, { mat: M.floor, under: false, edge: false });
     // covered part ceiling
     K.slab(polyOf(rect(HOLE, END + 0.1, -1.85, 1.85)), CY + 0.3, { mat: 'concrete', under: M.ceil, thick: 0.3, walk: false, edge: false });
     fq(M.led, ...rect(HOLE + 0.6, END - 0.4, -0.15, 0.15), CY - 0.012, false);
@@ -1546,8 +1558,9 @@ export function build(K) {
     const passAlong = a[1] === 0; // passage leaves through a side wall (else through the end)
     for (const sgn of [-1, 1]) {
       const toBand = passAlong && sgn === X.bandSideAc;
+      const toOnebailey = onebaileyDoor && sgn === -1;
       wallAlong(-0.1, HOLE, sgn * 1.75, -6.3, northCanopy ? 0 : 1.0, { mat: sgn > 0 ? M.granite : M.wall, mat2: sgn > 0 ? M.wall : M.granite, thick: 0.2, capMat: 0xcfc9bf });
-      wallAlong(HOLE, END, sgn * 1.75, -6.3, CY, { mat: M.wall, thick: 0.2, openings: toBand ? [{ at: (L0 + L1) / 2 - HOLE, w: 3.0, y0: FL, y1: -3.25 }] : [] });
+      wallAlong(HOLE, END, sgn * 1.75, -6.3, CY, { mat: M.wall, thick: 0.2, openings: toBand || toOnebailey ? [{ at: (L0 + L1) / 2 - HOLE - (toOnebailey ? 0.05 : 0), w: toOnebailey ? 3.1 : 3.0, y0: FL, y1: -3.25 }] : [] });
     }
     wallAcross(HOLE, -1.85, 1.85, CY, northCanopy ? 0 : 1.0, { mat: M.wall, mat2: M.granite, thick: 0.2, capMat: 0xcfc9bf });
     if (passAlong) wallAcross(END, -1.85, 1.85, -6.3, CY, { mat: M.wall, thick: 0.2 });
@@ -1720,6 +1733,21 @@ export function build(K) {
     const ebx = (al0, al1, ac0, ac1, y, h, mat, o) => { const r = rect(al0, al1, ac0, ac1); bx(r[0], r[2], r[1], r[3], y, h, mat, o); };
     const cvec = (sgn) => { const cu = c[0] * sgn, cv = c[1] * sgn; return [DU[0] * cu + DV[0] * cv, DU[1] * cu + DV[1] * cv]; };
     const faceC = sgn => (c[0] !== 0 ? (c[0] * sgn > 0 ? '+u' : '-u') : (c[1] * sgn > 0 ? '+v' : '-v'));
+    if (onebaileyDoor) {
+      // Charcoal portal matching the mall gates; leaves are held open onto the landing.
+      // Jamb inner faces 11.54..14.38 leave 2.8 m after collision margins, with 2.75 m headroom.
+      const frame = 0x2b2e30, glass = { tex: 'glass', color: 0xd6dedb };
+      for (const [al0, al1] of [[L0 - 0.1, L0 + 0.04], [L1 - 0.12, L1]]) ebx(al0, al1, -1.85, -1.55, FL, 2.75, frame);
+      ebx(L0 - 0.1, L1, -1.85, -1.55, FL + 2.75, 0.45, frame);
+      for (const al of [L0, L1 - 0.08]) {
+        ebx(al - 0.02, al + 0.02, -1.7, -0.4, FL + 0.05, 2.65, glass);
+        for (const y of [FL + 0.025, FL + 2.7]) ebx(al - 0.025, al + 0.025, -1.72, -0.38, y, 0.05, frame);
+        for (const ac of [-1.7, -0.4]) ebx(al - 0.025, al + 0.025, ac - 0.025, ac + 0.025, FL + 0.025, 2.725, frame);
+        ebx(al - 0.03, al + 0.03, -0.57, -0.53, FL + 0.8, 0.9, 0x9fa6a7);
+      }
+      sg('원베일리 · 반포한강공원 보행통로 →', ...E(13, -1.54), FL + 2.98, 2.82, 0.26, '+v', { bg: null, fg: '#ffd84a', pxPerM: 160 });
+      sg('고투몰 G2 · 지하상가', ...E(13, -1.86), FL + 2.98, 2.8, 0.3, '-v', { bg: null, fg: '#ffffff', pxPerM: 130 });
+    }
     if (X.elevator) {
       // bp_01 + corrected manifest: the freestanding glass lift is beside 8-1, not 8-2.
       // Keep the B1 cabin at the existing passage end; the small horizontal offset is recorded as a guess.
@@ -1766,20 +1794,22 @@ export function build(K) {
     } else if (X.wheelchairLift !== false) {
       // Existing inclined lifts use the 2011 general reference; do not invent a replacement lift at 8-2.
       const ls = passAlong ? -X.bandSideAc : 1, acR = ls * 1.58, yel = 0xf2c300;
-      const n = cvec(-ls), prof = [[-0.45, 0], [0, 0], [5, -3], [6.5, -3], [L0, FL], [L0 + 0.9, FL]];
+      const n = cvec(-ls), prof = [[-0.45, 0], [0, 0], [5, -3], [6.5, -3], [L0, FL]];
+      if (!onebaileyDoor) prof.push([L0 + 0.9, FL]);
       for (const [hy, hh, col] of [[0.82, 0.07, 0x9aa1a8], [0.22, 0.05, 0x7d858e]]) for (let i = 0; i < prof.length - 1; i++) {
         const [a0, y0] = prof[i], [a1, y1] = prof[i + 1]; const A0 = Q(a0, acR), A1 = Q(a1, acR), B0 = Q(a0, acR + ls * 0.07), B1 = Q(a1, acR + ls * 0.07);
         K.quad(col, [[A0[0], y0 + hy, A0[1]], [A1[0], y1 + hy, A1[1]], [A1[0], y1 + hy + hh, A1[1]], [A0[0], y0 + hy + hh, A0[1]]], [n[0], 0, n[1]]);
         K.quad(col, [[A0[0], y0 + hy + hh, A0[1]], [A1[0], y1 + hy + hh, A1[1]], [B1[0], y1 + hy + hh, B1[1]], [B0[0], y0 + hy + hh, B0[1]]], [0, 1, 0]);
       }
       for (const al of [1.5, 4.0, 8.0, 10.5]) { const y = al < 5 ? -3 * al / 5 : -3 - 3 * (al - 6.5) / 5; ebx(al - 0.04, al + 0.04, acR, acR + ls * 0.07, y, 0.85, 0x7d858e, { solid: false, skip: [] }); }
-      // folded platform parked at the bottom landing (yellow safety colour) + call panels top and bottom
-      ebx(L0 + 0.05, L0 + 0.95, Math.min(acR, acR - ls * 0.32), Math.max(acR, acR - ls * 0.32), FL + 0.1, 1.0, yel, { solid: false, skip: [] });
-      ebx(L0 + 0.1, L0 + 0.9, Math.min(acR - ls * 0.32, acR - ls * 0.36), Math.max(acR - ls * 0.32, acR - ls * 0.36), FL + 0.15, 0.85, 0x30353b, { solid: false, skip: [] });
+      // G2 parks its folded lift just above the bottom step, clear of the new doorway.
+      const park = onebaileyDoor ? L0 - 1.0 : L0, parkY = onebaileyDoor ? FL + 0.6 : FL;
+      ebx(park + 0.05, park + 0.95, Math.min(acR, acR - ls * 0.32), Math.max(acR, acR - ls * 0.32), parkY + 0.1, 1.0, yel, { solid: false, skip: [] });
+      ebx(park + 0.1, park + 0.9, Math.min(acR - ls * 0.32, acR - ls * 0.36), Math.max(acR - ls * 0.32, acR - ls * 0.36), parkY + 0.15, 0.85, 0x30353b, { solid: false, skip: [] });
       ebx(-0.62, -0.5, Math.min(acR, acR - ls * 0.12), Math.max(acR, acR - ls * 0.12), 0, 1.05, 0x7d858e, { solid: false, skip: [] });
       ebx(-0.64, -0.48, Math.min(acR, acR - ls * 0.14), Math.max(acR, acR - ls * 0.14), 1.05, 0.28, yel, { solid: false, skip: [] });
       sg('휠체어리프트', ...E(-0.65, acR - ls * 0.07), 1.19, 0.15, 0.1, faceNA, { bg: '#f2c300', fg: '#111', pxPerM: 400, offset: 0.004 });
-      sg(['휠체어리프트', '호출 버튼 · 직원 도움'], ...E(L0 + 1.6, acR + ls * 0.07), FL + 1.75, 0.95, 0.38, faceC(-ls), { bg: '#f2c300', fg: '#111', bold: false, offset: 0.01 });
+      sg(['휠체어리프트', '호출 버튼 · 직원 도움'], ...E(onebaileyDoor ? park + 0.5 : L0 + 1.6, acR + ls * 0.07), parkY + 1.75, 0.95, 0.38, faceC(-ls), { bg: '#f2c300', fg: '#111', bold: false, offset: 0.01 });
       const [ex, ez] = Q(L0 + 0.8, ls * 0.9), top = Q(-1.0, ls * 0.9);
       K.elevator({ name: `${title} 휠체어리프트`, x: ex, z: ez, rotY: FACE[faceA], w: 2.0, d: 2.0, shaft: false, floors: [{ label: '1F', y: 0, name: `신반포로 보도 · ${title}`, dx: top[0] - ex, dz: top[1] - ez }, { label: 'B1', y: FL, name: '고투몰 지하상가' }] });
       K.portal({ x: top[0], y: 0, z: top[1], r: 1.4, label: `${title} 휠체어리프트 · B1 고투몰로`, to: { x: ex, y: FL + 0.05, z: ez, yaw: yawOf(a[0], a[1]) } });
@@ -1800,6 +1830,67 @@ export function build(K) {
     sg('GOTO MALL 고투몰', J.u, Ly.fD + 0.06, FL + 2.46, 3.6, 0.45, '+v', { bg: '#252627', fg: '#ffffff', sub: '← WEST ZONE · 3호선    EAST ZONE · 9호선 →' });
     K.box({ x: P(J.u, Ly.fD)[0], z: P(J.u, Ly.fD)[1], y: FL + 2.2, w: 3.7, d: 0.1, h: 0.5, rotY: ROT, mat: 0x252627, solid: false, skip: [] });
   }
+
+  // ---------- G11 indoor route to Daiso GATE 4 ----------
+  // Photo 106 confirms stairs UP beyond the pink double doors. Both modules use
+  // canonical B1=-6, so the 1.5m rise and later return are an explicit, unmeasured
+  // fit assumption, not a claim that the real store has two floors.
+  {
+    const cx = G11.seam[0], x0 = cx - G11.width / 2, x1 = cx + G11.width / 2;
+    const rectXZ = (z0, z1) => [[x0, z0], [x1, z0], [x1, z1], [x0, z1]];
+    const lip0 = P(G11.u - 3.05, G11.e - 0.12), lip1 = P(G11.u + 3.05, G11.e - 0.12);
+    const join = [lip0, lip1, [x1, -161.8], [x0, -161.8]];
+    const floorMat = { tex: 'darkstone', color: 0xa5a7a5, gloss: 0.3 };
+    const wallMat = { tex: 'tile', color: 0xcac8bd };
+    K.slab(join, FL, { mat: floorMat, under: false });
+    K.slab(join, CY + 0.3, { mat: 'concrete', under: M.ceil, walk: false });
+    for (const [a, b] of [[lip0, [x0, -161.8]], [lip1, [x1, -161.8]]]) K.wall(...a, ...b, FL, CY, { mat: wallMat, thick: 0.16 });
+    K.stairs(cx, -161.8, cx, -156.8, { w: 4.8, ya: FL, yb: -4.5, mat: floorMat, rails: true, steps: 10 });
+    K.slab(rectXZ(-156.8, -151.2), -4.5, { mat: floorMat, under: false });
+    K.stairs(cx, -151.2, cx, -146.2, { w: 4.8, ya: -4.5, yb: FL, mat: floorMat, rails: true, steps: 10 });
+    K.slab(rectXZ(-146.2, -131.9), FL, { mat: floorMat, under: false });
+    K.slab(rectXZ(-161.8, -131.9), -0.9, { mat: 'concrete', under: M.ceil, thick: 0.3, walk: false });
+    for (const x of [x0, x1]) K.wall(x, -161.8, x, -131.9, FL, -1.2, { mat: wallMat, thick: 0.16 });
+    K.zone({ name: 'G11 다이소 연결통로', floor: 'B1', sub: '계단 위 · 다이소 4번 출입구', poly: [...join.slice(0, 2), [x1, -131.9], [x0, -131.9]], y0: FL - 0.2, y1: -0.9, priority: 4 });
+    K.zone({ name: '고투몰 G11 출입문', floor: 'B1', sub: '고속버스터미널 · 다이소 4번 출입구', poly: R(141.05, G11.front - 0.4, 148.0, G11.e + 0.3), y0: FL, y1: CY, priority: 4 });
+    furnish(G11.u, () => {
+      const u = G11.u, v = G11.front - 0.03, g0 = u - 2.65, g1 = u + 2.65;
+      // Photo: black metal frames, two rose headers, paired pull handles and clear
+      // doors. The centre leaves stand open, with a real 1.9m walking opening.
+      for (const side of [-1, 1]) {
+        const a = side < 0 ? g0 : u + 0.98, b = side < 0 ? u - 0.98 : g1;
+        bx(a, b, v - 0.025, v + 0.025, FL + 0.06, 2.3, { tex: 'glass', color: 0xd6dedb }, { solid: false });
+        bx(a, b, v - 0.055, v + 0.055, FL + 0.04, 0.06, 0x292a29, { solid: false });
+        bx(a, b, v - 0.055, v + 0.055, FL + 2.32, 0.08, 0x292a29, { solid: false });
+        bx(u + side * 1.05 - 0.025, u + side * 1.05 + 0.025, v - 0.12, v - 0.07, FL + 0.65, 1.05, 0x9eaaa9, { solid: false });
+        const a0 = side < 0 ? g0 : u + 0.04, b0 = side < 0 ? u - 0.04 : g1;
+        bx(a0, b0, v - 0.08, v + 0.08, FL + 2.42, 0.53, 0xb96e80, { solid: false });
+        sg('G11 출구 · 고속버스터미널', (a0 + b0) / 2, v - 0.09, FL + 2.69, b0 - a0 - 0.13, 0.3, '-v', { bg: null, fg: '#ffffff', sub: '경부·영동선', pxPerM: 140 });
+      }
+      for (const uu of [g0, u - 0.98, u + 0.98, g1]) bx(uu - 0.035, uu + 0.035, v - 0.06, v + 0.06, FL + 0.02, 2.36, 0x292a29, { solid: false });
+      // Folded glass leaves are parallel to the passage, preserving the clear gap.
+      for (const side of [-1, 1]) bx(u + side * 1.02 - 0.025, u + side * 1.02 + 0.025, v, v + 0.9, FL + 0.05, 2.25, 'glass', { solid: false });
+      sg(['고투몰', '새로운 패션을 만나는 곳'], u + 1.86, v - 0.055, FL + 1.25, 1.15, 0.85, '-v', { bg: null, fg: '#dd92aa', pxPerM: 110 });
+      sg('고투몰 중앙광장', u, v + 0.1, FL + 2.69, 4.8, 0.35, '+v', { bg: '#b96e80', fg: '#ffffff' });
+      fq(0xd9ae32, g0, v - 0.45, g1, v - 0.06, FL + 0.018);
+      fq(0xd9ae32, u + 1.1, v - 2.1, u + 1.48, G11.e - 0.12, FL + 0.017);
+      for (const zz of [-158, -152, -145, -137]) K.box({ x: cx, z: zz, y: -1.25, w: 0.35, h: 0.04, d: 1.5, mat: M.led, solid: false });
+      K.sign('다이소 4번 출입구 ↑', { x: cx, z: -143, y: -3.45, w: 3.1, h: 0.45, rotY: Math.PI, bg: '#b91832', fg: '#fff', sub: '고투몰 쪽 입구 · 계산대' });
+      K.sign('고투몰 G11 ↑', { x: cx, z: -137, y: -3.45, w: 3.1, h: 0.45, rotY: 0, bg: '#b96e80', fg: '#fff', sub: '중앙광장 · 고속터미널역' });
+    });
+  }
+
+  // Photo 102 explicitly routes G9 through Hangaram before Daiso GATE 1.
+  { const X = EXITS.find(e => e.id === '1'); furnish(X.uc, () => {
+    sg(['나가는 길 안내', 'G9 → 한가람문구 · 다이소'], X.uc - 2.7, lay(X.uc).fD - 0.11, FL + 1.85, 1.7, 1.05, '-v', { bg: '#fffdf5', fg: '#b45e1f', sub: '한가람문구를 지나 다이소 1번 출입구', pxPerM: 120 });
+  }); }
+
+  // The audited municipal article confirms pink ceiling wayfinding to the river.
+  // Only signs are added: an unlocated 360m gallery is not invented under this mall.
+  for (const u of [-280, -245, -210]) furnish(u, () => {
+    const v = (lay(u).fA + lay(u).fB) / 2;
+    sg('← 반포한강공원', u, v, FL + 2.74, 2.3, 0.32, '+u', { bg: '#dc789c', fg: '#ffffff', sub: '지하보도 · 스트리트갤러리', pxPerM: 110 });
+  });
 
   // ---------- 안내도: photos 10/11, charcoal ground / three coloured zones / pale twin spine ----------
   // The photographed vertical diagram is schematic, not geographic north. Keep the OSM world frame.
@@ -1882,6 +1973,7 @@ export function build(K) {
     }
     const boards = [...guideBoards, { u: -91, v: vN(-91) + 0.14, face: '+v', w: 3.4 }, { u: 15, v: vN(15) + 0.14, face: '+v', w: 3.4 }];
     for (const B of boards) furnish(B.u, () => mapBoard(B));
+    furnish(G11.u, () => mapBoard({ u: G11.u - 3.35, v: G11.front - 0.03, face: '-v', w: 0.9, title: '중앙광장', zone: 'GOTO ZONE' }, true));
     // Freestanding 10/11-style maps beside columns, readable in both directions.
     for (const B of [
       { u: 0, v: 3, title: '중앙광장', zone: 'GOTO ZONE' },
@@ -1911,6 +2003,7 @@ export function build(K) {
   sp('3호선 개찰구 앞 (G7)', -72, -2, FL, -1, 0);
   sp('고투몰 중앙 (빽다방 앞)', -24, (Lc.fC + Lc.fD) / 2, FL, 1, 0);
   sp('중앙광장 · 9호선 연결', -4, 4, FL, 1, 0);
+  sp('G11 · 다이소 4번 출입구 가는 곳', G11.u, G11.front - 2, FL, 0, 1);
   sp('고투몰 EAST ZONE (남측 통로)', 200, (Le.fC + Le.fD) / 2, FL, -1, 0);
   sp('고투몰 동편 푸드코트', 369.5, -2, FL, 1, 0);
   sp('사진 통로 · 점자블록', 170, -5.4, FL, 1, 0);
