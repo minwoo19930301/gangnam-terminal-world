@@ -730,25 +730,69 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
       }
     }
     if (people.length > peopleDone) {
-      const body = new THREE.CylinderGeometry(0.17, 0.2, 1, 8); body.translate(0, 0.5, 0);
-      const head = new THREE.SphereGeometry(0.11, 8, 6);
-      const mb = new THREE.MeshLambertMaterial({ color: 0xffffff }), mh = new THREE.MeshLambertMaterial({ color: 0xe0b896 }), mp = new THREE.MeshLambertMaterial({ color: 0xffffff });
-      const shirts = [0x2b3a55, 0xf2f2f2, 0x9b2c2c, 0x1d1d1d, 0xc9b28a, 0x4a6b3a, 0x7a5aa0, 0xe8a0a0, 0x3b6ea8, 0x6a6a6a];
-      const pants = [0x1e2430, 0x2b2b2b, 0x4a4a55, 0x22314f, 0x7a6a55];
+      // People: low-poly figures (legs, shoes, torso with arms, neck/head/hands, hair, some carry a shopping bag),
+      // built for a 1.7 m person and scaled per instance; standing and seated variants; each instance faces rotY.
+      const P = personGeos || (personGeos = makePersonGeos());
+      const mats = personMats || (personMats = { cloth: new THREE.MeshLambertMaterial({ color: 0xffffff }), skin: new THREE.MeshLambertMaterial({ color: 0xffffff }), shoe: new THREE.MeshLambertMaterial({ color: 0x232323 }) });
+      const shirts = [0x2b3a55, 0xf2f2f2, 0x9b2c2c, 0x1d1d1d, 0xc9b28a, 0x4a6b3a, 0x7a5aa0, 0xe8a0a0, 0x3b6ea8, 0x6a6a6a, 0xd9cbb3, 0x8a3b4f, 0xf0e3c8, 0x2f5e5a];
+      const pants = [0x1e2430, 0x2b2b2b, 0x4a4a55, 0x22314f, 0x7a6a55, 0xc8bba4, 0x3a3a3a, 0x5d6b7a];
+      const skins = [0xe0b896, 0xd8ab84, 0xecc8a6, 0xc99a74, 0xe6bf9b];
+      const hairs = [0x15110e, 0x231a14, 0x3a2a1e, 0x1c1c1c, 0x5a4636, 0x8a8a86, 0x2a2420];
+      const bags = [0xf4efe6, 0xc8a15a, 0x1b1b1b, 0xd94c3d, 0x9fb7c9, 0xffffff];
       const p0 = peopleDone; peopleDone = people.length;
       for (const g of groupBy(people.length - p0, i => [people[p0 + i].x, people[p0 + i].y, people[p0 + i].z, people[p0 + i].place])) {
-        const n = g.idx.length, ib = new THREE.InstancedMesh(body, mb, n), ih = new THREE.InstancedMesh(head, mh, n), ip = new THREE.InstancedMesh(body, mp, n);
-        g.idx.forEach((pi0, i) => {
-          const pi = p0 + pi0, p = people[pi], h = p.h, legH = p.sit ? 0.45 : h * 0.47, torso = h * 0.36;
-          M.compose(V.set(p.x, p.y, p.z), Q.identity(), S.set(0.85, legH, 0.7)); ip.setMatrixAt(i, M);
-          ip.setColorAt(i, C.setHex(p.pants ?? pants[pi % pants.length]));
-          M.compose(V.set(p.x, p.y + legH, p.z), Q.identity(), S.set(1.1, torso, 0.85)); ib.setMatrixAt(i, M);
-          ib.setColorAt(i, C.setHex(p.shirt ?? shirts[(pi * 7) % shirts.length]));
-          M.compose(V.set(p.x, p.y + legH + torso + 0.12, p.z), Q.identity(), S.set(1, 1.15, 1)); ih.setMatrixAt(i, M);
-        });
-        for (const m of [ib, ih, ip]) { m.instanceMatrix.needsUpdate = true; if (m.instanceColor) m.instanceColor.needsUpdate = true; scene.add(m); track(m, g.cell); }
+        for (const sit of [false, true]) {
+          const idx = g.idx.filter(i => !!people[p0 + i].sit === sit); if (!idx.length) continue;
+          const n = idx.length, withBag = sit ? [] : idx.filter(i => ((p0 + i) * 2654435761 >>> 0) % 5 < 2);
+          const legs = new THREE.InstancedMesh(sit ? P.sitLegs : P.legs, mats.cloth, n), shoes = new THREE.InstancedMesh(sit ? P.sitShoes : P.shoes, mats.shoe, n);
+          const top = new THREE.InstancedMesh(sit ? P.sitTop : P.top, mats.cloth, n), skin = new THREE.InstancedMesh(sit ? P.sitSkin : P.skin, mats.skin, n), hair = new THREE.InstancedMesh(sit ? P.sitHair : P.hair, mats.cloth, n);
+          const bag = withBag.length ? new THREE.InstancedMesh(P.bag, mats.cloth, withBag.length) : null;
+          let bi = 0;
+          idx.forEach((pi0, i) => {
+            const pi = p0 + pi0, p = people[pi], k = p.h / 1.7, hx = (pi * 2654435761) >>> 0;
+            M.compose(V.set(p.x, p.y, p.z), Q.setFromAxisAngle(V2.set(0, 1, 0), p.rotY || 0), S.set(k, k, k));
+            for (const m of [legs, shoes, top, skin, hair]) m.setMatrixAt(i, M);
+            legs.setColorAt(i, C.setHex(p.pants ?? pants[hx % pants.length]));
+            top.setColorAt(i, C.setHex(p.shirt ?? shirts[(hx >>> 3) % shirts.length]));
+            skin.setColorAt(i, C.setHex(skins[(hx >>> 7) % skins.length]));
+            hair.setColorAt(i, C.setHex(hairs[(hx >>> 11) % hairs.length]));
+            if (bag && withBag.includes(pi0)) { bag.setMatrixAt(bi, M); bag.setColorAt(bi, C.setHex(bags[(hx >>> 5) % bags.length])); bi++; }
+          });
+          for (const m of [legs, shoes, top, skin, hair, bag]) { if (!m) continue; m.instanceMatrix.needsUpdate = true; if (m.instanceColor) m.instanceColor.needsUpdate = true; scene.add(m); track(m, g.cell); }
+        }
       }
     }
+  }
+  let personGeos = null, personMats = null;
+  const V2 = new THREE.Vector3();
+  // one geometry per body part for all people (metres, a 1.7 m person standing at the origin facing +z)
+  function makePersonGeos() {
+    const parts = list => { // merge non-indexed copies of the given positioned geometries
+      const geos = list.map(([g, x, y, z, rx = 0, rz = 0]) => { const q = g.index ? g.toNonIndexed() : g.clone(); if (rx) q.rotateX(rx); if (rz) q.rotateZ(rz); q.translate(x, y, z); return q; });
+      let n = 0; for (const q of geos) n += q.attributes.position.count;
+      const pos = new Float32Array(n * 3), nor = new Float32Array(n * 3); let o = 0;
+      for (const q of geos) { pos.set(q.attributes.position.array, o * 3); nor.set(q.attributes.normal.array, o * 3); o += q.attributes.position.count; }
+      const out = new THREE.BufferGeometry(); out.setAttribute('position', new THREE.BufferAttribute(pos, 3)); out.setAttribute('normal', new THREE.BufferAttribute(nor, 3)); out.computeBoundingSphere(); return out;
+    };
+    const cyl = (r0, r1, h, seg = 7) => new THREE.CylinderGeometry(r1, r0, h, seg, 1);
+    const box = (w, h, d) => new THREE.BoxGeometry(w, h, d);
+    const sph = (r, w = 8, hh = 6) => new THREE.SphereGeometry(r, w, hh);
+    const leg = cyl(0.062, 0.05, 0.74), arm = cyl(0.04, 0.034, 0.56, 6);
+    const torso = cyl(0.17, 0.15, 0.56, 8); torso.scale(1, 1, 0.62);
+    return {
+      legs: parts([[leg, -0.085, 0.45, 0], [leg, 0.085, 0.45, 0], [box(0.32, 0.12, 0.2), 0, 0.82, 0]]),
+      shoes: parts([[box(0.1, 0.07, 0.24), -0.085, 0.035, 0.03], [box(0.1, 0.07, 0.24), 0.085, 0.035, 0.03]]),
+      top: parts([[torso, 0, 1.13, 0], [arm, -0.215, 1.11, 0, 0, -0.08], [arm, 0.215, 1.11, 0, 0, 0.08], [sph(0.058, 6, 4), -0.19, 1.37, 0], [sph(0.058, 6, 4), 0.19, 1.37, 0]]),
+      skin: parts([[cyl(0.045, 0.045, 0.08, 6), 0, 1.45, 0], [sph(0.105), 0, 1.57, 0.01], [sph(0.04, 6, 4), -0.24, 0.81, 0], [sph(0.04, 6, 4), 0.24, 0.81, 0]]),
+      hair: parts([[(() => { const h = new THREE.SphereGeometry(0.112, 8, 5, 0, Math.PI * 2, 0, Math.PI * 0.55); return h; })(), 0, 1.585, -0.008]]),
+      bag: parts([[box(0.26, 0.32, 0.1), 0.3, 0.62, 0], [box(0.02, 0.18, 0.02), 0.3, 0.86, 0]]),
+      sitHair: parts([[(() => new THREE.SphereGeometry(0.112, 8, 5, 0, Math.PI * 2, 0, Math.PI * 0.55))(), 0, 1.275, -0.008]]),
+      // seated: thighs forward at chair height (0.45), shins down, arms resting forward
+      sitLegs: parts([[box(0.13, 0.13, 0.46), -0.085, 0.47, 0.2], [box(0.13, 0.13, 0.46), 0.085, 0.47, 0.2], [cyl(0.05, 0.045, 0.42), -0.085, 0.22, 0.42], [cyl(0.05, 0.045, 0.42), 0.085, 0.22, 0.42]]),
+      sitShoes: parts([[box(0.1, 0.07, 0.24), -0.085, 0.035, 0.47], [box(0.1, 0.07, 0.24), 0.085, 0.035, 0.47]]),
+      sitTop: parts([[torso, 0, 0.82, 0], [arm, -0.215, 0.8, 0.12, -0.55, -0.05], [arm, 0.215, 0.8, 0.12, -0.55, 0.05], [sph(0.058, 6, 4), -0.19, 1.06, 0], [sph(0.058, 6, 4), 0.19, 1.06, 0]]),
+      sitSkin: parts([[cyl(0.045, 0.045, 0.08, 6), 0, 1.14, 0], [sph(0.105), 0, 1.26, 0.01], [sph(0.04, 6, 4), -0.22, 0.62, 0.3], [sph(0.04, 6, 4), 0.22, 0.62, 0.3]]),
+    };
   }
 
   // ---------- lazy detail groups ----------
