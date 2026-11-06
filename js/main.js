@@ -184,6 +184,45 @@ async function boot() {
   if (night) setNight(true);
 
   // ---- loop ----
+  // ---- routes: every room/floor has its own address (#/place/floor?p=x,y,z,yaw) ----
+  // Walking into another place/floor pushes a history entry (so Back returns to the previous room); the position
+  // inside the room is kept up to date with replaceState. Opening an address goes straight to that spot, or to
+  // the first spawn of that room when it has no position.
+  const route = (() => {
+    const keyOf = zn => zn && zn.place && zn.place !== 'streets' ? `${zn.place}/${zn.floor || '1F'}` : (player.y < -2 ? 'underground' : 'street');
+    let cur = null, pending = null, since = 0, lastWrite = 0, applying = false;
+    const enc = k => '#/' + k.split('/').map(encodeURIComponent).join('/');
+    const href = k => `${enc(k)}?p=${player.x.toFixed(1)},${player.y.toFixed(1)},${player.z.toFixed(1)},${Math.round(((player.yaw * 180 / Math.PI) % 360 + 360) % 360)}`;
+    function parse(h) {
+      const m = /^#\/([^?]*)(?:\?(.*))?$/.exec(h || ''); if (!m) return null;
+      const key = m[1].split('/').map(decodeURIComponent).join('/'), q = new URLSearchParams(m[2] || ''), p = q.get('p');
+      return { key, pos: p ? p.split(',').map(Number) : null };
+    }
+    function go(r) {
+      if (!r) return false;
+      applying = true; setTimeout(() => { applying = false; }, 800);
+      if (r.pos && r.pos.length >= 3 && r.pos.every(Number.isFinite)) { player.teleport(r.pos[0], r.pos[1], r.pos[2], r.pos[3] != null ? r.pos[3] * Math.PI / 180 : player.yaw); return true; }
+      const [place, floor] = r.key.split('/');
+      const zoneOfSpawn = s => phys.zoneAt(s.x, (s.y ?? 0) + 0.1, s.z);
+      const sp = spawns.find(s => { const z = zoneOfSpawn(s); return z && z.place === place && (z.floor || '1F') === floor; }) || spawns.find(s => s.place === place);
+      if (sp) { player.teleport(sp.x, sp.y ?? 0, sp.z, sp.yaw); return true; }
+      return false;
+    }
+    addEventListener('popstate', () => { go(parse(location.hash)); });
+    return {
+      start() { const r = parse(location.hash); if (r && !Q.get('pos')) go(r); },
+      update(zn) {
+        const now = performance.now(), k = keyOf(zn);
+        if (k !== (pending ?? cur)) { pending = k; since = now; }
+        if (pending && now - since > 600) {
+          const first = cur === null; cur = pending; pending = null; lastWrite = now;
+          if (!SHOT) { if (first || applying) history.replaceState(null, '', href(cur)); else history.pushState(null, '', href(cur)); }
+        } else if (cur && now - lastWrite > 2000 && !SHOT) { lastWrite = now; history.replaceState(null, '', href(cur)); }
+      },
+    };
+  })();
+  route.start();
+  K._.ensureDetail(player.x, player.y + player.eye, player.z); // detail of the floor you start on, before the first frame
   const clock = new THREE.Clock(); let t = 0, frames = 0, fpsT0 = performance.now(), fps = 0;
   let signsGo = false;
   const gl = renderer.getContext(), scratch = document.createElement('canvas'), sctx = scratch.getContext('2d');
@@ -230,6 +269,7 @@ async function boot() {
     if (traffic) traffic.update(dt);
     // zone + interactables
     currentZone = phys.zoneAt(player.x, player.y + 0.1, player.z);
+    route.update(currentZone);
     const zname = currentZone ? currentZone.name : (player.y < -2 ? '지하' : '거리');
     hudZone.textContent = zname + (currentZone && currentZone.floor ? ` · ${currentZone.floor}` : '');
     hudSub.textContent = currentZone ? currentZone.sub : '';
@@ -240,6 +280,8 @@ async function boot() {
     frames++; { const now = performance.now(); if (now - fpsT0 > 1000) { fps = frames * 1000 / (now - fpsT0); frames = 0; fpsT0 = now; adaptResolution(fps); } }
     hudCoord.textContent = `x ${player.x.toFixed(0)}  z ${player.z.toFixed(0)}  높이 ${player.y.toFixed(1)}m  ${player.fly ? '✈ ' : ''}${fps.toFixed(0)}fps${pixelRatio < Math.min(devicePixelRatio, 2) - 0.01 ? ` · 해상도 ${Math.round(pixelRatio / Math.min(devicePixelRatio, 2) * 100)}%` : ''}`;
     map.update(dt);
+    // lazy floor detail near the camera (bounded per frame); screenshots paint new sign text immediately
+    if (K._.ensureDetail(player.x, player.y + player.eye, player.z, 60, 40) && SHOT && K._.atlas.pending()) { K._.atlas.flushAll(); for (const p of K._.atlas.pages) p.t.needsUpdate = true; }
     K._.cull(camera.position.x, camera.position.y, camera.position.z);
     // progressive sign painting (≈5 ms per frame); only the painted rectangles are uploaded (texSubImage2D)
     if (signsGo && K._.atlas.pending()) uploadSignRects(K._.atlas.flush(5, player.x, player.z));

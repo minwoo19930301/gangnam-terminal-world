@@ -23,6 +23,7 @@ const claimed = { b: new Set(), r: new Set(), a: new Set() }; const mods = [];
 for (const id of ids) { const m = await import(url.pathToFileURL(path.join(ROOT, 'js/places', id + '.js')).href); mods.push([id, m]); for (const c of m.meta?.claims || []) claimed.b.add(c); for (const c of m.meta?.claimRoads || []) claimed.r.add(c); for (const c of m.meta?.claimAreas || []) claimed.a.add(c); }
 for (const [id, m] of mods) { K._.setCurrent(id, m.meta); m.build(K); }
 if (!args.includes('--no-city')) { K._.setCurrent('city'); buildCity(K, osm, { claimedBuildings: claimed.b, claimedRoads: claimed.r, claimedAreas: claimed.a }); }
+K._.buildAllDetail(); // furniture/stock in lazy detail groups can block paths too
 for (const h of K._.groundHoles) { } // ground holes are already registered in phys by K.groundHole
 
 const R = 0.32, H = 1.75, STEP = 0.5, G = 0.25;
@@ -83,6 +84,7 @@ const ROUTES = [
   { name: '고투몰 서편→동편', y: -6, pts: [[-314.2, -12.9], [-189.3, -61.5], [-68.1, -102.9], [-20.6, -112.7], [-2.3, -121.2], [189.5, -190.6], [345.3, -257.8]], need: ['gotomall'] },
   { name: '고투몰→3호선 B2', y: null, pts: [[-68.1, -102.9, -6], [-79, -151, -11]], need: ['gotomall', 'station'] },
   { name: '센트럴시티 B1→파미에 B1→7호선', y: -6, pts: [[-93.4, 57.8], [-60.5, 169.5], [-16.3, 174.5]], need: ['centralcity', 'station'] },
+  { name: '고터→반포한강공원 (반포대로·반포나들목)', y: 0, pts: [[-371, -136], [-345, -450], [-330, -620], [-297.9, -791.1], [-629, -736]], need: ['streets', 'hangang'] },
 ];
 for (const rt of ROUTES) {
   if (!rt.need.every(n => ids.includes(n))) continue;

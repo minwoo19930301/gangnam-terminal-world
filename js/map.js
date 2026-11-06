@@ -404,7 +404,20 @@ export function createMap({ THREE, K, osm, player, phys, spawns, places, contain
   // Raw double clicks follow the world's highest walkable support at maxY=200.
   function teleportTo(target, ground) {
     const x = clamp(target.x, bounds[0], bounds[2]), z = clamp(target.z, bounds[1], bounds[3]);
-    const exactFloor = !ground && Number.isFinite(target.y), maxY = exactFloor ? target.y + 0.65 : 200;
+    // try the requested floor, then street level, then whatever walkable surface is highest there
+    const tries = [];
+    if (!ground && Number.isFinite(target.y)) tries.push(target.y);
+    if (!tries.includes(0)) tries.push(0);
+    tries.push(null);
+    let destination = null;
+    for (const ty of tries) { destination = findSpot(x, z, ty); if (destination) break; }
+    if (!destination) { announce('이 위치에는 걸을 수 있는 바닥이 없어요. 가까운 출발 지점을 선택하세요.'); return; }
+    // The engine's teleport snaps again within +1m; compensate to retain the checked floor.
+    player.teleport(destination.x, destination.y, destination.z, target.yaw ?? player.yaw); player.y = destination.y; player.vy = 0;
+    toggle(); miniClock = 1;
+  }
+  function findSpot(x, z, ty) {
+    const exactFloor = ty != null, maxY = exactFloor ? ty + 0.65 : 200, target = { y: ty };
     function probe(px, pz) {
       const s = phys?.support ? phys.support(px, pz, maxY) : { y: 0, s: true };
       if (!s || !Number.isFinite(s.y) || (Object.hasOwn(s, 's') && !s.s) || (exactFloor && Math.abs(s.y - target.y) > 1)) return null;
@@ -416,10 +429,7 @@ export function createMap({ THREE, K, osm, player, phys, spawns, places, contain
     }
     let destination = probe(x, z);
     for (let r = 1; !destination && r <= 8; r++) for (let i = 0; !destination && i < 12; i++) destination = probe(x + Math.cos(i * TAU / 12) * r, z + Math.sin(i * TAU / 12) * r);
-    if (!destination) { announce('이 위치에는 걸을 수 있는 바닥이 없어요. 가까운 출발 지점을 선택하세요.'); return; }
-    // The engine's teleport snaps again within +1m; compensate to retain the checked floor.
-    player.teleport(destination.x, destination.y, destination.z, target.yaw ?? player.yaw); player.y = destination.y; player.vy = 0;
-    toggle(); miniClock = 1;
+    return destination;
   }
   function toggle() {
     open = !open; full.hidden = !open; document.body.classList.toggle('gt-map-open', open);
@@ -454,7 +464,16 @@ export function createMap({ THREE, K, osm, player, phys, spawns, places, contain
   }
   function pointerUp(e) {
     if (e.pointerId !== pointerA.id && e.pointerId !== pointerB.id) return;
-    if (layer === 'floor' && dragDistance < 8 && !pinched) { const box = canvas.getBoundingClientRect(); chooseFloorPlace(placeAt(view.x + (e.clientX - box.left - view.w / 2) / view.scale, view.z + (e.clientY - box.top - view.h / 2) / view.scale)); }
+    // a tap/click (no drag, no pinch) teleports there: street level on the surface layer, B1 on the underground
+    // layer, the shown floor on the floor-plan layer
+    if (dragDistance < 8 && !pinched && pointerB.id === null && e.type !== 'pointercancel') {
+      const box = canvas.getBoundingClientRect(), wx = view.x + (e.clientX - box.left - view.w / 2) / view.scale, wz = view.z + (e.clientY - box.top - view.h / 2) / view.scale;
+      let ty = 0;
+      if (layer === 'underground') ty = -6;
+      else if (layer === 'floor') { const pl = placeAt(wx, wz); if (pl) chooseFloorPlace(pl); const f = (floorPlace?.floors || []).find(f => f.label === floorLabel); if (f) ty = f.y; }
+      pointerA.id = pointerB.id = null; canvas.classList.remove('dragging');
+      teleportTo({ x: wx, z: wz, y: ty }, false); return;
+    }
     if (e.pointerId === pointerA.id) { pointerA.id = pointerB.id; pointerA.x = pointerB.x; pointerA.y = pointerB.y; pointerB.id = null; } else pointerB.id = null;
     if (pinched || e.timeStamp - lastPointerTime > 100 || e.type === 'pointercancel') velocityX = velocityZ = 0;
     if (pointerA.id === null) canvas.classList.remove('dragging');

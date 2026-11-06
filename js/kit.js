@@ -546,10 +546,12 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     }
     return layers;
   }
-  function finalize() {
-    for (const p of atlas.pages) p.t.needsUpdate = true;
-    const usedKeys = new Set(); for (const [, b] of buckets) usedKeys.add(b.key);
-    const aLayers = buildTexArrays(usedKeys);
+  const aLayers = new Map();
+  function finalize() { for (const p of atlas.pages) p.t.needsUpdate = true; return flush(); }
+  // merge everything emitted since the last flush into meshes (the initial build, then each lazy detail group)
+  function flush() {
+    const usedKeys = new Set(); for (const [, b] of buckets) if (!aLayers.has(b.key)) usedKeys.add(b.key);
+    for (const [k, v] of buildTexArrays(usedKeys)) aLayers.set(k, v);
     // two passes: classify every primitive and count, then fill typed arrays directly (no big JS arrays)
     const subs = new Map(), plan = [];
     for (const [, b] of buckets) {
@@ -608,6 +610,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     buildInstanced();
     return out;
   }
+  let treesDone = 0, peopleDone = 0;
   // group instances by cell + tile so each group can be frustum-culled and cell-culled on its own
   function groupBy(n, at) {
     const groups = new Map();
@@ -619,29 +622,30 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
   }
   function splitModuleInstances() {
     const M = new THREE.Matrix4(), C = new THREE.Color();
-    for (const im of scene.children.filter(o => o.isInstancedMesh && o.count >= 64 && !o.userData.dynamic)) {
+    for (const im of scene.children.filter(o => o.isInstancedMesh && o.count >= 64 && !o.userData.dynamic && !o.userData.split)) {
       const e = im.instanceMatrix.array;
       for (const g of groupBy(im.count, i => [e[i * 16 + 12], e[i * 16 + 13], e[i * 16 + 14], im.userData.owner])) {
         const nm = new THREE.InstancedMesh(im.geometry, im.material, g.idx.length);
         g.idx.forEach((src, j) => { im.getMatrixAt(src, M); nm.setMatrixAt(j, M); if (im.instanceColor) { im.getColorAt(src, C); nm.setColorAt(j, C); } });
         nm.instanceMatrix.needsUpdate = true; if (nm.instanceColor) nm.instanceColor.needsUpdate = true;
-        nm.frustumCulled = im.frustumCulled; nm.renderOrder = im.renderOrder; scene.add(nm); track(nm, g.cell);
+        nm.frustumCulled = im.frustumCulled; nm.renderOrder = im.renderOrder; nm.userData.split = true; scene.add(nm); track(nm, g.cell);
       }
       scene.remove(im);
     }
   }
   function buildInstanced() {
     const M = new THREE.Matrix4(), Q = new THREE.Quaternion(), S = new THREE.Vector3(), V = new THREE.Vector3(), C = new THREE.Color();
-    if (trees.length) {
+    if (trees.length > treesDone) {
       const trunk = new THREE.CylinderGeometry(0.12, 0.2, 1, 6); trunk.translate(0, 0.5, 0);
       const crown = new THREE.IcosahedronGeometry(1, 1); crown.translate(0, 0, 0);
       const mt = new THREE.MeshLambertMaterial({ color: 0x5b4636 });
       const mc = new THREE.MeshLambertMaterial({ color: 0xffffff });
       const pal = { zelkova: [0x4f7f3a, 0x5c8a40, 0x46733a], ginkgo: [0x8fae3c, 0x9db845, 0x7fa035], pine: [0x2f5a35, 0x36603a], cherry: [0x6f9a4a, 0x7da653], maple: [0x7a8f3a, 0x8a5a2a] };
-      for (const g of groupBy(trees.length, i => [trees[i].x, trees[i].y, trees[i].z, trees[i].place])) {
+      const t0 = treesDone; treesDone = trees.length;
+      for (const g of groupBy(trees.length - t0, i => [trees[t0 + i].x, trees[t0 + i].y, trees[t0 + i].z, trees[t0 + i].place])) {
         const it = new THREE.InstancedMesh(trunk, mt, g.idx.length), ic = new THREE.InstancedMesh(crown, mc, g.idx.length);
         g.idx.forEach((ti, i) => {
-          const t = trees[ti], h = t.h; M.compose(V.set(t.x, t.y, t.z), Q.identity(), S.set(1, h * 0.45, 1)); it.setMatrixAt(i, M);
+          const t = trees[t0 + ti], h = t.h; M.compose(V.set(t.x, t.y, t.z), Q.identity(), S.set(1, h * 0.45, 1)); it.setMatrixAt(i, M);
           const cr = t.kind === 'pine' ? [1.6, h * 0.35, 1.6] : t.kind === 'ginkgo' ? [1.5, h * 0.42, 1.5] : [h * 0.33, h * 0.3, h * 0.33];
           M.compose(V.set(t.x, t.y + h * 0.62, t.z), Q.setFromAxisAngle(V.clone().set(0, 1, 0), (t.x * 3 + t.z) % 6), S.set(...cr)); ic.setMatrixAt(i, M);
           const p = pal[t.kind] || pal.zelkova; ic.setColorAt(i, C.setHex(p[Math.abs(Math.round(t.x * 7 + t.z * 3)) % p.length]));
@@ -650,16 +654,17 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
         scene.add(it, ic); track(it, g.cell); track(ic, g.cell);
       }
     }
-    if (people.length) {
+    if (people.length > peopleDone) {
       const body = new THREE.CylinderGeometry(0.17, 0.2, 1, 8); body.translate(0, 0.5, 0);
       const head = new THREE.SphereGeometry(0.11, 8, 6);
       const mb = new THREE.MeshLambertMaterial({ color: 0xffffff }), mh = new THREE.MeshLambertMaterial({ color: 0xe0b896 }), mp = new THREE.MeshLambertMaterial({ color: 0xffffff });
       const shirts = [0x2b3a55, 0xf2f2f2, 0x9b2c2c, 0x1d1d1d, 0xc9b28a, 0x4a6b3a, 0x7a5aa0, 0xe8a0a0, 0x3b6ea8, 0x6a6a6a];
       const pants = [0x1e2430, 0x2b2b2b, 0x4a4a55, 0x22314f, 0x7a6a55];
-      for (const g of groupBy(people.length, i => [people[i].x, people[i].y, people[i].z, people[i].place])) {
+      const p0 = peopleDone; peopleDone = people.length;
+      for (const g of groupBy(people.length - p0, i => [people[p0 + i].x, people[p0 + i].y, people[p0 + i].z, people[p0 + i].place])) {
         const n = g.idx.length, ib = new THREE.InstancedMesh(body, mb, n), ih = new THREE.InstancedMesh(head, mh, n), ip = new THREE.InstancedMesh(body, mp, n);
-        g.idx.forEach((pi, i) => {
-          const p = people[pi], h = p.h, legH = p.sit ? 0.45 : h * 0.47, torso = h * 0.36;
+        g.idx.forEach((pi0, i) => {
+          const pi = p0 + pi0, p = people[pi], h = p.h, legH = p.sit ? 0.45 : h * 0.47, torso = h * 0.36;
           M.compose(V.set(p.x, p.y, p.z), Q.identity(), S.set(0.85, legH, 0.7)); ip.setMatrixAt(i, M);
           ip.setColorAt(i, C.setHex(p.pants ?? pants[pi % pants.length]));
           M.compose(V.set(p.x, p.y + legH, p.z), Q.identity(), S.set(1.1, torso, 0.85)); ib.setMatrixAt(i, M);
@@ -671,14 +676,47 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     }
   }
 
+  // ---------- lazy detail groups ----------
+  // K.detail({floor, y0, y1, poly|rect}, fn): fn builds furnishing detail (stock, furniture, fixtures, signage,
+  // people) for one floor area and runs only when the camera comes near — floors stay light until visited.
+  // Structure that must exist before you arrive (slabs, walls, stairs, escalators, elevators, zones, spawns,
+  // junctions) belongs in the normal build, not in a detail group.
+  const details = [];
+  function detail(o, fn) {
+    let poly = o.poly; if (!poly && o.rect) { const [x0, z0, x1, z1] = o.rect; poly = [[x0, z0], [x1, z0], [x1, z1], [x0, z1]]; }
+    const bb = poly ? polyBBox(poly) : [-1e9, -1e9, 1e9, 1e9];
+    details.push({ owner: current, meta: perPlace[current], floor: o.floor || '', y0: o.y0 ?? -1e9, y1: o.y1 ?? 1e9, bb, fn, built: false, name: o.name || '' });
+  }
+  function buildDetail(d) {
+    if (d.built) return []; d.built = true;
+    const prev = current; current = d.owner;
+    try { d.fn(K); } catch (e) { console.error('detail', d.owner, d.floor, e); }
+    current = prev;
+    return flush();
+  }
+  // build the groups the camera is close to (within reach metres horizontally, ±8 m vertically)
+  function ensureDetail(x, y, z, reach = 45, budgetMs = Infinity) {
+    const t0 = performance.now(); let n = 0;
+    for (const d of details) {
+      if (d.built) continue;
+      const dx = x < d.bb[0] ? d.bb[0] - x : x > d.bb[2] ? x - d.bb[2] : 0, dz = z < d.bb[1] ? d.bb[1] - z : z > d.bb[3] ? z - d.bb[3] : 0;
+      if (Math.hypot(dx, dz) > reach || y < d.y0 - 8 || y > d.y1 + 8) continue;
+      buildDetail(d); n++;
+      if (performance.now() - t0 > budgetMs) break;
+    }
+    if (n) cull(last.x, last.y, last.z, true);
+    return n;
+  }
+  function buildAllDetail() { for (const d of details) buildDetail(d); }
+
   const K = {
     THREE, scene, phys, osm, LEVELS, T,
     box, prism, slab, wall, polyWalls, ramp, stairs: (ax, az, bx, bz, o = {}) => ramp(ax, az, bx, bz, { ...o, steps: true }), escalator, cyl, dome, sign, floorText,
-    tree, person, crowd, vehicle, zone, spawn, interact, portal, elevator, groundHole, onFrame, addMesh, texture, material, mapMark,
+    tree, person, crowd, vehicle, zone, spawn, interact, portal, elevator, groundHole, onFrame, addMesh, texture, material, mapMark, detail,
     osmBuilding, osmFind, claim, rand, quad: (mat, p, n, uvs) => quad(spec(mat), p, n, uvs || [[0, 0], [1, 0], [1, 1], [0, 1]]), hpoly: (mat, poly, y, up = true, holes) => hpoly(spec(mat), poly, y, up, holes),
     pointInPoly, polyBBox, polyArea, orient,
     // internals for engine
-    _: { bounce, cull, cullList, finalize, frameFns, interactables, spawns, zonesList, elevators, claims, mapMarks, groundHoles, stats, atlas, trees, people, setCurrent: (id, meta) => { current = id; if (meta) perPlace[id] = meta; } },
+    _: { bounce, cull, cullList, finalize, details, ensureDetail, buildAllDetail, frameFns, interactables, spawns, zonesList, elevators, claims, mapMarks, groundHoles, stats, atlas, trees, people, setCurrent: (id, meta) => { current = id; if (meta) perPlace[id] = meta; } },
   };
   return K;
 }

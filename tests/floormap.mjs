@@ -5,14 +5,16 @@ import fs from 'node:fs'; import zlib from 'node:zlib'; import path from 'node:p
 const ROOT = path.resolve(path.dirname(url.fileURLToPath(import.meta.url)), '..');
 const ctx = new Proxy({}, { get: (t, k) => k === 'measureText' ? (s => ({ width: String(s).length * 10 })) : k === 'createLinearGradient' || k === 'createRadialGradient' || k === 'createPattern' ? (() => ({ addColorStop() { } })) : k === 'getImageData' ? (() => ({ data: new Uint8ClampedArray(4) })) : (typeof k === 'string' && /^[a-z]/.test(k) && !['canvas', 'font', 'fillStyle', 'strokeStyle', 'lineWidth', 'textAlign', 'textBaseline', 'globalAlpha', 'globalCompositeOperation', 'shadowColor', 'shadowBlur', 'lineCap', 'lineJoin', 'filter', 'imageSmoothingEnabled'].includes(k) ? () => { } : t[k]), set: (t, k, v) => { t[k] = v; return true; } });
 globalThis.__makeCanvas = (w, h) => ({ width: w, height: h, getContext: () => ctx, style: {} });
-const { createPhysics } = await import('../js/physics.js'); const { createKit } = await import('../js/kit.js'); const { PLACES } = await import('../js/places/index.js');
+const { createPhysics } = await import('../js/physics.js'); const { createKit } = await import('../js/kit.js'); const { PLACES } = await import('../js/places/index.js'); const { buildCity } = await import('../js/city.js');
 const osm = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/osm.json'), 'utf8'));
 const [Y, X0, Z0, X1, Z1, OUT, SX, SZ, MODS] = process.argv.slice(2); const y = +Y, x0 = +X0, z0 = +Z0, x1 = +X1, z1 = +Z1;
 const phys = createPhysics(); const walls = []; const ow = phys.addWall.bind(phys); let cur = '';
 phys.addWall = (ax, az, bx, bz, a, b, r, tag) => { walls.push({ ax, az, bx, bz, y0: a, y1: b, cur }); return ow(ax, az, bx, bz, a, b, r, tag); };
 const K = createKit(THREE, new THREE.Scene(), { osm, phys }); K.onNight = () => { };
-for (const id of (MODS ? MODS.split(',') : PLACES)) { cur = id; const m = await import(url.pathToFileURL(path.join(ROOT, 'js/places', id + '.js')).href); K._.setCurrent(id, m.meta); m.build(K); }
-const S = 4; // px per metre
+const cl = { b: new Set(), r: new Set(), a: new Set() };
+for (const id of (MODS ? MODS.split(',') : PLACES)) { cur = id; const m = await import(url.pathToFileURL(path.join(ROOT, 'js/places', id + '.js')).href); for (const c of m.meta?.claims || []) cl.b.add(c); for (const c of m.meta?.claimRoads || []) cl.r.add(c); for (const c of m.meta?.claimAreas || []) cl.a.add(c); K._.setCurrent(id, m.meta); m.build(K); }
+if (process.env.FLOORMAP_CITY) { cur = 'city'; K._.setCurrent('city'); buildCity(K, osm, { claimedBuildings: cl.b, claimedRoads: cl.r, claimedAreas: cl.a }); }
+const S = +(process.env.FLOORMAP_S || 4); // px per metre
 const W = Math.round((x1 - x0) * S), H = Math.round((z1 - z0) * S); const img = Buffer.alloc(W * H * 3, 255);
 const R = 0.32; const set = (i, j, c) => { if (i < 0 || j < 0 || i >= W || j >= H) return; const o = (j * W + i) * 3; img[o] = c[0]; img[o + 1] = c[1]; img[o + 2] = c[2]; };
 const free = (x, z, fy) => { const p = { x, z }; phys.resolve(p, R, fy, fy + 1.75, 0.5); return Math.hypot(p.x - x, p.z - z) < 0.03; };

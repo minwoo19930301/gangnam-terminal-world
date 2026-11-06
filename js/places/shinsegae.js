@@ -60,9 +60,10 @@ const thick = id => TH[id] ?? 0.6;
 const nextOf = id => { const i = MAIN.indexOf(id); return i < MAIN.length - 1 ? MAIN[i + 1] : 'RF'; };
 const clearH = id => LV[nextOf(id)] - thick(nextOf(id)) - LV[id];
 
-// atrium / escalator void (stacked 1F..11F) and the escalator lanes inside it
+// Full atrium starts at 2F; 1F opens only over the B1 escalator pair.
 const ATR = [27.6, 35, 39.4, 47];
 const LANE = { A: 28.6, B: 30.2, C: 36.8, D: 38.4 };
+const B1_WELL = [27.8, ATR[1], 31.0, ATR[3]];
 // elevator bank (3 cars) south of the atrium, doors facing north
 const ELV = [30.5, 33.5, 36.5].map(u => ({ u, v: 66, w: 2.4, d: 2.2 }));
 // stair cores: NE (door west) and SW (door east)
@@ -71,9 +72,6 @@ const CORES = [
   { uL: 0.25, uR: 5.8, v0: 61.8, v1: 76.2, door: 'E', lanes: [3.6, 1.4], top: '11F' },    // 신관 core
 ];
 const MEZZ = [8, 58, 60, 84.45];
-// 01/02/10: B1 food-hall void through 1F and 1M, capped at the 2F underside.
-// The SW plan position is approximate; the shared junctions and main escalator stack stay fixed.
-const HOS_VOID = [8.6, 60, 23.5, 74.5];
 // Two volumes inside the one OSM rectangle (namu: 적갈색 부분 = 백화점 본체, 그 남쪽 JW 쪽 회색 저층 = 옛 마르퀴스 플라자,
 // 2016년 그 위에 6개 층을 증축). 본관 = v 0..VS (신반포로 쪽, 1F~8F), 신관 = v VS..VD (JW 쪽, 1F~11F).
 // 2026 ssg_06 resolves the recessed north-facing curtain wall; unseen side/rear cladding stays plain stone.
@@ -709,8 +707,8 @@ export function build(K) {
   const floorMat = { B2: { tex: 'concrete', color: 0x8c8d89 }, B1: 'ssg_marble', '1F': 'ssg_marble_polished', '2F': 'ssg_marble', '3F': 'ssg_marble', '11F': { tex: 'darkstone', color: 0xd4c5af } };
   MAIN.forEach((id, s) => {
     const holes = [...elvHoles];
-    if (s >= 2) holes.push(atrHole);
-    if (id === '1F') holes.push(rect(...HOS_VOID));
+    if (id === '1F') holes.push(rect(...B1_WELL));
+    else if (s >= 3) holes.push(atrHole);
     if (s >= 1) for (const c of CORES) if (s <= coreTop(c)) holes.push(stairHole(c, s));
     K.slab(UPPER.has(id) ? rect(0, VS, UW, VD) : LV[id] >= LV['2F'] ? northOutline(VD, LV[id]) : FULL, LV[id], { mat: floorMat[id] ?? 'ssg_marble', thick: thick(id), holes, edge: false, under: id === 'B2' ? false : id === 'B1' ? { tex: 'concrete', color: 0xb4b2a9 } : CEIL });
   });
@@ -728,7 +726,7 @@ export function build(K) {
     box(u, v, 1.2, 1.2, YB + 0.1, 1, 0xc9ccc8, { solid: false, top: 0x7c8581 });
   }
   // mezzanine slab
-  K.slab(rect(...MEZZ), LV['1M'], { mat: { tex: 'wood', color: 0xe6d2b8 }, thick: TH['1M'], holes: [...elvHoles, rect(...HOS_VOID)], edge: true, edgeMat: 0xf4efe6, under: CEIL });
+  K.slab(rect(...MEZZ), LV['1M'], { mat: { tex: 'wood', color: 0xe6d2b8 }, thick: TH['1M'], holes: elvHoles, edge: true, edgeMat: 0xf4efe6, under: CEIL });
 
   // ------------------------------------------------------------ escalators (zigzag in the stacked atrium)
   const escH = 0.95;
@@ -744,32 +742,34 @@ export function build(K) {
     // Small destination plaque on the balustrade, below the sightline.
     sign(`${MAIN[i + 2]} ↑`, uu, vLo + (even ? -0.55 : 0.55), lo + 0.85, even ? 'N' : 'S', 0.55, 0.2, { bg: '#d8cbb8', fg: '#504638' });
   }
-  // atrium railings + fascia on 1F..11F
+  // 1F guards only the B1 well; the full atrium guards on other floors stay unchanged.
   for (let k = 1; k < MAIN.length; k++) {
     const id = MAIN[k], y = LV[id], th = thick(id);
+    const opening = id === '1F' ? B1_WELL : ATR;
     const gaps = { 35: [], 47: [] };
     const AB = [ATR[0], 31.0], CD = [36.0, ATR[2]];
     // pair k-1 upper end, pair k lower end
     // pair index i runs MAIN[i+1] -> MAIN[i+2]: the pair arriving at MAIN[k] is i=k-2, the departing one is i=k-1
     const arr = k - 2, dep = k - 1;
     if (arr >= 0) { if (arr % 2 === 0) gaps[47].push(AB); else gaps[35].push(CD); }
-    if (dep <= MAIN.length - 3) { if (dep % 2 === 0) gaps[35].push(AB); else gaps[47].push(CD); }
+    // The 1F→2F pair starts on solid floor outside the narrower B1 well.
+    if (id !== '1F' && dep <= MAIN.length - 3) { if (dep % 2 === 0) gaps[35].push(AB); else gaps[47].push(CD); }
     const railSeg = (u0, v0, u1, v1) => {
       wall(u0, v0, u1, v1, y, y + 1.1, { mat: 'glass', thick: 0.04 });
       const L = Math.hypot(u1 - u0, v1 - v0); if (L < 0.05) return;
       box((u0 + u1) / 2, (v0 + v1) / 2, Math.abs(u1 - u0) + 0.06, Math.abs(v1 - v0) + 0.06, y + 1.1, 0.06, 0xb9a77f, { solid: false });
     };
     for (const v of [35, 47]) {
-      let cur = ATR[0];
+      let cur = opening[0];
       for (const g of gaps[v].sort((p, q) => p[0] - q[0])) { if (g[0] - cur > 0.15) railSeg(cur, v, g[0], v); cur = Math.max(cur, g[1]); }
-      if (ATR[2] - cur > 0.15) railSeg(cur, v, ATR[2], v);
+      if (opening[2] - cur > 0.15) railSeg(cur, v, opening[2], v);
     }
-    railSeg(ATR[0], 35, ATR[0], 47); railSeg(ATR[2], 35, ATR[2], 47);
+    railSeg(opening[0], 35, opening[0], 47); railSeg(opening[2], 35, opening[2], 47);
     // white fascia band on the void edges
-    boxR(ATR[0], ATR[1], ATR[2], ATR[1] + 0.04, y - th, th, 0xf7f4ee, { solid: false, skip: ['top', 'bottom'] });
-    boxR(ATR[0], ATR[3] - 0.04, ATR[2], ATR[3], y - th, th, 0xf7f4ee, { solid: false, skip: ['top', 'bottom'] });
-    boxR(ATR[0], ATR[1], ATR[0] + 0.04, ATR[3], y - th, th, 0xf7f4ee, { solid: false, skip: ['top', 'bottom'] });
-    boxR(ATR[2] - 0.04, ATR[1], ATR[2], ATR[3], y - th, th, 0xf7f4ee, { solid: false, skip: ['top', 'bottom'] });
+    boxR(opening[0], opening[1], opening[2], opening[1] + 0.04, y - th, th, 0xf7f4ee, { solid: false, skip: ['top', 'bottom'] });
+    boxR(opening[0], opening[3] - 0.04, opening[2], opening[3], y - th, th, 0xf7f4ee, { solid: false, skip: ['top', 'bottom'] });
+    boxR(opening[0], opening[1], opening[0] + 0.04, opening[3], y - th, th, 0xf7f4ee, { solid: false, skip: ['top', 'bottom'] });
+    boxR(opening[2] - 0.04, opening[1], opening[2], opening[3], y - th, th, 0xf7f4ee, { solid: false, skip: ['top', 'bottom'] });
   }
   // ------------------------------------------------------------ elevators
   const ELV_FLOORS = [
@@ -1441,7 +1441,7 @@ export function build(K) {
     zone('신세계 마켓',fl,'신선식품 · 그로서리 · 델리',[.25,.25,26.8,31.5],y,y+H,2);
     zone('스위트파크',fl,'체크 대리석 · 디저트 쇼케이스',[8.5,32,26.8,51],y,y+H,2);
     zone('델리 전문관',fl,'식품관 · 델리 카운터',[41.5,10,UW,76.5],y,y+H,2);
-    zone('하우스 오브 신세계 푸드홀',fl,'라운지 · 바 · 오픈키친',[6.4,59,26.8,84.45],y,3.2,2);
+    zone('하우스 오브 신세계 푸드홀',fl,'라운지 · 바 · 오픈키친',[6.4,59,26.8,84.45],y,LV['1F']-TH['1F'],2);
     zone('하우스 오브 신세계 연결 복도',fl,'우드 게이트 · 대리석 파케',[12.7,51,17.3,60],y,y+3.4,3);
     // Unphotographed fresh-food bays: restrained low fixtures, no invented thematic fitout.
     finish([.3,.3,26.8,31.7],y+.013,'ssg_marble',2.4);
@@ -1656,36 +1656,13 @@ export function build(K) {
     woodWash(6.4,84.45,26.8,84.45,y+.1,y+2.3);
     woodWash(26.8,59,26.8,72,y+.1,y+2.3);
     for(const r of [[6.4,59,8.6,74.5],[8.6,59,26.8,60],[23.5,60,26.8,74.5]])hq(...r,-1.025,0xf3ece0,false);
-    // High amber balcony fascia from the photos; no opaque wall across the void.
-    for(const [u0,v0,u1,v1] of [[8.6,60,8.6,74.5],[23.5,60,23.5,74.5],[8.6,60,23.5,60],[8.6,74.5,23.5,74.5]]){
-      const len=Math.hypot(u1-u0,v1-v0),nx=-(v1-v0)/len,nv=(u1-u0)/len;
-      const landingEdge = v0 === 74.5 && v1 === 74.5;
-      const endU = landingEdge ? 20.4 : u1;
-      wall(u0,v0,endU,v1,-2.5,0,{mat:HONEY,thick:.12,solid:false});
-      wall(u0,v0,endU,v1,0,1.03,{mat:'glass',thick:.035});
-      box((u0+endU)/2,(v0+v1)/2,Math.max(.06,Math.abs(endU-u0)),Math.max(.06,Math.abs(v1-v0)),1.03,.055,BRASS,{solid:false});
-      // The photo shows a second timber/uplight tier below the 1M glass gallery.
-      // Start above the 1F rail so both balcony levels remain visible from B1.
-      wall(u0,v0,u1,v1,1.12,3.6,{mat:HONEY,thick:.12,solid:false});
-      wall(u0,v0,u1,v1,3.6,4.65,{mat:'glass',thick:.035});
-      box((u0+u1)/2,(v0+v1)/2,Math.max(.06,Math.abs(u1-u0)),Math.max(.06,Math.abs(v1-v0)),4.65,.055,BRASS,{solid:false});
-      woodWash(u0,v0,u1,v1,1.14,3.32);
-      for(let i=.6;i<len;i+=1.5){
-        const u=u0+(u1-u0)*i/len,v=v0+(v1-v0)*i/len;
-        if (landingEdge && u > 20.4) continue;
-        for(const sg of [-1,1]){
-          const [ax,az]=P(u+nx*.075*sg-(u1-u0)/len*.32,v+nv*.075*sg-(v1-v0)/len*.32),[bx,bz]=P(u+nx*.075*sg+(u1-u0)/len*.32,v+nv*.075*sg+(v1-v0)/len*.32);
-          K.quad('ssg_uplight',[[ax,-2.48,az],[bx,-2.48,bz],[bx,-.3,bz],[ax,-.3,az]],[nx*sg*CA+nv*sg*SA,0,-nx*sg*SA+nv*sg*CA]);
-        }
-        cyl(u,v,-2.49,.07,.04,glow,false,8);
-      }
-    }
-    // 01/02 resolve two gallery tiers: the 2F underside closes the void at y6.5.
-    coffer(8.8,60.2,23.3,74.3,6.48);
-    for(const [u,v] of [[10,61.2],[10,72.8],[22.1,61.2],[22.1,72.8]])downlight(u,v,6.42,.065);
+    // The lounge is a B1 room, enclosed by the continuous 1F slab at y=-1.
+    const loungeCeiling = LV['1F'] - TH['1F'];
+    coffer(8.8,60.2,23.3,74.3,loungeCeiling-.02);
+    for(const [u,v] of [[10,61.2],[10,72.8],[22.1,61.2],[22.1,72.8]])downlight(u,v,loungeCeiling-.08,.065);
     // Mirror-clad pier at the lounge's far end; the seating remains visible from the gate.
-    box(8.1,67.2,.6,.6,y,12.45,0xc3b89b,{solid:false});
-    for(const u of [7.75,8.45])box(u,67.2,.055,.7,y,12.45,BRASS,{solid:false});
+    box(8.1,67.2,.6,.6,y,loungeCeiling-y-.05,0xc3b89b,{solid:false});
+    for(const u of [7.75,8.45])box(u,67.2,.055,.7,y,loungeCeiling-y-.05,BRASS,{solid:false});
     function armchair(u,v,rot,col) {
       const c=Math.cos(rot),s=Math.sin(rot),pt=(a,b)=>[u+a*c+b*s,v-a*s+b*c];
       cyl(u,v,y,.30,.18,0x7b746a);cyl(u,v,y+.18,.35,.28,col,true,14);
@@ -1699,12 +1676,6 @@ export function build(K) {
       for(const [du,dv,ro,col] of [[-1.15,-.7,-PI/2,0xb8452e],[1.15,-.7,PI/2,0x6e7b3a],[-1.15,1.05,-PI/2,0xb86b35],[1.15,1.05,PI/2,0x777744]])armchair(u+du,v+dv,ro,col);
       const [x,z]=P(u-1.15,v-.7);K.person(x,y,z,{sit:true,shirt:0x324c5d});
     }
-    // The two glass escalators climb beside the lounge; the upper landings remain on 1F.
-    // Terminate before v74.5 so the slab edge becomes the landing at the flight's end.
-    for(const [u,dir] of [[21.15,'up'],[22.7,'down']]){
-      const a=P(u,60.8),b=P(u,74.7);K.escalator(a[0],a[1],b[0],b[1],{ya:y,yb:0,w:1.15,dir,speed:.6,sideMat:HONEY,truss:0xb07a3c});
-    }
-    sign(['HOUSE OF','SHINSEGAE'],20.2,60.7,y+.85,'N',.85,.7,{...serif,bg:'#e8d6b8',fg:'#5f4530'});
     // 03: apothecary cabinet with circular pulls, next to the lounge rather than in its path.
     box(18.4,67.5,1.2,2.8,y,.82,HONEY);
     for(let j=0;j<3;j++)for(let i=0;i<2;i++){
@@ -1879,7 +1850,7 @@ export function build(K) {
     island(cos.slice(4, 6), 12.25, 24.1, 35, 47, y, S('화장품', { kind: 'cos', H: 6.5 }));
     island(cos.slice(6, 10), 42.9, 54.75, 12.25, 31.5, y, S('화장품', { kind: 'cos', H: 6.5 }));
     island(cos.slice(10, 12), 42.9, 54.75, 35, 47, y, S('화장품', { kind: 'cos', H: 6.5 }));
-    // 01/02/10: B1 lounge is visible through this 1F opening; no cosmetics over the void.
+    // The former lounge opening is plain marble floor, continuing the wine-cellar approach.
     island(cos.slice(16, 20), 42.9, 48.8, 60, 72.5, y, S('화장품', { kind: 'cos', H: 3.2 }));
     shop({ u0: 48.8, u1: 58.4, v0: 64, v1: 72.5, f: 'N', name: 'HOURGLASS|아워글래스', kind: 'cos', y, ...S('화장품'), H: 3.2 });
     // Keep the documented pop-up use, but a small neutral display at the side preserves the approach.
@@ -1892,9 +1863,9 @@ export function build(K) {
     for (const u of [15.2, 52.2]) { const a = P(u, 50.7), b = P(u, 58); K.stairs(a[0], a[1], b[0], b[1], { w: 3.6, ya: 0, yb: LV['1M'], mat: 'marble', railMat: 0xb9a77f }); }
     sign('1M · 버건디& · 퍼퓸 ↑', 15.2, 50.4, 2.9, 'N', 3.4, 0.38, wayfinding);
     sign('1M · 분더샵 메자닌 ↑', 52.2, 50.4, 2.9, 'N', 3.4, 0.38, wayfinding);
-    columns(id, y, H, (u, v) => inR(u, v, HOS_VOID, .7));
-    lights(y + H - 0.02, [HOS_VOID]);
-    for (let u = 9.5; u < 60; u += 5) for (let v = 60.5; v < 84; v += 5) if (!inR(u, v, [27.6, 64.5, 39.4, 72.5], 0.3) && !inR(u, v, HOS_VOID)) downlight(u, v, LV['1M'] - TH['1M'] - 0.02);
+    columns(id, y, H);
+    lights(y + H - 0.02);
+    for (let u = 9.5; u < 60; u += 5) for (let v = 60.5; v < 84; v += 5) if (!inR(u, v, [27.6, 64.5, 39.4, 72.5], 0.3)) downlight(u, v, LV['1M'] - TH['1M'] - 0.02);
     aisleBorders(y);
     coffer(9, 32, 58, 34.6, y + H); coffer(9, 47.4, 58, 50, y + H);
     coffer(31, 12.4, 37, 31.3, y + H);
@@ -1920,7 +1891,7 @@ export function build(K) {
     for(const r of [[9,32,26,34.6],[40,32,58,34.6]]){
       hq(...r,4.5,CEIL,false);for(let u=r[0]+1;u<r[2];u+=2.5)for(let v=r[1]+1;v<r[3];v+=2.5)downlight(u,v,4.46,.055);
     }
-    zone('하우스 오브 신세계 와인 연결 홀',fl,'푸드홀 라운지 보이드 · 와인셀러',[8,58,27,76.5],0,3.2,2);
+    zone('하우스 오브 신세계 와인 연결 홀',fl,'와인셀러 · 매장 연결 통로',[8,58,27,76.5],0,3.2,2);
     for(const r of [[29,6,38,12],[27,13,39,32],[9,32,23,34.5],[40,32,58,34.5],[31,73,36.5,83],[42,48,48,50]])K.crowd(rect(...r),0,3,{seed:Math.round(r[0]*r[1])});
   }
 
@@ -1932,8 +1903,7 @@ export function build(K) {
     shop({ u0: 8, u1: 27, v0: 76.5, v1: 84.45, f: 'N', name: 'BOON THE SHOP MEZZANINE|분더샵 메자닌', kind: 'lux', y, ...S('THE ROW · 가브리엘라 허스트 · 체사레 아톨리니'), portal: 0x2a2420 });
     shop({ u0: 27, u1: 40, v0: 76.5, v1: 84.45, f: 'N', name: 'PERSONAL SHOPPER ROOM|퍼스널 쇼퍼룸', kind: 'lounge', y, ...S('PSR 337㎡') });
     shop({ u0: 40, u1: 60, v0: 76.5, v1: 84.45, f: 'N', name: 'BURGUNDY &|버건디&', kind: 'wine', y, ...S('부르고뉴 와인') });
-    // Relocate the small perfume displays to the solid east landing of the new void.
-    // Shallow counters keep both the void rail and elevator approach usable.
+    // Keep the existing perfume displays and the approach to the elevators.
     for(const [v,name,ko] of [[60.8,'ACQUA DI PARMA','아쿠아 디 파르마'],[63.0,'BULY 1803','불리 1803'],[69.0,'MAISON FRANCIS KURKDJIAN','메종 프란시스 커정'],[71.2,'ASTIER DE VILLATTE','아스티에 드 빌라트']]) {
       box(25.5,v,.75,1.5,y,.85,0xd7c4a3);
       box(25.5,v,.78,1.53,y+.85,.05,0xf3ece0,{solid:false});

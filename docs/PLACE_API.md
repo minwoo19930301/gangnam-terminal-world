@@ -56,6 +56,25 @@ Gameplay:
 
 Collision model: player capsule r=0.32, height 1.75, step-up 0.5 m. Walls block within their y-range; anything with a walkable top can be stood on. Floors are only what you register (slab/box tops/ramps) plus the global street ground (y=0 minus ground holes).
 
+## Lazy floor detail — `K.detail`
+
+`K.detail({ floor, y0, y1, rect: [x0, z0, x1, z1] | poly, name }, K => { ...furnishing... })` registers a group that is
+built only when the camera comes within ~60 m horizontally and ±8 m of `y0..y1` (screenshots and the tests build all
+groups). Use it for the heavy, per-floor furnishing: shop stock, shelves, racks, counters, tables and chairs, fixtures,
+light panels, small signage, people (`K.crowd/K.person`), plants. Because each floor only costs memory and frame time
+when someone is near it, a floor can be far more detailed than before (budget about 120k quads per detail group).
+
+Keep in the normal build (outside `K.detail`): everything you must be able to stand on or bump into before the group
+exists — slabs and their holes, outer walls and room partitions, stairs, escalators, elevators, junction corridors —
+plus `K.zone`, `K.spawn`, `K.interact`/`K.elevator` and the exterior. One group per floor (or per large room of a
+floor) is the intended granularity; groups may add walls (furniture collision) and signs.
+
+## Addresses
+
+Every place/floor has an address `#/<place>/<floor>?p=x,y,z,yaw` (the floor label of the zone you stand in). Walking into
+another place or floor pushes a browser-history entry; opening an address starts there. Name zones' `floor` exactly as
+the floor is called on site (B1, 1F, 1M, 2F …).
+
 ## Quality bar
 - Every real floor exists and is walkable, reachable by stairs/escalators AND an elevator, with zones per floor naming what is sold there.
 - Interiors have real tenants/brands/categories from the research file (signs on every shop front), shop partitions, counters/racks/shelves, corridors, toilets/escalator voids where they really are, information desks, columns grid, ceilings with light panels, people.

@@ -83,6 +83,7 @@ for (const w of WELLS) {
   }
 }
 K._.finalize();
+K._.buildAllDetail(); // lazy floor detail groups too
 const meshes = scene.children.filter(o => o.isMesh || o.isInstancedMesh);
 const tris = meshes.reduce((a, m) => a + (m.geometry.index ? m.geometry.index.count / 3 : 0) * (m.isInstancedMesh ? m.count : 1), 0);
 if (!quiet) console.table(report);
