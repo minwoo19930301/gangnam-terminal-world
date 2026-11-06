@@ -1,34 +1,434 @@
 {
- "id":"station","name":"고속터미널역 (서울 지하철 3·7·9호선)","updated":"2026-11-06",
- "sources":[
-  {"url":"https://itwiki.kr/w/%EA%B3%A0%EC%86%8D%ED%84%B0%EB%AF%B8%EB%84%90%EC%97%AD","title":"고속터미널역 (itwiki, 위키 미러)","year":2025},
-  {"url":"https://mediahub.seoul.go.kr/archives/2016717","title":"엘리베이터 생긴 고속터미널·까치산역 (서울시 미디어허브)","year":2020},
-  {"url":"https://mediahub.seoul.go.kr/archives/162098","title":"건축미 돋보이는 9호선 고속터미널역","year":2009},
-  {"url":"https://mediahub.seoul.go.kr/archives/1139258","title":"고터에서 버스만 타나요? (파미에스테이션·출구)","year":2019},
-  {"url":"https://www.sidae.com/article/2016012813588039242","title":"환승거리 기사 (7→9호선 314m)","year":2016}
- ],
- "building":{"floors_above":0,"floors_below":4,"height_m":0,"floor_height_m":"대합실~승강장 층고 약 5m 가정 (guess)","facade":"지상 건물 없음. 출구는 지상 캐노피/계단 구조물. 7호선 승강장은 심한 곡선 구간.","signage":"3호선 주황 #EF7C1C, 7호선 올리브 #747F00, 9호선 금색 #BDB092. 역명판 '고속터미널 Express Bus Terminal 高速터미널', 역번호 339/734/923.","entrances":"출구 총 10개: 서울교통공사 7개 + 9호선 3개 (출구 번호 체계 1~8-2)."},
- "floors":[
-  {"floor":"B1","use":"3호선 대합실 및 지하상가(고투몰) 연결부, 9호선 상부 열린 공간 일부","tenants":["고투몰(GOTO MALL)","파미에스테이션(센트럴시티 지하)"],"layout":"3호선 대합실에서 지하통로로 서울고속버스터미널(경부선)에 연결. 3호선 대합실과 나란한 환승통로에 무빙워크와 9호선 열차 접근 전광판이 있음.","source":"https://itwiki.kr/w/%EA%B3%A0%EC%86%8D%ED%84%B0%EB%AF%B8%EB%84%90%EC%97%AD","guess":false},
-  {"floor":"B2","use":"7호선 대합실 (엘리베이터가 지상 1층에서 지하2층 대합실, 지하3층 승강장으로 이어짐). 3호선 승강장 층도 B2로 추정","tenants":[],"layout":"7호선 4번 출구 앞 엘리베이터가 지상-대합실-승강장 연결.","source":"https://mediahub.seoul.go.kr/archives/2016717","guess":false},
-  {"floor":"B3","use":"7호선 승강장 (상대식 2면2선, 스크린도어, 심한 곡선)","tenants":[],"layout":"승강장과 열차 사이 틈이 넓어 '특정역' 지정, 발빠짐 주의.","source":"https://mediahub.seoul.go.kr/archives/2016717","guess":false},
-  {"floor":"B4","use":"9호선 승강장 (아치형 노출 강관 천장, 상대식)","tenants":[],"layout":"3호선 터널 바로 아래 약 15cm를 통과(공사 시). 상부는 대규모 개방 공간. 정확한 깊이는 미확인, 브리프 레벨 B4(y=-21)에 따름.","source":"https://mediahub.seoul.go.kr/archives/162098","guess":true}
- ],
- "elements":[
-  {"name":"3호선 승강장","what":"상대식 2면2선, 스크린도어, 1985.10.18 개통","where":"몰 하부 남북 방향","details":"과거 소음방지벽(2002~2008 중반) 설치됐다 철거. 인접역 잠원↔교대. 열차 스테인리스+주황 띠(일반 지식, 미검증).","source":"https://itwiki.kr/w/%EA%B3%A0%EC%86%8D%ED%84%B0%EB%AF%B8%EB%84%90%EC%97%AD","guess":false},
-  {"name":"7호선 승강장","what":"상대식 2면2선, 스크린도어, 2000.2.29 개통","where":"7호선 B1/B2 대합실 아래","details":"7호선 전체에서 곡선이 가장 심한 승강장. 인접역 반포↔내방. 열차 올리브 띠(미검증).","source":"https://itwiki.kr/w/%EA%B3%A0%EC%86%8D%ED%84%B0%EB%AF%B8%EB%84%90%EC%97%AD","guess":false},
-  {"name":"9호선 승강장","what":"상대식 2면2선, 스크린도어, 2009.7.24 개통","where":"가장 깊은 층","details":"인접역 신반포↔사평. 2009 대한토목학회 올해의 토목구조물 대상, 영국토목학회 Brunel Medal. 아치형 강관 노출 천장. 금색 계열 열차.","source":"https://mediahub.seoul.go.kr/archives/162098","guess":false},
-  {"name":"7호선↔9호선 환승통로","what":"긴 환승 통로","where":"7호선 대합실 ~ 9호선","details":"2016 기준 314m(성인 4분22초). 환승통로에 53개 계단 구간 보도(교통약자).","source":"https://www.sidae.com/article/2016012813588039242","guess":false},
-  {"name":"3호선↔9호선 환승통로","what":"3호선 대합실과 나란한 통로","where":"3호선 대합실 옆","details":"무빙워크, 9호선 열차 접근 전광판. 길이 미확인.","source":"https://itwiki.kr/w/%EA%B3%A0%EC%86%8D%ED%84%B0%EB%AF%B8%EB%84%90%EC%97%AD","guess":false},
-  {"name":"3호선↔7호선 환승","what":"역 내 환승 가능(3-7-9 모두)","where":"대합실 연계","details":"itwiki에 오금 방면 연속 환승 언급. 정확한 동선·길이 미확인.","source":"https://itwiki.kr/w/%EA%B3%A0%EC%86%8D%ED%84%B0%EB%AF%B8%EB%84%90%EC%97%AD","guess":true},
-  {"name":"3번 출구","what":"파미에스테이션/센트럴시티 연결 출구","where":"센트럴시티 신반포로 176","details":"파미에스테이션은 F&B 50여 개 입점.","source":"https://mediahub.seoul.go.kr/archives/1139258","guess":false},
-  {"name":"4번 출구","what":"국립중앙도서관(도보13분)·누에다리 방면, 7호선 엘리베이터 설치","where":"지상","details":"엘리베이터로 지상-B2 대합실-B3 승강장 연결.","source":"https://mediahub.seoul.go.kr/archives/2016717","guess":false},
-  {"name":"5번 출구","what":"서래마을 방면","where":"지상","details":"도보 약 20분.","source":"https://mediahub.seoul.go.kr/archives/1139258","guess":false},
-  {"name":"1·8·8-1·8-2 및 2·6·7 출구","what":"브리프 가정: 1·8계열은 고투몰/경부선, 2~7은 센트럴시티·신세계·JW메리어트","where":"-","details":"공식 확인 못함. 브리프 문구 기준.","source":"docs/briefs/station.md","guess":true},
-  {"name":"고속터미널 꽃상가","what":"고속버스터미널 3층 꽃시장, 역에서 도보 5분","where":"경부선 터미널 3F","details":"생화·조화·화분 등.","source":"https://mediahub.seoul.go.kr/archives/1139258","guess":false}
- ],
- "connections":["지하통로로 서울고속버스터미널(경부선)과 연결(3호선 대합실)","3번 출구로 파미에스테이션/센트럴시티","호남선(센트럴시티)·신세계 강남·JW메리어트 인접","서울성모병원·국립중앙도서관 인접"],
- "parking":"해당 없음(주변 터미널 건물 주차장 별도)",
- "notes":["3·7·9호선이 工자 형태로 교차","9호선은 3호선 터널 바로 아래(15cm) 통과","출구 총 10개(7+3)","시각 디자인은 브리프의 노선색 사용 권장"],
- "unresolved":["각 승강장 깊이(m)와 승강장 길이 (모두 미확인, 열차 편성 길이는 3호선 10량, 7호선 8량, 9호선 6/8량 추정)","출구 1~8-2별 정확한 담당 노선/대합실","3↔7, 3↔9 환승 거리","7호선 대합실과 파미에스테이션 연결부 구조","9호선 열차 외관 상세"]
+  "id": "station",
+  "name": "고속터미널역 (서울 지하철 3·7·9호선)",
+  "updated": "2026-11-06",
+  "sources": [
+    {
+      "url": "https://itwiki.kr/w/%EA%B3%A0%EC%86%8D%ED%84%B0%EB%AF%B8%EB%84%90%EC%97%AD",
+      "title": "고속터미널역 (itwiki, 위키 미러)",
+      "year": 2025
+    },
+    {
+      "url": "https://mediahub.seoul.go.kr/archives/2016717",
+      "title": "엘리베이터 생긴 고속터미널·까치산역 (서울시 미디어허브)",
+      "year": 2020
+    },
+    {
+      "url": "https://mediahub.seoul.go.kr/archives/162098",
+      "title": "건축미 돋보이는 9호선 고속터미널역",
+      "year": 2009
+    },
+    {
+      "url": "https://mediahub.seoul.go.kr/archives/1139258",
+      "title": "고터에서 버스만 타나요? (파미에스테이션·출구)",
+      "year": 2019
+    },
+    {
+      "url": "https://www.sidae.com/article/2016012813588039242",
+      "title": "환승거리 기사 (7→9호선 314m)",
+      "year": 2016
+    },
+    {
+      "url": "https://blog.naver.com/160cmn/224431934743",
+      "title": "사용자 제공 2025–2026 고속터미널역 실내 사진 · 3호선 대합실 쪽 출구 샤프트 옆, 7호선에서 환승해 올라온 구간",
+      "date": "2026-10-05",
+      "evidence": "refs/interior/station/notes.json 및 해당 로컬 사진; 이 작업에서 원문을 새로 열람하지 않음"
+    },
+    {
+      "url": "https://blog.naver.com/bhu2/223748272461",
+      "title": "사용자 제공 2025–2026 고속터미널역 실내 사진 · 중앙 대합실, 네이처리퍼블릭/아트박스 앞",
+      "date": "2025-02-05",
+      "evidence": "refs/interior/station/notes.json 및 해당 로컬 사진; 이 작업에서 원문을 새로 열람하지 않음"
+    },
+    {
+      "url": "https://blog.naver.com/brandpowerplant/224414693022",
+      "title": "사용자 제공 2025–2026 고속터미널역 실내 사진 · 3·7호선 환승/대합실 광고 구간",
+      "date": "2026-09-17",
+      "evidence": "refs/interior/station/notes.json 및 해당 로컬 사진; 이 작업에서 원문을 새로 열람하지 않음"
+    },
+    {
+      "url": "https://blog.naver.com/doer_doer/224331159043",
+      "title": "사용자 제공 2025–2026 고속터미널역 실내 사진 · 3호선 개찰구",
+      "date": "2026-06-30",
+      "evidence": "refs/interior/station/notes.json 및 해당 로컬 사진; 이 작업에서 원문을 새로 열람하지 않음"
+    },
+    {
+      "url": "https://blog.naver.com/gamjaa_log/224441118469",
+      "title": "사용자 제공 2025–2026 고속터미널역 실내 사진 · 7호선→3·9호선 환승 구간",
+      "date": "2026-10-14",
+      "evidence": "refs/interior/station/notes.json 및 해당 로컬 사진; 이 작업에서 원문을 새로 열람하지 않음"
+    },
+    {
+      "url": "https://blog.naver.com/gascop7/224399909971",
+      "title": "사용자 제공 2025–2026 고속터미널역 실내 사진 · 3호선 승강장 기둥",
+      "date": "2026-09-03",
+      "evidence": "refs/interior/station/notes.json 및 해당 로컬 사진; 이 작업에서 원문을 새로 열람하지 않음"
+    },
+    {
+      "url": "https://blog.naver.com/hjcho429/224371597418",
+      "title": "사용자 제공 2025–2026 고속터미널역 실내 사진 · 9호선 승강장",
+      "date": "2026-08-08",
+      "evidence": "refs/interior/station/notes.json 및 해당 로컬 사진; 이 작업에서 원문을 새로 열람하지 않음"
+    },
+    {
+      "url": "https://blog.naver.com/kdnlsk2/224341363561",
+      "title": "사용자 제공 2025–2026 고속터미널역 실내 사진 · 3호선 승강장",
+      "date": "2026-07-09",
+      "evidence": "refs/interior/station/notes.json 및 해당 로컬 사진; 이 작업에서 원문을 새로 열람하지 않음"
+    },
+    {
+      "url": "https://blog.naver.com/kohyo931/224282895649",
+      "title": "사용자 제공 2025–2026 고속터미널역 실내 사진 · 9호선 대합실 상층",
+      "date": "2026-05-12",
+      "evidence": "refs/interior/station/notes.json 및 해당 로컬 사진; 이 작업에서 원문을 새로 열람하지 않음"
+    },
+    {
+      "url": "https://blog.naver.com/ownerdailylog/224393704526",
+      "title": "사용자 제공 2025–2026 고속터미널역 실내 사진 · 9호선 1번 출구 홀",
+      "date": "2026-08-28",
+      "evidence": "refs/interior/station/notes.json 및 해당 로컬 사진; 이 작업에서 원문을 새로 열람하지 않음"
+    }
+  ],
+  "building": {
+    "floors_above": 0,
+    "floors_below": 4,
+    "height_m": 0,
+    "floor_height_m": "월드 보행 레벨 B1=-6, B2=-11, B3=-16, B4=-21m 유지. 마감 천장 높이는 사진 비례에 따라 일반 대합실·환승통로 약 2.9m, 3·7호선 승강장 약 3.18m, 9호선 승강장·분기 홀 약 4.85m로 별도 모델링(실측 아님).",
+    "facade": "지상 건물 없음. 출구는 지상 캐노피/계단 구조물. 7호선 승강장은 심한 곡선 구간.",
+    "signage": "실내 사진 팔레트: 3호선 주황 #E8731A, 7호선 올리브 #8B9A4A, 9호선 금색 #C99B5E. 짙은 회색 현수/벽부 패널에 노란 나가는 곳·갈아타는 곳 블록, 노선색 세로 꺾임 패널에 흰 원형 ③/⑦/⑨. 역번호 339/734/923. 사진 01·06의 노란 사각형 숫자 3은 3번 출구이며 3호선 마크가 아님.",
+    "entrances": "출구 총 10개: 서울교통공사 7개 + 9호선 3개 (출구 번호 체계 1~8-2)."
+  },
+  "floors": [
+    {
+      "floor": "B1",
+      "use": "3호선 대합실 및 지하상가(고투몰) 연결부, 9호선 상부 열린 공간 일부",
+      "tenants": [
+        "고투몰(GOTO MALL)",
+        "파미에스테이션(센트럴시티 지하)"
+      ],
+      "layout": "3호선 대합실에서 지하통로로 서울고속버스터미널(경부선)에 연결. 3호선 대합실과 나란한 환승통로에 무빙워크와 9호선 열차 접근 전광판이 있음.",
+      "source": "https://itwiki.kr/w/%EA%B3%A0%EC%86%8D%ED%84%B0%EB%AF%B8%EB%84%90%EC%97%AD",
+      "guess": false
+    },
+    {
+      "floor": "B2",
+      "use": "7호선 대합실 (엘리베이터가 지상 1층에서 지하2층 대합실, 지하3층 승강장으로 이어짐). 3호선 승강장 층도 B2로 추정",
+      "tenants": [],
+      "layout": "7호선 4번 출구 앞 엘리베이터가 지상-대합실-승강장 연결.",
+      "source": "https://mediahub.seoul.go.kr/archives/2016717",
+      "guess": false
+    },
+    {
+      "floor": "B3",
+      "use": "7호선 승강장 (상대식 2면2선, 스크린도어, 심한 곡선)",
+      "tenants": [],
+      "layout": "승강장과 열차 사이 틈이 넓어 '특정역' 지정, 발빠짐 주의.",
+      "source": "https://mediahub.seoul.go.kr/archives/2016717",
+      "guess": false
+    },
+    {
+      "floor": "B4",
+      "use": "9호선 승강장 및 양방향 분기 환승 홀; 사진 12·14의 흰 패널 천장과 사진 13의 완만한 곡면 환승 구간",
+      "tenants": [],
+      "layout": "가장 깊은 노선. W9 긴 에스컬레이터 및 3↔9 환승 계단이 내려와 양방향 승강장으로 분기한다. 실내 사진을 우선하여 플랫폼 전체의 높은 노출 강관 아치를 제거하고, 곡면 마감은 분기 홀 일부에만 둔다. 월드 계약 B4=-21m는 실제 심도 측정값이 아니다.",
+      "source": "https://mediahub.seoul.go.kr/archives/162098",
+      "guess": true,
+      "visual_sources": [
+        "refs/interior/station/12_line9_platform_doors.jpg",
+        "refs/interior/station/13_line9_transfer_corridor_gate.jpg",
+        "refs/interior/station/14_line9_platform_wide.jpg"
+      ]
+    }
+  ],
+  "elements": [
+    {
+      "name": "3호선 승강장",
+      "what": "상대식 2면2선, 스크린도어, 1985.10.18 개통",
+      "where": "몰 하부 남북 방향",
+      "details": "과거 소음방지벽(2002~2008 중반) 설치됐다 철거. 인접역 잠원↔교대. 열차 스테인리스+주황 띠(일반 지식, 미검증).",
+      "source": "https://itwiki.kr/w/%EA%B3%A0%EC%86%8D%ED%84%B0%EB%AF%B8%EB%84%90%EC%97%AD",
+      "guess": false
+    },
+    {
+      "name": "7호선 승강장",
+      "what": "상대식 2면2선, 스크린도어, 2000.2.29 개통",
+      "where": "7호선 B1/B2 대합실 아래",
+      "details": "7호선 전체에서 곡선이 가장 심한 승강장. 인접역 반포↔내방. 열차 올리브 띠(미검증).",
+      "source": "https://itwiki.kr/w/%EA%B3%A0%EC%86%8D%ED%84%B0%EB%AF%B8%EB%84%90%EC%97%AD",
+      "guess": false
+    },
+    {
+      "name": "9호선 승강장",
+      "what": "상대식 2면2선, 스크린도어, 2009.7.24 개통",
+      "where": "가장 깊은 층",
+      "details": "인접역 신반포↔사평. 기존 2009년 자료의 건축·시공 이력은 보존하되, 현재 보이는 천장 마감은 2026년 사진 12·14를 우선한다: 흰/알루미늄 패널과 선형 조명, 연속 스크린도어, 회색 석재 및 노란 점자블록. 사진 13의 완만한 곡면은 환승 분기 홀에 한정한다. 열차는 6량 모델을 유지하며 외장 세부는 단순화한다.",
+      "source": "https://mediahub.seoul.go.kr/archives/162098",
+      "guess": false,
+      "visual_sources": [
+        "refs/interior/station/12_line9_platform_doors.jpg",
+        "refs/interior/station/13_line9_transfer_corridor_gate.jpg",
+        "refs/interior/station/14_line9_platform_wide.jpg"
+      ]
+    },
+    {
+      "name": "7호선↔9호선 환승통로",
+      "what": "긴 환승 통로",
+      "where": "7호선 대합실 ~ 9호선",
+      "details": "2016 기준 314m(성인 4분22초). 환승통로에 53개 계단 구간 보도(교통약자).",
+      "source": "https://www.sidae.com/article/2016012813588039242",
+      "guess": false
+    },
+    {
+      "name": "3호선↔9호선 환승통로",
+      "what": "3호선 대합실과 나란한 통로",
+      "where": "3호선 대합실 옆",
+      "details": "무빙워크, 9호선 열차 접근 전광판. 길이 미확인.",
+      "source": "https://itwiki.kr/w/%EA%B3%A0%EC%86%8D%ED%84%B0%EB%AF%B8%EB%84%90%EC%97%AD",
+      "guess": false
+    },
+    {
+      "name": "3호선↔7호선 환승",
+      "what": "역 내 환승 가능(3-7-9 모두)",
+      "where": "대합실 연계",
+      "details": "itwiki에 오금 방면 연속 환승 언급. 정확한 동선·길이 미확인.",
+      "source": "https://itwiki.kr/w/%EA%B3%A0%EC%86%8D%ED%84%B0%EB%AF%B8%EB%84%90%EC%97%AD",
+      "guess": true
+    },
+    {
+      "name": "3번 출구",
+      "what": "파미에스테이션/센트럴시티 연결 출구",
+      "where": "센트럴시티 신반포로 176",
+      "details": "파미에스테이션은 F&B 50여 개 입점.",
+      "source": "https://mediahub.seoul.go.kr/archives/1139258",
+      "guess": false
+    },
+    {
+      "name": "4번 출구",
+      "what": "국립중앙도서관(도보13분)·누에다리 방면, 7호선 엘리베이터 설치",
+      "where": "지상",
+      "details": "엘리베이터로 지상-B2 대합실-B3 승강장 연결.",
+      "source": "https://mediahub.seoul.go.kr/archives/2016717",
+      "guess": false
+    },
+    {
+      "name": "5번 출구",
+      "what": "서래마을 방면",
+      "where": "지상",
+      "details": "도보 약 20분.",
+      "source": "https://mediahub.seoul.go.kr/archives/1139258",
+      "guess": false
+    },
+    {
+      "name": "1·8·8-1·8-2 및 2·6·7 출구",
+      "what": "브리프 가정: 1·8계열은 고투몰/경부선, 2~7은 센트럴시티·신세계·JW메리어트",
+      "where": "-",
+      "details": "공식 확인 못함. 브리프 문구 기준.",
+      "source": "docs/briefs/station.md",
+      "guess": true
+    },
+    {
+      "name": "고속터미널 꽃상가",
+      "what": "고속버스터미널 3층 꽃시장, 역에서 도보 5분",
+      "where": "경부선 터미널 3F",
+      "details": "생화·조화·화분 등.",
+      "source": "https://mediahub.seoul.go.kr/archives/1139258",
+      "guess": false
+    }
+  ],
+  "connections": [
+    "지하통로로 서울고속버스터미널(경부선)과 연결(3호선 대합실)",
+    "3번 출구로 파미에스테이션/센트럴시티",
+    "호남선(센트럴시티)·신세계 강남·JW메리어트 인접",
+    "서울성모병원·국립중앙도서관 인접"
+  ],
+  "parking": "해당 없음(주변 터미널 건물 주차장 별도)",
+  "notes": [
+    "3·7·9호선이 工자 형태로 교차",
+    "9호선은 3호선 터널 바로 아래(15cm) 통과",
+    "출구 총 10개(7+3)",
+    "시각 디자인은 브리프의 노선색 사용 권장"
+  ],
+  "unresolved": [
+    "실제 승강장 심도·길이·통로 좌표 미실측. 기존 모델의 3호선 10량·7호선 8량·9호선 6량과 연결 좌표를 유지하며 승강장 길이는 추정이다.",
+    "출구 1~8-2별 정확한 담당 노선/대합실",
+    "3↔7, 3↔9 환승 거리",
+    "7호선 대합실과 파미에스테이션 연결부 구조",
+    "9호선 열차 외관 상세"
+  ],
+  "interiors_round5": {
+    "reference_directory": "refs/interior/station",
+    "notes_file": "refs/interior/station/notes.json",
+    "photo_count": 22,
+    "photo_date_range": [
+      "2025-02-05",
+      "2026-10-14"
+    ],
+    "source_priority": "제공된 2025–2026 실내 사진을 마감·조명·사인·비례의 우선 근거로 사용. 과거 자료는 사진에서 보이지 않는 구조와 기존 외부 연결의 근거로만 유지.",
+    "layout": "7호선 승강장에서 에스컬레이터로 올라와 3·9호선 환승 갈아타는 곳 표지를 따라 중앙 대합실(3호선 개찰구·물품보관함·네이처리퍼블릭/아트박스·편의점)로 이어짐. 대합실에서 위로는 신세계/센트럴시티 연결 지하상가(벽돌 기둥 홀), 9호선은 3호선보다 깊어 환승 통로 끝 긴 에스컬레이터로 내려가 양방향 승강장으로 분기. 9호선 상층 대합실은 곡면 타원 천장 홀, 1번/8번 출구 방향으로 개찰구와 에스컬레이터가 연속.",
+    "typical_dimensions": "환승 통로 폭 약 6~8m(노란 점자블록 2열 기준), 대합실 천장 약 2.6~3m, 9호선 승강장 광장 천장 약 4~5m, 개찰구 게이트 폭 약 0.55m x 6~8대, 광고 라이트박스 약 0.87x2.17m(블로그 규격표), 기둥 직경 약 0.6~0.8m(원형), 사각 광고기둥 약 0.8m.",
+    "palette": [
+      "#C8C2B6 beige-grey marble floor",
+      "#F2F2EE white ceiling panels",
+      "#F2B705 yellow tactile/wayfinding",
+      "#E8731A line 3 orange",
+      "#8B9A4A line 7 olive",
+      "#C99B5E line 9 gold",
+      "#8B4A32 red brick piers",
+      "#2F3336 dark grey sign panels",
+      "#2E7D3A green gates"
+    ],
+    "not_like_airport": "지하 3개 노선 대합실이 상점 파사드(약국, 화장품, 아트박스, 의류 매장)와 직접 맞닿아 개찰구 옆까지 상점이 이어지고, 전 구간 벽면 전체가 광고 라이트박스와 LED 스크린으로 덮여 있으며, 노선색 원형 기둥 사인(주황/올리브/금색)과 벽돌 기둥 홀, 마블 벽면이 섞인 낮은 천장 복도가 복잡하게 엇갈림. 공항처럼 넓은 단일 홀이 아님.",
+    "photo_to_space": [
+      {
+        "photos": [
+          "01_line3_exit_sign_marble_pillar.jpg",
+          "05_line3_gates_green_marble.jpg",
+          "06_marble_floor_escalator_checker.jpg"
+        ],
+        "space": "3호선 출구·개찰구 및 W3 계단/에스컬레이터 입구",
+        "traced": "낮은 흰 격자 천장과 선형 형광등, 회백색·베이지 결무늬 대리석, 3번 출구 벽부 사인, 초록색·스테인리스 게이트, 계단 앞 국소 검정 체커 인레이. 중앙 B1 홀은 고투몰이 없을 때만 생성."
+      },
+      {
+        "photos": [
+          "02_central_hall_gate_screen_2025old.jpg",
+          "03_concourse_busy_corridor_2025.jpg"
+        ],
+        "space": "중앙 B1 대합실의 개찰구 인접 상점 전면",
+        "traced": "아트박스·네이처리퍼블릭은 제공 메모의 인근 매장명, ENTER6는 사진 02 식물벽 전면에서 직접 읽은 표기. 얕은 매장·상자형 진열물·식물벽과 개찰구 너머 보라색 화면으로 단순화. 정확한 매장 순서와 화면 내용은 복제가 아닌 추정."
+      },
+      {
+        "photos": [
+          "04_ad_wall_hall_crowd.jpg",
+          "08_transfer_concourse_gates_axis.jpg",
+          "09_gate_row_tile_floor.jpg"
+        ],
+        "space": "B2 3↔7 환승통로 및 7호선 대합실",
+        "traced": "낮은 흰 판넬 천장, 형광등 열, 회색/크림 대각 타일, 노란 유도선, 짙은 회색 현수 사인과 노란 블록, 연속 광고 라이트박스, 6–8대 개찰구. 04의 실제 호선·층은 미확정."
+      },
+      {
+        "photos": [
+          "07_brick_pier_hall_fixtures.jpg"
+        ],
+        "space": "B1 센트럴시티·파미에스테이션 연결 대합실",
+        "traced": "밝은 적갈색 벽돌 각기둥, 밝은 받침, 소화기 두 대와 흰 세로 방향표. 모듈 경계에 맞춘 위치는 추정."
+      },
+      {
+        "photos": [
+          "10_pillar_sign_line3_orange.jpg",
+          "11_pillar_sign_line7_olive.jpg"
+        ],
+        "space": "B2 3호선·B3 7호선 승강장 기둥",
+        "traced": "흰 원기둥의 검정·스테인리스 하단띠, 주황/올리브 꺾인 세로 패널, 흰 화살표와 원형 노선 번호, 대화·오금 및 장암·석남 표기."
+      },
+      {
+        "photos": [
+          "12_line9_platform_doors.jpg",
+          "14_line9_platform_wide.jpg"
+        ],
+        "space": "B4 9호선 승강장",
+        "traced": "연속 스크린도어, 회색 석재 바닥과 노란 점자블록, 흰 패널 천장·선형 조명. 기존 높은 강관 아치 전체를 사진에 맞는 평판 천장으로 교체."
+      },
+      {
+        "photos": [
+          "13_line9_transfer_corridor_gate.jpg"
+        ],
+        "space": "B4 9호선 긴 에스컬레이터 하부 양방향 분기 홀",
+        "traced": "약 4–5m 높이의 완만한 흰 곡면, 양옆 스테인리스 덕트/선형 조명, 두 줄 유도선, 통행부를 비운 접이식 은색 바리케이드."
+      },
+      {
+        "photos": [
+          "15_line3_platform_diamond_floor.jpg",
+          "22_ad_pillars_platform.jpg"
+        ],
+        "space": "3호선 승강장 바닥 및 승강장 광고기둥",
+        "traced": "회색 바닥에 좁은 검정 다이아몬드 연쇄, 스크린도어 앞 녹색 선, 검정 테두리 사각 LED 광고기둥. 22의 정확한 호선은 미확정이며 다른 승강장의 광고 배치는 추정."
+      },
+      {
+        "photos": [
+          "16_line9_concourse_oval_ceiling.jpg"
+        ],
+        "space": "단독 로드 시 B1 9호선 상층 대합실",
+        "traced": "타원형 중층 가장자리의 베이지 세로 패널·유리 난간과 중앙 너머 흰 천장. 돔으로 해석하지 않으며 상부 보행층은 추가하지 않는다."
+      },
+      {
+        "photos": [
+          "17_line9_concourse_columns_sign.jpg",
+          "19_line9_hall_yellow_tactile.jpg",
+          "20_line9_hall_pillars_lights.jpg",
+          "21_line9_hall_vending_ceiling.jpg"
+        ],
+        "space": "단독 로드 시 B1 9호선 1·8번 출구 홀 가장자리",
+        "traced": "회색 석재, 굵은 흰 원기둥, 노란 출구 번호, 꺾이는 점자블록, 선형 조명과 자판기·광고기둥. 보이지 않는 가장자리는 단순하게 유지."
+      },
+      {
+        "photos": [
+          "18_underpass_columns_blue_sign.jpg"
+        ],
+        "space": "B1 신세계·센트럴시티 방향 연결 대합실",
+        "traced": "스테인리스 사각기둥, 대리석 바닥, 파란 고속버스터미널 방향 패널. 정확한 지하상가 내 위치는 추정."
+      }
+    ],
+    "retail_names": [
+      {
+        "name": "ENTER6",
+        "evidence": "사진 02 식물벽 입구의 직접 판독; 네이처리퍼블릭으로 오인하지 않음"
+      },
+      {
+        "name": "아트박스",
+        "evidence": "notes.json 사진 02 위치와 layout에 명시"
+      },
+      {
+        "name": "네이처리퍼블릭",
+        "evidence": "notes.json 사진 02 위치와 layout에 명시; 식물벽 자체의 간판은 ENTER6"
+      }
+    ],
+    "qa": {
+      "rendered": false,
+      "reason": "사용자가 이 샌드박스에서 tests/shot.mjs를 실행할 수 없다고 명시했으므로 렌더 비교는 운영자 후속 작업. 제공 사진은 직접 열람했으나 수정된 월드의 PNG 시각 검증을 수행했다고 주장하지 않는다.",
+      "test_results": {
+        "smoke": {
+          "command": "node tests/smoke.mjs station gotomall centralcity",
+          "result": "OK",
+          "station_quads": 73109,
+          "budget_quads": 140000,
+          "station_spawns": 11
+        },
+        "station_walk": {
+          "command": "node tests/walk.mjs station --no-city",
+          "result": "20 ok, 0 blocked"
+        },
+        "connected_walk": {
+          "command": "node tests/walk.mjs gotomall centralcity station --no-city",
+          "result": "91 ok, 0 blocked (concurrent neighbour edits may change counts)"
+        },
+        "full_walk": {
+          "command": "node tests/walk.mjs",
+          "result": "330 ok, 0 blocked",
+          "note": "The final full-world run passed after concurrent jwmarriott edits resolved the earlier ATRIUM reference error."
+        },
+        "ramp_audit": "All station stair/escalator runs sampled at 79 longitudinal points × 3 lateral points; no newly introduced wall collisions or sub-1.8m registered ceiling clearance compared with previous station module."
+      }
+    },
+    "ad_text_evidence": {
+      "04": "Columbia / 깃털급 가벼움 / 히터급 보온력",
+      "22": "Sprite / 새로워진 상쾌함!",
+      "02": "통증을 피하는 / 유형별 반응"
+    }
+  },
+  "modeling": {
+    "round": 5,
+    "scope": "실내 재질·천장·사인·기둥·개찰구·광고·상점 전면. 기존 지상 출구 외관, OSM claims, 4개 지하층, 엘리베이터 층 목록과 J7/W3/W9 계약 좌표 유지.",
+    "guesses": [
+      "B1=-6, B2=-11, B3=-16, B4=-21m는 K.LEVELS/공유 월드 계약이며 실제 역의 실측 심도가 아니다. 특히 깊은 9호선을 B4=-21m에 맞췄다.",
+      "환승통로 꺾임, 출구 계단 방향, 승강장 길이와 위치는 기존 OSM/공유 연결을 보존한 추정 배치다. 3호선 약 200m 및 3호선 10량·7호선 8량·9호선 6량 모델을 유지한다.",
+      "사진의 통로 폭 6–8m, 일반 천장 2.6–3m, 9호선 분기 홀 4–5m, 기둥·개찰구·광고 크기는 사진 비례 또는 제공 메모 기준이며 실측 설계도가 없다. 모델의 일반 홀 2.9m/3·7호선 플랫폼 3.18m/9호선 플랫폼 4.85m는 이에 맞춘 근사값이다.",
+      "사진 07의 벽돌 기둥 홀과 18의 스테인리스 연결 통로의 정확한 평면 위치는 블로그 동선 설명에서만 추정된다. B1 센트럴시티 연결 대합실에 배치했다.",
+      "광고업체 사진 04·22의 정확한 호선과 층은 확인되지 않았다. 벽 광고의 간격과 LED 기둥 배치는 통로/승강장 유형의 참고로만 적용하며 실제 광고 위치로 확정하지 않는다.",
+      "사진 02의 식물벽 간판은 ENTER6다. 제공 메모의 네이처리퍼블릭·아트박스는 인근 매장 설명으로 취급한다. 구현의 ENTER6·아트박스·네이처리퍼블릭 순서, 폭, 깊이와 진열물은 추정이며 확인된 이름만 사용했다. 약국·의류·편의점은 메모에 유형만 있어 별도 미확인 상호를 만들지 않았다.",
+      "사진 16의 타원은 열린 중층 가장자리와 유리 난간으로 해석했다. 크기와 위치는 추정한 시각적 마감이며, 실제 접근 동선을 입증하지 못한 상부 보행층을 새로 등록하지 않았다.",
+      "중앙 B1 상점/초록 게이트 홀과 9호선 타원 대합실은 station 단독 로드용 대체 공간이다. 함께 로드되는 gotomall이 B1 바닥을 소유하면 station은 해당 홀을 중복 생성하지 않는다. 통합 월드에서 그 영역의 실내 완성도는 gotomall 모듈에 의존한다.",
+      "광고 인물·상품 이미지는 재현하지 않고 사진 04의 Columbia, 22의 Sprite와 직접 판독한 문구 및 단순 색면으로 대체했다. 사진 02의 보라색 화면 문구를 사용했지만 정확한 캠페인 이미지·시점 일치는 주장하지 않는다.",
+      "사진에 일부만 보이는 상점 내부·시설 및 노출되지 않은 통로 측면은 단순화했다. 원형 환기구·유리블록은 간단한 기하로 근사하며 장식 천장의 모든 세부를 완전 복제한 것은 아니다."
+    ]
+  }
 }

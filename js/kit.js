@@ -31,7 +31,23 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8 } = {}) {
     else if (key.startsWith('tex:')) { const s = T.surface(key.slice(4)); m = new THREE.MeshLambertMaterial({ map: s.tex, vertexColors: true }); }
     else if (key.startsWith('ctex:')) { const s = customTex.get(key.slice(5)); m = new THREE.MeshLambertMaterial({ map: s.tex, vertexColors: true, transparent: !!s.transparent, alphaTest: s.transparent ? 0.3 : 0, side: s.doubleSide ? THREE.DoubleSide : THREE.FrontSide }); }
     else throw new Error('unknown material key ' + key);
+    if (m.isMeshLambertMaterial) addBounce(m);
     materials.set(key, m); return m;
+  }
+  // Bounce light for downward faces. Lambert ceilings only see the hemisphere's ground colour (divided by pi),
+  // so lit interiors read grey; real ceilings get light reflected from floors and fixtures. This adds a
+  // diffuse term scaled by how much the surface faces down (world space). bounce.value is set by main.js
+  // (lower at night).
+  const bounce = { value: 0.55 };
+  function addBounce(m) {
+    m.onBeforeCompile = (sh) => {
+      sh.uniforms.uBounce = bounce;
+      sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nvarying float vDown;')
+        .replace('#include <beginnormal_vertex>', '#include <beginnormal_vertex>\nvDown = -normalize(mat3(modelMatrix) * objectNormal).y;');
+      sh.fragmentShader = sh.fragmentShader.replace('#include <common>', '#include <common>\nvarying float vDown;\nuniform float uBounce;')
+        .replace('#include <opaque_fragment>', 'outgoingLight += diffuseColor.rgb * uBounce * smoothstep(0.35, 0.95, vDown);\n#include <opaque_fragment>');
+    };
+    m.customProgramCacheKey = () => 'bounce1';
   }
   const customTex = new Map();
   const customMats = new Map();
@@ -517,7 +533,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8 } = {}) {
     osmBuilding, osmFind, claim, rand, quad: (mat, p, n, uvs) => quad(spec(mat), p, n, uvs || [[0, 0], [1, 0], [1, 1], [0, 1]]), hpoly: (mat, poly, y, up = true, holes) => hpoly(spec(mat), poly, y, up, holes),
     pointInPoly, polyBBox, polyArea, orient,
     // internals for engine
-    _: { finalize, frameFns, interactables, spawns, zonesList, elevators, claims, mapMarks, groundHoles, stats, atlas, trees, people, setCurrent: (id, meta) => { current = id; if (meta) perPlace[id] = meta; } },
+    _: { bounce, finalize, frameFns, interactables, spawns, zonesList, elevators, claims, mapMarks, groundHoles, stats, atlas, trees, people, setCurrent: (id, meta) => { current = id; if (meta) perPlace[id] = meta; } },
   };
   return K;
 }

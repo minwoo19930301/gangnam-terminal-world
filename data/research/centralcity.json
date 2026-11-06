@@ -128,13 +128,25 @@
    "url": "https://www.kukinews.com/article/view/kuk201807180185",
    "title": "신세계면세점 강남점 B1 입구 = 파미에스테이션 연결",
    "year": 2018
+  },
+  {
+   "url": "refs/interior/cc_hall/notes.json",
+   "title": "Round5 cc_hall: 운영자 제공 2026년 블로그 실내 사진 설명·배치·치수 추정",
+   "date_range": "2026-03-19..2026-11-06",
+   "provenance": "블로그 원문을 새로 검색하지 않고 제공된 사진·notes.json을 사용"
+  },
+  {
+   "url": "refs/interior/cc_famille/notes.json",
+   "title": "Round5 cc_famille: 운영자 제공 2026년 블로그 실내 사진 설명·배치·치수 추정",
+   "date_range": "2026-03-19..2026-11-06",
+   "provenance": "블로그 원문을 새로 검색하지 않고 제공된 사진·notes.json을 사용"
   }
  ],
  "building": {
   "floors_above": 2,
   "floors_below": 1,
   "height_m": 9,
-  "floor_height_m": "B1=-6 m, 1F=0 m, 2F=5 m, R=9 m. 1F 승차홀 t6..23은 8.5 m 볼트이며 2F 식당가는 동측 t23..38.5에만 존재. 남측 블록 층수는 유지. 층고·볼트 배치는 사진07/리뷰를 적용한 근사.",
+  "floor_height_m": "B1=-6 m, 1F=0 m, 2F=5 m, R=9 m 유지. 호남선 홀은 2F 동측 발코니 옆 높은 트러스 공간. 파미에스테이션 실내 거리는 1F 남측 블록의 5–6 m 높이 개방부, 식당 내부는 약3–4 m; 모던눌랑은6 m 이상 유리 지붕 분위기로 표현. 2F는 거리/고천장 점포 위 개방부를 제외한 기존 높이를 유지. 모든 치수와 개방부 평면은 사진 비례 근사.",
   "round_pavilion": {
    "osm_id": 593858530,
    "floors_above": 2,
@@ -150,28 +162,35 @@
  "floors": [
   {
    "floor": "B1",
-   "use": "파미에스테이션 다이닝·지하상가, 메가박스 센트럴, 신세계·GOTO MALL·지하철 연결통로",
+   "use": "메가박스 센트럴 입구·신세계/고투몰/지하철 연결통로. 파미에스테이션 식당 거리는 1F로 정정",
    "tenants": [
-    "진주회관(신세계 B1)",
-    "메가박스 센트럴(부띠끄 M)",
-    "스타벅스(터미널 매표소 맞은편 한 층 아래 동선 후기)",
-    "GOTO MALL 연결"
+    "메가박스 센트럴",
+    "신세계백화점 연결",
+    "고투몰 연결",
+    "지하철 3·7·9호선 연결"
    ],
-   "layout": "매표소 뒤편 에스컬레이터로 한 층 내려가 2시 방향이 지하철 연결, 한 층 더 내려가면 3호선 대합실(나무위키 후기). 파미에스테이션은 지하 연결 통로의 원형 건물 쪽 B1에서 7호선 쪽으로 열림. 실제 내부 평면·점포별 경계는 미확인으로 모델 배치가 추정.",
-   "source": "https://namu.wiki/w/센트럴시티",
+   "layout": "cc_famille22–24: 검은 프레임 유리문·짙은 대리석 문틀, 크림 대리석과 검은 띠 바닥, 짙은 대리석/목재 점포 전면, 금색 테두리 코퍼 천장과 밝은 패널. 폭8–10 m/높이약4 m 통로를 기존 B1 연결 축에 맞춰 표현. J3/J4(B1)/J7 유지. 매장 주소 FP103호를 근거로 파미에스테이션 식당을 B1에 배치하던 기존 해석은 폐기.",
+   "source": "refs/interior/cc_famille/notes.json; 22_shinsegae_entrance_to_central_glass_doors.jpg; 23_underground_corridor_coffered_ceiling.jpg; 24_megabox_central_entrance.jpg",
    "guess": true
   },
   {
    "floor": "1F",
-   "use": "호남선 터미널 본층: 승차홈, 하차장, 무인발권기, 승차장 편의점·ATM; 신세계 1F 화장품·명품; JW 메리어트 로비 진입",
+   "use": "호남선 대합실·매표소·승차홈·하차장, 파미에스테이션 실내 식당 거리, 신세계/JW 1F 연결",
    "tenants": [
-    "스타벅스 센트럴시티점(신세계 1F)",
-    "앤드테일 커피바(터미널 입구)",
-    "부첼라 센트럴시티점(JW 1F)",
-    "광주은행 제휴 CD기 1기(승차장)"
+    "호호식당",
+    "Cha R",
+    "BUDDHA’S BELLY",
+    "일상정원 (파미에스테이션 1층 FP103호)",
+    "모던눌랑",
+    "Agra",
+    "LEJARDIN (인접 상업 공간)",
+    "스타벅스",
+    "던킨",
+    "이디야커피",
+    "공탕"
    ],
-   "layout": "사진02에서 출입문 번호 2·3·4·5, 사진07에서 12 확인. 붉은 패널과 흰 번호 형식을 재현하며 1~12 연속 배치·전체 승차홈 번호 및 행선지 배정은 미확인. 한국어 매표소·무인발권기 안내, 개방 대합실.",
-   "source": "refs/photos/centralcity/02_dropoff.jpg; refs/photos/centralcity/07_honam_boarding.jpg; 기존 층 용도 연구",
+   "layout": "cc_hall01–21: 흰 파이프 트러스와 회색 패널 천장, 대리석/흑백 다이아몬드 바닥, 붉은 번호별 승차홈·시계/LED, 목재 톤 매표소, 벤치/화분, 유리 난간2F 발코니 아래 작은 상점. cc_famille01–21: 하차장 근처 남측 블록의1F 실내 거리. 크림 아치/갈색 벽돌/흰 벽돌/검은 철제 유리 등 점포마다 다른 전면과 연회색 타일, 높은 밝은 천장/채광 패널. 식당 순서와 정확한 점포 경계는 사진에서 확정되지 않음.",
+   "source": "refs/interior/cc_hall/notes.json; refs/interior/cc_famille/notes.json",
    "guess": true
   },
   {
@@ -183,8 +202,8 @@
     "명동교자 센트럴시티점",
     "쉐이크쉑(OSM POI, 층 미확인)"
    ],
-   "layout": "파미에스테이션 2층은 주차장에서 도보 1분 연결(2018 기사). 매표소 층(1F 또는 중1층)과 구분 불명",
-   "source": "https://namu.wiki/w/센트럴시티",
+   "layout": "기존 y=5 m 2F와 수직 이동을 유지. 홀 동측 유리 난간 발코니는 cc_hall04 근거. 남측1F 거리/고천장 식당 위에 개방부를 둠. 기존2016/2018 기사 점포와 현재2F의 정확한 대응·경계는 미확인; cc_famille26 모던샤브하우스 사진은 층 불명으로 특정 층 점포를 새로 확정하지 않음.",
+   "source": "기존2016/2018 식당가 연구; refs/interior/cc_hall/04_upper_corridor_neon_balcony.jpg; refs/interior/cc_famille/26_modern_shabu_window_hall.jpg (층 불명)",
    "guess": true
   },
   {
@@ -201,8 +220,8 @@
    "name": "호남선 승차홈",
    "what": "붉은 승차홈 출입문 패널과 흰 대형 번호",
    "where": "1F 터미널 뒤쪽 베이 구역",
-   "details": "사진에서 2·3·4·5·12 확인. 기존 문헌의 1~37/39 번호와 구획 설명은 전체 배치 검증 자료가 아니므로 모델 번호·배정의 정확성은 추정으로 남김.",
-   "source": "refs/photos/centralcity/02_dropoff.jpg; refs/photos/centralcity/07_honam_boarding.jpg",
+   "details": "cc_hall05·13·14에서 승차홈13·1·11과 붉은 문틀, 번호 LED·아날로그 시계·둥근 통풍구·유리문 확인. 전체 순서와 실제 번호별 위치/행선지 배정은 확정하지 않음.",
+   "source": "refs/interior/cc_hall/05_hall_seating_gate13_truss.jpg; 13_gate1_red_arch.jpg; 14_gate11_red_arch_hall.jpg",
    "guess": true
   },
   {
@@ -217,8 +236,8 @@
    "name": "매표소·무인발권기",
    "what": "센트럴시티 매표소(창구+키오스크)",
    "where": "승차장 쪽에서 쉑쉑버거·스타벅스 방향으로 나가는 쪽",
-   "details": "2021년 매표소 승차장 쪽 이전은 기존 연구. 사진07의 파란 고속버스 무인발권기 표지가 시각 근거. 창구·기기 정확한 배치와 형태는 추정.",
-   "source": "https://namu.wiki/w/센트럴시티",
+   "details": "cc_hall08/16: 목재 수평띠 파시아, 밝은 TICKETS 표사는곳, 어두운 세로 리브 뒤벽, 우드톤 긴 카운터, 파란 LED 운행 보드, 검은 대기줄 폴대와 노란 점자블록. 길이약15 m·창구/기기 수·정확한 위치는 비례 추정. 실제 시간표/요금/광고 내용은 재현하지 않음.",
+   "source": "refs/interior/cc_hall/08_ticket_counter.jpg; refs/interior/cc_hall/16_ticket_counter_wide.jpg",
    "guess": true
   },
   {
@@ -232,10 +251,10 @@
   {
    "name": "메가박스 센트럴",
    "what": "영화관",
-   "where": "센트럴시티 지하 1층 (THE BOUTIQUE 101~105호)",
-   "details": "2015.9 재개관, 부띠끄 M 전관, 6관에서 8관 확장(뉴프레스는 14개관이라 적어 불일치), 4K. 매표소·매점·무인발권기",
-   "source": "https://limeade.kr/센트럴-메가박스-상영시간표/",
-   "guess": false
+   "where": "B1 연결통로 옆 별도 입구",
+   "details": "cc_famille24에서 크림 석재 아치 상부와 짙은 목재 포털, 청록 MEGABOX 간판, 사선 목재 측판, 어두운 실내의 파란 포스터 패널 일부 확인. 2025년 이후 로비/상영관 실내 사진은 없어 이전 모델의8개관·리클라이너·상영 단차·매표/매점 추정 평면은 철거하고 보이는 입구 뒤를 평범하게 처리. 문헌의 상영관 수는 상충하므로 현재 사실로 확정하지 않음.",
+   "source": "refs/interior/cc_famille/24_megabox_central_entrance.jpg; refs/interior/cc_famille/notes.json",
+   "guess": true
   },
   {
    "name": "영풍문고 자리",
@@ -281,8 +300,8 @@
    "name": "호남선 대합실 구조",
    "what": "흰 분기 철골 트러스, 대리석 기둥, 밝은 대리석·검은 줄 바닥",
    "where": "1F 대합실",
-   "details": "1.1 m 사각 백색 대리석 기둥, 4 m 높이 역피라미드 주두, 업라이트, 약9.5 m 반복 곡선 쌍관 트러스와 웹. 밝은 금속 패널 볼트 정상8.5 m, 광택 대리석과6 m 격자 검은 줄, 금속 벤치. 사진02/07/08과 리뷰 치수 적용.",
-   "source": "refs/photos/centralcity/02_dropoff.jpg; refs/photos/centralcity/07_honam_boarding.jpg; refs/photos/centralcity/08_arcade.jpg",
+   "details": "cc_hall05/06/09: 흰 원형 강관 트러스, 회색 금속 패널, 밝은 대리석 기둥, 흑백 다이아몬드/띠 바닥, 벤치와 큰 화분. cc_hall04의 유리 난간2F 발코니, cc_hall02의 녹색 네온 상가 전면. 정확한 보 간격·기둥 위치·트러스 접합 상세는 비례 근사.",
+   "source": "refs/interior/cc_hall/02_green_neon_hall_shopfront.jpg; 04_upper_corridor_neon_balcony.jpg; 05_hall_seating_gate13_truss.jpg; 06_central_hall_wide_marble.jpg; 09_crowded_hall_truss.jpg",
    "guess": true
   },
   {
@@ -292,14 +311,22 @@
    "details": "cc_01 우측/cc_02 좌측/항공: 별도18×7.5 m 금속기단·녹색유리·흰 곡면지붕. 고투몰 현 exit/groundHole와 중복 없음. 미확인 지하 목적지로 연결하지 않고 보이는 계단만 구현.",
    "source": "refs/roadview/cc_01_main_gate_plaza_spheres_shinsegae_west_tower.jpg; refs/roadview/cc_02_sinbanporo_west_from_main_gate_tan_block_led.jpg; refs/aerial/cc_all.jpg",
    "guess": true
+  },
+  {
+   "name": "파미에스테이션 1F 실내 거리",
+   "what": "점포별 유럽식 입면과 실제 식당별 내부 분위기",
+   "where": "남측 블록1F, 하차장 근처·원형관 연결 방향",
+   "details": "호호식당: 크림 고전풍/짙은 브론즈 파시아·목재 슬랫. Cha R: 검은 스틸·파란 네온·체크 바닥·적색/청록 부스. BUDDHA’S BELLY: 벽돌·짙은 바닥·테라스 화분. 일상정원: 복숭아색 전면·중앙 수로·크림 부스/코브. 모던눌랑: 흰 벽돌 아치·검은 창 격자·유리 지붕 트러스/호박색 펜던트. Agra: 벽돌 기둥·크림 아치·밝은 아치 벽감. LEJARDIN: 크림 필라스터·검은 유리 냉장고·식물. 사진이 보여주지 않는 방과 주방은 상세를 만들지 않음.",
+   "source": "refs/interior/cc_famille/01–21 (정확한 파일은 modeling.round5.photo_notes)",
+   "guess": true
   }
  ],
  "connections": [
-  "B1 -> GOTO MALL 복도",
-  "B1 -> 7호선 콘코스(파미에스테이션 B1)",
+  "B1 -> GOTO MALL 복도 (J3)",
+  "B1 -> 7호선 콘코스, 원형관 하부 연결 (J7: (-45,191)/(-45,203), y=-6; 식당 거리는1F)",
   "B1/1F -> 신세계 강남점 (J4)",
   "1F -> JW 메리어트 (J6)",
-  "매표소 에스컬레이터 한 층 아래 -> 지하철 3호선 대합실"
+  "기존 계단·에스컬레이터·전체층 엘리베이터 유지"
  ],
  "parking": "호남선 지상 버스 야드 1173096801, 터미널·601356623·1173096805의 옥상 승용차 주차를 항공사진과 OSM으로 재현. OSM layer 도로를 기준으로 연결교·진입 경로를 유지하며 중간층 높이와 램프 경사는 추정. 백화점·호텔 지하 1~3층 공용 주차는 문헌 맥락으로 별도 구역.",
  "notes": [
@@ -313,7 +340,8 @@
   "사진06 경부선 별관 외관은 제외. 사진04 밀레니엄홀은 기존 6F 용도 확인에만 사용.",
   "Round3는 운영자가 제공한 cc_01/cc_02·manifest 및 비교 이미지 직접 검토. 북측 외관은 2026-06 로드뷰가 2009년 사진보다 우선; 새 외부 웹검색으로 현황을 확인했다고 주장하지 않음.",
   "cc_02의 8층 베이지/옥상 LED 건물은 OSM 413280002 르본시티로 판별. 중앙시티 claims 밖이므로 이 모듈에 중복 건물/LED를 추가하지 않음.",
-  "Round4: 제공된 로드뷰·항공·검증용 렌더와 코드 대조. 사용자 제한에 따라 tests/shot.mjs 미실행. 새 외부 웹검증이나 변경 후 렌더 검증을 주장하지 않음."
+  "Round4: 제공된 로드뷰·항공·검증용 렌더와 코드 대조. 사용자 제한에 따라 tests/shot.mjs 미실행. 새 외부 웹검증이나 변경 후 렌더 검증을 주장하지 않음.",
+  "Round5: 파미에스테이션은 일상정원 FP103호 등 제공된2026년 주소 근거로1F. cc_famille22–24는 별도B1 신세계↔메가박스↔지하철 통로. 최신 실내 사진이 있는 구역은 이전2009 실내 참조보다 우선. 외부 웹검색 없이 제공 파일을 사용했고, tests/shot.mjs는 사용자 제한으로 실행하지 않음."
  ],
  "unresolved": [
   "정문·구체의 정확한 실측 좌표/치수, 유리 캐노피 경사·C 표장 단면·벽돌 줄눈 모듈",
@@ -325,12 +353,16 @@
   "OSM 점포 POI의 실제 층·현재 입점 목록, 식당·영화관 내부 평면",
   "정문 간판 첫 단어 SHINSEGAE의 선명한 사진 확인",
   "광장 서측 파빌리온 실제 지하 연결/소속과 계단 방향·실측 높이",
-  "새 렌더에서 야드 밝기 RGB90..105, C 가독성, 파빌리온/캐노피/수목 배치의 대조 검증"
+  "새 렌더에서 야드 밝기 RGB90..105, C 가독성, 파빌리온/캐노피/수목 배치의 대조 검증",
+  "1F 파미에 점포 순서/좌표와 천창/2F 개방부 실측 평면",
+  "B1 금장 코퍼 통로의 전체 경로·폭·점포 정체 및 메가박스 최신 로비",
+  "모던눌랑 정확한 위치, 모던샤브하우스 정확한 층",
+  "Round5 새 렌더에서 천장 높이·간판 가독성·재료색·혼잡도 대조"
  ],
  "modeling": {
   "frame": "local s(남쪽, 서측 파사드 방향)/t(동쪽) 축. 스트립 s -22..151 · t 0..38.5, 남측 블록 s 151..204 · t -98..38",
-  "floors": "B1 -6(다이닝·연결통로·메가박스), 1F 0(호남선 승차홀 볼트8.5/남측 파미에), 2F5(스트립 동측 t23..38.5 및 남측 식당가), R9(주차). 원형관 B1/1F/2F4.2 보존, 지붕 정상16.5. 정문11.8m 파일런은 별도 조형 높이이며 새 층이 아님.",
-  "bays": "붉은 문틀 하나와 바닥 번호 하나를 승차홈 1~12로 통일. 문짝 폭3.2 m, 큰 흰 숫자1.4 m, LED 광고판 약2.5x1.5 m. 그룹 g/plats·남색 상부 번호판·14·15·16 그룹 문구 삭제. 사진02/07에서 확인된2·3·4·5·12 외 전체 배열과 버스 배정은 추정.",
+  "floors": "B1 -6(신세계·지하철 연결통로/메가박스 입구), 1F0(호남선 트러스 홀/남측 파미에스테이션 실내 거리), 2F5(홀 동측 및 남측 기존 식당가,1F 거리/고천장 식당 위 개방부), R9(주차). 원형관 B1/1F/2F4.2와 지붕 정상22.6 m는 Round4 유지. 정문 파일런은 별도 조형 높이.",
+  "bays": "번호별 붉은 아치 문틀·흰 숫자/푸른 LED·아날로그 시계는 cc_hall05/13/14 기준. 승차홈1/11/13 사진이 있으나 전체 연속 배치·간격·번호별 버스 배정은 미확인.",
   "station_band": "B1 남측 경계는 역 모듈의 7호선 B1 대합실(경로 (45,150)->(-45,186)->(-68,195)->(-88,220)->(-175,262), 폭 14 m)에서 7.6 m 이상 떨어지도록 잘라냄",
   "guesses": [
    "cc_01의 정문을6x6x11.8 m 쌍파일런·순폭6.6 m로 근사. 중심P(-23.5,13.2/25.8), 정면s=-26.5는 기존 OSM 북단 출입구 정렬을 유지한 추정이며 실측값이 아님. 신세계 서탑 동측·고투몰 덮개 서측의 상대 위치를 우선.",
@@ -341,11 +373,6 @@
    "cc_02의 베이지8층·LED 건물은 OSM413280002(르본시티,8F/H38,x-260.03..-204.13,z-5.03..45.49)로 판별하며 centralcity 소유 아님. 광고 내용·LED 치수는 추정하여 만들지 않음.",
    "모듈 소유 OSM1128012726 및 타워→데크 연결교는 높이9 m 유지, 두께0.65 m 슬래브·직경0.6 m 단일 원기둥·얇은 난간으로 단순화. 정확한 단면은 미측정. 별도 미소유 보행로1185035515는 city.js가 layer2→15 m로 생성하여 여전히 높은 구조가 보일 수 있음. claims/엔진 변경 없이 보고.",
    "사진03의 곡면 은색 출입 파빌리온은 북서측 세계 약(-138,-5), 로컬s-20.5..-9.5/t0.5..6.5의 기존 추정 배치를 유지. 2026 cc_01 우측 고투몰 덮개와 별개이며 현 존치/접지 위치는 미확인.",
-   "북측은2026-06 cc_01/cc_02 우선, 야드는 항공사진, 홀·남측은2009 사진. Round4에서 지붕·남측 창·야드 재질도 보정했으나 전체 점포/시설의2026 현황을 새로 검증한 것은 아님.",
-   "승차홈1~12 연속 배열·간격·매표소 구간·번호별 행선지 매핑은 미확인. 사진02의2/3/4/5와07의12로 번호 표현만 확인. 실제 운행시간이나 광고 문구는 만들지 않고 광고 화면은 센트럴시티 브랜드로 단순화.",
-   "호남선 홀 기둥9.5 m 간격·4 m 주두·네 갈래 곡선 팔·쌍관 트러스 간격/웹·8.5 m 천장은 사진07의 비례와 리뷰 치수로 재구성. 2F를 t23..38.5로 한정하고 E3/엘리베이터를 동측으로 옮긴 내부 평면은 실측 미확인.",
-   "사진07/08의 광택 대리석 바닥·6 m 어두운 띠·금속 좌석·유리 에스컬레이터 난간은 시각 근거. 줄눈/가구 수/업라이트 위치/금속 부속의 치수는 근사. E3 고체 측판은 밝은 대리석으로 마감.",
-   "B1 사진05의 폭9 m 통로(t13..22), 3 m 간격 뾰족 리브·대각 교차 리브·중앙 조명·양측 유리 상점·6 m 대리석 필라스터는 리뷰 근사. 확인 안 된 점포 전면은 무명으로 유지; 알려진 브랜드도 정확한 점포 경계/층은 미측정.",
    "사진11 원형관 지붕은16각 두 단: [반경,높이]=[18.5,5.5]→[12,10.5]→[12,11.1]→[4.6,19.5], 어두운 유리 랜턴r4.6/y19.5..22, 낮은캡22.6 m. 2009 원경 사진/리뷰 비례 추정이며 현재 근접사진은 없음; OSM 접지/실내 층수 보존.",
    "원형관 스타벅스는 OSM level0/기존 연구 근거. 2F 부분 갤러리 반경14 m·중앙 개방부 반경6 m, 카운터·커피기기·가구·문·창 배치는 미확인 내부 구성. 두 층과 엘리베이터/계단/B1 연결을 보존.",
    "사진11 남측 TERM8/9번 면: 회색 석재#a9a8a2·줄눈#8f8e88/0.6 m, 창2.2×1.6 m(y5.6..7.2)·4.5 m 반복, 흰 CENTRAL CITY 중심y8.15. 정확한 치수와1F 상점/캐노피는 미측정; JW 소유 범위는 건드리지 않음.",
@@ -354,21 +381,30 @@
    "버스 야드3열과 서측 접안 방향은 항공사진/OSM 근거. 약80% 흰색/아이보리+운수사 띠, 약10% 짙은 프리미엄, 소수 은하수고속관광 적백 차체는 사진03/09/리뷰에 맞춘 정적 구성. 실제 운수사별 색/대수/배정은 미확인.",
    "동측 야드 버스열은 t=-25.8로 접지 영역 안에 놓고 s<64의 데크 계단 접근부는 비움. 버스 열 간격·흰 구획·빈자리·차량 점유는 항공사진을 단순화.",
    "하차장 캐노피 폭4 m/상승0.6 m/4 m 간격V자 경사 원형 지지대·1 m 스테인리스 난간·20 m 간격 쌍등은 사진09와 리뷰 근사. 위치/길이/승하차 개구부/현재 시설 상세는 미확인.",
-   "매표소·무인발권기 존재는 기존 연구/사진07 근거. 창구 수·기기 수·정확한 위치·한국어 안내 문구는 단순 구성. 실제 시간표·가격·메뉴는 만들지 않음.",
-   "B1 영화관과8관 구성·로비·매표/매점·스크린·좌석 단차는 기존 연구 기반 근사. 상충하는 문헌이 있어 실측 확정 평면으로 취급하지 않으며 가상 영화 제목/상영시간/가격은 표시하지 않음.",
-   "OSM POI 일부가 JW 풋프린트 안에 있어 기존 터미널쪽 조사 브랜드 배치 유지. 점포별 경계·층 배정·화장실·설비 및 공유 연결 외 계단/엘리베이터 위치는 미확인.",
-   "인물의 수·위치·복장, 가구/차량의 정적 배치는 사진의 사용 상황을 단순 재현. 계절 장식이나 확인되지 않은 브랜드·광고·시설은 임의 추가하지 않음.",
    "정문 검은 파시아는폭6.6 m/y2.9..3.6, 갈색 스팬드럴y3.6..6. SHINSEGAE CENTRAL CITY는 사용자 판독 지시를 반영했으며 ref_sign_zoom에서 첫 단어는 독립 확인 불가. 문 후퇴1.7 m·어두운 전실/유리색#2a3230·깊이6 m는 외관에 맞춘 단순화.",
    "신규 광장 파빌리온은 cc_01 오른쪽·cc_02 왼쪽·항공사진의 같은 구조물로 취급. RECT(s-40.56..-33.06,t-29.3..-11.3), 18×7.5 m, 회색 금속 기단0..1.6 m·녹색 유리1.6..3.4 m·1.2 m 리브/줄눈·처마3.5 m/상승1 m/돌출0.3 m. 고투몰·지하철 중 정확한 소속/지하 연결 미확인. 임의 연결통로 대신1.4 m 내려가는 짧은 계단과 무표기 하단 마감; 기능적 B1 출입구로 주장하지 않음.",
    "광장 서쪽40×4 m 반투명 캐노피는cc_02/사진09의 흰 곡선·경사 지지대 근거. 로컬s-47..-43,t-45..-5로 근사하여 OSM 서비스 진입로를 피함. 파빌리온 뒤s=-30의8.5..10 m 나무5그루는cc_01 울창한 수목을 단순화; 종/간격·화단 길이는 미측정.",
    "호남선 야드·승차홈 앞·데크 주변 진입로는 concrete 텍스처/#9a9890로 밝힘. 기존 asphalt 원본#3b3c3f에 tint#8d8d8f를 곱해 검게 되던 원인 제거. 중간회색 목표는 항공사진/리뷰 근거, 새 렌더 픽셀90..105 달성 여부는 샌드박스에서 미측정. 샘플 지점의 중복 OSM 영역/동일 높이 어두운 폴리곤은 확인되지 않음.",
-   "critic hn_hall_w의 빈 방은 동측 점포 띠s108..119,t28..38.2. 실사용이 확인되지 않아 전면을 무표기 평벽으로 닫음. 사진07의 평범한 내부 마감에 맞춘 보수적 처리이며 실측 폐쇄벽이라는 주장은 아님. 바로 옆J6 통로s119..129 유지."
+   "최신2026년 실내 자료는 cc_hall/cc_famille, 북측 외관은2026-06 로드뷰, 야드는 항공사진, 최신 근접자료 없는 원형관/남측 외관은2009 사진 우선순위. 블로그 게시일은 촬영일을 보장하지 않음.",
+   "파미에스테이션의1F 층 지정은 FP103 주소로 확인했으나 식당의 정확한 순서·방향·점포 경계·거리 좌표는 미확인. 남측 OSM 풋프린트와 기존 연결/계단/엘리베이터에 맞춘 배치이며 실제 전체 평면을 복원했다는 뜻은 아님.",
+   "파미에 거리 폭약5–8 m·천장5–6 m, 점포 전면폭4–7 m/간판0.7 m, 내부3–4 m·모던눌랑6 m 이상은 notes 사진 비례 추정. 2F y5/옥상 y9는 유지하면서 거리와 고천장 식당 위 개방부를 둔 형상도 실측 미확인.",
+   "호호식당 낮은 진입단·목재 슬랫, Cha R 체크 타일/적색 부스, 일상정원 수로, Agra 아치 벽감, 모던눌랑 기차 객실형 좌석/펜던트 등은 개별 사진 근거. 정확한 가구 수·간격·수로 길이·식물 종·주방/후면 배치는 확인되지 않아 사진에 보이는 범위로 단순화.",
+   "B1 폭9 m·약4 m 금장 코퍼 천장, 크림 대리석/검은 띠와 짙은 대리석/목재 전면은 cc_famille22–23의 재료·비례를 기존 연결축에 적용한 것. 사진의 신세계 문 번호, 점포 정체·연속 배열·각 코퍼 길이/조명 밝기는 미확인. 이전 체크 바닥·뾰족 리브 볼트 해석은 이 구역에서 폐기.",
+   "메가박스24는 입구 사진으로 크림 아치·짙은 목재·청록 MEGABOX·파란 포스터 일부만 확인. 게시물에 다른 지점도 함께 등장하며2025 개편 전 사진일 가능성은 notes에 남아 있음. 최신 로비/매점/매표/상영관 평면과8관 여부를 확정하지 않고 입구 뒤는 평범하게 처리.",
+   "승차홈 전체 번호 순서·간격·매표소 구간과 번호별 노선 배정은 미확인. 최신 사진으로1/11/13의 문틀·시계·LED 형식을 확인했고 실제 출발시간·가격·미확인 광고는 만들지 않음.",
+   "호남선 홀 기둥/흰 강관 트러스의 위치와 접합·천장 높이/회색 패널 반복·흑백 다이아몬드 간격·벤치/화분 수는 사진비례 근사. 유리 난간2F 발코니·초록/빨강 네온·작은 실명 점포는 cc_hall02–06 근거이며 정확한 인접 순서는 미확인.",
+   "매표소 목재 파시아/카운터·파란 LED 보드·검은 대기줄·점자블록은 cc_hall08/16 근거. 창구 수·기기 수·약15 m 길이·정확한 위치는 미확인. LED는 판독 가능한 한국어 안내와 노선명 위주로 처리하며 실시간 운행표가 아님.",
+   "하차장 안내판/벽돌 아치 복도/노란 점자블록은 cc_hall17–21에 근거. 하차장과 복도의 정확한 방향·폭·계단 연계 및 곡면 벽 반경은 미확인. 공통 J3/J4/J6/J7 좌표와 레벨이 우선.",
+   "기존2F 식당가의2016/2018 입점 목록은 현재 점포 위치 확인 자료가 아님. cc_famille26 모던샤브하우스는 정확한 층 불명으로 새로운 특정 층 배정 근거로 사용하지 않음. OSM 점포 POI도 실제 층/실내 경계로 해석하지 않음.",
+   "인물·가구·식물의 수·위치, 네온/백라이트 밝기, 대리석 반사/목재 색은 사진과 정적 키트의 표현 범위에서 단순화. 새 렌더 비교는 운영자에게 남아 있으며 실내 시각 일치를 검증했다고 주장하지 않음.",
+   "Round5 배치/높이 상세는 modeling.round5.modeled_layout에 기록. 1F 거리s181.2..188.8/t-85..15·천장6.2 m, 남측2F 갤러리s188.8..192·연결부t-26..-16, 호호식당0.45 m 진입단, B1폭9 m/높이4.15 m, 메가박스s177.4/t-28/폭10 m는 사진 비례와 기존 동선을 조정한 모델 값이며 실측이 아님. 점포 폭이 notes의 대표4–7 m보다 넓은 일부 구간은 내부 좌석/전면을 담는 단순화된 공간 배정으로 실제 임대 경계를 뜻하지 않음.",
+   "게이트 순서는 기존12개 베이를1..8,10..13으로 표기하고9번 자리는 기존 매표소 변환 가정을 유지. 사진만으로 전체번호·간격은 확정할 수 없음. 시계 바늘은 정적인 예시이며 실제 시각/운행안내를 나타내지 않음. 창업의 시간/신용보증기금 광고 문구는 cc_hall13/14/16에서 읽히는 범위만 사용."
   ],
-  "megabox": "B1 영화관과 기존 연결 동선을 보존. 조사된 메가박스 이름, 로비·매표소·매점·중립 좌석·상영관을 단순화하며 개별 집기 위치·상영관 평면은 추정. 가상 영화 제목·상영시간·가격은 표시하지 않음.",
+  "megabox": "B1 메가박스 입구는 cc_famille24의 짙은 목재 포털·크림 석재 아치·청록 MEGABOX와 파란 포스터 일부를 재현. 미확인8관/리클라이너/단차/매점·매표소 평면은 제거; 안쪽은 평범하게 남김.",
   "reference_implementation": {
    "gate_plaza": "cc_01/01: 불투명 원판+크림C+금색중심, 0.75 민트 입체랜턴·경사지붕10.2..10.6 m, 전폭 검은 파시아/후퇴한 어두운 문, 스팬드럴. cc_01: 전방8 m 간격 구체(중앙 청동)·확장 화강석·검은난간·U자 거치대·볼라드·남색 안내판.",
-   "hall": "02/07: 일대일 붉은 승차홈 숫자·LED 화면·상부 유리, 8.5m 밝은 금속 볼트·흰 쌍관 곡선 트러스·주두와 업라이트·대리석·금속 좌석. 08: E3 유리 난간/스테인리스/대리석.",
-   "b1": "05: t13..22 좁은 체크 바닥 상가·양측 쇼윈도/대리석 필라스터·뾰족 리브와 대각 리브·연속 중앙 조명; 타일 평천장 제거.",
+   "hall": "Round5 cc_hall01–21: 흰 강관 트러스/회색 패널, 대리석 기둥, 흑백 다이아몬드/띠 바닥, 붉은 아치 게이트의 번호 LED/시계, 우드톤 TICKETS 카운터, 벤치/큰 화분·작은 점포,2F 유리 난간.",
+   "b1": "Round5 cc_famille22–24: 폭9 m 크림 대리석·검은 띠 연결통로, 짙은 대리석/목재 전면, 금장 코퍼와 발광 패널, 청록 MEGABOX 목재 포털. 이전2009 체크 바닥/뾰족 리브 볼트 해석을 대체.",
    "round_south": "11: 가파른16각 두 단 녹청색 지붕·넓은r4.6 랜턴·22.6 m 캡; 남측0.6 m 회색 석재 줄눈·4.5 m 간격 큰 어두운 창·창 위 흰 CENTRAL CITY.",
    "parking": "항공사진/OSM: 밝은 콘크리트 데크와 회색 통로·흰 구획·층당14대 희박한 차 배치·타워55% 점유/둥근 경계 연석·옥상 연결교.",
    "fleet_shelter": "항공사진/03/09: 흰색·아이보리 고속버스와 운수사 띠, 소수 짙은 프리미엄/적백 관광버스;09 곡면 캐노피·V자 지지·스테인리스 난간/쌍등.",
@@ -379,24 +415,14 @@
    "forecourt_pavilion": "cc_01 우측/cc_02 좌측/항공: 별도18×7.5 m 금속기단·녹색유리·흰 곡면지붕. 고투몰 현 exit/groundHole와 중복 없음. 미확인 지하 목적지로 연결하지 않고 보이는 계단만 구현.",
    "north_canopy_bridge": "cc_02/09:40 m 반투명 곡면지붕·흰 경사 지지대. cc_01:파빌리온 뒤8..10 m 수목열. OSM 모듈 소유 연결교0.65 m 슬래브/직경0.6 m 기둥. 별도 city 자동생성15 m 보행교는 범위밖.",
    "yard_surface": "항공사진: 중간회색 지면. 승차홈 앞/회차로/YARD 모두 concrete+#9a9890, 흰색·노란색 구획 유지.",
-   "hall_plain_closure": "critic hn_hall_w: 확인 안 된 방 전면만 s108..119/t28 평벽으로 마감, J6 통로 개방 유지."
+   "hall_plain_closure": "critic hn_hall_w: 확인 안 된 방 전면만 s108..119/t28 평벽으로 마감, J6 통로 개방 유지.",
+   "famille_1f": "Round5 cc_famille01–21: 1F 남측 실내 거리, 점포별 크림 아치/벽돌/흰 벽돌/검은 철제 유리 전면과 실제 사진에 나온 내부 재료·가구. 연회색 타일과 높은 밝은 채광 천장. 실제 점포 순서/좌표는 추정."
   },
   "validation": {
-   "status": "Round4 smoke, full-world walk, six local routes and independent geometry review passed; fresh rendered review not available",
+   "status": "Round5 required combined smoke and full-world walk passed; operator render review pending",
    "smoke_command": "node tests/smoke.mjs centralcity shinsegae jwmarriott station gotomall",
-   "smoke_result": "OK",
    "walk_command": "node tests/walk.mjs",
-   "budget_quads": 130000,
-   "centralcity_quads": 109289,
-   "spawns": 12,
-   "zones": 32,
-   "elevators": 5,
-   "floors": [
-    "B1",
-    "1F",
-    "2F",
-    "R"
-   ],
+   "budget_quads": 140000,
    "preserved_connections": [
     "J3",
     "J4 1F/B1",
@@ -404,29 +430,47 @@
     "J7"
    ],
    "wells": "No WELLS entry names centralcity.",
-   "visual_review": "Provided reference/critic PNGs inspected. tests/shot.mjs not run per user sandbox limitation; new render and exact RGB sampling not performed.",
+   "visual_review": "Provided individual photos inspected; tests/shot.mjs not run per user sandbox restriction. Operator render comparison pending.",
+   "centralcity_smoke_command": "node tests/smoke.mjs centralcity",
+   "centralcity_smoke_result": "OK",
+   "centralcity_quads": 72931,
+   "spawns": 12,
+   "zones": 33,
+   "elevators": 5,
+   "floors": [
+    "B1",
+    "1F",
+    "2F",
+    "R"
+   ],
+   "metrics_note": "부모가 전달한 통합 전 수치. 최종 홀 수정/연결검사 후 변경 가능.",
+   "centralcity_walk_command": "node tests/walk.mjs centralcity --no-city",
+   "centralcity_walk_result": "29 ok, 0 blocked",
    "additional_routes": {
-    "method": "Existing tests/walk.mjs BFS reused in memory with centralcity + four neighbours + city; no test files written",
+    "method": "Existing walk BFS evaluated in memory; no test files edited",
+    "result": "All checked routes passed",
     "passed": [
-     "도로 횡단부→구체 사이→정문→홀",
-     "광장 동서 횡단",
-     "파빌리온 계단 하강",
-     "파빌리온 계단→광장 복귀",
-     "9 m 옥상 연결교 통과",
-     "닫은 빈 점포 옆 J6 통로"
+     "J3",
+     "J4 1F/B1",
+     "J6",
+     "J7",
+     "1F street end-to-end",
+     "All seven restaurant entrances",
+     "B1 hall to relocated Megabox entrance and vestibule",
+     "2F gallery to both stair cores and elevator",
+     "E1/E2/E4/E5 escalator ascents"
     ],
-    "result": "6 ok, 0 blocked"
+    "headroom": "E1/E2/E4/E5 sampled; no ceiling intersections. Modern glasshouse trusses moved inside floor void."
    },
-   "geometry_review": {
-    "method": "Independent review plus real-kit THREE raycasts; no rendered screenshots",
-    "emblem": "cc01 관측점에서 C 좌측/상단은 #e8e4d6, 중심은 #7d6d3a, 오른쪽 개구/테두리는 #262c2a가 첫 교차면. 유리/멀리언은 원판 뒤 최소0.32 m.",
-    "glass": "정문 랜턴/신규 파빌리온은 면당 단일 유리 quad로 변경하여 투명벽 중복 합성 방지.",
-    "pavilion": "곡선 박공 유리와 지붕 높이까지 닫힌 금속 처마판; 계단/홀/하단 마감 일치.",
-    "yard": "샘플(-140,40),(-200,90)에 추가 OSM 도로 중첩 없음; 주차영역1173096801 claim 유지.",
-    "claims": "claims/claimRoads/claimAreas lists unchanged"
-   },
-   "walk_result": "walk: 318 ok, 0 blocked",
-   "concurrent_edit_note": "다른 모듈 동시 편집 중. 최종 전체 walk의318건 모두 통과; 이전320건 결과보다 검사 수가 달라졌지만 blocked는0. centralcity의12 spawns/32 zones/5 elevators 및 claims는 유지."
+   "smoke_result": "OK",
+   "walk_result": "walk: 330 ok, 0 blocked",
+   "concurrent_edit_note": "중간 검사에서 jwmarriott ATRIUM 미정의 및 gotomall/J1 경로 실패가 있었으나 다른 모듈 편집 완료 후 요청된 동일 명령을 재실행하여 smoke OK, 전체 walk330 ok/0 blocked 확인. 타 모듈/엔진/테스트는 수정하지 않음.",
+   "geometry_scope": "Only js/places/centralcity.js and data/research/centralcity.json edited. Claims and exterior envelope/roof/parking/round pavilion geometry preserved. 12 spawns; all five elevators and floor lists retained; J3/J4(1F,B1)/J6/J7 and all floors preserved.",
+   "final_checks": [
+    "node --check js/places/centralcity.js: passed",
+    "Research JSON parse: passed",
+    "git diff --check on both owned files: passed"
+   ]
   },
   "round2_issues": {
    "1–2": "사진01: 독립13m 파일런·6.6m 순폭·6m 날개/열린 상부·반원통 지붕·4.9x2.7 간판·금속 필라스터·4짝 유리문·확대 눈 조형.",
@@ -443,7 +487,7 @@
    "14": "사진03:북서측 은색 캐노피/청록 루버/흰 루버탑/분홍 기단/센트럴 표기/B1 출입. 정확한 위치 추정.",
    "15": "사진02/07:광택 대리석6m 격자·검은 금속 좌석/크롬 다리·붉은 문틀 위 투명 유리.",
    "16": "항공사진/리뷰 해석:서측 y5.6..7.6 수평창3.6m 베이·석재 멀리언·큰 터미널 글자.",
-   "status": "라운드2 기록. 북측 정문·광장(1–2/11)은 round3/reference_implementation의2026 cc_01 내용으로 대체; 나머지 보존."
+   "status": "라운드2 과거 기록. 북측 외관은round3/4로, 내부 홀/B1/파미에 해석은round5로 대체. 과거 B1 볼트/체크 바닥 기술은 현재 실내 설계에 적용하지 않음."
   },
   "round3": {
    "reference_date": "2026-06",
@@ -537,19 +581,636 @@
      "owner": "generic city building",
      "issue": "cc_02 tan/LED block belongs to 르본시티, outside centralcity"
     }
-   ]
+   ],
+   "validation": {
+    "status": "Round4 smoke, full-world walk, six local routes and independent geometry review passed; fresh rendered review not available",
+    "smoke_command": "node tests/smoke.mjs centralcity shinsegae jwmarriott station gotomall",
+    "smoke_result": "OK",
+    "walk_command": "node tests/walk.mjs",
+    "budget_quads": 130000,
+    "centralcity_quads": 109289,
+    "spawns": 12,
+    "zones": 32,
+    "elevators": 5,
+    "floors": [
+     "B1",
+     "1F",
+     "2F",
+     "R"
+    ],
+    "preserved_connections": [
+     "J3",
+     "J4 1F/B1",
+     "J6",
+     "J7"
+    ],
+    "wells": "No WELLS entry names centralcity.",
+    "visual_review": "Provided reference/critic PNGs inspected. tests/shot.mjs not run per user sandbox limitation; new render and exact RGB sampling not performed.",
+    "additional_routes": {
+     "method": "Existing tests/walk.mjs BFS reused in memory with centralcity + four neighbours + city; no test files written",
+     "passed": [
+      "도로 횡단부→구체 사이→정문→홀",
+      "광장 동서 횡단",
+      "파빌리온 계단 하강",
+      "파빌리온 계단→광장 복귀",
+      "9 m 옥상 연결교 통과",
+      "닫은 빈 점포 옆 J6 통로"
+     ],
+     "result": "6 ok, 0 blocked"
+    },
+    "geometry_review": {
+     "method": "Independent review plus real-kit THREE raycasts; no rendered screenshots",
+     "emblem": "cc01 관측점에서 C 좌측/상단은 #e8e4d6, 중심은 #7d6d3a, 오른쪽 개구/테두리는 #262c2a가 첫 교차면. 유리/멀리언은 원판 뒤 최소0.32 m.",
+     "glass": "정문 랜턴/신규 파빌리온은 면당 단일 유리 quad로 변경하여 투명벽 중복 합성 방지.",
+     "pavilion": "곡선 박공 유리와 지붕 높이까지 닫힌 금속 처마판; 계단/홀/하단 마감 일치.",
+     "yard": "샘플(-140,40),(-200,90)에 추가 OSM 도로 중첩 없음; 주차영역1173096801 claim 유지.",
+     "claims": "claims/claimRoads/claimAreas lists unchanged"
+    },
+    "walk_result": "walk: 318 ok, 0 blocked",
+    "concurrent_edit_note": "다른 모듈 동시 편집 중. 최종 전체 walk의318건 모두 통과; 이전320건 결과보다 검사 수가 달라졌지만 blocked는0. centralcity의12 spawns/32 zones/5 elevators 및 claims는 유지."
+   }
+  },
+  "round5": {
+   "reference_date": "제공된2026-03-19..2026-11-06 블로그 게시물; 촬영일은 미확인",
+   "scope": "호남선 홀·승차홈·하차장/벽돌 통로,1F 파미에스테이션, B1 연결통로와 메가박스 입구",
+   "floor_correction": "파미에스테이션 식당가는1F (일상정원 FP103호 등). B1은 신세계↔메가박스↔지하철 연결통로.",
+   "preserved": [
+    "OSM claims/claimRoads/claimAreas",
+    "외관·야드·옥상 주차장·원형관 지붕",
+    "B1=-6/1F=0/2F=5/R=9 및 원형관 기존층",
+    "J3/J4(1F/B1)/J6/J7 좌표·레벨",
+    "전체층 엘리베이터·계단/에스컬레이터"
+   ],
+   "photo_notes": [
+    {
+     "file": "refs/interior/cc_hall/01_red_kiosk_aisle_platform_edge.jpg",
+     "post_url": "https://blog.naver.com/01117794018/224436617373",
+     "post_date": "2026-10-10",
+     "where": "1F 승차홈 쪽 통로, 승차홈 번호 표지 아래",
+     "observed": "회색 금속 패널 천장+평행 라이트바, 우측 붉은 칸막이 매표/키오스크 부스(유리 미닫이), 승차홈 번호판(파랑 바탕 흰 숫자 11) 천장 매달림, 바닥 연회색 대리석 타일",
+     "use": "호남선 터미널 홀·승차홈·하차장/벽돌 연결통로"
+    },
+    {
+     "file": "refs/interior/cc_hall/02_green_neon_hall_shopfront.jpg",
+     "post_url": "https://blog.naver.com/01117794018/224436617373",
+     "post_date": "2026-10-10",
+     "where": "1F 홀 상가 앞",
+     "observed": "상점 처마에 초록/붉은 네온 띠 조명, 천장 짙은 회색 패널, 바닥 밝은 대리석, 기둥 붉은 패널, 승객 중간 밀도",
+     "use": "호남선 터미널 홀·승차홈·하차장/벽돌 연결통로"
+    },
+    {
+     "file": "refs/interior/cc_hall/03_gongtang_sign_departure_board.jpg",
+     "post_url": "https://blog.naver.com/01117794018/224436617373",
+     "post_date": "2026-10-10",
+     "where": "1F 중앙홀 상가 위 전광판",
+     "observed": "상가 상단 검은 간판(흰 글씨 점점심, 붉은 띠 공탕), 그 위 파란 전광 시간표, 흰 대리석 기둥",
+     "use": "호남선 터미널 홀·승차홈·하차장/벽돌 연결통로"
+    },
+    {
+     "file": "refs/interior/cc_hall/04_upper_corridor_neon_balcony.jpg",
+     "post_url": "https://blog.naver.com/01117794018/224436617373",
+     "post_date": "2026-10-10",
+     "where": "2F 발코니 복도(유리 난간) 아래서 올려봄",
+     "observed": "흰 유리 난간 발코니, 흰 띠 간판에 검은 화살표 안내문, 아래 상가 초록/붉은 네온 처마, 천장 어두운 회색",
+     "use": "호남선 터미널 홀·승차홈·하차장/벽돌 연결통로"
+    },
+    {
+     "file": "refs/interior/cc_hall/05_hall_seating_gate13_truss.jpg",
+     "post_url": "https://blog.naver.com/01117794018/224436617373",
+     "post_date": "2026-10-10",
+     "where": "1F 홀 승차홈 13 앞 벤치 구역",
+     "observed": "흰 강관 트러스 천장+회색 천장판, 붉은 승차홈 13 게이트 아치, 화분 식재, 붉은 벤치/긴 의자에 승객 앉음",
+     "use": "호남선 터미널 홀·승차홈·하차장/벽돌 연결통로"
+    },
+    {
+     "file": "refs/interior/cc_hall/06_central_hall_wide_marble.jpg",
+     "post_url": "https://blog.naver.com/01117794018/224436617373",
+     "post_date": "2026-10-10",
+     "where": "1F 중앙홀 전경",
+     "observed": "트러스 천장, 흑백 마름모 문양 섞인 대리석 바닥, 키 큰 화분, 상가 줄지어 있음",
+     "use": "호남선 터미널 홀·승차홈·하차장/벽돌 연결통로"
+    },
+    {
+     "file": "refs/interior/cc_hall/07_marble_column_signage.jpg",
+     "post_url": "https://blog.naver.com/01117794018/224436617373",
+     "post_date": "2026-10-10",
+     "where": "홀 기둥 앞",
+     "observed": "흰 대리석 기둥(각진 단면), 기둥에 검은 판 흰 글씨 안내(화살표+텍스트)사인, 바닥 연한 대리석",
+     "use": "호남선 터미널 홀·승차홈·하차장/벽돌 연결통로"
+    },
+    {
+     "file": "refs/interior/cc_hall/08_ticket_counter.jpg",
+     "post_url": "https://blog.naver.com/01117794018/224436617373",
+     "post_date": "2026-10-10",
+     "where": "1F 매표소(TICKETS 호남선)",
+     "observed": "매표 카운터: 벽 상단 TICKETS 로고(원형 아이콘+흰 글씨), 양쪽 전광판, 중앙 대형 LED 영상, 카운터 상판 검은색+나무 톤 배경, 앞 줄서기 포스트, 바닥 흑백 마름모 문양 대리석",
+     "use": "호남선 터미널 홀·승차홈·하차장/벽돌 연결통로"
+    },
+    {
+     "file": "refs/interior/cc_hall/09_crowded_hall_truss.jpg",
+     "post_url": "https://blog.naver.com/01117794018/224436617373",
+     "post_date": "2026-10-10",
+     "where": "1F 홀 통로, 인파 밀집",
+     "observed": "트러스 천장 아래 승객들 이동, 바닥 연회색 대리석에 어두운 줄무늬, 멀리 상가 간판들",
+     "use": "호남선 터미널 홀·승차홈·하차장/벽돌 연결통로"
+    },
+    {
+     "file": "refs/interior/cc_hall/11_long_corridor_clocks.jpg",
+     "post_url": "https://blog.naver.com/donmany0/224383754659",
+     "post_date": "2026-08-20",
+     "where": "1F 승차홈 쪽 긴 복도",
+     "observed": "끝이 소실점으로 보이는 긴 복도, 천장 중앙 흰 패널 라인, 벽 벽시계, 바닥 회색 석재",
+     "use": "호남선 터미널 홀·승차홈·하차장/벽돌 연결통로"
+    },
+    {
+     "file": "refs/interior/cc_hall/12_column_curved_wall_sign.jpg",
+     "post_url": "https://blog.naver.com/donmany0/224383754659",
+     "post_date": "2026-08-20",
+     "where": "하차장/복도 코너",
+     "observed": "곡면 어두운 벽, 흰 대리석 기둥, 검은 사인판 흰 글씨",
+     "use": "호남선 터미널 홀·승차홈·하차장/벽돌 연결통로"
+    },
+    {
+     "file": "refs/interior/cc_hall/13_gate1_red_arch.jpg",
+     "post_url": "https://blog.naver.com/donmany0/224383754659",
+     "post_date": "2026-08-20",
+     "where": "1F 승차홈 1 게이트",
+     "observed": "붉은 아치 게이트 위 시계+LED 사인(승차홈 1), 흰 유리문",
+     "use": "호남선 터미널 홀·승차홈·하차장/벽돌 연결통로"
+    },
+    {
+     "file": "refs/interior/cc_hall/14_gate11_red_arch_hall.jpg",
+     "post_url": "https://blog.naver.com/divb12/224336762972",
+     "post_date": "2026-07-05",
+     "where": "1F 승차홈 11 게이트",
+     "observed": "붉은 아치 게이트+대형 LED, 화분, 인파, 둥근 가로등형 조명",
+     "use": "호남선 터미널 홀·승차홈·하차장/벽돌 연결통로"
+    },
+    {
+     "file": "refs/interior/cc_hall/15_long_hall_benches_planters.jpg",
+     "post_url": "https://blog.naver.com/divb12/224336762972",
+     "post_date": "2026-07-05",
+     "where": "1F 홀 긴 통로",
+     "observed": "좌우 붉은 상가/게이트, 화분 벤치(돌), 노란 점자 블록 길, 트러스 천장 스카이라이트",
+     "use": "호남선 터미널 홀·승차홈·하차장/벽돌 연결통로"
+    },
+    {
+     "file": "refs/interior/cc_hall/16_ticket_counter_wide.jpg",
+     "post_url": "https://blog.naver.com/divb12/224336762972",
+     "post_date": "2026-07-05",
+     "where": "1F 매표소 와이드",
+     "observed": "TICKETS 카운터 전경, 나무 톤 카운터와 상단 LED, 노란 점자블록, 바닥 흑백 문양",
+     "use": "호남선 터미널 홀·승차홈·하차장/벽돌 연결통로"
+    },
+    {
+     "file": "refs/interior/cc_hall/17_brick_corridor_shops.jpg",
+     "post_url": "https://blog.naver.com/vending26/224421331837",
+     "post_date": "2026-09-23",
+     "where": "호남선 내 벽돌 복도",
+     "observed": "붉은 벽돌 기둥+아치형 문, 천장 흰색, 화분, 연한 바닥 타일, 천장에 매달린 세로 배너",
+     "use": "호남선 터미널 홀·승차홈·하차장/벽돌 연결통로"
+    },
+    {
+     "file": "refs/interior/cc_hall/18_platform_sign_escalator.jpg",
+     "post_url": "https://blog.naver.com/vending26/224421331837",
+     "post_date": "2026-09-23",
+     "where": "승차홈 진입 에스컬레이터 앞",
+     "observed": "갈색 사인(승차홈 번호 방향 화살표), 흰 벽, 에스컬레이터",
+     "use": "호남선 터미널 홀·승차홈·하차장/벽돌 연결통로"
+    },
+    {
+     "file": "refs/interior/cc_hall/19_dropoff_info_board.jpg",
+     "post_url": "https://blog.naver.com/justguri/224222672979",
+     "post_date": "2026-03-19",
+     "where": "하차장 안내판",
+     "observed": "붉은 기둥에 '현재 위치 하차장' 안내판, 흰 바탕 지도, 하차장 입구",
+     "use": "호남선 터미널 홀·승차홈·하차장/벽돌 연결통로"
+    },
+    {
+     "file": "refs/interior/cc_hall/20_brick_corridor_lower.jpg",
+     "post_url": "https://blog.naver.com/justguri/224222672979",
+     "post_date": "2026-03-19",
+     "where": "지하 쪽 통로",
+     "observed": "벽돌 벽+노란 점자블록, 흰 천장 매입등, 상가 유리 입구",
+     "use": "호남선 터미널 홀·승차홈·하차장/벽돌 연결통로"
+    },
+    {
+     "file": "refs/interior/cc_hall/21_lobby_hall_wide.jpg",
+     "post_url": "https://blog.naver.com/justguri/224222672979",
+     "post_date": "2026-03-19",
+     "where": "로비 홀",
+     "observed": "대리석 기둥, 흰 천장, 넓은 대리석 바닥, 대나무 화분 벽",
+     "use": "호남선 터미널 홀·승차홈·하차장/벽돌 연결통로"
+    },
+    {
+     "file": "refs/interior/cc_famille/01_hoho_entrance_queue_hall_skylight.jpg",
+     "post_url": "https://blog.naver.com/hiroaya/224466818745",
+     "post_date": "2026-11-06",
+     "where": "1F, Famille Station near the bus-arrival side; hoho entrance facing the open atrium",
+     "observed": "Ivory/cream stone-look pillars and walls, broad low stair steps in front of the shop, glass storefront with dark fascia, large LED board and skylight panels in a pale ceiling; queue of ~6 people at the door. Large open volume, ceiling clearly 5m+.",
+     "use": "1F 파미에스테이션/인접 점포"
+    },
+    {
+     "file": "refs/interior/cc_famille/02_hoho_sign_slat_ceiling_from_outside.jpg",
+     "post_url": "https://blog.naver.com/hiroaya/224466818745",
+     "post_date": "2026-11-06",
+     "where": "1F Famille Station, hoho (호호식당) glass front",
+     "observed": "Frameless full-height glass, rounded yellow square logo \"hoho\" (lowercase rounded sans, brown line-art smile) hung at about 2.2m. Inside: warm timber slat ceiling with recessed white light panels, light-wood chairs, potted tree.",
+     "use": "1F 파미에스테이션/인접 점포"
+    },
+    {
+     "file": "refs/interior/cc_famille/03_hoho_wide_wood_slat_ceiling.jpg",
+     "post_url": "https://blog.naver.com/hiroaya/224466818745",
+     "post_date": "2026-11-06",
+     "where": "1F Famille Station, inside hoho",
+     "observed": "Wide interior: ceiling of narrow timber battens on cream plaster, cove/indirect light, light oak square tables and slat-back chairs, indoor trees, order tablets; ceiling ~3.5-4m. Dense seating, nearly full.",
+     "use": "1F 파미에스테이션/인접 점포"
+    },
+    {
+     "file": "refs/interior/cc_famille/04_hoho_dark_fascia_signage.jpg",
+     "post_url": "https://blog.naver.com/emerjeoncy/224466385953",
+     "post_date": "2026-11-05/06",
+     "where": "1F Famille Station, hoho exterior fascia",
+     "observed": "Dark bronze/brown metal fascia with backlit cream-white Korean characters \"호호식당\" in a soft serif-like Myeongjo style, small English line at right; fascia ~0.7m high, mounted at ~3m above a glass front. Behind it cream arched-window facade (classical, European street feel).",
+     "use": "1F 파미에스테이션/인접 점포"
+    },
+    {
+     "file": "refs/interior/cc_famille/05_chaR_front_aisle_checker_floor.jpg",
+     "post_url": "https://blog.naver.com/rina616/224466824189",
+     "post_date": "2026-11-06",
+     "where": "1F Famille Station, Cha R (차알) frontage on the aisle",
+     "observed": "Aisle floor in light grey rectangular porcelain tile (stretcher bond), storefront with black steel frame and blue neon \"Cha R\" sign, brick pier at right, interior floor black/white checkerboard, orange timber bench outside. Low black ceiling grid with spot rails.",
+     "use": "1F 파미에스테이션/인접 점포"
+    },
+    {
+     "file": "refs/interior/cc_famille/06_famille_station_brick_sign.jpg",
+     "post_url": "https://blog.naver.com/rina616/224466824189",
+     "post_date": "2026-11-06",
+     "where": "1F Famille Station entry wall",
+     "observed": "Exposed warm brown/orange brick wall, small dark plaque \"FAMILLE STATION\" (serif caps with ornament) with pink neon script \"Here To Delight You!\" above; floor charcoal tile; dark ceiling. Sign plaque ~0.5m wide at about 1.7m height.",
+     "use": "1F 파미에스테이션/인접 점포"
+    },
+    {
+     "file": "refs/interior/cc_famille/07_chaR_booths_red_green.jpg",
+     "post_url": "https://blog.naver.com/rina616/224466824189",
+     "post_date": "2026-11-06",
+     "where": "Cha R interior",
+     "observed": "Red leatherette booths with turquoise trim, mustard-yellow walls, green window frames, recessed downlights in white ceiling; American-Chinese diner look (restaurant-specific).",
+     "use": "1F 파미에스테이션/인접 점포"
+    },
+    {
+     "file": "refs/interior/cc_famille/08_chaR_interior_wide.jpg",
+     "post_url": "https://blog.naver.com/rina616/224466824189",
+     "post_date": "2026-11-06",
+     "where": "Cha R interior",
+     "observed": "Black/white checkerboard floor, bentwood chairs, steel-grey tables, mustard yellow wall, glazed timber partition with green mullions, round framed pictures, ceiling ~3m with downlights and AC cassette.",
+     "use": "1F 파미에스테이션/인접 점포"
+    },
+    {
+     "file": "refs/interior/cc_famille/09_buddhas_belly_front_brick.jpg",
+     "post_url": "https://blog.naver.com/pessoa0605/224465065386",
+     "post_date": "2026-11-04",
+     "where": "1F Famille Station, Buddha's Belly storefront (street-like frontage)",
+     "observed": "Brick-clad frontage (orange-red brick piers), dark open-front shop with backlit blue sign \"BUDDHA'S BELLY\" white caps in a flared serif; queue of 4 people; ceiling above sign soffit pale. Ground tile warm beige stone.",
+     "use": "1F 파미에스테이션/인접 점포"
+    },
+    {
+     "file": "refs/interior/cc_famille/10_buddhas_belly_interior_wide.jpg",
+     "post_url": "https://blog.naver.com/pessoa0605/224465065386",
+     "post_date": "2026-11-04",
+     "where": "Buddha's Belly interior",
+     "observed": "Charcoal slate tile floor, dark feature wall with pattern, timber and navy-velvet chairs, wooden tables, timber-panel ceiling with recessed spots and a ~3m height; crowded.",
+     "use": "1F 파미에스테이션/인접 점포"
+    },
+    {
+     "file": "refs/interior/cc_famille/11_brick_terrace_plants.jpg",
+     "post_url": "https://blog.naver.com/pessoa0605/224465065386",
+     "post_date": "2026-11-04",
+     "where": "1F Famille Station, outdoor-style terrace seating beside Buddha's Belly",
+     "observed": "Tall brick piers, big round planters with ficus trees, black metal bistro chairs/tables, queue stanchion. Reads as an indoor \"street\" with building facades (not a concourse).",
+     "use": "1F 파미에스테이션/인접 점포"
+    },
+    {
+     "file": "refs/interior/cc_famille/12_ilsangjungwon_front.jpg",
+     "post_url": "https://blog.naver.com/qkralfl2020/224465702949",
+     "post_date": "2026-11-05",
+     "where": "1F Famille Station FP103, 일상정원 front",
+     "observed": "Salmon/peach beige wall panels, black fascia with white round logo + \"일상정원\" in white sans (bold geometric), flat TV menu board, double glass doors with orange wood frames, queue stanchion & wood bench. Fascia ~2.8m high.",
+     "use": "1F 파미에스테이션/인접 점포"
+    },
+    {
+     "file": "refs/interior/cc_famille/13_ilsangjungwon_wide_water_channel.jpg",
+     "post_url": "https://blog.naver.com/qkralfl2020/224465702949",
+     "post_date": "2026-11-05",
+     "where": "Inside 일상정원",
+     "observed": "Very wide shot: central water channel with stones and green lotus-leaf props, timber counter seating on both sides, white cove-lit ceiling edges, tall plants, light timber lattice at far wall; ceiling ~4m.",
+     "use": "1F 파미에스테이션/인접 점포"
+    },
+    {
+     "file": "refs/interior/cc_famille/14_ilsangjungwon_long_hall_cove_light.jpg",
+     "post_url": "https://blog.naver.com/qkralfl2020/224465702949",
+     "post_date": "2026-11-05",
+     "where": "Inside 일상정원, side hall",
+     "observed": "Long narrow hall, light porcelain floor, cream booth sofas, cyan/white LED cove lighting along ceiling edges, round downlights; shows ceiling height ~3m and a ~2m aisle.",
+     "use": "1F 파미에스테이션/인접 점포"
+    },
+    {
+     "file": "refs/interior/cc_famille/15_modern_nulang_brick_arch_entrance.jpg",
+     "post_url": "https://blog.naver.com/dentist_baek/224466286025",
+     "post_date": "2026-11-05/06",
+     "where": "1F Famille Station, 모던눌랑 entrance",
+     "observed": "Whitewashed/grey brick facade with grid black-steel windows above, brick arch opening with wood-and-glass door, black stone paving at doorstep, vertical digital signage kiosk; European train-station/greenhouse styling.",
+     "use": "1F 파미에스테이션/인접 점포"
+    },
+    {
+     "file": "refs/interior/cc_famille/16_modern_nulang_glass_roof_train_theme.jpg",
+     "post_url": "https://blog.naver.com/dentist_baek/224466286025",
+     "post_date": "2026-11-05/06",
+     "where": "Inside 모던눌랑 (glass-roofed hall)",
+     "observed": "Steel-truss glass roof with skylights, exposed pipe/ducts, amber pendant lamps, a railway-carriage-shaped booth in navy and mahogany with brass trim, dark grey slate floor, black chairs. Ceiling 6m+.",
+     "use": "1F 파미에스테이션/인접 점포"
+    },
+    {
+     "file": "refs/interior/cc_famille/17_modern_nulang_truss_pendants.jpg",
+     "post_url": "https://blog.naver.com/dentist_baek/224466286025",
+     "post_date": "2026-11-05/06",
+     "where": "Inside 모던눌랑",
+     "observed": "Tall steel columns and trusses, big glazed wall with grid mullions, copper/amber cone pendants, dark floor, black chairs with timber tables, mint green steel shelving unit.",
+     "use": "1F 파미에스테이션/인접 점포"
+    },
+    {
+     "file": "refs/interior/cc_famille/18_agra_entrance_brick_arch.jpg",
+     "post_url": "https://blog.naver.com/mattias7/224446286938",
+     "post_date": "2026-10-19",
+     "where": "1F Famille Station, Agra storefront",
+     "observed": "Blue backlit sign \"Agra\" (white script/serif with round logo) over black fascia, orange brick piers both sides, white arched glass doors, terrazzo-speckled floor at entrance, A-frame menu stands.",
+     "use": "1F 파미에스테이션/인접 점포"
+    },
+    {
+     "file": "refs/interior/cc_famille/19_agra_interior_arches.jpg",
+     "post_url": "https://blog.naver.com/mattias7/224446286938",
+     "post_date": "2026-10-19",
+     "where": "Inside Agra",
+     "observed": "White plaster arched wall niches with cove light, cream tufted banquettes, dark timber tables with copper pots, speckled stone floor; ceiling ~3m.",
+     "use": "1F 파미에스테이션/인접 점포"
+    },
+    {
+     "file": "refs/interior/cc_famille/20_lejardin_storefront.jpg",
+     "post_url": "https://blog.naver.com/mattias7/224466753309",
+     "post_date": "2026-11-06",
+     "where": "Centralcity retail floor (Le Jardin florist, near Famille Station)",
+     "observed": "White backlit capital serif sign \"LEJARDIN\", cream classical fluted pilaster/column at right, three lit Christmas trees on pale marble floor, black glass cooler front.",
+     "use": "1F 파미에스테이션/인접 점포"
+    },
+    {
+     "file": "refs/interior/cc_famille/21_lejardin_aisle_white_tile.jpg",
+     "post_url": "https://blog.naver.com/mattias7/224466753309",
+     "post_date": "2026-11-06",
+     "where": "Le Jardin interior/aisle",
+     "observed": "White glossy large-format tile floor with warm LED strip at base of fixtures, black-framed glass flower coolers, planted displays, ceiling ~3m with spots.",
+     "use": "1F 파미에스테이션/인접 점포"
+    },
+    {
+     "file": "refs/interior/cc_famille/22_shinsegae_entrance_to_central_glass_doors.jpg",
+     "post_url": "https://blog.naver.com/tcggogo/224452177231",
+     "post_date": "2026-11-05",
+     "where": "Underground link from subway toward Shinsegae/CentralCity (Gate 5-ish)",
+     "observed": "Black-framed glass revolving/sliding doors with \"SHINSEGAE\" red logo & gate number, grey stone-effect floor tile, dark marble wall, glass+steel stair rail at right, short-run yellow tactile strip.",
+     "use": "B1 신세계·지하철 연결통로/메가박스 입구"
+    },
+    {
+     "file": "refs/interior/cc_famille/23_underground_corridor_coffered_ceiling.jpg",
+     "post_url": "https://blog.naver.com/tcggogo/224452177231",
+     "post_date": "2026-11-05",
+     "where": "Inside Shinsegae/CentralCity link corridor towards Megabox",
+     "observed": "Wide corridor: polished cream/white marble floor with dark border bands, dark grey-black marble wall cladding and brown timber-framed shop fronts, coffered ceiling with illuminated frosted panel in gold-trimmed cornice, ~4m high, corridor ~8-10m wide, small kiosks/counters on right, wayfinding signs hung from ceiling.",
+     "use": "B1 신세계·지하철 연결통로/메가박스 입구"
+    },
+    {
+     "file": "refs/interior/cc_famille/24_megabox_central_entrance.jpg",
+     "post_url": "https://blog.naver.com/tcggogo/224452177231",
+     "post_date": "2026-11-05",
+     "where": "Megabox Central entrance (blue neon MEGABOX sign)",
+     "observed": "Cyan backlit \"MEGABOX\" block letters (squared, geometric sans) on a dark-brown timber portal, cream stone pilaster on the left, diagonal LED lines in ceiling, dark open lobby with blue-lit poster displays and a ticket gate. Old-style (pre-2025 refit may differ).",
+     "use": "B1 신세계·지하철 연결통로/메가박스 입구"
+    },
+    {
+     "file": "refs/interior/cc_famille/26_modern_shabu_window_hall.jpg",
+     "post_url": "https://blog.naver.com/o_songe/224459874246",
+     "post_date": "2026-10-31",
+     "where": "Upper-floor restaurant (모던샤브하우스 센트럴시티) with window to Banpo-daero/Express Bus Terminal side",
+     "observed": "Curved wave-shaped cove-lit ceiling with recessed spots, floor-to-ceiling mullioned glass wall, round pillars, beige banquettes with timber screens, stone-grey floor. Ceiling ~3.5m. Useful for upper-floor restaurant feel (blog says 2-?F; exact floor unconfirmed).",
+     "use": "층 불명 상층 식당 분위기 참고만; 실측 층 배치 근거 아님"
+    }
+   ],
+   "filename_note": "cc_hall notes.json의10 이후 번호는 실제 jpg 파일보다1 작음. 여기서는 suffix로 대조한 실제 파일명/첨부 contact sheet 번호를 기록.",
+   "visual_review": "선정 개별 참조사진을 직접 열어 재료/표기 확인. 사용자 지시에 따라 tests/shot.mjs 미실행, 수정 모델 렌더 비교는 운영자 담당.",
+   "modeled_layout": {
+    "coordinate_frame": "기존 로컬s/t 좌표. 위치/경계는 실측이 아니라 사진의 각 공간을 기존OSM 접지와 연결에 맞춘 추정 배치.",
+    "famille_street": {
+     "floor": "1F",
+     "y": 0,
+     "s": [
+      181.2,
+      188.8
+     ],
+     "t": [
+      -85,
+      15
+     ],
+     "ceiling_y": 6.2,
+     "floor_finish": "0.6×0.3 m급 밝은 회색 직사각 타일",
+     "two_floor_voids": "2F의t=-85..-26 및-16..15를 열고 t=-26..-16 연결부분 유지."
+    },
+    "south_gallery": {
+     "floor": "2F",
+     "y": 5,
+     "s": [
+      188.8,
+      192
+     ],
+     "note": "기존2F와 계단·엘리베이터 연결 유지. 남측 추정 실명 점포는 제거하고 사진에 없는 부분은 평범하게 처리. 북측 기존 연구 기반2F 점포는 유지."
+    },
+    "modern_glasshouse_void": {
+     "s": [
+      192,
+      201.35
+     ],
+     "t": [
+      -63.85,
+      -52.15
+     ],
+     "note": "고천장 유리온실 부분만2F를 열고 전면 포치 위 갤러리를 유지."
+    },
+    "frontages": [
+     {
+      "tenant": "호호식당",
+      "s": 181,
+      "t": [
+       -83,
+       -70
+      ],
+      "floor_y": 0.45,
+      "note": "사진의 넓은 낮은 진입단을0.45 m로 표현.",
+      "street_side": "north"
+     },
+     {
+      "tenant": "Cha R",
+      "s": 181,
+      "t": [
+       -62,
+       -54
+      ],
+      "street_side": "north"
+     },
+     {
+      "tenant": "BUDDHA’S BELLY",
+      "s": 181,
+      "t": [
+       -45,
+       -35
+      ],
+      "street_side": "north"
+     },
+     {
+      "tenant": "모던눌랑",
+      "s": 189,
+      "t": [
+       -64,
+       -52
+      ],
+      "street_side": "south"
+     },
+     {
+      "tenant": "Agra",
+      "s": 189,
+      "t": [
+       -45,
+       -37
+      ],
+      "street_side": "south"
+     },
+     {
+      "tenant": "일상정원",
+      "s": 189,
+      "t": [
+       -12,
+       1
+      ],
+      "street_side": "south"
+     },
+     {
+      "tenant": "LEJARDIN",
+      "s": 181,
+      "t": [
+       5,
+       14
+      ],
+      "street_side": "north"
+     }
+    ],
+    "b1_link": {
+     "floor": "B1",
+     "y": -6,
+     "width_m": 9,
+     "ceiling_clearance_m": 4.15,
+     "note": "크림 대리석/짙은 띠·대리석/목재 전면·금색 코퍼. 통로축과 전체길이는 사진에서 실측한 것이 아님.",
+     "west_branch": {
+      "s": [
+       168.4,
+       177.4
+      ],
+      "t": [
+       -89,
+       13
+      ],
+      "note": "북측 OSM 경계 s167.96..168.39 안쪽으로 조정, 폭9m 유지."
+     }
+    },
+    "megabox_portal": {
+     "floor": "B1",
+     "s": 177.4,
+     "t": -28,
+     "width_m": 10,
+     "note": "파란 디스플레이와 평범한 얕은 전실만 구현. 사진 밖 로비·매점·상영관 상세는 만들지 않음."
+    },
+    "arrival_brick_passage": {
+     "floor": "1F",
+     "s": [
+      169,
+      172
+     ],
+     "note": "벽돌/아치/노란 점자블록. 폭과 위치는 기존 동선에 맞춘 추정."
+    }
+   },
+   "implementation_status": "완료: 최신 실내 사진 기반 재구성, 연결/추가 보행/에스컬레이터 머리 위 여유 검사 완료. 전체 smoke OK/walk330 ok,0 blocked. 운영자 렌더 비교는 미수행.",
+   "operator_views": [
+    {
+     "name": "hall",
+     "position": [
+      -76.317,
+      1.7,
+      106.944
+     ],
+     "yawDeg": 111.34
+    },
+    {
+     "name": "famille_hoho",
+     "position": [
+      -139.172,
+      1.7,
+      209.872
+     ],
+     "yawDeg": 21.34
+    },
+    {
+     "name": "famille_modern",
+     "position": [
+      -122.406,
+      1.7,
+      203.323
+     ],
+     "yawDeg": 201.34
+    },
+    {
+     "name": "b1_link",
+     "position": [
+      -96.17,
+      -4.3,
+      58.873
+     ],
+     "yawDeg": 201.34
+    },
+    {
+     "name": "megabox",
+     "position": [
+      -98.684,
+      -4.3,
+      181.601
+     ],
+     "yawDeg": 201.34
+    }
+   ],
+   "operator_views_note": "모델 로컬 프레임에서 계산한 운영자 렌더 확인용 시점. tests/shot.mjs는 실행하지 않았음."
   }
  },
  "source_hierarchy": {
   "priority": [
-   "data/osm.json 건물 접지 풋프린트/소유 범위 유지",
-   "운영자 제공2025/2026 로드뷰가 이전 사진과 충돌할 경우 우선; cc_01/cc_02는2026-06",
-   "항공사진/이전 사진은 로드뷰에 드러나지 않는 야드·옥상·홀·남측 자료로 유지",
-   "기존 웹 연구는 용도/브랜드 근거; 미확인 배치는 추정으로 분리"
+   "data/osm.json 접지 풋프린트/소유 범위와 _junctions.js 좌표·레벨 유지",
+   "실내는 refs/interior/cc_hall 및 cc_famille의 제공2026 사진·notes 우선; 파미에1F 정정 적용",
+   "외관은 운영자2025/2026 로드뷰 우선; cc_01/cc_02는2026-06",
+   "항공사진/이전 사진은 최신 실내·로드뷰에 보이지 않는 야드·옥상·남측 외관에 한해 유지",
+   "기존 웹 연구는 역사적 용도/브랜드 근거; 현재 층/경계/배치는 별도 미확인으로 기록"
   ],
   "aerial_caution": "북쪽 위, x 동쪽·z 남쪽. 10 m 격자/50 m 라벨. 사선 촬영으로 고층부 지붕이 접지 풋프린트에서 어긋나므로 지붕 투영을 외벽 위치로 사용하지 않음.",
-  "photo_dates": "북측정문·파빌리온·캐노피·수목:2026-06 cc_01/cc_02. 야드/옥상:제공 항공사진. 홀/남측:2009년 사진; 최신 남측 근접사진 없음.",
-  "missing": [],
+  "photo_dates": "실내: cc_hall2026-03..10, cc_famille2026-10..11 게시물(촬영일 미확인). 북측외관2026-06 로드뷰. 야드/옥상은 제공 항공사진, 최신 외관 자료 없는 남측/원형관은2009 자료.",
+  "missing": [
+   "파미에스테이션 전체1F 평면과 점포 순서/치수",
+   "B1 전체 통로 경로·점포 경계",
+   "2025년 이후 메가박스 로비와 상영관 내부",
+   "현재2F 점포 전체배치",
+   "수정 모델의 운영자 렌더 비교"
+  ],
   "excluded": [
    {
     "file": "refs/photos/centralcity/06_terminal_side.jpg",

@@ -48,7 +48,7 @@ const TW = [-8, 6, 16, 58];
 const EL = { u: 9.9, v: 32 };                       // guest elevator car centre (2.2 x 2.2), door faces west
 const ELH = [8.75, 30.85, 11.05, 33.15];
 const STH = [10.4, 24.2, 15.8, 30.65];              // stair void (flights run along u)
-const ATRIUM = [-7.85, 14, 2.5, 48];                // 8F lobby void through 9F–11F
+const HALL = [-2, 42, 16.5, 55];                   // ground entrance double-height void; photo plan remains approximate
 const ESC = {                                       // podium escalator voids (hole in the upper floor)
   '2F': [21.6, 30, 25.2, 41.6], '3F': [26.0, 30.9, 29.6, 41.6], '4F': [21.6, 31.7, 25.2, 41.6], '5F': [26.0, 32.6, 29.6, 41.6],
 };
@@ -118,6 +118,83 @@ export function build(K) {
     }
   }, [1.2, 1.2]);
 
+  // Round 5, refs/interior/jw: subdued stone, walnut and woven surfaces.
+  // These are material traces, not photographic images projected onto the rooms.
+  K.texture('jwHoney', 512, 512, (g, w, h) => {
+    g.fillStyle = '#d9cbb2'; g.fillRect(0, 0, w, h);
+    const r = K.rand(505);
+    for (let i = 0; i < 180; i++) {
+      g.strokeStyle = i % 3 ? 'rgba(163,142,110,.07)' : 'rgba(255,248,227,.16)';
+      g.lineWidth = 1 + r() * 5; g.beginPath(); const xx = r() * w, yy = r() * h;
+      g.moveTo(xx, yy); g.bezierCurveTo(xx + 40, yy + 20, xx - 30, yy + 70, xx + 80, yy + 160); g.stroke();
+    }
+    g.strokeStyle = 'rgba(112,96,75,.16)'; g.lineWidth = 1; g.strokeRect(.5, .5, w - 1, h - 1);
+  }, [1.5, 1.5]);
+  K.texture('jwTravertine', 512, 256, (g, w, h) => {
+    g.fillStyle = '#cdb4a2'; g.fillRect(0, 0, w, h); const r = K.rand(606);
+    for (let i = 0; i < 360; i++) {
+      g.fillStyle = i % 3 ? 'rgba(107,80,64,.09)' : 'rgba(250,231,208,.22)';
+      g.fillRect(r() * w, r() * h, 12 + r() * 130, .4 + r() * 1.1);
+    }
+    g.strokeStyle = 'rgba(92,70,58,.22)'; g.lineWidth = 1; g.strokeRect(.5, .5, w - 1, h - 1);
+  }, [2.4, 1.2]);
+  K.texture('jwWalnut', 256, 512, (g, w, h) => {
+    g.fillStyle = '#50372a'; g.fillRect(0, 0, w, h); const r = K.rand(1313);
+    for (let i = 0; i < 250; i++) {
+      const x = r() * w; g.strokeStyle = i % 3 ? 'rgba(16,10,7,.12)' : 'rgba(181,126,78,.16)';
+      g.lineWidth = .5 + r(); g.beginPath(); g.moveTo(x, 0); g.bezierCurveTo(x + 4, h / 3, x - 3, 2 * h / 3, x + 2, h); g.stroke();
+    }
+  }, [.65, 3.2]);
+  K.texture('jwDarkMarble', 512, 256, (g, w, h) => {
+    g.fillStyle = '#343431'; g.fillRect(0, 0, w, h); const r = K.rand(1919);
+    for (let i = 0; i < 55; i++) {
+      g.strokeStyle = i % 4 ? 'rgba(220,214,197,.27)' : 'rgba(249,243,222,.65)'; g.lineWidth = .6 + r() * 2;
+      const yy = r() * h; g.beginPath(); g.moveTo(0, yy);
+      for (let x = 0; x <= w; x += 24) g.lineTo(x, yy + Math.sin(x / 42 + i) * 9 + r() * 12); g.stroke();
+    }
+  }, [2, 1]);
+  K.texture('jwTerrazzo', 256, 256, (g, w, h) => {
+    g.fillStyle = '#a7a198'; g.fillRect(0, 0, w, h); const r = K.rand(2020);
+    for (let i = 0; i < 5000; i++) { g.fillStyle = ['#c3bdb3', '#807c74', '#d9d4c8', '#989389'][i % 4]; const s = .4 + r() * 1.3; g.fillRect(r() * w, r() * h, s, s); }
+  }, [1.4, 1.4]);
+  for (const [key, base, colors] of [
+    ['jwFoyerCarpet', '#8e9294', ['#d7cdb9', '#35475c', '#596d83', '#b1afa2']],
+    ['jwLoungeRug', '#baa48d', ['#d9c9ae', '#9c8f80', '#c8b89c', '#e0d2b7']],
+  ]) K.texture(key, 512, 512, (g, w, h) => {
+    g.fillStyle = base; g.fillRect(0, 0, w, h); const r = K.rand(1010);
+    for (let i = 0; i < 2600; i++) {
+      g.strokeStyle = colors[i % colors.length]; g.globalAlpha = .18 + r() * .4; g.lineWidth = .5 + r() * 2;
+      let x = r() * w, yy = r() * h; g.beginPath(); g.moveTo(x, yy);
+      for (let n = 0; n < 5; n++) { x += (r() - .5) * 6; yy += 5 + r() * 13; g.lineTo(x, yy); } g.stroke();
+    } g.globalAlpha = 1;
+  }, [5, 7]);
+  K.texture('jwChevron', 256, 256, (g, w, h) => {
+    g.fillStyle = '#594438'; g.fillRect(0, 0, w, h);
+    for (let j = -4; j < 8; j++) for (let i = 0; i < 4; i++) {
+      const x = i * 64, yy = j * 64; g.fillStyle = ['#70533c', '#816047', '#644935', '#967155'][(i + j + 8) % 4];
+      g.beginPath(); g.moveTo(x, yy); g.lineTo(x + 32, yy + 32); g.lineTo(x + 32, yy + 62); g.lineTo(x, yy + 30); g.closePath(); g.fill();
+      g.fillStyle = ['#85654c', '#5e4635', '#76563f'][(i + j + 9) % 3];
+      g.beginPath(); g.moveTo(x + 32, yy + 32); g.lineTo(x + 64, yy); g.lineTo(x + 64, yy + 30); g.lineTo(x + 32, yy + 62); g.closePath(); g.fill();
+    }
+  }, [2.4, 2.4]);
+  K.texture('jwSheer', 128, 256, (g, w, h) => {
+    g.clearRect(0, 0, w, h);
+    for (let x = 0; x < w; x++) {
+      const fold = .34 + .21 * Math.pow(Math.sin(x / w * Math.PI * 4), 2);
+      g.fillStyle = `rgba(153,91,58,${fold})`; g.fillRect(x, 0, 1, h);
+    }
+    g.fillStyle = 'rgba(85,47,30,.55)';
+    for (let x = 0; x < w; x += 9) g.fillRect(x, 0, 1, h);
+  }, [.48, 2], { transparent: true });
+  // Modest specular highlights on polished stone/varnished wood; no fabricated reflections.
+  for (const [key, su, sv, shine, specular] of [
+    ['jwHoney', 1.5, 1.5, 75, 0x7b7361], ['jwDarkMarble', 2, 1, 90, 0x8c8980], ['jwWalnut', .65, 3.2, 28, 0x3c3025],
+  ]) {
+    const map = K.T.surface(key).tex; map.repeat.set(1 / su, 1 / sv);
+    K.material(key, new K.THREE.MeshPhongMaterial({ map, color: 0xffffff, specular, shininess: shine, vertexColors: true }));
+  }
+  K.material('jwFoyerBronze', new K.THREE.MeshPhongMaterial({ color: 0x514b42, specular: 0x9d9583, shininess: 90, vertexColors: true }));
+
   // ---------- helpers (local frame) ----------
   const B = (o) => { const [x, z] = P(o.u ?? 0, o.v ?? 0); const { u, v, r, ...rest } = o; return K.box({ ...rest, x, z, rotY: R + (r || 0) }); };
   const SG = (text, o) => { const [x, z] = P(o.u, o.v); const { u, v, f, ...rest } = o; K.sign(text, { ...rest, x, z, rotY: FACE[f || 'S'] }); };
@@ -184,6 +261,48 @@ export function build(K) {
   };
   const BOH = (rect, y, h, mat = WARM) => PR(rect, y, y + h, { mat, top: false, bottom: false, walkTop: false });
 
+  const SLATS = (axis, line, s0, s1, y, h, spacing = .24) => {
+    for (let s = s0; s <= s1; s += spacing) B({ u: axis === 'u' ? line : s, v: axis === 'u' ? s : line, y, w: axis === 'u' ? .17 : .075, d: axis === 'u' ? .075 : .17, h, mat: 'jwWalnut', solid: false });
+  };
+  const COVE = (rect, yc) => {
+    const [a, b, c, d] = rect;
+    HP(0xe5ded0, rect, yc, false);
+    for (const u of [a + .12, c - .12]) B({ u, v: (b + d) / 2, y: yc - .1, w: .14, d: d - b - .2, h: .035, mat: { tex: 'emit', color: 0xeec58c }, solid: false });
+    for (const v of [b + .12, d - .12]) B({ u: (a + c) / 2, v, y: yc - .1, w: c - a - .2, d: .14, h: .035, mat: { tex: 'emit', color: 0xeec58c }, solid: false });
+  };
+  const ROUND = (u, v, y, r = .55, h = .72, top = 0xe7dfd0) => {
+    CY(u, v, y + h - .055, r, .055, top, { seg: 20, solid: false });
+    CY(u, v, y + .04, .065, h - .095, 0x282421, { seg: 8, solid: false });
+    CY(u, v, y + .015, r * .48, .035, 0x282421, { seg: 12, solid: false });
+    B({ u, v, y, w: r * 1.4, d: r * 1.4, h, mat: 0, solid: true, skip: ['top', 'bottom', 'n', 's', 'e', 'w'] });
+  };
+  const CHAIR = (u, v, y, face = 'S', mat = 0xb9a58a) => {
+    const ang = { S: 0, E: Math.PI / 2, N: Math.PI, W: -Math.PI / 2 }[face];
+    const at = (a, b) => [u + a * Math.cos(ang) + b * Math.sin(ang), v - a * Math.sin(ang) + b * Math.cos(ang)];
+    CY(u, v, y + .36, .34, .14, mat, { seg: 12, solid: false });
+    for (let i = 0; i < 10; i++) {
+      const a = i / 10 * Math.PI, b = (i + 1) / 10 * Math.PI;
+      const p = at(Math.cos(a) * .39, -Math.sin(a) * .34), q = at(Math.cos(b) * .39, -Math.sin(b) * .34);
+      WL(...p, ...q, y + .42, y + .72 + .23 * Math.sin((a + b) / 2), { mat, thick: .09, solid: false });
+    }
+    for (const a of [-.25, .25]) for (const b of [-.23, .23]) { const p = at(a, b); B({ u: p[0], v: p[1], y, w: .035, d: .035, h: .38, mat: 0x272321, solid: false }); }
+    B({ u, v, y: y + .18, w: .66, d: .64, h: .62, r: ang, mat: 0, solid: true, skip: ['top', 'bottom', 'n', 's', 'e', 'w'] });
+  };
+  const FLOWER = (u, v, y, s = 1, palette = [0x6b844b, 0xc36d45, 0xd8af70, 0xe0c6ad]) => {
+    CY(u, v, y, .19 * s, .4 * s, 0xd4d1c5, { seg: 12, solid: false });
+    const r = K.rand(Math.round((u + 90) * 113 + v * 17));
+    for (let i = 0; i < 34; i++) {
+      const a = i * 2.399, reach = (.18 + r() * .55) * s;
+      const du = Math.cos(a) * reach, dv = Math.sin(a) * reach, h = (.45 + r() * .9) * s;
+      const p = P(u, v), q = P(u + du, v + dv);
+      K.quad(0x596840, [[p[0] - .008, y + .25 * s, p[1]], [p[0] + .008, y + .25 * s, p[1]], [q[0] + .008, y + h, q[1]], [q[0] - .008, y + h, q[1]]], [0, 0, 1]);
+      const [x, z] = P(u + du, v + dv);
+      K.dome({ x, y: y + h, z, rx: .08 * s, ry: .06 * s, rz: .09 * s, mat: palette[i % palette.length], seg: 6, rings: 3, hemi: false });
+      const leaf = P(u + du * .65, v + dv * .65);
+      K.quad(0x536a3c, [[leaf[0] - .13 * s, y + h * .65, leaf[1]], [leaf[0], y + h * .8, leaf[1] + .1 * s], [leaf[0] + .13 * s, y + h * .65, leaf[1]], [leaf[0], y + h * .55, leaf[1] - .1 * s]], [0, 1, 0]);
+    }
+  };
+
   // 1F edge walls (OSM line, inset), with openings given in the edge parameter (v for E/W, u for N/S)
   const EW = (edge, s0, s1, y0, y1, o = {}) => {
     const th = o.thick ?? 0.3; let A, Bp, at;
@@ -206,11 +325,11 @@ export function build(K) {
     if (ESC[k]) h.push(ESC[k]);
     if (k === '6F') h.push(BALL);
     if (k === 'B3') h.push(POOL, KIDS, SCUBA);
-    if (k === '9F' || k === '10F' || k === '11F') h.push(ATRIUM);
+    if (k === '2F') h.push(HALL);
     if (k === '9F') h.push([3.0, 48.8, 5.2, 57]);
     return h;
   };
-  const floorMat = { B4: { tex: 'tile', color: 0xc9c5bd }, B3: { tex: 'tile', color: 0xe6e2da }, B2: { tex: 'marble', color: 0xe8dfd0 }, B1: 'parking', '1F': 'marble', '2F': { tex: 'marble', color: 0xeee4d4 }, '3F': 'jwCarpet', '4F': 'jwCarpet', '5F': 'jwCarpet', '6F': { tex: 'concrete', color: 0xcfcac2 }, '7F': { tex: 'sidewalk', color: 0xe2dacb }, '8F': { tex: 'marble', color: 0xf1e9dc } };
+  const floorMat = { B4: { tex: 'tile', color: 0xc9c5bd }, B3: { tex: 'tile', color: 0xe6e2da }, B2: { tex: 'marble', color: 0xe8dfd0 }, B1: 'parking', '1F': 'jwHoney', '2F': { tex: 'marble', color: 0xeee4d4 }, '3F': 'jwCarpet', '4F': 'jwCarpet', '5F': 'jwCarpet', '6F': { tex: 'concrete', color: 0xcfcac2 }, '7F': { tex: 'sidewalk', color: 0xe2dacb }, '8F': 'jwHoney', '9F': 'jwChevron', '10F': 0xa59b8a, '11F': 0xa59b8a };
   for (const [k, y] of LV) {
     const tower = y >= Y['8F'];
     const poly = tower ? RECT(TW[0] + 0.06, TW[1] + 0.06, TW[2] - 0.06, TW[3] - 0.06) : (y > 1 ? FPLI : FPL);   // inset: keeps the slab edge off the facade plane (z-fighting)
@@ -307,7 +426,7 @@ export function build(K) {
   for (let i = 0; i < LV.length; i++) {
     const [k, y] = LV[i];
     // decorative elevator doors + floor plate signage at the hall
-    for (const dv of [34.9, 37.7]) { B({ u: 8.76, v: dv, y, w: 0.05, d: 1.15, h: 2.35, mat: 0x8a7458, solid: false, skip: ['top', 'bottom'] }); }
+    for (const dv of [34.9, 37.7]) { B({ u: 8.76, v: dv, y, w: 0.05, d: 1.15, h: 2.35, mat: k === '1F' ? 0x3d3028 : 0x8a7458, solid: false, skip: ['top', 'bottom'] }); }
     SG([k], { u: 8.72, v: 36.3, y: y + 2.75, w: 1.0, h: 0.45, f: 'W', bg: '#2b241d', fg: '#e8d6b0' });
     SG(['비상구'], { u: 8.72, v: 27.4, y: y + 2.55, w: 0.9, h: 0.28, f: 'W', bg: '#1d7a3a', fg: '#ffffff' });
     if (i === LV.length - 1) break;
@@ -322,7 +441,7 @@ export function build(K) {
   const elevFloors = [
     ['B4', '마르퀴스 피트니스 · 농구장 · 스쿼시 · 조깅트랙'], ['B3', '마르퀴스 수영장 · 키즈풀 · 스쿠버풀'], ['B2', '마르퀴스 스파 리셉션 · 라커 · 스파 레스토랑'], ['B1', '호텔 주차장'],
     ['1F', '호텔 현관 · 컨시어지 · 센트럴시티 연결'], ['2F', '플레이버즈 · 타마유라 · 파티세리'], ['3F', '연회장 살롱 1–6'], ['4F', '웨딩 · 연회 사무실'], ['5F', '그랜드 볼룸'], ['6F', '연회 지원 (직원)'],
-    ['7F', '더 마고 그릴 · 모보 바 · JW 가든'], ['8F', '로비 · 체크인 · 더 라운지'], ['9F', '이그제큐티브 라운지'], ['10F', '미팅룸'], ['11F', '호텔 사무실'],
+    ['7F', '더 마고 그릴 · 모보 바 · JW 가든'], ['8F', '로비 · 체크인 · 더 라운지'], ['9F', '이그제큐티브 라운지'], ['10F', '사무실'], ['11F', '호텔 사무실'],
   ];
   for (const n of ROOMF) elevFloors.push([n + 'F', `객실 ${n}01–${n}19`]);
   elevFloors.push(['33F', '펜트하우스']);
@@ -355,24 +474,27 @@ export function build(K) {
   zf('5F', '그랜드 볼룸 (천고 7m · 버진로드 21m) · 신부 대기실');
   zf('6F', '연회 지원 · 볼룸 상부 (직원 구역)');
   zf('7F', 'JW 가든 · 더 마고 그릴 · 모보 바', FPL);
-  zf('8F', '로비 · 프런트 데스크(체크인) · 더 라운지 · 오토니엘 목걸이 조형물');
-  zf('9F', '이그제큐티브 라운지 (추정)');
-  zf('10F', '미팅룸 (추정)');
-  zf('11F', '호텔 사무실 (추정)');
+  zf('8F', '로비 · 프런트 데스크(체크인) · 더 라운지');
+  zf('9F', '이그제큐티브 라운지 · 비즈니스 센터');
+  zf('10F', '사무실');
+  zf('11F', '사무실');
   for (const n of ROOMF) zf(n + 'F', `객실층 · ${n}01–${n}19호`);
   zf('33F', '펜트하우스 (복층)');
 
   // =====================================================================
   // SPAWNS
   // =====================================================================
-  SPAWN('JW 메리어트 정문 (차량 진입로)', 41.5, 49, 0, -1, 0);
-  SPAWN('JW 메리어트 1F 현관 로비', 24, 43.5, 0, 0.3, 1);
-  SPAWN('JW 메리어트 8F 로비 · 체크인', 6.5, 36, Y['8F'], -1, 0);
-  SPAWN('플레이버즈 (2F)', 6.5, 19, Y['2F'], -1, 0);
-  SPAWN('그랜드 볼룸 (5F)', -14, -7, Y['5F'], 0, -1);
+  SPAWN('JW 메리어트 1F 목걸이 조형물', 14.4, 48.5, 0, -1, 0);
+  SPAWN('JW 메리어트 1F 승강기 홀', 6.3, 40, 0, .15, -1);
+  SPAWN('더 라운지 8F · 피아노와 소파', 1.4, 30, Y['8F'], -1, -.5);
+  SPAWN('더 라운지 8F · 바', 1.8, 13.4, Y['8F'], -.4, -1);
+  SPAWN('플레이버즈 2F · 입구', 6.5, 19, Y['2F'], -1, 0);
+  SPAWN('플레이버즈 2F · 다이닝', -9, 29, Y['2F'], -1, .4);
+  SPAWN('그랜드 볼룸 5F · 포이어', -10, -3.2, Y['5F'], 1, 0);
+  SPAWN('이그제큐티브 라운지 9F', 5.5, 22, Y['9F'], .5, -1);
   SPAWN('JW 가든 (7F)', 4, -20, Y['7F'], 0, 1);
-  SPAWN('마르퀴스 수영장 (B3)', -6, -10, Y.B3, -0.4, -1);
-  SPAWN('객실 2006 (20F)', -1.3, 34.5, Y['20F'], -1, -0.55);
+  SPAWN('마르퀴스 수영장 (B3)', -6, -10, Y.B3, -.4, -1);
+  SPAWN('객실 2006 (20F)', -1.3, 34.5, Y['20F'], -1, -.55);
 
   // ---------- floors ----------
   // ---------- sub-zones (map search + HUD) ----------
@@ -448,52 +570,104 @@ export function build(K) {
     DOORP(-3.97, 8, y, 'E', 1.2, 0xbcae98); DOORP(-3.97, 12, y, 'E', 1.2, 0xbcae98);
     SG(['화장실'], { u: -3.9, v: 10, y: 2.75, w: 2.2, h: 0.45, f: 'E', bg: '#2b241d', fg: '#f0e2c4' });
     B({ u: -3.6, v: 30, y, w: 0.8, d: 4, h: 1.05, mat: WALNUT, top: 0xe8e0d0 }); SG(['수하물 보관'], { u: -3.9, v: 30, y: 2.4, w: 2.6, h: 0.45, f: 'E', bg: '#2b241d', fg: '#f0e2c4' });
-    // ---- hotel ground lobby ----
-    HP({ tex: 'darkstone', color: 0xb0a594 }, [26, 42, 33, 55], y + 0.012);
-    HP({ tex: 'marble', color: 0xf3eadb }, [-4, 4, 33, 60.4], y + 0.008, true, [[21.4, 29.5, 29.8, 41.8], [8.8, 24.2, 15.9, 39.5], [26, 42, 33, 55]]);
-    // revolving door drum on the entrance axis
-    const [rx, rz] = P(UE - 0.2, 48.5);
+    // ---- ground entrance hall, photos 05/11/12/14/15 ----
+    // A local void in 2F makes the photographed ~8 m room without altering facade bands.
+    HP('jwHoney', [-4, 4, 33, 60.4], .009, true, [[21.4, 29.5, 29.8, 41.8], [8.8, 24.2, 15.9, 39.5]]);
+    HP('jwWalnut', [-4, 4, 33, 60.4], 5.66, false, [HALL, [8.8, 24.2, 15.9, 39.5], [21.4, 29.5, 29.8, 41.8]]);
+    PR(HALL, 8.15, 8.32, { mat: 0x261e19, top: false, walkTop: false });
+    // Interlocking short timber bars trace the irregular lattice, not a regular office tile grid.
+    for (let u = -1.6, i = 0; u < 16; u += .72, i++) for (let v = 42.4, j = 0; v < 54.6; v += .72, j++) {
+      const cross = (i + j) % 3;
+      B({ u: u + (j % 2) * .13, v, y: 7.96, w: cross ? .55 : .085, d: cross ? .085 : .55, h: .15, mat: 'jwWalnut', solid: false });
+      if ((i + j) % 4 === 0) B({ u: u + .27, v: v + .26, y: 7.96, w: .085, d: .42, h: .15, mat: 0x8c6343, solid: false });
+    }
+    // Upper galleries: inset glazing, walnut blades, continuous warm wash under the screen.
+    for (const v of [42.08, 54.92]) {
+      WL(-1.9, v, 16.4, v, 6, 8.15, { mat: GL, thick: .045 });
+      SLATS('v', v, -1.85, 16.35, 3.45, 4.5, .22);
+      B({ u: 7.25, v, y: 3.39, w: 18.2, d: .1, h: .055, mat: { tex: 'emit', color: 0xe8ae65 }, solid: false });
+    }
+    WL(-1.92, 42, -1.92, 55, 0, 8.15, { mat: 'jwWalnut', thick: .1 });
+    WL(16.45, 42, 16.45, 55, 6, 8.15, { mat: GL, thick: .045 });
+    SLATS('u', -1.8, 42.15, 54.85, 3.45, 4.5, .22);
+    // Two large dark-walnut cylinders with narrow stone shoes (diameter 1.2 m).
+    for (const v of [44.6, 52.4]) {
+      CY(11, v, 0, .69, .16, 0x99998c, { seg: 24 });
+      CY(11, v, .16, .6, 7.8, 'jwWalnut', { seg: 28 });
+      for (const yy of [2.8, 5.4]) CY(11, v, yy, .603, .014, 0x38271f, { seg: 28, solid: false });
+    }
+    // A glazed bronze screen with pale layered timber in the lower rear wall (12/14).
+    for (let v = 42.7; v < 54.7; v += .62) {
+      B({ u: -1.65, v, y: .15, w: .09, d: .33, h: 3.05, mat: [0xb5a18b, 0xc9b9a5, 0x9c846c][Math.round(v * 10) % 3], solid: false });
+      B({ u: -1.35, v, y: 0, w: .05, d: .04, h: 3.35, mat: 0x302824, solid: false });
+    }
+    WL(-1.3, 42.2, -1.3, 54.8, .12, 3.3, { mat: { tex: 'glass', color: 0xc2bba9 }, thick: .03, solid: false });
+    for (const yy of [.12, 1.65, 3.3]) B({ u: -1.26, v: 48.5, y: yy, w: .07, d: 12.6, h: .045, mat: 0x302824, solid: false });
+    for (const v of [43.2, 45.6, 48, 50.4, 53.6]) B({ u: -1.15, v, y: .12, w: .06, d: .14, h: .06, mat: { tex: 'emit', color: 0xedc58d }, solid: false });
+    ROUND(.3, 48.5, 0, .85, .8, 0x272421);
+    FLOWER(.3, 48.5, .8, 1.65, [0x385d36, 0x53783e, 0x25557b, 0x718a45]);
+    // White ceramic necklace: two tall U-strands with bead loops close to the circular plinth.
+    CY(7.3, 48.5, 0, 1.45, .24, 0xa6a493, { seg: 36 });
+    const bead = (u, v, yy, r) => { const [x, z] = P(u, v); K.dome({ x, y: yy, z, rx: r, ry: r * .92, rz: r, mat: 0xf1ead9, seg: 10, rings: 5, hemi: false }); };
+    for (const [du, rad, top] of [[-.18, .76, 7.8], [.22, .48, 7.65]]) {
+      for (const side of [-1, 1]) for (let yy = .5; yy < top; yy += .29) bead(7.3 + du, 48.5 + side * rad, yy, .135);
+      for (let i = 0; i <= 10; i++) { const a = i / 10 * Math.PI; bead(7.3 + du + Math.sin(a) * .2, 48.5 + Math.cos(a) * rad, .38, .14); }
+      CY(7.3 + du, 48.5 - rad, top, .012, 8.1 - top, 0x918b78, { seg: 4, solid: false });
+      CY(7.3 + du, 48.5 + rad, top, .012, 8.1 - top, 0x918b78, { seg: 4, solid: false });
+    }
+    for (const u of [5.45, 9.15]) for (const v of [46.6, 50.4]) { CY(u, v, 0, .1, .035, 0x827f76, { seg: 10, solid: false }); CY(u, v, .035, .012, .7, 0x9a988c, { seg: 6, solid: false }); }
+    for (const v of [44.7, 52.3]) SOFA(3.1, v, 0, 2.5, v < 48 ? 'S' : 'N', 0xb5afa0);
+    LIGHTS(HALL, 7.94, 3.6, .16, 0xf3d3a1);
+    // Low vestibule and concierge remain under the unchanged facade/entrance canopy.
+    const [rx, rz] = P(UE - .2, 48.5);
     K.cyl({ x: rx, y: 0, z: rz, r: 1.45, h: 2.9, mat: GL, seg: 16, solid: false, caps: false });
-    K.cyl({ x: rx, y: 2.9, z: rz, r: 1.55, h: 0.35, mat: BRONZE, seg: 16, solid: false });
-    for (let i = 0; i < 4; i++) B({ u: UE - 0.2, v: 48.5, y: 0, w: 0.04, d: 2.8, h: 2.8, mat: GL, solid: false, r: i * Math.PI / 4 });
-    // feature wall on the core (east face) — JW MARRIOTT
-    B({ u: 15.98, v: 31.85, y, w: 0.12, d: 15.1, h: yc - y, mat: WALNUT, solid: false, skip: ['bottom', 'top'] });
-    SG(['JW MARRIOTT'], { u: 16.1, v: 31.85, y: 3.6, w: 9, h: 1.0, f: 'E', bg: '#6b4a32', fg: '#d8b878' });
-    SG(['JW 메리어트 호텔 서울'], { u: 16.1, v: 31.85, y: 2.75, w: 6, h: 0.5, f: 'E', bg: '#6b4a32', fg: '#efe2c4' });
-    SG(['체크인 · 로비 라운지는 8층입니다', '엘리베이터를 이용해 주세요'], { u: 16.1, v: 31.85, y: 1.7, w: 5.2, h: 0.7, f: 'E', bg: '#2b241d', fg: '#efe2c4' });
-    // concierge + bell desk
-    B({ u: 26.5, v: 57.6, y, w: 4.2, d: 0.9, h: 1.05, mat: WALNUT, top: 0xe8e0d0 }); SG(['컨시어지'], { u: 26.5, v: 57.1, y: 1.4, w: 1.6, h: 0.3, f: 'N', bg: '#2b241d', fg: '#e8d29a' });
-    B({ u: 19.5, v: 57.6, y, w: 4.2, d: 0.9, h: 1.05, mat: WALNUT, top: 0xe8e0d0 }); SG(['벨 데스크'], { u: 19.5, v: 57.1, y: 1.4, w: 1.6, h: 0.3, f: 'N', bg: '#2b241d', fg: '#e8d29a' });
-    for (let i = 0; i < 3; i++) { const u = 15.4 + i * 1.3; B({ u, v: 55.3, y: 0.25, w: 0.9, d: 1.6, h: 0.05, mat: 0x7a3a2a, solid: false }); for (const du of [-0.42, 0.42]) B({ u: u + du, v: 55.3, y: 0, w: 0.05, d: 0.05, h: 1.9, mat: 0xc9a85c, solid: false }); B({ u, v: 55.3, y: 1.85, w: 0.9, d: 0.06, h: 0.06, mat: 0xc9a85c, solid: false }); }
-    MAN(26.5, 58.6, 0, { shirt: 0x1d2433, rotY: FACE.N }); MAN(19.5, 58.6, 0, { shirt: 0x1d2433, rotY: FACE.N });
-    FLOWERS(22, 48.5, y, 1.3);
-    for (const [u, v, f] of [[1, 47, 'E'], [1, 52, 'E'], [5.5, 44.5, 'S'], [5.5, 55, 'N']]) SOFA(u, v, y, 3, f, 0xc9b9a0);
-    TABLE(4, 49.5, y, { r: 0.6, chairs: 0, h: 0.45, top: 0x5a463a });
-    for (const [u, v] of [[0, 12], [0, 22], [18.5, 12], [18.5, 46], [30, 12], [30, 24], [0, 40]]) CY(u, v, y, 0.5, yc - y, { tex: 'marble', color: 0xefe7da }, { seg: 14 });
-    // escalator 1F → 2F (+ planter under the 2F → 3F run)
+    K.cyl({ x: rx, y: 2.9, z: rz, r: 1.55, h: .35, mat: BRONZE, seg: 16, solid: false });
+    for (let i = 0; i < 4; i++) B({ u: UE - .2, v: 48.5, y: 0, w: .04, d: 2.8, h: 2.8, mat: GL, solid: false, r: i * Math.PI / 4 });
+    for (const [u, label] of [[25.8, '컨시어지'], [19.8, '벨 데스크']]) {
+      B({ u, v: 57.7, y: 0, w: 3.6, d: .9, h: .98, mat: 'jwWalnut', top: 'jwDarkMarble' });
+      SG(label, { u, v: 57.22, y: .73, w: .85, h: .17, f: 'N', bg: null, fg: '#dfcfab' });
+    }
+    MAN(25.8, 58.7, 0, { shirt: 0x292623 });
+    // Preserve the 1F/2F escalator and its open landing.
     ESCL(22.6, 40.4, 22.6, 30, 0, 6, 'up'); ESCL(24.2, 40.4, 24.2, 30, 0, 6, 'down');
-    SG(['2F 플레이버즈 · 타마유라 · 파티세리'], { u: 23.4, v: 41.3, y: 2.9, w: 4.6, h: 0.45, f: 'S', bg: '#2b241d', fg: '#efe2c4' });
-    B({ u: 27.8, v: 35.65, y, w: 3.5, d: 9.8, h: 0.9, mat: { tex: 'marble', color: 0xd9cfc0 } });
-    for (let v = 32; v <= 39.5; v += 2.5) PLANT(27.8, v, 0.9, 0.8);
-    // floor directory facing the elevator door + wayfinding around the core
-    B({ u: 4.35, v: 32, y, w: 0.14, d: 1.7, h: 2.5, mat: WALNUT });
-    SG(['층별 안내 · FLOOR GUIDE', '33F 펜트하우스', '12F–32F 객실', '11F 호텔 사무실', '10F 미팅룸 1001–1004', '9F 이그제큐티브 라운지 · 비즈니스 센터', '8F 로비 · 체크인 · 더 라운지', '7F 더 마고 그릴 · 모보 바 · JW 가든', '5F 그랜드 볼룸 · 신부 대기실', '4F 웨딩 상담 · 드레스룸', '3F 살롱 1–6', '2F 플레이버즈 · 타마유라 · 파티세리', '1F 현관 · 컨시어지 · 벨 데스크', 'B1 호텔 주차장', 'B2 마르퀴스 스파 · 라커', 'B3 마르퀴스 수영장', 'B4 마르퀴스 피트니스'], { u: 4.44, v: 32, y: 1.35, w: 1.55, h: 2.2, f: 'E', bg: '#2b241d', fg: '#efe2c4' });
-    SG(['← 엘리베이터 · 8F 체크인'], { u: 12.3, v: 40.4, y: 3.3, w: 3.6, h: 0.45, f: 'S', bg: '#2b241d', fg: '#e8d29a', twoSided: true });
-    SG(['엘리베이터 · 8F 체크인 →'], { u: 12.3, v: 23.4, y: 3.3, w: 3.6, h: 0.45, f: 'N', bg: '#2b241d', fg: '#e8d29a' });
-    SUBZ('엘리베이터 홀', '1F', '객실 엘리베이터 · 층별 안내', [4, 22, 8.8, 42]);
-    SUBZ('컨시어지 · 벨 데스크', '1F', '짐 보관 · 택시 · 안내', [15, 54, 30, 60.4]);
-    SUBZ('화장실', '1F', '호텔 로비', [-6, 6, -4, 14]); SUBZ('수하물 보관', '1F', '벨 데스크 연계', [-6, 27, -3.2, 33]);
-    // arcade direction signs (hanging)
-    SG(['↑ 신세계백화점 강남점'], { u: 0, v: -50, y: 3.5, w: 4.2, h: 0.5, f: 'S', bg: '#2b241d', fg: '#ffffff', twoSided: false });
-    SG(['JW 메리어트 호텔 로비 ↓'], { u: 0, v: -50, y: 3.5, w: 4.2, h: 0.5, f: 'N', bg: '#2b241d', fg: '#e8d29a' });
-    SG(['← 센트럴시티 · 메가박스 · 호남선'], { u: -20, v: 0, y: 3.5, w: 5, h: 0.5, f: 'E', bg: '#2b241d', fg: '#ffffff' });
-    SG(['고속터미널역 3·7·9호선 · 경부선 →'], { u: -20, v: 0, y: 3.5, w: 5, h: 0.5, f: 'W', bg: '#2b241d', fg: '#ffffff' });
-    LIGHTS([-4, -60, 4, -4], yc, 4, 1.0); LIGHTS([-33, -4, 33, 4], yc, 4, 1.0);
-    LIGHTS([-4, 4, 33, 60.4], yc, 4.5, 1.4, 0xfff0d0, (u, v) => inR(u, v, [8.8, 24.2, 15.9, 39.5], 0.6) || inR(u, v, [21, 29, 30, 42]));
-    for (const [u, v] of [[6, 14], [26, 14], [6, 52]]) CHAND(u, v, yc, 1.1);
-    CROWD([-3, -58, 3, -6], y, 14, 101); CROWD([-30, -3, 30, 3], y, 12, 102); CROWD([0, 6, 30, 22], y, 10, 103); CROWD([18, 42, 31, 54], y, 6, 104);
-    SUBZ('호텔 현관 로비', '1F', '컨시어지 · 벨 데스크 · 체크인은 8F', [-4, 4, 33, 60.4]);
-    SUBZ('센트럴시티 연결 아케이드', '1F', '신세계백화점 · 센트럴시티 · 고속터미널역 연결', [-33, -60.4, 33, 4]);
+    B({ u: 27.8, v: 35.65, y: 0, w: 3.5, d: 9.8, h: .6, mat: 'jwTravertine' });
+    // 06/07: 3.5 m rose travertine lift vestibule, three dark bronze portals, small aubergine directory.
+    COVE([4.2, 24.2, 8.68, 39.6], 3.5);
+    WL(4.2, 25, 4.2, 38.7, 0, 3.5, { mat: 'jwTravertine', thick: .12 });
+    for (const [v0, v1] of [[24.2, 26.5], [28.3, 30.9], [33.15, 39.5]]) B({ u: 8.66, v: (v0 + v1) / 2, y: 0, w: .12, d: v1 - v0, h: 3.5, mat: 'jwTravertine', solid: false });
+    for (const v of [32, 34.9, 37.7]) {
+      for (const dv of [-.69, .69]) B({ u: 8.54, v: v + dv, y: 0, w: .06, d: .08, h: 2.42, mat: 0x544739, solid: false });
+      B({ u: 8.54, v, y: 2.36, w: .06, d: 1.45, h: .09, mat: 0x544739, solid: false });
+      if (v !== 32) {
+        B({ u: 8.52, v, y: 0, w: .035, d: 1.27, h: 2.35, mat: 0x3e342c, solid: false });
+        B({ u: 8.49, v, y: 0, w: .012, d: .018, h: 2.35, mat: 0x241f1b, solid: false });
+      }
+      SG('L', { u: 8.48, v, y: 2.69, w: .22, h: .25, f: 'W', bg: null, fg: '#4a3e32' });
+      B({ u: 8.49, v: v + .91, y: .97, w: .04, d: .12, h: .3, mat: 0x514234, solid: false });
+    }
+    SG(['JW MARRIOTT', '33 펜트하우스', '32 앰배서더 펜트하우스', '12 객실', '9 이그제큐티브 라운지 · 비즈니스 센터', '8 리셉션 · 컨시어지 · 더 라운지', '7 더 마고 그릴 · 모보 바 · JW 가든', '5 그랜드 볼룸 · 웨딩 센터', '3 살롱 1–6', '2 플레이버즈 · 파티세리 · 타마유라', 'L 현관 · 벨 데스크 · 신세계 연결', 'B2 마르퀴스 · 스파 · 주차장', 'B3 주차장'], { u: 4.29, v: 36.3, y: 1.5, w: .72, h: 1.72, f: 'E', bg: '#594250', fg: '#e4d9df', bold: false, align: 'left', pxPerM: 280 });
+    // 08: small bronze button plates inside the functional lift; its opening stays clear.
+    for (const [i, label] of ['12 객실', '11 사무실', '10 사무실', '9 라운지', '8 리셉션', '7 레스토랑', '6 사무실', '5 그랜드 볼룸', '3 살롱', '2 플레이버즈', 'L 현관', 'B2 마르퀴스'].entries()) {
+      SG(label, { u: 10.94, v: 31.62 + (i % 2) * .67, y: 1.92 - Math.floor(i / 2) * .22, w: .56, h: .17, f: 'W', bg: '#514537', fg: '#ece5d3', bold: false });
+    }
+    // 13: restrained illuminated walnut blades along the approach to the lifts.
+    for (let v = 8; v < 23; v += 1.1) {
+      B({ u: -.8, v, y: 0, w: .16, d: .19, h: 3.4, mat: 'jwWalnut', solid: false });
+      B({ u: -.65, v, y: .08, w: .03, d: .1, h: .04, mat: { tex: 'emit', color: 0xe6be7d }, solid: false });
+    }
+    COVE([.3, 5, 4, 24], 3.5);
+    LIGHTS([17, 42, 32, 60], 5.64, 4.2, .14, 0xefcb91);
+    SG(['8층 리셉션 · 더 라운지', '엘리베이터 →'], { u: 4.25, v: 40.2, y: 1.5, w: .8, h: .32, f: 'S', bg: '#594250', fg: '#ece2db' });
+    SUBZ('목걸이 조형물 · 현관 홀', '1F', '목재 격자 천장 · 도자기 구슬 조형물', HALL, 8.15);
+    SUBZ('엘리베이터 홀', '1F', '트래버틴 벽 · 층별 안내', [4.2, 24.2, 8.8, 39.6]);
+    SUBZ('컨시어지 · 벨 데스크', '1F', '짐 보관 · 안내', [17, 55.2, 30, 60.4]);
+    SUBZ('호텔 현관 로비', '1F', '리셉션은 8층', [-4, 4, 33, 60.4]);
+    // Shared arcade routes, including J5 and J6, keep their coordinates and clear width.
+    SG('신세계백화점 강남점 ↑', { u: 0, v: -50, y: 2.6, w: 2.7, h: .3, f: 'S', bg: '#352b25', fg: '#e9dfce' });
+    SG('← 센트럴시티 · 호남선', { u: -20, v: 0, y: 2.6, w: 2.7, h: .3, f: 'E', bg: '#352b25', fg: '#e9dfce' });
+    LIGHTS([-4, -60, 4, -4], yc, 5, .2); LIGHTS([-33, -4, 33, 4], yc, 5, .2);
+    CROWD([-3, -58, 3, -6], y, 4, 101); CROWD([-30, -3, 30, 3], y, 3, 102);
+    SUBZ('센트럴시티 연결 아케이드', '1F', '신세계백화점 · 센트럴시티 연결', [-33, -60.4, 33, 4]);
   }
 
   // =====================================================================
@@ -518,30 +692,64 @@ export function build(K) {
     for (let u = -26; u <= -11; u += 3.5) for (let v = -3.5; v <= 9.5; v += 3.2) TABLE(u, v, y, { r: 0.42, chairs: 2, chair: 0xd8cbb5 });
     CROWD([-27, -4, -10, 10], y, 6, 201);
     SUBZ('카페 원', '2F', '카페 · 델리', [-33, -6, -8, 12]);
-    // 플레이버즈 (218석)
-    WL(-33.1, 12, 4, 12, y, yc, { mat: WARM });
-    FRONT('u', 4, 12, 60.4, y, yc, 'E', 'FLAVORS', { sub: '플레이버즈 · 올데이 뷔페', door: 18.5, dw: 5, signAt: 18.5, sw: 8, fascia: 0x2b241d, fg: '#e8d29a' });
-    HP({ tex: 'wood', color: 0xb8946a }, [-33, 12, 4, 60.4], y + 0.01);
-    const stations = ['샐러드', '해산물', '그릴', '누들', '한식', '중식', '베이커리', '디저트'];
-    stations.forEach((n, i) => {
-      const v = 15 + i * 5.6;
-      B({ u: -31.8, v, y, w: 1.3, d: 4.8, h: 0.95, mat: 0x3b302a, top: 0xece6da });
-      B({ u: -31.4, v, y: y + 0.95, w: 0.5, d: 4.6, h: 0.42, mat: GL, solid: false });
-      for (let j = 0; j < 4; j++) B({ u: -32.0, v: v - 1.7 + j * 1.15, y: y + 0.95, w: 0.6, d: 0.9, h: 0.08, mat: [0xd9a46a, 0x9fc06a, 0xe8d6b8, 0xc8553a][(i + j) & 3], solid: false });
-      B({ u: -32.6, v, y: y + 3.6, w: 1.0, d: 4.8, h: 0.5, mat: 0x5a4a3c, solid: false });
-      SG([n], { u: -31.2, v, y: y + 3.05, w: 2.2, h: 0.45, f: 'E', bg: '#2b241d', fg: '#efe2c4' });
-      MAN(-32.75, v, y);
-    });
-    for (const [v, n] of [[24, '라이브 스테이션'], [40, '스시 · 사시미'], [52, '치즈 & 콜드컷']]) {
-      B({ u: -23, v, y, w: 2.2, d: 7, h: 0.95, mat: 0x3b302a, top: 0xece6da }); B({ u: -23, v, y: y + 0.95, w: 1.4, d: 6.6, h: 0.42, mat: GL, solid: false });
-      SG([n], { u: -23, v, y: y + 3.3, w: 2.6, h: 0.42, f: 'E', bg: '#2b241d', fg: '#efe2c4', twoSided: true });
+    // 플레이버즈: photos 17–20. Keep unobserved dining-plan extensions plain.
+    WL(-33.1, 12, 4, 12, y, yc, { mat: 'jwWalnut' });
+    WL(4, 12, 4, 41.7, y, yc, { mat: 'jwWalnut', thick: .2, openings: [{ at: 6.5, w: 3.4, y0: y, y1: y + 3.45 }] });
+    HP('jwTerrazzo', [-33, 12, 4, 60.4], y + .012, true, [[-2, 42, 4, 55]]);
+    // Gold serif-size letters on the wood entrance pier, with a floral pedestal below.
+    SG('FLAVORS', { u: 4.12, v: 14.6, y: y + 2.62, w: 1.25, h: .22, f: 'E', bg: null, fg: '#c4a273', bold: false, font: 'Georgia, serif', pxPerM: 220 });
+    B({ u: 4.12, v: 14.6, y: y + 3.65, w: .08, d: 2.7, h: .04, mat: { tex: 'emit', color: 0xe3af6d }, solid: false });
+    ROUND(5.25, 14.6, y, .65, .8, 'jwWalnut');
+    FLOWER(5.25, 14.6, y + .8, 1.05, [0x8e3e2b, 0xa9643e, 0x48603d, 0xc9904e]);
+    // High pendant bay and its single oversized walnut column (17).
+    COVE([-32.7, 12.2, 3.8, 26.2], yc - .03);
+    CY(-11.5, 20.7, y, .58, yc - y - .02, 'jwWalnut', { seg: 28 });
+    SLATS('v', 12.16, -32.7, 3.7, y, yc - y - .1, .23);
+    for (let i = 0; i < 28; i++) {
+      const u = -18.7 + (i % 7) * .65, v = 16.3 + Math.floor(i / 7) * 1.1;
+      const h = .8 + ((i * 7) % 13) * .105, bot = yc - .5 - h - ((i * 3) % 5) * .15;
+      CY(u, v, bot + h, .008, yc - bot - h, 0x4c4237, { seg: 4, solid: false });
+      CY(u, v, bot, .045, h, 0xb18b52, { seg: 8, solid: false });
+      CY(u, v, bot - .012, .035, .018, { tex: 'emit', color: 0xf8ddb2 }, { seg: 8, solid: false });
     }
-    for (let u = -17; u <= 1; u += 3.6) for (let v = 16.5; v <= 58; v += 4.6) TABLE(u, v, y, { square: true, r: 0.5, chairs: 4, rot: Math.PI / 4, chair: 0x7a5a42, top: 0xf2ede4 });
-    B({ u: 2.8, v: 18.5, y, w: 0.6, d: 1.0, h: 1.1, mat: WALNUT }); MAN(2.2, 18.5, y);
-    LIGHTS([-33, 12, 4, 60.4], yc, 4.6, 1.0, 0xfff0d6);
-    for (let v = 20; v <= 56; v += 9) CHAND(-8, v, yc, 0.9);
-    CROWD([-20, 14, 2, 58], y, 28, 202); CROWD([-29, 14, -24, 58], y, 8, 203);
-    SUBZ('플레이버즈', '2F', '올데이 뷔페 218석 · 라이브 스테이션', [-33, 12, 4, 60.4]);
+    // Buffet bay: a dark slatted ceiling, veined stone counters, small display trays.
+    HP(0x30241d, [-32.8, 26.4, -21, 41.5], yc - .18, false);
+    for (let v = 26.5; v < 41.5; v += .42) B({ u: -27, v, y: yc - .35, w: 11.5, d: .09, h: .15, mat: 'jwWalnut', solid: false });
+    SLATS('u', -32.85, 12.5, 60, y, yc - y, .23);
+    for (const [u, v, w, d] of [[-29.3, 29.5, 1.25, 6.4], [-29.3, 37.4, 1.25, 5.2], [-24.6, 33.3, 1.5, 6.6]]) {
+      B({ u, v, y, w, d, h: .9, mat: 'jwWalnut', top: 'jwDarkMarble' });
+      B({ u, v, y: y + .9, w: w + .08, d: d + .08, h: .08, mat: 'jwDarkMarble', solid: false });
+      B({ u, v, y: y + .98, w: w - .1, d: d - .2, h: .42, mat: { tex: 'glass', color: 0xc8d4cd }, solid: false });
+      for (let j = 0; j < 6; j++) {
+        B({ u, v: v - d / 2 + .5 + j * (d - 1) / 5, y: y + 1.0, w: .6, d: .6, h: .025, mat: 0xe9e5d8, solid: false });
+        for (let k = 0; k < 3; k++) B({ u: u - .18 + k * .18, v: v - d / 2 + .5 + j * (d - 1) / 5, y: y + 1.025, w: .14, d: .27, h: .065, mat: [0xad5938, 0xb88a53, 0x6e8448, 0xdac599][(j + k) % 4], solid: false });
+      }
+    }
+    FLOWER(-29.3, 25, y + .95, 1.25, [0x994d33, 0xc86b3d, 0xcf9b56, 0x75804a]);
+    B({ u: -29.3, v: 25, y, w: 1.5, d: 1.4, h: .95, mat: 'jwDarkMarble' });
+    // Lower recessed dining ceiling and open timber screens, without closing the aisle.
+    COVE([-20.4, 26.4, 3.7, 41.6], y + 3.65);
+    SLATS('u', -20.5, 27.2, 33.4, y, 3.65, .22);
+    SLATS('v', 35.8, -18.8, -12, y, 3.65, .22);
+    SLATS('v', 35.8, -7.7, -.2, y, 3.65, .22);
+    for (const [u, v] of [[-17, 30.7], [-4, 30.7], [-16, 39.1], [-5, 39.1]]) {
+      SOFA(u, v + 1.1, y, 3.2, 'N', 0xb4a186);
+      ROUND(u, v, y, .78, .74, 'jwDarkMarble');
+      CHAIR(u - 1.1, v, y, 'E', 0xb4a186); CHAIR(u + 1.1, v, y, 'W', 0xb4a186); CHAIR(u, v - 1.05, y, 'S', 0xb4a186);
+      for (const du of [-.32, .32]) CY(u + du, v, y + .75, .14, .018, 0xe9e5db, { seg: 12, solid: false });
+      FLOWER(u, v, y + .76, .2);
+    }
+    for (const [u, v] of [[-26, 19.8], [-21.5, 22.3], [-5.5, 22.8], [-1, 22.8]]) {
+      ROUND(u, v, y, .65, .74, 'jwDarkMarble');
+      CHAIR(u, v - 1, y, 'S'); CHAIR(u, v + 1, y, 'N');
+      CHAIR(u - 1, v, y, 'E'); CHAIR(u + 1, v, y, 'W');
+    }
+    LIGHTS([-32, 13, 3.6, 25], yc - .06, 5.2, .12, 0xf0c98e);
+    MAN(-16, 40.1, y, { sit: true, shirt: 0xddd4c7 }); MAN(-28.1, 37.4, y, { shirt: 0xe5e0d5 });
+    // The hall void is kept out of all restaurant/landing surfaces and bounded at 2F.
+    RAILBOX(HALL, y);
+    SUBZ('플레이버즈', '2F', '뷔페 · 황동 펜던트 · 대리석 카운터', [-33, 12, 4, 41.7]);
+    SUBZ('플레이버즈 다이닝', '2F', '월넛 스크린 · 소파 좌석', [-20.4, 26.4, 3.7, 41.6]);
     // 파티세리 · 티 바
     FRONT('u', 17, -6, 26, y, yc, 'W', 'PÂTISSERIE', { sub: '파티세리 · 티 바', door: 20, dw: 4, signAt: 12, fascia: 0x3b2c22, fg: '#efe2c4' });
     WL(17, -6, 33.1, -6, y, yc, { mat: WARM }); WL(17, 26, 33.1, 26, y, yc, { mat: WARM });
@@ -572,17 +780,14 @@ export function build(K) {
     PARTS('u', 0, [21.2, 25.2, 29.2], 55.5, 60.4, y, yc - y, 0xe9dcc4);
     for (const [u, v] of [[30.3, 45.35], [30.3, 49.45], [30.3, 53.5], [19.2, 58], [23.2, 58], [27.2, 58], [31.1, 58]]) TABLE(u, v, y, { square: true, r: 0.7, chairs: 4, h: 0.72, top: 0x3a2a20, chair: 0x8a6e55, rot: Math.PI / 4 });
     SUBZ('타마유라', '2F', '일식 · 데판야키 · 룸 7실', [17, 43, 33, 60.4]);
-    // toilets + circulation
-    BOH([4, 44.5, 17, 60.4], y, yc - y);
-    DOORP(9, 44.47, y, 'N', 1.2, 0xbcae98); DOORP(13, 44.47, y, 'N', 1.2, 0xbcae98);
-    SG(['화장실'], { u: 11, v: 44.4, y: y + 2.75, w: 2.2, h: 0.45, f: 'N', bg: '#2b241d', fg: '#f0e2c4' });
-    HP({ tex: 'jwCarpet' }, [4, -6, 17, 44.5], y + 0.008, true, [[8.8, 24.2, 15.9, 39.5]]);
-    LIGHTS([4, -6, 17, 44.5], yc, 4.2, 1.0, 0xfff0d6, (u, v) => inR(u, v, [8.8, 24.2, 15.9, 39.5], 0.6));
-    LIGHTS([17, 26, 33, 43], yc, 4.2, 1.0, 0xfff0d6, (u, v) => inR(u, v, [21, 29, 30, 42]));
-    SUBZ('에스컬레이터 홀', '2F', '1F 현관 ↔ 3F 연회장', [17, 26, 33, 43]); SUBZ('화장실', '2F', '레스토랑 층', [4, 44.5, 17, 60.4]);
-    SUBZ('데판야키 카운터', '2F', '타마유라', [17.5, 45.5, 25.6, 53.8]); SUBZ('뷔페 스테이션', '2F', '플레이버즈 · 샐러드 · 해산물 · 그릴 · 누들 · 한식 · 중식 · 디저트', [-33, 12, -30.4, 60.4]);
-    SUBZ('2F 로비 · 라운지', '2F', '레스토랑 입구 · 대기', [4, -6, 17, 44.5]);
-    CROWD([5, -4, 16, 20], y, 6, 205);
+    // Plain continuation around the ground-hall void; no invented restroom block across it.
+    HP('jwHoney', [4, -6, 17, 41.8], y + .008, true, [[8.8, 24.2, 15.9, 39.5]]);
+    HP('jwHoney', [4, 55.15, 17, 60.4], y + .008);
+    LIGHTS([4, -6, 17, 41.8], yc, 5, .16, 0xffdfac, (u, v) => inR(u, v, [8.8, 24.2, 15.9, 39.5], .6));
+    LIGHTS([17, 26, 33, 43], yc, 5, .16, 0xffdfac, (u, v) => inR(u, v, [21, 29, 30, 42]));
+    SUBZ('에스컬레이터 홀', '2F', '1F 현관 ↔ 3F 연회장', [17, 26, 33, 43]);
+    SUBZ('데판야키 카운터', '2F', '타마유라', [17.5, 45.5, 25.6, 53.8]);
+    SUBZ('2F 로비', '2F', '레스토랑 입구', [4, -6, 17, 41.8]);
   }
 
   // =====================================================================
@@ -728,26 +933,63 @@ export function build(K) {
     SG(['그랜드 볼룸'], { u: -14, v: -9.75, y: y + 4.3, w: 5, h: 0.8, f: 'S', bg: '#d8cab2', fg: '#7a5f40' });
     SG(['GRAND BALLROOM'], { u: 3.2, v: -35, y: y + 4.0, w: 5, h: 0.6, f: 'E', bg: '#d8cab2', fg: '#7a5f40' });
     SUBZ('그랜드 볼룸', '5F', '천고 7m · 버진로드 21m · 웨딩 · 연회', BALL, bc);
-    // foyer
+    // 09–10: cream stone border, lengthwise blue/cream carpet, bronze ceiling grid,
+    // recessed walnut doors and a low black flower console. Unseen adjoining rooms stay plain.
     BOH([-33.1, -60.4, 3, -56], y, yc - y); BOH([-33.1, -56, -31, -10], y, yc - y); BOH([-33.1, 14, 4.9, 60.4], y, yc - y);
-    FRONT('u', -18, 0, 14, y, yc, 'E', '신부 대기실', { door: 7, dw: 2.2, fascia: 0xe8dcc4, fg: '#7a5f40', glass: GL });
-    WL(-33.1, 0, -18, 0, y, yc, { mat: 0xefe6da });
-    B({ u: -31.6, v: 7, y, w: 0.3, d: 12, h: 3.8, mat: 0xf3e4e2, solid: false });
-    for (let i = 0; i < 24; i++) B({ u: -31.4, v: 1.8 + (i % 12) * 0.9, y: y + 0.6 + Math.floor(i / 12) * 1.6 + rnd(), w: 0.2, d: 0.6, h: 0.5, mat: [0xf2f2ee, 0xe6b8c0, 0xd4e4c8][i % 3], solid: false });
-    SOFA(-28, 7, y, 3.6, 'E', 0xf6f2ea);
+    FRONT('u', -18, 0, 14, y, yc, 'E', '신부 대기실', { door: 7, dw: 2.2, fascia: 0x514238, fg: '#e7ddd0', glass: GL, sw: 1.8 });
+    WL(-33.1, 0, -18, 0, y, yc, { mat: 0xdcd0bf });
+    SOFA(-28, 7, y, 3.6, 'E', 0xe4dbcf);
     SUBZ('신부 대기실', '5F', '그랜드 볼룸 웨딩', [-33, 0, -18, 14]);
-    HP({ tex: 'marble', color: 0xefe6d8 }, [-31, -10, 3, 0], y + 0.008);
-    for (const [u, v, f] of [[10, -48, 'E'], [10, -40, 'E'], [10, -24, 'E'], [26, -10, 'W'], [26, 4, 'W']]) SOFA(u, v, y, 3, f, 0xc9b9a0);
-    FLOWERS(-14, -4.5, y, 1.3); FLOWERS(18, -30, y, 1.0);
-    B({ u: 2.0, v: 6, y, w: 1.2, d: 3.2, h: 1.1, mat: WALNUT, top: 0xf2ede4 }); SG(['방명록 · 축의금 접수'], { u: 2.6, v: 6, y: y + 1.6, w: 2.6, h: 0.36, f: 'E', bg: '#2b241d', fg: '#efe2c4' });
+    HP('jwHoney', [-31, -10, 3, 0], y + 0.012);
+    HP('jwFoyerCarpet', [-29.5, -8.6, 3, -1.4], y + 0.018);
+    HP('jwHoney', [3, -56, 32.95, 24.1], y + 0.012);
+    HP('jwFoyerCarpet', [5.4, -52.5, 30.5, 23.6], y + 0.018);
+    HP('jwHoney', [16, 24.2, 33, 60.4], y + 0.012, true, [ESC['5F']]);
+    HP('jwFoyerCarpet', [17.5, 24.2, 24.7, 58.5], y + 0.018);
+    const fCeil = y + 3.65;
+    // The source ceiling is a dark mirrored bronze grid, not a luminous tile array.
+    const bronzeCeiling = (r) => {
+      const [u0, v0, u1, v1] = r;
+      B({ u: (u0 + u1) / 2, v: (v0 + v1) / 2, y: fCeil, w: u1 - u0, d: v1 - v0, h: 0.08, mat: 'jwFoyerBronze', solid: false });
+      for (let u = u0; u <= u1; u += 2.1) B({ u, v: (v0 + v1) / 2, y: fCeil - 0.07, w: 0.045, d: v1 - v0, h: 0.07, mat: 0x241f1a, solid: false });
+      for (let v = v0; v <= v1; v += 2.4) B({ u: (u0 + u1) / 2, v, y: fCeil - 0.07, w: u1 - u0, d: 0.045, h: 0.07, mat: 0x241f1a, solid: false });
+      for (let u = u0 + 1.05; u < u1; u += 4.2) for (let v = v0 + 1.2; v < v1; v += 4.8) {
+        CY(u, v, fCeil - 0.085, 0.075, 0.015, { tex: 'emit', color: 0xffe0ae }, { seg: 8, solid: false });
+      }
+    };
+    bronzeCeiling([3.1, -55.8, 32.9, 24.1]); bronzeCeiling([-31, -10, 3, 0]);
+    bronzeCeiling([16.1, 24.2, 32.9, 60.3]);
+    // Timber blades beside the ballroom portals preserve the actual door openings.
+    for (const [a, b] of [[-55.3, -46.7], [-43.3, -26.7], [-23.3, -10.4]]) SLATS('u', 3.28, a, b, y, 3.58, 0.22);
+    SLATS('u', 32.65, -52.5, 23.4, y, 3.58, 0.24);
+    B({ u: 32.58, v: -14.5, y: y + 0.06, w: 0.09, d: 75.8, h: 0.035, mat: { tex: 'emit', color: 0xe7b66d }, solid: false });
+    // Pale framed screen and flower console at the end of the photographed foyer.
+    B({ u: 17.6, v: -53.25, y, w: 14, d: 0.12, h: 3.55, mat: 0xc6b6a0, solid: false });
+    for (let u = 10.6; u <= 24.6; u += 2) B({ u, v: -53.15, y, w: 0.065, d: 0.08, h: 3.55, mat: 0x3c3028, solid: false });
+    for (const dy of [0.55, 2.7]) B({ u: 17.6, v: -53.15, y: y + dy, w: 14, d: 0.08, h: 0.035, mat: 0x5e5144, solid: false });
+    B({ u: 18.5, v: -51.9, y, w: 4.2, d: 0.9, h: 0.85, mat: 'jwDarkMarble' });
+    B({ u: 16.2, v: -51.9, y: y + 0.82, w: 1.8, d: 0.85, h: 0.05, mat: 0xbda67d, solid: false });
+    for (const u of [15.4, 17]) B({ u, v: -51.9, y, w: 0.055, d: 0.85, h: 0.82, mat: 0x9d8764, solid: false });
+    for (let i = 0; i < 7; i++) FLOWER(15.7 + i * 0.72, -51.9 + (i % 2) * 0.12, y + 0.87, 0.38 + (i % 3) * 0.055, [0xd48453, 0xe1aa64, 0xdbbda1, 0x7f8d55]);
+    // Two low amber reception counters seen by the escalator approach (photo 09).
+    for (const u of [10, 26.5]) {
+      B({ u, v: 20.8, y, w: 4.0, d: 0.85, h: 0.93, mat: 0xa9693e, top: 0xe1c8a5 });
+      B({ u, v: 20.8, y, w: 4.05, d: 0.89, h: 0.2, mat: 0x342c24, solid: false });
+      B({ u: u - 1.1, v: 20.7, y: y + 0.94, w: 0.36, d: 0.26, h: 0.025, mat: 0xeee7db, solid: false });
+      B({ u: u + 2.45, v: 20.8, y, w: 0.055, d: 0.055, h: 1.6, mat: 0x362e25, solid: false });
+      SG('그랜드 볼룸', { u: u + 2.45, v: 20.75, y: y + 1.35, w: 0.5, h: 0.7, f: 'N', bg: '#28231f', fg: '#ded4bf' });
+    }
     RAILBOX(ESC['5F'], y, 'n');
-    SG(['그랜드 볼룸 →'], { u: 27.8, v: 31.5, y: y + 3.0, w: 3, h: 0.42, f: 'S', bg: '#2b241d', fg: '#efe2c4' });
-    DOORP(4.93, 20, y, 'E', 1.2, 0xbcae98); DOORP(4.93, 24, y, 'E', 1.2, 0xbcae98); SG(['화장실'], { u: 5.0, v: 22, y: y + 2.75, w: 2.2, h: 0.45, f: 'E', bg: '#2b241d', fg: '#f0e2c4' });
-    LIGHTS([3, -60.4, 33, 60.4], yc, 4.5, 1.0, 0xfff0d6, (u, v) => inR(u, v, [8.8, 24.2, 15.9, 39.5], 0.6) || inR(u, v, [25.5, 31, 30.5, 42]) || (u < 4.9 && v > 14));
-    LIGHTS([-31, -10, 3, 0], yc, 4, 1.0);
-    CROWD([5, -55, 31, 20], y, 22, 502); CROWD([-30, -9, 2, -1], y, 8, 503);
-    SUBZ('방명록 · 축의금 접수', '5F', '웨딩 리셉션', [0.5, 3, 4.9, 9]); SUBZ('웨딩 무대', '5F', '그랜드 볼룸 · 플라워 월', [-24, -56, -4, -51]); SUBZ('버진로드 21m', '5F', '그랜드 볼룸', [-15.5, -51, -12.5, -30]);
-    SUBZ('그랜드 볼룸 포이어', '5F', '웨딩 · 연회 로비', [3, -60.4, 33, 60.4]);
+    SG('그랜드 볼룸', { u: 30.3, v: 30.1, y: y + 1.55, w: 0.8, h: 0.32, f: 'S', bg: '#382e28', fg: '#e6dcc7' });
+    DOORP(4.93, 20, y, 'E', 1.2, 0x68513c); DOORP(4.93, 24, y, 'E', 1.2, 0x68513c);
+    SG('화장실', { u: 5.02, v: 22, y: y + 1.5, w: 0.45, h: 0.23, f: 'E', bg: '#382e28', fg: '#eee5d5' });
+    MAN(12, 17.7, y, { shirt: 0x26252a }); MAN(24.5, -28, y, { shirt: 0x5b4d44 });
+    SUBZ('방명록 · 축의금 접수', '5F', '웨딩 리셉션', [7.5, 18.6, 29, 22.2]);
+    SUBZ('웨딩 무대', '5F', '그랜드 볼룸 · 플라워 월', [-24, -56, -4, -51]); SUBZ('버진로드 21m', '5F', '그랜드 볼룸', [-15.5, -51, -12.5, -30]);
+    SUBZ('그랜드 볼룸 포이어', '5F', '푸른 추상 카펫 · 브론즈 격자 천장 · 리셉션', [3, -60.4, 33, 60.4]);
+    // The removed speculative bridal flower wall consumed 24 random values.
+    // Preserve the existing rooftop tree heights and basement vehicle layout downstream.
+    for (let i = 0; i < 24; i++) rnd();
   }
 
   // =====================================================================
@@ -882,134 +1124,155 @@ export function build(K) {
   }
 
   // =====================================================================
-  // 8F — 로비 · 체크인 · 더 라운지 (atrium to 12F + necklace sculpture)
+  // 8F — reception and The Lounge, photos 01–04. No sculpture/15 m atrium here.
   // =====================================================================
   function floor8() {
-    const y = Y['8F'], yc = NEXT['8F'] - 0.3, ytop = Y['12F'] - 0.3;
-    HP({ tex: 'darkstone', color: 0x6d6258 }, [-7.85, 13.6, 2.9, 48.4], y + 0.01, true, [[-7.85, 14.2, 2.3, 47.8]]);
-    // reception
-    for (const u of [7.6, 10.6, 13.6]) { B({ u, v: 48.2, y, w: 2.5, d: 0.9, h: 1.08, mat: WALNUT, top: 0xefe7da }); MAN(u, 49.6, y, { shirt: 0x1d2433, rotY: FACE.N }); }
-    WL(6, 53.5, 15.85, 53.5, y, yc, { mat: WALNUT, mat2: WARM });
-    BOH([6, 53.6, 15.85, 57.9], y, yc - y);
-    SG(['JW MARRIOTT'], { u: 10.9, v: 53.35, y: y + 3.4, w: 6, h: 0.9, f: 'N', bg: '#6b4a32', fg: '#d8b878' });
-    SG(['프런트 데스크 · 체크인'], { u: 10.9, v: 53.35, y: y + 2.45, w: 4, h: 0.45, f: 'N', bg: '#6b4a32', fg: '#efe2c4' });
-    SUBZ('프런트 데스크', '8F', '체크인 · 체크아웃 · 24시간', [5.2, 44, 16, 53.5]);
-    // grand stair to 9F
-    STR(4.1, 56.2, 4.1, 48.8, y, Y['9F'], 1.8, { railWalls: false });
-    // The Lounge
-    B({ u: -6.4, v: 10, y, w: 1.6, d: 6, h: 1.05, mat: WALNUT, top: 0xefe7da });
-    for (let j = 0; j < 4; j++) B({ u: -6.6, v: 7.8 + j * 1.4, y: y + 1.05, w: 0.6, d: 0.6, h: 0.32, mat: GL, solid: false });
-    B({ u: -7.7, v: 10, y: y + 1.4, w: 0.25, d: 6, h: 2.2, mat: 0x3b2c22, solid: false });
-    SG(['THE LOUNGE'], { u: -2, v: 13.8, y: y + 3.9, w: 4.5, h: 0.7, f: 'S', bg: '#2b241d', fg: '#d8b878', sub: '더 라운지 · 딤섬 · 애프터눈 티' });
-    const groups = [[-4.5, 17.5], [-4.5, 23.5], [-4.5, 38.5], [-4.5, 44.5], [0.2, 19], [0.2, 43], [-1, 8.5], [3, 8.5]];
-    for (const [u, v] of groups) { TABLE(u, v, y, { r: 0.45, chairs: 0, h: 0.5, top: 0xf0e8d8 }); SOFA(u - 1.3, v, y, 1.4, 'E', 0xe6dccb); SOFA(u + 1.3, v, y, 1.4, 'W', 0xb89a74); }
-    // grand piano
-    B({ u: -5.5, v: 31, y: y + 0.65, w: 1.5, d: 2.2, h: 0.35, mat: 0x0f0f10 }); for (const [du, dv] of [[-0.6, -0.9], [0.6, -0.9], [0, 0.9]]) B({ u: -5.5 + du, v: 31 + dv, y, w: 0.12, d: 0.12, h: 0.65, mat: 0x0f0f10, solid: false });
-    B({ u: -5.5, v: 32.3, y, w: 0.5, d: 0.8, h: 0.48, mat: 0x0f0f10 }); MAN(-5.5, 32.4, y, { rotY: FACE.N, sit: true, shirt: 0x111111 });
-    FLOWERS(-1.5, 31, y, 1.5);
-    // Jean-Michel Othoniel necklace sculpture (approx. 15 m) hanging in the atrium
-    {
-      const T = K.THREE; const pts = [];
-      const strand = (cu, va, vb, drop, n) => { for (let i = 0; i <= n; i++) { const t = i / n; const v = va + (vb - va) * t; const sag = Math.pow(Math.sin(Math.PI * t), 0.55); pts.push([cu + Math.sin(t * 6.2) * 0.25, ytop - 0.5 - drop * sag, v]); } };
-      strand(-2.2, 25.5, 36.5, 13.6, 46); strand(-1.0, 27.5, 34.5, 10.5, 32);
-      const mesh = new T.InstancedMesh(new T.SphereGeometry(0.34, 16, 12), new T.MeshLambertMaterial({ color: 0xf4ecdc, emissive: 0x2a2620 }), pts.length);
-      const M = new T.Matrix4();
-      pts.forEach(([u, yy, v], i) => { const [x, z] = P(u, v); M.makeTranslation(x, yy, z); mesh.setMatrixAt(i, M); });
-      mesh.instanceMatrix.needsUpdate = true; K.addMesh(mesh);
-      for (const [u, v] of [[-2.2, 25.5], [-2.2, 36.5], [-1.0, 27.5], [-1.0, 34.5]]) CY(u, v, ytop - 0.6, 0.02, 0.6, 0x9a8a70, { seg: 4, solid: false, caps: false });
+    const y = Y['8F'], yc = y + 5.2;
+    HP('jwHoney', [-7.85, 6.15, 15.85, 57.85], y + .008, true, [ELH, STH]);
+    HP('jwLoungeRug', [-7.4, 14, 2.3, 46.8], y + .018);
+    HP(0x3a2b24, [-7.85, 6.1, 5.1, 48], yc - .02, false);
+    // Glass facade is retained; the new curtain hangs entirely inside it.
+    for (let v = 14; v < 47.8; v += .24) {
+      const u0 = -7.68 + Math.sin(v * 8) * .065, u1 = -7.68 + Math.sin((v + .24) * 8) * .065;
+      WL(u0, v, u1, Math.min(v + .24, 48), y + .04, yc - .07, { mat: 'jwSheer', thick: .012, solid: false });
     }
-    SG(['장-미셸 오토니엘 · 목걸이 조형물'], { u: 2.4, v: 24.5, y: y + 0.55, w: 1.8, h: 0.22, f: 'E', bg: '#2b241d', fg: '#efe2c4' });
-    LIGHTS([5.2, 6.1, 15.85, 24.2], yc, 3.6, 0.8); LIGHTS([2.5, 39.5, 8.8, 53.5], yc, 3.6, 0.8);
-    LIGHTS(ATRIUM, ytop, 4.0, 0.5, 0xfff0d0);
-    CHAND(10.5, 15, yc, 1.2);
-    CROWD([-6, 15, 2, 46], y, 12, 801); CROWD([5.5, 40, 15, 47], y, 6, 802);
-    SUBZ('오토니엘 목걸이 조형물', '8F', '아트리움 · 약 15m', [-3.5, 24, 0.5, 38]); SUBZ('그랜드 피아노', '8F', '더 라운지 라이브', [-7, 29, -3.5, 33.5]); SUBZ('엘리베이터 홀', '8F', '객실 · 레스토랑 층 연결', [5.2, 24.2, 8.8, 39.5]); SUBZ('9F 라운지 계단', '8F', '이그제큐티브 라운지 연결', [3, 48.8, 5.2, 57]);
-    SUBZ('더 라운지', '8F', '로비 라운지 · 딤섬 · 애프터눈 티 · 피아노', [-8, 6, 5.2, 48]);
+    B({ u: -7.65, v: 31, y: yc - .08, w: .1, d: 34, h: .06, mat: 0x70513a, solid: false });
+    for (let v = 14.2; v < 48; v += 1.5) B({ u: -7.77, v, y, w: .045, d: .045, h: 5.1, mat: 0x302824, solid: false });
+    // Bar: panelled walnut back wall, two glowing bottle tiers, black fluted counter (03).
+    WL(-7.75, 6.35, 4.8, 6.35, y, yc, { mat: 'jwWalnut', thick: .1 });
+    for (let u = -7.7; u < 4.8; u += 1.4) B({ u, v: 6.46, y, w: .055, d: .06, h: 5.1, mat: 0x725139, solid: false });
+    for (const yy of [1.4, 3.1, 4.8]) B({ u: -1.45, v: 6.46, y: y + yy, w: 12.4, d: .06, h: .055, mat: 0x725139, solid: false });
+    B({ u: -2.1, v: 10.2, y, w: 9.2, d: 1.1, h: 1.02, mat: 0x242725, top: 'jwDarkMarble' });
+    B({ u: -2.1, v: 10.2, y: y + 1.02, w: 9.35, d: 1.2, h: .075, mat: 'jwDarkMarble', solid: false });
+    for (let u = -6.6; u < 2.5; u += .22) B({ u, v: 10.77, y: y + .08, w: .035, d: .035, h: .9, mat: 0x151a18, solid: false });
+    B({ u: -2.1, v: 7.15, y, w: 8.8, d: .9, h: .92, mat: 0x292b27, top: 'jwDarkMarble' });
+    for (let row = 0; row < 2; row++) {
+      const yy = y + 1.42 + row * .37;
+      B({ u: -2.1, v: 7.0 - row * .13, y: yy, w: 7.7, d: .5, h: .045, mat: { tex: 'emit', color: 0xf7d8a0 }, solid: false });
+      for (let i = 0; i < 34; i++) {
+        const u = -5.8 + i * .224, v = 7.03 - row * .13, h = .19 + ((i * 7 + row) % 6) * .025;
+        B({ u, v, y: yy + .045, w: .105, d: .11, h, mat: [0xb5842b, 0x687b4b, 0xb3b7a0, 0x77472d, 0xc7a55e][(i + row) % 5], solid: false });
+        CY(u, v, yy + .045 + h, .022, .09, i % 3 ? 0xbba05b : 0x344936, { seg: 6, solid: false });
+        B({ u, v: v + .061, y: yy + .09, w: .075, d: .007, h: .075, mat: 0xe4d9b8, solid: false });
+      }
+    }
+    for (const u of [-5.8, -4.7, -.6, 1.3]) CY(u, 10.2, y + 1.1, .08, .27, 0xa7a69a, { seg: 10, solid: false });
+    for (let i = 0; i < 6; i++) CY(-2.7 + i * .18, 10.2, y + 1.11, .045, .13, { tex: 'glass', color: 0xead7b2 }, { seg: 8, solid: false });
+    SG('THE LOUNGE', { u: 4.65, v: 12.6, y: y + 1.6, w: .95, h: .22, f: 'S', bg: null, fg: '#c7a573', bold: false });
+    // Grand piano with curved tail, tapered legs, a raised lid and individual keys (02).
+    const pu = -4.8, pv = 25.2;
+    const shape = [[-.82, 1.05], [.82, 1.05], [.82, .15], [.66, -.78], [.33, -1.35], [-.2, -1.45], [-.63, -.92], [-.82, -.3]];
+    K.prism(shape.map(([u, v]) => P(pu + u, pv + v)), y + .67, y + .98, { mat: 0x121314, solid: false });
+    const lid = shape.map(([u, v]) => { const p = P(pu + u, pv + v); return [p[0], y + 1.015 + (u + .82) * .2, p[1]]; });
+    for (let i = 1; i < lid.length - 1; i++) K.quad(0x18191a, [lid[0], lid[i], lid[i + 1], lid[0]], [0, 1, 0]);
+    for (const [du, dv] of [[-.64, .8], [.64, .8], [.1, -1.1]]) {
+      CY(pu + du, pv + dv, y + .04, .065, .67, 0x151617, { seg: 8, solid: false });
+      CY(pu + du, pv + dv, y + .015, .11, .035, 0x1d1d1c, { seg: 10, solid: false });
+    }
+    B({ u: pu, v: pv + 1.07, y: y + .78, w: 1.48, d: .29, h: .055, mat: 0xe7e2d8, solid: false });
+    for (let i = 0; i < 28; i++) B({ u: pu - .7 + i * .05, v: pv + 1.12, y: y + .835, w: .006, d: .22, h: .008, mat: 0x817d75, solid: false });
+    for (let i = 0; i < 20; i++) if (i % 7 !== 2 && i % 7 !== 6) B({ u: pu - .67 + i * .067, v: pv + 1.02, y: y + .843, w: .027, d: .15, h: .03, mat: 0x171717, solid: false });
+    B({ u: pu, v: pv + 1.8, y: y + .42, w: .85, d: .38, h: .1, mat: 0x201d1b });
+    for (const du of [-.32, .32]) B({ u: pu + du, v: pv + 1.8, y, w: .055, d: .25, h: .42, mat: 0x151515, solid: false });
+    // Long warm L-sofa, loose copper/burgundy cushions and two low walnut tables (02).
+    SOFA(-6.35, 36.7, y, 10.2, 'E', 0xb77b54);
+    SOFA(-3.6, 41.4, y, 6.25, 'N', 0xb77b54);
+    for (let v = 32.5; v < 41; v += 1.0) B({ u: -6.49, v, y: y + .5, w: .26, d: .49, h: .4, mat: [0x84462f, 0x9e6140, 0x613126, 0xb17c53][Math.round(v * 2) % 4], solid: false });
+    for (const u of [-5.7, -4.7, -2.2, -1.2]) B({ u, v: 41.55, y: y + .5, w: .48, d: .24, h: .4, mat: u < -3 ? 0x874c33 : 0x703a2d, solid: false });
+    ROUND(-3.7, 36.2, y, 1.05, .43, 'jwWalnut');
+    B({ u: -3.3, v: 38.5, y: y + .35, w: 1.7, d: 1.2, h: .09, mat: 'jwWalnut', solid: false });
+    B({ u: -3.3, v: 38.5, y, w: 1.35, d: .8, h: .35, mat: 0x27201b });
+    FLOWER(-3.7, 36.2, y + .44, .32); FLOWER(-3.3, 38.5, y + .45, .23);
+    // Low leather bucket chairs and small pale tables (01/04); leave an open east aisle.
+    for (const [u, v] of [[-.9, 17.5], [.4, 24], [.3, 32], [.5, 44.5]]) {
+      ROUND(u, v, y, .54, .62, 0xded4bf);
+      CHAIR(u - 1, v, y, 'E', 0xa39480); CHAIR(u + 1, v, y, 'W', 0xb4a38a);
+      FLOWER(u, v, y + .63, .18, [0x763553, 0xa14f71, 0x567442]);
+    }
+    // Woven peacock chair, open rattan rings instead of a solid oversized back (04).
+    CHAIR(-5.7, 17.6, y, 'E', 0xbd9d71);
+    const ring = (cv, cy, rv, ry, width) => {
+      for (let i = 0; i < 36; i++) {
+        const a = i / 36 * Math.PI * 2, b = (i + 1) / 36 * Math.PI * 2;
+        const at = (t, rr) => { const p = P(-6.03, cv + Math.cos(t) * (rv + rr)); return [p[0], y + cy + Math.sin(t) * (ry + rr), p[1]]; };
+        K.quad(0xd0b78d, [at(a, -width), at(b, -width), at(b, width), at(a, width)], [EV[0], 0, EV[1]]);
+      }
+    };
+    ring(17.6, 1.28, .68, .87, .016); ring(17.6, 1.28, .62, .81, .009);
+    for (const dv of [-.32, 0, .32]) for (const yy of [1.15, 1.52, 1.86]) ring(17.6 + dv, yy, .18, .18, .008);
+    B({ u: -5.72, v: 17.6, y: y + .5, w: .3, d: .44, h: .43, mat: 0xa66d78, solid: false });
+    // Plain black folding screen against the panelled end wall.
+    for (let i = 0; i < 5; i++) B({ u: -6.1 + i * .65, v: 13.3, y, w: .67, d: .07, h: 2.35, r: i % 2 ? .18 : -.18, mat: i % 2 ? 0x242728 : 0x111718, solid: false });
+    LIGHTS([-7.4, 7, 4.6, 47], yc - .04, 4.4, .12, 0xf3d4a4);
+    // Reception/core position and the walkable staircase remain, with modest signage.
+    for (const u of [7.6, 10.6, 13.6]) B({ u, v: 48.2, y, w: 2.5, d: .9, h: 1.08, mat: 'jwWalnut', top: 'jwHoney' });
+    WL(6, 53.5, 15.85, 53.5, y, yc, { mat: 'jwWalnut' });
+    BOH([6, 53.6, 15.85, 57.9], y, 5.2);
+    SG('JW MARRIOTT', { u: 10.9, v: 53.35, y: y + 2.5, w: 2.5, h: .36, f: 'N', bg: null, fg: '#c5aa7b' });
+    MAN(10.6, 49.6, y, { shirt: 0x292623 });
+    STR(4.1, 56.2, 4.1, 48.8, y, Y['9F'], 1.8, { railWalls: false });
+    COVE([5.2, 6.2, 15.8, 24.1], yc);
+    COVE([2.5, 39.6, 8.7, 48.5], yc);
+    COVE([5.2, 24.2, 8.7, 39.5], y + 3.5);
+    HP(0xe4dccd, [6, 48.5, 15.8, 53.5], yc, false);
+    SUBZ('프런트 데스크', '8F', '체크인 · 체크아웃', [5.2, 44, 16, 53.5]);
+    SUBZ('그랜드 피아노', '8F', '더 라운지', [-6, 23.5, -3.6, 27.5]);
+    SUBZ('더 라운지 바', '8F', '대리석 바 · 월넛 패널', [-7.85, 6.1, 4.8, 13.4]);
+    SUBZ('더 라운지', '8F', '커튼 벽 · 테라코타 소파 · 피아노', [-8, 14, 5.2, 48]);
+    SUBZ('엘리베이터 홀', '8F', '객실 · 레스토랑 층 연결', [5.2, 24.2, 8.8, 39.5]);
+    SUBZ('9F 라운지 계단', '8F', '이그제큐티브 라운지 연결', [3, 48.8, 5.2, 57]);
   }
 
   // =====================================================================
-  // 9F–11F — 이그제큐티브 라운지 · 미팅룸 · 사무실 (atrium galleries)
+  // 9F–11F — 이그제큐티브 라운지 · 사무실 (2026 lift directory)
   // =====================================================================
   function floors9to11() {
     for (const k of ['9F', '10F', '11F']) {
       const y = Y[k], yc = NEXT[k] - 0.3;
-      RAILBOX(ATRIUM, y, 'w');
       LIGHTS([2.5, 24.2, 8.8, 39.6], yc, 3.5, 0.6);
-      SUBZ('아트리움 갤러리', k, '8F 로비 오픈 천장 · 목걸이 조형물 전망', [-7.85, 14, 2.5, 48]);
       if (k === '9F') {
+        // 16: herringbone timber, blue rugs, ivory round tables and softly curved bucket chairs.
         RAILBOX([3.0, 48.8, 5.2, 57], y, 'n');
-        WL(2.5, 24.2, 8.85, 24.2, y, yc, { mat: WALNUT, openings: [{ at: 3.2, w: 2.4, y0: y, y1: y + 2.6 }] });
-        HP({ tex: 'wood', color: 0xb08a62 }, [-7.85, 6.1, 15.85, 24.2], y + 0.01, true, [[-7.85, 14, 2.5, 24.2]]);
-        B({ u: 10.5, v: 6.9, y, w: 9, d: 0.9, h: 0.95, mat: WALNUT, top: 0xefe7da });
-        for (let j = 0; j < 8; j++) B({ u: 6.8 + j * 1.05, v: 6.9, y: y + 0.95, w: 0.6, d: 0.5, h: 0.1, mat: [0xd9a46a, 0x9fc06a, 0xe8d6b8, 0xc8553a][j & 3], solid: false });
-        for (const [u, v] of [[-5.5, 8.5], [-1.5, 8.5], [7, 11.5], [11, 11.5], [7, 16], [11, 16], [14.5, 20]]) TABLE(u, v, y, { r: 0.45, chairs: 3, chair: 0xc9b9a0 });
-        for (const [u, v] of [[14.6, 9.5], [14.6, 14]]) SOFA(u, v, y, 2.4, 'W', 0x6a5a4a);
-        SG(['EXECUTIVE LOUNGE'], { u: 5.6, v: 24.05, y: y + 3.0, w: 3.6, h: 0.42, f: 'S', bg: '#2b241d', fg: '#e0c890', sub: '이그제큐티브 라운지' });
-        LIGHTS([-7.85, 6.1, 15.85, 14], yc, 3.5, 0.8); LIGHTS([2.5, 14, 15.85, 24.2], yc, 3.5, 0.8);
-        CROWD([-7, 7, 15, 13], y, 6, 901);
-        SUBZ('이그제큐티브 라운지', '9F', '조식 · 해피아워 (투숙객 전용, 층 추정)', [-8, 6, 16, 24.2]);
-        for (const [u, v, f] of [[-5, 52, 'E'], [0, 52, 'W'], [-2.5, 56.5, 'N']]) SOFA(u, v, y, 2.4, f, 0xc9b9a0);
+        WL(-7.85, 24.2, 8.85, 24.2, y, yc, { mat: 'jwWalnut', openings: [{ at: 13.55, w: 2.4, y0: y, y1: y + 2.6 }] });
+        HP('jwChevron', [-7.85, 6.1, 15.85, 24.2], y + 0.012);
+        for (const r of [[-7.2, 7.8, 3.2, 14.2], [6.8, 7.7, 15.2, 13.8], [-7.2, 16.1, 3.2, 22.6], [6.8, 16.1, 15.2, 22.6]]) HP('jwFoyerCarpet', r, y + 0.018);
+        COVE([-7.8, 6.15, 15.8, 24.1], y + 3.45);
+        // Fine timber lattice across the back wall; the entrance remains 2.4 m clear.
+        SLATS('v', 23.95, -7.65, 4.35, y, 3.35, 0.18);
+        SLATS('v', 23.95, 7.05, 15.6, y, 3.35, 0.18);
+        for (const [a, b] of [[-7.65, 4.35], [7.05, 15.6]]) for (const dy of [0.65, 1.4, 2.15, 2.9]) B({ u: (a + b) / 2, v: 23.87, y: y + dy, w: b - a, d: 0.045, h: 0.04, mat: 0x9b7c58, solid: false });
+        // Sparse window-side groups, with a straight aisle from the lift lobby.
+        for (const [u, v] of [[-4.5, 10.7], [0.8, 10.7], [10.8, 10.7], [-4.5, 19.4], [0.8, 19.4], [10.8, 19.4]]) {
+          ROUND(u, v, y, 0.66, 0.73, 0xe9e3d6);
+          CHAIR(u - 1.15, v, y, 'E', 0xc9bca5); CHAIR(u + 1.15, v, y, 'W', 0xe0d8c9);
+          CHAIR(u, v - 1.15, y, 'S', 0xd8cfbf);
+          CY(u + 0.16, v, y + 0.73, 0.055, 0.09, 0xece7dd, { seg: 8, solid: false });
+          B({ u: u - 0.2, v: v + 0.12, y: y + 0.73, w: 0.19, d: 0.035, h: 0.16, mat: 0x302b27, solid: false });
+        }
+        SOFA(-4.5, 22.3, y, 4.5, 'N', 0x8c7561);
+        SOFA(10.8, 22.3, y, 4.1, 'N', 0x90755f);
+        SG('이그제큐티브 라운지', { u: 7.5, v: 24.32, y: y + 1.5, w: 0.9, h: 0.28, f: 'S', bg: '#46382e', fg: '#dfd3bd' });
+        MAN(11.95, 10.7, y, { sit: true, rotY: FACE.W, shirt: 0x59718b });
+        MAN(-5.65, 19.4, y, { sit: true, rotY: FACE.E, shirt: 0x463c35 });
+        SUBZ('이그제큐티브 라운지', '9F', '창가 좌석 · 조식 · 해피아워', [-8, 6, 16, 24.2]);
         SUBZ('라운지 계단 홀', '9F', '8F 로비 연결 계단', [-7.85, 48, 5.2, 57.9]);
-        // business corner (south block) instead of a closed box
-        WL(5.2, 39.6, 15.85, 39.6, y, yc, { mat: WALNUT, thick: 0.15 });
-        FRONT('u', 5.2, 39.6, 57.9, y, yc, 'W', '비즈니스 센터', { door: 44, dw: 1.6, fascia: 0x2b241d, fg: '#e0c890', gh: 2.8, sw: 4 });
-        HP({ tex: 'carpet', color: 0x6d6258 }, [5.2, 39.6, 15.85, 57.9], y + 0.01);
-        for (const v of [42, 45.5, 49, 52.5]) { B({ u: 14.8, v, y, w: 1.2, d: 1.6, h: 0.74, mat: WALNUT, top: 0x2b241d }); B({ u: 15.1, v, y: y + 0.74, w: 0.05, d: 0.6, h: 0.42, mat: 0x1a1d22, solid: false }); B({ u: 15.06, v, y: y + 0.78, w: 0.01, d: 0.55, h: 0.34, mat: { tex: 'emit', color: 0xcfe2f2 }, solid: false }); B({ u: 13.8, v, y, w: 0.5, d: 0.5, h: 0.46, mat: 0x2b2b2b, solid: false }); }
-        TABLE(9.5, 51, y, { square: true, r: 1.1, chairs: 6, chair: 0x6a5a4a, top: 0x3b2c22 }); B({ u: 7, v: 56.8, y, w: 1.2, d: 1.4, h: 1.2, mat: 0xd8d2c6 });
-        LIGHTS([5.2, 39.6, 15.85, 57.9], yc, 3.2, 0.7);
-        SUBZ('비즈니스 센터', '9F', 'PC · 프린터 · 소회의 테이블', [5.2, 39.6, 15.85, 57.9]);
+        // The directory confirms a business centre, but its interior is not photographed.
+        WL(5.2, 39.6, 15.85, 39.6, y, yc, { mat: 0xd6cbbb, thick: 0.15 });
+        WL(5.2, 39.6, 5.2, 57.9, y, yc, { mat: 0xd6cbbb, thick: 0.15, openings: [{ at: 4.4, w: 1.6, y0: y, y1: y + 2.4 }] });
+        SG('비즈니스 센터', { u: 5.07, v: 42.5, y: y + 1.5, w: 0.7, h: 0.25, f: 'W', bg: '#49392e', fg: '#e5dcca' });
+        HP('jwChevron', [5.3, 39.7, 15.8, 57.8], y + 0.012);
+        COVE([5.3, 39.7, 15.8, 57.8], y + 3.45);
+        SUBZ('비즈니스 센터', '9F', '비즈니스 서비스', [5.2, 39.6, 15.85, 57.9]);
         continue;
       }
-      HP('jwCarpet', [2.5, 6.1, 5.2, 57.9], y + 0.008); SUBZ('복도', k, '미팅룸 · 사무실 · 아트리움 갤러리', [2.5, 6.1, 5.2, 57.9]);
-      LIGHTS([2.5, 6.1, 5.2, 57.9], yc, 3.5, 0.6);
-      const rooms = k === '10F'
-        ? [[6.1, 15, '미팅룸 1001'], [15, 24.1, '미팅룸 1002'], [39.6, 48.7, '미팅룸 1003'], [48.7, 57.9, '미팅룸 1004']]
-        : [[6.1, 24.1, '세일즈 · 마케팅'], [39.6, 48.7, '객실부'], [48.7, 57.9, '인사부 · 재무부']];
-      WL(5.2, 24.1, 8.85, 24.1, y, yc, { mat: 0xdccbb0, thick: 0.15 }); WL(5.2, 39.6, 8.85, 39.6, y, yc, { mat: 0xdccbb0, thick: 0.15 });
-      for (const [v0, v1, n] of rooms) {
-        FRONT('u', 5.2, v0, v1, y, yc, 'W', n, { door: v0 + 1.4, dw: 1.4, fascia: 0x2b241d, fg: '#efe2c4', gh: 2.8, sw: 3.6 });
-        HP(k === '10F' ? { tex: 'carpet', color: 0x5d6470 } : { tex: 'carpet', color: 0x7a7468 }, [5.2, v0, 15.85, v1], y + 0.01);
-        LIGHTS([5.2, v0, 15.85, v1], yc, 3.0, 0.8, 0xf8f4ec);
-        SUBZ(n, k, k === '10F' ? '회의 · 이사회 · 화상회의 (층 추정)' : '호텔 사무실 (층 추정)', [5.2, v0, 15.85, v1]);
+      // 08 labels both floors as offices. Unphotographed offices stay undecorated.
+      for (const [v0, v1] of [[6.2, 24], [39.7, 57.8]]) {
+        WL(5.2, v0, 5.2, v1, y, yc, { mat: 0xccc0ac, thick: .15, openings: [{ at: 2, w: 1.4, y0: y, y1: y + 2.3 }] });
+        SG('사무실', { u: 5.08, v: v0 + 3.2, y: y + 1.5, w: .42, h: .17, f: 'W', bg: '#514536', fg: '#ece4d6' });
+        HP(0xe7dfd1, [5.3, v0, 15.8, v1], yc - .04, false);
       }
-      for (const v of [15, 48.7]) if (k === '10F' || v === 48.7) WL(5.2, v, 15.85, v, y, yc, { mat: 0xefe6da, thick: 0.15 });
-      if (k === '10F') {
-        for (const [v0, v1] of rooms) {
-          const vc = (v0 + v1) / 2, len = v1 - v0 - 3.2;
-          B({ u: 10.8, v: vc, y, w: 1.6, d: len, h: 0.74, mat: WALNUT, top: 0x3b2c22 });
-          for (let v = vc - len / 2 + 0.6; v < vc + len / 2; v += 1.0) for (const du of [-1.15, 1.15]) { B({ u: 10.8 + du, v, y, w: 0.55, d: 0.55, h: 0.48, mat: 0x2b2b2b, solid: false }); B({ u: 10.8 + du * 1.3, v, y: y + 0.48, w: 0.08, d: 0.5, h: 0.55, mat: 0x2b2b2b, solid: false }); }
-          for (let v = vc - len / 2 + 0.6; v < vc + len / 2; v += 2.0) B({ u: 10.8, v, y: y + 0.74, w: 0.25, d: 0.18, h: 0.06, mat: 0xf6f2ea, solid: false });
-          B({ u: 15.7, v: vc, y: y + 0.9, w: 0.06, d: 3.2, h: 1.8, mat: 0x0d1014, solid: false }); B({ u: 15.66, v: vc, y: y + 0.95, w: 0.01, d: 3.0, h: 1.65, mat: { tex: 'emit', color: 0x2e4a66 }, solid: false });
-          B({ u: 6.0, v: vc, y, w: 0.5, d: 3, h: 0.9, mat: WALNUT, top: 0xefe7da });
-          for (let v = vc - len / 2 + 0.6, j = 0; v < vc + len / 2; v += 1.0, j++) if (j % 2 === (v0 > 30 ? 0 : 1)) MAN(10.8 + (j % 4 < 2 ? -1.15 : 1.15), v, y, { sit: true, rotY: j % 4 < 2 ? FACE.E : FACE.W, shirt: [0x1d2433, 0xf2f2f2, 0x2b3a55][j % 3] });
-        }
-      } else {
-        for (const [v0, v1] of rooms) for (let u = 7.6; u <= 14.4; u += 3.4) for (let v = v0 + 1.6; v < v1 - 1; v += 2.4) {
-          B({ u, v, y, w: 1.5, d: 0.8, h: 0.74, mat: 0xe8e0d0, top: 0xf2ede4 }); B({ u, v: v - 0.28, y: y + 0.74, w: 0.6, d: 0.05, h: 0.38, mat: 0x1a1d22, solid: false });
-          B({ u, v: v - 0.31, y: y + 0.78, w: 0.55, d: 0.01, h: 0.32, mat: { tex: 'emit', color: 0xcfe2f2 }, solid: false });
-          B({ u, v: v + 0.65, y, w: 0.5, d: 0.5, h: 0.46, mat: 0x2b2b2b, solid: false });
-          if (((u * 7 + v * 3) | 0) % 3 === 0) MAN(u, v + 0.65, y, { sit: true, rotY: FACE.N, shirt: 0xf2f2f2 });
-        }
-        for (const v of [7, 23]) B({ u: 15.3, v, y, w: 0.6, d: 1.8, h: 1.3, mat: 0x9a968e });
-      }
-      // west pockets beside the atrium: 10F 미팅 라운지 · 비즈니스 라운지 / 11F 총지배인실 · 회의실
-      if (k === '10F') {
-        for (const [u, v, f] of [[-6.6, 9, 'E'], [-6.6, 12.2, 'E'], [-6.6, 51, 'E'], [-6.6, 55, 'E'], [-2.5, 56.8, 'N']]) SOFA(u, v, y, 2.2, f, 0xc9b9a0);
-        TABLE(-4.6, 10.6, y, { r: 0.5, chairs: 0, h: 0.45, top: 0x5a463a }); TABLE(-4.6, 53, y, { r: 0.5, chairs: 0, h: 0.45, top: 0x5a463a });
-        B({ u: 0.5, v: 7, y, w: 3, d: 0.7, h: 0.95, mat: WALNUT, top: 0xefe7da }); SG(['커피 · 티 스테이션'], { u: 0.5, v: 6.6, y: y + 2.3, w: 2.2, h: 0.32, f: 'S', bg: '#2b241d', fg: '#efe2c4' });
-        SUBZ('미팅 라운지', k, '브레이크 · 커피 스테이션', [-7.85, 6.1, 2.5, 14]); SUBZ('미팅 라운지 (남측)', k, '대기 · 휴식', [-7.85, 48, 2.5, 57.9]);
-        LIGHTS([-7.85, 6.1, 2.5, 14], yc, 3.2, 0.6); LIGHTS([-7.85, 48, 2.5, 57.9], yc, 3.2, 0.6);
-      } else {
-        WL(-7.85, 48.1, 2.5, 48.1, y, yc, { mat: 0xefe6da, thick: 0.15, openings: [{ at: 8.6, w: 1.2, y0: y, y1: y + 2.3 }] });
-        WL(-7.85, 13.9, 2.5, 13.9, y, yc, { mat: 0xefe6da, thick: 0.15, openings: [{ at: 8.6, w: 1.2, y0: y, y1: y + 2.3 }] });
-        SG(['총지배인실'], { u: 0.7, v: 48.0, y: y + 2.6, w: 1.6, h: 0.32, f: 'N', bg: '#2b241d', fg: '#efe2c4' }); SG(['임원 회의실'], { u: 0.7, v: 14.0, y: y + 2.6, w: 1.6, h: 0.32, f: 'S', bg: '#2b241d', fg: '#efe2c4' });
-        B({ u: -4, v: 55.5, y, w: 2.2, d: 1.0, h: 0.76, mat: WALNUT, top: 0x2b241d }); B({ u: -4, v: 56.6, y, w: 0.6, d: 0.6, h: 1.1, mat: 0x3a2c20, solid: false });
-        SOFA(-6.6, 51, y, 2.4, 'E', 0x6a5a4a); TABLE(-4.6, 51, y, { r: 0.45, chairs: 0, h: 0.45, top: 0x5a463a }); B({ u: 1.8, v: 56.5, y, w: 0.8, d: 2.4, h: 2.0, mat: WALNUT });
-        TABLE(-3, 10, y, { square: true, r: 1.0, chairs: 6, chair: 0x2b2b2b, top: 0x3b2c22 });
-        HP({ tex: 'carpet', color: 0x6d6258 }, [-7.85, 48.1, 2.5, 57.9], y + 0.01); HP({ tex: 'carpet', color: 0x6d6258 }, [-7.85, 6.1, 2.5, 13.9], y + 0.01);
-        SUBZ('총지배인실', k, '호텔 사무실 (층 추정)', [-7.85, 48.1, 2.5, 57.9]); SUBZ('임원 회의실', k, '호텔 사무실 (층 추정)', [-7.85, 6.1, 2.5, 13.9]);
-        LIGHTS([-7.85, 48.1, 2.5, 57.9], yc, 3.2, 0.6); LIGHTS([-7.85, 6.1, 2.5, 13.9], yc, 3.2, 0.6);
-      }
+      COVE([-7.8, 6.2, 5, 57.8], yc - .05);
+      SUBZ('사무실', k, '호텔 사무실', TW);
     }
   }
 
