@@ -1,0 +1,1474 @@
+{
+  "id": "onebailey",
+  "name": "원베일리 공공보행통로",
+  "updated": "2026-11-07",
+  "sources": [
+    "https://mediahub.seoul.go.kr/archives/2011689",
+    "https://mediahub.seoul.go.kr/archives/2011692",
+    "https://m.seoul.co.kr/news/2024/07/19/20240719030002",
+    "https://www.heraldk.com/article/2025102721441133001",
+    "https://www.tfmedia.co.kr/news/article.html?no=170057",
+    "https://m.go.seoul.co.kr/news/2025/09/26/20250926500032",
+    "https://www.segye.com/newsView/20260427513557",
+    "https://www.heraldk.com/article/2026042313575353478",
+    "https://m.go.seoul.co.kr/news/2025/10/29/20251029022002",
+    "https://www.heraldk.com/article/2026012014344108585",
+    "https://www.data.go.kr/catalog/15157853/fileData.json"
+  ],
+  "evidence_source": ".codex-jobs/evidence/research_onebailey_walk.json",
+  "evidence_facts": [
+    {
+      "topic": "Route and length",
+      "fact": "Walkway runs from 고투몰 exit G2 (at the 래미안 원베일리 shopping-area public open space) through the corridor to 반포한강공원. Order from G2: 24 Hours mural (first), tourist center near the middle, Picasso mural (about 65 m), then 반포나들목 underpass to the park. Lengths given: 350 m (서초구 via Herald 2025), 360 m (삼성물산/서울시 2024), mural street 425 m and about 500 m including the plaza (서울신문 2024), 'about 500 m' (서울시 mediahub). Reconcile as about 360 m of corridor, about 500 m end to end.",
+      "sources": [
+        "https://mediahub.seoul.go.kr/archives/2011689",
+        "https://mediahub.seoul.go.kr/archives/2011692",
+        "https://m.seoul.co.kr/news/2024/07/19/20240719030002",
+        "https://www.heraldk.com/article/2025102721441133001",
+        "https://www.tfmedia.co.kr/news/article.html?no=170057"
+      ],
+      "confidence": "confirmed",
+      "where": "G2 exit of 고투몰, then toward 반포한강공원; Picasso section is the end nearest the park, per the Wonder Street article (visitors start at G2, pass the 24h mural, then reach the sculptures)"
+    },
+    {
+      "topic": "Origin and owner",
+      "fact": "Made by a 기부채납 from the 래미안 원베일리 complex (삼성물산); the 350 m '서울의 24시간' mural came from that donation. Won iF, Red Dot and IDEA 2024 (Environments, Featured Finalist) design awards. Opening date not found; the tourist center opened 2024-07-10 and murals were in place by July 2024. Seocho-gu held a nickname contest for the walkway in Sept-Oct 2025 (until 10/9, results 10/15); result not found.",
+      "sources": [
+        "https://www.heraldk.com/article/2025102721441133001",
+        "https://www.tfmedia.co.kr/news/article.html?no=170057",
+        "https://m.go.seoul.co.kr/news/2025/09/26/20250926500032"
+      ],
+      "confidence": "confirmed"
+    },
+    {
+      "topic": "24 Hours mural",
+      "fact": "'서울 시민의 일상, 서울의 24시간': 24 domestic and international graffiti, cartoon and illustration artists, each painting about 15 m (24 x 15 m = 360 m), arranged by time of day. Each panel has a digital-clock style time label (01:00, 02:00, 06:00, 12:00, 14:00, 20:00 seen) with the artist name. Navy and blue wall base; panels show Gyeongbokgung with fireworks, food, Hangang picnic, families. Selfie-spot panel: '수고한 우리의 새 자장가' by Bojan Jelesovski.",
+      "sources": [
+        "https://mediahub.seoul.go.kr/archives/2011689",
+        "https://m.seoul.co.kr/news/2024/07/19/20240719030002"
+      ],
+      "confidence": "confirmed",
+      "files": [
+        "mh2011689_04.jpg",
+        "mh2011689_05.jpg",
+        "mh2011689_06.jpg",
+        "mh2011689_07.jpg",
+        "mh2011689_08.jpg",
+        "mh2011689_09.jpg",
+        "mh2011689_10.jpg"
+      ]
+    },
+    {
+      "topic": "Picasso mural",
+      "fact": "Spain Tourism Office 'Picasso Urban Art Mural' series (4th city after Shanghai 2021, Bern 2022, Munich 2023), with the Málaga tourism office. Painted by Eduardo Luque (Raron). 65 m long; blue/orange cubist eyes, a grayscale Picasso in a striped shirt holding a wine glass, a flamenco figure with a spread skirt echoing 부채춤, 'MÁLAGA LOVES SEOUL' lettering, 'I AM PICASSO' text. The structural columns in this section are also painted blue with murals/text and run in a row down the hall. The Seoul article lists a 160 m figure for this mural, but other sources say 65 m.",
+      "sources": [
+        "https://m.seoul.co.kr/news/2024/07/19/20240719030002",
+        "https://mediahub.seoul.go.kr/archives/2011689",
+        "https://www.segye.com/newsView/20260427513557"
+      ],
+      "confidence": "confirmed",
+      "files": [
+        "mh2011689_01.jpg",
+        "mh2011689_13.jpg",
+        "mh2011689_14.jpg",
+        "mh2011689_15.jpg",
+        "mh2011689_16.jpg",
+        "mh2011689_17.jpg",
+        "mh2011689_18.jpg",
+        "mh2011692_02.jpg",
+        "mh2011692_03.jpg",
+        "mh2011692_04.jpg",
+        "mh2011692_05.jpg",
+        "mh2011692_06.jpg"
+      ]
+    },
+    {
+      "topic": "Wonder Street sculptures and ceiling installation (2026)",
+      "fact": "서초구 and 서초문화재단 second edition 2026-04-27 to 2026-11-15, tied to Crown Haitai's 견생조각전. 11 artists, 12 sculptures (animals, characters, nature) lined along the 65 m Picasso mural street; ceiling installation '도란도란' (colorful hanging discs/balloon-like pieces on the ceiling) and floor pattern sheets (colored blobs) based on the artists' works. 2026 photos show an orange hooded figure, blue figures, a yellow banana boat with white figures, a red astronaut, a white deer, a green propeller aircraft and a metal lizard. Individual artist names and exact positions not found. Previous year about 30,000 visitors. Ends 11/15, so the temporary pieces may be gone soon.",
+      "sources": [
+        "https://www.heraldk.com/article/2026042313575353478",
+        "https://www.segye.com/newsView/20260427513557",
+        "https://m.go.seoul.co.kr/news/2025/09/26/20250926500032"
+      ],
+      "confidence": "confirmed",
+      "files": [
+        "herald_wonder_20260424.jpg",
+        "segye_20260427_52.jpg",
+        "segye_20260427_53.jpg",
+        "segye_20260427_54.jpg",
+        "segye_20260427_55.jpg",
+        "segye_20260427_56.jpg",
+        "mh2011692_09.jpg",
+        "mh2011692_10.jpg",
+        "mh2011692_11.jpg",
+        "mh2011692_12.jpg"
+      ]
+    },
+    {
+      "topic": "Tourist center and lounge",
+      "fact": "고터·세빛 관광안내센터 opened 2024-07-10 in the middle of the walkway (Seocho-gu, Seoul Tourism Foundation, Seoul Tourist Association). Open 11:00-20:00 year-round; English, Japanese, Chinese interpreters; foreign-coin-to-won exchange kiosk (WOWPASS machine visible); brochure shelves and a digital information kiosk; glass-front white storefront. The Wonder Street article places a 관광특구 lounge at the far end of the walkway. Seocho-gu is considering a café-style rest area in unused space. Chairs and tables exist for rest according to the citizen-reporter write-up (not independently confirmed).",
+      "sources": [
+        "https://mediahub.seoul.go.kr/archives/2011692",
+        "https://www.heraldk.com/article/2026042313575353478",
+        "https://m.go.seoul.co.kr/news/2025/10/29/20251029022002"
+      ],
+      "confidence": "confirmed",
+      "files": [
+        "mh2011689_12.jpg",
+        "mh2011692_07.jpg",
+        "mh2011692_08.jpg",
+        "mh2011692_09.jpg",
+        "mh2011692_11.jpg"
+      ]
+    },
+    {
+      "topic": "Daylight, sunken garden, look of the corridor",
+      "fact": "Natural light comes through a sunken garden (썬큰 가든) and an upper skylight. One photo shows a sunken bamboo planter courtyard in the corridor. The hall is wide with white-gray floor tiles and a yellow tactile guide line, a dark gray/white ceiling with exposed red fire pipes and long fluorescent strips, and paired painted column rows. Signage hangs from the ceiling ('고터·세빛 관광안내센터 및 피카소 벽화 가는 길'). Fire hydrant boxes sit in the mural walls.",
+      "sources": [
+        "https://www.tfmedia.co.kr/news/article.html?no=170057",
+        "https://mediahub.seoul.go.kr/archives/2011689"
+      ],
+      "confidence": "confirmed",
+      "files": [
+        "mh2011689_02.jpg",
+        "mh2011689_03.jpg",
+        "mh2011689_11.jpg",
+        "mh2011692_01.jpg"
+      ]
+    },
+    {
+      "topic": "G2 plaza exhibit",
+      "fact": "Installation artist Vakki (빠키) showed '기하학의 리듬' at the 공개공지 in front of G2, opened 2024-07-15. Temporary exhibit, current status unknown.",
+      "sources": [
+        "https://m.seoul.co.kr/news/2024/07/19/20240719030002"
+      ],
+      "confidence": "confirmed",
+      "where": "outside exit G2, 원베일리 public open space"
+    },
+    {
+      "topic": "Park-side end: 반포나들목 underpass and signs",
+      "fact": "Near the park the route passes the 반포나들목 underpass: white tile walls with a yellow floor guide line and orange stripe, and a Han River mural (river, a boat with a red umbrella, skyline). Signposts: '고투몰 / 관광안내센터 / 반포한강공원 BANPO HANGANG PARK' (orange/blue pillar), and a '반포나들목 주변지역 안내도' map board. Related Seocho 'Urban Canvas' tile-wall art near subway exit 5 (themed 'everyone is the main character'). Seocho-gu's 2026-01 Urban Canvas project upgraded the Jamsugyo underground crosswalk with a media gate, background music, dichroic film and brighter lighting (96% satisfaction) and describes an art route from the 원베일리 wall paintings through the Picasso mural to the park. Not directly part of the straight walkway.",
+      "sources": [
+        "https://mediahub.seoul.go.kr/archives/2011689",
+        "https://www.heraldk.com/article/2026012014344108585"
+      ],
+      "confidence": "confirmed",
+      "files": [
+        "mh2011689_19.jpg",
+        "mh2011689_20.jpg",
+        "mh2011689_21.jpg",
+        "mh2011689_22.jpg",
+        "mh2011689_23.jpeg",
+        "herald_urbancanvas_20260121.jpg"
+      ]
+    },
+    {
+      "topic": "Future connections",
+      "fact": "Seoul plans an elevator at the south end of 반포대교, full pedestrian use of 잠수교 (target April 2026) and a new square-shaped crosswalk at the 고속터미널 intersection in December 2025 (previously pedestrians could cross only via the underground passage).",
+      "sources": [
+        "https://m.go.seoul.co.kr/news/2025/10/29/20251029022002",
+        "https://www.heraldk.com/article/2025102721441133001"
+      ],
+      "confidence": "likely"
+    },
+    {
+      "topic": "Not found",
+      "fact": "No official floor plan, entrance/elevator positions, opening hours of the corridor itself, or exact turn geometry was found in readable text. The Seocho 고터세빛 관광특구 안내지도 (data.go.kr dataset 15157853, JPG, 2026-03-27) is the best official map source and should be downloaded from the portal by hand. 24-hour access was not confirmed. Also not found: any 2025-26 Naver blog photos, as blog fetching was not attempted and search surfaced none.",
+      "sources": [
+        "https://www.data.go.kr/catalog/15157853/fileData.json"
+      ],
+      "confidence": "inference"
+    }
+  ],
+  "reference_audit": {
+    "files": 46,
+    "bytes": 9622552,
+    "license": "참고 사진은 private reference only. 모듈에서 어떤 참고 이미지 파일도 로드하지 않는다. 벽화는 원본 복제·트레이싱이 아닌 독립 절차적 그림이며 원작자 명의로 표시하지 않는다.",
+    "corrections": [
+      "mh2011692_07은 피카소 초상, _08은 안내대, _09/10 책자, _11 디지털 안내, _12 WOWPASS. 조각 근거는 segye_20260427_52..56.",
+      "노란 조각은 바나나가 아닌 접은 종이배.",
+      "피카소 구간 천장은 밝은 흰색, 광장·24시간 구간은 짙은 마감과 밝은 보/노출 배관.",
+      "_21..23 흰 타일·주황 리본은 연관 출구5 Urban Canvas 통로일 수 있다. 반포나들목 마감으로 확정할 수 없다.",
+      "사진으로 확인된 개별 승강기 위치는 없음."
+    ]
+  },
+  "floors": [
+    {
+      "floor": "B1",
+      "y": -6,
+      "name": "지하 보행로",
+      "segments": [
+        "공개공지",
+        "서울의 24시간",
+        "고터·세빛 관광안내센터",
+        "대나무 중정",
+        "피카소 벽화길",
+        "2026 원더스트리트",
+        "관광특구 라운지",
+        "한강공원 연결 통로"
+      ]
+    },
+    {
+      "floor": "1F",
+      "y": 0,
+      "name": "G2 접근부 · 공원 출입구"
+    }
+  ],
+  "modeling": {
+    "round": 10,
+    "scope": [
+      "js/places/onebailey.js",
+      "data/research/onebailey.json"
+    ],
+    "removed": [
+      "round 10의 빈 build stub만 대체. 기존 상세·이웃 모듈·OSM 좌표 삭제/변경 없음."
+    ],
+    "route_decision": {
+      "status": "서쪽 경로 권장 선택에 대한 비동기 질문 후 답변 없이 실제 단지/OSM 축을 우선하는 가정을 공지하고 진행.",
+      "core_axis": [
+        [
+          -410,
+          -45
+        ],
+        [
+          -540,
+          -380
+        ]
+      ],
+      "core_length_m": 359.34,
+      "core_width_m": 14,
+      "osm_residential_area": 412953594,
+      "osm_tunnel_way": 1481658416,
+      "osm_tunnel_axis": [
+        [
+          -513.03,
+          -465.14
+        ],
+        [
+          -565.03,
+          -596.26
+        ]
+      ],
+      "osm_tunnel_length_m": 141.055,
+      "excluded_east_tunnel": {
+        "way": 560449165,
+        "axis": [
+          [
+            -213.15,
+            -657.14
+          ],
+          [
+            -282.96,
+            -767.44
+          ]
+        ],
+        "reason": "반포대교 동쪽의 별도 시설이며 hangang이 이미 완성. 원베일리 단지는 반포대교 서쪽. 동일 500m 직선 길로 맞출 수 없어 중복/오인 구현하지 않음."
+      },
+      "length_conflict": "현재 고투몰 G2는 실측 아닌 추정 좌표다. 계단 우회와 기존 좌표 연결부를 포함한 모델의 G2→공원 중심선은 약 793m로 기사 약500m보다 길다. 예술 길 본체는359.34m. 좌표를 몰래 축소하거나 나들목을 이동하지 않았다.",
+      "osm_limit": "단지 내 B1 공공보행통로 way는 없음. 1461455324는 지상 경계 자전거길, 1481658414는 서쪽 나들목 지상 접근로. B1 중심선과 굴곡은 추정.",
+      "modeled_horizontal_length_m_approx": 793.3
+    },
+    "segments": [
+      {
+        "name": "서울의 24시간",
+        "s": [
+          0,
+          276
+        ],
+        "panels": 24,
+        "panel_pitch_m": 11.5,
+        "note": "24×15m+65m를360m에 넣을 수 없어 패널만11.5m로 압축. 각 시간의 제목은 모델 자체 설명, 정확한 원작 제목/작가로 주장하지 않음."
+      },
+      {
+        "name": "고터·세빛 관광안내센터",
+        "s": [
+          155,
+          182
+        ],
+        "v": [
+          7,
+          23
+        ],
+        "floor_y": -5.88
+      },
+      {
+        "name": "대나무 중정",
+        "s": [
+          182,
+          210
+        ],
+        "v": [
+          7,
+          23
+        ],
+        "roof": "open to sky"
+      },
+      {
+        "name": "피카소 벽화길",
+        "s": [
+          280,
+          345
+        ],
+        "length_m": 65,
+        "column_rows_v": [
+          -3.7,
+          3.7
+        ]
+      },
+      {
+        "name": "관광특구 라운지",
+        "s": [
+          345,
+          359.34
+        ]
+      }
+    ],
+    "temporary_exhibition": {
+      "period": [
+        "2026-04-27",
+        "2026-11-15"
+      ],
+      "default": "on",
+      "toggle": "피카소 시작 s=281,v=5.7의 E 상호작용",
+      "affects": [
+        "12 조각",
+        "천장 원판 설치",
+        "바닥 데칼"
+      ],
+      "date_automatic": false,
+      "collision": "독립 THREE 그룹, 통행 공간 밖. 모두 비충돌이므로 숨긴 뒤 보이지 않는 장애물이 남지 않음.",
+      "inference": "9가지 관찰 형태를12개 위치로 간략화, 일부 반복. 정확한 위치·작가·치수 미확인."
+    },
+    "junctions_to_add": [
+      {
+        "id": "J_ONEBAILEY_G2",
+        "a": "gotomall",
+        "b": "onebailey",
+        "y": -6,
+        "pa": [
+          -287.479,
+          -29.9796
+        ],
+        "pb": [
+          -290.8408,
+          -38.9565
+        ],
+        "width": 2.8,
+        "owner": "onebailey"
+      },
+      {
+        "id": "J_ONEBAILEY_PARK",
+        "a": "onebailey",
+        "b": "hangang",
+        "y": 0,
+        "pa": [
+          -567.9792,
+          -603.6965
+        ],
+        "pb": [
+          -592,
+          -625
+        ],
+        "width": 5,
+        "owner": "onebailey"
+      }
+    ],
+    "integration_required": [
+      {
+        "module": "gotomall",
+        "action": "G2 북측 하단 외벽에 실제 개구부 추가",
+        "center": [
+          -289.8764,
+          -36.3812
+        ],
+        "width": 2.8,
+        "y0": -6,
+        "y1": -3.25,
+        "location": "buildExit G2 wallAlong(HOLE,END,sgn*1.75) 바깥 북측 벽. 현재 닫혀 있음.",
+        "status": "이 파일 범위 밖이므로 미수정. 현재 직결은 막힘. 기존 G2 계단을 올라 자체 공개공지 계단으로 내려가는 임시 보행 동선 제공."
+      },
+      {
+        "module": "_junctions",
+        "action": "위 정확한 두 junction 항목 통합 후 메타 재생성"
+      },
+      {
+        "module": "_meta",
+        "action": "node tools/gen_meta.mjs 재실행하여 공용 파일 반영",
+        "status": "generator를 실제 실행하되 fs.writeFileSync의 _meta.json 쓰기만 메모리 캡처. 공용 파일 미변경."
+      }
+    ],
+    "guesses": [
+      "B1 중심선·폭14m·층고3.8m·방 배치·층고는 실측 도면 없음.",
+      "G2 연결부와 공개공지 위치는 현재 게임의 추정 G2를 보존하는 임시 배치.",
+      "서쪽 나들목은 OSM 축만 확정. 폭7m·y=-6·36m 경사로와 흰타일 마감은 추정.",
+      "안내센터 바닥12cm 상승·가구 크기·승강기 위치·라운지 좌석은 추정.",
+      "태양빛 입사/실제 조도는 재현 검증하지 못함.",
+      "피카소/24시간 그림은 색과 관찰된 주제를 반영한 새 삽화로 원작의 정확한 복제가 아님."
+    ],
+    "trace": [
+      {
+        "spot": "G2 공개공지 · 계단과 입구",
+        "x": -332,
+        "y": -6,
+        "z": -66,
+        "yawDeg": 204.444,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "floor": "B1",
+        "photos": [
+          "refs/interior/onebailey_walk/mh2011689_03.jpg",
+          "refs/interior/onebailey_walk/mh2011689_02.jpg"
+        ],
+        "coordinate_status": "모델 검수용 좌표. y는 바닥 높이이며 사진 GPS/실측 위치가 아님.",
+        "note": "계단·기하학 기둥·안내 배너. 현재 G2와 잇는 배치는 추정."
+      },
+      {
+        "spot": "G2 지상 접근",
+        "x": -312,
+        "y": 0,
+        "z": -34,
+        "yawDeg": 36.87,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "floor": "1F",
+        "photos": [
+          "refs/interior/onebailey_walk/mh2011689_03.jpg"
+        ],
+        "coordinate_status": "모델 검수용 좌표. y는 바닥 높이이며 사진 GPS/실측 위치가 아님.",
+        "note": "기존 G2 지하 외벽 개방 전의 임시 지상 경유 동선."
+      },
+      {
+        "spot": "공개공지 승강기 앞",
+        "x": -336,
+        "y": -6,
+        "z": -41,
+        "yawDeg": 33.341,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "floor": "B1",
+        "photos": [],
+        "coordinate_status": "모델 검수용 좌표. y는 바닥 높이이며 사진 GPS/실측 위치가 아님.",
+        "note": "무장애 연결을 위한 추정 승강기. 사진에서 위치 확인되지 않음."
+      },
+      {
+        "spot": "24시간 벽화길 전경",
+        "x": -411.8089,
+        "y": -6,
+        "z": -49.6613,
+        "yawDeg": 21.209,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "floor": "B1",
+        "photos": [
+          "refs/interior/onebailey_walk/mh2011689_02.jpg",
+          "refs/interior/onebailey_walk/mh2011689_04.jpg"
+        ],
+        "coordinate_status": "모델 검수용 좌표. y는 바닥 높이이며 사진 GPS/실측 위치가 아님.",
+        "note": ""
+      },
+      {
+        "spot": "00:00 벽화 패널",
+        "x": -412.0802,
+        "y": -6,
+        "z": -50.3605,
+        "yawDeg": 291.209,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "floor": "B1",
+        "photos": [
+          "refs/interior/onebailey_walk/mh2011689_05.jpg"
+        ],
+        "coordinate_status": "모델 검수용 좌표. y는 바닥 높이이며 사진 GPS/실측 위치가 아님.",
+        "note": "원작 복제가 아닌 새 절차적 삽화. 숫자·남색 하단·주제 배치 검수. 실제 작가 이름을 이 삽화에 붙이지 않음."
+      },
+      {
+        "spot": "01:00 벽화 패널",
+        "x": -416.2406,
+        "y": -6,
+        "z": -61.0816,
+        "yawDeg": 291.209,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "floor": "B1",
+        "photos": [
+          "refs/interior/onebailey_walk/mh2011689_04.jpg"
+        ],
+        "coordinate_status": "모델 검수용 좌표. y는 바닥 높이이며 사진 GPS/실측 위치가 아님.",
+        "note": "원작 복제가 아닌 새 절차적 삽화. 숫자·남색 하단·주제 배치 검수. 실제 작가 이름을 이 삽화에 붙이지 않음."
+      },
+      {
+        "spot": "02:00 벽화 패널",
+        "x": -420.401,
+        "y": -6,
+        "z": -71.8026,
+        "yawDeg": 291.209,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "floor": "B1",
+        "photos": [
+          "refs/interior/onebailey_walk/mh2011689_06.jpg"
+        ],
+        "coordinate_status": "모델 검수용 좌표. y는 바닥 높이이며 사진 GPS/실측 위치가 아님.",
+        "note": "원작 복제가 아닌 새 절차적 삽화. 숫자·남색 하단·주제 배치 검수. 실제 작가 이름을 이 삽화에 붙이지 않음."
+      },
+      {
+        "spot": "03:00 벽화 패널",
+        "x": -424.5614,
+        "y": -6,
+        "z": -82.5237,
+        "yawDeg": 291.209,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "floor": "B1",
+        "photos": [
+          "refs/interior/onebailey_walk/mh2011689_04.jpg"
+        ],
+        "coordinate_status": "모델 검수용 좌표. y는 바닥 높이이며 사진 GPS/실측 위치가 아님.",
+        "note": "원작 복제가 아닌 새 절차적 삽화. 숫자·남색 하단·주제 배치 검수. 실제 작가 이름을 이 삽화에 붙이지 않음."
+      },
+      {
+        "spot": "04:00 벽화 패널",
+        "x": -428.7218,
+        "y": -6,
+        "z": -93.2447,
+        "yawDeg": 291.209,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "floor": "B1",
+        "photos": [
+          "refs/interior/onebailey_walk/mh2011689_04.jpg"
+        ],
+        "coordinate_status": "모델 검수용 좌표. y는 바닥 높이이며 사진 GPS/실측 위치가 아님.",
+        "note": "원작 복제가 아닌 새 절차적 삽화. 숫자·남색 하단·주제 배치 검수. 실제 작가 이름을 이 삽화에 붙이지 않음."
+      },
+      {
+        "spot": "05:00 벽화 패널",
+        "x": -432.8822,
+        "y": -6,
+        "z": -103.9658,
+        "yawDeg": 291.209,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "floor": "B1",
+        "photos": [
+          "refs/interior/onebailey_walk/mh2011689_04.jpg"
+        ],
+        "coordinate_status": "모델 검수용 좌표. y는 바닥 높이이며 사진 GPS/실측 위치가 아님.",
+        "note": "원작 복제가 아닌 새 절차적 삽화. 숫자·남색 하단·주제 배치 검수. 실제 작가 이름을 이 삽화에 붙이지 않음."
+      },
+      {
+        "spot": "06:00 벽화 패널",
+        "x": -437.0427,
+        "y": -6,
+        "z": -114.6869,
+        "yawDeg": 291.209,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "floor": "B1",
+        "photos": [
+          "refs/interior/onebailey_walk/mh2011689_07.jpg"
+        ],
+        "coordinate_status": "모델 검수용 좌표. y는 바닥 높이이며 사진 GPS/실측 위치가 아님.",
+        "note": "원작 복제가 아닌 새 절차적 삽화. 숫자·남색 하단·주제 배치 검수. 실제 작가 이름을 이 삽화에 붙이지 않음."
+      },
+      {
+        "spot": "07:00 벽화 패널",
+        "x": -441.2031,
+        "y": -6,
+        "z": -125.4079,
+        "yawDeg": 291.209,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "floor": "B1",
+        "photos": [
+          "refs/interior/onebailey_walk/mh2011689_04.jpg"
+        ],
+        "coordinate_status": "모델 검수용 좌표. y는 바닥 높이이며 사진 GPS/실측 위치가 아님.",
+        "note": "원작 복제가 아닌 새 절차적 삽화. 숫자·남색 하단·주제 배치 검수. 실제 작가 이름을 이 삽화에 붙이지 않음."
+      },
+      {
+        "spot": "08:00 벽화 패널",
+        "x": -445.3635,
+        "y": -6,
+        "z": -136.129,
+        "yawDeg": 291.209,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "floor": "B1",
+        "photos": [
+          "refs/interior/onebailey_walk/mh2011689_04.jpg"
+        ],
+        "coordinate_status": "모델 검수용 좌표. y는 바닥 높이이며 사진 GPS/실측 위치가 아님.",
+        "note": "원작 복제가 아닌 새 절차적 삽화. 숫자·남색 하단·주제 배치 검수. 실제 작가 이름을 이 삽화에 붙이지 않음."
+      },
+      {
+        "spot": "09:00 벽화 패널",
+        "x": -449.5239,
+        "y": -6,
+        "z": -146.85,
+        "yawDeg": 291.209,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "floor": "B1",
+        "photos": [
+          "refs/interior/onebailey_walk/mh2011689_04.jpg"
+        ],
+        "coordinate_status": "모델 검수용 좌표. y는 바닥 높이이며 사진 GPS/실측 위치가 아님.",
+        "note": "원작 복제가 아닌 새 절차적 삽화. 숫자·남색 하단·주제 배치 검수. 실제 작가 이름을 이 삽화에 붙이지 않음."
+      },
+      {
+        "spot": "10:00 벽화 패널",
+        "x": -453.6843,
+        "y": -6,
+        "z": -157.5711,
+        "yawDeg": 291.209,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "floor": "B1",
+        "photos": [
+          "refs/interior/onebailey_walk/mh2011689_04.jpg"
+        ],
+        "coordinate_status": "모델 검수용 좌표. y는 바닥 높이이며 사진 GPS/실측 위치가 아님.",
+        "note": "원작 복제가 아닌 새 절차적 삽화. 숫자·남색 하단·주제 배치 검수. 실제 작가 이름을 이 삽화에 붙이지 않음."
+      },
+      {
+        "spot": "11:00 벽화 패널",
+        "x": -457.8447,
+        "y": -6,
+        "z": -168.2921,
+        "yawDeg": 291.209,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "floor": "B1",
+        "photos": [
+          "refs/interior/onebailey_walk/mh2011689_04.jpg"
+        ],
+        "coordinate_status": "모델 검수용 좌표. y는 바닥 높이이며 사진 GPS/실측 위치가 아님.",
+        "note": "원작 복제가 아닌 새 절차적 삽화. 숫자·남색 하단·주제 배치 검수. 실제 작가 이름을 이 삽화에 붙이지 않음."
+      },
+      {
+        "spot": "12:00 벽화 패널",
+        "x": -462.0051,
+        "y": -6,
+        "z": -179.0132,
+        "yawDeg": 291.209,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "floor": "B1",
+        "photos": [
+          "refs/interior/onebailey_walk/mh2011689_08.jpg"
+        ],
+        "coordinate_status": "모델 검수용 좌표. y는 바닥 높이이며 사진 GPS/실측 위치가 아님.",
+        "note": "원작 복제가 아닌 새 절차적 삽화. 숫자·남색 하단·주제 배치 검수. 실제 작가 이름을 이 삽화에 붙이지 않음."
+      },
+      {
+        "spot": "13:00 벽화 패널",
+        "x": -466.1655,
+        "y": -6,
+        "z": -189.7342,
+        "yawDeg": 291.209,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "floor": "B1",
+        "photos": [
+          "refs/interior/onebailey_walk/mh2011689_04.jpg"
+        ],
+        "coordinate_status": "모델 검수용 좌표. y는 바닥 높이이며 사진 GPS/실측 위치가 아님.",
+        "note": "원작 복제가 아닌 새 절차적 삽화. 숫자·남색 하단·주제 배치 검수. 실제 작가 이름을 이 삽화에 붙이지 않음."
+      },
+      {
+        "spot": "14:00 벽화 패널",
+        "x": -470.3259,
+        "y": -6,
+        "z": -200.4553,
+        "yawDeg": 291.209,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "floor": "B1",
+        "photos": [
+          "refs/interior/onebailey_walk/mh2011689_09.jpg"
+        ],
+        "coordinate_status": "모델 검수용 좌표. y는 바닥 높이이며 사진 GPS/실측 위치가 아님.",
+        "note": "원작 복제가 아닌 새 절차적 삽화. 숫자·남색 하단·주제 배치 검수. 실제 작가 이름을 이 삽화에 붙이지 않음."
+      },
+      {
+        "spot": "15:00 벽화 패널",
+        "x": -474.4863,
+        "y": -6,
+        "z": -211.1763,
+        "yawDeg": 291.209,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "floor": "B1",
+        "photos": [
+          "refs/interior/onebailey_walk/mh2011689_04.jpg"
+        ],
+        "coordinate_status": "모델 검수용 좌표. y는 바닥 높이이며 사진 GPS/실측 위치가 아님.",
+        "note": "원작 복제가 아닌 새 절차적 삽화. 숫자·남색 하단·주제 배치 검수. 실제 작가 이름을 이 삽화에 붙이지 않음."
+      },
+      {
+        "spot": "16:00 벽화 패널",
+        "x": -478.6467,
+        "y": -6,
+        "z": -221.8974,
+        "yawDeg": 291.209,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "floor": "B1",
+        "photos": [
+          "refs/interior/onebailey_walk/mh2011689_04.jpg"
+        ],
+        "coordinate_status": "모델 검수용 좌표. y는 바닥 높이이며 사진 GPS/실측 위치가 아님.",
+        "note": "원작 복제가 아닌 새 절차적 삽화. 숫자·남색 하단·주제 배치 검수. 실제 작가 이름을 이 삽화에 붙이지 않음."
+      },
+      {
+        "spot": "17:00 벽화 패널",
+        "x": -482.8072,
+        "y": -6,
+        "z": -232.6184,
+        "yawDeg": 291.209,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "floor": "B1",
+        "photos": [
+          "refs/interior/onebailey_walk/mh2011689_04.jpg"
+        ],
+        "coordinate_status": "모델 검수용 좌표. y는 바닥 높이이며 사진 GPS/실측 위치가 아님.",
+        "note": "원작 복제가 아닌 새 절차적 삽화. 숫자·남색 하단·주제 배치 검수. 실제 작가 이름을 이 삽화에 붙이지 않음."
+      },
+      {
+        "spot": "18:00 벽화 패널",
+        "x": -486.9676,
+        "y": -6,
+        "z": -243.3395,
+        "yawDeg": 291.209,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "floor": "B1",
+        "photos": [
+          "refs/interior/onebailey_walk/mh2011689_04.jpg"
+        ],
+        "coordinate_status": "모델 검수용 좌표. y는 바닥 높이이며 사진 GPS/실측 위치가 아님.",
+        "note": "원작 복제가 아닌 새 절차적 삽화. 숫자·남색 하단·주제 배치 검수. 실제 작가 이름을 이 삽화에 붙이지 않음."
+      },
+      {
+        "spot": "19:00 벽화 패널",
+        "x": -491.128,
+        "y": -6,
+        "z": -254.0606,
+        "yawDeg": 291.209,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "floor": "B1",
+        "photos": [
+          "refs/interior/onebailey_walk/mh2011689_04.jpg"
+        ],
+        "coordinate_status": "모델 검수용 좌표. y는 바닥 높이이며 사진 GPS/실측 위치가 아님.",
+        "note": "원작 복제가 아닌 새 절차적 삽화. 숫자·남색 하단·주제 배치 검수. 실제 작가 이름을 이 삽화에 붙이지 않음."
+      },
+      {
+        "spot": "20:00 벽화 패널",
+        "x": -495.2884,
+        "y": -6,
+        "z": -264.7816,
+        "yawDeg": 291.209,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "floor": "B1",
+        "photos": [
+          "refs/interior/onebailey_walk/mh2011689_10.jpg"
+        ],
+        "coordinate_status": "모델 검수용 좌표. y는 바닥 높이이며 사진 GPS/실측 위치가 아님.",
+        "note": "원작 복제가 아닌 새 절차적 삽화. 숫자·남색 하단·주제 배치 검수. 실제 작가 이름을 이 삽화에 붙이지 않음."
+      },
+      {
+        "spot": "21:00 벽화 패널",
+        "x": -499.4488,
+        "y": -6,
+        "z": -275.5027,
+        "yawDeg": 291.209,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "floor": "B1",
+        "photos": [
+          "refs/interior/onebailey_walk/mh2011689_04.jpg"
+        ],
+        "coordinate_status": "모델 검수용 좌표. y는 바닥 높이이며 사진 GPS/실측 위치가 아님.",
+        "note": "원작 복제가 아닌 새 절차적 삽화. 숫자·남색 하단·주제 배치 검수. 실제 작가 이름을 이 삽화에 붙이지 않음."
+      },
+      {
+        "spot": "22:00 벽화 패널",
+        "x": -503.6092,
+        "y": -6,
+        "z": -286.2237,
+        "yawDeg": 291.209,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "floor": "B1",
+        "photos": [
+          "refs/interior/onebailey_walk/mh2011689_04.jpg"
+        ],
+        "coordinate_status": "모델 검수용 좌표. y는 바닥 높이이며 사진 GPS/실측 위치가 아님.",
+        "note": "원작 복제가 아닌 새 절차적 삽화. 숫자·남색 하단·주제 배치 검수. 실제 작가 이름을 이 삽화에 붙이지 않음."
+      },
+      {
+        "spot": "23:00 벽화 패널",
+        "x": -507.7696,
+        "y": -6,
+        "z": -296.9448,
+        "yawDeg": 291.209,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "floor": "B1",
+        "photos": [
+          "refs/interior/onebailey_walk/mh2011689_04.jpg"
+        ],
+        "coordinate_status": "모델 검수용 좌표. y는 바닥 높이이며 사진 GPS/실측 위치가 아님.",
+        "note": "원작 복제가 아닌 새 절차적 삽화. 숫자·남색 하단·주제 배치 검수. 실제 작가 이름을 이 삽화에 붙이지 않음."
+      },
+      {
+        "spot": "관광안내센터 유리 전면",
+        "x": -473.2132,
+        "y": -6,
+        "z": -199.603,
+        "yawDeg": 111.209,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "floor": "B1",
+        "photos": [
+          "refs/interior/onebailey_walk/mh2011689_12.jpg"
+        ],
+        "coordinate_status": "모델 검수용 좌표. y는 바닥 높이이며 사진 GPS/실측 위치가 아님.",
+        "note": ""
+      },
+      {
+        "spot": "관광안내센터 흰 안내대",
+        "x": -479.739,
+        "y": -5.88,
+        "z": -197.0706,
+        "yawDeg": 101.747,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "floor": "B1",
+        "photos": [
+          "refs/interior/onebailey_walk/mh2011692_08.jpg"
+        ],
+        "coordinate_status": "모델 검수용 좌표. y는 바닥 높이이며 사진 GPS/실측 위치가 아님.",
+        "note": ""
+      },
+      {
+        "spot": "책자 진열대와 디지털 안내",
+        "x": -485.0682,
+        "y": -5.88,
+        "z": -202.5111,
+        "yawDeg": 90.653,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "floor": "B1",
+        "photos": [
+          "refs/interior/onebailey_walk/mh2011692_09.jpg",
+          "refs/interior/onebailey_walk/mh2011692_10.jpg",
+          "refs/interior/onebailey_walk/mh2011692_11.jpg"
+        ],
+        "coordinate_status": "모델 검수용 좌표. y는 바닥 높이이며 사진 GPS/실측 위치가 아님.",
+        "note": ""
+      },
+      {
+        "spot": "WOWPASS 환전기",
+        "x": -470.6,
+        "y": -6,
+        "z": -190.105,
+        "yawDeg": 111.209,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "floor": "B1",
+        "photos": [
+          "refs/interior/onebailey_walk/mh2011692_12.jpg"
+        ],
+        "coordinate_status": "모델 검수용 좌표. y는 바닥 높이이며 사진 GPS/실측 위치가 아님.",
+        "note": ""
+      },
+      {
+        "spot": "대나무 중정",
+        "x": -489.1939,
+        "y": -6,
+        "z": -225.5812,
+        "yawDeg": 132.064,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "floor": "B1",
+        "photos": [
+          "refs/interior/onebailey_walk/mh2011689_11.jpg"
+        ],
+        "coordinate_status": "모델 검수용 좌표. y는 바닥 높이이며 사진 GPS/실측 위치가 아님.",
+        "note": ""
+      },
+      {
+        "spot": "피카소 눈 패턴",
+        "x": -513.6484,
+        "y": -6,
+        "z": -312.0941,
+        "yawDeg": 291.209,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "floor": "B1",
+        "photos": [
+          "refs/interior/onebailey_walk/mh2011689_13.jpg"
+        ],
+        "coordinate_status": "모델 검수용 좌표. y는 바닥 높이이며 사진 GPS/실측 위치가 아님.",
+        "note": "색·주제·공간 구성을 재해석한 새 도안."
+      },
+      {
+        "spot": "피카소 초상",
+        "x": -518.3515,
+        "y": -6,
+        "z": -324.2135,
+        "yawDeg": 291.209,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "floor": "B1",
+        "photos": [
+          "refs/interior/onebailey_walk/mh2011689_14.jpg"
+        ],
+        "coordinate_status": "모델 검수용 좌표. y는 바닥 높이이며 사진 GPS/실측 위치가 아님.",
+        "note": "색·주제·공간 구성을 재해석한 새 도안."
+      },
+      {
+        "spot": "말라가 서울 문구",
+        "x": -523.0546,
+        "y": -6,
+        "z": -336.333,
+        "yawDeg": 291.209,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "floor": "B1",
+        "photos": [
+          "refs/interior/onebailey_walk/mh2011689_15.jpg"
+        ],
+        "coordinate_status": "모델 검수용 좌표. y는 바닥 높이이며 사진 GPS/실측 위치가 아님.",
+        "note": "색·주제·공간 구성을 재해석한 새 도안."
+      },
+      {
+        "spot": "무용수 실루엣",
+        "x": -527.7577,
+        "y": -6,
+        "z": -348.4524,
+        "yawDeg": 291.209,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "floor": "B1",
+        "photos": [
+          "refs/interior/onebailey_walk/mh2011689_16.jpg"
+        ],
+        "coordinate_status": "모델 검수용 좌표. y는 바닥 높이이며 사진 GPS/실측 위치가 아님.",
+        "note": "색·주제·공간 구성을 재해석한 새 도안."
+      },
+      {
+        "spot": "청색 벽화와 기둥",
+        "x": -532.4607,
+        "y": -6,
+        "z": -360.5719,
+        "yawDeg": 291.209,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "floor": "B1",
+        "photos": [
+          "refs/interior/onebailey_walk/mh2011689_17.jpg"
+        ],
+        "coordinate_status": "모델 검수용 좌표. y는 바닥 높이이며 사진 GPS/실측 위치가 아님.",
+        "note": "색·주제·공간 구성을 재해석한 새 도안."
+      },
+      {
+        "spot": "피카소 기둥열과 밝은 천장",
+        "x": -512.0205,
+        "y": -6,
+        "z": -307.8989,
+        "yawDeg": 21.209,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "floor": "B1",
+        "photos": [
+          "refs/interior/onebailey_walk/mh2011689_01.jpg",
+          "refs/interior/onebailey_walk/mh2011689_17.jpg",
+          "refs/interior/onebailey_walk/mh2011689_18.jpg"
+        ],
+        "coordinate_status": "모델 검수용 좌표. y는 바닥 높이이며 사진 GPS/실측 위치가 아님.",
+        "note": ""
+      },
+      {
+        "spot": "2026 원더스트리트 · 도란도란",
+        "x": -517.294,
+        "y": -6,
+        "z": -318.7243,
+        "yawDeg": 11.747,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "floor": "B1",
+        "photos": [
+          "refs/interior/onebailey_walk/segye_20260427_52.jpg",
+          "refs/interior/onebailey_walk/segye_20260427_53.jpg",
+          "refs/interior/onebailey_walk/segye_20260427_56.jpg"
+        ],
+        "coordinate_status": "모델 검수용 좌표. y는 바닥 높이이며 사진 GPS/실측 위치가 아님.",
+        "note": ""
+      },
+      {
+        "spot": "전시 토글 안내",
+        "x": -514.9216,
+        "y": -6,
+        "z": -305.7004,
+        "yawDeg": 111.209,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "floor": "B1",
+        "photos": [
+          "refs/interior/onebailey_walk/segye_20260427_52.jpg"
+        ],
+        "coordinate_status": "모델 검수용 좌표. y는 바닥 높이이며 사진 GPS/실측 위치가 아님.",
+        "note": "E 상호작용으로 조각·천장 디스크·바닥 데칼을 함께 표시/숨김. 기본 켜짐, 날짜 자동 판단 없음."
+      },
+      {
+        "spot": "원더스트리트 조각 01",
+        "x": -512.3822,
+        "y": -6,
+        "z": -308.8312,
+        "yawDeg": 291.209,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "floor": "B1",
+        "photos": [
+          "refs/interior/onebailey_walk/segye_20260427_55.jpg"
+        ],
+        "coordinate_status": "모델 검수용 좌표. y는 바닥 높이이며 사진 GPS/실측 위치가 아님.",
+        "note": "정확한 위치·작가·크기는 미확인. 관찰된 형태의 간략 재구성, 일부 형태 반복."
+      },
+      {
+        "spot": "원더스트리트 조각 02",
+        "x": -514.2454,
+        "y": -6,
+        "z": -313.6323,
+        "yawDeg": 291.209,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "floor": "B1",
+        "photos": [
+          "refs/interior/onebailey_walk/segye_20260427_55.jpg"
+        ],
+        "coordinate_status": "모델 검수용 좌표. y는 바닥 높이이며 사진 GPS/실측 위치가 아님.",
+        "note": "정확한 위치·작가·크기는 미확인. 관찰된 형태의 간략 재구성, 일부 형태 반복."
+      },
+      {
+        "spot": "원더스트리트 조각 03",
+        "x": -516.1085,
+        "y": -6,
+        "z": -318.4335,
+        "yawDeg": 291.209,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "floor": "B1",
+        "photos": [
+          "refs/interior/onebailey_walk/segye_20260427_55.jpg"
+        ],
+        "coordinate_status": "모델 검수용 좌표. y는 바닥 높이이며 사진 GPS/실측 위치가 아님.",
+        "note": "정확한 위치·작가·크기는 미확인. 관찰된 형태의 간략 재구성, 일부 형태 반복."
+      },
+      {
+        "spot": "원더스트리트 조각 04",
+        "x": -517.9717,
+        "y": -6,
+        "z": -323.2347,
+        "yawDeg": 291.209,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "floor": "B1",
+        "photos": [
+          "refs/interior/onebailey_walk/segye_20260427_55.jpg"
+        ],
+        "coordinate_status": "모델 검수용 좌표. y는 바닥 높이이며 사진 GPS/실측 위치가 아님.",
+        "note": "정확한 위치·작가·크기는 미확인. 관찰된 형태의 간략 재구성, 일부 형태 반복."
+      },
+      {
+        "spot": "원더스트리트 조각 05",
+        "x": -519.8348,
+        "y": -6,
+        "z": -328.0358,
+        "yawDeg": 291.209,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "floor": "B1",
+        "photos": [
+          "refs/interior/onebailey_walk/segye_20260427_52.jpg"
+        ],
+        "coordinate_status": "모델 검수용 좌표. y는 바닥 높이이며 사진 GPS/실측 위치가 아님.",
+        "note": "정확한 위치·작가·크기는 미확인. 관찰된 형태의 간략 재구성, 일부 형태 반복."
+      },
+      {
+        "spot": "원더스트리트 조각 06",
+        "x": -521.6979,
+        "y": -6,
+        "z": -332.837,
+        "yawDeg": 291.209,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "floor": "B1",
+        "photos": [
+          "refs/interior/onebailey_walk/segye_20260427_52.jpg"
+        ],
+        "coordinate_status": "모델 검수용 좌표. y는 바닥 높이이며 사진 GPS/실측 위치가 아님.",
+        "note": "정확한 위치·작가·크기는 미확인. 관찰된 형태의 간략 재구성, 일부 형태 반복."
+      },
+      {
+        "spot": "원더스트리트 조각 07",
+        "x": -523.5611,
+        "y": -6,
+        "z": -337.6382,
+        "yawDeg": 291.209,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "floor": "B1",
+        "photos": [
+          "refs/interior/onebailey_walk/segye_20260427_55.jpg"
+        ],
+        "coordinate_status": "모델 검수용 좌표. y는 바닥 높이이며 사진 GPS/실측 위치가 아님.",
+        "note": "정확한 위치·작가·크기는 미확인. 관찰된 형태의 간략 재구성, 일부 형태 반복."
+      },
+      {
+        "spot": "원더스트리트 조각 08",
+        "x": -525.4242,
+        "y": -6,
+        "z": -342.4393,
+        "yawDeg": 291.209,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "floor": "B1",
+        "photos": [
+          "refs/interior/onebailey_walk/segye_20260427_55.jpg"
+        ],
+        "coordinate_status": "모델 검수용 좌표. y는 바닥 높이이며 사진 GPS/실측 위치가 아님.",
+        "note": "정확한 위치·작가·크기는 미확인. 관찰된 형태의 간략 재구성, 일부 형태 반복."
+      },
+      {
+        "spot": "원더스트리트 조각 09",
+        "x": -527.2874,
+        "y": -6,
+        "z": -347.2405,
+        "yawDeg": 291.209,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "floor": "B1",
+        "photos": [
+          "refs/interior/onebailey_walk/segye_20260427_55.jpg"
+        ],
+        "coordinate_status": "모델 검수용 좌표. y는 바닥 높이이며 사진 GPS/실측 위치가 아님.",
+        "note": "정확한 위치·작가·크기는 미확인. 관찰된 형태의 간략 재구성, 일부 형태 반복."
+      },
+      {
+        "spot": "원더스트리트 조각 10",
+        "x": -529.1505,
+        "y": -6,
+        "z": -352.0417,
+        "yawDeg": 291.209,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "floor": "B1",
+        "photos": [
+          "refs/interior/onebailey_walk/segye_20260427_55.jpg"
+        ],
+        "coordinate_status": "모델 검수용 좌표. y는 바닥 높이이며 사진 GPS/실측 위치가 아님.",
+        "note": "정확한 위치·작가·크기는 미확인. 관찰된 형태의 간략 재구성, 일부 형태 반복."
+      },
+      {
+        "spot": "원더스트리트 조각 11",
+        "x": -531.0136,
+        "y": -6,
+        "z": -356.8428,
+        "yawDeg": 291.209,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "floor": "B1",
+        "photos": [
+          "refs/interior/onebailey_walk/segye_20260427_52.jpg"
+        ],
+        "coordinate_status": "모델 검수용 좌표. y는 바닥 높이이며 사진 GPS/실측 위치가 아님.",
+        "note": "정확한 위치·작가·크기는 미확인. 관찰된 형태의 간략 재구성, 일부 형태 반복."
+      },
+      {
+        "spot": "원더스트리트 조각 12",
+        "x": -532.8768,
+        "y": -6,
+        "z": -361.644,
+        "yawDeg": 291.209,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "floor": "B1",
+        "photos": [
+          "refs/interior/onebailey_walk/segye_20260427_52.jpg"
+        ],
+        "coordinate_status": "모델 검수용 좌표. y는 바닥 높이이며 사진 GPS/실측 위치가 아님.",
+        "note": "정확한 위치·작가·크기는 미확인. 관찰된 형태의 간략 재구성, 일부 형태 반복."
+      },
+      {
+        "spot": "관광특구 라운지",
+        "x": -536.6211,
+        "y": -6,
+        "z": -371.2929,
+        "yawDeg": 84.644,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "floor": "B1",
+        "photos": [
+          "refs/interior/onebailey_walk/mh2011689_18.jpg"
+        ],
+        "coordinate_status": "모델 검수용 좌표. y는 바닥 높이이며 사진 GPS/실측 위치가 아님.",
+        "note": "라운지 존재는 기사 근거, 가구 위치는 추정."
+      },
+      {
+        "spot": "서쪽 나들목 진입",
+        "x": -514.8733,
+        "y": -6,
+        "z": -469.7878,
+        "yawDeg": 21.632,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "floor": "B1",
+        "photos": [
+          "refs/interior/onebailey_walk/mh2011689_20.jpg",
+          "refs/interior/onebailey_walk/mh2011689_21.jpg"
+        ],
+        "coordinate_status": "모델 검수용 좌표. y는 바닥 높이이며 사진 GPS/실측 위치가 아님.",
+        "note": "서쪽 OSM 축에 대한 모델. 흰 타일 자료는 관련 출구5 지하도일 수 있어 동일 시설의 확정 마감이 아님."
+      },
+      {
+        "spot": "나들목 강변 벽화",
+        "x": -531.4626,
+        "y": -6,
+        "z": -511.6184,
+        "yawDeg": 111.632,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "floor": "B1",
+        "photos": [
+          "refs/interior/onebailey_walk/mh2011689_20.jpg"
+        ],
+        "coordinate_status": "모델 검수용 좌표. y는 바닥 높이이며 사진 GPS/실측 위치가 아님.",
+        "note": ""
+      },
+      {
+        "spot": "공원으로 올라가는 경사로",
+        "x": -550.284,
+        "y": -6,
+        "z": -559.0773,
+        "yawDeg": 21.632,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "floor": "B1",
+        "photos": [
+          "refs/interior/onebailey_walk/mh2011689_20.jpg"
+        ],
+        "coordinate_status": "모델 검수용 좌표. y는 바닥 높이이며 사진 GPS/실측 위치가 아님.",
+        "note": "경사 길이·B1 고도는 게임 연결 추정."
+      },
+      {
+        "spot": "공원 출입구",
+        "x": -567.9792,
+        "y": 0,
+        "z": -603.6965,
+        "yawDeg": 201.632,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "floor": "1F",
+        "photos": [
+          "refs/interior/onebailey_walk/mh2011689_19.jpg",
+          "refs/interior/onebailey_walk/mh2011689_20.jpg"
+        ],
+        "coordinate_status": "모델 검수용 좌표. y는 바닥 높이이며 사진 GPS/실측 위치가 아님.",
+        "note": ""
+      }
+    ],
+    "trace_coordinates": "x east,z south,y floor. Screenshot camera adds eye height1.62. yaw0 north,90 west. 모든 참조 기반 모델 지점 및24시간/12조각별 시점 기록.",
+    "screenshot_status": "사용자 지시: sandbox에서 tests/shot.mjs 실행 불가. 실행/시각 검증 완료라고 주장하지 않음. 운영자용 trace 제공.",
+    "verification": {
+      "smoke": {
+        "command": "node tests/smoke.mjs onebailey gotomall hangang streets",
+        "result": "OK",
+        "final": true
+      },
+      "walk": {
+        "command": "node tests/walk.mjs onebailey gotomall hangang streets",
+        "result": "86 ok, 0 blocked",
+        "final": true
+      },
+      "supplemental_route": {
+        "result": "0 support/capsule issues",
+        "step_m": 0.25,
+        "support_tolerance_m": 0.12,
+        "built": [
+          "all PLACES modules",
+          "city",
+          "all lazy furnishings"
+        ],
+        "routes": [
+          "G2 내부→기존 계단→지상 경유→신규 계단→광장→본체",
+          "본체→서쪽 OSM 나들목→경사로→공원",
+          "안내센터 출입구",
+          "승강기 B1/1F 출입"
+        ],
+        "note": "지하 G2 직결 자체는 기존 외벽 때문에 미통과/미완료. 검증 경로는 공개적으로 명시한 지상 우회.",
+        "full_world_result": "0 issues on all five routes; Banpo shoppingtown overlap does not block tested surface detour."
+      },
+      "metadata": {
+        "command": "node tools/gen_meta.mjs (executed with output write intercepted)",
+        "result": "PASS",
+        "shared_file_written": false,
+        "reason": "Only onebailey.js and onebailey.json are authorized; other jobs own shared metadata.",
+        "preview": {
+          "name": "원베일리 공공보행통로",
+          "claims": [],
+          "claimRoads": [
+            1481658416
+          ],
+          "claimAreas": [],
+          "box": [
+            -570.1,
+            -602.2,
+            -288.6,
+            -18.2
+          ],
+          "y": [
+            -6,
+            3.8
+          ],
+          "floors": [
+            "B1",
+            "1F"
+          ],
+          "cells": [
+            "-14,-10",
+            "-14,-9",
+            "-13,-9",
+            "-13,-8",
+            "-13,-7",
+            "-13,-6",
+            "-12,-6",
+            "-12,-5",
+            "-12,-4",
+            "-12,-3",
+            "-11,-4",
+            "-11,-3",
+            "-11,-2",
+            "-11,-1",
+            "-10,-1",
+            "-13,-5",
+            "-10,-2",
+            "-9,-2",
+            "-8,-2",
+            "-9,-1",
+            "-8,-1",
+            "-14,-11",
+            "-13,-12",
+            "-14,-15",
+            "-14,-14",
+            "-14,-13",
+            "-15,-15",
+            "-15,-16"
+          ],
+          "junctions": [],
+          "entrances": [
+            {
+              "x": -310,
+              "z": -42,
+              "y": 0,
+              "w": 6,
+              "nx": 0,
+              "nz": -1,
+              "other": "banpo_shoppingtown"
+            },
+            {
+              "x": -307,
+              "z": -40.9,
+              "y": 0,
+              "w": 2.3,
+              "nx": 1,
+              "nz": 0,
+              "other": "banpo_shoppingtown"
+            },
+            {
+              "x": -307,
+              "z": -35.2,
+              "y": 0,
+              "w": 6,
+              "nx": 1,
+              "nz": 0,
+              "other": null
+            },
+            {
+              "x": -316,
+              "z": -32,
+              "y": 0.2,
+              "w": 18,
+              "nx": 0,
+              "nz": 1,
+              "other": null
+            },
+            {
+              "x": -325,
+              "z": -36.9,
+              "y": 0,
+              "w": 9.8,
+              "nx": -1,
+              "nz": 0,
+              "other": null
+            },
+            {
+              "x": -566.8,
+              "z": -601,
+              "y": 0,
+              "w": 6.8,
+              "nx": -0.369,
+              "nz": -0.93,
+              "other": null
+            },
+            {
+              "x": -569.2,
+              "z": -597.2,
+              "y": 0,
+              "w": 3.8,
+              "nx": -0.93,
+              "nz": 0.369,
+              "other": null
+            }
+          ]
+        }
+      },
+      "walk_all": {
+        "command": "node tests/walk.mjs",
+        "result": "491 ok, 3 blocked",
+        "blocked": [
+          "junction J6 centralcity→jwmarriott y=0: no path (32320 cells)",
+          "elevator gyeongbu 북측 동 엘리베이터 지하1층: no path (35 cells)",
+          "spawn centralcity 파미에스테이션2F 식당가: no floor at start (found0)"
+        ],
+        "scope": "실패 모두 다른 모듈 영역. 본 작업의 허용 범위 밖이며 수정하지 않음."
+      },
+      "trace_cameras": {
+        "count": 58,
+        "support_and_capsule_failures": 0,
+        "scene": "onebailey with all detail",
+        "visual_review": "not run, user sandbox limitation"
+      },
+      "temporary_toggle": {
+        "result": "PASS",
+        "cases": [
+          "toggle off before lazy build → all15groups hidden",
+          "toggle on → all15visible",
+          "toggle off → all15hidden"
+        ]
+      },
+      "module_budget": {
+        "quads_with_details": 5914,
+        "detail_groups": 34,
+        "temporary_mesh_groups": 15
+      }
+    }
+  }
+}

@@ -1,7 +1,7 @@
 {
  "id": "gyeongbu",
  "name": "서울고속버스터미널 (경부·영동선) + 꽃시장",
- "updated": "2026-11-06",
+ "updated": "2026-11-07",
  "sources": [
   {
    "url": "https://ko.wikipedia.org/wiki/서울고속버스터미널",
@@ -462,6 +462,28 @@
    "post_url": "https://blog.naver.com/luneworld/224463048075 (or 224463884313)",
    "date": "2026-11-03",
    "priority": "ROUND6 interior ground truth; supplied local photograph and reviewer comparison, original post not re-fetched"
+  },
+  {
+   "url": "http://www.exterminal.co.kr/include/floor.asp?floornum=f1",
+   "title": "공식 본관 층별 점포 안내 및 저장된 약도",
+   "checked": "2026-11-07",
+   "local": "refs/official/gyeongbu/exterminal_directory_parsed.json"
+  },
+  {
+   "url": "http://www.exterminal.co.kr/include/floor_sub.asp?floornum=sf1",
+   "title": "공식 부속상가 B1/1F/2F 점포 안내",
+   "checked": "2026-11-07",
+   "local": "refs/official/gyeongbu/exterminal_floor/"
+  },
+  {
+   "url": "https://blog.naver.com/marketer_jyh/224465977099",
+   "title": "2026-11-05 G9/G11·다이소 GATE1/4 접근 사진",
+   "local": "refs/interior/daiso/101–112"
+  },
+  {
+   "url": "https://blog.naver.com/eun_bib/224395084303",
+   "title": "GATE1/2 포털·회전문·22/33/34번홈 위치 사진",
+   "local": "refs/interior/daiso/125–136"
   }
  ],
  "building": {
@@ -478,13 +500,49 @@
  "floors": [
   {
    "floor": "B1",
-   "use": "지하상가·역 연결, 다이소",
+   "use": "본관 식당가·노브랜드·신세계팩토리스토어 / 부속 한가람문구·다이소",
    "tenants": [
-    "다이소 강남고속터미널점(B1, 10~22시)",
-    "고투몰/강남터미널지하도상가 연결"
+    "놀부부대찌개",
+    "홍수계찜닭",
+    "롤링핀",
+    "신촌설렁탕",
+    "오니기리 와이규동",
+    "보승회관",
+    "얼큰수제비",
+    "용호동낙지",
+    "북창동 순두부",
+    "서브웨이",
+    "신룽푸마라탕",
+    "퍼부어",
+    "오한수 우육면가",
+    "시마스시",
+    "빽스",
+    "나인블럭",
+    "포레포레헤어",
+    "펀비어킹",
+    "신세계팩토리스토어",
+    "밥장인",
+    "전주콩나물",
+    "놀부주방",
+    "노브랜드",
+    "입점준비중",
+    "이니스프리(강남터미널)",
+    "네일&젤",
+    "제주스커피",
+    "123김밥",
+    "이마트24 5호점",
+    "미대오빠",
+    "한가람문구",
+    "복권/담배",
+    "에디슨",
+    "진보석",
+    "수연",
+    "대림보석",
+    "가챠샵",
+    "다이소"
    ],
-   "layout": "ROUND6 gb_hall17–20: J2 y-6의8m 연결통로·양끝 좌표 유지. 점자블록 경로의 기둥을 제거하고 자주색 깊은 점포 프리즈/밀집 진열벽·회전 진열대를 배치. 다이소는 흰 벽 안에 제한된 빨간 프레임 유리전면과 단일 중앙 입구, 밝은 저투명 유리, 흰 바탕 빨간 간판/정방향 매장입구 바닥띠. 내부는 목재·흰 철제1.5m 선반을 좁게 반복하고 여러 색 재고, 조밀한 쌍형광등과 녹청 카테고리 사인. 로비 측면에는 사진19의 인형뽑기2대. 실제 지점과 전체 매장 면적/절대좌표는 미확정.",
-   "source": "https://www.ktriptips.com/eng/shopping/4031110",
+   "layout": "ROUND10: 본관 B1를 서측 건물 아래까지 확장. 다이소는 부속 B1 u142..282,v8..30의 긴 한 층 매장. GATE1 이중 유리 출입문·한가람 접근, GATE2 1F 계단/하행 에스컬레이터·회전문, GATE4 고투몰 G11 연결·디즈니 짧은 가지를 분리. 3개 계산구역, 1–3구역, 상품검색대, 장바구니/카트. 좌표/길이는 모델 추정.",
+   "source": "refs/official/gyeongbu/exterminal_directory_parsed.json",
    "guess": false,
    "photo_source": "refs/interior/gb_hall/17–20",
    "layout_is_inferred": true
@@ -493,31 +551,94 @@
    "floor": "1F",
    "use": "매표소 제1·2·3, 무인발권기, 승차홈 1~43, 하차장, 상업시설",
    "tenants": [
-    "노브랜드버거 고속터미널점(경부선 1층)",
-    "다이소 강남고속버스터미널2호점(1F, ktriptips)",
-    "파리바게뜨·백미당·북창동순두부·아트박스·타코벨(브리프 기재, 웹에서 확인 못함)",
-    "DUNKIN’ (사진10)",
-    "기운센 식당·로봇김밥 (사진16)",
-    "BURGER KING (사진04의 승차홈 사인 인근 간판; 유닛 위치는 근사)",
-    "김밥천국·이마트24 (ROUND6 점포분할 예시/저장 상호, 실제 호실 미확정)"
+    "헬스보이짐",
+    "스테이스튜디오",
+    "소녀방앗간",
+    "만복식당",
+    "타쿠미나가사키",
+    "연남토마",
+    "파리바게트",
+    "띤띤익스프레스",
+    "신서울깍두기",
+    "타코벨",
+    "도시주방",
+    "복권/담배",
+    "물품보관소",
+    "이마트24(1호)",
+    "파스쿠찌",
+    "티월드",
+    "데일리햇",
+    "드림로또",
+    "로또앤담배",
+    "아메리칸트레일러",
+    "이마트24(4호)",
+    "고속터미널약국",
+    "앤티앤스",
+    "시그니처랩",
+    "스타벅스",
+    "라멘짱",
+    "석관동떡볶이",
+    "배스킨라빈스",
+    "타이거슈가",
+    "죠 샌드위치",
+    "후라토식당",
+    "노브랜드 버거",
+    "유니클로",
+    "이디야",
+    "뚜레쥬르",
+    "공차",
+    "스킨밴드",
+    "버거킹",
+    "청년떡볶이",
+    "제주스커피",
+    "코코이찌방야",
+    "칠렉스24",
+    "이마트24 2호점",
+    "압구정칼국수김밥",
+    "로봇김밥",
+    "역전우동",
+    "북촌손만두",
+    "던킨",
+    "김밥천국",
+    "약천",
+    "내고향사골순대국",
+    "청룡각",
+    "이마트24 키오스크",
+    "효도치킨",
+    "이마트24(5호점)"
    ],
-   "layout": "ROUND6 gb_hall01/02/04/10/16: 서측 빈 홀을 4–7m 점포 유닛으로 채우고 회랑 상점을 분할해 주황 캐노피·짙은 간판·유리 전면·냉장 쇼케이스·타일 카운터·메뉴판으로 구성. 주회랑은 약4.5m 텍스 천장과 크림 상부벽/조밀한 다운라이트, 구관 입구는 낮은 형광 트로퍼. 승차홈 면은 연속 알루미늄 창벽과 중앙 세로 전광판을 낀 갈색 격자 양개문. 05/06/09/12/14는 좁힌 매표통로·상점 전면·2F 유리 발코니, 흰 채광정/곡면 띠·연속 파란 시간표·6대 알코브·Tmoney 발권기. 13은 원형 강관 트러스/낮은 목재 벽/식재,15는 밝은 오크 슬랫·주황 소파/사면 식물 기둥. 03은 회랑에서 보이는 할리스/푸드스테이션 프리즈와 흰 메뉴판. 전체 위치·수량은 사진 비례 추정.",
-   "source": "https://ko.wikipedia.org/wiki/서울고속버스터미널",
+   "layout": "ROUND10 공식 호실 목록으로 기존 점포를 재배치/재명명하고 집기 유지. 본관35 유니클로 u34..66,v6..23; 노브랜드버거 인접, 이디야는 본관→부속 전환부. GATE1 계단 u274,v7..21(22번홈), GATE2 u206.5..214.5,v7..21(33/34번홈). 매표·승차홈·기존 사진 기반 대합실 디테일 유지. 공식 약도와 보존 승차홈 번호 방향 차이는 round10.guesses 참조.",
+   "source": "refs/official/gyeongbu/exterminal_directory_parsed.json",
    "guess": false,
    "photo_source": "refs/interior/gb_hall/01–16",
    "layout_is_inferred": true
   },
   {
    "floor": "2F",
-   "use": "할리스·푸드스테이션은 사진03에서 확인, 그 밖의 실내 용도 미확인. 북측/인접 데크 외부 주차 유지.",
+   "use": "본관 한복·혼수·커튼·홈패션 / 부속 식당가 / 유니클로 매장 내부 2층",
    "tenants": [
-    "HOLLYS COFFEE",
-    "FOOD STATION 2F"
+    "달리나인",
+    "온정",
+    "고향의 맛",
+    "티하우스레몬",
+    "군산오징어",
+    "샤브촌by계백집",
+    "할리스커피",
+    "시래마을",
+    "청년커피랩",
+    "금호(속리산)",
+    "오피스",
+    "천일사무실",
+    "천일영업소",
+    "동양영업소",
+    "브레드가든",
+    "유니클로"
    ],
-   "layout": "기존표고6m 유지. gb_hall03의 할리스/푸드스테이션 전면과 gb_flower13/14의 꽃시장 접근 회랑·에스컬레이터/옆 계단을 추적. 1F 포켓 상부의 천창/보이드 개구는 구조도 없는 모델링 근사. 나머지 미확인 공간은 중립적으로 유지.",
-   "source": "https://ko.wikipedia.org/wiki/서울고속버스터미널",
-   "guess": true,
-   "photo_source": "refs/interior/gb_hall/03_hall_shops_hollys_crowd.jpg"
+   "layout": "본관 y6, 부속 y4.2 유지. 유니클로 내부2층/계단/진열은 블로그 및 평면 기반 추정. 부속2F 공식 식당/사무실을 별도 구획. 기존 할리스 보이드 유지; 본관 홈패션 실제 호실/가구는 미측량.",
+   "source": "refs/official/gyeongbu/exterminal_directory_parsed.json",
+   "guess": false,
+   "photo_source": "refs/interior/gb_hall/03_hall_shops_hollys_crowd.jpg",
+   "layout_is_inferred": true
   },
   {
    "floor": "3F",
@@ -545,40 +666,51 @@
   },
   {
    "floor": "4F",
-   "use": "현재 용도 미확인; 단순한 중립 공간",
+   "use": "혼수·커튼·홈패션",
    "tenants": [],
-   "layout": "이전 모델의 종합상황실·시설관리·방재센터 등 임의 부서와 호실을 삭제. 과거 사진에는 2·4층 혼수·커텐·홈패션 간판이 있으나 현재 입주로 단정하지 않음.",
-   "source": "https://ko.wikipedia.org/wiki/서울고속버스터미널",
-   "guess": true
+   "layout": "공식 층 용도 반영. 기존 중립 공간과 구조 유지; 미확인 점포명/호실을 추가하지 않음.",
+   "source": "refs/official/gyeongbu/exterminal_directory_parsed.json",
+   "guess": false,
+   "layout_is_inferred": true
   },
   {
    "floor": "5F",
-   "use": "신세계백화점 본사(구 웨딩홀, 2017-05 종료)",
-   "tenants": [
-    "신세계백화점 본사"
-   ],
-   "layout": "기존 문헌의 신세계백화점 본사 용도만 기록. 개별 부서·회의실·임원실 등은 확인되지 않아 구체적인 실 이름과 배치를 만들지 않음. 기존 자료는 현재 입주를 재확인한 결과가 아님.",
-   "source": "https://ko.wikipedia.org/wiki/서울고속버스터미널",
-   "guess": false
+   "use": "입점 준비 중",
+   "tenants": [],
+   "layout": "공식 현황에 따라 신세계백화점 본사 표기 제거. 구조/가구 유지.",
+   "source": "refs/official/gyeongbu/exterminal_directory_parsed.json",
+   "guess": false,
+   "layout_is_inferred": true
   },
   {
    "floor": "6F-9F",
-   "use": "현재 용도 미확인; 단순한 중립 공간",
-   "tenants": [],
-   "layout": "이전 모델의 운수사별 사무실·승무원 수면실·배차실·문서고·임대실·구내식당·기계실 등 임의 테마와 호실을 삭제. 사진의 6·7·8층 의류도매상가 문구는 과거 간판 기록으로만 보존.",
-   "source": "",
-   "guess": true
+   "use": "6–8F 의류 도매 / 9F 고속사 사무실",
+   "tenants": [
+    "금호",
+    "한일",
+    "동양",
+    "천일",
+    "고속조합",
+    "동부",
+    "중앙"
+   ],
+   "layout": "공식 층 용도만 갱신. 실제 호실별 평면/상점과 집기 미확인, 중립 구조 유지.",
+   "source": "refs/official/gyeongbu/exterminal_directory_parsed.json",
+   "guess": false,
+   "layout_is_inferred": true
   },
   {
    "floor": "10F/옥상",
-   "use": "천주교 성당(사제 상주), 옥상정원(전망 좋음)",
+   "use": "포석정·육즙이흐르는각고기·고속터미널성당 / 옥상정원",
    "tenants": [
-    "성당",
-    "옥상정원"
+    "포석정",
+    "육즙이흐르는각고기",
+    "고속터미널성당"
    ],
    "layout": "문헌의 성당·옥상정원 존재를 유지하되 실내와 정원의 상세 도면·사진은 없음. 성당 위치·크기·내부 가구와 옥상 조경 배치는 근사이며, 상상한 대형 스테인드글라스나 반복 정원 격자는 사용하지 않음.",
-   "source": "https://mediahub.seoul.go.kr/archives/1220355",
-   "guess": false
+   "source": "refs/official/gyeongbu/exterminal_directory_parsed.json",
+   "guess": false,
+   "layout_is_inferred": true
   }
  ],
  "elements": [
@@ -664,17 +796,15 @@
   "같은 지번에 (경부선)·본관동·부속상가동·정비고,세차장·부대편의동이 따로 등록됨(knowingasset 건물관리번호 목록)"
  ],
  "unresolved": [
-  "2026-06 경부선 gb_01~05와 manifest를 확인해 북측 외관을 갱신함. 최신 사진에서 판독되지 않는 점포명·층별 임대 현황과 광고 내용은 미확인.",
-  "제공 사진은 날짜가 섞여 있고 대부분 촬영일 미상. 옛 도매상가·한가람문고 간판과 기존 입주 자료의 시점이 다르므로 현재 테넌트 현황은 미확인.",
   "북측 낮은2층 동의 정확한 층고·옥상 단차·코어 덮개 치수, 옥상 차량 진입 경로. 로드뷰8~9m 높이를4.2/8.4m로 근사.",
-  "서측 상층 단차 치수·실별 경계·정확한 코어 위치, 2F·4F·6~9F 현재 용도.",
-  "B1 다이소 외 상점과 내부 구획, 5F 본사의 현재 입주 상태와 실제 내부 평면, 10F 성당·옥상정원 상세 배치.",
   "사진06은 OSM356129683 부속동으로 잠정 대응하여4층 외피를 적용했지만 건물 식별·층수·실제높이는 확정되지 않음.",
   "옛 승차장 층이 2·3층인지 3·5층인지에 대한 위키백과와 미디어허브 차이.",
   "영문 파생 자료의 2021년 3층 공실 언급과 꽃시장 기록의 충돌은 다른 동을 가리킬 가능성이 있어 확정하지 않음.",
   "신반포로 보행 아치·날개형 차양·정류장·펜스·가로수의 실측 좌표와 치수. 항공사진 평면 및 로드뷰 형태를 함께 읽은 배치이며 사진과 세계 좌표의 정밀 보정은 아님.",
   "14188630 타원 공간의 실제 용도와 단차. 최신 로드뷰로 높이를 확인할 수 없어 임의 상부 구조물은 제거.",
-  "ROUND6 실내 재추적: 실제 절대좌표·사진 간 연결 순서·치수/수량·매장 지점 혼재·트러스 사진의 센트럴시티 가능성·박테라리움 전화 끝자리·현재 운행정보는 modeling.guesses에 분리. operator의 최종 렌더 비교 대기."
+  "공식 본관/부속 평면은 비축척 약도. 현 OSM 승차홈 번호 방향과 상점 약도 방향이 다르므로 승차홈을 그대로 두고 동선과 인접 관계를 근사. 한가람문구는 공식 약도 서단이지만 본 모델에서는 보존22번홈의 GATE1에 맞춰 동단 접근부에 배치했다. 실제 절대위치 보정 필요.",
+  "다이소 실제 길이/면적·1층 계단 위치 오프셋·G9 접근 단차와 G11 올라가는 계단의 정확한 표고는 미측량.",
+  "사진과 공식 목록으로 확인된 용도 외 상층 실별 평면과 가구는 추정/미구현. 렌더 비교는 operator 작업."
  ],
  "modeling": {
   "reference_priority": "ROUND8: shots/trace7/gyeongbu_1.png~13.png와 refs/interior/gb_hall·gb_flower 원본 사진을 비교. 위치는 기존 OSM 윤곽/POI와 연결 계약을 우선. 사진 기반 마감과 카메라 가림을 수정하며 기존 층간 구멍·버스·상층 상세를 보존. 이전 라운드 기록은 이력.",
@@ -704,22 +834,26 @@
   "facade_1f": "gb_03_crossing과 항공사진 검토에 따라 아치 중심u163, 앞v-27/뒤v-6, 날개 지붕·보행로·정문 스폰(163,-16)을 정렬. 북측 지상 아케이드와 내부 점포벽에 폭6m 통로 확보. 고속터미널역 녹색 키오스크는u36 유지. J2 및 모든 수직 동선 보존.",
   "interior_1f": "ROUND8: 실제 OSM 벽에 묻힌 16번 문 벽돌·목재 보·루버를 실내면으로 이동. 구관 천장 격자/환기구, 주문대·좌석·사람, 뚜레쥬르 벽돌, 식재 기둥, 입체 곡면 리브, 트러스/발권기, 할리스 유리·등·의자 보강.",
   "flower_market": "ROUND8: 시트8–13 전체 검토. 입체 꽃잎/수직 조화벽·리스/가지·드레이프/천장장식과 커튼 전면, 녹색 에폭시 광택·입구 공지·간판 시점 보강. 기존 꽃·진열·방문객을 유지하며 반복 형상 해상도와 상세 그룹 분할로 부담 관리.",
-  "floors_detail": "미확인 상층은 단순한 바닥·벽·기둥·조명과 공용 통로로 표현. 임의 부서·호실·실별 테마·층별 장식색을 삭제. 기존 문헌에 있는 다이소, 꽃시장, 5F 본사, 10F 성당/옥상정원 용도는 근거 시점을 구분해 유지.",
+  "floors_detail": "ROUND10: 공식 운영자 목록으로 본관/부속 B1·1F·2F 테넌트 구분. 2/4F 홈패션, 5F 입점준비중, 6–8F 의류도매, 9F 고속사 사무실, 10F 식당/성당으로 용도 정정. 미확인 상층 실별 배치에는 임의 브랜드를 넣지 않음.",
   "zones": "실제 모델의 동별·층별 슬래브 범위와 주차 면적을 따라 존을 등록. 낮은 북측 동 상공에 고층 실내 존을 만들지 않음. 꽃시장과 승차홈 등 주요 하위 공간은 사실에 근거한 범주명만 사용.",
   "connections": "_junctions.js에서 gyeongbu를 명시한 연결과 WELLS를 보존. B1 통로, 출입구, 계단 구멍과 도착점의 보행 높이를 유지. 연결 계약에 필요한 위치가 실측 출입구 위치와 같다는 뜻은 아님.",
   "excluded": "공항식 대형 유리홀, 임의 부서/호실/상호·가상 점포번호·광고 문구, 잔디 위 가상 주차장, 미확인 상부 파빌리온. 사진의 TICKETS·DUNKIN’·HOLLYS COFFEE·FOOD STATION·Flower Wholesaler는 실제 간판 표기로 유지하고 일반 안내는 한국어 사용. 사진08 외부 캐노피와 미확인 실내는 기존 외관/단순 배경 유지.",
   "guesses": [
-   "사진은 실제 평면도를 제공하지 않아 점포 순서·절대 좌표·거리·높이는 OSM 내부에 사진 비례로 배치한 추정이다. 한 카메라에 담기지 않는 참고 사진은 보조 trace로 나눴다.",
-   "다이소 두 지점 사진이 혼재할 수 있다.33/35의 계단 입구는 별도 매장을 만들지 않고 빨간 패턴 입구와 실제 인접 수직동선으로 분담 재현했다.",
+   "공식 호실·층과 사진으로 확인한 접속 순서를 우선한다. 실측이 없는 점포 좌표·거리·층고·재고 수량은 OSM 내부에 맞춘 추정이다.",
    "38/39/40/41의 터미널·지하철 소속이 불명확하다.39의 GS25를 확인되지 않은 터미널 점포로 추가하지 않았다.",
    "13의 트러스 발권기 위치, 하차장 위치/번호의 대응, 노선별 승차홈 번호 및 창구 시간표는 실측·실시간 운행자료가 아니다.",
    "3F 생화·조화·크리스마스·부자재 실제 순서/범위와 점포 절대 위치는 미확인. 크리스마스는2026년 가을 사진의 계절 진열이다.",
    "할리스 보이드는 양쪽 통로에서 간판이 보이는 재구성이고 메자닌 가장자리를 실제 보행 슬래브로 보완했다. 정확한 보이드 치수는 미확인.",
    "1번 출구 기둥의 세부 설치 오프셋은 추정. 인접 역 출구 구조는 station 모듈을 유지한다.",
-   "사진33/35의 빨간 다이소 계단 입구는 기존 계단에 마감만 적용했다. 사진과 동일 지점/지점명이라고 단정하지 않으며 GATE2 번호도 새로 붙이지 않음.",
    "북측 상점 순서/통로폭·할리스 유리면과 가구 위치·트러스 구간 위치는 사진 비례로 재구성한 추정. 유리면 뒤 검은 배경벽을 뒤로 옮겨 보이는 공간을 확보.",
    "새 실내 식물은 사진의 잎 밀도와 색을 재현한 정적 텍스처/형상이며 식물종을 주장하지 않음.",
-   "꽃시장 진열 수량·커튼/내부 유리 칸막이의 세부 위치·녹색 바닥 반사 강도는 사진 기반 재구성이며 실측값이 아니다."
+   "꽃시장 진열 수량·커튼/내부 유리 칸막이의 세부 위치·녹색 바닥 반사 강도는 사진 기반 재구성이며 실측값이 아니다.",
+   "140m×22m 매장 크기 및 B1 확장 외곽은 실측 아님. 기존 작은66m 방을 확대해 사진의 긴 동선을 확보.",
+   "공식 약도는 비축척이고 L자 OSM/고정 승차홈 방향과 다름. 정확한 세계좌표·호실 폭·계단 치수는 재구성.",
+   "한가람문구 서단↔동단 좌표 타협: 위 충돌 설명 참조.",
+   "유니클로 내부2층 존재는 블로그 근거; 내부 계단/진열 위치와 층고6m는 추정.",
+   "G9 접근 -1.5m 단차와 G11 -6→-4.5→-6 연결은 사진상 오르내림을 맞춘 추정, 실제표고로 주장하지 않음.",
+   "상층 미확인 실내 구조는 유지. 3F 주차장 연결은 unverified 유지."
   ],
   "implemented_counts": {
    "round": 8,
@@ -734,40 +868,52 @@
   "render_review": "비교 시트13장과 원본을 검토. tests/shot.mjs는 사용자 지시대로 실행하지 않음. 최종 외관 이미지는 operator가 modeling.trace로 렌더하여 확인해야 함.",
   "validation": {
    "smoke": {
-    "command": "node tests/smoke.mjs gyeongbu gotomall gyeongbu_east",
-    "result": "OK; 세 모듈의 모든 K.detail 생성 예외 없음"
+    "command": "node tests/smoke.mjs gyeongbu gotomall station gyeongbu_east",
+    "result": "OK (final geometry, all detail built)"
    },
    "walk": {
     "command": "node tests/walk.mjs",
-    "result": "최종 코드 재실행: 428 ok, 0 blocked; 전체 모듈/도시 레이어 포함, stderr 오류 없음"
+    "result": "final rerun: 494 ok, 0 blocked",
+    "initial_failures_resolved": "initial run: centralcity/J6/1M and north-wing B1 elevator blocked; owned elevator opening fixed, final shared-workspace rerun has no blocked routes"
    },
    "render": {
-    "command": "tests/shot.mjs",
-    "result": "사용자 지시대로 미실행. operator 렌더 대기"
-   },
-   "trace_cameras": {
-    "count": 62,
-    "floor_failures": 0,
-    "capsule_collisions": 0,
-    "method": "실제 kit + 전체17개 detail, 발밑 support와 반경0.32m/높이1.75m 캡슐 검사. 자료의 사진 경로62개 모두 존재하며 중복 없이 각1개 trace."
-   },
-   "spawns": {
-    "count": 12,
-    "floor_failures": 0,
-    "capsule_collisions": 0
+    "result": "tests/shot.mjs not run per user sandbox instruction; trace cameras recorded at floor level"
    },
    "ground_floor": {
-    "exact_match_to_round7": true,
-    "ground_holes": 7,
-    "method": "HEAD round7과 지상 K.slab의 polygon/holes 및 K.groundHole 전체 좌표/등록 순서를 직접 비교."
+    "command": "node tests/visfloor.mjs 0 -15 -185 315 100 /tmp/round10-gyeongbu-floor.png gyeongbu,gotomall,station,gyeongbu_east",
+    "result": "rendered and opened; red floor apertures confined to circulation wells, no broad missing ground floor"
    },
-   "sightlines": {
-    "boarding_wall": "OSM 벽면과 brick/sign local u 위치 비교로 가림 해소",
-    "bus_canopy": "카메라 이동 후 가까운 코치 앞유리 가림 해소; 앞유리 대상 사선 ray가1.30m에서12.53m로 이격",
-    "hollys": "두 카메라에서 HOLLYS/COFFEE/중앙표지/FOOD STATION/펜던트 총12개 불투명 ray 모두 차폐 없음"
+   "new_routes": {
+    "daiso_g11": "8 ok, 0 blocked: exact proposed junction, GATE4 branch, long store, both GATE1 doors",
+    "uniqlo_and_stairs": "13/13 pass: Uniqlo both ways/common hall, GATE1 both ways/store, GATE2 stair and escalator via bottom pocket/turnstiles into store",
+    "entry_only": "south→north allowed, reverse north→south clamped at v3.97; side u217 unaffected",
+    "elevator": "북측 동 B1→store and rear aisle pass after frontwall opening fix",
+    "trace": "30 round10 cameras support/capsule checked; 1 counter-view camera moved 0.5m clear of shelf; all now at actual modeled floor height",
+    "g9_dip": "2 narrow-bounds routes +23 support/capsule samples pass; y=-6→-7.5→-6 and zones continuous"
    },
-   "detail_exceptions": [],
-   "git_diff_check": "허용 두 파일 통과"
+   "metadata": {
+    "command": "NODE_OPTIONS='--import=/tmp/round10-meta-redirect.mjs' node tools/gen_meta.mjs",
+    "result": "completed; generated /tmp/round10-meta.json without writing js/places/_meta.json, respecting four-file-only scope",
+    "pending": "coordinating registry job must add J_G11_DAISO from modeling.junctions_to_add then regenerate/apply shared metadata",
+    "gyeongbu_box": [
+     0.8,
+     -221.7,
+     425.1,
+     95
+    ]
+   },
+   "walk_scoped": {
+    "command": "node tests/walk.mjs gyeongbu gotomall station gyeongbu_east",
+    "result": "129 ok, 0 blocked"
+   },
+   "trace_cameras": {
+    "new": 30,
+    "all_recorded": 76,
+    "floor_failures": 0,
+    "capsule_collisions": 0,
+    "result": "new-camera sample clearance verified; quiet checkout camera moved 0.5m from shelf"
+   },
+   "git_diff_check": "passed for the four authorized files"
   },
   "round2": {
    "1_south_end": {
@@ -940,7 +1086,7 @@
    },
    "preserved": "서측B1~10F,OSM claims,J2,모든 층의 계단·엘리베이터,8스폰·6승강기,톱니형 승차홈,버스 대기열·중앙/옥상 승용차 주차"
   },
-  "basement": "ROUND8: J2·구멍 유지. 문구점 양면 전면/바닥 띠, 보이는 줄무늬 계단벽, 화강석 문기둥·WOWPASS, 다이소 금속 문틀·센서·주의표지·선반 끝 상품 추가. 사진22는1F로 바로잡고 계단 사진33/35는 평면 입구17/37과 분리.",
+  "basement": "ROUND10: B1 외곽을 본관 전체와 부속 아래로 확장. 본관 식당가/노브랜드/팩토리 및 부속 문구·보석·가챠·다이소를 공식 층에 배치. 다이소 u142..282,v8..30; 한가람문구 u244..280,v.25..4.7; GATE1 271.5/276.5,v8, GATE2 210.5, GATE4 148,v0. 연결복도 u244..262,v4.9..8에 -6→-7.5→-6 계단/목재 바닥.",
   "round4": {
    "status": "과거 ROUND4 외관/실내 이력. 외관은 유지하며 실내/검증은 ROUND5와 상위 필드가 대체.",
    "arch": {
@@ -1514,23 +1660,6 @@
     "pitchDeg": 0
    },
    {
-    "spot": "1F 승차홈 쪽 상점가",
-    "photos": [
-     "refs/interior/gb_hall/10_hall_dunkin_stall_front.jpg"
-    ],
-    "x": 77.968,
-    "y": 0,
-    "z": -59.429,
-    "yawDeg": 110.806,
-    "local": {
-     "u": 70.8,
-     "v": 26.7
-    },
-    "floor": "1F",
-    "pitchDeg": 0,
-    "note": "DUNKIN’ 구획(v23..29.33)에 정면 배치. 예전 v34 카메라는 김밥천국 전면을 보았다."
-   },
-   {
     "x": 89.632,
     "z": -27.606,
     "y": 0,
@@ -1610,86 +1739,6 @@
     },
     "floor": "1F",
     "pitchDeg": 8
-   },
-   {
-    "spot": "1F 푸드코트 스탠드 줄",
-    "photos": [
-     "refs/interior/gb_hall/16_food_stalls_counter_row.jpg"
-    ],
-    "x": 97.859,
-    "y": 0,
-    "z": -7.08,
-    "yawDeg": 110.806,
-    "local": {
-     "u": 70.8,
-     "v": 82.7
-    },
-    "floor": "1F",
-    "pitchDeg": 0
-   },
-   {
-    "spot": "B1 다이소 입구(매장입구 표기)",
-    "photos": [
-     "refs/interior/gb_hall/17_b1_daiso_entrance.jpg"
-    ],
-    "x": 203.59,
-    "y": -6,
-    "z": -131.981,
-    "yawDeg": 200.806,
-    "local": {
-     "u": 214,
-     "v": 3.5
-    },
-    "floor": "B1",
-    "pitchDeg": 0
-   },
-   {
-    "spot": "B1 지하 복도(다이소 인근)",
-    "photos": [
-     "refs/interior/gb_hall/18_b1_corridor_shops_stone_floor.jpg"
-    ],
-    "x": 145.769,
-    "y": -6,
-    "z": -108.192,
-    "yawDeg": 110.806,
-    "local": {
-     "u": 151.5,
-     "v": 5.2
-    },
-    "floor": "B1",
-    "pitchDeg": 0
-   },
-   {
-    "x": 199.851,
-    "z": -130.56,
-    "y": -6,
-    "local": {
-     "u": 210,
-     "v": 3.5
-    },
-    "floor": "B1",
-    "yawDeg": 242.439,
-    "pitchDeg": 0,
-    "spot": "B1 다이소 접근 홀",
-    "photos": [
-     "refs/interior/gb_hall/19_b1_daiso_approach_hall.jpg"
-    ]
-   },
-   {
-    "spot": "B1 다이소 매장 내부",
-    "photos": [
-     "refs/interior/gb_hall/20_b1_daiso_interior_aisle.jpg"
-    ],
-    "x": 204.693,
-    "y": -6,
-    "z": -120.633,
-    "yawDeg": 290.806,
-    "local": {
-     "u": 211,
-     "v": 14.5
-    },
-    "floor": "B1",
-    "pitchDeg": 0
    },
    {
     "spot": "1F 대합실 매표창구 구간",
@@ -1883,154 +1932,6 @@
     },
     "floor": "1F",
     "pitchDeg": 6
-   },
-   {
-    "spot": "기존 계단 상부 · 다이소 계단 입구 마감 비교",
-    "photos": [
-     "refs/interior/gb_hall/33_b1_daiso_gate2_stairs.jpg"
-    ],
-    "x": 111.761,
-    "y": 0,
-    "z": -80.293,
-    "yawDeg": 20.806,
-    "local": {
-     "u": 109.8,
-     "v": 19.2
-    },
-    "floor": "1F",
-    "pitchDeg": -10,
-    "note": "사진의 빨간 계단 입구 마감을 기존 B1 하행 계단 상부에 적용한 비교 시점. 해당 지점/층 방향의 정확한 일치는 미확인; 새 구멍이나 별도 매장을 만들지 않았다."
-   },
-   {
-    "spot": "B1 상가 긴 복도",
-    "photos": [
-     "refs/interior/gb_hall/34_b1_corridor_shops_long.jpg"
-    ],
-    "x": 145.769,
-    "y": -6,
-    "z": -108.192,
-    "yawDeg": 110.806,
-    "local": {
-     "u": 151.5,
-     "v": 5.2
-    },
-    "floor": "B1",
-    "pitchDeg": 0
-   },
-   {
-    "spot": "기존 계단 상부 · 다이소 계단 입구 마감 비교",
-    "photos": [
-     "refs/interior/gb_hall/35_b1_daiso_entrance_stairs.jpg"
-    ],
-    "x": 111.761,
-    "y": 0,
-    "z": -80.293,
-    "yawDeg": 20.806,
-    "local": {
-     "u": 109.8,
-     "v": 19.2
-    },
-    "floor": "1F",
-    "pitchDeg": -10,
-    "note": "사진의 빨간 계단 입구 마감을 기존 B1 하행 계단 상부에 적용한 비교 시점. 해당 지점/층 방향의 정확한 일치는 미확인; 새 구멍이나 별도 매장을 만들지 않았다."
-   },
-   {
-    "spot": "B1 다이소 매장 내부 통로",
-    "photos": [
-     "refs/interior/gb_hall/36_b1_daiso_interior_aisle2.jpg"
-    ],
-    "x": 204.693,
-    "y": -6,
-    "z": -120.633,
-    "yawDeg": 290.806,
-    "local": {
-     "u": 211,
-     "v": 14.5
-    },
-    "floor": "B1",
-    "pitchDeg": 0
-   },
-   {
-    "spot": "B1 다이소 입구 안쪽 시점",
-    "photos": [
-     "refs/interior/gb_hall/37_b1_daiso_entrance_interior.jpg"
-    ],
-    "x": 205.935,
-    "y": -6,
-    "z": -125.811,
-    "yawDeg": 20.806,
-    "local": {
-     "u": 214,
-     "v": 10.1
-    },
-    "floor": "B1",
-    "pitchDeg": 0,
-    "note": "같은 자동문을 매장 안에서 본다. 외부 로비 시점17과 분리."
-   },
-   {
-    "spot": "지하철 쪽 통로에서 지상 출구",
-    "photos": [
-     "refs/interior/gb_hall/38_stairs_escalator_to_outside.jpg"
-    ],
-    "x": 102.282,
-    "y": -6,
-    "z": -95.947,
-    "yawDeg": 200.806,
-    "local": {
-     "u": 106.5,
-     "v": 1.2
-    },
-    "floor": "B1",
-    "pitchDeg": 5,
-    "note": "사진38의 터미널/역 소속은 미확인. 기존 동선의 계단·에스컬레이터 형상 비교에만 사용."
-   },
-   {
-    "spot": "B1 지하철 연결 통로",
-    "photos": [
-     "refs/interior/gb_hall/40_b1_escalator_corridor_kiosks.jpg"
-    ],
-    "x": 110.37,
-    "y": -6,
-    "z": -98.592,
-    "yawDeg": 137.371,
-    "local": {
-     "u": 115,
-     "v": 1.6
-    },
-    "floor": "B1",
-    "pitchDeg": 3
-   },
-   {
-    "spot": "B1 지하 연결통로 에스컬레이터 입구",
-    "photos": [
-     "refs/interior/gb_hall/41_b1_escalator_brown_tile_wall.jpg"
-    ],
-    "x": 110.37,
-    "y": -6,
-    "z": -98.592,
-    "yawDeg": 137.371,
-    "local": {
-     "u": 115,
-     "v": 1.6
-    },
-    "floor": "B1",
-    "pitchDeg": 3
-   },
-   {
-    "spot": "B1 영동선·경부선 방향 긴 복도(새벽/빈 시간)",
-    "photos": [
-     "refs/interior/gb_hall/42_b1_corridor_empty_wide.jpg"
-    ],
-    "x": 127.47,
-    "y": -6,
-    "z": -101.452,
-    "yawDeg": 290.806,
-    "local": {
-     "u": 132,
-     "v": 5
-    },
-    "floor": "B1",
-    "pitchDeg": 0
    },
    {
     "spot": "3F 꽃도매상가 유리 입구",
@@ -2269,23 +2170,6 @@
     "note": "기존 사람/재고를 지우지 않고 간판을 향한 가까운 통로 시점으로 이동. yaw는 간판 중심을 향함."
    },
    {
-    "spot": "플라워마트 제300호 간판",
-    "photos": [
-     "refs/interior/gb_flower/16_hanging_sign_flowermart.jpg"
-    ],
-    "x": 72.23,
-    "y": 11,
-    "z": 25.979,
-    "yawDeg": 239.733,
-    "local": {
-     "u": 35.1,
-     "v": 104.5
-    },
-    "floor": "3F",
-    "pitchDeg": 10,
-    "note": "기존 사람/재고를 지우지 않고 간판을 향한 가까운 통로 시점으로 이동. yaw는 간판 중심을 향함."
-   },
-   {
     "spot": "엠데코디자인 제242호 간판",
     "photos": [
      "refs/interior/gb_flower/17_hanging_sign_emde.jpg"
@@ -2364,6 +2248,510 @@
      "v": 96
     },
     "floor": "3F"
+   },
+   {
+    "spot": "다이소 1번 평면문 두 개와 거울기둥",
+    "x": 254.9576,
+    "y": -6,
+    "z": -148.8248,
+    "yawDeg": 290.806,
+    "pitchDeg": 0,
+    "floor": "B1",
+    "local": {
+     "u": 268,
+     "v": 6
+    },
+    "photos": [
+     "refs/interior/daiso/218_gate1_two_doors_mirror_pillar.jpg",
+     "refs/interior/daiso/101_gate1_main_entrance_marketer_jyh_20261105.jpg"
+    ],
+    "round": 10,
+    "guess": "camera pose derived from modeled geometry, not measured photograph pose"
+   },
+   {
+    "spot": "1F 다이소 1번 계단 포털",
+    "x": 266.6048,
+    "y": 0,
+    "z": -135.0644,
+    "yawDeg": 20.806,
+    "pitchDeg": 0,
+    "floor": "1F",
+    "local": {
+     "u": 274,
+     "v": 23
+    },
+    "photos": [
+     "refs/interior/daiso/129_gate1_1f_portal_B1_arrow_beside_jejuice_eun_bib_20260830.jpg",
+     "refs/interior/daiso/105_side_door_stairs_down_to_gate1_marketer_jyh_20261105.jpg"
+    ],
+    "round": 10,
+    "guess": "camera pose derived from modeled geometry, not measured photograph pose"
+   },
+   {
+    "spot": "1F 다이소 2번 하행 포털",
+    "x": 207.245,
+    "y": 0,
+    "z": -112.5092,
+    "yawDeg": 20.806,
+    "pitchDeg": 0,
+    "floor": "1F",
+    "local": {
+     "u": 210.5,
+     "v": 23
+    },
+    "photos": [
+     "refs/interior/daiso/125_gate2_1f_portal_B1_escalator_down_eun_bib_20260830.jpg",
+     "refs/interior/daiso/133_1f_hall_gate2_portal_beside_bukchon_eun_bib_20260830.jpg"
+    ],
+    "round": 10,
+    "guess": "camera pose derived from modeled geometry, not measured photograph pose"
+   },
+   {
+    "spot": "다이소 2번 입구전용 회전문",
+    "x": 199.7858,
+    "y": -6,
+    "z": -132.14,
+    "yawDeg": 200.806,
+    "pitchDeg": 0,
+    "floor": "B1",
+    "local": {
+     "u": 210.5,
+     "v": 2
+    },
+    "photos": [
+     "refs/interior/daiso/109_gate2_entry_only_turnstile_marketer_jyh_20261105.jpg",
+     "refs/interior/daiso/134_gate2_turnstiles_inside_eun_bib_20260830.jpg"
+    ],
+    "round": 10,
+    "guess": "camera pose derived from modeled geometry, not measured photograph pose"
+   },
+   {
+    "spot": "다이소 4번 후문",
+    "x": 140.2952,
+    "y": -6,
+    "z": -112.7444,
+    "yawDeg": 200.806,
+    "pitchDeg": 0,
+    "floor": "B1",
+    "local": {
+     "u": 148,
+     "v": -1
+    },
+    "photos": [
+     "refs/interior/daiso/107_gate4_entrance_gotomall_side_marketer_jyh_20261105.jpg"
+    ],
+    "round": 10,
+    "guess": "camera pose derived from modeled geometry, not measured photograph pose"
+   },
+   {
+    "spot": "다이소 4번 조용한 계산대",
+    "x": 156.6632,
+    "y": -6,
+    "z": -103.4522,
+    "yawDeg": 20.806,
+    "pitchDeg": 0,
+    "floor": "B1",
+    "local": {
+     "u": 160,
+     "v": 13.5
+    },
+    "photos": [
+     "refs/interior/daiso/108_gate4_register_inside_marketer_jyh_20261105.jpg"
+    ],
+    "round": 10,
+    "guess": "camera pose derived from modeled geometry, not measured photograph pose"
+   },
+   {
+    "spot": "다이소 디즈니 짧은 가지",
+    "x": 142.0712,
+    "y": -6,
+    "z": -108.0704,
+    "yawDeg": 200.806,
+    "pitchDeg": 0,
+    "floor": "B1",
+    "local": {
+     "u": 148,
+     "v": 4
+    },
+    "photos": [
+     "refs/interior/daiso/111_inside_floor_guide_map_kae2569_20260311.jpg"
+    ],
+    "round": 10,
+    "guess": "camera pose derived from modeled geometry, not measured photograph pose"
+   },
+   {
+    "spot": "다이소 긴 매장·구역2·행선 안내",
+    "x": 225.8288,
+    "y": -6,
+    "z": -118.5008,
+    "yawDeg": 110.806,
+    "pitchDeg": 0,
+    "floor": "B1",
+    "local": {
+     "u": 230,
+     "v": 24
+    },
+    "photos": [
+     "refs/interior/daiso/110_inside_hanging_route_sign_gate1-4_kae2569_20260311.jpg",
+     "refs/interior/daiso/138_inside_hanging_route_sign_afternoon_garden_20260211.jpg"
+    ],
+    "round": 10,
+    "guess": "camera pose derived from modeled geometry, not measured photograph pose"
+   },
+   {
+    "spot": "다이소 1구역 주계산대",
+    "x": 262.6412,
+    "y": -6,
+    "z": -131.4188,
+    "yawDeg": 200.806,
+    "pitchDeg": 0,
+    "floor": "B1",
+    "local": {
+     "u": 269,
+     "v": 25
+    },
+    "photos": [
+     "refs/interior/daiso/132_gate1_flush_register_and_exit_eun_bib_20260830.jpg"
+    ],
+    "round": 10,
+    "guess": "camera pose derived from modeled geometry, not measured photograph pose"
+   },
+   {
+    "spot": "다이소 3구역 주방·욕실",
+    "x": 169.7408,
+    "y": -6,
+    "z": -97.1888,
+    "yawDeg": 110.806,
+    "pitchDeg": 0,
+    "floor": "B1",
+    "local": {
+     "u": 170,
+     "v": 24
+    },
+    "photos": [
+     "refs/interior/daiso/111_inside_floor_guide_map_kae2569_20260311.jpg"
+    ],
+    "round": 10,
+    "guess": "camera pose derived from modeled geometry, not measured photograph pose"
+   },
+   {
+    "spot": "한가람문구 접근 프리즈",
+    "x": 252.1532,
+    "y": -6,
+    "z": -147.7592,
+    "yawDeg": 110.806,
+    "pitchDeg": 0,
+    "floor": "B1",
+    "local": {
+     "u": 265,
+     "v": 6
+    },
+    "photos": [
+     "refs/interior/daiso/114_terminal_b1_hangaram_corridor_dkdlemf777_20260326.jpg",
+     "refs/interior/daiso/123_b1_corridor_hangaram_side_ettomon_20260604.jpg"
+    ],
+    "round": 10,
+    "guess": "camera pose derived from modeled geometry, not measured photograph pose"
+   },
+   {
+    "spot": "한가람 연결 단차·목재 복도",
+    "x": 241.0954,
+    "y": -7.5,
+    "z": -143.0761,
+    "yawDeg": 290.806,
+    "pitchDeg": 0,
+    "floor": "B1",
+    "local": {
+     "u": 253,
+     "v": 6.45
+    },
+    "photos": [
+     "refs/interior/daiso/104_terminal_b1_empty_hall_after_stairs_marketer_jyh_20261105.jpg"
+    ],
+    "round": 10,
+    "guess": "camera pose derived from modeled geometry, not measured photograph pose"
+   },
+   {
+    "spot": "본관 B1 식당가 첫 착지",
+    "x": 66.5738,
+    "y": -6,
+    "z": 52.198,
+    "yawDeg": 200.806,
+    "pitchDeg": 0,
+    "floor": "B1",
+    "local": {
+     "u": 20.5,
+     "v": 127
+    },
+    "photos": [
+     "refs/interior/audit_gyeongbu/binu0518_19_IMG_9015.jpg",
+     "refs/official/gyeongbu/exterminal_floor/n_floorb01.jpg"
+    ],
+    "round": 10,
+    "guess": "camera pose derived from modeled geometry, not measured photograph pose"
+   },
+   {
+    "spot": "본관 B1 노브랜드",
+    "x": 34.6436,
+    "y": -6,
+    "z": -50.1344,
+    "yawDeg": 110.806,
+    "pitchDeg": 0,
+    "floor": "B1",
+    "local": {
+     "u": 27,
+     "v": 20
+    },
+    "photos": [
+     "refs/interior/daiso/115_terminal_b1_nobrand_dkdlemf777_20260326.jpg",
+     "refs/official/gyeongbu/exterminal_floor/n_floorb01.jpg"
+    ],
+    "round": 10,
+    "guess": "camera pose derived from modeled geometry, not measured photograph pose"
+   },
+   {
+    "spot": "본관 B1 신세계 팩토리 스토어",
+    "x": 82.2608,
+    "y": -6,
+    "z": -0.8324,
+    "yawDeg": 290.806,
+    "pitchDeg": 0,
+    "floor": "B1",
+    "local": {
+     "u": 54,
+     "v": 83
+    },
+    "photos": [
+     "refs/official/gyeongbu/exterminal_floor/n_floorb01.jpg"
+    ],
+    "round": 10,
+    "guess": "camera pose derived from modeled geometry, not measured photograph pose"
+   },
+   {
+    "spot": "B1 동남 소형 점포열",
+    "x": 58.1072,
+    "y": -6,
+    "z": -64.3988,
+    "yawDeg": 290.806,
+    "pitchDeg": 0,
+    "floor": "B1",
+    "local": {
+     "u": 54,
+     "v": 15
+    },
+    "photos": [
+     "refs/official/gyeongbu/exterminal_floor/n_floorb01.jpg"
+    ],
+    "round": 10,
+    "guess": "camera pose derived from modeled geometry, not measured photograph pose"
+   },
+   {
+    "spot": "B1 부속 보석·가챠 점포열",
+    "x": 170.8256,
+    "y": -6,
+    "z": -116.8568,
+    "yawDeg": 20.806,
+    "pitchDeg": 0,
+    "floor": "B1",
+    "local": {
+     "u": 178,
+     "v": 6
+    },
+    "photos": [
+     "refs/official/gyeongbu/exterminal_floor/n_floorb01_sub.jpg"
+    ],
+    "round": 10,
+    "guess": "camera pose derived from modeled geometry, not measured photograph pose"
+   },
+   {
+    "spot": "식당가 계단식 좌석과 에스컬레이터",
+    "x": 72.9674,
+    "y": 0,
+    "z": 69.0244,
+    "yawDeg": 20.806,
+    "pitchDeg": 0,
+    "floor": "1F",
+    "local": {
+     "u": 20.5,
+     "v": 145
+    },
+    "photos": [
+     "refs/interior/audit_gyeongbu/binu0518_16_IMG_9037.jpg"
+    ],
+    "round": 10,
+    "guess": "camera pose derived from modeled geometry, not measured photograph pose"
+   },
+   {
+    "spot": "B1 역·호남선·엔터식스 연결 안내",
+    "x": 116.6072,
+    "y": -6,
+    "z": -96.2552,
+    "yawDeg": 110.806,
+    "pitchDeg": 0,
+    "floor": "B1",
+    "local": {
+     "u": 120,
+     "v": 6
+    },
+    "photos": [
+     "refs/interior/audit_gyeongbu/binu0518_21_IMG_9040.jpg"
+    ],
+    "round": 10,
+    "guess": "camera pose derived from modeled geometry, not measured photograph pose"
+   },
+   {
+    "spot": "유니클로 1층 입구",
+    "x": 73.999,
+    "y": 0,
+    "z": -70.437,
+    "yawDeg": 110.8,
+    "pitchDeg": 0,
+    "floor": "1F",
+    "photos": [
+     "refs/official/gyeongbu/exterminal_floor/n_floor011.jpg"
+    ],
+    "round": 10,
+    "guess": "absolute pose inferred; operator render pending"
+   },
+   {
+    "spot": "유니클로 매장 2층",
+    "x": 64.651,
+    "y": 6,
+    "z": -66.885,
+    "yawDeg": 110.8,
+    "pitchDeg": 0,
+    "floor": "2F",
+    "photos": [
+     "refs/official/gyeongbu/exterminal_floor/n_floor011.jpg"
+    ],
+    "round": 10,
+    "guess": "absolute pose inferred; operator render pending"
+   },
+   {
+    "spot": "본관 노브랜드버거 측 상점열",
+    "x": 80.878,
+    "y": 0,
+    "z": -49.516,
+    "yawDeg": 110.8,
+    "pitchDeg": 0,
+    "floor": "1F",
+    "photos": [
+     "refs/official/gyeongbu/exterminal_floor/n_floor011.jpg"
+    ],
+    "round": 10,
+    "guess": "absolute pose inferred; operator render pending"
+   },
+   {
+    "spot": "본관 북측 점포열",
+    "x": 60.891,
+    "y": 0,
+    "z": 10.497,
+    "yawDeg": 290.8,
+    "pitchDeg": 0,
+    "floor": "1F",
+    "photos": [
+     "refs/official/gyeongbu/exterminal_floor/n_floor011.jpg"
+    ],
+    "round": 10,
+    "guess": "absolute pose inferred; operator render pending"
+   },
+   {
+    "spot": "본관 소형 서비스점포",
+    "x": 44.664,
+    "y": 0,
+    "z": -6.872,
+    "yawDeg": 110.8,
+    "pitchDeg": 0,
+    "floor": "1F",
+    "photos": [
+     "refs/official/gyeongbu/exterminal_floor/n_floor011.jpg"
+    ],
+    "round": 10,
+    "guess": "absolute pose inferred; operator render pending"
+   },
+   {
+    "spot": "본관 스타벅스 끝",
+    "x": 116.623,
+    "y": 0,
+    "z": 41.739,
+    "yawDeg": 110.8,
+    "pitchDeg": 0,
+    "floor": "1F",
+    "photos": [
+     "refs/official/gyeongbu/exterminal_floor/n_floor011.jpg"
+    ],
+    "round": 10,
+    "guess": "absolute pose inferred; operator render pending"
+   },
+   {
+    "spot": "부속 이디야",
+    "x": 87.254,
+    "y": 0,
+    "z": -63.706,
+    "yawDeg": 20.8,
+    "pitchDeg": 0,
+    "floor": "1F",
+    "photos": [
+     "refs/official/gyeongbu/exterminal_floor/n_floorf1_sub.jpg"
+    ],
+    "round": 10,
+    "guess": "absolute pose inferred; operator render pending"
+   },
+   {
+    "spot": "부속 북촌손만두",
+    "x": 199.075,
+    "y": 0,
+    "z": -107.265,
+    "yawDeg": 20.8,
+    "pitchDeg": 0,
+    "floor": "1F",
+    "photos": [
+     "refs/official/gyeongbu/exterminal_floor/n_floorf1_sub.jpg"
+    ],
+    "round": 10,
+    "guess": "absolute pose inferred; operator render pending"
+   },
+   {
+    "spot": "부속 제주스커피",
+    "x": 276.196,
+    "y": 0,
+    "z": -136.569,
+    "yawDeg": 20.8,
+    "pitchDeg": 0,
+    "floor": "1F",
+    "photos": [
+     "refs/official/gyeongbu/exterminal_floor/n_floorf1_sub.jpg"
+    ],
+    "round": 10,
+    "guess": "absolute pose inferred; operator render pending"
+   },
+   {
+    "spot": "부속 2층 식당가",
+    "x": 181.632,
+    "y": 4.2,
+    "z": -108.126,
+    "yawDeg": 20.8,
+    "pitchDeg": 0,
+    "floor": "2F",
+    "photos": [
+     "refs/official/gyeongbu/exterminal_floor/n_floorf2_sub.jpg"
+    ],
+    "round": 10,
+    "guess": "absolute pose inferred; operator render pending"
+   },
+   {
+    "spot": "부속 2층 사무실/베이커리",
+    "x": 288.199,
+    "y": 4.2,
+    "z": -148.618,
+    "yawDeg": 20.8,
+    "pitchDeg": 0,
+    "floor": "2F",
+    "photos": [
+     "refs/official/gyeongbu/exterminal_floor/n_floorf2_sub.jpg"
+    ],
+    "round": 10,
+    "guess": "absolute pose inferred; operator render pending"
    }
   ],
   "round7": {
@@ -2954,6 +3342,729 @@
     "stock_preservation": "공간별 두 그룹 추가 분할 전후 실제 삼각형 합2143098 동일. 기존 모든 생성 루프/진열·재고 보존. 꽃잎/잎의 공유 형상만 저해상도 팔면체와 매끄러운 법선 사용.",
     "group_splits": "생화 동편 남쪽 v66, 조화 v110에서 분할; 입구 생화 두 열은 북쪽 조화 그룹에 한 번만 생성."
    }
+  },
+  "junctions_to_add": [
+   {
+    "id": "J_G11_DAISO",
+    "a": "gotomall",
+    "b": "gyeongbu",
+    "y": -6,
+    "pa": [
+     140.6504,
+     -132
+    ],
+    "pb": [
+     140.6504,
+     -111.8096
+    ],
+    "width": 5.6,
+    "owner": "gyeongbu",
+    "note": "G11 남측 문·상행 계단 이후 gotomall 소유 복도는 pa까지. gyeongbu는 pa부터 GATE4/디즈니 짧은 가지까지. 높이/절대위치 추정; _junctions.js 담당 작업이 등록할 정확한 엔트리."
+   }
+  ],
+  "round10": {
+   "date": "2026-11-07",
+   "reference_priority": [
+    "운영자 공식 층별 목록/약도",
+    "2025–2026 다이소 사진·안내판",
+    "감사 항목의 출처 본문·사진",
+    "기존 사진 디테일",
+    "미확인 사항은 추정으로 보존"
+   ],
+   "evidence_files": [
+    ".codex-jobs/evidence/daiso.json",
+    ".codex-jobs/evidence/audit_gyeongbu.json",
+    ".codex-jobs/evidence/research_gyeongbu_shops.json",
+    "refs/interior/daiso/notes_1.json",
+    "refs/official/gyeongbu/exterminal_directory_parsed.json",
+    "refs/official/gyeongbu/uniqlo_store_official.json"
+   ],
+   "missing_reference": "refs/interior/daiso/notes_2.json does not exist; independent second report in daiso.json and existing 2NN photographs were read instead.",
+   "official_units_by_floor": {
+    "main_1F": {
+     "1": "헬스보이짐",
+     "2": "스테이스튜디오",
+     "3": "소녀방앗간",
+     "4": "만복식당",
+     "5": "타쿠미나가사키",
+     "6": "연남토마",
+     "7": "파리바게트",
+     "8": "띤띤익스프레스",
+     "9": "신서울깍두기",
+     "10": "타코벨",
+     "11": "도시주방",
+     "12": "복권/담배",
+     "13": "물품보관소",
+     "14": "이마트24(1호)",
+     "15": "파스쿠찌",
+     "16": "티월드",
+     "17": "데일리햇",
+     "18": "",
+     "19": "드림로또",
+     "20": "로또앤담배",
+     "21": "",
+     "22": "아메리칸트레일러",
+     "23": "이마트24(4호)",
+     "24": "고속터미널약국",
+     "25": "앤티앤스",
+     "26": "시그니처랩",
+     "27": "스타벅스",
+     "28": "라멘짱",
+     "29": "석관동떡볶이",
+     "30": "배스킨라빈스",
+     "31": "타이거슈가",
+     "32": "죠 샌드위치",
+     "33": "후라토식당",
+     "34": "노브랜드 버거",
+     "35": "유니클로"
+    },
+    "main_B1": {
+     "1": "놀부부대찌개",
+     "2": "홍수계찜닭",
+     "3": "롤링핀",
+     "4": "신촌설렁탕",
+     "5": "오니기리 와이규동",
+     "6": "보승회관",
+     "7": "얼큰수제비",
+     "8": "용호동낙지",
+     "9": "북창동 순두부",
+     "10": "서브웨이",
+     "11": "신룽푸마라탕",
+     "12": "퍼부어",
+     "13": "오한수 우육면가",
+     "14": "시마스시",
+     "15": "빽스",
+     "16": "나인블럭",
+     "17": "포레포레헤어",
+     "18": "펀비어킹",
+     "19": "신세계팩토리스토어",
+     "20": "밥장인",
+     "21": "전주콩나물",
+     "22": "놀부주방",
+     "23": "노브랜드",
+     "24": "입점준비중",
+     "25": "이니스프리(강남터미널)",
+     "26": "네일&젤",
+     "27": "제주스커피",
+     "28": "123김밥",
+     "29": "이마트24 5호점",
+     "30": "이마트24 5호점",
+     "31": "입점준비중"
+    },
+    "sub_1F": {
+     "36": "이디야",
+     "37": "뚜레쥬르",
+     "38": "공차",
+     "39": "스킨밴드",
+     "40": "버거킹",
+     "41": "청년떡볶이",
+     "42": "제주스커피",
+     "43": "코코이찌방야",
+     "44": "코코이찌방야",
+     "45": "칠렉스24",
+     "46": "이마트24 2호점",
+     "47": "압구정칼국수김밥",
+     "48": "로봇김밥",
+     "49": "역전우동",
+     "50": "북촌손만두",
+     "51": "던킨",
+     "52": "김밥천국",
+     "53": "약천",
+     "54": "내고향사골순대국",
+     "55": "청룡각",
+     "56": "복권/담배",
+     "57": "이마트24 키오스크",
+     "58": "효도치킨",
+     "59": "이마트24(5호점)"
+    },
+    "sub_2F": {
+     "1": "달리나인",
+     "2": "온정",
+     "3": "고향의 맛",
+     "4": "티하우스레몬",
+     "5": "군산오징어",
+     "6": "샤브촌by계백집",
+     "7": "할리스커피",
+     "8": "시래마을",
+     "9": "청년커피랩",
+     "10": "금호(속리산)",
+     "11": "",
+     "12": "오피스",
+     "13": "천일사무실",
+     "14": "천일영업소",
+     "15": "동양영업소",
+     "16": "브레드가든"
+    },
+    "sub_B1": {
+     "32": "",
+     "33": "미대오빠",
+     "34": "한가람문구",
+     "35": "한가람문구",
+     "36": "한가람문구",
+     "37": "입점준비중",
+     "38": "입점준비중",
+     "39": "복권/담배",
+     "40": "에디슨",
+     "41": "진보석",
+     "42": "수연",
+     "43": "대림보석",
+     "44": "가챠샵",
+     "45": "가챠샵",
+     "46": "다이소"
+    }
+   },
+   "positions_local_uv": {
+    "main_b1": [
+     [
+      0,
+      0
+     ],
+     [
+      75.7,
+      159
+     ]
+    ],
+    "daiso": [
+     [
+      142,
+      8
+     ],
+     [
+      282,
+      30
+     ]
+    ],
+    "gate1_flush_doors": [
+     [
+      271.5,
+      8
+     ],
+     [
+      276.5,
+      8
+     ]
+    ],
+    "gate1_mirror_pier": [
+     274,
+     5.4
+    ],
+    "gate1_stair": [
+     [
+      274,
+      7
+     ],
+     [
+      274,
+      21
+     ]
+    ],
+    "gate2_well": [
+     [
+      206.5,
+      7
+     ],
+     [
+      214.5,
+      21
+     ]
+    ],
+    "gate4_branch": [
+     [
+      145,
+      0
+     ],
+     [
+      151,
+      8
+     ]
+    ],
+    "hangaram": [
+     [
+      244,
+      0.25
+     ],
+     [
+      280,
+      4.7
+     ]
+    ],
+    "approach_dip": {
+     "rect": [
+      244,
+      4.9,
+      262,
+      8
+     ],
+     "floor_y": [
+      -6,
+      -7.5,
+      -6
+     ]
+    },
+    "uniqlo": {
+     "rect": [
+      34,
+      6,
+      66,
+      23
+     ],
+     "floor_y": [
+      0,
+      6
+     ]
+    },
+    "b1_restaurant_escalator": {
+     "center_u": 20.5,
+     "v": [
+      131,
+      143
+     ],
+     "y": [
+      -6,
+      0
+     ]
+    }
+   },
+   "daiso": {
+    "floor": "B1",
+    "single_floor": true,
+    "length_model_m": 140,
+    "checkout_areas": 3,
+    "zones": [
+     "1 문구·건기식·시즌·계산대",
+     "2 미용·패션·인테리어",
+     "3 일용·주방·욕실"
+    ],
+    "gate3": "내부 분기 안내판만; 출처 없는 외부 출입구를 추가하지 않음",
+    "gate2": "입구전용 회전문3대, 1/4번 출구 안내; 프레임 콜백은 좁은 회전문 평면의 역방향 통과만 막음",
+    "gate2_lower_landing": {
+     "flight_bottom_y": -5.4,
+     "landing_rect": [
+      206.6,
+      6.5,
+      214.4,
+      7.05
+     ],
+     "short_stair_v": [
+      6.5,
+      5
+     ],
+     "turnstiles_v": 4,
+     "store_entry_u": [
+      216,
+      220
+     ]
+    }
+   },
+   "corrections_and_conflicts": [
+    "공식 목록 우선: 본관35 유니클로는 1F이며 블로그 확인 내부2F를 추가. B1에 유니클로를 만들지 않음.",
+    "사용자 문구에 1F 소형 다이소 추가/제외가 함께 있으나 공식 목록 ground truth와 명시적 Drop 지시를 적용: 1F 다이소2호점 추가하지 않고 연구 현재 테넌트에서 제거.",
+    "101/218 사진 우선: GATE1은 거울 기둥 양옆 두 평면 유리 출입문. 기존 단일 중앙문 및 GATE2 원무늬 문과 혼합한 묘사를 대체.",
+    "109/125/129 사진 우선: GATE1 계단 포털과 GATE2 계단·하행 에스컬레이터·4단 계단·회전문을 별개로 구성.",
+    "110/111 사진: 긴 단일층 매장, GATE2 중간, GATE3 내부 분기, 짧은 디즈니/GATE4 가지. 3개 계산 구역과 검색대·카트·바구니.",
+    "공식 한가람 서단과 보존 승차홈22 위치가 동단인 기존 모델은 동시에 충족 불가. 승차홈 불변 지시를 따르고 GATE1·한가람 인접/접근 관계를 우선한 좌표 타협을 명시.",
+    "감사 ENTER6/ABC-MART/ARTBOX/OLIVE YOUNG는 고속터미널역 신반포로188의 상권. 본관194 B1 공식 테넌트로 오인 추가하지 않고 호남선/지하철 연결 표지에 반영. 두 번째 지하철 에스컬레이터는 station 소유 동선이며 해당 모듈 수정 범위 밖이다."
+   ],
+   "station_retail_primary_sources": [
+    "https://mstore.enter6.co.kr/stores/68/directions",
+    "https://company.artbox.kr/OfflineStore.asp"
+   ],
+   "removed_or_replaced": [
+    "다이소 중앙 단일문/다이소 계단 포털 혼합",
+    "다이소 확장 공간을 차지하던 반복 일반 점포칸",
+    "본관1F의 북창동순두부 등 잘못된 층·반복 임의 점포명",
+    "구 다이소 독립 계산대2개는 새 세 계산구역 안으로 통합",
+    "5F 신세계백화점 본사 현재 용도 표기",
+    "고투몰 북측 G11 거리 출구 추정은 gotomall 작업에서 사진 기반 남측문으로 대체"
+   ],
+   "preserved": [
+    "승차홈/노선/OSM 외피",
+    "꽃시장·옥상·미검증 주차 연결",
+    "기존 다이소 촘촘한 상품/선반·형광등·화분/재고·인형뽑기2대",
+    "사진 기반 대합실 천장/매표/가구",
+    "한가람 프리즈·유리·포스터·회전진열대·녹색 상자"
+   ],
+   "guesses": [
+    "140m×22m 매장 크기 및 B1 확장 외곽은 실측 아님. 기존 작은66m 방을 확대해 사진의 긴 동선을 확보.",
+    "공식 약도는 비축척이고 L자 OSM/고정 승차홈 방향과 다름. 정확한 세계좌표·호실 폭·계단 치수는 재구성.",
+    "한가람문구 서단↔동단 좌표 타협: 위 충돌 설명 참조.",
+    "유니클로 내부2층 존재는 블로그 근거; 내부 계단/진열 위치와 층고6m는 추정.",
+    "G9 접근 -1.5m 단차와 G11 -6→-4.5→-6 연결은 사진상 오르내림을 맞춘 추정, 실제표고로 주장하지 않음.",
+    "상층 미확인 실내 구조는 유지. 3F 주차장 연결은 unverified 유지."
+   ],
+   "superseded_guesses": [
+    "다이소 두 지점 사진이 혼재할 수 있다.33/35의 계단 입구는 별도 매장을 만들지 않고 빨간 패턴 입구와 실제 인접 수직동선으로 분담 재현했다.",
+    "사진33/35의 빨간 다이소 계단 입구는 기존 계단에 마감만 적용했다. 사진과 동일 지점/지점명이라고 단정하지 않으며 GATE2 번호도 새로 붙이지 않음."
+   ],
+   "audit_resolution": [
+    {
+     "element": "1F hall to B1/subway connection: which escalator, where it sits, and how many levels",
+     "confidence": "likely",
+     "sources": [
+      "https://blog.naver.com/biinuuuu/224289206124 (2026-05-18)"
+     ],
+     "photos": [
+      "refs/interior/audit_gyeongbu/binu0518_16_IMG_9037.jpg",
+      "refs/interior/audit_gyeongbu/binu0518_20_IMG_9039.jpg",
+      "refs/interior/audit_gyeongbu/binu0518_21_IMG_9040.jpg",
+      "refs/interior/audit_gyeongbu/binu0518_23_IMG_9041.jpg",
+      "refs/interior/audit_gyeongbu/binu0518_12_IMG_9033.png"
+     ],
+     "status": "applied_with_station_ownership_split",
+     "implementation": "첫 식당가 에스컬레이터 쌍/계단식 좌석·본관 식당가·홀 경로 표지 반영. ENTER6 및 두 번째 철도 에스컬레이터는 station 쪽으로 식별, 터미널에는 연결 방향 표지."
+    },
+    {
+     "element": "Daiso 강남고속터미널점: entrances (separate door from the Gotomall side and from the terminal side) and its B1 position",
+     "confidence": "unverified",
+     "sources": [
+      "https://www.ktriptips.com/eng/shopping/4031110",
+      "https://www.ktriptips.com/eng/shopping/4031593",
+      "user statement in this task"
+     ],
+     "photos": [],
+     "status": "superseded_by_confirmed_daiso_photos",
+     "guess": true
+    },
+    {
+     "element": "1F hall corridor order and sign positions from the entrance to the 승차홈",
+     "confidence": "likely",
+     "sources": [
+      "https://blog.naver.com/biinuuuu/224289206124 (2026-05-18)"
+     ],
+     "photos": [
+      "refs/interior/audit_gyeongbu/binu0518_12_IMG_9033.png",
+      "refs/interior/audit_gyeongbu/binu0518_16_IMG_9037.jpg"
+     ],
+     "status": "applied_with_station_ownership_split",
+     "implementation": "첫 식당가 에스컬레이터 쌍/계단식 좌석·본관 식당가·홀 경로 표지 반영. ENTER6 및 두 번째 철도 에스컬레이터는 station 쪽으로 식별, 터미널에는 연결 방향 표지."
+    },
+    {
+     "element": "Flower market (3F) reach from the Farmers/Pamie side and the parking-lot door",
+     "confidence": "unverified",
+     "sources": [
+      "https://www.teamblind.com/kr/post/고속터미널-파미에스테이션에서-영동선-타러-가는법-sr4pe0cz (year unknown)"
+     ],
+     "photos": [],
+     "status": "preserved_as_guess",
+     "guess": true
+    },
+    {
+     "element": "B1 floor use directly under the terminal ('터미널 지하상가' zone, sub 'Daiso, shops')",
+     "confidence": "likely",
+     "sources": [
+      "https://blog.naver.com/biinuuuu/224289206124 (2026-05-18)",
+      "https://www.ktriptips.com/eng/shopping/4031110 (updated 2026-03)"
+     ],
+     "photos": [
+      "refs/interior/audit_gyeongbu/binu0518_21_IMG_9040.jpg"
+     ],
+     "status": "applied_with_station_ownership_split",
+     "implementation": "첫 식당가 에스컬레이터 쌍/계단식 좌석·본관 식당가·홀 경로 표지 반영. ENTER6 및 두 번째 철도 에스컬레이터는 station 쪽으로 식별, 터미널에는 연결 방향 표지."
+    }
+   ],
+   "superseded_trace": [
+    {
+     "spot": "1F 승차홈 쪽 상점가",
+     "photos": [
+      "refs/interior/gb_hall/10_hall_dunkin_stall_front.jpg"
+     ],
+     "x": 77.968,
+     "y": 0,
+     "z": -59.429,
+     "yawDeg": 110.806,
+     "local": {
+      "u": 70.8,
+      "v": 26.7
+     },
+     "floor": "1F",
+     "pitchDeg": 0,
+     "note": "DUNKIN’ 구획(v23..29.33)에 정면 배치. 예전 v34 카메라는 김밥천국 전면을 보았다."
+    },
+    {
+     "spot": "1F 푸드코트 스탠드 줄",
+     "photos": [
+      "refs/interior/gb_hall/16_food_stalls_counter_row.jpg"
+     ],
+     "x": 97.859,
+     "y": 0,
+     "z": -7.08,
+     "yawDeg": 110.806,
+     "local": {
+      "u": 70.8,
+      "v": 82.7
+     },
+     "floor": "1F",
+     "pitchDeg": 0
+    },
+    {
+     "spot": "B1 다이소 입구(매장입구 표기)",
+     "photos": [
+      "refs/interior/gb_hall/17_b1_daiso_entrance.jpg"
+     ],
+     "x": 203.59,
+     "y": -6,
+     "z": -131.981,
+     "yawDeg": 200.806,
+     "local": {
+      "u": 214,
+      "v": 3.5
+     },
+     "floor": "B1",
+     "pitchDeg": 0
+    },
+    {
+     "spot": "B1 지하 복도(다이소 인근)",
+     "photos": [
+      "refs/interior/gb_hall/18_b1_corridor_shops_stone_floor.jpg"
+     ],
+     "x": 145.769,
+     "y": -6,
+     "z": -108.192,
+     "yawDeg": 110.806,
+     "local": {
+      "u": 151.5,
+      "v": 5.2
+     },
+     "floor": "B1",
+     "pitchDeg": 0
+    },
+    {
+     "x": 199.851,
+     "z": -130.56,
+     "y": -6,
+     "local": {
+      "u": 210,
+      "v": 3.5
+     },
+     "floor": "B1",
+     "yawDeg": 242.439,
+     "pitchDeg": 0,
+     "spot": "B1 다이소 접근 홀",
+     "photos": [
+      "refs/interior/gb_hall/19_b1_daiso_approach_hall.jpg"
+     ]
+    },
+    {
+     "spot": "B1 다이소 매장 내부",
+     "photos": [
+      "refs/interior/gb_hall/20_b1_daiso_interior_aisle.jpg"
+     ],
+     "x": 204.693,
+     "y": -6,
+     "z": -120.633,
+     "yawDeg": 290.806,
+     "local": {
+      "u": 211,
+      "v": 14.5
+     },
+     "floor": "B1",
+     "pitchDeg": 0
+    },
+    {
+     "spot": "기존 계단 상부 · 다이소 계단 입구 마감 비교",
+     "photos": [
+      "refs/interior/gb_hall/33_b1_daiso_gate2_stairs.jpg"
+     ],
+     "x": 111.761,
+     "y": 0,
+     "z": -80.293,
+     "yawDeg": 20.806,
+     "local": {
+      "u": 109.8,
+      "v": 19.2
+     },
+     "floor": "1F",
+     "pitchDeg": -10,
+     "note": "사진의 빨간 계단 입구 마감을 기존 B1 하행 계단 상부에 적용한 비교 시점. 해당 지점/층 방향의 정확한 일치는 미확인; 새 구멍이나 별도 매장을 만들지 않았다."
+    },
+    {
+     "spot": "B1 상가 긴 복도",
+     "photos": [
+      "refs/interior/gb_hall/34_b1_corridor_shops_long.jpg"
+     ],
+     "x": 145.769,
+     "y": -6,
+     "z": -108.192,
+     "yawDeg": 110.806,
+     "local": {
+      "u": 151.5,
+      "v": 5.2
+     },
+     "floor": "B1",
+     "pitchDeg": 0
+    },
+    {
+     "spot": "기존 계단 상부 · 다이소 계단 입구 마감 비교",
+     "photos": [
+      "refs/interior/gb_hall/35_b1_daiso_entrance_stairs.jpg"
+     ],
+     "x": 111.761,
+     "y": 0,
+     "z": -80.293,
+     "yawDeg": 20.806,
+     "local": {
+      "u": 109.8,
+      "v": 19.2
+     },
+     "floor": "1F",
+     "pitchDeg": -10,
+     "note": "사진의 빨간 계단 입구 마감을 기존 B1 하행 계단 상부에 적용한 비교 시점. 해당 지점/층 방향의 정확한 일치는 미확인; 새 구멍이나 별도 매장을 만들지 않았다."
+    },
+    {
+     "spot": "B1 다이소 매장 내부 통로",
+     "photos": [
+      "refs/interior/gb_hall/36_b1_daiso_interior_aisle2.jpg"
+     ],
+     "x": 204.693,
+     "y": -6,
+     "z": -120.633,
+     "yawDeg": 290.806,
+     "local": {
+      "u": 211,
+      "v": 14.5
+     },
+     "floor": "B1",
+     "pitchDeg": 0
+    },
+    {
+     "spot": "B1 다이소 입구 안쪽 시점",
+     "photos": [
+      "refs/interior/gb_hall/37_b1_daiso_entrance_interior.jpg"
+     ],
+     "x": 205.935,
+     "y": -6,
+     "z": -125.811,
+     "yawDeg": 20.806,
+     "local": {
+      "u": 214,
+      "v": 10.1
+     },
+     "floor": "B1",
+     "pitchDeg": 0,
+     "note": "같은 자동문을 매장 안에서 본다. 외부 로비 시점17과 분리."
+    },
+    {
+     "spot": "지하철 쪽 통로에서 지상 출구",
+     "photos": [
+      "refs/interior/gb_hall/38_stairs_escalator_to_outside.jpg"
+     ],
+     "x": 102.282,
+     "y": -6,
+     "z": -95.947,
+     "yawDeg": 200.806,
+     "local": {
+      "u": 106.5,
+      "v": 1.2
+     },
+     "floor": "B1",
+     "pitchDeg": 5,
+     "note": "사진38의 터미널/역 소속은 미확인. 기존 동선의 계단·에스컬레이터 형상 비교에만 사용."
+    },
+    {
+     "spot": "B1 지하철 연결 통로",
+     "photos": [
+      "refs/interior/gb_hall/40_b1_escalator_corridor_kiosks.jpg"
+     ],
+     "x": 110.37,
+     "y": -6,
+     "z": -98.592,
+     "yawDeg": 137.371,
+     "local": {
+      "u": 115,
+      "v": 1.6
+     },
+     "floor": "B1",
+     "pitchDeg": 3
+    },
+    {
+     "spot": "B1 지하 연결통로 에스컬레이터 입구",
+     "photos": [
+      "refs/interior/gb_hall/41_b1_escalator_brown_tile_wall.jpg"
+     ],
+     "x": 110.37,
+     "y": -6,
+     "z": -98.592,
+     "yawDeg": 137.371,
+     "local": {
+      "u": 115,
+      "v": 1.6
+     },
+     "floor": "B1",
+     "pitchDeg": 3
+    },
+    {
+     "spot": "B1 영동선·경부선 방향 긴 복도(새벽/빈 시간)",
+     "photos": [
+      "refs/interior/gb_hall/42_b1_corridor_empty_wide.jpg"
+     ],
+     "x": 127.47,
+     "y": -6,
+     "z": -101.452,
+     "yawDeg": 290.806,
+     "local": {
+      "u": 132,
+      "v": 5
+     },
+     "floor": "B1",
+     "pitchDeg": 0
+    },
+    {
+     "spot": "플라워마트 제300호 간판",
+     "photos": [
+      "refs/interior/gb_flower/16_hanging_sign_flowermart.jpg"
+     ],
+     "x": 72.23,
+     "y": 11,
+     "z": 25.979,
+     "yawDeg": 239.733,
+     "local": {
+      "u": 35.1,
+      "v": 104.5
+     },
+     "floor": "3F",
+     "pitchDeg": 10,
+     "note": "기존 사람/재고를 지우지 않고 간판을 향한 가까운 통로 시점으로 이동. yaw는 간판 중심을 향함."
+    }
+   ],
+   "historical_records": "round2..round8 및 validation_previous_round는 당시 기록이다. 다이소 지점 혼합/단일 문/5F 본사/상층 용도 미확인 해석과 옛 카메라는 round10의 현재 구조와 검증으로 대체된다.",
+   "completion": "Only js/places/gyeongbu.js, js/places/gotomall.js and their research JSON edited by this job. No commits. Shared junction registry and _meta.json intentionally not edited; exact pending entry saved and generator output verified outside repository."
+  },
+  "validation_previous_round": {
+   "smoke": {
+    "command": "node tests/smoke.mjs gyeongbu gotomall gyeongbu_east",
+    "result": "OK; 세 모듈의 모든 K.detail 생성 예외 없음"
+   },
+   "walk": {
+    "command": "node tests/walk.mjs",
+    "result": "최종 코드 재실행: 428 ok, 0 blocked; 전체 모듈/도시 레이어 포함, stderr 오류 없음"
+   },
+   "render": {
+    "command": "tests/shot.mjs",
+    "result": "사용자 지시대로 미실행. operator 렌더 대기"
+   },
+   "trace_cameras": {
+    "count": 62,
+    "floor_failures": 0,
+    "capsule_collisions": 0,
+    "method": "실제 kit + 전체17개 detail, 발밑 support와 반경0.32m/높이1.75m 캡슐 검사. 자료의 사진 경로62개 모두 존재하며 중복 없이 각1개 trace."
+   },
+   "spawns": {
+    "count": 12,
+    "floor_failures": 0,
+    "capsule_collisions": 0
+   },
+   "ground_floor": {
+    "exact_match_to_round7": true,
+    "ground_holes": 7,
+    "method": "HEAD round7과 지상 K.slab의 polygon/holes 및 K.groundHole 전체 좌표/등록 순서를 직접 비교."
+   },
+   "sightlines": {
+    "boarding_wall": "OSM 벽면과 brick/sign local u 위치 비교로 가림 해소",
+    "bus_canopy": "카메라 이동 후 가까운 코치 앞유리 가림 해소; 앞유리 대상 사선 ray가1.30m에서12.53m로 이격",
+    "hollys": "두 카메라에서 HOLLYS/COFFEE/중앙표지/FOOD STATION/펜던트 총12개 불투명 ray 모두 차폐 없음"
+   },
+   "detail_exceptions": [],
+   "git_diff_check": "허용 두 파일 통과"
   }
  }
 }

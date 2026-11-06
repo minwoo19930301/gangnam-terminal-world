@@ -1,32 +1,43 @@
 {
   "id": "banpo_shoppingtown",
   "name": "반포쇼핑타운 1~8동",
-  "updated": "2026-11-06",
+  "updated": "2026-11-07",
   "sources": [
     {
       "url": "https://www.localnaeil.com/News/View/640227",
       "title": "고속터미널 반포쇼핑타운 맛집 투어 (지역내일)",
-      "year": 2024
+      "year": 2019,
+      "published_date": "2019-07-05",
+      "verified_on": "2026-11-07",
+      "notes": "본문 게재일 재확인. 입점 정보는 2019년 기사 당시 기록이며 2025~2026 현황이 아니다. 3동 B1 20호는 온유월식당이고 우고집에는 호수 표기가 없다. 우고집의 모델 동 귀속은 사진18·19를 우선한다."
     },
     {
       "url": "https://www.localnaeil.com/News/View/650226",
       "title": "부담 없는 술자리, 반포 맛집 일번지육개장 (지역내일)",
-      "year": 2025
+      "year": 2023,
+      "published_date": "2023-09-07",
+      "verified_on": "2026-11-07",
+      "notes": "본문 게재일 재확인. 일번지육개장 5동 B1·8-2번 출구 인근 근거. 가격과 영업시간은 2023년 정보이며 2025~2026 현황 확인 자료가 아니다."
     },
     {
       "url": "https://www.goodoc.co.kr/hospitals/22651",
       "title": "반포좋은치과의원 (굿닥, 6동 3층)",
-      "year": 2025
+      "year": 2025,
+      "verified_on": "2026-11-07",
+      "notes": "이번 열람에서 봄치과 3동 3층 310호, 반포좋은치과 6동 3층 주소 확인. 복도상 위치와 내부 평면은 확인되지 않음."
     },
     {
       "url": "https://www.goodoc.co.kr/hospitals/13473",
       "title": "봄치과의원 (굿닥, 3동 3층 310호)",
-      "year": 2025
+      "year": 2025,
+      "verified_on": "2026-11-07",
+      "notes": "이번 열람에서 봄치과 3동 3층 310호, 반포좋은치과 6동 3층 주소 확인. 복도상 위치와 내부 평면은 확인되지 않음."
     },
     {
       "url": "https://realty.daangn.com/biz-profiles/4109041",
       "title": "뉴스타공인중개사사무소 (신반포로 195 5동 1층 15호)",
-      "year": 2025
+      "year": 2025,
+      "round10_review": "직접 페이지 열람 실패. 기존 5동 1층 15호 기록을 보존하며 이번 재확인으로 주장하지 않음."
     },
     {
       "url": "https://polle.com/place/10gAJu/%ED%95%98%EC%96%80%EC%A7%91",
@@ -150,6 +161,21 @@
       "path": "refs/interior/bp_inside/23_exterior_5dong_facade.jpg",
       "title": "5동 황갈색 소형 타일·금속 현관·경희나은한의원 간판",
       "capture_date": "2026"
+    },
+    {
+      "path": ".codex-jobs/evidence/audit_banpo_shoppingtown.json",
+      "title": "Round10 근거 감사; 우고집 20호 오독은 원문과 사진으로 정정",
+      "reviewed_on": "2026-11-07"
+    },
+    {
+      "path": "refs/interior/bp_inside/18_b1_stair_entrance_glass_building.jpg",
+      "title": "5동 현관명과 우고집 지하안내가 같은 사진에 보임",
+      "reviewed_on": "2026-11-07"
+    },
+    {
+      "path": "refs/interior/bp_inside/19_b1_stair_hanging_sign_directory.jpg",
+      "title": "5동 현관의 우고집·일번지·서래곱창·하트타임·숙이네·터미널포차 안내 확대",
+      "reviewed_on": "2026-11-07"
     }
   ],
   "building": {
@@ -164,7 +190,7 @@
     "height_basis": "B1+5F는 현 모듈의 1981/2011 기사 조사와 2026 로드뷰를 따른다. 18m 주지붕 높이와 각 층고는 재구성 추정치. B1=-6m는 K.LEVELS 공통 연결 좌표이며 지하 실측 층고가 아니다. OSM 2동 levels=6과 25.2m는 이전 6~7층 추정의 근거로 사용하지 않는다.",
     "facade": "1·2동: cc02의 밝은 회색/흰 타일 계열. 3·4동: bp01/bp02의 분홍·모브 정사각 타일. 5동: 사진23의 황갈색 소형 직사각 타일. 6·7·8동: bp03 및 gb05의 주황 적벽돌, 짙은 벽돌 수직 기둥, 작은 흰 창틀.",
     "signage": "신반포로 면 1~3층의 밀집 가로 간판, 일부 4층 간판 및 모서리 세로 간판. 실물에서 확인되지 않은 대형 녹색 건물명 띠·중앙 캐노피·옥상 부근 동 번호판은 제거. 입구 옆 소형 동 안내판은 위치 추정.",
-    "entrances": "각 동 기존 1층 정면/후면 출입구와 B1~5층 보행 동선 유지. 역 출구·버스 정류장·고투몰 유리 계단 덮개는 다른 모듈 소유. manifest는 bp01/02를 3동 동단 8-1 출구로 정정한다. 출입구 폭과 중앙 위치는 기존 접근성 재구성값이며 실측은 아님."
+    "entrances": "각 동 기존 1층 정면/후면 출입구와 B1~5층 보행 동선 유지. 역 출구·버스 정류장·고투몰 유리 계단 덮개는 다른 모듈 소유. manifest는 bp01/02를 3동 동단 8-1 출구로 정정한다. 출입구 폭과 중앙 위치는 기존 접근성 재구성값이며 실측은 아님. Round10: 3동 동단 후퇴부에는 B1 직행 동선을 만들지 않았으며 중앙 코어를 유지한다. 8-1/8-2와의 관계는 지상 근접 방향 설명이다."
   },
   "floors": [
     {
@@ -175,7 +201,11 @@
       ],
       "layout": "신반포로 165, 지하 1층 점포",
       "source": "https://www.localnaeil.com/News/View/640227",
-      "guess": false
+      "guess": false,
+      "layout_guess": true,
+      "guess_scope": "guess=false인 경우 상호의 동·층 또는 명시된 호수의 기존 출처 근거만 뜻함. 모델의 호실 순서·칸막이·복도상 좌표는 별도의 추정이다.",
+      "source_date": "2019-07-05",
+      "current_occupancy_verified": false
     },
     {
       "floor": "B1 (3동)",
@@ -185,10 +215,14 @@
         "배부장찌개",
         "온유월식당(20호)"
       ],
-      "layout": "신반포로 177, 8-1번 출구 바로 앞. 호수 20호까지 있어 지하 복도 양측 점포 구조(추정)",
+      "layout": "신반포로 177. 기사상 3동 건물이 8-1번 출구 앞에 있음. 20호는 온유월식당 주소이며 복도 형태나 전체 호실 수의 증거가 아니다. 모델의 양측 점포·중앙 계단 배치는 추정.",
       "source": "https://www.localnaeil.com/News/View/640227",
       "guess": false,
-      "round7_correction": "이전 조사에3동으로묶였던우고집은2026년10월사진18·19의5동현관/안내판근거로5동에배치."
+      "round7_correction": "이전 조사에3동으로묶였던우고집은2026년10월사진18·19의5동현관/안내판근거로5동에배치.",
+      "layout_guess": true,
+      "guess_scope": "guess=false인 경우 상호의 동·층 또는 명시된 호수의 기존 출처 근거만 뜻함. 모델의 호실 순서·칸막이·복도상 좌표는 별도의 추정이다.",
+      "source_date": "2019-07-05",
+      "current_occupancy_verified": false
     },
     {
       "floor": "3F (3동)",
@@ -198,7 +232,9 @@
       ],
       "layout": "3층에 300번대 호수, 복도 양쪽 의원(추정)",
       "source": "https://www.goodoc.co.kr/hospitals/13473",
-      "guess": false
+      "guess": false,
+      "layout_guess": true,
+      "guess_scope": "guess=false인 경우 상호의 동·층 또는 명시된 호수의 기존 출처 근거만 뜻함. 모델의 호실 순서·칸막이·복도상 좌표는 별도의 추정이다."
     },
     {
       "floor": "B1 (4동)",
@@ -220,7 +256,11 @@
       "interior_photo_sources": [
         "refs/interior/bp_inside/10_directory_board_floors_4dong.jpg",
         "refs/interior/bp_inside/37_b1_sign_wall_shops.jpg"
-      ]
+      ],
+      "layout_guess": true,
+      "guess_scope": "guess=false인 경우 상호의 동·층 또는 명시된 호수의 기존 출처 근거만 뜻함. 모델의 호실 순서·칸막이·복도상 좌표는 별도의 추정이다.",
+      "source_date": "2019-07-05",
+      "current_occupancy_verified": false
     },
     {
       "floor": "B1 (5동)",
@@ -233,13 +273,18 @@
         "숙이네",
         "터미널포차"
       ],
-      "layout": "신반포로 195, 8-2번 출구 인근. 낙곱전골 대표(소 39,000/대 45,000원), 11~23시",
+      "layout": "신반포로 195, 8-2번 출구 인근. 일번지육개장의 낙곱전골 가격(소 39,000/대 45,000원)과 11~23시 영업은 2023-09-07 기사 당시 정보. 사진18·19는 5동의 입점 안내를 확인하지만 복도상 순서는 확인하지 못한다.",
       "source": "https://www.localnaeil.com/News/View/650226",
       "guess": false,
       "interior_photo_sources": [
         "refs/interior/bp_inside/18_b1_stair_entrance_glass_building.jpg",
         "refs/interior/bp_inside/19_b1_stair_hanging_sign_directory.jpg"
-      ]
+      ],
+      "layout_guess": true,
+      "guess_scope": "guess=false인 경우 상호의 동·층 또는 명시된 호수의 기존 출처 근거만 뜻함. 모델의 호실 순서·칸막이·복도상 좌표는 별도의 추정이다.",
+      "source_date": "2023-09-07",
+      "photo_post_date": "2026-10-11",
+      "round10_review": "우고집 5동 B1 유지. 18번의 반포쇼핑타운5동 현판과 우고집 안내를 같은 화면에서 판독했으며 19번 확대사진으로 재확인. 감사의 3동20호 복귀 제안보다 사진을 우선."
     },
     {
       "floor": "1F (5동)",
@@ -247,9 +292,12 @@
       "tenants": [
         "뉴스타공인중개사사무소(15호)"
       ],
-      "layout": "1층 호수 15호 이상 -> 1층 점포 15개 이상",
+      "layout": "기존 출처의 뉴스타공인중개사사무소 15호 기록 유지. 호수 하나로 점포 총수가 15개 이상이라고 단정할 수 없으며 전면 베이·개수·순서는 추정.",
       "source": "https://realty.daangn.com/biz-profiles/4109041",
-      "guess": false
+      "guess": false,
+      "layout_guess": true,
+      "guess_scope": "guess=false인 경우 상호의 동·층 또는 명시된 호수의 기존 출처 근거만 뜻함. 모델의 호실 순서·칸막이·복도상 좌표는 별도의 추정이다.",
+      "round10_review": "신규 원문 재확인 실패; 기존 기록을 보존."
     },
     {
       "floor": "B1 (6동)",
@@ -259,7 +307,11 @@
       ],
       "layout": "신반포로 205, 8-2번 출구 방면",
       "source": "https://www.localnaeil.com/News/View/640227",
-      "guess": false
+      "guess": false,
+      "layout_guess": true,
+      "guess_scope": "guess=false인 경우 상호의 동·층 또는 명시된 호수의 기존 출처 근거만 뜻함. 모델의 호실 순서·칸막이·복도상 좌표는 별도의 추정이다.",
+      "source_date": "2019-07-05",
+      "current_occupancy_verified": false
     },
     {
       "floor": "3F (6동)",
@@ -269,7 +321,9 @@
       ],
       "layout": "3층 의원 구역",
       "source": "https://www.goodoc.co.kr/hospitals/22651",
-      "guess": false
+      "guess": false,
+      "layout_guess": true,
+      "guess_scope": "guess=false인 경우 상호의 동·층 또는 명시된 호수의 기존 출처 근거만 뜻함. 모델의 호실 순서·칸막이·복도상 좌표는 별도의 추정이다."
     },
     {
       "floor": "1F 전 동",
@@ -285,7 +339,9 @@
       ],
       "layout": "신반포로 면 1층 연속 점포",
       "source": "",
-      "guess": true
+      "guess": true,
+      "layout_guess": true,
+      "guess_scope": "guess=false인 경우 상호의 동·층 또는 명시된 호수의 기존 출처 근거만 뜻함. 모델의 호실 순서·칸막이·복도상 좌표는 별도의 추정이다."
     },
     {
       "floor": "2F 전 동",
@@ -293,7 +349,9 @@
       "tenants": [],
       "layout": "복도 양측 호실. 3동 생명의말씀사 2F 간판은 bp01/02 및 검토자 판독에 근거",
       "source": "",
-      "guess": true
+      "guess": true,
+      "layout_guess": true,
+      "guess_scope": "guess=false인 경우 상호의 동·층 또는 명시된 호수의 기존 출처 근거만 뜻함. 모델의 호실 순서·칸막이·복도상 좌표는 별도의 추정이다."
     },
     {
       "floor": "4F~5F 전 동",
@@ -301,7 +359,9 @@
       "tenants": [],
       "layout": "기존 중앙 복도와 계단·승강기 동선. 확인된 입점 외 세부 배치 추정",
       "source": "",
-      "guess": true
+      "guess": true,
+      "layout_guess": true,
+      "guess_scope": "guess=false인 경우 상호의 동·층 또는 명시된 호수의 기존 출처 근거만 뜻함. 모델의 호실 순서·칸막이·복도상 좌표는 별도의 추정이다."
     },
     {
       "floor": "B1 (1동, 7동, 8동)",
@@ -309,7 +369,9 @@
       "tenants": [],
       "layout": "미확인",
       "source": "",
-      "guess": true
+      "guess": true,
+      "layout_guess": true,
+      "guess_scope": "guess=false인 경우 상호의 동·층 또는 명시된 호수의 기존 출처 근거만 뜻함. 모델의 호실 순서·칸막이·복도상 좌표는 별도의 추정이다."
     },
     {
       "floor": "2F (3동)",
@@ -319,7 +381,9 @@
       ],
       "layout": "동쪽 끝에 가까운 남색 가로 간판. 개별 점포 경계는 미확인",
       "source": "refs/roadview/bp_02_banpo_shoppingtown_gotomall_canopy_west.jpg",
-      "guess": false
+      "guess": false,
+      "layout_guess": true,
+      "guess_scope": "guess=false인 경우 상호의 동·층 또는 명시된 호수의 기존 출처 근거만 뜻함. 모델의 호실 순서·칸막이·복도상 좌표는 별도의 추정이다."
     },
     {
       "floor": "5F (4동)",
@@ -329,7 +393,9 @@
       ],
       "layout": "현 모듈의 공식 안내 조사에서 입점 층·호수와 승강기 확인. 실내 구획은 추정",
       "source": "https://marupsy.imweb.me/index",
-      "guess": false
+      "guess": false,
+      "layout_guess": true,
+      "guess_scope": "guess=false인 경우 상호의 동·층 또는 명시된 호수의 기존 출처 근거만 뜻함. 모델의 호실 순서·칸막이·복도상 좌표는 별도의 추정이다."
     },
     {
       "floor": "4F (7동)",
@@ -339,7 +405,9 @@
       ],
       "layout": "현 모듈의 교육 디렉터리 조사 유지. 정확한 호실 경계 추정",
       "source": "현 모듈 meta.sources의 교육 디렉터리",
-      "guess": false
+      "guess": false,
+      "layout_guess": true,
+      "guess_scope": "guess=false인 경우 상호의 동·층 또는 명시된 호수의 기존 출처 근거만 뜻함. 모델의 호실 순서·칸막이·복도상 좌표는 별도의 추정이다."
     },
     {
       "floor": "5F (8동)",
@@ -350,7 +418,9 @@
       ],
       "layout": "현 모듈의 교육 디렉터리 조사 유지. 정확한 호실 경계 추정",
       "source": "현 모듈 meta.sources의 교육 디렉터리",
-      "guess": false
+      "guess": false,
+      "layout_guess": true,
+      "guess_scope": "guess=false인 경우 상호의 동·층 또는 명시된 호수의 기존 출처 근거만 뜻함. 모델의 호실 순서·칸막이·복도상 좌표는 별도의 추정이다."
     }
   ],
   "elements": [
@@ -360,7 +430,9 @@
       "where": "2~6동 지하 1층 (신반포로 165~205)",
       "details": "고속터미널역 8-1, 8-2 출구에서 가까운 직장인·여행객 대상 술집/식당 클러스터",
       "source": "https://www.localnaeil.com/News/View/640227",
-      "guess": false
+      "guess": false,
+      "source_date": "2019-07-05",
+      "placement_guess": true
     },
     {
       "name": "의원 층",
@@ -368,7 +440,8 @@
       "where": "3동 3층, 6동 3층",
       "details": "대기실+진료실, 세로 의원 간판",
       "source": "https://www.goodoc.co.kr/hospitals/22651",
-      "guess": false
+      "guess": false,
+      "layout_guess": true
     },
     {
       "name": "프랜차이즈 간판",
@@ -376,7 +449,9 @@
       "where": "3동 지하 입구 주변",
       "details": "계단 입구 입간판+벽면 돌출간판",
       "source": "https://www.localnaeil.com/News/View/640227",
-      "guess": false
+      "guess": false,
+      "source_date": "2019-07-05",
+      "placement_guess": true
     },
     {
       "name": "미용실/식당 POI 군집",
@@ -390,7 +465,8 @@
   "connections": [
     "js/places/_junctions.js에 banpo_shoppingtown을 지명하는 JUNCTIONS/WELLS 없음. 기존 OSM claims 및 B1~5층 동선 보존.",
     "동 간 지상 연결은 신반포로 보도. 확인되지 않은 지하 직결 통로는 추가하지 않음.",
-    "역 출구와 고투몰 계단 덮개는 해당 소유 모듈의 형상에 맡김. gotomall과 함께 smoke 검사."
+    "역 출구와 고투몰 계단 덮개는 해당 소유 모듈의 형상에 맡김. gotomall과 함께 smoke 검사.",
+    "Round10: 각 동 지하가 서로 독립이라는 것은 현장 확정 사실이 아닌 기존 모델 가정이다. 역·고투몰과 새 지하 연결은 만들지 않으며 요청할 신규 junction도 없다."
   ],
   "parking": "refs/aerial/bp_67.jpg에서 6동 동쪽과 7동 서쪽 사이 약 x160~183,z-245~-222의 지상 주차장과 약 8~10대 차량 확인. 차선·차량의 정확한 위치는 추정. 7동 앞에는 약 15×7m 낮은 파빌리온이 보이며 중심 약(209.5,-228.5), 높이3.2m와 재료 치수는 검토자 추정. 상호는 판독되지 않아 띠를 무기명으로 둔다.",
   "notes": [
@@ -401,7 +477,10 @@
     "refs/photos/banpo_shoppingtown 및 data/research/banpo_shoppingtown_visual.json은 이번 작업 환경에서 제공 여부를 확인하지 못했으며 새 근거로 사용하지 않았다.",
     "실물 상호는 기존 TENANTS와 제공 로드뷰 판독을 유지. 판독되지 않은 간판은 일반 업종 또는 빈 띠로 표현하며 가공의 고유 상호를 만들지 않는다.",
     "Round 7: refs/interior/bp_inside 사진39장에 대응한33개 카메라를 modeling.trace에 기록. 48개 층별 지연 디테일, B1/1F~5F 주소, 가구·재료·입점간판 재구성. 세부 위치의 불확실성은 modeling.interior_guesses 참고.",
-    "Round 8: 신반포로 전면 점포/차양/현관을 정렬하고 5동 외벽을 사진23의 황갈색으로 정정. 비교시트11장을 검토하고 사진39장에 각기 대응하는 카메라를 기록. 실내 변경·추정·검증은 modeling.round8_changes 및 validation 참고."
+    "Round 8: 신반포로 전면 점포/차양/현관을 정렬하고 5동 외벽을 사진23의 황갈색으로 정정. 비교시트11장을 검토하고 사진39장에 각기 대응하는 카메라를 기록. 실내 변경·추정·검증은 modeling.round8_changes 및 validation 참고.",
+    "Round10: localnaeil 640227은 2019-07-05, 650226은 2023-09-07로 원문 날짜를 정정. 두 기사는 2025~2026 임대현황 자료가 아니다.",
+    "Round10: 감사 JSON의 우고집 3동20호는 오독. 2019 기사에서 20호는 온유월식당이고 우고집은 3동 B1만 기록되어 있다. 사진18·19의 5동 안내를 우선해 현재 점포를 유지한다.",
+    "Round10: audit_banpo_shoppingtown 폴더는 비어 있었다. 기존 bp_inside 02·18·19·21 및 bp01을 직접 열어 대조. 다이소 Gate1/Gate4 사진도 확인했으나 다른 모듈이므로 이 작업에 출입구나 연결을 추가하지 않았다."
   ],
   "unresolved": [
     "각 동 실측 높이, 창 간격, 계단실 후퇴 치수와 실제 내부 평면",
@@ -409,10 +488,12 @@
     "간판별 정확한 상호·층·폭·위치, 단층 파빌리온 상호",
     "4동 외 각 동 실제 승강기 설치 여부와 위치",
     "옥상 안테나·실외기·물탱크의 개수와 위치",
-    "새 렌더를 이용한 수정 후 시각 검증: 사용자 안내에 따라 tests/shot.mjs는 이 샌드박스에서 실행 불가"
+    "새 렌더를 이용한 수정 후 시각 검증: 사용자 안내에 따라 tests/shot.mjs는 이 샌드박스에서 실행 불가",
+    "3동 동단 후퇴부의 실제 용도와 B1 직행 여부, 각 동 B1 입구의 정확한 위치 및 동간 지하 연결 여부",
+    "2019·2023 기사에만 남은 점포의 현재 영업 여부와 실제 호실 경계"
   ],
   "modeling": {
-    "round": 8,
+    "round": 10,
     "decisions": [
       {
         "element": "외벽 마감",
@@ -495,46 +576,39 @@
       "옥상 색은 항공사진에 근거한다. 작은 계단실의 정확한 위치·치수, 반복한 안테나 개수와 패널 방향, 실외기·물탱크 위치는 확정되지 않았다. 물탱크는 사용자 요청을 단순한 형태로 표현하며 특정 실물 탱크를 식별한 것은 아니다.",
       "6·7동 사이 주차장 경계, 차량8~10대의 정확한 위치·색·방향은 항공사진에 맞춘 근사다. 7동 앞 단층동의15×7m 평면·3.2m 높이는 검토자 추정치이며 상호는 판독되지 않아 쓰지 않는다.",
       "회색 보도 블록 크기0.3m 및 짙은 띠 폭0.6m는 사용자 지침에 따른 근사다. 황색 유도표시는 실제 횡단보도 전체 배치의 복제가 아니라 기존 출입구 접근성 표현만 유지한다.",
-      "4동 승강기 존재는 마루 공식 안내의 선행 조사로 확인했으나 다른 동의 실제 승강기 존재와 모든 위치는 미확인. 기존 모든 층 접근 기능을 유지한다."
+      "4동 승강기 존재는 마루 공식 안내의 선행 조사로 확인했으나 다른 동의 실제 승강기 존재와 모든 위치는 미확인. 기존 모든 층 접근 기능을 유지한다.",
+      "Round10: 각 동 B1의 건물 내부 중앙 왕복계단·승강기와 독립 지하 평면은 추정. 8-1/8-2 출구와 가깝다는 기사 문장은 별도 보도 계단이나 역·고투몰 직결을 입증하지 않는다.",
+      "Round10: 3동 동단 후퇴부의 계단실 용도·B1 직행 여부는 미확인. 모델은 후퇴 외벽과 창만 두고 B1 계단을 중앙에 유지하므로 동단에서 직접 내려가는 동선으로 해석하지 않는다.",
+      "Round10: 1층 미확인 생활업종, 모든 층의 호실 순서·칸막이·점포 좌표는 추정. 확인된 상호의 동·층·호수와 실제 모델 평면의 신뢰도를 분리한다.",
+      "Round10: 기존 1·2·8동 등 일반 안내판에 반복된 다른 상호의 동 귀속·위치 역시 미확인. 이번에는 사진상 5동으로 판단한 우고집 중복 표기만 일반 식당으로 바꾸고 나머지 디테일은 유지한다."
     ],
     "validation": {
+      "round": 10,
+      "status": "smoke and walk passed; shared metadata generation blocked in concurrently edited module",
+      "visual": "사용자 지시에 따라 tests/shot.mjs 미실행. 수정 지점별 바닥 높이 카메라를 modeling.trace에 추가; 수정 후 렌더 검증은 미실시.",
       "smoke": {
         "command": "node tests/smoke.mjs banpo_shoppingtown gotomall",
         "result": "OK",
         "detail_errors": 0,
-        "base_quads": 81881,
-        "all_groups_quads": 727870,
-        "spawns": 12,
-        "zones": 48,
-        "elevators": 8,
-        "floors_per_elevator": 6
+        "zones": 49,
+        "note": "단층동 천장 등록 후 최종 smoke OK. 49 zones, 8 elevators, 12 module spawns."
+      },
+      "trace": {
+        "camera_count": 13,
+        "collision_failures": 0,
+        "unsupported_cameras": 0,
+        "woogojip_signs_outside_block5": 0,
+        "pavilion_zone_verified": true,
+        "note": "최종 kit와 모든 디테일에서 round10 카메라13개 바닥 지지·캡슐 검사 통과. 우고집 표기는 앞선 검사에서 모두5동. 추가7동 카메라와 천장 y=3.05도 확인. 렌더 구도 검증은 아님.",
+        "pavilion_ceiling_y": 3.0500000000000003
       },
       "walk": {
         "command": "node tests/walk.mjs",
-        "result": "428 ok, 0 blocked",
-        "earlier_attempt": "Concurrent newcore module temporarily exported meta without build(); later final run started successfully.",
-        "note": "최종 식당/상층/전면 변경 후 전체월드·도시층·모든지연디테일 포함 검사 통과. 앞선 newcore 동시편집 상태는 최종 실행에서 해결됨."
+        "result": "442 ok, 0 blocked",
+        "exit_code": 0,
+        "note": "전체 월드 실행 시점의 모듈과 모든 지연 디테일 포함. 마지막 단층동 지붕 변경은 walk:false 천장 등록만 추가하며 보행 바닥·벽에는 변화 없음. 이후 최종 smoke 및 단층동 천장/카메라 검사도 통과."
       },
-      "isolated_walk": {
-        "command": "node tests/walk.mjs banpo_shoppingtown gotomall --no-city",
-        "result": "102 ok, 0 blocked",
-        "note": "최종 식당 helper 변경 전에 실행한 중간검증. 최종 전체검사를 별도 기록."
-      },
-      "trace": {
-        "camera_count": 53,
-        "interior_photos_covered": 39,
-        "roadview_cameras": 6,
-        "additional_frontage_cameras": 8,
-        "collision_failures": 0,
-        "note": "최종 모든 디테일 로드 후 각 카메라 바닥 지지와 r0.32m,h1.75m 캡슐 검사. 계단 카메라 높이는 실제 모델 계단 지지값. 렌더 구도 검증은 운영자 확인 필요."
-      },
-      "detail_budget": {
-        "groups": 48,
-        "max_group_quads": 26966,
-        "limit": 120000
-      },
-      "visual": "라운드7 비교시트11장 및 사진39장 검토. 사용자 지시에 따라 shot.mjs 미실행; 신규 렌더 검증은 운영자에게 남음.",
-      "syntax_and_diff": "node --check 및 git diff --check 통과"
+      "syntax_and_diff": "node --check js/places/banpo_shoppingtown.js 및 두 허용 파일 git diff --check 통과"
     },
     "trace": [
       {
@@ -1470,9 +1544,231 @@
           "v": 14.427
         },
         "round8_note": "동별 전면 검토용 추가 카메라; 특정 사진의 동일 촬영점 아님."
+      },
+      {
+        "spot": "R10 · 1동 B1 도착 안내판 우고집 중복 정정",
+        "round": 10,
+        "block": 1,
+        "floor": "B1",
+        "x": -305.883,
+        "y": -6,
+        "z": -41.669,
+        "yawDeg": 200.149,
+        "pitchDeg": 0,
+        "local": {
+          "u": -2.25,
+          "v": 6.456
+        },
+        "photos": [],
+        "note": "수정 지점 검토용 모델 카메라. y는 바닥/평평한 계단참 높이이며 촬영 실측점은 아님."
+      },
+      {
+        "spot": "R10 · 1동 계단참 안내벽 우고집 중복 정정",
+        "round": 10,
+        "block": 1,
+        "floor": "B1",
+        "x": -304.363,
+        "y": -3,
+        "z": -53.492,
+        "yawDeg": 290.149,
+        "pitchDeg": -12,
+        "local": {
+          "u": 3.25,
+          "v": -4.12
+        },
+        "photos": [],
+        "note": "수정 지점 검토용 모델 카메라. y는 바닥/평평한 계단참 높이이며 촬영 실측점은 아님."
+      },
+      {
+        "spot": "R10 · 2동 B1 도착 안내판 우고집 중복 정정",
+        "round": 10,
+        "block": 2,
+        "floor": "B1",
+        "x": -242.964,
+        "y": -6,
+        "z": -65.449,
+        "yawDeg": 200.536,
+        "pitchDeg": 0,
+        "local": {
+          "u": -2.25,
+          "v": 6.265
+        },
+        "photos": [],
+        "note": "수정 지점 검토용 모델 카메라. y는 바닥/평평한 계단참 높이이며 촬영 실측점은 아님."
+      },
+      {
+        "spot": "R10 · 2동 계단참 안내벽 우고집 중복 정정",
+        "round": 10,
+        "block": 2,
+        "floor": "B1",
+        "x": -241.457,
+        "y": -3,
+        "z": -77.103,
+        "yawDeg": 290.536,
+        "pitchDeg": -12,
+        "local": {
+          "u": 3.25,
+          "v": -4.12
+        },
+        "photos": [],
+        "note": "수정 지점 검토용 모델 카메라. y는 바닥/평평한 계단참 높이이며 촬영 실측점은 아님."
+      },
+      {
+        "spot": "R10 · 3동 B1 도착 안내판 우고집 중복 정정",
+        "round": 10,
+        "block": 3,
+        "floor": "B1",
+        "x": -135.071,
+        "y": -6,
+        "z": -106.5,
+        "yawDeg": 200.948,
+        "pitchDeg": 0,
+        "local": {
+          "u": -2.25,
+          "v": 6.308
+        },
+        "photos": [],
+        "note": "수정 지점 검토용 모델 카메라. y는 바닥/평평한 계단참 높이이며 촬영 실측점은 아님."
+      },
+      {
+        "spot": "R10 · 3동 계단참 안내벽 우고집 중복 정정",
+        "round": 10,
+        "block": 3,
+        "floor": "B1",
+        "x": -133.663,
+        "y": -3,
+        "z": -118.205,
+        "yawDeg": 290.948,
+        "pitchDeg": -12,
+        "local": {
+          "u": 3.25,
+          "v": -4.12
+        },
+        "photos": [],
+        "note": "수정 지점 검토용 모델 카메라. y는 바닥/평평한 계단참 높이이며 촬영 실측점은 아님."
+      },
+      {
+        "spot": "R10 · 8동 B1 도착 안내판 우고집 중복 정정",
+        "round": 10,
+        "block": 8,
+        "floor": "B1",
+        "x": 281.221,
+        "y": -6,
+        "z": -265.173,
+        "yawDeg": 201.734,
+        "pitchDeg": 0,
+        "local": {
+          "u": -2.25,
+          "v": 4.927
+        },
+        "photos": [],
+        "note": "수정 지점 검토용 모델 카메라. y는 바닥/평평한 계단참 높이이며 촬영 실측점은 아님."
+      },
+      {
+        "spot": "R10 · 8동 계단참 안내벽 우고집 중복 정정",
+        "round": 10,
+        "block": 8,
+        "floor": "B1",
+        "x": 282.98,
+        "y": -3,
+        "z": -275.613,
+        "yawDeg": 291.734,
+        "pitchDeg": -12,
+        "local": {
+          "u": 3.25,
+          "v": -4.12
+        },
+        "photos": [],
+        "note": "수정 지점 검토용 모델 카메라. y는 바닥/평평한 계단참 높이이며 촬영 실측점은 아님."
+      },
+      {
+        "spot": "R10 · 5동 로비 B1 입점 안내 정정",
+        "round": 10,
+        "block": 5,
+        "floor": "1F",
+        "x": 49.701,
+        "y": 0,
+        "z": -176.567,
+        "yawDeg": 201.279,
+        "pitchDeg": -10,
+        "local": {
+          "u": -4.4,
+          "v": 6.013
+        },
+        "photos": [],
+        "note": "수정 지점 검토용 모델 카메라. y는 바닥/평평한 계단참 높이이며 촬영 실측점은 아님."
+      },
+      {
+        "spot": "R10 · 7동 앞 단층동 실내 zone",
+        "round": 10,
+        "block": 7,
+        "floor": "1F",
+        "x": 209.5,
+        "y": 0.025,
+        "z": -228.5,
+        "yawDeg": 200.975,
+        "pitchDeg": 0,
+        "photos": [],
+        "note": "기존 단층동 내부 중심; y는 실제 슬래브 상단. 상호·실내 용도는 미확인."
+      },
+      {
+        "spot": "R10 · 우고집 5동 B1 사진 우선 유지",
+        "photos": [
+          "21_b1_woogojip_frontage_corridor.jpg"
+        ],
+        "x": 66.756,
+        "y": -6,
+        "z": -190.091,
+        "yawDeg": 135.779,
+        "block": 5,
+        "floor": "B1",
+        "local": {
+          "u": 16.4,
+          "v": -0.4
+        },
+        "source_area": "refs/interior/bp_inside",
+        "pitchDeg": 4,
+        "round8_note": "사진별 독립 비교 카메라. 실측 촬영점이 아닌 모델의 해당 요소를 보여주는 시점.",
+        "round": 10
+      },
+      {
+        "spot": "R10 · 일번지육개장 5동 B1 유지",
+        "photos": [
+          "24_b1_ilbonji_interior.jpg"
+        ],
+        "x": 33.427,
+        "y": -6,
+        "z": -174.106,
+        "yawDeg": 201.279,
+        "block": 5,
+        "floor": "B1",
+        "local": {
+          "u": -20.458,
+          "v": 2.4
+        },
+        "source_area": "refs/interior/bp_inside",
+        "round8_note": "사진별 독립 비교 카메라. 실측 촬영점이 아닌 모델의 해당 요소를 보여주는 시점.",
+        "round": 10
+      },
+      {
+        "spot": "R10 · 7동 계단참 안내벽 우고집 중복 정정",
+        "round": 10,
+        "block": 7,
+        "floor": "B1",
+        "x": 209.16,
+        "y": -3,
+        "z": -246.524,
+        "yawDeg": 290.975,
+        "pitchDeg": -12,
+        "local": {
+          "u": 3.25,
+          "v": -4.12
+        },
+        "photos": [],
+        "note": "계단 중간 평평한 참에서 보는 안내벽. 7동 사진 기반 하부 안내판은 변경하지 않음."
       }
     ],
-    "trace_camera_convention": "x=east,z=south, metres. y=feet/floor; rendered eye=y+1.62. yaw0=north,90=west,180=south,270=east; pitch+up/-down. Each of the 39 interior photos now has its own record, followed by six roadview cameras and eight per-block facade checks. source_area + photos identifies each file. Coordinates and camera framing are reconstructions, pending operator rendering.",
+    "trace_camera_convention": "x=east,z=south, metres. y=feet/floor; rendered eye=y+1.62. yaw0=north,90=west,180=south,270=east; pitch+up/-down. Each of the 39 interior photos now has its own record, followed by six roadview cameras and eight per-block facade checks. source_area + photos identifies each file. Coordinates and camera framing are reconstructions, pending operator rendering. Round10 추가 카메라는 안내판 수정9곳, 5동로비1곳, 단층동zone1곳 및 유지 점포2곳이며 y=-3은 평평한 중간 계단참이다.",
     "interior_decisions": [
       {
         "element": "지하 본선과 각 층 구조",
@@ -2138,6 +2434,182 @@
       ],
       "engine_files_modified": false,
       "committed_or_pushed": false
+    },
+    "junctions_to_add": [],
+    "round8_validation": {
+      "smoke": {
+        "command": "node tests/smoke.mjs banpo_shoppingtown gotomall",
+        "result": "OK",
+        "detail_errors": 0,
+        "base_quads": 81881,
+        "all_groups_quads": 727870,
+        "spawns": 12,
+        "zones": 48,
+        "elevators": 8,
+        "floors_per_elevator": 6
+      },
+      "walk": {
+        "command": "node tests/walk.mjs",
+        "result": "428 ok, 0 blocked",
+        "earlier_attempt": "Concurrent newcore module temporarily exported meta without build(); later final run started successfully.",
+        "note": "최종 식당/상층/전면 변경 후 전체월드·도시층·모든지연디테일 포함 검사 통과. 앞선 newcore 동시편집 상태는 최종 실행에서 해결됨."
+      },
+      "isolated_walk": {
+        "command": "node tests/walk.mjs banpo_shoppingtown gotomall --no-city",
+        "result": "102 ok, 0 blocked",
+        "note": "최종 식당 helper 변경 전에 실행한 중간검증. 최종 전체검사를 별도 기록."
+      },
+      "trace": {
+        "camera_count": 53,
+        "interior_photos_covered": 39,
+        "roadview_cameras": 6,
+        "additional_frontage_cameras": 8,
+        "collision_failures": 0,
+        "note": "최종 모든 디테일 로드 후 각 카메라 바닥 지지와 r0.32m,h1.75m 캡슐 검사. 계단 카메라 높이는 실제 모델 계단 지지값. 렌더 구도 검증은 운영자 확인 필요."
+      },
+      "detail_budget": {
+        "groups": 48,
+        "max_group_quads": 26966,
+        "limit": 120000
+      },
+      "visual": "라운드7 비교시트11장 및 사진39장 검토. 사용자 지시에 따라 shot.mjs 미실행; 신규 렌더 검증은 운영자에게 남음.",
+      "syntax_and_diff": "node --check 및 git diff --check 통과"
+    },
+    "round10_evidence_audit": {
+      "reviewed_on": "2026-11-07",
+      "audit_file": ".codex-jobs/evidence/audit_banpo_shoppingtown.json",
+      "items": [
+        {
+          "element": "B1 접근 동선 (지상 어디서 지하 식당가로 내려가는지, 8-1/8-2 출구와의 연결)",
+          "audit_confidence": "unverified",
+          "status": "retained_as_guess",
+          "resolution": "기존 중앙 계단·승강기와 독립 B1 유지. 8-1/8-2는 지상 접근 방향만 뜻하며 계단 이동·외부 우물·지하 직결을 추가하지 않음.",
+          "sources": [
+            "https://www.localnaeil.com/News/View/640227"
+          ]
+        },
+        {
+          "element": "일번지육개장 등 5동 B1 점포의 동 귀속",
+          "audit_confidence": "likely",
+          "status": "applied_photo_priority",
+          "resolution": "일번지와 우고집 5동 B1 유지. 우고집의 낡은 3동 tenant 기록과 1·2·3·7·8동 공통 안내판의 중복 상호를 정리하고 5동 로비 B1 행을 사진에서 판독한 지하 상호로 수정. 20호는 온유월식당이라는 원문 오독도 연구파일에 정정.",
+          "sources": [
+            "https://www.localnaeil.com/News/View/650226",
+            "https://www.localnaeil.com/News/View/640227"
+          ]
+        },
+        {
+          "element": "3동 동단 후퇴 계단실이 8-1번 출구/지하로 이어지는지",
+          "audit_confidence": "unverified",
+          "status": "retained_as_guess",
+          "resolution": "3·4동 동단 후퇴 외관 유지. 실제 B1 접근은 중앙 코어이며 후퇴부는 창만 있는 볼륨이다. 용도·직행 여부는 추정으로 명시.",
+          "sources": [
+            "https://www.localnaeil.com/News/View/640227"
+          ]
+        },
+        {
+          "element": "1F 전 동 가로변 생활상가 구성과 위치",
+          "audit_confidence": "unverified",
+          "status": "retained_as_guess",
+          "resolution": "미확인 업종·배치와 기존 뉴스타 기록을 유지. 새 상호를 만들지 않음. 당근 원문을 이번에는 재열람하지 못했고 15호로 전체 점포 수를 단정하는 문구는 추정으로 정정.",
+          "sources": [
+            "https://realty.daangn.com/biz-profiles/4109041"
+          ]
+        },
+        {
+          "element": "2F~5F 상층 용도와 점포 배치 (학원·사무실·의원)",
+          "audit_confidence": "likely",
+          "status": "applied_uncertainty_metadata",
+          "resolution": "기존 상층 점포·가구·칸막이 모두 보존. 봄치과 3동3층310호와 반포좋은치과 6동3층 주소 재확인. 모든 floors에 layout_guess=true를 추가해 입점 근거와 복도상 배치를 분리.",
+          "sources": [
+            "https://www.goodoc.co.kr/hospitals/13473",
+            "https://www.goodoc.co.kr/hospitals/22651"
+          ]
+        },
+        {
+          "element": "연구 JSON 소스 연도 표기",
+          "audit_confidence": "confirmed",
+          "status": "applied",
+          "resolution": "640227의 year=2019/published_date=2019-07-05, 650226의 year=2023/published_date=2023-09-07로 정정. 당시 점포정보·가격·시간을 현재로 오인하지 않도록 source/floor/notes에 명시.",
+          "sources": [
+            "https://www.localnaeil.com/News/View/650226"
+          ]
+        }
+      ],
+      "photo_review": {
+        "audit_folder": "refs/interior/audit_banpo_shoppingtown/",
+        "audit_folder_files": 0,
+        "opened": [
+          "refs/interior/bp_inside/02_b1_entrance_sign_wall_vertical.jpg",
+          "refs/interior/bp_inside/18_b1_stair_entrance_glass_building.jpg",
+          "refs/interior/bp_inside/19_b1_stair_hanging_sign_directory.jpg",
+          "refs/interior/bp_inside/21_b1_woogojip_frontage_corridor.jpg",
+          "refs/roadview/bp_01_banpo_shoppingtown_exit82_north.jpg",
+          "refs/interior/daiso/101_gate1_main_entrance_marketer_jyh_20261105.jpg",
+          "refs/interior/daiso/107_gate4_entrance_gotomall_side_marketer_jyh_20261105.jpg"
+        ],
+        "photo_over_text": "18번에 5동 현관명과 우고집 안내가 동시에 보임. 2019 기사상 3동 주소 및 감사의 복귀 제안보다 해당 사진 우선. 사진 게시일은 제공된 notes.json 기록이며 사진 촬영일은 별도 확인하지 못함."
+      },
+      "changes": [
+        {
+          "element": "다른 동의 우고집 중복 안내",
+          "blocks": [
+            1,
+            2,
+            3,
+            7,
+            8
+          ],
+          "floor": "B1",
+          "implementation": "기존 안내판의 우고집 글자를 식당으로 교체. 패널 수·위치·테두리·조명·점포·가구 보존. 3동 TENANTS의 과거 우고집 항목 정리. 7동은 계단 안내벽만 변경되고 사진 기반 도착 안내판은 유지."
+        },
+        {
+          "element": "5동 1층 로비 B1 입점 안내",
+          "block": 5,
+          "floor": "1F",
+          "implementation": "B1 행에 잘못 재사용되던 1층 상호 대신 사진18·19의 일번지육개장/우고집/서래곱창/하트타임/숙이네/터미널포차를 두 줄로 표시."
+        },
+        {
+          "element": "7동 앞 단층동 zone",
+          "position": [
+            209.5,
+            0.025,
+            -228.5
+          ],
+          "implementation": "기존 15×7m 단층 실내를 그대로 포괄하는 1F zone 추가. 지붕의 크기·높이·색·두께를 유지한 채 box를 slab(walk=false)로 바꿔 실내 판정용 천장 y=3.05를 등록."
+        }
+      ],
+      "retained_shop_door_positions": {
+        "일번지육개장": [
+          33.137,
+          -6,
+          -174.851
+        ],
+        "우고집": [
+          65.93,
+          -6,
+          -187.623
+        ]
+      },
+      "geometry": "점포·계단·벽·바닥·가구는 이동 또는 삭제하지 않음. 단층동에 zone 및 기존 지붕과 동일 형상의 천장 등록 추가.",
+      "scope": {
+        "files": [
+          "js/places/banpo_shoppingtown.js",
+          "data/research/banpo_shoppingtown.json"
+        ],
+        "claims_changed": false,
+        "zones_changed": true,
+        "junctions_changed": false,
+        "commit_or_push": false
+      },
+      "metadata_generation": {
+        "command": "node --input-type=module wrapper importing tools/gen_meta.mjs with _meta.json write captured in memory",
+        "result": "failed in another module before output",
+        "error": "ReferenceError: buildRound10BasementRetail is not defined at js/places/gyeongbu.js:1240",
+        "shared_meta_written": false,
+        "reason": "동시 편집 중인 타 모듈에서 발생. 사용자 파일 제한에 따라 공용 _meta.json은 쓰지 않음.",
+        "follow_up": "타 모듈 정리 후 통합 작업에서 node tools/gen_meta.mjs 실행 필요."
+      }
     }
   },
   "interior_reference_photos": [

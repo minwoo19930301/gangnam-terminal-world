@@ -1,71 +1,2171 @@
 {
- "id":"hangang","name":"반포한강공원 · 세빛섬 · 반포대교/잠수교 · 달빛무지개분수","updated":"2026-11-06",
- "sources":[
-  {"url":"https://mediahub.seoul.go.kr/archives/2002598","title":"아는 만큼 달라 보이는 한강다리 TMI (서울시 미디어허브)","year":2024},
-  {"url":"https://mediahub.seoul.go.kr/archives/2014254","title":"서초 분수쇼 명소 3곳 (서울시 미디어허브)","year":2025},
-  {"url":"https://hangang.seoul.go.kr/archives/46727","title":"반포한강공원 (서울시 한강공원)","year":2025},
-  {"url":"https://mediahub.seoul.go.kr/archives/2008745","title":"세빛섬 옥상 세빛마루 (서울시 미디어허브)","year":2023},
-  {"url":"https://www.telltrip.com/domestic-travel/sebitseom-han-river-floating-islands/","title":"세빛섬 야간 산책 (telltrip)","year":2025},
-  {"url":"https://www.mt.co.kr/estate/2014/12/27/2014122400441651139","title":"서울의 랜드마크 꿈꾸는 세빛섬 (머니투데이)","year":2014},
-  {"url":"https://www.heraldk.com/article/2026100906243422978","title":"잠수교 50년만 보행전용교 변신 (헤럴드경제)","year":2026},
-  {"url":"https://mediahub.seoul.go.kr/archives/2010487","title":"세빛섬 관련 (서울시 미디어허브)","year":2024},
-  {"url":"https://www.seoul.go.kr/story/hangangstory/2020/pdf/guidebook_b01.pdf","title":"한강 자전거길 이용 안내: 잠수교 자전거 전용도로는 평지와 같이 이용 가능 (서울시)","year":2020},
-  {"url":"https://mediahub.seoul.go.kr/archives/2019683","title":"잠수교 보행전용교 전환 공사 중 보행·자전거 통행 안내 (서울시 미디어허브)","year":2026}
- ],
- "building":{
-  "floors_above":3,"floors_below":0,"height_m":27,
-  "floor_height_m":"추정 약 4.5~5m (가빛섬 27m/3층 보도 기준, 옥상 세빛마루 4~5층 표기와 불일치) ",
-  "facade":"꽃잎 모양 유리 외피(추정: 확인된 기록 없음), 외벽 전체 LED 조명. 3개 섬은 '세빛'=빨강·파랑·초록 의미, 예빛섬은 대형 LED 스크린+수상무대",
-  "signage":"'세빛섬' 로고, 각 섬 이름(가빛섬·채빛섬·솔빛섬·예빛섬), 입점 브랜드 간판",
-  "entrances":"반포한강공원 쪽 부교(보행 연결)로 진입; 세빛섬나들목이 올림픽대로 아래로 연결 (고속터미널 8-1번 출구에서 약 650m, 도보 약 15분)"
- },
- "floors":[
-  {"floor":"가빛섬 1F","use":"수상레저·카페·편의점(추정)","tenants":["튜브스터(수상 튜브, 30분 3.5만원, 계절 운영)","카페돌체","골든블루마리나(요트, 2020 기준)"],"layout":"수면과 맞닿은 층, 수상 계류장 쪽 접안 (추정)","source":"https://www.telltrip.com/domestic-travel/sebitseom-han-river-floating-islands/","guess":false},
-  {"floor":"가빛섬 2F~3F","use":"컨벤션홀(700석)·레스토랑·펍","tenants":["FIC 컨벤션홀","이솔라(이탈리안, 개장 당시 '올라')","비스타(캐주얼 펍)","CNN카페(개장 당시)"],"layout":"가장 큰 섬(연면적 5,478㎡, 높이 27m). 컨벤션홀은 중심, 레스토랑은 한강 쪽 창가 (추정)","source":"https://www.mt.co.kr/estate/2014/12/27/2014122400441651139","guess":false},
-  {"floor":"가빛섬 옥상(4~5F 표기)","use":"세빛마루 옥상 개방 전망 공간","tenants":["세빛마루(상시 개방, 10~22시)"],"layout":"한강·반포대교 분수 조망 옥상 데크","source":"https://mediahub.seoul.go.kr/archives/2008745","guess":false},
-  {"floor":"채빛섬 1F~3F","use":"뷔페 레스토랑·공연","tenants":["채빛퀴진(뷔페)"],"layout":"3층 건물, 높이 21m, 연면적 3,419㎡, 최대 1,700명 수용 보도","source":"https://www.mt.co.kr/estate/2014/12/27/2014122400441651139","guess":false},
-  {"floor":"솔빛섬","use":"전시공간·수상레포츠 지원시설","tenants":[],"layout":"가장 낮고 작은 섬(추정), 층수 미확인","source":"https://www.smarttoday.co.kr/ko-kr/articles/29643","guess":true},
-  {"floor":"예빛섬","use":"미디어아트갤러리·수상무대","tenants":[],"layout":"대형 LED 스크린과 야외 수상무대 (층수 미확인, 1층 규모 추정)","source":"https://www.telltrip.com/domestic-travel/sebitseom-han-river-floating-islands/","guess":true}
- ],
- "elements":[
-  {"name":"달빛무지개분수","what":"반포대교 양측 교량분수","where":"반포대교 상류·하류 난간 아래, 각 570m","details":"총길이 1,140m, 노즐 380개, 분당 190톤 양수, 수면 방향 최대 약 20m 방수, 2008 기네스 최장 교량분수. 4~10월 운영(2025 기사는 연중 표기), 회당 20분, 하루 3~7회 가동, 야간 무지개색 LED","source":"https://mediahub.seoul.go.kr/archives/2002598","guess":false},
-  {"name":"반포대교","what":"2층 중 상층","where":"잠수교 바로 위","details":"길이 약 1,490m·폭 약 25m (출처에 따라 다름), 1982 준공","source":"https://mediahub.seoul.go.kr/archives/2014254","guess":false},
-  {"name":"잠수교","what":"하층 낮은 다리, 홍수 시 침수","where":"반포대교 아래, 수면과 가장 가까움","details":"길이 765~795m, 폭 약 18m, 1976 개통. 2008년 4차로 중 2차로를 보행·자전거로 전환. 2026-10-26부터 차량 전면 통제로 보행전용화 공사(2027 하반기 완료 예정). 수면 위 높이는 미확인(2~3m 추정)","source":"https://www.heraldk.com/article/2026100906243422978","guess":false},
-  {"name":"교각","what":"반포대교 상층 지지 교각","where":"잠수교 위 일정 간격","details":"개수·간격 미확인. 교각 사이 천정 웨이브 타공판 단장 계획 보도","source":"https://www.gqkorea.co.kr/?p=241442","guess":true},
-  {"name":"세빛섬 나들목","what":"올림픽대로 아래 보행 통로","where":"반포2동주민센터 앞 골목 끝 -> 올림픽대로 하부","details":"한강 62번째 나들목. OSM '반포나들목' 두 곳과 별개일 수 있음","source":"https://mediahub.seoul.go.kr/archives/2014026","guess":false},
-  {"name":"달빛광장·수변무대","what":"분수 관람 광장","where":"반포대교 남단 한강 쪽","details":"분수 관람 중심 잔디·계단형 광장","source":"https://hangang.seoul.go.kr/archives/46727","guess":false},
-  {"name":"세빛섬 편의점·카페·수상계류장","what":"세빛섬 쪽 편의시설","where":"세빛섬","details":"편의점, 선상레스토랑, 베이커리카페, 웨딩&컨벤션, 자전거 복합문화공간, 요트·카약 계류장","source":"https://hangang.seoul.go.kr/archives/46727","guess":false},
-  {"name":"공원 편의시설","what":"화장실·음수대·매점·카페·순환관람차(해치카)·따릉이 대여·물방울놀이터·체육시설","where":"반포한강공원 전역","details":"7.2km 자전거도로·산책로 분리, 여의도·잠원 방면 연결","source":"https://hangang.seoul.go.kr/archives/46727","guess":false},
-  {"name":"한강달빛야시장(밤도깨비)","what":"푸드트럭 39팀·공예 60팀(2022)","where":"반포한강공원 달빛광장 일대","details":"2025 개최 여부 미확인, 봄~가을 시즌","source":"https://mediahub.seoul.go.kr/archives/2005481","guess":false},
-  {"name":"서래섬·텐트존·무지개놀이터·수상택시","what":"기타 시설","where":"공원 서쪽(서래섬), 나머지 위치 미확인","details":"출처 없음","source":"","guess":true}
- ],
- "connections":[
-  "고속터미널 8-1번 출구 -> 반포2동주민센터 앞 골목 직진 -> 세빛섬나들목(올림픽대로 하부) -> 반포한강공원 -> 세빛섬 보행 부교, 약 650m/15분",
-  "잠수교 남단~올림픽대로 연결로 존재(보행 가능 여부 미확인)",
-  "세빛섬 섬 간 연결은 부교/도교(구조 미확인)",
-  "OSM 1563032434: 달빛광장 쪽 (-632.25,-712.99)와 동측 (-587.76,-721.05)를 잇는 지상 보행로, 교각 사이 횡단 유지",
-  "OSM 305677075: 폭 5m 수변 보행로 (-670.45,-786.08) -> (-647.53,-784.24) -> (-637.46,-786.19) -> (-589.48,-798.22), 다리 동서측 및 세빛섬 접근로 연결"
- ],
- "modeling":{
-  "round":7,
-  "guesses":[
-   "평탄한 공원 지면 y=0에서 보행자 머리 높이와 잠수교 하부가 겹치지 않도록 남단 강변 구간의 잠수교 상면을 y=3.6m로 조정했다. (-614,-710)부터 교축 방향 120m 구간이며 하부 여유 높이는 3.35m, 등기구 아래는 약 3.19m이다. 실측 고도·단면 자료는 확보하지 못했다.",
-   "강 쪽 (-694.02,-920.79)에서 기존 y=1.6m 하층 교면으로 완만하게 낮아진다. 기존 잠수교 스폰과 수상 구간, 상층 반포대교 y=15m는 유지했다.",
-   "잠수교 남단 공원 동·서 양측에 교축으로부터 15m 떨어진 폭 3.4m, 길이 44m 경사로(약 1:12.4)와 길이 12m 계단을 배치했다. 기준점 (-614,-710)에서 교축 방향 10m~54m가 경사로, 66m~54m가 계단이며 54m 지점에서 난간 개구부로 교면에 접속한다. 서울시 자료는 평지처럼 접근 가능한 자전거 연결만 확인하므로 정확한 위치·형식·치수는 추정이다.",
-   "교각은 기존 지름 2.2m·약 34m 간격의 충돌체를 유지했다. OSM 두 횡단 보행로에는 5m 폭 포장과 천장 등기구를 추가했다. 조명 배치와 포장 색상은 재구성이다."
+  "id": "hangang",
+  "name": "반포한강공원 · 세빛섬 · 반포대교/잠수교 · 달빛무지개분수",
+  "updated": "2026-11-07",
+  "sources": [
+    {
+      "url": "https://mediahub.seoul.go.kr/archives/2002598",
+      "title": "아는 만큼 달라 보이는 한강다리 TMI (서울시 미디어허브)",
+      "year": 2024
+    },
+    {
+      "url": "https://mediahub.seoul.go.kr/archives/2014254",
+      "title": "서초 분수쇼 명소 3곳 (서울시 미디어허브)",
+      "year": 2025
+    },
+    {
+      "url": "https://hangang.seoul.go.kr/archives/46727",
+      "title": "반포한강공원 (서울시 한강공원)",
+      "year": 2025
+    },
+    {
+      "url": "https://mediahub.seoul.go.kr/archives/2008745",
+      "title": "세빛섬 옥상 세빛마루 (서울시 미디어허브)",
+      "year": 2023
+    },
+    {
+      "url": "https://www.telltrip.com/domestic-travel/sebitseom-han-river-floating-islands/",
+      "title": "세빛섬 야간 산책 (telltrip)",
+      "year": 2025
+    },
+    {
+      "url": "https://www.mt.co.kr/estate/2014/12/27/2014122400441651139",
+      "title": "서울의 랜드마크 꿈꾸는 세빛섬 (머니투데이)",
+      "year": 2014
+    },
+    {
+      "url": "https://www.heraldk.com/article/2026100906243422978",
+      "title": "잠수교 50년만 보행전용교 변신 (헤럴드경제)",
+      "year": 2026
+    },
+    {
+      "url": "https://mediahub.seoul.go.kr/archives/2010487",
+      "title": "한강의 밤이 낭만적인 이유, '세빛섬'에서 즐기는 로맨틱 서울! (서울시, 2024-03-14)",
+      "year": 2024
+    },
+    {
+      "url": "https://www.seoul.go.kr/story/hangangstory/2020/pdf/guidebook_b01.pdf",
+      "title": "한강 자전거길 이용 안내: 잠수교 자전거 전용도로는 평지와 같이 이용 가능 (서울시)",
+      "year": 2020
+    },
+    {
+      "url": "https://mediahub.seoul.go.kr/archives/2019683",
+      "title": "잠수교 보행전용교 전환 공사 중 보행·자전거 통행 안내 (서울시 미디어허브)",
+      "year": 2026,
+      "published": "2026-10-13",
+      "modified": "2026-10-15",
+      "verified": "2026-11-07",
+      "date_correction": "기존 합동 조사 메모의 2026-10-08과 달리 현재 원문은 10-13 게시, 10-15 수정으로 표시된다. root가 재열람하여 확인했다."
+    },
+    {
+      "url": "https://mediahub.seoul.go.kr/archives/2014026",
+      "title": "한강 산책, 더욱 편해졌다! 새단장·리모델링한 나들목·초록길은? (서울시, 2025-04-23)",
+      "year": 2025
+    },
+    {
+      "url": "https://mediahub.seoul.go.kr/archives/2014042",
+      "title": "걸어서 10분이면 한강 도착! 새로 생긴 암사초록길·나들목 어디? (서울시, 2025-04-14)",
+      "year": 2025
+    },
+    {
+      "url": "https://www.newsis.com/view/NISX20250403_0003125928",
+      "title": "암사초록길·세빛섬 나들목 개통…한강공원 걸어서 10분 (뉴시스, 2025-04-04)",
+      "year": 2025
+    }
+  ],
+  "building": {
+    "floors_above": 3,
+    "floors_below": 0,
+    "height_m": 27,
+    "floor_height_m": "추정 약 4.5~5m (가빛섬 27m/3층 보도 기준, 옥상 세빛마루 4~5층 표기와 불일치) ",
+    "facade": "꽃잎 모양 유리 외피(추정: 확인된 기록 없음), 외벽 전체 LED 조명. 3개 섬은 '세빛'=빨강·파랑·초록 의미, 예빛섬은 대형 LED 스크린+수상무대",
+    "signage": "'세빛섬' 로고, 각 섬 이름(가빛섬·채빛섬·솔빛섬·예빛섬), 입점 브랜드 간판",
+    "entrances": "반포대교 남단 서쪽의 OSM 섬·도교 외곽 유지. 공원에서 도교(연결 보도)로 진입하며 연결교의 고정식/부유식 구조·출입문 형태는 미확인. 새 세빛섬나들목은 반포대교 서쪽, 기존 모델의 반포나들목은 동쪽의 별개 시설이다."
+  },
+  "floors": [
+    {
+      "floor": "가빛섬 1F",
+      "use": "수상레저·카페·편의점(추정)",
+      "tenants": [
+        "튜브스터(수상 튜브, 30분 3.5만원, 계절 운영)",
+        "카페돌체",
+        "골든블루마리나(요트, 2020 기준)"
+      ],
+      "layout": "1층 튜브스터는 서울시 2024 기사 확인. 기존 접수대·카페·편의점 위치를 보존. 기사 속 요트·레스토랑·카페·편의점·웨딩홀 목록은 건물 전체 설명으로, 모두 1층이라는 뜻은 아니다.",
+      "source": "https://mediahub.seoul.go.kr/archives/2010487",
+      "guess": false,
+      "layout_guess": true
+    },
+    {
+      "floor": "가빛섬 2F~3F",
+      "use": "컨벤션홀(700석)·레스토랑·펍",
+      "tenants": [
+        "FIC 컨벤션홀",
+        "이솔라(이탈리안, 개장 당시 '올라')",
+        "비스타(캐주얼 펍)",
+        "CNN카페(개장 당시)"
+      ],
+      "layout": "가장 큰 섬(연면적 5,478㎡, 높이 27m). 컨벤션홀은 중심, 레스토랑은 한강 쪽 창가 (추정)",
+      "source": "https://www.mt.co.kr/estate/2014/12/27/2014122400441651139",
+      "guess": false
+    },
+    {
+      "floor": "가빛섬 옥상(4~5F 표기)",
+      "use": "세빛마루 옥상 개방 전망 공간",
+      "tenants": [
+        "세빛마루(상시 개방, 10~22시)"
+      ],
+      "layout": "서울시 2024 기사는 4층 옥상 세빛마루로 표기. 모델의 기존 4층/y=23m를 유지하고 간판에 4층 명시. 2023 기사에는 4~5층 야외공간 표기가 있어 실제 층고·층 구분은 미확정.",
+      "source": "https://mediahub.seoul.go.kr/archives/2010487",
+      "guess": false,
+      "layout_guess": true
+    },
+    {
+      "floor": "채빛섬 1F",
+      "use": "비어가든 · 한강 테라스",
+      "tenants": [
+        "비어가든"
+      ],
+      "layout": "서울시 2024-03-14 기사에서 1층 비어가든과 야외 한강 조망 확인. 기존 안내 카운터를 맥주 서비스대로 변경하고 OSM 섬 데크에 테이블 추가. 실내 공연·대기 가구는 반증이 없어 보존. 서비스대·테라스 좌석 좌표는 추정.",
+      "source": "https://mediahub.seoul.go.kr/archives/2010487",
+      "confidence": "likely",
+      "guess": false,
+      "layout_guess": true
+    },
+    {
+      "floor": "채빛섬 2F",
+      "use": "채빛퀴진 뷔페",
+      "tenants": [
+        "채빛퀴진"
+      ],
+      "layout": "서울시 2024 기사에서 2층 뷔페 확인. 기존 y=7m 뷔페·좌석 유지. 층고 및 평면은 추정.",
+      "source": "https://mediahub.seoul.go.kr/archives/2010487",
+      "confidence": "likely",
+      "guess": false,
+      "layout_guess": true
+    },
+    {
+      "floor": "채빛섬 3F",
+      "use": "연회실 (추정 유지)",
+      "tenants": [],
+      "layout": "기존 y=14m 연회실·칸막이·테이블·장식을 보존하되 확인되지 않은 채빛퀴진 상호를 제거. 2014 보도는 3층 규모 건물을 확인하지만 이 층 용도는 확인하지 못함.",
+      "source": "https://www.mt.co.kr/estate/2014/12/27/2014122400441651139",
+      "confidence": "unverified",
+      "guess": true
+    },
+    {
+      "floor": "솔빛섬 1F",
+      "use": "무드서울 · 와인 다이닝",
+      "tenants": [
+        "무드서울"
+      ],
+      "layout": "서울시 2024 기사는 솔빛섬의 와인 공간 무드서울 및 2층 라이브를 확인. 1층 와인 다이닝은 감사 likely 항목에 따라 재구성. 기존 예술 패널·조형물은 장식으로 보존하고 안내대·와인병·잔·테이블 추가.",
+      "source": "https://mediahub.seoul.go.kr/archives/2010487",
+      "confidence": "likely",
+      "guess": false,
+      "layout_guess": true
+    },
+    {
+      "floor": "솔빛섬 2F",
+      "use": "무드서울 · 라이브 공연",
+      "tenants": [
+        "무드서울"
+      ],
+      "layout": "서울시 2024 기사에 2층에서 매주 라이브 공연 기록. 기존 y=6m 층과 라운지를 유지하고 수상레포츠 안내·구명조끼 진열 대신 와인바·병 선반·소형 무대를 배치. 공연 일정의 현재 지속 여부, 무대·악기·가구 위치는 미확인.",
+      "source": "https://mediahub.seoul.go.kr/archives/2010487",
+      "confidence": "likely",
+      "guess": false,
+      "layout_guess": true
+    },
+    {
+      "floor": "예빛섬",
+      "use": "미디어아트갤러리·수상무대",
+      "tenants": [],
+      "layout": "대형 LED 스크린과 야외 수상무대 (층수 미확인, 1층 규모 추정)",
+      "source": "https://www.telltrip.com/domestic-travel/sebitseom-han-river-floating-islands/",
+      "guess": true
+    }
+  ],
+  "elements": [
+    {
+      "name": "달빛무지개분수",
+      "what": "반포대교 양측 교량분수",
+      "where": "반포대교 상류·하류 난간 아래, 각 570m",
+      "details": "총길이 1,140m, 노즐 380개, 분당 190톤 양수, 수면 방향 최대 약 20m 방수, 2008 기네스 최장 교량분수. 4~10월 운영(2025 기사는 연중 표기), 회당 20분, 하루 3~7회 가동, 야간 무지개색 LED",
+      "source": "https://mediahub.seoul.go.kr/archives/2002598",
+      "guess": false
+    },
+    {
+      "name": "반포대교",
+      "what": "2층 중 상층",
+      "where": "잠수교 바로 위",
+      "details": "길이 약 1,490m·폭 약 25m (출처에 따라 다름), 1982 준공",
+      "source": "https://mediahub.seoul.go.kr/archives/2014254",
+      "guess": false
+    },
+    {
+      "name": "잠수교",
+      "what": "하층 낮은 다리, 홍수 시 침수",
+      "where": "반포대교 아래, 수면과 가장 가까움",
+      "details": "길이 765~795m, 폭 약 18m, 1976 개통. 2008년 4차로 중 2차로를 보행·자전거로 전환. 2026-10-26부터 차량 전면 통제로 보행전용화 공사(2027 하반기 완료 예정). 수면 위 높이는 미확인(2~3m 추정)",
+      "source": "https://www.heraldk.com/article/2026100906243422978",
+      "guess": false
+    },
+    {
+      "name": "교각",
+      "what": "반포대교 상층 지지 교각",
+      "where": "잠수교 위 일정 간격",
+      "details": "개수·간격 미확인. 교각 사이 천정 웨이브 타공판 단장 계획 보도",
+      "source": "https://www.gqkorea.co.kr/?p=241442",
+      "guess": true
+    },
+    {
+      "name": "세빛섬 나들목",
+      "what": "올림픽대로 아래 보행 통로",
+      "where": "반포대교 서쪽, 서초구 반포동 115-11. 반포2동주민센터 앞 골목 끝. 기존 모델의 동쪽 반포나들목과 별개.",
+      "details": "2025-04-04 개통한 한강 62번째 나들목. 폭 8m·통로 높이 3m·연장 85m, 도시 쪽 계단·엘리베이터와 공원 쪽 이중 육갑문 확인. 통로 높이는 지하 깊이가 아니다. 정확한 양쪽 입구 좌표·단면을 확인하지 못해 이번 모델에는 신규 통로를 배치하지 않았다. 감사의 원형 전망쉼터는 암사초록길 설명을 잘못 옮긴 것으로 제외.",
+      "source": "https://mediahub.seoul.go.kr/archives/2014026",
+      "guess": false,
+      "sources": [
+        "https://mediahub.seoul.go.kr/archives/2014026",
+        "https://mediahub.seoul.go.kr/archives/2014042",
+        "https://www.newsis.com/view/NISX20250403_0003125928"
+      ],
+      "modeled": false,
+      "dimensions_m": {
+        "width": 8,
+        "clear_height": 3,
+        "length": 85
+      },
+      "position_guess": true
+    },
+    {
+      "name": "달빛광장·수변무대",
+      "what": "분수 관람 광장",
+      "where": "반포대교 남단 한강 쪽",
+      "details": "분수 관람 중심 잔디·계단형 광장",
+      "source": "https://hangang.seoul.go.kr/archives/46727",
+      "guess": false
+    },
+    {
+      "name": "세빛섬 편의점·카페·수상계류장",
+      "what": "세빛섬 쪽 편의시설",
+      "where": "세빛섬",
+      "details": "편의점, 선상레스토랑, 베이커리카페, 웨딩&컨벤션, 자전거 복합문화공간, 요트·카약 계류장",
+      "source": "https://hangang.seoul.go.kr/archives/46727",
+      "guess": false
+    },
+    {
+      "name": "공원 편의시설",
+      "what": "화장실·음수대·매점·카페·순환관람차(해치카)·따릉이 대여·물방울놀이터·체육시설",
+      "where": "반포한강공원 전역",
+      "details": "7.2km 자전거도로·산책로 분리, 여의도·잠원 방면 연결",
+      "source": "https://hangang.seoul.go.kr/archives/46727",
+      "guess": false
+    },
+    {
+      "name": "한강달빛야시장(밤도깨비)",
+      "what": "푸드트럭 39팀·공예 60팀(2022)",
+      "where": "반포한강공원 달빛광장 일대",
+      "details": "2025 개최 여부 미확인, 봄~가을 시즌",
+      "source": "https://mediahub.seoul.go.kr/archives/2005481",
+      "guess": false
+    },
+    {
+      "name": "서래섬·텐트존·무지개놀이터·수상택시",
+      "what": "기타 시설",
+      "where": "공원 서쪽(서래섬), 나머지 위치 미확인",
+      "details": "출처 없음",
+      "source": "",
+      "guess": true
+    },
+    {
+      "name": "CU 반포한강공원 모델",
+      "what": "편의점 1층·휴게공간 2층",
+      "where": "OSM building 320797969 외곽 사용",
+      "details": "OSM 건물 외곽은 자료 기반이나 이 건물이 CU라는 상호 대응 및 2층 휴게공간·계단·승강기 배치는 2025+ 근거로 확인하지 못한 추정이다. unverified 감사 항목이므로 구조·간판·내부 모두 유지.",
+      "source": "https://hangang.seoul.go.kr/archives/46727",
+      "confidence": "unverified",
+      "guess": true
+    }
+  ],
+  "connections": [
+    "고속터미널역 8-1번 출구 → 반포2동주민센터 앞 골목 → 서쪽 세빛섬나들목 → 반포한강공원 → 세빛섬 도교. 신반포역 2번 출구의 첫 골목에서도 같은 새 나들목에 접근한다. 이 새 통로는 정확한 입출구 위치 미확인으로 미구현; 기존 동쪽 반포나들목과 혼동하지 않는다.",
+    "잠수교 남단~올림픽대로 연결로 존재(보행 가능 여부 미확인)",
+    "섬 사이는 도교(연결 보도)로 연결. 기존 OSM 외곽 및 지상 보행 동선 유지; 도교의 고정식/부유식 구조는 미확인.",
+    "OSM 1563032434: 달빛광장 쪽 (-632.25,-712.99)와 동측 (-587.76,-721.05)를 잇는 지상 보행로, 교각 사이 횡단 유지",
+    "OSM 305677075: 폭 5m 수변 보행로 (-670.45,-786.08) -> (-647.53,-784.24) -> (-637.46,-786.19) -> (-589.48,-798.22), 다리 동서측 및 세빛섬 접근로 연결",
+    "기존 동쪽 반포나들목: OSM 560449165 축 (-213.15,-657.14) → (-282.96,-767.44), 모델의 공원측 경사로는 (-297.9343,-791.0995)까지 연장. 이름과 기존 지하 구조는 유지; 새 나들목의 8×3×85m 수치를 이곳에 적용하지 않는다."
+  ],
+  "modeling": {
+    "round": 10,
+    "guesses": [
+      "평탄한 공원 지면 y=0에서 보행자 머리 높이와 잠수교 하부가 겹치지 않도록 남단 강변 구간의 잠수교 상면을 y=3.6m로 조정했다. (-614,-710)부터 교축 방향 120m 구간이며 하부 여유 높이는 3.35m, 등기구 아래는 약 3.19m이다. 실측 고도·단면 자료는 확보하지 못했다.",
+      "강 쪽 (-694.02,-920.79)에서 기존 y=1.6m 하층 교면으로 완만하게 낮아진다. 기존 잠수교 스폰과 수상 구간, 상층 반포대교 y=15m는 유지했다.",
+      "잠수교 남단 공원 동·서 양측에 교축으로부터 15m 떨어진 폭 3.4m, 길이 44m 경사로(약 1:12.4)와 길이 12m 계단을 배치했다. 기준점 (-614,-710)에서 교축 방향 10m~54m가 경사로, 66m~54m가 계단이며 54m 지점에서 난간 개구부로 교면에 접속한다. 서울시 자료는 평지처럼 접근 가능한 자전거 연결만 확인하므로 정확한 위치·형식·치수는 추정이다.",
+      "교각은 기존 지름 2.2m·약 34m 간격의 충돌체를 유지했다. OSM 두 횡단 보행로에는 5m 폭 포장과 천장 등기구를 추가했다. 조명 배치와 포장 색상은 재구성이다.",
+      "기존 동쪽 반포나들목의 폭 5.6m·바닥 y=-4.2m·22m 양측 경사로·마감·물결 벽화·등기구는 기존 재구성이다. 새 서쪽 세빛섬나들목의 폭 8m·통로 높이 3m·연장 85m 근거와 무관하다. 3m 높이만으로 기존 바닥 고도가 과도하다고 단정할 수 없다.",
+      "CU 상호와 OSM building 320797969의 대응, 2층 휴게공간 및 내부 배치는 unverified로 유지한다. 건물 외곽 좌표 자체와 상호 위치의 근거 수준을 구분한다.",
+      "채빛 1층 비어가든 용도는 2024 기사 기반 likely이며 서비스대 (-779,0,-813), 한강 쪽 테라스 좌석 (-762,0,-833), (-762,0,-841), (-773,0,-847), 맥주 탭·잔 및 보존한 공연 무대의 정확한 배치는 추정이다.",
+      "채빛 3층 연회실의 실제 용도·운영자는 unverified다. 기존 방·테이블·장식을 보존하고 채빛퀴진 표기만 제거했다. 층 바닥 y=0/7/14m는 실측이 아니다.",
+      "무드서울의 와인 공간과 2층 라이브는 2024 기사 기록이다. 1층 테이블 (-889.5,0,-828), (-882,0,-835.5), 안내대 (-880,0,-832), 2층 와인바 (-887,6,-835), 무대 (-885.7,6,-822.8), 키보드·마이크·스피커 및 기존 예술 패널·조형물은 현장 사진으로 확인되지 않은 배치다. 층 바닥 y=0/6m 유지도 추정이다.",
+      "가빛섬 튜브스터의 1층은 확인되나 접수대 좌표 (-859,0,-744), 카페·편의점 구획, GS25 상호의 해당 구획 대응, 옥상 y=23m 및 층고는 추정이다. 이번 감사는 기존 세부를 반증하지 않아 보존했다.",
+      "섬 입구 문·캐노피·난간 치수와 도교의 세부 구조는 unverified다. OSM 위치와 연결 보도 표현은 유지하며 부유식 연결교라고 확정하지 않는다.",
+      "잠수교 round 10 재구현의 계획 베이·투명 바닥·교각 형상 추정과 최신 공사 표현은 modeling.jamsugyo_wave_round10에 별도로 기록했다. 남단 램프는 참 중첩 수정 후 길이 42.3m, 계단은 10.3m이며 기존 메모의 44m/12m를 대체한다."
+    ],
+    "evidence_audit": {
+      "file": ".codex-jobs/evidence/audit_hangang.json",
+      "reviewed": "2026-11-06",
+      "historical_basis": "주요 층별 용도 근거는 2024-03-14 기사이며 2026 현재 영업/공연 편성 확정이 아님.",
+      "items": [
+        {
+          "element": "세빛섬나들목",
+          "audit_confidence": "confirmed",
+          "decision": "잘못된 시설 대응 정정; 기존 반포나들목 유지",
+          "applied": "연구 파일에서 새 서쪽 나들목의 정식명·8×3×85m 치수·계단·승강기·이중 육갑문·두 역 접근 경로를 별도 기록. 코드에 두 시설 혼동 금지 근거 주석 추가.",
+          "skipped": "동쪽 반포나들목 개명·치수 변경·입구 표지 전환은 원문이 별개 시설이라고 명시하므로 미적용. 원형 녹지 전망쉼터는 암사초록길이라 미추가. 새 통로는 정확한 양단 좌표 미확인으로 임의 배치하지 않음.",
+          "positions_xz": [
+            [
+              -213.15,
+              -657.14
+            ],
+            [
+              -297.9343,
+              -791.0995
+            ]
+          ],
+          "sources": [
+            "https://mediahub.seoul.go.kr/archives/2014026",
+            "https://mediahub.seoul.go.kr/archives/2014042",
+            "https://www.newsis.com/view/NISX20250403_0003125928"
+          ],
+          "photo_check": "저장 3장 직접 열람. 1번은 접근 보도, 2번은 갈색 세로 루버와 하강 입구, 3번은 잔디 피크닉장·서래나루. 원형 쉼터를 뒷받침하지 않는다."
+        },
+        {
+          "element": "세빛섬 입구",
+          "audit_confidence": "likely",
+          "decision": "keep 적용",
+          "applied": "반포대교 남단의 OSM 섬 위치·공원→도교→출입문 동선과 기존 디테일 유지. 코드·연구에서 부교 확정 표현을 도교로 정정.",
+          "positions_xz": [
+            [
+              -827.2,
+              -669.51
+            ],
+            [
+              -856.73,
+              -725.96
+            ]
+          ],
+          "sources": [
+            "https://mediahub.seoul.go.kr/archives/2010487"
+          ],
+          "guess": "문 형상·연결교 구조는 미확인"
+        },
+        {
+          "element": "섬별 층 용도",
+          "audit_confidence": "likely",
+          "decision": "적용",
+          "applied": [
+            "채빛 1층 비어가든 및 데크 맥주 좌석, 2층 채빛퀴진 유지, 3층 상호 제거·연회실 디테일 보존",
+            "솔빛 무드서울 안내·와인 테이블·바·병 선반, 2층 라이브 무대; 예술 패널·조형물·라운지 보존",
+            "가빛 1층 튜브스터 접수 명시, 카페·편의점 유지, 옥상 간판에 4층 명시"
+          ],
+          "sources": [
+            "https://mediahub.seoul.go.kr/archives/2010487"
+          ]
+        },
+        {
+          "element": "잠수교 남단 진입 경사로·계단",
+          "audit_confidence": "unverified",
+          "decision": "유지",
+          "guess": true,
+          "reason": "위치·치수·y=3.6m 남단 단면의 근거 미확인. 기존 모델은 이미 차량 없이 보행·자전거 통행을 표현하므로 추가 공사장·푸드트럭 연출 없이 유지.",
+          "positions_xz": [
+            [
+              -614,
+              -710
+            ],
+            [
+              -694.02,
+              -920.79
+            ]
+          ],
+          "round10_followup": "이전 감사의 유지 결정 이후 사용자의 잠수교 재구현 요청을 반영했다. 위치와 높이는 유지하고 참 중첩을 수정했으며, 공사 펜스와 계획 전망 베이를 추가했다. 새 근거는 jamsugyo_wave_round10을 참조한다."
+        },
+        {
+          "element": "잠수교 남단 교통 접근",
+          "audit_confidence": "likely",
+          "decision": "keep 적용",
+          "applied": "기존 공원·교량 접근 유지. 정류장 이름 반포대교 남단·한강시민공원 입구는 연구에 기록.",
+          "skipped": "정확한 정차 위치·현행 노선이 확정되지 않아 선택 사항인 새 정류장 간판과 405·740·셔틀 표시는 추가하지 않음.",
+          "sources": [
+            "https://mediahub.seoul.go.kr/archives/2010487"
+          ]
+        },
+        {
+          "element": "CU 반포한강공원",
+          "audit_confidence": "unverified",
+          "decision": "유지",
+          "guess": true,
+          "reason": "CU의 정확한 위치·건물 대응 미확인. 기존 2층 건물·편의점·휴게공간을 보존하고 추정을 명시."
+        }
+      ],
+      "source_cautions": [
+        "2014026의 원형 전망쉼터 단락은 암사초록길이다.",
+        "2010487의 가빛 1층 직접 언급은 튜브스터이며 뒤 시설 목록 전체를 1층으로 읽지 않는다.",
+        "Smarttoday 29643은 2023년 옥상 개방 기사이며 솔빛 용도나 2026년 경영 상황 근거가 아니다."
+      ]
+    },
+    "trace": [
+      {
+        "spot": "채빛 1층 비어가든 서비스대",
+        "x": -782,
+        "y": 0,
+        "z": -809,
+        "yawDeg": 323,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "sources": [
+          "https://mediahub.seoul.go.kr/archives/2010487"
+        ],
+        "photos": [],
+        "coordinate_status": "모델 검수 카메라. y는 해당 바닥 높이이며 사진 GPS가 아니다.",
+        "note": "맥주 탭·잔, 비어가든 표지와 2층 채빛퀴진 안내"
+      },
+      {
+        "spot": "채빛 1층 한강 테라스",
+        "x": -760,
+        "y": 0,
+        "z": -824,
+        "yawDeg": 15,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "sources": [
+          "https://mediahub.seoul.go.kr/archives/2010487"
+        ],
+        "photos": [],
+        "coordinate_status": "모델 검수 카메라. y는 해당 바닥 높이이며 사진 GPS가 아니다.",
+        "note": "한강 쪽 데크의 비어가든 테이블·맥주잔"
+      },
+      {
+        "spot": "채빛 2층 채빛퀴진",
+        "x": -775,
+        "y": 7,
+        "z": -816,
+        "yawDeg": 0,
+        "pitchDeg": 0,
+        "eyeY": 8.62,
+        "sources": [
+          "https://mediahub.seoul.go.kr/archives/2010487"
+        ],
+        "photos": [],
+        "coordinate_status": "모델 검수 카메라. y는 해당 바닥 높이이며 사진 GPS가 아니다.",
+        "note": "유지한 뷔페와 2층 전용 상호"
+      },
+      {
+        "spot": "채빛 3층 연회실",
+        "x": -780,
+        "y": 14,
+        "z": -812,
+        "yawDeg": 342,
+        "pitchDeg": 0,
+        "eyeY": 15.62,
+        "sources": [
+          "https://mediahub.seoul.go.kr/archives/2010487"
+        ],
+        "photos": [],
+        "coordinate_status": "모델 검수 카메라. y는 해당 바닥 높이이며 사진 GPS가 아니다.",
+        "note": "채빛퀴진 상호 제거, 기존 연회실 디테일 보존"
+      },
+      {
+        "spot": "솔빛 1층 무드서울",
+        "x": -883,
+        "y": 0,
+        "z": -828,
+        "yawDeg": 90,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "sources": [
+          "https://mediahub.seoul.go.kr/archives/2010487"
+        ],
+        "photos": [],
+        "coordinate_status": "모델 검수 카메라. y는 해당 바닥 높이이며 사진 GPS가 아니다.",
+        "note": "와인 다이닝, 기존 예술 패널·조형물 보존"
+      },
+      {
+        "spot": "솔빛 1층 무드서울 안내",
+        "x": -879,
+        "y": 0,
+        "z": -829,
+        "yawDeg": 18,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "sources": [
+          "https://mediahub.seoul.go.kr/archives/2010487"
+        ],
+        "photos": [],
+        "coordinate_status": "모델 검수 카메라. y는 해당 바닥 높이이며 사진 GPS가 아니다.",
+        "note": "안내대·와인병·무드서울 간판"
+      },
+      {
+        "spot": "솔빛 2층 라이브 무대",
+        "x": -886,
+        "y": 6,
+        "z": -829.5,
+        "yawDeg": 183,
+        "pitchDeg": 0,
+        "eyeY": 7.62,
+        "sources": [
+          "https://mediahub.seoul.go.kr/archives/2010487"
+        ],
+        "photos": [],
+        "coordinate_status": "모델 검수 카메라. y는 해당 바닥 높이이며 사진 GPS가 아니다.",
+        "note": "무대·키보드·마이크·스피커와 라운지"
+      },
+      {
+        "spot": "솔빛 2층 와인바",
+        "x": -886,
+        "y": 6,
+        "z": -831.5,
+        "yawDeg": 16,
+        "pitchDeg": 0,
+        "eyeY": 7.62,
+        "sources": [
+          "https://mediahub.seoul.go.kr/archives/2010487"
+        ],
+        "photos": [],
+        "coordinate_status": "모델 검수 카메라. y는 해당 바닥 높이이며 사진 GPS가 아니다.",
+        "note": "기존 수상레포츠 안내 대신 와인바·병 선반"
+      },
+      {
+        "spot": "가빛 1층 튜브스터 접수",
+        "x": -854,
+        "y": 0,
+        "z": -744,
+        "yawDeg": 90,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "sources": [
+          "https://mediahub.seoul.go.kr/archives/2010487"
+        ],
+        "photos": [],
+        "coordinate_status": "모델 검수 카메라. y는 해당 바닥 높이이며 사진 GPS가 아니다.",
+        "note": "기존 접수대에 튜브스터 접수 명시"
+      },
+      {
+        "spot": "가빛 4층 세빛마루",
+        "x": -881,
+        "y": 23,
+        "z": -731,
+        "yawDeg": 143,
+        "pitchDeg": 0,
+        "eyeY": 24.62,
+        "sources": [
+          "https://mediahub.seoul.go.kr/archives/2010487"
+        ],
+        "photos": [],
+        "coordinate_status": "모델 검수 카메라. y는 해당 바닥 높이이며 사진 GPS가 아니다.",
+        "note": "옥상 간판의 4층 표기"
+      },
+      {
+        "spot": "반포나들목 공원 입구 · 개명 미적용 확인",
+        "x": -297.9343,
+        "y": 0,
+        "z": -791.0995,
+        "yawDeg": 212,
+        "pitchDeg": 0,
+        "eyeY": 1.62,
+        "sources": [
+          "https://mediahub.seoul.go.kr/archives/2014026"
+        ],
+        "photos": [],
+        "coordinate_status": "기존 동쪽 통로 검수 카메라. 서쪽 세빛섬나들목 사진의 촬영위치가 아니다.",
+        "note": "감사 사진을 이 동쪽 통로에 대응시키지 않는다."
+      },
+      {
+        "spot": "잠수교 · 반복 문형교각과 저층 보행축",
+        "x": -707.5427,
+        "y": 1.6,
+        "z": -955.8996,
+        "yawDeg": 21.06,
+        "pitchDeg": 0,
+        "eyeY": 3.22,
+        "sources": [
+          "https://mediahub.seoul.go.kr/archives/2019683"
+        ],
+        "photos": [
+          "refs/interior/jamsugyo_wave/jamsugyo_01_closure_notice.jpg"
+        ],
+        "coordinate_status": "모델 검수 카메라. y는 발이 닿는 바닥 높이(m), 사진 GPS 아님.",
+        "note": "양측 교각을 보행 폭 바깥 ±10.15m로 옮기고 사각 기둥·횡보·헌치를 복원했다. 수면은 -1.4m, 이 지점 바닥은 1.6m다. 치수와 34m 간격은 추정이다.",
+        "round10_jamsugyo": true
+      },
+      {
+        "spot": "잠수교 · 분수 가까이 보는 물결 난간",
+        "x": -712.4703,
+        "y": 1.6,
+        "z": -991.508,
+        "yawDeg": 21.06,
+        "pitchDeg": 10,
+        "eyeY": 3.22,
+        "sources": [
+          "https://mediahub.seoul.go.kr/archives/2019683"
+        ],
+        "photos": [
+          "refs/interior/jamsugyo_wave/banpo_fountain.jpg",
+          "refs/interior/jamsugyo_wave/banpo_jamsugyo_photospot.jpg"
+        ],
+        "coordinate_status": "모델 검수 카메라. y는 발이 닿는 바닥 높이(m), 사진 GPS 아님.",
+        "note": "양쪽 상층 가장자리의 노즐 380개와 570m씩 이어지는 물줄기, 낮은 물결형 세로 난간을 본다. 분수 물줄기와 야간 색은 사진 분위기를 따른 재구성이다.",
+        "round10_jamsugyo": true
+      },
+      {
+        "spot": "잠수교 · 주황색 전망쉼터 계획",
+        "x": -697.4921,
+        "y": 1.6,
+        "z": -957.6274,
+        "yawDeg": 8.97,
+        "pitchDeg": -8,
+        "eyeY": 3.22,
+        "sources": [
+          "https://mediahub.seoul.go.kr/archives/2019683"
+        ],
+        "photos": [
+          "refs/interior/jamsugyo_wave/jamsugyo_03_viewing_spots.jpg"
+        ],
+        "coordinate_status": "모델 검수 카메라. y는 발이 닿는 바닥 높이(m), 사진 GPS 아님.",
+        "note": "주황색 확장 바닥과 푸른 빈백을 본다. 2026년 공사 중 상태와 완성안을 혼동하지 않도록 계획 안내판과 일부 폐쇄 구간을 함께 둔 재구성이다.",
+        "round10_jamsugyo": true
+      },
+      {
+        "spot": "잠수교 · 첫 번째 투명 바닥",
+        "x": -804.6466,
+        "y": 5.3,
+        "z": -1208.1412,
+        "yawDeg": 20.94,
+        "pitchDeg": -22,
+        "eyeY": 6.92,
+        "sources": [
+          "https://mediahub.seoul.go.kr/archives/2019683"
+        ],
+        "photos": [
+          "refs/interior/jamsugyo_wave/jamsugyo_04_transparent_deck.jpg"
+        ],
+        "coordinate_status": "모델 검수 카메라. y는 발이 닿는 바닥 높이(m), 사진 GPS 아님.",
+        "note": "항로 융기 구간의 첫 번째 14×18m 투명 패치. 불투명 교면과 자전거 도색을 실제로 빼서 바닥 아래 수면이 보인다. 패치 위치와 치수는 추정이다.",
+        "round10_jamsugyo": true
+      },
+      {
+        "spot": "잠수교 · 두 번째 투명 바닥",
+        "x": -818.2291,
+        "y": 5.3,
+        "z": -1243.6309,
+        "yawDeg": 20.94,
+        "pitchDeg": -22,
+        "eyeY": 6.92,
+        "sources": [
+          "https://mediahub.seoul.go.kr/archives/2019683"
+        ],
+        "photos": [
+          "refs/interior/jamsugyo_wave/jamsugyo_04_transparent_deck.jpg"
+        ],
+        "coordinate_status": "모델 검수 카메라. y는 발이 닿는 바닥 높이(m), 사진 GPS 아님.",
+        "note": "두 번째 투명 패치. 2027년 계획의 두 곳을 모델에 미리 표현하되 전체 조성 계획 표지로 구분한다. 정확한 항로 배치와 강선 통행은 구현하지 않았다.",
+        "round10_jamsugyo": true
+      },
+      {
+        "spot": "잠수교 · 차량 통제와 임시 공사 펜스",
+        "x": -681.7851,
+        "y": 2.4036,
+        "z": -880.1077,
+        "yawDeg": 35.5,
+        "pitchDeg": 0,
+        "eyeY": 4.0236,
+        "sources": [
+          "https://mediahub.seoul.go.kr/archives/2019683"
+        ],
+        "photos": [
+          "refs/interior/jamsugyo_wave/jamsugyo_07_detour_map.jpg"
+        ],
+        "coordinate_status": "모델 검수 카메라. y는 발이 닿는 바닥 높이(m), 사진 GPS 아님.",
+        "note": "2026.10.26 차량 통제 안내와 측면 임시 공사 펜스. 중앙 보행축은 끝까지 유지한다. 작업차 자체는 새로 추가하지 않았다.",
+        "round10_jamsugyo": true
+      },
+      {
+        "spot": "반포 남단 · 강변길 교각 하부 동서 연결",
+        "x": -642,
+        "y": 0.085,
+        "z": -785.3,
+        "yawDeg": 283.82,
+        "pitchDeg": 0,
+        "eyeY": 1.705,
+        "sources": [
+          "https://mediahub.seoul.go.kr/archives/2019683"
+        ],
+        "photos": [
+          "refs/interior/jamsugyo_wave/jamsugyo_01_closure_notice.jpg"
+        ],
+        "coordinate_status": "모델 검수 카메라. y는 발이 닿는 바닥 높이(m), 사진 GPS 아님.",
+        "note": "실제 OSM 305677075의 남쪽 강변길이며 북단 지하보차도와 구별한다. 높이 3.6m인 남단 교면 아래로 세빛섬에서 잠원 방향으로 통과한다.",
+        "round10_jamsugyo": true
+      },
+      {
+        "spot": "잠수교 · 동측 경사로와 개방된 참",
+        "x": -602.8157,
+        "y": 0.09,
+        "z": -722.8028,
+        "yawDeg": 20.79,
+        "pitchDeg": 0,
+        "eyeY": 1.71,
+        "sources": [
+          "https://mediahub.seoul.go.kr/archives/2019683"
+        ],
+        "photos": [
+          "refs/interior/jamsugyo_wave/jamsugyo_01_closure_notice.jpg"
+        ],
+        "coordinate_status": "모델 검수 카메라. y는 발이 닿는 바닥 높이(m), 사진 GPS 아님.",
+        "note": "기존 남단 접근 위치를 유지했다. 42.3m 경사로와 10.3m 계단이 폭 3.4m인 참의 양끝에서 만나도록 수정해 중첩 단차를 제거했다. 위치와 경사도는 추정이다.",
+        "round10_jamsugyo": true
+      }
+    ],
+    "screenshot_status": "사용자 지시대로 tests/shot.mjs는 실행하지 않았다. 기존 감사 11개와 잠수교 사진·계획 8개를 포함한 modeling.trace로 operator가 검수할 수 있다.",
+    "verification": {
+      "smoke": {
+        "command": "node tests/smoke.mjs hangang jamwon_hangang streets",
+        "result": "OK",
+        "hangang_quads": 68930
+      },
+      "walk_scoped": {
+        "command": "node tests/walk.mjs hangang jamwon_hangang streets",
+        "result": "61 ok, 0 blocked"
+      },
+      "walk_all": {
+        "command": "node tests/walk.mjs",
+        "result": "외부 모듈 빌드 오류로 중단 (2회 동일)",
+        "error": "ReferenceError: foodTextures is not defined",
+        "file": "js/places/newcore.js:88",
+        "scope_note": "newcore.js는 다른 작업의 수정 상태이며 본 작업에서는 변경하지 않음. 전체 0 blocked는 확인하지 못함."
+      },
+      "trace_cameras": "11개 모두 실제 kit/physics의 바닥 지지 및 캡슐 충돌 검사 통과. 반포나들목 유지 확인 카메라의 시각 포장 상면은 y=0.018m, 기준 지면 y=0m.",
+      "circulation": "무드서울 1층 입구→승강기, 2층 승강기→무대/와인바, 채빛 입구→테라스 BFS 통과. 테라스 가구 반경 1.6m가 기존 OSM 섬 데크 안에 위치.",
+      "metadata": "tools/gen_meta.mjs를 hangang 대상으로 실행하고 writeFileSync 결과를 메모리에서 비교. claims/구역 경계/층고/층명은 유지되어 기존 _meta.json의 hangang 항목과 동일. 두 파일 수정 제한 때문에 메타 파일은 쓰지 않음.",
+      "diff": "git diff --check -- js/places/hangang.js data/research/hangang.json 통과",
+      "screenshots": "사용자 지시로 tests/shot.mjs 미실행; 모델의 렌더링 결과는 미확인. trace에 바닥 높이 기준 검수 카메라 기록.",
+      "previous_validation_note": "이 항목의 기존 검증값은 이전 작업 기록을 보존한다. 최종 두 모듈 합동 및 전체 세계 검증 결과는 modeling.round10_validation을 참조할 것."
+    },
+    "jamsugyo_wave_round10": {
+      "evidence_file": ".codex-jobs/evidence/research_jamsugyo_wave.json",
+      "as_of": "2026-11-07",
+      "official_status": "2026-10-26부터 차량은 전면 통제되고 보행·자전거 통행은 유지된다. 보행전용교 개장은 2027년 하반기 예정이다. 완성 조감도의 전망쉼터 22곳과 투명 바닥 2곳은 계획 시각화로 반영하며, 공사 안내와 일부 폐쇄 펜스를 함께 둔다.",
+      "alignment": {
+        "source_osm_road": 596516315,
+        "south": [
+          -590.01,
+          0,
+          -647.54
+        ],
+        "north": [
+          -931.69,
+          0,
+          -1540.58
+        ],
+        "coordinate_order": "[x,y,z]",
+        "modeled_centerline_length_m": 956.187,
+        "lower_centerline": [
+          [
+            -590.01,
+            0,
+            -647.54
+          ],
+          [
+            -614,
+            3.6,
+            -710
+          ],
+          [
+            -656.5888302194293,
+            3.6,
+            -822.1881969751748
+          ],
+          [
+            -694.02,
+            1.6,
+            -920.79
+          ],
+          [
+            -762.57,
+            1.6,
+            -1098.77
+          ],
+          [
+            -800,
+            5.3,
+            -1196
+          ],
+          [
+            -831,
+            5.3,
+            -1277
+          ],
+          [
+            -866,
+            1.6,
+            -1367
+          ],
+          [
+            -912.02,
+            1.6,
+            -1486.06
+          ],
+          [
+            -931.69,
+            0,
+            -1540.58
+          ]
+        ],
+        "river_y": -1.4,
+        "upper_deck_y": 15,
+        "typical_lower_y": 1.6,
+        "south_crossing_y": 3.6,
+        "navigation_hump_y": 5.3,
+        "heights_guess": true
+      },
+      "built": [
+        "실제 하층 교축 양옆 ±10.15m에 원형 수면 기초와 사각 문형교각을 배치했다. 34m 간격의 사각 횡보·헌치·상층 거더 보강재로 기존 차로 내부 ±5.6m의 원형 기둥을 대체했다.",
+        "폭 18m의 중앙 하층 교면을 유지하고 주황색 전망 베이 11개씩, 총 22개를 양쪽 ±12.4m까지 확장했다. 일부는 공사 펜스로 폐쇄했고, 나머지에는 계획 이미지의 주황 바닥과 푸른 빈백을 배치했다.",
+        "항로 융기 구간에 14×18m 투명 바닥 2개를 배치했다. 해당 범위의 불투명 ramp와 자전거 도색을 제거하고 얇은 금속 그리드와 투명 하부를 만들었다.",
+        "회색 보행면, 붉은 자전거 띠, 유도선, 반사 볼라드와 중앙 590m 구간의 물결형 세로 난간을 추가했다.",
+        "2026.10.26 차량 통제 표지와 국소 공사 펜스, 2027년 전망쉼터·투명 바닥 조성 계획 안내를 추가했다. 공중 보행 데크는 추가하지 않았다.",
+        "양쪽 380개 달빛무지개분수 노즐과 동적 물줄기, 상층 차량과 세빛섬·달빛광장 및 기존 실내 세부를 보존했다.",
+        "남단 양측 경사로·계단이 참 가장자리에서 접속하게 고쳐, 참 슬래브 아래로 경사면이 파고들던 중첩을 제거했다."
+      ],
+      "removed_or_replaced": [
+        "보행·자전거 차로 안쪽 ±5.6m의 일률적인 원통 기둥을 외곽 사각 문형교각으로 대체",
+        "투명 패치 아래의 불투명 교면과 붉은 도색 제거",
+        "전망 베이 입구의 기존 외곽 난간을 해당 범위에서만 제거",
+        "남단 접근 경사면과 참의 중첩 제거"
+      ],
+      "preserved": [
+        "세빛섬의 OSM 위치와 모든 기존 입점 공간·실내",
+        "달빛광장과 서래섬",
+        "상층 반포대교와 양쪽 분수",
+        "남쪽 강변 교각 하부 횡단 2개와 교면 높이 3.6m"
+      ],
+      "guesses": [
+        "상하층의 정확한 표고·폭·기둥 간격·시공 세부는 실측 단면이 아니다. 기존 높이를 유지하면서 사진의 형상을 반영했다.",
+        "22개 베이의 균등 간격 48m, 폭 3.6m, 길이 16m와 빈백·펜스 위치는 계획 이미지 기반 추정이다.",
+        "투명 패치 두 곳은 현재 모델의 단일 항로 융기 구간에 배치했다. 실제 두 항로의 정확한 위치는 확인되지 않았다.",
+        "2026년 공사 중 상태와 2027년 완공안을 명시적으로 함께 보여 주는 미리보기 모델이다. 현재 시설이 완공되었다는 주장이 아니다.",
+        "북단 지하보차도 사진은 용산측 별도 시설이다. 반포→잠원 산책에 이용하지 않으며 지도 내 잠수교 북쪽 끝까지만 하층 교면을 연결했다."
+      ],
+      "riverside_seam": [
+        {
+          "id": "banpo-promenade",
+          "osm_road": 305677075,
+          "point": [
+            -26.4955,
+            0.065,
+            -1135.7848
+          ]
+        },
+        {
+          "id": "banpo-cycle-east",
+          "osm_road": 919393789,
+          "point": [
+            2.8896,
+            0.065,
+            -1119.9681
+          ]
+        },
+        {
+          "id": "banpo-cycle-west",
+          "osm_road": 919393790,
+          "point": [
+            -0.6597,
+            0.065,
+            -1121.8785
+          ]
+        }
+      ],
+      "seam_ownership": "세 way 전체는 jamwon_hangang이 렌더링하고 claim한다. 두 공원 area는 접점 구역을 통해 두 모듈을 함께 로드하므로 hangang이 중복 교면을 추가하지 않는다.",
+      "route_direction_correction": "반포와 잠원은 모두 한강 남안에 있다. 세빛섬→남단 교각 하부→동쪽 잠원으로 이동하며 북단 지하보차도를 향해 강을 건너지 않는다.",
+      "walk_waypoints": [
+        [
+          -704.46,
+          0.065,
+          -793.14
+        ],
+        [
+          -647.53,
+          0.085,
+          -784.24
+        ],
+        [
+          -637.46,
+          0.085,
+          -786.19
+        ],
+        [
+          -589.48,
+          0.085,
+          -798.22
+        ],
+        [
+          -26.4955,
+          0.065,
+          -1135.7848
+        ],
+        [
+          190.22,
+          0.065,
+          -1424.12
+        ],
+        [
+          234.12,
+          0.12,
+          -1476.21
+        ],
+        [
+          188.22,
+          0.12,
+          -1515.03
+        ]
+      ],
+      "waypoint_note": "좌표는 [x,y,z]이다. 길가 점은 중간 OSM way 305677075 형상을 따라 연결한다. 마지막 두 점은 기존 서울웨이브 도교 좌표이며 건물의 최종 연결은 jamwon 연구를 참조한다.",
+      "verification": {
+        "smoke_initial": "node tests/smoke.mjs hangang → OK",
+        "deck_centerline": "실제 kit/physics + city + jamwon + streets, 전체 detail 포함. 0.2m 간격 4,793개 표본에서 바닥·캡슐 충돌·머리 공간 오류 0개.",
+        "south_approaches": "최종 참 중첩 수정 후 양측 경사로와 계단을 각각 양방향 검사했다. 경사로는 방향별 286개 표본, 계단은 125개 표본에서 바닥·캡슐 충돌·머리 공간 오류 0개.",
+        "visual": "사용자 제한에 따라 tests/shot.mjs는 실행하지 않았다. 잠수교 현장 사진, 전망 베이와 투명 데크 계획 사진을 직접 열람했고 추가 trace 8개를 기록했다.",
+        "trace": "추가 trace 8개 모두 실제 바닥 지지, 캡슐 충돌 및 머리 공간 검사 통과. 경사로 앞 카메라는 달빛광장 상면 y=0.09로 보정했다."
+      }
+    },
+    "junctions_to_add": [],
+    "junction_note": "추가 junction은 필요하지 않다. 기존 OSM 바닥이 세 접점에서 연속되고 양쪽 outdoor area가 두 모듈을 함께 로드한다. 정확한 접점과 경유 좌표는 jamsugyo_wave_round10에 기록했다.",
+    "riverside_route_round10": {
+      "id": "banpo-jamwon-seoulwave-r10",
+      "coordinate_order": "[x,y,z], meters, feet/floor height",
+      "source": "data/osm.json way305677075 + way949348576; short 5.6m paved shore join inferred",
+      "direction_correction": "Remain on SOUTH bank; pass under SOUTH approach of Banpo/Jamsugyo. North end is opposite riverbank. Seoul Wave precedes Hannam bridge, which is not required to reach Wave.",
+      "seams": [
+        {
+          "id": "banpo-promenade",
+          "point": [
+            -26.4955,
+            0.065,
+            -1135.7848
+          ],
+          "osm_road": 305677075
+        },
+        {
+          "id": "banpo-cycle-east",
+          "point": [
+            2.8896,
+            0.065,
+            -1119.9681
+          ],
+          "osm_road": 919393789
+        },
+        {
+          "id": "banpo-cycle-west",
+          "point": [
+            -0.6597,
+            0.065,
+            -1121.8785
+          ],
+          "osm_road": 919393790
+        }
+      ],
+      "walk_route": [
+        [
+          -704.46,
+          0.065,
+          -793.14
+        ],
+        [
+          -687.85,
+          0.065,
+          -789.7
+        ],
+        [
+          -678.36,
+          0.065,
+          -787.54
+        ],
+        [
+          -670.45,
+          0.085,
+          -786.08
+        ],
+        [
+          -647.53,
+          0.085,
+          -784.24
+        ],
+        [
+          -637.46,
+          0.085,
+          -786.19
+        ],
+        [
+          -589.48,
+          0.085,
+          -798.22
+        ],
+        [
+          -582.57,
+          0.065,
+          -799.96
+        ],
+        [
+          -579.31,
+          0.065,
+          -801.16
+        ],
+        [
+          -569.1,
+          0.065,
+          -804.94
+        ],
+        [
+          -556.29,
+          0.065,
+          -809.68
+        ],
+        [
+          -554.5,
+          0.065,
+          -810.35
+        ],
+        [
+          -542.47,
+          0.065,
+          -817.9
+        ],
+        [
+          -534.82,
+          0.065,
+          -826.7
+        ],
+        [
+          -522.62,
+          0.065,
+          -843.09
+        ],
+        [
+          -509.88,
+          0.065,
+          -853.79
+        ],
+        [
+          -489.59,
+          0.065,
+          -865.9
+        ],
+        [
+          -477.2,
+          0.065,
+          -870.36
+        ],
+        [
+          -465.35,
+          0.065,
+          -873.21
+        ],
+        [
+          -454.4,
+          0.065,
+          -874.11
+        ],
+        [
+          -441.66,
+          0.065,
+          -873.56
+        ],
+        [
+          -427.3,
+          0.065,
+          -871.08
+        ],
+        [
+          -415.45,
+          0.065,
+          -869.65
+        ],
+        [
+          -403.6,
+          0.065,
+          -869.65
+        ],
+        [
+          -383.86,
+          0.065,
+          -870.9
+        ],
+        [
+          -366.08,
+          0.065,
+          -874.81
+        ],
+        [
+          -352,
+          0.065,
+          -878.45
+        ],
+        [
+          -335.03,
+          0.065,
+          -885.15
+        ],
+        [
+          -321.21,
+          0.065,
+          -892.82
+        ],
+        [
+          -303.62,
+          0.065,
+          -904.41
+        ],
+        [
+          -284.94,
+          0.065,
+          -921.69
+        ],
+        [
+          -271.66,
+          0.065,
+          -937.2
+        ],
+        [
+          -255.51,
+          0.065,
+          -954.49
+        ],
+        [
+          -245.1,
+          0.065,
+          -962.36
+        ],
+        [
+          -235.94,
+          0.065,
+          -969.28
+        ],
+        [
+          -216.37,
+          0.065,
+          -980.69
+        ],
+        [
+          -198.6,
+          0.065,
+          -990.49
+        ],
+        [
+          -180.11,
+          0.065,
+          -997.62
+        ],
+        [
+          -165.74,
+          0.065,
+          -1004.4
+        ],
+        [
+          -154.8,
+          0.065,
+          -1009.56
+        ],
+        [
+          -124.28,
+          0.065,
+          -1026.31
+        ],
+        [
+          -102.02,
+          0.065,
+          -1044.14
+        ],
+        [
+          -77.79,
+          0.065,
+          -1066.41
+        ],
+        [
+          -58.59,
+          0.065,
+          -1087.09
+        ],
+        [
+          -41.89,
+          0.065,
+          -1110.44
+        ],
+        [
+          -37.8,
+          0.065,
+          -1116.73
+        ],
+        [
+          -29.14,
+          0.065,
+          -1130.04
+        ],
+        [
+          -26.4955,
+          0.065,
+          -1135.7848
+        ],
+        [
+          -13.88,
+          0.065,
+          -1163.19
+        ],
+        [
+          -12.22,
+          0.065,
+          -1168.43
+        ],
+        [
+          -1.14,
+          0.065,
+          -1203.47
+        ],
+        [
+          4.96,
+          0.065,
+          -1237.34
+        ],
+        [
+          5.23,
+          0.065,
+          -1240.59
+        ],
+        [
+          7.12,
+          0.065,
+          -1263.89
+        ],
+        [
+          6.35,
+          0.065,
+          -1288.2
+        ],
+        [
+          6.22,
+          0.065,
+          -1292.23
+        ],
+        [
+          7.83,
+          0.065,
+          -1313.44
+        ],
+        [
+          15.91,
+          0.065,
+          -1332.87
+        ],
+        [
+          31.71,
+          0.065,
+          -1350.51
+        ],
+        [
+          55.77,
+          0.065,
+          -1364.23
+        ],
+        [
+          80.54,
+          0.065,
+          -1369.58
+        ],
+        [
+          112.31,
+          0.065,
+          -1371.18
+        ],
+        [
+          134.58,
+          0.065,
+          -1377.96
+        ],
+        [
+          153.06,
+          0.065,
+          -1387.4
+        ],
+        [
+          168.86,
+          0.065,
+          -1401.84
+        ],
+        [
+          190.22,
+          0.065,
+          -1424.12
+        ],
+        [
+          238.4,
+          0.065,
+          -1472.59
+        ],
+        [
+          234.12,
+          0.12,
+          -1476.21
+        ],
+        [
+          188.22,
+          0.12,
+          -1515.03
+        ],
+        [
+          184,
+          0.12,
+          -1518
+        ],
+        [
+          184,
+          0.12,
+          -1520
+        ],
+        [
+          178,
+          0.12,
+          -1520
+        ],
+        [
+          178,
+          0.12,
+          -1528
+        ]
+      ],
+      "summary_waypoints": [
+        [
+          -704.46,
+          0.065,
+          -793.14
+        ],
+        [
+          -647.53,
+          0.085,
+          -784.24
+        ],
+        [
+          -589.48,
+          0.085,
+          -798.22
+        ],
+        [
+          -303.62,
+          0.065,
+          -904.41
+        ],
+        [
+          -26.4955,
+          0.065,
+          -1135.7848
+        ],
+        [
+          6.35,
+          0.065,
+          -1288.2
+        ],
+        [
+          80.54,
+          0.065,
+          -1369.58
+        ],
+        [
+          190.22,
+          0.065,
+          -1424.12
+        ],
+        [
+          238.4,
+          0.065,
+          -1472.59
+        ],
+        [
+          234.12,
+          0.12,
+          -1476.21
+        ],
+        [
+          188.22,
+          0.12,
+          -1515.03
+        ],
+        [
+          184,
+          0.12,
+          -1520
+        ],
+        [
+          178,
+          0.12,
+          -1528
+        ]
+      ],
+      "owner_audit": {
+        "road_owner": "jamwon_hangang exclusively owns/render complete way305677075; hangang neighboring paths provide south-park entry",
+        "area_loading": "Both hangang and jamwon_hangang touch both outdoor district plans via shared edge cells; no double claiming required. Generic rendering can remain suppressed for way305677075.",
+        "virtual_doors": "Engine OUTDOOR set includes hangang and jamwon_hangang; generator intentionally excludes both from indoor entrances. Wave floor zones still operate in outdoor page."
+      },
+      "evidence_recheck": {
+        "official_park_url": "https://hangang.seoul.go.kr/www/contents/657.do?mid=454&tr_code=m_sweb",
+        "official_park_findings": "Official indexed text: park spans Banpo→Hannam→Dongho→Yeongdong along SOUTH bank, 5.4km bicycle route; pool downstream of Hannam; rental upstream. Exact underpass alignment not surveyed.",
+        "local_map": "docs/overview-park.png confirms south bridge approach cross-path. refs/aerial/jamwon_park.jpg confirms southwest lawn/path shoreline but stops before Hannam.",
+        "photo_caution": "refs/interior/jamwon_park/04_bike_path_under_bridge_red_green.jpg contains double-level through-bridge and fountain nozzle rack matching Jamsugyo, despite old notes labeling Hannam. Do not assert its bridge attribution as verified."
+      },
+      "final_validation": {
+        "method": "K kit/physics + hangang, jamwon_hangang, streets + generic city, all lazy detail; <=0.2m samples, capsule r=.32m/h=1.75m/step=.5m; support/resolve/headroom",
+        "routes": {
+          "full_osm_305677075": {
+            "points": 6810,
+            "length_m": 1340.8549062040117,
+            "blocked": 0,
+            "badfloor": 0,
+            "lowceilings": 0,
+            "surfaceFallback": 0,
+            "tags": {
+              "jamwon_hangang": 6230,
+              "hangang": 580
+            },
+            "heights": {
+              "0.065": 6382,
+              "0.085": 420,
+              "0.067": 2,
+              "0.066": 6
+            },
+            "blockedSamples": [],
+            "badfloorSamples": [],
+            "lowSamples": [],
+            "fallbackSamples": []
+          },
+          "canonical_route": {
+            "points": 6951,
+            "length_m": 1368.040529287843,
+            "blocked": 0,
+            "badfloor": 0,
+            "lowceilings": 0,
+            "surfaceFallback": 0,
+            "tags": {
+              "jamwon_hangang": 6371,
+              "hangang": 580
+            },
+            "heights": {
+              "0.065": 6082,
+              "0.085": 420,
+              "0.067": 3,
+              "0.066": 6,
+              "0.069": 1,
+              "0.071": 1,
+              "0.073": 1,
+              "0.074": 1,
+              "0.076": 1,
+              "0.078": 1,
+              "0.080": 1,
+              "0.082": 1,
+              "0.084": 1,
+              "0.086": 1,
+              "0.088": 1,
+              "0.090": 1,
+              "0.092": 1,
+              "0.093": 1,
+              "0.095": 1,
+              "0.097": 1,
+              "0.099": 1,
+              "0.101": 1,
+              "0.103": 1,
+              "0.105": 1,
+              "0.107": 1,
+              "0.109": 1,
+              "0.111": 1,
+              "0.112": 1,
+              "0.114": 1,
+              "0.116": 1,
+              "0.118": 1,
+              "0.120": 413
+            },
+            "blockedSamples": [],
+            "badfloorSamples": [],
+            "lowSamples": [],
+            "fallbackSamples": []
+          },
+          "cycle_919393789": {
+            "points": 4208,
+            "length_m": 821.6185970402901,
+            "blocked": 0,
+            "badfloor": 0,
+            "lowceilings": 0,
+            "surfaceFallback": 0,
+            "tags": {
+              "hangang": 114,
+              "jamwon_hangang": 4094
+            },
+            "heights": {
+              "0.065": 4198,
+              "0.071": 10
+            },
+            "blockedSamples": [],
+            "badfloorSamples": [],
+            "lowSamples": [],
+            "fallbackSamples": []
+          },
+          "cycle_919393790": {
+            "points": 4198,
+            "length_m": 820.6804129142658,
+            "blocked": 0,
+            "badfloor": 0,
+            "lowceilings": 0,
+            "surfaceFallback": 0,
+            "tags": {
+              "jamwon_hangang": 4051,
+              "hangang": 147
+            },
+            "heights": {
+              "0.065": 4197,
+              "0.071": 1
+            },
+            "blockedSamples": [],
+            "badfloorSamples": [],
+            "lowSamples": [],
+            "fallbackSamples": []
+          }
+        },
+        "module_sha256": {
+          "hangang": "aca44b3ab3b3e16db756537c6c285fc40aae3d1d629c81ae91cc7415addc988e",
+          "jamwon_hangang": "fdb9ba6c7828e88d324630cddeef0c1f27c3d3f24cb9014ebead4e70b33f9ef9",
+          "streets": "8c6f070ca7576eeacc54727ffdd303a167562e7c415a084670a0067b9f64d16c"
+        },
+        "floor_height_note": "Waypoints store actual support y per vertex. Along segments authored paving overlaps vary0.065..0.085m; 2cm transitions are normal, no fallback to global ground."
+      }
+    },
+    "generated_meta_round10": {
+      "target": "js/places/_meta.json",
+      "entry": "hangang",
+      "status": "생성 및 검증 완료. 사용자 지정 수정 범위 밖의 공용 파일이므로 실제 _meta.json은 변경하지 않음.",
+      "generation": "tools/gen_meta.mjs를 실행하되 임시 Node preloader가 _meta.json 쓰기만 /tmp/gangnam-r10-meta.json으로 전환함.",
+      "operator_action": "다른 모듈 작업을 합친 뒤 node tools/gen_meta.mjs를 실행하거나 이 value를 해당 모듈 항목에 병합할 것.",
+      "entrances_note": "hangang과 jamwon_hangang은 engine OUTDOOR 모듈이므로 가상 실내 문 생성 대상에서 제외됨. 층별 zone과 실제 열린 출입구는 등록되어 있음.",
+      "value": {
+        "name": "반포한강공원 · 세빛섬",
+        "claims": [
+          414267182,
+          320797228,
+          320797229,
+          320797969,
+          560449164,
+          1067146733
+        ],
+        "claimRoads": [
+          305677069,
+          305677070,
+          305677072,
+          305677073,
+          305677074,
+          305692222,
+          305692223,
+          359930728,
+          359930764,
+          532858557,
+          547990902,
+          585895794,
+          697678235,
+          697678236,
+          697678237,
+          697678238,
+          697678239,
+          697678240,
+          697678241,
+          697678250,
+          697678251,
+          697678480,
+          697678481,
+          697678482,
+          697678484,
+          697678486,
+          697678487,
+          697678488,
+          802402467,
+          815547952,
+          815547953,
+          815547954,
+          831122214,
+          838078383,
+          892361591,
+          892361592,
+          892361593,
+          892361594,
+          892361595,
+          892361596,
+          892361597,
+          892361598,
+          892361599,
+          892361600,
+          895877915,
+          895878160,
+          919400909,
+          919400910,
+          919400911,
+          1354859719,
+          1494834732,
+          1494834733,
+          1494834734,
+          1497710480,
+          1497710481,
+          1563032426,
+          1563032427,
+          1563032432,
+          1563032433,
+          1563032434,
+          1563032435,
+          1563032439,
+          1563032440,
+          1563032441,
+          1568503150,
+          1568503151,
+          1568503152,
+          1568503153,
+          1568503154,
+          414267188,
+          697678249,
+          697678489,
+          697678491,
+          320797964,
+          414267185,
+          414267186,
+          414267187,
+          617417296,
+          617417297,
+          617417300,
+          617417302,
+          617417307,
+          617417308,
+          617417309,
+          617417310,
+          617417311,
+          617417312,
+          320797973,
+          414267183,
+          617417299,
+          37928409,
+          674432572,
+          1091571409,
+          1091571410,
+          596516315,
+          560449165,
+          713327919
+        ],
+        "claimAreas": [
+          418249072,
+          769712608,
+          25979109,
+          769712603,
+          769712604,
+          769712605,
+          769712606,
+          769712607,
+          919393791,
+          305677067,
+          270550732,
+          305677071,
+          305692221,
+          848771871,
+          850389024,
+          850389025,
+          850389026,
+          850389027,
+          850389028,
+          851471280,
+          320797972,
+          320797230,
+          1091571021,
+          1085504592,
+          1538963197
+        ],
+        "box": [
+          -1900,
+          -1960.9,
+          69.1,
+          -13.7
+        ],
+        "y": [
+          -4.4,
+          28
+        ],
+        "floors": [
+          "수변",
+          "산책로",
+          "1층",
+          "2층",
+          "3층",
+          "4층",
+          "가빛섬 2층",
+          "가빛섬 3층",
+          "수상무대",
+          "하층",
+          "상층",
+          "지하통로"
+        ],
+        "cells": [
+          "-48,-4",
+          "-48,-3",
+          "-48,-2",
+          "-48,-1",
+          "-47,-5",
+          "-47,-4",
+          "-47,-3",
+          "-47,-2",
+          "-47,-1",
+          "-46,-5",
+          "-46,-4",
+          "-46,-3",
+          "-46,-2",
+          "-46,-1",
+          "-45,-5",
+          "-45,-4",
+          "-45,-3",
+          "-45,-2",
+          "-45,-1",
+          "-44,-6",
+          "-44,-5",
+          "-44,-4",
+          "-44,-3",
+          "-44,-2",
+          "-43,-6",
+          "-43,-5",
+          "-43,-4",
+          "-43,-3",
+          "-43,-2",
+          "-42,-5",
+          "-42,-4",
+          "-42,-3",
+          "-42,-2",
+          "-41,-5",
+          "-41,-4",
+          "-41,-3",
+          "-41,-2",
+          "-40,-5",
+          "-40,-4",
+          "-40,-3",
+          "-39,-5",
+          "-39,-4",
+          "-39,-3",
+          "-38,-5",
+          "-38,-4",
+          "-37,-5",
+          "-37,-4",
+          "-36,-5",
+          "-36,-4",
+          "-35,-5",
+          "-35,-4",
+          "-34,-6",
+          "-34,-5",
+          "-33,-6",
+          "-33,-5",
+          "-32,-7",
+          "-32,-6",
+          "-32,-5",
+          "-31,-7",
+          "-31,-6",
+          "-30,-9",
+          "-30,-8",
+          "-30,-7",
+          "-30,-6",
+          "-29,-10",
+          "-29,-9",
+          "-29,-8",
+          "-29,-7",
+          "-28,-11",
+          "-28,-10",
+          "-28,-9",
+          "-28,-8",
+          "-28,-7",
+          "-27,-12",
+          "-27,-11",
+          "-27,-10",
+          "-27,-9",
+          "-27,-8",
+          "-26,-13",
+          "-26,-12",
+          "-26,-11",
+          "-26,-10",
+          "-26,-9",
+          "-26,-8",
+          "-25,-14",
+          "-25,-13",
+          "-25,-12",
+          "-25,-11",
+          "-25,-10",
+          "-25,-9",
+          "-24,-15",
+          "-24,-14",
+          "-24,-13",
+          "-24,-12",
+          "-24,-11",
+          "-24,-10",
+          "-23,-16",
+          "-23,-15",
+          "-23,-14",
+          "-23,-13",
+          "-23,-12",
+          "-23,-11",
+          "-23,-10",
+          "-22,-17",
+          "-22,-16",
+          "-22,-15",
+          "-22,-14",
+          "-22,-13",
+          "-22,-12",
+          "-22,-11",
+          "-21,-18",
+          "-21,-17",
+          "-21,-16",
+          "-21,-15",
+          "-21,-14",
+          "-21,-13",
+          "-21,-12",
+          "-20,-19",
+          "-20,-18",
+          "-20,-17",
+          "-20,-16",
+          "-20,-15",
+          "-20,-14",
+          "-20,-13",
+          "-20,-12",
+          "-19,-20",
+          "-19,-19",
+          "-19,-18",
+          "-19,-17",
+          "-19,-16",
+          "-19,-15",
+          "-19,-14",
+          "-19,-13",
+          "-18,-21",
+          "-18,-20",
+          "-18,-19",
+          "-18,-18",
+          "-18,-17",
+          "-18,-16",
+          "-18,-15",
+          "-18,-14",
+          "-17,-21",
+          "-17,-20",
+          "-17,-19",
+          "-17,-18",
+          "-17,-17",
+          "-17,-16",
+          "-17,-15",
+          "-17,-14",
+          "-16,-22",
+          "-16,-21",
+          "-16,-20",
+          "-16,-19",
+          "-16,-18",
+          "-16,-17",
+          "-16,-16",
+          "-16,-15",
+          "-15,-22",
+          "-15,-21",
+          "-15,-20",
+          "-15,-19",
+          "-15,-18",
+          "-15,-17",
+          "-15,-16",
+          "-15,-15",
+          "-14,-22",
+          "-14,-21",
+          "-14,-20",
+          "-14,-19",
+          "-14,-18",
+          "-14,-17",
+          "-14,-16",
+          "-13,-23",
+          "-13,-22",
+          "-13,-21",
+          "-13,-20",
+          "-13,-19",
+          "-13,-18",
+          "-13,-17",
+          "-13,-16",
+          "-12,-23",
+          "-12,-22",
+          "-12,-21",
+          "-12,-20",
+          "-12,-19",
+          "-12,-18",
+          "-12,-17",
+          "-11,-23",
+          "-11,-22",
+          "-11,-21",
+          "-11,-20",
+          "-11,-19",
+          "-11,-18",
+          "-10,-24",
+          "-10,-23",
+          "-10,-22",
+          "-10,-21",
+          "-10,-20",
+          "-10,-19",
+          "-10,-18",
+          "-9,-24",
+          "-9,-23",
+          "-9,-22",
+          "-9,-21",
+          "-9,-20",
+          "-9,-19",
+          "-8,-25",
+          "-8,-24",
+          "-8,-23",
+          "-8,-22",
+          "-8,-21",
+          "-8,-20",
+          "-8,-19",
+          "-7,-26",
+          "-7,-25",
+          "-7,-24",
+          "-7,-23",
+          "-7,-22",
+          "-7,-21",
+          "-7,-20",
+          "-6,-27",
+          "-6,-26",
+          "-6,-25",
+          "-6,-24",
+          "-6,-23",
+          "-6,-22",
+          "-6,-21",
+          "-5,-28",
+          "-5,-27",
+          "-5,-26",
+          "-5,-25",
+          "-5,-24",
+          "-5,-23",
+          "-5,-22",
+          "-4,-29",
+          "-4,-28",
+          "-4,-27",
+          "-4,-26",
+          "-4,-25",
+          "-4,-24",
+          "-4,-23",
+          "-4,-22",
+          "-3,-29",
+          "-3,-28",
+          "-3,-27",
+          "-3,-26",
+          "-3,-25",
+          "-3,-24",
+          "-3,-23",
+          "-2,-29",
+          "-2,-28",
+          "-2,-27",
+          "-2,-26",
+          "-2,-25",
+          "-2,-24",
+          "-1,-29",
+          "-1,-28",
+          "-1,-27",
+          "-1,-26",
+          "-1,-25",
+          "0,-28",
+          "0,-27",
+          "0,-26",
+          "1,-28",
+          "1,-27",
+          "-41,-7",
+          "-41,-6",
+          "-40,-7",
+          "-40,-6",
+          "-39,-7",
+          "-39,-6",
+          "-38,-8",
+          "-38,-7",
+          "-38,-6",
+          "-37,-8",
+          "-37,-7",
+          "-36,-9",
+          "-36,-8",
+          "-36,-7",
+          "-36,-6",
+          "-35,-9",
+          "-35,-8",
+          "-35,-7",
+          "-35,-6",
+          "-34,-10",
+          "-34,-9",
+          "-34,-8",
+          "-34,-7",
+          "-33,-10",
+          "-33,-9",
+          "-33,-8",
+          "-32,-11",
+          "-32,-10",
+          "-32,-9",
+          "-32,-8",
+          "-31,-11",
+          "-31,-10",
+          "-31,-9",
+          "-30,-12",
+          "-30,-11",
+          "-30,-10",
+          "-29,-12",
+          "-29,-11",
+          "-28,-13",
+          "-28,-12",
+          "-27,-13",
+          "-23,-20",
+          "-23,-19",
+          "-23,-18",
+          "-22,-20",
+          "-22,-19",
+          "-22,-18",
+          "-21,-21",
+          "-20,-22",
+          "-20,-21",
+          "-20,-20",
+          "-23,-22",
+          "-23,-21",
+          "-22,-21",
+          "-24,-16",
+          "-23,-17",
+          "-24,-39",
+          "-24,-38",
+          "-23,-38",
+          "-23,-36",
+          "-22,-35",
+          "-22,-33",
+          "-21,-33",
+          "-21,-31",
+          "-20,-29",
+          "-20,-28",
+          "-19,-28",
+          "-19,-27",
+          "-19,-26",
+          "-19,-25",
+          "-18,-24",
+          "-17,-23",
+          "-17,-22",
+          "-27,-39",
+          "-27,-38",
+          "-26,-49",
+          "-26,-48",
+          "-26,-39",
+          "-25,-50",
+          "-25,-49",
+          "-25,-48",
+          "-25,-47",
+          "-25,-46",
+          "-25,-45",
+          "-25,-44",
+          "-25,-43",
+          "-25,-42",
+          "-25,-41",
+          "-25,-40",
+          "-25,-39",
+          "-24,-42",
+          "-24,-41",
+          "-24,-40",
+          "-23,-41",
+          "-23,-40",
+          "-23,-39",
+          "-23,-37",
+          "-23,-35",
+          "-22,-42",
+          "-22,-41",
+          "-22,-36",
+          "-22,-34",
+          "-21,-34",
+          "-21,-32",
+          "-21,-30",
+          "-20,-31",
+          "-20,-30",
+          "-20,-27",
+          "-18,-26",
+          "-18,-25",
+          "-18,-23",
+          "-18,-22",
+          "-15,-14",
+          "-15,-13",
+          "-14,-15",
+          "-14,-14",
+          "-14,-13",
+          "-14,-12",
+          "-13,-15",
+          "-13,-14",
+          "-13,-13",
+          "-13,-12",
+          "-7,-19",
+          "-6,-17"
+        ],
+        "junctions": []
+      }
+    },
+    "round10_validation": {
+      "smoke": {
+        "command": "node tests/smoke.mjs hangang jamwon_hangang streets",
+        "result": "OK",
+        "warning": "동시 작업 중인 streets의 기존 _meta.json claims 불일치 경고만 있음."
+      },
+      "syntax_and_diff": "두 모듈 node --check 및 네 허용 파일 git diff --check 통과",
+      "trace_cameras": {
+        "count": 44,
+        "passed": 44,
+        "failed": 0,
+        "method": "실제 kit/physics + hangang/jamwon_hangang/streets + generic city + 전체 detail, 바닥 지지·캡슐 충돌·1.75m 머리 공간 검사"
+      },
+      "screenshots": "사용자 지시에 따라 tests/shot.mjs 미실행. 실제 렌더 결과를 확인했다고 주장하지 않음. modeling.trace는 바닥 y 기준 운영자 검수 카메라.",
+      "metadata": "실제 generator 실행 완료. 공용 파일은 보존하고 생성 항목을 generated_meta_round10.value에 저장.",
+      "verified_on": "2026-11-07",
+      "walk_modules": {
+        "command": "node tests/walk.mjs hangang jamwon_hangang",
+        "result": "47 ok, 0 blocked"
+      },
+      "walk_all": {
+        "command": "node tests/walk.mjs",
+        "result": "480 ok, 2 blocked",
+        "blocked": [
+          {
+            "target": "junction J6 centralcity→jwmarriott",
+            "y": 0,
+            "error": "no path (28645 cells searched)"
+          },
+          {
+            "target": "gyeongbu 북측 동 엘리베이터 지하 1층",
+            "error": "no path (35 cells searched)"
+          }
+        ],
+        "isolation": {
+          "command": "node tests/walk.mjs centralcity jwmarriott gyeongbu",
+          "result": "두 외부 오류가 hangang/jamwon_hangang 없이 동일하게 재현됨. 부분 모듈 실행 전체 집계는 129 ok, 3 blocked.",
+          "additional_subset_failure": "부분 실행에서만 centralcity 파미에스테이션 2F 스폰 바닥 누락이 추가 보고됨. 전체 실행 결과의 실패는 위 두 곳뿐임."
+        },
+        "scope_note": "centralcity, jwmarriott, gyeongbu는 본 작업 수정 범위 밖이며 jwmarriott/gyeongbu는 시작 시점부터 다른 작업의 수정 상태였음. 해당 파일을 수정하지 않음. 전체 세계 0 blocked는 달성하지 못했으나 본 작업 두 모듈과 연결 강변은 통과함."
+      },
+      "riverside": "1,368.04m 강변→서울웨이브 실내 동선 6,951개 표본, 바닥 누락·충돌·낮은 천장·기본 지면 대체 모두 0. 두 자전거길도 통과. 정확한 수치는 riverside_route_round10.final_validation 참조."
+    }
+  },
+  "parking": "반포한강공원 2주차장, 세빛섬 내 음식점 이용 시 3시간 무료(2024 기사)",
+  "notes": [
+    "세빛섬 운영 11~21시(동절기 20시), 세빛마루 10~22시",
+    "세빛섬 이름 '세빛'=빨강·파랑·초록",
+    "입점 매장은 2014~2024 등 과거 기사 기준, 현재와 다를 수 있음",
+    "버스 접근: 서울시 2024 기사 표기는 반포대교 남단·한강시민공원 입구 정류장. 현행 노선·정확한 정차점·셔틀은 이번 감사에서 확정하지 않음.",
+    "round 10: 감사 JSON의 confirmed 표기 자체보다 인용 원문의 시설 구분과 제공 사진을 우선했다. 구체적 미적용 사유는 modeling.evidence_audit.items에 기록."
+  ],
+  "unresolved": [
+    "가빛·채빛의 정확한 층고·층별 구획, 솔빛의 총층수(최소 2층은 2024 기사 확인)·예빛 층수, 2026 현재 입점·운영 상태",
+    "꽃잎 형태 여부 및 LED 색상 연출 패턴",
+    "잠수교 수면 위 높이, 교각 개수·간격, 반포대교 상판 높이",
+    "수상택시 승강장·텐트존·무지개놀이터·CU 위치",
+    "섬 간 부교 구조, 2025 야시장 일정",
+    "새 서쪽 세빛섬나들목의 정확한 도시/공원측 출입구 좌표·경사·지하 깊이·구조 단면. 기존 동쪽 반포나들목의 수치와 구분 필요.",
+    "채빛 3층 연회실 실제 운영자·용도와 비어가든 테라스의 정확한 구획",
+    "무드서울 실내 가구·무대·악기 실제 배치"
   ]
- },
- "parking":"반포한강공원 2주차장, 세빛섬 내 음식점 이용 시 3시간 무료(2024 기사)",
- "notes":[
-  "세빛섬 운영 11~21시(동절기 20시), 세빛마루 10~22시",
-  "세빛섬 이름 '세빛'=빨강·파랑·초록",
-  "입점 매장은 2014~2020 기사 기준, 현재와 다를 수 있음"
- ],
- "unresolved":[
-  "각 섬 정확한 층수·층별 배치, 솔빛섬·예빛섬 층수",
-  "꽃잎 형태 여부 및 LED 색상 연출 패턴",
-  "잠수교 수면 위 높이, 교각 개수·간격, 반포대교 상판 높이",
-  "수상택시 승강장·텐트존·무지개놀이터·CU 위치",
-  "섬 간 부교 구조, 2025 야시장 일정"
- ]
 }

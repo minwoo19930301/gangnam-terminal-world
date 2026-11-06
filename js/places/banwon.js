@@ -6,7 +6,9 @@ export const meta = {
   sources: ['data/osm.json', 'refs/aerial/newcore_banwon.jpg',
     'refs/roadview/banwon_01_front.jpg', 'refs/roadview/banwon_02_across_towers.jpg',
     'refs/interior/banwon/notes.json', 'refs/interior/streets_islands/notes.json',
-    'https://m.blog.naver.com/dockdm12/224444904805', 'https://m.blog.naver.com/fewlove11/224458808662'],
+    'https://m.blog.naver.com/dockdm12/224444904805', 'https://m.blog.naver.com/fewlove11/224458808662',
+    'https://m.blog.naver.com/qkrthwjd655/224448552779', 'https://m.blog.naver.com/chloe_ponggee/224455066913',
+    'https://m.blog.naver.com/dktjtidnj/224459455661', 'https://m.blog.naver.com/h99578/224460314042'],
 };
 
 export function build(K) {
@@ -27,16 +29,38 @@ export function build(K) {
   const spawn = (name,u,y,v,yaw) => { const [x,z]=P(u,v); K.spawn({name,x,y,z,yaw}); };
   const stone={tex:'concrete',color:0xb8b6ad}, steel=0xa8b0af, trim=0x667577;
   const tile={tex:'tile',color:0xcecabb,scale:[2.4,2.4]};
+  const paving='banwon-paving', diningFloor={tex:'concrete',color:0x827d73};
+  K.texture('banwon-paving',512,512,(g,w,h)=>{
+    g.fillStyle='#99958c';g.fillRect(0,0,w,h);
+    for(let row=0;row<8;row++)for(let col=-1;col<5;col++){
+      g.fillStyle=['#a39f95','#93918a','#aba79d','#96958e'][(row*3+col+5)%4];
+      g.fillRect(col*128+(row%2)*64+2,row*64+2,124,60);
+    }
+  },[2.4,2.4]);
   K.texture('banwon-panel',256,256,(g,w,h)=>{
     g.fillStyle='#b5b6b1';g.fillRect(0,0,w,h);g.strokeStyle='#858c8c';g.lineWidth=3;g.strokeRect(0,0,w,h);
     g.strokeStyle='#cdcec8';g.lineWidth=1;g.strokeRect(4,4,w-8,h-8);
   },[2.4,1.2]);
-  K.texture('banwon-vinyl',512,256,(g,w,h)=>{
-    g.clearRect(0,0,w,h);g.strokeStyle='rgba(235,226,196,.42)';g.lineWidth=1;
-    for(let i=0;i<22;i++){g.beginPath();g.moveTo(i*25,0);g.lineTo(i*25+12,h*.45);g.lineTo(i*25-4,h);g.stroke();}
-    g.fillStyle='rgba(73,68,58,.4)';g.font='19px sans-serif';
-    ['오늘도 한신','또 만나요','우리들의 추억','반원','치킨과 맥주'].forEach((t,i)=>g.fillText(t,12+(i%2)*245,38+i*44));
-  },[3.1,1.5],{transparent:true,doubleSide:true});
+  K.texture('banwon-vinyl',1024,512,(g,w,h)=>{
+    // One cloudy skin, not clear glazing plus floating, mirrored word decals.
+    g.fillStyle='rgba(232,224,201,.48)';g.fillRect(0,0,w,h);
+    for(let i=0;i<52;i++){
+      const x=i*20;g.strokeStyle=i%2?'rgba(255,247,223,.64)':'rgba(128,118,96,.35)';g.lineWidth=i%3+1;
+      g.beginPath();g.moveTo(x,0);g.lineTo(x+13,170);g.lineTo(x-7,350);g.lineTo(x+9,h);g.stroke();
+    }
+    // Marker loops/hearts follow the photographed vinyl; no invented readable slogans.
+    g.strokeStyle='rgba(43,40,32,.67)';g.lineWidth=2.1;
+    for(let i=0;i<92;i++){
+      const x=12+(i*113)%990,y=22+(i*67)%468;
+      g.beginPath();g.moveTo(x,y);g.lineTo(x+20,y-9);g.lineTo(x+7,y+18);g.lineTo(x+35,y+10);g.stroke();
+      if(i%4===0){g.beginPath();g.moveTo(x,y+10);g.bezierCurveTo(x-24,y-13,x+2,y-23,x+8,y-9);g.bezierCurveTo(x+26,y-27,x+41,y-3,x,y+10);g.stroke();}
+    }
+  },[2.8,1.6],{transparent:true});
+  for(const[key,base,light]of [['banwon-drape','#aa3e22','#d76534'],['banwon-awning','#cc642a','#e7984c']])K.texture(key,512,256,(g,w,h)=>{
+    g.fillStyle=base;g.fillRect(0,0,w,h);
+    for(let i=0;i<70;i++){g.fillStyle=i%3?light:'#633a27';g.globalAlpha=i%3?.21:.22;g.fillRect(i*7.5,0,2+i%3,h);}
+    g.globalAlpha=1;g.strokeStyle='#c99a72';g.lineWidth=2;g.strokeRect(3,4,w-6,h-8);
+  },[2.7,.8]);
   // Open steel handrails; the waist-height tube also provides collision.
   const rail=(a,b,c,d,ya,yb,h=1.02)=>{
     const A=P(a,b),Z=P(c,d),L=Math.hypot(c-a,d-b),n=Math.ceil(L/1.2),nx=-(Z[1]-A[1])/L,nz=(Z[0]-A[0])/L;
@@ -58,16 +82,16 @@ export function build(K) {
   rail(-3.15,0,-3.15,15.7,G,G);rail(-3.15,24.5,-3.15,38.8,G,G);
   slab(-8.6,-2,-5.5,D+2,0,{mat:'sidewalk',thick:.08,ceil:false});
   // Park-side 1F deck and two gentle approaches ending at y=0.
-  slab(0,-3.5,W+3.5,0,G,{mat:'sidewalk',thick:.18});
-  slab(W,-3.5,W+3.5,35,G,{mat:'sidewalk',thick:.18});
+  slab(0,-3.5,W+3.5,0,G,{mat:paving,thick:.18});
+  slab(W,-3.5,W+3.5,35,G,{mat:paving,thick:.18});
   // Two metres of clear circulation outside the vinyl enclosure, at shop level.
-  slab(24,-6.2,W+5.2,-3.4,G,{mat:'sidewalk',thick:.18});
+  slab(24,-7.4,W+5.2,-3.4,G,{mat:paving,thick:.18});
   ramp(5,-5.1,20.2,-5.1,0,G,2.1,{rails:false});
-  slab(19.7,-6.2,24,-3.4,G,{mat:'sidewalk',thick:.16});
+  slab(19.7,-6.2,24,-3.4,G,{mat:paving,thick:.16});
   ramp(W+1.9,50,W+1.9,35,0,G,2.4,{rails:false});
   rail(W+3.3,50,W+3.3,35,0,G);
   // Permanent open doors in the storefront glazing.
-  const doors=[[0,20,3.6],[0,7,2.4],[0,27.5,2.2],[0,33.5,2.4],[21,0,2.8],[31,0,2.8],[39.2,0,3.2],[W,5.2,3.2],[W,13,2.5],[W,20,3.4],[W,29,2.8]];
+  const doors=[[0,20,3.6],[0,7,2.4],[0,27.5,2.2],[0,33.5,2.4],[21,0,2.8],[31,0,2.8],[39.2,0,6.8],[W,5.2,7.7],[W,13,2.5],[W,20,3.4],[W,29,8.6]];
   const openings=doors.map(([u,v,w])=>{const[x,z]=P(u,v);return{x,z,w,y0:G,y1:G+2.65};});
   K.polyWalls(footprint,G,G+FH,{mat:'glass',inner:'glass',thick:.08,openings});
   for(const v of [0,12.4,17.5,22.5,26,35,D])B(.15,G,v,.36,FH,.32,trim);
@@ -101,7 +125,7 @@ export function build(K) {
       wall(u,.25,u,18,y,y+3.35,{mat:0xe8e3d7,openings:[op(5.7),op(13)]});
       wall(u,22,u,D-.2,y,y+3.35,{mat:0xe8e3d7,openings:[op(7.8)]});
     }
-    sign([`${f+1}층`,uses[f]],16.4,y+2.7,18.15,4,.8);sign('계단',8.2,y+2.9,18.14,2,.45,R,'#306655','#fff');
+    sign([`${f+1}층`,uses[f]],f?16.4:12,y+2.7,18.15,4,.8);sign('계단',8.2,y+2.9,18.14,2,.45,R,'#306655','#fff');
     sign('승강기',21,y+2.7,28,1.8,.45,north);
     if(f){rail(5.15,8.8,5.15,17.65,y,y);rail(11.25,8.8,11.25,17.65,y,y);rail(5.15,8.8,11.25,8.8,y,y);}
     if(f<3){
@@ -117,12 +141,26 @@ export function build(K) {
   for(const u of [17,23,29,35]){B(u,roof+.12,28,2.6,1,1.9,0xbbbdb8);for(let k=0;k<7;k++)B(u-1+k*.33,roof+.9,28,.09,.23,1.5,0x747e7f,{solid:false});}
 
   // Black tower with three fins and individual real-world sign bands.
-  wall(-.32,14.9,-.32,24.7,G,roof+1,{mat:'darkstone',thick:.52,openings:[{at:5.1,w:3.6,y0:G,y1:G+2.8}]});
+  wall(-.32,14.9,-.32,24.7,G,roof+1,{mat:{tex:'darkstone',color:0x45494a,gloss:.5},thick:.52,openings:[{at:5.1,w:3.6,y0:G,y1:G+2.8}]});
   for(const v of [17,19.8,22.6])B(-.7,roof-.3,v,.33,1.8,.74,0xe5e3d9,{solid:false});
   sign('BAN WON',-.65,roof-2,19.8,8.1,.9,west,null,'#e6e2d9');
   sign('반원상가',-.65,G+2.95,20,4.4,.5,west,'#414744','#e0d6bd');
   sign('이비인후과  +',-.65,9.1,19.8,9,1.55,west,'#efefdf','#153b43');
   sign('진료 안내',-.66,7.5,19.8,6.2,.6,west,'#739aaf','#fff');
+  sign('의원 · 약국',-.68,6.6,19.8,6,.46,west,'#648294','#f5f1e5');
+  sign('반원상가',-.68,5.85,19.8,4.9,.42,west,'#74796e','#ede9db');
+  for(const v of [9.8,30.7,35]){
+    B(-8.15,0,v,.8,.3,4.2,stone);B(-8.15,.3,v,.85,.65,4.3,{tex:'grass',color:0x436238},{solid:false});
+  }
+  // Red-bordered triangular speed-hump warning sign beside, not across, the stairs.
+  cyl(-8.3,0,14.4,.045,2.4,steel,{solid:false});
+  const triangle=(r,y,mat,off)=>{
+    const[x,z]=P(-8.35-off,14.4),dx=Math.cos(west),dz=-Math.sin(west);
+    const p=[[x-dx*r,y-r*.55,z-dz*r],[x+dx*r,y-r*.55,z+dz*r],[x,y+r,z]];
+    K.quad(mat,[...p,p[0]],[Math.sin(west),0,Math.cos(west)]);
+  };
+  triangle(.69,2.35,0xb83428,0);triangle(.53,2.35,0xf2ca48,.012);
+  sign('과속방지턱',-8.4,2.25,14.4,.75,.19,west,null,'#222222');
   // As seen from the road: black tower, then pharmacy, then the blue bank fascia.
   sign('서초21세기약국',-.25,3.95,27.5,5.5,.85,west,'#2786a6','#f9f5c9');
   sign('우리은행 WOORI BANK',-.24,3.95,35,9.4,.8,west,'#11498a','#fff');
@@ -134,20 +172,43 @@ export function build(K) {
   wall(7.5,22.1,7.5,31,G,G+3.35,{mat:0xe5dfd1});
   wall(.15,31,7.5,31,G,G+3.35,{mat:0xe5dfd1});
 
+  // Basement parking is reported in the audit text; neither roadview shows its entry.
+  // Closed shutter at the SW street edge is an explicitly inferred marker, not a B1 route.
+  B(-3.12,0,42.4,.20,2.45,3.8,stone);
+  B(-3.25,.08,42.4,.08,2.14,3.3,0x858d8b,{solid:false});
+  for(let i=0;i<18;i++)B(-3.30,.13+i*.115,42.4,.025,.025,3.28,0x596461,{solid:false});
+  sign('지하주차장',-3.34,2.65,42.4,3.1,.4,west,'#405452','#eeeade');
+
+  // Shared toilet: central location is hearsay; this room/door geometry is inferred.
+  wall(13.8,14.6,19,14.6,G,G+3.35,{mat:0xe8e3d7});
+  wall(13.8,14.6,13.8,18,G,G+3.35,{mat:0xe8e3d7});
+  // The existing south-wall opening is centred at u15.25, v18.
+  B(14.25,G,17.05,.07,2.35,1.65,0xaab2a6);
+  sign('화장실',15.25,G+2.7,18.15,2.1,.45,R,'#ecebe0','#3d514b');
+  zone('반원상가 공용 화장실','1F',13.9,14.7,18.9,17.9,G,G+FH,'공용 화장실',25);
+
   // NE corner wraps north/east: the pin/OSM footprint take precedence over blog directions.
-  wall(34.2,.15,34.2,17.9,G,G+3.35,{mat:0xe5dfd1,openings:[{at:12.8,w:1.9,y0:G,y1:G+2.5}]});
+  // One restaurant: a broad opening joins the former Hansikdang bay to Hanshin.
+  // Retain the rear shop partition and its old doorway. Exact opening size is inferred.
+  wall(34.2,.15,34.2,17.9,G,G+3.35,{mat:0xe5dfd1,openings:[
+    {at:4.55,w:7.2,y0:G,y1:G+2.6},{at:12.8,w:1.9,y0:G,y1:G+2.5}]});
   wall(23.1,9.4,34.2,9.4,G,G+3.35,{mat:0xe5dfd1,openings:[{at:7.9,w:1.9,y0:G,y1:G+2.5}]});
-  zone('한신치킨호프','1F',34.3,0,W,13,G,G+FH,'111호 · 반원칼국수',24);
-  zone('한식당','1F',23.2,0,34.2,9.3,G,G+FH,'공원 쪽 음식점',24);
-  zone('감미옥','1F',34.3,22.2,W,34,G,G+FH,'공원 쪽 음식점',24);
+  const diningPoly=[P(23.2,0),P(W,0),P(W,13),P(34.3,13),P(34.3,9.3),P(23.2,9.3)];
+  K.zone({name:'한신치킨호프 · 반원칼국수 (한 가게)',floor:'1F',poly:diningPoly,y0:G,y1:G+FH,sub:'111호 · 반원식당 · 한식당',priority:24});
+  K.hpoly(diningFloor,diningPoly,G+.006,true);
+  K.slab(diningPoly,G+2.85,{mat:0xe8e3d7,under:0xe8e3d7,thick:.12,walk:false});
+  zone('감미옥','1F',34.3,22.2,W,34,G,G+FH,'참숯돼지갈비',24);
+  zone('감미옥 야장','1F',W,24,W+3.5,35,G,G+3.1,'참숯돼지갈비 · 야외 좌석',26);
   zone('한신치킨 야장','1F',24,-3.5,W+3.5,0,G,G+3.1,'북측 천막 · 공원 가장자리',26);
   zone('한신치킨 야장','1F',W,0,W+3.5,16,G,G+3.1,'동측 천막',26);
-  sign('한 식 당',28.7,G+2.95,-.13,10.4,.9,north);
+  sign('반원식당',28.7,G+2.95,-.13,10.4,.9,north);
   sign('한신 치킨호프',38.7,G+2.95,-.14,8.2,.9,north,'#a34030','#e9d486');
   sign('반원 칼국수',W+.13,G+2.95,4.6,8.4,.9,east,'#e5dbbf','#773630');
   sign('한신 치킨호프',W+.13,G+2.95,10.2,3.1,.8,east,'#9c4031','#e7d17f');
-  sign('신반포 문구 · 도장 · 열쇠',W+.13,G+2.95,17,7.5,.8,east,'#e7e8e2','#275e8c');
-  sign('PICNIC STORAGE',W+.13,G+2.95,22,3,.65,east,'#3d4a45','#e9e4d2');
+  // Photo 224455066913_01: Gammiok → stationery → PICNIC STORAGE → noodles.
+  sign('신반포 문구 · 도장 · 열쇠',W+.13,G+2.95,21.5,5.4,.8,east,'#e7e8e2','#275e8c');
+  sign('PICNIC STORAGE',W+.13,G+2.95,16.8,3,.65,east,'#3d4a45','#e9e4d2');
+  sign('피크닉 대여소',W+.14,G+2.48,16.8,2.8,.23,east,'#3d4a45','#e9e4d2');
   sign('감 미 옥',W+.13,G+2.95,28.8,9,.9,east,'#bd3935','#fff0df');
   sign('비에이블 스터디카페',32.5,6.7,-.13,18.8,1.1,north,'#e9e5da','#795238');
   sign('비 에 이 블  스 터 디 카 페',W+.13,6.7,8.6,17,1.1,east,'#eee7d9','#845b42');
@@ -207,12 +268,25 @@ export function build(K) {
     B(u+.19*si,y+.5,v+.19*co,.44,.38,.065,col,{rotY:angle,solid:false});
     for(const dx of [-.21,.21])B(u+dx*co,y+.62,v-dx*si,.045,.06,.37,col,{rotY:angle,solid:false});
   }
-  function table(u,y,v,round=true){
+  function table(u,y,v,round=true,grill=false,hoodTop=3.36){
     if(round){cyl(u,y+.72,v,.56,.055,0x595b57);cyl(u,y,v,.055,.72,0x4a514e,{solid:false});B(u,y+.06,v,.8,.06,.08,steel,{solid:false});B(u,y+.06,v,.08,.06,.8,steel,{solid:false});}
     else{B(u,y+.72,v,1.25,.075,.76,{tex:'wood',color:0xb58955});for(const dx of [-.49,.49])for(const dz of [-.25,.25])B(u+dx,y,v+dz,.045,.72,.045,0x343c3a,{solid:false});}
-    cyl(u,y+.79,v,.18,.025,0xf2ead6,{solid:false});
-    for(let i=0;i<5;i++)cyl(u-.1+(i%3)*.09,y+.815,v-.06+Math.floor(i/3)*.1,.044,.06,0xa46a2e,{seg:6,solid:false});
-    for(const dx of [-.34,.34]){cyl(u+dx,y+.79,v+.15,.055,.18,{tex:'glass',color:0xdda64c},{solid:false});cyl(u+dx,y+.79,v-.16,.09,.04,0xe9e8db,{solid:false});}
+    if(grill){
+      // Actual metal table/charcoal mesh: audit photo 224459455661_05 (not its illustrated cover).
+      cyl(u,y+.78,v,.32,.025,steel,{seg:24,solid:false});cyl(u,y+.807,v,.285,.013,0x252825,{seg:24,solid:false});
+      for(const[du,dv]of [[-.14,-.1],[.02,-.15],[.14,-.02],[-.09,.09],[.1,.13]]){
+        cyl(u+du,y+.822,v+dv,.055,.022,0x93432b,{seg:8,solid:false});cyl(u+du,y+.844,v+dv,.025,.003,0x292d29,{seg:8,solid:false});
+      }
+      for(let i=-5;i<=5;i++){
+        const t=i*.048,len=2*Math.sqrt(.28*.28-t*t);
+        B(u+t,y+.853,v,.007,.008,len,steel,{solid:false});B(u,y+.857,v+t,len,.008,.007,steel,{solid:false});
+      }
+      cyl(u,y+1.65,v,.22,.18,steel,{solid:false});cyl(u,y+1.83,v,.095,hoodTop-1.83,steel,{solid:false});
+    }else{
+      cyl(u,y+.79,v,.18,.025,0xf2ead6,{solid:false});
+      for(let i=0;i<5;i++)cyl(u-.1+(i%3)*.09,y+.815,v-.06+Math.floor(i/3)*.1,.044,.06,0xa46a2e,{seg:6,solid:false});
+    }
+    for(const dx of grill?[-.43,.43]:[-.34,.34]){cyl(u+dx,y+.79,v+.15,.055,.18,{tex:'glass',color:0xdda64c},{solid:false});cyl(u+dx,y+.79,v-.16,.09,.04,0xe9e8db,{solid:false});}
     cyl(u+.24,y+.79,v-.25,.04,.21,0x3b7759,{solid:false});cyl(u+.24,y+1,v-.25,.018,.075,0x3b7759,{solid:false});
   }
   function fridge(u,y,v){
@@ -221,13 +295,19 @@ export function build(K) {
     for(let row=0;row<4;row++){B(u,y+.35+row*.32,v+.38,.60,.025,.025,steel,{solid:false});for(let n=0;n<4;n++)B(u-.22+n*.145,y+.38+row*.32,v+.38,.07,.19,.035,[0x447956,0xd6bd5b,0xa8d4d8][n%3],{solid:false});}
     B(u,y+1.82,v+.36,.65,.08,.04,{tex:'emit',color:0x96d8ff},{solid:false});sign('음료 · 맥주',u,y+1.8,v+.39,.62,.13,R,'#134065','#d2e8fb');
   }
+  function orderTablet(u,y,v,title){
+    B(u,y+.8,v,.28,.025,.20,0x252b2b,{solid:false});B(u,y+.82,v,.045,.19,.045,0x252b2b,{solid:false});
+    B(u,y+1.01,v,.40,.29,.035,0x151b21,{solid:false});
+    sign([title,'주문하기'],u,y+1.155,v+.025,.36,.24,R,'#73b8ee','#163849');
+  }
   // Ground floor shop/room zones exist before detail loading.
   zone('서초21세기약국','1F',.3,22.2,7.3,30.9,G,G+FH,'약국',22);
   zone('우리은행','1F',.3,22.2,18.7,D-.3,G,G+FH,'영업점');
   zone('상가 음식점','1F',23.2,9.6,34,17.8,G,G+FH,'파더스 김밥 · 동대문엽기떡볶이');
   K.detail({name:'반원상가 1층 점포와 한신치킨 실내',floor:'1F',y0:G,y1:G+FH,poly:footprint},()=>{
-    for(const[name,u,v]of [['아빠의마음',15.3,18.14],['우리은행',12,21.86],['파더스 김밥',28.2,18.14],['한신치킨호프 · 111호',38.5,18.14],['감미옥',31,21.86]])
+    for(const[name,u,v]of [['우리은행',12,21.86],['파더스 김밥',28.2,18.14],['한신치킨호프 · 111호',38.5,18.14],['감미옥',31,21.86]])
       sign(name,u,G+2.85,v,5.9,.54,v<20?R:north,name.includes('은행')?'#15538b':'#e8e0ca',name.includes('은행')?'#fff':'#49372c');
+    sign('아빠의마음',19.15,G+2.85,5.95,3.9,.54,east,'#e8e0ca','#49372c');
     sign('서초21세기약국',3.75,G+2.8,21.86,5.5,.55,north,'#e8e8db','#34766c');
     sign('불닭발땡초 동대문엽기떡볶이 신반포점',22.86,G+2.8,13.2,6.2,.55,west,'#c33332','#fff');
     B(3.7,G,29.9,4.5,.92,.65,0xe0ded0);
@@ -238,21 +318,36 @@ export function build(K) {
     for(const u of [3,7,11,15]){B(u,G,35,2.6,1,.85,0xc6d4d9);B(u,G+1,35,2.65,.06,.9,0xf1f0df,{solid:false});B(u+.7,G+1.08,35,.45,.3,.05,0x22303a,{solid:false});chair(u,G,36.2,0x31495e);}
     for(const u of [11,13.3,15.6]){B(u,G,24,1,1.65,.6,0x4a7d9b);B(u,G+1,24.32,.65,.38,.03,{tex:'emit',color:0x9ddadf},{solid:false});}
     B(12,G+.45,28,4.3,.13,.55,0x466b8a);B(12,G+.58,28.22,4.3,.48,.08,0x466b8a,{solid:false});
+    B(17.8,G,15.25,.58,.68,.28,0xe5e6df);cyl(17.8,G+.34,15.75,.27,.13,0xefefe7,{solid:false});
+    B(14.6,G+.74,15.3,.62,.16,.48,0xe4e7df);cyl(14.6,G+.9,15.15,.022,.18,steel,{solid:false});
+    B(14.6,G+1.35,14.73,.65,.8,.03,{tex:'glass',color:0xbfcac6},{solid:false});
     // Photograph 12: cream interior, tables/black chairs and the back service wall.
-    for(const u of [35.8,41.6])for(const v of [2.2,5.6,8.8]){table(u,G,v,false);chair(u,G,v-.83,0x383a34,north);chair(u,G,v+.83,0x383a34);}
+    // The two seating bays share the long v4.0 cross-aisle and the u38.5 aisle.
+    for(const u of [35.8,41.6])for(const v of [2.2,5.6,8.8]){table(u,G,v,false);chair(u,G,v-.83,0x383a34,north);chair(u,G,v+.83,0x383a34);orderTablet(u+.35,G,v-.18,'한신치킨');}
+    for(const u of [26,31.5])for(const v of [2.3,7.2]){table(u,G,v,false);chair(u,G,v-.83,0x383a34,north);chair(u,G,v+.83,0x383a34);orderTablet(u+.35,G,v-.18,'반원&한식당');}
+    // Entrance-side self bar; ingredients are documented, location/dimensions inferred.
+    B(33.1,G,.75,2,.88,.75,0x9d8564);B(33.1,G+.88,.75,2.06,.055,.79,steel,{solid:false});
+    for(const[i,col]of [0xe6d3a0,0x7f994c,0xeee6cc,0xb94927].entries()){
+      B(32.35+i*.43,G+.94,.75,.36,.055,.43,steel,{solid:false});
+      for(let j=0;j<6;j++)cyl(32.25+i*.43+(j%3)*.09,G+1,.65+Math.floor(j/3)*.15,.045,.03,col,{seg:6,solid:false});
+    }
+    cyl(34.05,G+.94,.75,.13,.33,steel,{solid:false});
+    sign(['셀프바','팝콘 · 샐러드 · 치킨무 · 김치 · 물'],33.1,G+1.45,.35,2.8,.38,R,'#eee5ce','#4e463a');
+    B(28.3,G+1.04,9.24,3.5,1.6,.12,0x181f24,{solid:false});
+    sign('방송 중',28.3,G+1.84,9.16,3.28,1.38,north,'#315c75','#e5eaf0');
+    for(const u of [26,31])for(const v of [3.5,7.8])B(u,G+2.61,v,2.8,.055,.13,'emit',{solid:false});
     B(38.3,G,10.7,3.2,.9,.8,{tex:'wood',color:0x997955});B(38.3,G+.9,10.7,3.3,.07,.88,0xd8d8cc,{solid:false});
     B(37.4,G+1.03,10.6,.5,.33,.06,0x1f292d,{solid:false});
-    sign(['메뉴','후라이드치킨   양념치킨','칼국수   골뱅이   생맥주'],37.3,G+2.2,12.85,3.6,1.1,north,'#e7e0c6','#543a2d');
+    sign(['메뉴','후라이드치킨   양념치킨','칼국수   골뱅이   생맥주'],37.3,G+2.08,12.85,3.6,1.1,north,'#e7e0c6','#543a2d');
     fridge(42.3,G,10.8);for(const u of [40.6,41.2])cyl(u,G,11.8,.24,.55,0xa3aca6);
-    B(41.2,G+2.02,12.6,1.45,.82,.12,0x171e24,{solid:false});sign('야구 중계',41.2,G+2.43,12.51,1.29,.65,north,'#387685','#e8e5cd');
-    for(const v of [3.7,7.3,10.4])B(38.5,G+3.17,v,2.8,.07,.17,'emit',{solid:false});
+    B(41.2,G+1.85,12.6,1.45,.82,.12,0x171e24,{solid:false});sign('야구 중계',41.2,G+2.26,12.51,1.29,.65,north,'#387685','#e8e5cd');
+    for(const v of [3.7,7.3,10.4])B(38.5,G+2.61,v,2.8,.07,.17,'emit',{solid:false});
     for(const[u,v]of [[36,2.2],[41.7,5.6],[36,8.8]])person(u,G,v+.83,{sit:true,rotY:north,shirt:0x333d40});person(38.5,G,12,{rotY:north,shirt:0x373633});
-    // East-side Gammiok: round metal tables, red chairs, upright menu.
-    for(const u of [35.8,41.5])for(const v of [25,28.4,31.8]){table(u,G,v);chair(u,G,v-.83,0xbf3430,north);chair(u,G,v+.83,0xbf3430);}
-    B(35,G,36.8,5.5,.88,.6,0xb7b9ab);sign(['감미옥','순대국 · 육칼국수 · 만두찜'],36,G+2.2,38.8,5.5,.9,north,'#f1df9e','#7e2521');
-    for(const v of [25,27,31,33])sign(['순대국','칼국수'],W+.16,G+1.7,v,1.25,1.3,east,'#edcd7b','#733926');
-    for(const[u,v]of [[15.7,4.2],[27.8,15.8],[29,7.6]]){B(u,G,v,3.8,.9,.7,{tex:'wood',color:0xa4865c});for(let i=0;i<9;i++)B(u-1.5+i*.37,G+1,v,.20,.15,.2,[0xe0d19b,0xe1b38e,0xc6c2a1][i%3],{solid:false});}
-    for(const u of [26,31.5])for(const v of [2.5,5.4]){table(u,G,v,false);chair(u,G,v+.8,0x6b4b35);}
+    // East-side Gammiok: pork ribs, circular charcoal grills and red chairs.
+    for(const u of [35.8,41.5])for(const v of [25,28.4,31.8]){table(u,G,v,true,true);chair(u,G,v-.83,0xbf3430,north);chair(u,G,v+.83,0xbf3430);}
+    B(35,G,36.8,5.5,.88,.6,0xb7b9ab);sign(['감미옥 · 참숯돼지갈비','항정살 · 삼겹살 · 돼지목살'],36,G+2.2,38.8,5.5,.9,north,'#f1df9e','#7e2521');
+    for(const v of [25,27,31,33])sign(['참숯','돼지갈비'],W+.16,G+1.7,v,1.25,1.3,east,'#edcd7b','#733926');
+    for(const[u,v]of [[15.7,4.2],[27.8,15.8],[29,8.7]]){B(u,G,v,3.8,.9,.7,{tex:'wood',color:0xa4865c});for(let i=0;i<9;i++)B(u-1.5+i*.37,G+1,v,.20,.15,.2,[0xe0d19b,0xe1b38e,0xc6c2a1][i%3],{solid:false});}
     for(const v of [6,12,20,26,36])B(21,G+3.22,v,1.8,.055,.65,'emit',{solid:false});
     for(const u of [3,13,29,38])B(u,G+3.22,20,1.8,.055,.65,'emit',{solid:false});
     person(17,G,20,{shirt:0xa9b7b0});person(21,G,24.5,{shirt:0x717d9a});
@@ -261,10 +356,15 @@ export function build(K) {
     for(const u of [25.8,29.1,32.3,35.7,39,42.3]){
       table(u,G,-1.65);chair(u-.85,G,-1.65,0x255db4,west);chair(u+.85,G,-1.65,0x255db4,east);B(u,G+2.38,-1.55,1.8,.05,.12,'emit',{solid:false});
     }
-    for(const v of [1.7,5,8.2,12,15,25.5,28.8,32]){
+    // Unverified Hanshin terrace layout stays as before. Gammiok has five tables.
+    for(const v of [1.7,5,8.2,12,15]){
       table(W+1.65,G,v);chair(W+1.65,G,v-.85,0xbf3531,north);chair(W+1.65,G,v+.85,0xbf3531);B(W+1.8,G+2.38,v,.13,.05,1.8,'emit',{solid:false});
     }
+    for(const v of [24.9,27.05,29.2,31.35,33.5]){
+      table(W+1.65,G,v,true,true,2.6);chair(W+1.65,G,v-.85,0xbf3531,north);chair(W+1.65,G,v+.85,0xbf3531);B(W+1.8,G+2.38,v,.13,.05,1.8,'emit',{solid:false});
+    }
     for(let i=0;i<4;i++){chair(33.4,G+i*.14,-.55,0x235a9e);B(32.4,G+i*.3,-.5,.6,.28,.45,0x244c41);}
+    // Audit suggested removal, but photo 224459455661_03 clearly shows this exact sign at Gammiok.
     fridge(34.8,G,-.6);sign(['순대국','육칼국수','만두찜'],W+2.8,G+1.15,24.1,.62,1.7,east,'#efe8bf','#303d2b');
     for(const[u,v]of [[29.9,-1.65],[36.55,-1.65],[W+1.65,5.85],[W+1.65,12.85]])person(u,G,v,{sit:true,shirt:0x4a5056});
     for(const[u,v]of [[W+4.2,17.1],[W+4.1,18.3],[W+4.3,19.7]])person(u,G,v,{rotY:R,shirt:0xbcb9aa});

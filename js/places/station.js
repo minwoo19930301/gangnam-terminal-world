@@ -24,6 +24,17 @@ export const meta = {
 // the station remains entirely underground. The unsurveyed 3↔9 stair bay is
 // south of the Line 9 platform envelope so no stair skirt occupies its aisle.
 export function build(K) {
+  // Local material adaptation only: do not change the shared kit or neighbouring
+  // modules. Glazed stone uses three restrained reflection strengths.
+  const finish=mat=>typeof mat==='string'&&({'station-marble':.7,'station-granite':.5,'station-diagonal':.3,'station-panels':.3,'station-ceramic':.3}[mat])
+    ?{tex:mat,gloss:({'station-marble':.7,'station-granite':.5,'station-diagonal':.3,'station-panels':.3,'station-ceramic':.3})[mat]}:mat;
+  const raw=K;K=Object.create(raw);
+  const finished=o=>Object.fromEntries(Object.entries(o).map(([k,v])=>[k,['mat','top','side','bottom','inner'].includes(k)?finish(v):v]));
+  for(const method of ['box','cyl'])K[method]=o=>raw[method](finished(o));
+  K.slab=(p,y,o={})=>raw.slab(p,y,finished(o));
+  K.wall=(ax,az,bx,bz,y0,y1,o={})=>raw.wall(ax,az,bx,bz,y0,y1,finished(o));
+  K.quad=(m,...args)=>raw.quad(finish(m),...args);
+  K.hpoly=(m,...args)=>raw.hpoly(finish(m),...args);
   const { B1, B2, B3, B4 } = K.LEVELS;
   const C = { 3: 0xe8731a, 7: 0x8b9a4a, 9: 0xc99b5e };
   const CSS = { 3: '#e8731a', 7: '#8b9a4a', 9: '#c99b5e' };
@@ -87,8 +98,8 @@ export function build(K) {
   K.texture('station-grid',512,512,(g,w,h)=>{
     g.fillStyle='#a8aaa7';g.fillRect(0,0,w,h);
     for(let r=0;r<2;r++)for(let c=0;c<2;c++){
-      g.fillStyle=(r+c)%2?'#f2f2ee':'#e9eae6';g.fillRect(c*256+2,r*256+2,252,252);
-      g.fillStyle='#fafaf6';g.fillRect(c*256+3,r*256+3,250,2);
+      g.fillStyle=(r+c)%2?'#d8d7d0':'#d0cfc7';g.fillRect(c*256+2,r*256+2,252,252);
+      g.fillStyle='#e5e3db';g.fillRect(c*256+3,r*256+3,250,2);
     }
   },[1.2,1.2]);
   K.texture('station-panels',512,512,(g,w,h)=>{
@@ -98,21 +109,25 @@ export function build(K) {
     }
   },[1.2,1.8]);
   K.texture('station-marble',512,512,(g,w,h)=>{
-    g.fillStyle='#c8c2b6';g.fillRect(0,0,w,h);const rnd=K.rand(50106);
-    // Broad folded stone bands, rather than a uniformly speckled grey surface.
-    for(let i=0;i<32;i++){
-      g.beginPath();g.moveTo(0,i*18);
-      for(let x=0;x<=w;x+=16)g.lineTo(x,i*18+13*Math.sin(x/83+i*.7)+6*Math.sin(x/27+i));
-      g.strokeStyle=['#eeeae0','#aaa69b','#e0dcd1','#8f9189'][i%4];g.lineWidth=4+rnd()*8;g.stroke();
+    g.fillStyle='#d3d0c8';g.fillRect(0,0,w,h);const rnd=K.rand(90106);
+    // Irregular mineral clouds and branching veins; no parallel sinusoidal
+    // bands (the previous finish looked like sand/wood in photos 01 and 06).
+    for(let i=0;i<90;i++){
+      const x=rnd()*w,z=rnd()*h,r=18+rnd()*85;
+      const cloud=g.createRadialGradient(x,z,0,x,z,r);
+      cloud.addColorStop(0,i%3?'#a7a6a355':'#f3f0e8aa');cloud.addColorStop(1,'#d3d0c800');
+      g.fillStyle=cloud;g.fillRect(x-r,z-r,r*2,r*2);
     }
-    for(let i=0;i<110;i++){
-      let x=rnd()*w,z=rnd()*h;g.beginPath();g.moveTo(x,z);
-      for(let j=0;j<8;j++){x+=(rnd()-.42)*78;z+=(rnd()-.32)*48;g.lineTo(x,z);}
-      g.strokeStyle=['#a6a49d','#e8e5dc','#b3b0a7','#dad8d0'][i%4];g.lineWidth=i%6===0?5:1.3;g.stroke();
+    for(let i=0;i<45;i++){
+      let x=rnd()*w,z=rnd()*h,angle=rnd()*Math.PI*2;
+      const points=[[x,z]];
+      for(let j=0;j<12;j++){angle+=(rnd()-.5)*1.8;x+=Math.cos(angle)*(10+rnd()*35);z+=Math.sin(angle)*(8+rnd()*22);points.push([x,z]);}
+      for(const [width,color] of [[9,'#918f8660'],[3,'#72746d88'],[.9,'#f4f1e7']]){
+        g.beginPath();points.forEach(([xx,zz],j)=>j?g.lineTo(xx,zz):g.moveTo(xx,zz));g.lineWidth=width;g.strokeStyle=color;g.stroke();
+      }
     }
-    g.strokeStyle='#8f918b';g.lineWidth=1.4;g.strokeRect(0,0,w,h);
-    g.beginPath();g.moveTo(w/2,0);g.lineTo(w/2,h);g.moveTo(0,h/2);g.lineTo(w,h/2);g.stroke();
-  },[1.2,1.2]);
+    g.strokeStyle='#a2a198';g.lineWidth=1.5;g.strokeRect(0,0,w,h);
+  },[.9,.9]);
   K.texture('station-diagonal',512,512,(g,w,h)=>{
     g.fillStyle='#d6d3c9';g.fillRect(0,0,w,h);g.strokeStyle='#858a84';g.lineWidth=2;
     for(let i=-512;i<=1024;i+=128){g.beginPath();g.moveTo(i,0);g.lineTo(i+512,512);g.moveTo(i,0);g.lineTo(i-512,512);g.stroke();}
@@ -267,30 +282,43 @@ export function build(K) {
     if(exit){const q=f.at(s,-width/2+exitW/2);K.sign('나가는 곳',{x:q.x,y:y+cy,z:q.z,w:exitW,h:.43,rotY:rot,bg:'#f2c324',fg:'#252b2d',twoSided:true,offset:.08});}
   }
   function column(f,s,v,y,line,h=2.88,marble=false) {
-    const p=f.at(s,v),r=.39;
-    K.cyl({x:p.x,z:p.z,y,r,h,mat:marble?'station-marble':0xeeeee8,seg:marble?8:16});
+    const p=f.at(s,v),r=line===3?.52:.39;
+    if(line===7)localBox(f,s,v,y,1.5,h,.42,'station-panels',true);
+    else K.cyl({x:p.x,z:p.z,y,r,h,mat:marble?'station-marble':{color:0xeeeee8,gloss:.3},seg:marble?8:24});
+    if(line!==7){
     K.cyl({x:p.x,z:p.z,y,r:r+.015,h:.09,mat:0x343a3c,seg:16,solid:false});
-    K.cyl({x:p.x,z:p.z,y:y+.09,r:r+.018,h:.09,mat:'metal',seg:16,solid:false});
+    K.cyl({x:p.x,z:p.z,y:y+.09,r:r+.018,h:.09,mat:{tex:'metal',gloss:.7},seg:24,solid:false});
+    }
     const finish=()=>{
     // Photos 10/11/17: cladding joints and a bent, broad route-colour sash.
-    for(let yy=.64;yy<h;yy+=.64)K.cyl({x:p.x,z:p.z,y:y+yy,r:r+.005,h:.012,mat:0x838982,seg:16,solid:false});
+    if(line!==7)for(let yy=.64;yy<h;yy+=.64)K.cyl({x:p.x,z:p.z,y:y+yy,r:r+.005,h:.009,mat:0x838982,seg:24,solid:false});
     if(!line)return;
     for(const facing of [p.rot,p.rot+Math.PI]){
-      const rr=r+.023,half=.9/(2*rr),bottom=.25,top=h-.1;
-      const bend=yy=>{const t=(yy-bottom)/(top-bottom);return (line===7?-1:1)*(.67-1.45*Math.abs(t-.52));};
-      const P=(yy,t)=>{const a=facing+bend(yy)+t*half;return [p.x+Math.sin(a)*rr,y+yy,p.z+Math.cos(a)*rr];};
+      const rr=line===7?.225:r+.023,half=.58/(2*rr),bottom=.25,top=h;
+      const bend=yy=>{const t=(yy-bottom)/(top-bottom);return (line===7?-1:1)*(.38-.82*Math.abs(t-.52));};
+      const P=(yy,t)=>{
+        if(line===7){const u=t*.31+bend(yy);return [p.x+Math.sin(facing)*rr+Math.cos(facing)*u,y+yy,p.z+Math.cos(facing)*rr-Math.sin(facing)*u];}
+        const a=facing+bend(yy)+t*half;return [p.x+Math.sin(a)*rr,y+yy,p.z+Math.cos(a)*rr];
+      };
+      if(line===7){
+        const nx=Math.sin(facing),nz=Math.cos(facing),Q=(u,yy,d=.218)=>[p.x+nx*d+Math.cos(facing)*u,y+yy,p.z+nz*d-Math.sin(facing)*u];
+        K.quad({color:0xbfc2c0,gloss:.3},[Q(-.73,1.12),Q(.73,1.12),Q(.73,1.78),Q(-.73,1.78)],[nx,0,nz]);
+        for(const yy of [.14,.72,1.1,1.8,2.4])beam(Q(-.74,yy),Q(.74,yy),.006,0x676c69,4);
+      }
       for(let j=0;j<8;j++)for(let k=0;k<12;k++){
         const a=-1+k/6,b=-1+(k+1)/6,lo=bottom+(top-bottom)*j/8,hi=bottom+(top-bottom)*(j+1)/8;
-        const tip=t=>hi-(j===7?.2*(1-Math.abs(t)):0);
+        const tip=()=>hi;
         const normal=facing+bend((lo+hi)/2)+(a+b)/2*half;
         K.quad(C[line],[P(lo,a),P(lo,b),P(tip(b),b),P(tip(a),a)],[Math.sin(normal),0,Math.cos(normal)]);
       }
-      const q={x:p.x+Math.sin(facing)*(r+.04),z:p.z+Math.cos(facing)*(r+.04),rotY:facing,bg:null,fg:'#ffffff'};
+      const q={x:p.x+Math.sin(facing)*(rr+.019),z:p.z+Math.cos(facing)*(rr+.019),rotY:facing,bg:null,fg:'#ffffff',bold:false};
       K.sign(line===7?'←':'→',{...q,y:y+2.36,w:.56,h:.35});
       K.sign({3:'③',7:'⑦',9:'⑨'}[line],{...q,y:y+1.77,w:.6,h:.64});
-      K.sign({3:['대화','오금'],7:['장암','석남'],9:['개화','중앙보훈병원']}[line],{...q,y:y+1.06,w:.55,h:.43});
+      const destinations={3:['대화','오금'],7:['장암','석남'],9:['개화','중앙보훈병원']}[line];
+      K.sign(destinations[0],{...q,y:y+1.15,w:.43,h:.21});
+      K.sign(destinations[1],{...q,y:y+.81,w:.43,h:.21});
       const tx=Math.cos(facing)*.22,tz=-Math.sin(facing)*.22;
-      beam([q.x-tx,y+1.06,q.z-tz],[q.x+tx,y+1.06,q.z+tz],.006,0xffffff,4);
+      beam([q.x-tx,y+.98,q.z-tz],[q.x+tx,y+.98,q.z+tz],.006,0xffffff,4);
     }
     };
     if(!later(p.x,y,p.z,finish))finish();
@@ -500,6 +528,8 @@ export function build(K) {
   // Public B1 band stays outside the hotel and skirts the north of the rotunda.
   const b1Path=[[45,150],[-45,186],[-68,195],[-88,220],[-175,262]];
   const b1Voids=[[17,145,25,163],[-126,235,-118,251]];
+  // Round 10: destination labels and stair bearings remain unverified. OSM
+  // exit points do not establish which building each underground door serves.
   const exitSpecs=[
     ['2',55.11,124.19,0,1, [45,150],'경부선 · 신세계백화점'],
     ['7',37.5,131.19,0,1,[37,153],'JW메리어트 · 센트럴시티'],
@@ -554,7 +584,7 @@ export function build(K) {
     detailRooms[0].jobs.push(()=>{
     localBox(b1,s,-5.04,B1+1.225,.035,.55,1.1,'glass');
     const directory=b1.at(s,-5.01);
-    K.sign(['신세계백화점 ↑','경부선 터미널 →'],{x:directory.x,z:directory.z,y:B1+1.5,w:1.1,h:.5,rotY:directory.rot-Math.PI/2,bg:null,fg:'#5a4a3a',offset:.025});
+    K.sign(['신세계백화점 ↑','경부선 터미널','반포천 공영주차장 →'],{x:directory.x,z:directory.z,y:B1+1.55,w:1.1,h:.5,rotY:directory.rot-Math.PI/2,bg:null,fg:'#5a4a3a',bold:false,offset:.025});
     for(const ds of [-.19,.19]){
       const p=b1.at(s+ds,-4.9);
       localBox(b1,s+ds,-4.9,B1,.27,.06,.27,0xbe302b);
@@ -584,7 +614,46 @@ export function build(K) {
     K.cyl({x:p.x,z:p.z,y:B1,r:.47,h:.1,mat:0x8f9692,seg:8,solid:false});
     wayfinding(b1,s,B1,8);
   }
-  for(const s of [10,83,180])bench(b1,s,-5.5,B1);
+  for(const s of [10,180])bench(b1,s,-5.5,B1);
+  bench(b1,94,4.3,B1); // keep the seat, clear photo 07's pier/fixture approach
+  // Photo 07's brick hall has plain pale stone paving, not the marbled retail
+  // passage of photo 18. Finish only this local bay, retaining its walkable slab.
+  K.hpoly({tex:'station-granite',color:0xe1ddd3,gloss:.3},[b1.at(77,-7),b1.at(94,-7),b1.at(94,7),b1.at(77,7)].map(p=>[p.x,p.z]),B1+.032);
+  detailRooms[0].jobs.push(()=>{
+    for(const s of [79,90])localBox(b1,s,-6.86,B1,.06,2.82,5.5,'station-brick');
+    // Existing shop wall becomes the observed dark JAJU shutter frontage.
+    localBox(b1,88.5,-6.79,B1+.05,.09,2.38,2.6,0x3d4140);
+    for(let yy=.2;yy<2.25;yy+=.08)localBox(b1,88.5,-6.72,B1+yy,.025,.018,2.5,0x6b706b);
+    localSign(b1,88.5,-6.68,B1+2.5,'JAJU',2.5,.29,true,'#2b302d','#e1ded0');
+    const p=b1.at(90.5,-5.9);
+    K.cyl({x:p.x,z:p.z,y:B1,r:.36,h:.4,mat:0xc5c2b6,seg:12,solid:false});
+    beam([p.x,B1+.35,p.z],[p.x,B1+1.36,p.z],.04,0x665543,6);
+    for(let i=0;i<50;i++){
+      const a=i*2.4,r=.15+(i%4)*.06,yy=B1+.65+(i%9)*.11,x=p.x+Math.sin(a)*r,z=p.z+Math.cos(a)*r;
+      K.quad([0x334f39,0x53684b,0x6c7856][i%3],[[x-.12,yy,z],[x,yy+.16,z-.03],[x+.12,yy,z],[x,yy-.07,z+.03]],[0,0,1]);
+    }
+    // Visible underside of the adjacent staircase in 07; this shallow wall
+    // backing adds no invented floor, shaft opening or usable stair route.
+    const A=b1.at(85.5,-6.68),B=b1.at(88.1,-6.68),N=b1.at(86,-6.68);
+    K.quad(0x5b5d59,[[A.x,B1+.25,A.z],[B.x,B1+2.83,B.z],[A.x,B1+2.83,A.z],[A.x,B1+.25,A.z]],[-N.nx,0,-N.nz]);
+    beam([A.x,B1+.25,A.z],[B.x,B1+2.83,B.z],.08,0x252c2e,6);
+    for(const s of [80,86,92])for(const v of [-3,3]){
+      const p=b1.at(s,v);K.cyl({x:p.x,z:p.z,y:B1+2.78,r:.1,h:.025,mat:paint(0xffedca),seg:12,solid:false});
+    }
+    // Photo 18: cream ceiling, circular cassette diffusers and inset lit shop
+    // panels around the retained octagonal stainless columns.
+    const ceil=[b1.at(26,-7),b1.at(54,-7),b1.at(54,7),b1.at(26,7)].map(p=>[p.x,p.z]);
+    K.hpoly(0xd8d4c8,ceil,B1+2.82,false);
+    for(const s of [28,35.2,42.4,49.6])for(const v of [-3.2,3.2]){
+      const p=b1.at(s,v);K.cyl({x:p.x,z:p.z,y:B1+2.765,r:.11,h:.026,mat:paint(0xffedcc),seg:12,solid:false});
+      for(const dv of [-1.2,1.2])localBox(b1,s,v+dv,B1+2.76,.035,.04,2.9,0x777b70);
+      for(const ds of [-1.45,1.45])localBox(b1,s+ds,v,B1+2.76,2.4,.04,.035,0x777b70);
+    }
+    for(const s of [38,44]){
+      localBox(b1,s,6.7,B1+.25,.035,1.75,2.5,0x20496c);
+      localSign(b1,s,6.65,B1+1.37,['할인','80%'],2.1,.75,true,'#245d8c','#d4d8b3');
+    }
+  });
   for(let i=0;i<20;i++){const p=b1.at(8+i*11,(i%3-1)*2.2);person(p.x,B1,p.z,{shirt:[0x313e50,0xb3936d,0x575c46][i%3]});}
 
   const j=JUNCTIONS.find(j=>j.id==='J7');
@@ -679,19 +748,34 @@ export function build(K) {
       const s=start+c*(carLen+gap)+carLen/2,base=f.at(s,side*2.7),rot=base.rot;
       const at=(ls,v)=>({x:base.x+base.ux*ls+base.nx*v,z:base.z+base.uz*ls+base.nz*v});
       const cb=(ls,v,yy,w,h,d,mat)=>box({...at(ls,v),y:yy,w,h,d,rotY:rot,mat});
-      cb(0,0,y-.6,2.85,3.7,carLen,0xb9c2c5);
+      cb(0,0,y-.6,2.85,3.7,carLen,{color:0xd2d5d2,gloss:.3});
       cb(0,0,y+2.95,2.6,.22,carLen-.25,0xd7dbd9);
       cb(0,0,y+.43,2.91,.36,carLen-.2,C[line]);
       cb(0,0,y-.85,2.45,.35,carLen-.6,0x303b42);
       for(const v of [-1.44,1.44]) {
         for(let door=0;door<4;door++) {
           const ls=-7.1+door*4.7;
-          cb(ls,v,y+.08,.035,2.3,1.3,line===3?0xdb7137:0xdce1e1);
-          cb(ls,v*1.008,y+.84,.04,1.1,1.05,0x192c35);
-          cb(ls,v*1.015,y+.15,.05,2.12,.035,0x8b999e);
+          // Two separate leaves, inset windows and the blue waist stripe are
+          // visible through photo 12's glass; an orange rectangle hid them.
+          for(const leaf of [-1,1]){
+            cb(ls+leaf*.325,v,y+.08,.04,2.3,.635,{color:line===3?0xc77929:0xdce1e1,gloss:.5});
+            cb(ls+leaf*.325,v*1.009,y+.84,.045,1.13,.49,'metal');
+            cb(ls+leaf*.325,v*1.023,y+.88,.045,1.05,.405,{color:0x203332,gloss:.3});
+            cb(ls+leaf*.325,v*1.039,y+1.84,.014,.055,.36,paint(0xbacbc0));
+            cb(ls+leaf*.325,v*1.024,y+.08,.05,.39,.635,'metal');
+          }
+          if(line===3)cb(ls,v*1.028,y+.54,.05,.07,1.29,0x383978);
+          cb(ls,v*1.035,y+.15,.055,2.12,.024,0x5e696a);
           cb(ls,v*1.02,y+2.44,.035,.13,1.3,paint(line===9?0xe7c268:0xdde8cf));
         }
-        for(const ls of [-8.7,-4.75,0,4.7,8.8])cb(ls,v,y+.96,.045,1.15,1.9,0x243c49);
+        for(const ls of [-8.7,-4.75,0,4.7,8.8]){
+          cb(ls,v,y+.92,.045,1.23,1.96,'metal');
+          cb(ls,v*1.02,y+.96,.045,1.15,1.87,{color:0x243c3c,gloss:.3});
+        }
+        if(line===3&&c===3){
+          const p=at(-8.25,v*1.04);
+          sign('3697',p.x,y+2.32,p.z,.7,.25,rot+(v<0?Math.PI/2:-Math.PI/2),'#d2d5d2','#263139');
+        }
       }
       for(const ls of [-6.1,6.1]) {
         cb(ls,0,y-.98,2.45,.4,2.4,0x283038);
@@ -707,6 +791,7 @@ export function build(K) {
   }
   function platform(f,y,line,opts={}) {
     const width=opts.width||14.8,edge=5.1,roofH=line===9?4.85:3.18;
+    const platformCeiling=line===9?3.28:roofH;
     const openings=opts.openings||[];
     // B1-x/2 crosses the B4 roof near x=20.3. Start at 20 so the slab never
     // intersects passengers before the lower landing; x=22 was too late.
@@ -717,7 +802,7 @@ export function build(K) {
       const p=f.at(s,v);
       return openings.every(o=>Math.hypot(p.x-o.x,p.z-o.z)>o.w/2+pad);
     };
-    ceilingServices(f,width*2,y,roofH,roofHoles);
+    ceilingServices(f,width*2,y,platformCeiling,roofHoles);
     for(const side of [-1,1]){
       cutSlab(f.poly(side<0?-width:edge,side<0?-edge:width),y,opts.holes||[]);
       lineWall(f,side*width,y,roofH,openings,'station-ceramic');
@@ -725,8 +810,12 @@ export function build(K) {
       for(let s=1.3;s<f.length-1.3;s+=2.55) {
         if(line===9&&s<30)continue;
         strip(f,s,side*5.7,y+.015,.6,2.55,'station-tactile');
-        localBox(f,s,side*5.13,y, .12,2.7,2.5,'glass',true);
-        for(const ds of [-1.25,0,1.25])localBox(f,s+ds,side*5.13,y,.065,2.72,.065,0x748388);
+        // One glass leaf rather than a six-face box: overlapping transparent
+        // faces used to wash the real carriage geometry into a blue wall.
+        const ga=f.at(s-1.25,side*5.13),gb=f.at(s+1.25,side*5.13);
+        K.wall(ga.x,ga.z,gb.x,gb.z,y,y+2.7,{thick:.025,mat:{tex:'glass',color:0xd7e1d9}});
+        for(const ds of [-1.25,1.25])localBox(f,s+ds,side*5.13,y,.075,2.72,.09,{color:0x687879,gloss:.3});
+        localBox(f,s,side*5.13,y,.045,2.72,.032,0x38474a);
         localBox(f,s,side*5.13,y+.04,.15,.19,2.5,0x596a73);
         localBox(f,s,side*5.13,y+2.7,.18,.23,2.5,line===3?0xf2f2ee:0x4f626b);
         if(line===3){
@@ -735,15 +824,15 @@ export function build(K) {
           localBox(f,s,side*5.14,y+2.92,.22,.06,2.5,C[3]);
           if(Math.floor(s/2.55)%2===0){
             const q=f.at(s,side*5.26);
-            sign('고속터미널',q.x,y+3.075,q.z,2.3,.16,f.at(s).rot+side*Math.PI/2,'#f2f2ee','#2f3336');
+            sign('잠원  ←  고속터미널  →  교대',q.x,y+3.075,q.z,2.38,.16,f.at(s).rot+side*Math.PI/2,'#f2f2ee','#2f3336');
           }
-        }else localBox(f,s,side*5.13,y+2.92,.2,.13,2.5,C[line]);
-        localBox(f,s,side*5.15,y+1.08,.13,.06,2.48,0xd9dfd9);
+        }else localBox(f,s,side*5.13,y+2.92,.2,.13,2.5,line===9?0x242b43:C[line]);
+        localBox(f,s,side*5.15,y+1.08,.13,.06,2.48,line===9?0xa63b36:0xd9dfd9);
         const p=f.at(s,side*5.25);
         if(Math.round(s/2.55)%3===0)sign('발빠짐 주의',p.x,y+.35,p.z,1.7,.2,f.at(s).rot+Math.PI/2,'#efc551','#2f302a');
       }
       for(let s=3.1;s<f.length-3;s+=6.2)for(const row of [8.5,12]){
-        if(!insideVoid(f,s,side*row,roofHoles,3.1))light(f,s,side*row,y+roofH-.15,6);
+        if(!insideVoid(f,s,side*row,roofHoles,3.1))light(f,s,side*row,y+(line===9&&s<32?roofH:platformCeiling)-.15,line===9&&s>=32?2.4:6);
       }
       for(let s=8;s<f.length-5;s+=12.5){
         if(line!==9&&!(line===3&&side===-1&&s>120&&s<140)&&!insideVoid(f,s,side*11.6,opts.roofHoles||[],2))column(f,s,side*11.6,y,line,3.09);
@@ -755,21 +844,21 @@ export function build(K) {
         if(clearOfDoors(s+5,side*(width-1.1))&&(line!==7||[75,175].every(c=>Math.abs(s+5-c)>10)))bench(f,s+5,side*(width-1.1),y);
       }
       for(let s=20;s<f.length-10;s+=43){
-        const p=f.at(s,side*8.7);person(p.x,y,p.z,{shirt:side<0?0x405775:0xb39c7b});
-        const q=f.at(s+3.2,side*10.3);person(q.x,y,q.z,{shirt:0x363942});
+        const p=f.at(s,side*(line===9?12.6:8.7));person(p.x,y,p.z,{shirt:side<0?0x405775:0xb39c7b});
+        const q=f.at(s+3.2,side*(line===9?11.6:10.3));person(q.x,y,q.z,{shirt:0x363942});
         if(clearOfDoors(s+11,side*(width-1),3)&&(line!==7||[75,175].every(c=>Math.abs(s+11-c)>10)))facilities(f,s+11,side*(width-1),y);
       }
       if(line===3){
         // Photo 15: touching diamond corners plus inset dark tile intersections.
         for(let s=2;s<f.length-2;s+=1.07){
           const p=f.at(s,side*9.4);
-          box({x:p.x,z:p.z,y:y+.025,w:.76,h:.013,d:.76,rotY:p.rot+Math.PI/4,mat:0x414849});
+          box({x:p.x,z:p.z,y:y+.025,w:.76,h:.013,d:.76,rotY:p.rot+Math.PI/4,mat:{color:0x414849,gloss:.5}});
           strip(f,s,side*6.25,y+.028,.065,1.07,0x4a9b71);
         }
         for(let s=2.4;s<f.length-2;s+=2.4)for(let v=7.2;v<=14;v+=2.4){
           if(insideVoid(f,s,side*v,opts.roofHoles||[],.4))continue;
           const p=f.at(s,side*v);
-          box({x:p.x,z:p.z,y:y+.026,w:.45,h:.012,d:.45,rotY:p.rot+Math.PI/4,mat:0x2f3336});
+          box({x:p.x,z:p.z,y:y+.026,w:.45,h:.012,d:.45,rotY:p.rot+Math.PI/4,mat:{color:0x2f3336,gloss:.5}});
         }
       }
       for(let s=line===9?39:9;s<f.length-6;s+=9){
@@ -781,7 +870,7 @@ export function build(K) {
       train(f,y,line,line===3?10:line===7?8:6,side);
       const platformLife=()=>{
         const start=line===9?38:12;
-        for(let s=start,i=0;s<f.length-6;s+=10.2,i++){
+        for(let s=start,i=0;s<f.length-6;s+=line===9?5.1:10.2,i++){
           if(!clearOfDoors(s,side*7.1,3)||insideVoid(f,s,side*8,roofHoles,3))continue;
           const p=f.at(s,side*6.28),number=Math.min(line===3?10:line===7?8:6,1+Math.floor(s/f.length*(line===3?10:line===7?8:6)));
           K.floorText(`${number} - ${i%4+1}`,{x:p.x,y:y+.055,z:p.z,w:.64,h:.36,rotY:p.rot+side*Math.PI/2,bg:'#327b69',fg:'#ffffff'});
@@ -791,20 +880,20 @@ export function build(K) {
           }
           for(let j=0;j<(i%3===0?3:2);j++){
             const q=f.at(s+(j%2?-.68:.68),side*(6.9+Math.floor(j/2)*.85));
-            person(q.x,y,q.z,{shirt:[0xe0d9c8,0x303b49,0x697064,0xa38a73][(i+j)%4]});
+            person(q.x,y,q.z,{rotY:p.rot+side*Math.PI/2,shirt:[0xe0d9c8,0x303b49,0x697064,0xa38a73][(i+j)%4]});
             if(j===0&&i%3===0)localBox(f,s+.68,side*7.28,y,.3,.48,.21,0x343b3d);
           }
           if(line===9){
             localBox(f,s,side*5.14,y+2.68,.2,.5,3.4,0x29343e);
             const q=f.at(s,side*5.27);
             sign(i%2?'급행  중앙보훈병원':'일반  개화',q.x,y+2.95,q.z,2.8,.22,p.rot+side*Math.PI/2,'#1c2024','#ff6954');
-            localBox(f,s+3.2,side*10,y+.023,9.3,.012,.24,0x343a3e);
+            if(i%2===0)localBox(f,s+3.2,side*10,y+.023,9.3,.012,.18,{color:0x343a3e,gloss:.5});
           }
         }
-        for(let s=line===9?54:42;s<f.length-10;s+=64){
+        for(let s=line===9?54:42;s<f.length-10;s+=line===9?38.4:64){
           const p=f.at(s,side*9.5);
-          for(const v of [side*9.5-1,side*9.5+1])localBox(f,s,v,y+2.94,.025,roofH-3.03,.025,'metal');
-          sign(line===9?['이번 열차  급행','중앙보훈병원  곧 도착']:['열차 도착 안내','안전선 안쪽에서 기다려 주세요'],p.x,y+2.68,p.z,3.7,.48,p.rot,'#141c20','#ffc45a');
+          for(const v of [side*9.5-1,side*9.5+1])localBox(f,s,v,y+2.94,.025,platformCeiling-3.03,.025,'metal');
+          sign(line===9?['이번 열차  급행','중앙보훈병원  곧 도착']:['열차 도착 안내','안전선 안쪽에서 기다려 주세요'],p.x,y+2.68,p.z,line===9?2.6:3.7,.48,p.rot,'#141c20','#ffc45a');
         }
       };
       const q=f.at(f.length/2);later(q.x,y,q.z,platformLife);
@@ -989,20 +1078,33 @@ export function build(K) {
   K.stairs(-77.2,-104,-77.2,-90,{ya:B1,yb:B2,w:1.8,mat:'darkstone'});
   down(-80.55,-104,-80.55,-90,B1,B2,1.3);up(-79,-104,-79,-90,B1,B2,1.3);
   K.slab(rect(-83,-90,-73,-86),B2,{mat:'station-granite'});
-  K.hpoly('station-marble',rect(-83,-90,-73,-86),B2+.024);
-  for(let x=-82.5;x<-74;x+=.8)for(let z=-89.5;z<-86.5;z+=.8)if((Math.round((x+82.5)/.8)+Math.round((z+89.5)/.8))%2===0)box({x,z,y:B2+.028,w:.78,h:.013,d:.78,mat:0x3d4140});
+  K.hpoly('station-marble',rect(-83,-90,-74,-83.4),B2+.05);
+  for(let c=0;c<10;c++)for(let r=0;r<7;r++)if((c+r)%2===0)
+    box({x:-82.55+c*.9,z:-89.55+r*.9,y:B2+.052,w:.89,h:.009,d:.89,mat:{color:0x292d2d,gloss:.7}});
   // Marble jambs and exit-number panels at the shared W3 access, outside its
   // six-metre opening. The yellow 3 in photos 01/06 denotes EXIT 3.
   for(const x of [-84.25,-72.75]){
     box({x,z:-88.8,y:B2,w:2.5,h:3.18,d:.7,mat:'station-marble',solid:true});
     detailRooms[3].jobs.push(()=>{
-    sign(['3','경부선 · 호남선','신세계 · 파미에','←'],x,B2+1.95,-88.35,1.2,.95,0,'#2f3336');
-    K.sign('3',{x:x-.35,y:B2+2.18,z:-88.25,w:.5,h:.5,rotY:0,bg:'#f2c324',fg:'#222222'});
-    box({x:x+.55,z:-88.32,y:B2+.22,w:.52,h:1.08,d:.18,mat:'metal'});
-    box({x:x+.63,z:-88.31,y:B2+2.13,w:.58,h:.67,d:.2,mat:0xe6e6de});
+    box({x:x-.25,y:B2+1.69,z:-88.36,w:1.14,h:1.04,d:.07,mat:{color:0x202627,gloss:.3}});
+    K.sign('3',{x:x-.56,y:B2+2.34,z:-88.28,w:.43,h:.59,rotY:0,bg:'#e7c625',fg:'#252a2b',bold:false});
+    K.sign('출구',{x:x-.56,y:B2+2.05,z:-88.27,w:.32,h:.11,bg:null,fg:'#252a2b',bold:false});
+    K.sign(['경부선','호남선','신세계','파미에'],{x:x+.01,y:B2+2.22,z:-88.27,w:.48,h:.81,bg:null,fg:'#f4f2e7',bold:false});
+    K.sign('←',{x:x-.55,y:B2+1.84,z:-88.27,w:.46,h:.19,bg:null,fg:'#ffffff',bold:false});
+    box({x:x+.02,z:-88.32,y:B2+.43,w:.51,h:1.02,d:.075,mat:{tex:'metal',gloss:.7}});
+    box({x:x+.64,z:-88.32,y:B2+.99,w:.3,h:.48,d:.065,mat:{tex:'metal',gloss:.5}});
+    box({x:x+.63,z:-88.31,y:B2+2.13,w:.58,h:.67,d:.15,mat:{color:0xe6e6de,gloss:.3}});
     for(let i=0;i<5;i++)box({x:x+.64,z:-88.198,y:B2+.96+i*.034,w:.25,h:.012,d:.012,mat:0x6f7877});
     box({x:x+.56,z:-88.195,y:B2+.7,w:.04,h:.08,d:.015,mat:0x454f51});
     K.sign('전기',{x:x+.63,y:B2+2.27,z:-88.19,w:.22,h:.11,bg:null,fg:'#637170'});
+    for(const xx of [x-.19,x+.64]){
+      box({x:xx,y:B2+1.13,z:-88.269,w:.04,h:.16,d:.02,mat:0x58605f});
+      for(let i=0;i<4;i++)box({x:xx+.11,y:B2+1.29+i*.028,z:-88.268,w:.16,h:.009,d:.01,mat:0x606963});
+    }
+    // Large stone panels, black plinth and fine vertical steel corner trims.
+    for(const yy of [.75,1.5,2.25])box({x,y:B2+yy,z:-88.443,w:2.5,h:.005,d:.012,mat:0x999a92});
+    for(const dx of [-1.21,-.61,0,.61,1.21])box({x:x+dx,y:B2,z:-88.438,w:.005,h:3.18,d:.014,mat:0x999a92});
+    box({x,y:B2,z:-88.43,w:2.5,h:.08,d:.04,mat:{color:0x292d2b,gloss:.5}});
     });
   }
   detailRooms[3].jobs.push(()=>{
@@ -1013,11 +1115,28 @@ export function build(K) {
   box({x:-78.5,z:-88.8,y:B2+2.6,w:9,h:.58,d:.45,mat:'station-panels'});
   for(let x=-82.925,i=0;x<-74;x+=.15,i++)box({x,z:-88.56,y:B2+2.6,w:.15,h:.1,d:.025,mat:i%2?0x222222:0xf2c324});
   sign('호남선 · 경부선 · 영동선 · 사평로  ↑',-78.5,B2+2.94,-88.53,8.5,.3,0,'#f2f2ee','#2f3336');
-  // Photo 01's narrow glass-block strip beside the marble wall.
-  for(let r=0;r<9;r++)for(let c=0;c<3;c++){
-    box({x:-85.3+c*.23,y:B2+.12+r*.27,z:-88.42,w:.215,h:.25,d:.12,mat:'glass'});
-    box({x:-85.3+c*.23,y:B2+.12+r*.27,z:-88.34,w:.23,h:.018,d:.025,mat:0xe0e1d8});
-  }
+  // Photo 01: the visible glass-block return is RIGHT of the east sign pier.
+  // Retain the west strip as well; bevel highlights make the individual glass
+  // blocks readable without an invented glowing wall behind them.
+  detailRooms[3].jobs.push(()=>{
+    for(const start of [-85.3,-71.38])for(let r=0;r<13;r++)for(let c=0;c<5;c++){
+      const x=start+c*.2,yy=B2+.1+r*.2;
+      box({x,y:yy,z:-88.42,w:.188,h:.188,d:.1,mat:'glass'});
+      box({x,y:yy,z:-88.351,w:.2,h:.012,d:.023,mat:0xc5cfca});
+      box({x:x-.094,y:yy,z:-88.349,w:.012,h:.2,d:.023,mat:0xc5cfca});
+      box({x,y:yy+.027,z:-88.338,w:.132,h:.012,d:.012,mat:0xdbe3dd});
+      box({x:x+.062,y:yy+.025,z:-88.338,w:.009,h:.13,d:.012,mat:0xc1d1cd});
+    }
+    for(const x of [-82.5,-75.85]){
+      box({x,y:B2,z:-89.2,w:.22,h:1.04,d:.32,mat:{tex:'metal',gloss:.5}});
+      box({x,y:B2+1.04,z:-89.2,w:.22,h:.055,d:.3,mat:0x314950});
+      box({x,y:B2+.73,z:-89.025,w:.11,h:.08,d:.02,mat:paint(0x78b555)});
+    }
+    // Adjacent wall carries the rose stone band, fire call box and notices.
+    box({x:-71.92,y:B2+.84,z:-86.9,w:.055,h:.18,d:2.7,mat:{color:0xb09682,gloss:.5}});
+    box({x:-71.9,y:B2+1.05,z:-86.8,w:.08,h:.45,d:.24,mat:{color:0xad302a,gloss:.3}});
+    for(const z of [-87.7,-86.05])sign(['고속터미널역','안전 이용 안내'], -71.86,B2+1.87,z,.62,.89,-Math.PI/2,'#efeee5','#315361');
+  });
   if(!mallHere)sign('3  고속터미널  |  타는 곳 ↓',-79,B1+2.75,-104.7,5.8,.65,0,CSS[3]);
   K.slab(rect(-5,-138,0,-126),B1,{mat:'station-granite'});
   K.hpoly('station-granite',rect(-5,-138,0,-126),B1+.02);
@@ -1119,6 +1238,9 @@ export function build(K) {
   sign('9호선 열차 안내  |  일반 · 급행',-26,B1+2.38,-113,7,.43,0,'#d8d2c4','#3d3f8f');
 
   // 3↔7: a continuous paid passage around the east side of the main complex.
+  // Round 10: its 119 + 178 = 297 m centreline already makes the full 9↔7
+  // route longer than 300 m once the 3↔9 incline/access is included. Retain
+  // these inferred bends; the written distance is not a surveyed floor plan.
   const transfer=hall([[-79,-27],[40,-27],[40,151]],7,B2,{floor:'B2',name:'고속터미널역 환승통로',sub:'3호선 ↔ 7호선 · 9호선 연결',label:'7호선 갈아타는 곳  ↑    3·9호선  ↓',mat:'station-diagonal',ads:true,openings:[{x:-79,z:-27,w:9},{x:40,z:151,w:12}]});
   for(let s=7,i=0;s<transfer.length-4;s+=5,i++){const p=transfer.at(s,[1.2,2.1,.3][i%3]);person(p.x,B2,p.z,{shirt:[0x57554f,0xa0a8ad,0x3d526c,0xb19b87][i%4]});}
   // Two moving walks occupy one side, preserving a full pedestrian aisle.
@@ -1127,6 +1249,14 @@ export function build(K) {
     K.ramp(a.x,a.z,b.x,b.z,{ya:B2+.03,yb:B2+.03,w:1.4,mat:0x49555c,move:.65,rails:true});
     localSign(transfer,ends[0]-2,-1.6,B2+2.35,'무빙워크  ↑',2.5,.45);
   }
+  // The audit records a Line 9 arrival board beside the moving walkway.
+  // Its exact bay, casing and static display state are reconstruction guesses.
+  // Face the 9-bound approach on the north/south run, parallel to Line 3.
+  detailRooms[4].jobs.push(()=>{
+    const s=148,p=transfer.at(s);
+    for(const v of [-1.7,1.7])localBox(transfer,s,v,B2+2.7,.025,.12,.025,'metal');
+    sign(['⑨  열차 도착 안내','일반  개화  곧 도착'],p.x,B2+2.35,p.z,4.2,.7,p.rot,'#141c20','#ffc45a');
+  });
   // The entire 3↔9 flight is outside the south platform wall. Previously its
   // solid step skirts rose through the platform aisle at the B4 spawn.
   hall([[-76,-85],[-65,-85]],7,B2,{floor:'B2',name:'고속터미널역 3·9호선 환승통로',label:'9호선 환승  ↓',openings:[{x:-76,z:-85,w:9},{x:-65,z:-82,w:7,full:true}]});
@@ -1154,6 +1284,7 @@ export function build(K) {
 
   // Accessible routes. Each lift door has a real landing and all line levels;
   // Line 7's Exit 4 lift explicitly includes the verified 1F/B2/B3 stops.
+  // Its existing B1 stop is an unverified connection retained in this pass.
   function lift(x,z,rot,floors,name) {
     const w=2.6,d=2.5,c=Math.cos(rot),s=Math.sin(rot);
     const P=(lx,lz)=>[x+lx*c+lz*s,z-lx*s+lz*c];
@@ -1208,6 +1339,21 @@ export function build(K) {
   box({x:-136,y:3.3,z:248,w:3.2,h:.18,d:3.2,mat:0x4f626c});
   sign('고속터미널역  7호선',-134.6,2.75,248,3.3,.48,Math.PI/2,'#747f00');
   sign('엘리베이터',-134.6,2.15,248,2.3,.4,Math.PI/2);
+  // Seoul's 2026-01-09 article confirms an exterior ramp, but gives no survey
+  // dimensions. Keep the existing street/lift levels: this shallow paving
+  // relief is a flat-world approximation, not a real slope claim. Its surface
+  // clears both the station's .025 m and Central City's .06 m paving finishes.
+  // Approach north of the open Exit 4 stairwell, then turn south onto the
+  // existing east-facing lift landing. No new indoor room or building link.
+  K.ramp(-126.8,246.1,-127.8,246.1,{ya:.025,yb:.08,w:2.2,mat:'station-granite',rails:false});
+  K.ramp(-127.8,246.1,-133.2,246.1,{ya:.08,yb:.065,w:2.2,mat:'station-granite',rails:true});
+  K.ramp(-133.2,246.1,-133.9,246.1,{ya:.065,yb:.025,w:2.2,mat:'station-granite',rails:false});
+  K.slab(rect(-134.6,245,-133.2,248.8),.025,{mat:'station-granite',thick:.08});
+  for(const z of [245,247.2])for(const x of [-127.8,-130.5,-133.2]){
+    const y=.08+.015*(x+127.8)/5.4;
+    K.cyl({x,y,z,r:.035,h:.95,mat:'metal',seg:8});
+  }
+  sign('⑦ 엘리베이터 ←',-127.6,1.4,245,2.5,.32,Math.PI/2,'#747f00');
 
   // Network diagrams and local orientation boards, with researched names only.
   for(const [f,s,v,y,line] of [[l3,105,-16.8,B2,3],[l7,98,-14.5,B3,7],[l9,95,-14.5,B4,9]]){

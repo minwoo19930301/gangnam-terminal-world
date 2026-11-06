@@ -1,7 +1,7 @@
 {
   "id": "streets",
   "name": "고속터미널 거리 · 신반포로와 사평대로",
-  "updated": "2026-11-06",
+  "updated": "2026-11-07",
   "sources": [
     {
       "url": "https://www.asiae.co.kr/en/article/2024121008343423332",
@@ -142,6 +142,46 @@
       "url": "refs/interior/taxi/notes.json",
       "title": "Round8 사용자 제공 현장 참조",
       "year": 2026
+    },
+    {
+      "url": ".codex-jobs/evidence/audit_streets.json",
+      "title": "Round10 근거 감사: likely 2건, unverified 3건",
+      "year": 2026
+    },
+    {
+      "url": "https://www.asiae.co.kr/en/article/2025121008310383822",
+      "title": "고속터미널사거리 전방향 횡단보도: 2025-12-08 개통",
+      "year": 2025
+    },
+    {
+      "url": "https://www.seocho.go.kr/site/seocho/ex/bbs/View.do?bcIdx=406159&cbIdx=61",
+      "title": "서초구 2025-12-10 보도자료: 고속터미널사거리 횡단보도; 반포동사거리와 별도 사업",
+      "year": 2025
+    },
+    {
+      "url": "https://www.heraldk.com/article/2025102721441133001",
+      "title": "감사에 인용된 헤럴드 주소(접근 불가); 수치는 접근 가능한 헤럴드 Daum 송고본으로 확인",
+      "year": 2025
+    },
+    {
+      "url": "https://v.daum.net/v/20251028144547031",
+      "title": "헤럴드경제 2025-10-28: 10월 27일 설명회, 서울의 24시간 350m·피카소 160m·통로 내 관광안내센터",
+      "year": 2025
+    },
+    {
+      "url": "https://m.go.seoul.co.kr/news/2025/09/26/20250926500032",
+      "title": "서초구 지하 공공보행통로 애칭 공모",
+      "year": 2025
+    },
+    {
+      "url": "https://www.asiae.co.kr/article/2025121008310383822",
+      "title": "2025-12-10 아시아경제 한국어 원문: 고속터미널사거리 전방향 횡단보도",
+      "year": 2025
+    },
+    {
+      "url": "https://go.seoul.co.kr/news/newsView.php?id=20250926500032",
+      "title": "2025-09-26 서울신문 데스크톱 원문: 지하 공공보행로 애칭 공모",
+      "year": 2025
     }
   ],
   "building": {
@@ -168,7 +208,8 @@
       "tenants": [],
       "layout": "OSM886400346 외곽,서측 개방 출입문·대기석·민원 데스크·업무석. K.detail로 가구/집기 구성.",
       "source": "refs/interior/police_box/notes.json",
-      "guess": true
+      "guess": true,
+      "confidence": "unverified"
     },
     {
       "floor": "2F",
@@ -176,7 +217,8 @@
       "tenants": [],
       "layout": "y4.05 바닥과 뒤쪽 연결 계단. 내부 세부는 현장 배치 미확인.",
       "source": "refs/roadview/police_01_front.jpg",
-      "guess": true
+      "guess": true,
+      "confidence": "unverified"
     }
   ],
   "elements": [
@@ -200,17 +242,19 @@
       "name": "사평대로",
       "what": "경부선 방향 대로 (OSM primary, 폭 20m 양방 / 일방 4차로 14.2m, 3차로 10.9m 구간)",
       "where": "터미널 북동~동쪽, 서초IC/강남역 방향",
-      "details": "OSM: 498559927, 921681811 lanes 4 width 14.2 oneway; 309355890 lanes 3 width 10.9 oneway. 나머지는 폭 20m 양방(차로수 태그 없음 → 편도 3~4차로 추정). 중앙버스전용차로 존재 여부 미확인.",
+      "details": "OSM: 498559927, 921681811 lanes 4 width 14.2 oneway; 309355890 lanes 3 width 10.9 oneway. 나머지는 폭 20m 양방(차로수 태그 없음 → 편도 3~4차로 추정). 중앙버스전용차로 존재 여부 미확인. Round10 unverified 유지: 중앙버스전용차로를 추가하지 않음.",
       "source": "data/osm.json (local OSM extract)",
-      "guess": true
+      "guess": true,
+      "confidence": "unverified"
     },
     {
       "name": "사평지하도로",
       "what": "사평대로 지하차도 (OSM 폭 20m, 일방)",
       "where": "사평대로 71105531 외 6개 way",
-      "details": "터널/로 입구 램프 groundHole 필요. 실제 입출구 위치·길이는 미확인. 포털 벽면은 콘크리트 + 노란 도색 가드 추정.",
+      "details": "터널/로 입구 램프 groundHole 필요. 실제 입출구 위치·길이는 미확인. 포털 벽면은 콘크리트 + 노란 도색 가드 추정. Round10: 기존 OSM 선형과 입출구 유지. 터미널 지하 직결차로·주변 도로 지하화 장기 계획은 현재 모델에 적용하지 않음.",
       "source": "data/osm.json (local OSM extract)",
-      "guess": true
+      "guess": true,
+      "confidence": "unverified"
     },
     {
       "name": "강남터미널고가도로",
@@ -238,27 +282,49 @@
     },
     {
       "name": "센트럴씨티보도육교",
-      "what": "센트럴시티 앞 신반포로를 건너는 보도육교",
+      "what": "사평대로를 건너 서리풀공원으로 이어지는 보도육교",
       "where": "OSM way 301889788, layer 1 bridge, 폭 2.5m",
-      "details": "시민기자: 고속터미널역에서 센트럴시티 보도육교를 건너 서리풀공원/미도산 참나무 숲길로 연결. 계단 양단 필요(엘리베이터 여부 미확인).",
+      "details": "OSM 나선형 계단·교량 선형 유지. 육교 엘리베이터 실재 여부는 미확인. 현재 코드에는 남측 (109,235)에 y0.15↔6.2 승강기가 이미 있으며 추정 시설로 보존한다. 감사의 계단만 모델링이라는 설명은 현재 코드와 다르다. 7호선 4번 출구 앞 역 승강기는 별개 시설이며 3번 출구/육교 승강기의 근거가 아니다.",
       "source": "https://mediahub.seoul.go.kr/archives/2005907",
-      "guess": false
+      "guess": true,
+      "confidence": "unverified"
     },
     {
       "name": "반포동 교차로 횡단보도",
-      "what": "고터 앞 사거리, 2024-12-09 남·동쪽 횡단보 신설로 □형 횡단 완성",
-      "where": "고투몰 앞 반포동 교차로 (터미널 앞 신반포로 교차)",
-      "details": "15년간 상가 반대로 막혔다가 합의. 교통섬에 '서초형 AI 횡단보도'(대형차 접근 경고) 설치. OSM에도 이 근방 marked crossing 다수 (x -183~-99, z 261~362 부근 서울성모병원 쪽).",
-      "source": "https://www.asiae.co.kr/en/article/2024121008343423332 ; https://www.twig24.com/news/2025/12/10/20251210500170",
-      "guess": false
+      "what": "별개 사업: 반포동사거리 □형 횡단보도, 2024-12-09 남·동측 추가 개통",
+      "where": "고속터미널사거리와 구별해야 하는 반포동사거리; 이 항목의 종전 OSM 좌표 대응은 미확인",
+      "details": "2024-12-10 아시아경제 원문은 기존 북·서측에 남·동측을 추가해 □형을 완성했다고 명시한다. 2025 서초구 보도자료도 반포동사거리와 고속터미널사거리를 별도로 열거한다. 따라서 2024는 일부 신설일 뿐이라는 감사 해석은 채택하지 않고 2025 고터 개통과 분리한다. AI 횡단보도 설명도 이 2024 기사에 속하며 고터의 2025 공사로 전용하지 않는다.",
+      "source": "https://www.asiae.co.kr/en/article/2024121008343423332 ; https://www.seocho.go.kr/site/seocho/ex/bbs/View.do?bcIdx=406159&cbIdx=61",
+      "guess": true,
+      "confidence": "confirmed",
+      "guess_scope": "개통 사실은 확인; 현재 모델의 개별 횡단선·AI 설비와 해당 사업의 대응은 미확인"
+    },
+    {
+      "name": "고속터미널사거리 횡단보도",
+      "what": "□형 전방향 횡단보도, 2025-12-08 개통",
+      "where": "신반포로·잠원로 고속터미널교차로, 모델 중심 (358,-261)",
+      "details": "2025-12-10 보도자료와 감사 근거에 따라 완공일을 정정한다. 기존 4변 횡단선 끝단과 고투몰 출입구 계단 위치는 유지. 출입구 이설 대신 우회전 차로를 조정한 사실은 확인되지만, 좁아진 폭·정확한 도색 치수는 추정이며 새 수치를 만들지 않는다.",
+      "completed": "2025-12-08",
+      "source": "https://www.asiae.co.kr/en/article/2025121008310383822 ; https://www.seocho.go.kr/site/seocho/ex/bbs/View.do?bcIdx=406159&cbIdx=61",
+      "guess": true,
+      "confidence": "likely",
+      "guess_scope": "4변 교차로의 세부 선형·우회전 차로 폭은 OSM 및 기존 사진 기반 근사; 완공일과 출입구 미이전은 확인"
     },
     {
       "name": "반포한강공원 지하보행로",
       "what": "고투몰 G2 출구에서 한강공원으로 가는 지하 통로",
       "where": "고투몰 G2 게이트 오른쪽 출구 → 반포한강공원",
-      "details": "'서울의 24시간' 벽화 약 360m, 이어서 피카소 벽화 구간. 중간에 의자·테이블, 관광안내센터. 반포나들목 지하도에는 한강 풍경 벽화.",
-      "source": "https://mediahub.seoul.go.kr/archives/2011689",
-      "guess": false
+      "details": "2025-10-27 설명회를 다룬 10월 28일 헤럴드경제 송고본 기준 '서울의 24시간' 약 350m, '피카소 벽화' 약 160m. 기존 2024 자료의 서울 벽화 360m·피카소 65m와 다른 수치이며 이번 기록은 2025 보도를 채택한다. 의자·테이블과 통로 내 관광안내센터 존재는 기존 자료와 함께 유지. 안내센터를 중간 이후 한강 쪽으로 보는 배치는 추정이며 정확한 좌표 미확인. 한강 쪽 계단/엘리베이터의 상세 구조도 추정. streets에는 이 벽화·안내센터 형상이 없고, 새 onebailey 모듈의 별도 작업 범위다.",
+      "source": "https://v.daum.net/v/20251028144547031 ; https://mediahub.seoul.go.kr/archives/2011689 ; https://m.go.seoul.co.kr/news/2025/09/26/20250926500032",
+      "guess": true,
+      "confidence": "likely",
+      "guess_scope": "벽화 길이는 보도상 근삿값; 시작·끝 좌표, 관광안내센터 배치, 한강 측 출입 구조는 추정",
+      "mural_lengths_m": {
+        "seoul_24_hours": 350,
+        "picasso": 160
+      },
+      "geometry_owner": "onebailey",
+      "geometry_status": "streets에는 구현 없음; 이 작업에서는 연구 기록만 정정"
     },
     {
       "name": "버스정류장 고속터미널(중)",
@@ -462,12 +528,13 @@
     }
   ],
   "connections": [
-    "고속터미널 → 반포한강공원: 고투몰 G2 출구 → 지하보행로(서울의 24시간 벽화 360m → 피카소 벽화) → 반포나들목 지하도 → 한강공원 (서울시 기사 기준)",
+    "고속터미널 → 반포한강공원: 고투몰 G2 출구 → 원베일리 지하 공공보행통로(서울의 24시간 약350m·피카소 약160m, 2025-10 보도 기준) → 반포나들목 → 한강공원. streets의 구현 연결이 아닌 조사된 경로이며, 지하 통로 형상과 미등록 junction은 onebailey 별도 작업 범위.",
     "지상 대안: 신반포로 따라 서쪽 반포대교 남단 방향, 한강공원입구(OSM D-2) 부근 나들목 (추정)",
-    "센트럴씨티보도육교: 고속터미널역/센트럴시티 → 신반포로 건너 서리풀공원 방면"
+    "센트럴씨티보도육교: 고속터미널역/센트럴시티 → 사평대로 건너 서리풀공원 방면"
   ],
   "parking": "n/a",
   "notes": [
+    "Round10: 근거의 날짜·시설명을 정정하고 불확실성을 명시했다. 기존 형상을 바꿀 직접 근거가 없어 geometry는 보존. audit_streets 사진 폴더는 비어 있었고 기존 교차로·지구대 사진과 다이소 별도 출입구 사진을 직접 확인했다.",
     "Round8: 경찰서 전용 2026 로드뷰가 이전 흐린 ssg_04 체크무늬 추정을 대체한다. 3호선의 경찰서 앞 입구는 OSM1번 출구이며3번 출구와 구별했다.",
     "2025/2026 운영자 로드뷰를 우선 반영: 터미널 앞 좁은 잔디 분리대·회색 보도·울타리 쪽 붉은 벽돌·참조 건물 외관. 이번 범위 밖 추정은 modeling.guesses에 기록.",
     "OSM 태그 폭: 4차로 14.2m, 3차로 10.9m, 폭 20m 양방, 사이드워크 2~3m paving_stones",
@@ -479,13 +546,15 @@
     "가로수 종",
     "사평지하도로 입출구 위치와 길이",
     "고가도로 철거 여부",
-    "택시 승차장/흡연부스의 정확한 현장 좌표와 치수는 미확인; 이번 배치는 modeling.guesses에 공개한 추정."
+    "택시 승차장/흡연부스의 정확한 현장 좌표와 치수는 미확인; 이번 배치는 modeling.guesses에 공개한 추정.",
+    "고속터미널사거리 우회전 차로 조정 후 정확한 폭·보행 대기공간 치수",
+    "원베일리 벽화 구간 시작·끝, 통로 후반부로 추정하는 관광안내센터 좌표, 한강 측 계단/엘리베이터 구조",
+    "센트럴씨티보도육교 기존 남측 추정 승강기의 실재 여부와 반포지구대 가구의 정확한 평면 배치"
   ],
   "modeling": {
-    "round": 8,
-    "scope": "streets 소유 도로의 교차로·차선·보행시설, 중앙버스정류장·교통섬, 반포지구대 외관/민원실, 경부선·호남선 택시 승차장. 기존 고가·지하차도·육교·주변 건물 세부 유지.",
+    "round": 10,
+    "scope": "Round10 근거 감사의 기록·코드 주석 정정. 고터 횡단보도 완공일과 별개 반포동사거리 이력, 지하보행로 벽화 길이, unverified 추정 상태를 명시. 기존 도로·출입구·육교·지구대 세부 및 현재 claims/zones/연결 형상은 유지.",
     "claims": [
-      413280002,
       886400346,
       413367405,
       413367408,
@@ -507,7 +576,10 @@
         "element": "르본시티",
         "osm": 413280002,
         "reference": "cc_02",
-        "details": "OSM 외곽, 높이38m·8개 창문층, #c8a77a 석재와 독립된 어두운 창, 1층 유리 상가 띠. 북동쪽 옥상 안쪽의11×6.5m 발광 LED, 동측1.8×12m 세로판."
+        "details": "OSM 외곽, 높이38m·8개 창문층, #c8a77a 석재와 독립된 어두운 창, 1층 유리 상가 띠. 북동쪽 옥상 안쪽의11×6.5m 발광 LED, 동측1.8×12m 세로판.",
+        "status": "historical_transferred",
+        "current_owner": "lebon",
+        "note": "이전 round4 기록만 보존. streets의 해당 블록은 비활성화되어 있으며 413280002를 선점하지 않는다."
       },
       {
         "element": "터미널 앞 분리대",
@@ -724,7 +796,9 @@
       "gameplay": "기존 스폰·육교 승강기·도로 구조물 유지; 지구대 외부 및 택시 승차장 스폰 추가. 지구대는1F/2F 구역·계단과1F K.detail 민원실.",
       "busways": "기존 generic 소유1420100042/1420100043의 표면·버스도색을 streets로 통일; OSM 선형 유지.",
       "exit_1": "OSM3146856929 (51.36,-105.73), gotomall 소유. 계단·캐노피·유리난간 중복 생성하지 않고 hole을 보존. 실제3번 출구는(52.11,179.03)에 있어 별개.",
-      "city_boundaries": "city.js의 동시 수정 내용 read-only 확인. 차선 폭·주기·팔레트 일치. 반포대로 바깥 모서리 slip roads908623353/913615050/913615131은 city 소유의 별개 차로로 유지."
+      "city_boundaries": "city.js의 동시 수정 내용 read-only 확인. 차선 폭·주기·팔레트 일치. 반포대로 바깥 모서리 slip roads908623353/913615050/913615131은 city 소유의 별개 차로로 유지.",
+      "lebon": "OSM413280002는 lebon 소유. streets 비활성 블록과 이미 제외된 runtime claims를 유지하고 연구의 현행 claims도 동기화했다.",
+      "g2_hangang": "G2 계단은 gotomall, 원베일리 벽화 통로는 별도 onebailey 작업, 반포나들목은 hangang 소유. streets에는 벽화/안내센터 형상 없음. 기존 _junctions.js에 streets/onebailey 연결 없음; 이번 작업에서는 지하 연결을 만들지 않는다."
     },
     "guesses": [
       "중복 지적의 폭1.2m/1.5m·높이0.18m/0.2m는 잔디1.2m+경계석 포함1.5m, 높이0.2m로 통합했다. 치수는 사진 기준 근사치다.",
@@ -734,13 +808,494 @@
       "201/202동은 사진 설명의 약15층 대신 OSM의12층을 유지했다. bp_01의 고층 위치는 manifest 정정에 따라3동 뒤 기존34층101m 타워로 판단했다.",
       "CC 유리 캐노피의36m 길이, 지지대 간격6m, 정확한 광고판 도안은 추정이다. 보이는 유리·회백색 프레임 및 단순 색면만 표현했다.",
       "보도블록 줄눈, 터미널 붉은 띠의 단부, 옮긴 가로등 두 개의 정확한 간격은 사진과 서비스 도로에 맞춘 근사치다.",
-      "반포지구대 높이8.05m·층간4.05m·입상상단11.65m, 서측 출입문/공터의 세부 배치, 내부 업무석·계단·주차는 사진 비례 기반 추정. 파란 현수막의 서측 배치는 사용자 지시를 우선했다.",
+      "반포지구대 높이8.05m·층간4.05m·입상상단10.35m(현재 코드의 축소 후 약2.3m 입상; 이전11.65m 추정은 폐기), 서측 출입문/공터의 세부 배치, 내부 업무석·계단·주차는 사진 비례 기반 추정. 파란 현수막의 서측 배치는 사용자 지시를 우선했다.",
       "OSM에 택시 POI/node가 없다. 호남선 앞(-111.887,-61.999)·경부선 서비스도로(103.774,-133.587)와 흡연부스(-118,-44)는 연석/출구 위치를 기준으로 추정했다. 경부선 캐노피는 호남선 사진의 흰 아치 형식을 적용했다. 정확한 승차장 길이18m·차량색/개수·대기열도 모델링 추정이다.",
       "지구대 출구섬은 기존 gotomall1 출구 위치와 OSM 서비스도로를 우선했으며 항공사진의 그림자로 가려진 연석 윤곽·관목 배치는 추정이다. 삼호가든 남서 교통섬도 비어 있는 OSM 도로 사이 공간에 맞춘 추정이다.",
       "중앙정류장 위치는 OSM 정류장/버스전용차로를 따라 조정했으며 승강장26×3.2m, 쉼터/난간/패널 치수는 사진 비례 추정이다. 도착시간·확인되지 않은 정류소 번호는 만들지 않았다.",
-      "교차로 세부 차로별 진로·신호 주기·마스트 위치/길이·노면색깔유도선의 정확한 곡률은 정밀 측량이 없어 사용자 도로 규칙과 OSM 연결을 적용한 근사이다. 사진에 실제로 보이는 분홍/민트와 수평 신호 형태를 사용했다. 고가/지하차도/육교의 기존 치수 추정은 유지한다."
+      "교차로 세부 차로별 진로·신호 주기·마스트 위치/길이·노면색깔유도선의 정확한 곡률은 정밀 측량이 없어 사용자 도로 규칙과 OSM 연결을 적용한 근사이다. 사진에 실제로 보이는 분홍/민트와 수평 신호 형태를 사용했다. 고가/지하차도/육교의 기존 치수 추정은 유지한다.",
+      "Round10 unverified: 육교 남측 (109,235), y0.15↔6.2 승강기는 기존 접근성 추정이며 실재 확인 아님. 감사의 계단만이라는 현황은 오래된 상태이므로 현재 구조를 보존한다.",
+      "Round10: 고터 우회전 차로 조정은 확인되지만 폭이 좁아진 정도는 추정이다. 기존 OSM/사진 기반 차로·횡단선·계단을 유지했다.",
+      "Round10: 통로 관광안내센터를 중간 이후 한강 쪽으로 보는 위치와 한강 측 계단/엘리베이터 구조는 추정이다. 350m/160m를 실제 좌표에 임의 배치하지 않았다.",
+      "Round10 unverified: 지구대 내부 책상·CCTV·가구는 사진에 보이는 세부를 유지하되 방 배치와 2층·계단 치수는 추정이다. 사평지하차도 입출구/길이·깊이·폭과 육교 치수도 기존 추정을 유지한다."
     ],
     "verification": {
+      "status": "Round10 required smoke and full walk passed on their loaded snapshots; later supplemental neighbor run hit concurrent gyeongbu build error.",
+      "render": "User instruction: tests/shot.mjs not run. Round10 modeling.trace uses floor-level y; source images inspected, rendered output unverified.",
+      "smoke": "node tests/smoke.mjs streets gyeongbu banpo_shoppingtown: OK; streets 101268 quads, 11 spawns, 313 zones, 1 elevator.",
+      "warnings": [
+        "기존 lebon 이관에 따른 _meta.json stale claims: cached streets claims에는413280002가 남아 있으나 실제 streets claims에서는 제외됨. 이번 작업에서 runtime claims 변경 없음."
+      ],
+      "trace": "실제 kit/physics로 Round10 카메라8개 바닥 높이/충돌 확인: 전부 바닥 일치·capsule push0. G2 지상 카메라 y를 도로 바닥0.04로 보정.",
+      "file_checks": "node --check 및 대상 두 파일 git diff --check, JSON parsing 통과",
+      "walk_streets": "node tests/walk.mjs streets --no-city: 13 ok, 0 blocked (exit0)",
+      "walk_neighbors": "node tests/walk.mjs streets gotomall gyeongbu banpo_shoppingtown --no-city: concurrent gyeongbu.js edit failed to build at line1242, ReferenceError: buildRound10BasementRetail is not defined; no blocked count produced. Earlier required smoke passed before this edit.",
+      "preservation": "Round10 additions reversed in memory reproduce original streets.js SHA256 b4a3a18e8a1b46f436676674109e4088efc75e188710b9fbb27d3e8005cf15ed; only source list/comments changed.",
+      "walk": "node tests/walk.mjs: 443 ok, 0 blocked, exit0. Full-world run started before the later concurrent gyeongbu.js missing-function edit; this is a result for that loaded snapshot."
+    },
+    "verification_round4": {
+      "smoke_streets_gotomall": "OK; streets75,836quads(제한130,000),8spawns,1elevator(지상·육교 전층)",
+      "render": "기존 shots/verify/centralcity/cmp_1.png, critic/sheetA.png, gyeongbu/gb04.png 확인. 새 렌더용 로컬 서버가 listen EPERM으로 거부됨. tests/shot.mjs는 실행하지 않음.",
+      "walk": "node tests/walk.mjs: 320 ok, 0 blocked (최종 좌표·간섭 보정 후 재검사)",
+      "claims": "전체 PLACES meta.claims 검사: 중복 건물 선점0건",
+      "syntax_and_format": "node --check js/places/streets.js; git diff --check; JSON 파싱 통과",
+      "geometry_audit": {
+        "method": "실제 K 생성 호출 계측 및 폴리곤 교차 검사; 이미지 렌더 아님",
+        "median_x": [
+          60,
+          330
+        ],
+        "crossing_overlap_m2": 0,
+        "median_trees_or_poles": 0,
+        "parking_paver_overlap_m2": 0,
+        "pavement_pieces_checked": 2468,
+        "west_canopy_road_overlap_m2": 0,
+        "west_canopy_min_sampled_curb_clearance_m": 0.27,
+        "west_canopy_trees_or_poles": 0,
+        "red_paving_service_road_overlap_m2": 0
+      }
+    },
+    "trace": [
+      {
+        "spot": "반포지구대 북측 석재·경사 유리",
+        "photos": [
+          "refs/roadview/police_01_front.jpg"
+        ],
+        "x": 18,
+        "y": 1.7,
+        "z": -122,
+        "yawDeg": 201,
+        "round": 8,
+        "y_convention": "legacy camera height; round10 floor-level views are appended separately"
+      },
+      {
+        "spot": "반포지구대와 3호선1번 출구섬",
+        "photos": [
+          "refs/roadview/police_02_box_and_exit3_W.jpg"
+        ],
+        "x": 46,
+        "y": 1.7,
+        "z": -130,
+        "yawDeg": 141,
+        "round": 8,
+        "y_convention": "legacy camera height; round10 floor-level views are appended separately"
+      },
+      {
+        "spot": "신반포로 중앙정류장 동쪽 조망",
+        "photos": [
+          "refs/roadview/street_01_sinbanpo_median_busstop_E.jpg"
+        ],
+        "x": -32,
+        "y": 1.7,
+        "z": -105,
+        "yawDeg": 291,
+        "round": 8,
+        "y_convention": "legacy camera height; round10 floor-level views are appended separately"
+      },
+      {
+        "spot": "고속터미널교차로 잠원로 북쪽",
+        "photos": [
+          "refs/roadview/junction_01_jamwonro_N.jpg"
+        ],
+        "x": 358,
+        "y": 1.7,
+        "z": -261,
+        "yawDeg": 24,
+        "round": 8,
+        "y_convention": "legacy camera height; round10 floor-level views are appended separately"
+      },
+      {
+        "spot": "고속터미널교차로 신반포로 동쪽",
+        "photos": [
+          "refs/roadview/junction_02_jamwonro_E.jpg"
+        ],
+        "x": 358,
+        "y": 1.7,
+        "z": -261,
+        "yawDeg": 291,
+        "round": 8,
+        "y_convention": "legacy camera height; round10 floor-level views are appended separately"
+      },
+      {
+        "spot": "고속터미널교차로 잠원로 남쪽",
+        "photos": [
+          "refs/roadview/junction_03_jamwonro_S.jpg"
+        ],
+        "x": 358,
+        "y": 1.7,
+        "z": -261,
+        "yawDeg": 204,
+        "round": 8,
+        "y_convention": "legacy camera height; round10 floor-level views are appended separately"
+      },
+      {
+        "spot": "지구대 서측 현수막·옥상 입상",
+        "photos": [
+          "refs/interior/police_box/01_facade_wide_runner_statue_roof.jpg"
+        ],
+        "x": -3,
+        "y": 1.7,
+        "z": -93,
+        "yawDeg": 291,
+        "round": 8,
+        "y_convention": "legacy camera height; round10 floor-level views are appended separately"
+      },
+      {
+        "spot": "지구대 출입문",
+        "photos": [
+          "refs/interior/police_box/02_entrance_door_signage.jpg"
+        ],
+        "x": 14.3,
+        "y": 1.7,
+        "z": -95.9,
+        "yawDeg": 291,
+        "round": 8,
+        "y_convention": "legacy camera height; round10 floor-level views are appended separately"
+      },
+      {
+        "spot": "지구대 민원실 앞 공터",
+        "photos": [
+          "refs/interior/police_box/03_facade_entrance_front_apron.jpg"
+        ],
+        "x": 10,
+        "y": 1.7,
+        "z": -94,
+        "yawDeg": 291,
+        "round": 8,
+        "y_convention": "legacy camera height; round10 floor-level views are appended separately"
+      },
+      {
+        "spot": "지구대 CCTV 업무석",
+        "photos": [
+          "refs/interior/police_box/18_interior_cctv_control_room.jpg"
+        ],
+        "x": 24.8,
+        "y": 1.65,
+        "z": -102.3,
+        "yawDeg": 291,
+        "round": 8,
+        "y_convention": "legacy camera height; round10 floor-level views are appended separately"
+      },
+      {
+        "spot": "지구대 녹색 민원 데스크",
+        "photos": [
+          "refs/interior/police_box/23_interior_front_desk_2026.jpg"
+        ],
+        "x": 23.25,
+        "y": 1.2,
+        "z": -101.89,
+        "yawDeg": 111,
+        "round": 8,
+        "y_convention": "legacy camera height; round10 floor-level views are appended separately"
+      },
+      {
+        "spot": "호남선 택시 캐노피 안쪽",
+        "photos": [
+          "refs/interior/taxi/06_taxi_sign_canopy.jpg"
+        ],
+        "x": -110.65,
+        "y": 1.8,
+        "z": -61.57,
+        "yawDeg": 21.26,
+        "round": 8,
+        "y_convention": "legacy camera height; round10 floor-level views are appended separately"
+      },
+      {
+        "spot": "호남선 보도에서 택시 승차장 접근",
+        "photos": [
+          "refs/interior/taxi/05_sidewalk_to_taxi_canopy.jpg"
+        ],
+        "x": -120.7,
+        "y": 1.8,
+        "z": -39.7,
+        "yawDeg": 346,
+        "round": 8,
+        "y_convention": "legacy camera height; round10 floor-level views are appended separately"
+      },
+      {
+        "spot": "경부선 택시 승차장과 기존 아치 비교",
+        "photos": [
+          "refs/roadview/gb_03_front_plaza_arch_canopy_shelters.jpg"
+        ],
+        "x": 103.5,
+        "y": 1.8,
+        "z": -143.9,
+        "yawDeg": 177.25,
+        "round": 8,
+        "y_convention": "legacy camera height; round10 floor-level views are appended separately"
+      },
+      {
+        "spot": "Round10 고속터미널사거리 북측 횡단보도",
+        "round": 10,
+        "photos": [
+          "refs/roadview/junction_01_jamwonro_N.jpg"
+        ],
+        "x": 358,
+        "y": 0.04,
+        "z": -261,
+        "yawDeg": 24,
+        "pitchDeg": 0,
+        "places": [
+          "streets",
+          "gyeongbu",
+          "banpo_shoppingtown"
+        ],
+        "y_convention": "floor level",
+        "correction": "2025-12-08 전방향 횡단보도 완공; 기존 끝단 유지"
+      },
+      {
+        "spot": "Round10 고속터미널사거리 동측 횡단보도",
+        "round": 10,
+        "photos": [
+          "refs/roadview/junction_02_jamwonro_E.jpg"
+        ],
+        "x": 358,
+        "y": 0.04,
+        "z": -261,
+        "yawDeg": 291,
+        "pitchDeg": 0,
+        "places": [
+          "streets",
+          "gyeongbu",
+          "banpo_shoppingtown"
+        ],
+        "y_convention": "floor level"
+      },
+      {
+        "spot": "Round10 고속터미널사거리 남측 횡단보도",
+        "round": 10,
+        "photos": [
+          "refs/roadview/junction_03_jamwonro_S.jpg"
+        ],
+        "x": 358,
+        "y": 0.04,
+        "z": -261,
+        "yawDeg": 204,
+        "pitchDeg": 0,
+        "places": [
+          "streets",
+          "gyeongbu",
+          "banpo_shoppingtown"
+        ],
+        "y_convention": "floor level"
+      },
+      {
+        "spot": "Round10 고속터미널사거리 서측 횡단보도",
+        "round": 10,
+        "photos": [],
+        "x": 358,
+        "y": 0.04,
+        "z": -261,
+        "yawDeg": 111,
+        "pitchDeg": 0,
+        "places": [
+          "streets",
+          "gyeongbu",
+          "banpo_shoppingtown"
+        ],
+        "y_convention": "floor level"
+      },
+      {
+        "spot": "Round10 G2 지상 한강공원 안내표지",
+        "round": 10,
+        "photos": [],
+        "x": -294,
+        "y": 0.04,
+        "z": -24,
+        "yawDeg": 26.57,
+        "pitchDeg": 0,
+        "places": [
+          "streets",
+          "gotomall"
+        ],
+        "y_convention": "floor level",
+        "correction": "350m/160m 연구 정정 대상 경로의 접근 지점; 벽화 형상은 streets에 없어 이 뷰로 길이를 검증할 수 없음"
+      },
+      {
+        "spot": "Round10 G2 B1 출구 접근",
+        "round": 10,
+        "photos": [],
+        "x": -285.511,
+        "y": -6,
+        "z": -24.724,
+        "yawDeg": 20.53,
+        "pitchDeg": 0,
+        "places": [
+          "streets",
+          "gotomall"
+        ],
+        "y_convention": "floor level",
+        "correction": "기존 G2 끝점 검토용. 관광안내센터와 벽화 구간의 정확한 카메라는 onebailey 배치 확정 후 필요"
+      },
+      {
+        "spot": "Round10 육교 남측 기존 추정 승강기",
+        "round": 10,
+        "photos": [],
+        "x": 109,
+        "y": 0.15,
+        "z": 232,
+        "yawDeg": 180,
+        "pitchDeg": 0,
+        "places": [
+          "streets"
+        ],
+        "y_convention": "floor level",
+        "correction": "unverified 형상 보존; 신규 설치 아님"
+      },
+      {
+        "spot": "Round10 지구대 사진 기반 민원실",
+        "round": 10,
+        "photos": [
+          "refs/interior/police_box/18_interior_cctv_control_room.jpg",
+          "refs/interior/police_box/23_interior_front_desk_2026.jpg"
+        ],
+        "x": 24.8,
+        "y": 0,
+        "z": -102.3,
+        "yawDeg": 291,
+        "pitchDeg": 0,
+        "places": [
+          "streets"
+        ],
+        "y_convention": "floor level",
+        "correction": "unverified 평면은 추정으로 유지; 사진에 보이는 가구 세부는 삭제하지 않음"
+      }
+    ],
+    "evidence_audit_round10": {
+      "audit": ".codex-jobs/evidence/audit_streets.json",
+      "reviewed": "2026-11-07",
+      "confidence_counts": {
+        "confirmed": 0,
+        "likely": 2,
+        "unverified": 3
+      },
+      "photos": {
+        "audit_streets": "directory exists, empty; no saved audit photographs available",
+        "opened": [
+          "refs/roadview/junction_01_jamwonro_N.jpg",
+          "refs/interior/police_box/18_interior_cctv_control_room.jpg",
+          "refs/interior/police_box/23_interior_front_desk_2026.jpg",
+          "refs/interior/daiso/107_gate4_entrance_gotomall_side_marketer_jyh_20261105.jpg",
+          "refs/interior/daiso/125_gate2_1f_portal_B1_escalator_down_eun_bib_20260830.jpg"
+        ],
+        "photo_priority": "지구대 사진에 CCTV·녹색 데스크·집기가 보여 근거 미확인만으로 가구를 축소하지 않았다. 다이소 사진의 고투몰측 GATE4와 터미널측 GATE2는 별개지만 streets 감사 항목/소유 공간이 아니므로 수정하지 않았다."
+      },
+      "items": [
+        {
+          "element": "반포동(고터) 사거리 횡단보도",
+          "confidence": "likely",
+          "action": "applied_with_source_disambiguation",
+          "position": {
+            "x": 358,
+            "y": 0.04,
+            "z": -261
+          },
+          "applied": "고속터미널사거리 완공일 2025-12-08, 4변·끝단·계단 위치 유지. 우회전 차로 조정 후 폭은 추정으로 기록.",
+          "deviation": "2024-12-09 반포동사거리 □형 완성 자체는 원문에 명시돼 있어 삭제하지 않고 별개 사건으로 분리. AI 교통섬도 2024 기사 범위로 유지.",
+          "sources": [
+            "https://www.asiae.co.kr/en/article/2025121008310383822",
+            "https://www.seocho.go.kr/site/seocho/ex/bbs/View.do?bcIdx=406159&cbIdx=61",
+            "https://www.asiae.co.kr/en/article/2024121008343423332",
+            "https://www.twig24.com/news/2025/12/10/20251210500170"
+          ]
+        },
+        {
+          "element": "고투몰 G2 출구 ↔ 반포한강공원 지하보행로",
+          "confidence": "likely",
+          "action": "applied_to_research_geometry_outside_scope",
+          "position": {
+            "g2_b1_landing": [
+              -289.263,
+              -6,
+              -34.742
+            ],
+            "g2_street_top": [
+              -301.437,
+              0,
+              -30.183
+            ]
+          },
+          "applied": "서울의 24시간 약350m·피카소 약160m로 정정. 센터는 통로 내 존재가 확인되나 중간 이후 한강 쪽 배치 및 한강 출입 구조는 추정.",
+          "deviation": "streets에는 수정할 벽화/센터 형상이 없다. onebailey 별도 작업 범위이므로 통로를 중복 생성하지 않았다. 65m/160m 자료 차이는 보존.",
+          "sources": [
+            "https://www.heraldk.com/article/2025102721441133001",
+            "https://v.daum.net/v/20251028144547031",
+            "https://mediahub.seoul.go.kr/archives/2011689",
+            "https://m.go.seoul.co.kr/news/2025/09/26/20250926500032"
+          ]
+        },
+        {
+          "element": "센트럴씨티보도육교 계단 양단(엘리베이터 유무)",
+          "confidence": "unverified",
+          "guess": true,
+          "action": "kept_current_geometry",
+          "position": {
+            "existing_lift": [
+              109,
+              0.15,
+              235
+            ],
+            "deck_y": 6.2
+          },
+          "reason": "감사와 달리 현재 코드에 추정 승강기가 이미 존재. unverified 그대로 유지 규칙에 따라 보존하고 신규 승강기 없음. 4번 출구 역 승강기를 육교의 증거로 쓰지 않음."
+        },
+        {
+          "element": "반포지구대 위치와 1·2층 내부 배치",
+          "confidence": "unverified",
+          "guess": true,
+          "action": "kept_current_geometry",
+          "position": {
+            "bounds_xz": [
+              15.78,
+              -111.53,
+              34.64,
+              -93.34
+            ],
+            "floor_y": [
+              0,
+              4.05
+            ]
+          },
+          "reason": "OSM 외곽·현장 사진 기반 데스크/CCTV/가구 모두 유지. 평면과 계단·2층은 추정 표기. 감사의 가구 최소화 제안은 사진 및 세부 보존 지시를 우선하여 미적용."
+        },
+        {
+          "element": "사평지하차도 입·출구 위치와 사평대로 중앙버스전용차로",
+          "confidence": "unverified",
+          "guess": true,
+          "action": "kept_current_geometry",
+          "position": {
+            "west_portal": [
+              -211.18,
+              -6,
+              362.25
+            ],
+            "east_portal": [
+              -79.33,
+              -6,
+              301.845
+            ]
+          },
+          "reason": "기존 OSM 입출구/선형 유지. 사평대로 버스전용차로와 미착공 지하화 계획은 추가하지 않음."
+        }
+      ],
+      "geometry": "No geometry, runtime claims, zones, spawns, or registered connections changed by round10. Code changes are source references and comments only.",
+      "meta_generation": "이번 라운드는 runtime claims/zones 변경 없음. smoke는 기존 lebon 소유권 이관이 아직 _meta.json에 반영되지 않은 경고를 출력했다. _meta.json은 허용된 두 파일 밖이므로 재생성하지 않았으며 소유 작업에서 갱신 필요.",
+      "source_access": {
+        "read": [
+          "https://www.asiae.co.kr/en/article/2024121008343423332",
+          "https://www.asiae.co.kr/article/2025121008310383822",
+          "https://www.seocho.go.kr/site/seocho/ex/bbs/View.do?bcIdx=406159&cbIdx=61",
+          "https://v.daum.net/v/20251028144547031",
+          "https://mediahub.seoul.go.kr/archives/2011689",
+          "https://go.seoul.co.kr/news/newsView.php?id=20250926500032"
+        ],
+        "unavailable": [
+          "https://www.heraldk.com/article/2025102721441133001",
+          "https://www.twig24.com/news/2025/12/10/20251210500170"
+        ],
+        "note": "감사에 적힌 원문 주소가 열리지 않는 경우 접근 가능한 원문/송고본과 서초구 1차 자료로 확인했다. 접근 불가 주소를 직접 읽었다고 간주하지 않는다. 헤럴드 보도 발행일은 2025-10-28이며 설명회 날짜가 10월27일이다."
+      }
+    },
+    "verification_round8": {
       "smoke": "node tests/smoke.mjs streets gyeongbu banpo_shoppingtown: OK; streets 약100,186quads,11spawns,314zones; 모든K.detail 빌드 포함.",
       "walk": "node tests/walk.mjs:428 ok,0 blocked. streets/gotomall/gyeongbu/banpo_shoppingtown --no-city:163 ok,0 blocked.",
       "render": "사용자 지시대로 tests/shot.mjs 실행하지 않음. 운영자가 modeling.trace로 렌더 비교 예정. 기하 검사는 렌더 검증을 대체하지 않음.",
@@ -783,170 +1338,6 @@
       },
       "police_entrance": "실물 kit/physics로 외부spawn→문→민원 카운터 연속 충돌 검사 통과.",
       "file_checks": "node --check js/places/streets.js; git diff --check; JSON parsing and all trace photo paths checked."
-    },
-    "verification_round4": {
-      "smoke_streets_gotomall": "OK; streets75,836quads(제한130,000),8spawns,1elevator(지상·육교 전층)",
-      "render": "기존 shots/verify/centralcity/cmp_1.png, critic/sheetA.png, gyeongbu/gb04.png 확인. 새 렌더용 로컬 서버가 listen EPERM으로 거부됨. tests/shot.mjs는 실행하지 않음.",
-      "walk": "node tests/walk.mjs: 320 ok, 0 blocked (최종 좌표·간섭 보정 후 재검사)",
-      "claims": "전체 PLACES meta.claims 검사: 중복 건물 선점0건",
-      "syntax_and_format": "node --check js/places/streets.js; git diff --check; JSON 파싱 통과",
-      "geometry_audit": {
-        "method": "실제 K 생성 호출 계측 및 폴리곤 교차 검사; 이미지 렌더 아님",
-        "median_x": [
-          60,
-          330
-        ],
-        "crossing_overlap_m2": 0,
-        "median_trees_or_poles": 0,
-        "parking_paver_overlap_m2": 0,
-        "pavement_pieces_checked": 2468,
-        "west_canopy_road_overlap_m2": 0,
-        "west_canopy_min_sampled_curb_clearance_m": 0.27,
-        "west_canopy_trees_or_poles": 0,
-        "red_paving_service_road_overlap_m2": 0
-      }
-    },
-    "trace": [
-      {
-        "spot": "반포지구대 북측 석재·경사 유리",
-        "photos": [
-          "refs/roadview/police_01_front.jpg"
-        ],
-        "x": 18,
-        "y": 1.7,
-        "z": -122,
-        "yawDeg": 201
-      },
-      {
-        "spot": "반포지구대와 3호선1번 출구섬",
-        "photos": [
-          "refs/roadview/police_02_box_and_exit3_W.jpg"
-        ],
-        "x": 46,
-        "y": 1.7,
-        "z": -130,
-        "yawDeg": 141
-      },
-      {
-        "spot": "신반포로 중앙정류장 동쪽 조망",
-        "photos": [
-          "refs/roadview/street_01_sinbanpo_median_busstop_E.jpg"
-        ],
-        "x": -32,
-        "y": 1.7,
-        "z": -105,
-        "yawDeg": 291
-      },
-      {
-        "spot": "고속터미널교차로 잠원로 북쪽",
-        "photos": [
-          "refs/roadview/junction_01_jamwonro_N.jpg"
-        ],
-        "x": 358,
-        "y": 1.7,
-        "z": -261,
-        "yawDeg": 24
-      },
-      {
-        "spot": "고속터미널교차로 신반포로 동쪽",
-        "photos": [
-          "refs/roadview/junction_02_jamwonro_E.jpg"
-        ],
-        "x": 358,
-        "y": 1.7,
-        "z": -261,
-        "yawDeg": 291
-      },
-      {
-        "spot": "고속터미널교차로 잠원로 남쪽",
-        "photos": [
-          "refs/roadview/junction_03_jamwonro_S.jpg"
-        ],
-        "x": 358,
-        "y": 1.7,
-        "z": -261,
-        "yawDeg": 204
-      },
-      {
-        "spot": "지구대 서측 현수막·옥상 입상",
-        "photos": [
-          "refs/interior/police_box/01_facade_wide_runner_statue_roof.jpg"
-        ],
-        "x": -3,
-        "y": 1.7,
-        "z": -93,
-        "yawDeg": 291
-      },
-      {
-        "spot": "지구대 출입문",
-        "photos": [
-          "refs/interior/police_box/02_entrance_door_signage.jpg"
-        ],
-        "x": 14.3,
-        "y": 1.7,
-        "z": -95.9,
-        "yawDeg": 291
-      },
-      {
-        "spot": "지구대 민원실 앞 공터",
-        "photos": [
-          "refs/interior/police_box/03_facade_entrance_front_apron.jpg"
-        ],
-        "x": 10,
-        "y": 1.7,
-        "z": -94,
-        "yawDeg": 291
-      },
-      {
-        "spot": "지구대 CCTV 업무석",
-        "photos": [
-          "refs/interior/police_box/18_interior_cctv_control_room.jpg"
-        ],
-        "x": 24.8,
-        "y": 1.65,
-        "z": -102.3,
-        "yawDeg": 291
-      },
-      {
-        "spot": "지구대 녹색 민원 데스크",
-        "photos": [
-          "refs/interior/police_box/23_interior_front_desk_2026.jpg"
-        ],
-        "x": 23.25,
-        "y": 1.2,
-        "z": -101.89,
-        "yawDeg": 111
-      },
-      {
-        "spot": "호남선 택시 캐노피 안쪽",
-        "photos": [
-          "refs/interior/taxi/06_taxi_sign_canopy.jpg"
-        ],
-        "x": -110.65,
-        "y": 1.8,
-        "z": -61.57,
-        "yawDeg": 21.26
-      },
-      {
-        "spot": "호남선 보도에서 택시 승차장 접근",
-        "photos": [
-          "refs/interior/taxi/05_sidewalk_to_taxi_canopy.jpg"
-        ],
-        "x": -120.7,
-        "y": 1.8,
-        "z": -39.7,
-        "yawDeg": 346
-      },
-      {
-        "spot": "경부선 택시 승차장과 기존 아치 비교",
-        "photos": [
-          "refs/roadview/gb_03_front_plaza_arch_canopy_shelters.jpg"
-        ],
-        "x": 103.5,
-        "y": 1.8,
-        "z": -143.9,
-        "yawDeg": 177.25
-      }
-    ]
+    }
   }
 }

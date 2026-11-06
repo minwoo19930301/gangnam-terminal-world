@@ -1,7 +1,7 @@
 {
   "id": "newcore",
   "name": "뉴코아아울렛 강남점",
-  "updated": "2026-11-06",
+  "updated": "2026-11-07",
   "sources": [
     {
       "url": "https://www.elandretail.com/store02.do?BDID=0003001B&branchID=00110001&lang=000600KO",
@@ -196,6 +196,18 @@
       "title": "테이블 배치, 기둥 표지(화장실 표시), 오픈 매장",
       "post_date": "2026-11-03",
       "type": "provided_blog_photo"
+    },
+    {
+      "url": "https://www.elandretail.com/store05.do?branchID=00110001&lang=000600KO",
+      "title": "공식 식당가: 피자몰 1관 B1F, 버거킹·스타벅스 3관 1F",
+      "accessed": "2026-11-07",
+      "type": "official"
+    },
+    {
+      "url": ".codex-jobs/evidence/audit_newcore.json",
+      "title": "Round 10 evidence audit; Naver 원문 접근 실패 시 evidence_found 발췌문으로 확인",
+      "accessed": "2026-11-07",
+      "type": "provided_audit"
     }
   ],
   "buildings": [
@@ -406,11 +418,17 @@
     "사진09 통로 바닥은 회갈색 작은 직사각 타일의 헤링본, 좌석 구역은 큰 밝은 회색 정사각 타일. 천장은 검은 노출 철골·덕트·트랙등·황동 펜던트; 솥내음은 밝은 오크 격자 하부 패널과 길게 이어진 화분, 밝은 테이블·의자.",
     "사진06 3관 복도는 밝은 대형 타일·검은 메쉬/노출 천장·검은 유리 차이797 전면·검은 메뉴 스탠드. 실내 끝 표지는2관 방향이다.",
     "외관은 크림 석재 기둥·돌림띠·아치 몰딩, 청회색 타일 인필, 검은 어닝과 목높이 유리 쇼윈도, 상부 크림/회색 세로 띠. 3관은 청록·적색·검은 어닝과 파란P/유리 세로줄 주차탑.",
-    "2관 하나은행은 로컬 OSM POI2103907404(247.55,-445.61)로 확인했다. 점포 존재·대략 위치는 OSM 근거이며 전면 bay 폭과 간판 위치는 근사 배치다."
+    "2관 하나은행은 로컬 OSM POI2103907404(247.55,-445.61)로 확인했다. 점포 존재·대략 위치는 OSM 근거이며 전면 bay 폭과 간판 위치는 근사 배치다.",
+    "R10: audit_newcore의 confirmed/likely 5항목을 검토했다. refs/interior/audit_newcore/는 빈 폴더이며 기존 newcore 사진03·06·07·08·09·10·12·16을 대조했다. 다이소 안내도는 뉴코아 지하 직결의 증거로 사용하지 않았다.",
+    "R10: 공식 1·2·3관 층별안내와 공식 식당가 페이지는 재열람했다. Naver 모바일·데스크톱 원문은 접근 실패하여 감사 JSON evidence_found의 출처별 발췌문을 읽었다. 블로그 원문을 이번 작업에서 직접 읽었다고 간주하지 않는다.",
+    "R10: 1·2관 B1을 뉴코아 내부 통로로 연결했다. 같은 모듈이므로 양끝 및 통로 zone의 place는 newcore/B1이다. 고투몰·지하철 및 3관으로 이어지는 지하 통로는 추가하지 않았다. 고터 접근은 기존 공용 잠원로 지상 경로를 유지한다.",
+    "R10 사진 우선: audit의 5F 피자몰 추가 제안은 사진08·16 및 공식 식당가의 1관 B1F 표기와 모순되어 적용하지 않았다. 피자몰은 B1 보존, 애슐리 퀸즈만 5F 안내에 추가했다.",
+    "R10: 3관 1F는 공식 푸드 용도에 맞춰 근거 없는 농산물 판매대 12개만 제거했다. 기존 매장 전면·가구·조명·차이797 세부 및 사진03의 외부 KIM'S CLUB 어닝은 보존했다.",
+    "R10: 솥내음 전체 집기를 후면 u15/v23.884 전면으로 회전 이동했다. PhởVua도 같은 쪽 u4/v21.884 블록으로 옮겨 사진08의 인접 관계와 메인통로에서 오른쪽(+v) 지선 진입을 반영했다. 간섭한 RIMINI·신차이 집기는 옛 솥내음·PhởVua bay로 옮기고 중앙 테이블 2개는 남쪽 빈 좌석 구역으로 보존했다. 치수·점포선·세계 방위는 여전히 추정이다."
   ],
   "modeling": {
-    "round": 8,
-    "scope": "실제 OSM 네 건물의 외관과 지상 출입구, 1·2관 1F 및 1관 B1 푸드스트리트, 3관 1F 식당가, 나머지 상층 슬래브·입면과 수직 동선. 잠원로 도로 본체는 공용 도시 모듈 소유.",
+    "round": 10,
+    "scope": "기존 OSM 외곽·사진 세부 보존. 감사 자료에 따라 1·2관 B1 연결, 솥내음 지선, 1관 B1 접근 안내, 3관 식당가 용도, 5F 확인 간판을 수정.",
     "claims": [
       413372929,
       413372930,
@@ -566,108 +584,120 @@
         "photos": [
           "refs/interior/newcore/09_b1_foodstreet_aisle.jpg"
         ],
-        "x": 279.65,
+        "x": 268.61,
         "y": -6,
-        "z": -342.65,
-        "yawDeg": 336.55,
-        "note": "실제 실내 사진의 방위·세계좌표는 미측량. 구현 평면에 대응한 비교 시점. PhởVua 중심u18, 스테인리스 카운터v9.8와 검은 스툴v11.1을 통로에서 비스듬히 비교.",
+        "z": -366.22,
+        "yawDeg": 156.55,
+        "pitchDeg": 0,
+        "note": "R10 사진08의 솥내음과 같은 블록 관계를 반영한 포보아 이전. 사진09 스테인리스 카운터·검은 의자를 그대로 이동. y는 바닥 높이; 실제 점포 좌표와 사진 카메라는 미측량.",
         "local_frame": {
           "building": "1관",
-          "u": 24,
-          "v": 16,
-          "target_u": 18,
-          "target_v": 9.8
-        }
+          "u": -2,
+          "v": 17.184,
+          "target_u": 4,
+          "target_v": 23.384
+        },
+        "round": 10
       },
       {
         "spot": "B1_솥내음_정면",
         "photos": [
           "refs/interior/newcore/10_b1_foodstreet_sotnaeum_front.jpg"
         ],
-        "x": 268.78,
+        "x": 272.66,
         "y": -6,
-        "z": -366.29,
-        "yawDeg": 327.55,
-        "note": "실제 실내 사진의 방위·세계좌표는 미측량. 구현 평면에 대응한 비교 시점. 솥내음 중심u=-6, 전면v11.3; 통로v17에서 본다.",
+        "z": -353.83,
+        "yawDeg": 147.55,
+        "pitchDeg": 0,
+        "note": "R10 이동된 솥내음 전면·세부 비교; 원래 bay의 모든 집기를 보존한 뒤쪽 지선 배치. y는 바닥 높이. 위치·화각은 모델 비교용 추정이며 실측 사진 카메라가 아니다.",
         "local_frame": {
           "building": "1관",
-          "u": -2,
-          "v": 17,
-          "target_u": -6,
-          "target_v": 11.3
-        }
+          "u": 11,
+          "v": 18.184,
+          "target_u": 15,
+          "target_v": 23.884
+        },
+        "round": 10
       },
       {
         "spot": "B1_솥내음_돌출간판",
         "photos": [
           "refs/interior/newcore/11_b1_sotnaeum_signage.jpg"
         ],
-        "x": 269.28,
+        "x": 272.15,
         "y": -6,
-        "z": -370.83,
-        "yawDeg": 292.49,
-        "note": "실제 실내 사진의 방위·세계좌표는 미측량. 구현 평면에 대응한 비교 시점. 솥내음 간판의 정면 근접 비교.",
+        "z": -349.29,
+        "yawDeg": 112.49,
+        "pitchDeg": 0,
+        "note": "R10 이동된 솥내음 전면·세부 비교; 원래 bay의 모든 집기를 보존한 뒤쪽 지선 배치. y는 바닥 높이. 위치·화각은 모델 비교용 추정이며 실측 사진 카메라가 아니다.",
         "local_frame": {
           "building": "1관",
-          "u": -6,
-          "v": 14.8,
-          "target_u": -6,
-          "target_v": 11.3
-        }
+          "u": 15,
+          "v": 20.384,
+          "target_u": 15,
+          "target_v": 23.884
+        },
+        "round": 10
       },
       {
         "spot": "B1_오픈매장_열",
         "photos": [
           "refs/interior/newcore/12_b1_foodstreet_wide_shops.jpg"
         ],
-        "x": 272.76,
+        "x": 268.45,
         "y": -6,
-        "z": -359.28,
-        "yawDeg": 1.1,
-        "note": "실제 실내 사진의 방위·세계좌표는 미측량. 구현 평면에 대응한 비교 시점. 솥내음과 이웃 점포열·화분 파티션을 길게 본다.",
+        "z": -355.33,
+        "yawDeg": 183.68,
+        "pitchDeg": 0,
+        "note": "R10 솥내음 지선에서 목재 화분·메뉴판·개방형 전면을 비교. y는 바닥 높이. 위치·화각은 모델 비교용 추정이며 실측 사진 카메라가 아니다.",
         "local_frame": {
           "building": "1관",
-          "u": 6,
-          "v": 16,
-          "target_u": -6,
-          "target_v": 11.3
-        }
+          "u": 8,
+          "v": 21.5,
+          "target_u": 15,
+          "target_v": 23.884
+        },
+        "round": 10
       },
       {
         "spot": "B1_솥내음_좌석",
         "photos": [
           "refs/interior/newcore/13_b1_foodstreet_seating.jpg"
         ],
-        "x": 273.51,
+        "x": 267.92,
         "y": -6,
-        "z": -374.2,
-        "yawDeg": 238.28,
-        "note": "실제 실내 사진의 방위·세계좌표는 미측량. 구현 평면에 대응한 비교 시점. 솥내음 점포 안(v<11.3)에서 목재 테이블v7.6와 주방 뒤편을 비교.",
+        "z": -345.91,
+        "yawDeg": 58.28,
+        "pitchDeg": 0,
+        "note": "R10 이동된 솥내음 전면·세부 비교; 원래 bay의 모든 집기를 보존한 뒤쪽 지선 배치. y는 바닥 높이. 위치·화각은 모델 비교용 추정이며 실측 사진 카메라가 아니다.",
         "local_frame": {
           "building": "1관",
-          "u": -7.5,
-          "v": 9.6,
-          "target_u": -3.2,
-          "target_v": 6.5
-        }
+          "u": 16.5,
+          "v": 25.584,
+          "target_u": 12.2,
+          "target_v": 28.684
+        },
+        "round": 10
       },
       {
         "spot": "B1_메뉴판_화분_매장열",
         "photos": [
           "refs/interior/newcore/14_b1_foodstreet_row.jpg"
         ],
-        "x": 271.23,
+        "x": 268.45,
         "y": -6,
-        "z": -362.98,
-        "yawDeg": 352.06,
-        "note": "실제 실내 사진의 방위·세계좌표는 미측량. 구현 평면에 대응한 비교 시점. 메뉴 스탠드와 솥내음 전면 화분의 사선 비교.",
+        "z": -355.33,
+        "yawDeg": 183.68,
+        "pitchDeg": 0,
+        "note": "R10 솥내음 지선에서 목재 화분·메뉴판·개방형 전면을 비교. y는 바닥 높이. 위치·화각은 모델 비교용 추정이며 실측 사진 카메라가 아니다.",
         "local_frame": {
           "building": "1관",
-          "u": 2,
-          "v": 16,
-          "target_u": -6,
-          "target_v": 11.3
-        }
+          "u": 8,
+          "v": 21.5,
+          "target_u": 15,
+          "target_v": 23.884
+        },
+        "round": 10
       },
       {
         "spot": "B1_중앙홀_노출천장",
@@ -692,18 +722,20 @@
         "photos": [
           "refs/interior/newcore/16_foodstreet_directory_board.jpg"
         ],
-        "x": 255.42,
+        "x": 262.35,
         "y": -6,
-        "z": -401.17,
+        "z": -404.04,
         "yawDeg": 22.49,
-        "note": "실제 실내 사진의 방위·세계좌표는 미측량. 구현 평면에 대응한 비교 시점. B1 북서측 큰 입점 안내판(u=-L/2+1,v16, +u방향)을 통로 끝에서 정면 비교.",
+        "pitchDeg": 0,
+        "note": "R10 연결통로 시야를 막지 않도록 같은 안내판을 북쪽 벽 옆으로 이동. y는 바닥 높이. 위치·화각은 모델 비교용 추정이며 실측 사진 카메라가 아니다.",
         "local_frame": {
           "building": "1관",
           "u": -39.339,
-          "v": 16,
+          "v": 8.5,
           "target_u": -44.539,
-          "target_v": 16
-        }
+          "target_v": 8.5
+        },
+        "round": 10
       },
       {
         "spot": "B1_봉혜자_전면",
@@ -740,6 +772,259 @@
           "target_u": 6,
           "target_v": 19
         }
+      },
+      {
+        "spot": "R10_2관B1_관간통로_입구",
+        "photos": [],
+        "x": 239.78,
+        "y": -6,
+        "z": -434.75,
+        "yawDeg": 202.99,
+        "pitchDeg": 0,
+        "note": "2관 킴스클럽 델리 통로에서 1관 B1 연결통로를 본다. 원문 발췌와 사진08 기반 추정 개구부. y는 바닥 높이. 위치·화각은 모델 비교용 추정이며 실측 사진 카메라가 아니다.",
+        "local_frame": {
+          "building": "2관",
+          "u": 28.583,
+          "v": 18,
+          "target_u": 40.583,
+          "target_v": 18
+        },
+        "round": 10
+      },
+      {
+        "spot": "R10_1관B1_관간통로_입구",
+        "photos": [
+          "refs/interior/newcore/08_foodstreet_map.jpg"
+        ],
+        "x": 256.16,
+        "y": -6,
+        "z": -402.78,
+        "yawDeg": 22.49,
+        "pitchDeg": 0,
+        "note": "1관에서 2관 연결통로를 본다. 두 관과 통로는 모두 newcore/B1. y는 바닥 높이. 위치·화각은 모델 비교용 추정이며 실측 사진 카메라가 아니다.",
+        "local_frame": {
+          "building": "1관",
+          "u": -40.539,
+          "v": 14.7,
+          "target_u": -53.539,
+          "target_v": 14.7
+        },
+        "round": 10
+      },
+      {
+        "spot": "R10_솥내음_오른쪽_지선",
+        "photos": [
+          "refs/interior/newcore/08_foodstreet_map.jpg",
+          "refs/interior/newcore/09_b1_foodstreet_aisle.jpg"
+        ],
+        "x": 275.91,
+        "y": -6,
+        "z": -355.07,
+        "yawDeg": 112.49,
+        "pitchDeg": 0,
+        "note": "킴스클럽에서 +u로 온 뒤 +v로 오른쪽 회전. 정확한 굴절 위치·거리 추정. y는 바닥 높이. 위치·화각은 모델 비교용 추정이며 실측 사진 카메라가 아니다.",
+        "local_frame": {
+          "building": "1관",
+          "u": 11.1,
+          "v": 14.7,
+          "target_u": 11.1,
+          "target_v": 26
+        },
+        "round": 10
+      },
+      {
+        "spot": "R10_리미니_재배치_전면",
+        "photos": [
+          "refs/interior/newcore/08_foodstreet_map.jpg"
+        ],
+        "x": 269.37,
+        "y": -6,
+        "z": -370.87,
+        "yawDeg": 292.49,
+        "pitchDeg": 0,
+        "note": "솥내음 이전으로 간섭한 리미니의 카운터·좌석을 기존 빈 bay로 이동; 실제 점포 위치 추정. y는 바닥 높이. 위치·화각은 모델 비교용 추정이며 실측 사진 카메라가 아니다.",
+        "local_frame": {
+          "building": "1관",
+          "u": -6,
+          "v": 14.7,
+          "target_u": -6,
+          "target_v": 11.3
+        },
+        "round": 10
+      },
+      {
+        "spot": "R10_중앙좌석_보존_재배치",
+        "photos": [
+          "refs/interior/newcore/18_b1_foodstreet_tables.jpg"
+        ],
+        "x": 280.08,
+        "y": -6,
+        "z": -329.84,
+        "yawDeg": 112.49,
+        "pitchDeg": 0,
+        "note": "지선에 있던 중앙 테이블 두 개를 남쪽 빈 공간에 보존. y는 바닥 높이. 위치·화각은 모델 비교용 추정이며 실측 사진 카메라가 아니다.",
+        "local_frame": {
+          "building": "1관",
+          "u": 36,
+          "v": 20.5,
+          "target_u": 36,
+          "target_v": 24
+        },
+        "round": 10
+      },
+      {
+        "spot": "R10_1관1F_B1_안내",
+        "photos": [
+          "refs/interior/newcore/07_b1_stair_sign_1gwan_foodstreet.jpg"
+        ],
+        "x": 271.68,
+        "y": 0,
+        "z": -356.67,
+        "yawDeg": 292.49,
+        "pitchDeg": 0,
+        "note": "지상 모든 문에서 후면 공용 계단·승강기로 이어지는 안내. y는 바닥 높이. 위치·화각은 모델 비교용 추정이며 실측 사진 카메라가 아니다.",
+        "local_frame": {
+          "building": "1관",
+          "u": 8,
+          "v": 18,
+          "target_u": 8,
+          "target_v": 15.3
+        },
+        "round": 10
+      },
+      {
+        "spot": "R10_1관1F_계단_승강기_로비",
+        "photos": [
+          "refs/interior/newcore/07_b1_stair_sign_1gwan_foodstreet.jpg"
+        ],
+        "x": 255.15,
+        "y": 0,
+        "z": -386.13,
+        "yawDeg": 71.98,
+        "pitchDeg": 0,
+        "note": "기존 계단·승강기 인접 로비; 두 시설의 실제 위치는 미확인. y는 바닥 높이. 위치·화각은 모델 비교용 추정이며 실측 사진 카메라가 아니다.",
+        "local_frame": {
+          "building": "1관",
+          "u": -25.539,
+          "v": 22,
+          "target_u": -30.139,
+          "target_v": 27.384
+        },
+        "round": 10
+      },
+      {
+        "spot": "R10_3관1F_식당가_뒤쪽",
+        "photos": [
+          "refs/interior/newcore/06_gwan3_1f_corridor_chai797.jpg"
+        ],
+        "x": 175.95,
+        "y": 0,
+        "z": -566.12,
+        "yawDeg": 111.29,
+        "pitchDeg": 0,
+        "note": "근거가 약한 12개 마트형 판매대 제거. 확인된 식당가·외부 어닝은 그대로 유지. y는 바닥 높이. 위치·화각은 모델 비교용 추정이며 실측 사진 카메라가 아니다.",
+        "local_frame": {
+          "building": "3관",
+          "u": 5,
+          "v": 17.8,
+          "target_u": 5,
+          "target_v": 26
+        },
+        "round": 10
+      },
+      {
+        "spot": "R10_1관5F_애슐리_안내",
+        "photos": [
+          "refs/interior/newcore/08_foodstreet_map.jpg"
+        ],
+        "x": 254.6,
+        "y": 18.6,
+        "z": -384.38,
+        "yawDeg": 112.49,
+        "pitchDeg": 0,
+        "note": "사진08 5F 안내를 반영한 애슐리퀸즈 간판. 피자몰은 사진·공식 안내에 따라 B1 보존. y는 바닥 높이. 위치·화각은 모델 비교용 추정이며 실측 사진 카메라가 아니다.",
+        "local_frame": {
+          "building": "1관",
+          "u": -24.139,
+          "v": 23.184,
+          "target_u": -24.139,
+          "target_v": 27.184
+        },
+        "round": 10
+      },
+      {
+        "spot": "R10_1관1F_북쪽_B1_안내",
+        "photos": [],
+        "x": 260.97,
+        "y": 0,
+        "z": -382.54,
+        "yawDeg": 292.49,
+        "pitchDeg": 0,
+        "note": "R10 추가/갱신 안내사인 비교. y는 바닥 높이. 실제 사인 위치는 미확정.",
+        "local_frame": {
+          "building": "1관",
+          "u": -20,
+          "v": 18,
+          "target_u": -20,
+          "target_v": 15.3
+        },
+        "round": 10
+      },
+      {
+        "spot": "R10_1관1F_남쪽_B1_안내",
+        "photos": [],
+        "x": 281.24,
+        "y": 0,
+        "z": -333.57,
+        "yawDeg": 292.49,
+        "pitchDeg": 0,
+        "note": "R10 추가/갱신 안내사인 비교. y는 바닥 높이. 실제 사인 위치는 미확정.",
+        "local_frame": {
+          "building": "1관",
+          "u": 33,
+          "v": 18,
+          "target_u": 33,
+          "target_v": 15.3
+        },
+        "round": 10
+      },
+      {
+        "spot": "R10_1관5F_공식_층용도",
+        "photos": [],
+        "x": 263.19,
+        "y": 18.6,
+        "z": -353.15,
+        "yawDeg": 112.49,
+        "pitchDeg": 0,
+        "note": "R10 추가/갱신 안내사인 비교. y는 바닥 높이. 실제 사인 위치는 미확정.",
+        "local_frame": {
+          "building": "1관",
+          "u": 8,
+          "v": 27.184,
+          "target_u": 8,
+          "target_v": 32.184
+        },
+        "round": 10
+      },
+      {
+        "spot": "R10_신차이_재배치_전면",
+        "photos": [
+          "refs/interior/newcore/08_foodstreet_map.jpg"
+        ],
+        "x": 278.55,
+        "y": -6,
+        "z": -348.69,
+        "yawDeg": 292.49,
+        "pitchDeg": 0,
+        "note": "포보아 이전으로 간섭한 신차이 카운터·좌석을 옛 포보아 bay로 보존 이동. y는 바닥 높이; 실제 점포 좌표와 사진 카메라는 미측량.",
+        "local_frame": {
+          "building": "1관",
+          "u": 18,
+          "v": 14.7,
+          "target_u": 18,
+          "target_v": 11.3
+        },
+        "round": 10
       }
     ],
     "trace_convention": "x 동쪽, z 남쪽, m; yaw0 북/-z,90 서,180 남,270 동. y는 카메라의 눈높이가 아닌 바닥 높이. 실내 사진은 위치 측량이 없어 모델 내 대응 장면을 찍는 비교 좌표다.",
@@ -748,40 +1033,20 @@
       "1·2관 상층은 공식 층수·용도만 검증되었으며 내부 평면은 단순 슬래브와 공용 수직 동선으로 표현한다.",
       "별도 주차 건물413372931의 층수·난간·램프 위치는 항공사진과 주변 형상에서 추정한다.",
       "실내 음식점의 정확한 세계 좌표·점포 폭·주방 깊이·좌석 수·기둥 간격은 사진에서 확정 불가하다. 푸드스트리트 안내도와 사진의 특징을 보행 가능한 평면으로 근사 배치한다.",
-      "3관 홀 층고, 옥상 주차장 층명·진입 동선, 실제 식품 판매대 배치는 사진이 충분하지 않아 추정한다.",
-      "지하 관간 연결은 실내 안내의 존재와 방향만 알려져 실제 벽선·굴절·폭은 미확정이다.",
+      "3관 홀 층고, 옥상 주차장 층명·진입 동선, 실제 식당가 점포·좌석 배치는 사진이 충분하지 않아 추정한다.",
       "가로수 수종·정확한 수량, 버스정류장 캐노피 치수, 난간 단절부와 보도 시설 간격은 로드뷰 기반 근사치다.",
       "로드뷰·블로그 카메라의 위치와 화각은 측량하지 못했다. 각 trace는 대응 특징을 비교하기 위한 근사 시점이며 도로 카메라3개는 동일 기준점을 사용한다.",
       "1관B1 안내판·보관함·승강기·계단은 접근성을 확보하는 모델 내 위치이며 실제 시설 좌표·개수는 미확정이다. 보관함은40칸을 표현했고 블로그의 약100칸 서술 전체를 재현한 것은 아니다.",
       "1·2관 바닥고0/5/9.8/14.2/18.6m와지붕23m, 3관지붕10.8m, 주차동3.2m 간격4개층/지붕12.8m는 사진 기반 모델 치수다. 3관 옥상으로 가는 실제 계단의 중간 참수·승강기 위치는 확인하지 못했다.",
       "3관 북쪽P탑은 사진02에 대응한다.1·2관의 유리탑 위치·높이·창살 간격과 가로변 반복bay 간격은 근사치다.",
-      "사진의 솥내음·봉혜자·차이797 특징을 재현하되 모든 식당에 같은 평면·치수를 부여한 부분과 후면점포의 매장간 상대 순서는 추정이다. 세계좌표는 해당 지점·관 외곽 안에 배치한 모델 좌표이지 실제 매장 측량 좌표가 아니다."
+      "사진의 솥내음·봉혜자·차이797 특징을 재현하되 모든 식당에 같은 평면·치수를 부여한 부분과 후면점포의 매장간 상대 순서는 추정이다. 세계좌표는 해당 지점·관 외곽 안에 배치한 모델 좌표이지 실제 매장 측량 좌표가 아니다.",
+      "R10 likely: 1·2관 B1 연결 존재는 후기·안내도로 뒷받침되지만 연결 벽 개구부·폭5.6m·길이약27m·높이3.35m·메인통로 축은 OSM 사이 공간에 맞춘 모델 추정이다.",
+      "R10 likely: 솥내음 지선의 오른쪽 회전 관계만 근거가 있다. 솥내음 u15/v23.884 전면, 지선 u11.1, 리미니 u-6, 세부 이웃 순서·점포 폭·좌석수는 실제 측량 좌표가 아니다.",
+      "R10 unverified: 3관과 1·2관의 실제 관간 연결 방식은 미확인. 3관 옥상 주차장의 존재는 공사 공고가 있으나 현재 개방 여부·접근 경로·계단 및 승강기 좌표·높이10.8m는 추정이다. 기존 모델 형상은 유지했다.",
+      "R10 likely: 1관의 14개 지상 문에서 기존 공용 계단·엘리베이터로 갈 수 있으나 각 실제 문별 B1 직행계단 위치·정확한 코어 간격은 미확인. 안내사인의 설치 좌표 역시 모델용 추정이다.",
+      "R10: 1관 5F의 공식 용도와 애슐리퀸즈 입점은 확인했지만 점포 구획은 미확인. 승강기 앞 간판은 층 안내이며 실제 매장 입구 위치를 나타내지 않는다.",
+      "R10: PhởVua의 u4/v21.884 전면과 솥내음 u15/v23.884는 사진08의 같은 쪽 블록과 지선 관계를 반영한 근사 배치다. 전면 깊이차2m와 점포 순서·회전방향·세계좌표는 실측이 아니다. 신차이 u18은 간섭을 피한 모델 재배치 위치다."
     ],
-    "verification": {
-      "render": "운영자 지시에 따라 tests/shot.mjs 미실행. modeling.trace를 후속 렌더 비교에 사용.",
-      "smoke": "node tests/smoke.mjs newcore: OK (모든 K.detail 그룹 생성 포함)",
-      "smoke_neighbors_city": "node tests/smoke.mjs newcore banwon --city: OK",
-      "walk_newcore": "newcore targeted walk:29ok,0blocked",
-      "walk_full_world": "node tests/walk.mjs:428ok,0blocked",
-      "geometry_audit": {
-        "all_details_quads": 39492,
-        "boxes": 6832,
-        "signs": 159,
-        "detail_groups": 14,
-        "nonfinite": 0,
-        "detail_errors": 0,
-        "frontage_doors_to_aisles_passed": 23,
-        "floor_transitions_with_head_clearance_passed": 14,
-        "note": "독립 geometry_review의 보행·머리 위 여유공간 검사. 이미지 렌더 검증은 아님."
-      },
-      "inventory": {
-        "elevators": 4,
-        "spawns": 11,
-        "zones": 24
-      },
-      "research_json": "python3 -m json.tool 및 git diff --check 통과",
-      "engine_limitation": "js/kit.js:491 INDOOR 집합에 newcore가 없어 B1 지하 전용 가시성 최적화가 적용되지 않는다. 보행·지오메트리 오류는 아니며 성능 최적화 누락이다. 작업 범위에 따라 엔진 파일은 수정하지 않았다."
-    },
     "dimensions": {
       "1관": {
         "floors_above": 5,
@@ -801,8 +1066,9 @@
           "옥상"
         ],
         "roof_y_m": 10.8,
-        "roof_use": "접근 가능한 옥상 주차장",
-        "height_guess": true
+        "roof_use": "옥상 주차장 존재: 공사 공고. 현재 개방과 실제 접근 동선은 미확인",
+        "height_guess": true,
+        "access_guess": true
       },
       "주차동413372931": {
         "decks": 4,
@@ -825,15 +1091,15 @@
         ],
         "front_v": 11.3,
         "bonghyeja_u": -18,
-        "sotnaeum_u": -6,
+        "sotnaeum_u": 15,
         "aisle_v": [
           13,
           17.5
         ],
         "table_v": 19,
         "rear_shop_v": 30.184,
-        "phovua_u": 18,
-        "phovua_counter_v": 9.8,
+        "phovua_u": 4,
+        "phovua_counter_v": 23.384,
         "guide_map": {
           "u": -38.539,
           "v": 12.2,
@@ -841,7 +1107,7 @@
         },
         "directory": {
           "u": -44.539,
-          "v": 16,
+          "v": 8.5,
           "faces": "+u"
         },
         "stair_sign": {
@@ -849,7 +1115,60 @@
           "v": 31.784,
           "faces": "-v"
         },
-        "sotnaeum_tables_v": 7.6
+        "sotnaeum_tables_v": 27.584,
+        "sotnaeum_front_v": 23.884,
+        "sotnaeum_orientation": "전면 -v 방향. 기존 u=-6 bay 전체를 P(u,v)→P(9-u,W+2-v)로 180도 회전 이동.",
+        "right_branch": {
+          "from": [
+            11.1,
+            14.7
+          ],
+          "via": [
+            11.1,
+            22
+          ],
+          "entrance": [
+            11.1,
+            23.884
+          ],
+          "turn": "+u로 킴스클럽에서 오다가 +v로 오른쪽 회전",
+          "guess": true
+        },
+        "rimini": {
+          "u": -6,
+          "counter_v": 3.3,
+          "tables_v": 7.6,
+          "front_v": 11.3,
+          "guess": true
+        },
+        "relocated_shared_tables": {
+          "reason": "지선 보행 폭 확보",
+          "from_u_range": [
+            8,
+            14
+          ],
+          "u_offset": 25,
+          "to_v": 24,
+          "count": 2,
+          "guess": true
+        },
+        "shop_names": [
+          "오근내 닭갈비",
+          "봉혜자 별미요릿집",
+          "RIMINI",
+          "한성돈까스",
+          "신차이",
+          "육된장"
+        ],
+        "phovua_front_v": 21.884,
+        "phovua_orientation": "기존 u18 bay 전체를 P(u,v)→P(22-u,W-v)로 회전. 솥내음과 같은 후면 블록.",
+        "shinchai": {
+          "u": 18,
+          "counter_v": 3.3,
+          "tables_v": 7.6,
+          "front_v": 11.3,
+          "guess": true
+        }
       },
       "3관1F": {
         "chai_u": -20.411,
@@ -884,13 +1203,220 @@
       "elevators": 4,
       "spawns": 11,
       "detail_groups": 14,
-      "zones": 24,
-      "above_ground_circulation": "각 건물 스위치백 계단과 승강기. 1·2관 상층2F..5F는 조명·공식 용도 사인만 있는 단순 슬래브.",
+      "zones": 26,
+      "above_ground_circulation": "기존 스위치백 계단·승강기. 1관 모든 지상 출입구 14개→B1 보행 확인 및 1F 길 안내 추가. 2F..5F 단순 슬래브·공식 용도 사인 유지, 1관 5F 애슐리퀸즈 층 안내 추가.",
       "upper_floor_content": "확인되지 않은 상층 점포 평면·진열대는 만들지 않음.",
-      "between_buildings": "각 관은 지상 출입구를 통해 잠원로 보도에 연결. 실제 위치 미확정인 지하 관간 연결 통로는 구현하지 않음.",
-      "three_roof": "10.8m 옥상 주차장, 계단·승강기로 접근. 북쪽 끝 주차 표지탑은 사진02 방향에 맞춤.",
-      "furnishing": "1관B1 개방형6매장, 솥내음·봉혜자·PhởVua의 서로 다른 전면, 중앙 좌석·후면4점포·메뉴판·노출천장·40개 보관함. 2관B1 선반·델리. 1·2관1F 화장품·의류·명품·은행·제과 진열. 3관1F5매장 유리전면·킴스클럽 판매대."
-    }
+      "between_buildings": "1관 B1 푸드스트리트와 2관 B1 킴스클럽을 동일 newcore/B1 zone의 내부 통로로 연결. 3관은 지상 출입구 보행만 유지. 고투몰·지하철 지하 직결 없음.",
+      "three_roof": "기존 10.8m 옥상 주차장 및 계단·승강기 유지. 주차장 현재 개방·실제 접근 경로 미확인(guess=true).",
+      "furnishing": "기존 매장·집기 세부 보존. 솥내음·PhởVua 전체 bay를 같은 후면 블록으로 회전 이동하고 솥내음은2m 더 안쪽 지선에 둠. RIMINI·신차이 집기는 옛 솥내음·PhởVua bay로 보존 이전. 중앙 좌석2개 남쪽 재배치. 3관의 추정 농산물 판매대12개만 제거, 기존 식당가·카페와 외부 어닝 유지."
+    },
+    "junctions_to_add": [],
+    "junction_note": "1·2관 연결은 같은 newcore 모듈 내부 통로여서 공용 JUNCTIONS 추가 불필요. 교차 모듈 지하 연결은 생성하지 않음.",
+    "basement_connection": {
+      "from": {
+        "building": "2관",
+        "local": [
+          32.583,
+          18
+        ],
+        "world": [
+          241.339,
+          -6,
+          -431.07
+        ]
+      },
+      "to": {
+        "building": "1관",
+        "local": [
+          -45.539,
+          14.7
+        ],
+        "world": [
+          254.248,
+          -6,
+          -407.397
+        ]
+      },
+      "width_m": 5.6,
+      "span_m": 26.964,
+      "clear_height_m": 3.35,
+      "place": "newcore",
+      "floor": "B1",
+      "existence_confidence": "likely",
+      "geometry_guess": true
+    },
+    "evidence_audit": {
+      "round": 10,
+      "reviewed": "2026-11-07",
+      "input": ".codex-jobs/evidence/audit_newcore.json",
+      "audit_photo_directory": "refs/interior/audit_newcore/ (empty)",
+      "source_access": "Official floor guides and restaurant list read; Naver originals inaccessible, audit evidence_found excerpts and stored photos reviewed.",
+      "items": [
+        {
+          "element": "1관-2관 지하(B1) 관간 연결 (킴스클럽 <-> 푸드스트리트)",
+          "current_model": "architecture.between_buildings: 지하 관간 연결 통로는 구현하지 않음. 1관 B1(푸드스트리트)과 2관 B1(킴스클럽 델리)이 각각 벽으로 막힌 별개 공간이며, 1관 B1 안내판에만 'KIM'S CLUB →' 글자가 있음.",
+          "evidence_found": "2026-11-04 블로그(cherish37/224465298452): 킴스클럽에서 장을 본 뒤 '킴스클럽에서 푸드스트리트 방향으로 메인 통로를 따라 가다가 오른쪽 통로로 들어가면' 솥내음이 있다고 안내. 즉 킴스클럽(공식: 2관 B1F 킴스클럽·델리)과 1관 B1 푸드스트리트(공식: 1관 B1F 킴스클럽·푸드스트리트)가 지하에서 하나의 메인 통로로 이어짐. 2026-11-03 블로그(love__lover/224464082861)도 '아무 입구로 들어가서 지하1층 킴스 푸드 스트리트로 입장'이라 적음. 공식 층별안내 도면은 '준비중'이라 벽선·폭은 확인 불가. 모델링 보강 정도는 추론.",
+          "correction": "1관 B1과 2관 B1 사이 경계 벽을 열어 폭 넓은 메인 통로(킴스클럽 쪽 -> 푸드스트리트 쪽)로 연결하고, 로딩/구역 전환도 B1 하나를 한 덩어리로 취급. 푸드스트리트 진입은 통로에서 '오른쪽으로 꺾어 들어가는' 지선으로 솥내음 앞에 닿게 하는 쪽이 후기와 맞음(추론: 정확한 굴절 위치는 미확인). 연결 통로 길이·벽선은 추정임을 notes에 유지.",
+          "confidence": "likely",
+          "sources": [
+            "https://m.blog.naver.com/cherish37/224465298452",
+            "https://m.blog.naver.com/love__lover/224464082861",
+            "https://www.elandretail.com/store02.do?BDID=0003002B&branchID=00110001&lang=000600KO"
+          ],
+          "photos": [],
+          "status": "applied",
+          "resolution": "1·2관 B1 벽을 열고 같은 newcore/B1 내부 통로 연결; 통로 zone·양방향 안내·천장·바닥 포함. 치수·위치는 추정.",
+          "geometry_guess": true
+        },
+        {
+          "element": "푸드스트리트(1관 B1) 진입 경로: 어느 문에서 들어가는가",
+          "current_model": "지상 출입구를 통해 잠원로 보도에 연결, 1관 B1에는 u=-30 부근 B1 계단·승강기 로비 하나(사진07 대응)와 중앙 에스컬레이터는 미구현 수준. 어느 지상 문이 B1로 이어지는지 구분 없음.",
+          "evidence_found": "2026-11-03 블로그: '아무 입구로 들어가서 지하1층 킴스 푸드 스트리트로 입장, 엘리베이터는 당연 옆에 있다.' 지상 1층에는 올리브영·우리은행. 같은 글에서 '역에서 고투몰로도 걸어서 갈 수 있지만 야외로 횡단보도 건너 방문'이라 하여 고투몰(지하)과 뉴코아 사이가 지상 횡단보도로 건너는 별개 경로로 기술됨(뉴코아가 고투몰과 지하로 직결된다는 언급 없음). 2025-26 소스에서 1관 지상 입구별 B1 직행 계단 위치는 찾지 못함.",
+          "correction": "1관 지상 출입구 아무 쪽에서나 1F로 들어가 B1로 내려갈 수 있게 하고(계단+엘리베이터 쌍이 인접), 고투몰/지하철에서 뉴코아로 오는 연결은 지하 직결로 만들지 말고 잠원로 지상 횡단보도로 처리. 고투몰 쪽 지하 직결 통로가 있다고 가정한 부분이 있으면 제거. 단 지상->B1 계단 위치는 미확인(추론).",
+          "confidence": "likely",
+          "sources": [
+            "https://m.blog.naver.com/love__lover/224464082861"
+          ],
+          "photos": [],
+          "status": "applied_existing_access_verified",
+          "resolution": "기존 14개 지상 문에서 B1 공용 계단 및 승강기 접근 보행 확인. 1F 안내 추가. 새 직행계단·고투몰 지하 직결은 추정 생성하지 않음. 잠원로 지상 경로 유지.",
+          "geometry_guess": true
+        },
+        {
+          "element": "킴스클럽 위치: 2관 B1 vs 3관(443718139) 저층",
+          "current_model": "notes에서 OSM 443718139(킴스클럽뉴코아아울렛강남점)를 '3관 저층 푸드동'으로 대응. 3관 1F에 차이797·스타벅스·버거킹 등 5매장 + '킴스클럽 판매대', 3관 아치 위 'KIM'S CLUB' 어닝(사진03).",
+          "evidence_found": "공식 층별안내(접속 2026-11-06): 1관 B1F 킴스클럽·푸드스트리트, 2관 B1F 킴스클럽·델리, 3관 1F는 '푸드'만. 2026-11 블로그(letslookandeat/224466455531)는 3관 1층(잠원로 69)에 중식 차이797이 있고 '킴스클럽 뉴코아 아울렛 3관 식당가'라 칭함. 즉 3관 1F=식당가, 식료품 킴스클럽 본점은 1·2관 B1. 3관에 식품 판매대를 별도로 크게 두었다면 근거 약함.",
+          "correction": "3관 1F는 식당가(차이797, 카페 마마스, 스타벅스, 밀도, 백미당, 버거킹) 위주로 두고 마트형 '킴스클럽 판매대'는 축소/제거. 대형 킴스클럽 마트 경험은 1관-2관 B1에 집중. 3관 외벽의 KIM'S CLUB 어닝 간판은 사진03 근거가 있으니 유지.",
+          "confidence": "likely",
+          "sources": [
+            "https://www.elandretail.com/store02.do?BDID=0003003B&branchID=00110001&lang=000600KO",
+            "https://m.blog.naver.com/letslookandeat/224466455531"
+          ],
+          "photos": [],
+          "status": "applied",
+          "resolution": "3관 1F 추정 농산물 판매대 12개 제거; 식당가 안내로 변경. 외벽 KIM'S CLUB 어닝과 식당가 세부 보존.",
+          "geometry_guess": true
+        },
+        {
+          "element": "1관 B1 푸드스트리트 내부 점포 배치(솥내음 위치·통로 구조)",
+          "current_model": "shop_u 6점포를 한 줄(-30..30, front_v 11.3)로 두고 통로 v=13~17.5, 솥내음 u=-6 전면 중앙 부근에 배치.",
+          "evidence_found": "2026-11-04 블로그: 솥내음은 킴스클럽 방향 메인 통로 오른쪽 통로 안쪽에 있어 '앞만 보고 메인 통로로 쭉 가면 지나치기 쉽다'고 설명, 매장은 통로와 인접한 개방형 좌석 포함. 2026-11-04 jinheelp 글: 식당가 대부분 오픈형, 매장 입구에 오늘의 메뉴·품절 표시. 즉 솥내음은 메인 통로에서 한 칸 들어간 지선에 있는 점포.",
+          "correction": "솥내음을 메인 통로 정면이 아니라 메인 통로에서 오른쪽(킴스클럽에서 오는 방향 기준)으로 꺾인 지선 쪽에 옮기고, 메인 통로에는 다른 점포 전면(오픈 카운터)이 연속되게. 정확한 점포 순서는 안내도 사진08 기준 유지(추론 영역).",
+          "confidence": "likely",
+          "sources": [
+            "https://m.blog.naver.com/cherish37/224465298452",
+            "https://m.blog.naver.com/jinheelp/224465459283"
+          ],
+          "photos": [],
+          "status": "applied",
+          "resolution": "솥내음 전체 bay를 u15 후면 지선으로 회전 이동; PhởVua도 같은 쪽 u4로 회전 이동해 사진08의 블록 인접 관계 반영. 메인통로에서 오른쪽(+v)으로 진입. RIMINI·신차이·중앙좌석2개는 간섭 해소를 위해 보존 재배치. 실제 점포선·치수·순서는 추정.",
+          "geometry_guess": true
+        },
+        {
+          "element": "1관 5F / 상층 용도 (층 사용)",
+          "current_model": "1관 5F 전문식당가·문화센터·VIP라운지는 공식 용도로 표기하되 상층은 단순 슬래브+공용 계단.",
+          "evidence_found": "2026-11-04 블로그(cherish37): 5층 전문식당가 이용 시 5층 애슐리퀸즈·피자몰, 문화센터 이용 시 고속터미널역 8-2번 출구에서 가까움. 공식 1관: 5F 전문식당가·문화센터·VIP라운지, 4F 모던하우스, 3F 아동, 2F 여성, 1F 아웃도어·화장품. 2관: 5F 남성·골프, 4F 스포츠·캐주얼, 3F 여성 전문관, 2F 컨템포러리·영캐주얼, 1F 수입명품·패션잡화.",
+          "correction": "keep(공식 층별 용도 그대로). 1관 5F는 애슐리퀸즈·피자몰 간판을 구체 매장으로 추가 가능. 상층 평면은 여전히 미확인.",
+          "confidence": "confirmed",
+          "sources": [
+            "https://m.blog.naver.com/cherish37/224465298452",
+            "https://www.elandretail.com/store02.do?BDID=0003001B&branchID=00110001&lang=000600KO"
+          ],
+          "photos": [],
+          "status": "applied_with_photo_override",
+          "resolution": "공식 상층 용도 보존, 누락 VIP라운지 용도 및 애슐리퀸즈5F 안내 추가. 피자몰5F 추가는 사진08·16 및 공식 식당가의 B1 표기와 모순되어 생략.",
+          "geometry_guess": true,
+          "photo_override": {
+            "rejected": "피자몰 5F 추가",
+            "reason": "사진08·16 및 공식 식당가 모두 피자몰 1관 B1F. 사진을 우선함.",
+            "photos": [
+              "refs/interior/newcore/08_foodstreet_map.jpg",
+              "refs/interior/newcore/16_foodstreet_directory_board.jpg"
+            ],
+            "source": "https://www.elandretail.com/store05.do?branchID=00110001&lang=000600KO"
+          }
+        },
+        {
+          "element": "3관 옥상 주차장 진입 및 3관과 1·2관 관계(3관 위치/연결)",
+          "current_model": "3관 옥상 10.8m 주차장은 계단·승강기로 접근, 3관은 북쪽 별동으로 지상 출입구만으로 연결, 관간 연결 없음.",
+          "evidence_found": "2025-26 후기에서 3관과 1·2관의 연결(지상·지하 통로)을 직접 설명한 글은 찾지 못함. 블로그 주소로 3관은 잠원로 69, 1관은 잠원로 51(2026-11 글), 즉 도로를 따라 별동으로 이어짐. 2026-10-20 이랜드 공고에 3관 옥상 주차장 환경개선 공사가 있었음(기존 notes 기재). 주차는 뉴코아·킴스클럽 주차장 이용 가능(2026-11-03 글).",
+          "correction": "keep: 3관은 1·2관과 지하로 이어진다는 증거 없음이므로 지상 출입구 보행만 유지. 옥상 주차장은 공사 공고가 있으므로 접근 가능 여부를 넉넉히 표기하지 말고 '추정' 유지. 실제 확정에는 현장·카카오맵 실내지도 확인 필요.",
+          "confidence": "unverified",
+          "sources": [
+            "https://m.blog.naver.com/letslookandeat/224466455531",
+            "https://m.blog.naver.com/love__lover/224464082861"
+          ],
+          "photos": [],
+          "status": "unchanged_unverified",
+          "resolution": "3관 지상 연결 및 기존 옥상 주차장 모델 유지. 실제 개방·접근 동선·관간 연결은 guesses에 명시.",
+          "geometry_guess": true
+        }
+      ]
+    },
+    "verification_previous_round": {
+      "render": "운영자 지시에 따라 tests/shot.mjs 미실행. modeling.trace를 후속 렌더 비교에 사용.",
+      "smoke": "node tests/smoke.mjs newcore: OK (모든 K.detail 그룹 생성 포함)",
+      "smoke_neighbors_city": "node tests/smoke.mjs newcore banwon --city: OK",
+      "walk_newcore": "newcore targeted walk:29ok,0blocked",
+      "walk_full_world": "node tests/walk.mjs:428ok,0blocked",
+      "geometry_audit": {
+        "all_details_quads": 39492,
+        "boxes": 6832,
+        "signs": 159,
+        "detail_groups": 14,
+        "nonfinite": 0,
+        "detail_errors": 0,
+        "frontage_doors_to_aisles_passed": 23,
+        "floor_transitions_with_head_clearance_passed": 14,
+        "note": "독립 geometry_review의 보행·머리 위 여유공간 검사. 이미지 렌더 검증은 아님."
+      },
+      "inventory": {
+        "elevators": 4,
+        "spawns": 11,
+        "zones": 24
+      },
+      "research_json": "python3 -m json.tool 및 git diff --check 통과",
+      "engine_limitation": "js/kit.js:491 INDOOR 집합에 newcore가 없어 B1 지하 전용 가시성 최적화가 적용되지 않는다. 보행·지오메트리 오류는 아니며 성능 최적화 누락이다. 작업 범위에 따라 엔진 파일은 수정하지 않았다."
+    },
+    "verification": {
+      "render": "사용자 지시로 tests/shot.mjs 미실행. 모든 수정 지점 modeling.trace 기록(y=바닥).",
+      "smoke": "node tests/smoke.mjs newcore: OK",
+      "smoke_neighbors_city": "node tests/smoke.mjs newcore banwon --city: OK",
+      "targeted_routes": "독립 실제 kit/physics 검사: 연결통로303표본×lazy전후(606) 바닥·capsule·newcore zone 통과. 최종 솥내음 오른쪽 지선→좌석·카운터, PhởVua 전면→측면입구→내부·후면카운터 모두 lazy전후 통과. 1관 지상문14개→B1계단 통과. detail 오류0.",
+      "walk_full_world": "node tests/walk.mjs: 481 ok, 3 blocked. 다른 동시 수정 모듈 내부 실패: J6 centralcity→jwmarriott y0; centralcity 터미널 엘리베이터 1M; gyeongbu 북측 동 엘리베이터 B1. 해당 세 파일 모두 git modified 확인. newcore 실패 없음; 범위 밖 파일 미수정.",
+      "metadata": "tools/gen_meta.mjs를 fs.writeFileSync 인터셉트 래퍼로 실행해 메모리에서 비교 완료. newcore 엔트리 전체(entrances 포함) 기존과 동일(true). 사용자 허용 범위 두 파일을 지키기 위해 공유 _meta.json은 기록하지 않음.",
+      "inventory": {
+        "elevators": 4,
+        "spawns": 11,
+        "zones": 26
+      },
+      "walk_newcore": "node tests/walk.mjs newcore: 29 ok, 0 blocked",
+      "research_json": "python3 -m json.tool 및 git diff --check 통과",
+      "walk_failures": [
+        {
+          "check": "junction J6",
+          "modules": [
+            "centralcity",
+            "jwmarriott"
+          ],
+          "y": 0,
+          "why": "no path (28645 cells searched)"
+        },
+        {
+          "check": "센트럴시티 터미널 엘리베이터",
+          "module": "centralcity",
+          "floor": "1M",
+          "why": "no path (37 cells searched)"
+        },
+        {
+          "check": "북측 동 엘리베이터",
+          "module": "gyeongbu",
+          "floor": "지하 1층",
+          "why": "no path (35 cells searched)"
+        }
+      ]
+    },
+    "notes_on_photo_topology": "사진08의 솥내음·PhởVua를 메인통로 같은 쪽 블록에 유지하고 솥내음을 2m 더 안쪽으로 배치했다. 오른쪽 지선 접근과 상대 인접 관계를 반영한 모델 근사이며 실제 점포선·깊이·순서는 미확정."
   },
   "tenants": [
     {
@@ -937,7 +1463,7 @@
         "육된장"
       ],
       "evidence": "제공 사진08 안내도·16 입점 안내판; 사진09~18 실제 매장",
-      "placement": "안내도는 상대 이웃 관계만 확정; 방위·점포 좌표는 추정"
+      "placement": "솥내음·PhởVua는 메인통로 같은 쪽 후면 블록으로 이동. 솥내음 오른쪽 지선 접근. RIMINI·신차이 보존 재배치. 실제 점포 좌표·폭·방위·순서는 미확정."
     },
     {
       "building": "3관",
@@ -952,6 +1478,15 @@
       ],
       "evidence": "사진06 차이797; 사진16 업체별 관·층; 사진01 적색 버거킹 어닝과 공식 식당가 버거킹3관1F",
       "placement": "세부 점포 폭·순서는 부분 추정"
+    },
+    {
+      "building": "1관",
+      "floor": "5F",
+      "names": [
+        "애슐리 퀸즈"
+      ],
+      "evidence": "사진08의 별도 5F GUIDE; 감사 confirmed 공식 용도. 피자몰은 B1(사진08·16 및 공식 식당가)",
+      "placement": "층 안내 간판만 추가; 상층 점포 평면·실제 입구 위치는 추정"
     }
   ]
 }

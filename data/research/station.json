@@ -1,17 +1,21 @@
 {
   "id": "station",
   "name": "고속터미널역 (서울 지하철 3·7·9호선)",
-  "updated": "2026-11-06",
+  "updated": "2026-11-07",
   "sources": [
     {
       "url": "https://itwiki.kr/w/%EA%B3%A0%EC%86%8D%ED%84%B0%EB%AF%B8%EB%84%90%EC%97%AD",
       "title": "고속터미널역 (itwiki, 위키 미러)",
-      "year": 2025
+      "year": 2025,
+      "evidence": "round10 감사 JSON의 2026-09-30 열람 요약을 사용. 이번 원문 재열람은 HTTP 403으로 실패; 환승거리·무빙워크 설명을 재검증했다고 주장하지 않음."
     },
     {
       "url": "https://mediahub.seoul.go.kr/archives/2016717",
       "title": "엘리베이터 생긴 고속터미널·까치산역 (서울시 미디어허브)",
-      "year": 2020
+      "year": 2026,
+      "date": "2026-01-09",
+      "event_date": "2025-12",
+      "evidence": "round10 원문 열람. 4번 출구 앞 승강기의 지상·B2 대합실·B3 승강장 연결 및 완만한 외부 램프 확인. 기존 year=2020 정정. 기사 사진은 도구에서 시각 열람하지 못함."
     },
     {
       "url": "https://mediahub.seoul.go.kr/archives/162098",
@@ -108,7 +112,8 @@
       ],
       "layout": "3호선 대합실에서 지하통로로 서울고속버스터미널(경부선)에 연결. 3호선 대합실과 나란한 환승통로에 무빙워크와 9호선 열차 접근 전광판이 있음.",
       "source": "https://itwiki.kr/w/%EA%B3%A0%EC%86%8D%ED%84%B0%EB%AF%B8%EB%84%90%EC%97%AD",
-      "guess": false
+      "guess": true,
+      "evidence_status": "무빙워크·접근 전광판은 감사에서 likely. 실제 층·출입문 좌표·파미에 직접 연결은 unverified. 전체 layout을 확인된 평면으로 취급하지 않음."
     },
     {
       "floor": "B2",
@@ -116,7 +121,8 @@
       "tenants": [],
       "layout": "7호선 4번 출구 앞 엘리베이터가 지상-대합실-승강장 연결.",
       "source": "https://mediahub.seoul.go.kr/archives/2016717",
-      "guess": false
+      "guess": false,
+      "evidence_status": "7호선 B2 대합실만 confirmed. 3호선 승강장의 월드 B2 배치와 상세 동선은 추정."
     },
     {
       "floor": "B3",
@@ -174,7 +180,9 @@
       "where": "7호선 대합실 ~ 9호선",
       "details": "2016 기준 314m(성인 4분22초). 환승통로에 53개 계단 구간 보도(교통약자).",
       "source": "https://www.sidae.com/article/2016012813588039242",
-      "guess": false
+      "guess": true,
+      "confidence": "likely",
+      "evidence_status": "감사의 문헌 요약을 반영하나 꺾임·층·설비 위치는 미실측. 약 300m는 실제 거리 주장, 297m/429.07m는 서로 다른 범위의 모델 중심선 길이이며 일치 실측값이 아님."
     },
     {
       "name": "3호선↔9호선 환승통로",
@@ -182,7 +190,9 @@
       "where": "3호선 대합실 옆",
       "details": "무빙워크, 9호선 열차 접근 전광판. 길이 미확인.",
       "source": "https://itwiki.kr/w/%EA%B3%A0%EC%86%8D%ED%84%B0%EB%AF%B8%EB%84%90%EC%97%AD",
-      "guess": false
+      "guess": true,
+      "confidence": "likely",
+      "evidence_status": "감사의 문헌 요약을 반영하나 꺾임·층·설비 위치는 미실측. 약 300m는 실제 거리 주장, 297m/429.07m는 서로 다른 범위의 모델 중심선 길이이며 일치 실측값이 아님."
     },
     {
       "name": "3호선↔7호선 환승",
@@ -198,7 +208,9 @@
       "where": "센트럴시티 신반포로 176",
       "details": "파미에스테이션은 F&B 50여 개 입점.",
       "source": "https://mediahub.seoul.go.kr/archives/1139258",
-      "guess": false
+      "guess": true,
+      "confidence": "unverified",
+      "evidence_status": "기존 출구 목적지·방향 표기를 보존하되 round10 감사에서 목적지 대응을 확정하지 못했으므로 추정으로 분류."
     },
     {
       "name": "4번 출구",
@@ -206,7 +218,19 @@
       "where": "지상",
       "details": "엘리베이터로 지상-B2 대합실-B3 승강장 연결.",
       "source": "https://mediahub.seoul.go.kr/archives/2016717",
-      "guess": false
+      "guess": true,
+      "confidence": "unverified",
+      "evidence_status": "기존 출구 목적지·방향 표기를 보존하되 round10 감사에서 목적지 대응을 확정하지 못했으므로 추정으로 분류.",
+      "confirmed_facts": [
+        "4번 출구 앞 엘리베이터 존재",
+        "지상 1F·B2 대합실·B3 승강장 연결",
+        "완만한 외부 램프 존재"
+      ],
+      "guessed_facts": [
+        "국립중앙도서관·누에다리 목적지 표기",
+        "승강기와 램프의 정확한 x/z·방향·치수",
+        "기존 모델의 추가 B1 정차"
+      ]
     },
     {
       "name": "5번 출구",
@@ -214,7 +238,9 @@
       "where": "지상",
       "details": "도보 약 20분.",
       "source": "https://mediahub.seoul.go.kr/archives/1139258",
-      "guess": false
+      "guess": true,
+      "confidence": "unverified",
+      "evidence_status": "기존 출구 목적지·방향 표기를 보존하되 round10 감사에서 목적지 대응을 확정하지 못했으므로 추정으로 분류."
     },
     {
       "name": "1·8·8-1·8-2 및 2·6·7 출구",
@@ -222,7 +248,9 @@
       "where": "-",
       "details": "공식 확인 못함. 브리프 문구 기준.",
       "source": "docs/briefs/station.md",
-      "guess": true
+      "guess": true,
+      "confidence": "unverified",
+      "evidence_status": "기존 출구 목적지·방향 표기를 보존하되 round10 감사에서 목적지 대응을 확정하지 못했으므로 추정으로 분류."
     },
     {
       "name": "고속터미널 꽃상가",
@@ -251,11 +279,14 @@
     "출구 1~8-2별 정확한 담당 노선/대합실",
     "3↔7, 3↔9 환승 거리",
     "7호선 대합실과 파미에스테이션 연결부 구조",
-    "9호선 열차 외관 상세"
+    "9호선 열차 외관 상세",
+    "round10: 출구 목적지와 다이소의 역·몰·터미널 사이 출입문 월드 좌표는 미확인. 별도 문 사진을 단일 출입구로 합치지 않는다.",
+    "round10: station↔gotomall 별도 로딩은 현재 엔진 클러스터 구조와 다르며 두 허용 파일에서 해결할 수 없다.",
+    "round10: 4번 출구의 실제 램프 경사·방향·길이·폭 및 승강기 B1 정차 여부는 미확인."
   ],
   "modeling": {
-    "round": 7,
-    "scope": "제공 22장 사진별 시선 구성, 17개 trace 카메라, 9개 lazy 실내 detail 그룹. 대리석·유리블록 출구, 식물벽·상품진열·개찰구, 벽돌 홀, 환승 광고벽, 꺾임 노선 기둥, 승강장 대기 열·바닥표식·전광판, 9호선 긴 에스컬레이터와 곡면 분기홀 보강. 외부 출구·공유 W3/W9/J7·B1~B4·엘리베이터 층 유지.",
+    "round": 10,
+    "scope": "증거 감사 round10: 4번 출구 기존 승강기·1F/B2/B3 유지와 외부 경사 접근로 추가, 기존 297m 환승통로·무빙워크 유지와 9호선 도착 안내판 보강. 미확인 출구/매장/문/상부 통로는 형상을 보존하고 추정으로 구분. 이전 사진 디테일 보존.",
     "guesses": [
       "B1=-6, B2=-11, B3=-16, B4=-21m는 K.LEVELS/공유 월드 계약이며 실제 역의 실측 심도가 아니다. 특히 깊은 9호선을 B4=-21m에 맞췄다.",
       "환승통로 꺾임, 출구 계단 방향, 승강장 길이와 위치는 기존 OSM/공유 연결을 보존한 추정 배치다. 3호선 약 200m 및 3호선 10량·7호선 8량·9호선 6량 모델을 유지한다.",
@@ -275,7 +306,13 @@
       "완전한 9호선 긴 에스컬레이터를 보여주는 제공 사진은 없다. 30m 수평 길이·15m 하강은 W9 계약 좌표를 보존하며, 조명·판넬 분절은 주변 환승 사진을 바탕으로 추정했다.",
       "사진 11의 7호선 올리브 패널은 평벽 부착으로도 해석된다. 기존 승강장 기둥 위치를 보존하면서 꺾임 밴드와 수평 줄눈을 적용했다.",
       "사진 21의 서비스 출입구는 화장실로 근사했으나 정확한 위치·실 용도는 미확인이다. B1 자판기 옆 벽면에 모델상 배치했다.",
-      "광고의 레이아웃·색상·판독 문구를 재현하며 인물 사진 및 캠페인 원본은 절차적 도형으로 근사한다. 완전한 사진 일치를 주장하지 않는다."
+      "광고의 레이아웃·색상·판독 문구를 재현하며 인물 사진 및 캠페인 원본은 절차적 도형으로 근사한다. 완전한 사진 일치를 주장하지 않는다.",
+      "round10: 1·2·3·4·5·6·7·8·8-1·8-2 출구의 목적지 대응과 출구 계단 방향은 미확인이다. 기존 표지는 보존하되 다이소·고투몰·고터 입구 위치가 검증되었다고 주장하지 않는다.",
+      "round10: 4번 출구 승강기의 1F/B2/B3 운행 및 외부 램프 존재는 확인. 기존 (-136,248) 위치, 동쪽 문 방향, 외장·치수, B1 추가 정차는 추정이며 기사에는 B1 정차 여부가 명시되지 않아 삭제하지 않았다.",
+      "round10: 외부 램프 주 구간 (-127.8,246.1)→(-133.2,246.1), 폭 2.2m·길이 5.4m·y .08→.065는 기존 station .025m 및 centralcity .06m 포장 위에 드러나도록 잡은 모델 값이다. 앞 1m(.025→.08), 뒤 .7m(.065→.025) 접속 경사와 북쪽 회전 착지부 [-134.6,245,-133.2,248.8]도 추정이다. 1F 승강기는 y0 유지. 실제 경사율·방향·치수의 실측 재현이 아니다.",
+      "round10: 工자 교차는 개략 배치 힌트다. B2 환승통로의 정확한 두 꺾임과 9↔7 최단 보행거리·3호선 대합실과의 실제 층 대응은 확인하지 못했다.",
+      "round10: B2 도착 안내판 (40,2), 크기 4.2×0.7m, 검정 케이스·호박색 표시와 일반 개화 곧 도착 문구는 정적 재현이다. 실시간 도착 정보나 사진에서 판독한 문구가 아니다.",
+      "round10: B1 중앙 홀의 매장 순서·폭·좌표, 타원 대합실 크기와 상부 보행 동선, 벽돌 홀의 정확한 위치는 unverified 그대로 유지한다. 사진16은 유리난간 중층 가장자리의 근거이며 상부 보행로를 확정하지 않는다."
     ],
     "junction_issues": [
       {
@@ -490,9 +527,100 @@
         "z": -134.4,
         "yawDeg": 90,
         "floor": "B4"
+      },
+      {
+        "round": 10,
+        "spot": "round10 · 4번 출구 외부 램프",
+        "photos": [],
+        "source": "https://mediahub.seoul.go.kr/archives/2016717",
+        "x": -130.5,
+        "y": 0.0725,
+        "z": 246.1,
+        "yawDeg": 90,
+        "pitchDeg": 0,
+        "floor": "1F",
+        "note": "북쪽 경사 접근로와 회전 착지부. 실제 고저차 미실측."
+      },
+      {
+        "round": 10,
+        "spot": "round10 · 4번 출구 승강기 전면",
+        "photos": [],
+        "source": "https://mediahub.seoul.go.kr/archives/2016717",
+        "x": -134.05,
+        "y": 0.025,
+        "z": 248,
+        "yawDeg": 90,
+        "pitchDeg": 0,
+        "floor": "1F",
+        "note": "기존 승강기와 북쪽 접근로 연결."
+      },
+      {
+        "round": 10,
+        "spot": "round10 · 4번 출구 승강기 B2",
+        "photos": [],
+        "source": "https://mediahub.seoul.go.kr/archives/2016717",
+        "x": -133.1,
+        "y": -11,
+        "z": 248,
+        "yawDeg": 90,
+        "pitchDeg": 0,
+        "floor": "B2",
+        "note": "확인된 7호선 대합실 정차 유지."
+      },
+      {
+        "round": 10,
+        "spot": "round10 · 4번 출구 승강기 B3",
+        "photos": [],
+        "source": "https://mediahub.seoul.go.kr/archives/2016717",
+        "x": -133.1,
+        "y": -16,
+        "z": 248,
+        "yawDeg": 90,
+        "pitchDeg": 0,
+        "floor": "B3",
+        "note": "확인된 7호선 승강장 정차 유지."
+      },
+      {
+        "round": 10,
+        "spot": "round10 · 9호선 도착 안내판",
+        "photos": [],
+        "source": "https://itwiki.kr/w/%EA%B3%A0%EC%86%8D%ED%84%B0%EB%AF%B8%EB%84%90%EC%97%AD",
+        "x": 40,
+        "y": -11,
+        "z": 8,
+        "yawDeg": 0,
+        "pitchDeg": 0,
+        "floor": "B2",
+        "note": "표지 중심(40,2), 모델의 정적 도착 상태."
+      },
+      {
+        "round": 10,
+        "spot": "round10 · 무빙워크 첫 구간 유지",
+        "photos": [],
+        "source": "https://itwiki.kr/w/%EA%B3%A0%EC%86%8D%ED%84%B0%EB%AF%B8%EB%84%90%EC%97%AD",
+        "x": -48,
+        "y": -11,
+        "z": -25.8,
+        "yawDeg": 270,
+        "pitchDeg": 0,
+        "floor": "B2",
+        "note": "s35–85: 50m, 정확한 위치는 추정."
+      },
+      {
+        "round": 10,
+        "spot": "round10 · 무빙워크 평행 구간 유지",
+        "photos": [],
+        "source": "https://itwiki.kr/w/%EA%B3%A0%EC%86%8D%ED%84%B0%EB%AF%B8%EB%84%90%EC%97%AD",
+        "x": 38.6,
+        "y": -11,
+        "z": 8,
+        "yawDeg": 180,
+        "pitchDeg": 0,
+        "floor": "B2",
+        "note": "s157–212: 55m, 3호선과 평행한 구간."
       }
     ],
-    "trace_convention": "x,z는 월드 좌표(m), y는 눈 높이가 아닌 보행 바닥 높이. shot 도구가 눈높이를 추가한다. yaw 0 북쪽, 90 서쪽, 180 남쪽, 270 동쪽. notes.json에 trace_spots가 없으므로 22장의 사진 묶음으로 16개 지점과 W9 긴 에스컬레이터 하부 1개를 도출했다.",
+    "trace_convention": "x,z는 월드 좌표(m), y는 눈 높이가 아닌 보행 바닥 높이. shot 도구가 눈높이를 추가한다. yaw 0 북쪽, 90 서쪽, 180 남쪽, 270 동쪽. notes.json에 trace_spots가 없으므로 22장의 사진 묶음으로 16개 지점과 W9 긴 에스컬레이터 하부 1개를 도출했다. round10 카메라는 수정·유지 확인 지점 7개를 추가. 모든 y는 바닥 높이이며 화면 렌더는 수행하지 않았다.",
     "qa_round7": {
       "rendered": false,
       "reason": "사용자 지시대로 tests/shot.mjs를 실행하지 않음. 개별 사진 열람 및 kit/physics 검사 후 운영자가 trace 카메라를 렌더한다.",
@@ -609,7 +737,348 @@
       "total_standalone": 137954,
       "note": "kit stats.quads 기준. hpoly 삼각형 및 instanced people 삼각형은 이 값에 포함되지 않는다. smoke 표는 lazy detail 전의 eager 값만 표시하므로 별도 callback 전후 계측을 사용."
     },
-    "load_order_note": "월드의 실제 PLACES 순서인 gotomall → station에서 검증. station을 먼저 짓는 임의 walk 순서에서는 mallHere 사전 감지가 불가능하여 독립 B1 홀과 몰이 중복되는 기존 설계 한계가 있다. 요구된 station-first smoke는 통과."
+    "load_order_note": "월드의 실제 PLACES 순서인 gotomall → station에서 검증. station을 먼저 짓는 임의 walk 순서에서는 mallHere 사전 감지가 불가능하여 독립 B1 홀과 몰이 중복되는 기존 설계 한계가 있다. 요구된 station-first smoke는 통과.",
+    "previous_round": 7,
+    "exit_destination_audit": [
+      {
+        "exit": "1",
+        "retained_label_or_group": "기존 고투몰·경부선 계열 안내",
+        "confidence": "unverified",
+        "guess": true
+      },
+      {
+        "exit": "2",
+        "retained_label_or_group": "경부선 · 신세계백화점",
+        "confidence": "unverified",
+        "guess": true
+      },
+      {
+        "exit": "3",
+        "retained_label_or_group": "파미에스테이션 · 센트럴시티",
+        "confidence": "unverified",
+        "guess": true
+      },
+      {
+        "exit": "4",
+        "retained_label_or_group": "국립중앙도서관 · 누에다리",
+        "confidence": "unverified",
+        "guess": true
+      },
+      {
+        "exit": "5",
+        "retained_label_or_group": "서래마을 방면",
+        "confidence": "unverified",
+        "guess": true
+      },
+      {
+        "exit": "6",
+        "retained_label_or_group": "반포대로 방면",
+        "confidence": "unverified",
+        "guess": true
+      },
+      {
+        "exit": "7",
+        "retained_label_or_group": "JW메리어트 · 센트럴시티",
+        "confidence": "unverified",
+        "guess": true
+      },
+      {
+        "exit": "8",
+        "retained_label_or_group": "신세계백화점 · 고투몰 계열 안내",
+        "confidence": "unverified",
+        "guess": true
+      },
+      {
+        "exit": "8-1",
+        "retained_label_or_group": "고투몰 계열 안내",
+        "confidence": "unverified",
+        "guess": true
+      },
+      {
+        "exit": "8-2",
+        "retained_label_or_group": "고투몰 계열 안내",
+        "confidence": "unverified",
+        "guess": true
+      }
+    ],
+    "evidence_round10": {
+      "audit_file": ".codex-jobs/evidence/audit_station.json",
+      "photos": {
+        "audit_directory": "refs/interior/audit_station/",
+        "audit_directory_status": "empty (0 files)",
+        "opened": [
+          "refs/interior/daiso/201_g9_exit_guide_sign_daiso_hangaram.jpg",
+          "refs/interior/daiso/207_gate4_entrance_gotomall_side.jpg",
+          "refs/interior/daiso/209_gate2_entry_only_turnstile.jpg",
+          "refs/interior/daiso/101_gate1_main_entrance_marketer_jyh_20261105.jpg",
+          "refs/interior/daiso/136_subway_to_gyeongbu_stairs_up_uniqlo_eun_bib_20260830.jpg",
+          "refs/interior/station/16_line9_concourse_oval_ceiling.jpg"
+        ],
+        "article_images": "기사 이미지 URL 열기까지 시도했으나 web 도구는 이미지 픽셀을 반환하지 않음. 로컬 다운로드는 DNS 제한, 브라우저는 host unavailable. 승강기 기사 사진을 열람했다고 주장하지 않음."
+      },
+      "source_access": [
+        {
+          "url": "https://mediahub.seoul.go.kr/archives/2016717",
+          "status": "본문 열람",
+          "publication_date": "2026-01-09",
+          "event_date": "2025-12",
+          "finding": "4번 출구 앞 승강기 1F/B2/B3와 완만한 외부 램프 확인. 기사 발행일과 준공 시점을 구분."
+        },
+        {
+          "url": "https://itwiki.kr/w/%EA%B3%A0%EC%86%8D%ED%84%B0%EB%AF%B8%EB%84%90%EC%97%AD",
+          "status": "HTTP 403; 감사 JSON의 인용 요약에 한정",
+          "finding": "무빙워크·9호선 접근 전광판·300m 이상 환승 설명은 likely로 유지."
+        },
+        {
+          "url": "https://sisul.or.kr/open_content/undershop/guide/terminal/gangnam.jsp",
+          "status": "본문 텍스트 반환 없음",
+          "finding": "추가 출구 목적지 확인 근거 없음."
+        },
+        {
+          "url": "https://mediahub.seoul.go.kr/archives/162098",
+          "status": "본문 열람",
+          "publication_date": "2009-05-13",
+          "finding": "강관 아치의 시공·건축 이력 기사. 현행 상점 배치나 출입문 좌표 근거가 아님."
+        }
+      ],
+      "items": [
+        {
+          "element": "Entrances: exit number to destination mapping (1 to 8-2). Which exit leads to 고투몰, 파미에스테이션/센트럴시티, 신세계, 호남선, and the 경부선 terminal",
+          "confidence": "unverified",
+          "status": "preserved_and_marked_guess",
+          "action": "전체 10개 출구의 목적지 대응을 미확인 추정으로 표시하고 기존 형상을 유지.",
+          "positions_xyz": [],
+          "sources": [
+            "https://itwiki.kr/w/%EA%B3%A0%EC%86%8D%ED%84%B0%EB%AF%B8%EB%84%90%EC%97%AD",
+            "https://sisul.or.kr/open_content/undershop/guide/terminal/gangnam.jsp"
+          ]
+        },
+        {
+          "element": "7호선 4번 출구 and the elevator (ground, B2 concourse, B3 platform)",
+          "confidence": "confirmed",
+          "status": "applied",
+          "action": "기존의 보이는 승강기와 1F/B2/B3 정차를 보존하고 북쪽 외부 램프·회전 착지부·손잡이를 추가. 특정 건물에 새로 연결하지 않음.",
+          "positions_xyz": [
+            [
+              -136,
+              0,
+              248
+            ],
+            [
+              -126.8,
+              0.025,
+              246.1
+            ],
+            [
+              -127.8,
+              0.08,
+              246.1
+            ],
+            [
+              -133.2,
+              0.065,
+              246.1
+            ],
+            [
+              -133.9,
+              0.025,
+              246.1
+            ]
+          ],
+          "sources": [
+            "https://mediahub.seoul.go.kr/archives/2016717"
+          ]
+        },
+        {
+          "element": "Connection: 3호선 concourse to 9호선 and 7호선 transfer corridor (moving walkway, route length)",
+          "confidence": "likely",
+          "status": "applied_and_retained",
+          "action": "50m·55m 무빙워크 유지, B2 9호선 도착 안내판 추가. 이미 긴 297m 통로는 연장하지 않음.",
+          "positions_xyz": [
+            [
+              40,
+              -11,
+              2
+            ],
+            [
+              -44,
+              -10.97,
+              -28.6
+            ],
+            [
+              41.6,
+              -10.97,
+              11
+            ]
+          ],
+          "sources": [
+            "https://itwiki.kr/w/%EA%B3%A0%EC%86%8D%ED%84%B0%EB%AF%B8%EB%84%90%EC%97%AD"
+          ]
+        },
+        {
+          "element": "3호선 concourse underground passage to the 서울고속버스터미널 (경부선) and to 센트럴시티 (호남선)",
+          "confidence": "unverified",
+          "status": "preserved_and_marked_guess",
+          "action": "다이소 사진은 GATE1·2·4가 구별됨을 뒷받침한다. station 측 문 위치는 확인 불가하여 경부선/몰 문을 합치거나 이동하지 않음.",
+          "positions_xyz": [],
+          "sources": [
+            "https://itwiki.kr/w/%EA%B3%A0%EC%86%8D%ED%84%B0%EB%AF%B8%EB%84%90%EC%97%AD"
+          ]
+        },
+        {
+          "element": "B1 center hall layout (stores, 9호선 oval concourse, brick-pillar hall) and unregistered upper walkway",
+          "confidence": "unverified",
+          "status": "preserved_and_marked_guess",
+          "action": "상점 순서·타원·벽돌 홀과 상부 비보행 마감을 보존. station↔gotomall 별도 로딩은 공유 엔진 영역 설정으로 구현되지 않음.",
+          "positions_xyz": [],
+          "sources": [
+            "https://mediahub.seoul.go.kr/archives/162098"
+          ]
+        }
+      ],
+      "photo_priority": "다이소 GATE2의 입구전용·출구1/4 안내와 서로 다른 GATE1/4 전면을 직접 확인. 하나의 공용문으로 합치는 해석은 사용하지 않음. station 수정 대상인 승강기/환승거리와 직접 상충하는 로컬 사진은 없음.",
+      "transfer_length": {
+        "units": "m",
+        "b2_centerline_xz": [
+          [
+            -79,
+            -27
+          ],
+          [
+            40,
+            -27
+          ],
+          [
+            40,
+            151
+          ]
+        ],
+        "b2_centerline_m": 297,
+        "line9_to_line7_concourse_centerline_xyz": [
+          [
+            -29,
+            -21,
+            -103
+          ],
+          [
+            -29,
+            -21,
+            -82
+          ],
+          [
+            -33,
+            -21,
+            -82.2
+          ],
+          [
+            -63,
+            -11,
+            -82.2
+          ],
+          [
+            -65,
+            -11,
+            -85
+          ],
+          [
+            -76,
+            -11,
+            -85
+          ],
+          [
+            -79,
+            -11,
+            -85
+          ],
+          [
+            -79,
+            -11,
+            -27
+          ],
+          [
+            40,
+            -11,
+            -27
+          ],
+          [
+            40,
+            -11,
+            151
+          ]
+        ],
+        "line9_to_line7_concourse_centerline_m": 429.07,
+        "interpretation": "모델 중심선 합산이며 7호선 B3 접근을 포함하지 않는다. 최단 보행 경로나 실제 현장 실측값이 아니므로 314m와 일치한다고 주장하지 않음. 긴 느낌을 위해 근거 없이 더 늘리지 않음."
+      },
+      "loading_boundary": {
+        "current": "js/areas.js CLUSTERS=[[gotomall,station]]로 같은 실내 영역. 두 모듈 사이 별도 로딩 없음.",
+        "requested_but_unverified": "감사에서 제안한 station↔고투몰 별도 로딩 및 개별 다이소 문 트리거",
+        "disposition": "unverified 보존 지침과 station 두 파일 한정 범위를 따라 엔진/몰/터미널을 수정하지 않음. 고터/고투몰의 별도 문 구현이 완료됐다고 주장하지 않음."
+      },
+      "metadata": {
+        "claims_changed": false,
+        "zones_changed": false,
+        "gen_meta_run": false,
+        "reason": "실내 영역·claims·zones를 바꾸지 않아 재생성 불필요. 새 램프는 기존 승강기 앞 외부 접근로이며 새 실내 공간/지하 타모듈 연결을 만들지 않음."
+      }
+    },
+    "junctions_to_add": [
+      {
+        "id": "station-centralcity-existing-fronts-review",
+        "status": "proposal_only_unverified",
+        "a": "station",
+        "b": "centralcity",
+        "floor": "B1",
+        "y": -6,
+        "existing_open_front_centers_xz": [
+          [
+            -42.6,
+            177.2
+          ],
+          [
+            -61.3,
+            184.4
+          ]
+        ],
+        "width": 8,
+        "request": "기존 J7 이외 두 개방 전면의 실제 연결 여부·경계·owner를 공동 확인한 뒤 J7에 포함하거나 별도 계약을 정의해야 함. 이번에는 추정 전면을 이동/폐쇄하거나 _junctions.js를 편집하지 않음."
+      }
+    ],
+    "qa_round10": {
+      "rendered": false,
+      "reason": "사용자 지시대로 tests/shot.mjs 미실행. 로컬 증거 사진 열람 및 실제 kit/physics 검사; 렌더링 일치 여부는 미검증.",
+      "results": {
+        "smoke": {
+          "command": "node tests/smoke.mjs station gotomall centralcity",
+          "result": "OK",
+          "exit_code": 0,
+          "spawns": 12,
+          "zones": 19,
+          "elevators": 3,
+          "after_final_ramp_adjustment": true
+        },
+        "full_walk": {
+          "command": "node tests/walk.mjs",
+          "result": "443 ok, 0 blocked",
+          "exit_code": 0,
+          "scope_note": "동시 작업 중 전체 월드 스냅샷 검사. 이후 station 외부 램프의 포장 겹침 보정은 최종 station walk 및 별도 kit/physics 샘플로 검증."
+        },
+        "station_walk": {
+          "command": "node tests/walk.mjs station --no-city",
+          "result": "21 ok, 0 blocked",
+          "exit_code": 0,
+          "after_final_ramp_adjustment": true
+        },
+        "diff_check": "git diff --check -- js/places/station.js data/research/station.json passed",
+        "targeted_physics": {
+          "method": "실제 kit/physics와 lazy detail; station 단독 및 gotomall→station→centralcity+city; 렌더 캡처 아님.",
+          "ramp_to_lift": "최종 외부 램프→서쪽 회전→승강기 229개 표본(간격≤.05m), 충돌0·바닥 끊김0·최대 인접 높이차 .0055m.",
+          "visible_ramp": "주 경사면 y.065–.08은 기존 station .025/centralcity .06 포장보다 높다. 전체 폭 1188개 검사 중 입구 접속 22개는 kit 경사 끝 .05m 허용 구간 때문에 최대 .000139m 차이가 있으며 매몰 없음.",
+          "arrival_board": "안내판 밑면은 바닥 위1.98m로 높이1.75m 플레이어보다 .23m 높음. 천장 아래 .10m 여유.",
+          "trace": "round10 7개 카메라 모두 단독/통합에서 지정 y에 바닥 있음·capsule 밀림0. 지하 카메라 천장 여유2.82m.",
+          "zones_and_claims": "이번 편집 전후 zone/claims 선언 동일. 추가 실내 공간·지하 타모듈 연결 없음."
+        }
+      }
+    }
   },
   "interiors_round6": {
     "reference_directory": "refs/interior/station",
@@ -840,5 +1309,31 @@
       "9호선 상층 홀을 가로막던 중복 승강기 접근 통로의 내부 벽·천장 제거; 홀 자체로 승강기 접근. W9 하부 평탄 착지부 천장 틈 폐쇄."
     ],
     "integrated_limit": "고투몰이 먼저 로드되면 몰이 B1 중앙 게이트/상점/천장을 소유한다. 중복된 station 대합실은 만들지 않는다. 몰 연속 천장이 9호선 타원 가장자리를 가리는 기존 소유권 문제가 남아 있으며 station 단독 trace와 전체 월드 B1 결과가 다를 수 있다."
-  }
+  },
+  "connection_confidence": [
+    {
+      "connection": "지하통로로 서울고속버스터미널(경부선)과 연결(3호선 대합실)",
+      "confidence": "unverified",
+      "guess": true,
+      "note": "인접·연결 설명을 유지하며 개별 출입문 위치 또는 로딩 경계의 근거로 사용하지 않음."
+    },
+    {
+      "connection": "3번 출구로 파미에스테이션/센트럴시티",
+      "confidence": "unverified",
+      "guess": true,
+      "note": "인접·연결 설명을 유지하며 개별 출입문 위치 또는 로딩 경계의 근거로 사용하지 않음."
+    },
+    {
+      "connection": "호남선(센트럴시티)·신세계 강남·JW메리어트 인접",
+      "confidence": "context_only",
+      "guess": true,
+      "note": "인접·연결 설명을 유지하며 개별 출입문 위치 또는 로딩 경계의 근거로 사용하지 않음."
+    },
+    {
+      "connection": "서울성모병원·국립중앙도서관 인접",
+      "confidence": "context_only",
+      "guess": true,
+      "note": "인접·연결 설명을 유지하며 개별 출입문 위치 또는 로딩 경계의 근거로 사용하지 않음."
+    }
+  ]
 }

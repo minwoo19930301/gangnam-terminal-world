@@ -12,5 +12,7 @@ export const PLACES = [
   'newcore',
   'banwon',
   'jamwon_hangang',
+  'lebon',
+  'onebailey',
   'streets',
 ];

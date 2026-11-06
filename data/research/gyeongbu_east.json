@@ -1,8 +1,8 @@
 {
   "id": "gyeongbu_east",
   "name": "경부선 동측 주차빌딩 · 데블스도어",
-  "updated": "2026-11-06",
-  "round": 8,
+  "updated": "2026-11-07",
+  "round": 10,
   "sources": [
     {
       "url": "data/osm.json",
@@ -126,7 +126,7 @@
     {
       "url": "https://m.blog.naver.com/jinny__bear/224446735960",
       "local": "refs/interior/famille_back/15_dd_exterior_stair_2f_standee.jpg",
-      "title": "벽돌 벽에 붙은 간판, 2층 프라이빗 대관 입간판, 낮은 계단",
+      "title": "벽돌 벽 옆 목재 계단과 2층 프라이빗 대관 입간판; 외부·주차장 연결 여부 미확인",
       "post_date": "2026-10-19",
       "type": "provided_blog_photo"
     },
@@ -262,18 +262,56 @@
       "title": "파미에·본관 주차장 기본요금",
       "post_date": "2026-11-01",
       "type": "provided_blog_photo"
+    },
+    {
+      "url": "refs/interior/audit_gyeongbu_east/02_entrance_snfl_151300.jpg",
+      "type": "provided_audit_photo",
+      "title": "녹청 철판 대문과 벽돌 입면"
+    },
+    {
+      "url": "refs/interior/audit_gyeongbu_east/03_reception_snfl_131716.jpg",
+      "type": "provided_audit_photo",
+      "title": "철문 안 금속 상판 리셉션, 격자 유리, 사무실 문"
+    },
+    {
+      "url": "refs/interior/audit_gyeongbu_east/04_parking_to_famille_papanui_a.jpg",
+      "type": "provided_audit_photo",
+      "title": "녹색 지붕 주차 관리 부스와 방향 표지"
+    },
+    {
+      "url": "refs/interior/audit_gyeongbu_east/05_parking_to_famille_papanui_b.jpg",
+      "type": "provided_audit_photo",
+      "title": "촬영 시점 반포천 공영주차장 요금 안내판"
+    },
+    {
+      "url": "refs/interior/audit_gyeongbu_east/06_dd_drtitan_01.jpg",
+      "type": "provided_audit_photo",
+      "title": "독립 벽돌 홀 정면, 지상 주차면과 아치창"
+    },
+    {
+      "url": "refs/interior/audit_gyeongbu_east/07_dd_drtitan_06.jpg",
+      "type": "provided_audit_photo",
+      "title": "높은 홀과 복층 부분, 목재 테이블·철골 트러스"
+    },
+    {
+      "url": ".codex-jobs/evidence/audit_gyeongbu_east.json",
+      "type": "provided_evidence_audit",
+      "title": "round10, confirmed 2개 / likely 3개 / unverified 1개"
     }
   ],
   "notes": [
-    "외곽은 OSM414891734의 네 꼭짓점을 그대로 사용한다. 약104.86×17.18m, x333.85..435.49 z-30.33..31.65. 주차장은1F(0m),2F(3.8m),3F(7.6m), 지붕11.8m로 구성한다.",
-    "로드뷰의 개방형 하부2개 층, 흰 철골V가새, 주황 기둥 하부, 은색 난간, 청회색 상부 유리·리브 철판, 흰 지붕 테두리를 양쪽 긴 입면에 반영했다.",
-    "데블스도어는 POI(371.8,8.1)를 포함하는 벽돌 홀에 배치. 주출입문 중심은 약(371.8,11.9), 측면 출입구도 열려 있다. 녹슨 청색/주황 철판문·아치창·곡면 유리천창·철골/목재 트러스·탱크·구리배관·원목 테이블·스툴·소파·전구줄·메뉴판을 구성한다.",
-    "홀1F와 북측2F 대관 갤러리를 별도zone으로 등록. 주차층3개와 차고지 경계까지 총6개zone,9개spawn,5개K.detail 그룹,1개3층 승강기. 계단/램프/난간/출입구/바닥은 지연 로딩 밖에 둔다.",
-    "OSM 보행로1067157370이 지나는 local u≈53에 폭3m의 북측·남측 출입구와 실내 통로를 뚫었다. 지도상의2.5m 통로에 탱크/테이블/소파가 들어가지 않는다.",
-    "차고지1173093434 남동측 외곽선(349.86,-16.63)→(425.07,-53.16) 밖에 생울타리·낮은 철망·8그루 가로수. 차고지 포장·버스·면적claim은 gyeongbu에 남긴다. 1173093432/3434 내부에는 새 경계 물체를 넣지 않는다.",
-    "claimRoads와claimAreas는 비워 두었다. 도로/교차로/신호등은 이 모듈이 재시공하지 않으며 보도와 건물1F는y=0에서 연결한다.",
-    "참고 사진의 촬영 UI·지도·개인정보는 월드 텍스처에 넣지 않았다. 실제 사진파일을 그대로 투사하지 않고 관찰한 재료와 구조를 기하/절차적 텍스처로 만들었다.",
-    "블로그는 제공된 로컬 사진·notes 내용으로 사용했으며 게시물 URL을 새로 조회한 것으로 표기하지 않는다. 요금 안내판에는 현재 요금으로 오인될 숫자를 싣지 않았다."
+    "위치 기준은 사용자 지정 카카오 핀(372,8)과 OSM POI9797826019(371.8,8.1). claim은 OSM414891734 그대로이며 다른 건물로 옮기지 않았다.",
+    "독립 벽돌 홀 u18..63을 주차 데크와 분리. u16.8..64.4의 상층 데크·북측 외피 연결띠를 제거하고 양끝 주차 구조를 유지했다. 정면 u18..63,v19.7..24.8은 하늘이 열린 지상 아스팔트 주차면이다.",
+    "사진으로 확인되는 철판문, 입체 브랜드 문자, 아치창, 낮은 금속 처마, 유리 지붕, 화단·관목·주차선, 실내 양조 탱크·배관·트러스·전구·소파를 유지했다.",
+    "정문 u36,v15.9 뒤에 금속 상판 리셉션 u37,v12.65, 대기 등록 단말, 안내판, 오른쪽 격자 유리, 왼쪽 사무실 문을 추가. 왼쪽 u33.2,v10.1 개구부로 홀에 진입한다.",
+    "주차 계단에서 매장 2F로 통하던 개구부와 외부 대관 계단을 없앴다. 내부 계단 u19.9→29.5,v10.4가 y0→3.8의 복층 라운지로 연결된다. 라운지는 깊이 있는 L자 평면, 홀 쪽 난간, 바와 유리 프라이빗룸을 갖춘다.",
+    "남녀 화장실과 유리 흡연실을 u55..62.7,v10.7..13.2에 추가. 리셉션 뒤 u31.7..39.5,v1.7..4.75에는 기존 서비스 카운터를 유지한 오픈주방을 추가했다. 시설의 존재와 정확한 배치의 신뢰도를 구별한다.",
+    "이동이 필요한 가구는 보존: 내부 계단 자리의 공동 테이블 2개와 스툴16개는 2F로, 편의시설 자리 테이블1개는 u60.7,v7로 옮겼다. 기존 2F 테이블6개도 새 라운지/프라이빗룸 안으로 재배치했다.",
+    "OSM footway1067157370의 u≈53 관통 통로를 유지. 서측 OSM footway1067157385의 (339.44,32.31)에서 정문 앞 보도와 지상 주차 횡단 표시까지 연결했다. 3번 출구/파미에스테이션·스타벅스 방향은 지상 보도에서 안내한다.",
+    "차고지 경계와 생울타리, 기존 주차 데크의 차량·램프·계단·승강기·부스·안내 세부는 유지. claimRoads/claimAreas 및 기존 지하 연결은 바꾸지 않았다.",
+    "모든 실내 공간은 모듈 zone 안에 둔다. K.quad 유리 지붕은 자체 천장 판정이 없어 홀에 보이지 않는 물리 천장 범위를 등록했다. 실제 렌더링되는 평천장을 추가한 것은 아니다.",
+    "Naver 원문 URL 7개는 새로 열기를 시도했으나 접근할 수 없었다. 이번 판단은 감사 JSON의 인용 내용과 직접 열어 본 로컬 사진에 근거한다.",
+    "감사/기존 research의 숫자 미표기 설명은 현재 코드와 달랐다. 기존 ge-fee-notice-2026에는 요금 숫자가 이미 있으며 사진23과 일치한다. unverified 항목은 현 상태 유지 지시대로 수정하지 않고 촬영 시점 자료로 기록한다."
   ],
   "modeling": {
     "coordinate_frame": {
@@ -316,27 +354,28 @@
         "label": "1F",
         "y": 0,
         "rooms": [
-          "개방 주차장",
-          "데블스도어 브루어리"
+          "분리된 주차장",
+          "데블스도어 리셉션·홀·오픈주방",
+          "남녀 화장실·유리 흡연실"
         ]
       },
       {
         "label": "2F",
         "y": 3.8,
         "rooms": [
-          "개방 주차 데크",
-          "데블스도어 대관 갤러리"
+          "분리된 주차 데크",
+          "홀 내부 계단으로 연결되는 라운지·바·프라이빗룸"
         ]
       },
       {
         "label": "3F",
         "y": 7.6,
         "rooms": [
-          "유리·철판 외피 주차 데크"
+          "유리·철판 외피 주차 데크(홀과 연결 없음)"
         ]
       }
     ],
-    "trace_convention": "각 항목은 실제 카메라 좌표를 측량한 값이 아니라 모델과 제공사진을 나란히 비교하기 위한 추정 촬영점. x/z는월드좌표,y는카메라 눈높이(지상1.7m),yaw0=북90=서180=남270=동. 같은 사진은 독립trace 항목에1장씩 기록.",
+    "trace_convention": "모델 비교용 추정 촬영점. x/z=월드좌표(m), y=반드시 바닥 높이(1F=0, 2F=3.8). yawDeg 0=북,90=서,180=남,270=동. 눈높이는 렌더러에서 더한다. 실측 사진 촬영점이 아님. 기본 카메라 눈높이 오프셋은1.62m.",
     "trace": [
       {
         "spot": "로드뷰01 · 북측 도로에서 주차빌딩",
@@ -344,9 +383,10 @@
           "refs/roadview/gbeast_01_parking_deck.jpg"
         ],
         "x": 381.81,
-        "y": 1.7,
+        "y": 0,
         "z": -22.026,
-        "yawDeg": 206.404
+        "yawDeg": 206.404,
+        "pitchDeg": 0
       },
       {
         "spot": "로드뷰02 · 차고지 생울타리 남서 방향",
@@ -354,9 +394,10 @@
           "refs/roadview/gbeast_02_bus_yard_road.jpg"
         ],
         "x": 402.862,
-        "y": 1.7,
+        "y": 0,
         "z": -33.594,
-        "yawDeg": 116.404
+        "yawDeg": 116.404,
+        "pitchDeg": 0
       },
       {
         "spot": "로드뷰03 · 차고지 생울타리 북동 방향",
@@ -364,9 +405,10 @@
           "refs/roadview/gbeast_03_bus_yard_hedge.jpg"
         ],
         "x": 367.034,
-        "y": 1.7,
+        "y": 0,
         "z": -15.806,
-        "yawDeg": 296.404
+        "yawDeg": 296.404,
+        "pitchDeg": 0
       },
       {
         "spot": "파미에 참고01 · 데블스도어 정문 앞",
@@ -374,9 +416,10 @@
           "refs/interior/famille_back/01_dd_entrance_steel_door_panel.jpg"
         ],
         "x": 373.877,
-        "y": 1.7,
+        "y": 0,
         "z": 15.965,
-        "yawDeg": 26.404
+        "yawDeg": 26.404,
+        "pitchDeg": 0
       },
       {
         "spot": "파미에 참고02 · 정문 앞 보도",
@@ -384,9 +427,10 @@
           "refs/interior/famille_back/02_dd_entrance_door_standee_street.jpg"
         ],
         "x": 370.25,
-        "y": 1.7,
+        "y": 0,
         "z": 17.655,
-        "yawDeg": 6.404
+        "yawDeg": 6.404,
+        "pitchDeg": 0
       },
       {
         "spot": "파미에 참고03 · 정문 근접",
@@ -394,9 +438,10 @@
           "refs/interior/famille_back/03_dd_door_closeup_signage.jpg"
         ],
         "x": 372.898,
-        "y": 1.7,
+        "y": 0,
         "z": 13.995,
-        "yawDeg": 26.404
+        "yawDeg": 26.404,
+        "pitchDeg": 0
       },
       {
         "spot": "파미에 참고04 · 정문 정면(밤)",
@@ -404,9 +449,10 @@
           "refs/interior/famille_back/04_dd_door_brick_facade.jpg"
         ],
         "x": 374.321,
-        "y": 1.7,
+        "y": 0,
         "z": 16.861,
-        "yawDeg": 26.404
+        "yawDeg": 26.404,
+        "pitchDeg": 0
       },
       {
         "spot": "파미에 참고07 · 파미에스테이션 건물 바깥 잔디에서 본 모습",
@@ -414,9 +460,10 @@
           "refs/interior/famille_back/07_famille_building_glass_roof_lawn.jpg"
         ],
         "x": 360.645,
-        "y": 1.7,
+        "y": 0,
         "z": 29.792,
-        "yawDeg": 351.404
+        "yawDeg": 351.404,
+        "pitchDeg": 0
       },
       {
         "spot": "파미에 참고08 · 주차장 쪽에서 본 건물 입면(밤)",
@@ -424,9 +471,10 @@
           "refs/interior/famille_back/08_famille_facade_arched_windows_night.jpg"
         ],
         "x": 386.175,
-        "y": 1.7,
+        "y": 0,
         "z": 16,
-        "yawDeg": 26.404
+        "yawDeg": 26.404,
+        "pitchDeg": 0
       },
       {
         "spot": "파미에 참고09 · 건물 벽을 따라 난 보행로(밤)",
@@ -434,9 +482,10 @@
           "refs/interior/famille_back/09_brick_wall_walkway_hedge_night.jpg"
         ],
         "x": 360.136,
-        "y": 1.7,
+        "y": 0,
         "z": 19.773,
-        "yawDeg": 296.404
+        "yawDeg": 296.404,
+        "pitchDeg": 0
       },
       {
         "spot": "파미에 참고10 · 매장 옆면(가까운 보조 출입구)",
@@ -444,9 +493,10 @@
           "refs/interior/famille_back/10_dd_side_glass_door_brick.jpg"
         ],
         "x": 350.303,
-        "y": 1.7,
+        "y": 0,
         "z": 17.956,
-        "yawDeg": 296.404
+        "yawDeg": 296.404,
+        "pitchDeg": 0
       },
       {
         "spot": "파미에 참고11 · 내부 전경",
@@ -454,9 +504,10 @@
           "refs/interior/famille_back/11_dd_interior_wide_brewery.jpg"
         ],
         "x": 370.23,
-        "y": 1.7,
+        "y": 0,
         "z": 8.621,
-        "yawDeg": 296.404
+        "yawDeg": 296.404,
+        "pitchDeg": 0
       },
       {
         "spot": "파미에 참고12 · 내부 전경",
@@ -464,9 +515,10 @@
           "refs/interior/famille_back/12_dd_interior_glass_roof_long_tables.jpg"
         ],
         "x": 355.855,
-        "y": 1.7,
+        "y": 0,
         "z": 15.646,
-        "yawDeg": 296.404
+        "yawDeg": 296.404,
+        "pitchDeg": 0
       },
       {
         "spot": "파미에 참고13 · 내부 전경",
@@ -474,9 +526,10 @@
           "refs/interior/famille_back/13_dd_interior_tanks_tables.jpg"
         ],
         "x": 387.705,
-        "y": 1.7,
+        "y": 0,
         "z": -3.405,
-        "yawDeg": 26.404
+        "yawDeg": 26.404,
+        "pitchDeg": 0
       },
       {
         "spot": "파미에 참고14 · 내부 전경",
@@ -484,19 +537,21 @@
           "refs/interior/famille_back/14_dd_interior_wide_banners.jpg"
         ],
         "x": 367.095,
-        "y": 1.7,
+        "y": 0,
         "z": 10.177,
-        "yawDeg": 296.404
+        "yawDeg": 296.404,
+        "pitchDeg": 0
       },
       {
-        "spot": "파미에 참고15 · 매장 바깥 모서리 계단",
+        "spot": "파미에 참고15 · 홀 내부 계단 옆으로 이동한 대관 입간판",
         "photos": [
           "refs/interior/famille_back/15_dd_exterior_stair_2f_standee.jpg"
         ],
-        "x": 352.494,
-        "y": 1.7,
-        "z": 17.873,
-        "yawDeg": 296.404
+        "x": 357.991,
+        "y": 0,
+        "z": 19.275,
+        "yawDeg": 296.404,
+        "pitchDeg": 0
       },
       {
         "spot": "파미에 참고16 · 주차장 진입로 입구",
@@ -504,9 +559,10 @@
           "refs/interior/famille_back/16_parking_entrance_booth_pine_sign.jpg"
         ],
         "x": 430.521,
-        "y": 1.7,
+        "y": 0,
         "z": -9.366,
-        "yawDeg": 26.404
+        "yawDeg": 26.404,
+        "pitchDeg": 0
       },
       {
         "spot": "파미에 참고17 · 주차장 안내사무실 앞",
@@ -514,9 +570,10 @@
           "refs/interior/famille_back/17_parking_booth_office_building.jpg"
         ],
         "x": 431.426,
-        "y": 1.7,
+        "y": 0,
         "z": -13.165,
-        "yawDeg": 26.404
+        "yawDeg": 26.404,
+        "pitchDeg": 0
       },
       {
         "spot": "파미에 참고19 · 주차장 진입 도로(밤)",
@@ -524,9 +581,10 @@
           "refs/interior/famille_back/19_parking_access_road_night.jpg"
         ],
         "x": 429.174,
-        "y": 1.7,
+        "y": 0,
         "z": -7.581,
-        "yawDeg": 116.404
+        "yawDeg": 116.404,
+        "pitchDeg": 0
       },
       {
         "spot": "파미에 참고20 · 주차 데크 바깥 도로",
@@ -534,9 +592,10 @@
           "refs/interior/famille_back/20_parking_deck_exterior_night.jpg"
         ],
         "x": 400.951,
-        "y": 1.7,
+        "y": 0,
         "z": 9.781,
-        "yawDeg": 26.404
+        "yawDeg": 26.404,
+        "pitchDeg": 0
       },
       {
         "spot": "파미에 참고21 · 주차 데크 끝 계단·엘리베이터 탑",
@@ -544,9 +603,10 @@
           "refs/interior/famille_back/21_parking_tower_glass_elevator.jpg"
         ],
         "x": 352.596,
-        "y": 1.7,
+        "y": 0,
         "z": 29.322,
-        "yawDeg": 351.404
+        "yawDeg": 351.404,
+        "pitchDeg": 0
       },
       {
         "spot": "파미에 참고22 · 주차 데크 출구",
@@ -554,9 +614,10 @@
           "refs/interior/famille_back/22_parking_deck_exit_ramp.jpg"
         ],
         "x": 425.794,
-        "y": 1.7,
+        "y": 0,
         "z": -14.388,
-        "yawDeg": 296.404
+        "yawDeg": 296.404,
+        "pitchDeg": 0
       },
       {
         "spot": "파미에 참고23 · 데블스도어 내부 카운터 안내판",
@@ -564,9 +625,10 @@
           "refs/interior/famille_back/23_parking_fee_sign.jpg"
         ],
         "x": 361.867,
-        "y": 1.7,
+        "y": 0,
         "z": 8.642,
-        "yawDeg": 26.404
+        "yawDeg": 26.404,
+        "pitchDeg": 0
       },
       {
         "spot": "거리 참고01 · 사평대로 쪽 데블스도어 외관(유리 아치 지붕+적벽돌), 앞 잔디·보행로",
@@ -574,9 +636,10 @@
           "refs/interior/streets_islands/01_devilsdoor_ext_glass_roof_side.jpg"
         ],
         "x": 360.645,
-        "y": 1.7,
+        "y": 0,
         "z": 29.792,
-        "yawDeg": 351.404
+        "yawDeg": 351.404,
+        "pitchDeg": 0
       },
       {
         "spot": "거리 참고02 · 데블스도어 측면 벽돌 외벽, 강철 대문",
@@ -584,9 +647,10 @@
           "refs/interior/streets_islands/02_devilsdoor_steel_door_brick.jpg"
         ],
         "x": 373.877,
-        "y": 1.7,
+        "y": 0,
         "z": 15.965,
-        "yawDeg": 26.404
+        "yawDeg": 26.404,
+        "pitchDeg": 0
       },
       {
         "spot": "거리 참고03 · 밤 데블스도어 정면 아치창+앞 지상 주차면",
@@ -594,9 +658,10 @@
           "refs/interior/streets_islands/03_devilsdoor_facade_night_parking.jpg"
         ],
         "x": 386.175,
-        "y": 1.7,
+        "y": 0,
         "z": 16,
-        "yawDeg": 26.404
+        "yawDeg": 26.404,
+        "pitchDeg": 0
       },
       {
         "spot": "거리 참고04 · 벽돌 기둥 아케이드 보행로 야경, 뒤로 고층 아파트",
@@ -604,9 +669,10 @@
           "refs/interior/streets_islands/04_devilsdoor_brick_arcade_walkway_night.jpg"
         ],
         "x": 360.136,
-        "y": 1.7,
+        "y": 0,
         "z": 19.773,
-        "yawDeg": 296.404
+        "yawDeg": 296.404,
+        "pitchDeg": 0
       },
       {
         "spot": "거리 참고05 · 출입문 야경",
@@ -614,9 +680,10 @@
           "refs/interior/streets_islands/05_devilsdoor_entrance_door_night.jpg"
         ],
         "x": 374.321,
-        "y": 1.7,
+        "y": 0,
         "z": 16.861,
-        "yawDeg": 26.404
+        "yawDeg": 26.404,
+        "pitchDeg": 0
       },
       {
         "spot": "거리 참고06 · 외관/간판",
@@ -624,9 +691,10 @@
           "refs/interior/streets_islands/06_devilsdoor_entrance_signboard.jpg"
         ],
         "x": 370.25,
-        "y": 1.7,
+        "y": 0,
         "z": 17.655,
-        "yawDeg": 6.404
+        "yawDeg": 6.404,
+        "pitchDeg": 0
       },
       {
         "spot": "거리 참고07 · 외관",
@@ -634,9 +702,10 @@
           "refs/interior/streets_islands/07_devilsdoor_door_closeup.jpg"
         ],
         "x": 372.898,
-        "y": 1.7,
+        "y": 0,
         "z": 13.995,
-        "yawDeg": 26.404
+        "yawDeg": 26.404,
+        "pitchDeg": 0
       },
       {
         "spot": "거리 참고08 · 내부 쓱토버 현수막 홀",
@@ -644,9 +713,10 @@
           "refs/interior/streets_islands/08_devilsdoor_interior_hall.jpg"
         ],
         "x": 367.095,
-        "y": 1.7,
+        "y": 0,
         "z": 10.177,
-        "yawDeg": 296.404
+        "yawDeg": 296.404,
+        "pitchDeg": 0
       },
       {
         "spot": "거리 참고09 · 내부 테이블 홀",
@@ -654,9 +724,10 @@
           "refs/interior/streets_islands/09_devilsdoor_interior_tables.jpg"
         ],
         "x": 370.23,
-        "y": 1.7,
+        "y": 0,
         "z": 8.621,
-        "yawDeg": 296.404
+        "yawDeg": 296.404,
+        "pitchDeg": 0
       },
       {
         "spot": "거리 참고10 · 내부 긴 홀",
@@ -664,9 +735,10 @@
           "refs/interior/streets_islands/10_devilsdoor_interior_long_hall.jpg"
         ],
         "x": 355.855,
-        "y": 1.7,
+        "y": 0,
         "z": 15.646,
-        "yawDeg": 296.404
+        "yawDeg": 296.404,
+        "pitchDeg": 0
       },
       {
         "spot": "거리 참고11 · 내부 아치창",
@@ -674,9 +746,10 @@
           "refs/interior/streets_islands/11_devilsdoor_interior_arch_windows.jpg"
         ],
         "x": 387.705,
-        "y": 1.7,
+        "y": 0,
         "z": -3.405,
-        "yawDeg": 26.404
+        "yawDeg": 26.404,
+        "pitchDeg": 0
       },
       {
         "spot": "거리 참고12 · 주차요금 안내판",
@@ -684,52 +757,533 @@
           "refs/interior/streets_islands/12_devilsdoor_parking_fee_sign.jpg"
         ],
         "x": 361.867,
-        "y": 1.7,
+        "y": 0,
         "z": 8.642,
-        "yawDeg": 26.404
+        "yawDeg": 26.404,
+        "pitchDeg": 0
+      },
+      {
+        "id": "r10_standalone_front",
+        "round": 10,
+        "spot": "독립 벽돌 홀과 야외 주차면",
+        "x": 380.35,
+        "y": 0,
+        "z": 20.009,
+        "local_uv": [
+          40,
+          24
+        ],
+        "yawDeg": 26.404,
+        "pitchDeg": 8,
+        "photos": [
+          "refs/interior/audit_gyeongbu_east/06_dd_drtitan_01.jpg"
+        ],
+        "placement": "approximate_for_comparison"
+      },
+      {
+        "id": "r10_roof_gap",
+        "round": 10,
+        "spot": "데크와 홀 사이의 북측 상부 분리",
+        "x": 366.12,
+        "y": 0,
+        "z": -8.653,
+        "local_uv": [
+          40,
+          -8
+        ],
+        "yawDeg": 206.404,
+        "pitchDeg": 15,
+        "photos": [
+          "refs/interior/audit_gyeongbu_east/06_dd_drtitan_01.jpg"
+        ],
+        "placement": "approximate_for_comparison"
+      },
+      {
+        "id": "r10_steel_door",
+        "round": 10,
+        "spot": "철판 정문",
+        "x": 374.232,
+        "y": 0,
+        "z": 16.682,
+        "local_uv": [
+          36,
+          18.3
+        ],
+        "yawDeg": 26.404,
+        "pitchDeg": 0,
+        "photos": [
+          "refs/interior/audit_gyeongbu_east/02_entrance_snfl_151300.jpg"
+        ],
+        "placement": "approximate_for_comparison"
+      },
+      {
+        "id": "r10_reception",
+        "round": 10,
+        "spot": "철문 뒤 리셉션·결제·대기 등록",
+        "x": 372.454,
+        "y": 0,
+        "z": 13.099,
+        "local_uv": [
+          36,
+          14.3
+        ],
+        "yawDeg": 26.404,
+        "pitchDeg": 0,
+        "photos": [
+          "refs/interior/audit_gyeongbu_east/03_reception_snfl_131716.jpg"
+        ],
+        "placement": "approximate_for_comparison"
+      },
+      {
+        "id": "r10_office_glass",
+        "round": 10,
+        "spot": "리셉션 왼쪽 사무실 문",
+        "x": 370.575,
+        "y": 0,
+        "z": 13.139,
+        "local_uv": [
+          34.3,
+          13.5
+        ],
+        "yawDeg": 116.404,
+        "pitchDeg": 0,
+        "photos": [
+          "refs/interior/audit_gyeongbu_east/03_reception_snfl_131716.jpg"
+        ],
+        "placement": "approximate_for_comparison"
+      },
+      {
+        "id": "r10_reception_hall",
+        "round": 10,
+        "spot": "리셉션 왼쪽 개구부에서 홀로",
+        "x": 368.567,
+        "y": 0,
+        "z": 11.568,
+        "local_uv": [
+          33.2,
+          11.2
+        ],
+        "yawDeg": 26.404,
+        "pitchDeg": 0,
+        "photos": [
+          "refs/interior/audit_gyeongbu_east/03_reception_snfl_131716.jpg"
+        ],
+        "placement": "approximate_for_comparison"
+      },
+      {
+        "id": "r10_kitchen",
+        "round": 10,
+        "spot": "서비스 카운터 뒤 오픈주방",
+        "x": 368.068,
+        "y": 0,
+        "z": 6.289,
+        "local_uv": [
+          35.1,
+          6.25
+        ],
+        "yawDeg": 26.404,
+        "pitchDeg": 0,
+        "photos": [],
+        "placement": "approximate_for_comparison"
+      },
+      {
+        "id": "r10_stair_base",
+        "round": 10,
+        "spot": "홀 내부 라운지 계단",
+        "x": 355.672,
+        "y": 0,
+        "z": 17.077,
+        "local_uv": [
+          19.2,
+          10.4
+        ],
+        "yawDeg": 296.404,
+        "pitchDeg": 12,
+        "photos": [
+          "refs/interior/audit_gyeongbu_east/07_dd_drtitan_06.jpg"
+        ],
+        "placement": "approximate_for_comparison"
+      },
+      {
+        "id": "r10_lounge",
+        "round": 10,
+        "spot": "복층 라운지·홀 쪽 난간",
+        "x": 366.215,
+        "y": 3.8,
+        "z": 13.126,
+        "local_uv": [
+          30.4,
+          11.55
+        ],
+        "yawDeg": 26.404,
+        "pitchDeg": 0,
+        "photos": [
+          "refs/interior/audit_gyeongbu_east/07_dd_drtitan_06.jpg"
+        ],
+        "placement": "approximate_for_comparison"
+      },
+      {
+        "id": "r10_private_room",
+        "round": 10,
+        "spot": "라운지 안 프라이빗룸·바",
+        "x": 360.931,
+        "y": 3.8,
+        "z": 7.432,
+        "local_uv": [
+          28.2,
+          4.1
+        ],
+        "yawDeg": 116.404,
+        "pitchDeg": 0,
+        "photos": [],
+        "placement": "approximate_for_comparison"
+      },
+      {
+        "id": "r10_mens_toilet",
+        "round": 10,
+        "spot": "남자 화장실 출입문",
+        "x": 388.39,
+        "y": 0,
+        "z": -0.339,
+        "local_uv": [
+          56.25,
+          9.35
+        ],
+        "yawDeg": 206.404,
+        "pitchDeg": 0,
+        "photos": [],
+        "placement": "approximate_for_comparison"
+      },
+      {
+        "id": "r10_womens_toilet",
+        "round": 10,
+        "spot": "여자 화장실 출입문",
+        "x": 390.629,
+        "y": 0,
+        "z": -1.451,
+        "local_uv": [
+          58.75,
+          9.35
+        ],
+        "yawDeg": 206.404,
+        "pitchDeg": 0,
+        "photos": [],
+        "placement": "approximate_for_comparison"
+      },
+      {
+        "id": "r10_smoking_room",
+        "round": 10,
+        "spot": "유리 흡연실 출입문",
+        "x": 392.958,
+        "y": 0,
+        "z": -2.607,
+        "local_uv": [
+          61.35,
+          9.35
+        ],
+        "yawDeg": 206.404,
+        "pitchDeg": 0,
+        "photos": [],
+        "placement": "approximate_for_comparison"
+      },
+      {
+        "id": "r10_west_approach",
+        "round": 10,
+        "spot": "OSM 지상 보도에서 정문으로",
+        "x": 342.659,
+        "y": 0,
+        "z": 32.469,
+        "local_uv": [
+          0.7,
+          18.4
+        ],
+        "yawDeg": 296.404,
+        "pitchDeg": 0,
+        "photos": [
+          "refs/interior/audit_gyeongbu_east/04_parking_to_famille_papanui_a.jpg"
+        ],
+        "placement": "approximate_for_comparison"
+      },
+      {
+        "id": "r10_parking_crossing",
+        "round": 10,
+        "spot": "지상 주차장 횡단 후 철문 접근",
+        "x": 376.945,
+        "y": 0,
+        "z": 22.146,
+        "local_uv": [
+          36,
+          24.4
+        ],
+        "yawDeg": 26.404,
+        "pitchDeg": 0,
+        "photos": [
+          "refs/interior/audit_gyeongbu_east/06_dd_drtitan_01.jpg"
+        ],
+        "placement": "approximate_for_comparison"
+      },
+      {
+        "id": "r10_booth_reference",
+        "round": 10,
+        "spot": "기존 초록 지붕 부스·요금 안내 참고",
+        "x": 431.849,
+        "y": 0,
+        "z": -4.443,
+        "local_uv": [
+          97,
+          25
+        ],
+        "yawDeg": 331.404,
+        "pitchDeg": 0,
+        "photos": [
+          "refs/interior/audit_gyeongbu_east/04_parking_to_famille_papanui_a.jpg",
+          "refs/interior/audit_gyeongbu_east/05_parking_to_famille_papanui_b.jpg"
+        ],
+        "placement": "approximate_for_comparison"
       }
     ],
     "guesses": [
       {
-        "topic": "데블스도어의 위치와 건물 형식 충돌",
-        "evidence": "블로그는 파미에스테이션 끝의 독립 벽돌·곡면유리 건물로 설명하지만, 지정된 카카오 핀과 OSM pub POI는414891734에 있다.",
-        "decision": "사용자 지시대로 핀/OSM을 우선해 이 주차빌딩 내부에 벽돌·유리 홀을 삽입했다. 실제 건물 내부 평면의 실측 재현이라는 뜻은 아니다."
+        "topic": "홀과 주차 데크의 상대 배치",
+        "confidence": "unverified",
+        "decision": "핀은 확정 기준. 핀을 유지한 채 주차 데크 양끝을 분리한 배치는 모델링 절충이며, 실제 OSM 폴리곤 내부 실측 분할이라고 주장하지 않는다."
       },
       {
         "topic": "층수·층고·높이",
-        "evidence": "OSM height=9m, levels=null. 로드뷰는 개방 하부와 상부 유리/철판 띠를 보여주나 층표기는 확인되지 않는다.",
-        "decision": "1F/2F/3F,0/3.8/7.6m,평지붕11.8m,홀 유리지붕 정점11.95m로 추정. 층번호는 모델의 관례이며 현장 층별 안내판 검증은 안 됨."
+        "confidence": "unverified",
+        "decision": "주차 0/3.8/7.6m·지붕11.8m, 홀 곡면 지붕 정점11.95m는 기존 근사 유지. 실제 외관은 단일 높은 벽돌 홀 안 일부 복층으로 해석."
       },
       {
-        "topic": "동선과 평면",
-        "decision": "서측 왕복 계단·유리 승강기,동측30m 차량램프2개,2F 북측 대관 갤러리·실내 가구·탱크 개수/정확한 위치는 통행 가능한 모델링 배치. 지도상의u≈53 관통보행로만 원래 좌표를 보존."
+        "topic": "실내 평면과 시설 좌표",
+        "confidence": "unverified",
+        "decision": "리셉션·내부 계단·라운지·오픈주방·남녀 화장실·흡연실의 존재는 confirmed/likely 근거. 정확한 방향·치수·가구 수·시설 위치는 통행 가능한 추정 배치."
       },
       {
-        "topic": "블로그 주차장 사진19~22",
-        "decision": "같은 구간인지 불확실하므로 흰 가새·유리 승강기·출구안내·주황콘의 형태 참고로만 사용했다. 다른 건물이나 파미에 주차장 면적을 새로claim하지 않는다."
+        "topic": "라운지 승강기",
+        "confidence": "unverified",
+        "decision": "PLACE_API의 층간 접근성 요구를 충족하기 위해 홀 내부에 분리된 2개 층 승강기를 추가했다. 사진으로 존재/위치가 확인된 시설이 아니다."
+      },
+      {
+        "topic": "주차장 소속과 요금 안내",
+        "confidence": "unverified",
+        "decision": "audit 항목6 그대로 유지. 기존 숫자 안내판은 사진23 촬영 시점 재현이며 현재 적용 요금 확인값 아님. 다층 주차 데크 사진19~22의 소속은 확정하지 않는다."
+      },
+      {
+        "topic": "3번 출구·천사약국·스타벅스 전체 접근 경로",
+        "confidence": "unverified",
+        "decision": "이 모듈 서측 OSM 보도 접점만 구현. 천사약국 좌표와 타 모듈 스타벅스 문을 잇는 상세 경로는 미확인. 방향 표지는 기능적 길찾기 근사이며 실물 표지판 복제는 아님."
+      },
+      {
+        "topic": "식재·차량·부스",
+        "confidence": "unverified",
+        "decision": "기존 수종 근사, 주차 구획 수/차량 배치, 부스 위치를 유지. 사진은 형태 참고이며 측량 배치가 아니다."
       },
       {
         "topic": "차고지 경계 도로",
-        "decision": "사진의 생울타리 남서/북동 방향을3434 남동경계에 맞춘다. 이곳 도로 자체는OSM에 없으므로폭/정확한 차선은 복제하지 않고 경계의 좁은 분홍색/노란색 도색만 추가. 분홍색 띠를 자전거 전용도로라고 단정하지 않는다."
-      },
-      {
-        "topic": "식재와 차량",
-        "decision": "잎 모양과 수형은 kit의 은행나무로 근사. 수종·주차 차량·구획 수·배치는 사진의 분위기를 위한 추정이며 버스는 이 모듈에서 추가하지 않는다."
-      },
-      {
-        "topic": "출입문과 간판",
-        "decision": "브랜드 문자 DEVIL'S DOOR는 사진 표기를 사용. 문 폭·아치창 치수·조명 위치·주차 안내 문구는 사진에 맞춘 근사. 현재 영업시간·가격·주차요금 숫자는 추정해서 싣지 않음."
-      },
-      {
-        "topic": "미반영 사진 영역",
-        "decision": "famille_back05/06/18의 외부 승용차 주차장·잔디·아파트와 미확인 사무동은 이 건물 외곽과 담당 범위를 벗어나 독립 재구성하지 않았다."
+        "confidence": "unverified",
+        "decision": "생울타리·도색은 기존 유지. 분홍 띠를 자전거 전용도로로 단정하지 않는다."
       },
       {
         "topic": "렌더링 확인",
-        "decision": "사용자 지시로 tests/shot.mjs는 실행하지 않음. operator가 trace에 기록한 촬영점에서 후속 시각 검증해야 한다."
+        "confidence": "unverified",
+        "decision": "요청대로 tests/shot.mjs 미실행. trace 51개 중 round10 16개를 모두 바닥 y로 기록; 후속 렌더링 시 시각 검증 필요."
       }
     ],
-    "validation": {
+    "trace_command": "node tests/shot.mjs --places gyeongbu_east --city 0 --out shots/gyeongbu_east --views \"r10_standalone_front:380.35,0,20.009,26.404,8;r10_roof_gap:366.12,0,-8.653,206.404,15;r10_steel_door:374.232,0,16.682,26.404,0;r10_reception:372.454,0,13.099,26.404,0;r10_office_glass:370.575,0,13.139,116.404,0;r10_reception_hall:368.567,0,11.568,26.404,0;r10_kitchen:368.068,0,6.289,26.404,0;r10_stair_base:355.672,0,17.077,296.404,12;r10_lounge:366.215,3.8,13.126,26.404,0;r10_private_room:360.931,3.8,7.432,116.404,0;r10_mens_toilet:388.39,0,-0.339,206.404,0;r10_womens_toilet:390.629,0,-1.451,206.404,0;r10_smoking_room:392.958,0,-2.607,206.404,0;r10_west_approach:342.659,0,32.469,296.404,0;r10_parking_crossing:376.945,0,22.146,26.404,0;r10_booth_reference:431.849,0,-4.443,331.404,0\"",
+    "trace_command_note": "실행하지 않음. 사용자 지정 샌드박스 제약에 따라 카메라만 기록. y는 바닥 높이.",
+    "junctions_to_add": [],
+    "ground_approach": {
+      "confirmed_local_handoff": [
+        339.44,
+        0,
+        32.31
+      ],
+      "osm_way": 1067157385,
+      "existing_west_waypoints": [
+        [
+          265.12,
+          67.47
+        ],
+        [
+          312.2,
+          45.01
+        ],
+        [
+          319.82,
+          41.22
+        ],
+        [
+          339.44,
+          32.31
+        ],
+        [
+          343,
+          33.25
+        ]
+      ],
+      "modeled_route": [
+        "기존 OSM 서측 보행로",
+        "이 모듈 지상 보도",
+        "야외 주차면 횡단 표시",
+        "철문·리셉션"
+      ],
+      "outside_scope": {
+        "station_exit_3": [
+          52.11,
+          0,
+          179.03
+        ],
+        "famille_starbucks_pavilion_entrance_approx": [
+          -47,
+          0,
+          195.6
+        ],
+        "angel_pharmacy_coordinates": null,
+        "reason": "고정된 데블스도어 핀과 타 모듈 출입구 사이 실제 전체 경로/천사약국 좌표는 감사 사진으로 확정할 수 없다. 다른 모듈 건물에 새 문·지하 연결을 임의로 만들지 않았다."
+      }
+    },
+    "evidence_corrections": [
+      {
+        "element": "데블스도어 위치/건물 형식 (주차빌딩 안에 삽입)",
+        "confidence": "likely",
+        "status": "applied",
+        "applied_change": "주차 데크/외피의 중앙 연결을 제거해 홀을 분리, 지상 아스팔트와 횡단 표시 추가",
+        "position": {
+          "x": 373.994,
+          "y": 0,
+          "z": 6.082
+        },
+        "source_text": "2026 블로그 전부(jinny__bear 2026-10-19, hyei_00_ 2026-09-25, snfl_djaakal 2026-11-03, drtitan 2026-08-05, 104204303 2026-11-01)가 데블스도어를 독립된 붉은 벽돌 건물로 묘사. 주소 서초구 사평대로 205, 고속터미널역 3번 출구에서 327m. 매장 앞과 옆에 넓은 지상 주차공간이 있고 이것이 '신세계 파미에스테이션(반포천 공영) 주차장'. 드나드는 차량 요금 안내도 '매장 앞 파미에 주차장' 기준. 다층 주차 데크 사진(cha4se 2026-11-01)은 별개의 구조물로 보임. 건물 자체가 주차 데크 1층에 끼어 있다는 근거는 없음. (추정: 핀/OSM이 주차빌딩 폴리곤에 찍힌 것은 OSM POI 오차일 가능성.)",
+        "sources": [
+          "https://m.blog.naver.com/jinny__bear/224446735960 (2026-10-19)",
+          "https://m.blog.naver.com/snfl_djaakal/224463231656 (2026-11-03)",
+          "https://m.blog.naver.com/drtitan/224368004162 (2026-08-05)",
+          "https://m.blog.naver.com/104204303/224461513301 (2026-11-01)",
+          "https://m.blog.naver.com/hyei_00_/224422655113 (2026-09-25)"
+        ],
+        "photos": [
+          "refs/interior/audit_gyeongbu_east/06_dd_drtitan_01.jpg",
+          "refs/interior/audit_gyeongbu_east/07_dd_drtitan_06.jpg",
+          "refs/interior/audit_gyeongbu_east/02_entrance_snfl_151300.jpg"
+        ]
+      },
+      {
+        "element": "정문에서 홀로 들어가는 동선 (정문→홀)",
+        "confidence": "confirmed",
+        "status": "applied",
+        "applied_change": "철문 안쪽 길이4.8m 금속 상판 리셉션·키오스크·격자 유리·사무실 문 추가",
+        "position": {
+          "x": 372.616,
+          "y": 0,
+          "z": 11.177
+        },
+        "source_text": "drtitan 2026-08-05: 철문을 열면 '차분하고 세련된 리셉션 공간'이 맞이하고, 주말 피크엔 리셉션 앞 웨이팅 키오스크로 대기 등록. snfl_djaakal 2026-11-03: '문을 열고 들어가면 결제 카운터', 직원이 나와 자리 안내. 사진 03(2026-10-31 촬영): 입구 옆에 양조 스테인리스 상판 같은 긴 카운터(메뉴판/안내판 줄지어 놓임), 오른쪽 격자 유리창과 왼쪽 'OFFICE' 문, 벽돌벽.",
+        "sources": [
+          "https://m.blog.naver.com/drtitan/224368004162 (2026-08-05)",
+          "https://m.blog.naver.com/snfl_djaakal/224463231656 (2026-11-03)"
+        ],
+        "photos": [
+          "refs/interior/audit_gyeongbu_east/03_reception_snfl_131716.jpg",
+          "refs/interior/audit_gyeongbu_east/02_entrance_snfl_151300.jpg"
+        ]
+      },
+      {
+        "element": "2층(대관/복층 라운지) 접근 경로: 서측 주차 계단 옆 '2층 대관실 ↑' 사인",
+        "confidence": "likely",
+        "status": "applied",
+        "applied_change": "주차쪽 2F 출입구/외부 계단 제거, 내부 계단과 L자 복층 라운지·바·프라이빗룸 구성",
+        "position": {
+          "x": 364.897,
+          "y": 3.8,
+          "z": 12.497
+        },
+        "source_text": "drtitan 2026-08-05: '2층 복층 라운지 구조... 계단 위 공간은 더 프라이빗', 즉 매장 내부 계단으로 오름. jinny__bear 2026-10-19: 2층은 다양한 행사에 최적화된 독립 공간(대관 가능). hyei_00_ 2026-09-25: 2층은 Bar & Private Room. 기존 사진 15(외부 낮은 계단+2층 프라이빗 입간판)로 매장 바깥 모서리에도 2층 안내 계단이 있을 가능성은 있으나 2026 글에서 확인되지 않음(추정). 주차 데크와 연결된다는 근거 없음.",
+        "sources": [
+          "https://m.blog.naver.com/drtitan/224368004162 (2026-08-05)",
+          "https://m.blog.naver.com/jinny__bear/224446735960 (2026-10-19)",
+          "https://m.blog.naver.com/hyei_00_/224422655113 (2026-09-25)"
+        ],
+        "photos": [
+          "refs/interior/audit_gyeongbu_east/07_dd_drtitan_06.jpg"
+        ]
+      },
+      {
+        "element": "실내 편의시설 구성 (화장실·흡연실·주방)",
+        "confidence": "confirmed",
+        "status": "applied",
+        "applied_change": "남녀 화장실·유리 흡연실·오픈주방 추가, 시설 위치는 추정으로 명시",
+        "position": {
+          "x": 391.23,
+          "y": 0,
+          "z": -0.242
+        },
+        "source_text": "jinny__bear 2026-10-19: 매장 내부 남녀 화장실, 내부에 흡연실도 있음(야외 안 나가도 됨). snfl_djaakal 2026-11-03: 화장실 매장 내부(남녀 구분). 104204303 2026-11-01: 화장실 내부. drtitan 2026-08-05: 셰프가 요리하는 모습이 보이는 오픈주방, 유리벽 너머 양조 탱크에서 배관으로 맥주 추출.",
+        "sources": [
+          "https://m.blog.naver.com/jinny__bear/224446735960 (2026-10-19)",
+          "https://m.blog.naver.com/snfl_djaakal/224463231656 (2026-11-03)",
+          "https://m.blog.naver.com/drtitan/224368004162 (2026-08-05)"
+        ],
+        "photos": [
+          "refs/interior/audit_gyeongbu_east/03_reception_snfl_131716.jpg"
+        ]
+      },
+      {
+        "element": "파미에스테이션(고터 쪽)↔주차장↔데블스도어 연결과 지하철 쪽 접근 경로",
+        "confidence": "likely",
+        "status": "applied_local_handoff",
+        "applied_change": "서측 실제 OSM 보도까지 연결하고 지상 접근을 안내. 타 모듈 출입문·천사약국의 미확인 세부 경로는 추가하지 않음",
+        "position": {
+          "x": 339.44,
+          "y": 0,
+          "z": 32.31
+        },
+        "source_text": "drtitan 2026-08-05: 3번 출구(7호선)로 나와 천사약국 블록을 지나 '파미에 주차장을 쭉 가로질러' 도착. papanui(2026-11, 날짜 미표기): 파미에 주차장에 주차 후 백화점·메리어트 호텔 방향으로 걸으면 스타벅스가 있고, 그 문으로 들어가면 파미에스테이션으로 연결. 주차장 입구에 초록 지붕 정산 부스와 '반포천 공영주차장(파미에) / 사평로방향 출구' 표지(사진 04). 3번 출구 기준 327m.",
+        "sources": [
+          "https://m.blog.naver.com/drtitan/224368004162 (2026-08-05)",
+          "https://m.blog.naver.com/papanui/224467009381 (2026-11 추정)",
+          "https://m.blog.naver.com/cha4se/224461100051 (2026-11-01)"
+        ],
+        "photos": [
+          "refs/interior/audit_gyeongbu_east/04_parking_to_famille_papanui_a.jpg",
+          "refs/interior/audit_gyeongbu_east/05_parking_to_famille_papanui_b.jpg"
+        ]
+      },
+      {
+        "element": "주차 요금 안내판과 주차 연동 (모델은 숫자 미표기)",
+        "confidence": "unverified",
+        "status": "kept_unverified",
+        "applied_change": "감사 설명과 달리 현재 코드에는 숫자 안내판 존재. 현 상태 유지; 주차장 소속·현재 요금 단정하지 않음",
+        "position": {
+          "x": 361.022,
+          "y": 0,
+          "z": 6.94
+        },
+        "source_text": "2026 글 일치: 파미에 주차장 5분당 550원(11/1·11/3 글, 8/5 글과 9/25 글은 440~550 혼재), 본관 15분당 1,500원. 반포천 공영주차장(파미에)은 1,000면 이상 대규모(cha4se 2026-11-01). 매장은 본관·파미에 두 주차장 모두 가능하나 영화관 할인은 본관만.",
+        "sources": [
+          "https://m.blog.naver.com/cha4se/224461100051 (2026-11-01)",
+          "https://m.blog.naver.com/snfl_djaakal/224463231656 (2026-11-03)",
+          "https://m.blog.naver.com/104204303/224461513301 (2026-11-01)"
+        ],
+        "photos": [
+          "refs/interior/audit_gyeongbu_east/04_parking_to_famille_papanui_a.jpg"
+        ]
+      }
+    ],
+    "photo_priority_decisions": [
+      {
+        "photo": "refs/interior/famille_back/15_dd_exterior_stair_2f_standee.jpg",
+        "decision": "사진은 목재 계단과 2F 대관 입간판만 보이며 주차 데크 외부 연결을 입증하지 않는다. 기존 외부 계단 해석을 폐기하고 실내 계단으로 구성."
+      },
+      {
+        "photo": "refs/interior/audit_gyeongbu_east/03_reception_snfl_131716.jpg",
+        "decision": "OFFICE는 사진에서 확인. 월드 텍스트는 사용자 규칙에 따라 사무실로 표기하며 목재·유리 문의 형태를 반영."
+      },
+      {
+        "photo": "refs/interior/audit_gyeongbu_east/05_parking_to_famille_papanui_b.jpg",
+        "decision": "요금 숫자가 사진과 기존 코드에 있으므로 감사의 미표기 설명을 사실로 되풀이하지 않음. unverified keep에 따라 기존 안내판은 변경하지 않음."
+      }
+    ],
+    "validation_previous_round": {
       "smoke": {
         "command": "node tests/smoke.mjs gyeongbu_east gyeongbu",
         "result": "OK"
@@ -763,6 +1317,359 @@
         "result": "59 ok, 0 blocked"
       },
       "independent_review": "두 램프·두 계단·주출입구·u53 관통로·2F 갤러리를0.25m 간격으로 검사: 바닥 지지·캡슐 충돌·1.75m 머리 공간 통과. 램프 상단 연결 바닥과 홀 바닥의 중복 면 수정 완료."
-    }
+    },
+    "validation": {
+      "screenshots": {
+        "status": "not_run_per_user",
+        "camera_count": 51,
+        "round10_camera_count": 16,
+        "floor_y_only": true
+      },
+      "smoke_module": {
+        "command": "node tests/smoke.mjs gyeongbu_east",
+        "result": "OK"
+      },
+      "walk_module": {
+        "command": "node tests/walk.mjs gyeongbu_east --no-city",
+        "result": "14 ok, 0 blocked"
+      },
+      "additional_routes": {
+        "result": "12 ok, 0 blocked; gyeongbu_east+gyeongbu+city 및 모든 K.detail을 빌드한 real kit/physics BFS로 최종 재검증",
+        "details": [
+          "정문→리셉션→홀",
+          "홀→내부 계단→복층 라운지→프라이빗룸",
+          "홀→남/녀 화장실·흡연실 내부",
+          "u53 관통 통로",
+          "서측 OSM 접점→정문"
+        ],
+        "headroom": "내부 계단 중심선을0.1m 간격으로 바닥·캡슐·1.75m 머리 공간 검사 통과",
+        "open_air_parking": "u18..63,v19.7..24.8 격자에서 천장 없음 확인"
+      },
+      "integration_initial": {
+        "smoke": "gyeongbu의 buildOfficialHallRetail 미정의로 중단",
+        "walk": "gyeongbu의 buildRound10BasementRetail 미정의로 중단",
+        "meta": "같은 gyeongbu 병행 수정 오류로 중단"
+      },
+      "meta_policy": "ONLY 두 파일 수정 지시를 지키기 위해 gen_meta 출력은 /private/tmp로 리다이렉트. 생성 성공 시 해당 모듈 metadata를 modeling.generated_meta에 기록하고 중앙 통합 시 _meta 반영 필요.",
+      "smoke": {
+        "command": "node tests/smoke.mjs gyeongbu_east gyeongbu",
+        "result": "OK (최종 목재/타일 바닥 분리 이후)"
+      },
+      "walk_with_neighbor": {
+        "command": "node tests/walk.mjs gyeongbu_east gyeongbu",
+        "result": "64 ok, 1 blocked",
+        "blocked": [
+          "elevator gyeongbu \"북측 동 엘리베이터\" 지하 1층: no path (35 cells searched)"
+        ],
+        "scope": "해당 실패는 본 모듈에 지하층이 없는 것과도 구별되는 다른 모듈 지하1층 문제. gyeongbu 병행 수정 중 발생; 수정하지 않음."
+      },
+      "camera_validation": {
+        "round10_count": 16,
+        "result": "16/16 exact floor, free capsule, headroom ≥1.75m",
+        "eye_offset": 1.62
+      },
+      "metadata": {
+        "command": "NODE_OPTIONS='--require=/private/tmp/gyeongbu-east-r10-meta-preload.cjs' node tools/gen_meta.mjs",
+        "result": "성공; 이 모듈 3 floors, 0 junctions, 12 entrances",
+        "shared_file_written": false,
+        "reason": "사용자 ONLY 두 파일 수정 지시 준수",
+        "generated_entry": "modeling.generated_meta"
+      },
+      "walk_module_with_city": {
+        "command": "node tests/walk.mjs gyeongbu_east",
+        "result": "14 ok, 0 blocked"
+      },
+      "full_world_prefix": {
+        "method": "tests/walk.mjs 동일 geometry/search, 접점·승강기·스폰 검사만 메모리에서 실행; 저장소 테스트 수정 없음",
+        "result": "464 ok, 3 blocked",
+        "blocked": [
+          "junction J6 centralcity→jwmarriott y=0: no path (32320 cells searched)",
+          "elevator gyeongbu 북측 동 엘리베이터 지하 1층: no path (35 cells searched)",
+          "spawn centralcity 파미에스테이션2F식당가: no floor at start (found 0)"
+        ],
+        "own_module_blocked": 0
+      },
+      "full_world": {
+        "command": "node tests/walk.mjs",
+        "result": "481 ok, 3 blocked",
+        "blocked": [
+          "junction J6 centralcity→jwmarriott y=0: no path (28645 cells searched)",
+          "elevator centralcity \"센트럴시티 터미널 엘리베이터\" 1M: no path (37 cells searched)",
+          "elevator gyeongbu \"북측 동 엘리베이터\" 지하 1층: no path (35 cells searched)"
+        ],
+        "own_module_blocked": 0,
+        "interpretation": "3개 모두 다른 모듈/접점에 위치. 저장소 병행 수정 중 실행한 snapshot이며, 별도 prefix 재검사와 centralcity 실패 상세가 달라질 수 있음. 허용 범위 밖 파일은 수정하지 않음."
+      },
+      "syntax_and_format": {
+        "commands": [
+          "node --check js/places/gyeongbu_east.js",
+          "python3 -m json.tool data/research/gyeongbu_east.json",
+          "git diff --check -- js/places/gyeongbu_east.js data/research/gyeongbu_east.json"
+        ],
+        "result": "passed"
+      }
+    },
+    "generated_meta": {
+      "name": "경부선 동측 주차빌딩 · 데블스도어",
+      "claims": [
+        414891734
+      ],
+      "claimRoads": [],
+      "claimAreas": [],
+      "box": [
+        333.9,
+        -53.2,
+        436.1,
+        33.1
+      ],
+      "y": [
+        0,
+        12
+      ],
+      "floors": [
+        "1F",
+        "2F",
+        "3F"
+      ],
+      "cells": [
+        "8,0",
+        "9,-1",
+        "9,0",
+        "10,-1",
+        "8,-1",
+        "10,-2"
+      ],
+      "junctions": [],
+      "entrances": [
+        {
+          "x": 335.9,
+          "z": 15.3,
+          "y": 0,
+          "w": 1.5,
+          "nx": -0.445,
+          "nz": -0.896,
+          "other": null
+        },
+        {
+          "x": 346.9,
+          "z": 9.8,
+          "y": 0,
+          "w": 3.8,
+          "nx": -0.445,
+          "nz": -0.896,
+          "other": null
+        },
+        {
+          "x": 337.7,
+          "z": 24.1,
+          "y": 0,
+          "w": 15.7,
+          "nx": -0.896,
+          "nz": 0.445,
+          "other": null
+        },
+        {
+          "x": 393.5,
+          "z": -13.3,
+          "y": 0,
+          "w": 4.5,
+          "nx": -0.445,
+          "nz": -0.896,
+          "other": null
+        },
+        {
+          "x": 422.4,
+          "z": -27.7,
+          "y": 0,
+          "w": 7.5,
+          "nx": -0.445,
+          "nz": -0.896,
+          "other": null
+        },
+        {
+          "x": 427.1,
+          "z": -30,
+          "y": 0,
+          "w": 1.5,
+          "nx": -0.445,
+          "nz": -0.896,
+          "other": null
+        },
+        {
+          "x": 431.6,
+          "z": -22.6,
+          "y": 0,
+          "w": 17.3,
+          "nx": 0.896,
+          "nz": -0.445,
+          "other": null
+        },
+        {
+          "x": 395.2,
+          "z": -4.9,
+          "y": 0,
+          "w": 1.5,
+          "nx": -0.896,
+          "nz": 0.445,
+          "other": null
+        },
+        {
+          "x": 381.9,
+          "z": -5.9,
+          "y": 0,
+          "w": 2.3,
+          "nx": -0.445,
+          "nz": -0.896,
+          "other": null
+        },
+        {
+          "x": 393.9,
+          "z": -4.3,
+          "y": 0,
+          "w": 1.5,
+          "nx": 0.896,
+          "nz": -0.445,
+          "other": null
+        },
+        {
+          "x": 388.3,
+          "z": 7,
+          "y": 0,
+          "w": 2.3,
+          "nx": 0.445,
+          "nz": 0.896,
+          "other": null
+        },
+        {
+          "x": 373.2,
+          "z": 14.5,
+          "y": 0,
+          "w": 3,
+          "nx": 0.445,
+          "nz": 0.896,
+          "other": null
+        }
+      ]
+    },
+    "generated_meta_status": "node tools/gen_meta.mjs 성공. preload로 출력만 /private/tmp/gyeongbu-east-r10-meta.json에 기록. 사용자 지정 수정 범위 밖인 js/places/_meta.json에는 쓰지 않음; 중앙 통합 시 해당 entry 반영 필요.",
+    "corrected_landmarks": [
+      {
+        "name": "철판 정문",
+        "xyz": [
+          373.165,
+          0,
+          14.532
+        ],
+        "local_uv": [
+          36,
+          15.9
+        ],
+        "placement_confidence": "approximate"
+      },
+      {
+        "name": "리셉션",
+        "xyz": [
+          372.616,
+          0,
+          11.177
+        ],
+        "local_uv": [
+          37,
+          12.65
+        ],
+        "placement_confidence": "approximate"
+      },
+      {
+        "name": "오픈주방",
+        "xyz": [
+          366.289,
+          0,
+          2.707
+        ],
+        "local_uv": [
+          35.1,
+          2.25
+        ],
+        "placement_confidence": "approximate"
+      },
+      {
+        "name": "내부 계단 하부",
+        "xyz": [
+          356.299,
+          0,
+          16.766
+        ],
+        "local_uv": [
+          19.9,
+          10.4
+        ],
+        "placement_confidence": "approximate"
+      },
+      {
+        "name": "내부 계단 상부",
+        "xyz": [
+          364.897,
+          3.8,
+          12.497
+        ],
+        "local_uv": [
+          29.5,
+          10.4
+        ],
+        "placement_confidence": "approximate"
+      },
+      {
+        "name": "남자 화장실",
+        "xyz": [
+          388.99,
+          0,
+          0.87
+        ],
+        "local_uv": [
+          56.25,
+          10.7
+        ],
+        "placement_confidence": "approximate"
+      },
+      {
+        "name": "여자 화장실",
+        "xyz": [
+          391.23,
+          0,
+          -0.242
+        ],
+        "local_uv": [
+          58.75,
+          10.7
+        ],
+        "placement_confidence": "approximate"
+      },
+      {
+        "name": "흡연실",
+        "xyz": [
+          393.558,
+          0,
+          -1.398
+        ],
+        "local_uv": [
+          61.35,
+          10.7
+        ],
+        "placement_confidence": "approximate"
+      },
+      {
+        "name": "지상 주차 횡단부",
+        "xyz": [
+          375.878,
+          0,
+          19.996
+        ],
+        "local_uv": [
+          36,
+          22
+        ],
+        "placement_confidence": "approximate"
+      }
+    ]
   }
 }

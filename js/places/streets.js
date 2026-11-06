@@ -10,11 +10,14 @@ const ROAD_IDS = [37402467,71105531,71105555,97847428,131326713,131327735,218681
 const WALK_IDS = [301889787,301889789,308003937,606009741,665106093,665106094,665106095,665106096,665106097,816395057,845497271,845497273,1213763241,1213763242,1213763243,1232132158,1232132177,1232132196,1232132199,1481658419,1481658421,1481658423,1481658424,1481658425,1497710483,1497710484,1497710485,1497710486,1497710487,1497710488,1497710489,1497710492,1497710493,1497710494,1497710495,309355888,845497252,845497256,845497259,845497272];
 export const meta = {
   id: 'streets', name: '고속터미널 거리 · 신반포로와 사평대로',
-  claims: [413280002, 886400346, 413367405, 413367408, 1137867801],
+  claims: [886400346, 413367405, 413367408, 1137867801],
   // 831108569 is the footway through the east parking aisle, not service301889794.
   claimRoads: [...ROAD_IDS, ...WALK_IDS, 831108565, 831108569, 1420100042, 1420100043,
     1213763244, 1232132157, 1232132198, 1232132167, 1232132156], // crossing paint replaced here, avoiding city duplicates
   sources: ['data/osm.json', 'data/research/streets.json', 'refs/roadview/manifest.json',
+    '.codex-jobs/evidence/audit_streets.json',
+    'https://www.asiae.co.kr/en/article/2025121008310383822',
+    'https://www.seocho.go.kr/site/seocho/ex/bbs/View.do?bcIdx=406159&cbIdx=61',
     'refs/roadview/cc_02_sinbanporo_west_from_main_gate_tan_block_led.jpg',
     'refs/roadview/gb_03_front_plaza_arch_canopy_shelters.jpg',
     'refs/roadview/gb_05_sinbanporo_east_bus_shelters_terminal_side.jpg',
@@ -197,6 +200,10 @@ export function build(K) {
     const q=nearest(x,z,surfaceRoads.filter(major));if(!q.r)continue;
     const j={x,z,u:q.u,v:q.v,hu:10,hv:10,name:g.find(n=>n.name)?.name||q.r.name,arms:[]};
     for(const n of g){const [a,b]=frame(j,[n.x,n.z]);j.hu=Math.max(j.hu,Math.abs(a)+4);j.hv=Math.max(j.hv,Math.abs(b)+4);}
+    // Round 10: Goter's four-sided crossing opened 2025-12-08. The 2024-12-09
+    // Banpo-dong crossing is a separate project (Seocho press release above).
+    // Preserve these crossing ends and gotomall's stairs: entrances were not
+    // relocated. Right-turn lanes were adjusted; their exact widths are unknown.
     if(Math.hypot(x-360,z+263)<45)Object.assign(j,{x:358,z:-261,u:.934,v:-.357,hu:18,hv:21,name:'고속터미널교차로'});
     if(x===-342)Object.assign(j,{u:.934,v:-.357,hu:25,hv:25,name:'반포대로'});
     // Small signalised crossings still need room for the road width, but the
@@ -305,7 +312,8 @@ export function build(K) {
   }
   function treePit(x,z,y=WALK) {
     if(onTerminalMedian(x,z)||inWestCanopy(x,z)||inTaxiStand(x,z))return;
-    K.box({x,z,y:y+.005,w:1.55,h:.08,d:1.55,mat:0x666d64,top:'streets-grate',solid:false});K.tree(x,z,{y:y+.07,h:6.5+rnd()*2,kind:rnd()<.55?'ginkgo':'zelkova'});
+    const mature=Math.hypot(x-358,z+261)<100||(x>-95&&x<50&&z<-110);
+    K.box({x,z,y:y+.005,w:1.55,h:.08,d:1.55,mat:0x666d64,top:'streets-grate',solid:false});K.tree(x,z,{y:y+.07,h:(mature?10.5:6.5)+rnd()*2,kind:mature?'zelkova':rnd()<.55?'ginkgo':'zelkova'});
     for(const dx of [-.58,.58])for(const dz of [-.58,.58])K.box({x:x+dx,z:z+dz,y:y+.1,w:.045,h:.8,d:.045,mat:C.steel,solid:false});
   }
   const terminalRoad=byId.get(828782198);
@@ -434,14 +442,28 @@ export function build(K) {
     K.box({x,z,y:WALK,w:.42,h:.22,d:.42,mat:0x8d9290});
     beam([x,6.85,z],[x-nx*reach,6.85,z-nz*reach],.105,C.silver);
     beam([x,6.3,z],[x-nx*2,6.85,z-nz*2],.065,C.silver);
-    const hx=x-nx*(reach-.65),hz=z-nz*(reach-.65);
-    beam([hx,6.85,hz],[hx,6.27,hz],.045,C.steel);
-    K.box({x:hx,z:hz,y:6.03,w:1.35,h:.4,d:.28,rotY:rot,mat:0x20272b,solid:false});
-    for(let i=0;i<4;i++){
-      const px=hx+nx*(i-1.5)*.31+a.u*.155,pz=hz+nz*(i-1.5)*.31+a.v*.155;
-      K.box({x:px,z:pz,y:6.09,w:.245,h:.28,d:.11,rotY:rot,mat:0x10181b,solid:false});
-      if(i===2)K.sign('←',{x:px+a.u*.061,z:pz+a.v*.061,y:6.23,w:.19,h:.19,rotY:rot,bg:'#101b18',fg:'#274b37'});
-      else K.dome({x:px+a.u*.066,z:pz+a.v*.066,y:6.23,rx:.088,ry:.088,rz:.088,seg:10,rings:5,hemi:false,mat:i===0?emit(0xf73c35):i===1?0x493e22:0x214e38});
+    const busy=Math.hypot(a.j.x-358,a.j.z+261)<20;
+    for(const offset of busy?[reach-.65,Math.max(3.4,reach*.47)]:[reach-.65]){
+      const hx=x-nx*offset,hz=z-nz*offset;
+      beam([hx,6.85,hz],[hx,6.27,hz],.045,C.steel);
+      K.box({x:hx,z:hz,y:6.03,w:1.35,h:.4,d:.28,rotY:rot,mat:0x20272b,solid:false});
+      for(let i=0;i<4;i++){
+        const px=hx+nx*(i-1.5)*.31+a.u*.155,pz=hz+nz*(i-1.5)*.31+a.v*.155;
+        K.box({x:px,z:pz,y:6.09,w:.245,h:.28,d:.11,rotY:rot,mat:0x10181b,solid:false});
+        if(i===2)K.sign('←',{x:px+a.u*.061,z:pz+a.v*.061,y:6.23,w:.19,h:.19,rotY:rot,bg:'#101b18',fg:'#274b37'});
+        else K.dome({x:px+a.u*.066,z:pz+a.v*.066,y:6.23,rx:.088,ry:.088,rz:.088,seg:10,rings:5,hemi:false,mat:i===0?emit(0xf73c35):i===1?0x493e22:0x214e38});
+      }
+    }
+    if(busy){
+      // The existing mast bases stay on pavement. The closer side repeater,
+      // equipment box and camera make the photographed corner legible.
+      K.slab(rect(x,z,1.7,1.7),WALK,{mat:'streets-pavers',thick:.15,ceil:false});
+      K.box({x:x-nx*.23,z:z-nz*.23,y:3.45,w:.31,h:.9,d:.24,rotY:rot,mat:0x20272b,solid:false});
+      for(let i=0;i<3;i++)K.dome({x:x-nx*.23+a.u*.15,z:z-nz*.23+a.v*.15,y:4.18-i*.27,rx:.085,ry:.085,rz:.085,seg:8,rings:4,hemi:false,mat:i===0?emit(0xef4439):0x223b31});
+      K.box({x:x+nx*.25,z:z+nz*.25,y:.5,w:.38,h:.65,d:.25,rotY:rot,mat:0x8e9694,solid:false});
+      beam([x,7,z],[x+a.u*.8,7.3,z+a.v*.8],.035,C.silver);
+      K.box({x:x+a.u*.82,z:z+a.v*.82,y:7.22,w:.18,h:.17,d:.4,rotY:rot,mat:0xd8ddd8,solid:false});
+      K.box({x:x+a.u*1.02,z:z+a.v*1.02,y:7.25,w:.13,h:.1,d:.015,rotY:rot,mat:0x202a30,solid:false});
     }
     K.sign(a.r.name||'고속터미널',{x:x-nx*2.5,z:z-nz*2.5,y:6.23,w:3.2,h:.55,rotY:rot,bg:'#155b9c',fg:'#fff',twoSided:true,box:.08});
   }
@@ -463,23 +485,30 @@ export function build(K) {
     }
     signal(a);
   }
-  // Only colour guidance crosses the large junction boxes. Cubic paths join
-  // the incoming lane to the real opposite/right/left road arm, width 0.45m.
+  // Solid 0.45 m route guidance begins at the stop line, follows one lane and
+  // bends into its receiving lane. Do not paint every possible approach: that
+  // produced a fictitious pink X through every junction in the round-8 views.
   function guideCurve(a,b,color,left=false){
     const inn=left?(a.r.oneway?a.r.width/2-1.8:-1.8):-a.r.width/2+1.8,out=left?(b.r.oneway?-b.r.width/2+1.8:1.8):b.r.width/2-1.8;
-    const start=[a.x-a.u*2.8-a.v*inn,a.z-a.v*2.8+a.u*inn];
-    const end=[b.x-b.u*2.8-b.v*out,b.z-b.v*2.8+b.u*out];
-    const d=Math.hypot(end[0]-start[0],end[1]-start[1])*.4;
-    const c=[start[0]-a.u*d,start[1]-a.v*d],e=[end[0]-b.u*d,end[1]-b.v*d];let prev=start;
-    for(let i=1;i<=24;i++){const t=i/24,s=1-t,next=[s*s*s*start[0]+3*s*s*t*c[0]+3*s*t*t*e[0]+t*t*t*end[0],s*s*s*start[1]+3*s*s*t*c[1]+3*s*t*t*e[1]+t*t*t*end[1]];
+    const start=[a.x+a.u*5.2-a.v*inn,a.z+a.v*5.2+a.u*inn];
+    const end=[b.x+b.u*5.2-b.v*out,b.z+b.v*5.2+b.u*out];
+    // Straight approach/departure tails keep the curve tangent to the lane.
+    const lead=6,sa=[start[0]-a.u*lead,start[1]-a.v*lead],eb=[end[0]-b.u*lead,end[1]-b.v*lead];
+    flat(start,sa,.45,ROAD+.031,color);flat(eb,end,.45,ROAD+.031,color);
+    const d=Math.hypot(eb[0]-sa[0],eb[1]-sa[1])*(left?.58:.33);
+    const c=[sa[0]-a.u*d,sa[1]-a.v*d],e=[eb[0]-b.u*d,eb[1]-b.v*d];let prev=sa;
+    for(let i=1;i<=36;i++){const t=i/36,s=1-t,next=[s*s*s*sa[0]+3*s*s*t*c[0]+3*s*t*t*e[0]+t*t*t*eb[0],s*s*s*sa[1]+3*s*s*t*c[1]+3*s*t*t*e[1]+t*t*t*eb[1]];
       flat(prev,next,.45,ROAD+.03,color);prev=next;
     }
   }
   for(const j of junctions.filter(j=>j.arms.length>=4&&j.hu+j.hv>31)){
-    const incoming=j.arms.filter(a=>a.owned&&a.incoming);
-    for(const a of incoming.slice(0,4)){
+    const incoming=j.arms.filter(a=>a.owned&&a.incoming),paired=incoming.filter(a=>a.r.oneway);
+    const trunk=(paired.length?paired:incoming).sort((a,b)=>b.r.width-a.r.width)[0]?.r.name;
+    // junction_01/02/03 show the Sinbanpo route lines continuing across the
+    // box. Jamwon's perpendicular movements do not need another coloured X.
+    for(const a of incoming.filter(a=>a.r.name===trunk).slice(0,2)){
       const exits=j.arms.filter(b=>b!==a&&(!b.r.oneway||!b.incoming));
-      const straight=exits.find(b=>a.u*b.u+a.v*b.v<-.8);
+      const straight=exits.find(b=>b.r.name===a.r.name&&a.u*b.u+a.v*b.v<-.8);
       const left=exits.find(b=>a.u*b.v-a.v*b.u>.65);
       if(straight)guideCurve(a,straight,0x50cbb1);if(left)guideCurve(a,left,0xe477a1,true);
     }
@@ -615,8 +644,23 @@ export function build(K) {
       const dx=x-cx,dz=z-cz,c=Math.cos(a),s=Math.sin(a);
       if(Math.abs(dx*c-dz*s)<11&&Math.abs(dx*s+dz*c)<3.6)return true;
     }
-    return Math.hypot(x+118,z+44)<3.3;
+    // Reserve the photographed wall/bench approach as well as the smoking booth.
+    const dx=x+115.4,dz=z+48.7,t=dx*.254-dz*.967,n=dx*.967+dz*.254;
+    return Math.hypot(x+118,z+44)<3.3||(t>-3&&t<12&&Math.abs(n)<3.5);
   }
+  K.texture('streets-taxi-granite',256,256,(g,w,h)=>{
+    g.fillStyle='#777b7b';g.fillRect(0,0,w,h);
+    const noise=K.rand(806);
+    for(let i=0;i<3800;i++){const v=94+Math.floor(noise()*62);g.fillStyle=`rgb(${v},${v+2},${v+2})`;g.fillRect(noise()*w,noise()*h,1,1);}
+    g.strokeStyle='#555a59';g.lineWidth=1.5;
+    for(let j=0;j<=4;j++){g.beginPath();g.moveTo(0,j*64);g.lineTo(w,j*64);g.stroke();for(let i=-1;i<3;i++)g.strokeRect(i*128+(j%2)*64,j*64,128,64);}
+  },[2.4,1.6]);
+  K.texture('streets-taxi-wall',256,256,(g,w,h)=>{
+    g.fillStyle='#805e50';g.fillRect(0,0,w,h);
+    const noise=K.rand(805);
+    for(let i=0;i<6500;i++){g.fillStyle=['#473e38','#b29679','#a17e64','#6c5044'][i%4];g.fillRect(noise()*w,noise()*h,1+noise()*2,1+noise()*2);}
+    g.strokeStyle='#56473f';g.lineWidth=2;g.strokeRect(0,0,w,h);
+  },[1.2,.8]);
   function taxiStand(roadId,anchor,name) {
     const r=byId.get(roadId),p=path(r.pts),q=nearest(...anchor,[r]),off=r.width/2+2.2;
     const rot=Math.atan2(-q.v,q.u),cx=q.x-q.v*off,cz=q.z+q.u*off;
@@ -624,6 +668,7 @@ export function build(K) {
     const B=(u,v,y,w,d,h,mat,solid=false)=>{const a=P(u,v,y);K.box({x:a[0],y,z:a[2],w,d,h,rotY:rot,mat,solid});};
     const poly=[P(-9.4,-1.9),P(9.4,-1.9),P(9.4,2.2),P(-9.4,2.2)].map(a=>[a[0],a[2]]);
     K.slab(poly,WALK,{mat:'streets-pavers',thick:.15,ceil:false});
+    K.hpoly('streets-taxi-granite',poly,WALK+.012);
     // Clear 1.4m rear walking aisle; kerb rails break at the boarding opening.
     B(0,.85,WALK+.006,18,.35,.014,'streets-tactile');
     B(5.6,-.35,WALK+.006,.65,2.75,.014,'streets-tactile');
@@ -644,9 +689,12 @@ export function build(K) {
       beam(prev,P(u,0,roofY(0)),.12,0xf0efea);
     }
     // A dark street-facing fascia carries the same sign on both visible faces.
-    B(0,-1.88,2.73,18,.14,.48,0x242a2e);
-    const signP=P(0,-1.88,2.97);
-    for(const face of [rot,rot+PI])K.sign(['TAXI','택시승차'],{x:signP[0],z:signP[2],y:2.97,w:2.9,h:.4,rotY:face,bg:'#242a2e',fg:'#eeeeea',offset:.09});
+    B(0,-1.88,2.83,18,.14,.35,0x303639);
+    const signP=P(0,-1.88,3.015);
+    // Photo06: small lettering on the continuous fascia, rather than an
+    // oversized separate signboard. The original curved white posts remain.
+    for(const face of [rot,rot+PI])K.sign(['TAXI','택시승차'],{x:signP[0],z:signP[2],y:3.015,w:1.2,h:.31,rotY:face,bg:null,fg:'#eeeeea',offset:.085});
+    for(const u of [-7.5,-3,1.5,6])B(u,-1.65,2.78,.22,.13,.045,emit(0xe4e4d9));
     function queueRail(a,b,v,glass=false){
       const pa=P(a,v),pb=P(b,v);
       for(let u=a;u<=b+.01;u+=1.8)B(u,v,WALK,.055,.055,1.08,0x303b3e,true);
@@ -656,9 +704,9 @@ export function build(K) {
     }
     queueRail(-8.6,3.8,-1.7,true);queueRail(7.4,8.6,-1.7,true);
     queueRail(-6.8,2.5,-.32);
-    for(const u of [-5.7,-3.1,.5]){const a=P(u,.22,WALK);K.person(a[0],WALK,a[2],{rotY:rot+PI,shirt:u<0?0x354251:0xddd7c7});}
+    for(const [u,v,shirt] of [[-5.7,.22,0x303639],[-3.1,.22,0x293034],[-1.1,.7,0x242d31],[.5,.22,0xddd7c7],[3.2,-.7,0x424b50]]){const a=P(u,v,WALK);K.person(a[0],WALK,a[2],{rotY:rot+PI,shirt,pants:0x30373b});}
     for(const u of [-6.4,.05]){
-      B(u,.28,WALK,.33,.25,.48,0x5f4e59);beam(P(u-.1,.28,.62),P(u-.1,.28,.93),.018,C.silver);beam(P(u+.1,.28,.62),P(u+.1,.28,.93),.018,C.silver);beam(P(u-.1,.28,.93),P(u+.1,.28,.93),.024,C.steel);
+      B(u,.28,WALK,.33,.25,.48,u<0?0x8e2433:0x5f4e59);beam(P(u-.1,.28,.62),P(u-.1,.28,.93),.018,C.silver);beam(P(u+.1,.28,.62),P(u+.1,.28,.93),.018,C.silver);beam(P(u-.1,.28,.93),P(u+.1,.28,.93),.024,C.steel);
     }
     // Decorative twin lantern, as in the canopy photo, set behind the queue.
     const lp=P(-7.5,2.6,WALK);K.cyl({x:lp[0],z:lp[2],y:WALK,r:.105,h:3.7,seg:10,mat:0x303a3e});
@@ -673,16 +721,47 @@ export function build(K) {
       const dist=Math.hypot(q.x-a[0]-dx*t,q.z-a[1]-dz*t);if(dist<best){best=dist;station=p.cum[i-1]+len*t;}
     }
     for(let i=0;i<3;i++){
-      const a=at(p,station-7+i*6.6,r.width/2-1.15),col=[0xe77b31,0xf1f1e8,0xf5cf29][i];
+      // Hold cars behind the boarding point on the service lane. The previous
+      // three-abreast camera composition was the queue's front, not gb_03's arch.
+      const a=at(p,station-21+i*6.6,r.width/2-1.15),col=[0xb7bdbe,0xf1f1e8,0xd7dddc][i];
       K.vehicle({x:a.x,z:a.z,y:ROAD,rotY:a.rot,kind:'taxi',color:col});
       const nx=Math.cos(a.rot),nz=-Math.sin(a.rot);
-      for(const side of [-1,1])K.sign(i===2?'카카오 T':'서울 택시',{x:a.x+nx*side*.944,z:a.z+nz*side*.944,y:.78,w:1.25,h:.24,rotY:a.rot+side*PI/2,bg:i===2?'#f5cf29':i===0?'#e77b31':'#f1f1e8',fg:'#25323b',offset:.015});
+      for(const side of [-1,1])K.sign(i===2?'카카오 T':'서울 택시',{x:a.x+nx*side*.944,z:a.z+nz*side*.944,y:.78,w:1.25,h:.24,rotY:a.rot+side*PI/2,bg:null,fg:'#25323b',offset:.015});
     }
     K.zone({name,floor:'1F',sub:'택시 승차장',poly,y0:0,y1:4,priority:5});
     const sp=P(5.6,1.45,WALK);K.spawn({name,x:sp[0],z:sp[2],y:WALK,yaw:rot,group:'고속터미널 거리'});
   }
   taxiStand(218913527,[-115,-70],'호남선 · 센트럴시티 택시 승차장');
   taxiStand(1065783063,[104,-138.3],'경부선 터미널 택시 승차장');
+  // Photo06's green village bus is across the carriageway, not in the taxi bay.
+  {const a=nearest(-112,-84,[byId.get(1420100043)]);K.vehicle({x:a.x,z:a.z,y:ROAD,rotY:a.rot,kind:'cityBus',color:0x3c963d,label:'서초14'});}
+  // Photo05: a clear granite promenade past the smoking booth, brown stone
+  // planter to the left and two paired red cylindrical benches to the right.
+  // Its orientation/length remains inferred from the established curb location.
+  {
+    const ux=.254,uz=-.967,nx=.967,nz=.254,rot=Math.atan2(ux,uz);
+    const P=(t,n,y=.15)=>[-115.4+ux*t+nx*n,y,-48.7+uz*t+nz*n];
+    const footprint=[P(-2.5,-2.25),P(11.7,-2.25),P(11.7,2.45),P(-2.5,2.45)].map(p=>[p[0],p[2]]);
+    K.slab(footprint,.15,{mat:'streets-taxi-granite',thick:.15,ceil:false});
+    const a=P(-2.5,-2.5),b=P(8.2,-2.5);
+    K.wall(a[0],a[2],b[0],b[2],.15,1.22,{thick:.34,mat:{tex:'streets-taxi-wall',gloss:.3}});
+    beam(P(-2.5,-2.5,1.24),P(8.2,-2.5,1.24),.18,{tex:'streets-taxi-wall',gloss:.3});
+    // Planting stays behind the wall; neither a shrub nor a branch blocks the aisle.
+    const bed=[P(-2.5,-3.6),P(8.2,-3.6),P(8.2,-2.7),P(-2.5,-2.7)].map(p=>[p[0],p[2]]);
+    K.hpoly({tex:'grass',color:0x354b32},bed,1.17);
+    for(const t of [0,3.5,7]){const a=P(t,-3.1,1.17);K.dome({x:a[0],y:a[1],z:a[2],rx:.42,ry:.35,rz:.55,mat:0x3f573d,seg:8,rings:4});}
+    for(const t of [1.8,6.5]){
+      for(const n of [1.52,1.88]){
+        const a=P(t-1,n,.69),b=P(t+1,n,.69);beam(a,b,.16,0x9e2832);
+        for(const [end,normal] of [[a,[-ux,0,-uz]],[b,[ux,0,uz]]])for(let i=0;i<12;i++){
+          const q=ang=>[end[0]+nx*.16*Math.cos(ang),end[1]+.16*Math.sin(ang),end[2]+nz*.16*Math.cos(ang)];
+          K.quad(0xa93038,[end,q(i*PI/6),q((i+1)*PI/6),end],normal);
+        }
+      }
+      for(const dt of [-.65,.65]){const a=P(t+dt,1.7,.15);K.box({x:a[0],z:a[2],y:.15,w:.2,d:.4,h:.45,rotY:rot,mat:0x842833});}
+    }
+    const walker=P(8.8,.3);K.person(walker[0],.15,walker[2],{rotY:rot+PI,shirt:0x5c6265,pants:0x9b978c});
+  }
   // taxi/05 shows a glass smoking booth beside the plaza. This small enclosure's
   // position is inferred in the east edge of the existing forecourt, off its door axis.
   {
@@ -696,6 +775,9 @@ export function build(K) {
     for(const u of [-1.35,1.35]){const p=P(u,-.55);K.cyl({x:p[0],z:p[1],y:.15,r:.13,h:.85,seg:10,mat:C.silver});K.cyl({x:p[0],z:p[1],y:1,r:.15,h:.035,seg:10,mat:0x333b3d,solid:false});}
     for(const u of [-1,0,1]){const p=P(u,-.95);K.box({x:p[0],z:p[1],y:2.36,w:.62,h:.16,d:.08,rotY:rot,mat:0x323b3e,solid:false});}
   }
+  // G2's mural corridor belongs to the separate onebailey task, not this street
+  // sign. Research uses the 2025 report's ~350m Seoul / ~160m Picasso lengths;
+  // no corridor or underground connection is fabricated here without a junction.
   K.sign(['반포한강공원 가는 길','← 고투몰 출구 · 반포대로'],{x:-297,z:-30,y:2.1,w:3.1,h:.85,rotY:.36,bg:'#234d40',fg:'#fff',box:.1});
 
   // Flyover: approach ways tagged layer=0 are real ramps, not flat end stubs.
@@ -778,7 +860,9 @@ export function build(K) {
   K.sign(['서리풀공원 산책길','미도산  →'],{x:99,z:239,y:2.1,w:2.4,h:.8,rotY:PI,bg:'#375f46',fg:'#fff',box:.1});
   K.sign(['고속터미널역  ←','센트럴시티 · 신세계'],{x:74,z:177,y:2.4,w:2.9,h:.8,rotY:.4,bg:'#273e54',fg:'#fff',box:.1});
   const led=at(fp,5,1.35);K.sign(['센트럴씨티보도육교','서초구 · 함께 걷는 거리'],{x:led.x,z:led.z,y:BRIDGE+1.7,w:3.8,h:.65,rotY:led.rot+PI/2,bg:'#12282a',fg:'#8ddfda',box:.14});
-  // Accessible circulation is an explicit approximation: lift existence unresolved.
+  // Existing accessible circulation is a guess: lift existence unresolved.
+  // Round 10's unverified audit describes an older stairs-only model. Preserve
+  // the current lift as instructed, without treating it as a verified facility.
   K.slab(rect(106.5,232.5,7,3),BRIDGE,{mat:'streets-pavers',thick:.28});
   K.slab(rect(109,235,4.4,7),WALK,{mat:'streets-pavers',thick:.15});
   K.elevator({shaft:false,name:'보도육교 승강기',x:109,z:235,rotY:PI,w:2.2,d:2.2,mat:'glass',doorMat:0x8dabae,topH:2.9,floors:[{label:'지상',y:WALK,name:'사평대로 보도'},{label:'육교',y:BRIDGE,name:'센트럴씨티보도육교'}]});
@@ -844,7 +928,7 @@ function buildRoadviewBuildings(K) {
     for(let y=0;y<=h;y+=64){g.beginPath();g.moveTo(0,y);g.lineTo(w,y);g.stroke();}
     for(let row=0;row<4;row++)for(let x=(row%2)*64;x<w;x+=128){g.beginPath();g.moveTo(x,row*64);g.lineTo(x,(row+1)*64);g.stroke();}
   },[2.4,2.4]);
-  for(const b of K.osmBuilding(413280002)){
+  for(const b of [] /* 르본시티 413280002 is built by js/places/lebon.js */){
     const p=b.poly;
     K.prism(p,0,38,{mat:'streets-lebon-stone',top:0xd7c7ac});
     // Eight rows, with the first integrated into the street-level shop band.
@@ -904,17 +988,55 @@ function buildRoadviewBuildings(K) {
     g.clearRect(0,0,w,h);g.fillStyle='rgba(67,87,89,.55)';
     for(let j=0;j<3;j++)for(let i=0;i<3;i++){g.beginPath();g.arc(42+i*85,42+j*85,34-(i+j)%2*5,0,PI*2);g.fill();}
   },[2.1,2.1],{transparent:true});
+  K.texture('streets-police-glazing',256,256,(g,w,h)=>{
+    g.fillStyle='#526e69';g.fillRect(0,0,w,h);
+    for(let i=0;i<32;i++){g.fillStyle=i%3?'rgba(182,204,186,.06)':'rgba(20,42,41,.12)';g.fillRect(i*8,0,4+(i%5),h);}
+    g.fillStyle='rgba(183,201,185,.16)';g.fillRect(0,24,w,25);
+    g.fillStyle='rgba(20,39,38,.2)';g.fillRect(0,210,w,46);
+  },[1.72,2.0]);
+  K.texture('streets-police-taegeukgi',192,128,(g,w,h)=>{
+    g.fillStyle='#f1eee6';g.fillRect(0,0,w,h);
+    g.fillStyle='#bf3e45';g.beginPath();g.arc(96,64,26,0,PI*2);g.fill();
+    g.fillStyle='#344e85';g.beginPath();g.arc(96,64,26,0,PI);g.fill();
+    g.beginPath();g.arc(83,64,13,PI,PI*2);g.fill();
+    g.fillStyle='#bf3e45';g.beginPath();g.arc(109,64,13,0,PI);g.fill();
+    g.fillStyle='#283239';
+    for(const [x,y,a,broken] of [[42,30,-.6,0],[150,30,.6,2],[42,98,.6,1],[150,98,-.6,3]]){
+      g.save();g.translate(x,y);g.rotate(a);for(let i=0;i<3;i++){
+        if((broken===3)||(broken===2&&i!==1)||(broken===1&&i===1)){g.fillRect(-17,-9+i*7,14,4);g.fillRect(3,-9+i*7,14,4);}else g.fillRect(-17,-9+i*7,34,4);
+      }g.restore();
+    }
+  },[1,1]);
+  K.texture('streets-police-cctv',384,240,(g,w,h)=>{
+    g.fillStyle='#16282b';g.fillRect(0,0,w,h);
+    for(let j=0;j<4;j++)for(let i=0;i<6;i++){
+      const x=i*64+2,y=j*60+2,k=i+j*6;
+      g.fillStyle=['#687879','#738379','#697681'][k%3];g.fillRect(x,y,60,54);
+      g.fillStyle='#b5b5a0';g.fillRect(x+3,y+2,14+(k%4)*3,25);g.fillRect(x+40,y+7,17,18);
+      g.fillStyle='#3c514e';g.fillRect(x+25,y+3,9,16);
+      g.fillStyle='#38464a';g.beginPath();g.moveTo(x+23,y+23);g.lineTo(x+38,y+23);g.lineTo(x+56,y+52);g.lineTo(x+3,y+52);g.closePath();g.fill();
+      g.fillStyle='#c5d0c7';g.fillRect(x+28,y+33,7,4);g.fillRect(x+32,y+44,8,4);
+      g.fillStyle='#64c5a3';g.fillRect(x+3,y+48,13,2);
+    }
+  },[1,1]);
   for(const b of K.osmBuilding(886400346)){
     const p=b.poly,L=Math.hypot(p[1][0]-p[0][0],p[1][1]-p[0][1]),D=Math.hypot(p[3][0]-p[0][0],p[3][1]-p[0][1]);
     const ux=(p[1][0]-p[0][0])/L,uz=(p[1][1]-p[0][1])/L,vx=-uz,vz=ux;
     // v is east/northeast, the opposite of the west outward normal.
     const P=(u,v)=>[p[0][0]+ux*u-vx*v,p[0][1]+uz*u-vz*v];
     const pos=(u,v)=>{const q=P(u,v);return {x:q[0],z:q[1]};};
-    const rot=Math.atan2(vx,vz),frame=0x465555,stone='streets-police-stone',glass={tex:'glass',color:0x7faaa5};
+    const rot=Math.atan2(vx,vz),frame=0x394b49,stone='streets-police-stone',glass={tex:'glass',color:0x557d75};
     const localBox=(u,v,y,w,h,d,mat,solid=true)=>K.box({...pos(u,v),y,w,h,d,rotY:rot,mat,solid});
     const localRect=(u0,v0,u1,v1)=>[P(u0,v0),P(u1,v0),P(u1,v1),P(u0,v1)];
     const localWall=(u0,v0,u1,v1,y0,y1,opts)=>{const a=P(u0,v0),c=P(u1,v1);K.wall(...a,...c,y0,y1,opts);};
     const face=(uvys,mat,normal=[vx,0,vz])=>K.quad(mat,uvys.map(([u,v,y])=>{const q=P(u,v);return [q[0],y,q[1]];}),normal);
+    const bar=(a,b,r,mat)=>{ // round tubes in the police local frame
+      const A=P(a[0],a[1]),B=P(b[0],b[1]),aa=[A[0],a[2],A[1]],bb=[B[0],b[2],B[1]];
+      const d=bb.map((v,i)=>v-aa[i]),len=Math.hypot(...d),n=Math.abs(d[1])>len*.95?[1,0,0]:[-d[2],0,d[0]],nl=Math.hypot(...n);
+      for(let i=0;i<3;i++)n[i]/=nl;const m=[d[1]*n[2]-d[2]*n[1],d[2]*n[0]-d[0]*n[2],d[0]*n[1]-d[1]*n[0]].map(v=>v/len);
+      for(let j=0;j<8;j++){const q=(p,t)=>p.map((v,i)=>v+r*(n[i]*Math.cos(t)+m[i]*Math.sin(t))),t=j*PI/4,t1=(j+1)*PI/4;
+        K.quad(mat,[q(aa,t),q(bb,t),q(bb,t1),q(aa,t1)],n.map((v,i)=>v*Math.cos((t+t1)/2)+m[i]*Math.sin((t+t1)/2)));}
+    };
     const apron=localRect(-1,-10.6,L+1,0);
     K.slab(apron,.15,{mat:'streets-pavers',thick:.15,ceil:false});
     K.slab(p,0,{mat:{tex:'tile',color:0xd4d4c9},thick:.2});
@@ -924,25 +1046,42 @@ function buildRoadviewBuildings(K) {
     // The door is a genuine 2.2 m opening through the curtain wall, with the
     // glass leaves parked to either side. Nothing spans the entrance at foot level.
     localWall(0,0,L,0,0,8.05,{mat:glass,thick:.06,openings:[{at:9.3,w:2.2,y0:0,y1:2.9}]});
-    localWall(0,0,0,D,0,8.05,{mat:glass,thick:.06});
+    localWall(0,0,0,D,0,8.05,{mat:'streets-police-glazing',mat2:0xd9d9ce,thick:.06});
     localWall(L,0,L,D,0,8.05,{mat:stone,mat2:0xe0dfd4,thick:.2});
     localWall(0,D,L,D,0,8.05,{mat:stone,mat2:0xe0dfd4,thick:.2});
     const st0=P(1.25,D-1.35),st1=P(L-1.5,D-1.35);
     K.stairs(...st0,...st1,{w:1.45,ya:0,yb:4.05,mat:0xc5c8c1,rails:true});
+    // Photo18/23 show a low suspended office ceiling and a partition in front
+    // of the stair/service strip. Keep the upper floor and its stairs intact.
+    K.slab(localRect(.18,.18,L-.18,D-2.35),2.78,{mat:0xdad9cf,under:'ceiling',thick:.08,walk:false});
+    localWall(1.45,10.1,9.45,10.1,0,2.7,{mat:0xd5d5c9,mat2:0xc9cec5,thick:.12});
+    localWall(9.45,8.95,9.45,10.1,0,1.4,{mat:0xa38f6a,thick:.1});
     for(const y of [.2,3.05,4.05,5.0,7.98])localBox(L/2,-.065,y,L,.085,.12,frame,false);
+    // Frosted upper/lower infills reflect the street; clear lower bays retain
+    // the view through the real doorway. This is not an all-clear glass cube.
+    for(const [y0,y1] of [[.2,.6],[2.72,3.0],[3.15,4.0],[4.17,5.0],[5.08,7.95]])
+      face([[.08,-.045,y0],[L-.08,-.045,y0],[L-.08,-.045,y1],[.08,-.045,y1]],'streets-police-glazing');
     for(let u=.08;u<L;u+=1.72){
       if(u>8.15&&u<10.45){localBox(u,-.07,2.9,.075,5.15,.14,frame,false);continue;}
       localBox(u,-.07,0,.075,8.05,.14,frame,false);
     }
-    for(const [u0,u1] of [[.1,8.15],[10.45,L-.1]]){
+    for(const [start,end] of [[.1,8.15],[10.45,L-.1]])for(let u0=start;u0<end;u0+=1.72){
+      const u1=Math.min(end,u0+1.65);
       face([[u0,-.09,.6],[u1,-.09,.6],[u1,-.09,2.7],[u0,-.09,2.7]],'streets-police-frit');
       face([[u0,-.09,4.17],[u1,-.09,4.17],[u1,-.09,5.0],[u0,-.09,5.0]],'streets-police-frit');
     }
     // North road face: broad grey stone panels with dark glass bays, an oblique
     // glass/stone boundary, and slender metal mullions visible in police_01.
     const nn=[-ux,0,-uz];
-    face([[0,-.02,.2],[0,3.1,.2],[0,4.55,7.95],[0,-.02,7.95]],stone,nn);
-    face([[0,7.1,.2],[0,9.45,.2],[0,11.25,7.95],[0,8.9,7.95]],stone,nn);
+    face([[-.11,-.02,.2],[-.11,3.1,.2],[-.11,4.55,7.95],[-.11,-.02,7.95]],stone,nn);
+    face([[-.11,7.1,.2],[-.11,9.45,.2],[-.11,11.25,7.95],[-.11,8.9,7.95]],stone,nn);
+    // Explicit joints keep metre-scale stone tiles visible; quad UVs alone
+    // would stretch one four-row texture over the entire eight-metre facade.
+    for(let y=1.45;y<7.9;y+=1.28){
+      const t=(y-.2)/7.75;
+      for(const [a,c] of [[0,3.1+1.45*t],[7.1+1.8*t,9.45+1.8*t]])bar([-.13,a,y],[-.13,c,y],.012,0x6e7b74);
+    }
+    for(const v of [1.5,2.95,8.9])bar([-.13,v,.25],[-.13,v,7.9],.012,0x6e7b74);
     for(let v=4.7;v<D;v+=1.4){
       const a=P(-.045,v);K.box({x:a[0],z:a[1],y:.2,w:.08,h:7.85,d:.08,mat:frame,solid:false});
     }
@@ -951,7 +1090,9 @@ function buildRoadviewBuildings(K) {
     }
     // Lean the near-corner glass pane back 0.7 m at its top, preserving the
     // footprint below. These faces are decorative over the north envelope.
-    face([[-.12,3.15,.25],[-.12,4.8,.25],[.58,6.1,7.9],[.58,4.6,7.9]],glass,nn);
+    face([[-.23,3.15,.25],[-.23,7.07,.25],[-.08,8.87,7.9],[-.08,4.6,7.9]],{tex:'streets-police-glazing',color:0x637f79},nn);
+    for(const [a,c] of [[[3.15,.25],[4.6,7.9]],[[7.07,.25],[8.87,7.9]]])bar([-.25,a[0],a[1]],[-.1,c[0],c[1]],.045,0x99aaa1);
+    localWall(-.09,0,-.09,D,0,.22,{mat:stone,thick:.16,solid:false});
     // Low east glass annex from the previous model remains, with finer frames.
     const annex=localRect(0,D,L,D+5);
     K.slab(annex,0,{mat:'tile',thick:.18});K.slab(annex,3.8,{mat:0xc4c9c4,thick:.15});
@@ -962,23 +1103,47 @@ function buildRoadviewBuildings(K) {
     localBox(9.3,-1.2,3.05,3.7,.15,2.5,0x9ba5a1,false);
     localBox(9.3,-1.2,3.2,3.45,.045,2.2,glass,false);
     for(const u of [7.6,11.0])localBox(u,-2.25,.15,.095,2.9,.095,0xb9c1ba);
-    K.sign('경찰 POLICE',{...pos(9.3,-2.48),y:3.86,w:3.75,h:1.02,rotY:rot,bg:'#1749a1',fg:'#fff',box:.08});
+    // Work around kit.sign's rotated box offset: put the backing completely
+    // behind its text plane in this local frame, including the x offset.
+    localBox(9.3,-2.40,3.32,3.81,1.08,.08,0x71837f,false);
+    K.sign('경찰 POLICE',{...pos(9.68,-2.48),y:3.78,w:2.75,h:.71,rotY:rot,bg:'#1749a1',fg:'#fff'});
+    face([[7.42,-2.46,3.35],[11.18,-2.46,3.35],[11.18,-2.46,4.37],[7.42,-2.46,4.37]],0x1749a1);
+    // A small winged crest relief, as visible beside the word 경찰.
+    face([[7.63,-2.54,4.08],[8.03,-2.54,3.95],[8.27,-2.54,4.08],[8.14,-2.54,3.75],[7.96,-2.54,3.65],[7.8,-2.54,3.78]],0xcfcca5);
+    for(let j=0;j<3;j++)bar([7.66,-2.56,4.04-j*.07],[7.98,-2.56,3.87-j*.06],.014,0x7b8174);
     K.sign('서울서초경찰서 | 반포지구대',{...pos(9.3,-2.54),y:4.24,w:3.48,h:.18,rotY:rot,bg:'#1749a1',fg:'#fff'});
-    K.sign(['잘못 건 112신고전화','긴급출동의 발목을 잡습니다'],{...pos(L/2,-.16),y:6.4,w:L-1,h:2.35,rotY:rot,bg:'#174a9d',fg:'#fff',box:.06});
+    localBox(L/2,-.10,5.22,L-.94,2.41,.06,0x526363,false);
+    K.sign(['잘못 건 112신고전화','긴급출동의 발목을 잡습니다'],{...pos(L/2,-.18),y:6.4,w:L-1,h:2.35,rotY:rot,bg:'#174a9d',fg:'#fff'});
     K.sign('112는 긴급범죄신고 전화입니다',{...pos(L/2,-.22),y:5.48,w:L-2,h:.28,rotY:rot,bg:'#174a9d',fg:'#ffe882'});
     for(const u of [8.1,10.5])localBox(u,.12,.08,.08,2.82,.12,0xb4bfb9,false);
     for(const u of [8.55,10.05])localBox(u,.3,.12,.72,2.55,.035,glass,false);
+    for(const u of [8.55,10.05]){
+      face([[u-.34,.275,.4],[u+.34,.275,.4],[u+.34,.275,2.3],[u-.34,.275,2.3]],'streets-police-frit');
+      bar([u-.22,.23,1.15],[u+.22,.23,1.15],.025,0xc0c7bd);
+    }
+    for(const u of [8.3,9.3,10.3])localBox(u,-1.3,3.0,.05,.08,2.2,0x5d6863,false);
+    K.sign(['2019','우수 지구대'],{...pos(7.91,-.18),y:1.96,w:.31,h:.36,rotY:rot,bg:'#267caf',fg:'#f4e8b0'});
+    K.tree(...[pos(12.4,-1.4).x,pos(12.4,-1.4).z],{y:.15,h:3.0,kind:'pine'});
+    K.person(pos(11.65,-3.8).x,.15,pos(11.65,-3.8).z,{rotY:rot,shirt:0x29465a,pants:0x202e38});
     localBox(9.3,-.38,.015,2.25,.025,.8,0x545b57,false);
     // Three flags are compact static cloth panels; no guessed agency insignia.
     for(let i=0;i<3;i++){
       const u=11.8+i*.72,q=pos(u,-.85);K.cyl({...q,y:.15,r:.038,h:6.4,seg:8,mat:0xbfc6bf});
-      K.sign(i===1?'대한민국':'경찰',{...pos(u+.31,-.85),y:5.7,w:.6,h:1.0,rotY:rot,bg:i===1?'#eee9dd':'#353b74',fg:i===1?'#3c4c60':'#d9bf71',twoSided:true});
+      if(i===1)face([[u,-.87,5.3],[u+1.0,-.87,5.3],[u+1.0,-.87,6.0],[u,-.87,6.0]],'streets-police-taegeukgi');
+      else K.sign('경찰',{...pos(u+.31,-.85),y:5.7,w:.6,h:1.0,rotY:rot,bg:'#353b74',fg:'#d9bf71',twoSided:true});
     }
     // Forecourt boundary and parking remain fully inside the service-road curb.
     for(let u=0;u<=L;u+=1.8){
       if(u>7.5&&u<11)continue;
       const q=pos(u,-10.1);K.cyl({...q,y:.15,r:.09,h:.73,seg:8,mat:0x323a39});
       K.cyl({...q,y:.64,r:.095,h:.12,seg:8,mat:0xe8be35,solid:false});
+    }
+    // police_01: low yellow/black steel hoops, not just upright bollards.
+    // Their separated spans leave the forecourt entrances and sidewalk open.
+    for(const v of [1.0,4.0,7.0,10.0,13.0]){
+      const pts=[[-2.2,v-.65,.15],[-2.2,v-.65,.68],[-2.2,v-.54,.82],[-2.2,v+.54,.82],[-2.2,v+.65,.68],[-2.2,v+.65,.15]];
+      for(let i=1;i<pts.length;i++)bar(pts[i-1],pts[i],.052,i%2?0x2a302e:0xd9c45d);
+      bar([-2.2,v-.65,.43],[-2.2,v-.65,.57],.054,0xd9c45d);bar([-2.2,v+.65,.43],[-2.2,v+.65,.57],.054,0xd9c45d);
     }
     for(let u=1;u<7;u+=2){
       const a=P(u,-3),c=P(u,-5);K.wall(...a,...c,.78,.83,{mat:0x9ba9a6,thick:.05,solid:false});
@@ -995,14 +1160,30 @@ function buildRoadviewBuildings(K) {
       }
       K.box({...q,y:1.57,w:1.2,h:.1,d:.32,rotY:a,mat:0x9da9ac,solid:false});
       for(const side of [-1,1])K.box({...CP(side*.36,0),y:1.67,w:.45,h:.12,d:.28,rotY:a,mat:{tex:'emit',color:side<0?0xd63b32:0x326fbf},solid:false});
+      if(u===6){
+        // Photo03 school visit: the raised rear hatch belongs to this patrol
+        // car, with its dark cargo opening below; retain both parked cars.
+        localBox(u,-9.57,.63,1.48,.55,.03,0x1c292d,false);
+        face([[u-.85,-9.6,1.12],[u+.85,-9.6,1.12],[u+.85,-10.12,2.12],[u-.85,-10.12,2.12]],0xe3e7df);
+        face([[u-.70,-9.68,1.29],[u+.70,-9.68,1.29],[u+.70,-10.09,2.03],[u-.70,-10.09,2.03]],0x304448);
+        for(const side of [-1,1])bar([u+side*.7,-9.45,.92],[u+side*.7,-10.03,1.94],.018,0x727c77);
+      }
       const a0=P(u-1.35,-9.8),a1=P(u-1.35,-4.5);K.wall(...a0,...a1,.155,.16,{thick:.1,mat:0xe1e2d5,solid:false});
     }
     localBox(12.75,-3,.15,2.45,1.8,.18,0x7c8f83);
     K.sign('게시판',{...pos(12.75,-3.12),y:1.78,w:2.3,h:.34,rotY:rot,bg:'#eeeadd',fg:'#233c38'});
     for(const u of [12.05,12.8,13.55])K.sign(['주민 안내','생활 안전'],{...pos(u,-3.14),y:1.13,w:.61,h:.83,rotY:rot,bg:'#e4e1c9',fg:'#425c52'});
+    for(let i=0;i<8;i++){
+      const q=pos(7.55+(i%4)*.73,-7.7-Math.floor(i/4)*.9);
+      K.person(q.x,.15,q.z,{rotY:rot-PI/2,h:1.05+(i%3)*.08,shirt:i%3?0x9dd7c8:0xc7e8de,pants:i%2?0x596568:0xd4c1aa});
+    }
+    const visitingOfficer=pos(7.4,-5.8);K.person(visitingOfficer.x,.15,visitingOfficer.z,{rotY:rot,shirt:0x2c4e61,pants:0x25313c});
     // Running officer: a shallow extruded, two-sided silhouette, as in the
     // rooftop photo, with an extended arm, bent lead knee, cap and dark uniform.
     const silhouette=(poly,mat)=>{
+      // Operator measured the figure at roughly 1.3 × life size, about 2.3m.
+      // Keep every contour, scaling the old 3.75m silhouette about the roof edge.
+      poly=poly.map(([u,y])=>[4.5+(u-4.5)*.6,8.1+(y-7.9)*.6]);
       const vv=-.12,depth=.24,triangles=K.THREE.ShapeUtils.triangulateShape(poly.map(([u,y])=>new K.THREE.Vector2(u,y)),[]);
       for(const [v,normal] of [[vv,[vx,0,vz]],[vv+depth,[-vx,0,-vz]]]){
         for(const [a,b,c] of triangles)face([[poly[a][0],v,poly[a][1]],[poly[b][0],v,poly[b][1]],[poly[c][0],v,poly[c][1]],[poly[c][0],v,poly[c][1]]],mat,normal);
@@ -1017,8 +1198,8 @@ function buildRoadviewBuildings(K) {
     silhouette([[4.95,11.2],[4.88,11.65],[5.9,11.58],[5.98,11.33],[6.22,11.27],[6.05,11.16],[5.56,11.24]],0x172b3c);
     silhouette([[7.55,9.72],[7.85,9.9],[8.06,10.08],[8.16,9.98],[7.99,9.72],[8.28,9.77],[8.3,9.58],[7.72,9.43]],0xc7a184);
     silhouette([[1.52,9.8],[1.25,9.72],[1.08,9.48],[1.21,9.32],[1.4,9.51],[1.62,9.47]],0xc7a184);
-    localBox(4.0,-.1,9.35,1.3,.1,.3,0x1d2428,false);
-    localBox(5.63,-.16,11.34,.14,.16,.035,0xd6bc64,false);
+    localBox(4.2,-.1,8.97,.78,.06,.3,0x1d2428,false);
+    localBox(5.178,-.16,10.164,.084,.096,.035,0xd6bc64,false);
     K.zone({name:'반포지구대',floor:'1F',sub:'민원 안내',poly:p,y0:0,y1:4.05,priority:8});
     K.zone({name:'반포지구대',floor:'2F',sub:'업무 공간',poly:p,y0:4.05,y1:8.05,priority:8});
     const outside=pos(9.3,-5.2);K.spawn({name:'반포지구대 앞',...outside,y:.15,yaw:rot,group:'고속터미널 거리'});
@@ -1026,23 +1207,63 @@ function buildRoadviewBuildings(K) {
     // arcade images in the source folder. Room arrangement is a modest inference.
     K.detail({name:'반포지구대 민원실',floor:'1F',poly:p,y0:0,y1:4.05},K=>{
       const box=(u,v,y,w,h,d,mat,solid=true)=>K.box({...pos(u,v),y,w,h,d,rotY:rot,mat,solid});
-      box(7,4.4,0,8.6,.95,.8,0xb1a28a);box(7,4.4,.95,8.7,.06,.95,0x6f9f6b);
+      const person=(u,v,o)=>{const q=pos(u,v);K.person(q.x,0,q.z,o);};
+      const monitor=(u,v,y,w=.82,h=.5,staff=false)=>{
+        box(u,v,y-.12,.08,.15,.08,0x4d5957,false);box(u,v,y-.15,.38,.025,.24,0x343e3b,false);
+        box(u,v,y,w,h,.075,0x152429,false);
+        K.sign(['업무 안내','서울서초경찰서'],{...pos(u,v+(staff?.045:-.045)),y:y+h/2,w:w-.08,h:h-.075,rotY:rot+(staff?PI:0),bg:'#cddcdb',fg:'#37577d'});
+      };
+      const chair=(u,v,high=false)=>{
+        box(u,v,.4,.58,.12,.58,0x263131);box(u,v+.24,.49,.6,high?.92:.64,.12,0x253034);
+        box(u,v,.12,.065,.3,.065,0x6a7370,false);
+        for(const du of [-.3,.3])box(u+du,v,.65,.04,.06,.46,0x252e30,false);
+        for(const dv of [-.25,.25])box(u,v+dv,.08,.62,.04,.045,0x48524f,false);
+        if(high)box(u,v+.24,1.42,.51,.25,.14,0x263135,false);
+      };
+      box(7,4.4,0,8.6,.95,.8,{tex:'wood',color:0xb1a28a});box(7,4.4,.95,8.7,.06,.95,{color:0x539b61,gloss:.5});
+      box(7,3.99,1.01,8.6,.31,.08,{tex:'wood',color:0xc2b191});
       K.sign('민원 안내',{...pos(7,3.94),y:.66,w:2,h:.34,rotY:rot,bg:'#e1dfd1',fg:'#2e4b58'});
-      K.sign('반포지구대',{...pos(7,8.0),y:2.5,w:3.2,h:.55,rotY:rot,bg:'#e6e2d5',fg:'#2c4958'});
+      K.sign('반포지구대',{...pos(11.15,10.0),y:2.18,w:1.65,h:.26,rotY:rot,bg:'#e6e2d5',fg:'#2c4958'});
       for(const u of [3.8,6.8,9.8]){
-        box(u,4.42,1.05,.9,.64,.09,0x192528);box(u,4.05,1.02,.7,.025,.22,0x394344);
-        box(u,5.4,.45,.6,.12,.6,0x27353b);box(u,5.65,.55,.6,.75,.1,0x263941);
-        box(u,7.6,.7,2.0,.12,.85,0xc9c2af);box(u,7.62,.83,1.7,.015,.65,0x61925e);
-        box(u,7.78,.95,.85,.55,.08,0x24343d);
+        monitor(u,4.31,1.12,.88,.57,true);box(u,4.64,1.02,.66,.025,.21,0x303f40,false);
+        for(let row=0;row<3;row++)for(let col=0;col<10;col++)box(u-.28+col*.06,4.57+row*.06,1.048,.042,.005,.04,0x606b67,false);
+        box(u+.43,4.64,1.02,.22,.012,.25,0x3c4141,false);box(u+.43,4.64,1.035,.075,.03,.11,0x1d2628,false);
+        chair(u,5.45,u===9.8);
+        box(u,8.9,.7,2.0,.1,.85,0xc9c2af);box(u,8.92,.8,1.7,.015,.65,{color:0x5c9264,gloss:.3},false);
+        for(const du of [-.5,.5])box(u+du,8.9,0,.06,.7,.65,0x959e96);
+        monitor(u-.37,9.0,.91,.73,.47);monitor(u+.43,9.0,.91,.66,.47);
+        box(u,8.62,.82,.66,.025,.2,0x3d4847,false);chair(u,8.0);
+        // Paper stacks, document holders and upright files stay on the desks.
+        for(let n=0;n<4;n++)box(u+.65,8.71,.82+n*.018,.28,.016,.24,n%2?0xe4dfc5:0xf0eee3,false);
+        box(u-.69,8.95,.82,.12,.3,.24,0x46728e,false);
       }
       for(const u of [2.4,4.1,5.8]){box(u,1.55,.43,1.35,.12,.55,0x5f6c6d);box(u,1.83,.55,1.35,.62,.08,0x7c8988);}
-      for(const u of [2.4,4.6,6.8])for(const y of [1.95,2.75]){
-        box(u,10.3,y,1.95,.7,.08,0x19292d);
-        for(let a=0;a<3;a++)for(let c=0;c<2;c++)box(u-.6+a*.6,10.24,y+.07+c*.29,.54,.23,.015,[0x608778,0x83969b,0x596c7c][(a+c)%3],false);
+      for(const u of [2.65,4.85,7.05])for(const y of [1.36,2.06]){
+        box(u,9.96,y,1.95,.61,.08,0x19292d,false);
+        face([[u-.9,9.905,y+.055],[u+.9,9.905,y+.055],[u+.9,9.905,y+.555],[u-.9,9.905,y+.555]],'streets-police-cctv');
+        for(const du of [-.6,.6])bar([u+du,9.96,y],[u+du,9.96,y-.18],.012,0x343c3b);
       }
       box(11.8,7.6,0,.85,2.15,.65,0xe0e1d7);for(let y=1.3;y<1.8;y+=.12)box(11.8,7.24,y,.66,.025,.02,0x84918f,false);
-      for(const u of [3,7,11])for(const v of [3,7.5])box(u,v,3.77,1.6,.035,.55,{tex:'emit',color:0xf7f2df},false);
-      K.person(...[pos(6.8,5.4).x,0,pos(6.8,5.4).z],{rotY:rot,shirt:0x294b61,pants:0x24323a,sit:true});
+      for(const u of [3,7,11])for(const v of [3,7.5]){
+        box(u,v,2.655,1.25,.045,.27,0xa6b1ab,false);box(u,v,2.65,1.15,.012,.22,{tex:'emit',color:0xf4f1e1},false);
+      }
+      // Ceiling cassette, return slots and cable raceway from photo18/23.
+      box(8,6.0,2.63,.95,.07,.95,0xd3d4cb,false);box(8,6.0,2.61,.58,.02,.58,0x8d9792,false);
+      for(const side of [-1,1]){box(8+side*.38,6,2.605,.06,.02,.72,0x596c68,false);box(8,6+side*.38,2.605,.72,.02,.06,0x596c68,false);}
+      box(5.3,9.8,2.52,7.7,.1,.13,0xbfc6bd,false);
+      // Phone with keypad and curled cord, printer and a document stand.
+      box(9.07,4.62,1.015,.33,.065,.26,0x1f292b,false);box(9.07,4.51,1.08,.34,.055,.07,0x182326,false);
+      for(let i=0;i<3;i++)for(let j=0;j<3;j++)box(9.0+i*.047,4.62+j*.043,1.082,.025,.006,.024,0x7f8f85,false);
+      for(let j=0;j<10;j++)bar([8.88+j*.015,4.6+(j%2)*.05,1.075],[8.895+j*.015,4.6+((j+1)%2)*.05,1.075],.009,0x1c2829);
+      box(5.5,4.5,1.02,.63,.35,.46,0xd5d9d1,false);box(5.5,4.35,1.34,.48,.04,.26,0x899b94,false);box(5.5,4.65,1.15,.48,.025,.29,0xf0eee1,false);
+      K.sign(['민원 업무 안내','반포지구대'],{...pos(8.35,4.57),y:1.36,w:.34,h:.5,rotY:rot+PI,bg:'#f2efe5',fg:'#456774'});
+      const table=pos(1.2,6.7);K.cyl({...table,y:.7,r:.65,h:.07,seg:20,mat:0xe2dac2});K.cyl({...table,y:0,r:.07,h:.7,seg:8,mat:0x88948e});
+      chair(1.1,5.85);box(1.2,6.7,.78,.42,.02,.28,0xc79a40,false);
+      box(11.8,9.1,0,.86,1.7,.45,0xb5b29e);for(let y=.4;y<1.7;y+=.4){box(11.8,9.1,y,.9,.045,.47,0x8b9488,false);for(let i=0;i<5;i++)box(11.46+i*.15,9.04,y+.06,.1,.27,.28,[0x576e7b,0xd4cfbb,0x506d61][i%3],false);}
+      K.sign(['관할 안내','반포동 · 고속터미널'],{...pos(10.7,9.96),y:1.85,w:2.0,h:.65,rotY:rot,bg:'#e8e7da',fg:'#546b70'});
+      person(6.8,5.45,{rotY:rot,shirt:0x294b61,pants:0x24323a,sit:true});
+      person(9.8,5.45,{rotY:rot,shirt:0xd8bc4b,pants:0x444b45,sit:true});
+      for(const [u,v,color] of [[4.9,6.9,0x323f4c],[6.4,7.15,0x416c7b],[7.7,7.1,0x81918b],[8.8,8.1,0x34596a]])person(u,v,{rotY:rot+PI,shirt:color,pants:0x303a40});
     });
   }
 

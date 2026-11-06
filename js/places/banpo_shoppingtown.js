@@ -19,6 +19,10 @@
 // Additional upper-floor evidence (2026-11-06 audit): 마루 official site confirms
 // 4동 5F/510호 and an elevator. 7동4F 샤크에듀 and 8동5F academy names/rooms
 // come from the cited education directories; exact partition geometry is inferred.
+// Round 10: localnaeil 640227 is dated 2019-07-05, 650226 2023-09-07.
+// The former's 3동 B1 20호 is 온유월식당, not 우고집. Photos18/19 show
+// 우고집 on the 5동 basement directory; keep its existing 5동 furnished bay.
+// B1 access, independent basements and upper-floor room order remain guesses.
 export const meta = {
   id: 'banpo_shoppingtown',
   name: '반포쇼핑타운 1~8동',
@@ -408,7 +412,7 @@ const PI = Math.PI;
 const TENANTS = {
   1: { b: [], g: [], h: [] },
   2: { b: ['병천토종순대', '서초전집', '미락', '범주당', '하시무'], g: ['LG전자 베스트샵', 'IBK기업은행'], h: ['LG전자 서초서비스센터', '쎄븐미용실'] },
-  3: { b: ['만끽치킨', '배부장찌개', '온유월식당', '우고집', '반포대교', '명불허전 원조골뱅이'], g: ['지니 헤어', '네일스토리 잠원점', '꽃보다 남자'], h: ['생명의말씀사'], clinic: '봄치과의원' },
+  3: { b: ['만끽치킨', '배부장찌개', '온유월식당', '반포대교', '명불허전 원조골뱅이'], g: ['지니 헤어', '네일스토리 잠원점', '꽃보다 남자'], h: ['생명의말씀사'], clinic: '봄치과의원' },
   4: { b: ['정선 감자탕', '하얀집'], g: ['KFC'], h: ['혜원미용실', '라시앤느헤어'], fifth: ['마루정신건강의학과'] },
   5: { b: ['일번지육개장', '서래곱창', '백채 김치찌개 반포점', '블루'], g: ['뉴스타공인중개사사무소', 'GS25'], h: ['재임헤어', '킴스 헤어', '헤라 스킨앤바디'] },
   6: { b: ['유메', '그집'], g: ['최옥현헤어아뜨리에', '이쌤헤어', '아름다운 선택'], h: ['우리 피부', '안나민 반포점', '명동심 미용실', '김은제헤어', '눈썹쟁이'], clinic: '반포좋은치과의원' },
@@ -439,6 +443,10 @@ function buildPhotoUpper(K, C) {
   const frontRot = side > 0 ? angle + PI : angle;
   const B = (u, h, d, w, hh, dd, mat, extra = {}) => box(u, y + h, V(d), w, hh, dd, mat, extra);
   const S = (text, u, h, d, w, hh, bg, extra = {}) => sign(text, u, y + h, V(d), w, hh, bg, { rotY: frontRot, ...extra });
+  const panel = (mat, u, h, d, w, hh, rot = frontRot) => {
+    const [x, z] = P(u, V(d)), tx = Math.cos(rot) * w / 2, tz = -Math.sin(rot) * w / 2;
+    K.quad(mat, [[x - tx, y + h, z - tz], [x + tx, y + h, z + tz], [x + tx, y + h + hh, z + tz], [x - tx, y + h + hh, z - tz]], [Math.sin(rot), 0, Math.cos(rot)]);
+  };
   const cylinder = (u, h, d, r, hh, mat, seg = 10) => {
     const p = P(u, V(d)); K.cyl({ x: p[0], y: y + h, z: p[1], r, h: hh, mat, seg, solid: false });
   };
@@ -471,7 +479,30 @@ function buildPhotoUpper(K, C) {
     }
   };
 
-  if (name === '장솔학원' && f >= 2) {
+  if (/^[장짱]솔학원$/.test(name) && f >= 2) {
+    // Photo03: decals are printed on the white open leaves, with five small
+    // numbered lines, not oversized text floating across the glazed portal.
+    for (const right of [false, true]) K.texture(`banpo-zzangsol-${right ? 'care' : 'study'}`, 768, 896, (g, w, h) => {
+      g.fillStyle = '#f6f6f1'; g.fillRect(0, 0, w, h);
+      g.beginPath(); g.roundRect(24, 44, w - 48, h - 80, 80); g.fillStyle = '#bcdfdc'; g.fill();
+      g.lineWidth = 10; g.strokeStyle = '#352d31'; g.stroke();
+      const chars = right ? '짱솔은 학생을' : '짱솔학원';
+      g.textAlign = 'center'; g.textBaseline = 'middle'; g.font = 'bold 67px sans-serif';
+      Array.from(chars).forEach((ch, i) => { const xx = w / 2 + (i - (chars.length - 1) / 2) * (right ? 55 : 92); g.lineWidth = 8; g.strokeText(ch, xx, 126); g.fillStyle = ['#e4a52b', '#8abb35', '#258cc5'][i % 3]; g.fillText(ch, xx, 126); });
+      if (right) { g.font = 'bold 63px sans-serif'; g.fillStyle = '#e0b940'; g.strokeText('사랑합니다', w / 2, 207); g.fillText('사랑합니다', w / 2, 207); }
+      g.fillStyle = '#f9faf4'; g.strokeStyle = '#51484a'; g.lineWidth = 6;
+      g.beginPath(); g.moveTo(608, 226); g.lineTo(594, 196); g.lineTo(611, 166); g.lineTo(615, 124); g.quadraticCurveTo(640, 96, 658, 130); g.lineTo(652, 170); g.lineTo(680, 196); g.quadraticCurveTo(691, 246, 655, 250); g.closePath(); g.fill(); g.stroke();
+      g.fillStyle = '#263d3a'; g.textAlign = 'left'; g.font = '29px sans-serif';
+      if (!right) {
+        const lines = [['학생의 수준과 성향에 맞춘', '섬세한 1:1 커리큘럼'], ['기본, 응용, 심화까지', '탄탄한 교과 수학학습'], ['학습 구멍 ZERO', '단계별 학습 점검 테스트'], ['공부 습관까지 ALL-CARE', '철저한 관리 시스템'], ['초등부터 중등, 고등까지', '꾸준한 실력 향상']];
+        lines.forEach((rows, i) => { const yy = 304 + i * 103; g.font = '42px sans-serif'; g.fillText(String(i + 1), 68, yy + 20); g.font = '29px sans-serif'; rows.forEach((text, j) => g.fillText(text, 124, yy + j * 35)); if (i < 4) { g.strokeStyle = '#71948e'; g.lineWidth = 1; g.beginPath(); g.moveTo(117, yy + 64); g.lineTo(690, yy + 64); g.stroke(); } });
+      } else {
+        ['짱솔학원의 모든 선생님과 직원들은', '학생이 문구를 가슴에 새기고 있습니다.', '', '학생을 내 자녀처럼 아끼는 마음으로', '따뜻한 생각의 깊이를 느낄 수 있도록', '늘 세심한 노력을 기울이고 있습니다.'].forEach((text, i) => g.fillText(text, 63, 352 + i * 61));
+      }
+    }, [1, 1]);
+    K.hpoly({ tex: 'banpo-terrazzo', color: 0xf3f2e9, gloss: 0.3 }, rect(a, front - 0.32, q, V(1.42)), y + 0.015);
+    for (const u of [a + 0.025, q - 0.025]) B(u, 0, depth / 2, 0.035, ceiling - y, depth, 0xf4f4ed, { solid: false });
+    B(mid, 0, depth - 0.03, width - 0.05, ceiling - y, 0.035, 0xf4f4ed, { solid: false });
     // 03: open white entry leaves, cyan notices and a second glazed portal.
     // Door furniture stays alongside the existing 1.45m opening, never across it.
     B(mid, 0.01, 0.65, 1.42, 0.012, 0.85, 0x191d1c, { solid: false });
@@ -482,32 +513,52 @@ function buildPhotoUpper(K, C) {
       B(mid + sg * 1.06, 0.91, 0.88, 0.07, 0.08, 0.08, 0x9caaa6, { solid: false });
       B(mid + sg * 0.82, 0, 0.15, 0.08, 2.28, 0.45, 0xf4f3ef, { solid: false });
       B(mid + sg * 0.87, 1.05, 0.23, 0.035, 0.40, 0.035, 0x949b99, { solid: false });
-      S(sg < 0 ? ['장솔학원', '수준별 맞춤 수업', '학습 점검 · 상담'] : ['장솔학원', '학생을 사랑합니다'], mid + sg * 1.4, 1.5, -0.06, 0.9, 1.15, '#b8dcda', { fg: '#34524d' });
+      panel(`banpo-zzangsol-${sg > 0 ? 'study' : 'care'}`, mid + sg * 1.58, 0.82, -0.09, 1.12, 1.31);
       B(mid + sg * 1.17, 0.05, 1.25, 0.64, 2.05, 0.035, { tex: 'glass', color: 0xb7ded7 }, { solid: false });
       B(mid + sg * 0.82, 0.05, 1.25, 0.035, 2.15, 0.05, 0xb6bdb9, { solid: false });
     }
     B(mid, 2.19, 1.25, 2.95, 0.055, 0.07, 0xb6bdb9, { solid: false });
-    S('장솔학원', mid, 1.6, 1.25, 1.32, 0.4, '#b8dcda', { fg: '#227d78' });
+    S('짱솔학원', mid, 1.6, 1.25, 1.32, 0.4, '#b8dcda', { fg: '#227d78' });
     plant(q - 0.55, 1.55);
+    plant(q - 0.38, -0.14);
     // 04: shallow horizontal student trays, coloured sides, two wall displays.
     const mailW = Math.min(width - 0.8, 5.6), mailU = mid, cols = 10, rows = 14;
     B(mailU, 0.12, depth - 0.3, mailW, 1.39, 0.42, 0xb9bab4);
     B(mailU, 0.25, depth - 0.53, mailW - 0.08, 1.19, 0.02, 0x4d5454, { solid: false });
-    for (let c = 0; c <= cols; c++) B(mailU - mailW / 2 + c * mailW / cols, 0.23, depth - 0.5, 0.025, 1.23, 0.32, [0xd3d7c9, 0xadbcca, 0xceada8, 0xb7c7ac][c % 4], { solid: false });
+    for (let c = 0; c <= cols; c++) B(mailU - mailW / 2 + c * mailW / cols, 0.23, depth - 0.5, 0.032, 1.23, 0.32, [0xd5d6d4, 0xaebcc9, 0xe27d36, 0x92ae6f, 0xddc358][Math.floor(c / 2) % 5], { solid: false });
     for (let r = 0; r <= rows; r++) B(mailU, 0.24 + r * 0.085, depth - 0.5, mailW, 0.013, 0.34, 0xc4c7c3, { solid: false });
     for (let c = 0; c < cols; c++) {
       S(String(c + 1), mailU - mailW / 2 + (c + 0.5) * mailW / cols, 1.54, depth - 0.55, 0.19, 0.12, '#e7d45d', { fg: '#515242' });
       for (let r = 0; r < rows; r++) if ((c + r) % 3 !== 0) B(mailU - mailW / 2 + (c + 0.5) * mailW / cols, 0.26 + r * 0.085, depth - 0.52, mailW / cols - 0.07, 0.025, 0.23, [0xd6d1bd, 0xc6d4d4, 0xe4d8bf][r % 3], { solid: false });
     }
+    K.texture('banpo-academy-attendance', 768, 448, (g, w, h) => {
+      g.fillStyle = '#ede5e5'; g.fillRect(0, 0, w, h); g.textAlign = 'center';
+      for (let c = 0; c < 2; c++) { const xx = 35 + c * 371; g.fillStyle = c ? '#cf7c6e' : '#5689bd'; g.fillRect(xx, 25, 325, 52); g.fillStyle = '#fff8ef'; g.font = 'bold 28px sans-serif'; g.fillText(c ? '하원 안내' : '등원 안내', xx + 162, 60);
+        for (let r = 0; r < 6; r++) { g.fillStyle = r % 2 ? '#bd8248' : '#d39f5e'; g.fillRect(xx, 88 + r * 52, 325, 45); g.fillStyle = '#f9f5ec'; g.font = '24px sans-serif'; g.fillText(`${c ? '21' : '18'}:${String(58 - r * 3).padStart(2, '0')}    확인`, xx + 155, 119 + r * 52); g.fillStyle = '#b0d37c'; g.fillText('✓', xx + 288, 119 + r * 52); }
+      }
+    }, [1, 1]);
+    K.texture('banpo-academy-cctv', 640, 400, (g, w, h) => {
+      g.fillStyle = '#879598'; g.fillRect(0, 0, w, h);
+      g.fillStyle = '#c0c8c5'; g.beginPath(); g.moveTo(0, 0); g.lineTo(500, 0); g.lineTo(460, 245); g.lineTo(130, 255); g.closePath(); g.fill();
+      g.fillStyle = '#5a6c72'; g.fillRect(60, 58, 100, 155); g.fillRect(215, 45, 80, 165); g.fillStyle = '#465a60'; g.fillRect(382, 35, 90, 150);
+      g.fillStyle = '#78847e'; g.beginPath(); g.moveTo(0, h); g.lineTo(130, 255); g.lineTo(460, 245); g.lineTo(w, h); g.fill();
+      g.strokeStyle = '#929c92'; g.lineWidth = 3; for (let i = 0; i < 8; i++) { g.beginPath(); g.moveTo(i * 100, h); g.lineTo(280, 243); g.stroke(); }
+      g.fillStyle = '#303c3c'; g.fillRect(410, 268, 32, 70); g.beginPath(); g.arc(426, 255, 18, 0, Math.PI * 2); g.fill(); g.font = '17px monospace'; g.fillStyle = '#eff4ef'; g.fillText('복도 01', 18, 26);
+    }, [1, 1]);
     for (const sg of [-1, 1]) {
       const tu = mid + sg * Math.min(1.12, width / 4);
-      B(tu, 1.92, depth - 0.14, Math.min(2.1, width / 2 - 0.3), 0.70, 0.07, 0x252c2c, { solid: false });
-      S(sg < 0 ? ['등원 안내', '오늘의 수업', '출석 확인'] : ['장솔학원', '복도 · 학습실'], tu, 2.27, depth - 0.20, Math.min(2.0, width / 2 - 0.4), 0.63, sg < 0 ? '#e7d3be' : '#879b9c', { fg: '#384f56' });
+      const tw = sg > 0 ? 1.82 : 1.56, th = sg > 0 ? 1.06 : 0.89;
+      B(tu, 1.65, depth - 0.14, tw, th, 0.08, 0x181d21, { solid: false });
+      panel(sg > 0 ? 'banpo-academy-attendance' : 'banpo-academy-cctv', tu, 1.68, depth - 0.19, tw - 0.065, th - 0.065);
+      B(tu + 0.3, 1.54, depth - 0.10, 0.025, 0.20, 0.025, 0x252d30, { solid: false });
     }
     B(a + 0.75, 0, depth / 2, 1.1, 0.88, 0.62, 0xe7e6dc);
     B(a + 0.75, 0.88, depth / 2, 1.15, 0.06, 0.68, 0xf7f4e9, { solid: false });
     person(a + 0.72, y, V(depth / 2 + 0.7), { shirt: 0x222b30 });
-    person(q - 1.1, y, V(depth - 1.05), { shirt: 0x8a867b });
+    person(q - 1.1, y, V(depth - 1.05), { shirt: 0x24292a, rotY: frontRot });
+    person(mid - 0.65, y, V(depth - 0.95), { shirt: 0xccc4b1, pants: 0x8e8f88, rotY: frontRot });
+    person(mid + 1.0, y, V(depth - 1.75), { shirt: 0x4a4e53, rotY: frontRot + 0.35 });
+    B(mid + 1.0, 0.78, depth - 1.92, 0.35, 0.52, 0.16, 0xd9d2bc, { solid: false });
     for (const u of [mid - 1.25, mid + 1.25]) light(u, depth / 2);
     return true;
   }
@@ -790,6 +841,8 @@ export function build(K) {
     const recessedEnd = n === 3 || n === 4, recessU = W / 2 - 4.5;
     // bp01: narrow east stair volume behind the main shopfront. The OSM
     // envelope stays the source; only this 1m inward notch is reconstructed.
+    // Its stair use/B1 access is unverified: this recess has windows only;
+    // the existing walkable core remains central, not beside station exit 8-1.
     if (recessedEnd) {
       const [a, b] = poly.slice(0, 2).map(local);
       const v = a[1] + (b[1] - a[1]) * (recessU - a[0]) / (b[0] - a[0]);
@@ -1291,7 +1344,7 @@ export function build(K) {
         }
         if (f === 1) {
           // Photo10: six individually ruled storeys; known names only, not filler text.
-          const guideNames = n === 4 ? [ ['5F', '마루정신건강의학과'], ['4F', '학원 · 사무실'], ['3F', '학원 · 사무실'], ['2F', '장솔학원'], ['1F', 'KFC  ·  라시앤느헤어'], ['B1', '동해횟집  ·  담은  ·  반포갈비', '하얀집  ·  반포교집  ·  하림'] ] : [['5F', ...(tenant.fifth || [])], ['4F', ...(tenant.fourth || [])], ['3F', tenant.clinic || '학원 · 사무실'], ['2F', ...tenant.h], ['1F', ...tenant.g], ['B1', ...names]];
+          const guideNames = n === 4 ? [ ['5F', '마루정신건강의학과'], ['4F', '학원 · 사무실'], ['3F', '학원 · 사무실'], ['2F', '장솔학원'], ['1F', 'KFC  ·  라시앤느헤어'], ['B1', '동해횟집  ·  담은  ·  반포갈비', '하얀집  ·  반포교집  ·  하림'] ] : [['5F', ...(tenant.fifth || [])], ['4F', ...(tenant.fourth || [])], ['3F', tenant.clinic || '학원 · 사무실'], ['2F', ...tenant.h], ['1F', ...tenant.g], ['B1', ...(n === 5 ? ['일번지육개장 · 우고집 · 서래곱창', '하트타임 · 숙이네 · 터미널포차'] : names)]];
           const guideU = -4.4;
           box(guideU, y + 0.2, front - 0.2, 2.25, 2.6, 0.07, 0xe2e2d9, { solid: false });
           sign(`${n}동 층별 안내`, guideU, y + 2.64, front - 0.25, 2.12, 0.26, '#efefeb', { fg: '#243971', rotY: angle + PI });
@@ -1311,7 +1364,10 @@ export function build(K) {
           }
         }
         if (f === 0) {
-          const dirNames = n === 4 ? ['동해횟집', '4동노래방', '장터순대국', '5092호프', '반포교집', '담은', '하얀집', '하림', '반포갈비'] : n === 6 ? ['아리수포차', '그집', '기린부동산', '아리수포차', '싼타페', '미용실'] : n === 5 ? ['노래방', '하트타임', '숙이네', '우고집', '서래곱창', '터미널포차', '일번지'] : ['충무할매김밥', '만끽치킨', '배부장찌개', '온유월식당', '우고집', '반포대교', '명불허전'];
+          // Keep all directory panels and fittings. The old generic list copied
+          // 우고집 into 1/2/3/7/8동 despite its photo-confirmed 5동 assignment;
+          // only that stale label becomes a generic use, not a new tenant.
+          const dirNames = n === 4 ? ['동해횟집', '4동노래방', '장터순대국', '5092호프', '반포교집', '담은', '하얀집', '하림', '반포갈비'] : n === 6 ? ['아리수포차', '그집', '기린부동산', '아리수포차', '싼타페', '미용실'] : n === 5 ? ['노래방', '하트타임', '숙이네', '우고집', '서래곱창', '터미널포차', '일번지'] : ['충무할매김밥', '만끽치킨', '배부장찌개', '온유월식당', '식당', '반포대교', '명불허전'];
           // At the stair turn, panels face the descending flight. The wall is 4.25m wide.
           sign('지하상가 안내', 4.37, -0.95, -4.12, 4.1, 0.28, '#b65340', { rotY: angle - PI / 2 });
           const panels = n === 4 ? dirNames : [...dirNames, ...dirNames].slice(0, n === 6 ? 7 : 12);
@@ -1427,11 +1483,18 @@ export function build(K) {
       // bp_67: detached 15×7m single-storey pavilion in front of 7동.
       // The 1.19m passage behind it is left clear; signage is unreadable.
       const [pu, pv] = local([209.5, -228.5]);
+      // This existing enclosed room is outside 7동's footprint. Register its
+      // own zone so walking inside retains this module's indoor area ownership.
+      K.zone({ name: '반포쇼핑타운 7동 앞 단층동', floor: '1F',
+        poly: rect(pu - 7.5, pv - 3.5, pu + 7.5, pv + 3.5), y0: 0.025, y1: 3.05, priority: 2 });
       K.slab(rect(pu - 7.5, pv - 3.5, pu + 7.5, pv + 3.5), 0.025, { mat: 0xb9b8b2, thick: 0.06, ceil: false });
       const door = P(pu, pv + 3.5);
       K.polyWalls(rect(pu - 7.5, pv - 3.5, pu + 7.5, pv + 3.5), 0, 3.05,
         { mat: 0xb9bbb7, thick: 0.15, openings: [{ x: door[0], z: door[1], w: 1.8, y0: 0, y1: 2.45 }] });
-      box(pu, 3.05, pv, 15, 0.15, 7, 0x4a4d4f, { solid: false });
+      // Same roof envelope/material; a slab also registers the ceiling used by
+      // area loading to recognize that this already enclosed space is indoors.
+      K.slab(rect(pu - 7.5, pv - 3.5, pu + 7.5, pv + 3.5), 3.2,
+        { mat: 0x4a4d4f, under: 0x4a4d4f, edgeMat: 0x4a4d4f, thick: 0.15, walk: false });
       box(pu, 2.5, pv + 3.6, 15, 0.55, 0.15, 0xd8d8d2, { solid: false });
       // Light sign band only; no invented shop name or canopy.
       const lotCenter = local([171.5, -233.5]), [lu, lv] = lotCenter;

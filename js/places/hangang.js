@@ -1,7 +1,8 @@
 // 반포 수변: OSM footprints are the building/deck boundaries, not illustrative circles.
 // Floor heights, partitions and furniture layouts are reconstructions, not surveyed plans.
 // Tenant labels follow data/research/hangang.json and named OSM POIs. No current-tenant claim.
-// Solbit retains two plausible walkable levels; its floor count is unresolved in the research.
+// Solbit's Mood Seoul and second-floor live performances follow Seoul's 2024 report;
+// exact elevations, furniture and current operations remain reconstruction assumptions.
 // Assumptions: upper bridge +15m, lower +1.6m (water -1.4m), with a navigation hump;
 // the south-bank lower span rises to +3.6m for the mapped ground-level crossings.
 // Gabit's retained 0 / 5 / 18 / 23m levels give the convention hall a 13m volume;
@@ -22,6 +23,10 @@ export const meta = {
     'https://mediahub.seoul.go.kr/archives/2008745',
     'https://www.mt.co.kr/estate/2014/12/27/2014122400441651139',
     'https://www.telltrip.com/domestic-travel/sebitseom-han-river-floating-islands/',
+    'https://mediahub.seoul.go.kr/archives/2010487',
+    'https://mediahub.seoul.go.kr/archives/2014026',
+    'https://mediahub.seoul.go.kr/archives/2019683',
+    'https://mediahub.seoul.go.kr/archives/2004701',
   ],
 };
 
@@ -246,7 +251,8 @@ export function build(K) {
   sign('서래섬',-1130,2.2,-409,5,1);
   K.zone({name:'서래섬',floor:'산책로',sub:'한강 수변 · 나무그늘 쉼터',poly:sr,y0:0,y1:8,priority:3});
 
-  // Exact floating pontoons and connecting footbridges at the shared street datum.
+  // OSM island/deck outlines and simple connecting footbridges (도교).
+  // The source does not establish whether each connecting bridge floats or is fixed.
   const pierPolys=PIERS.map(id=>area(id).poly);
   for(const id of ISLETS) {
     const p=area(id).poly;
@@ -363,7 +369,7 @@ export function build(K) {
   const hb=(x,y,z,w,h,d,mat,solid=false)=>{const p=hp(x,z);box(p[0],y,p[1],w,h,d,mat,solid,hr);};
   const hsign=(text,x,y,z,w,h,bg='#20343e',fg='#f6e7cb')=>{const p=hp(x,z);sign(text,p[0],y,p[1],w,h,hr,bg,fg);};
   columns(gp,gy,(x,z)=>gc.avoid(x,z)||hallAt(x,z,1));
-  for(let i=0;i<4;i++)K.zone({name:'가빛섬',floor:(i+1)+'층',sub:['카페돌체 · 수상레저 안내','FIC 컨벤션홀 · 700석','이솔라 · 비스타','세빛마루 · 한강 전망'][i],poly:gp,y0:gy[i],y1:i<3?gy[i+1]-.15:28,priority:6});
+  for(let i=0;i<4;i++)K.zone({name:'가빛섬',floor:(i+1)+'층',sub:['카페돌체 · 튜브스터 접수 · 편의점','FIC 컨벤션홀 · 700석','이솔라 · 비스타','세빛마루 · 한강 전망'][i],poly:gp,y0:gy[i],y1:i<3?gy[i+1]-.15:28,priority:6});
 
   // 1F: cafe service, bakery display, lounge clusters and a marina reception.
   roomLights(gp,4.65,8,gc.avoid);
@@ -379,7 +385,7 @@ export function build(K) {
   }
   for(const [x,z]of [[-897,-733],[-889,-716],[-884,-724]])table(x,0,z);
   box(-859,0,-744,1.3,1.05,7,'wood',true);
-  sign(['수상레저 안내','튜브스터 · 골든블루마리나'], -858.3,2.6,-744,7,1.1,Math.PI/2);
+  sign(['튜브스터 접수','골든블루마리나 · 수상레저 안내'], -858.3,2.6,-744,7,1.1,Math.PI/2);
   for(let i=0;i<5;i++){box(-857.8,.25,-749+i*1.1,.6,1,.12,0xe59949);box(-857.8,.5,-749+i*1.1,.2,.5,.16,0x263b44);}
   sign('GS25',-894,2.5,-704,4,1,0,'#0873b7');shelf(-901,0,-704,3.2);
   box(-895,0,-704,2.2,.95,.8,0x9cbab7,true);
@@ -467,7 +473,7 @@ export function build(K) {
   furnishGrid(gp,23,(x,z)=>gc.avoid(x,z)||x>-884||z<-751,'dining',7.5);
   for(const [x,z]of [[-899,-740],[-884,-714],[-861,-761]])planter(x,z,23,2.6);
   for(const [x,z,rx,rz]of [[-897,-747,7,14],[-887,-720,7,9],[-859,-758,5,9]])K.dome({x,y:23.6,z,rx,ry:3.4,rz,mat:{tex:'glass',color:0xc3d9df},seg:24,rings:6});
-  sign('세빛마루 · 한강 전망',-884,25,-727,10,.8);
+  sign('4층 세빛마루 · 한강 전망',-884,25,-727,10,.8);
   sign('튜브스터',-857,2.1,-704,4.8,.8);sign('골든블루마리나',-917,2.2,-718,6,.8,Math.PI/2);
   for(let i=0;i<5;i++) {
     const x=-913-i*3,z=-686-i*2;
@@ -477,17 +483,24 @@ export function build(K) {
     K.dome({x,y:1.5,z,rx:1.4,ry:.45,rz:1.4,mat:0xf2e7cc,seg:12,rings:3});
   }
 
-  // 채빛: foyer/performance, buffet dining, then partitioned banquet rooms.
-  // Exact floor assignments are inferred; the research confirms three levels and 채빛퀴진.
+  // 2024 Seoul report: 채빛 1F 비어가든, 2F 채빛퀴진. The retained third-floor
+  // banquet partitions, stage, furnishings and terrace seating positions are estimates.
   const cp=building(320797228).poly,cy=[0,7,14];
-  const cc=core(-793,-819,cy,['채빛퀴진 · 안내','채빛퀴진 · 뷔페','채빛퀴진 · 연회'],cp);
+  const cc=core(-793,-819,cy,['비어가든 · 한강 테라스','채빛퀴진 · 뷔페','채빛섬 · 연회실'],cp);
   shell(cp,cy,19,'채빛섬',[-777,-804],0x599ee8);columns(cp,[0,19],cc.avoid);
   K.slab(cp,19,{mat:'roofgravel',thick:.3});
   for(let i=0;i<3;i++) {
-    K.zone({name:'채빛섬',floor:(i+1)+'층',sub:['채빛퀴진 · 대기 라운지 · 공연','채빛퀴진 · 뷔페 다이닝','채빛퀴진 · 연회실'][i],poly:cp,y0:cy[i],y1:i===2?19:cy[i+1]-.1,priority:6});
+    K.zone({name:'채빛섬',floor:(i+1)+'층',sub:['비어가든 · 한강 테라스','채빛퀴진 · 뷔페 다이닝','채빛섬 · 연회실'][i],poly:cp,y0:cy[i],y1:i===2?19:cy[i+1]-.1,priority:6});
     roomLights(cp,cy[i]+(i===2?4.65:6.65),8,cc.avoid);
   }
-  box(-779,0,-813,4,.95,1.2,0xc9b99c,true);sign(['채빛퀴진','안내 · 대기 라운지'], -779,2.8,-813,6,1.1);
+  box(-779,0,-813,4,.95,1.2,0xc9b99c,true);sign(['비어가든','맥주 · 한강 테라스'], -779,2.8,-813,6,1.1,0,'#405a45','#f1e2bc');
+  box(-779,.95,-813,4.1,.09,1.3,0x596862);
+  for(const x of [-780,-779.35]) {
+    K.cyl({x,y:1.04,z:-813,r:.045,h:.5,seg:8,mat:metal,solid:false});
+    box(x,1.46,-812.9,.08,.09,.24,metal);box(x,1.55,-813,.055,.17,.055,dark);
+  }
+  for(let i=0;i<5;i++)K.cyl({x:-778.65+i*.25,y:1.04,z:-812.7,r:.075,h:.2,seg:10,mat:0xd6b667,solid:false});
+  sign('채빛퀴진 · 2층 ↑',-784,2.5,-808,4,.6);
   for(const [x,z]of [[-806,-815],[-804,-807],[-803,-829]]){sofa(x,0,z,3);coffeeTable(x,0,z-1.5);}
   box(-776,0,-831,9,.35,5,'wood',true);box(-776,.35,-832,2.2,.85,1.8,0x202c32);box(-776,1.2,-831.2,2.2,.08,.4,0xe7e2d7);
   K.slab(rect(-781.5,-828,-770.5,-819),.06,{mat:{tex:'carpet',color:0x8f9b87},thick:.01,ceil:false});
@@ -506,34 +519,73 @@ export function build(K) {
   K.wall(-782,-838,-782,-815,14,18.7,{mat:0xc6b08a,thick:.16,openings:[{at:18,w:2.6,y0:14,y1:17}]});
   K.wall(-782,-824,-769,-824,14,18.7,{mat:0xc6b08a,thick:.16,openings:[{at:3,w:2.2,y0:14,y1:17}]});
   for(const [x,z]of [[-775,-831],[-776,-818],[-805,-817],[-802,-807]])table(x,14,z,'banquet');
-  sign('채빛퀴진 · 연회실',-779,16.8,-815,6,.8);
+  sign('채빛섬 · 연회실',-779,16.8,-815,6,.8);
   for(const [x,z]of [[-774,-835],[-777,-826]])artPanel(x,15,z,3,1.8);
   for(let i=0;i<8;i++)box(-780+i*1.3,18.45,-831,.12,.18,11,0xb89c78);
   K.dome({x:-789,y:19,z:-820,rx:20,ry:2,rz:17,mat:{tex:'glass',color:0xa1c4d5},seg:40,rings:7});
   for(let i=0;i<7;i++)bench(-821+i*4,-798,0,0);
+  // Open-air beer tables occupy the existing river-facing islet deck, clear of its
+  // entrance and connecting footbridges. Their exact arrangement is not documented.
+  for(const [x,z]of [[-762,-833],[-762,-841],[-773,-847]]) {
+    table(x,0,z);
+    for(const dx of [-.32,.32]) {
+      K.cyl({x:x+dx,y:.83,z,r:.075,h:.2,seg:10,mat:0xcfa34c,solid:false});
+      K.cyl({x:x+dx,y:1.03,z,r:.076,h:.035,seg:10,mat:0xf0e8d5,solid:false});
+    }
+  }
+  sign(['비어가든','한강 테라스'],-762,1.9,-828,3.6,.9,Math.PI/2,'#405a45','#f1e2bc');
 
-  // 솔빛: no unverified restaurant tenant. Two retained levels are an explicit guess.
+  // 2024 Seoul report: 솔빛섬 무드서울 wine dining; weekly live music on 2F.
+  // Keep the existing shell/core and decorative artwork; bar and stage layouts are estimates.
   const sp=building(320797229).poly,sy=[0,6],sh=rect(-902.6,-835,-899.4,-821.4);
   K.slab(sp,0,{mat:0xd1d8d4});K.hpoly(0xd1d8d4,sp,.045);K.slab(sp,6,{mat:'wood',holes:[sh]});
   K.stairs(-901,-822,-901,-833,{w:2.8,ya:0,yb:6,mat:'darkstone'});
   K.slab(rect(-903,-836,-899,-833),6,{mat:'wood',thick:.2});
   rail([-899.4,-832.8],[-899.4,-821.4],6,true);
-  lift({name:'솔빛섬 승강기',x:-897,z:-834,w:2.2,d:2.2,floors:[{label:'1층',y:0,name:'전시공간'},{label:'2층',y:6,name:'수상레포츠 안내 · 쉼터'}]});
+  lift({name:'솔빛섬 승강기',x:-897,z:-834,w:2.2,d:2.2,floors:[{label:'1층',y:0,name:'무드서울 · 와인 다이닝'},{label:'2층',y:6,name:'무드서울 · 라이브 공연'}]});
   shell(sp,sy,11,'솔빛섬',[-877,-828],0x72db9e);K.slab(sp,11,{mat:'roofgravel'});
   K.dome({x:-890,y:11,z:-828,rx:14,ry:2,rz:9,seg:32,rings:6,mat:{tex:'glass',color:0xa6c6bb}});
-  for(let i=0;i<2;i++)K.zone({name:'솔빛섬',floor:(i+1)+'층',sub:i?'수상레포츠 안내 · 전망 쉼터':'전시공간 · 한강과 세빛섬',poly:sp,y0:sy[i],y1:i?11:5.9,priority:6});
-  sign(['솔빛섬 전시공간','한강과 세빛섬'], -888,2.6,-837,7,1.2,0,'#e2e4dc','#3e655f');
-  box(-880,0,-832,3,.9,1,0xc1b69f,true);sign('전시 안내',-880,1.5,-831.4,2.5,.45);
+  for(let i=0;i<2;i++)K.zone({name:'솔빛섬',floor:(i+1)+'층',sub:i?'무드서울 · 라이브 공연':'무드서울 · 와인 다이닝',poly:sp,y0:sy[i],y1:i?11:5.9,priority:6});
+  sign(['무드서울','와인 · 한강 다이닝'], -888,2.6,-837,7,1.2,0,'#392d33','#e5cba2');
+  box(-880,0,-832,3,.9,1,0xc1b69f,true);sign('무드서울 · 안내',-880,1.5,-831.4,2.8,.45,0,'#392d33','#e5cba2');
+  function wineBottle(x,y,z,i=0) {
+    K.cyl({x,y,z,r:.065,h:.25,seg:8,mat:i%2?0x653e39:0x344c3d,solid:false});
+    K.cyl({x,y:y+.25,z,r:.028,h:.12,seg:6,mat:0x344c3d,solid:false});
+    box(x,y+.09,z+.065,.085,.11,.012,0xe0d1b1);
+  }
+  function wineGlass(x,y,z) {
+    K.cyl({x,y,z,r:.06,h:.012,seg:10,mat:0xbfcac8,solid:false});
+    K.cyl({x,y:y+.012,z,r:.011,h:.12,seg:6,mat:0xbfcac8,solid:false});
+    K.dome({x,y:y+.13,z,rx:.065,ry:.09,rz:.065,seg:10,rings:4,mat:{tex:'glass',color:0xd5c5bb}});
+  }
+  for(let i=0;i<6;i++)wineBottle(-881+i*.3,.9,-832.1,i);
   for(const [x,z,rot,i]of [[-892,-824,0,0],[-886,-832,0,1],[-884,-823,Math.PI/2,2],[-891,-836,0,3]])artPanel(x,.3,z,4,2.5,rot,i);
   for(const [x,z]of [[-894,-829],[-881,-828]]) {
     box(x,0,z,1.6,.65,1.6,0xb9c6c2,true);
     K.dome({x,y:.65,z,rx:.6,ry:1.1,rz:.6,seg:12,rings:6,mat:0xa4c6c1});
   }
+  for(const [x,z]of [[-889.5,-828],[-882,-835.5]]) {
+    K.cyl({x,y:0,z,r:.07,h:.73,seg:6,mat:dark,solid:false});
+    K.cyl({x,y:.73,z,r:.55,h:.08,seg:12,mat:0xa4774e,solid:false});
+    wineBottle(x,.81,z);
+    for(const dx of [-.3,.3]){wineGlass(x+dx,.81,z);chair(x+dx/ .3,0,z,dx<0?-Math.PI/2:Math.PI/2,0x665347);}
+  }
   for(const x of [-892,-885]){box(x,4.8,-829,.08,.08,14,dark);for(const z of [-834,-828,-822])box(x,4.55,z,.3,.2,.4,'emit');}
-  sign('수상레포츠 안내 · 전망 쉼터',-887,8.6,-836,8,.85);
+  sign(['무드서울','라이브 공연'],-887,8.6,-836,8,1.1,0,'#392d33','#e5cba2');
   box(-887,6,-835,6,.95,1.3,'wood',true);
-  for(let i=0;i<5;i++){box(-890+i*1.2,6.2,-838,.7,1,.18,0xe0a256);box(-890+i*1.2,6.4,-837.9,.2,.6,.15,dark);}
+  for(let j=0;j<2;j++) {
+    box(-887,7.05+j*.65,-838,6,.06,.38,0x9b7954);
+    for(let i=0;i<14;i++)wineBottle(-889.6+i*.4,7.11+j*.65,-837.95,i);
+  }
+  for(const x of [-889,-888,-886])wineGlass(x,6.95,-834.75);
   for(const [x,z]of [[-891,-822],[-883,-826]]){sofa(x,6,z,3.5);coffeeTable(x,6,z-1.5);}
+  // A compact stage, keyboard and microphone face the retained lounge seating.
+  box(-885.7,6,-822.8,5.6,.3,2.4,'wood',true);
+  box(-887,6.3,-823,1.7,.68,.65,dark);box(-887,6.98,-822.65,1.7,.06,.25,0xeee9de);
+  for(let i=0;i<10;i++)box(-887.7+i*.15,7.04,-822.72,.055,.045,.12,0x283238);
+  K.cyl({x:-884.8,y:6.3,z:-822.9,r:.035,h:1.35,seg:6,mat:metal,solid:false});
+  box(-884.8,7.62,-822.82,.1,.08,.25,dark);
+  for(const x of [-888,-883.4])box(x,6.3,-823.5,.45,.75,.4,dark);
   roomLights(sp,10.65,7,(x,z)=>x<-896);
   bench(-894,-828,0,6);planter(-880,-831,6,1.4);
   // 예빛: original 33×24m pontoon, 23×12m screen facing the riverbank audience.
@@ -574,12 +626,8 @@ export function build(K) {
       K.quad(0x6e8b91,[[ax,a[2]-.3,az],[bx,b[2]-.3,bz],[bx,b[2]-1.5,bz],[ax,a[2]-1.5,az]],[nx,0,nz]);
       K.quad(0x6e8b91,[[ax,a[2]-.3,az],[bx,b[2]-.3,bz],[bx,b[2]-1.5,bz],[ax,a[2]-1.5,az]],[-nx,0,-nz]);
     }
-    // Transverse beams, paired concrete supports and crossheads, clear of lower footways.
-    if(a[2]===15&&b[2]===15)for(let s=18;s<L;s+=34) {
-      const x=a[0]+ux*s,z=a[1]+uz*s;
-      box(x,12.1,z,25,1.6,1.9,0xa0aba8,true,rot);
-      for(const off of [-5.6,5.6])K.cyl({x:x+nx*off,y:-2.2,z:z+nz*off,r:1.1,h:14.3,seg:12,mat:{tex:'concrete',color:0xbac1bb}});
-    }
+    // Portal supports are placed once below, on the lower deck axis. The old
+    // cylinders at +/-5.6m wrongly stood inside the walking/cycle lanes.
     for(let s=45;s<L;s+=110){const t=s/L;K.vehicle({x:a[0]+ux*s+nx*4.8,y:a[2]+(b[2]-a[2])*t,z:a[1]+uz*s+nz*4.8,rotY:rot,kind:'car',solid:true});}
   }
   for(let i=1;i<bridge.length;i++)bridgeSection(bridge[i-1],bridge[i]);
@@ -588,32 +636,122 @@ export function build(K) {
   // both OSM park crossways. Rails and deck fascia never extend to the lawn.
   const lower=[[-590.01,-647.54,0],[...accessA,bankDeckY],[...accessPoint(120),bankDeckY],[...accessB,1.6],[-762.57,-1098.77,1.6],[-800,-1196,5.3],[-831,-1277,5.3],[-866,-1367,1.6],[-912.02,-1486.06,1.6],[-931.69,-1540.58,0]];
   const landingS=54,accessW=3.4,gateHalf=accessW/2;
+  const lowerLengths=lower.slice(1).map((p,i)=>Math.hypot(p[0]-lower[i][0],p[1]-lower[i][1]));
+  const lowerStarts=[0];for(const L of lowerLengths)lowerStarts.push(lowerStarts.at(-1)+L);
+  function lowerAt(s,off=0) {
+    let i=0;while(i<lowerLengths.length-1&&s>lowerStarts[i+1])i++;
+    const a=lower[i],b=lower[i+1],L=lowerLengths[i],t=(s-lowerStarts[i])/L,ux=(b[0]-a[0])/L,uz=(b[1]-a[1])/L;
+    return {x:a[0]+(b[0]-a[0])*t-uz*off,z:a[1]+(b[1]-a[1])*t+ux*off,y:a[2]+(b[2]-a[2])*t,ux,uz,nx:-uz,nz:ux};
+  }
+  const point2=p=>[p.x,p.z];
+  // These 22 orange bays visualize the published proposal. Construction fences
+  // and dated boards keep the planned widened deck distinct from the open lane.
+  const viewingBays=Array.from({length:11},(_,j)=>({s:280+j*48,half:8}));
+  const glassRanges=[[lowerStarts[5]+16,lowerStarts[5]+30],[lowerStarts[5]+54,lowerStarts[5]+68]];
+  const concrete={tex:'concrete',color:0xc4c2b9};
+  K.texture('hangang_work_barrier',256,128,(g,w,h)=>{g.fillStyle='#ece8d6';g.fillRect(0,0,w,h);g.fillStyle='#d36b35';for(let i=-3;i<8;i++){g.beginPath();g.moveTo(i*64,0);g.lineTo(i*64+34,0);g.lineTo(i*64+98,h);g.lineTo(i*64+64,h);g.fill();}},[2.5,1]);
+  function barrier(a,b,y,mesh=false) {
+    const L=Math.hypot(b[0]-a[0],b[1]-a[1]);
+    K.wall(...a,...b,y+.08,y+1.15,{thick:.06,mat:mesh?{tex:'glass',color:0xc6cac4}:'hangang_work_barrier'});
+    for(let s=0;s<=L;s+=2.4){const t=s/L,x=a[0]+(b[0]-a[0])*t,z=a[1]+(b[1]-a[1])*t;box(x,y,z,.07,1.25,.07,0xa8ada7);box(x,y,z,.38,.08,.48,0x656a63);}
+    if(mesh)for(const h of [.2,.5,.8,1.1])K.wall(...a,...b,y+h,y+h+.018,{mat:0xa4afa9,thick:.025,solid:false});
+  }
   for(let i=1;i<lower.length;i++) {
-    const a=lower[i-1],b=lower[i],L=Math.hypot(b[0]-a[0],b[1]-a[1]),nx=-(b[1]-a[1])/L,nz=(b[0]-a[0])/L;
-    K.ramp(...a.slice(0,2),...b.slice(0,2),{w:18,ya:a[2],yb:b[2],mat:{tex:'concrete',color:0xd2cbbd},under:0x45545a,rails:false});
-    for(const side of [-1,1]) {
-      const edge=s=>[a[0]+(b[0]-a[0])*s/L+nx*side*9,a[1]+(b[1]-a[1])*s/L+nz*side*9];
-      const height=s=>a[2]+(b[2]-a[2])*s/L;
-      const spans=i===2?[[0,landingS-gateHalf],[landingS+gateHalf,L]]:[[0,L]];
-      for(const [s,t] of spans)slopeRail(edge(s),edge(t),height(s),height(t));
-      const aa=edge(0),bb=edge(L);
-      K.quad(0x6e7776,[[aa[0],a[2]-.25,aa[1]],[bb[0],b[2]-.25,bb[1]],[bb[0],b[2],bb[1]],[aa[0],a[2],aa[1]]],[nx*side,0,nz*side]);
+    const a=lower[i-1],b=lower[i],L=lowerLengths[i-1],start=lowerStarts[i-1],nx=-(b[1]-a[1])/L,nz=(b[0]-a[0])/L;
+    const point=(s,off=0)=>[a[0]+(b[0]-a[0])*s/L+nx*off,a[1]+(b[1]-a[1])*s/L+nz*off];
+    const height=s=>a[2]+(b[2]-a[2])*s/L;
+    const cuts=[0,L,...glassRanges.flat().map(s=>s-start).filter(s=>s>0&&s<L)].sort((x,y)=>x-y);
+    for(let k=1;k<cuts.length;k++) {
+      const s=cuts[k-1],t=cuts[k],glass=glassRanges.some(([u,v])=>start+(s+t)/2>u&&start+(s+t)/2<v);
+      if(glass) {
+        const poly=[point(s,-9),point(t,-9),point(t,9),point(s,9)];
+        K.slab(poly,height(s),{mat:{tex:'glass',color:0x87c6ce},under:'glass',edge:0x788e90,thick:.12});
+        // Open water is visible between the slender steel grid. No opaque ramp
+        // or cycle ribbon remains beneath either transparent floor patch.
+        for(let u=s;u<t+.01;u+=2)K.wall(...point(u,-9),...point(u,9),height(u)-.16,height(u)-.06,{mat:0x607678,thick:.08,solid:false});
+        for(const off of[-9,-6,-3,0,3,6,9])K.wall(...point(s,off),...point(t,off),height(s)-.16,height(s)-.06,{mat:0x607678,thick:.06,solid:false});
+      } else {
+        K.ramp(...point(s),...point(t),{w:18,ya:height(s),yb:height(t),mat:concrete,under:0x566160,rails:false});
+        strip(point(s,6),point(t,6),3.5,height(s)+.015,{tex:'asphalt',color:0xaa6556},height(t)+.015);
+      }
+    }
+    for(const side of[-1,1]) {
+      const omissions=viewingBays.map(q=>[q.s-q.half-start,q.s+q.half-start]).filter(([s,t])=>t>0&&s<L);
+      if(i===2)omissions.push([landingS-gateHalf,landingS+gateHalf]);
+      const edges=[0,L,...omissions.flat().filter(s=>s>0&&s<L)].sort((x,y)=>x-y);
+      for(let k=1;k<edges.length;k++) {
+        const s=edges[k-1],t=edges[k];if(omissions.some(([u,v])=>(s+t)/2>u&&(s+t)/2<v))continue;
+        slopeRail(point(s,side*9),point(t,side*9),height(s),height(t));
+        for(let u=s;u<t;u+=.85) {
+          const p=point(u,side*9);
+          if(start+u<210||start+u>800)box(p[0],height(u)+.12,p[1],.045,.91,.045,metal);
+          else {
+            // The old railing's sinuous vertical rods are prominent in the
+            // fountain photo spot. Four bent strips share the deck's slope.
+            for(let j=0;j<5;j++) {
+              const h0=.13+j*.18,h1=h0+.18,d0=Math.sin(j/5*Math.PI*2)*.12,d1=Math.sin((j+1)/5*Math.PI*2)*.12;
+              const q=point(u+d0,side*9),r=point(u+d1,side*9),ux=(b[0]-a[0])/L,uz=(b[1]-a[1])/L;
+              for(const face of[-1,1])K.quad(metal,[[q[0]-ux*.022+nx*.014*face,height(u)+h0,q[1]-uz*.022+nz*.014*face],[q[0]+ux*.022+nx*.014*face,height(u)+h0,q[1]+uz*.022+nz*.014*face],[r[0]+ux*.022+nx*.014*face,height(u)+h1,r[1]+uz*.022+nz*.014*face],[r[0]-ux*.022+nx*.014*face,height(u)+h1,r[1]-uz*.022+nz*.014*face]],[nx*face,0,nz*face]);
+            }
+          }
+        }
+      }
+      const aa=point(0,side*9),bb=point(L,side*9);
+      K.quad(0x7b8582,[[aa[0],a[2]-.25,aa[1]],[bb[0],b[2]-.25,bb[1]],[bb[0],b[2],bb[1]],[aa[0],a[2],aa[1]]],[nx*side,0,nz*side]);
       if(a[2]===b[2])K.phys.addCeiling([a.slice(0,2),b.slice(0,2),bb,aa],a[2]-.25);
     }
-    strip([a[0]+nx*6,a[1]+nz*6],[b[0]+nx*6,b[1]+nz*6],3.5,a[2]+.015,{tex:'asphalt',color:0xc69e83},b[2]+.015);
-    for(let s=0;s<L;s+=2.3){if(i===2&&Math.abs(s-landingS)<gateHalf+.15)continue;const t=s/L;for(const side of [-1,1])box(a[0]+(b[0]-a[0])*t+nx*side*9,a[2]+(b[2]-a[2])*t,a[1]+(b[1]-a[1])*t+nz*side*9,.07,1.05,.07,metal);}
+    // Retained lane edge, low separators and orange bollards match the closure
+    // photographs; the middle stays open to walkers for the whole map extent.
+    for(const off of[4.1,-4.1])strip(point(0,off),point(L,off),.11,a[2]+.025,0xe9d9a5,b[2]+.025);
+    for(let s=9;s<L;s+=14){const p=point(s,4.1),y=height(s);box(p[0],y,p[1],.13,.72,.13,0xdc653e);box(p[0],y+.39,p[1],.15,.14,.15,0xe8e9e2);}
   }
-  // Parallel 1:12.4 approaches sit between the plaza and riverside crossways.
+  // Rectangular concrete portals at the margins frame the actual lower-level
+  // vista in the city photos. Circular waterline footings remain below them.
+  for(let s=85;s<lowerStarts.at(-1)-45;s+=34) {
+    const p=lowerAt(s),rot=Math.atan2(p.ux,p.uz);
+    box(p.x,12.1,p.z,25,1.6,2.15,concrete,true,rot);
+    for(const side of[-1,1]) {
+      const q=lowerAt(s,side*10.15),h=p.y-.2;
+      K.cyl({x:q.x,y:-2.2,z:q.z,r:1.55,h:h+2.2,seg:16,mat:{tex:'concrete',color:0x929e94}});
+      box(q.x,h,q.z,1.55,12.1-h,2.1,concrete,true,rot);
+      const a=lowerAt(s,side*9.38),b=lowerAt(s,side*7.65);
+      for(const dz of[-1.075,1.075])K.quad(concrete,[[a.x+p.ux*dz,10.45,a.z+p.uz*dz],[b.x+p.ux*dz,12.1,b.z+p.uz*dz],[b.x+p.ux*dz,12.45,b.z+p.uz*dz],[a.x+p.ux*dz,12.45,a.z+p.uz*dz]],[p.ux,0,p.uz]);
+      const light=lowerAt(s,side*9.2);box(light.x,p.y+.3,light.z,.09,3,.09,{tex:'emit',color:0xffce89});
+    }
+    // Web stiffeners and bolt plates under the top deck make the repeating
+    // structure readable without inventing a separate elevated pedestrian deck.
+    for(const off of[-9,-3,3,9]){const q=lowerAt(s,off);box(q.x,13.35,q.z,.23,1.35,2.2,0x6e8180,false,rot);}
+  }
+  for(const [j,bay] of viewingBays.entries())for(const side of[-1,1]) {
+    const s=bay.s,t=s-bay.half,u=s+bay.half,a=lowerAt(t,side*10.6),b=lowerAt(u,side*10.6);
+    K.ramp(a.x,a.z,b.x,b.z,{w:3.6,ya:a.y,yb:b.y,mat:0xd18c53,under:0x6c7772,rails:false});
+    const outerA=lowerAt(t,side*12.4),outerB=lowerAt(u,side*12.4);
+    slopeRail(point2(outerA),point2(outerB),a.y,b.y);
+    for(const d of[t,u]){const p=lowerAt(d,side*9),q=lowerAt(d,side*12.4);rail(point2(p),point2(q),p.y);}
+    // Every third bay remains fenced off; the others are accessible study
+    // representations of the planned orange viewing surface and blue seats.
+    if(j%3===0){const p=lowerAt(t,side*8.95),q=lowerAt(u,side*8.95);barrier(point2(p),point2(q),Math.min(a.y,b.y));}
+    else for(const offset of[-4,1,5]){const p=lowerAt(s+offset,side*11.1);K.dome({x:p.x,y:p.y,z:p.z,rx:.55,ry:.5,rz:.7,mat:[0x8caec1,0x8597b4,0x9cbcbc][j%3],seg:10,rings:5});}
+    const p=lowerAt(s,side*12.32);
+    for(let n=t;n<u;n+=.65){const q=lowerAt(n,side*12.4);box(q.x,q.y+.1,q.z,.045,1.02,.045,0xe5a36a);}
+    if(j===1&&side===1)sign(['전망쉼터 조성 계획','보행전용교 공사 중'],p.x,p.y+1.65,p.z,4.8,.95,Math.atan2(p.nx,p.nz),'#965b32');
+  }
+  // Local work zones leave more than 7m of clear width at the road closure.
+  for(const s of[34,258,835]) {
+    const a=lowerAt(s,-7.1),b=lowerAt(s+12,-7.1);barrier(point2(a),point2(b),Math.min(a.y,b.y),true);
+    const p=lowerAt(s+5,-7.8);sign(['차량 통행 금지','2026.10.26부터 · 보행·자전거 통행'],p.x,p.y+1.65,p.z,5.2,1.1,Math.atan2(-p.ux,-p.uz),'#3e493c','#f6d48b');
+  }
+  // Parallel gentle approaches sit between the plaza and riverside crossways.
   // Each has a stair shortcut from the river side and an open deck-side gate.
   for(const side of [-1,1]) {
-    const p=(s,off=15)=>accessPoint(s,side*off),low=p(10),high=p(landingS),stair=p(66);
-    K.ramp(...low,...high,{w:accessW,ya:.065,yb:bankDeckY,mat:'concrete',under:0x45545a,rails:false});
-    K.stairs(...stair,...high,{w:accessW,ya:.065,yb:bankDeckY,mat:'concrete',rails:false});
+    const p=(s,off=15)=>accessPoint(s,side*off),low=p(10),rampHigh=p(landingS-gateHalf),stairHigh=p(landingS+gateHalf),stair=p(66);
+    K.ramp(...low,...rampHigh,{w:accessW,ya:.065,yb:bankDeckY,mat:'concrete',under:0x45545a,rails:false});
+    K.stairs(...stair,...stairHigh,{w:accessW,ya:.065,yb:bankDeckY,mat:'concrete',rails:false});
     for(const off of [15-gateHalf,15+gateHalf]) {
       // End the approach rails at the landing edges, leaving its sideways exit open.
-      slopeRail(p(10,off),p(landingS-gateHalf,off),.065,bankDeckY-(bankDeckY-.065)*gateHalf/(landingS-10));
-      slopeRail(p(66,off),p(landingS+gateHalf,off),.065,bankDeckY-(bankDeckY-.065)*gateHalf/(66-landingS));
-      for(let s=10;s<landingS-gateHalf;s+=3) {const q=p(s,off);box(q[0],.065+(bankDeckY-.065)*(s-10)/(landingS-10),q[1],.07,1.12,.07,metal);}
+      slopeRail(p(10,off),p(landingS-gateHalf,off),.065,bankDeckY);
+      slopeRail(p(66,off),p(landingS+gateHalf,off),.065,bankDeckY);
+      for(let s=10;s<landingS-gateHalf;s+=3) {const q=p(s,off);box(q[0],.065+(bankDeckY-.065)*(s-10)/(landingS-gateHalf-10),q[1],.07,1.12,.07,metal);}
     }
     const landing=[p(landingS-gateHalf,8.5),p(landingS+gateHalf,8.5),p(landingS+gateHalf,15+gateHalf),p(landingS-gateHalf,15+gateHalf)];
     K.slab(landing,bankDeckY,{mat:'concrete',under:0x45545a,thick:.25});
@@ -638,10 +776,12 @@ export function build(K) {
     }
   }
   sign(['교각 사이 보행통로','세빛섬 · 달빛광장'], -596,2.1,-715,4.8,.9,Math.PI/2);
-  sign(['잠수교','보행 · 자전거 통행'], -600,2.6,-672,7,1.4,.37);
+  sign(['잠수교 · 차량 통행 금지','보행전용교 조성 공사 · 보행·자전거 통행'], -600,2.6,-672,7,1.4,.37);
+  sign(['보행전용교 조성 계획','전망쉼터 22곳 · 투명 바닥 2곳 · 2027년 하반기 개장 예정'],-607,1.6,-706,7,1.2,.37,'#96613e');
+  sign(['잠원한강공원 · 서울웨이브 →','강변 산책로'], -579,2,-800,5.6,1.0,Math.PI/2);
   sign(['반포대교','용산 · 녹사평 방면'], -621,19,-737,9,1.8,.37,'#18734c');
   K.floorText('보행로',{x:-700,y:1.64,z:-924,w:2.5,h:3.5,rotY:-.37,fg:'#fff4d7'});
-  K.zone({name:'잠수교',floor:'하층',sub:'한강 산책 · 자전거길',poly:area(1091571021).poly,y0:0,y1:7,priority:4});
+  K.zone({name:'잠수교',floor:'하층',sub:'보행전용교 공사 중 · 보행·자전거 통행',poly:area(1091571021).poly,y0:0,y1:7,priority:4});
   K.zone({name:'반포대교',floor:'상층',sub:'달빛무지개분수 · 용산 방면',poly:area(1085504592).poly,y0:12,y1:25,priority:3});
   for(let i=1;i<lower.length;i++) {
     const a=lower[i-1],b=lower[i],L=Math.hypot(b[0]-a[0],b[1]-a[1]),nx=-(b[1]-a[1])/L,nz=(b[0]-a[0])/L;
@@ -697,7 +837,11 @@ export function build(K) {
     if(t-lastUpdate>1/30){animateWater(t);lastUpdate=t;}
   });
 
-  // OSM 반포나들목: retain the surveyed axis, extend the bank ramp 28m along
+  // OSM 반포나들목 EAST of Banpo Bridge, NOT the new west-side 세빛섬나들목.
+  // Seoul 2014026 distinguishes the two; the audit's rename and 8×3×85m
+  // dimensions refer to the west tunnel and must not overwrite this geometry.
+  // The article's circular green lookout belongs to 암사초록길, not this park.
+  // Retain the mapped axis, extend the bank ramp 28m along
   // its approach cycleway so it emerges beyond all three at-grade road ribbons.
   // Portal elevation/length is inferred; the old bank marker remains underground.
   const ta=[-213.15,-657.14],tb=[-297.9343132274,-791.0994577995],tl=Math.hypot(tb[0]-ta[0],tb[1]-ta[1]),tx=(tb[0]-ta[0])/tl,tz=(tb[1]-ta[1])/tl,tnx=-tz,tnz=tx;
@@ -843,7 +987,7 @@ export function build(K) {
     {name:'가빛섬 · 카페돌체',x:-882,y:0,z:-723,yaw:1.3},
     {name:'가빛섬 · 세빛마루 전망',x:-881,y:23,z:-731,yaw:-.9},
     {name:'채빛섬 · 채빛 퀴진',x:-775,y:7,z:-816,yaw:1.2},
-    {name:'솔빛섬 · 전시공간',x:-883,y:0,z:-828,yaw:1.57},
+    {name:'솔빛섬 · 무드서울',x:-883,y:0,z:-828,yaw:1.57},
     {name:'잠수교 · 한강 산책',x:-700,y:1.6,z:-934,yaw:.37},
     {name:'반포대교 · 상층',x:-689.1,y:15.13,z:-940,yaw:.37},
     {name:'반포나들목 · 공원 입구',x:-297.9343132274,y:0,z:-791.0994577995,yaw:.56},

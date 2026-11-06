@@ -1,7 +1,7 @@
 {
  "id": "jwmarriott",
  "name": "JW 메리어트 호텔 서울",
- "updated": "2026-11-06",
+ "updated": "2026-11-07",
  "sources": [
   {
    "url": "https://ko.wikipedia.org/wiki/JW_메리어트_호텔_서울",
@@ -11,7 +11,9 @@
   {
    "url": "https://www.marriott.com/ko/hotels/seljw-jw-marriott-hotel-seoul/dining/",
    "title": "Marriott 공식 다이닝 페이지",
-   "year": 2025
+   "year": 2025,
+   "accessed": "2026-11-07",
+   "access": "본문 재확인: 더 라운지 8층, 플레이버즈·타마유라 2층. 연회장 평면·계단 유무는 설명하지 않음."
   },
   {
    "url": "https://www.etoday.co.kr/news/view/1654095",
@@ -26,7 +28,8 @@
   {
    "url": "https://www.trvlogue.com/ko/jw-marriott-seoul-fitness-guide",
    "title": "trvlogue 블로그(검색 스니펫만 확인)",
-   "year": 2024
+   "year": 2024,
+   "round10_access": "웹 도구로 원문 접근 실패. 지하 시설의 층 배분을 확정하는 근거로 쓰지 않음."
   },
   {
    "url": "https://middleeasttraveller.com/jw-marriott-hotel-seoul-review/",
@@ -121,6 +124,14 @@
     "refs/interior/jw/20_flavors_dining_booths.jpg"
    ],
    "access": "사용자 제공 사진 및 notes.json을 직접 판독; 원문 재조회하지 않음"
+  },
+  {
+   "url": "https://polle.com/marious/posts/3749",
+   "title": "플레이버즈 방문 리뷰 — 평면 근거 없음",
+   "post_date": "2026-01-17",
+   "visit_date": "2025-12-31",
+   "accessed": "2026-11-07",
+   "access": "본문 확인. 감사 JSON의 2025-12-31은 방문일이며 게시일과 구분한다. 소음·음식 평가 외 배치 근거 없음."
   }
  ],
  "building": {
@@ -166,30 +177,46 @@
    "floor": "5F",
    "use": "그랜드 볼룸 (천고 7m, 버진로드 21m)",
    "tenants": [],
-   "layout": "사진 09–10: 청색·크림색 추상 무늬 카펫의 프리펑션 홀, 얇은 흑색 프레임의 어두운 반사 천장, 월넛 루버, 낮은 리셉션 데스크와 꽃 콘솔. 연회장 내부는 새 사진 없음.",
+   "layout": "사진 09–10: 청색·크림색 추상 무늬 카펫의 프리펑션 홀, 얇은 흑색 프레임의 어두운 반사 천장, 월넛 루버, 낮은 연회 접수대 두 개(호텔 체크인 아님)와 꽃 콘솔. 연회장 내부는 새 사진 없음.",
    "source": "https://ko.wikipedia.org/wiki/JW_메리어트_호텔_서울",
-   "guess": false
+   "guess": false,
+   "photo_sources": [
+    "refs/interior/jw/07_floor_directory_sign.jpg",
+    "refs/interior/jw/08_elevator_button_panel.jpg",
+    "refs/interior/jw/09_grand_ballroom_foyer_5f.jpg",
+    "refs/interior/jw/10_ballroom_foyer_carpet.jpg"
+   ]
   },
   {
    "floor": "7F",
-   "use": "레스토랑 + JW 가든(블로그) ; 더 마고 그릴 7층(검색 요약)",
+   "use": "더 마고 그릴·모보 바·JW 가든 (사진 07/08의 7F 표기 확인)",
    "tenants": [
     "더 마고 그릴",
-    "모보 바(야외 테라스, 층 미확인 추정 7F)"
+    "모보 바"
    ],
-   "layout": "정원이 둘러싼 형태",
+   "layout": "정원·바·그릴의 상대 위치, 파빌리온·테라스 평면은 이전 리뷰에 의존한 미확인 추정.",
    "source": "https://www.marriott.com/ko/hotels/seljw-jw-marriott-hotel-seoul/dining/",
-   "guess": true
+   "guess": true,
+   "floor_confidence": "confirmed_by_photo",
+   "layout_confidence": "unverified",
+   "photo_sources": [
+    "refs/interior/jw/07_floor_directory_sign.jpg",
+    "refs/interior/jw/08_elevator_button_panel.jpg"
+   ]
   },
   {
    "floor": "8F",
-   "use": "더 라운지(딤섬, 애프터눈 티)",
+   "use": "리셉션·컨시어지·더 라운지 (호텔 체크인 8층)",
    "tenants": [
     "더 라운지"
    ],
    "layout": "사진 01–04: 전면 유리와 구리빛 시어 커튼, 그랜드 피아노와 테라코타 L자 소파, 석재 바·병 진열, 낮은 라운지 좌석. 각 요소의 실제 간격·방향은 미확인.",
    "source": "https://www.marriott.com/ko/hotels/seljw-jw-marriott-hotel-seoul/dining/",
-   "guess": false
+   "guess": false,
+   "photo_sources": [
+    "refs/interior/jw/07_floor_directory_sign.jpg",
+    "refs/interior/jw/08_elevator_button_panel.jpg"
+   ]
   },
   {
    "floor": "9F",
@@ -220,18 +247,24 @@
   {
    "name": "더 마고 그릴",
    "what": "스테이크 하우스",
-   "where": "7F 추정",
+   "where": "7F (사진 07/08 확인), 층 내 남측 배치·와인 셀러 평면은 추정",
    "details": "와인셀러 약 3,500병",
    "source": "https://www.etoday.co.kr/news/view/1654095",
-   "guess": false
+   "guess": true,
+   "floor_confidence": "confirmed_by_photo",
+   "layout_confidence": "unverified"
   },
   {
    "name": "파티세리/티 바/카페 원",
    "what": "베이커리·델리",
-   "where": "플레이버즈 입구(파티세리)",
+   "where": "파티세리 2F는 사진 07/08 확인. 플레이버즈 입구와의 상대 위치, 티 바·카페 원의 층과 배치는 추정.",
    "details": "",
    "source": "https://ko.wikipedia.org/wiki/JW_메리어트_호텔_서울",
-   "guess": false
+   "guess": true,
+   "photo_sources": [
+    "refs/interior/jw/07_floor_directory_sign.jpg",
+    "refs/interior/jw/08_elevator_button_panel.jpg"
+   ]
   }
  ],
  "connections": [
@@ -267,16 +300,16 @@
  ],
  "model_floors": {
   "B4": "피트니스 데스크·카디오(러닝머신·사이클)·프리웨이트(파워랙·덤벨)·스트레칭/터프·농구장·스쿼시·스크린골프·GX·85m 조깅트랙(추정 배치)",
-  "B3": "수영장 25m 6레인·키즈풀·자쿠지·스쿠버풀·사우나",
-  "B2": "마르퀴스 리셉션·남/여 라커(사물함·파우더룸·샤워·건식 사우나)·트리트먼트 9+커플 스위트(각 실 샤워 포함)·스파 레스토랑",
+  "B3": "수영장 25m 6레인·키즈풀·자쿠지·스쿠버풀·사우나 (B3 배분은 미확인 추정; 사진 07은 B3 주차장 표기)",
+  "B2": "마르퀴스 리셉션·남/여 라커(사물함·파우더룸·샤워·건식 사우나)·트리트먼트 9+커플 스위트(각 실 샤워 포함)·스파 레스토랑 (세부 시설 배분은 미확인 추정)",
   "B1": "호텔 주차장(추정)",
   "1F": "지상 L 주출입 홀: 월넛 원형 기둥 두 개·목재 격자 천장·흰 구슬 조형물·원형 받침·꿀빛 석재 바닥, 트래버틴 승강기 로비·자주색 층별 안내판·컨시어지·벨데스크 + 기존 센트럴시티 연결 아케이드",
-  "2F": "플레이버즈: 황동 튜브 펜던트·회색 스펙클 바닥·탄색 부스·목재 스크린·검은 돌 뷔페·유리 진열대·금색 FLAVORS 입구; 기존 타마유라·파티세리·신세계 연결; 지상 홀 상부 보이드",
+  "2F": "플레이버즈: 황동 튜브 펜던트·회색 스펙클 바닥·탄색 부스·목재 스크린·검은 돌 뷔페·유리 진열대·금색 FLAVORS 입구; 기존 타마유라·파티세리; 2F 북측 신세계 유리문은 미확인 추정이며 실제 모듈 간 통행은 1F J5; 지상 홀 상부 보이드",
   "3F": "살롱 1~6",
   "4F": "웨딩 상담실 1·2·연회 예약실·연회 사무실·신부 메이크업실·드레스룸·웨딩 쇼케이스(추정)",
-  "5F": "그랜드 볼룸(기존 천고 7m, 버진로드 21m)·신부 대기실 + 청회색/크림 추상 카펫·어두운 청동 반사 격자 천장·목재 루버·낮은 데스크·꽃 콘솔의 포이어",
+  "5F": "그랜드 볼룸(기존 천고 7m, 버진로드 21m)·신부 대기실 + 청회색/크림 추상 카펫·어두운 청동 반사 격자 천장·목재 루버·낮은 연회 접수대 두 개·꽃 콘솔의 포이어",
   "6F": "직원 구역: 연회 창고·린넨실·연회 조정실·직원 탈의실·세탁물 집하장·직원 식당(추정)",
-  "7F": "JW 가든·더 마고 그릴·와인 셀러·모보 바",
+  "7F": "JW 가든·더 마고 그릴·와인 셀러·모보 바 (층수는 사진 07/08 확인; 내부 평면·정원 구성은 미확인 추정)",
   "8F": "리셉션·더 라운지: 구리빛 리본/링 베이, 흰 쉬어 앞 피아노와 크림 L자 소파·구리빛 쿠션, 검은 돌 바·밀집 병 니치, 입체 라탄 체어·모브 터브 체어. 방별 배치는 근사.",
   "9F": "이그제큐티브 라운지·비즈니스 센터(층 용도는 사진 07·08 확인; 사진 16의 크림 원형 테이블·탄색 의자·청색 러그·목재 격자·창가 코브조명 반영, 상세 평면은 근사)",
   "10F": "사무실(사진 08의 층 용도; 내부 세부가 사진에 없어 단순하게 유지)",
@@ -397,7 +430,7 @@
   "atmosphere": "월넛·따뜻한 간접조명·꿀빛 석재·낮은 가구와 커튼을 중심으로 하고, 흰 형광 패널·큰 교통 안내판·과밀 인원은 두지 않는다."
  },
  "modeling": {
-  "round": 7,
+  "round": 10,
   "guesses": [
    "제공된 사진의 가구·마감·구도를 추적했으나 절대 방위·평면과 방 사이 간격은 실측 도면이 없어 OSM 외곽과 기존 코어에 맞춘 근사다.",
    "1F 천장은 기존 8.15m를 유지했다. 원기둥·갤러리·격자 모듈은 사진 비례에 맞췄다. 네 가닥 구슬(사진 05 확인)의 지름·개수·하단 루프 형상 및 4m 지름 단은 근사다.",
@@ -409,7 +442,12 @@
    "반사는 기존 광택 재질, 간접조명은 발광 표면으로 근사했다. 실제 거울상이나 광선 추적 조명은 구현하지 않았다. 천·라탄·도자기 재질과 인체는 단순 기하 표현이다.",
    "사인의 시설명은 프로젝트 규칙에 따라 한글로 쓰고 실제 브랜드명만 원문을 유지했다. 지도 주소는 기존 1F를 유지하며 지상 승강기 현장 표기는 L이다.",
    "기존 지하 시설 배분(B3 수영장과 사진 07의 B3 주차장 표기 차이), 객실·사무층·옥상·비촬영 서비스 시설은 이번 사진으로 재검증되지 않았다.",
-   "사용자 지시에 따라 tests/shot.mjs는 실행하지 않았다. 실제 렌더와 사진의 최종 시각 비교는 운영자의 modeling.trace 렌더가 필요하다."
+   "사용자 지시에 따라 tests/shot.mjs는 실행하지 않았다. 실제 렌더와 사진의 최종 시각 비교는 운영자의 modeling.trace 렌더가 필요하다.",
+   "2F 북측 신세계 연결 유리문(u=0,v=-60.1), 불가리 매장 옆이라는 위치·영업시간 표기는 이전 리뷰에 의존한 unverified 추정. 문과 기존 사인은 유지하며 실제 통행은 1F J5뿐이다.",
+   "7F 더 마고 그릴·모보 바·JW 가든 및 2F 파티세리의 층수는 사진 07/08로 확인되지만 정확한 위치·연결·평면은 unverified 추정이다. 7F에 새 공간을 추가하지 않았다.",
+   "B3 수영장 배치와 B2 스파/B4 피트니스의 층별 분리는 unverified 추정이다. 사진 07의 B3 주차장은 확인되나 수영장의 대체 층·같은 층 병존 여부는 미확인이라 시설 이동을 하지 않았다.",
+   "1F–5F 코어 비상계단 출입구를 닫힌 문으로 표시한 것은 L에서 체크인 8F까지 승강기를 이용하도록 하는 모델 동선 구현이다. 문 마감·규격·실제 개폐 상태·비상시 운영은 사진으로 확인하지 못했다. 기존 비상계단의 위치·층간 구조도 추정이며 철거하지 않았다.",
+   "8F 체크인 데스크 3개·라운지 옆 대기석의 정확한 개수와 위치 및 새 체크인/연회 접수 안내 문구의 디자인은 모델 표기다. 사진 07/08은 층별 기능을 확인할 뿐 평면이나 사인 디자인을 확정하지 않는다."
   ],
   "implemented_layout": {
    "coordinate_frame": "jwmarriott.js의 P(u,v) 로컬 좌표. x=east, z=south 원점 좌표로 변환하며 미터 단위.",
@@ -565,17 +603,19 @@
     "ceiling_above_floor_m": 3.65,
     "materials": "청회색/크림 줄무늬 카펫·크림 석재 테두리·브론즈 격자 천장",
     "end_console_vases": 9,
-    "reception_desks_uv": [
+    "waiting_groups": 4,
+    "event_registration_desks_uv": [
      [
       19,
-      20.8
+      26.8
      ],
      [
       27,
-      20.8
+      26.8
      ]
     ],
-    "waiting_groups": 4
+    "use": "그랜드 볼룸 연회·웨딩 접수. 호텔 체크인 데스크가 아니다.",
+    "evidence": "사진 09의 접수대 두 개를 보존. 기존 JSON의 v=20.8은 현재 코드 v=26.8과 달라 수정. 위치·대기석 배치는 여전히 근사."
    },
    "9F_executive_lounge": {
     "ceiling_above_floor_m": 3.45,
@@ -601,29 +641,49 @@
     ],
     "ceiling_y": 3.4,
     "materials": "브론즈 유리 진열 베이·월넛 블록·회색 석재·선형 간접조명"
+   },
+   "8F_checkin": {
+    "floor_y": 35.5,
+    "desk_centers_uv": [
+     [
+      7.6,
+      48.2
+     ],
+     [
+      10.6,
+      48.2
+     ],
+     [
+      13.6,
+      48.2
+     ]
+    ],
+    "floor_confidence": "confirmed",
+    "layout_confidence": "unverified",
+    "waiting": "더 라운지의 기존 소파·의자를 인접 대기 공간으로 보존. 새 좌석 추가 없음."
+   },
+   "visitor_checkin_route": {
+    "from": "L / 모델 1F",
+    "to": "8F 리셉션·더 라운지",
+    "mode": "승강기 로비 경유",
+    "lift_uv": [
+     9.9,
+     32
+    ],
+    "closed_emergency_portal_uv": [
+     8.85,
+     27.4
+    ],
+    "closed_floors": [
+     "1F",
+     "2F",
+     "3F",
+     "4F",
+     "5F"
+    ],
+    "preserved": "코어 비상계단의 전층 구조 및 8F–9F 라운지 계단 보존",
+    "door_status": "동선 구현용 정적 문; 현장 문 상태는 미확인 추정"
    }
-  },
-  "validation": {
-   "smoke_command": "node tests/smoke.mjs jwmarriott shinsegae centralcity",
-   "smoke_result": "OK 출력, exit 0. JW detail 오류 0. 동시 편집 중 shinsegae 4F–10F detail에서 ReferenceError: upperRetailCeiling is not defined 기록됨; clean 통합 성공으로 간주하지 않음.",
-   "full_walk_command": "node tests/walk.mjs",
-   "full_walk_result": "344 ok, 0 blocked; 동일한 신세계 detail ReferenceError가 먼저 출력됨.",
-   "jwmarriott_eager_quads": 36584,
-   "jwmarriott_detail_quads": 179439,
-   "jwmarriott_total_quads": 216023,
-   "quad_count_note": "실제 K._.stats.quads 차이로 각 detail 콜백 측정. smoke 기본 표는 detail 생성 전 수치여서 총 quads가 아니다. K.hpoly의 삼각형은 quads 카운터에 포함되지 않는다.",
-   "detail_errors": [],
-   "detail_budget_result": "5개 그룹 모두 120000 quads 이하",
-   "camera_physics": "연구 파일에 저장한 소수 3자리 좌표 18개 전부 해당 층 바닥 지지 및 capsule 충돌 이동 0m 확인",
-   "visfloor_command": "node tests/visfloor.mjs 0 -78 29 31 170 /tmp/jwmarriott-visfloor-round7.png jwmarriott",
-   "visfloor_hole_m2": 13.75,
-   "visfloor_result": "PNG 확인 및 빨간 픽셀 좌표 검사: 노출은 전부 기존 벽으로 둘러싼 STH 계단실(로컬 u10.4–15.8,v24.2–30.65) 안. 로비/아케이드의 비의도 지하 노출 없음.",
-   "render_status": "tests/shot.mjs 미실행(사용자 지시); modeling.trace 18시점 운영자 렌더 대기.",
-   "preserved": "OSM 136986976·외관·37층 B4–33F·11개 스폰·558개 존·전층 기능 승강기·J5/J6. JW를 지명하는 WELLS 항목 없음.",
-   "standalone_smoke_command": "node tests/smoke.mjs jwmarriott --quiet",
-   "standalone_smoke_result": "OK; detail 오류 0",
-   "lazy_registration_check": "detail 생성 전후 존 558개·스폰 11개·승강기 37정지 동일; 구조/게임플레이 등록을 지연하지 않음",
-   "engine_test_limitation": "kit.js buildDetail가 예외를 catch해 로그만 남기므로 smoke의 OK만으로 모든 detail 정상 생성을 보장하지 못함. JW는 콜백을 별도 계측해 예외 0을 확인했고, 신세계의 예외는 미해결 외부 모듈 항목으로 기록."
   },
   "trace": [
    {
@@ -933,9 +993,160 @@
      29
     ],
     "built": "곡면 탄색 의자·U자 부스·접시와 냅킨·포크/나이프·물잔/와인잔·48잔 진열장"
+   },
+   {
+    "round": 10,
+    "spot": "L 체크인 8층 승강기 안내",
+    "photos": [
+     "refs/interior/jw/07_floor_directory_sign.jpg",
+     "refs/interior/jw/08_elevator_button_panel.jpg"
+    ],
+    "floor": "1F",
+    "x": -3.201,
+    "y": 0,
+    "z": 136.7,
+    "yawDeg": 61.771,
+    "pitchDeg": 0,
+    "local_uv": [
+     5.8,
+     42
+    ],
+    "built": "기존 안내판 문구를 체크인 8층·엘리베이터 ↑로 명확히 함"
+   },
+   {
+    "round": 10,
+    "spot": "1F 비상계단 출입구와 체크인 승강기 안내",
+    "photos": [
+     "refs/interior/jw/07_floor_directory_sign.jpg",
+     "refs/interior/jw/08_elevator_button_panel.jpg"
+    ],
+    "floor": "1F",
+    "x": -7.976,
+    "y": 0,
+    "z": 122.894,
+    "yawDeg": 291.039,
+    "pitchDeg": 0,
+    "local_uv": [
+     6.3,
+     27.4
+    ],
+    "built": "기존 비상계단 개구부에 정적 닫힌 문. 실제 문 위치·외형·개폐 상태의 사진 근거 아님; 승강기 방문 경로 구현."
+   },
+   {
+    "round": 10,
+    "spot": "2F 비상계단 출입구와 체크인 승강기 안내",
+    "photos": [
+     "refs/interior/jw/07_floor_directory_sign.jpg",
+     "refs/interior/jw/08_elevator_button_panel.jpg"
+    ],
+    "floor": "2F",
+    "x": -7.976,
+    "y": 6,
+    "z": 122.894,
+    "yawDeg": 291.039,
+    "pitchDeg": 0,
+    "local_uv": [
+     6.3,
+     27.4
+    ],
+    "built": "기존 비상계단 개구부에 정적 닫힌 문. 실제 문 위치·외형·개폐 상태의 사진 근거 아님; 승강기 방문 경로 구현."
+   },
+   {
+    "round": 10,
+    "spot": "3F 비상계단 출입구와 체크인 승강기 안내",
+    "photos": [
+     "refs/interior/jw/07_floor_directory_sign.jpg",
+     "refs/interior/jw/08_elevator_button_panel.jpg"
+    ],
+    "floor": "3F",
+    "x": -7.976,
+    "y": 11.5,
+    "z": 122.894,
+    "yawDeg": 291.039,
+    "pitchDeg": 0,
+    "local_uv": [
+     6.3,
+     27.4
+    ],
+    "built": "기존 비상계단 개구부에 정적 닫힌 문. 실제 문 위치·외형·개폐 상태의 사진 근거 아님; 승강기 방문 경로 구현."
+   },
+   {
+    "round": 10,
+    "spot": "4F 비상계단 출입구와 체크인 승강기 안내",
+    "photos": [
+     "refs/interior/jw/07_floor_directory_sign.jpg",
+     "refs/interior/jw/08_elevator_button_panel.jpg"
+    ],
+    "floor": "4F",
+    "x": -7.976,
+    "y": 16.5,
+    "z": 122.894,
+    "yawDeg": 291.039,
+    "pitchDeg": 0,
+    "local_uv": [
+     6.3,
+     27.4
+    ],
+    "built": "기존 비상계단 개구부에 정적 닫힌 문. 실제 문 위치·외형·개폐 상태의 사진 근거 아님; 승강기 방문 경로 구현."
+   },
+   {
+    "round": 10,
+    "spot": "5F 비상계단 출입구와 체크인 승강기 안내",
+    "photos": [
+     "refs/interior/jw/07_floor_directory_sign.jpg",
+     "refs/interior/jw/08_elevator_button_panel.jpg"
+    ],
+    "floor": "5F",
+    "x": -7.976,
+    "y": 21,
+    "z": 122.894,
+    "yawDeg": 291.039,
+    "pitchDeg": 0,
+    "local_uv": [
+     6.3,
+     27.4
+    ],
+    "built": "기존 비상계단 개구부에 정적 닫힌 문. 실제 문 위치·외형·개폐 상태의 사진 근거 아님; 승강기 방문 경로 구현."
+   },
+   {
+    "round": 10,
+    "spot": "5F 연회 접수대 두 곳",
+    "photos": [
+     "refs/interior/jw/09_grand_ballroom_foyer_5f.jpg"
+    ],
+    "floor": "5F",
+    "x": 8.544,
+    "y": 21,
+    "z": 119.326,
+    "yawDeg": 21.039,
+    "pitchDeg": 0,
+    "local_uv": [
+     23,
+     30
+    ],
+    "built": "사진의 두 접수대·방명록·모니터 보존, 작은 사인을 연회 접수로 명확히 함"
+   },
+   {
+    "round": 10,
+    "spot": "8F 호텔 체크인 데스크",
+    "photos": [
+     "refs/interior/jw/07_floor_directory_sign.jpg",
+     "refs/interior/jw/08_elevator_button_panel.jpg"
+    ],
+    "floor": "8F",
+    "x": 2.212,
+    "y": 35.5,
+    "z": 137.404,
+    "yawDeg": 201.039,
+    "pitchDeg": 0,
+    "local_uv": [
+     10.6,
+     44.6
+    ],
+    "built": "기존 프런트 데스크 앞 체크인·체크아웃 사인. 라운지 대기석 보존, 평면은 추정."
    }
   ],
-  "trace_convention": "x=east, z=south, y=발바닥 높이(shot.mjs와 동일). yaw 0=북/-z, 90=서, 180=남, 270=동. pitchDeg는 선택 참고값(+위). refs/interior/jw/notes.json에 trace_spots가 없어 20개 사진을 18개 비교 시점으로 정리했다.",
+  "trace_convention": "x=east, z=south, y=발바닥 높이(shot.mjs와 동일). yaw 0=북/-z, 90=서, 180=남, 270=동. pitchDeg는 선택 참고값(+위). refs/interior/jw/notes.json에 trace_spots가 없어 20개 사진을 18개 비교 시점으로 정리했다. Round10은 기존 18개 카메라를 보존하고 수정 위치 8개를 추가했으며 y는 해당 층 바닥 높이다.",
   "detail_groups": [
    {
     "floor": "1F",
@@ -963,7 +1174,148 @@
     "quads": 10390
    }
   ],
-  "detail_group_budget_quads": 120000
+  "detail_group_budget_quads": 120000,
+  "junctions_to_add": [],
+  "validation_round7": {
+   "smoke_command": "node tests/smoke.mjs jwmarriott shinsegae centralcity",
+   "smoke_result": "OK 출력, exit 0. JW detail 오류 0. 동시 편집 중 shinsegae 4F–10F detail에서 ReferenceError: upperRetailCeiling is not defined 기록됨; clean 통합 성공으로 간주하지 않음.",
+   "full_walk_command": "node tests/walk.mjs",
+   "full_walk_result": "344 ok, 0 blocked; 동일한 신세계 detail ReferenceError가 먼저 출력됨.",
+   "jwmarriott_eager_quads": 36584,
+   "jwmarriott_detail_quads": 179439,
+   "jwmarriott_total_quads": 216023,
+   "quad_count_note": "실제 K._.stats.quads 차이로 각 detail 콜백 측정. smoke 기본 표는 detail 생성 전 수치여서 총 quads가 아니다. K.hpoly의 삼각형은 quads 카운터에 포함되지 않는다.",
+   "detail_errors": [],
+   "detail_budget_result": "5개 그룹 모두 120000 quads 이하",
+   "camera_physics": "연구 파일에 저장한 소수 3자리 좌표 18개 전부 해당 층 바닥 지지 및 capsule 충돌 이동 0m 확인",
+   "visfloor_command": "node tests/visfloor.mjs 0 -78 29 31 170 /tmp/jwmarriott-visfloor-round7.png jwmarriott",
+   "visfloor_hole_m2": 13.75,
+   "visfloor_result": "PNG 확인 및 빨간 픽셀 좌표 검사: 노출은 전부 기존 벽으로 둘러싼 STH 계단실(로컬 u10.4–15.8,v24.2–30.65) 안. 로비/아케이드의 비의도 지하 노출 없음.",
+   "render_status": "tests/shot.mjs 미실행(사용자 지시); modeling.trace 18시점 운영자 렌더 대기.",
+   "preserved": "OSM 136986976·외관·37층 B4–33F·11개 스폰·558개 존·전층 기능 승강기·J5/J6. JW를 지명하는 WELLS 항목 없음.",
+   "standalone_smoke_command": "node tests/smoke.mjs jwmarriott --quiet",
+   "standalone_smoke_result": "OK; detail 오류 0",
+   "lazy_registration_check": "detail 생성 전후 존 558개·스폰 11개·승강기 37정지 동일; 구조/게임플레이 등록을 지연하지 않음",
+   "engine_test_limitation": "kit.js buildDetail가 예외를 catch해 로그만 남기므로 smoke의 OK만으로 모든 detail 정상 생성을 보장하지 못함. JW는 콜백을 별도 계측해 예외 0을 확인했고, 신세계의 예외는 미해결 외부 모듈 항목으로 기록."
+  },
+  "validation": {
+   "round": 10,
+   "status": "통과",
+   "claims_zones": "claims·zone 등록·형상·floor label 및 J5/J6를 변경하지 않음. gen_meta 실행 조건에 해당하지 않음.",
+   "render_status": "tests/shot.mjs 미실행(사용자 지시). 현장 사진 직접 판독, 수정 위치 8개 카메라의 바닥·충돌 검증 완료; 렌더 시각 검증은 미실행.",
+   "engine_test_note": "현재 tests/smoke.mjs는 K._.detailErrors를 실패로 검사한다. 이전 round7의 smoke 예외 누락 경고는 당시 기록이다.",
+   "smoke_command": "node tests/smoke.mjs jwmarriott shinsegae",
+   "smoke_result": "OK; exit 0; detail 예외 없음.",
+   "full_walk_command": "node tests/walk.mjs",
+   "full_walk_result": "442 ok, 0 blocked; exit 0; 다른 모듈 오류 출력 없음.",
+   "camera_physics": "추가 round10 카메라 8개 모두 저장된 바닥 높이 지지 및 capsule 충돌 변위 0m.",
+   "targeted_routes": "현재 모듈·전체 detail 생성 후 0.2m UV 격자 BFS: 1F–5F 각 층의 비상계단 문 횡단 5개는 닫힘(1876–2228개 셀 탐색 완료), 같은 층 홀→승강기 5개는 통행 가능. 1F 현관(32,44.5)→승강기(9.9,32), 8F 승강기→체크인 앞(10.6,44.6) 통행 가능.",
+   "preserved": "작업 시작 시 모듈과 비교: claims/claimRoads/claimAreas, 558개 전체 존 등록, 11개 스폰, 승강기 1대·37정지 동일. J5/J6 및 코어 계단·기존 실내 가구 보존.",
+   "detail_errors": [],
+   "jwmarriott_eager_quads": 36659,
+   "diff_check": "git diff --check -- js/places/jwmarriott.js data/research/jwmarriott.json 통과"
+  },
+  "evidence_round10": {
+   "date": "2026-11-07",
+   "audit": ".codex-jobs/evidence/audit_jwmarriott.json",
+   "audit_photo_root": "refs/interior/audit_jwmarriott/",
+   "audit_photo_status": "디렉터리가 비어 있어 새 감사 사진 없음. 기존 refs/interior/jw 사진을 직접 열어 재판독.",
+   "related_photo_checked": "refs/interior/daiso/110_inside_hanging_route_sign_gate1-4_kae2569_20260311.jpg — 다이소 별도 출입 동선의 맥락만 확인; JW 변경 근거로 사용하지 않음.",
+   "policy": "unverified 항목의 형상 유지. 층수 확인과 세부 평면 추정을 분리. 사진과 충돌하는 감사 제안은 사진 우선.",
+   "items": [
+    {
+     "element": "체크인 층·5F 접수대·L에서 8F 접근",
+     "audit_confidence": "likely",
+     "status": "applied_with_photo_override",
+     "sources": [
+      "https://www.marriott.com/ko/hotels/seljw-jw-marriott-hotel-seoul/dining/"
+     ],
+     "photos": [
+      "refs/interior/jw/07_floor_directory_sign.jpg",
+      "refs/interior/jw/08_elevator_button_panel.jpg",
+      "refs/interior/jw/09_grand_ballroom_foyer_5f.jpg",
+      "refs/interior/jw/10_ballroom_foyer_carpet.jpg"
+     ],
+     "source_read": "공식 본문은 더 라운지 8층을 명시하나 5F 포이어·계단 유무는 설명하지 않음. 사진 07/08은 L 현관·벨데스크와 8F 리셉션, 5F 볼룸·웨딩센터를 구분. 사진 09는 접수대 두 개를 직접 보여 줌.",
+     "applied": "L 안내를 체크인 8층·엘리베이터 방향으로 명시, 8F 기존 데스크에 체크인·체크아웃 사인, 5F 두 접수대 사인을 연회 접수로 변경. L–5F 공개 에스컬레이터 경로에서 코어 계단으로 진입하지 않도록 기존 개구부 5곳에 닫힌 문을 표시.",
+     "skipped": "5F 접수대·포이어 삭제는 사진 09/10과 충돌하므로 적용하지 않음. 비상계단 전체 삭제는 사진/본문이 부재를 입증하지 않으므로 구조를 보존하고 일반 체크인 경로에서 분리.",
+     "guess": true,
+     "guess_scope": "문 외형·개폐 상태와 프런트/대기석 평면은 실측 확인 아님."
+    },
+    {
+     "element": "2F 플레이버즈·타마유라 및 신세계 연결문",
+     "audit_confidence": "unverified",
+     "status": "kept_as_guess",
+     "sources": [
+      "https://www.marriott.com/ko/hotels/seljw-jw-marriott-hotel-seoul/dining/",
+      "https://www.trvlogue.com/ko/jw-marriott-seoul-fitness-guide"
+     ],
+     "photos": [
+      "refs/interior/jw/07_floor_directory_sign.jpg",
+      "refs/interior/jw/08_elevator_button_panel.jpg"
+     ],
+     "floor_confidence": "confirmed",
+     "guess": true,
+     "guess_scope": "2F 북측 유리문 위치·불가리 옆 연결·영업시간 표기는 추정. J5(y=0) 기존 연결 유지; 새 연결 추가 없음."
+    },
+    {
+     "element": "플레이버즈 테이블·부스·남측 서비스·와인장",
+     "audit_confidence": "unverified",
+     "status": "kept_as_guess",
+     "sources": [
+      "https://polle.com/marious/posts/3749",
+      "https://www.marriott.com/ko/hotels/seljw-jw-marriott-hotel-seoul/dining/"
+     ],
+     "guess": true,
+     "guess_scope": "83개 테이블·14 U자 부스·332 모델 커버 및 와인장의 위치는 실측 수용인원이 아닌 반복 배치. 공식 218석과 모델 커버 수를 구분.",
+     "source_read": "Polle 게시일 2026-01-17, 방문일 2025-12-31. 소음·음식 평가이며 평면 근거 없음. 배치·가구 추가 없음."
+    },
+    {
+     "element": "7F 더 마고 그릴·모보 바·JW 가든 / 2F 파티세리",
+     "audit_confidence": "unverified",
+     "status": "geometry_kept_floor_verified_by_photo_layout_guess",
+     "sources": [
+      "https://www.marriott.com/ko/hotels/seljw-jw-marriott-hotel-seoul/dining/"
+     ],
+     "photos": [
+      "refs/interior/jw/07_floor_directory_sign.jpg",
+      "refs/interior/jw/08_elevator_button_panel.jpg"
+     ],
+     "floor_confidence": "confirmed_by_photo",
+     "guess": true,
+     "guess_scope": "정원·파빌리온·각 시설의 상세 평면과 상대 위치는 리뷰 기반 unverified 추정. 감사의 층수 미확인은 사진 07/08과 충돌하여 사진 판독을 우선 기록. 새 방 추가 없음."
+    },
+    {
+     "element": "B3 수영장과 주차장 표기",
+     "audit_confidence": "unverified",
+     "status": "kept_as_guess",
+     "sources": [
+      "https://www.trvlogue.com/ko/jw-marriott-seoul-fitness-guide"
+     ],
+     "photos": [
+      "refs/interior/jw/07_floor_directory_sign.jpg"
+     ],
+     "source_read": "사진 07은 B3 PARKING LOT(주차장)을 명확히 표기. trvlogue 원문 접근 실패.",
+     "guess": true,
+     "guess_scope": "B2 스파/B3 수영장/B4 피트니스 분리와 B3 시설 병존 여부는 미확인. 수영장 이전 목적 층을 확정할 수 없어 기존 시설을 유지."
+    },
+    {
+     "element": "세 번째 승강기 문과 9F 평면",
+     "audit_confidence": "unverified",
+     "status": "kept_as_guess",
+     "sources": [],
+     "photos": [
+      "refs/interior/jw/06_elevator_lobby_travertine.jpg",
+      "refs/interior/jw/07_floor_directory_sign.jpg",
+      "refs/interior/jw/08_elevator_button_panel.jpg",
+      "refs/interior/jw/16_executive_lounge.jpg"
+     ],
+     "guess": true,
+     "guess_scope": "세 번째 문을 직각 리턴에 놓은 방향, 9F 비즈니스 센터·남측 대기실·좌석 배치는 추정. 9F 시설명만 사진으로 확인."
+    }
+   ]
+  },
+  "detail_group_counts_measured_round": 7
  },
  "interior_round6": {
   "reference_root": "refs/interior/jw",

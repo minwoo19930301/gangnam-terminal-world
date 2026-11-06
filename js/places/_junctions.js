@@ -22,6 +22,20 @@ export const JUNCTIONS = [
   // ---- 7호선 concourse ↔ 파미에스테이션 ----
   { id: 'J7', a: 'station', b: 'centralcity', y: LEVELS.B1, pa: [-45, 191], pb: [-45, 203], width: 8, owner: 'station',
     note: '7호선 B1 concourse (band from (45,150) to (-175,262)) meets the 파미에스테이션 round building B1 (center (-47,215)).' },
+  // Round 10: second ground-floor passage, independent of J4 and with no basement descent.
+  // Two connections are supported by the user walkthrough; this shared-edge location is a schematic fit,
+  // not a surveyed gate position. Official guide + photo control residuals are recorded in both research files.
+  { id: 'J8', a: 'shinsegae', b: 'centralcity', y: 0, pa: [-78.917, 37.725], pb: [-86.362, 40.551], width: 8, owner: 'none',
+    note: '1게이트 방면 보조 연결: shared edge at (-82.640,39.138), 신세계 local (u=0,v=68). Open 1F passage only; J4 remains the 3게이트 hall link and the existing B1 link.' },
+  { id: 'J9', a: 'shinsegae', b: 'centralcity', y: 7, pa: [-72.647, 42.938], pb: [-83.810, 47.175], width: 1.8, owner: 'centralcity',
+    note: '1F 광장 백화점 2층 에스컬레이터의 상부 연결. Shared-edge landing at (-80.089,45.763), 신세계 local (u=0,v=75.1), uses the retained 2F stair-core south landing. Landing alignment is inferred; official floor guide confirms destination, not surveyed dimensions.' },
+  // ---- round 10 ----
+  { id: 'J_G11_DAISO', a: 'gotomall', b: 'gyeongbu', y: LEVELS.B1, pa: [140.6504, -132], pb: [140.6504, -111.8096], width: 5.6, owner: 'gyeongbu',
+    note: '고투몰 중앙광장 G11 문 → 계단 → 다이소 GATE 4 (후문, 고투몰 방면 끝). gotomall builds the G11 door/stair up to pa.' },
+  { id: 'J_ONEBAILEY_G2', a: 'gotomall', b: 'onebailey', y: LEVELS.B1, pa: [-287.479, -29.9796], pb: [-290.8408, -38.9565], width: 2.8, owner: 'onebailey',
+    note: '고투몰 G2 → 원베일리 공공보행통로 (24시간 벽화 거리). gotomall leaves the G2 wall open.' },
+  { id: 'J_ONEBAILEY_PARK', a: 'onebailey', b: 'hangang', y: 0, pa: [-567.9792, -603.6965], pb: [-592, -625], width: 5, owner: 'onebailey',
+    note: '보행통로 끝 → 반포나들목 지하차도 → 반포한강공원.' },
 ];
 // Vertical wells: owner of the surrounding floor leaves a HOLE (no slab, railing on 3 sides, open on `entry` side);
 // the well owner builds stairs/escalators inside it going DOWN from y=top.

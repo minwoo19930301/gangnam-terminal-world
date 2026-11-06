@@ -1,8 +1,8 @@
 {
   "id": "banwon",
   "name": "반원상가 · 한신치킨호프",
-  "updated": "2026-11-06",
-  "round": 8,
+  "updated": "2026-11-07",
+  "round": 10,
   "address": "서울 서초구 신반포로23길 30, 잠원동 72-2. 한신치킨호프 1층 111호는 사용자 제공 위치 정보.",
   "sources": [
     {
@@ -60,7 +60,7 @@
       "path": "refs/interior/banwon/04_gamiok_front_closeup.jpg",
       "url": "https://m.blog.naver.com/dktjtidnj/224459455661",
       "post_date": "2026-10-30",
-      "title": "감미옥 점포 앞 세로 입간판(순대국 육칼국수 만두찜)",
+      "title": "감미옥 앞 실제 세로 간판: 순대국·육칼국수·만두찜. round10 감사의 제거 제안과 달리 사진에서 확인되어 보존",
       "basis": "제공된 로컬 사진 및 notes.json의 출처 메타데이터"
     },
     {
@@ -188,6 +188,71 @@
       "post_date": "2026-10-31",
       "title": "야장 테이블 내부",
       "basis": "제공된 로컬 사진 및 notes.json의 출처 메타데이터"
+    },
+    {
+      "path": ".codex-jobs/evidence/audit_banwon.json",
+      "title": "round10 증거 감사: likely 4건, unverified 2건",
+      "basis": "각 items.evidence_found에 수록된 출처별 본문 요약을 읽고 로컬 실사 사진과 대조. 블로그 본문을 새로 조회한 것은 아님."
+    },
+    {
+      "url": "https://m.blog.naver.com/qkrthwjd655/224448552779",
+      "post_date": "2026-10-21",
+      "photos": [
+        "refs/interior/audit_banwon/224448552779_01.jpg",
+        "refs/interior/audit_banwon/224448552779_02.jpg",
+        "refs/interior/audit_banwon/224448552779_03.jpg",
+        "refs/interior/audit_banwon/224448552779_05.jpg"
+      ],
+      "title": "반원식당 간판, 반원&한식당 태블릿, 이어진 홀의 식탁·형광등·대형 TV",
+      "basis": "제공된 실사 사진 직접 확인 및 감사 JSON의 해당 출처 본문 요약"
+    },
+    {
+      "url": "https://m.blog.naver.com/dockdm12/224444904805",
+      "post_date": "2026-10-17",
+      "photos": [
+        "refs/interior/audit_banwon/224444904805_01.jpg",
+        "refs/interior/audit_banwon/224444904805_02.jpg",
+        "refs/interior/audit_banwon/224444904805_03.jpg",
+        "refs/interior/audit_banwon/224444904805_04.jpg",
+        "refs/interior/audit_banwon/224444904805_05.jpg",
+        "refs/interior/audit_banwon/224444904805_06.jpg"
+      ],
+      "title": "반원칼국수 간판, 한신치킨 태블릿, 실내 서비스대·TV·메뉴와 천막",
+      "basis": "제공된 실사 사진 직접 확인 및 감사 JSON의 해당 출처 본문 요약"
+    },
+    {
+      "url": "https://m.blog.naver.com/chloe_ponggee/224455066913",
+      "post_date": "2026-10-27",
+      "photos": [
+        "refs/interior/audit_banwon/224455066913_01.jpg",
+        "refs/interior/audit_banwon/224455066913_02.jpg",
+        "refs/interior/audit_banwon/224455066913_05.jpg"
+      ],
+      "title": "감미옥→문구점→PICNIC STORAGE→반원칼국수 간판 순서, 빨간 의자·원형 테이블, 돼지갈비 메뉴",
+      "basis": "제공된 실사 사진 직접 확인 및 감사 JSON의 해당 출처 본문 요약"
+    },
+    {
+      "url": "https://m.blog.naver.com/dktjtidnj/224459455661",
+      "post_date": "2026-10-30",
+      "photos": [
+        "refs/interior/audit_banwon/224459455661_02.jpg",
+        "refs/interior/audit_banwon/224459455661_03.jpg",
+        "refs/interior/audit_banwon/224459455661_05.jpg"
+      ],
+      "title": "감미옥 실사: 세로 순대국 간판, 둥근 숯불망·배기 후드; _01 홍보 일러스트는 구조 근거에서 제외",
+      "basis": "제공된 실사 사진 직접 확인 및 감사 JSON의 해당 출처 본문 요약"
+    },
+    {
+      "url": "https://m.blog.naver.com/fewlove11/224458808662",
+      "post_date": "2026-10-30",
+      "title": "입구 셀프바·복도 양쪽 테이블·지하주차장 존재 및 식당 손님 주차 불가",
+      "basis": "제공된 감사 JSON items.evidence_found의 본문 요약. 화장실 위치는 작성자가 직접 확인하지 않은 전언."
+    },
+    {
+      "url": "https://m.blog.naver.com/h99578/224460314042",
+      "post_date": "2026-10-31",
+      "title": "식당 확장과 공용 화장실의 중앙 위치 전언",
+      "basis": "제공된 감사 JSON items.evidence_found의 본문 요약. 화장실 위치는 작성자가 직접 확인하지 않은 전언."
     }
   ],
   "notes": [
@@ -195,14 +260,19 @@
     "로컬 기준점은 북서 모서리 (-152.28,-419.62). u는 동북동, v는 남남동. 폭 43.15m, 깊이39.45m, 회전각 약19.48도이다. 도로는 서측, 공원은 북·동측이며 출입구와 상가는 이 방향에 맞춘다.",
     "정면은 카카오 로드뷰의 검은 돌 출입탑·BAN WON·세 흰 핀, 회색 패널, 밀집 간판, 기단·계단·경사로, 은행·약국 전면을 따른다. 조현은 읽히는 단편만 사용하며 의원 전체 이름을 새로 만들지 않았다.",
     "야장은 북동 모서리를 감싸는 배치로 해석했다. 북측 사진에서 건물은 남쪽, 공원은 북쪽이고 서남서쪽으로 보이는 고층 아파트가 도로 건너 반포르엘 단지 방향과 맞는다. 북측 대기줄 사진의 한신교회는 동북동쪽에 있다. 정확한 점포 경계는 사진 추정이다.",
-    "한신치킨호프는 로컬 u34.3..43.15,v0..13, 한식당은 u23.2..34.2,v0..9.3, 감미옥은 u34.3..43.15,v22.2..34로 재구성한다. 북측 야장에는 파란 의자, 동측 감미옥 줄에는 빨간 의자와 원형 금속 테이블을 둔다.",
-    "실제 사진의 반원 칼국수·한신 치킨호프·한식당·감미옥·비에이블 스터디카페·반원 E&I 피아노·PICNIC STORAGE·문구/도장/열쇠 간판을 사용한다. 내부 복도의 아빠의마음·파더스 김밥·동대문엽기떡볶이는 해당 OSM POI 명칭을 사용한다.",
-    "사진12에서 확인한 낮은 크림색 천장, 형광등, 나무 직사각 테이블, 검은 의자, 회색 바닥, 뒤쪽 카운터·메뉴판, 오른쪽 TV·냉장고와 맥주통을 1층 detail에 반영했다.",
+    "한신치킨호프·반원칼국수·한식당은 한 가게로 통합했다. 단일 L자 zone은 u23.2..43.15,v0..9.3와 동측 u34.3..43.15,v9.3..13을 포함한다. u34.2,v1.1..8.3의 폭7.2m 개구부로 연결하며, 공용 통로와 이웃 점포의 뒤쪽 벽은 유지한다. 감미옥은 기존 u34.3..43.15,v22.2..34 위치를 유지한다.",
+    "실사 간판에 맞춰 북측은 반원식당과 한신 치킨호프를 같은 홀 앞에 나란히 두고, 동측 반원 칼국수 간판을 보존한다. 동측 v가 작아지는 방향은 감미옥(v28.8)→신반포 문구·도장·열쇠(v21.5)→PICNIC STORAGE(v16.8)→반원 칼국수(v4.6)이다. 비에이블·반원 E&I 피아노와 OSM의 아빠의마음·파더스 김밥·동대문엽기떡볶이도 보존한다. 간판의 상대 순서는 사진 근거이며 점포 경계나 정확한 폭을 확정한 것은 아니다.",
+    "기존 한신 홀의 나무 식탁·검은 의자·카운터·메뉴·냉장고·맥주통·TV를 보존하면서 서측 확장 홀과 연결했다. 회색 무광 바닥과 낮은 크림색 천장(밑면 G+2.73), 그 아래 형광등, 서측 대형 TV 및 주문 태블릿을 추가했다. 기존 테이블 10개를 유지하고 v4.0 가로 통로 및 u38.5 세로 통로를 비웠다. 북측 입구 안 셀프바(u33.1,v0.75)는 팝콘·샐러드·치킨무·김치·물을 표현한다.",
     "반원어린이공원 413360475 전체는 만들거나 claim하지 않는다. 건물에 접한 북·동쪽 보행 가장자리의 난간·나무·벤치·가로등만 추가하며 공원 면·나머지 수목·주변 건물은 일반 도시가 소유한다. 사진05의 놀이기구 전체를 이 모듈의 구현으로 주장하지 않는다.",
     "신반포로23길 523344140은 claim하지 않는다. 실제 중심선 (-145.36,-365.39)→(-169.16,-427.87)을 따라 낮은 적색 표면과 어린이/보호구역 글씨를 보강하며 일반 도시 차선의 통로를 남긴다.",
     "외벽·문·바닥·경사로·계단·승강기·층별 zone은 항상 존재한다. 실내 집기와 야장 의자/테이블은 별도 K.detail 그룹이다. 1F~4F 계단 및 승강기 연결은 보행을 위한 추정 배치이다.",
     "제공된 banwon/16_hangang_park_tree.jpg는 잠원한강공원으로 분류된 별개 장소이므로 사용하지 않았다. streets_islands/01~12 데블스도어와20 지하상가도 이 모듈에서 사용하지 않았다.",
-    "야장 바깥 통로도 북측 u24..48.35,v-6.2..-3.4 및 동측 u46.5..48.35,v-3.5..35에서 y1.2m로 이어진다. 북측 u30의 계단과 동측 v20의 계단으로 지상0m 보도에 연결한다. 철제 난간은 개방된 가로대 표현이다."
+    "야장 바깥 통로도 북측 u24..48.35,v-6.2..-3.4 및 동측 u46.5..48.35,v-3.5..35에서 y1.2m로 이어진다. 북측 u30의 계단과 동측 v20의 계단으로 지상0m 보도에 연결한다. 철제 난간은 개방된 가로대 표현이다.",
+    "round10 감미옥 sub는 참숯돼지갈비로 정정했다. 실내 원형 테이블6개와 야외5개에 둥근 숯통·철망·배기 후드를 추가했다. 현재 코드의 감미옥 야외 테이블은 감사문이 암시한 과다 수량과 달리 3개였으므로, 확인된 약5개로 늘렸다. 한신의 미검증 야장 개수·천막·의자 배치는 변경하지 않았다.",
+    "감미옥의 순대국·육칼국수·만두찜 세로 간판은 audit 224459455661_03과 기존 banwon/04 실사에서 같은 입구 프레임에 확인된다. 감사의 제거/이동 제안보다 사진을 우선해 원위치(u45.95,v24.1)에 보존했다. 반복 벽 메뉴와 실내 주메뉴는 돼지갈비 중심으로 정정했다.",
+    "공용 화장실은 중앙 복도 북서쪽 u13.8..19,v14.6..18에 작은 방과 열린 문을 두고 화장실만 표기했다. 남녀 구분은 추가하지 않았다. 존재/중앙 위치는 전언, 1F 선택과 문·방·기물 위치는 추정이다. 기존 아빠의마음 간판은 그 점포의 동측 복도 입구(u19.15,v5.95)로, 1F 안내는 u12,v18.15로 이동해 겹침을 피했다.",
+    "지하주차장의 존재는 감사 본문에 따라 likely로 기록한다. 로드뷰02는 도로 건너 아파트를 향하고 01에서도 차량 진입부를 확인할 수 없다. B1 내부나 연결 램프는 만들지 않고 서측 도로변 남쪽 끝(u-3.12,v42.4,y0)에 닫힌 셔터만 둔다. 이 셔터의 위치·규격·형태는 전부 추정이며 사진 근거를 붙이지 않는다.",
+    "모든 기존 실내는 반원상가 층 zone 안에 있고, 통합 식당/공용 화장실 zone을 갱신했다. 감미옥 천막 좌석(u43.15..46.65,v24..35)도 별도 zone으로 포함해 면적 로딩에서 빠지지 않게 했다. claims는 기존 OSM 건물1개를 유지하고 지하 모듈 연결은 없다."
   ],
   "building": {
     "osm_id": 413354848,
@@ -220,7 +290,14 @@
     "roof_m": 15.6,
     "floor_to_floor_m": 3.6,
     "basement_built": false,
-    "height_basis": "지상4층은 round8 사용자 지시를 따른다. 로드뷰와 블로그의 층수 해석이 충돌하므로 측정값 또는 검증된 현황으로 간주하지 않는다."
+    "height_basis": "지상4층은 round8 사용자 지시를 따른다. 로드뷰와 블로그의 층수 해석이 충돌하므로 측정값 또는 검증된 현황으로 간주하지 않는다.",
+    "basement_exists": {
+      "confidence": "likely",
+      "use": "지하주차장",
+      "source": "https://m.blog.naver.com/fewlove11/224458808662",
+      "basis": "감사 JSON에 수록된 2026-10-30 본문 요약",
+      "customer_parking": "한신치킨 손님용 주차 불가라는 본문 요약; 표식은 주차 가능 안내가 아님"
+    }
   },
   "modeling": {
     "trace_coordinate_convention": "x/z는 프로젝트 월드 좌표(m). y는 카메라 눈높이가 아니라 tests/shot.mjs가 받는 보행 바닥 높이이며 지상0, 기단/1층/야장 데크1.2이다. yaw0=북(-z),90=서,180=남,270=동. 모든 trace는 GPS 없는 사진 구도 추정값이다.",
@@ -293,14 +370,15 @@
       {
         "spot": "감미옥 세로 메뉴판",
         "photos": [
-          "refs/interior/banwon/04_gamiok_front_closeup.jpg"
+          "refs/interior/banwon/04_gamiok_front_closeup.jpg",
+          "refs/interior/audit_banwon/224459455661_03.jpg"
         ],
         "x": -100.26,
         "y": 1.2,
         "z": -411.4,
         "yawDeg": 143.6,
         "pitchDeg": 2,
-        "expected_subject": "순대국·육칼국수·만두찜 세로 간판과 빨간 의자",
+        "expected_subject": "사진을 우선해 보존한 순대국·육칼국수·만두찜 세로 간판과 빨간 의자",
         "coordinate_basis": "사진 구도를 모듈에 맞춘 추정 카메라. GPS 또는 실측 촬영점이 아님."
       },
       {
@@ -536,26 +614,590 @@
         "pitchDeg": 0,
         "expected_subject": "원형 테이블의 식기·맥주, 파란 플라스틱 의자와 주황 비닐 프레임",
         "coordinate_basis": "사진 구도를 모듈에 맞춘 추정 카메라. GPS 또는 실측 촬영점이 아님."
+      },
+      {
+        "round": 10,
+        "spot": "round10 같은 홀의 북측 간판",
+        "photos": [
+          "refs/interior/audit_banwon/224448552779_01.jpg"
+        ],
+        "x": -123.95,
+        "y": 1.2,
+        "z": -435.48,
+        "yawDeg": 199.48,
+        "pitchDeg": 8,
+        "local_uv": [
+          32,
+          -5.5
+        ],
+        "expected_subject": "반원식당·한신 치킨호프 간판이 한 홀 앞에 나란히",
+        "coordinate_basis": "모델에서 해당 수정 지점을 비교하기 위한 추정 카메라. y는 바닥 높이; GPS·실측 촬영점이 아님."
+      },
+      {
+        "round": 10,
+        "spot": "round10 두 식당 사이 넓은 개구부",
+        "photos": [
+          "refs/interior/audit_banwon/224448552779_02.jpg",
+          "refs/interior/audit_banwon/224448552779_05.jpg"
+        ],
+        "x": -123.61,
+        "y": 1.2,
+        "z": -425.52,
+        "yawDeg": 289.48,
+        "pitchDeg": 0,
+        "local_uv": [
+          29,
+          4
+        ],
+        "expected_subject": "u34.2의 폭7.2m 개방부와 양쪽 나무 식탁·검은 의자·연결 통로",
+        "coordinate_basis": "모델에서 해당 수정 지점을 비교하기 위한 추정 카메라. y는 바닥 높이; GPS·실측 촬영점이 아님."
+      },
+      {
+        "round": 10,
+        "spot": "round10 북측 입구 셀프바",
+        "photos": [],
+        "x": -123.48,
+        "y": 1.2,
+        "z": -428.75,
+        "yawDeg": 294.41,
+        "pitchDeg": 0,
+        "local_uv": [
+          30.2,
+          1
+        ],
+        "expected_subject": "팝콘·샐러드·치킨무·김치·물 셀프바. 구성은 감사 본문, 위치·형상은 추정",
+        "coordinate_basis": "모델에서 해당 수정 지점을 비교하기 위한 추정 카메라. y는 바닥 높이; GPS·실측 촬영점이 아님."
+      },
+      {
+        "round": 10,
+        "spot": "round10 확장 홀 대형 TV와 긴 복도",
+        "photos": [
+          "refs/interior/audit_banwon/224448552779_02.jpg",
+          "refs/interior/audit_banwon/224448552779_03.jpg",
+          "refs/interior/audit_banwon/224448552779_05.jpg"
+        ],
+        "x": -124.33,
+        "y": 1.2,
+        "z": -425.48,
+        "yawDeg": 199.48,
+        "pitchDeg": 3,
+        "local_uv": [
+          28.3,
+          3.8
+        ],
+        "expected_subject": "낮은 크림색 천장·형광등·대형 TV·태블릿과 통로 양쪽 좌석",
+        "coordinate_basis": "모델에서 해당 수정 지점을 비교하기 위한 추정 카메라. y는 바닥 높이; GPS·실측 촬영점이 아님."
+      },
+      {
+        "round": 10,
+        "spot": "round10 기존 한신 홀 천장과 서비스대",
+        "photos": [
+          "refs/interior/audit_banwon/224444904805_03.jpg",
+          "refs/interior/audit_banwon/224444904805_04.jpg",
+          "refs/interior/audit_banwon/224444904805_05.jpg"
+        ],
+        "x": -113.65,
+        "y": 1.2,
+        "z": -425.86,
+        "yawDeg": 199.48,
+        "pitchDeg": 0,
+        "local_uv": [
+          38.5,
+          7
+        ],
+        "expected_subject": "낮춘 천장 아래 형광등과 보존한 카운터·메뉴·냉장고·맥주통·TV",
+        "coordinate_basis": "모델에서 해당 수정 지점을 비교하기 위한 추정 카메라. y는 바닥 높이; GPS·실측 촬영점이 아님."
+      },
+      {
+        "round": 10,
+        "spot": "round10 감미옥 실내 숯불판",
+        "photos": [
+          "refs/interior/audit_banwon/224459455661_05.jpg",
+          "refs/interior/audit_banwon/224455066913_05.jpg"
+        ],
+        "x": -106.51,
+        "y": 1.2,
+        "z": -405.69,
+        "yawDeg": 289.48,
+        "pitchDeg": -12,
+        "local_uv": [
+          38.5,
+          28.4
+        ],
+        "expected_subject": "원형 테이블 중앙 둥근 숯불망·배기 후드·빨간 의자",
+        "coordinate_basis": "모델에서 해당 수정 지점을 비교하기 위한 추정 카메라. y는 바닥 높이; GPS·실측 촬영점이 아님."
+      },
+      {
+        "round": 10,
+        "spot": "round10 감미옥 야외 다섯 테이블",
+        "photos": [
+          "refs/interior/audit_banwon/224455066913_01.jpg",
+          "refs/interior/audit_banwon/224455066913_02.jpg",
+          "refs/interior/audit_banwon/224459455661_02.jpg"
+        ],
+        "x": -97.76,
+        "y": 1.2,
+        "z": -407.93,
+        "yawDeg": 109.48,
+        "pitchDeg": 0,
+        "local_uv": [
+          47.5,
+          29.2
+        ],
+        "expected_subject": "감미옥 야외 원형 숯불 테이블5개와 빨간 의자; 바깥 보행로 유지",
+        "coordinate_basis": "모델에서 해당 수정 지점을 비교하기 위한 추정 카메라. y는 바닥 높이; GPS·실측 촬영점이 아님."
+      },
+      {
+        "round": 10,
+        "spot": "round10 문구점 건너 피크닉 대여소",
+        "photos": [
+          "refs/interior/audit_banwon/224455066913_01.jpg"
+        ],
+        "x": -100.5,
+        "y": 1.2,
+        "z": -415.66,
+        "yawDeg": 84.79,
+        "pitchDeg": 8,
+        "local_uv": [
+          47.5,
+          21
+        ],
+        "expected_subject": "감미옥→문구·도장·열쇠→PICNIC STORAGE→반원 칼국수의 간판 순서",
+        "coordinate_basis": "모델에서 해당 수정 지점을 비교하기 위한 추정 카메라. y는 바닥 높이; GPS·실측 촬영점이 아님."
+      },
+      {
+        "round": 10,
+        "spot": "round10 중앙 공용 화장실",
+        "photos": [],
+        "x": -131.23,
+        "y": 1.2,
+        "z": -405.85,
+        "yawDeg": 19.48,
+        "pitchDeg": 0,
+        "local_uv": [
+          15.25,
+          20
+        ],
+        "expected_subject": "화장실 간판 하나, 열린 문과 작은 공용 방. 1F 위치/문·기물은 전언 기반 추정",
+        "coordinate_basis": "모델에서 해당 수정 지점을 비교하기 위한 추정 카메라. y는 바닥 높이; GPS·실측 촬영점이 아님."
+      },
+      {
+        "round": 10,
+        "spot": "round10 이동한 아빠의마음 간판",
+        "photos": [],
+        "x": -130.5,
+        "y": 1.2,
+        "z": -421.01,
+        "yawDeg": 109.48,
+        "pitchDeg": 5,
+        "local_uv": [
+          21,
+          5.95
+        ],
+        "expected_subject": "화장실 표지와 겹치지 않도록 기존 점포의 동측 복도 입구로 옮긴 간판. 위치는 추정",
+        "coordinate_basis": "모델에서 해당 수정 지점을 비교하기 위한 추정 카메라. y는 바닥 높이; GPS·실측 촬영점이 아님."
+      },
+      {
+        "round": 10,
+        "spot": "round10 서측 지하주차장 추정 셔터",
+        "photos": [],
+        "x": -144.74,
+        "y": 0,
+        "z": -377.31,
+        "yawDeg": 289.48,
+        "pitchDeg": 3,
+        "local_uv": [
+          -7,
+          42.4
+        ],
+        "expected_subject": "닫힌 지하주차장 표식. 존재만 감사 본문 근거이며 차량 진입 위치·형태는 사진 근거 없음",
+        "coordinate_basis": "모델에서 해당 수정 지점을 비교하기 위한 추정 카메라. y는 바닥 높이; GPS·실측 촬영점이 아님."
       }
     ],
     "guesses": [
       "가장 큰 자료 불일치: 사용자 round8 지시는 4층 상가이지만 제공된 블로그 notes와 공원 측 사진은 낮은 2층 상가로 해석되며 OSM의 height=9m도 낮은 매스다. 이번 모듈은 지시를 우선해 4개 보행층을 만들었다. 실제 층수와 높이는 후속 현장 검토가 필요하다.",
       "정면 기단은 로드뷰에서 약1.2m로 추정했다. 이를 1F 전체 및 북·동측 야장 데크 높이에 적용했으므로 실제 뒷면 지형 높이·경사와 다를 수 있다. 주변 도시는 평지0m여서 북·동측에 긴 접근 경사로를 추가했다.",
-      "층고3.6m, 층 바닥1.2/4.8/8.4/12m, 주지붕15.6m, 출입탑 상부·옥상 계단실·설비 높이는 재구성값이다. B1은 근거가 부족해 만들지 않았다.",
+      "층고3.6m, 층 바닥1.2/4.8/8.4/12m, 주지붕15.6m, 출입탑 상부·옥상 계단실·설비 높이는 재구성값이다. B1 주차장의 존재는 likely지만 진입 위치·평면이 없어 내부는 만들지 않고 추정 셔터만 표현한다.",
       "중앙 십자형 복도, 계단의 위치와 왕복형 구조, 승강기 위치, 실내 점포 깊이·방 경계·문폭은 실측 도면이 없다. 이동 가능한 실내를 제공하기 위한 추정 배치이다.",
       "상층의 이비인후과·스터디카페·학원·태권도 층 배정 및 방의 구분, 책상·열람석·의자·수련실 집기 배치는 간판의 실재와 별개로 추정이다. 검증된 층별 입점표로 사용하면 안 된다.",
       "우리은행 OSM POI (-118.08,-423.09)는 건물 내부 북동쪽에 있지만 로드뷰 은행 간판은 도로변에 있다. POI를 정확한 출입면이나 점포 외곽으로 확대 해석하지 않고 정면 간판과 은행실을 따로 재구성했다.",
-      "한식당 OSM POI (-113.96,-414.81) 및 인근 음식점 점들은 건물 내부 점포 존재의 근거이다. 한신치킨의 북동 모서리 배치, 감미옥 동측 배치와 서로의 순서·폭은 사진 배경·교회·아파트 방향을 대조한 추정이다.",
+      "한식당 OSM POI는 점포 존재의 근거이며 별도 식당 경계를 확정하지 않는다. 감사 본문·반원&한식당 태블릿에 따라 한신과 통합했다. 홀 L자 경계·폭7.2m 개구부·가로/세로 복도·셀프바와 TV/가구 위치는 사진 구도를 바탕으로 한 추정이다. 감미옥·문구점·PICNIC·칼국수의 상대 순서는 실사로 확인되지만 절대 좌표/호실 폭은 추정이다.",
       "조현은 정면 간판에서 보이는 일부 글자이며 전체 상호를 알 수 없다. 추가 성명이나 의원명을 만들지 않았다. 진료 안내·진료 상담·학원 교습실 등의 글자는 장소 탐색을 위한 일반 안내이며 확인된 개별 상호가 아니다.",
       "비닐 낙서 문구, 메뉴의 일부 한글 항목, TV 야구 화면, 식기·음료·손님 수, 조명과 원형 간판 치수, 가구 위치는 사진 분위기를 재구성한 근사 표현이다. 실제 가격·전화번호·특정 손님의 모습은 복제하지 않는다.",
       "학교구역 붉은 칠의 구간 길이·색·문자 배치, 공원 난간·가로수·벤치·가로등 위치는 사진/OSM에 맞춘 시각적 근사이며 별도 도로·조경 실측이 없다. 차도 및 공원은 claim하지 않는다.",
-      "모든 modeling.trace는 모듈 안에서 대응 물체가 보이도록 정한 비교용 카메라이다. 원본 카카오/블로그 사진의 정확한 좌표·렌즈·눈높이와 일치한다는 의미가 아니다."
+      "모든 modeling.trace는 모듈 안에서 대응 물체가 보이도록 정한 비교용 카메라이다. 원본 카카오/블로그 사진의 정확한 좌표·렌즈·눈높이와 일치한다는 의미가 아니다.",
+      "round10 unverified 야장 항목: 한신 야장 7~8테이블, 천막/보행로 단차, 계단·경사로 위치 및 소유 구분의 세부 배치는 감사에서 미검증이다. 해당 항목만을 이유로 기존 한신 테이블·빨간/파란 의자·천막·대기줄·데크/계단/경사로를 변경하지 않았다. 감미옥5테이블/숯불판은 별도의 likely 항목에 따라 변경했다.",
+      "round10 unverified 층수 항목: 2F 학원·비에이블 간판의 실재는 감사에 있으나 정확한 내부 배치와 3F·4F, 출입탑~계단/승강기 연결은 여전히 추정이다. 4개 보행층과 기존 상층 가구를 축소·삭제하지 않았다.",
+      "화장실의 중앙 위치는 직접 확인하지 않은 전언이다. u13.8..19,v14.6..18의 1F 방, 문 방향, 세면대/변기는 재구성용 추정이며 실제 위치 안내로 사용하면 안 된다.",
+      "주차 셔터(u-3.12,v42.4,y0)는 도로변 남쪽 끝의 가상 위치 표식이다. 로드뷰 사진은 그 위치를 입증하지 않으며 진입 램프·B1 평면·구조는 전혀 검증하지 않았다.",
+      "감미옥 실내6개/야외5개 테이블의 정확한 배치, 숯불망·배기 후드의 규격·높이, PICNIC/문구점 간판의 절대 좌표·폭은 추정이다. 피크닉 대여소의 실내 호실을 새로 확정하지 않았다."
     ],
     "operator_review": [
       "4층 지시와 2층으로 보이는 자료의 높이 불일치를 우선 검토",
       "정면의 실제 계단·은행/약국 간판 순서와 한신치킨 북동 모서리 배치 비교",
       "일반 도시 렌더와 함께 붉은 노면·차선 높이 및 공원 경계 겹침 확인",
-      "tests/shot.mjs는 작업 샌드박스에서 실행하지 않고 위 trace로 운영자가 렌더"
-    ]
+      "tests/shot.mjs는 작업 샌드박스에서 실행하지 않고 위 trace로 운영자가 렌더",
+      "round10 trace로 통합 홀·셀프바·TV·감미옥 숯불판/5테이블·간판 순서·화장실·추정 주차 셔터 확인. screenshots는 사용자 지시로 실행하지 않음.",
+      "주차 셔터와 공용 화장실은 위치 자료가 확보되면 재배치 필요.",
+      "감미옥 세로 순대국 간판은 사진과 감사문이 충돌하여 사진을 우선해 보존했음.",
+      "감미옥 야장 zone을 포함한 메타 생성 엔트리는 validation_round10.meta_regeneration.generated_banwon_entry에 보관했다. 이 작업은 공유 _meta.json을 쓰지 않았고, 최종 확인에서는 공유 banwon 엔트리가 생성 결과와 일치했다."
+    ],
+    "junctions_to_add": [],
+    "evidence_corrections_round10": [
+      {
+        "element": "한신치킨호프 / 반원칼국수 / 한식당 = 한 가게 (칸막이·입구 구성)",
+        "audit_confidence": "likely",
+        "status": "applied",
+        "evidence_text_read": "2026-10-17 블로그(dockdm12/224444904805): 한쪽 간판 반원칼국수, 다른 쪽 간판 한신치킨, 둘 다 같은 식당. 2026-10-21 블로그(qkrthwjd655/224448552779): 매장이 이어져 있어 어느 쪽으로 들어가도 같고 내부가 엄청 큼. 테이블 태블릿 메뉴 제목이 '반원&한식당', 외부 간판 '반원식당'(사진 224448552779_01·_05). 2026-10-31(h99578/224460314042): 최근 확장해서 매우 넓어짐. 2026-10-30(fewlove11/224458808662): 입구 쪽에 팝콘·샐러드·치킨무·김치·물 셀프바, 가운데 복도 양쪽에 테이블. 같은 계열 내부 천장은 낮은 형광등, 대형 TV(사진 _03).",
+        "sources": [
+          "https://m.blog.naver.com/dockdm12/224444904805 (2026-10-17)",
+          "https://m.blog.naver.com/qkrthwjd655/224448552779 (2026-10-21)",
+          "https://m.blog.naver.com/fewlove11/224458808662 (2026-10-30)",
+          "https://m.blog.naver.com/h99578/224460314042 (2026-10-31)"
+        ],
+        "photos": [
+          "refs/interior/audit_banwon/224448552779_01.jpg",
+          "refs/interior/audit_banwon/224448552779_02.jpg",
+          "refs/interior/audit_banwon/224448552779_03.jpg",
+          "refs/interior/audit_banwon/224448552779_05.jpg"
+        ],
+        "applied": "단일 L자 zone, 폭7.2m 개구부, 반원식당/한신의 같은 홀 간판, 입구 셀프바, 긴 통로 양쪽 식탁, 낮은 천장·형광등·대형 TV·주문 태블릿 반영",
+        "positions": {
+          "hall_local_uv": [
+            [
+              23.2,
+              0
+            ],
+            [
+              43.15,
+              0
+            ],
+            [
+              43.15,
+              13
+            ],
+            [
+              34.3,
+              13
+            ],
+            [
+              34.3,
+              9.3
+            ],
+            [
+              23.2,
+              9.3
+            ]
+          ],
+          "opening_local_uv": [
+            34.2,
+            1.1,
+            34.2,
+            8.3
+          ],
+          "self_bar_local_uv": [
+            33.1,
+            0.75
+          ],
+          "large_tv_local_uv": [
+            28.3,
+            9.24
+          ]
+        },
+        "exceptions": []
+      },
+      {
+        "element": "감미옥 업종·간판·위치 (동측 끝 u34.3..W,v22.2..34)",
+        "audit_confidence": "likely",
+        "status": "applied_with_photo_override",
+        "evidence_text_read": "2026-10-27(chloe_ponggee/224455066913), 2026-10-30(dktjtidnj/224459455661): 감미옥은 반원상가 1층 참숯돼지갈비 집(고기+김치찌개/된장찌개, 중앙 대나무숯 둥근 불판). 점포 앞 테라스에 원형 테이블+빨간 의자, 야외 약 5테이블, 내부는 꽤 넓음, 매일 10:30~23:00. 감미옥 '옆옆가게'가 피크닉 대여소. 2층은 학원·스터디카페(고기 냄새 언급)로 같은 글에서 확인. 순대국/육칼국수 입간판은 감미옥 것이라는 근거 없음, 이웃 점포 간판일 가능성.",
+        "sources": [
+          "https://m.blog.naver.com/chloe_ponggee/224455066913 (2026-10-27)",
+          "https://m.blog.naver.com/dktjtidnj/224459455661 (2026-10-30)"
+        ],
+        "photos": [
+          "refs/interior/audit_banwon/224455066913_01.jpg",
+          "refs/interior/audit_banwon/224455066913_02.jpg",
+          "refs/interior/audit_banwon/224459455661_01.jpg",
+          "refs/interior/audit_banwon/224459455661_02.jpg"
+        ],
+        "applied": "감미옥 업종/메뉴·숯불망·후드·야외5테이블 및 간판 순서를 교정. 중간 문구점 한 칸을 유지",
+        "positions": {
+          "gammiok_local_uv": [
+            34.3,
+            22.2,
+            43.15,
+            34
+          ],
+          "outdoor_tables_local_uv": [
+            [
+              44.8,
+              24.9
+            ],
+            [
+              44.8,
+              27.05
+            ],
+            [
+              44.8,
+              29.2
+            ],
+            [
+              44.8,
+              31.35
+            ],
+            [
+              44.8,
+              33.5
+            ]
+          ],
+          "stationery_sign_local_uv": [
+            43.28,
+            21.5
+          ],
+          "picnic_sign_local_uv": [
+            43.28,
+            16.8
+          ]
+        },
+        "exceptions": [
+          "순대국·육칼국수·만두찜 실제 세로 간판은 224459455661_03 실사가 감사의 제거 제안과 충돌하므로 보존.",
+          "감미옥 야외 기존3개를 약5개로 증가. 감사문 “줄임”은 실제 코드 수량과 불일치.",
+          "224459455661_01의 일러스트 표지는 구조 근거에서 제외."
+        ]
+      },
+      {
+        "element": "야장(천막) 배치: 북·동 모서리를 감싸는 3.5m 폭 데크 + 계단 2개",
+        "audit_confidence": "unverified",
+        "status": "unchanged_guess",
+        "evidence_text_read": "2026-10-17: 야장 테이블 7~8개, 천막(비닐)으로 둘러 따뜻하게. 2026-10-23: 상가 앞 천막 좌석과 대기줄(사진 224448552779_04는 천막 옆 보행로에 파란 의자 대기줄과 뒤 아파트). 감미옥은 별도 야외 약 5테이블(빨간 의자). 천막 높이 단차나 계단 위치는 어느 글에도 없음.",
+        "sources": [
+          "https://m.blog.naver.com/dockdm12/224444904805 (2026-10-17)",
+          "https://m.blog.naver.com/qkrthwjd655/224448552779 (2026-10-21)",
+          "https://m.blog.naver.com/chloe_ponggee/224455066913 (2026-10-27)"
+        ],
+        "photos": [
+          "refs/interior/audit_banwon/224448552779_04.jpg",
+          "refs/interior/audit_banwon/224448552779_01.jpg",
+          "refs/interior/audit_banwon/224460314042_01.jpg"
+        ],
+        "applied": "unverified이므로 한신 야장·천막·대기줄·높이·계단/경사로는 그대로 유지. 감미옥 테이블은 별도 likely 항목으로 처리",
+        "positions": {},
+        "exceptions": [
+          "기존 한신 야장을 7~8개로 임의 축소하지 않음."
+        ]
+      },
+      {
+        "element": "화장실 (공용) 위치",
+        "audit_confidence": "likely",
+        "status": "applied_as_inferred_geometry",
+        "evidence_text_read": "2026-10-31 블로그(h99578/224460314042): 화장실은 상가 중앙에 있다고 들음(직접 확인 아님, '그냥 그렇다'는 평). 상가 내부 복도 십자형 배치와는 일치하는 설명이지만 문이나 층은 불명.",
+        "sources": [
+          "https://m.blog.naver.com/h99578/224460314042 (2026-10-31)"
+        ],
+        "photos": [],
+        "applied": "중앙 복도 옆 작은 공용 화장실과 열린 문, 화장실 표지만 추가. 전언과 배치 추정을 구분",
+        "positions": {
+          "room_local_uv": [
+            13.8,
+            14.6,
+            19,
+            18
+          ],
+          "door_local_uv": [
+            15.25,
+            18
+          ],
+          "floor_y": 1.2
+        },
+        "exceptions": []
+      },
+      {
+        "element": "지하주차장(B1) 존재 여부",
+        "audit_confidence": "likely",
+        "status": "applied_as_inferred_marker",
+        "evidence_text_read": "2026-10-30(fewlove11/224458808662): 건물 내에 지하주차장이 있지만 오래된 건물이라 대중교통 추천. 한신치킨 손님용 주차는 불가(2026-10-17, 10-30 두 글). 진입 램프 위치는 어느 글에도 없음.",
+        "sources": [
+          "https://m.blog.naver.com/fewlove11/224458808662 (2026-10-30)",
+          "https://m.blog.naver.com/dockdm12/224444904805 (2026-10-17)"
+        ],
+        "photos": [],
+        "applied": "지하주차장 존재를 기록하고 서측 남단 닫힌 셔터로만 표시. B1 내부 미제작",
+        "positions": {
+          "shutter_local_uv": [
+            -3.12,
+            42.4
+          ],
+          "floor_y": 0
+        },
+        "exceptions": [
+          "로드뷰02는 아파트 방향이라 차량 진입구 근거가 아님. 셔터 위치는 사진 출처 없이 추정 명시."
+        ]
+      },
+      {
+        "element": "층별 입점(2층 이상)·층수 4층 가정",
+        "audit_confidence": "unverified",
+        "status": "unchanged_guess",
+        "evidence_text_read": "2026-10-27(chloe_ponggee): 반원상가 2층에 학원과 스터디카페(고기 냄새 언급). 2026-10-23(dltmfgml4088) 계열 사진에 2층 비에이블 스터디카페 간판과 2층 24H 카페 간판. 3층 이상 입점이나 4층 존재를 직접 말하는 2025~2026 글은 못 찾음. 기존 research의 '2층 상가로 보인다'는 판단과 충돌 없음. 한신 쪽 상층 입구 계단/엘리베이터 위치 글도 없음.",
+        "sources": [
+          "https://m.blog.naver.com/chloe_ponggee/224455066913 (2026-10-27)",
+          "https://m.blog.naver.com/dltmfgml4088/224450891474 (2026-10-23)"
+        ],
+        "photos": [
+          "refs/interior/audit_banwon/224455066913_03.jpg",
+          "refs/interior/audit_banwon/224455066913_04.jpg"
+        ],
+        "applied": "unverified이므로 층수·상층 배정·계단/승강기/가구를 유지하고 추정 표기",
+        "positions": {},
+        "exceptions": [
+          "3F 이상 삭제/축소 제안은 미검증 항목이므로 적용하지 않음."
+        ]
+      }
+    ],
+    "validation_round10": {
+      "smoke": {
+        "command": "node tests/smoke.mjs banwon",
+        "result": "OK"
+      },
+      "module_walk": {
+        "command": "node tests/walk.mjs banwon",
+        "result": "13 ok, 0 blocked"
+      },
+      "targeted_walk": {
+        "basis": "tests/walk.mjs를 메모리에서만 확장; 저장소 tests는 수정하지 않음",
+        "result": "33 ok, 0 blocked",
+        "coverage": [
+          "기존 반원 승강기/스폰13개",
+          "추가 카메라11개의 바닥 높이·충돌 없음",
+          "북측 입구→확장 홀→넓은 개구부→기존 홀",
+          "동측 입구→통합 홀",
+          "중앙 복도→공용 화장실",
+          "감미옥 출입구→실내 중앙"
+        ]
+      },
+      "full_walk": {
+        "command": "node tests/walk.mjs",
+        "first_attempt": "다른 작업 중인 gyeongbu.js:1240 buildRound10BasementRetail is not defined로 전체 build 중단. 해당 파일은 수정하지 않음.",
+        "result": "481 ok, 3 blocked",
+        "exit_code": 1,
+        "failures": [
+          {
+            "location": "junction J6 centralcity→jwmarriott y=0",
+            "result": "no path (28645 cells searched)"
+          },
+          {
+            "location": "elevator centralcity 센트럴시티 터미널 엘리베이터 1M",
+            "result": "no path (37 cells searched)"
+          },
+          {
+            "location": "elevator gyeongbu 북측 동 엘리베이터 지하 1층",
+            "result": "no path (35 cells searched)"
+          }
+        ],
+        "scope_note": "실패3개 모두 다른 모듈 내부/연결이다. 이 작업은 반원 모듈 및 연구 JSON만 수정했고 외부 모듈·엔진·테스트는 수정하지 않음. 반원 단독 13/0 및 추가 동선/카메라 33/0 통과. 최종 git status에서 centralcity.js, jwmarriott.js, gyeongbu.js 모두 별도 변경 중인 파일로 확인했다. 초기 경부 build 오류는 외부 작업 이후 해소되어 전체 검사를 재실행했다."
+      },
+      "screenshots": {
+        "executed": false,
+        "reason": "사용자 지시: 샌드박스에서 tests/shot.mjs 실행 불가. 모든 수정 지점에 modeling.trace 추가, 각 y는 바닥 높이."
+      },
+      "meta_regeneration": {
+        "command": "node --import /tmp/banwon-r10-meta-guard.mjs tools/gen_meta.mjs",
+        "result": "생성 완료. fs.writeFileSync 출력만 임시 파일로 전환하여 편집 금지인 js/places/_meta.json을 덮어쓰지 않음.",
+        "reason": "이번 작업에서 수정 가능한 저장소 파일은 js/places/banwon.js와 data/research/banwon.json 두 개뿐이라는 명시적 제한.",
+        "changed_keys": [],
+        "needs_shared_meta_update": false,
+        "generated_banwon_entry": {
+          "name": "반원상가 · 한신치킨호프",
+          "claims": [
+            413354848
+          ],
+          "claimRoads": [],
+          "claimAreas": [],
+          "box": [
+            -152.3,
+            -438.5,
+            -96.6,
+            -382.5
+          ],
+          "y": [
+            1.2,
+            15.6
+          ],
+          "floors": [
+            "1F",
+            "2F",
+            "3F",
+            "4F"
+          ],
+          "cells": [
+            "-4,-11",
+            "-4,-10",
+            "-3,-11",
+            "-3,-10"
+          ],
+          "junctions": [],
+          "entrances": [
+            {
+              "x": -104.9,
+              "z": -415.2,
+              "y": 1.2,
+              "w": 3,
+              "nx": 0.941,
+              "nz": -0.338,
+              "other": null
+            },
+            {
+              "x": -132.5,
+              "z": -426.6,
+              "y": 1.2,
+              "w": 2.2,
+              "nx": -0.333,
+              "nz": -0.943,
+              "other": null
+            },
+            {
+              "x": -150,
+              "z": -413.3,
+              "y": 1.2,
+              "w": 1.5,
+              "nx": -0.941,
+              "nz": 0.338,
+              "other": null
+            },
+            {
+              "x": -145.6,
+              "z": -400.9,
+              "y": 1.2,
+              "w": 2.3,
+              "nx": -0.941,
+              "nz": 0.338,
+              "other": null
+            },
+            {
+              "x": -142.9,
+              "z": -393.8,
+              "y": 1.2,
+              "w": 2.2,
+              "nx": -0.941,
+              "nz": 0.338,
+              "other": null
+            },
+            {
+              "x": -140.9,
+              "z": -388.1,
+              "y": 1.2,
+              "w": 2.2,
+              "nx": -0.941,
+              "nz": 0.338,
+              "other": null
+            }
+          ]
+        },
+        "final_shared_meta_check": "최종 확인 시 공유 _meta.json의 banwon 엔트리가 생성 결과와 완전히 일치했다. 이 작업에서는 공유 파일을 쓰지 않았으며, 최종 시점에는 별도 반영이 필요하지 않다."
+      },
+      "research_consistency": "4 likely 적용, 2 unverified 추정 유지, 추가 trace11개 y=바닥 높이 및 참조 사진 경로 확인 OK",
+      "diff_check": "git diff --check -- js/places/banwon.js data/research/banwon.json: 통과",
+      "independent_review": "실사 사진·최종 코드·연구 JSON 교차 검토 완료. 감사6개 처리/사진 우선 예외/추정 표기 일치, 추가 카메라11개 좌표 변환과 바닥 높이 확인. 실제 렌더 검토는 실행하지 않음."
+    }
   }
 }

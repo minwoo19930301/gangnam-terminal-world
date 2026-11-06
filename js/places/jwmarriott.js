@@ -120,7 +120,7 @@ export function build(K) {
 
   // Round 6, refs/interior/jw: horizontal stone grain and warmer walnut.
   // These are material traces, not photographic images projected onto the rooms.
-  for (const [key, base] of [['jwHoney', '#cfb58f'], ['jwLoungeStone', '#c9a577']]) K.texture(key, 512, 256, (g, w, h) => {
+  for (const [key, base] of [['jwHoney', '#ded0b8'], ['jwLoungeStone', '#d4b58d']]) K.texture(key, 512, 256, (g, w, h) => {
     g.fillStyle = base; g.fillRect(0, 0, w, h);
     const r = K.rand(505);
     for (let i = 0; i < 150; i++) {
@@ -130,7 +130,7 @@ export function build(K) {
     g.strokeStyle = 'rgba(112,96,75,.18)'; g.lineWidth = 1; g.strokeRect(.5, .5, w - 1, h - 1);
   }, [1.2, .6]);
   K.texture('jwTravertine', 512, 256, (g, w, h) => {
-    g.fillStyle = '#d8bc9a'; g.fillRect(0, 0, w, h); const r = K.rand(606);
+    g.fillStyle = '#dfbfa1'; g.fillRect(0, 0, w, h); const r = K.rand(606);
     for (let i = 0; i < 360; i++) {
       g.fillStyle = i % 3 ? 'rgba(120,90,60,.12)' : 'rgba(250,231,208,.22)';
       g.fillRect(r() * w, r() * h, 12 + r() * 130, .4 + r() * 1.1);
@@ -146,9 +146,9 @@ export function build(K) {
     }
   }, [.65, 3.2]);
   K.texture('jwDarkMarble', 512, 256, (g, w, h) => {
-    g.fillStyle = '#343431'; g.fillRect(0, 0, w, h); const r = K.rand(1919);
+    g.fillStyle = '#282926'; g.fillRect(0, 0, w, h); const r = K.rand(1919);
     for (let i = 0; i < 55; i++) {
-      g.strokeStyle = i % 4 ? 'rgba(220,214,197,.27)' : 'rgba(249,243,222,.65)'; g.lineWidth = .6 + r() * 2;
+      g.strokeStyle = i % 4 ? 'rgba(220,214,197,.32)' : 'rgba(249,243,222,.8)'; g.lineWidth = .6 + r() * 2;
       const yy = r() * h; g.beginPath(); g.moveTo(0, yy);
       for (let x = 0; x <= w; x += 24) g.lineTo(x, yy + Math.sin(x / 42 + i) * 9 + r() * 12); g.stroke();
     }
@@ -172,25 +172,29 @@ export function build(K) {
     for (let i = 0; i < 5000; i++) { g.fillStyle = ['#c3bdb3', '#807c74', '#d9d4c8', '#989389'][i % 4]; const s = .4 + r() * 1.3; g.fillRect(r() * w, r() * h, s, s); }
   }, [1.4, 1.4]);
   for (const [key, base, colors] of [
-    ['jwFoyerCarpet', '#8e9294', ['#d7cdb9', '#35475c', '#596d83', '#b1afa2']],
-    ['jwLoungeRug', '#baa48d', ['#d9c9ae', '#9c8f80', '#c8b89c', '#e0d2b7']],
+    ['jwFoyerCarpet', '#394d66', ['#d0bd98', '#26394f', '#65778a', '#a69f8e']],
+    ['jwLoungeRug', '#b9aa94', ['#c9bda8', '#a2998b', '#b4a58e', '#d0c3ae']],
   ]) K.texture(key, 512, 512, (g, w, h) => {
     g.fillStyle = base; g.fillRect(0, 0, w, h); const r = K.rand(1010);
-    for (let i = 0; i < 2600; i++) {
-      g.strokeStyle = colors[i % colors.length]; g.globalAlpha = .18 + r() * .4; g.lineWidth = .5 + r() * 2;
-      let x = r() * w, yy = r() * h; g.beginPath(); g.moveTo(x, yy);
-      for (let n = 0; n < 5; n++) { x += (r() - .5) * 6; yy += 5 + r() * 13; g.lineTo(x, yy); } g.stroke();
+    // Short broken brush tufts in clouds, not the previous long 5 x 7 m streaks.
+    for (let i = 0; i < 6800; i++) {
+      let x = r() * w, yy = r() * h;
+      const cloud = Math.sin(x / 51 + Math.sin(yy / 73)) + Math.cos(yy / 59);
+      g.strokeStyle = colors[(i + (cloud > .4 ? 2 : 0)) % colors.length];
+      g.globalAlpha = .14 + r() * .34; g.lineWidth = .6 + r() * 1.8;
+      g.beginPath(); g.moveTo(x, yy);
+      for (let n = 0; n < 3; n++) { x += (r() - .5) * 5; yy += 1 + r() * 4; g.lineTo(x, yy); } g.stroke();
     } g.globalAlpha = 1;
-  }, [5, 7]);
+  }, [2.4, 2.4]);
   K.texture('jwChevron', 256, 256, (g, w, h) => {
     g.fillStyle = '#594438'; g.fillRect(0, 0, w, h);
     for (let j = -4; j < 8; j++) for (let i = 0; i < 4; i++) {
-      const x = i * 64, yy = j * 64; g.fillStyle = ['#70533c', '#816047', '#644935', '#967155'][(i + j + 8) % 4];
+      const x = i * 64, yy = j * 64; g.fillStyle = ['#513d2d', '#5e4734', '#49372a', '#69513c'][(i + j + 8) % 4];
       g.beginPath(); g.moveTo(x, yy); g.lineTo(x + 32, yy + 32); g.lineTo(x + 32, yy + 62); g.lineTo(x, yy + 30); g.closePath(); g.fill();
-      g.fillStyle = ['#85654c', '#5e4635', '#76563f'][(i + j + 9) % 3];
+      g.fillStyle = ['#614b37', '#4b392b', '#58422f'][(i + j + 9) % 3];
       g.beginPath(); g.moveTo(x + 32, yy + 32); g.lineTo(x + 64, yy); g.lineTo(x + 64, yy + 30); g.lineTo(x + 32, yy + 62); g.closePath(); g.fill();
     }
-  }, [2.4, 2.4]);
+  }, [1.2, 1.2]);
   K.texture('jwSheer', 128, 256, (g, w, h) => {
     g.clearRect(0, 0, w, h);
     for (let x = 0; x < w; x++) {
@@ -200,15 +204,17 @@ export function build(K) {
     g.fillStyle = 'rgba(239,231,219,.8)';
     for (let x = 0; x < w; x += 9) g.fillRect(x, 0, 1, h);
   }, [.48, 2], { transparent: true });
-  // Modest specular highlights on polished stone/varnished wood; no fabricated reflections.
-  for (const [key, su, sv, shine, specular] of [
-    ['jwHoney', 1.2, .6, 75, 0x7b7361], ['jwLoungeStone', 1.2, .6, 75, 0x7b7361],
-    ['jwGreyMarble', 2, 1, 70, 0x8c8980], ['jwDarkMarble', 2, 1, 90, 0x8c8980], ['jwWalnut', .65, 3.2, 28, 0x3c3025],
-  ]) {
-    const map = K.T.surface(key).tex; map.repeat.set(1 / su, 1 / sv);
-    K.material(key, new K.THREE.MeshPhongMaterial({ map, color: 0xffffff, specular, shininess: shine, vertexColors: true }));
-  }
-  K.material('jwFoyerBronze', new K.THREE.MeshPhongMaterial({ color: 0x514b42, specular: 0x9d9583, shininess: 90, vertexColors: true }));
+  // Keep these as texture specs: custom MeshPhong overrides swallowed the kit's gloss
+  // flag and repeated the same UV scale twice. Polished surfaces opt into gloss below.
+  K.texture('jwFoyerBronze', 128, 128, (g, w, h) => {
+    g.fillStyle = '#756653'; g.fillRect(0, 0, w, h);
+    for (let i = 0; i < h; i += 2) { g.fillStyle = i % 6 ? 'rgba(225,203,169,.035)' : 'rgba(42,32,21,.04)'; g.fillRect(0, i, w, 1); }
+  }, [1.2, 1.2]);
+  K.texture('jwWallWash', 128, 256, (g, w, h) => {
+    const glow = g.createRadialGradient(w / 2, h * .85, 0, w / 2, h * .85, h * .8);
+    glow.addColorStop(0, 'rgba(255,195,104,.55)'); glow.addColorStop(.4, 'rgba(255,181,81,.22)'); glow.addColorStop(1, 'rgba(255,181,81,0)');
+    g.fillStyle = glow; g.fillRect(0, 0, w, h);
+  }, [1, 1], { transparent: true });
 
   // ---------- helpers (local frame) ----------
   // Record furnishing commands per visited floor, then let K.detail construct their geometry.
@@ -509,6 +515,17 @@ export function build(K) {
     for (const dv of [34.9, 37.7]) { if (k === '1F' && dv === 37.7) continue; B({ u: 8.76, v: dv, y, w: 0.05, d: 1.15, h: 2.35, mat: k === '1F' ? 0x3d3028 : 0x8a7458, solid: false, skip: ['top', 'bottom'] }); }
     if (!['1F', '2F', '8F'].includes(k)) SG([k], { u: 8.72, v: 36.3, y: y + 2.75, w: 1.0, h: 0.45, f: 'W', bg: '#2b241d', fg: '#e8d6b0' });
     SG(['비상구'], { u: 8.72, v: 27.4, y: y + 2.55, w: 0.9, h: 0.28, f: 'W', bg: '#1d7a3a', fg: '#ffffff' });
+    // Round 10: photos 07/08 establish reception on 8F. The audit requests lift-only
+    // visitor access from L; the photographs do not establish exclusive circulation.
+    // Close the existing emergency-core portals on every floor reachable by the L–5F
+    // escalators, so that those stairs cannot become an invented check-in route.
+    // Keep the flights intact; these static door leaves implement visitor circulation,
+    // not a claim about surveyed fire-door appearance or real emergency operation.
+    if (['1F', '2F', '3F', '4F', '5F'].includes(k)) {
+      B({ u: 8.85, v: 27.4, y, w: .1, d: 1.7, h: 2.3, mat: 0x3e342c, structural: true });
+      B({ u: 8.79, v: 27.4, y: y + .95, w: .025, d: 1.25, h: .055, mat: BRONZE, solid: false });
+      SG(['비상계단', '8층 체크인은 엘리베이터 이용'], { u: 8.78, v: 27.4, y: y + 1.6, w: 1.35, h: .35, f: 'W', bg: '#3e342c', fg: '#ece2db', bold: false });
+    }
     if (i === LV.length - 1) break;
     const h = LV[i + 1][1] - y;
     STR(10.4, 25.4, 14.2, 25.4, y, y + h / 2, 1.8);
@@ -873,7 +890,7 @@ export function build(K) {
     B({ u: 1, v: 5.101, y: 1.32, w: .66, d: .016, h: .71, mat: 0xc4aa85, solid: false });
     B({ u: .88, v: 5.113, y: 1.42, w: .08, d: .006, h: .47, mat: 0x715a45, solid: false });
     LIGHTS([17, 42, 32, 60], 5.64, 4.2, .14, 0xefcb91);
-    SG(['8층 리셉션 · 더 라운지', '엘리베이터 →'], { u: 4.25, v: 40.2, y: 1.5, w: .8, h: .32, f: 'S', bg: '#594250', fg: '#ece2db' });
+    SG(['체크인 · 더 라운지 8층', '엘리베이터 ↑'], { u: 4.25, v: 40.2, y: 1.5, w: .8, h: .32, f: 'S', bg: '#594250', fg: '#ece2db' });
     SUBZ('목걸이 조형물 · 현관 홀', '1F', '목재 격자 천장 · 도자기 구슬 조형물', HALL, 8.15);
     SUBZ('엘리베이터 홀', '1F', '트래버틴 벽 · 층별 안내', [4.2, 24.2, 8.8, 39.6]);
     SUBZ('컨시어지 · 벨 데스크', '1F', '짐 보관 · 안내', [17, 55.2, 30, 60.4]);
@@ -912,39 +929,44 @@ export function build(K) {
     WL(-33.1, 12, 4, 12, y, yc, { mat: 'jwWalnut' });
     WL(4, 12, 4, 41.7, y, yc, { mat: 'jwWalnut', thick: .2, openings: [{ at: 6.5, w: 3.4, y0: y, y1: y + 3.45 }] });
     WL(-33, 41.7, 4, 41.7, y, yc, { mat: 'jwWalnut', thick: .12 });
-    HP('jwTerrazzo', [-33, 12, 4, 60.4], y + .012, true, [[-2, 42, 4, 55]]);
+    HP({ tex: 'jwTerrazzo', color: 0x77746d, gloss: .3 }, [-33, 12, 4, 60.4], y + .012, true, [[-2, 42, 4, 55]]);
+    // Photo 20 alternates flecked terrazzo aisles with smooth, darker seating bays.
+    for (const rect of [[-19.4, 27.3, -12.2, 34.4], [-11.6, 27.3, -4.2, 34.4], [-19.4, 36.3, -4.2, 41.2]]) HP({ tex: 'jwGreyStone', color: 0x77736b, gloss: .3 }, rect, y + .016);
     // 18: medium walnut pier, concealed top wash, celadon vase and dried flowers.
     B({ u: 4.115, v: 14.6, y, w: .025, d: 2.7, h: yc - y - .04, mat: 'jwWalnutLight', solid: false });
-    SG('FLAVORS', { u: 4.12, v: 14.6, y: y + 2.62, w: 1.25, h: .22, f: 'E', bg: null, fg: '#c4a273', bold: false, font: 'Georgia, serif', pxPerM: 220 });
+    SG('F L A V O R S', { u: 4.16, v: 14.6, y: y + 2.72, w: 1.4, h: .24, f: 'E', bg: null, fg: '#d4b078', bold: false, font: 'Georgia, serif', pxPerM: 260 });
     B({ u: 4.24, v: 14.6, y: yc - .08, w: .3, d: 2.85, h: .12, mat: 0x2a221c, solid: false });
     B({ u: 4.15, v: 14.6, y: yc - .1, w: .06, d: 2.7, h: .025, mat: { tex: 'emit', color: 0xe3af6d }, solid: false });
-    CONE(5.25, 14.6, y, .45, .15, .745, 'jwWalnut', { seg: 20 });
-    CY(5.25, 14.6, y + .745, .65, .055, 'jwWalnut', { seg: 28, solid: false });
+    CONE(5.25, 14.6, y, .45, .15, .745, { tex: 'jwWalnut', gloss: .5 }, { seg: 28 });
+    CY(5.25, 14.6, y + .745, .65, .055, { tex: 'jwWalnut', gloss: .5 }, { seg: 32, solid: false });
     const [vaseX, vaseZ] = P(5.25, 14.6);
-    DK.dome({ x: vaseX, y: y + 1.05, z: vaseZ, rx: .25, ry: .28, rz: .25, hemi: false, mat: 0xe2e2d6, seg: 16, rings: 8 });
-    CY(5.25, 14.6, y + 1.23, .14, .08, 0xe2e2d6, { seg: 16, solid: false });
-    FLOWER(5.25, 14.6, y + .97, 1.6, [0x8e3e2b, 0xa9643e, 0x48603d, 0xc9904e, 0xcbb58e], { vase: false, stems: 92 });
+    DK.dome({ x: vaseX, y: y + 1.05, z: vaseZ, rx: .25, ry: .28, rz: .25, hemi: false, mat: { color: 0xdcd9c6, gloss: .3 }, seg: 28, rings: 12 });
+    CY(5.25, 14.6, y + 1.23, .14, .08, { color: 0xdcd9c6, gloss: .3 }, { seg: 24, solid: false });
+    FLOWER(5.25, 14.6, y + .97, 1.1, [0x923323, 0xba4d2e, 0x64704d, 0xb78851, 0xc5b28c], { vase: false, stems: 104, dried: true });
     // 17: cream acoustic ceiling, warm perimeter wash and staggered brass tubes.
     // Its photographed double height remains compressed into the retained 5.2 m floor stack.
     COVE([-32.7, 12.2, 3.8, 26.2], yc - .03, 0xe6dfce);
-    CY(-11.5, 20.7, y, .58, yc - y - .02, 'jwWalnut', { seg: 36, structural: true });
+    CY(-11.5, 20.7, y, .58, yc - y - .02, { tex: 'jwWalnut', color: 0x796c65, gloss: .5 }, { seg: 48, structural: true });
     for (const h of [.1, 2.1, 4.15]) CY(-11.5, 20.7, y + h, .583, .014, 0x30261e, { seg: 36, solid: false });
     SLATS('v', 12.16, -32.7, 3.7, y, yc - y, .10, { w: .035, d: .05 });
-    for (let i = 0; i < 40; i++) {
-      const u = -19.1 + (i % 8) * .53, v = 16 + Math.floor(i / 8) * .82;
-      const h = 1.2 + ((i * 7) % 10) * .1, bot = y + 3 + ((i * 3) % 7) * .1;
+    for (let i = 0; i < 48; i++) {
+      const u = -18.2 + (i % 8) * .48, v = 17 + Math.floor(i / 8) * .62;
+      const h = 1.1 + ((i * 7) % 13) * .13, bot = y + 2.25 + ((i * 3) % 9) * .105;
       const tubeH = Math.min(h, yc - .11 - bot);
       CY(u, v, bot + tubeH, .008, yc - .04 - bot - tubeH, 0x4c4237, { seg: 4, solid: false });
-      CY(u, v, bot, .04, tubeH, i % 3 ? 0xb18b52 : 0xd0ad70, { seg: 8, solid: false });
+      CY(u, v, bot, .035, tubeH, { color: i % 3 ? 0xb18b52 : 0xd0ad70, gloss: .5 }, { seg: 12, solid: false });
       CY(u, v, bot - .012, .035, .018, { tex: 'emit', color: 0xf8ddb2 }, { seg: 8, solid: false });
     }
     // 19: veined grey marble blocks and a bright, glazed dessert case.
     HP(0x30241d, [-32.8, 26.4, -21, 41.5], yc - .18, false);
-    for (let v = 26.5; v < 41.5; v += .42) B({ u: -27, v, y: yc - .35, w: 11.5, d: .09, h: .15, mat: 'jwWalnut', solid: false });
+    for (let v = 26.5; v < 41.5; v += .3) B({ u: -27, v, y: yc - .38, w: 11.5, d: .08, h: .2, mat: { tex: 'jwWalnut', color: 0xa29182, gloss: .3 }, solid: false });
+    // The counter room has horizontal baffles, circular spots, and an illuminated rear screen.
+    LIGHTS([-32, 27, -21.8, 40.8], yc - .4, 2.7, .09, 0xffd6a0);
+    for (const v of [28.2, 30.9, 33.6, 36.3, 39]) B({ u: -32.9, v, y: y + .18, w: .025, d: 1.2, h: 3.7, mat: { tex: 'emit', color: 0xa58b68 }, solid: false });
     SLATS('u', -32.85, 12.5, 41.5, y, yc - y, .10, { w: .035, d: .05 });
     for (const [u, v, w, d] of [[-29.3, 29.5, 1.25, 6.4], [-29.3, 37.4, 1.25, 5.2], [-24.6, 33.3, 1.5, 6.6]]) {
-      B({ u, v, y, w, d, h: 1.05, mat: 'jwGreyMarble' });
-      B({ u, v, y: y + 1.05, w: w + .08, d: d + .08, h: .055, mat: 'jwGreyMarble', solid: false });
+      B({ u, v, y, w, d, h: 1.05, mat: { tex: 'jwDarkMarble', color: 0xc7c4bd, gloss: .5 } });
+      B({ u, v, y: y + 1.05, w: w + .08, d: d + .08, h: .055, mat: { tex: 'jwDarkMarble', gloss: .7 }, solid: false });
       for (let j = 0; j < 24; j++) {
         const su = u + (j % 2 ? .23 : -.23), sv = v - d / 2 + .35 + Math.floor(j / 2) * (d - .7) / 11;
         if (j % 4 === 0) {
@@ -958,9 +980,9 @@ export function build(K) {
         } else B({ u: su, v: sv, y: y + 1.11, w: .23, d: .24, h: .12 + (j % 3) * .05, mat: j % 4 === 2 ? 0xad5938 : 0xd9c6a3, solid: false });
       }
     }
-    FLOWER(-29.3, 25, y + 1.05, 1.6, [0x994d33, 0xc86b3d, 0xcf9b56, 0x75804a], { stems: 74 });
-    B({ u: -29.3, v: 25, y, w: 1.5, d: 1.4, h: 1.05, mat: 'jwGreyMarble' });
-    B({ u: -21.5, v: 33, y, w: 1, d: 8, h: .95, mat: 'jwGreyMarble' });
+    FLOWER(-29.3, 33.65, y + 1.05, 1.25, [0xb64b24, 0xd47c38, 0xc7ad72, 0x75804a], { stems: 90, dried: true });
+    B({ u: -29.3, v: 33.65, y, w: 1.5, d: 1.4, h: 1.05, mat: { tex: 'jwDarkMarble', gloss: .5 } });
+    B({ u: -21.5, v: 33, y, w: 1, d: 8, h: .95, mat: { tex: 'jwDarkMarble', gloss: .5 } });
     HP({ tex: 'emit', color: 0xf4efe6 }, [-21.94, 29.06, -21.06, 36.94], y + .96);
     B({ u: -21.5, v: 33, y: y + .96, w: 1, d: 8, h: .35, mat: { tex: 'glass', color: 0xdde2db }, solid: false });
     for (const v of [29, 31, 33, 35, 37]) B({ u: -21.5, v, y: y + .96, w: 1.02, d: .035, h: .35, mat: 0xb9b9ad, solid: false });
@@ -1234,31 +1256,41 @@ export function build(K) {
     WL(-33.1, 0, -18, 0, y, yc, { mat: 0xdcd0bf });
     SOFA(-28, 7, y, 3.6, 'E', 0xe4dbcf);
     SUBZ('신부 대기실', '5F', '그랜드 볼룸 웨딩', [-33, 0, -18, 14]);
-    HP('jwHoney', [-31, -10, 3, 0], y + 0.012);
+    HP({ tex: 'jwHoney', gloss: .7 }, [-31, -10, 3, 0], y + 0.012);
     HP('jwFoyerCarpet', [-29.5, -8.6, 3, -1.4], y + 0.018);
-    HP('jwHoney', [3, -56, 32.95, 24.1], y + 0.012);
+    HP({ tex: 'jwHoney', gloss: .7 }, [3, -56, 32.95, 24.1], y + 0.012);
     HP('jwFoyerCarpet', [5.4, -52.5, 30.5, 23.6], y + 0.018);
-    HP('jwHoney', [16, 24.2, 33, 60.4], y + 0.012, true, [ESC['5F']]);
+    HP({ tex: 'jwHoney', gloss: .7 }, [16, 24.2, 33, 60.4], y + 0.012, true, [ESC['5F']]);
     HP('jwFoyerCarpet', [17.5, 24.2, 24.7, 58.5], y + 0.018);
     const fCeil = y + 3.65;
     // The source ceiling is a dark mirrored bronze grid, not a luminous tile array.
     const bronzeCeiling = (r) => {
       const [u0, v0, u1, v1] = r;
-      B({ u: (u0 + u1) / 2, v: (v0 + v1) / 2, y: fCeil, w: u1 - u0, d: v1 - v0, h: 0.08, mat: 'jwFoyerBronze', solid: false });
+      B({ u: (u0 + u1) / 2, v: (v0 + v1) / 2, y: fCeil, w: u1 - u0, d: v1 - v0, h: 0.08, mat: { tex: 'jwFoyerBronze', gloss: .7 }, solid: false });
       // Individual smoked-bronze coffers have a fine recessed edge, rather than one flat dark roof.
       for (let u = u0, i = 0; u < u1; u += 2.1, i++) for (let v = v0, j = 0; v < v1; v += 2.4, j++) {
         const w = Math.min(2.1, u1 - u), d = Math.min(2.4, v1 - v);
-        B({ u: u + w / 2, v: v + d / 2, y: fCeil - .025, w: w - .075, d: d - .075, h: .018, mat: { tex: 'jwFoyerBronze', color: [0xe3d4bd, 0xc3b7a5, 0xd7cbbb][(i + j * 2) % 3] }, solid: false });
+        B({ u: u + w / 2, v: v + d / 2, y: fCeil - .025, w: w - .075, d: d - .075, h: .018, mat: { tex: 'jwFoyerBronze', color: [0xead9c1, 0xd8c2a5, 0xe0cdb4][(i + j * 2) % 3], gloss: .7 }, solid: false });
       }
       for (let u = u0; u <= u1; u += 2.1) B({ u, v: (v0 + v1) / 2, y: fCeil - 0.07, w: 0.045, d: v1 - v0, h: 0.07, mat: 0x241f1a, solid: false });
       for (let v = v0; v <= v1; v += 2.4) B({ u: (u0 + u1) / 2, v, y: fCeil - 0.07, w: u1 - u0, d: 0.045, h: 0.07, mat: 0x241f1a, solid: false });
-      for (let u = u0 + 1.05; u < u1; u += 4.2) for (let v = v0 + 1.2; v < v1; v += 4.8) {
+      for (let u = u0 + 1.05; u < u1; u += 4.2) for (let v = v0 + 1.2; v < v1; v += 2.4) {
         CY(u, v, fCeil - .09, .105, .024, 0x211c18, { seg: 12, solid: false });
         CY(u, v, fCeil - .096, .06, .015, { tex: 'emit', color: 0xffe0ae }, { seg: 12, solid: false });
       }
     };
     bronzeCeiling([3.1, -55.8, 32.9, 24.1]); bronzeCeiling([-31, -10, 3, 0]);
     bronzeCeiling([16.1, 24.2, 32.9, 60.3]);
+    // Warm recessed perimeter slots are visible in both foyer photographs.
+    for (const u of [16.35, 32.65]) B({ u, v: 42.2, y: fCeil - .105, w: .045, d: 35.7, h: .025, mat: { tex: 'emit', color: 0xffd49b }, solid: false });
+    // The photographed approach dresses the core's existing blank east face and the east wall.
+    // No new circulation wall or second escalator is introduced.
+    for (const [u, a, b] of [[15.98, 24.2, 39.5], [32.98, 24.2, 60.3]]) {
+      B({ u, v: (a + b) / 2, y, w: .08, d: b - a, h: 3.58, mat: { tex: 'jwWalnut', color: 0x997e6b, gloss: .3 }, solid: false });
+      for (let v = a; v <= b; v += 1.2) B({ u: u < 20 ? u + .045 : u - .045, v, y, w: .012, d: .018, h: 3.58, mat: 0x2f261e, solid: false });
+    }
+    SLATS('u', 16.09, 24.4, 30.4, y, 3.58, .25, { w: .08, d: .18 });
+    SLATS('u', 32.75, 24.4, 31.8, y, 3.58, .25, { w: .08, d: .18 });
     // Timber blades beside the ballroom portals preserve the actual door openings.
     for (const [a, b] of [[-55.3, -46.7], [-43.3, -26.7], [-23.3, -10.4]]) SLATS('u', 3.28, a, b, y, 3.58, 0.22);
     SLATS('u', 32.65, -52.5, 23.4, y, 3.58, 0.24);
@@ -1274,17 +1306,28 @@ export function build(K) {
       B({ u: 32.48, v, y: y + 1.5, w: .09, d: .23, h: .58, mat: 0x342920, solid: false });
       B({ u: 32.42, v, y: y + 1.56, w: .026, d: .13, h: .46, mat: { tex: 'emit', color: 0xd9b074 }, solid: false });
     }
-    // Pale framed screen and flower console at the end of the photographed foyer.
-    B({ u: 17.6, v: -53.25, y, w: 14, d: 0.12, h: 3.55, mat: 0xc6b6a0, solid: false });
-    for (let u = 10.6; u <= 24.6; u += 2) B({ u, v: -53.15, y, w: 0.065, d: 0.08, h: 3.55, mat: 0x3c3028, solid: false });
+    // Photo 10's intimate end bay opens into the existing broad pre-function corridor.
+    // These short returns frame the console without reducing the circulation beyond this bay.
+    for (const u of [10.5, 25.0]) {
+      WL(u, -53.3, u, -46.3, y, fCeil, { mat: { tex: 'jwWalnut', color: 0xb39b86, gloss: .3 }, thick: .18 });
+      const faceU = u < 18 ? u + .13 : u - .13;
+      SLATS('u', faceU, -53.05, -49.2, y, 3.55, .24, { w: .075, d: .17 });
+      B({ u: faceU, v: -51.1, y: y + .055, w: .06, d: 3.85, h: .025, mat: { tex: 'emit', color: 0xffcd85 }, solid: false });
+    }
+    HP({ tex: 'jwHoney', gloss: .7 }, [10.65, -53.15, 24.85, -46.3], y + .023);
+    HP('jwFoyerCarpet', [12.05, -50.75, 23.45, -46.3], y + .027);
+    // Champagne framed panels and flower console, with narrow dark joints as in photo 10.
+    B({ u: 17.6, v: -53.25, y, w: 14, d: 0.12, h: 3.55, mat: { color: 0xc9b08e, gloss: .5 }, solid: false });
+    for (let u = 10.6; u <= 24.6; u += 2) B({ u, v: -53.15, y, w: 0.045, d: 0.08, h: 3.55, mat: 0x3c3028, solid: false });
     for (const dy of [0.55, 2.7]) B({ u: 17.6, v: -53.15, y: y + dy, w: 14, d: 0.08, h: 0.035, mat: 0x5e5144, solid: false });
-    B({ u: 18.5, v: -51.9, y, w: 4.2, d: 0.9, h: 0.85, mat: 'jwDarkMarble' });
+    B({ u: 18.5, v: -51.9, y, w: 4.32, d: .98, h: .07, mat: { tex: 'jwHoney', gloss: .5 }, solid: false });
+    B({ u: 18.5, v: -51.9, y: y + .07, w: 4.2, d: 0.9, h: 0.85, mat: { tex: 'jwDarkMarble', gloss: .7 } });
     B({ u: 16.2, v: -51.9, y: y + 0.82, w: 1.8, d: 0.85, h: 0.05, mat: 0xbda67d, solid: false });
     for (const u of [15.4, 17]) B({ u, v: -51.9, y, w: 0.055, d: 0.85, h: 0.82, mat: 0x9d8764, solid: false });
     for (let i = 0; i < 9; i++) {
-      const u = 15.65 + i * .56, v = -51.9 + (i % 3 - 1) * .16, s = .48 + (i % 4) * .065;
+      const u = 15.65 + i * .56, v = -51.9 + (i % 3 - 1) * .16, s = .72 + (i % 4) * .055;
       CY(u, v, y + .87, .1 + (i % 2) * .025, .24 + (i % 3) * .07, { tex: 'glass', color: 0xc5d1bd }, { seg: 12, solid: false });
-      FLOWER(u, v, y + .9, s, [0xe78b4e, 0xefbc62, 0xe1c4ae, 0x6e8b44], { vase: false });
+      FLOWER(u, v, y + .97, s, [0xef7e43, 0xd75138, 0xe7a84a, 0x72924b], { vase: false, stems: 42 });
     }
     // Queue ropes and a slender display console at the edge of the photograph, leaving its central carpet clear.
     for (const v of [-52.2, -50.3]) {
@@ -1299,29 +1342,30 @@ export function build(K) {
     B({ u: 28.4, v: -47.5, y: y + .86, w: .8, d: 2.7, h: .055, mat: 0xc8b898, solid: false });
     for (const du of [-.35, .35]) for (const dv of [-1.25, 1.25]) B({ u: 28.4 + du, v: -47.5 + dv, y, w: .035, d: .035, h: .86, mat: 0xa4916e, solid: false });
     for (const v of [-48.2, -46.8]) FLOWER(28.4, v, y + .915, .8, [0x557441, 0x819b5a, 0xe6d6b7, 0x78984f]);
-    // Two low amber reception counters seen by the escalator approach (photo 09).
+    // Photo 09 shows two amber event-registration counters at the escalator approach.
+    // Preserve them: the audit's proposed removal conflicts with the photo. Hotel check-in is on 8F.
     for (const u of [19, 27]) {
-      B({ u, v: 20.8, y, w: 4.0, d: 0.85, h: 0.93, mat: 0xa9693e, top: 0xe1c8a5 });
-      B({ u, v: 20.8, y, w: 4.05, d: 0.89, h: 0.2, mat: 0x342c24, solid: false });
-      for (const du of [-1.2, 0, 1.2]) B({ u: u + du, v: 21.235, y: y + .2, w: .012, d: .012, h: .68, mat: 0x86532f, solid: false });
+      B({ u, v: 26.8, y, w: 4.0, d: 0.85, h: 0.93, mat: 0xa9693e, top: 0xe1c8a5 });
+      B({ u, v: 26.8, y, w: 4.05, d: 0.89, h: 0.2, mat: 0x342c24, solid: false });
+      for (const du of [-1.2, 0, 1.2]) B({ u: u + du, v: 27.235, y: y + .2, w: .012, d: .012, h: .68, mat: 0x86532f, solid: false });
       // Guest books, pens, envelope trays and card holders use human-sized dimensions.
       for (const du of [-1.1, .35]) {
-        B({ u: u + du, v: 20.93, y: y + .94, w: .4, d: .29, h: .025, mat: 0xece5d8, solid: false });
-        B({ u: u + du, v: 20.93, y: y + .969, w: .006, d: .27, h: .003, mat: 0x998f7c, solid: false });
-        B({ u: u + du + .27, v: 20.98, y: y + .945, w: .012, d: .14, h: .01, mat: 0x26231f, solid: false });
+        B({ u: u + du, v: 26.93, y: y + .94, w: .4, d: .29, h: .025, mat: 0xece5d8, solid: false });
+        B({ u: u + du, v: 26.93, y: y + .969, w: .006, d: .27, h: .003, mat: 0x998f7c, solid: false });
+        B({ u: u + du + .27, v: 26.98, y: y + .945, w: .012, d: .14, h: .01, mat: 0x26231f, solid: false });
       }
-      B({ u: u + 1.35, v: 20.75, y: y + .94, w: .36, d: .28, h: .06, mat: 0x806346, solid: false });
-      B({ u: u + 1.35, v: 20.75, y: y + 1, w: .3, d: .22, h: .014, mat: 0xe6dfd0, solid: false });
-      SG('접수', { u: u - .1, v: 20.85, y: y + 1.08, w: .21, h: .12, f: 'S', bg: '#47382c', fg: '#e0d0ab', bold: false });
-      B({ u: u + 2.45, v: 20.8, y, w: 0.055, d: 0.055, h: 1.6, mat: 0x362e25, solid: false });
-      B({ u: u + 2.45, v: 20.8, y: y + .99, w: .54, d: .08, h: .75, mat: 0x272522, solid: false });
-      SG(['그랜드 볼룸', '연회 안내'], { u: u + 2.45, v: 20.855, y: y + 1.365, w: .48, h: .68, f: 'S', bg: '#64a6c3', fg: '#e9edf0', bold: false });
-      CY(u + 2.45, 20.8, y, .25, .025, 0x66523c, { seg: 12, solid: false });
-      MAN(u - .55, 19.85, y, { shirt: 0x29282a, rotY: FACE.S });
+      B({ u: u + 1.35, v: 26.75, y: y + .94, w: .36, d: .28, h: .06, mat: 0x806346, solid: false });
+      B({ u: u + 1.35, v: 26.75, y: y + 1, w: .3, d: .22, h: .014, mat: 0xe6dfd0, solid: false });
+      SG('연회 접수', { u: u - .1, v: 26.85, y: y + 1.08, w: .4, h: .12, f: 'S', bg: '#47382c', fg: '#e0d0ab', bold: false });
+      B({ u: u + 2.45, v: 26.8, y, w: 0.055, d: 0.055, h: 1.85, mat: 0x362e25, solid: false });
+      B({ u: u + 2.45, v: 26.8, y: y + .99, w: .68, d: .08, h: 1.0, mat: 0x272522, solid: false });
+      SG(['그랜드 볼룸', '연회 안내'], { u: u + 2.45, v: 26.855, y: y + 1.49, w: .60, h: .92, f: 'S', bg: '#3d91bc', fg: '#e9edf0', bold: false });
+      CY(u + 2.45, 26.8, y, .25, .025, 0x66523c, { seg: 12, solid: false });
+      MAN(u - .55, 25.85, y, { shirt: 0x29282a, rotY: FACE.S });
     }
     for (let u = 16.4, i = 0; u < 30.2; u += 1.25, i++) {
-      B({ u, v: 18.9 + (i % 2) * .13, y, w: 1.23, d: .12, h: 1.95, mat: [0x39352e, 0x4c463a, 0x302f29][i % 3], solid: false });
-      B({ u: u + .61, v: 18.92 + (i % 2) * .13, y, w: .025, d: .14, h: 1.95, mat: 0x1c1b18, solid: false });
+      B({ u, v: 24.9 + (i % 2) * .13, y, w: 1.23, d: .12, h: 1.95, mat: [0x39352e, 0x4c463a, 0x302f29][i % 3], solid: false });
+      B({ u: u + .61, v: 24.92 + (i % 2) * .13, y, w: .025, d: .14, h: 1.95, mat: 0x1c1b18, solid: false });
     }
     // Discreet waiting groups continue the same finish along the full pre-function hall.
     for (const [u, v, face] of [[6.4, -34, 'E'], [30.6, -12, 'W'], [6.4, 5, 'E'], [18.2, 52, 'E']]) {
@@ -1336,11 +1380,16 @@ export function build(K) {
       CY(30.7, 41.6 + i * .37, y + .836, .08, .01, 0xe7e0d4, { seg: 10, solid: false });
     }
     RAILBOX(ESC['5F'], y, 'n');
+    // Keep the actual moving escalator; add the photographed green comb/landing indicators.
+    for (const u of [26.85, 28.65]) {
+      B({ u, v: 32.64, y: y + .035, w: .78, d: .16, h: .018, mat: { tex: 'emit', color: 0x42ce99 }, solid: false });
+      for (const du of [-.46, .46]) B({ u: u + du, v: 32.95, y: y + .12, w: .035, d: .6, h: .055, mat: { tex: 'emit', color: 0x42ce99 }, solid: false });
+    }
     SG('그랜드 볼룸', { u: 30.3, v: 30.1, y: y + 1.55, w: 0.8, h: 0.32, f: 'S', bg: '#382e28', fg: '#e6dcc7' });
     DOORP(4.93, 20, y, 'E', 1.2, 0x68513c); DOORP(4.93, 24, y, 'E', 1.2, 0x68513c);
     SG('화장실', { u: 5.02, v: 22, y: y + 1.5, w: 0.45, h: 0.23, f: 'E', bg: '#382e28', fg: '#eee5d5' });
     MAN(12, 17.7, y, { shirt: 0x26252a }); MAN(24.5, -28, y, { shirt: 0x5b4d44 });
-    SUBZ('방명록 · 축의금 접수', '5F', '웨딩 리셉션', [7.5, 18.6, 29, 22.2]);
+    SUBZ('방명록 · 축의금 접수', '5F', '웨딩 리셉션', [16.2, 24.6, 30.2, 28.2]);
     SUBZ('웨딩 무대', '5F', '그랜드 볼룸 · 플라워 월', [-24, -56, -4, -51]); SUBZ('버진로드 21m', '5F', '그랜드 볼룸', [-15.5, -51, -12.5, -30]);
     SUBZ('그랜드 볼룸 포이어', '5F', '푸른 추상 카펫 · 브론즈 격자 천장 · 리셉션', [3, -60.4, 33, 60.4]);
     // The removed speculative bridal flower wall consumed 24 random values.
@@ -1484,7 +1533,7 @@ export function build(K) {
   // =====================================================================
   function floor8() {
     const y = Y['8F'], yc = y + 5.2;
-    HP('jwLoungeStone', [-7.85, 6.15, 15.85, 57.85], y + .008, true, [ELH, STH]);
+    HP({ tex: 'jwLoungeStone', gloss: .5 }, [-7.85, 6.15, 15.85, 57.85], y + .008, true, [ELH, STH]);
     // Separate rug islands preserve the polished honey-stone circulation between seating bays.
     HP('jwLoungeRug', [-7.4, 14.1, 2.3, 24.5], y + .018);
     HP('jwLoungeRug', [-7.4, 30.5, 1.2, 44.2], y + .018);
@@ -1492,7 +1541,9 @@ export function build(K) {
     // 01 is a ten-metre copper screen bay; 02 is the adjacent plain sheer-curtain bay.
     // Keeping them separate lets the piano and sofa read together against pale glazing.
     WL(-7.62, 6.5, -7.62, 47.8, y + .04, yc - .07, { mat: 'jwSheer', thick: .012, solid: false });
-    for (let v = 14.1, i = 0; v < 24.3; v += .085, i++) B({ u: -7.5, v, y: y + .05, w: .02, d: .05, h: 5.05, mat: [0xb26b4a, 0x8c4a2e, 0xc98a5c][i % 3], solid: false, skip: ['top', 'bottom'] });
+    // Full-height ribbons already reached this floor's soffit; finer, staggered copper strips
+    // and a closer upward trace view recover the tall screen visible in photo 01.
+    for (let v = 14.1, i = 0; v < 24.3; v += .052, i++) B({ u: -7.49 + Math.sin(i * 1.73) * .024, v, y: y + .035, w: .024, d: .026, h: 5.095, mat: { color: [0xb65a2c, 0x884023, 0xc3763f, 0x723a27][i % 4], gloss: .3 }, solid: false, skip: ['top', 'bottom'] });
     B({ u: -7.65, v: 27.15, y: yc - .08, w: .1, d: 41.3, h: .06, mat: 0x70513a, solid: false });
     B({ u: -7.3, v: 27.15, y: yc - .1, w: .06, d: 41.3, h: .025, mat: { tex: 'emit', color: 0xe3af6d }, solid: false });
     B({ u: -7.76, v: 27.15, y: y + 2.9, w: .035, d: 41.3, h: .5, mat: 0x3a2b24, solid: false });
@@ -1510,7 +1561,7 @@ export function build(K) {
         DK.quad(mat, [at(a, -width / 2), at(b, -width / 2), at(b, width / 2), at(a, width / 2)], [EV[0], 0, EV[1]]);
       }
     };
-    for (const v of [16.8, 21.2]) ring(-7.45, v, 3.4, 1.6, 1.6, .04, 0x6b4f35, 64);
+    for (const v of [16.8, 21.2]) ring(-7.42, v, 3.4, 1.6, 1.6, .025, { color: 0x68402c, gloss: .3 }, 80);
     const rod = (a, b, radius, mat, seg = 5) => {
       const pa = P(a[0], a[2]), pb = P(b[0], b[2]);
       const A = new K.THREE.Vector3(pa[0], a[1], pa[1]), Bp = new K.THREE.Vector3(pb[0], b[1], pb[1]);
@@ -1535,10 +1586,10 @@ export function build(K) {
     WL(4.8, 6.35, 4.8, 14, y, yc, { mat: 'jwWalnut', thick: .12 });
     for (let u = -7.7; u < 4.8; u += 1.4) B({ u, v: 6.46, y, w: .055, d: .06, h: 5.1, mat: 0x725139, solid: false });
     for (const yy of [1.4, 3.1, 4.8]) B({ u: -1.45, v: 6.46, y: y + yy, w: 12.4, d: .06, h: .055, mat: 0x725139, solid: false });
-    B({ u: -2.1, v: 10.2, y, w: 9.2, d: 1.1, h: 1.02, mat: 0x242725, top: 'jwDarkMarble' });
-    B({ u: -2.1, v: 10.2, y: y + 1.02, w: 9.35, d: 1.2, h: .075, mat: 'jwDarkMarble', solid: false });
-    for (let u = -6.6; u < 2.5; u += .22) B({ u, v: 10.77, y: y + .08, w: .035, d: .035, h: .9, mat: 0x151a18, solid: false });
-    B({ u: -2.1, v: 7.15, y, w: 8.8, d: .9, h: .92, mat: 0x292b27, top: 'jwDarkMarble' });
+    B({ u: -2.1, v: 8.9, y, w: 9.2, d: .8, h: 1.02, mat: 0x242725, top: { tex: 'jwDarkMarble', gloss: .7 } });
+    B({ u: -2.1, v: 8.9, y: y + 1.02, w: 9.35, d: .9, h: .075, mat: { tex: 'jwDarkMarble', gloss: .7 }, solid: false });
+    for (let u = -6.6; u < 2.5; u += .22) B({ u, v: 9.32, y: y + .08, w: .035, d: .035, h: .9, mat: 0x151a18, solid: false });
+    B({ u: -2.1, v: 7.15, y, w: 8.8, d: .9, h: .92, mat: 0x292b27, top: { tex: 'jwDarkMarble', gloss: .7 } });
     B({ u: -2.1, v: 6.51, y: y + 1.25, w: 5, d: .035, h: 1.35, mat: { tex: 'emit', color: 0xf3c98a }, solid: false });
     for (const u of [-4.64, .44]) B({ u, v: 6.69, y: y + 1.22, w: .08, d: .35, h: 1.43, mat: 0x4c3729, solid: false });
     B({ u: -2.1, v: 6.69, y: y + 2.6, w: 5.16, d: .35, h: .06, mat: 0x4c3729, solid: false });
@@ -1547,36 +1598,40 @@ export function build(K) {
       B({ u: -2.1, v: 6.76, y: yy, w: 5, d: .35, h: .035, mat: { tex: 'emit', color: 0xf7d8a0 }, solid: false });
       for (let i = 0; i < 40; i++) {
         const u = -4.5 + i * .123, v = 6.79, h = .26 + ((i * 7 + row) % 5) * .02;
-        B({ u, v, y: yy + .035, w: .085, d: .09, h: h - .075, mat: [0xb5842b, 0x687b4b, 0xb3b7a0, 0x77472d, 0xc7a55e][(i + row) % 5], solid: false, skip: ['bottom'] });
-        B({ u, v, y: yy + h - .04, w: .033, d: .035, h: .075, mat: i % 3 ? 0xbba05b : 0x344936, solid: false, skip: ['bottom'] });
+        const bottle = { color: [0xb5842b, 0x687b4b, 0xc0c4b7, 0x77472d, 0xc7a55e][(i + row) % 5], gloss: .5 };
+        const rr = .032 + (i % 3) * .005;
+        CY(u, v, yy + .035, rr, h - .09, bottle, { seg: 10, solid: false });
+        CONE(u, v, yy + h - .055, rr, .016, .025, bottle, { seg: 10 });
+        CY(u, v, yy + h - .03, .016, .065, bottle, { seg: 8, solid: false });
+        CY(u, v, yy + h + .032, .017, .015, i % 3 ? 0xbba05b : 0x344936, { seg: 8, solid: false });
         B({ u, v: v + .048, y: yy + .08, w: .065, d: .004, h: .075, mat: 0xe4d9b8, solid: false, skip: ['top', 'bottom', 'n', 'e', 'w'] });
       }
     }
-    for (const yy of [1.0, 1.2]) B({ u: -2.1, v: 6.83, y: y + yy, w: 5, d: .42, h: .025, mat: 0x282824, solid: false });
+    for (const yy of [1.0, 1.2]) B({ u: -2.1, v: 6.83, y: y + yy, w: 5, d: .42, h: .025, mat: { tex: 'glass', color: 0xc5d2c9 }, solid: false });
     for (let i = 0; i < 30; i++) {
       const u = -4.4 + i * .16;
       CY(u, 6.89, y + 1.025, .048, .145, { tex: 'glass', color: 0xe5e0d5 }, { seg: 6, solid: false, caps: false });
     }
     // 03 foreground: full spirit bottles, a wooden tasting tray and stainless service pitchers.
     for (const [i, u] of [-5.55, -4.85, -3.85].entries()) {
-      const col = [0x98a675, 0xbca55b, 0x70412b][i], h = [.37, .32, .41][i];
-      CY(u, 10.12, y + 1.1, .078, h * .68, col, { seg: 14, solid: false });
-      CONE(u, 10.12, y + 1.1 + h * .68, .078, .031, .055, col, { seg: 14 });
-      CY(u, 10.12, y + 1.155 + h * .68, .031, h * .32 - .055, col, { seg: 10, solid: false });
-      CY(u, 10.12, y + 1.1 + h, .034, .024, i ? 0x312a22 : 0xddd8c7, { seg: 10, solid: false });
-      B({ u, v: 10.2, y: y + 1.17, w: .11, d: .007, h: .12, mat: i === 2 ? 0xe8ddc9 : 0xf0ead7, solid: false });
-      B({ u, v: 10.205, y: y + 1.19, w: .06, d: .004, h: .016, mat: i === 2 ? 0x6f382b : 0x68848b, solid: false });
+      const col = { color: [0x98a675, 0xbca55b, 0x70412b][i], gloss: .5 }, h = [.37, .32, .41][i];
+      CY(u, 8.82, y + 1.1, .078, h * .68, col, { seg: 14, solid: false });
+      CONE(u, 8.82, y + 1.1 + h * .68, .078, .031, .055, col, { seg: 14 });
+      CY(u, 8.82, y + 1.155 + h * .68, .031, h * .32 - .055, col, { seg: 10, solid: false });
+      CY(u, 8.82, y + 1.1 + h, .034, .024, i ? 0x312a22 : 0xddd8c7, { seg: 10, solid: false });
+      B({ u, v: 8.9, y: y + 1.17, w: .11, d: .007, h: .12, mat: i === 2 ? 0xe8ddc9 : 0xf0ead7, solid: false });
+      B({ u, v: 8.905, y: y + 1.19, w: .06, d: .004, h: .016, mat: i === 2 ? 0x6f382b : 0x68848b, solid: false });
     }
-    B({ u: -2.1, v: 10.3, y: y + 1.1, w: 1.15, d: .52, h: .035, mat: 0xb68c5e, solid: false });
-    for (const u of [-2.67, -1.53]) B({ u, v: 10.3, y: y + 1.135, w: .018, d: .52, h: .025, mat: 0xd0a273, solid: false });
+    B({ u: -2.1, v: 9.0, y: y + 1.1, w: 1.15, d: .52, h: .035, mat: 0xb68c5e, solid: false });
+    for (const u of [-2.67, -1.53]) B({ u, v: 9.0, y: y + 1.135, w: .018, d: .52, h: .025, mat: 0xd0a273, solid: false });
     for (let i = 0; i < 6; i++) {
-      const u = -2.48 + (i % 3) * .37, v = 10.15 + Math.floor(i / 3) * .27;
+      const u = -2.48 + (i % 3) * .37, v = 8.85 + Math.floor(i / 3) * .27;
       CY(u, v, y + 1.138, .045, .012, 0xdfd6bc, { seg: 12, solid: false });
       CY(u, v, y + 1.15, .046, .1, { tex: 'glass', color: 0xdce4dc }, { seg: 12, solid: false, caps: false });
       CY(u, v, y + 1.15, .039, .025, 0xc59a4f, { seg: 12, solid: false });
     }
     for (const [i, u] of [.15, .62, 1.16, 1.74].entries()) {
-      const h = [.26, .31, .24, .29][i], vv = i % 2 ? 10.12 : 10.34, metal = { tex: 'metal', color: 0xc3c7c3 };
+      const h = [.26, .31, .24, .29][i], vv = i % 2 ? 8.82 : 9.04, metal = { tex: 'metal', color: 0xc3c7c3, gloss: .7 };
       CONE(u, vv, y + 1.1, .095, .067, h, metal, { seg: 16 });
       CY(u, vv, y + 1.1 + h, .073, .012, metal, { seg: 16, solid: false, caps: false });
       for (let j = 0; j < 10; j++) {
@@ -1584,16 +1639,20 @@ export function build(K) {
         rod([u + .071 + Math.cos(t) * .07, y + 1.1 + h * .54 + Math.sin(t) * h * .31, vv], [u + .071 + Math.cos(tn) * .07, y + 1.1 + h * .54 + Math.sin(tn) * h * .31, vv], .009, metal, 6);
       }
     }
-    for (const u of [-6.05, -5.8, -1.13, -.85]) goblet(u, 10.47, y + 1.1);
+    for (const u of [-6.05, -5.8, -1.13, -.85]) goblet(u, 9.17, y + 1.1);
     for (const u of [-5.8, -5.52, -5.24]) goblet(u, 7.25, y + .93, .92);
-    MAN(-.4, 8.5, y, { shirt: 0x2c2925, rotY: FACE.S });
+    for (const u of [-5.5, -3.25, -.95, 1.3]) {
+      CY(u, 7.3, yc - .09, .1, .045, { color: 0x38271e, gloss: .3 }, { seg: 16, solid: false });
+      CY(u, 7.3, yc - .095, .053, .008, { tex: 'emit', color: 0xffd7a1 }, { seg: 16, solid: false });
+    }
+    MAN(-.4, 8.0, y, { shirt: 0x2c2925, rotY: FACE.S });
     SG('THE LOUNGE', { u: 4.65, v: 12.6, y: y + 1.6, w: .95, h: .22, f: 'S', bg: null, fg: '#c7a573', bold: false });
     // Grand piano with curved tail, tapered legs, a raised lid and individual keys (02).
     const pu = -4.8, pv = 41.0;
     const shape = [[-.82, 1.05], [.82, 1.05], [.82, .15], [.66, -.78], [.33, -1.35], [-.2, -1.45], [-.63, -.92], [-.82, -.3]];
-    DK.prism(shape.map(([u, v]) => P(pu + u, pv + v)), y + .67, y + .98, { mat: 0x121314, solid: false });
+    DK.prism(shape.map(([u, v]) => P(pu + u, pv + v)), y + .67, y + .98, { mat: { color: 0x121314, gloss: .7 }, solid: false });
     const lid = shape.map(([u, v]) => { const p = P(pu + u, pv + v); return [p[0], y + 1.015 + (u + .82) * .2, p[1]]; });
-    for (let i = 1; i < lid.length - 1; i++) DK.quad(0x18191a, [lid[0], lid[i], lid[i + 1], lid[0]], [0, 1, 0]);
+    for (let i = 1; i < lid.length - 1; i++) DK.quad({ color: 0x18191a, gloss: .7 }, [lid[0], lid[i], lid[i + 1], lid[0]], [0, 1, 0]);
     for (const [du, dv] of [[-.64, .8], [.64, .8], [.1, -1.1]]) {
       CY(pu + du, pv + dv, y + .04, .065, .67, 0x151617, { seg: 8, solid: false });
       CY(pu + du, pv + dv, y + .015, .11, .035, 0x1d1d1c, { seg: 10, solid: false });
@@ -1611,8 +1670,14 @@ export function build(K) {
       B({ u: -6.34, v, y: y + .43, w: .74, d: .016, h: .014, mat: 0xb8a993, solid: false });
     }
     for (const u of [-5.7, -4.7, -2.2, -1.2]) B({ u, v: 31.2, y: y + .5, w: .48, d: .24, h: .4, mat: u < -3 ? 0x874c33 : 0x703a2d, solid: false });
-    ROUND(-3.6, 34.15, y, 1.05, .43, 'jwWalnut');
-    B({ u: -3.45, v: 36.35, y: y + .35, w: 1.7, d: 1.2, h: .09, mat: 'jwWalnut', solid: false });
+    // Photo 02 has an oval pale stone top overlapping a rectangular orange-walnut table.
+    // Preserve both pieces, their flowers and the continuous rug beneath the sofa/piano.
+    const oval = Array.from({ length: 48 }, (_, i) => { const t = i / 48 * Math.PI * 2; return P(-3.6 + Math.cos(t) * .78, 34.15 + Math.sin(t) * 1.12); });
+    DK.prism(oval, y + .385, y + .44, { mat: { tex: 'marble', color: 0xd7c7ae, gloss: .5 }, solid: false });
+    CY(-3.6, 34.15, y + .025, .065, .36, { color: 0x403027, gloss: .3 }, { seg: 12, solid: false });
+    B({ u: -3.6, v: 34.15, y: y + .025, w: .65, d: 1.1, h: .045, mat: 0x30241e });
+    B({ u: -3.45, v: 36.35, y: y + .35, w: 1.85, d: 1.25, h: .075, mat: { tex: 'wood', color: 0xb2713f, gloss: .3 }, solid: false });
+    B({ u: -3.45, v: 36.35, y: y + .35, w: 1.87, d: 1.27, h: .018, mat: 0xbd8452, solid: false });
     B({ u: -3.45, v: 36.35, y, w: 1.35, d: .8, h: .35, mat: 0x27201b });
     FLOWER(-3.6, 34.15, y + .44, .32); FLOWER(-3.45, 36.35, y + .45, .23);
     for (const [u, v] of [[-4.0, 34.6], [-3.1, 35.95]]) {
@@ -1620,28 +1685,33 @@ export function build(K) {
       CY(u, v, y + .461, .052, .062, 0xe7dfd1, { seg: 12, solid: false, caps: false });
       B({ u: u + .15, v, y: y + .447, w: .08, d: .16, h: .007, mat: 0xd9d2c4, solid: false });
     }
-    // 01/04: low quilted mauve tubs with a continuous upholstered base and open front.
-    const tub = (u, v, face) => {
+    // Photo 01's foreground leather is brown; photo 04's small tubs are grey taupe.
+    const tub = (u, v, face, brown = false) => {
+      const shell = brown ? 0x8b6048 : 0x8a7d80, seat = brown ? 0xa57958 : 0x9a8b8e, piping = brown ? 0x624431 : 0x71686e;
       const ang = face === 'E' ? Math.PI / 2 : -Math.PI / 2;
       const at = (a, r, yy) => { const du = Math.cos(a) * r, dv = Math.sin(a) * r; const p = P(u + du * Math.cos(ang) + dv * Math.sin(ang), v - du * Math.sin(ang) + dv * Math.cos(ang)); return [p[0], y + yy, p[1]]; };
-      CY(u, v, y + .025, .42, .37, 0x8a7a80, { seg: 16, solid: true });
-      CY(u, v, y + .395, .35, .075, 0x97878c, { seg: 16, solid: false });
+      CY(u, v, y + .025, .42, .37, shell, { seg: 16, solid: true });
+      CY(u, v, y + .395, .35, .075, seat, { seg: 16, solid: false });
       for (let i = 0; i < 16; i++) {
         const a = Math.PI * 5 / 6 + i * Math.PI / 12, b = a + Math.PI / 12, mid = (a + b) / 2;
         const nu = Math.cos(mid - ang), nv = Math.sin(mid - ang);
         const n = [nu * EV[0] + nv * SV[0], 0, nu * EV[1] + nv * SV[1]];
-        DK.quad(0x8a7a80, [at(a, .42, .35), at(b, .42, .35), at(b, .42, .7), at(a, .42, .7)], n);
-        DK.quad(0x97878c, [at(b, .34, .42), at(a, .34, .42), at(a, .34, .7), at(b, .34, .7)], n.map(v => -v));
-        DK.quad(0xa29297, [at(a, .34, .7), at(b, .34, .7), at(b, .42, .7), at(a, .42, .7)], [0, 1, 0]);
-        for (const base of [.38, .53]) {
-          DK.quad(0x75676c, [at(a, .423, base), at(a + .018, .423, base), at(b, .423, base + .14), at(b - .018, .423, base + .14)], n);
-          DK.quad(0x75676c, [at(b, .423, base), at(b - .018, .423, base), at(a, .423, base + .14), at(a + .018, .423, base + .14)], n);
+        const ha = .72 + .19 * Math.sin(i / 16 * Math.PI), hb = .72 + .19 * Math.sin((i + 1) / 16 * Math.PI);
+        DK.quad(shell, [at(a, .42, .35), at(b, .42, .35), at(b, .42, hb), at(a, .42, ha)], n);
+        DK.quad(seat, [at(b, .34, .42), at(a, .34, .42), at(a, .34, ha), at(b, .34, hb)], n.map(v => -v));
+        DK.quad(seat, [at(a, .34, ha), at(b, .34, hb), at(b, .42, hb), at(a, .42, ha)], [0, 1, 0]);
+        for (const base of [.4, .55, .7]) {
+          if (base + .14 > Math.min(ha, hb)) continue;
+          DK.quad(piping, [at(a, .423, base), at(a + .018, .423, base), at(b, .423, base + .14), at(b - .018, .423, base + .14)], n);
+          DK.quad(piping, [at(b, .423, base), at(b - .018, .423, base), at(a, .423, base + .14), at(a + .018, .423, base + .14)], n);
+          DK.quad(piping, [at(a, .337, base), at(a + .014, .337, base), at(b, .337, base + .14), at(b - .014, .337, base + .14)], n.map(v => -v));
+          DK.quad(piping, [at(b, .337, base), at(b - .014, .337, base), at(a, .337, base + .14), at(a + .014, .337, base + .14)], n.map(v => -v));
         }
       }
     };
-    for (const [u, v] of [[-.9, 17.5], [.4, 25.7], [.3, 28.6], [.5, 45.7], [1.6, 14.8]]) {
-      ROUND(u, v, y, .54, .62, 0xded4bf);
-      tub(u - 1, v, 'E'); tub(u + 1, v, 'W');
+    for (const [u, v] of [[-3.8, 20], [.4, 25.7], [.3, 28.6], [.5, 45.7], [1.6, 14.8]]) {
+      ROUND(u, v, y, .62, .62, { tex: 'marble', color: 0xe8dcc8, gloss: .5 });
+      tub(u - 1.1, v, 'E', v === 20 || v < 18); tub(u + 1.1, v, 'W', v === 20 || v < 18);
       FLOWER(u, v, y + .63, .18, [0x763553, 0xa14f71, 0x567442]);
     }
     // 01/04: four window peacock chairs plus the separate screen-corner chair seen in 04.
@@ -1672,6 +1742,15 @@ export function build(K) {
           reed(petal(t), petal(tn), .007, 0xd2b586, 5);
         }
       }
+      // Small circle-and-petal infill fills the broad back like the cream floral rattan in 04.
+      for (const [ac, hc, rr] of [[-.42, 1.2, .1], [-.14, 1.27, .12], [.23, 1.14, .1], [.39, 1.56, .1], [-.2, 1.72, .12], [.23, 1.75, .11], [-.43, 1.65, .08], [0, .88, .09], [.4, .99, .075], [-.4, .88, .075]]) {
+        for (let i = 0; i < 36; i++) {
+          const a = i / 36 * Math.PI * 2, b = (i + 1) / 36 * Math.PI * 2;
+          const at = t => shell(ac + Math.cos(t) * rr, hc + Math.sin(t) * rr, .023);
+          reed(at(a), at(b), .0065, 0xe4cfaa, 5);
+          if (i % 6 === 0) reed(shell(ac, hc, .023), at(a), .005, 0xdac39b, 5);
+        }
+      }
       // Woven pedestal has crossing diagonal reeds and three circular binding courses.
       for (let i = 0; i < 24; i++) {
         const a = Math.PI * 2 * i / 24;
@@ -1686,25 +1765,27 @@ export function build(K) {
       }
       // Loose mauve pillow: round corners and a central seam instead of a tall box cushion.
       const [px, pz] = P(u + .14 * face, v);
-      DK.dome({ x: px, y: y + .72, z: pz, rx: .18, ry: .27, rz: .32, hemi: false, mat: chairIndex % 2 ? 0xb08385 : 0xa66d78, seg: 16, rings: 8 });
+      DK.dome({ x: px, y: y + .72, z: pz, rx: .18, ry: .27, rz: .32, hemi: false, mat: chairIndex % 2 ? 0xc18d94 : 0xb67e8b, seg: 28, rings: 16 });
       reed([u + .315, y + .57, v - .02], [u + .315, y + .88, v + .025], .005, 0x8b5965, 4);
       B({ u, v, y, w: .7, d: .8, h: .75, mat: 0, solid: true, skip: ['top', 'bottom', 'n', 's', 'e', 'w'] });
     }
     for (const v of [16.77, 19.42, 22.07]) ROUND(-6.45, v, y, .3, .55, 0x1c1a18);
     // Photo 04's black lacquer screen and tub seats occupy the opposite end-wall corner.
     // This is kept clear of the frontal bar camera and of the central lift approach.
+    WL(4.92, 14, 4.92, 24.1, y, yc, { mat: { tex: 'jwWalnut', gloss: .3 }, thick: .12 });
     for (let i = 0; i < 7; i++) {
       const v = 14 + i * .69;
-      B({ u: 4.72, v, y, w: .72, d: .07, h: 2.65, r: Math.PI / 2 + (i % 2 ? .16 : -.16), mat: i % 2 ? 0x242728 : 0x111718, solid: false });
-      B({ u: 4.65, v: v + .1, y: y + .45, w: .014, d: .075, h: 1.8, mat: i % 3 ? 0xc7c7bc : 0x7e8b8d, solid: false });
+      B({ u: 4.72, v, y, w: .72, d: .07, h: 2.65, r: Math.PI / 2 + (i % 2 ? .16 : -.16), mat: { color: i % 2 ? 0x171b1c : 0x0c1011, gloss: .7 }, solid: false });
+      B({ u: 4.65, v: v + .1, y: y + .45, w: .014, d: .075, h: 1.8, mat: { color: i % 3 ? 0xc7c7bc : 0x7e8b8d, gloss: .7 }, solid: false });
     }
-    B({ u: 4.0, v: 22.9, y, w: .65, d: 1.5, h: .82, mat: 'jwWalnut', top: 'jwDarkMarble' });
+    B({ u: 4.0, v: 22.9, y, w: .65, d: 1.5, h: .82, mat: 'jwWalnut', top: { tex: 'jwDarkMarble', gloss: .7 } });
     for (let i = 0; i < 4; i++) goblet(3.95, 22.43 + i * .3, y + .83, .85);
-    MAN(-1.9, 17.5, y, { sit: true, rotY: FACE.E, shirt: 0x65554b });
+    MAN(-4.9, 20, y, { sit: true, rotY: FACE.E, shirt: 0x65554b });
     MAN(1.5, 45.7, y, { sit: true, rotY: FACE.W, shirt: 0x90837a });
     LIGHTS([-7.4, 7, 4.6, 47], yc - .04, 2.6, .07, 0xf3d4a4);
-    // Reception/core position and the walkable staircase remain, with modest signage.
+    // Photos 07/08 confirm reception on 8F, beside The Lounge; exact desk positions remain approximate.
     for (const u of [7.6, 10.6, 13.6]) B({ u, v: 48.2, y, w: 2.5, d: .9, h: 1.08, mat: 'jwWalnut', top: 'jwHoney' });
+    SG('체크인 · 체크아웃', { u: 10.6, v: 47.72, y: y + .78, w: 1.1, h: .16, f: 'N', bg: null, fg: '#e4d3b2', bold: false });
     WL(6, 53.5, 15.85, 53.5, y, yc, { mat: 'jwWalnut' });
     BOH([6, 53.6, 15.85, 57.9], y, 5.2);
     SG('JW MARRIOTT', { u: 10.9, v: 53.35, y: y + 2.5, w: 2.5, h: .36, f: 'N', bg: null, fg: '#c5aa7b' });
@@ -1734,13 +1815,17 @@ export function build(K) {
         // 16: herringbone timber, blue rugs, ivory round tables and softly curved bucket chairs.
         RAILBOX([3.0, 48.8, 5.2, 57], y, 'n');
         WL(-7.85, 24.2, 8.85, 24.2, y, yc, { mat: 'jwWalnut', openings: [{ at: 13.55, w: 2.4, y0: y, y1: y + 2.6 }] });
-        HP('jwChevron', [-7.85, 6.1, 15.85, 24.2], y + 0.012);
-        for (const r of [[-7.2, 7.8, 3.2, 14.2], [6.8, 7.7, 15.2, 13.8], [-7.2, 16.1, 3.2, 22.6], [6.8, 16.1, 15.2, 22.6]]) HP('jwFoyerCarpet', r, y + 0.018);
+        HP({ tex: 'jwChevron', gloss: .3 }, [-7.85, 6.1, 15.85, 24.2], y + 0.012);
+        for (const r of [[-7.2, 7.8, 3.2, 14.2], [6.8, 7.7, 15.2, 13.8], [-7.2, 16.1, 3.2, 22.6], [6.8, 16.1, 15.2, 22.6]]) {
+          const [a, b, c, d] = r, cu = (a + c) / 2, cv = (b + d) / 2, poly = [];
+          for (let n = 0; n < 48; n++) { const angle = n / 48 * Math.PI * 2; poly.push(P(cu + Math.cos(angle) * (c - a) / 2, cv + Math.sin(angle) * (d - b) / 2)); }
+          DK.hpoly('jwFoyerCarpet', poly, y + .018, true);
+        }
         COVE([-7.8, 6.15, 15.8, 24.1], y + 3.45, 0xf1eee5);
         // 16: small recessed spots, flat cream ceiling and a continuous amber window cove.
         for (const u of [-7.53, 15.53]) {
           B({ u, v: 15.1, y: y + 3.2, w: .32, d: 17.7, h: .16, mat: 0xe8e1d2, solid: false });
-          B({ u: u < 0 ? u + .17 : u - .17, v: 15.1, y: y + 3.32, w: .045, d: 17.65, h: .035, mat: { tex: 'emit', color: 0xffc477 }, solid: false });
+          B({ u: u < 0 ? u + .17 : u - .17, v: 15.1, y: y + 3.32, w: .09, d: 17.65, h: .055, mat: { tex: 'emit', color: 0xffb65c }, solid: false });
           for (let v = 7.3; v < 24; v += 1.5) B({ u, v, y: y + .35, w: .08, d: .045, h: 2.8, mat: 0x8f918b, solid: false });
           B({ u, v: 15.1, y: y + .95, w: .19, d: 17.7, h: .065, mat: 0xe1ded3, solid: false });
         }
@@ -1772,7 +1857,7 @@ export function build(K) {
         const executiveTable = (u, v, r = .69, h = .73) => {
           // Photo tables have a substantial black apron and four legs, not a central pedestal.
           CY(u, v, y + h - .13, r * .96, .115, 0x252421, { seg: 28, solid: false });
-          CY(u, v, y + h - .025, r, .035, 0xece6d9, { seg: 32, solid: false });
+          CY(u, v, y + h - .025, r, .035, { color: 0xece6d9, gloss: .5 }, { seg: 32, solid: false });
           for (const du of [-1, 1]) for (const dv of [-1, 1]) B({ u: u + du * r * .54, v: v + dv * r * .54, y: y + .025, w: .05, d: .05, h: h - .07, mat: 0x252421, solid: false });
           B({ u, v, y, w: r * 1.35, d: r * 1.35, h, mat: 0, solid: true, skip: ['top', 'bottom', 'n', 's', 'e', 'w'] });
           CY(u + .23, v - .08, y + h + .012, .09, .012, 0xf0ebe0, { seg: 16, solid: false });
@@ -1809,6 +1894,11 @@ export function build(K) {
         for (let i = 0; i < 12; i++) CY(8.8 + (i % 6) * .19, 6.8 + Math.floor(i / 6) * .23, y + .89, .055, .11, { tex: 'glass', color: 0xdbded4 }, { seg: 10, solid: false, caps: false });
         FLOWER(11.4, 6.8, y + .89, .37, [0x71815b, 0xd6cab7, 0x9c7354]);
         SG('이그제큐티브 라운지', { u: 7.5, v: 24.32, y: y + 1.5, w: 0.9, h: 0.28, f: 'S', bg: '#46382e', fg: '#dfd3bd' });
+        // Photo 16: a blue-shirted guest working at the nearer window table.
+        MAN(-.87, 10.7, y, { sit: true, rotY: FACE.E, shirt: 0x59758e, pants: 0x403c35 });
+        B({ u: .13, v: 10.7, y: y + .775, w: .28, d: .34, h: .018, mat: { color: 0x424642, gloss: .3 }, solid: false });
+        B({ u: .25, v: 10.7, y: y + .793, w: .025, d: .34, h: .24, mat: 0x303532, solid: false });
+        B({ u: .232, v: 10.7, y: y + .82, w: .006, d: .29, h: .185, mat: 0x6d817e, solid: false });
         MAN(-5.92, 14.8, y, { sit: true, rotY: FACE.E, shirt: 0x59718b });
         MAN(-.87, 20.6, y, { sit: true, rotY: FACE.E, shirt: 0x463c35 });
         MAN(14.52, 10.4, y, { sit: true, rotY: FACE.W, shirt: 0xc6b9a5 });
@@ -1818,7 +1908,7 @@ export function build(K) {
         WL(5.2, 39.6, 15.85, 39.6, y, yc, { mat: 0xd6cbbb, thick: 0.15 });
         WL(5.2, 39.6, 5.2, 57.9, y, yc, { mat: 0xd6cbbb, thick: 0.15, openings: [{ at: 4.4, w: 1.6, y0: y, y1: y + 2.4 }] });
         SG('비즈니스 센터', { u: 5.07, v: 42.5, y: y + 1.5, w: 0.7, h: 0.25, f: 'W', bg: '#49392e', fg: '#e5dcca' });
-        HP('jwChevron', [5.3, 39.7, 15.8, 57.8], y + 0.012);
+        HP({ tex: 'jwChevron', gloss: .3 }, [5.3, 39.7, 15.8, 57.8], y + 0.012);
         COVE([5.3, 39.7, 15.8, 57.8], y + 3.45);
         for (const v of [42, 46.2, 50.4]) {
           B({ u: 14.7, v, y, w: 1.7, d: .8, h: .74, mat: 'jwWalnut', top: 'jwHoney' });
