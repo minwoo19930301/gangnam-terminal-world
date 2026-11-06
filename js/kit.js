@@ -1,12 +1,14 @@
 // K = construction kit handed to every place module.  See docs/PLACE_API.md for the contract.
 // Coordinates: x=east, z=south, y=up, meters. Origin = 고속터미널역. Street level y=0.
-import { createTextures, createSignAtlas } from './textures.js';
+import { createTextures, createSignAtlas, makeCanvas } from './textures.js';
 import { pointInPoly, polyBBox, polyArea } from './physics.js';
 
 export const LEVELS = { B1: -6, B2: -11, B3: -16, B4: -21, B5: -26, B6: -31 };
 const TILE = 320;
 
-export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096, low = false } = {}) {
+export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096, low = false, keep = null, keepDetail = null } = {}) {
+  // Area loading (js/areas.js): keep(owner, x, y, z, ny) drops primitives/meshes/trees/people outside the loaded area,
+  // keepDetail(group) skips lazy detail groups the area does not show. Both null = build everything.
   const T = createTextures(THREE, { maxAniso });
   // big atlas pages mean fewer materials → fewer draw calls (the bottleneck on slow CPUs); low tier draws signs
   // at a lower pixel density (resolution only — every sign is still there)
@@ -34,9 +36,40 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     else if (key.startsWith('arr:')) { m = new THREE.MeshLambertMaterial({ map: dummyMap, vertexColors: true }); m.userData.arr = texArrays[+key.slice(4)]; addBounce(m, '', true); materials.set(key, m); return m; }
     else if (key.startsWith('tex:')) { const s = T.surface(key.slice(4)); m = new THREE.MeshLambertMaterial({ map: s.tex, vertexColors: true }); }
     else if (key.startsWith('ctex:')) { const s = customTex.get(key.slice(5)); m = new THREE.MeshLambertMaterial({ map: s.tex, vertexColors: true, transparent: !!s.transparent, alphaTest: s.transparent ? 0.3 : 0, side: s.doubleSide ? THREE.DoubleSide : THREE.FrontSide }); }
+    else if (/^gl\d+:/.test(key)) { // polished surface: the base material plus a blurred warm-interior reflection
+      const i = key.indexOf(':'), g = +key.slice(2, i) / 10, base = key.slice(i + 1);
+      if (base === 'vc') m = new THREE.MeshLambertMaterial({ vertexColors: true });
+      else if (base.startsWith('tex:')) m = new THREE.MeshLambertMaterial({ map: T.surface(base.slice(4)).tex, vertexColors: true });
+      else if (base.startsWith('ctex:')) m = new THREE.MeshLambertMaterial({ map: customTex.get(base.slice(5)).tex, vertexColors: true });
+      else throw new Error('gloss needs a colour or texture material, got ' + base);
+      m.envMap = glossEnv(); m.combine = THREE.MixOperation; m.reflectivity = 0.5 * g;
+    }
     else throw new Error('unknown material key ' + key);
     if (m.isMeshLambertMaterial) addBounce(m);
     materials.set(key, m); return m;
+  }
+  // Shared reflection map for polished floors/stone ({ gloss }): a soft interior — bright ceiling with downlight pools,
+  // warm walls fading to a darker floor. Not a mirror of the actual room, but it gives marble/terrazzo/lacquer their sheen.
+  let glossCube = null;
+  function glossEnv() {
+    if (glossCube) return glossCube;
+    const S = 128, faces = [];
+    for (let f = 0; f < 6; f++) {
+      const cv = makeCanvas(S, S), g = cv.getContext('2d');
+      if (f === 2) { // +y ceiling
+        g.fillStyle = '#e9e1d4'; g.fillRect(0, 0, S, S);
+        for (let i = 0; i < 4; i++) for (let j = 0; j < 4; j++) { const x = (i + 0.5) * S / 4, y = (j + 0.5) * S / 4, r = g.createRadialGradient ? g.createRadialGradient(x, y, 0, x, y, S / 7) : null; if (r && r.addColorStop) { r.addColorStop(0, '#fffaf0'); r.addColorStop(1, 'rgba(255,250,240,0)'); g.fillStyle = r; } else g.fillStyle = '#fffaf0'; g.fillRect(x - S / 7, y - S / 7, S / 3.5, S / 3.5); }
+      } else if (f === 3) { g.fillStyle = '#5a5248'; g.fillRect(0, 0, S, S); } // -y floor
+      else { // sides: light top band (ceiling edge), warm walls, darker bottom
+        const lg = g.createLinearGradient ? g.createLinearGradient(0, 0, 0, S) : null;
+        if (lg && lg.addColorStop) { lg.addColorStop(0, '#f4eee4'); lg.addColorStop(0.35, '#c9b9a2'); lg.addColorStop(0.6, '#8d7d6a'); lg.addColorStop(1, '#4e463d'); g.fillStyle = lg; } else g.fillStyle = '#a89886';
+        g.fillRect(0, 0, S, S);
+        g.fillStyle = 'rgba(255,248,235,0.4)'; for (let i = 0; i < 3; i++) g.fillRect((i + 0.3) * S / 3, S * 0.38, S / 9, S * 0.16); // shop windows
+      }
+      faces.push(cv);
+    }
+    glossCube = new THREE.CubeTexture(faces); glossCube.colorSpace = THREE.SRGBColorSpace; glossCube.needsUpdate = true;
+    return glossCube;
   }
   // Bounce light for downward faces. Lambert ceilings only see the hemisphere's ground colour (divided by pi),
   // so lit interiors read grey; real ceilings get light reflected from floors and fixtures. This adds a
@@ -79,9 +112,11 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     if (name === 'emit' || name === 'light') { if (col === undefined) c = [1, 1, 0.97]; return { key: 'emit', c, scale: [1, 1] }; }
     if (name === 'water') return { key: 'water', c, scale: T.surface('water').scale };
     if (customMats.has(name)) return { key: 'cm:' + name, c, scale: mat.scale || [1, 1] };
-    if (customTex.has(name)) { const s = customTex.get(name); return { key: 'ctex:' + name, c, scale: mat.scale || s.scale, facade: s.facade }; }
+    const gl = mat.gloss ? 'gl' + Math.max(1, Math.min(10, Math.round((mat.gloss === true ? 0.45 : +mat.gloss) * 10))) + ':' : '';
+    if (gl && name === undefined) return { key: gl + 'vc', c, scale: [1, 1] };
+    if (customTex.has(name)) { const s = customTex.get(name); if (gl && (s.transparent || s.doubleSide)) throw new Error('gloss on a transparent texture'); return { key: gl + 'ctex:' + name, c, scale: mat.scale || s.scale, facade: s.facade }; }
     const s = T.surface(name);
-    return { key: 'tex:' + name, c, scale: mat.scale || s.scale, facade: s.facade };
+    return { key: gl + 'tex:' + name, c, scale: mat.scale || s.scale, facade: s.facade };
   }
 
   // ---------- buckets ----------
@@ -411,8 +446,8 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     quad(sp, [P(-w / 2, h / 2), P(w / 2, h / 2), P(w / 2, -h / 2), P(-w / 2, -h / 2)], [0, 1, 0], [[u0, v0], [u1, v0], [u1, v1], [u0, v1]]);
   }
   // instanced things
-  function tree(x, z, o = {}) { trees.push({ place: current, x, z, y: o.y ?? 0, h: o.h ?? (6 + ((x * 13.7 + z * 7.3) % 3)), kind: o.kind ?? 'zelkova' }); }
-  function person(x, y, z, o = {}) { people.push({ place: current, x, y, z, rotY: o.rotY ?? ((x * 7 + z * 3) % 6.28), shirt: o.shirt, pants: o.pants, h: o.h ?? (1.6 + ((x * 31 + z * 17) % 0.25)), sit: !!o.sit }); }
+  function tree(x, z, o = {}) { if (keep && !keep(current, x, o.y ?? 0, z, 0)) return; trees.push({ place: current, x, z, y: o.y ?? 0, h: o.h ?? (6 + ((x * 13.7 + z * 7.3) % 3)), kind: o.kind ?? 'zelkova' }); }
+  function person(x, y, z, o = {}) { if (keep && !keep(current, x, y, z, 1)) return; people.push({ place: current, x, y, z, rotY: o.rotY ?? ((x * 7 + z * 3) % 6.28), shirt: o.shirt, pants: o.pants, h: o.h ?? (1.6 + ((x * 31 + z * 17) % 0.25)), sit: !!o.sit }); }
   function crowd(poly, y, n, o = {}) { const rnd = rand(o.seed ?? (poly[0][0] * 1000 + poly[0][1])); const bb = polyBBox(poly); let k = 0, guard = 0; while (k < n && guard++ < n * 30) { const x = bb[0] + rnd() * (bb[2] - bb[0]), z = bb[1] + rnd() * (bb[3] - bb[1]); if (pointInPoly(x, z, poly)) { person(x, y, z, { rotY: rnd() * 6.28 }); k++; } } }
   // vehicle (static, merged). kind: car|taxi|bus|cityBus|truck|van
   function vehicle(o) {
@@ -505,9 +540,19 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
   let last = { x: 1e9, y: 1e9, z: 1e9, n: 0 }, under = false;
   // x, y, z = camera (eye) position. "Underground" means: eye below -1 m, a ceiling over the head and standing in a
   // zone of an indoor place — so stairs, open ramps and road underpasses never count.
+  const lodList = [];
+  function lodUpdate(x, z) {
+    for (const m of lodList) {
+      const bb = m.userData.bb || m.userData.lodBB || (m.userData.lodBB = (() => { const b = new THREE.Box3(), M = new THREE.Matrix4(), V = new THREE.Vector3(); for (let i = 0; i < m.count; i++) { m.getMatrixAt(i, M); b.expandByPoint(V.setFromMatrixPosition(M)); } return [b.min.x, b.min.z, b.max.x, b.max.z]; })());
+      const dx = x < bb[0] ? bb[0] - x : x > bb[2] ? x - bb[2] : 0, dz = z < bb[1] ? bb[1] - z : z > bb[3] ? z - bb[3] : 0;
+      const g = Math.hypot(dx, dz) > 150 ? m.userData.lod[1] : m.userData.lod[0];
+      if (m.geometry !== g) m.geometry = g;
+    }
+  }
   function cull(x, y, z, force = false) {
     if (!force && Math.abs(x - last.x) + Math.abs(y - last.y) + Math.abs(z - last.z) < 1.5 && ++last.n < 30) return;
     last = { x, y, z, n: 0 };
+    lodUpdate(x, z);
     let u = false;
     if (y < -1) { const zn = phys.zoneAt(x, y - 1.5, z); u = !!zn && INDOOR.has(zn.place) && phys.ceilingAbove(x, z, y, y + 8) < Infinity; }
     under = u;
@@ -553,7 +598,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     const usedKeys = new Set(); for (const [, b] of buckets) if (!aLayers.has(b.key)) usedKeys.add(b.key);
     for (const [k, v] of buildTexArrays(usedKeys)) aLayers.set(k, v);
     // two passes: classify every primitive and count, then fill typed arrays directly (no big JS arrays)
-    const subs = new Map(), plan = [];
+    const subs = new Map(), plan = []; let dropped = 0;
     for (const [, b] of buckets) {
       if (!b.idx.length) continue;
       const P = b.pos, N = b.nor, ar = aLayers.get(b.key) || null, which = new Array(b.prim.length);
@@ -561,7 +606,9 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
       for (const nv of b.prim) {
         let cx = 0, cy = 0, cz = 0; for (let k = 0; k < nv; k++) { cx += P[(vo + k) * 3]; cy += P[(vo + k) * 3 + 1]; cz += P[(vo + k) * 3 + 2]; }
         cx /= nv; cy /= nv; cz /= nv;
+        if (keep && !keep(b.own[pi], cx, cy, cz, N[vo * 3 + 1])) { which[pi++] = null; vo += nv; dropped++; continue; }
         const cell = classify(cx, cy, cz, b.own[pi]);
+        if (stats.byOwner) stats.byOwner[b.own[pi]] = (stats.byOwner[b.own[pi]] || 0) + (nv === 4 ? 2 : 1);
         const T2 = cell === 'o' ? TILE : CELL_TILE, mk = ar ? 'arr:' + ar.arr : b.key, sk = mk + '|' + cell + '|' + Math.floor(cx / T2) + ',' + Math.floor(cz / T2);
         let s = subs.get(sk); if (!s) { s = { key: mk, cell, nv: 0, ni: 0, rect: !!ar }; subs.set(sk, s); }
         s.nv += nv; s.ni += nv === 4 ? 6 : 3; which[pi++] = s; vo += nv;
@@ -577,7 +624,9 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
       const P = b.pos, N = b.nor, U = b.uv, C = b.col, I = b.idx;
       let vo = 0, io = 0, pi = 0;
       for (const nv of b.prim) {
-        const s = which[pi++], ni = nv === 4 ? 6 : 3, base = s.v;
+        const s = which[pi++], ni = nv === 4 ? 6 : 3;
+        if (!s) { vo += nv; io += ni; continue; }
+        const base = s.v;
         for (let k = 0; k < nv; k++) {
           const v = vo + k, d = s.v++;
           s.pos[d * 3] = P[v * 3]; s.pos[d * 3 + 1] = P[v * 3 + 1]; s.pos[d * 3 + 2] = P[v * 3 + 2];
@@ -590,7 +639,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
         vo += nv; io += ni;
       }
     }
-    buckets.clear();
+    buckets.clear(); stats.areaDropped = (stats.areaDropped || 0) + dropped;
     const out = [];
     for (const [, s] of subs) {
       const g = new THREE.BufferGeometry();
@@ -606,6 +655,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
       m.matrixAutoUpdate = false; m.updateMatrix();
       scene.add(m); out.push(m); track(m, s.cell);
     }
+    pruneMeshes();
     splitModuleInstances();
     buildInstanced();
     return out;
@@ -619,6 +669,26 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
       const k = cell + '|' + Math.floor(x / T2) + ',' + Math.floor(z / T2); if (!groups.has(k)) groups.set(k, { cell, idx: [] }); groups.get(k).idx.push(i);
     }
     return [...groups.values()];
+  }
+  // meshes a module added itself (K.addMesh / instanced props): drop those outside the area, compact instanced ones
+  function pruneMeshes() {
+    if (!keep) return;
+    const M = new THREE.Matrix4(), V = new THREE.Vector3(), C = new THREE.Color();
+    for (const o of scene.children.slice()) {
+      if (!o.userData.owner || o.userData.areaChecked || !(o.isMesh || o.isInstancedMesh || o.isGroup || o.isObject3D) || o.isLight || o.isCamera) continue;
+      o.userData.areaChecked = true; o.updateMatrixWorld(true);
+      const own = o.userData.owner;
+      if (o.isInstancedMesh && !o.userData.dynamic) {
+        const kept = [];
+        for (let i = 0; i < o.count; i++) { o.getMatrixAt(i, M); V.setFromMatrixPosition(M).applyMatrix4(o.matrixWorld); if (keep(own, V.x, V.y, V.z, 0)) kept.push(i); }
+        if (!kept.length) { scene.remove(o); continue; }
+        if (kept.length < o.count) { kept.forEach((src, j) => { o.getMatrixAt(src, M); o.setMatrixAt(j, M); if (o.instanceColor) { o.getColorAt(src, C); o.setColorAt(j, C); } }); o.count = kept.length; o.instanceMatrix.needsUpdate = true; if (o.instanceColor) o.instanceColor.needsUpdate = true; }
+        continue;
+      }
+      const box = new THREE.Box3().setFromObject(o); if (box.isEmpty()) continue;
+      box.getCenter(V);
+      if (!keep(own, V.x, V.y, V.z, 0) && !keep(own, V.x, box.max.y, V.z, 0)) scene.remove(o);
+    }
   }
   function splitModuleInstances() {
     const M = new THREE.Matrix4(), C = new THREE.Color();
@@ -638,6 +708,9 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     if (trees.length > treesDone) {
       const trunk = new THREE.CylinderGeometry(0.12, 0.2, 1, 6); trunk.translate(0, 0.5, 0);
       const crown = new THREE.IcosahedronGeometry(1, 1); crown.translate(0, 0, 0);
+      // far trees (beyond ~150 m) swap to coarser geometry: same silhouette and colour at a quarter of the triangles
+      const trunkLo = new THREE.CylinderGeometry(0.12, 0.2, 1, 3); trunkLo.translate(0, 0.5, 0);
+      const crownLo = new THREE.IcosahedronGeometry(1, 0);
       const mt = new THREE.MeshLambertMaterial({ color: 0x5b4636 });
       const mc = new THREE.MeshLambertMaterial({ color: 0xffffff });
       const pal = { zelkova: [0x4f7f3a, 0x5c8a40, 0x46733a], ginkgo: [0x8fae3c, 0x9db845, 0x7fa035], pine: [0x2f5a35, 0x36603a], cherry: [0x6f9a4a, 0x7da653], maple: [0x7a8f3a, 0x8a5a2a] };
@@ -652,6 +725,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
         });
         it.instanceMatrix.needsUpdate = ic.instanceMatrix.needsUpdate = true; if (ic.instanceColor) ic.instanceColor.needsUpdate = true;
         scene.add(it, ic); track(it, g.cell); track(ic, g.cell);
+        it.userData.lod = [trunk, trunkLo]; ic.userData.lod = [crown, crownLo]; it.computeBoundingBox?.(); lodList.push(it, ic);
       }
     }
     if (people.length > peopleDone) {
@@ -698,7 +772,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
   function ensureDetail(x, y, z, reach = 45, budgetMs = Infinity) {
     const t0 = performance.now(); let n = 0;
     for (const d of details) {
-      if (d.built) continue;
+      if (d.built || (keepDetail && !keepDetail(d))) continue;
       const dx = x < d.bb[0] ? d.bb[0] - x : x > d.bb[2] ? x - d.bb[2] : 0, dz = z < d.bb[1] ? d.bb[1] - z : z > d.bb[3] ? z - d.bb[3] : 0;
       if (Math.hypot(dx, dz) > reach || y < d.y0 - 8 || y > d.y1 + 8) continue;
       buildDetail(d); n++;
@@ -707,7 +781,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     if (n) cull(last.x, last.y, last.z, true);
     return n;
   }
-  function buildAllDetail() { for (const d of details) buildDetail(d); }
+  function buildAllDetail() { for (const d of details) if (!keepDetail || keepDetail(d)) buildDetail(d); }
 
   const K = {
     THREE, scene, phys, osm, LEVELS, T,

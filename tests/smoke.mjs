@@ -24,7 +24,7 @@ const problems = [], warnings = [];
 const report = {};
 const osmIds = new Set(osm.buildings.map(b => b.id)), roadIds = new Set(osm.roads.map(r => r.id)), areaIds = new Set(osm.areas.map(a => a.id));
 const claimed = { b: new Set(), r: new Set(), a: new Set() };
-const loaded = new Set();
+const loaded = new Set(); const metaOf = new Map();
 
 for (const id of ids) {
   const f = path.join(ROOT, 'js/places', id + '.js');
@@ -33,6 +33,7 @@ for (const id of ids) {
   if (!m.meta || !m.meta.id || !m.meta.name) problems.push(`${id}: meta.id/meta.name missing`);
   if (m.meta && m.meta.id !== id) problems.push(`${id}: meta.id (${m.meta.id}) must equal file name`);
   if (typeof m.build !== 'function') { problems.push(`${id}: build() missing`); continue; }
+  metaOf.set(id, m.meta);
   for (const c of m.meta?.claims || []) { if (!osmIds.has(c)) problems.push(`${id}: claims unknown OSM building ${c}`); if (claimed.b.has(c)) problems.push(`${id}: building ${c} claimed twice`); claimed.b.add(c); }
   for (const c of m.meta?.claimRoads || []) { if (!roadIds.has(c)) warnings.push(`${id}: claimRoads unknown ${c}`); claimed.r.add(c); }
   for (const c of m.meta?.claimAreas || []) { if (!areaIds.has(c)) warnings.push(`${id}: claimAreas unknown ${c}`); claimed.a.add(c); }
@@ -85,6 +86,13 @@ for (const w of WELLS) {
 K._.finalize();
 K._.buildAllDetail(); // lazy floor detail groups too
 for (const e of K._.detailErrors) problems.push('detail group threw: ' + e);
+// area loading reads js/places/_meta.json: warn when a module's claims are not what it says (run node tools/gen_meta.mjs)
+try {
+  const META = JSON.parse(fs.readFileSync(path.join(ROOT, 'js/places/_meta.json'), 'utf8'));
+  for (const [id, mm] of metaOf) { const m = { meta: mm }; const v = META[id]; const same = (a, b) => JSON.stringify([...(a || [])].sort()) === JSON.stringify([...(b || [])].sort());
+    if (!v) warnings.push(`${id}: missing from js/places/_meta.json (run node tools/gen_meta.mjs)`);
+    else if (!same(v.claims, m.meta?.claims) || !same(v.claimRoads, m.meta?.claimRoads) || !same(v.claimAreas, m.meta?.claimAreas)) warnings.push(`${id}: claims changed since js/places/_meta.json (run node tools/gen_meta.mjs)`); }
+} catch (e) { warnings.push('js/places/_meta.json unreadable: ' + e.message); }
 const meshes = scene.children.filter(o => o.isMesh || o.isInstancedMesh);
 const tris = meshes.reduce((a, m) => a + (m.geometry.index ? m.geometry.index.count / 3 : 0) * (m.isInstancedMesh ? m.count : 1), 0);
 if (!quiet) console.table(report);

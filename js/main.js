@@ -5,6 +5,8 @@ import { buildCity, createTraffic } from './city.js';
 import { PLACES } from './places/index.js';
 import { createMap } from './map.js';
 import { FONT } from './textures.js';
+import { planArea, areaIdAt, areaIdForKey, areaName } from './areas.js';
+import { JUNCTIONS } from './places/_junctions.js';
 
 const Q = new URLSearchParams(location.search);
 const SHOT = Q.has('shot');
@@ -21,7 +23,15 @@ async function boot() {
   status('지도 데이터 불러오는 중…');
   const fontsReady = Promise.race([Promise.all(['400', '700'].map(w => document.fonts.load(`${w} 32px "Noto Sans KR"`, '가나다'))), new Promise(r => setTimeout(r, 4000))]).catch(() => { }).then(() => mark('fonts'));
   const osmP = fetch('data/osm.json').then(r => r.json());
-  const wantIds = Q.get('places') ? Q.get('places').split(',') : PLACES;
+  // ---- area loading: an address builds only its area (js/areas.js); ?area=all, ?places=… and screenshots build everything
+  const META = await fetch('js/places/_meta.json').then(r => r.json()).catch(() => null);
+  const hashR = /^#\/([^?]*)(?:\?(.*))?$/.exec(location.hash || '');
+  const hashKey = hashR ? hashR[1].split('/').map(decodeURIComponent).join('/') : '';
+  const hashPos = hashR && new URLSearchParams(hashR[2] || '').get('p') ? new URLSearchParams(hashR[2] || '').get('p').split(',').map(Number) : null;
+  const AREA_ID = (!META || SHOT || Q.get('places') || Q.get('area') === 'all') ? 'all' : (Q.get('area') || areaIdForKey(hashKey, hashPos, META));
+  const AREA = META ? planArea(AREA_ID, META, JUNCTIONS) : { id: 'all', modules: PLACES, keep: null, keepDetail: null };
+  if (AREA.id !== 'all') status(`${areaName(AREA.id, META)} 불러오는 중…`);
+  const wantIds = Q.get('places') ? Q.get('places').split(',') : PLACES.filter(id => AREA.modules.includes(id));
   const modP = wantIds.map(id => import(`./places/${id}.js`).then(m => ({ id, m }), e => ({ id, e })));
   const osm = await osmP; mark('osm');
 
@@ -52,17 +62,18 @@ async function boot() {
   const amb = new THREE.AmbientLight(0xffffff, 0.25); scene.add(amb);
 
   const phys = createPhysics();
-  const K = createKit(THREE, scene, { osm, phys, maxAniso: renderer.capabilities.getMaxAnisotropy(), maxTex: renderer.capabilities.maxTextureSize, low: LOW });
+  const K = createKit(THREE, scene, { osm, phys, maxAniso: renderer.capabilities.getMaxAnisotropy(), maxTex: renderer.capabilities.maxTextureSize, low: LOW, keep: AREA.keep, keepDetail: AREA.keepDetail });
   K._.atlas.start(); // sign rects are reserved during the build; text is painted once the fonts are in
   // modules may register night handlers while they build, so this must exist before any build()
   const nightFns = []; K.onNight = fn => nightFns.push(fn);
 
   // ---- places ----
-  const want = Q.get('places') ? Q.get('places').split(',') : PLACES;
   const mods = [];
   for (const r of await Promise.all(modP)) { if (r.e) fail(`load ${r.id}`, r.e); else mods.push(r); }
   const claimedBuildings = new Set(), claimedRoads = new Set(), claimedAreas = new Set();
   for (const { m } of mods) { for (const id of m.meta?.claims || []) claimedBuildings.add(id); for (const id of m.meta?.claimRoads || []) claimedRoads.add(id); for (const id of m.meta?.claimAreas || []) claimedAreas.add(id); }
+  // modules of other areas are not loaded, but what they claim is still theirs (the city must not put generic boxes there)
+  if (META && AREA.id !== 'all') for (const v of Object.values(META)) { for (const id of v.claims) claimedBuildings.add(id); for (const id of v.claimRoads) claimedRoads.add(id); for (const id of v.claimAreas) claimedAreas.add(id); }
   const placeInfo = [];
   for (const { id, m } of mods) {
     status(`짓는 중… ${m.meta?.name || id}`);
@@ -78,9 +89,21 @@ async function boot() {
     mark('places'); status('도시(OSM) 짓는 중…'); await new Promise(r => setTimeout(r, 0));
     try { roadsInfo = buildCity(K, osm, { claimedBuildings, claimedRoads, claimedAreas, log: s => console.log(s) }); } catch (e) { fail('city', e); }
   }
+  // far massing: buildings of place modules this area does not load stand as plain OSM blocks (skyline, walls)
+  if (META && AREA.id !== 'all') {
+    K._.setCurrent('lod');
+    for (const [mid, v] of Object.entries(META)) {
+      if (AREA.modules.includes(mid) || mid === 'streets' || mid === 'hangang' || mid === 'jamwon_hangang') continue;
+      for (const bid of v.claims) for (const b of osm.buildings.filter(b => b.id === bid)) {
+        const h = b.height || (b.levels ? b.levels * 3.6 : 12);
+        try { K.prism(b.poly, b.minHeight || 0, h, { mat: { tex: 'concrete', color: 0xd3cbbf }, holes: b.holes }); } catch (e) { }
+      }
+    }
+  }
   // ground with holes
   const [bx0, bz0, bx1, bz1] = osm.bbox;
   const holes = K._.groundHoles.map(h => h.poly);
+  K._.setCurrent('ground');
   try { K.hpoly({ tex: 'concrete', color: 0xc9c6bf }, [[bx0, bz0], [bx1, bz0], [bx1, bz1], [bx0, bz1]], -0.04, true, holes); }
   catch (e) { fail('ground', e); K.hpoly({ tex: 'concrete', color: 0xc9c6bf }, [[bx0, bz0], [bx1, bz0], [bx1, bz1], [bx0, bz1]], -0.04, true); }
   mark('city'); status('메시 합치는 중…'); await new Promise(r => setTimeout(r, 0));
@@ -102,7 +125,32 @@ async function boot() {
   const keys = {};
   const hudZone = $('zone'), hudSub = $('zone-sub'), hudPrompt = $('prompt'), hudCoord = $('coord');
   let menuOpen = false, nearIt = null;
-  const map = createMap({ THREE, K, osm, player, phys, spawns, places: placeInfo, container: $('app'), zoneAt: () => currentZone });
+  // ---- leaving the area: reload at the new address with a loading screen ----
+  let leaving = false;
+  function reloadAt(key, x, y, z, yawDeg, why) {
+    if (leaving || SHOT || AREA.id === 'all') return false;
+    // loop guard: never bounce between areas more than 4 times in 20 s
+    let hist = []; try { hist = JSON.parse(sessionStorage.getItem('areaHops') || '[]').filter(t => Date.now() - t < 20000); } catch (e) { }
+    if (hist.length >= 4) { toast('구역 이동을 잠시 멈췄어요 (반복 이동 감지)'); return false; }
+    hist.push(Date.now()); try { sessionStorage.setItem('areaHops', JSON.stringify(hist)); } catch (e) { }
+    leaving = true;
+    const enc = '#/' + key.split('/').map(encodeURIComponent).join('/');
+    const href = `${enc}?p=${x.toFixed(1)},${y.toFixed(1)},${z.toFixed(1)},${Math.round(((yawDeg % 360) + 360) % 360)}`;
+    const lt = $('loading-text'); if (lt) lt.textContent = `${why} 불러오는 중…`;
+    $('loading').classList.remove('hidden'); document.exitPointerLock?.();
+    history.pushState(null, '', location.pathname + location.search + href);
+    setTimeout(() => location.reload(), 60);
+    return true;
+  }
+  function leaveArea(x, y, z, yaw) {
+    if (AREA.id === 'all') return false;
+    const zn = phys.zoneAt(x, (y ?? 0) + 0.1, z);
+    const id = areaIdAt(zn, x, y ?? 0, z);
+    if (id === AREA.id) return false;
+    const key = zn && zn.place ? `${zn.place}/${zn.floor || '1F'}` : 'street';
+    return reloadAt(key, x, y ?? 0, z, yaw != null ? yaw * 180 / Math.PI : player.yaw * 180 / Math.PI, areaName(id, META));
+  }
+  const map = createMap({ THREE, K, osm, player, phys, spawns, places: placeInfo, container: $('app'), zoneAt: () => currentZone, leaveArea });
   let currentZone = null;
   if (SHOT) document.body.classList.add('shot');
   const canvas = renderer.domElement;
@@ -208,7 +256,11 @@ async function boot() {
       if (sp) { player.teleport(sp.x, sp.y ?? 0, sp.z, sp.yaw); return true; }
       return false;
     }
-    addEventListener('popstate', () => { go(parse(location.hash)); });
+    addEventListener('popstate', () => {
+      const r = parse(location.hash);
+      if (META && AREA.id !== 'all' && r && areaIdForKey(r.key, r.pos, META) !== AREA.id) { location.reload(); return; }
+      go(r);
+    });
     return {
       start() { const r = parse(location.hash); if (r && !Q.get('pos')) go(r); },
       update(zn) {
@@ -253,6 +305,17 @@ async function boot() {
     else if (f > 57 && pixelRatio < MAX_PR) np = Math.min(MAX_PR, pixelRatio * 1.08);
     if (Math.abs(np - pixelRatio) > 0.01) { pixelRatio = np; renderer.setPixelRatio(pixelRatio); }
   }
+  // walked into another area? (same area for 0.7 s, not in the first 1.5 s after loading)
+  let areaPending = null, areaSince = 0; const bootT = performance.now();
+  function areaWatch(zn) {
+    if (AREA.id === 'all' || leaving || menuOpen || performance.now() - bootT < 1500) return;
+    const id = areaIdAt(zn, player.x, player.y, player.z);
+    if (id === AREA.id) { areaPending = null; return; }
+    if (id !== areaPending) { areaPending = id; areaSince = performance.now(); return; }
+    if (performance.now() - areaSince < 700) return;
+    const key = zn && zn.place ? `${zn.place}/${zn.floor || '1F'}` : (player.y < -2 ? 'underground' : 'street');
+    reloadAt(key, player.x, player.y, player.z, player.yaw * 180 / Math.PI, areaName(id, META));
+  }
   function frame() {
     const dt = Math.min(clock.getDelta(), 0.05); t += dt;
     const input = {
@@ -270,6 +333,7 @@ async function boot() {
     // zone + interactables
     currentZone = phys.zoneAt(player.x, player.y + 0.1, player.z);
     route.update(currentZone);
+    areaWatch(currentZone);
     const zname = currentZone ? currentZone.name : (player.y < -2 ? '지하' : '거리');
     hudZone.textContent = zname + (currentZone && currentZone.floor ? ` · ${currentZone.floor}` : '');
     hudSub.textContent = currentZone ? currentZone.sub : '';
@@ -290,13 +354,16 @@ async function boot() {
   }
   $('loading').classList.add('hidden');
   if (SHOT || start) $('start').classList.add('hidden');
+  // arrived by walking into this area (reload): no intro card again, just a hint to click back in
+  let hopped = false; try { const h = JSON.parse(sessionStorage.getItem('areaHops') || '[]'); hopped = h.length && Date.now() - h[h.length - 1] < 30000; } catch (e) { }
+  if (hopped) { $('start').classList.add('hidden'); setTimeout(() => toast(`${areaName(AREA.id, META)} · 화면을 클릭하면 계속 걸어요`), 300); }
   // Noto Sans KR is served in unicode-range slices; load the slices for every character the signs use, otherwise
   // canvas text silently falls back to another font for glyphs whose slice is not loaded yet.
   const signFonts = fontsReady.then(() => { const txt = K._.atlas.chars(); return Promise.race([Promise.all(['400', '700'].map(w => document.fonts.load(`${w} 32px "Noto Sans KR"`, txt))), new Promise(r => setTimeout(r, 8000))]).catch(() => { }); }).then(() => mark('signFonts'));
   if (SHOT) { await signFonts; K._.atlas.flushAll(); for (const p of K._.atlas.pages) p.t.needsUpdate = true; }
   else signFonts.then(() => { signsGo = true; });
   mark('ready');
-  Object.assign(window.__world, { ready: true, K, phys, player, camera, scene, renderer, map, places: placeInfo, stats: { ...K._.stats, phys: phys.stats, draw: () => renderer.info.render }, setNight });
+  Object.assign(window.__world, { ready: true, area: AREA.id, K, phys, player, camera, scene, renderer, map, places: placeInfo, stats: { ...K._.stats, phys: phys.stats, draw: () => renderer.info.render }, setNight });
   frame();
 }
 boot().catch(e => { fail('boot', e); status('오류: ' + e.message); });

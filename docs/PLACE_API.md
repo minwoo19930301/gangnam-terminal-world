@@ -86,3 +86,24 @@ the floor is called on site (B1, 1F, 1M, 2F …).
 - `node tests/smoke.mjs <id> [other ids…]` — builds with the real kit in node, checks spawns/elevators/junction floors. Must print `OK`.
 - `node tests/shot.mjs --places <id> --city 0 --out shots/<id> --views "name:x,y,z,yawDeg,pitchDeg;…"` — headless screenshots (yaw 0 = north, 90 = west, 180 = south, 270 = east). Then look at the PNGs.
 - Full world: `node tests/serve.mjs 8765` → http://127.0.0.1:8765/ (URL params: `places=a,b`, `city=0`, `pos=x,y,z`, `yaw`, `pitch`, `fly=1`, `night=1`).
+
+## Polished surfaces — `gloss`
+Any colour or texture material spec takes `gloss` (true ≈ 0.45, or 0.1–1): `{ tex: 'marble', color: 0xeee6da, gloss: 0.6 }`,
+`{ color: 0x111111, gloss: 0.8 }` (black lacquer). The surface mixes in a blurred warm-interior reflection (bright ceiling with
+downlight pools, warm walls), which reads as polished marble, terrazzo, lacquer, glossy tile or waxed wood. Use it where photos show
+reflections (department-store marble floors, hotel lobbies, subway granite, glazed tile); keep matte for carpet, concrete, asphalt,
+fabric, plaster. Not for glass/transparent textures. Each gloss level is its own material, so stick to a few levels (0.3/0.5/0.7).
+
+## Area loading (js/areas.js)
+A page load builds one AREA, not the whole world: an outdoor district (고속터미널 일대 / 잠원·뉴코아 / 반포한강공원) or one
+building's interior (고투몰+고속터미널역 are one area). Walking into a building, out of it, or across a district edge reloads
+the page at the new address with a loading screen. Inside the area everything is built as before; around it:
+- other building modules near the area are built but only their above-ground part (y > -1.5; plus the mouth of every
+  junction into the area and the top of entrance stairs), and their lazy detail groups are skipped (outdoor districts keep
+  ground-floor groups so shop windows stay furnished);
+- buildings of modules further away stand as plain OSM blocks (far massing); generic city ground clutter (roads,
+  markings, trees) is kept ~220 m beyond the area, building walls/roofs everywhere (skyline).
+What this means for a module: register zones for every indoor space you build (the zone's place decides which area the
+player is in), keep junction corridors as the only way between modules underground, and after changing `claims` or the
+footprint/zones run `node tools/gen_meta.mjs` (writes js/places/_meta.json, which the browser uses to pick modules).
+`?area=all` (and screenshots, `?places=…`) still build everything. Tests build everything.
