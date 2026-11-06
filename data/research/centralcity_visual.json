@@ -1,0 +1,100 @@
+{
+ "photos": [
+  {
+   "file": "refs/photos/centralcity/01_main_gate.jpg",
+   "source_url": "https://commons.wikimedia.org/wiki/File:센트럴_정문.jpg",
+   "date_if_known": "2009-01-24",
+   "shows": "센트럴시티 정문: 갈색 화강석(약 0.5x0.3m 줄눈 패널) 두 개의 큰 사각 타워 사이 진입부, 가운데 눈 모양 원형 조각(남색/금색), 투명 지붕 캐노피, 짙은 녹색 간판 센트럴시티/CENTRAL CITY와 노란 글씨 입점 목록, 유리문 3~4짝 아래 하나은행·KB 간판"
+  },
+  {
+   "file": "refs/photos/centralcity/02_dropoff.jpg",
+   "source_url": "https://commons.wikimedia.org/wiki/File:센트럴_하차장.jpg",
+   "date_if_known": "2009-01-24",
+   "shows": "호남선 승차/하차 홀 1층 홀: 흰 대형 숫자 5,4,3,2 가 붉은색 패널 박스(승차홈 출입문) 위에 걸림, 연녹/베이지 대리석 기둥, 어두운 금속 격자 천장+다운라이트, LED 광고 모니터, 비상구 표지"
+  },
+  {
+   "file": "refs/photos/centralcity/03_cinus_entrance.jpg",
+   "source_url": "https://commons.wikimedia.org/wiki/File:센트럴_Cinus.jpg",
+   "date_if_known": "2009-01-24",
+   "shows": "Cinus 지하몰 입구: 곡선 은색 금속 캐노피, 청록색 루버 유리벽, 흰 루버 패널 타워, 검정 간판 흰 글씨 Cinus 센트럴, 에스컬레이터 입구, 분홍 화강석 하단부"
+  },
+  {
+   "file": "refs/photos/centralcity/07_honam_boarding.jpg",
+   "source_url": "https://commons.wikimedia.org/wiki/File:센트럴_승차장_01.jpg",
+   "date_if_known": "2009-01-24",
+   "shows": "호남선 승차장: 흰색 곡선 철골 트러스 지붕(가지처럼 뻗는 기둥머리), 흰 대리석 기둥, 반짝이는 흰/회색 대리석 바닥에 검은 줄, 기둥 옆 벤치, 12번 붉은 승차홈 박스, 고속패스 무인발권기 파란 표지"
+  },
+  {
+   "file": "refs/photos/centralcity/09_taxi.jpg",
+   "source_url": "https://commons.wikimedia.org/wiki/File:센트럴_앞_택시정류장.jpg",
+   "date_if_known": "2009-01-24",
+   "shows": "택시 정류장/버스 야드: 흰 경사 기둥이 받치는 반투명 곡면 캐노피 길게 이어짐, 스테인리스 난간, 쌍등 가로등 검정, 뒤에 고속버스 줄지어 정차"
+  },
+  {
+   "file": "refs/photos/centralcity/08_arcade.jpg",
+   "source_url": "https://commons.wikimedia.org/wiki/File:센트럴_회랑.jpg",
+   "date_if_known": "2009-01-24",
+   "shows": "대합실/중앙홀 1MF: 흰 천장+다운라이트, 줄무늬 연회색 대리석 기둥, 개찰구 없이 열린 구조, 녹색 전광 방향 표지판 1MF CENTRAL PARK, 유리 난간 계단"
+  },
+  {
+   "file": "refs/photos/centralcity/05_underpass.jpg",
+   "source_url": "https://commons.wikimedia.org/wiki/File:센트럴_지하통로.jpg",
+   "date_if_known": "2009-01-24",
+   "shows": "지하통로(7호선 연결): 흰 리브 볼트 천장, 흑백 체크무늬 바닥, 대리석 기둥 상점 입구, 중앙 선형 조명"
+  },
+  {
+   "file": "refs/photos/centralcity/10_shinsegae_gate.jpg",
+   "source_url": "https://commons.wikimedia.org/wiki/File:신세계_반포점_정문.jpg",
+   "date_if_known": "2009-01-24",
+   "shows": "신세계 정문: 같은 갈색 화강석 외벽, 흰색 반원통 캐노피, SHINSEGAE 간판, 창 작은 사각 창+흰 프레임, 빨강 차양, Cinus 아이콘 표지"
+  },
+  {
+   "file": "refs/photos/centralcity/11_banpo_overview.jpg",
+   "source_url": "https://commons.wikimedia.org/wiki/File:반포터미널_전경.jpg",
+   "date_if_known": "2009-03-08",
+   "shows": "원경: 갈색 화강석 사각 타워들(신세계), 낮은 회색 베이스 + CENTRAL CITY 흰 글씨, JW 메리어트 호텔 회색/흰 가로줄 고층, 앞에 녹색 돔 지붕(파미에스테이션 쪽 원형 건물)"
+  },
+  {
+   "file": "refs/photos/centralcity/04_millennium_hall.jpg",
+   "source_url": "https://commons.wikimedia.org/wiki/File:센트럴시티_밀레니엄홀.jpg",
+   "date_if_known": "2009-01-31",
+   "shows": "6층 밀레니엄홀 컨벤션 홀(대합실 아님): 목재 패널 벽, 노출 철골 천장, 스크린. 참고용"
+  },
+  {
+   "file": "refs/photos/centralcity/06_terminal_side.jpg",
+   "source_url": "https://commons.wikimedia.org/wiki/File:고속터미널_본관_옆쪽.jpg",
+   "date_if_known": "2009-01-24",
+   "shows": "경부선 쪽 터미널 별관 측면과 주차장(센트럴시티 호남선 건물 아님): 베이지 패널 3층, 띠창, 평지 주차장"
+  }
+ ],
+ "exterior": {
+  "main_gate": "01: 갈색 화강석 패널 타워, 중앙 진입부 폭 약 타워 한 개 너비, 투명 캐노피+철골, 원형 조각, 녹색 간판(센트럴시티 흰 글자 + CENTRAL CITY, 아래 노란 목록)",
+  "shinsegae": "10: 갈색 화강석, 흰 반원통 캐노피, 빨간 차양",
+  "overall": "11: 낮은 회색 베이스 + 갈색 타워들, JW Marriott 고층(회색+흰 가로 밴드, 약 35층 이상 시각 추정), 녹색 돔 지붕",
+  "canopy_bus_yard": "09: 흰 경사 기둥, 반투명 곡면 지붕",
+  "cinus": "03: 곡선 은색 캐노피, 청록 루버"
+ },
+ "parking": {
+  "known": "06 은 경부선 쪽 평지 주차장으로 센트럴 옥상주차 아님",
+  "note": "옥상주차/램프 사진은 찾지 못함"
+ },
+ "interior": {
+  "boarding_hall": "02,07: 붉은 패널 승차홈 박스 + 흰 대형 숫자, 흰 철골 트러스 지붕, 대리석 바닥",
+  "central_hall": "08: 흰 천장, 대리석 기둥, 녹색 전광 방향판",
+  "underpass": "05: 흑백 체크 바닥, 흰 리브 볼트",
+  "ticket_windows": "사진에서 직접 확인 못함 (무인발권기만 07에서 확인)"
+ },
+ "not_airport": [
+  "붉은 패널 승차홈 박스와 번호 숫자(02): 항공 게이트와 다름",
+  "1층에서 차량 바로 접한 개방형 승차장(07,09): 보안검색 없음",
+  "갈색 화강석 상업 복합 외관(01,10)",
+  "철골 트러스 + 흰 대리석 기둥(07)은 공항보다 낮은 층고 쇼핑몰 느낌"
+ ],
+ "unknown": [
+  "호남선 승차홈 정확한 번호 범위와 배치",
+  "매표 창구/전광판 사진",
+  "옥상주차장 진입 램프",
+  "파미에스테이션 원형 외관 근접 사진(11 원경 녹색 돔 정도)",
+  "센트럴시티터미널 현재(2020년대) 모습: 모든 사진은 2009년 촬영"
+ ]
+}

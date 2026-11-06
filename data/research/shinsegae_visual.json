@@ -1,0 +1,24 @@
+{
+"photos":[
+{"file":"refs/photos/shinsegae/01_facade_2009_towers_signage.jpg","source_url":"https://commons.wikimedia.org/wiki/File:Shinsegae_department_store_Gangnam_branch_20090124.jpg","date_if_known":"2009-01-24","shows":"Gangnam store facade seen from below: two tall blocky towers clad in brown-pink stone panels, small square windows in rows at tower tops, red flower logo + white Korean text 신세계 on upper tower, large framed billboard panels (dark triangular lattice border) mid-wall, curved glass atrium bay between towers, Central City taxi/bus blue signs on lamp post"},
+{"file":"refs/photos/shinsegae/02_facade_2008_pink_granite_logo.jpg","source_url":"https://commons.wikimedia.org/wiki/File:Shinsegaedept02a.jpg","date_if_known":"2007-12 (EXIF), uploaded 2008-01","shows":"Gangnam store from street: pinkish-brown stone facade with horizontal joint lines, red flower logo and gold/beige serif lettering SHINSEGAE on top of tower, rows of small square dark windows at tower top, one large black blank panel, glass curved entrance atrium with arched glass canopy at ground, small square projecting window frames, ground show windows"}
+],
+"exterior":{
+"material":"pinkish-brown/rose granite panel cladding with fine horizontal joints (photos 01,02); dark grey triangular-lattice frames around billboards (01)",
+"massing":"two stepped blocky towers flanking a curved glass bay/atrium; tower tops have rows of small square dark openings (01,02)",
+"signage":"red 5-petal flower logo above Korean wordmark 신세계 (white/silver) on the taller tower (01); 2008 photo shows Latin SHINSEGAE in gold/beige letters (02), so lettering varies by era",
+"billboards":"two large framed advertising banners on wall (01)",
+"canopy_entrance":"glass curved atrium bay descending to entrance, arched glass canopy plus fabric awning at ground (01,02)",
+"windows":"mostly closed wall; scattered small square window frames in diagonal column beside atrium; small ground-floor show windows (01,02)",
+"extension_2016":"text source only: 신관 floors 6-11 added Feb 2016 (area 55,500 -> 86,500 m2) https://news.bizwatch.co.kr/article/consumer/2016/02/25/0020; photos above predate it"
+},
+"parking":{},
+"interior":{
+"b1_food":"text only: 신세계마켓 B1 about 1,980 m2 renewed Feb 2025 https://www.hankyung.com/article/2025022742181 ; 스위트파크 dessert hall about 1,600 pyeong, 43 brands; whole food hall about 6,000 pyeong. No photo obtained."
+},
+"not_airport":[
+"solid stone-clad windowless-looking towers with tiny square openings, not a glass curtain wall or long canopy (01,02)",
+"retail brand signage and large fashion/cosmetic billboards instead of departure boards (01)"
+],
+"unknown":["2016 신관 exterior look","rooftop","parking entrance","1F cosmetics hall interior","B1 food hall interior","facade from 신반포로 side specifically","current facade colour/signage (photos are 2008-2009)"]
+}

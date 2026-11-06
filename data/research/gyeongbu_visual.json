@@ -1,0 +1,50 @@
+{
+"photos":[
+{"file":"01_exterior_dusk_neon_side.jpg","source_url":"https://commons.wikimedia.org/wiki/File:Express_Bus_Terminal_Seoul.jpg","date_if_known":"unknown (night, winter)","shows":"Side facade: stepped tiers with slanted white concrete struts, dark maroon-brown horizontal bands, ribbon windows, green/red LED running sign along upper band, scaffold netting on upper floors, ground-level arcade under cantilever, pine trees, subway exit kiosk"},
+{"file":"02_front_sign_boarding_yard_bus.jpg","source_url":"https://commons.wikimedia.org/wiki/File:Gangnam_Seoul_Express_Bus_Terminal.jpg","date_if_known":"unknown (rainy)","shows":"Front (yard) side: wide white horizontal facade, roof sign '서울고속버스터미날' blue letters with red AO logo + 'SEOUL EXPRESS BUS TERMINAL', blue banner text band (3층 꽃상가 / 2·4층 혼수·커튼·홈패션 / 6.7.8층 의류 도매상가), LED screen on roof, flat-roof boarding canopy at right edge, red Kumho bus on wet asphalt yard, Marriott tower behind"},
+{"file":"03_tower_vertical_sign_front.jpg","source_url":"https://commons.wikimedia.org/wiki/File:Seoul_Express_Bus_Terminal.jpg","date_if_known":"unknown (Christmas banners)","shows":"Central stair-stepped pyramid with brown-terracotta triangular wall, white central tower with vertical blue sign '서울고속버스터미널' (written 미널) and red AO logo, '의류도매상가 678층', tier signs '생화·조화 꽃 도매상가 3F', '혼수·커튼·홈패션 2·4F', ribbon windows on white terraces, police box with glass facade in front"},
+{"file":"04_front_plaza_dusk.jpg","source_url":"https://commons.wikimedia.org/wiki/File:Seoul_express_bus_terminal.jpg","date_if_known":"unknown (dusk, low-res)","shows":"Plaza in front: low shop arcade with blue band sign '귀금속 도매상가', shopfronts lit, motorbikes, main facade with roof sign, LED screens on roof, Marriott tower behind"},
+{"file":"05_gate_hall_departure_boards.jpg","source_url":"https://commons.wikimedia.org/wiki/File:The_Entrance_of_Kyungbu_Line_in_Seoul_Express_Bus_Terminal_on_May_1st,_2016.jpg","date_if_known":"2016-05-01","shows":"Gyeongbu line boarding-gate hall: speckled grey terrazzo/granite floor with yellow tactile strip, white square columns with black skirting, acoustic-tile ceiling with square LED panels, cyan backlit gate signs with white gate numbers + destination (부산 마산 진주 창원 울산 대구 포항), black LED departure board, glass double doors to bays, red LED clock, advertising lightboxes, bench seating at left"},
+{"file":"06_rear_annex_parking_lot.jpg","source_url":"https://commons.wikimedia.org/wiki/File:%EA%B3%A0%EC%86%8D%ED%84%B0%EB%AF%B8%EB%84%90_%EB%B3%B8%EA%B4%80_%EC%97%86%EC%AA%BD.jpg","date_if_known":"unknown (snow, ~2000s)","shows":"Likely a low annex/service block seen from a surface car lot (title ambiguous): 3-4 floor beige panel cladding, grid of bands of windows, green glass curtain section to right with canopy curve, snowy surface parking full of sedans with parking barrier gate"},
+{"file":"07_pyramid_tiers_vertical_sign.jpg","source_url":"https://commons.wikimedia.org/wiki/File:%EC%84%9C%EC%9A%B8%EA%B3%A0%EC%86%8D%EB%B2%84%EC%8A%A4%ED%84%B0%EB%AF%B8%EB%82%A0_01.jpg","date_if_known":"unknown","shows":"Building reads as stepped pyramid: cream/white tower with vertical blue sign and red logo, brown terracotta tier slabs, ribbon windows between tiers, grey metal box on roof"},
+{"file":"08_diagonal_facade_struts.jpg","source_url":"https://commons.wikimedia.org/wiki/File:%EC%84%9C%EC%9A%B8%EA%B3%A0%EC%86%8D%EB%B2%84%EC%8A%A4%ED%84%B0%EB%AF%B8%EB%82%A0_02.jpg","date_if_known":"unknown (winter)","shows":"Long diagonal facade: sloped cream wall panels with regular small square windows between slanted buttresses, brown projecting tier bands, blue sign band text along the slope, parked cars at base"},
+{"file":"09_honam_wing_concourse_truss.jpg","source_url":"https://commons.wikimedia.org/wiki/File:%EC%84%BC%ED%8A%B8%EB%9F%B4_%EC%8A%B9%EC%B0%A8%EC%9E%A5_01.jpg","date_if_known":"unknown","shows":"CAUTION: Honam-line (Central City) side, not Gyeongbu. Concourse with white tubular steel truss roof, white marble-clad square columns, polished marble floor, bench, unmanned ticket kiosk sign. Use only as reference for the sister wing"},
+{"file":"10_honam_wing_bays_numbers.jpg","source_url":"https://commons.wikimedia.org/wiki/File:%EC%84%BC%ED%8A%B8%EB%9F%B4_%ED%95%98%EC%B0%A8%EC%9E%A5.jpg","date_if_known":"unknown","shows":"CAUTION: Honam/Central City wing (file titled 하차장 but shows numbered gates). Red-panel gate kiosks each with large white number 5 4 3 2, backlit ad panel on top, marble-clad columns, glass door entry, recessed downlights, green exit sign. Gyeongbu hall likely similar style (see 05)"}
+],
+"exterior":{
+"overall":"Stepped pyramid/ziggurat-like mass: wide low base, tiers narrowing upward to a central white tower (photos 03, 07). Sloped facade on long side with slanted white concrete buttresses (01, 08).",
+"materials":"White/cream painted concrete or panel walls, brown/maroon (terracotta-like) projecting tier slabs and bands, ribbon windows with dark frames (01, 03, 07). Brown wall triangle in front tower (03).",
+"floors":"Sign text states 3F 꽃 도매상가, 2F and 4F 혼수·커튼·홈패션, 6-8F 의류도매상가, B1 한가람문고 (02, 03, 08). Building ~8 floors plus roof box.",
+"signage":"Roof sign '서울고속버스터미날' in blue letters with 'SEOUL EXPRESS BUS TERMINAL' below and red AO logo at left (02); vertical blue sign '서울고속버스터미널' on white tower with red logo at top (03, 07); long blue text bands along tiers listing floors (02, 08); LED running sign green/red (01); big LED screens on roof (02, 04).",
+"window_rhythm":"Ribbon windows per tier; sloped facade has small square windows between each buttress at about 3m spacing (08).",
+"canopies":"Flat steel/glass boarding canopy at yard edge with slight slope (02, right side); cantilever arcade under building at ground level (01).",
+"roof":"Flat roof tiers, grey metal box on top, LED screens (02, 03, 07)."
+},
+"parking":{
+"bus_yard":"Open wet-asphalt yard in front with coaches parked (Kumho Buslines red/white, gold coach) under long canopy (02).",
+"surface_car_park":"Surface lot of mixed sedans with yellow/black barrier gates and small booth on side annex (06).",
+"rooftop":"Not seen in any photo."
+},
+"interior":{
+"gate_hall_gyeongbu":"Terrazzo/granite speckled grey floor, white columns with black skirting, flat tile ceiling with square LED panels, cyan backlit gate number+destination boards, black LED departure board, glass double doors to bays, yellow tactile strips, wooden benches (05).",
+"honam_wing_reference":"Marble columns and floor, tubular white truss roof (09), red-panel gate kiosks with big white numbers (10). Not confirmed for Gyeongbu hall.",
+"ticket_windows":"Not seen in any photo.",
+"flower_market_3F":"Only exterior signage seen (03, 08); no interior photo obtained."
+},
+"not_airport":[
+"Facade is brown/cream stepped tiers with painted text bands, not glass-and-steel curtain wall (03, 07)",
+"Large Korean text banners and LED signs for wholesale markets cover the facade (02, 08)",
+"Buses park on open yard under canopies at ground level; no jet bridges (02)",
+"Gate hall uses cyan backlit gate boards and low tile ceiling, not high vaulted hall (05)",
+"Multiple wholesale shop floors (flowers, clothing, bedding) stacked above the terminal"
+],
+"unknown":[
+"Ticket window (매표소) and kiosk appearance for Gyeongbu hall",
+"Departure board layout in main 대합실",
+"하차장 (arrival) appearance",
+"Rooftop parking",
+"3F flower market interior and entrance",
+"Exact colours (photos vary with light/weather)",
+"Photo 06 identity (title says main building side; looks like annex)"
+]
+}
