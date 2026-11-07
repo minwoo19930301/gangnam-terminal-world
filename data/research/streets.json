@@ -552,8 +552,8 @@
     "센트럴씨티보도육교 기존 남측 추정 승강기의 실재 여부와 반포지구대 가구의 정확한 평면 배치"
   ],
   "modeling": {
-    "round": 17,
-    "scope": "Round17 verified frame review: floor-level camera traces, police road-face geometry/banner, continuous arch median/service lane/grey sidewalk, junction corner facades and guide markings, mature kerb trees and dashed bus lines. No engine or neighbouring module edits.",
+    "round": 19,
+    "scope": "Round19: remaining verified streets findings; source frames and read-only reviewer renders checked. Only streets.js/research changed; camera y stays at the support floor.",
     "claims": [
       886400346,
       413367405,
@@ -869,7 +869,16 @@
         "round": 17,
         "y_convention": "floor level; eye height added by renderer",
         "pitchDeg": 2,
-        "correction": "sr-12: shifted back to show apron; reviewer 0.9 m pose not used because user requires floor-level y"
+        "correction": "sr-12: shifted back to show apron; reviewer 0.9 m pose not used because user requires floor-level y",
+        "roadview_camera": {
+          "finding": "sr-12",
+          "floor_y": 0.04,
+          "target_eye_world_y": 2.52,
+          "eye_offset_above_floor_m": 2.48,
+          "extra_offset_over_physics_eye_m": 0.86,
+          "status": "needs camera-harness support; metadata only",
+          "note": "Do not turn support-floor y into floating feet. Existing harness adds fixed 1.62 m; renderer must apply the separate roadview eye offset."
+        }
       },
       {
         "spot": "반포지구대와 3호선1번 출구섬",
@@ -883,7 +892,16 @@
         "round": 17,
         "y_convention": "floor level; eye height added by renderer",
         "pitchDeg": 0,
-        "correction": "sr-11: road recedes ahead-right; west-face banner retained"
+        "correction": "sr-11: road recedes ahead-right; west-face banner retained",
+        "roadview_camera": {
+          "finding": "sr-12",
+          "floor_y": 0.04,
+          "target_eye_world_y": 2.52,
+          "eye_offset_above_floor_m": 2.48,
+          "extra_offset_over_physics_eye_m": 0.86,
+          "status": "needs camera-harness support; metadata only",
+          "note": "Do not turn support-floor y into floating feet. Existing harness adds fixed 1.62 m; renderer must apply the separate roadview eye offset."
+        }
       },
       {
         "spot": "신반포로 중앙정류장 동쪽 조망",
@@ -897,7 +915,16 @@
         "round": 17,
         "y_convention": "floor level; eye height added by renderer",
         "pitchDeg": 0,
-        "correction": "sr-09: first shelter and fence ahead-left"
+        "correction": "sr-09: first shelter and fence ahead-left",
+        "roadview_camera": {
+          "finding": "sr-12",
+          "floor_y": 0.04,
+          "target_eye_world_y": 2.52,
+          "eye_offset_above_floor_m": 2.48,
+          "extra_offset_over_physics_eye_m": 0.86,
+          "status": "needs camera-harness support; metadata only",
+          "note": "Do not turn support-floor y into floating feet. Existing harness adds fixed 1.62 m; renderer must apply the separate roadview eye offset."
+        }
       },
       {
         "spot": "지구대 서측 현수막·옥상 입상",
@@ -995,7 +1022,16 @@
         "round": 17,
         "y_convention": "floor level; eye height added by renderer",
         "pitchDeg": 3,
-        "correction": "sr-10: single butterfly arch viewed from carriageway"
+        "correction": "sr-10: single butterfly arch viewed from carriageway",
+        "roadview_camera": {
+          "finding": "sr-12",
+          "floor_y": 0.04,
+          "target_eye_world_y": 2.52,
+          "eye_offset_above_floor_m": 2.48,
+          "extra_offset_over_physics_eye_m": 0.86,
+          "status": "needs camera-harness support; metadata only",
+          "note": "Do not turn support-floor y into floating feet. Existing harness adds fixed 1.62 m; renderer must apply the separate roadview eye offset."
+        }
       },
       {
         "spot": "Round10 고속터미널사거리 북측 횡단보도",
@@ -1014,7 +1050,16 @@
           "banpo_shoppingtown"
         ],
         "y_convention": "floor level",
-        "correction": "2025-12-08 전방향 횡단보도 완공; 기존 끝단 유지"
+        "correction": "2025-12-08 전방향 횡단보도 완공; 기존 끝단 유지",
+        "roadview_camera": {
+          "finding": "sr-12",
+          "floor_y": 0.04,
+          "target_eye_world_y": 2.52,
+          "eye_offset_above_floor_m": 2.48,
+          "extra_offset_over_physics_eye_m": 0.86,
+          "status": "needs camera-harness support; metadata only",
+          "note": "Do not turn support-floor y into floating feet. Existing harness adds fixed 1.62 m; renderer must apply the separate roadview eye offset."
+        }
       },
       {
         "spot": "Round10 고속터미널사거리 동측 횡단보도",
@@ -1032,7 +1077,16 @@
           "gyeongbu",
           "banpo_shoppingtown"
         ],
-        "y_convention": "floor level"
+        "y_convention": "floor level",
+        "roadview_camera": {
+          "finding": "sr-12",
+          "floor_y": 0.04,
+          "target_eye_world_y": 2.52,
+          "eye_offset_above_floor_m": 2.48,
+          "extra_offset_over_physics_eye_m": 0.86,
+          "status": "needs camera-harness support; metadata only",
+          "note": "Do not turn support-floor y into floating feet. Existing harness adds fixed 1.62 m; renderer must apply the separate roadview eye offset."
+        }
       },
       {
         "spot": "Round10 고속터미널사거리 남측 횡단보도",
@@ -1051,7 +1105,16 @@
           "banpo_shoppingtown"
         ],
         "y_convention": "floor level",
-        "correction": "sr-05: face blue-glass Banpo Xi Plaza at bearing 246°"
+        "correction": "sr-05: face blue-glass Banpo Xi Plaza at bearing 246°",
+        "roadview_camera": {
+          "finding": "sr-12",
+          "floor_y": 0.04,
+          "target_eye_world_y": 2.52,
+          "eye_offset_above_floor_m": 2.48,
+          "extra_offset_over_physics_eye_m": 0.86,
+          "status": "needs camera-harness support; metadata only",
+          "note": "Do not turn support-floor y into floating feet. Existing harness adds fixed 1.62 m; renderer must apply the separate roadview eye offset."
+        }
       },
       {
         "spot": "Round10 고속터미널사거리 서측 횡단보도",
@@ -1430,6 +1493,188 @@
           "other_blockers": "None in final full-world walk. Earlier external failures resolved.",
           "required_smoke_final": "node tests/smoke.mjs station streets gotomall centralcity banpo_shoppingtown --quiet: OK after concurrent centralcity update; only stale _meta claims warning",
           "previous_full_walk": "node tests/walk.mjs:692ok,12blocked in concurrently edited world; no station/streets junction,spawn,elevator failure reported."
+        }
+      }
+    },
+    "round19": {
+      "review": ".codex-jobs/evidence/check_r17.json / streets; original review_walk17.json",
+      "originals_inspected": [
+        "refs/roadview/police_01_front.jpg",
+        "refs/roadview/police_02_box_and_exit3_W.jpg",
+        "refs/roadview/street_01_sinbanpo_median_busstop_E.jpg",
+        "refs/roadview/gb_03_front_plaza_arch_canopy_shelters.jpg",
+        "refs/roadview/junction_01_jamwonro_N.jpg",
+        "refs/roadview/junction_02_jamwonro_E.jpg",
+        "refs/roadview/junction_03_jamwonro_S.jpg"
+      ],
+      "reviewer_renders_inspected": [
+        "wt-r19/shots/chk_station/pol01hi.png",
+        "wt-r19/shots/chk_station/gbLow.png",
+        "wt-r19/shots/chk_station/topPolice.png",
+        "wt-r19/shots/chk_station/topTrees.png",
+        "wt-r19/shots/chk_station/junc01.png",
+        "wt-r19/shots/chk_station/junc02.png",
+        "wt-r19/shots/chk_station/junc03.png"
+      ],
+      "findings": [
+        {
+          "id": "NEW-1",
+          "status": "implemented",
+          "frame_check": "police_01 has open sky/apron on both sides, not the three crowns in pol01hi/topPolice.",
+          "change": "Suppress only generic treePit trees at x0..40, south offset6.9..12.5 from eastbound 828782198. Lamps, bollards and other furniture retain their pass.",
+          "verification": "Actual K tree-call audit: 0 trees in police apron x0..40,z-125..-105."
+        },
+        {
+          "id": "sr-01",
+          "status": "implemented",
+          "frame_check": "police_01 has dark glazing on a low light stone base and a slim grey west corner; the tall dark/beige object is a foreground pole.",
+          "change": "North face (15.78,-106.32)→(29.69,-111.53): glass base #3f4b4a/gloss0.7, explicit 0.6m stone plinth y0.15..0.75 beneath west 5.5m glass span, grey 0.24m corner frame replacing dark post. Existing wedge and mullions retained.",
+          "guess": "Exact glass reflectance and 0.6m base height from image; no new render available."
+        },
+        {
+          "id": "sr-02",
+          "status": "implemented_in_owned_geometry",
+          "frame_check": "gb_03/gbLow: no salmon at the arch; grey pavers and white zebra continue through the shelter line.",
+          "change": "Both full streets fence strips gbPoint u100..156 and170..207 at v-25 now grey #b9b6ad. Public pavement x110..200 extends from road offset14 to24 (was22). Added0.5m white zebra bars offsets14.5..23.5 at x141.5..148.5. Grass/road/other brick strips retained.",
+          "external_dependency": "gyeongbu.js gb_forecourt_brick still spans local rect(98,-45,230,-1), y0.022. Streets now covers the reviewed public band with grey slab y0.15; terminal-owned brick beyond offset24 remains for its owner to assess. No neighbouring file edited.",
+          "guess": "Zebra span7m and pavement extent24m are frame-scaled estimates."
+        },
+        {
+          "id": "sr-04",
+          "status": "implemented_position_estimate",
+          "frame_check": "police_02 shows the blank sign back on the south kerb; street_01 must not show the former near-west sign overhead.",
+          "change": "Moved pole(8,-112.5)→(26,-117.5), y0.15, h8.9m. Retained7.3m north cantilever and6×2.5m panel bottom6m, grey#7d8285; panel centre3m along arm.",
+          "angular_check": "From(46,-130), panel edges about107.3..122.0° world bearing: at yaw140 about18.0..32.7° right, compared with reviewer17..28°. At current yaw110 it lies about12° left..3° right. Angular fit improved; not claimed exact.",
+          "guess": "Pole location/arm attachment remain frame estimates. Source near-square HFOV≈74° and model≈104°; fixed sr-11 yaw110 retained."
+        },
+        {
+          "id": "sr-12",
+          "status": "external_camera_harness_needed",
+          "frame_check": "The car-height source is above a walking eye; pol01hi confirms the extra apron visibility.",
+          "change": "All7 reviewed traces retain support floor y0.04. Added separate roadview_camera metadata target eye worldy2.52, floor offset2.48 (+0.86 over physics1.62).",
+          "not_applied": "Changing feet to0.9 conflicts with explicit user floor-level y. The harness-held camera list/fixed eye offset is outside allowed files; metadata does not itself change renders."
+        },
+        {
+          "id": "sr-06",
+          "status": "implemented_frame_fitted_routes",
+          "frame_check": "All three originals contradict the previous pink semicircle and yellow north-south line. Mint crosses immediately ahead in N/E; pink is beyond it; yellow starts under the camera heading east in S.",
+          "change": "At junction centre(358,-261), OSM frameu=(.934,-.357),v=(.357,.934): mint centre u-v=4; pink shallow far-side path u17..21/v-23..13; yellow starts(0,0), initialyaw268. Colour widths0.45m/spacing1.5m; yellow0.15m/0.15gap. Retained white0.75m dash/gap guides and all other junctions.",
+          "world_paths": {
+            "mint": [
+              [
+                332.04,
+                -275.7
+              ],
+              [
+                347.534,
+                -268.776
+              ],
+              [
+                361.736,
+                -262.428
+              ],
+              [
+                373.356,
+                -257.235
+              ],
+              [
+                386.268,
+                -251.464
+              ]
+            ],
+            "pink": [
+              [
+                365.668,
+                -288.554
+              ],
+              [
+                369.628,
+                -280.432
+              ],
+              [
+                374.133,
+                -271.449
+              ],
+              [
+                379.181,
+                -261.602
+              ],
+              [
+                382.257,
+                -256.355
+              ]
+            ],
+            "yellow": [
+              [
+                358.0,
+                -261.0
+              ],
+              [
+                366.683,
+                -260.69
+              ],
+              [
+                375.552,
+                -259.894
+              ],
+              [
+                384.703,
+                -258.36
+              ]
+            ]
+          },
+          "guess": "Interior paint trajectories fitted to the three frames, not surveyed geometry. Needs re-render at all three fixed poses."
+        },
+        {
+          "id": "sr-07",
+          "status": "implemented",
+          "frame_check": "street_01 shows tall crowns above shelters; topTrees shows missing western trees, whose candidate points fall in underground mall1354860678(layer-1).",
+          "change": "Only this north-tree loop ignores layer<0 footprints. Above-ground buildings/canopies, inCut and3m exit8-2 clearance remain.15trees at7.5m chainage, x-39.93..58.16,z-124.29..-161.82; trunksr0.17/h7, crownscentrey8/r3.25/top11,#6f9a45. Single dashed blue lane paint retained.",
+          "verification": "Actual K build records15 trunks, including8 previously missing west ofx16.12, no lazy-group errors.",
+          "guess": "Species, exact individual centres and11m crown height from frame."
+        }
+      ],
+      "fixed_ids_retained": [
+        "sr-03",
+        "sr-05",
+        "sr-08",
+        "sr-09",
+        "sr-10",
+        "sr-11"
+      ],
+      "skipped_ids": [],
+      "verification": {
+        "smoke": "node tests/smoke.mjs streets --quiet: OK;337meshes/~296k triangles,0 detail errors",
+        "syntax": "node --check js/places/streets.js passed",
+        "geometry_audit": "Actual kit:15 mature row trunks,0 generic trees in police apron, mint8/pink8/yellow6 non-collision paint faces in reviewed box.",
+        "render": "tests/shot.mjs not run per sandbox constraint. Inspected7 source photos and7 existing review renders; no new-render claim.",
+        "combined": "Parent agent runs required combined smoke and full walk after both modules finish."
+      },
+      "integrated_qa": {
+        "smoke": "node tests/smoke.mjs station streets gotomall centralcity banpo_shoppingtown → OK, latest run",
+        "walk": "latest live:698 ok,1 blocked; all 사용자 루트/1F 동선 pass",
+        "rendered": false,
+        "frozen_walk_baseline": "695 ok,4 blocked",
+        "frozen_walk_current": "695 ok,4 blocked",
+        "added_failures": [],
+        "shared_failures": [
+          "BLOCKED elevator centralcity \"스위트 파크 동측 엘리베이터\" B1: no path (8 cells searched)",
+          "BLOCKED elevator centralcity \"하우스 오브 신세계 엘리베이터\" 1F: no path (28 cells searched)",
+          "BLOCKED elevator centralcity \"하우스 오브 신세계 엘리베이터\" 1M: no path (3 cells searched)",
+          "BLOCKED elevator centralcity \"하우스 오브 신세계 엘리베이터\" B1: no path (33 cells searched)"
+        ],
+        "user_routes": "all passed",
+        "first_floor_routes": "all passed",
+        "walk_final_live": {
+          "command": "node tests/walk.mjs",
+          "result": "698 ok,1 blocked",
+          "blocked": [
+            "elevator centralcity \"하우스 오브 신세계 엘리베이터\" 1M: no path (1 cells searched)"
+          ],
+          "user_routes": "all passed",
+          "first_floor_routes": "all passed",
+          "required_zero_blocked": "not achieved: remaining failure is in a neighbor file prohibited by this task",
+          "centralcity_sha256": "6192190120c675ced92e4d0e5ba89b3906d445c0b6b07abf1bd50086ebe848cd"
         }
       }
     }

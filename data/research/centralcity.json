@@ -551,7 +551,7 @@
   ],
   "parking": "호남선 지상 버스 야드 1173096801, 터미널·601356623·1173096805의 옥상 승용차 주차를 항공사진과 OSM으로 재현. OSM layer 도로를 기준으로 연결교·진입 경로를 유지하며 중간층 높이와 램프 경사는 추정. 백화점·호텔 지하 1~3층 공용 주차는 문헌 맥락으로 별도 구역.",
   "notes": [
-    "Round18는 공식 B1/1F/1M 도면과 review_ssg17을 우선한다. B1은0.092m/원본px 등축 직교 변환. B1 하우스 보이드 위에1F/1M 코트를 정렬하고 라운지는B1. 기존 서측 승차홈 앞마당과 충돌하는 잠정 투영이며 실측 복원이 아니다. Round14/17 해당 좌표·라운지 층·검증은 과거 기록이다.",
+    "과거 기록(현 배치 아님): Round18는 공식 B1/1F/1M 도면과 review_ssg17을 우선한다. B1은0.092m/원본px 등축 직교 변환. B1 하우스 보이드 위에1F/1M 코트를 정렬하고 라운지는B1. 기존 서측 승차홈 앞마당과 충돌하는 잠정 투영이며 실측 복원이 아니다. Round14/17 해당 좌표·라운지 층·검증은 과거 기록이다.",
     "소이연남·팔도국수 면주방은 2018 기사 근거",
     "파미에스테이션: 2014.11 개장, 약 4,500평, 10개국 30여 식음 브랜드 51개 매장(2014 기준). 2018.1.16 2층에 11곳 확장(주차장에서 도보 1분), 확인된 이름은 홍대만뽀·소이연남·팔도국수 면주방",
     "2016 센트럴시티 터미널 쪽 '캐쥬얼 다이닝&라이프' 존: 101번지 남산돈까스, 르사이공, 순대실록, 우마이도, 스노우폭스, 서대문 한옥집",
@@ -563,7 +563,9 @@
     "cc_02의 8층 베이지/옥상 LED 건물은 OSM 413280002 르본시티로 판별. 중앙시티 claims 밖이므로 이 모듈에 중복 건물/LED를 추가하지 않음.",
     "Round4: 제공된 로드뷰·항공·검증용 렌더와 코드 대조. 사용자 제한에 따라 tests/shot.mjs 미실행. 새 외부 웹검증이나 변경 후 렌더 검증을 주장하지 않음.",
     "Round5: 파미에스테이션은 일상정원 FP103호 등 제공된2026년 주소 근거로1F. cc_famille22–24는 별도B1 신세계↔메가박스↔지하철 통로. 최신 실내 사진이 있는 구역은 이전2009 실내 참조보다 우선. 외부 웹검색 없이 제공 파일을 사용했고, tests/shot.mjs는 사용자 제한으로 실행하지 않음.",
-    "Round18 final: node tests/smoke.mjs centralcity shinsegae jwmarriott gotomall=OK. Full node tests/walk.mjs=705ok/2blocked: shinsegae 연결부3호기2F and 사용자루트5 르본시티→G2. Centralcity+gotomall local walk82ok/0blocked; both1F동선 preserved. Tests/engine/other module files not edited. New render unavailable (sandbox server bindEPERM)."
+    "과거 기록(현 배치 아님): Round18 final: node tests/smoke.mjs centralcity shinsegae jwmarriott gotomall=OK. Full node tests/walk.mjs=705ok/2blocked: shinsegae 연결부3호기2F and 사용자루트5 르본시티→G2. Centralcity+gotomall local walk82ok/0blocked; both1F동선 preserved. Tests/engine/other module files not edited. New render unavailable (sandbox server bindEPERM).",
+    "Round19: 스위트파크는9GATE/J4기준 등축 정합. 하우스는기존 실내16×12m 코트 아래 B1/1F/1M으로 정합하고 버스 승강장/앞마당복원. 정확한 하우스 매장 축척은 별도 추정; 활성좌표와 검증은modeling.round19가이전기록을대체.",
+    "Round19 최종 확인: centralcity smoke OK / 단독 walk 40 ok,0 blocked. 통합 smoke 및 전체 walk의 최종 실패는 신세계 신관 화장실 옆1·2호기10F 바닥 누락2건뿐이며 사용자 루트와1F동선은 모두 통과. 다른 모듈·엔진·테스트는 수정하지 않음."
   ],
   "unresolved": [
     "정문·구체의 정확한 실측 좌표/치수, 유리 캐노피 경사·C 표장 단면·벽돌 줄눈 모듈",
@@ -581,9 +583,9 @@
     "Round5 새 렌더에서 천장 높이·간판 가독성·재료색·혼잡도 대조",
     "공식도면 셀과 OSM 풋프린트의 실측 정합: 기록된 지역별 변환은 동선·순서 보존용 근사이며 현장 실측 아님.",
     "파미에3-1/3-2/30/31/32매장명 및터미널36..42번호-이름매핑은 공식HTML에도 없음.",
-    "Round18: 등축 B1·고정 코어·J4·OSM 서측 앞마당을 동시에 만족하는 실측 등록이 없음. 상층 투영/앞마당 억제는 잠정적이며 실측 도면 필요.",
-    "Round18: 독립 hos_1M 도면 축척과 엘리베이터 상하층 샤프트 정합.",
-    "Round18: 리뷰 원본(1790,605) 카메라는 김수사 셀 내부. 지정 좌표 보존, 라운지 외부 시점으로 독립 확인되지 않음."
+    "Round19: 하우스 B1/1F/1M의 실내 코트 정합을 우선한 지역별 축척·매장 치수는 실측 미확인. 공식 도면의 방향/이웃 관계는 보존하지만 단일 등축 지도 아님.",
+    "Round19: E1/E2 고정 승강기·에스컬레이터와 공식 스위트파크 셀의 약15m 잔차. 간섭 셀 목록과 축소 집기는 modeling.round19에 명시.",
+    "Round19: 변경 후 WebGL 렌더 미검증. 카메라는 실바닥/충돌/머리공간 검증만 완료."
   ],
   "modeling": {
     "frame": "local s(남쪽, 서측 파사드 방향)/t(동쪽) 축. 스트립 s -22..151 · t 0..38.5, 남측 블록 s 151..204 · t -98..38",
@@ -675,72 +677,44 @@
       "south_surface_parking": "Round8: aerial-based south asphalt apron, road-clipped bays/70% cars, green booth canopy, barriers and 550원 fee board, rear pedestrian routes and brick/arch entrance details."
     },
     "validation": {
-      "status": "Scoped implementation complete; required smoke OK; full-world walk fails on2 out-of-scope blockers. Render unverified.",
-      "smoke": {
-        "command": "node tests/smoke.mjs centralcity shinsegae jwmarriott gotomall",
-        "result": "OK (final run);3 warnings from concurrent shinsegae basement elevators at1M, no centralcity warning/failure."
-      },
-      "walk": {
-        "command": "node tests/walk.mjs",
-        "result": "705 ok, 2 blocked",
-        "required_routes": [
-          "1F 동선",
-          "사용자 루트"
-        ],
-        "exit_code": 1,
-        "zero_blocked_requirement_met": false,
-        "blocked": [
-          {
-            "owner": "shinsegae",
-            "type": "elevator",
-            "name": "신세계 고객 엘리베이터 (연결부 3호기)",
-            "floor": "2F",
-            "reason": "no path (46 cells searched)"
-          },
-          {
-            "owner": "outside centralcity; lebon/gotomall/onebailey route",
-            "type": "route",
-            "name": "사용자 루트5 [3→4]",
-            "from_xz": [
-              -235.8,
-              8.7
-            ],
-            "to_xz": [
-              -332,
-              -66
-            ],
-            "reason": "no path (747204 cells searched)"
-          }
-        ],
-        "scope_note": "Do not edit other modules, shared junctions or tests. Both remaining blockers are outside the owned Sweet Park/HoS/CC hall geometry.",
-        "preserved_routes": "Both1F 동선 routes and every other 사용자 루트 segment passed; 사용자 루트5[3→4] remains blocked."
-      },
-      "visual_render": "No updated render: tests/shot.mjs not run per user instruction; preview server bind127.0.0.1:8765 failed EPERM. No appearance-validation claim.",
-      "initial_smoke": "OK before final elevator destination cleanup; final required smoke remains to be recorded by root.",
-      "physics_probe": {
-        "detail_errors": 0,
-        "court_center_support_y_at_1F_and_1M": -6,
-        "court_center_ceiling_y": 7,
-        "escalator_centerline_capsule_samples": 164,
-        "escalator_capsule_failures": 0,
-        "connector_1F_clear_lines_s": [
-          -4,
-          -3.8,
-          -3.6
-        ],
-        "connector_samples_per_line": 41,
-        "exact_camera_minor_contact_m": {
-          "centralcity_b1_02": 0.078,
-          "centralcity_b1_03": 0.078,
-          "centralcity_b1_04": 0.042
+      "round": 19,
+      "status": "Centralcity changes and camera physics complete. Required integrated commands currently fail only on two shinsegae10F elevator-floor omissions; zero-blocked requirement pending that owner.",
+      "smoke_command": "node tests/smoke.mjs centralcity shinsegae jwmarriott gotomall",
+      "smoke_result": "2 shinsegae10F lift-floor failures; prior required command returnedOK before concurrent change.",
+      "walk_command": "node tests/walk.mjs",
+      "walk_result": "697 ok,2 blocked",
+      "visual_render": "Not run per explicit sandbox instruction.",
+      "camera_qa": "22 affected camera poses physically checked with five modules/all detail; floor y retained, minor contacts nudged <=.4m.",
+      "blocked": [
+        {
+          "module": "shinsegae",
+          "name": "신세계 고객 엘리베이터 (신관 화장실 옆 1호기)",
+          "floor": "10F",
+          "reason": "floor45.4 expected,40.6 found"
         },
-        "camera_note": "All14 source cameras retain exact recomputed positions, have supported floors/headroom. Minor contacts flagged, not silently nudged."
+        {
+          "module": "shinsegae",
+          "name": "신세계 고객 엘리베이터 (신관 화장실 옆 2호기)",
+          "floor": "10F",
+          "reason": "floor45.4 expected,40.6 found"
+        }
+      ],
+      "required_routes": "All 사용자 루트 and1F동선 passed; neither latest blockage is a route.",
+      "previous_integrated_result": "699 ok,0 blocked and required smokeOK before final mezzanine correction/concurrent shinsegae change.",
+      "local_walk": "node tests/walk.mjs centralcity --no-city:40 ok,0 blocked",
+      "source_sha256": {
+        "js/places/centralcity.js": "5eb71d36dc8154eb94a4597d9473e4085d20bd1ff1b1434e1c7ba4ee6fd268f9",
+        "js/places/shinsegae.js": "00caecdf09e85a40e03138d3272991604817687797f763ab48948a572f72520b",
+        "tests/walk.mjs": "c908af6e1fa86bc7beb786d087c931755b4420a3c21958de80a5b054ccdaa7d8"
       },
-      "local_walk": {
-        "command": "node tests/walk.mjs centralcity gotomall",
-        "result": "82 ok, 0 blocked"
-      },
-      "centralcity_source_sha256": "a07b0fc92f3733ea8c5b6cfb8faa69d2cc5e581bb1ce47c7cd50cf2490208d95"
+      "local_smoke": "node tests/smoke.mjs centralcity:OK",
+      "static_checks": [
+        "node --check js/places/centralcity.js:passed",
+        "git diff --check (owned files):passed",
+        "research JSON parsed"
+      ],
+      "zero_blocked_requirement_met": false,
+      "centralcity_blocked": 0
     },
     "round2_issues": {
       "3": "사진07:8.5m 볼트·4m급 역피라미드 주두/업라이트·곡선 쌍관 트러스·밝은 선형 금속 패널. 2F는 동측 유지.",
@@ -6560,17 +6534,17 @@
         "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
-        "round": 17,
+        "round": 19,
         "spot": "하우스 B1 하행 에스컬레이터 · 고량주관 옆 추정 진입부",
         "local_st": [
           75.1,
-          37.5
+          37
         ],
-        "x": -73.443,
+        "x": -73.909177,
         "y": 0,
-        "z": 66.206,
-        "yawDeg": 111.343,
-        "pitchDeg": 0,
+        "z": 66.388089,
+        "yawDeg": 111.33861,
+        "pitchDeg": -8,
         "floor": "1F",
         "look_at_local_st": [
           75.1,
@@ -6579,24 +6553,43 @@
         "photos": [
           "refs/walk/s5_ssg_b1/srYQ3WmKlEI_30.jpg"
         ],
-        "camera_qa": "Round17 real kit, centralcity/shinsegae/jwmarriott/gotomall/station and all detail: floor 0m, radius0.38m/height1.85m collision push 0m, registered headroom 3.4m; passed. Updated render not generated.",
+        "camera_qa": {
+          "modules": [
+            "centralcity",
+            "shinsegae",
+            "jwmarriott",
+            "gotomall",
+            "station"
+          ],
+          "all_detail": true,
+          "floor_y_verified": true,
+          "capsule_radius_m": 0.38,
+          "capsule_height_m": 1.85,
+          "capsule_contact_m": 0,
+          "headroom_at_least_m": 1.85,
+          "rendered": false,
+          "method": "Real-kit physics and nearest supported clear pose; no WebGL render.",
+          "ceiling_y": 4.65,
+          "contact_tolerance_m": 0.025
+        },
         "nudge_m": 0.1,
         "r17_camera": "centralcity_00",
-        "active": false,
+        "active": true,
         "superseded_by_round": 18,
-        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation.",
+        "source_location_note": "CC-L1/D1: 8.5m behind new black-lobby heads; inside an8×9.7m lobby."
       },
       {
-        "round": 17,
+        "round": 19,
         "spot": "하우스 라운지 · 서측 에스컬레이터 상부에서 하향",
         "local_st": [
-          116.3,
-          24.5
+          115.48,
+          25.0
         ],
-        "x": -70.56,
+        "x": -70.393098,
         "y": 3.6,
-        "z": 109.312,
-        "yawDeg": 21.343,
+        "z": 108.366436,
+        "yawDeg": 21.33861,
         "pitchDeg": -55,
         "floor": "1M",
         "look_at_local_st": [
@@ -6606,24 +6599,43 @@
         "photos": [
           "refs/walk/s5_ssg_b1/8xxIIvP9uAY_10.jpg"
         ],
-        "camera_qa": "Round17 real kit, centralcity/shinsegae/jwmarriott/gotomall/station and all detail: floor 3.6m, radius0.38m/height1.85m collision push 0m, registered headroom 5m; passed. Updated render not generated.",
+        "camera_qa": {
+          "modules": [
+            "centralcity",
+            "shinsegae",
+            "jwmarriott",
+            "gotomall",
+            "station"
+          ],
+          "all_detail": true,
+          "floor_y_verified": true,
+          "capsule_radius_m": 0.38,
+          "capsule_height_m": 1.85,
+          "capsule_contact_m": 0,
+          "headroom_at_least_m": 1.85,
+          "rendered": false,
+          "method": "Real-kit physics and nearest supported clear pose; no WebGL render.",
+          "ceiling_y": 7,
+          "contact_tolerance_m": 0.025
+        },
         "nudge_m": 0,
         "r17_camera": "centralcity_01",
-        "active": false,
+        "active": true,
         "superseded_by_round": 18,
-        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation.",
+        "source_location_note": "CC-C2: south gallery edge above restored B1 court. Suggested old113.3 lies in the now-open B1–1M void; supported edge used."
       },
       {
-        "round": 17,
+        "round": 19,
         "spot": "하우스 라운지 · 러그 아일랜드 하향 전경",
         "local_st": [
-          116.3,
-          26
+          115.48,
+          26.5
         ],
-        "x": -69.163,
+        "x": -68.995929,
         "y": 3.6,
-        "z": 108.766,
-        "yawDeg": 21.343,
+        "z": 107.820617,
+        "yawDeg": 21.33861,
         "pitchDeg": -55,
         "floor": "1M",
         "look_at_local_st": [
@@ -6633,12 +6645,31 @@
         "photos": [
           "refs/walk/s5_ssg_b1/8xxIIvP9uAY_10.jpg"
         ],
-        "camera_qa": "Round17 real kit, centralcity/shinsegae/jwmarriott/gotomall/station and all detail: floor 3.6m, radius0.38m/height1.85m collision push 0m, registered headroom 5m; passed. Updated render not generated.",
+        "camera_qa": {
+          "modules": [
+            "centralcity",
+            "shinsegae",
+            "jwmarriott",
+            "gotomall",
+            "station"
+          ],
+          "all_detail": true,
+          "floor_y_verified": true,
+          "capsule_radius_m": 0.38,
+          "capsule_height_m": 1.85,
+          "capsule_contact_m": 0,
+          "headroom_at_least_m": 1.85,
+          "rendered": false,
+          "method": "Real-kit physics and nearest supported clear pose; no WebGL render.",
+          "ceiling_y": 7,
+          "contact_tolerance_m": 0.025
+        },
         "nudge_m": 0,
         "r17_camera": "centralcity_02",
-        "active": false,
+        "active": true,
         "superseded_by_round": 18,
-        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation.",
+        "source_location_note": "CC-C2: same supported 1M gallery edge, adjacent offset."
       },
       {
         "round": 17,
@@ -6768,16 +6799,16 @@
         "nudge_m": 0
       },
       {
-        "round": 17,
+        "round": 19,
         "spot": "호남선 1F 4번 승차문 · 긴 대합실 통로",
         "local_st": [
-          37.5,
-          9.2
+          37.430681,
+          8.827843
         ],
-        "x": -113.485,
+        "x": -113.8571,
         "y": 0,
-        "z": 41.482,
-        "yawDeg": 21.343,
+        "z": 41.5524,
+        "yawDeg": 21.33861,
         "pitchDeg": 0,
         "floor": "1F",
         "look_at_local_st": [
@@ -6787,10 +6818,33 @@
         "photos": [
           "refs/walk/s7_central_famille/HgbY_flKpMI_16.jpg"
         ],
-        "camera_qa": "Round17 real kit, centralcity/shinsegae/jwmarriott/gotomall/station and all detail: floor 0m, radius0.38m/height1.85m collision push 0m, registered headroom 8.6m; passed. Updated render not generated.",
-        "nudge_m": 0,
+        "camera_qa": {
+          "modules": [
+            "centralcity",
+            "shinsegae",
+            "jwmarriott",
+            "gotomall",
+            "station"
+          ],
+          "all_detail": true,
+          "floor_y_verified": true,
+          "capsule_radius_m": 0.38,
+          "capsule_height_m": 1.85,
+          "capsule_contact_m": 0.02068,
+          "headroom_at_least_m": 1.85,
+          "rendered": false,
+          "method": "Real-kit physics and nearest supported clear pose; no WebGL render.",
+          "contact_tolerance_m": 0.025
+        },
+        "nudge_m": 0.1001,
         "r17_camera": "centralcity_06",
-        "source_location_note": "The original is at red boarding gate4. Existing BOARDING_DOORS assigns gate4 to local s33; used actual modeled gate4 rather than the review’s approximate s100–140 band."
+        "source_location_note": "CC-C3: gate4 low white corridor; existing red gate remains left, gallery right.",
+        "active": true,
+        "camera_before_round19_clearance": [
+          -113.764666,
+          0,
+          41.590711
+        ]
       },
       {
         "round": 17,
@@ -6864,17 +6918,17 @@
         "nudge_m": 0
       },
       {
-        "round": 17,
+        "round": 19,
         "spot": "호남선 1F 진입부 · 코퍼 천장과 LED 기둥",
         "local_st": [
           46.5,
           18.6
         ],
-        "x": -101.455,
+        "x": -101.454727,
         "y": 0,
-        "z": 46.444,
-        "yawDeg": 201.343,
-        "pitchDeg": 5,
+        "z": 46.4441,
+        "yawDeg": 236,
+        "pitchDeg": 0,
         "floor": "1F",
         "look_at_local_st": [
           70,
@@ -6883,25 +6937,44 @@
         "photos": [
           "refs/walk/s7_central_famille/FeFx7kfWgdo_233.jpg"
         ],
-        "camera_qa": "Round17 real kit, centralcity/shinsegae/jwmarriott/gotomall/station and all detail: floor 0m, radius0.38m/height1.85m collision push 0m, registered headroom 5.82m; passed. Updated render not generated.",
+        "camera_qa": {
+          "modules": [
+            "centralcity",
+            "shinsegae",
+            "jwmarriott",
+            "gotomall",
+            "station"
+          ],
+          "all_detail": true,
+          "floor_y_verified": true,
+          "capsule_radius_m": 0.38,
+          "capsule_height_m": 1.85,
+          "capsule_contact_m": 0,
+          "headroom_at_least_m": 1.85,
+          "rendered": false,
+          "method": "Real-kit physics and nearest supported clear pose; no WebGL render.",
+          "contact_tolerance_m": 0.025
+        },
         "nudge_m": 0,
         "r17_camera": "centralcity_10",
         "plan_photos": [
           "refs/official/shinsegae/hos_1F.jpg"
-        ]
+        ],
+        "active": true,
+        "source_location_note": "CC-D2: reviewer verified yaw236; lounge moved to local54.8,20.45."
       },
       {
-        "round": 17,
+        "round": 19,
         "spot": "B1 배스앤바디웍스 하우스 키오스크 · 배럴 천장",
         "local_st": [
-          37.5,
-          29.6
+          21.1,
+          24.3
         ],
-        "x": -94.484,
+        "x": -105.38801,
         "y": -6,
-        "z": 34.058,
+        "z": 20.711256,
         "yawDeg": 329.499,
-        "pitchDeg": 3,
+        "pitchDeg": 0,
         "floor": "B1",
         "look_at_local_st": [
           33.5,
@@ -6910,52 +6983,88 @@
         "photos": [
           "refs/walk/s7_central_famille/FeFx7kfWgdo_181.jpg"
         ],
-        "camera_qa": "Round17 real kit, centralcity/shinsegae/jwmarriott/gotomall/station and all detail: floor -6m, radius0.38m/height1.85m collision push 0m, registered headroom 5.7m; passed. Updated render not generated.",
+        "camera_qa": {
+          "modules": [
+            "centralcity",
+            "shinsegae",
+            "jwmarriott",
+            "gotomall",
+            "station"
+          ],
+          "all_detail": true,
+          "floor_y_verified": true,
+          "capsule_radius_m": 0.38,
+          "capsule_height_m": 1.85,
+          "capsule_contact_m": 0,
+          "headroom_at_least_m": 1.85,
+          "rendered": false,
+          "method": "Real-kit physics and nearest supported clear pose; no WebGL render.",
+          "contact_tolerance_m": 0.025
+        },
         "nudge_m": 0,
         "r17_camera": "centralcity_11",
-        "active": false,
+        "active": true,
         "superseded_by_round": 18,
-        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation.",
+        "source_location_note": "CC-D3: moved with J4-reanchored Bath&BodyWorks cell; clear white corridor onpy454–488."
       },
       {
         "r17_camera": "centralcity_12",
         "photos": [
           "refs/walk/s7_central_famille/HgbY_flKpMI_29.jpg"
         ],
-        "round": 17,
+        "round": 19,
         "spot": "파미에 진입부 짧은 계단 · Gate2 추정 배치",
         "local_st": [
-          168.7,
-          21.7
+          166.4,
+          23.8
         ],
-        "x": -54.101,
+        "x": -52.982115,
         "y": 0.72,
-        "z": 159.139,
-        "yawDeg": 201.343,
-        "pitchDeg": -12,
+        "z": 156.232332,
+        "yawDeg": 176.343,
+        "pitchDeg": -2,
         "floor": "1F",
         "look_at_local_st": [
           172.4,
           21.7
         ],
-        "camera_qa": "Round17 real kit, centralcity/shinsegae/jwmarriott/gotomall/station and all detail: floor 0.72m, radius0.38m/height1.85m collision push 0m, registered headroom 3.98m; passed. Updated render not generated.",
+        "camera_qa": {
+          "modules": [
+            "centralcity",
+            "shinsegae",
+            "jwmarriott",
+            "gotomall",
+            "station"
+          ],
+          "all_detail": true,
+          "floor_y_verified": true,
+          "capsule_radius_m": 0.38,
+          "capsule_height_m": 1.85,
+          "capsule_contact_m": 0,
+          "headroom_at_least_m": 1.85,
+          "rendered": false,
+          "method": "Real-kit physics and nearest supported clear pose; no WebGL render.",
+          "headroom_m": 3.98
+        },
         "nudge_m": 0,
-        "source_location_note": "Original establishes a few steps down beside brick arches and a globe lamp, not a basement drop. Exact location and .72m rise are inferred at Gate2; platform and both flights remain on1F."
+        "source_location_note": "NEW-1: level .72m landing before right-hand stairs; yaw adjusted25deg to include right globe lamp. Exact placement inferred.",
+        "active": true
       },
       {
         "r17_camera": "centralcity_13",
         "photos": [
           "refs/walk/s7_central_famille/HgbY_flKpMI_36.jpg"
         ],
-        "round": 17,
+        "round": 19,
         "spot": "파미에1F 폴바셋 벽돌 광장",
         "local_st": [
-          188,
-          -37.8
+          179.6,
+          -40.8
         ],
-        "x": -102.499,
+        "x": -108.350339,
         "y": 0,
-        "z": 198.767,
+        "z": 192.034006,
         "yawDeg": 201.343,
         "pitchDeg": 5,
         "floor": "1F",
@@ -6963,13 +7072,31 @@
           194.5,
           -37.8
         ],
-        "camera_qa": "Round17 real kit, centralcity/shinsegae/jwmarriott/gotomall/station and all detail: floor 0m, radius0.38m/height1.85m collision push 0m, registered headroom 8.6m; passed. Updated render not generated.",
+        "camera_qa": {
+          "modules": [
+            "centralcity",
+            "shinsegae",
+            "jwmarriott",
+            "gotomall",
+            "station"
+          ],
+          "all_detail": true,
+          "floor_y_verified": true,
+          "capsule_radius_m": 0.38,
+          "capsule_height_m": 1.85,
+          "capsule_contact_m": 0,
+          "headroom_at_least_m": 1.85,
+          "rendered": false,
+          "method": "Real-kit physics and nearest supported clear pose; no WebGL render.",
+          "headroom_m": 4.7
+        },
         "nudge_m": 0,
-        "source_location_note": "Paul Bassett is legible in original frame and matches mapped unit16. Camera is offset from the decorative pier at t−39.6; exact viewpoint remains inferred."
+        "source_location_note": "NEW-2:12.76m open plaza before Paul Bassett; supported 1F floor.",
+        "active": true
       },
       {
         "r18_camera": "centralcity_b1_00",
-        "round": 18,
+        "round": 19,
         "active": true,
         "photos": [
           "refs/interior/ssg_food/13_sweetpark_standard_bread_front.jpg"
@@ -6981,14 +7108,25 @@
         "y": -6,
         "pitchDeg": 0,
         "camera_qa": {
-          "supported_floor": true,
-          "headroom_clear": true,
+          "modules": [
+            "centralcity",
+            "shinsegae",
+            "jwmarriott",
+            "gotomall",
+            "station"
+          ],
+          "all_detail": true,
+          "floor_y_verified": true,
+          "capsule_radius_m": 0.38,
+          "capsule_height_m": 1.85,
           "capsule_contact_m": 0,
+          "headroom_at_least_m": 1.85,
           "rendered": false,
-          "note": "Exact review plan position retained; minor fixture contact recorded without a coordinate nudge."
+          "method": "Real-kit physics and nearest supported clear pose; no WebGL render.",
+          "contact_tolerance_m": 0.025
         },
-        "plan_transform": "round18 orthogonal .092m/original-pixel similarity",
-        "nudge_m": 0,
+        "plan_transform": "round19 J4-anchored .1009m/display-pixel similarity",
+        "nudge_m": 0.4,
         "source_plan_original_px": [
           1225,
           686
@@ -6999,20 +7137,26 @@
         ],
         "source_plan_file": "refs/official/shinsegae/floor_B1.png",
         "local_st": [
-          21.244,
-          34.388
+          36.207907,
+          30.537676
         ],
         "look_at_local_st": [
-          21.244,
-          40.552
+          36.06236,
+          36.327135
         ],
-        "x": -95.939182,
-        "z": 17.174573,
-        "yawDeg": 291.33861
+        "x": -94.0805,
+        "z": 32.5137,
+        "yawDeg": 291.33861,
+        "source_location_note": "Round19 geometry refit; floor y, not eye y.",
+        "camera_before_round19_clearance": [
+          -94.480476,
+          -6,
+          32.513695
+        ]
       },
       {
         "r18_camera": "centralcity_b1_01",
-        "round": 18,
+        "round": 19,
         "active": true,
         "photos": [
           "refs/interior/ssg_food/15_sweetpark_seasonique_ceiling.jpg"
@@ -7024,13 +7168,24 @@
         "y": -6,
         "pitchDeg": 0,
         "camera_qa": {
-          "supported_floor": true,
-          "headroom_clear": true,
-          "capsule_contact_m": 0,
+          "modules": [
+            "centralcity",
+            "shinsegae",
+            "jwmarriott",
+            "gotomall",
+            "station"
+          ],
+          "all_detail": true,
+          "floor_y_verified": true,
+          "capsule_radius_m": 0.38,
+          "capsule_height_m": 1.85,
+          "capsule_contact_m": 0.01275,
+          "headroom_at_least_m": 1.85,
           "rendered": false,
-          "note": "Exact review plan position retained; minor fixture contact recorded without a coordinate nudge."
+          "method": "Real-kit physics and nearest supported clear pose; no WebGL render.",
+          "contact_tolerance_m": 0.025
         },
-        "plan_transform": "round18 orthogonal .092m/original-pixel similarity",
+        "plan_transform": "round19 J4-anchored .1009m/display-pixel similarity",
         "nudge_m": 0,
         "source_plan_original_px": [
           1280,
@@ -7042,20 +7197,21 @@
         ],
         "source_plan_file": "refs/official/shinsegae/floor_B1.png",
         "local_st": [
-          14.436,
-          29.328
+          29.256554,
+          25.106752
         ],
         "look_at_local_st": [
-          17.932,
-          29.328
+          32.751428,
+          25.106752
         ],
-        "x": -103.129588,
-        "z": 12.674515,
-        "yawDeg": 201.33861
+        "x": -101.668565,
+        "z": 28.015087,
+        "yawDeg": 201.33861,
+        "source_location_note": "Round19 geometry refit; floor y, not eye y."
       },
       {
         "r18_camera": "centralcity_b1_02",
-        "round": 18,
+        "round": 19,
         "active": true,
         "photos": [
           "refs/interior/ssg_food/11_sweetpark_ceiling_queue.jpg",
@@ -7068,14 +7224,25 @@
         "y": -6,
         "pitchDeg": 22,
         "camera_qa": {
-          "supported_floor": true,
-          "headroom_clear": true,
-          "capsule_contact_m": 0.078,
+          "modules": [
+            "centralcity",
+            "shinsegae",
+            "jwmarriott",
+            "gotomall",
+            "station"
+          ],
+          "all_detail": true,
+          "floor_y_verified": true,
+          "capsule_radius_m": 0.38,
+          "capsule_height_m": 1.85,
+          "capsule_contact_m": 0,
+          "headroom_at_least_m": 1.85,
           "rendered": false,
-          "note": "Exact review plan position retained; minor fixture contact recorded without a coordinate nudge."
+          "method": "Real-kit physics and nearest supported clear pose; no WebGL render.",
+          "contact_tolerance_m": 0.025
         },
-        "plan_transform": "round18 orthogonal .092m/original-pixel similarity",
-        "nudge_m": 0,
+        "plan_transform": "round19 J4-anchored .1009m/display-pixel similarity",
+        "nudge_m": 0.2,
         "source_plan_original_px": [
           1295,
           712
@@ -7086,20 +7253,26 @@
         ],
         "source_plan_file": "refs/official/shinsegae/floor_B1.png",
         "local_st": [
-          23.636,
-          27.948
+          38.59214,
+          23.871406
         ],
         "look_at_local_st": [
-          28.052,
-          27.948
+          42.868166,
+          23.727197
         ],
-        "x": -101.067297,
-        "z": 21.745973,
-        "yawDeg": 201.33861
+        "x": -99.4222,
+        "z": 37.1602,
+        "yawDeg": 201.33861,
+        "source_location_note": "Round19 geometry refit; floor y, not eye y.",
+        "camera_before_round19_clearance": [
+          -99.606939,
+          -6,
+          37.083622
+        ]
       },
       {
         "r18_camera": "centralcity_b1_03",
-        "round": 18,
+        "round": 19,
         "active": true,
         "photos": [
           "refs/interior/ssg_food/12_sweetpark_checker_floor.jpg"
@@ -7111,14 +7284,25 @@
         "y": -6,
         "pitchDeg": -18,
         "camera_qa": {
-          "supported_floor": true,
-          "headroom_clear": true,
-          "capsule_contact_m": 0.078,
+          "modules": [
+            "centralcity",
+            "shinsegae",
+            "jwmarriott",
+            "gotomall",
+            "station"
+          ],
+          "all_detail": true,
+          "floor_y_verified": true,
+          "capsule_radius_m": 0.38,
+          "capsule_height_m": 1.85,
+          "capsule_contact_m": 0,
+          "headroom_at_least_m": 1.85,
           "rendered": false,
-          "note": "Exact review plan position retained; minor fixture contact recorded without a coordinate nudge."
+          "method": "Real-kit physics and nearest supported clear pose; no WebGL render.",
+          "contact_tolerance_m": 0.025
         },
-        "plan_transform": "round18 orthogonal .092m/original-pixel similarity",
-        "nudge_m": 0,
+        "plan_transform": "round19 J4-anchored .1009m/display-pixel similarity",
+        "nudge_m": 0.2,
         "source_plan_original_px": [
           1295,
           712
@@ -7129,20 +7313,26 @@
         ],
         "source_plan_file": "refs/official/shinsegae/floor_B1.png",
         "local_st": [
-          23.636,
-          27.948
+          38.59214,
+          23.871406
         ],
         "look_at_local_st": [
-          28.052,
-          27.948
+          42.868166,
+          23.727197
         ],
-        "x": -101.067297,
-        "z": 21.745973,
-        "yawDeg": 201.33861
+        "x": -99.4222,
+        "z": 37.1602,
+        "yawDeg": 201.33861,
+        "source_location_note": "Round19 geometry refit; floor y, not eye y.",
+        "camera_before_round19_clearance": [
+          -99.606939,
+          -6,
+          37.083622
+        ]
       },
       {
         "r18_camera": "centralcity_b1_04",
-        "round": 18,
+        "round": 19,
         "active": true,
         "photos": [
           "refs/interior/ssg_food/17_market_vaulted_hall.jpg"
@@ -7154,14 +7344,25 @@
         "y": -6,
         "pitchDeg": 0,
         "camera_qa": {
-          "supported_floor": true,
-          "headroom_clear": true,
-          "capsule_contact_m": 0.042,
+          "modules": [
+            "centralcity",
+            "shinsegae",
+            "jwmarriott",
+            "gotomall",
+            "station"
+          ],
+          "all_detail": true,
+          "floor_y_verified": true,
+          "capsule_radius_m": 0.38,
+          "capsule_height_m": 1.85,
+          "capsule_contact_m": 0.01072,
+          "headroom_at_least_m": 1.85,
           "rendered": false,
-          "note": "Exact review plan position retained; minor fixture contact recorded without a coordinate nudge."
+          "method": "Real-kit physics and nearest supported clear pose; no WebGL render.",
+          "contact_tolerance_m": 0.025
         },
-        "plan_transform": "round18 orthogonal .092m/original-pixel similarity",
-        "nudge_m": 0,
+        "plan_transform": "round19 J4-anchored .1009m/display-pixel similarity",
+        "nudge_m": 0.1,
         "source_plan_original_px": [
           1215,
           700
@@ -7172,20 +7373,26 @@
         ],
         "source_plan_file": "refs/official/shinsegae/floor_B1.png",
         "local_st": [
-          22.532,
-          35.308
+          37.258317,
+          31.044713
         ],
         "look_at_local_st": [
-          16.092,
-          15.528
+          30.912021,
+          11.3112
         ],
-        "x": -94.613575,
-        "z": 18.039507,
-        "yawDeg": 93.304325
+        "x": -93.226,
+        "z": 33.3076,
+        "yawDeg": 93.304325,
+        "source_location_note": "Round19 geometry refit; floor y, not eye y.",
+        "camera_before_round19_clearance": [
+          -93.155297,
+          -6,
+          33.378351
+        ]
       },
       {
         "r18_camera": "centralcity_b1_05",
-        "round": 18,
+        "round": 19,
         "active": true,
         "photos": [
           "refs/interior/ssg_food/18_market_counters_wide.jpg"
@@ -7197,13 +7404,24 @@
         "y": -6,
         "pitchDeg": 0,
         "camera_qa": {
-          "supported_floor": true,
-          "headroom_clear": true,
+          "modules": [
+            "centralcity",
+            "shinsegae",
+            "jwmarriott",
+            "gotomall",
+            "station"
+          ],
+          "all_detail": true,
+          "floor_y_verified": true,
+          "capsule_radius_m": 0.38,
+          "capsule_height_m": 1.85,
           "capsule_contact_m": 0,
+          "headroom_at_least_m": 1.85,
           "rendered": false,
-          "note": "Exact review plan position retained; minor fixture contact recorded without a coordinate nudge."
+          "method": "Real-kit physics and nearest supported clear pose; no WebGL render.",
+          "contact_tolerance_m": 0.025
         },
-        "plan_transform": "round18 orthogonal .092m/original-pixel similarity",
+        "plan_transform": "round19 J4-anchored .1009m/display-pixel similarity",
         "nudge_m": 0,
         "source_plan_original_px": [
           1300,
@@ -7215,20 +7433,21 @@
         ],
         "source_plan_file": "refs/official/shinsegae/floor_B1.png",
         "local_st": [
-          28.052,
-          27.488
+          42.868166,
+          23.267345
         ],
         "look_at_local_st": [
-          34.032,
-          40.552
+          48.846239,
+          36.327135
         ],
-        "x": -99.888873,
-        "z": 26.026624,
-        "yawDeg": 266.742839
+        "x": -98.428894,
+        "z": 41.362893,
+        "yawDeg": 266.742839,
+        "source_location_note": "Round19 geometry refit; floor y, not eye y."
       },
       {
         "r18_camera": "centralcity_b1_06",
-        "round": 18,
+        "round": 19,
         "active": true,
         "photos": [
           "refs/interior/ssg_food/04_hos_entrance_gate.jpg"
@@ -7240,13 +7459,24 @@
         "y": -6,
         "pitchDeg": 0,
         "camera_qa": {
-          "supported_floor": true,
-          "headroom_clear": true,
+          "modules": [
+            "centralcity",
+            "shinsegae",
+            "jwmarriott",
+            "gotomall",
+            "station"
+          ],
+          "all_detail": true,
+          "floor_y_verified": true,
+          "capsule_radius_m": 0.38,
+          "capsule_height_m": 1.85,
           "capsule_contact_m": 0,
+          "headroom_at_least_m": 1.85,
           "rendered": false,
-          "note": "Exact review plan position retained; minor fixture contact recorded without a coordinate nudge."
+          "method": "Real-kit physics and nearest supported clear pose; no WebGL render.",
+          "contact_tolerance_m": 0.025
         },
-        "plan_transform": "round18 orthogonal .092m/original-pixel similarity",
+        "plan_transform": "round19 House court-constrained schematic fit",
         "nudge_m": 0,
         "source_plan_original_px": [
           1420,
@@ -7258,20 +7488,21 @@
         ],
         "source_plan_file": "refs/official/shinsegae/floor_B1.png",
         "local_st": [
-          -8.472,
-          16.448
+          91.800135,
+          37.4
         ],
         "look_at_local_st": [
-          -8.472,
-          7.248
+          91.691345,
+          37.397402
         ],
-        "x": -123.462355,
-        "z": -3.976294,
-        "yawDeg": 111.33861
+        "x": -67.45977,
+        "z": 81.797815,
+        "yawDeg": 111.33861,
+        "source_location_note": "D5: camera on actual inner landing east of inset portal atsourcex1465; no stand-off outside CC."
       },
       {
         "r18_camera": "centralcity_b1_07",
-        "round": 18,
+        "round": 19,
         "active": true,
         "photos": [
           "refs/interior/ssg_food/05_hos_corridor_ceiling_floor.jpg"
@@ -7283,13 +7514,24 @@
         "y": -6,
         "pitchDeg": 8,
         "camera_qa": {
-          "supported_floor": true,
-          "headroom_clear": true,
+          "modules": [
+            "centralcity",
+            "shinsegae",
+            "jwmarriott",
+            "gotomall",
+            "station"
+          ],
+          "all_detail": true,
+          "floor_y_verified": true,
+          "capsule_radius_m": 0.38,
+          "capsule_height_m": 1.85,
           "capsule_contact_m": 0,
+          "headroom_at_least_m": 1.85,
           "rendered": false,
-          "note": "Exact review plan position retained; minor fixture contact recorded without a coordinate nudge."
+          "method": "Real-kit physics and nearest supported clear pose; no WebGL render.",
+          "contact_tolerance_m": 0.025
         },
-        "plan_transform": "round18 orthogonal .092m/original-pixel similarity",
+        "plan_transform": "round19 House court-constrained schematic fit",
         "nudge_m": 0,
         "source_plan_original_px": [
           1500,
@@ -7301,20 +7543,21 @@
         ],
         "source_plan_file": "refs/official/shinsegae/floor_B1.png",
         "local_st": [
-          -8.472,
-          9.088
+          91.691345,
+          34.7
         ],
         "look_at_local_st": [
-          -8.472,
-          -0.112
+          91.691345,
+          35.986578
         ],
-        "x": -130.3178,
-        "z": -1.298145,
-        "yawDeg": 111.33861
+        "x": -70.014262,
+        "z": 82.678956,
+        "yawDeg": 111.33861,
+        "source_location_note": "D5: within4m honey-panel corridor west of inset portal."
       },
       {
         "r18_camera": "centralcity_b1_08",
-        "round": 18,
+        "round": 19,
         "active": true,
         "photos": [
           "refs/interior/ssg_food/07_hos_superstar_bar.jpg"
@@ -7326,13 +7569,24 @@
         "y": -6,
         "pitchDeg": 0,
         "camera_qa": {
-          "supported_floor": true,
-          "headroom_clear": true,
+          "modules": [
+            "centralcity",
+            "shinsegae",
+            "jwmarriott",
+            "gotomall",
+            "station"
+          ],
+          "all_detail": true,
+          "floor_y_verified": true,
+          "capsule_radius_m": 0.38,
+          "capsule_height_m": 1.85,
           "capsule_contact_m": 0,
+          "headroom_at_least_m": 1.85,
           "rendered": false,
-          "note": "Exact review plan position retained; minor fixture contact recorded without a coordinate nudge."
+          "method": "Real-kit physics and nearest supported clear pose; no WebGL render.",
+          "contact_tolerance_m": 0.025
         },
-        "plan_transform": "round18 orthogonal .092m/original-pixel similarity",
+        "plan_transform": "round19 House court-constrained schematic fit",
         "nudge_m": 0,
         "source_plan_original_px": [
           1725,
@@ -7344,20 +7598,21 @@
         ],
         "source_plan_file": "refs/official/shinsegae/floor_B1.png",
         "local_st": [
-          -7.092,
-          -11.612
+          93.92675,
+          33.782165
         ],
         "look_at_local_st": [
-          -11.508,
-          -11.612
+          88.017542,
+          33.782165
         ],
-        "x": -149.096583,
-        "z": 7.519546,
-        "yawDeg": 21.33861
+        "x": -70.055759,
+        "z": 85.095097,
+        "yawDeg": 21.33861,
+        "source_location_note": "Round19 geometry refit; floor y, not eye y."
       },
       {
         "r18_camera": "centralcity_b1_09",
-        "round": 18,
+        "round": 19,
         "active": true,
         "photos": [
           "refs/interior/ssg_food/09_hos_katsu_tapas_bar.jpg"
@@ -7369,13 +7624,24 @@
         "y": -6,
         "pitchDeg": 0,
         "camera_qa": {
-          "supported_floor": true,
-          "headroom_clear": true,
+          "modules": [
+            "centralcity",
+            "shinsegae",
+            "jwmarriott",
+            "gotomall",
+            "station"
+          ],
+          "all_detail": true,
+          "floor_y_verified": true,
+          "capsule_radius_m": 0.38,
+          "capsule_height_m": 1.85,
           "capsule_contact_m": 0,
+          "headroom_at_least_m": 1.85,
           "rendered": false,
-          "note": "Exact review plan position retained; minor fixture contact recorded without a coordinate nudge."
+          "method": "Real-kit physics and nearest supported clear pose; no WebGL render.",
+          "contact_tolerance_m": 0.025
         },
-        "plan_transform": "round18 orthogonal .092m/original-pixel similarity",
+        "plan_transform": "round19 House court-constrained schematic fit",
         "nudge_m": 0,
         "source_plan_original_px": [
           1790,
@@ -7387,20 +7653,21 @@
         ],
         "source_plan_file": "refs/official/shinsegae/floor_B1.png",
         "local_st": [
-          1.188,
-          -17.592
+          102.142857,
+          27.62
         ],
         "look_at_local_st": [
-          -4.148,
-          -17.592
+          96.314162,
+          27.62
         ],
-        "x": -151.653714,
-        "z": 17.407917,
-        "yawDeg": 21.33861
+        "x": -72.805815,
+        "z": 94.990241,
+        "yawDeg": 21.33861,
+        "source_location_note": "Round19 geometry refit; floor y, not eye y."
       },
       {
         "r18_camera": "centralcity_b1_10",
-        "round": 18,
+        "round": 19,
         "active": true,
         "photos": [
           "refs/interior/ssg_food/10_hos_hall_beyond_counters.jpg"
@@ -7412,13 +7679,24 @@
         "y": -6,
         "pitchDeg": 0,
         "camera_qa": {
-          "supported_floor": true,
-          "headroom_clear": true,
+          "modules": [
+            "centralcity",
+            "shinsegae",
+            "jwmarriott",
+            "gotomall",
+            "station"
+          ],
+          "all_detail": true,
+          "floor_y_verified": true,
+          "capsule_radius_m": 0.38,
+          "capsule_height_m": 1.85,
           "capsule_contact_m": 0,
+          "headroom_at_least_m": 1.85,
           "rendered": false,
-          "note": "Exact review plan position retained; minor fixture contact recorded without a coordinate nudge."
+          "method": "Real-kit physics and nearest supported clear pose; no WebGL render.",
+          "contact_tolerance_m": 0.025
         },
-        "plan_transform": "round18 orthogonal .092m/original-pixel similarity",
+        "plan_transform": "round19 House court-constrained schematic fit",
         "nudge_m": 0,
         "source_plan_original_px": [
           1700,
@@ -7430,20 +7708,21 @@
         ],
         "source_plan_file": "refs/official/shinsegae/floor_B1.png",
         "local_st": [
-          1.372,
-          -9.312
+          102.428571,
+          34.223047
         ],
         "look_at_local_st": [
-          4.132,
-          -17.592
+          106.714286,
+          27.62
         ],
-        "x": -143.874385,
-        "z": 14.566385,
-        "yawDeg": 129.773559
+        "x": -66.551466,
+        "z": 92.853659,
+        "yawDeg": 144.324236,
+        "source_location_note": "Round19 geometry refit; floor y, not eye y."
       },
       {
         "r18_camera": "centralcity_b1_11",
-        "round": 18,
+        "round": 19,
         "active": true,
         "photos": [
           "refs/interior/ssg_food/01_hos_atrium_wide.jpg",
@@ -7456,13 +7735,24 @@
         "y": -6,
         "pitchDeg": 15,
         "camera_qa": {
-          "supported_floor": true,
-          "headroom_clear": true,
+          "modules": [
+            "centralcity",
+            "shinsegae",
+            "jwmarriott",
+            "gotomall",
+            "station"
+          ],
+          "all_detail": true,
+          "floor_y_verified": true,
+          "capsule_radius_m": 0.38,
+          "capsule_height_m": 1.85,
           "capsule_contact_m": 0,
+          "headroom_at_least_m": 1.85,
           "rendered": false,
-          "note": "Exact review plan position retained; minor fixture contact recorded without a coordinate nudge."
+          "method": "Real-kit physics and nearest supported clear pose; no WebGL render.",
+          "contact_tolerance_m": 0.025
         },
-        "plan_transform": "round18 orthogonal .092m/original-pixel similarity",
+        "plan_transform": "round19 House court-constrained schematic fit",
         "nudge_m": 0,
         "source_plan_original_px": [
           1790,
@@ -7473,22 +7763,22 @@
           500
         ],
         "source_plan_file": "refs/official/shinsegae/floor_B1.png",
-        "source_location_note": "지정 원본 좌표는 공식 김수사 셀 내부(표시x1631.585,y551.4575). 좌표를 보존했으며 라운지 외부 시점으로 몰래 옮기지 않음. U카운터 배치 후 재검토 필요.",
+        "source_location_note": "B1 atrium camera kept in lounge approach north of KimSusa front, not inside counter.",
         "local_st": [
-          13.792,
-          -17.592
+          115.6,
+          27.5
         ],
         "look_at_local_st": [
-          4.132,
-          -17.592
+          106.714286,
+          27.62
         ],
-        "x": -147.067383,
-        "z": 29.147866,
+        "x": -68.020817,
+        "z": 107.568512,
         "yawDeg": 21.33861
       },
       {
         "r18_camera": "centralcity_b1_12",
-        "round": 18,
+        "round": 19,
         "active": true,
         "photos": [
           "refs/interior/ssg_food/03_hos_central_bar_floor.jpg"
@@ -7500,13 +7790,24 @@
         "y": -6,
         "pitchDeg": -10,
         "camera_qa": {
-          "supported_floor": true,
-          "headroom_clear": true,
+          "modules": [
+            "centralcity",
+            "shinsegae",
+            "jwmarriott",
+            "gotomall",
+            "station"
+          ],
+          "all_detail": true,
+          "floor_y_verified": true,
+          "capsule_radius_m": 0.38,
+          "capsule_height_m": 1.85,
           "capsule_contact_m": 0,
+          "headroom_at_least_m": 1.85,
           "rendered": false,
-          "note": "Exact review plan position retained; minor fixture contact recorded without a coordinate nudge."
+          "method": "Real-kit physics and nearest supported clear pose; no WebGL render.",
+          "contact_tolerance_m": 0.025
         },
-        "plan_transform": "round18 orthogonal .092m/original-pixel similarity",
+        "plan_transform": "round19 House court-constrained schematic fit",
         "nudge_m": 0,
         "source_plan_original_px": [
           1798,
@@ -7518,20 +7819,21 @@
         ],
         "source_plan_file": "refs/official/shinsegae/floor_B1.png",
         "local_st": [
-          10.112,
-          -18.328
+          115.6,
+          26.6
         ],
         "look_at_local_st": [
-          15.172,
-          -18.328
+          118.679587,
+          26.66
         ],
-        "x": -149.092002,
-        "z": 25.987958,
-        "yawDeg": 201.33861
+        "x": -68.859119,
+        "z": 107.896003,
+        "yawDeg": 201.33861,
+        "source_location_note": "KimSusa U-counter viewed from the lounge side; drawer chest to side."
       },
       {
         "r18_camera": "centralcity_b1_13",
-        "round": 18,
+        "round": 19,
         "active": true,
         "photos": [
           "refs/walk/s5_ssg_b1/8xxIIvP9uAY_10.jpg"
@@ -7539,15 +7841,27 @@
         "spot": "1F 하우스 코트에서 B1 보이드 내려다봄 (B1 보이드 개통 후 유효)",
         "source_review": ".codex-jobs/evidence/review_ssg17.json → b1.new_cameras",
         "source_review_index": 21,
-        "floor": "1F",
-        "y": 0,
-        "pitchDeg": -60,
+        "floor": "1M",
+        "y": 3.6,
+        "pitchDeg": -50,
         "camera_qa": {
-          "supported_floor": true,
-          "headroom_clear": true,
+          "modules": [
+            "centralcity",
+            "shinsegae",
+            "jwmarriott",
+            "gotomall",
+            "station"
+          ],
+          "all_detail": true,
+          "floor_y_verified": true,
+          "capsule_radius_m": 0.38,
+          "capsule_height_m": 1.85,
           "capsule_contact_m": 0,
+          "headroom_at_least_m": 1.85,
           "rendered": false,
-          "note": "Exact review plan position retained; minor fixture contact recorded without a coordinate nudge."
+          "method": "Real-kit physics and nearest supported clear pose; no WebGL render.",
+          "ceiling_y": 7,
+          "contact_tolerance_m": 0.025
         },
         "plan_transform": "round18 orthogonal .092m/original-pixel similarity",
         "nudge_m": 0,
@@ -7556,17 +7870,17 @@
           1791,
           502
         ],
-        "source_location_note": "옛s107 카메라 대신 새 B1보이드 남측1F 착지데크(s12,t−17.684)에서 중심을 내려다봄.",
+        "source_location_note": "C3: supported1M south gallery lip; stacked B1 lounge directly below, no crossed slab.",
         "local_st": [
-          12,
-          -17.684
+          115.48,
+          27.5
         ],
         "look_at_local_st": [
           4.316,
           -17.684
         ],
-        "x": -147.805147,
-        "z": 27.512191,
+        "x": -68.064482,
+        "z": 107.456738,
         "yawDeg": 21.33861
       }
     ],
@@ -12501,7 +12815,7 @@
       "visual_geometry_fix": "Explicit east2 slab and ceiling polygons replace invalid edge-touching HOS hole. Earcut had drawn an opaque y5 floor triangle over a physics-open void; source fixed without engine edits.",
       "superseded_by_round18": "B1 Sweet Park/HoS transform, HoS lounge floor/vertical court and upper HoS placement only. Other terminal/Famille work remains current. Historical checks here do not validate round18."
     },
-    "trace_note": "208 cameras total; 17 added in Round14. y is player foot height. New cameras pass support, 0.38m capsule and 1.85m headroom checks with all connected details. tests/shot.mjs was not run as instructed; this is not visual render validation.",
+    "trace_note": "Round19 active frame cameras use floor-level y. Transform and validation in modeling.round19 supersede earlier round notes; renderer adds eye height.",
     "trace_before_round12": [
       {
         "spot": "신세계 연결 유리문",
@@ -12553,106 +12867,86 @@
       }
     ],
     "plan_transform_B1": {
-      "round": 18,
+      "round": 19,
       "source": "refs/official/shinsegae/floor_B1.png",
-      "raster_size_px": [
-        2000,
-        1500
-      ],
-      "tracing_grid": [
-        1823,
-        1367
-      ],
       "original_to_trace_scale": 0.9115,
-      "method": "Uniform orthogonal similarity: +plan x→−t, +plan y→+s; equal scale and preserved cell aspect ratio. Fixed terminal E1/E2 pair midpoints anchor the fit; J4 keeps a separate B1 connector. No shear or piecewise scale.",
-      "scale_m_per_original_px": 0.092,
-      "scale_m_per_display_px": 0.10093252879868349,
+      "scale_m_per_display_px": 0.1009,
       "formula": [
-        "s=-41.868+0.092*originalY",
-        "t=147.088-0.092*originalX",
-        "BPst(px,py)=[21.75+(0.092/0.9115)*(py-630.30225),18.15-(0.092/0.9115)*(px-1277.46725)]",
-        "x=-135.7+0.3638789938720081*s+0.931446229161241*t",
-        "z=9.9+0.931446229161241*s-0.3638789938720081*t"
+        "s=21.1+0.1009*(py-477)",
+        "t=38.7-0.1009*(px-1032)"
       ],
-      "owner": "centralcity: Sweet Park/HoS; main market/deli and southwest cinema plaza remain shinsegae-owned.",
-      "anchors": [
-        {
-          "feature": "E1",
-          "source_original_px": [
-            1391.5,
-            514.5
-          ],
-          "source_display_px": [
-            1268.35225,
-            468.96675
-          ],
-          "mapped_local_st": [
-            5.466,
-            19.07
-          ],
-          "retained_pair_midpoint_local_st": [
-            4.25,
-            18.15
-          ],
-          "residual_m": 1.524813
-        },
-        {
-          "feature": "E2",
-          "source_original_px": [
-            1411.5,
-            868.5
-          ],
-          "source_display_px": [
-            1286.58225,
-            791.63775
-          ],
-          "mapped_local_st": [
-            38.034,
-            17.23
-          ],
-          "retained_pair_midpoint_local_st": [
-            39.25,
-            18.15
-          ],
-          "residual_m": 1.524813
-        }
+      "method": "SweetPark: uniform orthogonal similarity anchored to9GATE=J4, +px→−t,+py→+s. House independently registered inside the existing court; explicitly non-surveyed piecewise spacing below.",
+      "gate9_local_st": [
+        21.1,
+        38.7
       ],
-      "residual_error": {
-        "E1_E2_midpoint_residual_m": 1.524813,
-        "gate9_display_px": [
-          1032,
-          477
-        ],
-        "gate9_local_st": [
-          6.276816,
-          42.92563
-        ],
-        "gate9_world_xz": [
-          -93.433082,
-          0.126782
-        ],
-        "reference_J4_local_st": [
-          21.1,
-          38.7
-        ],
-        "gate9_to_J4_reference_m": 15.413719,
-        "surveyed_rmse_m": null,
-        "note": "The diagram scale, retained cores, J4 and current west exterior are not simultaneously registerable. No surveyed exterior fit is claimed."
-      },
-      "court_source_original_px": [
-        1741,
-        446,
-        1841,
-        558
+      "gate9_world_xz": [
+        -91.97518416076059,
+        15.471398372455473
       ],
-      "court_center_local_st": [
-        4.316,
-        -17.684
-      ],
-      "court_center_world_xz": [
-        -150.601193,
-        20.354958
-      ]
+      "house": {
+        "orientation": "+px→−t,+py→+s",
+        "source_to_old_local": [
+          "s=21.75+(0.092/0.9115)*(py-630.30225)",
+          "t=18.15-(0.092/0.9115)*(px-1277.46725)"
+        ],
+        "s_knots_old_to_new": [
+          [
+            -22.402,
+            78
+          ],
+          [
+            -9.56959,
+            89.8
+          ],
+          [
+            -7.2483,
+            93.8
+          ],
+          [
+            -0.836,
+            99
+          ],
+          [
+            9.468,
+            115
+          ],
+          [
+            45.122,
+            138
+          ]
+        ],
+        "t_knots_old_to_new": [
+          [
+            -34.845,
+            18
+          ],
+          [
+            -22.284,
+            21.5
+          ],
+          [
+            -13.084,
+            33.5
+          ],
+          [
+            11.435,
+            38.2
+          ]
+        ],
+        "court_local_bounds": [
+          99,
+          21.5,
+          115,
+          33.5
+        ],
+        "court_levels": [
+          -6,
+          0,
+          3.6
+        ],
+        "uncertainty": "A single metric similarity for the complete schematic House cannot fit the observed16×12m court and20m interior strip. Piecewise axis spacing preserves orientation/adjacency but not tenant aspect ratios. Exact room dimensions remain unverified."
+      }
     },
     "round12": {
       "date": "2026-11-07",
@@ -20219,6 +20513,468 @@
           "upper_door_anchors": "Four concave cells use source edge anchors for wall opening, signage and furnishing exclusion.",
           "local_visual_limit": "No updated WebGL image. Both screenshot runner limitation and EPERM preview-server bind are recorded; materials/appearance need frame review."
         }
+      }
+    },
+    "round19": {
+      "date": "2026-11-07",
+      "review_sources": [
+        ".codex-jobs/evidence/check_r17.json:centralcity",
+        ".codex-jobs/evidence/check_ssg18.json:b1 centralcity.js"
+      ],
+      "priority": [
+        "regression/layout",
+        "floor-level cameras",
+        "design",
+        "detail"
+      ],
+      "visual_validation": "Original supplied frames and official plans opened. tests/shot.mjs not run per user; fresh WebGL comparison still pending.",
+      "findings": [
+        {
+          "id": "b1.N1",
+          "status": "implemented_not_render_verified",
+          "changes": "Restored all prior boarding-bay loop entries, buses/markings and asphalt. Moved complete House B1/1F/1M stack inside building under original court, keeping source orientation.",
+          "original_frame_checked": true,
+          "positions": {
+            "restored_bays_s": [
+              -3,
+              9,
+              21,
+              33,
+              45
+            ],
+            "apron_st": [
+              -12,
+              -18.3,
+              151,
+              0
+            ],
+            "court_st": [
+              99,
+              21.5,
+              115,
+              33.5
+            ]
+          },
+          "qualification": "N1 literal advice not to move court alone was honored by moving B1 and all three layers together. Local House schematic scales are explicitly fitted; never presented as a uniform survey."
+        },
+        {
+          "id": "b1.L1",
+          "status": "implemented_not_render_verified",
+          "changes": "9GATE anchors true Sweet Park similarity; J4 now follows white corridor, east stores endt38.7 rather than crossing into main store.",
+          "original_frame_checked": true,
+          "positions": {
+            "gate9_st": [
+              21.1,
+              38.7
+            ],
+            "J4_keep_clear": [
+              19.7,
+              32,
+              22.3,
+              43.5
+            ]
+          },
+          "qualification": "E1/E2 retained to preserve photographed hall/1F routes. 시코르/팝업 and 깰끄쇼즈/크라눌레/팝업/오뜨르/고리 overlap wells and have clipped cabinets within original cells; no silent relocation."
+        },
+        {
+          "id": "b1.L2",
+          "status": "implemented_not_render_verified",
+          "changes": "B1–1F–1M openings, paired escalators, lounge and upper tenants share the16×12m indoor court. Restored the previously accepted r17 rust sofa/tub-chair islands and central bar onB1, preserving all photo-supported lounge detail.",
+          "original_frame_checked": true,
+          "positions": {
+            "void_st": [
+              99,
+              21.5,
+              115,
+              33.5
+            ],
+            "levels": [
+              -6,
+              0,
+              3.6
+            ]
+          }
+        },
+        {
+          "id": "b1.N3",
+          "status": "implemented_not_render_verified",
+          "changes": "Closed unused southern B1 hall with full-height boundary and one8m dogleg passage west of House, reconnecting station/J7 approaches. Sweet vaults stay inside transformed Sweet polygon.",
+          "original_frame_checked": true,
+          "positions": {
+            "boundary_s": 63.3,
+            "corridor_t_sections": [
+              [
+                14.6,
+                22.6
+              ],
+              [
+                8.6,
+                16.6
+              ],
+              [
+                14.6,
+                22.6
+              ]
+            ]
+          },
+          "qualification": "8m corridor bends around House rather than cutting its lounge; south station branches retained."
+        },
+        {
+          "id": "b1.N4",
+          "status": "implemented_not_render_verified",
+          "changes": "Full-height House perimeter and enclosed soffit now entirely within CC; only intentional stacked court stays open.",
+          "original_frame_checked": true,
+          "positions": {
+            "enclosure_st": [
+              85,
+              18.46,
+              128.7,
+              38.2
+            ],
+            "ceiling_y": -0.32
+          }
+        },
+        {
+          "id": "CC-L1",
+          "status": "implemented_not_render_verified",
+          "changes": "Added8×9.7m lobby and shifted descent heads to t28.5, preserving8.5m camera standoff.",
+          "original_frame_checked": true,
+          "positions": {
+            "lobby_st": [
+              72.1,
+              28.5,
+              80.1,
+              38.2
+            ],
+            "pad_st": [
+              73.1,
+              28.5,
+              79.1,
+              31.5
+            ]
+          }
+        },
+        {
+          "id": "CC-C2",
+          "status": "implemented_not_render_verified",
+          "changes": "Moved two lounge cameras onto supported1M south gallery edge.",
+          "original_frame_checked": true,
+          "positions": {
+            "local_st": [
+              [
+                115.48,
+                25
+              ],
+              [
+                115.48,
+                26.5
+              ]
+            ],
+            "y": 3.6
+          },
+          "qualification": "Old suggested forward points fall within new through-void; floor-safe lip used instead."
+        },
+        {
+          "id": "CC-C3",
+          "status": "implemented_not_render_verified",
+          "changes": "White low corridor/downlights,5m gallery with parapet/glass, buff piers, blue terminal/red4 sign and diagonal floor bands. Preserved sculpture/seat cluster moved7m east.",
+          "original_frame_checked": true,
+          "positions": {
+            "camera_st": [
+              37.5,
+              8.9
+            ],
+            "ceiling_y": 5.7
+          },
+          "qualification": "5.7m roof allows the existing5m gallery rail to remain visible; exact height inferred."
+        },
+        {
+          "id": "CC-D1",
+          "status": "implemented_not_render_verified",
+          "changes": "Black ceiling, charcoal herringbone,6×3m light pad, small HoS lettering, lattice, cylinder sconce and diagonal LED in new descent lobby. The unrelated Bodyfriend1M slab was found over the lobby and was refitted to preserve the black ceiling/screen view.",
+          "original_frame_checked": true
+        },
+        {
+          "id": "CC-D2",
+          "status": "implemented_not_render_verified",
+          "changes": "Camera yaw236, white lounge between LED columns, open cream arches on left shop/connection frontage.",
+          "original_frame_checked": true,
+          "positions": {
+            "lounge_st": [
+              54.8,
+              20.45
+            ],
+            "camera_yaw": 236
+          }
+        },
+        {
+          "id": "CC-D3",
+          "status": "implemented_not_render_verified",
+          "changes": "Cream barrel, continuous.15m coves,.3m edge bands and.6m diamonds at1.2m spacing in J4 corridor; transverse dark beam absent.",
+          "original_frame_checked": true,
+          "positions": {
+            "source_corridor": [
+              1032,
+              454,
+              1343,
+              488
+            ]
+          }
+        },
+        {
+          "id": "CC-D4",
+          "status": "implemented_not_render_verified",
+          "changes": "Single small charcoal fascia and single 메뉴 backboard across Famille cells; duplicate subboards removed.",
+          "original_frame_checked": true
+        },
+        {
+          "id": "CC-T3",
+          "status": "implemented_not_render_verified",
+          "changes": "KERVAN pendants cover seating on1.2m grid at2.4–2.8m; ebt posters now textless pizza/bread images.",
+          "original_frame_checked": true
+        },
+        {
+          "id": "CC-T4",
+          "status": "implemented_not_render_verified",
+          "changes": "Dense9-column coloured wordmark rows for26 sourced1F and16 sourced2F tenants.",
+          "original_frame_checked": true,
+          "qualification": "Partially skipped requested dense3F/M rows: original85 has only a few marks there, not8–10 per row. Kept known brands; no invented tenancy."
+        },
+        {
+          "id": "NEW-1",
+          "status": "implemented_not_render_verified",
+          "changes": "Expanded level landing before right stair/lamp; buff piers and two arched fanlights.",
+          "original_frame_checked": true,
+          "positions": {
+            "camera_st": [
+              166.4,
+              23.8
+            ],
+            "y": 0.72,
+            "yaw": 176.343,
+            "pitch": -2
+          }
+        },
+        {
+          "id": "NEW-2",
+          "status": "implemented_not_render_verified",
+          "changes": "Refitted opposite cells17/18 to retain their tables while opening12.76m plaza; tactile strip turns90degrees.",
+          "original_frame_checked": true,
+          "positions": {
+            "opposite_cells_s": [
+              171.1,
+              178.7
+            ],
+            "Paul_front_s": 191.46,
+            "camera_st": [
+              179.6,
+              -40.8
+            ]
+          }
+        },
+        {
+          "id": "NEW-3",
+          "status": "implemented_not_render_verified",
+          "changes": "Buff street/arcade piers and cream capitals; directory wall alone remains orange-red.",
+          "original_frame_checked": true
+        },
+        {
+          "id": "b1.D2",
+          "status": "implemented_not_render_verified",
+          "changes": "Removed gloss environment mix from checker floor and vitrine floor apron to retain near-black squares.",
+          "original_frame_checked": true
+        },
+        {
+          "id": "b1.D3",
+          "status": "implemented_not_render_verified",
+          "changes": "Three formerly skipped island cabinets restored; Standard Bread enclosed with dark fieldstone/oven wall and bread counters.",
+          "original_frame_checked": true,
+          "positions": {
+            "source_cells": [
+              [
+                1095,
+                551,
+                1120,
+                578
+              ],
+              [
+                1095,
+                610,
+                1120,
+                636
+              ],
+              [
+                1122,
+                610,
+                1147,
+                636
+              ]
+            ]
+          }
+        },
+        {
+          "id": "b1.D4",
+          "status": "implemented_not_render_verified",
+          "changes": "Honey panels/walnut seams and amber uplights at actual void sides, honey escalator skirts, gold counter coffers and subdued amber lamps.",
+          "original_frame_checked": true
+        },
+        {
+          "id": "b1.D5",
+          "status": "implemented_not_render_verified",
+          "changes": "Inset portal anchored in honey wall with dark bronze serif plaque2.6×.3m, warm halo,4m corridor with white ribs/wood sides.",
+          "original_frame_checked": true,
+          "positions": {
+            "portal_source_x": 1465
+          },
+          "qualification": "Inset portal gives real standoff inside the envelope; precise recess depth inferred."
+        },
+        {
+          "id": "b1.D6",
+          "status": "implemented_not_render_verified",
+          "changes": "KimSusa U counter16stools and1.6×.5×.9m glass-topped drawer chest. Removed north reeded screen in front of Superstar. Kept KATSU&TAPAS dark on cream louvre box.",
+          "original_frame_checked": true
+        },
+        {
+          "id": "b1.N5",
+          "status": "implemented_not_render_verified",
+          "changes": "Removed hanging island boards; individual.45×.30m brass-framed black acrylic signs atfloor+1.35m.",
+          "original_frame_checked": true
+        },
+        {
+          "id": "b1.C3",
+          "status": "implemented_not_render_verified",
+          "changes": "Moved trace222 to supported1M south gallery lip above B1 lounge.",
+          "original_frame_checked": true,
+          "positions": {
+            "st": [
+              115.48,
+              27.5
+            ],
+            "y": 3.6,
+            "yaw": 21.33861,
+            "pitch": -50
+          }
+        }
+      ],
+      "fixed_items_left_intact": [
+        "CC-L2",
+        "CC-L3",
+        "CC-L4",
+        "CC-L5",
+        "CC-L6",
+        "CC-C1",
+        "CC-C4",
+        "CC-T1",
+        "CC-T2",
+        "b1.T1",
+        "b1.T2",
+        "f1.F18"
+      ],
+      "inferred": [
+        "House room dimensions and piecewise court-fit scale; orientation and indoor stack constrained, not surveyed.",
+        "Famille plaza width, low ceiling profile and relocated camera poses are perspective fits.",
+        "Retained E1/E2 landings conflict with new schematic tenant cells; source icon centres differ ~15m."
+      ],
+      "validation": {
+        "status": "Centralcity changes and camera physics complete. Required integrated commands currently fail only on two shinsegae10F elevator-floor omissions; zero-blocked requirement pending that owner.",
+        "smoke_command": "node tests/smoke.mjs centralcity shinsegae jwmarriott gotomall",
+        "smoke_result": "2 shinsegae10F lift-floor failures; prior required command returnedOK before concurrent change.",
+        "walk_command": "node tests/walk.mjs",
+        "walk_result": "697 ok,2 blocked",
+        "visual_render": "Not run per explicit sandbox instruction.",
+        "camera_qa": "22 affected camera poses physically checked with five modules/all detail; floor y retained, minor contacts nudged <=.4m.",
+        "blocked": [
+          {
+            "module": "shinsegae",
+            "name": "신세계 고객 엘리베이터 (신관 화장실 옆 1호기)",
+            "floor": "10F",
+            "reason": "floor45.4 expected,40.6 found"
+          },
+          {
+            "module": "shinsegae",
+            "name": "신세계 고객 엘리베이터 (신관 화장실 옆 2호기)",
+            "floor": "10F",
+            "reason": "floor45.4 expected,40.6 found"
+          }
+        ],
+        "required_routes": "All 사용자 루트 and1F동선 passed; neither latest blockage is a route.",
+        "previous_integrated_result": "699 ok,0 blocked and required smokeOK before final mezzanine correction/concurrent shinsegae change.",
+        "local_walk": "node tests/walk.mjs centralcity --no-city:40 ok,0 blocked",
+        "source_sha256": {
+          "js/places/centralcity.js": "5eb71d36dc8154eb94a4597d9473e4085d20bd1ff1b1434e1c7ba4ee6fd268f9",
+          "js/places/shinsegae.js": "00caecdf09e85a40e03138d3272991604817687797f763ab48948a572f72520b",
+          "tests/walk.mjs": "c908af6e1fa86bc7beb786d087c931755b4420a3c21958de80a5b054ccdaa7d8"
+        },
+        "local_smoke": "node tests/smoke.mjs centralcity:OK",
+        "static_checks": [
+          "node --check js/places/centralcity.js:passed",
+          "git diff --check (owned files):passed",
+          "research JSON parsed"
+        ],
+        "zero_blocked_requirement_met": false,
+        "centralcity_blocked": 0
+      },
+      "lift_adjustments": {
+        "sweet_east": {
+          "plan_local_st": [
+            20.5955,
+            0.4589
+          ],
+          "actual_local_st": [
+            20.5955,
+            3
+          ],
+          "door": "E",
+          "reason": "Source icon would put car/door across retained west envelope; moved2.5411m inward. This exception does not move tenant plan cells."
+        },
+        "house": {
+          "local_st": [
+            107.22365,
+            34.33043
+          ],
+          "car_m": [
+            1.4,
+            1.8
+          ],
+          "door": "N",
+          "clearance_st": [
+            103.22365,
+            33.23043,
+            108.77365,
+            35.43043
+          ],
+          "clinic": "Opened intersecting1M clinic frontage at existing court-side approach; relocated affected table/chair cluster within clinic."
+        }
+      },
+      "mezzanine_correction": {
+        "reason": "Previous3.6m mezzanine underside hid the black lobby ceiling/lattice in srYQ frame.",
+        "Bodyfriend_retained_area_m2": 77,
+        "rotated_shop_local_bounds": [
+          62,
+          24,
+          67.5,
+          38
+        ],
+        "deck_local_bounds": [
+          61.5,
+          23,
+          72,
+          38.3
+        ],
+        "access_stair": {
+          "lower": [
+            66,
+            3.6,
+            23.5
+          ],
+          "upper": [
+            61,
+            5,
+            23.5
+          ],
+          "width_m": 1.2
+        },
+        "uncertainty": "Bodyfriend room location/orientation is an inferred refit; original generated fixtures and area retained."
       }
     }
   },

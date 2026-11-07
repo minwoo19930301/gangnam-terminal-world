@@ -53,11 +53,21 @@ export function build(K) {
     for(let i=0;i<500;i++)g.fillRect((i*37)%w,(i*83)%h,1,1);
   },[3,3]);
   K.texture('hangang_flagstones',512,512,(g,w,h)=>{
-    g.fillStyle='#8f887d';g.fillRect(0,0,w,h);
-    for(let y=-1;y<6;y++)for(let x=-1;x<6;x++){
-      const u=x*108+(y%2)*47,v=y*105;
-      g.fillStyle=['#b8aa95','#b0a28e','#c0b29f','#a99d8c'][(x+y+12)%4];
-      g.beginPath();g.moveTo(u+5,v+12);g.lineTo(u+72,v+3);g.lineTo(u+105,v+42);g.lineTo(u+85,v+98);g.lineTo(u+13,v+94);g.lineTo(u-4,v+50);g.closePath();g.fill();
+    // Irregular Voronoi flagstones, including wrapped edge cells: no checker grid.
+    g.fillStyle='#6e675c';g.fillRect(0,0,w,h);
+    const seeds=Array.from({length:36},(_,i)=>[(i%6+.15+((i*37)%17)/24)*w/6,(Math.floor(i/6)+.15+((i*29)%19)/27)*h/6]);
+    const copies=seeds.flatMap((p,i)=>[-1,0,1].flatMap(dx=>[-1,0,1].map(dy=>[p[0]+dx*w,p[1]+dy*h,i])));
+    for(const p of copies){
+      if(p[0]<-100||p[0]>w+100||p[1]<-100||p[1]>h+100)continue;
+      let poly=[[p[0]-150,p[1]-150],[p[0]+150,p[1]-150],[p[0]+150,p[1]+150],[p[0]-150,p[1]+150]];
+      for(const q of copies){
+        if(p===q||Math.hypot(q[0]-p[0],q[1]-p[1])>250)continue;
+        const nx=q[0]-p[0],ny=q[1]-p[1],c=(q[0]*q[0]+q[1]*q[1]-p[0]*p[0]-p[1]*p[1])/2,cut=[];
+        for(let j=0;j<poly.length;j++){const a=poly[j],b=poly[(j+1)%poly.length],da=a[0]*nx+a[1]*ny-c,db=b[0]*nx+b[1]*ny-c;if(da<=0)cut.push(a);if((da<0)!==(db<0)){const t=da/(da-db);cut.push([a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t]);}}
+        poly=cut;if(!poly.length)break;
+      }
+      g.fillStyle=['#b8aa95','#b0a28e','#c0b29f','#ad9f8b'][p[2]%4];g.beginPath();
+      poly.forEach((v,j)=>{const x=p[0]+(v[0]-p[0])*.93,y=p[1]+(v[1]-p[1])*.93;j?g.lineTo(x,y):g.moveTo(x,y);});g.closePath();g.fill();
     }
   },[3.5,3.5]);
   K.texture('hangang_grey_pavers',256,256,(g,w,h)=>{
@@ -257,7 +267,7 @@ export function build(K) {
   // hTk_1900 is west of the bridge on the shoreline path, not under its deck.
   strip([-735,-741],[-677,-774],7,.065,'hangang_grey_pavers');
   // HG-L5: the south-facing winter view has a stone bank and an open pilotis building.
-  K.ramp(-700,-744,-694,-729,{w:23,ya:.065,yb:1.85,mat:'hangang_flagstones',rails:false});
+  K.ramp(-705,-752,-699,-754,{w:17,ya:.065,yb:1.865,mat:'hangang_flagstones',rails:false});
   strip([-706,-749],[-680,-755],5,.07,'hangang_grey_pavers');
   K.hpoly(0x9b917e,[[-760,-744],[-706,-775],[-666,-742],[-668,-700],[-748,-693]],.048);
   const winterBuilding=rect(-697,-716,-672,-704);
@@ -398,21 +408,26 @@ export function build(K) {
 
     if(id===850389026){
       // hTk_1500: narrow tan deck, dark joints, stainless bars and a chain.
-      const a=[-880.4,-780.3],b=[-890.3,-813.2],L=Math.hypot(b[0]-a[0],b[1]-a[1]);
+      const a=[-880.2,-779.2],b=[-878,-814],L=Math.hypot(b[0]-a[0],b[1]-a[1]);
       const ux=(b[0]-a[0])/L,uz=(b[1]-a[1])/L,nx=-uz,nz=ux;
       const at=(s,o=0)=>[a[0]+ux*s+nx*o,a[1]+uz*s+nz*o];
       strip(a,b,3,0,0xc9b597);
+      // Land to the right of the shell, then turn on the islet to the retained
+      // south drum opening. Keep the occupied interior and its original door.
+      strip(b,[-890,-813.2],3,0,0xc9b597);
+      strip([-890,-813.2],[-890,-819],3,0,0xc9b597);
       for(const off of[-.72,.72])strip(at(0,off),at(L,off),.10,.012,0x5b5851);
       for(const side of[-1,1]){
-        rail(at(0,side*1.5),at(L,side*1.5),0,false,0x8b9090);
-        for(let s=.16;s<L;s+=.18){const q=at(s,side*1.5);box(q[0],.13,q[1],.025,.9,.025,0x8b9090);}
+        const end=side===-1?L-1.8:L; // opening toward the drum-entry landing
+        rail(at(0,side*1.5),at(end,side*1.5),0,false,0x8b9090);
+        for(let s=.16;s<end;s+=.18){const q=at(s,side*1.5);box(q[0],.13,q[1],.025,.9,.025,0x8b9090);}
       }
-      K.detail({name:'솔빛 도교 쇠사슬',floor:'수변',y0:0,y1:3,poly:p},K=>{
-        for(let s=0;s<L;s+=2.3){
-          const q=at(s,-1.56);box(q[0],0,q[1],.065,1.14,.065,0x919594);
-          const end=Math.min(L,s+2.3);
+      K.detail({name:'솔빛 도교 쇠사슬',floor:'수변',y0:0,y1:3,rect:[-893,-820,-875,-777]},K=>{
+        for(const side of[-1,1])for(let s=0;s<(side===-1?L-1.8:L);s+=2.3){
+          const q=at(s,side*1.56);box(q[0],0,q[1],.065,1.14,.065,0x919594);
+          const end=Math.min(side===-1?L-1.8:L,s+2.3);
           for(let j=0;j<10;j++){
-            const t=j/10,u=(j+1)/10,r=at(s+(end-s)*t,-1.56),v=at(s+(end-s)*u,-1.56);
+            const t=j/10,u=(j+1)/10,r=at(s+(end-s)*t,side*1.56),v=at(s+(end-s)*u,side*1.56);
             rod3([r[0],1.1-.30*Math.sin(t*Math.PI),r[1]],[v[0],1.1-.30*Math.sin(u*Math.PI),v[1]],.018,0x828789);
           }
         }
@@ -428,7 +443,7 @@ export function build(K) {
   const gu=[(gb[0]-ga[0])/gl,(gb[1]-ga[1])/gl],gn=[-gu[1],gu[0]],gat=(s,o)=>[ga[0]+gu[0]*s+gn[0]*o,ga[1]+gu[1]*s+gn[1]*o];
   strip([-819,-654],ga,7,.065,'hangang_ochre_paving',0);
   // HG-C3/D3: shore-side camera, ochre apron and dark waterfront mesh.
-  K.slab([[-817,-663],[-824,-656],[-836,-659],[-827,-672],[-819,-675]],.09,{mat:'hangang_shore_ochre',thick:.12,ceil:false});
+  K.slab([[-817,-663],[-824,-656],[-832,-651],[-839,-655],[-836,-659],[-827,-672],[-819,-675]],.09,{mat:'hangang_shore_ochre',thick:.12,ceil:false});
   const shoreA=[-836,-659],shoreB=[-828.5,-667.5];
   rail(shoreA,shoreB,.09,false,0x5c5f56);
   for(let t=0;t<1;t+=.025)box(shoreA[0]+(shoreB[0]-shoreA[0])*t,.2,shoreA[1]+(shoreB[1]-shoreA[1])*t,.025,.9,.025,0x5c5f56);
@@ -447,21 +462,22 @@ export function build(K) {
   }
   // F9MdeqY0Rro_21: flags and small white duck boats beside the approach.
   // The edited frame establishes the relationship, not their surveyed berth.
-  for(const [i,s] of [3,9,15].entries()){
-    const p=gat(-7+i*2,3.8);box(p[0],0,p[1],.065,4.1,.065,0xb5bdb8);
-    K.sign(['세빛섬','한강의 빛'],{x:p[0],y:2.65,z:p[1],w:.58,h:2.3,rotY:Math.atan2(gu[0],gu[1]),bg:['#e9dfb6','#abcaa2','#ecece1'][i],fg:'#425e57',twoSided:true,box:false});
+  for(let i=0;i<4;i++){
+    const t=i/3,p=[shoreA[0]+(shoreB[0]-shoreA[0])*t+1.2,shoreA[1]+(shoreB[1]-shoreA[1])*t+1.1];
+    box(p[0],.09,p[1],.065,4,.065,0xb5bdb8);
+    K.sign(['세빛섬','한강의 빛'],{x:p[0],y:2.65,z:p[1],w:.8,h:2.4,rotY:.7,bg:'#f2f0e8',fg:'#425e57',twoSided:true,box:false});
   }
   const dockA=[-846,-683],dockB=[-856,-713];
   K.wall(...dockA,...dockB,-.65,-.36,{thick:1.1,mat:{tex:'wood',color:0xaaa69a},solid:false});
-  for(let i=0;i<8;i++){
-    const x=-849-i*1.2,z=-684-i*3.5,rot=-.48;
-    K.dome({x,y:-.65,z,rx:1.05,ry:.4,rz:1.65,mat:0xeeeae1,seg:16,rings:6});
-    box(x,-.26,z,1.2,.2,1.3,0xc67b70,false,rot);
-    for(const dx of [-.37,.37])box(x+dx,-.06,z+.2,.48,.25,.72,0xd4c7ab,false,rot);
-    K.cyl({x:x-.55,y:-.17,z:z-1.1,r:.16,h:1.15,seg:10,mat:0xf1ede4,solid:false});
-    K.dome({x:x-.55,y:.8,z:z-1.25,rx:.28,ry:.3,rz:.35,mat:0xf1ede4,seg:12,rings:6});
-    box(x-.55,.83,z-1.6,.19,.13,.31,0xda9a43,false,rot);
-    for(const side of [-1,1])box(x-.55+side*.235,1,z-1.35,.035,.055,.065,0x263c40);
+  for(let row=0;row<3;row++)for(let i=0;i<8;i++){
+    const x=-855-row*3.6-i*.6,z=-681-i*2.55,rot=-.48;
+    K.dome({x,y:-1.0,z,rx:.7,ry:.3,rz:1,mat:0xeeeae1,seg:16,rings:6});
+    box(x,-.7,z,1,.18,.95,0xc67b70,false,rot);
+    for(const dx of [-.27,.27])box(x+dx,-.52,z+.15,.4,.2,.52,0xd4c7ab,false,rot);
+    K.cyl({x:x-.32,y:-.62,z:z-.64,r:.12,h:.82,seg:10,mat:0xf1ede4,solid:false});
+    K.dome({x:x-.32,y:.14,z:z-.76,rx:.22,ry:.24,rz:.26,mat:0xf1ede4,seg:12,rings:6});
+    box(x-.32,.15,z-.99,.16,.10,.23,0xda9a43,false,rot);
+    for(const side of [-1,1])box(x-.32+side*.18,.29,z-.82,.028,.045,.05,0x263c40);
   }
   K.detail({name:'세빛섬 도교 방문객',floor:'수변',y0:0,y1:5,rect:[-868,-729,-820,-659]},K=>{
     for(let j=0;j<9;j++){
@@ -473,7 +489,8 @@ export function build(K) {
   const ledMats=[];
   function shell(poly,heights,top,name,entry,ledColor) {
     const door=nearestEdge(poly,...entry);
-    K.polyWalls(poly,0,top,{mat:{tex:'glass',color:name==='가빛섬'?0x6aa996:0x87b5c9},thick:.035,openings:[{edge:door.edge,at:door.at,w:Math.min(5.8,Math.hypot(poly[(door.edge+1)%poly.length][0]-poly[door.edge][0],poly[(door.edge+1)%poly.length][1]-poly[door.edge][1])-.3),y0:0,y1:3.5}]});
+    const doors=name==='솔빛섬'?[door,nearestEdge(poly,-890,-817.1)]:[door];
+    K.polyWalls(poly,0,top,{mat:{tex:'glass',color:name==='가빛섬'?0x6aa996:0x87b5c9},thick:.035,openings:doors.map(d=>({edge:d.edge,at:d.at,w:Math.min(5.8,Math.hypot(poly[(d.edge+1)%poly.length][0]-poly[d.edge][0],poly[(d.edge+1)%poly.length][1]-poly[d.edge][1])-.3),y0:0,y1:3.5}))});
     const glow=new THREE.MeshBasicMaterial({color:ledColor,transparent:true,opacity:.12,depthWrite:false});
     const ledKey=K.material('hangang-led-'+name,glow);ledMats.push(glow);
     const ns=K.orient(poly);
@@ -481,7 +498,7 @@ export function build(K) {
       const b=poly[(i+1)%poly.length],L=Math.hypot(b[0]-a[0],b[1]-a[1]),N=Math.ceil(L/2.35);
       for(let j=0;j<N;j++) {
         const t=j/N,x=a[0]+(b[0]-a[0])*t,z=a[1]+(b[1]-a[1])*t;
-        if(i===door.edge&&Math.abs(t*L-door.at)<3)continue;
+        if(doors.some(d=>i===d.edge&&Math.abs(t*L-d.at)<3))continue;
         box(x,0,z,.13,top,.13,metal);
         box(x+ns[i][0]*.1,.15,z+ns[i][1]*.1,.045,top-.2,.045,ledKey);
       }
@@ -570,25 +587,26 @@ export function build(K) {
   const gGlass=K.material('hangang_gavit_clear',new THREE.MeshLambertMaterial({color:0x80b5ac,transparent:true,opacity:.23,side:THREE.DoubleSide,depthWrite:false}));
   const gGlow=new THREE.MeshBasicMaterial({color:0xffcf75,transparent:true,opacity:.12,depthWrite:false});
   const gLed=K.material('hangang-led-가빛섬',gGlow);ledMats.push(gGlow);
+  const gShoulder=17.55,gTop=27;
+  const crown=(p,t)=>{const a=t*Math.PI/2,scale=.6+.4*Math.cos(a);return[gCenter[0]+(p[0]-gCenter[0])*scale,gShoulder+(gTop-gShoulder)*Math.sin(a),gCenter[1]+(p[1]-gCenter[1])*scale];};
   K.slab(gSkin,0,{mat:0xb4b8b2,thick:.18});
   for(let i=0;i<gSkin.length;i++){
     const a=gSkin[i],b=gSkin[(i+1)%gSkin.length],n=gNormals[i],door=Math.hypot((a[0]+b[0])/2-gDoor.x,(a[1]+b[1])/2-gDoor.z)<3.6;
-    K.wall(...a,...b,door?3.6:0,21,{mat:gGlass,thick:.025});
-    if(!door)rod3([a[0],0,a[1]],[a[0],21,a[1]],.045,0x9eafad);
-    for(const y of[5,10.6,16.3,21])rod3([a[0],y,a[1]],[b[0],y,b[1]],.045,0xa5b5b3);
-    if(i%4===0&&!door)box(a[0]-n[0]*.06,.35,a[1]-n[1]*.06,.035,20,.035,gLed);
-    // Six-metre high quarter-ellipse: almost vertical at 21m and a soft roof
-    // turn at 27m. The existing 23m terrace remains below the curved crown.
+    K.wall(...a,...b,door?3.6:0,gShoulder,{mat:gGlass,thick:.025});
+    if(!door)rod3([a[0],0,a[1]],[a[0],gShoulder,a[1]],.045,0x9eafad);
+    for(const y of[5,10.6,16.3,gShoulder])rod3([a[0],y,a[1]],[b[0],y,b[1]],.045,0xa5b5b3);
+    if(i%4===0&&!door)box(a[0]-n[0]*.06,.35,a[1]-n[1]*.06,.035,gShoulder-.35,.035,gLed);
+    // The upper 35% rolls inward to 60% of the plan radius. The retained
+    // upper floors/terrace can project outside this glazed crown.
     for(let j=0;j<10;j++){
-      const crown=(p,normal,t)=>[p[0]-normal[0]*3.5*(1-Math.cos(t*Math.PI/2)),21+6*Math.sin(t*Math.PI/2),p[1]-normal[1]*3.5*(1-Math.cos(t*Math.PI/2))];
-      const t=j/10,u=(j+1)/10,nn=gNormals[(i+1)%gSkin.length],a0=crown(a,n,t),a1=crown(a,n,u),b0=crown(b,nn,t),b1=crown(b,nn,u);
+      const t=j/10,u=(j+1)/10,a0=crown(a,t),a1=crown(a,u),b0=crown(b,t),b1=crown(b,u);
       K.quad(gGlass,[a0,b0,b1,a1],[n[0],t,n[1]]);
       rod3(a0,a1,.045,0xa5b5b3);
       if(j%2===1)rod3(a1,b1,.045,0xa5b5b3);
     }
   }
   sign('가빛섬',gDoor.x,4.2,gDoor.z,7,.85,gDoor.rot,'#274956');
-  const arch=t=>[-860+7*Math.sin(t*Math.PI),23.1+5.6*Math.sin(t*Math.PI),-769+44*t];
+  const arch=t=>[-858-7*Math.sin(t*Math.PI),17.9+10.1*Math.sin(t*Math.PI),-769+44*t];
   for(let i=0;i<36;i++)rod3(arch(i/36),arch((i+1)/36),.30,0xeef0f2);
   // The rotated hall fits the broad southwest wing and leaves the existing core accessible.
   const hr=-.30,hc=Math.cos(hr),hs=Math.sin(hr);
@@ -795,13 +813,13 @@ export function build(K) {
     K.quad(0x9a9892,[[-890+17.7*Math.cos(a),-1.1,-828+13.2*Math.sin(a)],[-890+17.7*Math.cos(b),-1.1,-828+13.2*Math.sin(b)],solPoint(b,2.6),solPoint(a,2.6)],[Math.cos(a),0,Math.sin(a)]);
     rod3(solPoint(a,2.6),solPoint(b,2.6),.08,0xafada5);
   }
-  box(-907.8,0,-835,.7,16.5,10,0xb8bab7);
+  box(-912,0,-835,.7,18,10,0xb8bab7);
   const solWindowGlow=new THREE.MeshBasicMaterial({color:0xffcf75,transparent:true,opacity:.12,depthWrite:false,side:THREE.DoubleSide});
   const solWindow=K.material('hangang_solbit_window',solWindowGlow);ledMats.push(solWindowGlow);
   for(let j=0;j<42;j++)for(let i=0;i<64;i++){
     const a=i/64*Math.PI*2,b=(i+1)/64*Math.PI*2,y=2.6+j*24/42,y1=2.6+(j+1)*24/42;
     if(y<3.6&&(i<3||i>60))continue; // open east entrance to the retained restaurant
-    const windowBay=i>=15&&i<=16&&y<5.5;
+    const windowBay=(i>=15&&i<=16&&y<5.5)||((i<=3||i>=62)&&y<14.8);
     K.quad(windowBay?solWindow:0x514a3b,[solPoint(a,y),solPoint(b,y),solPoint(b,y1),solPoint(a,y1)],[Math.cos(a),.2,Math.sin(a)]);
     rod3(solPoint(a,y1),solPoint(b,y1),.062,j%3===0?0xb39865:0x967b4d);
     if(i%2===0)rod3(solPoint(a,y),solPoint(a,y1),.075,0x876d43);
@@ -988,7 +1006,8 @@ export function build(K) {
     for(const side of[-1,1]) {
       const q=lowerAt(s,side*10.15),h=p.y-.2;
       K.cyl({x:q.x,y:-2.2,z:q.z,r:1.55,h:h+2.2,seg:16,mat:{tex:'concrete',color:0x929e94}});
-      box(q.x,h,q.z,1.55,12.1-h,2.1,concrete,true,rot);
+      const bankPier=s===85||s===119;
+      box(q.x,h,q.z,bankPier?3.5:1.55,12.1-h,bankPier?2.5:2.1,bankPier?0xc9c5bc:concrete,true,rot);
       const a=lowerAt(s,side*9.38),b=lowerAt(s,side*7.65);
       for(const dz of[-1.075,1.075])K.quad(concrete,[[a.x+p.ux*dz,10.45,a.z+p.uz*dz],[b.x+p.ux*dz,12.1,b.z+p.uz*dz],[b.x+p.ux*dz,12.45,b.z+p.uz*dz],[a.x+p.ux*dz,12.45,a.z+p.uz*dz]],[p.ux,0,p.uz]);
       const light=lowerAt(s,side*9.2);box(light.x,11.85,light.z,.45,.12,.45,{tex:'emit',color:0xffcf75});
@@ -1077,7 +1096,7 @@ export function build(K) {
     const redA=lowerAt(114),redB=lowerAt(119);
     strip(point2(redA),point2(redB),8,redA.y+.025,'hangang_red_lane',redB.y+.025);
     K.texture('hangang_yellow_kerb',256,64,(g,w,h)=>{g.fillStyle='#e0b020';g.fillRect(0,0,w,h);g.fillStyle='#292c2c';for(let x=-64;x<w;x+=64){g.beginPath();g.moveTo(x,0);g.lineTo(x+32,0);g.lineTo(x+72,h);g.lineTo(x+40,h);g.closePath();g.fill();}},[2,.25]);
-    for(const s of[90,96,102,108]){const a=lowerAt(s,-4.7),b=lowerAt(s+4,-4.7);K.wall(...point2(a),...point2(b),a.y+.02,a.y+.17,{thick:.18,mat:'hangang_yellow_kerb',solid:false});}
+    for(const s of[90,96,102,108]){const a=lowerAt(s,-8.1),b=lowerAt(s+4,-8.1);K.wall(...point2(a),...point2(b),a.y+.02,a.y+.17,{thick:.18,mat:'hangang_yellow_kerb',solid:false});}
     for(let off=-7.2;off<=7.2;off+=1){
       const a=lowerAt(146,off),b=lowerAt(150,off);strip(point2(a),point2(b),.5,a.y+.04,0xf2f2f2,b.y+.04);
     }
@@ -1088,7 +1107,9 @@ export function build(K) {
     const speed=lowerAt(143,-8.4);box(speed.x,speed.y,speed.z,.08,4.4,.08,0x5f6d6a);
     sign('40',speed.x,speed.y+3.8,speed.z,.7,.7,Math.atan2(-speed.ux,-speed.uz),'#f4eee4','#a1473b');
     for(let s=84;s<228;s+=12){
-      const a=lowerAt(s,-6.3),b=lowerAt(s+12,-6.3);
+      const red=lowerAt(s,-6.5),redEnd=lowerAt(s+12,-6.5);
+      strip(point2(red),point2(redEnd),2.8,red.y+.025,'hangang_red_lane',redEnd.y+.025);
+      const a=lowerAt(s,-4.2),b=lowerAt(s+12,-4.2);
       strip(point2(a),point2(b),1.6,a.y+.035,0x3f8f6a,b.y+.035);
     }
     const signal=lowerAt(154,8.2),signalEnd=lowerAt(154,-2);
@@ -1101,7 +1122,7 @@ export function build(K) {
       for(const y of [94,278]){g.beginPath();g.ellipse(128,y,48,50,0,0,Math.PI*2);g.stroke();}
       g.beginPath();g.moveTo(128,94);g.lineTo(103,186);g.lineTo(153,225);g.lineTo(128,278);g.moveTo(103,186);g.lineTo(153,161);g.lineTo(153,225);g.moveTo(153,161);g.lineTo(169,147);g.moveTo(82,185);g.lineTo(123,185);g.stroke();
     },[1.3,2.2],{transparent:true});
-    for(const s of [100,130,178,210]){const p=lowerAt(s,-6.3),a=lowerAt(s-1.1,-6.95),b=lowerAt(s-1.1,-5.65),c=lowerAt(s+1.1,-5.65),d=lowerAt(s+1.1,-6.95);K.quad('hangang_bicycle_mark',[a,b,c,d].map(q=>[q.x,q.y+.045,q.z]),[0,1,0]);}
+    for(const s of [104,130,178,210]){const a=lowerAt(s-1.1,-4.85),b=lowerAt(s-1.1,-3.55),c=lowerAt(s+1.1,-3.55),d=lowerAt(s+1.1,-4.85);K.quad('hangang_bicycle_mark',[a,b,c,d].map(q=>[q.x,q.y+.045,q.z]),[0,1,0]);}
   });
   // The June walk is an event, not the ordinary November scene. Operators can
   // inspect its temporary furniture with ?festival=1 without engine changes.
@@ -1184,7 +1205,7 @@ export function build(K) {
         const u=j/steps,v=(j+1)/steps;
         const au=u*reach,av=v*reach,ay=14.6+3*u-19*u*u,by=14.6+3*v-19*v*v;
         const ax=ox+fnx*side*au,az=oz+fnz*side*au,bx=ox+fnx*side*av,bz=oz+fnz*side*av;
-        const w=.025+u*u*.045,wx=fux*w,wz=fuz*w;
+        const w=.025+u*u*.045+Math.max(0,u-.6)/.4*.08,wx=fux*w,wz=fuz*w;
         positions[k++]=ax-wx;positions[k++]=ay;positions[k++]=az-wz;
         positions[k++]=ax+wx;positions[k++]=ay;positions[k++]=az+wz;
         positions[k++]=bx+wx;positions[k++]=by;positions[k++]=bz+wz;
@@ -1199,42 +1220,58 @@ export function build(K) {
     const s=24+i*570/189,x=-651+fux*s+fnx*side*12.7,z=-813+fuz*s+fnz*side*12.7;
     box(x,14.4,z,.22,.17,.4,metal);box(x,14.25,z,.18,.1,.22,{tex:'emit',color:[0xe579a3,0x8bb1ef,0xb7dcba][Math.floor(i/20)%3]});
   }
-  // HG-L1: a thin eight-metre spray skirt, entirely on the river side of the bank.
+  // HG-L1: the falling mist follows the landing fan, only north of s=24.
   const mistPixels=new Uint8Array(64*64*4);
   for(let y=0;y<64;y++)for(let x=0;x<64;x++){
     const i=(y*64+x)*4,edge=Math.sin(Math.PI*x/63),fade=Math.sin(Math.PI*y/63);
     mistPixels[i]=226;mistPixels[i+1]=234;mistPixels[i+2]=235;
-    mistPixels[i+3]=Math.round(110*edge*fade*(.6+.4*Math.sin(x*2.31+y*.59)**2));
+    mistPixels[i+3]=Math.round(200*edge*fade*(.7+.3*Math.sin(x*2.31+y*.59)**2));
   }
   const mistTex=new THREE.DataTexture(mistPixels,64,64,THREE.RGBAFormat);mistTex.needsUpdate=true;
-  const mistMat=new THREE.MeshBasicMaterial({map:mistTex,transparent:true,opacity:.38,depthWrite:false,side:THREE.DoubleSide});
+  const mistMat=new THREE.MeshBasicMaterial({map:mistTex,transparent:true,opacity:.7,depthWrite:false,side:THREE.DoubleSide});
   const sprayMist=[];
   for(const side of[-1,1])for(let s=24;s<594;s+=30){
-    const p=(u,y)=>new THREE.Vector3(-651+fux*u+fnx*side*28,y,-813+fuz*u+fnz*side*28);
-    const a=p(s,-1.35),b=p(Math.min(594,s+34),-1.35),c=p(Math.min(594,s+34),6.65),d=p(s,6.65);
+    const p=(u,y,off)=>new THREE.Vector3(-651+fux*u+fnx*side*off,y,-813+fuz*u+fnz*side*off);
+    const a=p(s,-1.35,30),b=p(Math.min(594,s+34),-1.35,30),c=p(Math.min(594,s+34),9,24),d=p(s,9,24);
     const g=new THREE.BufferGeometry().setFromPoints([a,b,c,a,c,d]);g.setAttribute('uv',new THREE.Float32BufferAttribute([0,0,1,0,1,1,0,0,1,1,0,1],2));
     const mesh=K.addMesh(new THREE.Mesh(g,mistMat));sprayMist.push(mesh);
   }
   // Warm interior glow and a few actual deck lamps; avoid point lights at pier feet.
   const nightObjects=[],nightLamps=[];
-  const warmGlass=new THREE.MeshBasicMaterial({color:0xffcf75,transparent:true,opacity:.22,depthWrite:false,side:THREE.DoubleSide});
-  for(const [x,y,z,w,h,r] of[[-870,3,-725,18,3,-.4],[-790,3,-806,22,3,0],[-884,3,-819,10,2,0]]){
-    const pane=K.addMesh(new THREE.Mesh(new THREE.PlaneGeometry(w,h),warmGlass));pane.position.set(x,y,z);pane.rotation.y=r;nightObjects.push(pane);
-    const light=new THREE.PointLight(0xffcf75,0,26,2);light.position.set(x,y+1,z-2);K.addMesh(light);nightLamps.push(light);
+  const warmGlass=new THREE.MeshBasicMaterial({color:0xffcf75,transparent:true,opacity:.6,depthWrite:false,side:THREE.DoubleSide});
+  for(const poly of[gSkin,cp]){
+    const normals=K.orient(poly);
+    for(let i=0;i<poly.length;i++){
+      const a=poly[i],b=poly[(i+1)%poly.length],n=normals[i],x=(a[0]+b[0])/2,z=(a[1]+b[1])/2,L=Math.hypot(b[0]-a[0],b[1]-a[1]);
+      const vx=-671-x,vz=-808-z;
+      if((n[0]*vx+n[1]*vz)/Math.hypot(vx,vz)<.12)continue;
+      for(const y of[3,8,13]){
+        const pane=K.addMesh(new THREE.Mesh(new THREE.PlaneGeometry(Math.max(.3,L-.12),2.8),warmGlass));
+        pane.position.set(x-n[0]*.12,y,z-n[1]*.12);pane.rotation.y=Math.atan2(n[0],n[1]);nightObjects.push(pane);
+      }
+    }
+  }
+  for(const [x,z] of[[-854,-754],[-775,-814],[-875,-828]]){
+    const light=new THREE.PointLight(0xffcf75,0,26,2);light.position.set(x,5,z);K.addMesh(light);nightLamps.push(light);
   }
   for(const s of[100,168,236]){
     const p=lowerAt(s,-8);const light=new THREE.PointLight(0xffcf75,0,22,2);light.position.set(p.x,11.7,p.z);K.addMesh(light);nightLamps.push(light);
   }
-  const reflectMat=new THREE.MeshBasicMaterial({map:mistTex,color:0xffc66a,transparent:true,opacity:.3,depthWrite:false,side:THREE.DoubleSide});
-  for(const [x,z] of[[-871,-796],[-796,-861],[-901,-853]])for(let i=0;i<4;i++){
-    const mesh=K.addMesh(new THREE.Mesh(new THREE.PlaneGeometry(1.2+i*.5,12+i*5),reflectMat));mesh.rotation.x=-Math.PI/2;mesh.position.set(x+i*1.1,-1.37,z-i*2);nightObjects.push(mesh);
+  const reflectMat=new THREE.MeshBasicMaterial({map:mistTex,color:0xffc66a,transparent:true,opacity:.55,depthWrite:false,side:THREE.DoubleSide});
+  for(const [x,z] of[[-844,-758],[-762,-814],[-869,-828]])for(let i=0;i<4;i++){
+    const dx=-671-x,dz=-808-z,d=Math.hypot(dx,dz),ux=dx/d,uz=dz/d,nx=-uz,nz=ux,L=30+i*10,off=(i-1.5)*2.8,w=1.5+i*.5;
+    const p=(s,o)=>[x+ux*s+nx*(off+o),-1.36+i*.001,z+uz*s+nz*(off+o)];
+    const a=p(0,-w/2),b=p(L,-w/2),c=p(L,w/2),e=p(0,w/2);
+    const g=new THREE.BufferGeometry().setFromPoints([a,b,c,a,c,e].map(v=>new THREE.Vector3(...v)));
+    g.setAttribute('uv',new THREE.Float32BufferAttribute([0,0,0,1,1,1,0,0,1,1,1,0],2));
+    nightObjects.push(K.addMesh(new THREE.Mesh(g,reflectMat)));
   }
   const ledDayColors=ledMats.map(m=>m.color.clone());
   fountainColors(false);animateWater(0);
   function setNight(on){
     fountain.visible=on||sceneOptions.get('fountain')==='1';fm.opacity=on?.45:.32;fountainColors(on);
     for(const mist of sprayMist)mist.visible=fountain.visible;
-    for(let i=0;i<ledMats.length;i++){const m=ledMats[i];m.opacity=on?.45:.12;if(on)m.color.setHex(0xffcf75);else m.color.copy(ledDayColors[i]);}
+    for(let i=0;i<ledMats.length;i++){const m=ledMats[i];m.opacity=on?(m===solWindowGlow?.6:.45):.12;if(on)m.color.setHex(0xffcf75);else m.color.copy(ledDayColors[i]);}
     for(const mesh of nightObjects)mesh.visible=on;
     for(const light of nightLamps)light.intensity=on?85:0;
   }

@@ -1353,16 +1353,16 @@
         "spot": "유리 입구와 노천 계단",
         "x": -322,
         "y": -6,
-        "z": -66,
+        "z": -71.5,
         "yawDeg": 138,
-        "pitchDeg": 4,
+        "pitchDeg": 6,
         "eyeY": 1.62,
         "floor": "B1",
         "photos": [
           "refs/walk/s8_onebailey_banpo/wvUnarSte1A_3.jpg"
         ],
-        "coordinate_status": "round17 원본 프레임 대조 후 교정한 모델 카메라. y=바닥 높이, 새 렌더 미실행, 실측 아님.",
-        "note": "round17: 동쪽 벽화/단일 전시 기둥열 및 공개공지 수정 기하에 맞춘 구도.",
+        "coordinate_status": "round19: 원본 및 리뷰어 검증 PNG 대조. y=바닥 높이. 새 렌더 미실행, 실측 아님.",
+        "note": "OB-L4: 파빌리온 오른쪽의 이동된 연결 통로를 함께 보는 검증 시점.",
         "previous_round13_pose": {
           "x": -332,
           "y": -6,
@@ -1370,7 +1370,7 @@
           "yawDeg": 203.629,
           "pitchDeg": 0
         },
-        "updated_round": 17,
+        "updated_round": 19,
         "camera_id": "onebailey_03",
         "previous_round15_pose": {
           "x": -320.5,
@@ -1378,6 +1378,13 @@
           "z": -66.5,
           "yawDeg": 154,
           "pitchDeg": 0
+        },
+        "previous_round17_pose": {
+          "x": -322,
+          "y": -6,
+          "z": -66,
+          "yawDeg": 138,
+          "pitchDeg": 4
         }
       },
       {
@@ -1438,14 +1445,14 @@
         "y": 1.2,
         "z": -586.9802,
         "yawDeg": 21.632,
-        "pitchDeg": -15,
+        "pitchDeg": -10,
         "eyeY": 1.62,
         "floor": "1F",
         "photos": [
           "refs/walk/s8_onebailey_banpo/F9MdeqY0Rro_19.jpg"
         ],
-        "coordinate_status": "round15 원본 구도와 모듈 기하에 맞춘 검수 카메라. y는 바닥 높이. 실측 GPS가 아니며 새 렌더는 실행하지 않음.",
-        "note": "기존 +1.2m 참의 계단 머리에서 아래로15도. 원본의 내려가는 마지막 계단, 왼쪽 난간, 오른쪽 벽을 포함. 참 높이는 지형 근사.",
+        "coordinate_status": "round19: 원본 및 리뷰어 검증 PNG 대조. y=바닥 높이. 새 렌더 미실행, 실측 아님.",
+        "note": "OB-L5: 캐노피 뒤 계단 참, 하행 계단을 내려다보는 시점. y=참 높이.",
         "previous_round13_pose": {
           "x": -566.36,
           "y": 1.2,
@@ -1453,8 +1460,15 @@
           "yawDeg": 21.632,
           "pitchDeg": 0
         },
-        "updated_round": 15,
-        "camera_id": "onebailey_06"
+        "updated_round": 19,
+        "camera_id": "onebailey_06",
+        "previous_round17_pose": {
+          "x": -566.7286,
+          "y": 1.2,
+          "z": -586.9802,
+          "yawDeg": 21.632,
+          "pitchDeg": -15
+        }
       },
       {
         "round": 13,
@@ -1532,15 +1546,15 @@
         "x": -444.8,
         "y": -6,
         "z": -109.8,
-        "yawDeg": 113,
+        "yawDeg": 122,
         "pitchDeg": 4,
         "eyeY": 1.62,
         "floor": "B1",
         "photos": [
           "refs/walk/s8_onebailey_banpo/wvUnarSte1A_35.jpg"
         ],
-        "coordinate_status": "round17 원본 프레임 대조 후 교정한 모델 카메라. y=바닥 높이, 새 렌더 미실행, 실측 아님.",
-        "note": "round17: 동쪽 벽화/단일 전시 기둥열 및 공개공지 수정 기하에 맞춘 구도.",
+        "coordinate_status": "round19: 원본 및 리뷰어 검증 PNG 대조. y=바닥 높이. 새 렌더 미실행, 실측 아님.",
+        "note": "OB-C2: 밝은 홈줄 옹벽이 왼쪽에 들어오는 검증 yaw.",
         "previous_round13_pose": {
           "x": -443.0467,
           "y": -6,
@@ -1548,7 +1562,7 @@
           "yawDeg": 111.209,
           "pitchDeg": 0
         },
-        "updated_round": 17,
+        "updated_round": 19,
         "camera_id": "onebailey_10",
         "previous_round15_pose": {
           "x": -449.4056,
@@ -1556,6 +1570,13 @@
           "z": -113.3754,
           "yawDeg": 151,
           "pitchDeg": 0
+        },
+        "previous_round17_pose": {
+          "x": -444.8,
+          "y": -6,
+          "z": -109.8,
+          "yawDeg": 113,
+          "pitchDeg": 4
         }
       },
       {
@@ -1588,18 +1609,27 @@
         "round": 13,
         "frame": "refs/walk/s8_onebailey_banpo/wvUnarSte1A_59.jpg",
         "spot": "관광안내센터 유리 전면",
-        "x": -473.2132,
+        "x": -469.44,
         "y": -6,
-        "z": -199.603,
-        "yawDeg": 90.653,
-        "pitchDeg": 0,
+        "z": -196.78,
+        "yawDeg": 96,
+        "pitchDeg": 3,
         "eyeY": 1.62,
         "floor": "B1",
         "photos": [
           "refs/walk/s8_onebailey_banpo/wvUnarSte1A_59.jpg"
         ],
-        "coordinate_status": "모델 검수 카메라. y는 바닥 높이; 원본 촬영의 GPS/실측 위치 아님.",
-        "note": ""
+        "coordinate_status": "round19: 원본 및 리뷰어 검증 PNG 대조. y=바닥 높이. 새 렌더 미실행, 실측 아님.",
+        "note": "OB-D2: 왼쪽 WOWPASS 키오스크와 안내센터 전면을 포함하는 검증 시점.",
+        "previous_round17_pose": {
+          "x": -473.2132,
+          "y": -6,
+          "z": -199.603,
+          "yawDeg": 90.653,
+          "pitchDeg": 0
+        },
+        "updated_round": 19,
+        "camera_id": "onebailey_12"
       },
       {
         "round": 13,
@@ -1622,18 +1652,18 @@
         "round": 13,
         "frame": "refs/walk/s8_onebailey_banpo/wvUnarSte1A_75.jpg",
         "spot": "파스텔 포스터·점무늬 조각",
-        "x": -534.3,
+        "x": -535.9532512117233,
         "y": -6,
-        "z": -361.1,
+        "z": -360.45014029034206,
         "yawDeg": 111.2,
-        "pitchDeg": 3,
+        "pitchDeg": 8,
         "eyeY": 1.62,
         "floor": "B1",
         "photos": [
           "refs/walk/s8_onebailey_banpo/wvUnarSte1A_75.jpg"
         ],
-        "coordinate_status": "round17 원본 프레임 대조 후 교정한 모델 카메라. y=바닥 높이, 새 렌더 미실행, 실측 아님.",
-        "note": "round17: 동쪽 벽화/단일 전시 기둥열 및 공개공지 수정 기하에 맞춘 구도.",
+        "coordinate_status": "round19: 원본 및 리뷰어 검증 PNG 대조. y=바닥 높이. 새 렌더 미실행, 실측 아님.",
+        "note": "OB-T2: P(339.65,3.3), 포스터·점무늬 벤치·조각을 함께 보는 검증 시점.",
         "previous_round13_pose": {
           "x": -533.809,
           "y": -6,
@@ -1641,7 +1671,7 @@
           "yawDeg": 111.209,
           "pitchDeg": 0
         },
-        "updated_round": 17,
+        "updated_round": 19,
         "camera_id": "onebailey_14",
         "previous_round15_pose": {
           "x": -537.3516,
@@ -1649,6 +1679,13 @@
           "z": -359.9075,
           "yawDeg": 111.209,
           "pitchDeg": 0
+        },
+        "previous_round17_pose": {
+          "x": -534.3,
+          "y": -6,
+          "z": -361.1,
+          "yawDeg": 111.2,
+          "pitchDeg": 3
         }
       },
       {
@@ -1740,9 +1777,9 @@
         "round": 13,
         "frame": "refs/walk/s8_onebailey_banpo/PN3QyVXbUNg_60.jpg",
         "spot": "청백 인물 모티프",
-        "x": -453.566,
+        "x": -451.15,
         "y": -6,
-        "z": -160.0305,
+        "z": -160.97,
         "yawDeg": 291.2,
         "pitchDeg": 0,
         "eyeY": 1.62,
@@ -1750,8 +1787,8 @@
         "photos": [
           "refs/walk/s8_onebailey_banpo/PN3QyVXbUNg_60.jpg"
         ],
-        "coordinate_status": "round17 원본 프레임 대조 후 교정한 모델 카메라. y=바닥 높이, 새 렌더 미실행, 실측 아님.",
-        "note": "round17: 동쪽 벽화/단일 전시 기둥열 및 공개공지 수정 기하에 맞춘 구도.",
+        "coordinate_status": "round19: 원본 및 리뷰어 검증 PNG 대조. y=바닥 높이. 새 렌더 미실행, 실측 아님.",
+        "note": "NEW-3: 관람객 앞쪽으로 이동하여 벽화 하단 가림 해소. 인물 유지.",
         "previous_round13_pose": {
           "x": -455.4306,
           "y": -6,
@@ -1759,13 +1796,20 @@
           "yawDeg": 111.209,
           "pitchDeg": 0
         },
-        "updated_round": 17,
+        "updated_round": 19,
         "camera_id": "onebailey_18",
         "previous_round15_pose": {
           "x": -457.7612,
           "y": -6,
           "z": -158.4025,
           "yawDeg": 111.209,
+          "pitchDeg": 0
+        },
+        "previous_round17_pose": {
+          "x": -453.566,
+          "y": -6,
+          "z": -160.0305,
+          "yawDeg": 291.2,
           "pitchDeg": 0
         }
       },
@@ -1825,9 +1869,9 @@
         "round": 13,
         "frame": "refs/walk/s8_onebailey_banpo/PN3QyVXbUNg_105.jpg",
         "spot": "책상 인물 모티프",
-        "x": -406.5353,
+        "x": -403.92,
         "y": -6,
-        "z": -38.8359,
+        "z": -39.85,
         "yawDeg": 291.2,
         "pitchDeg": 0,
         "eyeY": 1.62,
@@ -1835,8 +1879,8 @@
         "photos": [
           "refs/walk/s8_onebailey_banpo/PN3QyVXbUNg_105.jpg"
         ],
-        "coordinate_status": "round17 원본 프레임 대조 후 교정한 모델 카메라. y=바닥 높이, 새 렌더 미실행, 실측 아님.",
-        "note": "round17: 동쪽 벽화/단일 전시 기둥열 및 공개공지 수정 기하에 맞춘 구도.",
+        "coordinate_status": "round19: 원본 및 리뷰어 검증 PNG 대조. y=바닥 높이. 새 렌더 미실행, 실측 아님.",
+        "note": "NEW-4: 벽화 쪽으로 이동하여 책상 앞 기둥 가림 해소. 기둥 유지.",
         "previous_round13_pose": {
           "x": -408.3998,
           "y": -6,
@@ -1844,13 +1888,20 @@
           "yawDeg": 111.209,
           "pitchDeg": 0
         },
-        "updated_round": 17,
+        "updated_round": 19,
         "camera_id": "onebailey_21",
         "previous_round15_pose": {
           "x": -411.0102,
           "y": -6,
           "z": -37.0994,
           "yawDeg": 111.209,
+          "pitchDeg": 0
+        },
+        "previous_round17_pose": {
+          "x": -406.5353,
+          "y": -6,
+          "z": -38.8359,
+          "yawDeg": 291.2,
           "pitchDeg": 0
         }
       },
@@ -1889,7 +1940,7 @@
       }
     ],
     "trace_coordinates": "x east,z south,y floor. Screenshot camera adds eye height1.62. yaw0 north,90 west. 모든 참조 기반 모델 지점 및24시간/12조각별 시점 기록.",
-    "screenshot_status": "round17: original23 video frames opened individually; shot.mjs not run per user. Trace updated with floor y, independent physics checks passed; operator re-render needed.",
+    "screenshot_status": "round19: original frames and existing assessor/skeptic PNGs inspected. New shot.mjs render prohibited; operator rerender pending.",
     "verification": {
       "smoke": {
         "command": "node tests/smoke.mjs onebailey hangang gotomall jamwon_hangang streets",
@@ -2849,6 +2900,273 @@
         "trace_cameras": "전체월드+generic city에서23개 frame trace의 바닥 y 일치, 캡슐밀림0,1.75m 머리공간 확인",
         "screenshots": "사용자 제한에 따라 tests/shot.mjs 미실행. 새로운 렌더 구도/재질은 미검증."
       }
+    },
+    "round19": {
+      "date": "2026-11-07",
+      "evidence": [
+        ".codex-jobs/evidence/check_r17.json:onebailey",
+        ".codex-jobs/evidence/review_walk17.json:onebailey",
+        "refs/walk/s8_onebailey_banpo/",
+        "shots/r17after/onebailey_1.png through onebailey_8.png",
+        "/private/tmp/claude-502/-Users-minwokim/f6d5d02c-e9b2-47ca-bd76-00c11cf56355/scratchpad/wt-r19/shots/chk_river/"
+      ],
+      "opened_original_frames": [
+        "wvUnarSte1A_3.jpg",
+        "F9MdeqY0Rro_19.jpg",
+        "wvUnarSte1A_35.jpg",
+        "wvUnarSte1A_27.jpg",
+        "wvUnarSte1A_43.jpg",
+        "wvUnarSte1A_59.jpg",
+        "wvUnarSte1A_75.jpg",
+        "wvUnarSte1A_83.jpg",
+        "F9MdeqY0Rro_16.jpg"
+      ],
+      "opened_reviewer_renders": [
+        "obCorrBack.png",
+        "v_ob03L4.png",
+        "v_ob06p10.png",
+        "v_ob10y122.png",
+        "ob14fix.png",
+        "ob18fix.png",
+        "ob21fix.png",
+        "obG2right.png",
+        "obG2left.png",
+        "v_obN300.png",
+        "obKhaki.png"
+      ],
+      "items": [
+        {
+          "id": "OB-L3",
+          "priority": "layout",
+          "prior_status": "partly",
+          "status": "implemented",
+          "change": "Trimmed plaza slab/zone to the shopping-town face. Added noncolliding 0.05m tile skins #d9dad6, offset 0.15m plaza-side of existing 0.24m wall; joints (-310,-56.6104) -> (-322.7024,-51.9495) -> (-319.3699,-43), y=-6..-2.2. Existing OSM block, open stair flank, rail, black column and skylight retained.",
+          "remaining_guess_or_dependency": "Measured wall centerlines from current model; not a surveyed plaza footprint."
+        },
+        {
+          "id": "OB-L4",
+          "priority": "layout",
+          "prior_status": "partly",
+          "status": "implemented",
+          "change": "Moved 11m connector mouth (-333,-58) to (-341,-60), keeping P(-22)=(-402.041,-24.4902). Axis yaw120.2, about40deg from stair; pavilion clears south wall. Camera03=(-322,-6,-71.5), yaw138,pitch6.",
+          "remaining_guess_or_dependency": "Reviewer-tested camera; changed-mouth composition still needs operator render."
+        },
+        {
+          "id": "OB-L5",
+          "priority": "layout",
+          "prior_status": "partly",
+          "status": "implemented",
+          "change": "Cut y4.15 canopy to s=len-12..len-8. Near deck spans s=len..len+10 at top6.5/underside5.8; second spans len+12..len+20 at top9.5, both across v=-28..28. Left rail v=-6.35 has 0.12m bar spacing and slope-following1.1m rail. Right-wall vertical sign at p(len-6,-3.56) now faces stair; red edge stripe follows descending slope. Added sedan at p(len+6,10). Camera06 pitch=-10,y=1.2 landing.",
+          "remaining_guess_or_dependency": "Deck heights/spacing and car placement are frame-derived approximations; streets module unchanged."
+        },
+        {
+          "id": "OB-C2",
+          "priority": "camera",
+          "prior_status": "partly",
+          "status": "implemented",
+          "change": "Court wall s48,v16..39 is dedicated #c2c2bb stone with0.6m horizontal grooves; parapet at y.85..1.2 and planting behind at s47.5. Camera10 retained(-444.8,-6,-109.8), yaw122,pitch4. Removed only coplanar duplicate dark/concrete wall spans at s48,v16..39 so the new stone finish cannot z-fight; retaining enclosure unchanged.",
+          "remaining_guess_or_dependency": "Retaining-wall distance and city-layer tower colours remain inferred/external."
+        },
+        {
+          "id": "OB-C3",
+          "priority": "camera",
+          "prior_status": "partly",
+          "status": "external_dependency",
+          "change": "No onebailey geometry change. Gotomall owner target: pink park band about(-287.5,-18.6), navy direction band ~15m ahead and lit LED column to right of cam01. Cameras00/01 and fixed hall geometry retained.",
+          "remaining_guess_or_dependency": "gotomall.js excluded from this job; confirmed in supplied F9_4/F9_7 frames and AFTER sheets."
+        },
+        {
+          "id": "OB-D2",
+          "priority": "design",
+          "prior_status": "partly",
+          "status": "implemented",
+          "change": "Camera12=(-469.44,-6,-196.78),yaw96,pitch3 includes WOWPASS left pier. Facade granite left unchanged per skeptic colour samples; optional shutter lightening not applied.",
+          "remaining_guess_or_dependency": "No broad colour lift because original facade spans dark/light values already containing current render."
+        },
+        {
+          "id": "OB-D5",
+          "priority": "design",
+          "prior_status": "partly",
+          "status": "implemented",
+          "change": "Moved 1.8x.35m sign to white-passage p(72.5),4.5m ahead of cam05; glass/stainless rail at v1.94 starts s70 and continues to len-40.",
+          "remaining_guess_or_dependency": "Camera05 and fixed wall/floor/cove details retained."
+        },
+        {
+          "id": "OB-T1",
+          "priority": "detail",
+          "prior_status": "partly",
+          "status": "implemented",
+          "change": "Board stays at P(327,6.82),7x2.5m. Serif title45px (~0.25m cap),16x6 head-and-shoulder silhouettes in5skin tones,32 drawn faces/hair,210 multicolour hearts/stars/flowers/handwriting marks concentrated above/around heading.",
+          "remaining_guess_or_dependency": "Original procedural visitor marks, not copied handwriting. Korean wording retained under AGENTS text rule; source English heading remains documented."
+        },
+        {
+          "id": "OB-T2",
+          "priority": "detail",
+          "prior_status": "partly",
+          "status": "implemented",
+          "change": "Camera14=P(339.65,3.3)=(-535.9533,-6,-360.4501),yaw111.2,pitch8. Poster remains1.3x1.4m at P(339.65,6.82); two-line Korean serif title longer line spans0.85m within top27%. Bench/sculpture retained.",
+          "remaining_guess_or_dependency": "Korean heading retained; no v4 closeup or bench crop."
+        },
+        {
+          "id": "OB-T5",
+          "priority": "detail",
+          "prior_status": "partly",
+          "status": "implemented",
+          "change": "Pendant and suspension rod moved(s95,v20) ->(s88.5,v20). Front table/chairs cluster moved(86,16)->(89,17), with seated person moved consistently to(89,18.1).",
+          "remaining_guess_or_dependency": "Counts of furniture/people unchanged; positions frame-derived."
+        },
+        {
+          "id": "OB-T6",
+          "priority": "detail",
+          "prior_status": "partly",
+          "status": "implemented",
+          "change": "Front at v6.91 split into s56..60.5 dark speckled #6f6f6c pier carrying existing signs and s60.5..80 #cfc6b8 stone panels with1.2x.6m joints. Removed multiplying beige tint by grey granite only on this face.",
+          "remaining_guess_or_dependency": "Original dark/light boundary inferred at s60.5; exit pictogram preserved."
+        },
+        {
+          "id": "NEW-1",
+          "priority": "layout",
+          "prior_status": "new_issue",
+          "status": "implemented",
+          "change": "Enclosed G2 plaza y=-6..-2.2: north z=-72, west x=-345 with connector gap z=-64.036..-51.3101, east x=-310 to z=-60.7304 with return to(-306.315,-58.197). South z=-43 wraps lift-front pocket x=-328.9458..-322.9458,z=-43..-41.2864. North connector return joins(-349.9459,-61.1588). Open G2 doorway/connector/lift approach retained.",
+          "remaining_guess_or_dependency": "No new screenshot. Continuous walls reviewed geometrically and both lift levels path-tested."
+        },
+        {
+          "id": "NEW-2",
+          "priority": "design",
+          "prior_status": "new_issue",
+          "status": "implemented",
+          "change": "Heavy salmon/blue ducts v4.6/5.4 end at s278, clipping crossing chunk exactly. Beyond278 only0.05m grey conduit v4.6 and0.12m blue pipe above columns v-4.2; lights/beams/hangers retained.",
+          "remaining_guess_or_dependency": "Thin conduit positions inferred from F9_13 and wvU_67."
+        },
+        {
+          "id": "NEW-3",
+          "priority": "camera",
+          "prior_status": "new_issue",
+          "status": "implemented",
+          "change": "Camera18=(-451.15,-6,-160.97),yaw291.2,pitch0; advances past foreground pedestrians without deleting them.",
+          "remaining_guess_or_dependency": "Reviewer-tested pose; physics checked, new render pending."
+        },
+        {
+          "id": "NEW-4",
+          "priority": "camera",
+          "prior_status": "new_issue",
+          "status": "implemented",
+          "change": "Camera21=(-403.92,-6,-39.85),yaw291.2,pitch0; avoids desk-mural column without deleting column.",
+          "remaining_guess_or_dependency": "Reviewer-tested pose; physics checked, new render pending."
+        }
+      ],
+      "already_fixed_preserved": [
+        "OB-L1",
+        "OB-L2",
+        "OB-C1",
+        "OB-D1",
+        "OB-D3",
+        "OB-D4",
+        "OB-D6",
+        "OB-T3",
+        "OB-T4",
+        "OB-T7"
+      ],
+      "skipped_due_to_frame_contradiction": [],
+      "coordinate_legend": "World positions x,y,z; y=floor for cameras. P(s,v) main gallery A=(-410,-45),B=(-540,-380). p(s,v) park passage a=(-513.03,-465.14),b=(-565.03,-596.26); len=distance(a,b).",
+      "world_anchors_xz": {
+        "pendant": [
+          -460.6624,
+          -120.27
+        ],
+        "front_table": [
+          -458.0465,
+          -121.8215
+        ],
+        "white_passage_sign": [
+          -539.7572,
+          -532.5337
+        ],
+        "near_road_deck_center": [
+          -566.8733,
+          -600.9078
+        ],
+        "upper_road_deck_center": [
+          -570.9284,
+          -611.1331
+        ],
+        "vertical_park_sign": [
+          -566.1274,
+          -589.3702
+        ]
+      },
+      "validation": {
+        "smoke_requested": "node tests/smoke.mjs onebailey hangang gotomall jamwon_hangang: OK (final code).",
+        "full_walk": {
+          "command": "node tests/walk.mjs",
+          "ok": 695,
+          "blocked": 4,
+          "failures": [
+            {
+              "place": "centralcity",
+              "elevator": "스위트 파크 동측 엘리베이터",
+              "floor": "B1",
+              "cells": 8
+            },
+            {
+              "place": "centralcity",
+              "elevator": "하우스 오브 신세계 엘리베이터",
+              "floor": "B1",
+              "cells": 33
+            },
+            {
+              "place": "centralcity",
+              "elevator": "하우스 오브 신세계 엘리베이터",
+              "floor": "1F",
+              "cells": 28
+            },
+            {
+              "place": "centralcity",
+              "elevator": "하우스 오브 신세계 엘리베이터",
+              "floor": "1M",
+              "cells": 3
+            }
+          ],
+          "routes": "All 사용자 루트 and1F 동선 route legs passed. No onebailey/hangang blocker.",
+          "scope": "Remaining elevator failures are in concurrently edited centralcity.js, explicitly outside this job. No engine/neighbour files modified.",
+          "earlier_runs": [
+            "718ok1blocked J4 (subsequently resolved by concurrent edits)",
+            "693ok6blocked incl2shinsegae10F elevator failures (subsequently resolved); current4centralcity failures remain."
+          ],
+          "read_only_handoff": {
+            "sweet_park_east_B1": {
+              "xyz": [
+                -125.4114,
+                -6,
+                27.992
+              ],
+              "source": "js/places/centralcity.js:1740-1755; panels1748"
+            },
+            "house_of_shinsegae": {
+              "xz": [
+                -64.7066,
+                97.2809
+              ],
+              "floors_y": [
+                -6,
+                0,
+                3.6
+              ],
+              "source": "js/places/centralcity.js:2661",
+              "observation": "At audit time a 1M room wall built by hosUpperCell2623/2651 was0.101m from lift center; concurrent edits ongoing."
+            }
+          }
+        },
+        "independent_all_world_physics": "All15modules+city+all detail:23cameras exact floor y, capsule push0, minimum headroom2.75m. G2→plaza,plaza→main,liftB1→plaza,lift1F→upper landing BFS pass.",
+        "screenshots": "tests/shot.mjs not run per user; no new image or render validation claimed.",
+        "focused_walk_requested_modules": {
+          "command": "node tests/walk.mjs onebailey hangang gotomall jamwon_hangang",
+          "ok": 117,
+          "blocked": 0
+        }
+      },
+      "precedence": "round19 camera/geometry/validation values supersede conflicting older round10/13/15/17 history."
     }
   },
   "walk_evidence_round13": {

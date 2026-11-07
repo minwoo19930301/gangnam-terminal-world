@@ -782,14 +782,15 @@
         "x": -830.43,
         "y": 0,
         "z": -675.73,
-        "yawDeg": 27,
+        "yawDeg": 42,
         "pitchDeg": 0,
         "eyeY": 1.62,
-        "coordinate_status": "round17 프레임 검수용 바닥 y. 실측 GPS 아님. 실제 지원 바닥과 최종 대조하며 렌더 미검증.",
+        "coordinate_status": "round19 검수 카메라. y는 실제 kit/physics로 확인한 바닥 높이. 실측 GPS가 아니며 새 모델의 렌더는 미검증.",
         "round13_walk": true,
         "review_camera": "hangang_00",
-        "render_url": "http://127.0.0.1:8765/?places=onebailey,hangang,gotomall&city=1&pos=-830.43,0,-675.73&yaw=27&pitch=0",
-        "render_verified": false
+        "render_url": "http://127.0.0.1:8765/?places=onebailey,hangang,gotomall&city=1&pos=-830.43,0,-675.73&yaw=42&pitch=0",
+        "render_verified": false,
+        "note": "round19 HG-L3: 기존 OSM 도교와 분기접속 보존. 검증자 v_hg00left에서 확인한 yaw42 대안을 사용. 가빛 상부35% 크라운은 별도 수정."
       },
       {
         "spot": "가빛→솔빛 도교 · 황갈색 격자 돔",
@@ -797,17 +798,17 @@
         "photos": [
           "refs/walk/s8_onebailey_banpo/hTkViN9S1vg_1500.jpg"
         ],
-        "x": -885.4,
+        "x": -880.2,
         "y": 0,
-        "z": -795,
-        "yawDeg": 8,
-        "pitchDeg": 4,
+        "z": -779.2,
+        "yawDeg": 356.3827,
+        "pitchDeg": 0,
         "eyeY": 1.62,
-        "coordinate_status": "round17 프레임 검수용 바닥 y. 실측 GPS 아님. 실제 지원 바닥과 최종 대조하며 렌더 미검증.",
+        "coordinate_status": "round19 검수 카메라. y는 실제 kit/physics로 확인한 바닥 높이. 실측 GPS가 아니며 새 모델의 렌더는 미검증.",
         "round13_walk": true,
-        "note": "round 15: 도교 방향과 OSM 솔빛 위치 유지. 원본은 솔빛이며 채빛이 아님. 낮은 원통 외피를 둥근 씨앗형 브론즈 외피로 보정.",
+        "note": "round19 HG-L4: 도교 남단으로 후퇴. 섬쪽 끝 (-878,-814)을 보는 yaw356.38. 솔빛 OSM 실내와 외피 규모 보존; 새 도교 끝에서 기존 남측 드럼 출입구로 연결.",
         "review_camera": "hangang_01",
-        "render_url": "http://127.0.0.1:8765/?places=onebailey,hangang,gotomall&city=1&pos=-885.4,0,-795&yaw=8&pitch=4",
+        "render_url": "http://127.0.0.1:8765/?places=onebailey,hangang,gotomall&city=1&pos=-880.2,0,-779.2&yaw=356.3827&pitch=0",
         "render_verified": false
       },
       {
@@ -816,17 +817,17 @@
         "photos": [
           "refs/walk/s8_onebailey_banpo/F9MdeqY0Rro_21.jpg"
         ],
-        "x": -825.5,
+        "x": -833.5,
         "y": 0.09,
-        "z": -668.0,
-        "yawDeg": 49,
+        "z": -655.5,
+        "yawDeg": 38,
         "pitchDeg": 2,
         "eyeY": 1.71,
-        "coordinate_status": "round17 프레임 검수용 바닥 y. 실측 GPS 아님. 실제 지원 바닥과 최종 대조하며 렌더 미검증.",
+        "coordinate_status": "round19 검수 카메라. y는 실제 kit/physics로 확인한 바닥 높이. 실측 GPS가 아니며 새 모델의 렌더는 미검증.",
         "round13_walk": true,
-        "note": "round 15: 도교 위에서 강변 접속부로 후퇴. 원본 오른쪽 세로 배너와 왼쪽 계류장을 함께 프레이밍.",
+        "note": "round19 HG-C3: 검증자 v_hg02A의 위치를 확장한 황토 포장에 수용. yaw38은 가빛을 오른쪽으로 옮기고 케이블 지주를 오른쪽으로 밀어내는 기하학적 추정. 사진 세로화각과 엔진 가로화각이 달라 최종 프레이밍 재렌더 필수.",
         "review_camera": "hangang_02",
-        "render_url": "http://127.0.0.1:8765/?places=onebailey,hangang,gotomall&city=1&pos=-825.5,0.09,-668.0&yaw=49&pitch=2",
+        "render_url": "http://127.0.0.1:8765/?places=onebailey,hangang,gotomall&city=1&pos=-833.5,0.09,-655.5&yaw=38&pitch=2",
         "render_verified": false
       },
       {
@@ -854,17 +855,18 @@
         "photos": [
           "refs/walk/s8_onebailey_banpo/hTkViN9S1vg_560.jpg"
         ],
-        "x": -619.6675,
+        "x": -621.7969186133571,
         "y": 0.115,
-        "z": -743.244,
+        "z": -748.8534325237187,
         "yawDeg": 21,
         "pitchDeg": 0,
         "eyeY": 1.735,
-        "coordinate_status": "round17 프레임 검수용 바닥 y. 실측 GPS 아님. 실제 지원 바닥과 최종 대조하며 렌더 미검증.",
+        "coordinate_status": "round19 검수 카메라. y는 실제 kit/physics로 확인한 바닥 높이. 실측 GPS가 아니며 새 모델의 렌더는 미검증.",
         "round13_walk": true,
         "review_camera": "hangang_04",
-        "render_url": "http://127.0.0.1:8765/?places=onebailey,hangang,gotomall&city=1&pos=-619.6675,0.115,-743.244&yaw=21&pitch=0",
-        "render_verified": false
+        "render_url": "http://127.0.0.1:8765/?places=onebailey,hangang,gotomall&city=1&pos=-621.7969186133571,0.115,-748.8534325237187&yaw=21&pitch=0",
+        "render_verified": false,
+        "note": "round19 HG-L2: lowerAt(106,6.5), 우측 s119 교각 앞13m. 요청 근사y=.1 대신 실제 붉은 도색 바닥 support=.115를 기록."
       },
       {
         "spot": "잠수교 · 물결 난간과 남쪽 조망",
@@ -890,17 +892,17 @@
         "photos": [
           "refs/walk/s8_onebailey_banpo/hTkViN9S1vg_1050.jpg"
         ],
-        "x": -747.8222955035252,
+        "x": -745.9,
         "y": 1.6,
-        "z": -1036.8304231331238,
+        "z": -1037.9,
         "yawDeg": 120,
-        "pitchDeg": -2,
+        "pitchDeg": -4,
         "eyeY": 3.22,
-        "coordinate_status": "round17 프레임 검수용 바닥 y. 실측 GPS 아님. 실제 지원 바닥과 최종 대조하며 렌더 미검증.",
+        "coordinate_status": "round19 검수 카메라. y는 실제 kit/physics로 확인한 바닥 높이. 실측 GPS가 아니며 새 모델의 렌더는 미검증.",
         "round13_walk": true,
-        "note": "round 15: 기본 2025 영상 장면은 계획 전망쉼터가 없는 물결 난간. 기존 2027 계획 형상은 proposal=1에서 보존.",
+        "note": "round19 HG-D1: 검증자 hg06fix의 확인된 시점. 난간이 하단40%를 차지. 우측 끝 교각을 피하는 미검증 추가이동은 하지 않음.",
         "review_camera": "hangang_06",
-        "render_url": "http://127.0.0.1:8765/?places=onebailey,hangang,gotomall&city=1&pos=-747.8222955035252,1.6,-1036.8304231331238&yaw=120&pitch=-2",
+        "render_url": "http://127.0.0.1:8765/?places=onebailey,hangang,gotomall&city=1&pos=-745.9,1.6,-1037.9&yaw=120&pitch=-4",
         "render_verified": false
       },
       {
@@ -954,12 +956,12 @@
           "refs/walk/s8_onebailey_banpo/MQ3DaFYo2R8_20.jpg"
         ],
         "x": -631.5407,
-        "y": 0.135,
+        "y": 0.125,
         "z": -738.7367,
         "yawDeg": 21,
         "pitchDeg": 0,
-        "eyeY": 1.755,
-        "coordinate_status": "round17 프레임 검수용 바닥 y. 실측 GPS 아님. 실제 지원 바닥과 최종 대조하며 렌더 미검증.",
+        "eyeY": 1.745,
+        "coordinate_status": "round19 검수 카메라. y는 실제 kit/physics로 확인한 바닥 높이. 실측 GPS가 아니며 새 모델의 렌더는 미검증.",
         "round13_walk": true,
         "query": "festival=1",
         "render_requirements": {
@@ -970,8 +972,9 @@
           "engine_handoff": "tests/shot.mjs/sheet generator가 모든 trace.query를 전달해야 함. 허용 범위 밖이라 수정하지 않음."
         },
         "review_camera": "hangang_09",
-        "render_url": "http://127.0.0.1:8765/?places=onebailey,hangang,gotomall&city=1&pos=-631.5407,0.135,-738.7367&yaw=21&pitch=0&festival=1",
-        "render_verified": false
+        "render_url": "http://127.0.0.1:8765/?places=onebailey,hangang,gotomall&city=1&pos=-631.5407,0.125,-738.7367&yaw=21&pitch=0&festival=1",
+        "render_verified": false,
+        "note": "round19 HG-L2: 광장쪽부터 해치경계 off-8.1, 적갈색 차로 off-6.5, 초록 자전거차로 off-4.2. 첫 자전거 문양 s104. 카메라 실제 도색 바닥 y=.125."
       },
       {
         "spot": "축제 · 횡단보도와 노란 볼라드",
@@ -1005,13 +1008,13 @@
         "photos": [
           "refs/walk/s8_onebailey_banpo/MQ3DaFYo2R8_900.jpg"
         ],
-        "x": -709.409,
+        "x": -714.79,
         "y": 1.6,
-        "z": -955.1808,
+        "z": -969.16,
         "yawDeg": 21,
         "pitchDeg": 0,
         "eyeY": 3.22,
-        "coordinate_status": "round17 프레임 검수용 바닥 y. 실측 GPS 아님. 실제 지원 바닥과 최종 대조하며 렌더 미검증.",
+        "coordinate_status": "round19 검수 카메라. y는 실제 kit/physics로 확인한 바닥 높이. 실측 GPS가 아니며 새 모델의 렌더는 미검증.",
         "round13_walk": true,
         "query": "festival=1",
         "render_requirements": {
@@ -1022,8 +1025,9 @@
           "engine_handoff": "tests/shot.mjs/sheet generator가 모든 trace.query를 전달해야 함. 허용 범위 밖이라 수정하지 않음."
         },
         "review_camera": "hangang_11",
-        "render_url": "http://127.0.0.1:8765/?places=onebailey,hangang,gotomall&city=1&pos=-709.409,1.6,-955.1808&yaw=21&pitch=0&festival=1",
-        "render_verified": false
+        "render_url": "http://127.0.0.1:8765/?places=onebailey,hangang,gotomall&city=1&pos=-714.79,1.6,-969.16&yaw=21&pitch=0&festival=1",
+        "render_verified": false,
+        "note": "round19 HG-T1: 검증자 hg11fwd, s345 부근에서 s357 교각의 23을 본다. 도장 번호 위치 유지."
       },
       {
         "spot": "축제 · 푸드트럭과 빈백",
@@ -1031,13 +1035,13 @@
         "photos": [
           "refs/walk/s8_onebailey_banpo/MQ3DaFYo2R8_1100.jpg"
         ],
-        "x": -725.5136,
+        "x": -737.73,
         "y": 1.6,
-        "z": -1002.5584,
+        "z": -1034.29,
         "yawDeg": 21,
         "pitchDeg": 0,
         "eyeY": 3.22,
-        "coordinate_status": "round17 프레임 검수용 바닥 y. 실측 GPS 아님. 실제 지원 바닥과 최종 대조하며 렌더 미검증.",
+        "coordinate_status": "round19 검수 카메라. y는 실제 kit/physics로 확인한 바닥 높이. 실측 GPS가 아니며 새 모델의 렌더는 미검증.",
         "round13_walk": true,
         "query": "festival=1",
         "render_requirements": {
@@ -1047,9 +1051,9 @@
           "url_query_required": true,
           "engine_handoff": "tests/shot.mjs/sheet generator가 모든 trace.query를 전달해야 함. 허용 범위 밖이라 수정하지 않음."
         },
-        "note": "round 15: 푸드트럭이 왼쪽, 휴식 매트가 오른쪽인 원본과 맞게 북향으로 수정. 이전 남향은 좌우 관계를 뒤집었음.",
+        "note": "round19 HG-T1: 검증자 v_hg12s414, s414 부근에서 s425 교각의16을 본다. 인접 교각으로 번호를 옮기지 않음.",
         "review_camera": "hangang_12",
-        "render_url": "http://127.0.0.1:8765/?places=onebailey,hangang,gotomall&city=1&pos=-725.5136,1.6,-1002.5584&yaw=21&pitch=0&festival=1",
+        "render_url": "http://127.0.0.1:8765/?places=onebailey,hangang,gotomall&city=1&pos=-737.73,1.6,-1034.29&yaw=21&pitch=0&festival=1",
         "render_verified": false
       },
       {
@@ -2953,6 +2957,181 @@
         "screenshots": "tests/shot.mjs 사용자 제한으로 미실행. 모든 trace.render_verified=false; 새 렌더 시각확인 필요."
       },
       "precedence": "round17 변경/trace가 아래 과거 round10/13/15 기록과 충돌하면 round17을 우선. 옛 bankDeckY=3.6 기록은 이력."
+    },
+    "walk_round19": {
+      "evidence": [
+        ".codex-jobs/evidence/check_r17.json#hangang",
+        ".codex-jobs/evidence/review_walk17.json#hangang"
+      ],
+      "original_frames_opened": [
+        "hTkViN9S1vg_1340.jpg",
+        "hTkViN9S1vg_1500.jpg",
+        "F9MdeqY0Rro_21.jpg",
+        "hTkViN9S1vg_1900.jpg",
+        "hTkViN9S1vg_560.jpg",
+        "hTkViN9S1vg_1050.jpg",
+        "MQ3DaFYo2R8_20.jpg",
+        "MQ3DaFYo2R8_2320.jpg",
+        "MQ3DaFYo2R8_900.jpg",
+        "MQ3DaFYo2R8_1100.jpg"
+      ],
+      "reviewer_renders_opened": [
+        "v_hg02A.png",
+        "v_hg02y62.png",
+        "hg06fix.png",
+        "hg08n.png",
+        "v_hg01y358.png",
+        "v_hg00left.png"
+      ],
+      "items": [
+        {
+          "id": "HG-D1",
+          "status": "implemented_render_pending",
+          "change": "회귀한 cam06을 (-745.9,1.6,-1037.9),yaw120,pitch-4로 복원. hg06fix 직접 열람. 고쳐진 난간 형상은 유지."
+        },
+        {
+          "id": "HG-L1",
+          "status": "implemented_render_pending",
+          "change": "노즐 s24..594 유지. 물줄기 후반(u>.6) 반폭을 최대.15m로 확대. 미스트 alpha200, opacity.7, 상단 y9/off±24 → 하단 y-1.35/off±30의 착수영역을 덮음. 은행/광장쪽 분수 없음."
+        },
+        {
+          "id": "HG-L2",
+          "status": "implemented_render_pending",
+          "change": "남단 s85/119 문형교각을 가로3.5×세로2.5m #c9c5bc로 확대. cam04 lowerAt(106,6.5), 실제 바닥y.115. 광장쪽 off-8.1 해치경계→off-6.5 적갈색2.8m→off-4.2 초록1.6m. 첫 문양 s104. cam09 바닥y.125로 정정."
+        },
+        {
+          "id": "HG-L3",
+          "status": "implemented_render_pending",
+          "change": "가빛 유리 어깨 y17.55부터27까지 상부35%를 곡면으로 만들고 최상단 평면반경60%. 동쪽 흰 아치도 내부쪽으로 휘게 수정. OSM850389028 도교/서측 분기 접속의 실제 좌표는 보존하고 reviewer-tested cam00 yaw42 대안 적용. 기존 상층 슬래브·옥상테라스·가구 보존.",
+          "choice_reason": "원본 프레임만으로 도교의 전체 실측 배치를 재지정하지 않음. remaining_fix가 허용한 yaw42 대안을 사용. 상층 테라스가 크라운 밖으로 노출되는 정도는 렌더 확인 필요."
+        },
+        {
+          "id": "HG-L4",
+          "status": "implemented_render_pending",
+          "change": "솔빛 도교 (-880.2,-779.2)→(-878,-814), 폭3m/y0, 양측체인. 섬쪽 끝→(-890,-813.2)→(-890,-819)에서 기존 드럼 입구 연결. 회색 측벽 x-912,z-835,h18. cam01 남단(-880.2,0,-779.2),yaw356.38,pitch0. OSM 실내와 35m외피는 유지. 새 도교 좌측 끝1.8m는 진입용 난간 개구부, 드럼 뒤 원래 내부 유리벽에도 남쪽 출입구를 추가하여 실제 보행 가능."
+        },
+        {
+          "id": "HG-L5",
+          "status": "implemented_render_pending",
+          "change": "새 경사면 축 (-705,-752)→(-699,-754), 폭17m, y.065→1.865. 중앙(-702,-753). 텍스처는 비정형 Voronoi 석재 #b8aa95와 #6e675c 줄눈으로 변경. 기존 필로티/겨울나무 유지."
+        },
+        {
+          "id": "HG-C3",
+          "status": "partly_render_required",
+          "change": "황토 포장 남서쪽을(-839,-655),(-832,-651)까지 확장하고 cam02 (-833.5,.09,-655.5),yaw38로 이동. 물가 난간 옆 흰 세로배너4개 .8×2.4m/4m기둥. 기존 도크 서쪽 x-855..-866.4,z-681..-698.85에 흰 오리배3×8열(약2.0×1.4×1.4m).",
+          "uncertainty": "v_hg02A 위치의 난간 방향은 확인. yaw38 최종 구도는 기하학적 후보이며 tests/shot 금지로 직접 검증 못함. 원본 세로화각에서의 C조각·섬·난간 관계를 최종 시트로 확인해야 함."
+        },
+        {
+          "id": "HG-D4",
+          "status": "implemented_render_pending_engine_sky_open",
+          "change": "가빛/채빛 중 cam08(-671,-808)을 향하는 유리면에 y3,8,13 높이의 opacity.6 #ffcf75 발광층. 솔빛 동쪽 격자뒤 창을 y14.8까지 남기고 야간 opacity.6. 각 섬의 동쪽 수면에서 cam08 방향으로 폭1.5..3m/길이30..60m 반사띠4개씩. 교량 하부 기존 따뜻한 조명 유지.",
+          "external": "엔진의 하늘은 #708fbe/#5f6d88 dusk 조정 필요. 모듈에서 전역 하늘을 변경하지 않음."
+        },
+        {
+          "id": "HG-T1",
+          "status": "implemented_render_pending",
+          "change": "번호23(s357),16(s425) 도장은 유지. cam11(-714.79,1.6,-969.16), cam12(-737.73,1.6,-1034.29),yaw21로 검증자 시점 적용."
+        },
+        {
+          "id": "HG-C1",
+          "status": "external_handoff_unchanged",
+          "reason": "tests/shot.mjs와 시트생성기가 trace.query를 누락. 수정 허용 파일 밖. cam08 night=1 및 cam09..12 festival=1과 직접 render_url을 보존. module은 두 query를 정상 수용하며 임의로 축제/야간을 기본 장면에 강제하지 않음."
+        },
+        {
+          "id": "HG-T2",
+          "status": "external_handoff_unchanged",
+          "reason": "city.js 소유 강물의 타일 이음. 수정 허용 파일 밖. 고쳐진 능선은 유지."
+        }
+      ],
+      "fixed_items_preserved": [
+        "HG-C2",
+        "HG-D2",
+        "HG-D3",
+        "HG-D5"
+      ],
+      "verification": {
+        "smoke": "node tests/smoke.mjs hangang: OK",
+        "camera_physics": "실제 kit/physics + onebailey/gotomall/generic city + 모든 detail에서 13개 프레임 카메라 확인. default와festival=1 모두 캡슐 밀림0, 머리공간1.75m 간섭0. cam04 support.115,cam09 support.125를 trace에 반영.",
+        "screenshots": "사용자 지시로 tests/shot.mjs 미실행. 새 모델의 시각검증은 미수행; 원본과 검증자 기존 PNG만 직접 열람.",
+        "focused_walk": "node tests/walk.mjs hangang --verbose: 21 ok, 0 blocked; 사용자 루트7 양쪽 구간 통과.",
+        "solbit_access": "수정 도교 남단(-880.2,-779.2)→(-878,-814)→(-890,-813.2)→(-890,-819)→실내(-888,-823) 292개 표본. default/festival=1 모두 바닥오류0, capsule밀림0. 끝 난간 개구부 및 드럼 뒤 내부 유리벽 남쪽 출입구를 열어 연결.",
+        "camera_physics_final": "최종 trace13개를 hangang+generic city에서 default/festival=1로 재검사. 바닥y 오차<1e-5, capsule밀림0, 머리공간1.75m 간섭0.",
+        "combined_smoke": "부모 에이전트 node tests/smoke.mjs onebailey hangang gotomall jamwon_hangang: OK.",
+        "smoke_requested": "node tests/smoke.mjs onebailey hangang gotomall jamwon_hangang: OK (final code).",
+        "focused_walk_requested_modules": {
+          "command": "node tests/walk.mjs onebailey hangang gotomall jamwon_hangang",
+          "ok": 117,
+          "blocked": 0
+        },
+        "full_walk": {
+          "command": "node tests/walk.mjs",
+          "ok": 695,
+          "blocked": 4,
+          "failures": [
+            {
+              "place": "centralcity",
+              "elevator": "스위트 파크 동측 엘리베이터",
+              "floor": "B1",
+              "cells": 8
+            },
+            {
+              "place": "centralcity",
+              "elevator": "하우스 오브 신세계 엘리베이터",
+              "floor": "B1",
+              "cells": 33
+            },
+            {
+              "place": "centralcity",
+              "elevator": "하우스 오브 신세계 엘리베이터",
+              "floor": "1F",
+              "cells": 28
+            },
+            {
+              "place": "centralcity",
+              "elevator": "하우스 오브 신세계 엘리베이터",
+              "floor": "1M",
+              "cells": 3
+            }
+          ],
+          "routes": "All 사용자 루트 and1F 동선 route legs passed. No onebailey/hangang blocker.",
+          "scope": "Remaining elevator failures are in concurrently edited centralcity.js, explicitly outside this job. No engine/neighbour files modified.",
+          "earlier_runs": [
+            "718ok1blocked J4 (subsequently resolved by concurrent edits)",
+            "693ok6blocked incl2shinsegae10F elevator failures (subsequently resolved); current4centralcity failures remain."
+          ],
+          "read_only_handoff": {
+            "sweet_park_east_B1": {
+              "xyz": [
+                -125.4114,
+                -6,
+                27.992
+              ],
+              "source": "js/places/centralcity.js:1740-1755; panels1748"
+            },
+            "house_of_shinsegae": {
+              "xz": [
+                -64.7066,
+                97.2809
+              ],
+              "floors_y": [
+                -6,
+                0,
+                3.6
+              ],
+              "source": "js/places/centralcity.js:2661",
+              "observation": "At audit time a 1M room wall built by hosUpperCell2623/2651 was0.101m from lift center; concurrent edits ongoing."
+            }
+          }
+        }
+      },
+      "guesses": [
+        "가빛 크라운 곡률·테라스 노출 및 솔빛 측벽/도교 끝의 정확한 좌표는 재구성",
+        "HG-C3 yaw38은 재렌더가 필요한 후보. 원본 프레임과 가로104도 렌더의 화각 차이 존재",
+        "전시/축제 소품과 오리배 계류열은 사진상 관계를 따른 추정. 현재 운영상태 주장 아님",
+        "분수의 미스트 투명도, 발광강도와 수면반사 길이는 시각적 추정, 실측 광학값 아님",
+        "가빛 y18 바닥에서는 크라운 반경0.9995배, y23테라스에서는0.9268배. 기존 슬래브를 삭제하지 않아 가장자리 약1~2.5m 노출 가능; 외부 테라스와 새 크라운의 최종 시각관계는 검수 필요."
+      ],
+      "precedence": "round19 trace와 변경 기록은 충돌하는 과거 round10/13/15/17 값보다 우선."
     }
   },
   "parking": "반포한강공원 2주차장, 세빛섬 내 음식점 이용 시 3시간 무료(2024 기사)",
