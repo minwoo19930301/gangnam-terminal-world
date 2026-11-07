@@ -107,7 +107,12 @@
       "title": "엔터식스 강남점 공식 오시는길",
       "accessed": "2026-11-07",
       "evidence": "round13 검색 색인 본문으로 서울특별시 서초구 신반포로176 고속터미널역 B1, 2번·7번 출구 및 고투몰 G7 접근 확인. 공식 모바일·데스크톱 원문 직접 열기는 HTTP 502로 실패. 개별 점포 좌표·면적·전면은 이 결과에 없음.",
-      "evidence_status": "official_search_excerpt; direct_fetch_failed"
+      "evidence_status": "official_search_excerpt; direct_fetch_failed",
+      "round20_recheck": {
+        "evidence": "B1 및 지하철 2·7번 출구/고투몰 G7 접근을 공식 검색 색인에서 확인. 본문 직접 open은 502; 통로 실측 선형·거리의 근거가 아님.",
+        "round": 20,
+        "accessed": "2026-11-07"
+      }
     },
     {
       "url": "https://www.codil.or.kr/filebank/original/RK/OTKCRK230024/OTKCRK230024.pdf",
@@ -159,6 +164,74 @@
       "evidence": "사용자 제공 로컬 영상 프레임 refs/walk/s4_enter6_subway/ 및 walk_s4_enter6_subway.json. round13에서 영상 전체를 새로 재생하거나 원문 설명을 직접 재검증하지 않음.",
       "evidence_status": "supplied_walk_frames_and_log",
       "recorded_date_from_walk_log": "2026-02-05"
+    },
+    {
+      "path": "refs/user_walk/20261107/IMG_0107.jpg",
+      "title": "사용자 현장 사진 #73: 본관 B1 서측 지하철 연결문 앞",
+      "date": "2026-11-07",
+      "time": "2026-11-07T12:02:29+09:00",
+      "round": 20,
+      "private": true,
+      "evidence": "PRIMARY: 사용자 승인 places.json의 실내 pose 적용. manifest GPS는 실내 배치 근거로 직접 사용하지 않음. 사진은 비공개 참조로만 사용; 배포 폴더에 복사하거나 재질로 포함하지 않음."
+    },
+    {
+      "path": "refs/user_walk/20261107/IMG_0108.jpg",
+      "title": "사용자 현장 사진 #74: 3호선 대합실 ENTER6 입구",
+      "date": "2026-11-07",
+      "time": "2026-11-07T12:02:36+09:00",
+      "round": 20,
+      "private": true,
+      "evidence": "PRIMARY: 사용자 승인 places.json의 실내 pose 적용. manifest GPS는 실내 배치 근거로 직접 사용하지 않음. 사진은 비공개 참조로만 사용; 배포 폴더에 복사하거나 재질로 포함하지 않음."
+    },
+    {
+      "path": "refs/user_walk/20261107/IMG_0109.jpg",
+      "title": "사용자 현장 사진 #75: 3호선 대합실 '타는 곳' 안내",
+      "date": "2026-11-07",
+      "time": "2026-11-07T12:02:39+09:00",
+      "round": 20,
+      "private": true,
+      "evidence": "PRIMARY: 사용자 승인 places.json의 실내 pose 적용. manifest GPS는 실내 배치 근거로 직접 사용하지 않음. 사진은 비공개 참조로만 사용; 배포 폴더에 복사하거나 재질로 포함하지 않음."
+    },
+    {
+      "path": "refs/user_walk/20261107/IMG_0110.jpg",
+      "title": "사용자 현장 사진 #76: ENTER6 매장 앞",
+      "date": "2026-11-07",
+      "time": "2026-11-07T12:02:41+09:00",
+      "round": 20,
+      "private": true,
+      "evidence": "PRIMARY: 사용자 승인 places.json의 실내 pose 적용. manifest GPS는 실내 배치 근거로 직접 사용하지 않음. 사진은 비공개 참조로만 사용; 배포 폴더에 복사하거나 재질로 포함하지 않음."
+    },
+    {
+      "path": "refs/user_walk/20261107/IMG_0111.jpg",
+      "title": "사용자 현장 사진 #77: 3호선 대합실 육각 기둥",
+      "date": "2026-11-07",
+      "time": "2026-11-07T12:02:46+09:00",
+      "round": 20,
+      "private": true,
+      "evidence": "PRIMARY: 사용자 승인 places.json의 실내 pose 적용. manifest GPS는 실내 배치 근거로 직접 사용하지 않음. 사진은 비공개 참조로만 사용; 배포 폴더에 복사하거나 재질로 포함하지 않음."
+    },
+    {
+      "path": "refs/user_walk/20261107/IMG_0112.jpg",
+      "title": "사용자 현장 사진 #78: 터미널↔서울교통공사 경계 문",
+      "date": "2026-11-07",
+      "time": "2026-11-07T12:02:53+09:00",
+      "round": 20,
+      "private": true,
+      "evidence": "PRIMARY: 사용자 승인 places.json의 실내 pose 적용. manifest GPS는 실내 배치 근거로 직접 사용하지 않음. 사진은 비공개 참조로만 사용; 배포 폴더에 복사하거나 재질로 포함하지 않음."
+    },
+    {
+      "url": "https://store.enter6.co.kr/index.php/stores/68/brand-shops",
+      "title": "엔터식스 강남점 공식 B1 브랜드 안내",
+      "evidence": "공식 페이지 본문 열람: 케이스홀릭·아트박스·ABC마트·올리브영 등 입점 확인. 연결된 B1 지도 이미지는 502/접근 불가로 열람 못함; 지도 픽셀을 확인했다고 주장하지 않음.",
+      "round": 20,
+      "accessed": "2026-11-07"
+    },
+    {
+      "url": "https://store.enter6.co.kr/upload/B2B/enter6_web_brochure_ko.pdf",
+      "title": "엔터식스 공식 회사 브로슈어",
+      "evidence": "검색 색인에서 3호선 고속터미널 지하1층 대형상가 표기를 확인. PDF 원문 open은 timeout; 개별 매장 또는 연결통로 좌표 근거가 아님.",
+      "round": 20,
+      "accessed": "2026-11-07"
     }
   ],
   "building": {
@@ -356,8 +429,8 @@
     "round13: 현행3·9호선 표시 층 전체의 원문 공식 도면은 확보하지 못함. 공유월드 층·좌표는 유지하며물리 깊이와 구분."
   ],
   "modeling": {
-    "round": 19,
-    "scope": "round15: 비교 시트와 2025+ 원본 프레임을 재대조하고 카메라→배치→재질/안내→집기/군중 순서로 보정. 실제 B1 띠벽과 7호선 검정 안내판은 보존. W3/W9/J7 및 이웃 모듈 경계 유지. 새 상업 전면과 환승 홀 치수는 사진을 공유 좌표계에 맞춘 추정이며 측량값이 아니다.",
+    "round": 20,
+    "scope": "round20: 사용자 2026-11-07 사진 #73–78과 승인 places.json을 최우선으로 경부선 B1 서문 바로 서쪽 3호선/ENTER6 홀을 배치. 기존 상가의 상세 집기·식물 전면·키오스크·코퍼를 이동·보존하고 사진의 대리석·육각 금속 기둥·경계문 안내를 반영. 옛 유료 대합실의 계단·승강기·개찰구, W3/W9/J7과 famille 영역 출구는 유지. 촬영되지 않은 서쪽 이후 연결은 확정하지 않음.",
     "guesses": [
       "B1=-6, B2=-11, B3=-16, B4=-21m는 K.LEVELS/공유 월드 계약이며 실제 역의 실측 심도가 아니다. 특히 깊은 9호선을 B4=-21m에 맞췄다.",
       "환승통로 꺾임, 출구 계단 방향, 승강장 길이와 위치는 기존 OSM/공유 연결을 보존한 추정 배치다. 3호선 약 200m 및 3호선 10량·7호선 8량·9호선 6량 모델을 유지한다.",
@@ -1235,57 +1308,93 @@
         "single_output_name": "station_cam009.png"
       },
       {
-        "round": 13,
-        "frame": "w7cLZSedgT4_70",
-        "spot": "개찰구 밖 팔각 조명·LOVE N SHOW 전면",
+        "round": 20,
+        "frame": "user_walk_077",
+        "spot": "경부선 서문 홀: 이전한 팔각 코퍼와 육각 기둥",
         "photos": [
-          "refs/walk/s4_enter6_subway/w7cLZSedgT4_70.jpg"
+          "refs/user_walk/20261107/IMG_0111.jpg"
         ],
-        "x": -90,
+        "x": 23.3,
         "y": -6,
-        "z": -65,
-        "yawDeg": 0,
-        "pitchDeg": 7,
+        "z": 26.9,
+        "yawDeg": 168,
+        "pitchDeg": 18,
         "floor": "B1",
-        "view_id": "r13_w7cLZSedgT4_70",
-        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다.",
+        "view_id": "r20_station_10_uw077",
+        "note": "round20: 사용자 사진의 승인 위치·방향으로 이동. y=-6은 눈높이가 아닌 B1 바닥 높이. 사진 #77를 우선하며 옛 영상의 상가 위치는 폐기. station_10은 같은 위치에서 코퍼 확인을 위해 pitch 18°로 상향. 새 렌더는 운영자 확인 대기.",
         "validation": {
+          "rendered": false,
+          "status": "geometry_checked_operator_render_pending",
+          "scope": "round20 actual kit/physics, lazy detail built; independent ray visibility checks. No screenshot.",
           "standalone": {
             "support_y": -6,
             "capsule_push_m": 0
-          },
-          "integrated": {
-            "support_y": -6,
-            "capsule_push_m": 0
-          },
-          "rendered": false,
-          "scope": "round17 actual kit/physics, all lazy detail loaded; standalone and current full PLACES; support/capsule occupancy only"
+          }
         },
         "camera_id": "station_10",
-        "single_output_name": "station_cam010.png"
+        "single_output_name": "station_cam010.png",
+        "previous_pose_round20": {
+          "x": -90,
+          "y": -6,
+          "z": -65,
+          "yawDeg": 0,
+          "pitchDeg": 7,
+          "floor": "B1",
+          "validation": {
+            "standalone": {
+              "support_y": -6,
+              "capsule_push_m": 0
+            },
+            "integrated": {
+              "support_y": -6,
+              "capsule_push_m": 0
+            },
+            "rendered": false,
+            "scope": "round17 actual kit/physics, all lazy detail loaded; standalone and current full PLACES; support/capsule occupancy only"
+          },
+          "spot": "개찰구 밖 팔각 조명·LOVE N SHOW 전면",
+          "photos": [
+            "refs/walk/s4_enter6_subway/w7cLZSedgT4_70.jpg"
+          ],
+          "frame": "w7cLZSedgT4_70",
+          "view_id": "r13_w7cLZSedgT4_70",
+          "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다."
+        },
+        "superseded_video_reference_round20": {
+          "frame": "w7cLZSedgT4_70",
+          "photos": [
+            "refs/walk/s4_enter6_subway/w7cLZSedgT4_70.jpg"
+          ],
+          "status": "geometry_superseded_by_user_photos",
+          "reason": "기존 영상은 재료·집기 보존의 보조 참조. 옛 x=-104..-80,z=-82..-44 상가 위치는 사용자 #73–78의 승인 실내 pose로 대체."
+        },
+        "round20_camera": {
+          "source_photo_index": 77,
+          "source_pose": "refs/user_walk/20261107/places.json",
+          "reason": "잘못 배치되었던 상가/코퍼에서 이번에 이동한 실제 서문 홀로 trace 재지정.",
+          "rendered": false,
+          "y_convention": "B1 floor support height, not eye height"
+        }
       },
       {
-        "round": 13,
-        "frame": "w7cLZSedgT4_90",
-        "spot": "비유료 연결 로비·엔터식스 전면의 추정 배치",
+        "round": 20,
+        "frame": "user_walk_076",
+        "spot": "경부선 서문 홀: 이전한 ENTER6 의류·신발 전면",
         "photos": [
-          "refs/walk/s4_enter6_subway/w7cLZSedgT4_90.jpg"
+          "refs/user_walk/20261107/IMG_0110.jpg"
         ],
-        "x": -85.4,
+        "x": 25.9,
         "y": -6,
-        "z": -65.6,
-        "yawDeg": 0,
-        "pitchDeg": 2,
+        "z": 25.4,
+        "yawDeg": 95,
+        "pitchDeg": 0,
         "floor": "B1",
-        "view_id": "r13_w7cLZSedgT4_90",
-        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다. round15: LOVE N SHOW 정면에서 엔터식스 연결 보행 진입부의 중심 x=-85.4로 이동해 북쪽을 봄. round19: SALE 기둥이 왼쪽 가장자리에 보이는 검증자 v_c3sale 위치로 0.9m 후퇴. 기존 cam27은 비교용으로 유지. 고투몰 경계 개방은 이웃 소유라 미완료.",
+        "view_id": "r20_station_11_uw076",
+        "note": "round20: 사용자 사진의 승인 위치·방향으로 이동. y=-6은 눈높이가 아닌 B1 바닥 높이. 사진 #76를 우선하며 옛 영상의 상가 위치는 폐기. 새 렌더는 운영자 확인 대기.",
         "validation": {
           "rendered": false,
-          "scope": "round19 actual K+physics, full PLACES snapshot; support/capsule only",
-          "integrated": {
-            "support_y": -6,
-            "capsule_push_m": 0
-          },
+          "status": "geometry_checked_operator_render_pending",
+          "scope": "round20 actual kit/physics, lazy detail built; independent ray visibility checks. No screenshot.",
           "standalone": {
             "support_y": -6,
             "capsule_push_m": 0
@@ -1344,6 +1453,48 @@
           "raw_frame_opened": true,
           "rendered": false,
           "y_convention": "actual floor/conveyor support, not eye height"
+        },
+        "previous_pose_round20": {
+          "x": -85.4,
+          "y": -6,
+          "z": -65.6,
+          "yawDeg": 0,
+          "pitchDeg": 2,
+          "floor": "B1",
+          "validation": {
+            "rendered": false,
+            "scope": "round19 actual K+physics, full PLACES snapshot; support/capsule only",
+            "integrated": {
+              "support_y": -6,
+              "capsule_push_m": 0
+            },
+            "standalone": {
+              "support_y": -6,
+              "capsule_push_m": 0
+            }
+          },
+          "spot": "비유료 연결 로비·엔터식스 전면의 추정 배치",
+          "photos": [
+            "refs/walk/s4_enter6_subway/w7cLZSedgT4_90.jpg"
+          ],
+          "frame": "w7cLZSedgT4_90",
+          "view_id": "r13_w7cLZSedgT4_90",
+          "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다. round15: LOVE N SHOW 정면에서 엔터식스 연결 보행 진입부의 중심 x=-85.4로 이동해 북쪽을 봄. round19: SALE 기둥이 왼쪽 가장자리에 보이는 검증자 v_c3sale 위치로 0.9m 후퇴. 기존 cam27은 비교용으로 유지. 고투몰 경계 개방은 이웃 소유라 미완료."
+        },
+        "superseded_video_reference_round20": {
+          "frame": "w7cLZSedgT4_90",
+          "photos": [
+            "refs/walk/s4_enter6_subway/w7cLZSedgT4_90.jpg"
+          ],
+          "status": "geometry_superseded_by_user_photos",
+          "reason": "기존 영상은 재료·집기 보존의 보조 참조. 옛 x=-104..-80,z=-82..-44 상가 위치는 사용자 #73–78의 승인 실내 pose로 대체."
+        },
+        "round20_camera": {
+          "source_photo_index": 76,
+          "source_pose": "refs/user_walk/20261107/places.json",
+          "reason": "잘못 배치되었던 상가/코퍼에서 이번에 이동한 실제 서문 홀로 trace 재지정.",
+          "rendered": false,
+          "y_convention": "B1 floor support height, not eye height"
         }
       },
       {
@@ -2158,31 +2309,28 @@
         "single_output_name": "station_cam026.png"
       },
       {
-        "round": 13,
-        "frame": "w7cLZSedgT4_90",
-        "spot": "추가 검증: 엔터식스 전면의 열린 보행 진입부",
+        "round": 20,
+        "frame": "user_walk_074",
+        "spot": "경부선 서문 홀: ENTER6 안내판과 열린 진입부",
         "photos": [
-          "refs/walk/s4_enter6_subway/w7cLZSedgT4_90.jpg"
+          "refs/user_walk/20261107/IMG_0108.jpg"
         ],
-        "x": -85.4,
+        "x": 30.2,
         "y": -6,
-        "z": -68,
-        "yawDeg": 0,
+        "z": 22.7,
+        "yawDeg": 125,
         "pitchDeg": 0,
         "floor": "B1",
-        "view_id": "r13_w7cLZSedgT4_90_entry",
-        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다. _90의 자막은 연결 상업 구간의 근거이며 이 전면의 실제 위치·문 형태를 직접 보여 준 것으로 취급하지 않는다. round15: 매장 집기 안쪽·역방향 180도 시점을 제거하고 엔터식스 진입부 앞의 열린 바닥에서 북향으로 조정.",
+        "view_id": "r20_station_27_uw074",
+        "note": "round20: 사용자 사진의 승인 위치·방향으로 이동. y=-6은 눈높이가 아닌 B1 바닥 높이. 사진 #74를 우선하며 옛 영상의 상가 위치는 폐기. 새 렌더는 운영자 확인 대기.",
         "validation": {
+          "rendered": false,
+          "status": "geometry_checked_operator_render_pending",
+          "scope": "round20 actual kit/physics, lazy detail built; independent ray visibility checks. No screenshot.",
           "standalone": {
             "support_y": -6,
             "capsule_push_m": 0
-          },
-          "integrated": {
-            "support_y": -6,
-            "capsule_push_m": 0
-          },
-          "rendered": false,
-          "scope": "round17 actual kit/physics, all lazy detail loaded; standalone and current full PLACES; support/capsule occupancy only"
+          }
         },
         "previous_pose_round13": {
           "x": -85.5,
@@ -2210,7 +2358,242 @@
           "rendered": false
         },
         "camera_id": "station_27",
-        "single_output_name": "station_cam027.png"
+        "single_output_name": "station_cam027.png",
+        "previous_pose_round20": {
+          "x": -85.4,
+          "y": -6,
+          "z": -68,
+          "yawDeg": 0,
+          "pitchDeg": 0,
+          "floor": "B1",
+          "validation": {
+            "standalone": {
+              "support_y": -6,
+              "capsule_push_m": 0
+            },
+            "integrated": {
+              "support_y": -6,
+              "capsule_push_m": 0
+            },
+            "rendered": false,
+            "scope": "round17 actual kit/physics, all lazy detail loaded; standalone and current full PLACES; support/capsule occupancy only"
+          },
+          "spot": "추가 검증: 엔터식스 전면의 열린 보행 진입부",
+          "photos": [
+            "refs/walk/s4_enter6_subway/w7cLZSedgT4_90.jpg"
+          ],
+          "frame": "w7cLZSedgT4_90",
+          "view_id": "r13_w7cLZSedgT4_90_entry",
+          "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다. _90의 자막은 연결 상업 구간의 근거이며 이 전면의 실제 위치·문 형태를 직접 보여 준 것으로 취급하지 않는다. round15: 매장 집기 안쪽·역방향 180도 시점을 제거하고 엔터식스 진입부 앞의 열린 바닥에서 북향으로 조정."
+        },
+        "superseded_video_reference_round20": {
+          "frame": "w7cLZSedgT4_90",
+          "photos": [
+            "refs/walk/s4_enter6_subway/w7cLZSedgT4_90.jpg"
+          ],
+          "status": "geometry_superseded_by_user_photos",
+          "reason": "기존 영상은 재료·집기 보존의 보조 참조. 옛 x=-104..-80,z=-82..-44 상가 위치는 사용자 #73–78의 승인 실내 pose로 대체."
+        },
+        "round20_camera": {
+          "source_photo_index": 74,
+          "source_pose": "refs/user_walk/20261107/places.json",
+          "reason": "잘못 배치되었던 상가/코퍼에서 이번에 이동한 실제 서문 홀로 trace 재지정.",
+          "rendered": false,
+          "y_convention": "B1 floor support height, not eye height"
+        }
+      },
+      {
+        "round": 20,
+        "camera_id": "station_uw_073",
+        "view_id": "r20_uw_073",
+        "frame": "user_walk_073",
+        "photo_index": 73,
+        "spot": "본관 B1 서측 지하철 연결문 앞",
+        "photos": [
+          "refs/user_walk/20261107/IMG_0107.jpg"
+        ],
+        "x": 37.3,
+        "y": -6,
+        "z": 18.9,
+        "yawDeg": 115,
+        "pitchDeg": 0,
+        "floor": "B1",
+        "pose_module": "gyeongbu",
+        "source_pose": "refs/user_walk/20261107/places.json",
+        "paired_render": "shots/user_walk/uw_073.png",
+        "paired_sheet": "shots/user_walk/gyeongbu_12.png",
+        "single_output_name": "station_uw_073.png",
+        "note": "사용자 승인 실내 pose 그대로. y=-6은 B1 바닥 높이. #73은 경부선 쪽 문 밖이므로 station+gyeongbu 통합으로 확인. 기존 paired_render는 수정 전 비교이고 round20 새 렌더는 운영자 작업.",
+        "validation": {
+          "rendered": false,
+          "status": "geometry_checked_operator_render_pending",
+          "scope": "round20 actual kit/physics, lazy detail built; independent ray visibility checks. No screenshot.",
+          "required_modules": [
+            "station",
+            "gyeongbu"
+          ],
+          "note": "경부선 쪽 시점. 현재 이웃 서벽이 시야/통행을 차단하므로 개방 후 통합 렌더 필요."
+        }
+      },
+      {
+        "round": 20,
+        "camera_id": "station_uw_074",
+        "view_id": "r20_uw_074",
+        "frame": "user_walk_074",
+        "photo_index": 74,
+        "spot": "3호선 대합실 ENTER6 입구",
+        "photos": [
+          "refs/user_walk/20261107/IMG_0108.jpg"
+        ],
+        "x": 30.2,
+        "y": -6,
+        "z": 22.7,
+        "yawDeg": 125,
+        "pitchDeg": 0,
+        "floor": "B1",
+        "pose_module": "station",
+        "source_pose": "refs/user_walk/20261107/places.json",
+        "paired_render": "shots/user_walk/uw_074.png",
+        "paired_sheet": "shots/user_walk/station_1.png",
+        "single_output_name": "station_uw_074.png",
+        "note": "사용자 승인 실내 pose 그대로. y=-6은 B1 바닥 높이. #73은 경부선 쪽 문 밖이므로 station+gyeongbu 통합으로 확인. 기존 paired_render는 수정 전 비교이고 round20 새 렌더는 운영자 작업.",
+        "validation": {
+          "rendered": false,
+          "status": "geometry_checked_operator_render_pending",
+          "scope": "round20 actual kit/physics, lazy detail built; independent ray visibility checks. No screenshot.",
+          "standalone": {
+            "support_y": -6,
+            "capsule_push_m": 0
+          }
+        }
+      },
+      {
+        "round": 20,
+        "camera_id": "station_uw_075",
+        "view_id": "r20_uw_075",
+        "frame": "user_walk_075",
+        "photo_index": 75,
+        "spot": "3호선 대합실 '타는 곳' 안내",
+        "photos": [
+          "refs/user_walk/20261107/IMG_0109.jpg"
+        ],
+        "x": 27.6,
+        "y": -6,
+        "z": 24.2,
+        "yawDeg": 137,
+        "pitchDeg": 0,
+        "floor": "B1",
+        "pose_module": "station",
+        "source_pose": "refs/user_walk/20261107/places.json",
+        "paired_render": "shots/user_walk/uw_075.png",
+        "paired_sheet": "shots/user_walk/station_1.png",
+        "single_output_name": "station_uw_075.png",
+        "note": "사용자 승인 실내 pose 그대로. y=-6은 B1 바닥 높이. #73은 경부선 쪽 문 밖이므로 station+gyeongbu 통합으로 확인. 기존 paired_render는 수정 전 비교이고 round20 새 렌더는 운영자 작업.",
+        "validation": {
+          "rendered": false,
+          "status": "geometry_checked_operator_render_pending",
+          "scope": "round20 actual kit/physics, lazy detail built; independent ray visibility checks. No screenshot.",
+          "standalone": {
+            "support_y": -6,
+            "capsule_push_m": 0
+          }
+        }
+      },
+      {
+        "round": 20,
+        "camera_id": "station_uw_076",
+        "view_id": "r20_uw_076",
+        "frame": "user_walk_076",
+        "photo_index": 76,
+        "spot": "ENTER6 매장 앞",
+        "photos": [
+          "refs/user_walk/20261107/IMG_0110.jpg"
+        ],
+        "x": 25.9,
+        "y": -6,
+        "z": 25.4,
+        "yawDeg": 95,
+        "pitchDeg": 0,
+        "floor": "B1",
+        "pose_module": "station",
+        "source_pose": "refs/user_walk/20261107/places.json",
+        "paired_render": "shots/user_walk/uw_076.png",
+        "paired_sheet": "shots/user_walk/station_1.png",
+        "single_output_name": "station_uw_076.png",
+        "note": "사용자 승인 실내 pose 그대로. y=-6은 B1 바닥 높이. #73은 경부선 쪽 문 밖이므로 station+gyeongbu 통합으로 확인. 기존 paired_render는 수정 전 비교이고 round20 새 렌더는 운영자 작업.",
+        "validation": {
+          "rendered": false,
+          "status": "geometry_checked_operator_render_pending",
+          "scope": "round20 actual kit/physics, lazy detail built; independent ray visibility checks. No screenshot.",
+          "standalone": {
+            "support_y": -6,
+            "capsule_push_m": 0
+          }
+        }
+      },
+      {
+        "round": 20,
+        "camera_id": "station_uw_077",
+        "view_id": "r20_uw_077",
+        "frame": "user_walk_077",
+        "photo_index": 77,
+        "spot": "3호선 대합실 육각 기둥",
+        "photos": [
+          "refs/user_walk/20261107/IMG_0111.jpg"
+        ],
+        "x": 23.3,
+        "y": -6,
+        "z": 26.9,
+        "yawDeg": 168,
+        "pitchDeg": 0,
+        "floor": "B1",
+        "pose_module": "station",
+        "source_pose": "refs/user_walk/20261107/places.json",
+        "paired_render": "shots/user_walk/uw_077.png",
+        "paired_sheet": "shots/user_walk/station_1.png",
+        "single_output_name": "station_uw_077.png",
+        "note": "사용자 승인 실내 pose 그대로. y=-6은 B1 바닥 높이. #73은 경부선 쪽 문 밖이므로 station+gyeongbu 통합으로 확인. 기존 paired_render는 수정 전 비교이고 round20 새 렌더는 운영자 작업.",
+        "validation": {
+          "rendered": false,
+          "status": "geometry_checked_operator_render_pending",
+          "scope": "round20 actual kit/physics, lazy detail built; independent ray visibility checks. No screenshot.",
+          "standalone": {
+            "support_y": -6,
+            "capsule_push_m": 0
+          }
+        }
+      },
+      {
+        "round": 20,
+        "camera_id": "station_uw_078",
+        "view_id": "r20_uw_078",
+        "frame": "user_walk_078",
+        "photo_index": 78,
+        "spot": "터미널↔서울교통공사 경계 문",
+        "photos": [
+          "refs/user_walk/20261107/IMG_0112.jpg"
+        ],
+        "x": 32.1,
+        "y": -6,
+        "z": 22,
+        "yawDeg": 285,
+        "pitchDeg": 0,
+        "floor": "B1",
+        "pose_module": "station",
+        "source_pose": "refs/user_walk/20261107/places.json",
+        "paired_render": "shots/user_walk/uw_078.png",
+        "paired_sheet": "shots/user_walk/station_1.png",
+        "single_output_name": "station_uw_078.png",
+        "note": "사용자 승인 실내 pose 그대로. y=-6은 B1 바닥 높이. #73은 경부선 쪽 문 밖이므로 station+gyeongbu 통합으로 확인. 기존 paired_render는 수정 전 비교이고 round20 새 렌더는 운영자 작업.",
+        "validation": {
+          "rendered": false,
+          "status": "geometry_checked_operator_render_pending",
+          "scope": "round20 actual kit/physics, lazy detail built; independent ray visibility checks. No screenshot.",
+          "standalone": {
+            "support_y": -6,
+            "capsule_push_m": 0
+          }
+        }
       }
     ],
     "trace_convention": "x,z는 월드 좌표(m), y는 눈 높이가 아닌 보행 바닥 높이. shot 도구가 눈높이를 추가한다. yaw 0 북쪽, 90 서쪽, 180 남쪽, 270 동쪽. notes.json에 trace_spots가 없으므로 22장의 사진 묶음으로 16개 지점과 W9 긴 에스컬레이터 하부 1개를 도출했다. round10 카메라는 수정·유지 확인 지점 7개를 추가. 모든 y는 바닥 높이이며 화면 렌더는 수행하지 않았다. round13: 재현한 27개 프레임의 개별 카메라와 ENTER6 보조 진입 시점 1개를 추가했고 단독/통합에서 56개 바닥·캡슐 검사를 통과했다. pitch 양수는 위, 음수는 아래다.",
@@ -5315,6 +5698,820 @@
           "first_floor_routes": "all passed",
           "required_zero_blocked": "not achieved: remaining failure is in a neighbor file prohibited by this task",
           "centralcity_sha256": "6192190120c675ced92e4d0e5ba89b3906d445c0b6b07abf1bd50086ebe848cd"
+        }
+      }
+    },
+    "previous_round_before20": 19,
+    "previous_scope_round20": "round15: 비교 시트와 2025+ 원본 프레임을 재대조하고 카메라→배치→재질/안내→집기/군중 순서로 보정. 실제 B1 띠벽과 7호선 검정 안내판은 보존. W3/W9/J7 및 이웃 모듈 경계 유지. 새 상업 전면과 환승 홀 치수는 사진을 공유 좌표계에 맞춘 추정이며 측량값이 아니다.",
+    "round20": {
+      "evidence": [
+        ".codex-jobs/evidence/up20_station.json",
+        ".codex-jobs/evidence/user_photo_review.json → groups.gbb1, groups.famille",
+        "refs/user_walk/20261107/manifest.json",
+        "refs/user_walk/20261107/places.json",
+        "shots/user_walk/poses.json",
+        "shots/user_walk/gyeongbu_12.png",
+        "shots/user_walk/station_1.png"
+      ],
+      "primary_reference": "사용자 2026-11-07 현장 사진 #73–78 및 승인 실내 pose. 공식 평면/옛 영상과 충돌하면 사용자 사진 우선.",
+      "priority_order": [
+        "layout",
+        "design",
+        "detail"
+      ],
+      "coordinate_basis": {
+        "x": "2.3 + 0.9348*u + 0.3552*v",
+        "z": "-59.24 - 0.3552*u + 0.9348*v",
+        "y": -6,
+        "rotation_y_rad": 0.3631245753430482,
+        "source": "gyeongbu와 같은 local u/v 기저; 문은 u=0,v=82..90"
+      },
+      "findings": [
+        {
+          "id": "gbb1/ST-L1",
+          "priority": "layout",
+          "status": "implemented_with_external_junction_pending",
+          "photos": [
+            73,
+            74,
+            75,
+            76,
+            77,
+            78
+          ],
+          "changes": "B1 바닥·연속 천장·외곽 벽을 경부선 서문 즉시 서쪽에 생성. 기존 상세 boutique와 식물 ENTER6 전면·작은 진열대·키오스크·코퍼를 새 홀로 이전. 문 폭 8m 유지; 북측 의류, 남측 Case holic 뒤 ARTBOX 배치.",
+          "hall": {
+            "local_uv_bounds": [
+              -22,
+              78,
+              0,
+              97
+            ],
+            "world_polygon_xz": [
+              [
+                9.44,
+                21.4888
+              ],
+              [
+                30.0056,
+                13.6744
+              ],
+              [
+                36.7544,
+                31.4356
+              ],
+              [
+                16.1888,
+                39.25
+              ]
+            ],
+            "world_aabb_xz": [
+              9.44,
+              13.6744,
+              36.7544,
+              39.25
+            ],
+            "floor_y": -6,
+            "ceiling_underside_y": -3.04,
+            "slab_top_y": -2.96,
+            "observed_minimum_uv": [
+              -16,
+              78,
+              0,
+              97
+            ],
+            "west_extension_guess": "u=-22..-16은 사진 시야 끝을 닫기 위한 6m 추정 연장; 서쪽 외곽은 닫혀 있으며 미확인 원격 대합실과 연결하지 않음."
+          },
+          "threshold": {
+            "local_uv": [
+              0,
+              82,
+              0,
+              90
+            ],
+            "world_endpoints_xz": [
+              [
+                31.4264,
+                17.4136
+              ],
+              [
+                34.268,
+                24.892
+              ]
+            ],
+            "width_m": 8,
+            "floor_lip": "u=0..0.35,v=82..90 granite slab"
+          },
+          "stores": {
+            "north_enter6_front": {
+              "local_uv": [
+                -10,
+                84
+              ],
+              "world_xyz": [
+                22.7888,
+                -6,
+                22.8352
+              ]
+            },
+            "boutique_span_m": 12.915363827410516,
+            "boutique_depth_m": 2.75,
+            "south_case_holic_front": {
+              "local_uv": [
+                -6.65,
+                92.1
+              ],
+              "world_xyz": [
+                28.7975,
+                -6,
+                29.21716
+              ]
+            },
+            "south_artbox_front": {
+              "local_uv": [
+                -15.4,
+                92.1
+              ],
+              "world_xyz": [
+                20.618,
+                -6,
+                32.32516
+              ]
+            }
+          },
+          "hexagonal_pillars": [
+            {
+              "local_uv": [
+                -6.8,
+                88.5
+              ],
+              "world_xyz": [
+                27.37856,
+                -6,
+                25.90516
+              ]
+            },
+            {
+              "local_uv": [
+                -12,
+                89
+              ],
+              "world_xyz": [
+                22.6952,
+                -6,
+                28.2196
+              ]
+            },
+            {
+              "local_uv": [
+                -18,
+                89
+              ],
+              "world_xyz": [
+                17.0864,
+                -6,
+                30.3508
+              ]
+            }
+          ],
+          "first_pillar_adjustment": "finding의 대략 u=-6,v=86보다 남쪽(-6.8,88.5)으로 조정해 승인 #74–77 pose 충돌을 피하고 #74/#75 시야 왼쪽을 맞춤.",
+          "old_fare_cores": {
+            "bounds_xz": [
+              -104,
+              -84,
+              -79,
+              -42
+            ],
+            "preserved": [
+              "3호선 유료 대합실 개찰구",
+              "B1↔B2 계단·에스컬레이터",
+              "(-101,-70) 대합실 승강기",
+              "W3/W9/J7 및 기존 환승통로"
+            ],
+            "reason": "사진 #73–78은 즉시 서문 홀만 확정한다. 기존 교통 core 전체를 옮길 근거가 없어 독립 동선은 보존. 중복 상업 전면·코퍼만 새 홀로 이전."
+          },
+          "new_render_verified": false
+        },
+        {
+          "id": "gbb1/ST-D1",
+          "priority": "design",
+          "status": "implemented_pending_operator_render",
+          "photos": [
+            74,
+            75,
+            76,
+            77
+          ],
+          "positions": {
+            "hall_center": {
+              "local_uv": [
+                -10,
+                87
+              ],
+              "world_xyz": [
+                23.8544,
+                -6,
+                25.6396
+              ]
+            },
+            "coffer": {
+              "local_uv": [
+                -12,
+                91
+              ],
+              "world_xyz": [
+                23.4056,
+                -6,
+                30.0892
+              ]
+            },
+            "pillars": [
+              {
+                "local_uv": [
+                  -6.8,
+                  88.5
+                ],
+                "world_xyz": [
+                  27.37856,
+                  -6,
+                  25.90516
+                ]
+              },
+              {
+                "local_uv": [
+                  -12,
+                  89
+                ],
+                "world_xyz": [
+                  22.6952,
+                  -6,
+                  28.2196
+                ]
+              },
+              {
+                "local_uv": [
+                  -18,
+                  89
+                ],
+                "world_xyz": [
+                  17.0864,
+                  -6,
+                  30.3508
+                ]
+              }
+            ]
+          },
+          "changes": "0.6×1.2m 흰 대리석(#ebe9e5)/회색 맥(#9b9b98), 광택 .5; 축 방향 황색 점자선(#d6aa3a); 직경 약0.9m across-flats 육각 스테인리스 기둥과 높이0.25m plinth/cap; 백색 미장 천장·원형 4-way AC·작은 다운라이트; 6×4m 팔각 코퍼의 크림 발광판(#f1ecd5), 회색 단계 몰딩(#b7b4ad), 검정 곡선 철제 고리; Arabescato 점포 기둥과 ARTBOX 흰 벽돌/붉은 글자(#ff3b30).",
+          "coffer": {
+            "local_center_uv": [
+              -12,
+              91
+            ],
+            "world_center_xz": [
+              23.4056,
+              30.0892
+            ],
+            "size_local_uv_m": [
+              6,
+              4
+            ],
+            "upper_ceiling_y": -2.71,
+            "rim_y_range": [
+              -3.12,
+              -2.71
+            ]
+          },
+          "tactile_axis": {
+            "local_uv": [
+              -21,
+              86.85,
+              -1,
+              87.15
+            ],
+            "world_endpoints_xz": [
+              [
+                13.5716,
+                29.5468
+              ],
+              [
+                32.2676,
+                22.4428
+              ]
+            ]
+          },
+          "texture_privacy": "모든 재질은 procedural drawing. 비공개 사진 픽셀을 텍스처/배포 asset으로 사용하지 않음.",
+          "new_render_verified": false
+        },
+        {
+          "id": "gbb1/ST-T1",
+          "priority": "detail",
+          "status": "implemented_pending_operator_render",
+          "photos": [
+            74,
+            75,
+            76,
+            78
+          ],
+          "positions": {
+            "enter6_black_gold_board": {
+              "local_uv": [
+                -5.1,
+                86.75
+              ],
+              "world_xyz": [
+                28.34612,
+                -3.69,
+                23.66542
+              ]
+            },
+            "hours_panel": {
+              "local_uv": [
+                -5.02,
+                84.55
+              ],
+              "world_xyz": [
+                27.639464,
+                -3.45,
+                21.580444
+              ]
+            },
+            "tracks_board": {
+              "local_uv": [
+                -10.5,
+                89
+              ],
+              "world_xyz": [
+                24.0974,
+                -3.82,
+                27.6868
+              ]
+            },
+            "folded_boundary_door_leaf": {
+              "local_uv": [
+                0.95,
+                87.3
+              ],
+              "world_xyz": [
+                34.19702,
+                -6,
+                22.0306
+              ]
+            },
+            "christmas_tree": {
+              "local_uv": [
+                -16.8,
+                84.15
+              ],
+              "world_xyz": [
+                16.48544,
+                -6,
+                25.39078
+              ]
+            },
+            "relocated_directory": {
+              "local_uv": [
+                -21.3,
+                83.6
+              ],
+              "world_xyz": [
+                12.08348,
+                -6,
+                26.47504
+              ]
+            },
+            "enter6_main_lettering": {
+              "local_uv": [
+                -5.02,
+                87.1
+              ],
+              "world_xyz": [
+                28.545224,
+                -3.43,
+                23.964184
+              ]
+            },
+            "tracks_heading": {
+              "local_uv": [
+                -10.42,
+                90.65
+              ],
+              "world_xyz": [
+                24.758264,
+                -3.52,
+                29.200804
+              ]
+            },
+            "magenta_boundary_strip": {
+              "local_uv": [
+                0.37,
+                87.2
+              ],
+              "world_xyz": [
+                33.619316,
+                -4.35,
+                22.143136
+              ]
+            },
+            "blue_boundary_strip": {
+              "local_uv": [
+                0.67,
+                87.2
+              ],
+              "world_xyz": [
+                33.899756,
+                -4.35,
+                22.036576
+              ]
+            }
+          },
+          "changes": "동쪽 접근면을 향한 ENTER-6/ABC-MART/ARTBOX/OLIVE YOUNG 금색 안내와 영업시간 패널, 더 안쪽 타는 곳 다국어·3/7/9호선 행선 안내. 펼쳐진 문짝 면에 마젠타 서울고속버스터미널/파랑 서울교통공사 관리구간 세로띠와 회색 시설물 경계. 북측 10,000원 의류 bin·신발 테이블/선반·가랜드·트리 추가.",
+          "sign_facing": "gbRot + π/2 (eastward approach normal); boundary text is on the folded leaf, not jamb.",
+          "photo_copy_policy": "실물에 보이는 브랜드와 다국어 안내만 그대로 표기. 사진 파일명은 화면 텍스트로 넣지 않음.",
+          "new_render_verified": false,
+          "boundary_leaf_note": "폭1.9m 문짝은 u=0..1.9 범위로 터미널 쪽에 접혀 있으며, 중심(.95,87.3). 승인 #78 시점 앞을 막지 않도록 조정. 색띠는 문짝 면의 v87.2에 부착."
+        }
+      ],
+      "detail_preservation": {
+        "boutique": "기존 폭12.91m boutique를 rigid frame으로 이전. 여섯 rack, 의류72개, hanger, 두 mannequin, 계산대, 직원, 조명 유지. 새 사진의 ENTER6 전면 명칭으로 갱신.",
+        "planted_frontage": "기존 식물 ENTER6 전면 전체를 W(-16.8,83)→W(-21.5,83) 북측 bay로 이전.",
+        "small_display_and_directory": "기존 붉은/노란 유리 진열대와 stock/counter는 W(-19.3,95.4), 키오스크는 W(-21.3,83.6)으로 이전. 위치 불명 디테일을 삭제하지 않고 점포 내부에 보존.",
+        "coffer": "옛 상가 팔각 코퍼를 W(-12,91)로 옮기고 사용자 사진의6×4m 크기·단계 몰딩·고리 grille로 보정."
+      },
+      "route_research": {
+        "sources": [
+          "https://mstore.enter6.co.kr/stores/68/directions",
+          "https://store.enter6.co.kr/index.php/stores/68/brand-shops",
+          "https://store.enter6.co.kr/upload/B2B/enter6_web_brochure_ko.pdf"
+        ],
+        "confirmed": "공식 안내의 B1, 2·7번 출구 및 고투몰 G7 접근; 공식 브랜드 안내의 관련 임차인. 사용자 #73→#78 왕복 24초로 경부 서문 바로 옆 홀 위치 확인.",
+        "not_confirmed": "서문 홀에서 옛 모델(-92,-63) 유료 대합실까지 통로의 실측 선형·길이·문 위치.",
+        "map_fetch_limit": "공식 B1 map image p8OwsG1LDuypPdgX6pA9tkU1jgDMpLqD1b1Tnun7.jpeg는 web 502/접근 불가, 로컬 curl DNS 제한. 지도를 열람했다고 주장하지 않음.",
+        "decision": "미확인 원격 hall로 연결통로를 만들지 않음. old c3의 fitted-not-surveyed 배치를 실측 endpoint로 취급하지 않음."
+      },
+      "junction": {
+        "id": "J_GB_ST_WEST",
+        "status": "proposed_registry_entry_external_owner_pending",
+        "a": "station",
+        "b": "gyeongbu",
+        "y": -6,
+        "pa": [
+          30.9776,
+          21.8632
+        ],
+        "pb": [
+          34.7168,
+          20.4424
+        ],
+        "width": 8,
+        "owner": "none",
+        "seam_local_uv": [
+          0,
+          82,
+          0,
+          90
+        ],
+        "station_side": "바닥·8m 문 개구부 구현. station은 자기 경계까지 담당.",
+        "registry_file": "js/places/_junctions.js",
+        "registry_edited_by_this_job": false,
+        "reason": "사용자 수정 허용 범위는 station.js와 station.json뿐. 별도 junction/gyeongbu 작업 소유자가 적용할 개구부와 registry 좌표를 기록.",
+        "walk_status": "실제 kit/physics에 임시 runtime junction을 등록해 검사: 80 ok,1 blocked. u=0,v82.5..89.5의 모든 표본을 gyeongbu 태그의 연속 서벽이 막음. station 쪽 개구부는 열려 있음.",
+        "confirmed_blocker": {
+          "module": "gyeongbu",
+          "wall_endpoints_xz": [
+            [
+              58.89365,
+              89.3488
+            ],
+            [
+              2.41685,
+              -59.2844
+            ]
+          ],
+          "wall_y_range": [
+            -6,
+            -0.3
+          ],
+          "required_opening": "local u=0,v=82..90; B1 -6 to at least -3.4",
+          "capsule_push_at_seam_m": 0.32
+        }
+      },
+      "famille_coordination": {
+        "verdict_read": ".codex-jobs/evidence/user_photo_review.json → groups.famille",
+        "new_famille_box_xz": [
+          -35,
+          140,
+          85,
+          175
+        ],
+        "exits_changed": false,
+        "ground_structures": [
+          {
+            "name": "7번 출구 계단·에스컬레이터 canopy/housing",
+            "mouth_xz": [
+              37.5,
+              131.19
+            ],
+            "roof_aabb_xz": [
+              34.4,
+              130.39,
+              40.6,
+              146.19
+            ],
+            "roof_y_range": [
+              3.04,
+              3.16
+            ],
+            "sidewall_aabb_xz": [
+              34.49,
+              131.19,
+              40.51,
+              145.79
+            ],
+            "sidewall_top_y": 1.15,
+            "hole_polygon_xz": [
+              [
+                40.3,
+                131.09
+              ],
+              [
+                40.3,
+                146.19
+              ],
+              [
+                34.7,
+                146.19
+              ],
+              [
+                34.7,
+                131.09
+              ]
+            ],
+            "overlap_with_famille_box": "z140..146.19의 캐노피/측벽·계단 housing 및 z146.59까지 보도 apron",
+            "ground_column_centers_xz": [
+              [
+                34.6,
+                140.79
+              ],
+              [
+                40.4,
+                140.79
+              ],
+              [
+                34.6,
+                145.49
+              ],
+              [
+                40.4,
+                145.49
+              ]
+            ],
+            "column_y_range": [
+              0.15,
+              3.05
+            ],
+            "fascia_max_y": 3.26
+          },
+          {
+            "name": "3번 출구 계단·에스컬레이터 canopy/housing",
+            "mouth_xz": [
+              52.11,
+              179.03
+            ],
+            "roof_aabb_xz": [
+              49.01,
+              164.03,
+              55.21,
+              179.83
+            ],
+            "roof_y_range": [
+              3.04,
+              3.16
+            ],
+            "sidewall_aabb_xz": [
+              49.1,
+              164.43,
+              55.12,
+              179.03
+            ],
+            "sidewall_top_y": 1.15,
+            "hole_polygon_xz": [
+              [
+                49.31,
+                179.13
+              ],
+              [
+                49.31,
+                164.03
+              ],
+              [
+                54.91,
+                164.03
+              ],
+              [
+                54.91,
+                179.13
+              ]
+            ],
+            "overlap_with_famille_box": "z164.03..175의 캐노피/측벽·계단 housing 및 z163.63까지 보도 apron",
+            "ground_column_centers_xz": [
+              [
+                49.21,
+                174.23
+              ],
+              [
+                55.01,
+                174.23
+              ],
+              [
+                49.21,
+                169.43
+              ],
+              [
+                55.01,
+                169.43
+              ],
+              [
+                49.21,
+                164.73
+              ],
+              [
+                55.01,
+                164.73
+              ]
+            ],
+            "column_y_range": [
+              0.15,
+              3.05
+            ],
+            "fascia_max_y": 3.26
+          },
+          {
+            "name": "3번 출구 벤치",
+            "center_xz": [
+              47.96,
+              171.03
+            ],
+            "length_m": 3.5,
+            "approx_aabb_xz": [
+              47.635,
+              169.28,
+              48.285,
+              172.78
+            ],
+            "y_range": [
+              0.025,
+              1.125
+            ]
+          },
+          {
+            "name": "3번 출구 화분",
+            "center_xz": [
+              47.96,
+              166.33
+            ],
+            "base_aabb_xz": [
+              47.185,
+              165.555,
+              48.735,
+              167.105
+            ],
+            "y_range": [
+              0.025,
+              0.675
+            ]
+          }
+        ],
+        "no_additional_vents": "이 좌표 상자 안에 station이 별도 생성한 지상 환기구는 없음. 2번 출구 캐노피/보도 끝은 z139.59 이하라 box 밖.",
+        "underground_conflict_to_check": "기존 B1 concourse와 [17,145,25,163] B2↔B1 vertical void가 새 famille 아래에 있음. 이 round에서는 지상/지하 출구 배치를 변경하지 않음."
+      },
+      "skipped": [
+        {
+          "part": "J_GB_ST_WEST 공용 registry 수정",
+          "reason": "_junctions.js는 허용 파일 밖이고 별도 동시 작업 소유. station측 준비 및 제안 좌표 기록."
+        },
+        {
+          "part": "서쪽 이후 원격 3호선 대합실 연결",
+          "reason": "사용자 사진 범위 밖이고 공식 source에서도 실측 alignment 확인 못함. 허위 연결 방지."
+        },
+        {
+          "part": "수정 후 렌더와 _meta 재생성",
+          "reason": "tests/shot.mjs는 사용자 지정으로 sandbox 실행 불가; 운영자가 photo pose 재렌더. _meta.json도 허용 수정 범위 밖이므로 운영자 재생성 필요."
+        },
+        {
+          "part": "전체 walk의 G11→다이소 차단 수정",
+          "reason": "고투몰/경부선의 동시 작업 영역이며 station 허용 범위 밖. 전체 walk707 ok,1 blocked 결과 기록."
+        }
+      ],
+      "guesses": [
+        "홀의 서쪽6m 연장(u=-22..-16), 뒤쪽 점포 깊이와 닫힌 서쪽 끝은 미촬영 영역 추정.",
+        "매장 전면 폭·기둥 간격/첫 기둥 보정·천장 높이와 코퍼 치수는 사진 기반 근사이며 실측 아님.",
+        "계절 장식과 상품의 위치·수량/작은 진열대 새 위치는 사진 및 기존 디테일을 보존한 재구성.",
+        "원격 3호선 유료 hall의 기존 위치와 그곳까지 연결 선형은 여전히 미확인."
+      ],
+      "qa": {
+        "status": "station_checks_passed_external_integration_pending",
+        "rendered": false,
+        "operator_render_pending": true,
+        "operator_meta_regeneration_pending": true,
+        "interim_report": {
+          "reported_by": "parent implementation agent",
+          "standalone_support_checks": "새 홀 승인 pose의 support/capsule 점검 통과 보고; 최종 수치는 parent가 작성 예정.",
+          "first_combined_smoke": {
+            "command": "node tests/smoke.mjs station gyeongbu gotomall centralcity",
+            "result": "OK reported; final rerun pending"
+          },
+          "first_full_walk": {
+            "command": "node tests/walk.mjs",
+            "result": "interrupted by concurrent gotomall edit: G11.seam undefined",
+            "classification": "다른 작업 영역의 일시적 build 오류. 최종 재실행은 완료되어707 ok,1 blocked(G11→다이소)로 대체."
+          },
+          "station_smoke": {
+            "command": "node tests/smoke.mjs station",
+            "result": "OK reported"
+          },
+          "station_walk": {
+            "command": "node tests/walk.mjs station --no-city",
+            "result": "26 ok, 0 blocked reported"
+          },
+          "proposed_junction_runtime_walk": {
+            "command": "station+gyeongbu, J_GB_ST_WEST runtime injection only; no registry file edited",
+            "result": "80 ok, 1 blocked at proposed west-door seam",
+            "interpretation": "station 태그 충돌벽 없음. 실제 phys wall tag=gyeongbu인 기존 서벽의 미개방이 원인으로 확인됨.",
+            "confirmed_cause": true
+          }
+        },
+        "final_results": {
+          "combined_smoke": {
+            "command": "node tests/smoke.mjs station gyeongbu gotomall centralcity",
+            "result": "OK",
+            "exit_code": 0
+          },
+          "standalone_smoke": {
+            "command": "node tests/smoke.mjs station",
+            "result": "OK",
+            "exit_code": 0
+          },
+          "standalone_walk": {
+            "command": "node tests/walk.mjs station --no-city",
+            "result": "26 ok, 0 blocked",
+            "exit_code": 0
+          },
+          "new_hall_geometry": {
+            "method": "실제 kit/physics 및 THREE raycaster. 렌더/사진 일치 판정 아님. 모든 lazy detail 생성.",
+            "photos": [
+              74,
+              75,
+              76,
+              77,
+              78
+            ],
+            "support_y": -6,
+            "capsule_push_m": 0,
+            "ceiling": "#74–77 위쪽 ray가 새 station 천장에 도달. #77 정면은 약1.1m 앞 스테인리스 기둥.",
+            "hall_route": "#74 (30.2,22.7) → (16,30) BFS 통과,4490 cells",
+            "detail_errors": []
+          },
+          "sign_visibility": {
+            "method": "승인 yaw와 eye=y+1.7에서 대상 표지까지 ray와 수평각 검사",
+            "photo_74_enter6_center_deg": 2.38,
+            "photo_75_tracks_header_deg": 13.39,
+            "photo_75_line9_roundel_deg": -1.11,
+            "photo_78_boundary_strips_deg": [
+              20.38,
+              16.16
+            ],
+            "occlusion": "가장 가까운 교차는 목표 표지 자체 표면 offset 범위(.08~.19m); 다른 차폐물 없음."
+          },
+          "full_walk": {
+            "command": "node tests/walk.mjs",
+            "result": "707 ok, 1 blocked",
+            "exit_code": 1,
+            "blocked": "route 사용자 루트 2: 고투몰 동편→G11→다이소 GATE4→매장→GATE1 [2→3] (138.2,-170.7)→(141.7,-109): no path (222416 cells searched)",
+            "classification": "전 구간 고투몰/경부선 작업 영역. 이번 station 변경 영역 밖으로 파일 수정하지 않음. station 관련 기존 검사에서 blocked 없음."
+          },
+          "proposed_junction": {
+            "result": "80 ok, 1 blocked",
+            "cause": "gyeongbu west wall missing opening",
+            "registry_edit": false
+          },
+          "render": {
+            "executed": false,
+            "reason": "사용자 지정 sandbox 제한. 운영자 렌더 대기."
+          },
+          "scope_check": {
+            "only_edited": [
+              "js/places/station.js",
+              "data/research/station.json"
+            ],
+            "git_diff_check": "passed after final JSON update",
+            "commit_or_push": false
+          }
+        },
+        "performance_note": {
+          "baseline_head_post_detail_quads": 159939,
+          "round20_check_before_final_sign_alignment_quads": 167401,
+          "difference_percent": 4.7,
+          "note": "기존 모듈이 이미 약150k 권고를 초과. 비사진 디테일을 삭제하지 않고 이동·보존했으며 신규 홀 약7.5k 추가. 최종 sign 분리 후 총량은 소폭 증가."
         }
       }
     }

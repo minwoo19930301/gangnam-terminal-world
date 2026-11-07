@@ -182,6 +182,81 @@
       "url": "https://go.seoul.co.kr/news/newsView.php?id=20250926500032",
       "title": "2025-09-26 서울신문 데스크톱 원문: 지하 공공보행로 애칭 공모",
       "year": 2025
+    },
+    {
+      "url": ".codex-jobs/evidence/up20_streets.json",
+      "title": "Round20 verified ST-L1..L4, ST-D1, ST-C1",
+      "year": 2026
+    },
+    {
+      "url": "refs/user_walk/20261107/manifest.json",
+      "title": "사용자 직접 촬영 원본 대응표 · 비공개",
+      "year": 2026
+    },
+    {
+      "url": "refs/user_walk/20261107/places.json",
+      "title": "사용자 승인 경로 · 보정된 #217/218 지상 포즈",
+      "year": 2026
+    },
+    {
+      "url": "refs/roadview/gs_caltex/notes.json",
+      "title": "GS칼텍스 카카오 로드뷰 · 영상 2026-06",
+      "year": 2026
+    },
+    {
+      "url": "refs/roadview/gs_caltex/rv_gs_canopy_from_G13.jpg",
+      "title": "G13 뒤 GS칼텍스 캐노피·사무동·보도 설비",
+      "year": 2026
+    },
+    {
+      "url": "refs/roadview/gs_caltex/rv_g13_exit_lot.jpg",
+      "title": "G13 유리 구조·승강기·회색 전기함",
+      "year": 2026
+    },
+    {
+      "url": "refs/user_walk/20261107/IMG_0249.jpg",
+      "title": "비공개 사용자 사진 #215 · G13 두 번째 계단 아래",
+      "year": 2026
+    },
+    {
+      "url": "refs/user_walk/20261107/IMG_0251.jpg",
+      "title": "비공개 사용자 사진 #217 · G13 출구 지상 (신반포로 남쪽 보도)",
+      "year": 2026
+    },
+    {
+      "url": "refs/user_walk/20261107/IMG_0252.jpg",
+      "title": "비공개 사용자 사진 #218 · 신반포로 남쪽 버스정류장",
+      "year": 2026
+    },
+    {
+      "url": "refs/user_walk/20261107/IMG_0253.jpg",
+      "title": "비공개 사용자 사진 #219 · GS칼텍스 북서 모퉁이 보도",
+      "year": 2026
+    },
+    {
+      "url": "refs/user_walk/20261107/IMG_0254.jpg",
+      "title": "비공개 사용자 사진 #220 · GS칼텍스 사무동 앞",
+      "year": 2026
+    },
+    {
+      "url": "refs/user_walk/20261107/IMG_0255.jpg",
+      "title": "비공개 사용자 사진 #221 · GS칼텍스 북쪽 진입로",
+      "year": 2026
+    },
+    {
+      "url": "refs/user_walk/20261107/IMG_0256.jpg",
+      "title": "비공개 사용자 사진 #222 · GS칼텍스 캐노피 쪽",
+      "year": 2026
+    },
+    {
+      "url": "refs/user_walk/20261107/IMG_0258.jpg",
+      "title": "비공개 사용자 사진 #224 · GS칼텍스 주유기 앞",
+      "year": 2026
+    },
+    {
+      "url": "refs/user_walk/20261107/IMG_0259.jpg",
+      "title": "비공개 사용자 사진 #225 · GS칼텍스 기둥 간판 앞",
+      "year": 2026
     }
   ],
   "building": {
@@ -538,7 +613,8 @@
     "Round8: 경찰서 전용 2026 로드뷰가 이전 흐린 ssg_04 체크무늬 추정을 대체한다. 3호선의 경찰서 앞 입구는 OSM1번 출구이며3번 출구와 구별했다.",
     "2025/2026 운영자 로드뷰를 우선 반영: 터미널 앞 좁은 잔디 분리대·회색 보도·울타리 쪽 붉은 벽돌·참조 건물 외관. 이번 범위 밖 추정은 modeling.guesses에 기록.",
     "OSM 태그 폭: 4차로 14.2m, 3차로 10.9m, 폭 20m 양방, 사이드워크 2~3m paving_stones",
-    "로컬 OSM에 bus_stop 89개, 따릉이 25개, crossing 130, traffic_signals 39 있음"
+    "로컬 OSM에 bus_stop 89개, 따릉이 25개, crossing 130, traffic_signals 39 있음",
+    "Round20: G13 잔디 구간은 x315에서 끝내고 승인된 계단 상단/남측 정류장 보도로 교체. 광장주차장↔GS칼텍스 실제 보행 연결 검사 통과."
   ],
   "unresolved": [
     "정류소 5자리 ID 대부분(고속터미널(중) 22020, 반포역 22018 외)",
@@ -549,18 +625,20 @@
     "택시 승차장/흡연부스의 정확한 현장 좌표와 치수는 미확인; 이번 배치는 modeling.guesses에 공개한 추정.",
     "고속터미널사거리 우회전 차로 조정 후 정확한 폭·보행 대기공간 치수",
     "원베일리 벽화 구간 시작·끝, 통로 후반부로 추정하는 관광안내센터 좌표, 한강 측 계단/엘리베이터 구조",
-    "센트럴씨티보도육교 기존 남측 추정 승강기의 실재 여부와 반포지구대 가구의 정확한 평면 배치"
+    "센트럴씨티보도육교 기존 남측 추정 승강기의 실재 여부와 반포지구대 가구의 정확한 평면 배치",
+    "Round20: gotomall 최종 upperHole가 승인된 지상 사진#219..221 포즈와 겹침. 계단을 덮지 않고 실제 지지 높이 및 보조 지상 trace 기록. GS 세부 치수는 사진 비례 추정이며 operator render 대기."
   ],
   "modeling": {
-    "round": 19,
-    "scope": "Round19: remaining verified streets findings; source frames and read-only reviewer renders checked. Only streets.js/research changed; camera y stays at the support floor.",
+    "round": 20,
+    "scope": "Round20 G13 지상 출구·신반포로 남측 보도/정류장·GS칼텍스. 승인된 사용자 보행 포즈와 검증 지적을 우선하고 GS 외관은 제공된 2026-06 로드뷰를 기준으로 반영. 비공개 원본은 열람만 하고 복사하지 않음.",
     "claims": [
       886400346,
       413367405,
       413367408,
       1137867801,
       606009742,
-      431589113
+      431589113,
+      1173093430
     ],
     "added_road_claims": [
       831108565,
@@ -800,11 +878,13 @@
       "exit_1": "OSM3146856929 (51.36,-105.73), gotomall 소유. 계단·캐노피·유리난간 중복 생성하지 않고 hole을 보존. 실제3번 출구는(52.11,179.03)에 있어 별개.",
       "city_boundaries": "city.js의 동시 수정 내용 read-only 확인. 차선 폭·주기·팔레트 일치. 반포대로 바깥 모서리 slip roads908623353/913615050/913615131은 city 소유의 별개 차로로 유지.",
       "lebon": "OSM413280002는 lebon 소유. streets 비활성 블록과 이미 제외된 runtime claims를 유지하고 연구의 현행 claims도 동기화했다.",
-      "g2_hangang": "G2 계단은 gotomall, 원베일리 벽화 통로는 별도 onebailey 작업, 반포나들목은 hangang 소유. streets에는 벽화/안내센터 형상 없음. 기존 _junctions.js에 streets/onebailey 연결 없음; 이번 작업에서는 지하 연결을 만들지 않는다."
+      "g2_hangang": "G2 계단은 gotomall, 원베일리 벽화 통로는 별도 onebailey 작업, 반포나들목은 hangang 소유. streets에는 벽화/안내센터 형상 없음. 기존 _junctions.js에 streets/onebailey 연결 없음; 이번 작업에서는 지하 연결을 만들지 않는다.",
+      "g13": "streets: 지상 캐노피/서향 승강기 외피/접근 데크/전기함/보도/정류장. gotomall: B1 홀/실제 L계단/groundHole/승강기 인터랙션. 최종 gotomall hole을 streets 포장에서 정확히 제외. 계단 상단에는 횡단 난간 없음.",
+      "gs_caltex": "streets가 OSM1173093430 팔각 사무동을 claim. 서쪽 광장주차장 자체는 기존 모듈 소유이며 주유소 경계벽을 끊어 보행 통로 유지."
     },
     "guesses": [
       "중복 지적의 폭1.2m/1.5m·높이0.18m/0.2m는 잔디1.2m+경계석 포함1.5m, 높이0.2m로 통합했다. 치수는 사진 기준 근사치다.",
-      "독립된 서비스 차로와 섬이 확실한 구간은 x약90..198이며 서비스 길은(207.26,-195.53)에서 본선으로 합류한다. 요청한 x330까지의 동쪽 잔디 연장은 낮은 가장자리 녹지의 길이 추정이다. 그 뒤에 새 서비스 차로는 만들지 않았다.",
+      "독립된 서비스 차로와 섬이 확실한 구간은 x약90..198이며 서비스 길은(207.26,-195.53)에서 본선으로 합류한다. 요청한 x330까지의 동쪽 잔디 연장은 낮은 가장자리 녹지의 길이 추정이다. 그 뒤에 새 서비스 차로는 만들지 않았다. Round20 사용자 사진에 따라 그 연장은 x315에서 끝내고 G13 보도로 교체했다.",
       "르본시티 LED 광고의 글자·정확한 영상은 판독되지 않아 사진의 녹색·노랑·분홍 색 덩어리를 단순화했다. 세로판은 실제 세입자 문구 대신 확인된 건물명만 사용했다.",
       "르본시티 창문 간격, 석재 줄눈, 지붕 LED의 정확한 치수·후퇴량은 시각적 근사치다. 8개층과38m 외곽 높이는 유지했다.",
       "201/202동은 사진 설명의 약15층 대신 OSM의12층을 유지했다. bp_01의 고층 위치는 manifest 정정에 따라3동 뒤 기존34층101m 타워로 판단했다.",
@@ -1196,6 +1276,282 @@
         ],
         "y_convention": "floor level",
         "correction": "unverified 평면은 추정으로 유지; 사진에 보이는 가구 세부는 삭제하지 않음"
+      },
+      {
+        "spot": "G13 출구 지상 (신반포로 남쪽 보도)",
+        "photo_index": 217,
+        "photos": [
+          "refs/user_walk/20261107/IMG_0251.jpg"
+        ],
+        "round": 20,
+        "x": 330,
+        "y": -0.7378656038,
+        "z": -232.3,
+        "yawDeg": 51.1,
+        "pitchDeg": 0,
+        "places": [
+          "streets",
+          "gotomall",
+          "gyeongbu",
+          "gyeongbu_east"
+        ],
+        "y_convention": "support floor; renderer adds eye height",
+        "correction": "ST-C1: approved places.json pose, #217/218 old carriageway poses superseded",
+        "approved_reference_floor": "out",
+        "integration_note": "Actual support in concurrent gotomall final stair geometry; #219..221 were approved as outdoor, so this is a shared-layout discrepancy, not a source-pose correction."
+      },
+      {
+        "spot": "신반포로 남쪽 버스정류장",
+        "photo_index": 218,
+        "photos": [
+          "refs/user_walk/20261107/IMG_0252.jpg"
+        ],
+        "round": 20,
+        "x": 328.6,
+        "y": 0.15,
+        "z": -233,
+        "yawDeg": 55.2,
+        "pitchDeg": 0,
+        "places": [
+          "streets",
+          "gotomall",
+          "gyeongbu",
+          "gyeongbu_east"
+        ],
+        "y_convention": "support floor; renderer adds eye height",
+        "correction": "ST-C1: approved places.json pose, #217/218 old carriageway poses superseded"
+      },
+      {
+        "spot": "GS칼텍스 북서 모퉁이 보도",
+        "photo_index": 219,
+        "photos": [
+          "refs/user_walk/20261107/IMG_0253.jpg"
+        ],
+        "round": 20,
+        "x": 329,
+        "y": -0.0595052906,
+        "z": -232,
+        "yawDeg": 190,
+        "pitchDeg": 0,
+        "places": [
+          "streets",
+          "gotomall",
+          "gyeongbu",
+          "gyeongbu_east"
+        ],
+        "y_convention": "support floor; renderer adds eye height",
+        "correction": "Approved user route pose; GS object dimensions remain frame estimates",
+        "approved_reference_floor": "out",
+        "integration_note": "Actual support in concurrent gotomall final stair geometry; #219..221 were approved as outdoor, so this is a shared-layout discrepancy, not a source-pose correction."
+      },
+      {
+        "spot": "GS칼텍스 사무동 앞",
+        "photo_index": 220,
+        "photos": [
+          "refs/user_walk/20261107/IMG_0254.jpg"
+        ],
+        "round": 20,
+        "x": 330,
+        "y": -0.8925793594,
+        "z": -231,
+        "yawDeg": 205,
+        "pitchDeg": 0,
+        "places": [
+          "streets",
+          "gotomall",
+          "gyeongbu",
+          "gyeongbu_east"
+        ],
+        "y_convention": "support floor; renderer adds eye height",
+        "correction": "Approved user route pose; GS object dimensions remain frame estimates",
+        "approved_reference_floor": "out",
+        "integration_note": "Actual support in concurrent gotomall final stair geometry; #219..221 were approved as outdoor, so this is a shared-layout discrepancy, not a source-pose correction."
+      },
+      {
+        "spot": "GS칼텍스 북쪽 진입로",
+        "photo_index": 221,
+        "photos": [
+          "refs/user_walk/20261107/IMG_0255.jpg"
+        ],
+        "round": 20,
+        "x": 330.5,
+        "y": -1.3686216845,
+        "z": -230,
+        "yawDeg": 262,
+        "pitchDeg": 0,
+        "places": [
+          "streets",
+          "gotomall",
+          "gyeongbu",
+          "gyeongbu_east"
+        ],
+        "y_convention": "support floor; renderer adds eye height",
+        "correction": "Approved user route pose; GS object dimensions remain frame estimates",
+        "approved_reference_floor": "out",
+        "integration_note": "Actual support in concurrent gotomall final stair geometry; #219..221 were approved as outdoor, so this is a shared-layout discrepancy, not a source-pose correction."
+      },
+      {
+        "spot": "GS칼텍스 캐노피 쪽",
+        "photo_index": 222,
+        "photos": [
+          "refs/user_walk/20261107/IMG_0256.jpg"
+        ],
+        "round": 20,
+        "x": 331.5,
+        "y": 0.15,
+        "z": -229.5,
+        "yawDeg": 225,
+        "pitchDeg": 0,
+        "places": [
+          "streets",
+          "gotomall",
+          "gyeongbu",
+          "gyeongbu_east"
+        ],
+        "y_convention": "support floor; renderer adds eye height",
+        "correction": "Approved user route pose; GS object dimensions remain frame estimates"
+      },
+      {
+        "spot": "GS칼텍스 사무동 앞마당",
+        "photo_index": 223,
+        "photos": [
+          "refs/user_walk/20261107/IMG_0257.jpg"
+        ],
+        "round": 20,
+        "x": 332,
+        "y": 0.15,
+        "z": -229,
+        "yawDeg": 192,
+        "pitchDeg": 0,
+        "places": [
+          "streets",
+          "gotomall",
+          "gyeongbu",
+          "gyeongbu_east"
+        ],
+        "y_convention": "support floor; renderer adds eye height",
+        "correction": "Approved user route pose; GS object dimensions remain frame estimates"
+      },
+      {
+        "spot": "GS칼텍스 주유기 앞",
+        "photo_index": 224,
+        "photos": [
+          "refs/user_walk/20261107/IMG_0258.jpg"
+        ],
+        "round": 20,
+        "x": 333,
+        "y": 0.08,
+        "z": -228.5,
+        "yawDeg": 162,
+        "pitchDeg": 0,
+        "places": [
+          "streets",
+          "gotomall",
+          "gyeongbu",
+          "gyeongbu_east"
+        ],
+        "y_convention": "support floor; renderer adds eye height",
+        "correction": "Approved user route pose; GS object dimensions remain frame estimates"
+      },
+      {
+        "spot": "GS칼텍스 기둥 간판 앞",
+        "photo_index": 225,
+        "photos": [
+          "refs/user_walk/20261107/IMG_0259.jpg"
+        ],
+        "round": 20,
+        "x": 334,
+        "y": 0.08,
+        "z": -228.5,
+        "yawDeg": 108,
+        "pitchDeg": 0,
+        "places": [
+          "streets",
+          "gotomall",
+          "gyeongbu",
+          "gyeongbu_east"
+        ],
+        "y_convention": "support floor; renderer adds eye height",
+        "correction": "Approved user route pose; GS object dimensions remain frame estimates"
+      },
+      {
+        "spot": "GS칼텍스 기둥 간판 (1부 끝)",
+        "photo_index": 226,
+        "photos": [
+          "refs/user_walk/20261107/IMG_0260.jpg"
+        ],
+        "round": 20,
+        "x": 334.5,
+        "y": 0.08,
+        "z": -228,
+        "yawDeg": 83,
+        "pitchDeg": 0,
+        "places": [
+          "streets",
+          "gotomall",
+          "gyeongbu",
+          "gyeongbu_east"
+        ],
+        "y_convention": "support floor; renderer adds eye height",
+        "correction": "Approved user route pose; GS object dimensions remain frame estimates"
+      },
+      {
+        "spot": "GS칼텍스 사무동 앞 · 지상 검수 보조",
+        "photo_index": 220,
+        "photos": [
+          "refs/user_walk/20261107/IMG_0254.jpg"
+        ],
+        "round": 20,
+        "x": 330,
+        "y": 0.15,
+        "z": -229.7,
+        "yawDeg": 205,
+        "pitchDeg": 0,
+        "places": [
+          "streets",
+          "gotomall",
+          "gyeongbu",
+          "gyeongbu_east"
+        ],
+        "y_convention": "support floor; renderer adds eye height",
+        "correction": "Approved user route pose; GS object dimensions remain frame estimates",
+        "approved_reference_floor": "out",
+        "integration_note": "Auxiliary paved camera south of concurrent gotomall well; source places.json unchanged. Use alongside approved pose to inspect station frontage.",
+        "auxiliary": true,
+        "approved_reference_pose": {
+          "x": 330,
+          "z": -231,
+          "yawDeg": 205
+        }
+      },
+      {
+        "spot": "GS칼텍스 북쪽 진입로 · 지상 검수 보조",
+        "photo_index": 221,
+        "photos": [
+          "refs/user_walk/20261107/IMG_0255.jpg"
+        ],
+        "round": 20,
+        "x": 330.5,
+        "y": 0.15,
+        "z": -229.45,
+        "yawDeg": 262,
+        "pitchDeg": 0,
+        "places": [
+          "streets",
+          "gotomall",
+          "gyeongbu",
+          "gyeongbu_east"
+        ],
+        "y_convention": "support floor; renderer adds eye height",
+        "correction": "Approved user route pose; GS object dimensions remain frame estimates",
+        "approved_reference_floor": "out",
+        "integration_note": "Auxiliary paved camera south of concurrent gotomall well; source places.json unchanged. Use alongside approved pose to inspect station frontage.",
+        "auxiliary": true,
+        "approved_reference_pose": {
+          "x": 330.5,
+          "z": -230,
+          "yawDeg": 262
+        }
       }
     ],
     "evidence_audit_round10": {
@@ -1677,6 +2033,297 @@
           "centralcity_sha256": "6192190120c675ced92e4d0e5ba89b3906d445c0b6b07abf1bd50086ebe848cd"
         }
       }
+    },
+    "round20": {
+      "review": ".codex-jobs/evidence/up20_streets.json",
+      "reference_priority": "Approved user photos/route primary; supplied June2026 Kakao roadview decides GS station exterior per user. No private photo textures or published copies.",
+      "originals_inspected": [
+        "refs/user_walk/20261107/IMG_0249.jpg",
+        "refs/user_walk/20261107/IMG_0251.jpg",
+        "refs/user_walk/20261107/IMG_0252.jpg",
+        "refs/user_walk/20261107/IMG_0253.jpg",
+        "refs/user_walk/20261107/IMG_0254.jpg",
+        "refs/user_walk/20261107/IMG_0255.jpg",
+        "refs/user_walk/20261107/IMG_0256.jpg",
+        "refs/user_walk/20261107/IMG_0258.jpg",
+        "refs/user_walk/20261107/IMG_0259.jpg",
+        "refs/roadview/gs_caltex/rv_gs_canopy_from_G13.jpg",
+        "refs/roadview/gs_caltex/rv_g13_exit_lot.jpg"
+      ],
+      "findings": [
+        {
+          "id": "daiso/ST-L1",
+          "status": "applied_integrated_with_gotomall",
+          "change": "G13 flat white soffit/grey-steel/green-glass enclosure with lime-dotted G13 and GOTO MALL graphic; west landing left open. West-facing glass lift box and paired vented cabinets added.",
+          "world": {
+            "canopy_bbox": [
+              329.2,
+              -235.04,
+              336.3,
+              -229.96
+            ],
+            "canopy_top_y": 3.24,
+            "open_landing": [
+              330,
+              -232.3
+            ],
+            "lift_center": [
+              339,
+              -232
+            ],
+            "lift_size": [
+              2.5,
+              4.04,
+              2.5
+            ],
+            "cabinet_centers": [
+              [
+                341.55,
+                -231
+              ],
+              [
+                343.1,
+                -231
+              ]
+            ],
+            "pavement_exclusion": [
+              [
+                [
+                  334.717502,
+                  -236.773694
+                ],
+                [
+                  339.103797,
+                  -234.824229
+                ],
+                [
+                  336.695396,
+                  -229.405327
+                ],
+                [
+                  332.309101,
+                  -231.354791
+                ]
+              ],
+              [
+                [
+                  335.830215,
+                  -233.744046
+                ],
+                [
+                  335.05754,
+                  -229.107995
+                ],
+                [
+                  328.63339,
+                  -230.178686
+                ],
+                [
+                  329.406065,
+                  -234.814738
+                ]
+              ]
+            ],
+            "lift_approach_deck_rect": [
+              336.9,
+              -233.2,
+              337.8,
+              -230.6
+            ],
+            "actual_stair_top": [
+              329,
+              -232.5
+            ]
+          },
+          "guess": "Canopy is fitted around the reviewed landing. Final pavement cuts copy gotomall lowerHole/upperHole, leaving the complete L stair visible. The lift approach deck spans only the eastern lower-flight edge (more than4m below), not the upper treads.",
+          "dependency": "Concurrent gotomall now registers G13 elevator at(339,-232), B1=-6/1F=0, shaft:false. Streets supplies the west-facing surface box and a supported west approach deck."
+        },
+        {
+          "id": "daiso/ST-L2",
+          "status": "applied",
+          "change": "Trim old raised planted island at x315, add small grey 20x10cm pavers across x315..347, tactile line, two-rail dark curb fence with x326.1..331.4 boarding gap, square wayfinding obelisk, blue electric/green buses; no shelter.",
+          "world": {
+            "pavement_x": [
+              315,
+              347
+            ],
+            "curb_formula": "z=-234.65-(x-330)*0.387",
+            "fence_x_runs": [
+              [
+                315,
+                326.1
+              ],
+              [
+                331.4,
+                345.5
+              ]
+            ],
+            "obelisk": [
+              328,
+              -234
+            ],
+            "blue_bus_center": [
+              326.1,
+              -234.6907
+            ],
+            "green_bus_center": [
+              311.3,
+              -228.9631
+            ]
+          },
+          "guess": "Curb uses OSM road tangent; exact bus positions, furniture spacing and paver module are frame-scaled."
+        },
+        {
+          "id": "daiso/ST-L3",
+          "status": "applied",
+          "change": "Claim1173093430, retain surveyed octagon, replace generic beige3F with teal2F, dark window ribbons, deep silver fascia/overhang/floodlights and north glazed entry with readable222.",
+          "world": {
+            "osm": 1173093430,
+            "footprint_bbox": [
+              327.97,
+              -214.51,
+              343.91,
+              -197.91
+            ],
+            "floors_y": [
+              0,
+              3.55
+            ],
+            "roof_y": 7.5,
+            "fascia_y": [
+              6.1,
+              7.5
+            ],
+            "overhang_m": 0.8,
+            "entrance": [
+              333.13,
+              -213.195
+            ]
+          },
+          "guess": "Floor heights and interior rear service stair/lift are inferred; no unseen interior tenants invented."
+        },
+        {
+          "id": "daiso/ST-L4",
+          "status": "applied",
+          "change": "Concrete forecourt, six-column teal/white pump canopy,20 soffit lights, arched glass skylight,4 islands plus standalone33; hoses, screens, guards, blue/red paint, arrows, yellow 일단 정지, cones and parked cars.",
+          "world": {
+            "apron_rect": [
+              312,
+              -229,
+              365,
+              -197
+            ],
+            "canopy_center": [
+              352,
+              -214
+            ],
+            "canopy_size_xz": [
+              12,
+              20
+            ],
+            "canopy_roof_y": 6.37,
+            "islands": [
+              [
+                347.1,
+                -219
+              ],
+              [
+                356.9,
+                -219
+              ],
+              [
+                347.1,
+                -210
+              ],
+              [
+                356.9,
+                -210
+              ]
+            ],
+            "standalone_pump33": [
+              328,
+              -218.3
+            ]
+          },
+          "guess": "12m E-W by20m N-S avoids office overlap; island centres, exact markings and skylight dimensions are estimates. Unseen pump IDs omitted."
+        },
+        {
+          "id": "daiso/ST-D1",
+          "status": "applied",
+          "change": "Twin-teal-post GS칼텍스/KIXX prime pole, white wall with teal coping and legible carwash boards; large mottled-bark plane-tree silhouette.",
+          "world": {
+            "pole": [
+              319,
+              -226
+            ],
+            "pole_height_m": 7,
+            "wall_x": 316.3,
+            "west_wall_z_runs": [
+              [
+                -225,
+                -213
+              ],
+              [
+                -203,
+                -197.6
+              ]
+            ],
+            "south_wall_z": -197.6,
+            "tree": [
+              328.65,
+              -231.2
+            ]
+          },
+          "guess": "Wall extents/tree centre are fitted, with tree displaced from the approximate review position to clear #217/218 and roof. GS swoosh represented with GS brand text per PLACE_API text-only sign rule. Unreadable tariff numbers omitted."
+        },
+        {
+          "id": "daiso/ST-C1",
+          "status": "applied",
+          "change": "Research trace cameras preserve approved x/z/yaw at#217..226. #217 uses actual final-step support-.737866 and#218 paved.15. Two extra paved cameras for#220/221 document neighbouring stair-hole overlap without changing source poses.",
+          "world": {
+            "photo217": [
+              330,
+              -0.7378656038,
+              -232.3,
+              51.1
+            ],
+            "photo218": [
+              328.6,
+              0.15,
+              -233,
+              55.2
+            ]
+          },
+          "guess": "Pitch remains0; roadview operator camera height is not inferred into user eye-height poses."
+        }
+      ],
+      "skipped_ids": [],
+      "deferred_parts": [],
+      "verification": {
+        "syntax": "node --check js/places/streets.js passed",
+        "streets_smoke": "node tests/smoke.mjs streets → OK;105147 base quads, no detail errors",
+        "streets_walk": "Final node tests/walk.mjs streets --no-city →16ok,0blocked.",
+        "combined_smoke": "Final node tests/smoke.mjs streets gotomall gyeongbu gyeongbu_east --quiet →OK. Only stale streets _meta claim warning. Final concurrent scene:1665meshes/~4521k triangles.",
+        "full_walk": "Final node tests/walk.mjs cannot complete: concurrent famille.js:20 calls buildDeck(K), but buildDeck is undefined (ReferenceError). No forbidden neighbour edit. Earlier pre-integration long-running full-world snapshot was stopped after it was superseded by final geometry; no zero-blocked result claimed.",
+        "physics_audit": "Initial streets+gyeongbu+gyeongbu_east+city: G13→stop/lift/GS and GS→photo0 parking route pass. Final streets+gotomall: #217 support-.737866 clear;#218 support.15 clear; lift front/threshold/car support.15 clear; spawn(328,-232.5) support.15 clear. See integration_notes for neighbour-owned well crossing outdoor poses.",
+        "synthetic_well": "Initial synthetic provisional-well check passed, then superseded by actual gotomall holes. Final explicit west lift deck preserves surface approach over deep lower-flight edge.",
+        "render": "Not run per user sandbox instruction. Opened original photos and supplied roadview; operator rendering still required.",
+        "metadata": "_meta.json needs operator regeneration after all jobs. Not run because task permits only streets.js and research/streets.json edits.",
+        "git_diff_check": "Passed for both permitted files; research JSON parses.",
+        "snapshot_sha256": {
+          "js/places/streets.js": "0ac1b808da2d5468b519e8efa6a27304956d0bec1f4c68599895601c5f0a830c",
+          "js/places/gotomall.js": "266b2b005be2a22ad90bbeb59267eacd80185bc0bd348257ca6e19844cdd5777",
+          "js/places/famille.js": "e65f785e575444bb2e60e433d145ea62777810567513e940c836079ae4c58ec3"
+        }
+      },
+      "integration_notes": [
+        "Initial gotomall G11.seam build error resolved during this task; final combined smoke now OK.",
+        "Gotomall final top is(329,-232.5). Approved #217(330,-232.3) lies on its last flight at feet y=-0.7378656. Trace keeps approved x/z/yaw and uses measured support.",
+        "Concurrent gotomall upperHole overlaps approved outdoor poses#219/220/221. #219 support=-0.0595053;#220=-0.8925794;#221=-1.3686217 and capsule push0.279m. Do not cap those stair treads to force an outdoor pose. Source poses remain recorded; added clear paved auxiliary cameras for220/221. This shared-layout disagreement is unresolved in the neighbour-owned stairs.",
+        "G13 street lift has paved west approach/threshold/car at y.15. Gotomall registers its street stop at0; the15cm pavement step is traversable.",
+        "Initial guessed well and synthetic test superseded by actual gotomall holes. No underground geometry edited.",
+        "Final full-world walk blocked before route checks by concurrent famille buildDeck undefined. Required zero-blocked result remains unverified; streets-only walk has0blocked."
+      ]
     }
   }
 }
