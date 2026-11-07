@@ -1349,776 +1349,100 @@
       "Round18 overrides current positions and confidence; older round notes are historical. See modeling.round18.guesses and physical_limits. A source cell present in upperGuidePlans is not proof that its entire shop has rendered."
     ],
     "validation": {
-      "round": 18,
+      "round": 19,
       "date": "2026-11-07",
-      "status": "required tests pass; upper geometry/registration still partial",
-      "source_sha256": "be041709c6ab83148c7283b23394ed531c4ff61a228da91943fc7fa20bc790bf",
+      "status": "Required checks pass; upper registration L1/N1 unresolved, L2 partial",
+      "source_sha256": "9e9e4b9dc26419ebb18bd417b6e5571eed9ecdd2597909f5be3ed77b356ac817",
       "smoke": {
-        "command": "node tests/smoke.mjs shinsegae centralcity gotomall jwmarriott station",
+        "command": "node tests/smoke.mjs shinsegae centralcity gotomall jwmarriott station --quiet",
         "result": "OK",
-        "warnings": 6,
-        "warning_explanation": "1M destination menu entries use horizontal offsets to a separate physical bank; smoke probes near originating car. Dedicated walk checks actual remote destination offsets."
-      },
-      "walk": {
-        "command": "node tests/walk.mjs",
-        "result": "walk: 719 ok, 0 blocked",
-        "required_zero_blocked_achieved": true,
-        "blocked_lines": []
+        "warnings": 7,
+        "warning_explanation": "Six1Mmenu entries and one north-lift11F entry use destination offsets; smoke warns while probing around originating shafts. Actual destination walking passes."
       },
       "own_walk": {
         "command": "node tests/walk.mjs shinsegae --no-city",
-        "result": "walk: 218 ok, 0 blocked"
+        "result": "walk: 198 ok, 0 blocked"
       },
-      "escalator_audit": {
-        "total": 40,
-        "failures": [],
-        "method": "40 escalators ×41 centreline samples, capsule.32m/height1.75m; support, wall collision and headroom"
+      "camera_qa": {
+        "active_floor_support_capsule_headroom": {
+          "checked": 824,
+          "passed": 824
+        },
+        "selected_eye_rays_and_people": {
+          "checked": 271,
+          "passed": 271
+        },
+        "flags": [],
+        "detail_errors": [],
+        "source783_preserved": true,
+        "webgl_rendered": false
+      },
+      "escalator_qa": {
+        "upper_escalators": {
+          "flights": 36,
+          "samples": 10908,
+          "collision_max_m": 0,
+          "headroom_failures": 0,
+          "max_support_delta_m": 0.048
+        },
+        "new_B1_B2_escalators": {
+          "samples": 202,
+          "collision_max_m": 0,
+          "max_support_delta_m": 0.001
+        },
+        "Dior": {
+          "direct_path_m": 8.4,
+          "local_path": [
+            [
+              10,
+              63
+            ],
+            [
+              10,
+              54.6
+            ]
+          ],
+          "y": 7,
+          "old_seam_fullheight_walls": 0
+        },
+        "1F_to_2F_arrivals": {
+          "banks": 2,
+          "clear_u": [
+            43.6,
+            46.5
+          ],
+          "aisle_access_path_m": 5
+        },
+        "lift_exits": {
+          "tested_stops": 12,
+          "floors": [
+            "2F",
+            "10F"
+          ],
+          "banks": 3,
+          "cars_per_bank": 2,
+          "all_can_walk_beyond_4m": true,
+          "10F_annex_paths_m": [
+            4.8,
+            4.6
+          ]
+        }
       },
       "visual_render": {
-        "total": 824,
-        "new": 40,
-        "deferred_to_centralcity": 15,
-        "method": "CPU actual-kit geometry, support/capsule/headroom/person clearance, three eye rays; representative before/after software triangle renders. No WebGL screenshots or tests/shot.mjs.",
-        "limitations": "CPU previews omit textures, text, transparent glass, actual lighting and gloss. They verify geometry/framing only. Actual WebGL visual appearance remains unverified.",
-        "new_camera_rules": "All camera y values are floor levels, not eye height. New Sweet Park/HOS camera coordinates are deferred and must be recomputed from official source pixels after the centralcity transform changes.",
-        "photo_matching_limits": [
-          "b1 C2 p5QE_50 unidentified portal remains unmatched",
-          "b1 C3 srY_30 intermediate lobby remains unmatched",
-          "2F RW40/RW190/RW250 locations are hypotheses; shapes/material references do not prove exact geographic matches",
-          "Unphotographed 3F–7F/9F/10F cameras are official-plan inspections, not photo matches",
-          "c2KRa_110/160 depict the same paused frame. up_07 reuses up_06; independent1F pose was visually contradicted. Exact floor inference and multi-level staircase registration remain partial."
-        ],
-        "final_geometry_audit": {
-          "total": 824,
-          "passed": 820,
-          "acceptedCloseups": 4,
-          "bad": [],
-          "exceptions": [
-            {
-              "index": 70,
-              "reason": "Physically clear intentional Bo&Mie display close-up; generic near-wall distance alone fails. No arbitrary displacement into merchandise.",
-              "rays": [
-                0.985,
-                0.9,
-                0.985
-              ]
-            },
-            {
-              "index": 100,
-              "id": "ssg_r14_b1_4",
-              "reason": "Physically clear dry-aging cabinet close-up matching source photo. Generic three-ray distance heuristic is not applicable to this close-up.",
-              "rays": [
-                2.136,
-                1.006,
-                2.135
-              ]
-            },
-            {
-              "index": 102,
-              "id": "ssg_r14_b1_6",
-              "reason": "Intentional 1.1 m view of glass-front gold letters from p5QE_180. Physical support/capsule/headroom/people clearance pass; distance heuristic alone fails.",
-              "rays": [
-                1.194,
-                1.091,
-                1.194
-              ]
-            },
-            {
-              "index": 788,
-              "id": "ssg_r18_b1_04",
-              "reason": "Intentional 1.1 m view of glass-front gold letters from p5QE_180. Physical support/capsule/headroom/people clearance pass; distance heuristic alone fails.",
-              "rays": [
-                1.194,
-                1.091,
-                1.194
-              ]
-            }
-          ],
-          "final_manual_correction": "up_07 reuses up_06 verified safe pose after visually matching the duplicate paused video frames; total/pass counts unchanged."
-        },
-        "legacy_lower_review": {
-          "method": "Suggested local shifts only. Preserve target line, yaw and pitch. Not automatically applied; photo framing not rendered.",
-          "suggested_overrides": [
-            {
-              "index": 4,
-              "id": "hall_a",
-              "spot": "1층 브랜드 셀 격자 · 북쪽 팝업",
-              "source_plan_cell": null,
-              "delta_view_m": 0.4,
-              "override": {
-                "x": -50.72596744445774,
-                "y": 0,
-                "z": -4.5240551146192685,
-                "yawDeg": 110.785,
-                "pitchDeg": 0,
-                "local_uv": [
-                  45.59880924321741,
-                  38.500396272620314
-                ],
-                "camera_mesh_qa": {
-                  "support": 0,
-                  "collision": 0,
-                  "headroom": null,
-                  "clearance": 0.4,
-                  "personClearance": 0.9505317762929449,
-                  "rays": [
-                    12,
-                    4.812,
-                    12
-                  ],
-                  "bad": false,
-                  "method": "CPU real kit support/capsule/headroom/eye rays; position-only correction; no WebGL verification"
-                },
-                "camera_qa": "Small shift along existing camera view axis; original photo/official target line and pitch retained. Physical and three-ray checks pass. CPU PNG confirms intended pop-up/escalator/mezzanine cafe remains in frame; textures/text/gloss not rendered."
-              },
-              "cpu_render_verified": true,
-              "preview": "/private/tmp/ssg-r18-lower-hall_a.png"
-            },
-            {
-              "index": 11,
-              "id": "ssg_04",
-              "spot": "1F 북서 중층 에스컬레이터 · 공식 슬롯",
-              "source_plan_cell": null,
-              "delta_view_m": -0.7000000000000001,
-              "override": {
-                "x": -89.63104330370686,
-                "y": 0,
-                "z": -12.64286059353334,
-                "yawDeg": 201.01668872490615,
-                "pitchDeg": 3,
-                "local_uv": [
-                  12.100000000000001,
-                  17.099894274810314
-                ],
-                "camera_mesh_qa": {
-                  "support": 0,
-                  "collision": 0,
-                  "headroom": null,
-                  "clearance": 0.4,
-                  "personClearance": 3.7014538441272364,
-                  "rays": [
-                    2.057,
-                    1.882,
-                    2.064
-                  ],
-                  "bad": false,
-                  "method": "CPU real kit support/capsule/headroom/eye rays; position-only correction; no WebGL verification"
-                },
-                "camera_qa": "Small shift along existing camera view axis; original photo/official target line and pitch retained. Physical and three-ray checks pass. CPU PNG confirms intended pop-up/escalator/mezzanine cafe remains in frame; textures/text/gloss not rendered."
-              },
-              "cpu_render_verified": true,
-              "preview": "/private/tmp/ssg-r18-lower-ssg_04.png"
-            },
-            {
-              "index": 15,
-              "id": "ssg_08",
-              "spot": "중층 링 · 베키아에누보와 어퍼하우스",
-              "source_plan_cell": null,
-              "delta_view_m": 0.1,
-              "override": {
-                "x": -53.02995340946724,
-                "y": 3.6,
-                "z": 34.41949405016717,
-                "yawDeg": 185.766,
-                "pitchDeg": 0,
-                "local_uv": [
-                  29.473972606643045,
-                  74.0962918426678
-                ],
-                "camera_mesh_qa": {
-                  "support": 3.6,
-                  "collision": 0,
-                  "headroom": null,
-                  "clearance": 0.35951594896408423,
-                  "personClearance": 3.60642423253719,
-                  "rays": [
-                    11.854,
-                    10.623,
-                    10.387
-                  ],
-                  "bad": false,
-                  "method": "CPU real kit support/capsule/headroom/eye rays; position-only correction; no WebGL verification"
-                },
-                "camera_qa": "Small shift along existing camera view axis; original photo/official target line and pitch retained. Physical and three-ray checks pass. CPU PNG confirms intended pop-up/escalator/mezzanine cafe remains in frame; textures/text/gloss not rendered."
-              },
-              "cpu_render_verified": true,
-              "preview": "/private/tmp/ssg-r18-lower-ssg_08.png"
-            },
-            {
-              "index": 21,
-              "id": null,
-              "spot": "B1 JS가든 델리",
-              "source_plan_cell": [
-                401.06,
-                362.71,
-                420.2,
-                406.45
-              ],
-              "delta_view_m": 0.2,
-              "override": {
-                "x": -42.680465945421524,
-                "y": -6,
-                "z": -33.761386863027,
-                "yawDeg": -69.183,
-                "pitchDeg": 0,
-                "local_uv": [
-                  63.568288366879614,
-                  14.019183088606818
-                ],
-                "camera_mesh_qa": {
-                  "support": -6,
-                  "collision": 0,
-                  "headroom": null,
-                  "clearance": 0.4,
-                  "personClearance": 0.7094848563465063,
-                  "rays": [
-                    3.423,
-                    3.127,
-                    3.423
-                  ],
-                  "bad": false,
-                  "method": "CPU real kit support/capsule/headroom/eye rays; position-only correction; no WebGL verification"
-                },
-                "camera_qa": "Small shift along existing camera view axis; original photo/official target line and pitch retained. Physical and three-ray checks pass. CPU before/after PNG comparison confirms comparable shop/fixture framing; text, transparency, texture and gloss omitted."
-              },
-              "preview": "/private/tmp/lower_21_after.png",
-              "cpu_render_verified": true
-            },
-            {
-              "index": 29,
-              "id": null,
-              "spot": "B1 서연",
-              "source_plan_cell": [
-                401.06,
-                516.73,
-                420.2,
-                542.24
-              ],
-              "delta_view_m": 0.1,
-              "override": {
-                "x": -28.885005973841434,
-                "y": -6,
-                "z": 2.7726222520131563,
-                "yawDeg": -77.069,
-                "pitchDeg": 0,
-                "local_uv": [
-                  63.46540978153331,
-                  53.0743847488273
-                ],
-                "camera_mesh_qa": {
-                  "support": -6,
-                  "collision": 0.018344311096207367,
-                  "headroom": null,
-                  "clearance": 0.4,
-                  "personClearance": 2.646678857641831,
-                  "rays": [
-                    3.794,
-                    3.252,
-                    3.353
-                  ],
-                  "bad": false,
-                  "method": "CPU real kit support/capsule/headroom/eye rays; position-only correction; no WebGL verification"
-                },
-                "camera_qa": "Small shift along existing camera view axis; original photo/official target line and pitch retained. Physical and three-ray checks pass. CPU before/after PNG comparison confirms comparable shop/fixture framing; text, transparency, texture and gloss omitted."
-              },
-              "preview": "/private/tmp/lower_29_after.png",
-              "cpu_render_verified": true
-            },
-            {
-              "index": 32,
-              "id": null,
-              "spot": "B1 모스꼬라델리",
-              "source_plan_cell": [
-                401.06,
-                546.8,
-                420.2,
-                579.61
-              ],
-              "delta_view_m": -0.1,
-              "override": {
-                "x": -30.127195238576476,
-                "y": -6,
-                "z": 4.703540177643798,
-                "yawDeg": -78.422,
-                "pitchDeg": 0,
-                "local_uv": [
-                  61.610636625955586,
-                  54.438949518777115
-                ],
-                "camera_mesh_qa": {
-                  "support": -6,
-                  "collision": 0,
-                  "headroom": null,
-                  "clearance": 0.4,
-                  "personClearance": 2.606463290810225,
-                  "rays": [
-                    6.061,
-                    5.136,
-                    5.242
-                  ],
-                  "bad": false,
-                  "method": "CPU real kit support/capsule/headroom/eye rays; position-only correction; no WebGL verification"
-                },
-                "camera_qa": "Small shift along existing camera view axis; original photo/official target line and pitch retained. Physical and three-ray checks pass. CPU before/after PNG comparison confirms comparable shop/fixture framing; text, transparency, texture and gloss omitted."
-              },
-              "preview": "/private/tmp/lower_32_after.png",
-              "cpu_render_verified": true
-            },
-            {
-              "index": 35,
-              "id": null,
-              "spot": "B1 고은",
-              "source_plan_cell": [
-                401.06,
-                595.1,
-                432.96,
-                619.71
-              ],
-              "delta_view_m": -0.7000000000000001,
-              "override": {
-                "x": -27.69463890656119,
-                "y": -6,
-                "z": 4.393685017887646,
-                "yawDeg": -148.8,
-                "pitchDeg": 0,
-                "local_uv": [
-                  64.0033124715183,
-                  55.01253051955811
-                ],
-                "camera_mesh_qa": {
-                  "support": -6,
-                  "collision": 0,
-                  "headroom": null,
-                  "clearance": 0.4,
-                  "personClearance": 0.6778663065253254,
-                  "rays": [
-                    12,
-                    12,
-                    4.756
-                  ],
-                  "bad": false,
-                  "method": "CPU real kit support/capsule/headroom/eye rays; position-only correction; no WebGL verification"
-                },
-                "camera_qa": "Small shift along existing camera view axis; original photo/official target line and pitch retained. Physical and three-ray checks pass. CPU before/after PNG comparison confirms comparable shop/fixture framing; text, transparency, texture and gloss omitted."
-              },
-              "preview": "/private/tmp/lower_35_after.png",
-              "cpu_render_verified": true
-            },
-            {
-              "index": 36,
-              "id": null,
-              "spot": "B1 오목집",
-              "source_plan_cell": [
-                434.79,
-                595.1,
-                467.6,
-                619.71
-              ],
-              "delta_view_m": -2,
-              "override": {
-                "x": -28.806071154759454,
-                "y": -6,
-                "z": 2.7869567028327036,
-                "yawDeg": -173.859,
-                "pitchDeg": 0,
-                "local_uv": [
-                  63.53433594573385,
-                  53.115800966625365
-                ],
-                "camera_mesh_qa": {
-                  "support": -6,
-                  "collision": 0.01820325624751505,
-                  "headroom": null,
-                  "clearance": 0.4,
-                  "personClearance": 2.5950519250715387,
-                  "rays": [
-                    12,
-                    12,
-                    12
-                  ],
-                  "bad": false,
-                  "method": "CPU real kit support/capsule/headroom/eye rays; position-only correction; no WebGL verification"
-                },
-                "camera_qa": "Small shift along existing camera view axis; original photo/official target line and pitch retained. Physical and three-ray checks pass. CPU before/after PNG comparison confirms comparable shop/fixture framing; text, transparency, texture and gloss omitted."
-              },
-              "preview": "/private/tmp/lower_36_after.png",
-              "cpu_render_verified": true
-            },
-            {
-              "index": 47,
-              "id": null,
-              "spot": "B1 블루버터플라이",
-              "source_plan_cell": [
-                531.4,
-                400.99,
-                551.46,
-                451.11
-              ],
-              "delta_view_m": 0.1,
-              "override": {
-                "x": -40.16780552369147,
-                "y": -6,
-                "z": -9.770680300658318,
-                "yawDeg": 20.852,
-                "pitchDeg": 0,
-                "local_uv": [
-                  57.36593072237403,
-                  37.34206781781767
-                ],
-                "camera_mesh_qa": {
-                  "support": -6,
-                  "collision": 0,
-                  "headroom": null,
-                  "clearance": 0.4,
-                  "personClearance": 2.349847158159508,
-                  "rays": [
-                    12,
-                    12,
-                    12
-                  ],
-                  "bad": false,
-                  "method": "CPU real kit support/capsule/headroom/eye rays; position-only correction; no WebGL verification"
-                },
-                "camera_qa": "Small shift along existing camera view axis; original photo/official target line and pitch retained. Physical and three-ray checks pass. CPU before/after PNG comparison confirms comparable shop/fixture framing; text, transparency, texture and gloss omitted."
-              },
-              "preview": "/private/tmp/lower_47_after.png",
-              "cpu_render_verified": true
-            },
-            {
-              "index": 65,
-              "id": null,
-              "spot": "B1 팝업",
-              "source_plan_cell": [
-                786.62,
-                529.48,
-                818.53,
-                555
-              ],
-              "delta_view_m": -0.30000000000000004,
-              "override": {
-                "x": -49.38735760787279,
-                "y": -6,
-                "z": 9.199504691327736,
-                "yawDeg": -148.348,
-                "pitchDeg": 0,
-                "local_uv": [
-                  41.94049788092804,
-                  51.80730957250193
-                ],
-                "camera_mesh_qa": {
-                  "support": -6,
-                  "collision": 0,
-                  "headroom": null,
-                  "clearance": 0.4,
-                  "personClearance": 5.035446482640076,
-                  "rays": [
-                    0.67,
-                    3.049,
-                    6.496
-                  ],
-                  "bad": false,
-                  "method": "CPU real kit support/capsule/headroom/eye rays; position-only correction; no WebGL verification"
-                },
-                "camera_qa": "Small shift along existing camera view axis; original photo/official target line and pitch retained. Physical and three-ray checks pass. CPU before/after PNG comparison confirms comparable shop/fixture framing; text, transparency, texture and gloss omitted."
-              },
-              "preview": "/private/tmp/lower_65_after.png",
-              "cpu_render_verified": true,
-              "cpu_review_limitation": "Existing diagonal black escalator-side rail remains across lower view; camera shift reduces its obstruction and keeps popup counter visible."
-            },
-            {
-              "index": 67,
-              "id": null,
-              "spot": "B1 정관장 · 건강식품",
-              "source_plan_cell": [
-                949.78,
-                393.7,
-                1030.91,
-                452.93
-              ],
-              "delta_view_m": -0.30000000000000004,
-              "override": {
-                "x": -85.3421256225218,
-                "y": -6,
-                "z": 8.25669723680219,
-                "yawDeg": 21.009,
-                "pitchDeg": 0,
-                "local_uv": [
-                  8.59847698078723,
-                  38.16452978136119
-                ],
-                "camera_mesh_qa": {
-                  "support": -6,
-                  "collision": 0,
-                  "headroom": null,
-                  "clearance": 0.4,
-                  "personClearance": 2.74974605642814,
-                  "rays": [
-                    2.055,
-                    1.88,
-                    2.061
-                  ],
-                  "bad": false,
-                  "method": "CPU real kit support/capsule/headroom/eye rays; position-only correction; no WebGL verification"
-                },
-                "camera_qa": "Small shift along existing camera view axis; original photo/official target line and pitch retained. Physical and three-ray checks pass. CPU before/after PNG comparison confirms comparable shop/fixture framing; text, transparency, texture and gloss omitted."
-              },
-              "preview": "/private/tmp/lower_67_after.png",
-              "cpu_render_verified": true
-            },
-            {
-              "index": 79,
-              "id": null,
-              "spot": "B1 신세계 마켓",
-              "source_plan_cell": [
-                499.5,
-                490.3,
-                818.53,
-                774.63
-              ],
-              "delta_view_m": null,
-              "override": {
-                "x": -39.93306620909619,
-                "y": -6,
-                "z": -0.600000015859312,
-                "yawDeg": 200.86950345320363,
-                "pitchDeg": 0,
-                "local_uv": [
-                  54.31,
-                  46
-                ],
-                "target_local_uv": [
-                  54.31,
-                  48.18
-                ],
-                "camera_selection": "north_market_doorway",
-                "camera_mesh_qa": {
-                  "support": -6,
-                  "collision": 0,
-                  "headroom": null,
-                  "clearance": 0.4,
-                  "personClearance": 3.5772337082371783,
-                  "rays": [
-                    12,
-                    10.676,
-                    12
-                  ],
-                  "bad": false,
-                  "method": "CPU real kit support/capsule/headroom/eye rays and CPU geometry PNG"
-                },
-                "camera_qa": "Position at existing official north-market doorway; CPU PNG shows produce aisles clearly. Same market subject and pitch0 retained; no photoreal verification."
-              },
-              "retarget_reason": "Previous plan-cell center camera faced solid market wall. Reuse existing north-market doorway view to preserve market subject and original pitch0.",
-              "preview": "/private/tmp/lower_79_alt.png",
-              "cpu_render_verified": true
-            },
-            {
-              "index": 86,
-              "id": null,
-              "spot": "B1 영풍문고",
-              "source_plan_cell": [
-                623.47,
-                1063.53,
-                733.76,
-                1122.76
-              ],
-              "delta_view_m": 0.5,
-              "override": {
-                "x": -32.27759500228502,
-                "y": -6,
-                "z": 32.591283927334665,
-                "yawDeg": -159.152,
-                "pitchDeg": 0,
-                "local_uv": [
-                  49.61426986024017,
-                  79.75132508731488
-                ],
-                "camera_mesh_qa": {
-                  "support": -6,
-                  "collision": 0,
-                  "headroom": null,
-                  "clearance": 0.4,
-                  "personClearance": 0.7068937912302253,
-                  "rays": [
-                    5.085,
-                    4.648,
-                    5.091
-                  ],
-                  "bad": false,
-                  "method": "CPU real kit support/capsule/headroom/eye rays; position-only correction; no WebGL verification"
-                },
-                "camera_qa": "Small shift along existing camera view axis; original photo/official target line and pitch retained. Physical and three-ray checks pass. CPU before/after PNG comparison confirms comparable shop/fixture framing; text, transparency, texture and gloss omitted."
-              },
-              "preview": "/private/tmp/lower_86_after.png",
-              "cpu_render_verified": true
-            },
-            {
-              "index": 88,
-              "id": null,
-              "spot": "B1 북서 화장실",
-              "source_plan_cell": [
-                399.24,
-                324.43,
-                418.38,
-                344.48
-              ],
-              "delta_view_m": -1.4000000000000001,
-              "override": {
-                "x": -45.67725331812294,
-                "y": -6,
-                "z": -45.269326886431784,
-                "yawDeg": 20.813,
-                "pitchDeg": 0,
-                "local_uv": [
-                  64.86179025518541,
-                  2.1958174474410943
-                ],
-                "camera_mesh_qa": {
-                  "support": -6,
-                  "collision": 0,
-                  "headroom": null,
-                  "clearance": 0.4,
-                  "personClearance": 6.1245779846206,
-                  "rays": [
-                    2.075,
-                    1.896,
-                    2.075
-                  ],
-                  "bad": false,
-                  "method": "CPU real kit support/capsule/headroom/eye rays; position-only correction; no WebGL verification"
-                },
-                "camera_qa": "Small shift along existing camera view axis; original photo/official target line and pitch retained. Physical and three-ray checks pass."
-              },
-              "cpu_render_verified": false,
-              "cpu_review_limitation": "Supported clear facade viewpoint, but current B1 wall seals off official NW-toilet bump. CPU sees only wall; interior test points also do not reveal fixtures. No matching view can be claimed. Text is omitted by CPU renderer, but source geometry indicates actual wall obstruction.",
-              "preview": "/private/tmp/lower_88_after.png"
-            },
-            {
-              "index": 94,
-              "id": null,
-              "spot": "B1 광장 화장실",
-              "source_plan_cell": [
-                678.16,
-                846.63,
-                743.78,
-                948.7
-              ],
-              "delta_view_m": 0.4,
-              "override": {
-                "x": -35.75398690390274,
-                "y": -6,
-                "z": 28.5921611124607,
-                "yawDeg": 20.865,
-                "pitchDeg": 0,
-                "local_uv": [
-                  47.78287449273008,
-                  74.7783548984491
-                ],
-                "camera_mesh_qa": {
-                  "support": -6,
-                  "collision": 0,
-                  "headroom": null,
-                  "clearance": 0.4,
-                  "personClearance": 4.616688543754182,
-                  "rays": [
-                    4.399,
-                    10.273,
-                    12
-                  ],
-                  "bad": false,
-                  "method": "CPU real kit support/capsule/headroom/eye rays; position-only correction; no WebGL verification"
-                },
-                "camera_qa": "Small shift along existing camera view axis; original photo/official target line and pitch retained. Physical and three-ray checks pass. CPU before/after PNG comparison confirms comparable shop/fixture framing; text, transparency, texture and gloss omitted."
-              },
-              "preview": "/private/tmp/lower_94_after.png",
-              "cpu_render_verified": true,
-              "cpu_review_limitation": "Former view was inside near visual panel;0.4m forward clears it and shows corridor/service fixtures. Exact toilet-sign lettering not rendered by CPU."
-            },
-            {
-              "index": 99,
-              "id": "ssg_r14_b1_3",
-              "spot": "핑크 천 과일 피라미드",
-              "source_plan_cell": null,
-              "delta_view_m": -0.5,
-              "override": {
-                "x": -42.44533727563556,
-                "y": -6,
-                "z": 18.828013481189032,
-                "yawDeg": 113.77077652672824,
-                "pitchDeg": 0,
-                "local_uv": [
-                  45.0015282521527,
-                  63.27394649032131
-                ],
-                "camera_mesh_qa": {
-                  "support": -6,
-                  "collision": 0,
-                  "headroom": null,
-                  "clearance": 0.4,
-                  "personClearance": 2.0389037957479292,
-                  "rays": [
-                    6.052,
-                    1.589,
-                    4.217
-                  ],
-                  "bad": false,
-                  "method": "CPU real kit support/capsule/headroom/eye rays; position-only correction; no WebGL verification"
-                },
-                "camera_qa": "Small shift along existing camera view axis; original photo/official target line and pitch retained. Physical and three-ray checks pass. CPU before/after PNG comparison confirms comparable shop/fixture framing; text, transparency, texture and gloss omitted."
-              },
-              "preview": "/private/tmp/lower_99_after.png",
-              "cpu_render_verified": true,
-              "cpu_review_note": "Photo M27U_200 re-inspected. Pink fruit island and fluted central column now fit lower/wider frame, matching photograph subject."
-            }
-          ],
-          "unresolved": [
-            {
-              "index": 70,
-              "id": null,
-              "spot": "B1 보앤미",
-              "reason": "No passing same-view-axis shift within2.5m behind or0.5m ahead; do not blindly reaim.",
-              "classification": "B1 Bo&Mie frontage in1.8m aisle: physical clearance passes; glass closeup is intentional, same reason as _04 exception."
-            },
-            {
-              "index": 100,
-              "id": "ssg_r14_b1_4",
-              "spot": "숙성 정육 캐비닛",
-              "reason": "No passing same-view-axis shift within2.5m behind or0.5m ahead; do not blindly reaim.",
-              "classification": "Photo p5QE_300 shows butcher/cabinet closeup. Physical clearance passes;1.0m eye ray is intended cabinet/display. Can retain with closeup exception."
-            }
-          ],
-          "documented_exceptions": [
-            "ssg_r14_b1_6: Bo&Mie glass-letter close-up, same as ssg_r18_b1_04"
-          ],
-          "summary": {
-            "suggestions": 16,
-            "cpu_render_verified": 15,
-            "physical_safe_but_target_not_visually_verified": [
-              88
-            ],
-            "paired_preview_sheets": [
-              "/private/tmp/ssg-r18-lower-compare-sheet0.png",
-              "/private/tmp/ssg-r18-lower-compare-sheet1.png",
-              "/private/tmp/ssg-r18-lower-compare-sheet2.png",
-              "/private/tmp/ssg-r18-lower-compare-sheet3.png"
-            ]
-          }
-        },
-        "temporary_artifacts": "CPU preview PNGs are temporary QA files; they were not saved into the repository because the allowed edit scope contains only the JS and research JSON."
+        "performed": false,
+        "reason": "User specified tests/shot.mjs cannot run in this sandbox. Original frames/plans were inspected; final colour, gloss and text rendering require an operator rerender."
       },
       "static_checks": {
         "node --check js/places/shinsegae.js": "passed",
-        "json parse": "passed",
-        "git diff --check -- js/places/shinsegae.js data/research/shinsegae.json": "passed"
+        "git diff --check": "passed",
+        "JSON parse": "passed"
       },
-      "external_route_blocker": {
-        "route": "사용자 루트 5 [3→4] (-235.8,8.7)→(-332,-66)",
-        "preexisting_baseline": "walk: 686 ok, 1 blocked before this round; same route failed",
-        "diagnosis": [
-          "streets road surfaces cover onebailey G2 descent at approx(-337.44,-38.54),(-334.14,-47.64),(-330.41,-57.86)",
-          "banpo_shoppingtown B1 walls intersect onebailey connector near(-292.84,-44.02) through(-308.53,-56.99), y=-6"
-        ],
-        "scope": "Those modules and engine files are outside authorized edits. No workaround was added to shinsegae.",
-        "final_status": "Historical finding: latest final full-world test is719ok,0blocked including this route; external blockage no longer reproduces. This record is not an outstanding failure."
+      "walk": {
+        "command": "node tests/walk.mjs",
+        "result": "walk: 699 ok, 0 blocked",
+        "required_zero_blocked_achieved": true,
+        "blocked_lines": [],
+        "required_routes": "All 사용자 루트 and 1F 동선 routes pass."
       }
     },
     "roof": "Round14: 11F 왼쪽동을 열린 S GARDEN으로 구성. 기존 옥상설비는 오른쪽식당가 RF위로 옮겨 보존. 북측 평면유리의 역전/영높이 프리즘과 중복옥상슬래브는 생성하지 않으며 기존 나무·화단은11F정원높이로 옮긴다. 수량·좌표·높이·새 파빌리온 설치위치는 추정.",
@@ -2577,6 +1901,779 @@
           "trace_cameras_total": 784,
           "trace_cameras_added_round14": 687,
           "limitation": "새 카메라는 실제 kit 전체 상세의 바닥·충돌·머리 공간으로 검증했다. WebGL 화면 비교나 실제 렌더 성능 검증은 아니다."
+        }
+      },
+      "round18_before_round19": {
+        "round": 18,
+        "date": "2026-11-07",
+        "status": "required tests pass; upper geometry/registration still partial",
+        "source_sha256": "be041709c6ab83148c7283b23394ed531c4ff61a228da91943fc7fa20bc790bf",
+        "smoke": {
+          "command": "node tests/smoke.mjs shinsegae centralcity gotomall jwmarriott station",
+          "result": "OK",
+          "warnings": 6,
+          "warning_explanation": "1M destination menu entries use horizontal offsets to a separate physical bank; smoke probes near originating car. Dedicated walk checks actual remote destination offsets."
+        },
+        "walk": {
+          "command": "node tests/walk.mjs",
+          "result": "walk: 719 ok, 0 blocked",
+          "required_zero_blocked_achieved": true,
+          "blocked_lines": []
+        },
+        "own_walk": {
+          "command": "node tests/walk.mjs shinsegae --no-city",
+          "result": "walk: 218 ok, 0 blocked"
+        },
+        "escalator_audit": {
+          "total": 40,
+          "failures": [],
+          "method": "40 escalators ×41 centreline samples, capsule.32m/height1.75m; support, wall collision and headroom"
+        },
+        "visual_render": {
+          "total": 824,
+          "new": 40,
+          "deferred_to_centralcity": 15,
+          "method": "CPU actual-kit geometry, support/capsule/headroom/person clearance, three eye rays; representative before/after software triangle renders. No WebGL screenshots or tests/shot.mjs.",
+          "limitations": "CPU previews omit textures, text, transparent glass, actual lighting and gloss. They verify geometry/framing only. Actual WebGL visual appearance remains unverified.",
+          "new_camera_rules": "All camera y values are floor levels, not eye height. New Sweet Park/HOS camera coordinates are deferred and must be recomputed from official source pixels after the centralcity transform changes.",
+          "photo_matching_limits": [
+            "b1 C2 p5QE_50 unidentified portal remains unmatched",
+            "b1 C3 srY_30 intermediate lobby remains unmatched",
+            "2F RW40/RW190/RW250 locations are hypotheses; shapes/material references do not prove exact geographic matches",
+            "Unphotographed 3F–7F/9F/10F cameras are official-plan inspections, not photo matches",
+            "c2KRa_110/160 depict the same paused frame. up_07 reuses up_06; independent1F pose was visually contradicted. Exact floor inference and multi-level staircase registration remain partial."
+          ],
+          "final_geometry_audit": {
+            "total": 824,
+            "passed": 820,
+            "acceptedCloseups": 4,
+            "bad": [],
+            "exceptions": [
+              {
+                "index": 70,
+                "reason": "Physically clear intentional Bo&Mie display close-up; generic near-wall distance alone fails. No arbitrary displacement into merchandise.",
+                "rays": [
+                  0.985,
+                  0.9,
+                  0.985
+                ]
+              },
+              {
+                "index": 100,
+                "id": "ssg_r14_b1_4",
+                "reason": "Physically clear dry-aging cabinet close-up matching source photo. Generic three-ray distance heuristic is not applicable to this close-up.",
+                "rays": [
+                  2.136,
+                  1.006,
+                  2.135
+                ]
+              },
+              {
+                "index": 102,
+                "id": "ssg_r14_b1_6",
+                "reason": "Intentional 1.1 m view of glass-front gold letters from p5QE_180. Physical support/capsule/headroom/people clearance pass; distance heuristic alone fails.",
+                "rays": [
+                  1.194,
+                  1.091,
+                  1.194
+                ]
+              },
+              {
+                "index": 788,
+                "id": "ssg_r18_b1_04",
+                "reason": "Intentional 1.1 m view of glass-front gold letters from p5QE_180. Physical support/capsule/headroom/people clearance pass; distance heuristic alone fails.",
+                "rays": [
+                  1.194,
+                  1.091,
+                  1.194
+                ]
+              }
+            ],
+            "final_manual_correction": "up_07 reuses up_06 verified safe pose after visually matching the duplicate paused video frames; total/pass counts unchanged."
+          },
+          "legacy_lower_review": {
+            "method": "Suggested local shifts only. Preserve target line, yaw and pitch. Not automatically applied; photo framing not rendered.",
+            "suggested_overrides": [
+              {
+                "index": 4,
+                "id": "hall_a",
+                "spot": "1층 브랜드 셀 격자 · 북쪽 팝업",
+                "source_plan_cell": null,
+                "delta_view_m": 0.4,
+                "override": {
+                  "x": -50.72596744445774,
+                  "y": 0,
+                  "z": -4.5240551146192685,
+                  "yawDeg": 110.785,
+                  "pitchDeg": 0,
+                  "local_uv": [
+                    45.59880924321741,
+                    38.500396272620314
+                  ],
+                  "camera_mesh_qa": {
+                    "support": 0,
+                    "collision": 0,
+                    "headroom": null,
+                    "clearance": 0.4,
+                    "personClearance": 0.9505317762929449,
+                    "rays": [
+                      12,
+                      4.812,
+                      12
+                    ],
+                    "bad": false,
+                    "method": "CPU real kit support/capsule/headroom/eye rays; position-only correction; no WebGL verification"
+                  },
+                  "camera_qa": "Small shift along existing camera view axis; original photo/official target line and pitch retained. Physical and three-ray checks pass. CPU PNG confirms intended pop-up/escalator/mezzanine cafe remains in frame; textures/text/gloss not rendered."
+                },
+                "cpu_render_verified": true,
+                "preview": "/private/tmp/ssg-r18-lower-hall_a.png"
+              },
+              {
+                "index": 11,
+                "id": "ssg_04",
+                "spot": "1F 북서 중층 에스컬레이터 · 공식 슬롯",
+                "source_plan_cell": null,
+                "delta_view_m": -0.7000000000000001,
+                "override": {
+                  "x": -89.63104330370686,
+                  "y": 0,
+                  "z": -12.64286059353334,
+                  "yawDeg": 201.01668872490615,
+                  "pitchDeg": 3,
+                  "local_uv": [
+                    12.100000000000001,
+                    17.099894274810314
+                  ],
+                  "camera_mesh_qa": {
+                    "support": 0,
+                    "collision": 0,
+                    "headroom": null,
+                    "clearance": 0.4,
+                    "personClearance": 3.7014538441272364,
+                    "rays": [
+                      2.057,
+                      1.882,
+                      2.064
+                    ],
+                    "bad": false,
+                    "method": "CPU real kit support/capsule/headroom/eye rays; position-only correction; no WebGL verification"
+                  },
+                  "camera_qa": "Small shift along existing camera view axis; original photo/official target line and pitch retained. Physical and three-ray checks pass. CPU PNG confirms intended pop-up/escalator/mezzanine cafe remains in frame; textures/text/gloss not rendered."
+                },
+                "cpu_render_verified": true,
+                "preview": "/private/tmp/ssg-r18-lower-ssg_04.png"
+              },
+              {
+                "index": 15,
+                "id": "ssg_08",
+                "spot": "중층 링 · 베키아에누보와 어퍼하우스",
+                "source_plan_cell": null,
+                "delta_view_m": 0.1,
+                "override": {
+                  "x": -53.02995340946724,
+                  "y": 3.6,
+                  "z": 34.41949405016717,
+                  "yawDeg": 185.766,
+                  "pitchDeg": 0,
+                  "local_uv": [
+                    29.473972606643045,
+                    74.0962918426678
+                  ],
+                  "camera_mesh_qa": {
+                    "support": 3.6,
+                    "collision": 0,
+                    "headroom": null,
+                    "clearance": 0.35951594896408423,
+                    "personClearance": 3.60642423253719,
+                    "rays": [
+                      11.854,
+                      10.623,
+                      10.387
+                    ],
+                    "bad": false,
+                    "method": "CPU real kit support/capsule/headroom/eye rays; position-only correction; no WebGL verification"
+                  },
+                  "camera_qa": "Small shift along existing camera view axis; original photo/official target line and pitch retained. Physical and three-ray checks pass. CPU PNG confirms intended pop-up/escalator/mezzanine cafe remains in frame; textures/text/gloss not rendered."
+                },
+                "cpu_render_verified": true,
+                "preview": "/private/tmp/ssg-r18-lower-ssg_08.png"
+              },
+              {
+                "index": 21,
+                "id": null,
+                "spot": "B1 JS가든 델리",
+                "source_plan_cell": [
+                  401.06,
+                  362.71,
+                  420.2,
+                  406.45
+                ],
+                "delta_view_m": 0.2,
+                "override": {
+                  "x": -42.680465945421524,
+                  "y": -6,
+                  "z": -33.761386863027,
+                  "yawDeg": -69.183,
+                  "pitchDeg": 0,
+                  "local_uv": [
+                    63.568288366879614,
+                    14.019183088606818
+                  ],
+                  "camera_mesh_qa": {
+                    "support": -6,
+                    "collision": 0,
+                    "headroom": null,
+                    "clearance": 0.4,
+                    "personClearance": 0.7094848563465063,
+                    "rays": [
+                      3.423,
+                      3.127,
+                      3.423
+                    ],
+                    "bad": false,
+                    "method": "CPU real kit support/capsule/headroom/eye rays; position-only correction; no WebGL verification"
+                  },
+                  "camera_qa": "Small shift along existing camera view axis; original photo/official target line and pitch retained. Physical and three-ray checks pass. CPU before/after PNG comparison confirms comparable shop/fixture framing; text, transparency, texture and gloss omitted."
+                },
+                "preview": "/private/tmp/lower_21_after.png",
+                "cpu_render_verified": true
+              },
+              {
+                "index": 29,
+                "id": null,
+                "spot": "B1 서연",
+                "source_plan_cell": [
+                  401.06,
+                  516.73,
+                  420.2,
+                  542.24
+                ],
+                "delta_view_m": 0.1,
+                "override": {
+                  "x": -28.885005973841434,
+                  "y": -6,
+                  "z": 2.7726222520131563,
+                  "yawDeg": -77.069,
+                  "pitchDeg": 0,
+                  "local_uv": [
+                    63.46540978153331,
+                    53.0743847488273
+                  ],
+                  "camera_mesh_qa": {
+                    "support": -6,
+                    "collision": 0.018344311096207367,
+                    "headroom": null,
+                    "clearance": 0.4,
+                    "personClearance": 2.646678857641831,
+                    "rays": [
+                      3.794,
+                      3.252,
+                      3.353
+                    ],
+                    "bad": false,
+                    "method": "CPU real kit support/capsule/headroom/eye rays; position-only correction; no WebGL verification"
+                  },
+                  "camera_qa": "Small shift along existing camera view axis; original photo/official target line and pitch retained. Physical and three-ray checks pass. CPU before/after PNG comparison confirms comparable shop/fixture framing; text, transparency, texture and gloss omitted."
+                },
+                "preview": "/private/tmp/lower_29_after.png",
+                "cpu_render_verified": true
+              },
+              {
+                "index": 32,
+                "id": null,
+                "spot": "B1 모스꼬라델리",
+                "source_plan_cell": [
+                  401.06,
+                  546.8,
+                  420.2,
+                  579.61
+                ],
+                "delta_view_m": -0.1,
+                "override": {
+                  "x": -30.127195238576476,
+                  "y": -6,
+                  "z": 4.703540177643798,
+                  "yawDeg": -78.422,
+                  "pitchDeg": 0,
+                  "local_uv": [
+                    61.610636625955586,
+                    54.438949518777115
+                  ],
+                  "camera_mesh_qa": {
+                    "support": -6,
+                    "collision": 0,
+                    "headroom": null,
+                    "clearance": 0.4,
+                    "personClearance": 2.606463290810225,
+                    "rays": [
+                      6.061,
+                      5.136,
+                      5.242
+                    ],
+                    "bad": false,
+                    "method": "CPU real kit support/capsule/headroom/eye rays; position-only correction; no WebGL verification"
+                  },
+                  "camera_qa": "Small shift along existing camera view axis; original photo/official target line and pitch retained. Physical and three-ray checks pass. CPU before/after PNG comparison confirms comparable shop/fixture framing; text, transparency, texture and gloss omitted."
+                },
+                "preview": "/private/tmp/lower_32_after.png",
+                "cpu_render_verified": true
+              },
+              {
+                "index": 35,
+                "id": null,
+                "spot": "B1 고은",
+                "source_plan_cell": [
+                  401.06,
+                  595.1,
+                  432.96,
+                  619.71
+                ],
+                "delta_view_m": -0.7000000000000001,
+                "override": {
+                  "x": -27.69463890656119,
+                  "y": -6,
+                  "z": 4.393685017887646,
+                  "yawDeg": -148.8,
+                  "pitchDeg": 0,
+                  "local_uv": [
+                    64.0033124715183,
+                    55.01253051955811
+                  ],
+                  "camera_mesh_qa": {
+                    "support": -6,
+                    "collision": 0,
+                    "headroom": null,
+                    "clearance": 0.4,
+                    "personClearance": 0.6778663065253254,
+                    "rays": [
+                      12,
+                      12,
+                      4.756
+                    ],
+                    "bad": false,
+                    "method": "CPU real kit support/capsule/headroom/eye rays; position-only correction; no WebGL verification"
+                  },
+                  "camera_qa": "Small shift along existing camera view axis; original photo/official target line and pitch retained. Physical and three-ray checks pass. CPU before/after PNG comparison confirms comparable shop/fixture framing; text, transparency, texture and gloss omitted."
+                },
+                "preview": "/private/tmp/lower_35_after.png",
+                "cpu_render_verified": true
+              },
+              {
+                "index": 36,
+                "id": null,
+                "spot": "B1 오목집",
+                "source_plan_cell": [
+                  434.79,
+                  595.1,
+                  467.6,
+                  619.71
+                ],
+                "delta_view_m": -2,
+                "override": {
+                  "x": -28.806071154759454,
+                  "y": -6,
+                  "z": 2.7869567028327036,
+                  "yawDeg": -173.859,
+                  "pitchDeg": 0,
+                  "local_uv": [
+                    63.53433594573385,
+                    53.115800966625365
+                  ],
+                  "camera_mesh_qa": {
+                    "support": -6,
+                    "collision": 0.01820325624751505,
+                    "headroom": null,
+                    "clearance": 0.4,
+                    "personClearance": 2.5950519250715387,
+                    "rays": [
+                      12,
+                      12,
+                      12
+                    ],
+                    "bad": false,
+                    "method": "CPU real kit support/capsule/headroom/eye rays; position-only correction; no WebGL verification"
+                  },
+                  "camera_qa": "Small shift along existing camera view axis; original photo/official target line and pitch retained. Physical and three-ray checks pass. CPU before/after PNG comparison confirms comparable shop/fixture framing; text, transparency, texture and gloss omitted."
+                },
+                "preview": "/private/tmp/lower_36_after.png",
+                "cpu_render_verified": true
+              },
+              {
+                "index": 47,
+                "id": null,
+                "spot": "B1 블루버터플라이",
+                "source_plan_cell": [
+                  531.4,
+                  400.99,
+                  551.46,
+                  451.11
+                ],
+                "delta_view_m": 0.1,
+                "override": {
+                  "x": -40.16780552369147,
+                  "y": -6,
+                  "z": -9.770680300658318,
+                  "yawDeg": 20.852,
+                  "pitchDeg": 0,
+                  "local_uv": [
+                    57.36593072237403,
+                    37.34206781781767
+                  ],
+                  "camera_mesh_qa": {
+                    "support": -6,
+                    "collision": 0,
+                    "headroom": null,
+                    "clearance": 0.4,
+                    "personClearance": 2.349847158159508,
+                    "rays": [
+                      12,
+                      12,
+                      12
+                    ],
+                    "bad": false,
+                    "method": "CPU real kit support/capsule/headroom/eye rays; position-only correction; no WebGL verification"
+                  },
+                  "camera_qa": "Small shift along existing camera view axis; original photo/official target line and pitch retained. Physical and three-ray checks pass. CPU before/after PNG comparison confirms comparable shop/fixture framing; text, transparency, texture and gloss omitted."
+                },
+                "preview": "/private/tmp/lower_47_after.png",
+                "cpu_render_verified": true
+              },
+              {
+                "index": 65,
+                "id": null,
+                "spot": "B1 팝업",
+                "source_plan_cell": [
+                  786.62,
+                  529.48,
+                  818.53,
+                  555
+                ],
+                "delta_view_m": -0.30000000000000004,
+                "override": {
+                  "x": -49.38735760787279,
+                  "y": -6,
+                  "z": 9.199504691327736,
+                  "yawDeg": -148.348,
+                  "pitchDeg": 0,
+                  "local_uv": [
+                    41.94049788092804,
+                    51.80730957250193
+                  ],
+                  "camera_mesh_qa": {
+                    "support": -6,
+                    "collision": 0,
+                    "headroom": null,
+                    "clearance": 0.4,
+                    "personClearance": 5.035446482640076,
+                    "rays": [
+                      0.67,
+                      3.049,
+                      6.496
+                    ],
+                    "bad": false,
+                    "method": "CPU real kit support/capsule/headroom/eye rays; position-only correction; no WebGL verification"
+                  },
+                  "camera_qa": "Small shift along existing camera view axis; original photo/official target line and pitch retained. Physical and three-ray checks pass. CPU before/after PNG comparison confirms comparable shop/fixture framing; text, transparency, texture and gloss omitted."
+                },
+                "preview": "/private/tmp/lower_65_after.png",
+                "cpu_render_verified": true,
+                "cpu_review_limitation": "Existing diagonal black escalator-side rail remains across lower view; camera shift reduces its obstruction and keeps popup counter visible."
+              },
+              {
+                "index": 67,
+                "id": null,
+                "spot": "B1 정관장 · 건강식품",
+                "source_plan_cell": [
+                  949.78,
+                  393.7,
+                  1030.91,
+                  452.93
+                ],
+                "delta_view_m": -0.30000000000000004,
+                "override": {
+                  "x": -85.3421256225218,
+                  "y": -6,
+                  "z": 8.25669723680219,
+                  "yawDeg": 21.009,
+                  "pitchDeg": 0,
+                  "local_uv": [
+                    8.59847698078723,
+                    38.16452978136119
+                  ],
+                  "camera_mesh_qa": {
+                    "support": -6,
+                    "collision": 0,
+                    "headroom": null,
+                    "clearance": 0.4,
+                    "personClearance": 2.74974605642814,
+                    "rays": [
+                      2.055,
+                      1.88,
+                      2.061
+                    ],
+                    "bad": false,
+                    "method": "CPU real kit support/capsule/headroom/eye rays; position-only correction; no WebGL verification"
+                  },
+                  "camera_qa": "Small shift along existing camera view axis; original photo/official target line and pitch retained. Physical and three-ray checks pass. CPU before/after PNG comparison confirms comparable shop/fixture framing; text, transparency, texture and gloss omitted."
+                },
+                "preview": "/private/tmp/lower_67_after.png",
+                "cpu_render_verified": true
+              },
+              {
+                "index": 79,
+                "id": null,
+                "spot": "B1 신세계 마켓",
+                "source_plan_cell": [
+                  499.5,
+                  490.3,
+                  818.53,
+                  774.63
+                ],
+                "delta_view_m": null,
+                "override": {
+                  "x": -39.93306620909619,
+                  "y": -6,
+                  "z": -0.600000015859312,
+                  "yawDeg": 200.86950345320363,
+                  "pitchDeg": 0,
+                  "local_uv": [
+                    54.31,
+                    46
+                  ],
+                  "target_local_uv": [
+                    54.31,
+                    48.18
+                  ],
+                  "camera_selection": "north_market_doorway",
+                  "camera_mesh_qa": {
+                    "support": -6,
+                    "collision": 0,
+                    "headroom": null,
+                    "clearance": 0.4,
+                    "personClearance": 3.5772337082371783,
+                    "rays": [
+                      12,
+                      10.676,
+                      12
+                    ],
+                    "bad": false,
+                    "method": "CPU real kit support/capsule/headroom/eye rays and CPU geometry PNG"
+                  },
+                  "camera_qa": "Position at existing official north-market doorway; CPU PNG shows produce aisles clearly. Same market subject and pitch0 retained; no photoreal verification."
+                },
+                "retarget_reason": "Previous plan-cell center camera faced solid market wall. Reuse existing north-market doorway view to preserve market subject and original pitch0.",
+                "preview": "/private/tmp/lower_79_alt.png",
+                "cpu_render_verified": true
+              },
+              {
+                "index": 86,
+                "id": null,
+                "spot": "B1 영풍문고",
+                "source_plan_cell": [
+                  623.47,
+                  1063.53,
+                  733.76,
+                  1122.76
+                ],
+                "delta_view_m": 0.5,
+                "override": {
+                  "x": -32.27759500228502,
+                  "y": -6,
+                  "z": 32.591283927334665,
+                  "yawDeg": -159.152,
+                  "pitchDeg": 0,
+                  "local_uv": [
+                    49.61426986024017,
+                    79.75132508731488
+                  ],
+                  "camera_mesh_qa": {
+                    "support": -6,
+                    "collision": 0,
+                    "headroom": null,
+                    "clearance": 0.4,
+                    "personClearance": 0.7068937912302253,
+                    "rays": [
+                      5.085,
+                      4.648,
+                      5.091
+                    ],
+                    "bad": false,
+                    "method": "CPU real kit support/capsule/headroom/eye rays; position-only correction; no WebGL verification"
+                  },
+                  "camera_qa": "Small shift along existing camera view axis; original photo/official target line and pitch retained. Physical and three-ray checks pass. CPU before/after PNG comparison confirms comparable shop/fixture framing; text, transparency, texture and gloss omitted."
+                },
+                "preview": "/private/tmp/lower_86_after.png",
+                "cpu_render_verified": true
+              },
+              {
+                "index": 88,
+                "id": null,
+                "spot": "B1 북서 화장실",
+                "source_plan_cell": [
+                  399.24,
+                  324.43,
+                  418.38,
+                  344.48
+                ],
+                "delta_view_m": -1.4000000000000001,
+                "override": {
+                  "x": -45.67725331812294,
+                  "y": -6,
+                  "z": -45.269326886431784,
+                  "yawDeg": 20.813,
+                  "pitchDeg": 0,
+                  "local_uv": [
+                    64.86179025518541,
+                    2.1958174474410943
+                  ],
+                  "camera_mesh_qa": {
+                    "support": -6,
+                    "collision": 0,
+                    "headroom": null,
+                    "clearance": 0.4,
+                    "personClearance": 6.1245779846206,
+                    "rays": [
+                      2.075,
+                      1.896,
+                      2.075
+                    ],
+                    "bad": false,
+                    "method": "CPU real kit support/capsule/headroom/eye rays; position-only correction; no WebGL verification"
+                  },
+                  "camera_qa": "Small shift along existing camera view axis; original photo/official target line and pitch retained. Physical and three-ray checks pass."
+                },
+                "cpu_render_verified": false,
+                "cpu_review_limitation": "Supported clear facade viewpoint, but current B1 wall seals off official NW-toilet bump. CPU sees only wall; interior test points also do not reveal fixtures. No matching view can be claimed. Text is omitted by CPU renderer, but source geometry indicates actual wall obstruction.",
+                "preview": "/private/tmp/lower_88_after.png"
+              },
+              {
+                "index": 94,
+                "id": null,
+                "spot": "B1 광장 화장실",
+                "source_plan_cell": [
+                  678.16,
+                  846.63,
+                  743.78,
+                  948.7
+                ],
+                "delta_view_m": 0.4,
+                "override": {
+                  "x": -35.75398690390274,
+                  "y": -6,
+                  "z": 28.5921611124607,
+                  "yawDeg": 20.865,
+                  "pitchDeg": 0,
+                  "local_uv": [
+                    47.78287449273008,
+                    74.7783548984491
+                  ],
+                  "camera_mesh_qa": {
+                    "support": -6,
+                    "collision": 0,
+                    "headroom": null,
+                    "clearance": 0.4,
+                    "personClearance": 4.616688543754182,
+                    "rays": [
+                      4.399,
+                      10.273,
+                      12
+                    ],
+                    "bad": false,
+                    "method": "CPU real kit support/capsule/headroom/eye rays; position-only correction; no WebGL verification"
+                  },
+                  "camera_qa": "Small shift along existing camera view axis; original photo/official target line and pitch retained. Physical and three-ray checks pass. CPU before/after PNG comparison confirms comparable shop/fixture framing; text, transparency, texture and gloss omitted."
+                },
+                "preview": "/private/tmp/lower_94_after.png",
+                "cpu_render_verified": true,
+                "cpu_review_limitation": "Former view was inside near visual panel;0.4m forward clears it and shows corridor/service fixtures. Exact toilet-sign lettering not rendered by CPU."
+              },
+              {
+                "index": 99,
+                "id": "ssg_r14_b1_3",
+                "spot": "핑크 천 과일 피라미드",
+                "source_plan_cell": null,
+                "delta_view_m": -0.5,
+                "override": {
+                  "x": -42.44533727563556,
+                  "y": -6,
+                  "z": 18.828013481189032,
+                  "yawDeg": 113.77077652672824,
+                  "pitchDeg": 0,
+                  "local_uv": [
+                    45.0015282521527,
+                    63.27394649032131
+                  ],
+                  "camera_mesh_qa": {
+                    "support": -6,
+                    "collision": 0,
+                    "headroom": null,
+                    "clearance": 0.4,
+                    "personClearance": 2.0389037957479292,
+                    "rays": [
+                      6.052,
+                      1.589,
+                      4.217
+                    ],
+                    "bad": false,
+                    "method": "CPU real kit support/capsule/headroom/eye rays; position-only correction; no WebGL verification"
+                  },
+                  "camera_qa": "Small shift along existing camera view axis; original photo/official target line and pitch retained. Physical and three-ray checks pass. CPU before/after PNG comparison confirms comparable shop/fixture framing; text, transparency, texture and gloss omitted."
+                },
+                "preview": "/private/tmp/lower_99_after.png",
+                "cpu_render_verified": true,
+                "cpu_review_note": "Photo M27U_200 re-inspected. Pink fruit island and fluted central column now fit lower/wider frame, matching photograph subject."
+              }
+            ],
+            "unresolved": [
+              {
+                "index": 70,
+                "id": null,
+                "spot": "B1 보앤미",
+                "reason": "No passing same-view-axis shift within2.5m behind or0.5m ahead; do not blindly reaim.",
+                "classification": "B1 Bo&Mie frontage in1.8m aisle: physical clearance passes; glass closeup is intentional, same reason as _04 exception."
+              },
+              {
+                "index": 100,
+                "id": "ssg_r14_b1_4",
+                "spot": "숙성 정육 캐비닛",
+                "reason": "No passing same-view-axis shift within2.5m behind or0.5m ahead; do not blindly reaim.",
+                "classification": "Photo p5QE_300 shows butcher/cabinet closeup. Physical clearance passes;1.0m eye ray is intended cabinet/display. Can retain with closeup exception."
+              }
+            ],
+            "documented_exceptions": [
+              "ssg_r14_b1_6: Bo&Mie glass-letter close-up, same as ssg_r18_b1_04"
+            ],
+            "summary": {
+              "suggestions": 16,
+              "cpu_render_verified": 15,
+              "physical_safe_but_target_not_visually_verified": [
+                88
+              ],
+              "paired_preview_sheets": [
+                "/private/tmp/ssg-r18-lower-compare-sheet0.png",
+                "/private/tmp/ssg-r18-lower-compare-sheet1.png",
+                "/private/tmp/ssg-r18-lower-compare-sheet2.png",
+                "/private/tmp/ssg-r18-lower-compare-sheet3.png"
+              ]
+            }
+          },
+          "temporary_artifacts": "CPU preview PNGs are temporary QA files; they were not saved into the repository because the allowed edit scope contains only the JS and research JSON."
+        },
+        "static_checks": {
+          "node --check js/places/shinsegae.js": "passed",
+          "json parse": "passed",
+          "git diff --check -- js/places/shinsegae.js data/research/shinsegae.json": "passed"
+        },
+        "external_route_blocker": {
+          "route": "사용자 루트 5 [3→4] (-235.8,8.7)→(-332,-66)",
+          "preexisting_baseline": "walk: 686 ok, 1 blocked before this round; same route failed",
+          "diagnosis": [
+            "streets road surfaces cover onebailey G2 descent at approx(-337.44,-38.54),(-334.14,-47.64),(-330.41,-57.86)",
+            "banpo_shoppingtown B1 walls intersect onebailey connector near(-292.84,-44.02) through(-308.53,-56.99), y=-6"
+          ],
+          "scope": "Those modules and engine files are outside authorized edits. No workaround was added to shinsegae.",
+          "final_status": "Historical finding: latest final full-world test is719ok,0blocked including this route; external blockage no longer reproduces. This record is not an outstanding failure."
         }
       }
     },
@@ -4311,14 +4408,14 @@
           619.71
         ],
         "frontage_image": "N",
-        "camera_qa": "Small shift along existing camera view axis; original photo/official target line and pitch retained. Physical and three-ray checks pass. CPU before/after PNG comparison confirms comparable shop/fixture framing; text, transparency, texture and gloss omitted.",
+        "camera_qa": "Round19: moved onto clear flat floor to avoid a shopper, sloped escalator or new lift boundary; y stays at floor level. Source framing needs operator re-render.",
         "camera_selection": "frontage",
         "frontage_offset_m": 0.85,
         "visual_validation": "2D/runtime QA only; no WebGL screenshot as requested",
-        "x": -27.694639,
+        "x": -27.8196,
         "y": -6,
-        "z": 4.393685,
-        "yawDeg": -148.8,
+        "z": 4.1772,
+        "yawDeg": -148.8364,
         "pitchDeg": 0,
         "floor": "B1",
         "photos": [
@@ -4326,25 +4423,21 @@
         ],
         "round": 18,
         "local_uv": [
-          64.0033124715183,
-          55.01253051955811
+          63.963374,
+          54.765769
         ],
         "camera_mesh_qa": {
-          "support": -6,
-          "collision": 0,
-          "headroom": null,
-          "clearance": 0.4,
-          "personClearance": 0.6778663065253254,
-          "rays": [
-            12,
-            12,
-            4.756
-          ],
-          "bad": false,
-          "method": "Final round18 actual-kit CPU support/capsule/headroom/person clearance and 3 eye rays; not WebGL appearance validation"
+          "round": 19,
+          "passed": true,
+          "floor_y": -6,
+          "flat_floor": true,
+          "capsule_threshold_m": 0.03,
+          "eye_and_headroom_clear": true,
+          "method": "Final actual kit/physics CPU checks; not a WebGL appearance check."
         },
         "camera_cpu_geometry_verified": true,
-        "id": "ssg_r18_legacy_035"
+        "id": "ssg_r18_legacy_035",
+        "camera_target_note": "No source target was stored; retained aim toward the original view at8m. This target is inferred."
       },
       {
         "spot": "B1 오목집",
@@ -7250,32 +7343,27 @@
           "refs/official/shinsegae/floor_B1.png"
         ],
         "local_uv": [
-          47.5,
-          58.5
+          47.694783,
+          58.341963
         ],
         "target_local_uv": [
           49.16,
           57.28
         ],
-        "x": -41.821825,
-        "z": 13.485674,
+        "x": -41.6968,
+        "z": 13.2692,
         "y": -6,
-        "yawDeg": 327.241344,
+        "yawDeg": -31.7875,
         "pitchDeg": 0,
-        "camera_qa": "실제 kit·전체 상세: 바닥 -6m/반경0.34m 충돌 없음/머리공간1.85m 통과. 시각 렌더 검증 아님.",
+        "camera_qa": "Round19: moved onto clear flat floor to avoid a shopper, sloped escalator or new lift boundary; y stays at floor level. Source framing needs operator re-render.",
         "camera_mesh_qa": {
-          "support": -6,
-          "collision": 0,
-          "headroom": null,
-          "clearance": 0.4,
-          "personClearance": 0.6879417584005867,
-          "rays": [
-            6.854,
-            12,
-            12
-          ],
-          "bad": false,
-          "method": "Final round18 actual-kit CPU support/capsule/headroom/person clearance and 3 eye rays; not WebGL appearance validation"
+          "round": 19,
+          "passed": true,
+          "floor_y": -6,
+          "flat_floor": true,
+          "capsule_threshold_m": 0.03,
+          "eye_and_headroom_clear": true,
+          "method": "Final actual kit/physics CPU checks; not a WebGL appearance check."
         }
       },
       {
@@ -7525,17 +7613,17 @@
           "refs/official/shinsegae/floor_2F.png"
         ],
         "local_uv": [
-          45.74966974900924,
-          15.040993433489202
+          45.698193,
+          15.538545
         ],
         "target_local_uv": [
           45.74966974900924,
           13.926258581235697
         ],
-        "x": -58.95301,
+        "x": -58.8236,
         "y": 7,
-        "z": -26.49101,
-        "yawDeg": 20.89935,
+        "z": -26.008,
+        "yawDeg": 19.1862,
         "pitchDeg": 0,
         "source_cell": [
           27,
@@ -7544,7 +7632,7 @@
           646
         ],
         "source_front": "S",
-        "camera_qa": "Round18: floor support, capsule, headroom, people and three eye rays pass.",
+        "camera_qa": "Round19: moved onto clear flat floor to avoid a shopper, sloped escalator or new lift boundary; y stays at floor level. Source framing needs operator re-render.",
         "source_camera_pixel": [
           173.8086956521739,
           608
@@ -7554,18 +7642,13 @@
           608
         ],
         "camera_mesh_qa": {
-          "support": 7,
-          "collision": 0,
-          "headroom": null,
-          "clearance": 0.4,
-          "personClearance": 2.9730742977730067,
-          "rays": [
-            2.007,
-            1.835,
-            2.01
-          ],
-          "bad": false,
-          "method": "Final round18 actual-kit CPU support/capsule/headroom/person clearance and 3 eye rays; not WebGL appearance validation"
+          "round": 19,
+          "passed": true,
+          "floor_y": 7,
+          "flat_floor": true,
+          "capsule_threshold_m": 0.03,
+          "eye_and_headroom_clear": true,
+          "method": "Final actual kit/physics CPU checks; not a WebGL appearance check."
         }
       },
       {
@@ -8150,17 +8233,17 @@
           "refs/official/shinsegae/floor_2F.png"
         ],
         "local_uv": [
-          36.25375590533552,
-          37.016819221967964
+          35.755054,
+          36.966369
         ],
         "target_local_uv": [
           34.76420079260238,
           37.016819221967964
         ],
-        "x": -59.96839,
+        "x": -60.4514,
         "y": 7,
-        "z": -2.60239,
-        "yawDeg": 110.78637,
+        "z": -2.473,
+        "yawDeg": 113.2829,
         "pitchDeg": 0,
         "source_cell": [
           658,
@@ -8169,7 +8252,7 @@
           876
         ],
         "source_front": "E",
-        "camera_qa": "Round18: floor support, capsule, headroom, people and three eye rays pass.",
+        "camera_qa": "Round19: moved onto clear flat floor to avoid a shopper, sloped escalator or new lift boundary; y stays at floor level. Source framing needs operator re-render.",
         "source_camera_pixel": [
           682.5999999999999,
           716.9152542372881
@@ -8179,18 +8262,13 @@
           734
         ],
         "camera_mesh_qa": {
-          "support": 7,
-          "collision": 0,
-          "headroom": null,
-          "clearance": 0.4,
-          "personClearance": 1.34485013478257,
-          "rays": [
-            12,
-            12,
-            5.996
-          ],
-          "bad": false,
-          "method": "Final round18 actual-kit CPU support/capsule/headroom/person clearance and 3 eye rays; not WebGL appearance validation"
+          "round": 19,
+          "passed": true,
+          "floor_y": 7,
+          "flat_floor": true,
+          "capsule_threshold_m": 0.03,
+          "eye_and_headroom_clear": true,
+          "method": "Final actual kit/physics CPU checks; not a WebGL appearance check."
         }
       },
       {
@@ -12494,17 +12572,17 @@
           "refs/official/shinsegae/floor_3F.png"
         ],
         "local_uv": [
-          39.17612252228717,
-          69.89541882452126
+          39.470835,
+          69.489772
         ],
         "target_local_uv": [
           38.17612252228717,
           78.49862700228832
         ],
-        "x": -45.504008,
+        "x": -45.3746,
         "y": 11.8,
-        "z": 27.070444,
-        "yawDeg": 194.323917,
+        "z": 26.5875,
+        "yawDeg": -168.1508,
         "pitchDeg": -2,
         "source_cell": [
           1643,
@@ -12513,7 +12591,7 @@
           784
         ],
         "source_front": "N",
-        "camera_qa": "Round18: floor support, capsule, headroom, people and three eye rays pass.",
+        "camera_qa": "Round19: moved onto clear flat floor to avoid a shopper, sloped escalator or new lift boundary; y stays at floor level. Source framing needs operator re-render.",
         "source_camera_pixel": [
           1443.8157894736842,
           752.9634686346863
@@ -12523,18 +12601,13 @@
           752.9634686346863
         ],
         "camera_mesh_qa": {
-          "support": 11.946370655890629,
-          "collision": 0,
-          "headroom": null,
-          "clearance": 0.4,
-          "personClearance": 6.334855412728246,
-          "rays": [
-            7.031,
-            6.098,
-            9.63
-          ],
-          "bad": false,
-          "method": "Final round18 actual-kit CPU support/capsule/headroom/person clearance and 3 eye rays; not WebGL appearance validation"
+          "round": 19,
+          "passed": true,
+          "floor_y": 11.8,
+          "flat_floor": true,
+          "capsule_threshold_m": 0.03,
+          "eye_and_headroom_clear": true,
+          "method": "Final actual kit/physics CPU checks; not a WebGL appearance check."
         }
       },
       {
@@ -16006,17 +16079,17 @@
           "refs/official/shinsegae/floor_4F.png"
         ],
         "local_uv": [
-          28.579619446721743,
-          74.32214079421634
+          27.994152,
+          74.796424
         ],
         "target_local_uv": [
           28.055236728837876,
           75.08750765894652
         ],
-        "x": -53.781193,
+        "x": -54.1562,
         "y": 16.6,
-        "z": 34.946149,
-        "yawDeg": 166.617476,
+        "z": 35.5957,
+        "yawDeg": 176.6823,
         "pitchDeg": -2,
         "source_cell": [
           1516,
@@ -16025,7 +16098,7 @@
           918
         ],
         "source_front": "E",
-        "camera_qa": "Round18: floor support, capsule, headroom, people and three eye rays pass.",
+        "camera_qa": "Round19: moved onto clear flat floor to avoid a shopper, sloped escalator or new lift boundary; y stays at floor level. Source framing needs operator re-render.",
         "source_camera_pixel": [
           1564.0246806336227,
           825.9487451108214
@@ -16035,18 +16108,13 @@
           851
         ],
         "camera_mesh_qa": {
-          "support": 16.78748845180445,
-          "collision": 0,
-          "headroom": null,
-          "clearance": 0.4,
-          "personClearance": 3.1443495481448793,
-          "rays": [
-            6.728,
-            8.794,
-            7.64
-          ],
-          "bad": false,
-          "method": "Final round18 actual-kit CPU support/capsule/headroom/person clearance and 3 eye rays; not WebGL appearance validation"
+          "round": 19,
+          "passed": true,
+          "floor_y": 16.6,
+          "flat_floor": true,
+          "capsule_threshold_m": 0.03,
+          "eye_and_headroom_clear": true,
+          "method": "Final actual kit/physics CPU checks; not a WebGL appearance check."
         }
       },
       {
@@ -16058,17 +16126,17 @@
           "refs/official/shinsegae/floor_4F.png"
         ],
         "local_uv": [
-          28.23345767575323,
-          76.92680205949657
+          27.985277,
+          76.966895
         ],
         "target_local_uv": [
           24.83345767575323,
           76.92680205949657
         ],
-        "x": -53.171598,
+        "x": -53.3881,
         "y": 16.6,
-        "z": 37.500354,
-        "yawDeg": 110.783145,
+        "z": 37.6254,
+        "yawDeg": 110.175,
         "pitchDeg": -2,
         "source_cell": [
           1579,
@@ -16077,7 +16145,7 @@
           918
         ],
         "source_front": "E",
-        "camera_qa": "Round18: floor support, capsule, headroom, people and three eye rays pass.",
+        "camera_qa": "Round19: moved onto clear flat floor to avoid a shopper, sloped escalator or new lift boundary; y stays at floor level. Source framing needs operator re-render.",
         "source_camera_pixel": [
           1600.0349745331068,
           825.9487451108214
@@ -16087,18 +16155,13 @@
           851
         ],
         "camera_mesh_qa": {
-          "support": 16.483151183763795,
-          "collision": 0,
-          "headroom": null,
-          "clearance": 0.4,
-          "personClearance": 2.7556914332823323,
-          "rays": [
-            6.473,
-            5.905,
-            12
-          ],
-          "bad": false,
-          "method": "Final round18 actual-kit CPU support/capsule/headroom/person clearance and 3 eye rays; not WebGL appearance validation"
+          "round": 19,
+          "passed": true,
+          "floor_y": 16.6,
+          "flat_floor": true,
+          "capsule_threshold_m": 0.03,
+          "eye_and_headroom_clear": true,
+          "method": "Final actual kit/physics CPU checks; not a WebGL appearance check."
         }
       },
       {
@@ -19674,17 +19737,17 @@
           "refs/official/shinsegae/floor_5F.png"
         ],
         "local_uv": [
-          41.951109776233665,
-          69.36876478237319
+          42.638998,
+          69.061143
         ],
         "target_local_uv": [
           42.71052631578947,
           70.78297834474628
         ],
-        "x": -43.109746,
+        "x": -42.5794,
         "y": 21.4,
-        "z": 25.598483,
-        "yawDeg": 229.008381,
+        "z": 25.0682,
+        "yawDeg": -160.4444,
         "pitchDeg": -2,
         "source_cell": [
           1410,
@@ -19693,7 +19756,7 @@
           739
         ],
         "source_front": "W",
-        "camera_qa": "Round18: floor support, capsule, headroom, people and three eye rays pass.",
+        "camera_qa": "Round19: moved onto clear flat floor to avoid a shopper, sloped escalator or new lift boundary; y stays at floor level. Source framing needs operator re-render.",
         "source_camera_pixel": [
           1464.3648496240598,
           759.6494859683246
@@ -19703,18 +19766,13 @@
           739
         ],
         "camera_mesh_qa": {
-          "support": 21.167531736498233,
-          "collision": 0,
-          "headroom": null,
-          "clearance": 0.4,
-          "personClearance": 3.1792597249924133,
-          "rays": [
-            12,
-            12,
-            5.986
-          ],
-          "bad": false,
-          "method": "Final round18 actual-kit CPU support/capsule/headroom/person clearance and 3 eye rays; not WebGL appearance validation"
+          "round": 19,
+          "passed": true,
+          "floor_y": 21.4,
+          "flat_floor": true,
+          "capsule_threshold_m": 0.03,
+          "eye_and_headroom_clear": true,
+          "method": "Final actual kit/physics CPU checks; not a WebGL appearance check."
         }
       },
       {
@@ -29067,17 +29125,17 @@
           "refs/official/shinsegae/floor_8F.png"
         ],
         "local_uv": [
-          26.512785048713795,
-          26.883924485125853
+          26.716865,
+          27.339969
         ],
         "target_local_uv": [
           23.956115107913668,
           26.883924485125853
         ],
-        "x": -72.67605,
+        "x": -72.3225,
         "y": 35.8,
-        "z": -8.61552,
-        "yawDeg": 110.78719,
+        "z": -8.262,
+        "yawDeg": 101.5751,
         "pitchDeg": 0,
         "source_cell": [
           397,
@@ -29086,7 +29144,7 @@
           952
         ],
         "source_front": "E",
-        "camera_qa": "Round18: floor support, capsule, headroom, people and three eye rays pass.",
+        "camera_qa": "Round19: moved onto clear flat floor to avoid a shopper, sloped escalator or new lift boundary; y stays at floor level. Source framing needs operator re-render.",
         "source_camera_pixel": [
           447.9999999999999,
           868.0774907749078
@@ -29096,18 +29154,13 @@
           895
         ],
         "camera_mesh_qa": {
-          "support": 35.8,
-          "collision": 0,
-          "headroom": null,
-          "clearance": 0.4,
-          "personClearance": 2.8011817988481615,
-          "rays": [
-            12,
-            7.094,
-            7.793
-          ],
-          "bad": false,
-          "method": "Final round18 actual-kit CPU support/capsule/headroom/person clearance and 3 eye rays; not WebGL appearance validation"
+          "round": 19,
+          "passed": true,
+          "floor_y": 35.8,
+          "flat_floor": true,
+          "capsule_threshold_m": 0.03,
+          "eye_and_headroom_clear": true,
+          "method": "Final actual kit/physics CPU checks; not a WebGL appearance check."
         }
       },
       {
@@ -29119,17 +29172,17 @@
           "refs/official/shinsegae/floor_8F.png"
         ],
         "local_uv": [
-          26.512785048713795,
-          30.81441647597254
+          27.26046,
+          30.890014
         ],
         "target_local_uv": [
           23.956115107913668,
           30.81441647597254
         ],
-        "x": -71.26983,
+        "x": -70.5454,
         "y": 35.8,
-        "z": -4.94575,
-        "yawDeg": 110.78688,
+        "z": -5.1399,
+        "yawDeg": 109.4744,
         "pitchDeg": 0,
         "source_cell": [
           499,
@@ -29138,7 +29191,7 @@
           952
         ],
         "source_front": "E",
-        "camera_qa": "Round18: floor support, capsule, headroom, people and three eye rays pass.",
+        "camera_qa": "Round19: moved onto clear flat floor to avoid a shopper, sloped escalator or new lift boundary; y stays at floor level. Source framing needs operator re-render.",
         "source_camera_pixel": [
           539,
           868.0774907749078
@@ -29148,18 +29201,13 @@
           895
         ],
         "camera_mesh_qa": {
-          "support": 35.8,
-          "collision": 0,
-          "headroom": null,
-          "clearance": 0.4,
-          "personClearance": 1.6603322640920943,
-          "rays": [
-            5.794,
-            7.093,
-            12
-          ],
-          "bad": false,
-          "method": "Final round18 actual-kit CPU support/capsule/headroom/person clearance and 3 eye rays; not WebGL appearance validation"
+          "round": 19,
+          "passed": true,
+          "floor_y": 35.8,
+          "flat_floor": true,
+          "capsule_threshold_m": 0.03,
+          "eye_and_headroom_clear": true,
+          "method": "Final actual kit/physics CPU checks; not a WebGL appearance check."
         }
       },
       {
@@ -31095,17 +31143,17 @@
           "refs/official/shinsegae/floor_8F.png"
         ],
         "local_uv": [
-          25.281594001551518,
-          60.98141962907775
+          25.476588,
+          60.823332
         ],
         "target_local_uv": [
           26.785730382483685,
           56.485712242562926
         ],
-        "x": -61.62318,
+        "x": -61.4982,
         "y": 35.8,
-        "z": 23.6552,
-        "yawDeg": 2.51801,
+        "z": 23.4387,
+        "yawDeg": 6.0198,
         "pitchDeg": -2,
         "source_cell": [
           1080,
@@ -31114,7 +31162,7 @@
           918
         ],
         "source_front": "S",
-        "camera_qa": "Round18: floor support, capsule, headroom, people and three eye rays pass.",
+        "camera_qa": "Round19: moved onto clear flat floor to avoid a shopper, sloped escalator or new lift boundary; y stays at floor level. Source framing needs operator re-render.",
         "source_camera_pixel": [
           1237.4360465116279,
           881.0423055897227
@@ -31124,18 +31172,13 @@
           865.2032936996036
         ],
         "camera_mesh_qa": {
-          "support": 35.8,
-          "collision": 0,
-          "headroom": null,
-          "clearance": 0.4,
-          "personClearance": 0.6687629239260366,
-          "rays": [
-            7.911,
-            5.365,
-            5.119
-          ],
-          "bad": false,
-          "method": "Final round18 actual-kit CPU support/capsule/headroom/person clearance and 3 eye rays; not WebGL appearance validation"
+          "round": 19,
+          "passed": true,
+          "floor_y": 35.8,
+          "flat_floor": true,
+          "capsule_threshold_m": 0.03,
+          "eye_and_headroom_clear": true,
+          "method": "Final actual kit/physics CPU checks; not a WebGL appearance check."
         }
       },
       {
@@ -34763,17 +34806,17 @@
           "refs/official/shinsegae/floor_9F.png"
         ],
         "local_uv": [
-          37.16666666666667,
-          70.2915271216859
+          37.573492,
+          70.583966
         ],
         "target_local_uv": [
           37.16666666666667,
           67.87334096109839
         ],
-        "x": -47.2324,
+        "x": -46.7494,
         "y": 40.6,
-        "z": 28.15006,
-        "yawDeg": 20.92928,
+        "z": 28.2795,
+        "yawDeg": 32.1199,
         "pitchDeg": 0,
         "source_cell": [
           1308,
@@ -34782,7 +34825,7 @@
           761
         ],
         "source_front": "S",
-        "camera_qa": "Round18: floor support, capsule, headroom, people and three eye rays pass.",
+        "camera_qa": "Round19: moved onto clear flat floor to avoid a shopper, sloped escalator or new lift boundary; y stays at floor level. Source framing needs operator re-render.",
         "source_camera_pixel": [
           1452.9866146848603,
           742
@@ -34792,18 +34835,13 @@
           742
         ],
         "camera_mesh_qa": {
-          "support": 40.474442214730935,
-          "collision": 0,
-          "headroom": null,
-          "clearance": 0.4,
-          "personClearance": 2.5846209166244702,
-          "rays": [
-            5.215,
-            6.002,
-            12
-          ],
-          "bad": false,
-          "method": "Final round18 actual-kit CPU support/capsule/headroom/person clearance and 3 eye rays; not WebGL appearance validation"
+          "round": 19,
+          "passed": true,
+          "floor_y": 40.6,
+          "flat_floor": true,
+          "capsule_threshold_m": 0.03,
+          "eye_and_headroom_clear": true,
+          "method": "Final actual kit/physics CPU checks; not a WebGL appearance check."
         }
       },
       {
@@ -35285,17 +35323,17 @@
           "refs/official/shinsegae/floor_9F.png"
         ],
         "local_uv": [
-          36.498198198198196,
-          76.1009038901602
+          39.6128,
+          75.6214
         ],
         "target_local_uv": [
           31.6981981981982,
           76.1009038901602
         ],
-        "x": -45.779253,
+        "x": -43.1812,
         "y": 40.6,
-        "z": 33.811484,
-        "yawDeg": 110.783212,
+        "z": 32.3115,
+        "yawDeg": 114.271,
         "pitchDeg": -2,
         "source_cell": [
           1548,
@@ -35304,7 +35342,7 @@
           822
         ],
         "source_front": "E",
-        "camera_qa": "Round18: floor support, capsule, headroom, people and three eye rays pass.",
+        "camera_qa": "Round19: moved around widened annex ramp/guard while preserving the original target and pitch. y remains at floor level; new visual render unavailable.",
         "source_camera_pixel": [
           1577.5,
           749.9680196801967
@@ -35314,18 +35352,13 @@
           777
         ],
         "camera_mesh_qa": {
-          "support": 40.6,
-          "collision": 0.0012243778458201294,
-          "headroom": null,
-          "clearance": 0.4,
-          "personClearance": 1.069323368547084,
-          "rays": [
-            2.85,
-            2.619,
-            12
-          ],
-          "bad": false,
-          "method": "Final round18 actual-kit CPU support/capsule/headroom/person clearance and 3 eye rays; not WebGL appearance validation"
+          "round": 19,
+          "passed": true,
+          "floor_y": 40.6,
+          "flat_floor": true,
+          "capsule_threshold_m": 0.03,
+          "eye_and_headroom_clear": true,
+          "method": "Final actual kit/physics CPU checks; not a WebGL appearance check."
         }
       },
       {
@@ -40156,17 +40189,17 @@
           "refs/official/shinsegae/floor_10F.png"
         ],
         "local_uv": [
-          28.68260869565217,
-          81.6378581235698
+          29.1701,
+          83.3617
         ],
         "target_local_uv": [
           26.182608695652174,
           81.95077803203662
         ],
-        "x": -51.068913,
+        "x": -50.1939,
         "y": 45.4,
-        "z": 41.740581,
-        "yawDeg": 117.957552,
+        "z": 43.2561,
+        "yawDeg": 85.5231,
         "pitchDeg": -2,
         "source_cell": [
           1638,
@@ -40175,7 +40208,7 @@
           906
         ],
         "source_front": "E",
-        "camera_qa": "Round18: floor support, capsule, headroom, people and three eye rays pass.",
+        "camera_qa": "Round19: moved around widened annex ramp/guard while preserving the original target and pitch. y remains at floor level; new visual render unavailable.",
         "source_camera_pixel": [
           1682.6111111111113,
           864.1359712683511
@@ -40185,18 +40218,13 @@
           883
         ],
         "camera_mesh_qa": {
-          "support": 45.4,
-          "collision": 0,
-          "headroom": null,
-          "clearance": 0.4,
-          "personClearance": 8.139997365751288,
-          "rays": [
-            12,
-            3.278,
-            5.338
-          ],
-          "bad": false,
-          "method": "Final round18 actual-kit CPU support/capsule/headroom/person clearance and 3 eye rays; not WebGL appearance validation"
+          "round": 19,
+          "passed": true,
+          "floor_y": 45.4,
+          "flat_floor": true,
+          "capsule_threshold_m": 0.03,
+          "eye_and_headroom_clear": true,
+          "method": "Final actual kit/physics CPU checks; not a WebGL appearance check."
         }
       },
       {
@@ -40808,17 +40836,17 @@
           "refs/official/shinsegae/floor_11F.jpg"
         ],
         "local_uv": [
-          48.79986122018656,
-          65.4761727688787
+          48.6722,
+          65.3355
         ],
         "target_local_uv": [
           51.20262390670554,
           65.4761727688787
         ],
-        "x": -38.1243,
+        "x": -38.3658,
         "y": 50.2,
-        "z": 19.54323,
-        "yawDeg": 290.78407,
+        "z": 19.4785,
+        "yawDeg": -72.3786,
         "pitchDeg": 0,
         "source_cell": [
           1272,
@@ -40827,7 +40855,7 @@
           615
         ],
         "source_front": "W",
-        "camera_qa": "Round18: floor support, capsule, headroom, people and three eye rays pass.",
+        "camera_qa": "Round19: moved0.25m off a nearby shopper, keeping the same restaurant target and floor-level y. No new WebGL render.",
         "source_camera_pixel": [
           1341.4999999999995,
           639.9741697416973
@@ -40837,18 +40865,13 @@
           615
         ],
         "camera_mesh_qa": {
-          "support": 50.2,
-          "collision": 0,
-          "headroom": null,
-          "clearance": 0.4,
-          "personClearance": 0.6974868392880177,
-          "rays": [
-            7.281,
-            12,
-            2.856
-          ],
-          "bad": false,
-          "method": "Final round18 actual-kit CPU support/capsule/headroom/person clearance and 3 eye rays; not WebGL appearance validation"
+          "round": 19,
+          "passed": true,
+          "floor_y": 50.2,
+          "flat_floor": true,
+          "capsule_threshold_m": 0.03,
+          "eye_and_headroom_clear": true,
+          "method": "Final actual kit/physics CPU checks; not a WebGL appearance check."
         }
       },
       {
@@ -40912,17 +40935,17 @@
           "refs/official/shinsegae/floor_11F.jpg"
         ],
         "local_uv": [
-          40.14614817988343,
-          56.320928902134
+          40.056547,
+          56.554704
         ],
         "target_local_uv": [
           40.14614817988343,
           59.36447368421052
         ],
-        "x": -49.44751,
+        "x": -49.4475,
         "y": 50.2,
-        "z": 14.04959,
-        "yawDeg": 200.91889,
+        "z": 14.2996,
+        "yawDeg": -159.3236,
         "pitchDeg": 0,
         "source_cell": [
           1200,
@@ -40931,7 +40954,7 @@
           780
         ],
         "source_front": "N",
-        "camera_qa": "Round18: floor support, capsule, headroom, people and three eye rays pass.",
+        "camera_qa": "Round19: moved onto clear flat floor to avoid a shopper, sloped escalator or new lift boundary; y stays at floor level. Source framing needs operator re-render.",
         "source_camera_pixel": [
           1129.5348837209303,
           729.920338615151
@@ -40941,18 +40964,13 @@
           729.920338615151
         ],
         "camera_mesh_qa": {
-          "support": 50.2,
-          "collision": 0,
-          "headroom": null,
-          "clearance": 0.4,
-          "personClearance": 1.7932665193143085,
-          "rays": [
-            12,
-            4.159,
-            4.557
-          ],
-          "bad": false,
-          "method": "Final round18 actual-kit CPU support/capsule/headroom/person clearance and 3 eye rays; not WebGL appearance validation"
+          "round": 19,
+          "passed": true,
+          "floor_y": 50.2,
+          "flat_floor": true,
+          "capsule_threshold_m": 0.03,
+          "eye_and_headroom_clear": true,
+          "method": "Final actual kit/physics CPU checks; not a WebGL appearance check."
         }
       },
       {
@@ -41016,17 +41034,17 @@
           "refs/official/shinsegae/floor_11F.jpg"
         ],
         "local_uv": [
-          29.178283081494456,
-          55.01436593725762
+          28.839618,
+          58.248292
         ],
         "target_local_uv": [
           27.87172011661808,
           59.36447368421052
         ],
-        "x": -60.129163,
+        "x": -59.288,
         "y": 50.2,
-        "z": 16.7066,
-        "yawDeg": 184.287255,
+        "z": 19.8459,
+        "yawDeg": 155.9262,
         "pitchDeg": -2,
         "source_cell": [
           1200,
@@ -41035,7 +41053,7 @@
           903
         ],
         "source_front": "N",
-        "camera_qa": "Round18: floor support, capsule, headroom, people and three eye rays pass.",
+        "camera_qa": "Round19: moved onto clear flat floor to avoid a shopper, sloped escalator or new lift boundary; y stays at floor level. Source framing needs operator re-render.",
         "source_camera_pixel": [
           1129.5348837209303,
           857.5
@@ -41045,18 +41063,13 @@
           857.5
         ],
         "camera_mesh_qa": {
-          "support": 50.2,
-          "collision": 0,
-          "headroom": null,
-          "clearance": 0.4,
-          "personClearance": 2.367968336261836,
-          "rays": [
-            3.27,
-            2.594,
-            2.508
-          ],
-          "bad": false,
-          "method": "Final round18 actual-kit CPU support/capsule/headroom/person clearance and 3 eye rays; not WebGL appearance validation"
+          "round": 19,
+          "passed": true,
+          "floor_y": 50.2,
+          "flat_floor": true,
+          "capsule_threshold_m": 0.03,
+          "eye_and_headroom_clear": true,
+          "method": "Final actual kit/physics CPU checks; not a WebGL appearance check."
         }
       },
       {
@@ -42392,19 +42405,19 @@
           805
         ],
         "local_uv": [
-          35.57246376811594,
-          81.5286613272311
+          35.6922,
+          82.025
         ],
         "target_local_uv": [
           35.57246376811594,
           83.98403890160182
         ],
-        "x": -44.701227,
+        "x": -44.5718,
         "y": 45.4,
-        "z": 39.207134,
-        "yawDeg": 200.934839,
+        "z": 39.6901,
+        "yawDeg": -162.6923,
         "pitchDeg": 5,
-        "camera_qa": "Round18: floor support, capsule, headroom, people and three eye rays pass.",
+        "camera_qa": "Round19: moved around widened annex ramp/guard while preserving the original target and pitch. y remains at floor level; new visual render unavailable.",
         "source_camera_pixel": [
           1689.9999999999995,
           805
@@ -42414,18 +42427,13 @@
           805
         ],
         "camera_mesh_qa": {
-          "support": 45.4,
-          "collision": 0,
-          "headroom": null,
-          "clearance": 0.4,
-          "personClearance": 2.9880970426664413,
-          "rays": [
-            3.151,
-            2.882,
-            3.158
-          ],
-          "bad": false,
-          "method": "Final round18 actual-kit CPU support/capsule/headroom/person clearance and 3 eye rays; not WebGL appearance validation"
+          "round": 19,
+          "passed": true,
+          "floor_y": 45.4,
+          "flat_floor": true,
+          "capsule_threshold_m": 0.03,
+          "eye_and_headroom_clear": true,
+          "method": "Final actual kit/physics CPU checks; not a WebGL appearance check."
         }
       },
       {
@@ -43430,10 +43438,10 @@
       },
       {
         "spot": "2F 몽클레르 정면",
-        "x": -74.896571,
+        "x": -74.3966,
         "y": 7,
-        "z": -20.890799,
-        "yawDeg": 21.024606,
+        "z": -20.8908,
+        "yawDeg": 32.0155,
         "pitchDeg": 0,
         "id": "ssg_r18_up_02",
         "round": 18,
@@ -43442,8 +43450,8 @@
         ],
         "floor": "2F",
         "local_uv": [
-          28.834744897415682,
-          14.617983819460349
+          29.302268,
+          14.795453
         ],
         "target_local_uv": [
           28.83205543221807,
@@ -43465,20 +43473,15 @@
         ],
         "source_front": "E",
         "camera_mesh_qa": {
-          "support": 7,
-          "collision": 0,
-          "headroom": null,
-          "clearance": 0.4,
-          "personClearance": 3.626608098317046,
-          "rays": [
-            2.537,
-            3.927,
-            5.46
-          ],
-          "bad": false,
-          "method": "Final round18 actual-kit CPU support/capsule/headroom/person clearance and 3 eye rays; not WebGL appearance validation"
+          "round": 19,
+          "passed": true,
+          "floor_y": 7,
+          "flat_floor": true,
+          "capsule_threshold_m": 0.03,
+          "eye_and_headroom_clear": true,
+          "method": "Final actual kit/physics CPU checks; not a WebGL appearance check."
         },
-        "camera_qa": "Round18: floor support, capsule, headroom, people and three eye rays pass."
+        "camera_qa": "Round19: moved onto clear flat floor to avoid a shopper, sloped escalator or new lift boundary; y stays at floor level. Source framing needs operator re-render."
       },
       {
         "spot": "2F 서측 통로 · 펜디 포털",
@@ -47096,6 +47099,1035 @@
             48.5,
             50.5
           ]
+        }
+      ],
+      "before_round19_affected": [
+        {
+          "index": 35,
+          "trace": {
+            "spot": "B1 고은",
+            "area": "west_strip",
+            "name": "고은",
+            "source": "refs/official/shinsegae/floor_B1.png",
+            "source_plan_pixel": [
+              417.01,
+              607.405
+            ],
+            "source_plan_cell": [
+              401.06,
+              595.1,
+              432.96,
+              619.71
+            ],
+            "frontage_image": "N",
+            "camera_qa": "Small shift along existing camera view axis; original photo/official target line and pitch retained. Physical and three-ray checks pass. CPU before/after PNG comparison confirms comparable shop/fixture framing; text, transparency, texture and gloss omitted.",
+            "camera_selection": "frontage",
+            "frontage_offset_m": 0.85,
+            "visual_validation": "2D/runtime QA only; no WebGL screenshot as requested",
+            "x": -27.694639,
+            "y": -6,
+            "z": 4.393685,
+            "yawDeg": -148.8,
+            "pitchDeg": 0,
+            "floor": "B1",
+            "photos": [
+              "refs/official/shinsegae/floor_B1.png"
+            ],
+            "round": 18,
+            "local_uv": [
+              64.0033124715183,
+              55.01253051955811
+            ],
+            "camera_mesh_qa": {
+              "support": -6,
+              "collision": 0,
+              "headroom": null,
+              "clearance": 0.4,
+              "personClearance": 0.6778663065253254,
+              "rays": [
+                12,
+                12,
+                4.756
+              ],
+              "bad": false,
+              "method": "Final round18 actual-kit CPU support/capsule/headroom/person clearance and 3 eye rays; not WebGL appearance validation"
+            },
+            "camera_cpu_geometry_verified": true,
+            "id": "ssg_r18_legacy_035"
+          }
+        },
+        {
+          "index": 98,
+          "trace": {
+            "id": "ssg_r14_b1_2",
+            "round": 14,
+            "floor": "B1",
+            "spot": "마켓 선반 전자 가격표",
+            "photos": [
+              "refs/walk/s5_ssg_b1/p5QE9cVtWDM_540.jpg",
+              "refs/official/shinsegae/floor_B1.png"
+            ],
+            "local_uv": [
+              47.5,
+              58.5
+            ],
+            "target_local_uv": [
+              49.16,
+              57.28
+            ],
+            "x": -41.821825,
+            "z": 13.485674,
+            "y": -6,
+            "yawDeg": 327.241344,
+            "pitchDeg": 0,
+            "camera_qa": "실제 kit·전체 상세: 바닥 -6m/반경0.34m 충돌 없음/머리공간1.85m 통과. 시각 렌더 검증 아님.",
+            "camera_mesh_qa": {
+              "support": -6,
+              "collision": 0,
+              "headroom": null,
+              "clearance": 0.4,
+              "personClearance": 0.6879417584005867,
+              "rays": [
+                6.854,
+                12,
+                12
+              ],
+              "bad": false,
+              "method": "Final round18 actual-kit CPU support/capsule/headroom/person clearance and 3 eye rays; not WebGL appearance validation"
+            }
+          }
+        },
+        {
+          "index": 105,
+          "trace": {
+            "id": "ssg_r14_upper_2F_001",
+            "round": 18,
+            "floor": "2F",
+            "spot": "2F 입점 준비 중",
+            "photos": [
+              "refs/official/shinsegae/floor_2F.png"
+            ],
+            "local_uv": [
+              45.74966974900924,
+              15.040993433489202
+            ],
+            "target_local_uv": [
+              45.74966974900924,
+              13.926258581235697
+            ],
+            "x": -58.95301,
+            "y": 7,
+            "z": -26.49101,
+            "yawDeg": 20.89935,
+            "pitchDeg": 0,
+            "source_cell": [
+              27,
+              570,
+              148,
+              646
+            ],
+            "source_front": "S",
+            "camera_qa": "Round18: floor support, capsule, headroom, people and three eye rays pass.",
+            "source_camera_pixel": [
+              173.8086956521739,
+              608
+            ],
+            "source_target_pixel": [
+              147.99999999999997,
+              608
+            ],
+            "camera_mesh_qa": {
+              "support": 7,
+              "collision": 0,
+              "headroom": null,
+              "clearance": 0.4,
+              "personClearance": 2.9730742977730067,
+              "rays": [
+                2.007,
+                1.835,
+                2.01
+              ],
+              "bad": false,
+              "method": "Final round18 actual-kit CPU support/capsule/headroom/person clearance and 3 eye rays; not WebGL appearance validation"
+            }
+          }
+        },
+        {
+          "index": 117,
+          "trace": {
+            "id": "ssg_r14_upper_2F_013",
+            "round": 18,
+            "floor": "2F",
+            "spot": "2F 발렌시아가",
+            "photos": [
+              "refs/official/shinsegae/floor_2F.png"
+            ],
+            "local_uv": [
+              36.25375590533552,
+              37.016819221967964
+            ],
+            "target_local_uv": [
+              34.76420079260238,
+              37.016819221967964
+            ],
+            "x": -59.96839,
+            "y": 7,
+            "z": -2.60239,
+            "yawDeg": 110.78637,
+            "pitchDeg": 0,
+            "source_cell": [
+              658,
+              734,
+              740,
+              876
+            ],
+            "source_front": "E",
+            "camera_qa": "Round18: floor support, capsule, headroom, people and three eye rays pass.",
+            "source_camera_pixel": [
+              682.5999999999999,
+              716.9152542372881
+            ],
+            "source_target_pixel": [
+              682.5999999999999,
+              734
+            ],
+            "camera_mesh_qa": {
+              "support": 7,
+              "collision": 0,
+              "headroom": null,
+              "clearance": 0.4,
+              "personClearance": 1.34485013478257,
+              "rays": [
+                12,
+                12,
+                5.996
+              ],
+              "bad": false,
+              "method": "Final round18 actual-kit CPU support/capsule/headroom/person clearance and 3 eye rays; not WebGL appearance validation"
+            }
+          }
+        },
+        {
+          "index": 201,
+          "trace": {
+            "id": "ssg_r14_upper_3F_061",
+            "round": 18,
+            "floor": "3F",
+            "spot": "3F 쇼파드",
+            "photos": [
+              "refs/official/shinsegae/floor_3F.png"
+            ],
+            "local_uv": [
+              39.17612252228717,
+              69.89541882452126
+            ],
+            "target_local_uv": [
+              38.17612252228717,
+              78.49862700228832
+            ],
+            "x": -45.504008,
+            "y": 11.8,
+            "z": 27.070444,
+            "yawDeg": 194.323917,
+            "pitchDeg": -2,
+            "source_cell": [
+              1643,
+              707,
+              1735,
+              784
+            ],
+            "source_front": "N",
+            "camera_qa": "Round18: floor support, capsule, headroom, people and three eye rays pass.",
+            "source_camera_pixel": [
+              1443.8157894736842,
+              752.9634686346863
+            ],
+            "source_target_pixel": [
+              1642.9999999999995,
+              752.9634686346863
+            ],
+            "camera_mesh_qa": {
+              "support": 11.946370655890629,
+              "collision": 0,
+              "headroom": null,
+              "clearance": 0.4,
+              "personClearance": 6.334855412728246,
+              "rays": [
+                7.031,
+                6.098,
+                9.63
+              ],
+              "bad": false,
+              "method": "Final round18 actual-kit CPU support/capsule/headroom/person clearance and 3 eye rays; not WebGL appearance validation"
+            }
+          }
+        },
+        {
+          "index": 269,
+          "trace": {
+            "id": "ssg_r14_upper_4F_057",
+            "round": 18,
+            "floor": "4F",
+            "spot": "4F 조이앤 피스",
+            "photos": [
+              "refs/official/shinsegae/floor_4F.png"
+            ],
+            "local_uv": [
+              28.579619446721743,
+              74.32214079421634
+            ],
+            "target_local_uv": [
+              28.055236728837876,
+              75.08750765894652
+            ],
+            "x": -53.781193,
+            "y": 16.6,
+            "z": 34.946149,
+            "yawDeg": 166.617476,
+            "pitchDeg": -2,
+            "source_cell": [
+              1516,
+              851,
+              1579,
+              918
+            ],
+            "source_front": "E",
+            "camera_qa": "Round18: floor support, capsule, headroom, people and three eye rays pass.",
+            "source_camera_pixel": [
+              1564.0246806336227,
+              825.9487451108214
+            ],
+            "source_target_pixel": [
+              1564.0246806336227,
+              851
+            ],
+            "camera_mesh_qa": {
+              "support": 16.78748845180445,
+              "collision": 0,
+              "headroom": null,
+              "clearance": 0.4,
+              "personClearance": 3.1443495481448793,
+              "rays": [
+                6.728,
+                8.794,
+                7.64
+              ],
+              "bad": false,
+              "method": "Final round18 actual-kit CPU support/capsule/headroom/person clearance and 3 eye rays; not WebGL appearance validation"
+            }
+          }
+        },
+        {
+          "index": 270,
+          "trace": {
+            "id": "ssg_r14_upper_4F_058",
+            "round": 18,
+            "floor": "4F",
+            "spot": "4F 호간",
+            "photos": [
+              "refs/official/shinsegae/floor_4F.png"
+            ],
+            "local_uv": [
+              28.23345767575323,
+              76.92680205949657
+            ],
+            "target_local_uv": [
+              24.83345767575323,
+              76.92680205949657
+            ],
+            "x": -53.171598,
+            "y": 16.6,
+            "z": 37.500354,
+            "yawDeg": 110.783145,
+            "pitchDeg": -2,
+            "source_cell": [
+              1579,
+              851,
+              1645,
+              918
+            ],
+            "source_front": "E",
+            "camera_qa": "Round18: floor support, capsule, headroom, people and three eye rays pass.",
+            "source_camera_pixel": [
+              1600.0349745331068,
+              825.9487451108214
+            ],
+            "source_target_pixel": [
+              1600.0349745331068,
+              851
+            ],
+            "camera_mesh_qa": {
+              "support": 16.483151183763795,
+              "collision": 0,
+              "headroom": null,
+              "clearance": 0.4,
+              "personClearance": 2.7556914332823323,
+              "rays": [
+                6.473,
+                5.905,
+                12
+              ],
+              "bad": false,
+              "method": "Final round18 actual-kit CPU support/capsule/headroom/person clearance and 3 eye rays; not WebGL appearance validation"
+            }
+          }
+        },
+        {
+          "index": 340,
+          "trace": {
+            "id": "ssg_r14_upper_5F_060",
+            "round": 18,
+            "floor": "5F",
+            "spot": "5F 써스데이 아일랜드",
+            "photos": [
+              "refs/official/shinsegae/floor_5F.png"
+            ],
+            "local_uv": [
+              41.951109776233665,
+              69.36876478237319
+            ],
+            "target_local_uv": [
+              42.71052631578947,
+              70.78297834474628
+            ],
+            "x": -43.109746,
+            "y": 21.4,
+            "z": 25.598483,
+            "yawDeg": 229.008381,
+            "pitchDeg": -2,
+            "source_cell": [
+              1410,
+              681,
+              1513,
+              739
+            ],
+            "source_front": "W",
+            "camera_qa": "Round18: floor support, capsule, headroom, people and three eye rays pass.",
+            "source_camera_pixel": [
+              1464.3648496240598,
+              759.6494859683246
+            ],
+            "source_target_pixel": [
+              1464.3648496240598,
+              739
+            ],
+            "camera_mesh_qa": {
+              "support": 21.167531736498233,
+              "collision": 0,
+              "headroom": null,
+              "clearance": 0.4,
+              "personClearance": 3.1792597249924133,
+              "rays": [
+                12,
+                12,
+                5.986
+              ],
+              "bad": false,
+              "method": "Final round18 actual-kit CPU support/capsule/headroom/person clearance and 3 eye rays; not WebGL appearance validation"
+            }
+          }
+        },
+        {
+          "index": 522,
+          "trace": {
+            "id": "ssg_r14_upper_8F_026",
+            "round": 18,
+            "floor": "8F",
+            "spot": "8F 엄브로",
+            "photos": [
+              "refs/official/shinsegae/floor_8F.png"
+            ],
+            "local_uv": [
+              26.512785048713795,
+              26.883924485125853
+            ],
+            "target_local_uv": [
+              23.956115107913668,
+              26.883924485125853
+            ],
+            "x": -72.67605,
+            "y": 35.8,
+            "z": -8.61552,
+            "yawDeg": 110.78719,
+            "pitchDeg": 0,
+            "source_cell": [
+              397,
+              895,
+              499,
+              952
+            ],
+            "source_front": "E",
+            "camera_qa": "Round18: floor support, capsule, headroom, people and three eye rays pass.",
+            "source_camera_pixel": [
+              447.9999999999999,
+              868.0774907749078
+            ],
+            "source_target_pixel": [
+              447.9999999999999,
+              895
+            ],
+            "camera_mesh_qa": {
+              "support": 35.8,
+              "collision": 0,
+              "headroom": null,
+              "clearance": 0.4,
+              "personClearance": 2.8011817988481615,
+              "rays": [
+                12,
+                7.094,
+                7.793
+              ],
+              "bad": false,
+              "method": "Final round18 actual-kit CPU support/capsule/headroom/person clearance and 3 eye rays; not WebGL appearance validation"
+            }
+          }
+        },
+        {
+          "index": 523,
+          "trace": {
+            "id": "ssg_r14_upper_8F_027",
+            "round": 18,
+            "floor": "8F",
+            "spot": "8F LEE",
+            "photos": [
+              "refs/official/shinsegae/floor_8F.png"
+            ],
+            "local_uv": [
+              26.512785048713795,
+              30.81441647597254
+            ],
+            "target_local_uv": [
+              23.956115107913668,
+              30.81441647597254
+            ],
+            "x": -71.26983,
+            "y": 35.8,
+            "z": -4.94575,
+            "yawDeg": 110.78688,
+            "pitchDeg": 0,
+            "source_cell": [
+              499,
+              895,
+              579,
+              952
+            ],
+            "source_front": "E",
+            "camera_qa": "Round18: floor support, capsule, headroom, people and three eye rays pass.",
+            "source_camera_pixel": [
+              539,
+              868.0774907749078
+            ],
+            "source_target_pixel": [
+              539,
+              895
+            ],
+            "camera_mesh_qa": {
+              "support": 35.8,
+              "collision": 0,
+              "headroom": null,
+              "clearance": 0.4,
+              "personClearance": 1.6603322640920943,
+              "rays": [
+                5.794,
+                7.093,
+                12
+              ],
+              "bad": false,
+              "method": "Final round18 actual-kit CPU support/capsule/headroom/person clearance and 3 eye rays; not WebGL appearance validation"
+            }
+          }
+        },
+        {
+          "index": 561,
+          "trace": {
+            "id": "ssg_r14_upper_8F_065",
+            "round": 18,
+            "floor": "8F",
+            "spot": "8F 오니츠카 타이거",
+            "photos": [
+              "refs/official/shinsegae/floor_8F.png"
+            ],
+            "local_uv": [
+              25.281594001551518,
+              60.98141962907775
+            ],
+            "target_local_uv": [
+              26.785730382483685,
+              56.485712242562926
+            ],
+            "x": -61.62318,
+            "y": 35.8,
+            "z": 23.6552,
+            "yawDeg": 2.51801,
+            "pitchDeg": -2,
+            "source_cell": [
+              1080,
+              822,
+              1177,
+              918
+            ],
+            "source_front": "S",
+            "camera_qa": "Round18: floor support, capsule, headroom, people and three eye rays pass.",
+            "source_camera_pixel": [
+              1237.4360465116279,
+              881.0423055897227
+            ],
+            "source_target_pixel": [
+              1133.35,
+              865.2032936996036
+            ],
+            "camera_mesh_qa": {
+              "support": 35.8,
+              "collision": 0,
+              "headroom": null,
+              "clearance": 0.4,
+              "personClearance": 0.6687629239260366,
+              "rays": [
+                7.911,
+                5.365,
+                5.119
+              ],
+              "bad": false,
+              "method": "Final round18 actual-kit CPU support/capsule/headroom/person clearance and 3 eye rays; not WebGL appearance validation"
+            }
+          }
+        },
+        {
+          "index": 632,
+          "trace": {
+            "id": "ssg_r14_upper_9F_061",
+            "round": 18,
+            "floor": "9F",
+            "spot": "9F 팝업",
+            "photos": [
+              "refs/official/shinsegae/floor_9F.png"
+            ],
+            "local_uv": [
+              37.16666666666667,
+              70.2915271216859
+            ],
+            "target_local_uv": [
+              37.16666666666667,
+              67.87334096109839
+            ],
+            "x": -47.2324,
+            "y": 40.6,
+            "z": 28.15006,
+            "yawDeg": 20.92928,
+            "pitchDeg": 0,
+            "source_cell": [
+              1308,
+              723,
+              1397,
+              761
+            ],
+            "source_front": "S",
+            "camera_qa": "Round18: floor support, capsule, headroom, people and three eye rays pass.",
+            "source_camera_pixel": [
+              1452.9866146848603,
+              742
+            ],
+            "source_target_pixel": [
+              1397,
+              742
+            ],
+            "camera_mesh_qa": {
+              "support": 40.474442214730935,
+              "collision": 0,
+              "headroom": null,
+              "clearance": 0.4,
+              "personClearance": 2.5846209166244702,
+              "rays": [
+                5.215,
+                6.002,
+                12
+              ],
+              "bad": false,
+              "method": "Final round18 actual-kit CPU support/capsule/headroom/person clearance and 3 eye rays; not WebGL appearance validation"
+            }
+          }
+        },
+        {
+          "index": 751,
+          "trace": {
+            "id": "ssg_r14_upper_11F_003",
+            "round": 18,
+            "floor": "11F",
+            "spot": "11F 더 키친 일 포노 (이탈리안 피자)",
+            "photos": [
+              "refs/official/shinsegae/floor_11F.jpg"
+            ],
+            "local_uv": [
+              40.14614817988343,
+              56.320928902134
+            ],
+            "target_local_uv": [
+              40.14614817988343,
+              59.36447368421052
+            ],
+            "x": -49.44751,
+            "y": 50.2,
+            "z": 14.04959,
+            "yawDeg": 200.91889,
+            "pitchDeg": 0,
+            "source_cell": [
+              1200,
+              646,
+              1380,
+              780
+            ],
+            "source_front": "N",
+            "camera_qa": "Round18: floor support, capsule, headroom, people and three eye rays pass.",
+            "source_camera_pixel": [
+              1129.5348837209303,
+              729.920338615151
+            ],
+            "source_target_pixel": [
+              1200,
+              729.920338615151
+            ],
+            "camera_mesh_qa": {
+              "support": 50.2,
+              "collision": 0,
+              "headroom": null,
+              "clearance": 0.4,
+              "personClearance": 1.7932665193143085,
+              "rays": [
+                12,
+                4.159,
+                4.557
+              ],
+              "bad": false,
+              "method": "Final round18 actual-kit CPU support/capsule/headroom/person clearance and 3 eye rays; not WebGL appearance validation"
+            }
+          }
+        },
+        {
+          "index": 753,
+          "trace": {
+            "id": "ssg_r14_upper_11F_005",
+            "round": 18,
+            "floor": "11F",
+            "spot": "11F 꼴라주 (프렌치 경양식)",
+            "photos": [
+              "refs/official/shinsegae/floor_11F.jpg"
+            ],
+            "local_uv": [
+              29.178283081494456,
+              55.01436593725762
+            ],
+            "target_local_uv": [
+              27.87172011661808,
+              59.36447368421052
+            ],
+            "x": -60.129163,
+            "y": 50.2,
+            "z": 16.7066,
+            "yawDeg": 184.287255,
+            "pitchDeg": -2,
+            "source_cell": [
+              1200,
+              812,
+              1380,
+              903
+            ],
+            "source_front": "N",
+            "camera_qa": "Round18: floor support, capsule, headroom, people and three eye rays pass.",
+            "source_camera_pixel": [
+              1129.5348837209303,
+              857.5
+            ],
+            "source_target_pixel": [
+              1200,
+              857.5
+            ],
+            "camera_mesh_qa": {
+              "support": 50.2,
+              "collision": 0,
+              "headroom": null,
+              "clearance": 0.4,
+              "personClearance": 2.367968336261836,
+              "rays": [
+                3.27,
+                2.594,
+                2.508
+              ],
+              "bad": false,
+              "method": "Final round18 actual-kit CPU support/capsule/headroom/person clearance and 3 eye rays; not WebGL appearance validation"
+            }
+          }
+        },
+        {
+          "index": 809,
+          "trace": {
+            "spot": "2F 몽클레르 정면",
+            "x": -74.896571,
+            "y": 7,
+            "z": -20.890799,
+            "yawDeg": 21.024606,
+            "pitchDeg": 0,
+            "id": "ssg_r18_up_02",
+            "round": 18,
+            "photos": [
+              "refs/walk/s6_ssg_upper/RWwfzmPmiYU_100.jpg"
+            ],
+            "floor": "2F",
+            "local_uv": [
+              28.834744897415682,
+              14.617983819460349
+            ],
+            "target_local_uv": [
+              28.83205543221807,
+              12.29530596026517
+            ],
+            "source_camera_pixel": [
+              164.0150426015456,
+              802.0090623129747
+            ],
+            "source_target_pixel": [
+              110.23966647077506,
+              802.0399096638018
+            ],
+            "source_cell": [
+              28,
+              733,
+              148,
+              938
+            ],
+            "source_front": "E",
+            "camera_mesh_qa": {
+              "support": 7,
+              "collision": 0,
+              "headroom": null,
+              "clearance": 0.4,
+              "personClearance": 3.626608098317046,
+              "rays": [
+                2.537,
+                3.927,
+                5.46
+              ],
+              "bad": false,
+              "method": "Final round18 actual-kit CPU support/capsule/headroom/person clearance and 3 eye rays; not WebGL appearance validation"
+            },
+            "camera_qa": "Round18: floor support, capsule, headroom, people and three eye rays pass."
+          }
+        },
+        {
+          "index": 749,
+          "trace": {
+            "id": "ssg_r14_upper_11F_001",
+            "round": 18,
+            "floor": "11F",
+            "spot": "11F 평양면옥 (냉면/불고기)",
+            "photos": [
+              "refs/official/shinsegae/floor_11F.jpg"
+            ],
+            "local_uv": [
+              48.79986122018656,
+              65.4761727688787
+            ],
+            "target_local_uv": [
+              51.20262390670554,
+              65.4761727688787
+            ],
+            "x": -38.1243,
+            "y": 50.2,
+            "z": 19.54323,
+            "yawDeg": 290.78407,
+            "pitchDeg": 0,
+            "source_cell": [
+              1272,
+              456,
+              1411,
+              615
+            ],
+            "source_front": "W",
+            "camera_qa": "Round18: floor support, capsule, headroom, people and three eye rays pass.",
+            "source_camera_pixel": [
+              1341.4999999999995,
+              639.9741697416973
+            ],
+            "source_target_pixel": [
+              1341.4999999999995,
+              615
+            ],
+            "camera_mesh_qa": {
+              "support": 50.2,
+              "collision": 0,
+              "headroom": null,
+              "clearance": 0.4,
+              "personClearance": 0.6974868392880177,
+              "rays": [
+                7.281,
+                12,
+                2.856
+              ],
+              "bad": false,
+              "method": "Final round18 actual-kit CPU support/capsule/headroom/person clearance and 3 eye rays; not WebGL appearance validation"
+            }
+          }
+        },
+        {
+          "index": 642,
+          "trace": {
+            "id": "ssg_r14_upper_9F_071",
+            "round": 18,
+            "floor": "9F",
+            "spot": "9F 캐논/소니",
+            "photos": [
+              "refs/official/shinsegae/floor_9F.png"
+            ],
+            "local_uv": [
+              36.498198198198196,
+              76.1009038901602
+            ],
+            "target_local_uv": [
+              31.6981981981982,
+              76.1009038901602
+            ],
+            "x": -45.779253,
+            "y": 40.6,
+            "z": 33.811484,
+            "yawDeg": 110.783212,
+            "pitchDeg": -2,
+            "source_cell": [
+              1548,
+              777,
+              1607,
+              822
+            ],
+            "source_front": "E",
+            "camera_qa": "Round18: floor support, capsule, headroom, people and three eye rays pass.",
+            "source_camera_pixel": [
+              1577.5,
+              749.9680196801967
+            ],
+            "source_target_pixel": [
+              1577.5,
+              777
+            ],
+            "camera_mesh_qa": {
+              "support": 40.6,
+              "collision": 0.0012243778458201294,
+              "headroom": null,
+              "clearance": 0.4,
+              "personClearance": 1.069323368547084,
+              "rays": [
+                2.85,
+                2.619,
+                12
+              ],
+              "bad": false,
+              "method": "Final round18 actual-kit CPU support/capsule/headroom/person clearance and 3 eye rays; not WebGL appearance validation"
+            }
+          }
+        },
+        {
+          "index": 736,
+          "trace": {
+            "id": "ssg_r14_upper_10F_069",
+            "round": 18,
+            "floor": "10F",
+            "spot": "10F 세컨스킨",
+            "photos": [
+              "refs/official/shinsegae/floor_10F.png"
+            ],
+            "local_uv": [
+              28.68260869565217,
+              81.6378581235698
+            ],
+            "target_local_uv": [
+              26.182608695652174,
+              81.95077803203662
+            ],
+            "x": -51.068913,
+            "y": 45.4,
+            "z": 41.740581,
+            "yawDeg": 117.957552,
+            "pitchDeg": -2,
+            "source_cell": [
+              1638,
+              883,
+              1735,
+              906
+            ],
+            "source_front": "E",
+            "camera_qa": "Round18: floor support, capsule, headroom, people and three eye rays pass.",
+            "source_camera_pixel": [
+              1682.6111111111113,
+              864.1359712683511
+            ],
+            "source_target_pixel": [
+              1682.6111111111113,
+              883
+            ],
+            "camera_mesh_qa": {
+              "support": 45.4,
+              "collision": 0,
+              "headroom": null,
+              "clearance": 0.4,
+              "personClearance": 8.139997365751288,
+              "rays": [
+                12,
+                3.278,
+                5.338
+              ],
+              "bad": false,
+              "method": "Final round18 actual-kit CPU support/capsule/headroom/person clearance and 3 eye rays; not WebGL appearance validation"
+            }
+          }
+        },
+        {
+          "index": 781,
+          "trace": {
+            "id": "ssg_r14_service_17",
+            "round": 18,
+            "floor": "10F",
+            "spot": "10F 여자 화장실 · 기저귀 교환대",
+            "photos": [
+              "refs/official/shinsegae/floor_10F.png"
+            ],
+            "source_pixel": [
+              1770,
+              805
+            ],
+            "local_uv": [
+              35.57246376811594,
+              81.5286613272311
+            ],
+            "target_local_uv": [
+              35.57246376811594,
+              83.98403890160182
+            ],
+            "x": -44.701227,
+            "y": 45.4,
+            "z": 39.207134,
+            "yawDeg": 200.934839,
+            "pitchDeg": 5,
+            "camera_qa": "Round18: floor support, capsule, headroom, people and three eye rays pass.",
+            "source_camera_pixel": [
+              1689.9999999999995,
+              805
+            ],
+            "source_target_pixel": [
+              1769.9999999999995,
+              805
+            ],
+            "camera_mesh_qa": {
+              "support": 45.4,
+              "collision": 0,
+              "headroom": null,
+              "clearance": 0.4,
+              "personClearance": 2.9880970426664413,
+              "rays": [
+                3.151,
+                2.882,
+                3.158
+              ],
+              "bad": false,
+              "method": "Final round18 actual-kit CPU support/capsule/headroom/person clearance and 3 eye rays; not WebGL appearance validation"
+            }
+          }
         }
       ]
     },
@@ -55762,10 +56794,545 @@
       "v": "8.7+(px-27)*75.5/1748",
       "raw_cells_unchanged": 618,
       "world": "P(u,v) unchanged bilinear OSM registration",
-      "limitation": "Constrained inside-envelope option B; not metrically isotropic. No new claims; ground/J1/J4/J5/J8/J9 positions unchanged."
+      "limitation": "Constrained inside-envelope option B; not metrically isotropic. No new claims; ground/J1/J4/J5/J8/J9 positions unchanged.",
+      "round19_status": "Unresolved: whole 1F-family registration cannot be adopted without annex allocation. See round19 L1/N1."
     },
     "circulation_round17_history": "1F두병렬뱅크·팝업·북서1M및고객리프트/모든J연결보존. 상층왼쪽아트리움2F–10F, 오른쪽에스컬레이터2F–11F. 상층리프트3대는local(u21.5/24.5/27.5,v58.4)연결다리에 모음. B1·1F·1M원위치도착은수평offset메뉴사용으로실측동일샤프트라고주장하지않음.1F는기존우물외B1에닫힘.",
-    "entrance_round17_history": "2025 ssg_01/02: 북측 검은 철골·유리 격자 캐노피 폭25.4m, 외부 돌출6.8m부터 v5 후퇴 문까지 이어지는 총깊이11.8m는 유지하며 높이를 약5.9m로 올린다. 원형 검정 기둥2개·검은 격자 트랜섬·유리 출입부 폭약12m/상단약5.7m. 문 상부 띠 y2.9m와 추가 가로 멀리언 y4.55m를 둔다. 문 양옆 쇼윈도는 무발광 #1c1a19 배경에 단일 작은 시계/보석 전시와 국소 발광부, 약25도 경사진 #a8202c 천 차양과 작은 흰 SHINSEGAE를 둔다. 정문 앞 v-7.4~0/슬롯v0~5는 #4a4744 차콜 판석·#3a3836 줄눈. 차로v-14.6~-7.6, 바깥 광장v-22~-14.6의 밝은 포장·경계석·흰선·콘은 유지한다. 서측 탑 북면에는 cc_01의 쇼윈도4칸·낮은 화단/산울타리·2층 사각창을 반영한다. 입구 옆 서측 큰 쇼윈도는 새4칸과 겹치지 않도록 u19.8/폭5.2m로 조정하고 동측은 u48.2/폭6.5m를 유지한다. POLO CLUB은 이 두 전시창 안에만 둔다. 동측은 v18.5/21.5의 폭2.5m 차양2개(0.5m 간격), 위끝y3.0m로 낮춘다."
+    "entrance_round17_history": "2025 ssg_01/02: 북측 검은 철골·유리 격자 캐노피 폭25.4m, 외부 돌출6.8m부터 v5 후퇴 문까지 이어지는 총깊이11.8m는 유지하며 높이를 약5.9m로 올린다. 원형 검정 기둥2개·검은 격자 트랜섬·유리 출입부 폭약12m/상단약5.7m. 문 상부 띠 y2.9m와 추가 가로 멀리언 y4.55m를 둔다. 문 양옆 쇼윈도는 무발광 #1c1a19 배경에 단일 작은 시계/보석 전시와 국소 발광부, 약25도 경사진 #a8202c 천 차양과 작은 흰 SHINSEGAE를 둔다. 정문 앞 v-7.4~0/슬롯v0~5는 #4a4744 차콜 판석·#3a3836 줄눈. 차로v-14.6~-7.6, 바깥 광장v-22~-14.6의 밝은 포장·경계석·흰선·콘은 유지한다. 서측 탑 북면에는 cc_01의 쇼윈도4칸·낮은 화단/산울타리·2층 사각창을 반영한다. 입구 옆 서측 큰 쇼윈도는 새4칸과 겹치지 않도록 u19.8/폭5.2m로 조정하고 동측은 u48.2/폭6.5m를 유지한다. POLO CLUB은 이 두 전시창 안에만 둔다. 동측은 v18.5/21.5의 폭2.5m 차양2개(0.5m 간격), 위끝y3.0m로 낮춘다.",
+    "round19": {
+      "date": "2026-11-07",
+      "review_source": ".codex-jobs/evidence/check_ssg18.json",
+      "status": "Scoped R19 changes implemented; required smoke and full-world walk pass. L1/N1 registration remains unresolved; L2 partial. No final WebGL rerender.",
+      "allowed_files": [
+        "js/places/shinsegae.js",
+        "data/research/shinsegae.json"
+      ],
+      "visual_validation": "Original official plans and supplied/source frames inspected. No tests/shot.mjs or new WebGL render was run, as required by sandbox constraint. Material appearance remains unverified.",
+      "findings": {
+        "b1": {
+          "L3": {
+            "status": "implemented_with_junction_gap",
+            "changes": "Added two 1 m lanes from B1 to a fenced B2 vestibule; retained the luggage lockers and did not cut 1F.",
+            "positions": {
+              "lanes_u": [
+                63,
+                64.2
+              ],
+              "v_run": [
+                78.4,
+                69.7
+              ],
+              "y_run": [
+                -6,
+                -11
+              ],
+              "top_world_xz": [
+                -19.752,
+                26.392
+              ],
+              "bottom_world_xz": [
+                -22.846,
+                18.262
+              ],
+              "vestibule_uv": [
+                61.9,
+                66.9,
+                65.3,
+                69.8
+              ]
+            },
+            "remaining_or_guess": "The plan establishes the upper icon (u≈62,v78.4), not the run or destination. Pair shifted 1.6 m east to retain lockers. B2 station transfer passage at x≈40 remains unconnected. Run, event-edge reservation and vestibule are inferred."
+          },
+          "D1": {
+            "status": "implemented_unrendered",
+            "changes": "Removed chandeliers from the centre, southwest plaza and west strip. Added cream coves and 0.14 m downlights on a 3 m grid in centre/west; Camel seating has 0.08 m LED strips at 1.2 m spacing."
+          },
+          "D7": {
+            "status": "implemented_unrendered",
+            "changes": "Changed deli kiosk bases to black glazed tile (#1e1c1a, grout #3a3633) using Phong specular. Retained 0.30 m checker squares and lowered gloss to 0.05. Blue Butterfly unchanged."
+          },
+          "D8": {
+            "status": "implemented_unrendered",
+            "changes": "Built thin cream cabinet backs, projecting backlit shelves and black trim. Moved bottle stock to the shelves and reduced counter stock to about eight bottles. Retained the existing sign.",
+            "positions": {
+              "source_shelf_spans_px": [
+                [
+                  920,
+                  540,
+                  595
+                ],
+                [
+                  889,
+                  595,
+                  655
+                ]
+              ]
+            },
+            "remaining_or_guess": "No photograph establishes a black 발효:곳간 fascia. Video title/subtitles are not treated as store signage."
+          },
+          "D10": {
+            "status": "implemented_unrendered",
+            "changes": "Added a chrome two-group machine (0.8 × 0.55 × 0.5 m) with two red LEDs, plywood rear wall, and two 1 × 1.4 m easel prints. Retained wooden chairs and existing wall prints.",
+            "positions": {
+              "machine_world_xz": [
+                -34.408,
+                33.046
+              ]
+            },
+            "remaining_or_guess": "Easel portrait/aircraft artwork is schematic; exact artwork and seating positions are not surveyed."
+          }
+        },
+        "f1": {
+          "F13": {
+            "status": "implemented_unrendered",
+            "changes": "Retained equal 0.95 m stripes and cross joints. Rust #934d22, white #f6f5f1, gloss 0.3; faint white veins at opacity 0.14 and width 0.8 px."
+          },
+          "F14": {
+            "status": "implemented_unrendered",
+            "changes": "Applied white cladding (#efece6, emissive #9a9690) to the four main bank runs and NW/SW mezzanine runs.",
+            "positions": {
+              "bank_u": [
+                25.6,
+                43.6
+              ],
+              "banks_v": [
+                33.76,
+                50.82
+              ],
+              "NW_run": [
+                12.1,
+                20,
+                12.1,
+                31
+              ],
+              "SW_run": [
+                12.05,
+                61,
+                12.05,
+                54.4
+              ]
+            }
+          },
+          "F21": {
+            "status": "implemented_unrendered",
+            "changes": "Hermès pavilion now has 0.08 m back panels, 0.5 m shelf ledges, visible orange boxes and light oak #dcb27c.",
+            "positions": {
+              "cell_uv": [
+                39.49,
+                0.12,
+                47.61,
+                13.29
+              ],
+              "back_offset": 0.12,
+              "shelf_offset": 0.41,
+              "box_offset": 0.42
+            },
+            "remaining_or_guess": "The reference is a brand-location card; exact shelf arrangement is inferred."
+          },
+          "F24": {
+            "status": "metadata_corrected",
+            "changes": "Photos 01/02 and the associated source trace spot are marked upper fashion floor, exact floor unknown, excluded from 1F/1M material evidence. Historical poses remain archived."
+          },
+          "NEW-GM": {
+            "status": "skipped_rejected_open",
+            "changes": "Kept the east wall: the skeptic rejected the finding because no source photo/plan supports glazing and verified F08 retained the wall."
+          },
+          "NEW-CAM": {
+            "status": "skipped_rejected_open",
+            "changes": "Reviewer-only poses are absent from the active trace data, so no blind replacements were made. Actual active camera QA was performed separately."
+          }
+        },
+        "up": {
+          "L1": {
+            "status": "unresolved_cross_module",
+            "changes": "Retained every raw official cell and the current envelope. Did not apply the unsafe whole-building registration.",
+            "remaining_or_guess": "The proposed 1F-family mapping u=67*(1048-px)/1023, v=84.7*(py-402)/720+5.6 puts annex x1061–1775 at u=-0.85…-47.61 in the live centralcity area, including its y7 hall crown/roof. The literal mapping also puts the 10F main bottom at v90.77, beyond VD84.7. Restoring all shop sizes while preserving the current exclusive footprint is not possible. Joint west-annex allocation and piecewise/per-floor outline registration are required. No source contradicts the finding; this is an unresolved scope dependency, not a rejected finding."
+          },
+          "N1": {
+            "status": "unresolved_cross_module",
+            "changes": "Official aspect ratios are still unresolved. N2 restores only the façade shoulder depth; it does not fix the registration.",
+            "remaining_or_guess": "The proposed 1F-family mapping u=67*(1048-px)/1023, v=84.7*(py-402)/720+5.6 puts annex x1061–1775 at u=-0.85…-47.61 in the live centralcity area, including its y7 hall crown/roof. The literal mapping also puts the 10F main bottom at v90.77, beyond VD84.7. Restoring all shop sizes while preserving the current exclusive footprint is not possible. Joint west-annex allocation and piecewise/per-floor outline registration are required. No source contradicts the finding; this is an unresolved scope dependency, not a rejected finding.",
+            "measured_built_parts": {
+              "2F 몽클레르": {
+                "parts": [
+                  [
+                    16.978,
+                    0.5,
+                    22.85,
+                    13.396
+                  ],
+                  [
+                    22.85,
+                    8.35,
+                    34.851,
+                    13.396
+                  ]
+                ],
+                "area_m2": 136.277,
+                "shape": "L-shaped after façade extension; not a full bbox"
+              },
+              "2F 펜디": {
+                "span_m": [
+                  7.41,
+                  5.046
+                ],
+                "area_m2": 37.3931
+              },
+              "2F 모이나": {
+                "span_m": [
+                  9.242,
+                  13.263
+                ],
+                "area_m2": 122.5721
+              },
+              "2F 발렌시아가": {
+                "span_m": [
+                  12.38,
+                  3.011
+                ],
+                "area_m2": 37.2805
+              },
+              "2F 생 로랑": {
+                "span_m": [
+                  12.38,
+                  2.968
+                ],
+                "area_m2": 36.7458
+              },
+              "8F 지샥": {
+                "span_m": [
+                  5.413,
+                  0.4816
+                ],
+                "area_m2": 2.6068
+              },
+              "8F 로우로우": {
+                "span_m": [
+                  10.541,
+                  0.85
+                ],
+                "area_m2": 8.9599
+              },
+              "8F 쌤소나이트 레드": {
+                "span_m": [
+                  1.4,
+                  1.8
+                ],
+                "area_m2": 2.52,
+                "raw_mapped_span_m": [
+                  1.804,
+                  5.874
+                ],
+                "reason": "Retained circulation niche; official size still not recovered."
+              }
+            }
+          },
+          "L2": {
+            "status": "partial",
+            "changes": "Moved the west face of the first 2F Gucci arrival to u ≥46.6; changed only 2F well caps to steel. Kept the user-confirmed 1F banks.",
+            "positions": {
+              "arrival_uv": [
+                [
+                  43.6,
+                  32.81
+                ],
+                [
+                  43.6,
+                  49.87
+                ]
+              ],
+              "gucci_new_west_face_u": 46.6
+            },
+            "remaining_or_guess": "Whole-stack orientation remains unresolved with L1. Celine and Helen Kaminski still have reservations around the wells. Nearby full-cell shifts overlap adjacent official cells; no claim of icon alignment or full cell-size recovery."
+          },
+          "N2": {
+            "status": "implemented_unrendered",
+            "changes": "Extended first-row cells (source x ≤79) to v=0.5 on the façade shoulders. Only the recessed u22.85–44.15 bay is clipped below v8.35. No shoppers below v8 and no aisle population below v8.4.",
+            "positions": {
+              "façade_v": 0.5,
+              "recess_uv": [
+                22.85,
+                0,
+                44.15,
+                8.35
+              ]
+            },
+            "remaining_or_guess": "The whole-floor registration remains schematic. This is only the north-band repair."
+          },
+          "N3": {
+            "status": "implemented",
+            "changes": "Merged the two 2F Dior rectangles into one L-shaped boutique. Removed the internal party wall and separate annex storefront. Stock uses the exterior backs and common south aisle.",
+            "positions": {
+              "union_rects_uv": [
+                [
+                  0.5,
+                  53.361,
+                  20.291,
+                  61.708
+                ],
+                [
+                  20.291,
+                  56.903,
+                  33.805,
+                  61.708
+                ]
+              ],
+              "old_partywall_v": 56.903,
+              "shared_open_segment_u": [
+                0.5,
+                20.291
+              ]
+            },
+            "remaining_or_guess": "Current constrained registration remains pending L1. Actual K/physics verified the direct route u10, v63→54.6 at y7."
+          },
+          "N4": {
+            "status": "implemented_unrendered",
+            "changes": "Removed obsolete 8 m panels at u22.9/44.1, v37–45. Columns and slots now derive from each actual main well; no stale advertising panel remains inside LV."
+          },
+          "N5": {
+            "status": "implemented_unrendered",
+            "changes": "8F fascia signs now sit at floor +2.75 m, height ≤0.35 m, white #f4f1ea on dark #1d1f20, below the grid starting at +3.2 m. K2 keeps its special sign."
+          },
+          "L5": {
+            "status": "implemented_with_geometry_residual",
+            "changes": "Opened both corner lift doors through v9.1–14.8, moved fountain to (12.3,14.4), turned annex bank north, added bounded 11F lift approaches, and limited NW lift menus to B2–1M.",
+            "positions": {
+              "corner_bank_uv": [
+                10,
+                11.95
+              ],
+              "annex_bank_uv": [
+                32,
+                82.2
+              ],
+              "annex_reserve_uv": [
+                29,
+                78.3,
+                35,
+                83.4
+              ],
+              "annex_arrival_v": 80.5,
+              "bridge_uv": [
+                29,
+                80,
+                35,
+                81.15
+              ],
+              "10F_bridge_uv": [
+                29,
+                80,
+                37.509855,
+                81.15
+              ],
+              "annex_9F_to_10F_lane_offsets": [
+                1.9,
+                3.5
+              ]
+            },
+            "remaining_or_guess": "Enlarged swept wells still occupy part of the nominal 2.8 m annex lobby. The narrow south bridge avoids the flights; a full 2.8 m clear depth is not claimed."
+          },
+          "L6": {
+            "status": "implemented_unrendered",
+            "changes": "Filled the space outside the official outline as back-of-house, closed both strip ends, excluded lighting/people candidates, and placed a closed 5 GATE door flush in the wall.",
+            "positions": {
+              "2F_gate_uv": [
+                11.57,
+                29.13
+              ],
+              "strip_v": [
+                7.2,
+                52.24
+              ]
+            }
+          },
+          "L7": {
+            "status": "implemented_with_junction_gap",
+            "changes": "Removed the slab, walls and ceiling beyond v84.7. A closed 3 m door sits at the façade with the hotel directory beside it.",
+            "positions": {
+              "door_uv": [
+                59.2,
+                84.62
+              ],
+              "directory_uv": [
+                56.15,
+                84.5
+              ]
+            },
+            "remaining_or_guess": "Through-walking needs a shared y7 junction and a descent to hotel 1F. _junctions.js and jwmarriott.js are outside the allowed files."
+          },
+          "L8": {
+            "status": "implemented",
+            "changes": "The 11F base plate is non-walkable. Explicit floors support the cross garden, dining wing and bounded official links/lift/service approaches. Retained gravel texture and corner glazing; moved both spawns into the dining link.",
+            "positions": {
+              "dining_link_uv": [
+                30.9,
+                49,
+                37,
+                59.4
+              ],
+              "corner_link_uv": [
+                12.9,
+                13.6,
+                20.81,
+                15.6
+              ],
+              "central_lift_lobby_uv": [
+                19.6,
+                51.2,
+                30.95,
+                55.3
+              ],
+              "service_corridor_uv": [
+                5.4,
+                52.97,
+                19.6,
+                55.3
+              ],
+              "spawns_uv": [
+                34,
+                57.5
+              ]
+            },
+            "remaining_or_guess": "Lift lobby dimensions and service recess depth are fitted to current cars; the plan establishes connections, not surveyed measurements."
+          },
+          "D4": {
+            "status": "implemented_unrendered",
+            "changes": "Repainted FENDI portal marble with light #e9e6df base, irregular 0.2–0.5 m grey breccia and dark veins. Material remains confined to portal piers and entry inlay."
+          },
+          "D5": {
+            "status": "implemented_unrendered",
+            "changes": "2F LV carpet is flat light #c9bfae. Removed the N4 obstructing panel and retained the four existing framed art panels behind the vitrines. Other-floor LV palettes unchanged."
+          },
+          "D8": {
+            "status": "implemented_unrendered",
+            "changes": "Removed the y0–7 pier segment. Added 1.1 m square jointed piers at main-well corners from2F upward, using the actual swept-well corners on3F to clear incoming/outgoing ramps. Only y7 well rail caps use steel;1F/1M unchanged.",
+            "remaining_or_guess": "The source photo establishes void-edge piers, not surveyed coordinates.3F uses the actual swept opening rather than the smaller schematic pad; final10,908 ramp samples have zero collision displacement."
+          }
+        }
+      },
+      "cameras": {
+        "changed_indices": [
+          35,
+          98,
+          105,
+          117,
+          201,
+          269,
+          270,
+          340,
+          522,
+          523,
+          561,
+          632,
+          751,
+          753,
+          809,
+          749,
+          642,
+          736,
+          781
+        ],
+        "changed_count": 19,
+        "height_rule": "All824active traces already use exact LV floor y, not eye height.",
+        "service19": "Original11F index783 preserved; restored official white service corridor rather than retargeting it to a restaurant.",
+        "final_validation": {
+          "active_floor_support_capsule_headroom": {
+            "checked": 824,
+            "passed": 824
+          },
+          "selected_eye_rays_and_people": {
+            "checked": 271,
+            "passed": 271
+          },
+          "flags": [],
+          "detail_errors": [],
+          "source783_preserved": true,
+          "webgl_rendered": false
+        }
+      },
+      "cross_module_blockers": [
+        {
+          "id": "up.L1/up.L2/up.N1",
+          "reason": "The proposed 1F-family mapping u=67*(1048-px)/1023, v=84.7*(py-402)/720+5.6 puts annex x1061–1775 at u=-0.85…-47.61 in the live centralcity area, including its y7 hall crown/roof. The literal mapping also puts the 10F main bottom at v90.77, beyond VD84.7. Restoring all shop sizes while preserving the current exclusive footprint is not possible. Joint west-annex allocation and piecewise/per-floor outline registration are required. No source contradicts the finding; this is an unresolved scope dependency, not a rejected finding."
+        },
+        {
+          "id": "b1.L3",
+          "reason": "B2 station connection about60m east is unbuilt."
+        },
+        {
+          "id": "up.L7",
+          "reason": "Hotel y7 junction/descent is unbuilt; door closes at own façade."
+        }
+      ],
+      "geometry_validation": {
+        "upper_escalators": {
+          "flights": 36,
+          "samples": 10908,
+          "collision_max_m": 0,
+          "headroom_failures": 0,
+          "max_support_delta_m": 0.048
+        },
+        "new_B1_B2_escalators": {
+          "samples": 202,
+          "collision_max_m": 0,
+          "max_support_delta_m": 0.001
+        },
+        "Dior": {
+          "direct_path_m": 8.4,
+          "local_path": [
+            [
+              10,
+              63
+            ],
+            [
+              10,
+              54.6
+            ]
+          ],
+          "y": 7,
+          "old_seam_fullheight_walls": 0
+        },
+        "1F_to_2F_arrivals": {
+          "banks": 2,
+          "clear_u": [
+            43.6,
+            46.5
+          ],
+          "aisle_access_path_m": 5
+        },
+        "lift_exits": {
+          "tested_stops": 12,
+          "floors": [
+            "2F",
+            "10F"
+          ],
+          "banks": 3,
+          "cars_per_bank": 2,
+          "all_can_walk_beyond_4m": true,
+          "10F_annex_paths_m": [
+            4.8,
+            4.6
+          ]
+        }
+      },
+      "test_history": [
+        {
+          "stage": "initial integrated snapshot",
+          "result": "smoke OK; full walk695ok/4blocked",
+          "blockers": "Four centralcity lift exits reproduced in centralcity-only walk(36ok/4blocked). Concurrent centralcity edits later resolved all four."
+        },
+        {
+          "stage": "widened annex lane before bridge completion",
+          "result": "smoke2fail; walk697ok/2blocked",
+          "blockers": "Both10Fannex lift arrivals lost support because the expanded hole exceeded the bridge predicate. Fixed with eastward bridge; final ownwalk198ok/0blocked."
+        },
+        {
+          "stage": "final source after bridge completion",
+          "result": "smoke OK; own walk198ok/0blocked; full walk699ok/0blocked",
+          "notes": "Previously observed centralcity blockers no longer reproduce. All required user/1F routes pass. Final bridge recheck: all36upper flights and all12tested2F/10Fliftstops pass."
+        }
+      ]
+    }
   },
   "visual_sources": [
     {
@@ -56037,14 +57604,14 @@
           "file": "01_aisle_marble_shinsegae_sign.jpg",
           "post_url": "https://blog.naver.com/keykey1201/224465916788",
           "post_date": "2026-11-05",
-          "where": "luxury/fashion hall, level not stated in post (likely 1F-2F main aisle)",
+          "where": "Upper fashion/luxury floor; exact floor unknown. Not evidence for1F/1M finishes.",
           "shows": "wide marble hall: big cream square pillars with backlit 'SHINSEGAE GANGNAM' sign, glossy pale marble floor with strong reflections, boutique fronts with display shelves on the right, clothes racks on the left, circular void/ceiling band above"
         },
         {
           "file": "02_aisle_marble_shoppingbag.jpg",
           "post_url": "https://blog.naver.com/keykey1201/224465916788",
           "post_date": "2026-11-05",
-          "where": "same hall as 01",
+          "where": "Upper fashion/luxury floor; exact floor unknown. Not evidence for1F/1M finishes.",
           "shows": "same pillar sign and floor from another angle; shows pillar ~1.2 m wide, sign about 2.5 m above floor, aisle at least 8 m wide"
         },
         {
@@ -56184,8 +57751,9 @@
             "01_aisle_marble_shinsegae_sign.jpg",
             "02_aisle_marble_shoppingbag.jpg"
           ],
-          "where": "1F main aisle between boutique rows, near central atrium",
-          "what_to_build": "Floor: glossy cream marble, high reflectivity. Pillars 1.2x1.2 m, 4.5 m tall, cream stone, with a backlit white 'SHINSEGAE / GANGNAM' sign 2.4x0.7 m at 2.5 m. Boutique fronts every 8-12 m with 0.4 m deep wall shelves and light strips. Ceiling white with a circular void."
+          "where": "Upper fashion/luxury hall, exact floor unknown; excluded from1F/1M reconstruction.",
+          "what_to_build": "Floor: glossy cream marble, high reflectivity. Pillars 1.2x1.2 m, 4.5 m tall, cream stone, with a backlit white 'SHINSEGAE / GANGNAM' sign 2.4x0.7 m at 2.5 m. Boutique fronts every 8-12 m with 0.4 m deep wall shelves and light strips. Ceiling white with a circular void.",
+          "status": "unassigned_floor_reference_only"
         },
         {
           "spot": "1F plan and shop-cell ring",
