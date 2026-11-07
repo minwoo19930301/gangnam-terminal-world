@@ -18,6 +18,9 @@ for mid in ids:
     tr = [t for t in tr if all(k in t for k in ('x', 'y', 'z'))]
     if os.environ.get('TRACE_ONLY_WALK'):  # only cameras matched to virtual-walk video frames (refs/walk) or roadview
         tr = [t for t in tr if any(('refs/walk' in (find_photo(n) or '')) or ('refs/roadview' in (find_photo(n) or '')) for n in (t.get('photos') or []))]
+    if os.environ.get('TRACE_PHOTO_RE'):  # only cameras whose resolved photo path matches this regex (e.g. 'ssg_food|s5_ssg')
+        import re; rx = re.compile(os.environ['TRACE_PHOTO_RE'])
+        tr = [t for t in tr if any(rx.search(find_photo(n) or '') for n in (t.get('photos') or []))]
     if not tr: print(mid, 'no trace entries'); continue
     views = ';'.join(f"{mid}_{i:02d}:{t['x']},{t['y']},{t['z']},{t.get('yawDeg', 0)},{t.get('pitchDeg', 0)}" for i, t in enumerate(tr))
     subprocess.run(['node', 'tests/shot.mjs', '--gpu', '--out', out, '--views', views], cwd=ROOT, check=False, capture_output=True)

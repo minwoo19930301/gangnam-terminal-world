@@ -321,10 +321,10 @@
         "미가훠궈",
         "아이스크림 소사이어티"
       ],
-      "layout": "공식 floor_B1/sweetpark_B1/hos_B1 도면의66개 매장·팝업 셀을 게이트·코어에 맞춘 연속 구간별 좌표 변환로 배치. 흰 통로·검은 경계·푸드홀의 홈을 유지. 메가박스/영풍문고 둥근 광장은 shinsegae 모듈이 담당. 기존1F바닥과우물/J3/J4/J7을보존.",
+      "layout": "Round18: 공식66개 매장 셀을0.092m/원본px 등축 직교 변환으로 배치, 종횡비·흰 통로·홈 유지. 하우스 중심(s4.316,t−17.684)에 B1→1F→1M 보이드와 B1 라운지. E1/E2와 J3/J4/J7 유지;9GATE는 기존 J4와 연결 통로로 접속.",
       "source": "refs/official/shinsegae/floor_B1.png; refs/official/shinsegae/sweetpark_B1.png; refs/official/shinsegae/hos_B1.png",
       "guess": false,
-      "metric_guess": "실측축척·깊이·높이·상하층 코어정합은추정;모든셀의원본좌표/치수는round12.cells 참조."
+      "metric_guess": "셀/인접관계는 공식 도면. 축척·방향·층고·상층 외곽 등록은 미측량. E1/E2 중점 잔차1.525m,J4 참조 잔차15.414m. 서측 앞마당과 충돌하는 잠정 정합."
     },
     {
       "floor": "2F",
@@ -412,7 +412,7 @@
         "록시땅",
         "와인셀러"
       ],
-      "layout": "See modeling.plan_transform andround10.plan_cells. Officialnames/floors/cellrelations; worldfit is regionalinference.",
+      "layout": "확인된 호남선 상점·쉐이크쉑/우리은행/스타벅스·두 신세계 연결·파미에 게이트 유지. HOS는round18 hos_1F 등축 투영으로 B1 보이드 위에 이동; 라운지는B1. 서측 앞마당과의 외부 정합은 잠정적.",
       "guess": true
     },
     {
@@ -429,7 +429,8 @@
         "딤딤섬",
         "바디프랜드"
       ],
-      "guess": true
+      "guess": true,
+      "layout": "hos_1M 중앙 아이콘(1204.5,695.5)을 동일 코트에 맞추고 독립 축척.039m/원본px 적용. 동측 끝t2.6545로 확인된 터미널 실내를 피함. 갤러리/피부과/분더샵/트웰브강남/PSR 인접관계는 공식 도면, 축척·외부 정합은 추정."
     }
   ],
   "elements": [
@@ -546,11 +547,11 @@
     "1F -> 신세계 두 번째 연결 (J8, 1게이트 방면; 위치는 지역 도면 정합 추정)",
     "2F y7 -> 신세계 남서측 코어 (J9)",
     "공식 도면으로 확인한 상업 출입구 주변 수직 동선만 유지. 근거 없는 문 앞 계단 철거.",
-    "HOS B1 푸드홀 ↔ 1F 와인·라운지 ↔ 1M 아트·카페: 공식 각층 엘리베이터 목적지 연결. B1과 상층의 수평 오프셋은 명시적이며 같은 실측 샤프트로 주장하지 않는다."
+    "HOS B1 푸드홀·라운지↔1F 와인셀러/레스토랑↔1M 아트·카페: 동일 보이드에 하부·상부 에스컬레이터 정렬. 기존 E1/E2와 B1 J3/J4/J7, 확인된1F J4/J8·파미에 게이트 유지. 실측 샤프트 정합은 미확인."
   ],
   "parking": "호남선 지상 버스 야드 1173096801, 터미널·601356623·1173096805의 옥상 승용차 주차를 항공사진과 OSM으로 재현. OSM layer 도로를 기준으로 연결교·진입 경로를 유지하며 중간층 높이와 램프 경사는 추정. 백화점·호텔 지하 1~3층 공용 주차는 문헌 맥락으로 별도 구역.",
   "notes": [
-    "Round14는 제공된 공식 HOS·파미에 층별 도면을 위치 기준으로 사용한다. 실측 축척·북쪽 정합·층고·미촬영 점포 내부와 일부 수직 연결은 추정이며 modeling.guesses와 round14.decisions에 구분했다.",
+    "Round18는 공식 B1/1F/1M 도면과 review_ssg17을 우선한다. B1은0.092m/원본px 등축 직교 변환. B1 하우스 보이드 위에1F/1M 코트를 정렬하고 라운지는B1. 기존 서측 승차홈 앞마당과 충돌하는 잠정 투영이며 실측 복원이 아니다. Round14/17 해당 좌표·라운지 층·검증은 과거 기록이다.",
     "소이연남·팔도국수 면주방은 2018 기사 근거",
     "파미에스테이션: 2014.11 개장, 약 4,500평, 10개국 30여 식음 브랜드 51개 매장(2014 기준). 2018.1.16 2층에 11곳 확장(주차장에서 도보 1분), 확인된 이름은 홍대만뽀·소이연남·팔도국수 면주방",
     "2016 센트럴시티 터미널 쪽 '캐쥬얼 다이닝&라이프' 존: 101번지 남산돈까스, 르사이공, 순대실록, 우마이도, 스노우폭스, 서대문 한옥집",
@@ -561,7 +562,8 @@
     "Round3는 운영자가 제공한 cc_01/cc_02·manifest 및 비교 이미지 직접 검토. 북측 외관은 2026-06 로드뷰가 2009년 사진보다 우선; 새 외부 웹검색으로 현황을 확인했다고 주장하지 않음.",
     "cc_02의 8층 베이지/옥상 LED 건물은 OSM 413280002 르본시티로 판별. 중앙시티 claims 밖이므로 이 모듈에 중복 건물/LED를 추가하지 않음.",
     "Round4: 제공된 로드뷰·항공·검증용 렌더와 코드 대조. 사용자 제한에 따라 tests/shot.mjs 미실행. 새 외부 웹검증이나 변경 후 렌더 검증을 주장하지 않음.",
-    "Round5: 파미에스테이션은 일상정원 FP103호 등 제공된2026년 주소 근거로1F. cc_famille22–24는 별도B1 신세계↔메가박스↔지하철 통로. 최신 실내 사진이 있는 구역은 이전2009 실내 참조보다 우선. 외부 웹검색 없이 제공 파일을 사용했고, tests/shot.mjs는 사용자 제한으로 실행하지 않음."
+    "Round5: 파미에스테이션은 일상정원 FP103호 등 제공된2026년 주소 근거로1F. cc_famille22–24는 별도B1 신세계↔메가박스↔지하철 통로. 최신 실내 사진이 있는 구역은 이전2009 실내 참조보다 우선. 외부 웹검색 없이 제공 파일을 사용했고, tests/shot.mjs는 사용자 제한으로 실행하지 않음.",
+    "Round18 final: node tests/smoke.mjs centralcity shinsegae jwmarriott gotomall=OK. Full node tests/walk.mjs=705ok/2blocked: shinsegae 연결부3호기2F and 사용자루트5 르본시티→G2. Centralcity+gotomall local walk82ok/0blocked; both1F동선 preserved. Tests/engine/other module files not edited. New render unavailable (sandbox server bindEPERM)."
   ],
   "unresolved": [
     "정문·구체의 정확한 실측 좌표/치수, 유리 캐노피 경사·C 표장 단면·벽돌 줄눈 모듈",
@@ -578,11 +580,14 @@
     "모던눌랑 정확한 위치, 모던샤브하우스 정확한 층",
     "Round5 새 렌더에서 천장 높이·간판 가독성·재료색·혼잡도 대조",
     "공식도면 셀과 OSM 풋프린트의 실측 정합: 기록된 지역별 변환은 동선·순서 보존용 근사이며 현장 실측 아님.",
-    "파미에3-1/3-2/30/31/32매장명 및터미널36..42번호-이름매핑은 공식HTML에도 없음."
+    "파미에3-1/3-2/30/31/32매장명 및터미널36..42번호-이름매핑은 공식HTML에도 없음.",
+    "Round18: 등축 B1·고정 코어·J4·OSM 서측 앞마당을 동시에 만족하는 실측 등록이 없음. 상층 투영/앞마당 억제는 잠정적이며 실측 도면 필요.",
+    "Round18: 독립 hos_1M 도면 축척과 엘리베이터 상하층 샤프트 정합.",
+    "Round18: 리뷰 원본(1790,605) 카메라는 김수사 셀 내부. 지정 좌표 보존, 라운지 외부 시점으로 독립 확인되지 않음."
   ],
   "modeling": {
     "frame": "local s(남쪽, 서측 파사드 방향)/t(동쪽) 축. 스트립 s -22..151 · t 0..38.5, 남측 블록 s 151..204 · t -98..38",
-    "floors": "B1 -6m: 신세계·지하철 연결, 스위트파크와 HOS 푸드홀. 1F 0m: 호남선 대합실·파미에스테이션·HOS 와인/식당 및 보이드 라운지. HOS 1M 3.6m: 아트·카페. 2F 5m: 터미널 중층 식당과 공식 파미에 13개 셀; 별도 M1F 아웃백·딤딤섬 유지. R 9m: 주차. 원형관 B1/1F/2F4.2m·지붕22.6m 유지. 메가박스와 영풍문고는 신세계 B1 모듈 소유다.",
+    "floors": "B1 -6m: 신세계·지하철 연결, 스위트파크·HOS 푸드홀·보이드 라운지. 1F 0m: 호남선 대합실·파미에·HOS 와인셀러/레스토랑과 B1 보이드 상부 코트. HOS 1M3.6m: 아트·카페. 터미널/파미에2F5m·R9m 및 원형관 층수 유지. HOS 상층은 서측 승차홈 앞마당과 충돌하는 잠정 등록이며 실측 미확정.",
     "bays": "번호별 붉은 아치 문틀·흰 숫자/푸른 LED·아날로그 시계는 cc_hall05/13/14 기준. 승차홈1/11/13 사진이 있으나 전체 연속 배치·간격·번호별 버스 배정은 미확인.",
     "station_band": "B1 남측 경계는 역 모듈의 7호선 B1 대합실(경로 (45,150)->(-45,186)->(-68,195)->(-88,220)->(-175,262), 폭 14 m)에서 7.6 m 이상 떨어지도록 잘라냄",
     "guesses": [
@@ -627,31 +632,34 @@
       "B1 메가박스 복도10m 간격 무명 유리 진열창과 로비의 호박색 원형등/파란 발권기/101–105 상영관 표기는 사진24 및 리뷰에 근거한 단순화. 전체 로비 평면/기기 수/현재 운영 상태는 미확인; 상영관 내부는 만들지 않음.",
       "Round6 수정 모델의 렌더 비교는 운영자 확인 대기. 사용자 지시에 따라 tests/shot.mjs를 실행하지 않았으며 시각적 일치가 확인됐다고 주장하지 않음.",
       "cc_hall11/17의 시계·배너를 파미에 거리에 재분류하여 배치했으나 투영 시계의 위치/간격과 배너가 걸리는 구간은 미확인. 2F 보행교3곳(-87/-21/17)은1F 전면을 유지하면서 위층에 통로 개구부를 확보한 모델상 연결이다.",
-      "Official guides are diagrammatic, not georeferenced: a single affine using their department-store rectangles conflicts with currentOSM ownership and would putHOS inJW. Regional fit preserves ordering and passage relationships but not metric accuracy.",
-      "HOS extent, exact corridors, twoSSG passage spacing,1M height3.6 andterminal middle height5 are model assumptions within realOSM boundaries.",
+      "[Round18에서 해당 B1/HOS 주장을 대체한 과거 기록] Official guides are diagrammatic, not georeferenced: a single affine using their department-store rectangles conflicts with currentOSM ownership and would putHOS inJW. Regional fit preserves ordering and passage relationships but not metric accuracy.",
+      "[Round18에서 해당 B1/HOS 주장을 대체한 과거 기록] HOS extent, exact corridors, twoSSG passage spacing,1M height3.6 andterminal middle height5 are model assumptions within realOSM boundaries.",
       "Full terminal1F1..42 numbering does not map to saved storelist1..33; only matched cells receive brands.26Gongtang hexagon assignment follows official number mapping despite photo showing a deeper restaurant.",
       "Fixtures, furniture counts, glass door widths, ceiling bays,tenant material choices except photos, simplified car geometry and all exact indoor dimensions are inferred.",
       "Existing roundpavilionStarbucks floor claim, J6ground connection, unverified exterior pavilion andB1network retained as guesses.",
       "Operator3Drender comparison is pending. tests/shot.mjs deliberately not run per user sandbox instruction.",
       "Round14: walk_s7 원본 로그와 refs/walk/s7_central_famille의 프레임이 실제 존재한다. synthesis의 프레임 없음 진술을 폐기하고 HgbY_flKpMI, FeFx7kfWgdo, MMwnXpMqkZ0를 직접 확인했다.",
       "Round14 층 충돌: 공식 HOS 도면은 B1 푸드홀, 1F 와인셀러/레스토랑, 1M 아트/카페다. B1~2F라는 서술의 2F를 HOS 독립층으로 만들지 않았다. 1F 도면의 2F 화살표는 파미에스테이션 신세계아카데미 연결이다.",
-      "Round14 수직 정합: HOS 상부 기존 엘리베이터와 공식 B1 푸드홀 엘리베이터를 명시적 수평 오프셋 목적지로 연결했다. 같은 실측 수직 샤프트라고 주장하지 않는다. 1F 슬래브·기존 에스컬레이터 우물은 추가/변경하지 않았다.",
+      "[Round18에서 해당 B1/HOS 주장을 대체한 과거 기록] Round14 수직 정합: HOS 상부 기존 엘리베이터와 공식 B1 푸드홀 엘리베이터를 명시적 수평 오프셋 목적지로 연결했다. 같은 실측 수직 샤프트라고 주장하지 않는다. 1F 슬래브·기존 에스컬레이터 우물은 추가/변경하지 않았다.",
       "Round14 스위트파크는 공식 floor_B1/hos_B1가 지하1층으로 명시하므로 B1 유지. srYQ3WmKlEI_30의 하강 장면만으로 스위트파크 전체를 1F로 옮기지 않는다.",
       "Round14 HgbY_flKpMI_29에서 약한 단차 하강은 보이나 공식 파미에 1F 도면은 터미널 Gate1/2와 연결된다. 단차를 B1 전체 층 하강으로 오독하지 않고 기존 수평 1F 연결을 유지했다. 정확한 경사 높이·좌표는 사용자 영상 필요.",
       "Round14 파미에 2F: 공식 famille_floor_2_ko_map과 HTML 번호대조로 1~13 셀을 F2_BANDS 단조 구간별 변환에 배치. 일정축척에서 마주보는 셀 사이가 0.17~0.76m로 줄어드는 문제를 확인해 도면의 흰 통로 폭은 최소 2.4m로 보정했다. 소스셀·행·순서는 동일하며 metric depth는 추정. 별도 M1F 아웃백·딤딤섬 유지.",
       "Round14 MMwnXpMqkZ0_85의 3층 스타벅스 표기와 _200의 새 조형 유리돔은 확인했으나, 저장된 공식 3F 도면에는 해당 브랜드/경계가 없다. 기존 OSM 원형관 스타벅스와 같은 공간인지 확정할 수 없어 3F를 임의로 생성하거나 두 곳을 동일시하지 않았다. 정확한 3F 위치와 접근계단은 사용자 영상 필요.",
       "Round14 오픈스테이지는 공식 hos_1F 도면이 호남선 대합실 옆 신세계 연결 광장으로 특정한다. 파미에 광장 팝업과 동일 공간으로 합치지 않았다. 렉서스는 2026-11-05~08 한시 팝업이며 기초 건축물이 아니다.",
       "Round14 경부선 연결 충돌: 공식 HOS1F 도면에 경부선 방향 화살표가 있으나 두 건물 사이 연속 실내 통로의 정확한 선형/문은 프레임에서 보이지 않는다. 기존 지상 외부 횡단 경로와 신세계 연결만 유지하고 가상의 스타벅스 옆 직결 관통로는 만들지 않았다.",
-      "Round14 HOS 라운지의 촬영층은 8xxIIvP9uAY_10만으로 확정 불가다. 기존 공식1F/1M 보이드 아래1F 공간에만24석을 배치했으며 12개 원형테이블·3열 러그·황동기둥 간격은 비례추정이다. B1라운지라고 주장하지 않는다.",
-      "Round14 조명은 실제lux측정/물리조명계산이 아닌 재질·발광색 표현이다. HOS는앰버/월넛/황동, 스위트파크통로는밝은크림 대리석으로 구분했다.",
+      "[Round18에서 해당 B1/HOS 주장을 대체한 과거 기록] Round14 HOS 라운지의 촬영층은 8xxIIvP9uAY_10만으로 확정 불가다. 기존 공식1F/1M 보이드 아래1F 공간에만24석을 배치했으며 12개 원형테이블·3열 러그·황동기둥 간격은 비례추정이다. B1라운지라고 주장하지 않는다.",
+      "[Round18에서 해당 B1/HOS 주장을 대체한 과거 기록] Round14 조명은 실제lux측정/물리조명계산이 아닌 재질·발광색 표현이다. HOS는앰버/월넛/황동, 스위트파크통로는밝은크림 대리석으로 구분했다.",
       "Round14 MMwnXpMqkZ0_170 카운터 및 _200 새장식돔은 위치·층 확정 전에 원형관으로 복제하지 않았다. 기존 원형관의 확인되지 않은 내부를 최신3F스타벅스로 잘못 주장하지 않기 위해 유지하되 한계를 기록한다.",
-      "Round14 쉐이크쉑119호와3대키오스크는사용자제공블로그(stated)근거이며 기기의매장내정확한위치는미측정이다. 메뉴·가격·실시간승차정보는만들지않았다."
+      "Round14 쉐이크쉑119호와3대키오스크는사용자제공블로그(stated)근거이며 기기의매장내정확한위치는미측정이다. 메뉴·가격·실시간승차정보는만들지않았다.",
+      "Round18: 공식 B1 비율과 고정 E1/E2에 맞추면 HOS는t<0 서측으로 나간다. 상층을 같은 보이드 위에 투영하고 겹치는 앞마당 물체만 억제하는 것은 잠정 모델 등록이지 실제 터미널 이전 주장이 아니다.",
+      "Round18: hos_1F는 에스컬레이터 간격으로.062063492m/원본px를 추정;1M은 중앙 아이콘 기준 독립 축척.039m/원본px 가정. 전체 외곽·점포 깊이는 실측 미확인.",
+      "Round18: 사진02 B1 표기와 사진03 김수사 앞 소파로 라운지 촬영층을B1로 정정. 가구·인물·상품 수와 조명은 사진 비례 근사; 새 렌더 검증 대기."
     ],
     "megabox": "Round12: official southwestern round plaza/Megabox tenant is built by shinsegae. The former distant centralcity B1 cinema at local s178,t-28 was removed. Cinema auditorium depths remain unknown.",
     "reference_implementation": {
       "gate_plaza": "cc_01/01: 불투명 원판+크림C+금색중심, 0.75 민트 입체랜턴·경사지붕10.2..10.6 m, 전폭 검은 파시아/후퇴한 어두운 문, 스팬드럴. cc_01: 전방8 m 간격 구체(중앙 청동)·확장 화강석·검은난간·U자 거치대·볼라드·남색 안내판.",
       "hall": "Round5 cc_hall01–21: 흰 강관 트러스/회색 패널, 대리석 기둥, 흑백 다이아몬드/띠 바닥, 붉은 아치 게이트의 번호 LED/시계, 우드톤 TICKETS 카운터, 벤치/큰 화분·작은 점포,2F 유리 난간.",
-      "b1": "Round12 공식 HOS/스위트파크 평면을 유지하고 Round14 흑백 마름모 바닥·검정 무광 진입부·청록 포인트·배스앤바디웍스 체크 전면을 반영. 옛 CC 메가박스 포털 설명은 폐기; 영화관은 shinsegae B1 소유다.",
+      "b1": "Round18: 등축 공식 셀, 스위트파크65cm 체커/교차볼트/구형샹들리에/팔각 유리장; 하우스 허니우드·앰버 조명·카운터 다이닝과 B1 보이드 라운지. 본관 마켓/델리/메가박스는 shinsegae 소유. 새 렌더 검증 대기.",
       "round_south": "11: 가파른16각 두 단 녹청색 지붕·넓은r4.6 랜턴·22.6 m 캡; 남측0.6 m 회색 석재 줄눈·4.5 m 간격 큰 어두운 창·창 위 흰 CENTRAL CITY.",
       "parking": "항공사진/OSM: 밝은 콘크리트 데크와 회색 통로·흰 구획·층당14대 희박한 차 배치·타워55% 점유/둥근 경계 연석·옥상 연결교.",
       "fleet_shelter": "항공사진/03/09: 흰색·아이보리 고속버스와 운수사 띠, 소수 짙은 프리미엄/적백 관광버스;09 곡면 캐노피·V자 지지·스테인리스 난간/쌍등.",
@@ -662,47 +670,77 @@
       "forecourt_pavilion": "cc_01 우측/cc_02 좌측/항공: 별도18×7.5 m 금속기단·녹색유리·흰 곡면지붕. 고투몰 현 exit/groundHole와 중복 없음. 미확인 지하 목적지로 연결하지 않고 보이는 계단만 구현.",
       "north_canopy_bridge": "cc_02/09:40 m 반투명 곡면지붕·흰 경사 지지대. cc_01:파빌리온 뒤8..10 m 수목열. OSM 모듈 소유 연결교0.65 m 슬래브/직경0.6 m 기둥. 별도 city 자동생성15 m 보행교는 범위밖.",
       "yard_surface": "항공사진: 중간회색 지면. 승차홈 앞/회차로/YARD 모두 concrete+#9a9890, 흰색·노란색 구획 유지.",
-      "hall_plain_closure": "Round11 HOS 중앙 보이드·연결 광장 배치를 유지. 이전 s108..119/t28 막음벽 설명은 폐기. J6 접근과 기존 1F 슬래브·우물 형상은 그대로 유지했다.",
+      "hall_plain_closure": "Round18: 옛s99..115 HOS 코트 등록 폐기, B1중심(s4.316,t−17.684)에 상부 코트 정렬. 확인된 홀·상점·J4/J8/J6 동선 유지; 서측 앞마당 충돌은 잠정 처리.",
       "famille_1f": "Round5 cc_famille01–21: 1F 남측 실내 거리, 점포별 크림 아치/벽돌/흰 벽돌/검은 철제 유리 전면과 실제 사진에 나온 내부 재료·가구. 연회색 타일과 높은 밝은 채광 천장. 실제 점포 순서/좌표는 추정.",
       "south_surface_parking": "Round8: aerial-based south asphalt apron, road-clipped bays/70% cars, green booth canopy, barriers and 550원 fee board, rear pedestrian routes and brick/arch entrance details."
     },
     "validation": {
-      "round": 14,
-      "date": "2026-11-07",
-      "status": "required smoke and full-world walk passed; visual render not run as instructed",
+      "status": "Scoped implementation complete; required smoke OK; full-world walk fails on2 out-of-scope blockers. Render unverified.",
       "smoke": {
-        "command": "node tests/smoke.mjs shinsegae centralcity gotomall jwmarriott station",
-        "result": "OK",
-        "nonfatal_warnings": 17,
-        "warning_explanation": "수평 오프셋 목적지 메뉴에 대한 출발 엘리베이터 주변 바닥 검사 경고. 실제 목적지 지지면·출구 동선은 별도 검사 및 전체 walk로 확인했다."
+        "command": "node tests/smoke.mjs centralcity shinsegae jwmarriott gotomall",
+        "result": "OK (final run);3 warnings from concurrent shinsegae basement elevators at1M, no centralcity warning/failure."
       },
       "walk": {
         "command": "node tests/walk.mjs",
-        "result": "walk: 687 ok, 0 blocked",
-        "started_UTC": "2026-11-06 20:47",
-        "completed_by_UTC": "2026-11-06 20:55:53",
-        "scope": "all modules + city + all deferred details; includes 1F 동선 and 사용자 루트",
-        "source_sha256": {
-          "js/places/shinsegae.js": "1ef1cbd895530543b2484c56f42921e897896bbb0425fc75f370c1527c34bd1d",
-          "js/places/centralcity.js": "0b20322d083aa652ee85aa569731f31dfcf2bd290facd317ebcf0953b3779032",
-          "tests/walk.mjs": "c908af6e1fa86bc7beb786d087c931755b4420a3c21958de80a5b054ccdaa7d8"
-        }
+        "result": "705 ok, 2 blocked",
+        "required_routes": [
+          "1F 동선",
+          "사용자 루트"
+        ],
+        "exit_code": 1,
+        "zero_blocked_requirement_met": false,
+        "blocked": [
+          {
+            "owner": "shinsegae",
+            "type": "elevator",
+            "name": "신세계 고객 엘리베이터 (연결부 3호기)",
+            "floor": "2F",
+            "reason": "no path (46 cells searched)"
+          },
+          {
+            "owner": "outside centralcity; lebon/gotomall/onebailey route",
+            "type": "route",
+            "name": "사용자 루트5 [3→4]",
+            "from_xz": [
+              -235.8,
+              8.7
+            ],
+            "to_xz": [
+              -332,
+              -66
+            ],
+            "reason": "no path (747204 cells searched)"
+          }
+        ],
+        "scope_note": "Do not edit other modules, shared junctions or tests. Both remaining blockers are outside the owned Sweet Park/HoS/CC hall geometry.",
+        "preserved_routes": "Both1F 동선 routes and every other 사용자 루트 segment passed; 사용자 루트5[3→4] remains blocked."
       },
-      "static_checks": {
-        "node --check js/places/shinsegae.js": "passed",
-        "node --check js/places/centralcity.js": "passed",
-        "git diff --check": "passed"
+      "visual_render": "No updated render: tests/shot.mjs not run per user instruction; preview server bind127.0.0.1:8765 failed EPERM. No appearance-validation claim.",
+      "initial_smoke": "OK before final elevator destination cleanup; final required smoke remains to be recorded by root.",
+      "physics_probe": {
+        "detail_errors": 0,
+        "court_center_support_y_at_1F_and_1M": -6,
+        "court_center_ceiling_y": 7,
+        "escalator_centerline_capsule_samples": 164,
+        "escalator_capsule_failures": 0,
+        "connector_1F_clear_lines_s": [
+          -4,
+          -3.8,
+          -3.6
+        ],
+        "connector_samples_per_line": 41,
+        "exact_camera_minor_contact_m": {
+          "centralcity_b1_02": 0.078,
+          "centralcity_b1_03": 0.078,
+          "centralcity_b1_04": 0.042
+        },
+        "camera_note": "All14 source cameras retain exact recomputed positions, have supported floors/headroom. Minor contacts flagged, not silently nudged."
       },
-      "metadata": {
-        "command": "node tools/gen_meta.mjs",
-        "result": "generated successfully after final geometry"
+      "local_walk": {
+        "command": "node tests/walk.mjs centralcity gotomall",
+        "result": "82 ok, 0 blocked"
       },
-      "visual_render": {
-        "tests/shot.mjs": "not run as instructed",
-        "trace_cameras_total": 208,
-        "trace_cameras_added_round14": 17,
-        "limitation": "새 카메라는 실제 kit 전체 상세의 바닥·충돌·머리 공간으로 검증했다. WebGL 화면 비교나 실제 렌더 성능 검증은 아니다."
-      }
+      "centralcity_source_sha256": "a07b0fc92f3733ea8c5b6cfb8faa69d2cc5e581bb1ce47c7cd50cf2490208d95"
     },
     "round2_issues": {
       "3": "사진07:8.5m 볼트·4m급 역피라미드 주두/업라이트·곡선 쌍관 트러스·밝은 선형 금속 패널. 2F는 동측 유지.",
@@ -2497,7 +2535,10 @@
           "refs/official/shinsegae/hos_1M.jpg"
         ],
         "round": 11,
-        "camera_qa": "Independent real-kit full-detail audit: clear player support/capsule/headroom and no opaque forward hit within2.5m. Operator image capture remains pending."
+        "camera_qa": "Independent real-kit full-detail audit: clear player support/capsule/headroom and no opaque forward hit within2.5m. Operator image capture remains pending.",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "고량주관 · 북측 레스토랑",
@@ -2520,7 +2561,10 @@
           "refs/official/shinsegae/hos_1M.jpg"
         ],
         "round": 11,
-        "camera_qa": "Independent real-kit full-detail audit: clear player support/capsule/headroom and no opaque forward hit within2.5m. Operator image capture remains pending."
+        "camera_qa": "Independent real-kit full-detail audit: clear player support/capsule/headroom and no opaque forward hit within2.5m. Operator image capture remains pending.",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "록시땅 · 센트럴시티 홀 모서리",
@@ -2543,7 +2587,10 @@
           "refs/official/shinsegae/hos_1M.jpg"
         ],
         "round": 11,
-        "camera_qa": "Independent real-kit full-detail audit: clear player support/capsule/headroom and no opaque forward hit within2.5m. Operator image capture remains pending."
+        "camera_qa": "Independent real-kit full-detail audit: clear player support/capsule/headroom and no opaque forward hit within2.5m. Operator image capture remains pending.",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "바위파스타바 · HOS 동측",
@@ -2566,7 +2613,10 @@
           "refs/official/shinsegae/hos_1M.jpg"
         ],
         "round": 11,
-        "camera_qa": "Independent real-kit full-detail audit: clear player support/capsule/headroom and no opaque forward hit within2.5m. Operator image capture remains pending."
+        "camera_qa": "Independent real-kit full-detail audit: clear player support/capsule/headroom and no opaque forward hit within2.5m. Operator image capture remains pending.",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "피어커피 · HOS 동측",
@@ -2589,7 +2639,10 @@
           "refs/official/shinsegae/hos_1M.jpg"
         ],
         "round": 11,
-        "camera_qa": "Independent real-kit full-detail audit: clear player support/capsule/headroom and no opaque forward hit within2.5m. Operator image capture remains pending."
+        "camera_qa": "Independent real-kit full-detail audit: clear player support/capsule/headroom and no opaque forward hit within2.5m. Operator image capture remains pending.",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "L자 와인셀러 · 남측 입구",
@@ -2612,7 +2665,10 @@
           "refs/official/shinsegae/hos_1M.jpg"
         ],
         "round": 11,
-        "camera_qa": "Independent real-kit full-detail audit: clear player support/capsule/headroom and no opaque forward hit within2.5m. Operator image capture remains pending."
+        "camera_qa": "Independent real-kit full-detail audit: clear player support/capsule/headroom and no opaque forward hit within2.5m. Operator image capture remains pending.",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "HOS 1층 정사각 광장과 평행 에스컬레이터",
@@ -2635,7 +2691,10 @@
           "refs/official/shinsegae/hos_1M.jpg"
         ],
         "round": 11,
-        "camera_qa": "Independent real-kit full-detail audit: clear player support/capsule/headroom and no opaque forward hit within2.5m. Operator image capture remains pending."
+        "camera_qa": "Independent real-kit full-detail audit: clear player support/capsule/headroom and no opaque forward hit within2.5m. Operator image capture remains pending.",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "신세계 갤러리 · HOS 1M 북측",
@@ -2658,7 +2717,10 @@
           "refs/official/shinsegae/hos_1M.jpg"
         ],
         "round": 11,
-        "camera_qa": "Independent real-kit full-detail audit: clear player support/capsule/headroom and no opaque forward hit within2.5m. Operator image capture remains pending."
+        "camera_qa": "Independent real-kit full-detail audit: clear player support/capsule/headroom and no opaque forward hit within2.5m. Operator image capture remains pending.",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "분더샵 메자닌 · 동측 전면",
@@ -2681,7 +2743,10 @@
           "refs/official/shinsegae/hos_1M.jpg"
         ],
         "round": 11,
-        "camera_qa": "Independent real-kit full-detail audit: clear player support/capsule/headroom and no opaque forward hit within2.5m. Operator image capture remains pending."
+        "camera_qa": "Independent real-kit full-detail audit: clear player support/capsule/headroom and no opaque forward hit within2.5m. Operator image capture remains pending.",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "피부과 · HOS 1M 서측",
@@ -2704,7 +2769,10 @@
           "refs/official/shinsegae/hos_1M.jpg"
         ],
         "round": 11,
-        "camera_qa": "Independent real-kit full-detail audit: clear player support/capsule/headroom and no opaque forward hit within2.5m. Operator image capture remains pending."
+        "camera_qa": "Independent real-kit full-detail audit: clear player support/capsule/headroom and no opaque forward hit within2.5m. Operator image capture remains pending.",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "자이푸르 러그 · 남서측",
@@ -2727,7 +2795,10 @@
           "refs/official/shinsegae/hos_1M.jpg"
         ],
         "round": 11,
-        "camera_qa": "Independent real-kit full-detail audit: clear player support/capsule/headroom and no opaque forward hit within2.5m. Operator image capture remains pending."
+        "camera_qa": "Independent real-kit full-detail audit: clear player support/capsule/headroom and no opaque forward hit within2.5m. Operator image capture remains pending.",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "트웰브 강남 · 카페",
@@ -2750,7 +2821,10 @@
           "refs/official/shinsegae/hos_1M.jpg"
         ],
         "round": 11,
-        "camera_qa": "Independent real-kit full-detail audit: clear player support/capsule/headroom and no opaque forward hit within2.5m. Operator image capture remains pending."
+        "camera_qa": "Independent real-kit full-detail audit: clear player support/capsule/headroom and no opaque forward hit within2.5m. Operator image capture remains pending.",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "PSR · 남동측",
@@ -2773,7 +2847,10 @@
           "refs/official/shinsegae/hos_1M.jpg"
         ],
         "round": 11,
-        "camera_qa": "Independent real-kit full-detail audit: clear player support/capsule/headroom and no opaque forward hit within2.5m. Operator image capture remains pending."
+        "camera_qa": "Independent real-kit full-detail audit: clear player support/capsule/headroom and no opaque forward hit within2.5m. Operator image capture remains pending.",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "HOS 1M 데크에서 보이드 내려다보기",
@@ -2796,7 +2873,10 @@
           "refs/official/shinsegae/hos_1M.jpg"
         ],
         "round": 11,
-        "camera_qa": "Independent real-kit full-detail audit: clear player support/capsule/headroom and no opaque forward hit within2.5m. Operator image capture remains pending."
+        "camera_qa": "Independent real-kit full-detail audit: clear player support/capsule/headroom and no opaque forward hit within2.5m. Operator image capture remains pending.",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "파미에 1 JAJU · 점포 전면",
@@ -4099,7 +4179,10 @@
           "refs/official/shinsegae/hos_1F.jpg"
         ],
         "round": 11,
-        "camera_qa": "Independent real-kit full-detail audit: clear player support/capsule/headroom and no opaque forward hit within2.5m. Operator image capture remains pending."
+        "camera_qa": "Independent real-kit full-detail audit: clear player support/capsule/headroom and no opaque forward hit within2.5m. Operator image capture remains pending.",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 시코르",
@@ -4128,7 +4211,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 0.85,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 팝업",
@@ -4157,7 +4243,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 0.85,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 아임도넛",
@@ -4186,7 +4275,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 0.85,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 렌위치",
@@ -4215,7 +4307,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 0.85,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 케이스티파이",
@@ -4244,7 +4339,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 0.85,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 S.style ACC",
@@ -4273,7 +4371,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 0.85,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 배스 앤 바디 웍스",
@@ -4302,7 +4403,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 0.85,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 포트넘앤메이슨",
@@ -4331,7 +4435,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 0.85,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 후쿠요시 카페 미친맛집",
@@ -4360,7 +4467,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 1.5,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 스탠다드브레드",
@@ -4389,7 +4499,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 0.85,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 비스퀴테리 M.O",
@@ -4418,7 +4531,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 2,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 피에르 마르콜리니",
@@ -4447,7 +4563,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 2.5,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 어나더팜",
@@ -4476,7 +4595,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 0.85,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 폼폼푸린 베이커리 카페",
@@ -4505,7 +4627,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 0.85,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 마리메꼬",
@@ -4534,7 +4659,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 1.5,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 밴루엔 아이스크림",
@@ -4563,7 +4691,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 0.85,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 파이브가이즈",
@@ -4592,7 +4723,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 0.85,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 치폴레",
@@ -4621,7 +4755,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 0.85,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 파이브가이즈",
@@ -4650,7 +4787,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 3,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 치폴레",
@@ -4679,7 +4819,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 0.85,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 차지",
@@ -4708,7 +4851,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 0.85,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 부창제과",
@@ -4737,7 +4883,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 1.15,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 크림한상 / 1994 양과점",
@@ -4766,7 +4915,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 0.85,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 구뜨몽떼",
@@ -4795,7 +4947,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 0.85,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 레브두",
@@ -4824,7 +4979,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 0.85,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 팝업",
@@ -4853,7 +5011,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 0.85,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 마담 피에르 오제",
@@ -4882,7 +5043,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 0.85,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 키친205",
@@ -4911,7 +5075,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 0.85,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 쇼토",
@@ -4940,7 +5107,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 0.85,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 시즈니크",
@@ -4969,7 +5139,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 0.85,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 쉐프조",
@@ -4998,7 +5171,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 0.85,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 깰끄쇼즈 / 르솔레이 / 아우치+터치",
@@ -5027,7 +5203,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 0.85,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 크라눌레",
@@ -5056,7 +5235,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 0.85,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 팝업",
@@ -5085,7 +5267,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 0.85,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 마망갸또",
@@ -5114,7 +5299,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 0.85,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 만나당",
@@ -5143,7 +5331,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 0.85,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 이스트우드",
@@ -5172,7 +5363,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 0.85,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 삐아프",
@@ -5201,7 +5395,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 0.85,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 팝업",
@@ -5230,7 +5427,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 0.85,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 한과미의식",
@@ -5259,7 +5459,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 1.15,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 팝업",
@@ -5288,7 +5491,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 1.15,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 해피해피 케이크",
@@ -5317,7 +5523,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 0.85,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 팝업",
@@ -5346,7 +5555,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 0.85,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 프랑스 루브르바게트",
@@ -5375,7 +5587,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 1.5,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 산스커피",
@@ -5404,7 +5619,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 1.5,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 한정선",
@@ -5433,7 +5651,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 0.85,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 오뜨르 베이커리",
@@ -5462,7 +5683,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 0.85,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 고리",
@@ -5491,7 +5715,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 0.85,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 태극당",
@@ -5520,7 +5747,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 2,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 르뱅룰즈",
@@ -5549,7 +5779,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 0.85,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 르빵",
@@ -5578,7 +5811,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 0.85,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 스코프",
@@ -5607,7 +5843,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 2.5,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 장 블랑제리",
@@ -5636,7 +5875,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 0.85,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 키쿠카와",
@@ -5665,7 +5907,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 0.85,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 슈퍼스타",
@@ -5694,7 +5939,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 0.85,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 %아라비카",
@@ -5723,7 +5971,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 0.85,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 키쿠카와",
@@ -5752,7 +6003,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 0.85,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 타치바나",
@@ -5781,7 +6035,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 0.85,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 키보 아츠아츠",
@@ -5810,7 +6067,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 0.85,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 미도한우함박",
@@ -5839,7 +6099,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 0.85,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 혼",
@@ -5868,7 +6131,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 0.85,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 자주한상",
@@ -5897,7 +6163,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 0.85,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 김수사",
@@ -5926,7 +6195,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 0.85,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 미가훠궈",
@@ -5955,7 +6227,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 0.85,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 아이스크림 소사이어티",
@@ -5984,7 +6259,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 0.85,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 팝업",
@@ -6013,7 +6291,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 0.85,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 9게이트 식품관 연결",
@@ -6040,7 +6321,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 0.85,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 스위트 가든",
@@ -6067,7 +6351,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 0.85,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 호남선 북측 연결",
@@ -6094,7 +6381,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 0.85,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 호남선 남측 연결",
@@ -6121,7 +6411,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 1.15,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 푸드홀 중앙",
@@ -6148,7 +6441,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 0.85,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 화장실 북측",
@@ -6175,7 +6471,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 0.85,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "spot": "B1 공식 화장실 남측",
@@ -6202,7 +6501,10 @@
         ],
         "plan_transform": "round12 monotone piecewise gate/core fit",
         "frontage_offset_m": 2,
-        "camera_selection": "plan frontage"
+        "camera_selection": "plan frontage",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "round": 14,
@@ -6225,7 +6527,10 @@
           "refs/official/shinsegae/hos_B1.png"
         ],
         "camera_qa": "Real kit + all five connected modules + all detail:0.38m clearance, correct floor,1.85m headroom; nearest clear position. Not rendered.",
-        "nudge_m": 0.2
+        "nudge_m": 0.2,
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "round": 14,
@@ -6249,7 +6554,10 @@
           "refs/official/shinsegae/hos_1M.jpg"
         ],
         "camera_qa": "Real kit + all five connected modules + all detail:0.38m clearance, correct floor,1.85m headroom; nearest clear position. Not rendered.",
-        "nudge_m": 0
+        "nudge_m": 0,
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "round": 17,
@@ -6273,7 +6581,10 @@
         ],
         "camera_qa": "Round17 real kit, centralcity/shinsegae/jwmarriott/gotomall/station and all detail: floor 0m, radius0.38m/height1.85m collision push 0m, registered headroom 3.4m; passed. Updated render not generated.",
         "nudge_m": 0.1,
-        "r17_camera": "centralcity_00"
+        "r17_camera": "centralcity_00",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "round": 17,
@@ -6297,7 +6608,10 @@
         ],
         "camera_qa": "Round17 real kit, centralcity/shinsegae/jwmarriott/gotomall/station and all detail: floor 3.6m, radius0.38m/height1.85m collision push 0m, registered headroom 5m; passed. Updated render not generated.",
         "nudge_m": 0,
-        "r17_camera": "centralcity_01"
+        "r17_camera": "centralcity_01",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "round": 17,
@@ -6321,7 +6635,10 @@
         ],
         "camera_qa": "Round17 real kit, centralcity/shinsegae/jwmarriott/gotomall/station and all detail: floor 3.6m, radius0.38m/height1.85m collision push 0m, registered headroom 5m; passed. Updated render not generated.",
         "nudge_m": 0,
-        "r17_camera": "centralcity_02"
+        "r17_camera": "centralcity_02",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "round": 17,
@@ -6595,7 +6912,10 @@
         ],
         "camera_qa": "Round17 real kit, centralcity/shinsegae/jwmarriott/gotomall/station and all detail: floor -6m, radius0.38m/height1.85m collision push 0m, registered headroom 5.7m; passed. Updated render not generated.",
         "nudge_m": 0,
-        "r17_camera": "centralcity_11"
+        "r17_camera": "centralcity_11",
+        "active": false,
+        "superseded_by_round": 18,
+        "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
         "r17_camera": "centralcity_12",
@@ -6646,6 +6966,608 @@
         "camera_qa": "Round17 real kit, centralcity/shinsegae/jwmarriott/gotomall/station and all detail: floor 0m, radius0.38m/height1.85m collision push 0m, registered headroom 8.6m; passed. Updated render not generated.",
         "nudge_m": 0,
         "source_location_note": "Paul Bassett is legible in original frame and matches mapped unit16. Camera is offset from the decorative pier at t−39.6; exact viewpoint remains inferred."
+      },
+      {
+        "r18_camera": "centralcity_b1_00",
+        "round": 18,
+        "active": true,
+        "photos": [
+          "refs/interior/ssg_food/13_sweetpark_standard_bread_front.jpg"
+        ],
+        "spot": "스탠다드브레드 전면 (원본 1225,686→1158,686, 동쪽 변환 수정 후 재계산)",
+        "source_review": ".codex-jobs/evidence/review_ssg17.json → b1.new_cameras",
+        "source_review_index": 8,
+        "floor": "B1",
+        "y": -6,
+        "pitchDeg": 0,
+        "camera_qa": {
+          "supported_floor": true,
+          "headroom_clear": true,
+          "capsule_contact_m": 0,
+          "rendered": false,
+          "note": "Exact review plan position retained; minor fixture contact recorded without a coordinate nudge."
+        },
+        "plan_transform": "round18 orthogonal .092m/original-pixel similarity",
+        "nudge_m": 0,
+        "source_plan_original_px": [
+          1225,
+          686
+        ],
+        "target_plan_original_px": [
+          1158,
+          686
+        ],
+        "source_plan_file": "refs/official/shinsegae/floor_B1.png",
+        "local_st": [
+          21.244,
+          34.388
+        ],
+        "look_at_local_st": [
+          21.244,
+          40.552
+        ],
+        "x": -95.939182,
+        "z": 17.174573,
+        "yawDeg": 291.33861
+      },
+      {
+        "r18_camera": "centralcity_b1_01",
+        "round": 18,
+        "active": true,
+        "photos": [
+          "refs/interior/ssg_food/15_sweetpark_seasonique_ceiling.jpg"
+        ],
+        "spot": "시즈니크 아일랜드 (원본 1280,612→1280,650, 변환 수정 후 재계산)",
+        "source_review": ".codex-jobs/evidence/review_ssg17.json → b1.new_cameras",
+        "source_review_index": 9,
+        "floor": "B1",
+        "y": -6,
+        "pitchDeg": 0,
+        "camera_qa": {
+          "supported_floor": true,
+          "headroom_clear": true,
+          "capsule_contact_m": 0,
+          "rendered": false,
+          "note": "Exact review plan position retained; minor fixture contact recorded without a coordinate nudge."
+        },
+        "plan_transform": "round18 orthogonal .092m/original-pixel similarity",
+        "nudge_m": 0,
+        "source_plan_original_px": [
+          1280,
+          612
+        ],
+        "target_plan_original_px": [
+          1280,
+          650
+        ],
+        "source_plan_file": "refs/official/shinsegae/floor_B1.png",
+        "local_st": [
+          14.436,
+          29.328
+        ],
+        "look_at_local_st": [
+          17.932,
+          29.328
+        ],
+        "x": -103.129588,
+        "z": 12.674515,
+        "yawDeg": 201.33861
+      },
+      {
+        "r18_camera": "centralcity_b1_02",
+        "round": 18,
+        "active": true,
+        "photos": [
+          "refs/interior/ssg_food/11_sweetpark_ceiling_queue.jpg",
+          "refs/interior/ssg_food/14_sweetpark_hanjungsun_hall.jpg"
+        ],
+        "spot": "한정선 대기줄·볼트 천장 (원본 1295,712→1295,760, 변환 수정 후 재계산)",
+        "source_review": ".codex-jobs/evidence/review_ssg17.json → b1.new_cameras",
+        "source_review_index": 10,
+        "floor": "B1",
+        "y": -6,
+        "pitchDeg": 22,
+        "camera_qa": {
+          "supported_floor": true,
+          "headroom_clear": true,
+          "capsule_contact_m": 0.078,
+          "rendered": false,
+          "note": "Exact review plan position retained; minor fixture contact recorded without a coordinate nudge."
+        },
+        "plan_transform": "round18 orthogonal .092m/original-pixel similarity",
+        "nudge_m": 0,
+        "source_plan_original_px": [
+          1295,
+          712
+        ],
+        "target_plan_original_px": [
+          1295,
+          760
+        ],
+        "source_plan_file": "refs/official/shinsegae/floor_B1.png",
+        "local_st": [
+          23.636,
+          27.948
+        ],
+        "look_at_local_st": [
+          28.052,
+          27.948
+        ],
+        "x": -101.067297,
+        "z": 21.745973,
+        "yawDeg": 201.33861
+      },
+      {
+        "r18_camera": "centralcity_b1_03",
+        "round": 18,
+        "active": true,
+        "photos": [
+          "refs/interior/ssg_food/12_sweetpark_checker_floor.jpg"
+        ],
+        "spot": "한정선 앞 체커 바닥 (원본 1295,712→1295,760, 변환 수정 후 재계산)",
+        "source_review": ".codex-jobs/evidence/review_ssg17.json → b1.new_cameras",
+        "source_review_index": 11,
+        "floor": "B1",
+        "y": -6,
+        "pitchDeg": -18,
+        "camera_qa": {
+          "supported_floor": true,
+          "headroom_clear": true,
+          "capsule_contact_m": 0.078,
+          "rendered": false,
+          "note": "Exact review plan position retained; minor fixture contact recorded without a coordinate nudge."
+        },
+        "plan_transform": "round18 orthogonal .092m/original-pixel similarity",
+        "nudge_m": 0,
+        "source_plan_original_px": [
+          1295,
+          712
+        ],
+        "target_plan_original_px": [
+          1295,
+          760
+        ],
+        "source_plan_file": "refs/official/shinsegae/floor_B1.png",
+        "local_st": [
+          23.636,
+          27.948
+        ],
+        "look_at_local_st": [
+          28.052,
+          27.948
+        ],
+        "x": -101.067297,
+        "z": 21.745973,
+        "yawDeg": 201.33861
+      },
+      {
+        "r18_camera": "centralcity_b1_04",
+        "round": 18,
+        "active": true,
+        "photos": [
+          "refs/interior/ssg_food/17_market_vaulted_hall.jpg"
+        ],
+        "spot": "스위트파크 아일랜드 사이 → 파이브가이즈 (원본 1215,700→1430,630, 변환 수정 후 재계산)",
+        "source_review": ".codex-jobs/evidence/review_ssg17.json → b1.new_cameras",
+        "source_review_index": 12,
+        "floor": "B1",
+        "y": -6,
+        "pitchDeg": 0,
+        "camera_qa": {
+          "supported_floor": true,
+          "headroom_clear": true,
+          "capsule_contact_m": 0.042,
+          "rendered": false,
+          "note": "Exact review plan position retained; minor fixture contact recorded without a coordinate nudge."
+        },
+        "plan_transform": "round18 orthogonal .092m/original-pixel similarity",
+        "nudge_m": 0,
+        "source_plan_original_px": [
+          1215,
+          700
+        ],
+        "target_plan_original_px": [
+          1430,
+          630
+        ],
+        "source_plan_file": "refs/official/shinsegae/floor_B1.png",
+        "local_st": [
+          22.532,
+          35.308
+        ],
+        "look_at_local_st": [
+          16.092,
+          15.528
+        ],
+        "x": -94.613575,
+        "z": 18.039507,
+        "yawDeg": 93.304325
+      },
+      {
+        "r18_camera": "centralcity_b1_05",
+        "round": 18,
+        "active": true,
+        "photos": [
+          "refs/interior/ssg_food/18_market_counters_wide.jpg"
+        ],
+        "spot": "스위트파크 아일랜드 → 피에르 마르콜리니 (원본 1300,760→1158,825, 변환 수정 후 재계산)",
+        "source_review": ".codex-jobs/evidence/review_ssg17.json → b1.new_cameras",
+        "source_review_index": 13,
+        "floor": "B1",
+        "y": -6,
+        "pitchDeg": 0,
+        "camera_qa": {
+          "supported_floor": true,
+          "headroom_clear": true,
+          "capsule_contact_m": 0,
+          "rendered": false,
+          "note": "Exact review plan position retained; minor fixture contact recorded without a coordinate nudge."
+        },
+        "plan_transform": "round18 orthogonal .092m/original-pixel similarity",
+        "nudge_m": 0,
+        "source_plan_original_px": [
+          1300,
+          760
+        ],
+        "target_plan_original_px": [
+          1158,
+          825
+        ],
+        "source_plan_file": "refs/official/shinsegae/floor_B1.png",
+        "local_st": [
+          28.052,
+          27.488
+        ],
+        "look_at_local_st": [
+          34.032,
+          40.552
+        ],
+        "x": -99.888873,
+        "z": 26.026624,
+        "yawDeg": 266.742839
+      },
+      {
+        "r18_camera": "centralcity_b1_06",
+        "round": 18,
+        "active": true,
+        "photos": [
+          "refs/interior/ssg_food/04_hos_entrance_gate.jpg"
+        ],
+        "spot": "하우스 오브 신세계 B1 입구 게이트 (원본 1420,363→1520,363, 변환 수정 후 재계산)",
+        "source_review": ".codex-jobs/evidence/review_ssg17.json → b1.new_cameras",
+        "source_review_index": 14,
+        "floor": "B1",
+        "y": -6,
+        "pitchDeg": 0,
+        "camera_qa": {
+          "supported_floor": true,
+          "headroom_clear": true,
+          "capsule_contact_m": 0,
+          "rendered": false,
+          "note": "Exact review plan position retained; minor fixture contact recorded without a coordinate nudge."
+        },
+        "plan_transform": "round18 orthogonal .092m/original-pixel similarity",
+        "nudge_m": 0,
+        "source_plan_original_px": [
+          1420,
+          363
+        ],
+        "target_plan_original_px": [
+          1520,
+          363
+        ],
+        "source_plan_file": "refs/official/shinsegae/floor_B1.png",
+        "local_st": [
+          -8.472,
+          16.448
+        ],
+        "look_at_local_st": [
+          -8.472,
+          7.248
+        ],
+        "x": -123.462355,
+        "z": -3.976294,
+        "yawDeg": 111.33861
+      },
+      {
+        "r18_camera": "centralcity_b1_07",
+        "round": 18,
+        "active": true,
+        "photos": [
+          "refs/interior/ssg_food/05_hos_corridor_ceiling_floor.jpg"
+        ],
+        "spot": "하우스 연결 복도 아치 리브 (원본 1500,363→1600,363, 변환 수정 후 재계산)",
+        "source_review": ".codex-jobs/evidence/review_ssg17.json → b1.new_cameras",
+        "source_review_index": 15,
+        "floor": "B1",
+        "y": -6,
+        "pitchDeg": 8,
+        "camera_qa": {
+          "supported_floor": true,
+          "headroom_clear": true,
+          "capsule_contact_m": 0,
+          "rendered": false,
+          "note": "Exact review plan position retained; minor fixture contact recorded without a coordinate nudge."
+        },
+        "plan_transform": "round18 orthogonal .092m/original-pixel similarity",
+        "nudge_m": 0,
+        "source_plan_original_px": [
+          1500,
+          363
+        ],
+        "target_plan_original_px": [
+          1600,
+          363
+        ],
+        "source_plan_file": "refs/official/shinsegae/floor_B1.png",
+        "local_st": [
+          -8.472,
+          9.088
+        ],
+        "look_at_local_st": [
+          -8.472,
+          -0.112
+        ],
+        "x": -130.3178,
+        "z": -1.298145,
+        "yawDeg": 111.33861
+      },
+      {
+        "r18_camera": "centralcity_b1_08",
+        "round": 18,
+        "active": true,
+        "photos": [
+          "refs/interior/ssg_food/07_hos_superstar_bar.jpg"
+        ],
+        "spot": "슈퍼스타 바 (원본 1725,378→1725,330, 변환 수정 후 재계산)",
+        "source_review": ".codex-jobs/evidence/review_ssg17.json → b1.new_cameras",
+        "source_review_index": 16,
+        "floor": "B1",
+        "y": -6,
+        "pitchDeg": 0,
+        "camera_qa": {
+          "supported_floor": true,
+          "headroom_clear": true,
+          "capsule_contact_m": 0,
+          "rendered": false,
+          "note": "Exact review plan position retained; minor fixture contact recorded without a coordinate nudge."
+        },
+        "plan_transform": "round18 orthogonal .092m/original-pixel similarity",
+        "nudge_m": 0,
+        "source_plan_original_px": [
+          1725,
+          378
+        ],
+        "target_plan_original_px": [
+          1725,
+          330
+        ],
+        "source_plan_file": "refs/official/shinsegae/floor_B1.png",
+        "local_st": [
+          -7.092,
+          -11.612
+        ],
+        "look_at_local_st": [
+          -11.508,
+          -11.612
+        ],
+        "x": -149.096583,
+        "z": 7.519546,
+        "yawDeg": 21.33861
+      },
+      {
+        "r18_camera": "centralcity_b1_09",
+        "round": 18,
+        "active": true,
+        "photos": [
+          "refs/interior/ssg_food/09_hos_katsu_tapas_bar.jpg"
+        ],
+        "spot": "키보 아츠아츠 KATSU & TAPAS (원본 1790,468→1790,410, 변환 수정 후 재계산)",
+        "source_review": ".codex-jobs/evidence/review_ssg17.json → b1.new_cameras",
+        "source_review_index": 17,
+        "floor": "B1",
+        "y": -6,
+        "pitchDeg": 0,
+        "camera_qa": {
+          "supported_floor": true,
+          "headroom_clear": true,
+          "capsule_contact_m": 0,
+          "rendered": false,
+          "note": "Exact review plan position retained; minor fixture contact recorded without a coordinate nudge."
+        },
+        "plan_transform": "round18 orthogonal .092m/original-pixel similarity",
+        "nudge_m": 0,
+        "source_plan_original_px": [
+          1790,
+          468
+        ],
+        "target_plan_original_px": [
+          1790,
+          410
+        ],
+        "source_plan_file": "refs/official/shinsegae/floor_B1.png",
+        "local_st": [
+          1.188,
+          -17.592
+        ],
+        "look_at_local_st": [
+          -4.148,
+          -17.592
+        ],
+        "x": -151.653714,
+        "z": 17.407917,
+        "yawDeg": 21.33861
+      },
+      {
+        "r18_camera": "centralcity_b1_10",
+        "round": 18,
+        "active": true,
+        "photos": [
+          "refs/interior/ssg_food/10_hos_hall_beyond_counters.jpg"
+        ],
+        "spot": "타치바나 쪽에서 본 하우스 홀 (원본 1700,470→1790,500, 변환 수정 후 재계산)",
+        "source_review": ".codex-jobs/evidence/review_ssg17.json → b1.new_cameras",
+        "source_review_index": 18,
+        "floor": "B1",
+        "y": -6,
+        "pitchDeg": 0,
+        "camera_qa": {
+          "supported_floor": true,
+          "headroom_clear": true,
+          "capsule_contact_m": 0,
+          "rendered": false,
+          "note": "Exact review plan position retained; minor fixture contact recorded without a coordinate nudge."
+        },
+        "plan_transform": "round18 orthogonal .092m/original-pixel similarity",
+        "nudge_m": 0,
+        "source_plan_original_px": [
+          1700,
+          470
+        ],
+        "target_plan_original_px": [
+          1790,
+          500
+        ],
+        "source_plan_file": "refs/official/shinsegae/floor_B1.png",
+        "local_st": [
+          1.372,
+          -9.312
+        ],
+        "look_at_local_st": [
+          4.132,
+          -17.592
+        ],
+        "x": -143.874385,
+        "z": 14.566385,
+        "yawDeg": 129.773559
+      },
+      {
+        "r18_camera": "centralcity_b1_11",
+        "round": 18,
+        "active": true,
+        "photos": [
+          "refs/interior/ssg_food/01_hos_atrium_wide.jpg",
+          "refs/interior/ssg_food/02_hos_atrium_escalator.jpg"
+        ],
+        "spot": "하우스 보이드 라운지 (원본 1790,605→1790,500, 변환·보이드 수정 후 재계산)",
+        "source_review": ".codex-jobs/evidence/review_ssg17.json → b1.new_cameras",
+        "source_review_index": 19,
+        "floor": "B1",
+        "y": -6,
+        "pitchDeg": 15,
+        "camera_qa": {
+          "supported_floor": true,
+          "headroom_clear": true,
+          "capsule_contact_m": 0,
+          "rendered": false,
+          "note": "Exact review plan position retained; minor fixture contact recorded without a coordinate nudge."
+        },
+        "plan_transform": "round18 orthogonal .092m/original-pixel similarity",
+        "nudge_m": 0,
+        "source_plan_original_px": [
+          1790,
+          605
+        ],
+        "target_plan_original_px": [
+          1790,
+          500
+        ],
+        "source_plan_file": "refs/official/shinsegae/floor_B1.png",
+        "source_location_note": "지정 원본 좌표는 공식 김수사 셀 내부(표시x1631.585,y551.4575). 좌표를 보존했으며 라운지 외부 시점으로 몰래 옮기지 않음. U카운터 배치 후 재검토 필요.",
+        "local_st": [
+          13.792,
+          -17.592
+        ],
+        "look_at_local_st": [
+          4.132,
+          -17.592
+        ],
+        "x": -147.067383,
+        "z": 29.147866,
+        "yawDeg": 21.33861
+      },
+      {
+        "r18_camera": "centralcity_b1_12",
+        "round": 18,
+        "active": true,
+        "photos": [
+          "refs/interior/ssg_food/03_hos_central_bar_floor.jpg"
+        ],
+        "spot": "김수사 U자 카운터 앞 (원본 1798,565→1798,620, 변환 수정 후 재계산)",
+        "source_review": ".codex-jobs/evidence/review_ssg17.json → b1.new_cameras",
+        "source_review_index": 20,
+        "floor": "B1",
+        "y": -6,
+        "pitchDeg": -10,
+        "camera_qa": {
+          "supported_floor": true,
+          "headroom_clear": true,
+          "capsule_contact_m": 0,
+          "rendered": false,
+          "note": "Exact review plan position retained; minor fixture contact recorded without a coordinate nudge."
+        },
+        "plan_transform": "round18 orthogonal .092m/original-pixel similarity",
+        "nudge_m": 0,
+        "source_plan_original_px": [
+          1798,
+          565
+        ],
+        "target_plan_original_px": [
+          1798,
+          620
+        ],
+        "source_plan_file": "refs/official/shinsegae/floor_B1.png",
+        "local_st": [
+          10.112,
+          -18.328
+        ],
+        "look_at_local_st": [
+          15.172,
+          -18.328
+        ],
+        "x": -149.092002,
+        "z": 25.987958,
+        "yawDeg": 201.33861
+      },
+      {
+        "r18_camera": "centralcity_b1_13",
+        "round": 18,
+        "active": true,
+        "photos": [
+          "refs/walk/s5_ssg_b1/8xxIIvP9uAY_10.jpg"
+        ],
+        "spot": "1F 하우스 코트에서 B1 보이드 내려다봄 (B1 보이드 개통 후 유효)",
+        "source_review": ".codex-jobs/evidence/review_ssg17.json → b1.new_cameras",
+        "source_review_index": 21,
+        "floor": "1F",
+        "y": 0,
+        "pitchDeg": -60,
+        "camera_qa": {
+          "supported_floor": true,
+          "headroom_clear": true,
+          "capsule_contact_m": 0,
+          "rendered": false,
+          "note": "Exact review plan position retained; minor fixture contact recorded without a coordinate nudge."
+        },
+        "plan_transform": "round18 orthogonal .092m/original-pixel similarity",
+        "nudge_m": 0,
+        "source_plan_original_px": null,
+        "target_plan_original_px": [
+          1791,
+          502
+        ],
+        "source_location_note": "옛s107 카메라 대신 새 B1보이드 남측1F 착지데크(s12,t−17.684)에서 중심을 내려다봄.",
+        "local_st": [
+          12,
+          -17.684
+        ],
+        "look_at_local_st": [
+          4.316,
+          -17.684
+        ],
+        "x": -147.805147,
+        "z": 27.512191,
+        "yawDeg": 21.33861
       }
     ],
     "round7": {
@@ -8146,41 +9068,55 @@
         },
         {
           "file": "refs/official/shinsegae/hos_1F.jpg",
-          "region": "HOS eastofcorridor",
-          "local_bounds": [
-            78,
-            18,
-            138,
-            38.2
-          ],
+          "region": "HoS projected above B1; west-apron registration provisional",
           "residual_m": null,
           "previous_formula": "s=78+(py-227)*60/991; t=23+(px-963)*15.2/640; individual cells maintain clear aisles within this regional envelope.",
-          "formula": "Round11 regional fit: terminal/JW boundary at t38.2 fixed; court measured target 12m in t by16m in s, s99..115,t21.5..33.5; named cells follow relative north/east/south/west plan topology. No single surveyed affine transform.",
+          "formula": [
+            "s=4.316+(0.092*85/126)*(originalY-680.5)",
+            "t=-17.684-(0.092*85/126)*(originalX-1482.5)"
+          ],
           "court_local_st": [
-            99,
-            21.5,
-            115,
-            33.5
+            -0.836,
+            -22.284,
+            9.468,
+            -13.084
+          ],
+          "superseded_round11_formula": "Round11 regional fit: terminal/JW boundary at t38.2 fixed; court measured target 12m in t by16m in s, s99..115,t21.5..33.5; named cells follow relative north/east/south/west plan topology. No single surveyed affine transform.",
+          "round": 18,
+          "scale_m_per_original_px": 0.062063492063492064,
+          "registration_status": "Provisional projection; original outline x1149..1759,y250..1338 puts east boundary near t3.014 with open terminal connection. Existing bus apron conflicts. Shared B1-sized void overrides longer schematic1F rail run.",
+          "source_outline_original_px": [
+            1149,
+            250,
+            1759,
+            1338
           ]
         },
         {
           "file": "refs/official/shinsegae/hos_1M.jpg",
-          "region": "HOS1M",
+          "region": "HoS1M centered on same court; independent guide scale inferred",
           "floor_y": 3.6,
-          "local_bounds": [
-            78,
-            18,
-            138,
-            38.2
-          ],
           "residual_m": null,
           "previous_formula": "s=78+(py-217)*60/1012; t=23+(px-623)*15.2/954",
-          "formula": "Round11 regional fit: terminal/JW boundary at t38.2 fixed; court measured target 12m in t by16m in s, s99..115,t21.5..33.5; named cells follow relative north/east/south/west plan topology. No single surveyed affine transform.",
+          "formula": [
+            "s=4.316+.039*(originalY-695.5)",
+            "t=-17.684-.039*(originalX-1204.5)"
+          ],
           "court_local_st": [
-            99,
-            21.5,
-            115,
-            33.5
+            -0.836,
+            -22.284,
+            9.468,
+            -13.084
+          ],
+          "superseded_round11_formula": "Round11 regional fit: terminal/JW boundary at t38.2 fixed; court measured target 12m in t by16m in s, s99..115,t21.5..33.5; named cells follow relative north/east/south/west plan topology. No single surveyed affine transform.",
+          "round": 18,
+          "scale_m_per_original_px": 0.039,
+          "registration_status": "Independent guide scale.039m/px inferred so east deck edge t2.6545 stays outside confirmed terminal interior. Shared B1-size void; external survey absent.",
+          "source_outline_original_px": [
+            683,
+            238,
+            1730,
+            1348
           ]
         },
         {
@@ -11562,7 +12498,8 @@
         },
         "visual_render": "tests/shot.mjs not run as instructed. modeling.trace ready for operator render."
       },
-      "visual_geometry_fix": "Explicit east2 slab and ceiling polygons replace invalid edge-touching HOS hole. Earcut had drawn an opaque y5 floor triangle over a physics-open void; source fixed without engine edits."
+      "visual_geometry_fix": "Explicit east2 slab and ceiling polygons replace invalid edge-touching HOS hole. Earcut had drawn an opaque y5 floor triangle over a physics-open void; source fixed without engine edits.",
+      "superseded_by_round18": "B1 Sweet Park/HoS transform, HoS lounge floor/vertical court and upper HoS placement only. Other terminal/Famille work remains current. Historical checks here do not validate round18."
     },
     "trace_note": "208 cameras total; 17 added in Round14. y is player foot height. New cameras pass support, 0.38m capsule and 1.85m headroom checks with all connected details. tests/shot.mjs was not run as instructed; this is not visual render validation.",
     "trace_before_round12": [
@@ -11616,6 +12553,7 @@
       }
     ],
     "plan_transform_B1": {
+      "round": 18,
       "source": "refs/official/shinsegae/floor_B1.png",
       "raster_size_px": [
         2000,
@@ -11626,53 +12564,94 @@
         1367
       ],
       "original_to_trace_scale": 0.9115,
-      "method": "Continuous monotone piecewise plan fit. Shared screen-y knots align the official gates and escalator banks with retained geometry; east-branch shear meets the main plan at px1032.",
+      "method": "Uniform orthogonal similarity: +plan x→−t, +plan y→+s; equal scale and preserved cell aspect ratio. Fixed terminal E1/E2 pair midpoints anchor the fit; J4 keeps a separate B1 connector. No shear or piecewise scale.",
+      "scale_m_per_original_px": 0.092,
+      "scale_m_per_display_px": 0.10093252879868349,
       "formula": [
-        "v=piecewiseLinear(py; [[345,0],[443,34.71],[477,42.6],[500,51.77],[1155,84.7]]); py<345 uses84.7*(py-345)/810",
-        "s=-21.446919905050464+0.999823297215*v+0.18*(px-1032)",
-        "t=39.11560592124772-0.00488132387637*v-0.04*(px-1032)",
+        "s=-41.868+0.092*originalY",
+        "t=147.088-0.092*originalX",
+        "BPst(px,py)=[21.75+(0.092/0.9115)*(py-630.30225),18.15-(0.092/0.9115)*(px-1277.46725)]",
         "x=-135.7+0.3638789938720081*s+0.931446229161241*t",
         "z=9.9+0.931446229161241*s-0.3638789938720081*t"
       ],
-      "owner": "centralcity: Sweet Park and food-hall east branch only; southwest round plaza is shinsegae",
+      "owner": "centralcity: Sweet Park/HoS; main market/deli and southwest cinema plaza remain shinsegae-owned.",
+      "anchors": [
+        {
+          "feature": "E1",
+          "source_original_px": [
+            1391.5,
+            514.5
+          ],
+          "source_display_px": [
+            1268.35225,
+            468.96675
+          ],
+          "mapped_local_st": [
+            5.466,
+            19.07
+          ],
+          "retained_pair_midpoint_local_st": [
+            4.25,
+            18.15
+          ],
+          "residual_m": 1.524813
+        },
+        {
+          "feature": "E2",
+          "source_original_px": [
+            1411.5,
+            868.5
+          ],
+          "source_display_px": [
+            1286.58225,
+            791.63775
+          ],
+          "mapped_local_st": [
+            38.034,
+            17.23
+          ],
+          "retained_pair_midpoint_local_st": [
+            39.25,
+            18.15
+          ],
+          "residual_m": 1.524813
+        }
+      ],
       "residual_error": {
-        "seam_to_main_fit_m": "<0.000001",
-        "J4_midpoint_to_plan_9gate_m": 0.242797,
+        "E1_E2_midpoint_residual_m": 1.524813,
+        "gate9_display_px": [
+          1032,
+          477
+        ],
+        "gate9_local_st": [
+          6.276816,
+          42.92563
+        ],
+        "gate9_world_xz": [
+          -93.433082,
+          0.126782
+        ],
+        "reference_J4_local_st": [
+          21.1,
+          38.7
+        ],
+        "gate9_to_J4_reference_m": 15.413719,
         "surveyed_rmse_m": null,
-        "note": "Gate9 is now covered by the unchanged J4 opening; independent survey RMSE remains unavailable. The zero main/east seam residual is a construction constraint."
+        "note": "The diagram scale, retained cores, J4 and current west exterior are not simultaneously registerable. No surveyed exterior fit is claimed."
       },
-      "y_knots_display_to_main_v": [
-        [
-          345,
-          0
-        ],
-        [
-          443,
-          34.71
-        ],
-        [
-          477,
-          42.6
-        ],
-        [
-          500,
-          51.77
-        ],
-        [
-          1155,
-          84.7
-        ]
+      "court_source_original_px": [
+        1741,
+        446,
+        1841,
+        558
       ],
-      "y_segment_scale_m_per_pixel": [
-        0.3541836734693878,
-        0.2320588235294118,
-        0.3986956521739131,
-        0.05027480916030534
+      "court_center_local_st": [
+        4.316,
+        -17.684
       ],
-      "largest_to_smallest_y_scale_ratio": 7.93032651606174,
-      "gate9_world_xz": [
-        -91.76518299882454,
-        15.438264462797056
+      "court_center_world_xz": [
+        -150.601193,
+        20.354958
       ]
     },
     "round12": {
@@ -14799,7 +15778,7 @@
         "garden": 1472
       },
       "previous_megabox_note": "B1 메가박스24: 짙은 목재/크림 포털·청록 MEGABOX·평판 장식·유리 진열창·호박색 원형등·파란 발권기. 깊은 로비/상영관 평면은 미확인으로 단순화.",
-      "supersedes": "All earlier B1 tenant-coordinate/arcade/cinema/trace claims are historical; plan_transform_B1,round12.cells and current modeling.trace define the current B1. Earlier1F/1M/upperfloorrecordsremaininforce.",
+      "supersedes": "Historical round12 snapshot. Original source rectangles remain authoritative; world polygons/shear/cabinet-fit/trace QA and unchanged1F-slab claims are superseded by round18 and plan_transform_B1.",
       "previous_floor_entry": {
         "floor": "B1",
         "use": "메가박스 센트럴 입구·신세계/고투몰/지하철 연결통로. 파미에스테이션 식당 거리는 1F로 정정",
@@ -14827,7 +15806,8 @@
         "method": "A short customer aisle inside the original Kikukawa cell connects the retained route arrival to the nearest public aisle. Cabinets use convex-polygon intersection and compact within their source cell; no tenant relocation or test edits.",
         "half_width_m": 1.05,
         "reason": "The final gate/core fit placed an existing required through-route arrival inside a table/counter cluster."
-      }
+      },
+      "superseded_by_round18": "B1 Sweet Park/HoS transform, HoS lounge floor/vertical court and upper HoS placement only. Other terminal/Famille work remains current. Historical checks here do not validate round18."
     },
     "junctions_to_add": [],
     "round14": {
@@ -15160,7 +16140,8 @@
         "modeling.reference_implementation.hall_plain_closure": "critic hn_hall_w: 확인 안 된 방 전면만 s108..119/t28 평벽으로 마감, J6 통로 개방 유지.",
         "modeling.trace_note": "121 trace cameras. Round11 revised J4/J8/plaza/right-hand brands/HOS/Famille close views. y is player foot (renderer adds eye height); screenshot verification pending operator.",
         "notes[0]": "웹 자료가 층별 구조를 거의 제공하지 않아 층 배치 상당수는 추정"
-      }
+      },
+      "superseded_by_round18": "B1 Sweet Park/HoS transform, HoS lounge floor/vertical court and upper HoS placement only. Other terminal/Famille work remains current. Historical checks here do not validate round18."
     },
     "trace_before_round17": [
       {
@@ -16570,7 +17551,2675 @@
         "reason": "Original dining fronts require more width than the schematic pixel scale; all tenant ordering retained.",
         "guess": true
       },
-      "completed": "2026-11-07"
+      "completed": "2026-11-07",
+      "superseded_by_round18": "B1 Sweet Park/HoS transform, HoS lounge floor/vertical court and upper HoS placement only. Other terminal/Famille work remains current. Historical checks here do not validate round18."
+    },
+    "round18": {
+      "date": "2026-11-07",
+      "review_source": ".codex-jobs/evidence/review_ssg17.json → b1 and f1.F18",
+      "status": "Round18 implemented in permitted files; smoke passes; full-world0blocked not reached because2 out-of-scope blockers remain; render review pending.",
+      "priority": [
+        "official plan layout",
+        "photo-based design",
+        "objects and people"
+      ],
+      "scope": [
+        "b1.L1",
+        "b1.L2",
+        "b1.D1 Sweet Park half",
+        "b1.D2",
+        "b1.D3 Sweet Park fixtures",
+        "b1.D4",
+        "b1.D5",
+        "b1.D6",
+        "b1.T1",
+        "b1.T2",
+        "f1.F18"
+      ],
+      "superseded_transform": {
+        "source": "refs/official/shinsegae/floor_B1.png",
+        "raster_size_px": [
+          2000,
+          1500
+        ],
+        "tracing_grid": [
+          1823,
+          1367
+        ],
+        "original_to_trace_scale": 0.9115,
+        "method": "Continuous monotone piecewise plan fit. Shared screen-y knots align the official gates and escalator banks with retained geometry; east-branch shear meets the main plan at px1032.",
+        "formula": [
+          "v=piecewiseLinear(py; [[345,0],[443,34.71],[477,42.6],[500,51.77],[1155,84.7]]); py<345 uses84.7*(py-345)/810",
+          "s=-21.446919905050464+0.999823297215*v+0.18*(px-1032)",
+          "t=39.11560592124772-0.00488132387637*v-0.04*(px-1032)",
+          "x=-135.7+0.3638789938720081*s+0.931446229161241*t",
+          "z=9.9+0.931446229161241*s-0.3638789938720081*t"
+        ],
+        "owner": "centralcity: Sweet Park and food-hall east branch only; southwest round plaza is shinsegae",
+        "residual_error": {
+          "seam_to_main_fit_m": "<0.000001",
+          "J4_midpoint_to_plan_9gate_m": 0.242797,
+          "surveyed_rmse_m": null,
+          "note": "Gate9 is now covered by the unchanged J4 opening; independent survey RMSE remains unavailable. The zero main/east seam residual is a construction constraint."
+        },
+        "y_knots_display_to_main_v": [
+          [
+            345,
+            0
+          ],
+          [
+            443,
+            34.71
+          ],
+          [
+            477,
+            42.6
+          ],
+          [
+            500,
+            51.77
+          ],
+          [
+            1155,
+            84.7
+          ]
+        ],
+        "y_segment_scale_m_per_pixel": [
+          0.3541836734693878,
+          0.2320588235294118,
+          0.3986956521739131,
+          0.05027480916030534
+        ],
+        "largest_to_smallest_y_scale_ratio": 7.93032651606174,
+        "gate9_world_xz": [
+          -91.76518299882454,
+          15.438264462797056
+        ]
+      },
+      "previous_active_validation": {
+        "round": 14,
+        "date": "2026-11-07",
+        "status": "required smoke and full-world walk passed; visual render not run as instructed",
+        "smoke": {
+          "command": "node tests/smoke.mjs shinsegae centralcity gotomall jwmarriott station",
+          "result": "OK",
+          "nonfatal_warnings": 17,
+          "warning_explanation": "수평 오프셋 목적지 메뉴에 대한 출발 엘리베이터 주변 바닥 검사 경고. 실제 목적지 지지면·출구 동선은 별도 검사 및 전체 walk로 확인했다."
+        },
+        "walk": {
+          "command": "node tests/walk.mjs",
+          "result": "walk: 687 ok, 0 blocked",
+          "started_UTC": "2026-11-06 20:47",
+          "completed_by_UTC": "2026-11-06 20:55:53",
+          "scope": "all modules + city + all deferred details; includes 1F 동선 and 사용자 루트",
+          "source_sha256": {
+            "js/places/shinsegae.js": "1ef1cbd895530543b2484c56f42921e897896bbb0425fc75f370c1527c34bd1d",
+            "js/places/centralcity.js": "0b20322d083aa652ee85aa569731f31dfcf2bd290facd317ebcf0953b3779032",
+            "tests/walk.mjs": "c908af6e1fa86bc7beb786d087c931755b4420a3c21958de80a5b054ccdaa7d8"
+          }
+        },
+        "static_checks": {
+          "node --check js/places/shinsegae.js": "passed",
+          "node --check js/places/centralcity.js": "passed",
+          "git diff --check": "passed"
+        },
+        "metadata": {
+          "command": "node tools/gen_meta.mjs",
+          "result": "generated successfully after final geometry"
+        },
+        "visual_render": {
+          "tests/shot.mjs": "not run as instructed",
+          "trace_cameras_total": 208,
+          "trace_cameras_added_round14": 17,
+          "limitation": "새 카메라는 실제 kit 전체 상세의 바닥·충돌·머리 공간으로 검증했다. WebGL 화면 비교나 실제 렌더 성능 검증은 아니다."
+        }
+      },
+      "plan_transform_B1": "modeling.plan_transform_B1",
+      "cell_metrics": [
+        {
+          "name": "시코르",
+          "zone": "sweet_north",
+          "rect_display": [
+            1116,
+            266,
+            1237,
+            320
+          ],
+          "local_st_bounds": [
+            -15.019947,
+            22.234462,
+            -9.569591,
+            34.447298
+          ],
+          "plan_width_depth_m": [
+            12.212836,
+            5.450357
+          ],
+          "area_m2": 66.564311,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "팝업",
+          "zone": "sweet_north",
+          "rect_display": [
+            1237,
+            266,
+            1264,
+            320
+          ],
+          "local_st_bounds": [
+            -15.019947,
+            19.509284,
+            -9.569591,
+            22.234462
+          ],
+          "plan_width_depth_m": [
+            2.725178,
+            5.450357
+          ],
+          "area_m2": 14.853193,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "아임도넛",
+          "zone": "sweet_north",
+          "rect_display": [
+            1264,
+            266,
+            1333,
+            320
+          ],
+          "local_st_bounds": [
+            -15.019947,
+            12.544939,
+            -9.569591,
+            19.509284
+          ],
+          "plan_width_depth_m": [
+            6.964344,
+            5.450357
+          ],
+          "area_m2": 37.958161,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "렌위치",
+          "zone": "sweet_north",
+          "rect_display": [
+            1333,
+            266,
+            1400,
+            320
+          ],
+          "local_st_bounds": [
+            -15.019947,
+            5.78246,
+            -9.569591,
+            12.544939
+          ],
+          "plan_width_depth_m": [
+            6.762479,
+            5.450357
+          ],
+          "area_m2": 36.857924,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "케이스티파이",
+          "zone": "sweet",
+          "rect_display": [
+            1033,
+            345,
+            1078,
+            397
+          ],
+          "local_st_bounds": [
+            -7.046278,
+            38.282734,
+            -1.797786,
+            42.824698
+          ],
+          "plan_width_depth_m": [
+            4.541964,
+            5.248491
+          ],
+          "area_m2": 23.838458,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "S.style ACC",
+          "zone": "sweet",
+          "rect_display": [
+            1033,
+            398,
+            1097,
+            453
+          ],
+          "local_st_bounds": [
+            -1.696854,
+            36.365016,
+            3.854436,
+            42.824698
+          ],
+          "plan_width_depth_m": [
+            6.459682,
+            5.551289
+          ],
+          "area_m2": 35.859561,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "배스 앤 바디 웍스",
+          "zone": "sweet",
+          "rect_display": [
+            1098,
+            398,
+            1164,
+            453
+          ],
+          "local_st_bounds": [
+            -1.696854,
+            29.602536,
+            3.854436,
+            36.264083
+          ],
+          "plan_width_depth_m": [
+            6.661547,
+            5.551289
+          ],
+          "area_m2": 36.980173,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "포트넘앤메이슨",
+          "zone": "sweet",
+          "rect_display": [
+            1059,
+            509,
+            1164,
+            533
+          ],
+          "local_st_bounds": [
+            9.506657,
+            29.602536,
+            11.929038,
+            40.200452
+          ],
+          "plan_width_depth_m": [
+            10.597916,
+            2.422381
+          ],
+          "area_m2": 25.672186,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "후쿠요시 카페 미친맛집",
+          "zone": "sweet",
+          "rect_display": [
+            1032,
+            540,
+            1079,
+            595
+          ],
+          "local_st_bounds": [
+            12.635566,
+            38.181801,
+            18.186855,
+            42.92563
+          ],
+          "plan_width_depth_m": [
+            4.743829,
+            5.551289
+          ],
+          "area_m2": 26.334365,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "스탠다드브레드",
+          "zone": "sweet",
+          "rect_display": [
+            1032,
+            596,
+            1079,
+            654
+          ],
+          "local_st_bounds": [
+            18.287787,
+            38.181801,
+            24.141874,
+            42.92563
+          ],
+          "plan_width_depth_m": [
+            4.743829,
+            5.854087
+          ],
+          "area_m2": 27.770785,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "비스퀴테리 M.O",
+          "zone": "sweet",
+          "rect_display": [
+            1032,
+            655,
+            1079,
+            716
+          ],
+          "local_st_bounds": [
+            24.242806,
+            38.181801,
+            30.399691,
+            42.92563
+          ],
+          "plan_width_depth_m": [
+            4.743829,
+            6.156884
+          ],
+          "area_m2": 29.207205,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "피에르 마르콜리니",
+          "zone": "sweet",
+          "rect_display": [
+            1032,
+            717,
+            1079,
+            777
+          ],
+          "local_st_bounds": [
+            30.500623,
+            38.181801,
+            36.556575,
+            42.92563
+          ],
+          "plan_width_depth_m": [
+            4.743829,
+            6.055952
+          ],
+          "area_m2": 28.728399,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "어나더팜",
+          "zone": "sweet",
+          "rect_display": [
+            1136,
+            809,
+            1210,
+            850
+          ],
+          "local_st_bounds": [
+            39.786416,
+            24.95964,
+            43.924649,
+            32.428647
+          ],
+          "plan_width_depth_m": [
+            7.469007,
+            4.138234
+          ],
+          "area_m2": 30.908497,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "폼폼푸린 베이커리 카페",
+          "zone": "sweet",
+          "rect_display": [
+            1032,
+            842,
+            1089,
+            894
+          ],
+          "local_st_bounds": [
+            43.117189,
+            37.172476,
+            48.365681,
+            42.92563
+          ],
+          "plan_width_depth_m": [
+            5.753154,
+            5.248491
+          ],
+          "area_m2": 30.195381,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "마리메꼬",
+          "zone": "sweet",
+          "rect_display": [
+            1090,
+            842,
+            1134,
+            894
+          ],
+          "local_st_bounds": [
+            43.117189,
+            32.630512,
+            48.365681,
+            37.071544
+          ],
+          "plan_width_depth_m": [
+            4.441031,
+            5.248491
+          ],
+          "area_m2": 23.308715,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "밴루엔 아이스크림",
+          "zone": "sweet",
+          "rect_display": [
+            1344,
+            488,
+            1400,
+            544
+          ],
+          "local_st_bounds": [
+            7.387074,
+            5.78246,
+            13.039296,
+            11.434681
+          ],
+          "plan_width_depth_m": [
+            5.652222,
+            5.652222
+          ],
+          "area_m2": 31.947609,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "파이브가이즈",
+          "zone": "sweet",
+          "rect_display": [
+            1344,
+            545,
+            1400,
+            624
+          ],
+          "local_st_bounds": [
+            13.140228,
+            5.78246,
+            21.113898,
+            11.434681
+          ],
+          "plan_width_depth_m": [
+            5.652222,
+            7.97367
+          ],
+          "area_m2": 45.068949,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "치폴레",
+          "zone": "sweet",
+          "rect_display": [
+            1344,
+            625,
+            1400,
+            718
+          ],
+          "local_st_bounds": [
+            21.21483,
+            5.78246,
+            30.601556,
+            11.434681
+          ],
+          "plan_width_depth_m": [
+            5.652222,
+            9.386725
+          ],
+          "area_m2": 53.055851,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "파이브가이즈",
+          "zone": "sweet",
+          "rect_display": [
+            1276,
+            550,
+            1328,
+            605
+          ],
+          "local_st_bounds": [
+            13.644891,
+            13.049602,
+            19.19618,
+            18.298093
+          ],
+          "plan_width_depth_m": [
+            5.248491,
+            5.551289
+          ],
+          "area_m2": 29.135894,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "치폴레",
+          "zone": "sweet",
+          "rect_display": [
+            1281,
+            610,
+            1328,
+            718
+          ],
+          "local_st_bounds": [
+            19.700843,
+            13.049602,
+            30.601556,
+            17.793431
+          ],
+          "plan_width_depth_m": [
+            4.743829,
+            10.900713
+          ],
+          "area_m2": 51.711117,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "차지",
+          "zone": "sweet",
+          "rect_display": [
+            1277,
+            731,
+            1332,
+            777
+          ],
+          "local_st_bounds": [
+            31.913679,
+            12.645872,
+            36.556575,
+            18.197161
+          ],
+          "plan_width_depth_m": [
+            5.551289,
+            4.642896
+          ],
+          "area_m2": 25.77406,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "부창제과",
+          "zone": "sweet",
+          "rect_display": [
+            1223,
+            732,
+            1265,
+            777
+          ],
+          "local_st_bounds": [
+            32.014611,
+            19.408351,
+            36.556575,
+            23.647517
+          ],
+          "plan_width_depth_m": [
+            4.239166,
+            4.541964
+          ],
+          "area_m2": 19.254139,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "크림한상 / 1994 양과점",
+          "zone": "sweet_islands",
+          "rect_display": [
+            1095,
+            551,
+            1120,
+            578
+          ],
+          "local_st_bounds": [
+            13.745823,
+            34.043568,
+            16.471002,
+            36.566881
+          ],
+          "plan_width_depth_m": [
+            2.523313,
+            2.725178
+          ],
+          "area_m2": 6.876478,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "구뜨몽떼",
+          "zone": "sweet_islands",
+          "rect_display": [
+            1122,
+            551,
+            1147,
+            564
+          ],
+          "local_st_bounds": [
+            13.745823,
+            31.318389,
+            15.057946,
+            33.841703
+          ],
+          "plan_width_depth_m": [
+            2.523313,
+            1.312123
+          ],
+          "area_m2": 3.310897,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "레브두",
+          "zone": "sweet_islands",
+          "rect_display": [
+            1122,
+            565,
+            1147,
+            578
+          ],
+          "local_st_bounds": [
+            15.158879,
+            31.318389,
+            16.471002,
+            33.841703
+          ],
+          "plan_width_depth_m": [
+            2.523313,
+            1.312123
+          ],
+          "area_m2": 3.310897,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "팝업",
+          "zone": "sweet_islands",
+          "rect_display": [
+            1095,
+            579,
+            1120,
+            605
+          ],
+          "local_st_bounds": [
+            16.571934,
+            34.043568,
+            19.19618,
+            36.566881
+          ],
+          "plan_width_depth_m": [
+            2.523313,
+            2.624246
+          ],
+          "area_m2": 6.621794,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "마담 피에르 오제",
+          "zone": "sweet_islands",
+          "rect_display": [
+            1122,
+            579,
+            1147,
+            605
+          ],
+          "local_st_bounds": [
+            16.571934,
+            31.318389,
+            19.19618,
+            33.841703
+          ],
+          "plan_width_depth_m": [
+            2.523313,
+            2.624246
+          ],
+          "area_m2": 6.621794,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "키친205",
+          "zone": "sweet_islands",
+          "rect_display": [
+            1155,
+            551,
+            1178,
+            578
+          ],
+          "local_st_bounds": [
+            13.745823,
+            28.189481,
+            16.471002,
+            30.510929
+          ],
+          "plan_width_depth_m": [
+            2.321448,
+            2.725178
+          ],
+          "area_m2": 6.32636,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "쇼토",
+          "zone": "sweet_islands",
+          "rect_display": [
+            1180,
+            551,
+            1206,
+            578
+          ],
+          "local_st_bounds": [
+            13.745823,
+            25.36337,
+            16.471002,
+            27.987616
+          ],
+          "plan_width_depth_m": [
+            2.624246,
+            2.725178
+          ],
+          "area_m2": 7.151538,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "시즈니크",
+          "zone": "sweet_islands",
+          "rect_display": [
+            1155,
+            580,
+            1178,
+            605
+          ],
+          "local_st_bounds": [
+            16.672867,
+            28.189481,
+            19.19618,
+            30.510929
+          ],
+          "plan_width_depth_m": [
+            2.321448,
+            2.523313
+          ],
+          "area_m2": 5.857741,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "쉐프조",
+          "zone": "sweet_islands",
+          "rect_display": [
+            1180,
+            580,
+            1206,
+            605
+          ],
+          "local_st_bounds": [
+            16.672867,
+            25.36337,
+            19.19618,
+            27.987616
+          ],
+          "plan_width_depth_m": [
+            2.624246,
+            2.523313
+          ],
+          "area_m2": 6.621794,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "깰끄쇼즈 / 르솔레이 / 아우치+터치",
+          "zone": "sweet_islands",
+          "rect_display": [
+            1223,
+            551,
+            1264,
+            578
+          ],
+          "local_st_bounds": [
+            13.745823,
+            19.509284,
+            16.471002,
+            23.647517
+          ],
+          "plan_width_depth_m": [
+            4.138234,
+            2.725178
+          ],
+          "area_m2": 11.277425,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "크라눌레",
+          "zone": "sweet_islands",
+          "rect_display": [
+            1223,
+            580,
+            1244,
+            605
+          ],
+          "local_st_bounds": [
+            16.672867,
+            21.527934,
+            19.19618,
+            23.647517
+          ],
+          "plan_width_depth_m": [
+            2.119583,
+            2.523313
+          ],
+          "area_m2": 5.348372,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "팝업",
+          "zone": "sweet_islands",
+          "rect_display": [
+            1245,
+            580,
+            1264,
+            605
+          ],
+          "local_st_bounds": [
+            16.672867,
+            19.509284,
+            19.19618,
+            21.427002
+          ],
+          "plan_width_depth_m": [
+            1.917718,
+            2.523313
+          ],
+          "area_m2": 4.839003,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "마망갸또",
+          "zone": "sweet_islands",
+          "rect_display": [
+            1095,
+            610,
+            1120,
+            636
+          ],
+          "local_st_bounds": [
+            19.700843,
+            34.043568,
+            22.325088,
+            36.566881
+          ],
+          "plan_width_depth_m": [
+            2.523313,
+            2.624246
+          ],
+          "area_m2": 6.621794,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "만나당",
+          "zone": "sweet_islands",
+          "rect_display": [
+            1122,
+            610,
+            1147,
+            636
+          ],
+          "local_st_bounds": [
+            19.700843,
+            31.318389,
+            22.325088,
+            33.841703
+          ],
+          "plan_width_depth_m": [
+            2.523313,
+            2.624246
+          ],
+          "area_m2": 6.621794,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "이스트우드",
+          "zone": "sweet_islands",
+          "rect_display": [
+            1155,
+            610,
+            1178,
+            636
+          ],
+          "local_st_bounds": [
+            19.700843,
+            28.189481,
+            22.325088,
+            30.510929
+          ],
+          "plan_width_depth_m": [
+            2.321448,
+            2.624246
+          ],
+          "area_m2": 6.09205,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "삐아프",
+          "zone": "sweet_islands",
+          "rect_display": [
+            1180,
+            610,
+            1206,
+            636
+          ],
+          "local_st_bounds": [
+            19.700843,
+            25.36337,
+            22.325088,
+            27.987616
+          ],
+          "plan_width_depth_m": [
+            2.624246,
+            2.624246
+          ],
+          "area_m2": 6.886666,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "팝업",
+          "zone": "sweet_islands",
+          "rect_display": [
+            1223,
+            610,
+            1264,
+            636
+          ],
+          "local_st_bounds": [
+            19.700843,
+            19.509284,
+            22.325088,
+            23.647517
+          ],
+          "plan_width_depth_m": [
+            4.138234,
+            2.624246
+          ],
+          "area_m2": 10.859742,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "한과미의식",
+          "zone": "sweet_islands",
+          "rect_display": [
+            1095,
+            638,
+            1147,
+            662
+          ],
+          "local_st_bounds": [
+            22.526953,
+            31.318389,
+            24.949334,
+            36.566881
+          ],
+          "plan_width_depth_m": [
+            5.248491,
+            2.422381
+          ],
+          "area_m2": 12.713844,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "팝업",
+          "zone": "sweet_islands",
+          "rect_display": [
+            1155,
+            638,
+            1178,
+            662
+          ],
+          "local_st_bounds": [
+            22.526953,
+            28.189481,
+            24.949334,
+            30.510929
+          ],
+          "plan_width_depth_m": [
+            2.321448,
+            2.422381
+          ],
+          "area_m2": 5.623431,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "해피해피 케이크",
+          "zone": "sweet_islands",
+          "rect_display": [
+            1180,
+            638,
+            1206,
+            662
+          ],
+          "local_st_bounds": [
+            22.526953,
+            25.36337,
+            24.949334,
+            27.987616
+          ],
+          "plan_width_depth_m": [
+            2.624246,
+            2.422381
+          ],
+          "area_m2": 6.356922,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "팝업",
+          "zone": "sweet_islands",
+          "rect_display": [
+            1223,
+            638,
+            1264,
+            662
+          ],
+          "local_st_bounds": [
+            22.526953,
+            19.509284,
+            24.949334,
+            23.647517
+          ],
+          "plan_width_depth_m": [
+            4.138234,
+            2.422381
+          ],
+          "area_m2": 10.024377,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "프랑스 루브르바게트",
+          "zone": "sweet_islands",
+          "rect_display": [
+            1095,
+            665,
+            1147,
+            691
+          ],
+          "local_st_bounds": [
+            25.252132,
+            31.318389,
+            27.876377,
+            36.566881
+          ],
+          "plan_width_depth_m": [
+            5.248491,
+            2.624246
+          ],
+          "area_m2": 13.773331,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "산스커피",
+          "zone": "sweet_islands",
+          "rect_display": [
+            1095,
+            693,
+            1147,
+            718
+          ],
+          "local_st_bounds": [
+            28.078242,
+            31.318389,
+            30.601556,
+            36.566881
+          ],
+          "plan_width_depth_m": [
+            5.248491,
+            2.523313
+          ],
+          "area_m2": 13.243588,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "한정선",
+          "zone": "sweet_islands",
+          "rect_display": [
+            1155,
+            665,
+            1206,
+            718
+          ],
+          "local_st_bounds": [
+            25.252132,
+            25.36337,
+            30.601556,
+            30.510929
+          ],
+          "plan_width_depth_m": [
+            5.147559,
+            5.349424
+          ],
+          "area_m2": 27.536476,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "오뜨르 베이커리",
+          "zone": "sweet_islands",
+          "rect_display": [
+            1223,
+            665,
+            1264,
+            691
+          ],
+          "local_st_bounds": [
+            25.252132,
+            19.509284,
+            27.876377,
+            23.647517
+          ],
+          "plan_width_depth_m": [
+            4.138234,
+            2.624246
+          ],
+          "area_m2": 10.859742,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "고리",
+          "zone": "sweet_islands",
+          "rect_display": [
+            1223,
+            693,
+            1264,
+            718
+          ],
+          "local_st_bounds": [
+            28.078242,
+            19.509284,
+            30.601556,
+            23.647517
+          ],
+          "plan_width_depth_m": [
+            4.138234,
+            2.523313
+          ],
+          "area_m2": 10.44206,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "태극당",
+          "zone": "sweet_islands",
+          "rect_display": [
+            1095,
+            730,
+            1124,
+            750
+          ],
+          "local_st_bounds": [
+            31.812746,
+            33.639838,
+            33.831397,
+            36.566881
+          ],
+          "plan_width_depth_m": [
+            2.927043,
+            2.018651
+          ],
+          "area_m2": 5.908678,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "르뱅룰즈",
+          "zone": "sweet_islands",
+          "rect_display": [
+            1125,
+            730,
+            1160,
+            750
+          ],
+          "local_st_bounds": [
+            31.812746,
+            30.006267,
+            33.831397,
+            33.538905
+          ],
+          "plan_width_depth_m": [
+            3.532639,
+            2.018651
+          ],
+          "area_m2": 7.131163,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "르빵",
+          "zone": "sweet_islands",
+          "rect_display": [
+            1161,
+            730,
+            1206,
+            750
+          ],
+          "local_st_bounds": [
+            31.812746,
+            25.36337,
+            33.831397,
+            29.905334
+          ],
+          "plan_width_depth_m": [
+            4.541964,
+            2.018651
+          ],
+          "area_m2": 9.168638,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "스코프",
+          "zone": "sweet_islands",
+          "rect_display": [
+            1095,
+            752,
+            1150,
+            777
+          ],
+          "local_st_bounds": [
+            34.033262,
+            31.015592,
+            36.556575,
+            36.566881
+          ],
+          "plan_width_depth_m": [
+            5.551289,
+            2.523313
+          ],
+          "area_m2": 14.007641,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "장 블랑제리",
+          "zone": "sweet_islands",
+          "rect_display": [
+            1152,
+            752,
+            1206,
+            777
+          ],
+          "local_st_bounds": [
+            34.033262,
+            25.36337,
+            36.556575,
+            30.813727
+          ],
+          "plan_width_depth_m": [
+            5.450357,
+            2.523313
+          ],
+          "area_m2": 13.752957,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "키쿠카와",
+          "zone": "hos",
+          "rect_display": [
+            1424,
+            285,
+            1493,
+            320
+          ],
+          "local_st_bounds": [
+            -13.102229,
+            -3.604265,
+            -9.569591,
+            3.360079
+          ],
+          "plan_width_depth_m": [
+            6.964344,
+            3.532639
+          ],
+          "area_m2": 24.602512,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "슈퍼스타",
+          "zone": "hos",
+          "rect_display": [
+            1533,
+            285,
+            1618,
+            320
+          ],
+          "local_st_bounds": [
+            -13.102229,
+            -16.220832,
+            -9.569591,
+            -7.641567
+          ],
+          "plan_width_depth_m": [
+            8.579265,
+            3.532639
+          ],
+          "area_m2": 30.307442,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "%아라비카",
+          "zone": "hos",
+          "rect_display": [
+            1344,
+            343,
+            1389,
+            462
+          ],
+          "local_st_bounds": [
+            -7.248143,
+            6.892717,
+            4.762828,
+            11.434681
+          ],
+          "plan_width_depth_m": [
+            4.541964,
+            12.010971
+          ],
+          "area_m2": 54.553395,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "키쿠카와",
+          "zone": "hos",
+          "rect_display": [
+            1435,
+            343,
+            1493,
+            377
+          ],
+          "local_st_bounds": [
+            -7.248143,
+            -3.604265,
+            -3.816437,
+            2.249821
+          ],
+          "plan_width_depth_m": [
+            5.854087,
+            3.431706
+          ],
+          "area_m2": 20.089504,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "타치바나",
+          "zone": "hos",
+          "rect_display": [
+            1494,
+            343,
+            1548,
+            432
+          ],
+          "local_st_bounds": [
+            -7.248143,
+            -9.155555,
+            1.734852,
+            -3.705198
+          ],
+          "plan_width_depth_m": [
+            5.450357,
+            8.982995
+          ],
+          "area_m2": 48.960526,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "키보 아츠아츠",
+          "zone": "hos",
+          "rect_display": [
+            1600,
+            345,
+            1660,
+            400
+          ],
+          "local_st_bounds": [
+            -7.046278,
+            -20.459998,
+            -1.494988,
+            -14.404046
+          ],
+          "plan_width_depth_m": [
+            6.055952,
+            5.551289
+          ],
+          "area_m2": 33.618339,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "미도한우함박",
+          "zone": "hos",
+          "rect_display": [
+            1714,
+            397,
+            1785,
+            443
+          ],
+          "local_st_bounds": [
+            -1.797786,
+            -33.076564,
+            2.84511,
+            -25.910354
+          ],
+          "plan_width_depth_m": [
+            7.16621,
+            4.642896
+          ],
+          "area_m2": 33.271968,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "혼",
+          "zone": "hos",
+          "rect_display": [
+            1714,
+            444,
+            1785,
+            489
+          ],
+          "local_st_bounds": [
+            2.946043,
+            -33.076564,
+            7.488007,
+            -25.910354
+          ],
+          "plan_width_depth_m": [
+            7.16621,
+            4.541964
+          ],
+          "area_m2": 32.548664,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "자주한상",
+          "zone": "hos",
+          "rect_display": [
+            1714,
+            490,
+            1785,
+            589
+          ],
+          "local_st_bounds": [
+            7.588939,
+            -33.076564,
+            17.581259,
+            -25.910354
+          ],
+          "plan_width_depth_m": [
+            7.16621,
+            9.99232
+          ],
+          "area_m2": 71.607061,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "김수사",
+          "zone": "hos",
+          "rect_display": [
+            1580,
+            529,
+            1698,
+            589
+          ],
+          "local_st_bounds": [
+            11.525308,
+            -24.295434,
+            17.581259,
+            -12.385396
+          ],
+          "plan_width_depth_m": [
+            11.910038,
+            6.055952
+          ],
+          "area_m2": 72.126618,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "미가훠궈",
+          "zone": "hos",
+          "rect_display": [
+            1463,
+            444,
+            1531,
+            589
+          ],
+          "local_st_bounds": [
+            2.946043,
+            -7.439702,
+            17.581259,
+            -0.57629
+          ],
+          "plan_width_depth_m": [
+            6.863412,
+            14.635217
+          ],
+          "area_m2": 100.447521,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "아이스크림 소사이어티",
+          "zone": "hos",
+          "rect_display": [
+            1532,
+            485,
+            1558,
+            589
+          ],
+          "local_st_bounds": [
+            7.084276,
+            -10.16488,
+            17.581259,
+            -7.540634
+          ],
+          "plan_width_depth_m": [
+            2.624246,
+            10.496983
+          ],
+          "area_m2": 27.546663,
+          "aspect_ratio_preserved": true
+        },
+        {
+          "name": "팝업",
+          "zone": "sweet",
+          "rect_display": [
+            1059,
+            487,
+            1164,
+            507
+          ],
+          "local_st_bounds": [
+            7.286142,
+            29.602536,
+            9.304792,
+            40.200452
+          ],
+          "plan_width_depth_m": [
+            10.597916,
+            2.018651
+          ],
+          "area_m2": 21.393488,
+          "aspect_ratio_preserved": true
+        }
+      ],
+      "void": {
+        "source_original_px": [
+          1741,
+          446,
+          1841,
+          558
+        ],
+        "center_local_st": [
+          4.316,
+          -17.684
+        ],
+        "center_world_xz": [
+          -150.601193,
+          20.354958
+        ],
+        "floor_heights": {
+          "B1": -6,
+          "1F": 0,
+          "1M": 3.6
+        },
+        "B1_to_1F_hole_local_st": [
+          -0.836,
+          -22.284,
+          9.468,
+          -13.084
+        ],
+        "1F_to_1M_hole_local_st": [
+          -0.836,
+          -22.284,
+          9.468,
+          -13.084
+        ],
+        "B1_escalator_lanes_t": [
+          -13.774,
+          -21.594
+        ],
+        "B1_flights_low_high_s": [
+          9.468,
+          -0.836
+        ],
+        "upper_flights_low_high_s": [
+          9.468,
+          -0.836
+        ],
+        "flight_separation_note": "Identical10.304m north-rising footprints; lower -6→0, upper0→3.6. Nominal separation6m at south to3.6m at north. Source1F longer run treated as schematic; both landing decks outside shared void."
+      },
+      "footprint_conflict": {
+        "status": "explicit provisional projection, not a surveyed reconciliation",
+        "B1_HoS_region_local_st": [
+          -15.019947,
+          -33.177496,
+          30.601556,
+          5.78246
+        ],
+        "apron_local_st": [
+          -12,
+          -18.3,
+          151,
+          0
+        ],
+        "void_apron_overlap_m2": 53.745664,
+        "affected_bus_centers_local_st": [
+          [
+            -3,
+            -3.6
+          ],
+          [
+            9,
+            -3.6
+          ],
+          [
+            33,
+            -3.6
+          ]
+        ],
+        "treatment": "기존 승차홈 버스/주차선 중s<47인 앞마당 물체를 잠정 억제하고 앞마당 asphalt는s47부터 시작. 새 보이드를 막던 지면도 제거. 확인된 터미널 실내·상점·J4/J8·파미에 게이트는 유지. 실제 터미널/승차장 이전으로 주장하지 않음.",
+        "unresolved": "Official diagram proportions, retained cores/J4 and current OSM west exterior cannot all fit one metric transform; independent registered survey needed.",
+        "suppressed_boarding_bays_s": [
+          -3,
+          9,
+          21,
+          33,
+          45
+        ]
+      },
+      "findings": {
+        "L1": {
+          "change": "Uniform orthogonal .092m/original-px transform;66 cells preserve aspect ratio; E1/E2 retained; J4 independent connector; west-apron conflict documented.",
+          "status": "Implemented; module physics checked. Required full-world walk has2 out-of-scope blockers; rendered appearance unverified.",
+          "transform_original_px": {
+            "s": "-41.868 + 0.092*py",
+            "t": "147.088 - 0.092*px",
+            "input": "original2000x1500 floor_B1.png pixels"
+          },
+          "cell_fit_note": "No tenant rectangles are sheared or independently rescaled. Core/J3/J4 conflicts affect in-cell fixtures only, with three fully omitted cabinet footprints recorded."
+        },
+        "L2": {
+          "change": "B1/1F/1M share void s−.836..9.468,t−22.284..−13.084; same-footprint paired flights and true vertical lift. B1 lounge beside 김수사; old upper s99..115 block removed.",
+          "status": "Implemented; module physics checked. Required full-world walk has2 out-of-scope blockers; rendered appearance unverified."
+        },
+        "D1": {
+          "change": "Sweet Park cross-vault/globe-chandelier half only; main market/deli belongs to concurrent shinsegae job.",
+          "status": "Implemented; module physics checked. Required full-world walk has2 out-of-scope blockers; rendered appearance unverified."
+        },
+        "D2": {
+          "change": "Sweet Park dessert65cm black/white veined checker; sweet_north white diamond floor retained; HoS separate.",
+          "status": "Implemented; module physics checked. Required full-world walk has2 out-of-scope blockers; rendered appearance unverified."
+        },
+        "D3": {
+          "change": "Octagonal marble-top vitrines, timber arch transoms, cream/brass piers and 한정선 stanchions.",
+          "status": "Implemented; module physics checked. Required full-world walk has2 out-of-scope blockers; rendered appearance unverified.",
+          "partial_fixture_note": "50/53 cabinet footprints retained;3 impossible core/connection conflicts explicitly skipped."
+        },
+        "D4": {
+          "change": "HoS honey wood/walnut, amber uplights, herringbone stone/wood bands and corridor/counter ceilings.",
+          "status": "Implemented; module physics checked. Required full-world walk has2 out-of-scope blockers; rendered appearance unverified.",
+          "lighting_limit": "Amber emissive accents and warm material palette are modeled; scene-wide lighting/lux is not modified or calibrated."
+        },
+        "D5": {
+          "change": "B1 portal, gold brand plaque/globe wall lights and ribbed corridor at official north Sweet Park→HoS connection.",
+          "status": "Implemented; module physics checked. Required full-world walk has2 out-of-scope blockers; rendered appearance unverified.",
+          "width_note": "Official white neck320.5..342.5 displaypx is2.22m; photo-estimated4m is not enforced by moving tenants."
+        },
+        "D6": {
+          "change": "Distinct Superstar/김수사 U counter/키보/키쿠카와/%아라비카 fronts and counter dining.",
+          "status": "Implemented; module physics checked. Required full-world walk has2 out-of-scope blockers; rendered appearance unverified."
+        },
+        "T1": {
+          "change": "Dense 한정선 queue and seated B1 lounge; clear customer aisles.",
+          "status": "Implemented; module physics checked. Required full-world walk has2 out-of-scope blockers; rendered appearance unverified.",
+          "counts": {
+            "hanjungsun_queue": 24,
+            "B1_lounge_seated": 24,
+            "general_B1_white_space_target": 175,
+            "note": "Deterministic sampler may stop below target if no physics-safe position is found."
+          }
+        },
+        "T2": {
+          "change": "Mixed dense pastry trays, package boxes and green-uniform staff; unlocated temporary objects omitted.",
+          "status": "Implemented; module physics checked. Required full-world walk has2 out-of-scope blockers; rendered appearance unverified."
+        },
+        "F18": {
+          "change": "Remove trusses within retained stage coffer zone s50..78,t8..23; add upper arcade and dark diagonal/terracotta floor bands; do not extend coffers to3GATE without evidence.",
+          "status": "Implemented; module physics checked. Required full-world walk has2 out-of-scope blockers; rendered appearance unverified."
+        }
+      },
+      "new_camera_count": 14,
+      "new_cameras": [
+        {
+          "r18_camera": "centralcity_b1_00",
+          "round": 18,
+          "active": true,
+          "photos": [
+            "refs/interior/ssg_food/13_sweetpark_standard_bread_front.jpg"
+          ],
+          "spot": "스탠다드브레드 전면 (원본 1225,686→1158,686, 동쪽 변환 수정 후 재계산)",
+          "source_review": ".codex-jobs/evidence/review_ssg17.json → b1.new_cameras",
+          "source_review_index": 8,
+          "floor": "B1",
+          "y": -6,
+          "pitchDeg": 0,
+          "camera_qa": {
+            "supported_floor": true,
+            "headroom_clear": true,
+            "capsule_contact_m": 0,
+            "rendered": false,
+            "note": "Exact review plan position retained; minor fixture contact recorded without a coordinate nudge."
+          },
+          "plan_transform": "round18 orthogonal .092m/original-pixel similarity",
+          "nudge_m": 0,
+          "source_plan_original_px": [
+            1225,
+            686
+          ],
+          "target_plan_original_px": [
+            1158,
+            686
+          ],
+          "source_plan_file": "refs/official/shinsegae/floor_B1.png",
+          "local_st": [
+            21.244,
+            34.388
+          ],
+          "look_at_local_st": [
+            21.244,
+            40.552
+          ],
+          "x": -95.939182,
+          "z": 17.174573,
+          "yawDeg": 291.33861
+        },
+        {
+          "r18_camera": "centralcity_b1_01",
+          "round": 18,
+          "active": true,
+          "photos": [
+            "refs/interior/ssg_food/15_sweetpark_seasonique_ceiling.jpg"
+          ],
+          "spot": "시즈니크 아일랜드 (원본 1280,612→1280,650, 변환 수정 후 재계산)",
+          "source_review": ".codex-jobs/evidence/review_ssg17.json → b1.new_cameras",
+          "source_review_index": 9,
+          "floor": "B1",
+          "y": -6,
+          "pitchDeg": 0,
+          "camera_qa": {
+            "supported_floor": true,
+            "headroom_clear": true,
+            "capsule_contact_m": 0,
+            "rendered": false,
+            "note": "Exact review plan position retained; minor fixture contact recorded without a coordinate nudge."
+          },
+          "plan_transform": "round18 orthogonal .092m/original-pixel similarity",
+          "nudge_m": 0,
+          "source_plan_original_px": [
+            1280,
+            612
+          ],
+          "target_plan_original_px": [
+            1280,
+            650
+          ],
+          "source_plan_file": "refs/official/shinsegae/floor_B1.png",
+          "local_st": [
+            14.436,
+            29.328
+          ],
+          "look_at_local_st": [
+            17.932,
+            29.328
+          ],
+          "x": -103.129588,
+          "z": 12.674515,
+          "yawDeg": 201.33861
+        },
+        {
+          "r18_camera": "centralcity_b1_02",
+          "round": 18,
+          "active": true,
+          "photos": [
+            "refs/interior/ssg_food/11_sweetpark_ceiling_queue.jpg",
+            "refs/interior/ssg_food/14_sweetpark_hanjungsun_hall.jpg"
+          ],
+          "spot": "한정선 대기줄·볼트 천장 (원본 1295,712→1295,760, 변환 수정 후 재계산)",
+          "source_review": ".codex-jobs/evidence/review_ssg17.json → b1.new_cameras",
+          "source_review_index": 10,
+          "floor": "B1",
+          "y": -6,
+          "pitchDeg": 22,
+          "camera_qa": {
+            "supported_floor": true,
+            "headroom_clear": true,
+            "capsule_contact_m": 0.078,
+            "rendered": false,
+            "note": "Exact review plan position retained; minor fixture contact recorded without a coordinate nudge."
+          },
+          "plan_transform": "round18 orthogonal .092m/original-pixel similarity",
+          "nudge_m": 0,
+          "source_plan_original_px": [
+            1295,
+            712
+          ],
+          "target_plan_original_px": [
+            1295,
+            760
+          ],
+          "source_plan_file": "refs/official/shinsegae/floor_B1.png",
+          "local_st": [
+            23.636,
+            27.948
+          ],
+          "look_at_local_st": [
+            28.052,
+            27.948
+          ],
+          "x": -101.067297,
+          "z": 21.745973,
+          "yawDeg": 201.33861
+        },
+        {
+          "r18_camera": "centralcity_b1_03",
+          "round": 18,
+          "active": true,
+          "photos": [
+            "refs/interior/ssg_food/12_sweetpark_checker_floor.jpg"
+          ],
+          "spot": "한정선 앞 체커 바닥 (원본 1295,712→1295,760, 변환 수정 후 재계산)",
+          "source_review": ".codex-jobs/evidence/review_ssg17.json → b1.new_cameras",
+          "source_review_index": 11,
+          "floor": "B1",
+          "y": -6,
+          "pitchDeg": -18,
+          "camera_qa": {
+            "supported_floor": true,
+            "headroom_clear": true,
+            "capsule_contact_m": 0.078,
+            "rendered": false,
+            "note": "Exact review plan position retained; minor fixture contact recorded without a coordinate nudge."
+          },
+          "plan_transform": "round18 orthogonal .092m/original-pixel similarity",
+          "nudge_m": 0,
+          "source_plan_original_px": [
+            1295,
+            712
+          ],
+          "target_plan_original_px": [
+            1295,
+            760
+          ],
+          "source_plan_file": "refs/official/shinsegae/floor_B1.png",
+          "local_st": [
+            23.636,
+            27.948
+          ],
+          "look_at_local_st": [
+            28.052,
+            27.948
+          ],
+          "x": -101.067297,
+          "z": 21.745973,
+          "yawDeg": 201.33861
+        },
+        {
+          "r18_camera": "centralcity_b1_04",
+          "round": 18,
+          "active": true,
+          "photos": [
+            "refs/interior/ssg_food/17_market_vaulted_hall.jpg"
+          ],
+          "spot": "스위트파크 아일랜드 사이 → 파이브가이즈 (원본 1215,700→1430,630, 변환 수정 후 재계산)",
+          "source_review": ".codex-jobs/evidence/review_ssg17.json → b1.new_cameras",
+          "source_review_index": 12,
+          "floor": "B1",
+          "y": -6,
+          "pitchDeg": 0,
+          "camera_qa": {
+            "supported_floor": true,
+            "headroom_clear": true,
+            "capsule_contact_m": 0.042,
+            "rendered": false,
+            "note": "Exact review plan position retained; minor fixture contact recorded without a coordinate nudge."
+          },
+          "plan_transform": "round18 orthogonal .092m/original-pixel similarity",
+          "nudge_m": 0,
+          "source_plan_original_px": [
+            1215,
+            700
+          ],
+          "target_plan_original_px": [
+            1430,
+            630
+          ],
+          "source_plan_file": "refs/official/shinsegae/floor_B1.png",
+          "local_st": [
+            22.532,
+            35.308
+          ],
+          "look_at_local_st": [
+            16.092,
+            15.528
+          ],
+          "x": -94.613575,
+          "z": 18.039507,
+          "yawDeg": 93.304325
+        },
+        {
+          "r18_camera": "centralcity_b1_05",
+          "round": 18,
+          "active": true,
+          "photos": [
+            "refs/interior/ssg_food/18_market_counters_wide.jpg"
+          ],
+          "spot": "스위트파크 아일랜드 → 피에르 마르콜리니 (원본 1300,760→1158,825, 변환 수정 후 재계산)",
+          "source_review": ".codex-jobs/evidence/review_ssg17.json → b1.new_cameras",
+          "source_review_index": 13,
+          "floor": "B1",
+          "y": -6,
+          "pitchDeg": 0,
+          "camera_qa": {
+            "supported_floor": true,
+            "headroom_clear": true,
+            "capsule_contact_m": 0,
+            "rendered": false,
+            "note": "Exact review plan position retained; minor fixture contact recorded without a coordinate nudge."
+          },
+          "plan_transform": "round18 orthogonal .092m/original-pixel similarity",
+          "nudge_m": 0,
+          "source_plan_original_px": [
+            1300,
+            760
+          ],
+          "target_plan_original_px": [
+            1158,
+            825
+          ],
+          "source_plan_file": "refs/official/shinsegae/floor_B1.png",
+          "local_st": [
+            28.052,
+            27.488
+          ],
+          "look_at_local_st": [
+            34.032,
+            40.552
+          ],
+          "x": -99.888873,
+          "z": 26.026624,
+          "yawDeg": 266.742839
+        },
+        {
+          "r18_camera": "centralcity_b1_06",
+          "round": 18,
+          "active": true,
+          "photos": [
+            "refs/interior/ssg_food/04_hos_entrance_gate.jpg"
+          ],
+          "spot": "하우스 오브 신세계 B1 입구 게이트 (원본 1420,363→1520,363, 변환 수정 후 재계산)",
+          "source_review": ".codex-jobs/evidence/review_ssg17.json → b1.new_cameras",
+          "source_review_index": 14,
+          "floor": "B1",
+          "y": -6,
+          "pitchDeg": 0,
+          "camera_qa": {
+            "supported_floor": true,
+            "headroom_clear": true,
+            "capsule_contact_m": 0,
+            "rendered": false,
+            "note": "Exact review plan position retained; minor fixture contact recorded without a coordinate nudge."
+          },
+          "plan_transform": "round18 orthogonal .092m/original-pixel similarity",
+          "nudge_m": 0,
+          "source_plan_original_px": [
+            1420,
+            363
+          ],
+          "target_plan_original_px": [
+            1520,
+            363
+          ],
+          "source_plan_file": "refs/official/shinsegae/floor_B1.png",
+          "local_st": [
+            -8.472,
+            16.448
+          ],
+          "look_at_local_st": [
+            -8.472,
+            7.248
+          ],
+          "x": -123.462355,
+          "z": -3.976294,
+          "yawDeg": 111.33861
+        },
+        {
+          "r18_camera": "centralcity_b1_07",
+          "round": 18,
+          "active": true,
+          "photos": [
+            "refs/interior/ssg_food/05_hos_corridor_ceiling_floor.jpg"
+          ],
+          "spot": "하우스 연결 복도 아치 리브 (원본 1500,363→1600,363, 변환 수정 후 재계산)",
+          "source_review": ".codex-jobs/evidence/review_ssg17.json → b1.new_cameras",
+          "source_review_index": 15,
+          "floor": "B1",
+          "y": -6,
+          "pitchDeg": 8,
+          "camera_qa": {
+            "supported_floor": true,
+            "headroom_clear": true,
+            "capsule_contact_m": 0,
+            "rendered": false,
+            "note": "Exact review plan position retained; minor fixture contact recorded without a coordinate nudge."
+          },
+          "plan_transform": "round18 orthogonal .092m/original-pixel similarity",
+          "nudge_m": 0,
+          "source_plan_original_px": [
+            1500,
+            363
+          ],
+          "target_plan_original_px": [
+            1600,
+            363
+          ],
+          "source_plan_file": "refs/official/shinsegae/floor_B1.png",
+          "local_st": [
+            -8.472,
+            9.088
+          ],
+          "look_at_local_st": [
+            -8.472,
+            -0.112
+          ],
+          "x": -130.3178,
+          "z": -1.298145,
+          "yawDeg": 111.33861
+        },
+        {
+          "r18_camera": "centralcity_b1_08",
+          "round": 18,
+          "active": true,
+          "photos": [
+            "refs/interior/ssg_food/07_hos_superstar_bar.jpg"
+          ],
+          "spot": "슈퍼스타 바 (원본 1725,378→1725,330, 변환 수정 후 재계산)",
+          "source_review": ".codex-jobs/evidence/review_ssg17.json → b1.new_cameras",
+          "source_review_index": 16,
+          "floor": "B1",
+          "y": -6,
+          "pitchDeg": 0,
+          "camera_qa": {
+            "supported_floor": true,
+            "headroom_clear": true,
+            "capsule_contact_m": 0,
+            "rendered": false,
+            "note": "Exact review plan position retained; minor fixture contact recorded without a coordinate nudge."
+          },
+          "plan_transform": "round18 orthogonal .092m/original-pixel similarity",
+          "nudge_m": 0,
+          "source_plan_original_px": [
+            1725,
+            378
+          ],
+          "target_plan_original_px": [
+            1725,
+            330
+          ],
+          "source_plan_file": "refs/official/shinsegae/floor_B1.png",
+          "local_st": [
+            -7.092,
+            -11.612
+          ],
+          "look_at_local_st": [
+            -11.508,
+            -11.612
+          ],
+          "x": -149.096583,
+          "z": 7.519546,
+          "yawDeg": 21.33861
+        },
+        {
+          "r18_camera": "centralcity_b1_09",
+          "round": 18,
+          "active": true,
+          "photos": [
+            "refs/interior/ssg_food/09_hos_katsu_tapas_bar.jpg"
+          ],
+          "spot": "키보 아츠아츠 KATSU & TAPAS (원본 1790,468→1790,410, 변환 수정 후 재계산)",
+          "source_review": ".codex-jobs/evidence/review_ssg17.json → b1.new_cameras",
+          "source_review_index": 17,
+          "floor": "B1",
+          "y": -6,
+          "pitchDeg": 0,
+          "camera_qa": {
+            "supported_floor": true,
+            "headroom_clear": true,
+            "capsule_contact_m": 0,
+            "rendered": false,
+            "note": "Exact review plan position retained; minor fixture contact recorded without a coordinate nudge."
+          },
+          "plan_transform": "round18 orthogonal .092m/original-pixel similarity",
+          "nudge_m": 0,
+          "source_plan_original_px": [
+            1790,
+            468
+          ],
+          "target_plan_original_px": [
+            1790,
+            410
+          ],
+          "source_plan_file": "refs/official/shinsegae/floor_B1.png",
+          "local_st": [
+            1.188,
+            -17.592
+          ],
+          "look_at_local_st": [
+            -4.148,
+            -17.592
+          ],
+          "x": -151.653714,
+          "z": 17.407917,
+          "yawDeg": 21.33861
+        },
+        {
+          "r18_camera": "centralcity_b1_10",
+          "round": 18,
+          "active": true,
+          "photos": [
+            "refs/interior/ssg_food/10_hos_hall_beyond_counters.jpg"
+          ],
+          "spot": "타치바나 쪽에서 본 하우스 홀 (원본 1700,470→1790,500, 변환 수정 후 재계산)",
+          "source_review": ".codex-jobs/evidence/review_ssg17.json → b1.new_cameras",
+          "source_review_index": 18,
+          "floor": "B1",
+          "y": -6,
+          "pitchDeg": 0,
+          "camera_qa": {
+            "supported_floor": true,
+            "headroom_clear": true,
+            "capsule_contact_m": 0,
+            "rendered": false,
+            "note": "Exact review plan position retained; minor fixture contact recorded without a coordinate nudge."
+          },
+          "plan_transform": "round18 orthogonal .092m/original-pixel similarity",
+          "nudge_m": 0,
+          "source_plan_original_px": [
+            1700,
+            470
+          ],
+          "target_plan_original_px": [
+            1790,
+            500
+          ],
+          "source_plan_file": "refs/official/shinsegae/floor_B1.png",
+          "local_st": [
+            1.372,
+            -9.312
+          ],
+          "look_at_local_st": [
+            4.132,
+            -17.592
+          ],
+          "x": -143.874385,
+          "z": 14.566385,
+          "yawDeg": 129.773559
+        },
+        {
+          "r18_camera": "centralcity_b1_11",
+          "round": 18,
+          "active": true,
+          "photos": [
+            "refs/interior/ssg_food/01_hos_atrium_wide.jpg",
+            "refs/interior/ssg_food/02_hos_atrium_escalator.jpg"
+          ],
+          "spot": "하우스 보이드 라운지 (원본 1790,605→1790,500, 변환·보이드 수정 후 재계산)",
+          "source_review": ".codex-jobs/evidence/review_ssg17.json → b1.new_cameras",
+          "source_review_index": 19,
+          "floor": "B1",
+          "y": -6,
+          "pitchDeg": 15,
+          "camera_qa": {
+            "supported_floor": true,
+            "headroom_clear": true,
+            "capsule_contact_m": 0,
+            "rendered": false,
+            "note": "Exact review plan position retained; minor fixture contact recorded without a coordinate nudge."
+          },
+          "plan_transform": "round18 orthogonal .092m/original-pixel similarity",
+          "nudge_m": 0,
+          "source_plan_original_px": [
+            1790,
+            605
+          ],
+          "target_plan_original_px": [
+            1790,
+            500
+          ],
+          "source_plan_file": "refs/official/shinsegae/floor_B1.png",
+          "source_location_note": "지정 원본 좌표는 공식 김수사 셀 내부(표시x1631.585,y551.4575). 좌표를 보존했으며 라운지 외부 시점으로 몰래 옮기지 않음. U카운터 배치 후 재검토 필요.",
+          "local_st": [
+            13.792,
+            -17.592
+          ],
+          "look_at_local_st": [
+            4.132,
+            -17.592
+          ],
+          "x": -147.067383,
+          "z": 29.147866,
+          "yawDeg": 21.33861
+        },
+        {
+          "r18_camera": "centralcity_b1_12",
+          "round": 18,
+          "active": true,
+          "photos": [
+            "refs/interior/ssg_food/03_hos_central_bar_floor.jpg"
+          ],
+          "spot": "김수사 U자 카운터 앞 (원본 1798,565→1798,620, 변환 수정 후 재계산)",
+          "source_review": ".codex-jobs/evidence/review_ssg17.json → b1.new_cameras",
+          "source_review_index": 20,
+          "floor": "B1",
+          "y": -6,
+          "pitchDeg": -10,
+          "camera_qa": {
+            "supported_floor": true,
+            "headroom_clear": true,
+            "capsule_contact_m": 0,
+            "rendered": false,
+            "note": "Exact review plan position retained; minor fixture contact recorded without a coordinate nudge."
+          },
+          "plan_transform": "round18 orthogonal .092m/original-pixel similarity",
+          "nudge_m": 0,
+          "source_plan_original_px": [
+            1798,
+            565
+          ],
+          "target_plan_original_px": [
+            1798,
+            620
+          ],
+          "source_plan_file": "refs/official/shinsegae/floor_B1.png",
+          "local_st": [
+            10.112,
+            -18.328
+          ],
+          "look_at_local_st": [
+            15.172,
+            -18.328
+          ],
+          "x": -149.092002,
+          "z": 25.987958,
+          "yawDeg": 201.33861
+        },
+        {
+          "r18_camera": "centralcity_b1_13",
+          "round": 18,
+          "active": true,
+          "photos": [
+            "refs/walk/s5_ssg_b1/8xxIIvP9uAY_10.jpg"
+          ],
+          "spot": "1F 하우스 코트에서 B1 보이드 내려다봄 (B1 보이드 개통 후 유효)",
+          "source_review": ".codex-jobs/evidence/review_ssg17.json → b1.new_cameras",
+          "source_review_index": 21,
+          "floor": "1F",
+          "y": 0,
+          "pitchDeg": -60,
+          "camera_qa": {
+            "supported_floor": true,
+            "headroom_clear": true,
+            "capsule_contact_m": 0,
+            "rendered": false,
+            "note": "Exact review plan position retained; minor fixture contact recorded without a coordinate nudge."
+          },
+          "plan_transform": "round18 orthogonal .092m/original-pixel similarity",
+          "nudge_m": 0,
+          "source_plan_original_px": null,
+          "target_plan_original_px": [
+            1791,
+            502
+          ],
+          "source_location_note": "옛s107 카메라 대신 새 B1보이드 남측1F 착지데크(s12,t−17.684)에서 중심을 내려다봄.",
+          "local_st": [
+            12,
+            -17.684
+          ],
+          "look_at_local_st": [
+            4.316,
+            -17.684
+          ],
+          "x": -147.805147,
+          "z": 27.512191,
+          "yawDeg": 21.33861
+        }
+      ],
+      "superseded_trace_indices": [
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        117,
+        118,
+        119,
+        120,
+        121,
+        122,
+        123,
+        124,
+        125,
+        126,
+        127,
+        128,
+        129,
+        130,
+        131,
+        132,
+        133,
+        134,
+        135,
+        136,
+        137,
+        138,
+        139,
+        140,
+        141,
+        142,
+        143,
+        144,
+        145,
+        146,
+        147,
+        148,
+        149,
+        150,
+        151,
+        152,
+        153,
+        154,
+        155,
+        156,
+        157,
+        158,
+        159,
+        160,
+        161,
+        162,
+        163,
+        164,
+        165,
+        166,
+        167,
+        168,
+        169,
+        170,
+        171,
+        172,
+        173,
+        174,
+        175,
+        176,
+        177,
+        178,
+        179,
+        180,
+        181,
+        182,
+        183,
+        184,
+        185,
+        186,
+        187,
+        188,
+        189,
+        190,
+        191,
+        192,
+        193,
+        194,
+        195,
+        206
+      ],
+      "camera_note": "13 B1 cameras recomputed from spot original pixels; one1F lookdown uses new landing. Old moved traces retained active=false. No secret nudges.",
+      "validation": {
+        "status": "Scoped implementation complete; required smoke OK; full-world walk fails on2 out-of-scope blockers. Render unverified.",
+        "smoke": {
+          "command": "node tests/smoke.mjs centralcity shinsegae jwmarriott gotomall",
+          "result": "OK (final run);3 warnings from concurrent shinsegae basement elevators at1M, no centralcity warning/failure."
+        },
+        "walk": {
+          "command": "node tests/walk.mjs",
+          "result": "705 ok, 2 blocked",
+          "required_routes": [
+            "1F 동선",
+            "사용자 루트"
+          ],
+          "exit_code": 1,
+          "zero_blocked_requirement_met": false,
+          "blocked": [
+            {
+              "owner": "shinsegae",
+              "type": "elevator",
+              "name": "신세계 고객 엘리베이터 (연결부 3호기)",
+              "floor": "2F",
+              "reason": "no path (46 cells searched)"
+            },
+            {
+              "owner": "outside centralcity; lebon/gotomall/onebailey route",
+              "type": "route",
+              "name": "사용자 루트5 [3→4]",
+              "from_xz": [
+                -235.8,
+                8.7
+              ],
+              "to_xz": [
+                -332,
+                -66
+              ],
+              "reason": "no path (747204 cells searched)"
+            }
+          ],
+          "scope_note": "Do not edit other modules, shared junctions or tests. Both remaining blockers are outside the owned Sweet Park/HoS/CC hall geometry.",
+          "preserved_routes": "Both1F 동선 routes and every other 사용자 루트 segment passed; 사용자 루트5[3→4] remains blocked."
+        },
+        "visual_render": "No updated render: tests/shot.mjs not run per user instruction; preview server bind127.0.0.1:8765 failed EPERM. No appearance-validation claim.",
+        "initial_smoke": "OK before final elevator destination cleanup; final required smoke remains to be recorded by root.",
+        "physics_probe": {
+          "detail_errors": 0,
+          "court_center_support_y_at_1F_and_1M": -6,
+          "court_center_ceiling_y": 7,
+          "escalator_centerline_capsule_samples": 164,
+          "escalator_capsule_failures": 0,
+          "connector_1F_clear_lines_s": [
+            -4,
+            -3.8,
+            -3.6
+          ],
+          "connector_samples_per_line": 41,
+          "exact_camera_minor_contact_m": {
+            "centralcity_b1_02": 0.078,
+            "centralcity_b1_03": 0.078,
+            "centralcity_b1_04": 0.042
+          },
+          "camera_note": "All14 source cameras retain exact recomputed positions, have supported floors/headroom. Minor contacts flagged, not silently nudged."
+        },
+        "local_walk": {
+          "command": "node tests/walk.mjs centralcity gotomall",
+          "result": "82 ok, 0 blocked"
+        },
+        "centralcity_source_sha256": "a07b0fc92f3733ea8c5b6cfb8faa69d2cc5e581bb1ce47c7cd50cf2490208d95"
+      },
+      "skipped": [
+        {
+          "id": "b1.D1 main market/deli half",
+          "reason": "Concurrent shinsegae ownership."
+        },
+        {
+          "id": "b1.T2 unlocated digital stand/character/orange-box event island",
+          "reason": "Location unverified; do not invent temporary placement."
+        },
+        {
+          "id": "b1.D3 partial fixtures",
+          "reason": "Three cabinet footprints entirely collide with preserved cores/J4 approach: 크림한상/1994양과점[1095,551,1120,578], 마망갸또[1095,610,1120,636], 만나당[1122,610,1147,636]. Their official cells/signs remain; 50 of53 Sweet fixtures (excluding separate Bath kiosk) have a full or in-cell reduced cabinet."
+        },
+        {
+          "id": "b1.L3",
+          "reason": "Main-store subway escalator/locker belongs to shinsegae; outside assigned ownership."
+        }
+      ],
+      "guesses": [
+        "Round18: 공식 B1 비율과 고정 E1/E2에 맞추면 HOS는t<0 서측으로 나간다. 상층을 같은 보이드 위에 투영하고 겹치는 앞마당 물체만 억제하는 것은 잠정 모델 등록이지 실제 터미널 이전 주장이 아니다.",
+        "Round18: hos_1F는 에스컬레이터 간격으로.062063492m/원본px를 추정;1M은 중앙 아이콘 기준 독립 축척.039m/원본px 가정. 전체 외곽·점포 깊이는 실측 미확인.",
+        "Round18: 사진02 B1 표기와 사진03 김수사 앞 소파로 라운지 촬영층을B1로 정정. 가구·인물·상품 수와 조명은 사진 비례 근사; 새 렌더 검증 대기.",
+        "Fixture dimensions, vault spacing, furniture/person/product counts and material colors are photo-based simplifications; no rendered appearance validation.",
+        "Review camera original(1790,605) falls inside the source 김수사 cell and is retained explicitly for review.",
+        "Full atrium ceiling height is13m because fixed B1/1F/1M levels and3.6m upper enclosure are retained; photograph-derived8–9m estimate was not used to move agreed floor heights."
+      ],
+      "upper_registration": {
+        "H1": {
+          "source": "refs/official/shinsegae/hos_1F.jpg",
+          "scale_m_per_original_px": 0.062063492063492064,
+          "center_original_px": [
+            1482.5,
+            680.5
+          ],
+          "center_local_st": [
+            4.316,
+            -17.684
+          ],
+          "outline_original_px": [
+            1149,
+            250,
+            1759,
+            1338
+          ]
+        },
+        "HM": {
+          "source": "refs/official/shinsegae/hos_1M.jpg",
+          "scale_m_per_original_px": 0.039,
+          "center_original_px": [
+            1204.5,
+            695.5
+          ],
+          "center_local_st": [
+            4.316,
+            -17.684
+          ],
+          "outline_original_px": [
+            683,
+            238,
+            1730,
+            1348
+          ],
+          "max_east_t_m": 2.6545,
+          "scale_reason": "Independent schematic raster scale inferred to preserve tenant topology while keeping projected deck west of confirmed terminal hall. Not a surveyed metric fit."
+        },
+        "core_note": "Upper and lower floor holes share B1 court bounds. Official1F rail lengths are schematic; the upper flight is shortened uniformly along the same common10.304m opening."
+      },
+      "connections": {
+        "J4_B1_reserved_local_st": [
+          19.7,
+          32,
+          22.3,
+          43.5
+        ],
+        "cabinet_note": "Narrow connector reservation preserves cabinet pieces remaining inside source cells.",
+        "sweet_elevators": "Remote menus limited to supported B1/1F destinations; unsupported upper-floor destinations removed.",
+        "hos_elevator": {
+          "source_display_px": [
+            1544,
+            459
+          ],
+          "local_st": [
+            4.460031,
+            -8.751824
+          ],
+          "floors": [
+            "B1",
+            "1F",
+            "1M"
+          ],
+          "registration": "True vertical same x/z lift; no remote offset."
+        },
+        "J3_B1_reserved_local_st": [
+          -26,
+          10,
+          -6.5,
+          15.5
+        ]
+      },
+      "implementation_followups": {
+        "removed_displaced_descent": "Removed old s72.65..77.55/t22.4..34.5 HoS B1 descent, its well, finish and misleading labels. Actual paired flights are at the registered court.",
+        "roof": "1M roof y7.2, underside7.0. Separate y3.6 roofs cover the parts of1F H1 extending north/south/east beyond the smaller HM deck. B1−6 to1M floor3.6 is9.6m; full atrium to roof underside is13m, an unmeasured height assumption.",
+        "upper_concave_door_anchors": {
+          "와인셀러": {
+            "guide": "H1",
+            "original_px": [
+              1683,
+              702
+            ]
+          },
+          "분더샵 메자닌": {
+            "guide": "HM",
+            "original_px": [
+              1385.225,
+              700
+            ]
+          },
+          "트웰브 강남": {
+            "guide": "HM",
+            "original_px": [
+              1134,
+              894
+            ]
+          },
+          "PSR": {
+            "guide": "HM",
+            "original_px": [
+              1500,
+              1008
+            ]
+          }
+        },
+        "spawns_local_sty": {
+          "스위트 파크": [
+            7,
+            25,
+            -6
+          ],
+          "하우스 B1": [
+            10.5,
+            -17.684,
+            -6
+          ],
+          "하우스 1F": [
+            11.4,
+            -17.684,
+            0
+          ],
+          "하우스 1M": [
+            10.8,
+            -17.684,
+            3.6
+          ]
+        },
+        "fixed_connection_reservations": {
+          "J3_B1": [
+            -26,
+            10,
+            -6.5,
+            15.5
+          ],
+          "J4_B1": [
+            19.7,
+            32,
+            22.3,
+            43.5
+          ]
+        },
+        "sweet_west_lift": "Retains official display1054,523. Its door/enclosure faces local+s into the plan-south white aisle because both retained shared walls cross the old−t exit. Real-physics paths to J4 and Sweet main aisle pass.",
+        "additional_independent_checks": {
+          "west_lift_to_J4": "Centralcity-only real physics path passes, length16.25m; combined-world J4 and Sweet aisle paths pass.",
+          "upper_door_anchors": "Four concave cells use source edge anchors for wall opening, signage and furnishing exclusion.",
+          "local_visual_limit": "No updated WebGL image. Both screenshot runner limitation and EPERM preview-server bind are recorded; materials/appearance need frame review."
+        }
+      }
     }
   },
   "source_hierarchy": {
