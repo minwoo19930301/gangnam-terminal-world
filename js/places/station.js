@@ -68,14 +68,14 @@ export function build(K) {
     ['B4','9호선 분기홀 · 승강장',[-190,-164,61,-39]],
     ['B1','9호선 긴 에스컬레이터',[-1,-137,40,-124]],
     ['B1','3호선 개찰구 대합실',[-105,-84,-79,-42]],
-    ['B1','경부선 서문 · 3호선 엔터식스 대합실',[7,13,38,40]],
+    ['B1','경부선 서문 · 3호선 엔터식스 대합실',[3,13,39,45.5]],
   ].map(([floor,name,bounds])=>({floor,name,rect:bounds,y0:K.LEVELS[floor],y1:K.LEVELS[floor]+4.95,jobs:[]}));
   detailRooms[8].y0=B4; // visible from either landing of the 15 m descent
   let furnishing = false;
   function later(x,y,z,fn) {
     if(furnishing||y>=-.1)return false;
     const floor=y>=B1-.1?'B1':y>=B2-.1?'B2':y>=B3-.1?'B3':'B4';
-    const i=floor==='B1'?(x>7&&x<38&&z>13&&z<40?10:x<-79&&z>-84&&z<-42?9:z>0?0:x<-60?1:2):floor==='B2'?(z>100?5:x<-70&&z<-15?3:4):floor==='B3'?6:7;
+    const i=floor==='B1'?(x>3&&x<39&&z>13&&z<45.5?10:x<-79&&z>-84&&z<-42?9:z>0?0:x<-60?1:2):floor==='B2'?(z>100?5:x<-70&&z<-15?3:4):floor==='B3'?6:7;
     detailRooms[i].jobs.push(fn);return true;
   }
   const person=(x,y,z,o={})=>{if(!later(x,y,z,()=>person(x,y,z,o)))K.person(x,y,z,{h:1.68,...o});};
@@ -1692,10 +1692,10 @@ export function build(K) {
   // Private photos remain references only: all surface art is procedural.
   for(const [key,heavy,scale] of [['station-enter6-floor',false,[.6,1.2]],['station-enter6-arabescato',true,[1.2,2.4]]])K.texture(key,512,512,(g,w,h)=>{
     g.fillStyle='#ebe9e5';g.fillRect(0,0,w,h);const rnd=K.rand(heavy?2077:2075);
-    for(let i=0;i<(heavy?32:22);i++){
+    for(let i=0;i<(heavy?32:28);i++){
       let x=rnd()*w,z=rnd()*h;const pts=[[x,z]];
       for(let j=0;j<9;j++){x+=(rnd()-.28)*48;z+=(rnd()-.5)*55;pts.push([x,z]);}
-      for(const [lw,col] of (heavy?[[9,'#8b8b8780'],[3,'#4a4d4ac0'],[.8,'#353934']]:[[5,'#c5c4bf80'],[1.6,'#9b9b98'],[.6,'#808580']])){
+      for(const [lw,col] of (heavy?[[9,'#8b8b8780'],[3,'#4a4d4ac0'],[.8,'#353934']]:[[7,'#bdbcb780'],[2.1,'#959592'],[.8,'#737873']])){
         g.strokeStyle=col;g.lineWidth=lw;g.beginPath();pts.forEach(([xx,zz],j)=>j?g.lineTo(xx,zz):g.moveTo(xx,zz));g.stroke();
       }
       for(let j=2;j<8;j+=2){const [xx,zz]=pts[j];g.strokeStyle=heavy?'#6e726daa':'#9b9b9888';g.lineWidth=.7;g.beginPath();g.moveTo(xx,zz);g.lineTo(xx-18,zz+14);g.lineTo(xx-43,zz+19);g.stroke();}
@@ -1711,53 +1711,72 @@ export function build(K) {
     for(let x=10;x<w;x+=24){g.fillStyle='#a88631';g.fillRect(x,0,5,h);g.fillStyle='#ebcd78';g.fillRect(x+5,0,5,h);}
   },[.3,.3]);
   const hallFloor={tex:'station-enter6-floor',gloss:.5},shopMarble={tex:'station-enter6-arabescato',gloss:.5};
-  // Minimum observed envelope is u=-16..0,v=78..97. The extra six metres
-  // west keep the photographed sightlines inside a room; onward alignment is
-  // unverified and is not joined to the old, schematic fare-gate hall.
-  const entryPoly=gbPoly(-22,78,0,97);
-  const coffer=gbP(-12,91),cofferUV=[[-3,-1.2],[-2.2,-2],[2.2,-2],[3,-1.2],[3,1.2],[2.2,2],[-2.2,2],[-3,1.2]];
-  const cofferPoly=cofferUV.map(([u,v])=>{const p=gbP(-12+u,91+v);return[p.x,p.z];});
-  K.slab(entryPoly,B1,{mat:hallFloor});
+  // Round 20 polish, solved from #74–#77 together (floor contacts, sign and
+  // pillar bearings): the terminal door opens onto a 3.3 m granite vestibule
+  // (u 0..-3.3, v 82..90) with folded panelled leaves and a yellow line where
+  // the marble starts. The hall is 22.5 m wide (v 78..100.5): ENTER6 along the
+  // north side, the hexagonal pillars on its centre line v≈90.3, Case holic and
+  // ARTBOX facing north at v 95.5, and two crossing tactile lines. #74/#75 see
+  // well past u=-22, so the room runs to u=-28; the onward link stays closed.
+  const HW=-28,VE=-3.3,VS=100.5;
+  const hallPoly=gbPoly(HW,78,VE,VS),vestPoly=gbPoly(VE,82,0,90);
+  const entryPoly=[[HW,78],[VE,78],[VE,82],[0,82],[0,90],[VE,90],[VE,VS],[HW,VS]].map(([u,v])=>{const p=gbP(u,v);return[p.x,p.z];});
+  const CU=-16.45,CV=90.4; // coffer between pillars B and C (#75, #77)
+  const coffer=gbP(CU,CV),cofferUV=[[-2.6,-1.2],[-1.9,-2],[1.9,-2],[2.6,-1.2],[2.6,1.2],[1.9,2],[-1.9,2],[-2.6,1.2]];
+  const cofferPoly=cofferUV.map(([u,v])=>{const p=gbP(CU+u,CV+v);return[p.x,p.z];});
+  K.slab(hallPoly,B1,{mat:hallFloor});
+  K.slab(vestPoly,B1,{mat:'station-granite'});
   K.slab(gbPoly(0,82,.35,90),B1,{mat:'station-granite',thick:.12});
-  K.slab(entryPoly,B1+3.04,{under:0xeeeDE7,mat:'concrete',holes:[cofferPoly],thick:.08,walk:false});
+  K.slab(hallPoly,B1+3.04,{under:0xeeeDE7,mat:'concrete',holes:[cofferPoly],thick:.08,walk:false});
   K.slab(cofferPoly,B1+3.37,{under:paint(0xf1ecd5),mat:'concrete',thick:.08,walk:false});
-  for(const e of [[-22,78,0,78],[-22,97,0,97],[-22,78,-22,97],[0,78,0,82],[0,90,0,97]])gbWall(...e,B1,B1+2.96,{mat:0xe8e5de,thick:.16});
+  K.slab(vestPoly,B1+3.04,{under:0xeeeDE7,mat:'concrete',thick:.08,walk:false});
+  for(const e of [[HW,78,VE,78],[HW,VS,VE,VS],[HW,78,HW,VS],[VE,78,VE,82],[VE,90,VE,VS]])gbWall(...e,B1,B1+2.96,{mat:0xe8e5de,thick:.16});
+  // #78: white plaster reveals with a black skirting either side of the vestibule.
+  for(const v of [82,90]){
+    gbWall(VE,v,0,v,B1,B1+2.96,{mat:0xeceae4,thick:.16});
+    gbBox(VE/2,v<86?v+.095:v-.095,B1,-VE,.12,.025,0x1d1f1f);
+  }
   // Both sides of the threshold remain eight metres wide. The terminal owns
   // its own wall opening; the shared-junction operator can use these endpoints.
   // Proposed registry id J_GB_ST_WEST: station W(-2,86), terminal W(2,86),
   // width 8, y=B1. _junctions.js is owned by the concurrent junction job.
   K.zone({name:'고속터미널역 3호선 대합실',floor:'B1',sub:'엔터식스 · ARTBOX · 경부선 지하 연결문',poly:entryPoly,y0:B1,y1:B1+3.04,priority:8});
   K.spawn({name:'B1 · 경부선 서문과 엔터식스',x:30.2,y:B1,z:22.7,yaw:125*Math.PI/180});
-  // First pillar is offset south from the rough finding point to clear the
-  // approved walking poses and match its left-of-view position in #74/#75.
-  const hallPillars=[[-6.8,88.5],[-12,89],[-18,89]];
+  // Pillar row on the hall's centre line, about 6.3 m apart; the fourth stands
+  // a little north, where #74, #75 and #76 all see a far pillar.
+  const hallPillars=[[-7,90.2],[-13.3,90.4],[-19.6,90.4],[-25.5,88]];
   for(const [u,v] of hallPillars){
     const p=gbP(u,v);K.cyl({...p,y:B1,r:.52,h:2.96,mat:{tex:'station-brushed',gloss:.5},seg:6});
     for(const y of [B1,B1+2.71])K.cyl({...p,y,r:.55,h:.25,mat:'station-brushed',seg:6,solid:false});
   }
-  // Relocate the old detailed boutique with a rigid frame. Its 12.91 m span,
-  // six racks, 72 garments, hangers, mannequins, counter and lights survive.
-  const boutiqueWidth=Math.hypot(12,12*.397969),boutiqueFace=gbRot;
-  const shopP=(u,d)=>gbP(-10-boutiqueWidth/2+u,84-d);
+  // The detailed boutique keeps its racks, garments, mannequins, counter and
+  // lights, rescaled to the photographed frontage: from the vestibule's end to
+  // the garland arch (#76: west pilaster at u≈-14).
+  const boutiqueWest=-14.3,boutiqueWidth=10.3,bs=boutiqueWidth/12.91,boutiqueFace=gbRot;
+  const shopP=(u,d)=>gbP(boutiqueWest+u,84-d);
   const shopBox=(u,d,y,w,h,depth,mat,solid=false)=>box({...shopP(u,d),y,w,h,d:depth,rotY:boutiqueFace,mat,solid});
   for(const u of [0,boutiqueWidth]){const a=shopP(u,0),b=shopP(u,2.75);K.wall(a.x,a.z,b.x,b.z,B1,B1+2.8,{mat:shopMarble,thick:.13});}
   {const a=shopP(0,2.75),b=shopP(boutiqueWidth,2.75);K.wall(a.x,a.z,b.x,b.z,B1,B1+2.8,{mat:shopMarble,thick:.12});}
-  for(const [a,b] of [[0,4],[8.8,boutiqueWidth]]){const p=shopP(a,0),q=shopP(b,0);K.wall(p.x,p.z,q.x,q.z,B1+1.95,B1+2.45,{mat:'glass',thick:.025});}
+  gbWall(boutiqueWest+boutiqueWidth,81.25,VE,81.25,B1,B1+2.96,{mat:0xe8e5de,thick:.12}); // close the slot behind the boutique
+  for(const [a,b] of [[0,4*bs],[8.8*bs,boutiqueWidth]]){const p=shopP(a,0),q=shopP(b,0);K.wall(p.x,p.z,q.x,q.z,B1+1.95,B1+2.45,{mat:'glass',thick:.025});}
   // The former standalone planted frontage is also moved as a complete bay.
   const plantA=gbP(-16.8,83),plantB=gbP(-21.5,83),plantFrame=frame([[plantA.x,plantA.z],[plantB.x,plantB.z]]);
   storefront(plantFrame,2.35,0,B1,'ENTER6','plant',true);
-  // South-side stores face north: Case holic first, ARTBOX further west.
-  // Dimensions behind the photographed fronts are inferred shallow interiors.
-  for(const [u0,u1,name] of [[-9.5,-3.8,'Case holic'],[-20.8,-10,'ARTBOX']]){
-    for(const u of [u0,u1])gbBox(u,94.5,B1,.35,2.96,5,shopMarble,true);
-    gbBox((u0+u1)/2,96.7,B1,u1-u0,2.9,.15,0xeee9df,true);
-    gbBox((u0+u1)/2,92.1,B1+2.35,u1-u0,.55,.25,name==='ARTBOX'?'station-enter6-whitebrick':shopMarble);
+  // South-side stores face north at v 95.5 (#74/#75 floor contacts): Case
+  // holic first, ARTBOX west of it. Depths behind the fronts are inferred.
+  const SV=95.5,southShops=[[-12.6,-5,'Case holic'],[-23.5,-12.95,'ARTBOX']];
+  for(const [u0,u1,name] of southShops){
+    for(const u of [u0,u1])gbBox(u,SV+2.4,B1,.35,2.96,5,shopMarble,true);
+    gbBox((u0+u1)/2,SV+4.6,B1,u1-u0,2.9,.15,paint(0xf1ede4),true); // brightly lit interiors (#74/#75/#77)
+    gbBox((u0+u1)/2,SV,B1+2.35,u1-u0,.55,.25,name==='ARTBOX'?'station-enter6-whitebrick':shopMarble);
   }
+  // Closed returns either side of the two shops.
+  gbBox((-4.825+VE)/2,SV+2.5,B1,VE+4.825,2.96,5,shopMarble,true);
+  gbBox((HW-23.675)/2,SV+2.5,B1,-23.675-HW,2.96,5,0xe8e5de,true);
   detailRooms[10].jobs.push(()=>{
-    // Preserve the former boutique furniture in its new coordinate frame.
-    const front=shopP(boutiqueWidth/2,-.08);
-    sign('ENTER6',front.x,B1+2.59,front.z,11.7,.28,boutiqueFace,'#edece6','#736957');
-    for(const d of [.8,2])for(const u of [2,6.4,10.8]){
+    // Preserve the former boutique furniture in its new coordinate frame. Its
+    // old 'ENTER6' fascia lettering is dropped: #74/#76 show a plain marble band.
+    for(const d of [.8,2])for(const u of [2*bs,6.4*bs,10.8*bs]){
       for(const du of [-.8,.8]){const q=shopP(u+du,d);beam([q.x,B1+.15,q.z],[q.x,B1+1.62,q.z],.022,'metal',6);}
       const a=shopP(u-.86,d),b=shopP(u+.86,d);beam([a.x,B1+1.62,a.z],[b.x,B1+1.62,b.z],.025,'metal',6);
       for(let i=0;i<12;i++){
@@ -1767,20 +1786,21 @@ export function build(K) {
         shopBox(t,d,B1+.58,.13,.88+(i%3)*.04,.38,[0xe2d6c1,0x383b39,0xb3aaa0,0xc4b190,0x77766e][i%5]);
       }
     }
-    for(const [u,col] of [[1,0xd5ccb9],[11.8,0x353a37]]){
+    for(const [u,col] of [[1*bs,0xd5ccb9],[11.8*bs,0x353a37]]){
       const p=shopP(u,.45);K.cyl({...p,y:B1+.04,r:.24,h:.04,mat:'metal',seg:16,solid:false});
       K.person(p.x,B1+.08,p.z,{shirt:col,pants:0xc9b89d,h:1.66,rotY:boutiqueFace});
     }
-    shopBox(6.4,2.25,B1,1.3,.86,.55,0xe2dccf);
-    {const p=shopP(6.4,2.7);person(p.x,B1,p.z,{shirt:0x373b39,pants:0x343435,rotY:boutiqueFace});}
-    for(const u of [1.8,4.8,7.8,10.8])shopBox(u,1.4,B1+2.72,.4,.04,1.8,paint(0xf9f4e8));
+    shopBox(6.4*bs,2.25,B1,1.3,.86,.55,0xe2dccf);
+    {const p=shopP(6.4*bs,2.7);person(p.x,B1,p.z,{shirt:0x373b39,pants:0x343435,rotY:boutiqueFace});}
+    for(const u of [1.8,4.8,7.8,10.8])shopBox(u*bs,1.4,B1+2.72,.4,.04,1.8,paint(0xf9f4e8));
 
     // #76: filled wheeled sale bins, shoe tables and four-tier shoe shelving.
     for(const [u,v] of [[-5.2,84.5],[-7.3,84.5],[-11.1,83.8]]){
-      gbBox(u,v,B1+.1,1.8,.78,.9,0x37362b);
+      gbBox(u,v,B1+.1,1.8,.78,.9,0x1f201d);
+      gbBox(u,v,B1+.86,1.84,.04,.94,0xb9b8b0);
       for(const du of [-.76,.76])for(const dv of [-.33,.33]){const p=gbP(u+du,v+dv);K.cyl({...p,y:B1+.02,r:.07,h:.09,mat:0x282d2b,seg:8,solid:false});}
-      for(let i=0;i<15;i++)gbBox(u-.7+(i%5)*.32,v-.28+Math.floor(i/5)*.23,B1+.84+(i%3)*.025,.37,.1,.32,[0x515c48,0x797a69,0xc6b59c,0x393c37,0xd2b48f][i%5]);
-      gbSign(['ENTER-6','FASHION MALL'],u,v+.46,B1+.45,1.2,.34,0,'#37362b','#ead9a0');
+      for(let i=0;i<15;i++)gbBox(u-.7+(i%5)*.32,v-.28+Math.floor(i/5)*.23,B1+.9+(i%3)*.025,.37,.1,.32,[0x515c48,0x797a69,0xc6b59c,0x393c37,0xd2b48f][i%5]);
+      gbSign(['Party ENTER-6','FASHION MALL'],u,v+.46,B1+.45,1.2,.34,0,'#1f201d','#ead9a0');
     }
     for(const [u,v,rows] of [[-4.4,85.7,1],[-9.6,83.9,4]]){
       for(let r=0;r<rows;r++){
@@ -1792,16 +1812,49 @@ export function build(K) {
       }
       for(const du of [-.77,.77])gbBox(u+du,v,B1,.025,.4+(rows-1)*.38,.66,'metal');
     }
-    for(const u of [-6.1,-12.8])gbSign(['균일가','10,000원'],u,83.95,B1+2.05,2.1,.52,0,'#233d80','#fff0a5');
-    gbSign('SECOND STORAGE',-8.1,83.95,B1+2.05,1.75,.35,0,'#e3eae2','#303d43');
-    // Marble transom and gilt mullions stay above the open clothing frontage.
-    gbBox(-10,84,B1+2.4,boutiqueWidth,.27,.22,shopMarble);
-    for(const u of [-16.45,-12.6,-8.8,-3.55])gbBox(u,84,B1+2.1,.035,.84,.05,'station-brushed');
-    // Garlands grow out from the retained planted jamb, with warm fairy lights.
-    for(const u0 of [-16.7,-10.4])for(let i=0;i<110;i++){
+    // #76: banners hang just inside the open front; the west one pairs the
+    // blue price panel with a white SECOND STORAGE panel.
+    for(const u of [-5.6,-8.4,-12.15])gbSign(['균일가','10,000원'],u,83.55,B1+2.05,1,.48,0,'#233d80','#fff0a5');
+    gbSign(['SECOND','STORAGE'],-11.15,83.55,B1+2.05,.9,.48,0,'#eef0ec','#303d43');
+    // Marble transom on a stainless lintel, with the glass clerestory above it
+    // up to the ceiling (#76), over the open clothing frontage.
+    gbBox(boutiqueWest+boutiqueWidth/2,84,B1+2.4,boutiqueWidth,.27,.22,shopMarble);
+    gbBox(boutiqueWest+boutiqueWidth/2,84.02,B1+2.34,boutiqueWidth,.06,.25,'station-brushed');
+    gbBox(boutiqueWest+boutiqueWidth/2,84,B1+2.67,boutiqueWidth,.35,.03,'glass');
+    for(let u=boutiqueWest;u<=boutiqueWest+boutiqueWidth+.01;u+=boutiqueWidth/6)gbBox(u,84,B1+2.67,.045,.35,.06,'station-brushed');
+    for(const u of [-14.3,-10.9,-7.4,-4])gbBox(u,84,B1+2.1,.035,.84,.05,'station-brushed');
+    // Strings of garland with warm fairy lights along the transom.
+    for(const u0 of [-13.9,-8.2])for(let i=0;i<110;i++){
       const t=i/109,u=u0+t*3.8,v=83.7+.15*Math.sin(i*2.4),yy=B1+2.75-(i%7)*.055;
       gbBox(u,v,yy,.09,.16,.11,[0x374b2d,0x657046,0x8a8b5b][i%3]);
       if(i%3===0)gbBox(u,v+.07,yy-.035,.025,.025,.025,paint(0xffe5a0));
+    }
+    // #76: a lush fern-and-lights arch at the boutique's west pilaster frames
+    // the walk on towards the planted frontage; a second garland hangs beyond.
+    {
+      const rnd=K.rand(7613),leaf=[0x30452d,0x4c6236,0x65724a,0x7d8a4f];
+      for(const v of [84.35,87.05])for(let j=0;j<52;j++){
+        const u=-14.65+(rnd()-.5)*.7,vv=v+(rnd()-.5)*.7,yy=B1+.05+(j>>1)*.11;
+        gbBox(u,vv,yy,.24+rnd()*.22,.2+rnd()*.14,.24+rnd()*.22,leaf[j%4]);
+        gbBox(u+(rnd()-.5)*.45,vv+(rnd()-.5)*.45,yy+.1,.03,.03,.03,paint(0xffe1a0));
+      }
+      for(let i=0;i<90;i++){
+        const t=i/89,v=84.35+t*2.7,yy=B1+2.45+.42*Math.sin(Math.PI*t)-(i%5)*.05,u=-14.65+(rnd()-.5)*.8;
+        gbBox(u,v,yy,.22,.22+rnd()*.25,.22,leaf[i%4]);
+        if(i%2===0)gbBox(u,v,yy-.06,.03,.03,.03,paint(0xffe1a0));
+      }
+      // Hanging fronds under the arch head.
+      for(let i=0;i<24;i++){const v=84.6+i*.1,u=-14.65+(rnd()-.5)*.7;gbBox(u,v,B1+2.05+rnd()*.25,.05,.45,.16,leaf[(i+1)%4]);}
+      for(let i=0;i<60;i++){
+        const t=i/59,v=84.3+t*2.3,yy=B1+2.6+.18*Math.sin(Math.PI*t*2)-(i%4)*.05;
+        gbBox(-18.7,v,yy,.2,.2,.2,leaf[i%4]);
+        if(i%3===0)gbBox(-18.62,v,yy-.05,.03,.03,.03,paint(0xffe1a0));
+      }
+      // White '2+1' sandwich board under the arch.
+      const sb=gbP(-15.6,85.6);
+      gbBox(-15.6,85.6,B1,.04,1.05,.55,0x2a2c2b,false,0);
+      gbSign(['2+1','1개 10,000원','3개 20,000원'],-15.57,85.6,B1+1.15,.55,.75,Math.PI/2,'#f4f2ec','#b03a2e');
+      K.cyl({x:sb.x,z:sb.z,y:B1,r:.18,h:.03,mat:0x2a2c2b,seg:12,solid:false});
     }
     const tree=gbP(-16.8,84.15);
     K.cyl({...tree,y:B1,r:.24,h:.3,mat:0x574a32,seg:12,solid:false});
@@ -1811,46 +1864,50 @@ export function build(K) {
       if((i+j)%4===0)gbBox(u,v,B1+.42+j*.23,.035,.04,.035,paint(0xffdea2));
     }
     // Keep the old small display/counter's detail, now within Case holic.
-    for(const [u0,u1,name] of [[-9.5,-3.8,'Case holic'],[-20.8,-10,'ARTBOX']]){
+    for(const [u0,u1,name] of southShops){
       const mid=(u0+u1)/2,art=name==='ARTBOX';
-      gbSign(name,mid,91.93,B1+2.62,art?6:4.8,.35,Math.PI,art?'#e4e2db':'#707773',art?'#ff3b30':'#ffffff');
+      // #75: the Case holic lettering sits towards the shop's west end.
+      gbSign(name,art?mid:-10.6,SV-.17,B1+2.62,art?6:3.6,.35,Math.PI,art?'#e4e2db':'#707773',art?'#ff3b30':'#ffffff');
       for(let u=u0+.6;u<u1-.3;u+=1.05){
-        gbBox(u,96.2,B1+.1,.91,2.05,.27,0xc9c9bd);
+        gbBox(u,SV+4.1,B1+.1,.91,2.05,.27,0xc9c9bd);
         for(let r=0;r<5;r++)for(let c=0;c<4;c++){
           const uu=u-.34+c*.22;
-          gbBox(uu,96.01,B1+.27+r*.34,.17,.27,.075,[0xd2b99d,0x829e9d,0xebd9d4,0xededde,0xa795a0][(r+c)%5]);
-          gbBox(uu,95.96,B1+.3+r*.34,.12,.16,.018,art?0xd4c5a1:0x4b5356);
+          gbBox(uu,SV+3.91,B1+.27+r*.34,.17,.27,.075,[0xd2b99d,0x829e9d,0xebd9d4,0xededde,0xa795a0][(r+c)%5]);
+          gbBox(uu,SV+3.86,B1+.3+r*.34,.12,.16,.018,art?0xd4c5a1:0x4b5356);
         }
       }
-      gbBox(mid+.7,93,B1,1.3,.9,.7,0xe7dfce);
-      gbSign(art?'ARTBOX':'Case holic',mid+.7,92.63,B1+.65,1,.2,Math.PI,'#e7dfce','#35382f');
+      gbBox(mid+.7,SV+.9,B1,1.3,.9,.7,0xe7dfce);
+      gbSign(art?'ARTBOX':'Case holic',mid+.7,SV+.53,B1+.65,1,.2,Math.PI,'#e7dfce','#35382f');
       for(let r=0;r<3;r++){
-        gbBox(u0+.9,93.1,B1+.4+r*.46,1.5,.055,.5,0xb3ac98);
-        for(let c=0;c<7;c++)gbBox(u0+.3+c*.2,93.1,B1+.46+r*.46,.14,.24,.19,[0xe5bec8,0xc7cf9e,0x739b8a,0xe9dfbb][(c+r)%4]);
+        gbBox(u0+.9,SV+1,B1+.4+r*.46,1.5,.055,.5,0xb3ac98);
+        for(let c=0;c<7;c++)gbBox(u0+.3+c*.2,SV+1,B1+.46+r*.46,.14,.24,.19,[0xe5bec8,0xc7cf9e,0x739b8a,0xe9dfbb][(c+r)%4]);
       }
-      for(let u=u0+.7;u<u1;u+=1.9)gbBox(u,94.5,B1+2.87,.12,.035,1.5,paint(0xffefc9));
+      for(let u=u0+.7;u<u1;u+=1.9)gbBox(u,SV+2.4,B1+2.87,.12,.035,1.5,paint(0xffefc9));
     }
     // Retain the old small red/yellow display bay and stocked counter inside
     // the shop, away from the photo-proven public circulation.
-    gbBox(-19.3,95.4,B1,1.3,2.45,.08,0xeee7d9);
-    for(const u of [-19.96,-18.64])gbBox(u,95.15,B1,.06,2.5,.5,0xd9d6cc);
-    gbBox(-19.3,94.89,B1+2.16,1.3,.36,.07,paint(0xd8262c));
-    gbBox(-19.79,94.88,B1+1.45,.27,.68,.04,paint(0xf6c21c));
-    gbBox(-19.2,95.15,B1+.15,.9,.75,.4,0xd62d29);
-    gbBox(-19.2,95.15,B1+.9,.94,.04,.42,0xe8debd);
-    for(let i=0;i<4;i++)gbBox(-19.5+i*.2,95.14,B1+.95,.12,.17,.12,[0xf6c21c,0xd89949,0xebe4cf,0xc8733c][i]);
-    gbBox(-19.3,94.93,B1+.9,1.22,1.22,.025,'glass');
-    gbBox(-19.3,95.13,B1+2.08,1.18,.035,.32,paint(0xffefc6));
+    gbBox(-19.3,SV+3.3,B1,1.3,2.45,.08,0xeee7d9);
+    for(const u of [-19.96,-18.64])gbBox(u,SV+3.05,B1,.06,2.5,.5,0xd9d6cc);
+    gbBox(-19.3,SV+2.79,B1+2.16,1.3,.36,.07,paint(0xd8262c));
+    gbBox(-19.79,SV+2.78,B1+1.45,.27,.68,.04,paint(0xf6c21c));
+    gbBox(-19.2,SV+3.05,B1+.15,.9,.75,.4,0xd62d29);
+    gbBox(-19.2,SV+3.05,B1+.9,.94,.04,.42,0xe8debd);
+    for(let i=0;i<4;i++)gbBox(-19.5+i*.2,SV+3.04,B1+.95,.12,.17,.12,[0xf6c21c,0xd89949,0xebe4cf,0xc8733c][i]);
+    gbBox(-19.3,SV+2.83,B1+.9,1.22,1.22,.025,'glass');
+    gbBox(-19.3,SV+3.03,B1+2.08,1.18,.035,.32,paint(0xffefc6));
     gbBox(-21.3,83.6,B1+.18,.16,2.22,1.3,0x171b1e);
     gbSign(['매장 안내','의류 · 잡화'],-21.2,83.6,B1+1.8,1.15,.64,Math.PI/2,'#eac841','#252a2d');
     gbSign('엔터식스',-21.2,83.6,B1+.85,1.15,.38,Math.PI/2,'#202426');
-    gbSign(['SALE','시즌 할인'],-16.45,84.1,B1+1.72,.45,.67,0,'#f0ebe2','#b55935');
+    gbSign(['SALE','시즌 할인'],-14.2,84.1,B1+1.72,.45,.67,0,'#f0ebe2','#b55935');
     // Broad veins frame the shops; white plaster has small round downlights
     // and four-way circular cassettes, not the terminal's acoustic tile grid.
-    for(let u=-20;u<-1;u+=3.6)for(const v of [80,85.8,95]){
+    for(let u=-26.5;u<-4;u+=3.6)for(const v of [80,85.8,93.6]){
       const p=gbP(u,v);K.cyl({...p,y:B1+2.91,r:.065,h:.025,mat:paint(0xfff4df),seg:12,solid:false});
     }
-    for(const [u,v] of [[-3,86],[-9,86],[-18,86],[-17,94]]){
+    for(const [u,v] of [[-1.4,84.2],[-1.4,87.8]]){const p=gbP(u,v);K.cyl({...p,y:B1+2.91,r:.06,h:.025,mat:paint(0xfff4df),seg:12,solid:false});}
+    // Cassettes: one just inside the vestibule end (#75 overhead, #74 centre),
+    // one before the coffer (#74/#75), the others as before.
+    for(const [u,v] of [[-5.1,87.5],[-9.7,89.3],[-18,86],[-17,94],[-23.5,90.4]]){
       gbBox(u,v,B1+2.88,1.04,.07,1.04,0xe5e4dd);
       const p=gbP(u,v);K.cyl({...p,y:B1+2.865,r:.46,h:.025,mat:0x3a3e39,seg:32,solid:false});
       K.cyl({...p,y:B1+2.85,r:.385,h:.025,mat:0xe8e8df,seg:32,solid:false});
@@ -1866,10 +1923,23 @@ export function build(K) {
         for(const y of [B1+.3,B1+2.65])beam([p0[0],y,p0[1]],[p1[0],y,p1[1]],.013,0x8d9792,4);
       }
     }
+    // #74/#77: black A-frame poster stand with an orange notice beside pillar B.
+    {
+      const fu=-12.3,fv=90.6;
+      for(const dv of [-.32,.32]){gbBeam([fu,B1,fv+dv],[fu,B1+1.75,fv+dv],.014,0x191b1a,4);gbBeam([fu-.35,B1,fv+dv],[fu,B1+1.75,fv+dv],.012,0x191b1a,4);}
+      gbBeam([fu,B1+1.75,fv-.32],[fu,B1+1.75,fv+.32],.014,0x191b1a,4);
+      gbBeam([fu-.35,B1+.02,fv-.36],[fu+.12,B1+.02,fv-.36],.014,0x191b1a,4);
+      gbBeam([fu-.35,B1+.02,fv+.36],[fu+.12,B1+.02,fv+.36],.014,0x191b1a,4);
+      // Poster copy is unreadable in the photos: abstract bands only.
+      gbBox(fu+.02,fv,B1+.25,.015,1.42,.58,0xc8743a);
+      gbBox(fu+.03,fv,B1+1.38,.012,.14,.22,0xfbefe1);
+      for(let i=0;i<4;i++)gbBox(fu+.03,fv,B1+1.02+i*.07,.012,.025,.42-i*.06,0xf1d2b6);
+      gbBox(fu+.03,fv,B1+.32,.012,.55,.5,0x2a2725);
+    }
     // Relocated octagonal coffer: stepped grey rim and curly iron loops.
     for(let step=0;step<3;step++){
-      const outer=cofferUV.map(([u,v])=>{const p=gbP(-12+u*(1.07-step*.055),91+v*(1.07-step*.055));return[p.x,p.z];});
-      const inner=cofferUV.map(([u,v])=>{const p=gbP(-12+u*(1.01-step*.055),91+v*(1.01-step*.055));return[p.x,p.z];});
+      const outer=cofferUV.map(([u,v])=>{const p=gbP(CU+u*(1.07-step*.055),CV+v*(1.07-step*.055));return[p.x,p.z];});
+      const inner=cofferUV.map(([u,v])=>{const p=gbP(CU+u*(1.01-step*.055),CV+v*(1.01-step*.055));return[p.x,p.z];});
       K.hpoly(0xb7b4ad,outer,B1+2.88+step*.055,false,[inner]);
     }
     for(let i=0;i<8;i++){
@@ -1877,49 +1947,75 @@ export function build(K) {
       K.quad(0xb7b4ad,[[a[0],B1+2.96,a[1]],[b[0],B1+2.96,b[1]],[b[0],B1+3.29,b[1]],[a[0],B1+3.29,a[1]]],[coffer.x-(a[0]+b[0])/2,0,coffer.z-(a[1]+b[1])/2]);
       beam([a[0],B1+3.24,a[1]],[b[0],B1+3.24,b[1]],.023,0x222b28,6);
     }
-    for(const [u,v,rx,rz] of [[-13.6,90.2,.95,.63],[-11,90.2,.95,.63],[-13.6,91.7,.95,.63],[-11,91.7,.95,.63]])for(let i=0;i<28;i++){
-      const a=i*Math.PI*2/28,b=(i+1)*Math.PI*2/28;
+    for(const [du,dv,rx,rz] of [[-1.3,-.75,.95,.63],[1.3,-.75,.95,.63],[-1.3,.75,.95,.63],[1.3,.75,.95,.63]])for(let i=0;i<28;i++){
+      const a=i*Math.PI*2/28,b=(i+1)*Math.PI*2/28,u=CU+du,v=CV+dv;
       gbBeam([u+rx*Math.cos(a),B1+3.23,v+rz*Math.sin(a)],[u+rx*Math.cos(b),B1+3.23,v+rz*Math.sin(b)],.023,0x252c27,5);
     }
-    for(const v of [90,92])gbBeam([-14.8,B1+3.23,v],[-9.2,B1+3.23,v],.021,0x252c27);
-    for(const u of [-13.5,-10.5])gbBeam([u,B1+3.23,89.1],[u,B1+3.23,92.9],.021,0x252c27);
-    // Rib direction follows the corridor; cross strip marks the threshold.
-    // Use explicit quads for the axis strip, avoiding a rotated rectangle's
-    // width/depth swap; texture UVs turn the ribs along the walking axis.
-    K.quad('station-enter6-tactile',gbPoly(-21,86.85,-1,87.15).map(([x,z])=>[x,B1+.026,z]),[0,1,0],[[0,0],[0,20/.3],[1,20/.3],[1,0]]);
-    K.hpoly('station-tactile',gbPoly(-1.2,82,-.6,90),B1+.018);
-    // Door leaf is folded east into the terminal side of the shared doorway,
-    // with the coloured boundary strip on the leaf, visible to #78's eastward
-    // camera. It remains non-colliding and leaves the central walking lane open.
-    gbBox(.95,87.3,B1,1.9,2.75,.12,0xb3b6aa);
-    for(const u of [.04,1.86])gbBox(u,87.22,B1+.08,.05,2.6,.05,'station-brushed');
-    for(const y of [.12,.72,2.65])gbBox(.95,87.22,B1+y,1.86,.035,.04,'station-brushed');
-    for(const [text,u,bg] of [['서울고속버스터미널 관리구간 ←',-1.53,'#c2386a'],['서울교통공사 관리구간 →',-1.23,'#23628f']]){
-      gbSign(text.replaceAll(' ','').split(''),u+1.9,87.2,B1+1.65,.28,1.85,Math.PI,bg,'#ffffff');
+    for(const dv of [-1,1])gbBeam([CU-2.4,B1+3.23,CV+dv],[CU+2.4,B1+3.23,CV+dv],.021,0x252c27);
+    for(const du of [-1.5,1.5])gbBeam([CU+du,B1+3.23,CV-1.9],[CU+du,B1+3.23,CV+1.9],.021,0x252c27);
+    // Tactile lines as photographed: none runs down the middle (#74). One
+    // crosses the hall north-south at u≈-8.9 from the boutique's shoe table
+    // (#75 right, #76 foreground) and turns west along the south shops (#75).
+    // Explicit quads avoid a rotated rectangle's width/depth swap; texture UVs
+    // turn the ribs along each line.
+    K.quad('station-enter6-tactile',gbPoly(-9.05,84.4,-8.75,94.65).map(([x,z])=>[x,B1+.026,z]),[0,1,0],[[0,0],[1,0],[1,10.25/.3],[0,10.25/.3]]);
+    K.quad('station-enter6-tactile',gbPoly(HW,94.35,-9.05,94.65).map(([x,z])=>[x,B1+.026,z]),[0,1,0],[[0,0],[0,18.95/.3],[1,18.95/.3],[1,0]]);
+    // Yellow line where the vestibule granite meets the hall marble (#73/#74).
+    K.hpoly('station-tactile',gbPoly(VE-.3,82,VE,90),B1+.018);
+    // Door leaves stand folded open against the vestibule reveals at its west
+    // end (#78: pale grey-green panelled leaf, stainless frame, the boundary
+    // strip near its free east edge; #73: the same strip on the left leaf).
+    for(const v of [89.88,82.12]){
+      const face=v>86?v-.04:v+.04,rot=v>86?Math.PI:0;
+      gbBox(-2.3,v,B1,1.9,2.3,.06,0xc3cbc4);
+      for(const u of [-3.22,-1.38])gbBox(u,face,B1+.04,.04,2.22,.02,'station-brushed');
+      for(const y of [.06,2.22])gbBox(-2.3,face,B1+y,1.88,.03,.02,'station-brushed');
+      for(const [y0,y1] of [[.2,.86],[1.02,2.06]]){
+        for(const y of [y0,y1])gbBox(-2.3,face,B1+y,1.5,.025,.018,0xd7dbd6);
+        for(const u of [-3.05,-1.55])gbBox(u,face,B1+y0,.025,y1-y0,.018,0xd7dbd6);
+      }
+      if(v<86)continue;
+      // Flat decals (no sign backing box) on the leaf face.
+      for(const [text,u,bg] of [['서울고속버스터미널 관리구간 ←',-1.63,'#c2386a'],['서울교통공사 관리구간 →',-1.9,'#23628f']]){
+        const p=gbP(u,face);K.sign(text.replaceAll(' ','').split(''),{x:p.x,y:B1+1.6,z:p.z,w:.26,h:1.3,rotY:gbRot+rot,bg,fg:'#ffffff',offset:.012});
+      }
+      {const p=gbP(-1.76,face);K.sign('시설물 경계',{x:p.x,y:B1+.86,z:p.z,w:.54,h:.16,rotY:gbRot+rot,bg:'#4f5756',fg:'#ffffff',offset:.012});}
+      // #78: small wall speaker on the reveal beyond the leaf.
+      gbBox(-.75,89.9,B1+1.95,.24,.3,.08,0xe9e7e0);
+      // The boundary stripe also runs along the top of this reveal.
+      gbBox(VE/2,89.912,B1+2.86,-VE,.08,.012,paint(0xc2386a));
+      gbBox(VE/2,89.912,B1+2.79,-VE,.07,.012,paint(0x23628f));
     }
-    gbSign('시설물 경계',.52,87.19,B1+.62,.6,.2,Math.PI,'#5e6665');
-    for(const v of [82,90])gbBox(0,v,B1,.23,2.92,.16,'station-brushed');
-    gbBox(0,86,B1+2.86,.22,.1,8.1,'station-brushed');
-    gbBox(-.05,86,B1+2.7,.04,.1,8.1,0xc2386a);
-    gbBox(-.075,86,B1+2.63,.04,.055,8.1,0x23628f);
+    // Door header at the terminal seam: stainless face, and the boundary
+    // colours on its soffit, magenta (terminal) east of blue (Seoul Metro) (#74).
+    for(const v of [82,90])gbBox(0,v,B1,.23,2.35,.16,'station-brushed');
+    gbBox(-.25,86,B1+2.35,.5,.61,8,'station-brushed');
+    gbBox(-.13,86,B1+2.343,.24,.006,8,paint(0xc2386a));
+    gbBox(-.37,86,B1+2.343,.2,.006,8,paint(0x23628f));
     // Exact multilingual copy is retained only where the photographed sign
-    // has it. Separate panels keep the small hours and line names readable.
-    gbBox(-5.1,86.75,B1+2.31,5.05,.5,.1,0x181d18,false,Math.PI/2);
-    gbSign('ENTER-6 FASHION MALL  |  ↑  |  ABC-MART  |  ARTBOX  |  OLIVE YOUNG',-5.02,87.1,B1+2.57,4.15,.28,Math.PI/2,'#181d18','#f0c050');
-    gbSign(['365일 연중무휴','OPEN AM 10:30','CLOSE PM 10:00'],-5.02,84.55,B1+2.55,.88,.42,Math.PI/2,'#181d18','#f0c050');
-    for(const v of [84.5,89])gbBox(-5.1,v,B1+2.8,.025,.16,.025,0x252a26);
-    gbBox(-10.5,89,B1+2.18,5.7,.56,.1,0x1f2427,false,Math.PI/2);
-    gbSign(['타는 곳  Tracks','乘车  のりば  ↑'],-10.42,90.65,B1+2.48,2.15,.42,Math.PI/2,'#1f2427','#f1eee7');
-    for(const [v,n,color,dest] of [[89.05,'⑨','#c99b5e',['개화','중앙보훈병원']],[87.95,'⑦','#8b9a4a',['장암','석남']],[86.85,'③','#e8731a',['대화','오금']]]){
-      gbSign(n,-10.4,v,B1+2.49,.34,.34,Math.PI/2,color);
-      gbSign(dest,-10.4,v+.42,B1+2.49,.48,.35,Math.PI/2,'#1f2427','#f1eee7');
-    }
-    for(const v of [86.4,91.5])gbBox(-10.5,v,B1+2.74,.025,.22,.025,0x252a26);
+    // has it. The ENTER-6 board hangs over the vestibule end, about 3 m wide
+    // (#73/#74); the 타는 곳 board 4 m further, about 3.3 m wide (#74/#75).
+    gbBox(-2.8,86.75,B1+2.29,3.1,.52,.1,0x181d18,false,Math.PI/2);
+    // Read south to north as in #74: logo, framed arrow and brands, hours.
+    gbSign(['ENTER-6','FASHION MALL'],-2.73,87.88,B1+2.55,.66,.3,Math.PI/2,'#181d18','#f0c050');
+    gbSign('↑',-2.73,87.28,B1+2.55,.26,.3,Math.PI/2,'#181d18','#f0c050');
+    gbSign('ABC-MART  |  ARTBOX  |  OLIVE YOUNG',-2.73,86.45,B1+2.55,1.22,.2,Math.PI/2,'#181d18','#f0c050');
+    gbSign(['365일 연중무휴','OPEN AM 10:30','CLOSE PM 10:00'],-2.73,85.58,B1+2.55,.55,.36,Math.PI/2,'#181d18','#f0c050');
+    for(const y of [2.38,2.72])gbBox(-2.735,86.62,B1+y,.012,.014,1.76,0xd8a93e);
+    for(const v of [85.74,87.5,87.06])gbBox(-2.735,v,B1+2.38,.012,.35,.014,0xd8a93e);
+    for(const v of [85.6,87.9])gbBox(-2.8,v,B1+2.81,.025,.15,.025,0x252a26);
+    gbBox(-6.9,85.95,B1+2.3,3.3,.42,.1,0x1f2427,false,Math.PI/2);
+    gbSign(['타는 곳  Tracks','乘车  のりば  ↑'],-6.83,87.02,B1+2.51,1.05,.36,Math.PI/2,'#1f2427','#f1eee7');
+    [['⑨','#c99b5e',['개화','중앙보훈병원']],['⑦','#8b9a4a',['장암','석남']],['③','#e8731a',['대화','오금']]].forEach(([n,color,dest],k)=>{
+      const s=86.45-k*.72;
+      gbSign(dest,-6.83,s-.19,B1+2.51,.38,.3,Math.PI/2,'#1f2427','#f1eee7');
+      gbSign(n,-6.83,s-.55,B1+2.51,.26,.26,Math.PI/2,color);
+    });
+    for(const v of [84.7,87.2])gbBox(-6.9,v,B1+2.72,.025,.32,.025,0x252a26);
     // The unphotographed western edge stays enclosed; no invented gates or
     // connection to the former 140 m-distant hall are implied by this return.
-    for(const v of [85.5,90.5])gbSign(['고속터미널역','3 · 7 · 9호선'],-21.88,v,B1+1.62,2.2,1.8,Math.PI/2,'#d8e6e2','#344d57');
-    gbSign(['이용 안내','고속터미널역'],-12.65,89.65,B1+1.2,.65,1.6,Math.PI/2,'#a97b54','#f3eee2');
-    for(const [i,u,v] of [[0,-5,90.5],[1,-9.5,86],[2,-14.5,87.7],[3,-18,85],[4,-16,90.2],[5,-12,94],[6,-6,82.8],[7,-18,94],[8,-4,91],[9,-20,87],[10,-19.5,91.5],[11,-15,94.6],[12,-14,85.4]]){const p=gbP(u,v);traveler(p.x,B1,p.z,310+i,{rotY:gbRot+(i%2?Math.PI/2:0)});}
+    for(const v of [85.5,90.5])gbSign(['고속터미널역','3 · 7 · 9호선'],HW+.12,v,B1+1.62,2.2,1.8,Math.PI/2,'#d8e6e2','#344d57');
+    for(const [i,u,v] of [[0,-5,91.5],[1,-9.5,86.3],[2,-14.5,88.4],[3,-18,85.5],[4,-16,92.7],[5,-12,93.6],[6,-6,83.2],[7,-18,93.8],[8,-4.4,92],[9,-20,87],[10,-21.5,92.5],[11,-15,93.2],[12,-11.6,86.9],[13,-24,92],[14,-26.2,84.8],[15,-23,86.2]]){const p=gbP(u,v);traveler(p.x,B1,p.z,310+i,{rotY:gbRot+(i%2?Math.PI/2:0)});}
   });
   // The old fare-gate room keeps its independent wayfinding and circulation.
   detailRooms[9].jobs.push(()=>{
