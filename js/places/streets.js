@@ -1035,10 +1035,10 @@ function buildG13Street(K, {beam, flat, clipped, rect, terminalStrip, streetSlab
     }
   },[.8,.8]);
   K.texture('streets-g13-graphic',1024,512,(g,w,h)=>{
-    g.clearRect(0,0,w,h);g.fillStyle='#b2dd5b';g.font='900 390px Arial, sans-serif';
+    g.clearRect(0,0,w,h);g.fillStyle='#b9e34e';g.font='900 400px Arial, sans-serif';
     g.textAlign='center';g.textBaseline='middle';g.fillText('G13',w/2,210,w-50);
     g.globalCompositeOperation='destination-in';g.beginPath();
-    for(let x=7;x<w;x+=14)for(let y=7;y<410;y+=14){g.moveTo(x+4.1,y);g.arc(x,y,4.1,0,PI*2);}
+    for(let x=7;x<w;x+=14)for(let y=7;y<410;y+=14){g.moveTo(x+5.8,y);g.arc(x,y,5.8,0,PI*2);}
     g.fill();g.globalCompositeOperation='source-over';
     g.fillStyle='#edf1e4';g.font='bold 59px Arial, sans-serif';g.fillText('GOTO MALL',w/2,465);
   },[1,1],{transparent:true});
@@ -1119,8 +1119,19 @@ function buildG13Street(K, {beam, flat, clipped, rect, terminalStrip, streetSlab
   }
   // The photographed square obelisk, not a roofed bus shelter.
   K.box({x:328,z:-234,y:WALK,w:.35,h:2.7,d:.35,mat:0x454a50});
-  K.sign(['한','강','공','원'],{x:328,z:-233.817,y:2.13,w:.2,h:.94,bg:null,fg:'#e6e7de'});
-  K.sign(['→','500m','반포'],{x:328,z:-233.815,y:1.35,w:.25,h:.51,bg:null,fg:'#ddd5b7'});
+  // Lettering as photographed (#218): ~0.4 m of stacked 한강공원, the rotated
+  // HANGANGPARK line, a small yellow arrow tile, 500m and a gold 반포.
+  K.box({x:328,z:-234,y:2.78,w:.36,h:.05,d:.36,mat:0x2f3337,solid:false});
+  for(const y of [2.62,2.66,2.7])K.box({x:328,z:-233.822,y,w:.12,h:.012,d:.01,mat:0x23272a,solid:false});
+  K.sign(['한','강','공','원'],{x:328,z:-233.817,y:2.4,w:.11,h:.42,bg:null,fg:'#dadcd3'});
+  K.texture('streets-hangang-v',64,512,(g,w,h)=>{
+    g.clearRect(0,0,w,h);g.save();g.translate(w/2,h/2);g.rotate(PI/2);g.fillStyle='#cfd2c9';
+    g.font='600 44px Arial, sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText('HANGANGPARK',0,0,h-20);g.restore();
+  },[1,1],{transparent:true});
+  K.quad('streets-hangang-v',[[327.968,1.66,-233.815],[328.032,1.66,-233.815],[328.032,2.14,-233.815],[327.968,2.14,-233.815]],[0,0,1]);
+  K.sign('→',{x:328,z:-233.816,y:1.56,w:.085,h:.085,bg:'#e3b23c',fg:'#26292b',bold:true});
+  K.sign('500m',{x:328,z:-233.816,y:1.46,w:.11,h:.045,bg:null,fg:'#d6d6cc'});
+  K.sign('반포',{x:328,z:-233.816,y:1.36,w:.08,h:.05,bg:null,fg:'#d2ad55'});
   K.sign('버스',{x:325.7,z:curbZ(325.7)+.33,y:2.6,w:.55,h:.38,bg:'#1f6694',fg:'#f4f2e8',twoSided:true});
   K.cyl({x:325.7,z:curbZ(325.7)+.33,y:WALK,r:.038,h:2.7,seg:8,mat:dark});
   // Eastbound electric bus is immediately outside the south kerb. Keep its
@@ -1142,8 +1153,9 @@ function buildG13Street(K, {beam, flat, clipped, rect, terminalStrip, streetSlab
       K.sign('♿',{...B(-1.29,.1),y:.98,w:.46,h:.46,rotY:busRot-PI/2,bg:'#2357a0',fg:'#fff'});
     }
   }
-  // Large plane-tree silhouette and mottled bark. Its fitted centre stays
-  // southwest of the mouth, clear of both #217 and #218 camera/foot positions.
+  // Large plane-tree silhouette and mottled bark. Polish: from the #224-#226
+  // spot its trunk stands WNW (~280-285 deg) in front of the kerb with the
+  // buses right behind it, and #225 only catches its crown at the top right.
   K.texture('streets-plane-bark',128,256,(g,w,h)=>{
     g.fillStyle='#8d8775';g.fillRect(0,0,w,h);
     for(let i=0;i<65;i++){
@@ -1151,10 +1163,11 @@ function buildG13Street(K, {beam, flat, clipped, rect, terminalStrip, streetSlab
       const x=(i*37)%w,y=(i*71)%h;g.beginPath();g.ellipse(x,y,5+i%8,10+i%20,i*.2,0,PI*2);g.fill();
     }
   },[1.5,3]);
-  K.cyl({x:328.65,z:-231.2,y:WALK,r:.37,h:5.8,seg:12,mat:'streets-plane-bark'});
-  for(const [dx,dz] of [[-1.3,.5],[1.1,-.7],[.2,1.4]]){
-    beam([328.65,3.9,-231.2],[328.65+dx,7.2,-231.2+dz],.15,0x827d69);
-    K.dome({x:328.65+dx,z:-231.2+dz,y:8.3,rx:2.25,ry:2.5,rz:2.15,seg:10,rings:5,hemi:false,mat:0x52743e});
+  K.hpoly(0x9c8a6c,[[324.6,-230.3],[326.0,-230.3],[326.0,-228.9],[324.6,-228.9]],WALK+.006);
+  K.cyl({x:325.3,z:-229.6,y:WALK,r:.37,h:5.8,seg:12,mat:'streets-plane-bark'});
+  for(const [dx,dz] of [[-1.7,.2],[.6,-1.6],[-.6,1.1]]){
+    beam([325.3,3.9,-229.6],[325.3+dx,7.2,-229.6+dz],.15,0x827d69);
+    K.dome({x:325.3+dx,z:-229.6+dz,y:8.3,rx:2.25,ry:2.5,rz:2.15,seg:10,rings:5,hemi:false,mat:0x52743e});
   }
   K.zone({name:'고투몰 G13 출구',floor:'지상',sub:'신반포로 · 버스정류장',rect:[315,-239,346,-225],y0:0,y1:4.3,priority:5});
   K.spawn({name:'고투몰 G13 · 버스정류장',x:328,y:WALK,z:-232.5,yaw:51.1*PI/180,group:'고속터미널 거리'});
@@ -1677,7 +1690,11 @@ function buildGsCaltex(K) {
 
   // Layout first: the broad, open concrete apron is a traversable ground surface.
   // It ends south of G13; it never bridges the stair opening or the curb footway.
-  K.slab(rect(312,-229,365,-197),G,{mat:'streets-gs-concrete',under:false,thick:.08,ceil:false,edge:false});
+  // Round20 polish: the pump canopy stands SE of the office (aerial roof + its
+  // shadow, and the column vanishing lines in #220/#222), so the apron also
+  // runs south under it, between the office and the east service lane.
+  K.slab([[312,-229],[365,-229],[365,-198.45],[369.1,-186.6],[351.6,-180.6],[345.9,-197],[312,-197]],G,
+    {mat:'streets-gs-concrete',under:false,thick:.08,ceil:false,edge:false});
   for(const b of K.osmBuilding(1173093430)){
     const p=b.poly,cx=p.reduce((s,q)=>s+q[0],0)/p.length,cz=p.reduce((s,q)=>s+q[1],0)/p.length;
     const normals=K.orient(p),face=(i,start,y,w,h,mat,off=.045)=>{
@@ -1721,99 +1738,177 @@ function buildGsCaltex(K) {
     K.zone({name:'GS칼텍스 사무동',floor:'2F',sub:'사무동',poly:p,y0:3.55,y1:7.5,priority:7});
   }
 
-  // Long canopy: 12 m across east/west, 20 m along the filling lanes.
-  // This orientation leaves 1.3+ m clear of the octagon's silver overhang.
-  box(352,-214,5.4,12,.85,20,'streets-gs-teal',false);
-  box(352,-214,6.25,12.12,.12,20.12,silver,false);
-  box(352,-214,5.32,11.8,.08,19.8,0xe5e5de,false);
-  box(352,-214,5.31,2.25,.025,19.65,0x2e9ca8,false);
-  for(const x of [347.1,356.9])for(const z of [-222.7,-214,-205.3]){
-    box(x,z,G,.55,5.33-G,.55,0xe3e5df);
-    box(x,z,G,.57,.55,.57,teal,false);box(x,z,5.0,.58,.32,.58,teal,false);
-    for(const y of [1.5,2.8,4.1])box(x,z,y,.565,.012,.565,0xb4c1bd,false);
+  // Round20 polish / layout: the canopy is not N-S beside the office. #220 and
+  // #222 both see its two column rows converging AWAY from the camera, front
+  // face square to the view, and the aerial shows its pale roof (with the
+  // central skylight strip) and its shadow at x 346-366, z -208..-184. A
+  // bundle fit of the octagon corners, pump 33 and the columns gives rows
+  // 8.7 m apart, 6.4 m bays, axis bearing ~161 deg (parallel to 잠원로).
+  // u = along the lanes (SSE), l = across (ENE); front (north) edge at t=-10.8.
+  const CA=.3316,cu=[Math.sin(CA),Math.cos(CA)],cr=[Math.cos(CA),-Math.sin(CA)],C0=[356,-196.2];
+  const CF=(l,t)=>[C0[0]+l*cr[0]+t*cu[0],C0[1]+l*cr[1]+t*cu[1]];
+  const cbox=(l,t,y,w,h,d,mat,solid=false)=>{const q=CF(l,t);box(q[0],q[1],y,w,h,d,mat,solid,CA);};
+  const CW=6.75,CL=10.8,ROWS=[-4.35,4.35],BAYS=[-9.6,-3.2,3.2,9.6];
+  cbox(0,0,5.35,CW*2,1.0,CL*2,'streets-gs-teal');
+  cbox(0,0,6.35,CW*2+.12,.12,CL*2+.12,silver);
+  cbox(0,0,5.27,CW*2-.2,.08,CL*2-.2,0xe5e5de);
+  cbox(0,0,5.26,2.25,.025,CL*2-.6,0x2e9ca8);
+  for(const l of ROWS)for(const t of BAYS){
+    cbox(l,t,G,.55,5.27-G,.55,0xe3e5df,true);
+    cbox(l,t,G,.57,.55,.57,teal);cbox(l,t,4.95,.58,.32,.58,teal);
+    for(const y of [1.5,2.8,4.1])cbox(l,t,y,.565,.012,.565,0xb4c1bd);
   }
-  // The small barrel skylight is translucent and has visible arch ribs.
-  const arch=(t,z)=>[352+Math.cos(t)*1.22,6.37+Math.sin(t)*1.12,z];
+  // Glass barrel skylight on the roof axis; its ribbed semicircular front end
+  // shows above the fascia in #220 and #222.
+  const T0=-CL+1.4,T1=CL-1.4,arch=(th,t)=>{const q=CF(Math.cos(th)*1.22,t);return [q[0],6.47+Math.sin(th)*1.12,q[1]];};
   for(let i=0;i<12;i++){
-    const t0=i*PI/12,t1=(i+1)*PI/12;
-    K.quad({tex:'glass',color:0xbdd4c8},[arch(t0,-217),arch(t0,-211),arch(t1,-211),arch(t1,-217)],[Math.cos((t0+t1)/2),Math.sin((t0+t1)/2),0]);
-    for(const z of [-217,-214,-211])bar(arch(t0,z),arch(t1,z),.025,0x7b908d);
+    const t0=i*PI/12,t1=(i+1)*PI/12,m=(t0+t1)/2;
+    K.quad({tex:'glass',color:0xbdd4c8},[arch(t0,T0),arch(t0,T1),arch(t1,T1),arch(t1,T0)],[Math.cos(m)*cr[0],Math.sin(m),Math.cos(m)*cr[1]]);
+    for(let t=T0;t<=T1+.01;t+=(T1-T0)/6)bar(arch(t0,t),arch(t1,t),.025,0x7b908d);
+    for(const t of [T0,T1]){const c=CF(0,t);bar([c[0],6.47,c[1]],arch(m,t),.02,0x7b908d);}
   }
-  for(const t of [0,PI/2,PI])bar(arch(t,-217),arch(t,-211),.025,0x7b908d);
-  for(const x of [348.2,350.3,353.7,355.8])for(const z of [-222,-218,-214,-210,-206]){
-    K.cyl({x,z,y:5.17,r:.19,h:.12,seg:12,mat:0xa3aca7,solid:false});
-    K.cyl({x,z,y:5.145,r:.14,h:.025,seg:12,mat:{tex:'emit',color:0xf0efe2},solid:false});
+  for(const th of [0,PI/2,PI])bar(arch(th,T0),arch(th,T1),.025,0x7b908d);
+  for(const l of [-3.8,-1.7,1.7,3.8])for(const t of [-8.4,-5.6,-2.8,0,2.8,5.6,8.4]){
+    const q=CF(l,t);
+    K.cyl({x:q[0],z:q[1],y:5.12,r:.19,h:.12,seg:12,mat:0xa3aca7,solid:false});
+    K.cyl({x:q[0],z:q[1],y:5.095,r:.14,h:.025,seg:12,mat:{tex:'emit',color:0xf0efe2},solid:false});
   }
-  K.sign('GS칼텍스',{x:349,z:-224.04,y:5.83,w:3.2,h:.53,rotY:PI,bg:null,fg:'#fff',bold:true});
+  {const q=CF(4.3,-CL-.04);K.sign('GS칼텍스',{x:q[0],z:q[1],y:5.86,w:3.0,h:.55,rotY:CA+PI,bg:null,fg:'#fff',bold:true});}
 
-  // White/teal pump cabinets, control screens, paired black hoses and guards.
-  const pump=(x,z,number,rotY=0)=>{
+  // White/teal dispensers. The island runs along the cabinet's wide face (u);
+  // screens face both lanes (+-v); teal hoop guards stand at the island ends
+  // (#223/#224 see the screens head-on with a hoop left and right).
+  const pump=(x,z,number,rotY=0,{base=true,guards=true}={})=>{
     const c=Math.cos(rotY),s=Math.sin(rotY),P=(u,v)=>[x+u*c+v*s,z-u*s+v*c];
     const pb=(u,v,y,w,h,d,mat,solid=false)=>{const q=P(u,v);box(q[0],q[1],y,w,h,d,mat,solid,rotY);};
     const rail=(a,b,r,mat)=>{const q=P(a[0],a[2]),v=P(b[0],b[2]);bar([q[0],a[1],q[1]],[v[0],b[1],v[1]],r,mat);};
-    pb(0,0,G,1.7,.16,2.5,0x9ba9a5,true);pb(0,0,G+.16,1.16,.77,.65,0x198d9b,true);
-    pb(0,0,G+.93,1.16,1.06,.65,0xd9dfd8,true);pb(0,0,G+1.99,1.36,.16,.82,0xcdd5ce,false);
+    if(base){pb(0,0,G,2.3,.16,1.05,0x9ba9a5,true);pb(0,0,G+.155,2.32,.012,1.07,0x2b8e9b);}
+    const B=G+(base?.16:.16);
+    pb(0,0,B,.86,.77,.62,0x198d9b,true);
+    pb(0,0,B+.77,.86,1.06,.62,0xd9dfd8,true);pb(0,0,B+1.83,1.0,.16,.76,0xcdd5ce,false);
     for(const side of [-1,1]){
-      pb(0,side*.333,G+1.31,.78,.49,.025,0x364d50);pb(0,side*.353,G+1.5,.62,.14,.014,0xa9b9aa);
-      for(const u of [-.23,0,.23])pb(u,side*.355,G+1.34,.13,.08,.016,0xd8d9c5);
-      const q=P(0,side*.37);if(number)K.sign(String(number),{x:q[0],z:q[1],y:G+2.08,w:.5,h:.16,rotY:rotY+(side<0?PI:0),bg:null,fg:'#304e56'});
-      K.sign('GS칼텍스',{x:q[0],z:q[1],y:G+.6,w:.72,h:.13,rotY:rotY+(side<0?PI:0),bg:null,fg:'#fff'});
+      pb(0,side*.312,B+1.15,.62,.49,.025,0x364d50);pb(0,side*.33,B+1.34,.5,.14,.014,0xa9b9aa);
+      for(const u of [-.18,0,.18])pb(u,side*.332,B+1.18,.11,.08,.016,0xd8d9c5);
+      const q=P(0,side*.39);if(number)K.sign(String(number),{x:q[0],z:q[1],y:B+1.92,w:.42,h:.15,rotY:rotY+(side<0?PI:0),bg:null,fg:'#304e56'});
+      K.sign('GS칼텍스',{x:q[0],z:q[1],y:B+.44,w:.6,h:.12,rotY:rotY+(side<0?PI:0),bg:null,fg:'#fff'});
     }
     for(const side of [-1,1]){
-      const pts=[[side*.57,1.95,0],[side*.86,1.73,0],[side*.96,.72,0],[side*.84,.35,0],[side*.58,.43,0],[side*.57,1.17,0]];
-      for(let i=1;i<pts.length;i++)rail(pts[i-1].map((v,j)=>j===1?v+G:v),pts[i].map((v,j)=>j===1?v+G:v),.034,0x252d2c);
-      pb(side*.6,0,G+1.03,.11,.28,.16,0x202d2d);
-      for(const v of [-.93,.93]){rail([side*.73,G+.18,v],[side*.73,G+.63,v],.065,0x85a8a9);rail([side*.73,G+.63,v],[side*.52,G+.73,v],.065,0x85a8a9);}
+      const pts=[[side*.43,1.79,0],[side*.68,1.57,0],[side*.78,.56,0],[side*.68,.19,0],[side*.46,.27,0],[side*.43,1.01,0]];
+      for(let i=1;i<pts.length;i++)rail(pts[i-1].map((v,j)=>j===1?v+B:v),pts[i].map((v,j)=>j===1?v+B:v),.03,0x252d2c);
+      pb(side*.46,0,B+.87,.1,.28,.16,0x202d2d);
+      if(guards)hoop(P,side*.86,side*1.12,base?G+.16:G+.16,rail);
     }
-    for(const v of [-.93,.93])rail([-.52,G+.73,v],[.52,G+.73,v],.065,0x85a8a9);
   };
-  for(const [x,z,num] of [[347.1,-219,23],[356.9,-219,null],[347.1,-210,null],[356.9,-210,null]])pump(x,z,num);
-  pump(328,-218.3,33,PI/2);
-  for(const [x,z] of [[347.1,-222.2],[356.9,-222.2]]){
-    box(x,z,G+.18,.65,1.5,.12,0x989f8a,false);
-    K.sign(['주유 안내','안전 운행'],{x,z:z-.08,y:G+.98,w:.58,h:1.3,rotY:PI,bg:'#eee3a0',fg:'#315f66'});
+  const hoop=(P,ua,ub,y0,rail,v=0,col=0x2f9fb4)=>{
+    rail([ua,y0,v],[ua,y0+.55,v],.045,col);rail([ua,y0+.55,v],[(ua+ub)/2,y0+.66,v],.045,col);
+    rail([(ua+ub)/2,y0+.66,v],[ub,y0+.55,v],.045,col);rail([ub,y0+.55,v],[ub,y0,v],.045,col);
+  };
+  // Under the canopy: one long island per column row, dispensers in the bays.
+  const ISL=CA-PI/2;
+  for(const [k,l] of ROWS.entries()){
+    cbox(l,0,G,1.15,.16,CL*2-1.2,0x9ba9a5,true);cbox(l,0,G+.155,1.17,.012,CL*2-1.18,0x2b8e9b);
+    for(const [j,t] of [-6.4,0,6.4].entries()){const q=CF(l,t);pump(q[0],q[1],k===0&&j===1?23:null,ISL,{base:false,guards:false});}
+    for(const t of [-CL+.75,CL-.75]){
+      const q=CF(l,t),c=Math.cos(ISL),s=Math.sin(ISL),P=(u,v)=>[q[0]+u*c+v*s,q[1]-u*s+v*c];
+      const rail=(a,b,r,mat)=>{const A=P(a[0],a[2]),V=P(b[0],b[2]);bar([A[0],a[1],A[1]],[V[0],b[1],V[1]],r,mat);};
+      hoop(P,-.15,.15,G+.16,rail,-.32);hoop(P,-.15,.15,G+.16,rail,.32);
+    }
+    const q=CF(l,-CL+.45);
+    box(q[0],q[1],G+.18,.65,1.5,.12,0x989f8a,false,CA);
+    K.sign(['주유 안내','안전 운행'],{x:q[0]-cu[0]*.08,z:q[1]-cu[1]*.08,y:G+.98,w:.58,h:1.3,rotY:CA+PI,bg:'#eee3a0',fg:'#315f66'});
   }
+  // Pump 33 stands alone NNW of the office: bundle fit (#219/#220/#223/#224/#225).
+  const P33=[331,-221.45],R33=-.436;
+  pump(P33[0],P33[1],33,R33);
+  {const c=Math.cos(R33),s=Math.sin(R33),P=(u,v)=>[P33[0]+u*c+v*s,P33[1]-u*s+v*c];
+    const q=[P(-1.45,-1.25),P(-5.2,-1.25),P(-5.2,1.25),P(-1.45,1.25)];
+    for(let i=0;i<3;i++)strip(q[i],q[i+1],.1,G+.013,0xe0c23a);}
 
   // Thin paint stays non-colliding; the forecourt connects straight through.
-  strip([312.2,-228.86],[364.7,-228.86],.17,G+.012,0xd4462a);
-  strip([312.2,-228.53],[364.7,-228.53],.17,G+.014,0x2b6fd6);
-  strip([315,-225.55],[361.6,-225.55],.11,G+.012,0x2b6fd6);
-  strip([361.6,-225.55],[361.6,-199],.11,G+.012,0x2b6fd6);
-  for(const x of [347.1,356.9])for(const z of [-219,-210]){
-    const q=rect(x-1.25,z-1.8,x+1.25,z+1.8);for(let i=0;i<4;i++)strip(q[i],q[(i+1)%4],.07,G+.013,0xd6bf63);
+  // North edge: red curb paint only. ~3.4 m south runs the trench drain, blue
+  // with a dark grate slot and its own red line, bending SW at its west end
+  // (#219-#222). Thin blue lane lines continue beyond it.
+  // West of x~333 the sidewalk pavers (6.7 m from the kerb) reach into the
+  // apron, so the red line follows their edge there. The drain bends with it.
+  const zE=x=>-227.47-(x-330)*.387,RN=[.361,.933],RD=[.933,-.361],ro=(x,o)=>[x+RN[0]*o,zE(x)+RN[1]*o];
+  strip([332.9,-228.6],[364.7,-228.6],.17,G+.012,0xd4462a);
+  strip(ro(332.9,.1),ro(316,.1),.17,G+.012,0xd4462a);
+  const DB=[333.1,-225.45],DW=[DB[0]+RD[0]*-16.2,DB[1]+RD[1]*-16.2];
+  for(const [a,b] of [[DB,[361.6,-225.45]],[DB,DW]]){
+    const dx=b[0]-a[0],dz=b[1]-a[1],L=Math.hypot(dx,dz),n=[-dz/L,dx/L],off=(p,o)=>[p[0]+n[0]*o,p[1]+n[1]*o];
+    const sg=b[0]>a[0]?-1:1;
+    strip(off(a,sg*.3),off(b,sg*.3),.15,G+.012,0xd4462a);
+    strip(a,b,.36,G+.013,0x2c63c8);
+    strip(off(a,sg*.04),off(b,sg*.04),.07,G+.016,0x2b2f2f);
   }
-  arrow(322,-226.7,-PI/2);arrow(341,-227.1,PI/2);arrow(362.5,-218,0);
+  strip([361.6,-225.3],[361.6,-199],.11,G+.012,0x2b6fd6);
+  strip([337.5,-224.6],[358.6,-211.2],.11,G+.012,0x2b6fd6);
+  for(const l of ROWS)for(const t of [-6.4,0,6.4]){
+    const q=[CF(l-1.3,t-2.2),CF(l+1.3,t-2.2),CF(l+1.3,t+2.2),CF(l-1.3,t+2.2)];
+    for(let i=0;i<4;i++)strip(q[i],q[(i+1)%4],.07,G+.013,0xd6bf63);
+  }
+  arrow(323.3,-223.4,-PI/2-.37);arrow(341,-227.1,PI/2);arrow(362.5,-218,0);arrow(347.5,-221.2,CA);
   K.floorText('일단 정지',{x:358.8,z:-226.7,y:G+.02,w:4.0,h:.85,rotY:PI/2,fg:'#e2bd37'});
-  for(const [x,z] of [[324,-221.7],[330.4,-220.2],[335,-219.6],[340,-218.5],[344.9,-225.2],[354.8,-225.1],[360,-222]]){
+  // Stop markings for the westbound exits, read facing W (#219/#225/#226):
+  // a blue box with yellow bars before the NW exit, a second text past the drain.
+  // floorText runs left-to-right along (cos r,-sin r): here along -RN, top to WSW.
+  {const SR=Math.atan2(RN[1],-RN[0]),stop=(c,box)=>{
+      const Q=(a,b)=>[c[0]+RD[0]*a+RN[0]*b,c[1]+RD[1]*a+RN[1]*b];
+      if(box){const q=[Q(-2.1,-1.1),Q(2.1,-1.1),Q(2.1,1.1),Q(-2.1,1.1)];for(let i=0;i<4;i++)strip(q[i],q[(i+1)%4],.13,G+.013,0x2b6fd6);}
+      for(const a of [-.62,.62])strip(Q(a,-.95),Q(a,.95),.09,G+.014,0xe2bd37);
+      K.floorText('일단 정지',{x:c[0],z:c[1],y:G+.02,w:1.85,h:.62,rotY:SR,fg:'#e2bd37'});
+    };
+    stop(ro(329.2,1.5),true);stop(ro(323.2,4.6),false);}
+  for(const [x,z] of [[324,-222.2],[328.2,-218.6],[333.4,-219.2],[339.5,-218.1],[344.9,-225.2],[349.5,-211.6],[354.2,-213.2],[360,-222]]){
     box(x,z,G,.48,.045,.48,0x4a4d43,false);
     const n=8,base=.22,top=.055,h=.76,poly=[];for(let i=0;i<n;i++)poly.push([Math.cos(i*PI/4),Math.sin(i*PI/4)]);
     for(let i=0;i<n;i++){const a=poly[i],b=poly[(i+1)%n];K.quad(0xcc673e,[[x+a[0]*base,G+.045,z+a[1]*base],[x+b[0]*base,G+.045,z+b[1]*base],[x+b[0]*top,G+h,z+b[1]*top],[x+a[0]*top,G+h,z+a[1]*top]],[a[0],.2,a[1]]);}
     K.cyl({x,z,y:G+.48,r:.12,h:.12,seg:8,mat:0xe6e6db,solid:false});
   }
-  // Parked vehicles seen against the north shopfront, clear of walking poses.
-  K.vehicle({x:336.7,z:-217.2,y:G,rotY:PI/2,kind:'car',color:0x242e37});
-  K.vehicle({x:331.6,z:-217.9,y:G,rotY:PI/2,kind:'car',color:0xe8e9e3});
+  // Parked vehicles along the north (entrance) face, parallel to it, with the
+  // black rubber mat and the striped cone in front (#220/#223).
+  K.vehicle({x:335.3,z:-216.6,y:G,rotY:PI/2+.4,kind:'car',color:0x242e37});
+  K.vehicle({x:330.4,z:-214.9,y:G,rotY:PI/2+.4,kind:'car',color:0xe8e9e3});
+  box(334.6,-219.4,G,3.2,.02,1.5,0x22262a,false,.4);
+  // Hand-wash bay: a black tarp on a light frame in front of the west wall,
+  // SSW of pump 33 (#223-#225). Visual only; the lane past it stays open.
+  {const TA=.4,tc=[322.7,-213.6],c=Math.cos(TA),s=Math.sin(TA),P=(u,v)=>[tc[0]+u*c+v*s,tc[1]-u*s+v*c];
+    for(const u of [-2.2,2.2])for(const v of [-2.6,0,2.6]){const q=P(u,v);K.cyl({x:q[0],z:q[1],y:G,r:.035,h:2.85,seg:6,mat:0x8d9696,solid:false});}
+    const q=P(0,0);box(q[0],q[1],2.9,4.7,.08,5.5,0x1b1f22,false,TA);
+    for(const u of [-2.25,2.25]){const e=P(u,0);box(e[0],e[1],1.9,.04,1.05,5.5,0x22272b,false,TA);}
+    const bk=P(0,2.75);box(bk[0],bk[1],.9,4.5,2.05,.04,0x1d2226,false,TA);
+    const cv=P(.2,-.4);K.vehicle({x:cv[0],z:cv[1],y:G,rotY:TA,kind:'car',color:0x2a4f8c,solid:false});}
 
-  // The wall is discontinuous at both west approaches. No fence encloses the
-  // public apron or the walk west toward 광장주차장.
+  // West boundary: the white wall with teal coping runs parallel to the lot
+  // edge (bearing ~157), just west of the service lane, and stops short of
+  // 신반포로 to leave the west entry open. The pole stands ~1 m in front of
+  // it (ray from #224/#225/#226 at bearing 245, panel ~20 m away).
+  const WD=[.391,.921],WN=[.921,-.391],W0=[314.3,-222.2],WP=t=>[W0[0]+WD[0]*t,W0[1]+WD[1]*t],WR=Math.atan2(WN[0],WN[1]);
   const wall=(a,b)=>{
     K.wall(...a,...b,G,1.35,{thick:.22,mat:0xe3e4dc});
     K.wall(...a,...b,1.35,1.55,{thick:.28,mat:0x168c99});
   };
-  wall([316.3,-225],[316.3,-213]);wall([316.3,-203],[316.3,-197.6]);wall([316.3,-197.6],[328,-197.6]);
-  const wallSign=(text,z,y,w,h,bg,fg)=>K.sign(text,{x:316.45,z,y,w,h,rotY:PI/2,bg,fg});
-  wallSign('손세차',-216.3,.93,2.2,.55,'#f2efe4','#222d2e');
-  wallSign('기계세차',-218.5,.9,1.8,.5,'#f2efe4','#333c3b');
-  wallSign(['2026년 1월 1일 기계세차 요금','세차장 이용 안내'],-222,.94,3.7,.64,'#ecece0','#73574e');
-  // Pole at the evidenced west entry. Real brand wording uses text panels;
-  // prices and unseen machine tariffs are deliberately not fabricated.
-  for(const z of [-226.85,-225.15])box(319,z,G,.15,7,.15,0x16949f);
-  box(319,-226,4.65,.16,2.3,2.2,0xe5e5df,false);
-  box(319,-226,4.65,.19,.53,2.2,0x168e9b,false);
+  wall(WP(0),WP(14.2));wall(WP(20.5),WP(30.5));
+  const wallSign=(text,t,y,w,h,bg,fg)=>{const q=WP(t);K.sign(text,{x:q[0]+WN[0]*.14,z:q[1]+WN[1]*.14,y,w,h,rotY:WR,bg,fg});};
+  wallSign(['2026년 1월 1일 기계세차 요금','세차장 이용 안내'],1.4,.94,2.6,.64,'#ecece0','#73574e');
+  wallSign(['세차장 진입 안내','손세차 · 기계세차'],4.3,.86,1.25,.95,'#f2efe4','#c0395a');
+  wallSign('주입구',8.0,.72,.55,.24,'#f2efe4','#333c3b');
+  wallSign(['협정차량 파손시 손해배상 불가','세차중 핸드폰 사용 절대 금지'],10.6,.92,1.7,.55,'#f4f1ea','#c52f3c');
+  wallSign('손세차',24,.93,2.2,.55,'#f2efe4','#222d2e');
+  wallSign('기계세차',27,.9,1.8,.5,'#f2efe4','#333c3b');
+  for(const dt of [-.25,0,.25]){const q=WP(8.9+dt);K.cyl({x:q[0]+WN[0]*.3,z:q[1]+WN[1]*.3,y:G,r:.045,h:4.8,seg:8,mat:0x2ea5b2,solid:false});}
+  // Pole sign: twin posts, white GS panel over the teal band, KIXX below
+  // (#225 heights: panel 5.45-7.45 m, KIXX 4.38-4.82 m). Text only, no logo
+  // artwork (PLACE_API sign rule); prices are not invented.
+  const PL=WP(2.3),pole=[PL[0]+WN[0]*.95,PL[1]+WN[1]*.95],PR=WR;
+  const pq=(a,y,w,h,d,mat,solid=false)=>{box(pole[0]+WD[0]*a,pole[1]+WD[1]*a,y,w,h,d,mat,solid,PR);};
+  for(const a of [-.92,.92])pq(a,G,.15,7.55,.15,0x16949f,true);
+  pq(0,7.5,2.05,.16,.18,0x16949f);
+  pq(0,5.45,1.95,2.0,.16,0xe5e5df);pq(0,5.45,1.98,.5,.19,0x168e9b);pq(0,4.38,1.85,.44,.15,0xe3561d);
   for(const side of [-1,1]){
-    K.sign('GS',{x:319+side*.11,z:-226,y:6.12,w:1.55,h:.9,rotY:side*PI/2,bg:'#f3f2e9',fg:'#1b8492',bold:true});
-    K.sign('GS칼텍스',{x:319+side*.12,z:-226,y:4.93,w:2.05,h:.4,rotY:side*PI/2,bg:'#168e9b',fg:'#fff',bold:true});
+    const o2=[pole[0]+WN[0]*side*.11,pole[1]+WN[1]*side*.11],ry=WR+(side<0?PI:0);
+    K.sign('GS',{x:o2[0],z:o2[1],y:6.62,w:1.2,h:.78,rotY:ry,bg:'#f3f2e9',fg:'#1b8492',bold:true});
+    K.sign('GS칼텍스',{x:o2[0],z:o2[1],y:5.7,w:1.75,h:.4,rotY:ry,bg:'#168e9b',fg:'#fff',bold:true});
+    K.sign('KIXX prime',{x:o2[0],z:o2[1],y:4.6,w:1.7,h:.34,rotY:ry,bg:'#e3561d',fg:'#fff',bold:true});
   }
-  box(319,-226,3.9,.15,.48,2.2,0xe3561d,false);
-  for(const side of [-1,1])K.sign('KIXX prime',{x:319+side*.1,z:-226,y:4.14,w:2.05,h:.31,rotY:side*PI/2,bg:'#e3561d',fg:'#fff',bold:true});
 }

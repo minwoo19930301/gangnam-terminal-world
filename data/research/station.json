@@ -470,7 +470,8 @@
       "round13 직결 한계: 신세계 J1 서벽 x=-79와 고투몰 외벽의 개구는 타 모듈 소관이다. 새 엔터식스 전면/대합실과 기존 비유료 상가의 B1 직결은 이번에 만들지 못했으며, 계단 또는 신설 모델 승강기로 승강장층을 거쳐 접근하는 임시 동선이다. 이 임시 우회를 실제 방문 경로로 주장하지 않는다.",
       "round13 방위 한계: w7cLZSedgT4_30의 우측 3호선 분기는 기존 이웃 경계를 피하면서 모델의 서측(카메라 왼쪽)으로 맞췄다. 분기 순서·층 관계를 구현했으나 프레임의 실제 좌우 일치는 아직 해결하지 못했다.",
       "round13 환승 치수: 기존 297m 중심선은 동서 구간을 z=-54로 옮겨 324m가 됐다. 별도 7↔9 통로는 x=-68,z=-46..-85이고 병렬 무빙워크 각15m는 시각·통과성 근사다. 문헌의314m나 실제 시설 길이를 재측정한 결과가 아니다.",
-      "round13 표기 출구: 기존 출구 2/3/4/5/6의 목적지 문구를 walk 근거로 정정했으며 OSM 지상 좌표와 기존 W3/W9/J7은 이동하지 않았다. 1·2번이 특정 보드 사진에 보이지 않아도 제거하지 않는다."
+      "round13 표기 출구: 기존 출구 2/3/4/5/6의 목적지 문구를 walk 근거로 정정했으며 OSM 지상 좌표와 기존 W3/W9/J7은 이동하지 않았다. 1·2번이 특정 보드 사진에 보이지 않아도 제거하지 않는다.",
+      "round20 polish: 사진 #74–#77을 함께 풀어 홀을 재배치. 문 서쪽 3.3 m 화강석 전실(u 0..-3.3, v 82..90, 접힌 판넬 문짝·노란 선), 홀 v 78..100.5, 기둥 열 v≈90.3(u -7/-13.3/-19.6, 네 번째 -25.5,88), 코퍼 중심 (-16.45,90.4), 남측 Case holic·ARTBOX 전면 v 95.5, 점자선은 u≈-8.9 남북선과 v 94.5 동서선(가운데 축선 없음), ENTER-6 판 u -2.8·폭 3.1 m, 타는 곳 판 u -6.9·폭 3.3 m. 사진 내 상대 거리(눈높이 1.4–1.6 m 가정)에서 나온 값이라 ±1 m 오차가 있다. u -22..-28 연장부와 네 번째 기둥은 원경으로만 보인 부분이며 이후 연결은 여전히 닫아 둔다."
     ],
     "junction_issues": [
       {
@@ -2465,6 +2466,19 @@
             "support_y": -6,
             "capsule_push_m": 0
           }
+        },
+        "round20_polish_fitted_pose": {
+          "x": 34.25,
+          "y": -6,
+          "z": 20.62,
+          "yawDeg": 125,
+          "pitchDeg": 0,
+          "local_uv": [
+            1.5,
+            86
+          ],
+          "note": "polish 라운드에서 사진의 바닥 접점·간판·기둥 방위를 함께 맞춘 추정 pose. 모델 비교용이며 places.json을 고치지 않음. 카메라는 문 동쪽(터미널 쪽) 약 1.5 m. 머리 위 문틀 하부 띠가 보이고 바닥은 화강석. 승인 pose(u≈-3)는 약 4.5 m 서쪽으로 치우침.",
+          "render": "shots/polish_station/station_fitted_after.png (비공개, 커밋 안 함)"
         }
       },
       {
@@ -2497,6 +2511,19 @@
             "support_y": -6,
             "capsule_push_m": 0
           }
+        },
+        "round20_polish_fitted_pose": {
+          "x": 29.94,
+          "y": -6,
+          "z": 22.79,
+          "yawDeg": 137,
+          "pitchDeg": 0,
+          "local_uv": [
+            -3.3,
+            86.5
+          ],
+          "note": "polish 라운드에서 사진의 바닥 접점·간판·기둥 방위를 함께 맞춘 추정 pose. 모델 비교용이며 places.json을 고치지 않음. 점자 교차선(u≈-8.9)이 오른쪽 앞 약 5 m, 기둥 A가 왼쪽 앞 약 4 m. 승인 pose보다 약 2.7 m 동쪽.",
+          "render": "shots/polish_station/station_fitted_after.png (비공개, 커밋 안 함)"
         }
       },
       {
@@ -2529,6 +2556,19 @@
             "support_y": -6,
             "capsule_push_m": 0
           }
+        },
+        "round20_polish_fitted_pose": {
+          "x": 26.4,
+          "y": -6,
+          "z": 24.9,
+          "yawDeg": 92,
+          "pitchDeg": 0,
+          "local_uv": [
+            -7.4,
+            87.2
+          ],
+          "note": "polish 라운드에서 사진의 바닥 접점·간판·기둥 방위를 함께 맞춘 추정 pose. 모델 비교용이며 places.json을 고치지 않음. 가로지르는 점자선이 약 3 m 앞, 매장 서단 기둥과 아치가 정면 왼쪽. 승인 pose보다 약 0.7 m 동쪽·북쪽, yaw 3° 오른쪽.",
+          "render": "shots/polish_station/station_fitted_after.png (비공개, 커밋 안 함)"
         }
       },
       {
@@ -2561,6 +2601,19 @@
             "support_y": -6,
             "capsule_push_m": 0
           }
+        },
+        "round20_polish_fitted_pose": {
+          "x": 22.74,
+          "y": -6,
+          "z": 26.92,
+          "yawDeg": 168,
+          "pitchDeg": 0,
+          "local_uv": [
+            -11.5,
+            87.8
+          ],
+          "note": "polish 라운드에서 사진의 바닥 접점·간판·기둥 방위를 함께 맞춘 추정 pose. 모델 비교용이며 places.json을 고치지 않음. 기둥 B 정면 약 3 m, 코퍼가 오른쪽. 승인 pose와 거의 같음.",
+          "render": "shots/polish_station/station_fitted_after.png (비공개, 커밋 안 함)"
         }
       },
       {
@@ -2593,6 +2646,19 @@
             "support_y": -6,
             "capsule_push_m": 0
           }
+        },
+        "round20_polish_fitted_pose": {
+          "x": 31.18,
+          "y": -6,
+          "z": 25.21,
+          "yawDeg": 257,
+          "pitchDeg": 0,
+          "local_uv": [
+            -3,
+            89.2
+          ],
+          "note": "polish 라운드에서 사진의 바닥 접점·간판·기둥 방위를 함께 맞춘 추정 pose. 모델 비교용이며 places.json을 고치지 않음. 현관(전실) 남쪽 벽 가까이에서 동남동을 봄(나침반 +34° 보정값 ≈103°). 승인 yaw 285는 문짝·벽 위치와 맞지 않음.",
+          "render": "shots/polish_station/station_fitted_after.png (비공개, 커밋 안 함)"
         }
       }
     ],

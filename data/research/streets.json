@@ -1552,6 +1552,90 @@
           "z": -230,
           "yawDeg": 262
         }
+      },
+      {
+        "spot": "GS칼텍스 캐노피 정면 · 폴리시 피팅",
+        "photo_index": 222,
+        "photos": [
+          "refs/user_walk/20261107/IMG_0256.jpg"
+        ],
+        "round": 20,
+        "x": 336.9,
+        "y": 0.08,
+        "z": -229.9,
+        "yawDeg": 210.4,
+        "pitchDeg": 0,
+        "places": [
+          "streets",
+          "gotomall",
+          "gyeongbu",
+          "gyeongbu_east"
+        ],
+        "y_convention": "support floor; renderer adds eye height",
+        "correction": "round20 polish: pose fitted from octagon corners/columns/pump bearings, not the approved places.json pose"
+      },
+      {
+        "spot": "GS칼텍스 주유기 33 · 폴리시 피팅",
+        "photo_index": 223,
+        "photos": [
+          "refs/user_walk/20261107/IMG_0257.jpg"
+        ],
+        "round": 20,
+        "x": 336.9,
+        "y": 0.08,
+        "z": -229.9,
+        "yawDeg": 158.5,
+        "pitchDeg": 0,
+        "places": [
+          "streets",
+          "gotomall",
+          "gyeongbu",
+          "gyeongbu_east"
+        ],
+        "y_convention": "support floor; renderer adds eye height",
+        "correction": "round20 polish: pose fitted from octagon corners/columns/pump bearings, not the approved places.json pose"
+      },
+      {
+        "spot": "GS칼텍스 기둥 간판 · 폴리시 피팅",
+        "photo_index": 225,
+        "photos": [
+          "refs/user_walk/20261107/IMG_0259.jpg"
+        ],
+        "round": 20,
+        "x": 335.0,
+        "y": 0.08,
+        "z": -227.5,
+        "yawDeg": 122.2,
+        "pitchDeg": 0,
+        "places": [
+          "streets",
+          "gotomall",
+          "gyeongbu",
+          "gyeongbu_east"
+        ],
+        "y_convention": "support floor; renderer adds eye height",
+        "correction": "round20 polish: pose fitted from octagon corners/columns/pump bearings, not the approved places.json pose"
+      },
+      {
+        "spot": "GS칼텍스 북쪽 진입로 · 폴리시 보정",
+        "photo_index": 221,
+        "photos": [
+          "refs/user_walk/20261107/IMG_0255.jpg"
+        ],
+        "round": 20,
+        "x": 330.5,
+        "y": 0.08,
+        "z": -228.4,
+        "yawDeg": 262,
+        "pitchDeg": 0,
+        "places": [
+          "streets",
+          "gotomall",
+          "gyeongbu",
+          "gyeongbu_east"
+        ],
+        "y_convention": "support floor; renderer adds eye height",
+        "correction": "round20 polish: pose fitted from octagon corners/columns/pump bearings, not the approved places.json pose"
       }
     ],
     "evidence_audit_round10": {
@@ -2323,6 +2407,105 @@
         "G13 street lift has paved west approach/threshold/car at y.15. Gotomall registers its street stop at0; the15cm pavement step is traversable.",
         "Initial guessed well and synthetic test superseded by actual gotomall holes. No underground geometry edited.",
         "Final full-world walk blocked before route checks by concurrent famille buildDeck undefined. Required zero-blocked result remains unverified; streets-only walk has0blocked."
+      ]
+    },
+    "round20_polish": {
+      "method": "Rendered every approved photo pose (tools/photo_compare.py) and compared photo|model sheets in two rounds. Vertical edges (octagon corners, canopy columns, pump 33, pole) were measured in the photos (f~1200 px on the 1200 px wide copies) and fitted jointly with the octagon OSM outline and the Kakao aerial tiles.",
+      "changes": [
+        {
+          "what": "Pump canopy moved and turned",
+          "evidence": "#220 and #222 both see the two column rows converging away from the camera with the front fascia square to the view; aerial roof (pale, central skylight strip) and its shadow at x346-366, z-208..-184",
+          "world": {
+            "centre": [
+              356,
+              -196.2
+            ],
+            "axis_bearing_deg": 161,
+            "size": [
+              13.5,
+              21.6
+            ],
+            "column_rows_apart": 8.7,
+            "bay": 6.4,
+            "front_edge_t": -10.8
+          },
+          "was": "12x20 m N-S box centred (352,-214)"
+        },
+        {
+          "what": "Apron extended south under the canopy; two long islands with three dispensers each along the column rows",
+          "guess": "dispenser count per island and the yellow bay outlines"
+        },
+        {
+          "what": "Pump 33 relocated and turned: screens face NNE, island along WNW-ESE with teal hoops at the ends, yellow waiting box on its WNW side",
+          "world": {
+            "pump33": [
+              331,
+              -221.45
+            ],
+            "rotY": -0.436
+          },
+          "evidence": "#219/#220/#223/#224/#225 bearings"
+        },
+        {
+          "what": "Paint: red kerb line only on the north edge (follows the paver edge west of x333); trench drain (blue, dark slot, red line) 3.4 m south of it bending SW; westbound 일단 정지 box before the NW exit and a second text past the drain",
+          "guess": "drain bend and box extents within ~2 m"
+        },
+        {
+          "what": "West wall re-aligned with the lot edge (bearing ~157, west of the service lane), pole sign ~1 m in front of its north end, car-wash boards, red notices, 주입구 plate and three teal flagpoles",
+          "world": {
+            "wall_north_end": [
+              314.3,
+              -222.2
+            ],
+            "pole": [
+              316.1,
+              -220.45
+            ]
+          },
+          "evidence": "#224/#225/#226 all put the pole on one ray at bearing ~245 from the pump-33 spot; panel width gives ~20 m"
+        },
+        {
+          "what": "Pole sign panels raised to the photographed heights (white GS panel 5.45-7.45 m, KIXX 4.38-4.82 m), turned to face the forecourt; text only per PLACE_API"
+        },
+        {
+          "what": "Hand-wash tarp bay (visual only) SSW of pump 33; cars along the north face turned parallel to it"
+        },
+        {
+          "what": "Plane tree moved to (325.3,-229.6): WNW of the #224-#226 spot with buses right behind it, crown only at the top right of #225"
+        },
+        {
+          "what": "Obelisk lettering at photographed size; G13 glass graphic dots enlarged/brightened so the lime G reads as in #221"
+        }
+      ],
+      "pose_notes": [
+        {
+          "i": 217,
+          "note": "Approved pose is on the top landing at eye 1.6 m; the photo is ~4 risers down (eye near the top-step level) about 1 m further SE. Model stair top also sits ~2.5 m closer to the kerb than the photo (obelisk 2.8 m beyond the top step), which is gotomall's stair vs the OSM kerb; not changed here."
+        },
+        {
+          "i": 218,
+          "note": "Photo stands ~3.5 m SE of the obelisk on pavers; with the model's stair that spot is inside the well, so the render stays too close (same kerb/stair offset)."
+        },
+        {
+          "i": 219,
+          "note": "Pose (329,-232) is on the stair top; the photo stands just N of the plane tree looking S. Position not recoverable from the octagon alone."
+        },
+        {
+          "i": 221,
+          "note": "Camera is ~1.6 m S of the G13 canopy wall, on the apron next to the red line: z ~ -228.4 instead of -230 (render then matches: G graphic left, lane, drain right)."
+        },
+        {
+          "i": "222-223",
+          "note": "Fit (336.9,-229.9), bearings 150 / 201 deg (yawDeg 210 / 158)."
+        },
+        {
+          "i": "224-226",
+          "note": "Fit (335.0,-227.5), bearings 220 / 238 / 268 deg (yawDeg 140 / 122 / 92); #226 stands south of the drain."
+        }
+      ],
+      "open": [
+        "CAR WASH building with dark fascia SW of the office (seen #219/#220/#223/#224) not modelled: footprint unknown and the OSM service lane passes there",
+        "Kerb vs G13 stair offset (#217/#218)"
       ]
     }
   }
