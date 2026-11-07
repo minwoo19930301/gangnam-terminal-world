@@ -1,0 +1,1285 @@
+{
+  "id": "famille",
+  "name": "파미에스테이션 동관",
+  "round": 20,
+  "updated": "2026-11-07",
+  "primary_evidence": "User-approved 2026-11-07 photo route; verified fixes override official plans, raw GPS and earlier models.",
+  "sources": [
+    {
+      "url": "refs/user_walk/20261107/IMG_0261.jpg",
+      "photo_index": 227,
+      "private": true
+    },
+    {
+      "url": "refs/user_walk/20261107/IMG_0262.jpg",
+      "photo_index": 228,
+      "private": true
+    },
+    {
+      "url": "refs/user_walk/20261107/IMG_0263.jpg",
+      "photo_index": 229,
+      "private": true
+    },
+    {
+      "url": "refs/user_walk/20261107/IMG_0264.jpg",
+      "photo_index": 230,
+      "private": true
+    },
+    {
+      "url": "refs/user_walk/20261107/IMG_0265.jpg",
+      "photo_index": 231,
+      "private": true
+    },
+    {
+      "url": "refs/user_walk/20261107/IMG_0266.jpg",
+      "photo_index": 232,
+      "private": true
+    },
+    {
+      "url": "refs/user_walk/20261107/IMG_0267.jpg",
+      "photo_index": 233,
+      "private": true
+    },
+    {
+      "url": "refs/user_walk/20261107/IMG_0268.jpg",
+      "photo_index": 234,
+      "private": true
+    },
+    {
+      "url": "refs/user_walk/20261107/IMG_0269.jpg",
+      "photo_index": 235,
+      "private": true
+    },
+    {
+      "url": "refs/user_walk/20261107/IMG_0270.jpg",
+      "photo_index": 236,
+      "private": true
+    },
+    {
+      "url": "refs/user_walk/20261107/IMG_0271.jpg",
+      "photo_index": 237,
+      "private": true
+    },
+    {
+      "url": "refs/user_walk/20261107/IMG_0272.jpg",
+      "photo_index": 238,
+      "private": true
+    },
+    {
+      "url": "refs/user_walk/20261107/IMG_0273.jpg",
+      "photo_index": 239,
+      "private": true
+    },
+    {
+      "url": "refs/user_walk/20261107/IMG_0274.jpg",
+      "photo_index": 240,
+      "private": true
+    },
+    {
+      "url": "refs/user_walk/20261107/IMG_0275.jpg",
+      "photo_index": 241,
+      "private": true
+    },
+    {
+      "url": "refs/user_walk/20261107/IMG_0276.jpg",
+      "photo_index": 242,
+      "private": true
+    },
+    {
+      "url": "refs/user_walk/20261107/IMG_0277.jpg",
+      "photo_index": 243,
+      "private": true
+    },
+    {
+      "url": "refs/user_walk/20261107/IMG_0278.jpg",
+      "photo_index": 244,
+      "private": true
+    },
+    {
+      "url": "refs/user_walk/20261107/IMG_0279.jpg",
+      "photo_index": 245,
+      "private": true
+    },
+    {
+      "url": "refs/user_walk/20261107/IMG_0280.jpg",
+      "photo_index": 246,
+      "private": true
+    },
+    {
+      "url": "refs/user_walk/20261107/IMG_0281.jpg",
+      "photo_index": 247,
+      "private": true
+    },
+    {
+      "url": "refs/user_walk/20261107/IMG_0282.jpg",
+      "photo_index": 248,
+      "private": true
+    },
+    {
+      "url": "refs/user_walk/20261107/IMG_0283.jpg",
+      "photo_index": 249,
+      "private": true
+    },
+    {
+      "url": "refs/user_walk/20261107/IMG_0284.jpg",
+      "photo_index": 250,
+      "private": true
+    },
+    {
+      "url": "refs/user_walk/20261107/IMG_0285.jpg",
+      "photo_index": 251,
+      "private": true
+    },
+    {
+      "url": "refs/user_walk/20261107/IMG_0286.jpg",
+      "photo_index": 252,
+      "private": true
+    },
+    {
+      "url": "refs/user_walk/20261107/IMG_0287.jpg",
+      "photo_index": 253,
+      "private": true
+    },
+    {
+      "url": "refs/user_walk/20261107/IMG_0288.jpg",
+      "photo_index": 254,
+      "private": true
+    },
+    {
+      "url": "refs/user_walk/20261107/IMG_0289.jpg",
+      "photo_index": 255,
+      "private": true
+    },
+    {
+      "url": "refs/user_walk/20261107/IMG_0290.jpg",
+      "photo_index": 256,
+      "private": true
+    },
+    {
+      "url": "refs/user_walk/20261107/IMG_0291.jpg",
+      "photo_index": 257,
+      "private": true
+    },
+    {
+      "url": "refs/user_walk/20261107/IMG_0292.jpg",
+      "photo_index": 258,
+      "private": true
+    },
+    {
+      "url": "refs/user_walk/20261107/IMG_0293.jpg",
+      "photo_index": 259,
+      "private": true
+    },
+    {
+      "url": "refs/user_walk/20261107/IMG_0294.jpg",
+      "photo_index": 260,
+      "private": true
+    },
+    {
+      "url": "refs/user_walk/20261107/IMG_0295.jpg",
+      "photo_index": 261,
+      "private": true
+    },
+    {
+      "url": "refs/user_walk/20261107/IMG_0296.jpg",
+      "photo_index": 262,
+      "private": true
+    },
+    {
+      "url": "refs/user_walk/20261107/IMG_0297.jpg",
+      "photo_index": 263,
+      "private": true
+    },
+    {
+      "url": "refs/user_walk/20261107/IMG_0298.jpg",
+      "photo_index": 264,
+      "private": true
+    },
+    {
+      "url": "refs/user_walk/20261107/IMG_0299.jpg",
+      "photo_index": 265,
+      "private": true
+    },
+    {
+      "url": "refs/user_walk/20261107/IMG_0300.jpg",
+      "photo_index": 266,
+      "private": true
+    },
+    {
+      "url": "refs/user_walk/20261107/IMG_0301.jpg",
+      "photo_index": 267,
+      "private": true
+    },
+    {
+      "url": "refs/user_walk/20261107/IMG_0302.jpg",
+      "photo_index": 268,
+      "private": true
+    },
+    {
+      "url": "refs/user_walk/20261107/IMG_0303.jpg",
+      "photo_index": 269,
+      "private": true
+    },
+    {
+      "url": "refs/user_walk/20261107/IMG_0304.jpg",
+      "photo_index": 270,
+      "private": true
+    },
+    {
+      "url": "refs/user_walk/20261107/IMG_0305.jpg",
+      "photo_index": 271,
+      "private": true
+    },
+    {
+      "url": "refs/user_walk/20261107/IMG_0306.jpg",
+      "photo_index": 272,
+      "private": true
+    },
+    {
+      "url": "refs/user_walk/20261107/IMG_0307.jpg",
+      "photo_index": 273,
+      "private": true
+    },
+    {
+      "url": "refs/user_walk/20261107/IMG_0308.jpg",
+      "photo_index": 274,
+      "private": true
+    },
+    {
+      "url": "refs/user_walk/20261107/IMG_0309.jpg",
+      "photo_index": 275,
+      "private": true
+    },
+    {
+      "url": "refs/user_walk/20261107/IMG_0310.jpg",
+      "photo_index": 276,
+      "private": true
+    },
+    {
+      "url": ".codex-jobs/evidence/up20_famille.json"
+    },
+    {
+      "url": ".codex-jobs/evidence/centralcity_r19_snapshot.js"
+    },
+    {
+      "url": "data/osm.json"
+    }
+  ],
+  "coordinate_system": {
+    "origin_xz": [
+      29,
+      144
+    ],
+    "u_unit": [
+      -0.9325680982740896,
+      0.3609941025577121
+    ],
+    "v_unit": [
+      0.3609941025577121,
+      0.9325680982740896
+    ],
+    "floor_y": {
+      "1F": 0,
+      "2F": 5,
+      "HOS_1F_centralcity": 2.1,
+      "B1_station": -6
+    }
+  },
+  "findings": [
+    {
+      "id": "famille/L1",
+      "priority": "layout",
+      "photos": "#227–#281 (key: #230, #231, #250–#253, #262–#267, #273–#275)",
+      "world": "축 기준선 (29,144)→(-33,168); 2F 복도 (73,147)→(26,166) y5; 홀 x≈8..32, z≈145..171 (1F)",
+      "verdict": "confirmed",
+      "confidence": "high",
+      "status": "implemented",
+      "change": "JW 남면 (29,144)→(-33,168)을 축으로 홀 u4..22/v0..20, 2F v≈19.5, 데크 실제 OSM footprint. 북쪽 GPS 오배치 폐기."
+    },
+    {
+      "id": "famille/L2",
+      "priority": "layout",
+      "photos": "#262–#275",
+      "world": "이동 전 (-43,178)/(-35,174) → 이동 후 에스컬레이터 (26,166)→(22,156), 갤러리 시점 (8.5,152)",
+      "verdict": "adjusted",
+      "confidence": "high",
+      "status": "partial_shared_scope",
+      "change": "기존 centralcity 동단 형식을 보존·확장한 새 홀/갤러리. 에스컬레이터는 (25.9,165.8)/(24.1,166.5)→(22,155.5)/(20.2,156.2)로 옮긴 구성. 기존 노드 제거는 centralcity 담당."
+    },
+    {
+      "id": "famille/L3",
+      "priority": "layout",
+      "photos": "#227, #228, #229, #230, #231, #232, #233",
+      "world": "데크 x 71..173, z 97..156 (414891732), 바닥 y5, 사진 구간 x 85..105, z 134..146",
+      "verdict": "confirmed",
+      "confidence": "high",
+      "status": "implemented",
+      "change": "414891732 claim; y5 주차층, y9 지붕. 노출 기둥/보, 장축 주행로, 북측 개방 난간."
+    },
+    {
+      "id": "famille/L4",
+      "priority": "layout",
+      "photos": "#233, #234, #235, #236, #237",
+      "world": "문 ≈(73,147) 2F; 화장실 벽 ≈(87,143); A1 ≈(85,146)",
+      "verdict": "adjusted",
+      "confidence": "high",
+      "status": "implemented",
+      "change": "(73,147) 평탄한 출입구, 바로 카펫 복도; 북측 화강석 계단 (70.3,147)→(59.5,141.8), 화장실 서단 포켓."
+    },
+    {
+      "id": "famille/L5",
+      "priority": "layout",
+      "photos": "#238–#261",
+      "world": "(72.5,148.5)→(27.7,165.1) y5; 명판 벽 ≈(50,157); 케르반 ≈(39,159); 이비티 코트 ≈(32,167)",
+      "verdict": "adjusted",
+      "confidence": "medium",
+      "status": "implemented",
+      "change": "카펫 끝 (62.5,152.3), 전실 (59.7,153.3), 명판 벽 (49.7,157), 식당가 (47.8,157.7)→(39.6,160.7), 서측 홀과 에스컬레이터까지 연결."
+    },
+    {
+      "id": "famille/L6",
+      "priority": "layout",
+      "photos": "#253, #260, #261, #262, #263, #264, #265, #266, #267",
+      "world": "하행 (25.9,165.8)→(22.0,155.5); 상행 (24.1,166.5)→(20.2,156.2)",
+      "verdict": "confirmed",
+      "confidence": "high",
+      "status": "implemented",
+      "change": "상하행 한 쌍을 지정 좌표에 1.1 m 디딤판으로 설치, y0↔5. 상부 슬래브는 보이드를 덮지 않음."
+    },
+    {
+      "id": "famille/L7",
+      "priority": "layout",
+      "photos": "#262–#276",
+      "world": "홀 x≈8..33, z≈145..171, y0~10; JAJU (27.8,152.0); 아그라 (30.3,158.5)",
+      "verdict": "confirmed",
+      "confidence": "medium",
+      "status": "implemented",
+      "change": "홀 u4..22/v0..20 (약 (25.3,145.4),(8.5,151.9),(15.7,170.6),(32.5,164.1)). JAJU/Agra는 동벽에서 WSW를 봄."
+    },
+    {
+      "id": "famille/L8",
+      "priority": "layout",
+      "photos": "#272, #274, #275",
+      "world": "(8.5,151.9)/(12.6,162.7) → (-35,174) 1F",
+      "verdict": "confirmed",
+      "confidence": "medium",
+      "status": "implemented",
+      "change": "v0..11.5 갤러리를 u22..70.56까지 연장; 기존 접합≈(-35,174). 와필레는≈(5.7,153)."
+    },
+    {
+      "id": "famille/L9",
+      "priority": "layout",
+      "photos": "#264, #266, #267, #272, #273, #276, #277, #278, #279",
+      "world": "문 (19.6,147.8) 1F; 계단 (17.8,145.6)→북북서; B1 에스컬레이터 상단 ≈(22.9,144.8)",
+      "verdict": "confirmed",
+      "confidence": "medium",
+      "status": "partial_shared_scope",
+      "change": "북벽 HOS 파사드 문≈(19.6,147.8), JF1 hall→lobby. 안쪽 로비·상승계단·B1 에스컬레이터는 centralcity의 동시 작업 범위."
+    },
+    {
+      "id": "famille/L12",
+      "priority": "layout",
+      "photos": "#237, #238, #239, #241, #263, #278",
+      "world": "데크=2F y5; 홀 y0; HOS 1F y≈+2.1; B1 y-6",
+      "verdict": "adjusted",
+      "confidence": "medium",
+      "status": "implemented",
+      "change": "선택안(a): 홀/갤러리 y0, 데크와 2F y5, HOS 와인층 약+2.1은 centralcity. 사진 포즈 y7 사용하지 않음."
+    },
+    {
+      "id": "famille/L13",
+      "priority": "layout",
+      "photos": "#227–#299",
+      "world": "box 확장 x -5→175; station void x17..25,z145..163 B2/B1; 육교 (65..81,162..179)",
+      "verdict": "confirmed",
+      "confidence": "high",
+      "status": "partial_shared_scope",
+      "change": "새 모듈이 데크를 claim하며 자체 zones/bounds 생성. 지하층 구조물을 만들지 않아 역 B1/B2 void 유지. 출구2/7과 3번 계단 캐노피 아래 지상 구멍을 덮지 않음. _meta.json 생성은 허용 파일 밖이므로 운영자 작업."
+    },
+    {
+      "id": "famille/L14",
+      "priority": "layout",
+      "photos": "#230, #231",
+      "world": "트렌치 x 75..110, z≈126..134",
+      "verdict": "adjusted",
+      "confidence": "medium",
+      "status": "implemented",
+      "change": "데크 북변에 평행한 폭6m 식재 트렌치, 지상보다2m 낮은 바닥. 경부선 캐노피는 별도 담당."
+    },
+    {
+      "id": "famille/L15",
+      "priority": "layout",
+      "photos": "#249, #266, #268, #270, #274",
+      "world": "홀 x 8..33, z 145..171",
+      "verdict": "confirmed",
+      "confidence": "low",
+      "status": "implemented",
+      "change": "사진 인접관계대로 HOS→격자 매장→와필레, 동측 JAJU→Agra; KERVAN 북측·ebt 남측. 공식 번호를 위치로 쓰지 않음."
+    },
+    {
+      "id": "famille/D1",
+      "priority": "design",
+      "photos": "#227, #228, #229, #232, #233, #236",
+      "world": "데크 x 71..173 2F",
+      "verdict": "confirmed",
+      "confidence": "high",
+      "status": "implemented",
+      "change": "회색 에폭시·녹색 차로·황색 선·북측 난간·황/청 배관·노출 콘크리트와 형광등, A1 짙은 회색/A2,A3 흰색 파란 표기."
+    },
+    {
+      "id": "famille/D2",
+      "priority": "design",
+      "photos": "#238, #239, #240, #241, #242, #243",
+      "world": "(72.5,148.5)~(57,154) y5",
+      "verdict": "confirmed",
+      "confidence": "high",
+      "status": "implemented",
+      "change": "입구 화강석 계단과 청동 난간·금테 간판, 폭3.2m 카펫·짙은 목재 천장·메뉴 라이트박스·검정 유리문."
+    },
+    {
+      "id": "famille/D3",
+      "priority": "design",
+      "photos": "#244, #245, #246, #247, #248",
+      "world": "(58,154)~(48,158) y5",
+      "verdict": "confirmed",
+      "confidence": "high",
+      "status": "implemented",
+      "change": "담황 벽돌과 밝은 줄눈, 분홍 Here To Delight You! 실제 간판, 자주/금테 명판, 회색 플랭크 타일, 북측 철제 아치난간·차알 좌석."
+    },
+    {
+      "id": "famille/D4",
+      "priority": "design",
+      "photos": "#250, #251, #252",
+      "world": "(48,158)→(36,162) y5",
+      "verdict": "confirmed",
+      "confidence": "high",
+      "status": "implemented",
+      "change": "2F 식당가 거리축과 평행한 검정 Warren 트러스, 검정 슬랫 천장·선형등·전구와 식재, 소이연남·메뉴·녹색 병 선반·사물함·바 좌석."
+    },
+    {
+      "id": "famille/D5",
+      "priority": "design",
+      "photos": "#252, #253, #254, #255, #256, #257, #258, #259, #260",
+      "world": "케르반 ≈(39,159); 이비티 ≈(32,167); 아치창 ≈(28,163) y5",
+      "verdict": "confirmed",
+      "confidence": "high",
+      "status": "implemented",
+      "change": "KERVAN≈(39,159) 북측, ebt PIZZA≈(32,167) 남측. 청록 진열장·모자이크 등·크림 몰딩 아치·빨강/흰 차양·거울 코퍼·화분·의자."
+    },
+    {
+      "id": "famille/D6",
+      "priority": "design",
+      "photos": "#263, #264, #266, #267, #268, #269, #272",
+      "world": "홀 x 8..33, z 145..171",
+      "verdict": "confirmed",
+      "confidence": "high",
+      "status": "implemented",
+      "change": "담황 벽돌 홀·크림 주두/코니스·루넷·발광 격자 천장·베이지 타일·주철 구형등·원형 화분."
+    },
+    {
+      "id": "famille/D7",
+      "priority": "design",
+      "photos": "#268, #269, #270, #271, #274",
+      "world": "JAJU (27.8,152.0); 아그라 (30.3,158.5); 와필레 ≈(5.7,153)",
+      "verdict": "confirmed",
+      "confidence": "high",
+      "status": "implemented",
+      "change": "JAJU≈(27.8,152) 검정/흰 파사드·게이트·원형 진열대; Agra≈(30.3,158.5) 흰 문/키오스크; 와필레≈(5.7,153) 민트 카운터; 미상 점포 이름 추정하지 않음."
+    },
+    {
+      "id": "famille/D8",
+      "priority": "design",
+      "photos": "#274, #275",
+      "world": "(8.5,152)→(-35,174) 1F",
+      "verdict": "adjusted",
+      "confidence": "medium",
+      "status": "implemented",
+      "change": "폭11.5m 전폭 흰 곡면 볼트 (스프링 y8, 크라운≈11), 중앙 유리 천창, 6~7m 벽돌 베이·크림 루넷·화분열. snapshot의 풍부한 아케이드 어휘를 새 축으로 확장."
+    },
+    {
+      "id": "famille/D9",
+      "priority": "design",
+      "photos": "#266, #267, #272, #273, #276",
+      "world": "(19.6,147.8) 1F",
+      "verdict": "confirmed",
+      "confidence": "high",
+      "status": "implemented",
+      "change": "(19.6,147.8) 북벽에 HOUSE OF SHINSEGAE 은색 글자·청동 개구부·황동 격자·검정 문과 구형등."
+    },
+    {
+      "id": "famille/T1",
+      "priority": "detail",
+      "photos": "#227, #228, #229, #233, #234, #236",
+      "world": "데크 서단 x 75..105",
+      "verdict": "confirmed",
+      "confidence": "high",
+      "status": "implemented",
+      "change": "데크 A1/A2/A3, 2층, 장애인 주차/정산/화장실/파미에스테이션/신세계아카데미 안내와 소화기함."
+    },
+    {
+      "id": "famille/T2",
+      "priority": "detail",
+      "photos": "#242, #249, #266, #267",
+      "world": "기둥 ≈(57,154) 2F, ≈(21,157) 1F; 명판 벽 ≈(50,157) 2F",
+      "verdict": "confirmed",
+      "confidence": "high",
+      "status": "implemented",
+      "change": "2F 문 앞과 1F 에스컬레이터 옆 안내 기둥. 명판 벽에 사진 #249의 실제 15개 상호를 각각 표기."
+    },
+    {
+      "id": "famille/T3",
+      "priority": "detail",
+      "photos": "#243, #262, #264, #265, #266, #274, #275, #280, #281",
+      "world": "파빌리온 ≈(15,157.6) 1F",
+      "verdict": "confirmed",
+      "confidence": "high",
+      "status": "deferred_optional",
+      "change": "선택사항인 계절 리스·배너 및 N Moment 팝업은 생략. 홀 동선/전시 여유 공간을 상설 구조로 점유하지 않음."
+    }
+  ],
+  "trace_cameras": [
+    {
+      "name": "famille_227",
+      "photo_index": 227,
+      "x": 103.9,
+      "y": 5,
+      "z": 135.3,
+      "yawDeg": 103.1,
+      "pitchDeg": 0,
+      "floor": "2F",
+      "aim": "파미에 주차장 2층 A3 기둥",
+      "note": "y is feet/floor height; add eye height in renderer. Deck corrected from old y7 to y5."
+    },
+    {
+      "name": "famille_228",
+      "photo_index": 228,
+      "x": 103.9,
+      "y": 5,
+      "z": 135.3,
+      "yawDeg": 283.8,
+      "pitchDeg": 0,
+      "floor": "2F",
+      "aim": "파미에 주차장 2층 동쪽 주차열",
+      "note": "y is feet/floor height; add eye height in renderer. Deck corrected from old y7 to y5."
+    },
+    {
+      "name": "famille_229",
+      "photo_index": 229,
+      "x": 98.6,
+      "y": 5,
+      "z": 138,
+      "yawDeg": 105.6,
+      "pitchDeg": 0,
+      "floor": "2F",
+      "aim": "파미에 주차장 2층 A2 기둥",
+      "note": "y is feet/floor height; add eye height in renderer. Deck corrected from old y7 to y5."
+    },
+    {
+      "name": "famille_230",
+      "photo_index": 230,
+      "x": 96.8,
+      "y": 5,
+      "z": 138.8,
+      "yawDeg": 23,
+      "pitchDeg": 0,
+      "floor": "2F",
+      "aim": "파미에 주차장 2층 북쪽 난간",
+      "note": "y is feet/floor height; add eye height in renderer. Deck corrected from old y7 to y5."
+    },
+    {
+      "name": "famille_231",
+      "photo_index": 231,
+      "x": 96.8,
+      "y": 5,
+      "z": 138.8,
+      "yawDeg": 42.2,
+      "pitchDeg": 0,
+      "floor": "2F",
+      "aim": "파미에 주차장 2층 북쪽 난간",
+      "note": "y is feet/floor height; add eye height in renderer. Deck corrected from old y7 to y5."
+    },
+    {
+      "name": "famille_232",
+      "photo_index": 232,
+      "x": 93.2,
+      "y": 5,
+      "z": 140.6,
+      "yawDeg": 118.8,
+      "pitchDeg": 0,
+      "floor": "2F",
+      "aim": "파미에 주차장 2층 서쪽 통로",
+      "note": "y is feet/floor height; add eye height in renderer. Deck corrected from old y7 to y5."
+    },
+    {
+      "name": "famille_233",
+      "photo_index": 233,
+      "x": 91.4,
+      "y": 5,
+      "z": 141.5,
+      "yawDeg": 123.4,
+      "pitchDeg": 0,
+      "floor": "2F",
+      "aim": "파미에 주차장 2층 서쪽 통로",
+      "note": "y is feet/floor height; add eye height in renderer. Deck corrected from old y7 to y5."
+    },
+    {
+      "name": "famille_234",
+      "photo_index": 234,
+      "x": 86.9,
+      "y": 5,
+      "z": 143.7,
+      "yawDeg": 78.5,
+      "pitchDeg": 0,
+      "floor": "2F",
+      "aim": "파미에 주차장 2층 화장실 벽",
+      "note": "y is feet/floor height; add eye height in renderer. Deck corrected from old y7 to y5."
+    },
+    {
+      "name": "famille_235",
+      "photo_index": 235,
+      "x": 86,
+      "y": 5,
+      "z": 144.1,
+      "yawDeg": 89.2,
+      "pitchDeg": 0,
+      "floor": "2F",
+      "aim": "파미에 주차장 2층 A1 기둥",
+      "note": "y is feet/floor height; add eye height in renderer. Deck corrected from old y7 to y5."
+    },
+    {
+      "name": "famille_236",
+      "photo_index": 236,
+      "x": 85.1,
+      "y": 5,
+      "z": 144.5,
+      "yawDeg": 102.2,
+      "pitchDeg": 0,
+      "floor": "2F",
+      "aim": "파미에 주차장 2층 서쪽 끝",
+      "note": "y is feet/floor height; add eye height in renderer. Deck corrected from old y7 to y5."
+    },
+    {
+      "name": "famille_237",
+      "photo_index": 237,
+      "x": 80.6,
+      "y": 5,
+      "z": 144.5,
+      "yawDeg": 86.5,
+      "pitchDeg": 0,
+      "floor": "2F",
+      "aim": "파미에스테이션 2층 출입구",
+      "note": "y is feet/floor height; add eye height in renderer. Deck corrected from old y7 to y5."
+    },
+    {
+      "name": "famille_238",
+      "photo_index": 238,
+      "x": 72.5,
+      "y": 5,
+      "z": 148.5,
+      "yawDeg": 63.7,
+      "pitchDeg": 0,
+      "floor": "2F",
+      "aim": "파미에 2층 출입구 안",
+      "note": "y is feet/floor height; add eye height in renderer. Deck corrected from old y7 to y5."
+    },
+    {
+      "name": "famille_239",
+      "photo_index": 239,
+      "x": 70.7,
+      "y": 5,
+      "z": 149.3,
+      "yawDeg": 72.3,
+      "pitchDeg": 0,
+      "floor": "2F",
+      "aim": "파미에 2층 출입구 통로",
+      "note": "y is feet/floor height; add eye height in renderer. Deck corrected from old y7 to y5."
+    },
+    {
+      "name": "famille_240",
+      "photo_index": 240,
+      "x": 68.9,
+      "y": 5,
+      "z": 150,
+      "yawDeg": 42.7,
+      "pitchDeg": 0,
+      "floor": "2F",
+      "aim": "파미에 2층 통로 계단참",
+      "note": "y is feet/floor height; add eye height in renderer. Deck corrected from old y7 to y5."
+    },
+    {
+      "name": "famille_241",
+      "photo_index": 241,
+      "x": 68,
+      "y": 5,
+      "z": 150.3,
+      "yawDeg": 96.5,
+      "pitchDeg": 0,
+      "floor": "2F",
+      "aim": "파미에 2층 카펫 복도",
+      "note": "y is feet/floor height; add eye height in renderer. Deck corrected from old y7 to y5."
+    },
+    {
+      "name": "famille_242",
+      "photo_index": 242,
+      "x": 66.1,
+      "y": 5,
+      "z": 151,
+      "yawDeg": 102.9,
+      "pitchDeg": 0,
+      "floor": "2F",
+      "aim": "파미에 2층 카펫 복도",
+      "note": "y is feet/floor height; add eye height in renderer. Deck corrected from old y7 to y5."
+    },
+    {
+      "name": "famille_243",
+      "photo_index": 243,
+      "x": 62.5,
+      "y": 5,
+      "z": 152.3,
+      "yawDeg": 95.8,
+      "pitchDeg": 0,
+      "floor": "2F",
+      "aim": "파미에 2층 유리문",
+      "note": "y is feet/floor height; add eye height in renderer. Deck corrected from old y7 to y5."
+    },
+    {
+      "name": "famille_244",
+      "photo_index": 244,
+      "x": 59.7,
+      "y": 5,
+      "z": 153.3,
+      "yawDeg": 115,
+      "pitchDeg": 0,
+      "floor": "2F",
+      "aim": "파미에 2층 'Here To Delight You!'",
+      "note": "y is feet/floor height; add eye height in renderer. Deck corrected from old y7 to y5."
+    },
+    {
+      "name": "famille_245",
+      "photo_index": 245,
+      "x": 57.9,
+      "y": 5,
+      "z": 154,
+      "yawDeg": 99.6,
+      "pitchDeg": 0,
+      "floor": "2F",
+      "aim": "파미에 2층 'Here To Delight You!'",
+      "note": "y is feet/floor height; add eye height in renderer. Deck corrected from old y7 to y5."
+    },
+    {
+      "name": "famille_246",
+      "photo_index": 246,
+      "x": 56.1,
+      "y": 5,
+      "z": 154.7,
+      "yawDeg": 103.8,
+      "pitchDeg": 0,
+      "floor": "2F",
+      "aim": "파미에 2층 벽돌 복도",
+      "note": "y is feet/floor height; add eye height in renderer. Deck corrected from old y7 to y5."
+    },
+    {
+      "name": "famille_247",
+      "photo_index": 247,
+      "x": 54.2,
+      "y": 5,
+      "z": 155.4,
+      "yawDeg": 95,
+      "pitchDeg": 0,
+      "floor": "2F",
+      "aim": "파미에 2층 벽돌 복도",
+      "note": "y is feet/floor height; add eye height in renderer. Deck corrected from old y7 to y5."
+    },
+    {
+      "name": "famille_248",
+      "photo_index": 248,
+      "x": 52.4,
+      "y": 5,
+      "z": 156,
+      "yawDeg": 87.8,
+      "pitchDeg": 0,
+      "floor": "2F",
+      "aim": "파미에 2층 복도 끝 벤치",
+      "note": "y is feet/floor height; add eye height in renderer. Deck corrected from old y7 to y5."
+    },
+    {
+      "name": "famille_249",
+      "photo_index": 249,
+      "x": 49.7,
+      "y": 5,
+      "z": 157,
+      "yawDeg": 134.2,
+      "pitchDeg": 0,
+      "floor": "2F",
+      "aim": "파미에 2층 입점 명판 벽",
+      "note": "y is feet/floor height; add eye height in renderer. Deck corrected from old y7 to y5."
+    },
+    {
+      "name": "famille_250",
+      "photo_index": 250,
+      "x": 47.8,
+      "y": 5,
+      "z": 157.7,
+      "yawDeg": 73.3,
+      "pitchDeg": 0,
+      "floor": "2F",
+      "aim": "파미에 2층 식당가 통로",
+      "note": "y is feet/floor height; add eye height in renderer. Deck corrected from old y7 to y5."
+    },
+    {
+      "name": "famille_251",
+      "photo_index": 251,
+      "x": 43.3,
+      "y": 5,
+      "z": 159.4,
+      "yawDeg": 92.6,
+      "pitchDeg": 0,
+      "floor": "2F",
+      "aim": "파미에 2층 식당가 통로",
+      "note": "y is feet/floor height; add eye height in renderer. Deck corrected from old y7 to y5."
+    },
+    {
+      "name": "famille_252",
+      "photo_index": 252,
+      "x": 39.6,
+      "y": 5,
+      "z": 160.7,
+      "yawDeg": 98.4,
+      "pitchDeg": 0,
+      "floor": "2F",
+      "aim": "파미에 2층 홀 (아치 창)",
+      "note": "y is feet/floor height; add eye height in renderer. Deck corrected from old y7 to y5."
+    },
+    {
+      "name": "famille_253",
+      "photo_index": 253,
+      "x": 38.7,
+      "y": 5,
+      "z": 161.1,
+      "yawDeg": 116.8,
+      "pitchDeg": 0,
+      "floor": "2F",
+      "aim": "파미에 2층 케르반 앞",
+      "note": "y is feet/floor height; add eye height in renderer. Deck corrected from old y7 to y5."
+    },
+    {
+      "name": "famille_254",
+      "photo_index": 254,
+      "x": 37.8,
+      "y": 5,
+      "z": 161.4,
+      "yawDeg": 144.9,
+      "pitchDeg": 0,
+      "floor": "2F",
+      "aim": "파미에 2층 벽돌 기둥",
+      "note": "y is feet/floor height; add eye height in renderer. Deck corrected from old y7 to y5."
+    },
+    {
+      "name": "famille_255",
+      "photo_index": 255,
+      "x": 35,
+      "y": 5,
+      "z": 162.4,
+      "yawDeg": 142.9,
+      "pitchDeg": 0,
+      "floor": "2F",
+      "aim": "파미에 2층 이비티 피자 앞",
+      "note": "y is feet/floor height; add eye height in renderer. Deck corrected from old y7 to y5."
+    },
+    {
+      "name": "famille_256",
+      "photo_index": 256,
+      "x": 34.1,
+      "y": 5,
+      "z": 162.8,
+      "yawDeg": 166.1,
+      "pitchDeg": 0,
+      "floor": "2F",
+      "aim": "파미에 2층 이비티 피자 앞",
+      "note": "y is feet/floor height; add eye height in renderer. Deck corrected from old y7 to y5."
+    },
+    {
+      "name": "famille_257",
+      "photo_index": 257,
+      "x": 32.3,
+      "y": 5,
+      "z": 163.4,
+      "yawDeg": 153.4,
+      "pitchDeg": 0,
+      "floor": "2F",
+      "aim": "파미에 2층 이비티 피자 앞",
+      "note": "y is feet/floor height; add eye height in renderer. Deck corrected from old y7 to y5."
+    },
+    {
+      "name": "famille_258",
+      "photo_index": 258,
+      "x": 31.4,
+      "y": 5,
+      "z": 163.8,
+      "yawDeg": 137,
+      "pitchDeg": 0,
+      "floor": "2F",
+      "aim": "파미에 2층 이비티 피자 앞",
+      "note": "y is feet/floor height; add eye height in renderer. Deck corrected from old y7 to y5."
+    },
+    {
+      "name": "famille_259",
+      "photo_index": 259,
+      "x": 30.5,
+      "y": 5,
+      "z": 164.1,
+      "yawDeg": 125.4,
+      "pitchDeg": 0,
+      "floor": "2F",
+      "aim": "파미에 2층 이비티 피자 앞",
+      "note": "y is feet/floor height; add eye height in renderer. Deck corrected from old y7 to y5."
+    },
+    {
+      "name": "famille_260",
+      "photo_index": 260,
+      "x": 29.6,
+      "y": 5,
+      "z": 164.5,
+      "yawDeg": 99.6,
+      "pitchDeg": 0,
+      "floor": "2F",
+      "aim": "파미에 2층 홀 서측",
+      "note": "y is feet/floor height; add eye height in renderer. Deck corrected from old y7 to y5."
+    },
+    {
+      "name": "famille_261",
+      "photo_index": 261,
+      "x": 27.7,
+      "y": 5,
+      "z": 165.1,
+      "yawDeg": 58.3,
+      "pitchDeg": 0,
+      "floor": "2F",
+      "aim": "파미에 2층 하행 에스컬레이터 입구",
+      "note": "y is feet/floor height; add eye height in renderer. Deck corrected from old y7 to y5."
+    },
+    {
+      "name": "famille_262",
+      "photo_index": 262,
+      "x": 25.9,
+      "y": 5,
+      "z": 165.8,
+      "yawDeg": 37.1,
+      "pitchDeg": 0,
+      "floor": "2F",
+      "aim": "파미에 2→1층 에스컬레이터 상단",
+      "note": "y is feet/floor height; add eye height in renderer. Deck corrected from old y7 to y5."
+    },
+    {
+      "name": "famille_263",
+      "photo_index": 263,
+      "x": 25,
+      "y": 3.738,
+      "z": 163.2,
+      "yawDeg": 354.4,
+      "pitchDeg": -13,
+      "floor": "2F",
+      "aim": "파미에 2→1층 에스컬레이터",
+      "note": "y is feet/floor height; add eye height in renderer. Deck corrected from old y7 to y5."
+    },
+    {
+      "name": "famille_264",
+      "photo_index": 264,
+      "x": 24.2,
+      "y": 2.67,
+      "z": 161,
+      "yawDeg": 20.3,
+      "pitchDeg": -13,
+      "floor": "2F",
+      "aim": "파미에 2→1층 에스컬레이터",
+      "note": "y is feet/floor height; add eye height in renderer. Deck corrected from old y7 to y5."
+    },
+    {
+      "name": "famille_265",
+      "photo_index": 265,
+      "x": 23.4,
+      "y": 1.553,
+      "z": 158.7,
+      "yawDeg": 42.9,
+      "pitchDeg": -13,
+      "floor": "1F",
+      "aim": "파미에 2→1층 에스컬레이터 하단부",
+      "note": "y is feet/floor height; add eye height in renderer. Deck corrected from old y7 to y5."
+    },
+    {
+      "name": "famille_266",
+      "photo_index": 266,
+      "x": 22.7,
+      "y": 0.68,
+      "z": 156.9,
+      "yawDeg": 42.8,
+      "pitchDeg": -13,
+      "floor": "1F",
+      "aim": "파미에 에스컬레이터 하단 직전",
+      "note": "y is feet/floor height; add eye height in renderer. Deck corrected from old y7 to y5."
+    },
+    {
+      "name": "famille_267",
+      "photo_index": 267,
+      "x": 22,
+      "y": 0,
+      "z": 155.5,
+      "yawDeg": 22.7,
+      "pitchDeg": 0,
+      "floor": "1F",
+      "aim": "파미에 1층 에스컬레이터 하단",
+      "note": "y is feet/floor height; add eye height in renderer. Deck corrected from old y7 to y5."
+    },
+    {
+      "name": "famille_268",
+      "photo_index": 268,
+      "x": 22,
+      "y": 0,
+      "z": 155.5,
+      "yawDeg": 329.1,
+      "pitchDeg": 0,
+      "floor": "1F",
+      "aim": "파미에 1층 JAJU 앞",
+      "note": "y is feet/floor height; add eye height in renderer. Deck corrected from old y7 to y5."
+    },
+    {
+      "name": "famille_269",
+      "photo_index": 269,
+      "x": 22,
+      "y": 0,
+      "z": 155.5,
+      "yawDeg": 252.5,
+      "pitchDeg": 0,
+      "floor": "1F",
+      "aim": "파미에 1층 아그라 앞",
+      "note": "y is feet/floor height; add eye height in renderer. Deck corrected from old y7 to y5."
+    },
+    {
+      "name": "famille_270",
+      "photo_index": 270,
+      "x": 21.5,
+      "y": 0,
+      "z": 155.2,
+      "yawDeg": 302.5,
+      "pitchDeg": 0,
+      "floor": "1F",
+      "aim": "파미에 1층 JAJU 앞",
+      "note": "y is feet/floor height; add eye height in renderer. Deck corrected from old y7 to y5."
+    },
+    {
+      "name": "famille_271",
+      "photo_index": 271,
+      "x": 21.5,
+      "y": 0,
+      "z": 155.2,
+      "yawDeg": 323.1,
+      "pitchDeg": 0,
+      "floor": "1F",
+      "aim": "파미에 1층 JAJU 앞",
+      "note": "y is feet/floor height; add eye height in renderer. Deck corrected from old y7 to y5."
+    },
+    {
+      "name": "famille_272",
+      "photo_index": 272,
+      "x": 20.5,
+      "y": 0,
+      "z": 154.6,
+      "yawDeg": 35,
+      "pitchDeg": 0,
+      "floor": "1F",
+      "aim": "하우스 오브 신세계 입구 쪽",
+      "note": "y is feet/floor height; add eye height in renderer. Deck corrected from old y7 to y5."
+    },
+    {
+      "name": "famille_273",
+      "photo_index": 273,
+      "x": 19.5,
+      "y": 0,
+      "z": 154,
+      "yawDeg": 6.6,
+      "pitchDeg": 0,
+      "floor": "1F",
+      "aim": "하우스 오브 신세계 입구",
+      "note": "y is feet/floor height; add eye height in renderer. Deck corrected from old y7 to y5."
+    },
+    {
+      "name": "famille_274",
+      "photo_index": 274,
+      "x": 19.3,
+      "y": 0,
+      "z": 153.9,
+      "yawDeg": 79.5,
+      "pitchDeg": 0,
+      "floor": "1F",
+      "aim": "파미에 1층 유리지붕 갤러리",
+      "note": "y is feet/floor height; add eye height in renderer. Deck corrected from old y7 to y5."
+    },
+    {
+      "name": "famille_275",
+      "photo_index": 275,
+      "x": 19.3,
+      "y": 0,
+      "z": 153.9,
+      "yawDeg": 91.7,
+      "pitchDeg": 0,
+      "floor": "1F",
+      "aim": "파미에 1층 유리지붕 갤러리",
+      "note": "y is feet/floor height; add eye height in renderer. Deck corrected from old y7 to y5."
+    },
+    {
+      "name": "famille_276",
+      "photo_index": 276,
+      "x": 18.2,
+      "y": 0,
+      "z": 153.2,
+      "yawDeg": 32.6,
+      "pitchDeg": 0,
+      "floor": "1F",
+      "aim": "HOS 입구 벽돌 기둥",
+      "note": "y is feet/floor height; add eye height in renderer. Deck corrected from old y7 to y5."
+    },
+    {
+      "name": "JF1_HOS_door",
+      "x": 20.033,
+      "y": 0,
+      "z": 148.919,
+      "yawDeg": 21.158,
+      "pitchDeg": 0,
+      "aim": "HOUSE OF SHINSEGAE 문과 연결 로비"
+    },
+    {
+      "name": "JF2_gallery_joint",
+      "x": -32.206,
+      "y": 0,
+      "z": 172.918,
+      "yawDeg": 111.158,
+      "pitchDeg": 0,
+      "aim": "기존 centralcity 갤러리 이음"
+    }
+  ],
+  "unknowns": [
+    "Absolute upper floor height is inferred as +5 m from cornice/lunette and level deck threshold, not surveyed.",
+    "Entrance stair lower endpoint and access lift (69.4,152.5) are schematic: photos confirm stair existence/direction, not its full run or lift shaft.",
+    "Gallery intermediate unnamed shop bay fit, unphotographed deck east/1F circulation, exact service-wall details and trench planting are inferred.",
+    "No evidence for a connection to the footbridge stair at x65..81/z162..179; no connection added.",
+    "Unknown dark grille shop between HOS and Wafille remains unnamed.",
+    "Final operator photo rendering is pending because tests/shot.mjs is unavailable in this sandbox.",
+    "Upper east hall corner pier is offset0.85m south above y5 so photo#257 and the real 2F passage stay clear; lower pier retained. Exact structural offset is inferred."
+  ],
+  "cross_module": {
+    "JF1": {
+      "pa": [
+        20.033,
+        148.919
+      ],
+      "pb": [
+        18.517,
+        145.002
+      ],
+      "y": 0,
+      "width": 4
+    },
+    "JF2": {
+      "pa": [
+        -32.206,
+        172.918
+      ],
+      "pb": [
+        -37.794,
+        175.082
+      ],
+      "y": 0,
+      "width": 4.5
+    },
+    "claimed_road": 593858532,
+    "unclaimed_road": 301889794,
+    "operator_tasks": [
+      "Regenerate js/places/_meta.json using node tools/gen_meta.mjs after concurrent jobs finish (outside allowed edit scope).",
+      "Road301889794 (36.03,148.95)→(45.68,150.93)→(49.88,152.71), width5, lies beneath the elevated 2F strip, outside the hall. Left unclaimed. No clipping currently needed because its ground corridor is kept clear; review during full-world rendering.",
+      "centralcity owns HOS lobby, its +2.1 m floor and B1, west gallery and old displaced east-node removal.",
+      "jwmarriott must keep HOS and gallery facade zones clear; no edits to jwmarriott by this job."
+    ],
+    "station_clearance": {
+      "B1_concourse": {
+        "path_head": [
+          [
+            45,
+            150
+          ],
+          [
+            -45,
+            186
+          ]
+        ],
+        "width": 14,
+        "y": -6
+      },
+      "B2_B1_void": [
+        17,
+        145,
+        25,
+        163
+      ],
+      "ground_exits": {
+        "2": [
+          52.31,
+          124.09,
+          57.91,
+          139.19
+        ],
+        "7": [
+          34.7,
+          131.09,
+          40.3,
+          146.19
+        ],
+        "3": [
+          49.31,
+          164.03,
+          54.91,
+          179.13
+        ]
+      },
+      "exit3_canopy_top_y": 3.26,
+      "famille_upper_slab_bottom_y": 4.78,
+      "entrance_stair_lower_landing_note": "Bottom59.5,141.8, landing SW57.4,140.1 narrowly clears exit2; do not expand north/west.",
+      "bus_stop_734": "(34,133)/(35.6,138) is north of the hall and elevated strip; no new ground geometry there.",
+      "footbridge": "[65,162,81,179] remains south; no unverified link."
+    }
+  },
+  "validation": {
+    "smoke": "node tests/smoke.mjs famille centralcity jwmarriott station streets: OK; only expected missing _meta.json warning.",
+    "famille_walk": "node tests/walk.mjs famille --no-city: 6 ok, 0 blocked.",
+    "photo_physics": "156 samples after all lazy details: photos227–276, both escalator centre lines and upper landing extensions. Famille alone and combined with centralcity,jwmarriott,station,streets: 156 pass, 0 fail each.",
+    "full_walk": "node tests/walk.mjs: 709 ok, 19 blocked during concurrent jobs. No famille/JF1/JF2 failure. See full_walk_external_failures.",
+    "render": "Not run: task explicitly states tests/shot.mjs cannot run in this sandbox. Operator must render the supplied trace_views after metadata regeneration.",
+    "test_artifacts_private_tmp": [
+      "/tmp/famille-audit.mjs",
+      "/tmp/famille-walk-final.log"
+    ],
+    "full_walk_external_failures": [
+      "detail gyeongbu B1 TypeError: Cannot read properties of undefined (reading '0')",
+      "BLOCKED junction J5 shinsegae→centralcity y=3.6: no path (74334 cells searched)",
+      "BLOCKED junction J_CC_9GATE shinsegae→centralcity y=-6: no path (22182 cells searched)",
+      "BLOCKED junction J_G11_DAISO gotomall→gyeongbu y=-6: no floor at start (found -Infinity)",
+      "BLOCKED elevator gyeongbu \"중앙 엘리베이터\" 1층: no path (9 cells searched)",
+      "BLOCKED elevator gyeongbu \"중앙 엘리베이터 2호기\" 1층: no path (9 cells searched)",
+      "BLOCKED spawn gyeongbu \"다이소 GATE 4 고투몰 연결\": no path (1 cells searched)",
+      "BLOCKED spawn gyeongbu \"북측 동 옥상 주차장\": no floor at start (found 0.48)",
+      "BLOCKED route 1F 동선: 센트럴시티 홀→스위트 가든→B1 스위트 파크→하우스 오브 신세계 [1→2] (-23,90)→(-27,80): no path (318511 cells searched)",
+      "BLOCKED route 1F 동선: 센트럴시티 홀→스위트 가든→B1 스위트 파크→하우스 오브 신세계 [2→3] (-27,80)→(-32,77): no floor at start (found -11)",
+      "BLOCKED route 1F 동선: 센트럴시티 홀→스위트 가든→B1 스위트 파크→하우스 오브 신세계 [3→4] (-32,77)→(-15,82): no floor at start (found -11)",
+      "BLOCKED route 1F 동선: 센트럴시티 홀→스위트 가든→B1 스위트 파크→하우스 오브 신세계 [4→5] (-15,82)→(-4,85): no floor at start (found -11)",
+      "BLOCKED route 1F 동선: 센트럴시티 홀→스위트 가든→B1 스위트 파크→하우스 오브 신세계 [5→6] (-4,85)→(0,95): no floor at start (found -11)",
+      "BLOCKED route 1F 동선: 센트럴시티 홀→스위트 가든→B1 스위트 파크→하우스 오브 신세계 [6→7] (0,95)→(6,112): no floor at start (found -11)",
+      "BLOCKED route 1F 동선: 센트럴시티 홀→스위트 가든→B1 스위트 파크→하우스 오브 신세계 [7→8] (6,112)→(3,126): no floor at start (found -11)",
+      "BLOCKED route 1F 동선: 센트럴시티 홀→스위트 가든→B1 스위트 파크→하우스 오브 신세계 [8→9] (3,126)→(7.8,138.3): no floor at start (found -11)",
+      "BLOCKED route 사용자 루트 2: 고투몰 동편→G11→다이소 GATE4→매장→GATE1 [2→3] (138.2,-170.7)→(141.7,-109): no path (60677 cells searched)",
+      "BLOCKED route 사용자 루트 2: 고투몰 동편→G11→다이소 GATE4→매장→GATE1 [3→4] (141.7,-109)→(225.8,-118.5): no floor at start (found -Infinity)",
+      "BLOCKED route 사용자 루트 2: 고투몰 동편→G11→다이소 GATE4→매장→GATE1 [4→5] (225.8,-118.5)→(258.1,-150.2): no floor at start (found -Infinity)",
+      "BLOCKED route 사용자 루트 3: 다이소 GATE1→경부선 1F 대합실→3F 꽃시장 [0→1] (258.1,-150.2)→(149,-132.1): no floor at start (found -Infinity)"
+    ],
+    "concurrency_note": "First whole-world run:709 ok/6 blocked (gyeongbu only). Final run:709 ok/19 blocked after concurrent junction/route/module edits. Other-owned geometry and tests were not edited by this job."
+  },
+  "trace_views": "famille_227:103.9,5,135.3,103.1,0;famille_228:103.9,5,135.3,283.8,0;famille_229:98.6,5,138,105.6,0;famille_230:96.8,5,138.8,23,0;famille_231:96.8,5,138.8,42.2,0;famille_232:93.2,5,140.6,118.8,0;famille_233:91.4,5,141.5,123.4,0;famille_234:86.9,5,143.7,78.5,0;famille_235:86,5,144.1,89.2,0;famille_236:85.1,5,144.5,102.2,0;famille_237:80.6,5,144.5,86.5,0;famille_238:72.5,5,148.5,63.7,0;famille_239:70.7,5,149.3,72.3,0;famille_240:68.9,5,150,42.7,0;famille_241:68,5,150.3,96.5,0;famille_242:66.1,5,151,102.9,0;famille_243:62.5,5,152.3,95.8,0;famille_244:59.7,5,153.3,115,0;famille_245:57.9,5,154,99.6,0;famille_246:56.1,5,154.7,103.8,0;famille_247:54.2,5,155.4,95,0;famille_248:52.4,5,156,87.8,0;famille_249:49.7,5,157,134.2,0;famille_250:47.8,5,157.7,73.3,0;famille_251:43.3,5,159.4,92.6,0;famille_252:39.6,5,160.7,98.4,0;famille_253:38.7,5,161.1,116.8,0;famille_254:37.8,5,161.4,144.9,0;famille_255:35,5,162.4,142.9,0;famille_256:34.1,5,162.8,166.1,0;famille_257:32.3,5,163.4,153.4,0;famille_258:31.4,5,163.8,137,0;famille_259:30.5,5,164.1,125.4,0;famille_260:29.6,5,164.5,99.6,0;famille_261:27.7,5,165.1,58.3,0;famille_262:25.9,5,165.8,37.1,0;famille_263:25,3.738,163.2,354.4,-13;famille_264:24.2,2.67,161,20.3,-13;famille_265:23.4,1.553,158.7,42.9,-13;famille_266:22.7,0.68,156.9,42.8,-13;famille_267:22,0,155.5,22.7,0;famille_268:22,0,155.5,329.1,0;famille_269:22,0,155.5,252.5,0;famille_270:21.5,0,155.2,302.5,0;famille_271:21.5,0,155.2,323.1,0;famille_272:20.5,0,154.6,35,0;famille_273:19.5,0,154,6.6,0;famille_274:19.3,0,153.9,79.5,0;famille_275:19.3,0,153.9,91.7,0;famille_276:18.2,0,153.2,32.6,0;JF1_HOS_door:20.033,0,148.919,21.158,0;JF2_gallery_joint:-32.206,0,172.918,111.158,0"
+}

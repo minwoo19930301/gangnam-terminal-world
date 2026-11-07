@@ -1,6 +1,6 @@
 """Render the model from every photo of the user's walk and put each render next to its photo.
 
-usage: uv run -q --with pillow python tools/photo_compare.py refs/user_walk/<date> [out_dir] [--every N] [--modules a,b] [--redo i,j,...]
+usage: uv run -q --with pillow python tools/photo_compare.py refs/user_walk/<date> [out_dir] [--every N] [--modules a,b] [--redo i,j,...] [--range a-b]
 
 Reads <dir>/places.json (the approved, stitched place reading: i, place, module, floor, x, z, yawDeg) and <dir>/manifest.json,
 renders one view per photo with tests/shot.mjs --gpu (y = that floor's level), and writes <out>/<module>_<k>.png sheets
@@ -23,6 +23,8 @@ LV = {'B2': -11, 'B1': -6, '1F': 0, '1M': 3.6, '2F': 7, 'out': 0}
 MOD_LV = {'centralcity': {'2F': 5}}  # module-specific floor heights (js/places/<id>.js)
 sel = [p for p in sorted(places, key=lambda p: p['i']) if p['i'] % every == 0 and p.get('module') not in ('car',)]
 if only: sel = [p for p in sel if p.get('module') in only]
+if '--range' in args:  # only photo numbers a..b (inclusive), e.g. --range 227-299
+    a, b = map(int, args[args.index('--range') + 1].split('-')); sel = [p for p in sel if a <= p['i'] <= b]
 poses = []
 for p in sel:
     y = MOD_LV.get(p.get('module'), {}).get(p['floor'], LV.get(p['floor'], 0))

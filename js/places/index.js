@@ -5,6 +5,7 @@ export const PLACES = [
   'shinsegae',
   'jwmarriott',
   'centralcity',
+  'famille',
   'gyeongbu',
   'banpo_shoppingtown',
   'hangang',

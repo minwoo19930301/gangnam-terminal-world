@@ -36,6 +36,11 @@ export const JUNCTIONS = [
     note: '고투몰 G2 → 원베일리 공공보행통로 (24시간 벽화 거리). gotomall leaves the G2 wall open.' },
   { id: 'J_ONEBAILEY_PARK', a: 'onebailey', b: 'hangang', y: 0, pa: [-567.9792, -603.6965], pb: [-592, -625], width: 5, owner: 'onebailey',
     note: '보행통로 끝 → 반포나들목 지하차도 → 반포한강공원.' },
+  // ---- famille (round 20) ----
+  { id: 'JF1', a: 'famille', b: 'centralcity', y: 0, pa: [20.033,148.919], pb: [18.517,145.002], width: 4, owner: 'famille',
+    note: '사진 #273 HOUSE OF SHINSEGAE 문 (19.6,147.8): 파미에 벽돌 홀 → 문 안 3 m 로비. 홀 바닥 y0; HOS 1F y+2.1 계단은 centralcity 소유.' },
+  { id: 'JF2', a: 'famille', b: 'centralcity', y: 0, pa: [-32.206,172.918], pb: [-37.794,175.082], width: 4.5, owner: 'famille',
+    note: 'JW 남면 평행 v≈5 갤러리 이음 (-35,174). 동쪽은 famille, 서쪽은 centralcity. 11.5 m 볼트 갤러리 내 보행 중심선.' },
 ];
 // Vertical wells: owner of the surrounding floor leaves a HOLE (no slab, railing on 3 sides, open on `entry` side);
 // the well owner builds stairs/escalators inside it going DOWN from y=top.

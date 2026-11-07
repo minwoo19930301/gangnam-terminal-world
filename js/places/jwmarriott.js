@@ -2350,7 +2350,7 @@ export function build(K) {
     SG(['JW 메리어트 호텔 서울 남측 출입구'], { u: 8, v: vS(8) + 0.12, y: 3.85, w: 4.4, h: 0.5, f: 'S', bg: '#2b241d', fg: '#f0e4cc' });
     // sidewalk planters along the east side
     for (let v = -50; v <= 30; v += 10) { B({ u: 35.0, v, y: 0, w: 1.4, d: 3.6, h: 0.6, mat: { tex: 'jwStone' } }); TREE(35.0, v, 0.6, { h: 6, kind: 'zelkova' }); }
-    for (let u = -26; u <= 22; u += 12) { B({ u, v: 62.6, y: 0, w: 3.6, d: 1.2, h: 0.6, mat: { tex: 'jwStone' } }); TREE(u, 62.6, 0.6, { h: 6, kind: 'ginkgo' }); }
+    // Round 20: no planters/trees along the south face — the 파미에스테이션 glass gallery and brick hall (module famille) stand there (user photos #262–#273).
     CROWD([33.5, -40, 37.5, 36], 0, 8, 1501);
   }
 }
