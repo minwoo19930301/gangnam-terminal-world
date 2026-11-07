@@ -68,11 +68,16 @@ function textures(K) {
     }
     for (let i = 0; i < 18000; i++) { g.fillStyle = i % 2 ? 'rgba(255,255,242,.07)' : 'rgba(29,29,24,.09)'; g.fillRect(rand() * w, rand() * h, 2, 2); }
   }, [0.8, 0.8]);
-  for (const [key, base, scale] of [['newcore-polished-stone', '#b8afa0', 0.6], ['newcore-grey-paving', '#b9b4a8', 0.3]]) {
+  for (const [key, base, scale] of [['newcore-polished-stone', '#b8afa0', 0.6], ['newcore-grey-paving', '#a3a4a1', 0.3]]) {
     K.texture(key, 256, 256, (g, w, h) => {
       const rand = K.rand(904); g.fillStyle = base; g.fillRect(0, 0, w, h);
-      for (let i = 0; i < 6500; i++) { g.fillStyle = i % 2 ? 'rgba(247,241,218,.09)' : 'rgba(63,57,48,.07)'; g.fillRect(rand() * w, rand() * h, 3, 2); }
-      g.strokeStyle = '#817e75'; g.lineWidth = 2; g.strokeRect(0, 0, w, h);
+      const paving = key === 'newcore-grey-paving';
+      for (let i = 0; i < 6500; i++) {
+        g.fillStyle = paving ? (i % 2 ? 'rgba(245,247,245,.12)' : 'rgba(51,57,57,.08)')
+          : (i % 2 ? 'rgba(247,241,218,.09)' : 'rgba(63,57,48,.07)');
+        g.fillRect(rand() * w, rand() * h, 3, 2);
+      }
+      g.strokeStyle = paving ? '#878b89' : '#817e75'; g.lineWidth = 2; g.strokeRect(0, 0, w, h);
     }, [scale, scale]);
   }
   K.texture('newcore-plaster', 256, 256, (g, w, h) => {
@@ -92,13 +97,27 @@ function textures(K) {
     }
   }, [0.8, 0.4]);
   K.texture('newcore-market-floor', 256, 256, (g, w, h) => {
-    const rand = K.rand(941); g.fillStyle = '#d1d3d0'; g.fillRect(0, 0, w, h);
+    const rand = K.rand(941); g.fillStyle = '#8e8e8b'; g.fillRect(0, 0, w, h);
     for (let i = 0; i < 5000; i++) {
       g.fillStyle = i % 2 ? 'rgba(255,255,250,.12)' : 'rgba(52,57,55,.08)';
       g.fillRect(rand() * w, rand() * h, 2, 2);
     }
-    g.strokeStyle = '#b0b4b0'; g.lineWidth = 1; g.strokeRect(0, 0, w, h);
-  }, [0.6, 0.6]);
+    g.strokeStyle = '#858582'; g.lineWidth = 1; g.strokeRect(0, 0, w, h);
+  }, [1.2, 1.2]);
+  for (const [i, band] of ['#31528b', '#772d43'].entries()) K.texture('newcore-market-bag-' + i, 256, 384, (g, w, h) => {
+    g.fillStyle = '#eeede6'; g.fillRect(0, 0, w, h);
+    g.fillStyle = band; g.fillRect(34, 0, 63, h); g.fillRect(0, h - 35, w, 20);
+    g.fillStyle = '#faf9ef'; g.font = 'bold 42px sans-serif'; g.textAlign = 'center';
+    ['가', '루'].forEach((t, j) => g.fillText(t, 65, 115 + j * 65));
+    g.fillStyle = '#7b786e'; g.font = '26px sans-serif'; g.fillText('곡물', 169, 280);
+    g.strokeStyle = '#d1cfc5'; g.lineWidth = 3;
+    for (const xx of [12, 240]) { g.beginPath(); g.moveTo(xx, 15); g.lineTo(xx + (xx < 100 ? 10 : -10), h - 12); g.stroke(); }
+  }, [1, 1]);
+  for (const [i, color] of ['#ad3e32', '#dfb842', '#53844c', '#cf7944'].entries()) K.texture('newcore-food-pack-' + i, 128, 192, (g, w, h) => {
+    g.fillStyle = color; g.fillRect(0, 0, w, h); g.fillStyle = '#f1ead3'; g.fillRect(16, 35, 96, 92);
+    g.fillStyle = '#4b503b'; g.font = 'bold 22px sans-serif'; g.textAlign = 'center'; g.fillText(['반찬', '간편식', '신선식품', '즉석조리'][i], w / 2, 74);
+    g.fillStyle = '#a98a52'; g.beginPath(); g.ellipse(64, 105, 32, 15, 0, 0, Math.PI * 2); g.fill();
+  }, [1, 1]);
   K.texture('newcore-shelf-label', 384, 160, (g, w, h) => {
     g.fillStyle = '#e3e5de'; g.fillRect(0, 0, w, h);
     g.fillStyle = '#fafbf4'; g.fillRect(10, 9, w - 20, h - 18);
@@ -287,28 +306,49 @@ function streetFront(F, number, roof) {
     if (number === 1) B(0, 10.65, -0.025, L - 0.3, roof - 11.2, 0.08, 0xf0f0eb, { solid: false });
     for (let u = -L / 2 + 2.3; u < L / 2 - 2; u += 5.4) {
       B(u, 10.7, -0.05, 2.65, roof - 11.6, 0.15, number === 1 ? 0x62666b : C.cream, { solid: false });
-      B(u - 2.45, 10.65, -0.22, 0.27, roof - 11.2, 0.4, C.trim, { solid: false });
+      // T92e_50: 1관 stripes meet directly, without cream pilaster trims.
+      if (number !== 1) B(u - 2.45, 10.65, -0.22, 0.27, roof - 11.2, 0.4, C.trim, { solid: false });
     }
     chromeLetters(F, 0, roof - 6, 12.2, 2.25);
   }
   // Photo02's 잠원로4길/P tower is at 3관's NORTH end, not the 1관 end.
-  const towerU = number === 3 ? -L / 2 + 2.5 : L / 2 - 2.5;
+  const towerU = number === 3 ? -L / 2 + 2.5 : number === 2 ? L / 2 - 1.2 : L / 2 - 2.5;
   // Tower cladding remains visual, so it does not seal the corner entrance.
-  B(towerU, 0, 1.25, 4.4, roof + 4, 2.3, 'newcore-limestone', { solid: false });
-  B(towerU, 0.35, -0.16, 2.6, roof + 0.9, 0.15, 0x243e49, { solid: false });
-  B(towerU, 0.35, -0.26, 2.42, roof + 0.9, 0.035, 'glass', { solid: false });
-  for (let y = 1; y < roof; y += 2.25) B(towerU, y, -0.3, 2.6, 0.08, 0.09, 0x495b61, { solid: false });
-  S(number === 3 ? 'P' : 'NEWCORE', towerU, roof + 2.35, -0.25, number === 3 ? 1.8 : 4.1, 1.15, null, { fg: number === 3 ? '#346c9c' : '#595c5b' });
+  if (number === 2) {
+    // Roadview03: broaden toward 1관, keeping the old north edge beside
+    // DESIGNERS clear. The glass is on the edge away from that arcade.
+    B(towerU, 0, 1.25, 7, roof + 4, 2.3, 0xf0eee6, { solid: false });
+    B(towerU + 2.65, .35, -.16, 1.5, roof + .9, .15, 0x648b94, { solid: false });
+    B(towerU + 2.65, .35, -.26, 1.42, roof + .9, .035, 'glass', { solid: false });
+    for (let y = 1; y < roof; y += 2.25) B(towerU + 2.65, y, -.30, 1.5, .06, .09, 0x536a70, { solid: false });
+    B(towerU - 3, .35, -.16, 1, roof + 2, .15, 0x20282b, { solid: false });
+    B(towerU, roof + 2.4, -.20, 6, 1.6, .4, 0x252b2e, { solid: false });
+    S('NEWCORE', towerU, roof + 3.2, -.43, 5.65, 1.02, null, { fg: '#e7e9e7', font: 'Georgia, Times New Roman, serif' });
+  } else {
+    B(towerU, 0, 1.25, 4.4, roof + 4, 2.3, 'newcore-limestone', { solid: false });
+    B(towerU, 0.35, -0.16, 2.6, roof + 0.9, 0.15, 0x243e49, { solid: false });
+    B(towerU, 0.35, -0.26, 2.42, roof + 0.9, 0.035, 'glass', { solid: false });
+    for (let y = 1; y < roof; y += 2.25) B(towerU, y, -0.3, 2.6, 0.08, 0.09, 0x495b61, { solid: false });
+    S(number === 3 ? 'P' : 'NEWCORE', towerU, roof + 2.35, -0.25, number === 3 ? 1.8 : 4.1, 1.15, null, { fg: number === 3 ? '#346c9c' : '#595c5b' });
+  }
   // Private paving at grade; no roads or commercial landuse replaced.
   K.slab(Q(-L / 2, -10, L / 2, 0), 0, { mat: 'newcore-grey-paving', thick: 0.08, ceil: false });
-  B(0, 0.008, -1.8, L - 1, 0.014, 0.45, 'darkstone', { solid: false });
-  B(0, .025, -6.25, L - 1, .018, .3, 0xd7b83a, { solid: false });
-  for (const dv of [-.09, 0, .09]) B(0, .045, -6.25 + dv, L - 1, .008, .024, 0xe7c94d, { solid: false });
-  for (const u of centers.filter((_, i) => i % 2 === 0)) {
-    const [x, z] = P(u + 1.6, -7.8); K.tree(x, z, { h: 7.3, kind: 'zelkova' });
-    B(u + 1.6, 0.018, -7.8, 1.6, 0.025, 1.6, 0x545e53, { solid: false });
-    for (let j = -0.65; j <= 0.65; j += 0.18) B(u + 1.6 + j, 0.046, -7.8, 0.04, 0.018, 1.45, C.black, { solid: false });
-  }
+  if (number === 2) {
+    // Separate dark inlays and small pale paving squares in roadview01/03.
+    for (let u = -L / 2 + 1; u < L / 2 - .5; u += 2) B(u, .008, -1.8, 1.5, .014, .5, 'darkstone', { solid: false });
+    for (let u = -L / 2 + .6; u < L / 2 - .3; u += 1.2) for (const v of [-3.3, -4.5, -5.7]) B(u, .009, v, .10, .012, .10, 0xe0e2dd, { solid: false });
+  } else B(0, .008, -1.8, L - 1, .014, .45, 'darkstone', { solid: false });
+  // 2관 rail is v=-9.5; the requested kerb at -9.8 remains city-owned.
+  const tactileV = number === 2 ? -7.3 : -6.25;
+  B(0, .025, tactileV, L - 1, .018, .3, 0xd7b83a, { solid: false });
+  for (const dv of [-.09, 0, .09]) B(0, .045, tactileV + dv, L - 1, .008, .024, 0xe7c94d, { solid: false });
+  centers.forEach((u, i) => {
+    if (number !== 2 && i % 2 !== 0) return;
+    const treeV = i % 2 ? -8.5 : -7.8;
+    const [x, z] = P(u + 1.6, treeV); K.tree(x, z, { h: 7.3, kind: 'zelkova' });
+    B(u + 1.6, .018, treeV, 1.6, .025, 1.6, 0x545e53, { solid: false });
+    for (let j = -.65; j <= .65; j += .18) B(u + 1.6 + j, .046, treeV, .04, .018, 1.45, C.black, { solid: false });
+  });
   for (const u of centers) {
     const len = Math.max(2.4, bay - 3.2), v = -9.5;
     for (const du of [-len / 2, 0, len / 2]) B(u + du, 0, v, 0.055, 0.9, 0.055, C.black);
@@ -615,17 +655,31 @@ function retail(F, number) {
     for (let u = -L / 2 + 4; u < L / 2 - 2; u += 6) for (const v of [5, 16, W - 2]) B(u, 4.25, v, 2.2, 0.08, 0.5, { tex: 'emit', color: 0xfff0cf }, { solid: false });
   });
 }
-function marketStock(F, u, y, v, row) {
+function marketStock(F, u, y, v, row, tier) {
   const { B, cyl } = F;
   const count = row === 13 ? 11 : 5, spacing = row === 13 ? .18 : .37;
   for (let k = -count; k <= count; k++) for (const side of [-1, 1]) {
     const uu = u + side * 0.52, vv = v + k * spacing, turn = side * Math.PI / 2;
     if (row === 13) {
-      // _400 has slim amber/beige AND dark brown bottles, gold/cream caps.
-      cyl(uu, y, vv, .052, .225, { color: side * k > -3 ? (k % 3 ? 0xd8b45e : 0xd5c399) : 0x3b2e1c, gloss: .3 }, 6);
-      cyl(uu, y + .225, vv, .027, .035, 0x9d8143, 6);
-      cyl(uu, y + .26, vv, .034, .035, k % 3 ? 0xd8b252 : 0xe9dfbd, 8);
-      panel(F, uu + side * .053, y + .13, vv, .092, .135, 'newcore-condiment-label', turn);
+      // _400: short round jars at upper left, dark yellow-wrapped bottles
+      // at upper right, blue/maroon white sacks on the shelf immediately below.
+      if (tier === 2 || (tier === 0 && k % 3 === 0)) {
+        marketBag(F, uu, y, vv, side, Math.abs(k) % 2);
+      } else {
+        const jar = tier === 3 ? side * k > -3 : (tier === 0 || k % 3 === 0);
+        const r = jar ? .058 : .047, h = jar ? .14 : .215;
+        cyl(uu, y, vv, r, h, { color: jar ? (k % 2 ? 0xc1a670 : 0xd4c69f) : 0x30251c, gloss: .5 }, 12);
+        if (!jar) cyl(uu, y + h, vv, .025, .04, { color: 0x33261a, gloss: .5 }, 10);
+        cyl(uu, y + (jar ? h : .255), vv, jar ? .061 : .03, .022, 0xc3a052, 12);
+        // Curved wrap exposes round shoulders instead of a flat square label.
+        const wrap = jar ? 'newcore-condiment-label' : { tex: 'newcore-condiment-label', color: 0xe4cb77 };
+        for (let q = 0; q < 6; q++) {
+          const aa = turn - 1.15 + q * 2.3 / 6, bb = turn - 1.15 + (q + 1) * 2.3 / 6;
+          const point = (a, yy) => { const [x, z] = F.P(uu + Math.sin(a) * (r + .001), vv + Math.cos(a) * (r + .001)); return [x, yy, z]; };
+          const lo = y + .025, hi = y + (jar ? .115 : .19), mid = F.angle + (aa + bb) / 2;
+          F.K.quad(wrap, [point(aa, lo), point(bb, lo), point(bb, hi), point(aa, hi)], [Math.sin(mid), 0, Math.cos(mid)], [[q / 6, 0], [(q + 1) / 6, 0], [(q + 1) / 6, 1], [q / 6, 1]]);
+        }
+      }
     } else if (row === 24) {
       if (side * k > 2) {
         // Green beverage bottles at the left of _600; not verified soy sauce.
@@ -641,9 +695,28 @@ function marketStock(F, u, y, v, row) {
         panel(F, uu + side * .049, y + .14, vv, .26, .28, 'newcore-dry-grocery', turn);
       }
     } else B(uu, y, vv, 0.23, 0.24, 0.23, [0xdab358, 0x698a60, 0xb95a43, 0xe5d9b0][(k + 5) % 4], { solid: false });
-    if (k % (row === 13 ? 4 : 2) === 0) panel(F, u + side * 0.69, y - 0.02, vv, 0.25, 0.105,
-      row === 13 && k === 0 && Math.abs(u + 10.183) < .1 && y > -4.7 ? 'newcore-esl-13500' : 'newcore-shelf-label', turn);
+    if (k % (row === 13 ? 4 : 2) === 0) {
+      const priceCard = row === 13 && k === -8 && Math.abs(u + 10.183) < .1 && tier === 3;
+      panel(F, u + side * .705, y - .02, vv, priceCard ? .42 : .25, priceCard ? .16 : .105,
+        priceCard ? 'newcore-esl-13500' : 'newcore-shelf-label', turn);
+    }
   }
+}
+function marketBag(F, u, y, v, side, variant) {
+  // Bulging paper sacks with tapered shoulders and a folded top seam.
+  const rows = [[0, .105, .035], [.055, .16, .07], [.235, .15, .06], [.29, .115, .018]];
+  const pt = (du, yy, dv) => { const [x, z] = F.P(u + du, v + dv); return [x, y + yy, z]; };
+  for (let j = 0; j < rows.length - 1; j++) {
+    const [ya, wa, da] = rows[j], [yb, wb, db] = rows[j + 1];
+    for (const face of [-1, 1]) {
+      const rot = F.angle + face * Math.PI / 2;
+      F.K.quad('newcore-market-bag-' + variant, [pt(face * da, ya, face * wa / 2), pt(face * da, ya, -face * wa / 2), pt(face * db, yb, -face * wb / 2), pt(face * db, yb, face * wb / 2)], [Math.sin(rot), 0, Math.cos(rot)], [[0, ya / .29], [1, ya / .29], [1, yb / .29], [0, yb / .29]]);
+      const rotEnd = F.angle + (face > 0 ? 0 : Math.PI);
+      const ends = [pt(-da, ya, face * wa / 2), pt(da, ya, face * wa / 2), pt(db, yb, face * wb / 2), pt(-db, yb, face * wb / 2)];
+      F.K.quad(0xe3e1d8, face > 0 ? ends : ends.reverse(), [Math.sin(rotEnd), 0, Math.cos(rotEnd)]);
+    }
+  }
+  F.B(u, y + .29, v, .037, .018, .12, 0xd8d5cb, { solid: false });
 }
 function shoppingCart(F, u, y, v) {
   // _800's red foreground bar belongs to a cart, not a fixed queue railing.
@@ -661,43 +734,106 @@ function shoppingCart(F, u, y, v) {
   for (const dv of [-0.46, 0.46]) for (const yy of [0.48, 0.64, 0.82]) B(u, y + yy, v + dv, 0.64, 0.018, 0.02, steel, { solid: false });
   B(u, y + 0.98, v + 0.43, 0.72, 0.055, 0.06, 0xb53732, { solid: false });
 }
+function refrigeratedCase(F, u, y, v, w, variant) {
+  const { B, S } = F;
+  B(u, y, v, w, 2.05, 1.4, 0x404b46, { skip: ['top', 'bottom', 'n', 's', 'e', 'w'] });
+  B(u, y, v, w, .28, 1.4, 0x404b46);
+  B(u, y + .28, v - .61, w, 1.77, .1, 0x6e7872, { solid: false });
+  for (const du of [-w / 2 + .05, w / 2 - .05]) B(u + du, y + .28, v, .09, 1.77, 1.4, 0x788780);
+  B(u, y + 1.92, v, w, .13, 1.4, 0x46534e, { solid: false });
+  B(u, y + 1.91, v + .54, w - .17, .025, .1, { tex: 'emit', color: 0xffffec }, { solid: false });
+  for (const [j, yy] of [.32, .73, 1.14, 1.55].entries()) {
+    B(u, y + yy, v + .05, w - .16, .04, 1.2, { color: 0xa2b1ad, gloss: .5 }, { solid: false });
+    B(u, y + yy + .04, v + .63, w - .15, .06, .025, 'glass', { solid: false });
+    const n = Math.floor((w - .25) / .24);
+    for (let k = 0; k < n; k++) for (const dv of [.40, .05, -.3]) {
+      const uu = u - (n - 1) * .24 / 2 + k * .24, c = (variant + j + k) % 4;
+      B(uu, y + yy + .045, v + dv, .205, .28, .22, [0xac3e31, 0xdbb94a, 0x5c824c, 0xce7d43][c], { solid: false });
+      panel(F, uu, y + yy + .18, v + dv + .115, .195, .25, 'newcore-food-pack-' + c);
+    }
+    for (let du = -w / 2 + .45; du < w / 2 - .2; du += .8) panel(F, u + du, y + yy - .035, v + .66, .3, .075, 'newcore-shelf-label');
+  }
+  S(['신선식품', '냉장식품', '간편식'][variant % 3], u, y + 1.99, v + .715, Math.min(w - .25, 2), .15, null, { rotY: F.angle });
+}
+function marketStall(F, u, y, v, i) {
+  const { B, S, cyl } = F, wood = i === 2 || i === 4, w = 5.8;
+  B(u, y, v, w, 1.12, 1.4, wood ? 'newcore-ash' : 0xb8322c);
+  B(u, y + 1.12, v, w + .08, .08, 1.48, { color: 0xc4c4b8, gloss: .5 }, { solid: false });
+  S(['즉석조리', '맛있는 반찬', '신선식품', '오늘의 요리', '간편한 한 끼'][i], u, y + .65, v - .715, 4.5, .36, null);
+  for (let k = 0; k < 9; k++) {
+    const uu = u - 2.35 + k * .58;
+    B(uu, y + 1.205, v, .52, .045, .9, 0x303a34, { solid: false });
+    for (const dv of [-.24, 0, .24]) for (const du of [-.12, .12]) B(uu + du, y + 1.25, v + dv, .2, .08, .18, [0x9b4a2d, 0x72914a, 0xd4ad55, 0xc5aa7b][(i + k) % 4], { solid: false });
+    panel(F, uu, y + 1.12, v - .755, .4, .095, 'newcore-shelf-label', Math.PI);
+  }
+  B(u, y + 1.23, v - .66, w - .16, .37, .028, 'glass', { solid: false });
+  for (const du of [-2.7, 2.7]) B(u + du, y + 1.2, v - .62, .035, .43, .035, 0x929f99, { solid: false });
+  if (i % 2 === 1 || i === 4) {
+    for (const du of [-2.74, 2.74]) B(u + du, y + 1.2, v + .45, .07, 1.55, .07, C.black, { solid: false });
+    B(u, y + 2.55, v + .42, w, .48, .3, wood ? 0x755b3d : 0x8f2f28, { solid: false });
+    S(['반찬 · 즉석조리', '따뜻한 요리', '신선식품'][Math.floor(i / 2)], u, y + 2.78, v + .245, 5.1, .34, null);
+    B(u, y + 2.51, v + .26, w - .2, .035, .18, { tex: 'emit', color: 0xffedc3 }, { solid: false });
+    for (const du of [-1.8, 0, 1.8]) cyl(u + du, y + 2.34, v, .1, .14, { tex: 'emit', color: 0xffedc3 }, 12);
+  }
+  const firstRackU = -F.L / 2 + 5, staffU = firstRackU + (Math.round((u - firstRackU - 2.9) / 5.8) + .5) * 5.8;
+  F.person(staffU, y, v + 1.5, { rotY: F.angle + Math.PI, shirt: 0x832e31, pants: 0x33393a });
+}
 function market(F, ci) {
   const { K, L, W, B, S } = F, y = K.LEVELS.B1;
   // qZYgbakp2UA_800 shows an open food hall, not a narrow rack maze.
-  // Keep every existing rack/counter. Move the middle/back rack rows to
-  // v=13/24 to leave a 6.3m spine centred on the unchanged v=18 B1 link.
+  // Keep all thirty gondolas and the six back deli counters. The _800
+  // frame's continuous cases and red stalls border a 7m clear v18 spine.
   // A second open aisle (v=28..32) serves the low deli counters; dimensions
   // and world orientation are inferred inside the official 2관 B1 footprint.
-  const rackRows = [6, 13, 24], deliV = W - 9;
+  const rackRows = [[6, 4.8], [13, 10.4], [24, 25.2]], deliV = W - 9;
   for (const u of [-L / 2 + 11, -2, L / 2 - 10]) {
     B(u, y, 28.2, 0.65, 3.65, 0.65, 0xe9e8df);
   }
+  for (const u of [-20, -12, -4, 4, 12, 20, 28]) B(u, y, 14, 1, 3.65, 1, 0xeeeDE7);
   // _800: grey polished floor, white square columns, dark exposed services.
   // Preserve the real-kit stair void in the lower visual ceiling as well.
-  K.hpoly({ tex: 'newcore-market-floor', gloss: 0.5 }, F.p, y + 0.012, true);
-  K.hpoly(0x292c2c, F.p, y + 3.65, false, [ci.hole]);
+  K.hpoly({ tex: 'newcore-market-floor', gloss: 0.6 }, F.p, y + 0.012, true);
+  K.hpoly(0xb8b8b3, F.p, y + 3.65, false, [ci.hole]);
   K.detail({ name: '2관 킴스클럽 델리', floor: 'B1', poly: F.p, y0: y, y1: 0 }, () => {
-    for (let u = -L / 2 + 5; u < L / 2 - 4; u += 5.8) for (const v of rackRows) {
+    for (let u = -L / 2 + 5; u < L / 2 - 4; u += 5.8) for (const [row, v] of rackRows) {
       // Retain the old collision footprint, but expose stock between shelves.
       // An opaque full-height cube would bury the bottles and bag fronts.
       B(u, y, v, 1.15, 1.45, 4.7, 0x303434, { skip: ['top', 'bottom', 'n', 's', 'e', 'w'] });
       B(u, y, v, 1.15, 0.18, 4.7, 0x303434, { solid: false });
       B(u, y + 0.18, v, 0.08, 1.27, 4.7, 0x303434, { solid: false });
       for (const dv of [-2.34, 2.34]) B(u, y, v + dv, 0.1, 1.72, 0.06, 0x505757, { solid: false });
-      for (let yy = 0.2; yy < 1.4; yy += 0.38) {
+      for (let tier = 0; tier < 4; tier++) {
+        const yy = .2 + tier * .38;
         B(u, y + yy, v, 1.35, 0.04, 4.8, 0x646b6b, { solid: false });
+        for (const side of [-1, 1]) B(u + side * .68, y + yy, v, .035, .045, 4.8, { color: 0xb5bcbd, gloss: .7 }, { solid: false });
         for (const side of [-1, 1]) B(u + side * .69, y + yy - .01, v, .025, .035, 4.76, 0xf0f1e9, { solid: false });
-        marketStock(F, u, y + yy + 0.05, v, v);
+        marketStock(F, u, y + yy + 0.05, v, row, tier);
       }
       // Existing rack ends gain low stocked faces, within the rack footprint.
-      if (v === 13 || v === 24) for (const side of [-1, 1]) {
+      if (row === 13 || row === 24) for (const side of [-1, 1]) {
         const vv = v + side * 2.27;
         for (const yy of [.3, .68, 1.06]) for (const du of [-.38, 0, .38]) {
-          B(u + du, y + yy, vv, .25, .26, .13, v === 13 ? 0xdfc88f : 0xefe2c6, { solid: false });
-          panel(F, u + du, y + yy + .13, vv + side * .07, .22, .22, v === 13 ? 'newcore-condiment-label' : 'newcore-dry-grocery', side > 0 ? 0 : Math.PI);
+          B(u + du, y + yy, vv, .25, .26, .13, row === 13 ? 0xdfc88f : 0xefe2c6, { solid: false });
+          panel(F, u + du, y + yy + .13, vv + side * .07, .22, .22, row === 13 ? 'newcore-condiment-label' : 'newcore-dry-grocery', side > 0 ? 0 : Math.PI);
         }
       }
     }
+    // Gaps at u=-8,5,18 connect both stock rows and the rear v30 aisle.
+    for (const [lo, hi] of [[-29, -10], [-6, 3], [7, 16], [20, 29]]) {
+      const n = Math.ceil((hi - lo) / 3.4), w = (hi - lo) / n;
+      for (let i = 0; i < n; i++) refrigeratedCase(F, lo + (i + .5) * w, y, 13.8, w - .05, i);
+    }
+    for (const [i, u] of [-24, -16, 0, 12, 24].entries()) marketStall(F, u, y, 22.2, i);
+    for (const u of [-12, 4, 20]) {
+      B(u, y + 1.15, 14.52, .72, 1.05, .035, 0x272b27, { solid: false });
+      panel(F, u, y + 1.7, 14.545, .62, .87, 'newcore-food-pack-0');
+      S('킴스클럽', u, y + 2.31, 14.55, .85, .2, null, { rotY: F.angle });
+    }
+    // The far-end fascia hangs above the retained 5.6m inter-building route.
+    const end = localFrame(K, { ...F, angle: F.angle - Math.PI / 2, P: (u, v) => F.P(29 - v, 18 + u) });
+    end.B(0, y + 2.66, 0, 5.4, .57, .18, 0x3d3830, { solid: false });
+    end.S(['즉석조리 · 신선식품', '킴스클럽'], 0, y + 2.94, .11, 4.9, .45, '#ede6d1', { fg: '#443d30', rotY: end.angle });
+    end.B(0, y + 3.24, -.05, 5.3, .045, .28, { tex: 'emit', color: 0xfff4d8 }, { solid: false });
     S(["KIM'S CLUB", '킴스클럽 · 신선식품 · 델리'], 0, y + 2.65, W - 1, 12, 0.8, '#7c322d');
     for (let u = 0; u < L / 2 - 5; u += 5) {
       B(u, y, deliV, 2.8, 0.9, 1.25, 0x9caaa1);
@@ -712,17 +848,23 @@ function market(F, ci) {
     shoppingCart(F, L / 2 - 3, y, deliV + 1.6);
     // A few occupied carts, inferred activity rather than an invented cart bay.
     for (const [u, v] of [[-15.5, 19.5], [11.8, 19.5], [15, 31.1]]) shoppingCart(F, u, y, v);
+    const forwardCart = localFrame(K, { ...F, angle: F.angle - Math.PI / 2, P: (u, v) => F.P(-10.9 - v, 18.55 + u) });
+    shoppingCart(forwardCart, 0, y, 0);
     marketPeople(F, y);
+    for (const [i, u, v] of [[0, -2, 17.1], [1, -.9, 19], [2, 1.2, 18.9], [3, 8.8, 20.2], [4, 10, 16], [5, 19, 19.8], [6, 22, 17], [7, 26, 20]]) {
+      F.person(u, y, v, { h: 1.6 + i % 3 * .04, rotY: F.angle + i * .8, shirt: [0x36484d, 0xb1a48d, 0x6a6657, 0x812f32][i % 4], pants: 0x34393d });
+    }
     for (const [u, v, text] of [[-13, 18, ['킴스클럽', '식품']], [8, 30, ['신선식품', '델리']]]) {
       B(u, y + 2.7, v, 3.1, .52, .06, 0x303532, { solid: false });
       S(text, u, y + 2.96, v - .05, 2.9, .45, null, { twoSided: true });
       for (const du of [-1.3, 1.3]) B(u + du, y + 3.22, v, .025, .32, .025, 0x707873, { solid: false });
     }
-    for (let u = -L / 2 + 2; u < L / 2 - 1; u += 6) {
+    for (let u = -L / 2 + 2; u < L / 2 - 1; u += 3) {
       const end = u > ci.a - 0.3 && u < ci.b + 3.1 ? ci.v0 - 1.5 : W - 0.5;
-      B(u, y + 3.48, (end + 0.5) / 2, 0.12, 0.16, end - 0.5, 0x161c1d, { solid: false });
+      B(u, y + 3.4, (end + 0.5) / 2, 0.18, 0.25, end - 0.5, 0x1c1c1c, { solid: false });
     }
-    for (const v of [7, 18, 30]) B(0, y + 3.4, v, L - 1, 0.14, 0.1, 0x1c2222, { solid: false });
+    for (let v = 1; v < 30; v += 3) B(0, y + 3.38, v, L - 1, .20, .16, 0x1c1c1c, { solid: false });
+    for (const v of [34, 37, 40, 43]) B((ci.b + 3.2 + L / 2) / 2, y + 3.38, v, L / 2 - ci.b - 3.2, .20, .16, 0x1c1c1c, { solid: false });
     for (const v of [10, 31]) {
       B(0, y + 3.19, v, L - 1, 0.31, 0.65, { color: 0x9ba4a8, gloss: .3 }, { solid: false });
       for (let u = -L / 2 + 2; u < L / 2 - 1; u += 3.2) B(u, y + 3.17, v, 0.035, 0.35, 0.69, 0x969c98, { solid: false });
@@ -740,10 +882,10 @@ function market(F, ci) {
     pipe([-17, 3.05, 10], [-17, 3.05, 16.7]); pipe([-17, 3.05, 16.7], [-16.5, 3.05, 17.4]); pipe([-16.5, 3.05, 17.4], [-15.7, 3.05, 17.8]); pipe([-15.7, 3.05, 17.8], [-8, 3.05, 17.8]);
     for (let u = -L / 2 + 4; u < L / 2 - 3; u += 3) for (const v of [7, 14, 18, 24, 28, 32]) {
       B(u, y + 3.36, v, 2.2, 0.07, 0.12, 0x252c2c, { solid: false });
-      B(u, y + 3.34, v, 2.05, 0.02, 0.12, { tex: 'emit', color: 0xfffff5 }, { solid: false });
+      B(u, y + 3.34, v, 2.05, 0.02, 0.07, 0x1c1c1c, { solid: false });
       for (const du of [-0.7, 0.7]) {
-        F.cyl(u + du, y + 3.12, v, 0.10, 0.22, 0x252a29, 8);
-        F.cyl(u + du, y + 3.10, v, 0.09, 0.025, { tex: 'emit', color: 0xfffff5 }, 8);
+        F.cyl(u + du, y + 3.12, v, 0.10, 0.22, 0x252a29, 12);
+        F.cyl(u + du, y + 3.10, v, 0.09, 0.025, { tex: 'emit', color: 0xfffff5 }, 12);
       }
     }
   });
@@ -762,7 +904,7 @@ function marketPeople(F, y) {
     shopper(u - .4, 33.4, F.angle); shopper(u + .4, 32.5, F.angle + .1);
     shopper(u, 37, F.angle + Math.PI, true);
   }
-  for (let u = -F.L / 2 + 7.9; u < F.L / 2 - 4; u += 5.8) for (const v of [5.4, 12, 23]) shopper(u, v, F.angle + (i % 2 ? 1 : -1) * Math.PI / 2);
+  for (let u = -F.L / 2 + 7.9; u < F.L / 2 - 4; u += 5.8) for (const v of [5.4, 12, 25.2]) shopper(u, v, F.angle + (i % 2 ? 1 : -1) * Math.PI / 2);
 }
 
 // 1/2관 are parts of the same newcore area, not a cross-module junction.

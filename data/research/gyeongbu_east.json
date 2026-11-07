@@ -2,7 +2,7 @@
   "id": "gyeongbu_east",
   "name": "경부선 동측 주차빌딩 · 데블스도어",
   "updated": "2026-11-07",
-  "round": 10,
+  "round": 17,
   "sources": [
     {
       "url": "data/osm.json",
@@ -301,7 +301,7 @@
   ],
   "notes": [
     "위치 기준은 사용자 지정 카카오 핀(372,8)과 OSM POI9797826019(371.8,8.1). claim은 OSM414891734 그대로이며 다른 건물로 옮기지 않았다.",
-    "독립 벽돌 홀 u18..63을 주차 데크와 분리. u16.8..64.4의 상층 데크·북측 외피 연결띠를 제거하고 양끝 주차 구조를 유지했다. 정면 u18..63,v19.7..24.8은 하늘이 열린 지상 아스팔트 주차면이다.",
+    "Round17 ge-L01: 2026-06 북측 로드뷰는 u0..104.86의 연속 주차 데크를 입증한다. 북측 연결띠 v-4.5..1.3을 복원해 홀 북벽 v1.5 앞에 놓았다. 홀 내부·유리 지붕과 남측 u18..63,v19.7..24.8의 열린 지상 주차장은 유지한다. Round10의 북측 상부 분리 판단은 이 부분에 한해 폐기한다.",
     "사진으로 확인되는 철판문, 입체 브랜드 문자, 아치창, 낮은 금속 처마, 유리 지붕, 화단·관목·주차선, 실내 양조 탱크·배관·트러스·전구·소파를 유지했다.",
     "정문 u36,v15.9 뒤에 금속 상판 리셉션 u37,v12.65, 대기 등록 단말, 안내판, 오른쪽 격자 유리, 왼쪽 사무실 문을 추가. 왼쪽 u33.2,v10.1 개구부로 홀에 진입한다.",
     "주차 계단에서 매장 2F로 통하던 개구부와 외부 대관 계단을 없앴다. 내부 계단 u19.9→29.5,v10.4가 y0→3.8의 복층 라운지로 연결된다. 라운지는 깊이 있는 L자 평면, 홀 쪽 난간, 바와 유리 프라이빗룸을 갖춘다.",
@@ -382,22 +382,34 @@
         "photos": [
           "refs/roadview/gbeast_01_parking_deck.jpg"
         ],
-        "x": 381.81,
+        "x": 367.034,
         "y": 0,
-        "z": -22.026,
+        "z": -15.806,
         "yawDeg": 206.404,
-        "pitchDeg": 0
+        "pitchDeg": 0,
+        "local_uv": [
+          44,
+          -14
+        ],
+        "round17_finding": "ge-C01",
+        "placement": "same_panorama_station; minimap_verified"
       },
       {
         "spot": "로드뷰02 · 차고지 생울타리 남서 방향",
         "photos": [
           "refs/roadview/gbeast_02_bus_yard_road.jpg"
         ],
-        "x": 402.862,
+        "x": 367.034,
         "y": 0,
-        "z": -33.594,
+        "z": -15.806,
         "yawDeg": 116.404,
-        "pitchDeg": 0
+        "pitchDeg": 0,
+        "local_uv": [
+          44,
+          -14
+        ],
+        "round17_finding": "ge-C01",
+        "placement": "same_panorama_station; minimap_verified"
       },
       {
         "spot": "로드뷰03 · 차고지 생울타리 북동 방향",
@@ -408,7 +420,13 @@
         "y": 0,
         "z": -15.806,
         "yawDeg": 296.404,
-        "pitchDeg": 0
+        "pitchDeg": 0,
+        "local_uv": [
+          44,
+          -14
+        ],
+        "round17_finding": "ge-C01",
+        "placement": "same_panorama_station; minimap_verified"
       },
       {
         "spot": "파미에 참고01 · 데블스도어 정문 앞",
@@ -1046,7 +1064,7 @@
       {
         "topic": "홀과 주차 데크의 상대 배치",
         "confidence": "unverified",
-        "decision": "핀은 확정 기준. 핀을 유지한 채 주차 데크 양끝을 분리한 배치는 모델링 절충이며, 실제 OSM 폴리곤 내부 실측 분할이라고 주장하지 않는다."
+        "decision": "핀과 남측 벽돌 정면은 유지. 연속 북측 데크는 2026-06 로드뷰로 확인되지만 v-4.5..1.3의 깊이 5.8m, 전면 위치 및 층고는 모델 추정. 북벽 v1.5와 기존 내부 배치를 건드리지 않는 배치다."
       },
       {
         "topic": "층수·층고·높이",
@@ -1076,17 +1094,17 @@
       {
         "topic": "식재·차량·부스",
         "confidence": "unverified",
-        "decision": "기존 수종 근사, 주차 구획 수/차량 배치, 부스 위치를 유지. 사진은 형태 참고이며 측량 배치가 아니다."
+        "decision": "가로수 높이13~15m·5m 간격, 버스12×2.5×3.5m·8대씩 두 줄은 프레임 비례 근사. 흰 몸체/빨강·파랑 도색/회색 커튼은 로드뷰 확인. 차량 소속·개별 대수·수종·정확한 식재 위치는 추정. 기존 부스와 다른 주차 상세 보존."
       },
       {
         "topic": "차고지 경계 도로",
         "confidence": "unverified",
-        "decision": "생울타리·도색은 기존 유지. 분홍 띠를 자전거 전용도로로 단정하지 않는다."
+        "decision": "기존 OSM 경계선을 보존하고 생울타리 1.4m 둥근 수관·이중 황색선을 반영. 분홍 띠는 경계 법선 off10.8..11.4의 반대편 차선 가장자리로 이동; 정확한 차선 폭과 기능은 추정이며 자전거도로로 단정하지 않는다."
       },
       {
         "topic": "렌더링 확인",
         "confidence": "unverified",
-        "decision": "요청대로 tests/shot.mjs 미실행. trace 51개 중 round10 16개를 모두 바닥 y로 기록; 후속 렌더링 시 시각 검증 필요."
+        "decision": "사용자 샌드박스 제한에 따라 tests/shot.mjs는 실행하지 않았다. 기존 R17 시트 및 원본 로드뷰 3장, 남측 홀 사진2장을 직접 열어 확인했다. 수정 후 원근·재질은 operator 재렌더링 확인 필요."
       }
     ],
     "trace_command": "node tests/shot.mjs --places gyeongbu_east --city 0 --out shots/gyeongbu_east --views \"r10_standalone_front:380.35,0,20.009,26.404,8;r10_roof_gap:366.12,0,-8.653,206.404,15;r10_steel_door:374.232,0,16.682,26.404,0;r10_reception:372.454,0,13.099,26.404,0;r10_office_glass:370.575,0,13.139,116.404,0;r10_reception_hall:368.567,0,11.568,26.404,0;r10_kitchen:368.068,0,6.289,26.404,0;r10_stair_base:355.672,0,17.077,296.404,12;r10_lounge:366.215,3.8,13.126,26.404,0;r10_private_room:360.931,3.8,7.432,116.404,0;r10_mens_toilet:388.39,0,-0.339,206.404,0;r10_womens_toilet:390.629,0,-1.451,206.404,0;r10_smoking_room:392.958,0,-2.607,206.404,0;r10_west_approach:342.659,0,32.469,296.404,0;r10_parking_crossing:376.945,0,22.146,26.404,0;r10_booth_reference:431.849,0,-4.443,331.404,0\"",
@@ -1417,7 +1435,7 @@
       "claimRoads": [],
       "claimAreas": [],
       "box": [
-        333.9,
+        331.8,
         -53.2,
         436.1,
         33.1
@@ -1442,64 +1460,19 @@
       "junctions": [],
       "entrances": [
         {
-          "x": 335.9,
-          "z": 15.3,
+          "x": 336.7,
+          "z": 21.9,
           "y": 0,
-          "w": 1.5,
-          "nx": -0.445,
-          "nz": -0.896,
-          "other": null
-        },
-        {
-          "x": 346.9,
-          "z": 9.8,
-          "y": 0,
-          "w": 3.8,
-          "nx": -0.445,
-          "nz": -0.896,
-          "other": null
-        },
-        {
-          "x": 337.7,
-          "z": 24.1,
-          "y": 0,
-          "w": 15.7,
+          "w": 20.5,
           "nx": -0.896,
           "nz": 0.445,
           "other": null
         },
         {
-          "x": 393.5,
-          "z": -13.3,
+          "x": 430.6,
+          "z": -24.6,
           "y": 0,
-          "w": 4.5,
-          "nx": -0.445,
-          "nz": -0.896,
-          "other": null
-        },
-        {
-          "x": 422.4,
-          "z": -27.7,
-          "y": 0,
-          "w": 7.5,
-          "nx": -0.445,
-          "nz": -0.896,
-          "other": null
-        },
-        {
-          "x": 427.1,
-          "z": -30,
-          "y": 0,
-          "w": 1.5,
-          "nx": -0.445,
-          "nz": -0.896,
-          "other": null
-        },
-        {
-          "x": 431.6,
-          "z": -22.6,
-          "y": 0,
-          "w": 17.3,
+          "w": 20.2,
           "nx": 0.896,
           "nz": -0.445,
           "other": null
@@ -1514,10 +1487,253 @@
           "other": null
         },
         {
-          "x": 381.9,
-          "z": -5.9,
+          "x": 334.9,
+          "z": 10.8,
+          "y": 0,
+          "w": 5.3,
+          "nx": -0.445,
+          "nz": -0.896,
+          "other": null
+        },
+        {
+          "x": 339.9,
+          "z": 8.3,
+          "y": 0,
+          "w": 1.5,
+          "nx": -0.445,
+          "nz": -0.896,
+          "other": null
+        },
+        {
+          "x": 341.9,
+          "z": 7.3,
+          "y": 0,
+          "w": 1.5,
+          "nx": -0.445,
+          "nz": -0.896,
+          "other": null
+        },
+        {
+          "x": 346.6,
+          "z": 4.9,
+          "y": 0,
+          "w": 6,
+          "nx": -0.445,
+          "nz": -0.896,
+          "other": null
+        },
+        {
+          "x": 350.7,
+          "z": 2.9,
+          "y": 0,
+          "w": 1.5,
+          "nx": -0.445,
+          "nz": -0.896,
+          "other": null
+        },
+        {
+          "x": 352.7,
+          "z": 1.9,
+          "y": 0,
+          "w": 1.5,
+          "nx": -0.445,
+          "nz": -0.896,
+          "other": null
+        },
+        {
+          "x": 358,
+          "z": -0.7,
+          "y": 0,
+          "w": 4.5,
+          "nx": -0.445,
+          "nz": -0.896,
+          "other": null
+        },
+        {
+          "x": 363.4,
+          "z": -3.4,
+          "y": 0,
+          "w": 1.5,
+          "nx": -0.445,
+          "nz": -0.896,
+          "other": null
+        },
+        {
+          "x": 365.8,
+          "z": -4.6,
           "y": 0,
           "w": 2.3,
+          "nx": -0.445,
+          "nz": -0.896,
+          "other": null
+        },
+        {
+          "x": 369.1,
+          "z": -6.2,
+          "y": 0,
+          "w": 3.8,
+          "nx": -0.445,
+          "nz": -0.896,
+          "other": null
+        },
+        {
+          "x": 372.2,
+          "z": -7.7,
+          "y": 0,
+          "w": 1.5,
+          "nx": -0.445,
+          "nz": -0.896,
+          "other": null
+        },
+        {
+          "x": 374.2,
+          "z": -8.7,
+          "y": 0,
+          "w": 1.5,
+          "nx": -0.445,
+          "nz": -0.896,
+          "other": null
+        },
+        {
+          "x": 376.9,
+          "z": -10.1,
+          "y": 0,
+          "w": 3,
+          "nx": -0.445,
+          "nz": -0.896,
+          "other": null
+        },
+        {
+          "x": 379.9,
+          "z": -11.6,
+          "y": 0,
+          "w": 2.3,
+          "nx": -0.445,
+          "nz": -0.896,
+          "other": null
+        },
+        {
+          "x": 382.2,
+          "z": -12.7,
+          "y": 0,
+          "w": 1.5,
+          "nx": -0.445,
+          "nz": -0.896,
+          "other": null
+        },
+        {
+          "x": 386.3,
+          "z": -14.7,
+          "y": 0,
+          "w": 3,
+          "nx": -0.445,
+          "nz": -0.896,
+          "other": null
+        },
+        {
+          "x": 388.9,
+          "z": -16.1,
+          "y": 0,
+          "w": 1.5,
+          "nx": -0.445,
+          "nz": -0.896,
+          "other": null
+        },
+        {
+          "x": 393,
+          "z": -18.1,
+          "y": 0,
+          "w": 1.5,
+          "nx": -0.445,
+          "nz": -0.896,
+          "other": null
+        },
+        {
+          "x": 395,
+          "z": -19.1,
+          "y": 0,
+          "w": 1.5,
+          "nx": -0.445,
+          "nz": -0.896,
+          "other": null
+        },
+        {
+          "x": 397.7,
+          "z": -20.4,
+          "y": 0,
+          "w": 1.5,
+          "nx": -0.445,
+          "nz": -0.896,
+          "other": null
+        },
+        {
+          "x": 399.7,
+          "z": -21.4,
+          "y": 0,
+          "w": 1.5,
+          "nx": -0.445,
+          "nz": -0.896,
+          "other": null
+        },
+        {
+          "x": 403.7,
+          "z": -23.4,
+          "y": 0,
+          "w": 1.5,
+          "nx": -0.445,
+          "nz": -0.896,
+          "other": null
+        },
+        {
+          "x": 406.4,
+          "z": -24.8,
+          "y": 0,
+          "w": 3,
+          "nx": -0.445,
+          "nz": -0.896,
+          "other": null
+        },
+        {
+          "x": 410.4,
+          "z": -26.8,
+          "y": 0,
+          "w": 1.5,
+          "nx": -0.445,
+          "nz": -0.896,
+          "other": null
+        },
+        {
+          "x": 412.5,
+          "z": -27.8,
+          "y": 0,
+          "w": 1.5,
+          "nx": -0.445,
+          "nz": -0.896,
+          "other": null
+        },
+        {
+          "x": 417.5,
+          "z": -30.3,
+          "y": 0,
+          "w": 3.8,
+          "nx": -0.445,
+          "nz": -0.896,
+          "other": null
+        },
+        {
+          "x": 421.2,
+          "z": -32.1,
+          "y": 0,
+          "w": 1.5,
+          "nx": -0.445,
+          "nz": -0.896,
+          "other": null
+        },
+        {
+          "x": 423.2,
+          "z": -33.1,
+          "y": 0,
+          "w": 1.5,
           "nx": -0.445,
           "nz": -0.896,
           "other": null
@@ -1551,7 +1767,7 @@
         }
       ]
     },
-    "generated_meta_status": "node tools/gen_meta.mjs 성공. preload로 출력만 /private/tmp/gyeongbu-east-r10-meta.json에 기록. 사용자 지정 수정 범위 밖인 js/places/_meta.json에는 쓰지 않음; 중앙 통합 시 해당 entry 반영 필요.",
+    "generated_meta_status": "Round17: gen_meta logic ran in memory; shared _meta.json was not written per allowed-file rule. Entry captured here for integration.",
     "corrected_landmarks": [
       {
         "name": "철판 정문",
@@ -1670,6 +1886,221 @@
         ],
         "placement_confidence": "approximate"
       }
-    ]
+    ],
+    "round17_review": {
+      "source": ".codex-jobs/evidence/review_walk17.json#gyeongbu_east",
+      "originals_opened": [
+        "refs/roadview/gbeast_01_parking_deck.jpg",
+        "refs/roadview/gbeast_02_bus_yard_road.jpg",
+        "refs/roadview/gbeast_03_bus_yard_hedge.jpg",
+        "refs/interior/audit_gyeongbu_east/06_dd_drtitan_01.jpg",
+        "refs/interior/audit_gyeongbu_east/02_entrance_snfl_151300.jpg"
+      ],
+      "findings": [
+        {
+          "id": "ge-C01",
+          "priority": "camera",
+          "status": "applied",
+          "change": "모든 로드뷰 trace 및 해당 스폰을 같은 촬영점 (367.034,0,-15.806), local(44,-14)로 통합. yaw206.404/116.404/296.404, pitch0.",
+          "position": {
+            "world": [
+              367.034,
+              0,
+              -15.806
+            ]
+          },
+          "evidence_and_uncertainty": "미니맵 위치와 시야 방향을 원본3장에서 확인. 정확한 수평 위치는 미니맵 축척 근사."
+        },
+        {
+          "id": "ge-L01",
+          "priority": "layout",
+          "status": "applied",
+          "change": "북측 데크를 local u0..104.86,v-4.5..1.3로 연결. y3.8/7.6 및 지붕11.8. 홀 북벽v1.5, 남측 정면/열린 주차장/내부 상세 유지. 기존 계단·램프 겹침 부분에는 구멍 보존.",
+          "position": {
+            "local_uv_bounds": [
+              0,
+              -4.5,
+              104.86,
+              1.3
+            ],
+            "levels": [
+              3.8,
+              7.6,
+              11.8
+            ]
+          },
+          "evidence_and_uncertainty": "원본의 연속 데크는 확인. 북측 띠 깊이와 전면 위치는 추정. drtitan 남측 사진은 북측 데크와 양립 가능하다."
+        },
+        {
+          "id": "ge-L02",
+          "priority": "layout",
+          "status": "applied",
+          "change": "기존 먼 차고지 차량을 보존하며 근접 버스열 추가. 경계기준 t=-6+12.4i, off=-4 및 t=-3+12.4i,off=-8, i0..7. 12×2.5×3.45m, 둥글게 잘린 모서리/바퀴/흰몸체/빨강파랑 띠/회색커튼.",
+          "position": {
+            "edge_origin": [
+              349.86,
+              -16.63
+            ],
+            "edge_end": [
+              425.07,
+              -53.16
+            ],
+            "front_offset": -4,
+            "rear_offset": -8,
+            "count_per_row": 8
+          },
+          "evidence_and_uncertainty": "버스가 생울타리 바로 뒤에서 측면으로 보이는 것은 원본 확인. 기존 울타리 중심은 localv≈-21.5이므로 권고v-23은 겹친다. 실제 구현 전열v≈-26.4..-25.7로 조정해 약3.1m 간격 유지. 대수·차종·후열은 근사."
+        },
+        {
+          "id": "ge-D01",
+          "priority": "design",
+          "status": "applied",
+          "change": "북측과 기존 남측 외피의 단층 Λ 스트럿 및 백색기둥 #e9e9e4, 주황 후퇴기둥 #cd763b. 북측 16개 약6.53m 경간. y7.6..9.4 청색유리 #5f86ad, y9.4..11.55 골판금속 #aab9c8, 1.2m 멀리언과 백색 코니스.",
+          "position": {
+            "north_face_local_v": -4.4,
+            "glazing_y": [
+              7.6,
+              9.4
+            ],
+            "cladding_y": [
+              9.4,
+              11.55
+            ]
+          },
+          "evidence_and_uncertainty": "층고12m 내에서 유리1.8m/금속2.15m로 구성. 원본은 상부 수평 판넬 이음도 보이므로 세로 잔골과 수평 이음 모두 표현."
+        },
+        {
+          "id": "ge-D02",
+          "priority": "design",
+          "status": "applied",
+          "change": "기존 약9m 간격 두꺼운 갈색/덩어리 나무를 5m 간격, 지름.24m 회색 줄기와 4.6m부터 가지가 시작하는13~15m 가로수로 교체. 투명 잎 클러스터 #8cc04a/#7fae45.",
+          "position": {
+            "edge_t": [
+              5,
+              80
+            ],
+            "spacing": 5,
+            "trunk_diameter": 0.24
+          },
+          "evidence_and_uncertainty": "원본의 높고 가는 수형 확인. 수종·개별 가지는 추정."
+        },
+        {
+          "id": "ge-T01",
+          "priority": "detail",
+          "status": "applied",
+          "change": "생울타리 기존 경계 위치 보존. 1.6m 단위로 높이 약1.4m, ±.08m 둥근 윗면과 #4d7a2e/#7fae45 덩어리 추가. 연석 옆 off1.65/1.92에 이중 황색선.",
+          "position": {
+            "edge_offset": 0.9,
+            "height": 1.4,
+            "yellow_offsets": [
+              1.65,
+              1.92
+            ]
+          },
+          "evidence_and_uncertainty": "원본의 둥근 불규칙 수관·연석·황색선을 확인."
+        },
+        {
+          "id": "ge-T02",
+          "priority": "detail",
+          "status": "applied",
+          "change": "localu34..55,v-10.8..-8.8에2m 포장띠. u39/44/49,v-10.3에0.75m 높이×1m 스테인리스 U볼라드와 황색 반사띠, 전면 황색선v-11. 북측 데크v-4.9에0.9m 2단 난간; u50.8..55.2 관통부 개방.",
+          "position": {
+            "bollards_local_uv": [
+              [
+                39,
+                -10.3
+              ],
+              [
+                44,
+                -10.3
+              ],
+              [
+                49,
+                -10.3
+              ]
+            ],
+            "fence_local_v": -4.9
+          },
+          "evidence_and_uncertainty": "원본3개 U볼라드/반사띠/저층 난간을 확인. 스탠드오프와 폭은 근사."
+        },
+        {
+          "id": "ge-T03",
+          "priority": "detail",
+          "status": "applied",
+          "change": "분홍 띠를 생울타리 인접off3.4..4에서 반대편off10.8..11.4로 이동하고off11.4..13.2에 밝은 보도. 울타리 옆에는 이중 황색선.",
+          "position": {
+            "pink_edge_offsets": [
+              10.8,
+              11.4
+            ],
+            "paving_offsets": [
+              11.4,
+              13.2
+            ]
+          },
+          "evidence_and_uncertainty": "원본02의 반대편 분홍 띠는 확인되나 정확한 폭/거리 신뢰도 낮음."
+        }
+      ],
+      "skipped": [],
+      "validation": {
+        "syntax": "node --check js/places/gyeongbu_east.js: passed",
+        "smoke": "node tests/smoke.mjs gyeongbu_east: OK",
+        "walk_module": "node tests/walk.mjs gyeongbu_east --no-city: 14 ok, 0 blocked",
+        "screenshots": "not run: user sandbox constraint",
+        "integration": "parent agent runs requested combined smoke and full-world walk",
+        "additional_routes": [
+          {
+            "name": "north gallery 3.8",
+            "ok": true,
+            "cells": 34966
+          },
+          {
+            "name": "north gallery 7.6",
+            "ok": true,
+            "cells": 16477
+          },
+          {
+            "name": "mapped hall through path",
+            "ok": true,
+            "cells": 10301
+          },
+          {
+            "name": "camera 0",
+            "ok": true
+          },
+          {
+            "name": "camera 1",
+            "ok": true
+          },
+          {
+            "name": "camera 2",
+            "ok": true
+          },
+          {
+            "name": "south apron open sky",
+            "ok": true
+          }
+        ],
+        "walk_with_city": "node tests/walk.mjs gyeongbu_east: 14 ok, 0 blocked"
+      },
+      "operator_views": "gyeongbu_east_00:367.034,0,-15.806,206.404,0;gyeongbu_east_01:367.034,0,-15.806,116.404,0;gyeongbu_east_02:367.034,0,-15.806,296.404,0",
+      "final_shared_validation": {
+        "smoke": {
+          "command": "node tests/smoke.mjs gyeongbu gyeongbu_east gotomall banpo_shoppingtown",
+          "result": "OK",
+          "exit_code": 0
+        },
+        "walk": {
+          "command": "node tests/walk.mjs",
+          "result": "687 ok, 0 blocked",
+          "exit_code": 0,
+          "required_routes": "사용자 루트 1–7 and both 1F 동선 routes passed"
+        },
+        "camera_physics": "31/31 review cameras: floor support, zero capsule displacement, headroom >=1.75 m",
+        "syntax_whitespace": "node --check and scoped git diff --check passed",
+        "render": "tests/shot.mjs not run per sandbox constraint; original frames inspected, final visual render pending operator",
+        "scope": "Only the four requested module/research files were edited by this job; no engine/junction/meta/test edits, no commit."
+      }
+    }
   }
 }

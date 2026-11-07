@@ -6252,145 +6252,157 @@
         "nudge_m": 0
       },
       {
-        "round": 14,
-        "spot": "하우스 무광검정·청록 진입부",
+        "round": 17,
+        "spot": "하우스 B1 하행 에스컬레이터 · 고량주관 옆 추정 진입부",
         "local_st": [
-          96,
-          15
+          75.1,
+          37.5
         ],
-        "x": -86.796,
+        "x": -73.443,
         "y": 0,
-        "z": 93.861,
-        "yawDeg": 291.343,
+        "z": 66.206,
+        "yawDeg": 111.343,
         "pitchDeg": 0,
         "floor": "1F",
         "look_at_local_st": [
-          96,
-          19
+          75.1,
+          30.5
         ],
         "photos": [
           "refs/walk/s5_ssg_b1/srYQ3WmKlEI_30.jpg"
         ],
-        "camera_qa": "Real kit + all five connected modules + all detail:0.38m clearance, correct floor,1.85m headroom; nearest clear position. Not rendered.",
-        "nudge_m": 0
+        "camera_qa": "Round17 real kit, centralcity/shinsegae/jwmarriott/gotomall/station and all detail: floor 0m, radius0.38m/height1.85m collision push 0m, registered headroom 3.4m; passed. Updated render not generated.",
+        "nudge_m": 0.1,
+        "r17_camera": "centralcity_00"
       },
       {
-        "round": 14,
-        "spot": "하우스 라운지24석과 황동·월넛",
+        "round": 17,
+        "spot": "하우스 라운지 · 서측 에스컬레이터 상부에서 하향",
         "local_st": [
-          97.3,
-          27.5
+          116.3,
+          24.5
         ],
-        "x": -74.68,
-        "y": 0,
-        "z": 90.523,
-        "yawDeg": 201.34,
-        "pitchDeg": 0,
-        "floor": "1F",
-        "look_at_local_st": [
-          108,
-          27.5
-        ],
-        "photos": [
-          "refs/walk/s5_ssg_b1/8xxIIvP9uAY_10.jpg"
-        ],
-        "camera_qa": "Real kit + all five connected modules + all detail:0.38m clearance, correct floor,1.85m headroom; nearest clear position. Not rendered.",
-        "nudge_m": 0
-      },
-      {
-        "round": 14,
-        "spot": "하우스1M에서 내려다본 라운지",
-        "local_st": [
-          97.3,
-          27.5
-        ],
-        "x": -74.68,
+        "x": -70.56,
         "y": 3.6,
-        "z": 90.523,
-        "yawDeg": 201.34,
-        "pitchDeg": -20,
+        "z": 109.312,
+        "yawDeg": 21.343,
+        "pitchDeg": -55,
         "floor": "1M",
         "look_at_local_st": [
-          108,
-          27.5
+          106,
+          24.5
         ],
         "photos": [
           "refs/walk/s5_ssg_b1/8xxIIvP9uAY_10.jpg"
         ],
-        "camera_qa": "Real kit + all five connected modules + all detail:0.38m clearance, correct floor,1.85m headroom; nearest clear position. Not rendered.",
-        "nudge_m": 0
+        "camera_qa": "Round17 real kit, centralcity/shinsegae/jwmarriott/gotomall/station and all detail: floor 3.6m, radius0.38m/height1.85m collision push 0m, registered headroom 5m; passed. Updated render not generated.",
+        "nudge_m": 0,
+        "r17_camera": "centralcity_01"
       },
       {
-        "round": 14,
-        "spot": "파미에2F 소이연남·아카데미",
+        "round": 17,
+        "spot": "하우스 라운지 · 러그 아일랜드 하향 전경",
         "local_st": [
-          173.4,
-          -73
+          116.3,
+          26
         ],
-        "x": -140.599,
+        "x": -69.163,
+        "y": 3.6,
+        "z": 108.766,
+        "yawDeg": 21.343,
+        "pitchDeg": -55,
+        "floor": "1M",
+        "look_at_local_st": [
+          106,
+          26
+        ],
+        "photos": [
+          "refs/walk/s5_ssg_b1/8xxIIvP9uAY_10.jpg"
+        ],
+        "camera_qa": "Round17 real kit, centralcity/shinsegae/jwmarriott/gotomall/station and all detail: floor 3.6m, radius0.38m/height1.85m collision push 0m, registered headroom 5m; passed. Updated render not generated.",
+        "nudge_m": 0,
+        "r17_camera": "centralcity_02"
+      },
+      {
+        "round": 17,
+        "spot": "파미에2F 소이연남 · 개방 다이닝",
+        "local_st": [
+          174.1,
+          -70.25
+        ],
+        "x": -137.783,
         "y": 5,
-        "z": 197.976,
-        "yawDeg": 181.685,
+        "z": 197.627,
+        "yawDeg": 201.343,
         "pitchDeg": 0,
         "floor": "2F",
         "look_at_local_st": [
-          179,
-          -75
+          180,
+          -70.25
         ],
         "photos": [
-          "refs/official/centralcity/famille_floor_2_ko_map.png",
           "refs/walk/s7_central_famille/MMwnXpMqkZ0_105.jpg"
         ],
-        "camera_qa": "Real kit + all five connected modules + all detail:0.38m clearance, correct floor,1.85m headroom; nearest clear position. Not rendered.",
-        "nudge_m": 0
+        "camera_qa": "Round17 real kit, centralcity/shinsegae/jwmarriott/gotomall/station and all detail: floor 5m, radius0.38m/height1.85m collision push 0m, registered headroom 3.6m; passed. Updated render not generated.",
+        "nudge_m": 0,
+        "r17_camera": "centralcity_03",
+        "plan_photos": [
+          "refs/official/centralcity/famille_floor_2_ko_map.png"
+        ]
       },
       {
-        "round": 14,
-        "spot": "파미에2F 케르반",
+        "round": 17,
+        "spot": "파미에2F KERVAN · 난간 좌석과 베이커리",
         "local_st": [
-          177,
-          -62
+          174.2,
+          -51.85
         ],
-        "x": -129.043,
+        "x": -120.608,
         "y": 5,
-        "z": 197.326,
-        "yawDeg": 201.334,
+        "z": 191.025,
+        "yawDeg": 201.343,
         "pitchDeg": 0,
         "floor": "2F",
         "look_at_local_st": [
-          180,
-          -62
+          181,
+          -51.85
         ],
         "photos": [
-          "refs/official/centralcity/famille_floor_2_ko_map.png",
           "refs/walk/s7_central_famille/MMwnXpMqkZ0_65.jpg"
         ],
-        "camera_qa": "Real kit + all five connected modules + all detail:0.38m clearance, correct floor,1.85m headroom; nearest clear position. Not rendered.",
-        "nudge_m": 0
+        "camera_qa": "Round17 real kit, centralcity/shinsegae/jwmarriott/gotomall/station and all detail: floor 5m, radius0.38m/height1.85m collision push 0m, registered headroom 3.6m; passed. Updated render not generated.",
+        "nudge_m": 0,
+        "r17_camera": "centralcity_04",
+        "plan_photos": [
+          "refs/official/centralcity/famille_floor_2_ko_map.png"
+        ]
       },
       {
-        "round": 14,
-        "spot": "파미에2F 이비티피자·무월식탁",
+        "round": 17,
+        "spot": "파미에2F ebt PIZZA · 크림 전면과 두 창",
         "local_st": [
-          177,
-          -47
+          177.1,
+          -35.25
         ],
-        "x": -115.071,
+        "x": -104.091,
         "y": 5,
-        "z": 191.868,
-        "yawDeg": 201.33,
+        "z": 187.686,
+        "yawDeg": 201.343,
         "pitchDeg": 0,
         "floor": "2F",
         "look_at_local_st": [
-          180,
-          -47
+          182,
+          -35.25
         ],
         "photos": [
-          "refs/official/centralcity/famille_floor_2_ko_map.png",
           "refs/walk/s7_central_famille/MMwnXpMqkZ0_125.jpg"
         ],
-        "camera_qa": "Real kit + all five connected modules + all detail:0.38m clearance, correct floor,1.85m headroom; nearest clear position. Not rendered.",
-        "nudge_m": 0
+        "camera_qa": "Round17 real kit, centralcity/shinsegae/jwmarriott/gotomall/station and all detail: floor 5m, radius0.38m/height1.85m collision push 0m, registered headroom 3.6m; passed. Updated render not generated.",
+        "nudge_m": 0,
+        "r17_camera": "centralcity_05",
+        "plan_photos": [
+          "refs/official/centralcity/famille_floor_2_ko_map.png"
+        ]
       },
       {
         "round": 14,
@@ -6439,98 +6451,77 @@
         "nudge_m": 0
       },
       {
-        "round": 14,
-        "spot": "호남선→파미에1F→4번출구",
+        "round": 17,
+        "spot": "호남선 1F 4번 승차문 · 긴 대합실 통로",
         "local_st": [
-          167,
-          19
+          37.5,
+          9.2
         ],
-        "x": -57.235,
+        "x": -113.485,
         "y": 0,
-        "z": 158.538,
-        "yawDeg": 238.212,
+        "z": 41.482,
+        "yawDeg": 21.343,
         "pitchDeg": 0,
         "floor": "1F",
         "look_at_local_st": [
-          171,
-          22
+          9,
+          9.2
         ],
         "photos": [
-          "refs/walk/s7_central_famille/HgbY_flKpMI_16.jpg",
-          "refs/walk/s7_central_famille/HgbY_flKpMI_29.jpg",
-          "refs/walk/s7_central_famille/HgbY_flKpMI_36.jpg"
+          "refs/walk/s7_central_famille/HgbY_flKpMI_16.jpg"
         ],
-        "camera_qa": "Real kit + all five connected modules + all detail:0.38m clearance, correct floor,1.85m headroom; nearest clear position. Not rendered.",
-        "nudge_m": 0
+        "camera_qa": "Round17 real kit, centralcity/shinsegae/jwmarriott/gotomall/station and all detail: floor 0m, radius0.38m/height1.85m collision push 0m, registered headroom 8.6m; passed. Updated render not generated.",
+        "nudge_m": 0,
+        "r17_camera": "centralcity_06",
+        "source_location_note": "The original is at red boarding gate4. Existing BOARDING_DOORS assigns gate4 to local s33; used actual modeled gate4 rather than the review’s approximate s100–140 band."
       },
       {
-        "round": 14,
-        "spot": "파미에4번출구 방향",
+        "round": 17,
+        "spot": "파미에1F BUDDHA’S BELLY · 전면 6.46m 거리",
         "local_st": [
-          194,
-          25.2
+          185,
+          -63.44
         ],
-        "x": -41.635,
+        "x": -127.473,
         "y": 0,
-        "z": 181.431,
-        "yawDeg": 201.339,
-        "pitchDeg": 0,
+        "z": 205.302,
+        "yawDeg": 201.343,
+        "pitchDeg": 5,
         "floor": "1F",
         "look_at_local_st": [
-          199,
-          25.2
-        ],
-        "photos": [
-          "refs/walk/s7_central_famille/HgbY_flKpMI_50.jpg"
-        ],
-        "camera_qa": "Real kit + all five connected modules + all detail:0.38m clearance, correct floor,1.85m headroom; nearest clear position. Not rendered.",
-        "nudge_m": 0
-      },
-      {
-        "round": 14,
-        "spot": "파미에1F 부다스벨리 황갈색 전면",
-        "local_st": [
-          189.4,
-          -63.5
-        ],
-        "x": -125.928,
-        "y": 0,
-        "z": 209.422,
-        "yawDeg": 201.336,
-        "pitchDeg": 0,
-        "floor": "1F",
-        "look_at_local_st": [
-          195,
-          -63.5
+          191.4635,
+          -63.44
         ],
         "photos": [
           "refs/walk/s7_central_famille/MMwnXpMqkZ0_15.jpg"
         ],
-        "camera_qa": "Real kit + all five connected modules + all detail:0.38m clearance, correct floor,1.85m headroom; nearest clear position. Not rendered.",
-        "nudge_m": 0
+        "camera_qa": "Round17 real kit, centralcity/shinsegae/jwmarriott/gotomall/station and all detail: floor 0m, radius0.38m/height1.85m collision push 0m, registered headroom 8.6m; passed. Updated render not generated.",
+        "nudge_m": 0,
+        "r17_camera": "centralcity_08"
       },
       {
-        "round": 14,
-        "spot": "파미에1F 층별안내판",
+        "round": 17,
+        "spot": "파미에1F 층별안내판 · 벽돌 벽 정면",
         "local_st": [
-          189.4,
-          -44
+          189.9,
+          -41.5
         ],
-        "x": -107.765,
+        "x": -105.254,
         "y": 0,
-        "z": 202.327,
-        "yawDeg": 21.333,
+        "z": 201.883,
+        "yawDeg": 21.343,
         "pitchDeg": 0,
         "floor": "1F",
         "look_at_local_st": [
-          187.3,
-          -44
+          187.78,
+          -41.5
         ],
         "photos": [
           "refs/walk/s7_central_famille/MMwnXpMqkZ0_85.jpg"
         ],
-        "camera_qa": "Real kit + all five connected modules + all detail:0.38m clearance, correct floor,1.85m headroom; nearest clear position. Not rendered.",
-        "nudge_m": 0
+        "camera_qa": "Round17 real kit, centralcity/shinsegae/jwmarriott/gotomall/station and all detail: floor 0m, radius0.38m/height1.85m collision push 0m, registered headroom 8.6m; passed. Updated render not generated.",
+        "nudge_m": 0,
+        "r17_camera": "centralcity_09"
       },
       {
         "round": 14,
@@ -6556,51 +6547,105 @@
         "nudge_m": 0
       },
       {
-        "round": 14,
-        "spot": "오픈스테이지 교체형 행사바닥",
+        "round": 17,
+        "spot": "호남선 1F 진입부 · 코퍼 천장과 LED 기둥",
         "local_st": [
-          58,
+          46.5,
           18.6
         ],
-        "x": -97.27,
+        "x": -101.455,
         "y": 0,
-        "z": 57.156,
-        "yawDeg": 172.527,
-        "pitchDeg": 0,
+        "z": 46.444,
+        "yawDeg": 201.343,
+        "pitchDeg": 5,
         "floor": "1F",
         "look_at_local_st": [
-          66,
-          14.2
+          70,
+          18.6
         ],
         "photos": [
-          "refs/official/shinsegae/hos_1F.jpg",
           "refs/walk/s7_central_famille/FeFx7kfWgdo_233.jpg"
         ],
-        "camera_qa": "Real kit + all five connected modules + all detail:0.38m clearance, correct floor,1.85m headroom; nearest clear position. Not rendered.",
-        "nudge_m": 0
+        "camera_qa": "Round17 real kit, centralcity/shinsegae/jwmarriott/gotomall/station and all detail: floor 0m, radius0.38m/height1.85m collision push 0m, registered headroom 5.82m; passed. Updated render not generated.",
+        "nudge_m": 0,
+        "r17_camera": "centralcity_10",
+        "plan_photos": [
+          "refs/official/shinsegae/hos_1F.jpg"
+        ]
       },
       {
-        "round": 14,
-        "spot": "B1 배스앤바디웍스·흑백마름모 통로",
+        "round": 17,
+        "spot": "B1 배스앤바디웍스 하우스 키오스크 · 배럴 천장",
         "local_st": [
-          35,
-          31.2
+          37.5,
+          29.6
         ],
-        "x": -93.903,
+        "x": -94.484,
         "y": -6,
-        "z": 31.148,
+        "z": 34.058,
         "yawDeg": 329.499,
-        "pitchDeg": 0,
+        "pitchDeg": 3,
         "floor": "B1",
         "look_at_local_st": [
-          31.7,
-          35.4
+          33.5,
+          35.05
         ],
         "photos": [
           "refs/walk/s7_central_famille/FeFx7kfWgdo_181.jpg"
         ],
-        "camera_qa": "Real kit + all five connected modules + all detail:0.38m clearance, correct floor,1.85m headroom; nearest clear position. Not rendered.",
-        "nudge_m": 0
+        "camera_qa": "Round17 real kit, centralcity/shinsegae/jwmarriott/gotomall/station and all detail: floor -6m, radius0.38m/height1.85m collision push 0m, registered headroom 5.7m; passed. Updated render not generated.",
+        "nudge_m": 0,
+        "r17_camera": "centralcity_11"
+      },
+      {
+        "r17_camera": "centralcity_12",
+        "photos": [
+          "refs/walk/s7_central_famille/HgbY_flKpMI_29.jpg"
+        ],
+        "round": 17,
+        "spot": "파미에 진입부 짧은 계단 · Gate2 추정 배치",
+        "local_st": [
+          168.7,
+          21.7
+        ],
+        "x": -54.101,
+        "y": 0.72,
+        "z": 159.139,
+        "yawDeg": 201.343,
+        "pitchDeg": -12,
+        "floor": "1F",
+        "look_at_local_st": [
+          172.4,
+          21.7
+        ],
+        "camera_qa": "Round17 real kit, centralcity/shinsegae/jwmarriott/gotomall/station and all detail: floor 0.72m, radius0.38m/height1.85m collision push 0m, registered headroom 3.98m; passed. Updated render not generated.",
+        "nudge_m": 0,
+        "source_location_note": "Original establishes a few steps down beside brick arches and a globe lamp, not a basement drop. Exact location and .72m rise are inferred at Gate2; platform and both flights remain on1F."
+      },
+      {
+        "r17_camera": "centralcity_13",
+        "photos": [
+          "refs/walk/s7_central_famille/HgbY_flKpMI_36.jpg"
+        ],
+        "round": 17,
+        "spot": "파미에1F 폴바셋 벽돌 광장",
+        "local_st": [
+          188,
+          -37.8
+        ],
+        "x": -102.499,
+        "y": 0,
+        "z": 198.767,
+        "yawDeg": 201.343,
+        "pitchDeg": 5,
+        "floor": "1F",
+        "look_at_local_st": [
+          194.5,
+          -37.8
+        ],
+        "camera_qa": "Round17 real kit, centralcity/shinsegae/jwmarriott/gotomall/station and all detail: floor 0m, radius0.38m/height1.85m collision push 0m, registered headroom 8.6m; passed. Updated render not generated.",
+        "nudge_m": 0,
+        "source_location_note": "Paul Bassett is legible in original frame and matches mapped unit16. Camera is offset from the decorative pier at t−39.6; exact viewpoint remains inferred."
       }
     ],
     "round7": {
@@ -15116,6 +15161,1416 @@
         "modeling.trace_note": "121 trace cameras. Round11 revised J4/J8/plaza/right-hand brands/HOS/Famille close views. y is player foot (renderer adds eye height); screenshot verification pending operator.",
         "notes[0]": "웹 자료가 층별 구조를 거의 제공하지 않아 층 배치 상당수는 추정"
       }
+    },
+    "trace_before_round17": [
+      {
+        "round": 14,
+        "spot": "하우스 무광검정·청록 진입부",
+        "local_st": [
+          96,
+          15
+        ],
+        "x": -86.796,
+        "y": 0,
+        "z": 93.861,
+        "yawDeg": 291.343,
+        "pitchDeg": 0,
+        "floor": "1F",
+        "look_at_local_st": [
+          96,
+          19
+        ],
+        "photos": [
+          "refs/walk/s5_ssg_b1/srYQ3WmKlEI_30.jpg"
+        ],
+        "camera_qa": "Real kit + all five connected modules + all detail:0.38m clearance, correct floor,1.85m headroom; nearest clear position. Not rendered.",
+        "nudge_m": 0,
+        "original_trace_index": 193
+      },
+      {
+        "round": 14,
+        "spot": "하우스 라운지24석과 황동·월넛",
+        "local_st": [
+          97.3,
+          27.5
+        ],
+        "x": -74.68,
+        "y": 0,
+        "z": 90.523,
+        "yawDeg": 201.34,
+        "pitchDeg": 0,
+        "floor": "1F",
+        "look_at_local_st": [
+          108,
+          27.5
+        ],
+        "photos": [
+          "refs/walk/s5_ssg_b1/8xxIIvP9uAY_10.jpg"
+        ],
+        "camera_qa": "Real kit + all five connected modules + all detail:0.38m clearance, correct floor,1.85m headroom; nearest clear position. Not rendered.",
+        "nudge_m": 0,
+        "original_trace_index": 194
+      },
+      {
+        "round": 14,
+        "spot": "하우스1M에서 내려다본 라운지",
+        "local_st": [
+          97.3,
+          27.5
+        ],
+        "x": -74.68,
+        "y": 3.6,
+        "z": 90.523,
+        "yawDeg": 201.34,
+        "pitchDeg": -20,
+        "floor": "1M",
+        "look_at_local_st": [
+          108,
+          27.5
+        ],
+        "photos": [
+          "refs/walk/s5_ssg_b1/8xxIIvP9uAY_10.jpg"
+        ],
+        "camera_qa": "Real kit + all five connected modules + all detail:0.38m clearance, correct floor,1.85m headroom; nearest clear position. Not rendered.",
+        "nudge_m": 0,
+        "original_trace_index": 195
+      },
+      {
+        "round": 14,
+        "spot": "파미에2F 소이연남·아카데미",
+        "local_st": [
+          173.4,
+          -73
+        ],
+        "x": -140.599,
+        "y": 5,
+        "z": 197.976,
+        "yawDeg": 181.685,
+        "pitchDeg": 0,
+        "floor": "2F",
+        "look_at_local_st": [
+          179,
+          -75
+        ],
+        "photos": [
+          "refs/official/centralcity/famille_floor_2_ko_map.png",
+          "refs/walk/s7_central_famille/MMwnXpMqkZ0_105.jpg"
+        ],
+        "camera_qa": "Real kit + all five connected modules + all detail:0.38m clearance, correct floor,1.85m headroom; nearest clear position. Not rendered.",
+        "nudge_m": 0,
+        "original_trace_index": 196
+      },
+      {
+        "round": 14,
+        "spot": "파미에2F 케르반",
+        "local_st": [
+          177,
+          -62
+        ],
+        "x": -129.043,
+        "y": 5,
+        "z": 197.326,
+        "yawDeg": 201.334,
+        "pitchDeg": 0,
+        "floor": "2F",
+        "look_at_local_st": [
+          180,
+          -62
+        ],
+        "photos": [
+          "refs/official/centralcity/famille_floor_2_ko_map.png",
+          "refs/walk/s7_central_famille/MMwnXpMqkZ0_65.jpg"
+        ],
+        "camera_qa": "Real kit + all five connected modules + all detail:0.38m clearance, correct floor,1.85m headroom; nearest clear position. Not rendered.",
+        "nudge_m": 0,
+        "original_trace_index": 197
+      },
+      {
+        "round": 14,
+        "spot": "파미에2F 이비티피자·무월식탁",
+        "local_st": [
+          177,
+          -47
+        ],
+        "x": -115.071,
+        "y": 5,
+        "z": 191.868,
+        "yawDeg": 201.33,
+        "pitchDeg": 0,
+        "floor": "2F",
+        "look_at_local_st": [
+          180,
+          -47
+        ],
+        "photos": [
+          "refs/official/centralcity/famille_floor_2_ko_map.png",
+          "refs/walk/s7_central_famille/MMwnXpMqkZ0_125.jpg"
+        ],
+        "camera_qa": "Real kit + all five connected modules + all detail:0.38m clearance, correct floor,1.85m headroom; nearest clear position. Not rendered.",
+        "nudge_m": 0,
+        "original_trace_index": 198
+      },
+      {
+        "round": 14,
+        "spot": "호남선→파미에1F→4번출구",
+        "local_st": [
+          167,
+          19
+        ],
+        "x": -57.235,
+        "y": 0,
+        "z": 158.538,
+        "yawDeg": 238.212,
+        "pitchDeg": 0,
+        "floor": "1F",
+        "look_at_local_st": [
+          171,
+          22
+        ],
+        "photos": [
+          "refs/walk/s7_central_famille/HgbY_flKpMI_16.jpg",
+          "refs/walk/s7_central_famille/HgbY_flKpMI_29.jpg",
+          "refs/walk/s7_central_famille/HgbY_flKpMI_36.jpg"
+        ],
+        "camera_qa": "Real kit + all five connected modules + all detail:0.38m clearance, correct floor,1.85m headroom; nearest clear position. Not rendered.",
+        "nudge_m": 0,
+        "original_trace_index": 201
+      },
+      {
+        "round": 14,
+        "spot": "파미에4번출구 방향",
+        "local_st": [
+          194,
+          25.2
+        ],
+        "x": -41.635,
+        "y": 0,
+        "z": 181.431,
+        "yawDeg": 201.339,
+        "pitchDeg": 0,
+        "floor": "1F",
+        "look_at_local_st": [
+          199,
+          25.2
+        ],
+        "photos": [
+          "refs/walk/s7_central_famille/HgbY_flKpMI_50.jpg"
+        ],
+        "camera_qa": "Real kit + all five connected modules + all detail:0.38m clearance, correct floor,1.85m headroom; nearest clear position. Not rendered.",
+        "nudge_m": 0,
+        "original_trace_index": 202
+      },
+      {
+        "round": 14,
+        "spot": "파미에1F 부다스벨리 황갈색 전면",
+        "local_st": [
+          189.4,
+          -63.5
+        ],
+        "x": -125.928,
+        "y": 0,
+        "z": 209.422,
+        "yawDeg": 201.336,
+        "pitchDeg": 0,
+        "floor": "1F",
+        "look_at_local_st": [
+          195,
+          -63.5
+        ],
+        "photos": [
+          "refs/walk/s7_central_famille/MMwnXpMqkZ0_15.jpg"
+        ],
+        "camera_qa": "Real kit + all five connected modules + all detail:0.38m clearance, correct floor,1.85m headroom; nearest clear position. Not rendered.",
+        "nudge_m": 0,
+        "original_trace_index": 203
+      },
+      {
+        "round": 14,
+        "spot": "파미에1F 층별안내판",
+        "local_st": [
+          189.4,
+          -44
+        ],
+        "x": -107.765,
+        "y": 0,
+        "z": 202.327,
+        "yawDeg": 21.333,
+        "pitchDeg": 0,
+        "floor": "1F",
+        "look_at_local_st": [
+          187.3,
+          -44
+        ],
+        "photos": [
+          "refs/walk/s7_central_famille/MMwnXpMqkZ0_85.jpg"
+        ],
+        "camera_qa": "Real kit + all five connected modules + all detail:0.38m clearance, correct floor,1.85m headroom; nearest clear position. Not rendered.",
+        "nudge_m": 0,
+        "original_trace_index": 204
+      },
+      {
+        "round": 14,
+        "spot": "오픈스테이지 교체형 행사바닥",
+        "local_st": [
+          58,
+          18.6
+        ],
+        "x": -97.27,
+        "y": 0,
+        "z": 57.156,
+        "yawDeg": 172.527,
+        "pitchDeg": 0,
+        "floor": "1F",
+        "look_at_local_st": [
+          66,
+          14.2
+        ],
+        "photos": [
+          "refs/official/shinsegae/hos_1F.jpg",
+          "refs/walk/s7_central_famille/FeFx7kfWgdo_233.jpg"
+        ],
+        "camera_qa": "Real kit + all five connected modules + all detail:0.38m clearance, correct floor,1.85m headroom; nearest clear position. Not rendered.",
+        "nudge_m": 0,
+        "original_trace_index": 206
+      },
+      {
+        "round": 14,
+        "spot": "B1 배스앤바디웍스·흑백마름모 통로",
+        "local_st": [
+          35,
+          31.2
+        ],
+        "x": -93.903,
+        "y": -6,
+        "z": 31.148,
+        "yawDeg": 329.499,
+        "pitchDeg": 0,
+        "floor": "B1",
+        "look_at_local_st": [
+          31.7,
+          35.4
+        ],
+        "photos": [
+          "refs/walk/s7_central_famille/FeFx7kfWgdo_181.jpg"
+        ],
+        "camera_qa": "Real kit + all five connected modules + all detail:0.38m clearance, correct floor,1.85m headroom; nearest clear position. Not rendered.",
+        "nudge_m": 0,
+        "original_trace_index": 207
+      }
+    ],
+    "round17": {
+      "review_source": ".codex-jobs/evidence/review_walk17.json → centralcity",
+      "source_rule": "Original video frames govern visible layout/finish; official maps govern tenant order and floor labels. Dimensions and OSM registration are inferred where schematic maps and perspective frames do not determine them.",
+      "visual_validation": "Original frames inspected. Updated renders not generated: user states tests/shot.mjs cannot run in this sandbox.",
+      "camera_convention": "All y values are floor levels; the screenshot tool adds eye height. r17_camera preserves the supplied sheet ID after splitting or removing traces.",
+      "excluded_cameras": [
+        {
+          "r17_camera": "centralcity_07",
+          "owner": "station",
+          "source_frame": "refs/walk/s7_central_famille/HgbY_flKpMI_50.jpg",
+          "reason": "Original frame is at B1 at the foot of station exit-4 escalators and adjacent stair, not the Famille street door. The former centralcity pose is about 110 m away. Excluded instead of assigning an unverified station pose; station module is outside this job.",
+          "original_trace": {
+            "round": 14,
+            "spot": "파미에4번출구 방향",
+            "local_st": [
+              194,
+              25.2
+            ],
+            "x": -41.635,
+            "y": 0,
+            "z": 181.431,
+            "yawDeg": 201.339,
+            "pitchDeg": 0,
+            "floor": "1F",
+            "look_at_local_st": [
+              199,
+              25.2
+            ],
+            "photos": [
+              "refs/walk/s7_central_famille/HgbY_flKpMI_50.jpg"
+            ],
+            "camera_qa": "Real kit + all five connected modules + all detail:0.38m clearance, correct floor,1.85m headroom; nearest clear position. Not rendered.",
+            "nudge_m": 0,
+            "r17_camera": "centralcity_07"
+          },
+          "approximate_exit4_world_xz": [
+            -130.5,
+            250.1
+          ],
+          "required_floor_y": -6
+        }
+      ],
+      "findings": [
+        {
+          "id": "CC-L1",
+          "priority": "layout",
+          "review_status": "adjusted",
+          "source_frames": "srYQ3WmKlEI_30.jpg",
+          "status": "implemented",
+          "changes": [
+            "Added two1.2m down escalators beside 고량주관 at s74.2/76, top t34.5,y0 to t23,y−6, with a6×3m grey-marble landing and basement foot landing.",
+            "Kept the wine-cellar gate and lift at s95.1,t19.5. Retargeted cc00 to the separate descent.",
+            "Cleared the new landing by refitting the overlapping schematic 오슬로 cell north to s69–71.6,t25.3–38; retained the café brand,counter,espresso and stocked glazed pastry case,with four supported tables."
+          ],
+          "uncertainty": "The plan identifies the corner beside 고량주관; world registration, run direction and rise fit are inferred. The review’s suggested world point was beside the retained lift and was not used.",
+          "original_frame_checked": true,
+          "positions": {
+            "lane1_top": {
+              "local_st": [
+                74.2,
+                34.5
+              ],
+              "world_xyz": [
+                -76.565,
+                0,
+                66.459
+              ]
+            },
+            "lane1_bottom": {
+              "local_st": [
+                74.2,
+                23
+              ],
+              "world_xyz": [
+                -87.277,
+                -6,
+                70.644
+              ]
+            },
+            "lane2_top": {
+              "local_st": [
+                76,
+                34.5
+              ],
+              "world_xyz": [
+                -75.91,
+                0,
+                68.136
+              ]
+            },
+            "lane2_bottom": {
+              "local_st": [
+                76,
+                23
+              ],
+              "world_xyz": [
+                -86.622,
+                -6,
+                72.321
+              ]
+            },
+            "oslo_refit_local_bounds": [
+              69,
+              25.3,
+              71.6,
+              38
+            ]
+          }
+        },
+        {
+          "id": "CC-L2",
+          "priority": "layout",
+          "review_status": "adjusted",
+          "source_frames": "8xxIIvP9uAY_10.jpg",
+          "status": "implemented",
+          "changes": [
+            "Moved the court escalator centres from t25/30 to t23/32.5,9.5m apart; high landings remain at s115.",
+            "Replaced three long carpet/armchair strips with six separate4.2×2.9m rug islands centred at s101.8/106.95/112.1 and t25.7/29.9, with grey stone aisles, beige strips and a central3×1.1m wood bar."
+          ],
+          "uncertainty": "The source sees one edge run; the second remains on the opposite edge per the official plan. Rug dimensions and precise spacing are fitted.",
+          "original_frame_checked": true,
+          "positions": {
+            "court_local_bounds": [
+              99,
+              21.5,
+              115,
+              33.5
+            ],
+            "bar": {
+              "local_st": [
+                106.95,
+                27.8
+              ],
+              "world_xyz": [
+                -70.889,
+                0,
+                99.402
+              ]
+            },
+            "escalator_high_landings": [
+              {
+                "local_st": [
+                  115,
+                  23
+                ],
+                "world_xyz": [
+                  -72.431,
+                  3.6,
+                  108.647
+                ]
+              },
+              {
+                "local_st": [
+                  115,
+                  32.5
+                ],
+                "world_xyz": [
+                  -63.582,
+                  3.6,
+                  105.19
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "CC-L3",
+          "priority": "layout",
+          "review_status": "confirmed",
+          "source_frames": "MMwnXpMqkZ0_105.jpg, MMwnXpMqkZ0_65.jpg, MMwnXpMqkZ0_125.jpg",
+          "status": "implemented",
+          "changes": [
+            "Replaced narrow glazed front cells for 소이연남,KERVAN and ebt PIZZA with open dining fronts; retained every mapped tenant and ordering through a monotone horizontal fit.",
+            "소이연남 now has11.26m frontage and10tables; KERVAN9.46m frontage and8tables with low black rail and bakery counter on the right; ebt has7.26m cream frontage, two windows and exterior folding seats."
+          ],
+          "uncertainty": "Frames establish broad/open dining, not surveyed widths. Regional metric fit changes schematic cell widths without asserting15m exact width.",
+          "original_frame_checked": true,
+          "positions": {
+            "soi_local_bounds": [
+              177.2,
+              -75.88,
+              183.6,
+              -64.62
+            ],
+            "kervan_local_bounds": [
+              178.4,
+              -56.58,
+              184,
+              -47.12
+            ],
+            "ebt_local_bounds": [
+              181.3,
+              -38.88,
+              187.4,
+              -31.62
+            ],
+            "floor_y": 5
+          }
+        },
+        {
+          "id": "CC-L4",
+          "priority": "layout",
+          "review_status": "confirmed",
+          "source_frames": "MMwnXpMqkZ0_15.jpg",
+          "status": "implemented",
+          "changes": [
+            "Shifted opposite units22젤라띠젤라띠 and23크림라벨 by local s−4.5m, retaining their fronts and contents.",
+            "Removed only the conflicting decorative piers in the new sightline; the BUDDHA’S BELLY camera now stands6.46m from the facade with pitch+5°, showing the arch and entablature.",
+            "Cut the upper-floor slab over local s184.8–191.8,t−68..−59.8 to expose the full arch from the revised camera; kept a gallery behind the inset Soi back wall."
+          ],
+          "uncertainty": "The stand-off is video-derived; exact aisle and opposite-cell metric positions remain inferred from the schematic map.",
+          "original_frame_checked": true,
+          "positions": {
+            "facade": {
+              "local_st": [
+                191.4635,
+                -63.44
+              ],
+              "world_xyz": [
+                -125.121,
+                0,
+                211.322
+              ]
+            },
+            "camera": {
+              "local_st": [
+                185,
+                -63.44
+              ],
+              "world_xyz": [
+                -127.473,
+                0,
+                205.302
+              ]
+            },
+            "opposite_unit_shift_local_st": [
+              -4.5,
+              0
+            ],
+            "upper_floor_new_void_local_bounds": [
+              184.8,
+              -68,
+              191.8,
+              -59.8
+            ]
+          }
+        },
+        {
+          "id": "CC-L5",
+          "priority": "layout",
+          "review_status": "confirmed",
+          "source_frames": "MMwnXpMqkZ0_85.jpg",
+          "status": "implemented",
+          "changes": [
+            "Moved the directory2.5m along the wall from t−44 to−41.5 and forward onto an uninterrupted brick backing, clear of the jamb and grey wall.",
+            "Camera faces the board from2.12m in front."
+          ],
+          "uncertainty": "Exact wall position is fitted; the unobstructed brick mounting is directly visible.",
+          "original_frame_checked": true,
+          "positions": {
+            "panel": {
+              "local_st": [
+                187.78,
+                -41.5
+              ],
+              "world_xyz": [
+                -106.026,
+                1.65,
+                199.908
+              ]
+            },
+            "camera": {
+              "local_st": [
+                189.9,
+                -41.5
+              ],
+              "world_xyz": [
+                -105.254,
+                0,
+                201.883
+              ]
+            }
+          }
+        },
+        {
+          "id": "CC-L6",
+          "priority": "layout",
+          "review_status": "confirmed",
+          "source_frames": "FeFx7kfWgdo_181.jpg",
+          "status": "implemented",
+          "changes": [
+            "Replaced the distant counter-sized Bath & Body Works treatment with a4×2.5m oak house kiosk,height3.55m, near the B1 camera.",
+            "Added slate pitched roof, oak panelling, arched side windows with48bottles, navy/white check front, pink display and adjacent palm."
+          ],
+          "uncertainty": "Video fixes the kiosk character and relative viewpoint. Rectangle slightly exceeds the southeast edge of the sheared schematic cell; metric registration is inferred.",
+          "original_frame_checked": true,
+          "positions": {
+            "kiosk": {
+              "local_st": [
+                33.5,
+                35.05
+              ],
+              "world_xyz": [
+                -90.863,
+                -6,
+                28.349
+              ]
+            },
+            "local_bounds": [
+              31.5,
+              33.8,
+              35.5,
+              36.3
+            ],
+            "palm": {
+              "local_st": [
+                30.7,
+                34.25
+              ],
+              "world_xyz": [
+                -92.627,
+                -6,
+                26.033
+              ]
+            }
+          }
+        },
+        {
+          "id": "CC-C1",
+          "priority": "camera",
+          "review_status": "confirmed",
+          "source_frames": "famille_floor_2_ko_map.png / hos_1F.jpg (sheet), MMwnXpMqkZ0_105/65/125.jpg, FeFx7kfWgdo_233.jpg",
+          "status": "implemented",
+          "changes": [
+            "Moved the walk frame to photos[0] for supplied cameras03/04/05/10. Official plans are retained in plan_photos."
+          ],
+          "uncertainty": "None for source selection.",
+          "original_frame_checked": true,
+          "positions": {
+            "trace_ids": [
+              "centralcity_03",
+              "centralcity_04",
+              "centralcity_05",
+              "centralcity_10"
+            ]
+          }
+        },
+        {
+          "id": "CC-C2",
+          "priority": "camera",
+          "review_status": "confirmed",
+          "source_frames": "8xxIIvP9uAY_10.jpg",
+          "status": "implemented",
+          "changes": [
+            "Both lounge cameras now use the high landing, floor y3.6,pitch−55°,yaw21.343°.",
+            "The retained escalator high end is s115; cameras stand at s116.3 and face decreasing s, correcting the reviewer’s opposite-end example."
+          ],
+          "uncertainty": "Exact viewpoint,lens and steepness remain inferred; updated visual review is pending.",
+          "original_frame_checked": true,
+          "positions": {
+            "cc01": {
+              "local_st": [
+                116.3,
+                24.5
+              ],
+              "world_xyz": [
+                -70.56,
+                3.6,
+                109.312
+              ]
+            },
+            "cc02": {
+              "local_st": [
+                116.3,
+                26
+              ],
+              "world_xyz": [
+                -69.163,
+                3.6,
+                108.766
+              ]
+            }
+          }
+        },
+        {
+          "id": "CC-C3",
+          "priority": "camera",
+          "review_status": "confirmed",
+          "source_frames": "HgbY_flKpMI_16.jpg",
+          "status": "implemented",
+          "changes": [
+            "Retargeted _16 to the actual modeled red boarding gate4 at s33, viewed from s37.5,t9.2 along the hall; separated _29 and _36 into new cc12/cc13 traces.",
+            "Added a short.72m raised threshold and four-step descent near Gate2 with side rails and globe lamp for _29. _36 targets the known Paul Bassett unit16, clear of its decorative pier."
+          ],
+          "uncertainty": "Gate4 follows the existing explicit door numbering. The short stair’s Gate2 location and.72m rise are inferred; source shows the steps but does not locate them metrically. Paul Bassett’s exact viewpoint is fitted.",
+          "original_frame_checked": true,
+          "positions": {
+            "cc06": {
+              "local_st": [
+                37.5,
+                9.2
+              ],
+              "world_xyz": [
+                -113.485,
+                0,
+                41.482
+              ]
+            },
+            "cc12": {
+              "local_st": [
+                168.7,
+                21.7
+              ],
+              "world_xyz": [
+                -54.101,
+                0.72,
+                159.139
+              ]
+            },
+            "cc13": {
+              "local_st": [
+                188,
+                -37.8
+              ],
+              "world_xyz": [
+                -102.499,
+                0,
+                198.767
+              ]
+            },
+            "short_threshold_local_bounds": [
+              167.4,
+              19.7,
+              169.4,
+              24.3
+            ]
+          }
+        },
+        {
+          "id": "CC-C4",
+          "priority": "camera",
+          "review_status": "confirmed",
+          "source_frames": "HgbY_flKpMI_50.jpg",
+          "status": "implemented",
+          "changes": [
+            "Removed station-only _50 from active centralcity trace and retained its original pose and station ownership in excluded_cameras.",
+            "Removed the two caption-derived 서울성모병원/4번출구 boards near s167,t21.8 and s197,t25.2; kept plain local Famille wayfinding."
+          ],
+          "uncertainty": "No station geometry or replacement station camera was changed; the user explicitly permitted dropping this camera from centralcity.",
+          "original_frame_checked": true,
+          "positions": {
+            "excluded_trace": "centralcity_07",
+            "station_exit4_approximate_world_xz": [
+              -130.5,
+              250.1
+            ]
+          }
+        },
+        {
+          "id": "CC-D1",
+          "priority": "design",
+          "review_status": "adjusted",
+          "source_frames": "srYQ3WmKlEI_30.jpg",
+          "status": "implemented",
+          "changes": [
+            "Applied dark herringbone#2e3134 floor with gloss.5,grey-marble landing gloss.7,warm wood#b07a50 wall and cylindrical lamp on the left; matte black#1d1e20 wall,round sconces and diagonal warm strip on the right.",
+            "Added small white HOUSE OF SHINSEGAE letters3m×.25m,backlit square lattice and teal escalator under-light at the new head. Kept the wine-cellar gate finish."
+          ],
+          "uncertainty": "The3.3m entry ceiling is retained below the1M floor; lattice height is compressed to.7m to preserve that structural level, so vertical proportions remain an approximation.",
+          "original_frame_checked": true,
+          "positions": {
+            "entry_head": {
+              "local_st": [
+                75.1,
+                34.5
+              ],
+              "world_xyz": [
+                -76.238,
+                0,
+                67.298
+              ]
+            },
+            "header": {
+              "local_st": [
+                75.1,
+                32.4
+              ],
+              "world_xyz": [
+                -78.194,
+                2.33,
+                68.062
+              ]
+            }
+          }
+        },
+        {
+          "id": "CC-D2",
+          "priority": "design",
+          "review_status": "confirmed",
+          "source_frames": "FeFx7kfWgdo_233.jpg",
+          "status": "implemented",
+          "changes": [
+            "Added deep white2.5m coffers over entry s42–61,t8–23,soffit5.82m and lower mouldings5.37m; trusses remain visible further along.",
+            "Clad the four column positions s40.5/50/59.5/69,t20.5 as black1.2m LED columns and added red/pink screens; changed the nearby lounge to white sofas and tables."
+          ],
+          "uncertainty": "Exact coffer registration and advertising artwork are inferred. Existing dated event details were retained.",
+          "original_frame_checked": true,
+          "positions": {
+            "entry_local_bounds": [
+              42,
+              8,
+              61,
+              23
+            ],
+            "columns": [
+              {
+                "local_st": [
+                  40.5,
+                  20.5
+                ],
+                "world_xyz": [
+                  -101.868,
+                  0,
+                  40.164
+                ]
+              },
+              {
+                "local_st": [
+                  50,
+                  20.5
+                ],
+                "world_xyz": [
+                  -98.411,
+                  0,
+                  49.013
+                ]
+              },
+              {
+                "local_st": [
+                  59.5,
+                  20.5
+                ],
+                "world_xyz": [
+                  -94.955,
+                  0,
+                  57.862
+                ]
+              },
+              {
+                "local_st": [
+                  69,
+                  20.5
+                ],
+                "world_xyz": [
+                  -91.498,
+                  0,
+                  66.71
+                ]
+              }
+            ],
+            "sofas": [
+              {
+                "local_st": [
+                  51.6,
+                  24.8
+                ],
+                "world_xyz": [
+                  -93.824,
+                  0,
+                  48.938
+                ]
+              },
+              {
+                "local_st": [
+                  55,
+                  24.8
+                ],
+                "world_xyz": [
+                  -92.587,
+                  0,
+                  52.105
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "CC-D3",
+          "priority": "design",
+          "review_status": "confirmed",
+          "source_frames": "FeFx7kfWgdo_181.jpg",
+          "status": "implemented",
+          "changes": [
+            "Added cream#eee4d2 barrel intrados and warm cove strips over the B1 passage s25–44,t26–38.5,spring3.55m/rise1m.",
+            "Replaced the local tiny-dot appearance with gloss marble,0.6m black diamonds and black border bands."
+          ],
+          "uncertainty": "Vault dimensions and pattern spacing are fitted to the supplied view.",
+          "original_frame_checked": true,
+          "positions": {
+            "local_bounds": [
+              25,
+              26,
+              44,
+              38.5
+            ],
+            "floor_y": -6
+          }
+        },
+        {
+          "id": "CC-D4",
+          "priority": "design",
+          "review_status": "confirmed",
+          "source_frames": "MMwnXpMqkZ0_105.jpg, MMwnXpMqkZ0_65.jpg, MMwnXpMqkZ0_125.jpg, MMwnXpMqkZ0_15.jpg",
+          "status": "implemented",
+          "changes": [
+            "Removed duplicated Korean back-wall name boards in the four reviewed restaurants by using dedicated open interiors.",
+            "Front signs now present KERVAN in white with red round mark,ebt PIZZA in small black letters on cream,and BUDDHA’S BELLY in white on navy with THAI CUISINE badge."
+          ],
+          "uncertainty": "Brand text follows the source; exact lettering and logo artwork are approximated.",
+          "original_frame_checked": true,
+          "positions": {
+            "reviewed_units": [
+              "Famille2F10소이연남",
+              "Famille2F8KERVAN",
+              "Famille2F5ebt PIZZA",
+              "Famille1F28BUDDHA’S BELLY"
+            ]
+          }
+        },
+        {
+          "id": "CC-T1",
+          "priority": "detail",
+          "review_status": "confirmed",
+          "source_frames": "MMwnXpMqkZ0_105.jpg, MMwnXpMqkZ0_65.jpg",
+          "status": "implemented",
+          "changes": [
+            "Replaced the floating seated figures with diners placed at furnished tables; every seated figure in the reviewed custom dining fronts has an actual chair."
+          ],
+          "uncertainty": "Guest positions and clothing are inferred, using the observed occupancy.",
+          "original_frame_checked": true,
+          "positions": {
+            "floors": [
+              "Famille2F",
+              "BUDDHA’S BELLY1F"
+            ]
+          }
+        },
+        {
+          "id": "CC-T2",
+          "priority": "detail",
+          "review_status": "confirmed",
+          "source_frames": "8xxIIvP9uAY_10.jpg",
+          "status": "implemented",
+          "changes": [
+            "Added four pairs of terracotta3-seat sofas#a34a2f and two clusters of four lime-olive tub chairs#a7a53c,round white marble tables and six red/beige rugs.",
+            "Placed28visitors in the lounge including standing counter guests,all inside K.detail."
+          ],
+          "uncertainty": "Exact rug designs and individual seating allocations are reconstructed from the visible pattern.",
+          "original_frame_checked": true,
+          "positions": {
+            "rug_centres": [
+              {
+                "local_st": [
+                  101.8,
+                  25.7
+                ],
+                "world_xyz": [
+                  -74.719,
+                  0,
+                  95.37
+                ]
+              },
+              {
+                "local_st": [
+                  101.8,
+                  29.9
+                ],
+                "world_xyz": [
+                  -70.807,
+                  0,
+                  93.841
+                ]
+              },
+              {
+                "local_st": [
+                  106.95,
+                  25.7
+                ],
+                "world_xyz": [
+                  -72.845,
+                  0,
+                  100.166
+                ]
+              },
+              {
+                "local_st": [
+                  106.95,
+                  29.9
+                ],
+                "world_xyz": [
+                  -68.933,
+                  0,
+                  98.638
+                ]
+              },
+              {
+                "local_st": [
+                  112.1,
+                  25.7
+                ],
+                "world_xyz": [
+                  -70.971,
+                  0,
+                  104.963
+                ]
+              },
+              {
+                "local_st": [
+                  112.1,
+                  29.9
+                ],
+                "world_xyz": [
+                  -67.059,
+                  0,
+                  103.435
+                ]
+              }
+            ],
+            "bar": {
+              "local_st": [
+                106.95,
+                27.8
+              ],
+              "world_xyz": [
+                -70.889,
+                0,
+                99.402
+              ]
+            }
+          }
+        },
+        {
+          "id": "CC-T3",
+          "priority": "detail",
+          "review_status": "confirmed",
+          "source_frames": "MMwnXpMqkZ0_105.jpg, MMwnXpMqkZ0_65.jpg, MMwnXpMqkZ0_125.jpg",
+          "status": "implemented",
+          "changes": [
+            "ebt: two red/white striped window awnings,yellow pizza posters,rope line and four folding chairs.",
+            "KERVAN: coloured bead pendants across the dining area,buff brick,glass bakery counter with stock. 소이연남: hanging ivy across black trusses,round downlights and buff brick.",
+            "Occupancy: 소이연남10tables/12seated+1staff; KERVAN8tables/14seated+2standing; ebt2internal tables/2seated+1staff."
+          ],
+          "uncertainty": "Fixture spacing,stock and individual guests are fitted; signs and room character come from the frames.",
+          "original_frame_checked": true,
+          "positions": {
+            "floor_y": 5,
+            "soi": {
+              "local_st": [
+                181.9,
+                -70.25
+              ],
+              "world_xyz": [
+                -134.945,
+                5,
+                204.893
+              ]
+            },
+            "kervan": {
+              "local_st": [
+                181.2,
+                -51.85
+              ],
+              "world_xyz": [
+                -118.061,
+                5,
+                197.545
+              ]
+            },
+            "ebt": {
+              "local_st": [
+                184.35,
+                -35.25
+              ],
+              "world_xyz": [
+                -101.452,
+                5,
+                194.439
+              ]
+            }
+          }
+        },
+        {
+          "id": "CC-T4",
+          "priority": "detail",
+          "review_status": "confirmed",
+          "source_frames": "MMwnXpMqkZ0_85.jpg",
+          "status": "implemented",
+          "changes": [
+            "Replaced text lines with a1024×640white directory texture containing small coloured brand wordmarks grouped3F/2F/M·2·3/1F.",
+            "Added the black8cm border and separate dark plaque above on the clear brick backing."
+          ],
+          "uncertainty": "The board’s hierarchy/colours are reconstructed; exact small logos and all illegible wording are not traced.",
+          "original_frame_checked": true,
+          "positions": {
+            "panel": {
+              "local_st": [
+                187.78,
+                -41.5
+              ],
+              "world_xyz": [
+                -106.026,
+                1.65,
+                199.908
+              ]
+            },
+            "panel_size_m": [
+              3.04,
+              1.9
+            ],
+            "frame_size_m": [
+              3.2,
+              2.06
+            ]
+          }
+        }
+      ],
+      "validation": {
+        "status": "Passed required smoke and full-world walk, plus final connected-module walk and camera/geometry audits. Updated rendered appearance remains pending operator review.",
+        "detail_budget": {
+          "groups": 28,
+          "total_detail_quads": 248066,
+          "largest_group": {
+            "name": "스위트 파크 디저트 아일랜드",
+            "quads": 70635,
+            "people": 0
+          },
+          "groups_above_120000": 0,
+          "centralcity_detail_errors": [],
+          "dependency_detail_errors": []
+        },
+        "camera_physics": {
+          "module_ids": [
+            "centralcity",
+            "shinsegae",
+            "jwmarriott",
+            "gotomall",
+            "station"
+          ],
+          "radius_m": 0.38,
+          "height_m": 1.85,
+          "results": [
+            {
+              "id": "centralcity_00",
+              "expectedY": 0,
+              "floor": 0,
+              "push": 0,
+              "headroom": 3.4,
+              "ok": true
+            },
+            {
+              "id": "centralcity_01",
+              "expectedY": 3.6,
+              "floor": 3.6,
+              "push": 0,
+              "headroom": 5,
+              "ok": true
+            },
+            {
+              "id": "centralcity_02",
+              "expectedY": 3.6,
+              "floor": 3.6,
+              "push": 0,
+              "headroom": 5,
+              "ok": true
+            },
+            {
+              "id": "centralcity_03",
+              "expectedY": 5,
+              "floor": 5,
+              "push": 0,
+              "headroom": 3.6,
+              "ok": true
+            },
+            {
+              "id": "centralcity_04",
+              "expectedY": 5,
+              "floor": 5,
+              "push": 0,
+              "headroom": 3.6,
+              "ok": true
+            },
+            {
+              "id": "centralcity_05",
+              "expectedY": 5,
+              "floor": 5,
+              "push": 0,
+              "headroom": 3.6,
+              "ok": true
+            },
+            {
+              "id": "centralcity_06",
+              "expectedY": 0,
+              "floor": 0,
+              "push": 0,
+              "headroom": 8.6,
+              "ok": true
+            },
+            {
+              "id": "centralcity_08",
+              "expectedY": 0,
+              "floor": 0,
+              "push": 0,
+              "headroom": 8.6,
+              "ok": true
+            },
+            {
+              "id": "centralcity_09",
+              "expectedY": 0,
+              "floor": 0,
+              "push": 0,
+              "headroom": 8.6,
+              "ok": true
+            },
+            {
+              "id": "centralcity_10",
+              "expectedY": 0,
+              "floor": 0,
+              "push": 0,
+              "headroom": 5.82,
+              "ok": true
+            },
+            {
+              "id": "centralcity_11",
+              "expectedY": -6,
+              "floor": -6,
+              "push": 0,
+              "headroom": 5.7,
+              "ok": true
+            },
+            {
+              "id": "centralcity_12",
+              "expectedY": 0.72,
+              "floor": 0.72,
+              "push": 0,
+              "headroom": 3.98,
+              "ok": true
+            },
+            {
+              "id": "centralcity_13",
+              "expectedY": 0,
+              "floor": 0,
+              "push": 0,
+              "headroom": 8.6,
+              "ok": true
+            }
+          ],
+          "visual_mesh_occlusion_checked": true,
+          "all_passed": true,
+          "visual_mesh_occlusion_scope": "Targeted CPU ray tests only, recorded in cpu_sightlines; no new render or appearance validation."
+        },
+        "new_hos_descent": {
+          "method": "Each lane:47centreline samples at0.25m,25head approach samples,13foot exit samples; all five connected modules and all detail,radius0.38m/height1.85m.",
+          "lanes": [
+            {
+              "s": 74.2,
+              "samples": 85,
+              "maxFloorError": 0.001,
+              "minHeadroom": 3.4,
+              "fails": []
+            },
+            {
+              "s": 76,
+              "samples": 85,
+              "maxFloorError": 0.001,
+              "minHeadroom": 3.4,
+              "fails": []
+            }
+          ]
+        },
+        "upper_gallery": {
+          "method": "Local0.1m BFS with radius0.32m,height1.75m on y5; slab and detail collision enabled.",
+          "ok": true,
+          "visited": 2304,
+          "from_local": [
+            184.3,
+            -69
+          ],
+          "to_local": [
+            184.3,
+            -58
+          ],
+          "straight_line_s184_4_passes": true
+        },
+        "cpu_sightlines": {
+          "method": "Independent agent built current centralcity+all detail, cast rays from trace camera eye(y+1.65), and projected targets into72°16:9 frustum. Geometry-only, not a rendered appearance check.",
+          "clear_targets": [
+            "소이연남 sign",
+            "KERVAN sign",
+            "ebt PIZZA sign",
+            "BUDDHA’S BELLY fascia",
+            "BUDDHA’S BELLY arch crown",
+            "directory centre",
+            "Bath & Body Works screen",
+            "Bath & Body Works brand",
+            "B1 vault crown",
+            "cc10coffer",
+            "cc10LED column"
+          ],
+          "lounge_note": "Rug rays meet their own tables/sofas, consistent with occupied rug islands.",
+          "hos_head_retest": "After the Oslo refit, all nine fascia samples and the stairs-head target at local s74.2,t31,y−1.5 are unobstructed. Rays aimed further down meet the escalator’s own top tread nose; no leftover shop furniture or structural slab occludes the head. Kept cc00 at local75.1,37.5 as the original frame is a landing/head view."
+        },
+        "smoke_command": "node tests/smoke.mjs centralcity shinsegae jwmarriott gotomall",
+        "smoke_result": "OK after final Oslo refit; existing remote elevator approach warnings remain.",
+        "walk_command": "node tests/walk.mjs",
+        "walk_result": "687 ok, 0 blocked; exit0",
+        "walk_snapshot_note": "The full-world run began before the final Oslo cell refit. After that last centralcity geometry change, the five connected modules were rebuilt and walked successfully, and the required four-module smoke passed again.",
+        "post_refit_connected_walk": {
+          "command": "node tests/walk.mjs centralcity shinsegae jwmarriott gotomall station --no-city",
+          "result": "361 ok, 0 blocked; exit0"
+        },
+        "required_route_coverage": "The successful full-world run includes every 사용자 루트 and both 1F 동선 routes from tests/walk.mjs. The subsequent connected-module run rechecks the centralcity/shared-building routes after the Oslo change.",
+        "final_cli_checks": [
+          "node --check js/places/centralcity.js passed",
+          "data/research/centralcity.json parsed",
+          "git diff --check for both owned files passed"
+        ],
+        "scope": "Only js/places/centralcity.js and data/research/centralcity.json changed by this job; no engine, junction, test, other-module, commit or push actions.",
+        "visual_review": "All original frames inspected. Targeted CPU ray/frustum tests verified key front signs, Buddha arch, directory, kiosk, vault, coffers and HoS escalator head. tests/shot.mjs was not run because the user says it cannot run in this sandbox; no updated-render appearance claim."
+      },
+      "coordinate_note": "Positions use module local s/t, converted through P(s,t) to world x/y/z. Local−s is away from the BUDDHA’S BELLY front; shifting opposite cells in that direction widens the aisle.",
+      "original_frames_inspected": [
+        "refs/walk/s5_ssg_b1/srYQ3WmKlEI_30.jpg",
+        "refs/walk/s5_ssg_b1/8xxIIvP9uAY_10.jpg",
+        "refs/walk/s7_central_famille/MMwnXpMqkZ0_15.jpg",
+        "refs/walk/s7_central_famille/MMwnXpMqkZ0_65.jpg",
+        "refs/walk/s7_central_famille/MMwnXpMqkZ0_85.jpg",
+        "refs/walk/s7_central_famille/MMwnXpMqkZ0_105.jpg",
+        "refs/walk/s7_central_famille/MMwnXpMqkZ0_125.jpg",
+        "refs/walk/s7_central_famille/HgbY_flKpMI_16.jpg",
+        "refs/walk/s7_central_famille/HgbY_flKpMI_29.jpg",
+        "refs/walk/s7_central_famille/HgbY_flKpMI_36.jpg",
+        "refs/walk/s7_central_famille/HgbY_flKpMI_50.jpg",
+        "refs/walk/s7_central_famille/FeFx7kfWgdo_181.jpg",
+        "refs/walk/s7_central_famille/FeFx7kfWgdo_233.jpg"
+      ],
+      "skipped_findings": [],
+      "famille_2F_regional_fit": {
+        "x_pixels_to_local_t": [
+          [
+            0,
+            -96
+          ],
+          [
+            95,
+            -85
+          ],
+          [
+            169,
+            -76
+          ],
+          [
+            220,
+            -64.5
+          ],
+          [
+            245,
+            -61.8
+          ],
+          [
+            290,
+            -57
+          ],
+          [
+            293,
+            -56.7
+          ],
+          [
+            342,
+            -47
+          ],
+          [
+            421,
+            -39
+          ],
+          [
+            492,
+            -31.5
+          ],
+          [
+            531,
+            -27.5
+          ],
+          [
+            640,
+            -16
+          ],
+          [
+            758,
+            -3.5
+          ],
+          [
+            900,
+            11.6
+          ],
+          [
+            1238,
+            38
+          ]
+        ],
+        "reason": "Original dining fronts require more width than the schematic pixel scale; all tenant ordering retained.",
+        "guess": true
+      },
+      "completed": "2026-11-07"
     }
   },
   "source_hierarchy": {

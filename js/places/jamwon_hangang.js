@@ -1,7 +1,7 @@
 // Local OSM is preserved at its real coordinates; unrecorded facilities are
 // separately anchored by source pins. Dimensions/heights are reconstructions.
 const PATHS=[305677075,919393789,919393790,697678242,697678244,697678248,892370125,892370126,892370127,408858834,1497710475,1497710499,1497710500,949348575,949348576];
-export const meta={id:'jamwon_hangang',name:'잠원한강공원',claims:[],claimRoads:PATHS,claimAreas:[981963451,1532626249],sources:['data/osm.json','refs/aerial/jamwon_park.jpg','refs/interior/jamwon_park/notes.json','https://hangang.seoul.go.kr/www/contents/657.do?mid=454','https://magazine.sfac.or.kr/html/view.asp?PubDate=202004&CateMasterCd=300&CateSubCd=2336','https://www.directwedding.co.kr/weddinghall/marevo-in-wave','https://mediahub.seoul.go.kr/archives/2017290']};
+export const meta={id:'jamwon_hangang',name:'잠원한강공원',claims:[],claimRoads:[...PATHS,282194887,282194888,703825832,1497710476],claimAreas:[981963451,1532626249],sources:['data/osm.json','refs/aerial/jamwon_park.jpg','refs/interior/jamwon_park/notes.json','https://hangang.seoul.go.kr/www/contents/657.do?mid=454','https://magazine.sfac.or.kr/html/view.asp?PubDate=202004&CateMasterCd=300&CateSubCd=2336','https://www.directwedding.co.kr/weddinghall/marevo-in-wave','https://mediahub.seoul.go.kr/archives/2017290']};
 export function build(K){
   const rnd=K.rand(1082026),C={steel:0x71828a,dark:0x293f43,white:0xf1eee3,red:0xa96054,green:0x507c6a,yellow:0xf1cb43};
   const area=id=>K.osm.areas.find(a=>a.id===id),road=id=>K.osm.roads.filter(r=>r.id===id);
@@ -31,10 +31,18 @@ export function build(K){
   function ground(poly,y,mat){let ps=[poly];for(const h of cutouts)ps=ps.flatMap(p=>subtract(p,h));for(const p of ps)K.hpoly(mat,p,y);}
   const park=area(981963451).poly,paths=[],reserved=[];
   // Direct colours avoid multiplying an already dark asphalt/green grass map.
-  for(const[key,col]of[['jamwon_orange','#c58b68'],['jamwon_walk_orange','#cfa181'],['jamwon_wet_path','#555951'],['jamwon_mud','#81735e'],['jamwon_lawn','#78865a']])K.texture(key,256,256,(g,w,h)=>{
+  for(const[key,col]of[['jamwon_orange','#c58b68'],['jamwon_walk_orange','#cfa181'],['jamwon_wet_path','#555951'],['jamwon_mud','#81735e'],['jamwon_lawn','#5f7a45']])K.texture(key,256,256,(g,w,h)=>{
     g.fillStyle=col;g.fillRect(0,0,w,h);const r=K.rand(1509);
     for(let i=0;i<4200;i++){g.fillStyle=i%3?'#d9cbb91a':'#25362519';g.fillRect(r()*w,r()*h,1+r()*2,1+r()*2);}
   },[2,2]);
+  // HF_65: own the three local approach ways so city junction paint/signals do
+  // not reappear on the pedestrian apron. Preserve their remote surveyed ends.
+  K.texture('jamwon_granite',256,256,(g,w,h)=>{g.fillStyle='#cac3b7';g.fillRect(0,0,w,h);const r=K.rand(1765);for(let i=0;i<6000;i++){g.fillStyle=i%2?'#f0ece52b':'#4b494223';g.fillRect(r()*w,r()*h,1,1);}g.strokeStyle='#a9a49b';g.lineWidth=1;g.strokeRect(0,0,w,h);},[1.2,.6]);
+  K.texture('jamwon_setts',256,256,(g,w,h)=>{g.fillStyle='#8e8c86';g.fillRect(0,0,w,h);for(let j=0;j<8;j++)for(let i=-1;i<8;i++){g.fillStyle=['#93918a','#85857f','#a4a29b'][(i+j+12)%3];g.fillRect(i*36+(j%2)*18+2,j*32+2,32,28);}},[1.2,1.2]);
+  for(const r of road(282194887))for(let i=1;i<2;i++)strip(r.pts[i-1],r.pts[i],7,.03,'asphalt');
+  strip([396.27,-1245.58],[361,-1253.4],7,.03,'asphalt');
+  strip([361,-1253.4],[350.65,-1253.39],3.5,.03,'jamwon_setts',.075);
+  for(const r of road(703825832))for(let i=2;i<r.pts.length;i++)strip(r.pts[i-1],r.pts[i],7,.03,'asphalt');
   // Pedestrian tunnel beside the separately mapped vehicle bore. Ramps start
   // outside both motorway ribbons; all pedestrian coordinates follow the OSM.
   K.texture('jamwon_hex_revetment',512,512,(g,w,h)=>{
@@ -107,13 +115,17 @@ export function build(K){
     zone('신잠원나들목',band(a,b,w+.2),Math.min(a[2],b[2]),'1F','차도 옆 분리 보행 통로',Math.abs(b[2]-a[2])+3.4);
     if(!approach){
       // City skips OSM tunnel roads. Render the mapped neighbouring vehicle bore
-      // here without moving it or claiming a new road / changing shared metadata.
-      for(const r of road(282194888))for(let i=1;i<r.pts.length;i++){
-        const c=r.pts[i-1],d=r.pts[i],p=band(c,d,r.width),ya=i===1?0:-4,yb=i===r.pts.length-1?0:-4;
-        cutouts.push(p);K.groundHole(p);strip(c,d,r.width,ya,'asphalt',yb);
-        const roof=p.map((q,j)=>[q[0],(j<2?ya:yb)+3.35,q[1]]);K.quad(concrete,roof,[0,-1,0]);K.quad(concrete,roof,[0,1,0]);
-        const line=band(c,d,.1);K.quad(C.yellow,line.map((q,j)=>[q[0],(j<2?ya:yb)+.02,q[1]]),[0,1,0]);
-        for(const[e,f]of[[p[0],p[3]],[p[1],p[2]]])K.wall(...e,...f,-4,3.35,{mat:concrete,thick:.15});
+      // here with a short mouth extension; mapped centreline vertices remain.
+      const bore=[[340.27,-1264.22,0],[330.47,-1272.14,-4],[309.86,-1291.36,-4],[286.1,-1318.65,0]];
+      for(let i=1;i<bore.length;i++){
+        const c=bore[i-1],d=bore[i],w=5.0,p=band(c,d,w),ya=c[2],yb=d[2];
+        cutouts.push(p);K.groundHole(p);strip(c,d,w,ya,i===1?'jamwon_setts':'jamwon_wet_path',yb);
+        const roof=p.map((q,j)=>[q[0],(j<2?ya:yb)+3.35,q[1]]);K.quad(0x777c75,roof,[0,-1,0]);K.quad(concrete,roof,[0,1,0]);
+        for(const[e,f]of[[p[0],p[3]],[p[1],p[2]]]){
+          K.wall(...e,...f,-4.1,3.35,{mat:0x8e948c,thick:.15});
+        }
+        const L=Math.hypot(d[0]-c[0],d[1]-c[1]);
+        for(let t=2;t<L;t+=4.5){const q=mix(c,d,t/L);box(q[0],ya+(yb-ya)*t/L+3.22,q[1],.18,.045,1.1,'emit',false,Math.atan2(c[0]-d[0],c[1]-d[1]));}
       }
     }
   }
@@ -130,14 +142,14 @@ export function build(K){
     for(const s of[0,length]){
       const normal=s===0?[-ux,0,-uz]:[ux,0,uz],half=w/2+.18;
       for(const side of[-1,1])for(let i=0;i<8;i++){
-        const start=name==='신잠원나들목'&&side===1?12.5:half;
+        const start=name==='신잠원나들목'&&side===1?7.4:half;
         const t0=side*(start+(105-start)*i/8),t1=side*(start+(105-start)*(i+1)/8);
         const h0=crest*fade(t0)*.84,h1=crest*fade(t1)*.84;
-        K.quad('jamwon_hex_revetment',[P(s,t0,0),P(s,t1,0),P(s,t1,h1),P(s,t0,h0)],normal,[[t0/3.2,0],[t1/3.2,0],[t1/3.2,h1/3.2],[t0/3.2,h0/3.2]]);
+        K.quad(name==='신잠원나들목'&&s===length?0xbdbfbe:'jamwon_hex_revetment',[P(s,t0,0),P(s,t1,0),P(s,t1,h1),P(s,t0,h0)],normal,[[t0/3.2,0],[t1/3.2,0],[t1/3.2,h1/3.2],[t0/3.2,h0/3.2]]);
       }
       // Sinjamwon has a square lintel; retain the separate Jamwon metal arch.
       if(name==='신잠원나들목'){
-        K.quad({tex:'concrete',color:0xc5c6bc},[P(s,-half,3.25),P(s,12.5,3.25),P(s,12.5,4.91),P(s,-half,4.91)],normal);
+        K.quad({tex:'concrete',color:0xc5c6bc},[P(s,-half,3.25),P(s,7.4,3.25),P(s,7.4,4.91),P(s,-half,4.91)],normal);
         K.quad({tex:'concrete',color:0xb4b8af},[P(s,half,0),P(s,half+.4,0),P(s,half+.4,3.25),P(s,half,3.25)],normal);
       }else for(let k=0;k<20;k++){const a=k*Math.PI/20,b=(k+1)*Math.PI/20,t0=Math.cos(a)*half,t1=Math.cos(b)*half,h0=2.32+Math.sin(a)*1.38,h1=2.32+Math.sin(b)*1.38;
         K.quad('jamwon_hex_revetment',[P(s,t0,h0),P(s,t1,h1),P(s,t1,4.91),P(s,t0,4.91)],normal,[[k/10,0],[(k+1)/10,0],[(k+1)/10,.5],[k/10,.5]]);
@@ -146,16 +158,16 @@ export function build(K){
         beam(P(s+out,t0,h0),P(s+out,t1,h1),.045,C.dark);
       }
       for(const side of[-1,1]){
-        const inner=name==='신잠원나들목'&&side===1?12.5:side*(w/2+.3),outer=name==='신잠원나들목'&&side===1?20:side*12;
-        K.quad('jamwon_hex_revetment',[P(s-.18,inner,0),P(s-.18,outer,0),P(s-.18,outer,1.0),P(s-.18,inner,4.75)],normal,[[0,0],[3,0],[3,.32],[0,1.48]]);
+        const inner=name==='신잠원나들목'&&side===1?7.4:side*(w/2+.3),outer=name==='신잠원나들목'&&side===1?20:side*12;
+        K.quad(name==='신잠원나들목'&&s===length?0xbdbfbe:'jamwon_hex_revetment',[P(s-.18,inner,0),P(s-.18,outer,0),P(s-.18,outer,1.0),P(s-.18,inner,4.75)],normal,[[0,0],[3,0],[3,.32],[0,1.48]]);
         beam(P(s-.23,inner,4.75),P(s-.23,outer,1),.09,0xcbd0c6);
       }
       const out=s===0?-1:1;slab([plan(s+out*1,-12),plan(s+out*7,-12),plan(s+out*7,12),plan(s+out*1,12)],0,{tex:'concrete',color:0xc0c0b6});
       // Five posts frame a clear 1.4m walking gap; no centre bollard blocks route.
-      for(const t of[-5.4,-3.8,-1.7,1.7,4.1,5.7]){const p=P(s+out*3,t);K.cyl({x:p[0],y:0,z:p[2],r:.14,h:1,mat:0x44534e,seg:10});K.cyl({x:p[0],y:.58,z:p[2],r:.145,h:.18,mat:C.yellow,seg:10});}
+      for(const t of(name==='신잠원나들목'&&s===length?[]:[-5.4,-3.8,-1.7,1.7,4.1,5.7])){const p=P(s+out*3,t);K.cyl({x:p[0],y:0,z:p[2],r:.14,h:1,mat:0x44534e,seg:10});K.cyl({x:p[0],y:.58,z:p[2],r:.145,h:.18,mat:C.yellow,seg:10});}
       const yaw=Math.atan2(normal[0],normal[2]);
-      for(const[t,label]of[[-w/2-.65,'20'],[w/2+.65,'진입금지']]){const p=P(s+out*.4,t,2.15);K.sign(label,{x:p[0],y:p[1],z:p[2],w:label==='20'?.48:.65,h:.5,rotY:yaw,bg:'#f4eee2',fg:'#b42d2d',twoSided:true});}
-      const p=P(s+out*.42,0,4.25);sign(name,p[0],p[1],p[2],w,.4,yaw,'#4c605a');
+      for(const[t,label]of(name==='신잠원나들목'&&s===length?[]:[[-w/2-.65,'20'],[w/2+.65,'진입금지']])){const p=P(s+out*.4,t,2.15);K.sign(label,{x:p[0],y:p[1],z:p[2],w:label==='20'?.48:.65,h:.5,rotY:yaw,bg:'#f4eee2',fg:'#b42d2d',twoSided:true});}
+      if(name!=='신잠원나들목'||s!==length){const p=P(s+out*.42,0,4.25);sign(name,p[0],p[1],p[2],w,.4,yaw,'#4c605a');}
       // Transparent noise screen sits on the crest, above the tunnel opening.
       for(let t=-58;t<58;t+=2.9){const a=P(s,t,crest*fade(t)*.84),b=P(s,t+2.9,crest*fade(t+2.9)*.84);K.quad({tex:'glass',color:0xaabdbb},[a,b,[b[0],b[1]+1.85,b[2]],[a[0],a[1]+1.85,a[2]]],normal);beam(a,[a[0],a[1]+1.95,a[2]],.045,C.steel);beam([a[0],a[1]+1.85,a[2]],[b[0],b[1]+1.85,b[2]],.03,C.steel);}
     }
@@ -176,8 +188,12 @@ export function build(K){
   // occupied building. Keep both surveyed bores and their ramp levels intact.
   {
     const u=[.692,.722],n=[-.722,.692],P=(s,t,h=0)=>[344.24+u[0]*s+n[0]*t,h,-1268.03+u[1]*s+n[1]*t],p=(s,t)=>{const q=P(s,t);return[q[0],q[2]];},a=Math.atan2(u[0],u[1]);
-    slab([p(.6,-3),p(14,-3),p(14,12.7),p(.6,12.7)],0,{tex:'sidewalk',color:0xd2c7b9});
-    for(const side of[-1,1]){const t=side<0?-2.1:12.7;K.quad({tex:'concrete',color:0xc7c9c3},[P(0,t,0),P(8,t,0),P(8,t,1.05),P(0,t,4.91)],[u[0],0,u[1]]);}
+    slab([p(0,-3),p(15,-3),p(15,2.8),p(0,2.8)],.075,{tex:'jamwon_granite',gloss:.5});
+    strip(p(0,4.8),p(15,4.8),3.5,.075,{tex:'jamwon_setts',gloss:.3});
+    const curbA=p(.1,2.9),curbB=p(15,2.9);K.wall(...curbA,...curbB,.075,.18,{mat:0xaaa9a3,thick:.15,solid:false});
+    // New apron ties to the unchanged surveyed pedestrian and vehicle mouths.
+    strip(p(0,0),p(1,0),3.25,0,'jamwon_granite',.075);
+    for(const side of[-1,1]){const t=side<0?-2.1:7.4;K.quad(0xbdbfbe,[P(0,t,0),P(8,t,0),P(8,t,1.05),P(0,t,4.91)],[u[0],0,u[1]]);}
     K.detail({name:'신잠원나들목 광장과 방음벽',floor:'1F',rect:[322,-1286,365,-1240],y0:0,y1:12},()=>{
       for(let t=-2;t<13;t+=1.5){
         for(let row=0;row<4;row++)K.quad({tex:'metal',color:row%2?0xa09a8c:0xb4b0a4},[P(-.3,t,4.95+row*1.1),P(-.3,t+1.48,4.95+row*1.1),P(-.3,t+1.48,6.03+row*1.1),P(-.3,t,6.03+row*1.1)],[u[0],0,u[1]]);
@@ -185,9 +201,12 @@ export function build(K){
         beam(P(-.18,t,10.8),P(-2.3,t,11.3),.035,0x8a8e85);
       }
       for(const h of[5,6.1,7.2,8.3,9.4,10.8])beam(P(-.16,-2,h),P(-.16,13,h),.04,0x7c7b70);
-      const s=P(.14,6.2,5.42);sign('신잠원나들목',s[0],s[1],s[2],3,.68,a,'#806150','#f0e7d2');
-      const g=P(6.6,.1,.018);box(g[0],g[1],g[2],1.05,.035,.68,0x5c5044,false,a);
-      for(let t=-.42;t<=.43;t+=.12)beam(P(6.3,t,.06),P(6.9,t,.06),.012,0x8d8171);
+      const s=P(.14,5.2,5.42);sign('신잠원나들목',s[0],s[1],s[2],3,.68,a,'#806150','#f0e7d2');
+      const g=P(6.6,.1,.077);box(g[0],g[1],g[2],1.35,.015,2.15,0x8a7360,false,a);
+      box(g[0],.094,g[2],1,.012,1.8,0x363b39,false,a);
+      for(let t=-.33;t<=.53;t+=.09)beam(P(5.75,t,.11),P(7.45,t,.11),.014,0x74766e);
+      const plaque=P(.12,0,3.86);sign('보행자 통로',plaque[0],plaque[1],plaque[2],.75,.22,a,'#c8bda3','#514b3f');
+      const round=P(.12,3.1,4.12);K.dome({x:round[0],y:round[1],z:round[2],rx:.17,ry:.17,rz:.045,mat:0xd4d1c7,seg:12,rings:6,hemi:false});
       const sticker=P(.3,-1.58,1.5);sign(['한강공원','보행자 통로'],sticker[0],sticker[1],sticker[2],.5,.45,a,'#327a99');
     });
   }
@@ -199,14 +218,33 @@ export function build(K){
   for(const r of road(408858834))for(let i=1;i<r.pts.length;i++){
     const a=r.pts[i-1],b=r.pts[i];strip(a,b,3.8,.065,{tex:'jamwon_orange',gloss:.3});
     slab(band(a,b,1.85,2.85),.065,{tex:'jamwon_walk_orange',gloss:.3});paths.push([a,b,9]);
-    paint(a,b,.09,.081,0xd8ba70);const p=band(a,b,3.8);paint(p[1],p[2],.12,.081);
+    if(i<3)paint(a,b,.09,.081,0xd8ba70);
+    else if(i===3)paint(a,mix(a,b,.15),.09,.081,0xd8ba70);
+    const p=band(a,b,3.8);paint(p[1],p[2],.12,.081);
   }
+  // HF_130: the zebra lies on a transverse service road, not on orange paving.
+  strip([247.5,-1373.2],[270.5,-1397.4],5.8,.086,{tex:'jamwon_wet_path',gloss:.3});
+  strip([270.5,-1397.4],[288,-1402],5.8,.086,{tex:'jamwon_wet_path',gloss:.3});
+  const crossingA=[259.74,-1376.82],crossingB=[251.9,-1384.26];
+  slab(band(crossingA,crossingB,1.85,2.85),.091,{tex:'jamwon_walk_orange',gloss:.3});
+  {const q=band(crossingA,crossingB,3.8);paint(q[1],q[2],.12,.102);}
   // A separate tree-lined walking path reaches Wave's shore gangway. It never
   // cuts across the water to the cafe (HF_185/215); both ends meet mapped paths.
   const waveWalk=[[253.4,-1385.7],[248,-1404],[247,-1430],[243,-1453],[238.4,-1472.59]];
   for(let i=1;i<waveWalk.length;i++){strip(waveWalk[i-1],waveWalk[i],2.5,.065,i<3?{tex:'jamwon_wet_path',gloss:.3}:'jamwon_mud');paths.push([waveWalk[i-1],waveWalk[i],5.5]);}
   const dirtSpur=[[243,-1453],[236,-1453],[227,-1456],[219,-1453]];
   for(let i=1;i<dirtSpur.length;i++){strip(dirtSpur[i-1],dirtSpur[i],1.6,.07,'jamwon_mud');paths.push([dirtSpur[i-1],dirtSpur[i],3.5]);}
+  // HF_215: irregular damp margins and three puddles around the worn spur.
+  for(let j=1;j<dirtSpur.length;j++){
+    const a=dirtSpur[j-1],b=dirtSpur[j],len=Math.hypot(b[0]-a[0],b[1]-a[1]),nx=-(b[1]-a[1])/len,nz=(b[0]-a[0])/len;
+    for(let k=0;k<Math.ceil(len*2);k++){const q=mix(a,b,k/(Math.ceil(len*2))),off=(k%2?1:-1)*(.7+(k%4)*.11),r=.2+(k%3)*.1;
+      K.hpoly('jamwon_mud',Array.from({length:9},(_,i)=>[q[0]+nx*off+Math.cos(i*Math.PI*2/9)*r,q[1]+nz*off+Math.sin(i*Math.PI*2/9)*r*.7]),.074);}
+  }
+  for(const[x,z,rx,rz]of[[234.6,-1453.5,.7,.35],[228.3,-1455.5,1.1,.33],[220.7,-1453.6,.8,.45]])K.hpoly({color:0x66706b,gloss:.5},Array.from({length:13},(_,i)=>[x+Math.cos(i*Math.PI*2/13)*rx,z+Math.sin(i*Math.PI*2/13)*rz]),.078);
+  strip([213,-1445],[226,-1462],3,.082,{color:0xb8b6ae,gloss:.3});
+  // The leaf patch reaches a shallow local inlet 2.5 m behind the tape.
+  const leafWater=[[194.5,-1449.2],[205.5,-1457.1],[198,-1464.8],[184.5,-1454.5]];
+  cutouts.push(leafWater);K.groundHole(leafWater);K.hpoly({tex:'water',color:0x7f877f},leafWater,-1.4);
   // Keep trunks outside the whole adjoining walking/cycle width, including bends.
   // Invoked by lazy detail only, after bikeLink below has been initialized.
   function vergePoint(x,z){
@@ -218,54 +256,72 @@ export function build(K){
   }
   K.detail({name:'신잠원 출구와 서울웨이브 산책길',floor:'1F',rect:[190,-1480,290,-1330],y0:0,y1:7},()=>{
     const a=[259.74,-1376.82],b=[251.9,-1384.26],L=Math.hypot(b[0]-a[0],b[1]-a[1]),nx=-(b[1]-a[1])/L,nz=(b[0]-a[0])/L;
-    for(let i=0;i<6;i++){const p=mix(a,b,(3+i*.8)/L);paint([p[0]-nx*1.78,p[1]-nz*1.78],[p[0]+nx*1.78,p[1]+nz*1.78],.46,.09);}
+    for(let i=0;i<6;i++){const p=mix(a,b,(3.2+i*.8)/L);paint([p[0]-nx*1.78,p[1]-nz*1.78],[p[0]+nx*1.78,p[1]+nz*1.78],.46,.102);}
+    const stop=mix(a,b,1.7/L);paint([stop[0]-nx*1.85,stop[1]-nz*1.85],[stop[0]+nx*1.85,stop[1]+nz*1.85],.22,.103);
     sign(['한강공원','서울웨이브아트센터 →'],256.8,2,-1389,2.3,.75,.8,'#386b8a');
     cone(256.1,-1382.5,.065);lamp(265,-1378);lamp(278,-1353);
     for(const r of road(408858834))for(let i=1;i<r.pts.length;i++){
       const a=r.pts[i-1],b=r.pts[i],L=Math.hypot(b[0]-a[0],b[1]-a[1]),nx=-(b[1]-a[1])/L,nz=(b[0]-a[0])/L;
-      for(let s=3;s<L;s+=5.5)for(const side of[-1,1]){const p=mix(a,b,s/L),off=side<0?-5.1:5.9,[x,z]=vergePoint(p[0]+nx*off,p[1]+nz*off);
-        shadeTree(x,z,7.5+(i%2));K.dome({x,y:.1,z,rx:1.6,ry:1.05,rz:1.4,mat:0x687b4d,seg:8,rings:4});}
+      for(let j=0;j<Math.ceil(L/9);j++){
+        const q=mix(a,b,Math.min(.96,(4+j*9+(j%3)*1.3)/L)),off=-(7.5+(j%3)*2),[x,z]=vergePoint(q[0]+nx*off,q[1]+nz*off);
+        shadeTree(x,z,6.5+(j%4)*.8);
+        if(j%2===0){const[x1,z1]=vergePoint(q[0]+nx*11,q[1]+nz*11);shadeTree(x1,z1,7.5+(j%3));}
+      }
     }
+    // A close, elongated shrub mass at the right edge; left tree clumps close
+    // the river horizon without the former low, uniform umbrella canopy.
+    for(let j=0;j<9;j++)K.dome({x:275.5+(j%3)*.6,y:.15,z:-1358.1+Math.floor(j/3)*1.4,rx:1.15,ry:1.4+(j%2)*.18,rz:1.25,mat:[0x4e733e,0x5b7f46,0x67864c][j%3],seg:10,rings:6});
     // Autumn canopy flanks the walking path; trunks leave its full 2.5 m clear.
     for(let i=0;i<12;i++){const z=-1396-i*5.8,j=waveWalk.findIndex((p,k)=>k>0&&p[1]<=z),a=waveWalk[j-1],b=waveWalk[j],x=a[0]+(b[0]-a[0])*(z-a[1])/(b[1]-a[1]);
-      for(const side of[-1,1]){const[xx,zz]=vergePoint(x+side*3.5,z),h=8+(i%3)*.45;K.cyl({x:xx,y:0,z:zz,r:.18,h:h*.75,mat:{tex:'wood',color:0x8d8b7e},seg:8});
-        for(let k=0;k<3;k++)K.dome({x:xx+Math.sin(i+k)*.7,y:h*.65+k*.5,z:zz+Math.cos(i+k)*.7,rx:1.65,ry:2.4,rz:2,mat:side>0?[0x947b47,0xb58c4c,0x8c8c4d][i%3]:0x6d8051,seg:10,rings:6,hemi:false});}
+      for(const side of(i===2||i===8?[-1,1]:[1])){const[xx,zz]=vergePoint(x+side*(side<0?2.8:3.5),z),h=8+(i%3)*.45;K.cyl({x:xx,y:0,z:zz,r:.18,h:h*.75,mat:{tex:'wood',color:0x8d8b7e},seg:8});
+        for(let k=0;k<3;k++)K.dome({x:xx+Math.sin(i+k)*.7,y:h*.65+k*.5,z:zz+Math.cos(i+k)*.7,rx:side<0?.8:1.65,ry:2.4,rz:side<0?.9:2,mat:side>0?[0x947b47,0xb58c4c,0x8c8c4d][i%3]:0x6d8051,seg:10,rings:6,hemi:false});}
     }
     for(const[x,z]of[[253,-1405],[252,-1429],[248,-1451]]){K.tree(x,z,{h:8.7,kind:'ginkgo'});bench(x+3,z,Math.PI/2);}
     shadeTree(222.5,-1452,10.5);
-    // HF_285's riverside leaves and temporary striped tape; extent is inferred.
-    for(let i=0;i<45;i++){
-      const x=196+(i*13%23)*.55,z=-1442-(i*7%17)*.55,y=.12+(i%5)*.1;
-      K.dome({x,y,z,rx:.6,ry:.12,rz:.53,mat:[0x46793d,0x608f48,0x739c4c][i%3],seg:6,rings:2,hemi:false});
+    // HF_285: overlapping round/lobed gourd leaves, fine veins and flowers.
+    // Dense low layers cover the soil; no angular floating fans remain.
+    K.hpoly(0x476f39,[[195,-1441],[208,-1441],[208,-1451],[196,-1451]],.09);
+    for(let row=0;row<34;row++)for(let col=0;col<47;col++){
+      const i=row*47+col,x=195+col*.28+Math.sin(i*1.7)*.07,z=-1441-row*.28+Math.cos(i*1.3)*.07,y=.26+(i%5)*.035,r=.19+(i%3)*.018;
+      const leaf=Array.from({length:12},(_,k)=>{const a=k*Math.PI/6,rr=r*(1+.12*Math.cos(a*5));return[x+Math.cos(a)*rr,y-.035+Math.cos(a*2)*.02,z+Math.sin(a)*rr];});
+      for(let k=0;k<12;k+=2)K.quad([0x518444,0x608a43,0x6e964b,0x789d51][i%4],[[x,y+.025,z],leaf[k],leaf[(k+1)%12],leaf[(k+2)%12]],[0,1,0]);
+      if(i%4===0){beam([x,y+.028,z],[x+r*.8,y-.01,z],.003,0xa4b478);beam([x,y+.028,z],[x,y-.01,z+r*.7],.003,0xa4b478);}
+      if(i%41===0){for(let k=0;k<5;k++){const a=k*Math.PI*2/5;K.dome({x:x+Math.cos(a)*.036,y:y+.035,z:z+Math.sin(a)*.036,rx:.029,ry:.012,rz:.025,mat:0xeee9db,seg:6,rings:2});}beam([x,.12,z],[x+.12,y,z+.06],.007,0x708a4d);}
     }
     for(let i=0;i<18;i++){const x=196+i*.6,z=-1447-i*.43;beam([x,.84,z],[x+.6,.84,z-.43],.025,i%2?0xece3cd:0xdd8b49);}
-    for(let i=0;i<240;i++){
-      const x=195+(i*17%107)*.12,z=-1441-(i*19%79)*.12,y=.32+(i%7)*.065,a=i*2.4;
-      beam([x,.08,z],[x+.16,y,z+.1],.009,0x6c874d);
-      const tip=[x+Math.cos(a)*.4,y-.03,z+Math.sin(a)*.4],left=[x+Math.cos(a+1.7)*.3,y-.08,z+Math.sin(a+1.7)*.3],right=[x+Math.cos(a-1.7)*.3,y-.08,z+Math.sin(a-1.7)*.3];
-      K.quad([0x518444,0x6c984b,0x83a453][i%3],[[x,y,z],left,tip,right],[0,1,0]);beam([x,y+.01,z],tip,.007,0xa8b877);
-    }
+    for(const[x,z]of[[196,-1447],[206.8,-1454.74]])beam([x,.1,z],[x,.95,z],.025,0x8b8d7a);
     // Rainy walking clip is quiet; populate small pairs, not a festival crowd.
     for(const[x,z,a]of[[250,-1419,0],[250.6,-1420,3.1],[244,-1440,.2],[272,-1359,3.5],[273,-1360,3.2]])K.person(x,.065,z,{rotY:a,shirt:0x7f8b7c,pants:0x3e4745});
   });
   // Complete ways above preserve the three western paths across the Banpo edge.
   strip([226.35,-1384.83],[238.65,-1389.18],3,.065,{tex:'asphalt',color:C.red});strip([222.75,-1391.13],[238.65,-1389.18],2,.065,{tex:'asphalt',color:C.red});
-  const promenade=[[289.49,-1501.82],[321,-1568],[350,-1593],[379,-1621],[411,-1658],[447,-1698],[598,-1872],[687,-1967],[791,-2085]];
+  const promenade=[[289.49,-1501.82],[321,-1568],[345,-1570],[365,-1580],[383,-1596],[386,-1616],[403.66,-1649.508],[411,-1658],[447,-1698],[598,-1872],[687,-1967],[791,-2085]];
+  const popHeight=p=>p[0]>=365&&p[0]<=411&&p[1]<=-1580&&p[1]>=-1658?1.065:.065;
   function parkWay(pts){for(let i=1;i<pts.length;i++){
     const a=pts[i-1],b=pts[i],poplar=a[0]>=289&&b[0]<=447&&a[1]<=-1500&&b[1]>=-1699;
     // The shaded poplar stretch is grey asphalt with white paint, unlike the
     // separate brick-red/green lanes below Hannam bridge farther upstream.
-    strip(a,b,3,.065,poplar?0x989a96:{tex:'asphalt',color:C.red});
-    slab(band(a,b,2.4,3),.06,poplar?0xa5aaa0:{tex:'asphalt',color:C.green});paths.push([a,b,10]);
+    const ya=poplar?popHeight(a):.065,yb=poplar?popHeight(b):.065;
+    strip(a,b,3,ya,poplar?0x989a96:{tex:'asphalt',color:C.red},yb);
+    if(!poplar)slab(band(a,b,2.4,3),.06,{tex:'asphalt',color:C.green});
+    paths.push([a,b,poplar?16:10]);
+    if(poplar){
+      const bank=band(a,b,22,-13);cutouts.push(bank);K.groundHole(bank);
+      const near=band(a,b,4),far=band(a,b,48);
+      K.quad('jamwon_lawn',[[near[0][0],ya-.02,near[0][1]],[far[0][0],-1.39,far[0][1]],[far[3][0],-1.39,far[3][1]],[near[3][0],yb-.02,near[3][1]]],[0,1,0]);
+      const land=band(a,b,20);
+      K.quad('jamwon_lawn',[[near[1][0],ya-.02,near[1][1]],[near[2][0],yb-.02,near[2][1]],[land[2][0],.02,land[2][1]],[land[1][0],.02,land[1][1]]],[0,1,0]);
+    }
     const L=Math.hypot(b[0]-a[0],b[1]-a[1]);
-    for(let s=2;s<L-2;s+=poplar?5:7)paint(mix(a,b,s/L),mix(a,b,Math.min(L,s+2)/L),.1,.08,poplar?0xf3f2e5:C.yellow);
-    if(poplar){const e=band(a,b,2.85);paint(e[0],e[3],.07,.08);paint(e[1],e[2],.07,.08);}
+    for(let s=2;s<L-2;s+=poplar?5:7){const c=mix(a,b,s/L),d=mix(a,b,Math.min(L,s+2)/L),q=band(c,d,.1);K.quad(poplar?0xf3f2e5:C.yellow,q.map((p,j)=>[p[0],ya+(yb-ya)*(j<2?s:Math.min(L,s+2))/L+.015,p[1]]),[0,1,0]);}
+    if(poplar){const e=band(a,b,2.85);for(const[c,d]of[[e[0],e[3]],[e[1],e[2]]]){const q=band(c,d,.07);K.quad(0xf3f2e5,q.map((p,j)=>[p[0],(j<2?ya:yb)+.015,p[1]]),[0,1,0]);}}
   }}
   parkWay(promenade);
   // This inferred connector used to cut diagonally through waveWalk at the
   // same height, producing the brown wedge in HF_185. Follow its west side.
-  const bikeLink=[[238.65,-1389.18],[241.2,-1404],[240,-1430],[236,-1453],[238.4,-1472.59],[262,-1486],[289.49,-1501.82]];
+  const bikeLink=[[238.65,-1389.18],[242,-1404],[241,-1430],[237,-1453],[238.4,-1472.59],[262,-1486],[289.49,-1501.82]];
   for(let i=1;i<bikeLink.length;i++){strip(bikeLink[i-1],bikeLink[i],3,.05,'jamwon_wet_path');paths.push([bikeLink[i-1],bikeLink[i],4]);}
+  for(let i=1;i<3;i++){const a=waveWalk[i-1],b=waveWalk[i],q=band(a,b,.16,-1.38);slab(q,.13,0x9faaa2);}
   for(const id of[949348575,949348576])for(const r of road(id)){strip(r.pts[0],r.pts[1],3.2,.12,id===949348576?{tex:'wood',color:0xa6aba4}:'wood');const p=band(r.pts[0],r.pts[1],3.2);rail(p[0],p[3],.12);rail(p[1],p[2],.12);
     if(id===949348576)for(const[a,b]of[[p[0],p[3]],[p[1],p[2]]]){
       for(const h of[.28,.8,1.27])beam([a[0],h,a[1]],[b[0],h,b[1]],.035,0xe5e8e1);
@@ -278,7 +334,7 @@ export function build(K){
   paths.push([[238.4,-1472.59],[234.12,-1476.21],5]);
   const fitness=area(1532626249).poly;slab(fitness,.03,{tex:'sidewalk',color:0xc9c0a7});zone('잠원 체력단련장',fitness,0);
   K.detail({name:'체력단련장',floor:'1F',poly:fitness,y0:0,y1:4},()=>{for(let i=0;i<5;i++){const x=270+i*2.2,z=-1381+i*1.5;for(const dx of[-.65,.65])K.cyl({x:x+dx,z,y:.03,r:.06,h:2.2,mat:C.dark,seg:6});beam([x-.65,2.2,z],[x+.65,2.2,z],.055,0xebb64b);bench(x,z+3);}});
-  for(const[a,b]of[[[10,-1330],[29,-1352]],[[157,-1403],[187,-1434]],[[337,-1602],[414,-1684]]])rail(a,b,.035);
+  for(const[a,b]of[[[10,-1330],[29,-1352]],[[157,-1403],[187,-1434]]])rail(a,b,.035);
   // Photo10's railing meets paving at the real OSM water edge, not a lawn gap.
   const riverA=[51,-1382],riverB=[111,-1387];
   slab(band(riverA,riverB,4,2.1),.065,{tex:'concrete',color:0xb6b3a5});
@@ -362,20 +418,17 @@ export function build(K){
     pool();
     // Photo17: tall poplars on the river side, spreading trees on the land side.
     // Clustered foliage, exposed trunks and low ropes keep the route legible.
-    const popA=[321,-1568],popB=[447,-1698],popRoute=promenade.slice(1,6);
-    const popP=(s,o)=>{for(let i=1;i<popRoute.length;i++){const a=popRoute[i-1],b=popRoute[i],L=Math.hypot(b[0]-a[0],b[1]-a[1]);if(s<=L||i===popRoute.length-1){const ux=(b[0]-a[0])/L,uz=(b[1]-a[1])/L;return[a[0]+ux*s-uz*o,a[1]+uz*s+ux*o];}s-=L;}};
+    const popA=[321,-1568],popB=[447,-1698],popRoute=promenade.slice(1,9);
+    const popP=(s,o)=>{for(let i=1;i<popRoute.length;i++){const a=popRoute[i-1],b=popRoute[i],L=Math.hypot(b[0]-a[0],b[1]-a[1]);if(s<=L||i===popRoute.length-1){const ux=(b[0]-a[0])/L,uz=(b[1]-a[1])/L;return[a[0]+ux*s-uz*o,a[1]+uz*s+ux*o,popHeight(a)+(popHeight(b)-popHeight(a))*s/L];}s-=L;}};
     for(let i=0;i<30;i++){
       const p=popP(i*6,-4.6),h=12+(i%4)*.3;
-      K.cyl({x:p[0],z:p[1],y:0,r:.24,h:h-4,seg:8,mat:{tex:'wood',color:0x777a68}});
-      for(let j=0;j<5;j++){const yy=4.5+j*1.45,dx=Math.sin(i*2+j)*.25,dz=Math.cos(i+j*2)*.25;K.dome({x:p[0]+dx,z:p[1]+dz,y:yy,rx:1.05+(j===1?.2:0),ry:2.1-(j===4?.4:0),rz:1.15,seg:10,rings:6,hemi:false,mat:[0x6a884a,0x78974e,0x829c51][(i+j)%3]});}
+      K.cyl({x:p[0],z:p[1],y:p[2]-.18,r:.24,h:h-4,seg:8,mat:{tex:'wood',color:0x777a68}});
+      for(let j=0;j<5;j++){const yy=p[2]+4.5+j*1.45,dx=Math.sin(i*2+j)*.25,dz=Math.cos(i+j*2)*.25;K.dome({x:p[0]+dx,z:p[1]+dz,y:yy,rx:1.05+(j===1?.2:0),ry:2.1-(j===4?.4:0),rz:1.15,seg:10,rings:6,hemi:false,mat:[0x6a884a,0x78974e,0x829c51][(i+j)%3]});}
       // The source also has landward trees, set back from the narrow poplar row.
-      if(i%2===0){const q=popP(i*6,13.5);if(!reserved.some(r=>K.pointInPoly(q[0],q[1],r))){K.tree(q[0],q[1],{h:7+(i%3),kind:'zelkova'});for(const off of[-1.2,1.2])K.dome({x:q[0]+off,z:q[1],y:5.5,rx:1.6,ry:1.8,rz:1.9,mat:0x627a49,seg:8,rings:5,hemi:false});}}
-      const r=popP(i*6,5.1);box(r[0],.02,r[1],.07,.72,.07,0xe1dec8);
-      const q=popP((i+1)*6,5.1),m=popP(i*6+3,5.1);beam([r[0],.66,r[1]],[m[0],.44,m[1]],.017,0xd3d2bf);beam([m[0],.44,m[1]],[q[0],.66,q[1]],.017,0xd3d2bf);
-      const riverPost=popP(i*6,-3.05),riverNext=popP((i+1)*6,-3.05);box(riverPost[0],.02,riverPost[1],.06,.54,.06,0xbcbba2);beam([riverPost[0],.48,riverPost[1]],[riverNext[0],.48,riverNext[1]],.012,0xe1dfcb);
-      if(i>5){const q=popP(i*6,6.5);K.dome({x:q[0],z:q[1],y:.05,rx:2.3,ry:1.05,rz:2,mat:0x55783d,seg:7,rings:3});}
+      if(i%2===0){const q=popP(i*6,64);if(K.pointInPoly(q[0],q[1],park)&&!reserved.some(r=>K.pointInPoly(q[0],q[1],r))){K.tree(q[0],q[1],{h:7+(i%3),kind:'zelkova'});for(const off of[-1.2,1.2])K.dome({x:q[0]+off,z:q[1],y:5.5,rx:1.6,ry:1.8,rz:1.9,mat:0x627a49,seg:8,rings:5,hemi:false});}}
+      const riverPost=popP(i*6,-3.05),riverNext=popP((i+1)*6,-3.05);box(riverPost[0],riverPost[2]-.08,riverPost[1],.06,.54,.06,0xbcbba2);beam([riverPost[0],riverPost[2]+.4,riverPost[1]],[riverNext[0],riverNext[2]+.4,riverNext[1]],.012,0xe1dfcb);
     }
-    K.detail({name:'포플러 길 산책객',floor:'1F',poly:band(popA,popB,15),y0:0,y1:5},()=>{for(const[s,o,col]of[[29,.6,0xe5dfcb],[31,-.6,0x324437],[82,.5,0xedd6af],[120,-.7,0x8a9f9a]]){const p=popP(s,o);K.person(p[0],.065,p[1],{rotY:2.37,shirt:col,pants:0x374547});}});
+    K.detail({name:'포플러 길 산책객',floor:'1F',poly:band(popA,popB,15),y0:0,y1:5},()=>{for(const[s,o,col]of[[29,.6,0xe5dfcb],[31,-.6,0x324437],[82,.5,0xedd6af],[120,-.7,0x8a9f9a]]){const p=popP(s,o);K.person(p[0],p[2],p[1],{rotY:2.37,shirt:col,pants:0x374547});}});
     // Primary paper locates the older 잠원나들목 park portal at this pin.
     // The street-side alignment and ramps are inferred, connecting to 잠원로.
     const old=[[806,-1650,0],[770,-1675,0],[741,-1708,-4],[698,-1779,-4],[678.49,-1805.34,0]];
@@ -431,40 +484,121 @@ export function build(K){
     spawn('세븐일레븐 잠원1호 · 선상 데크',1383.5,.12,-2561,0);
   }
 
-  function seoulWave(){
-    const name='서울웨이브아트센터',ys=[.12,4.92,10.12,15.12],inner=rect(154,-1549,192,-1518),stairHole=rect(156.2,-1545.4,159.4,-1522.6);
-    const hull=[[153,-1553],[193,-1553],[196,-1550],[196,-1517],[193,-1514],[153,-1514],[150,-1517],[150,-1550]];
+  function seoulWave(worldK=K){
+    // HF1iiczAe6M is a rainy walk. Own the temporary weather overlay here,
+    // restoring the scene when leaving this corridor or switching to night.
+    // ?jamwonWeather=sunny/rain also lets the operator match another dated clip.
+    const weather=typeof location==='undefined'?'auto':new URLSearchParams(location.search).get('jamwonWeather')||'auto';
+    const {THREE}=worldK,scene=worldK.scene;
+    const rainSky=new THREE.Mesh(new THREE.SphereGeometry(2900,16,8),new THREE.MeshBasicMaterial({color:0xcfd2d3,side:THREE.BackSide,fog:false,depthWrite:false}));
+    rainSky.renderOrder=-.5;rainSky.visible=false;rainSky.userData.dynamic=true;worldK.addMesh(rainSky);
+    const rainWater=new THREE.Group();rainWater.userData.dynamic=true;rainWater.visible=false;
+    const waterMat=new THREE.MeshPhongMaterial({color:0x7f877f,specular:0x252b26,shininess:12,side:THREE.DoubleSide});
+    for(const a of worldK.osm.areas.filter(a=>a.kind==='natural:water'&&Math.abs(worldK.polyArea(a.poly))>20000)){
+      const outline=a.poly.map(p=>new THREE.Vector2(...p)),holes=(a.holes||[]).map(h=>h.map(p=>new THREE.Vector2(...p)));
+      const verts=[...outline,...holes.flat()],g=new THREE.BufferGeometry();
+      g.setAttribute('position',new THREE.Float32BufferAttribute(verts.flatMap(p=>[p.x,-1.385,p.y]),3));
+      g.setIndex(THREE.ShapeUtils.triangulateShape(outline,holes).flat());g.computeVertexNormals();rainWater.add(new THREE.Mesh(g,waterMat));
+    }
+    worldK.addMesh(rainWater);
+    // The near shore fades after 400m, while the verified downriver pylon must
+    // retain a faint silhouette at about 500m; full extinction is at 650m.
+    const rainFog=new THREE.Fog(0xcfd2d3,80,650),lights=scene.children.filter(o=>o.isLight),normalLights=lights.map(o=>o.intensity);
+    let savedFog=scene.fog,wet=false,night=false;
+    worldK.onNight(v=>{night=v;if(savedFog)savedFog.color.setHex(v?0x1a2238:0xcfe0ee);rainFog.color.setHex(0xcfd2d3);});
+    worldK.onFrame((dt,t,player)=>{
+      const near=player.x>65&&player.x<380&&player.z<-1220&&player.z>-1610;
+      const want=!night&&weather!=='sunny'&&(weather==='rain'||near);
+      if(want!==wet){
+        if(want){savedFog=scene.fog;scene.fog=rainFog;for(let i=0;i<lights.length;i++)lights[i].intensity=lights[i].isDirectionalLight?.22:normalLights[i];}
+        else{scene.fog=savedFog;for(let i=0;i<lights.length;i++)lights[i].intensity=night?(lights[i].isDirectionalLight?.08:lights[i].isHemisphereLight?.35:normalLights[i]):normalLights[i];}
+        wet=want;rainSky.visible=want;rainWater.visible=want;
+      }
+      if(wet)rainSky.position.set(player.x,player.y+1.62,player.z);
+    });
+    // R17: local vessel coordinates rotate about the surveyed gangway landing.
+    // A rigid transform also moves collision, detail bounds, stairs and cameras;
+    // it does not stretch people/furniture or disconnect any floor.
+    const turn=Math.PI/4,cs=Math.cos(turn),sn=Math.sin(turn),anchor=[188.22,-1515.03];
+    const wp=(x,z)=>[anchor[0]+(x-anchor[0])*cs+(z-anchor[1])*sn,anchor[1]-(x-anchor[0])*sn+(z-anchor[1])*cs];
+    const poly=p=>p.map(q=>wp(...q)),xyz=p=>{const q=wp(p[0],p[2]);return[q[0],p[1],q[1]];};
+    const opt=o=>{const p=wp(o.x,o.z);return{...o,x:p[0],z:p[1],rotY:(o.rotY||0)+turn};};
+    const region=o=>({...o,rect:undefined,poly:poly(o.poly||rect(...o.rect))});
+    const K={...worldK,
+      box:o=>worldK.box(opt(o)),cyl:o=>worldK.cyl(opt(o)),
+      dome:o=>{
+        const {x,y,z,rx,ry,rz=rx,seg=24,rings=10}=o,t0=o.hemi===false?-Math.PI/2:0;
+        const P=(a,b)=>[x+Math.cos(a)*Math.cos(b)*rx,y+Math.sin(a)*ry,z+Math.cos(a)*Math.sin(b)*rz];
+        for(let j=0;j<rings;j++)for(let i=0;i<seg;i++){
+          const a=t0+(Math.PI/2-t0)*j/rings,b=t0+(Math.PI/2-t0)*(j+1)/rings,c=i/seg*2*Math.PI,d=(i+1)/seg*2*Math.PI;
+          K.quad(o.mat,[P(a,c),P(a,d),P(b,d),P(b,c)],[Math.cos((a+b)/2)*Math.cos((c+d)/2),Math.sin((a+b)/2),Math.cos((a+b)/2)*Math.sin((c+d)/2)]);
+        }
+      },
+      prism:(p,a,b,o={})=>worldK.prism(poly(p),a,b,{...o,holes:o.holes?.map(poly)}),
+      slab:(p,y,o={})=>worldK.slab(poly(p),y,{...o,holes:o.holes?.map(poly)}),
+      hpoly:(m,p,y,up=true,holes)=>worldK.hpoly(m,poly(p),y,up,holes?.map(poly)),
+      quad:(m,p,n,uv)=>worldK.quad(m,p.map(xyz),n?[n[0]*cs+n[2]*sn,n[1],-n[0]*sn+n[2]*cs]:n,uv),
+      wall:(ax,az,bx,bz,a,b,o)=>worldK.wall(...wp(ax,az),...wp(bx,bz),a,b,o),
+      polyWalls:(p,a,b,o={})=>worldK.polyWalls(poly(p),a,b,{...o,openings:o.openings?.map(opt)}),
+      ramp:(ax,az,bx,bz,o)=>worldK.ramp(...wp(ax,az),...wp(bx,bz),o),
+      stairs:(ax,az,bx,bz,o)=>worldK.stairs(...wp(ax,az),...wp(bx,bz),o),
+      sign:(t,o)=>worldK.sign(t,opt(o)),floorText:(t,o)=>worldK.floorText(t,opt(o)),
+      person:(x,y,z,o={})=>worldK.person(wp(x,z)[0],y,wp(x,z)[1],{...o,rotY:(o.rotY||0)+turn}),
+      zone:o=>worldK.zone(region(o)),detail:(o,fn)=>worldK.detail(region(o),()=>fn(K)),
+      spawn:o=>worldK.spawn({...opt(o),yaw:(o.yaw||0)+turn}),elevator:o=>worldK.elevator(opt(o)),
+    };
+    const box=(x,y,z,w,h,d,mat,solid=false,rotY=0)=>K.box({x,y,z,w,h,d,mat,solid,rotY});
+    const sign=(t,x,y,z,w=4,h=.65,rotY=0,bg='#214a45',fg='#ffffff')=>K.sign(t,{x,y,z,w,h,rotY,bg,fg,twoSided:true});
+    const slab=(p,y=0,mat='sidewalk',holes)=>K.slab(p,y,{mat,holes,thick:.16,ceil:false});
+    const spawn=(name,x,y,z,yawDeg=0)=>K.spawn({name,x,y,z,yaw:yawDeg*Math.PI/180});
+    function strip(a,b,w,y,mat,yb=y){if(Math.hypot(b[0]-a[0],b[1]-a[1])>.01)K.ramp(...a.slice(0,2),...b.slice(0,2),{w,ya:y,yb,mat,rails:false});}
+    function beam(a,b,r=.065,mat=C.steel){const dx=b[0]-a[0],dy=b[1]-a[1],dz=b[2]-a[2],L=Math.hypot(dx,dy,dz)||1;let nx=-dz,nz=dx,nl=Math.hypot(nx,nz);if(nl<.001){nx=1;nz=0;nl=1;}nx=nx/nl*r;nz=nz/nl*r;const v=[-dy*nz/L,(dz*nx-dx*nz)/L,dy*nx/L],p=(q,s,t)=>[q[0]+s*nx+t*v[0],q[1]+t*v[1],q[2]+s*nz+t*v[2]];for(const s of[-1,1]){K.quad(mat,[p(a,s,-1),p(b,s,-1),p(b,s,1),p(a,s,1)],[s*nx,0,s*nz]);K.quad(mat,[p(a,-1,s),p(a,1,s),p(b,1,s),p(b,-1,s)],v.map(n=>n*s));}}
+    function rail(a,b,y=0,truss=false){const L=Math.hypot(b[0]-a[0],b[1]-a[1]),n=Math.ceil(L/2.4);K.wall(...a,...b,y,y+1.15,{thick:.06,mat:C.steel,openings:[{at:L/2,w:L,y0:y+.12,y1:y+1.04}]});for(let i=0;i<=n;i++){const p=mix(a,b,i/n);box(p[0],y,p[1],.07,1.2,.07,C.steel);}beam([a[0],y+.5,a[1]],[b[0],y+.5,b[1]],.025);if(truss)for(let i=0;i<n;i++){const p=mix(a,b,i/n),q=mix(a,b,(i+1)/n);beam([p[0],y+.17,p[1]],[q[0],y+1.02,q[1]],.03);beam([p[0],y+1.02,p[1]],[q[0],y+.17,q[1]],.03);}}
+    function bench(x,z,a=0,y=0){const P=frame(x,z,a);for(let i=0;i<4;i++){const p=P(0,(i-1.5)*.13);box(p[0],y+.42,p[1],1.9,.07,.10,'wood',false,a);}const p=P(0,.27);box(p[0],y+.55,p[1],1.9,.43,.08,'wood',false,a);for(const u of[-.7,.7]){const q=P(u,0);box(q[0],y,q[1],.09,.44,.55,C.dark,false,a);}}
+    function chair(x,y,z,a=0,col=C.yellow){const P=frame(x,z,a);box(x,y+.43,z,.46,.07,.46,col,false,a);const q=P(0,.22);box(q[0],y+.5,q[1],.46,.42,.05,col,false,a);for(const u of[-.18,.18])for(const v of[-.18,.18]){const p=P(u,v);box(p[0],y,p[1],.035,.43,.035,col);}}
+    function table(x,y,z){box(x,y+.71,z,1.1,.07,.8,'wood',true);for(const dx of[-.43,.43])for(const dz of[-.28,.28])box(x+dx,y,z+dz,.045,.71,.045,C.dark);}
+    const name='서울웨이브아트센터',ys=[.12,6.92,11.32,15.72],inner=rect(138,-1549,192,-1518),stairHole=rect(156.2,-1545.4,159.4,-1522.6);
+    const hull=[[137,-1553],[193,-1553],[196,-1550],[196,-1517],[193,-1514],[137,-1514],[134,-1517],[134,-1550]];
     const roofLight=rect(166,-1548,191,-1524),white=0xeeeede,bronze=0x9c7b42,black=0x242722;
     const marble={tex:'marble',color:0xf1f0e6,gloss:.7},gold={color:0xb5944c,gloss:.5};
     K.texture('wave_terrazzo',512,512,(g,w,h)=>{
-      const r=K.rand(1310360);g.fillStyle='#615d54';g.fillRect(0,0,w,h);
-      for(let i=0;i<16500;i++){const x=r()*w,z=r()*h,s=1.1+r()*3.2;g.fillStyle=['#d8d2bf','#eee9d8','#aaa493','#383b35'][i%4];g.beginPath();g.moveTo(x,z);g.lineTo(x+s,z+.5);g.lineTo(x+s*.4,z+s);g.closePath();g.fill();}
+      const r=K.rand(1310360);g.fillStyle='#8d8a84';g.fillRect(0,0,w,h);
+      for(let i=0;i<16500;i++){const x=r()*w,z=r()*h,s=1.1+r()*3.2;g.fillStyle=['#eeeeda','#ffffff','#b7b7b1','#242826'][i%4];g.beginPath();g.moveTo(x,z);g.lineTo(x+s,z+.5);g.lineTo(x+s*.4,z+s);g.closePath();g.fill();}
     },[1.25,1.25]);
     K.texture('wave_exposed_soffit',512,256,(g,w,h)=>{
       g.fillStyle='#d5d2c7';g.fillRect(0,0,w,h);
       for(let x=0;x<w;x+=64){g.fillStyle='#b9bcb6';g.fillRect(x,0,3,h);g.fillStyle='#e8e5da';g.fillRect(x+4,0,5,h);}
       g.strokeStyle='#bebfb7';g.lineWidth=2;g.beginPath();g.moveTo(0,128);g.lineTo(w,128);g.stroke();
     },[4,5]);
-    const terrazzo={tex:'wave_terrazzo',gloss:.5};
+    const terrazzo={tex:'wave_terrazzo',gloss:.6};
     K.prism(hull,-1.75,-.45,{mat:0x334f52,solid:false});
-    K.prism(hull,-.45,.12,{mat:0x969f98,top:false,solid:false});slab(hull,.12,{tex:'wood',color:0xc6c3ae},[inner]);
-    reserved.push(rect(147,-1556,199,-1510));
+    K.prism(hull,-.45,.12,{mat:0x969f98,top:false,solid:false});slab(hull,.12,{tex:'wood',color:0x85847f,gloss:.3},[inner]);
+    reserved.push(poly(rect(131,-1556,199,-1510)));
     // Rubber fenders, tall guide piles and tether cleats make the waterborne base visible.
-    for(const [x,z]of[[150,-1546],[150,-1520],[196,-1546],[196,-1522]]){
+    for(const [x,z]of[[134,-1546],[134,-1520],[196,-1546],[196,-1522]]){
       K.cyl({x,y:-2,z,r:.28,h:4.5,mat:0x727d76,seg:12});K.cyl({x,y:2.5,z,r:.36,h:.2,mat:0xc3c6ba,seg:12});
       box(x+(x<173?.55:-.55),-.5,z,.5,1.1,1.4,0x343b38);
       beam([x,.8,z],[x+(x<173?1.8:-1.8),.4,z+.7],.045,0x9a9073);
     }
-    for(let x=155;x<=191;x+=6){box(x,-.6,-1553.1,1.8,.8,.35,0x2c3431);box(x,.15,-1552,.7,.12,.16,C.steel);}
-    // Real south entry remains open. Rails only enclose the other hull edges.
-    for(let i=0;i<hull.length;i++){const a=hull[i],b=hull[(i+1)%hull.length];if(a[1]===-1514&&b[1]===-1514){rail([153,-1514],[181.8,-1514],.12);continue;}rail(a,b,.12);}
+    for(let x=139;x<=191;x+=6){box(x,-.6,-1553.1,1.8,.8,.35,0x2c3431);box(x,.15,-1552,.7,.12,.16,C.steel);}
+    // White tubular deck guard has four horizontal pipes; entry stays open.
+    function deckRail(a,b){const n=Math.ceil(Math.hypot(b[0]-a[0],b[1]-a[1])/2);
+      for(let i=0;i<=n;i++){const p=mix(a,b,i/n);beam([p[0],.12,p[1]],[p[0],1.32,p[1]],.025,0xe6e7e3);}
+      for(const y of[.28,.58,.94,1.3])beam([a[0],y,a[1]],[b[0],y,b[1]],.022,0xe6e7e3);
+      K.wall(...a,...b,.12,1.32,{thick:.035,mat:'glass',openings:[{at:Math.hypot(b[0]-a[0],b[1]-a[1])/2,w:100,y0:.14,y1:1.30}]});
+    }
+    for(let i=0;i<hull.length;i++){const a=hull[i],b=hull[(i+1)%hull.length];if(a[1]===-1514&&b[1]===-1514){deckRail([137,-1514],[181.8,-1514]);continue;}deckRail(a,b);}
     // HF_500: a secured white tender on the outer deck, outside cafe circulation.
-    K.detail({name:'서울웨이브 외부 갑판',floor:'1F',rect:[150,-1549,154,-1518],y0:0,y1:4},()=>{
-      const tender=[[150.55,-1540.8],[151.75,-1540.8],[151.95,-1541.3],[151.94,-1543.2],[151.7,-1543.9],[151.15,-1544.4],[150.6,-1543.9],[150.36,-1543.2],[150.35,-1541.3]];
-      K.prism(tender,.18,.65,{mat:0xe7e9df,solid:false});K.hpoly(0x65736f,[[150.65,-1541.2],[151.65,-1541.2],[151.65,-1543.2],[151.15,-1543.9],[150.65,-1543.2]],.655);
-      for(const z of[-1541.8,-1542.9])box(151.15,.65,z,1.1,.08,.22,0xdde0d6);
-      for(const z of[-1541,-1543.6]){beam([150.2,.25,z],[152,.72,z],.02,0x7f8981);for(let k=0;k<7;k++)beam([150,.8-k*.055,z],[150.12,.77-k*.055,z+.025],.012,0x454f4b);}
-      for(const z of[-1540.8,-1544.4]){beam([150.15,.25,z],[150.15,1.05,z],.035,0xdce2da);beam([150.15,1.05,z],[151.65,1.05,z],.035,0xdce2da);}
+    K.detail({name:'서울웨이브 외부 갑판',floor:'1F',rect:[134,-1549,138,-1518],y0:0,y1:4},()=>{
+      // Closed rescue capsule lies lengthwise beside the rail, on two U stands.
+      const tender=[[134.55,-1540.1],[135.5,-1540.1],[135.8,-1540.8],[135.8,-1544],[135.5,-1544.8],[135.05,-1545.2],[134.6,-1544.8],[134.3,-1544],[134.3,-1540.8]];
+      K.prism(tender,.42,.76,{mat:0xe7e9e3,top:0xf1f2ed,solid:false});
+      K.dome({x:135.05,y:.76,z:-1542.5,rx:.72,ry:.22,rz:2.45,mat:{color:0xe6e9e2,gloss:.3},seg:16,rings:5});
+      for(const z of[-1540.8,-1544.1]){
+        for(const x of[134.15,136])beam([x,.12,z],[x,1.08,z],.035,0xe6e7e3);
+        beam([134.15,1.08,z],[136,1.08,z],.035,0xe6e7e3);beam([134.15,.37,z],[136,.37,z],.035,0xe6e7e3);
+        for(let k=0;k<15;k++){const xx=134+k*.085,yy=.78-.24*Math.sin(k/14*Math.PI);for(let j=0;j<6;j++){const a=j*Math.PI/3,b=(j+1)*Math.PI/3;beam([xx+.045*Math.cos(a),yy+.032*Math.sin(a),z],[xx+.045*Math.cos(b),yy+.032*Math.sin(b),z],.008,0x454b48);}}
+      }
     });
     strip([188.22,-1515.03],[184,-1518],4.2,.12,'wood');
     for(let f=0;f<3;f++){
@@ -475,6 +609,17 @@ export function build(K){
       for(let edge=0;edge<4;edge++){
         const a=inner[edge],b=inner[(edge+1)%4],L=Math.hypot(b[0]-a[0],b[1]-a[1]),n=Math.ceil(L/.82),nx=(b[1]-a[1])/L,nz=-(b[0]-a[0])/L;
         const P=(t,yy)=>[a[0]+(b[0]-a[0])*t+nx*.18,yy,a[1]+(b[1]-a[1])*t+nz*.18];
+        if(f===0&&edge===3){
+          // River elevation: flat, vertical folding glazing, not slanted fins.
+          const count=Math.ceil(L/1.05);
+          for(let i=0;i<=count;i++)beam(P(i/count,y),P(i/count,3.55),.027,0x1c1d1d);
+          for(const h of[y+.04,3.48])beam(P(0,h),P(1,h),.028,0x1c1d1d);
+          for(let i=0;i<count;i++){const p=P((i+.5)/count,1.2);box(p[0]-.03,1.12,p[2],.055,.23,.025,0x1c1d1d);}
+          K.quad(white,[P(0,3.55),P(1,3.55),P(1,top),P(0,top)],[nx,0,nz]);
+          box(137.15,3.65,-1533.5,1.85,.14,31,0xeeeeda);
+          for(let z=-1548;z<-1518;z+=3)box(137.15,3.49,z,1.85,.16,.13,0xeeeeda);
+          continue;
+        }
         for(let i=0;i<n;i++){
           const t=i/n,u=(i+1)/n,p=P(t,y),q=P(u,y),middle=(p[0]+q[0])/2,door=f===0&&edge===2&&middle>181.8&&middle<186.2;
           const wave=t=>Math.sin(t*Math.PI*2+(edge%2)*.7+f*.75),lo=t=>y+.32+(f===0?.65:.25)*(wave(t)+1),hi=t=>top-.65-(wave(t)+1)*.65;
@@ -492,13 +637,13 @@ export function build(K){
       if(f===0){
         // HF_360 shows an open upper gallery inside the cafe volume. Its height
         // and return to the existing stair core are reconstructed, not a 2F cafe.
-        K.stairs(157.8,-1523,157.8,-1533.4,{w:2.6,ya:y,yb:2.65,mat:'concrete',rails:true});
-        K.slab(rect(156.2,-1535.8,166.3,-1533.4),2.65,{mat:'tile',thick:.16});
-        K.stairs(157.8,-1535.8,157.8,-1545,{w:2.6,ya:2.65,yb:top,mat:'concrete',rails:true});
+        K.stairs(157.8,-1523,157.8,-1533.4,{w:2.6,ya:y,yb:3.92,mat:'concrete',rails:true});
+        K.slab(rect(156.2,-1535.8,166.3,-1533.4),3.92,{mat:'tile',thick:.16});
+        K.stairs(157.8,-1535.8,157.8,-1545,{w:2.6,ya:3.92,yb:top,mat:'concrete',rails:true});
       }else K.stairs(157.8,-1523,157.8,-1545,{w:2.6,ya:y,yb:top,mat:{tex:'concrete',color:0xc7c8bb},rails:true});
       K.slab(rect(156.2,-1523,160,-1520),y,{mat:marble,thick:.16});
       K.slab(rect(156.2,-1547,161,-1545),top,{mat:marble,thick:.16});
-      K.wall(161,-1546,161,-1525,y,top-.2,{mat:0xd6d6cb,thick:.12,openings:f?[]:[{at:11.4,w:2.4,y0:2.65,y1:4.72}]});
+      K.wall(161,-1546,161,-1525,y,top-.2,{mat:0xd6d6cb,thick:.12,openings:f?[]:[{at:11.4,w:2.4,y0:3.92,y1:6.72}]});
       K.wall(166,-1523,191,-1523,y,top-.2,{mat:f===0?'glass':f===1?0x393b32:0xe7e5da,thick:.12,openings:[{at:12,w:4.4,y0:y,y1:y+3.2},{at:1.8,w:2,y0:y,y1:y+2.6}]});
       const floor=(f+1)+'F',sub=f===0?'스타벅스 · 전시공간':f===1?'마레보 인 웨이브 · 벨라홀':'마레보 인 웨이브 · 루체홀';
       K.zone({name,floor,sub,poly:inner,y0:y,y1:top,priority:5});
@@ -510,12 +655,14 @@ export function build(K){
     K.slab(inner,ys[3],{mat:{tex:'wood',color:0xbaa58a},holes:[stairHole,roofLight],thick:.18});
     // The exhibition partition belongs beneath the west gallery. Its previous
     // full-height position inside the cafe concealed the observed left mezzanine.
-    K.wall(166.15,-1548,166.15,-1534,ys[0],2.49,{mat:0xe1ddcf,thick:.16,openings:[{at:10,w:2,y0:ys[0],y1:2.49}]});
-    const gallery=[[161.2,-1548],[191,-1548],[191,-1542],[166,-1542],[166,-1519.35],[161.2,-1519.35]];
-    K.slab(gallery,2.65,{mat:terrazzo,under:0xe5e7e2,thick:.16});
-    rail([166,-1542],[191,-1542],2.65);rail([166,-1542],[166,-1535.8],2.65);
-    rail([166,-1533.4],[166,-1523],2.65);
-    K.zone({name:'스타벅스 서울웨이브아트센터점',floor:'1M',sub:'카페 중층 좌석',poly:gallery,y0:2.65,y1:4.74,priority:10});
+    K.wall(166.15,-1548,166.15,-1534,ys[0],3.74,{mat:0xe1ddcf,thick:.16,openings:[{at:10,w:2,y0:ys[0],y1:3.74}]});
+    K.wall(166.3,-1537,185.4,-1537,ys[0],3.74,{mat:{tex:'wood',color:0xa39a83},thick:.16});
+    const gallery=[[161.2,-1548],[191,-1548],[191,-1537],[173,-1537],[173,-1526.2],[166,-1526.2],[166,-1519.35],[161.2,-1519.35]];
+    K.slab(gallery,3.92,{mat:terrazzo,under:0xe5e7e2,thick:.16});
+    rail([173,-1537],[191,-1537],3.92);rail([173,-1537],[173,-1526.2],3.92);
+    rail([173,-1526.2],[166,-1526.2],3.92);rail([166,-1526.2],[166,-1523],3.92);
+    for(const [a,b]of[[[173,-1537],[173,-1526.2]],[[173,-1526.2],[166,-1526.2]]])K.wall(...a,...b,4.02,4.94,{mat:'glass',thick:.025,solid:false});
+    K.zone({name:'스타벅스 서울웨이브아트센터점',floor:'1M',sub:'카페 중층 좌석',poly:gallery,y0:3.92,y1:6.74,priority:10});
     for(let i=0;i<inner.length;i++)rail(inner[i],inner[(i+1)%4],ys[3]);
     // The terrace is around, rather than across, Luce's shallow glazed roof.
     for(let i=0;i<roofLight.length;i++)rail(roofLight[i],roofLight[(i+1)%4],ys[3]);
@@ -525,8 +672,10 @@ export function build(K){
       beam([x0,ys[3]-.22,z0],[x1,ys[3]-.94,z0],.07,bronze);
     }
     const waveFloors=ys.map((y,i)=>({label:i<3?(i+1)+'F':'옥상',y,name:['스타벅스 · 전시공간','마레보 인 웨이브 · 벨라홀','마레보 인 웨이브 · 루체홀','옥상 테라스'][i]}));
-    waveFloors.splice(1,0,{label:'1M',y:2.65,name:'스타벅스 중층 좌석'});
-    K.elevator({name:'서울웨이브아트센터 승강기',x:164,z:-1520.7,w:2.2,d:2.2,rotY:Math.PI,floors:waveFloors});
+    waveFloors.splice(1,0,{label:'1M',y:3.92,name:'스타벅스 중층 좌석'});
+    // The old exposed lift looked like the nonexistent 2×3m grey standee in
+    // the entrance frame. Keep accessible service in the rear gallery aisle.
+    K.elevator({name:'서울웨이브아트센터 승강기',x:164,z:-1540.4,w:2.2,d:2.2,rotY:Math.PI,floors:waveFloors});
     K.zone({name,floor:'옥상',sub:'한강 전망 테라스',poly:inner,y0:ys[3],y1:ys[3]+4,priority:5});
     sign('MAREVO IN WAVE',174,13.98,-1517.7,14,1,0,null,'#246572');
     sign('서울웨이브아트센터',174,13.35,-1517.68,5,.35,0,null,'#246572');
@@ -534,7 +683,7 @@ export function build(K){
     // Text-only round brand marker at the observed middle white spandrel.
     for(let i=0;i<32;i++){const a=i*Math.PI/16,b=(i+1)*Math.PI/16;K.quad(0x26634c,[[172,7.05,-1517.65],[172+Math.cos(a)*.58,7.05+Math.sin(a)*.58,-1517.65],[172+Math.cos(b)*.58,7.05+Math.sin(b)*.58,-1517.65],[172,7.05,-1517.65]],[0,0,1]);}
     sign('스타벅스',172,7.05,-1517.62,.9,.22,0,null,'#f0eee1');
-    sign(['서울웨이브아트센터','스타벅스 · 마레보 인 웨이브'],235,1.8,-1473.5,4.8,.85,.7);
+    worldK.sign(['서울웨이브아트센터','스타벅스 · 마레보 인 웨이브'],{x:235,y:1.8,z:-1473.5,w:4.8,h:.85,rotY:.7,bg:'#214a45',fg:'#ffffff',twoSided:true});
     // 2025 entrance frame: pale slatted timber fascia, dark shop glazing, then
     // speckled cafe paving beyond the light tiled public vestibule.
     K.hpoly(terrazzo,rect(166.3,-1548.8,191.8,-1523.1),.126);
@@ -556,12 +705,34 @@ export function build(K){
       // Tiered seasonal boxes and taller tumbler shelves behind the round table.
       for(let row=0;row<3;row++)for(let col=0;col<6;col++)box(181.15+col*.33,y+.86+row*.22,-1528.8-row*.1,.29,.19,.34,[0xb5a1bb,0xd9b9cb,0xe7c962,0xdfd5bc][(row+col)%4]);
       for(const x of[184.3,185.5]){box(x,y,-1529.6,1.04,1.7,.5,0x3d4039);for(let row=0;row<4;row++){box(x,y+.27+row*.38,-1529.28,1,.045,.5,'wood');for(let col=0;col<4;col++)K.cyl({x:x-.36+col*.24,y:y+.3+row*.38,z:-1529.25,r:.075,h:.24+(col%2)*.06,mat:[0xd7ccad,0xa1b2ad,0xd9c4d4][col%3],seg:8});}}
-      for(const x of[171,179,187]){box(x,4.49,-1533,.14,.14,18,0xe1e5e0);for(const z of[-1539,-1533,-1527]){box(x,4.46,z,.22,.055,.22,0x636d68);box(x,4.44,z,.14,.025,.14,'emit');}}
-      for(const z of[-1540,-1534,-1527]){box(178,4.38,z,25,.28,.18,0xb9c9c7);beam([166,4.28,z+.3],[191,4.28,z+.3],.055,0xd4dcd6);}
-      for(const x of[170.2,173.8,181.3,187.5]){beam([x,4.48,-1541],[x,4.48,-1524],.07,0xb6c3bd);for(const z of[-1537,-1530]){beam([x,4.45,z],[x,4.12,z],.016,0x525c56);K.cyl({x,y:4.02,z,r:.11,h:.14,mat:0x7f8172,seg:10});box(x,4.005,z,.16,.025,.16,{tex:'emit',color:0xffdda3});}}
+      // Near seating wall and the photographed whale relief close the first
+      // room at twelve metres; a 6m east aisle still reaches the retained cafe.
+      for(const x of[169.5,174,179.5,183]){
+        box(x,y,-1536.42,3.1,.44,.62,{tex:'wood',color:0x8f795c});box(x,y+.44,-1536.65,3.1,.58,.12,0x82715c);
+        table(x,y,-1535.35);chair(x,y,-1534.45,Math.PI,0x6d6c53);
+      }
+      K.dome({x:179,y:2.12,z:-1536.85,rx:1.3,ry:.52,rz:.12,mat:0x414f4b,seg:18,rings:7,hemi:false});
+      K.quad(0x414f4b,[[177.9,2.25,-1536.7],[177.25,2.88,-1536.7],[177.18,2.18,-1536.7],[177.9,2.05,-1536.7]],[0,0,1]);
+      K.quad(0x414f4b,[[177.9,2.25,-1536.7],[177.18,1.8,-1536.7],[177.25,2.4,-1536.7],[177.9,2.05,-1536.7]],[0,0,1]);
+      // Dense exposed white I-beams and round ducts match the white ceiling.
+      for(let z=-1536;z<-1523;z+=3){
+        for(const yy of[6.39,6.69])box(178,yy,z,25,.06,.24,0xe9eae6);
+        box(178,6.45,z,25,.24,.07,0xe9eae6);
+      }
+      for(const x of[170,176,182,188]){
+        for(const yy of[6.24,6.54])box(x,yy,-1530,.24,.055,13,0xe9eae6);
+        box(x,6.29,-1530,.07,.25,13,0xe9eae6);
+      }
+      for(const x of[174.6,186.5])for(let i=0;i<12;i++){
+        const a=i*Math.PI/6,b=(i+1)*Math.PI/6;
+        K.quad(0xe1e4df,[[x+.17*Math.cos(a),6.08+.17*Math.sin(a),-1537],[x+.17*Math.cos(a),6.08+.17*Math.sin(a),-1523.5],[x+.17*Math.cos(b),6.08+.17*Math.sin(b),-1523.5],[x+.17*Math.cos(b),6.08+.17*Math.sin(b),-1537]],[Math.cos(a),Math.sin(a),0]);
+      }
+      for(const x of[171,179,187]){box(x,6.49,-1533,.14,.14,18,0xe1e5e0);for(const z of[-1539,-1533,-1527]){box(x,6.46,z,.22,.055,.22,0x636d68);box(x,6.44,z,.14,.025,.14,'emit');}}
+      for(const z of[-1540,-1534,-1527]){box(178,6.38,z,25,.28,.18,0xb9c9c7);beam([166,6.28,z+.3],[191,6.28,z+.3],.055,0xd4dcd6);}
+      for(const x of[170.2,173.8,181.3,187.5]){beam([x,6.48,-1541],[x,6.48,-1524],.07,0xb6c3bd);for(const z of[-1537,-1530]){beam([x,6.45,z],[x,6.12,z],.016,0x525c56);K.cyl({x,y:6.02,z,r:.11,h:.14,mat:0x7f8172,seg:10});box(x,6.005,z,.16,.025,.16,{tex:'emit',color:0xffdda3});}}
       for(const x of[173,180]){box(x,y,-1541.05,3.6,.45,.65,{tex:'wood',color:0x9b7954});box(x,y+.45,-1541.3,3.6,.65,.12,0x846b50);}
       for(let i=0;i<3;i++){box(161.4,y+.7,-1545+i*3.2,.12,1.8,2.1,0xd5d0bf);box(161.48,y+.8,-1545+i*3.2,.06,1.6,1.8,[0x879f9d,0xc6ac8e,0x8f927c][i]);}
-      sign('전시공간',164,y+2.65,-1535.3,3,.5,0,'#eeede3','#4c6259');
+      sign('전시공간',164,y+3.92,-1535.3,3,.5,0,'#eeede3','#4c6259');
       box(187,y,-1544.5,6.7,1.05,1.3,{tex:'wood',color:0x9b7d59},true);box(187,y+1.05,-1544.5,6.8,.09,1.4,{color:0xd9d7c9,gloss:.5});
       for(let i=0;i<2;i++){box(185+i*2.1,y+1.14,-1544.5,1.2,.55,.65,0x313d39);for(const dx of[-.35,.35])K.cyl({x:185+i*2.1+dx,y:y+1.1,z:-1543.8,r:.09,h:.18,mat:C.white,seg:10});}
       sign('주문 · 픽업',187,y+2.4,-1545.3,4.2,.55,0,'#254d3e','#f3eedb');
@@ -572,22 +743,22 @@ export function build(K){
         for(const dz of[-1.05,1.05])beam([191.65,y,z+dz],[191.65,y+2.5,z+dz],.065,C.white);
         for(let j=0;j<18;j++){const a=j*Math.PI/18,b=(j+1)*Math.PI/18;beam([191.65,y+2.5+Math.sin(a),z+Math.cos(a)],[191.65,y+2.5+Math.sin(b),z+Math.cos(b)],.065,C.white);}
       }
-      for(const x of[169,177,185])for(const z of[-1543,-1535,-1527])box(x,4.61,z,1.3,.045,.3,{tex:'emit',color:0xffefd2});
+      for(const x of[169,177,185])for(const z of[-1543,-1535,-1527])box(x,6.61,z,1.3,.045,.3,{tex:'emit',color:0xffefd2});
       K.person(186,.12,-1545.8,{shirt:0x244c39,pants:0x353c33});K.person(174.1,.12,-1538,{sit:true,shirt:0xc2bca3,pants:0x4d5147});
       for(const[x,z,a,sit,col]of[[188.5,-1545.7,.2,false,0x315e46],[185.7,-1542.3,3.1,false,0xe0d2bd],[186.3,-1540.9,3,false,0x8c7464],[181,-1526.8,2,false,0xc1a5a2],[183.9,-1527.6,1.2,false,0x657b79],[174,-1544,1.5,true,0xd8cdb7],[182,-1538,4.7,true,0x717b8b],[188,-1532,1.5,true,0xafa585],[173,-1530,4.7,true,0xd3ba9f],[176,-1547.1,3.1,true,0x7e8e85],[178.2,-1547.1,3.1,true,0xafa0a4],[180,-1534.8,.7,false,0xada38e]]){
         K.person(x,y,z,{rotY:a,sit,shirt:col,pants:0x3e4443});if(!sit&&x<186)box(x+.24,y+.55,z,.19,.3,.1,0xc8b18b,false,a);
       }
-      for(const x of[174.6,181.5]){
-        box(x,.12,-1522.25,.33,.035,.4,0xe7bb2a);beam([x-.16,.16,-1522.45],[x-.16,.72,-1522.25],.028,0xe7bb2a);beam([x+.16,.16,-1522.45],[x+.16,.72,-1522.25],.028,0xe7bb2a);
+      for(const x of[175.7,180.4]){
+        box(x,.12,-1522.25,.33,.035,.4,0xe7bb2a);beam([x-.16,.16,-1522.45],[x-.16,.68,-1522.25],.028,0xe7bb2a);beam([x+.16,.16,-1522.45],[x+.16,.68,-1522.25],.028,0xe7bb2a);
         sign(['주의','미끄럼'],x,.45,-1522.2,.33,.35,0,'#edc43b','#34352d');
       }
       sign('←',175.8,1.35,-1522.93,.22,.19,0,'#307b58','#ffffff');
-      for(const[x,z,a,col]of[[176.8,-1522,2.7,0xbca891],[179.3,-1524,1.1,0x6b7a73]])K.person(x,y,z,{rotY:a,shirt:col,pants:0x404843});
-      box(171.5,.12,-1522,.55,1.3,.08,0xeee8dc);sign(['스타벅스','매장 안내'],171.5,1.15,-1521.94,.5,.45,0,'#eee8dc','#266447');
+      for(const[x,z,a,col]of[[172,-1530,2.7,0xbca891],[181,-1535.5,1.1,0x6b7a73]])K.person(x,y,z,{rotY:a,sit:true,shirt:col,pants:0x404843});
+      box(175.2,.12,-1522,.6,1.7,.055,0xf0f1ec);sign(['스타벅스','매장 안내'],175.2,1.15,-1521.955,.5,.45,0,'#f0f1ec','#266447');
     });
-    K.detail({name:'스타벅스 중층 좌석',floor:'1M',poly:gallery,y0:2.65,y1:4.74},()=>{
-      for(const x of[172,178,184,189]){table(x,2.65,-1546.25);chair(x-.95,2.65,-1546.25,Math.PI/2,0x968166);chair(x+.95,2.65,-1546.25,-Math.PI/2,0x968166);}
-      for(const[x,a,col]of[[171.05,1.57,0xb7a38c],[178.95,4.71,0xa8aaa1],[183.05,1.57,0x7b8c89],[189.95,4.71,0xd0b8a3]])K.person(x,2.65,-1546.25,{rotY:a,sit:true,shirt:col,pants:0x434a45});
+    K.detail({name:'스타벅스 중층 좌석',floor:'1M',poly:gallery,y0:3.92,y1:6.74},()=>{
+      for(const x of[172,178,184,189]){table(x,3.92,-1546.25);chair(x-.95,3.92,-1546.25,Math.PI/2,0x968166);chair(x+.95,3.92,-1546.25,-Math.PI/2,0x968166);}
+      for(const[x,a,col]of[[171.05,1.57,0xb7a38c],[178.95,4.71,0xa8aaa1],[183.05,1.57,0x7b8c89],[189.95,4.71,0xd0b8a3]])K.person(x,3.92,-1546.25,{rotY:a,sit:true,shirt:col,pants:0x434a45});
     });
     function floral(x,y,z,tall=false){
       if(tall){box(x,y,z,.75,.8,.75,{color:0xe3e1d5,gloss:.5});for(const dx of[-.18,.18])beam([x+dx,y+.75,z],[x+dx*.8,y+2.3,z],.035,0x899379);}
@@ -642,10 +813,35 @@ export function build(K){
       sign('한강 전망 테라스',180,ys[3]+1.5,-1518.2,5,.55,0,'#e8e2cf','#4d6254');
     });
     spawn('서울웨이브 · 스타벅스',184,.12,-1520,0);
-    spawn('스타벅스 · 중층 좌석',174,2.65,-1543,180);
-    spawn('마레보 인 웨이브 · 벨라홀',178,4.92,-1521.4,0);
-    spawn('마레보 인 웨이브 · 루체홀',178,10.12,-1521.4,0);
-    spawn('서울웨이브 · 옥상 전망',165,15.12,-1526,0);
+    spawn('스타벅스 · 중층 좌석',174,3.92,-1543,180);
+    spawn('마레보 인 웨이브 · 벨라홀',178,6.92,-1521.4,0);
+    spawn('마레보 인 웨이브 · 루체홀',178,11.32,-1521.4,0);
+    spawn('서울웨이브 · 옥상 전망',165,15.72,-1526,0);
+    // HF_400: the downriver south-bank point and lattice pylon are visible
+    // left of centre. This landmark is reconstructed here, not in city.js.
+    const point=[[-271,-1014],[-258,-1055],[-242,-1090],[-218,-1097],[-197,-1085],[-210,-1060],[-244,-1023]];
+    worldK.prism(point,-1.5,.08,{mat:0x64734f,solid:false});
+    function strut(a,b,r=.065){
+      const v=new THREE.Vector3(b[0]-a[0],b[1]-a[1],b[2]-a[2]).normalize();
+      const n=new THREE.Vector3(-v.z,0,v.x);if(n.lengthSq()<.001)n.set(1,0,0);n.normalize().multiplyScalar(r);
+      const m=new THREE.Vector3().crossVectors(v,n).normalize().multiplyScalar(r);
+      const p=(q,s,t)=>[q[0]+s*n.x+t*m.x,q[1]+s*n.y+t*m.y,q[2]+s*n.z+t*m.z];
+      for(const s of[-1,1]){worldK.quad(0x6b716e,[p(a,s,-1),p(b,s,-1),p(b,s,1),p(a,s,1)],[n.x*s,n.y*s,n.z*s]);worldK.quad(0x6b716e,[p(a,-1,s),p(a,1,s),p(b,1,s),p(b,-1,s)],[m.x*s,m.y*s,m.z*s]);}
+    }
+    const px=-229,pz=-1080,P=(h,u,v)=>[px+u*(4.3-h*.059),h,pz+v*(4.3-h*.059)];
+    for(let j=0;j<10;j++){const h=j*6.5,hh=(j+1)*6.5;
+      for(const u of[-1,1])for(const v of[-1,1])strut(P(h,u,v),P(hh,u,v),.075);
+      for(const side of[-1,1])for(const axis of[0,1]){
+        const a=axis?P(h,side,-1):P(h,-1,side),b=axis?P(h,side,1):P(h,1,side),c=axis?P(hh,side,-1):P(hh,-1,side),d=axis?P(hh,side,1):P(hh,1,side);
+        strut(a,d,.035);strut(b,c,.035);strut(a,b,.045);
+      }
+    }
+    for(const h of[41,49,57]){strut([px-7,h,pz],[px+7,h,pz],.08);strut([px-7,h,pz],[px,h+3,pz],.045);strut([px+7,h,pz],[px,h+3,pz],.045);}
+    for(const[x,z,h]of[[-242,-1054,19],[-233,-1058,22],[-222,-1053,21],[-215,-1050,18],[-251,-1043,15]]){
+      worldK.cyl({x,y:.08,z,r:.22,h,mat:0x626b52,seg:8});
+      for(let j=0;j<4;j++)worldK.dome({x:x+Math.sin(j*2+x)*.7,y:h*.45+j*2.1,z:z+Math.cos(j*3)*.7,rx:1.7,ry:3.2,rz:1.65,mat:0x455f3c,seg:10,rings:6,hemi:false});
+    }
+    for(const[x,z,w,h]of[[-267,-1019,14,12],[-247,-1022,17,14],[-211,-1033,15,10]])worldK.box({x,y:0,z,w,h,d:9,mat:{tex:'apt',color:0xadafa4},floorH:3,solid:false});
   }
 
   function floatingHouse(o){
@@ -775,7 +971,7 @@ export function build(K){
     // 2026 official notice: closed for rebuilding, not a publicly open dry pool.
     // Keep the earlier basin/canopy detail behind the temporary perimeter.
     for(let i=0;i<deck.length;i++){const a=deck[i],b=deck[(i+1)%deck.length];if(i===2){const m=mix(a,b,.5),u=mix(a,b,.44),v=mix(a,b,.56);rail(a,u);rail(v,b);strip(m,[360,-1565],4,.035,'sidewalk');paths.push([m,[360,-1565],5]);}else rail(a,b);}
-    K.polyWalls(deck,.035,2.5,{mat:{tex:'metal',color:0xb0b8b3},thick:.1});
+    // The 2025 walking frame predates the solid 2026 construction hoarding.
     const entry=P(0,38);sign(['잠원수영장','리모델링 공사 중 · 출입금지'],entry[0],2.8,entry[1],7,1.15,.74);
     zone('잠원수영장',deck,0,'1F','리모델링 공사 중 · 미개장',5);zone('잠원수영장 수조',basin,-1.25,'1F','공사 구역',1.4);
     for(const side of[-1,1])for(let i=0;i<7;i++){

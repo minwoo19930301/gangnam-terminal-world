@@ -1109,19 +1109,20 @@
      "refs/walk/s2_gotomall/rLMagJuViqo_170.jpg"
     ],
     "frame": "rLMagJuViqo_170.jpg",
-    "x": -197.0748,
+    "x": -195.3891,
     "y": -6,
-    "z": -58.6013,
+    "z": -59.2326,
     "yawDeg": 110.531,
     "pitchDeg": 0,
     "floor": "B1",
     "local_uv": [
-     -208.3,
+     -206.5,
      -5.718
     ],
-    "view": "서향 남색G5/G1~G4/신반포역/G6 사인과 앞 왼쪽TONYMOLY, 교차로 타원등.",
+    "view": "서향u-206.5. 왼쪽 가까운 TONYMOLY(B열u≈-209.5), 약5.3m 앞 G5/G1~G4/G6 사인(u-211.8), 그 뒤 타원(u-215.825)의 순서. 원본에서 왼쪽 TONYMOLY가 사인보다 가까운 점에 맞춘 배치.",
     "placement_confidence": "inferred",
-    "render_status": "운영자 비교 렌더 대기; y는 바닥높이"
+    "render_status": "라운드17 원본 프레임 직접 대조·동선 순서 보정. tests/shot.mjs 실행 불가: 신규 구도는 운영자 렌더 검증 대기. y=-6은 B1 바닥 높이.",
+    "pose_revision": 17
    },
    {
     "spot": "라운드13 k9yW0vOWPrs_580",
@@ -1140,10 +1141,11 @@
      -88.5,
      -5.2
     ],
-    "view": "W3 건너편에서 촬영하던 위치를 8-1 분홍 문 앞 서측으로 이동. 유리문은 오른쪽, 자판기는 왼쪽 전경으로 보는 사선 구도. 공유 W3 계단·난간·개찰기는 유지한다. 실제 문번호의 8-1 대응은 여전히 추정.",
+    "view": "8-1 분홍문·자판기의 원본 대응은 유지한다. gm-C1의 제안 서행카메라(u-76,v-5.5)는 현재 Line3 개찰기 위치에 있고 W3 공유 계단·난간도 문 앞을 가린다. _junctions.js/역 모듈 수정 금지와 W3 북쪽 진입 보존 때문에 기존(-84.7025,-100.1316),yaw330.5를 유지했다. 이 pose는 원본과 불일치하며 운영자 공유역 배치 조정이 필요하다. G8-2로 재매칭하지 않는다.",
     "placement_confidence": "inferred",
-    "render_status": "라운드15 원본·비교시트 검토로 보정; tests/shot.mjs 사용 불가로 신규 렌더는 운영자 검증 대기; y는 바닥높이",
-    "pose_revision": 15
+    "render_status": "라운드17 원본 확인; 카메라 수정은 W3/Line3 공유배치 충돌로 보류. 원본 불일치 미해결.",
+    "pose_revision": 15,
+    "camera_revision_review": 17
    },
    {
     "spot": "라운드13 k9yW0vOWPrs_240",
@@ -1152,19 +1154,20 @@
      "refs/walk/s2_gotomall/k9yW0vOWPrs_240.jpg"
     ],
     "frame": "k9yW0vOWPrs_240.jpg",
-    "x": 77.6195,
+    "x": 232.0165,
     "y": -6,
-    "z": -161.4017,
-    "yawDeg": 110.531,
+    "z": -219.5971,
+    "yawDeg": 85,
     "pitchDeg": 0,
     "floor": "B1",
     "local_uv": [
-     85,
-     -5.65
+     250,
+     -6
     ],
-    "view": "u78.105 북측 교차부 큰 타원·흰 천장·중앙 점자블록. 기존 북측 슬랫 구간을 피한 구도이며 실제 위치는 추정.",
+    "view": "서행 시간순서에 맞추어 bay67 교차통로(u≈246.1) 동쪽으로 이동. 오른쪽 A열 크림 코너기둥·포스터와 앞의 의류점, 왼쪽으로 물러나는 남색 사인 통로를 함께 보도록 서향 축에서 북측으로25.5° 회전. 절대 위치·yaw85는 렌더 미확인 추정이다.",
     "placement_confidence": "inferred",
-    "render_status": "운영자 비교 렌더 대기; y는 바닥높이"
+    "render_status": "라운드17 원본 프레임 직접 대조·동선 순서 보정. tests/shot.mjs 실행 불가: 신규 구도는 운영자 렌더 검증 대기. y=-6은 B1 바닥 높이.",
+    "pose_revision": 17
    },
    {
     "spot": "라운드13 rLMagJuViqo_860",
@@ -1173,20 +1176,20 @@
      "refs/walk/s2_gotomall/rLMagJuViqo_860.jpg"
     ],
     "frame": "rLMagJuViqo_860.jpg",
-    "x": -0.3074,
+    "x": 7.383,
     "y": -6,
-    "z": -119.1372,
-    "yawDeg": 285,
+    "z": -123.6938,
+    "yawDeg": 290.531,
     "pitchDeg": 0,
     "floor": "B1",
     "local_uv": [
-     -2.8,
-     6.6
+     6,
+     5.03
     ],
-    "view": "중앙광장 남측 휴게공간 가까이에서 동쪽을 약간 남향하여 본다. 유모차는 왼쪽, 원형 벤치·식재와 직사각 조명은 앞/오른쪽. W9와 근접 길안내 사인이 장면을 지배하던 기존 시점 수정. 실제 광장의 절대 위치는 여전히 추정.",
-    "placement_confidence": "inferred",
-    "render_status": "라운드15 원본·비교시트 검토로 보정; tests/shot.mjs 사용 불가로 신규 렌더는 운영자 검증 대기; y는 바닥높이",
-    "pose_revision": 15
+    "view": "중앙광장u6,v5.03에서 동향. 뒤쪽(u<0)의 안내대·EDIYA를 프레임에서 제외하고 앞오른쪽u12..19의 식재 벤치와 그 앞 쇼핑객·왼쪽 유모차를 본다. 리뷰 제안(7.4,-123.7)에 대응; 휴게부 절대 위치와 실제 구도는 렌더 미확인 저신뢰 추정.",
+    "placement_confidence": "low",
+    "render_status": "라운드17 원본 프레임 직접 대조·동선 순서 보정. tests/shot.mjs 실행 불가: 신규 구도는 운영자 렌더 검증 대기. y=-6은 B1 바닥 높이.",
+    "pose_revision": 17
    },
    {
     "spot": "라운드13 rLMagJuViqo_445",
@@ -1195,19 +1198,20 @@
      "refs/walk/s2_gotomall/rLMagJuViqo_445.jpg"
     ],
     "frame": "rLMagJuViqo_445.jpg",
-    "x": -276.8975,
+    "x": -284.3894,
     "y": -6,
-    "z": -15.9814,
+    "z": -13.1757,
     "yawDeg": 110.531,
     "pitchDeg": 0,
     "floor": "B1",
     "local_uv": [
-     -298,
+     -306,
      6.2
     ],
-    "view": "서쪽을 보며 왼쪽 화장실 안내, 오른쪽 기존 벤치·양면 TV·마름모 바닥과 갈색 기둥을 비교. 위치 추정.",
+    "view": "서편 휴게포켓 안쪽u-306에서 서향. u-309,v8.5의 두 면 화장실 사인은 약3m 앞왼쪽, 가까운 오른쪽 갈색 대리석 기둥·벤치와 왼쪽 의류를 비교한다. 기존 꽃 진열 앞u-298에서8m 서쪽으로 이동.",
     "placement_confidence": "inferred",
-    "render_status": "운영자 비교 렌더 대기; y는 바닥높이"
+    "render_status": "라운드17 원본 프레임 직접 대조·동선 순서 보정. tests/shot.mjs 실행 불가: 신규 구도는 운영자 렌더 검증 대기. y=-6은 B1 바닥 높이.",
+    "pose_revision": 17
    },
    {
     "spot": "라운드13 k9yW0vOWPrs_20",
@@ -1216,20 +1220,20 @@
      "refs/walk/s2_gotomall/k9yW0vOWPrs_20.jpg"
     ],
     "frame": "k9yW0vOWPrs_20.jpg",
-    "x": 403.6768,
+    "x": 398.0579,
     "y": -6,
-    "z": -277.3168,
+    "z": -275.2125,
     "yawDeg": 110.531,
     "pitchDeg": 0,
     "floor": "B1",
     "local_uv": [
-     431,
+     425,
      0.15
     ],
-    "view": "동단 접근부에서 서향. 왼쪽 기둥열·광고와 오른쪽 Tstorage 전면을 지나 식당가로 접근하는 구도. 리뷰의 보관함 왼쪽 배치는 원본과 반대여서 채택하지 않는다.",
+    "view": "_5u439에서 서쪽14m 이동한 u425. 원본의 오른쪽 Tstorage 전면 바로 곁과 왼쪽 타일 기둥열을 서향으로 비교한다. 15초 이동거리14m; 실제 절대 위치는 추정.",
     "placement_confidence": "inferred",
-    "render_status": "라운드15 원본·비교시트 검토로 보정; tests/shot.mjs 사용 불가로 신규 렌더는 운영자 검증 대기; y는 바닥높이",
-    "pose_revision": 15
+    "render_status": "라운드17 원본 프레임 직접 대조·동선 순서 보정. tests/shot.mjs 실행 불가: 신규 구도는 운영자 렌더 검증 대기. y=-6은 B1 바닥 높이.",
+    "pose_revision": 17
    },
    {
     "spot": "라운드13 k9yW0vOWPrs_40",
@@ -1259,19 +1263,20 @@
      "refs/walk/s2_gotomall/rLMagJuViqo_60.jpg"
     ],
     "frame": "rLMagJuViqo_60.jpg",
-    "x": 248.5193,
+    "x": -107.7866,
     "y": -6,
-    "z": -212.5983,
-    "yawDeg": 290.531,
+    "z": -91.9137,
+    "yawDeg": 110.531,
     "pitchDeg": 0,
     "floor": "B1",
     "local_uv": [
-     263,
-     6.342
+     -113,
+     -5.6
     ],
-    "view": "C/D 의류 통로의 옅은 광택석·중앙 노란점자블록·흰 타원패널·개방 진열.",
-    "placement_confidence": "inferred",
-    "render_status": "운영자 비교 렌더 대기; y는 바닥높이"
+    "view": "rL _170 서행 사인 위치보다 동쪽인 A/Bu-113로 수정. bay24 타원 바로 아래의 연속 의류 전면을 서쪽으로 본다. 기존 C/Du263에서110초에470m 이동하던 모순을 해소. 영상이 무편집 연속보행이라는 가정으로 신뢰도 낮음.",
+    "placement_confidence": "low",
+    "render_status": "라운드17 원본 프레임 직접 대조·동선 순서 보정. tests/shot.mjs 실행 불가: 신규 구도는 운영자 렌더 검증 대기. y=-6은 B1 바닥 높이.",
+    "pose_revision": 17
    },
    {
     "spot": "라운드13 rLMagJuViqo_1520",
@@ -1290,9 +1295,10 @@
      194,
      6.3948
     ],
-    "view": "남측u199.874 부근의3연속 타원등과 긴 의류 통로.",
+    "view": "C/D 동행u194 유지. 세 타원(u≈198.4/201.6)은4.4–7.6m 앞이므로 카메라를 전진하지 않는다. 원본에 없는 bay61 C/D 방향사인은 모델에서 제거하여 근접 상부가림을 해소한다.",
     "placement_confidence": "inferred",
-    "render_status": "운영자 비교 렌더 대기; y는 바닥높이"
+    "render_status": "운영자 비교 렌더 대기; y는 바닥높이",
+    "camera_revision_review": 17
    },
    {
     "spot": "라운드13 k9yW0vOWPrs_700",
@@ -1387,19 +1393,20 @@
      "refs/walk/s2_gotomall/k9yW0vOWPrs_100.jpg"
     ],
     "frame": "k9yW0vOWPrs_100.jpg",
-    "x": 332.3452,
+    "x": 344.6855,
     "y": -6,
-    "z": -256.7895,
+    "z": -258.0543,
     "yawDeg": 110.531,
     "pitchDeg": 0,
     "floor": "B1",
     "local_uv": [
-     357,
-     -5.6435
+     369,
+     -2.5
     ],
-    "view": "동편 식당가에서 의류로 들어가는 B열u353 꽃·화분 가판. 도매 꽃시장이 아님.",
+    "view": "동편광장u369,v-2.5에서 서향. 약10m 앞왼쪽의 중앙 점포섬 끝 꽃·화분 전면(u359.438), 검정 타원 화단, 오른쪽으로 이어지는 A/B 통로를 본다.",
     "placement_confidence": "inferred",
-    "render_status": "운영자 비교 렌더 대기; y는 바닥높이"
+    "render_status": "라운드17 보정; shot.mjs 사용불가로 최종 비교 렌더 대기",
+    "pose_revision": 17
    },
    {
     "spot": "라운드13 k9yW0vOWPrs_1660",
@@ -1408,19 +1415,20 @@
      "refs/walk/s2_gotomall/k9yW0vOWPrs_1660.jpg"
     ],
     "frame": "k9yW0vOWPrs_1660.jpg",
-    "x": 296.2593,
+    "x": 301.877,
     "y": -6,
-    "z": -230.5397,
+    "z": -232.647,
     "yawDeg": 290.531,
     "pitchDeg": 0,
     "floor": "B1",
     "local_uv": [
-     314,
-     6.2832
+     320,
+     6.28
     ],
-    "view": "C/D 동행 오른쪽D열 고주파 체험관과 다음 타원등. 점포 베이는 추정.",
+    "view": "C/D 동행u320으로6m 전진하여 D열u322 고주파 체험관을 오른쪽2–3m 전경에 둔다. 머리 위 큰 타원등과 함께 비교한다. 고주파 점포 절대 베이는 추정.",
     "placement_confidence": "inferred",
-    "render_status": "운영자 비교 렌더 대기; y는 바닥높이"
+    "render_status": "라운드17 원본 프레임 직접 대조·동선 순서 보정. tests/shot.mjs 실행 불가: 신규 구도는 운영자 렌더 검증 대기. y=-6은 B1 바닥 높이.",
+    "pose_revision": 17
    },
    {
     "spot": "라운드13 k9yW0vOWPrs_1730",
@@ -1493,19 +1501,20 @@
      "refs/walk/s2_gotomall/k9yW0vOWPrs_1240.jpg"
     ],
     "frame": "k9yW0vOWPrs_1240.jpg",
-    "x": 95.8633,
+    "x": -100.4529,
     "y": -6,
-    "z": -155.4568,
+    "z": -80.8853,
     "yawDeg": 290.531,
     "pitchDeg": 0,
     "floor": "B1",
     "local_uv": [
-     100,
-     6.3156
+     -110,
+     7.3
     ],
-    "view": "C/D 의류행거·노랑/빨강 행사표와 쇼핑객이 많은 구간.",
+    "view": "C/D 동행 _1030u-295에서 _1660u320 사이 보행시간을 보간한 u-110. D열 상품 전면에서 약1–2m 떨어진 오른쪽 시점(v7.3)으로 군중과 의류를 본다. 연속영상·보행속도 가정이며 실측 아님.",
     "placement_confidence": "inferred",
-    "render_status": "운영자 비교 렌더 대기; y는 바닥높이"
+    "render_status": "라운드17 원본 프레임 직접 대조·동선 순서 보정. tests/shot.mjs 실행 불가: 신규 구도는 운영자 렌더 검증 대기. y=-6은 B1 바닥 높이.",
+    "pose_revision": 17
    },
    {
     "spot": "라운드13 k9yW0vOWPrs_340",
@@ -1514,19 +1523,20 @@
      "refs/walk/s2_gotomall/k9yW0vOWPrs_340.jpg"
     ],
     "frame": "k9yW0vOWPrs_340.jpg",
-    "x": 250.9329,
+    "x": 155.4002,
     "y": -6,
-    "z": -226.1126,
+    "z": -190.3704,
     "yawDeg": 110.531,
     "pitchDeg": 0,
     "floor": "B1",
     "local_uv": [
-     270,
-     -5.4674
+     168,
+     -5.5
     ],
-    "view": "A/B 의류·가방 개방랙과 가격표를 따라 서행.",
+    "view": "k9 서행 A/B 동선의 _240u250 다음, _460u45 이전인 u168. 왼쪽 B열의 가방 벽을 비교한다. G12는 약19m 앞이며 근접 문 전경을 피한다. 점포의 절대 위치는 시간순서와 연속보행 가정에 의한 추정.",
     "placement_confidence": "inferred",
-    "render_status": "운영자 비교 렌더 대기; y는 바닥높이"
+    "render_status": "라운드17 원본 프레임 직접 대조·동선 순서 보정. tests/shot.mjs 실행 불가: 신규 구도는 운영자 렌더 검증 대기. y=-6은 B1 바닥 높이.",
+    "pose_revision": 17
    },
    {
     "spot": "라운드13 rLMagJuViqo_680",
@@ -1535,19 +1545,20 @@
      "refs/walk/s2_gotomall/rLMagJuViqo_680.jpg"
     ],
     "frame": "rLMagJuViqo_680.jpg",
-    "x": 170.8067,
+    "x": -98.0994,
     "y": -6,
-    "z": -183.4477,
-    "yawDeg": 290.531,
+    "z": -83.1548,
+    "yawDeg": 330,
     "pitchDeg": 0,
     "floor": "B1",
     "local_uv": [
-     180,
-     6.3863
+     -107,
+     6
     ],
-    "view": "의류 전면의3900 가격표·행거·교차통로 쪽 시야; 실제 점포 위치는 추정.",
-    "placement_confidence": "inferred",
-    "render_status": "운영자 비교 렌더 대기; y는 바닥높이"
+    "view": "C/D 동행 중 B/C 섬의 동쪽 끝(u≈-102.2)을4.8m 앞에서 비스듬히 본다. 흰 코너기둥과 노란 가격표·L자 의류랙, 양옆으로 갈라지는 통로를 겨냥한다. 기존 직선 통로 구도에서 변경; 절대 위치·yaw330은 렌더 미확인 저신뢰 추정.",
+    "placement_confidence": "low",
+    "render_status": "라운드17 원본 프레임 직접 대조·동선 순서 보정. tests/shot.mjs 실행 불가: 신규 구도는 운영자 렌더 검증 대기. y=-6은 B1 바닥 높이.",
+    "pose_revision": 17
    },
    {
     "spot": "라운드13 rLMagJuViqo_620",
@@ -1556,19 +1567,20 @@
      "refs/walk/s2_gotomall/rLMagJuViqo_620.jpg"
     ],
     "frame": "rLMagJuViqo_620.jpg",
-    "x": 129.2004,
+    "x": -139.1994,
     "y": -6,
-    "z": -180.4926,
-    "yawDeg": 110.531,
+    "z": -67.4425,
+    "yawDeg": 290.531,
     "pitchDeg": 0,
     "floor": "B1",
     "local_uv": [
-     140,
-     -5.4382
+     -151,
+     6.3
     ],
-    "view": "양말 스탠드·옷행거·프로모션배너·중앙 점자블록.",
-    "placement_confidence": "inferred",
-    "render_status": "운영자 비교 렌더 대기; y는 바닥높이"
+    "view": "서편 회차 _445 다음 C/D 동행u-151. bay21 타원(u≈-140.4)이 약10.6m 앞에 있고 왼쪽 양말 진열·행거를 본다. 영상이 무편집 연속보행이라는 가정으로 신뢰도 낮음.",
+    "placement_confidence": "low",
+    "render_status": "라운드17 원본 프레임 직접 대조·동선 순서 보정. tests/shot.mjs 실행 불가: 신규 구도는 운영자 렌더 검증 대기. y=-6은 B1 바닥 높이.",
+    "pose_revision": 17
    },
    {
     "spot": "라운드13 k9yW0vOWPrs_1520",
@@ -1577,19 +1589,20 @@
      "refs/walk/s2_gotomall/k9yW0vOWPrs_1520.jpg"
     ],
     "frame": "k9yW0vOWPrs_1520.jpg",
-    "x": 245.7112,
+    "x": 138.3502,
     "y": -6,
-    "z": -211.5424,
+    "z": -170.317,
     "yawDeg": 290.531,
     "pitchDeg": 0,
     "floor": "B1",
     "local_uv": [
-     260,
-     6.346
+     145,
+     7.3
     ],
-    "view": "C/D 동행 계단식 신발 선반·의류행거·10000 가격표.",
+    "view": "C/D 동행 시간순서를 따라 u145로 수정. 오른쪽 D열 밝은 목재 신발선반과 흰 필라스터 가까이(v7.3)서 동쪽을 본다. 실제 점포의 절대 좌표는 보간 추정.",
     "placement_confidence": "inferred",
-    "render_status": "운영자 비교 렌더 대기; y는 바닥높이"
+    "render_status": "라운드17 원본 프레임 직접 대조·동선 순서 보정. tests/shot.mjs 실행 불가: 신규 구도는 운영자 렌더 검증 대기. y=-6은 B1 바닥 높이.",
+    "pose_revision": 17
    },
    {
     "spot": "라운드13 k9yW0vOWPrs_460",
@@ -2466,6 +2479,611 @@
     "W3/W9, _junctions.js, 사용자 루트의 기존 접속, 다른 모듈을 변경하지 않음. 8-1 문과 _580 프레임 대응은 추정.",
     "확장 접근부로 생성 메타데이터 _meta.json의 기존 bbox보다 약26m 동쪽으로 나가지만 사용자 지정 두 파일 범위를 지키기 위해 gen_meta를 실행하지 않음. gotomall 자체 area는 owner 전체를 유지하므로 접근부가 잘리지는 않음. 엔진/통합 담당자의 다음 metadata 재생성 대상."
    ]
+  },
+  "interior_round17": {
+   "date": "2026-11-07",
+   "review_source": ".codex-jobs/evidence/review_walk17.json → gotomall",
+   "priority_order": [
+    "카메라",
+    "레이아웃",
+    "색상·재질·사인",
+    "상품·인파"
+   ],
+   "camera_original_frames_opened": [
+    "k9yW0vOWPrs_580.png",
+    "k9yW0vOWPrs_240.jpg",
+    "k9yW0vOWPrs_340.jpg",
+    "k9yW0vOWPrs_1240.jpg",
+    "k9yW0vOWPrs_1520.jpg",
+    "rLMagJuViqo_60.jpg",
+    "rLMagJuViqo_620.jpg",
+    "rLMagJuViqo_680.jpg",
+    "rLMagJuViqo_445.jpg",
+    "k9yW0vOWPrs_1660.jpg",
+    "rLMagJuViqo_1520.jpg",
+    "rLMagJuViqo_860.jpg",
+    "rLMagJuViqo_170.jpg",
+    "k9yW0vOWPrs_5.jpg",
+    "k9yW0vOWPrs_20.jpg"
+   ],
+   "camera_changes": [
+    {
+     "finding": "gm-C2",
+     "frame": "k9yW0vOWPrs_240.jpg",
+     "before": {
+      "x": 77.6195,
+      "y": -6,
+      "z": -161.4017,
+      "yawDeg": 110.531,
+      "pitchDeg": 0,
+      "local_uv": [
+       85,
+       -5.65
+      ]
+     },
+     "after": {
+      "x": 232.0165,
+      "y": -6,
+      "z": -219.5971,
+      "yawDeg": 85,
+      "pitchDeg": 0,
+      "local_uv": [
+       250,
+       -6
+      ]
+     },
+     "basis": "서행 시간순서에 맞추어 bay67 교차통로(u≈246.1) 동쪽으로 이동. 오른쪽 A열 크림 코너기둥·포스터와 앞의 의류점, 왼쪽으로 물러나는 남색 사인 통로를 함께 보도록 서향 축에서 북측으로25.5° 회전. 절대 위치·yaw85는 렌더 미확인 추정이다."
+    },
+    {
+     "finding": "gm-C2",
+     "frame": "k9yW0vOWPrs_340.jpg",
+     "before": {
+      "x": 250.9329,
+      "y": -6,
+      "z": -226.1126,
+      "yawDeg": 110.531,
+      "pitchDeg": 0,
+      "local_uv": [
+       270,
+       -5.4674
+      ]
+     },
+     "after": {
+      "x": 155.4002,
+      "y": -6,
+      "z": -190.3704,
+      "yawDeg": 110.531,
+      "pitchDeg": 0,
+      "local_uv": [
+       168,
+       -5.5
+      ]
+     },
+     "basis": "k9 서행 A/B 동선의 _240u250 다음, _460u45 이전인 u168. 왼쪽 B열의 가방 벽을 비교한다. G12는 약19m 앞이며 근접 문 전경을 피한다. 점포의 절대 위치는 시간순서와 연속보행 가정에 의한 추정."
+    },
+    {
+     "finding": "gm-C3",
+     "frame": "k9yW0vOWPrs_1240.jpg",
+     "before": {
+      "x": 95.8633,
+      "y": -6,
+      "z": -155.4568,
+      "yawDeg": 290.531,
+      "pitchDeg": 0,
+      "local_uv": [
+       100,
+       6.3156
+      ]
+     },
+     "after": {
+      "x": -100.4529,
+      "y": -6,
+      "z": -80.8853,
+      "yawDeg": 290.531,
+      "pitchDeg": 0,
+      "local_uv": [
+       -110,
+       7.3
+      ]
+     },
+     "basis": "C/D 동행 _1030u-295에서 _1660u320 사이 보행시간을 보간한 u-110. D열 상품 전면에서 약1–2m 떨어진 오른쪽 시점(v7.3)으로 군중과 의류를 본다. 연속영상·보행속도 가정이며 실측 아님."
+    },
+    {
+     "finding": "gm-C3",
+     "frame": "k9yW0vOWPrs_1520.jpg",
+     "before": {
+      "x": 245.7112,
+      "y": -6,
+      "z": -211.5424,
+      "yawDeg": 290.531,
+      "pitchDeg": 0,
+      "local_uv": [
+       260,
+       6.346
+      ]
+     },
+     "after": {
+      "x": 138.3502,
+      "y": -6,
+      "z": -170.317,
+      "yawDeg": 290.531,
+      "pitchDeg": 0,
+      "local_uv": [
+       145,
+       7.3
+      ]
+     },
+     "basis": "C/D 동행 시간순서를 따라 u145로 수정. 오른쪽 D열 밝은 목재 신발선반과 흰 필라스터 가까이(v7.3)서 동쪽을 본다. 실제 점포의 절대 좌표는 보간 추정."
+    },
+    {
+     "finding": "gm-C4",
+     "frame": "rLMagJuViqo_60.jpg",
+     "before": {
+      "x": 248.5193,
+      "y": -6,
+      "z": -212.5983,
+      "yawDeg": 290.531,
+      "pitchDeg": 0,
+      "local_uv": [
+       263,
+       6.342
+      ]
+     },
+     "after": {
+      "x": -107.7866,
+      "y": -6,
+      "z": -91.9137,
+      "yawDeg": 110.531,
+      "pitchDeg": 0,
+      "local_uv": [
+       -113,
+       -5.6
+      ]
+     },
+     "basis": "rL _170 서행 사인 위치보다 동쪽인 A/Bu-113로 수정. bay24 타원 바로 아래의 연속 의류 전면을 서쪽으로 본다. 기존 C/Du263에서110초에470m 이동하던 모순을 해소. 영상이 무편집 연속보행이라는 가정으로 신뢰도 낮음."
+    },
+    {
+     "finding": "gm-C4",
+     "frame": "rLMagJuViqo_620.jpg",
+     "before": {
+      "x": 129.2004,
+      "y": -6,
+      "z": -180.4926,
+      "yawDeg": 110.531,
+      "pitchDeg": 0,
+      "local_uv": [
+       140,
+       -5.4382
+      ]
+     },
+     "after": {
+      "x": -139.1994,
+      "y": -6,
+      "z": -67.4425,
+      "yawDeg": 290.531,
+      "pitchDeg": 0,
+      "local_uv": [
+       -151,
+       6.3
+      ]
+     },
+     "basis": "서편 회차 _445 다음 C/D 동행u-151. bay21 타원(u≈-140.4)이 약10.6m 앞에 있고 왼쪽 양말 진열·행거를 본다. 영상이 무편집 연속보행이라는 가정으로 신뢰도 낮음."
+    },
+    {
+     "finding": "gm-C4",
+     "frame": "rLMagJuViqo_680.jpg",
+     "before": {
+      "x": 170.8067,
+      "y": -6,
+      "z": -183.4477,
+      "yawDeg": 290.531,
+      "pitchDeg": 0,
+      "local_uv": [
+       180,
+       6.3863
+      ]
+     },
+     "after": {
+      "x": -98.0994,
+      "y": -6,
+      "z": -83.1548,
+      "yawDeg": 330,
+      "pitchDeg": 0,
+      "local_uv": [
+       -107,
+       6
+      ]
+     },
+     "basis": "C/D 동행 중 B/C 섬의 동쪽 끝(u≈-102.2)을4.8m 앞에서 비스듬히 본다. 흰 코너기둥과 노란 가격표·L자 의류랙, 양옆으로 갈라지는 통로를 겨냥한다. 기존 직선 통로 구도에서 변경; 절대 위치·yaw330은 렌더 미확인 저신뢰 추정."
+    },
+    {
+     "finding": "gm-C5",
+     "frame": "rLMagJuViqo_445.jpg",
+     "before": {
+      "x": -276.8975,
+      "y": -6,
+      "z": -15.9814,
+      "yawDeg": 110.531,
+      "pitchDeg": 0,
+      "local_uv": [
+       -298,
+       6.2
+      ]
+     },
+     "after": {
+      "x": -284.3894,
+      "y": -6,
+      "z": -13.1757,
+      "yawDeg": 110.531,
+      "pitchDeg": 0,
+      "local_uv": [
+       -306,
+       6.2
+      ]
+     },
+     "basis": "서편 휴게포켓 안쪽u-306에서 서향. u-309,v8.5의 두 면 화장실 사인은 약3m 앞왼쪽, 가까운 오른쪽 갈색 대리석 기둥·벤치와 왼쪽 의류를 비교한다. 기존 꽃 진열 앞u-298에서8m 서쪽으로 이동."
+    },
+    {
+     "finding": "gm-C6",
+     "frame": "k9yW0vOWPrs_1660.jpg",
+     "before": {
+      "x": 296.2593,
+      "y": -6,
+      "z": -230.5397,
+      "yawDeg": 290.531,
+      "pitchDeg": 0,
+      "local_uv": [
+       314,
+       6.2832
+      ]
+     },
+     "after": {
+      "x": 301.877,
+      "y": -6,
+      "z": -232.647,
+      "yawDeg": 290.531,
+      "pitchDeg": 0,
+      "local_uv": [
+       320,
+       6.28
+      ]
+     },
+     "basis": "C/D 동행u320으로6m 전진하여 D열u322 고주파 체험관을 오른쪽2–3m 전경에 둔다. 머리 위 큰 타원등과 함께 비교한다. 고주파 점포 절대 베이는 추정."
+    },
+    {
+     "finding": "gm-C6",
+     "frame": "rLMagJuViqo_860.jpg",
+     "before": {
+      "x": -0.3074,
+      "y": -6,
+      "z": -119.1372,
+      "yawDeg": 285,
+      "pitchDeg": 0,
+      "local_uv": [
+       -2.8,
+       6.6
+      ]
+     },
+     "after": {
+      "x": 7.383,
+      "y": -6,
+      "z": -123.6938,
+      "yawDeg": 290.531,
+      "pitchDeg": 0,
+      "local_uv": [
+       6,
+       5.03
+      ]
+     },
+     "basis": "중앙광장u6,v5.03에서 동향. 뒤쪽(u<0)의 안내대·EDIYA를 프레임에서 제외하고 앞오른쪽u12..19의 식재 벤치와 그 앞 쇼핑객·왼쪽 유모차를 본다. 리뷰 제안(7.4,-123.7)에 대응; 휴게부 절대 위치와 실제 구도는 렌더 미확인 저신뢰 추정."
+    },
+    {
+     "finding": "gm-L3",
+     "frame": "rLMagJuViqo_170.jpg",
+     "before": {
+      "x": -197.0748,
+      "y": -6,
+      "z": -58.6013,
+      "yawDeg": 110.531,
+      "pitchDeg": 0,
+      "local_uv": [
+       -208.3,
+       -5.718
+      ]
+     },
+     "after": {
+      "x": -195.3891,
+      "y": -6,
+      "z": -59.2326,
+      "yawDeg": 110.531,
+      "pitchDeg": 0,
+      "local_uv": [
+       -206.5,
+       -5.718
+      ]
+     },
+     "basis": "서향u-206.5. 왼쪽 가까운 TONYMOLY(B열u≈-209.5), 약5.3m 앞 G5/G1~G4/G6 사인(u-211.8), 그 뒤 타원(u-215.825)의 순서. 원본에서 왼쪽 TONYMOLY가 사인보다 가까운 점에 맞춘 배치."
+    },
+    {
+     "finding": "gm-L4",
+     "frame": "k9yW0vOWPrs_20.jpg",
+     "before": {
+      "x": 403.6768,
+      "y": -6,
+      "z": -277.3168,
+      "yawDeg": 110.531,
+      "pitchDeg": 0,
+      "local_uv": [
+       431,
+       0.15
+      ]
+     },
+     "after": {
+      "x": 398.0579,
+      "y": -6,
+      "z": -275.2125,
+      "yawDeg": 110.531,
+      "pitchDeg": 0,
+      "local_uv": [
+       425,
+       0.15
+      ]
+     },
+     "basis": "_5u439에서 서쪽14m 이동한 u425. 원본의 오른쪽 Tstorage 전면 바로 곁과 왼쪽 타일 기둥열을 서향으로 비교한다. 15초 이동거리14m; 실제 절대 위치는 추정."
+    },
+    {
+     "finding": "gm-L5",
+     "frame": "k9yW0vOWPrs_100.jpg",
+     "before": {
+      "x": 332.3452,
+      "y": -6,
+      "z": -256.7895,
+      "yawDeg": 110.531,
+      "pitchDeg": 0,
+      "local_uv": [
+       357,
+       -5.6435
+      ]
+     },
+     "after": {
+      "x": 344.6855,
+      "y": -6,
+      "z": -258.0543,
+      "yawDeg": 110.531,
+      "pitchDeg": 0,
+      "local_uv": [
+       369,
+       -2.5
+      ]
+     },
+     "basis": "동편광장u369,v-2.5에서 서향. 약10m 앞왼쪽의 중앙 점포섬 끝 꽃·화분 전면(u359.438), 검정 타원 화단, 오른쪽으로 이어지는 A/B 통로를 본다."
+    }
+   ],
+   "camera_findings": [
+    {
+     "id": "gm-C1",
+     "status": "blocked_cross_module",
+     "change": "기존 8-1 매칭·카메라 유지. W3 위치는 고정 공유계약이고 제안 카메라 자리에는 Line3 개찰기가 있다. G8-2 대체를 하지 않으며 원본 불일치 미해결로 기록.",
+     "kept_pose": {
+      "x": -84.7025,
+      "y": -6,
+      "z": -100.1316,
+      "yawDeg": 330.5,
+      "local_uv": [
+       -88.5,
+       -5.2
+      ]
+     },
+     "dependency": "station의 W3 계단·난간과 gotomall Line3 개찰기 공유배치 협의"
+    },
+    {
+     "id": "gm-C2",
+     "status": "implemented_pending_render",
+     "change": "_240A/Bu250,v-6,yaw85; _340A/Bu168,v-5.5,yaw110.531. 서행 순서 수정. _240의 yaw는 교차부 확인렌더 필요."
+    },
+    {
+     "id": "gm-C3",
+     "status": "implemented_pending_render",
+     "change": "_1240C/Du-110,v7.3; _1520C/Du145,v7.3, 모두 동향290.531. 오른쪽 상품 앞1–2m; 보행시간 보간, 중간 컷 없음 가정."
+    },
+    {
+     "id": "gm-C4",
+     "status": "implemented_pending_render",
+     "change": "rL_60A/Bu-113 서향; _620C/Du-151 동향; _680C/Du-107,v6,yaw330. 무편집 동선·서편회차/광장 앵커 추정으로 신뢰도 낮음."
+    },
+    {
+     "id": "gm-C5",
+     "status": "implemented_pending_render",
+     "change": "rL_445u-306,v6.2,서향. gm-D6 화장실 코너사인·gm-L9 의류 전면과 함께 확인."
+    },
+    {
+     "id": "gm-C6",
+     "status": "implemented_pending_render",
+     "change": "k9_1660u320,v6.28 동향; rL_1520 기존u194 유지+bay61 방향사인 제거 요청; rL_860u6,v5.03 동향으로 뒤쪽 안내대/EDIYA 제외. 광장 구도는 저신뢰."
+    }
+   ],
+   "camera_assumptions": [
+    "카메라 y=-6은 B1 바닥높이이며 눈높이 아님.",
+    "k9/rL 절대좌표는 프레임 특징·영상 시간순서를 기존 OSM 평면에 대응한 추정이다. 보행속도 보간은 중간 컷 없음 가정에 의존한다.",
+    "_240yaw85 및 _680yaw330은 신규 렌더 미확인. _860의 식재 벤치도 절대 위치 추정.",
+    "tests/shot.mjs는 사용자 sandbox 제약으로 미실행. 모든 수정 카메라의 최종 구도는 운영자 비교 렌더 대기."
+   ],
+   "implementation_findings": [
+    {
+     "id": "gm-L1",
+     "status": "implemented",
+     "change": "일반 소매 기둥은 폭0.36m #e8e5de 벽기둥으로 점포선보다5cm 돌출. 0.8m 구조체는 점포 안쪽0.48m로 매입; 교차통로/홀의 크림 기둥 유지.",
+     "positions": "retail u-296..359.6; A/B/C/D storefronts"
+    },
+    {
+     "id": "gm-L2",
+     "status": "implemented",
+     "change": "연속 짧은 랙, 약25벌/m, 상품 돌출0.27..0.39m, 통로 유효폭약4.25..4.46m. 상단 재고2.4m.",
+     "positions": "retail A/B,C/D"
+    },
+    {
+     "id": "gm-L3",
+     "status": "implemented",
+     "change": "원본 순서대로 TONYMOLY B u-209.5 → 얇은 안내판u-211.8 → 타원u-215.825. 교차통로는 유지; 스피커2개 추가. 리뷰 대안의 B bay11은 기존 위치라 bay13을 사용.",
+     "positions": "camera u-206.5; crossing u-220.024..-211.626"
+    },
+    {
+     "id": "gm-L4",
+     "status": "implemented",
+     "change": "난간 뒤벽을v-6으로 물리고2m 낮은 바닥의3m 깊이 공간 추가; 충돌 가능한 흰 타일 난간과3개 강관. 광고v4.24, TStorage끝u425.",
+     "positions": "u425..442, guard v-3.04; camera20u425"
+    },
+    {
+     "id": "gm-L5",
+     "status": "implemented",
+     "change": "중앙섬끝u359.438 벽을 점포 개구부로 열어5.6m 꽃집 전면 배치. 마지막B/C점포는1.8m 짧게해 꽃집 깊이 확보. B353은 의류, 검정 화단은 유지. 원형등/크림배너 추가.",
+     "positions": "end u359.438; light(365,-2); camera(369,-2.5)"
+    },
+    {
+     "id": "gm-L6",
+     "status": "implemented",
+     "change": "북쪽 작은 식탁5열/붉은 의자, 남쪽 메뉴벽. 동쪽 남측은 빈 홀/크림기둥/초록상자3개/식물로 변경.",
+     "positions": "u373..398; north v-2.2..-8.8; south open u388+"
+    },
+    {
+     "id": "gm-L7",
+     "status": "implemented",
+     "change": "크림기둥에 작은 EDIYA판/주스메뉴. 오른쪽 셔터·주황식탁2개·노랑의자4개; 왼쪽 검정스툴로 약5m 보행로.",
+     "positions": "column(u-343.3,v-13.4),world(-326.194,-18.449)"
+    },
+    {
+     "id": "gm-L8",
+     "status": "partial_cross_module",
+     "change": "8-1을 유지하고1.8m×7칸 유리문, #c49aa6 연속헤더/G8-1/한강공원/픽토그램. 자판기2대는 웰 서쪽 맞은편u-92/-90.9. 파란 바닥표식·안전한 서쪽 점자띠 추가, 자막성 남색판 삭제. W3/개찰기 때문에 동쪽4–5m 빈 접근부는 미해결.",
+     "positions": "bank u-90.6..-78; W3 world[-82,-104,-76,-90] preserved"
+    },
+    {
+     "id": "gm-L9",
+     "status": "implemented_with_inferred_chainage",
+     "change": "서편D 첫약18m는 의류, 서향 중앙섬끝은3랙 파스텔 의류. 원본28의 B접두 매장번호(유력B125),27의 유력B124를 따라 숲으로/선정아트를B열로 이전; 다른 꽃 진열은 유지.",
+     "positions": "D clothing u-305..-287.208; named florists B282/B290 (u uncertain)"
+    },
+    {
+     "id": "gm-D1",
+     "status": "implemented",
+     "change": "점포벽 #f1efea 발광보조, 천장높이2.6m #f4f2ee, 흰 소핏, 검정레일1열. 기존 다운라이트 유지. _1240의 어두운 매장천장/나무바닥은 원본 예외로 보존.",
+     "positions": "all shops; exception D u-119..-102"
+    },
+    {
+     "id": "gm-D2",
+     "status": "implemented",
+     "change": "베이지 중복틴트 제거. #9c9d9f 3–4mm 회색입자/광택0.8, 홀 #b9bbbb. 점자띠폭0.30m 유지, #c9a73e/#d1b24d로 채도완화.",
+     "positions": "B1 floors"
+    },
+    {
+     "id": "gm-D3",
+     "status": "implemented",
+     "change": "접근부 LED바 가로방향/3m간격, 기둥0.8m높이10cm 스테인리스 띠/적색함. TStorage #e6ecef 투명도0.85 남색프레임/큰 글자.",
+     "positions": "u398..442"
+    },
+    {
+     "id": "gm-D4",
+     "status": "implemented",
+     "change": "교차부에만5m×0.35m 얇은 남색 안내판/작은글자/파랑G배지. G5 및 문턱사인 양면출력. bay61/서편970 근접사인 제거. 0.45×0.25m 비상구 그림표지,0.45×0.15m 벽부착 점포번호.",
+     "positions": "crossings; zone u-101.4/41.4; west wall signu-330; east signu364"
+    },
+    {
+     "id": "gm-D5",
+     "status": "implemented",
+     "change": "곡선천장을 흰 평천장/회색 가로보2개/1.8×0.6m 등으로 변경. 식재벤치 #4a4c50, 기둥 파란스티커, 서북쪽 키오스크. 안내대/식물/카페 유지.",
+     "positions": "plaza u-2..24,v2.8..12; kiosk(11.8,5.4)"
+    },
+    {
+     "id": "gm-D6",
+     "status": "implemented",
+     "change": "갈색대리석기둥2개/회색돌벤치/TV/흑백곡선 바닥/양면화장실 사인. 원본과 다른 나무벤치·나무만 교체. 앉은 사람은 실제벤치위로 정렬.",
+     "positions": "columns(-309,3.5),(-316,3.5); sign(-308.6,7.72)"
+    },
+    {
+     "id": "gm-D7",
+     "status": "implemented",
+     "change": "6×3m흰 타원/7cm테두리, C/D bay76 추가, triple유지. 작은LED1.5m간격/원형환기구. 보라 천장조각 삭제,8.4m간격 붉은 사선배너/노랑문양.",
+     "positions": "retail ceilings; C/D u≈318"
+    },
+    {
+     "id": "gm-T1",
+     "status": "implemented",
+     "change": "기존 인원을 군집과 상품앞/양방향보행으로 재배치하고 비교시점10곳에4명씩 추가. _760구간은 저밀도. 전원 K.detail 내부.",
+     "positions": "A/B u-206.5/250/168/-145/-113; C/D -110/145/-151/320/194"
+    },
+    {
+     "id": "gm-T2",
+     "status": "implemented",
+     "change": "B가방/양말걸이/나무생활용품/나무신발선반/노란할인간판·검정식탁/흰그릇선반과주황·회색탁자. 서편식당은작은탁자·붉은스툴. 사진별특수진열과일반상자 겹침 제거.",
+     "positions": "B150..169 bags; C-155..-132 socks/banneru-143; B-270..-254 homeware; D138..155 shoes; B40.6..49.5 sale; C340..351 dishes"
+    }
+   ],
+   "skipped_as_contradicted": [],
+   "remaining_conflicts": [
+    {
+     "ids": [
+      "gm-C1",
+      "gm-L8"
+     ],
+     "reason": "W3는 _junctions.js 고정 웰[-82,-104,-76,-90] 및 station 계단과 공유. 이 작업 범위에서 이동 금지. 카메라는 8-1 원본 매칭을 유지하고 G8-2로 오인하지 않는다. 분홍문/자판기/표식은 수정했으나 원본처럼 빈 접근부와 카메라 구도는 해결하지 못했다."
+    }
+   ],
+   "assumptions": [
+    "순서·보행시간으로 추정한 카메라 절대위치 및 yaw85/330은 새 렌더로 확인 필요.",
+    "꽃집27/28의 B열은 사진번호로 확인되나 u282/290 배치는 임시; 실제 점포번호와 모델 자동번호는 별개.",
+    "정확한 통로폭·가구간격·기둥위치·상품수는 사진스케일 추정, 실측 아님.",
+    "rL860 광장의 절대위치와 휴게공간 분류는 저신뢰.",
+    "2025+ 원본과 제공 비교시트를 직접 열어 판독; 현재 작업 후 렌더는 sandbox 제약상 생성하지 않음."
+   ],
+   "additional_source_clues": [
+    "refs/interior/gotomall/28_florist_front_wide.jpg: 숲으로 상단 B-prefix, 유력 B125.",
+    "refs/interior/gotomall/27_florist_row_ring_ceiling.jpg: 선정아트 유력 B124, 번호 뒷자리는 저신뢰."
+   ],
+   "verification": {
+    "render": "tests/shot.mjs 미실행 (사용자 명시 sandbox 제약); 최종 사진 구도/색상은 운영자 비교 렌더 대기",
+    "smoke": {
+     "command": "node tests/smoke.mjs gotomall station gyeongbu onebailey",
+     "result": "OK"
+    },
+    "camera_check": {
+     "count": 25,
+     "floor_y": -6,
+     "floor_or_capsule_problems": 0,
+     "capsule": {
+      "radius": 0.32,
+      "height": 1.75,
+      "step": 0.5
+     }
+    },
+    "detail_groups": {
+     "count": 9,
+     "quads": [
+      4134,
+      96122,
+      95818,
+      26125,
+      6805,
+      104848,
+      111757,
+      99570,
+      14974
+     ],
+     "max_quads": 111757,
+     "budget": 120000,
+     "eager_people": 0,
+     "detail_errors": []
+    },
+    "walk": {
+     "command": "node tests/walk.mjs",
+     "result": "687 ok, 0 blocked",
+     "required_routes": "사용자 루트 1–7 및 1F 동선 전체 포함",
+     "final_source": true
+    },
+    "source_sha256": "c7e75b4d11de6698b17ba9d06a0b9ad4f7dab89b3b86c2b0c3f86dc0f732ca59",
+    "syntax": "node --check js/places/gotomall.js: passed",
+    "diff_check": "git diff --check: passed"
+   },
+   "render_status": "수정 구현과 보행검사는 완료. 운영자 최종 비교 렌더 대기; gm-C1/gm-L8 공유 W3 충돌 미해결."
   }
  }
 }

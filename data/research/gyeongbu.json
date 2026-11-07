@@ -2875,17 +2875,17 @@
     "photos": [
      "refs/walk/s3_gyeongbu/Zq_7eC75nBI_60.jpg"
     ],
-    "x": 71.9432,
+    "x": 60.2,
     "y": 0,
-    "z": -112.4468,
-    "yawDeg": 198.76,
+    "z": -100.8,
+    "yawDeg": 255,
     "pitchDeg": 0,
     "local": {
-     "u": 84,
-     "v": -25
+     "u": 68.887,
+     "v": -18.2842
     },
     "floor": "1F",
-    "note": "ROUND15: 비교 시트와 원본 프레임으로 시선 보정. y는 발밑 바닥 높이. OSM/기존 연결 구조 안에서 추정한 촬영 위치이며 측량 좌표 아님. 최종 operator 렌더 대기.",
+    "note": "ROUND17: 원본 프레임과 검증된 재검토 포즈 적용. y는 발밑 바닥 높이; 사진의 실제 측량 위치는 아니며 최종 렌더는 operator 확인 필요.",
     "round15_previous_pose": {
      "x": 63.4736,
      "y": 0,
@@ -2897,7 +2897,18 @@
       "v": -12
      }
     },
-    "revised_round": 15
+    "revised_round": 17,
+    "round17_previous_pose": {
+     "x": 71.9432,
+     "y": 0,
+     "z": -112.4468,
+     "yawDeg": 198.76,
+     "pitchDeg": 0,
+     "local": {
+      "u": 84,
+      "v": -25
+     }
+    }
    },
    {
     "round": 13,
@@ -2908,14 +2919,14 @@
     "x": 68.8952,
     "y": 0,
     "z": -86.684,
-    "yawDeg": 186.769,
-    "pitchDeg": 0,
+    "yawDeg": 172,
+    "pitchDeg": 4,
     "local": {
-     "u": 72,
-     "v": -2
+     "u": 72.0013,
+     "v": -2.0
     },
     "floor": "1F",
-    "note": "ROUND15: 비교 시트와 원본 프레임으로 시선 보정. y는 발밑 바닥 높이. OSM/기존 연결 구조 안에서 추정한 촬영 위치이며 측량 좌표 아님. 최종 operator 렌더 대기.",
+    "note": "ROUND17: 원본 프레임과 검증된 재검토 포즈 적용. y는 발밑 바닥 높이; 사진의 실제 측량 위치는 아니며 최종 렌더는 operator 확인 필요.",
     "round15_previous_pose": {
      "x": 66.6704,
      "y": 0,
@@ -2927,7 +2938,18 @@
       "v": -3
      }
     },
-    "revised_round": 15
+    "revised_round": 17,
+    "round17_previous_pose": {
+     "x": 68.8952,
+     "y": 0,
+     "z": -86.684,
+     "yawDeg": 186.769,
+     "pitchDeg": 0,
+     "local": {
+      "u": 72,
+      "v": -2
+     }
+    }
    },
    {
     "round": 13,
@@ -3059,13 +3081,13 @@
     "y": 0,
     "z": -71.3252,
     "yawDeg": 110.806,
-    "pitchDeg": 0,
+    "pitchDeg": 9,
     "local": {
-     "u": 73.5,
-     "v": 15
+     "u": 73.5013,
+     "v": 15.0003
     },
     "floor": "1F",
-    "note": "ROUND15: 비교 시트와 원본 프레임으로 시선 보정. y는 발밑 바닥 높이. OSM/기존 연결 구조 안에서 추정한 촬영 위치이며 측량 좌표 아님. 최종 operator 렌더 대기.",
+    "note": "ROUND17: 원본 프레임과 검증된 재검토 포즈 적용. y는 발밑 바닥 높이; 사진의 실제 측량 위치는 아니며 최종 렌더는 operator 확인 필요.",
     "round15_previous_pose": {
      "x": 76.6534,
      "y": 0,
@@ -3077,7 +3099,18 @@
       "v": 23
      }
     },
-    "revised_round": 15
+    "revised_round": 17,
+    "round17_previous_pose": {
+     "x": 76.3358,
+     "y": 0,
+     "z": -71.3252,
+     "yawDeg": 110.806,
+     "pitchDeg": 0,
+     "local": {
+      "u": 73.5,
+      "v": 15
+     }
+    }
    },
    {
     "round": 13,
@@ -3115,17 +3148,17 @@
     "photos": [
      "refs/walk/s3_gyeongbu/J0LLdN5rPnI_2.jpg"
     ],
-    "x": 76.9232,
+    "x": 79.35,
     "y": -6,
-    "z": -3.6182,
-    "yawDeg": 290.806,
-    "pitchDeg": 0,
+    "z": -4.54,
+    "yawDeg": 290.8,
+    "pitchDeg": -3,
     "local": {
-     "u": 50,
-     "v": 78.5
+     "u": 52.5969,
+     "v": 78.5017
     },
     "floor": "B1",
-    "note": "ROUND15: 비교 시트와 원본 프레임으로 시선 보정. y는 발밑 바닥 높이. OSM/기존 연결 구조 안에서 추정한 촬영 위치이며 측량 좌표 아님. 최종 operator 렌더 대기.",
+    "note": "ROUND17: 원본 프레임과 검증된 재검토 포즈 적용. y는 발밑 바닥 높이; 사진의 실제 측량 위치는 아니며 최종 렌더는 operator 확인 필요.",
     "round15_previous_pose": {
      "x": 80.6624,
      "y": -6,
@@ -3137,7 +3170,18 @@
       "v": 78.5
      }
     },
-    "revised_round": 15
+    "revised_round": 17,
+    "round17_previous_pose": {
+     "x": 76.9232,
+     "y": -6,
+     "z": -3.6182,
+     "yawDeg": 290.806,
+     "pitchDeg": 0,
+     "local": {
+      "u": 50,
+      "v": 78.5
+     }
+    }
    },
    {
     "round": 13,
@@ -3145,17 +3189,17 @@
     "photos": [
      "refs/walk/s3_gyeongbu/J0LLdN5rPnI_6.jpg"
     ],
-    "x": 76.74,
+    "x": 79.35,
     "y": -6,
-    "z": -2.6928,
-    "yawDeg": 296.182,
-    "pitchDeg": 0,
+    "z": -4.54,
+    "yawDeg": 292,
+    "pitchDeg": -3,
     "local": {
-     "u": 49.5,
-     "v": 79.3
+     "u": 52.5969,
+     "v": 78.5017
     },
     "floor": "B1",
-    "note": "ROUND15: 복도에서 전면 8.5m 밖. 기존 기둥(u51,v78)이 화면 중앙을 가리지 않도록 v79.3으로 보정. y는 발밑 바닥 높이. 시점은 사진 비례 추정이며 최종 operator 렌더 대기.",
+    "note": "ROUND17: 원본 프레임과 검증된 재검토 포즈 적용. y는 발밑 바닥 높이; 사진의 실제 측량 위치는 아니며 최종 렌더는 operator 확인 필요.",
     "round15_previous_pose": {
      "x": 81.9992,
      "y": -6,
@@ -3167,7 +3211,18 @@
       "v": 77
      }
     },
-    "revised_round": 15
+    "revised_round": 17,
+    "round17_previous_pose": {
+     "x": 76.74,
+     "y": -6,
+     "z": -2.6928,
+     "yawDeg": 296.182,
+     "pitchDeg": 0,
+     "local": {
+      "u": 49.5,
+      "v": 79.3
+     }
+    }
    },
    {
     "round": 13,
@@ -3175,17 +3230,17 @@
     "photos": [
      "refs/walk/s3_gyeongbu/J0LLdN5rPnI_10.jpg"
     ],
-    "x": 77.3233,
+    "x": 79.5,
     "y": -6,
-    "z": -3.1284,
-    "yawDeg": 295.204,
-    "pitchDeg": 0,
+    "z": -4.9,
+    "yawDeg": 289.5,
+    "pitchDeg": -3,
     "local": {
-     "u": 50.2,
-     "v": 79.1
+     "u": 52.865,
+     "v": 78.2185
     },
     "floor": "B1",
-    "note": "ROUND15: 비교 시트와 원본 프레임으로 시선 보정. y는 발밑 바닥 높이. OSM/기존 연결 구조 안에서 추정한 촬영 위치이며 측량 좌표 아님. 최종 operator 렌더 대기.",
+    "note": "ROUND17: 원본 프레임과 검증된 재검토 포즈 적용. y는 발밑 바닥 높이; 사진의 실제 측량 위치는 아니며 최종 렌더는 operator 확인 필요.",
     "round15_previous_pose": {
      "x": 86.2712,
      "y": -6,
@@ -3197,7 +3252,18 @@
       "v": 78.5
      }
     },
-    "revised_round": 15
+    "revised_round": 17,
+    "round17_previous_pose": {
+     "x": 77.3233,
+     "y": -6,
+     "z": -3.1284,
+     "yawDeg": 295.204,
+     "pitchDeg": 0,
+     "local": {
+      "u": 50.2,
+      "v": 79.1
+     }
+    }
    },
    {
     "round": 13,
@@ -3388,14 +3454,14 @@
     "x": 106.055,
     "y": 0.14,
     "z": -0.9945,
-    "yawDeg": 289.551,
-    "pitchDeg": 0,
+    "yawDeg": 255,
+    "pitchDeg": 3,
     "local": {
-     "u": 76.3,
-     "v": 91.3
+     "u": 76.3014,
+     "v": 91.3017
     },
     "floor": "1F",
-    "note": "ROUND15: 흰 승차홈 지지대를 오른쪽에 두고 버스 측면을 보는 local(76.3,91.3)→(90,91.6) 시점. 중앙 첫 버스6.95m. y0.14는 승차장 바닥, physics push0. 최종 operator 렌더 대기.",
+    "note": "ROUND17: 원본 프레임과 검증된 재검토 포즈 적용. y는 발밑 바닥 높이; 사진의 실제 측량 위치는 아니며 최종 렌더는 operator 확인 필요.",
     "round15_previous_pose": {
      "x": 109.0294,
      "y": 0.14,
@@ -3407,7 +3473,18 @@
       "v": 97.7
      }
     },
-    "revised_round": 15
+    "revised_round": 17,
+    "round17_previous_pose": {
+     "x": 106.055,
+     "y": 0.14,
+     "z": -0.9945,
+     "yawDeg": 289.551,
+     "pitchDeg": 0,
+     "local": {
+      "u": 76.3,
+      "v": 91.3
+     }
+    }
    },
    {
     "round": 13,
@@ -3501,21 +3578,33 @@
    },
    {
     "round": 13,
-    "spot": "하차장 유리문 옆 검정 쓰레기통 네 칸",
+    "spot": "하차장 유리문 옆 검정 쓰레기통 여섯 칸",
     "photos": [
      "refs/walk/s3_gyeongbu/Rq5bLTg7xPI_100.jpg"
     ],
     "x": 123.8512,
     "y": 0.14,
     "z": -68.5194,
-    "yawDeg": 20.806,
+    "yawDeg": 30.806,
     "pitchDeg": 0,
     "local": {
-     "u": 116.92,
-     "v": 34.5
+     "u": 116.9221,
+     "v": 34.5006
     },
     "floor": "1F",
-    "note": "프레임의 형태·동선 관계 비교용. 공식 약도/보존 구조에 맞춘 위치이며 촬영 지점의 측량 좌표가 아님. y는 눈높이가 아니라 모델 바닥 높이."
+    "note": "ROUND17: 원본 프레임과 검증된 재검토 포즈 적용. y는 발밑 바닥 높이; 사진의 실제 측량 위치는 아니며 최종 렌더는 operator 확인 필요.",
+    "round17_previous_pose": {
+     "x": 123.8512,
+     "y": 0.14,
+     "z": -68.5194,
+     "yawDeg": 20.806,
+     "pitchDeg": 0,
+     "local": {
+      "u": 116.92,
+      "v": 34.5
+     }
+    },
+    "revised_round": 17
    },
    {
     "round": 13,
@@ -3553,17 +3642,17 @@
     "photos": [
      "refs/walk/s3_gyeongbu/Zq_7eC75nBI_230.jpg"
     ],
-    "x": 62.0512,
+    "x": 63.3,
     "y": 11,
-    "z": -29.5254,
+    "z": -26.3,
     "yawDeg": 200.806,
     "pitchDeg": 0,
     "local": {
-     "u": 45.3,
-     "v": 49
+     "u": 45.3225,
+     "v": 52.4595
     },
     "floor": "3F",
-    "note": "ROUND15: 꽃시장 원본 프레임의 복도 방향·좌우 관계로 보정. y는 발밑 바닥 높이. 실재 승강기/외벽을 유지하며 복도 치수는 프레임 비례로 추정. 최종 operator 렌더 대기.",
+    "note": "ROUND17: 원본 프레임과 검증된 재검토 포즈 적용. y는 발밑 바닥 높이; 사진의 실제 측량 위치는 아니며 최종 렌더는 operator 확인 필요.",
     "round15_previous_pose": {
      "x": 63.472,
      "y": 11,
@@ -3575,7 +3664,18 @@
       "v": 53
      }
     },
-    "revised_round": 15
+    "revised_round": 17,
+    "round17_previous_pose": {
+     "x": 62.0512,
+     "y": 11,
+     "z": -29.5254,
+     "yawDeg": 200.806,
+     "pitchDeg": 0,
+     "local": {
+      "u": 45.3,
+      "v": 49
+     }
+    }
    },
    {
     "round": 13,
@@ -5785,6 +5885,239 @@
     "method": "tools/gen_meta.mjs executed with writeFileSync captured in memory; no repository or temporary file written",
     "result": "gyeongbu claims, roads, areas, box, heights, floors, cells, junctions and all80 entrance entries exactly match current js/places/_meta.json",
     "requires_update": false
+   }
+  },
+  "round17_review": {
+   "review": ".codex-jobs/evidence/review_walk17.json",
+   "date": "2026-11-07",
+   "priority_order": [
+    "camera",
+    "layout",
+    "design",
+    "detail"
+   ],
+   "coordinate_basis": "Positions are module-local u,v unless labelled world; y is foot/floor elevation. O=[2.3,-59.24], A=[0.9348,-0.3552], B=[0.3552,0.9348].",
+   "findings": [
+    {
+     "id": "gb-C01",
+     "status": "implemented",
+     "change": "Trace00 world (60.2,0,-100.8), yaw255 pitch0; diagonal facade/plaza approach.",
+     "original_checked": "Zq_7eC75nBI_60.jpg",
+     "verification": "confirmed"
+    },
+    {
+     "id": "gb-C02",
+     "status": "implemented",
+     "change": "Trace08/09 world (79.35,-6,-4.54), yaw290.8/292 pitch-3; trace10 (79.5,-6,-4.9), yaw289.5 pitch-3; moved in front of pillar.",
+     "original_checked": "J0LLdN5rPnI_2.jpg (also J0LLdN5rPnI_6.jpg, J0LLdN5rPnI_10.jpg)",
+     "verification": "confirmed"
+    },
+    {
+     "id": "gb-C03",
+     "status": "implemented",
+     "change": "Trace 06 pitch +9. Oval centre (69.5,15), radii 3.2/4.8 m, black 0.3 m fascia, emissive rim, eight spots and near dark arc.",
+     "original_checked": "69BNJ7tHUhI_8.jpg",
+     "verification": "adjusted"
+    },
+    {
+     "id": "gb-C04",
+     "status": "implemented",
+     "change": "Trace17 yaw255 pitch+3 at existing y0.14 platform; bay8 coach moved u85.3 to96.3.",
+     "original_checked": "jpOjc7GGnDo_5.jpg",
+     "verification": "adjusted"
+    },
+    {
+     "id": "gb-L01",
+     "status": "implemented",
+     "change": "Added along-u stocked fronts v12.65/16.35, cross-passages about12m; filled north u241..254 and2.1m shelf v8.5. Preserved original stock; promotion islands moved v23.2.",
+     "original_checked": "69BNJ7tHUhI_23.jpg (also 69BNJ7tHUhI_18.jpg)",
+     "verification": "confirmed"
+    },
+    {
+     "id": "gb-L02",
+     "status": "implemented",
+     "change": "Removed22 u78.7 thin posts; beams#c9cbc6, inclined piers up to5.86m with crossheads to u80.",
+     "original_checked": "jpOjc7GGnDo_80.jpg (also jpOjc7GGnDo_5.jpg, jpOjc7GGnDo_155.jpg)",
+     "verification": "confirmed"
+    },
+    {
+     "id": "gb-L03",
+     "status": "implemented_partial_external",
+     "change": "Moved six of20 holding coaches to u103.5,v95.5..113; CHUNIL EXPRESS at(88.5,111.8); bevelled coach noses/windscreen cheeks/stalk mirrors. Existing red coach retained. Elevated background roadway requires streets/city owner.",
+     "original_checked": "jpOjc7GGnDo_130.jpg (also jpOjc7GGnDo_155.jpg, jpOjc7GGnDo_5.jpg)",
+     "verification": "adjusted"
+    },
+    {
+     "id": "gb-L04",
+     "status": "implemented",
+     "change": "Curved lane fromu116 about20deg/30m;2m x0.8m sloped yellow/black Jersey sections,6delineators, wash coach(119.3,37.6), blue booth, 출차주의 signs,15white coaches u123..171.3. Conflicting sedans relocated to u187.",
+     "original_checked": "Rq5bLTg7xPI_300.jpg",
+     "verification": "confirmed"
+    },
+    {
+     "id": "gb-L05",
+     "status": "implemented",
+     "change": "White enclosure at u67.3..73.4, v43.5..56 gives about 5.8 m clear width. Added curved ends, round column, black/blue kiosks, 2 x 1.2 m artwork and low cabinet. Removed contradicted benches/glazing here; moved overhead sign from v45 to v62.",
+     "original_checked": "Zq_7eC75nBI_120.jpg",
+     "verification": "confirmed"
+    },
+    {
+     "id": "gb-L06",
+     "status": "implemented",
+     "change": "Removed only entrance supportu69; trace01 keeps(68.8952,0,-86.684), yaw172 pitch4. Other support lean preserved pending further evidence.",
+     "original_checked": "Zq_7eC75nBI_80.jpg",
+     "verification": "adjusted"
+    },
+    {
+     "id": "gb-L07",
+     "status": "implemented",
+     "change": "Five navy display fins at u69.2, v90..102 with 3 m spacing, blue screens and tube guards. Added 0.3 m S LED at v85..110 and 0.9 m cassette; retained established 1F registration.",
+     "original_checked": "69BNJ7tHUhI_13.jpg",
+     "verification": "confirmed"
+    },
+    {
+     "id": "gb-L08",
+     "status": "implemented",
+     "change": "Lift corridor outer liners widened u42.8..47.8; shafts/thresholds unchanged. Trace23(63.3,11,-26.3). West glazing/vending(43.35,58.15),two blue trolleysv59.65/61,boxcartv63.7. Frame vs west lift opening conflict retained explicitly.",
+     "original_checked": "Zq_7eC75nBI_230.jpg (also Zq_7eC75nBI_1780.jpg)",
+     "verification": "adjusted"
+    },
+    {
+     "id": "gb-L09",
+     "status": "implemented",
+     "change": "Raised wooden flower bank u50.6..51.8, v48..60 with 45 buckets, 315 mixed flower heads and hanging garlands. One wrapped cart at (53.5,53.5), 0.35 m wall clock and stall front v47.9. Suppressed the contradicted old right-wall bucket faces at u53.85..54.6,v43.5..60.2 so flowers cannot protrude through the bare wall.",
+     "original_checked": "Zq_7eC75nBI_260.jpg",
+     "verification": "adjusted"
+    },
+    {
+     "id": "gb-L10",
+     "status": "implemented",
+     "change": "Eight printed box stacks u35..43.05, v151.85; white wall v150.9 and column (45,151.2). Added 32 notes, calendar, round red pipe and 22 plants on left; tables u12.6, v137..147 hold blue crates and pink/white flowers.",
+     "original_checked": "Zq_7eC75nBI_1250.jpg (also Zq_7eC75nBI_1050.jpg)",
+     "verification": "confirmed"
+    },
+    {
+     "id": "gb-L11",
+     "status": "implemented",
+     "change": "Plain #4a4d50 third arrival header; six 0.45 m bins with perforations and silver end rails. Round column at arrival.u+2.65, v32 with stepped capital. Trace 21 yaw 30.806.",
+     "original_checked": "Rq5bLTg7xPI_100.jpg",
+     "verification": "confirmed"
+    },
+    {
+     "id": "gb-D01",
+     "status": "implemented",
+     "change": "Smooth #efeeea ceiling; 1.2 m discs at u68.5 every 4.2 m and 0.15 m emissive right slot. Existing coves retained except S replacement at v85..110.",
+     "original_checked": "Zq_7eC75nBI_145.jpg (also Zq_7eC75nBI_120.jpg, Zq_7eC75nBI_170.jpg)",
+     "verification": "adjusted"
+    },
+    {
+     "id": "gb-D02",
+     "status": "implemented",
+     "change": "Left fascia reduced to 0.4 m, #2a2d30; orange edge removed. Right frames #2e3336, glass #2c3a40; 0.8 m #8e9191 piers every 6 m.",
+     "original_checked": "Zq_7eC75nBI_145.jpg (also Zq_7eC75nBI_170.jpg)",
+     "verification": "adjusted"
+    },
+    {
+     "id": "gb-D03",
+     "status": "implemented",
+     "change": "5 x 2.2 m emissive sea screen at (69.2,109.6) in white bulkhead with raised soffit. Adjacent dark slatted pier and 6 x 3 m planted wall at u66.94,v114.2. Blue board moved to u60.2; sweeping white cove/LED added.",
+     "original_checked": "Zq_7eC75nBI_170.jpg",
+     "verification": "adjusted"
+    },
+    {
+     "id": "gb-D04",
+     "status": "implemented",
+     "change": "Cream #e6dccb door reveal and two 1.6 x 0.35 m dark signs. Full-width timber gallery frieze at u73.52, y5..7.2; local 2F void u67.4..73.6,v23.5..37 reveals it, with retained supported east gallery and guards. Lobby soffit/cove raised to 7.4/7.35 m.",
+     "original_checked": "Zq_7eC75nBI_100.jpg",
+     "verification": "confirmed"
+    },
+    {
+     "id": "gb-D05",
+     "status": "implemented",
+     "change": "Horizontally compensated PET STREET texture at (235.45,16.09) for box-face UV reflection. Retained orange #f2aa21 and red #9d3825.",
+     "original_checked": "zHONiMorRm0_12.jpg",
+     "verification": "confirmed"
+    },
+    {
+     "id": "gb-D06",
+     "status": "implemented",
+     "change": "Dark #241f1c ceiling and ten warm spots. Five white shelves of tableware, three low wooden tables, red right tower, ceiling glow strip and green exit sign; thinner coral fascia text. Six tall gondolas and their goods moved to u64/66.5/68.5, v88/94 to expose the photographed fronts.",
+     "original_checked": "J0LLdN5rPnI_2.jpg",
+     "verification": "confirmed"
+    },
+    {
+     "id": "gb-D07",
+     "status": "implemented",
+     "change": "Grid removed in back area u8..55,v70..158 and flower aisle u48..54.3,v43..65. Plain #8f9498 soffit, #7c8185 ducts and varied twin battens; light grey lift ceiling retained.",
+     "original_checked": "Zq_7eC75nBI_1050.jpg (also Zq_7eC75nBI_1250.jpg, Zq_7eC75nBI_260.jpg)",
+     "verification": "confirmed"
+    },
+    {
+     "id": "gb-D08",
+     "status": "implemented",
+     "change": "Entrance u64..73 uses #45494c soffit/pier, upper glazing and ten downlights. Dry paving #8c8e8d, gloss 0.3, with small puddle patches; rain-darkened frame colour was not applied globally.",
+     "original_checked": "Zq_7eC75nBI_60.jpg (also Zq_7eC75nBI_80.jpg)",
+     "verification": "adjusted"
+    },
+    {
+     "id": "gb-T01",
+     "status": "implemented",
+     "change": "Moved close lobby and camera 07 figures. Daiso u248 blockers moved to u234; twelve shoppers added u236.3..244.8. Bay 6 vest worker (79.05,103.9) and three wash workers (115.6,40.2)/(119.4,40.2)/(123.1,39.9), all in detail groups.",
+     "original_checked": "69BNJ7tHUhI_13.jpg (also 69BNJ7tHUhI_23.jpg, 69BNJ7tHUhI_18.jpg, jpOjc7GGnDo_130.jpg, Rq5bLTg7xPI_300.jpg)",
+     "verification": "confirmed"
+    },
+    {
+     "id": "gb-T02",
+     "status": "implemented",
+     "change": "Diagram signs at u215/242/265, summer POP, ivy and baskets. Forty hanging treat bags, transparent printed pouches, stepped wet-food table u256, and 36 small paint bottles plus lower canister bin u262.",
+     "original_checked": "69BNJ7tHUhI_18.jpg (also zHONiMorRm0_12.jpg, zHONiMorRm0_22.jpg, 69BNJ7tHUhI_28.jpg, 69BNJ7tHUhI_33.jpg)",
+     "verification": "adjusted"
+    }
+   ],
+   "skipped": [],
+   "unresolved": [
+    "Elevated roadway behind jp coach row is external streets/city geometry; not added in this module.",
+    "West lift opening localu43.45,v53.7..56.3 conflicts with Zq230 vending/glazing location; shafts were not moved.",
+    "69B8/13 walk log labels B1 but prior mapping uses1F; kept existing spatial registration rather than inventing a new basement route.",
+    "Entrance u63 support lean is not resolved by single oblique frame; kept current lean.",
+    "Exact dimensions, screen/cove heights, route-sign labels/spacing, bus queue curve, coach spacing, fixtures and shopper locations are visual estimates; final operator screenshots pending."
+   ],
+   "validation": {
+    "smoke": "node tests/smoke.mjs gyeongbu gyeongbu_east gotomall banpo_shoppingtown: OK after final detail-group split.",
+    "walk": "node tests/walk.mjs: 687 ok, 0 blocked; all 사용자 루트 1–7 and both 1F 동선 routes passed.",
+    "screenshots": "tests/shot.mjs not run per user sandbox constraint",
+    "camera_check": "Final real-kit physics check with both modules + city: 31/31 review cameras on requested floors, capsule displacement 0, headroom >=1.75m; no detail errors.",
+    "visibility": "CPU rays: six screen targets hit emissive screen first; gallery slats at y5.1/6.2/7.1 visible; factory dish shelves and low tables have no nearer opaque blockers. This is not a screenshot comparison.",
+    "detail_groups": {
+     "new_3f_kit_quads": {
+      "lift": 5863,
+      "flower": 78080,
+      "back": 78337
+     },
+     "legacy_flower_room_splits": 7,
+     "preserved_instances": 97447,
+     "preservation": "Order-independent geometry/matrix/colour SHA256 identical before and after split; emitted quads, collision walls and support surfaces unchanged. Special decorations emitted once; original random sequence preserved. This comparison is specific to the group split; the later gb-L09 filter removes only frame-contradicted right-wall decoration.",
+     "largest_split_group_conservative_quad_equivalent": 102440,
+     "detail_errors": 0
+    }
+   },
+   "final_shared_validation": {
+    "smoke": {
+     "command": "node tests/smoke.mjs gyeongbu gyeongbu_east gotomall banpo_shoppingtown",
+     "result": "OK",
+     "exit_code": 0
+    },
+    "walk": {
+     "command": "node tests/walk.mjs",
+     "result": "687 ok, 0 blocked",
+     "exit_code": 0,
+     "required_routes": "사용자 루트 1–7 and both 1F 동선 routes passed",
+     "final_visual_change": "After the full walk, only non-colliding right-wall flower instances were filtered for gb-L09; final smoke confirms identical walls/surfaces and OK."
+    },
+    "camera_physics": "31/31 review cameras: floor support, zero capsule displacement, headroom >=1.75 m",
+    "syntax_whitespace": "node --check and scoped git diff --check passed",
+    "render": "tests/shot.mjs not run per sandbox constraint; original frames inspected, final visual render pending operator",
+    "scope": "Only the four requested module/research files were edited by this job; no engine/junction/meta/test edits, no commit."
    }
   }
  }

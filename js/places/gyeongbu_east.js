@@ -1,5 +1,5 @@
-// OSM 414891734 / authoritative pub pin (372, 8). Round 10 keeps the pin,
-// but separates the photographed brick hall from the adjacent parking structures.
+// OSM 414891734 / authoritative pub pin (372, 8). The brick south front remains
+// independent; the June 2026 roadview establishes a continuous deck on its north side.
 export const meta = {
   id: 'gyeongbu_east', name: '경부선 동측 주차빌딩 · 데블스도어',
   claims: [414891734], claimRoads: [], claimAreas: [],
@@ -85,19 +85,20 @@ export function build(K) {
     for (let i = 0; i < 2200; i++) { g.fillStyle = i % 2 ? '#ffffff12' : '#00000014'; g.fillRect(r() * w, r() * h, 1, 1); }
   }, [1.8, 2.4]);
   K.texture('ge-ribbed-cladding', 128, 128, (g, w, h) => {
-    g.fillStyle = '#aebfca'; g.fillRect(0, 0, w, h);
-    for (let y = 0; y < h; y += 16) { g.fillStyle = '#879daa'; g.fillRect(0, y, w, 2); g.fillStyle = '#d3dce0'; g.fillRect(0, y + 2, w, 1); }
-    g.fillStyle = '#82939d'; g.fillRect(0, 0, 2, h);
+    g.fillStyle = '#aab9c8'; g.fillRect(0, 0, w, h);
+    for (let x = 0; x < w; x += 8) { g.fillStyle = '#91a4b8'; g.fillRect(x, 0, 1, h); g.fillStyle = '#c0ccd5'; g.fillRect(x + 1, 0, 1, h); }
+    for (let y = 0; y < h; y += 32) { g.fillStyle = '#879db2'; g.fillRect(0, y, w, 1); }
   }, [2.5, 2.2]);
   K.texture('ge-privet', 128, 128, (g, w, h) => {
-    const r = K.rand(3434); g.fillStyle = '#335338'; g.fillRect(0, 0, w, h);
-    for (let i = 0; i < 1500; i++) { g.fillStyle = ['#537345', '#65834a', '#375d35', '#789554'][i % 4]; g.beginPath(); g.ellipse(r() * w, r() * h, 2, 4, r() * PI, 0, PI * 2); g.fill(); }
+    const r = K.rand(3434); g.fillStyle = '#4d7a2e'; g.fillRect(0, 0, w, h);
+    for (let i = 0; i < 1500; i++) { g.fillStyle = ['#4d7a2e', '#7fae45', '#416b2b', '#91b953'][i % 4]; g.beginPath(); g.ellipse(r() * w, r() * h, 2, 4, r() * PI, 0, PI * 2); g.fill(); }
   }, [.9, .9]);
 
-  // Retain the claimed OSM ground footprint; upper parking stops short of the hall.
+  // Retain the hall footprint and south open-air apron. The roadview north bay
+  // occupies v -4.5..1.3, ahead of the hall's north wall at v=1.5.
   K.slab(footprint, 0, { mat: 'concrete', thick: .22, holes: [rect(18, 1.5, 63, 15.9)] });
-  // No deck, roof, fascia or truss crosses u18..63: the brick hall and its
-  // parking apron are open to the sky, with daylight gaps at both ends.
+  // Round 17 ge-L01: the roadview supersedes the former north-side roof gap.
+  // No new slab crosses the hall interior or its photographed south parking lot.
   const stair1 = rect(2.8, .8, 14.2, 3.6), stair2 = rect(2.8, 4, 14.2, 6.8);
   const ramp1 = rect(68.5, .65, 99.5, 5.75), ramp2 = rect(68.5, 6.35, 99.5, 11.45);
   const deckParts = [rect(0, 0, 16.8, 17.18), rect(64.4, 0, 104.86, 17.18)];
@@ -106,6 +107,13 @@ export function build(K) {
     K.slab(deckParts[i], 7.6, { mat: 'concrete', under: 0x5b5d5c, thick: .3, holes: i === 0 ? [stair2] : i === 1 ? [ramp2] : [] });
     K.slab(deckParts[i], 11.8, { mat: { tex: 'roofgravel', color: 0xe5e3dc }, under: 0x777a78, thick: .26, walk: false });
   }
+  for (const y of [3.8, 7.6, 11.8]) slab(0, -4.5, 104.86, 1.3, y, {
+    mat: y === 11.8 ? { tex: 'roofgravel', color: 0xe5e3dc } : 'concrete',
+    under: 0x626661, thick: .3, walk: y !== 11.8,
+    // The narrow overlap joins the existing wing slabs but stays out of their
+    // ramp/stair voids, preserving the original headroom and landings.
+    holes: y === 3.8 ? [rect(2.8, .8, 14.2, 1.3), rect(68.5, .65, 99.5, 1.3)] : [],
+  });
   // An internal mezzanine, with a proper lounge depth, replaces the thin
   // parking-linked gallery. Its stair opening is inside the hall envelope.
   slab(18.3, 1.8, 39.8, 9.2, 3.8, { mat: { tex: 'wood', gloss: .3 } });
@@ -159,35 +167,41 @@ export function build(K) {
   for (const u of [10.5, 14.1]) box(u, 18.9, 0, .8, .18, 1.2, white);
   sign('P ↑', 12.3, 18.94, 2.6, 1.3, .85, 0, { bg: '#245a91', fg: '#ffffff' });
 
-  // Roadview: white V-braces, orange ground-column bases and open rails; the
-  // enclosed blue glazing/ribbed-metal band sits only above the second deck.
-  for (const v of [.25, 16.85]) {
-    for (let u = 1; u < 105; u += 8.5) {
-      if (u > 16.8 && u < 64.4) continue;
-      box(u, v, 0, .36, .4, 11.55, white);
-      box(u, v, 0, .39, .43, 2.65, orange, { solid: false });
-      box(u, v, 3.8, .39, .43, 2.65, 0x32617c, { solid: false });
-      if (u < 96) for (const y of [0, 3.8]) {
-        if (u + 8.5 > 16.8 && u < 64.4) continue;
-        beam([u, y + .1, v], [u + 4.25, y + 3.55, v], .24, white, .32);
-        beam([u + 8.5, y + .1, v], [u + 4.25, y + 3.55, v], .24, white, .32);
+  // ge-L01/D01: continuous north frontage in front of the brick hall. Upper
+  // glazing is tinted blue, with a ribbed pale-blue band and a white cornice.
+  const deckWhite = 0xe9e9e4;
+  K.material('ge-blue-deck-glass', new K.THREE.MeshLambertMaterial({ color: 0x5f86ad,
+    transparent: true, opacity: .82, depthWrite: false, side: K.THREE.DoubleSide }));
+  for (const [v, spans] of [[-4.4, [[.15, 104.6]]], [16.85, [[.15, 16.8], [64.4, 104.6]]]]) {
+    for (const [a, b] of spans) {
+      const count = Math.ceil((b - a) / 6.8), pitch = (b - a) / count;
+      for (let i = 0; i <= count; i++) {
+        const u = a + i * pitch;
+        box(u, v, 0, .3, .4, 11.55, deckWhite);
+        // Orange columns are recessed behind the pale front struts.
+        box(u, v + .42, 0, .36, .38, 2.65, orange, { solid: false });
+        box(u, v + .42, 3.8, .36, .38, 2.65, 0x32617c, { solid: false });
+        if (i < count) for (const y of [0, 3.8]) {
+          beam([u, y + .1, v], [u + pitch / 2, y + 3.5, v], .24, deckWhite, .32);
+          beam([u + pitch, y + .1, v], [u + pitch / 2, y + 3.5, v], .24, deckWhite, .32);
+        }
       }
-    }
-    for (const [a, b] of [[.15, 16.8], [64.4, 104.6]]) {
-      for (const y of [3.5, 7.3]) box((a + b) / 2, v, y, b - a, .45, .3, white, { solid: false });
-      railing(a, v, b, v, 3.8);
-      wall(a, v, b, v, 7.6, 9.8, { mat: 'glass', thick: .04 });
-      wall(a, v, b, v, 9.8, 11.55, { mat: 'ge-ribbed-cladding', thick: .12 });
-      box((a + b) / 2, v, 11.55, b - a, .55, .25, white, { solid: false });
-      for (let u = a + .8; u < b; u += 2.83) box(u, v, 7.6, .07, .11, 2.2, white, { solid: false });
-      for (const y of [7.7, 8.05, 9.7]) box((a + b) / 2, v, y, b - a, .12, .06, white, { solid: false });
+      for (const y of [3.5, 7.3]) box((a + b) / 2, v, y, b - a, .48, .3, deckWhite, { solid: false });
+      railing(a, v, b, v, 3.8, 1.05, 0xb6bdbb);
+      wall(a, v, b, v, 7.6, 9.4, { mat: 'ge-blue-deck-glass', thick: .04 });
+      wall(a, v, b, v, 9.4, 11.55, { mat: 'ge-ribbed-cladding', thick: .12 });
+      box((a + b) / 2, v, 11.55, b - a, .55, .25, deckWhite, { solid: false });
+      for (let u = a + 1.2; u < b; u += 1.2) box(u, v - .03, 7.6, .065, .12, 1.8, deckWhite, { solid: false });
+      for (const y of [7.7, 8.05, 9.35]) box((a + b) / 2, v - .04, y, b - a, .13, .06, deckWhite, { solid: false });
     }
   }
-  for (const u of [.18, 16.8, 64.4, 104.65]) {
-    railing(u, .3, u, 16.8, 3.8);
-    wall(u, .3, u, 16.8, 7.6, 9.8, { mat: 'glass', thick: .04 });
-    wall(u, .3, u, 16.8, 9.8, 11.55, { mat: 'ge-ribbed-cladding', thick: .15 });
-    box(u, 8.55, 11.55, .5, 17.2, .25, white, { solid: false });
+  // End walls seal the new strip; internal former end walls remain behind the
+  // north face, so upper parking remains a continuous walkable gallery.
+  for (const [u, v0] of [[.18, -4.4], [16.8, 1.3], [64.4, 1.3], [104.65, -4.4]]) {
+    railing(u, v0, u, 16.8, 3.8);
+    wall(u, v0, u, 16.8, 7.6, 9.4, { mat: 'ge-blue-deck-glass', thick: .04 });
+    wall(u, v0, u, 16.8, 9.4, 11.55, { mat: 'ge-ribbed-cladding', thick: .15 });
+    box(u, (v0 + 16.8) / 2, 11.55, .5, 16.8 - v0, .25, deckWhite, { solid: false });
   }
   // Clear access in the south arcade and west/east ends; no continuous ground-level fence.
   sign('데블스도어 센트럴시티', 28, 13.5, 7.65, 5.2, .42, 0, { bg: null, fg: '#e1c496' });
@@ -195,6 +209,7 @@ export function build(K) {
   sign(['출구 ←', '잠원 · 논현 · 신사'], 102.8, 12.5, 2.45, 2.8, 1.1, -PI / 2, { bg: '#222a2c', fg: '#f2ca45' });
   for (const y of [0, 3.8, 7.6]) {
     for (const [a, b] of [[0, 17.1], [64.4, 104.8]]) zone('경부선 동측 주차빌딩', y === 0 ? '1F' : y === 3.8 ? '2F' : '3F', '주차장 · 계단 · 승강기', a, 0, b, 18.8, y, y + 3.79, 1);
+    zone('경부선 동측 주차빌딩', y === 0 ? '1F' : y === 3.8 ? '2F' : '3F', '북측 데크 · 연결 통로', 0, -4.5, 104.86, 1.3, y, y + 3.79, 1);
     sign(y === 0 ? '1층 주차장' : y === 3.8 ? '2층 주차장' : '3층 주차장', 66, 13.2, y + 2.3, 2.3, .5, 0);
   }
 
@@ -736,10 +751,28 @@ export function build(K) {
     }
   }
 
-  // Coach-yard edge is implemented below after validating it against the actual
-  // OSM area boundary. Coaches and parking surfaces belong to gyeongbu alone.
+  // Roadview-specific curb equipment, with gaps at the mapped access u53.
+  slab(34, -10.8, 55, -8.8, 0, { mat: 'ge-pavers', thick: .12 });
+  K.hpoly(0xd5b847, rect(34, -11.06, 55, -10.94), .028);
+  for (const u of [39, 44, 49]) {
+    for (const du of [-.5, .5]) {
+      cylinder(u + du, -10.3, 0, .045, .66, 0xbac2bd, { seg: 10 });
+      cylinder(u + du, -10.3, .12, .047, .15, 0xd6af36, { solid: false, seg: 10 });
+    }
+    beam([u - .42, .75, -10.3], [u + .42, .75, -10.3], .09, 0xbac2bd);
+    for (const side of [-1, 1]) for (let j = 0; j < 4; j++) {
+      const a = j * PI / 8, b = (j + 1) * PI / 8;
+      beam([u + side * (.42 + .08 * Math.cos(a)), .67 + .08 * Math.sin(a), -10.3],
+        [u + side * (.42 + .08 * Math.cos(b)), .67 + .08 * Math.sin(b), -10.3], .09, 0xbac2bd);
+    }
+  }
+  for (const [a, b] of [[.5, 50.8], [55.2, 104.2]]) {
+    for (let u = a; u <= b; u += 2.4) cylinder(u, -4.9, 0, .035, .9, 0x9da7a6, { seg: 8 });
+    for (const y of [.42, .86]) beam([a, y, -4.9], [b, y, -4.9], .045, 0x9da7a6);
+  }
+  // The close coach row is separate from gyeongbu's distant parking stock.
   buildYardEdge(K);
-  spawn('동측 주차빌딩 로드뷰', 60, -13, 0, 0, 1);
+  spawn('동측 주차빌딩 로드뷰', 44, -14, 0, 0, 1);
   spawn('데블스도어 정문', 36, 18.3, 0);
   spawn('데블스도어 홀', 36, 9.3, 0, 1, 0);
   spawn('데블스도어 2층 라운지', 30.4, 11.55, 3.8, 0, -1);
@@ -749,29 +782,107 @@ export function build(K) {
 }
 
 function buildYardEdge(K) {
-  // This southeast edge faces the gap between the coach lot and parking building.
-  const a = [349.86, -16.63], b = [425.07, -53.16];
+  // Preserve the surveyed lot-edge alignment. The first coach row is only
+  // 3.1 m behind the back of the hedge; the old distant stock stays in gyeongbu.
+  const a = [349.86, -16.63], b = [425.07, -53.16], PI = Math.PI;
   const len = Math.hypot(b[0] - a[0], b[1] - a[1]), ux = (b[0] - a[0]) / len, uz = (b[1] - a[1]) / len;
   const nx = -uz, nz = ux, rot = Math.atan2(nx, nz), P = (t, off) => [a[0] + ux * t + nx * off, a[1] + uz * t + nz * off];
+  const poly = (t0, o0, t1, o1) => [P(t0, o0), P(t1, o0), P(t1, o1), P(t0, o1)];
   const areas = K.osm.areas.filter(v => [1173093432, 1173093434].includes(v.id));
   const reserved = (x, z) => areas.some(v => K.pointInPoly(x, z, v.poly));
-  for (let t = 3; t < len - 3; t += 2) {
-    const [x, z] = P(t, .9); if (reserved(x, z)) continue;
-    K.box({ x, z, y: 0, w: 1.94, d: 1.1, h: .16, rotY: rot, mat: 0x8c9185 });
-    K.box({ x, z, y: .16, w: 1.96, d: .95, h: 1.45 + Math.sin(t) * .06, rotY: rot, mat: 'ge-privet' });
-    const [fx, fz] = P(t, .28);
-    K.cyl({ x: fx, z: fz, y: 0, r: .025, h: 1.55, mat: 0x777d72, seg: 6, solid: false });
+  const bp = (D, t, off, y, w, d, h, mat, solid = false) => { const [x,z] = P(t, off); D.box({x,z,y,w,d,h,rotY:rot,mat,solid}); };
+  for (let t = 3; t < len - 3; t += 1.6) {
+    const [x,z] = P(t,.9); if (reserved(x,z)) continue;
+    bp(K,t,.9,0,1.6,1.1,.16,0x8c9185,true);
+    // Collision follows only the lower body; the irregular leaf cap is detail.
+    bp(K,t,.9,.16,1.62,.94,.91,'ge-privet',true);
+    const [fx,fz]=P(t,.28);K.cyl({x:fx,z:fz,y:0,r:.025,h:1.3,mat:0x777d72,seg:6,solid:false});
   }
-  for (const y of [.45, .95, 1.45]) { const p = P(3, .28), q = P(len - 3, .28); K.wall(...p, ...q, y, y + .025, { mat: 0x7d8777, thick: .025, solid: false }); }
-  for (let t = 7; t < len - 5; t += 9) {
-    const [x, z] = P(t, .85); if (!reserved(x, z)) K.tree(x, z, { h: 9.8 + Math.sin(t) * 1.5, kind: 'ginkgo' });
+  for (const y of [.45,.95,1.25]) {const p=P(3,.28),q=P(len-3,.28);K.wall(...p,...q,y,y+.025,{mat:0x7d8777,thick:.025,solid:false});}
+  // Double yellow edge lines stay beside the hedge. The pink strip belongs to
+  // the opposite lane edge, next to the pale pedestrian paving (ge-T03).
+  for (const off of [1.65,1.92]) K.hpoly(0xd7b741,poly(3,off,len-3,off+.1),.036);
+  K.hpoly(0xb9717d,poly(3,10.8,len-3,11.4),.035);
+  K.hpoly({tex:'sidewalk',color:0xd1d0c9},poly(3,11.4,len-3,13.2),.032);
+  K.texture('ge-airy-leaves',128,128,(g,w,h)=>{
+    const r=K.rand(1717);g.clearRect(0,0,w,h);
+    for(let i=0;i<170;i++){
+      g.fillStyle=['#8cc04acc','#7fae45e0','#6e9d3ccc','#a1c75cbb'][i%4];
+      g.beginPath();g.ellipse(r()*w,r()*h,2+r()*3,1.5+r()*2,r()*PI,0,PI*2);g.fill();
+    }
+  },[1.2,1.2],{transparent:true,doubleSide:true});
+  // Slender trunks are structural; all branch/leaf work is in the lazy group.
+  for(let t=5;t<len-3;t+=5){
+    const [x,z]=P(t,.85);if(reserved(x,z))continue;
+    K.cyl({x,z,y:.16,r:.12,h:12.6+Math.sin(t)*.55,mat:0x7c8172,seg:9});
   }
-  // Narrow pink edge marking only; the unclaimed generic service road keeps its
-  // asphalt and lane geometry. It is not labeled a cycle lane without evidence.
-  const p = [P(3, 3.4), P(len - 3, 3.4), P(len - 3, 4), P(3, 4)];
-  K.hpoly(0xb9717d, p, .035);
-  const q = [P(3, 2.25), P(len - 3, 2.25), P(len - 3, 2.36), P(3, 2.36)]; K.hpoly(0xd7b741, q, .036);
-  K.spawn({ name: '버스 차고지 생울타리 · 남서', x: 402.862, y: 0, z: -33.594, yaw: Math.atan2(ux, uz) });
-  K.spawn({ name: '버스 차고지 생울타리 · 북동', x: 367.034, y: 0, z: -15.806, yaw: Math.atan2(-ux, -uz) });
-  K.zone({ name: '경부선 동측 차고지 경계', floor: '1F', sub: '생울타리 · 가로수 · 보행로', poly: [P(0, 0), P(len, 0), P(len, 7), P(0, 7)], y0: 0, y1: 5, priority: 2 });
+  K.detail({name:'차고지 경계 · 가로수와 근접 버스열',floor:'1F',y0:0,y1:15,poly:poly(-13,-10,len+8,13.2)},D=>{
+    const xyz=(t,off,y)=>{const[x,z]=P(t,off);return[x,y,z];};
+    const tube=(a,b,r,mat)=>{
+      const A=new D.THREE.Vector3(...a),B=new D.THREE.Vector3(...b),dir=B.clone().sub(A).normalize();
+      const ref=Math.abs(dir.y)>.95?new D.THREE.Vector3(1,0,0):new D.THREE.Vector3(0,1,0);
+      const X=new D.THREE.Vector3().crossVectors(dir,ref).normalize(),Y=new D.THREE.Vector3().crossVectors(dir,X).normalize();
+      const at=(p,q)=>p.clone().addScaledVector(X,Math.cos(q)*r).addScaledVector(Y,Math.sin(q)*r).toArray();
+      for(let i=0;i<6;i++){const q=i*PI/3,q1=(i+1)*PI/3,n=X.clone().multiplyScalar(Math.cos((q+q1)/2)).addScaledVector(Y,Math.sin((q+q1)/2));D.quad(mat,[at(A,q),at(B,q),at(B,q1),at(A,q1)],n.toArray());}
+    };
+    for(let t=3;t<len-3;t+=1.6){
+      const[x,z]=P(t,.9);if(reserved(x,z))continue;
+      D.dome({x,z,y:1.08,rx:.94,rz:.65,ry:.32+.08*Math.sin(t*1.7),mat:'ge-privet',hemi:false,seg:12,rings:5});
+      for(const [dt,off] of [[-.45,.68],[.4,1.08]]){
+        const[cx,cz]=P(t+dt,off);D.dome({x:cx,z:cz,y:1.18+.06*Math.sin(t),rx:.54,rz:.44,ry:.22,mat:t%3<1.5?0x4d7a2e:0x7fae45,hemi:false,seg:10,rings:4});
+      }
+    }
+    for(let t=5;t<len-3;t+=5){
+      const[x,z]=P(t,.85);if(reserved(x,z))continue;
+      const h=13.8+Math.sin(t)*.55;
+      for(let k=0;k<12;k++){
+        const y=4.6+k*.72,angle=k*2.4+t,spread=(k<7?1.3:1.05)*(1+.24*Math.sin(k));
+        const dt=Math.cos(angle)*spread,off=.85+Math.sin(angle)*spread;
+        tube(xyz(t,.85,y-.8),xyz(t+dt,off,y+.55),.026+(11-k)*.003,0x7c8172);
+        const[cx,cz]=P(t+dt,off);D.dome({x:cx,z:cz,y:y+.55,rx:1.15,rz:1.05,ry:1.5,mat:'ge-airy-leaves',hemi:false,seg:10,rings:5});
+      }
+      D.dome({x,z,y:h-1.2,rx:.85,rz:.8,ry:1.35,mat:'ge-airy-leaves',hemi:false,seg:10,rings:5});
+    }
+    function coach(t,off,index){
+      const p=(u,h,v)=>xyz(t+u,off+v,h), body=0xf2f2ee, window=0x23303a;
+      const shape=[[-6,-.92],[-5.65,-1.25],[5.65,-1.25],[6,-.92],[6,.92],[5.65,1.25],[-5.65,1.25],[-6,.92]].map(([u,v])=>P(t+u,off+v));
+      D.prism(shape,.44,3.45,{mat:body,solid:true});
+      bp(D,t-.9,off,3.45,2.3,1.7,.16,0xd8deda);
+      for(const side of [-1,1]){
+        const n=[side*nx,0,side*nz],v=side*1.258;
+        const panel=(mat,u0,y0,u1,y1,d=.0)=>D.quad(mat,[p(u0,y0,v+side*d),p(u1,y0,v+side*d),p(u1,y1,v+side*d),p(u0,y1,v+side*d)],n);
+        panel(window,-5.6,1.72,5.6,3.14);
+        panel(0x2a5fb0,-5.65,3.14,5.65,3.34,.004);
+        // Pale folded curtains are visible above the hedge, behind thin dividers.
+        for(let u=-5.3;u<5.1;u+=1.34){
+          panel(0x939e99,u,1.82,u+.99,2.86,.008);
+          for(let j=0;j<7;j++)panel(j%2?0x738581:0xb3beb4,u+j*.14,1.83,u+j*.14+.045,2.85,.01);
+          panel(0x273e44,u+1.05,1.73,u+1.095,3.13,.012);
+        }
+        panel(0x2a5fb0,-5.65,.55,5.65,.8,.015);
+        D.quad(0xd23a2f,[p(-5.6,1.55,v+side*.017),p(-2.3,1.55,v+side*.017),p(.15,.81,v+side*.017),p(-1.3,.81,v+side*.017)],n);
+        D.quad(0x2a5fb0,[p(-2.2,1.55,v+side*.018),p(-.6,1.55,v+side*.018),p(2.1,.81,v+side*.018),p(.4,.81,v+side*.018)],n);
+        for(const u of [-3.8,3.8]){
+          for(let k=0;k<14;k++){
+            const q=k*PI/7,q1=(k+1)*PI/7;
+            const w=(r,a)=>p(u+r*Math.cos(a),.55+r*Math.sin(a),side*1.285);
+            D.quad(0x1b2122,[p(u,.55,side*1.285),w(.55,q),w(.55,q1),p(u,.55,side*1.285)],n);
+            D.quad(0x929d9c,[p(u,.55,side*1.29),p(u+.29*Math.cos(q),.55+.29*Math.sin(q),side*1.29),p(u+.29*Math.cos(q1),.55+.29*Math.sin(q1),side*1.29),p(u,.55,side*1.29)],n);
+          }
+        }
+        for(let u=-2.8;u<4;u+=1.8){panel(0xa9b4b0,u,.88,u+.025,1.62,.02);panel(0x46514e,u+.7,1.43,u+1.05,1.48,.025);}
+      }
+      for(const end of [-1,1]){
+        const n=[end*ux,0,end*uz],u=end*6.015;
+        D.quad(window,[p(u,1.32,-.9),p(u,1.32,.9),p(u,3.12,.9),p(u,3.12,-.9)],n);
+        for(const side of [-1,1])bp(D,t+end*6.02,off+side*.72,.7,.035,.32,.18,end===1?0xf0edc8:0xb62c27);
+      }
+    }
+    // Eight coaches per row at 12.4 m pitch; count and fleet allocation are
+    // approximate. The colour pattern is directly visible in both roadviews.
+    for(let i=0;i<8;i++){coach(-6+i*12.4,-4,i);coach(-3+i*12.4,-8,i+8);}
+  });
+  K.spawn({name:'버스 차고지 생울타리 · 남서',x:367.034,y:0,z:-15.806,yaw:Math.atan2(ux,uz)});
+  K.spawn({name:'버스 차고지 생울타리 · 북동',x:367.034,y:0,z:-15.806,yaw:Math.atan2(-ux,-uz)});
+  K.zone({name:'경부선 동측 차고지 경계',floor:'1F',sub:'생울타리 · 가로수 · 보행로',poly:poly(0,0,len,13.2),y0:0,y1:5,priority:2});
 }

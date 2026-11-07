@@ -468,8 +468,8 @@
     "R15: 맞은편 Xi 아파트·차도·공용 차량/수목은 newcore 소유가 아니므로 수정하지 않았다. 밝은 세로 골조+청록 창이 실제 모습이므로 리뷰의 전체 짙은 녹색 도색도 기각."
   ],
   "modeling": {
-    "round": 15,
-    "scope": "R15 비교 시트·원본 프레임 직접 대조. 카메라/정류장 위치를 먼저 수정하고, 하부 창·석재·상부 간판·회색 광택 바닥·노출 천장·상품 형태·사람 밀도를 보강. OSM 외곽·층·출입구·계단·승강기·1·2관 B1 연결 및 사용자 지상 루트 보존.",
+    "round": 17,
+    "scope": "R17 비교 시트·검증 목록 및 모든 관련 원본 프레임 직접 대조. 카메라 trace를 먼저 수정한 뒤 2관B1의7m 주통로·냉장케이스·빨강/목재 카운터·노출 천장·회색 광택 바닥·다양한 상품을 보강. 코너탑·포장·1관띠·2관 누락수목 수정. OSM 외곽·층·출입구·계단·승강기·1/2관B1연결·기존30매대/6델리카운터/72인물/4카트 보존. 도시측 중복보도와 맞은편 자이는 허용파일 밖으로 미수정.",
     "claims": [
       413372929,
       413372930,
@@ -483,11 +483,11 @@
         "photos": [
           "refs/roadview/newcore_01_front.jpg"
         ],
-        "x": 262.23,
+        "x": 265.4,
         "y": 0,
-        "z": -461.205,
-        "yawDeg": 130.091,
-        "note": "R15: 원본은 약한 사선. 중간 폴바셋 대신 남쪽 럭셔리갤러리·DESIGNERS를 본다. 리뷰 35–45도 회전은 과함. y는 바닥 높이. 모델 내 비교용 추정 카메라.",
+        "z": -453.8,
+        "yawDeg": 95,
+        "note": "R17 NC-C1: roadview01의 DESIGNERS가 왼쪽에 잘리고 오른쪽 아치 간격이 줄어드는 방향으로 북쪽 회전. 검증 nc_a의 포즈. NC-L1 도시측 보도 제거가 별도 필요하며 현재는 차선이 아닌 도시 보도 위. y=0 바닥, 로드뷰 화각 차이/정확한 실측 위치는 미확정.",
         "previous_pose_round13": {
           "x": 257,
           "y": 0,
@@ -496,14 +496,19 @@
           "pitchDeg": 0
         },
         "pitchDeg": 3,
-        "round": 15,
+        "round": 17,
         "review_camera_id": "newcore_00",
         "local_frame": {
           "building": "2관",
-          "u": 13,
-          "v": -13,
-          "target_u": 17,
-          "target_v": 0
+          "u": 21.055,
+          "v": -13.027
+        },
+        "previous_pose_round15": {
+          "x": 262.23,
+          "y": 0,
+          "z": -461.205,
+          "yawDeg": 130.091,
+          "pitchDeg": 3
         }
       },
       {
@@ -522,11 +527,11 @@
         "photos": [
           "refs/roadview/newcore_03_along_SW.jpg"
         ],
-        "x": 262.871,
+        "x": 263.6,
         "y": 0,
-        "z": -457.132,
-        "yawDeg": 171.66,
-        "note": "R15: 남단 DESIGNERS 아치·기존 유리 코너탑·차도측 정류장이 함께 들어오도록 남쪽 이동. 기존 탑과 아치를 중복 생성하지 않음. y는 바닥 높이. 모델 내 비교용 추정 카메라.",
+        "z": -455.5,
+        "yawDeg": 155,
+        "note": "R17 NC-C2: 원본03의 왼쪽 끝 도로 소실점·오른쪽 DESIGNERS·중앙 코너탑을 맞춘 검증 v_nc_c2b 포즈. NC-L1 도시 보도는 소유 범위 밖으로 남음. y=0 바닥, 촬영 위치는 모델 비교용 추정.",
         "previous_pose_round13": {
           "x": 257,
           "y": 0,
@@ -535,14 +540,19 @@
           "pitchDeg": 0
         },
         "pitchDeg": 9,
-        "round": 15,
+        "round": 17,
         "review_camera_id": "newcore_02",
         "local_frame": {
           "building": "2관",
-          "u": 17,
-          "v": -12,
-          "target_u": 40,
-          "target_v": 2
+          "u": 18.787,
+          "v": -12.034
+        },
+        "previous_pose_round15": {
+          "x": 262.871,
+          "y": 0,
+          "z": -457.132,
+          "yawDeg": 171.66,
+          "pitchDeg": 9
         }
       },
       {
@@ -1103,7 +1113,7 @@
       },
       {
         "spot": "R13_킴스클럽_주통로_1관연결",
-        "round": 13,
+        "round": 17,
         "photos": [
           "refs/walk/s1_banpo_newcore/qZYgbakp2UA_800.jpg"
         ],
@@ -1119,27 +1129,25 @@
           "target_u": 24,
           "target_v": 18
         },
-        "note": "기존 연결축 v18; 진열대 사이 6.3m 통로. 프레임의 넓은 매장 공간을 근사. y는 바닥. 실측 촬영 위치가 아닌 모델 내 비교 카메라."
+        "note": "R17 NC-L2: 연결축 v18의7m 주통로. 좌측 냉장케이스·우측 빨강/목재 카운터를+u방향으로 비교. _800은03/04/07의 공통 근거이며 서로 다른 촬영 프레임이 아님. y=-6 바닥, 실내 배치는 추정.",
+        "review_camera_id": "newcore_03"
       },
       {
         "spot": "R13_킴스클럽_식품코너_노출천장",
-        "round": 15,
-        "photos": [
-          "refs/walk/s1_banpo_newcore/qZYgbakp2UA_800.jpg"
-        ],
-        "x": 219.52,
+        "round": 17,
+        "x": 227.052,
         "y": -6,
-        "z": -451.776,
-        "yawDeg": 329.858,
-        "pitchDeg": 5,
+        "z": -464.748,
+        "yawDeg": 202.988,
+        "pitchDeg": 4,
         "local_frame": {
           "building": "2관",
-          "u": 5,
-          "v": 30,
-          "target_u": -4,
+          "u": -4,
+          "v": 18,
+          "target_u": 20,
           "target_v": 18
         },
-        "note": "R15: 뒤 벽 대신 델리 통로에서 상품 진열·주통로·노출 천장을 향함. _800은 과일 코너의 정확한 위치/평면을 확정하지 못함. y는 바닥 높이. 모델 내 비교용 추정 카메라.",
+        "note": "R17 NC-L2: 기존 교차통로 대신 같은 v18 식품관 주통로의 P(-4,18)에서+u방향. 8m 앞 왼쪽 기둥P(4,14), 양측 케이스·카운터·노출 천장을 비교한다. _800은03/04/07 모두 같은 프레임이며 서로 다른 실제 촬영 위치로 주장하지 않음. y=-6 바닥; 실제 실내 좌표·화각은 추정.",
         "previous_pose_round13": {
           "x": 219.52,
           "y": -6,
@@ -1147,68 +1155,93 @@
           "yawDeg": 112.988,
           "pitchDeg": 8
         },
-        "review_camera_id": "newcore_04"
+        "review_camera_id": "newcore_04",
+        "photos": [
+          "refs/walk/s1_banpo_newcore/qZYgbakp2UA_800.jpg"
+        ],
+        "previous_pose_round15": {
+          "x": 219.52,
+          "y": -6,
+          "z": -451.776,
+          "yawDeg": 329.858,
+          "pitchDeg": 5
+        }
       },
       {
         "spot": "R13_킴스클럽_조미료_전자라벨",
-        "round": 13,
+        "round": 17,
         "photos": [
           "refs/walk/s1_banpo_newcore/qZYgbakp2UA_400.jpg"
         ],
-        "x": 230.093,
+        "x": 232.487,
         "y": -6,
-        "z": -470.383,
+        "z": -471.398,
         "yawDeg": 22.988,
         "pitchDeg": -10,
         "local_frame": {
           "building": "2관",
           "u": -8,
-          "v": 13,
+          "v": 10.4,
           "target_u": -10.183,
-          "target_v": 13
+          "target_v": 10.4
         },
-        "note": "어두운 선반, 노랑/크림 뚜껑의 조미료 병과 전자 라벨. 실제 상품별 가격/매대 좌표 미확인. y는 바닥. 실측 촬영 위치가 아닌 모델 내 비교 카메라."
+        "note": "R17 NC-L2: 조미료 매대 v13→v10.4 이동에 따라 카메라와 정면 target도 함께 이동. 기존 원본 상품 비교 구도 보존. y=-6 바닥, 매대 실측 배치는 추정.",
+        "previous_pose_round15": {
+          "x": 230.093,
+          "y": -6,
+          "z": -470.383,
+          "yawDeg": 22.988,
+          "pitchDeg": -10
+        },
+        "review_camera_id": "newcore_05"
       },
       {
         "spot": "R15_킴스클럽_부침가루",
-        "round": 15,
+        "round": 17,
         "photos": [
           "refs/walk/s1_banpo_newcore/qZYgbakp2UA_600.jpg"
         ],
-        "x": 219.967,
+        "x": 218.862,
         "y": -6,
-        "z": -466.087,
+        "z": -465.618,
         "yawDeg": 22.988,
         "pitchDeg": -12,
         "local_frame": {
           "building": "2관",
           "u": -8,
-          "v": 24,
+          "v": 25.2,
           "target_u": -10.183,
-          "target_v": 24
+          "target_v": 25.2
         },
-        "note": "원본 _600의 표기는 부침가루. 얇은 크림색 봉지와 왼쪽 녹색 병으로 수정. 영상의 손은 카메라 앞 사람의 일부이므로 고정 진열물로 만들지 않음. y=-6 바닥.",
-        "review_camera_id": "newcore_06"
+        "note": "R17 NC-L2: 부침가루 매대 v24→v25.2 이동에 따라 카메라와 정면 target도 함께 이동. 기존 원본 상품 비교 구도 보존. y=-6 바닥, 매대 실측 배치는 추정.",
+        "review_camera_id": "newcore_06",
+        "previous_pose_round15": {
+          "x": 219.967,
+          "y": -6,
+          "z": -466.087,
+          "yawDeg": 22.988,
+          "pitchDeg": -12
+        }
       },
       {
         "spot": "R13_킴스클럽_빨간손잡이_카트",
-        "round": 15,
+        "round": 17,
         "photos": [
           "refs/walk/s1_banpo_newcore/qZYgbakp2UA_800.jpg"
         ],
-        "x": 221.296,
+        "x": 223.928,
         "y": -6,
-        "z": -425.826,
-        "yawDeg": 292.988,
-        "pitchDeg": -3,
+        "z": -472.112,
+        "yawDeg": 202.988,
+        "pitchDeg": 0,
         "local_frame": {
           "building": "2관",
-          "u": 29.583,
-          "v": 38.5,
-          "target_u": 29.583,
+          "u": -12,
+          "v": 18,
+          "target_u": 12,
           "target_v": 18
         },
-        "note": "R15: 기존 카트 손잡이 뒤(u=L/2-3,v38.5)에서 -v 방향 매장으로 회전. 카트·델리·진열대가 함께 보이며 OSM 외곽 벽은 유지. y=-6 바닥, 실측 촬영 위치는 미확정.",
+        "note": "R17 NC-C3/NC-L2: 뒤벽 인접 P(29.583,38.5) 대신 식품관 주통로 P(-12,18)에서+u방향. 전경 카트 P(-10.9,18.55), 왼쪽 냉장케이스 v13.8, 오른쪽 빨강/목재 카운터 v22.2를 본다. 원본800의 카트 뒤 주통로 구도를 채택. y=-6 바닥; 정확한 실내 실측 좌표는 추정.",
         "previous_pose_round13": {
           "x": 225.085,
           "y": -6,
@@ -1216,27 +1249,34 @@
           "yawDeg": 146.899,
           "pitchDeg": -12
         },
-        "review_camera_id": "newcore_07"
+        "review_camera_id": "newcore_07",
+        "previous_pose_round15": {
+          "x": 221.296,
+          "y": -6,
+          "z": -425.826,
+          "yawDeg": 292.988,
+          "pitchDeg": -3
+        }
       },
       {
         "spot": "R13_1관_회백색_세로띠",
-        "round": 15,
+        "round": 17,
         "photos": [
           "refs/walk/s1_banpo_newcore/T92eDMIb3vE_50.jpg"
         ],
-        "x": 292.642,
+        "x": 294.172,
         "y": 0,
-        "z": -374.005,
+        "z": -370.309,
         "yawDeg": 112.491,
         "pitchDeg": 62,
         "local_frame": {
           "building": "1관",
-          "u": 0,
+          "u": 4,
           "v": -8,
-          "target_u": 0,
+          "target_u": 4,
           "target_v": 0
         },
-        "note": "R15: 외벽 거리14→8m, 간판 중심y17에 맞춰 상향62도. 리뷰20도는 현재 층고에서 간판을 못 봄. 영상 관 번호/실측 카메라 미확정. y는 바닥 높이. 모델 내 비교용 추정 카메라.",
+        "note": "R17 NC-C4: 원본50의 거의 수평인 글자와 세로 띠를 따라 정면 방향 유지 후 +u 남동쪽으로4m 이동. 검증 v_nc_08a의 정면 이동 원칙을 적용;161도 사선은 원본과 불일치하여 채택하지 않음. y=0 바닥. 프레임 확대율/FOV와 관 번호·촬영 면은 미확정.",
         "previous_pose_round13": {
           "x": 298.185,
           "y": 0,
@@ -1244,7 +1284,14 @@
           "yawDeg": 112.491,
           "pitchDeg": 45
         },
-        "review_camera_id": "newcore_08"
+        "review_camera_id": "newcore_08",
+        "previous_pose_round15": {
+          "x": 292.642,
+          "y": 0,
+          "z": -374.005,
+          "yawDeg": 112.491,
+          "pitchDeg": 62
+        }
       },
       {
         "spot": "R13_1관_남측_NEWCORE",
@@ -1455,18 +1502,18 @@
         "rack_count": 30,
         "rack_u": "-L/2+5 에서 5.8m 간격 10열",
         "rack_rows_v": [
-          6,
-          13,
-          24
+          4.8,
+          10.4,
+          25.2
         ],
         "main_aisle": {
           "center_v": 18,
           "clear_v": [
-            15.35,
-            21.65
+            14.5,
+            21.5
           ],
-          "width_m": 6.3,
-          "connection": "기존 1관 B1 연결 입구 v18"
+          "width_m": 7,
+          "connection": "기존 1관 B1 연결 입구 v18, 연결폭5.6m 보존"
         },
         "cross_aisle": {
           "center_v": 30,
@@ -1508,14 +1555,17 @@
         },
         "all_positions_inferred": true,
         "people": {
-          "total": 72,
-          "main_aisle": 18,
+          "total": 85,
+          "main_aisle": 26,
           "rear_aisle": 15,
           "deli_customers": 6,
           "deli_staff": 3,
           "shelf_browsing": 30,
-          "density_basis": "주 통로 약3명/10m, 사용자가 요청한 밀도. 프레임의 정확한 인원수/실측 위치가 아님",
-          "collision": "K.person 비충돌, 인물 위치는 실제 physics로 검사"
+          "density_basis": "기존72명 보존 후 주통로8명·카운터직원5명 추가. 원본800의 중간 통로2–3명 군집을 모델 여러 위치에 배치; 전체85명은 프레임에서 센 실제 인원수가 아님.",
+          "collision": "최종 실제 kit/physics 85명 capsule 검사에서 간섭 없음",
+          "added_round17": 13,
+          "preserved_from_round15": 72,
+          "stall_staff": 5
         },
         "additional_carts": [
           {
@@ -1532,13 +1582,113 @@
             "u": 15,
             "v": 31.1,
             "guess": true
+          },
+          {
+            "u": -10.9,
+            "v": 18.55,
+            "facing": "+u",
+            "round": 17,
+            "guess": true
           }
         ],
         "floor_finish": {
-          "texture_base": "#d1d3d0",
-          "gloss": 0.5
+          "texture_base": "#8e8e8b",
+          "gloss": 0.6
         },
-        "ceiling_spot_spacing_m": 1.5
+        "ceiling_spot_spacing_m": 1.5,
+        "rack_row_product_keys": [
+          6,
+          13,
+          24
+        ],
+        "ceiling": {
+          "slab": "#b8b8b3",
+          "beam": "#1c1c1c",
+          "beam_pitch_m": 3,
+          "round_spot_intervals_m": [
+            1.4,
+            1.6
+          ],
+          "silver_ducts": "기존 각형/원형 분기 덕트 보존",
+          "stair_void_preserved": true
+        },
+        "main_aisle_columns": {
+          "u": [
+            -20,
+            -12,
+            -4,
+            4,
+            12,
+            20,
+            28
+          ],
+          "v": 14,
+          "size_m": [
+            1,
+            3.65,
+            1
+          ]
+        },
+        "refrigerated_cases": {
+          "count": 15,
+          "v": 13.8,
+          "depth_m": 1.4,
+          "height_m": 2.05,
+          "u_ranges": [
+            [
+              -29,
+              -10
+            ],
+            [
+              -6,
+              3
+            ],
+            [
+              7,
+              16
+            ],
+            [
+              20,
+              29
+            ]
+          ],
+          "cross_passages_center_u": [
+            -8,
+            5,
+            18
+          ],
+          "stock": "붉은/노란/녹색/주황 식품 포장"
+        },
+        "main_aisle_stalls": {
+          "count": 5,
+          "u": [
+            -24,
+            -16,
+            0,
+            12,
+            24
+          ],
+          "v": 22.2,
+          "size_m": [
+            5.8,
+            1.2,
+            1.4
+          ],
+          "red": "#b8322c",
+          "wood": "기존 목재 계열",
+          "fascias": 3,
+          "end_fascia": {
+            "u": 29,
+            "bottom_y": -3.34,
+            "link_width_m": 5.6
+          }
+        },
+        "cart_count": 5,
+        "cart_distribution": {
+          "main_aisle": 3,
+          "rear_aisle": 1,
+          "back_corner": 1
+        }
       }
     },
     "architecture": {
@@ -1573,7 +1723,7 @@
       "upper_floor_content": "확인되지 않은 상층 점포 평면·진열대는 만들지 않음.",
       "between_buildings": "1관 B1 푸드스트리트와 2관 B1 킴스클럽을 동일 newcore/B1 zone의 내부 통로로 연결. 3관은 지상 출입구 보행만 유지. 고투몰·지하철 지하 직결 없음.",
       "three_roof": "기존 10.8m 옥상 주차장 및 계단·승강기 유지. 주차장 현재 개방·실제 접근 경로 미확인(guess=true).",
-      "furnishing": "기존 매장·집기 세부 보존. 솥내음·PhởVua 전체 bay를 같은 후면 블록으로 회전 이동하고 솥내음은2m 더 안쪽 지선에 둠. RIMINI·신차이 집기는 옛 솥내음·PhởVua bay로 보존 이전. 중앙 좌석2개 남쪽 재배치. 3관의 추정 농산물 판매대12개만 제거, 기존 식당가·카페와 외부 어닝 유지. R13: 2관B1 기존 매대30개·델리카운터6개 보존 재배치. 조미료열은 병, 건식품열 일부는 봉지 형태로 구체화. 전자 라벨·트레이·카트1대·흰 사각기둥3개 추가. 노출 천장의 기존 계단 구멍 보존. 매대는 동일한 충돌 외곽을 유지하고 받침·얇은 등판·기둥으로 표현해 병과 봉지 진열이 보이도록 했다. R15: 기존 매대·델리 카운터 보존, 병 소형화/증량·봉지와 녹색 병·전자 가격띠·매대 끝 상품·카트3대·천장 등기구 증설. 2관B1 72명 및 1관B1 보행24명 추가, 정류장 인물은 별도 detail7명."
+      "furnishing": "기존 매장·집기 세부 보존. 솥내음·PhởVua 전체 bay를 같은 후면 블록으로 회전 이동하고 솥내음은2m 더 안쪽 지선에 둠. RIMINI·신차이 집기는 옛 솥내음·PhởVua bay로 보존 이전. 중앙 좌석2개 남쪽 재배치. 3관의 추정 농산물 판매대12개만 제거, 기존 식당가·카페와 외부 어닝 유지. R13: 2관B1 기존 매대30개·델리카운터6개 보존 재배치. 조미료열은 병, 건식품열 일부는 봉지 형태로 구체화. 전자 라벨·트레이·카트1대·흰 사각기둥3개 추가. 노출 천장의 기존 계단 구멍 보존. 매대는 동일한 충돌 외곽을 유지하고 받침·얇은 등판·기둥으로 표현해 병과 봉지 진열이 보이도록 했다. R15: 기존 매대·델리 카운터 보존, 병 소형화/증량·봉지와 녹색 병·전자 가격띠·매대 끝 상품·카트3대·천장 등기구 증설. 2관B1 72명 및 1관B1 보행24명 추가, 정류장 인물은 별도 detail7명. R17: 30매대와6델리카운터·72인물·4카트 보존 후 냉장케이스15개·빨강/목재 카운터5개·기둥7개·주통로13인물·카트1대 추가. 매대 세 줄은4.8/10.4/25.2로 이동.2관B1합계85명·5카트.1관/3관 실내가구 불변."
     },
     "junctions_to_add": [],
     "junction_note": "1·2관 연결은 같은 newcore 모듈 내부 통로여서 공용 JUNCTIONS 추가 불필요. 교차 모듈 지하 연결은 생성하지 않음.",
@@ -2059,6 +2209,404 @@
       "walk_failures": [],
       "frame_trace_coverage": "재현한 영상 프레임4개 모두 trace 포함. R13 카메라8개(y=바닥), 모든 참조 파일 존재 확인.",
       "scope": "수정 파일은 js/places/newcore.js와 data/research/newcore.json 두 개. 엔진·공유 junction·tests·다른 모듈·_meta 미수정. 커밋/푸시 없음."
+    },
+    "review_round17": {
+      "review_source": ".codex-jobs/evidence/review_walk17.json → newcore",
+      "workflow": [
+        "카메라 trace 수정",
+        "배치",
+        "재질·조명",
+        "상품·수목·인물"
+      ],
+      "camera_corrections": [
+        {
+          "id": "NC-C1",
+          "camera": "newcore_00",
+          "pose": [
+            265.4,
+            0,
+            -453.8,
+            95,
+            3
+          ],
+          "status": "applied",
+          "note": "R17 NC-C1: roadview01의 DESIGNERS가 왼쪽에 잘리고 오른쪽 아치 간격이 줄어드는 방향으로 북쪽 회전. 검증 nc_a의 포즈. NC-L1 도시측 보도 제거가 별도 필요하며 현재는 차선이 아닌 도시 보도 위. y=0 바닥, 로드뷰 화각 차이/정확한 실측 위치는 미확정."
+        },
+        {
+          "id": "NC-C2",
+          "camera": "newcore_02",
+          "pose": [
+            263.6,
+            0,
+            -455.5,
+            155,
+            9
+          ],
+          "status": "applied",
+          "note": "R17 NC-C2: 원본03의 왼쪽 끝 도로 소실점·오른쪽 DESIGNERS·중앙 코너탑을 맞춘 검증 v_nc_c2b 포즈. NC-L1 도시 보도는 소유 범위 밖으로 남음. y=0 바닥, 촬영 위치는 모델 비교용 추정."
+        },
+        {
+          "id": "NC-C3",
+          "camera": "newcore_07",
+          "pose": [
+            223.928,
+            -6,
+            -472.112,
+            202.988,
+            0
+          ],
+          "status": "applied",
+          "note": "R17 NC-C3/NC-L2: 뒤벽 인접 P(29.583,38.5) 대신 식품관 주통로 P(-12,18)에서+u방향. 전경 카트 P(-10.9,18.55), 왼쪽 냉장케이스 v13.8, 오른쪽 빨강/목재 카운터 v22.2를 본다. 원본800의 카트 뒤 주통로 구도를 채택. y=-6 바닥; 정확한 실내 실측 좌표는 추정."
+        },
+        {
+          "id": "NC-C4",
+          "camera": "newcore_08",
+          "pose": [
+            294.172,
+            0,
+            -370.309,
+            112.491,
+            62
+          ],
+          "status": "applied",
+          "note": "R17 NC-C4: 원본50의 거의 수평인 글자와 세로 띠를 따라 정면 방향 유지 후 +u 남동쪽으로4m 이동. 검증 v_nc_08a의 정면 이동 원칙을 적용;161도 사선은 원본과 불일치하여 채택하지 않음. y=0 바닥. 프레임 확대율/FOV와 관 번호·촬영 면은 미확정."
+        }
+      ],
+      "auxiliary_cameras": [
+        "newcore_03/04/07은 동일800의 추정된 단일 주통로에서 세부 구도를 비교하는 시점. 실제로 서로 다른 위치를 촬영한 프레임이라고 주장하지 않음.",
+        "newcore_04는 P(-4,18),yaw202.988,pitch4로 수정하여 같은 주통로 왼쪽8m 전방 기둥과 노출천장 비교.",
+        "newcore_05/06은 NC-L2 매대 이동에 함께 이동"
+      ],
+      "outside_scope": [
+        {
+          "id": "NC-L1",
+          "status": "deferred_outside_allowed_files",
+          "original_frames": [
+            "refs/roadview/newcore_01_front.jpg",
+            "refs/roadview/newcore_03_along_SW.jpg"
+          ],
+          "evidence": "난간 바로 바깥의 좁은 포장·연석·노란 차선 확인. 현재 추가6–8m 보도와 도시 수목은 city/streets 소유.",
+          "required_owner_change": "newcore 난간(v=-9.5) 바깥 약0.3m 연석; 추가 도시 보도·나무·등 제거. newcore 기존10m 바닥·난간·나무 보존.",
+          "world": "2관(242.2,-501.6)→(267.2,-442.6),1관(277.3,-416.8)→(312.1,-332.8)",
+          "reason": "사용자 허용 파일은 newcore.js와 research/newcore.json뿐. 도로 claim/덮개/중복 수목으로 숨기지 않음."
+        },
+        {
+          "id": "NC-D2",
+          "status": "deferred_outside_allowed_files",
+          "original_frames": [
+            "refs/roadview/newcore_02_across_xi.jpg"
+          ],
+          "evidence": "좌측 아파트의 짙은 세로 골조·청록 창·밝은 세로 기둥, 중앙/우측 흰 주거동, 연속 수목띠와 정류장/키오스크/낮은 담 확인.",
+          "required_owner_change": "city의 사무실형 수평 리본창을 아파트 세로창으로 수정하고 맞은편 정류장·수목·차량 크기 조정.",
+          "world": "잠원로 맞은편 x≈275이상,z=-500..-440",
+          "reason": "도시 건물·도로 가구·차량은 허용 파일 밖. newcore에서 중복 생성하지 않음."
+        }
+      ],
+      "independent_original_frame_checks": [
+        {
+          "id": "NC-D3",
+          "photo": "refs/roadview/newcore_03_along_SW.jpg",
+          "confirmed": "넓은 밝은 탑; DESIGNERS 반대쪽 가장자리 청록 유리; DESIGNERS 쪽 어두운 세로띠; 검은 상부 NEWC… 사인"
+        },
+        {
+          "id": "NC-D4",
+          "photo": "refs/roadview/newcore_01_front.jpg, refs/roadview/newcore_03_along_SW.jpg",
+          "confirmed": "회색·흰점 포장; 점포 앞 분리된 검은 직사각형; 난간 안쪽1.5–2.5m 점자선"
+        },
+        {
+          "id": "NC-D5",
+          "photo": "refs/walk/s1_banpo_newcore/T92eDMIb3vE_50.jpg",
+          "confirmed": "상부 회색띠 경계에 크림 장식기둥 없음; 밝은 띠는 거의 흰색 유지; 별도 크롬 글자"
+        },
+        {
+          "id": "NC-T2",
+          "photo": "refs/roadview/newcore_01_front.jpg",
+          "confirmed": "2관 연속 bay에 수목이 있고 DESIGNERS/luxury gallery 앞 중간 수목 누락"
+        }
+      ],
+      "uncertainties": [
+        "모든 카메라는 실측이 아닌 OSM 모델과 프레임 대응 추정",
+        "NC-C4 이동은 확인된 정면+4m 원칙이며 리뷰 렌더의 정확한 카메라 메타데이터는 없음",
+        "모바일 영상 확대율과 렌더 FOV 차이로 글자 크기 차이는 남을 수 있음",
+        "원본800/400/600은 작은 유튜브 화면 캡처로 실제 집기 수·상표·정밀 좌표는 식별 불가",
+        "NC-L1/NC-D2 수정은 다른 소유 파일에서 필요"
+      ],
+      "render_status": "사용자 지시에 따라 tests/shot.mjs 실행 안 함. 기존 r17/r17x 렌더와 원본만 대조.",
+      "findings": [
+        {
+          "id": "NC-C1",
+          "priority": "camera",
+          "status": "applied",
+          "camera": "newcore_00",
+          "pose_x_y_z_yaw_pitch": [
+            265.4,
+            0,
+            -453.8,
+            95,
+            3
+          ],
+          "change": "R17 NC-C1: roadview01의 DESIGNERS가 왼쪽에 잘리고 오른쪽 아치 간격이 줄어드는 방향으로 북쪽 회전. 검증 nc_a의 포즈. NC-L1 도시측 보도 제거가 별도 필요하며 현재는 차선이 아닌 도시 보도 위. y=0 바닥, 로드뷰 화각 차이/정확한 실측 위치는 미확정.",
+          "original_frames": [
+            "refs/roadview/newcore_01_front.jpg"
+          ]
+        },
+        {
+          "id": "NC-C2",
+          "priority": "camera",
+          "status": "applied",
+          "camera": "newcore_02",
+          "pose_x_y_z_yaw_pitch": [
+            263.6,
+            0,
+            -455.5,
+            155,
+            9
+          ],
+          "change": "R17 NC-C2: 원본03의 왼쪽 끝 도로 소실점·오른쪽 DESIGNERS·중앙 코너탑을 맞춘 검증 v_nc_c2b 포즈. NC-L1 도시 보도는 소유 범위 밖으로 남음. y=0 바닥, 촬영 위치는 모델 비교용 추정.",
+          "original_frames": [
+            "refs/roadview/newcore_03_along_SW.jpg"
+          ]
+        },
+        {
+          "id": "NC-C3",
+          "priority": "camera",
+          "status": "applied",
+          "camera": "newcore_07",
+          "pose_x_y_z_yaw_pitch": [
+            223.928,
+            -6,
+            -472.112,
+            202.988,
+            0
+          ],
+          "change": "R17 NC-C3/NC-L2: 뒤벽 인접 P(29.583,38.5) 대신 식품관 주통로 P(-12,18)에서+u방향. 전경 카트 P(-10.9,18.55), 왼쪽 냉장케이스 v13.8, 오른쪽 빨강/목재 카운터 v22.2를 본다. 원본800의 카트 뒤 주통로 구도를 채택. y=-6 바닥; 정확한 실내 실측 좌표는 추정.",
+          "original_frames": [
+            "refs/walk/s1_banpo_newcore/qZYgbakp2UA_800.jpg"
+          ]
+        },
+        {
+          "id": "NC-C4",
+          "priority": "camera",
+          "status": "applied",
+          "camera": "newcore_08",
+          "pose_x_y_z_yaw_pitch": [
+            294.172,
+            0,
+            -370.309,
+            112.491,
+            62
+          ],
+          "change": "R17 NC-C4: 원본50의 거의 수평인 글자와 세로 띠를 따라 정면 방향 유지 후 +u 남동쪽으로4m 이동. 검증 v_nc_08a의 정면 이동 원칙을 적용;161도 사선은 원본과 불일치하여 채택하지 않음. y=0 바닥. 프레임 확대율/FOV와 관 번호·촬영 면은 미확정.",
+          "original_frames": [
+            "refs/walk/s1_banpo_newcore/T92eDMIb3vE_50.jpg"
+          ],
+          "validation": "P1(4,-8)에서 간판 전체표면1,891개광선: newcore수관교차0. 도시수목은 별도소유로미검증."
+        },
+        {
+          "id": "NC-L1",
+          "priority": "layout",
+          "status": "deferred_outside_allowed_files",
+          "original_frames": [
+            "refs/roadview/newcore_01_front.jpg",
+            "refs/roadview/newcore_03_along_SW.jpg"
+          ],
+          "evidence": "난간 바로 바깥의 좁은 포장·연석·노란 차선 확인. 현재 추가6–8m 보도와 도시 수목은 city/streets 소유.",
+          "required_owner_change": "newcore 난간(v=-9.5) 바깥 약0.3m 연석; 추가 도시 보도·나무·등 제거. newcore 기존10m 바닥·난간·나무 보존.",
+          "world": "2관(242.2,-501.6)→(267.2,-442.6),1관(277.3,-416.8)→(312.1,-332.8)",
+          "reason": "사용자 허용 파일은 newcore.js와 research/newcore.json뿐. 도로 claim/덮개/중복 수목으로 숨기지 않음."
+        },
+        {
+          "id": "NC-L2",
+          "priority": "layout",
+          "status": "applied",
+          "original_frames": [
+            "refs/walk/s1_banpo_newcore/qZYgbakp2UA_800.jpg"
+          ],
+          "frame_check": "전경 빨강 카트 손잡이, 좌측 높은 다색 식품 케이스, 포스터 달린 흰 기둥, 우측 빨강·목재 카운터와 먼쪽 발광 사인, 중간 통로 손님 확인.",
+          "change": "v18 주통로 양측에 높이2.05m 냉장케이스15개(v13.8,d1.4)와 높이1.2m 빨강/목재 카운터5개(v22.2,d1.4). 통로 경계14.5..21.5의7m 폭, u=-8/5/18 지선 간격 보존. 1m 사각기둥7개(u=-20,-12,-4,4,12,20,28;v14), 어두운 포스터·점포상부판3개·u29의끝사인. 기존30곤돌라를v4.8/10.4/25.2로 이동해 모두 보존, 기존6델리카운터 보존. 기존72명+주통로8명+직원5명=85명, 기존4카트+전경1카트=5대.",
+          "world_spine": {
+            "from": [
+              223.928,
+              -6,
+              -472.112
+            ],
+            "to": [
+              239.55,
+              -6,
+              -435.289
+            ]
+          },
+          "foreground_cart": {
+            "local": [
+              -10.9,
+              18.55
+            ],
+            "world": [
+              223.851,
+              -6,
+              -470.885
+            ],
+            "facing": "+u"
+          },
+          "guess": "케이스/카운터 개수·실내 좌표·군중 총수는 단일 작은 프레임을 OSM 내부에 대응시킨 추정, 실측 아님.",
+          "cart_distribution": "주통로3대(-15.5,19.5),(11.8,19.5),(-10.9,18.55); 후면통로1대(15,31.1), 뒤쪽기존1대(29.583,36.598)."
+        },
+        {
+          "id": "NC-D1",
+          "priority": "design",
+          "status": "applied",
+          "original_frames": [
+            "refs/walk/s1_banpo_newcore/qZYgbakp2UA_800.jpg"
+          ],
+          "frame_check": "검은 보 사이 밝은 슬래브, 은색 원형 덕트, 밝은 둥근 스폿, 회색 바닥 반사 확인.400의 매대 밑면은 천장 근거로 사용하지 않음.",
+          "change": "2관B1 바닥 #8e8e8b gloss0.6. 천장 슬래브 #b8b8b3, 검은 #1c1c1c 보3m격자. 기존 은색 덕트·굽은 분기 유지. 둥근12각스폿 간격1.4/1.6m, 흰 선형 발광막대는 어두운 트랙으로 수정. 계단 천장구멍 보존.",
+          "position": "2관B1 전체; 바닥y=-5.988(보행바닥-6), 슬래브y=-2.35",
+          "guess": "색은 프레임 근사이고 조도·노출·실측 층고는 미확인. gloss는 키트의 반사 표현이며 실제 광량 측정 아님."
+        },
+        {
+          "id": "NC-D2",
+          "priority": "design",
+          "status": "deferred_outside_allowed_files",
+          "original_frames": [
+            "refs/roadview/newcore_02_across_xi.jpg"
+          ],
+          "evidence": "좌측 아파트의 짙은 세로 골조·청록 창·밝은 세로 기둥, 중앙/우측 흰 주거동, 연속 수목띠와 정류장/키오스크/낮은 담 확인.",
+          "required_owner_change": "city의 사무실형 수평 리본창을 아파트 세로창으로 수정하고 맞은편 정류장·수목·차량 크기 조정.",
+          "world": "잠원로 맞은편 x≈275이상,z=-500..-440",
+          "reason": "도시 건물·도로 가구·차량은 허용 파일 밖. newcore에서 중복 생성하지 않음."
+        },
+        {
+          "id": "NC-D3",
+          "priority": "design",
+          "status": "applied",
+          "original_frames": [
+            "refs/roadview/newcore_03_along_SW.jpg"
+          ],
+          "frame_check": "DESIGNERS 옆 밝은 넓은 탑, 반대쪽 가장자리 유리와 DESIGNERS 쪽 어두운띠, 검은 상부 NEWC… 사인 확인.",
+          "change": "2관 코너탑 폭4.4→7m, 중심u=L/2-2.5→L/2-1.2로1.3m남동 이동해 기존 DESIGNERS쪽 끝선 보존. 몸체 #f0eee6, +u쪽1.5m청록 유리띠, -u쪽1m #20282b띠. 지붕 위4m 높이 유지,6×1.6m검은 사인박스와 밝은 NEWCORE.",
+          "position": {
+            "local_center": [
+              31.383,
+              1.25
+            ],
+            "world_center": [
+              256.291,
+              -438.717
+            ],
+            "top_y": 27,
+            "crown_bottom_y": 25.4
+          },
+          "guess": "7m 폭·띠폭·높이는 사진비례 추정. 비충돌 외장으로 기존 코너 입구 개구부 보존."
+        },
+        {
+          "id": "NC-D4",
+          "priority": "design",
+          "status": "applied",
+          "original_frames": [
+            "refs/roadview/newcore_01_front.jpg",
+            "refs/roadview/newcore_03_along_SW.jpg"
+          ],
+          "frame_check": "차가운 회색 포장과 흰 점, 점포 앞 분리된 검은 패드, 난간 안쪽 점자선 확인.",
+          "change": "전면 포장 #a3a4a1에 회백색 반점.2관은v=-1.8의 연속 띠를1.5×0.5m 분리 패드(2m간격)로 교체, v=-3.3/-4.5/-5.7에0.1m흰사각점 추가. 점자선v=-6.25→-7.3으로 이동.",
+          "position": "2관전면v=-10..0; 기존난간v=-9.5, 제안연석v=-9.8 기준 점자선까지2.5m.",
+          "limitation": "NC-L1 도시연석 이동은 미완료여서 현재 도시의 실제 연석까지2.5m라고 주장하지 않음."
+        },
+        {
+          "id": "NC-D5",
+          "priority": "design",
+          "status": "applied",
+          "original_frames": [
+            "refs/walk/s1_banpo_newcore/T92eDMIb3vE_50.jpg"
+          ],
+          "frame_check": "회색띠는 직접 맞닿고 크림색 좁은 장식기둥은 없음. 글자는 별도 크롬/검은돌출부, 밝은띠를 더 어둡게할 근거없음.",
+          "change": "1관전면상부띠 사이0.27m크림장식기둥 삭제. 띠너비/비율, 밝은 #f0f0eb와짙은 #62666b 유지.",
+          "position": "1관전면y10.65..22.45, 남측띠도 기존 직접맞닿은 구성 유지.",
+          "preserved": "상하 코니스·크롬 글자12.2×2.25m·남측 간판·하부아치 유지."
+        },
+        {
+          "id": "NC-T1",
+          "priority": "detail",
+          "status": "applied",
+          "original_frames": [
+            "refs/walk/s1_banpo_newcore/qZYgbakp2UA_400.jpg"
+          ],
+          "frame_check": "상단 왼쪽 짧은 둥근 단지와금색뚜껑, 오른쪽 짙은병/노란랩, 아랫단 흰봉지/파랑·자주띠, 크롬선반/흰가격표/큰13,500 확인.",
+          "change": "조미료열(v10.4)의 기존4단 유지. 최상단 12각 원형0.14m단지/금뚜껑과0.277m짙은병/노란곡면라벨 혼합. 바로 아래는 파랑·자주띠가 있는 배부른 흰봉지/접힌윗면. 아래단 상품도혼합. 크롬선반끝·흰가격표 보강, 해당매대 상단13,500카드 확대. 기존부침가루/녹색병열은v25.2로 보존 이동.",
+          "position": "대표조미료매대u≈-10.183,v10.4;카메라05는P(-8,10.4),y=-6.",
+          "guess": "상품브랜드·상세상품명·각실물치수는 미판독; 가격은 프레임에 찍힌 과거표시이지 현재판매가가 아님."
+        },
+        {
+          "id": "NC-T2",
+          "priority": "detail",
+          "status": "applied",
+          "original_frames": [
+            "refs/roadview/newcore_01_front.jpg"
+          ],
+          "frame_check": "연속bay의 수목과luxury gallery앞중간나무 확인.",
+          "change": "2관 홀수bay 세 곳에 높이7.3m느티나무·동일1.6m보호판 추가. 기존짝수bay수목 유지,1관수목은변경없음.",
+          "local_u_v": [
+            [
+              -14.733,
+              -8.5
+            ],
+            [
+              1.6,
+              -8.5
+            ],
+            [
+              17.933,
+              -8.5
+            ]
+          ],
+          "world_x_z": [
+            [
+              247.256,
+              -484.978
+            ],
+            [
+              253.635,
+              -469.942
+            ],
+            [
+              260.014,
+              -454.906
+            ]
+          ],
+          "guess": "수종·수관형상·높이는 기존표현과프레임에맞춘근사."
+        }
+      ],
+      "preserved": "OSM claims/외곽/층/출입구/엘리베이터/계단/연결통로 및 기존 상품·가구·인물 보존. 프레임과 모순한 평면 검은천장/발광선형등/연속바닥띠/1관띠장식만 교체 또는 제거.",
+      "verification": {
+        "smoke": "node tests/smoke.mjs newcore streets gotomall: 최종 재실행 OK",
+        "targeted_geometry": {
+          "market_detail_quads": 95740,
+          "group_budget_under_120000": true,
+          "market_people": 85,
+          "people_capsule_errors": 0,
+          "canonical_camera_capsule_errors": 0,
+          "v18_v30_u_minus8_routes": "clear",
+          "checked_bag_and_wrap_face_normals": 14820,
+          "bad_normals": 0,
+          "C4_sign_visibility": {
+            "rays": 1891,
+            "newcore_canopy_intersections": 0,
+            "city_canopy": "소유범위 밖으로 미검증",
+            "pose": "P1(4,-8)"
+          },
+          "ceiling_stair_void": "보·덕트·스폿트랙 모두 계단 구멍을 침범하지 않음",
+          "total_module_quads": 135316,
+          "route_samples": 616,
+          "canonical_trace_cameras": 10
+        },
+        "neighbor_walk": "node tests/walk.mjs newcore streets gotomall: 90 ok, 0 blocked",
+        "full_walk": "node tests/walk.mjs: 687 ok, 0 blocked; exit 0. 사용자 루트 1–7 및 두 1F 동선 포함.",
+        "render": "tests/shot.mjs not run per user instruction",
+        "source_files": "all trace photos/reference_photos exist",
+        "scope": "Only js/places/newcore.js and data/research/newcore.json; no commit/push",
+        "walk_failures": [],
+        "validation": "node --check js/places/newcore.js, python3 -m json.tool data/research/newcore.json, git diff --check: 통과",
+        "concurrent_build_note": "초기 두 실행은 다른 작업이 편집 중인 gyeongbu의 임시 미정의 함수에서 중단. 해당 함수가 정의된 후 최종 전체 테스트 통과. 다른 모듈은 수정하지 않음."
+      }
     }
   },
   "tenants": [

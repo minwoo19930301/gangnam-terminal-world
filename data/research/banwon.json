@@ -2,7 +2,7 @@
   "id": "banwon",
   "name": "반원상가 · 한신치킨호프",
   "updated": "2026-11-07",
-  "round": 15,
+  "round": 17,
   "address": "서울 서초구 신반포로23길 30, 잠원동 72-2. 한신치킨호프 1층 111호는 사용자 제공 위치 정보.",
   "sources": [
     {
@@ -338,31 +338,36 @@
         "photos": [
           "refs/roadview/banwon_01_front.jpg"
         ],
-        "x": -159.33,
+        "x": -156.3,
         "y": 0,
-        "z": -389.76,
-        "yawDeg": 289.48,
+        "z": -390.6,
+        "yawDeg": 289.5,
         "pitchDeg": 8,
         "expected_subject": "중앙 왼쪽의 검은 BAN WON 출입탑, 전면 계단·오른쪽 경사로, 약국→우리은행과 가까운 은행나무·생울타리",
-        "coordinate_basis": "2025-06 원본 로드뷰를 직접 대조. 너무 가까웠던 u-9,v20에서 u-16.6,v25.8로 후퇴·우측 이동하여 출입탑 전체와 오른쪽 점포열/나무가 함께 보이도록 수정. y0은 지상 바닥, 촬영GPS/렌즈는 추정.",
+        "coordinate_basis": "BW-C1: 두 2025-06 로드뷰는 같은 파노라마 위치. 검증자가 렌더한 공통 촬영점 (-156.3,0,-390.6), 앞/뒤 yaw 289.5/109.5. y0은 도로 바닥. 정확한 GPS·렌즈는 추정.",
         "local_uv": [
-          -16.6,
-          25.8
+          -13.468,
+          26.018
         ],
-        "round": 15
+        "round": 17
       },
       {
         "spot": "신반포로23길 건너편 로드뷰",
         "photos": [
           "refs/roadview/banwon_02_across_towers.jpg"
         ],
-        "x": -152.76,
+        "x": -156.3,
         "y": 0,
-        "z": -393.99,
-        "yawDeg": 109.48,
+        "z": -390.6,
+        "yawDeg": 109.5,
         "pitchDeg": 8,
         "expected_subject": "적색 어린이보호구역과 일반 도시 모듈이 만드는 건너편 아파트",
-        "coordinate_basis": "사진 구도를 모듈에 맞춘 추정 카메라. GPS 또는 실측 촬영점이 아님."
+        "coordinate_basis": "BW-C1: 두 2025-06 로드뷰는 같은 파노라마 위치. 검증자가 렌더한 공통 촬영점 (-156.3,0,-390.6), 앞/뒤 yaw 289.5/109.5. y0은 도로 바닥. 정확한 GPS·렌즈는 추정.",
+        "round": 17,
+        "local_uv": [
+          -13.468,
+          26.018
+        ]
       },
       {
         "spot": "감미옥에서 한신치킨으로 이어지는 동측 점포열",
@@ -1513,6 +1518,119 @@
         "result": "69 ok, 0 blocked",
         "state": "마지막geometry수정 이후 검사"
       }
+    },
+    "decisions_round17": {
+      "evidence_opened": [
+        "refs/roadview/banwon_01_front.jpg",
+        "refs/roadview/banwon_02_across_towers.jpg",
+        "refs/walk/s9_jamwon/KFygWqMvrY8_60.jpg"
+      ],
+      "review_source": ".codex-jobs/evidence/review_walk17.json → banwon",
+      "priority_order": [
+        "camera",
+        "layout",
+        "design",
+        "detail"
+      ],
+      "coordinate_system": "P(u,v)=(-152.28+u*cosR+v*sinR,-419.62-u*sinR+v*cosR), R=atan2(14.39,40.68). 도로 rp(t,o)는 A(-145.36,-365.39)→Z(-169.16,-427.87)의 접선 t/법선 o. 모든 y는 보행 바닥 높이.",
+      "findings": [
+        {
+          "id": "BW-C1",
+          "status": "changed",
+          "change": "trace 00/01 및 공개 로드뷰 스폰을 하나의 (-156.3,0,-390.6)으로 통일. yaw289.5/109.5, pitch8. local(-13.468,26.018).",
+          "verification": "같은 2025-06 지도/파노라마 표식 확인. 실제 physics y0/free=true 각각 통과.",
+          "guess": "검증자의 r17x 구도 추정 사용; 정확한 GPS/렌즈 미확인."
+        },
+        {
+          "id": "BW-L1",
+          "status": "changed",
+          "change": "적색 골재는 rp(t8..60,o-.28..-6.9)에만 남김. 반원측은 #55575b 아스팔트를 중심선 o+.28부터 실 경계석까지 채움. 경계석은 OSM중심선에 대해 o+2.4..+3.34에 있으므로 +6.9까지 도색하지 않음. 노란 연석선 P(u-10.08..-9.96,v-2..41.45).",
+          "guess": "중앙선은 도시 소유 위치를 보존. 제안 카메라가 모델 중심선보다 1.25m 서쪽인 차이는 OSM도로 폭/중심선과 실제 로드뷰의 정합 오차로 남음."
+        },
+        {
+          "id": "BW-L2",
+          "status": "changed",
+          "change": "화강석 연석 u-9.55, v-2..41.45, h.16; 실제 frontage(-161.28,-416.44)→(-148.13,-379.24). 생울타리 u-9.48..-8.32, v-.8..14.8 및17.8..40로 바꾸어 계단 왼쪽만 3m 열림. 보도 u-8.3..-5.5, y.08; 점자띠 u-6.99 폭.3m. 중복된 u-7.25/8.15 화단을 실사에 맞는 한 줄로 통합.",
+          "verification": "새 틈→계단, 계단→1F복도 및 경사로→1F복도 physics경로 통과."
+        },
+        {
+          "id": "BW-D1",
+          "status": "changed",
+          "change": "탑(-146.29,-400.74)을 #0c0d0f 전용 PBR(roughness.5, metalness.12)와 1.2m 패널 줄눈으로 교체. 공유 gloss의 따뜻한 실내 반사맵이 석재를 회갈색으로 밝히던 경로를 이 재질에서 제거. 문 P(-.84,20)=(-146.4,-400.48)에 짙은 유리 옆문과 1.4m 열린 통로. 4m 안쪽 u4,v18.04..20.45에 어두운 가림벽, 우측 통로1.55m 유지. u3 천장 조명은 비발광으로 낮춤.",
+          "guess": "내부 가림벽/유리 개방폭은 어두운 전실 인상을 유지하는 추정 배치. 실측 내벽 위치는 확인 불가."
+        },
+        {
+          "id": "BW-D2",
+          "status": "changed",
+          "change": "도시 소유 OSM 윤곽 바깥 .16m에 비충돌 외장만 추가. 중앙107동1137867805: #9e8a78 기둥, #2d4c7c 수직유리; 우측201동1137867808: #8fb1d2 유리와 층별 흰 발코니; 좌측105/106동1137867804/7807: #cfd0cf 벽과 어두운 창; 뒤 우측34.8m 높이107동413354821: #c9c2ad 저층 베이지 외장. 기존 footprints, 높이, city 본체/충돌 및 meta.claims 모두 유지.",
+          "guess": "사진 건물과 동번호의 대응은 제안 공통 카메라 시야와 OSM 좌표에서 추정. 개별 유리 모듈/발코니 단차 치수는 사진 비례 추정."
+        },
+        {
+          "id": "BW-D3",
+          "status": "changed",
+          "change": "rp(t5..61,o-7.35) 연속 난간을 제거하고 r.06,h.9 검정 볼라드를 3m 간격으로 배치. 뒤 보도 o-7.15..-9.6 유지; o-9.7 화강석 낮은 연석/불규칙 관목·돌. 수목 t7,13.2,22,28.4,36.1,42.3,50.5,58, 높이5.7..7.7m, 3각 지주.",
+          "guess": "각 나무/바위 위치는 사진상 불규칙한 밀도에 맞춘 추정; 도시가 별도 만드는 더 먼 식생은 그대로."
+        },
+        {
+          "id": "BW-D4",
+          "status": "changed",
+          "change": "상층 u-.24,y8: 반원 태권도 · 줄넘기로 정정, 좌측 v7.5는 #477eac 띠에 읽히는 제일의학과만 사용. 탑 우측 v24.8의 청색 더 첫 글자 라이트박스. v27/33.6/38에 3.5x1.2m 검정 보드, 작은 흰 인쇄 획. 진료·상담/학원·교습실/합기도 외부 임의 간판 제거; 별도로 조사된 실내 상호·점포 디테일 유지.",
+          "guess": "더 이후 상호와 작은 검정 보드 문구는 판독 불가로 가짜 문장을 쓰지 않음."
+        },
+        {
+          "id": "BW-T1",
+          "status": "changed",
+          "change": "전면 낮고 촘촘한 4개 은행나무를 실사에 맞춰 u-8.9,v29=(-151.0,-389.31)의 12m 열린 은행나무와 먼 왼쪽 v2.5=(-159.84,-414.3)의9.5m 나무로 교체. 가는 줄기 r.15, 분산된 중간녹색 #4f7a37/#3d6b38 잎뭉치, 수관 사이 하늘 틈. K.detail 안에 배치.",
+          "guess": "수관과 세부 가지는 사진상 실루엣/투과도 추정."
+        },
+        {
+          "id": "BW-T2",
+          "status": "partially_changed_frame_contradicts_label",
+          "change": "양쪽에 반복되던 어린이/보호구역 글자를 제거. 타워측 적색만 유지하고 확인되지 않는 먼 글자는 추가하지 않음.",
+          "skipped": "신반…을 노면에 쓰는 제안은 적용하지 않음. 원본은 회색 채움/검정 외곽의 지도 도로명 UI이며 실제 흰 도색이 아니다. 이전 round15에서도 같은 UI 오버레이로 식별했고 원본 재확인 결과 동일. 흰 이동 화살표/지도핀도 3D물체로 복제하지 않음."
+        }
+      ],
+      "preserved": "본체 OSM413354848,1F1.2/2F4.8/roof8.4, 승강기/계단/상가 실내/식당 재고/야장 디테일 모두 유지. 외부 프레임이 명확히 모순하는 중복 화단·나무·표식만 교체. K.person은 기존 detail 그룹에서 유지.",
+      "scope": "js/places/banwon.js와 data/research/banwon.json만 편집. 엔진/도시/_junctions/_meta/tests 미수정. claims/층수/zone 변동 없음. commit/push 없음."
+    },
+    "validation_round17": {
+      "smoke": {
+        "command": "node tests/smoke.mjs banwon",
+        "result": "OK; 76k triangles including all lazy details"
+      },
+      "module_walk": {
+        "command": "node tests/walk.mjs banwon",
+        "result": "11 ok, 0 blocked"
+      },
+      "geometry_audit": {
+        "method": "기존 tests/walk.mjs 소스를 메모리에서만 확장하여 실제 kit/physics/city 검사. 저장소 테스트 파일 미수정.",
+        "result": "계단→복도22790 cells, 경사로→복도30455 cells, 생울타리 틈→계단2186 cells 모두 성공. 공통 로드뷰 카메라2개 floor0/free=true."
+      },
+      "combined_attempt": {
+        "command": "node tests/smoke.mjs banwon newcore",
+        "result": "외부 편집 중인 newcore B1에서 refrigeratedCase is not defined(newcore.js:776). banwon build 정상. 상위 작업자에게 전달했으며 외부 파일은 수정하지 않음. 최종4모듈 smoke 및 전체walk는 상위 작업자가 재검사."
+      },
+      "screenshots": {
+        "executed": false,
+        "reason": "사용자 지시: tests/shot.mjs는 샌드박스에서 실행 불가. 원본3장을 열어 비교했고 geometry/physics만 검증. 최종 시각 비교는 운영자 후속 렌더 필요."
+      },
+      "diff_check": "node --check 및 git diff --check 통과",
+      "metadata": "기존 footprint/claims/zone/층고 유지; 공통 _meta 재생성 불필요. 외장만 기존 OSM 경계에 추가.",
+      "final_combined_smoke": {
+        "command": "node tests/smoke.mjs jamwon_hangang banwon hangang newcore",
+        "result": "OK",
+        "note": "Earlier transient newcore detail error resolved by its independent owner. Only jamwon road metadata warning remains."
+      },
+      "combined_walk": {
+        "command": "node tests/walk.mjs jamwon_hangang banwon hangang newcore",
+        "result": "107 ok, 0 blocked"
+      },
+      "full_walk": {
+        "command": "node tests/walk.mjs",
+        "result": "687 ok, 0 blocked",
+        "user_routes": "사용자 루트 1..7 및 1F 동선 포함 전부 통과"
+      },
+      "scope": "Only the two assigned JS and two research JSON files edited; no engine/tests/_junctions/_meta edits, screenshots, commit or push."
     }
   }
 }
