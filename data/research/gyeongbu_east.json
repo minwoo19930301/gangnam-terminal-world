@@ -2,7 +2,7 @@
   "id": "gyeongbu_east",
   "name": "경부선 동측 주차빌딩 · 데블스도어",
   "updated": "2026-11-07",
-  "round": 17,
+  "round": 19,
   "sources": [
     {
       "url": "data/osm.json",
@@ -382,51 +382,54 @@
         "photos": [
           "refs/roadview/gbeast_01_parking_deck.jpg"
         ],
-        "x": 367.034,
+        "x": 364.9,
         "y": 0,
-        "z": -15.806,
-        "yawDeg": 206.404,
+        "z": -20.1,
+        "yawDeg": 204,
         "pitchDeg": 0,
         "local_uv": [
-          44,
-          -14
+          43.997808,
+          -18.795089
         ],
         "round17_finding": "ge-C01",
-        "placement": "same_panorama_station; minimap_verified"
+        "placement": "same_panorama_station; hedge_standoff_and_vanishing_point_corrected",
+        "round19_finding": "ge-C01"
       },
       {
         "spot": "로드뷰02 · 차고지 생울타리 남서 방향",
         "photos": [
           "refs/roadview/gbeast_02_bus_yard_road.jpg"
         ],
-        "x": 367.034,
+        "x": 364.9,
         "y": 0,
-        "z": -15.806,
-        "yawDeg": 116.404,
+        "z": -20.1,
+        "yawDeg": 80,
         "pitchDeg": 0,
         "local_uv": [
-          44,
-          -14
+          43.997808,
+          -18.795089
         ],
         "round17_finding": "ge-C01",
-        "placement": "same_panorama_station; minimap_verified"
+        "placement": "same_panorama_station; hedge_standoff_and_vanishing_point_corrected",
+        "round19_finding": "ge-C01"
       },
       {
         "spot": "로드뷰03 · 차고지 생울타리 북동 방향",
         "photos": [
           "refs/roadview/gbeast_03_bus_yard_hedge.jpg"
         ],
-        "x": 367.034,
+        "x": 364.9,
         "y": 0,
-        "z": -15.806,
-        "yawDeg": 296.404,
+        "z": -20.1,
+        "yawDeg": 334,
         "pitchDeg": 0,
         "local_uv": [
-          44,
-          -14
+          43.997808,
+          -18.795089
         ],
         "round17_finding": "ge-C01",
-        "placement": "same_panorama_station; minimap_verified"
+        "placement": "same_panorama_station; hedge_standoff_and_vanishing_point_corrected",
+        "round19_finding": "ge-C01"
       },
       {
         "spot": "파미에 참고01 · 데블스도어 정문 앞",
@@ -2101,6 +2104,267 @@
         "render": "tests/shot.mjs not run per sandbox constraint; original frames inspected, final visual render pending operator",
         "scope": "Only the four requested module/research files were edited by this job; no engine/junction/meta/test edits, no commit."
       }
+    },
+    "round19_review": {
+      "source": ".codex-jobs/evidence/check_r17.json#gyeongbu_east",
+      "originals_opened": [
+        "refs/roadview/gbeast_01_parking_deck.jpg",
+        "refs/roadview/gbeast_02_bus_yard_road.jpg",
+        "refs/roadview/gbeast_03_bus_yard_hedge.jpg"
+      ],
+      "check_renders_opened": [
+        "wt-r19/shots/chk_gyeongbu/e00_new.png",
+        "wt-r19/shots/chk_gyeongbu/e01_new.png",
+        "wt-r19/shots/chk_gyeongbu/e02_new.png"
+      ],
+      "findings": [
+        {
+          "id": "NEW-2",
+          "priority": "layout",
+          "status": "applied",
+          "change": "차고지 경계의 기존 직선 접선을 따라 t3에서 t-40까지 43 m 연장. 생울타리, 철제 경계, 이중 황색선, 5 m 간격 나무를 연속시키고 버스는 기존 8+8대를 보존하여 서남쪽에 각 3대씩 추가(11+11대).",
+          "positions": {
+            "edge_origin": [
+              349.86,
+              -16.63
+            ],
+            "edge_direction": [
+              0.899510844422002,
+              -0.43689843301071324
+            ],
+            "edge_t": [
+              -40,
+              80.612
+            ],
+            "new_wsw_endpoint": [
+              313.88,
+              0.846
+            ],
+            "hedge_center_endpoint": [
+              314.273,
+              1.655
+            ],
+            "coach_t_front": [
+              -43.2,
+              -30.8,
+              -18.4
+            ],
+            "coach_offsets": [
+              -4,
+              -8
+            ]
+          },
+          "evidence_and_uncertainty": "원본02의 지평선까지 이어지는 열을 확인. OSM1173093434의 서남쪽 꼭짓점을 넘으므로 정확한 끝점은 추정. 경부선 주차장 소유 모듈과 확인: 가장 가까운 기존 브리지는 (320.03,-46.17)로 새 끝점보다 약45 m 북쪽, 부속동은 x242 서쪽이라 겹치지 않음. 소유권 claim은 변경하지 않음."
+        },
+        {
+          "id": "ge-C01",
+          "priority": "camera",
+          "status": "applied",
+          "change": "세 trace와 해당 스폰을 동일 좌표 (364.9,0,-20.1), yaw204/80/334°, pitch0°로 이동. y는 바닥0.",
+          "positions": {
+            "world": [
+              364.9,
+              0,
+              -20.1
+            ],
+            "local_uv": [
+              43.997808,
+              -18.795089
+            ],
+            "yawDeg": [
+              204,
+              80,
+              334
+            ],
+            "hedge_face_distance_m": 2.08
+          },
+          "evidence_and_uncertainty": "원본과 e00_new/e01_new/e02_new를 확인. 검증자의 조정 범위 중앙값을 적용: 104° 수평 시야 기준 생울타리 실제 소실점은 왼쪽22%, 오른쪽81% 근사. 실제 픽셀 정합은 운영자 재렌더 필요."
+        },
+        {
+          "id": "NEW-1",
+          "priority": "design",
+          "status": "applied",
+          "change": "홀 북벽 localu18..63,v1.5의 주차장 방향 면만 y0..7.6에 #3a3f44. 실내 벽돌과 출입구 유지. 북측 데크 밑면 #303538, 각 열린 층에 4대 평행 주차차량 및 두 줄 조명.",
+          "positions": {
+            "wall_start": [
+              350.639,
+              9.639
+            ],
+            "wall_end": [
+              390.945,
+              -10.372
+            ],
+            "wall_y": [
+              0,
+              7.6
+            ],
+            "cars_local_uv": [
+              [
+                24,
+                -0.05
+              ],
+              [
+                34,
+                -0.05
+              ],
+              [
+                44,
+                -0.05
+              ],
+              [
+                59,
+                -0.05
+              ]
+            ],
+            "car_floor_y": [
+              0,
+              3.8
+            ],
+            "light_u": [
+              16.8,
+              64.4
+            ],
+            "light_v": [
+              -2.8,
+              -0.65
+            ],
+            "light_y": [
+              3.46,
+              7.26
+            ]
+          },
+          "evidence_and_uncertainty": "원본01의 어두운 내부/차량/형광등 확인. remaining_fix의 조명 y3.7/7.5는 기존 .3 m 슬래브 내부이므로 실제 밑면3.5/7.3 바로 아래3.46/7.26에 설치. 실측 주차대수와 뒤벽 위치는 추정; 홀 배치를 훼손하지 않는 면 재질 대안을 채택."
+        },
+        {
+          "id": "ge-T01",
+          "priority": "detail",
+          "status": "applied",
+          "change": "생울타리 몸체 상단1.18 m, 수관 중심1.2 m/높이반경.2 m로 낮고 이어진 윤곽. 종방향반경1.08 m/횡방향.58 m의 회전 타원체가1.6 m 간격에서 겹치며 윗모서리를 .11 m 덮음. 측면 수관 높이반경.13 m 및 .08 m 위치 흔들림 유지.",
+          "positions": {
+            "body_top": 1.18,
+            "crown_center": 1.2,
+            "crown_radii_along_across_up": [
+              1.08,
+              0.58,
+              0.2
+            ],
+            "crown_top_range": [
+              1.365,
+              1.435
+            ],
+            "pitch": 1.6,
+            "edge_offset": 0.9
+          },
+          "evidence_and_uncertainty": "원본02/03의 연속 둥근 수관 확인. world-axis dome rx/rz>=1 방식은 좁은 울타리를 .5 m 이상 넘어가므로 경계방향으로 회전한 타원체로 목표 겹침과 .1 m 돌출을 동시에 구현."
+        },
+        {
+          "id": "ge-T02",
+          "priority": "detail",
+          "status": "applied",
+          "change": "3개 U볼라드를 localu41.8/44/46.2,v-13으로 당겨2.2 m 간격. 포장띠1.5 m(localu34..55,v-13.25..-11.75), 차고지offset9.0에 단일 황색선.",
+          "positions": {
+            "bollard_world": [
+              [
+                365.509,
+                -13.932
+              ],
+              [
+                367.479,
+                -14.91
+              ],
+              [
+                369.45,
+                -15.889
+              ]
+            ],
+            "bollard_local_uv": [
+              [
+                41.8,
+                -13
+              ],
+              [
+                44,
+                -13
+              ],
+              [
+                46.2,
+                -13
+              ]
+            ],
+            "paver_local_bounds": [
+              34,
+              -13.25,
+              55,
+              -11.75
+            ],
+            "yellow_edge_offset": 9,
+            "yellow_line_endpoints": [
+              [
+                317.812,
+                8.942
+              ],
+              [
+                426.304,
+                -43.754
+              ]
+            ]
+          },
+          "evidence_and_uncertainty": "원본01의 볼라드 간격/앞 황색선 확인. 촬영점부터 중앙 볼라드까지5.8 m, 폭/정확한 정렬은 근사."
+        },
+        {
+          "id": "ge-T03",
+          "priority": "detail",
+          "status": "applied",
+          "change": "분홍#b9717d 띠를 차고지offset4.9..5.6으로 옮겨 아스팔트 위에 독립 배치. offset11.4..13.2 밝은 보도띠 제거하고 볼라드 회색포장만 유지. 생울타리 이중 황색선 보존.",
+          "positions": {
+            "pink_offsets": [
+              4.9,
+              5.6
+            ],
+            "pink_centerline": [
+              [
+                316.173,
+                5.568
+              ],
+              [
+                424.665,
+                -47.127
+              ]
+            ]
+          },
+          "evidence_and_uncertainty": "원본02의 띠가 보도 옆이 아니라 도로 위에 있는 점 확인. 폭.7 m와 정밀 이격은 사진 근사."
+        }
+      ],
+      "untouched_fixed": [
+        "ge-L01",
+        "ge-L02",
+        "ge-D01",
+        "ge-D02"
+      ],
+      "skipped": [],
+      "operator_views": "gyeongbu_east_00:364.9,0,-20.1,204,0;gyeongbu_east_01:364.9,0,-20.1,80,0;gyeongbu_east_02:364.9,0,-20.1,334,0",
+      "validation": {
+        "syntax": "node --check js/places/gyeongbu_east.js: passed",
+        "smoke": "node tests/smoke.mjs gyeongbu gyeongbu_east gotomall banpo_shoppingtown: OK on final geometry.",
+        "walk_module": "node tests/walk.mjs gyeongbu_east: 14 ok, 0 blocked",
+        "render": "tests/shot.mjs not run per user sandbox constraint; original frames and reviewer renders inspected. Final visual check pending operator.",
+        "additional_routes": {
+          "north_gallery_floor_0": "walkable, 16228 cells",
+          "north_gallery_floor_3_8": "walkable, 4097 cells",
+          "north_gallery_floor_7_6": "walkable, 5034 cells"
+        },
+        "corrected_camera": {
+          "floor": 0,
+          "capsule_displacement": 0,
+          "ceiling": "open sky"
+        },
+        "format": "JSON parse, scoped git diff --check: passed",
+        "walk_full": "node tests/walk.mjs: 719 ok, 0 blocked on both full-world runs. The final near-coach pitch adjustment was additionally checked by the final module walk.",
+        "walk_final_modules": "node tests/walk.mjs gyeongbu gyeongbu_east --verbose: 68 ok, 0 blocked on final geometry, including all three legs of 사용자 루트3.",
+        "camera": "31/31 frame cameras (28 gyeongbu + 3 east), both modules plus city: correct floor support, zero capsule displacement, at least 1.75 m headroom; no detail errors."
+      },
+      "metadata": "외부 생울타리·버스열의 detail 범위만 확장. 기존 K.zone 범위/claim/footprint 유지하므로 공유 _meta.json 갱신 불필요. 생성기 검토 중 _meta 쓰기는 메모리에서 가로채어 공유파일은 변경하지 않았음.",
+      "status": "Implementation and route validation complete; final visual matching pending operator render."
     }
   }
 }

@@ -1,5 +1,5 @@
 // OSM 413354848; local u=ENE, v=SSE. Road on west, park on north/east.
-// Round17: one roadview pose, grey near lane, continuous planted kerb, dark glazed entry.
+// Round19: frame-aligned road centreline, hedge opening, shaded entry and open tree crowns.
 // Floor heights/core/room plan remain inferred; the OSM footprint is unchanged.
 // No JUNCTIONS or WELLS name this module. Park and roads remain city-owned.
 export const meta = {
@@ -53,6 +53,7 @@ export function build(K) {
   // The shared gloss uses a warm interior environment, which washed this exterior
   // charcoal stone brown in r15. Local PBR gives a restrained sheen without that map.
   const portalStone=K.material('banwon-charcoal-r17',new K.THREE.MeshStandardMaterial({color:0x0c0d0f,roughness:.5,metalness:.12}));
+  const entryGlass=K.material('banwon-entry-glass-r19',new K.THREE.MeshStandardMaterial({color:0x2a2f33,roughness:.2,metalness:.35,transparent:true,opacity:.92,depthWrite:true,side:K.THREE.DoubleSide}));
   K.texture('banwon-grey-road',256,256,(g,w,h)=>{
     g.fillStyle='#55575b';g.fillRect(0,0,w,h);const rnd=K.rand(417);
     for(let i=0;i<2200;i++){g.fillStyle=i%2?'#626467':'#484b4e';g.fillRect(rnd()*w,rnd()*h,1,1);}
@@ -117,7 +118,7 @@ export function build(K) {
   rail(-3.15,0,-3.15,17.3,G,G);rail(-3.15,24.5,-3.15,38.8,G,G);
   // BW-L2: road → granite kerb → one planted strip → block paving → stair/ramp.
   slab(-8.3,-2,-5.5,D+2,.08,{mat:paving,thick:.08,ceil:false});
-  slab(-9.7,14.8,-6.7,17.8,.08,{mat:paving,thick:.08,ceil:false});
+  slab(-9.7,14.8,-6.7,21.7,.08,{mat:paving,thick:.08,ceil:false});
   B(-9.55,0,19.7,.24,.16,43.4,{tex:'concrete',color:0xcacbc7});
   B(-6.99,.082,19.7,.3,.012,41.8,0xd7b344,{solid:false});
   for(let v=-1;v<D+1;v+=.16)B(-6.99,.095,v,.19,.006,.025,0xbca04b,{solid:false});
@@ -195,31 +196,36 @@ export function build(K) {
   sign('인후과 +',-1.03,6.5,19.8,5.95,.94,west,'#f3f3ed','#17464b');
   sign('진료 안내',-1.04,5.66,19.8,4.55,.48,west,'#376a8e','#fff');
   sign('의원 · 약국',-1.04,5.13,19.8,4.55,.32,west,'#497c9b','#fff');
-  // BW-D1: reflected side leaves, a 1.4m open leaf, and a dark offset inner screen.
-  // The screen leaves a 1.55m passage at v20.45..22; the 1F cross-corridor stays connected.
+  // BW-D1: dark glass leaves and two offset screens stop the bright corridor sightline.
+  // Side liners sit IN FRONT of the cream corridor faces (v18.1/21.9), not inside them.
+  // The first screen leaves 1.23m at the south; the second leaves 1.28m at the north.
   slab(-.9,18.3,5,21.7,4.02,{mat:0x191d20,under:0x15191c,thick:.1,walk:false});
-  for(const v of [18.02,21.98])wall(-.4,v,5,v,G,G+2.9,{mat:0x414846,thick:.035,solid:false});
+  for(const v of [18.13,21.87])wall(-.4,v,5,v,G,G+2.9,{mat:0x262d31,thick:.035,solid:false});
   for(const v of [18.38,21.62])B(-1.05,G,v,.12,2.65,.08,0x202b2a,{solid:false});
-  wall(-.84,18.4,-.84,21.6,G,G+2.6,{mat:{tex:'glass',color:0x687678},thick:.035,openings:[{at:1.6,w:1.4,y0:G,y1:G+2.6}]});
+  wall(-.84,18.4,-.84,21.6,G,G+2.6,{mat:entryGlass,thick:.035,openings:[{at:1.6,w:1.4,y0:G,y1:G+2.6}]});
   for(const v of [19.3,20.7]){B(-.88,G,v,.055,2.6,.05,0x151c20,{solid:false});B(-.95,G+.8,v,.05,.45,.04,steel,{solid:false});}
-  wall(4,18.04,4,20.45,G,G+2.8,{mat:0x171d21,thick:.12});
+  wall(-.81,19.3,.34,19.3,G,G+2.6,{mat:entryGlass,thick:.035});
+  for(const y of [G,G+2.55])B(-.235,y,19.3,1.2,.05,.045,0x151c20,{solid:false});
+  B(.34,G,19.3,.045,2.6,.045,0x151c20,{solid:false});
+  wall(4,18.04,4,20.65,G,G+2.8,{mat:0x1a1d20,thick:.12});
+  wall(7,19.4,7,21.96,G,G+2.8,{mat:0x1a1d20,thick:.12});
   K.hpoly({tex:'tile',color:0x555a5c,gloss:.3},rect(-.7,18.1,4,21.9),G+.01,true);
   // Red freestanding board visible beside the door; its small type is unreadable.
   B(-1.3,G,22.7,.11,1.35,.47,0x9e3539,{solid:false});
   // Red-bordered triangular speed-hump warning sign beside, not across, the stairs.
-  cyl(-8.3,0,15.9,.035,2.18,steel,{solid:false});
+  cyl(-8.3,0,21.3,.035,2.18,steel,{solid:false});
   const triangle=(r,y,mat,off)=>{
-    const[x,z]=P(-8.35-off,15.9),dx=Math.cos(west),dz=-Math.sin(west);
+    const[x,z]=P(-8.35-off,21.3),dx=Math.cos(west),dz=-Math.sin(west);
     const p=[[x-dx*r,y-r*.55,z-dz*r],[x+dx*r,y-r*.55,z+dz*r],[x,y+r,z]];
     K.quad(mat,[...p,p[0]],[Math.sin(west),0,Math.cos(west)]);
   };
   triangle(.55,2.03,0xb83428,0);triangle(.42,2.03,0xf2ca48,.012);
-  sign('과속방지턱',-8.4,1.95,15.9,.62,.16,west,null,'#222222');
+  sign('과속방지턱',-8.4,1.95,21.3,.62,.16,west,null,'#222222');
   // As seen from the road: black tower, then pharmacy, then the blue bank fascia.
   sign('서초21세기약국',-.25,3.95,26.7,6.4,.8,west,'#256eaf','#fff3cc');
   sign('우리은행 WOORI BANK',-.24,3.95,34.8,9.3,.8,west,'#174b89','#fff');
   sign('반원 태권도 · 줄넘기',-.24,8,33.2,10,.68,west,'#f0f0e9','#20282c');
-  sign('이비',-.23,6.5,12.2,7,.94,west,'#f3f3ed','#183b4a');sign('조현',-.24,6.5,4.8,7,.94,west,'#f3f3ed','#183b4a');
+  sign('이비',-.23,6.5,14.4,2.5,.94,west,'#f3f3ed','#183b4a');sign('조현',-.24,6.5,11.5,2.5,.94,west,'#f3f3ed','#183b4a');
   sign('제일의학과',-.24,8,7.5,11.5,.6,west,'#477eac','#edf1f2');
   // Only the initial 더 is legible on this blue lightbox; do not expand the tenant name.
   sign('더',-.32,7.85,24.8,2.4,.78,west,'#f0f1e9','#3866aa');
@@ -311,7 +317,16 @@ export function build(K) {
   // BW-L1: only the tower-side lane is red. The shop-side asphalt stops at its kerb.
   const A=[-145.36,-365.39],Z=[-169.16,-427.87],L=Math.hypot(Z[0]-A[0],Z[1]-A[1]);
   const ux=(Z[0]-A[0])/L,uz=(Z[1]-A[1])/L,rp=(t,o)=>[A[0]+ux*t-uz*o,A[1]+uz*t+ux*o];
-  K.hpoly('banwon-red-road',[rp(8,-.28),rp(60,-.28),rp(60,-6.9),rp(8,-6.9)],.0345,true);
+  // BW-C1: the common panorama stands 0.75m east of the corrected centreline.
+  // Cover the old city paint locally above y.042, without claiming/editing the road.
+  // Three-metre end transitions join the unchanged road centreline outside this frontage.
+  const centreNodes=[[2,0],[5,-2],[61,-2],[64,0]];
+  for(let i=0;i<centreNodes.length-1;i++){
+    const [a,oa]=centreNodes[i],[b,ob]=centreNodes[i+1];
+    K.hpoly('banwon-grey-road',[rp(a,oa-.28),rp(b,ob-.28),rp(b,.28),rp(a,.28)],.046,true);
+    for(const d of [-.15,.15])K.hpoly(0xf2c329,[rp(a,oa+d-.075),rp(b,ob+d-.075),rp(b,ob+d+.075),rp(a,oa+d+.075)],.049,true);
+  }
+  K.hpoly('banwon-red-road',[rp(8,-2.28),rp(60,-2.28),rp(60,-6.9),rp(8,-6.9)],.045,true);
   // The actual kerb is oblique to the OSM centreline (offset +2.4..+3.34, not +6.9).
   const roadT=p=>(p[0]-A[0])*ux+(p[1]-A[1])*uz;
   const kerb0=P(-9.69,-2),kerb1=P(-9.69,D+2);
@@ -320,16 +335,22 @@ export function build(K) {
   // BW-T2: '신반…' has the grey fill/black outline of the roadview street-name UI.
   // Neither that overlay nor the illegible far word is painted onto the physical lane.
   // The opposite curb and planting belong to the roadview foreground, not the tower shells.
-  K.hpoly({tex:'sidewalk',color:0xd2d0ca},[rp(5,-7.15),rp(61,-7.15),rp(61,-9.6),rp(5,-9.6)],.055,true);
+  K.texture('banwon-far-paving',256,256,(g,w,h)=>{
+    g.fillStyle='#9a9a96';g.fillRect(0,0,w,h);g.strokeStyle='#858580';g.lineWidth=2;
+    for(let y=0;y<=h;y+=64){g.beginPath();g.moveTo(0,y);g.lineTo(w,y);g.stroke();}
+    for(let row=0;row<4;row++)for(let x=(row%2)*64;x<=w;x+=128){g.beginPath();g.moveTo(x,row*64);g.lineTo(x,(row+1)*64);g.stroke();}
+  },[1.6,1.6]);
+  K.hpoly('banwon-far-paving',[rp(5,-7.15),rp(61,-7.15),rp(61,-9.6),rp(5,-9.6)],.055,true);
   for(const[a,b]of [[5,18],[20.5,45],[48,61]]){
-    K.hpoly(0x63744c,[rp(a,-9.6),rp(b,-9.6),rp(b,-12.2),rp(a,-12.2)],.06,true);
+    K.hpoly(0x526343,[rp(a,-9.6),rp(b,-9.6),rp(b,-15.4),rp(a,-15.4)],.06,true);
     const aa=rp(a,-9.7),bb=rp(b,-9.7);
     K.wall(...aa,...bb,.06,.25,{mat:{tex:'concrete',color:0xc3c2ba},thick:.18,solid:false});
     for(let t=a;t<b;t+=3){const[x,z]=rp(t,-7.35);K.cyl({x,y:.055,z,r:.06,h:.9,seg:10,mat:0x1c2325,solid:false});}
   }
   // BW-D3: irregular young planting and three pale support stakes per tree.
-  for(const[t,o,h]of [[7,-11.2,6.5],[13.2,-10.8,7.4],[22,-11.4,5.7],[28.4,-11,6.9],[36.1,-11.5,7.7],[42.3,-10.9,6.2],[50.5,-11.2,7.1],[58,-11.5,5.9]]){
-    const[x,z]=rp(t,o);K.tree(x,z,{h,kind:t<20?'cherry':'zelkova'});
+  for(const[t,o,h,d]of [[7,-11.2,6.5,3.5],[13.2,-10.8,7.4,4.4],[22,-11.4,5.7,2.5],[28.4,-11,6.9,3.8],[36.1,-11.5,7.7,5],[42.3,-10.9,6.2,3.2],[50.5,-11.2,7.1,4.2],[58,-11.5,5.9,2.8]]){
+    const[x,z]=rp(t,o);K.cyl({x,y:.06,z,r:.1,h:h-.8,seg:10,mat:0x685943,solid:false});
+    K.dome({x,y:h-d*.26,z,rx:d*.5,ry:d*.34,rz:d*.45,hemi:false,seg:16,rings:8,mat:t<20?0x527546:0x45643c});
     for(let a=0;a<3;a++){const angle=a*2*Math.PI/3,xx=x+Math.cos(angle)*.65,zz=z+Math.sin(angle)*.65;rod([xx,.08,zz],[x,1.8,z],.035,0x9b8c6e);}
   }
   const[lx,lz]=rp(32,-7.85);
@@ -368,20 +389,32 @@ export function build(K) {
   }
 
   K.detail({name:'반원상가 거리 간판·식재·보행자',floor:'1F',y0:0,y1:G+3.4,poly:rect(-28,-4,1,44)},()=>{
-    for(const[a,b]of [[-.8,14.8],[17.8,40]])for(let v=a;v<b;v+=.95){
-      B(-8.9,.12,v,1.16,.05,.94,0x514c3a,{solid:false});
-      B(-8.9,.17,v,1.13,.65+(Math.round(v)%3)*.055,.98,{tex:'grass',color:0x36583c},{solid:false});
+    // BW-L2 / NEW-1: real paving gap ends at v21.7, then individual boxwood clumps.
+    // Plain leaf colours avoid the shared grass texture's almost-black green multiplication.
+    for(const[a,b]of [[-.8,14.8],[21.7,40]])for(let v=a+.62;v<b-.5;v+=1.3){
+      B(-8.9,.12,v,1.16,.05,1.18,0x514c3a,{solid:false});
+      const[x,z]=P(-8.9,v),i=Math.abs(Math.round(v*3)),height=.8+(i%3)*.08;
+      K.dome({x,y:.35,z,rx:.55,ry:height-.35,rz:.61,hemi:false,seg:16,rings:8,mat:[0x46573c,0x43543a,0x4c6041][i%3]});
+      K.dome({x:x+.13,y:height-.17,z:z-.09,rx:.26,ry:.18,rz:.31,seg:12,rings:5,mat:0x5a6e4c});
     }
     // BW-T1: one open 12m ginkgo by the bank, plus the tree at the far left.
     const openGinkgo=(u,v,h)=>{
-      const[x,z]=P(u,v);K.cyl({x,y:.16,z,r:.15,h:h*.68,seg:10,mat:0x635b48,solid:false});
-      const lobes=[[-1.55,3.9,.1,1.15], [1.8,4.8,.35,1.22],[-.6,6.15,-.9,1.08],[1.45,7.3,-.65,1.18],[-1.1,8.45,.6,1.14],[.1,9.7,-.1,1.2],[.55,7.9,1.4,.85],[-1.8,6.8,1.3,.92]];
+      const[x,z]=P(u,v);K.cyl({x,y:.16,z,r:.12,h:h*.94,seg:12,mat:0x635b48,solid:false});
+      const lobes=[[-1.2,3.35,.1,.62],[1.45,4.6,.35,.74],[-.65,6.1,-.8,.68],[1.35,7.55,-.55,.82],[-1.2,8.95,.4,.76],[.15,11.25,-.1,.72],[.5,9.85,1.35,.64],[-1.65,7.1,1.1,.61]];
       for(const[dx,yy,dz,r]of lobes){
-        const y=yy*h/12;rod([x,y-1.2,z],[x+dx*.8,y+.04,z+dz*.8],.045,0x655d49);
-        K.dome({x:x+dx,y:y+.3,z:z+dz,rx:r,ry:1.45*h/12,rz:r*.8,hemi:false,seg:14,rings:8,mat:(yy%2<1)?0x4f7a37:0x3d6b38});
+        const y=yy*h/12;rod([x,y-1,z],[x+dx*.9,y,z+dz*.9],.03,0x655d49);
+        K.dome({x:x+dx,y,z:z+dz,rx:r,ry:r*h/12,rz:r*.8,hemi:false,seg:16,rings:8,mat:(yy%2<1)?0x4f7a37:0x52763e});
       }
     };
-    openGinkgo(-8.9,29,12);openGinkgo(-8.9,2.5,9.5);
+    openGinkgo(-8.9,27.7,12);openGinkgo(-8.9,2.5,9.5);
+    // BW-D3: four interlocking rows cover the far bed, retaining its entrance breaks.
+    // The low shrubs extend behind the existing staked trees; boulders below remain.
+    for(const[a,b]of [[5,18],[20.5,45],[48,61]])for(let row=0;row<4;row++){
+      let n=0;for(let t=a+.75+(row%2)*.35;t<b-.6;t+=1.15,n++){
+        const o=-10.35-row*1.3,[x,z]=rp(t,o),height=.5+((n+row*2)%5)*.1;
+        K.dome({x,y:.12,z,rx:.82,ry:height,rz:.88,seg:12,rings:6,mat:[0x3f5f33,0x4c6a3b,0x5a7a45,0x49683b][(n+row)%4]});
+      }
+    }
     for(let i=0;i<22;i++){
       const t=6+i*2.45,o=-10.3-(i%3)*.48,[x,z]=rp(t,o);
       K.dome({x,y:.22,z,rx:.45+(i%3)*.17,ry:.22+(i%2)*.15,rz:.38,mat:i%4===0?0xa3a195:0x526b3f});
@@ -545,7 +578,7 @@ export function build(K) {
     });
   });
   K.spawn({name:'반원상가 정면 · 로드뷰',x:-156.3,y:0,z:-390.6,yaw:289.5*Math.PI/180});
-  K.spawn({name:'신반포로23길 · 어린이 보호구역',x:-156.3,y:0,z:-390.6,yaw:109.5*Math.PI/180});
+  K.spawn({name:'신반포로23길 · 어린이 보호구역',x:-156.3,y:0,z:-390.6,yaw:80*Math.PI/180});
   spawn('반원상가 1층 통로',16.8,G,20,east);spawn('한신치킨호프 111호',38.5,G,7,R);
   spawn('한신치킨 야장 · 공원 쪽',37.8,G,-1.65,north);spawn('반원어린이공원 접면',21,0,-9.4,R);
   spawn('비에이블 스터디카페',21,floors[1],13,east);spawn('반원상가 2층 교습실',16,floors[1],20,R);spawn('반원 태권도',21,floors[1],29,east);

@@ -109,7 +109,7 @@ export function build(K) {
   }
   for (const y of [3.8, 7.6, 11.8]) slab(0, -4.5, 104.86, 1.3, y, {
     mat: y === 11.8 ? { tex: 'roofgravel', color: 0xe5e3dc } : 'concrete',
-    under: 0x626661, thick: .3, walk: y !== 11.8,
+    under: 0x303538, thick: .3, walk: y !== 11.8,
     // The narrow overlap joins the existing wing slabs but stays out of their
     // ramp/stair voids, preserving the original headroom and landings.
     holes: y === 3.8 ? [rect(2.8, .8, 14.2, 1.3), rect(68.5, .65, 99.5, 1.3)] : [],
@@ -216,7 +216,10 @@ export function build(K) {
   // Freestanding brick hall at the authoritative pub pin. All windows are cut out of the wall, including their
   // curved heads, so the hall is visible through the arcade and the glazing.
   slab(18, 1.5, 63, 15.9, 0, { mat: { tex: 'wood', color: 0x5a4030, gloss: .38 }, holes: [rect(31.9, 10.2, 40.2, 15.7)] });
-  wall(18, 1.5, 63, 1.5, 0, 8.65, { mat: brick, thick: .25, openings: [{ at: 35, w: 3, y0: 0, y1: 3.1 }] });
+  // Round 19 NEW-1: only the parking-facing side is dark. The inner brick
+  // wall and its through-door remain intact for the photographed restaurant.
+  wall(18, 1.5, 63, 1.5, 0, 7.6, { mat: brick, mat2: 0x3a3f44, thick: .25, openings: [{ at: 35, w: 3, y0: 0, y1: 3.1 }] });
+  wall(18, 1.5, 63, 1.5, 7.6, 8.65, { mat: brick, thick: .25 });
   const endOps = [{ at: 7, w: 5, y0: 0, y1: 3.4 }];
   for (const u of [18, 63]) wall(u, 1.5, u, 15.9, 0, 8.65, { mat: brick, thick: .25, openings: u === 18 ? endOps : [{ at: 7, w: 2.5, y0: 0, y1: 2.8 }] });
   const windowUs = [21.4, 25.4, 29.4, 41.2, 45.2, 49.2, 57, 61];
@@ -642,6 +645,13 @@ export function build(K) {
     cylinder(u, v, .06, .065, .82, red ? 0xda653d : 0x323b40, { seg: 10 });
     for (const y of [.45,.7]) cylinder(u, v, y, .068, .09, 0xe7e5d9, { solid: false, seg: 10 });
   }
+  for (const y of [0, 3.8]) detail('북측 개방 주차층 · 차량과 조명', y === 0 ? '1F' : '2F', y, y + 3.7, rect(16.8, -4.5, 64.4, 1.3), () => {
+    // Four parallel cars leave over 3 m between their sides and the front
+    // struts. The hall's u53 passage stays clear on both levels.
+    for (const [i, u] of [24, 34, 44, 59].entries()) parkingCar(u, -.05, y, true, i);
+    // Slab bottoms are y3.5/7.3, not the nominal floor tops3.8/7.6.
+    for (const v of [-2.8, -.65]) box(40.6, v, y + 3.46, 47.6, .065, .025, { tex: 'emit', color: 0xe4e9e2 }, { solid: false });
+  });
   for (const [floor, y] of [['1F', 0], ['2F', 3.8], ['3F', 7.6]]) detail(`${floor} 주차 구획 · 차량 · 안내`, floor, y, y + 3.7, footprint, () => {
     const stalls = [];
     for (const u of [4.5, 7.3, 10.1]) stalls.push([u, 10]);
@@ -752,18 +762,17 @@ export function build(K) {
   }
 
   // Roadview-specific curb equipment, with gaps at the mapped access u53.
-  slab(34, -10.8, 55, -8.8, 0, { mat: 'ge-pavers', thick: .12 });
-  K.hpoly(0xd5b847, rect(34, -11.06, 55, -10.94), .028);
-  for (const u of [39, 44, 49]) {
+  slab(34, -13.25, 55, -11.75, 0, { mat: 'ge-pavers', thick: .12 });
+  for (const u of [41.8, 44, 46.2]) {
     for (const du of [-.5, .5]) {
-      cylinder(u + du, -10.3, 0, .045, .66, 0xbac2bd, { seg: 10 });
-      cylinder(u + du, -10.3, .12, .047, .15, 0xd6af36, { solid: false, seg: 10 });
+      cylinder(u + du, -13, 0, .045, .66, 0xbac2bd, { seg: 10 });
+      cylinder(u + du, -13, .12, .047, .15, 0xd6af36, { solid: false, seg: 10 });
     }
-    beam([u - .42, .75, -10.3], [u + .42, .75, -10.3], .09, 0xbac2bd);
+    beam([u - .42, .75, -13], [u + .42, .75, -13], .09, 0xbac2bd);
     for (const side of [-1, 1]) for (let j = 0; j < 4; j++) {
       const a = j * PI / 8, b = (j + 1) * PI / 8;
-      beam([u + side * (.42 + .08 * Math.cos(a)), .67 + .08 * Math.sin(a), -10.3],
-        [u + side * (.42 + .08 * Math.cos(b)), .67 + .08 * Math.sin(b), -10.3], .09, 0xbac2bd);
+      beam([u + side * (.42 + .08 * Math.cos(a)), .67 + .08 * Math.sin(a), -13],
+        [u + side * (.42 + .08 * Math.cos(b)), .67 + .08 * Math.sin(b), -13], .09, 0xbac2bd);
     }
   }
   for (const [a, b] of [[.5, 50.8], [55.2, 104.2]]) {
@@ -772,7 +781,7 @@ export function build(K) {
   }
   // The close coach row is separate from gyeongbu's distant parking stock.
   buildYardEdge(K);
-  spawn('동측 주차빌딩 로드뷰', 44, -14, 0, 0, 1);
+  K.spawn({name:'동측 주차빌딩 로드뷰',x:364.9,y:0,z:-20.1,yaw:204*PI/180});
   spawn('데블스도어 정문', 36, 18.3, 0);
   spawn('데블스도어 홀', 36, 9.3, 0, 1, 0);
   spawn('데블스도어 2층 라운지', 30.4, 11.55, 3.8, 0, -1);
@@ -787,23 +796,26 @@ function buildYardEdge(K) {
   const a = [349.86, -16.63], b = [425.07, -53.16], PI = Math.PI;
   const len = Math.hypot(b[0] - a[0], b[1] - a[1]), ux = (b[0] - a[0]) / len, uz = (b[1] - a[1]) / len;
   const nx = -uz, nz = ux, rot = Math.atan2(nx, nz), P = (t, off) => [a[0] + ux * t + nx * off, a[1] + uz * t + nz * off];
+  // NEW-2: the roadview continues beyond the OSM lot corner. Extend on the
+  // same tangent; the existing main-module bridge is ~45 m north of this end.
+  const edgeStart = -40, edgeEnd = len - 3;
   const poly = (t0, o0, t1, o1) => [P(t0, o0), P(t1, o0), P(t1, o1), P(t0, o1)];
   const areas = K.osm.areas.filter(v => [1173093432, 1173093434].includes(v.id));
   const reserved = (x, z) => areas.some(v => K.pointInPoly(x, z, v.poly));
   const bp = (D, t, off, y, w, d, h, mat, solid = false) => { const [x,z] = P(t, off); D.box({x,z,y,w,d,h,rotY:rot,mat,solid}); };
-  for (let t = 3; t < len - 3; t += 1.6) {
+  for (let t = edgeStart; t < edgeEnd; t += 1.6) {
     const [x,z] = P(t,.9); if (reserved(x,z)) continue;
     bp(K,t,.9,0,1.6,1.1,.16,0x8c9185,true);
     // Collision follows only the lower body; the irregular leaf cap is detail.
-    bp(K,t,.9,.16,1.62,.94,.91,'ge-privet',true);
+    bp(K,t,.9,.16,1.62,.94,1.02,'ge-privet',true);
     const [fx,fz]=P(t,.28);K.cyl({x:fx,z:fz,y:0,r:.025,h:1.3,mat:0x777d72,seg:6,solid:false});
   }
-  for (const y of [.45,.95,1.25]) {const p=P(3,.28),q=P(len-3,.28);K.wall(...p,...q,y,y+.025,{mat:0x7d8777,thick:.025,solid:false});}
-  // Double yellow edge lines stay beside the hedge. The pink strip belongs to
-  // the opposite lane edge, next to the pale pedestrian paving (ge-T03).
-  for (const off of [1.65,1.92]) K.hpoly(0xd7b741,poly(3,off,len-3,off+.1),.036);
-  K.hpoly(0xb9717d,poly(3,10.8,len-3,11.4),.035);
-  K.hpoly({tex:'sidewalk',color:0xd1d0c9},poly(3,11.4,len-3,13.2),.032);
+  for (const y of [.45,.95,1.25]) {const p=P(edgeStart,.28),q=P(edgeEnd,.28);K.wall(...p,...q,y,y+.025,{mat:0x7d8777,thick:.025,solid:false});}
+  // ge-T02/T03: pink paint lies in the asphalt about 3.5 m off the hedge,
+  // separate from the nearer bollard pavers and their single yellow edge.
+  for (const off of [1.65,1.92]) K.hpoly(0xd7b741,poly(edgeStart,off,edgeEnd,off+.1),.036);
+  K.hpoly(0xb9717d,poly(edgeStart,4.9,edgeEnd,5.6),.035);
+  K.hpoly(0xd5b847,poly(edgeStart,8.94,edgeEnd,9.06),.037);
   K.texture('ge-airy-leaves',128,128,(g,w,h)=>{
     const r=K.rand(1717);g.clearRect(0,0,w,h);
     for(let i=0;i<170;i++){
@@ -812,11 +824,11 @@ function buildYardEdge(K) {
     }
   },[1.2,1.2],{transparent:true,doubleSide:true});
   // Slender trunks are structural; all branch/leaf work is in the lazy group.
-  for(let t=5;t<len-3;t+=5){
+  for(let t=-40;t<edgeEnd;t+=5){
     const [x,z]=P(t,.85);if(reserved(x,z))continue;
     K.cyl({x,z,y:.16,r:.12,h:12.6+Math.sin(t)*.55,mat:0x7c8172,seg:9});
   }
-  K.detail({name:'차고지 경계 · 가로수와 근접 버스열',floor:'1F',y0:0,y1:15,poly:poly(-13,-10,len+8,13.2)},D=>{
+  K.detail({name:'차고지 경계 · 가로수와 근접 버스열',floor:'1F',y0:0,y1:15,poly:poly(-50,-10,len+8,13.2)},D=>{
     const xyz=(t,off,y)=>{const[x,z]=P(t,off);return[x,y,z];};
     const tube=(a,b,r,mat)=>{
       const A=new D.THREE.Vector3(...a),B=new D.THREE.Vector3(...b),dir=B.clone().sub(A).normalize();
@@ -825,14 +837,26 @@ function buildYardEdge(K) {
       const at=(p,q)=>p.clone().addScaledVector(X,Math.cos(q)*r).addScaledVector(Y,Math.sin(q)*r).toArray();
       for(let i=0;i<6;i++){const q=i*PI/3,q1=(i+1)*PI/3,n=X.clone().multiplyScalar(Math.cos((q+q1)/2)).addScaledVector(Y,Math.sin((q+q1)/2));D.quad(mat,[at(A,q),at(B,q),at(B,q1),at(A,q1)],n.toArray());}
     };
-    for(let t=3;t<len-3;t+=1.6){
+    // Rotated ellipsoids use the hedge tangent, not world x/z. This lets the
+    // 1.08 m long caps overlap at 1.6 m pitch without overhanging the kerb.
+    const leafCap=(t,off,y,along,across,rise,mat)=>{
+      const rings=4,seg=12;
+      const point=(a,b)=>xyz(t+Math.cos(a)*Math.cos(b)*along,off+Math.cos(a)*Math.sin(b)*across,y+Math.sin(a)*rise);
+      for(let j=0;j<rings;j++)for(let i=0;i<seg;i++){
+        const a0=-PI/2+j*PI/rings,a1=-PI/2+(j+1)*PI/rings,b0=i*PI*2/seg,b1=(i+1)*PI*2/seg;
+        const am=(a0+a1)/2,bm=(b0+b1)/2,nt=Math.cos(am)*Math.cos(bm)/along,no=Math.cos(am)*Math.sin(bm)/across,ny=Math.sin(am)/rise;
+        const n=new D.THREE.Vector3(ux*nt+nx*no,ny,uz*nt+nz*no).normalize();
+        D.quad(mat,[point(a0,b0),point(a0,b1),point(a1,b1),point(a1,b0)],n.toArray(),[[i/seg,j/rings],[(i+1)/seg,j/rings],[(i+1)/seg,(j+1)/rings],[i/seg,(j+1)/rings]]);
+      }
+    };
+    for(let t=edgeStart;t<edgeEnd;t+=1.6){
       const[x,z]=P(t,.9);if(reserved(x,z))continue;
-      D.dome({x,z,y:1.08,rx:.94,rz:.65,ry:.32+.08*Math.sin(t*1.7),mat:'ge-privet',hemi:false,seg:12,rings:5});
+      leafCap(t+.08*Math.sin(t),.9,1.2+.035*Math.sin(t*1.7),1.08,.58,.2,'ge-privet');
       for(const [dt,off] of [[-.45,.68],[.4,1.08]]){
-        const[cx,cz]=P(t+dt,off);D.dome({x:cx,z:cz,y:1.18+.06*Math.sin(t),rx:.54,rz:.44,ry:.22,mat:t%3<1.5?0x4d7a2e:0x7fae45,hemi:false,seg:10,rings:4});
+        leafCap(t+dt,off,1.2+.04*Math.sin(t),.72,.38,.13,t%3<1.5?0x4d7a2e:0x7fae45);
       }
     }
-    for(let t=5;t<len-3;t+=5){
+    for(let t=-40;t<edgeEnd;t+=5){
       const[x,z]=P(t,.85);if(reserved(x,z))continue;
       const h=13.8+Math.sin(t)*.55;
       for(let k=0;k<12;k++){
@@ -878,11 +902,13 @@ function buildYardEdge(K) {
         for(const side of [-1,1])bp(D,t+end*6.02,off+side*.72,.7,.035,.32,.18,end===1?0xf0edc8:0xb62c27);
       }
     }
-    // Eight coaches per row at 12.4 m pitch; count and fleet allocation are
-    // approximate. The colour pattern is directly visible in both roadviews.
-    for(let i=0;i<8;i++){coach(-6+i*12.4,-4,i);coach(-3+i*12.4,-8,i+8);}
+    // Retain the eight original coaches per row and add three to the WSW end.
+    // Exact count and fleet allocation remain approximate.
+    for(let i=-3;i<8;i++){coach(-6+i*12.4,-4,i+3);coach(-3+i*12.4,-8,i+14);}
   });
-  K.spawn({name:'버스 차고지 생울타리 · 남서',x:367.034,y:0,z:-15.806,yaw:Math.atan2(ux,uz)});
-  K.spawn({name:'버스 차고지 생울타리 · 북동',x:367.034,y:0,z:-15.806,yaw:Math.atan2(-ux,-uz)});
+  K.spawn({name:'버스 차고지 생울타리 · 남서',x:364.9,y:0,z:-20.1,yaw:80*PI/180});
+  K.spawn({name:'버스 차고지 생울타리 · 북동',x:364.9,y:0,z:-20.1,yaw:334*PI/180});
+  // Exterior scenery extends beyond the lot corner; gameplay/area bounds stay
+  // at the existing surveyed lot so no shared metadata handoff is required.
   K.zone({name:'경부선 동측 차고지 경계',floor:'1F',sub:'생울타리 · 가로수 · 보행로',poly:poly(0,0,len,13.2),y0:0,y1:5,priority:2});
 }

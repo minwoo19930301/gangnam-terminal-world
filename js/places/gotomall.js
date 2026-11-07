@@ -194,17 +194,18 @@ export function build(K) {
   const tx = (key, w, h, scale, draw) => K.texture(key, w, h, (g, W, H) => draw(g, W, H, lcg(key.length * 7919 + 13)), scale);
   const hsl = (h, s, l) => `hsl(${h | 0},${s | 0}%,${l | 0}%)`;
   tx('gt_floor', 256, 256, [1.2, 1.2], (g, W, H, r) => {
-    g.fillStyle = '#9c9d9f'; g.fillRect(0, 0, W, H);
-    for (let i = 0; i < 14000; i++) { g.fillStyle = i % 2 ? '#5f6062' : '#c4c5c7'; g.globalAlpha = 0.35; g.fillRect(r() * W, r() * H, 0.65 + r() * 0.2, 0.65 + r() * 0.2); }
+    g.fillStyle = '#85878a'; g.fillRect(0, 0, W, H);
+    // About 18% grain coverage; these 7–9 mm flecks survive the aisle's mip levels.
+    for (let i = 0; i < 4200; i++) { g.fillStyle = i % 2 ? '#5f6062' : '#c4c5c7'; g.globalAlpha = 0.7; g.fillRect(r() * W, r() * H, 1.5 + r() * 0.5, 1.5 + r() * 0.5); }
     g.globalAlpha = 1;
-    g.fillStyle = '#85878a'; for (const p of [0, W / 2]) { g.fillRect(p, 0, 0.6, H); g.fillRect(0, p, W, 0.6); }
+    g.fillStyle = '#72757a'; for (const p of [0, W / 2]) { g.fillRect(p, 0, 0.6, H); g.fillRect(0, p, W, 0.6); }
   });
   tx('gt_apparel_floor', 512, 512, [2.4, 2.4], (g, W, H, r) => {
-    g.fillStyle = '#9c9d9f'; g.fillRect(0, 0, W, H);
-    for (let i = 0; i < 36000; i++) { g.fillStyle = i % 2 ? '#5f6062' : '#c4c5c7'; g.globalAlpha = 0.35; g.fillRect(r() * W, r() * H, 0.65 + r() * 0.2, 0.65 + r() * 0.2); }
+    g.fillStyle = '#85878a'; g.fillRect(0, 0, W, H);
+    for (let i = 0; i < 16800; i++) { g.fillStyle = i % 2 ? '#5f6062' : '#c4c5c7'; g.globalAlpha = 0.7; g.fillRect(r() * W, r() * H, 1.5 + r() * 0.5, 1.5 + r() * 0.5); }
     g.globalAlpha = 1;
     // Four 60 cm tiles within the 2.4 m material repeat.
-    g.fillStyle = '#85878a'; for (let p = 0; p < W; p += W / 4) { g.fillRect(p, 0, 1.2, H); g.fillRect(0, p, W, 1.2); }
+    g.fillStyle = '#72757a'; for (let p = 0; p < W; p += W / 4) { g.fillRect(p, 0, 1.2, H); g.fillRect(0, p, W, 1.2); }
   });
   tx('gt_column', 128, 256, [0.9, 1.8], (g, W, H, r) => {
     g.fillStyle = '#b2a694'; g.fillRect(0, 0, W, H);
@@ -232,6 +233,16 @@ export function build(K) {
   tx('gt_folded', 128, 256, [1.0, 2.0], (g, W, H, r) => {
     g.fillStyle = '#f2efe9'; g.fillRect(0, 0, W, H);
     for (let s = 0; s < 4; s++) { const y0 = s * H / 4; g.fillStyle = '#c9c2b6'; g.fillRect(0, y0 + H / 4 - 6, W, 6); for (let k = 0; k < 4; k++) { const hue = r() * 360; for (let j = 0; j < 5; j++) { g.fillStyle = hsl(hue, 25 + r() * 40, 40 + r() * 40); g.fillRect(4 + k * W / 4, y0 + H / 4 - 12 - j * 7, W / 4 - 8, 6); } } }
+  });
+  // NEW-2 / k9_1030: small floral prints on pastel cloth, rather than solid-colour panels.
+  for (const [i, base] of ['#f3d9e6', '#cfe3f2', '#f6eec8'].entries()) tx('gt_dress_print_' + i, 128, 256, [0.4, 1.2], (g, W, H, r) => {
+    g.fillStyle = base; g.fillRect(0, 0, W, H);
+    for (let j = 0; j < 100; j++) {
+      const x = r() * W, y = r() * H;
+      g.fillStyle = ['#b986a7', '#819eb1', '#b9a379'][i];
+      for (let k = 0; k < 4; k++) { const a = k * Math.PI / 2; g.beginPath(); g.ellipse(x + Math.cos(a) * 1.7, y + Math.sin(a) * 2.1, 1.5, 2.2, a, 0, Math.PI * 2); g.fill(); }
+      g.fillStyle = '#839578'; g.fillRect(x + 2, y + 3, 1.4, 3.5);
+    }
   });
   tx('gt_shoes', 128, 256, [1.0, 2.2], (g, W, H, r) => {
     g.fillStyle = '#f3f1ec'; g.fillRect(0, 0, W, H);
@@ -295,8 +306,8 @@ export function build(K) {
   K.material('gt_lift_glass', new K.THREE.MeshLambertMaterial({ color: 0xc9d4d1, transparent: true, opacity: 0.78, depthWrite: false, side: K.THREE.DoubleSide }));
   K.material('gt_canopy_collision', new K.THREE.MeshBasicMaterial({ visible: false }));
   const M = {
-    // Built-in gloss supplies the blurred interior reflection missing from Phong shininess alone.
-    floor: { tex: 'gt_floor', color: 0xffffff, scale: [1.2, 1.2], gloss: 0.8 }, apparelFloor: { tex: 'gt_apparel_floor', color: 0xffffff, scale: [2.4, 2.4], gloss: 0.8 }, hallFloor: { color: 0xb9bbbb, gloss: 0.8 }, darkStone: { tex: 'gt_floor', color: 0x464943, gloss: 0.5 }, ceil: { tex: 'gt_ceil_u', scale: [1.2, 1.2] }, wall: { tex: 'gt_wall' }, fascia: 'gt_shop_wall', part: 'gt_shop_wall',
+    // gm-D2: soften the kit's warm reflection blend; a cool tint keeps the filmed grey stone neutral.
+    floor: { tex: 'gt_floor', color: 0xe8eef4, scale: [1.2, 1.2], gloss: 0.5 }, apparelFloor: { tex: 'gt_apparel_floor', color: 0xe8eef4, scale: [2.4, 2.4], gloss: 0.5 }, hallFloor: { color: 0x9a9c9c, gloss: 0.5 }, darkStone: { tex: 'gt_floor', color: 0x464943, gloss: 0.5 }, ceil: { tex: 'gt_ceil_u', scale: [1.2, 1.2] }, wall: { tex: 'gt_wall' }, fascia: 'gt_shop_wall', part: 'gt_shop_wall',
     col: { tex: 'gt_column' }, spine: 0xe9e4dc, led: { tex: 'emit', color: 0xf2f5f4 }, ledWarm: { tex: 'emit', color: 0xffe5b8 },
     steel: 0xb9bec4, dark: 0x2f3337, wood: { tex: 'wood', color: 0xc8a27a }, granite: { tex: 'marble', color: 0xa9a59f },
   };
@@ -521,6 +532,9 @@ export function build(K) {
 
   const fabric = [0xe6dfcf, 0x303137, 0xb6aa96, 0x36567b, 0xd7839f, 0x4e5646, 0xb13e4d, 0xd4d0c4, 0x798aaf, 0xaba6be, 0xdcae55, 0x4f8a82];
   function shopper(u, v, seed, rotY, sit = false) {
+    // NEW-1 / rL_1520: the first four metres are empty; keep the triple lights visible.
+    if (!sit && Math.hypot(u - 194, v - 6.4) < 4) return;
+    if (!sit && seed < 1900 && u >= 198 && u <= 209 && v > 3 && v < 9) return;
     const [x, z] = P(u, v);
     K.person(x, FL, z, { rotY, sit, shirt: fabric[(seed * 7) % fabric.length], pants: seed % 4 ? 0x37363b : 0xc6b7a2 });
     if (sit) return;
@@ -553,11 +567,12 @@ export function build(K) {
       for (const dd of [d - 0.26, d + 0.26]) lbox(S, aa - 0.042, aa + 0.042, dd - 0.035, dd + 0.035, FL + 0.015, 0.075, 0x2c3031, opt);
     }
     lbox(S, a - 0.03, a + len + 0.03, d - 0.025, d + 0.025, FL + 1.58, 0.04, 0xbec3c1, opt);
-    const n = Math.max(8, Math.round(len * 25)), longDress = S.line === 'D' && S.uc >= -305 && S.uc <= -285;
+    const printed = S.photo === 'pastel-print';
+    const n = Math.max(8, Math.round(len * 25)), longDress = printed || S.line === 'D' && S.uc >= -305 && S.uc <= -285;
     const garmentOpt = { solid: false, skip: ['bottom', ...(S.fr.au ? ['e', 'w'] : ['n', 's'])] };
     for (let j = 0; j < n; j++) {
       const aa = a + 0.035 + j * (len - 0.07) / Math.max(1, n - 1), y = FL + (longDress ? 0.13 : 0.28) + (j % 4) * 0.065;
-      lbox(S, aa - 0.019, aa + 0.019, d - 0.25, d + 0.25, y, FL + 1.39 - y, fabric[(j + seed) % fabric.length], garmentOpt);
+      lbox(S, aa - 0.019, aa + 0.019, d - 0.25, d + 0.25, y, FL + 1.39 - y, printed ? { tex: 'gt_dress_print_' + (j + seed) % 3 } : fabric[(j + seed) % fabric.length], garmentOpt);
       // A shallow triangular hanger lies across the depth of the rack. Two faces
       // are needed because a visitor sees both ends of a rail while passing it.
       for (const s of [-1, 1]) {
@@ -570,8 +585,8 @@ export function build(K) {
     }
     // Face-out knitwear makes the silhouette legible from the aisle, including
     // the shoulders, sleeves, neck opening and contrasting hem.
-    const mid = a + len / 2, col = fabric[seed % fabric.length], fd = d - 0.30;
-    lbox(S, mid - 0.22, mid + 0.22, fd - 0.055, fd + 0.055, FL + 0.55, 0.81, col, opt);
+    const mid = a + len / 2, col = printed ? { tex: 'gt_dress_print_' + seed % 3 } : fabric[seed % fabric.length], fd = d - 0.30;
+    lbox(S, mid - 0.22, mid + 0.22, fd - 0.055, fd + 0.055, FL + (printed ? 0.16 : 0.55), printed ? 1.20 : 0.81, col, opt);
     for (const s of [-1, 1]) {
       lbox(S, mid + s * 0.27 - 0.075, mid + s * 0.27 + 0.075, fd - 0.045, fd + 0.045, FL + 0.56, 0.74, col, opt);
       lbox(S, mid + s * 0.085 - 0.055, mid + s * 0.085 + 0.055, fd - 0.065, fd + 0.035, FL + 1.33, 0.055, col, opt);
@@ -596,11 +611,11 @@ export function build(K) {
     }
     K.hpoly(fabric[seed % fabric.length], ellipse(u, v, 0.55, 0.55, seg), FL + 1.4, true);
   }
-  function bagItem(S, a, d, y, col) {
-    lbox(S, a - 0.15, a + 0.15, d - 0.075, d + 0.075, y, 0.3, col, stockOpt(S));
+  function bagItem(S, a, d, y, col, scale = 1) {
+    lbox(S, a - 0.15 * scale, a + 0.15 * scale, d - 0.075, d + 0.075, y, 0.3, col, stockOpt(S));
     // Handles are open, with their backs hidden against the body or display wall.
-    for (const da of [-0.095, 0.095]) lquadV(S, a + da - 0.012, a + da + 0.012, d - 0.055, y + 0.29, y + 0.43, col);
-    lquadV(S, a - 0.1, a + 0.1, d - 0.055, y + 0.42, y + 0.445, col);
+    for (const da of [-0.095 * scale, 0.095 * scale]) lquadV(S, a + da - 0.012, a + da + 0.012, d - 0.055, y + 0.29, y + 0.43, col);
+    lquadV(S, a - 0.1 * scale, a + 0.1 * scale, d - 0.055, y + 0.42, y + 0.445, col);
   }
   function bagStands(S, W) {
     for (let j = 0; j < 2; j++) {
@@ -676,6 +691,17 @@ export function build(K) {
     },
     clothes(S, W, D, r) {
       const seed = r * 23 | 0, entry = 0.72, fw = Math.max(0.45, (W - entry - 0.16) / 2);
+      if (S.line === 'D' && S.a0 < -292 && S.a1 > -300) {
+        const printed = { ...S, photo: 'pastel-print' }, len = (W - 0.3) / 3;
+        for (let j = 0; j < 3; j++) clothesRail(printed, 0.08 + j * (len + 0.05), -0.08, len, j + seed);
+        clothesRail(printed, 0.2, Math.max(1.45, D * 0.64), W - 0.4, seed + 1);
+        for (const y of [0.65, 1.58]) for (let a = 0.28, j = 0; a < W - 0.15; a += 0.36, j++) {
+          lbox(S, a - 0.18, a + 0.18, D - 0.22, D - 0.10, FL + y, 0.82, { tex: 'gt_dress_print_' + j % 3 }, { solid: false });
+          lbox(S, a - 0.2, a + 0.2, D - 0.24, D - 0.08, FL + y + 0.82, 0.025, 0xe3ddcf, { solid: false });
+        }
+        for (const a of [0.47, W - 0.47]) mannequin(S, a, Math.min(1.05, D * 0.35), seed + (a > W / 2 ? 1 : 0));
+        return;
+      }
       // Face-out stock projects 0.375m; dense rail bodies project 0.27m,
       // so the five-metre shop gap reads as 4.25–4.46m between goods.
       // Each side of the short entry reads as one continuous rail, with no empty margins at the pilasters.
@@ -739,14 +765,14 @@ export function build(K) {
     },
     bags(S, W, D) {
       shelfStock(S, W, D, 'bags');
-      if (S.line === 'B' && S.uc >= 150 && S.uc <= 169) {
+      if (S.line === 'B' && S.uc >= 150 && S.uc <= 183) {
         // k9_340: dark stepped tiers run from the shop's front platform to the ceiling.
         lbox(S, 0.08, W - 0.08, -0.40, Math.min(D - 0.1, 1.7), FL + 0.01, 0.12, 0x3c3e40, { solid: false });
         for (let t = 0; t < 5; t++) {
-          const d = -0.30 + t * 0.29, y = FL + 0.36 + t * 0.44;
+          const d = -0.30 + t * 0.29, y = FL + 0.40 + t * 0.39;
           lbox(S, 0.08, W - 0.08, d - 0.10, d + 0.24, y - 0.05, 0.05, 0x4a4c4e, { solid: false });
           lquadV(S, 0.08, W - 0.08, d + 0.23, y, y + 0.39, 0x4a4c4e);
-          for (let a = 0.28, j = 0; a < W - 0.16; a += 0.38, j++) bagItem(S, a, d, y, [0xc9c3b6, 0x2e3338, 0x667f63, 0xd9d1c2, 0xa98e68][(j + t) % 5]);
+          for (let a = 0.20, j = 0; a < W - 0.12; a += 0.18, j++) bagItem(S, a, d, y, [0xc9c3b6, 0x2e3338, 0x667f63, 0xd9d1c2, 0xa98e68][(j + t) % 5], 0.65);
         }
       } else bagStands(S, W);
     },
@@ -791,7 +817,7 @@ export function build(K) {
       // _170/_60: stacked sun hats and caps right at the open stall edge.
       for (const a of [0.38, W - 0.4]) {
         lbox(S, a - 0.30, a + 0.30, -0.52, 0.12, FL, 0.70, 0xc7baa2, { solid: false });
-        for (let j = 0; j < 6; j++) {
+        for (let j = 0; j < (S.line === 'A' && S.uc > -230 && S.uc < -205 ? 13 : 6); j++) {
           const [u, v] = Lp(S, a, -0.18), [x, z] = P(u, v), y = FL + 0.72 + j * 0.13;
           const col = [0xdcc9aa, 0xf0e9dc, 0x363938, 0xc2928c][j % 4];
           K.cyl({ x, z, y, r: 0.26 - (j % 2) * 0.035, h: 0.025, seg: 10, mat: col, solid: false });
@@ -862,7 +888,8 @@ export function build(K) {
       lbox(S, 0.5, W - 0.5, D * 0.5, D * 0.5 + 0.12, FL, 1.1, { tex: 'gt_frames' });
     },
     flowers(S, W, D) {
-      const colours = [0xf2c230, 0xe8a0b0, 0xf4f2ea, 0xb3263a, 0xe8742a, 0x8a5fb0];
+      const endFront = S.photo === 'east-flower-front';
+      const colours = endFront ? [0xe05a7a, 0xf2d04a, 0xffffff, 0x9a5ac8, 0xe8a0b0] : [0xf2c230, 0xe8a0b0, 0xf4f2ea, 0xb3263a, 0xe8742a, 0x8a5fb0];
       const opt = { solid: false }, front = FACE[outFace(S)], nx = Math.sin(front), nz = Math.cos(front);
       const leaf = (a, d, y, r, lean = 1) => {
         const shape = [[a, d, y], [a + r, d - 0.025, y + r * 0.55], [a + r * 1.45, d + lean * 0.08, y + r * 1.8], [a + r * 0.2, d + lean * 0.07, y + r * 1.1]];
@@ -873,7 +900,7 @@ export function build(K) {
         const [x, z] = P(...Lp(S, a, d));
         K.cyl({ x, z, y, r: tall ? 0.18 : 0.12, h: tall ? 0.53 : 0.23, seg: 6, mat: tall || j % 4 === 0 ? 0xf0eee7 : j % 3 ? 0x343e36 : 0xc5afa2, solid: false });
         const ph = tall ? 0.53 : 0.23;
-        for (let n = 0; n < (tall ? 3 : 4); n++) {
+        for (let n = 0; n < (tall ? 3 : endFront ? 6 : 4); n++) {
           const ang = n * 2.4 + j, aa = a + Math.cos(ang) * 0.095, dd = d + Math.sin(ang) * 0.095, h = (tall ? 0.67 : 0.24) + (n % 3) * 0.065;
           lbox(S, aa - 0.009, aa + 0.009, dd - 0.009, dd + 0.009, y + ph - 0.025, h, 0x446a31, opt);
           leaf(aa, dd, y + ph + h * 0.24, n % 2 ? -0.07 : 0.085);
@@ -887,9 +914,10 @@ export function build(K) {
       };
       // 18/27/28: five irregular tiers rather than a single flower texture. A
       // narrow access gap remains at the right, while stock projects into the edge.
-      const displayW = Math.max(1.2, W - 0.85), n = Math.min(8, Math.max(3, Math.floor(displayW / 0.41)));
+      const displayW = Math.max(1.2, W - (endFront ? 0.15 : 0.85));
+      const n = endFront ? Math.floor(displayW / 0.3) : Math.min(8, Math.max(3, Math.floor(displayW / 0.41)));
       for (let t = 0; t < 5; t++) {
-        const d = -0.23 + t * Math.min(0.42, Math.max(0.25, (D - 0.65) / 5)), h = 0.10 + t * 0.27;
+        const d = -0.23 + t * Math.min(0.42, Math.max(0.25, (D - 0.65) / 5)), h = endFront ? 0.05 + t * 0.22 : 0.10 + t * 0.27;
         lbox(S, 0.08, displayW, d - 0.21, d + 0.21, FL, h, t % 2 ? 0xdedbd0 : 0xf0eee8, opt);
         for (let j = 0; j < n; j++) {
           const a = 0.27 + j * (displayW - 0.5) / Math.max(1, n - 1);
@@ -899,7 +927,7 @@ export function build(K) {
       // Tall white orchid pots and floor baskets make the outlines uneven.
       for (let j = 0; j < 3; j++) bouquet(W - 0.34, 0.35 + j * Math.min(0.7, (D - 0.7) / 3), FL, j % 2 ? 0xf3e7ed : 0xca7fc2, j, true);
       // Visible hanging trailing foliage and bare warm bulbs (27/28).
-      for (let a = 0.3, j = 0; a < W - 0.2; a += 0.55, j++) {
+      for (let a = 0.3, j = 0; !endFront && a < W - 0.2; a += 0.55, j++) {
         const d = 0.12, len = 0.26 + (j % 3) * 0.12;
         lbox(S, a - 0.009, a + 0.009, d - 0.009, d + 0.009, AY - len, len, 0x315838, opt);
         for (let k = 0; k < 3; k++) leaf(a, d, AY - 0.13 - k * len / 3, k % 2 ? -0.075 : 0.075);
@@ -1028,6 +1056,9 @@ export function build(K) {
     const food = ['food', 'cafe'].includes(info.fx), sw = food ? Math.min(W - 0.35, 3.3) : Math.min(W - 0.35, 1.2);
     if (S.photo !== 'BYC' && (food || S.named || !S.num)) lsign(loc, name, W / 2, -0.09, FL + (food ? 2.83 : 2.6), sw, food ? 0.3 : 0.35, outFace(loc), { bg: food ? info.bg : '#242526', fg: food ? info.fg || '#ffffff' : '#ffffff', bold: true, sub: food ? sub : undefined, pxPerM: 150, box: 0.025 });
     if (name === 'TONYMOLY') {
+      // gm-L3: the black blade is in front of the G5/G6 bar, facing along the aisle.
+      bx(-209.55, -209.45, -4.3, -3.1, FL + 2.45, 0.35, 0x171717, { solid: false });
+      for (const face of ['+u', '-u']) sg('TONYMOLY', -209.5 + (face === '+u' ? 0.057 : -0.057), -3.7, FL + 2.625, 1.16, 0.30, face, { bg: '#171717', fg: '#ffffff', pxPerM: 190 });
       lsign(loc, '세일', 0.45, -0.10, FL + 2.1, 0.65, 0.3, outFace(loc), { bg: '#bf2638', fg: '#fff' });
       lbox(loc, 0.08, 0.65, -0.38, 0.18, FL, 1.35, { tex: 'gt_cosme' }, { solid: false });
     }
@@ -1100,7 +1131,9 @@ export function build(K) {
   const bays = [], guideBoards = [];
   let passN = 0;
   for (let k = 0; k < NB; k++) {
-    const ua = GRID0 + k * GRID, ub = ua + GRID, uc = (ua + ub) / 2;
+    // gm-L3: the crossing starts behind the round light, leaving TONYMOLY glass under the sign.
+    const ua = GRID0 + k * GRID - ([12, 13].includes(k) ? 4.4 : 0);
+    const ub = GRID0 + (k + 1) * GRID - ([11, 12].includes(k) ? 4.4 : 0), uc = (ua + ub) / 2;
     const Ly = lay(uc); const sec = sectionOf(uc);
     bays.push({ k, ua, ub, uc, L: Ly, sec, central: hasCentral(k) && !isPassage(k), passage: isPassage(k) });
   }
@@ -1134,10 +1167,10 @@ export function build(K) {
           let ck = pick(POOL[poolKey], rnd());
           // gm-L9: the west U-turn opens onto pastel apparel; florists continue east.
           if (Ln.line === 'D' && b.uc > -305 && b.uc < -285) ck = 'women';
-          if (Ln.line === 'A' && b.uc > -230 && b.uc < -210) ck = 'hats'; // _170 opposite TONYMOLY
+          if (Ln.line === 'A' && b.uc > -230 && b.uc < -205) ck = 'hats'; // _170 near right, opposite TONYMOLY
           if (Ln.line === 'A' && b.k === 67) ck = 'women'; // _240 across the poster column
           if (ck === 'shoes' && (b.k + i) % 12 !== 0) ck = 'women';
-          if (Ln.line === 'B' && b.uc > 150 && b.uc < 169) ck = 'bags'; // relocated _340
+          if (Ln.line === 'B' && b.uc > 150 && b.uc < 183) ck = 'bags'; // _340: outside the G13 pocket, u168..182
           if (Ln.line === 'D' && b.uc > 138 && b.uc < 155) ck = 'shoes'; // relocated k9_1520
           if (Ln.line === 'B' && b.uc > -121 && b.uc < -109) ck = 'hats'; // relocated rL_60
           if (Ln.line === 'C' && b.uc > -155 && b.uc < -132) ck = 'socks'; // relocated rL_620
@@ -1147,17 +1180,24 @@ export function build(K) {
           if (Ln.line === 'A' && b.uc > -156 && b.uc < -141) ck = 'women';
           if (Ln.line === 'B' && b.uc > 40.6 && b.uc < 49.5) ck = 'women'; // _460 sale shop
           if (Ln.line === 'B' && b.uc > 349 && b.uc < 359.6) ck = 'women';
-          const no = ++counters[Ln.line]; const num = `${Ln.line}-${String(no).padStart(3, '0')}`;
+          if (Ln.line === 'D' && a + i * w < -292 && a + (i + 1) * w > -300) ck = 'women';
+          // L3's changed subdivision count must not re-dress the unrelated curtain stall.
+          if (Ln.line === 'D' && a + i * w > -197.7 && a + (i + 1) * w < -194.7) ck = 'curtain';
+          const no = ++counters[Ln.line]; const generatedNum = `${Ln.line}-${String(no).padStart(3, '0')}`;
           const S = makeShop({ line: Ln.line, a0: a + i * w, a1: a + (i + 1) * w, fr: Ln.fr, depth: Ln.depth, r });
+          // Keep known tenants at their existing frontage when a neighbouring passage changes bay counts.
+          const jewellery = Ln.line === 'C' && S.a0 <= 145.29 && S.a1 > 145.29;
+          const office = Ln.line === 'D' && S.a0 <= 285.26 && S.a1 > 285.26;
+          const num = jewellery ? 'C-083' : office ? 'D-142' : generatedNum === 'C-083' ? 'C-084' : generatedNum === 'D-142' ? 'D-140' : generatedNum;
           let info;
           // zone sub = store number only (short map labels; the section is named by the corridor zones)
           const tenant = namedFor(Ln.line, S.a0, S.a1);
           S.photo = tenant?.photo;
           if (tenant) info = { name: tenant.name, sub: `${tenant.sub ? tenant.sub + ' · ' : ''}${num}`, fx: tenant.fx, bg: tenant.bg, fg: tenant.fg, menu: tenant.menu, glass: tenant.glass, back: tenant.back, zsub: num };
-          else if (num === 'C-083') info = { name: '주얼리 하우스', sub: `목걸이·팔찌·반지 · ${num}`, fx: 'acc', bg: '#3b2a46', fg: '#f3d98b', zsub: `${num} · 액세서리` };
-          else if (num === 'D-142') info = { ...CAT.office, name: '고투몰 관리사무소', sub: `고객센터 · ${num}`, zsub: `${num} · 고객센터 · 분실물` };
+          else if (jewellery) info = { name: '주얼리 하우스', sub: '목걸이·팔찌·반지 · C-083', fx: 'acc', bg: '#3b2a46', fg: '#f3d98b', zsub: 'C-083 · 액세서리' };
+          else if (office) info = { ...CAT.office, name: '고투몰 관리사무소', sub: '고객센터 · D-142', zsub: 'D-142 · 고객센터 · 분실물' };
           else { const C = CAT[ck]; info = { name: C.label, sub: num, fx: C.fx, bg: C.bg, fg: C.fg, menu: C.menu, glass: ck === 'cosme' || ck === 'lens', zname: C.label, zsub: num }; }
-          S.num = num; S.no = no; S.uc = (S.a0 + S.a1) / 2; S.col = info.bg; S.named = !!tenant || num === 'C-083' || num === 'D-142';
+          S.num = num; S.no = Number(num.slice(2)); S.uc = (S.a0 + S.a1) / 2; S.col = info.bg; S.named = !!tenant || jewellery || office;
           buildShop(S, info);
         }
       }
@@ -1169,13 +1209,13 @@ export function build(K) {
       for (const [cond, u, face] of [[!prev || !prev.central, ua, '-u'], [!next || !next.central, ub, '+u']]) {
         if (!cond) continue;
         const openEndShop = b.k === 80 && face === '+u' || b.k === 3 && face === '-u';
-        wallV(u, Ly.fB, Ly.fC, FL, CY, { mat: M.wall, thick: 0.25, openings: openEndShop ? [{ at: (Ly.fC - Ly.fB) / 2, w: 5.8, y0: FL, y1: FL + 2.65 }] : [] });
+        if (!(b.k === 80 && face === '+u')) wallV(u, Ly.fB, Ly.fC, FL, CY, { mat: M.wall, thick: 0.25, openings: openEndShop ? [{ at: (Ly.fC - Ly.fB) / 2, w: 5.8, y0: FL, y1: FL + 2.65 }] : [] });
         const off = face === '-u' ? -0.15 : 0.15;
         if (b.k === 80 && face === '+u') {
           // gm-L5: preserve the island, replace its end directory with the flower front.
           furnish(u, () => {
-            const S = { fr: { pu: u + 0.18, pv: Ly.mid - 2.8, au: 0, av: 1, du: -1, dv: 0 }, r: 0.7 };
-            FX.flowers(S, 5.6, 2.1);
+            const S = { fr: { pu: u + 0.18, pv: Ly.mid - 3.0, au: 0, av: 1, du: -1, dv: 0 }, r: 0.7, photo: 'east-flower-front' };
+            FX.flowers(S, 6.0, 2.1);
             sg('꽃·화분', u + 0.20, Ly.mid, FL + 2.55, 2.5, 0.25, '+u', { bg: '#323b2c', fg: '#fff' });
           });
         } else if (b.k === 3 && face === '-u') {
@@ -1221,6 +1261,8 @@ export function build(K) {
     }
     furnish(b.uc, () => {
     const rnd = K.rand(7000 + b.k);
+    // L3 moves the shop opening, not the photographed sign/light sequence.
+    const ua = GRID0 + b.k * GRID, ub = ua + GRID, ceilingU = (ua + ub) / 2;
     // 01/19: warm grey soffit, one closed white oval per three bays, downlights in between.
     for (const [c0, c1, side] of [[Ly.fA, Ly.fB, 'N'], [Ly.fC, Ly.fD, 'S']]) {
       const cm = (c0 + c1) / 2;
@@ -1230,13 +1272,13 @@ export function build(K) {
         const triple = side === 'S' && b.k === 62;
         const hasOval = !end && (b.passage || b.k % 3 === 0 || side === 'S' && b.k === 76);
         // _1520 has two adjacent near lobes and a third further down the aisle.
-        const ovals = triple ? [[b.uc - 1.5, cm - 1.26, 1.48, 1.06], [b.uc - 1.35, cm + 1.26, 1.35, 1.04], [b.uc + 1.7, cm + 0.12, 1.42, 1.16]] : hasOval ? [[b.uc, cm, 3, 1.5]] : [];
+        const ovals = triple ? [[ceilingU - 1.5, cm - 1.26, 1.48, 1.06], [ceilingU - 1.35, cm + 1.26, 1.35, 1.04], [ceilingU + 1.7, cm + 0.12, 1.42, 1.16]] : hasOval ? [[ceilingU, cm, 3, 1.5]] : [];
         K.hpoly(end ? M.ceil : 'gt_soffit', R(ua, c0, ub, c1), AY, false, ovals.map(o => ellipse(...o)));
         if (slatted) {
           for (let u = ua + 0.2; u < ub; u += 0.48) bx(u, u + 0.065, c0 + 0.45, c1 - 0.45, AY - 0.15, 0.16, 0xe4e0d7, { solid: false, skip: ['top'] });
           for (const u of [ua + 1.0, ua + 4.0, ua + 7.0]) panelCove(u, cm, 1.15, c1 - c0 - 1.2, AY + 0.02);
-          foodAC(b.uc, cm, AY - 0.17);
-        } else if (end) panelCove(b.uc, cm, 6.4, 3.1, AY);
+          foodAC(ceilingU, cm, AY - 0.17);
+        } else if (end) panelCove(ceilingU, cm, 6.4, 3.1, AY);
         else if (ovals.length) for (const o of ovals) ovalCove(...o);
         else for (const u of [ua + 1.4, ua + 4.2, ua + 7.0]) downlight(u, cm);
         for (let u = ua + 0.7; u < ub - 0.2; u += 1.5) for (const v of [c0 + 0.65, c1 - 0.65]) downlight(u, v, AY, false);
@@ -1244,43 +1286,43 @@ export function build(K) {
         else fq(M.floor, ua, c0, ub, c1, FL + 0.004);
         // The 2026 walk shows a centred guide in BOTH parallel aisles.
         tactilePath([[ua, cm], [ub, cm]]);
-        if (b.passage && side === 'N') tactilePath([[b.uc - 3.1, cm], [b.uc - 3.1, (Ly.fC + Ly.fD) / 2]]);
-        if (side === 'N' && [55, 60].includes(b.k)) sg(['교환·환불·카드결제를 거부하지 않습니다', '고투몰에서 즐거운 쇼핑 하세요'], b.uc + 1.4, cm, FL + 2.79, 4.6, 0.32, '-u', { bg: '#f8f4ed', fg: '#992e3a', pxPerM: 100 });
+        if (b.passage && side === 'N') tactilePath([[ceilingU - 3.1, cm], [ceilingU - 3.1, (Ly.fC + Ly.fD) / 2]]);
+        if (side === 'N' && [55, 60].includes(b.k)) sg(['교환·환불·카드결제를 거부하지 않습니다', '고투몰에서 즐거운 쇼핑 하세요'], ceilingU + 1.4, cm, FL + 2.79, 4.6, 0.32, '-u', { bg: '#f8f4ed', fg: '#992e3a', pxPerM: 100 });
         if (b.k % 4 === 0 || sec.key === 'center' && b.k % 4 === 2) exitPictogram(ua + 0.8, cm, FL + 2.7, '-u');
-        {
+        if (!(side === 'S' && [2, 3].includes(b.k))) {
           const u = ua + 1.8;
           bx(u - 0.015, u + 0.015, cm - 0.015, cm + 0.015, AY - 0.15, 0.15, 0x77736e, { solid: false });
           sg('✦', u, cm, AY - 0.43, 0.30, 0.60, '+u', { rotY: FACE['+u'] + 0.28, bg: '#a02030', fg: '#f2c230', twoSided: true, pxPerM: 180 });
         }
         if (side === 'S' && b.k === 20) sg('교환·환불·카드결제를 거부하지 않습니다', -143, cm, FL + 2.78, 4.3, 0.26, '-u', { bg: '#fff0f2', fg: '#a33445', twoSided: true, pxPerM: 150 });
         if (b.k % 2 === 0) {
-          const vu = b.uc + 2.3, vv = c0 + 0.85;
+          const vu = ceilingU + 2.3, vv = c0 + 0.85;
           K.hpoly(0xd5d5d1, ellipse(vu, vv, 0.24, 0.24, 20), AY - 0.012, false);
           for (const rr of [0.19, 0.13, 0.07]) K.hpoly(0xaaaead, ellipse(vu, vv, rr, rr, 20), AY - 0.018, false, [ellipse(vu, vv, rr - 0.022, rr - 0.022, 20)]);
         }
         if (b.k % 8 === 1) {
-          const [x, z] = P(b.uc, c0 + 0.45);
+          const [x, z] = P(ceilingU, c0 + 0.45);
           K.cyl({ x, z, y: AY - 0.08, r: 0.13, h: 0.08, seg: 10, mat: 0xe5e5df, solid: false });
           K.dome({ x, z, y: AY - 0.13, rx: 0.105, ry: 0.105, rz: 0.105, mat: 0x353c3e, seg: 10, rings: 3 });
         }
       } else {
-        hallCoffer(b.uc, cm, GRID - 0.4, c1 - c0 - 0.5);
+        hallCoffer(ceilingU, cm, GRID - 0.4, c1 - c0 - 0.5);
         for (const u of [ua + 1.4, ua + 4.2, ua + 7]) downlight(u, cm, CY - 0.10);
       }
-      const quiet = side === 'N' && b.uc > -285 && b.uc < -240;
+      const quiet = side === 'N' && ceilingU > -285 && ceilingU < -240;
       const retailCrowd = ['west', 'center', 'east'].includes(sec.key);
-      const n = retailCrowd ? (quiet ? 4 : (b.uc > -290 && b.uc < -190 ? 7 : 6) + (rnd() * 3 | 0)) : 3 + (rnd() * 3 | 0);
+      const n = retailCrowd ? (quiet ? 4 : (ceilingU > -290 && ceilingU < -190 ? 7 : 6) + (rnd() * 3 | 0)) : 3 + (rnd() * 3 | 0);
       for (let i = 0; i < n; i++) {
-        const cluster = Math.floor(i / 3), rackSide = (b.k + cluster) % 2 ? 1 : -1;
-        const u = ua + 0.6 + cluster * 2.65 + (i % 3) * 0.58 + rnd() * 0.15;
-        const browse = i % 2 === 0;
-        const v = cm + rackSide * (browse ? (c1 - c0) / 2 - 0.85 : 0.55 + rnd() * 0.25);
+        const cluster = Math.floor(i / 4), rackSide = (b.k + cluster) % 2 ? 1 : -1;
+        const u = ua + 0.6 + cluster * 3.2 + (i % 4) * 0.64 + rnd() * 0.25;
+        const browse = i % 4 < 2;
+        const v = cm + (browse ? rackSide * ((c1 - c0) / 2 - 0.85) : (i % 4 === 2 ? -1 : 1) * (0.4 + rnd() * 1.0));
         if (!blocked(u, v - 0.3, v + 0.3)) shopper(u, v, b.k * 11 + i, browse ? FACE[rackSide > 0 ? '+v' : '-v'] : FACE[i % 3 ? '+u' : '-u']);
       }
     }
     if (!b.central) { // hall / passage ceiling panels
-      if (['l3', 'l9'].includes(sec.key)) hallCoffer(b.uc, Ly.mid, GRID - 0.4, Ly.fC - Ly.fB - 0.5);
-      else for (let v = Ly.fB + 1.2; v < Ly.fC - 0.8; v += 2.7) panelCove(b.uc, v, 5.6, 1.8);
+      if (['l3', 'l9'].includes(sec.key)) hallCoffer(ceilingU, Ly.mid, GRID - 0.4, Ly.fC - Ly.fB - 0.5);
+      else for (let v = Ly.fB + 1.2; v < Ly.fC - 0.8; v += 2.7) panelCove(ceilingU, v, 5.6, 1.8);
     }
     });
     if (b.passage) { // cross passage: benches + hanging signs
@@ -1295,24 +1337,45 @@ export function build(K) {
 
   // gm-T1: close shoppers at filmed browsing positions, separate from the walking
   // clusters above. All belong to the same nearby lazy detail rooms as their stock.
-  for (const [u, aisle, seed] of [[-206.5,'N',301], [250,'N',311], [168,'N',321], [-145,'N',331], [-110,'S',341], [145,'S',351], [-113,'N',361], [-151,'S',371], [320,'S',381], [194,'S',391]]) {
+  for (const [u, aisle, seed, dir] of [[-208,'N',301,-1], [250,'N',311,-1], [182,'N',321,-1], [-145,'N',331,-1], [-110,'S',341,1], [151,'S',351,1], [-113,'N',361,-1], [-151,'S',371,1], [320,'S',381,1]]) {
     furnish(u, () => {
       const L = lay(u), cm = aisle === 'N' ? (L.fA + L.fB) / 2 : (L.fC + L.fD) / 2;
       for (let i = 0; i < 4; i++) {
-        const side = i < 2 ? 1 : -1, uu = u + (i % 2 ? 1.9 : 0.85), vv = cm + side * (i % 2 ? 1.05 : 1.65);
+        const side = i < 2 ? 1 : -1, uu = u + dir * (i % 2 ? 2.6 : 1.35), vv = cm + side * (i % 2 ? 1.0 : 1.65);
         if (!blocked(uu, vv - 0.3, vv + 0.3)) shopper(uu, vv, seed + i, i % 2 ? FACE[i < 2 ? '+u' : '-u'] : FACE[side > 0 ? '+v' : '-v']);
       }
     });
   }
+  furnish(201, () => {
+    // NEW-1: fourteen distant shoppers, with an open foreground to the three ceiling panels.
+    for (let i = 0; i < 14; i++) {
+      const u = 198.4 + Math.floor(i / 2) * 1.53, L = lay(u), cm = (L.fC + L.fD) / 2;
+      const side = i % 2 ? 1 : -1, browse = i % 4 < 2, v = cm + side * (browse ? 1.65 : 0.5 + (i % 3) * 0.36);
+      shopper(u, v, 1900 + i, browse ? FACE[side > 0 ? '+v' : '-v'] : FACE[i % 3 ? '+u' : '-u']);
+    }
+  });
+  furnish(-308, () => {
+    // gm-T1 / _445: three women with totes ahead-left, walking toward the toilet sign.
+    for (const [i, [u, v]] of [[-308, 7.0], [-308.55, 7.5], [-309, 7.0]].entries()) shopper(u, v, 420 + i * 3, FACE['-u']);
+  });
+  furnish(-296, () => {
+    for (const u of [-299, -296, -293]) {
+      bx(u - 0.015, u + 0.015, 6.15, 6.18, AY - 0.15, 0.15, 0x77736e, { solid: false });
+      sg('✦', u, 6.16, AY - 0.43, 0.30, 0.60, '-v', { rotY: FACE['-v'] + 0.28, bg: '#a02030', fg: '#f2c230', twoSided: true, pxPerM: 180 });
+    }
+  });
 
   // Continuous hall detours use the preserved W3/W9 edges and avoid the benches.
   furnish(-105, () => {
     // gm-C4/_680: merchandise wraps the south-east corner of the B/C island.
     const L = lay(-106), S = { fr: { pu: -108.2, pv: L.fC, au: 1, av: 0, du: 0, dv: -1 } };
     clothesRail(S, 0.1, -0.02, 2.8, 8);
-    const corner = { fr: { pu: -102.6, pv: L.fC - 2.8, au: 0, av: 1, du: -1, dv: 0 } };
-    clothesRail(corner, 0.12, 0.25, 2.5, 9);
-    sg('9,900', -104.5, L.fC + 0.02, FL + 2.1, 0.7, 0.38, '+v', { bg: '#f2d34e', fg: '#a82d33', pxPerM: 170 });
+    // gm-C4: free-standing rails project beyond the island, visible on both sides of its corner.
+    const corner = { fr: { pu: -101.65, pv: 2.9, au: 0, av: 1, du: -1, dv: 0 } };
+    clothesRail(corner, 0.05, 0, 1.25, 9);
+    clothesRail(S, 3.1, -0.38, 2.1, 11);
+    bx(-102.4, -102.0, 2.4, 2.8, FL, 2.65, 0xe8e5de, { solid: false });
+    sg('9,900', -102.2, 2.83, FL + 2.0, 0.8, 0.5, '+v', { bg: '#f2d04a', fg: '#a82d33', pxPerM: 170 });
   });
   const hallGuide = (key, side, bends) => {
     const group = bays.filter(b => b.sec.key === key), before = bays[group[0].k - 1], after = bays[group.at(-1).k + 1];
@@ -1337,6 +1400,7 @@ export function build(K) {
     const Ly = b.L; const zoneTag = b.sec.key === 'west' || b.sec.key === 'wplaza' ? 'WEST ZONE' : b.sec.key === 'east' || b.sec.key === 'eplaza' ? 'EAST ZONE' : '고속터미널역';
     for (const [c0, c1] of [[Ly.fA, Ly.fB], [Ly.fC, Ly.fD]]) {
       const cm = (c0 + c1) / 2; const u = b.uc;
+      if (b.k === 62 && c0 === Ly.fC) continue; // gm-C6/D4: rL_1520 shows the three panels without a G13 bar
       if (blocked(u, cm - 1.6, cm + 1.6) || Math.abs(u + 1.8) < 4) continue;
       const [x, z] = P(u, cm);
       K.box({ x, z, y: FL + 2.56, w: 0.07, d: 5.0, h: 0.35, rotY: ROT, mat: 0x1b2233, solid: false, skip: [] });
@@ -1532,8 +1596,8 @@ export function build(K) {
       const u = 13.0 + i * 0.21, v0 = 9.04 - Math.sin(i * 1.7) * 0.11;
       bx(u - 0.12, u + 0.12, v0 - 0.11, v0 + 0.13, FL + 0.3 + (i % 5) * 0.1, 0.08, greens[i % 3], { solid: false });
     }
-    for (let j = 0; j < 9; j++) {
-      const a = Math.PI + 0.2 + j * (Math.PI - 0.4) / 8;
+    for (let j = 0; j < 10; j++) {
+      const a = Math.PI + 0.2 + j * (Math.PI - 0.4) / 9;
       const [x, z] = P(16.1 + Math.cos(a) * 3.86, 10.15 + Math.sin(a) * 1.53);
       K.person(x, FL, z, { sit: true, rotY: FACE['+v'] + Math.atan2(Math.cos(a), Math.sin(a)), shirt: [0x7b3544, 0xc2bba3, 0x4c596a, 0x8b8b88][j % 4] });
     }
@@ -1549,14 +1613,17 @@ export function build(K) {
     const [ix, iz] = P(-0.15, 10.7); K.person(ix, FL, iz, { shirt: 0xb22e36, pants: 0x252933 });
     sg('쓰레기를 버리지 마세요', 1.0, 10.0, FL + 1.25, 0.46, 0.36, '-v', { bg: '#f9f8ef', fg: '#b93436', pxPerM: 150 });
     // gm-D5 / rLMagJuViqo_860: straight grey transverse beams in front of flush white panels.
-    // The lower uninterrupted field masks the generic hall coffers here, without altering the halls beyond.
-    fq({ tex: 'emit', color: 0xe9e9e6 }, -2, 2.8, 24, 12.0, CY - 0.48, false);
+    // station.ovalMezzanine adds a 2.82 m grid and a fascia reaching 2.7 m here even with mallHere.
+    // This local 2.66 m soffit is a frame-fit finish below that overlap, not a corrected station survey.
+    // Preserve the station oval and the other photographed ceiling treatments beyond the plaza.
+    const plazaCeil = FL + 2.66, beamBottom = FL + 2.405; // cove face stays at 2.40 m clearance
+    fq('gt_shop_ceiling', -2, 2.8, 26.5, 12.0, plazaCeil, false);
     for (const u of [8.0, 10.5]) {
-      bx(u - 0.36, u + 0.36, 2.8, 12.0, CY - 0.74, 0.60, 0x5a5c5e, { solid: false, skip: ['top'] });
-      for (const du of [-0.24, 0.24]) fq({ tex: 'emit', color: 0xf6f8fa }, u + du - 0.045, 2.95, u + du + 0.045, 11.85, CY - 0.745, false);
+      bx(u - 0.36, u + 0.36, 2.8, 12.0, beamBottom, 0.60, 0x5a5c5e, { solid: false, skip: ['top'] });
+      for (const du of [-0.24, 0.24]) fq({ tex: 'emit', color: 0xf6f8fa }, u + du - 0.045, 2.95, u + du + 0.045, 11.85, beamBottom - 0.005, false);
     }
-    for (const u of [12.4, 14.8, 17.2, 19.6, 22.0]) for (const v of [4.3, 6.7, 9.1, 11.2])
-      fq({ tex: 'emit', color: 0xf6f8fa }, u - 0.3, v - 0.9, u + 0.3, v + 0.9, CY - 0.493, false);
+    for (const u of [12.4, 14.8, 17.2, 19.6, 22.0, 24.4]) for (const v of [4.3, 6.7, 9.1, 11.0])
+      fq({ tex: 'emit', color: 0xf6f8fa }, u - 0.3, v - 0.9, u + 0.3, v + 0.9, plazaCeil - 0.013, false);
     // The screen stands on the north-west edge of the planted bench, left in the east-facing _860 view.
     bx(11.5, 12.1, 4.95, 5.85, FL, 0.12, 0x202326, { solid: false });
     bx(11.76, 11.94, 4.95, 5.85, FL + 0.12, 1.78, 0x171a1e, { solid: false });
@@ -1587,7 +1654,8 @@ export function build(K) {
       bx(a, b, front, back, FL + 2.65, CY - FL - 2.65, 0xe7e1d7, { solid: false, skip: ['top'] });
       for (const u of [a, b]) bx(u - 0.025, u + 0.025, front, back, FL, 2.65, 0x8e8980, { solid: false });
       vq({ tex: 'emit', color: type === 'cafe' ? 0xe4cfa9 : 0xf2ede3 }, a + 0.06, back - 0.025, b - 0.06, back - 0.025, FL + 0.4, FL + 2.6, '-v');
-      sg(name, centre, front - 0.035, FL + 2.83, W - 0.18, 0.38, '-v', { bg: unit.bg, fg: '#ffffff', bold: type !== 'cafe' });
+      // Keep tenant names visible below the photographed low plaza soffit.
+      sg(name, centre, front - 0.035, FL + 2.46, W - 0.18, 0.28, '-v', { bg: unit.bg, fg: '#ffffff', bold: type !== 'cafe' });
       for (let u = a + 0.5; u < b; u += 1.25) downlight(u, front + depth * 0.45, AY, true);
       if (type === 'food') {
         foodMenuFront(S, W, unit);
@@ -1621,7 +1689,7 @@ export function build(K) {
     }
     // _860: a stroller and additional seated shoppers at the existing plaza edge.
     // This does not identify the unlabelled video plaza's absolute location.
-    const su = -0.7, sv = 5.1;
+    const su = 7.8, sv = 5.1;
     for (const du of [-0.31, 0.31]) for (const dv of [-0.35, 0.35]) {
       const [x, z] = P(su + du, sv + dv);
       K.cyl({ x, z, y: FL + 0.05, h: 0.15, r: 0.10, seg: 8, mat: 0x2b2d2e, solid: false });
@@ -1816,10 +1884,13 @@ export function build(K) {
     for (const u of [-345.8, -354.2, -362.6, -371.0]) for (const v of [-8, 0, 8]) { cols.push([u, v]); bx(u - 0.35, u + 0.35, v - 0.35, v + 0.35, FL, CY - FL, 0xd8d0c0, { skip: ['bottom', 'top'] }); }
     bx(-343.8, -342.8, -13.9, -12.9, FL, CY - FL, 0xd8d0c0);
     bx(-336.05, -334.95, 6.45, 7.55, FL, CY - FL, 0xd8d0c0);
+    // gm-L7: a shallow stool lane, with the dining room screened behind it.
+    wallU(-371, -344.6, -5.5, FL, FL + 3.0, { mat: 0xd8d0c0, thick: 0.14 });
     furnish(-360, () => {
     // Separate restaurant clusters leave a six-metre clear through route in the centre.
     const seats = { fr: { pu: 0, pv: 0, au: 1, av: 0, du: 0, dv: 1 } };
     for (const v of [-5.8, 6.6]) for (const u of [-373.8, -367.6, -359.8, -351.8, -339.4]) {
+      if (v < 0 && u > -371 && u < -344.6) continue; // the frame closes behind the stool row
       if (cols.some(([cu, cv]) => Math.abs(u - cu) < 1.1 && Math.abs(v - cv) < 1.5)) continue;
       if (u === -339.4 && v < 0) diningSet(seats, -336, -9, false);
       else diningSet(seats, u, v, u < -367);
@@ -1833,7 +1904,7 @@ export function build(K) {
     sg('EDIYA COFFEE', -342.77, -13.4, FL + 1.77, 0.62, 0.25, '+u', { bg: '#222326', fg: '#ffffff', pxPerM: 150 });
     bx(-342.76, -342.69, -13.85, -13.05, FL + 0.04, 1.14, 0xc9a77c, { solid: false });
     sg(['생과일주스', '시원한 한 잔'], -342.67, -13.45, FL + 0.66, 0.75, 0.9, '+u', { bg: '#e6d5b8', fg: '#304e75', pxPerM: 130 });
-    for (const u of [-346.7, -344.7]) {
+    for (const u of [-348.7, -346.7, -344.7, -343.0]) {
       bx(u - 0.4, u + 0.4, -15.55, -14.85, FL + 0.71, 0.055, 0xe07a2a, { solid: false });
       for (const du of [-0.31, 0.31]) for (const v of [-15.47, -14.93]) bx(u + du - 0.025, u + du + 0.025, v - 0.025, v + 0.025, FL, 0.71, 0x92612f, { solid: false });
       for (const v of [-16.05, -14.35]) {
@@ -1842,7 +1913,10 @@ export function build(K) {
         for (const du of [-0.17, 0.17]) for (const dv of [-0.17, 0.17]) bx(u + du - 0.018, u + du + 0.018, v + dv - 0.018, v + dv + 0.018, FL, 0.42, 0x6c6860, { solid: false });
       }
     }
-    bx(-369.5, -344.8, -6.8, -6.1, FL, 0.88, 0xc8c5b8, { solid: false });
+    sg(['식사 메뉴', '김밥 · 우동 · 만두'], -354.2, -5.59, FL + 1.75, 1.15, 1.05, '-v', { bg: '#f1e8d4', fg: '#574b39', pxPerM: 130 });
+    bx(-348.04, -347.96, -8.04, -7.96, FL, 2.55, 0x727572, { solid: false });
+    bx(-348.04, -347.94, -8.52, -7.48, FL + 2.2, 0.6, 0x22262b, { solid: false });
+    sg('고투몰 안내', -347.925, -8, FL + 2.5, 0.94, 0.5, '+u', { bg: '#2a5fa8', fg: '#ffffff', pxPerM: 140 });
     for (let u = -367.5; u < -344.5; u += 2.5) {
       bx(u - 0.35, u + 0.35, -7.75, -7.05, FL + 0.72, 0.05, 0xe4dfd2, { solid: false });
       bx(u - 0.04, u + 0.04, -7.44, -7.36, FL, 0.72, 0x252525, { solid: false });
@@ -1974,9 +2048,10 @@ export function build(K) {
     ];
     const fu = 398.6, uE = v => { const e = edgesAtV(v); return e[e.length - 1]; };
     const eastFront = { pu: fu, pv: 0, au: 0, av: 1, du: 1, dv: 0 };
-    // Keep every existing tenant, with a six-metre clear opening between them.
+    // gm-L6: the east-facing return has a plain south wall. Retain its food tenants west of u388.
     stallRow(east.slice(0, 3), eastFront, -15.5, -3.7, v => uE(v) - 0.14 - fu, '동편 푸드코트');
-    stallRow(east.slice(3), eastFront, 3.7, 9.5, v => uE(v) - 0.14 - fu, '동편 푸드코트');
+    stallRow(east.slice(3), { pu: 0, pv: 7.0, au: 1, av: 0, du: 0, dv: 1 }, 370.5, 386.8, u => Math.min(6.2, vS(u) - 7.14), '동편 푸드코트');
+    wallV(fu, 3.7, 9.5, FL, CY, { mat: 0xe1ddd4, thick: 0.14 });
     stallRow([{ name: 'Cafe 헤이와', sub: '동편 가장 안쪽 · G012', bg: '#efe6d6', fg: '#4a3324', fx: 'cafe', menu: ['핸드드립 · 라떼', '디저트'] }], { pu: fu, pv: 0, au: 0, av: 1, du: 1, dv: 0 }, 10.0, 15.2, v => uE(v) - 0.14 - fu, '동편 푸드코트');
     const north = [{ name: '떡볶이 · 튀김', sub: '푸드코트', bg: '#b3261e', menu: ['떡볶이 · 튀김 · 순대'] }, { name: 'COMPOSE COFFEE', sub: '컴포즈커피', bg: '#22221f', fg: '#f4ce20', fx: 'cafe', menu: ['커피 · 음료'] }, { name: '돈가스', sub: '푸드코트', bg: '#4b3b2b', menu: ['돈가스 · 우동'] }];
     const fv = -14.6;
@@ -1988,8 +2063,8 @@ export function build(K) {
       if (v < 0) { const [x, z] = P(u, v); K.cyl({ x, z, y: FL, r: 0.3, h: CY - FL, mat: 0xf1efea, seg: 24 }); }
       else bx(u - 0.45, u + 0.45, v - 0.45, v + 0.45, FL, CY - FL, 0xd9d2c4, { skip: ['bottom', 'top'] });
     }
-    { const [x, z] = P(384, 1.4); K.cyl({ x, z, y: FL, r: 0.3, h: 3, mat: 0xf1efea, seg: 24 }); }
-    bx(396.55, 397.45, 4.15, 5.05, FL, CY - FL, 0xd9d2c4);
+    { const [x, z] = P(377, 1.4); K.cyl({ x, z, y: FL, r: 0.3, h: 3.3, mat: 0xf1efea, seg: 24 }); }
+    bx(391.55, 392.45, 4.05, 4.95, FL, CY - FL, 0xd9d2c4);
     furnish(383, () => {
     foodHallSkin(368.3, 404, -19.5, 19.7, FL + 3.5);
     const endBay = bays.at(-1);
@@ -2065,13 +2140,14 @@ export function build(K) {
       }
       sg('메뉴 안내', u, -8.94, FL + 1.56, 0.54, 0.17, '+v', { bg: '#fffdf5', fg: '#33382f', bold: false });
     }
-    bx(387.95, 388.05, 0.18, 0.82, FL + 0.02, 1.8, 0xd4d4d0, { solid: false });
-    vq({ tex: 'emit', color: 0xffffff }, 388.07, 0.21, 388.07, 0.79, FL + 0.08, FL + 1.76, '+u');
-    sg(['오늘의 메뉴', '칼국수 · 만두', '식사 안내'], 388.09, 0.5, FL + 1.0, 0.54, 1.45, '+u', { bg: null, fg: '#526666', pxPerM: 120 });
+    // _40's corrected u387 camera: menu stand six metres ahead-left, round column ten metres ahead.
+    bx(380.95, 381.05, 0.88, 1.52, FL + 0.02, 1.8, 0xd4d4d0, { solid: false });
+    vq({ tex: 'emit', color: 0xffffff }, 381.07, 0.91, 381.07, 1.49, FL + 0.08, FL + 1.76, '+u');
+    sg(['오늘의 메뉴', '칼국수 · 만두', '식사 안내'], 381.09, 1.2, FL + 1.0, 0.54, 1.45, '+u', { bg: null, fg: '#526666', pxPerM: 120 });
     bx(394.8, 396.1, -4.5, -3.8, FL, 1.02, 0xf5f1e8, { top: 0xd8d4ca, solid: false });
     sg(['커피 · 음료', '주문'], 394.77, -4.15, FL + 0.6, 0.62, 0.58, '-u', { bg: null, fg: '#6d5842', pxPerM: 120 });
-    sg(['커피 · 음료', '오늘의 메뉴'], 392.9, -1.85, FL + 1.03, 0.62, 1.75, '-u', { bg: '#dc823d', fg: '#fff7e7', pxPerM: 130 });
-    bx(392.65, 393.15, -2.02, -1.68, FL + 0.02, 0.04, 0x77746d, { solid: false });
+    sg(['커피 · 음료', '오늘의 메뉴'], 395, -2.5, FL + 0.94, 0.5, 1.8, '-u', { bg: '#e07a2a', fg: '#fff7e7', pxPerM: 130 });
+    bx(394.78, 395.22, -2.7, -2.3, FL + 0.02, 0.04, 0x77746d, { solid: false });
     // 31: narrow EAST ZONE sign, illuminated pillars, six coloured direction arrows.
     sg('EAST ZONE', 383.1, -0.4, FL + 2.82, 1.55, 0.31, '+v', { bg: '#22252a', fg: '#fff', sub: '동편광장', pxPerM: 130 });
     for (const u of [377.3, 381.5]) {
@@ -2091,16 +2167,16 @@ export function build(K) {
     { const [x, z] = P(383.1, 4.0); K.floorText('동편광장', { x, z, y: FL + 0.032, w: 1.1, h: 0.36, rotY: ROT, fg: '#ffffff' }); }
     for (const [u, v] of [[376.5, -12.4], [392.5, -12.4], [396.2, -3]]) drainCover(u, v);
     // _1795: plants and green delivery crates at the edge of the food street.
-    for (const u of [396.1]) {
-      const v = 5.5, [x, z] = P(u, v);
+    for (const u of [392.9]) {
+      const v = 4.6, [x, z] = P(u, v);
       K.cyl({ x, z, y: FL, r: 0.27, h: 0.42, mat: 0xc5b69b, seg: 10, solid: false });
       for (let i = 0; i < 13; i++) {
         const a = i * 2.4;
         bx(u + Math.cos(a) * 0.31 - 0.12, u + Math.cos(a) * 0.31 + 0.12, v + Math.sin(a) * 0.25 - 0.10, v + Math.sin(a) * 0.25 + 0.10, FL + 0.48 + i % 4 * 0.17, 0.08, i % 2 ? 0x66844e : 0x3c653d, { solid: false });
       }
       for (let i = 0; i < 3; i++) {
-        bx(396.1, 396.65, 4.2, 4.55, FL + i * 0.3, 0.29, 0x2f7d4a, { solid: false });
-        for (let j = 0; j < 5; j++) vq(0x1b5635, 396.13 + j * 0.1, 4.19, 396.18 + j * 0.1, 4.19, FL + 0.06 + i * 0.3, FL + 0.23 + i * 0.3, '-v');
+        bx(391.65, 392.2, 3.69, 4.04, FL + i * 0.3, 0.29, 0x2f7d4a, { solid: false });
+        for (let j = 0; j < 5; j++) vq(0x1b5635, 391.68 + j * 0.1, 3.68, 391.73 + j * 0.1, 3.68, FL + 0.06 + i * 0.3, FL + 0.23 + i * 0.3, '-v');
       }
     }
     for (const [u, v] of cols.slice(0, 3)) {
@@ -2123,11 +2199,10 @@ export function build(K) {
     sg('고투몰에서 즐거운 쇼핑 하세요', 363.8, 2.0, FL + 2.48, 2.5, 0.8, '+u', { bg: '#efe6d2', fg: '#8a7858', twoSided: true, pxPerM: 150 });
     const u = 364.0, v = 1.0, inner = ellipse(u, v, 2.35, 1.20, 48);
     K.prism(ellipse(u, v, 3.15, 1.95, 48), FL + 0.07, FL + 0.45, { mat: 0x202824, holes: [inner] });
-    K.prism(ellipse(u, v, 2.62, 1.47, 48), FL + 0.45, FL + 0.72, { mat: 0x242b26, holes: [inner] });
-    K.hpoly(0x3b4231, inner, FL + 0.55);
+    K.hpoly(0x3b4231, inner, FL + 0.38);
     for (let i = 0; i < 320; i++) {
       const a = i * 2.399963, r = Math.sqrt((i % 97) / 97), [x, z] = P(u + Math.cos(a) * r * 2.25, v + Math.sin(a) * r * 1.1);
-      K.box({ x, z, y: FL + 0.7 + (1 - r) * 1.0 + (i % 4) * 0.05, w: 0.23, d: 0.17, h: 0.04, rotY: a, mat: [0x385637, 0x4a7040, 0x5d7f49][i % 3], solid: false });
+      K.box({ x, z, y: FL + 0.45 + (1 - r) * 0.37 + (i % 4) * 0.025, w: 0.23, d: 0.17, h: 0.04, rotY: a, mat: [0x385637, 0x4a7040, 0x5d7f49][i % 3], solid: false });
     }
     for (let i = 0; i < 64; i++) {
       const a = i * Math.PI / 32, [x, z] = P(u + Math.cos(a) * 3.12, v + Math.sin(a) * 1.92);
@@ -2136,6 +2211,24 @@ export function build(K) {
     const outer = ellipse(u, v, 4.8, 3.6, 64), hole = ellipse(u, v, 4.65, 3.45, 64);
     K.hpoly(0x4d5752, outer, FL + 0.012, true, [hole]);
     for (const du of [-1.6, 0.8]) { const [x, z] = P(u + du, v + 1.7); K.person(x, FL, z, { sit: true, shirt: du < 0 ? 0xd7cfbc : 0x4e5860 }); }
+    // gm-L5: low stools at the stall, and the separate blue folding chair near _100.
+    for (const [j, [su, sv]] of [[361.5, -2.6], [362.5, -1.6], [363.5, -2.6]].entries()) {
+      bx(su - 0.22, su + 0.22, sv - 0.2, sv + 0.2, FL + 0.37, 0.05, 0xc7c9cb, { solid: false });
+      for (const du of [-0.16, 0.16]) for (const dv of [-0.14, 0.14]) bx(su + du - 0.025, su + du + 0.025, sv + dv - 0.025, sv + dv + 0.025, FL, 0.37, 0x8c9297, { solid: false });
+      if (j < 2) shopper(su, sv, 48 + j, FACE['+u'], true);
+    }
+    bx(367.45, 367.95, -2.05, -1.55, FL + 0.43, 0.055, 0x2f5fae, { solid: false });
+    bx(367.89, 367.95, -2.05, -1.55, FL + 0.48, 0.45, 0x2f5fae, { solid: false });
+    for (const du of [-0.19, 0.19]) for (const dv of [-0.20, 0.20]) bx(367.7 + du - 0.018, 367.7 + du + 0.018, -1.8 + dv - 0.018, -1.8 + dv + 0.018, FL, 0.44, 0x8c9194, { solid: false });
+    shopper(367.7, -1.8, 52, FACE['-u'], true);
+    for (const [pu, pv] of [[360.3, 3.0], [361.1, 3.1]]) {
+      const [x, z] = P(pu, pv);
+      K.cyl({ x, z, y: FL, r: 0.22, h: 0.35, mat: 0xc8b18c, seg: 10, solid: false });
+      for (let i = 0; i < 15; i++) {
+        const a = i * 2.4;
+        bx(pu + Math.cos(a) * 0.21 - 0.09, pu + Math.cos(a) * 0.21 + 0.09, pv + Math.sin(a) * 0.18 - 0.08, pv + Math.sin(a) * 0.18 + 0.08, FL + 0.38 + i % 5 * 0.11, 0.05, i % 2 ? 0x547949 : 0x315938, { solid: false });
+      }
+    }
     for (const cu of [360.5, 363.5, 366.5]) panelCove(cu, 5.8, 2.98, 3.2, CY - 0.18);
     for (const cu of [360, 366]) foodAC(cu, 8.05, CY - 0.20);
     for (const cu of [378.8, 386.8]) ovalCove(cu, -9.5, 2.5, 1.3, FL + 3.45);
@@ -2274,10 +2367,9 @@ export function build(K) {
       }
       exitPictogram(X.uc, gateV + inward * 0.09, FL + (X.id === '8-1' ? 2.93 : 3.08), face);
       if (X.id === '8-1') {
-        // gm-L8: across-aisle vending at the western end, outside the fixed W3
-        // well. The requested clear east approach requires a shared W3 redesign.
-        for (const [du, colour] of [[-7.7, 0xf1f1ee], [-6.6, 0x285da0]]) {
-          const u = X.uc + du, frontV = gateV + 4.65;
+        // gm-L8: reviewed u-91/-89.9 pair; the bank/W3 alignment remains a shared-layout limitation.
+        for (const [u, colour] of [[-91, 0xf1f1ee], [-89.9, 0x285da0]]) {
+          const frontV = gateV + 4.65;
           bx(u - 0.47, u + 0.47, frontV, frontV + 0.75, FL + 0.03, 1.96, colour, { solid: false });
           vq(0x27343e, u - 0.37, frontV - 0.01, u + 0.20, frontV - 0.01, FL + 0.85, FL + 1.72, '-v');
           for (let row = 0; row < 4; row++) for (let col = 0; col < 4; col++) {
@@ -2632,7 +2724,7 @@ export function build(K) {
       { u: 0, v: 3, title: '중앙광장', zone: 'GOTO ZONE' },
       { u: -101, v: 2.6, title: '서편광장', zone: 'WEST ZONE' },
       { u: 41, v: lay(41).fC + 0.65, title: '동편광장', zone: 'EAST ZONE' },
-      { u: -296.8, v: lay(-296.8).mid + 2.1, title: '서편광장', zone: 'WEST ZONE' },
+      { u: -296.8, v: lay(-296.8).mid + 0.1, title: '서편광장', zone: 'WEST ZONE' },
     ]) {
       furnish(B.u, () => {
       mapBoard({ ...B, face: '+u', free: true }, true);

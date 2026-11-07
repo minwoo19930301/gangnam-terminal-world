@@ -468,7 +468,7 @@
     "R15: 맞은편 Xi 아파트·차도·공용 차량/수목은 newcore 소유가 아니므로 수정하지 않았다. 밝은 세로 골조+청록 창이 실제 모습이므로 리뷰의 전체 짙은 녹색 도색도 기각."
   ],
   "modeling": {
-    "round": 17,
+    "round": 19,
     "scope": "R17 비교 시트·검증 목록 및 모든 관련 원본 프레임 직접 대조. 카메라 trace를 먼저 수정한 뒤 2관B1의7m 주통로·냉장케이스·빨강/목재 카운터·노출 천장·회색 광택 바닥·다양한 상품을 보강. 코너탑·포장·1관띠·2관 누락수목 수정. OSM 외곽·층·출입구·계단·승강기·1/2관B1연결·기존30매대/6델리카운터/72인물/4카트 보존. 도시측 중복보도와 맞은편 자이는 허용파일 밖으로 미수정.",
     "claims": [
       413372929,
@@ -1241,7 +1241,7 @@
           "target_u": 12,
           "target_v": 18
         },
-        "note": "R17 NC-C3/NC-L2: 뒤벽 인접 P(29.583,38.5) 대신 식품관 주통로 P(-12,18)에서+u방향. 전경 카트 P(-10.9,18.55), 왼쪽 냉장케이스 v13.8, 오른쪽 빨강/목재 카운터 v22.2를 본다. 원본800의 카트 뒤 주통로 구도를 채택. y=-6 바닥; 정확한 실내 실측 좌표는 추정.",
+        "note": "R17 NC-C3/NC-L2: 뒤벽 인접 P(29.583,38.5) 대신 식품관 주통로 P(-12,18)에서+u방향. 전경 카트 P(-10.35,18.55) (R19: 손잡이 프레임 진입을 위해 카트만 +u 0.55m 이동), 왼쪽 냉장케이스 v13.8, 오른쪽 빨강/목재 카운터 v22.2를 본다. 원본800의 카트 뒤 주통로 구도를 채택. y=-6 바닥; 정확한 실내 실측 좌표는 추정.",
         "previous_pose_round13": {
           "x": 225.085,
           "y": -6,
@@ -1256,7 +1256,8 @@
           "z": -425.826,
           "yawDeg": 292.988,
           "pitchDeg": -3
-        }
+        },
+        "geometry_update_round": 19
       },
       {
         "spot": "R13_1관_회백색_세로띠",
@@ -1584,16 +1585,31 @@
             "guess": true
           },
           {
-            "u": -10.9,
+            "u": -10.35,
             "v": 18.55,
             "facing": "+u",
-            "round": 17,
-            "guess": true
+            "round": 19,
+            "guess": true,
+            "handle_u": -10.78,
+            "handle_v": 18.55,
+            "handle_world_xz": [
+              223.898,
+              -470.774
+            ]
           }
         ],
         "floor_finish": {
-          "texture_base": "#8e8e8b",
-          "gloss": 0.6
+          "texture_base": "#77716a",
+          "gloss": 0.6,
+          "grout": "#6e6963",
+          "highlight_color": "#d0d0cc",
+          "highlight_peak_opacity": 0.3,
+          "highlight_size_m": [
+            1.5,
+            0.3
+          ],
+          "highlight_y": -5.982,
+          "highlight_path": "v=18; 기존 스폿 아래 u=-L/2+4부터 3m마다 ±0.7m"
         },
         "ceiling_spot_spacing_m": 1.5,
         "rack_row_product_keys": [
@@ -1688,7 +1704,89 @@
           "main_aisle": 3,
           "rear_aisle": 1,
           "back_corner": 1
-        }
+        },
+        "column_poster_round19": {
+          "column_local_uv": [
+            12,
+            14
+          ],
+          "poster_local_uv": [
+            11.455,
+            14
+          ],
+          "poster_world_xz": [
+            236.771,
+            -452.082
+          ],
+          "bottom_y": -3.83,
+          "top_y": -2.63,
+          "size_m": [
+            0.6,
+            1.2
+          ],
+          "face": "-u",
+          "guess": true
+        },
+        "far_stall_signs_round19": {
+          "frame_u": 30,
+          "centers_v": [
+            15.35,
+            18,
+            20.65
+          ],
+          "world_centers_xz": [
+            [
+              242.724,
+              -434.593
+            ],
+            [
+              240.284,
+              -433.558
+            ],
+            [
+              237.844,
+              -432.523
+            ]
+          ],
+          "panel_bottom_y": -3.5,
+          "panel_size_m": [
+            2.5,
+            0.8
+          ],
+          "frame_lowest_y": -3.54,
+          "face": "-u",
+          "solid": false,
+          "wording": [
+            "즉석조리",
+            "신선식품 / 킴스클럽",
+            "델리"
+          ],
+          "tenant_names_unresolved": true
+        },
+        "additional_round_duct_round19": {
+          "from_local_uv": [
+            -17,
+            16.1
+          ],
+          "to_local_uv": [
+            29,
+            16.1
+          ],
+          "center_y": -2.95,
+          "diameter_m": 0.5,
+          "world_endpoints_xz": [
+            [
+              223.724,
+              -477.457
+            ],
+            [
+              241.689,
+              -435.11
+            ]
+          ],
+          "guess": true
+        },
+        "aisle_spot_diameter_m": 0.28
       }
     },
     "architecture": {
@@ -1963,36 +2061,64 @@
       "common_synthesis_conflicts": "꽃시장·경부선/센트럴시티 연결·한강 출구·UNIQLO·스위트파크·오픈스테이지는 newcore 범위 밖. 다른 모듈에 대한 판정/수정 없음."
     },
     "verification": {
-      "round": 15,
-      "render": "tests/shot.mjs 미실행(사용자 제한). 비교 시트4장+원본7장 직접 확인; 최종 결과는 geometry/physics 검사이며 새 렌더의 시각 검증은 아님.",
-      "smoke": "node tests/smoke.mjs newcore streets gotomall: OK (최종 코드, 전체 lazy detail 포함)",
-      "walk_full_world": "node tests/walk.mjs: 687 ok, 0 blocked; exit0. 검사 시점 전체 모듈 및 모든 사용자 루트 보행 가능.",
+      "round": 19,
+      "smoke": "node tests/smoke.mjs newcore streets gotomall: 최종 코드 재실행 OK; exit0",
+      "full_walk": "node tests/walk.mjs: 719 ok, 0 blocked; exit0. 사용자 루트1–7 및 두 1F 동선 포함.",
       "geometry_audit": {
-        "all_detail_quads": 105613,
-        "boxes": 10337,
-        "signs": 190,
-        "largest_detail_group_quads": 66885,
+        "physics_registration_equal_to_HEAD": true,
+        "walls": 2578,
+        "horizontal_surfaces": 932,
+        "ramps": 28,
+        "ceilings": 307,
+        "ground_holes": 2,
+        "zones": 26,
+        "total_people": 214,
+        "trees": 15,
+        "spawns": 11,
+        "elevators": 4,
+        "people_trees_spawns_elevators_unchanged": true,
+        "trace_cameras_checked": 42,
+        "camera_floor_or_capsule_errors": 0,
+        "kit_quads": 135353,
+        "additional_reflection_quads": 40,
         "detail_groups": 16,
         "detail_errors": 0,
-        "round15_cameras": 8,
-        "camera_floor_or_capsule_errors": 0,
-        "new_standing_person_positions_checked": 100,
-        "new_standing_person_errors": 0,
-        "seated_people_at_shelter": 3,
-        "aisle_samples": 871,
-        "aisle_blocked": 0,
-        "standing_position_note": "시장72+식당가24+정류장4의 추가/이동 위치. 정류장 기존 서 있는1명 포함.",
-        "total_people": 201,
-        "spawns": 11,
-        "zones": 26,
-        "elevators": 4
+        "reflection_meshes": 1,
+        "reflection_triangles": 80,
+        "reflection_bad_winding": 0,
+        "reflection_opacity": 0.3,
+        "reflection_alpha_test": 0,
+        "reflection_depth_write": false,
+        "cart_handle_projection_1280x720": {
+          "x": [
+            715,
+            1019
+          ],
+          "y": [
+            592,
+            627
+          ],
+          "image_height_percent": [
+            82.2,
+            87.0
+          ]
+        },
+        "poster_ray_visibility": {
+          "full_panel_visible": 7,
+          "full_panel_samples": 9,
+          "text_visible": 25,
+          "text_samples": 25,
+          "art_visible": 20,
+          "art_samples": 20,
+          "note": "상단 빈 여백 일부만 기존 스폿 몸체에 가림. 제목을 낮춘 후 모든 글자/그림 광선 통과."
+        }
       },
-      "independent_review": "추가 인물·카메라 바닥/capsule, v18/v30/v14.7 연속 통로, 간판 시야 ray, 창 패널의4.4m 문 바깥 배치, 덕트40면 법선 검사 통과. 벤치 착석 v=.45 보정 완료.",
-      "metadata": "claims·OSM 외곽·층·zone·출입구·spawns·elevators 불변. 공유 _meta와 junction 수정 없음.",
-      "scope": "js/places/newcore.js와 data/research/newcore.json만 수정. 타 작업의 shinsegae/centralcity 변경 불간섭. commit/push 없음.",
-      "research_json": "node --check, python3 -m json.tool, git diff --check 통과",
-      "walk_neighbors": "node tests/walk.mjs newcore streets gotomall: 90 ok, 0 blocked. 사용자 루트1의 네 구간 모두 통과.",
-      "walk_failures": []
+      "render": "사용자 지시로 tests/shot.mjs 실행 안 함. 제공 원본과 AFTER는 직접 확인했으나 이번 수정의 새 PNG/시각적 완료판정은 없음.",
+      "scope": "js/places/newcore.js 및 data/research/newcore.json만 수정. 엔진·도시·streets·_junctions 수정 및 commit/push 없음.",
+      "metadata": "OSM claims/외곽/층/zone/출입구/spawns/elevators 불변. 공유 _meta와 junction 수정 없음.",
+      "syntax_json_diff": "node --check, python3 -m json.tool, git diff --check 통과",
+      "walk_failures": [],
+      "walk_snapshot_note": "전체 테스트 시작 후 변경한 포스터/간판 글자와 비충돌 면은 보행 형상에 영향 없음. 독립 검사에서 최종 newcore의 모든 physics 등록 인자가 HEAD와 동일함을 확인. 다른 모듈은 동시 편집 중이므로 수치는 해당 실행 시점 기준."
     },
     "review_round15": {
       "review_source": ".codex-jobs/evidence/review_walk13.json → newcore",
@@ -2607,6 +2733,314 @@
         "validation": "node --check js/places/newcore.js, python3 -m json.tool data/research/newcore.json, git diff --check: 통과",
         "concurrent_build_note": "초기 두 실행은 다른 작업이 편집 중인 gyeongbu의 임시 미정의 함수에서 중단. 해당 함수가 정의된 후 최종 전체 테스트 통과. 다른 모듈은 수정하지 않음."
       }
+    },
+    "review_round19": {
+      "date": "2026-11-07",
+      "basis": [
+        ".codex-jobs/evidence/check_r17.json#newcore",
+        ".codex-jobs/evidence/review_walk17.json#newcore",
+        "refs/walk/s1_banpo_newcore/qZYgbakp2UA_800.jpg",
+        "refs/roadview/newcore_02_across_xi.jpg",
+        "refs/roadview/newcore_03_along_SW.jpg",
+        "shots/r17after/newcore_03.png",
+        "shots/r17after/newcore_07.png"
+      ],
+      "scope": "js/places/newcore.js 및 data/research/newcore.json만 수정. 엔진·도시·streets·_junctions 수정 및 commit/push 없음.",
+      "open_item_count": 5,
+      "findings": [
+        {
+          "id": "NC-L1",
+          "priority": "layout",
+          "status": "deferred_outside_allowed_files",
+          "frame_check": "로드뷰03에서 난간 바깥은 좁은 보도 끝·연석 후 바로 도로. 리뷰의 도시 보도 중복 문제와 모순 없음.",
+          "required_owner": "streets/city",
+          "required_change": "난간 바깥0.3m로 연석 이동; 현재 연석까지 약8m 중복 도시 보도·나무·보호판·가로등 제거; 버스정류장을 새 연석으로 이동. newcore의 기존10m 포장·난간·수목 보존.",
+          "kerb_world_segments": [
+            [
+              [
+                242.2,
+                -501.6
+              ],
+              [
+                267.2,
+                -442.6
+              ]
+            ],
+            [
+              [
+                277.3,
+                -416.8
+              ],
+              [
+                312.1,
+                -332.8
+              ]
+            ]
+          ],
+          "reason": "이번 사용자 파일 제한과 동시 진행 streets 작업을 존중. newcore에 도로 덮개·중복 물체를 만들어 도시 소유물을 숨기지 않음. 아직 수정 완료 아님."
+        },
+        {
+          "id": "NC-L2",
+          "priority": "layout",
+          "status": "applied_not_rerendered",
+          "frame_check": "원본800에서 왼쪽 중간 흰 기둥의 검은 포스터와 끝쪽 여러 발광 점포판 확인. 가까운 큰 흰 패널은 원본 화각 밖이라는 skeptic 조정대로 보존.",
+          "change": "기존 P(12,14) 기둥의 카메라향 -u면에0.6×1.2m 어두운 포스터 추가. 끝 P(30,18)에2.5×0.8m 따뜻한 발광판3개; 기존 즉석조리·신선식품·킴스클럽 문구와 델리 용도 유지.",
+          "poster": {
+            "column_local_uv": [
+              12,
+              14
+            ],
+            "poster_local_uv": [
+              11.455,
+              14
+            ],
+            "poster_world_xz": [
+              236.771,
+              -452.082
+            ],
+            "bottom_y": -3.83,
+            "top_y": -2.63,
+            "size_m": [
+              0.6,
+              1.2
+            ],
+            "face": "-u",
+            "guess": true,
+            "visibility": "상단 일부 스폿 가림을 유지하면서 글자를 아래로 배치. 글자25/25·그림20/20 광선 가림 없음."
+          },
+          "signs": {
+            "frame_u": 30,
+            "centers_v": [
+              15.35,
+              18,
+              20.65
+            ],
+            "world_centers_xz": [
+              [
+                242.724,
+                -434.593
+              ],
+              [
+                240.284,
+                -433.558
+              ],
+              [
+                237.844,
+                -432.523
+              ]
+            ],
+            "panel_bottom_y": -3.5,
+            "panel_size_m": [
+              2.5,
+              0.8
+            ],
+            "frame_lowest_y": -3.54,
+            "face": "-u",
+            "solid": false,
+            "wording": [
+              "즉석조리",
+              "신선식품 / 킴스클럽",
+              "델리"
+            ],
+            "tenant_names_unresolved": true
+          },
+          "target_adjustment": "camera03 P(0,18) 앞8m·12–15도에 기존 기둥이 없음. 구조기둥 이동 없이 기존 왼쪽 중간 기둥(중심 거리12.65m·18.43도)을 사용. 포스터 하단2.17m는2.05m 냉장케이스를 넘는 시선 확보용 추정.",
+          "preserved": "가까운 흰패널, 기존 기둥격자·진열대30개·냉장케이스15개·양측카운터·군중85명·카트5대·7m 주통로·5.6m 관간통로. 끝쪽 단일 작은 사인만3개 발광판으로 교체.",
+          "guess": "포스터 원문·그림·실제 점포명은 판독 불가. 기존 브랜드명/일반 식품분류만 사용. 실제 배치와 높이는 사진·모델 대응 추정."
+        },
+        {
+          "id": "NC-D1",
+          "priority": "design",
+          "status": "applied_not_rerendered",
+          "frame_check": "원본800의 바닥은 약간 따뜻한 중회색, 스폿 아래 밝은 긴 반사, 큰 발광등과 은색 원형덕트 확인.",
+          "change": "바닥 기본색#8e8e8b→#77716a, 줄눈#6e6963, gloss0.6 유지. v18의 각 스폿 아래1.5×0.3m 부드러운 #d0d0cc 반사(최대불투명도30%)를 하나의 비충돌 mesh로 추가. v14/18/24의 기존 약1.5m 간격 스폿을 지름0.28m 흰색 발광 원판으로 확대. 기존 덕트·엘보 보존 후 지름0.5m 평행 원형덕트 한 줄 추가.",
+          "floor_y": -5.988,
+          "reflection_y": -5.982,
+          "spot_bottom_y": -2.9,
+          "duct": {
+            "from_local_uv": [
+              -17,
+              16.1
+            ],
+            "to_local_uv": [
+              29,
+              16.1
+            ],
+            "center_y": -2.95,
+            "diameter_m": 0.5,
+            "world_endpoints_xz": [
+              [
+                223.724,
+                -477.457
+              ],
+              [
+                241.689,
+                -435.11
+              ]
+            ],
+            "guess": true
+          },
+          "material_note": "K.texture transparent의 alphaTest0.3에서 반사면이 사라지지 않도록 MeshBasicMaterial opacity0.3 + DataTexture 알파 그라데이션 사용. 반사면40개를1mesh로 병합.",
+          "guess": "색은 기존 렌더에 대한 리뷰 보정값. 최종 픽셀색·반사 강도는 새 렌더로 검증하지 못함. 덕트 경로·반사위치·포스터높이는 실측 아님."
+        },
+        {
+          "id": "NC-D2",
+          "priority": "design",
+          "status": "deferred_outside_allowed_files",
+          "frame_check": "로드뷰02에서 왼쪽 짙은 세로창 아파트·중앙과오른쪽 밝은 주거동·연속수목·정류장·키오스크 확인. 리뷰와 모순 없음.",
+          "required_owner": "streets/city",
+          "world_region": "잠원로 맞은편 x≈275 이상,z=-500..-440",
+          "required_change": "왼쪽 두 짙은 약30층 주거탑(#4a4f52)의 세로창, 중앙 흰 탑(#e2e2de) 및 오른쪽 낮은 흰 주거동; 높이7–8m 연속 수목,6–8m 검은 정류장·벤치·키오스크·낮은 회색 울타리;4.7m 승용차.",
+          "reason": "도시 건물/가구/차량은 허용 파일 밖이며 별도 streets 작업과 중복하지 않음. newcore의 OSM claims도 유지. 아직 수정 완료 아님."
+        },
+        {
+          "id": "NEW-1",
+          "priority": "detail",
+          "status": "applied_not_rerendered",
+          "frame_check": "원본800 하단의 빨강·흰색 카트 손잡이 확인; AFTER07에서는 회색 바구니만 보임.",
+          "change": "기존 전경 카트를 P(-10.9,18.55)→P(-10.35,18.55)로 +u0.55m 이동. 손잡이#c8322c, 가운데0.24m 흰 그립 추가. 바구니/차대/바퀴·다른4카트 보존.",
+          "cart_world_xz": [
+            224.066,
+            -470.378
+          ],
+          "handle_local_uv": [
+            -10.78,
+            18.55
+          ],
+          "handle_world_xz": [
+            223.898,
+            -470.774
+          ],
+          "handle_y_range": [
+            -5.02,
+            -4.965
+          ],
+          "camera07": [
+            223.928,
+            -6,
+            -472.112,
+            202.988,
+            0
+          ],
+          "target_adjustment": "기존 손잡이는camera07 전방0.67m라 수직화각72도 아래에 있음. 리뷰 대안의 카메라쪽0.5m 이동/0.8m 거리는 더 가림. 카메라 보존 후 전방1.22m로 보내 하단82.2–87.0%에 진입시킴.",
+          "guess": "손잡이 실측방위·크기와 원본 카메라FOV는 미확인; 모델의 고정화각 기준 투영 계산.",
+          "projection_1280x720": {
+            "x": [
+              715,
+              1019
+            ],
+            "y": [
+              592,
+              627
+            ]
+          }
+        }
+      ],
+      "fixed_items_preserved": [
+        "NC-C1",
+        "NC-C2",
+        "NC-C3",
+        "NC-C4",
+        "NC-D3",
+        "NC-D4",
+        "NC-D5",
+        "NC-T1",
+        "NC-T2"
+      ],
+      "camera_policy": "모든 기존 카메라 x/y/z/yaw/pitch 보존. B1 y=-6, 지상y=0은 바닥 높이.",
+      "render_status": "사용자 지시로 tests/shot.mjs 실행 안 함. 제공 원본과 AFTER는 직접 확인했으나 이번 수정의 새 PNG/시각적 완료판정은 없음.",
+      "verification": {
+        "round": 19,
+        "smoke": "node tests/smoke.mjs newcore streets gotomall: 최종 코드 재실행 OK; exit0",
+        "full_walk": "node tests/walk.mjs: 719 ok, 0 blocked; exit0. 사용자 루트1–7 및 두 1F 동선 포함.",
+        "geometry_audit": {
+          "physics_registration_equal_to_HEAD": true,
+          "walls": 2578,
+          "horizontal_surfaces": 932,
+          "ramps": 28,
+          "ceilings": 307,
+          "ground_holes": 2,
+          "zones": 26,
+          "total_people": 214,
+          "trees": 15,
+          "spawns": 11,
+          "elevators": 4,
+          "people_trees_spawns_elevators_unchanged": true,
+          "trace_cameras_checked": 42,
+          "camera_floor_or_capsule_errors": 0,
+          "kit_quads": 135353,
+          "additional_reflection_quads": 40,
+          "detail_groups": 16,
+          "detail_errors": 0,
+          "reflection_meshes": 1,
+          "reflection_triangles": 80,
+          "reflection_bad_winding": 0,
+          "reflection_opacity": 0.3,
+          "reflection_alpha_test": 0,
+          "reflection_depth_write": false,
+          "cart_handle_projection_1280x720": {
+            "x": [
+              715,
+              1019
+            ],
+            "y": [
+              592,
+              627
+            ],
+            "image_height_percent": [
+              82.2,
+              87.0
+            ]
+          },
+          "poster_ray_visibility": {
+            "full_panel_visible": 7,
+            "full_panel_samples": 9,
+            "text_visible": 25,
+            "text_samples": 25,
+            "art_visible": 20,
+            "art_samples": 20,
+            "note": "상단 빈 여백 일부만 기존 스폿 몸체에 가림. 제목을 낮춘 후 모든 글자/그림 광선 통과."
+          }
+        },
+        "render": "사용자 지시로 tests/shot.mjs 실행 안 함. 제공 원본과 AFTER는 직접 확인했으나 이번 수정의 새 PNG/시각적 완료판정은 없음.",
+        "scope": "js/places/newcore.js 및 data/research/newcore.json만 수정. 엔진·도시·streets·_junctions 수정 및 commit/push 없음.",
+        "metadata": "OSM claims/외곽/층/zone/출입구/spawns/elevators 불변. 공유 _meta와 junction 수정 없음.",
+        "syntax_json_diff": "node --check, python3 -m json.tool, git diff --check 통과",
+        "walk_failures": [],
+        "walk_snapshot_note": "전체 테스트 시작 후 변경한 포스터/간판 글자와 비충돌 면은 보행 형상에 영향 없음. 독립 검사에서 최종 newcore의 모든 physics 등록 인자가 HEAD와 동일함을 확인. 다른 모듈은 동시 편집 중이므로 수치는 해당 실행 시점 기준."
+      }
+    },
+    "verification_round15": {
+      "round": 15,
+      "render": "tests/shot.mjs 미실행(사용자 제한). 비교 시트4장+원본7장 직접 확인; 최종 결과는 geometry/physics 검사이며 새 렌더의 시각 검증은 아님.",
+      "smoke": "node tests/smoke.mjs newcore streets gotomall: OK (최종 코드, 전체 lazy detail 포함)",
+      "walk_full_world": "node tests/walk.mjs: 687 ok, 0 blocked; exit0. 검사 시점 전체 모듈 및 모든 사용자 루트 보행 가능.",
+      "geometry_audit": {
+        "all_detail_quads": 105613,
+        "boxes": 10337,
+        "signs": 190,
+        "largest_detail_group_quads": 66885,
+        "detail_groups": 16,
+        "detail_errors": 0,
+        "round15_cameras": 8,
+        "camera_floor_or_capsule_errors": 0,
+        "new_standing_person_positions_checked": 100,
+        "new_standing_person_errors": 0,
+        "seated_people_at_shelter": 3,
+        "aisle_samples": 871,
+        "aisle_blocked": 0,
+        "standing_position_note": "시장72+식당가24+정류장4의 추가/이동 위치. 정류장 기존 서 있는1명 포함.",
+        "total_people": 201,
+        "spawns": 11,
+        "zones": 26,
+        "elevators": 4
+      },
+      "independent_review": "추가 인물·카메라 바닥/capsule, v18/v30/v14.7 연속 통로, 간판 시야 ray, 창 패널의4.4m 문 바깥 배치, 덕트40면 법선 검사 통과. 벤치 착석 v=.45 보정 완료.",
+      "metadata": "claims·OSM 외곽·층·zone·출입구·spawns·elevators 불변. 공유 _meta와 junction 수정 없음.",
+      "scope": "js/places/newcore.js와 data/research/newcore.json만 수정. 타 작업의 shinsegae/centralcity 변경 불간섭. commit/push 없음.",
+      "research_json": "node --check, python3 -m json.tool, git diff --check 통과",
+      "walk_neighbors": "node tests/walk.mjs newcore streets gotomall: 90 ok, 0 blocked. 사용자 루트1의 네 구간 모두 통과.",
+      "walk_failures": []
     }
   },
   "tenants": [

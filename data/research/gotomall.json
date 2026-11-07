@@ -1109,20 +1109,21 @@
      "refs/walk/s2_gotomall/rLMagJuViqo_170.jpg"
     ],
     "frame": "rLMagJuViqo_170.jpg",
-    "x": -195.3891,
+    "x": -196.8,
     "y": -6,
-    "z": -59.2326,
+    "z": -58.7,
     "yawDeg": 110.531,
     "pitchDeg": 0,
     "floor": "B1",
     "local_uv": [
-     -206.5,
-     -5.718
+     -208.0081,
+     -5.714
     ],
-    "view": "서향u-206.5. 왼쪽 가까운 TONYMOLY(B열u≈-209.5), 약5.3m 앞 G5/G1~G4/G6 사인(u-211.8), 그 뒤 타원(u-215.825)의 순서. 원본에서 왼쪽 TONYMOLY가 사인보다 가까운 점에 맞춘 배치.",
+    "view": "서향 A/B 통로. TONYMOLY 전면을 지나 약3.8m 앞 G5/G1–G4/G6 사인, 그 뒤 타원등을 비교한다. 사인의 프레임 점유율을 높이기 위해 기존 시점에서 약1.5m 서쪽으로 전진.",
     "placement_confidence": "inferred",
-    "render_status": "라운드17 원본 프레임 직접 대조·동선 순서 보정. tests/shot.mjs 실행 불가: 신규 구도는 운영자 렌더 검증 대기. y=-6은 B1 바닥 높이.",
-    "pose_revision": 17
+    "render_status": "라운드19 원본 프레임·리뷰어 확인렌더 근거로 보정. tests/shot.mjs 미실행(사용자 sandbox 제약); 현재 수정 기하의 최종 구도는 운영자 렌더 검증 대기. y=-6은 B1 바닥 높이.",
+    "pose_revision": 19,
+    "camera_revision_review": 19
    },
    {
     "spot": "라운드13 k9yW0vOWPrs_580",
@@ -1131,21 +1132,21 @@
      "refs/walk/s2_gotomall/k9yW0vOWPrs_580.png"
     ],
     "frame": "k9yW0vOWPrs_580.png",
-    "x": -84.7025,
+    "x": -82.5,
     "y": -6,
-    "z": -100.1316,
-    "yawDeg": 330.5,
+    "z": -99.88,
+    "yawDeg": 102,
     "pitchDeg": 0,
     "floor": "B1",
     "local_uv": [
-     -88.5,
-     -5.2
+     -86.5257,
+     -4.1919
     ],
-    "view": "8-1 분홍문·자판기의 원본 대응은 유지한다. gm-C1의 제안 서행카메라(u-76,v-5.5)는 현재 Line3 개찰기 위치에 있고 W3 공유 계단·난간도 문 앞을 가린다. _junctions.js/역 모듈 수정 금지와 W3 북쪽 진입 보존 때문에 기존(-84.7025,-100.1316),yaw330.5를 유지했다. 이 pose는 원본과 불일치하며 운영자 공유역 배치 조정이 필요하다. G8-2로 재매칭하지 않는다.",
+    "view": "8-1 분홍 유리문열의 동쪽에서 서향으로 보며 오른쪽 문열과 왼쪽 자판기 쌍을 비교한다. 리뷰 v19_c1e(-81.94,-99.88)는 W3 구멍 안으로 실제 바닥이 B2(-11)이고 캡슐이0.32m 밀려나는 점을 검출해 x=-82.5로0.56m 서쪽 이동. 바닥 y=-6·캡슐충돌0 확인. W3 계단·난간과 개찰기 공유배치의 원본 불일치는 남는다.",
     "placement_confidence": "inferred",
-    "render_status": "라운드17 원본 확인; 카메라 수정은 W3/Line3 공유배치 충돌로 보류. 원본 불일치 미해결.",
-    "pose_revision": 15,
-    "camera_revision_review": 17
+    "render_status": "라운드19 원본 프레임·리뷰어 확인렌더 근거로 보정. tests/shot.mjs 미실행(사용자 sandbox 제약); 현재 수정 기하의 최종 구도는 운영자 렌더 검증 대기. y=-6은 B1 바닥 높이.",
+    "pose_revision": 19,
+    "camera_revision_review": 19
    },
    {
     "spot": "라운드13 k9yW0vOWPrs_240",
@@ -1157,17 +1158,18 @@
     "x": 232.0165,
     "y": -6,
     "z": -219.5971,
-    "yawDeg": 85,
+    "yawDeg": 55,
     "pitchDeg": 0,
     "floor": "B1",
     "local_uv": [
      250,
      -6
     ],
-    "view": "서행 시간순서에 맞추어 bay67 교차통로(u≈246.1) 동쪽으로 이동. 오른쪽 A열 크림 코너기둥·포스터와 앞의 의류점, 왼쪽으로 물러나는 남색 사인 통로를 함께 보도록 서향 축에서 북측으로25.5° 회전. 절대 위치·yaw85는 렌더 미확인 추정이다.",
+    "view": "A/B u250,v-6 유지. yaw55로 오른쪽 크림 포스터 기둥, 왼쪽 남색 안내사인과 타원등, 앞의 의류점이 함께 보이도록 수정. 리뷰 a03r에서 원본 구도를 확인한 방향.",
     "placement_confidence": "inferred",
-    "render_status": "라운드17 원본 프레임 직접 대조·동선 순서 보정. tests/shot.mjs 실행 불가: 신규 구도는 운영자 렌더 검증 대기. y=-6은 B1 바닥 높이.",
-    "pose_revision": 17
+    "render_status": "라운드19 원본 프레임·리뷰어 확인렌더 근거로 보정. tests/shot.mjs 미실행(사용자 sandbox 제약); 현재 수정 기하의 최종 구도는 운영자 렌더 검증 대기. y=-6은 B1 바닥 높이.",
+    "pose_revision": 19,
+    "camera_revision_review": 19
    },
    {
     "spot": "라운드13 rLMagJuViqo_860",
@@ -1176,20 +1178,21 @@
      "refs/walk/s2_gotomall/rLMagJuViqo_860.jpg"
     ],
     "frame": "rLMagJuViqo_860.jpg",
-    "x": 7.383,
+    "x": 8.1,
     "y": -6,
-    "z": -123.6938,
-    "yawDeg": 290.531,
+    "z": -121.8,
+    "yawDeg": 285,
     "pitchDeg": 0,
     "floor": "B1",
     "local_uv": [
-     6,
-     5.03
+     6.0073,
+     7.0549
     ],
-    "view": "중앙광장u6,v5.03에서 동향. 뒤쪽(u<0)의 안내대·EDIYA를 프레임에서 제외하고 앞오른쪽u12..19의 식재 벤치와 그 앞 쇼핑객·왼쪽 유모차를 본다. 리뷰 제안(7.4,-123.7)에 대응; 휴게부 절대 위치와 실제 구도는 렌더 미확인 저신뢰 추정.",
-    "placement_confidence": "low",
-    "render_status": "라운드17 원본 프레임 직접 대조·동선 순서 보정. tests/shot.mjs 실행 불가: 신규 구도는 운영자 렌더 검증 대기. y=-6은 B1 바닥 높이.",
-    "pose_revision": 17
+    "view": "중앙광장의 휴게섬을6–8m 앞오른쪽, 검정 키오스크를 왼쪽에 놓는 c860b 시점. 안내대·EDIYA는 뒤로 빠진다. 왼쪽 가장자리 W9 웰 난간은 공유모듈 구조로 남으며 원본에 없는 요소다.",
+    "placement_confidence": "inferred",
+    "render_status": "라운드19 원본 프레임·리뷰어 확인렌더 근거로 보정. tests/shot.mjs 미실행(사용자 sandbox 제약); 현재 수정 기하의 최종 구도는 운영자 렌더 검증 대기. y=-6은 B1 바닥 높이.",
+    "pose_revision": 19,
+    "camera_revision_review": 19
    },
    {
     "spot": "라운드13 rLMagJuViqo_445",
@@ -1242,19 +1245,21 @@
      "refs/walk/s2_gotomall/k9yW0vOWPrs_40.jpg"
     ],
     "frame": "k9yW0vOWPrs_40.jpg",
-    "x": 368.9743,
+    "x": 362.6,
     "y": -6,
-    "z": -264.4809,
+    "z": -261.6,
     "yawDeg": 110.531,
     "pitchDeg": 0,
     "floor": "B1",
     "local_uv": [
-     394,
-     0
+     387.0202,
+     0.4623
     ],
-    "view": "동편 식당가를 서쪽으로 보며 크림 패널·원목 테이블·빨강 스툴·메뉴배너 확인.",
+    "view": "동편 식당가 u387 부근에서 서향. 카운터 동쪽의 빈 공간에서 식당 전면이 연속되는 구간으로 약7m 이동하여 양측 메뉴판·테이블·빨강 의자·흰 입간판을 비교한다.",
     "placement_confidence": "inferred",
-    "render_status": "운영자 비교 렌더 대기; y는 바닥높이"
+    "render_status": "라운드19 원본 프레임·리뷰어 확인렌더 근거로 보정. tests/shot.mjs 미실행(사용자 sandbox 제약); 현재 수정 기하의 최종 구도는 운영자 렌더 검증 대기. y=-6은 B1 바닥 높이.",
+    "pose_revision": 19,
+    "camera_revision_review": 19
    },
    {
     "spot": "라운드13 rLMagJuViqo_60",
@@ -1349,20 +1354,21 @@
      "refs/walk/s2_gotomall/k9yW0vOWPrs_910.jpg"
     ],
     "frame": "k9yW0vOWPrs_910.jpg",
-    "x": -323.5493,
+    "x": -322.6,
     "y": -6,
-    "z": -17.9447,
-    "yawDeg": 110.531,
+    "z": -18.3,
+    "yawDeg": 98,
     "pitchDeg": 0,
     "floor": "B1",
     "local_uv": [
-     -341,
-     -12
+     -339.9864,
+     -11.9998
     ],
-    "view": "서편 북측 식당가를 서쪽으로 따라 보는 구도. EDIYA와 회색 셔터는 오른쪽, 테이블은 왼쪽. 카페를 정면으로 보던 기존 yaw20.531을 수정하며 서편 회차의 절대 위치는 추정.",
+    "view": "서편 회차 북측 통로를 비스듬히 서향. 오른쪽 중앙의 EDIYA 기둥·주스보드와 셔터 앞 주황 식탁·노랑 의자를 보며 왼쪽 v-7.4 스툴열이 통로 경계를 이룬다. 기존 통로 자체는 이동하지 않음.",
     "placement_confidence": "inferred",
-    "render_status": "라운드15 원본·비교시트 검토로 보정; tests/shot.mjs 사용 불가로 신규 렌더는 운영자 검증 대기; y는 바닥높이",
-    "pose_revision": 15
+    "render_status": "라운드19 원본 프레임·리뷰어 확인렌더 근거로 보정. tests/shot.mjs 미실행(사용자 sandbox 제약); 현재 수정 기하의 최종 구도는 운영자 렌더 검증 대기. y=-6은 B1 바닥 높이.",
+    "pose_revision": 19,
+    "camera_revision_review": 19
    },
    {
     "spot": "라운드13 k9yW0vOWPrs_970",
@@ -1480,19 +1486,21 @@
      "refs/walk/s2_gotomall/k9yW0vOWPrs_1030.jpg"
     ],
     "frame": "k9yW0vOWPrs_1030.jpg",
-    "x": -273.5515,
+    "x": -277.8,
     "y": -6,
-    "z": -15.6007,
-    "yawDeg": 290.531,
+    "z": -18.5,
+    "yawDeg": 235,
     "pitchDeg": 0,
     "floor": "B1",
     "local_uv": [
-     -295,
-     7.73
+     -297.9618,
+     3.5248
     ],
-    "view": "서편 회차 후 C/D 동행 시작: 의류 양측, 붉은 페넌트와 점자블록.",
+    "view": "서편 C/D 입구에서 남동쪽으로 돌아 중앙섬 끝 의류 전면과 코너를 비교하는 구도. 원본 _1030의 직선 소실점보다 오른쪽 근접 진열이 크게 보이는 방향에 맞춘 추정 시점.",
     "placement_confidence": "inferred",
-    "render_status": "운영자 비교 렌더 대기; y는 바닥높이"
+    "render_status": "라운드19 원본 프레임·리뷰어 확인렌더 근거로 보정. tests/shot.mjs 미실행(사용자 sandbox 제약); 현재 수정 기하의 최종 구도는 운영자 렌더 검증 대기. y=-6은 B1 바닥 높이.",
+    "pose_revision": 19,
+    "camera_revision_review": 19
    },
    {
     "spot": "라운드13 k9yW0vOWPrs_1240",
@@ -1504,17 +1512,18 @@
     "x": -100.4529,
     "y": -6,
     "z": -80.8853,
-    "yawDeg": 290.531,
+    "yawDeg": 264,
     "pitchDeg": 0,
     "floor": "B1",
     "local_uv": [
      -110,
      7.3
     ],
-    "view": "C/D 동행 _1030u-295에서 _1660u320 사이 보행시간을 보간한 u-110. D열 상품 전면에서 약1–2m 떨어진 오른쪽 시점(v7.3)으로 군중과 의류를 본다. 연속영상·보행속도 가정이며 실측 아님.",
+    "view": "u-110,v7.3 시점 유지. yaw264로 오른쪽 D열 니트 점포 내부를 넓게 보아 기존 어두운 천장·목재 바닥·노란 세일판을 프레임에 포함한다. 재단장 대신 리뷰 v19_c19r의 시선 보정을 적용.",
     "placement_confidence": "inferred",
-    "render_status": "라운드17 원본 프레임 직접 대조·동선 순서 보정. tests/shot.mjs 실행 불가: 신규 구도는 운영자 렌더 검증 대기. y=-6은 B1 바닥 높이.",
-    "pose_revision": 17
+    "render_status": "라운드19 원본 프레임·리뷰어 확인렌더 근거로 보정. tests/shot.mjs 미실행(사용자 sandbox 제약); 현재 수정 기하의 최종 구도는 운영자 렌더 검증 대기. y=-6은 B1 바닥 높이.",
+    "pose_revision": 19,
+    "camera_revision_review": 19
    },
    {
     "spot": "라운드13 k9yW0vOWPrs_340",
@@ -1523,20 +1532,21 @@
      "refs/walk/s2_gotomall/k9yW0vOWPrs_340.jpg"
     ],
     "frame": "k9yW0vOWPrs_340.jpg",
-    "x": 155.4002,
+    "x": 168.6863,
     "y": -6,
-    "z": -190.3704,
+    "z": -194.8122,
     "yawDeg": 110.531,
     "pitchDeg": 0,
     "floor": "B1",
     "local_uv": [
-     168,
-     -5.5
+     182,
+     -5
     ],
-    "view": "k9 서행 A/B 동선의 _240u250 다음, _460u45 이전인 u168. 왼쪽 B열의 가방 벽을 비교한다. G12는 약19m 앞이며 근접 문 전경을 피한다. 점포의 절대 위치는 시간순서와 연속보행 가정에 의한 추정.",
+    "view": "A/B u182,v-5에서 서향. B열 u168–182의 가방 진열을 왼쪽 가까운 전경부터 이어 보며, 기존 u168 시점 바로 옆 G13 포켓은 뒤쪽으로 물러난다. 실제 점포 절대위치는 원본·영상순서에 기반한 추정.",
     "placement_confidence": "inferred",
-    "render_status": "라운드17 원본 프레임 직접 대조·동선 순서 보정. tests/shot.mjs 실행 불가: 신규 구도는 운영자 렌더 검증 대기. y=-6은 B1 바닥 높이.",
-    "pose_revision": 17
+    "render_status": "라운드19 원본 프레임·리뷰어 확인렌더 근거로 보정. tests/shot.mjs 미실행(사용자 sandbox 제약); 현재 수정 기하의 최종 구도는 운영자 렌더 검증 대기. y=-6은 B1 바닥 높이.",
+    "pose_revision": 19,
+    "camera_revision_review": 19
    },
    {
     "spot": "라운드13 rLMagJuViqo_680",
@@ -1545,20 +1555,21 @@
      "refs/walk/s2_gotomall/rLMagJuViqo_680.jpg"
     ],
     "frame": "rLMagJuViqo_680.jpg",
-    "x": -98.0994,
+    "x": -99.1,
     "y": -6,
-    "z": -83.1548,
-    "yawDeg": 330,
+    "z": -81.4,
+    "yawDeg": 328,
     "pitchDeg": 0,
     "floor": "B1",
     "local_uv": [
-     -107,
-     6
+     -108.5525,
+     7.2924
     ],
-    "view": "C/D 동행 중 B/C 섬의 동쪽 끝(u≈-102.2)을4.8m 앞에서 비스듬히 본다. 흰 코너기둥과 노란 가격표·L자 의류랙, 양옆으로 갈라지는 통로를 겨냥한다. 기존 직선 통로 구도에서 변경; 절대 위치·yaw330은 렌더 미확인 저신뢰 추정.",
-    "placement_confidence": "low",
-    "render_status": "라운드17 원본 프레임 직접 대조·동선 순서 보정. tests/shot.mjs 실행 불가: 신규 구도는 운영자 렌더 검증 대기. y=-6은 B1 바닥 높이.",
-    "pose_revision": 17
+    "view": "C/D에서 섬의 동쪽 코너(u-102.2,v2.6)를 비스듬히 본다. 리뷰 v19_c21q의 yaw330에서2도 조정하여 흰 필라스터·노란 가격표를 화면 중앙 근처에 두고 좌측 양말벽 점유를 줄인다. 코너 양측 외부 의류랙은 별도 배치 보정 대상.",
+    "placement_confidence": "inferred",
+    "render_status": "라운드19 원본 프레임·리뷰어 확인렌더 근거로 보정. tests/shot.mjs 미실행(사용자 sandbox 제약); 현재 수정 기하의 최종 구도는 운영자 렌더 검증 대기. y=-6은 B1 바닥 높이.",
+    "pose_revision": 19,
+    "camera_revision_review": 19
    },
    {
     "spot": "라운드13 rLMagJuViqo_620",
@@ -1589,20 +1600,21 @@
      "refs/walk/s2_gotomall/k9yW0vOWPrs_1520.jpg"
     ],
     "frame": "k9yW0vOWPrs_1520.jpg",
-    "x": 138.3502,
+    "x": 143.5132,
     "y": -6,
-    "z": -170.317,
-    "yawDeg": 290.531,
+    "z": -173.6387,
+    "yawDeg": 278,
     "pitchDeg": 0,
     "floor": "B1",
     "local_uv": [
-     145,
-     7.3
+     151,
+     6
     ],
-    "view": "C/D 동행 시간순서를 따라 u145로 수정. 오른쪽 D열 밝은 목재 신발선반과 흰 필라스터 가까이(v7.3)서 동쪽을 본다. 실제 점포의 절대 좌표는 보간 추정.",
+    "view": "C/D u151,v6으로 이동하여 G11 문 대신 D열 밝은 목재 신발선반을 오른쪽1–3m 전경에 둔다. yaw278로 신발 진열과 흰 필라스터, 앞왼쪽 의류·모자를 비교하며 리뷰 v19_c23b 시점을 적용.",
     "placement_confidence": "inferred",
-    "render_status": "라운드17 원본 프레임 직접 대조·동선 순서 보정. tests/shot.mjs 실행 불가: 신규 구도는 운영자 렌더 검증 대기. y=-6은 B1 바닥 높이.",
-    "pose_revision": 17
+    "render_status": "라운드19 원본 프레임·리뷰어 확인렌더 근거로 보정. tests/shot.mjs 미실행(사용자 sandbox 제약); 현재 수정 기하의 최종 구도는 운영자 렌더 검증 대기. y=-6은 B1 바닥 높이.",
+    "pose_revision": 19,
+    "camera_revision_review": 19
    },
    {
     "spot": "라운드13 k9yW0vOWPrs_460",
@@ -3084,6 +3096,537 @@
     "diff_check": "git diff --check: passed"
    },
    "render_status": "수정 구현과 보행검사는 완료. 운영자 최종 비교 렌더 대기; gm-C1/gm-L8 공유 W3 충돌 미해결."
+  },
+  "interior_round19": {
+   "date": "2026-11-07",
+   "camera_authority": "현재 비교 카메라의 단일 기준은 modeling.trace 중 frame 필드가 있는25개 항목이다. 번호 gotomall_00..24는 이25개 항목의 배열순서. 과거 interior_round 기록은 이력이며 현재 포즈가 아니다.",
+   "camera_changes": [
+    {
+     "camera": "gotomall_01",
+     "ids": [
+      "gm-L3"
+     ],
+     "frame": "rLMagJuViqo_170.jpg",
+     "before": {
+      "x": -195.3891,
+      "y": -6,
+      "z": -59.2326,
+      "yawDeg": 110.531,
+      "local_uv": [
+       -206.5,
+       -5.718
+      ]
+     },
+     "after": {
+      "x": -196.8,
+      "y": -6,
+      "z": -58.7,
+      "yawDeg": 110.531,
+      "local_uv": [
+       -208.0081,
+       -5.714
+      ]
+     },
+     "evidence": "a01; rLMagJuViqo_170.jpg"
+    },
+    {
+     "camera": "gotomall_02",
+     "ids": [
+      "gm-C1",
+      "gm-L8"
+     ],
+     "frame": "k9yW0vOWPrs_580.png",
+     "before": {
+      "x": -84.7025,
+      "y": -6,
+      "z": -100.1316,
+      "yawDeg": 330.5,
+      "local_uv": [
+       -88.5,
+       -5.2
+      ]
+     },
+     "after": {
+      "x": -82.5,
+      "y": -6,
+      "z": -99.88,
+      "yawDeg": 102,
+      "local_uv": [
+       -86.5257,
+       -4.1919
+      ]
+     },
+     "evidence": "v19_c1e; k9yW0vOWPrs_580.png",
+     "physical_pose_correction": {
+      "reviewer_proposal": [
+       -81.94,
+       -6,
+       -99.88,
+       102
+      ],
+      "reviewer_proposal_support_y": -11,
+      "reviewer_proposal_capsule_displacement": 0.32,
+      "correction": "W3 서쪽 난간의 보행 반경 밖으로 x를0.56m 서쪽 이동. 최근접 검증 후보 x=-82.4도 안전하나0.1m 여유를 더함.",
+      "corrected_support_y": -6,
+      "corrected_capsule_displacement": 0
+     }
+    },
+    {
+     "camera": "gotomall_03",
+     "ids": [
+      "gm-C2"
+     ],
+     "frame": "k9yW0vOWPrs_240.jpg",
+     "before": {
+      "x": 232.0165,
+      "y": -6,
+      "z": -219.5971,
+      "yawDeg": 85,
+      "local_uv": [
+       250,
+       -6
+      ]
+     },
+     "after": {
+      "x": 232.0165,
+      "y": -6,
+      "z": -219.5971,
+      "yawDeg": 55,
+      "local_uv": [
+       250,
+       -6
+      ]
+     },
+     "evidence": "a03r; k9yW0vOWPrs_240.jpg"
+    },
+    {
+     "camera": "gotomall_04",
+     "ids": [
+      "gm-C6",
+      "gm-D5"
+     ],
+     "frame": "rLMagJuViqo_860.jpg",
+     "before": {
+      "x": 7.383,
+      "y": -6,
+      "z": -123.6938,
+      "yawDeg": 290.531,
+      "local_uv": [
+       6,
+       5.03
+      ]
+     },
+     "after": {
+      "x": 8.1,
+      "y": -6,
+      "z": -121.8,
+      "yawDeg": 285,
+      "local_uv": [
+       6.0073,
+       7.0549
+      ]
+     },
+     "evidence": "c860b; rLMagJuViqo_860.jpg"
+    },
+    {
+     "camera": "gotomall_07",
+     "ids": [
+      "gm-L6"
+     ],
+     "frame": "k9yW0vOWPrs_40.jpg",
+     "before": {
+      "x": 368.9743,
+      "y": -6,
+      "z": -264.4809,
+      "yawDeg": 110.531,
+      "local_uv": [
+       394,
+       0
+      ]
+     },
+     "after": {
+      "x": 362.6,
+      "y": -6,
+      "z": -261.6,
+      "yawDeg": 110.531,
+      "local_uv": [
+       387.0202,
+       0.4623
+      ]
+     },
+     "evidence": "l6w07; k9yW0vOWPrs_40.jpg"
+    },
+    {
+     "camera": "gotomall_12",
+     "ids": [
+      "gm-L7"
+     ],
+     "frame": "k9yW0vOWPrs_910.jpg",
+     "before": {
+      "x": -323.5493,
+      "y": -6,
+      "z": -17.9447,
+      "yawDeg": 110.531,
+      "local_uv": [
+       -341,
+       -12
+      ]
+     },
+     "after": {
+      "x": -322.6,
+      "y": -6,
+      "z": -18.3,
+      "yawDeg": 98,
+      "local_uv": [
+       -339.9864,
+       -11.9998
+      ]
+     },
+     "evidence": "a12; k9yW0vOWPrs_910.jpg"
+    },
+    {
+     "camera": "gotomall_18",
+     "ids": [
+      "NEW-2"
+     ],
+     "frame": "k9yW0vOWPrs_1030.jpg",
+     "before": {
+      "x": -273.5515,
+      "y": -6,
+      "z": -15.6007,
+      "yawDeg": 290.531,
+      "local_uv": [
+       -295,
+       7.73
+      ]
+     },
+     "after": {
+      "x": -277.8,
+      "y": -6,
+      "z": -18.5,
+      "yawDeg": 235,
+      "local_uv": [
+       -297.9618,
+       3.5248
+      ]
+     },
+     "evidence": "a18; k9yW0vOWPrs_1030.jpg"
+    },
+    {
+     "camera": "gotomall_19",
+     "ids": [
+      "gm-T2",
+      "gm-C3"
+     ],
+     "frame": "k9yW0vOWPrs_1240.jpg",
+     "before": {
+      "x": -100.4529,
+      "y": -6,
+      "z": -80.8853,
+      "yawDeg": 290.531,
+      "local_uv": [
+       -110,
+       7.3
+      ]
+     },
+     "after": {
+      "x": -100.4529,
+      "y": -6,
+      "z": -80.8853,
+      "yawDeg": 264,
+      "local_uv": [
+       -110,
+       7.3
+      ]
+     },
+     "evidence": "v19_c19r; k9yW0vOWPrs_1240.jpg"
+    },
+    {
+     "camera": "gotomall_20",
+     "ids": [
+      "gm-C2",
+      "gm-T2"
+     ],
+     "frame": "k9yW0vOWPrs_340.jpg",
+     "before": {
+      "x": 155.4002,
+      "y": -6,
+      "z": -190.3704,
+      "yawDeg": 110.531,
+      "local_uv": [
+       168,
+       -5.5
+      ]
+     },
+     "after": {
+      "x": 168.6863,
+      "y": -6,
+      "z": -194.8122,
+      "yawDeg": 110.531,
+      "local_uv": [
+       182,
+       -5
+      ]
+     },
+     "evidence": "a20/s340a; k9yW0vOWPrs_340.jpg"
+    },
+    {
+     "camera": "gotomall_21",
+     "ids": [
+      "gm-C4"
+     ],
+     "frame": "rLMagJuViqo_680.jpg",
+     "before": {
+      "x": -98.0994,
+      "y": -6,
+      "z": -83.1548,
+      "yawDeg": 330,
+      "local_uv": [
+       -107,
+       6
+      ]
+     },
+     "after": {
+      "x": -99.1,
+      "y": -6,
+      "z": -81.4,
+      "yawDeg": 328,
+      "local_uv": [
+       -108.5525,
+       7.2924
+      ]
+     },
+     "evidence": "v19_c21q; rLMagJuViqo_680.jpg"
+    },
+    {
+     "camera": "gotomall_23",
+     "ids": [
+      "gm-C3",
+      "gm-T2"
+     ],
+     "frame": "k9yW0vOWPrs_1520.jpg",
+     "before": {
+      "x": 138.3502,
+      "y": -6,
+      "z": -170.317,
+      "yawDeg": 290.531,
+      "local_uv": [
+       145,
+       7.3
+      ]
+     },
+     "after": {
+      "x": 143.5132,
+      "y": -6,
+      "z": -173.6387,
+      "yawDeg": 278,
+      "local_uv": [
+       151,
+       6
+      ]
+     },
+     "evidence": "v19_c23b; k9yW0vOWPrs_1520.jpg"
+    }
+   ],
+   "assumptions": [
+    "모든 비교 카메라 y=-6은 B1 보행 바닥 높이이며 눈높이가 아니다. local_uv는 모듈 P/UV 변환으로 정합시켰다.",
+    "리뷰어 확인렌더는 이전 기하에서의 검증이다. 이번 수정 이후 직접 렌더는 사용자 sandbox 제약상 실행하지 않았으며 최종 프레임 점유율·가림은 운영자 확인이 필요하다.",
+    "카메라 좌표·yaw와 점포 절대 chainage는 원본 프레임 특징·영상 보행순서에 대한 모델 적합값이며 현장 실측값이 아니다.",
+    "gm-C1은 서행 시점으로 개선하되 W3 계단(station/_junctions)과 gotomall의 개찰기·난간을 함께 조정해야 하는 공유배치 충돌은 남는다. 리뷰 v19_c1e는 실제 W3 구멍 안이어서 x=-82.5로0.56m 서쪽 보정했다. 바닥 y=-6·캡슐충돌0 확인; 원본 완전일치를 주장하지 않는다.",
+    "gm-C6의 광장 절대 위치와 왼쪽 W9 난간은 여전히 추정/공유구조 제약이다.",
+    "gotomall_18의 yaw235는 리뷰 a18의 검증시점이며, gotomall_21의 yaw328은 제안범위326–330도에서 선택했다. 최종 기하에서 새 렌더로 확인해야 한다."
+   ],
+   "review_source": ".codex-jobs/evidence/check_r17.json → gotomall; original .codex-jobs/evidence/review_walk17.json",
+   "priority_order": [
+    "regression/layout",
+    "camera (floor y=-6)",
+    "design",
+    "detail"
+   ],
+   "implementation_status": "Implemented local changes; final operator comparison render pending. Shared W3 layout remains partial.",
+   "coordinate_note": "u=east along mall, v=south across mall, metres. World x/z and camera y=-6 are recorded in camera_changes.",
+   "items": [
+    {
+     "id": "NEW-1",
+     "change": "Remove generic close crowd around rL_1520. Zero standing people inside radius4m of (u194,v6.4); replace forward u198..209,v3..9 with fourteen loose walkers/browsers.",
+     "positions": "u198.4..207.58; near radius4m cleared",
+     "status": "implemented; geometry count verified"
+    },
+    {
+     "id": "gm-L3",
+     "change": "Shift cross-passage bay12 and associated benches/planter/tree/end poster4.4m west, east edge u-216.026. TONYMOLY glass begins there, blade at u-209.5,v-3.7 faces ±u with bottom2.45m. Expand hats to A bays through u-205 and stack to2.5m. Preserve original sign u-211.8 and oval centre u-215.825.",
+     "positions": "passage u-224.424..-216.026; _01=(-196.8,-6,-58.7),yaw110.531",
+     "status": "implemented; render pending"
+    },
+    {
+     "id": "gm-L5",
+     "change": "Unframed6m end flower front, five dense tiers (~0.3m bucket pitch), no pendant lamps at this front. Retain other florist detailing. Lower existing oval bench to0.45m with foliage under0.5m above seat. Three stools/two seated shoppers, separate blue folding chair and two floor plants.",
+     "positions": "front u359.438; stools u361.5..363.5,v-2.6..-1.6; blue chair(367.7,-1.8); planter(364,1)",
+     "status": "implemented; render pending"
+    },
+    {
+     "id": "gm-L6",
+     "change": "Clear south u388..400,v1..6 of restaurant tables/counters by moving south food tenants to u370.5..386.8,v7; plain east wall. Crates beside cream column(392,4.5), ficus(392.9,4.6), orange standee(395,-2.5),0.5×1.8m. Corrected _07 requires lit menu stand(381,1.2),6m ahead, and round column(377,1.4),10m ahead per original _40.",
+     "positions": "_07=(362.6,-6,-261.6),yaw110.531",
+     "status": "implemented; source occupancy audited; exact stand/column offsets inferred"
+    },
+    {
+     "id": "gm-L7",
+     "change": "Keep stool row v-7.4; screen dining room with beige wall u-371..-344.6,v-5.5, remove contradicted near table clusters and0.88m counter. TV( -348,-8 )at2.2m bottom; menu poster. Four orange tables/eight yellow chairs total in front of shutter.",
+     "positions": "_12=(-322.6,-6,-18.3),yaw98; tables u-348.7,-346.7,-344.7,-343",
+     "status": "implemented; render pending"
+    },
+    {
+     "id": "gm-L8",
+     "change": "Vending pair set to literal u-91/-89.9, same transverse location, facing-v. Preserve real frosted glass graphics and1.5m-offset tactile segment. Fixed shared W3 pit prevents full4–5m clear approach.",
+     "positions": "literal u values used because X.uc=-84.3 includes the13m exit landing offset",
+     "status": "partial: shared W3/station handoff unchanged"
+    },
+    {
+     "id": "gm-C1",
+     "change": "Westbound safe view yaw102. Reviewer(-81.94,-99.88) stood over W3 (support-11); use x-82.5,z-99.88,y-6 instead. Gates and balustrades are drawn by gotomall, but moving them alone cannot remove the shared W3 pit/stair conflict.",
+     "positions": "_02=(-82.5,-6,-99.88),yaw102",
+     "status": "partial: safe camera corrected, full bank approach unresolved"
+    },
+    {
+     "id": "gm-C2",
+     "change": "_03 yaw55 retains poster column. _20 moved to u182,v-5. Extend B bag shops beyond G13 pocket through u183; dark platform and five densely stocked stepped tiers0.4..2.4m, about5.6 bags/m/tier.",
+     "positions": "_03=(232.0165,-6,-219.5971),yaw55; _20=(168.6863,-6,-194.8122),yaw110.531; bag front u166.284..183.08",
+     "status": "implemented; render pending"
+    },
+    {
+     "id": "gm-C3",
+     "change": "Move _23 past G11 glass to light-wood shoe display at u151,v6,yaw278. Retain photographed shoe fixtures. _19 position stays; only T2 changes its yaw.",
+     "positions": "_23=(143.5132,-6,-173.6387),yaw278",
+     "status": "implemented; render pending"
+    },
+    {
+     "id": "gm-C4",
+     "change": "Step _21 back,yaw328. Add white0.4m corner pilaster,0.8×0.5m yellow9,900 board and freestanding dress rails outside both corner faces. _08/_22 remain fixed.",
+     "positions": "_21=(-99.1,-6,-81.4),yaw328; corner(-102.2,2.6); outer rack u-101.65,v2.95..4.2",
+     "status": "implemented; render pending"
+    },
+    {
+     "id": "gm-C6",
+     "change": "Remove only C/D crossing G13 bar in bay62 (u204.075). _04=(8.1,-6,-121.8),yaw285; ten seated people on visible plant-bench arc, stroller moved ahead-left to(7.8,5.1). _15 retained.",
+     "positions": "bar u204.075; seats around(16.1,10.15)",
+     "status": "implemented locally; W9 left-edge balustrade remains shared-layout limitation"
+    },
+    {
+     "id": "gm-D2",
+     "change": "Both floor textures base#85878a,1.5–2px speckles at0.7alpha (~18% coverage). Cool tint0xe8eef4/gloss0.5. Halls0x9a9c9c/gloss0.5. No painted fake reflection streaks.",
+     "positions": "all B1 aisle/hall material uses",
+     "status": "implemented; target rendered#949597 not pixel-verified"
+    },
+    {
+     "id": "gm-D4",
+     "change": "Same bay62 C/D bar removal as C6. Keep other corrected plates, pictograms, double-sided direction bars. Optional English Toilet not added (Korean-text rule).",
+     "positions": "u204.075,v~6.3",
+     "status": "implemented; render pending"
+    },
+    {
+     "id": "gm-D5",
+     "change": "Flat white soffit at floor+2.66m over u-2..26.5,v2.8..12; two transverse dark beams at u8/10.5 with lowest cove+2.40m and1.8×0.6m flush light rows at2.4m pitch.",
+     "positions": "local photographed plaza only",
+     "status": "implemented with inferred ceiling height; station oval/grid still exists above local finish"
+    },
+    {
+     "id": "gm-T1",
+     "change": "Pair browsers0.3–0.6m from merchandise edge, face±v; walkers spread across aisle in both directions. Camera-local groups moved ahead of travel direction. Three tote-carrying shoppers ahead-left of _05 face-u.",
+     "positions": "_05 group(-308,7),(-308.55,7.5),(-309,7); retail aisles",
+     "status": "implemented; render pending"
+    },
+    {
+     "id": "gm-T2",
+     "change": "Bag tiers and shoe-camera change covered by C2/C3. Keep _1240 dark ceiling/wood floor and turn _19 to yaw264 instead of re-dressing. Other already-correct goods retained.",
+     "positions": "_19=(-100.4529,-6,-80.8853),yaw264",
+     "status": "implemented; render pending"
+    },
+    {
+     "id": "NEW-2",
+     "change": "Turn from west pocket toward D dress front; move directory2m north. Three front rails plus rear rail and two wall tiers to2.4m with pastel floral-print textures. Three red pennants over front.",
+     "positions": "_18=(-277.8,-6,-18.5),yaw235; D stalls overlapping u-300..-292; kiosk u-296.8,v=mid+0.1; pennants u-299/-296/-293",
+     "status": "implemented; render pending"
+    }
+   ],
+   "unchanged_closed_ids": {
+    "fixed": [
+     "gm-L1",
+     "gm-L2",
+     "gm-L4",
+     "gm-L9",
+     "gm-C5",
+     "gm-D1",
+     "gm-D3",
+     "gm-D6",
+     "gm-D7"
+    ],
+    "rejected_open": [
+     "NEW-3"
+    ],
+    "reason": "Reviewer verified these; no new corrective work targeted them. Fire box is already0.25m and original shows white markings."
+   },
+   "remaining_limits": [
+    "W3 fixed rectangle[-82,-104,-76,-90] and station stair handoff cannot be relocated within two-file scope. Full L8/C1 clear aisle remains unresolved; gates are gotomall-owned, pit is shared.",
+    "W9 remains at shared coordinates; corrected _04 still may show left-edge balustrade absent in source frame.",
+    "D5 station ovalMezzanine(14,-132,B1) underside grid atFL+2.82/fascia+2.70 overlaps plaza. Local finish below it restores frame design;2.66m ceiling and2.40m beam are inferred, not measured. Engine/station untouched.",
+    "True floor reflection streaks require renderer support; gloss is a blurred warm reflection. Final floor colour requires operator re-render.",
+    "All exact world chainages, furniture dimensions, flower/pastel patterns, and camera fits remain inferred from supplied2025+ frames and existing OSM layout, not surveyed measurements.",
+    "tests/shot.mjs was not run per sandbox instruction. Existing original/check images inspected; no final-render match claimed.",
+    "L8 numerical target differs from current door bank: X.uc=-84.3, mouthu-90.6..-78.0. Pair follows reviewed literal u-91/-89.9 for safe-camera foreground; full seven-leaf east-end camera remains part of unresolved shared W3 alignment."
+   ],
+   "preservation_checks": [
+    "주얼리 하우스 anchored at existing C frontage containing u145.29; 관리사무소 at D frontage containing u285.26, so L3 ordinal shifts cannot relocate them.",
+    "Unrelated D curtain stall u-197.63..-194.83 retains its category despite changed subdivision random-stream consumption.",
+    "Original u-211.8 G5/G6 sign and u-215.825 oval are retained independently of shifted shop crossing.",
+    "Plaza tenant signs lowered to centre FL+2.46,h0.28 so the new D5 soffit does not hide their names.",
+    "Food-street round column at(377,1.4) reaches its actual overhead luminous field atFL+3.3."
+   ],
+   "verification": {
+    "syntax": "node --check js/places/gotomall.js: passed",
+    "diff_check": "git diff --check: passed",
+    "camera_check": {
+     "count": 25,
+     "y": -6,
+     "floor_or_capsule_problems": 0,
+     "capsule_radius": 0.32,
+     "height": 1.75,
+     "step": 0.5,
+     "modules": [
+      "gotomall",
+      "station",
+      "gyeongbu",
+      "onebailey"
+     ]
+    },
+    "detail_groups": {
+     "count": 9,
+     "max_quads_at_audit": 111808,
+     "budget": 120000,
+     "errors": []
+    },
+    "NEW-1": {
+     "standing_within4m": 0,
+     "standing_in_forward_band": 14
+    },
+    "smoke": {
+     "command": "node tests/smoke.mjs gotomall station gyeongbu onebailey",
+     "result": "OK",
+     "final_source": true
+    },
+    "walk": {
+     "command": "node tests/walk.mjs",
+     "result": "719 ok, 0 blocked",
+     "final_geometry": true,
+     "required_routes": [
+      "사용자 루트",
+      "1F 동선"
+     ],
+     "note": "Final geometry run passed; subsequent source changes only preserved tenant number labels and comments."
+    },
+    "render": "Not run: user states tests/shot.mjs cannot run in this sandbox. Existing original and reviewer images opened; final composition/colour awaiting operator.",
+    "source_sha256": "790703cbdbd266f758b368ce2ecaf25b4b8ab49b27f0a0a91308945530b8c319"
+   }
   }
  }
 }

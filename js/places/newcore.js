@@ -97,13 +97,24 @@ function textures(K) {
     }
   }, [0.8, 0.4]);
   K.texture('newcore-market-floor', 256, 256, (g, w, h) => {
-    const rand = K.rand(941); g.fillStyle = '#8e8e8b'; g.fillRect(0, 0, w, h);
+    // R19: the previous #8e8e8b rendered #a59f96 under the kit's warm gloss.
+    const rand = K.rand(941); g.fillStyle = '#77716a'; g.fillRect(0, 0, w, h);
     for (let i = 0; i < 5000; i++) {
       g.fillStyle = i % 2 ? 'rgba(255,255,250,.12)' : 'rgba(52,57,55,.08)';
       g.fillRect(rand() * w, rand() * h, 2, 2);
     }
-    g.strokeStyle = '#858582'; g.lineWidth = 1; g.strokeRect(0, 0, w, h);
+    g.strokeStyle = '#6e6963'; g.lineWidth = 1; g.strokeRect(0, 0, w, h);
   }, [1.2, 1.2]);
+  K.texture('newcore-market-column-poster', 256, 512, (g, w, h) => {
+    // _800 resolves a dark poster, but not its actual copy or product brand.
+    g.fillStyle = '#262826'; g.fillRect(0, 0, w, h);
+    g.fillStyle = '#eee8d8'; g.textAlign = 'center'; g.font = 'bold 36px sans-serif';
+    // Leave the top dark where the retained ceiling spot grazes the sightline.
+    g.fillText('킴스클럽', w / 2, 176); g.font = '28px sans-serif'; g.fillText('신선식품', w / 2, 220);
+    g.fillStyle = '#d6c5a2'; g.beginPath(); g.ellipse(w / 2, 340, 86, 67, 0, 0, Math.PI * 2); g.fill();
+    g.fillStyle = '#8e683d'; g.beginPath(); g.ellipse(w / 2, 340, 64, 47, 0, 0, Math.PI * 2); g.fill();
+    g.fillStyle = '#c0b7a3'; for (let i = 0; i < 3; i++) g.fillRect(46, 440 + i * 15, 164 - i * 18, 4);
+  }, [1, 1]);
   for (const [i, band] of ['#31528b', '#772d43'].entries()) K.texture('newcore-market-bag-' + i, 256, 384, (g, w, h) => {
     g.fillStyle = '#eeede6'; g.fillRect(0, 0, w, h);
     g.fillStyle = band; g.fillRect(34, 0, 63, h); g.fillRect(0, h - 35, w, 20);
@@ -718,7 +729,7 @@ function marketBag(F, u, y, v, side, variant) {
   }
   F.B(u, y + .29, v, .037, .018, .12, 0xd8d5cb, { solid: false });
 }
-function shoppingCart(F, u, y, v) {
+function shoppingCart(F, u, y, v, foreground = false) {
   // _800's red foreground bar belongs to a cart, not a fixed queue railing.
   const { B, cyl } = F, steel = 0xa7adab;
   B(u, y + 0.36, v, 0.64, 0.025, 0.93, steel, { solid: false });
@@ -732,7 +743,8 @@ function shoppingCart(F, u, y, v) {
     }
   }
   for (const dv of [-0.46, 0.46]) for (const yy of [0.48, 0.64, 0.82]) B(u, y + yy, v + dv, 0.64, 0.018, 0.02, steel, { solid: false });
-  B(u, y + 0.98, v + 0.43, 0.72, 0.055, 0.06, 0xb53732, { solid: false });
+  B(u, y + 0.98, v + 0.43, 0.72, 0.055, 0.06, foreground ? 0xc8322c : 0xb53732, { solid: false });
+  if (foreground) B(u, y + 0.977, v + 0.43, .24, .061, .066, 0xefeee7, { solid: false });
 }
 function refrigeratedCase(F, u, y, v, w, variant) {
   const { B, S } = F;
@@ -777,6 +789,32 @@ function marketStall(F, u, y, v, i) {
   }
   const firstRackU = -F.L / 2 + 5, staffU = firstRackU + (Math.round((u - firstRackU - 2.9) / 5.8) + .5) * 5.8;
   F.person(staffU, y, v + 1.5, { rotY: F.angle + Math.PI, shirt: 0x832e31, pants: 0x33393a });
+}
+function marketReflections(F, y, spots) {
+  // _800 has soft elongated floor highlights under the aisle spots. One
+  // transparent mesh avoids the kit's 0.3 alpha-test cutoff and adds no floors.
+  const T = F.K.THREE, size = 32, rgba = new Uint8Array(size * size * 4);
+  for (let j = 0; j < size; j++) for (let i = 0; i < size; i++) {
+    const a = i / (size - 1) * 2 - 1, b = j / (size - 1) * 2 - 1, q = (j * size + i) * 4;
+    rgba[q] = rgba[q + 1] = rgba[q + 2] = 255;
+    rgba[q + 3] = Math.round(255 * Math.exp(-2.7 * (a * a + b * b)) * (1 - a * a) * (1 - b * b));
+  }
+  const tex = new T.DataTexture(rgba, size, size); tex.needsUpdate = true;
+  tex.minFilter = tex.magFilter = T.LinearFilter;
+  const pos = [], uv = [], idx = [];
+  spots.forEach(([u, v], i) => {
+    for (const [du, dv] of [[-.75, -.15], [-.75, .15], [.75, .15], [.75, -.15]]) {
+      const [x, z] = F.P(u + du, v + dv); pos.push(x, y + .018, z);
+    }
+    uv.push(0, 0, 0, 1, 1, 1, 1, 0);
+    const n = i * 4; idx.push(n, n + 1, n + 2, n, n + 2, n + 3);
+  });
+  const geometry = new T.BufferGeometry();
+  geometry.setAttribute('position', new T.Float32BufferAttribute(pos, 3));
+  geometry.setAttribute('uv', new T.Float32BufferAttribute(uv, 2)); geometry.setIndex(idx);
+  const material = new T.MeshBasicMaterial({ map: tex, color: 0xd0d0cc, transparent: true, opacity: .3, depthWrite: false });
+  const mesh = new T.Mesh(geometry, material); mesh.name = 'newcore-market-floor-reflections';
+  F.K.addMesh(mesh);
 }
 function market(F, ci) {
   const { K, L, W, B, S } = F, y = K.LEVELS.B1;
@@ -829,11 +867,18 @@ function market(F, ci) {
       panel(F, u, y + 1.7, 14.545, .62, .87, 'newcore-food-pack-0');
       S('킴스클럽', u, y + 2.31, 14.55, .85, .2, null, { rotY: F.angle });
     }
-    // The far-end fascia hangs above the retained 5.6m inter-building route.
-    const end = localFrame(K, { ...F, angle: F.angle - Math.PI / 2, P: (u, v) => F.P(29 - v, 18 + u) });
-    end.B(0, y + 2.66, 0, 5.4, .57, .18, 0x3d3830, { solid: false });
-    end.S(['즉석조리 · 신선식품', '킴스클럽'], 0, y + 2.94, .11, 4.9, .45, '#ede6d1', { fg: '#443d30', rotY: end.angle });
-    end.B(0, y + 3.24, -.05, 5.3, .045, .28, { tex: 'emit', color: 0xfff4d8 }, { solid: false });
+    // R19 NC-L2: use the existing left-centre column, not a new obstacle in
+    // the 7m aisle. Its camera-facing poster sits above the 2.05m cases.
+    B(11.48, y + 2.15, 14, .035, 1.24, .64, 0x202320, { solid: false });
+    panel(F, 11.455, y + 2.77, 14, .6, 1.2, 'newcore-market-column-poster', -Math.PI / 2);
+    // Three lit stall panels close the view, above the retained 5.6m link.
+    // Category wording is supported; the frame does not resolve tenant names.
+    const end = localFrame(K, { ...F, angle: F.angle - Math.PI / 2, P: (u, v) => F.P(30 - v, 18 + u) });
+    for (const [i, u] of [-2.65, 0, 2.65].entries()) {
+      end.B(u, y + 2.46, 0, 2.58, .88, .22, 0x3d3830, { solid: false });
+      end.B(u, y + 2.5, .12, 2.5, .8, .025, { tex: 'emit', color: [0xffe8b9, 0xffefd0, 0xffdfac][i] }, { solid: false });
+      end.S(['즉석조리', ['신선식품', '킴스클럽'], '델리'][i], u, y + 2.9, .15, 2.2, i === 1 ? .62 : .46, null, { fg: '#543b29', rotY: end.angle });
+    }
     S(["KIM'S CLUB", '킴스클럽 · 신선식품 · 델리'], 0, y + 2.65, W - 1, 12, 0.8, '#7c322d');
     for (let u = 0; u < L / 2 - 5; u += 5) {
       B(u, y, deliV, 2.8, 0.9, 1.25, 0x9caaa1);
@@ -848,8 +893,10 @@ function market(F, ci) {
     shoppingCart(F, L / 2 - 3, y, deliV + 1.6);
     // A few occupied carts, inferred activity rather than an invented cart bay.
     for (const [u, v] of [[-15.5, 19.5], [11.8, 19.5], [15, 31.1]]) shoppingCart(F, u, y, v);
-    const forwardCart = localFrame(K, { ...F, angle: F.angle - Math.PI / 2, P: (u, v) => F.P(-10.9 - v, 18.55 + u) });
-    shoppingCart(forwardCart, 0, y, 0);
+    // NEW-1: the old handle was only .67m ahead, below camera07's frame.
+    // Move the retained cart forward .55m: handle 1.22m ahead, h=1.01m.
+    const forwardCart = localFrame(K, { ...F, angle: F.angle - Math.PI / 2, P: (u, v) => F.P(-10.35 - v, 18.55 + u) });
+    shoppingCart(forwardCart, 0, y, 0, true);
     marketPeople(F, y);
     for (const [i, u, v] of [[0, -2, 17.1], [1, -.9, 19], [2, 1.2, 18.9], [3, 8.8, 20.2], [4, 10, 16], [5, 19, 19.8], [6, 22, 17], [7, 26, 20]]) {
       F.person(u, y, v, { h: 1.6 + i % 3 * .04, rotY: F.angle + i * .8, shirt: [0x36484d, 0xb1a48d, 0x6a6657, 0x812f32][i % 4], pants: 0x34393d });
@@ -880,14 +927,20 @@ function market(F, ci) {
       }
     };
     pipe([-17, 3.05, 10], [-17, 3.05, 16.7]); pipe([-17, 3.05, 16.7], [-16.5, 3.05, 17.4]); pipe([-16.5, 3.05, 17.4], [-15.7, 3.05, 17.8]); pipe([-15.7, 3.05, 17.8], [-8, 3.05, 17.8]);
+    // One additional round silver run, parallel to the existing u-axis branch.
+    pipe([-17, 3.05, 16.1], [29, 3.05, 16.1], .25);
+    const floorSpots = [];
     for (let u = -L / 2 + 4; u < L / 2 - 3; u += 3) for (const v of [7, 14, 18, 24, 28, 32]) {
       B(u, y + 3.36, v, 2.2, 0.07, 0.12, 0x252c2c, { solid: false });
       B(u, y + 3.34, v, 2.05, 0.02, 0.07, 0x1c1c1c, { solid: false });
       for (const du of [-0.7, 0.7]) {
-        F.cyl(u + du, y + 3.12, v, 0.10, 0.22, 0x252a29, 12);
-        F.cyl(u + du, y + 3.10, v, 0.09, 0.025, { tex: 'emit', color: 0xfffff5 }, 12);
+        const aisle = v === 14 || v === 18 || v === 24;
+        F.cyl(u + du, y + 3.12, v, aisle ? .15 : .10, 0.22, 0x252a29, 12);
+        F.cyl(u + du, y + 3.10, v, aisle ? .14 : .09, 0.025, { tex: 'emit', color: aisle ? 0xffffff : 0xfffff5 }, 12);
+        if (v === 18) floorSpots.push([u + du, v]);
       }
     }
+    marketReflections(F, y, floorSpots);
   });
 }
 function marketPeople(F, y) {

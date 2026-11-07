@@ -649,6 +649,35 @@
           "1M": [
             "스타벅스 중층 좌석"
           ]
+        },
+        "round19_current_geometry": {
+          "local_inner_rect": [
+            138,
+            -1549,
+            192,
+            -1518
+          ],
+          "local_hull_width_depth": [
+            62,
+            39
+          ],
+          "pivot": [
+            188.22,
+            -1515.03
+          ],
+          "yawDeg": 45,
+          "translation": [
+            4.6,
+            3.9
+          ],
+          "floor_y": [
+            0.12,
+            3.92,
+            6.92,
+            11.32,
+            15.72
+          ],
+          "note": "Earlier geometry fields retained as historical research; this is current model transform."
         }
       },
       {
@@ -848,6 +877,61 @@
         ],
         [
           334.76,
+          0,
+          -1275.72
+        ],
+        [
+          297.31,
+          0,
+          -1315.35
+        ],
+        [
+          283.79,
+          0,
+          -1330.92
+        ],
+        [
+          264.56,
+          0.065,
+          -1366.59
+        ],
+        [
+          259.74,
+          0.065,
+          -1376.82
+        ],
+        [
+          251.9,
+          0.065,
+          -1384.26
+        ],
+        [
+          238.65,
+          0.065,
+          -1389.18
+        ],
+        [
+          190.22,
+          0.065,
+          -1424.12
+        ]
+      ],
+      "route_coordinate_order": "[x,y,z]",
+      "dimensions_guess": true,
+      "note": "OSM x/z와 양쪽 입구 유지. HF_65의 긴 수평천장/출구에 따라 미측량 -4m 바닥 가정을 폐기: y0 바닥, y3.5 천장. 올림픽대로는 기존 y5.85 제방 위. 색띠는 비물리 표면.",
+      "round19_previous_walk_route": [
+        [
+          399.9,
+          0.025,
+          -1250.4
+        ],
+        [
+          344.24,
+          0,
+          -1268.03
+        ],
+        [
+          334.76,
           -4,
           -1275.72
         ],
@@ -886,10 +970,7 @@
           0.065,
           -1424.12
         ]
-      ],
-      "route_coordinate_order": "[x,y,z]",
-      "dimensions_guess": true,
-      "note": "차도 터널 OSM 282194888(신잠원나들목) 옆 별도 보행 터널이다. 올림픽대로 두 차로 리본 아래를 통과하도록 깊이 -4m, 양쪽 접근 경사를 모델링했다. 원본 터널 길이는 54.526m이며 블로그가 부르는 잠원나들목과 구분한다."
+      ]
     },
     {
       "id": "jamwon-underpass",
@@ -979,6 +1060,42 @@
           -1476.21
         ],
         [
+          192.82,
+          0.12,
+          -1511.13
+        ],
+        [
+          187.7359,
+          0.12,
+          -1510.2461
+        ],
+        [
+          186.3217,
+          0.12,
+          -1511.6603
+        ]
+      ],
+      "route_coordinate_order": "[x,y,z]",
+      "guess": true,
+      "height_guess": true,
+      "note": "육지측 OSM 끝은 보존. HF245 apparent size로 선체를6m 육지방향 이동하여 수역측 끝을192.82,-1511.13으로 단축. OSM 원본949348576은 geometry.osm_gangways에 보존.",
+      "inferred_segments": [
+        0,
+        2,
+        3
+      ],
+      "round19_previous_walk_route": [
+        [
+          238.4,
+          0.065,
+          -1472.59
+        ],
+        [
+          234.12,
+          0.12,
+          -1476.21
+        ],
+        [
           188.22,
           0.12,
           -1515.03
@@ -993,15 +1110,6 @@
           0.12,
           -1520
         ]
-      ],
-      "route_coordinate_order": "[x,y,z]",
-      "guess": false,
-      "height_guess": true,
-      "note": "OSM949348576부교 양 끝과305677075보행로 노드의 평면좌표 보존. 노드→부교 5.6m 포장 연결부와 부교→실내 출입구는 추정 설계. 부교폭3.2m·높이.12m는 복원 추정.",
-      "inferred_segments": [
-        0,
-        2,
-        3
       ]
     },
     {
@@ -1295,7 +1403,7 @@
     "s9 합성 문서의 근거0은 원본52프레임과 불일치하여 채택하지 않음. HF_65 사각 콘크리트와 구잠원 금속아치는 서로 다른 나들목으로 분리. rJp_760 아치교각이라는 로그 설명도 실제 프레임에 없어 배치 근거에서 제외."
   ],
   "modeling": {
-    "round": 15,
+    "round": 19,
     "trace": [
       {
         "spot": "잠원나들목 · 공원측 아치 입구",
@@ -1563,9 +1671,9 @@
         "photos": [
           "refs/interior/jamsugyo_wave/wave_03_sfac_exterior.jpg"
         ],
-        "x": 188.22,
+        "x": 192.82,
         "y": 0.12,
-        "z": -1515.03,
+        "z": -1511.13,
         "yawDeg": 85,
         "pitchDeg": 0,
         "eyeY": 1.74,
@@ -1578,16 +1686,24 @@
           "yawDeg": 40,
           "pitchDeg": 0
         },
-        "round17_note": "OSM 부교 끝 (188.22,-1515.03)을 고정하고 선체와 함께 +45° 강체 회전. 서측 창/갑판 카메라는 확장한 서측 면으로 local x -16m; y는 해당 층 바닥."
+        "round17_note": "OSM 부교 끝 (188.22,-1515.03)을 고정하고 선체와 함께 +45° 강체 회전. 서측 창/갑판 카메라는 확장한 서측 면으로 local x -16m; y는 해당 층 바닥.",
+        "round19_previous_pose": {
+          "x": 188.22,
+          "y": 0.12,
+          "z": -1515.03,
+          "yawDeg": 85,
+          "pitchDeg": 0
+        },
+        "round19_note": "선체를 강둑 방향 (+4.6,+3.9)m 평행이동. 카메라도 같은 이동, y는 층 바닥."
       },
       {
         "spot": "서울웨이브 · 스타벅스와 창가 좌석",
         "photos": [
           "refs/interior/jamsugyo_wave/wave_04_mustshare.jpg"
         ],
-        "x": 168.2867,
+        "x": 172.8867,
         "y": 0.12,
-        "z": -1520.5101,
+        "z": -1516.6101,
         "yawDeg": 45,
         "pitchDeg": 0,
         "eyeY": 1.74,
@@ -1600,16 +1716,24 @@
           "yawDeg": 0,
           "pitchDeg": 0
         },
-        "round17_note": "OSM 부교 끝 (188.22,-1515.03)을 고정하고 선체와 함께 +45° 강체 회전. 서측 창/갑판 카메라는 확장한 서측 면으로 local x -16m; y는 해당 층 바닥."
+        "round17_note": "OSM 부교 끝 (188.22,-1515.03)을 고정하고 선체와 함께 +45° 강체 회전. 서측 창/갑판 카메라는 확장한 서측 면으로 local x -16m; y는 해당 층 바닥.",
+        "round19_previous_pose": {
+          "x": 168.2867,
+          "y": 0.12,
+          "z": -1520.5101,
+          "yawDeg": 45,
+          "pitchDeg": 0
+        },
+        "round19_note": "선체를 강둑 방향 (+4.6,+3.9)m 평행이동. 카메라도 같은 이동, y는 층 바닥."
       },
       {
         "spot": "서울웨이브 · 전시공간",
         "photos": [
           "refs/interior/jamsugyo_wave/wave_03_sfac_exterior.jpg"
         ],
-        "x": 157.3265,
+        "x": 161.9265,
         "y": 0.12,
-        "z": -1513.7926,
+        "z": -1509.8926,
         "yawDeg": 45,
         "pitchDeg": 0,
         "eyeY": 1.74,
@@ -1630,16 +1754,24 @@
           "yawDeg": 0,
           "pitchDeg": 0
         },
-        "round17_note": "OSM 부교 끝 (188.22,-1515.03)을 고정하고 선체와 함께 +45° 강체 회전. 서측 창/갑판 카메라는 확장한 서측 면으로 local x -16m; y는 해당 층 바닥."
+        "round17_note": "OSM 부교 끝 (188.22,-1515.03)을 고정하고 선체와 함께 +45° 강체 회전. 서측 창/갑판 카메라는 확장한 서측 면으로 local x -16m; y는 해당 층 바닥.",
+        "round19_previous_pose": {
+          "x": 157.3265,
+          "y": 0.12,
+          "z": -1513.7926,
+          "yawDeg": 45,
+          "pitchDeg": 0
+        },
+        "round19_note": "선체를 강둑 방향 (+4.6,+3.9)m 평행이동. 카메라도 같은 이동, y는 층 바닥."
       },
       {
         "spot": "마레보 인 웨이브 · 2F벨라홀",
         "photos": [
           "refs/interior/jamsugyo_wave/marebo_2F_bella.jpg"
         ],
-        "x": 176.4891,
+        "x": 181.0891,
         "y": 6.92,
-        "z": -1512.3076,
+        "z": -1508.4076,
         "yawDeg": 45,
         "pitchDeg": 0,
         "eyeY": 8.54,
@@ -1652,16 +1784,24 @@
           "yawDeg": 0,
           "pitchDeg": 0
         },
-        "round17_note": "OSM 부교 끝 (188.22,-1515.03)을 고정하고 선체와 함께 +45° 강체 회전. 서측 창/갑판 카메라는 확장한 서측 면으로 local x -16m; y는 해당 층 바닥."
+        "round17_note": "OSM 부교 끝 (188.22,-1515.03)을 고정하고 선체와 함께 +45° 강체 회전. 서측 창/갑판 카메라는 확장한 서측 면으로 local x -16m; y는 해당 층 바닥.",
+        "round19_previous_pose": {
+          "x": 176.4891,
+          "y": 6.92,
+          "z": -1512.3076,
+          "yawDeg": 45,
+          "pitchDeg": 0
+        },
+        "round19_note": "선체를 강둑 방향 (+4.6,+3.9)m 평행이동. 카메라도 같은 이동, y는 층 바닥."
       },
       {
         "spot": "마레보 인 웨이브 · 3F루체홀",
         "photos": [
           "refs/interior/jamsugyo_wave/marebo_3F_luce.jpg"
         ],
-        "x": 176.4891,
+        "x": 181.0891,
         "y": 11.32,
-        "z": -1512.3076,
+        "z": -1508.4076,
         "yawDeg": 45,
         "pitchDeg": 0,
         "eyeY": 12.94,
@@ -1674,7 +1814,15 @@
           "yawDeg": 0,
           "pitchDeg": 0
         },
-        "round17_note": "OSM 부교 끝 (188.22,-1515.03)을 고정하고 선체와 함께 +45° 강체 회전. 서측 창/갑판 카메라는 확장한 서측 면으로 local x -16m; y는 해당 층 바닥."
+        "round17_note": "OSM 부교 끝 (188.22,-1515.03)을 고정하고 선체와 함께 +45° 강체 회전. 서측 창/갑판 카메라는 확장한 서측 면으로 local x -16m; y는 해당 층 바닥.",
+        "round19_previous_pose": {
+          "x": 176.4891,
+          "y": 11.32,
+          "z": -1512.3076,
+          "yawDeg": 45,
+          "pitchDeg": 0
+        },
+        "round19_note": "선체를 강둑 방향 (+4.6,+3.9)m 평행이동. 카메라도 같은 이동, y는 층 바닥."
       },
       {
         "spot": "서울웨이브 · 옥상과 루체홀 채광지붕",
@@ -1682,9 +1830,9 @@
           "refs/interior/jamsugyo_wave/wave_03_sfac_exterior.jpg",
           "refs/interior/jamsugyo_wave/marebo_3F_luce.jpg"
         ],
-        "x": 164.044,
+        "x": 168.644,
         "y": 15.72,
-        "z": -1506.3679,
+        "z": -1502.4679,
         "yawDeg": 0,
         "pitchDeg": 0,
         "eyeY": 17.34,
@@ -1697,7 +1845,15 @@
           "yawDeg": 315,
           "pitchDeg": 0
         },
-        "round17_note": "OSM 부교 끝 (188.22,-1515.03)을 고정하고 선체와 함께 +45° 강체 회전. 서측 창/갑판 카메라는 확장한 서측 면으로 local x -16m; y는 해당 층 바닥."
+        "round17_note": "OSM 부교 끝 (188.22,-1515.03)을 고정하고 선체와 함께 +45° 강체 회전. 서측 창/갑판 카메라는 확장한 서측 면으로 local x -16m; y는 해당 층 바닥.",
+        "round19_previous_pose": {
+          "x": 164.044,
+          "y": 15.72,
+          "z": -1506.3679,
+          "yawDeg": 0,
+          "pitchDeg": 0
+        },
+        "round19_note": "선체를 강둑 방향 (+4.6,+3.9)m 평행이동. 카메라도 같은 이동, y는 층 바닥."
       },
       {
         "round": 13,
@@ -1869,7 +2025,7 @@
         "x": 203,
         "y": 0,
         "z": -1447.8,
-        "yawDeg": 38,
+        "yawDeg": 78,
         "pitchDeg": -22,
         "eyeY": 1.62,
         "coordinate_status": "모델 검수 카메라; 원본 GPS가 아니며 y는 바닥/발 높이",
@@ -1891,7 +2047,15 @@
         },
         "weather": "rain",
         "query": "jamwonWeather=rain",
-        "round17_floor_note": "실제 kit+city support y=0 확인. 리뷰 초안 y=.07/.065는 부유하므로 지면 높이0으로 정정."
+        "round17_floor_note": "실제 kit+city support y=0 확인. 리뷰 초안 y=.07/.065는 부유하므로 지면 높이0으로 정정.",
+        "round19_previous_pose": {
+          "x": 203,
+          "y": 0,
+          "z": -1447.8,
+          "yawDeg": 38,
+          "pitchDeg": -22
+        },
+        "round19_note": "위치/바닥 y0 유지. 건물과 왼쪽 강둑 사이의 열린 수역을 바라보도록 yaw78°, pitch-22°. 안전띠2m 앞, 수면은 띠2.5m 뒤."
       },
       {
         "round": 13,
@@ -1899,9 +2063,9 @@
         "photos": [
           "refs/walk/s9_jamwon/HF1iiczAe6M_360.jpg"
         ],
-        "x": 173.6607,
+        "x": 178.2607,
         "y": 0.12,
-        "z": -1514.1461,
+        "z": -1510.2461,
         "yawDeg": 30,
         "pitchDeg": 10,
         "eyeY": 1.74,
@@ -1924,7 +2088,15 @@
         },
         "round17_note": "OSM 부교 끝 (188.22,-1515.03)을 고정하고 선체와 함께 +45° 강체 회전. 서측 창/갑판 카메라는 확장한 서측 면으로 local x -16m; y는 해당 층 바닥.",
         "weather": "rain",
-        "query": "jamwonWeather=rain"
+        "query": "jamwonWeather=rain",
+        "round19_previous_pose": {
+          "x": 173.6607,
+          "y": 0.12,
+          "z": -1514.1461,
+          "yawDeg": 30,
+          "pitchDeg": 10
+        },
+        "round19_note": "선체를 강둑 방향 (+4.6,+3.9)m 평행이동. 카메라도 같은 이동, y는 층 바닥."
       },
       {
         "round": 13,
@@ -1932,9 +2104,9 @@
         "photos": [
           "refs/walk/s9_jamwon/zykZqEnfdl4_14.jpg"
         ],
-        "x": 138.0932,
+        "x": 142.6932,
         "y": 0.12,
-        "z": -1495.9735,
+        "z": -1492.0735,
         "yawDeg": 157,
         "pitchDeg": 14,
         "eyeY": 1.74,
@@ -1957,7 +2129,15 @@
         },
         "round17_note": "OSM 부교 끝 (188.22,-1515.03)을 고정하고 선체와 함께 +45° 강체 회전. 서측 창/갑판 카메라는 확장한 서측 면으로 local x -16m; y는 해당 층 바닥.",
         "weather": "rain",
-        "query": "jamwonWeather=rain"
+        "query": "jamwonWeather=rain",
+        "round19_previous_pose": {
+          "x": 138.0932,
+          "y": 0.12,
+          "z": -1495.9735,
+          "yawDeg": 157,
+          "pitchDeg": 14
+        },
+        "round19_note": "선체를 강둑 방향 (+4.6,+3.9)m 평행이동. 카메라도 같은 이동, y는 층 바닥."
       },
       {
         "round": 13,
@@ -1965,9 +2145,9 @@
         "photos": [
           "refs/walk/s9_jamwon/g6lNHxLOEEA_13.jpg"
         ],
-        "x": 180.661,
+        "x": 185.261,
         "y": 0.12,
-        "z": -1514.9239,
+        "z": -1511.0239,
         "yawDeg": 102,
         "pitchDeg": 5,
         "eyeY": 1.74,
@@ -1990,7 +2170,15 @@
         },
         "round17_note": "OSM 부교 끝 (188.22,-1515.03)을 고정하고 선체와 함께 +45° 강체 회전. 서측 창/갑판 카메라는 확장한 서측 면으로 local x -16m; y는 해당 층 바닥.",
         "weather": "rain",
-        "query": "jamwonWeather=rain"
+        "query": "jamwonWeather=rain",
+        "round19_previous_pose": {
+          "x": 180.661,
+          "y": 0.12,
+          "z": -1514.9239,
+          "yawDeg": 102,
+          "pitchDeg": 5
+        },
+        "round19_note": "선체를 강둑 방향 (+4.6,+3.9)m 평행이동. 카메라도 같은 이동, y는 층 바닥."
       },
       {
         "round": 13,
@@ -1998,10 +2186,10 @@
         "photos": [
           "refs/walk/s9_jamwon/HF1iiczAe6M_400.jpg"
         ],
-        "x": 138.3053,
+        "x": 142.9053,
         "y": 0.12,
-        "z": -1489.1145,
-        "yawDeg": 135,
+        "z": -1485.2145,
+        "yawDeg": 130,
         "pitchDeg": 0,
         "eyeY": 1.74,
         "coordinate_status": "모델 검수 카메라; 원본 GPS가 아니며 y는 바닥/발 높이",
@@ -2023,7 +2211,15 @@
         },
         "round17_note": "OSM 부교 끝 (188.22,-1515.03)을 고정하고 선체와 함께 +45° 강체 회전. 서측 창/갑판 카메라는 확장한 서측 면으로 local x -16m; y는 해당 층 바닥.",
         "weather": "rain",
-        "query": "jamwonWeather=rain"
+        "query": "jamwonWeather=rain",
+        "round19_previous_pose": {
+          "x": 138.3053,
+          "y": 0.12,
+          "z": -1489.1145,
+          "yawDeg": 135,
+          "pitchDeg": 0
+        },
+        "round19_note": "선체를 강둑 방향 (+4.6,+3.9)m 평행이동. 카메라도 같은 이동, y는 층 바닥. 송전탑이 세로프레임 왼쪽 약35%에 오도록 yaw130°."
       },
       {
         "round": 13,
@@ -2031,11 +2227,11 @@
         "photos": [
           "refs/walk/s9_jamwon/HF1iiczAe6M_500.jpg"
         ],
-        "x": 133.0374,
+        "x": 139.4052,
         "y": 0.12,
-        "z": -1498.2716,
+        "z": -1496.1394,
         "yawDeg": 135,
-        "pitchDeg": -5,
+        "pitchDeg": -10,
         "eyeY": 1.74,
         "coordinate_status": "모델 검수 카메라; 원본 GPS가 아니며 y는 바닥/발 높이",
         "note": "보트는 서측 외부데크 추정배치; 실내 통행선 밖.",
@@ -2056,7 +2252,15 @@
         },
         "round17_note": "OSM 부교 끝 (188.22,-1515.03)을 고정하고 선체와 함께 +45° 강체 회전. 서측 창/갑판 카메라는 확장한 서측 면으로 local x -16m; y는 해당 층 바닥.",
         "weather": "rain",
-        "query": "jamwonWeather=rain"
+        "query": "jamwonWeather=rain",
+        "round19_previous_pose": {
+          "x": 133.0374,
+          "y": 0.12,
+          "z": -1498.2716,
+          "yawDeg": 135,
+          "pitchDeg": -5
+        },
+        "round19_note": "선체를 강둑 방향 (+4.6,+3.9)m 평행이동. 카메라도 같은 이동, y는 층 바닥. local x137.35→139.85, 폴딩문 안쪽으로2.5m 후퇴, pitch-10°."
       },
       {
         "round": 13,
@@ -2064,9 +2268,9 @@
         "photos": [
           "refs/walk/s9_jamwon/rTgYwFjfd5U_1650.jpg"
         ],
-        "x": 403.66,
+        "x": 307,
         "y": 1.065,
-        "z": -1649.508,
+        "z": -1547,
         "yawDeg": 152.2,
         "pitchDeg": 0,
         "eyeY": 2.685,
@@ -2088,7 +2292,15 @@
           "pitchDeg": 0
         },
         "weather": "sunny",
-        "query": "jamwonWeather=sunny"
+        "query": "jamwonWeather=sunny",
+        "round19_previous_pose": {
+          "x": 403.66,
+          "y": 1.065,
+          "z": -1649.508,
+          "yawDeg": 152.2,
+          "pitchDeg": 0
+        },
+        "round19_note": "검증자의 허용 대안: 실제 수영장 위치와 천막을 보존하고 GPS미상 비교카메라를 수영장 남서쪽으로 이동. 15m앞부터 반경60m 왼쪽곡선, 강쪽포플러/로프. sunny query 유지."
       }
     ],
     "guesses": [
@@ -4661,6 +4873,891 @@
       },
       "screenshots": "Not run per user; final render still required for visual verification.",
       "scope": "Only the two assigned JS and two research JSON files edited; no engine/tests/_junctions/_meta edits, screenshots, commit or push."
+    },
+    "round19_review": {
+      "evidence_file": ".codex-jobs/evidence/check_r17.json",
+      "original_findings": ".codex-jobs/evidence/review_walk17.json",
+      "status": "implemented_unrendered",
+      "coordinate_convention": "[x,z] or explicitly [x,y,z], metres; local = before45deg rotation and (+4.6,+3.9)m translation",
+      "findings": [
+        {
+          "id": "JW-L2",
+          "priority": "layout",
+          "previous_status": "partly",
+          "frame_checked": true,
+          "status": "implemented_unrendered",
+          "change": "OSM 보행축과 양쪽 입구 좌표를 유지한 y0 수평바닥·y3.5 평천장. 보행 입구 왼쪽0.65m 확폭 후12m 동안 원래폭으로 복귀. 차도 중간꺾임은 양쪽 입구 사이76.8m 직선으로 교체, 입구기둥쪽0.35m 확폭 후12m 복귀. 차도/중앙기둥 지붕을 덮고4.5m마다 튜브등. 보행통로 왼쪽45% 회색·오른쪽55% #c8743c/노란선. 양 출구는 실제로 열림.",
+          "positions": {
+            "pedestrian": [
+              [
+                344.24,
+                0,
+                -1268.03
+              ],
+              [
+                334.76,
+                0,
+                -1275.72
+              ],
+              [
+                297.31,
+                0,
+                -1315.35
+              ],
+              [
+                283.79,
+                0,
+                -1330.92
+              ]
+            ],
+            "vehicle": [
+              [
+                340.27,
+                0,
+                -1264.22
+              ],
+              [
+                286.1,
+                0,
+                -1318.65
+              ]
+            ],
+            "roof_y": 3.5,
+            "mouth_splays_m": {
+              "pedestrian_left": 0.65,
+              "vehicle_toward_pier": 0.35
+            }
+          },
+          "ray_check": {
+            "camera": [
+              350.4,
+              1.695,
+              -1258.3
+            ],
+            "pedestrian_exit_distance_m": 98.542,
+            "vehicle_exit_distance_m": 88.185,
+            "hits_before_exit": 0
+          },
+          "guess": "터널 바닥고도/확폭/기둥폭 및 차도직선축은 HF65 재구성. OSM 원본 중간점은 데이터원본에 남아 있고 모듈외 엔진은 미수정."
+        },
+        {
+          "id": "JW-L3",
+          "priority": "layout",
+          "previous_status": "partly",
+          "frame_checked": true,
+          "status": "implemented_unrendered",
+          "change": "45° 선체 회전 유지, 전체 선체/실내/충돌/카메라를 강둑 방향6m 이동. 육지 부교 끝 보존, 수역 끝만 단축.",
+          "positions": {
+            "translation": [
+              4.6,
+              3.9
+            ],
+            "gangway": [
+              [
+                234.12,
+                -1476.21
+              ],
+              [
+                192.82,
+                -1511.13
+              ]
+            ]
+          }
+        },
+        {
+          "id": "JW-L6",
+          "priority": "layout",
+          "previous_status": "partly",
+          "frame_checked": true,
+          "status": "implemented_unrendered",
+          "change": "검증자가 허용한 GPS미상 카메라 이동 대안 사용. 실제 수영장·천막 보존, 비교시점 남서 이동. 15m 앞부터 반경60m 왼쪽곡선25m, 강쪽 포플러/로프도 같은 경로. 육지 수목84m 이상, 갈색 잔디패치.",
+          "positions": {
+            "camera": [
+              307,
+              1.065,
+              -1547
+            ],
+            "yawDeg": 152.2,
+            "curve_radius_m": 60,
+            "curve_starts_ahead_m": 15
+          }
+        },
+        {
+          "id": "JW-L8",
+          "priority": "layout",
+          "previous_status": "partly",
+          "frame_checked": true,
+          "status": "implemented_unrendered",
+          "change": "좌측 우산모양 반복수관을 높이6–12m의 불규칙 군집으로 변경. 가까운8m broadleaf와 1.2–1.5m 관목 및 먼 저층수목 추가. 우측 관목 유지. 최종 OSM 대조: 제안(263,-1368),(270,-1356)은 자전거띠 안쪽이라 원본의 길밖 식재에 맞춰 나무(261,-1367.05),관목(265.65,-1357.175)으로 조정.",
+          "positions": {
+            "tree": [
+              261,
+              -1367.05
+            ],
+            "shrub": [
+              265.65,
+              -1357.175
+            ]
+          }
+        },
+        {
+          "id": "JW-C2",
+          "priority": "camera",
+          "previous_status": "partly",
+          "frame_checked": true,
+          "status": "implemented_unrendered",
+          "change": "위치/바닥높이 유지, 열린 강창 방향으로 시선78°/pitch-22°. 띠를2m 앞 시선 직각으로 다시 놓음.",
+          "positions": {
+            "camera": [
+              203,
+              0,
+              -1447.8
+            ],
+            "yawDeg": 78,
+            "pitchDeg": -22,
+            "tape_center": [
+              201.0513,
+              -1448.2499
+            ]
+          },
+          "projection_check": {
+            "wall_max_bearing": 57.952,
+            "canopy_max_bearing": 58.791,
+            "hull_deck_max_bearing": 62.139,
+            "building_clearance_from_axis_deg": 19.209,
+            "note": "camera78° within verifier76–78° target. Tape remains77° basis, only1° from exact perpendicular. A42° portrait crop can retain a narrow rightmost corner/deck; render verification required."
+          }
+        },
+        {
+          "id": "JW-D2",
+          "priority": "design",
+          "previous_status": "partly",
+          "frame_checked": true,
+          "status": "implemented_unrendered",
+          "change": "기존 덕트2개 지름.48m/중심y5.8로 확대·하강, 갤러리옆 세번째 추가. 은회색Phong재질, 빔 베이마다 지름.12m 원형등4개.",
+          "positions": {
+            "local_duct_x": [
+              173.25,
+              174.6,
+              186.5
+            ],
+            "local_z": [
+              -1537,
+              -1523.5
+            ],
+            "y": 5.8
+          }
+        },
+        {
+          "id": "JW-D3",
+          "priority": "design",
+          "previous_status": "partly",
+          "frame_checked": true,
+          "status": "implemented_unrendered",
+          "change": "서쪽 edge3 검정 접이문틀.09m, Basic fog:false #0c0c0c. 1.05m bays에 #9aa6a8 투명도28% Phong유리, 하단 중복유리 제거.",
+          "positions": {
+            "local_edge": [
+              138,
+              -1549,
+              138,
+              -1518
+            ]
+          }
+        },
+        {
+          "id": "JW-D4",
+          "priority": "design",
+          "previous_status": "partly",
+          "frame_checked": true,
+          "status": "implemented_unrendered",
+          "change": "갈색 wood색곱 제거, 직접 #85847f 회색판재/줄눈으로 변경. 보트·흰난간·사슬 보존. cam11 local x+2.5m 문 안쪽 후퇴, pitch-10°.",
+          "positions": {
+            "camera": [
+              139.4052,
+              0.12,
+              -1496.1394
+            ],
+            "yawDeg": 135,
+            "pitchDeg": -10
+          }
+        },
+        {
+          "id": "JW-D6",
+          "priority": "design",
+          "previous_status": "partly",
+          "frame_checked": true,
+          "status": "implemented_unrendered",
+          "change": "방음판 간판을 화면 왼쪽4.35m 이동(t5.2→9.55), 높이 유지. 오른쪽 날개벽을 입구4.91→12m 앞1.05m 경사로 변경.",
+          "positions": {
+            "board_world": [
+              337.4418,
+              5.42,
+              -1261.3204
+            ],
+            "wing_length_m": 12
+          }
+        },
+        {
+          "id": "JW-T1",
+          "priority": "detail",
+          "previous_status": "partly",
+          "frame_checked": true,
+          "status": "implemented_unrendered",
+          "change": "77° 시선에 맞춰 총6.4m 깊이×20m 너비의 겹친 둥근 잎/잎맥/꽃. 수면 시작은 카메라4.5m 앞=띠2.5m 뒤.",
+          "positions": {
+            "camera_basis_s": [
+              -2,
+              4.4
+            ],
+            "camera_basis_t": [
+              -10,
+              10
+            ],
+            "water_front_s": 4.5,
+            "tape_s": 2
+          }
+        },
+        {
+          "id": "JW-T2",
+          "priority": "detail",
+          "previous_status": "partly",
+          "frame_checked": true,
+          "status": "implemented_unrendered",
+          "change": "문턱 x175.7/176.25,z-1522.7에 작은 A형2개. 왼쪽 흰안내판 local175.2,-1522를 카메라방향77.4°로 회전, 지름.35m 녹색원. 제안183.5,-1521은 실제 문턱이 아니어서 수정.",
+          "positions": {
+            "local_signs": [
+              [
+                175.7,
+                -1522.7
+              ],
+              [
+                176.25,
+                -1522.7
+              ]
+            ],
+            "local_standee": [
+              175.2,
+              -1522
+            ]
+          }
+        },
+        {
+          "id": "JW-T3",
+          "priority": "detail",
+          "previous_status": "partly",
+          "frame_checked": true,
+          "status": "implemented_unrendered",
+          "change": "철탑·강변돌출부·포플러를 fog:false 흐린색 재질로. 기둥.30m/가새.12m, 카메라10 yaw130°.",
+          "positions": {
+            "pylon": [
+              -229,
+              -1080
+            ],
+            "camera": [
+              142.9053,
+              0.12,
+              -1485.2145
+            ],
+            "yawDeg": 130
+          }
+        },
+        {
+          "id": "JW-T4",
+          "priority": "detail",
+          "previous_status": "partly",
+          "frame_checked": true,
+          "status": "implemented_unrendered",
+          "change": "밝은 타원 웅덩이를 왼쪽 반쪽의 길쭉한 불규칙 젖은 줄무늬로 교체. 명도 #9a908a..#b0aaa7/광택. 교차길 주변40m를 #bcbcb8로.",
+          "positions": {
+            "wet_streaks": [
+              [
+                234.5,
+                -1453.45
+              ],
+              [
+                228.4,
+                -1455.65
+              ],
+              [
+                221.4,
+                -1453.8
+              ]
+            ],
+            "cross_path_approx": [
+              219,
+              -1453
+            ]
+          }
+        },
+        {
+          "id": "NEW-1",
+          "priority": "design",
+          "previous_status": "new_issue",
+          "frame_checked": true,
+          "status": "implemented_unrendered",
+          "change": "raycast상 별도 포장 없음: rain water y-1.385와 city water y-1.4만 확인. 삼각형 법선을+Y로 바로잡고 polygonOffset(-1,-4), 잎밭쪽 수역도 같은 재질로 포함. 재렌더로 잔여 쐐기 확인 필요.",
+          "positions": {
+            "rain_water_y": -1.385,
+            "polygon_offset": [
+              -1,
+              -4
+            ]
+          }
+        },
+        {
+          "id": "NEW-2",
+          "priority": "design",
+          "previous_status": "new_issue",
+          "frame_checked": true,
+          "status": "implemented_unrendered",
+          "change": "강둑면에 흰 물결띠: 주기22m/진폭1.5m/깊이.7m, 핀.5m 간격. 원형 녹색표지 왼쪽25%/지름1.5m. 상단오른쪽 마레보15.5×1.05m 패널.",
+          "positions": {
+            "local_front_z": -1517.2,
+            "local_brand_x": 151.5,
+            "local_marevo_x": 182.1
+          }
+        },
+        {
+          "id": "NEW-3",
+          "priority": "design",
+          "previous_status": "new_issue",
+          "frame_checked": true,
+          "status": "implemented_unrendered",
+          "change": "짙은 wood색곱 제거, #c8b89a 밝은목재/가는세로결. 따뜻한 가지모양 벽등4개, 어두운 고래 유지.",
+          "positions": {
+            "local_wall": [
+              166.3,
+              -1537,
+              185.4,
+              -1537
+            ],
+            "local_lights_x": [
+              168.2,
+              172.4,
+              176.3,
+              183.8
+            ]
+          }
+        }
+      ],
+      "preserved_fixed_ids": [
+        "JW-L1",
+        "JW-L4",
+        "JW-L5",
+        "JW-L7",
+        "JW-C1",
+        "JW-D1"
+      ],
+      "skipped_open_ids": [],
+      "uncertainties": [
+        "Camera positions are frame-matching estimates, not GPS.",
+        "Tunnel elevation y0 and height3.5m inferred from HF65; OSM has no elevation.",
+        "New camera12 uses verifier-approved SW relocation rather than moving actual pool.",
+        "NEW-1 raycasts find only water surfaces; depth interference and winding diagnosis requires render confirmation.",
+        "JW-T1 request for leaves6m ahead conflicts with tape2m ahead + water2.5m beyond; preserve water edge4.5m ahead and cover6.4m total depth including2m behind camera.",
+        "Camera06 yaw78 keeps building/canopy>=19.2deg right but deck edge15.86deg; exact portrait-width exclusion needs renderer, unavailable here.",
+        "JW-L8 tree/shrub positions adjusted off the OSM paved lane; their exact portrait-frame placement is unrendered."
+      ],
+      "visual_validation": "tests/shot.mjs not run per user sandbox constraint. Original frames and supplied after renders inspected; final visual verification remains for operator."
+    },
+    "round19_wave_access": {
+      "coordinate_order": "[x,y,z] meters at floor",
+      "rotation": {
+        "pivot": [
+          188.22,
+          -1515.03
+        ],
+        "yawDeg": 45,
+        "western_facade_local_x": 138,
+        "translation": [
+          4.6,
+          3.9
+        ]
+      },
+      "ground_to_stairs": [
+        [
+          186.3217,
+          0.12,
+          -1511.6603
+        ],
+        [
+          176.4222,
+          0.12,
+          -1501.7608
+        ],
+        [
+          174.7958,
+          0.12,
+          -1503.3872
+        ],
+        [
+          169.139,
+          0.12,
+          -1497.7303
+        ],
+        [
+          166.7348,
+          0.12,
+          -1494.1948
+        ],
+        [
+          165.6742,
+          0.12,
+          -1495.2555
+        ]
+      ],
+      "floor_y": [
+        0.12,
+        3.92,
+        6.92,
+        11.32,
+        15.72
+      ],
+      "elevator_local": [
+        164,
+        -1540.4
+      ],
+      "elevator_world": [
+        157.7546,
+        -1511.9432
+      ],
+      "gangway_world": [
+        [
+          192.82,
+          0.12,
+          -1511.13
+        ],
+        [
+          234.12,
+          0.12,
+          -1476.21
+        ]
+      ],
+      "river_route": [
+        [
+          -704.46,
+          0.065,
+          -793.14
+        ],
+        [
+          -687.85,
+          0.065,
+          -789.7
+        ],
+        [
+          -678.36,
+          0.065,
+          -787.54
+        ],
+        [
+          -670.45,
+          0.085,
+          -786.08
+        ],
+        [
+          -647.53,
+          0.085,
+          -784.24
+        ],
+        [
+          -637.46,
+          0.085,
+          -786.19
+        ],
+        [
+          -589.48,
+          0.085,
+          -798.22
+        ],
+        [
+          -582.57,
+          0.065,
+          -799.96
+        ],
+        [
+          -579.31,
+          0.065,
+          -801.16
+        ],
+        [
+          -569.1,
+          0.065,
+          -804.94
+        ],
+        [
+          -556.29,
+          0.065,
+          -809.68
+        ],
+        [
+          -554.5,
+          0.065,
+          -810.35
+        ],
+        [
+          -542.47,
+          0.065,
+          -817.9
+        ],
+        [
+          -534.82,
+          0.065,
+          -826.7
+        ],
+        [
+          -522.62,
+          0.065,
+          -843.09
+        ],
+        [
+          -509.88,
+          0.065,
+          -853.79
+        ],
+        [
+          -489.59,
+          0.065,
+          -865.9
+        ],
+        [
+          -477.2,
+          0.065,
+          -870.36
+        ],
+        [
+          -465.35,
+          0.065,
+          -873.21
+        ],
+        [
+          -454.4,
+          0.065,
+          -874.11
+        ],
+        [
+          -441.66,
+          0.065,
+          -873.56
+        ],
+        [
+          -427.3,
+          0.065,
+          -871.08
+        ],
+        [
+          -415.45,
+          0.065,
+          -869.65
+        ],
+        [
+          -403.6,
+          0.065,
+          -869.65
+        ],
+        [
+          -383.86,
+          0.065,
+          -870.9
+        ],
+        [
+          -366.08,
+          0.065,
+          -874.81
+        ],
+        [
+          -352,
+          0.065,
+          -878.45
+        ],
+        [
+          -335.03,
+          0.065,
+          -885.15
+        ],
+        [
+          -321.21,
+          0.065,
+          -892.82
+        ],
+        [
+          -303.62,
+          0.065,
+          -904.41
+        ],
+        [
+          -284.94,
+          0.065,
+          -921.69
+        ],
+        [
+          -271.66,
+          0.065,
+          -937.2
+        ],
+        [
+          -255.51,
+          0.065,
+          -954.49
+        ],
+        [
+          -245.1,
+          0.065,
+          -962.36
+        ],
+        [
+          -235.94,
+          0.065,
+          -969.28
+        ],
+        [
+          -216.37,
+          0.065,
+          -980.69
+        ],
+        [
+          -198.6,
+          0.065,
+          -990.49
+        ],
+        [
+          -180.11,
+          0.065,
+          -997.62
+        ],
+        [
+          -165.74,
+          0.065,
+          -1004.4
+        ],
+        [
+          -154.8,
+          0.065,
+          -1009.56
+        ],
+        [
+          -124.28,
+          0.065,
+          -1026.31
+        ],
+        [
+          -102.02,
+          0.065,
+          -1044.14
+        ],
+        [
+          -77.79,
+          0.065,
+          -1066.41
+        ],
+        [
+          -58.59,
+          0.065,
+          -1087.09
+        ],
+        [
+          -41.89,
+          0.065,
+          -1110.44
+        ],
+        [
+          -37.8,
+          0.065,
+          -1116.73
+        ],
+        [
+          -29.14,
+          0.065,
+          -1130.04
+        ],
+        [
+          -26.4955,
+          0.065,
+          -1135.7848
+        ],
+        [
+          -13.88,
+          0.065,
+          -1163.19
+        ],
+        [
+          -12.22,
+          0.065,
+          -1168.43
+        ],
+        [
+          -1.14,
+          0.065,
+          -1203.47
+        ],
+        [
+          4.96,
+          0.065,
+          -1237.34
+        ],
+        [
+          5.23,
+          0.065,
+          -1240.59
+        ],
+        [
+          7.12,
+          0.065,
+          -1263.89
+        ],
+        [
+          6.35,
+          0.065,
+          -1288.2
+        ],
+        [
+          6.22,
+          0.065,
+          -1292.23
+        ],
+        [
+          7.83,
+          0.065,
+          -1313.44
+        ],
+        [
+          15.91,
+          0.065,
+          -1332.87
+        ],
+        [
+          31.71,
+          0.065,
+          -1350.51
+        ],
+        [
+          55.77,
+          0.065,
+          -1364.23
+        ],
+        [
+          80.54,
+          0.065,
+          -1369.58
+        ],
+        [
+          112.31,
+          0.065,
+          -1371.18
+        ],
+        [
+          134.58,
+          0.065,
+          -1377.96
+        ],
+        [
+          153.06,
+          0.065,
+          -1387.4
+        ],
+        [
+          168.86,
+          0.065,
+          -1401.84
+        ],
+        [
+          190.22,
+          0.065,
+          -1424.12
+        ],
+        [
+          238.4,
+          0.065,
+          -1472.59
+        ],
+        [
+          234.12,
+          0.12,
+          -1476.21
+        ],
+        [
+          192.82,
+          0.12,
+          -1511.13
+        ],
+        [
+          187.7359,
+          0.12,
+          -1510.2461
+        ],
+        [
+          186.3217,
+          0.12,
+          -1511.6603
+        ],
+        [
+          182.079,
+          0.12,
+          -1507.4177
+        ],
+        [
+          176.4222,
+          0.12,
+          -1513.0745
+        ]
+      ]
+    },
+    "round19_validation": {
+      "smoke": {
+        "command": "node tests/smoke.mjs jamwon_hangang banwon hangang newcore",
+        "result": "OK"
+      },
+      "targeted_geometry": {
+        "pedestrian_samples": 531,
+        "vehicle_samples": 462,
+        "roof_slot_samples": 336,
+        "errors": 0,
+        "camera12_support": 1.065,
+        "camera12_forward_samples": 81,
+        "detail_errors": 0,
+        "flared_floor_samples": 19,
+        "exit_rays": {
+          "pedestrian_m": 98.542,
+          "vehicle_m": 88.185,
+          "hits": 0
+        }
+      },
+      "full_walk": {
+        "command": "node tests/walk.mjs",
+        "result": "719 ok, 0 blocked",
+        "routes": "사용자 루트1–7 and 1F 동선 included",
+        "note": "Passed before final two verge-planting coordinate refinements; module walk and lane-clearance checks rerun after those visual corrections."
+      },
+      "visual": "Not rendered: tests/shot.mjs cannot run in this sandbox per user. Source photos opened directly.",
+      "camera_audit": {
+        "count": 37,
+        "collision_free": true,
+        "headroom_m": 1.75,
+        "rain_water_meshes": 2,
+        "rain_water_normals": "+Y",
+        "c06_yaw_final": 78,
+        "portrait_crop": "Building/canopy lies>=19.2deg right; outer deck begins15.86deg right. Narrow right-edge glimpse remains possible; no camera beyond requested76–78deg range used.",
+        "max_support_delta_m": 0.025,
+        "frame_matched_round17_cameras_support_delta_m": 0
+      },
+      "final_smoke": {
+        "command": "node tests/smoke.mjs jamwon_hangang banwon hangang newcore",
+        "result": "OK"
+      },
+      "final_module_walk": {
+        "command": "node tests/walk.mjs jamwon_hangang",
+        "result": "28 ok, 0 blocked"
+      },
+      "diff_check": "git diff --check passed",
+      "final_lane_clearance": {
+        "bike_samples": 475,
+        "pedestrian_samples": 475,
+        "support_or_collision_errors": 0,
+        "tree_to_centreline_m": 3.024,
+        "bark_to_bike_edge_m": 0.896,
+        "capsule_edge_clearance_m": 0.576,
+        "shrub_foliage_clearance_m_analytic": 0.2,
+        "note": "After950samples, non-colliding shrub domes moved0.85m west/.45m south for positive foliage-edge clearance; physics unchanged."
+      }
     }
   }
 }
