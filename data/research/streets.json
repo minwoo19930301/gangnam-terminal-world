@@ -552,13 +552,15 @@
     "센트럴씨티보도육교 기존 남측 추정 승강기의 실재 여부와 반포지구대 가구의 정확한 평면 배치"
   ],
   "modeling": {
-    "round": 10,
-    "scope": "Round10 근거 감사의 기록·코드 주석 정정. 고터 횡단보도 완공일과 별개 반포동사거리 이력, 지하보행로 벽화 길이, unverified 추정 상태를 명시. 기존 도로·출입구·육교·지구대 세부 및 현재 claims/zones/연결 형상은 유지.",
+    "round": 17,
+    "scope": "Round17 verified frame review: floor-level camera traces, police road-face geometry/banner, continuous arch median/service lane/grey sidewalk, junction corner facades and guide markings, mature kerb trees and dashed bus lines. No engine or neighbouring module edits.",
     "claims": [
       886400346,
       413367405,
       413367408,
-      1137867801
+      1137867801,
+      606009742,
+      431589113
     ],
     "added_road_claims": [
       831108565,
@@ -860,12 +862,14 @@
         "photos": [
           "refs/roadview/police_01_front.jpg"
         ],
-        "x": 18,
-        "y": 1.7,
-        "z": -122,
+        "x": 19,
+        "y": 0.04,
+        "z": -127,
         "yawDeg": 201,
-        "round": 8,
-        "y_convention": "legacy camera height; round10 floor-level views are appended separately"
+        "round": 17,
+        "y_convention": "floor level; eye height added by renderer",
+        "pitchDeg": 2,
+        "correction": "sr-12: shifted back to show apron; reviewer 0.9 m pose not used because user requires floor-level y"
       },
       {
         "spot": "반포지구대와 3호선1번 출구섬",
@@ -873,59 +877,27 @@
           "refs/roadview/police_02_box_and_exit3_W.jpg"
         ],
         "x": 46,
-        "y": 1.7,
+        "y": 0.04,
         "z": -130,
-        "yawDeg": 141,
-        "round": 8,
-        "y_convention": "legacy camera height; round10 floor-level views are appended separately"
+        "yawDeg": 110,
+        "round": 17,
+        "y_convention": "floor level; eye height added by renderer",
+        "pitchDeg": 0,
+        "correction": "sr-11: road recedes ahead-right; west-face banner retained"
       },
       {
         "spot": "신반포로 중앙정류장 동쪽 조망",
         "photos": [
           "refs/roadview/street_01_sinbanpo_median_busstop_E.jpg"
         ],
-        "x": -32,
-        "y": 1.7,
-        "z": -105,
+        "x": -11,
+        "y": 0.04,
+        "z": -121,
         "yawDeg": 291,
-        "round": 8,
-        "y_convention": "legacy camera height; round10 floor-level views are appended separately"
-      },
-      {
-        "spot": "고속터미널교차로 잠원로 북쪽",
-        "photos": [
-          "refs/roadview/junction_01_jamwonro_N.jpg"
-        ],
-        "x": 358,
-        "y": 1.7,
-        "z": -261,
-        "yawDeg": 24,
-        "round": 8,
-        "y_convention": "legacy camera height; round10 floor-level views are appended separately"
-      },
-      {
-        "spot": "고속터미널교차로 신반포로 동쪽",
-        "photos": [
-          "refs/roadview/junction_02_jamwonro_E.jpg"
-        ],
-        "x": 358,
-        "y": 1.7,
-        "z": -261,
-        "yawDeg": 291,
-        "round": 8,
-        "y_convention": "legacy camera height; round10 floor-level views are appended separately"
-      },
-      {
-        "spot": "고속터미널교차로 잠원로 남쪽",
-        "photos": [
-          "refs/roadview/junction_03_jamwonro_S.jpg"
-        ],
-        "x": 358,
-        "y": 1.7,
-        "z": -261,
-        "yawDeg": 204,
-        "round": 8,
-        "y_convention": "legacy camera height; round10 floor-level views are appended separately"
+        "round": 17,
+        "y_convention": "floor level; eye height added by renderer",
+        "pitchDeg": 0,
+        "correction": "sr-09: first shelter and fence ahead-left"
       },
       {
         "spot": "지구대 서측 현수막·옥상 입상",
@@ -933,11 +905,11 @@
           "refs/interior/police_box/01_facade_wide_runner_statue_roof.jpg"
         ],
         "x": -3,
-        "y": 1.7,
+        "y": 0,
         "z": -93,
         "yawDeg": 291,
-        "round": 8,
-        "y_convention": "legacy camera height; round10 floor-level views are appended separately"
+        "round": 17,
+        "y_convention": "floor level; eye height added by renderer"
       },
       {
         "spot": "지구대 출입문",
@@ -945,11 +917,11 @@
           "refs/interior/police_box/02_entrance_door_signage.jpg"
         ],
         "x": 14.3,
-        "y": 1.7,
+        "y": 0.15,
         "z": -95.9,
         "yawDeg": 291,
-        "round": 8,
-        "y_convention": "legacy camera height; round10 floor-level views are appended separately"
+        "round": 17,
+        "y_convention": "floor level; eye height added by renderer"
       },
       {
         "spot": "지구대 민원실 앞 공터",
@@ -957,11 +929,11 @@
           "refs/interior/police_box/03_facade_entrance_front_apron.jpg"
         ],
         "x": 10,
-        "y": 1.7,
+        "y": 0.15,
         "z": -94,
         "yawDeg": 291,
-        "round": 8,
-        "y_convention": "legacy camera height; round10 floor-level views are appended separately"
+        "round": 17,
+        "y_convention": "floor level; eye height added by renderer"
       },
       {
         "spot": "지구대 CCTV 업무석",
@@ -969,11 +941,11 @@
           "refs/interior/police_box/18_interior_cctv_control_room.jpg"
         ],
         "x": 24.8,
-        "y": 1.65,
+        "y": 0,
         "z": -102.3,
         "yawDeg": 291,
-        "round": 8,
-        "y_convention": "legacy camera height; round10 floor-level views are appended separately"
+        "round": 17,
+        "y_convention": "floor level; eye height added by renderer"
       },
       {
         "spot": "지구대 녹색 민원 데스크",
@@ -981,11 +953,11 @@
           "refs/interior/police_box/23_interior_front_desk_2026.jpg"
         ],
         "x": 23.25,
-        "y": 1.2,
+        "y": 0,
         "z": -101.89,
         "yawDeg": 111,
-        "round": 8,
-        "y_convention": "legacy camera height; round10 floor-level views are appended separately"
+        "round": 17,
+        "y_convention": "floor level; eye height added by renderer"
       },
       {
         "spot": "호남선 택시 캐노피 안쪽",
@@ -993,11 +965,11 @@
           "refs/interior/taxi/06_taxi_sign_canopy.jpg"
         ],
         "x": -110.65,
-        "y": 1.8,
+        "y": 0.15,
         "z": -61.57,
         "yawDeg": 21.26,
-        "round": 8,
-        "y_convention": "legacy camera height; round10 floor-level views are appended separately"
+        "round": 17,
+        "y_convention": "floor level; eye height added by renderer"
       },
       {
         "spot": "호남선 보도에서 택시 승차장 접근",
@@ -1005,23 +977,25 @@
           "refs/interior/taxi/05_sidewalk_to_taxi_canopy.jpg"
         ],
         "x": -120.7,
-        "y": 1.8,
+        "y": 0,
         "z": -39.7,
         "yawDeg": 346,
-        "round": 8,
-        "y_convention": "legacy camera height; round10 floor-level views are appended separately"
+        "round": 17,
+        "y_convention": "floor level; eye height added by renderer"
       },
       {
-        "spot": "경부선 택시 승차장과 기존 아치 비교",
+        "spot": "경부선 나비형 아치 · 연속 초지 · 서비스 차로",
         "photos": [
           "refs/roadview/gb_03_front_plaza_arch_canopy_shelters.jpg"
         ],
-        "x": 103.5,
-        "y": 1.8,
-        "z": -143.9,
-        "yawDeg": 177.25,
-        "round": 8,
-        "y_convention": "legacy camera height; round10 floor-level views are appended separately"
+        "x": 145,
+        "y": 0.04,
+        "z": -166,
+        "yawDeg": 180,
+        "round": 17,
+        "y_convention": "floor level; eye height added by renderer",
+        "pitchDeg": 3,
+        "correction": "sr-10: single butterfly arch viewed from carriageway"
       },
       {
         "spot": "Round10 고속터미널사거리 북측 횡단보도",
@@ -1062,21 +1036,22 @@
       },
       {
         "spot": "Round10 고속터미널사거리 남측 횡단보도",
-        "round": 10,
+        "round": 17,
         "photos": [
           "refs/roadview/junction_03_jamwonro_S.jpg"
         ],
         "x": 358,
         "y": 0.04,
         "z": -261,
-        "yawDeg": 204,
+        "yawDeg": 246,
         "pitchDeg": 0,
         "places": [
           "streets",
           "gyeongbu",
           "banpo_shoppingtown"
         ],
-        "y_convention": "floor level"
+        "y_convention": "floor level",
+        "correction": "sr-05: face blue-glass Banpo Xi Plaza at bearing 246°"
       },
       {
         "spot": "Round10 고속터미널사거리 서측 횡단보도",
@@ -1338,6 +1313,125 @@
       },
       "police_entrance": "실물 kit/physics로 외부spawn→문→민원 카운터 연속 충돌 검사 통과.",
       "file_checks": "node --check js/places/streets.js; git diff --check; JSON parsing and all trace photo paths checked."
+    },
+    "round17": {
+      "review": ".codex-jobs/evidence/review_walk17.json / streets",
+      "originals_inspected": [
+        "refs/roadview/police_01_front.jpg",
+        "refs/roadview/police_02_box_and_exit3_W.jpg",
+        "refs/roadview/street_01_sinbanpo_median_busstop_E.jpg",
+        "refs/roadview/gb_03_front_plaza_arch_canopy_shelters.jpg",
+        "refs/roadview/junction_01_jamwonro_N.jpg",
+        "refs/roadview/junction_02_jamwonro_E.jpg",
+        "refs/roadview/junction_03_jamwonro_S.jpg"
+      ],
+      "camera_convention": "All poses use support-floor y; road=0.04, sidewalk=0.15. sr-12 requested 0.9 m is not applied because explicit task requires floor level. Removed round8 junction duplicates, retained round10 views.",
+      "findings": [
+        {
+          "id": "sr-09",
+          "status": "applied",
+          "frame_check": "First shelter/fence are a few metres ahead-left in street_01.",
+          "change": "Trace (-11,0.04,-121), yaw291, pitch0."
+        },
+        {
+          "id": "sr-10",
+          "status": "applied",
+          "frame_check": "gb_03 shows the single butterfly arch across the grass median, not the multi-arch taxi stand.",
+          "change": "Trace (145,0.04,-166), yaw180, pitch3."
+        },
+        {
+          "id": "sr-11",
+          "status": "applied",
+          "frame_check": "police_02 has police block left and westbound view ahead-right.",
+          "change": "Trace (46,0.04,-130), yaw110, pitch0. Existing west-face banner retained per prior user instruction."
+        },
+        {
+          "id": "sr-12",
+          "status": "applied_with_user_override",
+          "frame_check": "police_01 includes the apron and foreground lanes; legacy high views duplicate newer junction views.",
+          "change": "Police trace (19,0.04,-127), yaw201, pitch2. All legacy poses changed to actual floor support (0,0.04,0.15); removed three round8 junction duplicates.",
+          "not_applied": "Reviewer suggested y=0.9, but user explicitly requires floor-level y. No invented roadview eye-height platform."
+        },
+        {
+          "id": "sr-01",
+          "status": "applied",
+          "frame_check": "police_01 confirms a west-leaning stone parallelogram between two glass fields; west corner is glass.",
+          "change": "North edge (15.78,-106.32)→(29.69,-111.53): west glass v0–5.5 at plinth→0–4.2 at roof; stone wedge5.5–8.8→4.2–7.5; east glass8.8–11.9→7.5–11.9; final stone11.9–14.85. Stone #a9aca5, glass #5d6f6c/gloss0.3, mullions #2f3a3a every1.2m; plinth0.7m.",
+          "guess": "Exact diagonal shift1.3m and field widths scaled from image/OSM."
+        },
+        {
+          "id": "sr-02",
+          "status": "applied",
+          "frame_check": "gb_03 shows continuous grass, asphalt service lane with white arrow, then grey paving; no salmon brick.",
+          "change": "Continuous grass x60–330 at south-road offset7.85, grass1.2m/kerb1.5m; removed137–148 break. At x110–200 add road-aligned asphalt offsets8.6–14, edges8.85/13.75 and arrow x≈141; grey #b9b6ad sidewalk14–22 above earlier terminal brick.",
+          "ownership": "Only streets surfaces edited. Gyeongbu brick lies below at y0.022; lane y0.048 and public sidewalk y0.15 cover conflicting strip without deleting neighbouring code.",
+          "guess": "Visible lane width5.4m and sidewalk clipping end at offset22 are frame estimates."
+        },
+        {
+          "id": "sr-03",
+          "status": "applied",
+          "frame_check": "Tall grey lamp stands east of arch leg in gb_03.",
+          "change": "Added pole at(151,0.15,-145), radius0.12, top10.15; swept2.5m arm north-normal to road, #8d9396.",
+          "guess": "Position/height approximate; existing lamps retained."
+        },
+        {
+          "id": "sr-04",
+          "status": "applied",
+          "frame_check": "police_02 shows blank rear of cantilever sign on police/south kerb, not westbound centre.",
+          "change": "Pole(8,0.15,-112.5), radius0.25, height8.9; north-reaching7.3m arm; 6×2.5m grey panel bottom6m, over eastbound lanes.",
+          "guess": "Low-confidence location inferred from frame perspective; no legible front text invented."
+        },
+        {
+          "id": "sr-05",
+          "status": "applied",
+          "frame_check": "All three junction frames opened: red grooved windowless box and blue-glass white-grid plaza confirmed.",
+          "change": "Claim/build OSM606009742 at(≈361.8,-314.2),9m with #a4553d vertical-groove brick; OSM431589113 at(≈437.9,-225.6),16.8m #3f6fa6/gloss0.5 glass,1.5×3.5m pale grid, floor bands4.2m. South view yaw246.",
+          "guess": "Glass tint/grid dimensions and unobserved return faces inferred; apartment towers behind remain external city geometry."
+        },
+        {
+          "id": "sr-06",
+          "status": "applied",
+          "frame_check": "junction_01–03 show parallel mint/pink pairs, short white guides and a curved double yellow line.",
+          "change": "Goter box near(358,-261): colour paths at offsets±0.8m,0.45m wide (#50cbb1/#e477a1); white turn/straight guide dashes0.15m wide,0.75/0.75m; south-to-north Jamwon double yellow0.15m lines/0.15m gap (#e2b31f).",
+          "guess": "Individual turning curves fitted to OSM arms, not surveyed lane trajectories."
+        },
+        {
+          "id": "sr-07",
+          "status": "applied",
+          "frame_check": "street_01 has seven tall crowns along north kerb and a single blue dashed boundary.",
+          "change": "Added7 mature trees at7.5m chainage along523344143 north offset8.5, safe OSM sidewalk positions(16.12,-145.76)→(58.16,-161.82),9m high/crown radius3/#6f9a45. Near stops(6.55,-132.2),(-70.27,-95.53) changed paired continuous bus paint to single0.15m3m/3m dash.",
+          "guess": "Tree species/precise centres inferred; prospective western row positions inside OSM building footprints omitted."
+        },
+        {
+          "id": "sr-08",
+          "status": "applied",
+          "frame_check": "police_02 confirms yellow annual-call line, lower-left police emblem and red-jacket phone portrait.",
+          "change": "West banner y5.22–7.63 retains #174a9d; yellow line now *한해840만건(전체신고의약45%); added0.8m crest and red #c23a33/skin #e0b49a phone portrait occupying right≈30%.",
+          "guess": "Portrait and crest are simplified shapes rather than a photo texture."
+        }
+      ],
+      "skipped_ids": [],
+      "verification": {
+        "smoke": "node tests/smoke.mjs streets: OK; base101710quads,11spawns,313zones. All lazy details built without errors.",
+        "primitive_audit": {
+          "mint_faces": 200,
+          "pink_faces": 202,
+          "yellow_faces": 102,
+          "white_dash_faces": 501,
+          "mature_tree_count": 7,
+          "reviewed_camera_floor_support": "all reviewed road poses support y0.04"
+        },
+        "render": "tests/shot.mjs not run as user states it cannot run in sandbox. All seven original frame images opened; no claim of new render QA.",
+        "metadata": "Adding the two required building claims triggers _meta.json warning. Regeneration edits a forbidden file, so left for operator; module-local claims are correct.",
+        "combined_modules": {
+          "without_centralcity": "node tests/smoke.mjs station streets gotomall banpo_shoppingtown --quiet: OK",
+          "full_walk": "node tests/walk.mjs:719 ok,0 blocked. All 사용자 루트 and1F 동선 passed after concurrent owner updates.",
+          "baseline": "User route5 leg3→4 remains blocked identically747204cells with HEAD station/streets; unrelated to these revisions.",
+          "other_blockers": "None in final full-world walk. Earlier external failures resolved.",
+          "required_smoke_final": "node tests/smoke.mjs station streets gotomall centralcity banpo_shoppingtown --quiet: OK after concurrent centralcity update; only stale _meta claims warning",
+          "previous_full_walk": "node tests/walk.mjs:692ok,12blocked in concurrently edited world; no station/streets junction,spawn,elevator failure reported."
+        }
+      }
     }
   }
 }

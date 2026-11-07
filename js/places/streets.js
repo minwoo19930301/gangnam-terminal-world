@@ -10,7 +10,7 @@ const ROAD_IDS = [37402467,71105531,71105555,97847428,131326713,131327735,218681
 const WALK_IDS = [301889787,301889789,308003937,606009741,665106093,665106094,665106095,665106096,665106097,816395057,845497271,845497273,1213763241,1213763242,1213763243,1232132158,1232132177,1232132196,1232132199,1481658419,1481658421,1481658423,1481658424,1481658425,1497710483,1497710484,1497710485,1497710486,1497710487,1497710488,1497710489,1497710492,1497710493,1497710494,1497710495,309355888,845497252,845497256,845497259,845497272];
 export const meta = {
   id: 'streets', name: '고속터미널 거리 · 신반포로와 사평대로',
-  claims: [886400346, 413367405, 413367408, 1137867801],
+  claims: [886400346, 413367405, 413367408, 1137867801, 606009742, 431589113],
   // 831108569 is the footway through the east parking aisle, not service301889794.
   claimRoads: [...ROAD_IDS, ...WALK_IDS, 831108565, 831108569, 1420100042, 1420100043,
     1213763244, 1232132157, 1232132198, 1232132167, 1232132156], // crossing paint replaced here, avoiding city duplicates
@@ -137,6 +137,12 @@ export function build(K) {
     const colors=['#a9a59c','#aaa69d','#a6a299','#ada99f'];
     for(let j=0;j<4;j++)for(let i=0;i<4;i++){
       g.fillStyle=colors[(i*3+j*5)%4];g.fillRect(i*64+1,j*64+1,62,62);
+    }
+  },[1.2,1.2]);
+  K.texture('streets-arch-pavers',256,256,(g,w,h)=>{
+    g.fillStyle='#98978f';g.fillRect(0,0,w,h);
+    for(let j=0;j<4;j++)for(let i=0;i<4;i++){
+      g.fillStyle=(i+j)%3?'#b9b6ad':'#b4b2a9';g.fillRect(i*64+1,j*64+1,62,62);
     }
   },[1.2,1.2]);
   // gb_01: red brick is confined to the terminal fence-side strip.
@@ -312,6 +318,9 @@ export function build(K) {
   }
   function treePit(x,z,y=WALK) {
     if(onTerminalMedian(x,z)||inWestCanopy(x,z)||inTaxiStand(x,z))return;
+    const north=nearest(x,z,[byId.get(523344143)]);
+    const northOff=-(x-north.x)*north.v+(z-north.z)*north.u;
+    if(x>=-40&&x<=60&&northOff>7.5&&northOff<10.5)return; // replaced by the photographed 7.5 m row below
     const mature=Math.hypot(x-358,z+261)<100||(x>-95&&x<50&&z<-110);
     K.box({x,z,y:y+.005,w:1.55,h:.08,d:1.55,mat:0x666d64,top:'streets-grate',solid:false});K.tree(x,z,{y:y+.07,h:(mature?10.5:6.5)+rnd()*2,kind:mature?'zelkova':rnd()<.55?'ginkgo':'zelkova'});
     for(const dx of [-.58,.58])for(const dz of [-.58,.58])K.box({x:x+dx,z:z+dz,y:y+.1,w:.045,h:.8,d:.045,mat:C.steel,solid:false});
@@ -354,15 +363,36 @@ export function build(K) {
       }
     }
   }
+  // sr-07 / street_01: continuous mature light-green crowns on the north
+  // sidewalk. OSM chainage preserves the oblique kerb at both ends of the row.
+  K.detail({name:'신반포로 북측 가로수',floor:'지상',rect:[-45,-168,65,-113],y0:0,y1:12},K=>{
+    const p=path(byId.get(523344143).pts);
+    for(let s=0;s<p.L;s+=7.5){
+      const q=at(p,s,8.5);if(q.x< -40||q.x>60||inBuilding(q.x,q.z)||inCut(q.x,q.z))continue;
+      K.box({x:q.x,z:q.z,y:WALK+.005,w:1.55,h:.06,d:1.55,mat:0x666d64,top:'streets-grate',solid:false});
+      K.cyl({x:q.x,z:q.z,y:WALK+.06,r:.15,h:6.9,seg:8,mat:0x777766});
+      K.dome({x:q.x,z:q.z,y:6.2,rx:3,ry:2.8,rz:3,seg:10,rings:5,hemi:false,mat:0x6f9a45});
+      for(const [dx,dz] of [[-1.25,.3],[1.1,-.8],[.3,1.25]]){
+        beam([q.x,4.2,q.z],[q.x+dx,6.5,q.z+dz],.075,0x777766);
+        K.dome({x:q.x+dx,z:q.z+dz,y:6.5,rx:1.7,ry:1.9,rz:1.7,seg:8,rings:4,hemi:false,mat:0x739b4c});
+      }
+    }
+  });
   // gb_03/04/05: low concrete island, 1.2m grass inside a 1.5m kerb envelope;
   // no trees or poles between the through lanes and the terminal service lane.
-  for(const [x0,x1] of [[60,137],[148,330]]){
+  for(const [x0,x1] of [[60,330]]){
     terminalStrip(x0,x1,7.85,1.5,poly=>K.slab(poly,ROAD+.2,{mat:0xb9b6ad,thick:.2,ceil:false}));
     terminalStrip(x0,x1,7.85,1.2,poly=>K.hpoly(0x6f8f3e,poly,ROAD+.202));
   }
-  // Keep the actual road-level crossing open. The terminal module owns its
-  // arches, dark shelter run and ad lightboxes (gb_03, local u163 crossing).
-  terminalStrip(137,148,7.85,1.5,poly=>K.hpoly('asphalt',poly,ROAD+.008));
+  // sr-02 / gb_03: the crossing is behind an uninterrupted planted island.
+  // Follow the 21-degree road bearing, not a fixed world-z rectangle. These
+  // street surfaces also cover the older terminal brick that extended into
+  // the service lane and its public sidewalk; the terminal owns the arches.
+  terminalStrip(110,200,11.3,5.4,poly=>K.slab(poly,ROAD+.008,{mat:'asphalt',thick:.05,ceil:false}));
+  for(const off of [8.85,13.75])terminalStrip(110,200,off,.15,poly=>K.hpoly(C.white,poly,ROAD+.012));
+  terminalStrip(110,200,18,8,poly=>K.slab(poly,WALK,{mat:'streets-arch-pavers',thick:.15,ceil:false}));
+  terminalStrip(110,200,14.1,.22,poly=>K.slab(poly,WALK+.025,{mat:0xc2c1b9,thick:.18,ceil:false}));
+  terminalStrip(136,146,11.3,.01,(poly,a,b)=>arrow(path([a,b]),5,0,ROAD+.015,false));
   // Outer sidewalk: the roadview red strip sits by the fence, not on the island.
   // Separate runs follow the service-lane side and then the parking-lot edge.
   const gbPoint=(u,v)=>[2.3+.9348*u+.3552*v,-59.24-.3552*u+.9348*v];
@@ -373,6 +403,31 @@ export function build(K) {
   for(const [a,b] of fenceRuns)for(const poly of clipped(stripPoly(a,b,2),serviceCuts))
     K.slab(poly,WALK,{mat:'streets-kerb-brick',thick:.15,ceil:false});
   for(const [x,z] of [[114.2336,-130.6556],[184.344,-157.296]])lamp(x,z,PI+.365);
+  // sr-03: single swept arm immediately east of the butterfly arch.
+  {
+    const x=151,z=-145,y=WALK,col=0x8d9396;
+    K.cyl({x,z,y,r:.12,h:9.45,seg:12,mat:col});
+    const q=nearest(x,z,[terminalRoad]),nx=q.v,nz=-q.u;
+    let prev=[x,y+9.45,z];
+    for(let k=1;k<=10;k++){
+      const t=k/10,p=[x+nx*2.5*t,y+9.45+.55*Math.sin(t*PI/2),z+nz*2.5*t];
+      beam(prev,p,.085,col);prev=p;
+    }
+    K.box({x:prev[0],z:prev[2],y:prev[1]-.12,w:.36,h:.13,d:.9,rotY:Math.atan2(nx,nz),mat:0x727c7d,solid:false});
+    K.box({x:prev[0],z:prev[2],y:prev[1]-.125,w:.27,h:.015,d:.7,rotY:Math.atan2(nx,nz),mat:emit(0xe9eedc),solid:false});
+  }
+  // sr-04: back of the eastbound cantilever sign, south kerb of the road.
+  // Its location is an image estimate; it must not be planted in westbound lanes.
+  {
+    const x=8,z=-112.5,q=nearest(x,z,[terminalRoad]),nx=q.v,nz=-q.u;
+    const col=0x8d9396,rot=Math.atan2(q.u,q.v),px=x+nx*4.0,pz=z+nz*4.0;
+    K.cyl({x,z,y:WALK,r:.25,h:8.9,seg:12,mat:col});
+    beam([x,8.65,z],[x+nx*7.3,8.65,z+nz*7.3],.16,col);
+    K.box({x:px,z:pz,y:6,w:6,h:2.5,d:.18,rotY:rot,mat:0x7d8285,solid:false});
+    for(const side of [-1,1])for(const h of [6.12,8.38])
+      beam([px-nx*2.85+q.u*side*.12,h,pz-nz*2.85+q.v*side*.12],[px+nx*2.85+q.u*side*.12,h,pz+nz*2.85+q.v*side*.12],.045,0xb2b9b7);
+    for(let s=-2.6;s<2.7;s+=1.3)beam([px+nx*s+q.u*.12,6.13,pz+nz*s+q.v*.12],[px+nx*s+q.u*.12,8.36,pz+nz*s+q.v*.12],.035,col);
+  }
   // Raised granite-edged island wrapping the existing line-3 exit 1 shaft.
   // The SE mouth remains paved and open; gotomall owns stairs and balustrades.
   const policeIsland=[[39.7,-121.3],[44.7,-124],[48.4,-121.5],[55.7,-108.1],[57.2,-103.6],[53.6,-100],[49.2,-101.9],[44,-113]];
@@ -485,32 +540,52 @@ export function build(K) {
     }
     signal(a);
   }
-  // Solid 0.45 m route guidance begins at the stop line, follows one lane and
-  // bends into its receiving lane. Do not paint every possible approach: that
-  // produced a fictitious pink X through every junction in the round-8 views.
-  function guideCurve(a,b,color,left=false){
-    const inn=left?(a.r.oneway?a.r.width/2-1.8:-1.8):-a.r.width/2+1.8,out=left?(b.r.oneway?-b.r.width/2+1.8:1.8):b.r.width/2-1.8;
+  // sr-06: sampled lane paths let coloured pairs, short white turn dashes
+  // and the curved yellow centreline share the actual junction tangents.
+  function movementPath(a,b,left=false,center=false){
+    const inn=center?0:left?(a.r.oneway?a.r.width/2-1.8:-1.8):-a.r.width/2+1.8;
+    const out=center?0:left?(b.r.oneway?-b.r.width/2+1.8:1.8):b.r.width/2-1.8;
     const start=[a.x+a.u*5.2-a.v*inn,a.z+a.v*5.2+a.u*inn];
     const end=[b.x+b.u*5.2-b.v*out,b.z+b.v*5.2+b.u*out];
-    // Straight approach/departure tails keep the curve tangent to the lane.
     const lead=6,sa=[start[0]-a.u*lead,start[1]-a.v*lead],eb=[end[0]-b.u*lead,end[1]-b.v*lead];
-    flat(start,sa,.45,ROAD+.031,color);flat(eb,end,.45,ROAD+.031,color);
     const d=Math.hypot(eb[0]-sa[0],eb[1]-sa[1])*(left?.58:.33);
-    const c=[sa[0]-a.u*d,sa[1]-a.v*d],e=[eb[0]-b.u*d,eb[1]-b.v*d];let prev=sa;
-    for(let i=1;i<=36;i++){const t=i/36,s=1-t,next=[s*s*s*sa[0]+3*s*s*t*c[0]+3*s*t*t*e[0]+t*t*t*eb[0],s*s*s*sa[1]+3*s*s*t*c[1]+3*s*t*t*e[1]+t*t*t*eb[1]];
-      flat(prev,next,.45,ROAD+.03,color);prev=next;
+    const c=[sa[0]-a.u*d,sa[1]-a.v*d],e=[eb[0]-b.u*d,eb[1]-b.v*d],pts=[start,sa];
+    for(let i=1;i<=48;i++){const t=i/48,v=1-t;
+      pts.push([v*v*v*sa[0]+3*v*v*t*c[0]+3*v*t*t*e[0]+t*t*t*eb[0],v*v*v*sa[1]+3*v*v*t*c[1]+3*v*t*t*e[1]+t*t*t*eb[1]]);
     }
+    pts.push(end);return path(pts);
+  }
+  function pathPaint(p,off,width,color,dash=0,gap=0,y=ROAD+.031){
+    for(let s=0;s<p.L;s+=dash?dash+gap:p.L){
+      const end=Math.min(p.L,s+(dash||p.L));
+      for(let t=s;t<end-.001;){
+        const next=p.cum.find(v=>v>t+.001),e=Math.min(end,next??end),a=at(p,t,off),b=at(p,e,off);
+        flat([a.x,a.z],[b.x,b.z],width,y,color);t=e;
+      }
+    }
+  }
+  function guideCurve(a,b,color,left=false){
+    const p=movementPath(a,b,left),paired=a.j.name==='고속터미널교차로';
+    for(const off of paired?[-.8,.8]:[0])pathPaint(p,off,.45,color);
   }
   for(const j of junctions.filter(j=>j.arms.length>=4&&j.hu+j.hv>31)){
     const incoming=j.arms.filter(a=>a.owned&&a.incoming),paired=incoming.filter(a=>a.r.oneway);
     const trunk=(paired.length?paired:incoming).sort((a,b)=>b.r.width-a.r.width)[0]?.r.name;
-    // junction_01/02/03 show the Sinbanpo route lines continuing across the
-    // box. Jamwon's perpendicular movements do not need another coloured X.
     for(const a of incoming.filter(a=>a.r.name===trunk).slice(0,2)){
       const exits=j.arms.filter(b=>b!==a&&(!b.r.oneway||!b.incoming));
       const straight=exits.find(b=>b.r.name===a.r.name&&a.u*b.u+a.v*b.v<-.8);
       const left=exits.find(b=>a.u*b.v-a.v*b.u>.65);
       if(straight)guideCurve(a,straight,0x50cbb1);if(left)guideCurve(a,left,0xe477a1,true);
+    }
+    if(j.name==='고속터미널교차로'){
+      for(const a of incoming){
+        const exits=j.arms.filter(b=>b!==a&&(!b.r.oneway||!b.incoming));
+        for(const [b,left] of [[exits.find(b=>a.u*b.u+a.v*b.v<-.8),false],[exits.find(b=>a.u*b.v-a.v*b.u>.65),true]])
+          if(b)pathPaint(movementPath(a,b,left),1.8,.15,0xf4f1e6,.75,.75,ROAD+.033);
+      }
+      const south=incoming.find(a=>a.r.name==='잠원로'&&a.z>j.z);
+      const north=j.arms.find(b=>b.r.name==='잠원로'&&b.z<j.z&&b!==south);
+      if(south&&north)for(const off of [-.15,.15])pathPaint(movementPath(south,north,false,true),off,.15,0xe2b31f);
     }
   }
   K.texture('streets-bus-stencil',256,512,(g,w,h)=>{g.clearRect(0,0,w,h);g.fillStyle='#e8e5d7';g.font='bold 105px "Apple SD Gothic Neo", "Malgun Gothic", sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText('버스',128,170);g.fillText('전용',128,340);},[2,5],{transparent:true});
@@ -521,12 +596,15 @@ export function build(K) {
     const p=path(r.pts),bus=r.hw==='busway';
     const lane=bus?0:-r.width/2+r.width/laneCount(r)/2;
     const bounds=bus?[-2.8,2.8]:[-r.width/2+.9,-r.width/2+r.width/laneCount(r)];
-    for(const edge of bounds)for(let s=0;s<p.L;s+=8){
-      const q=at(p,s),nearStop=[[-70.27,-95.53],[6.55,-132.2],[559.18,-333.88]].some(([x,z])=>Math.hypot(q.x-x,q.z-z)<25);
-      for(const delta of nearStop?[-.14,.14]:[0]){
-        const end=Math.min(p.L,s+(nearStop?8:3));
-        for(let t=s;t<end;t+=2){const a=at(p,t,edge+delta),b=at(p,Math.min(end,t+2),edge+delta);paint(stripPoly([a.x,a.z],[b.x,b.z],.15),C.blue,ROAD+.027,!bus);}
+    for(const edge of bounds)for(let s=0;s<p.L;){
+      const q=at(p,s),reviewStop=[[-70.27,-95.53],[6.55,-132.2]].some(([x,z])=>Math.hypot(q.x-x,q.z-z)<35);
+      const oldStop=Math.hypot(q.x-559.18,q.z+333.88)<25;
+      // sr-07: a single 3 m dash / 3 m gap at the two reviewed median stops.
+      for(const delta of oldStop&&!reviewStop?[-.14,.14]:[0]){
+        const end=Math.min(p.L,s+(oldStop&&!reviewStop?8:3));
+        for(let t=s;t<end;t+=1){const a=at(p,t,edge+delta),b=at(p,Math.min(end,t+1),edge+delta);paint(stripPoly([a.x,a.z],[b.x,b.z],.15),C.blue,ROAD+.027,!bus);}
       }
+      s+=reviewStop?6:8;
     }
     for(let s=35;s<p.L;s+=100){const q=at(p,s,lane);if(junctions.some(j=>insideJ(j,q.x,q.z,22))||(!bus&&medianBusWays.some(b=>nearest(q.x,q.z,[b]).d<7)))continue;
       const rot=q.rot+PI,c=Math.cos(rot),sn=Math.sin(rot),P=(x,z)=>[q.x+x*c+z*sn,ROAD+.032,q.z-x*sn+z*c];
@@ -976,14 +1054,59 @@ function buildRoadviewBuildings(K) {
     K.zone({name:'르본시티',floor:'지상',sub:'신반포로',poly:p,y0:0,y1:38,priority:2});
   }
 
+  // sr-05: the two photographed junction corners replace city-generic blocks
+  // on their exact OSM footprints. No invented window bays on 해돋는집.
+  K.texture('streets-sunrise-grooved-brick',192,256,(g,w,h)=>{
+    g.fillStyle='#a4553d';g.fillRect(0,0,w,h);
+    for(let x=0;x<w;x+=16){
+      g.fillStyle='#793f32';g.fillRect(x,0,3,h);
+      g.fillStyle='#bc7052';g.fillRect(x+3,0,2,h);
+    }
+    g.strokeStyle='rgba(94,54,43,.45)';g.lineWidth=1;
+    for(let y=0;y<h;y+=32){g.beginPath();g.moveTo(0,y);g.lineTo(w,y);g.stroke();}
+  },[1.2,2.4]);
+  K.texture('streets-xi-plaza-glass',192,256,(g,w,h)=>{
+    g.fillStyle='#3f6fa6';g.fillRect(0,0,w,h);
+    g.fillStyle='#547eaa';g.fillRect(5,5,92,246);
+    g.fillStyle='rgba(202,220,218,.19)';g.fillRect(5,112,182,35);
+    g.fillStyle='#d7dddb';g.fillRect(0,0,5,h);g.fillRect(187,0,5,h);g.fillRect(0,0,w,4);g.fillRect(0,252,w,4);
+    g.fillStyle='#a9b9c4';g.fillRect(0,126,w,2);
+  },[1.5,3.5]);
+  for(const b of K.osmBuilding(606009742)){
+    K.prism(b.poly,0,9,{side:'streets-sunrise-grooved-brick',top:0x8e5847,bottom:0x6c5147});
+    for(let i=0;i<b.poly.length;i++){
+      const a=b.poly[i],c=b.poly[(i+1)%b.poly.length];
+      K.wall(...a,...c,8.88,9.04,{mat:0xaf6a4c,thick:.1,solid:false});
+    }
+  }
+  for(const b of K.osmBuilding(431589113)){
+    K.prism(b.poly,0,16.8,{side:{tex:'streets-xi-plaza-glass',gloss:.5},top:0xb5b6ac,bottom:0x9eaaa7});
+    for(let i=0;i<b.poly.length;i++){
+      const a=b.poly[i],c=b.poly[(i+1)%b.poly.length];
+      for(const y of [.25,4.2,8.4,12.6,16.55])K.wall(...a,...c,y,y+.22,{mat:0xd2d8d5,thick:.17,solid:false});
+      K.cyl({x:a[0],z:a[1],y:0,r:.19,h:16.82,seg:4,mat:0xd8dcd7,solid:false});
+    }
+    // The narrow tall white-framed bays punctuate the long curtain wall.
+    const a=b.poly[4],c=b.poly[5],L=Math.hypot(c[0]-a[0],c[1]-a[1]);
+    for(const t of [.08,.8]){
+      const x=a[0]+(c[0]-a[0])*t,z=a[1]+(c[1]-a[1])*t,dx=(c[0]-a[0])/L,dz=(c[1]-a[1])/L;
+      for(const side of [-1,1])K.box({x:x+dx*side*1.6,z:z+dz*side*1.6,y:0,w:.35,h:18.1,d:.35,mat:0xcbd0ca,solid:false});
+      K.wall(x-dx*1.8,z-dz*1.8,x+dx*1.8,z+dz*1.8,17.8,18.1,{thick:.5,mat:0xcbd0ca,solid:false});
+    }
+  }
   // Round 8: the police-specific roadviews supersede the blurred ssg_04
   // checkerboard inference. The OSM footprint stays authoritative. Local u
   // follows the west facade toward the south; v points into the building.
   K.texture('streets-police-stone',256,256,(g,w,h)=>{
-    g.fillStyle='#a5aaa2';g.fillRect(0,0,w,h);g.strokeStyle='#707c78';g.lineWidth=2;
+    g.fillStyle='#a9aca5';g.fillRect(0,0,w,h);g.strokeStyle='#707c78';g.lineWidth=2;
     for(let x=0;x<=w;x+=128){g.beginPath();g.moveTo(x,0);g.lineTo(x,h);g.stroke();}
     for(let y=0;y<=h;y+=64){g.beginPath();g.moveTo(0,y);g.lineTo(w,y);g.stroke();}
   },[3,3]);
+  K.texture('streets-police-roadglass',256,256,(g,w,h)=>{
+    g.fillStyle='#5d6f6c';g.fillRect(0,0,w,h);
+    g.fillStyle='rgba(197,211,196,.13)';g.fillRect(0,22,w,34);
+    for(let i=0;i<12;i++){g.fillStyle=i%2?'rgba(30,49,44,.12)':'rgba(151,171,153,.13)';g.fillRect(i*23,58,9,198);}
+  },[1.2,3.6]);
   K.texture('streets-police-frit',256,256,(g,w,h)=>{
     g.clearRect(0,0,w,h);g.fillStyle='rgba(67,87,89,.55)';
     for(let j=0;j<3;j++)for(let i=0;i<3;i++){g.beginPath();g.arc(42+i*85,42+j*85,34-(i+j)%2*5,0,PI*2);g.fill();}
@@ -1070,29 +1193,42 @@ function buildRoadviewBuildings(K) {
       face([[u0,-.09,.6],[u1,-.09,.6],[u1,-.09,2.7],[u0,-.09,2.7]],'streets-police-frit');
       face([[u0,-.09,4.17],[u1,-.09,4.17],[u1,-.09,5.0],[u0,-.09,5.0]],'streets-police-frit');
     }
-    // North road face: broad grey stone panels with dark glass bays, an oblique
-    // glass/stone boundary, and slender metal mullions visible in police_01.
-    const nn=[-ux,0,-uz];
-    face([[-.11,-.02,.2],[-.11,3.1,.2],[-.11,4.55,7.95],[-.11,-.02,7.95]],stone,nn);
-    face([[-.11,7.1,.2],[-.11,9.45,.2],[-.11,11.25,7.95],[-.11,8.9,7.95]],stone,nn);
-    // Explicit joints keep metre-scale stone tiles visible; quad UVs alone
-    // would stretch one four-row texture over the entire eight-metre facade.
-    for(let y=1.45;y<7.9;y+=1.28){
-      const t=(y-.2)/7.75;
-      for(const [a,c] of [[0,3.1+1.45*t],[7.1+1.8*t,9.45+1.8*t]])bar([-.13,a,y],[-.13,c,y],.012,0x6e7b74);
+    // sr-01 / police_01: west-to-east is glass, west-leaning STONE wedge,
+    // glass widening toward the roof, then stone. The former green diagonal
+    // band inverted both the material allocation and the direction of slope.
+    const nn=[-ux,0,-uz],roadGlass={tex:'streets-police-roadglass',gloss:.3};
+    const roadFace=(v0,v1,v2,v3,y0=.7,y1=7.95,mat=roadGlass)=>
+      face([[-.13,v0,y0],[-.13,v1,y0],[-.13,v2,y1],[-.13,v3,y1]],mat,nn);
+    roadFace(0,5.5,4.2,0);
+    roadFace(5.5,8.8,7.5,4.2,.7,7.95,stone);
+    roadFace(8.8,11.9,11.9,7.5);
+    roadFace(11.9,D,D,11.9,.2,7.95,stone);
+    roadFace(0,11.9,11.9,0,.2,.7,stone);
+    roadFace(0,D,D,0,7.95,8.05,stone);
+    // Dark corner post and ~1.2 m mullions are confined to the glass fields.
+    bar([-.17,.04,.2],[-.17,.04,8.05],.075,0x2f3a3a);
+    for(let v=1.2;v<5.5;v+=1.2){
+      const top=Math.min(7.95,.7+(5.5-v)/1.3*7.25);
+      bar([-.16,v,.7],[-.16,v,top],.035,0x2f3a3a);
     }
-    for(const v of [1.5,2.95,8.9])bar([-.13,v,.25],[-.13,v,7.9],.012,0x6e7b74);
-    for(let v=4.7;v<D;v+=1.4){
-      const a=P(-.045,v);K.box({x:a[0],z:a[1],y:.2,w:.08,h:7.85,d:.08,mat:frame,solid:false});
+    for(let v=8.1;v<11.9;v+=1.2){
+      const bottom=Math.max(.7,.7+(8.8-v)/1.3*7.25);
+      bar([-.16,v,bottom],[-.16,v,7.95],.035,0x2f3a3a);
     }
-    for(const y of [.25,4.03,7.95]){
-      const a=P(-.04,0),c=P(-.04,D);K.wall(...a,...c,y,y+.08,{mat:frame,thick:.08,solid:false});
+    for(const [base,top] of [[5.5,4.2],[8.8,7.5],[11.9,11.9]])
+      bar([-.16,base,.7],[-.16,top,7.95],.04,0x2f3a3a);
+    for(const y of [.7,4.03,7.95]){
+      const t=(y-.7)/7.25;
+      bar([-.16,0,y],[-.16,5.5-1.3*t,y],.035,0x2f3a3a);
+      bar([-.16,8.8-1.3*t,y],[-.16,11.9,y],.035,0x2f3a3a);
     }
-    // Lean the near-corner glass pane back 0.7 m at its top, preserving the
-    // footprint below. These faces are decorative over the north envelope.
-    face([[-.23,3.15,.25],[-.23,7.07,.25],[-.08,8.87,7.9],[-.08,4.6,7.9]],{tex:'streets-police-glazing',color:0x637f79},nn);
-    for(const [a,c] of [[[3.15,.25],[4.6,7.9]],[[7.07,.25],[8.87,7.9]]])bar([-.25,a[0],a[1]],[-.1,c[0],c[1]],.045,0x99aaa1);
-    localWall(-.09,0,-.09,D,0,.22,{mat:stone,thick:.16,solid:false});
+    for(let y=1.6;y<7.9;y+=1.28){
+      const t=(y-.7)/7.25;
+      bar([-.15,5.5-1.3*t,y],[-.15,8.8-1.3*t,y],.012,0x7e8680);
+      bar([-.15,11.9,y],[-.15,D,y],.012,0x7e8680);
+    }
+    for(const v of [6.6,7.7])bar([-.15,v,.7],[-.15,v-1.3,7.95],.012,0x7e8680);
+    for(const v of [13.2,14.5])bar([-.15,v,.2],[-.15,v,7.95],.012,0x7e8680);
     // Low east glass annex from the previous model remains, with finer frames.
     const annex=localRect(0,D,L,D+5);
     K.slab(annex,0,{mat:'tile',thick:.18});K.slab(annex,3.8,{mat:0xc4c9c4,thick:.15});
@@ -1113,8 +1249,20 @@ function buildRoadviewBuildings(K) {
     for(let j=0;j<3;j++)bar([7.66,-2.56,4.04-j*.07],[7.98,-2.56,3.87-j*.06],.014,0x7b8174);
     K.sign('서울서초경찰서 | 반포지구대',{...pos(9.3,-2.54),y:4.24,w:3.48,h:.18,rotY:rot,bg:'#1749a1',fg:'#fff'});
     localBox(L/2,-.10,5.22,L-.94,2.41,.06,0x526363,false);
-    K.sign(['잘못 건 112신고전화','긴급출동의 발목을 잡습니다'],{...pos(L/2,-.18),y:6.4,w:L-1,h:2.35,rotY:rot,bg:'#174a9d',fg:'#fff'});
-    K.sign('112는 긴급범죄신고 전화입니다',{...pos(L/2,-.22),y:5.48,w:L-2,h:.28,rotY:rot,bg:'#174a9d',fg:'#ffe882'});
+    // sr-08: 2026-06 banner artwork, still on the west face as requested.
+    face([[.47,-.18,5.22],[L-.47,-.18,5.22],[L-.47,-.18,7.63],[.47,-.18,7.63]],0x174a9d);
+    K.sign(['잘못 건 112신고전화','긴급출동의 발목을 잡습니다'],{...pos(4.65,-.22),y:6.87,w:7.8,h:1.02,rotY:rot,bg:'#174a9d',fg:'#fff'});
+    K.sign('*한해 840만건 (전체신고의 약 45%)',{...pos(4.65,-.24),y:6.11,w:7.8,h:.26,rotY:rot,bg:'#174a9d',fg:'#ffe882'});
+    face([[.85,-.25,5.77],[1.25,-.25,5.63],[1.65,-.25,5.77],[1.25,-.25,5.31]],0xddd3a0);
+    face([[1.1,-.26,5.64],[1.4,-.26,5.64],[1.38,-.26,5.45],[1.12,-.26,5.45]],0x3973b9);
+    K.sign('서울서초경찰서',{...pos(2.75,-.25),y:5.48,w:2.0,h:.16,rotY:rot,bg:'#174a9d',fg:'#dddcb8'});
+    // Stylised portrait retains the evidenced red jacket, skin and phone.
+    face([[9.25,-.26,5.23],[L-.51,-.26,5.23],[L-1.02,-.26,6.35],[10.05,-.26,6.35]],0xc23a33);
+    face([[10.05,-.27,6.33],[L-1.04,-.27,6.33],[L-1.14,-.27,7.35],[10.18,-.27,7.35]],0xe0b49a);
+    face([[10.13,-.28,7.05],[L-1.11,-.28,7.05],[L-1.17,-.28,7.5],[10.32,-.28,7.49]],0x292c2b);
+    face([[10.65,-.28,5.23],[11.18,-.28,5.23],[11.52,-.28,6.37],[10.52,-.28,6.37]],0xcfcfc4);
+    face([[L-1.06,-.29,6.28],[L-.77,-.29,6.31],[L-.76,-.29,7.06],[L-1.05,-.29,7.07]],0x252c31);
+    face([[L-1.12,-.3,6.07],[L-.8,-.3,6.08],[L-.77,-.3,6.68],[L-1.04,-.3,6.74]],0xe0b49a);
     for(const u of [8.1,10.5])localBox(u,.12,.08,.08,2.82,.12,0xb4bfb9,false);
     for(const u of [8.55,10.05])localBox(u,.3,.12,.72,2.55,.035,glass,false);
     for(const u of [8.55,10.05]){

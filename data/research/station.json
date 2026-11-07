@@ -356,7 +356,7 @@
     "round13: 현행3·9호선 표시 층 전체의 원문 공식 도면은 확보하지 못함. 공유월드 층·좌표는 유지하며물리 깊이와 구분."
   ],
   "modeling": {
-    "round": 15,
+    "round": 17,
     "scope": "round15: 비교 시트와 2025+ 원본 프레임을 재대조하고 카메라→배치→재질/안내→집기/군중 순서로 보정. 실제 B1 띠벽과 7호선 검정 안내판은 보존. W3/W9/J7 및 이웃 모듈 경계 유지. 새 상업 전면과 환승 홀 치수는 사진을 공유 좌표계에 맞춘 추정이며 측량값이 아니다.",
     "guesses": [
       "B1=-6, B2=-11, B3=-16, B4=-21m는 K.LEVELS/공유 월드 계약이며 실제 역의 실측 심도가 아니다. 특히 깊은 9호선을 B4=-21m에 맞췄다.",
@@ -729,7 +729,7 @@
             "capsule_push_m": 0
           },
           "rendered": false,
-          "scope": "round15 final station.js: actual support/capsule checked standalone and full PLACES; opaque rays exclude people and transparent PSD"
+          "scope": "round17 actual kit/physics, all lazy detail loaded; standalone and current full PLACES; support/capsule occupancy only"
         },
         "previous_pose_round13": {
           "x": -102.5,
@@ -782,7 +782,7 @@
             "capsule_push_m": 0
           },
           "rendered": false,
-          "scope": "round15 final station.js: actual support/capsule checked standalone and full PLACES; opaque rays exclude people and transparent PSD"
+          "scope": "round17 actual kit/physics, all lazy detail loaded; standalone and current full PLACES; support/capsule occupancy only"
         }
       },
       {
@@ -810,7 +810,7 @@
             "capsule_push_m": 0
           },
           "rendered": false,
-          "scope": "round15 final station.js: actual support/capsule checked standalone and full PLACES; opaque rays exclude people and transparent PSD"
+          "scope": "round17 actual kit/physics, all lazy detail loaded; standalone and current full PLACES; support/capsule occupancy only"
         }
       },
       {
@@ -830,15 +830,15 @@
         "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다. round15: 원본은 하부 착지점이 아니라 상승 에스컬레이터 탑승 중의 가까운 난간 구도다. 실제 경사 지지면으로 5m 전진하고 y는 물리 지지 높이로 기록.",
         "validation": {
           "standalone": {
-            "support_y": -9.887888889,
+            "support_y": -9.88788888888889,
             "capsule_push_m": 0
           },
           "integrated": {
-            "support_y": -9.887888889,
+            "support_y": -9.88788888888889,
             "capsule_push_m": 0
           },
           "rendered": false,
-          "scope": "round15 final station.js: actual support/capsule checked standalone and full PLACES; opaque rays exclude people and transparent PSD"
+          "scope": "round17 actual kit/physics, all lazy detail loaded; standalone and current full PLACES; support/capsule occupancy only"
         },
         "previous_pose_round13": {
           "x": -98.2,
@@ -891,7 +891,7 @@
             "capsule_push_m": 0
           },
           "rendered": false,
-          "scope": "round15 final station.js: actual support/capsule checked standalone and full PLACES; opaque rays exclude people and transparent PSD"
+          "scope": "round17 actual kit/physics, all lazy detail loaded; standalone and current full PLACES; support/capsule occupancy only"
         },
         "previous_pose_round13": {
           "x": -90,
@@ -944,7 +944,7 @@
             "capsule_push_m": 0
           },
           "rendered": false,
-          "scope": "round15 final station.js: actual support/capsule checked standalone and full PLACES; opaque rays exclude people and transparent PSD"
+          "scope": "round17 actual kit/physics, all lazy detail loaded; standalone and current full PLACES; support/capsule occupancy only"
         },
         "previous_pose_round13": {
           "x": -90,
@@ -986,8 +986,10 @@
         "pitchDeg": -2,
         "floor": "B1",
         "view_id": "r13_zPXe32QRyJo_52",
-        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다. round15: 하행부에서 1m 후퇴하고 과한 하향 피치를 줄여 상부 착지·벽면·표지를 눈높이에서 함께 본다. 공유 계단에 따른 좌우 차이는 남음.",
+        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다. round15: 하행부에서 1m 후퇴하고 과한 하향 피치를 줄여 상부 착지·벽면·표지를 눈높이에서 함께 본다. 공유 계단에 따른 좌우 차이는 남음. round17: 원본의 오른쪽 흰/올리브 벽·앞왼쪽 개찰구·바닥 모서리의 에스컬레이터를 현재 동측 뱅크에서 동시에 맞추는 검증된 시점이 없다. 반증된 (-82.5,-6,-63,yaw0) 후보는 적용하지 않고 기존 좌표를 미해결 상태로 보존했다. 녹색 표지는 0.3m 높이는 별도 형상 수정.",
         "validation": {
+          "rendered": false,
+          "scope": "round17 actual kit/physics, all lazy detail loaded; standalone and current full PLACES; support/capsule occupancy only",
           "standalone": {
             "support_y": -6,
             "capsule_push_m": 0
@@ -995,9 +997,7 @@
           "integrated": {
             "support_y": -6,
             "capsule_push_m": 0
-          },
-          "rendered": false,
-          "scope": "round15 final station.js: actual support/capsule checked standalone and full PLACES; opaque rays exclude people and transparent PSD"
+          }
         },
         "previous_pose_round13": {
           "x": -82.1,
@@ -1023,6 +1023,34 @@
           "raw_frame_opened": true,
           "support_check": "passed: actual support y, capsule_push_m=0 standalone/full PLACES",
           "rendered": false
+        },
+        "previous_pose_round15": {
+          "x": -82.1,
+          "y": -6,
+          "z": -66.8,
+          "yawDeg": 182,
+          "pitchDeg": -2,
+          "validation": {
+            "standalone": {
+              "support_y": -6,
+              "capsule_push_m": 0
+            },
+            "integrated": {
+              "support_y": -6,
+              "capsule_push_m": 0
+            },
+            "rendered": false,
+            "scope": "round15 final station.js: actual support/capsule checked standalone and full PLACES; opaque rays exclude people and transparent PSD"
+          }
+        },
+        "round17_camera": {
+          "finding_id": "st-23",
+          "sheet_camera": "station_06",
+          "status": "unresolved",
+          "reason": "원본의 오른쪽 흰/올리브 벽·앞왼쪽 개찰구·바닥 모서리의 에스컬레이터를 현재 동측 뱅크에서 동시에 맞추는 검증된 시점이 없다. 반증된 (-82.5,-6,-63,yaw0) 후보는 적용하지 않고 기존 좌표를 미해결 상태로 보존했다. 녹색 표지는 0.3m 높이는 별도 형상 수정.",
+          "raw_frame_opened": true,
+          "rendered": false,
+          "y_convention": "floor support height, not eye height"
         }
       },
       {
@@ -1050,7 +1078,7 @@
             "capsule_push_m": 0
           },
           "rendered": false,
-          "scope": "round15 final station.js: actual support/capsule checked standalone and full PLACES; opaque rays exclude people and transparent PSD"
+          "scope": "round17 actual kit/physics, all lazy detail loaded; standalone and current full PLACES; support/capsule occupancy only"
         },
         "previous_pose_round13": {
           "x": 33,
@@ -1103,7 +1131,7 @@
             "capsule_push_m": 0
           },
           "rendered": false,
-          "scope": "round15 final station.js: actual support/capsule checked standalone and full PLACES; opaque rays exclude people and transparent PSD"
+          "scope": "round17 actual kit/physics, all lazy detail loaded; standalone and current full PLACES; support/capsule occupancy only"
         },
         "previous_pose_round13": {
           "x": 30,
@@ -1156,7 +1184,7 @@
             "capsule_push_m": 0
           },
           "rendered": false,
-          "scope": "round15 final station.js: actual support/capsule checked standalone and full PLACES; opaque rays exclude people and transparent PSD"
+          "scope": "round17 actual kit/physics, all lazy detail loaded; standalone and current full PLACES; support/capsule occupancy only"
         }
       },
       {
@@ -1184,7 +1212,7 @@
             "capsule_push_m": 0
           },
           "rendered": false,
-          "scope": "round15 final station.js: actual support/capsule checked standalone and full PLACES; opaque rays exclude people and transparent PSD"
+          "scope": "round17 actual kit/physics, all lazy detail loaded; standalone and current full PLACES; support/capsule occupancy only"
         }
       },
       {
@@ -1212,7 +1240,7 @@
             "capsule_push_m": 0
           },
           "rendered": false,
-          "scope": "round15 final station.js: actual support/capsule checked standalone and full PLACES; opaque rays exclude people and transparent PSD"
+          "scope": "round17 actual kit/physics, all lazy detail loaded; standalone and current full PLACES; support/capsule occupancy only"
         },
         "previous_pose_round13": {
           "x": -89.7,
@@ -1247,15 +1275,17 @@
         "photos": [
           "refs/walk/s4_enter6_subway/w7cLZSedgT4_110.jpg"
         ],
-        "x": -90,
+        "x": 14,
         "y": -6,
-        "z": -63.3,
-        "yawDeg": 0,
-        "pitchDeg": 10,
+        "z": -125,
+        "yawDeg": 270,
+        "pitchDeg": 0,
         "floor": "B1",
         "view_id": "r13_w7cLZSedgT4_110",
-        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다.",
+        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다. round17: 실제 프레임은 엔터식스 이후 버스터미널 연결 홀이다. 기존 3호선 파랑/노랑 표지 바로 아래 시점에서 벗어나 B1 동행 연결 동선의 후보로 이동했다. 정확한 촬영 지점과 상점·표지 일치는 미확인.",
         "validation": {
+          "rendered": false,
+          "scope": "round17 actual kit/physics, all lazy detail loaded; standalone and current full PLACES; support/capsule occupancy only",
           "standalone": {
             "support_y": -6,
             "capsule_push_m": 0
@@ -1263,9 +1293,35 @@
           "integrated": {
             "support_y": -6,
             "capsule_push_m": 0
-          },
+          }
+        },
+        "previous_pose_round15": {
+          "x": -90,
+          "y": -6,
+          "z": -63.3,
+          "yawDeg": 0,
+          "pitchDeg": 10,
+          "validation": {
+            "standalone": {
+              "support_y": -6,
+              "capsule_push_m": 0
+            },
+            "integrated": {
+              "support_y": -6,
+              "capsule_push_m": 0
+            },
+            "rendered": false,
+            "scope": "round15 final station.js: actual support/capsule checked standalone and full PLACES; opaque rays exclude people and transparent PSD"
+          }
+        },
+        "round17_camera": {
+          "finding_id": "st-21",
+          "sheet_camera": "station_12",
+          "status": "candidate_unverified",
+          "reason": "실제 프레임은 엔터식스 이후 버스터미널 연결 홀이다. 기존 3호선 파랑/노랑 표지 바로 아래 시점에서 벗어나 B1 동행 연결 동선의 후보로 이동했다. 정확한 촬영 지점과 상점·표지 일치는 미확인.",
+          "raw_frame_opened": true,
           "rendered": false,
-          "scope": "round15 final station.js: actual support/capsule checked standalone and full PLACES; opaque rays exclude people and transparent PSD"
+          "y_convention": "floor support height, not eye height"
         }
       },
       {
@@ -1293,7 +1349,7 @@
             "capsule_push_m": 0
           },
           "rendered": false,
-          "scope": "round15 final station.js: actual support/capsule checked standalone and full PLACES; opaque rays exclude people and transparent PSD"
+          "scope": "round17 actual kit/physics, all lazy detail loaded; standalone and current full PLACES; support/capsule occupancy only"
         },
         "previous_pose_round13": {
           "x": -68,
@@ -1335,8 +1391,10 @@
         "pitchDeg": 0,
         "floor": "B1",
         "view_id": "r13_xmLYPNlwtkU_56",
-        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다. round15: 개찰구에서 약4m 후퇴해 좌측 기둥과 B구역·점자 유도블록을 함께 포함하며 근접 인물 가림을 줄임.",
+        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다. round15: 개찰구에서 약4m 후퇴해 좌측 기둥과 B구역·점자 유도블록을 함께 포함하며 근접 인물 가림을 줄임. round17: 원본은 왼쪽 거친 화강석 기둥, 오른쪽 비스듬한 개찰구, 정면 줄무늬 벽의 B표지를 보인다. 현 게이트/표지 배치에서 이를 함께 맞춘 시점이 없으므로 반증된 (-95,-6,-57.5,yaw300)은 적용하지 않았다. 기둥의 거친 마감은 별도 수정한다.",
         "validation": {
+          "rendered": false,
+          "scope": "round17 actual kit/physics, all lazy detail loaded; standalone and current full PLACES; support/capsule occupancy only",
           "standalone": {
             "support_y": -6,
             "capsule_push_m": 0
@@ -1344,9 +1402,7 @@
           "integrated": {
             "support_y": -6,
             "capsule_push_m": 0
-          },
-          "rendered": false,
-          "scope": "round15 final station.js: actual support/capsule checked standalone and full PLACES; opaque rays exclude people and transparent PSD"
+          }
         },
         "previous_pose_round13": {
           "x": -89.4,
@@ -1372,6 +1428,34 @@
           "raw_frame_opened": true,
           "support_check": "passed: actual support y, capsule_push_m=0 standalone/full PLACES",
           "rendered": false
+        },
+        "previous_pose_round15": {
+          "x": -90.2,
+          "y": -6,
+          "z": -54.7,
+          "yawDeg": 0,
+          "pitchDeg": 0,
+          "validation": {
+            "standalone": {
+              "support_y": -6,
+              "capsule_push_m": 0
+            },
+            "integrated": {
+              "support_y": -6,
+              "capsule_push_m": 0
+            },
+            "rendered": false,
+            "scope": "round15 final station.js: actual support/capsule checked standalone and full PLACES; opaque rays exclude people and transparent PSD"
+          }
+        },
+        "round17_camera": {
+          "finding_id": "st-24",
+          "sheet_camera": "station_14",
+          "status": "unresolved",
+          "reason": "원본은 왼쪽 거친 화강석 기둥, 오른쪽 비스듬한 개찰구, 정면 줄무늬 벽의 B표지를 보인다. 현 게이트/표지 배치에서 이를 함께 맞춘 시점이 없으므로 반증된 (-95,-6,-57.5,yaw300)은 적용하지 않았다. 기둥의 거친 마감은 별도 수정한다.",
+          "raw_frame_opened": true,
+          "rendered": false,
+          "y_convention": "floor support height, not eye height"
         }
       },
       {
@@ -1399,7 +1483,7 @@
             "capsule_push_m": 0
           },
           "rendered": false,
-          "scope": "round15 final station.js: actual support/capsule checked standalone and full PLACES; opaque rays exclude people and transparent PSD"
+          "scope": "round17 actual kit/physics, all lazy detail loaded; standalone and current full PLACES; support/capsule occupancy only"
         },
         "previous_pose_round13": {
           "x": -87,
@@ -1452,7 +1536,7 @@
             "capsule_push_m": 0
           },
           "rendered": false,
-          "scope": "round15 final station.js: actual support/capsule checked standalone and full PLACES; opaque rays exclude people and transparent PSD"
+          "scope": "round17 actual kit/physics, all lazy detail loaded; standalone and current full PLACES; support/capsule occupancy only"
         },
         "previous_pose_round13": {
           "x": -86.7,
@@ -1505,7 +1589,7 @@
             "capsule_push_m": 0
           },
           "rendered": false,
-          "scope": "round15 final station.js: actual support/capsule checked standalone and full PLACES; opaque rays exclude people and transparent PSD"
+          "scope": "round17 actual kit/physics, all lazy detail loaded; standalone and current full PLACES; support/capsule occupancy only"
         }
       },
       {
@@ -1533,7 +1617,7 @@
             "capsule_push_m": 0
           },
           "rendered": false,
-          "scope": "round15 final station.js: actual support/capsule checked standalone and full PLACES; opaque rays exclude people and transparent PSD"
+          "scope": "round17 actual kit/physics, all lazy detail loaded; standalone and current full PLACES; support/capsule occupancy only"
         },
         "previous_pose_round13": {
           "x": -90,
@@ -1570,13 +1654,15 @@
         ],
         "x": 40,
         "y": -11,
-        "z": 90,
+        "z": -51.5,
         "yawDeg": 0,
         "pitchDeg": 0,
         "floor": "B2",
         "view_id": "r13_AlqE1LnWVr0_212",
-        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다.",
+        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다. round17: 원본의 검은 마스크 사이로 보이는 정면 흰 벽·왼쪽 문·가까운 군중을 맞추기 위해 x=40 통로 북쪽 모서리로 이동했다. 원본에서 가려진 광고 벽은 유지한다. 정확한 촬영 지점은 미확인.",
         "validation": {
+          "rendered": false,
+          "scope": "round17 actual kit/physics, all lazy detail loaded; standalone and current full PLACES; support/capsule occupancy only",
           "standalone": {
             "support_y": -11,
             "capsule_push_m": 0
@@ -1584,9 +1670,35 @@
           "integrated": {
             "support_y": -11,
             "capsule_push_m": 0
-          },
+          }
+        },
+        "previous_pose_round15": {
+          "x": 40,
+          "y": -11,
+          "z": 90,
+          "yawDeg": 0,
+          "pitchDeg": 0,
+          "validation": {
+            "standalone": {
+              "support_y": -11,
+              "capsule_push_m": 0
+            },
+            "integrated": {
+              "support_y": -11,
+              "capsule_push_m": 0
+            },
+            "rendered": false,
+            "scope": "round15 final station.js: actual support/capsule checked standalone and full PLACES; opaque rays exclude people and transparent PSD"
+          }
+        },
+        "round17_camera": {
+          "finding_id": "st-09",
+          "sheet_camera": "station_19",
+          "status": "candidate_unverified",
+          "reason": "원본의 검은 마스크 사이로 보이는 정면 흰 벽·왼쪽 문·가까운 군중을 맞추기 위해 x=40 통로 북쪽 모서리로 이동했다. 원본에서 가려진 광고 벽은 유지한다. 정확한 촬영 지점은 미확인.",
+          "raw_frame_opened": true,
           "rendered": false,
-          "scope": "round15 final station.js: actual support/capsule checked standalone and full PLACES; opaque rays exclude people and transparent PSD"
+          "y_convention": "floor support height, not eye height"
         }
       },
       {
@@ -1600,21 +1712,21 @@
         "y": -15.022437395,
         "z": 152.082741,
         "yawDeg": 214.711795,
-        "pitchDeg": -18,
+        "pitchDeg": 2,
         "floor": "B3",
         "view_id": "r13_AlqE1LnWVr0_142",
-        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다. 경사면 위 v=12 대신 바닥이 정확히 B3인 하부 착지점 v=13.8에서 상승 방향을 본다. round15: 계단 아래 시점에서 실제 상승 에스컬레이터(l7 s=78.7,v=10.3)로 이동해 근접 난간 표식을 내려다봄. y는 경사면의 물리 지지 높이이며 눈높이가 아님.",
+        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다. 경사면 위 v=12 대신 바닥이 정확히 B3인 하부 착지점 v=13.8에서 상승 방향을 본다. round15: 계단 아래 시점에서 실제 상승 에스컬레이터(l7 s=78.7,v=10.3)로 이동해 근접 난간 표식을 내려다봄. y는 경사면의 물리 지지 높이이며 눈높이가 아님. round17: 원본은 상승 에스컬레이터 옆 네 개 노란 표식과 앞선 승객을 거의 수평으로 본다. 실제 경사면 지지 높이·x/z·상승 방향 yaw를 유지하고 pitch -18°를 +2°로 수정했다.",
         "validation": {
+          "rendered": false,
+          "scope": "round17 actual kit/physics, all lazy detail loaded; standalone and current full PLACES; support/capsule occupancy only",
           "standalone": {
-            "support_y": -15.022437395,
+            "support_y": -15.022437395421056,
             "capsule_push_m": 0
           },
           "integrated": {
-            "support_y": -15.022437395,
+            "support_y": -15.022437395421056,
             "capsule_push_m": 0
-          },
-          "rendered": false,
-          "scope": "round15 final station.js: actual support/capsule checked standalone and full PLACES; opaque rays exclude people and transparent PSD"
+          }
         },
         "previous_pose_round13": {
           "x": -26.478062,
@@ -1640,6 +1752,34 @@
           "raw_frame_opened": true,
           "support_check": "passed: actual support y, capsule_push_m=0 standalone/full PLACES",
           "rendered": false
+        },
+        "previous_pose_round15": {
+          "x": -29.158721,
+          "y": -15.022437395,
+          "z": 152.082741,
+          "yawDeg": 214.711795,
+          "pitchDeg": -18,
+          "validation": {
+            "standalone": {
+              "support_y": -15.022437395,
+              "capsule_push_m": 0
+            },
+            "integrated": {
+              "support_y": -15.022437395,
+              "capsule_push_m": 0
+            },
+            "rendered": false,
+            "scope": "round15 final station.js: actual support/capsule checked standalone and full PLACES; opaque rays exclude people and transparent PSD"
+          }
+        },
+        "round17_camera": {
+          "finding_id": "st-22",
+          "sheet_camera": "station_20",
+          "status": "pose_corrected_pending_render",
+          "reason": "원본은 상승 에스컬레이터 옆 네 개 노란 표식과 앞선 승객을 거의 수평으로 본다. 실제 경사면 지지 높이·x/z·상승 방향 yaw를 유지하고 pitch -18°를 +2°로 수정했다.",
+          "raw_frame_opened": true,
+          "rendered": false,
+          "y_convention": "floor support height, not eye height"
         }
       },
       {
@@ -1667,7 +1807,7 @@
             "capsule_push_m": 0
           },
           "rendered": false,
-          "scope": "round15 final station.js: actual support/capsule checked standalone and full PLACES; opaque rays exclude people and transparent PSD"
+          "scope": "round17 actual kit/physics, all lazy detail loaded; standalone and current full PLACES; support/capsule occupancy only"
         },
         "previous_pose_round13": {
           "x": -66,
@@ -1720,7 +1860,7 @@
             "capsule_push_m": 0
           },
           "rendered": false,
-          "scope": "round15 final station.js: actual support/capsule checked standalone and full PLACES; opaque rays exclude people and transparent PSD"
+          "scope": "round17 actual kit/physics, all lazy detail loaded; standalone and current full PLACES; support/capsule occupancy only"
         }
       },
       {
@@ -1730,15 +1870,17 @@
         "photos": [
           "refs/walk/s4_enter6_subway/AHB7dR-5aOU_157.jpg"
         ],
-        "x": -68,
+        "x": -67.4,
         "y": -11,
-        "z": -77,
-        "yawDeg": 320,
+        "z": -76.2,
+        "yawDeg": 0,
         "pitchDeg": -3,
         "floor": "B2",
         "view_id": "r13_AHB7dR-5aOU_157",
-        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다. round15: 무빙워크 끝에서 동쪽으로 넓어진 중간 홀을 사선으로 바라보아 중앙 기둥 정면에 막히던 시야를 바꿈. 로프 안내와 하행 착지점으로 이어지는 넓이를 확인.",
+        "note": "위치·거리·방향은 공유 월드와 이웃 경계를 피한 추정 배치다. 원본 프레임의 카메라 위치를 측량한 값이 아니며, 대응하는 재료·시설·동선 순서를 운영자가 렌더해 비교하기 위한 시점이다. y는 눈 높이가 아닌 실제 지지 바닥 높이다. round15: 무빙워크 끝에서 동쪽으로 넓어진 중간 홀을 사선으로 바라보아 중앙 기둥 정면에 막히던 시야를 바꿈. 로프 안내와 하행 착지점으로 이어지는 넓이를 확인. round17: 무빙워크 끝 z=-75보다 북쪽인 평탄 착지부(-67.4,-76.2)로 이동했다. 이동한 크림 기둥(-70.5,-81)은 앞왼쪽, 로프(x=-69.35)는 그보다 가까운 왼쪽, 하행 에스컬레이터(-63,-82.2)는 오른쪽에 오도록 yaw0°를 선택했다. 계산상 기둥 약33° 왼쪽·하행 입구 약36° 오른쪽이며 원근과 화면 일치는 운영자 재렌더 필요.",
         "validation": {
+          "rendered": false,
+          "scope": "round17 actual kit/physics, all lazy detail loaded; standalone and current full PLACES; support/capsule occupancy only",
           "standalone": {
             "support_y": -11,
             "capsule_push_m": 0
@@ -1746,9 +1888,7 @@
           "integrated": {
             "support_y": -11,
             "capsule_push_m": 0
-          },
-          "rendered": false,
-          "scope": "round15 final station.js: actual support/capsule checked standalone and full PLACES; opaque rays exclude people and transparent PSD"
+          }
         },
         "previous_pose_round13": {
           "x": -68,
@@ -1774,6 +1914,34 @@
           "raw_frame_opened": true,
           "support_check": "passed: actual support y, capsule_push_m=0 standalone/full PLACES",
           "rendered": false
+        },
+        "previous_pose_round15": {
+          "x": -68,
+          "y": -11,
+          "z": -77,
+          "yawDeg": 320,
+          "pitchDeg": -3,
+          "validation": {
+            "standalone": {
+              "support_y": -11,
+              "capsule_push_m": 0
+            },
+            "integrated": {
+              "support_y": -11,
+              "capsule_push_m": 0
+            },
+            "rendered": false,
+            "scope": "round15 final station.js: actual support/capsule checked standalone and full PLACES; opaque rays exclude people and transparent PSD"
+          }
+        },
+        "round17_camera": {
+          "finding_id": "st-25",
+          "sheet_camera": "station_23",
+          "status": "geometry_derived_pending_render",
+          "reason": "무빙워크 끝 z=-75보다 북쪽인 평탄 착지부(-67.4,-76.2)로 이동했다. 이동한 크림 기둥(-70.5,-81)은 앞왼쪽, 로프(x=-69.35)는 그보다 가까운 왼쪽, 하행 에스컬레이터(-63,-82.2)는 오른쪽에 오도록 yaw0°를 선택했다. 계산상 기둥 약33° 왼쪽·하행 입구 약36° 오른쪽이며 원근과 화면 일치는 운영자 재렌더 필요.",
+          "raw_frame_opened": true,
+          "rendered": false,
+          "y_convention": "floor support height, not eye height"
         }
       },
       {
@@ -1801,7 +1969,7 @@
             "capsule_push_m": 0
           },
           "rendered": false,
-          "scope": "round15 final station.js: actual support/capsule checked standalone and full PLACES; opaque rays exclude people and transparent PSD"
+          "scope": "round17 actual kit/physics, all lazy detail loaded; standalone and current full PLACES; support/capsule occupancy only"
         }
       },
       {
@@ -1829,7 +1997,7 @@
             "capsule_push_m": 0
           },
           "rendered": false,
-          "scope": "round15 final station.js: actual support/capsule checked standalone and full PLACES; opaque rays exclude people and transparent PSD"
+          "scope": "round17 actual kit/physics, all lazy detail loaded; standalone and current full PLACES; support/capsule occupancy only"
         },
         "previous_pose_round13": {
           "x": -6.244231,
@@ -1882,7 +2050,7 @@
             "capsule_push_m": 0
           },
           "rendered": false,
-          "scope": "round15 final station.js: actual support/capsule checked standalone and full PLACES; opaque rays exclude people and transparent PSD"
+          "scope": "round17 actual kit/physics, all lazy detail loaded; standalone and current full PLACES; support/capsule occupancy only"
         },
         "previous_pose_round13": {
           "x": -146.685759,
@@ -1935,7 +2103,7 @@
             "capsule_push_m": 0
           },
           "rendered": false,
-          "scope": "round15 final station.js: actual support/capsule checked standalone and full PLACES; opaque rays exclude people and transparent PSD"
+          "scope": "round17 actual kit/physics, all lazy detail loaded; standalone and current full PLACES; support/capsule occupancy only"
         },
         "previous_pose_round13": {
           "x": -85.5,
@@ -2082,7 +2250,7 @@
       "note": "kit stats.quads 기준. hpoly 삼각형 및 instanced people 삼각형은 이 값에 포함되지 않는다. smoke 표는 lazy detail 전의 eager 값만 표시하므로 별도 callback 전후 계측을 사용."
     },
     "load_order_note": "월드의 실제 PLACES 순서인 gotomall → station에서 검증. station을 먼저 짓는 임의 walk 순서에서는 mallHere 사전 감지가 불가능하여 독립 B1 홀과 몰이 중복되는 기존 설계 한계가 있다. 요구된 station-first smoke는 통과.",
-    "previous_round": 13,
+    "previous_round": 15,
     "exit_destination_audit": [
       {
         "exit": "1",
@@ -3336,6 +3504,1192 @@
       "render_limitation": "tests/shot.mjs not run per task. Attempted node tests/serve.mjs8765; bind127.0.0.1 failed EPERM. No rendered-after screenshots created or claimed.",
       "diff_check": "passed",
       "scope": "Only js/places/station.js and data/research/station.json modified by this task; no engine/test/junction/neighbour edits, no commit/push."
+    },
+    "round17": {
+      "evidence": {
+        "review": ".codex-jobs/evidence/review_walk17.json → station",
+        "raw_frames": "refs/walk/s4_enter6_subway/",
+        "camera_raw_frames_opened": [
+          "w7cLZSedgT4_110",
+          "AlqE1LnWVr0_142",
+          "AlqE1LnWVr0_212",
+          "AHB7dR-5aOU_157",
+          "zPXe32QRyJo_52",
+          "xmLYPNlwtkU_56"
+        ],
+        "originals_checked_count": 25,
+        "originals_checked": [
+          "refs/walk/s4_enter6_subway/AHB7dR-5aOU_107.jpg",
+          "refs/walk/s4_enter6_subway/AHB7dR-5aOU_132.jpg",
+          "refs/walk/s4_enter6_subway/AHB7dR-5aOU_157.jpg",
+          "refs/walk/s4_enter6_subway/AHB7dR-5aOU_182.jpg",
+          "refs/walk/s4_enter6_subway/AHB7dR-5aOU_257.jpg",
+          "refs/walk/s4_enter6_subway/AlqE1LnWVr0_142.jpg",
+          "refs/walk/s4_enter6_subway/AlqE1LnWVr0_212.jpg",
+          "refs/walk/s4_enter6_subway/AlqE1LnWVr0_232.jpg",
+          "refs/walk/s4_enter6_subway/AlqE1LnWVr0_252.jpg",
+          "refs/walk/s4_enter6_subway/w7cLZSedgT4_110.jpg",
+          "refs/walk/s4_enter6_subway/w7cLZSedgT4_30.jpg",
+          "refs/walk/s4_enter6_subway/w7cLZSedgT4_50.jpg",
+          "refs/walk/s4_enter6_subway/w7cLZSedgT4_70.jpg",
+          "refs/walk/s4_enter6_subway/w7cLZSedgT4_90.jpg",
+          "refs/walk/s4_enter6_subway/xmLYPNlwtkU_24.jpg",
+          "refs/walk/s4_enter6_subway/xmLYPNlwtkU_40.jpg",
+          "refs/walk/s4_enter6_subway/xmLYPNlwtkU_56.jpg",
+          "refs/walk/s4_enter6_subway/xmLYPNlwtkU_72.jpg",
+          "refs/walk/s4_enter6_subway/xmLYPNlwtkU_88.jpg",
+          "refs/walk/s4_enter6_subway/zPXe32QRyJo_16.jpg",
+          "refs/walk/s4_enter6_subway/zPXe32QRyJo_27.jpg",
+          "refs/walk/s4_enter6_subway/zPXe32QRyJo_40.jpg",
+          "refs/walk/s4_enter6_subway/zPXe32QRyJo_52.jpg",
+          "refs/walk/s4_enter6_subway/zPXe32QRyJo_64.jpg",
+          "refs/walk/s4_enter6_subway/zPXe32QRyJo_77.jpg"
+        ],
+        "audit_scope": "Geometry reviewer/root opened21 unique design/layout/detail originals; trace agent independently opened6 camera originals (2 overlap),25 unique source frames combined."
+      },
+      "step1_cameras": [
+        {
+          "id": "st-23",
+          "camera": "station_06",
+          "frame": "zPXe32QRyJo_52",
+          "pose": {
+            "x": -82.1,
+            "y": -6,
+            "z": -66.8,
+            "yawDeg": 182,
+            "pitchDeg": -2
+          },
+          "status": "unresolved",
+          "reason": "원본의 오른쪽 흰/올리브 벽·앞왼쪽 개찰구·바닥 모서리의 에스컬레이터를 현재 동측 뱅크에서 동시에 맞추는 검증된 시점이 없다. 반증된 (-82.5,-6,-63,yaw0) 후보는 적용하지 않고 기존 좌표를 미해결 상태로 보존했다. 녹색 표지는 0.3m 높이는 별도 형상 수정."
+        },
+        {
+          "id": "st-21",
+          "camera": "station_12",
+          "frame": "w7cLZSedgT4_110",
+          "pose": {
+            "x": 14,
+            "y": -6,
+            "z": -125,
+            "yawDeg": 270,
+            "pitchDeg": 0
+          },
+          "status": "candidate_unverified",
+          "reason": "실제 프레임은 엔터식스 이후 버스터미널 연결 홀이다. 기존 3호선 파랑/노랑 표지 바로 아래 시점에서 벗어나 B1 동행 연결 동선의 후보로 이동했다. 정확한 촬영 지점과 상점·표지 일치는 미확인."
+        },
+        {
+          "id": "st-24",
+          "camera": "station_14",
+          "frame": "xmLYPNlwtkU_56",
+          "pose": {
+            "x": -90.2,
+            "y": -6,
+            "z": -54.7,
+            "yawDeg": 0,
+            "pitchDeg": 0
+          },
+          "status": "unresolved",
+          "reason": "원본은 왼쪽 거친 화강석 기둥, 오른쪽 비스듬한 개찰구, 정면 줄무늬 벽의 B표지를 보인다. 현 게이트/표지 배치에서 이를 함께 맞춘 시점이 없으므로 반증된 (-95,-6,-57.5,yaw300)은 적용하지 않았다. 기둥의 거친 마감은 별도 수정한다."
+        },
+        {
+          "id": "st-09",
+          "camera": "station_19",
+          "frame": "AlqE1LnWVr0_212",
+          "pose": {
+            "x": 40,
+            "y": -11,
+            "z": -51.5,
+            "yawDeg": 0,
+            "pitchDeg": 0
+          },
+          "status": "candidate_unverified",
+          "reason": "원본의 검은 마스크 사이로 보이는 정면 흰 벽·왼쪽 문·가까운 군중을 맞추기 위해 x=40 통로 북쪽 모서리로 이동했다. 원본에서 가려진 광고 벽은 유지한다. 정확한 촬영 지점은 미확인."
+        },
+        {
+          "id": "st-22",
+          "camera": "station_20",
+          "frame": "AlqE1LnWVr0_142",
+          "pose": {
+            "x": -29.158721,
+            "y": -15.022437395,
+            "z": 152.082741,
+            "yawDeg": 214.711795,
+            "pitchDeg": 2
+          },
+          "status": "pose_corrected_pending_render",
+          "reason": "원본은 상승 에스컬레이터 옆 네 개 노란 표식과 앞선 승객을 거의 수평으로 본다. 실제 경사면 지지 높이·x/z·상승 방향 yaw를 유지하고 pitch -18°를 +2°로 수정했다."
+        },
+        {
+          "id": "st-25",
+          "camera": "station_23",
+          "frame": "AHB7dR-5aOU_157",
+          "pose": {
+            "x": -67.4,
+            "y": -11,
+            "z": -76.2,
+            "yawDeg": 0,
+            "pitchDeg": -3
+          },
+          "status": "geometry_derived_pending_render",
+          "reason": "무빙워크 끝 z=-75보다 북쪽인 평탄 착지부(-67.4,-76.2)로 이동했다. 이동한 크림 기둥(-70.5,-81)은 앞왼쪽, 로프(x=-69.35)는 그보다 가까운 왼쪽, 하행 에스컬레이터(-63,-82.2)는 오른쪽에 오도록 yaw0°를 선택했다. 계산상 기둥 약33° 왼쪽·하행 입구 약36° 오른쪽이며 원근과 화면 일치는 운영자 재렌더 필요."
+        }
+      ],
+      "rendered": false,
+      "render_limitation": "사용자 지정: tests/shot.mjs는 sandbox에서 실행 불가. 후보 포즈의 화면 일치는 아직 검증하지 않음.",
+      "operator_render": {
+        "run_by_agent": false,
+        "y_convention": "floor support height; renderer adds eye height",
+        "views": "r13_zPXe32QRyJo_16:-99.5,-11,-136.5,78,0;r13_xmLYPNlwtkU_24:-102.5,-11,-112,90,3;r13_xmLYPNlwtkU_8:-103.5,-11,-120,210,0;r13_zPXe32QRyJo_27:-98.2,-9.887888889,-62,180,7;r13_zPXe32QRyJo_40:-90.5,-6,-60.6,180,0;r13_xmLYPNlwtkU_40:-88.6,-6,-50.7,340,0;r13_zPXe32QRyJo_52:-82.1,-6,-66.8,182,-2;r13_zPXe32QRyJo_64:-50.78326,-11,172.913233,128.079998,0;r13_zPXe32QRyJo_77:-51.805596,-11,181.336702,128.079998,0;r13_w7cLZSedgT4_50:-90,-6,-58,0,-2;r13_w7cLZSedgT4_70:-90,-6,-65,0,7;r13_w7cLZSedgT4_90:-85.4,-6,-66.5,0,2;r13_w7cLZSedgT4_110:14,-6,-125,270,0;r13_w7cLZSedgT4_30:-67,-11,-49.2,315,0;r13_xmLYPNlwtkU_56:-90.2,-6,-54.7,0,0;r13_xmLYPNlwtkU_72:-88.3,-6,-59.2,270,0;r13_xmLYPNlwtkU_88:-91.5,-6,-63.9,60,-3;r13_AlqE1LnWVr0_232:-87,-6,-65,270,0;r13_AlqE1LnWVr0_252:-90,-6,-53.6,0,-60;r13_AlqE1LnWVr0_212:40,-11,-51.5,0,0;r13_AlqE1LnWVr0_142:-29.158721,-15.022437395,152.082741,214.711795,2;r13_AHB7dR-5aOU_107:-66,-11,-55.7,0,-38;r13_AHB7dR-5aOU_132:-66,-10.975,-61,0,0;r13_AHB7dR-5aOU_157:-67.4,-11,-76.2,0,-3;r13_AHB7dR-5aOU_182:-64.5,-11,-82.2,270,-18;r13_AHB7dR-5aOU_207:-8.768152657,-21,-132.871217178,110.806437,16;r13_AHB7dR-5aOU_257:-147.418684775,-21,-63.235850575,20.426925,-12;r13_w7cLZSedgT4_90_entry:-85.4,-6,-68,0,0",
+        "note": "Re-render all 28 retained camera views; st-21/st-09/st-25 are fitting candidates and st-23/st-24 remain unresolved."
+      },
+      "findings": [
+        {
+          "id": "st-01",
+          "priority": "layout",
+          "status": "implemented_pending_render",
+          "raw_frame_check": "원본 프레임을 root/독립 감사 에이전트가 열어 검증; 카메라6항목은 trace 에이전트도 직접 열어 확인",
+          "photos": "zPXe32QRyJo_27.jpg",
+          "changes": "양쪽 3호선 계단실 경계에 y=-7.82..-6 불투명 station-panels 상부 벽을 추가해 지하 천장과 B1 바닥 사이의 노출 틈을 폐쇄.",
+          "positions": "x=-103..-94.6,z=-66.2..-47.8 및 x=-86..-80,z=-64..-47.8",
+          "limits_or_reason": "카메라 측면의 지상 노출 재렌더 필요."
+        },
+        {
+          "id": "st-02",
+          "priority": "layout",
+          "status": "implemented_pending_render",
+          "raw_frame_check": "원본 프레임을 root/독립 감사 에이전트가 열어 검증; 카메라6항목은 trace 에이전트도 직접 열어 확인",
+          "photos": "w7cLZSedgT4_30.jpg",
+          "changes": "bypass39 동측 반환벽과 남쪽 끝벽을 닫고, 실제 동서 환승통로에 주황색 띠를 추가.",
+          "positions": "동측 x=-64,z=-50.5..-46; 끝벽 z=-46,x=-68..-64; 주황띠 x=-64.09,z=-54,y=-8.7",
+          "limits_or_reason": "기존 바닥/천장 위로 폐쇄하며 z=-57.5..-50.5 연결은 유지."
+        },
+        {
+          "id": "st-03",
+          "priority": "layout",
+          "status": "partial_external_dependency",
+          "raw_frame_check": "원본 프레임을 root/독립 감사 에이전트가 열어 검증; 카메라6항목은 trace 에이전트도 직접 열어 확인",
+          "photos": "w7cLZSedgT4_90.jpg, w7cLZSedgT4_70.jpg, w7cLZSedgT4_50.jpg",
+          "changes": "3호선 비유료 홀을 OSM 고투몰 남쪽 경계까지 확장. LOVE N SHOW 유리 전면을 약12.9m로 넓히고 경계와 평행 배치, 랙/마네킹/직원 보존 및 상품 증량. 어두운 아케이드 천장·촘촘한 다운라이트·13명 군중·흰 원기둥·노란 디지털 보드 추가, 안내판은 통로 위로 이동. station 단독 로딩에서는 이웃 없는 개구부를 불투명 임시 경계로 막아 새로운 지상 노출을 방지한다.",
+          "positions": "북쪽 경계 z=-43.45-.397969*(x+178.53); 상점 전면 x=-100..-88,z=경계+3; 팔각 천장(-93.2,-71.4); 아케이드 x=-87.6..-80.35,z=-68.3..고투몰 경계; station측 출입구 중심(-83,경계),폭6.35m",
+          "limits_or_reason": "gotomall의 대응 남쪽 벽은 현 상태에서 막혀 있다. _junctions.js/gotomall.js 수정 금지로 새 공유 개구부 연결은 미완료. 신세계 x=-79 벽으로의 우회도 막힘. 이웃 작업의 별도 개방이 필요."
+        },
+        {
+          "id": "st-04",
+          "priority": "layout",
+          "status": "implemented_pending_render",
+          "raw_frame_check": "원본 프레임을 root/독립 감사 에이전트가 열어 검증; 카메라6항목은 trace 에이전트도 직접 열어 확인",
+          "photos": "zPXe32QRyJo_27.jpg",
+          "changes": "상승 벨트는 유지하고 고정계단/하행벨트 좌우를 교환. 기울어진 흰 천장,2m 간격 선형등,계단 수직 스테인리스 난간,흑황색 위험 가드를 추가.",
+          "positions": "고정계단 x=-96.1; 상승 x=-98.2; 하행 x=-100.5; z=-66..-48; 천장 y=-8.4→-3.4; 위험 가드 x=-101.84",
+          "limits_or_reason": "계단·상승·하행 실제 보행은 별도 BFS로 확인."
+        },
+        {
+          "id": "st-05",
+          "priority": "layout",
+          "status": "implemented_pending_render",
+          "raw_frame_check": "원본 프레임을 root/독립 감사 에이전트가 열어 검증; 카메라6항목은 trace 에이전트도 직접 열어 확인",
+          "photos": "AlqE1LnWVr0_232.jpg",
+          "changes": "E표지 북쪽에 동서 통행 스테인리스 게이트3기. 기존 넓은 검정 패널을 좁은 공지판으로 교체하고 두 소화전함은 별개로 줄무늬 벽에 배치. E표지/공지/소화전 배경을 줄무늬 벽으로 두기 위해 흰/올리브 마감은 동측 벽 z=-64.1..-60.4로 이동.",
+          "positions": "게이트 x=-81.9,z=-67.5/-68.75/-70; 공지 x=-80.24,z=-65.6,0.7×1.5m; 소화전 z=-64.9/-64.35",
+          "limits_or_reason": "정확한 게이트 개수는 사진에 가려져 추정."
+        },
+        {
+          "id": "st-06",
+          "priority": "layout",
+          "status": "implemented_pending_render",
+          "raw_frame_check": "원본 프레임을 root/독립 감사 에이전트가 열어 검증; 카메라6항목은 trace 에이전트도 직접 열어 확인",
+          "photos": "AHB7dR-5aOU_182.jpg",
+          "changes": "B2→B4 10m 낙차에 수평17.32m(30°) 에스컬레이터 쌍으로 재구성. 고정계단은 남쪽 별도 불투명 구획에 보존. 흰 회색 대판석,밝은 하부 착지부·유리 가드·2명과 기존 B4 연결 바닥 유지.",
+          "positions": "벨트 x=-63→-45.6795,z=-84.4/-82.2; 계단 분리벽 z=-80.95; 하부 바닥 x=-45.6795..-25,y=-21",
+          "limits_or_reason": "원본에서 정확한 비행 길이는 측량 불가; 30° 표준 경사로 장면 비율을 맞춘 추정."
+        },
+        {
+          "id": "st-07",
+          "priority": "layout",
+          "status": "implemented_pending_render",
+          "raw_frame_check": "원본 프레임을 root/독립 감사 에이전트가 열어 검증; 카메라6항목은 trace 에이전트도 직접 열어 확인",
+          "photos": "AHB7dR-5aOU_157.jpg",
+          "changes": "기존 로프를5포스트 길이4.6m로 늘려 관찰자 쪽으로 이동. 기둥을 크림색 반지름0.6m로 하고 북쪽으로 옮겨 새 카메라 앞왼쪽에 배치,파란 상단 표지 추가. 입간판 이동,기존 바닥 화살표 보존.",
+          "positions": "기둥(-70.5,-81); 로프 x=-69.35,z=-77.8..-82.4; 입간판(-70.3,-78.6)",
+          "limits_or_reason": "기둥의5m 이동은 무빙워크 끝·하행입구를 한 프레임에 담는 모델 배치 추정."
+        },
+        {
+          "id": "st-08",
+          "priority": "layout",
+          "status": "implemented_pending_render",
+          "raw_frame_check": "원본 프레임을 root/독립 감사 에이전트가 열어 검증; 카메라6항목은 trace 에이전트도 직접 열어 확인",
+          "photos": "zPXe32QRyJo_77.jpg, zPXe32QRyJo_64.jpg",
+          "changes": "7호선 하부 홀에5.5m 간격 반지름.45m의 광택 스테인리스 기둥 행과 짧은 반대편 행·아크릴 안내판을 추가. 해당 홀 벽광고는 격칸 간격으로 조정,다른 광고/기둥 보존.",
+          "positions": "concourse7 s=104..142.5,v=-5.5; 짧은행 v=5.2,s≤120.5; 아크릴 패널 s=109.5,v=5.2",
+          "limits_or_reason": "원본의 우측 행·좌측 군집이 기준. 정확한 기둥 그리드는 미실측."
+        },
+        {
+          "id": "st-09",
+          "priority": "layout",
+          "status": "candidate_unverified",
+          "raw_frame_check": "원본 프레임을 root/독립 감사 에이전트가 열어 검증; 카메라6항목은 trace 에이전트도 직접 열어 확인",
+          "photos": "AlqE1LnWVr0_212.jpg",
+          "changes": "검은 마스크로 가려진 측면 광고는 보존. 북쪽 모서리 정면에 흰 패널·문·노란 금지 표식을 추가하고 가까운 겨울옷 승객8명 배치,카메라를 모서리로 이동.",
+          "positions": "카메라(40,-11,-51.5),yaw0; 문(38.4,-57.08),표식(38.4,-56.4); 군중 x=37.4..42.6,z=-53.2..-55.4",
+          "limits_or_reason": "가려진 원본으로 정확한 위치는 미확인. 기존 측면 광고를 지우라는 최초 주장은 반증 부족으로 미적용."
+        },
+        {
+          "id": "st-10",
+          "priority": "design",
+          "status": "implemented_pending_render",
+          "raw_frame_check": "원본 프레임을 root/독립 감사 에이전트가 열어 검증; 카메라6항목은 trace 에이전트도 직접 열어 확인",
+          "photos": "zPXe32QRyJo_16.jpg, xmLYPNlwtkU_24.jpg, xmLYPNlwtkU_72.jpg",
+          "changes": "역명 타원·주변 안내 지도·보라 화면·광고·TV·안전 표식 quad의 UV를 하단(0,0),상단(1,1) 기준으로 정정. 지도/보라 화면은 서향 관찰자의 좌→우(z-w/2→z+w/2),TV는 동향 관찰자의 좌→우가 되도록 quad 가로 정점 순서도 정정하여 좌우 미러도 제거.",
+          "positions": "지도 x=-86.22,z=-60; 타원은 l3 s=87/137; 공통 adPanel 포함",
+          "limits_or_reason": "텍스트/그림 상하 반전만 수정."
+        },
+        {
+          "id": "st-11",
+          "priority": "design",
+          "status": "implemented_pending_render",
+          "raw_frame_check": "원본 프레임을 root/독립 감사 에이전트가 열어 검증; 카메라6항목은 trace 에이전트도 직접 열어 확인",
+          "photos": "xmLYPNlwtkU_24.jpg",
+          "changes": "사선 벽 상부의 목재 천장과 타원은 다른 베이로 이동. 사선 벽에는 주황 띠·짙은 역명,좌측 스테인리스 소화전함·빨간 벨,그 오른쪽 공기청정기·빨간 구호함 배치. 광고판은 이웃 베이로 옮겨 보존.",
+          "positions": "목재 s=111→135(z=-90); 사선벽 띠 l3 s=113,y=-8.25..-7.85; 소화전 s=116.5(z=-108.5); 청정기 s=114.6(z=-110.4); 구호함 s=112(z=-113)",
+          "limits_or_reason": "원본의 흰 천장/띠/기기 좌우를 반영."
+        },
+        {
+          "id": "st-12",
+          "priority": "design",
+          "status": "implemented_pending_render",
+          "raw_frame_check": "원본 프레임을 root/독립 감사 에이전트가 열어 검증; 카메라6항목은 trace 에이전트도 직접 열어 확인",
+          "photos": "zPXe32QRyJo_40.jpg, xmLYPNlwtkU_40.jpg",
+          "changes": "3호선 B1에1.9m 행 간격,3m 열 간격의1.2m 선형등을 촘촘히 추가. 두 거친 기둥 한 면에 청색 LED 수직 띠 추가.",
+          "positions": "조명 z=-45..-69.7,x=-101.5..-83.5,실제 계단 void 제외; LED(-93.8,-58),(-88.3,-55)",
+          "limits_or_reason": "발광색 #fbfbf4/#2f6fe0."
+        },
+        {
+          "id": "st-13",
+          "priority": "design",
+          "status": "implemented_pending_render",
+          "raw_frame_check": "원본 프레임을 root/독립 감사 에이전트가 열어 검증; 카메라6항목은 trace 에이전트도 직접 열어 확인",
+          "photos": "AHB7dR-5aOU_107.jpg, w7cLZSedgT4_50.jpg",
+          "changes": "공통 개찰구 상부 캡을 몸통 위 y+1.005로 올려 겹침 제거. 강철 캡 #c9ccd0,gloss.6,안쪽 흰 발광 띠.",
+          "positions": "게이트 몸체높이1m;캡 y+1.005..1.055;띠 y+1.057",
+          "limits_or_reason": "기존 녹색 게이트 색은 보존."
+        },
+        {
+          "id": "st-14",
+          "priority": "design",
+          "status": "implemented_pending_render",
+          "raw_frame_check": "원본 프레임을 root/독립 감사 에이전트가 열어 검증; 카메라6항목은 trace 에이전트도 직접 열어 확인",
+          "photos": "AHB7dR-5aOU_132.jpg",
+          "changes": "3·9호선 무빙워크 벽을 옅은 분홍 #f2b3c8과 큰 흰 카피 형태/연분홍 패널로 교체. 조명은 통로를 가로지르는1.2m등3개씩2.4m 간격 행으로 배치.",
+          "positions": "분홍 벽 x=-64.12,z=-74.5..-60.5;큰 흰 형태 중심 z=-72.7/-68.4/-64.1",
+          "limits_or_reason": "읽을 수 없는 캠페인 문구는 글자처럼 보이는 비문자 획으로 나타내며 상호/문구를 창작하지 않음."
+        },
+        {
+          "id": "st-15",
+          "priority": "design",
+          "status": "implemented_pending_render",
+          "raw_frame_check": "원본 프레임을 root/독립 감사 에이전트가 열어 검증; 카메라6항목은 trace 에이전트도 직접 열어 확인",
+          "photos": "zPXe32QRyJo_77.jpg",
+          "changes": "중복되던4번 출구 안내판을 일반 환승표지와 다른 위치로 이동.",
+          "positions": "concourse7 s=119→126,v=0,y=-8.62",
+          "limits_or_reason": "기존 일반 hanging 표지는 보존."
+        },
+        {
+          "id": "st-16",
+          "priority": "design",
+          "status": "implemented_pending_render",
+          "raw_frame_check": "원본 프레임을 root/독립 감사 에이전트가 열어 검증; 카메라6항목은 trace 에이전트도 직접 열어 확인",
+          "photos": "w7cLZSedgT4_70.jpg, xmLYPNlwtkU_88.jpg",
+          "changes": "3호선 연결 홀에만 밝고 희박한 대리석 마감 추가. 두 둥근 대리석 기둥을0.9m 사각 기둥으로,구호함 뒤를 리브 마감으로 변경. 해당 계단 가드는 스테인리스 천공 패널로 변경.",
+          "positions": "사각기둥(-94,-66.5),(-88.4,-67.1);리브(-94.1,-66.05);천공가드 x=-94.6,z=-66.2..-48.5",
+          "limits_or_reason": "7호선 등 다른 대리석은 그대로 유지."
+        },
+        {
+          "id": "st-17",
+          "priority": "design",
+          "status": "implemented_pending_render",
+          "raw_frame_check": "원본 프레임을 root/독립 감사 에이전트가 열어 검증; 카메라6항목은 trace 에이전트도 직접 열어 확인",
+          "photos": "AHB7dR-5aOU_257.jpg",
+          "changes": "9호선 PSD 프레임을 #3a5478로,붉은 가로대를 #8a8d95 회색 띠로 변경. 하나의 평평한 회색 띠에6-2,노란 휠체어→5m,흰 금지 원형2개를 관찰자 왼쪽부터 배치.",
+          "positions": "l9 s≈205.75,v=-5.24,y=-19.92,폭2.6m; 쿼드 회전 q.rot+π/2로 승강장 관찰자 방향 확인",
+          "limits_or_reason": "원본 문양을 단순 선으로 재현,기존 바닥 번호 유지."
+        },
+        {
+          "id": "st-18",
+          "priority": "detail",
+          "status": "implemented_pending_render",
+          "raw_frame_check": "원본 프레임을 root/독립 감사 에이전트가 열어 검증; 카메라6항목은 trace 에이전트도 직접 열어 확인",
+          "photos": "zPXe32QRyJo_40.jpg, w7cLZSedgT4_90.jpg, xmLYPNlwtkU_72.jpg, xmLYPNlwtkU_88.jpg, AlqE1LnWVr0_232.jpg",
+          "changes": "특정 카메라를 가리던 인물3명을 이동하고 ENTER6 근접 중복1명만 삭제. E게이트 앞의 실제 근접 보행자는 보존. 배열 삭제 후 남은 인물의 기존 색/방향 인덱스도 보존;E보행자는 황갈색 코트·배낭을 유지하며 동쪽 진행 방향(rotY=-π/2)으로 교정.",
+          "positions": "(-90.4,-60)→(-90.6,-56.5);(-87.4,-58.7)→(-85.5,-55.5);(-91.5,-64.3)→(-93.5,-61);(-85.8,-67.9)삭제;(-86.4,-65.5)보존",
+          "limits_or_reason": "리뷰에서 지적되지 않은 군중은 보존."
+        },
+        {
+          "id": "st-19",
+          "priority": "detail",
+          "status": "implemented_pending_render",
+          "raw_frame_check": "원본 프레임을 root/독립 감사 에이전트가 열어 검증; 카메라6항목은 trace 에이전트도 직접 열어 확인",
+          "photos": "zPXe32QRyJo_27.jpg",
+          "changes": "3호선 상승 에스컬레이터의3명 승객을 올라가는+z방향으로 회전.",
+          "positions": "x=-98.2,z=-60.1/-56.2/-51.5;rotY=Math.PI",
+          "limits_or_reason": "위치/옷은 유지."
+        },
+        {
+          "id": "st-20",
+          "priority": "detail",
+          "status": "implemented_pending_render",
+          "raw_frame_check": "원본 프레임을 root/독립 감사 에이전트가 열어 검증; 카메라6항목은 trace 에이전트도 직접 열어 확인",
+          "photos": "AlqE1LnWVr0_252.jpg, zPXe32QRyJo_16.jpg",
+          "changes": "원형 청색 바닥 화살표 주변을 어두운 세립 화강석으로,둥근 회색 물체·갈색 띠 추가.3호선 플랫폼에는 녹색 얇은 바닥선과 전면 막힌 연속 낮은 벤치.",
+          "positions": "물체(-90.9,-56.2),r.3,h.9;벤치 l3 s=87,v=16.35,6m;녹색선 s=87,v=14.2,폭.1m",
+          "limits_or_reason": "사진은 물체 하단만 보여 쓰레기통이라는 해석과 전체 높이는 추정. 벤치 재질도 미확인."
+        },
+        {
+          "id": "st-21",
+          "priority": "camera",
+          "status": "candidate_unverified",
+          "raw_frame_check": "원본 프레임을 root/독립 감사 에이전트가 열어 검증; 카메라6항목은 trace 에이전트도 직접 열어 확인",
+          "photos": "w7cLZSedgT4_110.jpg",
+          "changes": "3호선 대합실 표지 아래 시점을 벗어나 B1 경부선 방향 연결 후보로 이동.",
+          "positions": "카메라(14,-6,-125),yaw270,pitch0",
+          "limits_or_reason": "실제 촬영위치/상점·천장·경부선 표지 일치는 미확인.지원 바닥만 검증."
+        },
+        {
+          "id": "st-22",
+          "priority": "camera",
+          "status": "pose_corrected_pending_render",
+          "raw_frame_check": "원본 프레임을 root/독립 감사 에이전트가 열어 검증; 카메라6항목은 trace 에이전트도 직접 열어 확인",
+          "photos": "AlqE1LnWVr0_142.jpg",
+          "changes": "기존 상승 에스컬레이터 좌표·지지높이·yaw를 유지하고 pitch -18→+2.",
+          "positions": "(-29.158721,-15.022437395,152.082741),yaw214.711795,pitch2",
+          "limits_or_reason": "반대 yaw로 바꾸라는 초기 제안은 실제 상승방향과 모순되어 미적용."
+        },
+        {
+          "id": "st-23",
+          "priority": "camera",
+          "status": "unresolved",
+          "raw_frame_check": "원본 프레임을 root/독립 감사 에이전트가 열어 검증; 카메라6항목은 trace 에이전트도 직접 열어 확인",
+          "photos": "zPXe32QRyJo_52.jpg",
+          "changes": "반증된 카메라 후보는 적용하지 않고 기존 포즈를 미해결로 기록. 녹색4번출구 표지는.3m 높임.",
+          "positions": "기존(-82.1,-6,-66.8),yaw182,pitch-2;표지(-82.1,-3.27,-65.5)",
+          "limits_or_reason": "현 동측 계단 뱅크에서 사진의 오른쪽 흰/올리브 벽과 앞왼쪽 게이트를 동시에 만족하는 검증된 시점이 없음. (-82.5,-6,-63,yaw0)은 게이트를 뒤로 보내므로 미적용."
+        },
+        {
+          "id": "st-24",
+          "priority": "camera",
+          "status": "unresolved",
+          "raw_frame_check": "원본 프레임을 root/독립 감사 에이전트가 열어 검증; 카메라6항목은 trace 에이전트도 직접 열어 확인",
+          "photos": "xmLYPNlwtkU_56.jpg",
+          "changes": "반증된 포즈는 미적용,기존 시점을 미해결로 기록.기둥은 #8f8e8a의 거친 화강석으로 교정.",
+          "positions": "기존(-90.2,-6,-54.7),yaw0;거친기둥(-93.8,-58),(-88.3,-55),(-88,-49)",
+          "limits_or_reason": "사진의 오른쪽 사선 게이트와 정면 B표지/왼쪽 기둥을 한 시점에서 맞추지 못함. (-95,-6,-57.5,yaw300)은 게이트를 왼쪽으로 보내므로 미적용."
+        },
+        {
+          "id": "st-25",
+          "priority": "camera",
+          "status": "geometry_derived_pending_render",
+          "raw_frame_check": "원본 프레임을 root/독립 감사 에이전트가 열어 검증; 카메라6항목은 trace 에이전트도 직접 열어 확인",
+          "photos": "AHB7dR-5aOU_157.jpg",
+          "changes": "st-07 기둥/로프 재배치 후 무빙워크 밖 착지부에서 북쪽을 보도록 이동.",
+          "positions": "카메라(-67.4,-11,-76.2),yaw0,pitch-3",
+          "limits_or_reason": "계산상 기둥 약33°왼쪽,하행입구 약36°오른쪽. 새 원근과 두 여성 승객 배치는 미렌더 상태."
+        }
+      ],
+      "skipped_or_unresolved": [
+        {
+          "id": "st-03",
+          "status": "partial_external_dependency",
+          "reason": "gotomall의 대응 남쪽 벽은 현 상태에서 막혀 있다. _junctions.js/gotomall.js 수정 금지로 새 공유 개구부 연결은 미완료. 신세계 x=-79 벽으로의 우회도 막힘. 이웃 작업의 별도 개방이 필요."
+        },
+        {
+          "id": "st-09",
+          "status": "candidate_unverified",
+          "reason": "가려진 원본으로 정확한 위치는 미확인. 기존 측면 광고를 지우라는 최초 주장은 반증 부족으로 미적용."
+        },
+        {
+          "id": "st-21",
+          "status": "candidate_unverified",
+          "reason": "실제 촬영위치/상점·천장·경부선 표지 일치는 미확인.지원 바닥만 검증."
+        },
+        {
+          "id": "st-23",
+          "status": "unresolved",
+          "reason": "현 동측 계단 뱅크에서 사진의 오른쪽 흰/올리브 벽과 앞왼쪽 게이트를 동시에 만족하는 검증된 시점이 없음. (-82.5,-6,-63,yaw0)은 게이트를 뒤로 보내므로 미적용."
+        },
+        {
+          "id": "st-24",
+          "status": "unresolved",
+          "reason": "사진의 오른쪽 사선 게이트와 정면 B표지/왼쪽 기둥을 한 시점에서 맞추지 못함. (-95,-6,-57.5,yaw300)은 게이트를 왼쪽으로 보내므로 미적용."
+        }
+      ],
+      "remaining_guesses": [
+        "지하 통로/상점/기둥 배치는 원본 비율과 공유 월드 경계를 맞춘 모델 좌표이며 실측되지 않음.",
+        "st-03 고투몰 경계 개방은 이웃 모듈 편집 금지 때문에 완료하지 못함.",
+        "st-09/st-21/st-25 새 카메라는 바닥/캡슐 검사를 통과한 합성 후보이며 화면 일치는 재렌더 필요.",
+        "st-23/st-24 카메라/배치 대응은 미해결.",
+        "st-20 원통 물체의 쓰레기통 해석/높이·벤치 재질,st-05 게이트 개수,st-14 판독 불가능한 캠페인 문구는 미확인."
+      ]
+    },
+    "qa_round17": {
+      "camera_checks": {
+        "camera_count": 28,
+        "contexts": [
+          {
+            "context": "standalone",
+            "results": [
+              {
+                "frame": "zPXe32QRyJo_16",
+                "support_y": -11,
+                "delta_y": 0,
+                "capsule_push_m": 0
+              },
+              {
+                "frame": "xmLYPNlwtkU_24",
+                "support_y": -11,
+                "delta_y": 0,
+                "capsule_push_m": 0
+              },
+              {
+                "frame": "xmLYPNlwtkU_8",
+                "support_y": -11,
+                "delta_y": 0,
+                "capsule_push_m": 0
+              },
+              {
+                "frame": "zPXe32QRyJo_27",
+                "support_y": -9.88788888888889,
+                "delta_y": 1.1110934394764627e-10,
+                "capsule_push_m": 0
+              },
+              {
+                "frame": "zPXe32QRyJo_40",
+                "support_y": -6,
+                "delta_y": 0,
+                "capsule_push_m": 0
+              },
+              {
+                "frame": "xmLYPNlwtkU_40",
+                "support_y": -6,
+                "delta_y": 0,
+                "capsule_push_m": 0
+              },
+              {
+                "frame": "zPXe32QRyJo_52",
+                "support_y": -6,
+                "delta_y": 0,
+                "capsule_push_m": 0
+              },
+              {
+                "frame": "zPXe32QRyJo_64",
+                "support_y": -11,
+                "delta_y": 0,
+                "capsule_push_m": 0
+              },
+              {
+                "frame": "zPXe32QRyJo_77",
+                "support_y": -11,
+                "delta_y": 0,
+                "capsule_push_m": 0
+              },
+              {
+                "frame": "w7cLZSedgT4_50",
+                "support_y": -6,
+                "delta_y": 0,
+                "capsule_push_m": 0
+              },
+              {
+                "frame": "w7cLZSedgT4_70",
+                "support_y": -6,
+                "delta_y": 0,
+                "capsule_push_m": 0
+              },
+              {
+                "frame": "w7cLZSedgT4_90",
+                "support_y": -6,
+                "delta_y": 0,
+                "capsule_push_m": 0
+              },
+              {
+                "frame": "w7cLZSedgT4_110",
+                "support_y": -6,
+                "delta_y": 0,
+                "capsule_push_m": 0
+              },
+              {
+                "frame": "w7cLZSedgT4_30",
+                "support_y": -11,
+                "delta_y": 0,
+                "capsule_push_m": 0
+              },
+              {
+                "frame": "xmLYPNlwtkU_56",
+                "support_y": -6,
+                "delta_y": 0,
+                "capsule_push_m": 0
+              },
+              {
+                "frame": "xmLYPNlwtkU_72",
+                "support_y": -6,
+                "delta_y": 0,
+                "capsule_push_m": 0
+              },
+              {
+                "frame": "xmLYPNlwtkU_88",
+                "support_y": -6,
+                "delta_y": 0,
+                "capsule_push_m": 0
+              },
+              {
+                "frame": "AlqE1LnWVr0_232",
+                "support_y": -6,
+                "delta_y": 0,
+                "capsule_push_m": 0
+              },
+              {
+                "frame": "AlqE1LnWVr0_252",
+                "support_y": -6,
+                "delta_y": 0,
+                "capsule_push_m": 0
+              },
+              {
+                "frame": "AlqE1LnWVr0_212",
+                "support_y": -11,
+                "delta_y": 0,
+                "capsule_push_m": 0
+              },
+              {
+                "frame": "AlqE1LnWVr0_142",
+                "support_y": -15.022437395421056,
+                "delta_y": -4.2105519071355957e-10,
+                "capsule_push_m": 0
+              },
+              {
+                "frame": "AHB7dR-5aOU_107",
+                "support_y": -11,
+                "delta_y": 0,
+                "capsule_push_m": 0
+              },
+              {
+                "frame": "AHB7dR-5aOU_132",
+                "support_y": -10.975,
+                "delta_y": 0,
+                "capsule_push_m": 0
+              },
+              {
+                "frame": "AHB7dR-5aOU_157",
+                "support_y": -11,
+                "delta_y": 0,
+                "capsule_push_m": 0
+              },
+              {
+                "frame": "AHB7dR-5aOU_182",
+                "support_y": -11,
+                "delta_y": 0,
+                "capsule_push_m": 0
+              },
+              {
+                "frame": "AHB7dR-5aOU_207",
+                "support_y": -21,
+                "delta_y": 0,
+                "capsule_push_m": 0
+              },
+              {
+                "frame": "AHB7dR-5aOU_257",
+                "support_y": -21,
+                "delta_y": 0,
+                "capsule_push_m": 0
+              },
+              {
+                "frame": "w7cLZSedgT4_90",
+                "support_y": -6,
+                "delta_y": 0,
+                "capsule_push_m": 0
+              }
+            ],
+            "detail_groups": [
+              {
+                "name": "연결 대합실 · 상점과 벽돌 홀",
+                "quads": 13566,
+                "people": 20
+              },
+              {
+                "name": "중앙 대합실 · 초록 개찰구",
+                "quads": 5336,
+                "people": 14
+              },
+              {
+                "name": "9호선 상층 · 타원과 출구 홀",
+                "quads": 3418,
+                "people": 4
+              },
+              {
+                "name": "3호선 승강장 · 대리석 출구",
+                "quads": 27221,
+                "people": 101
+              },
+              {
+                "name": "3·7·9호선 환승통로",
+                "quads": 7975,
+                "people": 113
+              },
+              {
+                "name": "7호선 대합실 · 개찰구",
+                "quads": 15422,
+                "people": 75
+              },
+              {
+                "name": "7호선 곡선 승강장",
+                "quads": 22562,
+                "people": 97
+              },
+              {
+                "name": "9호선 분기홀 · 승강장",
+                "quads": 16602,
+                "people": 195
+              },
+              {
+                "name": "9호선 긴 에스컬레이터",
+                "quads": 288,
+                "people": 0
+              },
+              {
+                "name": "3호선 대합실 · 엔터식스 연결상가",
+                "quads": 4158,
+                "people": 41
+              }
+            ],
+            "detail_errors": []
+          },
+          {
+            "context": "integrated",
+            "results": [
+              {
+                "frame": "zPXe32QRyJo_16",
+                "support_y": -11,
+                "delta_y": 0,
+                "capsule_push_m": 0
+              },
+              {
+                "frame": "xmLYPNlwtkU_24",
+                "support_y": -11,
+                "delta_y": 0,
+                "capsule_push_m": 0
+              },
+              {
+                "frame": "xmLYPNlwtkU_8",
+                "support_y": -11,
+                "delta_y": 0,
+                "capsule_push_m": 0
+              },
+              {
+                "frame": "zPXe32QRyJo_27",
+                "support_y": -9.88788888888889,
+                "delta_y": 1.1110934394764627e-10,
+                "capsule_push_m": 0
+              },
+              {
+                "frame": "zPXe32QRyJo_40",
+                "support_y": -6,
+                "delta_y": 0,
+                "capsule_push_m": 0
+              },
+              {
+                "frame": "xmLYPNlwtkU_40",
+                "support_y": -6,
+                "delta_y": 0,
+                "capsule_push_m": 0
+              },
+              {
+                "frame": "zPXe32QRyJo_52",
+                "support_y": -6,
+                "delta_y": 0,
+                "capsule_push_m": 0
+              },
+              {
+                "frame": "zPXe32QRyJo_64",
+                "support_y": -11,
+                "delta_y": 0,
+                "capsule_push_m": 0
+              },
+              {
+                "frame": "zPXe32QRyJo_77",
+                "support_y": -11,
+                "delta_y": 0,
+                "capsule_push_m": 0
+              },
+              {
+                "frame": "w7cLZSedgT4_50",
+                "support_y": -6,
+                "delta_y": 0,
+                "capsule_push_m": 0
+              },
+              {
+                "frame": "w7cLZSedgT4_70",
+                "support_y": -6,
+                "delta_y": 0,
+                "capsule_push_m": 0
+              },
+              {
+                "frame": "w7cLZSedgT4_90",
+                "support_y": -6,
+                "delta_y": 0,
+                "capsule_push_m": 0
+              },
+              {
+                "frame": "w7cLZSedgT4_110",
+                "support_y": -6,
+                "delta_y": 0,
+                "capsule_push_m": 0
+              },
+              {
+                "frame": "w7cLZSedgT4_30",
+                "support_y": -11,
+                "delta_y": 0,
+                "capsule_push_m": 0
+              },
+              {
+                "frame": "xmLYPNlwtkU_56",
+                "support_y": -6,
+                "delta_y": 0,
+                "capsule_push_m": 0
+              },
+              {
+                "frame": "xmLYPNlwtkU_72",
+                "support_y": -6,
+                "delta_y": 0,
+                "capsule_push_m": 0
+              },
+              {
+                "frame": "xmLYPNlwtkU_88",
+                "support_y": -6,
+                "delta_y": 0,
+                "capsule_push_m": 0
+              },
+              {
+                "frame": "AlqE1LnWVr0_232",
+                "support_y": -6,
+                "delta_y": 0,
+                "capsule_push_m": 0
+              },
+              {
+                "frame": "AlqE1LnWVr0_252",
+                "support_y": -6,
+                "delta_y": 0,
+                "capsule_push_m": 0
+              },
+              {
+                "frame": "AlqE1LnWVr0_212",
+                "support_y": -11,
+                "delta_y": 0,
+                "capsule_push_m": 0
+              },
+              {
+                "frame": "AlqE1LnWVr0_142",
+                "support_y": -15.022437395421056,
+                "delta_y": -4.2105519071355957e-10,
+                "capsule_push_m": 0
+              },
+              {
+                "frame": "AHB7dR-5aOU_107",
+                "support_y": -11,
+                "delta_y": 0,
+                "capsule_push_m": 0
+              },
+              {
+                "frame": "AHB7dR-5aOU_132",
+                "support_y": -10.975,
+                "delta_y": 0,
+                "capsule_push_m": 0
+              },
+              {
+                "frame": "AHB7dR-5aOU_157",
+                "support_y": -11,
+                "delta_y": 0,
+                "capsule_push_m": 0
+              },
+              {
+                "frame": "AHB7dR-5aOU_182",
+                "support_y": -11,
+                "delta_y": 0,
+                "capsule_push_m": 0
+              },
+              {
+                "frame": "AHB7dR-5aOU_207",
+                "support_y": -21,
+                "delta_y": 0,
+                "capsule_push_m": 0
+              },
+              {
+                "frame": "AHB7dR-5aOU_257",
+                "support_y": -21,
+                "delta_y": 0,
+                "capsule_push_m": 0
+              },
+              {
+                "frame": "w7cLZSedgT4_90",
+                "support_y": -6,
+                "delta_y": 0,
+                "capsule_push_m": 0
+              }
+            ],
+            "detail_groups": [
+              {
+                "name": "연결 대합실 · 상점과 벽돌 홀",
+                "quads": 13566,
+                "people": 20
+              },
+              {
+                "name": "중앙 대합실 · 초록 개찰구",
+                "quads": 18,
+                "people": 0
+              },
+              {
+                "name": "9호선 상층 · 타원과 출구 홀",
+                "quads": 390,
+                "people": 0
+              },
+              {
+                "name": "3호선 승강장 · 대리석 출구",
+                "quads": 27221,
+                "people": 101
+              },
+              {
+                "name": "3·7·9호선 환승통로",
+                "quads": 7975,
+                "people": 113
+              },
+              {
+                "name": "7호선 대합실 · 개찰구",
+                "quads": 15422,
+                "people": 75
+              },
+              {
+                "name": "7호선 곡선 승강장",
+                "quads": 22562,
+                "people": 97
+              },
+              {
+                "name": "9호선 분기홀 · 승강장",
+                "quads": 16602,
+                "people": 195
+              },
+              {
+                "name": "9호선 긴 에스컬레이터",
+                "quads": 288,
+                "people": 0
+              },
+              {
+                "name": "3호선 대합실 · 엔터식스 연결상가",
+                "quads": 4158,
+                "people": 41
+              }
+            ],
+            "detail_errors": []
+          }
+        ],
+        "rendered": false,
+        "scope": "Actual kit/physics support and capsule occupancy only; no image matching claim."
+      },
+      "targeted_routes": {
+        "method": "Existing tests/walk.mjs BFS reused in memory, station standalone, all lazy detail; test files unchanged",
+        "results": [
+          {
+            "name": "west up",
+            "ok": true,
+            "cells": 1915
+          },
+          {
+            "name": "west stair",
+            "ok": true,
+            "cells": 2215
+          },
+          {
+            "name": "east down",
+            "ok": true,
+            "cells": 642
+          },
+          {
+            "name": "new 9 flight",
+            "ok": true,
+            "cells": 813
+          },
+          {
+            "name": "new 9 lower link",
+            "ok": true,
+            "cells": 2586
+          },
+          {
+            "name": "hidden 9 stair",
+            "ok": true,
+            "cells": 768
+          },
+          {
+            "name": "hidden 9 stair lower link",
+            "ok": true,
+            "cells": 1674
+          }
+        ],
+        "blocked": 0
+      },
+      "leak_rays": {
+        "scope": "Station standalone opaque meshes only; eye height1.62; rays check specific former street-leak directions; no rendered proof",
+        "results": [
+          {
+            "id": "st-01",
+            "yaw": 90,
+            "pitch": 0,
+            "distance_m": 8.710003662109372,
+            "point": [
+              -106.91000366210938,
+              -8.267888888999998,
+              -62
+            ]
+          },
+          {
+            "id": "st-01",
+            "yaw": 90,
+            "pitch": 12,
+            "distance_m": 3.665094776514204,
+            "point": [
+              -101.78500366210938,
+              -7.505872837007592,
+              -62
+            ]
+          },
+          {
+            "id": "st-01",
+            "yaw": 90,
+            "pitch": 25,
+            "distance_m": 2.316512002071731,
+            "point": [
+              -100.29947286624147,
+              -7.288888613382976,
+              -62
+            ]
+          },
+          {
+            "id": "st-01",
+            "yaw": 135,
+            "pitch": 0,
+            "distance_m": 4.310524491814613,
+            "point": [
+              -101.24800109863281,
+              -8.267888888999998,
+              -58.95199890136719
+            ]
+          },
+          {
+            "id": "st-01",
+            "yaw": 135,
+            "pitch": 12,
+            "distance_m": 6.766377163004148,
+            "point": [
+              -102.87999725341797,
+              -6.861079972329133,
+              -57.320002746582034
+            ]
+          },
+          {
+            "id": "st-01",
+            "yaw": 135,
+            "pitch": 25,
+            "distance_m": 4.002411288490864,
+            "point": [
+              -100.7649708178415,
+              -6.576396787486636,
+              -59.435029182158495
+            ]
+          },
+          {
+            "id": "st-01",
+            "yaw": 225,
+            "pitch": 0,
+            "distance_m": 4.214354689536912,
+            "point": [
+              -95.22000122070312,
+              -8.267888888999998,
+              -59.02000122070312
+            ]
+          },
+          {
+            "id": "st-01",
+            "yaw": 225,
+            "pitch": 12,
+            "distance_m": 5.031409847584744,
+            "point": [
+              -94.72000122070312,
+              -7.221799960391529,
+              -58.52000122070312
+            ]
+          },
+          {
+            "id": "st-01",
+            "yaw": 225,
+            "pitch": 25,
+            "distance_m": 4.002411288490864,
+            "point": [
+              -95.6350291821585,
+              -6.576396787486635,
+              -59.435029182158495
+            ]
+          },
+          {
+            "id": "st-02",
+            "yaw": 250,
+            "pitch": 0,
+            "distance_m": 3.0861171639865606,
+            "point": [
+              -64.0999984741211,
+              -9.379999999999999,
+              -48.14448576525351
+            ]
+          },
+          {
+            "id": "st-02",
+            "yaw": 250,
+            "pitch": 12,
+            "distance_m": 3.155062857253198,
+            "point": [
+              -64.0999984741211,
+              -8.724025546712175,
+              -48.14448576525351
+            ]
+          },
+          {
+            "id": "st-02",
+            "yaw": 250,
+            "pitch": 25,
+            "distance_m": 2.839441177675581,
+            "point": [
+              -64.58178782087074,
+              -8.180000305175781,
+              -48.31984274665694
+            ]
+          },
+          {
+            "id": "st-02",
+            "yaw": 270,
+            "pitch": 0,
+            "distance_m": 2.9000015258789062,
+            "point": [
+              -64.0999984741211,
+              -9.379999999999999,
+              -49.2
+            ]
+          },
+          {
+            "id": "st-02",
+            "yaw": 270,
+            "pitch": 12,
+            "distance_m": 2.9647892850765336,
+            "point": [
+              -64.0999984741211,
+              -8.763585646821362,
+              -49.2
+            ]
+          },
+          {
+            "id": "st-02",
+            "yaw": 270,
+            "pitch": 25,
+            "distance_m": 2.8394411776755795,
+            "point": [
+              -64.4265923498401,
+              -8.180000305175781,
+              -49.2
+            ]
+          },
+          {
+            "id": "st-02",
+            "yaw": 315,
+            "pitch": 0,
+            "distance_m": 3.224405195875742,
+            "point": [
+              -64.72000122070312,
+              -9.379999999999999,
+              -51.47999877929688
+            ]
+          },
+          {
+            "id": "st-02",
+            "yaw": 315,
+            "pitch": 12,
+            "distance_m": 3.296440326037497,
+            "point": [
+              -64.72000122070312,
+              -8.694631518133697,
+              -51.47999877929688
+            ]
+          },
+          {
+            "id": "st-02",
+            "yaw": 315,
+            "pitch": 25,
+            "distance_m": 2.8394411776755817,
+            "point": [
+              -65.1803259998146,
+              -8.180000305175781,
+              -51.019674000185404
+            ]
+          }
+        ]
+      },
+      "smoke": {
+        "required": {
+          "command": "node tests/smoke.mjs station streets gotomall centralcity banpo_shoppingtown --quiet",
+          "result": "OK",
+          "status": "passed",
+          "warning": "streets claims require operator _meta.json refresh; file outside edit scope"
+        },
+        "isolation": {
+          "command": "node tests/smoke.mjs centralcity",
+          "result": "same24 elevator floor check failures",
+          "conclusion": "Failures reproduce without station/streets; no edit to forbidden neighbor module."
+        },
+        "allowed_modules": {
+          "command": "node tests/smoke.mjs station streets gotomall banpo_shoppingtown",
+          "result": "OK",
+          "status": "passed"
+        },
+        "earlier_required": {
+          "command": "node tests/smoke.mjs station streets gotomall centralcity banpo_shoppingtown",
+          "result": "24 problems, all centralcity elevator floor checks",
+          "status": "failed_external_module",
+          "runs": 2
+        }
+      },
+      "global_walk": {
+        "command": "node tests/walk.mjs",
+        "result": "719 ok, 0 blocked",
+        "status": "passed",
+        "one_floor_routes": "All 1F 동선 passed.",
+        "user_routes": "All 사용자 루트 passed.",
+        "note": "Final rerun after concurrent neighbor updates. Earlier failing snapshots are superseded; only the four owned station/streets files were edited by this job."
+      },
+      "rendered": false,
+      "render_limitation": "사용자 지시로 tests/shot.mjs 미실행. 기존 비교 시트와 원본을 검사했으나 수정 후 PNG는 생성하지 않음.",
+      "station_sha256": "8344726d550b4ba4541a3bfb8448f1e4944e11750a7f49b5a21bb39cbc59bb4a",
+      "scope": "Only js/places/station.js and data/research/station.json for station task; no engine, tests, _junctions, other module changes, no commit/push.",
+      "diff_check": "git diff --check -- data/research/station.json passed",
+      "required_smoke_final": {
+        "command": "node tests/smoke.mjs station streets gotomall centralcity banpo_shoppingtown --quiet",
+        "result": "OK",
+        "note": "Earlier24centralcity failures resolved by concurrent owner update; only streets _meta claims warning remains."
+      },
+      "previous_global_walk": {
+        "command": "node tests/walk.mjs",
+        "result": "692 ok, 12 blocked",
+        "status": "failed_in_concurrently_edited_world",
+        "blocked": [
+          "junction J3 gotomall→centralcity B1",
+          "shinsegae 연결부3호기 2F",
+          "shinsegae 신관화장실옆1호기 3F/9F/10F/11F",
+          "shinsegae 신관화장실옆2호기 3F/9F/10F/11F",
+          "centralcity 스위트파크 엘리베이터 B1",
+          "사용자 루트5[3→4](-235.8,8.7)→(-332,-66)"
+        ],
+        "baseline_isolation": "The 사용자 루트5 failure is identical with git HEAD station/streets loaded in memory and other current modules unchanged:747204 BFS cells. The extra11 failures appeared during concurrent edits outside these four owned files; no claim they have all been baseline-isolated.",
+        "one_floor_routes": "All 1F 동선 routes passed. All 사용자 루트 legs except route5[3→4] passed.",
+        "previous_snapshot": "686 ok,1 blocked before concurrent external changes; final snapshot above supersedes it."
+      }
     }
   },
   "interiors_round6": {
