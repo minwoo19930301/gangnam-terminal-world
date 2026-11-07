@@ -4,6 +4,19 @@
   "updated": "2026-11-07",
   "sources": [
     {
+      "url": "refs/user_walk/20261107/manifest.json",
+      "title": "비공개 사용자 직접 보행 사진 562장, 2026-11-07. 인덱스·시간·원본 경로; 공개 자산으로 복사하지 않음.",
+      "capture_date": "2026-11-07"
+    },
+    {
+      "url": "refs/user_walk/20261107/places.json",
+      "title": "사용자가 승인한 보행 장소·층·세계좌표·카메라 방향; pose fixes 반영"
+    },
+    {
+      "url": ".codex-jobs/evidence/up20_honam.json",
+      "title": "호남선 담당 검증 항목: famille/L2,L15; ccm/L6–L10,D4,X1. 형제 cc1f/ccb1 작업과 공유 계약 적용."
+    },
+    {
       "url": "refs/roadview/cc_01_main_gate_plaza_spheres_shinsegae_west_tower.jpg",
       "title": "2026년 6월 센트럴시티 정문: 갈색 쌍파일런·유리 캐노피·C 표장·CENTRAL CITY 간판·석재 구체 3개·여름 수목·화강석 광장·빨간 벤치",
       "capture_date": "2026-06"
@@ -1847,36 +1860,32 @@
         "reviewed_trace7_index": 3
       },
       {
-        "spot": "매표소 카운터",
+        "spot": "호남선 매표소·B1 하행 에스컬레이터 웰",
         "photos": [
-          "refs/interior/cc_hall/08_ticket_counter.jpg"
+          "refs/user_walk/20261107/IMG_0560.jpg"
         ],
-        "x": -83.705,
+        "user_photo_index": 526,
+        "x": -63,
         "y": 0,
-        "z": 90.506,
-        "yawDeg": 111.339,
+        "z": 115.2,
+        "yawDeg": 39.5,
         "floor": "1F",
-        "local_st": [
-          94,
-          19.1
-        ],
-        "reviewed_trace7_index": 4
+        "round20_owner": "honam",
+        "render_status": "operator_render_pending"
       },
       {
-        "spot": "매표소 카운터",
+        "spot": "호남선 매표소·B1 하행 에스컬레이터 웰",
         "photos": [
-          "refs/interior/cc_hall/16_ticket_counter_wide.jpg"
+          "refs/user_walk/20261107/IMG_0561.jpg"
         ],
-        "x": -81.056,
+        "user_photo_index": 527,
+        "x": -63,
         "y": 0,
-        "z": 95.913,
-        "yawDeg": 79.333,
+        "z": 115.2,
+        "yawDeg": 10.7,
         "floor": "1F",
-        "local_st": [
-          100,
-          19.6
-        ],
-        "reviewed_trace7_index": 4
+        "round20_owner": "honam",
+        "render_status": "operator_render_pending"
       },
       {
         "spot": "파미에 주차장 · 주차열",
@@ -2230,21 +2239,19 @@
         "reference_scope": "Officialplan location; dimensions and furnishings inferred."
       },
       {
-        "spot": "공식 육각매장 29 던킨도너츠",
+        "spot": "DUNKIN' · 사진 위치로 옮긴 직사각 부스",
         "photos": [
-          "refs/official/centralcity/terminal_floor_1_ko.png"
+          "refs/user_walk/20261107/IMG_0547.jpg"
         ],
-        "x": -75.986,
+        "user_photo_index": 513,
+        "x": -66.9,
         "y": 0,
-        "z": 123.456,
-        "yawDeg": 21.339,
-        "pitchDeg": 0,
+        "z": 85.6,
+        "yawDeg": 57.345,
         "floor": "1F",
-        "local_st": [
-          127.5,
-          14.3
-        ],
-        "reference_scope": "Officialplan location; dimensions and furnishings inferred."
+        "round20_owner": "honam",
+        "render_status": "operator_render_pending",
+        "camera_qa": "Approved #513 camera, re-aimed at kiosk centre (-85,74)."
       },
       {
         "spot": "쉐이크쉑 · 신세계 출구 오른쪽",
@@ -2853,48 +2860,42 @@
         "camera_status": "Historical position under old HoS/B1 registration; old QA is not current round18 validation."
       },
       {
-        "spot": "파미에 1 JAJU · 점포 전면",
-        "x": -35.77,
-        "y": 0,
-        "z": 174.308,
-        "yawDeg": 21.339,
-        "pitchDeg": 0,
-        "floor": "1F",
-        "local_st": [
-          189.5,
-          33.255
-        ],
-        "target_st": [
-          187.2,
-          33.255
-        ],
+        "spot": "파미에 1층 JAJU 앞",
         "photos": [
-          "refs/official/centralcity/famille_floor_1_ko_map.png"
+          "refs/user_walk/20261107/IMG_0302.jpg"
         ],
-        "round": 11,
-        "camera_qa": "Independent real-kit full-detail audit: clear player support/capsule/headroom and no opaque forward hit within2.5m. Operator image capture remains pending."
+        "user_photo_index": 268,
+        "x": 22,
+        "y": 0,
+        "z": 155.5,
+        "yawDeg": 329.1,
+        "floor": "1F",
+        "round20_owner": "famille",
+        "render_status": "operator_render_pending",
+        "requires_places": [
+          "centralcity",
+          "famille"
+        ],
+        "handoff": "Old node removed here; the new node, fronts and eastern gallery extension are built by famille."
       },
       {
-        "spot": "파미에 2 아그라 · 점포 전면",
-        "x": -41.344,
-        "y": 0,
-        "z": 176.486,
-        "yawDeg": 21.339,
-        "pitchDeg": 0,
-        "floor": "1F",
-        "local_st": [
-          189.5,
-          27.27
-        ],
-        "target_st": [
-          187.2,
-          27.27
-        ],
+        "spot": "파미에 1층 아그라 앞",
         "photos": [
-          "refs/official/centralcity/famille_floor_1_ko_map.png"
+          "refs/user_walk/20261107/IMG_0303.jpg"
         ],
-        "round": 11,
-        "camera_qa": "Independent real-kit full-detail audit: clear player support/capsule/headroom and no opaque forward hit within2.5m. Operator image capture remains pending."
+        "user_photo_index": 269,
+        "x": 22,
+        "y": 0,
+        "z": 155.5,
+        "yawDeg": 252.5,
+        "floor": "1F",
+        "round20_owner": "famille",
+        "render_status": "operator_render_pending",
+        "requires_places": [
+          "centralcity",
+          "famille"
+        ],
+        "handoff": "Old node removed here; the new node, fronts and eastern gallery extension are built by famille."
       },
       {
         "spot": "파미에 3-1 이름 미확인 셀 · 점포 전면",
@@ -3557,26 +3558,23 @@
         "camera_qa": "Independent real-kit full-detail audit: clear player support/capsule/headroom and no opaque forward hit within2.5m. Operator image capture remains pending."
       },
       {
-        "spot": "파미에 32 이름 미확인 셀 · 점포 전면",
-        "x": -38.02,
-        "y": 0,
-        "z": 175.187,
-        "yawDeg": 201.339,
-        "pitchDeg": 0,
-        "floor": "1F",
-        "local_st": [
-          189.5,
-          30.839
-        ],
-        "target_st": [
-          191.6,
-          30.839
-        ],
+        "spot": "파미에 1층 유리지붕 갤러리",
         "photos": [
-          "refs/official/centralcity/famille_floor_1_ko_map.png"
+          "refs/user_walk/20261107/IMG_0309.jpg"
         ],
-        "round": 11,
-        "camera_qa": "Independent real-kit full-detail audit: clear player support/capsule/headroom and no opaque forward hit within2.5m. Operator image capture remains pending."
+        "user_photo_index": 275,
+        "x": 19.3,
+        "y": 0,
+        "z": 153.9,
+        "yawDeg": 91.7,
+        "floor": "1F",
+        "round20_owner": "famille",
+        "render_status": "operator_render_pending",
+        "requires_places": [
+          "centralcity",
+          "famille"
+        ],
+        "handoff": "Old node removed here; the new node, fronts and eastern gallery extension are built by famille."
       },
       {
         "spot": "파미에 1게이트 · 호남선 홀에서 진입",
@@ -3803,38 +3801,42 @@
         "camera_qa": "Independent real-kit full-detail audit: clear player support/capsule/headroom and no opaque forward hit within2.5m. Operator image capture remains pending."
       },
       {
-        "spot": "파미에 중층 에스컬레이터 하부",
-        "x": -43.454,
-        "y": 0,
-        "z": 176.774,
-        "yawDeg": 201.339,
-        "pitchDeg": 0,
-        "floor": "1F",
-        "local_st": [
-          189,
-          25.2
-        ],
+        "spot": "파미에 1층 에스컬레이터 하단",
         "photos": [
-          "refs/official/centralcity/famille_floor_1_ko_map.png"
+          "refs/user_walk/20261107/IMG_0301.jpg"
         ],
-        "reference_scope": "Officialescalatoriconbesideunit32,px1190/py100; run/riseinferred."
+        "user_photo_index": 267,
+        "x": 22,
+        "y": 0,
+        "z": 155.5,
+        "yawDeg": 22.7,
+        "floor": "1F",
+        "round20_owner": "famille",
+        "render_status": "operator_render_pending",
+        "requires_places": [
+          "centralcity",
+          "famille"
+        ],
+        "handoff": "Old node removed here; the new node, fronts and eastern gallery extension are built by famille."
       },
       {
-        "spot": "파미에 중층 에스컬레이터 도착",
-        "x": -39.452,
-        "y": 5,
-        "z": 187.019,
-        "yawDeg": 21.339,
-        "pitchDeg": 0,
-        "floor": "1M",
-        "local_st": [
-          200,
-          25.2
-        ],
+        "spot": "파미에 2→1층 에스컬레이터 상단",
         "photos": [
-          "refs/official/centralcity/famille_M1F.png"
+          "refs/user_walk/20261107/IMG_0296.jpg"
         ],
-        "reference_scope": "M1FDimDimSumsideescalator; run/riseinferred."
+        "user_photo_index": 262,
+        "x": 25.9,
+        "y": 5,
+        "z": 165.8,
+        "yawDeg": 37.1,
+        "floor": "2F",
+        "round20_owner": "famille",
+        "render_status": "operator_render_pending",
+        "requires_places": [
+          "centralcity",
+          "famille"
+        ],
+        "handoff": "Old node removed here; the new node, fronts and eastern gallery extension are built by famille."
       },
       {
         "spot": "터미널 중층 이춘복참치",
@@ -7882,6 +7884,240 @@
         "x": -68.064482,
         "z": 107.456738,
         "yawDeg": 21.33861
+      },
+      {
+        "spot": "호남선 대합실 입구",
+        "photos": [
+          "refs/user_walk/20261107/IMG_0546.jpg"
+        ],
+        "user_photo_index": 512,
+        "x": -65.5,
+        "y": 0,
+        "z": 80.8,
+        "yawDeg": 141.5,
+        "floor": "1F",
+        "round20_owner": "honam",
+        "render_status": "operator_render_pending",
+        "camera_qa": "Full kit + lazy detail: floor y=0, zero capsule collision for the checked photo poses; #520 shares #513 position."
+      },
+      {
+        "spot": "호남선 대합실 8번 승차홈 방향",
+        "photos": [
+          "refs/user_walk/20261107/IMG_0547.jpg"
+        ],
+        "user_photo_index": 513,
+        "x": -66.9,
+        "y": 0,
+        "z": 85.6,
+        "yawDeg": 111.1,
+        "floor": "1F",
+        "round20_owner": "honam",
+        "render_status": "operator_render_pending",
+        "camera_qa": "Full kit + lazy detail: floor y=0, zero capsule collision for the checked photo poses; #520 shares #513 position."
+      },
+      {
+        "spot": "호남선 대합실 이마트24 키오스크",
+        "photos": [
+          "refs/user_walk/20261107/IMG_0553.jpg"
+        ],
+        "user_photo_index": 519,
+        "x": -66.9,
+        "y": 0,
+        "z": 85.6,
+        "yawDeg": 128,
+        "floor": "1F",
+        "round20_owner": "honam",
+        "render_status": "operator_render_pending",
+        "camera_qa": "Full kit + lazy detail: floor y=0, zero capsule collision for the checked photo poses; #520 shares #513 position."
+      },
+      {
+        "spot": "호남선 대합실 곡면 LED 아래",
+        "photos": [
+          "refs/user_walk/20261107/IMG_0554.jpg"
+        ],
+        "user_photo_index": 520,
+        "x": -66.9,
+        "y": 0,
+        "z": 85.6,
+        "yawDeg": 167.8,
+        "floor": "1F",
+        "round20_owner": "honam",
+        "render_status": "operator_render_pending",
+        "camera_qa": "Full kit + lazy detail: floor y=0, zero capsule collision for the checked photo poses; #520 shares #513 position."
+      },
+      {
+        "spot": "호남선 대합실 유니클로 LED 기둥",
+        "photos": [
+          "refs/user_walk/20261107/IMG_0556.jpg"
+        ],
+        "user_photo_index": 522,
+        "x": -66.9,
+        "y": 0,
+        "z": 85.6,
+        "yawDeg": 220.7,
+        "floor": "1F",
+        "round20_owner": "honam",
+        "render_status": "operator_render_pending",
+        "camera_qa": "Full kit + lazy detail: floor y=0, zero capsule collision for the checked photo poses; #520 shares #513 position."
+      },
+      {
+        "spot": "호남선 대합실 이디야 앞",
+        "photos": [
+          "refs/user_walk/20261107/IMG_0557.jpg"
+        ],
+        "user_photo_index": 523,
+        "x": -65.5,
+        "y": 0,
+        "z": 100.1,
+        "yawDeg": 210.6,
+        "floor": "1F",
+        "round20_owner": "honam",
+        "render_status": "operator_render_pending",
+        "camera_qa": "Full kit + lazy detail: floor y=0, zero capsule collision for the checked photo poses; #520 shares #513 position."
+      },
+      {
+        "spot": "호남선 대합실 AED·12번 게이트",
+        "photos": [
+          "refs/user_walk/20261107/IMG_0558.jpg"
+        ],
+        "user_photo_index": 524,
+        "x": -62.4,
+        "y": 0,
+        "z": 113.9,
+        "yawDeg": 167.4,
+        "floor": "1F",
+        "round20_owner": "honam",
+        "render_status": "operator_render_pending",
+        "camera_qa": "Full kit + lazy detail: floor y=0, zero capsule collision for the checked photo poses; #520 shares #513 position."
+      },
+      {
+        "spot": "호남선 매표소·B1 하행 에스컬레이터 웰",
+        "photos": [
+          "refs/user_walk/20261107/IMG_0560.jpg"
+        ],
+        "user_photo_index": 526,
+        "x": -63,
+        "y": 0,
+        "z": 115.2,
+        "yawDeg": 39.5,
+        "floor": "1F",
+        "round20_owner": "honam",
+        "render_status": "operator_render_pending",
+        "camera_qa": "Full kit + lazy detail: floor y=0, zero capsule collision for the checked photo poses; #520 shares #513 position."
+      },
+      {
+        "spot": "호남선 매표소·B1 하행 에스컬레이터 웰",
+        "photos": [
+          "refs/user_walk/20261107/IMG_0561.jpg"
+        ],
+        "user_photo_index": 527,
+        "x": -63,
+        "y": 0,
+        "z": 115.2,
+        "yawDeg": 10.7,
+        "floor": "1F",
+        "round20_owner": "honam",
+        "render_status": "operator_render_pending",
+        "camera_qa": "Full kit + lazy detail: floor y=0, zero capsule collision for the checked photo poses; #520 shares #513 position."
+      },
+      {
+        "spot": "호남선 1F 스위트파크 하행 에스컬레이터 상단",
+        "photos": [
+          "refs/user_walk/20261107/IMG_0562.jpg"
+        ],
+        "user_photo_index": 528,
+        "x": -64.1802,
+        "y": -0.0,
+        "z": 112.4995,
+        "yawDeg": 22.6594,
+        "floor": "1F",
+        "round20_owner": "honam",
+        "render_status": "operator_render_pending",
+        "source_pose": {
+          "x": -64.9,
+          "y": 0,
+          "z": 112.8,
+          "yawDeg": 5.7
+        },
+        "pitchDeg": -22,
+        "camera_qa": "Projected onto the ENE down lane (0.78m offset), y on the slope; source centreline pose retained. Both lanes/support checked."
+      },
+      {
+        "spot": "1F→B1 스위트파크 에스컬레이터",
+        "photos": [
+          "refs/user_walk/20261107/IMG_0564.jpg"
+        ],
+        "user_photo_index": 530,
+        "x": -66.0827,
+        "y": -2.6547,
+        "z": 107.9423,
+        "yawDeg": 22.6594,
+        "floor": "1F",
+        "round20_owner": "honam",
+        "render_status": "operator_render_pending",
+        "source_pose": {
+          "x": -66.7,
+          "y": 0,
+          "z": 108.2,
+          "yawDeg": 33.8
+        },
+        "pitchDeg": -22,
+        "camera_qa": "Projected onto the ENE down lane (0.78m offset), y on the slope; source centreline pose retained. Both lanes/support checked."
+      },
+      {
+        "spot": "1F→B1 스위트파크 에스컬레이터",
+        "photos": [
+          "refs/user_walk/20261107/IMG_0565.jpg"
+        ],
+        "user_photo_index": 531,
+        "x": -67.277,
+        "y": -4.3211,
+        "z": 105.0817,
+        "yawDeg": 22.6594,
+        "floor": "1F",
+        "round20_owner": "honam",
+        "render_status": "operator_render_pending",
+        "source_pose": {
+          "x": -67.8,
+          "y": 0,
+          "z": 105.3,
+          "yawDeg": 36.9
+        },
+        "pitchDeg": -22,
+        "camera_qa": "Projected onto the ENE down lane (0.78m offset), y on the slope; source centreline pose retained. Both lanes/support checked."
+      },
+      {
+        "spot": "스위트파크 남측 에스컬레이터 도착",
+        "photos": [
+          "refs/user_walk/20261107/IMG_0566.jpg"
+        ],
+        "user_photo_index": 532,
+        "x": -68.4802,
+        "y": -6,
+        "z": 102.1995,
+        "yawDeg": 22.6594,
+        "floor": "B1",
+        "round20_owner": "honam",
+        "render_status": "operator_render_pending",
+        "source_pose": {
+          "x": -69.2,
+          "y": -6,
+          "z": 102.5,
+          "yawDeg": 31.9
+        },
+        "pitchDeg": -22,
+        "camera_qa": "Projected onto the ENE down lane (0.78m offset), y on the slope; source centreline pose retained. Both lanes/support checked."
+      },
+      {
+        "spot": "파미에 기존 갤러리 동단 · 새 모듈 인계",
+        "x": -35,
+        "y": 0,
+        "z": 174,
+        "yawDeg": 291.339,
+        "floor": "1F",
+        "round20_owner": "honam",
+        "camera_qa": "41 samples across local s189.5,t36..41 passed; new eastern extension requires famille.",
+        "render_status": "operator_render_pending"
       }
     ],
     "round7": {
@@ -20976,10 +21212,479 @@
         },
         "uncertainty": "Bodyfriend room location/orientation is an inferred refit; original generated fixtures and area retained."
       }
+    },
+    "trace_before_round20_honam": [
+      {
+        "trace_index": 7,
+        "spot": "매표소 카운터",
+        "photos": [
+          "refs/interior/cc_hall/08_ticket_counter.jpg"
+        ],
+        "x": -83.705,
+        "y": 0,
+        "z": 90.506,
+        "yawDeg": 111.339,
+        "floor": "1F",
+        "local_st": [
+          94,
+          19.1
+        ],
+        "reviewed_trace7_index": 4
+      },
+      {
+        "trace_index": 8,
+        "spot": "매표소 카운터",
+        "photos": [
+          "refs/interior/cc_hall/16_ticket_counter_wide.jpg"
+        ],
+        "x": -81.056,
+        "y": 0,
+        "z": 95.913,
+        "yawDeg": 79.333,
+        "floor": "1F",
+        "local_st": [
+          100,
+          19.6
+        ],
+        "reviewed_trace7_index": 4
+      },
+      {
+        "trace_index": 28,
+        "spot": "공식 육각매장 29 던킨도너츠",
+        "photos": [
+          "refs/official/centralcity/terminal_floor_1_ko.png"
+        ],
+        "x": -75.986,
+        "y": 0,
+        "z": 123.456,
+        "yawDeg": 21.339,
+        "pitchDeg": 0,
+        "floor": "1F",
+        "local_st": [
+          127.5,
+          14.3
+        ],
+        "reference_scope": "Officialplan location; dimensions and furnishings inferred."
+      },
+      {
+        "trace_index": 54,
+        "spot": "파미에 1 JAJU · 점포 전면",
+        "x": -35.77,
+        "y": 0,
+        "z": 174.308,
+        "yawDeg": 21.339,
+        "pitchDeg": 0,
+        "floor": "1F",
+        "local_st": [
+          189.5,
+          33.255
+        ],
+        "target_st": [
+          187.2,
+          33.255
+        ],
+        "photos": [
+          "refs/official/centralcity/famille_floor_1_ko_map.png"
+        ],
+        "round": 11,
+        "camera_qa": "Independent real-kit full-detail audit: clear player support/capsule/headroom and no opaque forward hit within2.5m. Operator image capture remains pending."
+      },
+      {
+        "trace_index": 55,
+        "spot": "파미에 2 아그라 · 점포 전면",
+        "x": -41.344,
+        "y": 0,
+        "z": 176.486,
+        "yawDeg": 21.339,
+        "pitchDeg": 0,
+        "floor": "1F",
+        "local_st": [
+          189.5,
+          27.27
+        ],
+        "target_st": [
+          187.2,
+          27.27
+        ],
+        "photos": [
+          "refs/official/centralcity/famille_floor_1_ko_map.png"
+        ],
+        "round": 11,
+        "camera_qa": "Independent real-kit full-detail audit: clear player support/capsule/headroom and no opaque forward hit within2.5m. Operator image capture remains pending."
+      },
+      {
+        "trace_index": 86,
+        "spot": "파미에 32 이름 미확인 셀 · 점포 전면",
+        "x": -38.02,
+        "y": 0,
+        "z": 175.187,
+        "yawDeg": 201.339,
+        "pitchDeg": 0,
+        "floor": "1F",
+        "local_st": [
+          189.5,
+          30.839
+        ],
+        "target_st": [
+          191.6,
+          30.839
+        ],
+        "photos": [
+          "refs/official/centralcity/famille_floor_1_ko_map.png"
+        ],
+        "round": 11,
+        "camera_qa": "Independent real-kit full-detail audit: clear player support/capsule/headroom and no opaque forward hit within2.5m. Operator image capture remains pending."
+      },
+      {
+        "trace_index": 99,
+        "spot": "파미에 중층 에스컬레이터 하부",
+        "x": -43.454,
+        "y": 0,
+        "z": 176.774,
+        "yawDeg": 201.339,
+        "pitchDeg": 0,
+        "floor": "1F",
+        "local_st": [
+          189,
+          25.2
+        ],
+        "photos": [
+          "refs/official/centralcity/famille_floor_1_ko_map.png"
+        ],
+        "reference_scope": "Officialescalatoriconbesideunit32,px1190/py100; run/riseinferred."
+      },
+      {
+        "trace_index": 100,
+        "spot": "파미에 중층 에스컬레이터 도착",
+        "x": -39.452,
+        "y": 5,
+        "z": 187.019,
+        "yawDeg": 21.339,
+        "pitchDeg": 0,
+        "floor": "1M",
+        "local_st": [
+          200,
+          25.2
+        ],
+        "photos": [
+          "refs/official/centralcity/famille_M1F.png"
+        ],
+        "reference_scope": "M1FDimDimSumsideescalator; run/riseinferred."
+      }
+    ],
+    "round20_honam": {
+      "date": "2026-11-07",
+      "source_priority": "User photographs and approved poses beat official diagrams and previous rounds. Private originals inspected; not copied into publication folders.",
+      "source_indices_inspected": [
+        512,
+        514,
+        517,
+        519,
+        520,
+        522,
+        523,
+        524,
+        526,
+        527,
+        529,
+        532
+      ],
+      "sources": [
+        "refs/user_walk/20261107/IMG_0546.jpg",
+        "refs/user_walk/20261107/IMG_0553.jpg",
+        "refs/user_walk/20261107/IMG_0554.jpg",
+        "refs/user_walk/20261107/IMG_0557.jpg",
+        "refs/user_walk/20261107/IMG_0558.jpg",
+        "refs/user_walk/20261107/IMG_0560.jpg",
+        "refs/user_walk/20261107/IMG_0563.jpg",
+        "refs/user_walk/20261107/IMG_0566.jpg"
+      ],
+      "code_boundary": "Only honam-owned centralcity.js sections and new honamR20(); no engine, tests, junctions, famille or shinsegae edits.",
+      "findings": [
+        {
+          "id": "famille/L2",
+          "status": "handoff_completed",
+          "changed": "Removed old one-way flight P(190..199,25.2), its hole/rails/zone/sign and old east-end cells 1,2,32. Opened wall and 0.55m plinth at the gallery east end.",
+          "world": {
+            "old_flight": [
+              -43,
+              178
+            ],
+            "gallery_end": [
+              -35,
+              174
+            ],
+            "opening_approx": [
+              -30.4,
+              172.3
+            ],
+            "new_pair_owned_by_famille": [
+              [
+                25.9,
+                165.8,
+                5
+              ],
+              [
+                22,
+                155.5,
+                0
+              ]
+            ]
+          }
+        },
+        {
+          "id": "famille/L15",
+          "status": "handoff_completed",
+          "changed": "Removed misplaced JAJU/Agra fronts; no translation of the mirrored plan cells into HOS. New photo-adjacent HOS/Waflle/JAJU/Agra node belongs to famille; western gallery retained.",
+          "world": {
+            "new_JAJU_by_famille": [
+              27.8,
+              152
+            ],
+            "new_Agra_by_famille": [
+              30.3,
+              158.5
+            ]
+          },
+          "qualification": "Remaining western plan-cell locations are not validated by this stretch."
+        },
+        {
+          "id": "ccm/L6",
+          "status": "honam_side_complete_cc1f_handoff",
+          "changed": "16m wide terminal boundary opening and high dropped beam at (-65,81), with trusses immediately west. Open Stage, coffered passage and arcade east of beam belong to cc1f.",
+          "world": {
+            "beam": [
+              -65,
+              81
+            ],
+            "opening_y": [
+              0,
+              8.25
+            ]
+          },
+          "qualification": "Existing JW wall still blocks the straight combined-module line until cc1f opens its facade."
+        },
+        {
+          "id": "ccm/L7",
+          "status": "implemented",
+          "changed": "Deleted the displaced HOS upper slabs, 1F/1M shops, court rails, flights, elevator and upper spawns. Kept B1 sibling data; clipped mixed-floor honey cladding at y0. Restored full-width terminal hall and new northern strip back-fill without editing cc1f copy-deletion lines.",
+          "world": {
+            "clear_band_local_st": [
+              85,
+              23,
+              125,
+              40
+            ],
+            "clear_band_approx_xz": [
+              -85,
+              85,
+              -60,
+              118
+            ],
+            "north_waiting_local_st": [
+              -17,
+              27,
+              13,
+              38.1
+            ],
+            "east_backfill_roof_local_st": [
+              40,
+              23,
+              138,
+              39.5
+            ]
+          }
+        },
+        {
+          "id": "ccm/L8",
+          "status": "implemented",
+          "changed": "Open glass/stainless slot, ENE down lane + WSW up lane, black skirts, explicit level top landing, SHINSEGAE/Sweet Park/Market head panel and B1 directions.",
+          "world": {
+            "corners": [
+              [
+                -71.7,
+                100.8
+              ],
+              [
+                -66.2,
+                114.8
+              ],
+              [
+                -62.5,
+                113.3
+              ],
+              [
+                -68,
+                99.3
+              ]
+            ],
+            "top": [
+              -64.9,
+              112.8,
+              0
+            ],
+            "foot": [
+              -69.2,
+              102.5,
+              -6
+            ],
+            "lane_offsets_m": [
+              -0.78,
+              0.78
+            ]
+          },
+          "qualification": "B1 checker street and old HOS soffit removal remain ccb1-owned."
+        },
+        {
+          "id": "ccm/L9",
+          "status": "implemented",
+          "changed": "Transplanted the full old counter detail into a 10×4m freestanding booth, including staff, desks, microphones, queue fittings, clock, four departure-screen panels in two clusters and landscape LED. Three rounded window frames, cream body/wood crown, TICKETS signs on ENE/SSE faces; ticket machines moved north.",
+          "world": {
+            "centre": [
+              -73,
+              106
+            ],
+            "size_m": [
+              10,
+              4,
+              3.26
+            ],
+            "source_local_st_centre": [
+              94,
+              9.3
+            ],
+            "destination_local_st_centre": [
+              112.327,
+              23.433
+            ]
+          },
+          "qualification": "No exact live departure data or temporary LED artwork inferred."
+        },
+        {
+          "id": "ccm/L10",
+          "status": "implemented",
+          "changed": "Retained DUNKIN products/register and moved into a rectangular burgundy display booth; placed emart24, EDIYA, UNIQLO pier and AED directory from photographs. Removed old gate-kiosk emart24 name guesses but retained stocked kiosks. Red detailed gateways retained and renumbered/spaced with gate10 at s110.",
+          "world": {
+            "DUNKIN": [
+              -85,
+              74
+            ],
+            "emart24": [
+              -75,
+              92
+            ],
+            "EDIYA": [
+              -62.106,
+              104.846
+            ],
+            "UNIQLO": [
+              -66,
+              87
+            ],
+            "AED": [
+              -61,
+              117
+            ],
+            "gates_local_s": {
+              "6": 62,
+              "8": 86,
+              "10": 110,
+              "12": 134
+            }
+          },
+          "qualification": "EDIYA nudged 0.423m ENE from target to leave a 2.45m well-side passage; faces NNW. Full gateway pitch outside observed anchors remains inferred."
+        },
+        {
+          "id": "ccm/D4",
+          "status": "implemented",
+          "changed": "Reused tube/curve/twin-arch construction across cleared and north back-fill bays. Square polished-marble shafts, bronze flares, white lattice branches, dark slat deck, downlights, double-charcoal diamond bands, black benches/ficus and a curved SE LED band.",
+          "world": {
+            "new_column_row_t": 30,
+            "AED_column_local_st": [
+              126.94,
+              30.608
+            ],
+            "curved_LED_local_st_centre": [
+              133.5,
+              19
+            ],
+            "curved_LED_size_m": [
+              20,
+              3.15
+            ],
+            "floor_colour": "#ebebe8",
+            "line_colour": "#3d4146"
+          }
+        },
+        {
+          "id": "ccm/X1",
+          "status": "delegated_cc1f",
+          "changed": "No edit to cc1f-owned old Open Stage copy/LED texture/Lexus display. The blue-cyan content and black car move with cc1f Open Stage at (-50,78).",
+          "world": {
+            "owner_target": [
+              -50,
+              78
+            ]
+          },
+          "reason": "Shared code-ownership contract prohibits editing the copy lines being deleted by cc1f."
+        }
+      ],
+      "merge_checks": [
+        {
+          "owner": "cc1f",
+          "check": "Open jwmarriott.js existing facade at hall beam. Exact collider endpoints (-76.498,54.665)→(-55.870,108.295), y0..6; source line241 at base. Centralcity-only direct leg passes, combined sample pushes up to0.469m."
+        },
+        {
+          "owner": "cc1f",
+          "check": "Remove/re-register old black HOS entrance lobby at strip s72..80 and hosEntryWell while moving HOS entry under JW. These separate copy lines are left to their relocation owner."
+        },
+        {
+          "owner": "ccb1",
+          "check": "Old hosB1Poly soffit at y=-.32 still uses hosRoofHole ending s115. Remove/re-register so new well s115..123 is visually open from below. Keep foot landing clear; connect checker street NNW to Market."
+        },
+        {
+          "owner": "famille/operator",
+          "check": "This base _junctions.js contains no JF2/famille block. Existing gallery exit is physically open; verify new famille extension and final JF2 on merge."
+        },
+        {
+          "owner": "cc1f",
+          "check": "Re-aim upper HOS and former Open Stage traces alongside moved spaces; honam re-aims ticket/DUNKIN/node traces and appends user-photo hall/well cameras."
+        }
+      ],
+      "uncertainties": [
+        "Photo anchors are approved but not a measured survey. Kiosk sizes, entire gateway pitch and screen radius remain fitted.",
+        "North terminal waiting furniture and remaining generic gate kiosks are unverified; preserved stocked details, no new guessed tenant brands.",
+        "Actual live advertising/departure content is not reconstructed. LED colour/layout is schematic.",
+        "Western Famille cell placement remains out of scope; new east node and JAju/Agra are owned by famille."
+      ],
+      "validation": {
+        "smoke_command": "node tests/smoke.mjs centralcity jwmarriott shinsegae gotomall station",
+        "smoke_result": "OK; same seven pre-existing Shinsegae lift-floor warnings.",
+        "walk_command": "node tests/walk.mjs",
+        "walk_result": "704 ok, 11 blocked",
+        "baseline_walk": "708 ok, 11 blocked",
+        "new_blocked": 0,
+        "count_difference": "Removed old misplaced HOS lift (3 floor checks) and replaced two upper spawns with one honam spawn: four fewer successful checks.",
+        "blocked": [
+          "Shinsegae new 1F route legs [1→2], [4→5].",
+          "Sweet Garden/B1/HOS new route legs [1→2] through [8→9], cc1f/ccb1.",
+          "Existing 사용자 루트2 Gyeongbu GATE4 leg [2→3], unchanged from baseline."
+        ],
+        "honam_legs": "New first route [11→12] belongs to honam; [10→11] ends at shared beam. Both pathfind, but JW wall still forces a detour until merge. Second new route belongs to cc1f/ccb1.",
+        "targeted_checks": "8 photo positions supported/clear with centralcity and combined JW+SSG; both escalator lanes 71 samples each pass including both landings; gallery opening41/41 pass; photo paths513→523→524→526 and all5 existing user-route5 legs pass.",
+        "static_checks": [
+          "node --check js/places/centralcity.js",
+          "git diff --check",
+          "research JSON parse"
+        ],
+        "visual_render": "Not run: task explicitly assigns screenshots/render comparison to operator because tests/shot.mjs cannot run in this sandbox.",
+        "zero_blocked_requirement_met": false
+      }
     }
   },
   "source_hierarchy": {
     "priority": [
+      "Round20: 2026-11-07 사용자 직접 촬영 사진과 승인된 places.json 좌표가 최우선. 공식 도면, 기존 영상 및 이전 라운드와 다르면 이번 사진을 따른다. 파미에 도면 번호는 현재 위치 근거로 사용하지 않는다.",
       "Round14: saved official floorplans win relative cells/floor names; actual 2025–2026 s7 frames win observed finish and newer shop character. The synthesis statement that no s7frames exist is superseded by the original log and inspected files.",
       "Round10: official2026 floorplans and number-to-nameHTML win floors/relativecells; supplied photos win architecturalfinish and anywiki/photo contradiction. Metricfit remains expressly inferred.",
       "data/osm.json 접지 풋프린트/소유 범위와 _junctions.js 좌표·레벨 유지",
