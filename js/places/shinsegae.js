@@ -2790,6 +2790,9 @@ export function build(K) {
       for(const v of[35,52.0])for(let u=29.1;u<37.9;u+=2.2)K.hpoly({tex:'marble',color:0xa3523f,gloss:.7},[[u,v],[u+2.2,v],[u+1.1,v+.95]].map(p=>P(...p)),.031);
       // D05: coat-collar pavilion. Existing event furniture is replaced only because
       // the user's dated photographs show Burberry rather than the old Sulwhasoo.
+      // Photos IMG_0494/0496: the pavilion's warm cream floor is distinct from
+      // the surrounding white/rosso marble, but does not obstruct the central view.
+      hq(29.6,36.5,37.4,51.5,.026,0xd8d2b6);
       for(const side of[-1,1]){
         const u=33.5+side*3.9;
         box(u,44,.10,14.7,.1,3.03,0xd8ccb2,{solid:false});
