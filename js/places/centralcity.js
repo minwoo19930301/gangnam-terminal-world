@@ -950,9 +950,12 @@ export function build(K) {
   for(const s of [21,124])lbox(s,32.8,.42,9.4,.022,.018,0xd4a34f,{solid:false});
   hallFurnish(()=>{lcrowd(0,21.7,38,26.4,Y1,20,11);lcrowd(65,21.7,77,26.4,Y1,8,111);lcrowd(-8,10,146,12.5,Y1,38,12);lcrowd(-20,8,-11,26,Y1,10,13);});
 
-  // Round19: 9GATE is the shared J4 datum; retain a true similarity for Sweet Park.
-  const B1_SCALE=.1009;
-  const BPst=(px,py)=>[21.1+B1_SCALE*(py-477),38.7-B1_SCALE*(px-1032)];
+  // Round20 user walk: the previous plan fit reflected the Sweet Park guide and
+  // anchored it to the unrelated J4. Plan-right runs south along the terminal,
+  // and plan-down runs west. Register the 9GATE end to the surveyed crossing.
+  // The dimensions are an approximate 0.13 m/pixel photographic fit.
+  const B1_SCALE=.13;
+  const BPst=(px,py)=>[74.05068+B1_SCALE*(px-1032),75.24268-B1_SCALE*(py-477)];
   // The House guide is schematic, wider than this OSM strip. Keep its tenant
   // adjacency/orientation, but register its three-floor court to the photographed
   // interior court, not the bus apron. These explicit piecewise axes insert the
@@ -997,7 +1000,7 @@ export function build(K) {
     let nx=-(b[1]-a[1])/L,nz=(b[0]-a[0])/L;if(nx*(m[0]-c[0])+nz*(m[1]-c[1])<0){nx=-nx;nz=-nz;}
     sign(name,{x:m[0]+nx*.12,z:m[1]+nz*.12,y:YB1+height,w:Math.max(.65,L-.2),h:.42,rotY:Math.atan2(nx,nz),bg:'#43382f',fg:'#fff5dd',bold:true,box:0});
   };
-  const sweetLiftST=(px,py)=>{const[s,t]=BPst(px,py);return[s,px===1411?3:t];};
+  const sweetLiftST=(px,py)=>BPst(px,py);
   const B1_KEEP_CLEAR=[[-4,15.7,11,20.6],[31,15.7,46,20.6],[13.25,33.4,15.75,38.15],[157,-8.2,164,-3.4],[19.7,32,22.3,43.5],[-26,10,-6.5,15.5],
     ...[[1054,523],[1411,472]].map(q=>{const[s,t]=sweetLiftST(...q);return q[0]===1411?[s-1.55,t-1.4,s+1.55,t+3.8]:[s-1.55,t-3.8,s+1.55,t+1.4];}),
     (()=>{const[s,t]=HPst(1544,459);return[s-4,t-1.1,s+1.55,t+1.1];})(),[73.6,14.6,78.4,17.5]];
@@ -1273,6 +1276,18 @@ export function build(K) {
   ];
   const b1PlanOutline=[[1032,345],[1078,345],[1078,266],[1400,266],[1400,755],[1343,755],[1343,894],[1032,894]].map(q=>BP(...q));
   K.slab(b1PlanOutline,YB1,{mat:{tex:'marble',color:0xe5dacc,gloss:.5},under:false,ceil:false,edge:false,holes:H.b1});
+  // 9GATE bridges the market's south wall and the newly registered B1 plan.
+  // The exact fit is approximate; its direction and extent follow the supplied
+  // photo walk, rather than the old J4 entrance on the opposite side.
+  {
+    const a=[-43.82,37.99], b=P(77.0,75.24268), d=[b[0]-a[0],b[1]-a[1]], len=Math.hypot(...d), n=[-d[1]/len*3.25,d[0]/len*3.25];
+    const poly=[[a[0]+n[0],a[1]+n[1]],[b[0]+n[0],b[1]+n[1]],[b[0]-n[0],b[1]-n[1]],[a[0]-n[0],a[1]-n[1]]];
+    K.slab(poly,YB1,{mat:{tex:'marble',color:0xe5dacc,gloss:.5},under:false,ceil:false,edge:false});
+    K.hpoly(0xf0e5d3,poly,-1.45,false);
+    K.wall(...poly[0],...poly[1],YB1,-1.45,{mat:0xe6dac8,thick:.16});
+    K.wall(...poly[3],...poly[2],YB1,-1.45,{mat:0xe6dac8,thick:.16});
+    K.zone({name:'9GATE 연결통로',floor:'B1',sub:'신세계 마켓 · 스위트 파크',poly,y0:YB1,y1:-1.4,priority:8});
+  }
   const B1_STAFF=[]; // Filled by region detail groups; placed after every fixture has been built.
   const B1_REGIONS=[
     ['sweet_north','스위트 파크 북측', [1032,266,1400,488]],
@@ -1519,7 +1534,7 @@ export function build(K) {
         for(const v of [[p[0],p[1],a,p[3]],[c,p[1],p[2],p[3]],[a,p[1],c,b],[a,d,c,p[3]]])if(v[2]-v[0]>.42&&v[3]-v[1]>.42)next.push(v);
       }parts=next;
     }
-    const toPlan=p=>[x0+(t1-p[3])*(x1-x0)/(t1-t0),y0+(p[0]-s0)*(y1-y0)/(s1-s0),x0+(t1-p[1])*(x1-x0)/(t1-t0),y0+(p[2]-s0)*(y1-y0)/(s1-s0)];
+    const toPlan=p=>[x0+(p[0]-s0)*(x1-x0)/(s1-s0),y0+(t1-p[3])*(y1-y0)/(t1-t0),x0+(p[2]-s0)*(x1-x0)/(s1-s0),y0+(t1-p[1])*(y1-y0)/(t1-t0)];
     const candidates=[];
     for(const p of parts){
       const ds=Math.min(.9,p[2]-p[0]),dt=Math.min(.9,p[3]-p[1]);
@@ -1531,7 +1546,7 @@ export function build(K) {
     return candidates[0]?.plan??null;
   };
   const spCell=(cell,index)=>{
-    const r=cell.rect_display,[x0,y0,x1,y1]=r,[s0,t0,s1,t1]=spBounds(r),front=cell.front,face={N:'N',S:'S',E:'W',W:'E'}[front];
+    const r=cell.rect_display,[x0,y0,x1,y1]=r,[s0,t0,s1,t1]=spBounds(r),front=cell.front,face={N:'E',S:'W',E:'S',W:'N'}[front];
     const retail=['beauty','accessory'].includes(cell.kind),west=x0===1032&&y0>=540&&y1<=777;
     const i=3,depth=Math.min(11,(y1-y0)*.45),sideDepth=Math.min(11,(x1-x0)*.45);
     let caseRect=front==='N'?[x0+i,y0+i,x1-i,y0+i+depth]:front==='S'?[x0+i,y1-i-depth,x1-i,y1-i]:front==='W'?[x0+i,y0+i,x0+i+sideDepth,y1-i]:[x1-i-sideDepth,y0+i,x1-i,y1-i];

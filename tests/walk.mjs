@@ -65,8 +65,8 @@ for (const j of JUNCTIONS) {
 }
 for (const el of K._.elevators) for (const f of el.floors) {
   const cx = el.x + (f.dx || 0), cz = el.z + (f.dz || 0);
-  const bb = [el.x - 12, el.z - 12, el.x + 12, el.z + 12];
-  const r = search(cx, cz, f.y, (x, z, yy) => Math.hypot(x - el.x, z - el.z) > 4 && Math.abs(yy - f.y) < 0.7, bb, 60000);
+  const bb = [cx - 12, cz - 12, cx + 12, cz + 12];
+  const r = search(cx, cz, f.y, (x, z, yy) => Math.hypot(x - cx, z - cz) > 4 && Math.abs(yy - f.y) < 0.7, bb, 60000);
   (r.ok ? oks : fails).push(`elevator ${el.place} "${el.name}" ${f.label}: ${r.ok ? 'can walk out' : r.why}`);
   if (!r.ok && args.includes('--debug')) {
     const rows = [];

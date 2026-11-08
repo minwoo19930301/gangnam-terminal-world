@@ -32,8 +32,8 @@ export const JUNCTIONS = [
   { id: 'J9', a: 'shinsegae', b: 'centralcity', y: 7, pa: [-72.647, 42.938], pb: [-83.810, 47.175], width: 1.8, owner: 'centralcity',
     note: '1F 광장 백화점 2층 에스컬레이터의 상부 연결. Shared-edge landing at (-80.089,45.763), 신세계 local (u=0,v=75.1), uses the retained 2F stair-core south landing. Landing alignment is inferred; official floor guide confirms destination, not surveyed dimensions.' },
   // ---- round 10 ----
-  { id: 'J_G11_DAISO', a: 'gotomall', b: 'gyeongbu', y: LEVELS.B1, pa: [140.6504, -132], pb: [140.6504, -111.8096], width: 5.6, owner: 'gyeongbu',
-    note: '고투몰 중앙광장 G11 문 → 계단 → 다이소 GATE 4 (후문, 고투몰 방면 끝). gotomall builds the G11 door/stair up to pa.' },
+  { id: 'J_G11_DAISO', a: 'gotomall', b: 'gyeongbu', y: LEVELS.B1, pa: [244.8, -181.5], pb: [245.3, -179.5], width: 4.5, owner: 'gyeongbu',
+    note: '고투몰 중앙광장 G11 문 → 다이소 GATE 4: 양 끝점은 B1 -6m 문과 계단 아래참. 이후 경부 모듈 계단을 올라 GATE 4와 다이소 -4m 홀로 연결된다.' },
   { id: 'J_ONEBAILEY_G2', a: 'gotomall', b: 'onebailey', y: LEVELS.B1, pa: [-287.479, -29.9796], pb: [-290.8408, -38.9565], width: 2.8, owner: 'onebailey',
     note: '고투몰 G2 → 원베일리 공공보행통로 (24시간 벽화 거리). gotomall leaves the G2 wall open.' },
   { id: 'J_ONEBAILEY_PARK', a: 'onebailey', b: 'hangang', y: 0, pa: [-567.9792, -603.6965], pb: [-592, -625], width: 5, owner: 'onebailey',

@@ -2876,7 +2876,12 @@ export function build(K) {
       }
       // D03: preserve and move every fluted Ionic composition from its plan point.
       for(const[px,py]of[[372,570],[666,571],[372,678],[666,678],[372,769],[666,769],[372,938],[810,770]]){
-        const[u,v]=PLAN(px,py);if(BEAUTY_BANK_RECTS.some(r=>inR(u,v,r,.7))||(u>30&&u<38&&v>30&&v<52))continue;const[x,z]=P(u,v);
+        const[u,v]=PLAN(px,py);
+        // The 1 GATE to 3 GATE axis stays visible and walkable past the
+        // central popup. Two old plan-derived columns fell directly across
+        // that sightline, despite the user's walkthrough photographs.
+        if(BEAUTY_BANK_RECTS.some(r=>inR(u,v,r,.7))||(u>30&&u<38&&v>5&&v<80))continue;
+        const[x,z]=P(u,v);
         K.cyl({x,z,y:0,r:.58,h:.2,mat:{tex:'marble',color:cream,gloss:.3},seg:20});
         K.cyl({x,z,y:.2,r:.46,h:5.36,mat:cream,seg:24});
         for(let k=0;k<20;k++){const a=k*PI/10,pp=P(u+.46*Math.cos(a),v+.46*Math.sin(a));K.cyl({x:pp[0],z:pp[1],y:.35,r:.042,h:5.04,mat:0xe4e1da,seg:6,solid:false});}

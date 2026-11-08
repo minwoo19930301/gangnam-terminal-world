@@ -58,7 +58,7 @@ for (const el of K._.elevators) for (const f of el.floors) {
   const sup = phys.support(el.x + (f.dx || 0), el.z + (f.dz || 0), f.y + 0.5);
   if (sup.y === -Infinity || Math.abs(sup.y - f.y) > 0.6) problems.push(`${el.place}: elevator "${el.name}" floor ${f.label} (y=${f.y}) not walkable at car position (found ${sup.y})`);
   // can you walk out? sample 2.2m around the car for a floor at the same level
-  let ok = false; for (let a = 0; a < 16 && !ok; a++) { const x = el.x + Math.cos(a / 16 * 6.283) * 2.3, z = el.z + Math.sin(a / 16 * 6.283) * 2.3; const s2 = phys.support(x, z, f.y + 0.5); if (Math.abs(s2.y - f.y) < 0.6) ok = true; }
+  let ok = false; for (let a = 0; a < 16 && !ok; a++) { const x = el.x + (f.dx || 0) + Math.cos(a / 16 * 6.283) * 2.3, z = el.z + (f.dz || 0) + Math.sin(a / 16 * 6.283) * 2.3; const s2 = phys.support(x, z, f.y + 0.5); if (Math.abs(s2.y - f.y) < 0.6) ok = true; }
   if (!ok) warnings.push(`${el.place}: elevator "${el.name}" floor ${f.label}: no floor found just outside the car`);
 }
 // junction checks
