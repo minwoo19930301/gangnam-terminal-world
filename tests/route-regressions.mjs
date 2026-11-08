@@ -78,6 +78,9 @@ for (let v=6; v<=84; v+=.25) {
 console.log('OK Shinsegae entrance axis');
 
 for (const [name,from,to] of [
+  ['user link to Central City atrium', [-52.1,109.8,0], [-36,72,0]],
+  ['Shinsegae 3GATE to Central City atrium', [-44,47,0], [-36,72,0]],
+  ['Central City atrium to 1M escalator landing', [-36,72,0], [-30.59,92.25,3.6]],
   ['G11 door to Daiso hall', [244.8,-181.5,-6], [246.5,-170,-4]],
   ['Daiso hall to store', [246.5,-170,-4], [238,-167,-4]],
   ['Daiso hall to street', [246.5,-170,-4], [254.5,-171,0]],

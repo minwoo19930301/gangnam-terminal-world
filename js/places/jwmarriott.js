@@ -64,6 +64,41 @@ const HEX = n => '#' + n.toString(16).padStart(6, '0');
 const GL = { tex: 'glass', color: 0x8fa9b8 }, GLD = { tex: 'glass', color: 0x60798a };
 
 export function build(K) {
+  // R20: transfer intact, previously photo-traced hotel fitouts to the west
+  // podium band. Only this inferred registration changes; their materials,
+  // furniture, sculpture, table settings and signs are retained.
+  const baseKit = K;
+  const ID = { su: 1, sv: 1, du: 0, dv: 0 };
+  let fit = ID;
+  const setFit = (du=0, su=1, dv=0, sv=1) => { fit={du,su,dv,sv}; };
+  const mapPoint = (x,z,m=fit) => {
+    const dx=x-C0[0], dz=z-C0[1], u=dx*EV[0]+dz*EV[1], v=dx*SV[0]+dz*SV[1];
+    return P(u*m.su+m.du,v*m.sv+m.dv);
+  };
+  const mapPoly = (poly,m=fit) => poly?.map(q=>mapPoint(...q,m));
+  const mapOpts = o => ({...o,holes:o.holes?.map(p=>mapPoly(p))});
+  const scaledAxis = (rot=0) => {
+    const du=Math.cos(rot)*EV[0]-Math.sin(rot)*EV[1],dv=Math.cos(rot)*SV[0]-Math.sin(rot)*SV[1];
+    const xx=du*fit.su*EV[0]+dv*fit.sv*SV[0],zz=du*fit.su*EV[1]+dv*fit.sv*SV[1];
+    return {scale:Math.hypot(xx,zz),rot:Math.atan2(-zz,xx)};
+  };
+  K = new Proxy(baseKit,{get(target,key){
+    if(key==='box')return o=>{if(fit===ID)return target.box(o);const[x,z]=mapPoint(o.x,o.z),a=scaledAxis(o.rotY),b=scaledAxis((o.rotY||0)+Math.PI/2);return target.box({...o,x,z,w:o.w*a.scale,d:o.d*b.scale,rotY:a.rot});};
+    if(key==='wall')return(ax,az,bx,bz,y0,y1,o={})=>{if(fit===ID)return target.wall(ax,az,bx,bz,y0,y1,o);const a=mapPoint(ax,az),b=mapPoint(bx,bz),scale=Math.hypot(b[0]-a[0],b[1]-a[1])/Math.hypot(bx-ax,bz-az);return target.wall(...a,...b,y0,y1,{...o,openings:o.openings?.map(p=>({...p,at:p.at*scale,w:p.w*scale}))});};
+    if(key==='slab')return(poly,y,o={})=>target.slab(mapPoly(poly),y,mapOpts(o));
+    if(key==='prism')return(poly,y0,y1,o={})=>target.prism(mapPoly(poly),y0,y1,mapOpts(o));
+    if(key==='polyWalls')return(poly,y0,y1,o={})=>target.polyWalls(mapPoly(poly),y0,y1,{...o,openings:o.openings?.map(p=>{const[x,z]=mapPoint(p.x,p.z);return{...p,x,z};})});
+    if(key==='hpoly')return(mat,poly,y,up,holes)=>target.hpoly(mat,mapPoly(poly),y,up,holes?.map(p=>mapPoly(p)));
+    if(key==='quad')return(mat,points,normal)=>target.quad(mat,points.map(([x,y,z])=>{const[a,b]=mapPoint(x,z);return[a,y,b];}),normal);
+    if(key==='cyl'||key==='dome')return o=>{const[x,z]=mapPoint(o.x,o.z);return target[key]({...o,x,z,...(key==='cyl'?{r:o.r*Math.sqrt(fit.su*fit.sv)}:{rx:o.rx*Math.sqrt(fit.su*fit.sv),rz:o.rz*Math.sqrt(fit.su*fit.sv)})});};
+    if(key==='sign'||key==='floorText')return(text,o)=>{const[x,z]=mapPoint(o.x,o.z),axis=scaledAxis(o.rotY);return target[key](text,{...o,x,z,w:o.w*axis.scale,rotY:axis.rot});};
+    if(key==='person')return(x,y,z,o)=>{const[a,b]=mapPoint(x,z);return target.person(a,y,b,o);};
+    if(key==='crowd')return(poly,...args)=>target.crowd(mapPoly(poly),...args);
+    if(key==='zone')return o=>target.zone({...o,poly:o.poly?mapPoly(o.poly):o.poly});
+    if(key==='spawn')return o=>{const[x,z]=mapPoint(o.x,o.z);return target.spawn({...o,x,z});};
+    if(['escalator','stairs','ramp'].includes(key))return(ax,az,bx,bz,o)=>target[key](...mapPoint(ax,az),...mapPoint(bx,bz),o);
+    return target[key];
+  }});
   const rnd = K.rand(976);
   // ---------- custom textures ----------
   // tower shaft (Commons 메리어트호텔.jpg, 2009): continuous dark-blue glass ribbon per floor between cream spandrel bands
@@ -224,7 +259,11 @@ export function build(K) {
   // Slabs, opaque partitions, columns, rails and circulation execute immediately. The explicit
   // structural flag is for a stage/column/door built with a furniture primitive, not a size heuristic.
   let detailQueue = null;
-  const DEC = fn => detailQueue ? detailQueue.push(fn) : fn();
+  const DEC = fn => {
+    const captured=fit;
+    const draw=()=>{const before=fit;fit=captured;try{return fn();}finally{fit=before;}};
+    return detailQueue?detailQueue.push(draw):draw();
+  };
   const STRUCT = fn => { const prev = detailQueue; detailQueue = null; try { return fn(); } finally { detailQueue = prev; } };
   const DETAIL = (floor, rect, name, fn, y1 = NEXT[floor]) => {
     const commands = [], prev = detailQueue;
@@ -414,17 +453,34 @@ export function build(K) {
     if (ESC[k]) h.push(ESC[k]);
     if (k === '6F') h.push(BALL);
     if (k === 'B3') h.push(POOL, KIDS, SCUBA);
-    if (k === '2F') h.push(HALL, [-33.5, -61, 16, -6.2]);
+    if (k === '2F') h.push(HALL);
     if (k === '9F') h.push([3.0, 48.8, 5.2, 57]);
     return h;
   };
   const floorMat = { B4: { tex: 'tile', color: 0xc9c5bd }, B3: { tex: 'tile', color: 0xe6e2da }, B2: { tex: 'marble', color: 0xe8dfd0 }, '1F': 'jwHoney', '2F': { tex: 'marble', color: 0xeee4d4 }, '3F': 'jwCarpet', '4F': 'jwCarpet', '5F': 'jwCarpet', '6F': { tex: 'concrete', color: 0xcfcac2 }, '7F': { tex: 'sidewalk', color: 0xe2dacb }, '8F': 'jwHoney', '9F': 'jwChevron', '10F': 0xa59b8a, '11F': 0xa59b8a };
   for (const [k, y] of LV) {
-    if (k === 'B1') continue; // public B1 floor belongs to centralcity
+    if (k === 'B1' || k === '1F') continue; // public lower slabs/voids belong to centralcity
+    if (k === '2F') {
+      // R20: no hotel slab through the 8.8m central hall, its 1M gallery,
+      // Sweet Garden well or public lift. Separate edge strips avoid holes
+      // crossing the outer slab boundary (the old northern hole did that).
+      SLAB([UW + .06, -6, 2, 60.5], y, { mat: floorMat[k], under: { tex: 'ceiling', color: 0xf4efe6 }, holes: [[-31.6,42,-14.025,55],[-12.25,24.2,-5.15,39.5],[-2.9,30,1,41.6]], thick: .3 });
+      continue;
+    }
     const tower = y >= Y['8F'];
     const poly = tower ? RECT(TW[0] + 0.06, TW[1] + 0.06, TW[2] - 0.06, TW[3] - 0.06) : (y > 1 ? FPLI : FPL);   // inset: keeps the slab edge off the facade plane (z-fighting)
     const holes = holesFor(k).map(h => RECT(...h));
     K.slab(poly, y, { mat: floorMat[k] ?? (tower ? 'jwCarpet' : 'tile'), under: k === 'B4' ? false : { tex: 'ceiling', color: 0xf4efe6 }, thick: 0.3, holes, edgeMat: STONE_D });
+  }
+  // R20 sweet/L4,L12: the hall's 2F head is y7; the documented hotel
+  // restaurant level remains y6. The short southern link resolves the 1m
+  // difference beyond the main coffered void, without a low slab across it.
+  SLAB([-2.0, -12.2, 2.0, -9.0], 7, { mat: 'jwGreyStone', under: 0xe7dfd2, thick: .22 });
+  {
+    const aa=P(0,-9), bb=P(-15.5,5);
+    K.ramp(...aa,...bb,{ya:7,yb:6,w:3.4,mat:{tex:'marble',color:0xe4ded1,gloss:.5},rails:true});
+    ZN('JW 메리어트 호텔 연결', '2F', '호텔 레스토랑 · 센트럴시티', [-17.2,-12.2,2,6], 6, 10, 4);
+    SG('JW 메리어트 호텔 2F ↑', {u:0,v:-9.5,y:9.25,w:3.2,h:.28,f:'N',bg:'#332c26',fg:'#f5ead8'});
   }
   // tower roof + podium roof is the 7F slab
   SLAB([TW[0] + 0.06, TW[1] + 0.06, TW[2] - 0.06, TW[3] - 0.06], ROOF, { mat: 'roofgravel', under: { tex: 'ceiling', color: 0xf4efe6 }, thick: 0.4, holes: [] });
@@ -436,19 +492,24 @@ export function build(K) {
   K.polyWalls(FPL, Y.B4, Y.B1 - 0.3, { mat: 0x8d8a84, inner: 0xd9d4cb, thick: 0.4 });
   // 1F: shared walls N/W (stone both sides, junction openings), glass storefront E/S
   const H1 = 6;
-  EW('N', UW, UE, 0, H1, { mat: { tex: 'jwStone' }, inner: WARM, openings: [{ s: -0.04, w: 6.6, y0: 0, y1: 3.3 }] });               // J5 → 신세계
-  EW('W', -60.88, 60.58, 0, H1, { mat: { tex: 'jwStone' }, inner: WARM, openings: [{ s: -0.12, w: 6.6, y0: 0, y1: 3.3 }] });         // J6 → 센트럴시티
+  EW('N', UW, UE, 0, H1, { mat: { tex: 'jwStone' }, inner: WARM, openings: [{ s: -0.04, w: 6.8, y0: 0, y1: 6 }] });               // J5 → 신세계
+  EW('W', -60.88, 60.58, 0, H1, { mat: { tex: 'jwStone' }, inner: WARM, openings: [{ s: -32.2, w: 17, y0: 0, y1: 6 }, { s: -0.12, w: 6.6, y0: 0, y1: 3.3 }] });         // J6 → 센트럴시티
   EW('E', -60.58, -30, 0, H1, { mat: { tex: 'jwStone' }, inner: WARM });
   EW('E', -30, 60.89, 0, 4.2, { mat: GL, thick: 0.06, openings: [{ s: 0, w: 5, y0: 0, y1: 3.4 }, { s: 44.5, w: 3.2, y0: 0, y1: 3.4 }, { s: 52.5, w: 3.2, y0: 0, y1: 3.4 }] });
   EW('E', -30, 60.89, 4.2, H1, { mat: { tex: 'jwStone' }, inner: WARM });
   EW('S', UW, -10, 0, H1, { mat: { tex: 'jwStone' }, inner: WARM });
-  EW('S', -10, UE, 0, 4.2, { mat: GL, thick: 0.06, openings: [{ s: 8, w: 4, y0: 0, y1: 3.4 }] });
-  EW('S', -10, UE, 4.2, H1, { mat: { tex: 'jwStone' }, inner: WARM });
+  EW('S', -10, 2.2, 0, 4.2, { mat: GL, thick: 0.06, openings: [{ s: -4, w: 4, y0: 0, y1: 3.4 }] });
+  EW('S', -10, 2.2, 4.2, H1, { mat: { tex: 'jwStone' }, inner: WARM });
   // 1F stone piers on the glass storefronts
   for (let v = -27; v <= 60; v += 6) if (Math.abs(v - 0) > 3.2 && Math.abs(v - 44.5) > 2.2 && Math.abs(v - 52.5) > 2.2) B({ u: UE - 0.2, v, y: 0, w: 0.7, d: 0.9, h: 4.2, mat: { tex: 'jwStone' } });
-  for (let u = -8; u <= 32; u += 6) if (Math.abs(u - 8) > 2.6) B({ u, v: vS(u) - 0.2, y: 0, w: 0.9, d: 0.7, h: 4.2, mat: { tex: 'jwStone' } });
+  for (let u = -8; u <= 2; u += 6) if (Math.abs(u - 8) > 2.6) B({ u, v: vS(u) - 0.2, y: 0, w: 0.9, d: 0.7, h: 4.2, mat: { tex: 'jwStone' } });
   // 2F–6F podium bands
-  for (const k of ['2F', '3F', '4F', '5F', '6F']) K.polyWalls(FPL, Y[k], NEXT[k], { mat: { tex: 'jwPodium' }, inner: WARM, thick: 0.35, floorH: NEXT[k] - Y[k] });
+  for (const k of ['2F', '3F', '4F', '5F', '6F']) K.polyWalls(FPL, Y[k], NEXT[k], { mat: { tex: 'jwPodium' }, inner: WARM, thick: 0.35, floorH: NEXT[k] - Y[k],
+    openings: k === '2F' ? [
+      { x: -46, z: 43.1, w: 6.8, y0: 6, y1: 7.3 },
+      { x: -65.9, z: 81.4, w: 17, y0: 6, y1: 9.1 },
+      { x: 15.0, z: 149.9, w: 30, y0: 6, y1: 9.5 },
+    ] : [] });
   // podium cornice + 7F parapet (stone base + glass balustrade)
   K.polyWalls(FPL, Y['7F'] - 0.6, Y['7F'] + 0.45, { mat: STONE_D, inner: STONE, thick: 0.5 });
   K.polyWalls(FPL, Y['7F'] + 0.45, Y['7F'] + 1.25, { mat: GL, thick: 0.04 });
@@ -505,6 +566,23 @@ export function build(K) {
   // =====================================================================
   // CORE: stairs + guest elevator + service blocks (B4 → 33F)
   // =====================================================================
+  const hotelKit=K;
+  const corePieces=(lo,hi,draw)=>{
+    for(const[a,b,du]of[[lo,Math.min(hi,0),0],[Math.max(lo,0),Math.min(hi,9.5),-21],[Math.max(lo,9.5),hi,0]]){
+      if(b<=a)continue;const before=fit;setFit(du);try{draw(a,b);}finally{fit=before;}
+    }
+  };
+  K=new Proxy(hotelKit,{get(target,key){
+    if(key==='prism')return(poly,a,b,o)=>corePieces(a,b,(lo,hi)=>target.prism(poly,lo,hi,o));
+    if(key==='wall')return(ax,az,bx,bz,a,b,o)=>corePieces(a,b,(lo,hi)=>target.wall(ax,az,bx,bz,lo,hi,o));
+    if(key==='box')return o=>corePieces(o.y,o.y+o.h,(lo,hi)=>target.box({...o,y:lo,h:hi-lo}));
+    if(key==='slab')return(poly,y,o)=>{const before=fit;if(y>=0&&y<9.5)setFit(-21);try{return target.slab(poly,y,o);}finally{fit=before;}};
+    if(key==='stairs')return(ax,az,bx,bz,o)=>{if(o.ya<0&&o.yb>-.01||o.ya>=6&&o.ya<9.5)return;const before=fit;if(o.ya>=0&&o.ya<9.5)setFit(-21);try{return target.stairs(ax,az,bx,bz,o);}finally{fit=before;}};
+    if(key==='sign')return(text,o)=>{const before=fit;if(o.y>=0&&o.y<9.5)setFit(-21);try{return target.sign(text,o);}finally{fit=before;}};
+    if(key==='zone')return o=>{if(o.floor==='B1')return;const before=fit;if(o.y0>=0&&o.y0<9.5)setFit(-21);try{return target.zone(o);}finally{fit=before;}};
+    if(key==='groundHole')return()=>{};
+    return target[key];
+  }});
   const coreMat = { tex: 'jwStone', color: 0xe6dccb };
   PR([11.1, 30.75, 15.8, 33.25], Y.B4, ROOF, { mat: coreMat, top: false, bottom: false, walkTop: false });
   PR([8.8, 33.25, 15.8, 39.5], Y.B4, ROOF, { mat: coreMat, top: false, bottom: false, walkTop: false });
@@ -541,7 +619,7 @@ export function build(K) {
   K.groundHole(RECT(...STH));
   const elevFloors = [
     ['B4', '마르퀴스 피트니스 · 농구장 · 스쿼시 · 조깅트랙'], ['B3', '마르퀴스 수영장 · 키즈풀 · 스쿠버풀'], ['B2', '마르퀴스 스파 리셉션 · 라커 · 스파 레스토랑'],
-    ['1F', '호텔 현관 · 컨시어지 · 센트럴시티 연결'], ['2F', '플레이버즈 · 타마유라 · 파티세리'], ['3F', '연회장 살롱 1–6'], ['4F', '웨딩 · 연회 사무실'], ['5F', '그랜드 볼룸'], ['6F', '연회 지원 (직원)'],
+    ['3F', '연회장 살롱 1–6'], ['4F', '웨딩 · 연회 사무실'], ['5F', '그랜드 볼룸'], ['6F', '연회 지원 (직원)'],
     ['7F', '더 마고 그릴 · 모보 바 · JW 가든'], ['8F', '로비 · 체크인 · 더 라운지'], ['9F', '이그제큐티브 라운지'], ['10F', '사무실'], ['11F', '호텔 사무실'],
   ];
   for (const n of ROOMF) elevFloors.push([n + 'F', `객실 ${n}01–${n}19`]);
@@ -568,6 +646,17 @@ export function build(K) {
   WL(8.8, 33.1, 8.8, 30.9, Y.B4, shaftTop, { ...shaftStyle, openings: LV.map(([, y]) => ({ at: 1.1, w: 1.2, y0: y, y1: y + 2.4 })) });
   for (const [, y] of LV) SLAB([8.8, 30.9, 11, 33.1], y, { mat: 'jwGreyStone', under: 0x3e342c, thick: .05, edge: false, ceil: false });
 
+  K=hotelKit;fit=ID;
+  {
+    const[x,z]=P(EL.u-21,EL.v);
+    K.elevator({name:'JW 호텔 서측 연결 엘리베이터',x,z,rotY:FACE.W,w:2.2,d:2.2,shaft:false,
+      floors:[{label:'1F',y:0,name:'호텔 현관'},{label:'2F',y:6,name:'호텔 레스토랑'},{label:'3F',y:11.5,name:'호텔 상층 엘리베이터 연결'}]});
+    for(const y of[0,6,11.5])SLAB([-12.2,30.85,-9.95,33.15],y,{mat:'jwGreyStone',thick:.05,ceil:false});
+    // Displaced core stops at 9.5; the small 3F landing uses the existing
+    // floor and opens onto a new passage through previously guessed support rooms.
+    SLAB([-14,29.5,8.7,34.5],11.5,{mat:'jwCarpet',thick:.05,ceil:false});
+    SG('호텔 상층 엘리베이터 →',{u:-11,v:29.6,y:13.6,w:3,h:.3,f:'S',bg:'#3d3028',fg:'#eee3cc'});
+  }
   // =====================================================================
   // ZONES (one per floor)
   // =====================================================================
@@ -576,8 +665,8 @@ export function build(K) {
   zf('B4', '마르퀴스 스파 & 피트니스 클럽 · 피트니스 · 농구 코트 · 스쿼시 · 85m 조깅트랙');
   zf('B3', '마르퀴스 스파 & 피트니스 클럽 · 25m 6레인 수영장 · 키즈풀 · 자쿠지 · 스쿠버풀');
   zf('B2', '마르퀴스 스파 & 피트니스 클럽 · 리셉션 · 스파 트리트먼트 · 라커 · 스파 레스토랑');
-  zf('1F', '호텔 현관 · 컨시어지 · 벨 데스크', [-4, 4, 33, 60.4]);
-  zf('2F', '플레이버즈(뷔페) · 타마유라(일식) · 파티세리 · 카페 원');
+  zf('1F', '호텔 현관 · 컨시어지 · 벨 데스크', [-33.2,4,2,60.4]);
+  zf('2F', '플레이버즈(뷔페) · 타마유라(일식) · 파티세리 · 카페 원',[-33.2,-6,2,60.4]);
   zf('3F', '연회장 살롱 1–6 · 프리펑션');
   zf('4F', '웨딩 상담 · 연회 사무실');
   zf('5F', '그랜드 볼룸 (천고 7m · 버진로드 21m) · 신부 대기실');
@@ -593,12 +682,12 @@ export function build(K) {
   // =====================================================================
   // SPAWNS
   // =====================================================================
-  SPAWN('JW 메리어트 1F 목걸이 조형물', 14.4, 48.5, 0, -1, 0);
-  SPAWN('JW 메리어트 1F 승강기 홀', 6.3, 40, 0, .15, -1);
+  SPAWN('JW 메리어트 1F 목걸이 조형물', -16.02, 48.5, 0, -1, 0);
+  SPAWN('JW 메리어트 1F 승강기 홀', -14.7, 40, 0, .15, -1);
   SPAWN('더 라운지 8F · 피아노와 소파', 1.4, 36.9, Y['8F'], -1, -.05);
   SPAWN('더 라운지 8F · 바', -2.1, 16.4, Y['8F'], 0, -1);
-  SPAWN('플레이버즈 2F · 입구', 6.5, 19, Y['2F'], -1, 0);
-  SPAWN('플레이버즈 2F · 다이닝', -9, 29, Y['2F'], -1, .4);
+  SPAWN('플레이버즈 2F · 입구', -12.8, 19, Y['2F'], -1, 0);
+  SPAWN('플레이버즈 2F · 다이닝', -20.6757, 29, Y['2F'], -1, .4);
   SPAWN('그랜드 볼룸 5F · 포이어', -10, -3.2, Y['5F'], 1, 0);
   SPAWN('이그제큐티브 라운지 9F', 5.5, 22, Y['9F'], .5, -1);
   SPAWN('JW 가든 (7F)', 4, -20, Y['7F'], 0, 1);
@@ -642,8 +731,8 @@ export function build(K) {
   };
   const PARTS = (axis, at, list, a0, a1, y, h, mat = WARM) => { for (const s of list) axis === 'u' ? WL(s, a0, s, a1, y, y + h, { mat, thick: 0.15 }) : WL(a0, s, a1, s, y, y + h, { mat, thick: 0.15 }); };
 
-  DETAIL('1F', [-4, 4, UE, 60.4], '호텔 현관 홀 · 승강기 로비', floor1, 8.32);
-  DETAIL('2F', [UW, -60.7, UE, 60.9], '플레이버즈 · 파티세리 · 타마유라', floor2);
+  DETAIL('1F', [-33.2, 4, 2, 60.4], '호텔 현관 홀 · 승강기 로비', floor1, 8.32);
+  DETAIL('2F', [UW, -6, 2, 60.9], '플레이버즈 · 파티세리 · 타마유라', floor2);
   floor3(); floor4();
   DETAIL('5F', [UW, -60.7, UE, 60.9], '그랜드 볼룸 · 포이어', floor5, 28.4);
   floor6(); floor7();
@@ -655,13 +744,14 @@ export function build(K) {
   // =====================================================================
   function floor1() {
     const y = 0, yc = NEXT['1F'] - 0.3;
+    setFit(-29.7,.95);
     // Round 20 sweet/L2,L12 and ccm/L1: the former north food court,
     // loading rooms, poster walls and full-width connecting arcade were invented.
     // centralcity now constructs the hall/1M arcade and the HOS upper floor.
     // ---- ground entrance hall, photos 05/11/12/14/15 ----
     // A local void in 2F makes the photographed ~8 m room without altering facade bands.
-    HP('jwHoney', [-4, 4, 33, 60.4], .009, true, [[21.4, 29.5, 29.8, 41.8], [8.8, 24.2, 15.9, 39.5]]);
-    HP('jwWalnut', [-4, 4, 33, 60.4], 5.66, false, [HALL, [8.8, 24.2, 15.9, 39.5], [21.4, 29.5, 29.8, 41.8]]);
+    HP('jwHoney', [-3.7, 4, 33, 60.4], .009, true, [[21.4, 29.5, 29.8, 41.8], [8.8, 24.2, 15.9, 39.5]]);
+    HP('jwWalnut', [-3.7, 4, 33, 60.4], 5.66, false, [HALL, [8.8, 24.2, 15.9, 39.5], [21.4, 29.5, 29.8, 41.8]]);
     PR(HALL, 8.15, 8.32, { mat: { tex: 'emit', color: 0x6b4528 }, top: false, walkTop: false });
     // 11/15: two interlocked L/T strokes per half-cell, with .23 m clear pockets inside each .6 m module.
     for (let u = -1.7, i = 0; u < 16.3; u += .6, i++) for (let v = 42.3, j = 0; v < 54.8; v += .6, j++) {
@@ -774,9 +864,11 @@ export function build(K) {
     }
     CHAIR(13.8, 52.8, 0, 'W', 0x93836d); MAN(13.8, 52.8, 0, { sit: true, shirt: 0x34302a, rotY: FACE.W });
     // Preserve the 1F/2F escalator and its open landing.
+    setFit(-24.4);
     ESCL(22.6, 40.4, 22.6, 30, 0, 6, 'up'); ESCL(24.2, 40.4, 24.2, 30, 0, 6, 'down');
     B({ u: 27.8, v: 35.65, y: 0, w: 3.5, d: 9.8, h: .6, mat: 'jwTravertine', structural: true });
     // 06/07: warm staggered travertine, three flush bronze portals and one aubergine directory panel.
+    setFit(-21);
     COVE([4.2, 24.2, 8.68, 39.6], 3.5);
     WL(4.2, 25, 4.2, 38.7, 0, 3.5, { mat: 'jwTravertine', thick: .12 });
     for (let row = 0; row < 6; row++) {
@@ -827,6 +919,7 @@ export function build(K) {
       B({ u: u + .19, v: 31.05, y: yy - .015, w: .026, d: .012, h: .03, mat: i === 7 ? 0xe8f3ec : 0xb39d78, solid: false });
     }
     SG('◀ ▶     ▶ ◀', { u: 10, v: 31.03, y: .94, w: .66, h: .095, f: 'S', bg: '#3e342c', fg: '#ece5d3' });
+    setFit(-29.7,.95);
     // 13: enclosed 3.9 m hotel passage, bronze display glazing over small walnut relief blocks.
     WL(-1.17, 5, -1.17, 24, 0, 3.5, { mat: 'jwWalnut', thick: .08 });
     WL(3, 5, 3, 24, 0, 3.5, { mat: 'jwTravertine', thick: .12 });
@@ -857,11 +950,16 @@ export function build(K) {
     B({ u: 1, v: 5.101, y: 1.32, w: .66, d: .016, h: .71, mat: 0xc4aa85, solid: false });
     B({ u: .88, v: 5.113, y: 1.42, w: .08, d: .006, h: .47, mat: 0x715a45, solid: false });
     LIGHTS([17, 42, 32, 60], 5.64, 4.2, .14, 0xefcb91);
+    setFit(-21);
     SG(['체크인 · 더 라운지 8층', '엘리베이터 ↑'], { u: 4.25, v: 40.2, y: 1.5, w: .8, h: .32, f: 'S', bg: '#594250', fg: '#ece2db' });
+    setFit(-29.7,.95);
     SUBZ('목걸이 조형물 · 현관 홀', '1F', '목재 격자 천장 · 도자기 구슬 조형물', HALL, 8.15);
+    setFit(-21);
     SUBZ('엘리베이터 홀', '1F', '트래버틴 벽 · 층별 안내', [4.2, 24.2, 8.8, 39.6]);
+    setFit(-29.7,.95);
     SUBZ('컨시어지 · 벨 데스크', '1F', '짐 보관 · 안내', [17, 55.2, 30, 60.4]);
-    SUBZ('호텔 현관 로비', '1F', '리셉션은 8층', [-4, 4, 33, 60.4]);
+    SUBZ('호텔 현관 로비', '1F', '리셉션은 8층', [-3.7, 4, 33, 60.4]);
+    fit=ID;
 
   }
 
@@ -872,7 +970,8 @@ export function build(K) {
     const y = Y['2F'], yc = NEXT['2F'] - 0.3;
     // The north section is the Central City double-height hall below.
     // Its 1M bridge is at y=3.6, built by centralcity, not this former y=6 link.
-    // 카페 원
+    // 카페 원: west north bay, retaining every furnishing.
+    setFit(-11.88,.64);
     FRONT('u', -8, -6, 12, y, yc, 'E', 'CAFÉ ONE', { sub: '카페 원', fascia: 0x3b2c22, fg: '#efe2c4' });
     WL(-33.1, -6, -8, -6, y, yc, { mat: WARM });
     HP({ tex: 'wood', color: 0xc8a477 }, [-33, -6, -8, 12], y + 0.01);
@@ -881,9 +980,10 @@ export function build(K) {
     for (let u = -26; u <= -11; u += 3.5) for (let v = -3.5; v <= 9.5; v += 3.2) TABLE(u, v, y, { r: 0.42, chairs: 2, chair: 0xd8cbb5 });
     CROWD([-27, -4, -10, 10], y, 6, 201);
     SUBZ('카페 원', '2F', '카페 · 델리', [-33, -6, -8, 12]);
+    setFit(-16.054054054,19/37);
     // 플레이버즈: photos 17–20. The unobserved southern extension is screened off.
     WL(-33.1, 12, 4, 12, y, yc, { mat: 'jwWalnut' });
-    WL(4, 12, 4, 41.7, y, yc, { mat: 'jwWalnut', thick: .2, openings: [{ at: 6.5, w: 3.4, y0: y, y1: y + 3.45 }] });
+    WL(4, 12, 4, 41.7, y, yc, { mat: 'jwWalnut', thick: .2, openings: [{ at: 6.5, w: 3.4, y0: y, y1: y + 3.45 }, {at:20,w:3.2,y0:y,y1:y+3.45}] });
     WL(-33, 41.7, 4, 41.7, y, yc, { mat: 'jwWalnut', thick: .12 });
     HP({ tex: 'jwTerrazzo', color: 0x77746d, gloss: .3 }, [-33, 12, 4, 60.4], y + .012, true, [[-2, 42, 4, 55]]);
     // Photo 20 alternates flecked terrazzo aisles with smooth, darker seating bays.
@@ -1012,10 +1112,11 @@ export function build(K) {
     LIGHTS([-20, 27, 3.6, 41], yc - .12, 3.2, .08, 0xf0c98e);
     MAN(-16, 40.1, y, { sit: true, shirt: 0xddd4c7 }); MAN(-28.1, 37.4, y, { shirt: 0xe5e0d5 });
     // The hall void is kept out of all restaurant/landing surfaces and bounded at 2F.
-    RAILBOX(HALL, y);
+    fit=ID;RAILBOX([-31.6,42,-14.025,55], y);setFit(-16.054054054,19/37);
     SUBZ('플레이버즈', '2F', '뷔페 · 황동 펜던트 · 대리석 카운터', [-33, 12, 4, 41.7]);
     SUBZ('플레이버즈 다이닝', '2F', '월넛 스크린 · 소파 좌석', [-20.4, 26.4, 3.7, 41.6]);
-    // 파티세리 · 티 바
+    // 파티세리 · 티 바 — intact east fitout transferred to the west band.
+    setFit(-31);
     FRONT('u', 17, -6, 26, y, yc, 'W', 'PÂTISSERIE', { sub: '파티세리 · 티 바', door: 20, dw: 4, signAt: 12, fascia: 0x3b2c22, fg: '#efe2c4' });
     WL(17, -6, 33.1, -6, y, yc, { mat: WARM }); WL(17, 26, 33.1, 26, y, yc, { mat: WARM });
     HP({ tex: 'marble', color: 0xf6efe4 }, [17, -6, 33, 26], y + 0.01);
@@ -1027,10 +1128,14 @@ export function build(K) {
     CROWD([18, -4, 31, 24], y, 8, 204);
     SUBZ('파티세리 · 티 바', '2F', '케이크 · 베이커리 · 차', [17, -6, 33, 26]);
     // escalator hall
-    RAILBOX(ESC['2F'], y, 'n');
-    ESCL(27, 40.4, 27, 30.9, y, Y['3F'], 'up'); ESCL(28.6, 40.4, 28.6, 30.9, y, Y['3F'], 'down');
+    fit=ID;
+    RAILBOX([-2.9,30,1,41.6],y,'n');
+    setFit(-28.4);
+    // The relocated lower lift provides the 3F connection; the old flights
+    // intersected the observed HOS 1M and had no photo support.
     SG('3F 연회장 · 5F 그랜드 볼룸', { u: 27.8, v: 41.3, y: y + 2.6, w: 1.6, h: .16, f: 'S', bg: null, fg: '#c5aa7b', bold: false });
     // 타마유라 (일식, 룸 7실)
+    setFit(-31);
     FRONT('v', 43, 17, 33.1, y, yc, 'N', 'TAMAYURA', { sub: '타마유라 · 일식 · 데판야키', door: 20.5, dw: 2.2, fascia: 0x1f1a16, fg: '#efe2c4' });
     WL(17, 43, 17, 60.4, y, yc, { mat: WARM });
     HP({ tex: 'wood', color: 0xd6b88c }, [17, 43, 33, 60.4], y + 0.01);
@@ -1045,21 +1150,14 @@ export function build(K) {
     PARTS('u', 0, [21.2, 25.2, 29.2], 55.5, 60.4, y, yc - y, 0xe9dcc4);
     for (const [u, v] of [[30.3, 45.35], [30.3, 49.45], [30.3, 53.5], [19.2, 58], [23.2, 58], [27.2, 58], [31.1, 58]]) TABLE(u, v, y, { square: true, r: 0.7, chairs: 4, h: 0.72, top: 0x3a2a20, chair: 0x8a6e55, rot: Math.PI / 4 });
     SUBZ('타마유라', '2F', '일식 · 데판야키 · 룸 7실', [17, 43, 33, 60.4]);
-    // 18 and the gallery views: grey stone and warm plaster, no exposed office ceiling grid.
-    HP('jwGreyStone', [4, -6, 17, 41.8], y + .008, true, [[8.8, 24.2, 15.9, 39.5]]);
-    HP('jwGreyStone', [4, 55.15, 17, 60.4], y + .008);
-    HP(0x4a3e35, [4, -6, 17, 41.8], yc - .02, false, [[8.8, 24.2, 15.9, 39.5]]);
-    for (const rect of [[4, 55.15, 17, 60.4], [-33, 41.7, -2, 60.4], [-2, 41.7, 4, 42], [-2, 55, 4, 60.4], [16.5, 41.8, 17, 55.15], [-33, -6, 4, 12], [17, -6, 33, 26], [17, 43, 33, 60.4]]) HP(0x4a3e35, rect, yc - .02, false);
-    HP(0x4a3e35, [17, 26, 33, 43], yc - .02, false, [ESC['3F']]);
-    // Narrow concealed wall-edge light strips leave both the core and HALL open.
-    for (const [u, va, vb] of [[4.25, -5.7, 12], [16.75, -5.7, 41.5], [4.25, 55.4, 60.1], [16.75, 55.4, 60.1]]) B({ u, v: (va + vb) / 2, y: yc - .10, w: .07, d: vb - va, h: .025, mat: { tex: 'emit', color: 0xeec58c }, solid: false });
-    for (const v of [55.4, 60.1]) B({ u: 10.5, v, y: yc - .10, w: 12.4, d: .07, h: .025, mat: { tex: 'emit', color: 0xeec58c }, solid: false });
-    LIGHTS([4, -6, 17, 41.8], yc - .03, 3.8, .08, 0xffdfac, (u, v) => inR(u, v, [8.8, 24.2, 15.9, 39.5], .6));
-    LIGHTS([4, 55.15, 17, 60.4], yc - .03, 3.8, .08, 0xffdfac);
-    LIGHTS([17, 26, 33, 43], yc - .03, 3.8, .08, 0xffdfac, (u, v) => inR(u, v, [21, 29, 30, 42]));
-    SUBZ('에스컬레이터 홀', '2F', '1F 현관 ↔ 3F 연회장', [17, 26, 33, 43]);
-    SUBZ('데판야키 카운터', '2F', '타마유라', [17.5, 45.5, 25.6, 53.8]);
-    SUBZ('2F 로비', '2F', '레스토랑 입구', [4, -6, 17, 41.8]);
+    fit=ID;
+    for(const r of[[-17,-6,-14,12],[-14,26,-12.3,42],[-14,41.8,2,43],[-12.2,26,2,29.6]]){
+      HP('jwGreyStone',r,y+.008);HP(0x4a3e35,r,yc-.02,false);LIGHTS(r,yc-.03,2.8,.08,0xffdfac);
+    }
+    SUBZ('2F 로비','2F','레스토랑 · 호텔 상층 연결',[-17,-6,2,43]);
+    SUBZ('에스컬레이터 홀','2F','호텔 현관 연결',[-5,26,2,43]);
+    SUBZ('데판야키 카운터','2F','타마유라',[-13.5,45.5,-5.4,53.8]);
+
   }
 
   // =====================================================================
@@ -1068,7 +1166,7 @@ export function build(K) {
   function floor3() {
     const y = Y['3F'], yc = NEXT['3F'] - 0.3;
     const bins = [[-31, -19.5], [-19.5, -8], [-8, 3.5]];
-    BOH([-33.1, -60.4, 3.5, -58], y, yc - y); BOH([-33.1, -58, -31, -12], y, yc - y); BOH([-33.1, -12, 4.9, 60.4], y, yc - y);
+    BOH([-33.1, -60.4, 3.5, -58], y, yc - y); BOH([-33.1, -58, -31, -12], y, yc - y); BOH([-33.1,-12,4.9,29.5],y,yc-y);BOH([-33.1,34.5,4.9,60.4],y,yc-y);BOH([-33.1,29.5,-14,34.5],y,yc-y);
     // row A (north, doors face south), row B (south, doors face north)
     ROOMROW('v', -38, bins.map(([a, b], i) => [a, b, `살롱 ${i + 1}`]), y, yc - y, 'S', { dw: 2.0, lw: 1.6 });
     ROOMROW('v', -32, bins.map(([a, b], i) => [a, b, `살롱 ${i + 4}`]), y, yc - y, 'N', { dw: 2.0, lw: 1.6 });
