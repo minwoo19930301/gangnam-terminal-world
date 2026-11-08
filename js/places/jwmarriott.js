@@ -1,6 +1,7 @@
 // JW 메리어트 호텔 서울 — 센트럴시티 동측 블록 (OSM 136986976), 지상 33층 · 지하 4층.
 // Local frame: u = across the block (east, toward the 경부선 service road), v = along the block (south, toward 사평대로).
-//   north edge (v≈-60.7) = shared wall with 신세계 강남점 (J5), west edge (u≈-33.3) = shared wall with 센트럴시티 (J6).
+// Round 20: the north podium and B1 public interiors belong to centralcity.
+// The hotel retains its tower, documented southern entrance and upper hotel floors.
 // Podium 1F–6F over the whole footprint, 7F = podium roof (JW 가든 + 더 마고 그릴 / 모보 바 pavilion),
 // tower 8F (체크인 로비 · 더 라운지) – 33F (펜트하우스), crown to 144 m (= OSM height).
 export const meta = {
@@ -18,6 +19,8 @@ export const meta = {
     'https://commons.wikimedia.org/wiki/File:메리어트호텔.jpg (2009 tower photo: ribbon windows, crown plaque, podium granite)',
     'https://www.trvlogue.com/ko/jw-marriott-seoul-fitness-guide',
     'OSM 136986976 footprint, POIs 12076553105 (THE LOUNGE), 12079262441 (Flavors), 933102389',
+    'refs/user_walk/20261107/manifest.json (private, 2026-11-07 primary reference)',
+    '.codex-jobs/evidence/up20_cc.json (round 20 verified public-space ownership)',
   ],
 };
 
@@ -411,12 +414,13 @@ export function build(K) {
     if (ESC[k]) h.push(ESC[k]);
     if (k === '6F') h.push(BALL);
     if (k === 'B3') h.push(POOL, KIDS, SCUBA);
-    if (k === '2F') h.push(HALL);
+    if (k === '2F') h.push(HALL, [-33.5, -61, 16, -6.2]);
     if (k === '9F') h.push([3.0, 48.8, 5.2, 57]);
     return h;
   };
-  const floorMat = { B4: { tex: 'tile', color: 0xc9c5bd }, B3: { tex: 'tile', color: 0xe6e2da }, B2: { tex: 'marble', color: 0xe8dfd0 }, B1: 'parking', '1F': 'jwHoney', '2F': { tex: 'marble', color: 0xeee4d4 }, '3F': 'jwCarpet', '4F': 'jwCarpet', '5F': 'jwCarpet', '6F': { tex: 'concrete', color: 0xcfcac2 }, '7F': { tex: 'sidewalk', color: 0xe2dacb }, '8F': 'jwHoney', '9F': 'jwChevron', '10F': 0xa59b8a, '11F': 0xa59b8a };
+  const floorMat = { B4: { tex: 'tile', color: 0xc9c5bd }, B3: { tex: 'tile', color: 0xe6e2da }, B2: { tex: 'marble', color: 0xe8dfd0 }, '1F': 'jwHoney', '2F': { tex: 'marble', color: 0xeee4d4 }, '3F': 'jwCarpet', '4F': 'jwCarpet', '5F': 'jwCarpet', '6F': { tex: 'concrete', color: 0xcfcac2 }, '7F': { tex: 'sidewalk', color: 0xe2dacb }, '8F': 'jwHoney', '9F': 'jwChevron', '10F': 0xa59b8a, '11F': 0xa59b8a };
   for (const [k, y] of LV) {
+    if (k === 'B1') continue; // public B1 floor belongs to centralcity
     const tower = y >= Y['8F'];
     const poly = tower ? RECT(TW[0] + 0.06, TW[1] + 0.06, TW[2] - 0.06, TW[3] - 0.06) : (y > 1 ? FPLI : FPL);   // inset: keeps the slab edge off the facade plane (z-fighting)
     const holes = holesFor(k).map(h => RECT(...h));
@@ -429,7 +433,7 @@ export function build(K) {
   // ENVELOPE
   // =====================================================================
   // basement retaining walls
-  K.polyWalls(FPL, Y.B4, -0.3, { mat: 0x8d8a84, inner: 0xd9d4cb, thick: 0.4 });
+  K.polyWalls(FPL, Y.B4, Y.B1 - 0.3, { mat: 0x8d8a84, inner: 0xd9d4cb, thick: 0.4 });
   // 1F: shared walls N/W (stone both sides, junction openings), glass storefront E/S
   const H1 = 6;
   EW('N', UW, UE, 0, H1, { mat: { tex: 'jwStone' }, inner: WARM, openings: [{ s: -0.04, w: 6.6, y0: 0, y1: 3.3 }] });               // J5 → 신세계
@@ -536,7 +540,7 @@ export function build(K) {
   for (const u of [10.4, 14.2]) for (const [v0, v1] of [[26.3, 27.7], [29.5, 30.55]]) WL(u, v0, u, v1, Y.B4, topStair, { mat: 0xb8b2a8, thick: 0.06 });
   K.groundHole(RECT(...STH));
   const elevFloors = [
-    ['B4', '마르퀴스 피트니스 · 농구장 · 스쿼시 · 조깅트랙'], ['B3', '마르퀴스 수영장 · 키즈풀 · 스쿠버풀'], ['B2', '마르퀴스 스파 리셉션 · 라커 · 스파 레스토랑'], ['B1', '호텔 주차장'],
+    ['B4', '마르퀴스 피트니스 · 농구장 · 스쿼시 · 조깅트랙'], ['B3', '마르퀴스 수영장 · 키즈풀 · 스쿠버풀'], ['B2', '마르퀴스 스파 리셉션 · 라커 · 스파 레스토랑'],
     ['1F', '호텔 현관 · 컨시어지 · 센트럴시티 연결'], ['2F', '플레이버즈 · 타마유라 · 파티세리'], ['3F', '연회장 살롱 1–6'], ['4F', '웨딩 · 연회 사무실'], ['5F', '그랜드 볼룸'], ['6F', '연회 지원 (직원)'],
     ['7F', '더 마고 그릴 · 모보 바 · JW 가든'], ['8F', '로비 · 체크인 · 더 라운지'], ['9F', '이그제큐티브 라운지'], ['10F', '사무실'], ['11F', '호텔 사무실'],
   ];
@@ -572,8 +576,7 @@ export function build(K) {
   zf('B4', '마르퀴스 스파 & 피트니스 클럽 · 피트니스 · 농구 코트 · 스쿼시 · 85m 조깅트랙');
   zf('B3', '마르퀴스 스파 & 피트니스 클럽 · 25m 6레인 수영장 · 키즈풀 · 자쿠지 · 스쿠버풀');
   zf('B2', '마르퀴스 스파 & 피트니스 클럽 · 리셉션 · 스파 트리트먼트 · 라커 · 스파 레스토랑');
-  zf('B1', '호텔 주차장 · 엘리베이터 홀');
-  zf('1F', '호텔 현관 · 컨시어지 · 벨 데스크 · 신세계/센트럴시티 연결 아케이드');
+  zf('1F', '호텔 현관 · 컨시어지 · 벨 데스크', [-4, 4, 33, 60.4]);
   zf('2F', '플레이버즈(뷔페) · 타마유라(일식) · 파티세리 · 카페 원');
   zf('3F', '연회장 살롱 1–6 · 프리펑션');
   zf('4F', '웨딩 상담 · 연회 사무실');
@@ -639,7 +642,7 @@ export function build(K) {
   };
   const PARTS = (axis, at, list, a0, a1, y, h, mat = WARM) => { for (const s of list) axis === 'u' ? WL(s, a0, s, a1, y, y + h, { mat, thick: 0.15 }) : WL(a0, s, a1, s, y, y + h, { mat, thick: 0.15 }); };
 
-  DETAIL('1F', [UW, -60.7, UE, 60.9], '현관 홀 · 승강기 로비 · 아케이드', floor1, 8.32);
+  DETAIL('1F', [-4, 4, UE, 60.4], '호텔 현관 홀 · 승강기 로비', floor1, 8.32);
   DETAIL('2F', [UW, -60.7, UE, 60.9], '플레이버즈 · 파티세리 · 타마유라', floor2);
   floor3(); floor4();
   DETAIL('5F', [UW, -60.7, UE, 60.9], '그랜드 볼룸 · 포이어', floor5, 28.4);
@@ -652,45 +655,9 @@ export function build(K) {
   // =====================================================================
   function floor1() {
     const y = 0, yc = NEXT['1F'] - 0.3;
-    // arcade floor runners
-    HP({ tex: 'marble', color: 0xb8ab98 }, [-0.7, -60.4, 0.7, -4], y + 0.012);
-    HP({ tex: 'marble', color: 0xb8ab98 }, [-33, -0.7, -4, 0.7], y + 0.012);
-    // NW: 쉐이크쉑
-    FRONT('u', -4, -60.4, -38, y, yc, 'E', 'SHAKE SHACK', { sub: '쉐이크쉑', fascia: 0x1f1f1f, fg: '#ffffff', subFg: '#9ccf5a' });
-    WL(-33.1, -38, -4, -38, y, yc, { mat: WARM });
-    HP({ tex: 'wood', color: 0xc49a6a }, [-33, -60.4, -4, -38], y + 0.01);
-    B({ u: -30.4, v: -49, y, w: 1.2, d: 13, h: 1.05, mat: 0x2b2b2b, top: 0xd8d2c6 });
-    SG(['SHAKE SHACK', '버거 · 핫도그 · 셰이크 · 프라이'], { u: -32.9, v: -49, y: 3.2, w: 9, h: 1.6, f: 'E', bg: '#111', fg: '#ffffff' });
-    for (let u = -25; u <= -7; u += 3.6) for (let v = -57.5; v <= -41; v += 3.3) TABLE(u, v, y, { square: true, r: 0.4, chairs: 2, chair: 0x5a5a5a, top: 0x8b6b4a, rot: Math.PI / 2 });
-    CROWD([-28, -58, -6, -40], y, 12, 11);
-    SUBZ('쉐이크쉑', '1F', '버거 · 센트럴시티 연결 아케이드', [-33, -60.4, -4, -38]);
-    // NW middle: closed block with light-box posters + toilets
-    BOH([-33.1, -38, -4, -4], y, yc - y);
-    const posters = [['JW 메리어트 호텔 서울', '플레이버즈 2F · 올데이 뷔페'], ['마르퀴스 스파 & 피트니스', 'B2 – B4 · 06:00 – 22:00'], ['그랜드 볼룸 5F', '웨딩 · 연회 문의'], ['더 마고 그릴 7F', '우드 파이어 그릴 · JW 가든']];
-    posters.forEach((t, i) => { B({ u: -4.08, v: -34 + i * 7.5, y: 0.6, w: 0.12, d: 3.2, h: 2.3, mat: 0x222222, solid: false }); SG(t, { u: -3.97, v: -34 + i * 7.5, y: 1.75, w: 3.0, h: 2.1, f: 'E', bg: '#efe6d6', fg: '#4a3a2a' }); });
-    DOORP(-24, -4.03, y, 'S', 1.2, 0xbcae98); DOORP(-18, -4.03, y, 'S', 1.2, 0xbcae98);
-    SG(['화장실'], { u: -21, v: -3.95, y: 2.75, w: 2.2, h: 0.45, f: 'S', bg: '#2b241d', fg: '#f0e2c4' });
-    // NE: back of house, 순대실록, 101번지남산돈까스
-    BOH([4, -60.4, 33.1, -30], y, yc - y, { tex: 'jwStone' });
-    DOORP(4.03, -40, y, 'W', 1.8, 0x7d7a74); SG(['직원 출입구 · 하역장'], { u: 3.95, v: -40, y: 2.75, w: 2.6, h: 0.4, f: 'W', bg: '#333', fg: '#fff' });
-    FRONT('u', 4, -30, -17, y, yc, 'W', '순대실록', { sub: '센트럴시티점', fascia: 0x5a2a1c, fg: '#f6e7c8' });
-    FRONT('u', 4, -17, -4, y, yc, 'W', '101번지남산돈까스', { sub: '센트럴시티점', fascia: 0x1c3a5a, fg: '#ffffff', sw: 10 });
-    WL(4, -17, 33.1, -17, y, yc, { mat: WARM, thick: 0.2 });
-    WL(4, -4, 33.1, -4, y, yc, { mat: WARM, thick: 0.2 });
-    for (const [v0, v1, c] of [[-30, -17, 0xa0522d], [-17, -4, 0x2a5a8a]]) {
-      HP({ tex: 'wood', color: 0xb98f63 }, [4, v0, 33, v1], y + 0.01);
-      B({ u: 31.6, v: (v0 + v1) / 2, y, w: 1.4, d: v1 - v0 - 2, h: 1.05, mat: 0x4a3a2e, top: 0xe2dccf });
-      SG(['주방'], { u: 33.0, v: (v0 + v1) / 2, y: 2.6, w: 2, h: 0.5, f: 'W', bg: '#' + c.toString(16), fg: '#fff' });
-      for (let u = 8; u <= 27; u += 3.4) for (let v = v0 + 2.2; v < v1 - 1.5; v += 3.4) TABLE(u, v, y, { square: true, r: 0.45, chairs: 4, rot: Math.PI / 4, chair: 0x6b4a32 });
-      CROWD([6, v0 + 1, 28, v1 - 1], y, 7, v0);
-    }
-    SUBZ('순대실록 센트럴시티점', '1F', '순대국 · 한식', [4, -30, 33, -17]);
-    SUBZ('101번지남산돈까스 센트럴시티점', '1F', '돈까스', [4, -17, 33, -4]);
-    // SW: hotel back office / luggage / toilets
-    BOH([-33.1, 4, -4, 60.4], y, yc - y);
-    DOORP(-3.97, 8, y, 'E', 1.2, 0xbcae98); DOORP(-3.97, 12, y, 'E', 1.2, 0xbcae98);
-    SG(['화장실'], { u: -3.9, v: 10, y: 2.75, w: 2.2, h: 0.45, f: 'E', bg: '#2b241d', fg: '#f0e2c4' });
-    B({ u: -3.6, v: 30, y, w: 0.8, d: 4, h: 1.05, mat: WALNUT, top: 0xe8e0d0 }); SG(['수하물 보관'], { u: -3.9, v: 30, y: 2.4, w: 2.6, h: 0.45, f: 'E', bg: '#2b241d', fg: '#f0e2c4' });
+    // Round 20 sweet/L2,L12 and ccm/L1: the former north food court,
+    // loading rooms, poster walls and full-width connecting arcade were invented.
+    // centralcity now constructs the hall/1M arcade and the HOS upper floor.
     // ---- ground entrance hall, photos 05/11/12/14/15 ----
     // A local void in 2F makes the photographed ~8 m room without altering facade bands.
     HP('jwHoney', [-4, 4, 33, 60.4], .009, true, [[21.4, 29.5, 29.8, 41.8], [8.8, 24.2, 15.9, 39.5]]);
@@ -895,12 +862,7 @@ export function build(K) {
     SUBZ('엘리베이터 홀', '1F', '트래버틴 벽 · 층별 안내', [4.2, 24.2, 8.8, 39.6]);
     SUBZ('컨시어지 · 벨 데스크', '1F', '짐 보관 · 안내', [17, 55.2, 30, 60.4]);
     SUBZ('호텔 현관 로비', '1F', '리셉션은 8층', [-4, 4, 33, 60.4]);
-    // Shared arcade routes, including J5 and J6, keep their coordinates and clear width.
-    SG('신세계백화점 강남점 ↑', { u: 0, v: -50, y: 2.6, w: 2.7, h: .3, f: 'S', bg: '#352b25', fg: '#e9dfce' });
-    SG('← 센트럴시티 · 호남선', { u: -20, v: 0, y: 2.6, w: 2.7, h: .3, f: 'E', bg: '#352b25', fg: '#e9dfce' });
-    LIGHTS([-4, -60, 4, -4], yc, 5, .2); LIGHTS([-33, -4, 33, 4], yc, 5, .2);
-    CROWD([-3, -58, 3, -6], y, 4, 101); CROWD([-30, -3, 30, 3], y, 3, 102);
-    SUBZ('센트럴시티 연결 아케이드', '1F', '신세계백화점 · 센트럴시티 연결', [-33, -60.4, 33, 4]);
+
   }
 
   // =====================================================================
@@ -908,14 +870,8 @@ export function build(K) {
   // =====================================================================
   function floor2() {
     const y = Y['2F'], yc = NEXT['2F'] - 0.3;
-    // north: closed blocks + link corridor to 신세계 (BVLGARI side)
-    BOH([-33.1, -60.4, -3, -6], y, yc - y); BOH([3, -60.4, 33.1, -6], y, yc - y);
-    HP({ tex: 'wood', color: 0x9b7a56 }, [-3, -60.4, 3, -6], y + 0.01);
-    B({ u: 0, v: -60.1, y, w: 5.4, d: 0.12, h: 3.2, mat: GLD, solid: true, structural: true }); B({ u: 0, v: -60.0, y: y + 3.2, w: 6, d: 0.2, h: 0.3, mat: BRONZE, solid: false });
-    SG(['신세계백화점 강남점 연결통로', '불가리(BVLGARI) 매장 옆 · 영업시간 내 개방'], { u: 0, v: -59.85, y: y + 3.85, w: 5.6, h: 0.75, f: 'S', bg: '#2b241d', fg: '#efe2c4' });
-    for (let v = -54; v <= -12; v += 7) { for (const s of [-1, 1]) { B({ u: s * 2.95, v, y: y + 1.0, w: 0.08, d: 2.2, h: 1.6, mat: [0x8a5a44, 0x46607a, 0xb8a070, 0x5f7a52][(v / 7 | 0) & 3], solid: false }); } }
-    LIGHTS([-3, -60, 3, -6], yc, 3.5, 0.8);
-    SUBZ('신세계 연결통로', '2F', '신세계백화점 강남점 (불가리 옆)', [-3, -60.4, 3, -6]);
+    // The north section is the Central City double-height hall below.
+    // Its 1M bridge is at y=3.6, built by centralcity, not this former y=6 link.
     // 카페 원
     FRONT('u', -8, -6, 12, y, yc, 'E', 'CAFÉ ONE', { sub: '카페 원', fascia: 0x3b2c22, fg: '#efe2c4' });
     WL(-33.1, -6, -8, -6, y, yc, { mat: WARM });
@@ -2091,41 +2047,12 @@ export function build(K) {
   }
 
   // =====================================================================
-  // B1–B4 — 주차장 · 마르퀴스 스파 & 피트니스 클럽
+  // B2–B4 — 기존 지하층 · 마르퀴스 스파 & 피트니스 클럽
   // =====================================================================
   function basements() {
-    // ---------- B1 parking ----------
-    {
-      const y = Y.B1, yc = NEXT.B1 - 0.3;
-      BOH([21.4, 29.5, 25.4, 41.8], y, yc - y, 0x9a968e);
-      BOH([-33.1, -60.4, -10, -46], y, yc - y, 0x9a968e); SG(['방재실 · 전기실'], { u: -21, v: -45.9, y: y + 2.6, w: 2.6, h: 0.4, f: 'S', bg: '#333', fg: '#fff' });
-      WL(4.6, 21, 4.6, 42, y, yc, { mat: GL, thick: 0.05, openings: [{ at: 11, w: 2, y0: y, y1: y + 2.4 }] });
-      WL(4.6, 21, 8.85, 21, y, yc, { mat: GL, thick: 0.05 }); WL(4.6, 42, 15.85, 42, y, yc, { mat: GL, thick: 0.05 });
-      SG(['JW 메리어트 호텔 엘리베이터', '로비 8F · 객실 · 마르퀴스 B2–B4'], { u: 4.5, v: 32, y: y + 2.9, w: 3.4, h: 0.7, f: 'W', bg: '#2b241d', fg: '#efe2c4' });
-      for (let u = -29.4; u <= 30; u += 8.4) for (let v = -54.6; v <= 56; v += 8.4) {
-        if (inR(u, v, [-33.1, -60.4, -10, -46], 0.6) || inR(u, v, [4, 20, 16.5, 43], 0.6) || inR(u, v, [21, 29, 26, 42.5], 0.6)) continue;
-        B({ u, v, y, w: 0.8, d: 0.8, h: yc - y, mat: 0xcfcac2, skip: ['top', 'bottom'] }); B({ u, v, y, w: 0.84, d: 0.84, h: 1.0, mat: 0xe0b03a, solid: false, skip: ['top', 'bottom'] });
-      }
-      // two aisles along v with stalls both sides
-      for (const [uA, dir] of [[-19, 1], [21.5, 1]]) {
-        HP({ tex: 'asphalt', color: 0x6a6a6a }, [uA - 3, -58, uA + 3, 58], y + 0.01);
-        for (let v = -57; v <= 57; v += 2.5) for (const side of [-1, 1]) {
-          const uc = uA + side * 5.5;
-          if (inR(uc, v, [-33.1, -60.4, -10, -46], 1) || inR(uc, v, [4, 20, 16.5, 43], 1.5) || inR(uc, v, [20, 28, 27, 43], 1)) continue;
-          const p = [P(uc - 2.5, v - 0.06), P(uc + 2.5, v - 0.06), P(uc + 2.5, v + 0.06), P(uc - 2.5, v + 0.06)];
-          K.quad(0xf2f2f2, p.map(q => [q[0], y + 0.02, q[1]]), [0, 1, 0]);
-          if (rnd() < 0.6 && v < 56) { const [x, z] = P(uc, v + 1.25); K.vehicle({ x, y, z, rotY: side > 0 ? FACE.E : FACE.W, kind: rnd() < 0.15 ? 'van' : 'car' }); }
-        }
-        for (let v = -50; v <= 50; v += 20) FT('→', { u: uA, v, y: y + 0.03, w: 2, h: 2, r: Math.PI / 2, fg: '#f2f2f2' });
-      }
-      HP({ tex: 'asphalt', color: 0x6a6a6a }, [-16, -3, 18.5, 3], y + 0.01);
-      SG(['P  B1 호텔 주차장'], { u: 0, v: 2.9, y: y + 3.6, w: 4, h: 0.6, f: 'S', bg: '#1d4f9a', fg: '#ffffff', twoSided: true });
-      SG(['출구 →'], { u: 21.5, v: 57, y: y + 3.6, w: 2.4, h: 0.5, f: 'N', bg: '#1d7a3a', fg: '#ffffff' });
-      LIGHTS([-33, -60.4, 33, 60.4], yc, 5.6, 0.25, 0xf2f6ff);
-      MAN(2, 30, y, {}); MAN(-19, 10, y, {}); MAN(21, -20, y, {});
-      SUBZ('주차 구역 A', 'B1', '서측 통로 · 셀프 주차', [-27, -46, -11, 58]); SUBZ('주차 구역 B', 'B1', '동측 통로 · 발렛', [13.5, -58, 30, 58]); SUBZ('방재실 · 전기실', 'B1', '직원 전용', [-33.1, -60.4, -10, -46]); SUBZ('엘리베이터 홀', 'B1', '로비 8F · 객실 · 마르퀴스 B2–B4', [4.6, 21, 15.85, 42]);
-      SUBZ('호텔 주차장', 'B1', '발렛 · 셀프 주차', [-33, -60.4, 33, 60.4]);
-    }
+    // Round 20 sweet/L1, ssg1f/C01, famille/L10: B1 is Sweet Park and
+    // House of Shinsegae. Its floors, walls, ceilings, signs and furnishings
+    // are supplied by centralcity; no hotel parking remains on this level.
     // ---------- B2 Marquis reception / spa / lockers / spa restaurant ----------
     {
       const y = Y.B2, yc = NEXT.B2 - 0.3;
@@ -2346,11 +2273,8 @@ export function build(K) {
     SG(['JW MARRIOTT'], { u: UE + 0.22, v: 48.5, y: 8.6, w: 15, h: 2.1, f: 'E', bg: '#d3c4aa', fg: '#4a3a28' });
     SG(['JW 메리어트 호텔 서울'], { u: UE + 0.22, v: 48.5, y: 6.95, w: 8.5, h: 0.95, f: 'E', bg: '#d3c4aa', fg: '#4a3a28' });
     SG(['JW MARRIOTT HOTEL SEOUL'], { u: 4, v: vS(4) + 0.22, y: 8.8, w: 22, h: 1.8, f: 'S', bg: '#d3c4aa', fg: '#4a3a28' });
-    SG(['센트럴시티 · 신세계백화점 연결'], { u: UE + 0.12, v: 0, y: 3.85, w: 5.6, h: 0.55, f: 'E', bg: '#2b241d', fg: '#f0e4cc' });
-    SG(['JW 메리어트 호텔 서울 남측 출입구'], { u: 8, v: vS(8) + 0.12, y: 3.85, w: 4.4, h: 0.5, f: 'S', bg: '#2b241d', fg: '#f0e4cc' });
     // sidewalk planters along the east side
     for (let v = -50; v <= 30; v += 10) { B({ u: 35.0, v, y: 0, w: 1.4, d: 3.6, h: 0.6, mat: { tex: 'jwStone' } }); TREE(35.0, v, 0.6, { h: 6, kind: 'zelkova' }); }
-    // Round 20: no planters/trees along the south face — the 파미에스테이션 glass gallery and brick hall (module famille) stand there (user photos #262–#273).
     CROWD([33.5, -40, 37.5, 36], 0, 8, 1501);
   }
 }

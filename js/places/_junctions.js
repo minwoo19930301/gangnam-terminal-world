@@ -13,12 +13,14 @@ export const JUNCTIONS = [
   { id: 'J3', a: 'gotomall', b: 'centralcity', y: LEVELS.B1, pa: [-150, -57.5], pb: [-128, -5], width: 8, owner: 'centralcity',
     note: 'GOTO south wall opening near x=-150 → corridor → 센트럴시티 B1 (north tip of the complex).' },
   // ---- shared walls between adjacent buildings (openings both sides, no corridor) ----
-  { id: 'J4', a: 'shinsegae', b: 'centralcity', y: 0, pa: [-88, 14], pb: [-96, 17], width: 8, owner: 'none', alsoY: [LEVELS.B1],
-    note: 'Shared edge (-107,-24)->(-77,55). Openings centered at (-92,15.5) on 1F (y=0) and B1 (y=-6).' },
-  { id: 'J5', a: 'shinsegae', b: 'jwmarriott', y: 0, pa: [-46, 39], pb: [-44, 47], width: 6, owner: 'none',
-    note: 'Shared edge (-14,31)->(-77,55). Opening centered at (-45.5,43) on 1F.' },
-  { id: 'J6', a: 'centralcity', b: 'jwmarriott', y: 0, pa: [-60, 113], pb: [-50, 110], width: 6, owner: 'none',
-    note: 'Shared edge (-77,55)->(-33,168). Opening centered at (-55,111.5) on 1F.' },
+  { id: 'J4', a: 'shinsegae', b: 'centralcity', y: 0, pa: [-88, 14], pb: [-96, 17], width: 8, owner: 'none',
+    note: 'Retained unnumbered west-side 1F opening at (-91.73,15.53). The rotated plan has no numbered gate here; round20 moves the former B1 link to J_CC_9GATE.' },
+  { id: 'J5', a: 'shinsegae', b: 'centralcity', y: 0, pa: [-46, 39], pb: [-44, 47], width: 6, owner: 'centralcity', alsoY: [3.6],
+    note: 'Real 3GATE crosses the south wall at (-45.96,43.08), into the Central City corridor under JW. The 1M bridge is level at y3.6 above this connection (photos #479–481).' },
+  { id: 'J_CC_9GATE', a: 'shinsegae', b: 'centralcity', y: LEVELS.B1, pa: [-43.82,37.99], pb: [-38.67,51.495], width: 6.5, owner: 'centralcity',
+    note: 'Unmirrored B1 9GATE: south-wall crossing (-42.384,41.72), actual portal (-38.67,51.495), from ssg_r20_gates.json. Central City carries the corridor south to Sweet Park.' },
+  // Former J6 at (-55,111.5) is now internal Central City public circulation.
+  // It is no longer an entrance to the hotel's invented ground-floor rooms.
   // ---- 7호선 concourse ↔ 파미에스테이션 ----
   { id: 'J7', a: 'station', b: 'centralcity', y: LEVELS.B1, pa: [-45, 191], pb: [-45, 203], width: 8, owner: 'station',
     note: '7호선 B1 concourse (band from (45,150) to (-175,262)) meets the 파미에스테이션 round building B1 (center (-47,215)).' },
@@ -26,7 +28,7 @@ export const JUNCTIONS = [
   // Two connections are supported by the user walkthrough; this shared-edge location is a schematic fit,
   // not a surveyed gate position. Official guide + photo control residuals are recorded in both research files.
   { id: 'J8', a: 'shinsegae', b: 'centralcity', y: 0, pa: [-78.917, 37.725], pb: [-86.362, 40.551], width: 8, owner: 'none',
-    note: '1게이트 방면 보조 연결: shared edge at (-82.640,39.138), 신세계 local (u=0,v=68). Open 1F passage only; J4 remains the 3게이트 hall link and the existing B1 link.' },
+    note: 'Retained unnumbered west-side 1F auxiliary connection at (-82.640,39.138), 신세계 local (u=0,v=68). No numbered gate appears here on the rotated plan. Real 3GATE is J5; B1 9GATE is J_CC_9GATE.' },
   { id: 'J9', a: 'shinsegae', b: 'centralcity', y: 7, pa: [-72.647, 42.938], pb: [-83.810, 47.175], width: 1.8, owner: 'centralcity',
     note: '1F 광장 백화점 2층 에스컬레이터의 상부 연결. Shared-edge landing at (-80.089,45.763), 신세계 local (u=0,v=75.1), uses the retained 2F stair-core south landing. Landing alignment is inferred; official floor guide confirms destination, not surveyed dimensions.' },
   // ---- round 10 ----
