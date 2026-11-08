@@ -35,7 +35,7 @@ for (const id of PLACES) {
     claims: m.meta?.claims || [], claimRoads: m.meta?.claimRoads || [], claimAreas: m.meta?.claimAreas || [],
     box: isFinite(x0) ? [r(x0), r(z0), r(x1), r(z1)] : null, y: isFinite(y0) ? [r(y0), r(y1)] : [0, 0],
     floors: [...new Set(K._.zonesList.map(z => z.floor || '1F'))], cells: [...cells],
-    junctions: JUNCTIONS.filter(j => j.a === id || j.b === id).map(j => ({ other: j.a === id ? j.b : j.a, x: r((j.pa[0] + j.pb[0]) / 2), z: r((j.pa[1] + j.pb[1]) / 2), y: j.y, also: j.alsoY || [] })),
+    junctions: JUNCTIONS.filter(j => j.a === id || j.b === id).map(j => ({ id: j.id, other: j.a === id ? j.b : j.a, x: r((j.pa[0] + j.pb[0]) / 2), z: r((j.pa[1] + j.pb[1]) / 2), y: j.y, also: j.alsoY || [] })),
   };
 }
 // ---- entrances: where you can walk from outside into a building module's indoor zones at street level ----
@@ -89,7 +89,7 @@ for (const id of PLACES) {
     out[id].entrances = opens.filter(o => o.w >= 1);
   }
   // junction directions (pa → pb) for the corridor doors
-  for (const [id, v] of Object.entries(out)) for (const j of v.junctions) { const jj = JUNCTIONS.find(q => (q.a === id && q.b === j.other) || (q.b === id && q.a === j.other)); if (jj) { const dx = jj.pb[0] - jj.pa[0], dz = jj.pb[1] - jj.pa[1], L = Math.hypot(dx, dz) || 1; const s = jj.a === id ? 1 : -1; j.nx = Math.round(dx / L * s * 1000) / 1000; j.nz = Math.round(dz / L * s * 1000) / 1000; } }
+  for (const [id, v] of Object.entries(out)) for (const j of v.junctions) { const jj = JUNCTIONS.find(q => q.id === j.id); if (jj) { const dx = jj.pb[0] - jj.pa[0], dz = jj.pb[1] - jj.pa[1], L = Math.hypot(dx, dz) || 1; const s = jj.a === id ? 1 : -1; j.nx = Math.round(dx / L * s * 1000) / 1000; j.nz = Math.round(dz / L * s * 1000) / 1000; } }
 }
 fs.writeFileSync(path.join(ROOT, 'js/places/_meta.json'), JSON.stringify(out));
 for (const [id, v] of Object.entries(out)) console.log(id.padEnd(20), JSON.stringify(v.box), JSON.stringify(v.y), v.floors.length + ' floors', v.junctions.length + ' junctions', (v.entrances || []).length + ' entrances');

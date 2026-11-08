@@ -9,6 +9,7 @@ import * as gyeongbu from '../js/places/gyeongbu.js';
 import * as shinsegae from '../js/places/shinsegae.js';
 import * as centralcity from '../js/places/centralcity.js';
 import * as jwmarriott from '../js/places/jwmarriott.js';
+import { JUNCTIONS } from '../js/places/_junctions.js';
 
 const context = new Proxy({}, {
   get: (target, key) => key === 'measureText' ? text => ({width: String(text).length * 10}) :
@@ -97,3 +98,15 @@ for (const el of suspect) for (const floor of el.floors) {
   if (!canWalk(destination,destination,true)) throw new Error(`${el.name} ${floor.label}: cannot leave destination`);
   console.log(`OK ${el.name} ${floor.label} arrival`);
 }
+
+// Multiple connections join Shinsegae and Central City. Verify the published
+// area-switch direction belongs to this 9GATE, not another connection's pair.
+const meta = JSON.parse(fs.readFileSync(new URL('../js/places/_meta.json', import.meta.url), 'utf8'));
+const gate = JUNCTIONS.find(j => j.id === 'J_CC_9GATE');
+const dx=gate.pb[0]-gate.pa[0], dz=gate.pb[1]-gate.pa[1], length=Math.hypot(dx,dz);
+for (const [place,sign] of [[gate.a,1],[gate.b,-1]]) {
+  const j=meta[place].junctions.find(j => j.id === gate.id);
+  if (!j || Math.abs(j.nx-sign*dx/length)>.001 || Math.abs(j.nz-sign*dz/length)>.001)
+    throw new Error(`${place}: wrong 9GATE area-switch direction; regenerate metadata`);
+}
+console.log('OK 9GATE area-switch directions');
