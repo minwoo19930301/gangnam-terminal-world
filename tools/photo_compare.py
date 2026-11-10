@@ -1,14 +1,16 @@
 """Render the model from every photo of the user's walk and put each render next to its photo.
 
-usage: uv run -q --with pillow python tools/photo_compare.py refs/user_walk/<date> [out_dir] [--every N] [--modules a,b] [--redo i,j,...] [--range a-b]
+usage: uv run -q --with pillow python tools/photo_compare.py refs/user_walk/<date> [out_dir] [--every N] [--modules a,b] [--redo i,j,...] [--range a-b] [--floors pose_floor.json] [--nosnap]
 
 Reads <dir>/places.json (the approved, stitched place reading: i, place, module, floor, x, z, yawDeg) and <dir>/manifest.json,
 renders one view per photo with tests/shot.mjs --gpu (y = that floor's level), and writes <out>/<module>_<k>.png sheets
 (6 pairs per sheet, each photo | render; header = photo #, time, place, floor, pose) plus <out>/poses.json.
+Run `node tools/pose_floor.mjs <dir>` first: cameras then stand on the model's real floor (다이소 -4, stairs), and the
+header marks poses with no floor ([NO FLOOR]) or inside a wall ([INSIDE WALL]).
 The photos are private (refs/ is git-ignored); the sheets go to shots/ (also ignored). Never publish either.
 """
 import json, os, sys, subprocess
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFont, ImageStat
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 args = sys.argv[1:]
 if not args: print(__doc__); sys.exit(1)
@@ -25,12 +27,18 @@ sel = [p for p in sorted(places, key=lambda p: p['i']) if p['i'] % every == 0 an
 if only: sel = [p for p in sel if p.get('module') in only]
 if '--range' in args:  # only photo numbers a..b (inclusive), e.g. --range 227-299
     a, b = map(int, args[args.index('--range') + 1].split('-')); sel = [p for p in sel if a <= p['i'] <= b]
+# pose_floor.json (node tools/pose_floor.mjs <dir>): the model's real floor height at each pose, and whether a player fits there
+pf_path = os.path.join(ROOT, args[args.index('--floors') + 1]) if '--floors' in args else os.path.join(d, 'pose_floor.json')  # --floors: a worktree's own measurement
+pf = json.load(open(pf_path)) if os.path.exists(pf_path) and '--nosnap' not in args else {}
 poses = []
 for p in sel:
     y = MOD_LV.get(p.get('module'), {}).get(p['floor'], LV.get(p['floor'], 0))
+    f = pf.get(str(p['i'])); flag = ''
+    if f:
+        y = f['y']; flag = '' if f['floor'] and f['free'] else (' [NO FLOOR]' if not f['floor'] else f" [INSIDE WALL {f['push']}m]")
     poses.append({'i': p['i'], 'name': f"uw_{p['i']:03d}", 'module': p.get('module') or 'outdoor', 'place': p['place'], 'floor': p['floor'],
                   'x': p['x'], 'y': y, 'z': p['z'], 'yawDeg': p.get('yawDeg', man[p['i']].get('yawDeg', 0)) or 0,
-                  'photo': man[p['i']]['file'], 't': man[p['i']]['t'][11:19]})
+                  'photo': man[p['i']]['file'], 't': man[p['i']]['t'][11:19], 'flag': flag})
 by = {}
 for q in poses: by.setdefault(q['module'], []).append(q)
 PER = 6  # pairs per sheet: 3 columns x 2 rows, each pair = photo | render (300x400 each)
@@ -58,8 +66,9 @@ for mod, qs in by.items():
             rp = os.path.join(out, q['name'] + '.png')
             if os.path.exists(rp):
                 b = Image.open(rp).convert('RGB'); b.thumbnail((300, 400)); sheet.paste(b, (x0 + 305 + (300 - b.width) // 2, y0 + 26))
+                if ImageStat.Stat(b.convert('L')).stddev[0] < 9 and not q.get('flag'): q['flag'] = ' [BLANK VIEW]'  # the camera faces a bare wall
             dr.rectangle([x0, y0, x0 + 605, y0 + 24], fill='black')
-            dr.text((x0 + 3, y0 + 1), f"#{q['i']} {q['t']} {q['place']} {q['floor']}"[:60], fill='yellow', font=FONT)
+            dr.text((x0 + 3, y0 + 1), f"#{q['i']} {q['t']} {q['place']} {q['floor']}"[:60] + q.get('flag', ''), fill='#ff8080' if q.get('flag') else 'yellow', font=FONT)
             dr.text((x0 + 3, y0 + 12), f"PHOTO | MODEL {q['name']} ({q['x']},{q['y']},{q['z']}, yaw {q['yawDeg']})", fill='#9fe0ff', font=FONT)
         sheet.save(os.path.join(out, f"{mod}_{g // PER + 1}.png"))
 print(out, {m: (len(v) + 5) // 6 for m, v in by.items()})
