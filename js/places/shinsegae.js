@@ -2570,6 +2570,37 @@ export function build(K) {
       const isMezzJewel=floor==='1M'&&kind==='jewel';
       const [base,accent,bg,fg]=isMezzJewel?[0xe2e5e3,0x9cb7bd,'#edf1ef','#3e5052']:beautyPalette(name),jewel=kind==='jewel';
       const cw=Math.max(.65,w-(w<2.5?.65:1.1)),dd=Math.min(.85,d*.30),cv=v-Math.min(.65,d*.13);
+      if(floor==='1F'&&name==='바이레도'){
+        // The private 1F walk shows a navy display enclosure with white
+        // lettering, lit shelves and a grey, glass-fronted counter.
+        // The precise product arrangement is illustrative.
+        const navy=0x132c49,stone=0x777a78,side=Math.min(.72,w*.22),len=Math.min(2.7,d-.9);
+        hq(u0+.12,v0+.12,u1-.12,v1-.12,y+.018,{color:0xeeeae4,gloss:.3});
+        for(const s of [-1,1]){
+          const x=u+s*(w/2-side/2-.12);
+          box(x,v,side,len,y,.90,s<0?navy:stone);
+          box(x,v,side+.03,len+.03,y+.90,.06,0xdedbd3,{solid:false});
+          box(x,v,side-.08,len-.16,y+.12,.53,'glass',{solid:false});
+          for(let row=0;row<3;row++){
+            const z=v-len*.32+row*len*.32;
+            box(x,z,side-.18,.45,y+.23+row*.18,.025,0xf3f3ef,{solid:false});
+            for(let j=0;j<3;j++)box(x+(j-1)*side*.21,z,.10,.13,y+.92,.14+(j%2)*.06,j%2?0xe6e2d8:0x1c2223,{solid:false});
+          }
+          beautyObstacles.push(R([x-side/2,v-len/2,x+side/2,v+len/2]));
+        }
+        const back=v1-.31,sw=Math.min(w-.24,2.8);
+        box(u,back,sw,.25,y,2.05,navy,{solid:false});
+        for(let row=0;row<3;row++){
+          const h=y+.48+row*.40;
+          box(u,back-.16,sw-.28,.16,h,.035,0xe9e7df,{solid:false});
+          box(u,back-.25,sw-.36,.018,h+.04,.025,{tex:'emit',color:0xe6f2ff},{solid:false});
+          for(let j=0;j<5;j++)box(u+(j-2)*sw*.15,back-.18,.11,.09,h+.06,.16,j%2?0x1f282b:0xeae6dd,{solid:false});
+        }
+        for(const [z,face]of [[back-.16,'N'],[back+.16,'S']])
+          sign('BYREDO',u,z,y+1.97,face,Math.min(sw-.2,1.8),.22,{bg:null,fg:'#ffffff',pxPerM:120});
+        beautyPerson(u,v+.15,y,FACE.N,true,0);
+        return;
+      }
       if(floor==='1F'&&name==='랑콤'){
         // Private 1F walk: open white Lancôme island with silver counter rims,
         // softly lit white shelving and pink/red product displays. No photo or
@@ -3388,10 +3419,6 @@ export function build(K) {
       // X01: photographed identity accents on retained detailed counter cells.
       for(const [name,px,py,count]of[['에스티로더',319,812,1],['톰포드 뷰티',319,717,2],['바이레도',777,814,1]]){
         const[u,v]=PLAN(px,py);
-        if(name==='바이레도'){
-          box(u,v,.90,2.6,.05,.98,0x132d4b,{solid:false});box(u+.48,v,.05,2.4,.3,.58,'glass',{solid:false});
-          sign('BYREDO',u+.52,v,1.85,'E',2.1,.28,{bg:'#142b46',fg:'#f7faf3',bold:false});
-        }
         for(let j=0;j<count;j++){
           const U=u+(j-(count-1)/2)*1.15,V=v+.4,p=P(U,V);
           K.cyl({x:p[0],z:p[1],y:1.05,r:.30,h:.43,mat:0x777b67,seg:14,solid:false});
@@ -3840,6 +3867,12 @@ export function build(K) {
       for(const hole of [[54,463,165,493],[148,526,165,569]])
         parts=parts.flatMap(q=>cutRect(q,upperRect(id,hole)));
     }
+    // The 2F guide shows only the centre of Loro Piana extending into
+    // the rear bay; the two flanking white recesses are outside the shop.
+    if(id==='2F'&&c.name==='로로피아나'){
+      for(const hole of [[179,969,331,1000],[427,969,469,1000]])
+        parts=parts.flatMap(q=>cutRect(q,upperRect(id,hole)));
+    }
     if(id==='2F'&&c.name==='몽클레르')
       parts=parts.flatMap(q=>cutRect(q,upperRect(id,[28,733,54,794])));
     if(id==='2F'&&c.name==='그라프')
@@ -3852,6 +3885,12 @@ export function build(K) {
       wing[1]=Math.max(wing[1],r[1]); // preserve the same public aisle setback
       parts=[r.slice(),wing];
       r[2]=wing[2];
+    }
+    // The official 3F guide shows a two-step cut-out along Boontheshop's
+    // southern side. The white recess belongs to the circulation/core area.
+    if(id==='3F'&&c.name==='분더샵 여성'){
+      for(const hole of [[921,943,943,958],[878,958,943,1016]])
+        parts=parts.flatMap(q=>cutRect(q,upperRect(id,hole)));
     }
     const theilma=id==='5F'&&c.name==='더일마';
     if(theilma){
@@ -4716,6 +4755,45 @@ export function build(K) {
         B(a,b,w,.72,.05,.82,0x242424);B(a,b,w,.72,.87,.26,'glass');
         for(let i=-1;i<=1;i++){B(a+i*.25,b,.14,.13,.90,.15,0xe7e2d8);B(a+i*.25,b-.07,.06,.02,1.04,.05,0xd1b572);}
       }
+    }else if(id==='2F'&&name==='티파니앤코'){
+      // 2025 Gangnam reopening photography: a light champagne-gold room,
+      // pale vitrines with glass tops, fine gold uprights and a sunflower-like
+      // feature on the rear wall. The narrow cell is a schematic compromise,
+      // so use shallow fixtures and do not reproduce artwork or photos.
+      // https://tnnews.co.kr/archives/257326
+      const back=D-.33, panelW=Math.max(.5,W-.54);
+      B(W/2,back,panelW,.07,.18,2.55,0xd7c8ad);
+      for(let a=.60;a<W-.4;a+=2.0)B(a,back-.06,.035,.025,.22,2.45,0xc4ad7d);
+      if(W>4&&D>2.1){
+        const count=Math.max(1,Math.floor((W-.8)/3.1)),width=(W-.8)/count-.10;
+        for(let i=0;i<count;i++){
+          const a=.4+(i+.5)*(W-.8)/count,b=D-.84;
+          B(a,b,width,.66,.08,.76,0xded9cf);
+          B(a,b,width,.66,.84,.035,0xb8a078);
+          B(a,b,width-.04,.62,.88,.26,'glass');
+          B(a,b,width-.11,.53,.90,.025,{tex:'emit',color:0xf9f5e8});
+          for(const da of [-width*.43,width*.43])B(a+da,b-.35,.025,.025,.12,.74,0xbda77e);
+          const n=Math.max(2,Math.floor(width/.55));
+          for(let j=0;j<n;j++){
+            const aa=a-width*.40+j*width*.80/Math.max(1,n-1);
+            B(aa,b,.22,.14,.94,.045,0xf0ece2);
+            B(aa,b-.01,.11,.07,.985,.05,0xd2bea0);
+          }
+        }
+      }
+      if(W>4){
+        const a=W*.5,b=D-.395,h=2.04;
+        for(let i=0;i<20;i++){
+          const t=i*Math.PI/10;
+          B(a+Math.cos(t)*.34,b,.075,.025,h+Math.sin(t)*.34,.075,i%2?0xe4d3aa:0xb69e6d);
+        }
+        B(a,b-.02,.19,.025,h-.06,.19,0x6f8f9b);
+      }
+      // A shallow, luminous ceiling border suggests the photographed cove.
+      if(W>3&&D>1.5){
+        B(W/2,D*.5,W-.48,D-.5,3.20,.035,{color:0xd7c49b,gloss:.3});
+        for(const b of [.29,D-.29])B(W/2,b,W-.55,.035,3.17,.025,{tex:'emit',color:0xfff1d5});
+      }
     }else if(kind==='watch'||kind==='jewel'||/주얼리|반클리프|불가리|티파니|까르띠에|그라프/.test(name)){
       eachStock((a,b,h,i)=>{
         B(a,b,.22,.19,h,.08,0xefe5d3);B(a,b-.025,.07,.16,h+.085,.026,gold);
@@ -5112,7 +5190,7 @@ export function build(K) {
       hq(u0+.13,v0+.13,u1-.13,v1-.13,y+.018,palette.floor);
       // A split guide outline is still one shop: furnish its secondary area
       // with bounded illustrative stock, but no duplicate shopfront or staff.
-      if(id==='2F'&&['모이나','몽클레르','그라프'].includes(c.name)&&q!==largest){
+      if(id==='2F'&&['모이나','몽클레르','그라프','로로피아나'].includes(c.name)&&q!==largest){
         if(Wf>1.5&&Dp>1.4){
           if(c.name==='몽클레르'){
             const span=Math.min(Wf-.55,2.8),a=Wf/2,b=Dp-.45;
@@ -5130,7 +5208,7 @@ export function build(K) {
         }
         continue;
       }
-      if(((id==='5F'&&['뷰오리','아스페시','룰루레몬'].includes(c.name))||(id==='3F'&&c.name==='호라이즌'))&&q!==largest)continue;
+      if(((id==='5F'&&['뷰오리','아스페시','룰루레몬'].includes(c.name))||(id==='3F'&&['호라이즌','분더샵 여성'].includes(c.name)))&&q!==largest)continue;
       if(id==='4F'&&/캐주얼 슈즈|컨템포러리 슈즈|국내 슈즈|컴포트 슈즈/.test(c.name))
         hq(u0+.14,v0+.14,u1-.14,v1-.14,y+3.15,0x1b2029,false);
       // The guide groups these five small jewellery concessions in one
