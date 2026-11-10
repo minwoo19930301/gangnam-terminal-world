@@ -2500,9 +2500,9 @@ export function build(K) {
     ['맥',142,688,207,746],['나스',234,688,282,746],['톰포드 뷰티',284,688,355,746],['샤넬 코스메틱',682,688,794,746],
     ['디올화장품',143,782,207,841],['아베다',234,782,282,841],['에스티로더',283,782,355,841],['프라다 뷰티',690,786,750,843],['바이레도',752,786,802,843],
     ['메이크업 포에버',143,861,175,926],['베네피트',177,861,208,926],['오휘/후',234,861,282,926],['설화수',283,861,355,926],['로에베 퍼퓸',388,861,445,926],['크리드',447,861,492,926],['킬리안',495,861,544,926],['아쿠아 디파르마',546,861,598,926],['탬버린즈',600,861,653,926],['케이스스터디',682,861,794,926],
-    ['다이슨 뷰티',143,933,208,968],['프란시스 커정',820,575,850,624],['샤넬 코스메틱',820,664,876,720],
-    ['탐포드 선글라스(DK)',820,863,851,881],['레이벤 선글라스',820,882,851,900],
-    ['페라가모 선글라스(룩)',820,901,851,919],['케어링 선글라스',820,920,851,938]
+    ['다이슨 뷰티',143,933,208,968],['메종 프란시스 커정',820,575,850,624],['샤넬 코스메틱',820,664,876,720],
+    ['톰포드 선글라스',820,863,851,881],['레이벤 선글라스',820,882,851,900],
+    ['페라가모 선글라스',820,901,851,919],['구찌 선글라스',820,920,851,938]
   ];
   const EDGE_BOUTIQUES = [
     ['루이비통 뷰티 & 프래그런스 스토어',25,515,111,688,'W'],['딥티크',220,432,320,515,'S'],['에르메스 파빌리온',321,403,445,515,'S'],
@@ -3819,6 +3819,17 @@ export function build(K) {
       const hunter=guide.cells.find(o=>o.name==='헌터');
       parts=cutRect(r,upperRect(id,hunter.rect));
     }
+    // The 5F guide shows a stepped partition between Vuori and ASPESI,
+    // and a short return on the lower side of lululemon.
+    const stepped5=id==='5F'&&['뷰오리','아스페시','룰루레몬'].includes(c.name);
+    if(stepped5){
+      if(c.name==='뷰오리')parts=parts.flatMap(q=>cutRect(q,upperRect(id,[861,747,887,790])));
+      if(c.name==='아스페시')parts.push(upperRect(id,[861,747,887,790]));
+      if(c.name==='룰루레몬'){
+        const arm=upperRect(id,[781,1006,827,1034]);
+        arm[3]=r[1];parts.push(arm);
+      }
+    }
     const theilma=id==='5F'&&c.name==='더일마';
     if(theilma){
       // The 5F guide shows a recessed white corner between 더일마 and
@@ -3873,7 +3884,10 @@ export function build(K) {
     if(niche){parts=[niche];K.slab(rect(...niche),y,{mat:{tex:'marble',color:0xe8e2d5,gloss:.3},thick:.12,under:false,ceil:false,edge:false});}
     c.model={raw,local:r,parts,face,sourceFace,aisleEdges:['N','S','E','W'].filter(f=>score(f)>=2).map(f=>upperFace[f])};
     upperCells.set(`${id}:${c.name}`,{...c,local:r,parts,face});
-    if(tag||chanel||amomento||casualShoe||theilma||galleryNeighbors)for(const q of parts)zone(c.name,id,`${id} · 신세계백화점 강남점`,q,y,y+H,3);
+    // A guide rectangle can be partly or wholly cut by modelled circulation.
+    // On the requested floors, only the rendered pieces may identify as a
+    // shop: otherwise the HUD names absent stores in the atrium or lift well.
+    if(['2F','3F','4F','5F'].includes(id)||tag||chanel||amomento||casualShoe||theilma||galleryNeighbors)for(const q of parts)zone(c.name,id,`${id} · 신세계백화점 강남점`,q,y,y+H,3);
     else zone(c.name,id,`${id} · 신세계백화점 강남점`,r,y,y+H,3);
     for(const q of parts){
       const [a,b,d,e]=q;
@@ -5073,6 +5087,8 @@ export function build(K) {
         occupied.push([a,b]);const[x,z]=P(u,v);K.person(x,y,z,{rotY:FACE[face],...o});
       };
       hq(u0+.13,v0+.13,u1-.13,v1-.13,y+.018,palette.floor);
+      // Extra fragments are part of the same store, not extra staffed shops.
+      if(id==='5F'&&['뷰오리','아스페시','룰루레몬'].includes(c.name)&&q!==largest)continue;
       if(id==='4F'&&/캐주얼 슈즈|컨템포러리 슈즈|국내 슈즈|컴포트 슈즈/.test(c.name))
         hq(u0+.14,v0+.14,u1-.14,v1-.14,y+3.15,0x1b2029,false);
       // The guide groups these five small jewellery concessions in one
