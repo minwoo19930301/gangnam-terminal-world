@@ -1,7 +1,14 @@
 {
   "id": "shinsegae",
   "name": "신세계백화점 강남점",
-  "updated": "2026-11-08",
+  "updated": "2026-11-11",
+  "layout_conflicts_2026_11_11": {
+    "status": "unresolved: guide registration, circulation and actual locations need further evidence",
+    "guide_4f": "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/11/10/pLc2zpesvkoW.png",
+    "western_stair_core": "The older CORES[1] stair location is approximate. Its reservation intersects the registered official 4F 금강 cell (approximately 89% of the rectangular cell before other cuts); related overlaps also affect 2F 까르띠에, 3F 까르띠에/피아제 and several 5F cells. These percentages compare model rectangles, not surveyed floor areas. The guide does not locate emergency stairs and the available private walk does not cover 4F. This core supplies modelled upper-floor stair routes; do not move it without checking all floors and their slabs, guardrails and access.",
+    "tag_heuer_3f": "The official guide shows an L-shaped 태그호이어 cell: the top arm and vertical arm are both recorded in the model. The annex lift and its access reservation remove most of the top arm; the current shopfront sightline and physical entry are not verified. The official elevator symbol projects beyond the shop edge, but its shaft dimensions and precise location are not shown.",
+    "model_access_compromises": "3F and 5F main escalator landings have short modelled bridges to resolve overlapping floor void registrations. 2F 생 로랑 and 발렌시아가 have side openings added to connect otherwise isolated cells. These restore game paths but do not establish surveyed positions of real landings or doors."
+  },
   "sources": [
     {
       "path": "refs/user_walk/20261107/manifest.json",
