@@ -25,8 +25,16 @@ const kit = createKit(THREE, new THREE.Scene(), { osm, phys });
 const signs = [];
 const originalSign = kit.sign;
 kit.sign = (text, options) => { signs.push({ text: Array.isArray(text) ? text.join(' ') : String(text), ...options }); return originalSign(text, options); };
+const escalators = [];
+const originalEscalator = kit.escalator;
+let currentPlace = '';
+kit.escalator = (ax, az, bx, bz, options) => {
+  if (currentPlace === 'shinsegae') escalators.push({ ax, az, bx, bz, ...options });
+  return originalEscalator(ax, az, bx, bz, options);
+};
 const claimed = { b: new Set(), r: new Set(), a: new Set() };
 for (const mod of [shinsegae, centralcity, jwmarriott]) {
+  currentPlace = mod.meta.id;
   kit._.setCurrent(mod.meta.id, mod.meta);
   mod.build(kit);
   for (const id of mod.meta.claims || []) claimed.b.add(id);
@@ -102,6 +110,23 @@ for (const [name, from, to] of [
 ]) {
   assert.ok(reachable(from,to), `${name}: no clear walkable path`);
   console.log(`OK ${name}`);
+}
+
+// Both the main and annex escalator banks must connect every successive
+// department-store floor through 5F. Check the physical support and walking
+// capsule at 21 points on every flight, including both up and down lanes.
+for (const [lower, upper] of [[7, 11.8], [11.8, 16.6], [16.6, 21.4]]) {
+  const flights = escalators.filter(e => Math.abs(e.ya - lower) < .01 && Math.abs(e.yb - upper) < .01);
+  assert.equal(flights.filter(e => e.dir === 'up').length, 2, `${lower}–${upper}: missing up lane`);
+  assert.equal(flights.filter(e => e.dir === 'down').length, 2, `${lower}–${upper}: missing down lane`);
+  for (const e of flights) for (let i=0; i<=20; i++) {
+    const t=i/20, x=e.ax+(e.bx-e.ax)*t, z=e.az+(e.bz-e.az)*t, expected=lower+(upper-lower)*t;
+    const y=floorAt(x,z,expected), p={x,z};
+    assert.ok(Number.isFinite(y) && Math.abs(y-expected)<.7, `${lower}–${upper}: missing support at ${i*5}%`);
+    phys.resolve(p,radius,y,y+playerHeight,step);
+    assert.ok(Math.hypot(p.x-x,p.z-z)<.15, `${lower}–${upper}: blocked at ${i*5}%`);
+  }
+  console.log(`OK ${lower}–${upper} both escalator banks`);
 }
 // The 1F-to-2F escalators have walkable support throughout their climb.
 // The sample points are the centres of the two actual escalators, not visual
