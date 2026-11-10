@@ -3713,7 +3713,8 @@ function hallR20(K) {
   zone('센트럴시티 연결 통로','1F',37.8,-33,49,-18,0,3.5,'호남선 대합실 · 중앙홀');
   // 1M: five-metre clear galleries, with a genuinely open central void.
   const galleryMat={tex:'ccR20GalleryTile',gloss:.3};
-  K.texture('ccR20GalleryTile',256,256,(g,w,h)=>{g.fillStyle='#e6dccc';g.fillRect(0,0,w,h);g.save();g.translate(w/2,h/2);g.rotate(PI/4);g.strokeStyle='#b9afa0';g.lineWidth=1;for(let y=-400;y<400;y+=40)for(let x=-400;x<400;x+=80)g.strokeRect(x+(Math.round(y/40)%2)*40,y,80,40);g.restore();},[2.4,2.4]);
+  // The photographed M1F passage has a regular pale square-tile grid.
+  K.texture('ccR20GalleryTile',256,256,(g,w,h)=>{g.fillStyle='#e8e3d9';g.fillRect(0,0,w,h);g.strokeStyle='#bdb7ab';g.lineWidth=1;for(let p=0;p<=256;p+=64){g.beginPath();g.moveTo(p,0);g.lineTo(p,256);g.moveTo(0,p);g.lineTo(256,p);g.stroke();}},[2.4,2.4]);
   slab(-11,-29,0,26,3.6,{mat:galleryMat,holes:[RECT(-3.7,-22,-1.3,-14.8)]});
   slab(0,12,38,26,3.6,{mat:galleryMat});
   for(const q of[[32,-12,38,2.25],[32,8.75,38,12],[33,2.25,38,8.75]])slab(...q,3.6,{mat:galleryMat});
@@ -3778,12 +3779,14 @@ function hallR20(K) {
     }
     shopFurnish(y,()=>{
     // fascia band + sign
+    const mezzanine = y === 3.6;
     const fy = y + Math.min(h - 0.45, 3.55);
     const fp = pt(um, f + dv * 0.12);
-    lbox(fp[0], fp[1], axis === 's' ? len - 0.1 : 0.2, axis === 's' ? 0.2 : len - 0.1, fy - 0.4, 0.8, 0x26282b, { solid: false });
-    const col = BRAND[name] || KIND_COL[kind] || KIND_COL.food;
+    lbox(fp[0], fp[1], axis === 's' ? len - 0.1 : 0.2, axis === 's' ? 0.2 : len - 0.1, fy - (mezzanine ? .25 : .4), mezzanine ? .5 : .8, 0x202525, { solid: false });
+    const col = mezzanine ? ['#202525', name === '르사이공' ? '#8ce3c0' : '#f6f4ec'] : (BRAND[name] || KIND_COL[kind] || KIND_COL.food);
     const sp = pt(um, f + dv * 0.24);
-    lsign(name, sp[0], sp[1], fy, Math.min(len - 0.6, o.famille?4.5:7.5), o.famille?.28:.66, face, { bg: o.famille?'#292b29':col[0], fg: o.famille?'#eee7d9':col[1], sub, pxPerM: 100 });
+    const signName = mezzanine && name === '르사이공' ? 'Le Saigon' : mezzanine && name === '온고지신' ? 'Ongozisin' : name;
+    lsign(signName, sp[0], sp[1], fy, Math.min(len - 0.6, o.famille?4.5:mezzanine?4.6:7.5), o.famille?.28:mezzanine?.38:.66, face, { bg: o.famille?'#292b29':col[0], fg: o.famille?'#eee7d9':col[1], sub, pxPerM: 100 });
     // interior fixtures
     const R2 = K.rand(seed * 977 + Math.round(u0 * 13));
     const ip = (u, v) => pt(u, v); // local helper
@@ -3810,6 +3813,14 @@ function hallR20(K) {
       }
       // standing menu board outside the shop front
       if (!open && !o.noBoard && len > 5) { const ap = ip(u0 + 0.9, f + dv * 0.6); lsign([name, menuFor(name, kind)[0]], ap[0], ap[1], y + 0.75, 0.8, 1.0, face, { bg: '#262626', fg: '#ffffff', twoSided: true, pxPerM: 70 }); }
+      // Photo walk: the M1F restaurant frontage has slim freestanding menu
+      // stands just outside the black-framed glass, not a row of solid walls.
+      if (mezzanine && len > 5 && kind === 'food') {
+        const u = u0 + .72, v = f + dv * .45, p = ip(u,v);
+        lbox(p[0],p[1],.42,.42,y,.035,0x292d2b,{solid:false});
+        lbox(p[0],p[1],.035,.035,y+.035,.87,0x6b706d,{solid:false});
+        lsign([name,'메뉴 안내'],p[0],p[1],y+1.05,.48,.4,face,{bg:'#f3f1e9',fg:'#262c29',twoSided:true,pxPerM:100});
+      }
       // shop ceiling light panels
       const lp2 = ip(um, (f + b) / 2); lbox(lp2[0], lp2[1], axis === 's' ? Math.max(1, len - 3) : 0.6, axis === 's' ? 0.6 : Math.max(1, len - 3), y + h - 0.12, 0.05, 'emit', { color: 0xfff3dc, solid: false });
       const nT = Math.max(1, Math.floor((len - 1.5) / 2.4)), nV = o.tableRows??Math.max(1, Math.floor((dep - 3) / 2.4));
@@ -4011,13 +4022,25 @@ function hallR20(K) {
     });
   }
   K.detail({name:'중층 갤러리 · 검은 천장과 루프 난간',floor:'1M',y0:3.6,y1:7.1,poly:RECT(-11,-33,38,26)},()=>{
-    for(let t=-27.5;t<17;t+=1.4)lbox(-3,t,2.7,1.29,6.91,.06,{tex:'emit',color:0xf4f6f4},{solid:false});
-    for(let s=0;s<38;s+=1.4)lbox(s,14.7,1.29,2.7,6.91,.06,{tex:'emit',color:0xf4f6f4},{solid:false});
-    for(let t=-27;t<18;t+=4)tube([-4.8,t,6.75],[-.6,t,6.75],.13,0x181c1d);
-    for(let s=0;s<38;s+=4)tube([s,12.6,6.75],[s,16.8,6.75],.13,0x181c1d);
+    // The user's M1F photos show a dark exposed grid across the corridor,
+    // with a narrow strip of white panels above the shop fronts.
+    for(let t=-27.5;t<17;t+=1.4)lbox(-5.55,t,.95,1.29,6.91,.06,{tex:'emit',color:0xf4f6f4},{solid:false});
+    for(let s=0;s<38;s+=1.4)lbox(s,16.38,1.29,.95,6.91,.06,{tex:'emit',color:0xf4f6f4},{solid:false});
+    for(let t=-27;t<18;t+=1.4)tube([-4.8,t,6.75],[-.6,t,6.75],.055,0x353838);
+    for(let s=0;s<38;s+=1.4)tube([s,12.6,6.75],[s,16.8,6.75],.055,0x353838);
+    for(const s of[1,12,23,34])lcyl(s,14,6.73,.10,.035,{tex:'emit',color:0xf3f2e9},{solid:false,seg:12});
     for(const t of[-21,-12,7]){lbox(-.9,t,.55,3.2,3.6,.44,{tex:'wood',color:0xc8a46c});for(const d of[-1.4,1.4])lbox(-.88,t+d,.58,.055,4.04,.035,0x2c7d78,{solid:false});}
     for(const[s,t]of[[-1.1,11],[10,12.6],[30,12.6]]){lbox(s,t,.3,.3,3.6,.8,0xa92c25);lcyl(s,t,3.65,.1,.5,0xd52c25,{solid:false});}
     lsign(['↑ 매표소','← 지하철 3·7·9호선'],-2.5,-14,5.8,3,.6,'E',{bg:'#282c2c',fg:'#fff'});
+    // Large white pots sit against the arcade, leaving the centre of the
+    // public walkway unobstructed as in the photographed restaurant corridor.
+    for(const [s,t]of[[6,12.85],[27,12.85]]){
+      lcyl(s,t,3.6,.40,.48,0xf3f1e8,{solid:false,seg:16});
+      lcyl(s,t,4.08,.045,1.05,0x645546,{solid:false,seg:8});
+      for(const [ds,dt,dy]of[[0,0,0],[-.27,.05,-.14],[.28,-.05,-.08],[0,.23,.13]]){
+        const [x,z]=P(s+ds,t+dt);K.dome({x,z,y:5.0+dy,rx:.30,ry:.35,rz:.27,mat:0x3f624c,seg:10,rings:5,hemi:false});
+      }
+    }
     for(const[s,t]of[[-2,5],[-2,-13],[10,14.5],[25,14.5]])lperson(s,t,3.6,{shirt:0x394744});
   });
   K.detail({name:'3게이트 · 금빛 천장과 안내',floor:'1F',y0:0,y1:3.4,poly:RECT(-19.5,-4.2,0,4.2)},()=>{
@@ -4118,6 +4141,10 @@ function hosUpperR20(K) {
     lsign(name,ss,tt,y+2.65,Math.min(6,frontWidth-.4),.43,face,{bg:'#4a3526',fg:'#f5e4bb',font:"serif"});
     K.detail({name,floor:y===YM?'1M':'1F',y0:y,y1:y+3.3,poly},()=>{
       K.hpoly({tex:'wood',color:0xb98a53,gloss:.3},poly,y+.018,true);
+      // The plan-to-world registration is piecewise scaled. Check spacing
+      // after that transform so chairs and racks do not pile up where the
+      // room footprint is compressed.
+      const furnishedAt=[];
       for(let seedS=s0+1.4;seedS<s1-1;seedS+=3.0)for(let seedT=t0+1.2;seedT<t1-1;seedT+=3.0){
         let s=seedS,t=seedT;
         const inLiftLane=(a,b)=>{const[u,v]=hosMap(a,b);return u>101&&u<110&&v>33.3&&v<35.5;};
@@ -4128,11 +4155,56 @@ function hosUpperR20(K) {
           if(next)[s,t]=next;
         }
         const q=P(s,t);if(!K.pointInPoly(...q,poly)||Math.hypot(s-ss,t-tt)<2.1)continue;
-        if(kind==='wine'||kind==='fashion'){
+        if(y===YM && furnishedAt.some(p=>Math.hypot(q[0]-p[0],q[1]-p[1])<1.8))continue;
+        furnishedAt.push(q);
+        if(kind==='wine'){
           lbox(s,t,1.5,.52,y,1.85,{tex:'wood',color:0x67492b});
-          for(const h of [.45,.95,1.45]){lbox(s,t,1.5,.56,y+h,.04,0xa7804d,{solid:false});for(const d of[-.5,-.25,0,.25,.5])lcyl(s+d,t,y+h+.04,.045,kind==='wine'?.27:.42,kind==='wine'?0x36412b:0xc7b8a0,{solid:false});}
+          for(const h of [.45,.95,1.45]){lbox(s,t,1.5,.56,y+h,.04,0xa7804d,{solid:false});for(const d of[-.5,-.25,0,.25,.5])lcyl(s+d,t,y+h+.04,.045,.27,0x36412b,{solid:false});}
+        }else if(kind==='fashion'){
+          // The Mezzanine is a residential-style fashion/lifestyle edit:
+          // warm timber shelves, garments, low display tables and art objects.
+          // Placement is a plan-based approximation, not a surveyed shop photo.
+          const row=Math.round((seedS-s0)/3),col=Math.round((seedT-t0)/3);
+          if((row+col)%3===0){
+            lbox(s,t,1.55,.52,y,1.9,{tex:'wood',color:0x72553c},{solid:false});
+            for(const h of [.42,.88,1.34,1.78])lbox(s,t,1.58,.56,y+h,.035,0xa78a68,{solid:false});
+            for(const [i,d]of[-.53,-.27,0,.27,.53].entries()){
+              lcyl(s+d,t,y+.92,.075,.20,[0xe5ded0,0x928575,0xd6c8b2,0x9b7254,0xe9e4db][i],{solid:false,seg:9});
+              lbox(s+d,t,.16,.14,y+1.38,.27,[0xf0ece2,0x9f8d78,0xd8cec0][i%3],{solid:false});
+            }
+          }else if((row+col)%3===1){
+            for(const d of[-.72,.72])lbox(s+d,t,.045,.08,y,.15,0x746149,{solid:false});
+            for(const d of[-.70,.70])lbox(s+d,t,.035,.035,y+.14,1.45,0x9c8968,{solid:false});
+            lbox(s,t,1.42,.035,y+1.57,.035,0x9c8968,{solid:false});
+            for(const [i,d]of[-.48,-.24,0,.24,.48].entries()){
+              lbox(s+d,t,.17,.08,y+.57,.88,[0xd2c7b6,0x8f8580,0x292b2e,0xb6a391,0xe6ded0][i],{solid:false});
+              lbox(s+d,t,.025,.025,y+1.44,.10,0x8e806c,{solid:false});
+            }
+          }else{
+            lbox(s,t,1.45,.75,y+.65,.08,{tex:'wood',color:0x8a694e},{solid:false});
+            for(const d of[-.55,.55])lbox(s+d,t,.06,.60,y,.65,0x73573f,{solid:false});
+            for(const [i,d]of[-.42,0,.42].entries())lcyl(s+d,t,y+.73,.10,.22,[0xe8e0d1,0x8d7965,0xd0bd9e][i],{solid:false,seg:10});
+          }
+        }else if(kind==='psr'){
+          // Private shopper rooms are lounges, not public sales racks.
+          lbox(s,t,1.35,.65,y+.42,.16,0xb7a895,{solid:false});
+          lbox(s,t+.24,1.35,.16,y+.58,.48,0xa99a87,{solid:false});
+          lbox(s,t-.72,.90,.50,y+.44,.07,{tex:'wood',color:0x8a6e52},{solid:false});
+          lcyl(s,t-.72,y+.51,.07,.16,0xded7c7,{solid:false,seg:9});
         }else if(kind==='gallery'){
           lbox(s,t,.12,1.4,y+.6,1.7,0xc6b394,{solid:false});lbox(s+.07,t,.02,1.15,y+.8,1.3,0x806c58,{solid:false});
+        }else if(name==='트웰브 강남'){
+          // TWELVE's interior designer describes warm timber, leather
+          // banquettes, brass-and-paper lamps, and an intimate dining salon.
+          // These furnishings evoke that palette; their exact positions are
+          // inferred from the official floor-plan footprint.
+          lcyl(s,t,y+.72,.48,.07,{tex:'marble',color:0xe5d9c7,gloss:.5},{solid:false});
+          lbox(s+.77,t,.48,1.10,y+.38,.18,0x724d42,{solid:false});
+          lbox(s+1.0,t,.15,1.10,y+.56,.52,0x765044,{solid:false});
+          lbox(s-.70,t,.43,.43,y+.42,.10,0x816c59,{solid:false});
+          lbox(s-.89,t,.09,.43,y+.52,.40,0x816c59,{solid:false});
+          lcyl(s+.13,t,y+.79,.045,.24,0x9f865f,{solid:false,seg:10});
+          lcyl(s+.13,t,y+1.03,.14,.14,{tex:'emit',color:0xffe8ba},{solid:false,seg:12});
         }else{
           lcyl(s,t,y+.72,.48,.07,{tex:'marble',color:0xe9dec8,gloss:.5});
           for(const d of[-.7,.7]){lbox(s+d,t,.46,.46,y+.42,.1,0x8a6543,{solid:false});lbox(s+d+Math.sign(d)*.2,t,.08,.46,y+.52,.4,0x8a6543,{solid:false});}
@@ -4152,7 +4224,7 @@ function hosUpperR20(K) {
   hosUpperCell('피부과',[[780,600],[970,600],[970,733],[1038,733],[1038,905],[867,905],[867,925],[683,925],[683,646],[725,646],[725,790],[867,790],[867,733],[780,733]],'W','office',YM,HM);
   hosUpperCell('자이푸르 러그',[[1200,894],[1304,894],[1304,973],[1200,973]],'N','gallery',YM,HM);
   hosUpperCell('트웰브 강남',[[899,937],[1068,937],[1068,894],[1200,894],[1200,1117],[1234,1117],[1234,1241],[1305,1241],[1305,1348],[731,1348],[731,1248],[899,1248],[899,1144],[953,1144],[953,1050],[899,1050]],'N','cafe',YM,HM);
-  hosUpperCell('PSR',[[1305,973],[1382,973],[1382,1008],[1661,1008],[1700,1205],[1730,1205],[1730,1348],[1305,1348]],'N','fashion',YM,HM);
+  hosUpperCell('PSR',[[1305,973],[1382,973],[1382,1008],[1661,1008],[1700,1205],[1730,1205],[1730,1348],[1305,1348]],'N','psr',YM,HM);
 
   for(const[poly,y,floor,sub]of[[hosDeck,Y1,'1F','와인셀러 · 레스토랑'],[hosMDeck,YM,'1M','아트 앤 라이프 · 카페']])K.zone({name:'하우스 오브 신세계',floor,sub,poly,y0:y,y1:y+3.6,priority:10});
   // The upper stair head joins the retained east balcony without a step.
