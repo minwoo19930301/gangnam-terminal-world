@@ -87,11 +87,14 @@ const LANE = { A: 28.6, B: 30.2, C: 36.8, D: 38.4 };
 const PHOTO_ATRIUM=[30,30,38,52];
 // elevator bank (3 cars) south of the atrium, doors facing north
 const ELV = [30.5, 33.5, 36.5].map(u => ({ u, v: 66, w: 2.4, d: 2.2 }));
-// stair cores: NE (door west) and SW (door east)
+// Emergency cores remain schematic; separate upper and basement reservations
+// keep the official upper retail cells clear while preserving basement routes.
 const CORES = [
   { uL: 61.4, uR: 66.75, v0: 9.8, v1: 24.2, door: 'W', lanes: [62.6, 64.8], top: '8F' },   // 본관 core
-  { uL: 0.25, uR: 5.8, v0: 61.8, v1: 76.2, door: 'E', lanes: [3.6, 1.4], top: '11F' },    // 신관 core
+  { uL: 0.25, uR: 5.8, v0: 37.5, v1: 51.9, door: 'E', lanes: [3.6, 1.4], top: '8F' },    // upper back-of-house core
 ];
+const BASE_CORES = [CORES[0], { ...CORES[1], v0: 61.8, v1: 76.2, top:'11F' }];
+const activeCores=id=>MAIN.indexOf(id)<MAIN.indexOf('8F')?CORES:id==='8F'?[...CORES,BASE_CORES[1]]:BASE_CORES;
 const MEZZ = [0, 0, 67, 84.7];
 // The retained exterior shoulder datum is VS. Official sheets show both retail
 // wings through 10F and a left-wing rooftop garden at 11F; the former 8F cap is superseded.
@@ -806,7 +809,7 @@ export function build(K) {
     if (id === '2F') holes.push(...beautyUpHoles);
     // L09: retain all upper tenant registrations, opening only the photographed vertical atrium.
     if (s >= 3) holes.push(rect(...PHOTO_ATRIUM));
-    if (s >= 1) for (const c of CORES) if (s <= coreTop(c) && !(id==='1F'||id==='2F') && !(id==='B1'&&c.door==='W')) holes.push(stairHole(c, s));
+    if (s >= 1) for (const c of (s===1||s>MAIN.indexOf('8F')?BASE_CORES:CORES)) if (s <= coreTop(c) && !(id==='1F'||id==='2F') && !(id==='B1'&&c.door==='W')) holes.push(stairHole(c, s));
     K.slab(UPPER.has(id) ? rect(0, VS, UW, VD) : LV[id] >= LV['2F'] ? northOutline(VD, LV[id]) : FULL, LV[id], { mat: floorMat[id] ?? 'ssg_marble', thick: thick(id), holes:mergedHoles(holes), edge: false, walk:id!=='11F', under: id === 'B2' ? false : id === 'B1' ? { tex: 'concrete', color: 0xb4b2a9 } : CEIL });
   });
   // Aerial: dark membrane, mechanical penthouse, pale cooling boxes and an AC grid.
@@ -1078,9 +1081,12 @@ export function build(K) {
   });
 
   // ------------------------------------------------------------ stair cores (enclosed, alternating lanes)
-  for (const c of CORES) {
-    const vA = c.v0 + 2.2, vB = c.v1 - 2.2, uDoor = c.door === 'W' ? c.uL : c.uR, top = coreTop(c), FL = MAIN.slice(0, top + 1);
-    for (let s = 0; s < top; s++) {
+  // The original basement and upper cores already lacked a 1F–2F flight.
+  // Use a schematic 8F public-floor transfer to preserve the 9F–11F layout.
+  const stairSections=[CORES[0],{...CORES[1], start:'2F'},{...BASE_CORES[1], start:'8F'},{...BASE_CORES[1], top:'B1', belowOnly:true}];
+  for (const c of stairSections) {
+    const vA = c.v0 + 2.2, vB = c.v1 - 2.2, uDoor = c.door === 'W' ? c.uL : c.uR, top = coreTop(c), first=c.start?MAIN.indexOf(c.start):0, FL = MAIN.slice(first, top + 1);
+    for (let s = first; s < top; s++) {
       if(MAIN[s]==='B1'||MAIN[s]==='1F'||(MAIN[s]==='B2'&&c.door==='W'))continue;
       const ya = LV[MAIN[s]], yb = LV[MAIN[s + 1]], lane = s % 2, u = c.lanes[lane];
       const [v0, v1] = lane === 0 ? [vA, vB] : [vB, vA];
@@ -1088,7 +1094,7 @@ export function build(K) {
       K.stairs(a[0], a[1], b[0], b[1], { w: 1.6, ya, yb, mat: { tex: 'darkstone', color: 0xb0aaa2 }, railMat: 0x5c6166 });
     }
     // guards around each floor's stair hole
-    for (let s = 1; s <= top; s++) {
+    for (let s = Math.max(1,first); s <= top; s++) {
       if(MAIN[s]==='1F'||MAIN[s]==='2F'||(MAIN[s]==='B1'&&c.door==='W'))continue;
       const y = LV[MAIN[s]], lane = (s - 1) % 2, u = c.lanes[lane];
       const farV = lane === 0 ? vA : vB; // arriving flight enters from the far (deep) end
@@ -1103,12 +1109,14 @@ export function build(K) {
       const y = LV[id], y1 = LV[nextOf(id)];
       wall(uDoor, c.v0, uDoor, c.v1, y, y1, { mat: 0xe4dfd6, thick: 0.25, openings: [{ at: 1.1, w: 1.8, y0: y, y1: y + 2.3 }, { at: c.v1 - c.v0 - 1.1, w: 1.8, y0: y, y1: y + 2.3 }] });
     }
-    for(const [ya,yb] of [[LV.B2,c.door==='W'?LV.B1:0],[7,LV[nextOf(c.top)]]])for(const v of [c.v0,c.v1])wall(c.uL,v,c.uR,v,ya,yb,{mat:0xe4dfd6,thick:.25});
+    for(const [ya,yb] of (c.belowOnly?[[LV.B2,0]]:c.start?[[LV[c.start],LV[nextOf(c.top)]]]:[[LV.B2,c.door==='W'?LV.B1:0],[7,LV[nextOf(c.top)]]]))for(const v of [c.v0,c.v1])wall(c.uL,v,c.uR,v,ya,yb,{mat:0xe4dfd6,thick:.25});
     for (const id of FL) {
       if(id==='1F'||(id==='B1'&&c.door==='W'))continue;
       const y = LV[id], fo = c.door === 'W' ? 'W' : 'E', off = c.door === 'W' ? -0.14 : 0.14;
       sign(['비상계단', id], uDoor + off, c.v0 + 1.1, y + 2.75, fo, 0.9, 0.42, { bg: '#1f7a3a', fg: '#fff' });
       sign(['비상계단', id], uDoor + off, c.v1 - 1.1, y + 2.75, fo, 0.9, 0.42, { bg: '#1f7a3a', fg: '#fff' });
+      if(id==='8F'&&c.start==='2F')for(const v of[c.v0+1.1,c.v1-1.1])
+        sign(['9층 이상 비상계단','8층 매장 통로로 이동'],uDoor+off,v,y+1.95,fo,1.25,.6,{bg:'#1f7a3a',fg:'#fff',bold:false});
       hq(c.uL + 0.15, c.v0 + 0.15, c.uR - 0.15, c.v0 + 2.2, y + 0.01, { tex: 'concrete', color: 0xcfcac2 });
       hq(c.uL + 0.15, c.v1 - 2.2, c.uR - 0.15, c.v1 - 0.15, y + 0.01, { tex: 'concrete', color: 0xcfcac2 });
     }
@@ -1511,7 +1519,7 @@ export function build(K) {
     columns('B2', y, H);
     boxR(ATR[0], ATR[1], ATR[2], ATR[3], y, H, 0xbdb8ae); // 기계실 (under the escalator stack)
     sign(['기계실', '관계자 외 출입금지'], 33.5, ATR[1] - 0.02, y + 2.2, 'N', 2.6, 0.7, { bg: '#d8d2c6', fg: '#333' });
-    const obstacles = [[ATR[0] - 0.5, ATR[1] - 0.5, ATR[2] + 0.5, ATR[3] + 0.5], [27, 62, 40, 73], [24, 55, 43, 65], [58, 51.1, UW, 57.9], [61.8,66.8,65.4,78.6], ...CORES.map(c => [c.uL - 0.5, c.v0 - 0.5, c.uR + 0.5, c.v1 + 0.5])];
+    const obstacles = [[ATR[0] - 0.5, ATR[1] - 0.5, ATR[2] + 0.5, ATR[3] + 0.5], [27, 62, 40, 73], [24, 55, 43, 65], [58, 51.1, UW, 57.9], [61.8,66.8,65.4,78.6], ...BASE_CORES.map(c => [c.uL - 0.5, c.v0 - 0.5, c.uR + 0.5, c.v1 + 0.5])];
     const colHit = (u, v) => COLS_U.some(cu => COLS_V.some(cv => Math.abs(cu - u) < 1.6 && Math.abs(cv - v) < 3));
     const rows = [[3, 'N'], [16, 'S'], [21.5, 'N'], [37, 'S'], [42.5, 'N'], [57, 'S'], [80, 'S']];
     for (const [vc, dir] of rows) {
@@ -2023,7 +2031,7 @@ export function build(K) {
     // Round14 video finishes preserve every round12 cell and every 1F slab.
     // The market ramp is visible in p5QE9cVtWDM_90 but is unlocated: no invented level change.
     K.detail({floor:'B1',y0:y,y1:0,poly:FULL,name:'B1 보행 영상 · 대리석과 마켓 포털'},()=>{
-      K.hpoly('ssg_diamond_gloss',FULL,y+.006,true,[...CORES.filter(c=>c.door!=='W').map(c=>stairHole(c,1))]);
+      K.hpoly('ssg_diamond_gloss',FULL,y+.006,true,[...BASE_CORES.filter(c=>c.door!=='W').map(c=>stairHole(c,1))]);
       const [u,v]=BPLAN(595.5,491);
       for(const dv of [-2.58,2.58]){
         box(u,v+dv,.22,.12,y,3.12,0x191b1b,{solid:false});
@@ -2574,6 +2582,45 @@ export function build(K) {
           box(u-innerW*.18,mv,mw,.52,y,.66,0x9cdcc8,{solid:false});
           for(let i=0;i<4;i++)box(u-innerW*.18+(i-1.5)*mw*.19,mv,.11,.11,y+.66,.15,[0xe0b98d,0xcbb6a2,0xa8bdaa,0xc58074][i],{solid:false});
         }
+        return;
+      }
+      if(floor==='1F'&&(name==='시세이도'||name==='시슬리 코스메틱')){
+        // User's private Gangnam 1F walk: SHISEIDO has gold drawer fronts
+        // and dark tester tops, while sisley uses pale cases with cool light.
+        // Recreate fixtures only; do not copy people or campaign artwork.
+        const shiseido=name==='시세이도',unitW=Math.min(1.05,w*.26),unitD=Math.min(3.0,d-.9),front=v-.05;
+        const panel=shiseido?0xb69a58:0xe5e9e7,top=shiseido?0x202322:0xf2f4ef;
+        hq(u0+.16,v0+.16,u1-.16,v1-.16,y+.018,shiseido?0xddd6c8:0xdde3e0);
+        for(const side of[-1,1]){
+          const x=u+side*w*.27;
+          box(x,front,unitW,unitD,y,.80,panel);
+          box(x,front,unitW+.035,unitD+.035,y+.8,.055,top,{solid:false});
+          for(const e of[-1,1]){
+            box(x+e*(unitW/2+.012),front,.025,unitD-.06,y+.78,.025,{tex:'emit',color:shiseido?0xfff5e1:0xb6eaf8},{solid:false});
+            for(let row=0;row<2;row++)box(x+e*(unitW/2+.014),front,.02,unitD-.06,y+.25+row*.24,.025,shiseido?0x66583e:0xc3cdca,{solid:false});
+          }
+          for(let j=0;j<5;j++){
+            const z=front-unitD*.38+j*unitD*.19;
+            box(x,z,unitW*.8,.34,y+.86,.03,shiseido?0xe9e5dc:0xd4edf2,{solid:false});
+            for(let i=0;i<3;i++){
+              const xx=x+(i-1)*unitW*.23,h=.13+(i+j)%3*.045;
+              box(xx,z,.09,.09,y+.9,h,shiseido?[0x96292c,0xdbd2b9,0x314771][(i+j)%3]:[0xf2f0e6,0xc0dad8,0x96c5cc][(i+j)%3],{solid:false});
+              box(xx,z,.065,.065,y+.9+h,.025,0xd4c9af,{solid:false});
+            }
+          }
+          if(!shiseido){
+            for(const edge of[-1,1])sign('sisley',x+edge*(unitW/2+.025),front,y+.44,edge<0?'W':'E',Math.min(1.05,unitD*.45),.20,{bg:null,fg:'#ffffff',twoSided:true});
+          }
+          beautyObstacles.push(R([x-unitW/2,front-unitD/2,x+unitW/2,front+unitD/2]));
+        }
+        const hw=Math.min(w-.5,2.0),hv=v1-.37;
+        box(u,hv,hw,.12,y+.86,.94,shiseido?0x292c2d:0xdbe1df,{solid:false});
+        for(let i=0;i<3;i++){
+          const x=u+(i-1)*hw*.30;
+          box(x,hv-.075,hw*.27,.018,y+.95,.63,{tex:'emit',color:shiseido?[0xe0c6c0,0xdae0e2,0xa9c8e2][i]:0xc7eaf1},{solid:false});
+        }
+        sign(shiseido?'SHISEIDO':'sisley',u,hv-.08,y+1.72,'N',Math.min(1.2,hw*.75),.16,{bg:null,fg:shiseido?'#f8f4ec':'#4d5a58',twoSided:true});
+        beautyPerson(u,Math.min(v1-.35,front+.25),y,FACE.N,true,0);
         return;
       }
       if(floor==='1F'&&['키엘','연작'].includes(name)){
@@ -3319,7 +3366,7 @@ export function build(K) {
   }
   function upperRetailCeiling(id,y) {
     const v0=UPPER.has(id)?VS+.2:.2, yy=y+3.2;
-    const omissions=[PHOTO_ATRIUM,upperPhysicalWell(id),upperPhysicalWell(id,true),[19.6,51.5,29.4,55.3],...CORES.map(c=>[c.uL,c.v0,c.uR,c.v1]),[23,0,44,9]];
+    const omissions=[PHOTO_ATRIUM,upperPhysicalWell(id),upperPhysicalWell(id,true),[19.6,51.5,29.4,55.3],...activeCores(id).map(c=>[c.uL,c.v0,c.uR,c.v1]),[23,0,44,9]];
     const runs=(a0,a1,fixed,horizontal)=>{
       let parts=[[a0,a1]];
       for(const r of omissions){
@@ -3636,7 +3683,7 @@ export function build(K) {
     upperPhysicalWell(id,true).map((n,i)=>n+(i<2?-.3:.3)), [19.6,51.5,29.4,55.3],
     ...(upperPhysicalWell(id,true)[3]>=81.1?[[29,79.85,upperPhysicalWell(id,true)[2]+.85,81.3]]:[]),
     ...UPPER_BANKS.filter(b=>LV[id]<=LV[b.top]).map(b=>b.face==='N'?[b.u-3,b.v-3.9,b.u+3,b.v+1.2]:b.face==='S'?[b.u-3,b.v-1.2,b.u+3,b.v+2.4]:[b.u-3.8,b.v-3,b.u+3.8,b.v+3]),
-    ...CORES.map(c=>[c.uL-.7,c.v0-.6,c.uR+.2,c.v1+.6]),
+    ...activeCores(id).map(c=>[c.uL-.7,c.v0-.6,c.uR+.2,c.v1+.6]),
     ...(id==='2F'?[[57.7,79.4,60.7,84.7],[0,72.6,7.5,77.5],[38.25,39.6,40.35,53],[26.45,43.5,30.9,57]]:[]),
   ];
   function cutRect(r,c) {
@@ -3817,13 +3864,19 @@ export function build(K) {
     // Keep the actual two-car corner-bank recess rather than burying its doors.
     let serviceFill=[[0,7.2,u,vEnd]];
     for(const bank of UPPER_BANKS)if(bank.key==='본관 코너')serviceFill=serviceFill.flatMap(r=>cutRect(r,[bank.u-3.8,bank.v-3.1,bank.u+3.8,bank.v+3.1]));
+    // Leave the relocated schematic stairs and their two landing doors open.
+    if(MAIN.indexOf(id)<=MAIN.indexOf('8F'))serviceFill=serviceFill.flatMap(r=>cutRect(r,[0,37.2,u+.2,52.2]));
     for(const r of serviceFill)if(r[2]>r[0])boxR(...r,y,3.4,0xe7e1d6);
     for(const v of[7.2,vEnd])wall(0,v,u,v,y,y+3.4,{mat:0xe7e1d6,thick:.16});
     const openings=id==='2F'?[
       {at:11.95-7.2,w:5.7,y0:y,y1:y+2.7},
       {at:upperPlanPoint(id,500,bottom)[1]-7.2,w:2.5,y0:y,y1:y+2.6},
     ]:[];
-    wall(u,7.2,u,vEnd,y,y+3.4,{mat:0xe7e1d6,thick:.16,openings});
+    if(MAIN.indexOf(id)<=MAIN.indexOf('8F'))for(const v of [38.6,50.8])if(v>7.2&&v<vEnd)openings.push({at:v-7.2,w:2.0,y0:y,y1:y+2.3});
+    if(u<5.8&&MAIN.indexOf(id)<=MAIN.indexOf('8F')) {
+      wall(u,7.2,u,Math.min(vEnd,37.5),y,y+3.4,{mat:0xe7e1d6,thick:.16,openings});
+      if(vEnd>51.9)wall(u,51.9,u,vEnd,y,y+3.4,{mat:0xe7e1d6,thick:.16});
+    } else wall(u,7.2,u,vEnd,y,y+3.4,{mat:0xe7e1d6,thick:.16,openings});
     if(id==='2F'){
       const v=upperPlanPoint(id,500,bottom)[1];
       box(u,v,.14,2.5,y,2.5,0x484944);
