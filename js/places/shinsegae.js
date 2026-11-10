@@ -2539,6 +2539,9 @@ export function build(K) {
     // The user's 1F walk shows Gucci's sage header and AP Beauty's grey one.
     if(name==='구찌 코스메틱')return[0xe4e2d8,0x9da87f,'#a3ae84','#fffdf5'];
     if(name==='에이피 뷰티')return[0xe9eae9,0xaab7b8,'#7d8281','#fffdf8'];
+    // The 1F walk shows the Maison Francis Kurkdjian name in white on a
+    // black fascia. Counter fittings remain schematic; only the sign is visible.
+    if(name==='메종 프란시스 커정')return[0xeeeae3,0xb3a894,'#171918','#fffdf7'];
     if(/샤넬|맥|크리드|킬리안|톰포드|프라다|바이레도|나스/.test(name))return[0x242624,0xb2a07b,'#242624','#fff8ec'];
     if(/SK-|설화수|클라랑스|시세이도/.test(name))return[0xf2e8dc,0x8e3434,'#8e3434','#fff6e6'];
     if(/라메르|라프레리|헤라|코스메데코르테/.test(name))return[0xe9eee8,0x5e776d,'#536960','#ffffff'];
@@ -2968,9 +2971,10 @@ export function build(K) {
       const beautySign={'구찌 코스메틱':'GUCCI','나스':'NARS','톰포드 뷰티':'TOM FORD',
         '에스티로더':'ESTÉE LAUDER','랑콤':'LANCÔME','시세이도':'SHISEIDO',
         '클라랑스':'CLARINS','에이피 뷰티':'AP BEAUTY','시슬리 코스메틱':'sisley',
-        '산타마리아 노벨라':'SANTA MARIA NOVELLA'};
+        '산타마리아 노벨라':'SANTA MARIA NOVELLA','메종 프란시스 커정':'Maison Francis Kurkdjian'};
       const brand=name==='알로드'?'ALOD':/샤넬/.test(name)?'CHANEL':/디올/.test(name)?'DIOR':/에르메스/.test(name)?'HERMÈS':(floor==='1F'&&beautySign[name])||name;
-      sign(brand,u,d>2.5?shelfV-.15:cv-dd/2-.04,y+(d>2.5?shelfH+.20:1.38),'N',Math.max(.65,cw),name.length>13?.26:.33,{bg,fg,bold:true,twoSided:true});
+      const mfk=floor==='1F'&&name==='메종 프란시스 커정';
+      sign(brand,u,d>2.5?shelfV-.15:cv-dd/2-.04,y+(d>2.5?shelfH+.20:1.38),'N',Math.max(.65,cw),name.length>13?.26:.33,{bg,fg,bold:!mfk,...(mfk?{font:'Georgia, serif',pxPerM:160}:{}),twoSided:true});
       if(floor==='1F'){
         const staffN=w>5.3?2:1;
         for(let j=0;j<staffN;j++)beautyPerson(u+(j-(staffN-1)/2)*1.0,cv+dd/2+.48,y,FACE.N,true,j);
@@ -3829,6 +3833,25 @@ export function build(K) {
         const arm=upperRect(id,[781,1006,827,1034]);
         arm[3]=r[1];parts.push(arm);
       }
+    }
+    // The 2F guide outlines recessed corners on these three boutiques.
+    // Keep the grey selling area; the white cut-outs are not extra shop space.
+    if(id==='2F'&&c.name==='모이나'){
+      for(const hole of [[54,463,165,493],[148,526,165,569]])
+        parts=parts.flatMap(q=>cutRect(q,upperRect(id,hole)));
+    }
+    if(id==='2F'&&c.name==='몽클레르')
+      parts=parts.flatMap(q=>cutRect(q,upperRect(id,[28,733,54,794])));
+    if(id==='2F'&&c.name==='그라프')
+      parts=parts.flatMap(q=>cutRect(q,upperRect(id,[721,938,787,968])));
+    // The 3F guide shows a narrow upper wing attached to Horizon's main cell.
+    // It is the same shop; this is schematic guide geometry, not a survey.
+    if(id==='3F'&&c.name==='호라이즌'){
+      const wing=upperRect(id,[833,581,894,639]);
+      wing[0]=r[2]; // close the shared edge after circulation setbacks
+      wing[1]=Math.max(wing[1],r[1]); // preserve the same public aisle setback
+      parts=[r.slice(),wing];
+      r[2]=wing[2];
     }
     const theilma=id==='5F'&&c.name==='더일마';
     if(theilma){
@@ -5087,8 +5110,27 @@ export function build(K) {
         occupied.push([a,b]);const[x,z]=P(u,v);K.person(x,y,z,{rotY:FACE[face],...o});
       };
       hq(u0+.13,v0+.13,u1-.13,v1-.13,y+.018,palette.floor);
-      // Extra fragments are part of the same store, not extra staffed shops.
-      if(id==='5F'&&['뷰오리','아스페시','룰루레몬'].includes(c.name)&&q!==largest)continue;
+      // A split guide outline is still one shop: furnish its secondary area
+      // with bounded illustrative stock, but no duplicate shopfront or staff.
+      if(id==='2F'&&['모이나','몽클레르','그라프'].includes(c.name)&&q!==largest){
+        if(Wf>1.5&&Dp>1.4){
+          if(c.name==='몽클레르'){
+            const span=Math.min(Wf-.55,2.8),a=Wf/2,b=Dp-.45;
+            fb(a,b,span,.045,y+2.03,.045,0x292d2b);
+            for(let i=0;i<Math.max(2,Math.floor(span/.5));i++){
+              const n=Math.max(2,Math.floor(span/.5)),x=a-span/2+span*(i+.5)/n;
+              fb(x,b,.32,.17,y+1.13,.80,[0x1d252c,0x383c3b,0xd8d5ca][i%3]);
+            }
+          }else{
+            const a=Wf/2,b=Dp-.46,span=Math.min(Wf-.45,2.2);
+            fb(a,b,span,.52,y,.82,c.name==='그라프'?0xe9e6de:0x8e715b);
+            fb(a,b,span,.52,y+.82,.045,c.name==='그라프'?0xd8d5cc:0x9b7b60);
+            for(let i=0;i<3;i++)fb(a+(i-1)*span*.27,b,.22,.20,y+.87,.14,c.name==='그라프'?0xc6bba9:0x453c34);
+          }
+        }
+        continue;
+      }
+      if(((id==='5F'&&['뷰오리','아스페시','룰루레몬'].includes(c.name))||(id==='3F'&&c.name==='호라이즌'))&&q!==largest)continue;
       if(id==='4F'&&/캐주얼 슈즈|컨템포러리 슈즈|국내 슈즈|컴포트 슈즈/.test(c.name))
         hq(u0+.14,v0+.14,u1-.14,v1-.14,y+3.15,0x1b2029,false);
       // The guide groups these five small jewellery concessions in one
