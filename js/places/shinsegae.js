@@ -3569,7 +3569,14 @@ export function build(K) {
     const [px,py,pX,pY]=c.rect,guide=upperGuidePlans[id];
     const edgePoint=(f,t)=>f==='N'?[px+(pX-px)*t,py-5]:f==='S'?[px+(pX-px)*t,pY+5]:f==='W'?[px-5,py+(pY-py)*t]:[pX+5,py+(pY-py)*t];
     const score=f=>[.25,.5,.75].filter(t=>{const[a,b]=edgePoint(f,t);return a>27&&a<1775&&b>guide.top&&b<guide.bottom&&!guide.cells.some(o=>o!==c&&a>o.rect[0]&&a<o.rect[2]&&b>o.rect[1]&&b<o.rect[3]);}).length;
-    const frontOverrides={'11F:더 키친 일 포노 (이탈리안 피자)':'S','11F:꼴라주 (프렌치 경양식)':'N','11F:살롱드호우섬 (딤섬/누들/홍콩식 솥밥)':'S','11F:카테고릭 (카페)':'N','3F:PSR 컨시어지':'S','3F:트리니티 라운지':'N','6F:블런드스톤':'E','9F:가게나우/스메그':'S','10F:토박스':'S','10F:트래드후스':'S','10F:컴프프로':'S'};
+    // The 5F guide shows public aisles along these side edges. The exact
+    // shop doors are unverified; this avoids the model's open atrium cut.
+    const frontOverrides={'5F:DKNY':'W','5F:캐나다 구스':'E','11F:더 키친 일 포노 (이탈리안 피자)':'S','11F:꼴라주 (프렌치 경양식)':'N','11F:살롱드호우섬 (딤섬/누들/홍콩식 솥밥)':'S','11F:카테고릭 (카페)':'N','3F:PSR 컨시어지':'S','3F:트리니티 라운지':'N',
+      // Their automatically chosen fronts faced into the cut-out escalator
+      // shaft. The opposite edges face the white aisle on the 3F guide and
+      // are walkable in this model; exact real entrance positions are unknown.
+      '3F:미꼬':'S','3F:윤연화':'S','3F:루첸리':'S',
+      '6F:블런드스톤':'E','9F:가게나우/스메그':'S','10F:토박스':'S','10F:트래드후스':'S','10F:컴프프로':'S'};
     const dior=id==='2F'&&c.name==='디올',annex=dior&&c.rect[0]===1061;
     const tag=id==='3F'&&c.name==='태그호이어',tagAnnex=tag&&c.rect[1]===859;
     const preferred=c.face,sourceFace=(id==='2F'&&((c.name==='샤넬'&&c.rect[0]===1061)||(dior&&c.rect[0]===1143))?'E':null)||frontOverrides[`${id}:${c.name}`]||['N','S','E','W'].reduce((a,b)=>score(b)>score(a)?b:a,preferred),face=upperFace[sourceFace];
@@ -3610,7 +3617,15 @@ export function build(K) {
         const glazed=(id==='2F'||id==='11F')&&c.model.aisleEdges.includes(f)&&!/입점 준비/.test(c.name),L=Math.hypot(u1-u0,v1-v0);
         const wallOptions={mat:glazed?'glass':0xe7e1d6,thick:glazed?.035:.08,solid:id==='2F'||id==='11F'};
         const adjacentAisleGap=id==='2F'&&((c.name==='생 로랑'&&f==='S')||(c.name==='발렌시아가'&&f==='N'))&&u1-u0>5;
-        if(adjacentAisleGap){
+        // Official 2F guide draws Louis Vuitton as one L-shaped cell. The
+        // two source rectangles share this edge; neither may build glass
+        // between them or the large section becomes a sealed room.
+        const lvSeam=id==='2F'&&c.name==='루이비통'?upperRect('2F',[821,493,964,555]):null;
+        const lvJoin=lvSeam&&(f==='E'||f==='W')&&Math.abs(u0-lvSeam[0])<.02&&v1>lvSeam[1]&&v0<lvSeam[3];
+        if(lvJoin){
+          if(v0<lvSeam[1]-.1)upperSafeWall(u0,v0,u1,Math.min(v1,lvSeam[1]),y,H,wallOptions);
+          if(v1>lvSeam[3]+.1)upperSafeWall(u0,Math.max(v0,lvSeam[3]),u1,v1,y,H,wallOptions);
+        }else if(adjacentAisleGap){
           // Both plan-facing entries are truncated by the ground-floor atrium
           // reservation. These unsurveyed side openings reconcile the two
           // model layouts with the adjacent white aisles; they are not a
@@ -3624,6 +3639,7 @@ export function build(K) {
           for(let j=0;j<count;j++){
             const t=(j+.5)/count,u=u0+(u1-u0)*t,v=v0+(v1-v0)*t,along=f==='N'||f==='S',span=Math.min(2,L/count-.65);
             if(adjacentAisleGap&&u>26.2&&u<29.8)continue;
+            if(lvJoin&&v>lvSeam[1]-.4&&v<lvSeam[3]+.4)continue;
             box(u,v,along?.65:.18,along?.18:.65,y,H,0xcfc8bd,{solid:false});
             for(let h=.6;h<H;h+=.6)box(u,v,along?.66:.19,along?.19:.66,y+h,.015,0xb7afa4,{solid:false});
             const tu=u+(along?span/2+.35:0),tv=v+(along?0:span/2+.35),du=f==='W'?.38:f==='E'?-.38:0,dv=f==='N'?.38:f==='S'?-.38:0;
@@ -4361,7 +4377,7 @@ export function build(K) {
       for(let i=0;i<4;i++)bag(.5+i*(W-1)/3,Math.max(.5,D-.6),.58,stock[i],.8);
     }else if(/루이비통/.test(name)&&id==='2F'){
       for(const a of islands){B(a,D*.5,Math.min(1.65,sideWidth-.1),.8,.05,.75,ivory);B(a,D*.5,Math.min(1.65,sideWidth-.1),.8,.8,.35,'glass');bag(a,D*.5,.85,0xbb9971,.85);}
-      for(let i=0;i<4;i++){const a=.6+(W-1.2)*(i+.5)/4;B(a,D-.3,Math.min(1,W/5),.04,1.2,1.2,0xb7a989);B(a,D-.33,Math.min(.84,W/5-.08),.025,1.28,1.04,{tex:'ssg_upper_graphic',color:0xc2c7c1});}
+      if(!ctx.lvInnerSeam)for(let i=0;i<4;i++){const a=.6+(W-1.2)*(i+.5)/4;B(a,D-.3,Math.min(1,W/5),.04,1.2,1.2,0xb7a989);B(a,D-.33,Math.min(.84,W/5-.08),.025,1.28,1.04,{tex:'ssg_upper_graphic',color:0xc2c7c1});}
     }else if(/펜디/.test(name)&&id==='2F'){
       const n=Math.max(2,Math.floor((W-.6)/.65));shelf(W/2,rear,W-.6,3,0xf3f1ec);
       for(let j=0;j<3;j++)for(let i=0;i<n;i++)bag(.4+(W-.8)*(i+.5)/n,rear-.17,.59+j*.61,stock[i%6],.82);
@@ -4612,7 +4628,10 @@ export function build(K) {
       const photoOpen=(id==='4F'&&['가니','COS','씨뉴욕','엔폴드','라움'].includes(c.name))||(id==='5F'&&['렉토','조이 그라이슨','SHOP 아모멘토','룩캐스트','틸아이다이','루에브르','레이브'].includes(c.name));
       // Full-height colour at the back, shallow side returns, open selling front.
       // Never build across a round14 core cut or the white aisle outside a cell.
-      if(!c.model.aisleEdges.includes(({N:'S',S:'N',E:'W',W:'E'})[face]))fb(Wf/2,Dp-.20,Wf-.3,.12,y,H-.2,palette.wall);
+      const lvInnerSeam=id==='2F'&&c.name==='루이비통'&&c.rect[0]===821;
+      // This back edge joins the other Louis Vuitton rectangle; do not rebuild
+      // an opaque decorative wall over the walkable shared opening.
+      if(!lvInnerSeam&&!c.model.aisleEdges.includes(({N:'S',S:'N',E:'W',W:'E'})[face]))fb(Wf/2,Dp-.20,Wf-.3,.12,y,H-.2,palette.wall);
       const sideDepth=Math.min(Dp*.42,3.4);
       if(id!=='2F'&&id!=='11F')for(const a of [.20,Wf-.20])fb(a,Dp-sideDepth/2-.16,.10,sideDepth,y,H-.2,palette.wall);
       fb(Wf/2,Dp-.29,Wf-.4,.04,y+.10,.055,palette.trim);
@@ -5164,7 +5183,7 @@ export function build(K) {
       }
       const special=id==='8F'&&['K2','르꼬끄','닥터마틴'].includes(c.name);
       const retailKind=id==='5F'&&['에스실','넘버링'].includes(c.name)?'jewel':/바카라|크리스토플|라리끄|생루이|에르메스 메종|피숀/.test(c.name)?'kitchen':/B&O/.test(c.name)?'elec':/컨시어지/.test(c.name)?'service':/라운지/.test(c.name)?'lounge':c.name==='컴프프로'?'home':c.kind;
-      if(!/입점 준비/.test(c.name))furnishUpperMerch({id,name:c.name,kind:retailKind,Wf,Dp,y,H,fb,fsign,person,seed,palette,special});
+      if(!/입점 준비/.test(c.name))furnishUpperMerch({id,name:c.name,kind:retailKind,Wf,Dp,y,H,fb,fsign,person,seed,palette,special,lvInnerSeam});
       else{fb(Wf/2,.3,Wf-.3,.12,y,2.94,palette.wall);fsign('입점 준비 중',Wf/2,.21,y+1.6,Wf*.75,.3,{bg:null,fg:'#5f5b51'});}
       if(id==='11F'||c.name==='JAJU 테이블'){
         const menu=c.name.includes('(')?c.name.split('(')[1].replace(')','').replaceAll('/',' · '):c.name==='JAJU 테이블'?'식사 · 차 · 디저트':'음식 · 음료';
