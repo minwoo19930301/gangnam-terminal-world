@@ -2523,6 +2523,67 @@ export function build(K) {
       const isMezzJewel=floor==='1M'&&kind==='jewel';
       const [base,accent,bg,fg]=isMezzJewel?[0xe2e5e3,0x9cb7bd,'#edf1ef','#3e5052']:beautyPalette(name),jewel=kind==='jewel';
       const cw=Math.max(.65,w-(w<2.5?.65:1.1)),dd=Math.min(.85,d*.30),cv=v-Math.min(.65,d*.13);
+      if(floor==='1F'&&['키엘','연작'].includes(name)){
+        // Individual geometry from a private walk reference; no source image
+        // or temporary advertising artwork is embedded in the application.
+        const kiehls=name==='키엘', light=0xe1dcd0,wood=0xbcb4a5;
+        hq(u0+.18,v0+.18,u1-.18,v1-.18,y+.018,kiehls?{tex:'wood',color:0x806d5d}:0xd2cec5);
+        if(kiehls){
+          // Brick end pier, dark green merchandise cabinet and a lightbox.
+          const pu=u0+.72,pv=v+.4;
+          box(pu,pv,1.12,.65,y,2.38,{tex:'brick',color:0x8b6457},{solid:false});
+          box(pu,pv-.35,1.01,.045,y+1.78,.42,0x34342e,{solid:false});
+          for(const [su,sv,face,sw]of [[pu,pv-.35,'N',.91],[pu,pv+.35,'S',.91],[pu-.58,pv,'W',.52],[pu+.58,pv,'E',.52]])
+            sign("KIEHL'S",su,sv,y+2.12,face,sw,.20,{bg:'#483d35',fg:'#fffaf0',bold:true,twoSided:true});
+          box(pu,pv-.36,.87,.035,y+.72,.95,{tex:'emit',color:0xe6f0ee},{solid:false});
+          box(pu,pv+.36,.87,.035,y+.72,.95,{tex:'emit',color:0xe6f0ee},{solid:false});
+          box(u+.48,v+.3,1.25,.54,y,1.80,0x22362f,{solid:false});
+          box(u+.48,v+.00,1.15,.035,y+1.05,.70,0x183529,{solid:false});
+          sign('CUSTOMER FAVORITES',u+.48,v-.03,y+1.68,'N',1.00,.14,{bg:null,fg:'#fffaf4',twoSided:true});
+          sign('CUSTOMER FAVORITES',u+.48,v+.59,y+1.68,'S',1.00,.14,{bg:null,fg:'#fffaf4',twoSided:true});
+          for(let row=0;row<2;row++){
+            const h=.55+row*.39;box(u+.48,v+.60,1.12,.04,y+h,.035,0xd4cfc1,{solid:false});
+            for(let i=0;i<4;i++)box(u+.09+i*.26,v+.60,.13,.05,y+h+.04,.15,i%2?0xbba393:0xe6dbcb,{solid:false});
+          }
+          for(let row=0;row<2;row++)for(let i=0;i<4;i++){
+            const x=u+.09+i*.26,h=.54+row*.39;
+            box(x,v-.05,.14,.10,y+h,.17,i%2?0xbba393:0xe6dbcb,{solid:false});
+          }
+          box(u+.35,cv,cw*.65,dd,y,.88,0x294037);
+          box(u+.35,cv,cw*.65,dd,y+.88,.06,light,{solid:false});
+          // Small contrasting tile edge, inside the retained official cell.
+          for(let j=0;j<Math.min(7,Math.floor((w-.5)/.3));j++){
+            const x=u0+.35+j*.30;
+            hq(x,v0+.22,x+.25,v0+.47,y+.035,j%3?0xebeae4:0x353936);
+          }
+          beautyObstacles.push(R([u+.35-cw*.325,cv-dd/2,u+.35+cw*.325,cv+dd/2]));
+        }else{
+          // Pale striated island with a warm underlit fascia and tester table.
+          const iw=Math.max(.8,Math.min(cw,w-1)),iv=v-.16;
+          box(u,iv,iw,Math.min(1.12,d-.6),y,.93,wood);
+          box(u,iv,iw+.04,Math.min(1.14,d-.56),y+.93,.065,0xf1eee5,{solid:false});
+          box(u,iv-Math.min(.58,(d-.6)/2),iw-.06,.025,y+.72,.045,{tex:'emit',color:0xffefd2},{solid:false});
+          for(let j=0;j<6;j++)box(u,iv-Math.min(.59,(d-.6)/2),iw-.08,.018,y+.12+j*.09,.012,j%2?0xd9d1c3:0xa79f91,{solid:false});
+          for(const [sv,face] of [[iv-Math.min(.61,(d-.6)/2),'N'],[iv+Math.min(.61,(d-.6)/2),'S']])
+            sign('YUNJAC',u,sv,y+.60,face,Math.min(1.1,iw*.8),.20,{bg:null,fg:'#4a433a',twoSided:true});
+          const n=Math.max(4,Math.floor(iw/.3));
+          for(let i=0;i<n;i++){
+            const x=u-iw*.4+i*iw*.8/(n-1),h=.15+(i%3)*.045;
+            box(x,iv,.10,.10,y+1.0,h,i%3===0?0x252823:0xf0eadc,{solid:false});
+            box(x,iv,.07,.07,y+1.0+h,.035,0xc6bda8,{solid:false});
+          }
+          box(u,v+.95,Math.min(iw*.85,1.55),.52,y,.76,0xd1c8b9,{solid:false});
+          box(u,v+.95,Math.min(iw*.85,1.55),.52,y+.76,.05,0xf1eee5,{solid:false});
+          const bu=u+Math.min(iw*.3,.65);
+          box(bu,v1-.38,Math.min(.8,iw*.45),.10,y+.95,1.10,0xb9b2a8,{solid:false});
+          for(const sv of [v1-.44,v1-.32])box(bu,sv,Math.min(.68,iw*.38),.018,y+1.08,.48,{tex:'emit',color:0xb7d7dc},{solid:false});
+          for(const [sv,face] of [[v1-.46,'N'],[v1-.30,'S']])
+            sign('YUNJAC',bu,sv,y+1.80,face,Math.min(.7,iw*.4),.16,{bg:null,fg:'#f9f8ef',twoSided:true});
+          beautyObstacles.push(R([u-iw/2,iv-Math.min(.56,(d-.6)/2),u+iw/2,iv+Math.min(.56,(d-.6)/2)]));
+        }
+        beautyPerson(u,Math.min(v1-.35,cv+dd/2+.45),y,FACE.N,true,0);
+        return;
+      }
       // A low coloured plinth marks each plan cell separately, instead of one continuous counter row.
       hq(u0+.2,v0+.2,u1-.2,v1-.2,y+.018,{color:base,gloss:.3});
       box(u,cv,cw,dd,y,.94,{color:base,gloss:.5});
@@ -2996,8 +3057,7 @@ export function build(K) {
           for(let k=0;k<14;k++){const a=k*2.4;ball(U+Math.cos(a)*.62,V+Math.sin(a)*.62,2.65+(k%4)*.17,.024,{tex:'emit',color:0xfff1bf});}
         }
       }
-      {const[u,v]=PLAN(421,635);box(u-.7,v,.68,.05,1.1,2.25,0xa8212b,{solid:false});sign(['CUSTOMER','FAVORITES'],u-.7,v-.032,2.65,'N',.60,.55,{bg:null,fg:'#fff6e9',bold:false});}
-      for(const [px,py,col]of[[478.5,567.5,0xa82a36],[417.5,567.5,0xdce0df],[620.5,635.5,0xe5a7b9]]){
+      for(const [px,py,col]of[[478.5,567.5,0xa82a36],[620.5,635.5,0xe5a7b9]]){
         const[u,v]=PLAN(px,py);box(u,v,.78,2.7,.04,.8,col,{solid:false});box(u+.42,v,.025,2.5,.82,.09,{tex:'emit',color:0xf9f3ee},{solid:false});
       }
       // Mint island and luminous blue diamond base sit east of the south bank.
@@ -3635,6 +3695,13 @@ export function build(K) {
     // https://japanese.visitkorea.or.kr/svc/contents/contentsView.do?vcontsId=152482
     if(id==='2F'&&n==='프라다')Object.assign(p,{wall:0xdfe3c7,portal:0xede7d8,trim:0x282825,accent:0xbbbca1,floor:{tex:'marble',color:0xe8e7dc,gloss:.4}});
     if(id==='2F'&&n==='펜디')Object.assign(p,{wall:0xece8e0,portal:0xd6cec2,trim:0x5f554f,accent:0x9b8270,floor:{tex:'wood',color:0xa77c59,gloss:.25}});
+    // Gangnam 2F photographs: grey veined stone and white lettering at Miu
+    // Miu; Burberry Women's open front has dark wood and metallic frames.
+    // These archival images do not establish the date of a later refit.
+    // https://www.ktriptips.com/kor/shopping/2908828
+    // https://www.ktriptips.com/kor/shopping/4013301
+    if(id==='2F'&&n==='미우미우')Object.assign(p,{wall:0xe1e2df,portal:{tex:'marble',color:0xa6a8a6},trim:0xb7b8b5,accent:0xb1b4b2,floor:{color:0xd7d8d4,gloss:.35}});
+    if(id==='2F'&&n==='버버리 여성')Object.assign(p,{wall:{tex:'wood',color:0x795438},portal:0x77726b,trim:0x454744,accent:0x8d745d,floor:0xd0c3ad});
     if(/구찌/.test(n))Object.assign(p,{wall:0xd8d8c6,trim:0xa28d69,accent:0x4a5e46});
     // Gangnam boutique photographs archived by the Korea Tourism Organization.
     // The displays are simplified, and the photographs may predate renovations.
@@ -3673,6 +3740,15 @@ export function build(K) {
     if(id==='3F'&&n==='파네라이')Object.assign(p,{wall:0xe3ddd0,trim:0x9d8664,accent:0x4b5c56,floor:{tex:'carpet',color:0x243b54}});
 
 
+    // Gangnam Blancpain's 2020 opening photos and Chaumet's undated KTO
+    // storefront photo: simplified materials; present-day details may differ.
+    // https://www.blancpain.com/en/news/blancpain-unveils-new-retail-design-concept
+    // https://english.visitkorea.or.kr/svc/contents/contentsView.do?vcontsId=143661
+    if(id==='3F'&&n==='블랑팡')Object.assign(p,{wall:0xede7db,trim:0x655442,accent:0x9a6340,floor:{tex:'wood',color:0xdec9a4,gloss:.25}});
+    if(id==='3F'&&n==='쇼메')Object.assign(p,{wall:0xf0ebdf,trim:0xb39a65,accent:0x1c273b,floor:{tex:'marble',color:0xeee7d9,gloss:.4}});
+
+
+
     if(/티파니/.test(n))Object.assign(p,{wall:0xefe9dc,trim:0xb8a47a,accent:0x888f91,floor:{tex:'marble',color:0xece5d6,gloss:.5}});
     // 2F: the brand's own Gangnam boutique photograph shows the black stone
     // BVLGARI fascia, pale stone piers and warm gold/green window displays.
@@ -3702,6 +3778,10 @@ export function build(K) {
     if(id==='4F'&&n==='씨뉴욕')Object.assign(p,{wall:{tex:'wood',color:0xb09a75},trim:0xb29769,accent:0xe9e2d5,floor:{tex:'wood',color:0xe5d5b7,gloss:.15}});
     // 2023 Gangnam NUMBERING photograph: black signage and silver jewellery.
     // https://www.g-enews.com/view.php?ud=2023121309194553781c3c506100_1
+    // The brand's own Gangnam 5F photos show a white showcase, black
+    // jewellery panel and a dark carpet with a light repeating motif.
+    // https://minisilsil.cafe24.com/stockist.html
+    if(id==='5F'&&n==='에스실')Object.assign(p,{wall:0xe6e7e3,trim:0xb8bdbb,accent:0xe2e4df,floor:{tex:'carpet',color:0x202325}});
     if(id==='5F'&&n==='넘버링')Object.assign(p,{wall:0x34383a,trim:0x9c9e9c,accent:0x16191a,dark:true,floor:0x686b6d});
     if(id==='4F'&&n==='가니')Object.assign(p,{wall:0xd9a8c1,trim:0xaaa7a5,accent:0x32649f,floor:0xecece9});
     if(id==='4F'&&n==='COS')Object.assign(p,{wall:0xefefec,trim:0x9b9c99,accent:0xe9e9e5,floor:{tex:'wood',color:0xdac8aa,gloss:.2}});
@@ -3731,7 +3811,7 @@ export function build(K) {
     if(W<1.05||D<1.05)return;
     const oak={tex:'wood',color:0xd4bb91},walnut={tex:'wood',color:0x765a43},ivory=0xf1ece1,
       metal={tex:'metal',color:0xb4b7b5},gold={color:0xb6a17a,gloss:.5},dark=0x272a28;
-    const brandStock=id==='4F'&&name==='씨뉴욕'?[0x26364f,0xf0ede2,0x56718a,0xc5b59b]:/막스마라/.test(name)?[0xb8875a,0xefe7d8,0x1d1d1d,0x8a8a88]:/A.P.C./.test(name)?[0x2c3a57,0x1f2a3a,0xe6dfcc,0x8a8463]:/로로피아나/.test(name)?[0xd9cbb3,0xa8957e,0xb98d5f,0xf0e9dc]:/스톤 아일랜드/.test(name)?[0x1b1c1c,0x4f5a3a,0x23304a]:/몽클레르/.test(name)?[0x121314,0x1d2433,0xf2f2ef]:name==='K2'?[0x8c9093,0xc4c8ca,0x1b1b1c,0xeae6d8,0xbb7251,0x514738]:null;
+    const brandStock=id==='2F'&&name==='버버리 여성'?[0xc5aa82,0xe1d0b4,0x62584d,0xc9b9ac]:id==='4F'&&name==='씨뉴욕'?[0x26364f,0xf0ede2,0x56718a,0xc5b59b]:/막스마라/.test(name)?[0xb8875a,0xefe7d8,0x1d1d1d,0x8a8a88]:/A.P.C./.test(name)?[0x2c3a57,0x1f2a3a,0xe6dfcc,0x8a8463]:/로로피아나/.test(name)?[0xd9cbb3,0xa8957e,0xb98d5f,0xf0e9dc]:/스톤 아일랜드/.test(name)?[0x1b1c1c,0x4f5a3a,0x23304a]:/몽클레르/.test(name)?[0x121314,0x1d2433,0xf2f2ef]:name==='K2'?[0x8c9093,0xc4c8ca,0x1b1b1c,0xeae6d8,0xbb7251,0x514738]:null;
     const stock=brandStock?Array.from({length:6},(_,i)=>brandStock[i%brandStock.length]):[0xe3ddd1,0x303b43,0xb3a18a,0x5c7065,0x9c6571,0xb28b48];
     const toys=[0xe4b827,0xa74232,0x4b7793,0x6b9567,0xd89f9b];
     const staffColor=/프리스비/.test(name)?0x275f92:/레고/.test(name)?0xdaa51c:0x262c2b;
@@ -3811,7 +3891,7 @@ export function build(K) {
       const bays=Math.max(1,Math.min(4,Math.floor((W-.4)/4.7)));
       for(let bay=0;bay<bays;bay++){
         const a=.4+(bay+.5)*(W-.8)/bays,w=Math.min(4.6,(W-.8)/bays-.12),n=Math.max(2,Math.min(8,Math.floor(w/.56)));
-        shelf(a,rear,w,rows,p.dark?walnut:oak);
+        shelf(a,rear,w,rows,id==='2F'&&name==='미우미우'?0xe5e6e3:p.dark?walnut:oak);
         for(let row=0;row<rows;row++)for(let i=0;i<n;i++)fn(a-w/2+.3+i*(w-.6)/Math.max(1,n-1),rear-.15,.59+row*.61,i+bay*n,row);
       }
     };
@@ -3843,7 +3923,27 @@ export function build(K) {
       const w=Math.max(.45,W-.55),b=D-.45;
       B(W/2,b,w,.25,.25,1.7,p.wall);
       B(W/2,b-.12,w,.30,.65,.05,oak);
-      if(id==='5F'&&name==='넘버링'){
+      if(id==='5F'&&name==='에스실'){
+        // Narrow official-plan footprint: simplified white glass-topped
+        // counter and necklaces, leaving the exterior aisle untouched.
+        B(W/2,1.15,Math.min(.80,W-.5),.55,.05,.78,0xe6e7e2);
+        B(W/2,1.15,Math.min(.80,W-.5),.55,.83,.18,'glass');
+        B(W/2,1.15,Math.min(.70,W-.55),.43,.84,.025,0xf3f3ef);
+        for(const da of[-.16,0,.16]){
+          B(W/2+da,1.15,.10,.09,.87,.02,0xb5b9b7);
+          B(W/2+da,1.15,.05,.05,.89,.018,0xe8dcb9);
+        }
+        B(W/2,b-.15,Math.min(.72,W-.5),.05,.78,1.34,0x181c1d);
+        for(const da of[-.18,0,.18]){
+          B(W/2+da,b-.19,.025,.02,1.12,.62,0xdde1df);
+          B(W/2+da,b-.21,.06,.02,1.09,.05,0xd3b977);
+        }
+        // Abstract light crosses suggest the photographed carpet motif.
+        for(let bb=.70;bb<D-.45;bb+=.78)for(let j=-2;j<=2;j++){
+          B(W/2+j*.055,bb+j*.055,.065,.065,.025,.012,0xe6e6df);
+          B(W/2+j*.055,bb-j*.055,.065,.065,.025,.012,0xe6e6df);
+        }
+      }else if(id==='5F'&&name==='넘버링'){
         // Small guide cell: keep the display inside the cell and use jewellery
         // trays rather than the generic folded fashion stock.
         B(W/2,1.15,Math.min(.78,W-.5),.55,.05,.78,0x25292a);
@@ -3912,6 +4012,8 @@ export function build(K) {
         B(a,b,w,.8,.1,.84,p.dark?walnut:ivory);B(a,b,w,.8,.94,.3,'glass');B(a,b,w-.12,.65,.945,.025,0xe1d5bd);
         for(let i=0;i<4;i++){const aa=a+(i-1.5)*w*.20;B(aa,b,.12,.22,.98,.025,gold);B(aa,b,.13,.10,1.01,.035,dark);B(aa,b,.10,.08,1.046,.012,ivory);}
       }
+    }else if(id==='2F'&&name==='버버리 여성'){
+      apparel();
     }else if(/몽클레르/.test(name)){
       apparel();for(const a of[W*.28,W*.72])mannequin(a,Math.min(1.2,D*.35));
     }else if(/로로피아나/.test(name)){
@@ -4180,7 +4282,7 @@ export function build(K) {
         fb(Wf/2,.29,Wf-.26,.34,y+3.03,.62,/펜디/.test(c.name)?0xcdc4be:/몽클레르/.test(c.name)?0x0e0f10:lintel);
         fb(Wf/2,.10,Wf-.32,.04,y+3.02,.04,palette.trim);
         // Flanking lit window niches, with a generous central doorway.
-        if(!palette.apple&&!/몽클레르|루이비통|펜디/.test(c.name)&&!(id==='2F'&&['고야드','구찌','프라다'].includes(c.name))&&Wf>4.5&&Dp>2.3)for(const a of [Wf*.18,Wf*.82]){
+        if(!palette.apple&&!/몽클레르|루이비통|펜디/.test(c.name)&&!(id==='2F'&&['고야드','구찌','프라다','미우미우','버버리 여성'].includes(c.name))&&Wf>4.5&&Dp>2.3)for(const a of [Wf*.18,Wf*.82]){
           const ww=Math.min(1.55,Wf*.20);
           fb(a,.62,ww,.65,y+.10,.28,palette.wall);
           fb(a,.93,ww,.055,y+.38,1.9,palette.wall);
@@ -4221,6 +4323,22 @@ export function build(K) {
           for(const h of [.32,2.62])fb(a,.28,ww-.14,.035,y+h,.05,{tex:'emit',color:0xfff4da});
           for(const h of [.65,1.20,1.75,2.30])fb(a,.23,.29,.12,y+h,.25,0x8f786e);
           fb(Wf*.2,.55,Math.min(Wf*.27,1.4),.7,y+.02,.07,0xb77b56);
+        }
+        if(id==='2F'&&c.name==='미우미우'&&Wf>3){
+          // Pale metal-lit shelf niche on the stone pier; leave the broad
+          // central opening and the existing aisle unobstructed.
+          const a=Wf-.55;
+          fb(a,.26,.52,.035,y+.3,2.55,0xb6b9b7);
+          for(const h of [.76,1.42,2.08]){
+            fb(a,.20,.48,.025,y+h,.035,{tex:'emit',color:0xf2f4ef});
+            fb(a,.17,.18,.08,y+h+.04,.17,0xc6beb0);
+          }
+        }
+        if(id==='2F'&&c.name==='버버리 여성'&&Wf>3){
+          // Slender dark metal glazing posts, with the photo's open selling
+          // front and pale carpet; no temporary crowd-control barriers.
+          for(const a of [.42,Wf-.42])fb(a,.16,.055,.045,y+.08,2.9,0x414340);
+          fb(Wf/2,.16,Wf-.78,.04,y+2.95,.055,0x414340);
         }
         if(id==='2F'&&c.name==='고야드'&&Wf>3){
           // Dark green panelling, fine brass outlines and warm trunk windows.
@@ -4341,6 +4459,37 @@ export function build(K) {
           fb(Wf/2,Dp-.28,Wf-.5,.055,y+.12,2.7,{tex:'wood',color:0x725843});
           fb(Wf*.38,Dp-.34,Math.min(Wf*.55,1.8),.04,y+1.16,1.15,0xb5aa97);
           fb(Wf*.38,Dp-.39,Math.min(Wf*.55-.12,1.68),.03,y+1.22,1.03,{tex:'ssg_upper_graphic',color:0x899395});
+        }
+        if(id==='3F'&&c.name==='블랑팡'&&Wf>2.4&&Dp>2){
+          // Photographed cherry-wood entry returns and dark bronze outlines.
+          for(const a of [.35,Wf-.35]){
+            fb(a,.23,.12,.08,y+.12,2.82,0x493f35);
+            fb(a,.55,.31,.34,y+.12,2.80,{tex:'wood',color:0x9c5b33});
+          }
+          // Blue watch-campaign window is abstract, avoiding the original art.
+          fb(Wf-.48,.30,.50,.04,y+.45,2.25,0x1a293b);
+          fb(Wf-.48,.23,.38,.025,y+.52,2.08,{tex:'emit',color:0x294e73});
+          if(Dp>3){
+            // Walnut-lit watch cabinets and central pale sculptural wall panel.
+            fb(Wf/2,Dp-1.05,Math.min(1.3,Wf-.9),.06,y+1.25,1.36,0xd8ccb8);
+            for(let j=0;j<24;j++){
+              const t=j*PI/12;
+              fb(Wf/2+.39*Math.cos(t),Dp-1.11,.055,.025,y+1.91+.39*Math.sin(t),.055,0xbcae96);
+            }
+          }
+        }
+        if(id==='3F'&&c.name==='쇼메'&&Wf>3&&Dp>2){
+          // KTO's Gangnam shopfront: navy surround, pale stone name band,
+          // gilt entrance edging and the left vertical blue display.
+          for(const a of [.45,Wf-.45])fb(a,.24,.65,.12,y+.12,2.80,0x152033);
+          for(const a of [Wf/2-1,Wf/2+1])fb(a,.16,.055,.045,y+.12,2.78,0xbda16a);
+          fb(Wf/2,.16,2.05,.045,y+2.86,.05,0xbda16a);
+          fb(.76,.30,.44,.04,y+.30,2.22,0x0d1728);
+          fb(.76,.23,.32,.025,y+.40,1.98,{tex:'emit',color:0x315c9d});
+          fb(Wf-.76,.30,.46,.035,y+.65,1.56,0xbfae88);
+          fb(Wf-.76,.23,.34,.025,y+.72,1.42,{tex:'emit',color:0xe4e2d8});
+          // Deep blue feature wall behind the jewellery cases.
+          if(Dp>2.8)fb(Wf/2,Dp-.65,Math.min(1.25,Wf-.6),.04,y+1.05,1.55,0x293548);
         }
         if(id==='3F'&&c.name==='파네라이'&&Wf>2.5&&Dp>3){
           // Oversized luminous Luminor dial from the Gangnam boutique interior.
@@ -4472,12 +4621,12 @@ export function build(K) {
       }
       if(q===largest&&!photoOpen&&!(id==='8F'&&c.name==='K2')){
         const chanel2=id==='2F'&&c.name==='샤넬';
-        const fg=id==='2F'&&['불가리','티파니앤코'].includes(c.name)?'#fffaf0':id==='8F'?'#f4f1ea':luxury||palette.apple||(id==='5F'&&c.name==='룰루레몬')||(id==='4F'&&['A.P.C.','린드버그'].includes(c.name))?'#303536':'#fffaf0',bg=id==='8F'?'#1d1f20':palette.dark&&!chanel2?'#202424':null;
-        const brand2={'에르메스':'HERMÈS','샤넬':'CHANEL','디올':'DIOR','까르띠에':'Cartier','루이비통':'LOUIS VUITTON','루이비통 주얼리':'LOUIS VUITTON','고야드':'GOYARD','구찌':'GUCCI','프라다':'PRADA'};
-        const brand3={'프레드':'FRED','쇼파드':'Chopard','피아제':'PIAGET','부쉐론':'BOUCHERON','브레게':'BREGUET','오메가':'Ω OMEGA Ω','오데마피게':'AUDEMARS PIGUET','IWC':'IWC SCHAFFHAUSEN','파네라이':'PANERAI'};
+        const fg=id==='2F'&&['불가리','티파니앤코','미우미우','버버리 여성'].includes(c.name)?'#fffaf0':id==='8F'?'#f4f1ea':luxury||palette.apple||(id==='5F'&&['룰루레몬','에스실'].includes(c.name))||(id==='4F'&&['A.P.C.','린드버그'].includes(c.name))?'#303536':'#fffaf0',bg=id==='8F'?'#1d1f20':id==='2F'&&c.name==='버버리 여성'?'#202424':palette.dark&&!chanel2?'#202424':null;
+        const brand2={'에르메스':'HERMÈS','샤넬':'CHANEL','디올':'DIOR','까르띠에':'Cartier','루이비통':'LOUIS VUITTON','루이비통 주얼리':'LOUIS VUITTON','고야드':'GOYARD','구찌':'GUCCI','프라다':'PRADA','미우미우':'miu miu','버버리 여성':'BURBERRY'};
+        const brand3={'프레드':'FRED','쇼파드':'Chopard','피아제':'PIAGET','부쉐론':'BOUCHERON','브레게':'BREGUET','오메가':'Ω OMEGA Ω','오데마피게':'AUDEMARS PIGUET','IWC':'IWC SCHAFFHAUSEN','파네라이':'PANERAI','블랑팡':'BLANCPAIN','쇼메':'CHAUMET'};
         const shoeGroup=id==='4F'&&/캐주얼 슈즈|컨템포러리 슈즈|국내 슈즈|컴포트 슈즈|분더샵 슈/.test(c.name);
         const fasciaName=shoeGroup?c.name.replace(/\s*\([^)]*\)\s*$/, ''):c.name;
-        fsign(shoeGroup?fasciaName:id==='5F'&&c.name==='넘버링'?'NUMBERING':id==='4F'&&c.name==='린드버그'?'LINDBERG':id==='2F'&&brand2[c.name]?brand2[c.name]:id==='3F'&&brand3[c.name]?brand3[c.name]:c.name==='몽클레르'?'MONCLER':c.name==='펜디'?'FENDI':id==='5F'&&c.name==='룰루레몬'?'lululemon':c.name==='불가리'&&id==='2F'?'BVLGARI':c.name==='티파니앤코'&&id==='2F'?'TIFFANY & CO.':c.name==='로에베'&&id==='3F'?'LOEWE':c.name==='막스마라'&&id==='3F'?'MAX MARA':c.name,Wf/2,.075,y+(id==='8F'?2.75:id==='2F'&&c.name==='고야드'?3.34:3.25),Math.min(Wf-.55,8.5),id==='2F'&&c.name==='고야드'?.26:Math.min(id==='8F'?.35:.45,.19+Wf*.035),{bg:id==='2F'&&c.name==='고야드'?null:bg,fg:id==='2F'&&c.name==='고야드'?'#dfc77d':palette.dark&&!chanel2&&id!=='8F'?'#f4eee0':fg,twoSided:true});
+        fsign(shoeGroup?fasciaName:id==='5F'&&c.name==='에스실'?'SSIL':id==='5F'&&c.name==='넘버링'?'NUMBERING':id==='4F'&&c.name==='린드버그'?'LINDBERG':id==='2F'&&brand2[c.name]?brand2[c.name]:id==='3F'&&brand3[c.name]?brand3[c.name]:c.name==='몽클레르'?'MONCLER':c.name==='펜디'?'FENDI':id==='5F'&&c.name==='룰루레몬'?'lululemon':c.name==='불가리'&&id==='2F'?'BVLGARI':c.name==='티파니앤코'&&id==='2F'?'TIFFANY & CO.':c.name==='로에베'&&id==='3F'?'LOEWE':c.name==='막스마라'&&id==='3F'?'MAX MARA':c.name,Wf/2,.075,y+(id==='8F'?2.75:id==='2F'&&c.name==='고야드'?3.34:3.25),Math.min(Wf-.55,8.5),id==='2F'&&c.name==='고야드'?.26:Math.min(id==='8F'?.35:.45,.19+Wf*.035),{bg:id==='2F'&&c.name==='고야드'?null:bg,fg:id==='2F'&&c.name==='고야드'?'#dfc77d':palette.dark&&!chanel2&&id!=='8F'?'#f4eee0':fg,twoSided:true});
       }
       // A clear counter at the rear side, payment terminal and framed mirror.
       if(Wf>2.3&&Dp>2.8){
@@ -4493,7 +4642,7 @@ export function build(K) {
         }
       }
       const special=id==='8F'&&['K2','르꼬끄','닥터마틴'].includes(c.name);
-      const retailKind=id==='5F'&&c.name==='넘버링'?'jewel':/바카라|크리스토플|라리끄|생루이|에르메스 메종|피숀/.test(c.name)?'kitchen':/B&O/.test(c.name)?'elec':/컨시어지/.test(c.name)?'service':/라운지/.test(c.name)?'lounge':c.name==='컴프프로'?'home':c.kind;
+      const retailKind=id==='5F'&&['에스실','넘버링'].includes(c.name)?'jewel':/바카라|크리스토플|라리끄|생루이|에르메스 메종|피숀/.test(c.name)?'kitchen':/B&O/.test(c.name)?'elec':/컨시어지/.test(c.name)?'service':/라운지/.test(c.name)?'lounge':c.name==='컴프프로'?'home':c.kind;
       if(!/입점 준비/.test(c.name))furnishUpperMerch({id,name:c.name,kind:retailKind,Wf,Dp,y,H,fb,fsign,person,seed,palette,special});
       else{fb(Wf/2,.3,Wf-.3,.12,y,2.94,palette.wall);fsign('입점 준비 중',Wf/2,.21,y+1.6,Wf*.75,.3,{bg:null,fg:'#5f5b51'});}
       if(id==='11F'||c.name==='JAJU 테이블'){
