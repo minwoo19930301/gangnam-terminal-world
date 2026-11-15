@@ -6793,11 +6793,8 @@ export function build(K) {
   }}
   // Small level landing outside the incoming 5F flight opening.
   {const r=upperAnnexAtriumRect('5F'),y=LV['5F'];K.slab(rect(28.9,r[1]-1.5,r[0]+.12,121.45),y,{mat:{tex:'marble',color:0xe8dfce},thick:.12,under:false,ceil:false,edge:false});}
-  // Guard the outside of the relocated 5F annex opening. The 5F–6F
-  // escalator uses the separate legacy landing, not this east edge.
-  // This fixed edge guards the original opening; the shortened incoming
-  // flight must not extend it across the adjacent it MICHAA frontage.
-  {const q=upperPhysicalWell('5F',true),y=LV['5F'];upperSafeWall(q[2],q[1],q[2],Math.min(q[3],127.53),y,1.05,{mat:'glass',thick:.045});}
+  // The former 5F east-edge glass stood over supported floor on both sides
+  // after the annex flights moved. The actual flight openings stay guarded.
   // Official 2F plan joins the two Hermes areas by a narrow strip. The
   // enclosing walls and 2.2m ceiling are schematic, not surveyed finishes.
   {const y=LV['2F'];
