@@ -972,7 +972,9 @@ export function build(K) {
     for (let u = -26; u <= -11; u += 3.5) for (let v = -3.5; v <= 9.5; v += 3.2) TABLE(u, v, y, { r: 0.42, chairs: 2, chair: 0xd8cbb5 });
     CROWD([-27, -4, -10, 10], y, 6, 201);
     SUBZ('카페 원', '2F', '카페 · 델리', [-33, -6, -8, 12]);
-    setFit(-16.054054054,19/37);
+    // Keep the inferred western boundary fixed and make a narrow public aisle
+    // between Flavors and the Patisserie. Their real widths are not surveyed.
+    setFit(-17.391891892,17.5/37);
     // 플레이버즈: photos 17–20. The unobserved southern extension is screened off.
     WL(-33.1, 12, 4, 12, y, yc, { mat: 'jwWalnut' });
     WL(4, 12, 4, 41.7, y, yc, { mat: 'jwWalnut', thick: .2, openings: [{ at: 6.5, w: 3.4, y0: y, y1: y + 3.45 }, {at:20,w:3.2,y0:y,y1:y+3.45}] });
@@ -1104,7 +1106,7 @@ export function build(K) {
     LIGHTS([-20, 27, 3.6, 41], yc - .12, 3.2, .08, 0xf0c98e);
     MAN(-16, 40.1, y, { sit: true, shirt: 0xddd4c7 }); MAN(-28.1, 37.4, y, { shirt: 0xe5e0d5 });
     // The hall void is kept out of all restaurant/landing surfaces and bounded at 2F.
-    fit=ID;RAILBOX([-31.6,42,-14.025,55], y);setFit(-16.054054054,19/37);
+    fit=ID;RAILBOX([-31.6,42,-14.025,55], y);setFit(-17.391891892,17.5/37);
     SUBZ('플레이버즈', '2F', '뷔페 · 황동 펜던트 · 대리석 카운터', [-33, 12, 4, 41.7]);
     SUBZ('플레이버즈 다이닝', '2F', '월넛 스크린 · 소파 좌석', [-20.4, 26.4, 3.7, 41.6]);
     // 파티세리 · 티 바 — intact east fitout transferred to the west band.

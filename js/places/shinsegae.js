@@ -178,6 +178,13 @@ export function build(K) {
     g.strokeRect(0, 0, w, h);
   }, [2.4, 2.4]);
   K.material('ssg_marble_polished', new K.THREE.MeshPhongMaterial({ map: K.T.surface('ssg_marble').tex, color: 0xffffff, shininess: 85, specular: 0xb3a68f }));
+  // The 1F public floor in the user's walk is a bright, polished white stone
+  // with faint square joints. Store finishes and the 3GATE inlay stay above it.
+  K.texture('ssg_1f_public_stone', 256, 256, (g, w, h) => {
+    g.fillStyle = '#fafaf8'; g.fillRect(0, 0, w, h);
+    g.strokeStyle = 'rgba(130,130,125,0.18)'; g.lineWidth = 1;
+    g.strokeRect(0, 0, w, h);
+  }, [1.2, 1.2]);
 
   const groundPassages=[[-.3,38.3,13.5,46.9],[-.3,63.8,13.0,72.2],[21,68.65,31,70.35],[44.4,68.65,51.2,70.35]];
   const intersects=(r,q)=>r[0]<q[2]&&r[2]>q[0]&&r[1]<q[3]&&r[3]>q[1];
@@ -836,7 +843,7 @@ export function build(K) {
   const beautyUpHoles=[rect(38.48,39.8,40.12,52.2),rect(28.0,51.6,30.67,56.2)];
   for(const hole of beautyDownHoles)K.groundHole(hole);
   // F13: keep the terracotta colour; stronger environment mixing washed it pink.
-  const floorMat = { B2: { tex: 'concrete', color: 0x8c8d89 }, B1: 'ssg_marble', '1F': {tex:'marble',color:0xebe9e5,scale:[.9,.9],gloss:.7}, '2F': {tex:'marble',color:0xf4efe4,gloss:.7}, '3F': {tex:'marble',color:0xf1ebdf,gloss:.5}, '11F': { tex: 'darkstone', color: 0xd4c5af } };
+  const floorMat = { B2: { tex: 'concrete', color: 0x8c8d89 }, B1: 'ssg_marble', '1F': {tex:'ssg_1f_public_stone',gloss:.7}, '2F': {tex:'marble',color:0xf4efe4,gloss:.7}, '3F': {tex:'marble',color:0xf1ebdf,gloss:.5}, '11F': { tex: 'darkstone', color: 0xd4c5af } };
   // Round16: the shared circulation is polished ivory; grey sports tile stays
   // inside its official tenant cells. Lower-floor finishes are untouched.
   for (const id of ['4F', '5F', '6F', '7F', '8F', '9F', '10F', '11F']) floorMat[id] = {tex:'marble',color:0xf2ede3,gloss:.5};
