@@ -451,7 +451,7 @@ export function build(K) {
     const h = [ELH];
     if (k !== 'B4') h.push(STH);
     if (ESC[k]) h.push(ESC[k]);
-    if (k === '6F') h.push(BALL);
+    if (k === '6F') h.push([-19.3,.1,3,32]);
     if (k === 'B3') h.push(POOL, KIDS, SCUBA);
     if (k === '2F') h.push(HALL);
     if (k === '9F') h.push([3.0, 48.8, 5.2, 57]);
@@ -464,23 +464,13 @@ export function build(K) {
       // R20: no hotel slab through the 8.8m central hall, its 1M gallery,
       // Sweet Garden well or public lift. Separate edge strips avoid holes
       // crossing the outer slab boundary (the old northern hole did that).
-      SLAB([UW + .06, -6, 2, 60.5], y, { mat: floorMat[k], under: { tex: 'ceiling', color: 0xf4efe6 }, holes: [[-31.6,42,-14.025,55],[-12.25,24.2,-5.15,39.5],[-2.9,30,1,41.6]], thick: .3 });
+      SLAB([UW + .06, 0, 2, 60.5], y, { mat: floorMat[k], under: { tex: 'ceiling', color: 0xf4efe6 }, holes: [[-31.6,42,-14.025,55],[-12.25,24.2,-5.15,39.5],[-2.9,30,1,41.6]], thick: .3 });
       continue;
     }
     const tower = y >= Y['8F'];
-    const poly = tower ? RECT(TW[0] + 0.06, TW[1] + 0.06, TW[2] - 0.06, TW[3] - 0.06) : (y > 1 ? FPLI : FPL);   // inset: keeps the slab edge off the facade plane (z-fighting)
+    const poly = tower ? RECT(TW[0] + 0.06, TW[1] + 0.06, TW[2] - 0.06, TW[3] - 0.06) : ['3F','4F','5F','6F'].includes(k) ? RECT(UW + .06, 0, UE - .06, 60.5) : (y > 1 ? FPLI : FPL);   // inset: keeps the slab edge off the facade plane (z-fighting)
     const holes = holesFor(k).map(h => RECT(...h));
     K.slab(poly, y, { mat: floorMat[k] ?? (tower ? 'jwCarpet' : 'tile'), under: k === 'B4' ? false : { tex: 'ceiling', color: 0xf4efe6 }, thick: 0.3, holes, edgeMat: STONE_D });
-  }
-  // R20 sweet/L4,L12: the hall's 2F head is y7; the documented hotel
-  // restaurant level remains y6. The short southern link resolves the 1m
-  // difference beyond the main coffered void, without a low slab across it.
-  SLAB([-2.0, -12.2, 2.0, -9.0], 7, { mat: 'jwGreyStone', under: 0xe7dfd2, thick: .22 });
-  {
-    const aa=P(0,-9), bb=P(-15.5,5);
-    K.ramp(...aa,...bb,{ya:7,yb:6,w:3.4,mat:{tex:'marble',color:0xe4ded1,gloss:.5},rails:true});
-    ZN('JW 메리어트 호텔 연결', '2F', '호텔 레스토랑 · 센트럴시티', [-17.2,-12.2,2,6], 6, 10, 4);
-    SG('JW 메리어트 호텔 2F ↑', {u:0,v:-9.5,y:9.25,w:3.2,h:.28,f:'N',bg:'#332c26',fg:'#f5ead8'});
   }
   // tower roof + podium roof is the 7F slab
   SLAB([TW[0] + 0.06, TW[1] + 0.06, TW[2] - 0.06, TW[3] - 0.06], ROOF, { mat: 'roofgravel', under: { tex: 'ceiling', color: 0xf4efe6 }, thick: 0.4, holes: [] });
@@ -503,13 +493,15 @@ export function build(K) {
   // 1F stone piers on the glass storefronts
   for (let v = -27; v <= 60; v += 6) if (Math.abs(v - 0) > 3.2 && Math.abs(v - 44.5) > 2.2 && Math.abs(v - 52.5) > 2.2) B({ u: UE - 0.2, v, y: 0, w: 0.7, d: 0.9, h: 4.2, mat: { tex: 'jwStone' } });
   for (let u = -8; u <= 2; u += 6) if (Math.abs(u - 8) > 2.6) B({ u, v: vS(u) - 0.2, y: 0, w: 0.9, d: 0.7, h: 4.2, mat: { tex: 'jwStone' } });
-  // 2F–6F podium bands
-  for (const k of ['2F', '3F', '4F', '5F', '6F']) K.polyWalls(FPL, Y[k], NEXT[k], { mat: { tex: 'jwPodium' }, inner: WARM, thick: 0.35, floorH: NEXT[k] - Y[k],
-    openings: k === '2F' ? [
-      { x: -46, z: 43.1, w: 6.8, y0: 6, y1: 7.3 },
-      { x: -65.9, z: 81.4, w: 17, y0: 6, y1: 9.1 },
-      { x: 15.0, z: 149.9, w: 30, y0: 6, y1: 9.5 },
-    ] : [] });
+  // 2F–5F department-store guide passages cross the north podium seam.
+  // Their widths are plan-derived, not a claim about the unseen structure.
+  const seamRanges={'2F':[[.5,66.5]],'3F':[[.5,34.8],[36.8,66.5]],'4F':[[.5,66.5]],'5F':[[.5,66.5]],'6F':[[34,40]]};
+  const storeLevel={'2F':7,'3F':11.8,'4F':16.6,'5F':21.4,'6F':26.2};
+  for (const k of ['2F', '3F', '4F', '5F', '6F']) {
+    const interior=(seamRanges[k]||[]).map(([a,b])=>{const u=-33.31+(a+b)/2*66.62/67,[x,z]=P(u,vN(u));return{x,z,w:(b-a)*66.62/67,y0:storeLevel[k],y1:storeLevel[k]+3.4};});
+    const original=k==='2F'?[{x:-46,z:43.1,w:6.8,y0:6,y1:7.3},{x:-65.9,z:81.4,w:17,y0:6,y1:9.1},{x:15,z:149.9,w:30,y0:6,y1:9.5}]:[];
+    K.polyWalls(FPL,Y[k],NEXT[k],{mat:{tex:'jwPodium'},inner:WARM,thick:.35,floorH:NEXT[k]-Y[k],openings:[...original,...interior]});
+  }
   // podium cornice + 7F parapet (stone base + glass balustrade)
   K.polyWalls(FPL, Y['7F'] - 0.6, Y['7F'] + 0.45, { mat: STONE_D, inner: STONE, thick: 0.5 });
   K.polyWalls(FPL, Y['7F'] + 0.45, Y['7F'] + 1.25, { mat: GL, thick: 0.04 });
@@ -688,7 +680,7 @@ export function build(K) {
   SPAWN('더 라운지 8F · 바', -2.1, 16.4, Y['8F'], 0, -1);
   SPAWN('플레이버즈 2F · 입구', -12.8, 19, Y['2F'], -1, 0);
   SPAWN('플레이버즈 2F · 다이닝', -20.6757, 29, Y['2F'], -1, .4);
-  SPAWN('그랜드 볼룸 5F · 포이어', -10, -3.2, Y['5F'], 1, 0);
+  SPAWN('그랜드 볼룸 5F · 포이어', 7, 35, Y['5F'], 1, 0);
   SPAWN('이그제큐티브 라운지 9F', 5.5, 22, Y['9F'], .5, -1);
   SPAWN('JW 가든 (7F)', 4, -20, Y['7F'], 0, 1);
   SPAWN('마르퀴스 수영장 (B3)', -6, -10, Y.B3, -.4, -1);
@@ -703,7 +695,7 @@ export function build(K) {
     const seg = (a, b, y0, y1, opts) => axis === 'u' ? WL(line, a, line, b, y0, y1, opts) : WL(a, line, b, line, y0, y1, opts);
     // 2F restaurant entries: lettering on walnut piers, as at FLAVORS (photo 18).
     if (y === Y['2F']) {
-      seg(s0, s1, y, yc, { mat: 'jwWalnut', thick: .2, openings: [{ at: dc - s0, w: dw, y0: y, y1: y + gh }] });
+      seg(s0, s1, y, yc, { mat: 'jwWalnut', thick: .2, openings: [{ at: dc - s0, w: dw, y0: y, y1: y + gh }, ...(o.extraOpenings || [])] });
       const off = { E: [.12, 0], W: [-.12, 0], N: [0, -.12], S: [0, .12] }[f];
       let cs = o.signAt ?? (s0 + s1) / 2;
       if (Math.abs(cs - dc) < dw / 2 + 1) cs = dc - dw / 2 - 1.3;
@@ -971,7 +963,7 @@ export function build(K) {
     // The north section is the Central City double-height hall below.
     // Its 1M bridge is at y=3.6, built by centralcity, not this former y=6 link.
     // 카페 원: west north bay, retaining every furnishing.
-    setFit(-11.88,.64);
+    setFit(-11.88,.64,4,2/3);
     FRONT('u', -8, -6, 12, y, yc, 'E', 'CAFÉ ONE', { sub: '카페 원', fascia: 0x3b2c22, fg: '#efe2c4' });
     WL(-33.1, -6, -8, -6, y, yc, { mat: WARM });
     HP({ tex: 'wood', color: 0xc8a477 }, [-33, -6, -8, 12], y + 0.01);
@@ -1116,9 +1108,10 @@ export function build(K) {
     SUBZ('플레이버즈', '2F', '뷔페 · 황동 펜던트 · 대리석 카운터', [-33, 12, 4, 41.7]);
     SUBZ('플레이버즈 다이닝', '2F', '월넛 스크린 · 소파 좌석', [-20.4, 26.4, 3.7, 41.6]);
     // 파티세리 · 티 바 — intact east fitout transferred to the west band.
-    setFit(-31);
-    FRONT('u', 17, -6, 26, y, yc, 'W', 'PÂTISSERIE', { sub: '파티세리 · 티 바', door: 20, dw: 4, signAt: 12, fascia: 0x3b2c22, fg: '#efe2c4' });
-    WL(17, -6, 33.1, -6, y, yc, { mat: WARM }); WL(17, 26, 33.1, 26, y, yc, { mat: WARM });
+    setFit(-31,1,4.875,.8125);
+    FRONT('u', 17, -6, 26, y, yc, 'W', 'PÂTISSERIE', { sub: '파티세리 · 티 바', door: 16.76923, dw: 4, extraOpenings: [{ at: 10, w: 4, y0: y, y1: y + 3.2 }], signAt: 12, fascia: 0x3b2c22, fg: '#efe2c4' });
+    // Northern frontage stops at the shared boundary with department store.
+    WL(17, -6, 33.1, -6, y, yc, { mat: WARM, openings: [{ at: 9, w: 7, y0: 7, y1: 10.5 }] }); WL(17, 26, 33.1, 26, y, yc, { mat: WARM });
     HP({ tex: 'marble', color: 0xf6efe4 }, [17, -6, 33, 26], y + 0.01);
     for (const v of [10, 15, 20]) { B({ u: 21, v, y, w: 1.0, d: 4.2, h: 0.95, mat: 0x2a2420, top: 0xe8e0d0 }); B({ u: 21, v, y: y + 0.95, w: 0.9, d: 4.0, h: 0.5, mat: GL, solid: false }); for (let j = 0; j < 5; j++) B({ u: 21, v: v - 1.6 + j * 0.8, y: y + 0.97, w: 0.35, d: 0.35, h: 0.18, mat: [0xf2d0d8, 0x6b3b2a, 0xf5e6c8, 0xc9425a, 0x9ac07a][j], solid: false }); }
     B({ u: 32.4, v: 10, y, w: 0.9, d: 30, h: 2.4, mat: WALNUT, solid: true });
@@ -1154,7 +1147,7 @@ export function build(K) {
     for(const r of[[-17,-6,-14,12],[-14,26,-12.3,42],[-14,41.8,2,43],[-12.2,26,2,29.6]]){
       HP('jwGreyStone',r,y+.008);HP(0x4a3e35,r,yc-.02,false);LIGHTS(r,yc-.03,2.8,.08,0xffdfac);
     }
-    SUBZ('2F 로비','2F','레스토랑 · 호텔 상층 연결',[-17,-6,2,43]);
+    SUBZ('2F 로비','2F','레스토랑 · 호텔 상층 연결',[-17,0,2,43]);
     SUBZ('에스컬레이터 홀','2F','호텔 현관 연결',[-5,26,2,43]);
     SUBZ('데판야키 카운터','2F','타마유라',[-13.5,45.5,-5.4,53.8]);
 
@@ -1166,7 +1159,8 @@ export function build(K) {
   function floor3() {
     const y = Y['3F'], yc = NEXT['3F'] - 0.3;
     const bins = [[-31, -19.5], [-19.5, -8], [-8, 3.5]];
-    BOH([-33.1, -60.4, 3.5, -58], y, yc - y); BOH([-33.1, -58, -31, -12], y, yc - y); BOH([-33.1,-12,4.9,29.5],y,yc-y);BOH([-33.1,34.5,4.9,60.4],y,yc-y);BOH([-33.1,29.5,-14,34.5],y,yc-y);
+    setFit(0,1,65.5,1);
+    BOH([-33.1, -60.4, 3.5, -58], y, yc - y); BOH([-33.1, -58, -31, -12], y, yc - y);
     // row A (north, doors face south), row B (south, doors face north)
     ROOMROW('v', -38, bins.map(([a, b], i) => [a, b, `살롱 ${i + 1}`]), y, yc - y, 'S', { dw: 2.0, lw: 1.6 });
     ROOMROW('v', -32, bins.map(([a, b], i) => [a, b, `살롱 ${i + 4}`]), y, yc - y, 'N', { dw: 2.0, lw: 1.6 });
@@ -1181,20 +1175,22 @@ export function build(K) {
         SUBZ(`살롱 ${n}`, '3F', '연회 · 미팅 · 스몰 웨딩', [a, v0, b, v1]);
       }
     });
+    fit=ID;
+    BOH([-33.1,53.5,4.9,60.4],y,yc-y);
     // prefunction (east band + corridor between rows)
-    for (const [u, v, f] of [[10, -50, 'E'], [10, -44, 'E'], [26, -20, 'W'], [26, -14, 'W'], [10, 50, 'E']]) SOFA(u, v, y, 3.2, f, 0xbfae92);
-    for (const v of [-46, -20]) { B({ u: 12, v, y, w: 1.0, d: 4.2, h: 0.76, mat: 0xf2ede4, solid: true }); MAN(12.9, v, y, { rotY: FACE.W, shirt: 0x1d2433 }); }
+    for (const [u, v, f] of [[10, 15.5, 'E'], [10, 21.5, 'E'], [26, 45.5, 'W'], [26, 51.5, 'W'], [10, 50, 'E']]) SOFA(u, v, y, 3.2, f, 0xbfae92);
+    for (const v of [19.5, 45.5]) { B({ u: 12, v, y, w: 1.0, d: 4.2, h: 0.76, mat: 0xf2ede4, solid: true }); MAN(12.9, v, y, { rotY: FACE.W, shirt: 0x1d2433 }); }
     SG(['오늘의 행사 안내', '살롱 1 · 기업 세미나 10:00', '살롱 4 · 돌잔치 12:00', '그랜드 볼룸(5F) · 웨딩 13:00'], { u: 4.9, v: 0, y: y + 1.9, w: 2.8, h: 2.0, f: 'E', bg: '#1c1a18', fg: '#efe2c4' });
-    FLOWERS(20, -35, y, 1.2); FLOWERS(20, 10, y, 1.0);
+    FLOWERS(20, 30.5, y, 1.2); FLOWERS(20, 10, y, 1.0);
     RAILBOX(ESC['3F'], y, 'n');
     ESCL(22.6, 40.4, 22.6, 31.7, y, Y['4F'], 'up'); ESCL(24.2, 40.4, 24.2, 31.7, y, Y['4F'], 'down');
     SG(['4F · 5F 그랜드 볼룸'], { u: 23.4, v: 41.3, y: y + 2.9, w: 3.6, h: 0.42, f: 'S', bg: '#2b241d', fg: '#efe2c4' });
     DOORP(4.93, 10, y, 'E', 1.2, 0xbcae98); DOORP(4.93, 14, y, 'E', 1.2, 0xbcae98); SG(['화장실'], { u: 5.0, v: 12, y: y + 2.75, w: 2.2, h: 0.45, f: 'E', bg: '#2b241d', fg: '#f0e2c4' });
-    LIGHTS([3.5, -60, 33, 60.4], yc, 4.5, 1.0, 0xfff0d6, (u, v) => inR(u, v, [8.8, 24.2, 15.9, 39.5], 0.6) || inR(u, v, [21, 29, 30, 42]) || (u < 4.9 && v > -12));
-    LIGHTS([-31, -38, 3.5, -32], yc, 3, 0.8);
-    CROWD([6, -55, 32, 25], y, 18, 301); CROWD([-30, -37.5, 3, -32.5], y, 5, 302);
-    SUBZ('행사 안내 · 등록 데스크', '3F', '살롱 행사 접수', [10, -48, 14, -18]); SUBZ('화장실', '3F', '연회장 층', [2.5, 8, 4.9, 16]);
-    SUBZ('연회장 프리펑션', '3F', '살롱 1–6 로비', [3.5, -60.4, 33, 60.4]);
+    LIGHTS([3.5, 0, 33, 60.4], yc, 4.5, 1.0, 0xfff0d6, (u, v) => inR(u, v, [8.8, 24.2, 15.9, 39.5], 0.6) || inR(u, v, [21, 29, 30, 42]) || (u < 4.9 && v > -12));
+    LIGHTS([-31, 27.5, 3.5, 33.5], yc, 3, 0.8);
+    CROWD([6, 0, 32, 25], y, 18, 301); CROWD([-30, 28, 3, 33], y, 5, 302);
+    SUBZ('행사 안내 · 등록 데스크', '3F', '살롱 행사 접수', [10, 17.5, 14, 47.5]); SUBZ('화장실', '3F', '연회장 층', [2.5, 8, 4.9, 16]);
+    SUBZ('연회장 프리펑션', '3F', '살롱 1–6 로비', [3.5, 0, 33, 60.4]);
   }
 
   // =====================================================================
@@ -1202,7 +1198,8 @@ export function build(K) {
   // =====================================================================
   function floor4() {
     const y = Y['4F'], yc = NEXT['4F'] - 0.3;
-    BOH([-33.1, -60.4, 33.1, -20], y, yc - y); BOH([-33.1, -20, -12, 60.4], y, yc - y); BOH([-12, 14, 4.9, 38], y, yc - y);
+    setFit(0,1,15.0248756,.75124378);
+    BOH([-33.1, -20, -12, 60.4], y, yc - y); BOH([-12, 14, 4.9, 38], y, yc - y);
     SG(['연회 주방 · 직원 통로'], { u: 10, v: -19.9, y: y + 2.65, w: 2.6, h: 0.35, f: 'S', bg: '#333', fg: '#fff' }); DOORP(10, -19.97, y, 'S', 1.6, 0x8c867c);
     // glass-fronted rooms along u = 4.9 (doors face the east hall)
     const rooms = [[-20, -12, '웨딩 상담실 1'], [-12, -4, '웨딩 상담실 2'], [-4, 4, '연회 예약실'], [4, 14, '연회 사무실'], [38, 46, '신부 메이크업실'], [46, 60.4, '드레스룸']];
@@ -1236,7 +1233,7 @@ export function build(K) {
     };
     DESK(-8, -2); DESK(-8, 2); SOFA(1.5, 0, y, 2.2, 'W', 0xcfc3b0); MAN(-8.75, -2, y, { sit: true, rotY: FACE.E, shirt: 0x1d2433 });
     for (const u of [-9.5, -5.5, -1.5]) for (const v of [6.5, 11]) DESK(u, v);
-    for (let v = 5; v <= 13; v += 1.2) B({ u: 4.3, v, y, w: 0.6, d: 1.0, h: 1.3, mat: 0x9a968e });
+    for (let v = 5; v <= 13; v += 1.2) if (Math.abs(v-5.8)>1.4) B({ u: 4.3, v, y, w: 0.6, d: 1.0, h: 1.3, mat: 0x9a968e });
     MAN(-10.25, 6.5, y, { sit: true, rotY: FACE.E }); MAN(-2.25, 11, y, { sit: true, rotY: FACE.E, shirt: 0xf2f2f2 });
     // 신부 메이크업실: vanity mirrors with bulb frames + chairs
     for (let i = 0; i < 3; i++) {
@@ -1263,13 +1260,16 @@ export function build(K) {
     SG(['웨딩 쇼케이스 · 테이블 세팅 샘플'], { u: 20, v: 3.2, y: y + 2.6, w: 3.2, h: 0.36, f: 'N', bg: '#2b241d', fg: '#efe2c4', twoSided: true });
     B({ u: 10.5, v: 16, y, w: 0.5, d: 1.4, h: 1.4, mat: WALNUT }); for (let j = 0; j < 3; j++) B({ u: 10.78, v: 15.6 + j * 0.4, y: y + 1.0, w: 0.05, d: 0.3, h: 0.4, mat: 0xf2ede4, solid: false });
     B({ u: 18, v: 22, y, w: 3.2, d: 0.9, h: 1.05, mat: WALNUT, top: 0xefe7da }); SG(['웨딩 · 연회 안내'], { u: 18, v: 21.5, y: y + 1.5, w: 2.2, h: 0.32, f: 'N', bg: '#2b241d', fg: '#e8d29a' }); MAN(18, 22.9, y, { shirt: 0x1d2433, rotY: FACE.N });
+    fit=ID;
     RAILBOX(ESC['4F'], y, 'n');
     ESCL(27, 40.4, 27, 32.6, y, Y['5F'], 'up'); ESCL(28.6, 40.4, 28.6, 32.6, y, Y['5F'], 'down');
     SG(['5F 그랜드 볼룸'], { u: 27.8, v: 41.3, y: y + 2.7, w: 3.2, h: 0.42, f: 'S', bg: '#2b241d', fg: '#efe2c4' });
+    setFit(0,1,15.0248756,.75124378);
     LIGHTS([4.9, -20, 33, 60.4], yc, 4.5, 1.0, 0xfff0d6, (u, v) => inR(u, v, [8.8, 24.2, 15.9, 39.5], 0.6) || inR(u, v, [21, 29, 30, 42]));
     for (const [u, v] of [[20, 6], [20, 46]]) CHAND(u, v, yc, 0.9);
     CROWD([6, -18, 31, 28], y, 10, 401); CROWD([6, 42, 24, 58], y, 4, 402);
     SUBZ('웨딩 라운지', '4F', '웨딩 쇼케이스 · 상담 대기', [4.9, -20, 33, 60.4]);
+    fit=ID;
   }
 
   // =====================================================================
@@ -1277,6 +1277,7 @@ export function build(K) {
   // =====================================================================
   function floor5() {
     const y = Y['5F'], yc = NEXT['5F'] - 0.3, bc = 28.0;
+    setFit(3-3*22.3/34,22.3/34,56*32/46,32/46);
     const [b0, c0, b1, c1] = BALL;
     WL(b0, c0, b1, c0, y, bc + 0.4, { mat: 0xe8dcc4, mat2: WARM, thick: 0.3 });
     WL(b0, c0, b0, c1, y, bc + 0.4, { mat: WARM, mat2: 0xe8dcc4, thick: 0.3 });
@@ -1291,7 +1292,7 @@ export function build(K) {
     for (let i = 0; i < 40; i++) B({ u: -24.5 + (i % 20) * 1.1, v: -55.55, y: y + 0.9 + Math.floor(i / 20) * 2.2 + rnd() * 1.6, w: 0.7, d: 0.25, h: 0.6, mat: [0xf2f2ee, 0xe6b8c0, 0xd4e4c8, 0xf6e6c8][i & 3], solid: false });
     SG(['JW MARRIOTT', '그랜드 볼룸'], { u: -14, v: -55.5, y: y + 5.4, w: 7, h: 1.4, f: 'S', bg: '#f3e4e2', fg: '#b89a62' });
     // 21 m virgin road with flower stands
-    B({ u: -14, v: -40.5, y, w: 3, d: 21, h: 0.12, mat: IVORY, solid: false, skip: ['bottom'] });
+    B({ u: -14, v: (15-56*32/46)/(32/46), y, w: 3, d: 21/(32/46), h: 0.12, mat: IVORY, solid: false, skip: ['bottom'] });
     for (let v = -50; v <= -31; v += 3.2) for (const du of [-2.1, 2.1]) { CY(-14 + du, v, y, 0.12, 1.1, 0xd8d0c4, { seg: 6 }); B({ u: -14 + du, v, y: y + 1.1, w: 0.7, d: 0.7, h: 0.5, mat: [0xf3f0ea, 0xe6b8c0][(v | 0) & 1], solid: false }); }
     for (let v = -48; v <= -33; v += 5) CHAND(-14, v, bc, 0.8);
     // round tables (10 seats each)
@@ -1303,17 +1304,20 @@ export function build(K) {
     SG(['그랜드 볼룸'], { u: -14, v: -9.75, y: y + 4.3, w: 5, h: 0.8, f: 'S', bg: '#d8cab2', fg: '#7a5f40' });
     SG(['그랜드 볼룸'], { u: 3.2, v: -35, y: y + 4.0, w: 5, h: 0.6, f: 'E', bg: '#d8cab2', fg: '#7a5f40' });
     SUBZ('그랜드 볼룸', '5F', '천고 7m · 버진로드 21m · 웨딩 · 연회', BALL, bc);
+    fit=ID;
     // 09–10: cream stone border, lengthwise blue/cream carpet, bronze ceiling grid,
     // recessed walnut doors and a low black flower console. Unseen adjoining rooms stay plain.
-    BOH([-33.1, -60.4, 3, -56], y, yc - y); BOH([-33.1, -56, -31, -10], y, yc - y); BOH([-33.1, 14, 4.9, 60.4], y, yc - y);
+    BOH([-15, 57, 3, 60.4], y, yc - y);
+    setFit(0,1,46,1);
     FRONT('u', -18, 0, 14, y, yc, 'E', '신부 대기실', { door: 7, dw: 2.2, fascia: 0x514238, fg: '#e7ddd0', glass: GL, sw: 1.8 });
     WL(-33.1, 0, -18, 0, y, yc, { mat: 0xdcd0bf });
     SOFA(-28, 7, y, 3.6, 'E', 0xe4dbcf);
     SUBZ('신부 대기실', '5F', '그랜드 볼룸 웨딩', [-33, 0, -18, 14]);
-    HP({ tex: 'jwHoney', gloss: .7 }, [-31, -10, 3, 0], y + 0.012);
-    HP('jwFoyerCarpet', [-29.5, -8.6, 3, -1.4], y + 0.018);
-    HP({ tex: 'jwHoney', gloss: .7 }, [3, -56, 32.95, 24.1], y + 0.012);
-    HP('jwFoyerCarpet', [5.4, -52.5, 30.5, 23.6], y + 0.018);
+    fit=ID;
+    HP({ tex: 'jwHoney', gloss: .7 }, [-18, 46, 3, 56], y + 0.012);
+    HP('jwFoyerCarpet', [-18, 47.4, 3, 54.6], y + 0.018);
+    HP({ tex: 'jwHoney', gloss: .7 }, [3, 0, 32.95, 46], y + 0.012, true, [ELH, STH, ESC['5F']]);
+    HP('jwFoyerCarpet', [5.4, 3.5, 30.5, 45.6], y + 0.018, true, [ELH, STH, ESC['5F']]);
     HP({ tex: 'jwHoney', gloss: .7 }, [16, 24.2, 33, 60.4], y + 0.012, true, [ESC['5F']]);
     HP('jwFoyerCarpet', [17.5, 24.2, 24.7, 58.5], y + 0.018);
     const fCeil = y + 3.65;
@@ -1333,7 +1337,7 @@ export function build(K) {
         CY(u, v, fCeil - .096, .06, .015, { tex: 'emit', color: 0xffe0ae }, { seg: 12, solid: false });
       }
     };
-    bronzeCeiling([3.1, -55.8, 32.9, 24.1]); bronzeCeiling([-31, -10, 3, 0]);
+    bronzeCeiling([3.1, .2, 32.9, 46]); bronzeCeiling([-18, 46, 3, 56]);
     bronzeCeiling([16.1, 24.2, 32.9, 60.3]);
     // Warm recessed perimeter slots are visible in both foyer photographs.
     for (const u of [16.35, 32.65]) B({ u, v: 42.2, y: fCeil - .105, w: .045, d: 35.7, h: .025, mat: { tex: 'emit', color: 0xffd49b }, solid: false });
@@ -1346,20 +1350,21 @@ export function build(K) {
     SLATS('u', 16.09, 24.4, 30.4, y, 3.58, .25, { w: .08, d: .18 });
     SLATS('u', 32.75, 24.4, 31.8, y, 3.58, .25, { w: .08, d: .18 });
     // Timber blades beside the ballroom portals preserve the actual door openings.
-    for (const [a, b] of [[-55.3, -46.7], [-43.3, -26.7], [-23.3, -10.4]]) SLATS('u', 3.28, a, b, y, 3.58, 0.22);
-    SLATS('u', 32.65, -52.5, 23.4, y, 3.58, 0.24);
-    B({ u: 32.58, v: -14.5, y: y + 0.06, w: 0.09, d: 75.8, h: 0.035, mat: { tex: 'emit', color: 0xe7b66d }, solid: false });
+    for (const [a, b] of [[.7, 6.3], [9.0, 20.0], [23.1, 31.8]]) SLATS('u', 3.28, a, b, y, 3.58, 0.22);
+    SLATS('u', 32.65, 0, 60, y, 3.58, 0.24);
+    B({ u: 32.58, v: 30, y: y + 0.06, w: 0.09, d: 60, h: 0.035, mat: { tex: 'emit', color: 0xe7b66d }, solid: false });
     // Recessed ballroom portals: narrow bronze jambs and concealed warm lintel washes.
-    for (const v of [-45, -25]) {
+    for (const v of [11*32/46, 31*32/46]) {
       for (const dv of [-1.43, 1.43]) B({ u: 3.32, v: v + dv, y, w: .16, d: .075, h: 3.45, mat: 0x745d43, solid: false });
       B({ u: 3.32, v, y: y + 3.42, w: .16, d: 2.94, h: .075, mat: 0x745d43, solid: false });
       B({ u: 3.43, v, y: y + 3.37, w: .06, d: 2.65, h: .024, mat: { tex: 'emit', color: 0xe5b878 }, solid: false });
       SG('그랜드 볼룸', { u: 3.4, v: v + 2, y: y + 1.53, w: .45, h: .13, f: 'E', bg: null, fg: '#cbb894', bold: false });
     }
-    for (const v of [-37, -15, 5]) {
+    for (const v of [19, 41, 56]) {
       B({ u: 32.48, v, y: y + 1.5, w: .09, d: .23, h: .58, mat: 0x342920, solid: false });
       B({ u: 32.42, v, y: y + 1.56, w: .026, d: .13, h: .46, mat: { tex: 'emit', color: 0xd9b074 }, solid: false });
     }
+    setFit(0,1,56,1);
     // Photo 10's intimate end bay opens into the existing broad pre-function corridor.
     // These short returns frame the console without reducing the circulation beyond this bay.
     for (const u of [10.5, 25.0]) {
@@ -1396,6 +1401,7 @@ export function build(K) {
     B({ u: 28.4, v: -47.5, y: y + .86, w: .8, d: 2.7, h: .055, mat: 0xc8b898, solid: false });
     for (const du of [-.35, .35]) for (const dv of [-1.25, 1.25]) B({ u: 28.4 + du, v: -47.5 + dv, y, w: .035, d: .035, h: .86, mat: 0xa4916e, solid: false });
     for (const v of [-48.2, -46.8]) FLOWER(28.4, v, y + .915, .8, [0x557441, 0x819b5a, 0xe6d6b7, 0x78984f]);
+    fit=ID;
     // Photo 09 shows two amber event-registration counters at the escalator approach.
     // Preserve them: the audit's proposed removal conflicts with the photo. Hotel check-in is on 8F.
     for (const u of [19, 27]) {
@@ -1422,7 +1428,7 @@ export function build(K) {
       B({ u: u + .61, v: 24.92 + (i % 2) * .13, y, w: .025, d: .14, h: 1.95, mat: 0x1c1b18, solid: false });
     }
     // Discreet waiting groups continue the same finish along the full pre-function hall.
-    for (const [u, v, face] of [[6.4, -34, 'E'], [30.6, -12, 'W'], [6.4, 5, 'E'], [18.2, 52, 'E']]) {
+    for (const [u, v, face] of [[6.4, 22, 'E'], [30.6, 44, 'W'], [6.4, 5, 'E'], [18.2, 52, 'E']]) {
       const inward = face === 'E' ? 1 : -1;
       CHAIR(u, v - 1.1, y, face, 0xc3b6a0); CHAIR(u, v + 1.1, y, face, 0xc3b6a0);
       ROUND(u + inward * .55, v, y, .42, .48, 'jwDarkMarble');
@@ -1444,8 +1450,8 @@ export function build(K) {
     SG('화장실', { u: 5.02, v: 22, y: y + 1.5, w: 0.45, h: 0.23, f: 'E', bg: '#382e28', fg: '#eee5d5' });
     MAN(12, 17.7, y, { shirt: 0x26252a }); MAN(24.5, -28, y, { shirt: 0x5b4d44 });
     SUBZ('방명록 · 축의금 접수', '5F', '웨딩 리셉션', [16.2, 24.6, 30.2, 28.2]);
-    SUBZ('웨딩 무대', '5F', '그랜드 볼룸 · 플라워 월', [-24, -56, -4, -51]); SUBZ('버진로드 21m', '5F', '그랜드 볼룸', [-15.5, -51, -12.5, -30]);
-    SUBZ('그랜드 볼룸 포이어', '5F', '푸른 추상 카펫 · 브론즈 격자 천장 · 리셉션', [3, -60.4, 33, 60.4]);
+    SUBZ('웨딩 무대', '5F', '그랜드 볼룸 · 플라워 월', [-24, 0, -4, 5]); SUBZ('버진로드 21m', '5F', '그랜드 볼룸', [-15.5, 5, -12.5, 26]);
+    SUBZ('그랜드 볼룸 포이어', '5F', '푸른 추상 카펫 · 브론즈 격자 천장 · 리셉션', [3, 0, 33, 60.4]);
     // The removed speculative bridal flower wall consumed 24 random values.
     // Preserve the existing rooftop tree heights and basement vehicle layout downstream.
     for (let i = 0; i < 24; i++) rnd();
@@ -1456,7 +1462,8 @@ export function build(K) {
   // =====================================================================
   function floor6() {
     const y = Y['6F'], yc = NEXT['6F'] - 0.3, WH = 0xe4e0d8;
-    BOH([-33.1, -60.4, 3, -56], y, yc - y); BOH([-33.1, -56, -31, -10], y, yc - y); BOH([-33.1, -10, 4.9, 60.4], y, yc - y);
+    BOH([-33.1, 0, -19.3, 32], y, yc - y); BOH([-33.1, 32, 4.9, 60.4], y, yc - y);
+    setFit(0,1,30.2,.5);
     BOH([21, 20, 33.1, 44], y, yc - y, 0xb9b4ac); BOH([20, 44, 33.1, 60.4], y, yc - y);
     SG(['기계실 · 전기실'], { u: 20.9, v: 32, y: y + 2.6, w: 2.4, h: 0.38, f: 'W', bg: '#333', fg: '#fff' }); DOORP(20.93, 28, y, 'W', 1.6, 0x8c867c);
     SG(['직원 휴게실'], { u: 20.9, v: 52, y: y + 2.6, w: 2.0, h: 0.38, f: 'W', bg: '#333', fg: '#fff' }); DOORP(19.93, 50, y, 'W', 1.2, 0x8c867c);
@@ -1465,7 +1472,7 @@ export function build(K) {
     SG(['볼룸 천장 설비 구역'], { u: 3.35, v: -33, y: y + 2.0, w: 3.2, h: 0.4, f: 'E', bg: '#333', fg: '#fff' });
     // room partitions (corridors: u 18–21 north-south, v -30…-24 east-west)
     const room = (u0, v0, u1, v1, name, sub, doorSide, at) => {
-      const ops = [{ at, w: 1.6, y0: y, y1: y + 2.4 }];
+      const ops = [{ at, w: 3.0, y0: y, y1: y + 2.4 }];
       if (doorSide === 'E') { WL(u1, v0, u1, v1, y, yc, { mat: WH, thick: 0.15, openings: ops }); SG([name], { u: u1 + 0.1, v: v0 + at, y: y + 2.7, w: 2.2, h: 0.36, f: 'E', bg: '#333', fg: '#fff' }); }
       if (doorSide === 'W') { WL(u0, v0, u0, v1, y, yc, { mat: WH, thick: 0.15, openings: ops }); SG([name], { u: u0 - 0.1, v: v0 + at, y: y + 2.7, w: 2.2, h: 0.36, f: 'W', bg: '#333', fg: '#fff' }); }
       if (doorSide === 'S') { WL(u0, v1, u1, v1, y, yc, { mat: WH, thick: 0.15, openings: ops }); SG([name], { u: u0 + at, v: v1 + 0.1, y: y + 2.7, w: 2.2, h: 0.36, f: 'S', bg: '#333', fg: '#fff' }); }
@@ -1510,6 +1517,7 @@ export function build(K) {
     LIGHTS([3, -60.4, 33, 60.4], yc, 4, 0.7, 0xf2f6ff, (u, v) => inR(u, v, [8.8, 24.2, 15.9, 39.5], 0.6) || inR(u, v, [20, 20, 33, 60.4]) || u < 4.9);
     MAN(19.5, -27, y, { shirt: 0x1d2433 }); MAN(19.5, 10, y, { shirt: 0xf2f2f2 }); MAN(26, -27, y, { shirt: 0x2b3a55 });
     SUBZ('직원 복도', '6F', '연회 지원 동선', [18, -30, 21, 40], NEXT['6F']);
+    fit=ID;
   }
 
   // =====================================================================

@@ -29,8 +29,13 @@ export const JUNCTIONS = [
   // not a surveyed gate position. Official guide + photo control residuals are recorded in both research files.
   { id: 'J8', a: 'shinsegae', b: 'centralcity', y: 0, pa: [-78.917, 37.725], pb: [-86.362, 40.551], width: 8, owner: 'none',
     note: 'Retained unnumbered west-side 1F auxiliary connection at (-82.640,39.138), 신세계 local (u=0,v=68). No numbered gate appears here on the rotated plan. Real 3GATE is J5; B1 9GATE is J_CC_9GATE.' },
-  { id: 'J9', a: 'centralcity', b: 'jwmarriott', y: 7, pa: [-27.63, 89.62], pb: [-26.9235, 91.1825], width: 3.4, owner: 'jwmarriott',
-    note: '중앙홀 2층 에스컬레이터에서 JW 2층으로 이어지는 연결. 사진 기준 위치이며 호텔 측 연결은 추정.' },
+  { id: 'J9', a: 'centralcity', b: 'shinsegae', y: 7, pa: [-27.63, 89.62], pb: [-26.9235, 91.1825], width: 3.4, owner: 'none', streamOnly: true,
+    note: '광장 상행기 → 신세계 2층; 불가리 인접. JW 호텔 1층 연결통로는 미구현.' },
+  // Render context only: no walkable hotel connection has been surveyed here.
+  { id:'J_RENDER_SSG_JW', a:'shinsegae', b:'jwmarriott', y:7, pa:[-27.63,89.62], pb:[-26.9235,91.1825], width:0, owner:'none', streamOnly:true,
+    note:'Loads adjacent hotel structure; not a hotel passage.' },
+  { id:'J_RENDER_CC_JW', a:'centralcity', b:'jwmarriott', y:7, pa:[-27.63,89.62], pb:[-26.9235,91.1825], width:0, owner:'none', streamOnly:true,
+    note:'Loads adjacent hotel structure; not a hotel passage.' },
   // ---- round 10 ----
   { id: 'J_G11_DAISO', a: 'gotomall', b: 'gyeongbu', y: LEVELS.B1, pa: [244.8, -181.5], pb: [245.3, -179.5], width: 4.5, owner: 'gyeongbu',
     note: '고투몰 중앙광장 G11 문 → 다이소 GATE 4: 양 끝점은 B1 -6m 문과 계단 아래참. 이후 경부 모듈 계단을 올라 GATE 4와 다이소 -4m 홀로 연결된다.' },

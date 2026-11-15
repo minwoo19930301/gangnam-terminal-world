@@ -103,6 +103,32 @@ async function boot() {
       if ((AREA.modules.includes(mid) && !(AREA.id.startsWith('in:') && !AREA.id.slice(3).split('+').includes(mid))) || mid === 'streets' || mid === 'hangang' || mid === 'jamwon_hangang') continue;
       for (const bid of v.claims) for (const b of osm.buildings.filter(b => b.id === bid)) {
         const h = b.height || (b.levels ? b.levels * 3.6 : 12);
+        // The registered 2F-5F Shinsegae retail apron covers the
+        // northern part of the JW OSM footprint (local v=84.7..145.3).
+        // Preserve the hotel beyond the apron, on the ground floor, and above
+        // 5F (6F starts at 26.2m). These are model coordinates, not a survey.
+        // The long-edge interpolation below depends on this exact OSM corner
+        // order. If the footprint or heights change, use the original LOD.
+        const expected=[[29.26,144.45],[-14.35,31.08],[-76.64,54.72],[-33.04,168.08]];
+        const knownFootprint=Array.isArray(b.poly)&&b.poly.length===4&&
+          expected.every((p,i)=>Array.isArray(b.poly[i])&&Math.hypot(b.poly[i][0]-p[0],b.poly[i][1]-p[1])<.25)&&
+          (!b.holes||b.holes.length===0)&&Number.isFinite(h)&&h>26.2&&(b.minHeight||0)<=0;
+        if (AREA.id==='in:shinsegae' && mid==='jwmarriott' && bid===136986976 && knownFootprint) {
+          const [se,ne,nw,sw] = b.poly;
+          const length=Math.hypot(sw[0]-nw[0],sw[1]-nw[1]);
+          const t=(145.3-84.7+2)/length; // 2m outside the retail apron
+          const lerp=(a,c,t)=>[a[0]+(c[0]-a[0])*t,a[1]+(c[1]-a[1])*t];
+          const south=[se,lerp(ne,se,t),lerp(nw,sw,t),sw];
+          const opts={mat:{tex:'concrete',color:0xd3cbbf},solid:false};
+          if(t>0&&t<1) {
+            try {
+              K.prism(b.poly,b.minHeight||0,7,{...opts,top:false});
+              K.prism(south,7,26.2,{...opts,top:false,bottom:false});
+              K.prism(b.poly,26.2,h,{...opts,bottom:false});
+              continue;
+            } catch(e) { console.warn('Shinsegae/JW LOD cut failed; keeping full mass',e); }
+          }
+        }
         try { K.prism(b.poly, b.minHeight || 0, h, { mat: { tex: 'concrete', color: 0xd3cbbf }, holes: b.holes, solid: AREA.lodSolid !== false }); } catch (e) { }
       }
     }
@@ -250,9 +276,12 @@ async function boot() {
   let currentZone = null;
   if (SHOT) document.body.classList.add('shot');
   const canvas = renderer.domElement;
-  const lock = () => { if (!SHOT && !menuOpen && !map.isOpen()) canvas.requestPointerLock?.(); };
+  const lock = e => {
+    if (e?.pointerType === 'touch' || e?.sourceCapabilities?.firesTouchEvents) return;
+    if (!SHOT && !menuOpen && !map.isOpen()) canvas.requestPointerLock?.();
+  };
   canvas.addEventListener('click', lock);
-  $('start').addEventListener('click', () => { $('start').classList.add('hidden'); lock(); });
+  $('start').addEventListener('click', e => { $('start').classList.add('hidden'); lock(e); });
   document.addEventListener('pointerlockchange', () => document.body.classList.toggle('locked', document.pointerLockElement === canvas));
   document.addEventListener('mousemove', e => { if (document.pointerLockElement === canvas) { player.yaw -= e.movementX * 0.0022; player.pitch = Math.max(-1.5, Math.min(1.5, player.pitch - e.movementY * 0.0022)); } });
   addEventListener('keydown', e => {
@@ -269,26 +298,55 @@ async function boot() {
   addEventListener('keyup', e => { keys[e.code] = false; });
   function toast(t) { const el = $('toast'); el.textContent = t; el.classList.add('show'); clearTimeout(toast._t); toast._t = setTimeout(() => el.classList.remove('show'), 1800); }
   window.__toast = toast;
-  // touch controls
-  const touch = { mx: 0, mz: 0, id: null, lookId: null, lx: 0, ly: 0, ox: 0, oy: 0 };
+  // The visible left pad moves; a separate finger anywhere outside UI looks.
+  const touch = { mx: 0, mz: 0, id: null, lookId: null, lx: 0, ly: 0 };
   const stick = $('stick'), knob = $('knob');
+  function resetPad() {
+    touch.id = null; touch.mx = touch.mz = 0;
+    knob.style.transform = ''; stick.classList.remove('on');
+  }
+  function resetTouch() { resetPad(); touch.lookId = null; }
+  function movePad(t) {
+    const rect = stick.getBoundingClientRect();
+    const dx = t.clientX - (rect.left + rect.width / 2), dy = t.clientY - (rect.top + rect.height / 2);
+    const distance = Math.hypot(dx, dy), radius = rect.width * .30;
+    const reach = Math.min(distance, radius), scale = distance ? reach / distance : 0;
+    knob.style.transform = `translate(${dx * scale}px,${dy * scale}px)`;
+    // A small dead zone lets a resting thumb stay still.
+    const strength = Math.max(0, (reach - radius * .10) / (radius * .90));
+    touch.mx = distance ? dx / distance * strength : 0;
+    touch.mz = distance ? dy / distance * strength : 0;
+  }
   addEventListener('touchstart', e => {
-    $('start').classList.add('hidden');
+    if (menuOpen || map.isOpen() || !$('start').classList.contains('hidden')) return;
     for (const t of e.changedTouches) {
-      if (t.target.closest && t.target.closest('button,#map-full,#elev')) continue;
-      if (t.clientX < innerWidth * 0.45 && touch.id === null) { touch.id = t.identifier; touch.ox = t.clientX; touch.oy = t.clientY; stick.style.left = (t.clientX - 60) + 'px'; stick.style.top = (t.clientY - 60) + 'px'; stick.classList.add('on'); }
-      else if (touch.lookId === null) { touch.lookId = t.identifier; touch.lx = t.clientX; touch.ly = t.clientY; }
+      if (t.target.closest?.('#stick')) {
+        if (touch.id === null) { touch.id = t.identifier; stick.classList.add('on'); movePad(t); }
+        continue;
+      }
+      if (t.target.closest?.('button,#map-full,#elev,#start,.gt-mini')) continue;
+      if (touch.lookId === null) { touch.lookId = t.identifier; touch.lx = t.clientX; touch.ly = t.clientY; }
     }
   }, { passive: true });
   addEventListener('touchmove', e => {
+    if (menuOpen || map.isOpen()) { resetTouch(); return; }
     for (const t of e.changedTouches) {
-      if (t.identifier === touch.id) { const dx = t.clientX - touch.ox, dy = t.clientY - touch.oy; const l = Math.min(50, Math.hypot(dx, dy)); const a = Math.atan2(dy, dx); knob.style.transform = `translate(${Math.cos(a) * l}px,${Math.sin(a) * l}px)`; touch.mx = Math.cos(a) * l / 50; touch.mz = Math.sin(a) * l / 50; }
+      if (t.identifier === touch.id) movePad(t);
       if (t.identifier === touch.lookId) { player.yaw -= (t.clientX - touch.lx) * 0.005; player.pitch = Math.max(-1.5, Math.min(1.5, player.pitch - (t.clientY - touch.ly) * 0.005)); touch.lx = t.clientX; touch.ly = t.clientY; }
     }
   }, { passive: true });
-  addEventListener('touchend', e => { for (const t of e.changedTouches) { if (t.identifier === touch.id) { touch.id = null; touch.mx = touch.mz = 0; knob.style.transform = ''; stick.classList.remove('on'); } if (t.identifier === touch.lookId) touch.lookId = null; } });
+  function endTouches(e) {
+    for (const t of e.changedTouches) {
+      if (t.identifier === touch.id) resetPad();
+      if (t.identifier === touch.lookId) touch.lookId = null;
+    }
+  }
+  addEventListener('touchend', endTouches, { passive: true });
+  addEventListener('touchcancel', endTouches, { passive: true });
+  addEventListener('blur', resetTouch);
+  document.addEventListener('visibilitychange', () => { if (document.hidden) resetTouch(); });
   $('btn-use').addEventListener('click', () => nearIt && use(nearIt));
-  $('btn-map').addEventListener('click', () => map.toggle());
+  $('btn-map').addEventListener('click', () => { resetTouch(); map.toggle(); });
   $('btn-run').addEventListener('click', () => { touch.run = !touch.run; $('btn-run').classList.toggle('on', touch.run); });
   $('btn-fly').addEventListener('click', () => { player.fly = !player.fly; });
 
@@ -299,7 +357,7 @@ async function boot() {
   }
   let menuEl = null;
   function openMenu(el) {
-    menuOpen = true; menuEl = el; document.exitPointerLock?.();
+    menuOpen = true; menuEl = el; resetTouch(); document.exitPointerLock?.();
     const box = $('elev'); box.innerHTML = `<div class="elev-title">${el.name}</div>`;
     const list = document.createElement('div'); list.className = 'elev-list';
     [...el.floors].sort((a, b) => b.y - a.y).forEach((f, i) => {
@@ -441,7 +499,7 @@ async function boot() {
       s: (keys.KeyD || keys.ArrowRight ? 1 : 0) - (keys.KeyA || keys.ArrowLeft ? 1 : 0) + touch.mx,
       run: keys.ShiftLeft || keys.ShiftRight || touch.run, jump: keys.Space, up: keys.Space, down: keys.KeyC || keys.ControlLeft,
     };
-    if (menuOpen || map.isOpen()) { input.f = input.s = 0; }
+    if (menuOpen || map.isOpen()) { resetTouch(); input.f = input.s = 0; }
     player.update(dt, input);
     camera.position.set(player.x, player.y + player.eye, player.z);
     camera.rotation.set(player.pitch, player.yaw, 0, 'YXZ');

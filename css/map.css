@@ -242,6 +242,18 @@ body.shot .gt-mini { display: none !important; }
   .gt-mini .gt-mini-zoom button { width: 24px; height: 25px; font-size: 17px; }
   .gt-mini-caption { display: none; }
 }
+/* Keep the mini-map above the interaction button on short screens. */
+@media (min-width: 641px) and (max-height: 480px) {
+  .gt-mini { width: min(120px, max(72px, calc(100vh - 230px))); height: min(120px, max(72px, calc(100vh - 230px))); top: 12px; right: 12px; outline-width: 2px; outline-offset: -2px; border-radius: 18px; }
+  .gt-mini .gt-mini-open { top: 5px; left: 5px; padding: 3px 6px; min-height: 25px; font-size: 9px; border-radius: 7px; }
+  .gt-mini .gt-mini-open svg { display: none; }
+  .gt-mini-zoom { bottom: 5px; right: 5px; border-radius: 7px; }
+  .gt-mini .gt-mini-zoom button { width: 24px; height: 25px; font-size: 17px; }
+  .gt-mini-caption { display: none; }
+}
+@media (max-width: 640px) and (max-height: 350px) {
+  .gt-mini { width: min(120px, max(72px, calc(100vh - 230px))); height: min(120px, max(72px, calc(100vh - 230px))); }
+}
 @media (prefers-reduced-motion: reduce) {
   #map-full.gt-map *, .gt-mini * { transition: none !important; }
 }
