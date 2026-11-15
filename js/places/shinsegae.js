@@ -1247,22 +1247,24 @@ export function build(K) {
       box((a[0]+b[0])/2,(a[1]+b[1])/2,Math.abs(b[0]-a[0])+.06,Math.abs(b[1]-a[1])+.06,y+1.05,.055,rail,{solid:false});
     }
   }
-  // L02/L03: opposite landing directions; both photographed basement lanes carry UP.
+  // The Lancôme-side pair is photographed carrying up from B1 and toward 2F.
+  // The opposite pair's directions are an approximation until independently
+  // photographed; using down supplies the return route on both levels.
   for(const b of [
     {u:41,inner:39.3,topU:39.3,bottom:41,ground:52,top:40,side:'동측'},
     {u:25.8,inner:27.5,topU:29.85,bottom:54.5,ground:44,top:56,side:'서측'},
   ]) {
-    dressedEscalator(b.u,b.bottom,b.u,b.ground,-6,0,'up');
-    dressedEscalator(b.inner,b.ground,b.topU,b.top,0,7,'up',b.side==='서측');
+    dressedEscalator(b.u,b.bottom,b.u,b.ground,-6,0,b.side==='서측'?'down':'up');
+    dressedEscalator(b.inner,b.ground,b.topU,b.top,0,7,b.side==='서측'?'down':'up',b.side==='서측');
     const entry=b.ground>b.bottom?'S':'N',topEntry=b.top>b.ground?'S':'N';
     // The guard must meet the actual edge of the 1F floor opening: the
     // former inset left an unsupported strip at the non-entry end.
     wellGuard(b.side==='동측'?[40.18,40.5,41.82,51.8]:[24.98,44.2,26.62,55.0],0,entry,0xc9955b);
     wellGuard(b.side==='서측'?[28.0,51.6,30.67,56.15]:[Math.min(b.inner,b.topU)-.82,Math.min(b.ground,b.top)-.15,Math.max(b.inner,b.topU)+.82,Math.max(b.ground,b.top)+.15],7,topEntry,0xa7a9a8);
     sign('1',b.u,b.ground+(entry==='S'?.6:-.6),.08,entry,.4,.2,{bg:'#d7d7d0',fg:'#222222'});
-    sign('2층 ↑',b.inner,b.ground+(entry==='S'?1:-1),1.6,entry,1.1,.3,{bg:'#34312c',fg:'#ffffff',twoSided:true});
-    sign('2',b.topU,b.top,8.25,topEntry,.5,.5,{bg:'#38352f',fg:'#ffffff',twoSided:true});
-    zone(`${b.side} 에스컬레이터`,'1F','B1에서 올라옴 · 2층 올라감',[Math.min(b.u,b.inner)-1.1,Math.min(b.bottom,b.ground)-1,Math.max(b.u,b.inner)+1.1,Math.max(b.bottom,b.ground)+1],0,3.6,4);
+    sign(b.side==='서측'?'B1 ↓':'2층 ↑',b.side==='서측'?b.u:b.inner,b.ground+(entry==='S'?1:-1),b.side==='서측'?2.35:1.6,entry,1.1,.3,{bg:'#34312c',fg:'#ffffff',twoSided:true});
+    sign(b.side==='서측'?'1층 ↓':'2',b.topU,b.top,b.side==='서측'?9.35:8.25,topEntry,b.side==='서측'?1.1:.5,b.side==='서측'?.3:.5,{bg:'#38352f',fg:'#ffffff',twoSided:true});
+    zone(`${b.side} 에스컬레이터`,'1F',b.side==='서측'?'2층에서 내려옴 · B1 내려감':'B1에서 올라옴 · 2층 올라감',[Math.min(b.u,b.inner)-1.1,Math.min(b.bottom,b.ground)-1,Math.max(b.u,b.inner)+1.1,Math.max(b.bottom,b.ground)+1],0,3.6,4);
     for(const[u,v,y]of [[b.u,b.bottom,-6],[b.topU,b.top,7]])
       // Overlap the 2F ramp tip so an idle rider does not fall into a gap.
       box(u,v+(v===b.top?(topEntry==='S'?1.0:-1.0):(entry==='S'?-1:1)),1.65,v===b.top?2.2:1.8,y-.08,.08,{tex:'marble',color:0xebe9e5});
@@ -7979,7 +7981,7 @@ export function build(K) {
   // Round16 stock is category-specific, bounded to the unchanged official cell.
   // a runs along the storefront; b points into the shop. Keep the centre aisle open.
   function furnishUpperMerch(ctx) {
-    const {id,name,kind,Wf:W,Dp:D,y,fb,fdisk,fball,fsign,person,seed,palette:p,ST}=ctx;
+    const {id,name,kind,Wf:W,Dp:D,y,face,fb,fdisk,fball,fsign,person,seed,palette:p,ST}=ctx;
     if(W<1.05||(D<1.05&&!(id==='4F'&&name==='금강'&&D>=.45)))return;
     // The other 5F DAKS guide cell is a handbag concession, not womenswear.
     const daksWoman=id==='5F'&&name==='닥스'&&kind==='fashion';
@@ -12232,6 +12234,36 @@ export function build(K) {
         B(a,b,w,.65,.04,.48,0xf1f0ea);
         boot(a-.27,b,.53,0xeeeae2);boot(a+.27,b,.53,0x2d3934);
       }
+    }else if(id==='4F'&&name==='로저 비비에'){
+      // The Gangnam 4F store photograph shows dark floating shoe shelves on
+      // pale walls, a glossy round table, a light bench and a framed mirror.
+      // Merchandise and fixture positions are simplified, not surveyed.
+      // https://www.koreatriptips.com/en/shopping/2955570.html
+      const back=D-.48,span=Math.min(W-.65,3.6),ink=0x252322,pale=0xe7e2d9;
+      B(W/2,back,span,.10,.08,2.40,pale);
+      for(let row=0;row<3;row++){
+        const h=.55+row*.56;
+        B(W/2,back-.13,span-.1,.31,h,.065,ink);
+        for(let i=0;i<4;i++)shoe(W/2-span*.34+i*span*.225,back-.14,h+.07,
+          [0xe8e4dd,0x242526,0xd5c4ae,0x3f3938][(row+i)%4],.67);
+      }
+      const [signU,signV]=ST(W/2,back-.075),signW=Math.min(span-.18,1.65);
+      if(!immediateUpperFascia(id,'Roger Vivier',signU,signV,y+2.26,signW,.22,face,
+        {bg:null,fg:'#514b43'}))
+        fsign('Roger Vivier',W/2,back-.075,y+2.26,signW,.22,{bg:null,fg:'#514b43',bold:false,twoSided:true});
+      if(W>3.2&&D>2.8){
+        const a=W*.27,b=Math.min(D-.80,1.40),r=Math.min(.48,W*.12);
+        fdisk(a,b,r,y+.69,.065,0x171819);
+        fdisk(a,b,.055,y+.09,.60,0x9a9d9d);
+        fdisk(a,b,r*.52,y+.06,.04,0x787c7b);
+        shoe(a-.18,b,.76,0xe9e8e3,.60);shoe(a+.18,b,.76,0x292a2b,.60);
+        B(W*.70,b,Math.min(.95,W*.24),.42,.28,.19,0xc7c0b6);
+      }
+      if(W>3.2&&D>2.4){
+        const a=W-.55,b=back-.06;
+        B(a,b,.56,.05,.18,1.85,0x987d5c);
+        B(a,b-.04,.46,.025,.24,1.72,{tex:'metal',color:0xb9b9b1,gloss:.6});
+      }
     }else if(id==='4F'&&name==='페라가모'){
       // W Korea's 2016 Gangnam Grand Shoe opening image shows a pale rear
       // wall with metallic-edged shelves and a dark round display table with
@@ -14926,7 +14958,7 @@ export function build(K) {
             immediateUpperFascia(id,c.name,ru,rv,y+.43,sw,.20,face,opts);
           }
         }
-      }else if(!/입점 준비/.test(c.name))furnishUpperMerch({id,name:c.name,kind:retailKind,Wf,Dp,y,H,fb,fdisk,fball,fsign,person,seed,palette,special,lvInnerSeam,ST,largestPart:q===largest,phoebeNotchWidth:id==='3F'&&c.name==='피비파일로'&&q===largest&&parts.length>1?Math.max(0,v1-parts.find(p=>p!==q)[3]):0,gucciPhotoCell:id==='2F'&&c.name==='구찌'&&c.rect[0]===487,
+      }else if(!/입점 준비/.test(c.name))furnishUpperMerch({id,name:c.name,kind:retailKind,Wf,Dp,y,H,face,fb,fdisk,fball,fsign,person,seed,palette,special,lvInnerSeam,ST,largestPart:q===largest,phoebeNotchWidth:id==='3F'&&c.name==='피비파일로'&&q===largest&&parts.length>1?Math.max(0,v1-parts.find(p=>p!==q)[3]):0,gucciPhotoCell:id==='2F'&&c.name==='구찌'&&c.rect[0]===487,
         ...(vivienneJoin?{rearOpenWidth:Math.min(Wf,Math.max(0,vivienneJoin[3]-v0))}:{}),
         ...(isabelJoin?{rearOpenFrom:Math.min(Wf,Math.max(0,isabelJoin[1]-v0))}:{}),
         ...(southJoin&&c.name==='엠포리오아르마니'?{rearOpenWidth:Math.min(Wf,Math.max(0,v1-southJoin[1]))}:{}),
