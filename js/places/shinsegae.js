@@ -1308,8 +1308,8 @@ export function build(K) {
     { label: '1M', y: LV['1M'], name: '액세서리 · 여행 · 식음료' },
     { label: '2F', y: LV['2F'], name: '해외유명브랜드' },
     { label: '3F', y: LV['3F'], name: '인터내셔널 디자이너 · 워치&주얼리' },
-    { label: '4F', y: LV['4F'], name: '여성 컨템포러리 · 그랜드 슈' },
-    { label: '5F', y: LV['5F'], name: '여성 클래식 · 영캐주얼 · 핸드백' },
+    { label: '4F', y: LV['4F'], name: '해외 컨템포러리 · 슈즈' },
+    { label: '5F', y: LV['5F'], name: '여성 클래식 · 뉴 컨템포러리 · 핸드백' },
     { label: '6F', y: LV['6F'], name: '남성 럭셔리 · 남성 컨템포러리' },
     { label: '7F', y: LV['7F'], name: '골프 · 남성 캐주얼 · 남성 컨템포러리 · 남성 정장' },
     { label: '8F', y: LV['8F'], name: '뉴 스트리트 · 베이직 스포츠 · 아웃도어' },
@@ -15394,7 +15394,7 @@ export function build(K) {
 
 
   sp('8F 겨울 매장 · 에스컬레이터', 40.8, 49.2, LV['8F'], 1, 0);
-  sp('4F 그랜드 슈', 41.2, 41, LV['4F'], 0, 1);
+  sp('4F 슈즈', 41.2, 41, LV['4F'], 0, 1);
   sp('11F 전문식당가 · S GARDEN', 34, 57.5, LV['11F'], 0, 1);
   for(const id of Object.keys(upperGuidePlans))sp(`${id} ${upperCats[id]}`,id==='11F'?34:24.5,id==='11F'?57.5:56.2,LV[id],0,-1);
   K.spawn({ name: 'B1 고투몰 ↔ 신세계 연결통로', x: -70, y: LV.B1, z: -70, yaw: PI });
