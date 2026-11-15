@@ -3821,7 +3821,7 @@ function hallR20(K) {
   // changes in either direction do not route the player through outdoors.
   zone('신세계 중층 연결','1M',-21,-8,-11,10,3.6,6.95,'신세계 메자닌');
   zone('신세계백화점 연결통로','1F',-19.5,-4,0,4,0,3.5,'3게이트 · 스타벅스');
-  zone('센트럴시티 2층 연결','2F',29,-1.5,38,2.5,7,10,'신세계백화점 2층 · 불가리 방면');
+  zone('센트럴시티 2층 연결','2F',29,-1.5,38,2.5,7,10,'신세계백화점 2층 · 불가리 · 티파니');
   for(const [floor,y0,y1] of [['1F',0,3.5],['1M',3.6,6.95],['2F',7,10]])zone('센트럴시티 중앙홀 엘리베이터',floor,38,11.5,43,17.5,y0,y1,'센트럴시티 · 신세계백화점');
   // The 1F north/east shops retain the former generated fitout, now on the correct fronts.
   const shopFurnish=(y,fn)=>{
