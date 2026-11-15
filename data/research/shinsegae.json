@@ -56236,6 +56236,17 @@
       }
     }
   },
+  "chanel_2f_watch_jewelry_research_2026_11_16": {
+    "sources": [
+      {"url": "https://www.shinsegae.com/store/floor.do?storeCd=SC00002", "observed": "Current 2F directory lists 샤넬 and 샤넬(쥬얼리); its floor plan depicts one L-shaped CHANEL cell without a separately legible door or partition."},
+      {"url": "https://www.chanel.com/kr/storelocator/store/shinsegae-gangnam-chanel-boutique-303/", "observed": "CHANEL lists its 2F fashion boutique."},
+      {"url": "https://www.chanel.com/kr/storelocator/store/shinsegae-gangnam-chanel-watch-fine-jewelry-boutique-112508/", "observed": "CHANEL separately lists its 2F watch and fine jewelry boutique."},
+      {"url": "https://news.nate.com/view/20210811n10799", "observed": "A 2021 Korea Economic Daily article describes the high jewelry boutique adjacent to the fashion boutique."}
+    ],
+    "implementation": "Inside the existing L-shaped 2F Chanel cell, the secondary arm is furnished with jewelry cases and watch/fine jewelry lettering while the fashion area, existing entrances and zone remain intact.",
+    "limits": "The separate boutique is supported by the directory and article, but its precise footprint, entrance, which arm it occupies, fittings and interior appearance are unverified. The arm assignment and furnishings are illustrative, not a claim about the actual partition or interior. No separate address or assumed partition is added.",
+    "verification": "A player traversed between the fashion area and secondary arm in both directions. Sampled entry results for 30 2F cells matched the prior build. Smoke and Shinsegae walking checks passed. The existing store-floor-regressions test stops at a legacy 2F Bulgari coordinate predating the user's revised layout. Its count of K.escalator calls also excludes the 2F annex lanes implemented using K.ramp(move); the count failure does not establish missing lanes. Both annex directions were checked separately using an actual player."
+  },
   "visual_sources": [
     {
       "file": "refs/roadview/ssg_06_north_facade_from_sinbanporo_median.jpg",

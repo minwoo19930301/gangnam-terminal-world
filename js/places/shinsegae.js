@@ -10916,6 +10916,26 @@ export function build(K) {
           B(a+da,b,.08,.08,.98,.035,0x383b3a);
         }
       }
+    }else if(id==='2F'&&name==='샤넬'&&!ctx.largestPart){
+      // A 2021 report and CHANEL's Gangnam directory list an adjacent watch
+      // and fine jewellery boutique. The official plan combines Chanel into
+      // one L-shaped cell, so the position and fittings here are estimates.
+      const ivory2=0xeeeae1,brass=0xb9a57e,black=0x292a28;
+      eachStock((a,b,h,i)=>{
+        B(a,b,.25,.18,h,.035,ivory2);
+        B(a,b-.02,.10,.10,h+.04,.025,i%2?brass:black);
+      },2);
+      for(const a of islands){
+        const w=Math.min(sideWidth-.20,1.8),b=Math.min(D-.8,Math.max(1.4,D*.40));
+        B(a,b,w,.78,.08,.72,{tex:'marble',color:0xe9e3d8,gloss:.5});
+        B(a,b,w-.08,.70,.81,.23,'glass');
+        B(a,b,w-.14,.60,.83,.025,ivory2);
+        for(const da of [-.35,0,.35]){
+          B(a+da,b,.14,.18,.86,.025,brass); B(a+da,b,.11,.08,.89,.035,black);
+        }
+      }
+      fsign('CHANEL',W/2,D-.46,y+2.52,Math.min(2.2,W-.7),.24,{bg:null,fg:'#2d2d2b',twoSided:true});
+      fsign('WATCHES & FINE JEWELRY',W/2,D-.46,y+2.28,Math.min(2.3,W-.7),.13,{bg:null,fg:'#4a4742',twoSided:true});
     }else if(kind==='watch'||kind==='jewel'||/주얼리|반클리프|불가리|티파니|까르띠에|그라프/.test(name)){
       eachStock((a,b,h,i)=>{
         B(a,b,.22,.19,h,.08,0xefe5d3);B(a,b-.025,.07,.16,h+.085,.026,gold);
