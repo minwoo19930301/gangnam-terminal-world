@@ -6800,6 +6800,8 @@ export function build(K) {
   K.slab(rect(27.8,128.25,31.1,131.2),LV['4F'],{mat:floorMat['4F'],thick:.12,under:false,ceil:false,edge:false});
   {const y=LV['4F'];wall(27.8,128.25,28.32,128.25,y,y+1.05,{mat:'glass',thick:.045});}
   K.slab(rect(27.9,129.6,33.2,131.7),LV['4F'],{mat:floorMat['4F'],thick:.12,under:false,ceil:false,edge:false});
+  K.slab(rect(29.95,131.2,32.05,132.85),LV['4F'],{mat:floorMat['4F'],thick:.12,under:false,ceil:false,edge:false});
+  K.slab(rect(36.90,127.95,37.85,128.65),LV['4F'],{mat:floorMat['4F'],thick:.12,under:false,ceil:false,edge:false});
   // At the 5F main well, the modelled flight and floor overlap here. This
   // low guard protects the open floor edge without blocking riders above it.
   {const y=LV['5F'];wall(30.0,49.4,30.0,52.15,y,y+.78,{mat:'glass',thick:.045});}
