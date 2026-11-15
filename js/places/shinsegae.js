@@ -869,7 +869,7 @@ export function build(K) {
       // Narrow level strip at the back of the relocated elevator cars.
       K.slab(rect(29,145.1,35,146.3),LV[id],{mat:floorMat[id]??'ssg_marble',thick:.12,under:false,ceil:false,edge:false});
       const apronEnd=Math.min(145.3,Math.max(84.71,upperPlanPoint(id,1775,700)[1]+2.5)),a=upperPhysicalWell(id,true),q=[Math.max(0,a[0]),Math.max(84.7,a[1]),Math.min(UW,a[2]),Math.min(apronEnd,a[3])];
-      const h=id==='3F'?[rect(...q),rect(36,125.3,39.8,127.5),rect(1.65,112.5,5.15,119.2)]:id==='2F'?[rect(32,129.1,36.5,134.2)]:id==='5F'?[rect(27.65,121.5,29.45,126.2),[P(32.15,121.5),P(33.95,121.5),P(35.30,126.2),P(33.50,126.2)]]:(q[2]>q[0]&&q[3]>q[1]?[rect(...q)]:[]);
+      const h=id==='3F'?[rect(...q),rect(36,125.3,39.8,127.5),rect(1.65,112.5,5.15,119.2)]:id==='2F'?[rect(32,129.1,36.5,134.2)]:id==='5F'?[[P(29.45,121.5),P(31.25,121.5),P(30.35,126.2),P(28.55,126.2)],[P(33.95,121.5),P(35.75,121.5),P(36.20,126.2),P(34.40,126.2)]]:(q[2]>q[0]&&q[3]>q[1]?[rect(...q)]:[]);
       K.slab(rect(0,84.7,UW,apronEnd),LV[id],{mat:floorMat[id]??'ssg_marble',thick:thick(id),holes:id==='3F'?mergedHoles(h):h,under:CEIL,edge:false});
     }
   });
@@ -950,8 +950,8 @@ export function build(K) {
     for(let i=0;i<ids.length-(annex?1:2);i++){
       const r=fn(ids[i]),t=annex&&ids[i]==='5F'?upperExpanded6AnnexRect():fn(ids[i+1]),rev=annex?(i===2?1:i%2):i%2;
       for(const [lane,off] of (annex?actualAnnexLaneOffsets(i):upperLaneOffsets(i)).entries())upperFlightReservations.push({
-        a:annex?(ids[i]==='2F'?[40+off,132]:ids[i]==='3F'?[28.5+off,119]:ids[i]==='4F'?[lane===0?28.70:35.70,lane===0?129.7:130.5]:ids[i]==='5F'?[lane===0?30.05:31.55,121.5]:[ids[i]==='4F'?38.1:ids[i]==='8F'?r[0]+1.5:ids[i]==='9F'?r[2]-1:rev?r[2]:r[0],(r[1]+r[3])/2+off]):[(r[0]+r[2])/2+off,rev?r[3]:r[1]],
-        b:annex?(ids[i]==='2F'?[40+off,121.7]:ids[i]==='3F'?[28.5+off,128]:ids[i]==='4F'?[lane===0?28.55:33.05,121.5]:ids[i]==='5F'?[lane===0?32.95:34.55,129.7]:[ids[i]==='6F'?t[2]-2:ids[i]==='7F'?t[0]+2:ids[i]==='8F'?t[2]-1:ids[i]==='4F'?30.7:rev?t[0]:t[2],ids[i]==='4F'?(r[1]+r[3])/2+off:(t[1]+t[3])/2+off]):[(t[0]+t[2])/2+off,rev?t[1]:t[3]],ya:LV[ids[i]],yb:LV[ids[i+1]],
+        a:annex?(ids[i]==='2F'?[40+off,132]:ids[i]==='3F'?[28.5+off,119]:ids[i]==='4F'?[lane===0?28.70:35.70,lane===0?129.7:130.5]:ids[i]==='5F'?[lane===0?31.85:33.35,121.5]:[ids[i]==='4F'?38.1:ids[i]==='8F'?r[0]+1.5:ids[i]==='9F'?r[2]-1:rev?r[2]:r[0],(r[1]+r[3])/2+off]):[(r[0]+r[2])/2+off,rev?r[3]:r[1]],
+        b:annex?(ids[i]==='2F'?[40+off,121.7]:ids[i]==='3F'?[28.5+off,128]:ids[i]==='4F'?[lane===0?30.35:34.85,121.5]:ids[i]==='5F'?[lane===0?32.95:34.55,129.7]:[ids[i]==='6F'?t[2]-2:ids[i]==='7F'?t[0]+2:ids[i]==='8F'?t[2]-1:ids[i]==='4F'?30.7:rev?t[0]:t[2],ids[i]==='4F'?(r[1]+r[3])/2+off:(t[1]+t[3])/2+off]):[(t[0]+t[2])/2+off,rev?t[1]:t[3]],ya:LV[ids[i]],yb:LV[ids[i+1]],
       });
     }
   }
@@ -6145,7 +6145,7 @@ export function build(K) {
     ...(id==='7F'?[[40.8,70.7,41.9,75.8]]:[]),
     ...(id==='11F'?[]:(()=>{const[a,b,c,d]=upperPierRect(id);return[[a-1.12,b-1.12,a+.02,b+.02],[c-.02,b-1.12,c+1.12,b+.02],[a-1.12,d-.02,a+.02,d+1.12],[c-.02,d-.02,c+1.12,d+1.12]];})()),
     ...(id==='11F'?[]:[upperPhysicalWell(id).map((n,i)=>n+(i<2?-.3:.3))]),
-    ...(id==='5F'?[[30.39,116.81,43.03,124.65],[30.50,124.75,35.70,128.75],[30.75,123.7,33.25,129.1],[27.4,118.6,35.55,126.7]]:[upperPhysicalWell(id,true).map((n,i)=>n+(i<2?-.3:.3))]), [.6,81,10.4,84.8],
+    ...(id==='5F'?[[30.39,116.81,43.03,124.65],[30.50,124.75,35.70,128.75],[30.75,123.7,33.25,129.1],[29.2,118.6,37.35,126.7]]:[upperPhysicalWell(id,true).map((n,i)=>n+(i<2?-.3:.3))]), [.6,81,10.4,84.8],
     // The former 2F–5F bridge is no longer built after the annex flights
     // moved. Keeping its reservation cuts mapped shops despite clear floor.
     ...(!['2F','3F','4F','5F'].includes(id)&&upperPhysicalWell(id,true)[3]>=81.1?[[29,79.85,upperPhysicalWell(id,true)[2]+.85,81.3]]:[]),
@@ -6645,7 +6645,7 @@ export function build(K) {
       // Keep consecutive flights parallel through the two guide icons; the
       // former diagonal 3F flight crossed the Longines counter. Coordinates
       // and landing bridges remain schematic rather than measured.
-      let a=id==='2F'?P(40+off,132):id==='3F'?P(28.5+off,119):id==='4F'?P(dir==='up'?28.70:35.70,dir==='up'?129.7:130.5):id==='5F'?P(dir==='up'?30.05:31.55,121.5):P(id==='4F'?38.1:id==='8F'?r[0]+1.5:id==='9F'?r[2]-1:rev?r[2]:r[0],(r[1]+r[3])/2+off),b=id==='2F'?P(40+off,121.7):id==='3F'?P(28.5+off,128):id==='4F'?P(dir==='up'?28.55:33.05,121.5):id==='5F'?P(dir==='up'?32.95:34.55,129.7):id==='4F'?P(30.7,(r[1]+r[3])/2+off):P(id==='6F'?t[2]-2:id==='7F'?t[0]+2:id==='8F'?t[2]-1:rev?t[0]:t[2],(t[1]+t[3])/2+off);
+      let a=id==='2F'?P(40+off,132):id==='3F'?P(28.5+off,119):id==='4F'?P(dir==='up'?28.70:35.70,dir==='up'?129.7:130.5):id==='5F'?P(dir==='up'?31.85:33.35,121.5):P(id==='4F'?38.1:id==='8F'?r[0]+1.5:id==='9F'?r[2]-1:rev?r[2]:r[0],(r[1]+r[3])/2+off),b=id==='2F'?P(40+off,121.7):id==='3F'?P(28.5+off,128):id==='4F'?P(dir==='up'?30.35:34.85,121.5):id==='5F'?P(dir==='up'?32.95:34.55,129.7):id==='4F'?P(30.7,(r[1]+r[3])/2+off):P(id==='6F'?t[2]-2:id==='7F'?t[0]+2:id==='8F'?t[2]-1:rev?t[0]:t[2],(t[1]+t[3])/2+off);
 
       const slender=id==='2F'||id==='3F'||id==='4F'||id==='5F';
       if(id==='2F')annexHermesEsc(...a,...b,LV[id],LV[next],1.2,dir);else K.escalator(...a,...b,{ya:LV[id],yb:LV[next],w:1.2,dir,speed:.6,sideMat:slender?'ssg_annex_escalator_clear':0xeee7da,truss:0xf3eee4});
@@ -6812,7 +6812,7 @@ export function build(K) {
 
   {const y=LV['4F'];K.slab(rect(37.95,125.0,40.9,128.55),y,{mat:{tex:'marble',color:0xe8dfce},thick:.16,under:false,ceil:false,edge:false});}
   // Approximate guarding around the reoriented 4F–5F openings.
-  {const y=LV['5F'];for(const [a,b,c,d,outer] of [[27.65,122.2,27.65,126.2,true],[29.45,122.2,29.45,126.2,false],[27.65,126.2,29.45,126.2,false],[32.319,122.2,33.50,126.2,false],[34.119,122.2,35.30,126.2,true],[33.50,126.2,35.30,126.2,false]]){
+  {const y=LV['5F'];for(const [a,b,c,d,outer] of [[29.315,122.2,28.55,126.2,true],[31.115,122.2,30.35,126.2,false],[28.55,126.2,30.35,126.2,false],[34.04,122.2,34.40,126.2,false],[35.84,122.2,36.20,126.2,true],[34.40,126.2,36.20,126.2,false]]){
     // The 2022 5F photograph shows coral panels on the outside of the wells.
     wall(a,b,c,d,y,y+1.05,{mat:outer?0xc57f6e:'glass',thick:.045});
     if(outer)wall(a,b,c,d,y+1.05,y+1.10,{mat:0x745f53,solid:false,thick:.055});
@@ -15623,13 +15623,8 @@ for(const [id,names,top]of[
   ['9F',['에이스','시몬스'],475],
   ['10F',['분 주니어','봉쁘앙'],542],
 ])for(const c of upperGuidePlans[id].cells)if(names.includes(c.name))c.rect[1]=top;
-// Approximate 5F fit: shift the linked tenant cells slightly to leave a
-// public landing at the grouped escalators while retaining their order.
-// The offset and resulting shop dimensions are not surveyed.
-for(const c of upperGuidePlans['5F'].cells){
-  if(c.name==='로서울'){c.rect[1]+=6.65;c.rect[3]+=15.675;}
-  if(c.name==='조이 그라이슨'){c.rect[1]+=15.675;c.rect[3]+=6.65;}
-}
+// ROH SEOUL and JOY GRYSON now retain their adjacent 5F guide rectangles.
+// The adjusted nearby stair landing remains a schematic, unsurveyed fit.
 for(const c of upperGuidePlans['4F'].cells){if(['샤넬 슈 부틱','미우미우'].includes(c.name)){c.rect[0]-=25.45;c.rect[2]-=25.45;}}
 export const upperRightPads={
   '2F':[1575,670,1635,805],'3F':[1370,760,1445,840],'4F':[1550,747,1620,830],
@@ -15674,7 +15669,7 @@ export function upperPhysicalWell(id,annex=false){
   if(i>0&&!(annex&&id==='6F')){
     const p=!annex&&ids[i-1]==='6F'?upperLegacy6PlanRect(upperGuidePlans['6F'].well):fn(ids[i-1]),rev=annex&&i-1===2?1:(i-1)%2;
     for(const [lane,off] of upperLaneOffsets(i-1,annex).entries()){
-      const a=annex?[id==='5F'?(lane===0?28.70:35.70):rev?p[2]:p[0],id==='5F'?(lane===0?129.7:130.5):(p[1]+p[3])/2+off]:[(p[0]+p[2])/2+off,rev?p[3]:p[1]],b=annex?(id==='5F'?[lane===0?28.55:33.05,121.5]:[rev?r[0]:r[2],(r[1]+r[3])/2+off]):[(r[0]+r[2])/2+off,rev?r[1]:r[3]];
+      const a=annex?[id==='5F'?(lane===0?28.70:35.70):rev?p[2]:p[0],id==='5F'?(lane===0?129.7:130.5):(p[1]+p[3])/2+off]:[(p[0]+p[2])/2+off,rev?p[3]:p[1]],b=annex?(id==='5F'?[lane===0?30.35:34.85,121.5]:[rev?r[0]:r[2],(r[1]+r[3])/2+off]):[(r[0]+r[2])/2+off,rev?r[1]:r[3]];
       // Below t=.45 the arriving player's head is below this floor's soffit.
       const dx=b[0]-a[0],dz=b[1]-a[1],len=Math.hypot(dx,dz),nx=-dz/len,nz=dx/len;
       for(const t of[.43,1]){const u=a[0]+dx*t,v=a[1]+dz*t;points.push([u+nx*.82,v+nz*.82],[u-nx*.82,v-nz*.82]);}
