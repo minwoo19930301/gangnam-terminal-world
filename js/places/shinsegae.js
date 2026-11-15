@@ -6113,9 +6113,9 @@ export function build(K) {
     ...(id==='11F'?[]:(()=>{const[a,b,c,d]=upperPierRect(id);return[[a-1.12,b-1.12,a+.02,b+.02],[c-.02,b-1.12,c+1.12,b+.02],[a-1.12,d-.02,a+.02,d+1.12],[c-.02,d-.02,c+1.12,d+1.12]];})()),
     ...(id==='11F'?[]:[upperPhysicalWell(id).map((n,i)=>n+(i<2?-.3:.3))]),
     ...(id==='5F'?[[30.39,116.81,43.03,124.65],[30.50,124.75,35.70,128.75],[30.75,123.7,33.25,129.1],[27.4,118.6,35.55,126.7]]:[upperPhysicalWell(id,true).map((n,i)=>n+(i<2?-.3:.3))]), [.6,81,10.4,84.8],
-    // The former 2F/3F/5F bridge is no longer built after the annex flights
+    // The former 2F–5F bridge is no longer built after the annex flights
     // moved. Keeping its reservation cuts mapped shops despite clear floor.
-    ...(!['2F','3F','5F'].includes(id)&&upperPhysicalWell(id,true)[3]>=81.1?[[29,79.85,upperPhysicalWell(id,true)[2]+.85,81.3]]:[]),
+    ...(!['2F','3F','4F','5F'].includes(id)&&upperPhysicalWell(id,true)[3]>=81.1?[[29,79.85,upperPhysicalWell(id,true)[2]+.85,81.3]]:[]),
     // The main restroom-side shaft's back extends roughly 1.2m from its
     // centre. Keep a further half-metre reservation for wall thickness and
     // player clearance, instead of excluding an extra 0.6m of retail on
