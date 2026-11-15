@@ -6113,9 +6113,9 @@ export function build(K) {
     ...(id==='11F'?[]:(()=>{const[a,b,c,d]=upperPierRect(id);return[[a-1.12,b-1.12,a+.02,b+.02],[c-.02,b-1.12,c+1.12,b+.02],[a-1.12,d-.02,a+.02,d+1.12],[c-.02,d-.02,c+1.12,d+1.12]];})()),
     ...(id==='11F'?[]:[upperPhysicalWell(id).map((n,i)=>n+(i<2?-.3:.3))]),
     ...(id==='5F'?[[30.39,116.81,43.03,124.65],[30.50,124.75,35.70,128.75],[30.75,123.7,33.25,129.1],[27.4,118.6,35.55,126.7]]:[upperPhysicalWell(id,true).map((n,i)=>n+(i<2?-.3:.3))]), [.6,81,10.4,84.8],
-    // The former 3F/5F bridge is no longer built after the annex flights
+    // The former 2F/3F/5F bridge is no longer built after the annex flights
     // moved. Keeping its reservation cuts mapped shops despite clear floor.
-    ...(id!=='3F'&&id!=='5F'&&upperPhysicalWell(id,true)[3]>=81.1?[[29,79.85,upperPhysicalWell(id,true)[2]+.85,81.3]]:[]),
+    ...(!['2F','3F','5F'].includes(id)&&upperPhysicalWell(id,true)[3]>=81.1?[[29,79.85,upperPhysicalWell(id,true)[2]+.85,81.3]]:[]),
     // The main restroom-side shaft's back extends roughly 1.2m from its
     // centre. Keep a further half-metre reservation for wall thickness and
     // player clearance, instead of excluding an extra 0.6m of retail on
@@ -6658,7 +6658,7 @@ export function build(K) {
       K.slab(rect(35,77.9,39.99,80.15),y,{mat:{tex:'marble',color:0xe8dfce},thick:.16,under:CEIL,edge:false});
       for(const [a,b,c,d] of [[35,77.9,35,p[3]],[39.99,77.9,39.99,p[3]],[35,77.9,39.99,77.9],[p[0],p[1],p[0],76.3]])upperSafeWall(a,b,c,d,y,1.1,{mat:'glass',thick:.04});
     }
-    if(bankBridge){
+    if(bankBridge&&id!=='2F'){
       // Stop north at v80: incoming lanes on 4F/8F/10F occupy v78–79.
       // Arrivals at v80.5 remain 0.6m outside the car's north door.
       K.slab(rect(29,80,bridgeEnd,81.15),y,{mat:{tex:'marble',color:0xe8dfce},thick:.05,under:false,ceil:false,edge:false});
