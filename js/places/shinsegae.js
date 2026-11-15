@@ -4569,7 +4569,21 @@ export function build(K) {
       for(const i of fronts){
         const a=poly[i],b=poly[(i+1)%poly.length],dx=b[0]-a[0],dz=b[1]-a[1],L=Math.hypot(dx,dz),angle=Math.atan2(-dz,dx);
         K.wall(...a,...b,2.68,3.06,{mat:eyewear?0x232522:0xe8dfcf,thick:.16,solid:false});
-        if(i===faceEdge&&name==='키린')immediateBeautyName('Qeelin',6.3,36.55,2.86,'E',Math.min(L*.52,1.10),.3,.10);
+        if(i===faceEdge&&name==='포멜라토'){
+          // The Gangnam jewellery-hall photograph shows a white Pomellato
+          // name on the fascia. Draw the name immediately on the angled edge.
+          const key=K.texture('ssg_pomellato_1f_name',512,128,(g,w,h)=>{
+            g.clearRect(0,0,w,h);g.fillStyle='#fffdf8';g.textAlign='center';g.textBaseline='middle';
+            g.font='italic 78px Georgia, serif';g.fillText('Pomellato',w/2,h/2,w*.94);
+          },[1,1],{transparent:true});
+          const mat=K.material('ssg_pomellato_1f_name_mat',new K.THREE.MeshBasicMaterial({map:K.T.surface(key).tex,transparent:true,depthWrite:false,side:K.THREE.DoubleSide}));
+          const ux=dx/L,uz=dz/L,nx=-uz,nz=ux,w=Math.min(L*.70,2.6),mx=(a[0]+b[0])/2,mz=(a[1]+b[1])/2;
+          for(const side of[-1,1]){
+            const x=mx+nx*.12*side,z=mz+nz*.12*side;
+            const ends=side===-1?[1,-1]:[-1,1];
+            K.quad(mat,[[x+ends[0]*ux*w/2,2.72,z+ends[0]*uz*w/2],[x+ends[1]*ux*w/2,2.72,z+ends[1]*uz*w/2],[x+ends[1]*ux*w/2,3.00,z+ends[1]*uz*w/2],[x+ends[0]*ux*w/2,3.00,z+ends[0]*uz*w/2]],[nx*side,0,nz*side]);
+          }
+        }else if(i===faceEdge&&name==='키린')immediateBeautyName('Qeelin',6.3,36.55,2.86,'E',Math.min(L*.52,1.10),.3,.10);
         else if(i===faceEdge||eyewear&&i===3)K.sign(name==='타사키'?'TASAKI':name==='아크레도'?'acredo':name,{x:(a[0]+b[0])/2,z:(a[1]+b[1])/2,y:2.86,w:Math.min(L*.8,5),h:.3,rotY:angle,bg:null,fg:name==='아크레도'?'#ffffff':eyewear?'#f0efdf':'#71593c',twoSided:true,...(['타사키','아크레도'].includes(name)?{offset:.10}: {})});
       }
       if(name==='아크레도'){
@@ -4598,6 +4612,18 @@ export function build(K) {
           for(const du of [-.12,.12])box(u+du,back+.15,.035,.015,1.02,.08,0xf4eee1,{solid:false});
         }
         immediateBeautyName('TASAKI',12.02,back+.13,2.69,'S',1.38,.22,.04,true);
+      }
+      if(name==='포멜라토'){
+        // The Gangnam hall photograph shows pale rose walls and three warm,
+        // framed display niches at the back. The fittings are schematic.
+        const back=r[0]+.17;
+        box(back,20.2,.08,4.7,.12,2.48,0xd5beb7,{solid:false});
+        for(const v of[18.65,20.2,21.75]){
+          box(back+.055,v,.035,1.12,.52,1.55,0xab8e72,{solid:false});
+          box(back+.08,v,.025,.94,.62,1.34,{tex:'emit',color:0xf3e7db},{solid:false});
+          box(back+.11,v,.04,.56,.92,.04,0xb89e84,{solid:false});
+          box(back+.14,v,.05,.32,1.00,.43,0xe9ddd3,{solid:false});
+        }
       }
       // Low display islands and back-wall vitrines remain inside the traced cell.
       const candidates=[];
