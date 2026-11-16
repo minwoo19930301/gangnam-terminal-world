@@ -5983,7 +5983,11 @@ export function build(K) {
         for(const u of[33.3-.30,33.3+.30])box(u,v,.025,.06,2.72,.55,glow,{solid:false});
         for(const y of[2.72,3.245])box(33.3,v,.62,.06,y,.025,glow,{solid:false});
       }
-      for(const[txt,u,v,face]of[['1 GATE',34.6,5.4,'S'],['2 GATE',66.6,EAST_GATE,'W'],['3 GATE',33.2,80.05,'S']])sign(txt,u,v,2.85,face,3.5,.30,{bg:'#39352f',fg:'#eee2c6',bold:false,twoSided:true});
+      // Suspend the existing Gate 3 marker below the glass-door header. The
+      // former lettering intersected the metal frame and disappeared behind
+      // the cosmetics-hall ceiling. Its hanging height is a model fit.
+      for (const u of [32.1,34.3]) box(u,80,.035,.035,2.65,.24,'metal',{solid:false});
+      for(const[txt,u,v,h,face]of[['1 GATE',34.6,5.4,2.85,'S'],['2 GATE',66.6,EAST_GATE,2.85,'W'],['3 GATE',33.2,80,2.50,'S']])sign(txt,u,v,h,face,3.5,.30,{bg:'#39352f',fg:'#eee2c6',bold:false,twoSided:true});
       // J4/J8 have no confirmed gate in the unmirrored plan: retain plain openings.
       for(const v of[42.6,68])for(const dv of[-4,4])box(.05,v+dv,.14,.14,0,3.1,0xece7dc,{solid:false});
 
@@ -6616,11 +6620,63 @@ export function build(K) {
     '자딕앤 볼테르': '쟈딕앤볼테르 · ZADIG & VOLTAIRE',
     'SHOP 아모멘토': '샵아모멘토 · SHOP AMOMENTO',
   };
+  // Consecutive boutiques separated by a continuous dark line on the guides.
+  // White boundaries between open concessions have no shared wall.
+  const partitionedShopRows = {
+    '3F': [
+      ['이세이미야케','조르지오 아르마니','트리니티','아크리스','에르뎀'],
+      ['자크뮈스','발렌티노','보테가 베네타','케이트','피비파일로'],
+      ['랑에운트 죄네','파네라이','블랑팡','위블로','다미아니','PSR 컨시어지'],
+      ['로저드뷔','튜더'], ['오메가','몽블랑'],
+      ['쇼메','프레드','쇼파드'], ['까르띠에','피아제','트리니티 라운지'],
+    ],
+    '4F': [
+      ['A.P.C.','이자벨 마랑','띠어리','마쥬','비비안 웨스트우드','린드버그'],
+      ['COS','토리버치','코치','이브살로몬'],
+      ['엠포리오아르마니','플리츠 플리즈','파비아나 필리피','쉐르'],
+    ],
+    '5F': [
+      ['파로','사바티에','타임','구호','델라라나','클럽모나코'],
+      ['랑방 컬렉션','마인','미샤','셀럽제이','미스지 컬렉션'],
+      ['동우모피','진도모피','르베이지','쁘렝땅','닥스 숙녀','보티첼리'],
+      ['더일마','스튜디오 톰보이','보브','시스템','라코스테','럭키슈에뜨'],
+      ['헤지스','빈폴'], ['분크','닥스 핸드백'],
+      ['부디무드라','르917 (르셉템버)','던스트'],
+    ],
+  };
+  function buildShopPartitions(id, y) {
+    const height = Math.min(3.4,clearH(id));
+    const finish = {mat:0xe7e1d6,thick:.09};
+    for (const row of partitionedShopRows[id] || []) {
+      const shops = row.map(name=>upperCells.get(`${id}:${name}`).parts);
+      for (let i=1;i<shops.length;i++) {
+        // Only the shared part of a stepped outline is a partition. Digitising
+        // a line into two cells can leave a one-pixel gap between their edges.
+        for (const a of shops[i-1]) for (const b of shops[i]) {
+          if (Math.abs(a[3]-b[1])<.15) {
+            const v=(a[3]+b[1])/2, start=Math.max(a[0],b[0]), end=Math.min(a[2],b[2]);
+            if (end>start) upperSafeWall(start,v,end,v,y,height,finish);
+          } else if (Math.abs(a[0]-b[2])<.15) {
+            const u=(a[0]+b[2])/2, start=Math.max(a[1],b[1]), end=Math.min(a[3],b[3]);
+            if (end>start) upperSafeWall(u,start,u,end,y,height,finish);
+          }
+        }
+      }
+    }
+  }
+  // Continuous black boundaries on the 4F shoe guide. The thin white seams
+  // between neighbouring concessions stay open to their shared selling floor.
+  const shoeBoundaries4F = {
+    '지미추':'NW', '버켄스탁':'NE', '캠퍼':'NW', '루이비통':'SW',
+    '프라다':'SW', '페라가모':'SE', '토즈':'NSE'
+  };
   const northBoutiques3F = ['막스마라','브루넬로 쿠치넬리','로에베','끌로에','아크네스튜디오'];
   // An open shop face stays on its official white aisle. Stock is bounded to its cell.
   function buildUpperCell(id,c) {
     const y=LV[id],H=Math.min(3.4,clearH(id)),raw=upperRect(id,c.rect),r=upperBuildRect(id,c);
     const [px,py,pX,pY]=c.rect,guide=upperGuidePlans[id];
+    const markedEdges = id === '4F' ? shoeBoundaries4F[c.name] : null;
+    const displayBacks = markedEdges && [...markedEdges].map(f => upperFace[f]);
     const edgePoint=(f,t)=>f==='N'?[px+(pX-px)*t,py-5]:f==='S'?[px+(pX-px)*t,pY+5]:f==='W'?[px-5,py+(pY-py)*t]:[pX+5,py+(pY-py)*t];
     const score=f=>[.25,.5,.75].filter(t=>{const[a,b]=edgePoint(f,t);return a>27&&a<1775&&b>guide.top&&b<guide.bottom&&!guide.cells.some(o=>o!==c&&a>o.rect[0]&&a<o.rect[2]&&b>o.rect[1]&&b<o.rect[3]);}).length;
     // The 5F guide shows public aisles along these side edges. The exact
@@ -6651,6 +6707,9 @@ export function build(K) {
       // Both long sides border the white aisle on the guide; the north
       // edge is cut by the current swept well, so use the opposite edge.
       '4F:어그 맨&키즈':'S',
+      // The Camper and Louis Vuitton islands both open to the east aisle;
+      // their western edges are continuous on the branch guide.
+      '4F:캠퍼':'E','4F:루이비통':'E',
       // These shoe halls open onto the short sales-floor aisles beside
       // Le Mouton and Longchamp; the opposite sides are building edges.
       '4F:컨템포러리 슈즈 (리치오안나/류클래식/파비오루스코니)':'W',
@@ -6845,8 +6904,14 @@ export function build(K) {
       zone('신관 연결통로', id, '불가리 옆 · JW 메리어트 서울 방향',
         [bulgariSide, mouthV, edgeU, 145.3], y, y + H, 3);
     }
-    if(id==='2F'&&c.name==='몽클레르')
-      parts=parts.flatMap(q=>cutRect(q,upperRect(id,[28,733,54,794])));
+    if(id==='2F'&&c.name==='몽클레르'){
+      // The outer wall steps back behind Moncler on the Fendi side.
+      const notch=upperRect(id,[28,733,54,794]);
+      parts=parts.flatMap(q=>cutRect(q,notch));
+      const [u0,v0,u1,v1]=notch,finish={mat:0xe7e1d6,thick:.08};
+      upperSafeWall(u0,v0,u0,v1,y,H,finish);
+      upperSafeWall(u0,v1,u1,v1,y,H,finish);
+    }
     if(id==='2F'&&c.name==='그라프')
       parts=parts.flatMap(q=>cutRect(q,upperRect(id,[721,938,787,968])));
     // Phoebe Philo's south-east white corner is circulation in the official 3F guide.
@@ -7232,6 +7297,10 @@ export function build(K) {
           const start=Math.min(u1-.5,Math.max(u0+.5,26.8)),end=Math.min(u1-.25,29.2);
           if(start>u0+.1)upperSafeWall(u0,v0,start,v1,y,H,wallOptions);
           if(end<u1-.1)upperSafeWall(end,v0,u1,v1,y,H,wallOptions);
+        }else if(displayBacks?.includes(f)){
+          // Retain a low solid display back on the marked edges. The plan
+          // fixes their extent, but does not give a partition height.
+          upperSafeWall(u0,v0,u1,v1,y,1.18,{mat:0xe7e1d6,thick:.08});
         }else if(id==='4F'&&c.name==='샤넬 슈 부틱'){
           // The official plan closes three sides and opens only to the
           // Miu Miu aisle on the west. Keep the adjacent landing clear.
@@ -7269,11 +7338,9 @@ export function build(K) {
     if(dior){
       const a=upperBuildRect(id,guide.cells.find(o=>o.name==='디올'&&o.rect[0]===1061));
       wall(a[2],a[1],a[2],raw[1],y,y+H,{mat:0xe7e1d6,thick:.08});
-      // The west 1F→2F up escalator lands at u=29.85, immediately
-      // north of this Dior wing edge. Keep its 2F landing open to the
-      // public aisle; an unbroken divider trapped players on the landing.
-      wall(a[2],raw[1],raw[2],raw[1],y,y+H,{mat:0xe7e1d6,thick:.08,
-        openings:[{at:29.85-a[2],w:2.4,y0:y,y1:y+2.7}]});
+      // The guide closes this rear edge against the lift core. The 1F
+      // escalator bank is in the main building, away from this annex wall.
+      wall(a[2],raw[1],raw[2],raw[1],y,y+H,{mat:0xe7e1d6,thick:.08});
     }
   }
   // Use short collision segments following the 0.9m truss depth. The stock
@@ -7527,6 +7594,7 @@ export function build(K) {
   for(const [id,guide]of Object.entries(upperGuidePlans)){
     const y=LV[id];zone('신세계백화점 강남점',id,upperCats[id],[0,0,UW,['2F','3F','4F','5F'].includes(id)?145.3:VD],y,LV[nextOf(id)],1);
     for(const c of guide.cells)buildUpperCell(id,c);
+    buildShopPartitions(id,y);
     if (id==='2F') {
       for (const [name,parts] of joined2FBays) {
         // The public escalators cross above the roof of the Hermès passage.
@@ -7757,10 +7825,24 @@ export function build(K) {
     '4F': [[913, 439], [913, 568], [896, 568], [896, 632], [965, 632], [965, 760], [1060, 760], [1060, 439]],
     '5F': [[886, 508], [886, 677], [936, 677], [936, 765], [1031, 765], [1031, 508]],
   };
-  for (const [id, pixels] of Object.entries(northRecesses)) {
-    const y = LV[id], outline = pixels.map(([px, py]) => upperPlanPoint(id, px, py));
-    for (let i = 1; i < outline.length; i++) {
-      wall(...outline[i - 1], ...outline[i], y, y + clearH(id), { mat: 0xe7e1d6, thick: .14 });
+  // The dark perimeter also steps behind the north boutiques. The white
+  // public aisle is on their opposite, open side.
+  const northShopOutlines = {
+    '4F': [
+      [[182,602],[182,537],[342,537],[342,475],[629,475],[629,537],[681,537]],
+    ],
+    '5F': [
+      [[176,635],[176,573],[333,573],[333,513],[612,513],[612,573],[738,573],[738,635]],
+      [[1134,559],[1134,521],[1261,521],[1261,513],[1534,513],[1534,521],[1701,521],[1701,615]],
+    ],
+  };
+  for (const [id, recess] of Object.entries(northRecesses)) {
+    const y = LV[id];
+    for (const pixels of [recess, ...(northShopOutlines[id] || [])]) {
+      const outline = pixels.map(([px,py])=>upperPlanPoint(id,px,py));
+      for (let i = 1; i < outline.length; i++) {
+        wall(...outline[i-1],...outline[i],y,y+clearH(id),{mat:0xe7e1d6,thick:.14});
+      }
     }
   }
   // Main-wing guides show a stepped public landing beside the lift bank.
@@ -13542,12 +13624,16 @@ export function build(K) {
       // One coffee counter occupies the contiguous part of the mapped bay.
       // The escalator exclusion subdivides that bay, but those rectangles
       // are not separate cafes. Join their common supported rectangle only.
-      const a=parts.find(q=>Math.abs(q[0]-35.7)<.01&&Math.abs(q[2]-37.15)<.01);
-      const b=parts.find(q=>Math.abs(q[0]-37.15)<.01&&Math.abs(q[2]-39.65)<.01);
-      const c0=parts.find(q=>Math.abs(q[2]-35.7)<.01);
-      if(a&&b&&c0&&Math.abs(a[3]-b[3])<.01&&Math.abs(a[3]-c0[3])<.01){
-        const common=Math.max(a[1],b[1],c0[1]);
-        parts.splice(0,parts.length,[c0[0],common,b[2],a[3]],[a[0],a[1],a[2],common],[c0[0],c0[1],c0[2],common]);
+      // Read the shared rear edge from the current storefront pieces. The
+      // cut follows the four moving flights and can shift between revisions.
+      const strips=[...parts].sort((a,b)=>a[0]-b[0]);
+      const farV=strips[0]?.[3];
+      if(strips.length>1 && strips.every((q,i)=>Math.abs(q[3]-farV)<.01 &&
+          (i===0 || Math.abs(q[0]-strips[i-1][2])<.01))){
+        const nearV=Math.max(...strips.map(q=>q[1]));
+        const room=[strips[0][0],nearV,strips[strips.length-1][2],farV];
+        const shoulders=strips.filter(q=>q[1]<nearV-.01).map(q=>[q[0],q[1],q[2],nearV]);
+        parts.splice(0,parts.length,room,...shoulders);
         joinedMembers=true;
       }
     }
@@ -16320,7 +16406,7 @@ export function build(K) {
     sp(name,u,v,LV[id],toU-u,toV-v);
   }
   sp('8F 겨울 매장 · 에스컬레이터', 40.8, 49.2, LV['8F'], 1, 0);
-  aisleStart('4F 슈즈','4F',1175,772,1275,833); // Miu Miu and Louis Vuitton shoes
+  aisleStart('4F 슈즈','4F',1476,946,1275,833); // Gianvito Rossi and Louis Vuitton shoes
   sp('11F 전문식당가 · S GARDEN', 34, 57.5, LV['11F'], 0, 1);
   const retailStarts={
     '2F':[1628,666,1650,730],  // upper landing between Bulgari and Tiffany
@@ -16527,7 +16613,7 @@ export const upperGuidePlans = {};
 for(const [id,names,top]of[
   ['3F',['브루넬로 쿠치넬리','로에베','끌로에'],490],
   ['4F',['이자벨 마랑','띠어리','마쥬'],475],
-  ['5F',['타임','구호','델라라나'],513],
+  ['5F',['타임','구호','델라라나','스튜디오 톰보이','보브','시스템'],513],
   ['6F',['에르노','엠포리오 아르마니','일레븐티','RRL'],475],
   ['7F',['타이틀리스트','PXG','G/FORE'],475],
   ['9F',['에이스','시몬스'],475],

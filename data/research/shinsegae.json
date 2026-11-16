@@ -1,4 +1,28 @@
 {
+  "gate_3_sightline_20261117": {
+    "layout": "Seen from inside the main entrance, Gate 3 is directly across the central aisle and popup. Its double doors lead into Central City. The Gate 3 sign hangs just below the door header in the model. Its height is approximate."
+  },
+  "retail_partitions_3f_to_5f_20261117": {
+    "guides": [
+      "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/08/26/XgByI9HjyXqX.png",
+      "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/11/10/pLc2zpesvkoW.png",
+      "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/11/10/CR8TldsBKpZG.png"
+    ],
+    "layout": "The guides distinguish continuous dark partitions between perimeter boutiques from the thin white seams on open selling islands. The mapped boutiques open on the white public aisles. The party walls follow the touching lengths of the retained store footprints, including corners cut out for lifts. The stepped northern outlines on 4F and 5F close the unsupported shortcuts behind the boutiques. The 5F annex projects farther back behind Studio Tomboy, VOV and System. Wall heights and finishes are model estimates."
+  },
+  "shoe_hall_fronts_4f_20261117": {
+    "guide": "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/11/10/pLc2zpesvkoW.png",
+    "layout": "Camper and Louis Vuitton open to the east aisle. The diagram marks solid edges on these and the Jimmy Choo, Birkenstock, Prada, Ferragamo and Tod’s shoe displays. The 1.18 m display backs are schematic. The internal white concession seams remain open."
+  },
+  "annex_members_bar_5f_counter_20261117": {
+    "guide": "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/11/10/CR8TldsBKpZG.png",
+    "reference": "https://dangit.tistory.com/m/356",
+    "layout": "The 5F guide has one Members Bar across the public aisle beside the annex escalators. One serving counter follows the shared rear of its fitted footprint. The side pieces around the stairwell belong to the same room. The 2022 visit shows a takeaway counter. Present counter dimensions and finish are approximate."
+  },
+  "dior_moncler_rear_edges_2f_20261117": {
+    "guide": "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/10/16/1esU4Yqhl5TX.png",
+    "layout": "The Dior rear wall is continuous on the lift side. Its entrance opens onto the Miu Miu and Delvaux aisle. Moncler’s outline steps in behind the boutique on the Fendi side. Both are physical boundaries in the model."
+  },
   "joined_2f_boutiques_20261117": {
     "guide": "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/10/16/1esU4Yqhl5TX.png",
     "layout": "Hermès occupies two sales areas joined by a narrow retail passage around the escalator. Louis Vuitton occupies two adjoining bays. Each boutique has one map destination that follows its footprint. Louis Vuitton Jewelry has a separate entrance across the public aisle."
@@ -21,7 +45,7 @@
     "layout": "The official 2F and 3F guides show a stepped end to the lift lobby at the restroom. The public recess and threshold follow the guide boundary, leaving both model cars approachable. The 2F marker denotes the women’s and accessible restroom. The 3F marker denotes the men’s and women’s restrooms. The interiors are unverified."
   },
   "floor_shortcuts_2f_5f_20261117": {
-    "layout": "The floor shortcuts start on public aisles between the mapped boutiques. They look toward Bulgari and Tiffany on 2F, the watch boutiques near Omega on 3F, the annex from the cross-wing passage on 4F, and vunque and DAKS Handbags on 5F. The dedicated 4F shoes shortcut is in the shoe hall near Miu Miu and Louis Vuitton. The standing points and camera headings are chosen for navigation."
+    "layout": "The floor shortcuts start on public aisles between the mapped boutiques. They look toward Bulgari and Tiffany on 2F, the watch boutiques near Omega on 3F, the annex from the cross-wing passage on 4F, and vunque and DAKS Handbags on 5F. The dedicated 4F shoes shortcut faces Gianvito Rossi and the east entrance of Louis Vuitton. The standing points and camera headings are chosen for navigation."
   },
   "cross_wing_passages_and_lifts_20261117": {
     "guides": [
