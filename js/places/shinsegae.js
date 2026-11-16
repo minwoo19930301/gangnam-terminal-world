@@ -121,6 +121,14 @@ const UPPER_ELV = [2.5,5.5,8.5].map(u=>({u,v:83.5,w:2.4,d:2.2}));
 // The diagonal 9F→10F annex pair needs 1.6m axis spacing and a small south
 // offset to clear the next flight's handrails. All other lanes keep their stack.
 const actualAnnexLaneOffsets=i=>i===0?[-10,-1.3]:i===1?[4.5,8.5]:upperLaneOffsets(i,true);
+// The left 9F popup faces the main escalator landing. Set the two heads
+// back inside the well so riders can cross the landing outside the popup.
+const MAIN_9F_SETBACK = .85;
+function mainFlightStartV(id, well, reversed) {
+  if (id === '9F') return well[1] + MAIN_9F_SETBACK;
+  if (id === '6F') return well[1] - 2.8;
+  return reversed ? well[3] : well[1];
+}
 const upperLaneOffsets=(i,annex=false)=>annex?(i===7?[1.9,3.5]:i===1?[2,3.6]:i===2?[-5.19322,-3.59322]:i%2?[1.3,2.9]:[-2.9,-1.3]):(i===4?[-2.0,3.5]:i===5?[-.2,1.7]:i===6?[-2.9,4.0]:i===7?[2.3,-.3]:i>=4?(i%2?[1.3,2.9]:[-2.9,-1.3]):i===3?[-3.9,4.8]:i===2?[-2.5,2.55]:i%2?[4.36,-1.44]:[-2.5,4.95]);
 const RIGHT_ATR = [27.6,74.2,39.4,78.0]; // legacy helper fallback; active wells are sheet-derived
 const UPPER_BANKS = [
@@ -132,10 +140,11 @@ const UPPER_BANKS = [
 ];
 
 export function build(K) {
-  // The brand's November 2026 event map places its counter beside Rag & Bone.
-  // Shinsegae lists November 25 as its final day in Seoul.
+  // GELATO PIQUE by Rag & Bone and MUKHA at the annex New Stage independently
+  // announced the same Seoul dates, November 12 through 25, 2026.
+  // https://www.mukha.co.kr/store/26shinsegae-popup.html
   const visitTime = Date.now();
-  const gelatoPiqueOpen = visitTime >= Date.parse('2026-11-12T00:00:00+09:00') &&
+  const novemberPopupsOpen = visitTime >= Date.parse('2026-11-12T00:00:00+09:00') &&
     visitTime < Date.parse('2026-11-26T00:00:00+09:00');
   // Bilinear survey frame: all four wall corners land on the authoritative OSM footprint.
   // Keep RA only for small rectangular fittings (the footprint has a slight skew).
@@ -927,9 +936,26 @@ export function build(K) {
     const v=rev?r[1]:r[3],mid=(r[0]+r[2])/2,offs=[...upperLaneOffsets(previous),...upperLaneOffsets(i)];
     K.slab(rect(id==='8F'||id==='10F'?29:mid+Math.min(...offs)-1,v-(id==='9F'?1.0:.15),id==='8F'||id==='10F'?39:mid+Math.max(...offs)+1,v+(id==='9F'?.15:3.0)),LV[id],{mat:floorMat[id],thick:.12,under:false,ceil:false,edge:false});
   }
+  {
+    const well = upperAtriumRect('9F'), near = well[1], mid = (well[0]+well[2])/2;
+    const edge = near + MAIN_9F_SETBACK + .02, y = LV['9F'];
+    // Extend the existing landing to both flights. Only the gap between
+    // the handrails overlooks the level below.
+    K.slab(rect(mid-1.15,near+.13,mid+3.17,edge),y,{mat:floorMat['9F'],thick:.12,under:CEIL,edge:false});
+    wall(mid+.42,edge,mid+1.55,edge,y,y+1.05,{mat:'glass',thick:.045});
+  }
   wall(29.1,31.75,37.15,31.75,LV['9F'],LV['9F']+1.05,{mat:'glass',thick:.045});
   wall(30.35,22.46,31.3,22.46,LV['9F'],LV['9F']+1.05,{mat:'glass',thick:.045});
   wall(22.65,34.7481,28.35,34.7481,LV['10F'],LV['10F']+1.05,{mat:'glass',thick:.045});
+  {
+    // Protect the exposed front and rear edges of the 10F turning area,
+    // keeping the two adjacent 9F stair heads open.
+    const r = upperAtriumRect('10F'), v = r[3], mid = (r[0]+r[2])/2, y = LV['10F'];
+    const [up,down] = upperLaneOffsets(Object.keys(upperGuidePlans).indexOf('9F')).map(off=>mid+off);
+    for(const [a,b] of [[down+.72,up-.72],[up+.72,38]])
+      wall(a,v-.15,b,v-.15,y,y+1.05,{mat:'glass',thick:.045});
+    wall(30,v+3,38,v+3,y,y+1.05,{mat:'glass',thick:.045});
+  }
   wall(34.4,21.85,36.3,21.85,LV['7F'],LV['7F']+1.05,{mat:'glass',thick:.045});
   wall(35.35,30,38,30,LV['10F'],LV['10F']+1.05,{mat:'glass',thick:.045});
   // Experimental 7F landing only; details and walk bounds are not surveyed.
@@ -972,7 +998,7 @@ export function build(K) {
     for(let i=0;i<ids.length-(annex?1:2);i++){
       const r=fn(ids[i]),t=annex&&ids[i]==='5F'?upperExpanded6AnnexRect():fn(ids[i+1]),rev=annex?(i===2?1:i%2):i>=5?1-i%2:i%2;
       for(const [lane,off] of (annex?actualAnnexLaneOffsets(i):upperLaneOffsets(i)).entries())upperFlightReservations.push({
-        a:annex?(ids[i]==='2F'?[40+off,132]:ids[i]==='3F'?[28.5+off,119]:ids[i]==='4F'?[lane===0?28.70:35.70,lane===0?129.7:130.5]:ids[i]==='5F'?[lane===0?31.85:33.35,121.5]:[ids[i]==='4F'?38.1:ids[i]==='8F'?r[0]+1.5:ids[i]==='9F'?r[2]-1:rev?r[2]:r[0],(r[1]+r[3])/2+off]):[(r[0]+r[2])/2+off,ids[i]==='6F'?r[1]-2.8:rev?r[3]:r[1]],
+        a:annex?(ids[i]==='2F'?[40+off,132]:ids[i]==='3F'?[28.5+off,119]:ids[i]==='4F'?[lane===0?28.70:35.70,lane===0?129.7:130.5]:ids[i]==='5F'?[lane===0?31.85:33.35,121.5]:[ids[i]==='4F'?38.1:ids[i]==='8F'?r[0]+1.5:ids[i]==='9F'?r[2]-1:rev?r[2]:r[0],(r[1]+r[3])/2+off]):[(r[0]+r[2])/2+off,mainFlightStartV(ids[i],r,rev)],
         b:annex?(ids[i]==='2F'?[40+off,121.7]:ids[i]==='3F'?[28.5+off,128]:ids[i]==='4F'?[lane===0?30.35:34.85,121.5]:ids[i]==='5F'?[lane===0?32.95:34.55,129.7]:[ids[i]==='6F'?t[2]-2:ids[i]==='7F'?t[0]+2:ids[i]==='8F'?t[2]-1:ids[i]==='4F'?30.7:rev?t[0]:t[2],ids[i]==='4F'?(r[1]+r[3])/2+off:(t[1]+t[3])/2+off]):[(i===0?(r[0]+r[2]):(t[0]+t[2]))/2+off+(i===1&&lane===1?.65:0),ids[i]==='6F'?t[1]:rev?t[1]:t[3]],ya:LV[ids[i]],yb:LV[ids[i+1]],
       });
     }
@@ -1057,7 +1083,7 @@ export function build(K) {
   upperStack.slice(0,-2).forEach((id,i)=>{
     const next=upperStack[i+1],r=upperAtriumRect(id),t=upperAtriumRect(next),rev=i>=5?1-i%2:i%2;
     for(const [off,dir]of upperLaneOffsets(i).map((off,j)=>[off,j?'down':'up'])){
-      const a=P((r[0]+r[2])/2+off,id==='6F'?r[1]-2.8:rev?r[3]:r[1]),b=P((i===0?(r[0]+r[2]):(t[0]+t[2]))/2+off+(i===1&&dir==='down'?.65:0),id==='6F'?t[1]:rev?t[1]:t[3]);
+      const a=P((r[0]+r[2])/2+off,mainFlightStartV(id,r,rev)),b=P((i===0?(r[0]+r[2]):(t[0]+t[2]))/2+off+(i===1&&dir==='down'?.65:0),id==='6F'?t[1]:rev?t[1]:t[3]);
       K.escalator(...a,...b,{ya:LV[id],yb:LV[next],w:1.2,dir,speed:.6,sideMat:'ssg_annex_escalator_clear',truss:0xf3eee4});
       annexSlimHousing(...a,...b,LV[id],LV[next],1.2);
       if(id==='5F'){
@@ -1113,7 +1139,8 @@ export function build(K) {
       // only across the supported portion; retain guards on both sides.
       // The 2F north landing crosses this side of the photo opening; keep
       // its supported passage clear while guarding the rest of the edge.
-      const gap=id==='2F'?[upperAtriumRect('2F')[1]-.92,upperAtriumRect('2F')[1]+.92]:id==='4F'?[35.48,36.57]:id==='7F'?[33.36,36.2]:id==='9F'?[31.75,35.0]:null;
+      // On 10F the paired escalators and level public floor straddle this rail.
+      const gap=id==='2F'?[upperAtriumRect('2F')[1]-.92,upperAtriumRect('2F')[1]+.92]:id==='4F'?[35.48,36.57]:id==='7F'?[33.36,36.2]:id==='9F'?[31.75,35.0]:id==='10F'?[34.95,36.25]:null;
       const gapU=id==='2F'?38:30;
       // The 11F guide shows the dining area connected to S GARDEN, and the
       // modeled link has floor on both sides. The lower-floor atrium guard
@@ -6705,8 +6732,11 @@ export function build(K) {
     if(niche){parts=[niche];K.slab(rect(...niche),y,{mat:{tex:'marble',color:0xe8e2d5,gloss:.3},thick:.12,under:false,ceil:false,edge:false});}
     c.model={raw,local:r,parts,face,sourceFace,aisleEdges:['N','S','E','W'].filter(f=>score(f)>=2).map(f=>upperFace[f])};
     if (aisleOutline) c.model.aisleOutline = aisleOutline;
-    if (gelatoPiqueOpen && id === '5F' && c.name === '팝업' && px === 712 && py === 844) {
+    if (novemberPopupsOpen && id === '5F' && c.name === '팝업' && px === 712 && py === 844) {
       c.model.event = { name: '젤라또피케 팝업', sign: 'GELATO PIQUE' };
+    }
+    if (novemberPopupsOpen && id === '5F' && c.name === '팝업 스테이지') {
+      c.model.event = { name: '무카 팝업', sign: 'MUKHA' };
     }
     upperCells.set(`${id}:${c.name}`,{...c,local:r,parts,face});
     // A guide rectangle can be partly or wholly cut by modelled circulation.
@@ -8261,10 +8291,12 @@ export function build(K) {
     // The other 5F DAKS guide cell is a handbag concession, not womenswear.
     const daksWoman=id==='5F'&&name==='닥스 숙녀'&&kind==='fashion';
     const prendang=id==='5F'&&name==='쁘렝땅';
+    const mukhaStage=novemberPopupsOpen&&id==='5F'&&name==='팝업 스테이지';
     const oak={tex:'wood',color:0xd4bb91},walnut={tex:'wood',color:0x765a43},ivory=0xf1ece1,
       metal={tex:'metal',color:0xb4b7b5},gold={color:0xb6a17a,gloss:.5},dark=0x272a28;
     const brandStock=id==='3F'&&name==='아크리스'?[0xe5e1d8,0xc9b9a5,0x636960,0x348476,0xe9b053,0xd1c6bb]:id==='4F'&&name==='일라일'?[0xede8df,0xc9b6a4,0x6c5854,0xe2ded7,0x403b38]:kind==='fur'?[0x7c6658,0xd8c9b6,0x4d4038,0xa58f7b,0xe4ddd2]:id==='3F'&&name==='피비파일로'?[0x242827,0x383a38,0xe8e5df,0x9b9992,0x5b5a55]:id==='3F'&&name==='자크뮈스'?[0xe8e1d3,0x252925,0xaaa89c,0xd6c5a8]:id==='5F'&&name==='랙앤본'?[0xc7d2dc,0x6a82a1,0xece9df,0x354967,0x9aa9b3]:id==='4F'&&name==='N°21'?[0x212325,0xeae7e1,0xb6ada5,0x55595a,0xd3c3bd]:id==='5F'&&name==='뷰오리'?[0x343d3d,0x7b8581,0xd2d1c8,0x454b50,0xe9e8df]:id==='5F'&&name==='포유어아이즈온리'?[0xe9e7df,0xd6d3cc,0x25282a,0x9fa7a5,0xc6c1b8]:id==='3F'&&name==='더로우'?[0xf2f0e9,0x202527,0xb7b4ae,0x6d6d68]:id==='4F'&&name==='포르테 포르테'?[0xe4d4d5,0xf1e8e1,0xbdb3bd,0x90a2b6]:id==='5F'&&name==='타낫'?[0xf0efea,0x202326,0x354257,0xa5aaa8]:id==='5F'&&name==='레이브'?[0xe8e3e3,0xa7bfaf,0xd4c2d6,0xf2f1e9,0x39526a,0x303435]:id==='4F'&&name==='르무통'?[0x2f373b,0x657076,0xc6c9c6,0x4b5558]:id==='4F'&&name==='엔폴드'?[0x202522,0xf1f0e6,0x597a96,0xe4e5dd]:id==='4F'&&name==='라움'?[0xebe8e4,0x27292b,0xd3d3ce,0xdcc9c9]:id==='3F'&&name==='꾸레쥬'?[0x1d1d1d,0xf0ece4,0x9f9f9e,0xd5a9b2]:id==='5F'&&name==='룩캐스트'?[0xd6c7c8,0xe8e4da,0x222a2c,0xc9d2d4]:id==='5F'&&name==='틸아이다이'?[0xe4ddd0,0xc7bba8,0x292928,0x6d7576]:id==='5F'&&name==='루에브르'?[0xe2d6c7,0xd0bb9e,0x292622,0xf0e7d8]:id==='2F'&&name==='버버리 여성'?[0xc5aa82,0xe1d0b4,0x62584d,0xc9b9ac]:id==='4F'&&name==='씨뉴욕'?[0x26364f,0xf0ede2,0x56718a,0xc5b59b]:/막스마라/.test(name)?[0xb8875a,0xefe7d8,0x1d1d1d,0x8a8a88]:/A.P.C./.test(name)?[0x2c3a57,0x1f2a3a,0xe6dfcc,0x8a8463]:/로로피아나/.test(name)?[0xd9cbb3,0xa8957e,0xb98d5f,0xf0e9dc]:/스톤 아일랜드/.test(name)?[0x1b1c1c,0x4f5a3a,0x23304a]:/몽클레르/.test(name)?[0x121314,0x1d2433,0xf2f2ef]:name==='K2'?[0x8c9093,0xc4c8ca,0x1b1b1c,0xeae6d8,0xbb7251,0x514738]:null;
     const stock=prendang?[0x36373a,0xe8e4d8,0x8a8a89,0xa49c94,0x292b2c,0xbc976f]:daksWoman?[0xe8dfce,0xc3a887,0x282725,0xe3d7c5,0x9b846c,0x272828]:id==='5F'&&name==='유메르'?[0xe8e5dc,0xc4b8aa,0x383a38,0xd8d6d0,0x777d6e,0xada59a]:id==='5F'&&name==='위뜨'?[0xc4b8c6,0xe8ddd9,0x333438,0xdacac7,0xaba8b3,0xeee9e0]:id==='5F'&&name==='헤지스'?[0xe8e4d9,0x29343a,0xaca595,0x30313a,0xc4aa91,0x454648]:id==='4F'&&name==='바오바오'?[0xf2f0e8,0x343b3d,0xd6d8d4,0xd8c6a8,0xa8b4b2,0xebe6e0]:id==='5F'&&name==='르917 (르셉템버)'?[0xe3e0d8,0x292c2c,0xc9c4b8,0x867668,0xece9e1,0x46413d]:id==='3F'&&name==='아크네스튜디오'?[0xe9e7e2,0xd8c0cb,0xd4d1c9,0x55595a,0xefece7,0xb9b7b2]:brandStock?Array.from({length:6},(_,i)=>brandStock[i%brandStock.length]):[0xe3ddd1,0x303b43,0xb3a18a,0x5c7065,0x9c6571,0xb28b48];
+    if (mukhaStage) stock.splice(0,stock.length,0x505150,0x614c42,0x292a2a);
     // The Gangnam directory identifies the 3F concession as women's Thom
     // Browne. Its parent group's 2024 annual report describes grey and navy as
     // the brand's main collection colours. This is a schematic colour palette,
@@ -8344,7 +8376,7 @@ export function build(K) {
         for(const da of[-.12,.12])B(a+da,b,.025,.04,h+.43,.15,col);
         B(a,b,.24,.08,h,.16,col);
       }else{
-        const coat=kind==='fur'||daksWoman||prendang||/막스마라/.test(name),down=/몽클레르|K2/.test(name),m=down?{color:col,gloss:.3}:col;
+        const coat=kind==='fur'||daksWoman||prendang||mukhaStage||/막스마라/.test(name),down=/몽클레르|K2/.test(name),m=down?{color:col,gloss:.3}:col;
         B(a,b,.32*s,(down?.19:.12)*s,h-(coat?.30:0),(.57+(coat?.30:0))*s,m);
         if(down)for(let j=1;j<6;j++)B(a,b-.104*s,.32*s,.012*s,h+j*.09,.018,0x4a4b4b);
         if(/스톤 아일랜드/.test(name))B(a+.20*s,b-.07*s,.06,.014,h+.32,.065,0xe8752a);
@@ -8780,17 +8812,21 @@ export function build(K) {
     }else if(id==='5F'&&name==='팝업 스테이지'){
       // The 2024 Gangnam pop-up photograph shows an open temporary event
       // area with a dark POP-UP marquee, freestanding display and rails.
-      // This neutral fitting does not assert the currently featured brand.
+      // The temporary MUKHA sign and cashmere stock reuse these same fittings.
       // https://marimekko.kr/main/html.php?htmid=_dbook/page/240808_popup.html
       const charcoal=0x202426,metallic=0xb6b9b4,pale=0xe8e6df;
       const marqueeW=Math.min(2.1,W-.7),ma=W*.52,mb=Math.min(D-.55,.78);
       B(ma,mb,marqueeW,.24,2.51,.33,charcoal);
       for(const da of [-marqueeW/2+.08,marqueeW/2-.08])B(ma+da,mb,.045,.045,.05,2.48,metallic);
-      fsign('POP-UP',ma,mb-.14,y+2.72,Math.min(1.35,marqueeW-.15),.23,{bg:null,fg:'#f7f7f3',twoSided:true,pxPerM:192});
+      fsign(mukhaStage?'MUKHA':'POP-UP',ma,mb-.14,y+2.72,Math.min(1.35,marqueeW-.15),.23,{bg:null,fg:'#f7f7f3',twoSided:true,pxPerM:192});
       if(W>3&&D>2.7){
         const a=W*.68,b=D*.52,w=Math.min(1.2,W*.23),d=.68;
         B(a,b,w,d,.08,.69,pale);B(a,b,w+.03,d+.03,.77,.045,0xf1f0e9);
-        for(let j=0;j<3;j++)B(a+(j-1)*w*.25,b,.22,.24,.82,.055,[0xd9cabc,0x759092,0xca827e][j]);
+        for(let j=0;j<3;j++){
+          const x=a+(j-1)*w*.25;
+          if(mukhaStage)folded(x,b,.82,stock[j],.22); // cashmere knit shawls
+          else B(x,b,.22,.24,.82,.055,[0xd9cabc,0x759092,0xca827e][j]);
+        }
         rail(W*.46,D-.64,Math.min(W-1.2,3.2));
       }
     }else if(prendang){
@@ -12933,7 +12969,7 @@ export function build(K) {
     '포유어아이즈온리':['For Your Eyes Only'],'던스트':['Dunst'],
     '르917 (르셉템버)':['LE17SEPTEMBRE'],'조이 그라이슨':['JOY GRYSON'],
     '럭키슈에뜨':['LUCKY CHOUETTE'],'멤버스바':['SHINSEGAE','MEMBERS BAR'],
-    '넘버링':['NUMBERING'],'에스실':['SSIL'],
+    '넘버링':['NUMBERING'],'에스실':['SSIL'],'팝업 스테이지':['MUKHA'],
   };
   function immediateUpperFascia(id,text,u,v,yy,width,h,face,o){
     let a=immediateFasciaAtlases.get(id);
@@ -15431,7 +15467,29 @@ export function build(K) {
     // fascias remain visible from the adjacent escalator.
     sign(id==='2F'?['본관 ↔ 신관','엘리베이터 · 에스컬레이터']:id==='3F'?'3F · 본관 ↔ 신관': [ `${id} ${upperCats[id]}`,'본관 ↔ 신관'],39.8,51,y+2.8,'N',id==='2F'||id==='3F'?2.4:5,id==='2F'||id==='3F'?.35:.5,{bg:id==='2F'?'#2f6fb3':'#f1e9da',fg:id==='2F'?'#ffffff':'#4d4133',twoSided:true});
     sign('엘리베이터',5.5,80.14,y+2.55,'N',2.8,.32,{bg:'#36322b',fg:'#e3ceb1'});
-    const ar=upperAnnexAtriumRect(id);sign(`${id} · 에스컬레이터`,(ar[0]+ar[2])/2,ar[1]-.6,y+2.3,'N',2.5,.32,{bg:'#35332d',fg:'#f0e7d4'});
+    if (id === '6F') {
+      // Wayfinding for the modeled transfer between the two existing banks.
+      // The plaques sit on the lift recess, aisle-facing fascias and the two
+      // sides of the cross-wing doorway. Their wording and locations are local.
+      const routeStyle = {bg:'#35332d',fg:'#fff7e7',pxPerM:160};
+      // A short blade projects from the Thom Browne corner fascia above
+      // head height so it is legible when approaching along either aisle.
+      box(21.7,133.93,.055,1.82,y+2.85,.40,0x35332d,{solid:false});
+      for (const [text,u,v,height,face,width] of [
+        ['7층행 에스컬레이터 →',32.3,146.91,2.65,'N',3.35],
+        ['7층행 →',21.74,133.93,3.05,'E',1.72],
+        ['5층행 ↑',21.66,133.93,3.05,'W',1.72],
+        ['구찌·디올 사이  ↗  7층행',29.0,102.06,3.05,'S',2.70],
+        ['톰브라운 옆  →  5층행',26.1,112.99,3.05,'N',2.70],
+        ['7층행  ↗',32.72,84.73,2.58,'S',2.20],
+        ['5층행  ↖',32.72,84.36,2.58,'N',2.20],
+        ['← 5층행 에스컬레이터',26.72,75.02,2.55,'E',2.25],
+        ['7층행 →',27.45,70.85,2.6,'S',1.05],
+      ]) sign(text,u,v,y+height,face,width,.36,routeStyle);
+    } else {
+      const ar=upperAnnexAtriumRect(id);
+      sign(`${id} · 에스컬레이터`,(ar[0]+ar[2])/2,ar[1]-.6,y+2.3,'N',2.5,.32,{bg:'#35332d',fg:'#f0e7d4'});
+    }
   });
 
   // Both areas stream the doorway. The visitor photo shows glass leaves
@@ -15967,7 +16025,7 @@ export function upperPhysicalWell(id,annex=false){
   if(i>0&&!(annex&&id==='6F')){
     const p=fn(ids[i-1]),rev=annex&&i-1===2?1:!annex&&i-1>=5?1-(i-1)%2:(i-1)%2;
     for(const [lane,off] of upperLaneOffsets(i-1,annex).entries()){
-      const a=annex?[id==='5F'?(lane===0?28.70:35.70):rev?p[2]:p[0],id==='5F'?(lane===0?129.7:130.5):(p[1]+p[3])/2+off]:[(p[0]+p[2])/2+off,ids[i-1]==='6F'?p[1]-2.8:rev?p[3]:p[1]],b=annex?(id==='5F'?[lane===0?30.35:34.85,121.5]:[rev?r[0]:r[2],(r[1]+r[3])/2+off]):[(id==='3F'?(p[0]+p[2]):(r[0]+r[2]))/2+off+(id==='4F'&&lane===1?.65:0),ids[i-1]==='6F'?r[1]:rev?r[1]:r[3]];
+      const a=annex?[id==='5F'?(lane===0?28.70:35.70):rev?p[2]:p[0],id==='5F'?(lane===0?129.7:130.5):(p[1]+p[3])/2+off]:[(p[0]+p[2])/2+off,mainFlightStartV(ids[i-1],p,rev)],b=annex?(id==='5F'?[lane===0?30.35:34.85,121.5]:[rev?r[0]:r[2],(r[1]+r[3])/2+off]):[(id==='3F'?(p[0]+p[2]):(r[0]+r[2]))/2+off+(id==='4F'&&lane===1?.65:0),ids[i-1]==='6F'?r[1]:rev?r[1]:r[3]];
       // Below t=.45 the arriving player's head is below this floor's soffit.
       const dx=b[0]-a[0],dz=b[1]-a[1],len=Math.hypot(dx,dz),nx=-dz/len,nz=dx/len;
       for(const t of[.43,1]){const u=a[0]+dx*t,v=a[1]+dz*t;points.push([u+nx*.82,v+nz*.82],[u-nx*.82,v-nz*.82]);}

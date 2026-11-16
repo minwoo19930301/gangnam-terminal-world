@@ -4637,7 +4637,46 @@ function hosUpperR20(K) {
       K.zone({name:'하우스 오브 신세계',floor,sub,poly,y0:y,y1:y+3.4,priority:10});
     }
   }
-  K.elevator({name:'하우스 오브 신세계 엘리베이터',x:lift[0],z:lift[1],rotY:R+PI/2,w:1.4,d:1.8,floors:[{label:'B1',y:YB1,name:'푸드홀'},{label:'1F',y:Y1,name:'와인셀러 · 레스토랑'},{label:'1M',y:YM,name:'아트 앤 라이프'}]});
+  const houseLift=K.elevator({name:'하우스 오브 신세계 엘리베이터',x:lift[0],z:lift[1],rotY:R+PI/2,w:1.4,d:1.8,topH:2.85,floors:[{label:'B1',y:YB1,name:'푸드홀'},{label:'1F',y:Y1,name:'와인셀러 · 레스토랑'},{label:'1M',y:YM,name:'아트 앤 라이프'}]});
+  {
+    // The kit gives its standard stops one door direction. Register L on the same car
+    // after drawing those stops so only its opposite door opens into the hotel.
+    const lobbyY=8.55,roofY=10.97,finish={tex:'marble',color:0xe5d9c1,gloss:.4};
+    houseLift.floors.push({label:'L',y:lobbyY,name:'JW 메리어트 호텔 로비'});
+    K.slab(QR(-13.7,11.3,-12.3,13.1),lobbyY,{mat:'metal',thick:.05});
+    for(const s of [-13.7,-12.3])wall(s,11.3,s,13.1,lobbyY,roofY,{mat:0x655342,thick:.15});
+    wall(-13.7,13.1,-12.3,13.1,lobbyY,roofY,{mat:0x4a4036,thick:.15});
+    wall(-13.7,11.3,-12.3,11.3,lobbyY,roofY,{mat:0x655342,thick:.15,openings:[{at:.7,w:1.1,y0:lobbyY,y1:lobbyY+2.23}]});
+    sig('L · JW MARRIOTT HOTEL',-13,11.195,lobbyY+2.27,1.25,.21,'W',{bg:'#463a32',fg:'#eee0c3'});
+    // The schematic grade stays east of the occupied mezzanine deck and lands on the public boutique aisle.
+    const low=-38.25,high=-14,west=9.40,east=11.40,middle=(west+east)/2;
+    const join=-30.18;
+    K.slab(QR(-14.04,west,-11.9,11.42),lobbyY,{mat:finish,thick:.14});
+    K.slab(QR(-40.35,8.57,low+.02,east),7,{mat:finish,thick:.14});
+    K.ramp(...Q(low,middle),...Q(high,middle),{ya:7,yb:lobbyY,w:east-west,mat:finish,under:0xd7cbba,rails:false});
+    // The ramp underside is 25 cm below the tread. Register short strips above the lower public balcony.
+    for(let s=-25.6;s<high;s+=1){
+      const end=Math.min(s+1,high);
+      const underside=7+(s-low)*(lobbyY-7)/(high-low)-.25;
+      K.phys.addCeiling(QR(s,west,end,east),underside,{});
+    }
+    const shell={mat:{tex:'wood',color:0x66503c},thick:.09};
+    for(const t of [west,east]){
+      for(const [a,b,y] of [[low,-25.6,7],[-25.6,high,7.76]])wall(a,t,b,t,y,roofY,shell);
+    }
+    for(const [a,b,c,d] of [[high,west,-11.9,west],[-11.9,west,-11.9,11.42],[-11.9,11.42,-12.31,11.42],[high,east,-13.69,east]])
+      wall(a,b,c,d,lobbyY,roofY,shell);
+    for(const [a,b,c,d] of [[-40.35,8.57,-40.35,east],[-40.35,east,low,east],[low,8.57,low,west]])
+      wall(a,b,c,d,7,roofY,shell);
+    for(const [a,b,c,d] of [[-40.35,8.57,low,east],[low,west,-11.9,east],[-13.7,11.3,-12.3,13.1]]){
+      K.slab(QR(a,b,c,d),roofY+.12,{mat:0xc5b8a9,under:0xe8dfd2,walk:false,thick:.12});
+    }
+    const hallName='하우스 오브 신세계 전용 승강기 · 호텔 연결';
+    K.zone({name:hallName,floor:'L',sub:'JW 메리어트 호텔 로비',poly:QR(join,west,-11.9,east),y0:7.43,y1:roofY,priority:18});
+    K.zone({name:hallName,floor:'L',sub:'JW 메리어트 호텔 로비',poly:QR(-13.7,11.3,-12.3,13.1),y0:8.45,y1:roofY,priority:18});
+    sig('호텔 로비 · 부티크 →',-13,west+.07,lobbyY+1.7,1.35,.28,'E',{bg:'#513f32',fg:'#f4e1c7'});
+  }
+
   K.zone({name:'하우스 오브 신세계',floor:'1F',sub:'파미에 출입구 · 푸드홀 내려가는 곳',poly:lobby,y0:0,y1:2.1,priority:12});
   const spawn=Q(16.4,9.4);K.spawn({name:'하우스 오브 신세계 남측 로비',x:spawn[0],y:0,z:spawn[1],yaw:R,group:'센트럴시티'});
 }

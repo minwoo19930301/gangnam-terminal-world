@@ -680,6 +680,8 @@ export function build(K) {
       [26.72,0,26.72,1.77], [22.50,1.77,22.50,3.45], [2,3.45,18.15,3.45], [21.05,3.45,22.50,3.45],
       [2,.85,17.97,.85], [17.97,0,17.97,.85], [17.97,0,24.58,0],
     ]) WL(a,b,c,d,5.98,10.38, { mat: WARM, thick: .10 });
+    ZN('하우스 전용 승강기 연결통로', '1F', '호텔 로비 · 하우스 오브 신세계', [21.04,4.54,23.87,6.70], 6.94,10.97,17);
+    ZN('하우스 전용 승강기 연결통로', '1F', '호텔 로비 · 하우스 오브 신세계', [21.80,6.60,23.87,14.79], 6.94,10.97,17);
     // Keep the north doorway opposite the pastry shop; its threshold is 1m higher.
     WL(-15.5,.35,1.99,.35,6,9.38, { mat: WARM, thick: .10, openings: [{ at: 10.5, w: 7, y0: 7, y1: 9.38 }] });
     ZN('호텔 식당층 연결통로', '2F', '호텔 현관 · 승강기', [-15.55,.35,2,3.5], 6,9.4,2);
@@ -781,8 +783,9 @@ export function build(K) {
     ZN('호텔 부티크 통로', '1F', 'JW 메리어트 · 백화점 2층 연결', wing, y - .05, soffit, 16);
     WL(18.15, aisle, right, aisle, 9.7, soffit, { mat: WARM, thick: .12 });
     SG('호텔 부티크', { u: (18.15 + right) / 2, v: aisle - .08, y: 9.98, w: 1.55, h: .29, f: 'N', bg: null, fg: '#483b31' });
+    SG('하우스 전용 승강기', { u: right-.08, v: 5.56, y: y+2.66, w: 1.65, h: .25, f: 'W', bg: null, fg: '#493629' });
     WL(left, aisle, left, front, y, soffit, { mat: WARM, thick: .12 });
-    WL(right, aisle, right, front, y, soffit, { mat: WARM, thick: .12 });
+    WL(right, aisle, right, front, y, soffit, { mat: WARM, thick: .12, openings: [{ at: 2.12, w: 1.88, y0: y, y1: y + 2.4 }] });
     LIGHTS([left, aisle, right, front], soffit, 2.7, .18);
     WL(left, back, right, back, y, soffit, { mat: 'jwTravertine', thick: .15 });
     for (let i = 0; i <= fronts.length; i++) {

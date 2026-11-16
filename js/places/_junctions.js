@@ -31,6 +31,8 @@ export const JUNCTIONS = [
     note: 'Retained unnumbered west-side 1F auxiliary connection at (-82.640,39.138), 신세계 local (u=0,v=68). No numbered gate appears here on the rotated plan. Real 3GATE is J5; B1 9GATE is J_CC_9GATE.' },
   { id: 'J9', a: 'centralcity', b: 'shinsegae', y: 7, pa: [-27.63, 89.62], pb: [-26.9235, 91.1825], width: 3.4, owner: 'none', streamOnly: true,
     note: '광장 상행기 → 신세계 2층 명품관.' },
+  { id: 'J_HOS_JW_LOBBY', a: 'centralcity', b: 'jwmarriott', y: 7.52, pa: [3.083,105.601], pb: [2.724,104.668], width: 2, owner: 'centralcity',
+    note: '하우스 오브 신세계 전용 승강기 L층 ↔ JW 메리어트 로비 부티크 공용 통로. 아래층 매장과 분리된 모델 경사로 중간.' },
   { id: 'J_SSG_JW_ARCADE', a: 'shinsegae', b: 'jwmarriott', y: 7, pa: [-0.205, 89.336], pb: [0.400, 90.925], width: 2.1, owner: 'jwmarriott',
     note: '신세계 2층 불가리 옆 통로 ↔ JW 메리어트 현관층 연결 갤러리.' },
   // The plaza also loads the neighboring hotel structure for its views.
