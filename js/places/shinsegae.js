@@ -6382,6 +6382,18 @@ export function build(K) {
       upperSafeWall(notch[0],notch[1],r[2],notch[1],y,H,{mat:0xe7e1d6,thick:.08});
       upperSafeWall(notch[0],notch[1],notch[0],r[3],y,H,{mat:0xe7e1d6,thick:.08});
     }
+    if (id === '2F' && c.name === '반클리프 아펠') {
+      // The guide leaves a stepped passage above Bulgari. The main shop
+      // frontage and its smaller rear arm share an open interior edge.
+      const [edgeU, edgeV] = upperPlanPoint(id, 1622, 439);
+      parts = [[r[0], r[1], r[2], edgeV], [edgeU, edgeV, r[2], r[3]]];
+      const finish = { mat: 0xe7e1d6, thick: .10 };
+      wall(r[0], edgeV, edgeU, edgeV, y, y + clearH(id), finish);
+      wall(edgeU, edgeV, edgeU, 145.3, y, y + clearH(id), finish);
+      const [bulgariSide, mouthV] = upperPlanPoint(id, 1658, 463);
+      zone('신관 연결통로', id, '불가리 옆 · JW 메리어트 서울 방향',
+        [bulgariSide, mouthV, edgeU, 145.3], y, y + H, 3);
+    }
     if(id==='2F'&&c.name==='몽클레르')
       parts=parts.flatMap(q=>cutRect(q,upperRect(id,[28,733,54,794])));
     if(id==='2F'&&c.name==='그라프')
@@ -13132,6 +13144,9 @@ export function build(K) {
           { bg: '#efede8', fg: '#303331', twoSided: true });
         continue;
       }
+      // The rear arm beside the 2F hotel passage belongs to the same boutique.
+      // It needs neither another storefront nor a partition across the join.
+      if (id === '2F' && c.name === '반클리프 아펠' && q !== largest) continue;
       if(id==='5F'&&c.name==='자딕앤 볼테르'&&q!==largest){
         // Secondary part of the same store: bounded indicative merchandise,
         // without a second storefront, counter, staff or internal wall.

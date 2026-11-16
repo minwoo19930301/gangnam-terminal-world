@@ -3822,6 +3822,8 @@ function hallR20(K) {
   zone('신세계 중층 연결','1M',-21,-8,-11,10,3.6,6.95,'신세계 메자닌');
   zone('신세계백화점 연결통로','1F',-19.5,-4,0,4,0,3.5,'3게이트 · 스타벅스');
   zone('센트럴시티 2층 연결','2F',29,-1.5,38,2.5,7,10,'신세계백화점 2층 · 불가리 · 티파니');
+  // Keep the lift aisle between Bulgari and the restroom on its indoor route.
+  zone('센트럴시티 2층 연결','2F',39.22,1.7,40.45,11.5,7,10,'중앙홀 엘리베이터 · 신세계백화점');
   for(const [floor,y0,y1] of [['1F',0,3.5],['1M',3.6,6.95],['2F',7,10]])zone('센트럴시티 중앙홀 엘리베이터',floor,38,11.5,43,17.5,y0,y1,'센트럴시티 · 신세계백화점');
   // The 1F north/east shops retain the former generated fitout, now on the correct fronts.
   const shopFurnish=(y,fn)=>{
@@ -3991,6 +3993,27 @@ function hallR20(K) {
   storefront('우리은행',17.2,12.1,24.8,23,'W',0,'bank');
   storefront('TWO CHAIRS W 센트럴시티',25,12.1,29,23,'W',0,'bank');
   storefront("L'OCCITANE",33,12.1,38,23,'W',0,'beauty');
+  // From the plaza the recessed House entrance sits between the shop and
+  // the lift. The stone apron ends at the open timber and brass doorway.
+  const entryStone={tex:'tile',color:0x938f86,gloss:.26};
+  K.hpoly(entryStone,RECT(38.05,10.35,40.7,17.7),.031,true);
+  K.hpoly(entryStone,RECT(40.7,11.5,43,13.42),.031,true);
+  const pier={mat:{tex:'marble',color:0xdacbb6},thick:.14};
+  lwall(38.13,14.0,38.13,17.76,0,3.14,pier);
+  lwall(40.72,15.57,40.72,23,0,3.14,pier);
+  const reveal={tex:'wood',color:0x614732};
+  lbox(39.38,17.70,2.65,.24,2.48,.66,reveal);
+  for(const s of [38.31,40.45]){
+    lbox(s,17.7,.40,.09,.08,2.39,'glass');
+    for(const edge of [s-.20,s+.20])lbox(edge,17.7,.045,.16,.02,2.47,reveal);
+    for(const y of [.08,1.04,2.34])lbox(s,17.64,.40,.04,y,.043,0xb19766,{solid:false});
+  }
+  // Return the soffit to the wood-floored turn beyond the door.
+  K.slab(RECT(38.05,12.1,40.7,23),3.25,{mat:0xe3ded4,under:0xf0ece3,walk:false,thick:.11});
+  for(const s of [38.44,40.29]){
+    lbox(s,14.74,.04,4.8,3.126,.012,0x514f49,{solid:false});
+    for(const t of [13.1,16.35])lcyl(s,t,3.11,.074,.02,'emit',{solid:false});
+  }
   storefront('LEJARDIN',33,-12,38,-5,'N',0,'flower');
   // Units 20/21 are distinct from STARBUCKS central F1. Retain their fitout by the east passage.
   storefront('스타벅스',-11,18,-1,26,'E',0,'cafe');
@@ -4003,7 +4026,67 @@ function hallR20(K) {
   const[xl,zl]=P(41.9,14.5);
   for(const y of[0,3.6,7])slab(38,11.5,43,17.5,y,{mat:marble,under:false,ceil:false});
   slab(36,2.4,38.5,17.5,7,{mat:galleryMat});
-  K.elevator({name:'센트럴시티 중앙홀 엘리베이터',x:xl,z:zl,w:2.1,d:2.1,rotY:F.N,floors:[{label:'1F',y:0,name:'중앙홀'},{label:'1M',y:3.6,name:'중층 식당가'},{label:'2F',y:7,name:'백화점 2층'}]});
+  // The ground door faces the plaza. The upper doors open onto the side
+  // galleries, including the cut through the adjoining 2F boutique wall.
+  const liftStops=[
+    {label:'1F',y:0,name:'중앙홀'},
+    {label:'1M',y:3.6,name:'중층 식당가'},
+    {label:'2F',y:7,name:'백화점 2층'}
+  ];
+  const liftWall={mat:{tex:'marble',color:0xdacfbf},thick:.15};
+  const liftDoor=y=>({at:1.05,w:1.2,y0:y,y1:y+2.4});
+  lwall(42.95,13.45,42.95,15.55,0,10.2,liftWall);
+  lwall(40.85,15.55,42.95,15.55,0,10.2,liftWall);
+  lwall(40.85,13.45,42.95,13.45,0,10.2,{...liftWall,openings:[liftDoor(0)]});
+  lwall(40.85,13.45,40.85,15.55,0,10.2,{...liftWall,openings:[liftDoor(3.6),liftDoor(7)]});
+  for(const {label,y} of liftStops){
+    K.hpoly('metal',RECT(40.85,13.45,42.95,15.55),y+.013,true);
+    const ground=y===0;
+    const s=ground?41.9:40.74,t=ground?13.34:14.5;
+    lsign(label,s,t,y+2.59,.44,.19,ground?'W':'N',{bg:'#272623',fg:'#ffd5a8'});
+    lbox(ground?s+.84:s,ground?t:t-.84,ground?.13:.035,ground?.035:.13,y+1.04,.24,0x454642,{solid:false});
+    for(const offset of [-.63,.63])
+      lbox(ground?s+offset:s,ground?t:t+offset,ground?.055:.035,ground?.035:.055,y,2.4,'metal',{solid:false});
+  }
+  K.elevator({name:'센트럴시티 중앙홀 엘리베이터',x:xl,z:zl,w:2.1,d:2.1,shaft:false,floors:liftStops});
+  // The plaza walk places the full L'Occitane on the Sweet Garden arcade.
+  // The HOS 1F guide continues past its south wall to Yoon and the court.
+  // Both are 1F. The restaurant's entrance film turns left behind the
+  // plaza store and right into a light-wood passage. Its grade is fitted here
+  // to meet the separately registered restaurant floor and lift apron.
+  const hosEntryFloor={tex:'wood',color:0xc7a67d,gloss:.25};
+  const flatPassage=[[37.8,8.8,40.7,12],[38.05,11.95,40.7,25.6],
+    [33.3,23.2,38.05,25.6],[33.3,25.6,35.7,28.95]];
+  const entryZone=(poly,name)=>K.zone({
+    name,floor:'1F',sub:'센트럴시티 중앙홀 · 윤해운대갈비',
+    poly,y0:0,y1:3.35,priority:13
+  });
+  for(const r of flatPassage){
+    const poly=RECT(...r);
+    K.slab(poly,.008,{mat:hosEntryFloor,under:false,ceil:false,thick:.12});
+    entryZone(poly,'하우스 오브 신세계 입구');
+  }
+  const passageLo=35.7,passageHi=69.08,mid=27.6,sideA=26.25,sideB=28.95;
+  K.ramp(...P(passageLo,mid),...P(passageHi,mid),{w:sideB-sideA,ya:.008,yb:2.1,mat:hosEntryFloor,rails:false});
+  const passage=RECT(passageLo,sideA,passageHi,sideB);
+  entryZone(passage,'센트럴시티 · 하우스 오브 신세계 연결통로');
+  const lining={mat:{tex:'wood',color:0x685447},thick:.13};
+  for(const [a,b,c,d] of [[40.7,23,40.7,25.6],[40.7,25.6,35.7,25.6],
+    [35.7,25.6,35.7,sideA],[38.05,23.2,33.3,23.2],[33.3,23.2,33.3,sideB],[33.3,sideB,35.7,sideB]]){
+    lwall(a,b,c,d,0,3.25,lining);
+  }
+  // The recessed outer wall keeps the grade within the interior landing.
+  // Finish the walls at its threshold so the lift aisle stays open.
+  const passageCeiling={mat:0xd8d0c4,under:0xe6dfd3,walk:false,thick:.12};
+  // The existing hall mezzanine sits directly above the first 2.4 m.
+  for(const [a,b,roof] of [[passageLo,38.1,3.25],[38.1,passageHi,5.48]]){
+    for(const t of [sideA,sideB])lwall(a,t,b,t,0,roof,lining);
+    K.slab(RECT(a,sideA,b,sideB),roof,passageCeiling);
+  }
+  lwall(38.1,sideA,38.1,sideB,3.25,5.48,lining);
+  for(const r of [[38.05,23,40.7,25.6],[33.3,23.2,38.05,25.6],[33.3,25.6,35.7,sideB]]){
+    K.slab(RECT(...r),3.25,passageCeiling);
+  }
   // Enclosure and corridor soffits. The west beam is the handoff to honamR20.
   lwall(-19.5,-3.3,-7,-3.3,0,3.35,{mat:{tex:'marble',color:0xeceae5},thick:.14});
   lwall(-19.5,3.3,-7,3.3,0,3.35,{mat:{tex:'marble',color:0xeceae5},thick:.14});
@@ -4235,7 +4318,7 @@ function hallR20(K) {
     for(const t of[-3.25,3.25])for(let s=-18;s<-7;s+=2.2){lbox(s,t,1.8,.06,.5,1.9,0x171d20,{solid:false});lsign('SHINSEGAE',s,t+(t<0?.04:-.04),1.6,1.65,.5,t<0?'E':'W',{bg:'#263338',fg:'#e6e1d4'});}
     for(const s of[-5.5,-2]){lbox(s,-4.08,1.4,.05,0,2.7,0x1c2325,{solid:false});lbox(s,-4.03,1.2,.03,.12,2.4,'glass',{solid:false});}
     for(const t of[-3.1,3.1])lbox(-3.3,t,5.9,.035,3.1,.025,{tex:'emit',color:0x91d7f4},{solid:false});
-    for(let t=-2.8;t<3;t+=1.05)lbox(-19.2,t,.05,1,0,2.95,'glass',{solid:false});
+    // The cosmetics arcade already supplies the open glass door and sidelights.
     const[x,z]=P(-18,0);K.floorText('SHINSEGAE',{x,z,y:.035,w:3.4,h:.7,rotY:R,fg:'#323738'});
     lsign('반려동물 출입 기준',-2,-3.6,1.15,.7,1,'S',{bg:'#f1efea',fg:'#303535'});
   });
@@ -4447,7 +4530,8 @@ function hosUpperR20(K) {
   };
   hosUpperCell('윤해운대갈비',[[1248,251],[1445,251],[1445,474],[1353,474],[1353,577],[1248,577]],'S','food',Y1);
   hosUpperCell('고량주관',[[1498,251],[1626,251],[1626,474],[1498,474]],'S','food',Y1);
-  hosUpperCell('록시땅',[[1149,562],[1179,562],[1179,629],[1149,629]],'W','beauty',Y1);
+  // The narrow L'Occitane sliver at the left crop of this guide is the
+  // full plaza store in hallR20, beside the shared 1F passage.
   hosUpperCell('바위파스타바',[[1608,547],[1708,547],[1708,701],[1608,701]],'E','food',Y1);
   hosUpperCell('피어커피',[[1708,547],[1750,547],[1750,701],[1708,701]],'N','cafe',Y1);
   // L-shaped wine cellar surrounds the southern open court; no wall across the north approach.
