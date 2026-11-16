@@ -832,11 +832,14 @@ export function build(K) {
   // F03/F04: north-west lift bank backs onto the NNW wall band; doors face south.
   const NWLIFTS=[57.6,60.6].map(u=>({u,v:64.5,w:2.65,d:2.4}));
   const nwLiftHoles=NWLIFTS.map(e=>rect(e.u-e.w/2,e.v-e.d/2,e.u+e.w/2,e.v+e.d/2));
-  const NW_ESC=[44.4,68.5,51.2,70.5];
-  // Keep the descending mezzanine flight clear of the 3GATE aisle. Its
-  // exact landing position is not surveyed; the previous enclosure reached
-  // 1.7m into the photographed patterned corridor.
-  const SW_ESC=[21,68.5,29.2,70.5];
+  // From the main hall facing 3 GATE, the feet of the two flights are
+  // on the outside. Their heads open onto the shared mezzanine aisle.
+  const mezzUpFoot=51, mezzDownFoot=21, mezzRun=6.4, mezzV=69.5;
+  const mezzUpHead=mezzUpFoot-mezzRun, mezzDownHead=mezzDownFoot+mezzRun;
+  // Overlap the upward tip with the slab for a level exit. At the down
+  // entrance the opening extends onto the first moving tread's end cap.
+  const NW_ESC=[mezzUpHead+.03,mezzV-1,mezzUpFoot+.2,mezzV+1];
+  const SW_ESC=[mezzDownFoot-.2,mezzV-1,mezzDownHead+.02,mezzV+1];
   const beautyDownHoles=[rect(40.18,40.5,41.82,51.8),rect(24.98,44.2,26.62,55.0)];
   // The west up-flight only reaches the 2F slab near its upper end; keeping
   // its entire sloped run open upstairs needlessly cuts through CELINE.
@@ -1291,10 +1294,10 @@ export function build(K) {
       // Overlap the 2F ramp tip so an idle rider does not fall into a gap.
       box(u,v+(v===b.top?(topEntry==='S'?1.0:-1.0):(entry==='S'?-1:1)),1.65,v===b.top?2.2:1.8,y-.08,.08,{tex:'marble',color:0xebe9e5});
   }
-  dressedEscalator(51,69.5,44.6,69.5,0,3.6,'up');
-  dressedEscalator(29.2,69.5,21,69.5,0,3.6,'down');
-  zone('메자닌 에스컬레이터','1F','메자닌 · 멤버스바',[44.4,68.5,52.2,70.5],0,3.6,5);
-  zone('메자닌 내려오는 에스컬레이터','1F','1층 · 여자화장실',[20,68.5,30.2,70.5],0,3.6,5);
+  dressedEscalator(mezzUpFoot,mezzV,mezzUpHead,mezzV,0,3.6,'up');
+  dressedEscalator(mezzDownFoot,mezzV,mezzDownHead,mezzV,0,3.6,'down');
+  zone('메자닌 에스컬레이터','1F','메자닌 · 멤버스바',[mezzUpHead-.2,mezzV-1,mezzUpFoot+1.2,mezzV+1],0,3.6,5);
+  zone('메자닌 내려오는 에스컬레이터','1F','1층 · 여자화장실',[mezzDownFoot-1.2,mezzV-1,mezzDownHead+.2,mezzV+1],0,3.6,5);
   // In the private 1F walk, the entrance-side part of the east-bound
   // mezzanine escalator enclosure is framed glass; the opposite side and
   // the remainder of the shaft are opaque. Keep the glass collision solid.
@@ -5875,7 +5878,7 @@ export function build(K) {
     };
     for(let i=0;i<MEZZ_VOID.length;i++)rail(MEZZ_VOID[i],MEZZ_VOID[(i+1)%MEZZ_VOID.length],i>=4&&i<28);
     wellGuard(NW_ESC,y,'W',0xa7a9a8);
-    wellGuard(SW_ESC,y,'W',0xa7a9a8);
+    wellGuard(SW_ESC,y,'E',0xa7a9a8);
     // Finish both the vertical slab edge and underside in warm plaster, with a continuous cove.
     for(let i=0;i<MEZZ_VOID.length;i++) {
       const a=MEZZ_VOID[i],b=MEZZ_VOID[(i+1)%MEZZ_VOID.length],dx=b[0]-a[0],dz=b[1]-a[1],L=Math.hypot(dx,dz),rotY=Math.atan2(dx,dz);
