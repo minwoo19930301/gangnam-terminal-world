@@ -677,7 +677,7 @@ export function build(K) {
     // The entrance photograph shows the art corridor ending at dark timber.
     WL(22.50, 1.77, 26.72, 1.77, 6.86, 10.38, { mat: timber, thick: .10 });
     for (const [a,b,c,d] of [
-      [26.72,0,26.72,1.77], [22.50,1.77,22.50,3.45], [2,3.45,22.50,3.45],
+      [26.72,0,26.72,1.77], [22.50,1.77,22.50,3.45], [2,3.45,18.15,3.45], [21.05,3.45,22.50,3.45],
       [2,.85,17.97,.85], [17.97,0,17.97,.85], [17.97,0,24.58,0],
     ]) WL(a,b,c,d,5.98,10.38, { mat: WARM, thick: .10 });
     // Keep the north doorway opposite the pastry shop; its threshold is 1m higher.
@@ -759,6 +759,71 @@ export function build(K) {
     }
   };
   const PARTS = (axis, at, list, a0, a1, y, h, mat = WARM) => { for (const s of list) axis === 'u' ? WL(s, a0, s, a1, y, y + h, { mat, thick: 0.15 }) : WL(a0, s, a1, s, y, y + h, { mat, thick: 0.15 }); };
+
+  // The Gangnam 2F plan lists all three boutiques at JW Marriott 1F. Their order and
+  // dimensions on this shared aisle are schematic. It meets the flat turn beyond the
+  // photographed art passage, above the 1F dining ceilings and before the HOS mezzanine.
+  DETAIL('1F', [3.65, 3.45, 21.05, 13.85], '호텔 부티크 통로', () => {
+    const now = Date.now();
+    const agnonaOpen = now >= Date.parse('2026-09-10T00:00:00+09:00') && now < Date.parse('2027-03-01T00:00:00+09:00');
+    const fronts = [
+      { name: '토즈', label: "TOD’S", fascia: 0x282522, ink: '#ffffff', inner: 0xe8d8bd, accent: 0xad6742, goods: 'bags' },
+      { name: '로저 비비에', label: 'Roger Vivier', fascia: 0xe6dfd1, ink: '#a92a51', inner: 0xeacec4, accent: 0xa88756, goods: 'shoes' },
+      { name: agnonaOpen ? '아뇨나' : '팝업 행사장', label: agnonaOpen ? 'AGNONA' : 'POP-UP', fascia: 0xb0a596,
+        ink: '#332e29', inner: 0xe9e0d2, accent: 0x847664, goods: agnonaOpen ? 'knitwear' : 'event' },
+    ];
+    const y = 7, soffit = 10.37, left = 3.65, width = 5.8;
+    const right = left + width * fronts.length, aisle = 3.45, front = 7.45, back = 13.85;
+    const wing = [left, aisle, right, back];
+    SLAB(wing, y, { mat: 'jwHoney', under: WARM, thick: .13 });
+    HP(WARM, wing, soffit, false);
+    K.phys.addCeiling(RECT(...wing), soffit, {});
+    ZN('호텔 부티크 통로', '1F', 'JW 메리어트 · 백화점 2층 연결', wing, y - .05, soffit, 16);
+    WL(18.15, aisle, right, aisle, 9.7, soffit, { mat: WARM, thick: .12 });
+    SG('호텔 부티크', { u: (18.15 + right) / 2, v: aisle - .08, y: 9.98, w: 1.55, h: .29, f: 'N', bg: null, fg: '#483b31' });
+    WL(left, aisle, left, front, y, soffit, { mat: WARM, thick: .12 });
+    WL(right, aisle, right, front, y, soffit, { mat: WARM, thick: .12 });
+    LIGHTS([left, aisle, right, front], soffit, 2.7, .18);
+    WL(left, back, right, back, y, soffit, { mat: 'jwTravertine', thick: .15 });
+    for (let i = 0; i <= fronts.length; i++) {
+      const u = left + i * width;
+      WL(u, front, u, back, y, soffit, { mat: WARM, thick: .15 });
+    }
+    for (const [i, shop] of fronts.entries()) {
+      const lo = left + i * width, hi = lo + width, mid = (lo + hi) / 2;
+      const bay = [lo + .09, front + .06, hi - .09, back - .08];
+      FRONT('v', front, lo, hi, y, soffit, 'N', shop.label, {
+        dw: 3.65, gh: 2.75, sw: 3.1, fascia: shop.fascia, inner: shop.inner, fg: shop.ink
+      });
+      ZN(shop.name, '1F', shop.goods === 'bags' || shop.goods === 'shoes' ? 'JW 메리어트 · 부티크' : 'JW 메리어트 · 팝업', bay, y - .04, soffit, 17);
+      HP(shop.goods === 'bags' ? shop.accent : shop.inner, [lo + .55, front + .75, hi - .55, back - 1.25], y + .018);
+      LIGHTS(bay, soffit, 2.7, .2, 0xffe5c6);
+      if (shop.goods === 'event') continue;
+      if (shop.goods === 'knitwear') {
+        const v = back - 1;
+        for (const u of [lo + .85, hi - .85]) B({ u, v, y, w: .08, h: 1.75, d: .36, mat: shop.accent });
+        B({ u: mid, v, y: y + 1.67, w: width - 1.65, h: .06, d: .06, mat: shop.accent, solid: false });
+        for (const [j, color] of [0xbcb6a7, 0x7a6d63, 0xd6c8b6, 0x6d6966, 0xb78c73, 0xd3cec4].entries()) {
+          B({ u: lo + 1 + j * .75, v, y: y + .5, w: .42, h: 1.14, d: .24, mat: color, solid: false });
+        }
+      } else {
+        for (const shelf of [.8, 1.45]) {
+          B({ u: mid, v: back - .52, y: y + shelf, w: width - .8, d: .72, h: .06, mat: shop.accent });
+          for (const [j, color] of [0x5b483b, 0xae9472, 0x39312e, 0xa66d62].entries()) {
+            const u = lo + .95 + j * 1.3, v = back - .58;
+            if (shop.goods === 'bags') {
+              B({ u, v, y: y + shelf + .06, w: .42, h: .28, d: .16, mat: color, solid: false });
+              ROD([u - .12,y + shelf + .33,v],[u,y + shelf + .46,v],.016,color);
+              ROD([u,y + shelf + .46,v],[u + .12,y + shelf + .33,v],.016,color);
+            } else {
+              B({ u, v, y: y + shelf + .06, w: .18, h: .1, d: .35, mat: color, solid: false });
+              B({ u, v: v - .09, y: y + shelf + .16, w: .1, h: .024, d: .065, mat: shop.accent, solid: false });
+            }
+          }
+        }
+      }
+    }
+  }, 10.37);
 
   DETAIL('1F', [-33.2, 4, 2, 60.4], '호텔 현관 홀 · 승강기 로비', floor1, 8.32);
   DETAIL('2F', [UW, -6, 2, 60.9], '플레이버즈 · 파티세리 · 타마유라', floor2);

@@ -6382,6 +6382,14 @@ export function build(K) {
       parts = [r.slice(), shoulder];
       r[3] = shoulder[3];
     }
+    if (id === '4F' && c.name.startsWith('컴포트 슈즈')) {
+      // The white aisle beside UGG ends at a short return of the shared shoe hall.
+      const ugg = upperBuildRect(id, guide.cells.find(shop => shop.name === '어그'));
+      const shoulder = [r[2],ugg[1],ugg[0],r[3]];
+      parts = [r.slice(), shoulder];
+      r[2] = shoulder[2];
+      upperSafeWall(shoulder[2],shoulder[1],shoulder[2],shoulder[3],y,H,{mat:0xe7e1d6,thick:.08});
+    }
     if (id === '4F' && c.name === '헌터') {
       // Hunter reaches the public aisle east of its short return, alongside AUTRY.
       const arm = upperRect(id, [1155, 632, 1205, 663]);
@@ -6972,7 +6980,7 @@ export function build(K) {
   // Guard the exposed edges of the 3F escalator opening while keeping both
   // moving-stair entrances clear. These lines follow the modelled floor cut,
   // whose precise real-world boundaries remain approximate.
-  {const y=LV['3F'];for(const [a,b,c,d] of [[39.45,113.6,39.45,116.75],[39.45,120.75,40.35,120.75],[30.9,119.2,32.05,119.2],[33.95,119.2,36.35,119.2],[36,125.3,36,127.5],[39.8,125.3,39.8,127.5],[36,127.5,39.8,127.5]])wall(a,b,c,d,y,y+1.05,{mat:'glass',thick:.045});}
+  {const y=LV['3F'];for(const [a,b,c,d] of [[39.45,upperPhysicalWell('3F',true)[1],39.45,116.75],[39.45,120.75,40.35,120.75],[30.9,119.2,32.05,119.2],[33.95,119.2,36.35,119.2],[36,125.3,36,127.5],[39.8,125.3,39.8,127.5],[36,127.5,39.8,127.5]])wall(a,b,c,d,y,y+1.05,{mat:'glass',thick:.045});}
   // Support the west 2F-to-3F landing in the schematic void.
   {const y=LV['3F'];K.slab(rect(29.1,118.8,30.9,122.2),y,{mat:floorMat['3F'],thick:.12,under:false,ceil:false,edge:false});
    for(const [a,b,c,d] of [[29.1,119.2,29.1,122.2],[30.9,119.2,30.9,122.2]])wall(a,b,c,d,y,y+1.05,{mat:'glass',thick:.045});}
@@ -7021,7 +7029,7 @@ export function build(K) {
   {const y=LV['5F'];wall(30.0,49.4,30.0,52.15,y,y+.78,{mat:'glass',thick:.045});}
 
   // Connect the arriving 2F flight to the 3F landing.
-  {const r=upperAnnexAtriumRect('3F'),y=LV['3F'];K.slab(rect(r[2]-.25,r[1]-.8,r[2]+1.1,r[1]+1.4),y,{mat:{tex:'marble',color:0xe8dfce},thick:.12,under:false,ceil:false,edge:false});K.slab(rect(r[2]-.15,117.8,r[2]+1.1,121.0),y,{mat:{tex:'marble',color:0xe8dfce},thick:.12,under:false,ceil:false,edge:false});}
+  {const r=upperAnnexAtriumRect('3F'),y=LV['3F'];K.slab(rect(r[2]-.15,117.8,r[2]+1.1,121.0),y,{mat:{tex:'marble',color:0xe8dfce},thick:.12,under:false,ceil:false,edge:false});}
   // Connect the realigned incoming flights to the narrow 5F aisle.
   // The lane fit and landing footprints are schematic; they keep the 4F
   // Chanel shoe cell clear and preserve a guarded path to the 5F level.
@@ -13128,6 +13136,10 @@ export function build(K) {
     }
     for(const q of parts){
       const [u0,v0,u1,v1]=q,along=face==='N'||face==='S',Wf=along?u1-u0:v1-v0,Dp=along?v1-v0:u1-u0;
+      if (id === '4F' && c.name.startsWith('컴포트 슈즈') && q !== largest) {
+        hq(u0-.14,v0+.13,u1-.07,v1-.13,y+.019,palette.floor);
+        continue;
+      }
       if (id === '5F' && c.name === '랑방 컬렉션' && q !== largest) {
         // Continue this boutique’s floor into its shoulder and keep the
         // approach open along the Faro side.
@@ -15961,7 +15973,11 @@ export function upperPhysicalWell(id,annex=false){
       for(const t of[.43,1]){const u=a[0]+dx*t,v=a[1]+dz*t;points.push([u+nx*.82,v+nz*.82],[u-nx*.82,v-nz*.82]);}
     }
   }
-  return [Math.min(...points.map(p=>p[0]))-.12,Math.min(...points.map(p=>p[1]))-.12,Math.max(...points.map(p=>p[0]))+.12,Math.max(...points.map(p=>p[1]))+.12];
+  // Beside the 3F jewellery island the public aisle reaches the annex
+  // escalator symbol at guide x1388. The realigned 2F–4F flights and their
+  // landing start farther inside the well. Retain level floor up to this edge.
+  const minV = annex && id === '3F' ? upperPlanPoint(id,1388,800)[1] : Math.min(...points.map(p=>p[1]))-.12;
+  return [Math.min(...points.map(p=>p[0]))-.12,minV,Math.max(...points.map(p=>p[0]))+.12,Math.max(...points.map(p=>p[1]))+.12];
 }
 // Cell-only setbacks widen actual white aisles to 2.4m. Raw plan cells and every
 // tenant name remain unchanged; boundaries between touching cells do not move.
