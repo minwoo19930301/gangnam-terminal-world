@@ -121,7 +121,7 @@ const UPPER_ELV = [2.5,5.5,8.5].map(u=>({u,v:83.5,w:2.4,d:2.2}));
 // The diagonal 9F→10F annex pair needs 1.6m axis spacing and a small south
 // offset to clear the next flight's handrails. All other lanes keep their stack.
 const actualAnnexLaneOffsets=i=>i===0?[-10,-1.3]:i===1?[4.5,8.5]:upperLaneOffsets(i,true);
-const upperLaneOffsets=(i,annex=false)=>annex?(i===7?[1.9,3.5]:i===1?[2,3.6]:i===2?[-5.19322,-3.59322]:i%2?[1.3,2.9]:[-2.9,-1.3]):(i>=4?(i%2?[1.3,2.9]:[-2.9,-1.3]):i===3?[-3.9,4.8]:i%2?[-4.5,5.8]:[-2.5,3.3]);
+const upperLaneOffsets=(i,annex=false)=>annex?(i===7?[1.9,3.5]:i===1?[2,3.6]:i===2?[-5.19322,-3.59322]:i%2?[1.3,2.9]:[-2.9,-1.3]):(i===4?[-2.0,3.5]:i===5?[-.2,1.7]:i===6?[-2.9,4.0]:i===7?[2.3,-.3]:i>=4?(i%2?[1.3,2.9]:[-2.9,-1.3]):i===3?[-3.9,4.8]:i===2?[-2.5,2.55]:i%2?[4.36,-1.44]:[-2.5,4.95]);
 const RIGHT_ATR = [27.6,74.2,39.4,78.0]; // legacy helper fallback; active wells are sheet-derived
 const UPPER_BANKS = [
   {key:"본관 화장실 옆",u:65,v:43.61,face:"W",top:"10F"},
@@ -910,6 +910,18 @@ export function build(K) {
     wall(q[0],q[1],q[0],q[3],y,y+1.05,{mat:'glass',thick:.045});
     wall(q[2],q[1],q[2],q[3],y,y+1.05,{mat:'glass',thick:.045});
   }
+  K.slab(rect(30.5,21.9,38.0,23.19),LV['7F'],{mat:floorMat['7F'],thick:.12,under:false,ceil:false,edge:false});
+  wall(30.5,33.36,37.9,33.36,LV['7F'],LV['7F']+1.05,{mat:'glass',thick:.045});
+  for(const id of ['8F','9F','10F']){
+    const r=upperAtriumRect(id),i=Object.keys(upperGuidePlans).indexOf(id),previous=i-1,rev=previous>=5?1-previous%2:previous%2;
+    const v=rev?r[1]:r[3],mid=(r[0]+r[2])/2,offs=[...upperLaneOffsets(previous),...upperLaneOffsets(i)];
+    K.slab(rect(id==='8F'||id==='10F'?29:mid+Math.min(...offs)-1,v-(id==='9F'?1.0:.15),id==='8F'||id==='10F'?39:mid+Math.max(...offs)+1,v+(id==='9F'?.15:3.0)),LV[id],{mat:floorMat[id],thick:.12,under:false,ceil:false,edge:false});
+  }
+  wall(29.1,31.75,37.15,31.75,LV['9F'],LV['9F']+1.05,{mat:'glass',thick:.045});
+  wall(30.35,22.46,31.3,22.46,LV['9F'],LV['9F']+1.05,{mat:'glass',thick:.045});
+  wall(22.65,34.7481,28.35,34.7481,LV['10F'],LV['10F']+1.05,{mat:'glass',thick:.045});
+  wall(34.4,21.85,36.3,21.85,LV['7F'],LV['7F']+1.05,{mat:'glass',thick:.045});
+  wall(35.35,30,38,30,LV['10F'],LV['10F']+1.05,{mat:'glass',thick:.045});
   // Experimental 7F landing only; details and walk bounds are not surveyed.
   K.slab(rect(29.1,33.36,37.9,36.2),LV['7F'],{mat:floorMat['7F']??'ssg_marble',thick:.16,under:CEIL,edge:false});
   wall(37.9,33.36,37.9,36.2,LV['7F'],LV['7F']+1.05,{mat:'glass',thick:.045});
@@ -948,10 +960,10 @@ export function build(K) {
   for(const annex of[false,true]){
     const ids=Object.keys(upperGuidePlans),fn=annex?upperAnnexAtriumRect:upperAtriumRect;
     for(let i=0;i<ids.length-(annex?1:2);i++){
-      const r=fn(ids[i]),t=annex&&ids[i]==='5F'?upperExpanded6AnnexRect():fn(ids[i+1]),rev=annex?(i===2?1:i%2):i%2;
+      const r=fn(ids[i]),t=annex&&ids[i]==='5F'?upperExpanded6AnnexRect():fn(ids[i+1]),rev=annex?(i===2?1:i%2):i>=5?1-i%2:i%2;
       for(const [lane,off] of (annex?actualAnnexLaneOffsets(i):upperLaneOffsets(i)).entries())upperFlightReservations.push({
-        a:annex?(ids[i]==='2F'?[40+off,132]:ids[i]==='3F'?[28.5+off,119]:ids[i]==='4F'?[lane===0?28.70:35.70,lane===0?129.7:130.5]:ids[i]==='5F'?[lane===0?31.85:33.35,121.5]:[ids[i]==='4F'?38.1:ids[i]==='8F'?r[0]+1.5:ids[i]==='9F'?r[2]-1:rev?r[2]:r[0],(r[1]+r[3])/2+off]):[(r[0]+r[2])/2+off,rev?r[3]:r[1]],
-        b:annex?(ids[i]==='2F'?[40+off,121.7]:ids[i]==='3F'?[28.5+off,128]:ids[i]==='4F'?[lane===0?30.35:34.85,121.5]:ids[i]==='5F'?[lane===0?32.95:34.55,129.7]:[ids[i]==='6F'?t[2]-2:ids[i]==='7F'?t[0]+2:ids[i]==='8F'?t[2]-1:ids[i]==='4F'?30.7:rev?t[0]:t[2],ids[i]==='4F'?(r[1]+r[3])/2+off:(t[1]+t[3])/2+off]):[(t[0]+t[2])/2+off,rev?t[1]:t[3]],ya:LV[ids[i]],yb:LV[ids[i+1]],
+        a:annex?(ids[i]==='2F'?[40+off,132]:ids[i]==='3F'?[28.5+off,119]:ids[i]==='4F'?[lane===0?28.70:35.70,lane===0?129.7:130.5]:ids[i]==='5F'?[lane===0?31.85:33.35,121.5]:[ids[i]==='4F'?38.1:ids[i]==='8F'?r[0]+1.5:ids[i]==='9F'?r[2]-1:rev?r[2]:r[0],(r[1]+r[3])/2+off]):[(r[0]+r[2])/2+off,ids[i]==='6F'?r[1]-2.8:rev?r[3]:r[1]],
+        b:annex?(ids[i]==='2F'?[40+off,121.7]:ids[i]==='3F'?[28.5+off,128]:ids[i]==='4F'?[lane===0?30.35:34.85,121.5]:ids[i]==='5F'?[lane===0?32.95:34.55,129.7]:[ids[i]==='6F'?t[2]-2:ids[i]==='7F'?t[0]+2:ids[i]==='8F'?t[2]-1:ids[i]==='4F'?30.7:rev?t[0]:t[2],ids[i]==='4F'?(r[1]+r[3])/2+off:(t[1]+t[3])/2+off]):[(i===0?(r[0]+r[2]):(t[0]+t[2]))/2+off+(i===1&&lane===1?.65:0),ids[i]==='6F'?t[1]:rev?t[1]:t[3]],ya:LV[ids[i]],yb:LV[ids[i+1]],
       });
     }
   }
@@ -961,7 +973,7 @@ export function build(K) {
   const mainLandingBridge=id=>{
     if(id!=='3F'&&id!=='5F')return null;
     const r=upperAtriumRect(id),p=upperPhysicalWell(id),mid=(r[0]+r[2])/2;
-    return [p[0]-1.8,r[3]-.10,mid-.50,r[3]+3.10];
+    return [p[0]-1.8,r[3]-.35,id==='3F'?p[2]+1.8:mid-.50,r[3]+3.10];
   };
   // The Central City 1F–2F pair is owned by a different place module.
   // Reserve its two existing centre lines only when drawing the 2F guard's
@@ -1033,9 +1045,9 @@ export function build(K) {
   }
   K.texture('ssg_annex_escalator_clear',2,2,(g,w,h)=>g.clearRect(0,0,w,h),[1,1],{transparent:true});
   upperStack.slice(0,-2).forEach((id,i)=>{
-    const next=upperStack[i+1],r=id==='6F'?upperLegacy6PlanRect(upperGuidePlans[id].well):upperAtriumRect(id),t=upperAtriumRect(next),rev=i%2;
+    const next=upperStack[i+1],r=upperAtriumRect(id),t=upperAtriumRect(next),rev=i>=5?1-i%2:i%2;
     for(const [off,dir]of upperLaneOffsets(i).map((off,j)=>[off,j?'down':'up'])){
-      const a=P((r[0]+r[2])/2+off,rev?r[3]:r[1]),b=P((t[0]+t[2])/2+off,rev?t[1]:t[3]);
+      const a=P((r[0]+r[2])/2+off,id==='6F'?r[1]-2.8:rev?r[3]:r[1]),b=P((i===0?(r[0]+r[2]):(t[0]+t[2]))/2+off+(i===1&&dir==='down'?.65:0),id==='6F'?t[1]:rev?t[1]:t[3]);
       K.escalator(...a,...b,{ya:LV[id],yb:LV[next],w:1.2,dir,speed:.6,sideMat:'ssg_annex_escalator_clear',truss:0xf3eee4});
       annexSlimHousing(...a,...b,LV[id],LV[next],1.2);
       if(id==='5F'){
@@ -1071,7 +1083,7 @@ export function build(K) {
     }
   });
   for(const id of upperStack.filter(id=>id!=='11F')){
-    const i=upperStack.indexOf(id),r=upperAtriumRect(id),p=upperPhysicalWell(id),y=LV[id],mid=(r[0]+r[2])/2,atSouth=i%2===1;
+    const i=upperStack.indexOf(id),r=upperAtriumRect(id),p=upperPhysicalWell(id),y=LV[id],mid=(r[0]+r[2])/2,atSouth=i>=5?i%2===0:i%2===1;
     // Only the end containing the actual 2-lane landing is open in the parapet.
     voidRail(p,y,true,mid,i<=4?6.8:3.6);
     const v=atSouth?r[3]:r[1],edge=atSouth?p[3]:p[1];
@@ -1207,7 +1219,10 @@ export function build(K) {
     // end clear. These are new outer edges, not barriers across the landing.
     wall(q[0],q[3],q[2],q[3],y,y+1.1,{mat:'glass',thick:.04});
     wall(q[2],q[1],q[2],q[3],y,y+1.1,{mat:'glass',thick:.04});
-    upperSafeWall(q[0],q[1],mid-3.65,q[1],y,1.1,{mat:'glass',thick:.04});
+    if(id==='3F'){
+      for(const [a,b] of [[q[0],31.45],[34.78,37.24],[38.95,40.45],[42.25,q[2]]])
+        if(b>a+.05)wall(a,q[1],b,q[1],y,y+1.1,{mat:'glass',thick:.04});
+    }else upperSafeWall(q[0],q[1],mid-3.65,q[1],y,1.1,{mat:'glass',thick:.04});
   }
   // R19 D8: piers follow each floor's well corners, starting above the 1F plaza.
   for(const id of upperStack.filter(id=>id!=='11F')){
@@ -7012,15 +7027,21 @@ export function build(K) {
     wall(up-w,v-w,38.15,v-w,y,y+1.05,{mat:'glass',thick:.045});
     wall(39.65,v-w,q[2]+.24,v-w,y,y+1.05,{mat:'glass',thick:.045});
     wall(up-w,v-w,up-w,v+w,y,y+1.05,{mat:'glass',thick:.045});
-    for(const [a,b] of [[up+w,down-w],[down+w,q[2]+.24]])if(b>a+.05)wall(a,v+w,b,v+w,y,y+1.05,{mat:'glass',thick:.045});
+    for(const [a,b] of [[up+w,down-w],[down+w,q[2]+.24]]){
+      for(const [lo,hi] of [[a,Math.min(b,38.15)],[Math.max(a,39.95),b]])
+        if(hi>lo+.05)wall(lo,v+w,hi,v+w,y,y+1.05,{mat:'glass',thick:.045});
+    }
   }
+  K.slab(rect(38,38.65,40.4,39.8),LV['2F'],{mat:floorMat['2F'],thick:.12,under:CEIL,ceil:false,edge:false});
+  K.slab(rect(37.45,37.20,38.40,38.30),LV['4F'],{mat:floorMat['4F'],thick:.12,under:false,ceil:false,edge:false});
   // Preserve a protected aisle between the two pairs of main atrium flights.
   for(const id of ['3F','5F']){
     const r=upperAtriumRect(id),y=LV[id];
-    wall(32.2,r[3]+.02,36.3,r[3]+.02,y,y+1.05,{mat:'glass',thick:.045});
+    if(id!=='3F')wall(32.2,r[3]+.02,36.3,r[3]+.02,y,y+1.05,{mat:'glass',thick:.045});
   }
   {const r=upperPhysicalWell('3F');wall(38.0,r[1],r[2],r[1],LV['3F'],LV['3F']+1.05,{mat:'glass',thick:.045});}
-  {const r=upperAtriumRect('3F');wall(38.0,r[3]+.02,38.75,r[3]+.02,LV['3F'],LV['3F']+1.05,{mat:'glass',thick:.045});}
+  {const y=LV['5F'];wall(37.65,53.65,38.35,53.65,y,y+1.05,{mat:'glass',thick:.045});}
+  {const y=LV['4F'];wall(37.05,37.28,37.55,37.28,y,y+1.05,{mat:'glass',thick:.045});}
   // Protect the exposed east edge and preserve the two flight openings.
   {const q=upperPhysicalWell('4F'),y=LV['4F'];
     wall(q[2],39.0,q[2],44.5,y,y+1.05,{mat:'glass',thick:.045});
@@ -15669,9 +15690,9 @@ const upperIncoming56Hole=()=>[31.25,124.08,35.45,130.45];
 export function upperPhysicalWell(id,annex=false){
   const ids=Object.keys(upperGuidePlans),i=ids.indexOf(id),fn=annex?upperAnnexAtriumRect:upperAtriumRect,r=fn(id),points=[[r[0],r[1]],[r[2],r[3]]];
   if(i>0&&!(annex&&id==='6F')){
-    const p=!annex&&ids[i-1]==='6F'?upperLegacy6PlanRect(upperGuidePlans['6F'].well):fn(ids[i-1]),rev=annex&&i-1===2?1:(i-1)%2;
+    const p=fn(ids[i-1]),rev=annex&&i-1===2?1:!annex&&i-1>=5?1-(i-1)%2:(i-1)%2;
     for(const [lane,off] of upperLaneOffsets(i-1,annex).entries()){
-      const a=annex?[id==='5F'?(lane===0?28.70:35.70):rev?p[2]:p[0],id==='5F'?(lane===0?129.7:130.5):(p[1]+p[3])/2+off]:[(p[0]+p[2])/2+off,rev?p[3]:p[1]],b=annex?(id==='5F'?[lane===0?30.35:34.85,121.5]:[rev?r[0]:r[2],(r[1]+r[3])/2+off]):[(r[0]+r[2])/2+off,rev?r[1]:r[3]];
+      const a=annex?[id==='5F'?(lane===0?28.70:35.70):rev?p[2]:p[0],id==='5F'?(lane===0?129.7:130.5):(p[1]+p[3])/2+off]:[(p[0]+p[2])/2+off,ids[i-1]==='6F'?p[1]-2.8:rev?p[3]:p[1]],b=annex?(id==='5F'?[lane===0?30.35:34.85,121.5]:[rev?r[0]:r[2],(r[1]+r[3])/2+off]):[(id==='3F'?(p[0]+p[2]):(r[0]+r[2]))/2+off+(id==='4F'&&lane===1?.65:0),ids[i-1]==='6F'?r[1]:rev?r[1]:r[3]];
       // Below t=.45 the arriving player's head is below this floor's soffit.
       const dx=b[0]-a[0],dz=b[1]-a[1],len=Math.hypot(dx,dz),nx=-dz/len,nz=dx/len;
       for(const t of[.43,1]){const u=a[0]+dx*t,v=a[1]+dz*t;points.push([u+nx*.82,v+nz*.82],[u-nx*.82,v-nz*.82]);}
