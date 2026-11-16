@@ -365,7 +365,7 @@ export function build(K) {
 
   // ------------------------------------------------------------ envelope
   K.groundHole(FULL);
-  const ENTRY = 33.5, J4V = 42.6, J5U = 33.65;
+  const ENTRY = 33.5, EAST_GATE = 42.35, J4V = 42.6, J5U = 33.65;
   const IN = 0xf2eee7, YB = LV['11F'], STEEL = 0x252c2b;
   K.polyWalls(FULL, LV.B2, LV.B1, { mat: 'concrete', inner: 0xb3b1a7, thick: 0.3, openings: [
     { x: P(UW, 54.5)[0], z: P(UW, 54.5)[1], w: 6.5, y0: LV.B2, y1: -8.2 },
@@ -386,7 +386,7 @@ export function build(K) {
   for (const u of [29.7, 39.5]) wall(u, 0, u, 5, 0, 7, { mat: 'ssg_granite', thick: 0.22 });
   exWall('E', UW, 0, 18.5, 0, 7, { mat: 'ssg_tower_stone' });
   exWall('E', UW, 18.5, VS, 0, 7, { mat: 'ssg_granite', openings: [{ ...dOp(30), y1: 3.45 }] });
-  exWall('E', UW, VS, VD, 0, 7, { mat: 'ssg_granite', openings: [{...dOp(42.35, 17.7), y1:3.45}] });
+  exWall('E', UW, VS, VD, 0, 7, { mat: 'ssg_granite', openings: [{...dOp(EAST_GATE, 17.7), y1:3.45}] });
   exWall('W', 0, 0, 18.5, 0, 7, { mat: 'ssg_tower_stone' });
   exWall('W', 0, 18.5, VS, 0, 7, { mat: 'ssg_granite' });
   exWall('W', 0, VS, VD, 0, 7, { mat: 'ssg_granite', openings: [{ s: J4V, w: 8, y0: 0, y1: 3.4 }, {s:68,w:8,y0:0,y1:3.4}, {s:39.25,w:5,y0:3.6,y1:6.3}] });
@@ -619,7 +619,7 @@ export function build(K) {
     for(let i=0;i<3;i++){const a=i*2*PI/3;wall(...center,center[0]+.92*Math.cos(a),center[1]+.92*Math.sin(a),.08,2.78,{mat:'glass',thick:.035,solid:false});}
   }
   entrance('E', 30, 6);
-  entrance('E', 42.35, 17.7);
+  entrance('E', EAST_GATE, 17.7);
   // v20 intersects the preserved NE stair core; retain the v30 door. Its south
   // canopy return meets the pergola at v30 instead of stacking two grid roofs.
   // The short wall-supported return has no extra posts across the door approach.
@@ -5766,7 +5766,7 @@ export function build(K) {
         for(const u of[33.3-.30,33.3+.30])box(u,v,.025,.06,2.72,.55,glow,{solid:false});
         for(const y of[2.72,3.245])box(33.3,v,.62,.06,y,.025,glow,{solid:false});
       }
-      for(const[txt,u,v,face]of[['1 GATE',34.6,5.4,'S'],['2 GATE',66.6,42.35,'W'],['3 GATE',33.2,80.05,'S']])sign(txt,u,v,2.85,face,3.5,.30,{bg:'#39352f',fg:'#eee2c6',bold:false,twoSided:true});
+      for(const[txt,u,v,face]of[['1 GATE',34.6,5.4,'S'],['2 GATE',66.6,EAST_GATE,'W'],['3 GATE',33.2,80.05,'S']])sign(txt,u,v,2.85,face,3.5,.30,{bg:'#39352f',fg:'#eee2c6',bold:false,twoSided:true});
       // J4/J8 have no confirmed gate in the unmirrored plan: retain plain openings.
       for(const v of[42.6,68])for(const dv of[-4,4])box(.05,v+dv,.14,.14,0,3.1,0xece7dc,{solid:false});
 
@@ -15855,7 +15855,7 @@ export function build(K) {
   // ================================================================= spawns
   const sp = (name, u, v, y, du, dv) => { const [x, z] = P(u, v); K.spawn({ name, x, y, z, yaw: yawTo(du, dv) }); };
   sp('신세계 강남점 정문 (신반포로)', ENTRY, -9, 0, 0, 1);
-  sp('신세계 강남점 동문 (경부선 터미널 방면)', UW + 1.2, 30, 0, -1, 0);
+  sp('신세계 강남점 동문 (경부선 터미널 방면)', UW + 1.2, EAST_GATE, 0, -1, 0);
   sp('1F 화장품 · 주얼리', 33.3, 65.5, 0, 0, -1);
   sp('1M 액세서리 · 여행 · 식음료', 43.3, 71.6, LV['1M'], -1, 0);
 

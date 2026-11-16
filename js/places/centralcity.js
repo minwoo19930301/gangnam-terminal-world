@@ -2813,7 +2813,6 @@ export function build(K) {
   // Round20 famille/L2: the paired 2F↔1F flights are rebuilt at (26,166)→(22,156) by famille.
   // No ghost flight, slab hole, landing rails or directional sign at this gallery end.
   lsign(['중층','아웃백 · 딤딤섬'],190.7,-5,7.5,4.8,.6,'N',{bg:'#393327',fg:'#fff0d7'});
-  // Round20: Bodyfriend joins the relocated 1M gallery, retaining its 77m² bay.
 
   // Round20 — private user walk #512–#532. Keep this replacement separate from
   // the strip-copy deletion (cc1f) and the B1 re-registration (ccb1).
@@ -3847,7 +3846,10 @@ function hallR20(K) {
   zone('센트럴시티 2층 연결','2F',29,-1.5,38,2.5,7,10,'신세계백화점 2층 · 불가리 · 티파니');
   // Keep the lift aisle between Bulgari and the restroom on its indoor route.
   zone('센트럴시티 2층 연결','2F',39.22,1.7,40.45,11.5,7,10,'중앙홀 엘리베이터 · 신세계백화점');
-  for(const [floor,y0,y1] of [['1F',0,3.5],['1M',3.6,6.95],['2F',7,10]])zone('센트럴시티 중앙홀 엘리베이터',floor,38,11.5,43,17.5,y0,y1,'센트럴시티 · 신세계백화점');
+  for(const [floor,y0,y1] of [['1F',0,3.5],['1M',3.6,6.95]])zone('센트럴시티 중앙홀 엘리베이터',floor,38,11.5,43,17.5,y0,y1,'센트럴시티 · 신세계백화점');
+  // The 2F car opens onto the department store. Keep the car and its
+  // 1.2 m boarding apron in Central City; the retail aisle has its own zone.
+  zone('센트럴시티 중앙홀 엘리베이터','2F',39.65,13.45,42.95,15.55,7,10,'센트럴시티 · 신세계백화점');
   // The 1F north/east shops retain the former generated fitout, now on the correct fronts.
   const shopFurnish=(y,fn)=>{
     const opt={name:'중앙홀 매장 · '+(y?'중층':'1층'),floor:y?'1M':'1F',y0:y,y1:y+3.4,poly:RECT(-11,-30,38,26)};
@@ -4042,8 +4044,34 @@ function hallR20(K) {
   storefront('스타벅스',-11,18,-1,26,'E',0,'cafe');
   storefront('SK텔레콤',5,23,12,29,'E',0,'store');
   slab(-11,26,12,30,0,{under:false,ceil:false});
-  const northNames=[['이춘복참치',-29,-23.5],['바디프랜드',-23.5,-9.5],['온고지신',-9.5,-4],['샤브보트',4,10.5],['101번지 남산돈까스',10.5,17]];
-  for(const[name,a,b]of northNames){const back=name==='바디프랜드'?-10.5:name==='온고지신'?-13.2:-15.2;slab(back,a,-5,b,3.6,{mat:galleryMat});storefront(name,back,a,-5,b,'S',3.6,name==='바디프랜드'?'store':'food');}
+  const northNames=[['이춘복참치',-29,-23.5],['온고지신',-9.5,-4],['샤브보트',4,10.5],['101번지 남산돈까스',10.5,17]];
+  for(const[name,a,b]of northNames){const back=name==='온고지신'?-13.2:-15.2;slab(back,a,-5,b,3.6,{mat:galleryMat});storefront(name,back,a,-5,b,'S',3.6);}
+  // The 1M guide places Bodyfriend's door in the east side of its short
+  // wing. Set the facade 1.8m inside the guide line to retain the gallery's
+  // through aisle. Ongojisin limits the north end, and the south return
+  // clears the existing stair to 1F.
+  const loungeFront=-3.35, loungeDoorT=-11.44;
+  const loungeShape=[[-7.94,-9.5],[loungeFront,-9.5],[loungeFront,-13.34],
+    [-4.65,-13.34],[-4.65,-18.34],[-15.18,-18.34],[-15.18,-13.34],[-7.94,-13.34]];
+  const loungePoly=loungeShape.map(q=>P(...q));
+  K.slab(loungePoly,3.6,{mat:galleryMat,under:0xeeeae2,thick:.22});
+  K.zone({name:'바디프랜드',floor:'1M',sub:'안마의자 체험 라운지',poly:loungePoly,y0:3.6,y1:6.85,priority:13});
+  for(let i=0;i<loungeShape.length;i++){
+    const a=loungeShape[i],b=loungeShape[(i+1)%loungeShape.length];
+    const door=i===1,mat=door?'glass':0xe3dfd5;
+    lwall(...a,...b,3.6,6.80,{mat,thick:.10,...(door?{openings:[{at:a[1]-loungeDoorT,w:3.05,y0:3.6,y1:6.18}]}:{})});
+  }
+  shopFurnish(3.6,()=>{
+    lbox(loungeFront,loungeDoorT,.16,3.60,5.95,.43,0x292b2b,{solid:false});
+    lsign('바디프랜드',loungeFront+.10,loungeDoorT,6.16,3.35,.34,'S',{bg:'#292b2b',fg:'#fff',pxPerM:150});
+    lbox(-6.20,-10.15,1.80,.65,3.6,.92,0xb9a88f);
+    // Two display chairs in the rear wing leave a clear way to the desk.
+    for(const s of [-9.3,-12.9]){
+      lbox(s,-16.95,.94,1.30,3.6,.52,0x8c847b);
+      lbox(s,-17.44,.96,.32,4.07,.67,0x766f69);
+      for(const side of [-.50,.50])lbox(s+side,-16.93,.16,1.04,3.95,.30,0xb9b1a5);
+    }
+  });
   for(const[name,a,b]of[['르사이공',0,7],['수라빔',7,14],['순대실록',14,20],['중화가정',20,26],['삼맛종합분식',26,32],['놀부보쌈족발·김치찜',32,38]]){slab(a,26,b,27.2,3.6,{mat:galleryMat});storefront(name,a,17,b,27.2,'W',3.6);}
   // A small lift in the south-east perimeter serves all public upper floors.
   const[xl,zl]=P(41.9,14.5);
