@@ -3667,7 +3667,7 @@ export function build(K) {
   sp('호남선 대합실 · 동상 벤치', 33, 22, 0, 'W');
   sp('호남선 승차홈 (8번)', bays.find(b => b.p === 8).s, 4.6, Y1 + 0.12, 'W');
   sp('스위트 파크 · 호남선 연결통로 (B1)', 7, 25, YB1, 'S');
-  sp('하우스 오브 신세계 · B1 라운지', 115.9, 27.5, YB1, 'N');
+  sp('하우스 오브 신세계 · B1 라운지', 115.9, 26.5, YB1, 'N');
   sp('호남선 대합실 · 매표소와 B1 연결', 124.5, 28.5, 0, 'N');
   sp('지하철 7호선 연결통로 (B1)', 173.4, -28, YB1, 'S');
   sp('파미에스테이션 1층 · 호호식당', 189.5, -58, Y1, 'N');
@@ -3675,7 +3675,25 @@ export function build(K) {
   sp('파미에스테이션 중층 식당가', 192.1, -21, Y2, 'W');
   K.spawn({ name: '센트럴시티 ↔ 고투몰 연결통로 (B1)', x: -140.9, y: YB1, z: -34.6, yaw: Math.atan2(18.2, 40.5) + PI });
   hallR20(K);
-  hosUpperR20(K);
+  const upperLanding=hosUpperR20(K);
+  // The B1 plan puts the door beside Miga Hotpot and Ice Cream Society, facing
+  // the lounge. Fit the car inside the marked bay, clear of Miga's frontage.
+  const [cabS,markerT]=HPst(1544,459),cabT=markerT-.74;
+  const [cabX,cabZ]=P(cabS,cabT);
+  const basement={label:'B1',y:YB1,name:'푸드홀'};
+  const basementLanding=K.elevator({name:upperLanding.name,x:cabX,z:cabZ,rotY:F.W,
+    w:1.4,d:1.8,topH:2.75,mat:0x635246,doorMat:0x51453c,floors:[basement]});
+  K.slab(RECT(cabS-.7,cabT-.9,cabS+.7,cabT+.9),YB1+2.83,{mat:0x706355,under:0xe1d6c1,walk:false,thick:.08});
+  lsign('하우스 오브 신세계',cabS,cabT-.99,YB1+2.7,1.35,.19,'W',{bg:'#4c4036',fg:'#fff3dc'});
+  // The upper and basement guides use separate world registrations. Keep their
+  // floor-specific map pins and call buttons, but open the same four-stop car.
+  const car={...upperLanding,floors:[{...basement,dx:cabX-upperLanding.x,dz:cabZ-upperLanding.z},...upperLanding.floors]};
+  for(const landing of [upperLanding,basementLanding]){
+    const call=K._.interactables.find(it=>it.elevator===landing);
+    call.elevator=car;
+    call.y=landing.floors[0].y;
+    for(const floor of landing.floors.slice(1))K.interact({...call,y:floor.y});
+  }
   sp('센트럴시티 옥상 주차장', 70, 16, YR, 'S');
   K.spawn({ name: '파미에스테이션 원형관 (스타벅스)', x: -47, y: 0, z: 195.6, yaw: PI });
 }
@@ -4628,7 +4646,6 @@ function hosUpperR20(K) {
     tube([a,b,YM+1.055],[c,d,YM+1.055],.055,0x9a7f52);
   }
   const liftFloor={mat:{tex:'marble',color:0xe5d9c1,gloss:.5},under:0xe8dec9,thick:.2};
-  K.slab(pad,YB1,liftFloor);
   for(const [y,floor,sub] of [[Y1,'1F','와인셀러 · 레스토랑'],[YM,'1M','아트 앤 라이프 · 카페']]){
     // Meet the mezzanine edge so the lift aisle has no slot along its floor.
     const approach=QR(-25,y===Y1?9.05:outerEast,6.1,12.5);
@@ -4637,7 +4654,7 @@ function hosUpperR20(K) {
       K.zone({name:'하우스 오브 신세계',floor,sub,poly,y0:y,y1:y+3.4,priority:10});
     }
   }
-  const houseLift=K.elevator({name:'하우스 오브 신세계 엘리베이터',x:lift[0],z:lift[1],rotY:R+PI/2,w:1.4,d:1.8,topH:2.85,floors:[{label:'B1',y:YB1,name:'푸드홀'},{label:'1F',y:Y1,name:'와인셀러 · 레스토랑'},{label:'1M',y:YM,name:'아트 앤 라이프'}]});
+  const houseLift=K.elevator({name:'하우스 오브 신세계 엘리베이터',x:lift[0],z:lift[1],rotY:R+PI/2,w:1.4,d:1.8,topH:2.85,floors:[{label:'1F',y:Y1,name:'와인셀러 · 레스토랑'},{label:'1M',y:YM,name:'아트 앤 라이프'}]});
   {
     // The kit gives its standard stops one door direction. Register L on the same car
     // after drawing those stops so only its opposite door opens into the hotel.
@@ -4679,4 +4696,5 @@ function hosUpperR20(K) {
 
   K.zone({name:'하우스 오브 신세계',floor:'1F',sub:'파미에 출입구 · 푸드홀 내려가는 곳',poly:lobby,y0:0,y1:2.1,priority:12});
   const spawn=Q(16.4,9.4);K.spawn({name:'하우스 오브 신세계 남측 로비',x:spawn[0],y:0,z:spawn[1],yaw:R,group:'센트럴시티'});
+  return houseLift;
 }

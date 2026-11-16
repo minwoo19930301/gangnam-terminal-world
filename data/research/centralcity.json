@@ -1,8 +1,13 @@
 {
+  "house_food_hall_lift_20261117": {
+    "guide": "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/10/28/h40Bjz8nmD2d.png",
+    "view": "https://www.youtube.com/watch?v=T0DZ-GuhQ-E&t=41",
+    "layout": "The basement car opens to the lounge between Miga Hotpot and Ice Cream Society, west of the first food-hall escalator. The basement and upper areas use independent coordinate frames in the model, so B1 uses a floor-specific lift position. The position is 0.74 m from the registered basement icon to keep the lift clear of Miga. All four stops share a menu, with a separate B1 map pin at its actual landing."
+  },
   "house_lobby_lift_20261117": {
     "official": "https://deptmapp.shinsegae.com/magazine/view.do?pSeq=2238",
     "door_and_directory": "https://www.youtube.com/watch?v=T0DZ-GuhQ-E&t=73",
-    "layout": "The House elevator serves B1 food hall, 1F wine cellar/restaurants, 1M Art & Life and the L hotel lobby. Its hotel door is on the opposite side of the same car. A short corridor follows the side of the existing mezzanine and meets the public hotel arcade; its grade and length are approximate. In the current model the older B1 landing remains separated from the food hall."
+    "layout": "The House elevator serves B1 food hall, 1F wine cellar/restaurants, 1M Art & Life and the L hotel lobby. Its hotel door is on the opposite side of the same car. A short corridor follows the side of the existing mezzanine and meets the public hotel arcade; its grade and length are approximate. The basement door opens onto the food-hall lounge."
   },
   "members_bar_mezzanine_bridge_20261117": {
     "guide": "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/07/23/yE3UuO1otYr8.jpg",
