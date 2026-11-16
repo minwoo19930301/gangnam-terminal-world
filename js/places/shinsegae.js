@@ -274,6 +274,12 @@ export function build(K) {
   const inR = (u, v, r, m = 0) => u > r[0] - m && u < r[2] + m && v > r[1] - m && v < r[3] + m;
   const zone = (name, floor, sub, r, y0, y1, priority = 1) => K.zone({ name, floor, sub, poly: rect(...r), y0, y1, priority });
 
+  // Keep the full area for the HUD while the map selects its public approach.
+  function zoneAtApproach(details, footprint, approach) {
+    K.phys.addZone({...details, place:meta.id, poly:footprint});
+    K.zone({...details, poly:approach});
+  }
+
   // One deferred furnishing batch per retail floor; structure/zones are registered immediately.
   // K.detail invokes the same construction kit, so the local survey helpers retain their frame.
   const furnishings = new Map();
@@ -742,6 +748,11 @@ export function build(K) {
     const [x, z] = P(u, -18.5); K.tree(x, z, { y: 0.14, h: 5.3, kind: 'zelkova' });
   }
   zone('신세계백화점 정문', '1F', '1 GATE · 유리 출입문', [23, 5, 44, 6], 0, 3.6, 2);
+  zone('2게이트', '1F', '2 GATE · 경부선 터미널 방면', [UW-1.6, eastGateStart, UW, eastGateEnd], 0, 3.45, 2);
+  // The two retained west-side passages have no numbered gate on the guide.
+  for (const [name,v] of [['서측 연결통로 (북쪽)',J4V],['서측 연결통로 (남쪽)',68]]) {
+    zone(name, '1F', '센트럴시티 연결', [0, v-4, 1.6, v+4], 0, 3.4, 2);
+  }
   // The forecourt is outdoors: do not extend the indoor area zone across it.
 
   // ------------------------------------------------------------ east surface parking (2025 ssg_03/04)
@@ -1490,7 +1501,13 @@ export function build(K) {
     sign(b.side==='서측'?'B1 ↓':'2층 ↑',b.side==='서측'?b.u:b.inner,b.ground+(entry==='S'?1:-1),b.side==='서측'?2.35:1.6,entry,1.1,.3,{bg:'#34312c',fg:'#ffffff',twoSided:true});
     sign(b.side==='서측'?'1층 ↓':'2',b.topU,b.top,b.side==='서측'?9.35:8.25,topEntry,b.side==='서측'?1.1:.5,b.side==='서측'?.3:.5,{bg:'#38352f',fg:'#ffffff',twoSided:true});
     const zoneFarV=b.side==='서측'?westBeautyDownWell[3]:Math.max(b.bottom,b.ground)+1;
-    zone(`${b.side} 에스컬레이터`,'1F',b.side==='서측'?'2층에서 내려옴 · B1 내려감':'B1에서 올라옴 · 2층 올라감',[Math.min(b.u,b.inner)-1.1,Math.min(b.bottom,b.ground)-1,Math.max(b.u,b.inner)+1.1,zoneFarV],0,3.6,4);
+    // Both flights meet the public floor at b.ground. Their geometric centres
+    // lie between the treads, away from the shared level apron.
+    const bank={name:`${b.side} 에스컬레이터`,floor:'1F',sub:b.side==='서측'?'2층에서 내려옴 · B1 내려감':'B1에서 올라옴 · 2층 올라감',y0:0,y1:3.6,priority:4};
+    const left=Math.min(b.u,b.inner),right=Math.max(b.u,b.inner);
+    const apron=b.ground+(entry==='S'?1:-1);
+    zoneAtApproach(bank,rect(left-1.1,Math.min(b.bottom,b.ground)-1,right+1.1,zoneFarV),
+      rect(left-.40,apron-.35,right+.40,apron+.35));
     for(const[u,v,y]of [[b.u,b.bottom,-6],[b.topU,b.top,7]])
       // Overlap the 2F ramp tip so an idle rider does not fall into a gap.
       box(u,v+(v===b.top?(topEntry==='S'?1.0:-1.0):(entry==='S'?-1:1)),1.65,v===b.top?2.2:1.8,y-.08,.08,{tex:'marble',color:0xebe9e5});
@@ -5685,12 +5702,17 @@ export function build(K) {
     // Round20: original photo walk is primary. Plan cells retain their detailed
     // fit-outs under the unmirrored registration; new photo objects use native u/v.
     const groundZone=[P(0,0),P(29.7,0),P(29.7,5),P(39.5,5),P(39.5,0),P(67,0),P(67,VD),P(0,VD)];
-    K.zone({name:'신세계백화점 강남점',floor:fl,sub:'화장품 · 향수 · 주얼리',poly:groundZone,y0:0,y1:3.6,priority:1});
+    // The floor overview starts in the aisle between the main entrance and the popup hall.
+    const groundFloor={name:'신세계백화점 강남점',floor:fl,sub:'화장품 · 향수 · 주얼리',y0:0,y1:3.6,priority:1};
+    const entryAisle=[[29.7,5],[39.5,5],[39.5,6],[35.5,7],[35.5,14],[31.5,14],[31.5,7],[29.7,6]];
+    zoneAtApproach(groundFloor,groundZone,entryAisle.map(([u,v])=>P(u,v)));
     for(const [name,x0,y0,x1,y1]of BEAUTY_CELLS)planCounter(name,planRect(x0,y0,x1,y1));
     // The official guide labels the four sunglasses brands together. Their
     // common floor flares towards the curved promenade, opposite Casestudy.
     const eyewearFloor=[[820,863],[851,863],[851,939],[799,939],[820,898]].map(p=>P(...PLAN(...p)));
-    K.zone({name:'선글라스',floor:fl,sub:'탐포드 · 레이벤 · 페라가모 · 구찌(케어링)',poly:eyewearFloor,y0:0,y1:2.6,priority:2});
+    const eyewearHall={name:'선글라스',floor:fl,sub:'탐포드 · 레이벤 · 페라가모 · 구찌(케어링)',y0:0,y1:2.6,priority:2};
+    const sharedApproach=[[820,898],[820,939],[799,939]].map(p=>P(...PLAN(...p)));
+    zoneAtApproach(eyewearHall,eyewearFloor,sharedApproach);
     furnish(fl,()=>K.hpoly(0xe6e2da,eyewearFloor,.015));
     for(const [name,x0,y0,x1,y1,face]of EDGE_BOUTIQUES)planBoutique(name,planRect(x0,y0,x1,y1),face);
     // The 3GATE walk shows a black-and-white Chanel corner at the edge of
@@ -6403,8 +6425,7 @@ export function build(K) {
     // The centre of the floor footprint is the open atrium. Use the public
     // landing beside the south hall as its map destination.
     const mezzanineFloor={name:'신세계백화점 중층',floor:fl,sub:'액세서리 · 여행 · 식음료',y0:y,y1:LV['2F'],priority:1};
-    K.phys.addZone({...mezzanineFloor,place:meta.id,poly:rect(...MEZZ)});
-    K.zone({...mezzanineFloor,poly:rect(24.1,66.65,25.9,67.35)});
+    zoneAtApproach(mezzanineFloor,rect(...MEZZ),rect(24.1,66.65,25.9,67.35));
     const remappedFace={N:'E',S:'W',E:'N',W:'S'};
     // The café projects into the end of the aisle beside Upper House. Only
     // the short north face between the lounge and the partition is its entry.
@@ -6489,8 +6510,7 @@ export function build(K) {
     // The counter-specific destinations line both sides. Searching for
     // the hall itself brings visitors into the open aisle between them.
     const jewelleryHall={name:'주얼리',floor:fl,sub:'패션 주얼리 · 메자닌 남측 통로',y0:y,y1:6.46,priority:14};
-    K.phys.addZone({...jewelleryHall,place:meta.id,poly:jewelleryPoly});
-    K.zone({...jewelleryHall,poly:rect(...planRect(958,691,969,748,MPLAN))});
+    zoneAtApproach(jewelleryHall,jewelleryPoly,rect(...planRect(958,691,969,748,MPLAN)));
     for(let i=0;i<6;i++)
       wall(...jewelleryUV[i],...jewelleryUV[i+1],y,6.46,{mat:0xeeeae3,thick:.12});
     const rows=[699,713,727,741], columns=[942,985];
