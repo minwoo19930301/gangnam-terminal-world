@@ -1,4 +1,28 @@
 {
+  "joined_2f_boutiques_20261117": {
+    "guide": "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/10/16/1esU4Yqhl5TX.png",
+    "layout": "Hermès occupies two sales areas joined by a narrow retail passage around the escalator. Louis Vuitton occupies two adjoining bays. Each boutique has one map destination that follows its footprint. Louis Vuitton Jewelry has a separate entrance across the public aisle."
+  },
+  "ground_retail_arrivals_20261117": {
+    "guide": "https://www.shinsegae.com/store/floor.do?storeCd=SC00002",
+    "layout": "Ground-floor display cases have solid bases before their decoration loads. The eyewear cases face the customer aisle. Prada Beauty has a standing lane between its testers. The YSL destination follows its sales floor around the right-hand Members Bar descent. In the modeled layout, each of the 76 ground-floor retail destinations has a walking round trip to the main entrance or Gate 3. The precise display-case positions and widths are schematic."
+  },
+  "north_fashion_boutiques_3f_20261117": {
+    "guide": "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/08/26/XgByI9HjyXqX.png",
+    "layout": "Max Mara, Brunello Cucinelli, Loewe, Chloé and Acne Studios each open onto the same public aisle. The guide draws continuous dark partitions between these units and a stepped perimeter behind the deeper middle three. The model uses those lines for its visible and solid walls. Their height and finish are schematic."
+  },
+  "polestar_directory_service_20261117": {
+    "directory": "https://www.shinsegae.com/store/floor.do?storeCd=SC00002",
+    "vip_service": "https://www.polestar.com/kr/news/ssg_vip_benefit/",
+    "showroom": "https://www.polestar.com/kr/locations/seoul/",
+    "layout": "The 2F directory lists Polestar as a service and gives its national customer-support number. The brand describes a VIP test-drive reservation partnership. Its Seoul showroom is on Dosan-daero. The directory does not establish a physical boutique or a particular handover point on the 2F shopping floor."
+  },
+  "main_wing_restroom_pockets_2f_3f_20261117": {
+    "layout": "The official 2F and 3F guides show a stepped end to the lift lobby at the restroom. The public recess and threshold follow the guide boundary, leaving both model cars approachable. The 2F marker denotes the women’s and accessible restroom. The 3F marker denotes the men’s and women’s restrooms. The interiors are unverified."
+  },
+  "floor_shortcuts_2f_5f_20261117": {
+    "layout": "The floor shortcuts start on public aisles between the mapped boutiques. They look toward Bulgari and Tiffany on 2F, the watch boutiques near Omega on 3F, the annex from the cross-wing passage on 4F, and vunque and DAKS Handbags on 5F. The dedicated 4F shoes shortcut is in the shoe hall near Miu Miu and Louis Vuitton. The standing points and camera headings are chosen for navigation."
+  },
   "cross_wing_passages_and_lifts_20261117": {
     "guides": [
       "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/10/16/1esU4Yqhl5TX.png",

@@ -1,4 +1,19 @@
 {
+  "restaurant_gallery_1m_20261117": {
+    "directory": "https://www.shinsegae.com/store/floor.do?storeCd=SC00002",
+    "layout": "The photographed mezzanine directory and shopfronts place ten restaurant entrances along the two arms of the L-shaped public arcade. Each destination uses the existing shop outline and doorway. The passage from the Shinsegae Members Bar continues across the bridge to Sundae Sillok. On the plaza level the Woori Bank branch and the adjoining TWO CHAIRS W office have independent front doors."
+  },
+  "open_stage_20261117": {
+    "event": "https://www.segye.com/newsView/20261105510641",
+    "calendar": "https://www.shinsegae.com/shopping/list.do?storeCd=SC00002",
+    "layout": "The Open Stage search destination is on the level plaza between the LED pillars. The Lexus ES exhibit and its movable barriers ran November 5–8, 2026. The plaza, fixed lighting and lounge remain accessible after closing."
+  },
+  "plaza_shops_and_house_mezzanine_20261117": {
+    "directory": "https://www.shinsegae.com/store/floor.do?storeCd=SC00002",
+    "house_1m": "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/07/02/pU2GDKD9YgCz.jpg",
+    "clinic": "https://an-clinic.com/sub/AN-CLINIC/Contact-Us",
+    "layout": "The four existing plaza interiors for Starbucks Central F1, Shake Shack, Woori Bank and L’Occitane have individual shop search destinations. On the House mezzanine the clinic’s north frontage opens onto the lift approach at the break shown in the guide. Its model opening widens from about 0.68 m to 1.14 m at the same jamb to fit the player. Valextra, Corthay and Camicie share the BOONTHESHOP destination. Wine Cellar is searchable under the directory and guide spellings."
+  },
   "wine_cellar_restroom_entrance_1f_20261117": {
     "guides": [
       "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/03/10/8p0O5JDfiYV3.jpg",
