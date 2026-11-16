@@ -5341,7 +5341,13 @@ export function build(K) {
     const remap=(u,v)=>[67*(1-v/84.7),84.7*(1-u/67)];
     for(const [u,v,U,V]of[[54.3,0,54.3,13.3],[54.3,13.3,61.1,13.3],[61.1,13.3,61.1,9.5],[61.1,9.5,67,9.5]])wall(...remap(u,v),...remap(U,V),0,3.1,{mat:0xe8e2d7,thick:.14});
     {const a=remap(54.3,0),b=remap(67,9.4);zone('직원 전용',fl,'안내도 외 비공개 구역',[Math.min(a[0],b[0]),Math.min(a[1],b[1]),Math.max(a[0],b[0]),Math.max(a[1],b[1])],0,3.1,4);}
-    planBoutique('여자화장실',planRect(877,872,948,987),'N',0,fl,'service');
+    // The 1F guide steps the service wall behind the sunglasses counter,
+    // then turns again beside the curved Gentle Monster aisle. The landing
+    // on the public side of this return also serves the Members Bar descent.
+    planBoutique('여자화장실',planRect(877,872,948,920),'N',0,fl,'service');
+    const wcReturn=PLAN(948,987);
+    wall(...PLAN(948,920),...wcReturn,0,3.1,{mat:0xe8e2d7,thick:.12});
+    wall(...wcReturn,...PLAN(795,987),0,3.1,{mat:0xe8e2d7,thick:.12});
 
     // L04: GATE 3's north-facing glass threshold is on the SOUTH wall.
     // Full 8 m corridor remains clear between the separately rotated boutiques.
@@ -6207,7 +6213,9 @@ export function build(K) {
     // shop doors are unverified; this avoids the model's open atrium cut.
     // Thursday Island's previous front faced the modelled escalator opening;
     // use the guide-side aisle until the real doorway location is surveyed.
-    const frontOverrides={'5F:써스데이 아일랜드':'W','5F:DKNY':'W','5F:캐나다 구스':'E','5F:입점 준비 중':'N','11F:더 키친 일 포노 (이탈리안 피자)':'S','11F:꼴라주 (프렌치 경양식)':'N','11F:살롱드호우섬 (딤섬/누들/홍콩식 솥밥)':'S','11F:카테고릭 (카페)':'N','3F:PSR 컨시어지':'S','3F:트리니티 라운지':'N',
+    // On 5F, ASPESI and DsFURS front the cross-wing passage opposite
+    // the Yoonjin Fur side. The space behind them is outside the guide outline.
+    const frontOverrides={'5F:아스페시':'S','5F:디에스퍼':'S','5F:써스데이 아일랜드':'W','5F:DKNY':'W','5F:캐나다 구스':'E','5F:입점 준비 중':'N','11F:더 키친 일 포노 (이탈리안 피자)':'S','11F:꼴라주 (프렌치 경양식)':'N','11F:살롱드호우섬 (딤섬/누들/홍콩식 솥밥)':'S','11F:카테고릭 (카페)':'N','3F:PSR 컨시어지':'S','3F:트리니티 라운지':'N',
       // Both shops border public aisles on the guide. The current atrium
       // removes their north-facing fronts, so use the opposite aisle.
       '2F:발렌시아가':'S','2F:생 로랑':'S',
@@ -7090,6 +7098,17 @@ export function build(K) {
         const dangerous=k<steps&&support<y-.7&&!atEsc;
         if(dangerous&&begin===null)begin=k/steps;else if(!dangerous)flush(k/steps);
       }
+    }
+  }
+  // The 5F guide steps back behind ASPESI and DsFURS. Follow the outline
+  // to both outer walls so the blank area cannot become a second cross-wing
+  // aisle. The public passage runs along the fronts opposite Yoonjin Fur.
+  {
+    const y = LV['5F'];
+    const outline = [[886, 508], [886, 677], [936, 677], [936, 765],
+                     [1031, 765], [1031, 508]].map(([px, py]) => upperPlanPoint('5F', px, py));
+    for (let i = 1; i < outline.length; i++) {
+      wall(...outline[i - 1], ...outline[i], y, y + clearH('5F'), { mat: 0xe7e1d6, thick: .14 });
     }
   }
   const mainOutlineBottom={'2F':1000,'3F':1078,'4F':1077,'5F':1095,'6F':1077,'7F':1125,'8F':1089,'9F':1077,'10F':1126};
