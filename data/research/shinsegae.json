@@ -1,4 +1,11 @@
 {
+  "5f_gelato_pique_popup_20261117": {
+    "floor_guide": "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/11/10/CR8TldsBKpZG.png",
+    "directory": "https://www.shinsegae.com/store/floor.do?storeCd=SC00002",
+    "event": "https://popga.co.kr/popup/17767",
+    "map": "https://cdn.popga.co.kr/spot/17767/main/f2575f79-7f36-4978-878c-ec72c22cb2a5_1794783866718_thumbnail_MAIN_W480.webp",
+    "layout": "The event map places the concession in the 5F main-wing popup beside Rag & Bone. Its poster gives November 12–25, 2026 and the store directory records the same closing date. Only this existing booth carries the event name during those dates in Korea."
+  },
   "bulgari_jw_aisle_20261117": {
     "guide": "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/10/16/1esU4Yqhl5TX.png",
     "layout": "On the 2F guide the south-east corner of Van Cleef & Arpels steps back above Bulgari. Its rear showroom arm shares the boutique interior. The intervening public aisle continues toward JW Marriott up to the modelled edge of the department-store floor. The hotel-side floor and doors are unresolved."
@@ -9,6 +16,7 @@
   },
   "members_bar_descent_1f_turn_20261117": {
     "guide": "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/08/06/DWUvdakUS5Xd.png",
+    "approach": "Facing 3 GATE from the main hall places the 1F ascent on the left and the descending exit on the right. At each boarding apron the in-game location label gives the direction before the player steps on the belt.",
     "layout": "The 1F wall steps behind the sunglasses counter and turns beside the Gentle Monster aisle. Refitting the restroom to that corner opens the public turn from the right-hand Members Bar descent. Game-player input reaches Gentle Monster continuously from the 1M corridor. The restroom interior and exact doorway dimensions are schematic."
   },
   "cross_wing_passage_5f_20261117": {

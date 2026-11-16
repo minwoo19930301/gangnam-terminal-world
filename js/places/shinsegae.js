@@ -132,6 +132,11 @@ const UPPER_BANKS = [
 ];
 
 export function build(K) {
+  // The brand's November 2026 event map places its counter beside Rag & Bone.
+  // Shinsegae lists November 25 as its final day in Seoul.
+  const visitTime = Date.now();
+  const gelatoPiqueOpen = visitTime >= Date.parse('2026-11-12T00:00:00+09:00') &&
+    visitTime < Date.parse('2026-11-26T00:00:00+09:00');
   // Bilinear survey frame: all four wall corners land on the authoritative OSM footprint.
   // Keep RA only for small rectangular fittings (the footprint has a slight skew).
   const P = (u, v) => {
@@ -1301,8 +1306,12 @@ export function build(K) {
   }
   dressedEscalator(mezzUpFoot,mezzV,mezzUpHead,mezzV,0,3.6,'up');
   dressedEscalator(mezzDownFoot,mezzV,mezzDownHead,mezzV,0,3.6,'down');
-  zone('메자닌 에스컬레이터','1F','메자닌 · 멤버스바',[mezzUpHead-.2,mezzV-1,mezzUpFoot+1.2,mezzV+1],0,3.6,5);
+  zone('메자닌 올라가는 에스컬레이터','1F','1.5층 · 멤버스바',[mezzUpHead-.2,mezzV-1,mezzUpFoot+2.3,mezzV+1],0,3.6,5);
   zone('메자닌 내려오는 에스컬레이터','1F','1층 · 여자화장실',[mezzDownFoot-1.2,mezzV-1,mezzDownHead+.2,mezzV+1],0,3.6,5);
+  // Announce the destination on the upper boarding apron, before the belt
+  // starts dropping below the mezzanine. Keep the adjoining public aisle clear.
+  zone('1층 내려가는 에스컬레이터','1M','멤버스바 메자닌 · 1층 젠틀몬스터 방면',
+    [mezzDownHead-.35,mezzV-.85,mezzDownHead+2.35,mezzV+.85],3.6,6.46,5);
   // In the private 1F walk, the entrance-side part of the east-bound
   // mezzanine escalator enclosure is framed glass; the opposite side and
   // the remainder of the shaft are opaque. Keep the glass collision solid.
@@ -6557,12 +6566,15 @@ export function build(K) {
     const niche=upperNiches[`${id}:${c.name}`];
     if(niche){parts=[niche];K.slab(rect(...niche),y,{mat:{tex:'marble',color:0xe8e2d5,gloss:.3},thick:.12,under:false,ceil:false,edge:false});}
     c.model={raw,local:r,parts,face,sourceFace,aisleEdges:['N','S','E','W'].filter(f=>score(f)>=2).map(f=>upperFace[f])};
+    if (gelatoPiqueOpen && id === '5F' && c.name === '팝업' && px === 712 && py === 844) {
+      c.model.event = { name: '젤라또피케 팝업', sign: 'GELATO PIQUE' };
+    }
     upperCells.set(`${id}:${c.name}`,{...c,local:r,parts,face});
     // A guide rectangle can be partly or wholly cut by modelled circulation.
     // On the requested floors, only the rendered pieces may identify as a
     // shop: otherwise the HUD names absent stores in the atrium or lift well.
     const shopDescription=id==='5F'&&c.name==='팝업 스테이지'?'팝업 행사 공간':id==='4F'&&c.name==='쏘솔트'?'헤어 액세서리 · 스카프 · 모자':id==='4F'&&c.name==='코치'?'여성 의류 · 가방':id==='3F'&&c.name==='PSR 컨시어지'?'VIP 컨시어지':id==='3F'&&c.name==='트리니티 라운지'?'VIP 라운지':id==='3F'&&c.name==='호라이즌'?'카페 · 브런치':id==='3F'&&c.name==='트리니티'?'수입 여성의류 편집숍':id==='4F'&&c.name.startsWith('슈블루')?'구두 · 가방 수선':id==='5F'&&c.name==='부디무드라'?'요가복 · 애슬레저':id==='5F'&&c.name==='파로'?'여성 가발':id==='4F'&&c.name==='콜롬보'?'명품 핸드백':((id==='5F'&&['사바티에','동우모피','진도모피','윤진모피','디에스퍼','셀럽제이'].includes(c.name))||(id==='4F'&&c.name==='이브살로몬'))?'모피 · 여성의류':`${id} · 신세계백화점 강남점`;
-    if(['2F','3F','4F','5F'].includes(id)||(id==='6F'&&c.name==='일레븐티')||tag||chanel||amomento||casualShoe||theilma||galleryNeighbors)for(const q of parts)zone(c.name,id,shopDescription,q,y,y+H,3);
+    if(['2F','3F','4F','5F'].includes(id)||(id==='6F'&&c.name==='일레븐티')||tag||chanel||amomento||casualShoe||theilma||galleryNeighbors)for(const q of parts)zone(c.model.event?.name || c.name,id,shopDescription,q,y,y+H,3);
     else zone(c.name,id,`${id} · 신세계백화점 강남점`,r,y,y+H,3);
     if(id==='4F'&&(c.name==='준지'||(c.name==='입점 준비 중'&&c.rect[0]===498))){
       const opening=c.name==='입점 준비 중';
@@ -15037,6 +15049,7 @@ export function build(K) {
         // Directory names and brand spellings, not a claim about the actual
         // facade typography or the present-day interior fittings.
         Object.assign(brand5,{'자딕앤 볼테르':'ZADIG & VOLTAIRE','캐나다 구스':'CANADA GOOSE','아스페시':'ASPESI','베르니스':'BERENICE','에레':'EHRE','유메르':'UMER','로서울':'ROH SEOUL'});
+        if (c.model.event) brand5[c.name] = c.model.event.sign;
         const shoeGroup=id==='4F'&&/캐주얼 슈즈|컨템포러리 슈즈|국내 슈즈|컴포트 슈즈|분더샵 슈/.test(c.name);
         const fasciaName=shoeGroup?c.name.replace(/\s*\([^)]*\)\s*$/, ''):c.name;
         // The official guide lists the tenants only at the shared-hall
