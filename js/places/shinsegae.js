@@ -90,7 +90,14 @@ const PHOTO_ATRIUM=[30,30,38,52];
 const PHOTO_ATRIUM_5F_PARTS=[[30,32.82713,38,52],[31.657894736842103,30,38,32.82713]];
 // Recover the small guide-derived 2F Burberry corner, preserving the larger
 // 1F photo atrium. This registration and the guard positions are estimates.
-const PHOTO_ATRIUM_2F_PARTS=[[30,33.4347,38,52],[34.7642,30,38,33.4347]];
+// The 2F guide has a continuous aisle between Prada and Burberry to
+// the cross aisle past Prada's corner. Keep the photo opening beside it.
+const PRADA_AISLE_EDGE = 36.55, PRADA_AISLE_END = 35.25;
+const PHOTO_ATRIUM_2F_PARTS=[
+  [30,PRADA_AISLE_END,38,52],
+  [30,33.4347,PRADA_AISLE_EDGE,PRADA_AISLE_END],
+  [34.7642,30,PRADA_AISLE_EDGE,33.4347],
+];
 // On 3F the guide's main opening starts farther back; preserving the full
 // ground-floor approximation here cuts into the Rick Owens and The Row cells.
 // This floor-specific boundary is a model estimate, not a surveyed opening.
@@ -1070,6 +1077,14 @@ export function build(K) {
   function voidRail(r,y,gapsAtEnds=false,landingMid=(r[0]+r[2])/2,landingHalf=1.65){
     const [a,b,c,d]=r;
     for(const [u0,v0,u1,v1]of [[a,b,a,d],[c,b,c,d],...(gapsAtEnds?[]:[[a,b,c,b],[a,d,c,d]])]){
+      if(y===LV['3F']&&u0===u1&&u0===upperPhysicalWell('3F')[2]){
+        // This edge runs parallel to the 2F down flight. The entire side
+        // is exposed up to the landing, where the level floor resumes.
+        const end=mainLandingBridge('3F')[1];
+        wall(u0,v0,u1,end,y,y+1.1,{mat:'glass',thick:.04});
+        upperGuardTrim(u0,v0,u1,end,y+1.1,.05,.05,0xa7a9a8,[[0,1]]);
+        continue;
+      }
       const openings=[]; // r20 ground arrivals are guarded at their own north/south heads
       const safe=upperSafeWall(u0,v0,u1,v1,y,1.1,{mat:'glass',thick:.04,openings});
       upperGuardTrim(u0,v0,u1,v1,y+1.1,.05,.05,0xa7a9a8,safe,openings);
@@ -1167,8 +1182,13 @@ export function build(K) {
       }
     }
   }
-  // Guard both exposed sides of the recovered 2F corner.
-  {const y=LV['2F'];wall(30,33.4347,34.7642,33.4347,y,y+1.05,{mat:'glass',thick:.045});wall(34.7642,30,34.7642,33.4347,y,y+1.05,{mat:'glass',thick:.045});}
+  // Guard the returns on the Burberry and Prada sides of the 2F opening.
+  {const y=LV['2F'], rail={mat:'glass',thick:.045};
+    wall(30,33.4347,34.7642,33.4347,y,y+1.05,rail);
+    wall(34.7642,30,34.7642,33.4347,y,y+1.05,rail);
+    wall(PRADA_AISLE_EDGE,30,PRADA_AISLE_EDGE,PRADA_AISLE_END,y,y+1.05,rail);
+    wall(PRADA_AISLE_EDGE,PRADA_AISLE_END,38,PRADA_AISLE_END,y,y+1.05,rail);
+  }
   // Guard the corresponding exposed edges of the retained 5F corner.
   {const y=LV['5F'];wall(30,32.82713,31.657894736842103,32.82713,y,y+1.05,{mat:'glass',thick:.045});wall(31.657894736842103,30,31.657894736842103,32.82713,y,y+1.05,{mat:'glass',thick:.045});}
   // Guard the newly exposed 3F edge; the moving stair landings are at the
@@ -1245,7 +1265,7 @@ export function build(K) {
       zone('여자 화장실 · 기저귀 교환대','3F','고객 편의시설',[35.3,143.1,41.2,146.95],y,y+2.8,10);
     }
     // The 4F cross-landing has guards along its exposed edge below.
-    if(id==='2F')upperSafeWall(34.7642,30,38,30,y,1.1,{mat:'glass',thick:.04});
+    if(id==='2F')upperSafeWall(34.7642,30,PRADA_AISLE_EDGE,30,y,1.1,{mat:'glass',thick:.04});
     else if(id==='5F')upperSafeWall(31.657894736842103,30,38,30,y,1.1,{mat:'glass',thick:.04});
     else if(id!=='3F'&&id!=='4F')upperSafeWall(30,30,38,30,y,1.1,{mat:'glass',thick:.04});
   }
@@ -1266,10 +1286,13 @@ export function build(K) {
     K.slab(rect(...q),y,{mat:{tex:'marble',color:0xe8dfce},thick:.16,under:false,ceil:false,edge:false});
     // Guard the open sides while keeping both escalator heads and the aisle
     // end clear. These are new outer edges, not barriers across the landing.
-    wall(q[0],q[3],q[2],q[3],y,y+1.1,{mat:'glass',thick:.04});
-    wall(q[2],q[1],q[2],q[3],y,y+1.1,{mat:'glass',thick:.04});
+    // The 3F bridge overlaps permanent floor beside the two boutiques.
+    // Stop its end rails at the well; the aisle continues around the landing.
+    const guardEnd=id==='3F'?upperPhysicalWell(id)[2]:q[2];
+    wall(q[0],q[3],guardEnd,q[3],y,y+1.1,{mat:'glass',thick:.04});
+    if(id!=='3F')wall(q[2],q[1],q[2],q[3],y,y+1.1,{mat:'glass',thick:.04});
     if(id==='3F'){
-      for(const [a,b] of [[q[0],31.45],[34.78,37.24],[38.95,40.45],[42.25,q[2]]])
+      for(const [a,b] of [[q[0],31.45],[34.78,37.24],[38.95,40.45],[42.25,guardEnd]])
         if(b>a+.05)wall(a,q[1],b,q[1],y,y+1.1,{mat:'glass',thick:.04});
     }else upperSafeWall(q[0],q[1],mid-3.65,q[1],y,1.1,{mat:'glass',thick:.04});
   }
@@ -1342,8 +1365,19 @@ export function build(K) {
   }
   dressedEscalator(mezzUpFoot,mezzV,mezzUpHead,mezzV,0,3.6,'up');
   dressedEscalator(mezzDownFoot,mezzV,mezzDownHead,mezzV,0,3.6,'down');
-  zone('메자닌 올라가는 에스컬레이터','1F','1.5층 · 멤버스바',[mezzUpHead-.2,mezzV-1,mezzUpFoot+2.3,mezzV+1],0,3.6,5);
-  zone('메자닌 내려오는 에스컬레이터','1F','1층 · 여자화장실',[mezzDownFoot-1.2,mezzV-1,mezzDownHead+.2,mezzV+1],0,3.6,5);
+  // The map uses each zone's centre at its floor height. Mark the level
+  // aprons so selecting a flight puts the player in front of its treads.
+  function mezzanineLanding(name, sub, apronStart, apronEnd, foot, head) {
+    const location={name,sub,floor:'1F',y0:0,y1:3.6,priority:5};
+    K.zone({...location,poly:rect(apronStart,mezzV-1,apronEnd,mezzV+1)});
+    // Keep the same HUD location while riding above the cosmetics floor.
+    K.phys.addZone({...location,place:meta.id,
+      poly:rect(Math.min(foot,head)-.2,mezzV-1,Math.max(foot,head)+.2,mezzV+1)});
+  }
+  mezzanineLanding('메자닌 올라가는 에스컬레이터','왼쪽 상행 · 1.5층 멤버스바',
+    mezzUpFoot-.35,mezzUpFoot+2.3,mezzUpFoot,mezzUpHead);
+  mezzanineLanding('메자닌 내려오는 에스컬레이터','오른쪽 하행 출구 · 여자화장실 · 젠틀몬스터',
+    mezzDownFoot-1.8,mezzDownFoot+.35,mezzDownFoot,mezzDownHead);
   // Announce the destination on the upper boarding apron, before the belt
   // starts dropping below the mezzanine. Keep the adjoining public aisle clear.
   zone('1층 내려가는 에스컬레이터','1M','멤버스바 메자닌 · 1층 젠틀몬스터 방면',
@@ -3089,7 +3123,7 @@ export function build(K) {
   const lowerFace={N:'E',S:'W',E:'N',W:'S'};
   const remapRect=(r)=>{const a=lowerRemap(r[0],r[1]),b=lowerRemap(r[2],r[3]);return[Math.min(a[0],b[0]),Math.min(a[1],b[1]),Math.max(a[0],b[0]),Math.max(a[1],b[1])];};
   const nativeCounterTools={box,hq,sign,zone,beautyPerson};
-  function planCounter(name,r,y=0,kind='cos',floor='1F') {
+  function planCounter(name,r,y=0,kind='cos',floor='1F',customerSide=0) {
     // The four sunglass counters face the Case Study aisle. Their shared
     // guide outline backs onto the women's room and the mezzanine escalator.
     const eyewear=/선글라스/.test(name);
@@ -3107,7 +3141,14 @@ export function build(K) {
     const caseOutline = floor === '1F' && name === '케이스스터디'
       ? [[682,861],[794,861],[794,886],[767,926],[682,926]].map(p => PLAN(...p)) : null;
     if (caseOutline) K.zone({name,floor,sub:'패션 · 라이프스타일',poly:caseOutline.map(p => P(...p)),y0:y,y1:y+2.6,priority:3});
-    else if (floor==='1M' && kind==='jewel') zone(name,floor,'주얼리',r,y,y+2.6,15);
+    else if (customerSide) {
+      // Map search takes the player to the zone centre. Use the viewing side
+      // of the mezzanine case, so each destination is on the gallery floor.
+      const centre=v+customerSide*1.0;
+      const directoryName={'알로드':'ALOD','장폴클라리쎄':'JP클라리쎄'}[name];
+      zone(name,floor,directoryName ? directoryName+' · 주얼리' : '주얼리',
+        [u0,centre-.30,u1,centre+.30],y,y+2.6,15);
+    }
     else zone(name,floor,name==='다이슨 뷰티'?'헤어 기기 · 체험':kind==='jewel'?'주얼리':name==='케어링 선글라스'?'구찌 · 발렌시아가 · 생로랑':eyewear?'선글라스':kind==='popup'?'팝업 행사':'화장품 · 향수',r,y,y+2.6,3);
     furnish(floor,()=>{
       // The 1M jewellery island is built from low pale vitrines with cool-lit
@@ -5461,12 +5502,19 @@ export function build(K) {
     zone('3게이트 화장품관 복도',fl,'조말론 · 입생로랑 · 이솝 · 샤넬',[29.3,66,37.3,80],0,3.6,4);
     wall(29,80,29,84.7,0,3.1,{mat:{tex:'marble',color:0xefefec,gloss:.5},thick:.14,openings:[{at:3.1,w:1.05,y0:0,y1:2.3}]});
     wall(37.3,80,37.3,84.7,0,3.1,{mat:{tex:'marble',color:0xefefec,gloss:.5},thick:.14});
-    // Glass doors are open at the centre; side leaves remain visible and walkable.
-    for(const u of[29.35,37.1]){
-      box(u,80,.065,.09,0,2.9,'metal',{solid:false});
-      box(u+(u<33?.52:-.52),80,1,.025,.12,2.65,'glass',{solid:false});
-      box(u+(u<33?.93:-.93),80,.035,.05,.8,1.05,'metal',{solid:false});
+    // IMG_0410–0413 show glass sidelights and an open door on the
+    // visitor's right when entering cosmetics from the Gate 3 vestibule.
+    for (const [jamb, inward] of [[29.35,1],[37.1,-1]]) {
+      box(jamb,80,.065,.09,0,2.9,'metal',{solid:false});
+      box(jamb+inward*.52,80,1,.025,.12,2.65,'glass',{solid:true});
+      box(jamb+inward*1.02,80,.045,.055,.06,2.72,0x333738,{solid:false});
     }
+    const hinge = 37.1-1.02, leafLength = 1.10;
+    const tip = 80+leafLength;
+    box(hinge,80+leafLength/2,.035,leafLength,.08,2.68,'glass',{solid:true});
+    for (const v of [80,tip]) box(hinge,v,.055,.045,.08,2.68,0x333738,{solid:false});
+    for (const h of [.08,2.72]) box(hinge,80+leafLength/2,.055,leafLength,h,.04,0x333738,{solid:false});
+    box(hinge-.065,tip-.20,.035,.035,.85,.50,0x454a49,{solid:false});
     box(33.2,80,7.95,.16,2.88,.14,{tex:'metal',color:0x8e9694},{solid:false});
     box(29.08,83.1,.055,1.02,0,2.3,0xf0f0ec,{solid:false});
     sign('비상계단',29.13,83.1,1.65,'E',.65,.23,{bg:null,fg:'#4b4c4b',bold:false});
@@ -5569,7 +5617,9 @@ export function build(K) {
           // At the near end the arch legs sit behind the red display, so its
           // photographed wordmark remains visible across the whole plinth.
           const redV=v+(v>50?.25:0);
-          box(u-side*.65,redV,1.55,.65,.03,.72,0xb2262c,{solid:false});
+          // The red product plinths flank the photographed entrance. Keep
+          // their footprint solid and the middle aisle open between them.
+          box(u-side*.65,redV,1.55,.65,.03,.72,0xb2262c,{solid:true});
           // The dated private Gangnam walk shows an illuminated name on the
           // plinth. Keep it visible while the shared sign atlas is loading.
           immediateBeautyName('BURBERRY',u-side*.65,redV+(v<40?-.34:.34),.37,v<40?'N':'S',1.45,.24,.02);
@@ -6009,13 +6059,13 @@ export function build(K) {
       [917,690],[935,688],[948,685],[961,680],[968,675],[973,670]];
     const jewelleryUV=jewelleryPlan.map(pixel=>MPLAN(...pixel));
     const jewelleryPoly=jewelleryUV.map(point=>P(...point));
-    K.zone({name:'주얼리',floor:fl,sub:jewels.join(' · '),poly:jewelleryPoly,y0:y,y1:6.46,priority:14});
+    K.zone({name:'주얼리',floor:fl,sub:'패션 주얼리 · 메자닌 남측 통로',poly:jewelleryPoly,y0:y,y1:6.46,priority:14});
     for(let i=0;i<6;i++)
       wall(...jewelleryUV[i],...jewelleryUV[i+1],y,6.46,{mat:0xeeeae3,thick:.12});
     const rows=[699,713,727,741], columns=[942,985];
     for(let i=0;i<jewels.length;i++){
       const [u,v]=MPLAN(columns[i%2],rows[Math.floor(i/2)]);
-      planCounter(jewels[i],[u-.69,v-.92,u+.69,v+.92],y,'jewel',fl);
+      planCounter(jewels[i],[u-.69,v-.92,u+.69,v+.92],y,'jewel',fl,i%2===0?1:-1);
     }
     furnish(fl,()=>{
       K.hpoly({tex:'marble',color:0xeae4db},jewelleryPoly,y+.029);
@@ -6052,7 +6102,11 @@ export function build(K) {
     K.hpoly({tex:'marble',color:0xf3f2ee,scale:[1,1],gloss:.7},rect(...southBlock),y+.02,true,[rect(...NW_ESC),rect(...SW_ESC)]);
     K.hpoly(CEIL,rect(...southBlock),6.46,false);
     // The hallway connects the two escalator slots and the entrance to the bridge.
-    zone('멤버스바',fl,'SHINSEGAE MEMBERS BAR',memberBar,y,6.46,6);
+    // The front counter has a curtained recess at its north end. Keep the
+    // searchable guest area in front of the counter and round that end.
+    const membersGuest=[[937,479],[995,479],[995,488],[963,488],[963,552],[937,552]];
+    K.zone({name:'멤버스바',floor:fl,sub:'SHINSEGAE MEMBERS BAR',
+      poly:membersGuest.map(p=>P(...MPLAN(...p))),y0:y,y1:6.46,priority:6});
     // Complete the photographed 1F south frieze, keeping the MEZZANINE entry
     // (u51..55) directly beside MFK and the DECORTÉ approach clear.
     for(const u of [50.6,55.4])box(u,67.9,.7,.55,0,3.6,0xefeae0);
@@ -6315,6 +6369,7 @@ export function build(K) {
   // ================================================================= Round 14 official upper floors
   const upperCells = new Map();
   const upperRect=upperPlanRect;
+  const pradaWindowWidth = width => Math.min(4.5,(width-2.4)/2);
   const upperFace={N:'E',S:'W',E:'S',W:'N'};
   // Retained ground arrivals and the existing emergency cores are hard constraints.
   // Every cut is recorded as a schematic-registration exception, never a new tenant.
@@ -6373,12 +6428,14 @@ export function build(K) {
       '4F:캐주얼 슈즈 (슈콤마보니/아쉬/라움에디션/비바이아)':'S','4F:헌터':'E',
       '5F:아스페시':'S','5F:디에스퍼':'S',
       '5F:써스데이 아일랜드':'W','5F:DKNY':'W','5F:캐나다 구스':'E','5F:입점 준비 중':'N','11F:더 키친 일 포노 (이탈리안 피자)':'S','11F:꼴라주 (프렌치 경양식)':'N','11F:살롱드호우섬 (딤섬/누들/홍콩식 솥밥)':'S','11F:카테고릭 (카페)':'N','3F:PSR 컨시어지':'S','3F:트리니티 라운지':'N',
-      // The retained atrium occupies the guide aisle below HERNO. Its north
-      // edge faces the continuous public passage on the same guide.
+      // HERNO faces the public aisle on the north side of the shared island.
       '3F:에르노':'N',
       // Both shops border public aisles on the guide. The current atrium
       // removes their north-facing fronts, so use the opposite aisle.
       '2F:발렌시아가':'S','2F:생 로랑':'S',
+      // BURBERRY is reflected in the Korea Tourism Organization's photo of
+      // Prada's display. The guide puts Burberry across the aisle to its south.
+      '2F:프라다':'S',
       // Their automatically chosen fronts faced into the cut-out escalator
       // shaft. The opposite edges face the white aisle on the 3F guide and
       // are walkable in this model; exact real entrance positions are unknown.
@@ -6795,6 +6852,20 @@ export function build(K) {
     const artWall = id==='3F' && c.name==='신세계 갤러리';
     const shopDescription=artWall?'본관 아트월 · 본관과 신관 사이 통로':id==='5F'&&c.name==='팝업 스테이지'?'팝업 행사 공간':id==='4F'&&c.name==='쏘솔트'?'헤어 액세서리 · 스카프 · 모자':id==='4F'&&c.name==='코치'?'여성 의류 · 가방':id==='3F'&&c.name==='PSR 컨시어지'?'VIP 컨시어지':id==='3F'&&c.name==='트리니티 라운지'?'VIP 라운지':id==='3F'&&c.name==='호라이즌'?'카페 · 브런치':id==='3F'&&c.name==='트리니티'?'수입 여성의류 편집숍':id==='4F'&&c.name.startsWith('슈블루')?'구두 · 가방 수선':id==='5F'&&c.name==='부디무드라'?'요가복 · 애슬레저':id==='5F'&&c.name==='파로'?'여성 가발':id==='4F'&&c.name==='콜롬보'?'명품 핸드백':((id==='5F'&&['사바티에','동우모피','진도모피','윤진모피','디에스퍼','셀럽제이'].includes(c.name))||(id==='4F'&&c.name==='이브살로몬'))?'모피 · 여성의류':`${id} · 신세계백화점 강남점`;
     const shopName = c.model.event?.name || (id === '5F' && floor5EntranceNames[c.name]) || c.name;
+    if (opening5) {
+      // DUNST and DAKS adjoin one closed bay. The public aisle turns
+      // outside its inner corner, alongside COURONNE.
+      for (const loop of unionRects(parts)) {
+        K.polyWalls(loop.map(([u,v])=>P(u,v)),y,y+H,{mat:0xe5e3df,thick:.08});
+      }
+      const [front,mid] = upperPlanPoint(id,(1512+1660)/2,1021);
+      sign('입점 준비 중',front+.07,mid,y+2.15,'E',2.1,.32,{bg:null,fg:'#56534c',pxPerM:160});
+      // Map search goes to the zone centre. Place the destination at the
+      // posted notice so players arrive in the aisle on the open floor.
+      zone('입점 준비 중 안내판',id,'던스트 옆 · 쿠론 핸드백 맞은편',
+        [front+.32,mid-1.05,front+1.30,mid+1.05],y,y+H,3);
+      return;
+    }
     if (aisleOutline) K.zone({ name: c.name, floor: id, sub: shopDescription, poly: aisleOutline, y0: y, y1: y+H, priority: 3 });
     else if(['2F','3F','4F','5F'].includes(id)||(id==='6F'&&c.name==='일레븐티')||tag||chanel||amomento||casualShoe||theilma||galleryNeighbors)for(const q of shopParts)zone(shopName,id,shopDescription,q,y,y+H,3);
     else zone(c.name,id,`${id} · 신세계백화점 강남점`,r,y,y+H,3);
@@ -6820,6 +6891,14 @@ export function build(K) {
       }
       // The shared diagonal boundary is built below as one smooth wall.
       if(id==='4F'&&(c.name==='준지'||(c.name==='입점 준비 중'&&c.rect[0]===498)))continue;
+      // The display windows face Burberry. Their glass belongs to the shell,
+      // so the aisle and the walk-in gap work before merchandise detail loads.
+      if (id === '2F' && c.name === '프라다' && face === 'W' && e-b > 3) {
+        const width = pradaWindowWidth(e-b);
+        for (const start of [b+.2, e-.2-width]) {
+          wall(a+.16,start,a+.16,start+width,y+.10,y+2.92,{mat:{tex:'glass',color:0xe5ebd7},thick:.035});
+        }
+      }
       // A 2025 Gangnam visitor photograph shows an enclosed, vertically
       // timber-slatted facade extending toward Van Cleef & Arpels. Its
       // precise entry position is unknown; leave a generous open entry at
@@ -6827,6 +6906,13 @@ export function build(K) {
       if(id==='2F'&&c.name==='에르메스'&&c.rect[1]===493&&face==='S'&&d-a>7){
         const start=a+4.25;
         wall(start,e-.35,d,e-.35,y,y+3.03,{mat:0x68482c,thick:.07});
+      }
+      if (id==='5F' && c.name==='던스트') {
+        // The guide has a single open aisle face. The adjoining closed bay
+        // supplies the other side wall. Both flank the mirrored entrance pier.
+        wall(a,b,d,b,y,y+H,{mat:0xf1efea,thick:.08});
+        wall(a,b,a,e,y,y+H,{mat:0xf1efea,thick:.08});
+        continue;
       }
       const edges=[['N',a,b,d,b],['S',a,e,d,e],['W',a,b,a,e],['E',d,b,d,e]];
       // Islands have open perimeter displays, so all white passages remain permeable.
@@ -6845,6 +6931,9 @@ export function build(K) {
         // Open that fragment onto the opposite guide-side aisle; the real
         // doorway location is unknown and the existing lift is unchanged.
         const celineSide=id==='2F'&&c.name==='셀린느'&&f==='W'&&b>54;
+        // The photograph shows the windows but does not locate a door on
+        // the Moynat side. Keep the existing approach from that guide aisle.
+        if (id === '2F' && c.name === '프라다' && f === 'N') continue;
         if(celineSide){
           // Leave this short edge open for circulation.
         }else if(hermesJoin){
@@ -6862,6 +6951,10 @@ export function build(K) {
           const start=Math.min(u1-.5,Math.max(u0+.5,26.8)),end=Math.min(u1-.25,29.2);
           if(start>u0+.1)upperSafeWall(u0,v0,start,v1,y,H,wallOptions);
           if(end<u1-.1)upperSafeWall(end,v0,u1,v1,y,H,wallOptions);
+        }else if(id==='4F'&&c.name==='샤넬 슈 부틱'){
+          // The official plan closes three sides and opens only to the
+          // Miu Miu aisle on the west. Keep the adjacent landing clear.
+          upperSafeWall(u0,v0,u1,v1,y,H,{mat:0xf0efeb,thick:.08});
         }else upperSafeWall(u0,v0,u1,v1,y,((id==='2F'||id==='11F')?H:.12),wallOptions);
         // The Dior annex's retained west edge stops at 3.4m although the
         // next slab underside is higher, exposing an outdoor strip. Close
@@ -9832,7 +9925,7 @@ export function build(K) {
       // pillar and warm metal-framed garment bays. Its wide frontage and
       // large curved room cannot fit this narrow guide cell; fixtures are
       // bounded, schematic representations without the advertising imagery.
-      // https://en.dunststudio.com/pages/dunst-store
+      // https://dunststudio.com/stockist.html (Shinsegae Gangnam)
       const silver={color:0xb7c1bf,gloss:.75},pale=0xf3f0eb;
       if(W>2.8&&D>4){
         const a=W*.22, start=2.15, end=D-.95;
@@ -9849,23 +9942,25 @@ export function build(K) {
         // An illuminated wordmark on a vertically faceted mirrored pillar,
         // approximated without a real-time reflection. The two sides remain
         // open, as in the official Gangnam branch photograph.
-        const pa=W*.53,pb=1.28;
+        const pa=W*.53,pb=1.63;
         const pillarW=Math.min(.95,W*.15);
-        B(pa,pb,pillarW,.35,.08,2.70,silver);
-        for(let i=-6;i<=6;i++)B(pa+i*pillarW/14,pb-.18,.012,.016,.10,2.62,0xe5e7e2);
+        B(pa,pb,pillarW,.35,0,3.98,silver,{solid:true});
+        for(let i=-6;i<=6;i++)B(pa+i*pillarW/14,pb-.18,.012,.016,.04,3.90,0xe5e7e2);
         fsign('Dunst',pa,pb-.22,y+2.16,Math.min(.80,pillarW-.12),.22,{bg:null,fg:'#ffffff',twoSided:true,pxPerM:256});
         // The opening photograph has a low layered white table in front of
         // the pillar and a softly rounded pale form behind its right side.
         // Their exact dimensions and current placement are not established.
-        const a2=W*.35,b2=1.05,tableW=Math.min(1.25,W*.20);
-        B(a2,b2,tableW,.82,.06,.66,pale);
+        const a2=pa-.14,b2=pb-.60,tableW=Math.min(1.25,W*.20);
+        B(a2,b2,tableW,.84,.06,.66,pale,{solid:true});
         for(let j=0;j<8;j++)B(a2,b2,tableW,.82,.14+j*.078,.022,j%2?0xf2f1ed:0xd6d9d5);
         B(a2,b2,tableW+.02,.84,.75,.045,0xfaf9f5);
         fball(W*.78,D*.62,y+1.12,.55,0xf0f1eb,1.03);
-        // Light neutral wall panel toward the rear.
-        B(W*.73,D-.47,W*.42,.08,.08,2.46,0xf4f3ef);
-        B(W*.73,D-.53,W*.34,.035,.95,.035,silver);
-        garment(W*.73,D-.57,1.12,0xd8d0bf);
+        // Recess on the right-hand wall seen from the public aisle.
+        const side=W-.44, bay=D*.44;
+        for(const height of [.12,2.34])B(side,bay,.30,3.05,height,.16,pale);
+        for(const end of [bay-1.46,bay+1.46])B(side,end,.30,.12,.28,2.06,pale);
+        B(side,bay,.04,2.62,1.87,.045,silver);
+        garment(side-.12,bay,1.24,0xd8d0bf);
       }
     }else if(id==='5F'&&name==='SHOP 아모멘토'){
       // Gangnam 5F in MAWA's 2022 visit and the brand's own store photograph:
@@ -13073,6 +13168,7 @@ export function build(K) {
   }
   function fitUpperCell(id,c) {
     const seed=upperSeed++;
+    if (c.kind==='closed' && id==='5F') return;
     if (id==='3F' && c.name==='신세계 갤러리') {
       // The Gangnam Art Wall exhibition photos show shallow recesses opening
       // directly onto the retail floor. Artwork and recess spacing are schematic.
@@ -13467,18 +13563,6 @@ export function build(K) {
             const a=Wf/2+(j-1.5)*span*.20;
             fb(a,b,.27,.12,y+1.02,.76,[0x2d3030,0xe7e3da,0x86706c,0x303637][j]);
           }
-        }
-        continue;
-      }
-      if(id==='5F'&&c.name==='입점 준비 중'){
-        // Only the plan's status and outline are known. Keep the interior
-        // empty instead of generating an operating shop's checkout and stock.
-        if(q===largest){
-          // The right-hand arm continues behind the screen: stop at its
-          // join so this temporary aisle-facing screen is not an inner wall.
-          const span=Math.max(0,Math.min(Wf,upperRect('5F',[1512,1021,1660,1080])[3]-v0));
-          if(span>.5){const a=Wf-span/2,w=Math.min(2.8,span-.3);fb(a,.3,w,.12,y+2.1,.55,0xe5e3df);
-            fsign('입점 준비 중',a,.21,y+2.37,w*.85,.25,{bg:null,fg:'#5f5b51'});}
         }
         continue;
       }
@@ -14020,9 +14104,8 @@ export function build(K) {
             }
           },[1,1],{transparent:true});
           const meshMat=K.material('ssg_prada_gangnam_window_mesh_mat',new K.THREE.MeshBasicMaterial({map:K.T.surface(mesh).tex,transparent:true,opacity:.65,alphaTest:.05,depthWrite:false,side:K.THREE.DoubleSide}));
-          const sideW=Math.min(4.5,(Wf-2.4)/2);
+          const sideW=pradaWindowWidth(Wf);
           for(const a of [sideW/2+.2,Wf-sideW/2-.2]){
-            fb(a,.16,sideW,.035,y+.10,2.82,{tex:'glass',color:0xe5ebd7});
             const left=P(...ST(a-sideW/2+.05,.132)),right=P(...ST(a+sideW/2-.05,.132));
             const meshW=sideW-.10,normal=[Math.sin(FACE[face]),0,Math.cos(FACE[face])];
             K.quad(meshMat,[[left[0],y+.10,left[1]],[right[0],y+.10,right[1]],[right[0],y+2.92,right[1]],[left[0],y+2.92,left[1]]],normal,[[0,0],[meshW,0],[meshW,2.82],[0,2.82]]);
@@ -15937,7 +16020,7 @@ export const upperGuidePlans = {};
   c('컨템포러리 슈즈 (리치오안나/류클래식/파비오루스코니)',1534,447,1734,573,'S','shoe');c('분더샵 슈 (르네까오빌라/생로랑/발렌시아가)',1534,574,1734,634,'S','shoe');
   c('헌터',1061,545,1155,663,'E','shoe');c('오트리',1061,664,1205,760,'E','shoe');r([1397,1449,1502],551,632,'지미추|버켄스탁','S','shoe');
   c('캠퍼',1237,662,1346,729,'W','shoe');c('레페토',1378,663,1483,729,'N','shoe');r([1516,1573,1645],663,727,'로저 비비에|타비오','N','shoe');
-  c('미우미우',1237,762,1316,821,'W','shoe');c('샤넬 슈 부틱',1348,762,1510,821,'S','shoe');c('토즈',1679,651,1734,807,'W','shoe');
+  c('미우미우',1237,762,1316,821,'W','shoe');c('샤넬 슈 부틱',1348,762,1510,821,'W','shoe');c('토즈',1679,651,1734,807,'W','shoe');
   c('롱샴',1061,822,1205,949,'E','bag');c('국내 슈즈(남/여) (닥스/탠디/미소페/소다/바바라)',1061,950,1367,1142,'E','shoe');
   c('루이비통',1237,851,1345,918,'W','shoe');c('지안비토로시',1378,851,1483,918,'N','shoe');r([1516,1579,1645],851,918,'어그 맨&키즈|호간','N','shoe');c('어그',1679,839,1734,929,'W','shoe');
   r([1397,1450,1503],950,1049,'프라다|페라가모','N','shoe');c('금강',1368,1077,1530,1142,'N','shoe');c('컴포트 슈즈 (에코/스타카토/제옥스/락포트/핏플랍/바이네르/스케쳐스USA)',1531,950,1734,1142,'N','shoe');
@@ -16148,6 +16231,9 @@ export function upperBuildRect(id,c) {
     const width=raw[axis+2]-raw[axis],min=Math.min(width,.85),loss=(r[axis]-raw[axis])+(raw[axis+2]-r[axis+2]);
     if(width-loss<min&&loss>0){const f=(width-min)/loss;r[axis]=raw[axis]+(r[axis]-raw[axis])*f;r[axis+2]=raw[axis+2]-(raw[axis+2]-r[axis+2])*f;}
   }
+  // The 3F guide shows a public aisle between these concessions and the
+  // main well. Allow for the retained escalator guard and its corner piers.
+  if(id==='3F'&&['에르노','드리스반노튼'].includes(c.name))r[0]=Math.max(r[0],upperPhysicalWell(id)[2]+2.32);
   // The 4F shoe boutiques keep their guide frontage on both public aisles.
   // Leave clearance behind Chanel for the modeled annex landing and slope.
   if(id==='4F'&&c.name==='샤넬 슈 부틱')r[3]=Math.min(r[3],upperPhysicalWell(id,true)[1]-1.3);
