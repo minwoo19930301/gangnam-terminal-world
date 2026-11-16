@@ -85,19 +85,6 @@ const clearH = id => LV[nextOf(id)] - thick(nextOf(id)) - LV[id];
 const ATR = [27.6, 35, 39.4, 47];
 const LANE = { A: 28.6, B: 30.2, C: 36.8, D: 38.4 };
 const PHOTO_ATRIUM=[30,30,38,52];
-// Retain Son Jung Wan's guide-derived 5F corner outside the stair well;
-// the real floor opening and the fitted guard positions are not surveyed.
-const PHOTO_ATRIUM_5F_PARTS=[[30,32.82713,38,52],[31.657894736842103,30,38,32.82713]];
-// Recover the small guide-derived 2F Burberry corner, preserving the larger
-// 1F photo atrium. This registration and the guard positions are estimates.
-// The 2F guide has a continuous aisle between Prada and Burberry to
-// the cross aisle past Prada's corner. Keep the photo opening beside it.
-const PRADA_AISLE_EDGE = 36.55, PRADA_AISLE_END = 35.25;
-const PHOTO_ATRIUM_2F_PARTS=[
-  [30,PRADA_AISLE_END,38,52],
-  [30,33.4347,PRADA_AISLE_EDGE,PRADA_AISLE_END],
-  [34.7642,30,PRADA_AISLE_EDGE,33.4347],
-];
 // On 3F the guide's main opening starts farther back; preserving the full
 // ground-floor approximation here cuts into the Rick Owens and The Row cells.
 // This floor-specific boundary is a model estimate, not a surveyed opening.
@@ -155,6 +142,23 @@ const UPPER_BANKS = [
 ];
 
 export function build(K) {
+  // The cross aisles beside Prada on 2F and Son Jung Wan on 5F wrap around
+  // the end of the stair well. The 1F opening has a different footprint.
+  const mainNearEdge2F = upperPhysicalWell('2F')[1];
+  const photoAtria = {
+    '2F': [30,mainNearEdge2F,38,52],
+    '3F': PHOTO_ATRIUM_3F,
+    '4F': PHOTO_ATRIUM_4F,
+    '5F': [30,upperPhysicalWell('5F')[1],38,52],
+  };
+  const photoAtrium = id => photoAtria[id] ?? PHOTO_ATRIUM;
+  function photoAtriumAtHeight(y) {
+    if (y < LV['2F'] || y >= LV['6F']) return PHOTO_ATRIUM;
+    if (y < LV['3F']) return photoAtria['2F'];
+    if (y < LV['4F']) return photoAtria['3F'];
+    if (y < LV['5F']) return photoAtria['4F'];
+    return photoAtria['5F'];
+  }
   // GELATO PIQUE by Rag & Bone and MUKHA at the annex New Stage independently
   // announced the same Seoul dates, November 12 through 25, 2026.
   // https://www.mukha.co.kr/store/26shinsegae-popup.html
@@ -247,8 +251,7 @@ export function build(K) {
   }
   function hq(u0, v0, u1, v1, y, mat, up = true) {
     const r=[Math.min(u0,u1),Math.min(v0,v1),Math.max(u0,u1),Math.max(v0,v1)];
-    const cuts=y>=LV['2F']&&y<LV['3F']?PHOTO_ATRIUM_2F_PARTS:y>=LV['3F']&&y<LV['4F']?[PHOTO_ATRIUM_3F]:y>=LV['4F']&&y<LV['5F']?[PHOTO_ATRIUM_4F]:y>=LV['5F']&&y<LV['6F']?PHOTO_ATRIUM_5F_PARTS:[PHOTO_ATRIUM];
-    const parts=y>=6.5&&y<LV.RF?cuts.reduce((parts,cut)=>parts.flatMap(p=>cutRect(p,cut)),[r]):[r];
+    const parts=y>=6.5&&y<LV.RF?cutRect(r,photoAtriumAtHeight(y)):[r];
     for(const q of parts)K.hpoly(mat,rect(...q),y,up);
   }
   function lightPanel(u, v, y, lw = 1.2, ld = 0.6, color = 0xfffbf0) {
@@ -892,6 +895,10 @@ export function build(K) {
   for(let i=0;i<=24;i++){const a=.2+(Math.PI-.4)*i/24;mezzVoidPixels.push([607+225*Math.cos(a),738+122*Math.sin(a)]);}
   mezzVoidPixels.push([385,774],[258,774]);
   const MEZZ_VOID=mezzVoidPixels.map(p=>P(...MPLAN(...p)));
+  // The row of glazed arches ends where the straight atrium edge turns
+  // away from the public approach to Vecchia e Nuovo.
+  const mezzArchStart=MPLAN(869,740)[0], mezzArchEnd=MPLAN(869,452)[0];
+  const mezzArchCenters=Array.from({length:8},(_,i)=>mezzArchStart+(i+.5)*(mezzArchEnd-mezzArchStart)/8);
   // F03/F04: north-west lift bank backs onto the NNW wall band; doors face south.
   const NWLIFTS=[57.6,60.6].map(u=>({u,v:64.5,w:2.65,d:2.4}));
   const nwLiftHoles=NWLIFTS.map(e=>rect(e.u-e.w/2,e.v-e.d/2,e.u+e.w/2,e.v+e.d/2));
@@ -903,7 +910,11 @@ export function build(K) {
   // entrance the opening extends onto the first moving tread's end cap.
   const NW_ESC=[mezzUpHead+.03,mezzV-1,mezzUpFoot+.2,mezzV+1];
   const SW_ESC=[mezzDownFoot-.2,mezzV-1,mezzDownHead+.02,mezzV+1];
-  const beautyDownHoles=[rect(40.18,40.5,41.82,51.8),rect(24.98,44.2,26.62,55.0)];
+  // The 1F guide shows a cross aisle between the popup and Prada Beauty.
+  // At its near edge the west basement flight has already dropped over 3m,
+  // leaving room for the public floor above it. Keep the boarding end open.
+  const westBeautyDownWell = [24.98, 44.2, 26.62, 51.3];
+  const beautyDownHoles=[rect(40.18,40.5,41.82,51.8),rect(...westBeautyDownWell)];
   // The west up-flight only reaches the 2F slab near its upper end; keeping
   // its entire sloped run open upstairs needlessly cuts through CELINE.
   const beautyUpHoles=[rect(38.48,39.8,40.12,52.2),rect(28.0,51.6,30.67,56.2)];
@@ -928,7 +939,7 @@ export function build(K) {
     if (id === '5F') holes.push(rect(38.45,43.65,40.0,52.0));
     if (id === '2F') holes.push(...beautyUpHoles);
     // L09: retain all upper tenant registrations, opening only the photographed vertical atrium.
-    if (s >= 3) holes.push(...(id==='2F'?PHOTO_ATRIUM_2F_PARTS:id==='5F'?PHOTO_ATRIUM_5F_PARTS:[id==='3F'?PHOTO_ATRIUM_3F:id==='4F'?PHOTO_ATRIUM_4F:PHOTO_ATRIUM]).map(q=>rect(...q)));
+    if (s >= 3) holes.push(rect(...photoAtrium(id)));
     if (s >= 1) for (const c of (s===1||s>MAIN.indexOf('8F')?BASE_CORES:CORES)) if (s <= coreTop(c) && !(id==='1F'||id==='2F') && !(id==='B1'&&c.door==='W')) holes.push(stairHole(c, s));
     K.slab(UPPER.has(id) ? rect(0, VS, UW, VD) : LV[id] >= LV['2F'] ? northOutline(VD, LV[id]) : FULL, LV[id], { mat: floorMat[id] ?? 'ssg_marble', thick: thick(id), holes:mergedHoles(holes), edge: false, walk:id!=='11F', under: id === 'B2' ? false : id === 'B1' ? { tex: 'concrete', color: 0xb4b2a9 } : CEIL });
     if (['2F','3F','4F','5F'].includes(id)) {
@@ -1095,7 +1106,8 @@ export function build(K) {
   };
   function upperSafeIntervals(u0,v0,u1,v1,y,H,extraBlocked=null){
     const L=Math.hypot(u1-u0,v1-v0),n=Math.max(1,Math.ceil(L/.10)),safe=[];
-    const blocked=(u,v)=>(extraBlocked&&extraBlocked(u,v))||['3F','4F','5F'].some(id=>{const q=mainLandingBridge(id);return y>=LV[id]-1.1&&y<=LV[id]+.1&&u>=q[0]-.08&&u<=q[2]+.08&&v>=q[1]-.08&&v<=q[3]+.08;})||(y>=6.0&&(y<LV['3F']?PHOTO_ATRIUM_2F_PARTS:y>=LV['5F']&&y<LV['6F']?PHOTO_ATRIUM_5F_PARTS:[y<LV['4F']?PHOTO_ATRIUM_3F:PHOTO_ATRIUM]).some(q=>u>q[0]+.02&&u<q[2]-.02&&v>q[1]+.02&&v<q[3]-.02))||upperFlightReservations.some(f=>{
+    const aperture = photoAtriumAtHeight(Math.max(y, LV['2F']));
+    const blocked=(u,v)=>(extraBlocked&&extraBlocked(u,v))||['3F','4F','5F'].some(id=>{const q=mainLandingBridge(id);return y>=LV[id]-1.1&&y<=LV[id]+.1&&u>=q[0]-.08&&u<=q[2]+.08&&v>=q[1]-.08&&v<=q[3]+.08;})||(y>=6.0&&inR(u,v,aperture,-.02))||upperFlightReservations.some(f=>{
       if(f.ya>y+H+.1||f.yb<y-1.8)return false;
       const dx=f.b[0]-f.a[0],dz=f.b[1]-f.a[1],l2=dx*dx+dz*dz,t=((u-f.a[0])*dx+(v-f.a[1])*dz)/l2;
       if(t<-.06||t>1.06)return false;const h=f.ya+(f.yb-f.ya)*Math.max(0,Math.min(1,t));
@@ -1124,7 +1136,13 @@ export function build(K) {
   const upperStack=Object.keys(upperGuidePlans);
   // The 3F swept opening is wider than its schematic pad: its piers must follow
   // that actual edge to clear the incoming/outgoing flight capsules.
-  const upperPierRect=id=>id==='3F'?upperPhysicalWell(id):upperAtriumRect(id);
+  const upperPierRect=id=>{
+    if(id==='3F')return upperPhysicalWell(id);
+    const [a,b,c,d]=upperAtriumRect(id);
+    // Set the two 5F end piers on the long sides of the well. Their former
+    // bases projected into the guide aisle between Mojo and Son Jung Wan.
+    return [a,id==='5F'?b+1.15:b,c,d];
+  };
   function voidRail(r,y,gapsAtEnds=false,landingMid=(r[0]+r[2])/2,landingHalf=1.65){
     const [a,b,c,d]=r;
     for(const [u0,v0,u1,v1]of [[a,b,a,d],[c,b,c,d],...(gapsAtEnds?[]:[[a,b,c,b],[a,d,c,d]])]){
@@ -1200,14 +1218,17 @@ export function build(K) {
     voidRail(p,y,true,mid,i<=4?6.8:3.6);
     const v=atSouth?r[3]:r[1],edge=atSouth?p[3]:p[1];
     for(const q of cutRect([mid-6.8,Math.min(v,edge)-.04,mid+6.8,Math.max(v,edge)+.04],PHOTO_ATRIUM))K.slab(rect(...q),y,{mat:{tex:'marble',color:0xe8dfce},thick:.16,under:CEIL,edge:false});
-    for(const end of[p[1],p[3]])if(end!==edge)upperSafeWall(mid-3.6,end,mid+3.6,end,y,1.1,{mat:'glass',thick:.04});
+    for(const end of[p[1],p[3]])if(end!==edge){
+      if(id==='5F')wall(p[0],end,p[2],end,y,y+1.1,{mat:'glass',thick:.04});
+      else upperSafeWall(mid-3.6,end,mid+3.6,end,y,1.1,{mat:'glass',thick:.04});
+    }
     registerEscalatorLanding('본관 아트리움',id,'교차 에스컬레이터',p,4,false);
   }
   // L09/D06: glass guards follow the combined aperture without a rail across
   // its interior. Existing upper flights retain their own approach openings.
   for(const id of upperStack){
     const y=LV[id],other=id==='11F'?[]:[upperPhysicalWell(id)];
-    for(const loop of unionRects([...(id==='2F'?PHOTO_ATRIUM_2F_PARTS:id==='5F'?PHOTO_ATRIUM_5F_PARTS:[id==='3F'?PHOTO_ATRIUM_3F:id==='4F'?PHOTO_ATRIUM_4F:PHOTO_ATRIUM]),...other]))for(let i=0;i<loop.length;i++){
+    for(const loop of unionRects([photoAtrium(id),...other]))for(let i=0;i<loop.length;i++){
       const a=loop[i],b=loop[(i+1)%loop.length];
       if(!((Math.abs(a[0]-30)<.01&&Math.abs(b[0]-30)<.01)||(Math.abs(a[0]-38)<.01&&Math.abs(b[0]-38)<.01)||(Math.abs(a[1]-52)<.01&&Math.abs(b[1]-52)<.01)))continue;
       // The 4F guide puts SoSalt on this side of the well. Its retained
@@ -1233,15 +1254,6 @@ export function build(K) {
       }
     }
   }
-  // Guard the returns on the Burberry and Prada sides of the 2F opening.
-  {const y=LV['2F'], rail={mat:'glass',thick:.045};
-    wall(30,33.4347,34.7642,33.4347,y,y+1.05,rail);
-    wall(34.7642,30,34.7642,33.4347,y,y+1.05,rail);
-    wall(PRADA_AISLE_EDGE,30,PRADA_AISLE_EDGE,PRADA_AISLE_END,y,y+1.05,rail);
-    wall(PRADA_AISLE_EDGE,PRADA_AISLE_END,38,PRADA_AISLE_END,y,y+1.05,rail);
-  }
-  // Guard the corresponding exposed edges of the retained 5F corner.
-  {const y=LV['5F'];wall(30,32.82713,31.657894736842103,32.82713,y,y+1.05,{mat:'glass',thick:.045});wall(31.657894736842103,30,31.657894736842103,32.82713,y,y+1.05,{mat:'glass',thick:.045});}
   // Guard the newly exposed 3F edge; the moving stair landings are at the
   // opposite end of this well. The exact position remains schematic.
   {const y=LV['3F'];wall(30,35.30,39.5,35.30,y,y+1.05,{mat:'glass',thick:.045});}
@@ -1333,9 +1345,7 @@ export function build(K) {
       zone('여자 화장실 · 기저귀 교환대','3F','고객 편의시설',[35.3,143.1,41.2,146.95],y,y+2.8,10);
     }
     // The 4F cross-landing has guards along its exposed edge below.
-    if(id==='2F')upperSafeWall(34.7642,30,PRADA_AISLE_EDGE,30,y,1.1,{mat:'glass',thick:.04});
-    else if(id==='5F')upperSafeWall(31.657894736842103,30,38,30,y,1.1,{mat:'glass',thick:.04});
-    else if(id!=='3F'&&id!=='4F')upperSafeWall(30,30,38,30,y,1.1,{mat:'glass',thick:.04});
+    if(!['2F','3F','4F','5F'].includes(id))upperSafeWall(30,30,38,30,y,1.1,{mat:'glass',thick:.04});
   }
   // Guard the exposed edge beside the 1F landing and photo atrium.
   wall(26.5,56.3,29.7,56.3,LV['2F'],LV['2F']+1.05,{mat:'glass',thick:.04});
@@ -1421,12 +1431,13 @@ export function build(K) {
     const entry=b.ground>b.bottom?'S':'N',topEntry=b.top>b.ground?'S':'N';
     // The guard must meet the actual edge of the 1F floor opening: the
     // former inset left an unsupported strip at the non-entry end.
-    wellGuard(b.side==='동측'?[40.18,40.5,41.82,51.8]:[24.98,44.2,26.62,55.0],0,entry,0xc9955b);
+    wellGuard(b.side==='동측'?[40.18,40.5,41.82,51.8]:westBeautyDownWell,0,entry,0xc9955b);
     wellGuard(b.side==='서측'?[28.0,51.6,30.67,56.15]:[Math.min(b.inner,b.topU)-.82,Math.min(b.ground,b.top)-.15,Math.max(b.inner,b.topU)+.82,Math.max(b.ground,b.top)+.15],7,topEntry,0xa7a9a8);
     sign('1',b.u,b.ground+(entry==='S'?.6:-.6),.08,entry,.4,.2,{bg:'#d7d7d0',fg:'#222222'});
     sign(b.side==='서측'?'B1 ↓':'2층 ↑',b.side==='서측'?b.u:b.inner,b.ground+(entry==='S'?1:-1),b.side==='서측'?2.35:1.6,entry,1.1,.3,{bg:'#34312c',fg:'#ffffff',twoSided:true});
     sign(b.side==='서측'?'1층 ↓':'2',b.topU,b.top,b.side==='서측'?9.35:8.25,topEntry,b.side==='서측'?1.1:.5,b.side==='서측'?.3:.5,{bg:'#38352f',fg:'#ffffff',twoSided:true});
-    zone(`${b.side} 에스컬레이터`,'1F',b.side==='서측'?'2층에서 내려옴 · B1 내려감':'B1에서 올라옴 · 2층 올라감',[Math.min(b.u,b.inner)-1.1,Math.min(b.bottom,b.ground)-1,Math.max(b.u,b.inner)+1.1,Math.max(b.bottom,b.ground)+1],0,3.6,4);
+    const zoneFarV=b.side==='서측'?westBeautyDownWell[3]:Math.max(b.bottom,b.ground)+1;
+    zone(`${b.side} 에스컬레이터`,'1F',b.side==='서측'?'2층에서 내려옴 · B1 내려감':'B1에서 올라옴 · 2층 올라감',[Math.min(b.u,b.inner)-1.1,Math.min(b.bottom,b.ground)-1,Math.max(b.u,b.inner)+1.1,zoneFarV],0,3.6,4);
     for(const[u,v,y]of [[b.u,b.bottom,-6],[b.topU,b.top,7]])
       // Overlap the 2F ramp tip so an idle rider does not fall into a gap.
       box(u,v+(v===b.top?(topEntry==='S'?1.0:-1.0):(entry==='S'?-1:1)),1.65,v===b.top?2.2:1.8,y-.08,.08,{tex:'marble',color:0xebe9e5});
@@ -5951,7 +5962,7 @@ export function build(K) {
         box(u,v,alongV?.10:4.0,alongV?4.0:.10,3.61,.12,0xd0c1a7,{solid:false});
         for(const side of[-1,1])box(u+(alongV?0:side*2.28),v+(alongV?side*2.28:0),alongV?.22:.35,alongV?.35:.22,3.6,2.85,0xf0eadd,{solid:false});
       }
-      for(const u of[20,25,30,35,40,45,50,55]){
+      for(const u of mezzArchCenters){
         const v=67.76;disk(u,v,4.64,.64,0x30412c,false);disk(u,v-.012,4.64,.43,0xc4bba4,false);
         for(let j=0;j<12;j++){const a=j*PI/6;ball(u+.56*Math.cos(a),v-.045,4.64+.56*Math.sin(a),.07,j%2?0xb42b35:0xd2b36a);}
         box(u,v-.08,.10,.035,4.8,.55,0x9b1c2b,{solid:false});
@@ -6128,7 +6139,7 @@ export function build(K) {
   }
   function upperRetailCeiling(id,y) {
     const v0=UPPER.has(id)?VS+.2:.2, yy=y+3.2;
-    const omissions=[...(id==='2F'?PHOTO_ATRIUM_2F_PARTS:id==='5F'?PHOTO_ATRIUM_5F_PARTS:[id==='3F'?PHOTO_ATRIUM_3F:PHOTO_ATRIUM]),upperPhysicalWell(id),upperPhysicalWell(id,true),bridgeLobby(id),...activeCores(id).map(c=>[c.uL,c.v0,c.uR,c.v1]),[23,0,44,9]];
+    const omissions=[photoAtrium(id),upperPhysicalWell(id),upperPhysicalWell(id,true),bridgeLobby(id),...activeCores(id).map(c=>[c.uL,c.v0,c.uR,c.v1]),[23,0,44,9]];
     const runs=(a0,a1,fixed,horizontal)=>{
       let parts=[[a0,a1]];
       for(const r of omissions){
@@ -6222,6 +6233,19 @@ export function build(K) {
         sign(room.description,u,v-.38,y+1.29,'N',1.9,.24,{bg:'#e7dfd0',fg:'#514b42'});
       });
     }
+    // The 1M guide closes the bays beside skincare and behind the jewellery
+    // hall. Its stepped south edge leaves the aisle to Vecchia e Nuovo open.
+    const lobbyPartitions = [
+      [[869,452],[884,452],[884,371]],
+      [[884,397],[1003,397]], [[884,421],[937,421]], [[1019,371],[1019,397]],
+      [[917,754],[917,814]],
+      [[1002,754],[1002,814],[810,814],[810,894],[918,894]]
+    ];
+    for (const edge of lobbyPartitions) {
+      for (let i=1; i<edge.length; i++) {
+        wall(...MPLAN(...edge[i-1]), ...MPLAN(...edge[i]), y, 6.46, {mat:0xe8e2d7, thick:.10});
+      }
+    }
     const memberBar=planRect(937,479,995,552,MPLAN);
     // The concierge closes the rest of the back edge with its stepped arm.
     wall(...MPLAN(995,479),...MPLAN(995,526),y,6.46,{mat:0xe8e2d7,thick:.10});
@@ -6303,13 +6327,13 @@ export function build(K) {
     immediateBeautyName('MEZZANINE',53,67.57,3.2,'N',3.7,.28);
     // Low sill and round heads are seen from 1M; their decorated outward face
     // reads as the south clerestory of the 1F cosmetics hall.
-    const archV=67.95,archCenters=[20,25,30,35,40,45,50,55],archR=1.75,spring=y+.72;
-    wall(16.1,archV,58.4,archV,y,y+.28,{mat:0xefeae1,thick:.20});
-    for(let j=0;j<archCenters.length;j++){
-      const u=archCenters[j],r=archR;
-      const l=j===0?16.1:archCenters[j-1]+r;
+    const archV=67.95,archR=1.75,spring=y+.72;
+    wall(mezzArchStart,archV,mezzArchEnd,archV,y,y+.28,{mat:0xefeae1,thick:.20});
+    for(let j=0;j<mezzArchCenters.length;j++){
+      const u=mezzArchCenters[j],r=archR;
+      const l=j===0?mezzArchStart:mezzArchCenters[j-1]+r;
       wall(l,archV,u-r,archV,y,6.46,{mat:0xefeae1,thick:.20});
-      if(j===archCenters.length-1)wall(u+r,archV,58.4,archV,y,6.46,{mat:0xefeae1,thick:.20});
+      if(j===mezzArchCenters.length-1)wall(u+r,archV,mezzArchEnd,archV,y,6.46,{mat:0xefeae1,thick:.20});
       const pp=(a,yy,dv=0)=>{const q=P(a,archV+dv);return[q[0],yy,q[1]];};
       // Glazing follows the actual arch silhouette, so the 1F hall is visible.
       K.quad({tex:'glass',color:0xc4c1b4},[pp(u-r,y+.28),pp(u+r,y+.28),pp(u+r,spring),pp(u-r,spring)],[SA,0,CA]);
@@ -6387,7 +6411,7 @@ export function build(K) {
           }
         }
       }
-      for(const [i,u]of [18.7,34.6,39.6,55].entries()){
+      for(const [i,u]of [30.5,34.6,39.6,55].entries()){
         box(u,68.65,2.1,.56,y+.43,.075,{tex:'wood',color:0xa47a4f},{solid:false});
         for(const du of [-.85,.85])box(u+du,68.65,.06,.4,y,.43,0x393c38,{solid:false});
         box(u,68.36,2.1,.05,y+.5,.46,{tex:'wood',color:0xa47a4f},{solid:false});
@@ -6395,7 +6419,7 @@ export function build(K) {
         if(i!==1)for(const du of [-.48,.48]){const p=P(u+du,68.72);K.person(p[0],y,p[1],{sit:true,rotY:FACE.S,shirt:i%2?0x292c30:0x625952,pants:0x343632});}
       }
       // South-end arches carry the user's November wreaths on the hall face.
-      for(const u of [20,25,30,35,40,45,50,55]){
+      for(const u of mezzArchCenters){
         for(let k=0;k<18;k++){const a=k*PI/9,p=P(u+.55*Math.cos(a),67.76);K.dome({x:p[0],z:p[1],y:4.95+.55*Math.sin(a),rx:.16,ry:.16,rz:.09,mat:k%3?0x304c35:0x5e6540});}
         box(u,67.66,.12,.05,5.33,.36,0x9b1c2b,{solid:false});
         for(const du of [-.12,.12])box(u+du,67.66,.22,.05,5.55,.13,0x9b1c2b,{solid:false});
@@ -6563,7 +6587,7 @@ export function build(K) {
   // Retained ground arrivals and the existing emergency cores are hard constraints.
   // Every cut is recorded as a schematic-registration exception, never a new tenant.
   const upperKeepClear=(id,shopName)=>[
-    ...(id==='2F'?PHOTO_ATRIUM_2F_PARTS:id==='5F'?PHOTO_ATRIUM_5F_PARTS:[id==='3F'?PHOTO_ATRIUM_3F:id==='4F'?PHOTO_ATRIUM_4F:PHOTO_ATRIUM]),
+    photoAtrium(id),
     ...(id==='3F'?[[35.7,125.0,40.1,127.8]]:[]),
     ...(id==='6F'?[upperIncoming56Hole().map((n,i)=>n+(i<2?-.3:.3)),[26.8,72.5,29.5,78.5]]:[]),
     ...(id==='7F'?[[40.8,70.7,41.9,75.8]]:[]),
@@ -7148,6 +7172,14 @@ export function build(K) {
       returnBay = [shoulder,start,back,stepEnd];
       const floor = upperPalette(id,c).floor;
       K.hpoly(floor,rect(...returnBay),y+.019,true);
+    }
+    if (id === '5F' && c.name === '보티첼리') {
+      // The short front return forms one side of the passage to the blind
+      // pocket beside lululemon. Keep the photographed fit-out in the main bay.
+      const [cornerU,cornerV] = upperPlanPoint(id,751,1034);
+      returnBay = [cornerU, cornerV, r[2], r[3]];
+      parts = parts.flatMap(q=>cutRect(q,[r[0],cornerV,r[2],r[3]]));
+      K.hpoly(upperPalette(id,c).floor,rect(...returnBay),y+.019,true);
     }
     if (id === '5F' && c.name === '닥스 핸드백') {
       // The lift reservation steps into the shop's rear corner.
@@ -7827,11 +7859,10 @@ export function build(K) {
   // Its open front aligns with the two moving stairways.
   {const r=upperAtriumRect('2F'),q=upperPhysicalWell('2F'),y=LV['2F'],mid=(r[0]+r[2])/2,up=mid+upperLaneOffsets(0)[0],down=mid+upperLaneOffsets(0)[1],v=r[1],w=.92;
     K.slab(rect(up-w,v-w,q[2]+.24,v+w),y,{mat:{tex:'marble',color:0xe8dfce},thick:.12,under:CEIL,ceil:false,edge:false});
-    // The aisle meets the landing here, over existing floor. Retain both
-    // outer guards and open the supported approach between them.
-    wall(up-w,v-w,38.15,v-w,y,y+1.05,{mat:'glass',thick:.045});
-    wall(39.65,v-w,q[2]+.24,v-w,y,y+1.05,{mat:'glass',thick:.045});
-    wall(up-w,v-w,up-w,v+w,y,y+1.05,{mat:'glass',thick:.045});
+    // The cross aisle now meets the landing across its full supported
+    // front. The exposed edge turns along the side of the stair platform.
+    wall(30,mainNearEdge2F,up-w,mainNearEdge2F,y,y+1.05,{mat:'glass',thick:.045});
+    wall(up-w,mainNearEdge2F,up-w,v+w,y,y+1.05,{mat:'glass',thick:.045});
     for(const [a,b] of [[up+w,down-w],[down+w,q[2]+.24]]){
       for(const [lo,hi] of [[a,Math.min(b,38.15)],[Math.max(a,39.95),b]])
         if(hi>lo+.05)wall(lo,v+w,hi,v+w,y,y+1.05,{mat:'glass',thick:.045});
@@ -7902,6 +7933,7 @@ export function build(K) {
     '5F': [
       [[56,1063],[28,1063],[28,897],[54,897],[54,573],[333,573],[333,513],[612,513],[612,573],[738,573],[738,635]],
       [[176,573],[176,635]],
+      [[638,1064],[874,1064]], // closed rear of Botticelli and the side pocket
       [[1031,573],[1134,573],[1134,521],[1261,521],[1261,513],[1534,513],[1534,521],[1701,521],[1701,615],[1734,615],[1734,768]],
       [[1734,792],[1734,915]],
       [[1031,1081],[1261,1081],[1261,1111],[1512,1111]],
@@ -7923,6 +7955,8 @@ export function build(K) {
     ],
     '5F': [
       [[54,604],[160,604],[160,635]], // Lanvin Collection
+      [[765,1006],[765,1034],[751,1034],[751,1064]], // Botticelli
+      [[781,1006],[781,1034],[874,1034]], // lululemon; beyond this is the existing exterior return
       [[1134,573],[1155,573]], [[1031,739],[1155,739]], [[1031,991],[1155,991]], // Lookast, Ehre and Recto
       [[1103,1021],[1103,1050],[1189,1050],[1189,1081]], // Shop Amomento
     ],
@@ -16583,7 +16617,7 @@ export const upperGuidePlans = {};
   // at the shallower building edge; they must not inherit those bays.
   r([176,253,322],1006,1063,'동우모피|진도모피','N','fur');
   r([322,418,510],1006,1096,'르베이지|쁘렝땅','N');
-  r([510,638,752],1006,1063,'닥스 숙녀|보티첼리','N');
+  r([510,638,765],1006,1063,'닥스 숙녀|보티첼리','N');
   c('더일마',1134,521,1261,580);r([1261,1361,1441,1534,1622,1701],521,603,'스튜디오 톰보이|보브|시스템|라코스테|럭키슈에뜨');
   c('룩캐스트',1031,573,1155,627,'E');c('틸아이다이',1031,628,1155,682,'E');c('에레',1031,683,1155,739,'E');c('렉토',1031,849,1155,991,'E');
   r([1186,1246,1311,1378],626,703,'베네통|온앤온|포유어아이즈온리');r([1186,1246,1278],704,756,'에스실|넘버링');c('팝업 스테이지',1278,704,1378,756,'S','popup');
