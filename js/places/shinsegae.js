@@ -121,23 +121,36 @@ const MAIN_9F_SETBACK = .85;
 // The official 4F plan places SoSalt against the short end of the atrium.
 // Recess the two pairs of stair ends to give riders a transverse public landing.
 const MAIN_4F_SETBACK = 2.4;
-function mainFlightStartV(id, well, reversed) {
+// Keep the 1F–2F flights at their photographed approaches. On 2F the next
+// up flight joins the east arrival, and the descending pair shares the west end.
+function mainFlightStartV(id, well, reversed, lane) {
+  if (id === '2F' && lane === 1) return well[3];
   if (id === '4F') return well[1] + MAIN_4F_SETBACK;
   if (id === '9F') return well[1] + MAIN_9F_SETBACK;
   if (id === '6F') return well[1] - 2.8;
   return reversed ? well[3] : well[1];
 }
-function mainFlightEndV(from, well, reversed) {
+function mainFlightEndV(from, well, reversed, lane) {
+  // On the 3F guide the west-side escalator symbol is halfway along the well.
+  if (from === '2F' && lane === 1) return (well[1] + well[3]) / 2;
   if (from === '3F') return well[1] + MAIN_4F_SETBACK;
   return from === '6F' || reversed ? well[1] : well[3];
 }
-const upperLaneOffsets=(i,annex=false)=>annex?(i===7?[1.9,3.5]:i===1?[2,3.6]:i===2?[-5.19322,-3.59322]:i%2?[1.3,2.9]:[-2.9,-1.3]):(i===4?[-2.0,3.5]:i===5?[-.2,1.7]:i===6?[-2.9,4.0]:i===7?[2.3,-.3]:i>=4?(i%2?[1.3,2.9]:[-2.9,-1.3]):i===3?[-3.9,4.8]:i===2?[-2.5,2.55]:i%2?[4.36,-1.44]:[-2.5,4.95]);
+// Transverse offsets of the up and down treads, indexed from 2F.
+const mainLaneOffsets = [
+  [4.95,-4.98], [4.36,-1.44], [-2.5,2.55], [-3.9,4.8],
+  [-2,3.5], [-.2,1.7], [-2.9,4], [2.3,-.3],
+];
+const annexLaneOffsets = {1:[2,3.6], 2:[-5.19322,-3.59322], 7:[1.9,3.5]};
+function upperLaneOffsets(i,annex=false) {
+  const offsets=annex ? annexLaneOffsets : mainLaneOffsets;
+  return offsets[i] || (i%2 ? [1.3,2.9] : [-2.9,-1.3]);
+}
 const RIGHT_ATR = [27.6,74.2,39.4,78.0]; // legacy helper fallback; active wells are sheet-derived
 const UPPER_BANKS = [
   {key:"본관 화장실 옆",u:65,v:43.61,face:"W",top:"10F"},
   {key:"신관 화장실 옆",u:32,v:82.2,face:"N",top:"11F"},
-  // Move the continuous corner bank slightly toward the guide's lower-floor
-  // corner to recover the 5F Miss Gee cell; its exact position is unsurveyed.
+  // The upper stack uses this registration above the individually mapped retail floors.
   {key:"본관 코너",u:8,v:11.95,face:"E",top:"11F"},
 ];
 
@@ -1059,8 +1072,8 @@ export function build(K) {
       const r=fn(ids[i]),t=annex&&ids[i]==='5F'?upperExpanded6AnnexRect():fn(ids[i+1]),rev=annex?(i===2?1:i%2):i>=5?1-i%2:i%2;
       for(const [lane,off] of (annex?actualAnnexLaneOffsets(i):upperLaneOffsets(i)).entries())upperFlightReservations.push({
         floor:ids[i],annex,lane,
-        a:annex?(ids[i]==='2F'?[40+off,132]:ids[i]==='3F'?[28.5+off,119]:ids[i]==='4F'?[lane===0?28.70:35.70,lane===0?129.7:130.5]:ids[i]==='5F'?[lane===0?31.85:33.35,121.5]:[ids[i]==='4F'?38.1:ids[i]==='8F'?r[0]+1.5:ids[i]==='9F'?r[2]-1:rev?r[2]:r[0],(r[1]+r[3])/2+off]):[(r[0]+r[2])/2+off,mainFlightStartV(ids[i],r,rev)],
-        b:annex?(ids[i]==='2F'?[40+off,121.7]:ids[i]==='3F'?[28.5+off,128]:ids[i]==='4F'?[lane===0?30.35:34.85,121.5]:ids[i]==='5F'?[lane===0?32.95:34.55,129.7]:[ids[i]==='6F'?t[2]-2:ids[i]==='7F'?t[0]+2:ids[i]==='8F'?t[2]-1:ids[i]==='4F'?30.7:rev?t[0]:t[2],ids[i]==='4F'?(r[1]+r[3])/2+off:(t[1]+t[3])/2+off]):[(i===0?(r[0]+r[2]):(t[0]+t[2]))/2+off+(i===1&&lane===1?.65:0),mainFlightEndV(ids[i],t,rev)],ya:LV[ids[i]],yb:LV[ids[i+1]],
+        a:annex?(ids[i]==='2F'?[40+off,132]:ids[i]==='3F'?[28.5+off,119]:ids[i]==='4F'?[lane===0?28.70:35.70,lane===0?129.7:130.5]:ids[i]==='5F'?[lane===0?31.85:33.35,121.5]:[ids[i]==='4F'?38.1:ids[i]==='8F'?r[0]+1.5:ids[i]==='9F'?r[2]-1:rev?r[2]:r[0],(r[1]+r[3])/2+off]):[(r[0]+r[2])/2+off,mainFlightStartV(ids[i],r,rev,lane)],
+        b:annex?(ids[i]==='2F'?[40+off,121.7]:ids[i]==='3F'?[28.5+off,128]:ids[i]==='4F'?[lane===0?30.35:34.85,121.5]:ids[i]==='5F'?[lane===0?32.95:34.55,129.7]:[ids[i]==='6F'?t[2]-2:ids[i]==='7F'?t[0]+2:ids[i]==='8F'?t[2]-1:ids[i]==='4F'?30.7:rev?t[0]:t[2],ids[i]==='4F'?(r[1]+r[3])/2+off:(t[1]+t[3])/2+off]):[(i===0?(r[0]+r[2]):(t[0]+t[2]))/2+off+(i===1&&lane===1?.65:0),mainFlightEndV(ids[i],t,rev,lane)],ya:LV[ids[i]],yb:LV[ids[i+1]],
       });
     }
   }
@@ -1084,6 +1097,8 @@ export function build(K) {
   const mainWell4 = upperPhysicalWell('4F');
   const near4 = upperAtriumRect('4F')[1];
   const mainLanding4 = [mainWell4[0]-.8, near4-.46, mainWell4[2]+.8, near4+MAIN_4F_SETBACK+.02];
+  const mainDown3 = upperFlightReservations.find(f=>f.floor==='2F'&&!f.annex&&f.lane===1).b;
+  const mainDownApron3 = [Math.min(upperPhysicalWell('3F')[0],30)-.5,mainDown3[1]-1.8,mainDown3[0]+.90,mainDown3[1]+.035];
   const mainLandingBridge=id=>{
     if(id==='4F')return mainLanding4;
     if(id!=='3F'&&id!=='5F')return null;
@@ -1107,7 +1122,7 @@ export function build(K) {
   function upperSafeIntervals(u0,v0,u1,v1,y,H,extraBlocked=null){
     const L=Math.hypot(u1-u0,v1-v0),n=Math.max(1,Math.ceil(L/.10)),safe=[];
     const aperture = photoAtriumAtHeight(Math.max(y, LV['2F']));
-    const blocked=(u,v)=>(extraBlocked&&extraBlocked(u,v))||['3F','4F','5F'].some(id=>{const q=mainLandingBridge(id);return y>=LV[id]-1.1&&y<=LV[id]+.1&&u>=q[0]-.08&&u<=q[2]+.08&&v>=q[1]-.08&&v<=q[3]+.08;})||(y>=6.0&&inR(u,v,aperture,-.02))||upperFlightReservations.some(f=>{
+    const blocked=(u,v)=>(extraBlocked&&extraBlocked(u,v))||(y>=LV['3F']-1.1&&y<=LV['3F']+.1&&inR(u,v,mainDownApron3,.06))||['3F','4F','5F'].some(id=>{const q=mainLandingBridge(id);return y>=LV[id]-1.1&&y<=LV[id]+.1&&u>=q[0]-.08&&u<=q[2]+.08&&v>=q[1]-.08&&v<=q[3]+.08;})||(y>=6.0&&inR(u,v,aperture,-.02))||upperFlightReservations.some(f=>{
       if(f.ya>y+H+.1||f.yb<y-1.8)return false;
       const dx=f.b[0]-f.a[0],dz=f.b[1]-f.a[1],l2=dx*dx+dz*dz,t=((u-f.a[0])*dx+(v-f.a[1])*dz)/l2;
       if(t<-.06||t>1.06)return false;const h=f.ya+(f.yb-f.ya)*Math.max(0,Math.min(1,t));
@@ -1147,7 +1162,7 @@ export function build(K) {
     const [a,b,c,d]=r;
     for(const [u0,v0,u1,v1]of [[a,b,a,d],[c,b,c,d],...(gapsAtEnds?[]:[[a,b,c,b],[a,d,c,d]])]){
       if(y===LV['3F']&&u0===u1&&u0===upperPhysicalWell('3F')[2]){
-        // This edge runs parallel to the 2F down flight. The entire side
+        // This edge runs parallel to the arriving 2F up flight. The entire side
         // is exposed up to the landing, where the level floor resumes.
         const end=mainLandingBridge('3F')[1];
         wall(u0,v0,u1,end,y,y+1.1,{mat:'glass',thick:.04});
@@ -1176,8 +1191,9 @@ export function build(K) {
   K.texture('ssg_annex_escalator_clear',2,2,(g,w,h)=>g.clearRect(0,0,w,h),[1,1],{transparent:true});
   upperStack.slice(0,-2).forEach((id,i)=>{
     const next=upperStack[i+1],r=upperAtriumRect(id),t=upperAtriumRect(next),rev=i>=5?1-i%2:i%2;
-    for(const [off,dir]of upperLaneOffsets(i).map((off,j)=>[off,j?'down':'up'])){
-      const a=P((r[0]+r[2])/2+off,mainFlightStartV(id,r,rev)),b=P((i===0?(r[0]+r[2]):(t[0]+t[2]))/2+off+(i===1&&dir==='down'?.65:0),mainFlightEndV(id,t,rev));
+    for(const [lane,off] of upperLaneOffsets(i).entries()){
+      const dir=lane===0?'up':'down';
+      const a=P((r[0]+r[2])/2+off,mainFlightStartV(id,r,rev,lane)),b=P((i===0?(r[0]+r[2]):(t[0]+t[2]))/2+off+(i===1&&dir==='down'?.65:0),mainFlightEndV(id,t,rev,lane));
       K.escalator(...a,...b,{ya:LV[id],yb:LV[next],w:1.2,dir,speed:.6,sideMat:'ssg_annex_escalator_clear',truss:0xf3eee4});
       annexSlimHousing(...a,...b,LV[id],LV[next],1.2);
       if(id==='5F'){
@@ -1410,7 +1426,7 @@ export function build(K) {
     wall(q[0],q[3],guardEnd,q[3],y,y+1.1,{mat:'glass',thick:.04});
     if(id!=='3F')wall(q[2],q[1],q[2],q[3],y,y+1.1,{mat:'glass',thick:.04});
     if(id==='3F'){
-      for(const [a,b] of [[q[0],31.45],[34.78,37.24],[38.95,40.45],[42.25,guardEnd]])
+      for(const [a,b] of [[q[0],31.45],[33.14,37.24],[38.95,40.45],[42.25,guardEnd]])
         if(b>a+.05)wall(a,q[1],b,q[1],y,y+1.1,{mat:'glass',thick:.04});
     }else upperSafeWall(q[0],q[1],mid-3.65,q[1],y,1.1,{mat:'glass',thick:.04});
   }
@@ -1646,6 +1662,24 @@ export function build(K) {
     const [u, v] = mainLiftCentre(id, bank);
     return P(u - 2.5, v + (carIndex - .5) * 2.7);
   }
+  // Door lines are the dark outer edges through the corner lift symbols.
+  // The 3F pocket is rectangular, while the other guides have a stepped return.
+  const cornerGuides = {
+    '2F': {door:[102,1000], left:[[148,938],[56,938],[56,1000]], right:[[148,1000],[148,969],[179,969]], water:[102,938], by:'몽클레르 · 로로피아나'},
+    '3F': {door:[71,1047], left:[[145,1001],[27,1001],[27,1047]], right:[[176,1047],[176,986]], water:[119,1001], by:'에르뎀 · 자크뮈스'},
+    '4F': {door:[100,1076], left:[[148,983],[27,983],[27,1043],[56,1043],[56,1076]], right:[[148,1076],[148,1045],[180,1045],[180,983]], water:[100,983], by:'이브살로몬 · 엠포리오아르마니'},
+    '5F': {door:[100,1095], left:[[145,1006],[145,1036],[56,1036],[56,1095]], right:[[145,1095],[145,1065],[176,1065],[176,1006]], water:[74,1036], by:'미스지 컬렉션 · 동우모피'}
+  };
+  function cornerLiftCentre(id,bank) {
+    const lobby=cornerGuides[id];
+    if (!lobby) return [bank.u,bank.v];
+    const [front,v]=upperPlanPoint(id,...lobby.door);
+    return [front-1.1,v];
+  }
+  function cornerLiftLanding(id,bank,i) {
+    const [u,v]=cornerLiftCentre(id,bank);
+    return P(u+2.5,v+(i-.5)*2.7);
+  }
   // The 1F plan puts the corner lift doors in the wall opposite Dior's rear
   // wall, reached between Dior and Dyson. Keep the two existing cars and stops.
   const [cornerFrontU, cornerMidV] = PLAN(81,1078);
@@ -1660,11 +1694,13 @@ export function build(K) {
     // Schematic split for the corrected 2–5F map and retained upper floors.
     // This does not assert that the real building has two separate shafts.
     const isMainLift = bank.key === '본관 화장실 옆';
+    const isCorner = bank.key === '본관 코너';
+    const byFloor = isMainLift || isCorner;
     const parts = [];
-    if (isMainLift) {
+    if (byFloor) {
       parts.push([u, v, LV['6F'], LV[bank.top]]);
       for (const id of Object.keys(mainLiftFronts)) {
-        const [cu, cv] = mainLiftCentre(id, bank);
+        const [cu, cv] = isCorner ? cornerLiftCentre(id,bank) : mainLiftCentre(id,bank);
         parts.push([cu, cv + (i - .5) * 2.7, LV[id], LV[id]]);
       }
     } else if (bank.key === '신관 화장실 옆') {
@@ -1683,13 +1719,13 @@ export function build(K) {
       const northUV=B1_PLAN(936,335),northB1=P(...northUV),ground=cornerGroundLanding(i);
       const b1=bank.key==='본관 코너'?MARKET_B1_DEST:[northB1[0]-1.8*CA,northB1[1]+1.8*SA];
       const low=ELV_FLOORS.filter(f=>f.label==='B1'||(bank.key==='본관 코너'&&f.label==='1F'));
-      const stops = isMainLift ? ELV_FLOORS.filter(f => f.y >= LV['2F'] && f.y <= LV[bank.top]).map(f => {
-        const [arrivalX, arrivalZ] = mainLiftLanding(f.label, bank, i);
+      const stops = byFloor ? ELV_FLOORS.filter(f => f.y >= LV['2F'] && f.y <= LV[bank.top]).map(f => {
+        const [arrivalX, arrivalZ] = isCorner ? cornerLiftLanding(f.label,bank,i) : mainLiftLanding(f.label,bank,i);
         return {...f, dx:arrivalX-x, dz:arrivalZ-z};
       }) : floors;
       // Map markers describe the floors at this physical position. The E
       // menu retains every served floor and sends riders to its landing.
-      const menu = isMainLift ? {...el} : el;
+      const menu = byFloor ? {...el} : el;
       menu.floors=[...stops,...low.map(f=>{const dest=f.label==='1F'?ground:b1;return {...f,dx:dest[0]-x,dz:dest[1]-z};})];
 
       if(bank.key==='신관 화장실 옆'&&lo===7&&i===1){
@@ -1749,9 +1785,13 @@ export function build(K) {
   });
   cornerGroundDoors.forEach((v,i)=>{
     const [x,z]=P(cornerFrontU-1.2,v),ground=cornerGroundLanding(i);
-    const corner=UPPER_BANKS.find(b=>b.key==='본관 코너'),remote=P(corner.u+2.5,corner.v+(i-.5)*2.7),parking=P(ELV[i].u,ELV[i].v-2.2),nw=P(36,81);
+    const corner=UPPER_BANKS.find(b=>b.key==='본관 코너'),parking=P(ELV[i].u,ELV[i].v-2.2),nw=P(36,81);
     const el=K.elevator({name:`북서 고객 엘리베이터 ${i+1}호기`,x,z,rotY:FACE.E,w:2.6,d:2.4,topH:3.1,floors:[{label:'1F',y:0,dx:ground[0]-x,dz:ground[1]-z}]});
-    el.floors=ELV_FLOORS.map(f=>({...f,...(f.label==='1F'?{dx:ground[0]-x,dz:ground[1]-z}:f.label==='B2'?{dx:parking[0]-x,dz:parking[1]-z}:f.label==='B1'?{dx:MARKET_B1_DEST[0]-x,dz:MARKET_B1_DEST[1]-z}:f.label==='1M'?{dx:nw[0]-x,dz:nw[1]-z}:{dx:remote[0]-x,dz:remote[1]-z})}));
+    el.floors=ELV_FLOORS.map(f=>{
+      const point=f.label==='1F'?ground:f.label==='B2'?parking:f.label==='B1'?MARKET_B1_DEST:
+        f.label==='1M'?nw:cornerLiftLanding(f.label,corner,i);
+      return {...f,dx:point[0]-x,dz:point[1]-z};
+    });
     const call=K._.interactables.find(it=>it.elevator===el);
     const [callX,callZ]=P(cornerFrontU+.55,v);
     Object.assign(call,{x:callX,z:callZ,y:0,r:1.3});
@@ -2727,7 +2767,7 @@ export function build(K) {
       const r=uvRect(c),[u,v]=BPLAN(...(c.name==='마켓 엘리베이터'?[578,617]:[936,335])),[x,z]=P(u,v);
       const corner=UPPER_BANKS.find(b=>b.key==='본관 코너'),main=UPPER_BANKS.find(b=>b.key==='본관 화장실 옆'),annex=UPPER_BANKS.find(b=>b.key==='신관 화장실 옆');
       const remote=f=>{
-        if(c.name==='마켓 엘리베이터')return P(corner.u+2.5,corner.v+1.35);
+        if(c.name==='마켓 엘리베이터')return cornerLiftLanding(f.label,corner,1);
         if(f.label==='11F')return P(annex.u+1.35,annex.v-1.7);
         return mainLiftLanding(f.label, main, 1);
       };
@@ -6365,7 +6405,13 @@ export function build(K) {
     const y=LV['1M'],fl='1M';
     zone('신세계백화점 중층',fl,'액세서리 · 여행 · 식음료',MEZZ,y,LV['2F'],1);
     const remappedFace={N:'E',S:'W',E:'N',W:'S'};
-    planBoutique('베키아에누보',planRect(638,894,918,970,MPLAN),'E',y,fl,'cafe');
+    // The café projects into the end of the aisle beside Upper House. Only
+    // the short north face between the lounge and the partition is its entry.
+    const vecchiaPixels=[[636,890],[707,890],[707,881],[810,881],[810,894],[919,894],[919,970],[636,970]];
+    const vecchiaPoly=vecchiaPixels.map(pixel=>P(...MPLAN(...pixel)));
+    K.zone({name:'베키아에누보',floor:fl,sub:'카페 · 식음료',poly:vecchiaPoly,y0:y,y1:y+2.9,priority:3});
+    wall(...MPLAN(919,894),...MPLAN(919,970),y,y+2.9,{mat:0xe8e2d7,thick:.12});
+    wall(...MPLAN(919,970),...MPLAN(636,970),y,y+2.9,{mat:0xe8e2d7,thick:.12});
 
     // On the 1M guide the skincare room and travel desk share partitions
     // with opposite ends of the Members Bar. The travel desk opens on the
@@ -6418,15 +6464,16 @@ export function build(K) {
     // F10: cafe follows the curved void, rather than retreating behind a rectangular wall.
     const upperHousePixels=[[375,814],[430,814]];
     for(let px=446;px<=709;px+=17)upperHousePixels.push([px,738+122*Math.sqrt(1-((px-607)/225)**2)]);
-    upperHousePixels.push([709,847],[709,894],[636,894],[636,970],[394,970],[394,894],[375,894]);
+    upperHousePixels.push([707,847],[707,890],[636,890],[636,970],[394,970],[394,894],[375,894]);
     const upperHousePoly=upperHousePixels.map(p=>P(...MPLAN(...p)));
     // The Gangnam 1M Upper House is a VIP lounge serving refreshments.
     // Its in-game seating is an approximation, not a public cafe.
     K.zone({name:'어퍼하우스',floor:fl,sub:'VIP 라운지',poly:upperHousePoly,y0:y,y1:y+2.9,priority:3});
     for(let i=upperHousePixels.length-7;i<upperHousePixels.length;i++){
       const a=MPLAN(...upperHousePixels[i]),b=MPLAN(...upperHousePixels[(i+1)%upperHousePixels.length]);
-      // Short return at the Vecchia side; keep a public access opening from the balcony.
-      wall(...a,...b,y,y+2.8,{mat:0xe8e2d7,thick:.12,openings:i===upperHousePixels.length-7?[{at:1.3,w:2.0,y0:y,y1:y+2.5}]:[]});
+      // The lounge enters from the side of the shared approach, before the
+      // café threshold. Retain the guard by the atrium corner and the return.
+      wall(...a,...b,y,y+2.8,{mat:0xe8e2d7,thick:.12,openings:i===upperHousePixels.length-7?[{at:2.11,w:3.0,y0:y,y1:y+2.5}]:[]});
     }
     // A Gangnam lounge photo shows pale stone walkways and grey seating rugs.
     // Keep the guide outline; the finish is a visual approximation.
@@ -6598,7 +6645,25 @@ export function build(K) {
       const [ju,jv]=MPLAN(965,751);
       sign('주얼리',ju+.05,jv,y+1.65,'E',1.4,.38,{bg:'#51434b',fg:'#ffffff',bold:false});
       box(42.1,72.6,.6,.6,y,2.85,0xf1eee7,{solid:false});
-      sign(['↑ UPPER HOUSE','JEWELRY'],42.1,72.26,y+1.6,'N',.51,.64,{bg:'#333936',fg:'#f4f2eb',bold:false});
+      // IMG_0448 shows this plaque on the pillar face seen from the arrival.
+      const wayfinding=K.texture('ssg_mezz_arrival_directory',512,768,(g,w,h)=>{
+        g.fillStyle='#262622';g.fillRect(0,0,w,h);g.fillStyle='#eee8d7';g.textAlign='left';
+        const arrow=(top,left)=>{
+          g.strokeStyle='#e8dfc8';g.lineWidth=7;g.beginPath();
+          if(left){g.moveTo(67,top);g.lineTo(43,top+24);g.lineTo(67,top+48);}
+          else{g.moveTo(41,top+26);g.lineTo(66,top);g.lineTo(91,top+26);}
+          g.stroke();
+        };
+        arrow(38,false);arrow(432,true);
+        for(const [en,ko,base] of [['UPPER HOUSE','어퍼하우스',121],['vecchia e nuovo','베키아에누보',219],
+          ['JEWELRY','주얼리',317],['VIA SHINSEGAE','비아 신세계 트래블 컨시어지',537],
+          ['SHINSEGAE MEMBERS BAR','멤버스바',639]]) {
+          g.font='500 38px sans-serif';g.fillText(en,43,base,w-80);
+          g.font='400 25px sans-serif';g.fillText(ko,43,base+38,w-80);
+        }
+      },[1,1]);
+      const plaque=K.material('ssg_mezz_arrival_directory_lit',new K.THREE.MeshBasicMaterial({map:K.T.surface(wayfinding).tex}));
+      faceQuad(plaque,'E',72.6,y+1.23,.52,.78,.018,42.4);
       for(const v of [71.7,82.6])box(37,v,37,.045,6.43,.025,0x292d2b,{solid:false});
       for(let u=18;u<57;u+=3.7)for(const v of [70.8,76.5,82.3])downlight(u,v,6.42,.065);
       for(const u of [28,42,54])sign('←',u,71.9,6.1,'E',.40,.34,{bg:'#48bccb',fg:'#e7ffff',twoSided:true});
@@ -6643,7 +6708,7 @@ export function build(K) {
             }
             g.strokeStyle='#d4cfc6';g.lineWidth=1;g.strokeRect(0,0,w,h);
           },[1.15,1.15]);
-          K.hpoly('ssg_vecchia_gangnam_floor',[[u-width/2+.2,v-depth/2+.2],[u+width/2-.2,v-depth/2+.2],[u+width/2-.2,v+depth/2-.2],[u-width/2+.2,v+depth/2-.2]].map(q=>P(...q)),y+.026,true);
+          K.hpoly('ssg_vecchia_gangnam_floor',vecchiaPoly,y+.026,true);
           const counterW=Math.min(width-1,5.6);
           for(let j=0;j<24;j++)box(counterU-counterW/2+.13+j*(counterW-.26)/23,counterV-.44,.08,.045,y+.08,.84,0xa3d9d0,{solid:false});
           box(counterU,counterV-.47,counterW-.12,.035,y+.89,.045,{tex:'emit',color:0xb3eee7},{solid:false});
@@ -6670,9 +6735,9 @@ export function build(K) {
           }
           const pp=P(tu,tv);K.cyl({x:pp[0],z:pp[1],y:y+.79,r:.075,h:.12,mat:0xf8efe0,seg:8,solid:false});
         }
-        sign(name,u+(east?width*.5:0),v+(east?0:-depth*.5),y+2.45,face,Math.min(east?depth*.8:width*.8,7),.38,{bg:'#e7ddcb',fg:'#4f3d2c',bold:false});
       }
       cafeFit('베키아에누보',20.3,79.2,20.6,9.6,'N');
+      sign('베키아에누보',...MPLAN(758.5,881),y+2.45,'E',3.6,.36,{bg:'#e7ddcb',fg:'#4f3d2c',bold:false});
       // The Gangnam 1M Upper House is a VIP lounge, not a public cafe.
       // A 2023 visitor photograph shows grey rugs, low upholstered seats,
       // black modular dividers and dark low tables. Layout and dimensions are
@@ -6710,7 +6775,6 @@ export function build(K) {
         }
         box(tu,tv,.10,.10,y+.8,.11,0xf5f0e5,{solid:false});
       }
-      sign('베키아에누보 · 어퍼하우스',17,70.6,y+2.15,'E',4.4,.32,{bg:'#eee6d6',fg:'#514638',twoSided:true});
       // F16: solid plaster arcade, with real spandrels rather than a thin pergola.
       // The photograph resolves the form; opening dimensions and retained bronze cap are estimates.
       const arcade=[];
@@ -6769,6 +6833,10 @@ export function build(K) {
     // 2F–5F. A 0.25m model-side margin remains beyond the paired cars;
     // neither the shaft location nor the margin is a surveyed measurement.
     ...UPPER_BANKS.filter(b=>LV[id]<=LV[b.top]).map(b=>(b.key==='신관 화장실 옆'&&mainLiftFronts[id])?{...b,v:145}:b).map(b=>{
+      if(b.key==='본관 코너'&&cornerGuides[id]){
+        const [u,v]=cornerLiftCentre(id,b);
+        return [u-1.2,v-2.63,u+1.2,v+2.63];
+      }
       if(b.key==='본관 화장실 옆'&&mainLiftFronts[id]){
         const [u,v]=mainLiftCentre(id,b);
         return [u-2.8,v-2.8,u+1.7,v+2.8];
@@ -6814,6 +6882,7 @@ export function build(K) {
       }
     }
   },[.8,2.7]);
+  const tiffanyPassageDisplay = { width:2.42, offset:-.90 };
   const hermesPassageHeight = 2.2;
   const hermesPassage = [27.50, upperPlanPoint('2F',1477,652)[1], 41.94, 124.95];
   // These guide cells are adjoining bays of the same 2F boutique.
@@ -7353,6 +7422,12 @@ export function build(K) {
       const floor = upperPalette(id,c).floor;
       K.hpoly(floor,rect(...returnBay),y+.019,true);
     }
+    if (id==='5F' && c.name==='미스지 컬렉션') {
+      // The outer end of the boutique extends around the drinking fountain.
+      const [back,side]=upperPlanPoint(id,56,1063);
+      returnBay=[back,r[1],r[0],side];
+      K.hpoly(upperPalette(id,c).floor,rect(...returnBay),y+.019,true);
+    }
     if (id === '5F' && c.name === '보티첼리') {
       // The short front return forms one side of the passage to the blind
       // pocket beside lululemon. Keep the photographed fit-out in the main bay.
@@ -7561,6 +7636,7 @@ export function build(K) {
         const celineSide=id==='2F'&&c.name==='셀린느'&&f==='W'&&b>54;
         // The photograph shows the windows but does not locate a door on
         // the Moynat side. Keep the existing approach from that guide aisle.
+        if (id==='5F' && c.name==='미스지 컬렉션' && f==='W') continue; // The lift lobby walls follow its stepped side.
         if (id === '2F' && c.name === '프라다' && f === 'N') continue;
         if(celineSide){
           // Leave this short edge open for circulation.
@@ -7593,6 +7669,8 @@ export function build(K) {
         if(id==='2F'&&c.name==='디올'&&f==='W'&&u0<.6&&v0>85&&clearH(id)>H)
           upperSafeWall(u0,v0,u1,v1,y+H,clearH(id)-H,{mat:0xe7e1d6,thick:.08,solid:false});
         if(glazed&&id==='2F'&&!celineSide)furnish(id,()=>{
+          const coversScreen = c.name==='티파니앤코' && f==='E';
+          const screenCenter = (raw[1]+raw[3])/2+tiffanyPassageDisplay.offset;
           const count=Math.max(1,Math.floor(L/3.1));
           for(let j=0;j<count;j++){
             const t=(j+.5)/count,u=u0+(u1-u0)*t,v=v0+(v1-v0)*t,along=f==='N'||f==='S',span=Math.min(2,L/count-.65);
@@ -7602,8 +7680,7 @@ export function build(K) {
             // The 2026 passage photograph shows an uninterrupted screen at
             // this position. Omit the older, non-structural generic mullion
             // that otherwise renders in front of the modeled screen.
-            const tiffanyScreen=id==='2F'&&c.name==='티파니앤코'&&f==='E'&&Math.abs(v-((upperPlanPoint(id,c.rect[0],c.rect[1])[1]+upperPlanPoint(id,c.rect[2],c.rect[1])[1])/2-.90))<.45;
-            if(!tiffanyScreen){
+            if (!coversScreen || Math.abs(v-screenCenter) >= (tiffanyPassageDisplay.width+.66)/2) {
               box(u,v,along?.65:.18,along?.18:.65,y,H,0xcfc8bd,{solid:false});
               for(let h=.6;h<H;h+=.6)box(u,v,along?.66:.19,along?.19:.66,y+h,.015,0xb7afa4,{solid:false});
             }
@@ -7961,8 +8038,8 @@ export function build(K) {
           g.save();g.translate(w,0);g.scale(-1,1);g.fillStyle='#ffffff';g.textAlign='center';g.textBaseline='middle';g.font='400 32px Georgia, serif';g.fillText('TIFFANY & CO.',w*.5,h*.85,w*.91);g.restore();
         },[2.42,2.73]);
         sideBox(vm+1.65,y+.12,2.25,2.91,.08,facets);
-        sideBox(vm-.90,y+.12,2.6,2.91,.09,0x62615c);
-        sideBox(vm-.90,y+.20,2.42,2.73,.11,screen);
+        sideBox(vm+tiffanyPassageDisplay.offset,y+.12,2.6,2.91,.09,0x62615c);
+        sideBox(vm+tiffanyPassageDisplay.offset,y+.20,tiffanyPassageDisplay.width,2.73,.11,screen);
       }
       const c=guide.cells.find(c=>c.name==='불가리');
       if(c?.model?.face==='N'&&c.model.parts.length===1){
@@ -8043,18 +8120,16 @@ export function build(K) {
       crossWing?.bounds || [29.6,48.1,44.8,54.5],y,y+3.5,2);
     zone('고객 엘리베이터',id,'본관 · 신관 연결부',bridgeLobby(id),y,y+3.4,2);
   }
-  // 2F: a shallow landing connects the first pair to the retail aisle.
-  // Its open front aligns with the two moving stairways.
-  {const r=upperAtriumRect('2F'),q=upperPhysicalWell('2F'),y=LV['2F'],mid=(r[0]+r[2])/2,up=mid+upperLaneOffsets(0)[0],down=mid+upperLaneOffsets(0)[1],v=r[1],w=.92;
-    K.slab(rect(up-w,v-w,q[2]+.24,v+w),y,{mat:{tex:'marble',color:0xe8dfce},thick:.12,under:CEIL,ceil:false,edge:false});
-    // The cross aisle now meets the landing across its full supported
-    // front. The exposed edge turns along the side of the stair platform.
-    wall(30,mainNearEdge2F,up-w,mainNearEdge2F,y,y+1.05,{mat:'glass',thick:.045});
-    wall(up-w,mainNearEdge2F,up-w,v+w,y,y+1.05,{mat:'glass',thick:.045});
-    for(const [a,b] of [[up+w,down-w],[down+w,q[2]+.24]]){
-      for(const [lo,hi] of [[a,Math.min(b,38.15)],[Math.max(a,39.95),b]])
-        if(hi>lo+.05)wall(lo,v+w,hi,v+w,y,y+1.05,{mat:'glass',thick:.045});
-    }
+  // The north apron joins the 1F arrival and the next up flight. Close
+  // its unused western edge where the former up flight met the well.
+  {
+    const r=upperAtriumRect('2F'),q=upperPhysicalWell('2F'),y=LV['2F'],v=r[1];
+    const mid=(r[0]+r[2])/2,westEdge=mid-3.42,up=mid+upperLaneOffsets(0)[0];
+    K.slab(rect(westEdge,v-.92,q[2]+.24,v+.92),y,{mat:{tex:'marble',color:0xe8dfce},thick:.12,under:CEIL,ceil:false,edge:false});
+    wall(30,mainNearEdge2F,westEdge,mainNearEdge2F,y,y+1.05,{mat:'glass',thick:.045});
+    wall(westEdge,mainNearEdge2F,westEdge,v+.92,y,y+1.05,{mat:'glass',thick:.045});
+    for(const [a,b] of [[westEdge,38.15],[39.95,up-.92]])
+      wall(a,v+.92,b,v+.92,y,y+1.05,{mat:'glass',thick:.045});
   }
   K.slab(rect(38,38.65,40.4,39.8),LV['2F'],{mat:floorMat['2F'],thick:.12,under:CEIL,ceil:false,edge:false});
   K.slab(rect(...mainLanding4),LV['4F'],{mat:floorMat['4F'],thick:.12,under:CEIL,ceil:false,edge:false});
@@ -8065,6 +8140,14 @@ export function build(K) {
   }
   {const r=upperPhysicalWell('3F');wall(38.0,r[1],r[2],r[1],LV['3F'],LV['3F']+1.05,{mat:'glass',thick:.045});}
   {const y=LV['5F'];wall(37.65,53.65,38.35,53.65,y,y+1.05,{mat:'glass',thick:.045});}
+  // The 3F down flight boards from the side aisle facing along the atrium.
+  {
+    const [left,near,right,far]=mainDownApron3,y=LV['3F'];
+    K.slab(rect(left,near,right,far),y,{mat:floorMat['3F'],thick:.12,under:CEIL,edge:false});
+    wall(30,near,right,near,y,y+1.05,{mat:'glass',thick:.045});
+    wall(right,near,right,far,y,y+1.05,{mat:'glass',thick:.045});
+    wall(30,far,mainDown3[0]-.72,far,y,y+1.05,{mat:'glass',thick:.045});
+  }
   // Protect the exposed east edge and preserve the two flight openings.
   {const q=upperPhysicalWell('4F'),y=LV['4F'];
     wall(q[2],mainLanding4[3],q[2],44.5,y,y+1.05,{mat:'glass',thick:.045});
@@ -8215,7 +8298,9 @@ export function build(K) {
     // L6: the area outside the official outline is enclosed back-of-house.
     // Keep the actual two-car corner-bank recess rather than burying its doors.
     let serviceFill=[[0,7.2,u,vEnd]];
-    for(const bank of UPPER_BANKS)if(bank.key==='본관 코너')serviceFill=serviceFill.flatMap(r=>cutRect(r,[bank.u-3.8,bank.v-3.1,bank.u+3.8,bank.v+3.1]));
+    const cornerBank=UPPER_BANKS.find(b=>b.key==='본관 코너');
+    const [carU,carV]=cornerLiftCentre(id,cornerBank),lobby=cornerGuides[id];
+    serviceFill=serviceFill.flatMap(r=>cutRect(r,[carU-3.8,carV-3.1,carU+3.8,carV+3.1]));
     // The continuous lift bank is at the far edge of this service strip.
     // Carve its common lobby through the enclosed service fill rather than
     // placing visible shafts behind solid walls. Bounds are approximate.
@@ -8225,36 +8310,36 @@ export function build(K) {
     for(const r of serviceFill)if(r[2]>r[0])boxR(...r,y,3.4,0xe7e1d6);
     for(const v of[7.2,vEnd])wall(0,v,u,v,y,y+3.4,{mat:0xe7e1d6,thick:.16});
     const openings=id==='2F'?[
-      {at:11.95-7.2,w:5.7,y0:y,y1:y+2.7},
       {at:upperPlanPoint(id,500,bottom)[1]-7.2,w:2.5,y0:y,y1:y+2.6},
     ]:[];
+    if(lobby && Math.abs(carU+1.1-u)<.2)openings.push({at:carV-7.2,w:5.4,y0:y,y1:y+3.4});
     if(MAIN.indexOf(id)<=MAIN.indexOf('8F'))for(const v of [38.6,50.8])if(v>7.2&&v<vEnd)openings.push({at:v-7.2,w:2.0,y0:y,y1:y+2.3});
     if(vEnd>81.5)openings.push({at:82.0-7.2,w:4.2,y0:y,y1:y+2.7});
     if(u<5.8&&MAIN.indexOf(id)<=MAIN.indexOf('8F')) {
       wall(u,7.2,u,Math.min(vEnd,37.5),y,y+3.4,{mat:0xe7e1d6,thick:.16,openings});
       if(vEnd>51.9)wall(u,51.9,u,vEnd,y,y+3.4,{mat:0xe7e1d6,thick:.16,openings:vEnd>81.5?[{at:82.0-51.9,w:4.2,y0:y,y1:y+2.7}]:[]});
     } else wall(u,7.2,u,vEnd,y,y+3.4,{mat:0xe7e1d6,thick:.16,openings});
-    if(id==='5F'){
-      // On the official plan the passage between Miss Gee and Dongwoo Fur
-      // turns beside the drinking-water symbol toward the corner lifts.
-      // The heavy outlines are the shop returns; the sales fronts face the wider aisle.
-      const [back,missSide]=upperPlanPoint(id,145,1036);
-      const [mouth,furSide]=upperPlanPoint(id,176,1006);
-      const [outer]=upperPlanPoint(id,176,1063);
-      const [,waterSide]=upperPlanPoint(id,56,1063);
-      const edge={mat:0xe7e1d6,thick:.10};
-      wall(back,waterSide,back,missSide,y,y+3.4,edge);
-      wall(back,missSide,mouth,missSide,y,y+3.4,edge);
-      wall(outer,furSide,mouth,furSide,y,y+3.4,edge);
-      wall(outer,missSide,outer,furSide,y,y+3.4,edge);
-      wall(u,missSide,outer,missSide,y,y+3.4,edge);
-      const bank=UPPER_BANKS.find(b=>b.key==='본관 코너');
-      for(const landing of [[outer,missSide,mouth,furSide],[bank.u-1.1,bank.v-2.7,back,missSide]])
-        zone('본관 코너 엘리베이터',id,'미스지 컬렉션 · 동우모피 사이',landing,y,y+3.4,2);
-      // Keep the fitting against the return, clear of both current car arrivals.
-      const [,waterV]=upperPlanPoint(id,74,1053);
-      box(back-.15,waterV,.21,.57,y,.90,0xc2c4c2);
-      sign('음수대',back-.27,waterV,y+1.30,'W',.54,.17,{bg:null,fg:'#555851'});
+    if(lobby){
+      const edge={mat:0xe7e1d6,thick:.11};
+      const left=lobby.left.map(p=>upperPlanPoint(id,...p)),right=lobby.right.map(p=>upperPlanPoint(id,...p));
+      const front=carU+1.1;
+      left.push([front,carV-2.55]);
+      right.unshift([front,carV+2.55]);
+      for(const outline of [left,right]){
+        for(let i=1;i<outline.length;i++)wall(...outline[i-1],...outline[i],y,y+3.4,edge);
+      }
+      const [back,waterV]=upperPlanPoint(id,...lobby.water);
+      box(back-.22,waterV,.34,.70,y,.88,0xbac2c0);
+      box(back-.22,waterV,.39,.75,y+.88,.055,'metal',{solid:false});
+      sign('음수대',back-.44,waterV,y+1.36,'W',.65,.19,{bg:null,fg:'#555851'});
+      if(id==='3F'){
+        const [cu,cv]=upperPlanPoint(id,27,1023);
+        box(cu,cv+.16,.60,.22,y,1.20,0x595f60);
+        sign('휴대폰 충전',cu,cv+.31,y+1.45,'S',.82,.22,{bg:null,fg:'#454744'});
+      }
+      // Map GO stands on the public apron in front of the two doors.
+      zone('본관 코너 엘리베이터',id,lobby.by,
+        [front+.30,carV-2.63,front+1.86,carV+2.63],y,y+3.4,2);
     }
     if(id==='2F'){
       const v=upperPlanPoint(id,500,bottom)[1];
@@ -14542,7 +14627,11 @@ export function build(K) {
       }
       const sideDepth=Math.min(Dp*.42,3.4);
       const openIsland=jewelryIsland||(id==='3F'&&['아크리스','더로우','론진','자크뮈스','피비파일로','알라이아','분더샵 여성','발렌티노'].includes(c.name))||(id==='4F'&&['A.P.C.','포르테 포르테','N°21','메종 키츠네','타비오','일라일','버켄스탁','레페토','지안비토로시'].includes(c.name))||(id==='5F'&&['캐나다 구스','르몽생미셸','베네통','위뜨','더일마','타낫','레이브','포유어아이즈온리','랙앤본','온앤온','넘버링','조셉앤 스테이시','룰루레몬','자딕앤 볼테르'].includes(c.name));
-      if(id!=='2F'&&id!=='11F'&&!openIsland&&!popupStage)for(const a of [.20,Wf-.20])fb(a,Dp-sideDepth/2-.16,.10,sideDepth,y,H-.2,palette.wall);
+      if(id!=='2F'&&id!=='11F'&&!openIsland&&!popupStage){
+        // The lift-side wall of Miss Gee turns around the rear sales bay.
+        const sides=id==='5F'&&c.name==='미스지 컬렉션'?[Wf-.20]:[.20,Wf-.20];
+        for(const a of sides)fb(a,Dp-sideDepth/2-.16,.10,sideDepth,y,H-.2,palette.wall);
+      }
       fb(Wf/2,Dp-.29,Wf-.4,.04,y+.10,.055,palette.trim);
       if((luxury||palette.apple)&&!photoOpen){
         const pier=Math.min(.45,Wf*.11),lintel=palette.portal||palette.wall;
@@ -16449,11 +16538,15 @@ export function build(K) {
   // assigned to the matching guide junction and side passage, not new tenants.
   furnish('2F',()=>{
     const y=LV['2F'];
-    for(const u of[38.6,41]){
+    // Preserve the canopy and its two light strips beside the up flight.
+    // Its former outside edge reached into the space above the moving treads.
+    const well=upperAtriumRect('2F'),up=(well[0]+well[2])/2+upperLaneOffsets(0)[0];
+    const left=38.25,right=up-.85;
+    for(const u of [left+.35,right-.35]){
       box(u,51,.04,.04,y+2.98,1.0,0xa5a49e,{solid:false});
       box(u,51,.09,6,y+3.87,.06,{tex:'emit',color:0xf3dfb5},{solid:false});
     }
-    box(39.8,51,3.1,6,y+4.0,.08,0xe7d7b5,{solid:false});
+    box((left+right)/2,51,right-left,6,y+4.0,.08,0xe7d7b5,{solid:false});
     for(const v of[50.9,52.6]){
       hq(36.8,v-.15,43,v+.15,y+.025,{color:0x3a3836,gloss:.5});
       for(const d of[-.18,.18])hq(36.8,v+d-.025,43,v+d+.025,y+.027,0xf8f5ef);
@@ -16966,7 +17059,7 @@ export function upperPhysicalWell(id,annex=false){
   if(i>0&&!(annex&&id==='6F')){
     const p=fn(ids[i-1]),rev=annex&&i-1===2?1:!annex&&i-1>=5?1-(i-1)%2:(i-1)%2;
     for(const [lane,off] of upperLaneOffsets(i-1,annex).entries()){
-      const a=annex?[id==='5F'?(lane===0?28.70:35.70):rev?p[2]:p[0],id==='5F'?(lane===0?129.7:130.5):(p[1]+p[3])/2+off]:[(p[0]+p[2])/2+off,mainFlightStartV(ids[i-1],p,rev)],b=annex?(id==='5F'?[lane===0?30.35:34.85,121.5]:[rev?r[0]:r[2],(r[1]+r[3])/2+off]):[(id==='3F'?(p[0]+p[2]):(r[0]+r[2]))/2+off+(id==='4F'&&lane===1?.65:0),mainFlightEndV(ids[i-1],r,rev)];
+      const a=annex?[id==='5F'?(lane===0?28.70:35.70):rev?p[2]:p[0],id==='5F'?(lane===0?129.7:130.5):(p[1]+p[3])/2+off]:[(p[0]+p[2])/2+off,mainFlightStartV(ids[i-1],p,rev,lane)],b=annex?(id==='5F'?[lane===0?30.35:34.85,121.5]:[rev?r[0]:r[2],(r[1]+r[3])/2+off]):[(id==='3F'?(p[0]+p[2]):(r[0]+r[2]))/2+off+(id==='4F'&&lane===1?.65:0),mainFlightEndV(ids[i-1],r,rev,lane)];
       // Below t=.45 the arriving player's head is below this floor's soffit.
       const dx=b[0]-a[0],dz=b[1]-a[1],len=Math.hypot(dx,dz),nx=-dz/len,nz=dx/len;
       for(const t of[.43,1]){const u=a[0]+dx*t,v=a[1]+dz*t;points.push([u+nx*.82,v+nz*.82],[u-nx*.82,v-nz*.82]);}

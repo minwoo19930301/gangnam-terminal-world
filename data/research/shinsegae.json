@@ -1,4 +1,29 @@
 {
+  "main_atrium_escalator_transfers_2f_3f_20261117": {
+    "guides": [
+      "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/10/16/1esU4Yqhl5TX.png",
+      "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/08/26/XgByI9HjyXqX.png"
+    ],
+    "layout": "Visitors from the 1F Lancome-side escalator can continue to 3F in the same bank. Across the atrium the 3F down flight boards from a side landing and delivers riders to the 1F down flight. The 2F and 3F guide symbols locate the facilities. Individual tread positions, headroom and turns are reconstructed. In the model the 2F down transfer is about 1.4 m and the 3F down transfer from 4F about 15.9 m."
+  },
+  "corner_lift_approaches_and_stores_2f_to_5f_20261117": {
+    "guides": [
+      "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/10/16/1esU4Yqhl5TX.png",
+      "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/08/26/XgByI9HjyXqX.png",
+      "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/11/10/pLc2zpesvkoW.png",
+      "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/11/10/CR8TldsBKpZG.png"
+    ],
+    "layout": "The main-wing end lobbies and pair of doors follow the separate lift symbols on each sheet. The walk passes Moncler and Loro Piana on 2F, Erdem and Jacquemus on 3F, Yves Salomon and Emporio Armani on 4F, and Miss Gee Collection and Dongwoo Fur on 5F. The drinking fountains follow their marked walls. The charging symbol on the west side of the 3F lobby is retained. The rear portion of Miss Gee rejoins the selling floor beside the fountain. The drawings do not specify car assignments or shaft dimensions."
+  },
+  "members_bar_to_vecchia_and_upper_house_20261117": {
+    "guide": "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/07/23/yE3UuO1otYr8.jpg",
+    "photo": "Visitor IMG_0448, 2026-11-07. From the ascent the column points ahead to Upper House, Vecchia e Nuovo and jewelry, and left to Via Shinsegae and Members Bar.",
+    "layout": "Vecchia e Nuovo projects into the public approach between the jewelry aisle and Upper House. The restaurant and lounge have separate openings on the shared passage. The model traces their outline and estimates aperture widths."
+  },
+  "tiffany_2f_plaza_sightline_20261117": {
+    "source": "https://www.hankookilbo.com/news/article/A2026072915300001004",
+    "layout": "Approaching from the plaza, the corner screen of Tiffany appears on the right before its main entrance comes into view. The glass-bay piers stop at the screen edges. Bulgari faces the approach from across the hall."
+  },
   "the_stage_ground_floor_november_2026": {
     "schedule": "Burberry outerwear October 28–November 8 and Jaeger-LeCoultre November 12–22 at The Stage, in Korea Standard Time. The 2026-11-07 visitor photographs record Burberry. The off-event model retains the public hall, marble and escalators.",
     "sources": [
