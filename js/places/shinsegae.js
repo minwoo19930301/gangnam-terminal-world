@@ -6215,7 +6215,13 @@ export function build(K) {
     // use the guide-side aisle until the real doorway location is surveyed.
     // On 5F, ASPESI and DsFURS front the cross-wing passage opposite
     // the Yoonjin Fur side. The space behind them is outside the guide outline.
-    const frontOverrides={'5F:아스페시':'S','5F:디에스퍼':'S','5F:써스데이 아일랜드':'W','5F:DKNY':'W','5F:캐나다 구스':'E','5F:입점 준비 중':'N','11F:더 키친 일 포노 (이탈리안 피자)':'S','11F:꼴라주 (프렌치 경양식)':'N','11F:살롱드호우섬 (딤섬/누들/홍콩식 솥밥)':'S','11F:카테고릭 (카페)':'N','3F:PSR 컨시어지':'S','3F:트리니티 라운지':'N',
+    const frontOverrides={
+      '4F:캐주얼 슈즈 (슈콤마보니/아쉬/라움에디션/비바이아)':'S','4F:헌터':'E',
+      '5F:아스페시':'S','5F:디에스퍼':'S',
+      '5F:써스데이 아일랜드':'W','5F:DKNY':'W','5F:캐나다 구스':'E','5F:입점 준비 중':'N','11F:더 키친 일 포노 (이탈리안 피자)':'S','11F:꼴라주 (프렌치 경양식)':'N','11F:살롱드호우섬 (딤섬/누들/홍콩식 솥밥)':'S','11F:카테고릭 (카페)':'N','3F:PSR 컨시어지':'S','3F:트리니티 라운지':'N',
+      // The retained atrium occupies the guide aisle below HERNO. Its north
+      // edge faces the continuous public passage on the same guide.
+      '3F:에르노':'N',
       // Both shops border public aisles on the guide. The current atrium
       // removes their north-facing fronts, so use the opposite aisle.
       '2F:발렌시아가':'S','2F:생 로랑':'S',
@@ -6242,10 +6248,16 @@ export function build(K) {
     let parts=[r];
     const casualShoe=id==='4F'&&c.name.startsWith('캐주얼 슈즈');
     if(casualShoe){
-      // The grey cell in the 4F guide wraps around Hunter: its lower-left
-      // rectangle is Hunter's own cell, not part of the casual shoe area.
-      const hunter=guide.cells.find(o=>o.name==='헌터');
-      parts=cutRect(r,upperRect(id,hunter.rect));
+      // The shared shoe hall wraps around Hunter and its short entrance aisle.
+      const hunter = upperRect(id, guide.cells.find(o => o.name === '헌터').rect);
+      parts = [[r[0], hunter[3], r[2], r[3]], [hunter[2], r[1], r[2], hunter[3]]];
+    }
+    if (id === '4F' && c.name === '헌터') {
+      // Hunter reaches the public aisle east of its short return, alongside AUTRY.
+      const arm = upperRect(id, [1155, 632, 1205, 663]);
+      arm[1] = r[3];
+      parts = [r.slice(), arm];
+      r[3] = arm[3];
     }
     if(id==='4F'&&c.name==='비이커'){
       // The 2026 Gangnam guide draws the east edge of BEAKER diagonally,
@@ -7100,15 +7112,18 @@ export function build(K) {
       }
     }
   }
-  // The 5F guide steps back behind ASPESI and DsFURS. Follow the outline
-  // to both outer walls so the blank area cannot become a second cross-wing
-  // aisle. The public passage runs along the fronts opposite Yoonjin Fur.
-  {
-    const y = LV['5F'];
-    const outline = [[886, 508], [886, 677], [936, 677], [936, 765],
-                     [1031, 765], [1031, 508]].map(([px, py]) => upperPlanPoint('5F', px, py));
+  // At the neck between the wings, the guides draw an exterior recess
+  // north of the public corridor. Trace its stepped edge up to the outside
+  // walls. The elevator alcoves and sales floors open onto the public side.
+  const northRecesses = {
+    '3F': [[893, 457], [893, 639], [943, 639], [943, 767], [1037, 767], [1037, 457]],
+    '4F': [[913, 439], [913, 568], [896, 568], [896, 632], [965, 632], [965, 760], [1060, 760], [1060, 439]],
+    '5F': [[886, 508], [886, 677], [936, 677], [936, 765], [1031, 765], [1031, 508]],
+  };
+  for (const [id, pixels] of Object.entries(northRecesses)) {
+    const y = LV[id], outline = pixels.map(([px, py]) => upperPlanPoint(id, px, py));
     for (let i = 1; i < outline.length; i++) {
-      wall(...outline[i - 1], ...outline[i], y, y + clearH('5F'), { mat: 0xe7e1d6, thick: .14 });
+      wall(...outline[i - 1], ...outline[i], y, y + clearH(id), { mat: 0xe7e1d6, thick: .14 });
     }
   }
   const mainOutlineBottom={'2F':1000,'3F':1078,'4F':1077,'5F':1095,'6F':1077,'7F':1125,'8F':1089,'9F':1077,'10F':1126};
@@ -13110,6 +13125,13 @@ export function build(K) {
       if(id==='3F'&&c.name==='까르띠에'){
         for(const r of cutRect([u0+.13,v0+.13,u1-.13,v1-.13],[1.65,112.5,5.15,119.2]))hq(...r,y+.018,palette.floor);
       }else hq(u0+.13,v0+.13,u1-.13,v1-.13,y+.018,palette.floor);
+      if (id === '4F' && c.name === '헌터' && q !== largest) {
+        // This arm joins the aisle to the main selling floor. A second shop
+        // fit-out here would put a back wall across the customer's entrance.
+        fsign('HUNTER', Wf / 2, .075, y + 2.58, Math.min(1.8, Wf - .4), .26,
+          { bg: '#efede8', fg: '#303331', twoSided: true });
+        continue;
+      }
       if(id==='5F'&&c.name==='자딕앤 볼테르'&&q!==largest){
         // Secondary part of the same store: bounded indicative merchandise,
         // without a second storefront, counter, staff or internal wall.
@@ -14947,7 +14969,7 @@ export function build(K) {
       }
       // The VCA cell is split by a retained core cut. Its outer west-facing
       // part, not the largest interior part, faces the customer aisle.
-      const frontPart=id==='2F'&&c.name==='반클리프 아펠' ? q[0]===Math.min(...parts.map(p=>p[0])) : q===largest;
+      const frontPart=id==='2F'&&c.name==='반클리프 아펠' ? q[0]===Math.min(...parts.map(p=>p[0])) : q===largest && !(id==='4F'&&c.name==='헌터');
       if(id==='5F'&&c.name==='마인'&&q===largest&&face==='S'){
         const left=parts.find(p=>p!==largest&&Math.abs(p[2]-u0)<.02&&Math.abs(p[3]-v1)<.02);
         const extra=left?u0-left[0]:0,[su,sv]=ST((Wf-extra)/2,.075);

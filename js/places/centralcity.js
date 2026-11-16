@@ -4249,7 +4249,7 @@ function hallR20(K) {
   for(const[name,s,t,y,yaw]of[['센트럴시티 중앙홀',8,0,0,R+PI],['센트럴시티 중층 갤러리',-2,5,3.6,R+PI],['스위트 가든 에스컬레이터',34,6,0,R],['3게이트 연결통로',-10,0,0,R]]){const[x,z]=P(s,t);K.spawn({name,x,z,y,yaw});}
 }
 
-// Round20: retained HOS source cells moved beneath JW; the courtyard stays 16×12 m.
+// House of Shinsegae shops and their shared 1F–1M court below the hotel.
 // Photographed south door and split-level stair override the former strip lobby.
 function hosUpperR20(K) {
   const PI=Math.PI,R=Math.atan2(.358,.934),AX=Math.sin(R),AZ=Math.cos(R),EX=AZ,EZ=-AX;
@@ -4276,10 +4276,18 @@ function hosUpperR20(K) {
   K.texture('ccR20HosHoney',256,256,(g,w,h)=>{g.fillStyle='#a77543';g.fillRect(0,0,w,h);for(let x=0;x<w;x+=32){g.fillStyle=x%64?'#ad7e49':'#996b3f';g.fillRect(x+1,0,30,h);g.strokeStyle='#6c492e';g.lineWidth=1;g.beginPath();g.moveTo(x,0);g.lineTo(x,h);g.stroke();}},[1.4,3.6]);
   K.texture('ccR20HosHerringbone',512,512,(g,w,h)=>{g.fillStyle='#1c1c1e';g.fillRect(0,0,w,h);g.save();g.translate(w/2,h/2);g.rotate(PI/4);for(let y=-640;y<640;y+=32)for(let x=-640;x<640;x+=128){const off=((y/32)%4)*32;g.fillStyle=['#252526','#2d2c2c','#202022','#29292a'][Math.abs((x/128+y/32)%4)];g.fillRect(x+off+1,y+1,125,29);g.strokeStyle='#575556';g.lineWidth=.75;g.strokeRect(x+off,y,128,32);g.fillStyle='#272728';g.fillRect(x+off+128,y+1,29,125);}g.restore();},[2.4,2.4]);
   const H1=(px,py)=>[4.316+(py-680.5)*(.092*85/126),-17.684-(px-1482.5)*(.092*85/126)];
-  const HM=(px,py)=>[4.316+(py-695.5)*.039,-17.684-(px-1204.5)*.039];
+  // Fit the band between the shared TWELVE/Jaipur frontage and the PSR
+  // threshold while keeping the court and the outer mezzanine wall fixed.
+  const HM=(px,py)=>{
+    const south=axis(py,[[238,238],[894,894],[973,1170.5],[1348,1348]]);
+    return [4.316+(south-695.5)*.039,-17.684-(px-1204.5)*.039];
+  };
   const upperPoly=(coords,fn=H1)=>coords.map(q=>P(...fn(...q)));
   const upperRect=(r,fn=H1)=>upperPoly([[r[0],r[1]],[r[2],r[1]],[r[2],r[3]],[r[0],r[3]]],fn);
-  const court=QR(-8,-6,8,6),hosDeck=upperRect([1149,250,1759,1338]),hosMDeck=upperRect([683,238,1730,1348],HM);
+  const courtStart=-8, courtEnd=5.4, upLane=courtEnd-.9;
+  const courtMiddle=(courtStart+courtEnd)/2, courtLength=courtEnd-courtStart;
+  const court=QR(courtStart,-6,courtEnd,6);
+  const hosDeck=upperRect([1149,250,1759,1338]),hosMDeck=upperRect([683,238,1730,1348],HM);
   const stairHole=QR(6.1,7.65,13.3,12.0),entryWell=QR(2.6,12.9,14.04,16.8);
   K.groundHole(court);K.groundHole(entryWell);
   const deckST=[reg(...H1(1149,250)),reg(...H1(1759,250)),reg(...H1(1759,1338)),reg(...H1(1149,1338))];
@@ -4292,9 +4300,17 @@ function hosUpperR20(K) {
   K.slab(hosMDeck,YM,{mat:{tex:'marble',color:0xe8dfd0,gloss:.5},under:0xf4ebdd,holes:[court],thick:.23});
   for(const r of [[-22.402,-34.845,-13.5265,3.014],[29.7635,-34.845,45.122,3.014],[-13.5265,2.6545,29.7635,3.014]])K.slab(RECT(...r),YM,{mat:0xc6bba3,under:0xeee0c4,walk:false,thick:.2});
   K.slab(hosMDeck,YM+3.6,{mat:0xc6bba3,under:0xeee0c4,walk:false,thick:.2});
-  // Open balcony edges at both levels, with the two original court escalator lanes.
-  for(const y of [Y1,YM]){rail(-8,-6,-8,6,y);rail(8,-6,8,6,y);rail(-5.5,-6,5.5,-6,y);rail(-5.5,6,5.5,6,y);}
-  for(const[s,dir]of[[-7.1,'down'],[7.1,'up']]){
+  for(const y of [Y1,YM]){
+    rail(courtStart,-6,courtStart,6,y);
+    rail(courtEnd,-6,courtEnd,6,y);
+    // Both high landings are on the west edge. Leave each belt mouth open.
+    const landing=y===Y1?6:-6;
+    rail(y===YM?courtStart:-5.5,-landing,courtEnd,-landing,y);
+    if(y===YM)rail(courtStart,landing,-7.85,landing,y);
+    rail(y===Y1?-6.47:-6.35,landing,upLane-.75,landing,y);
+    rail(upLane+.75,landing,courtEnd,landing,y);
+  }
+  for(const [s,dir] of [[-7.1,'down'],[upLane,'up']]){
     K.escalator(...Q(s,6),...Q(s,-6),{ya:Y1,yb:YM,w:1.18,dir,sideMat:'ccR20HosHoney',under:'ccR20HosHoney'});
     for(const ds of[-.7,.7])tube([s+ds,6,Y1+.98],[s+ds,-6,YM+.98],.06,0x3e372d);
   }
@@ -4312,10 +4328,21 @@ function hosUpperR20(K) {
     const lsign=(text,s,t,y,w,h,face,o={})=>{const[a,b]=reg(s,t);sig(text,a,cellT(b),y,Math.min(w,face==='N'||face==='S'?7:6),h,face,o);};
     const poly=upperPoly(coords,fn),pts=coords.map(q=>fn(...q));
     const s0=Math.min(...pts.map(q=>q[0])),s1=Math.max(...pts.map(q=>q[0])),t0=Math.min(...pts.map(q=>q[1])),t1=Math.max(...pts.map(q=>q[1]));
-    const sourceDoor={'와인셀러':[1683,702],'분더샵 메자닌':[1385.225,700],'트웰브 강남':[1134,894],'PSR':[1500,1008]}[name];
+    const sourceDoor={'와인셀러':[1482.5,1117],'분더샵 메자닌':[1385.225,700],'트웰브 강남':[1134,894],'PSR':[1342,973]}[name];
     const [ss,tt]=sourceDoor?fn(...sourceDoor):[face==='N'?s0:face==='S'?s1:(s0+s1)/2,face==='E'?t1:face==='W'?t0:(t0+t1)/2];
     const door=P(ss,tt),frontWidth=face==='N'||face==='S'?t1-t0:s1-s0;
     const openings=[{x:door[0],z:door[1],w:Math.min(4.2,frontWidth-1),y0:y,y1:y+2.9}];
+    if(name==='피어커피'||name==='바위파스타바'){
+      // The 42-pixel café cell narrows to 0.72 m here. Recess the shared
+      // jamb at the north aisle so its entrance clears a player's width.
+      // Keep the exterior wall continuous above the edge of the raised deck.
+      const [x,z]=P(...fn(1708,557));
+      openings.push({x,z,w:2.0,y0:y,y1:y+2.9});
+      if(name==='바위파스타바'){
+        const [x,z]=P(...fn(1688,547));
+        openings.push({x,z,w:1.1,y0:y,y1:y+2.9});
+      }
+    }
     if(name==='피부과'){
       // The independent 1M guide otherwise lays this frontage through the
       // shared lift. Its open lobby continues along the court-side landing.
@@ -4418,11 +4445,11 @@ function hosUpperR20(K) {
       }
     });
   };
-  hosUpperCell('윤해운대갈비',[[1248,251],[1445,251],[1445,474],[1353,474],[1353,629],[1248,629]],'S','food',Y1);
+  hosUpperCell('윤해운대갈비',[[1248,251],[1445,251],[1445,474],[1353,474],[1353,577],[1248,577]],'S','food',Y1);
   hosUpperCell('고량주관',[[1498,251],[1626,251],[1626,474],[1498,474]],'S','food',Y1);
   hosUpperCell('록시땅',[[1149,562],[1179,562],[1179,629],[1149,629]],'W','beauty',Y1);
   hosUpperCell('바위파스타바',[[1608,547],[1708,547],[1708,701],[1608,701]],'E','food',Y1);
-  hosUpperCell('피어커피',[[1708,547],[1750,547],[1750,701],[1708,701]],'S','cafe',Y1);
+  hosUpperCell('피어커피',[[1708,547],[1750,547],[1750,701],[1708,701]],'N','cafe',Y1);
   // L-shaped wine cellar surrounds the southern open court; no wall across the north approach.
   hosUpperCell('와인셀러',[[1153,790],[1359,790],[1359,1117],[1608,1117],[1608,702],[1759,702],[1759,1338],[1247,1338],[1247,967],[1153,967]],'N','wine',Y1);
   hosUpperCell('신세계 갤러리',[[1068,238],[1305,238],[1305,365],[1068,365]],'S','gallery',YM,HM);
@@ -4430,7 +4457,7 @@ function hosUpperR20(K) {
   hosUpperCell('피부과',[[780,600],[970,600],[970,733],[1038,733],[1038,905],[867,905],[867,925],[683,925],[683,646],[725,646],[725,790],[867,790],[867,733],[780,733]],'W','office',YM,HM);
   hosUpperCell('자이푸르 러그',[[1200,894],[1304,894],[1304,973],[1200,973]],'N','gallery',YM,HM);
   hosUpperCell('트웰브 강남',[[899,937],[1068,937],[1068,894],[1200,894],[1200,1117],[1234,1117],[1234,1241],[1305,1241],[1305,1348],[731,1348],[731,1248],[899,1248],[899,1144],[953,1144],[953,1050],[899,1050]],'N','cafe',YM,HM);
-  hosUpperCell('PSR',[[1305,973],[1382,973],[1382,1008],[1661,1008],[1700,1205],[1730,1205],[1730,1348],[1305,1348]],'N','psr',YM,HM);
+  hosUpperCell('PSR',[[1200,973],[1382,973],[1382,1008],[1677,1008],[1700,1205],[1603,1205],[1603,1255],[1572,1255],[1572,1348],[1305,1348],[1305,1241],[1234,1241],[1234,1117],[1200,1117]],'N','psr',YM,HM);
 
   for(const[poly,y,floor,sub]of[[hosDeck,Y1,'1F','와인셀러 · 레스토랑'],[hosMDeck,YM,'1M','아트 앤 라이프 · 카페']])K.zone({name:'하우스 오브 신세계',floor,sub,poly,y0:y,y1:y+3.6,priority:10});
   // The upper stair head joins the retained east balcony without a step.
@@ -4478,19 +4505,49 @@ function hosUpperR20(K) {
     for(let s=9.4;s<16.8;s+=1.25)box(s,11.964,.025,.025,0,5.35,0x67422b,{solid:false});
     for(let s=9.5;s<16.8;s+=2){box(s,9.2,.06,4.8,5.26,.04,0x232323,{solid:false});for(const t of[8,10.5,14]){const[x,z]=Q(s,t);K.cyl({x,z,y:5.22,r:.065,h:.018,mat:{tex:'emit',color:0xfff0d7},seg:12,solid:false});}}
   });
-  // Upper court finish retains the original honey panels, slender brass posts and amber lines.
   K.detail({name:'하우스 상층 보이드 · 허니 우드와 앰버',floor:'1F',y0:Y1,y1:9.3,poly:hosDeck},()=>{
-    for(const t of[-9.55,9.05]){
-      box(0,t,16,.18,Y1,6.9,'ccR20HosHoney',{solid:false});
-      for(let s=-7.6;s<8;s+=.96){box(s,t,.045,.2,Y1,6.9,0x6b4226,{solid:false});box(s,t+(t<0?.13:-.13),.12,.07,Y1+.10,.08,{tex:'emit',color:0xffc98a},{solid:false});}
+    // The Famille stair and lift aisle meet the east side at floor level.
+    // Carry the timber finish above the aisle on each level.
+    const trims=[[-9.55,Y1,YM+3.3],[9.05,YM-.48,YM],[9.05,YM+2.9,YM+3.3]];
+    for(const [t,base,top] of trims){
+      box(courtMiddle,t,courtLength,.18,base,top-base,'ccR20HosHoney',{solid:false});
+      for(let s=courtStart+.4;s<courtEnd;s+=.96){
+        box(s,t,.045,.2,base,top-base,0x6b4226,{solid:false});
+        box(s,t+(t<0?.13:-.13),.12,.07,base+.1,.08,{tex:'emit',color:0xffc98a},{solid:false});
+      }
     }
-    for(const s of[-8.2,8.2])for(const t of[-6.4,6.4]){box(s,t,.32,.32,Y1,7.2,{color:0xc7b27c,gloss:.7},{solid:false});for(const d of[-.18,.18])box(s+d,t,.025,.35,Y1,7.2,0x997537,{solid:false});}
-    for(const y of[Y1-.12,YM-.12])for(const t of[-6.2,6.2])box(0,t,16.8,.045,y,.045,{tex:'emit',color:0xffd69a},{solid:false});
+    for(const s of [courtStart-.2,courtEnd+.2])for(const t of [-6.4,6.4]){
+      box(s,t,.32,.32,Y1,7.2,{color:0xc7b27c,gloss:.7},{solid:false});
+      for(const d of [-.18,.18])box(s+d,t,.025,.35,Y1,7.2,0x997537,{solid:false});
+    }
+    for(const y of [Y1-.12,YM-.12])for(const t of [-6.2,6.2]){
+      box(courtMiddle,t,courtLength+.8,.045,y,.045,{tex:'emit',color:0xffd69a},{solid:false});
+    }
   });
-  // One accessible core beside the east balcony; lift pads preserve the B1 handoff.
+  // The HOS area follows the supported approach all the way onto each lift pad.
   const lift=Q(-13,12.2),pad=QR(-17.5,8.5,-8.5,16.5);
-  for(const y of[Y1,YM])K.slab(QR(-25,9.3,6.1,12.5),y,{mat:{tex:'marble',color:0xe5d9c1,gloss:.5},under:0xe8dec9,thick:.2});
-  for(const y of[YB1,Y1,YM])K.slab(pad,y,{mat:{tex:'marble',color:0xe5d9c1,gloss:.5},under:0xe8dec9,thick:.2});
+  const [galleryEnd,outerEast]=reg(...HM(683,238));
+  const [,outerWest]=reg(...HM(1730,238));
+  // The lift apron projects over the lower lobby. Follow the outside of the
+  // joined mezzanine floors, leaving the full aisle and pad entrance clear.
+  const balconyEdge=[[galleryEnd,outerWest],[galleryEnd,outerEast],[-25,outerEast],
+    [-25,12.5],[-17.5,12.5],[-17.5,16.5],[-8.5,16.5],[-8.5,12.5],
+    [6.1,12.5],[6.1,outerEast]];
+  for(let i=1;i<balconyEdge.length;i++){
+    const [a,b]=balconyEdge[i-1],[c,d]=balconyEdge[i];
+    wall(a,b,c,d,YM,YM+1.04,{mat:0xc5b7a1,thick:.09});
+    tube([a,b,YM+1.055],[c,d,YM+1.055],.055,0x9a7f52);
+  }
+  const liftFloor={mat:{tex:'marble',color:0xe5d9c1,gloss:.5},under:0xe8dec9,thick:.2};
+  K.slab(pad,YB1,liftFloor);
+  for(const [y,floor,sub] of [[Y1,'1F','와인셀러 · 레스토랑'],[YM,'1M','아트 앤 라이프 · 카페']]){
+    // Meet the mezzanine edge so the lift aisle has no slot along its floor.
+    const approach=QR(-25,y===Y1?9.05:outerEast,6.1,12.5);
+    for(const poly of [approach,pad]){
+      K.slab(poly,y,liftFloor);
+      K.zone({name:'하우스 오브 신세계',floor,sub,poly,y0:y,y1:y+3.4,priority:10});
+    }
+  }
   K.elevator({name:'하우스 오브 신세계 엘리베이터',x:lift[0],z:lift[1],rotY:R+PI/2,w:1.4,d:1.8,floors:[{label:'B1',y:YB1,name:'푸드홀'},{label:'1F',y:Y1,name:'와인셀러 · 레스토랑'},{label:'1M',y:YM,name:'아트 앤 라이프'}]});
   K.zone({name:'하우스 오브 신세계',floor:'1F',sub:'파미에 출입구 · 푸드홀 내려가는 곳',poly:lobby,y0:0,y1:2.1,priority:12});
   const spawn=Q(16.4,9.4);K.spawn({name:'하우스 오브 신세계 남측 로비',x:spawn[0],y:0,z:spawn[1],yaw:R,group:'센트럴시티'});
