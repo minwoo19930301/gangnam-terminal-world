@@ -1,4 +1,19 @@
 {
+  "shopping_floor_escalator_map_destinations_20261117": {
+    "layout": "On floors 2–5, each main-atrium and annex-escalator map destination is on the level approach 0.65 model metres before its up flight. The navigation points follow the built flight directions. The well retains its floor and location name while the player is on the stairs."
+  },
+  "retail_wing_outline_and_shop_approaches_20261117": {
+    "guides": [
+      "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/08/26/XgByI9HjyXqX.png",
+      "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/11/10/pLc2zpesvkoW.png",
+      "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/11/10/CR8TldsBKpZG.png"
+    ],
+    "layout": "The stepped perimeter sets the depth of the main wing's west row on each floor. MINE and the neighboring 5F shops end at that perimeter. The east-facing 5F annex fronts run from Lookast through Till I Die to Ehre, with Recto beyond the cross-wing entrance. On 3F the annex perimeter turns around the watch boutiques. The side passage between Chopard and TAG Heuer leads to the lift and restroom. On 4F the Le Mouton aisle gives access to the shoe repair counter and the contemporary shoe hall. In the main wing the restroom opens off the recessed lift lobby beside Lindberg. The model follows continuous strokes on the guides for the outer walls and shop returns. Heights and finishes are estimates."
+  },
+  "jewelry_and_valet_approaches_2f_20261117": {
+    "guide": "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/10/16/1esU4Yqhl5TX.png",
+    "layout": "Tiffany has a straight rear edge next to the annex lift lobby. Its sales floor opens toward Bulgari and the plaza escalator. On the main wing, the recessed walls of Loro Piana and Graff flank Gate 5. Both shop entrances face the retail aisle. The western row from Moynat to Moncler ends at its guide outline. Moynat opens beside the unopened unit and has a stepped wall facing Prada."
+  },
   "gate_3_sightline_20261117": {
     "layout": "Seen from inside the main entrance, Gate 3 is directly across the central aisle and popup. Its double doors lead into Central City. The Gate 3 sign hangs just below the door header in the model. Its height is approximate."
   },
@@ -12,7 +27,7 @@
   },
   "shoe_hall_fronts_4f_20261117": {
     "guide": "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/11/10/pLc2zpesvkoW.png",
-    "layout": "Camper and Louis Vuitton open to the east aisle. The diagram marks solid edges on these and the Jimmy Choo, Birkenstock, Prada, Ferragamo and Tod’s shoe displays. The 1.18 m display backs are schematic. The internal white concession seams remain open."
+    "layout": "Camper and Louis Vuitton open to the east aisle. The diagram marks solid edges on these and the Jimmy Choo, Birkenstock, Prada, Ferragamo and Tod’s shoe displays. Roger Vivier and Tabio have a continuous back to the south. UGG Men & Kids and Hogan face the southern aisle. UGG opens west. Display backs follow the edge of the selling floor beside the escalator landing and lift. Their 1.18 m height is schematic. The internal white concession seams remain open."
   },
   "annex_members_bar_5f_counter_20261117": {
     "guide": "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/11/10/CR8TldsBKpZG.png",
@@ -93,7 +108,7 @@
     "poster": "https://www.shinsegae.com/cms12/SC00002/info/theme/__icsFiles/afieldfile/2026/11/12/6_1112_3.png",
     "directory": "https://www.shinsegae.com/store/floor.do?storeCd=SC00002",
     "brand": "https://cinziarocca.co.kr/",
-    "layout": "The Shinsegae poster identifies the 4F event area for Peuterey and Duvetica through January 31. The directory lists Cinzia Rocca under women’s classic on 5F and the brand lists the seasonal Gangnam pop-up. In the game the 4F notice is shown from publication of the poster, November 12, through January 31 in Korea. The 5F November directory is shown for that month, independent of the shop’s unconfirmed closing date. Both notices are at schematic positions beside the annex lifts, and the search points lead to the notices. Individual booth positions remain unverified."
+    "layout": "The Shinsegae poster identifies the 4F event area for Peuterey and Duvetica through January 31. The directory lists Cinzia Rocca under women’s classic on 5F and the brand lists the seasonal Gangnam pop-up. In the game the 4F notice is shown from publication of the poster, November 12, through January 31 in Korea. The 5F November directory is shown for that month, independent of the shop’s unconfirmed closing date. The 4F notice is on the cross-wing passage wall. The 5F notice is on the public side of Ehre near the annex end of that passage. The positions of the model notices are schematic. Individual booth positions remain unverified."
   },
   "members_bar_escalator_map_landings_20261117": {
     "guide": "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/07/23/yE3UuO1otYr8.jpg",

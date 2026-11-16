@@ -1047,10 +1047,27 @@ export function build(K) {
     for(let i=0;i<ids.length-(annex?1:2);i++){
       const r=fn(ids[i]),t=annex&&ids[i]==='5F'?upperExpanded6AnnexRect():fn(ids[i+1]),rev=annex?(i===2?1:i%2):i>=5?1-i%2:i%2;
       for(const [lane,off] of (annex?actualAnnexLaneOffsets(i):upperLaneOffsets(i)).entries())upperFlightReservations.push({
+        floor:ids[i],annex,lane,
         a:annex?(ids[i]==='2F'?[40+off,132]:ids[i]==='3F'?[28.5+off,119]:ids[i]==='4F'?[lane===0?28.70:35.70,lane===0?129.7:130.5]:ids[i]==='5F'?[lane===0?31.85:33.35,121.5]:[ids[i]==='4F'?38.1:ids[i]==='8F'?r[0]+1.5:ids[i]==='9F'?r[2]-1:rev?r[2]:r[0],(r[1]+r[3])/2+off]):[(r[0]+r[2])/2+off,mainFlightStartV(ids[i],r,rev)],
         b:annex?(ids[i]==='2F'?[40+off,121.7]:ids[i]==='3F'?[28.5+off,128]:ids[i]==='4F'?[lane===0?30.35:34.85,121.5]:ids[i]==='5F'?[lane===0?32.95:34.55,129.7]:[ids[i]==='6F'?t[2]-2:ids[i]==='7F'?t[0]+2:ids[i]==='8F'?t[2]-1:ids[i]==='4F'?30.7:rev?t[0]:t[2],ids[i]==='4F'?(r[1]+r[3])/2+off:(t[1]+t[3])/2+off]):[(i===0?(r[0]+r[2]):(t[0]+t[2]))/2+off+(i===1&&lane===1?.65:0),mainFlightEndV(ids[i],t,rev)],ya:LV[ids[i]],yb:LV[ids[i+1]],
       });
     }
+  }
+  // Map GO uses the centre of each zone. The public destination is the
+  // level apron just before the up flight. The entire well still has its HUD.
+  function registerEscalatorLanding(name,id,sub,well,zoneHeight,annex) {
+    const y=LV[id];
+    if (!['2F','3F','4F','5F'].includes(id)) {
+      zone(name,id,sub,well,y,y+zoneHeight,2);
+      return;
+    }
+    const flight=upperFlightReservations.find(f=>f.floor===id && f.annex===annex && f.lane===0);
+    const [ax,az]=P(...flight.a),[bx,bz]=P(...flight.b);
+    const length=Math.hypot(bx-ax,bz-az),dx=(bx-ax)/length,dz=(bz-az)/length;
+    const corner=(back,side)=>[ax-back*dx-side*dz,az-back*dz+side*dx];
+    const location={name,floor:id,sub,y0:y,y1:y+zoneHeight,priority:2};
+    K.zone({...location,poly:[corner(.35,-.50),corner(.95,-.50),corner(.95,.50),corner(.35,.50)]});
+    K.phys.addZone({...location,place:meta.id,poly:rect(...well)});
   }
   // These level landings join the guide-derived well to the public aisles.
   const mainWell4 = upperPhysicalWell('4F');
@@ -1184,7 +1201,7 @@ export function build(K) {
     const v=atSouth?r[3]:r[1],edge=atSouth?p[3]:p[1];
     for(const q of cutRect([mid-6.8,Math.min(v,edge)-.04,mid+6.8,Math.max(v,edge)+.04],PHOTO_ATRIUM))K.slab(rect(...q),y,{mat:{tex:'marble',color:0xe8dfce},thick:.16,under:CEIL,edge:false});
     for(const end of[p[1],p[3]])if(end!==edge)upperSafeWall(mid-3.6,end,mid+3.6,end,y,1.1,{mat:'glass',thick:.04});
-    zone('본관 아트리움',id,'교차 에스컬레이터',p,y,y+4,2);
+    registerEscalatorLanding('본관 아트리움',id,'교차 에스컬레이터',p,4,false);
   }
   // L09/D06: glass guards follow the combined aperture without a rail across
   // its interior. Existing upper flights retain their own approach openings.
@@ -1248,20 +1265,21 @@ export function build(K) {
   const [jwAisleWest] = upperPlanPoint('2F', 1658, 463);
   const [jwAisleEast] = upperPlanPoint('2F', 1622, 439);
   // The listings identify the floor but not the individual bays. Map searches
-  // lead to these notices on the wall beside the two annex lifts.
+  // lead to representative notices on the passage walls before and after the two wings meet.
   const seasonalNotices = [
-    {floor:'4F', from:'2026-11-12', until:'2027-02-01', heading:'4층 겨울 행사 안내',
+    {floor:'4F', from:'2026-11-12', until:'2027-02-01', heading:'4층 겨울 행사 안내', wallPoint:[1010,760],
       brands:'듀베티카 · 페트레이', caption:'4층 행사장 · 1월 31일까지'},
-    {floor:'5F', from:'2026-11-01', until:'2026-12-01', heading:'11월 · 5층 매장 안내',
+    {floor:'5F', from:'2026-11-01', until:'2026-12-01', heading:'11월 · 5층 매장 안내', wallPoint:[1058,739],
       brands:'신지아로카', caption:'여성 클래식'},
   ];
-  for (const {floor,from,until,heading,brands,caption} of seasonalNotices) {
+  for (const {floor,from,until,heading,brands,caption,wallPoint} of seasonalNotices) {
     if (visitTime < Date.parse(from+'T00:00:00+09:00') || visitTime >= Date.parse(until+'T00:00:00+09:00')) continue;
     const y = LV[floor];
-    sign([heading,brands,caption],27.3,145.20,y+1.56,'N',1.75,.84,
+    const [u,v] = upperPlanPoint(floor,...wallPoint);
+    sign([heading,brands,caption],u-.10,v,y+1.56,'W',1.75,.84,
       {bg:'#f1e9da',fg:'#413a32',bold:false,pxPerM:200});
-    zone(heading+'판',floor,brands+' · 신관 엘리베이터 옆',
-      [26.65,143.65,27.95,144.55],y,y+2.6,4);
+    zone(heading+'판',floor,brands+' · 본관·신관 연결통로',
+      [u-1.25,v-.85,u-.45,v+.85],y,y+2.6,4);
   }
   // Guard the new store boundary and the small lifted elevator platform.
   for(const id of ['2F','3F','4F','5F']){
@@ -6544,7 +6562,7 @@ export function build(K) {
   const upperFace={N:'E',S:'W',E:'S',W:'N'};
   // Retained ground arrivals and the existing emergency cores are hard constraints.
   // Every cut is recorded as a schematic-registration exception, never a new tenant.
-  const upperKeepClear=id=>[
+  const upperKeepClear=(id,shopName)=>[
     ...(id==='2F'?PHOTO_ATRIUM_2F_PARTS:id==='5F'?PHOTO_ATRIUM_5F_PARTS:[id==='3F'?PHOTO_ATRIUM_3F:id==='4F'?PHOTO_ATRIUM_4F:PHOTO_ATRIUM]),
     ...(id==='3F'?[[35.7,125.0,40.1,127.8]]:[]),
     ...(id==='6F'?[upperIncoming56Hole().map((n,i)=>n+(i<2?-.3:.3)),[26.8,72.5,29.5,78.5]]:[]),
@@ -6564,6 +6582,11 @@ export function build(K) {
       if(b.key==='본관 화장실 옆'&&mainLiftFronts[id]){
         const [u,v]=mainLiftCentre(id,b);
         return [u-2.8,v-2.8,u+1.7,v+2.8];
+      }
+      if(id==='2F'&&shopName==='티파니앤코'&&b.key==='신관 화장실 옆'){
+        // Tiffany's straight rear wall stops before the lift doors. Clip to
+        // the shafts here; the public aisle approaches both cars from the side.
+        return [b.u-3,b.v-1.2,b.u+3,b.v+1.2];
       }
       return b.face==='N'?[b.u-3,b.v-3.9,b.u+3,b.v+1.2]:b.face==='S'?[b.u-3,b.v-1.2,b.u+3,b.v+2.4]:[b.u-3.8,b.v-3,b.u+3.8,b.v+3];
     }),
@@ -6640,6 +6663,7 @@ export function build(K) {
       ['랑방 컬렉션','마인','미샤','셀럽제이','미스지 컬렉션'],
       ['동우모피','진도모피','르베이지','쁘렝땅','닥스 숙녀','보티첼리'],
       ['더일마','스튜디오 톰보이','보브','시스템','라코스테','럭키슈에뜨'],
+      ['룩캐스트','틸아이다이','에레'],
       ['헤지스','빈폴'], ['분크','닥스 핸드백'],
       ['부디무드라','르917 (르셉템버)','던스트'],
     ],
@@ -6668,7 +6692,8 @@ export function build(K) {
   // between neighbouring concessions stay open to their shared selling floor.
   const shoeBoundaries4F = {
     '지미추':'NW', '버켄스탁':'NE', '캠퍼':'NW', '루이비통':'SW',
-    '프라다':'SW', '페라가모':'SE', '토즈':'NSE'
+    '프라다':'SW', '페라가모':'SE', '토즈':'NSE',
+    '로저 비비에':'S', '타비오':'S', '어그 맨&키즈':'N', '호간':'N', '어그':'NSE'
   };
   const northBoutiques3F = ['막스마라','브루넬로 쿠치넬리','로에베','끌로에','아크네스튜디오'];
   // An open shop face stays on its official white aisle. Stock is bounded to its cell.
@@ -6704,9 +6729,9 @@ export function build(K) {
       // The guide shows a passage along Songzio's east edge. Its northern
       // frontage is truncated by the model's current atrium reservation.
       '4F:송지오 파리':'E',
-      // Both long sides border the white aisle on the guide; the north
-      // edge is cut by the current swept well, so use the opposite edge.
-      '4F:어그 맨&키즈':'S',
+      // Hogan and UGG Men & Kids share a back on the escalator side.
+      // Their south fronts open onto the white aisle toward the comfort-shoe hall.
+      '4F:어그 맨&키즈':'S','4F:호간':'S',
       // The Camper and Louis Vuitton islands both open to the east aisle;
       // their western edges are continuous on the branch guide.
       '4F:캠퍼':'E','4F:루이비통':'E',
@@ -6868,6 +6893,14 @@ export function build(K) {
     if(id==='2F'&&c.name==='모이나'){
       for(const hole of [[54,463,165,493],[148,526,165,569]])
         parts=parts.flatMap(q=>cutRect(q,upperRect(id,hole)));
+      // The guide closes the upper part of the Prada-facing side. Its
+      // recessed lower part opens onto the public approach beside the hoarding.
+      const [bend,shortSide,back]=upperRect(id,[54,463,165,493]);
+      const [entry]=upperPlanPoint(id,165,526);
+      const finish={mat:0xe7e1d6,thick:.08};
+      upperSafeWall(back,shortSide,bend,shortSide,y,H,finish);
+      upperSafeWall(bend,shortSide,bend,r[3],y,H,finish);
+      upperSafeWall(bend,r[3],entry,r[3],y,H,finish);
     }
     // The larger 2F opening-soon area steps back beside Moynat. The white
     // upper-left corner on the official guide is outside its hoarding.
@@ -6877,8 +6910,16 @@ export function build(K) {
     // The 2F guide shows only the centre of Loro Piana extending into
     // the rear bay; the two flanking white recesses are outside the shop.
     if(id==='2F'&&c.name==='로로피아나'){
-      for(const hole of [[179,969,331,1000],[427,969,469,1000]])
-        parts=parts.flatMap(q=>cutRect(q,upperRect(id,hole)));
+      const finish={mat:0xe7e1d6,thick:.08};
+      for(const hole of [[179,969,331,1000],[427,969,469,1000]]){
+        const notch=upperRect(id,hole),[rear,start,front,end]=notch;
+        parts=parts.flatMap(q=>cutRect(q,notch));
+        // Both recesses have a closed rear edge. The outer return at the
+        // gate also forms the left side wall of the valet entrance.
+        upperSafeWall(front,start,front,end,y,H,finish);
+        upperSafeWall(rear,end,front,end,y,H,finish);
+        if(hole[0]===427)upperSafeWall(rear,start,front,start,y,H,finish);
+      }
     }
     // The 2F guide gives Louis Vuitton watch and jewellery a shallow return
     // at its right end.  Its upper-right white corner is outside the store;
@@ -6912,8 +6953,16 @@ export function build(K) {
       upperSafeWall(u0,v0,u0,v1,y,H,finish);
       upperSafeWall(u0,v1,u1,v1,y,H,finish);
     }
-    if(id==='2F'&&c.name==='그라프')
-      parts=parts.flatMap(q=>cutRect(q,upperRect(id,[721,938,787,968])));
+    if(id==='2F'&&c.name==='그라프'){
+      const notch=upperRect(id,[721,938,787,968]),[rear,start,front,end]=notch;
+      parts=parts.flatMap(q=>cutRect(q,notch));
+      const finish={mat:0xe7e1d6,thick:.08};
+      upperSafeWall(rear,start,front,start,y,H,finish);
+      upperSafeWall(front,start,front,end,y,H,finish);
+      // The guide extends the gate-side wall to the public threshold.
+      const [gateU]=upperPlanPoint(id,532,1000);
+      upperSafeWall(gateU,r[1],r[0],r[1],y,H,finish);
+    }
     // Phoebe Philo's south-east white corner is circulation in the official 3F guide.
     // Keep its two grey portions as a single connected L-shaped concession.
     if (id === '3F' && c.name === '발렌티노') {
@@ -7074,7 +7123,7 @@ export function build(K) {
     // N2: only the actual recessed middle bay is excluded. First-row shops
     // reach the façade at v=.5 on both shoulders, with no invented public band.
     parts=parts.flatMap(q=>cutRect(q,[22.85,0,44.15,8.35]));
-    for(const clear of upperKeepClear(id)){
+    for(const clear of upperKeepClear(id,c.name)){
       if(id==='4F'&&c.name==='쏘솔트'&&clear===PHOTO_ATRIUM_4F)continue;
       parts=parts.flatMap(p=>cutRect(p,clear));
     }
@@ -7204,6 +7253,19 @@ export function build(K) {
       else if (hasMappedShops) registerShopFootprint(shopName,id,shopDescription,shopParts,y,H);
       else for(const q of shopParts)zone(shopName,id,shopDescription,q,y,y+H,3);
     }else zone(c.name,id,`${id} · 신세계백화점 강남점`,r,y,y+H,3);
+    if (displayBacks) {
+      // Follow the edge of the retained selling floor beside the annex
+      // landing and lift. The guide marks these boundaries. The low display
+      // height and the setbacks around the game’s stair and lift are estimates.
+      for (const loop of unionRects(parts)) {
+        for (let i = 0; i < loop.length; i++) {
+          const [u0,v0] = loop[i], [u1,v1] = loop[(i+1)%loop.length];
+          // unionRects traces the outer edges with the selling floor on the left.
+          const side = u0===u1 ? (v1>v0 ? 'E' : 'W') : (u1>u0 ? 'N' : 'S');
+          if (displayBacks.includes(side)) upperSafeWall(u0,v0,u1,v1,y,1.18,{mat:0xe7e1d6,thick:.08});
+        }
+      }
+    }
     for(const q of parts){
       const [a,b,d,e]=q;
       if (artWall) {
@@ -7298,9 +7360,7 @@ export function build(K) {
           if(start>u0+.1)upperSafeWall(u0,v0,start,v1,y,H,wallOptions);
           if(end<u1-.1)upperSafeWall(end,v0,u1,v1,y,H,wallOptions);
         }else if(displayBacks?.includes(f)){
-          // Retain a low solid display back on the marked edges. The plan
-          // fixes their extent, but does not give a partition height.
-          upperSafeWall(u0,v0,u1,v1,y,1.18,{mat:0xe7e1d6,thick:.08});
+          continue; // The fitted boundary above already covers this edge.
         }else if(id==='4F'&&c.name==='샤넬 슈 부틱'){
           // The official plan closes three sides and opens only to the
           // Miu Miu aisle on the west. Keep the adjacent landing clear.
@@ -7457,7 +7517,7 @@ export function build(K) {
       upperGuardTrim(a,b,c,d,y+1.1,.05,.05,0xa7a9a8,safe);
       upperGuardTrim(a,b,c,d,y-1,1,.08,0xc4b8a5,upperSafeIntervals(a,b,c,d,y-1,1,id==='2F'?centralCityUpperTrimOpening:null));
     }
-    zone('신관 에스컬레이터',id,'층별 매장 · 식당가',p,y,y+3,2);
+    registerEscalatorLanding('신관 에스컬레이터',id,'층별 매장 · 식당가',p,3,true);
   }
   // Schematic 8F landing for the shortened paired flights. The official
   // guide marks this as a shared pad; exact surveyed dimensions are unknown.
@@ -7821,29 +7881,62 @@ export function build(K) {
   // walls. The elevator alcoves and sales floors open onto the public side.
   const northRecesses = {
     '2F': [[913, 364], [913, 492], [964, 492], [964, 683], [1061, 683], [1061, 364]],
-    '3F': [[893, 457], [893, 639], [943, 639], [943, 767], [1037, 767], [1037, 457]],
-    '4F': [[913, 439], [913, 568], [896, 568], [896, 632], [965, 632], [965, 760], [1060, 760], [1060, 439]],
-    '5F': [[886, 508], [886, 677], [936, 677], [936, 765], [1031, 765], [1031, 508]],
+    '3F': [[893, 457], [893, 639], [943, 639], [943, 767], [1037, 767], [1037, 500]],
+    '4F': [[913, 439], [913, 568], [896, 568], [896, 632], [965, 632], [965, 760], [1060, 760], [1060, 447]],
+    '5F': [[886, 508], [886, 677], [936, 677], [936, 765], [1031, 765], [1031, 573]],
   };
-  // The dark perimeter also steps behind the north boutiques. The white
-  // public aisle is on their opposite, open side.
-  const northShopOutlines = {
+  // Perimeter returns around the retail wings. Breaks at the far edge of
+  // the annex line up with the public passages to the toilets and lifts.
+  const wingOutlines = {
+    '3F': [
+      [[179,551],[27,551],[27,731],[53,731],[53,877],[27,877],[27,1001]],
+      [[1037,500],[1146,500],[1146,462],[1734,462],[1734,784],[1643,784]],
+      [[1037,1092],[1175,1092],[1175,1140],[1734,1140],[1734,814],[1643,814]],
+    ],
     '4F': [
-      [[182,602],[182,537],[342,537],[342,475],[629,475],[629,537],[681,537]],
+      [[56,1043],[27,1043],[27,537],[342,537],[342,475],[629,475],[629,537],[681,537]],
+      [[182,602],[182,537]],
+      [[1060,447],[1734,447],[1734,650]],
+      [[1061,1141],[1734,1141],[1734,930]],
     ],
     '5F': [
-      [[176,635],[176,573],[333,573],[333,513],[612,513],[612,573],[738,573],[738,635]],
-      [[1134,559],[1134,521],[1261,521],[1261,513],[1534,513],[1534,521],[1701,521],[1701,615]],
+      [[56,1063],[28,1063],[28,897],[54,897],[54,573],[333,573],[333,513],[612,513],[612,573],[738,573],[738,635]],
+      [[176,573],[176,635]],
+      [[1031,573],[1134,573],[1134,521],[1261,521],[1261,513],[1534,513],[1534,521],[1701,521],[1701,615],[1734,615],[1734,768]],
+      [[1734,792],[1734,915]],
+      [[1031,1081],[1261,1081],[1261,1111],[1512,1111]],
+    ],
+  };
+  // Solid strokes inside the outline close the backs and ends of these
+  // shops. Across the white aisles, the entrances stay open.
+  const shopReturns = {
+    '3F': [
+      [[27,582],[145,582],[145,613]], // Issey Miyake
+      [[1037,582],[1146,582]], [[1037,767],[1146,767]], // Roger Dubuis and Tudor
+      [[1037,828],[1146,828]], [[1147,1047],[1147,1092]], // Omega and Montblanc
+      [[1608,553],[1734,553]], // Chaumet beside PSR
+    ],
+    '4F': [
+      [[54,537],[54,569],[148,569],[148,600]], // COS
+      [[1369,447],[1369,519]], [[1533,447],[1533,519]], // shoe repair and Le Mouton
+      [[1061,949],[1205,949]], // Longchamp beside the domestic shoe hall
+    ],
+    '5F': [
+      [[54,604],[160,604],[160,635]], // Lanvin Collection
+      [[1134,573],[1155,573]], [[1031,739],[1155,739]], [[1031,991],[1155,991]], // Lookast, Ehre and Recto
+      [[1103,1021],[1103,1050],[1189,1050],[1189,1081]], // Shop Amomento
     ],
   };
   for (const [id, recess] of Object.entries(northRecesses)) {
     const y = LV[id];
-    for (const pixels of [recess, ...(northShopOutlines[id] || [])]) {
+    const trace = (pixels,height) => {
       const outline = pixels.map(([px,py])=>upperPlanPoint(id,px,py));
       for (let i = 1; i < outline.length; i++) {
-        wall(...outline[i-1],...outline[i],y,y+clearH(id),{mat:0xe7e1d6,thick:.14});
+        wall(...outline[i-1],...outline[i],y,y+height,{mat:0xe7e1d6,thick:.14});
       }
-    }
+    };
+    for (const line of [recess,...(wingOutlines[id] || [])]) trace(line,clearH(id));
+    for (const line of shopReturns[id] || []) trace(line,Math.min(3.4,clearH(id)));
   }
   // Main-wing guides show a stepped public landing beside the lift bank.
   // Trace the white pocket up to the marked restroom wall. The guides do
@@ -8020,27 +8113,6 @@ export function build(K) {
   // The right-wing bank is the walkable connection to the 11F dining corridor.
 
 
-  // The guide identifies the 4F main-wing restroom entrance, not its inner
-  // layout. This compact vestibule and its decorative doors are schematic.
-  {
-    const y=LV['4F'],u0=59.0,u1=64.5,v0=74.1,v1=77.2,doorV=75.65868;
-    const finish={mat:0xe8e5df,thick:.12};
-    wall(u0,v0,u0,v1,y,y+2.8,{...finish,openings:[{at:doorV-v0,w:1.7,y0:y,y1:y+2.35}]});
-    wall(u0,v0,u1,v0,y,y+2.8,finish);wall(u0,v1,u1,v1,y,y+2.8,finish);wall(u1,v0,u1,v1,y,y+2.8,finish);
-    hq(u0,v0,u1,v1,y+2.8,CEIL,false);
-    zone('화장실','4F','남자 · 여자 · 장애인',[u0+.1,v0+.1,u1-.1,v1-.1],y,y+2.8,4);
-    furnish('4F',()=>{
-      box(u1-.10,74.91,.05,1.05,y,2.18,0xaaa49c,{solid:false});box(u1-.10,76.40,.05,1.05,y,2.18,0xaaa49c,{solid:false});
-      sign('남자',u1-.4,74.91,y+1.85,'W',.8,.26,{bg:'#4b4b49',fg:'#ffffff',twoSided:true,pxPerM:160});
-      sign('여자 · 장애인',u1-.4,76.40,y+1.85,'W',1.05,.26,{bg:'#4b4b49',fg:'#ffffff',twoSided:true,pxPerM:160});
-      const boardU=u0-.22,inkU=u0-.27,ink=0xf7f7f3;
-      box(boardU,doorV,.05,1.35,y+2.34,.38,0x34332f,{solid:false});
-      for(const dv of[-.42,-.27,-.12])box(inkU,doorV+dv,.035,.035,y+2.40,.23,ink,{solid:false});
-      box(inkU,doorV-.27,.035,.33,y+2.40,.035,ink,{solid:false});box(inkU,doorV+.06,.035,.035,y+2.40,.23,ink,{solid:false});
-      for(const yy of[2.40,2.595])box(inkU,doorV+.22,.035,.34,y+yy,.035,ink,{solid:false});
-    });
-  }
-
   // 5F main-wing restroom: a compact, approximate vestibule behind the
   // guide's restroom icon.  Its interior doors are schematic; their real
   // positions are not shown on the guide.  Keep the entrance and walls
@@ -8083,8 +8155,7 @@ export function build(K) {
     const serviceVMax=expanded?Math.min(145.3,Math.max(84.71,upperPlanPoint(floor,1775,700)[1]+2.5)):VD-.1;
     const serviceVMin=expanded&&v>VD?v-.9:v-.45;
     zone(name,floor,'고객 편의시설',[Math.max(.1,u-.7),Math.max(.1,serviceVMin),Math.min(UW-.1,u+.7),Math.min(serviceVMax,v+.45)],y,y+2.8,4);
-    // The 4F main icon is now a walkable vestibule rather than a stand-alone frame.
-    if((floor==='4F'&&v<VD)||(floor==='3F'&&v>145.3))continue;
+    if(floor==='3F'&&v>145.3)continue;
     furnish(floor,()=>{
       const along=f==='N'||f==='S';
       // The 3F annex icon lies beyond this model's supported floor edge.
@@ -16514,7 +16585,7 @@ export const upperGuidePlans = {};
   r([322,418,510],1006,1096,'르베이지|쁘렝땅','N');
   r([510,638,752],1006,1063,'닥스 숙녀|보티첼리','N');
   c('더일마',1134,521,1261,580);r([1261,1361,1441,1534,1622,1701],521,603,'스튜디오 톰보이|보브|시스템|라코스테|럭키슈에뜨');
-  c('룩캐스트',1031,573,1155,635,'E');c('틸아이다이',1031,636,1155,683,'E');c('에레',1031,684,1155,739,'E');c('렉토',1031,849,1155,991,'E');
+  c('룩캐스트',1031,573,1155,627,'E');c('틸아이다이',1031,628,1155,682,'E');c('에레',1031,683,1155,739,'E');c('렉토',1031,849,1155,991,'E');
   r([1186,1246,1311,1378],626,703,'베네통|온앤온|포유어아이즈온리');r([1186,1246,1278],704,756,'에스실|넘버링');c('팝업 스테이지',1278,704,1378,756,'S','popup');
   r([1410,1513,1623],626,680,'CC콜렉트|에고이스트');r([1410,1513,1623],681,739,'써스데이 아일랜드|잇미샤');
   c('헤지스',1660,615,1734,691,'W');c('빈폴',1660,692,1734,768,'W');c('분크',1660,792,1734,850,'W','bag');c('닥스 핸드백',1660,851,1734,914,'W','bag');
@@ -16710,9 +16781,9 @@ export function upperBuildRect(id,c) {
   // The 4F shoe boutiques keep their guide frontage on both public aisles.
   // Leave clearance behind Chanel for the modeled annex landing and slope.
   if(id==='4F'&&c.name==='샤넬 슈 부틱')r[3]=Math.min(r[3],upperPhysicalWell(id,true)[1]-1.3);
-  // R19 N2: façade shoulders belong to their first-row cells. The structural
-  // and fitting passes clip only the recessed u23–44 bay, not the whole row.
-  if(c.rect[0]<=79&&id!=='11F'&&!(id==='3F'&&c.name==='트리니티'))r[1]=.5;
+  // On 2F–5F the stepped outside wall follows each guide's retail outline.
+  // Other floors still fit their front row to the building's façade shoulders.
+  if(c.rect[0]<=79&&!['2F','3F','4F','5F','11F'].includes(id))r[1]=.5;
   return r;
 }
 
@@ -16725,7 +16796,7 @@ export const upperServicePoints=[
   {floor:'2F',pixel:[1762,667],face:'W',name:'여자 화장실'},
   {floor:'3F',pixel:[878,550],face:'S',name:'남자 · 여자 화장실',lobbyStep:[946,585,551,611]},
   {floor:'3F',pixel:[1768,752],face:'W',name:'여자 화장실 · 기저귀 교환대'},
-  {floor:'4F',pixel:[879,532],face:'S',name:'남자 · 여자 · 장애인 화장실'},
+  {floor:'4F',pixel:[879,532],face:'S',name:'남자 · 여자 · 장애인 화장실',lobbyStep:[967,571,537,599]},
   {floor:'4F',pixel:[1765,746],face:'W',name:'여자 화장실 · 기저귀 교환대'},
   {floor:'5F',pixel:[866,568],face:'S',name:'남자 · 여자 · 장애인 화장실'},
   {floor:'5F',pixel:[1765,767],face:'W',name:'여자 화장실'},
