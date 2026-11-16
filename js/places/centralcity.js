@@ -4455,13 +4455,65 @@ function hosUpperR20(K) {
       const q=Q(-1.8,6.9313);openings.push({x:q[0],z:q[1],w:8.4,y0:y,y1:y+2.9});
     }
     if(shift)K.slab(poly,y,{mat:{tex:'marble',color:0xe8dfd0,gloss:.5},under:0xf4ebdd,thick:.23});
-    K.polyWalls(poly,y,y+3.22,{mat:'ccR20HosHoney',inner:0xf0e5d0,thick:.12,openings});
-    // A shop must take precedence over the surrounding House of Shinsegae
-    // zone so the HUD identifies the place the player actually entered.
-    K.zone({name,floor:y===YM?'1M':'1F',poly,y0:y,y1:y+3.4,priority:11});
+    const gallery = kind === 'gallery';
+    K.polyWalls(poly,y,y+3.22,{mat:gallery?0xf0ece4:'ccR20HosHoney',inner:gallery?0xf5f1eb:0xf0e5d0,thick:.12,openings});
+    const zone = {name,floor:y===YM?'1M':'1F',poly,y0:y,y1:y+3.4,priority:11};
+    if (gallery) {
+      const visit = Date.now();
+      zone.sub = visit >= Date.parse('2026-09-10T00:00:00+09:00') && visit < Date.parse('2026-11-19T00:00:00+09:00')
+        ? 'BEYOND LANDSCAPE · 하우스오브신세계' : '하우스오브신세계 · 전시실';
+    }
+    K.zone(zone);
+    if (gallery) {
+      // The official gallery photographs show a clear view through two rounded
+      // jambs and a freestanding wall with a passage on either side.
+      const [back,left] = reg(s0,t0), [front,right] = reg(s1,t1);
+      const [,entry] = reg(ss,tt), wallT = entry - 1.7, middle = (back+front)/2;
+      wall(middle-1.75,wallT,middle+1.75,wallT,y,y+3.2,{mat:0xf2efe9,thick:.24});
+      for (const side of [-1,1]) {
+        const t = entry + side*(openings[0].w/2+.24), [x,z] = Q(front,t);
+        K.cyl({x,z,y,r:.24,h:2.88,mat:0xeeeae3,seg:20});
+      }
+      sig(['SHINSEGAE','GALLERY'],front+.08,entry-openings[0].w/2-1.07,y+1.65,1.02,.32,'S',{bg:null,fg:'#332f2a'});
+      K.detail({name,floor:'1M',poly,y0:y,y1:y+3.4},()=>{
+        K.hpoly({tex:'wood',color:0xc7a77e,gloss:.25},poly,y+.018,true);
+        K.hpoly(0xf4f1eb,poly,y+3.22,false);
+        const decor = {solid:false};
+        // Muted sample panels locate the display surfaces. The original
+        // artworks and the measured positions of the exhibits are not available.
+        const panel = (s,t,onSide,w,h,color) => {
+          box(s,t,onSide?w:.07,onSide?.07:w,y+1.6-h/2,h,0x766b59,decor);
+          box(s,t,onSide?w-.10:.085,onSide?.085:w-.10,y+1.65-h/2,h-.10,color,decor);
+        };
+        panel(back+.11,entry,false,2.18,1.52,0x869b7a);
+        panel(back+.11,entry-2.7,false,1.04,.79,0x98b4c2);
+        for (const side of [left+.12,right-.12]) {
+          panel(middle-2.15,side,true,1.46,1.12,0xa2b29d);
+          panel(middle+.8,side,true,1.18,.95,0xd1b595);
+          box(middle,side+(side<entry?.68:-.68),front-back-1.0,.035,y+3.10,.05,0x9f9a90,decor);
+        }
+        for (const offset of [-.16,.16]) panel(middle,wallT+offset,true,1.84,1.36,offset<0?0x98a8b5:0xb0a1a4);
+      });
+      return;
+    }
     lsign(name,ss,tt,y+2.65,Math.min(6,frontWidth-.4),.43,face,{bg:'#4a3526',fg:'#f5e4bb',font:"serif"});
     K.detail({name,floor:y===YM?'1M':'1F',y0:y,y1:y+3.3,poly},()=>{
       K.hpoly({tex:'wood',color:0xb98a53,gloss:.3},poly,y+.018,true);
+      if (kind === 'rugs') {
+        // The Gangnam showroom photograph shows full-length textiles on a
+        // timber rail and a lit grid of swatches. Keep the shallow aisle open.
+        const [back,left]=reg(s1,t0), [,right]=reg(s1,t1), span=right-left;
+        const displayS=back-.20, timber={tex:'wood',color:0x9a7651}, decor={solid:false};
+        box(displayS,(left+right)/2,.21,span-.25,y+.12,2.38,timber,decor);
+        const weave=[0x8c9ca6,0xc5b293,0x9eaa9c,0xd0ba97,0xc5977e,0xad9c8d];
+        for(let i=0;i<3;i++){
+          const t=left+.68+i*.54, mat={tex:'carpet',color:weave[i]};
+          box(displayS-.15-.025*i,t,.06,.92,y+.27,1.99,mat,decor);
+        }
+        for(let row=0;row<2;row++)for(let col=0;col<3;col++)
+          box(displayS-.12,right-.51-col*.56,.05,.49,y+.45+row*.81,.71,{tex:'carpet',color:weave[row*3+col]},decor);
+        return;
+      }
       // The plan-to-world registration is piecewise scaled. Check spacing
       // after that transform so chairs and racks do not pile up where the
       // room footprint is compressed.
@@ -4530,8 +4582,6 @@ function hosUpperR20(K) {
           lbox(s,t+.24,1.35,.16,y+.58,.48,0xa99a87,{solid:false});
           lbox(s,t-.72,.90,.50,y+.44,.07,{tex:'wood',color:0x8a6e52},{solid:false});
           lcyl(s,t-.72,y+.51,.07,.16,0xded7c7,{solid:false,seg:9});
-        }else if(kind==='gallery'){
-          lbox(s,t,.12,1.4,y+.6,1.7,0xc6b394,{solid:false});lbox(s+.07,t,.02,1.15,y+.8,1.3,0x806c58,{solid:false});
         }else if(name==='트웰브 강남'){
           // TWELVE's interior designer describes warm timber, leather
           // banquettes, brass-and-paper lamps, and an intimate dining salon.
@@ -4562,7 +4612,7 @@ function hosUpperR20(K) {
   hosUpperCell('신세계 갤러리',[[1068,238],[1305,238],[1305,365],[1068,365]],'S','gallery',YM,HM);
   hosUpperCell('분더샵 메자닌',[[1315,249],[1597,249],[1631,523],[1661,793],[1641,1008],[1382,1008],[1388,435],[1315,365]],'E','fashion',YM,HM);
   hosUpperCell('피부과',[[780,600],[970,600],[970,733],[1038,733],[1038,905],[867,905],[867,925],[683,925],[683,646],[725,646],[725,790],[867,790],[867,733],[780,733]],'W','office',YM,HM);
-  hosUpperCell('자이푸르 러그',[[1200,894],[1304,894],[1304,973],[1200,973]],'N','gallery',YM,HM);
+  hosUpperCell('자이푸르 러그',[[1200,894],[1304,894],[1304,973],[1200,973]],'N','rugs',YM,HM);
   hosUpperCell('트웰브 강남',[[899,937],[1068,937],[1068,894],[1200,894],[1200,1117],[1234,1117],[1234,1241],[1305,1241],[1305,1348],[731,1348],[731,1248],[899,1248],[899,1144],[953,1144],[953,1050],[899,1050]],'N','cafe',YM,HM);
   hosUpperCell('PSR',[[1200,973],[1382,973],[1382,1008],[1677,1008],[1700,1205],[1603,1205],[1603,1255],[1572,1255],[1572,1348],[1305,1348],[1305,1241],[1234,1241],[1234,1117],[1200,1117]],'N','psr',YM,HM);
 
