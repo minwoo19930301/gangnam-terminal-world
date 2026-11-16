@@ -1186,21 +1186,24 @@ export function build(K) {
       downlight(38.3,145,y+3.05,.08);
       zone('여자 화장실 · 기저귀 교환대','3F','고객 편의시설',[35.3,143.1,41.2,146.95],y,y+2.8,10);
     }
-    // The north side of the photo atrium has no incoming flight.
+    // Guard the edge of the main atrium between the escalator landings.
     if(id==='4F'){
-      const r=upperAtriumRect(id),mid=(r[0]+r[2])/2,[u1,u2]=upperLaneOffsets(2).map(o=>mid+o);
-      // Guard the newly accessible near edge, leaving both 4F escalator
-      // entrances open. The former shoulder also admitted falls into the well.
-      const rEdge=upperPhysicalWell(id);
-      let rails=[[rEdge[0],u1-.83],[u1+.83,u2-.83],[u2+.83,rEdge[2]]];
-      // The 3F-to-4F flights have different lane centres from the 4F-to-5F
-      // flights. Keep the guard elsewhere, but open both incoming landings.
-      for(const incoming of upperLaneOffsets(1).map(o=>mid+o)){
-        const lo=incoming-.83,hi=incoming+.83;
+      const edgeV=37.25,well=upperPhysicalWell(id);
+      let rails=[[well[0],well[2]]];
+      // The incoming and outgoing flights have different lane centres here.
+      // Open the guard at the actual tip of every flight meeting this edge.
+      for(const {a,b,ya,yb} of upperFlightReservations){
+        const end=ya===y?a:yb===y?b:null;
+        if(!end||Math.abs(end[1]-edgeV)>1)continue;
+        const lo=end[0]-.83,hi=end[0]+.83;
+        // Bridge the seam before the west descending tread. Its first
+        // moving step takes over just beyond the lip of the level floor.
+        if(yb===y&&end[0]<(well[0]+well[2])/2)
+          K.slab(rect(lo,well[1],hi,end[1]-.02),y,{mat:floorMat[id],thick:.12,under:CEIL,edge:false});
         rails=rails.flatMap(([a,b])=>hi<=a||lo>=b?[[a,b]]:[[a,Math.min(b,lo)],[Math.max(a,hi),b]]);
       }
       for(const [a,b] of rails)
-        if(b-a>.05)wall(a,37.25,b,37.25,y,y+1.1,{mat:'glass',thick:.04});
+        if(b-a>.05)wall(a,edgeV,b,edgeV,y,y+1.1,{mat:'glass',thick:.04});
     }else if(id==='2F')upperSafeWall(34.7642,30,38,30,y,1.1,{mat:'glass',thick:.04});
     else if(id==='5F')upperSafeWall(31.657894736842103,30,38,30,y,1.1,{mat:'glass',thick:.04});
     else if(id!=='3F')upperSafeWall(30,30,38,30,y,1.1,{mat:'glass',thick:.04});
