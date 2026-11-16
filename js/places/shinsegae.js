@@ -908,7 +908,9 @@ export function build(K) {
     K.slab(rect(q[0]-.1,q[3]-.10,q[2]+.1,q[3]+.1),y,{mat:floorMat['6F'],thick:.12,under:false,ceil:false,edge:false});
     // Support arriving riders while leaving the descending tread below clear.
     K.slab(rect(31.25,129.45,33.7,130.45),y,{mat:floorMat['6F'],thick:.12,under:false,ceil:false,edge:false});
-    K.slab(rect(31.25,129.85,35.45,130.45),y,{mat:floorMat['6F'],thick:.12,under:false,ceil:false,edge:false});
+    // The descending 5F–6F flight meets this edge at an angle. Overlap
+    // the full boarding width so a stationary player stays on the landing.
+    K.slab(rect(31.25,129.58,35.45,130.45),y,{mat:floorMat['6F'],thick:.12,under:false,ceil:false,edge:false});
     wall(q[0],q[1],q[2],q[1],y,y+1.05,{mat:'glass',thick:.045});
     wall(q[0],q[1],q[0],q[3],y,y+1.05,{mat:'glass',thick:.045});
     wall(q[2],q[1],q[2],q[3],y,y+1.05,{mat:'glass',thick:.045});
@@ -6718,9 +6720,23 @@ export function build(K) {
         if(bridgeEnd<p[2])upperSafeWall(bridgeEnd,80,bridgeEnd,p[3],y,1.1,{mat:'glass',thick:.04});
       }
     }
-    const bankSegments4=id==='4F'?bankSegments.flatMap(([a,b,c,d])=>b===d&&Math.abs(b-p[3])<.01?[[a,b,Math.min(c,29.5),d],[Math.max(a,39.1),b,c,d]].filter(q=>q[2]-q[0]>.05):[[a,b,c,d]]):bankSegments;
-    const safeSegments=id==='5F'?bankSegments4.flatMap(([a,b,c,d])=>b===d&&Math.abs(b-p[1])<.01?[[Math.max(a,32),b,Math.min(c,32.38),d],[Math.max(a,35.42),b,Math.min(c,37.35),d],[Math.max(a,39.45),b,c,d]].filter(q=>q[2]-q[0]>.05):[[a,b,c,d]]):bankSegments4;
-    for(const[a,b,c,d]of (id==='5F'?[]:safeSegments).flatMap(([a,b,c,d])=>id==='6F'&&b===d&&Math.abs(b-p[3])<.01?[[a,b,Math.min(c,27),d],[Math.max(a,35),b,c,d]].filter(q=>q[2]-q[0]>.05):[[a,b,c,d]]).filter(([a,b,c,d])=>!(id==='2F'&&a===c&&Math.abs(a-p[2])<.01)).flatMap(([a,b,c,d])=>id==='4F'&&a===c&&Math.abs(a-p[0])<.01?[[a,b,c,Math.min(d,131.35)],[a,Math.max(b,p[3]),c,d]].filter(q=>q[3]-q[1]>.05):[[a,b,c,d]]).flatMap(([a,b,c,d])=>id==='4F'&&b===d&&Math.abs(b-p[3])<.01?[[Math.max(a,p[0]+.9),b,c,d]].filter(q=>q[2]-q[0]>.05):[[a,b,c,d]])){
+    // The four-lane 5F bank has its own guards. On other floors, keep the
+    // shared well outline except where it meets a landing or a flight.
+    const guards=id==='5F'?[]:bankSegments.flatMap(segment=>{
+      const [a,b,c,d]=segment;
+      const south=b===d&&Math.abs(b-p[3])<.01;
+      if(id==='4F'&&south){
+        const start=Math.max(a,39.1);
+        return c-start>.05?[[start,b,c,d]]:[];
+      }
+      if(id==='4F'&&a===c&&Math.abs(a-p[0])<.01)
+        return [[a,b,c,Math.min(d,128.25)],[a,Math.max(b,p[3]),c,d]].filter(q=>q[3]-q[1]>.05);
+      if(id==='6F'&&south)
+        return [[a,b,Math.min(c,27),d],[Math.max(a,35),b,c,d]].filter(q=>q[2]-q[0]>.05);
+      if(id==='2F'&&a===c&&Math.abs(a-p[2])<.01)return [];
+      return [segment];
+    });
+    for(const [a,b,c,d] of guards){
       const safe=upperSafeWall(a,b,c,d,y,1.1,{mat:'glass',thick:.04});
       upperGuardTrim(a,b,c,d,y+1.1,.05,.05,0xa7a9a8,safe);
       upperGuardTrim(a,b,c,d,y-1,1,.08,0xc4b8a5,upperSafeIntervals(a,b,c,d,y-1,1,id==='2F'?centralCityUpperTrimOpening:null));
@@ -6768,12 +6784,12 @@ export function build(K) {
   // Schematic landing for the shorter 3F–4F flights: their upper ends meet
   // this bridge instead of passing through the Longines retail footprint.
   {const y=LV['4F'];K.slab(rect(32.05,127.7,36.95,133.2),y,{mat:floorMat['4F'],thick:.12,under:false,ceil:false,edge:false});
-   for(const [a,b,c,d] of [[32.05,131.7,32.05,132.8],[36.95,129.5,36.95,132.8],[32.05,127.7,32.18,127.7],[33.82,127.7,35.18,127.7],[36.95,132.8,37.65,132.8]])wall(a,b,c,d,y,y+1.05,{mat:'glass',thick:.045});
+   for(const [a,b,c,d] of [[36.95,129.5,36.95,132.8],[32.05,127.7,32.18,127.7],[33.82,127.7,35.18,127.7],[36.95,132.8,37.65,132.8]])wall(a,b,c,d,y,y+1.05,{mat:'glass',thick:.045});
    // Raise the collider above a descending rider's head; the lower glass is visual only.
-   wall(32.05,124.45,36.95,124.45,y,y+.32,{mat:'glass',thick:.045,solid:false});
-   wall(32.05,124.45,36.95,124.45,y+.32,y+1.35,{mat:'glass',thick:.045});}
+   wall(32.05,124.45,38.1,124.45,y,y+.32,{mat:'glass',thick:.045,solid:false});
+   wall(32.05,124.45,38.1,124.45,y+.32,y+1.35,{mat:'glass',thick:.045});}
   {const y=LV['4F'];K.slab(rect(29.95,132.8,39.3,135.55),y,{mat:floorMat['4F'],thick:.12,under:false,ceil:false,edge:false});
-   for(const [a,b,c,d] of [[29.95,132.8,29.95,135.45],[39.3,132.8,39.3,135.45]])wall(a,b,c,d,y,y+1.05,{mat:'glass',thick:.045});}
+   wall(39.3,132.8,39.3,135.45,y,y+1.05,{mat:'glass',thick:.045});}
   // Guard the exposed edges of the 3F escalator opening while keeping both
   // moving-stair entrances clear. These lines follow the modelled floor cut,
   // whose precise real-world boundaries remain approximate.
@@ -6798,11 +6814,16 @@ export function build(K) {
     // The landing outline is schematic; this adds no floor or collision.
     wall(p[0],p[3],p[2],p[3],y-thick('4F'),y,{mat:CEIL,thick:.04,solid:false});
     wall(p[2],130.9,p[2],p[3],y,y+1.05,{mat:'glass',thick:.045});
-    // Extend the supported public aisle beside Hogan without moving its
-    // guide cell; the widened span remains clear of the arriving flights.
-    // This is a model circulation correction, not a surveyed aisle width.
-    wall(p[0]+2.15,131.35,p[0]+2.15,p[3],y,y+1.05,{mat:'glass',thick:.045});
-    K.slab(rect(p[0]-.75,131.35,p[0]+2.15,p[3]+.65),y,{mat:{tex:'marble',color:0xe8dfce},thick:.12,under:false,ceil:false,edge:false});
+    // Join the Hogan aisle and the up escalator on one level landing.
+    // Its northern edge follows the 4F opening around the stair treads.
+    K.slab(rect(p[0]-.05,128.25,32.1,p[3]+.05),y,{mat:floorMat['4F'],thick:.12,under:false,ceil:false,edge:false});
+    // From 3F only the span inside the existing well has an exposed underside.
+    K.hpoly(CEIL,rect(p[0],128.25,32.1,p[3]),y-.12,false);
+    for(const [a,b] of [[p[0],28.32],[29.7,32.1]]){
+      wall(a,128.25,b,128.25,y,y+1.0,{mat:'ssg_annex_escalator_clear',thick:.04});
+      for(const u of [a,b])box(u,128.25,.05,.05,y,.98,0x77746f,{solid:false});
+      box((a+b)/2,128.25,b-a,.06,y+.96,.06,0x77746f,{solid:false});
+    }
     K.slab(rect(p[2]-1.0,129.4,p[2]+1.2,131.3),y,{mat:{tex:'marble',color:0xe8dfce},thick:.12,under:false,ceil:false,edge:false});
     wall(p[2]-1,130.4,p[2]-1,131.3,y,y+1.05,{mat:'glass',thick:.045});
     wall(p[2]-1,131.0,p[2],131.0,y,y+1.05,{mat:'glass',thick:.045});
@@ -6811,14 +6832,10 @@ export function build(K) {
   // These follow the schematic floor openings and leave the escalator
   // approaches open; the real guard positions are not surveyed.
   {const y=LV['2F'];wall(35.5,134.2,36.5,134.2,y,y+1.05,{mat:'glass',thick:.045});}
-  // The shorter 4F–5F pair exposes the western edge of this landing; keep it guarded.
-  {const y=LV['4F'];for(const [a,b,c,d] of [[26.57,131.35,29.47,131.35],[37.95,125,40.9,125],[39.1,128.55,40.9,128.55],[37.95,125,37.95,125.3],[37.95,127.5,37.95,128.55]])wall(a,b,c,d,y,y+1.05,{mat:'glass',thick:.045});}
+  // The east landing overlooks the descending flight along its west edge.
+  {const y=LV['4F'];for(const [a,b,c,d] of [[37.95,125,40.9,125],[39.1,128.55,40.9,128.55],[37.95,125,37.95,128.55]])wall(a,b,c,d,y,y+1.05,{mat:'glass',thick:.045});}
   K.slab(rect(37.7,132.3,39.25,133.3),LV['4F'],{mat:floorMat['4F'],thick:.12,under:false,ceil:false,edge:false});
   K.slab(rect(36.5,128.55,40.0,133.0),LV['4F'],{mat:floorMat['4F'],thick:.12,under:false,ceil:false,edge:false});
-  K.slab(rect(27.8,128.25,31.1,131.2),LV['4F'],{mat:floorMat['4F'],thick:.12,under:false,ceil:false,edge:false});
-  {const y=LV['4F'];wall(27.8,128.25,28.32,128.25,y,y+1.05,{mat:'glass',thick:.045});}
-  K.slab(rect(27.9,129.6,33.2,131.7),LV['4F'],{mat:floorMat['4F'],thick:.12,under:false,ceil:false,edge:false});
-  K.slab(rect(29.95,131.2,32.05,132.85),LV['4F'],{mat:floorMat['4F'],thick:.12,under:false,ceil:false,edge:false});
   K.slab(rect(36.90,127.95,37.85,128.65),LV['4F'],{mat:floorMat['4F'],thick:.12,under:false,ceil:false,edge:false});
   // At the 5F main well, the modelled flight and floor overlap here. This
   // low guard protects the open floor edge without blocking riders above it.
@@ -6837,8 +6854,8 @@ export function build(K) {
     wall(a,b,c,d,y,y+1.05,{mat:outer?0xc57f6e:'glass',thick:.045});
     if(outer)wall(a,b,c,d,y+1.05,y+1.10,{mat:0x745f53,solid:false,thick:.055});
   }}
-  // Small level landing outside the incoming 5F flight opening.
-  {const r=upperAnnexAtriumRect('5F'),y=LV['5F'];K.slab(rect(28.9,r[1]-1.5,r[0]+.12,121.45),y,{mat:{tex:'marble',color:0xe8dfce},thick:.12,under:false,ceil:false,edge:false});}
+  // Overlap the entire angled last tread with the 5F landing.
+  {const r=upperAnnexAtriumRect('5F'),y=LV['5F'];K.slab(rect(28.9,r[1]-1.5,r[0]+.12,121.65),y,{mat:{tex:'marble',color:0xe8dfce},thick:.12,under:false,ceil:false,edge:false});}
   // The former 5F east-edge glass stood over supported floor on both sides
   // after the annex flights moved. The actual flight openings stay guarded.
   // Official 2F plan joins the two Hermes areas by a narrow strip. The
