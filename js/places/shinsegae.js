@@ -1153,12 +1153,13 @@ export function build(K) {
     const p=upperPhysicalWell('6F');
     wall(p[0],p[3],p[2],p[3],y,y+1.05,{mat:'glass',thick:.045});
   }
-  // Small recessed lights along the photographed atrium soffits. Keep them
-  // on solid slab edges and clear of the swept escalator openings.
+  // The white passage beside Bulgari meets the hotel at the end of the apron.
+  const [jwAisleWest] = upperPlanPoint('2F', 1658, 463);
+  const [jwAisleEast] = upperPlanPoint('2F', 1622, 439);
   // Guard the new store boundary and the small lifted elevator platform.
   for(const id of ['2F','3F','4F','5F']){
     const y=LV[id];
-    for(const [a,b,c,d] of (id==='3F'?[[0,145.3,29,145.3],[35,145.3,35.3,145.3],[41.2,145.3,UW,145.3],[29,145.3,29,146.3],[35,145.3,35,146.3],[29,146.3,35,146.3]]:id==='2F'?[[0,145.3,29,145.3],[35,145.3,46.55,145.3],[48.68,145.3,UW,145.3],[29,145.3,29,146.3],[35,145.3,35,146.3],[29,146.3,35,146.3]]:[[0,145.3,29,145.3],[35,145.3,UW,145.3],[29,145.3,29,146.3],[35,145.3,35,146.3],[29,146.3,35,146.3]]))
+    for(const [a,b,c,d] of (id==='3F'?[[0,145.3,29,145.3],[35,145.3,35.3,145.3],[41.2,145.3,UW,145.3],[29,145.3,29,146.3],[35,145.3,35,146.3],[29,146.3,35,146.3]]:id==='2F'?[[0,145.3,29,145.3],[35,145.3,46.55,145.3],[48.68,145.3,jwAisleWest,145.3],[jwAisleEast,145.3,UW,145.3],[29,145.3,29,146.3],[35,145.3,35,146.3],[29,146.3,35,146.3]]:[[0,145.3,29,145.3],[35,145.3,UW,145.3],[29,145.3,29,146.3],[35,145.3,35,146.3],[29,146.3,35,146.3]]))
       wall(a,b,c,d,y,y+3.4,{mat:0xe7e1d6,thick:.12});
     if(id==='3F'){
       // Guide indicates a women's restroom and baby-changing point beside
@@ -2912,9 +2913,17 @@ export function build(K) {
     ['코스메데코르테',893,508,944,585,'E'],['샤넬 코스메틱',877,586,951,684,'E'],['르라보',877,686,951,721,'S'],['이솝',952,618,1020,721,'S'],
     ['입생로랑 뷰티',820,807,927,861,'N'],['조말론',929,807,1047,861,'N'],['디올화장품',45,842,111,994,'W']
   ];
-  const JEWELLERY = [
-    ['타사키',233,997],['포멜라토',294,1040],['아크레도',354,1080],['메시카',429,1090],['키린',550,1098],['스피넬리킬콜린',632,1096],['골든듀',690,1087],['스와로브스키',757,1058],
-    ['누니',350,965],['반조애',414,972],['페로즈',477,969],['타니바이 미네타니',536,972],['세그먼트A',570,970],['프릿',474,1017],['아르투스 베르트랑',523,1018],['리오레',578,1020]
+  // Open concessions inside the curved 1F jewellery walk, traced from the
+  // official guide in the same image coordinates as the surrounding shops.
+  const jewelleryIslands = [
+    ['누니',[[324,948],[369,948],[376,953],[380,958],[380,981],[377,986],[372,989],[366,989],[324,963]]],
+    ['반조애',[[397,960],[399,954],[404,949],[409,947],[420,947],[426,949],[430,954],[431,960],[431,989],[397,989]]],
+    ['페로즈',[[447,958],[450,952],[456,947],[506,947],[505,962],[468,986],[462,989],[455,989],[450,986],[447,981]]],
+    ['타니바이 미네타니',[[520,958],[522,953],[528,948],[532,947],[552,947],[552,991],[531,991],[525,988],[521,983],[520,979]]],
+    ['세그먼트A',[[552,947],[575,947],[581,950],[585,955],[586,960],[586,979],[583,986],[577,991],[552,991]]],
+    ['프릿',[[453,1014],[458,1008],[483,993],[492,993],[492,1024],[489,1029],[483,1033],[478,1033],[458,1028],[454,1024],[452,1020]]],
+    ['아르투스 베르트랑',[[507,1014],[509,1009],[515,1004],[533,1004],[533,1016],[548,1032],[548,1040],[526,1039],[514,1036],[508,1032],[506,1027]]],
+    ['리오레',[[561,1031],[575,1011],[575,1004],[592,1004],[598,1008],[600,1012],[600,1030],[596,1034],[590,1037],[561,1040]]],
   ];
   const planRect=(x0,y0,x1,y1,map=PLAN)=>{const a=map(x0,y0),b=map(x1,y1);return[Math.min(a[0],b[0]),Math.min(a[1],b[1]),Math.max(a[0],b[0]),Math.max(a[1],b[1])];};
   // The official cells retain their full plan footprint; furniture sits inside each cell,
@@ -5342,7 +5351,38 @@ export function build(K) {
         K.dome({x:p[0],z:p[1],y:2.60,rx:r,ry:.16+(i%3)*.035,rz:r,hemi:false,seg:8,rings:4,mat:[0x546b4c,0x6a7a59,0x7d8a6c][i%3],solid:false});
       }
     });
-    for(const [name,px,py]of JEWELLERY.slice(8)){const[u,v]=PLAN(px,py);planCounter(name,[u-.9,v-1.2,u+.9,v+1.2],0,'jewel');}
+    for (const [name, pixels] of jewelleryIslands) {
+      const points = pixels.map(([x,y]) => PLAN(x,y));
+      const poly = points.map(([u,v]) => P(u,v));
+      K.zone({name, floor:fl, sub:'주얼리', poly, y0:0, y1:2.6, priority:3});
+      const us = points.map(p => p[0]), vs = points.map(p => p[1]);
+      beautyObstacles.push([Math.min(...us),Math.min(...vs),Math.max(...us),Math.max(...vs)]);
+      furnish(fl, () => {
+        // Shinsegae's opening photographs show freestanding glazed cases with
+        // low fluted pale bases and brass edges. Leave a walk-up apron inside
+        // each mapped outline. The two adjacent concessions share one island.
+        const cx = pixels.reduce((sum,p) => sum+p[0],0)/pixels.length;
+        const cy = pixels.reduce((sum,p) => sum+p[1],0)/pixels.length;
+        const outline = pixels.map(([x,y]) => PLAN(x===552?x:cx+(x-cx)*.58,cy+(y-cy)*.60));
+        const display = outline.map(([u,v]) => P(u,v));
+        K.hpoly(0xe5dfd3,poly,.019);
+        K.prism(display,0,.76,{mat:0xe7dfcf,walkTop:false});
+        K.prism(display,.76,.84,{mat:{tex:'metal',color:0xb49b70},solid:false});
+        K.prism(display,.84,1.12,{mat:'glass',bottom:false,solid:false});
+        const edges = outline.map((a,i) => [a,outline[(i+1)%outline.length]])
+          .filter((e,i) => pixels[i][0]!==552 || pixels[(i+1)%pixels.length][0]!==552);
+        const length = ([a,b]) => Math.hypot(b[0]-a[0],b[1]-a[1]);
+        const [a,b] = edges.reduce((best,e) => length(e)>length(best)?e:best);
+        const [cu,cv] = PLAN(cx,cy);
+        for (const f of [.24,.50,.76]) {
+          const u=(a[0]+(b[0]-a[0])*f)*.64+cu*.36, v=(a[1]+(b[1]-a[1])*f)*.64+cv*.36;
+          box(u,v,.22,.17,.844,.026,0xf7f4ec,{solid:false});
+          box(u,v,.06,.05,.87,.023,0xbba371,{solid:false});
+        }
+        const p=P(...a),q=P(...b);
+        K.sign(name,{x:(p[0]+q[0])/2,z:(p[1]+q[1])/2,y:.60,rotY:Math.atan2(p[1]-q[1],q[0]-p[0]),w:Math.min(length([a,b])*.85,1.35),h:.15,bg:null,fg:'#504334',twoSided:true,offset:.025});
+      });
+    }
     for(const [name,pixels,fronts]of jewelleryWedges)curvedBoutique(name,pixels,fronts);
     const gentlePixels=[[631,947],[810,947],[795,964],[772,984],[746,1003],[713,1021],[676,1036],[631,1048]];
     curvedBoutique('젠틀몬스터',gentlePixels,[0,1,2,3,4,5,6],true);
@@ -5767,7 +5807,7 @@ export function build(K) {
     });
     furnish(fl,()=>{
       // Keep the population density, with new route axes and popup walls reserved.
-      const cells=[...BEAUTY_CELLS.map(c=>planRect(...c.slice(1))),...EDGE_BOUTIQUES.map(c=>planRect(...c.slice(1,5))),...JEWELLERY.map(c=>{const p=PLAN(c[1],c[2]);return[p[0]-1.05,p[1]-1.35,p[0]+1.05,p[1]+1.35];})];
+      const cells=[...BEAUTY_CELLS.map(c=>planRect(...c.slice(1))),...EDGE_BOUTIQUES.map(c=>planRect(...c.slice(1,5)))];
       const rng=K.rand(111026),placed=[],target=Math.max(0,204-beautyStaff-12);
       const safe=(u,v)=>u>9&&u<64&&v>12&&v<79&&!(u>31.6&&u<35&&v>27&&v<84)&&!(u<13&&(Math.abs(v-42.6)<4.5||Math.abs(v-68)<4.5))&&!BEAUTY_BANK_RECTS.some(r=>inR(u,v,r,1.0))&&!cells.some(r=>inR(u,v,r,.35))&&!beautyObstacles.some(r=>inR(u,v,r,.6))&&!placed.some(p=>Math.hypot(p[0]-u,p[1]-v)<.72);
       let guard=0;
@@ -6260,6 +6300,14 @@ export function build(K) {
       // The shared shoe hall wraps around Hunter and its short entrance aisle.
       const hunter = upperRect(id, guide.cells.find(o => o.name === '헌터').rect);
       parts = [[r[0], hunter[3], r[2], r[3]], [hunter[2], r[1], r[2], hunter[3]]];
+    }
+    if (id === '5F' && c.name === '랑방 컬렉션') {
+      // The guide steps out at the top of Lanvin, leaving the narrow white
+      // strip beside Faro and the wider cross aisle below y635.
+      const shoulder = upperRect(id, [145,605,160,635]);
+      shoulder[1] = r[3];
+      parts = [r.slice(), shoulder];
+      r[3] = shoulder[3];
     }
     if (id === '4F' && c.name === '헌터') {
       // Hunter reaches the public aisle east of its short return, alongside AUTRY.
@@ -12995,6 +13043,12 @@ export function build(K) {
     }
     for(const q of parts){
       const [u0,v0,u1,v1]=q,along=face==='N'||face==='S',Wf=along?u1-u0:v1-v0,Dp=along?v1-v0:u1-u0;
+      if (id === '5F' && c.name === '랑방 컬렉션' && q !== largest) {
+        // Continue this boutique’s floor into its shoulder and keep the
+        // approach open along the Faro side.
+        hq(u0+.13,v0-.14,u1-.13,v1-.13,y+.019,palette.floor);
+        continue;
+      }
       const vivienneJoin=id==='4F'&&c.name==='비비안 웨스트우드'&&face==='W'&&q===largest&&parts.find(p=>p!==q&&Math.abs(p[0]-u1)<.02&&p[1]<=v0+.02);
       const isabelJoin=id==='4F'&&c.name==='이자벨 마랑'&&face==='W'&&q===largest&&parts.find(p=>p!==q&&Math.abs(p[0]-u1)<.02&&p[3]>=v1-.02);
       const southJoin=id==='4F'&&['엠포리오아르마니','폴로 랄프 로렌'].includes(c.name)&&face==='E'&&q===largest&&parts.find(p=>p!==q&&Math.abs(p[2]-u0)<.02);
@@ -15276,6 +15330,32 @@ export function build(K) {
     const ar=upperAnnexAtriumRect(id);sign(`${id} · 에스컬레이터`,(ar[0]+ar[2])/2,ar[1]-.6,y+2.3,'N',2.5,.32,{bg:'#35332d',fg:'#f0e7d4'});
   });
 
+  // Both areas stream the doorway. The visitor photo shows glass leaves
+  // held open against the walls, with a framed gallery beyond the bronze fascia.
+  {
+    const y = LV['2F'], mid = (jwAisleWest + jwAisleEast) / 2;
+    const width = jwAisleEast - jwAisleWest, doorV = 138.4, endV = 145.3;
+    const bronze = 0x433b32, ceiling = {tex:'wood', color:0x635041};
+    const trim = {solid:false};
+    hq(jwAisleWest, doorV, jwAisleEast, endV, y + .025, {tex:'marble', color:0xf2e9d8});
+    box(mid, (doorV + endV)/2, width, endV-doorV, y + 3.15, .14, ceiling, trim);
+    box(mid, doorV, width, .19, y + 2.58, .59, bronze, trim);
+    sign('JW MARRIOTT', mid, doorV - .10, y + 3.00, 'N', 1.25, .16, {fg:'#eee6d5', bg:null, bold:false, pxPerM:140});
+    sign('SHINSEGAE', mid, doorV - .10, y + 2.77, 'N', 1.48, .21, {fg:'#fff6e5', bg:null, bold:false, pxPerM:140});
+    for (const [edge, inward] of [[jwAisleWest, 1], [jwAisleEast, -1]]) {
+      const at = offset => edge + inward * offset;
+      box(at(.045), (doorV + endV)/2, .07, endV-doorV, y, 3.15, 0xede6d8, trim);
+      box(at(.075), doorV, .09, .19, y, 2.58, bronze, trim);
+      box(at(.105), doorV + .49, .028, .96, y + .04, 2.47, 'glass', trim);
+      box(at(.15), doorV + .83, .035, .04, y + .78, .70, bronze, trim);
+      for (const v of [140.8, 142.5, 144.25]) {
+        box(at(.095), v, .04, .56, y + 1.22, .73, bronze, trim);
+        box(at(.123), v, .015, .48, y + 1.26, .65, {tex:'ssg_upper_graphic', color:0xc6bbab}, trim);
+        downlight(at(.32), v, y + 3.135, .065);
+      }
+    }
+  }
+
   // D6/D7 photo recipes. Exact walk locations are uncertain, so these are
   // assigned to the matching guide junction and side passage, not new tenants.
   furnish('2F',()=>{
@@ -15740,7 +15820,6 @@ for(const [id,names,top]of[
 ])for(const c of upperGuidePlans[id].cells)if(names.includes(c.name))c.rect[1]=top;
 // ROH SEOUL and JOY GRYSON now retain their adjacent 5F guide rectangles.
 // The adjusted nearby stair landing remains a schematic, unsurveyed fit.
-for(const c of upperGuidePlans['4F'].cells){if(['샤넬 슈 부틱','미우미우'].includes(c.name)){c.rect[0]-=25.45;c.rect[2]-=25.45;}}
 export const upperRightPads={
   '2F':[1575,670,1635,805],'3F':[1370,760,1445,840],'4F':[1550,747,1620,830],
   '5F':[1410,757,1495,835],'6F':[1505,768,1595,800],'7F':[1500,744,1590,812],
@@ -15817,6 +15896,9 @@ export function upperBuildRect(id,c) {
     const width=raw[axis+2]-raw[axis],min=Math.min(width,.85),loss=(r[axis]-raw[axis])+(raw[axis+2]-r[axis+2]);
     if(width-loss<min&&loss>0){const f=(width-min)/loss;r[axis]=raw[axis]+(r[axis]-raw[axis])*f;r[axis+2]=raw[axis+2]-(raw[axis+2]-r[axis+2])*f;}
   }
+  // The 4F shoe boutiques keep their guide frontage on both public aisles.
+  // Leave clearance behind Chanel for the modeled annex landing and slope.
+  if(id==='4F'&&c.name==='샤넬 슈 부틱')r[3]=Math.min(r[3],upperPhysicalWell(id,true)[1]-1.3);
   // R19 N2: façade shoulders belong to their first-row cells. The structural
   // and fitting passes clip only the recessed u23–44 bay, not the whole row.
   if(c.rect[0]<=79&&id!=='11F'&&!(id==='3F'&&c.name==='트리니티'))r[1]=.5;

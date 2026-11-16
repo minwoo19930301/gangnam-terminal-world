@@ -1,4 +1,9 @@
 {
+  "jewelry_aisles_1f_20261117": {
+    "guide": "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/08/06/DWUvdakUS5Xd.png",
+    "photographs": "https://www.shinsegaegroupnewsroom.com/shinsegae-gangnam-opens-dedicated-jewelry-section/",
+    "layout": "The guide traces eight counter islands or sections along the public passage. Tani by Minetani and Segment.A meet along a shared counter edge. The aisle between Peros and Prit follows their angled edges. Counter heights and finishes are schematic."
+  },
   "5f_gelato_pique_popup_20261117": {
     "floor_guide": "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/11/10/CR8TldsBKpZG.png",
     "directory": "https://www.shinsegae.com/store/floor.do?storeCd=SC00002",
@@ -8,7 +13,16 @@
   },
   "bulgari_jw_aisle_20261117": {
     "guide": "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/10/16/1esU4Yqhl5TX.png",
-    "layout": "On the 2F guide the south-east corner of Van Cleef & Arpels steps back above Bulgari. Its rear showroom arm shares the boutique interior. The intervening public aisle continues toward JW Marriott up to the modelled edge of the department-store floor. The hotel-side floor and doors are unresolved."
+    "walkthrough": "https://xcoolcat7.tistory.com/92368",
+    "layout": "The south-east corner of Van Cleef & Arpels steps back above Bulgari, leaving a public passage to the JW Marriott entrance. Its doorway has a bronze-coloured surround labelled JW MARRIOTT and SHINSEGAE, open glass leaves, framed prints and a wood ceiling. The guide and photographs establish the sequence. Widths, print artwork and the bend on the hotel side are schematic."
+  },
+  "lanvin_side_aisle_5f_20261117": {
+    "guide": "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/11/10/CR8TldsBKpZG.png",
+    "layout": "The north end of Lanvin Collection projects into the otherwise wider public aisle. The narrow strip alongside Faro still joins the cross aisle. The boundary follows the guide, and the resulting model width is approximate."
+  },
+  "shoe_aisles_4f_20261117": {
+    "guide": "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/11/10/pLc2zpesvkoW.png",
+    "layout": "At the annex end of the connecting hall, the official plan aligns Camper, Miu Miu and Louis Vuitton along the same aisle opposite AUTRY and Longchamp. A second public aisle separates Miu Miu from the Chanel Shoe Boutique. The model follows both aisles and keeps a 1.3m model clearance between the far end of Chanel and the annex escalator opening. The store depth and physical escalator position are approximate."
   },
   "cross_wing_passages_3f_4f_20261117": {
     "guides": ["https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/08/26/XgByI9HjyXqX.png", "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/11/10/pLc2zpesvkoW.png"],

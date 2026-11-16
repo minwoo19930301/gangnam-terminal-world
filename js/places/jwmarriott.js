@@ -636,7 +636,8 @@ export function build(K) {
   WL(8.8, 30.9, 11, 30.9, Y.B4, shaftTop, shaftStyle);
   WL(11, 33.1, 8.8, 33.1, Y.B4, shaftTop, shaftStyle);
   WL(8.8, 33.1, 8.8, 30.9, Y.B4, shaftTop, { ...shaftStyle, openings: LV.map(([, y]) => ({ at: 1.1, w: 1.2, y0: y, y1: y + 2.4 })) });
-  for (const [, y] of LV) SLAB([8.8, 30.9, 11, 33.1], y, { mat: 'jwGreyStone', under: 0x3e342c, thick: .05, edge: false, ceil: false });
+  // Extend the car floor under the west sill to meet the floor cut at u=8.75.
+  for (const [, y] of LV) SLAB([8.70, 30.9, 11, 33.1], y, { mat: 'jwGreyStone', under: 0x3e342c, thick: .05, edge: false, ceil: false });
 
   K=hotelKit;fit=ID;
   {
@@ -648,6 +649,37 @@ export function build(K) {
     // floor and opens onto a new passage through previously guessed support rooms.
     SLAB([-14,29.5,8.7,34.5],11.5,{mat:'jwCarpet',thick:.05,ceil:false});
     SG('호텔 상층 엘리베이터 →',{u:-11,v:29.6,y:13.6,w:3,h:.3,f:'S',bg:'#3d3028',fg:'#eee3cc'});
+  }
+  // The hotel directions show the department store 2F entering hotel 1F.
+  // An entrance gallery meets that threshold at 7m. The short interior grade
+  // fits the existing restaurant lobby datum at 6m; its slope is schematic.
+  {
+    const stone = { tex: 'marble', color: 0xe8dfcf, gloss: .4 };
+    const timber = { tex: 'wood', color: 0x50392d };
+    const threshold = [24.58, -.14, 26.72, .02];
+    const entrance = [17.97, 0, 26.72, 1.77];
+    const turn = [17.97, 1.75, 22.50, 3.45];
+    const grade = [1.94, .85, 18.05, 3.45];
+    for (const rect of [threshold, entrance, turn]) {
+      SLAB(rect, 7, { mat: stone, under: WARM, thick: .13 });
+    }
+    for (const rect of [entrance, turn, grade]) {
+      ZN('백화점 연결 갤러리', '1F', 'JW 메리어트 · 백화점 2층 연결', rect, rect === grade ? 5.97 : 6.93, 10.37, 16);
+      HP(0xeae2d5, rect, 10.37, false);
+      K.phys.addCeiling(RECT(...rect), 10.37, {});
+    }
+    K.ramp(...P(1.94, 2.15), ...P(18.05, 2.15), { ya: 6, yb: 7, w: 2.6, mat: stone, sideMat: WARM, rails: false });
+    // The entrance photograph shows the art corridor ending at dark timber.
+    WL(22.50, 1.77, 26.72, 1.77, 6.86, 10.38, { mat: timber, thick: .10 });
+    for (const [a,b,c,d] of [
+      [26.72,0,26.72,1.77], [22.50,1.77,22.50,3.45], [2,3.45,22.50,3.45],
+      [2,.85,17.97,.85], [17.97,0,17.97,.85], [17.97,0,24.58,0],
+    ]) WL(a,b,c,d,5.98,10.38, { mat: WARM, thick: .10 });
+    // Keep the north doorway opposite the pastry shop; its threshold is 1m higher.
+    WL(-15.5,.35,1.99,.35,6,9.38, { mat: WARM, thick: .10, openings: [{ at: 10.5, w: 7, y0: 7, y1: 9.38 }] });
+    ZN('호텔 식당층 연결통로', '2F', '호텔 현관 · 승강기', [-15.55,.35,2,3.5], 6,9.4,2);
+    SG(['JW MARRIOTT','현관 로비 · 승강기 →'], { u: 25.6, v: 1.70, y: 8.65, w: 1.70, h: .43, f: 'N', bg: '#49392f', fg: '#f2e5c9' });
+    SG('← 로비 하행 · 승강기', { u: -15.34, v: 2.95, y: 7.65, w: 2.1, h: .3, f: 'E', bg: '#3c332d', fg: '#f2e5c9' });
   }
   // =====================================================================
   // ZONES (one per floor)
@@ -1110,9 +1142,10 @@ export function build(K) {
     SUBZ('플레이버즈', '2F', '뷔페 · 황동 펜던트 · 대리석 카운터', [-33, 12, 4, 41.7]);
     SUBZ('플레이버즈 다이닝', '2F', '월넛 스크린 · 소파 좌석', [-20.4, 26.4, 3.7, 41.6]);
     // 파티세리 · 티 바 — intact east fitout transferred to the west band.
-    setFit(-31,1,4.875,.8125);
+    // Leave the north edge as a continuous public aisle to the hotel lift.
+    setFit(-31,1,7.71875,.703125);
     FRONT('u', 17, -6, 26, y, yc, 'W', 'PÂTISSERIE', { sub: '파티세리 · 티 바', door: 16.76923, dw: 4, extraOpenings: [{ at: 10, w: 4, y0: y, y1: y + 3.2 }], signAt: 12, fascia: 0x3b2c22, fg: '#efe2c4' });
-    // Northern frontage stops at the shared boundary with department store.
+    // The northern pastry-shop frontage faces the public corridor.
     WL(17, -6, 33.1, -6, y, yc, { mat: WARM, openings: [{ at: 9, w: 7, y0: 7, y1: 10.5 }] }); WL(17, 26, 33.1, 26, y, yc, { mat: WARM });
     HP({ tex: 'marble', color: 0xf6efe4 }, [17, -6, 33, 26], y + 0.01);
     for (const v of [10, 15, 20]) { B({ u: 21, v, y, w: 1.0, d: 4.2, h: 0.95, mat: 0x2a2420, top: 0xe8e0d0 }); B({ u: 21, v, y: y + 0.95, w: 0.9, d: 4.0, h: 0.5, mat: GL, solid: false }); for (let j = 0; j < 5; j++) B({ u: 21, v: v - 1.6 + j * 0.8, y: y + 0.97, w: 0.35, d: 0.35, h: 0.18, mat: [0xf2d0d8, 0x6b3b2a, 0xf5e6c8, 0xc9425a, 0x9ac07a][j], solid: false }); }

@@ -30,8 +30,10 @@ export const JUNCTIONS = [
   { id: 'J8', a: 'shinsegae', b: 'centralcity', y: 0, pa: [-78.917, 37.725], pb: [-86.362, 40.551], width: 8, owner: 'none',
     note: 'Retained unnumbered west-side 1F auxiliary connection at (-82.640,39.138), 신세계 local (u=0,v=68). No numbered gate appears here on the rotated plan. Real 3GATE is J5; B1 9GATE is J_CC_9GATE.' },
   { id: 'J9', a: 'centralcity', b: 'shinsegae', y: 7, pa: [-27.63, 89.62], pb: [-26.9235, 91.1825], width: 3.4, owner: 'none', streamOnly: true,
-    note: '광장 상행기 → 신세계 2층; 불가리 인접. JW 호텔 1층 연결통로는 미구현.' },
-  // Render context only: no walkable hotel connection has been surveyed here.
+    note: '광장 상행기 → 신세계 2층 명품관.' },
+  { id: 'J_SSG_JW_ARCADE', a: 'shinsegae', b: 'jwmarriott', y: 7, pa: [-0.205, 89.336], pb: [0.400, 90.925], width: 2.1, owner: 'jwmarriott',
+    note: '신세계 2층 불가리 옆 통로 ↔ JW 메리어트 현관층 연결 갤러리.' },
+  // The plaza also loads the neighboring hotel structure for its views.
   { id:'J_RENDER_SSG_JW', a:'shinsegae', b:'jwmarriott', y:7, pa:[-27.63,89.62], pb:[-26.9235,91.1825], width:0, owner:'none', streamOnly:true,
     note:'Loads adjacent hotel structure; not a hotel passage.' },
   { id:'J_RENDER_CC_JW', a:'centralcity', b:'jwmarriott', y:7, pa:[-27.63,89.62], pb:[-26.9235,91.1825], width:0, owner:'none', streamOnly:true,
