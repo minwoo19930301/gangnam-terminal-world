@@ -3784,8 +3784,13 @@ function hallR20(K) {
   galleryEdge(-11,17.5,-11,26);
   galleryEdge(-5.5,-29,0,-29);
   // North bridge shares the Shinsegae 1M crossing (J5); it has no step.
-  slab(-19.6,-3.2,-10.5,3.2,3.6,{mat:galleryMat,under:0xeeeae2});
-  for(const t of[-3.15,3.15])glassRail(-19.6,t,-11,t,3.6);
+  // The 1M store doorway lies between the jewellery hall and travel desk,
+  // to one side of the ground-floor gate. Meet the existing gallery at s=-11.
+  const storeEnd=4.65;
+  K.slab([P(-19.6,storeEnd-3.2),P(-11,-3.2),P(-10.5,-3.2),
+    P(-10.5,3.2),P(-11,3.2),P(-19.6,storeEnd+3.2)],3.6,
+    {mat:galleryMat,under:0xeeeae2,thick:.22});
+  for(const t of[-3.15,3.15])glassRail(-19.6,t+storeEnd,-11,t,3.6);
   // West gallery branch/stair above the tall 1F passage.
   K.stairs(...P(-2.5,-22),...P(-2.5,-14.8),{ya:0,yb:3.6,w:2.1,mat:marble,rails:true});
   for(const ss of[-3.7,-1.3])glassRail(ss,-22,ss,-14.8,3.6);

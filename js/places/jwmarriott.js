@@ -482,7 +482,12 @@ export function build(K) {
   K.polyWalls(FPL, Y.B4, Y.B1 - 0.3, { mat: 0x8d8a84, inner: 0xd9d4cb, thick: 0.4 });
   // 1F: shared walls N/W (stone both sides, junction openings), glass storefront E/S
   const H1 = 6;
-  EW('N', UW, UE, 0, H1, { mat: { tex: 'jwStone' }, inner: WARM, openings: [{ s: -0.04, w: 6.8, y0: 0, y1: 6 }] });               // J5 → 신세계
+  // J5 at street level and the skewed department-store mezzanine bridge
+  // cross this shared podium wall at different positions.
+  EW('N', UW, UE, 0, H1, { mat: { tex: 'jwStone' }, inner: WARM, openings: [
+    { s: -0.04, w: 6.8, y0: 0, y1: H1 },
+    { s: 3.7, w: 6.4, y0: 3.6, y1: H1 },
+  ] });
   EW('W', -60.88, 60.58, 0, H1, { mat: { tex: 'jwStone' }, inner: WARM, openings: [{ s: -32.2, w: 17, y0: 0, y1: 6 }, { s: -0.12, w: 6.6, y0: 0, y1: 3.3 }] });         // J6 → 센트럴시티
   EW('E', -60.58, -30, 0, H1, { mat: { tex: 'jwStone' }, inner: WARM });
   EW('E', -30, 60.89, 0, 4.2, { mat: GL, thick: 0.06, openings: [{ s: 0, w: 5, y0: 0, y1: 3.4 }, { s: 44.5, w: 3.2, y0: 0, y1: 3.4 }, { s: 52.5, w: 3.2, y0: 0, y1: 3.4 }] });
