@@ -3828,7 +3828,28 @@ function hallR20(K) {
   // Rotate the pair approximately 10° and shift its top half a metre while
   // keeping it within the existing landing. The dimensions are not surveyed.
   // https://ratti-english.tistory.com/289
-  for(const [t,dir]of [[1.3,'up'],[-.3,'down']])K.escalator(...P(17.18,t+.5-2.10),...P(29,t+.5),{ya:0,yb:7,w:1.1,dir});
+  for (const [t, dir] of [[1.3, 'up'], [-.3, 'down']]) {
+    const foot = P(17.18, t + .5 - 2.10), top = P(29, t + .5);
+    K.escalator(...foot, ...top, { ya: 0, yb: 7, w: 1.1, dir });
+    // The 2F retail route continues along these treads to the level plaza.
+    // Central City's hall on either side keeps the uphill rider in that scene
+    // until the retail aisle. A descending rider keeps the store scene until
+    // the plaza: reloading mid-descent loses contact with the moving belt.
+    const dx = top[0] - foot[0], dz = top[1] - foot[1], length = Math.hypot(dx, dz);
+    const edge = (y, offset) => [
+      foot[0] + dx * y / 7 - offset * dz / length,
+      foot[1] + dz * y / 7 + offset * dx / length
+    ];
+    // A zone has constant vertical limits. Use 1 m rises so the floor below
+    // stays in the hall. Individual tread sections are not map destinations.
+    for (let y = 0; y < 7; y++) {
+      K.phys.addZone({
+        place: 'shinsegae', name: '광장 · 백화점 2층 에스컬레이터', floor: y < 3 ? '1F' : '2F',
+        sub: '센트럴시티 중앙홀 ↔ 신세계백화점 2층', priority: 13, y0: y - .05, y1: y + 1.2,
+        poly: [edge(y, -.56), edge(y + 1, -.56), edge(y + 1, .56), edge(y, .56)]
+      });
+    }
+  }
   K.escalator(...P(16.5,-3.2),...P(32.4,-3.2),{ya:0,yb:3.6,w:1.1,dir:'up'});
   // Opposite the short ascent, the mezzanine descends on the hall's left.
   K.escalator(...P(16.5,3.8),...P(33.6,3.8),{ya:0,yb:3.6,w:1.1,dir:'down'});
@@ -4635,6 +4656,26 @@ function hosUpperR20(K) {
   // full plaza store in hallR20, beside the shared 1F passage.
   hosUpperCell('바위파스타바',[[1608,547],[1708,547],[1708,701],[1608,701]],'E','food',Y1);
   hosUpperCell('피어커피',[[1708,547],[1750,547],[1750,701],[1708,701]],'N','cafe',Y1);
+  // The House and department-store 1F guides both put a men's/women's
+  // restroom entrance against the cellar's north edge. The schematic fit
+  // narrows this doorway and the Famille stair cuts into the rear of the bay.
+  // Model only the supported entrance before that stair, keeping its landing clear.
+  {
+    const [front, right] = reg(...H1(1194,712));
+    const [, left] = reg(...H1(1262,712));
+    const back = 5.35, middle = (left+right)/2;
+    // Flare each jamb by 0.32 m at the mouth. The registered room is only
+    // 0.81 m wide here; the flared threshold allows approach from either side.
+    const mouthLeft = left-.32, mouthRight = right+.32;
+    const finish = {mat:0xe4dfd4,thick:.045};
+    wall(front,mouthLeft,back,left,Y1,Y1+2.80,finish);
+    wall(front,mouthRight,back,right,Y1,Y1+2.80,finish);
+    wall(back,left,back,right,Y1,Y1+2.80,finish);
+    wall(front,mouthLeft,front,mouthRight,Y1+2.28,Y1+2.80,finish);
+    sig('화장실',front-.04,middle,Y1+2.53,.70,.23,'N',{bg:null,fg:'#393a36',pxPerM:200});
+    K.zone({name:'화장실 입구',floor:'1F',sub:'남자 화장실 · 여자 화장실 · 와인셀러 앞',
+      poly:[Q(front,mouthLeft),Q(back,left),Q(back,right),Q(front,mouthRight)],y0:Y1,y1:Y1+2.80,priority:12});
+  }
   // L-shaped wine cellar surrounds the southern open court; no wall across the north approach.
   hosUpperCell('와인셀러',[[1153,790],[1359,790],[1359,1117],[1608,1117],[1608,702],[1759,702],[1759,1338],[1247,1338],[1247,967],[1153,967]],'N','wine',Y1);
   hosUpperCell('신세계 갤러리',[[1068,238],[1305,238],[1305,365],[1068,365]],'S','gallery',YM,HM);

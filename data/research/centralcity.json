@@ -1,4 +1,14 @@
 {
+  "wine_cellar_restroom_entrance_1f_20261117": {
+    "guides": [
+      "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/03/10/8p0O5JDfiYV3.jpg",
+      "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/08/06/DWUvdakUS5Xd.png"
+    ],
+    "layout": "The House and department store plans show a restroom for men and women on the north side of the wine cellar, accessible from the dedicated lift and the Famille stair. The model represents the supported entrance. The threshold widens by 0.32 m on either side to accommodate the player, and ends before the stair. The layout of the fixtures is unverified."
+  },
+  "plaza_department_store_escalator_handoff_20261117": {
+    "layout": "The main pair of plaza escalators carries the player to the floor of the jewellery boutiques or back to the plaza. Small height-bounded tread zones keep the rider in the current scene until the level landing. The hall, mezzanine flights, store destinations, physical incline and belt speed retain their previous registrations."
+  },
   "bodyfriend_gallery_door_1m_20261117": {
     "guide": "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/07/23/yE3UuO1otYr8.jpg",
     "layout": "The Central City mezzanine gallery reached from the department store Members Bar has a Bodyfriend lounge with a single door in the short east wing of its L-shaped footprint. The model sets its frontage about 1.8 m inside the registered guide line to preserve the public gallery aisle. Its sides meet Ongojisin and the 1F stair. The desk and display chairs are schematic."

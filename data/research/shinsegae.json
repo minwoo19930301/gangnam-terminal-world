@@ -1,4 +1,23 @@
 {
+  "cross_wing_passages_and_lifts_20261117": {
+    "guides": [
+      "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/10/16/1esU4Yqhl5TX.png",
+      "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/08/26/XgByI9HjyXqX.png",
+      "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/11/10/pLc2zpesvkoW.png",
+      "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/11/10/CR8TldsBKpZG.png"
+    ],
+    "passages": "The public passage between the two wings passes Helen Kaminski on 2F, Shinsegae Gallery on 3F, Songzio Paris on 4F and Yoonjin Fur on 5F. The southern recess and lift vestibule follow the outline on each sheet. A central opening is visible in the vestibule partition on 2F and 4F. The 5F model allows a 1.15 m aisle between Yoonjin Fur and lululemon. The shop setback and door widths are gameplay fits.",
+    "lift_service": "The map and landing for each level are registered separately. The visitor photos IMG_0513 and IMG_0514 show two doors beside the mezzanine bridge. Each has a playable round trip to its corresponding 2F–5F entrance. The upper guides mark a bank with a single icon. Individual car identities, car dimensions and through service are schematic. The two model routes returning to the photographed pair and the third route serving the existing mezzanine landing preserve access to both lobbies."
+  },
+  "valet_gate_2f_thresholds_20261117": {
+    "guide": "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/10/16/1esU4Yqhl5TX.png",
+    "layout": "The guide locates Gate 5 between Loro Piana and Graff and Gate 6 between Tiffany and Cartier. Each indoor approach has its own map destination on the level floor at the marked door. The Gate 6 door finish and markings are approximate. The public floor and door thresholds are represented. The parking deck and valet lounge have no verified modeled route."
+  },
+  "shoe_hall_public_fronts_4f_20261117": {
+    "guide": "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/11/10/pLc2zpesvkoW.png",
+    "directory": "https://www.shinsegae.com/store/floor.do?storeCd=SC00002",
+    "layout": "Contemporary Shoes faces the short west aisle beyond Le Mouton. Domestic Shoes opens north beside Longchamp, across from Louis Vuitton shoes. The guide identifies each group and public edge. Directory boards and exact entry positions are schematic. The November directory lists Daks shoes and Barbara shoes, and supplies RYU and FABIO RUSCONI as the two brand names in English. The group-level boards retain shared destinations without assigning individual brands to counter bays."
+  },
   "main_wing_lift_by_toilets_2f_5f_20261117": {
     "guides": {
       "2F": "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/10/16/1esU4Yqhl5TX.png",

@@ -845,6 +845,35 @@ export function build(K) {
       : [[23, BAY_BACK], ...bay, [44, BAY_BACK]];
     return [P(0, 0), P(23, 0), ...front.map(p => P(...p)), P(44, 0), P(UW, 0), P(UW, vSouth), P(0, vSouth)];
   };
+  // The cross-wing lift pictogram is at the back of a short vestibule.
+  // Each upper sheet is registered separately; use its own door line.
+  const sourcePoint=(id,x,y)=>upperPlanPoint(id,x*1823/2000,y*1367/1500);
+  const bridgeLiftFront = {}, bridgeAisles = {};
+  for (const [id,x,y,near,far,by] of [
+    ['2F',1115,864,763,787,'헬렌카민스키 · 보테가 베네타'],
+    ['3F',1085,953,867,880,'신세계 갤러리 · 나니스'],
+    ['4F',1112,947,843,891,'송지오 파리 · 롱샴'],
+    ['5F',1078,950,884,898,'디에스퍼 · 윤진모피']
+  ]) {
+    bridgeLiftFront[id] = sourcePoint(id,x,y);
+    const [u0,v0]=sourcePoint(id,x-52,far),[u1,v1]=sourcePoint(id,x+52,near);
+    bridgeAisles[id]={bounds:[u0,v0,u1,v1],by};
+  }
+  function bridgeCar(id,i) {
+    const [u,v] = bridgeLiftFront[id];
+    return [u - 1.05, v + (i - 1) * 2.20];
+  }
+  function bridgeLanding(id,i) {
+    const [u,v]=bridgeCar(id,i);
+    return P(u+2.05,v);
+  }
+  const mezzBridgeDoors=[79.2,82.0];
+  function bridgeLobby(id) {
+    const front = bridgeLiftFront[id];
+    if (!front) return [.6,81,10.4,84.8];
+    const [u,v] = front;
+    return [u+.06,v-3.26,u+1.58,v+3.26];
+  }
   const elvHoles = UPPER_ELV.map(e => rect(e.u - e.w / 2, e.v - e.d / 2, e.u + e.w / 2, e.v + e.d / 2));
   const atrHole = rect(...ATR); // basement machinery keeps its retained position
   // stair hole at main-floor index s (B2=0): lane of the flight that arrives from s-1
@@ -881,7 +910,7 @@ export function build(K) {
   for (const id of ['4F', '5F', '6F', '7F', '8F', '9F', '10F', '11F']) floorMat[id] = {tex:'marble',color:0xf2ede3,gloss:.5};
   floorMat['8F']={tex:'ssg_upper_tile',gloss:.3};
   MAIN.forEach((id, s) => {
-    const holes = id==='1F' ? [...nwLiftHoles] : id==='B1' ? [] : id==='B2' ? ELV.map(e=>rect(e.u-e.w/2,e.v-e.d/2,e.u+e.w/2,e.v+e.d/2)) : [...elvHoles];
+    const holes = id==='1F' ? [...nwLiftHoles] : id==='B1' ? [] : id==='B2' ? ELV.map(e=>rect(e.u-e.w/2,e.v-e.d/2,e.u+e.w/2,e.v+e.d/2)) : bridgeLiftFront[id] ? [] : [...elvHoles];
     // Ground NW lift bank has its own 1F/1M controls; upper banks follow their plan icons.
     if (id === '1F') holes.push(...beautyDownHoles);
     // The old subway icon remaps outside this footprint; CC owns that well.
@@ -1443,36 +1472,74 @@ export function build(K) {
   ELV.forEach((e, i) => {
     const [x, z] = P(e.u, e.v);
     const basement=K.elevator({name:`신세계 지하 엘리베이터 ${i+1}호기`,x,z,rotY:RA+PI,w:e.w,d:e.d,topH:4.6,floors:ELV_FLOORS.filter(f=>f.label==='B2').map(f=>({...f,...ARR})),mat:0xc9c2b4});
-    const ue=UPPER_ELV[i],[ux,uz]=P(ue.u,ue.v),updest=P(ue.u,ue.v-2.2);
-    const upper=K.elevator({name:`신세계 고객 엘리베이터 (연결부 ${i+1}호기)`,x:ux,z:uz,rotY:RA+PI,w:e.w,d:e.d,floors:ELV_FLOORS.filter(f=>f.y>=LV['1F']).map(f=>({...f,...ARR})),mat:0xc9c2b4});
-    mezzBankCalls.push(upper);
-    const nw=NWLIFTS[i%NWLIFTS.length],destination=P(nw.u,nw.v-2.8);
-    // K.elevator's returned destination table is shared with its interaction menu.
-    // Retain existing visible shafts, but allow a return to the relocated 1F/1M lobby.
-    const menu=ELV_FLOORS.map(f=>({...f,...(f.label==='B1'?{dx:MARKET_B1_DEST[0]-x,dz:MARKET_B1_DEST[1]-z}:f.label==='1M'?{dx:P(36,81)[0]-x,dz:P(36,81)[1]-z}:f.label==='1F'?{dx:destination[0]-x,dz:destination[1]-z}:ARR)}));
-    basement.floors=menu.filter(f=>f.y<7); // T2: no invisible basement call buttons in upper shops
+    const ue=UPPER_ELV[i], [ux,uz]=P(ue.u,ue.v);
+    const nw=NWLIFTS[i%NWLIFTS.length],ground=P(nw.u,nw.v-2.8),mezz=P(36,81);
+    const lowerStops = ELV_FLOORS.filter(f => f.y < 7).map(f => {
+      const dest = {B1:MARKET_B1_DEST,'1F':ground,'1M':mezz}[f.label];
+      return {...f,...(dest ? {dx:dest[0]-x,dz:dest[1]-z} : ARR)};
+    });
+    basement.floors = lowerStops;
     const basementCall=K._.interactables.find(it=>it.elevator===basement);if(basementCall)basementCall.y=LV.B2;
-    // On 2F–5F stop just outside the door. The bank's earlier relocation
-    // otherwise placed arrivals another metre into the facing storefronts.
-    const nearExit={dx:-1.2*SA,dz:-1.2*CA};
-    upper.floors=menu.map(f=>f.y>=LV['1F']?{...f,...nearExit}:{...f,dx:f.dx+x-ux,dz:f.dz+z-uz});
-    // Destination menus may include other lobbies, but calls only exist at
-    // physically present upper cars. Explicit per-floor y prevents phantom HUD.
-    const call=K._.interactables.find(it=>it.elevator===upper);
-    if(call){call.y=LV['1F'];for(const f of ELV_FLOORS.filter(f=>f.y>LV['1F']))K.interact({...call,y:f.y});}
-
+    const legacyExit = [ux-1.2*SA,uz-1.2*CA];
+    function landing(f, atBridge) {
+      if (bridgeLiftFront[f.label]) {
+        return bridgeLanding(f.label,i);
+      }
+      if (atBridge && f.label==='1M' && i<mezzBridgeDoors.length) return P(39.55,mezzBridgeDoors[i]);
+      if (f.label==='B1') return MARKET_B1_DEST;
+      if (f.label==='B2') return [x+ARR.dx,z+ARR.dz];
+      return legacyExit;
+    }
+    const sections = [
+      {u:ue.u,v:ue.v,lo:0,hi:LV['1M']},
+      {u:ue.u,v:ue.v,lo:LV['6F'],hi:LV['11F']}
+    ];
+    for(const id of Object.keys(bridgeLiftFront)){
+      const [u,v]=bridgeCar(id,i);
+      sections.push({u,v,lo:LV[id],hi:LV[id]});
+    }
+    for (const {u,v,lo,hi} of sections) {
+      const [cx,cz]=P(u,v);
+      const stops=ELV_FLOORS.map(f=>{
+        const [tx,tz]=landing(f, lo===hi);
+        return {...f,dx:tx-cx,dz:tz-cz};
+      });
+      const doors=stops.filter(f=>f.y>=lo&&f.y<=hi);
+      const mapped=lo===hi;
+      const shaft=K.elevator({name:`신세계 고객 엘리베이터 (연결부 ${i+1}호기)`,x:cx,z:cz,rotY:mapped?FACE.E:FACE.N,
+        w:mapped?2.0:e.w,d:mapped?2.0:e.d,topH:mapped?4.5:3.2,floors:doors,mat:0xc9c2b4});
+      const menu={...shaft,floors:stops};
+      const call=K._.interactables.find(it=>it.elevator===shaft);
+      call.elevator=menu;
+      call.y=lo;
+      for (const f of doors.slice(1)) K.interact({...call,y:f.y});
+      if (lo===0) mezzBankCalls.push(menu);
+    }
   });
-  // 1M bridge lobby, visible in the user's private photo. The 1M side
-  // calls use the existing game menu; upper shafts are not yet aligned.
-  // This short lobby wall and door locations are approximations.
+  // The 2F and 4F guides draw a short partition with a central opening
+  // between the shopping corridor and the lift doors.
+  for (const [id,x0,x1,gapLeft,gapRight,py] of [
+    ['2F',1061,1254,1092,1133,817],['4F',1060,1164,1091,1133,900]
+  ]) {
+    const y=LV[id];
+    const planX=x=>sourcePoint(id,x,py);
+    for(const [left,right] of [[x0,gapLeft],[gapRight,x1]]) {
+      wall(...planX(left),...planX(right),y,y+2.80,{mat:0xe3dfd5,thick:.12});
+    }
+  }
+  // The 1M bridge lobby and both dark doors are visible in the visitor
+  // photos. The door positions and cross-floor alignment are approximate.
   box(40.55,80.75,.30,6.2,3.6,2.65,0xe8e5de);
-  for(const [i,v] of [79.2,82.0].entries()){
-    // The photographed 1M doors are not spatially aligned with the
-    // modeled upper shaft. Preserve the existing remote menu as an explicit
-    // approximation, with a local same-floor destination and the nearest
-    // modeled car for other floors. The real served levels remain unknown.
+  for(const [i,v] of mezzBridgeDoors.entries()){
+    // Each photographed bridge door has a return route from the upper guide
+    // lobbies. The real car numbers and served levels are not identified.
     const u=40.35,[cx,cz]=P(39.55,v),upper=mezzBankCalls[2],local=P(39.55,v),nw=NWLIFTS[i],ground=P(nw.u,nw.v-2.8);
-    const e={...upper,name:`신세계 중층 연결 다리 엘리베이터 ${i+1}호기`,floors:upper.floors.map(f=>f.label==='1M'?{...f,dx:local[0]-upper.x,dz:local[1]-upper.z}:f.label==='1F'?{...f,dx:ground[0]-upper.x,dz:ground[1]-upper.z}:f)};
+    const floors=upper.floors.map(f=>{
+      const dest=bridgeLiftFront[f.label] ? bridgeLanding(f.label,i) :
+        f.label==='1M' ? local : f.label==='1F' ? ground : null;
+      return dest ? {...f,dx:dest[0]-upper.x,dz:dest[1]-upper.z} : f;
+    });
+    const e={...upper,name:`신세계 중층 연결 다리 엘리베이터 ${i+1}호기`,floors};
     K.interact({x:cx,z:cz,y:LV['1M'],r:1.40,label:e.name,elevator:e});
     box(u,v,.06,1.38,3.6,2.30,0x343837,{solid:false});
     box(u-.034,v,.02,.018,3.6,2.30,0x1b1e1d,{solid:false});
@@ -6004,7 +6071,7 @@ export function build(K) {
   }
   function upperRetailCeiling(id,y) {
     const v0=UPPER.has(id)?VS+.2:.2, yy=y+3.2;
-    const omissions=[...(id==='2F'?PHOTO_ATRIUM_2F_PARTS:id==='5F'?PHOTO_ATRIUM_5F_PARTS:[id==='3F'?PHOTO_ATRIUM_3F:PHOTO_ATRIUM]),upperPhysicalWell(id),upperPhysicalWell(id,true),[.6,81,10.4,84.8],...activeCores(id).map(c=>[c.uL,c.v0,c.uR,c.v1]),[23,0,44,9]];
+    const omissions=[...(id==='2F'?PHOTO_ATRIUM_2F_PARTS:id==='5F'?PHOTO_ATRIUM_5F_PARTS:[id==='3F'?PHOTO_ATRIUM_3F:PHOTO_ATRIUM]),upperPhysicalWell(id),upperPhysicalWell(id,true),bridgeLobby(id),...activeCores(id).map(c=>[c.uL,c.v0,c.uR,c.v1]),[23,0,44,9]];
     const runs=(a0,a1,fixed,horizontal)=>{
       let parts=[[a0,a1]];
       for(const r of omissions){
@@ -6445,7 +6512,7 @@ export function build(K) {
     ...(id==='7F'?[[40.8,70.7,41.9,75.8]]:[]),
     ...(id==='11F'?[]:(()=>{const[a,b,c,d]=upperPierRect(id);return[[a-1.12,b-1.12,a+.02,b+.02],[c-.02,b-1.12,c+1.12,b+.02],[a-1.12,d-.02,a+.02,d+1.12],[c-.02,d-.02,c+1.12,d+1.12]];})()),
     ...(id==='11F'?[]:[upperPhysicalWell(id).map((n,i)=>n+(i<2?-.3:.3))]),
-    ...(id==='5F'?[[30.39,116.81,43.03,124.65],[30.50,124.75,35.70,128.75],[30.75,123.7,33.25,129.1],[29.2,118.6,37.35,126.7]]:[upperPhysicalWell(id,true).map((n,i)=>n+(i<2?-.3:.3))]), [.6,81,10.4,84.8],
+    ...(id==='5F'?[[30.39,116.81,43.03,124.65],[30.50,124.75,35.70,128.75],[30.75,123.7,33.25,129.1],[29.2,118.6,37.35,126.7]]:[upperPhysicalWell(id,true).map((n,i)=>n+(i<2?-.3:.3))]), ...(bridgeLiftFront[id]?[]:[bridgeLobby(id)]),
     // The former 2F–5F bridge is no longer built after the annex flights
     // moved. Keeping its reservation cuts mapped shops despite clear floor.
     ...(!['2F','3F','4F','5F'].includes(id)&&upperPhysicalWell(id,true)[3]>=81.1?[[29,79.85,upperPhysicalWell(id,true)[2]+.85,81.3]]:[]),
@@ -6529,6 +6596,10 @@ export function build(K) {
       // Both long sides border the white aisle on the guide; the north
       // edge is cut by the current swept well, so use the opposite edge.
       '4F:어그 맨&키즈':'S',
+      // These shoe halls open onto the short sales-floor aisles beside
+      // Le Mouton and Longchamp; the opposite sides are building edges.
+      '4F:컨템포러리 슈즈 (리치오안나/류클래식/파비오루스코니)':'W',
+      '4F:국내 슈즈(남/여) (닥스/탠디/미소페/소다/바바라)':'N',
       '4F:쏘솔트':'W',
       '6F:블런드스톤':'E','9F:가게나우/스메그':'S','10F:토박스':'S','10F:트래드후스':'S','10F:컴프프로':'S'};
     const dior=id==='2F'&&c.name==='디올',annex=dior&&c.rect[0]===1061;
@@ -6950,7 +7021,9 @@ export function build(K) {
     // On the requested floors, only the rendered pieces may identify as a
     // shop: otherwise the HUD names absent stores in the atrium or lift well.
     const artWall = id==='3F' && c.name==='신세계 갤러리';
-    const shopDescription=artWall?'본관 아트월 · 본관과 신관 사이 통로':id==='5F'&&c.name==='팝업 스테이지'?'팝업 행사 공간':id==='4F'&&c.name==='쏘솔트'?'헤어 액세서리 · 스카프 · 모자':id==='4F'&&c.name==='코치'?'여성 의류 · 가방':id==='3F'&&c.name==='PSR 컨시어지'?'VIP 컨시어지':id==='3F'&&c.name==='트리니티 라운지'?'VIP 라운지':id==='3F'&&c.name==='호라이즌'?'카페 · 브런치':id==='3F'&&c.name==='트리니티'?'수입 여성의류 편집숍':id==='4F'&&c.name.startsWith('슈블루')?'구두 · 가방 수선':id==='5F'&&c.name==='부디무드라'?'요가복 · 애슬레저':id==='5F'&&c.name==='파로'?'여성 가발':id==='4F'&&c.name==='콜롬보'?'명품 핸드백':((id==='5F'&&['사바티에','동우모피','진도모피','윤진모피','디에스퍼','셀럽제이'].includes(c.name))||(id==='4F'&&c.name==='이브살로몬'))?'모피 · 여성의류':`${id} · 신세계백화점 강남점`;
+    const shoeApproach=id==='4F'&&c.name.startsWith('국내 슈즈')?'롱샴 옆 통로 · 닥스 구두 · 바바라 슈즈':
+      id==='4F'&&c.name.startsWith('컨템포러리 슈즈')?'르무통 옆 통로 · RYU · FABIO RUSCONI':null;
+    const shopDescription=shoeApproach || (artWall?'본관 아트월 · 본관과 신관 사이 통로':id==='5F'&&c.name==='팝업 스테이지'?'팝업 행사 공간':id==='4F'&&c.name==='쏘솔트'?'헤어 액세서리 · 스카프 · 모자':id==='4F'&&c.name==='코치'?'여성 의류 · 가방':id==='3F'&&c.name==='PSR 컨시어지'?'VIP 컨시어지':id==='3F'&&c.name==='트리니티 라운지'?'VIP 라운지':id==='3F'&&c.name==='호라이즌'?'카페 · 브런치':id==='3F'&&c.name==='트리니티'?'수입 여성의류 편집숍':id==='4F'&&c.name.startsWith('슈블루')?'구두 · 가방 수선':id==='5F'&&c.name==='부디무드라'?'요가복 · 애슬레저':id==='5F'&&c.name==='파로'?'여성 가발':id==='4F'&&c.name==='콜롬보'?'명품 핸드백':((id==='5F'&&['사바티에','동우모피','진도모피','윤진모피','디에스퍼','셀럽제이'].includes(c.name))||(id==='4F'&&c.name==='이브살로몬'))?'모피 · 여성의류':`${id} · 신세계백화점 강남점`);
     const shopName = c.model.event?.name || (id === '5F' && floor5EntranceNames[c.name]) || c.name;
     if (opening5 || (id === '2F' && c.kind === 'closed')) {
       // Enclose only the retained guide outline, leaving the circulation
@@ -7548,8 +7621,10 @@ export function build(K) {
         earlyGucciSigns.add(shop);
       }
     }
-    zone('본관 · 신관 연결통로',id,'층별 매장 · 엘리베이터',[29.6,48.1,44.8,54.5],y,y+3.5,2);
-    zone('고객 엘리베이터',id,'본관 · 신관 연결부',[.6,81,10.4,84.8],y,y+3.4,2);
+    const crossWing=bridgeAisles[id];
+    zone('본관 · 신관 연결통로',id,crossWing?.by || '층별 매장 · 엘리베이터',
+      crossWing?.bounds || [29.6,48.1,44.8,54.5],y,y+3.5,2);
+    zone('고객 엘리베이터',id,'본관 · 신관 연결부',bridgeLobby(id),y,y+3.4,2);
   }
   // 2F: a shallow landing connects the first pair to the retail aisle.
   // Its open front aligns with the two moving stairways.
@@ -7619,6 +7694,26 @@ export function build(K) {
       wall(...outline[i - 1], ...outline[i], y, y + clearH(id), { mat: 0xe7e1d6, thick: .14 });
     }
   }
+  // The opposite exterior recess ends at the lift doors. Its stepped
+  // outline prevents crossing between the wings behind the boutiques.
+  const southRecesses = {
+    '2F': [[[986,1063],[986,961],[1060,961],[1060,863]],[[1254,863],[1254,989],[1162,989],[1162,1235]]],
+    '3F': [[[963,1147],[963,1050],[1012,1050],[1012,1035],[1033,1035],[1033,952]],[[1138,952],[1138,1196]]],
+    '4F': [[[985,1146],[985,1031],[1060,1031],[1060,946]],[[1163,946],[1163,1251]]],
+    '5F': [[[958,1168],[958,1134],[1028,1134],[1028,950]],[[1130,950],[1130,1185]]]
+  };
+  for(const [id,[left,right]] of Object.entries(southRecesses)){
+    const [u,v]=bridgeLiftFront[id], y=LV[id];
+    const boundary=points=>points.map(([x,y])=>sourcePoint(id,x,y));
+    const before=boundary(left), after=boundary(right);
+    before.unshift([0,before[0][1]]);
+    before.push([u,v-3.20]);
+    after.unshift([u,v+3.20]);
+    after.push([0,after[after.length-1][1]]);
+    for(const side of [before,after]) {
+      for(let j=1;j<side.length;j++) wall(...side[j-1],...side[j],y,y+clearH(id),{mat:0xe7e1d6,thick:.14});
+    }
+  }
   const mainOutlineBottom={'2F':1000,'3F':1078,'4F':1077,'5F':1095,'6F':1077,'7F':1125,'8F':1089,'9F':1077,'10F':1126};
   for(const [id,bottom]of Object.entries(mainOutlineBottom)){
     const u=upperPlanPoint(id,27,bottom)[0],vEnd=upperPlanPoint(id,1035,bottom)[1],y=LV[id];
@@ -7670,6 +7765,27 @@ export function build(K) {
       const v=upperPlanPoint(id,500,bottom)[1];
       box(u,v,.14,2.5,y,2.5,0x484944);
       sign('5 GATE · 발렛파킹 ↓',u+.10,v,y+2.7,'E',2.4,.4,{bg:'#444740',fg:'#ffffff'});
+      zone('5 GATE',id,'발렛 주차 방향 · 로로피아나와 그라프 사이',
+        [u+.075,v-1.24,u+1.9,v+1.24],y,y+3.4,3);
+
+      // The official 2F guide ends the aisle between Cartier and Tiffany
+      // at Gate 6. The surface outside drops to street level in this model.
+      // Fit the gate face to the supported indoor edge; the door finish is schematic.
+      const [gateU, cartierEnd] = upperPlanPoint(id,1592,1127);
+      const [, tiffanyStart] = upperPlanPoint(id,1658,1127);
+      const gateV = (cartierEnd+tiffanyStart)/2, halfDoor = 1.15;
+      wall(gateU,cartierEnd,gateU,tiffanyStart,y,y+clearH(id),{
+        mat:0xe4dfd4,thick:.09,openings:[{at:(tiffanyStart-cartierEnd)/2,w:2*halfDoor,y0:y,y1:y+2.45}]
+      });
+      for (const side of [-1,1]) {
+        box(gateU,gateV+side*halfDoor/2,.085,halfDoor-.008,y,2.45,0x555957);
+        box(gateU+.065,gateV+side*.15,.065,.043,y+.97,.45,0xaaa89e,{solid:false});
+      }
+      sign('6 GATE · 발렛파킹 ↓',gateU+.09,gateV,y+2.70,'E',2.4,.4,{bg:'#444740',fg:'#ffffff'});
+      // Honam's double-height hall overlaps the supported retail landing.
+      // Identify only the aisle between these two shop sides on this floor.
+      zone('6 GATE',id,'발렛 주차 방향 · 까르띠에와 티파니앤코 사이',
+        [gateU+.05,cartierEnd,gateU+1.90,tiffanyStart],y,y+3.4,11);
       box(12.3,14.4,.65,.55,y,.9,0xc2c4c2,{solid:false});sign('음수대',12.7,14.4,y+1.3,'E',.7,.2,{bg:null,fg:'#555851'});
     }
   }
@@ -12984,7 +13100,7 @@ export function build(K) {
           }
         }
       }
-      if(id==='4F'&&name.includes('(')&&!name.startsWith('분더샵 슈')&&W>2.8&&D>1.8){
+      if(id==='4F'&&name.includes('(')&&!/^(분더샵 슈|컨템포러리 슈즈|국내 슈즈)/.test(name)&&W>2.8&&D>1.8){
         // The official plan groups these brands in a shared concession; the
         // individual order within it is illustrative, not surveyed.
         let brands=name.match(/\(([^()]*(?:\/[^()]*)+)\)\s*$/)?.[1].split('/')||[];
@@ -15547,6 +15663,14 @@ export function build(K) {
         Object.assign(brand5,{'자딕앤 볼테르':'ZADIG & VOLTAIRE','캐나다 구스':'CANADA GOOSE','아스페시':'ASPESI','베르니스':'BERENICE','에레':'EHRE','유메르':'UMER','로서울':'ROH SEOUL'});
         if (c.model.event) brand5[c.name] = c.model.event.sign;
         const shoeGroup=id==='4F'&&/캐주얼 슈즈|컨템포러리 슈즈|국내 슈즈|컴포트 슈즈|분더샵 슈/.test(c.name);
+        const contemporaryHall=shoeGroup&&c.name.startsWith('컨템포러리 슈즈');
+        const domesticHall=shoeGroup&&c.name.startsWith('국내 슈즈');
+        // Use the exposed frontage only. Le Mouton shares the remainder
+        // of the west edge, and Longchamp the remainder of the north edge.
+        const publicWidth=contemporaryHall?upperPlanPoint(id,1534,519)[0]-u0:
+          domesticHall?v1-upperPlanPoint(id,1205,950)[1]:Wf;
+        const frontAt=contemporaryHall?Wf-publicWidth/2:publicWidth/2;
+        const sharedEntry=contemporaryHall||domesticHall;
         const fasciaName=shoeGroup?c.name.replace(/\s*\([^)]*\)\s*$/, ''):c.name;
         // The official guide lists the tenants only at the shared-hall
         // level. Keep them together as a compact directory, not as invented
@@ -15554,11 +15678,11 @@ export function build(K) {
         const groupLabels=id==='4F'?(
           c.name.startsWith('캐주얼 슈즈')?['슈콤마보니 · 아쉬 · 라움에디션 · 비바이아']:
           c.name.startsWith('컨템포러리 슈즈')?['리치오안나 · 류클래식 · 파비오루스코니']:
-          c.name.startsWith('국내 슈즈')?['닥스 · 탠디 · 미소페 · 소다 · 바바라']:
+          c.name.startsWith('국내 슈즈')?['닥스 구두 · 탠디 · 미소페 · 소다 · 바바라 슈즈']:
           c.name.startsWith('컴포트 슈즈')?['에코 · 스타카토 · 제옥스 · 락포트','핏플랍 · 바이네르 · 스케쳐스USA']:
           c.name.startsWith('분더샵 슈')?['르네까오빌라 · 생로랑 · 발렌시아가']:null):null;
         if(groupLabels&&Wf>3){
-          const [gu,gv]=ST(Wf/2,Math.min(2.2,Dp-.4)),width=Math.min(Wf-.5,5.0),h=.26;
+          const [gu,gv]=ST(frontAt,sharedEntry?.40:Math.min(2.2,Dp-.4)),width=Math.min(publicWidth-.5,5.0),h=.26;
           const groupId=c.name.startsWith('캐주얼')?'casual':c.name.startsWith('컨템포러리')?'contemporary':c.name.startsWith('국내')?'domestic':c.name.startsWith('컴포트')?'comfort':'boon';
           groupLabels.forEach((line,i)=>{
             const key=K.texture(`ssg_4f_shoe_directory_${groupId}_${i}`,1024,128,(g,w,h)=>{
@@ -15581,7 +15705,7 @@ export function build(K) {
           immediateUpperFascia(id,entranceName || brand5[c.name],su,sv,y+2.12,width,entranceName ? .24 : .18,face,{bg:'#edeae3',fg:'#363b39'});
           fb(a,b,.018,.018,y+2.22,1.12,0x8b8982,{solid:false});
         }
-        fsign(shoeGroup?fasciaName:id==='5F'&&c.name==='미샤'?'MICHAA':id==='4F'&&c.name==='샤넬 슈 부틱'?'CHANEL':id==='5F'&&c.name==='킨더살몬'?'KINDERSALMON':id==='5F'&&c.name==='에스실'?'SSIL':id==='5F'&&c.name==='넘버링'?'NUMBERING':id==='4F'&&c.name==='폴로 랄프 로렌'?'POLO RALPH LAUREN':id==='4F'&&c.name==='레페토'?'repetto':id==='4F'&&c.name==='쏘솔트'?'SOSALT':id==='4F'&&c.name==='린드버그'?'LINDBERG':id==='4F'&&c.name==='코치'?'COACH':id==='4F'&&c.name==='버켄스탁'?'BIRKENSTOCK':id==='2F'&&brand2[c.name]?brand2[c.name]:id==='4F'&&c.name==='오트리'?'AUTRY':id==='4F'&&c.name==='헌터'?'HUNTER':id==='3F'&&c.name==='다미아니'?'DAMIANI':id==='3F'&&brand3[c.name]?brand3[c.name]:id==='4F'&&c.name==='이브살로몬'?'YVES SALOMON':id==='4F'&&brand4[c.name]?brand4[c.name]:id==='5F'&&brand5[c.name]?brand5[c.name]:c.name==='몽클레르'?'MONCLER':c.name==='펜디'?'FENDI':id==='5F'&&c.name==='룰루레몬'?'lululemon':c.name==='불가리'&&id==='2F'?'BVLGARI':c.name==='티파니앤코'&&id==='2F'?'TIFFANY & CO.':c.name==='로에베'&&id==='3F'?'LOEWE':c.name==='막스마라'&&id==='3F'?'MAX MARA':c.name,(id==='2F'&&c.name==='불가리'?Wf-1.8:Wf/2),.075,y+(id==='8F'?2.75:id==='2F'&&c.name==='고야드'?3.34:id==='2F'&&c.name==='티파니앤코'?2.94:3.25),Math.min(Wf-.55,id==='2F'&&c.name==='불가리'?2.8:8.5),id==='2F'&&c.name==='고야드'?.26:Math.min(id==='8F'?.35:.45,.19+Wf*.035),{bg:id==='2F'&&c.name==='고야드'?null:bg,fg:id==='2F'&&c.name==='고야드'?'#dfc77d':palette.dark&&!chanel2&&id!=='8F'?'#f4eee0':fg,twoSided:true});
+        fsign(shoeGroup?fasciaName:id==='5F'&&c.name==='미샤'?'MICHAA':id==='4F'&&c.name==='샤넬 슈 부틱'?'CHANEL':id==='5F'&&c.name==='킨더살몬'?'KINDERSALMON':id==='5F'&&c.name==='에스실'?'SSIL':id==='5F'&&c.name==='넘버링'?'NUMBERING':id==='4F'&&c.name==='폴로 랄프 로렌'?'POLO RALPH LAUREN':id==='4F'&&c.name==='레페토'?'repetto':id==='4F'&&c.name==='쏘솔트'?'SOSALT':id==='4F'&&c.name==='린드버그'?'LINDBERG':id==='4F'&&c.name==='코치'?'COACH':id==='4F'&&c.name==='버켄스탁'?'BIRKENSTOCK':id==='2F'&&brand2[c.name]?brand2[c.name]:id==='4F'&&c.name==='오트리'?'AUTRY':id==='4F'&&c.name==='헌터'?'HUNTER':id==='3F'&&c.name==='다미아니'?'DAMIANI':id==='3F'&&brand3[c.name]?brand3[c.name]:id==='4F'&&c.name==='이브살로몬'?'YVES SALOMON':id==='4F'&&brand4[c.name]?brand4[c.name]:id==='5F'&&brand5[c.name]?brand5[c.name]:c.name==='몽클레르'?'MONCLER':c.name==='펜디'?'FENDI':id==='5F'&&c.name==='룰루레몬'?'lululemon':c.name==='불가리'&&id==='2F'?'BVLGARI':c.name==='티파니앤코'&&id==='2F'?'TIFFANY & CO.':c.name==='로에베'&&id==='3F'?'LOEWE':c.name==='막스마라'&&id==='3F'?'MAX MARA':c.name,(id==='2F'&&c.name==='불가리'?Wf-1.8:frontAt),.075,y+(sharedEntry?2.91:id==='8F'?2.75:id==='2F'&&c.name==='고야드'?3.34:id==='2F'&&c.name==='티파니앤코'?2.94:3.25),Math.min(publicWidth-.55,id==='2F'&&c.name==='불가리'?2.8:8.5),id==='2F'&&c.name==='고야드'?.26:Math.min(id==='8F'?.35:.45,.19+Wf*.035),{bg:id==='2F'&&c.name==='고야드'?null:bg,fg:id==='2F'&&c.name==='고야드'?'#dfc77d':palette.dark&&!chanel2&&id!=='8F'?'#f4eee0':fg,twoSided:true});
       }
       // A clear counter at the rear side, payment terminal and framed mirror.
       if(!popupStage&&!jewelryIsland&&!(id==='5F'&&['베네통','캐나다 구스'].includes(c.name))&&Wf>2.3&&Dp>2.8&&!(id==='2F'&&['생 로랑','불가리','보테가 베네타','헬렌카민스키','디올'].includes(c.name))&&!(id==='3F'&&['아디르','더로우','호라이즌','알라이아','분더샵 여성','바쉐론 콘스탄틴','릭오웬스','오데마피게','로에베','몽블랑','발렌티노','브레게','프레드','부쉐론','끌로에','아크리스','블랑팡'].includes(c.name))&&!(id==='4F'&&['토리버치','A.P.C.','포르테 포르테','N°21','메종 키츠네','레페토','폴로 랄프 로렌','샤넬 슈 부틱','루이비통','지안비토로시','린드버그'].includes(c.name))&&!(id==='5F'&&['델라라나','위뜨','헤지스','더일마','룩캐스트','루에브르','타낫','뷰오리','포유어아이즈온리','랙앤본','킨더살몬','던스트','에스실','넘버링','미샤','쁘렝땅','조셉앤 스테이시','렉토','럭키슈에뜨','르917 (르셉템버)','멤버스바','SHOP 아모멘토'].includes(c.name))){
@@ -15771,10 +15895,19 @@ export function build(K) {
     }
     upperCommonDesign(id,guide);
     if(id==='8F')upperRetailCeiling(id,y);
-    // The 3F wayfinding sign is schematic; keep it compact so the store
-    // fascias remain visible from the adjacent escalator.
-    sign(id==='2F'?['본관 ↔ 신관','엘리베이터 · 에스컬레이터']:id==='3F'?'3F · 본관 ↔ 신관': [ `${id} ${upperCats[id]}`,'본관 ↔ 신관'],39.8,51,y+2.8,'N',id==='2F'||id==='3F'?2.4:5,id==='2F'||id==='3F'?.35:.5,{bg:id==='2F'?'#2f6fb3':'#f1e9da',fg:id==='2F'?'#ffffff':'#4d4133',twoSided:true});
-    sign('엘리베이터',5.5,80.14,y+2.55,'N',2.8,.32,{bg:'#36322b',fg:'#e3ceb1'});
+    const crossing=bridgeAisles[id];
+    if(crossing){
+      const [u0,v0,u1,v1]=crossing.bounds;
+      sign('본관 ↔ 신관',(u0+u1)/2,(v0+v1)/2,y+2.70,'N',Math.min(2,u1-u0),.27,
+        {bg:'#36322f',fg:'#fffaf3',twoSided:true});
+    }else{
+      sign([`${id} ${upperCats[id]}`,'본관 ↔ 신관'],39.8,51,y+2.8,'N',5,.5,
+        {bg:'#f1e9da',fg:'#4d4133',twoSided:true});
+    }
+    if (bridgeLiftFront[id]) {
+      const [u,v]=bridgeLiftFront[id];
+      sign('엘리베이터',u+.07,v,y+2.78,'E',2.3,.30,{bg:'#36322b',fg:'#e3ceb1'});
+    } else sign('엘리베이터',5.5,80.14,y+2.55,'N',2.8,.32,{bg:'#36322b',fg:'#e3ceb1'});
     if (id === '6F') {
       // Wayfinding for the modeled transfer between the two existing banks.
       // The plaques sit on the lift recess, aisle-facing fascias and the two
@@ -16370,6 +16503,9 @@ export function upperBuildRect(id,c) {
     const width=raw[axis+2]-raw[axis],min=Math.min(width,.85),loss=(r[axis]-raw[axis])+(raw[axis+2]-r[axis+2]);
     if(width-loss<min&&loss>0){const f=(width-min)/loss;r[axis]=raw[axis]+(r[axis]-raw[axis])*f;r[axis+2]=raw[axis+2]-(raw[axis+2]-r[axis+2])*f;}
   }
+  // The 5F lift lobby opens around the west end of Yoonjin Fur, beside
+  // Lululemon. Keep its display, back and HUD within the same sales floor.
+  if(id==='5F'&&c.name==='윤진모피')r[1]=Math.max(r[1],upperPlanPoint(id,937,849)[1]+1.15);
   // The 3F guide shows a public aisle between these concessions and the
   // main well. Allow for the retained escalator guard and its corner piers.
   if(id==='3F'&&['에르노','드리스반노튼'].includes(c.name))r[0]=Math.max(r[0],upperPhysicalWell(id)[2]+2.32);
