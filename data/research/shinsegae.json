@@ -1,4 +1,14 @@
 {
+  "main_wing_lift_by_toilets_2f_5f_20261117": {
+    "guides": {
+      "2F": "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/10/16/1esU4Yqhl5TX.png",
+      "3F": "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/08/26/XgByI9HjyXqX.png",
+      "4F": "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/11/10/pLc2zpesvkoW.png",
+      "5F": "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/11/10/CR8TldsBKpZG.png"
+    },
+    "layout": "Each guide locates a customer lift beside the main-wing toilets. The doors, map markers and arrival points use the position on each floor. On 4F the doors sit behind Lindberg and clear the toilet vestibule. Door count, spacing and shaft dimensions are model approximations. The B1 and 6F–10F connections follow the existing game routes.",
+    "lower_floors": "The visitor photo at the 1F La Mer lobby shows car 4 and B3–10F. The upper guides do not identify car numbers, so the correspondence with the La Mer doors or the separate Members Bar mezzanine bridge doors remains unconfirmed."
+  },
   "tiffany_entry_from_central_city_20261117": {
     "photo": "https://tnnews.co.kr/archives/257326",
     "guide": "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/10/16/1esU4Yqhl5TX.png",
@@ -110,7 +120,7 @@
   },
   "jiban_public_aisle_3f_20261117": {
     "guide": "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/08/26/XgByI9HjyXqX.png",
-    "layout": "A public aisle separates the shared jewellery island from the annex escalators. It continues between Yejin/Boucheron and the stairwell. Gallery Jiban is inside the island with access between the counters. The staircase guard follows the well edge. The fitted aisle width is approximately 2.4 m in the model."
+    "layout": "A public aisle separates the shared jewellery island from the annex escalators. It continues between Yejin/Boucheron and the stairwell. Gallery Jiban is inside the island with access between the counters. The staircase guard follows the well edge. The fitted aisle width is approximately 2.4 m in the model. The positions of the freestanding cases are approximate. The customer arrival point for Gallery Jiban is on the selling floor in front of its case. From there the Ronde/Bice and Diami sides lead to the common aisle."
   },
   "comfort_shoes_ugg_4f_20261117": {
     "guide": "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/11/10/pLc2zpesvkoW.png",

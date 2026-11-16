@@ -1487,6 +1487,24 @@ export function build(K) {
   const lobbyMarkMat=K.material('ssg_mezz_lift_1m_mark_mat',new K.THREE.MeshBasicMaterial({map:K.T.surface(lobbyMark).tex,transparent:true,alphaTest:.3,side:K.THREE.DoubleSide}));
   faceQuad(lobbyMarkMat,'W',80.6,5.55,.48,.31,.05,40.35);
 
+  // The elevator symbol beside the main-wing toilets lies on the front of
+  // the bank on each official sheet. The stitched game plans are registered
+  // independently; shaft depth and the spacing of the two cars are approximate.
+  const mainLiftFronts = {};
+  for(const [id,x,y] of [['2F',917,488],['3F',914,585],['4F',917,571],['5F',877,610]]){
+    mainLiftFronts[id]=upperPlanPoint(id,x*1823/2000,y*1367/1500);
+  }
+  const mainLiftCentre=(id,bank)=>{
+    const front = mainLiftFronts[id];
+    if (!front) return [bank.u, bank.v];
+    // On 4F the icon straddles the end of the bank beside the toilet
+    // vestibule. Leave the whole vestibule clear of the second car.
+    return [front[0] + 1.1, front[1] - (id === '4F' ? 1.1 : 0)];
+  };
+  function mainLiftLanding(id, bank, carIndex) {
+    const [u, v] = mainLiftCentre(id, bank);
+    return P(u - 2.5, v + (carIndex - .5) * 2.7);
+  }
   // The 6F lobby is outside the retained Eleventy selling floor.
   {const bank=UPPER_BANKS.find(b=>b.key==='본관 화장실 옆');const y=LV['6F'];
    zone('고객 엘리베이터','6F','본관 화장실 옆',[bank.u-3.8,bank.v-3,bank.u+1.2,bank.v+3],y,y+3.4,4);}
@@ -1495,16 +1513,38 @@ export function build(K) {
     const du=bank.face==='E'?2.5:bank.face==='W'?-2.5:0,dv=bank.face==='N'?-1.7:bank.face==='S'?2:0;
     // Schematic split for the corrected 2–5F map and retained upper floors.
     // This does not assert that the real building has two separate shafts.
-    const parts=bank.key==='신관 화장실 옆'?[[v,26.2,LV[bank.top]],[145,7,21.4]]:[[v,7,LV[bank.top]]];
-    for(const [vv,lo,hi] of parts){const [x,z]=P(u,vv),dest=P(u+du,vv+dv),floors=ELV_FLOORS.filter(f=>f.y>=lo&&f.y<=hi).map(f=>({...f,dx:dest[0]-x,dz:dest[1]-z}));
-      const el=K.elevator({name:`신세계 고객 엘리베이터 (${bank.key} ${i+1}호기)`,x,z,rotY:FACE[bank.face],w:2.4,d:2.2,floors,mat:0xc9c2b4});
+    const isMainLift = bank.key === '본관 화장실 옆';
+    const parts = [];
+    if (isMainLift) {
+      parts.push([u, v, LV['6F'], LV[bank.top]]);
+      for (const id of Object.keys(mainLiftFronts)) {
+        const [cu, cv] = mainLiftCentre(id, bank);
+        parts.push([cu, cv + (i - .5) * 2.7, LV[id], LV[id]]);
+      }
+    } else if (bank.key === '신관 화장실 옆') {
+      parts.push([u, v, LV['6F'], LV[bank.top]], [u, 145, LV['2F'], LV['5F']]);
+    } else {
+      parts.push([u, v, LV['2F'], LV[bank.top]]);
+    }
+    for (const [carU, vv, lo, hi] of parts) {
+      const [x, z] = P(carU, vv), dest = P(carU + du, vv + dv);
+      const floors = ELV_FLOORS.filter(f => f.y >= lo && f.y <= hi)
+        .map(f => ({...f, dx:dest[0]-x, dz:dest[1]-z}));
+      const el=K.elevator({name:`신세계 고객 엘리베이터 (${bank.key} ${i+1}호기)`,x,z,rotY:FACE[bank.face],w:2.4,d:2.2,floors,mat:0xc9c2b4,topH:lo===hi?4.65:3.2});
       // Existing lower lobbies are remotely connected; they are not a
       // measured continuation of these upper-floor shafts. Preserve just the
       // return choices required by their corresponding lower-floor menus.
       const northUV=B1_PLAN(936,335),northB1=P(...northUV),ground=P([3.2,6.2][i],7.3);
       const b1=bank.key==='본관 코너'?MARKET_B1_DEST:[northB1[0]-1.8*CA,northB1[1]+1.8*SA];
       const low=ELV_FLOORS.filter(f=>f.label==='B1'||(bank.key==='본관 코너'&&f.label==='1F'));
-      el.floors=[...floors,...low.map(f=>{const dest=f.label==='1F'?ground:b1;return {...f,dx:dest[0]-x,dz:dest[1]-z};})];
+      const stops = isMainLift ? ELV_FLOORS.filter(f => f.y >= LV['2F'] && f.y <= LV[bank.top]).map(f => {
+        const [arrivalX, arrivalZ] = mainLiftLanding(f.label, bank, i);
+        return {...f, dx:arrivalX-x, dz:arrivalZ-z};
+      }) : floors;
+      // Map markers describe the floors at this physical position. The E
+      // menu retains every served floor and sends riders to its landing.
+      const menu = isMainLift ? {...el} : el;
+      menu.floors=[...stops,...low.map(f=>{const dest=f.label==='1F'?ground:b1;return {...f,dx:dest[0]-x,dz:dest[1]-z};})];
 
       if(bank.key==='신관 화장실 옆'&&lo===7&&i===1){
         // The 2026 Gangnam photograph shows dark bronze doors in this bay.
@@ -1536,7 +1576,12 @@ export function build(K) {
         const liftExitMat=K.material('ssg_2f_passage_lift_exit_mat',new K.THREE.MeshBasicMaterial({map:K.T.surface(liftExit).tex}));
         faceQuad(liftExitMat,'N',u,9.48,.27,.24,.04,vv-1.23);
       }
-      const call=K._.interactables.find(it=>it.elevator===el);if(call){call.y=lo;for(const f of floors.filter(f=>f.y>lo))K.interact({...call,y:f.y});}
+      const call = K._.interactables.find(it => it.elevator === el);
+      if (call) {
+        call.elevator = menu;
+        call.y = lo;
+        for (const f of floors.filter(f => f.y > lo)) K.interact({...call, y:f.y});
+      }
     }
   }
   NWLIFTS.forEach((e,i)=>{
@@ -2518,7 +2563,11 @@ export function build(K) {
     for(const c of cells.filter(c=>c.name.endsWith('엘리베이터')&&worldPoly(c).length>=3)){
       const r=uvRect(c),[u,v]=BPLAN(...(c.name==='마켓 엘리베이터'?[578,617]:[936,335])),[x,z]=P(u,v);
       const corner=UPPER_BANKS.find(b=>b.key==='본관 코너'),main=UPPER_BANKS.find(b=>b.key==='본관 화장실 옆'),annex=UPPER_BANKS.find(b=>b.key==='신관 화장실 옆');
-      const remote=f=>c.name==='마켓 엘리베이터'?P(corner.u+2.5,corner.v+1.35):f.label==='11F'?P(annex.u+1.35,annex.v-1.7):P(main.u-2.5,main.v+1.35);
+      const remote=f=>{
+        if(c.name==='마켓 엘리베이터')return P(corner.u+2.5,corner.v+1.35);
+        if(f.label==='11F')return P(annex.u+1.35,annex.v-1.7);
+        return mainLiftLanding(f.label, main, 1);
+      };
       const parking=P(ELV[1].u,ELV[1].v-2.2),nw=P(NWLIFTS[0].u,NWLIFTS[0].v-2.8),mezz=P(36,81);
       // B2 has its own basement shaft; the upper-floor landing is not a
       // valid parking-level arrival and can trap the player inside a wall.
@@ -6405,7 +6454,13 @@ export function build(K) {
     // player clearance, instead of excluding an extra 0.6m of retail on
     // 2F–5F. A 0.25m model-side margin remains beyond the paired cars;
     // neither the shaft location nor the margin is a surveyed measurement.
-    ...UPPER_BANKS.filter(b=>LV[id]<=LV[b.top]).map(b=>(b.key==='신관 화장실 옆'&&['2F','3F','4F','5F'].includes(id))?{...b,v:145}:b).map(b=>b.key==='본관 화장실 옆'&&['2F','3F','4F','5F'].includes(id)?[b.u-2.9,b.v-2.8,b.u+1.7,b.v+2.8]:b.face==='N'?[b.u-3,b.v-3.9,b.u+3,b.v+1.2]:b.face==='S'?[b.u-3,b.v-1.2,b.u+3,b.v+2.4]:[b.u-3.8,b.v-3,b.u+3.8,b.v+3]),
+    ...UPPER_BANKS.filter(b=>LV[id]<=LV[b.top]).map(b=>(b.key==='신관 화장실 옆'&&mainLiftFronts[id])?{...b,v:145}:b).map(b=>{
+      if(b.key==='본관 화장실 옆'&&mainLiftFronts[id]){
+        const [u,v]=mainLiftCentre(id,b);
+        return [u-2.8,v-2.8,u+1.7,v+2.8];
+      }
+      return b.face==='N'?[b.u-3,b.v-3.9,b.u+3,b.v+1.2]:b.face==='S'?[b.u-3,b.v-1.2,b.u+3,b.v+2.4]:[b.u-3.8,b.v-3,b.u+3.8,b.v+3];
+    }),
     ...activeCores(id).map(c=>[c.uL-.7,c.v0-.6,c.uR+.2,c.v1+.6]),
     ...(id==='2F'?[[57.7,79.4,60.7,84.7],[0,72.6,7.5,77.5],[38.25,39.6,40.35,53],[28.0,51.6,30.9,57]]:[]),
   ];
@@ -15544,7 +15599,12 @@ export function build(K) {
       const special=id==='8F'&&['K2','르꼬끄','닥터마틴'].includes(c.name);
       const retailKind=id==='5F'&&['에스실','넘버링'].includes(c.name)?'jewel':/바카라|크리스토플|라리끄|생루이|에르메스 메종|피숀/.test(c.name)?'kitchen':/B&O/.test(c.name)?'elec':/컨시어지/.test(c.name)?'service':/라운지/.test(c.name)?'lounge':c.name==='컴프프로'?'home':c.kind;
       if(jewelryIsland){
-        const w=Math.min(1.7,Wf-.5),d=Math.min(.68,Dp-.5),a=Wf/2,b=Dp*.52;
+        const w=Math.min(1.7,Wf-.5),d=Math.min(.68,Dp-.5),a=Wf/2;
+        // Leave standing space at the three map destinations in this shared
+        // island. The guide locates the concessions, not the individual cases.
+        let b=Dp*.52;
+        if(c.name==='갤러리 지반')b=Dp/2+1.1;
+        else if(q===largest&&(c.name==='론드/비체'||c.name==='예진'))b-=.18;
         if(w>.4&&d>.3){
           fb(a,b,w,d,y+.03,.80,0xe5e1d9);
           fb(a,b,w,d,y+.83,.22,'glass');
