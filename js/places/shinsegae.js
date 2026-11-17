@@ -6811,6 +6811,7 @@ export function build(K) {
   // real names stay on the map, with an adjacent landmark for each result.
   const shopLandmarks = {
     '2F:구찌:400':'루이비통 주얼리 옆',
+    '2F:루이비통 주얼리:463':'워치 & 주얼리 · 루이비통 여성 매장 맞은편',
     '2F:구찌:555':'프라다와 루이비통 사이 · 본관 에스컬레이터 옆',
     '3F:부쉐론:797':'다이아미 옆 · 갤러리 지반 앞',
     '3F:부쉐론:891':'브레게 옆',
@@ -7004,7 +7005,10 @@ export function build(K) {
     const tag=id==='3F'&&c.name==='태그호이어',tagAnnex=tag&&c.rect[1]===859;
     const amomento=id==='5F'&&c.name==='SHOP 아모멘토',amomentoAnnex=amomento&&c.rect[1]===1050;
     const opening5=id==='5F'&&c.name==='입점 준비 중',opening5Annex=opening5&&c.rect[1]!==1021;
-    const preferred=c.face,sourceFace=(id==='2F'&&c.name==='루이비통'&&c.rect[0]===852?'N':null)||(id==='2F'&&((c.name==='샤넬'&&c.rect[0]===1061)||(dior&&c.rect[0]===1143))?'E':null)||frontOverrides[`${id}:${c.name}`]||['N','S','E','W'].reduce((a,b)=>score(b)>score(a)?b:a,preferred),face=upperFace[sourceFace];
+    // Both arms open onto the aisle opposite Louis Vuitton Watch & Jewelry.
+    // The uninterrupted edge on the cross-wing passage is the shop's back.
+    const lvFront=id==='2F'&&c.name==='루이비통' ? c.face : null;
+    const preferred=c.face,sourceFace=lvFront||(id==='2F'&&((c.name==='샤넬'&&c.rect[0]===1061)||(dior&&c.rect[0]===1143))?'E':null)||frontOverrides[`${id}:${c.name}`]||['N','S','E','W'].reduce((a,b)=>score(b)>score(a)?b:a,preferred),face=upperFace[sourceFace];
     // N3: the two source rectangles form ONE L-shaped boutique. Its annex
     // has neither a second storefront nor a sealed room with spawned shoppers.
     let parts=[r];
@@ -7930,7 +7934,8 @@ export function build(K) {
       for (const [name,parts] of joined2FBays) {
         // The public escalators cross above the roof of the Hermès passage.
         const height = name==='에르메스' ? hermesPassageHeight : 3.4;
-        registerShopFootprint(name,id,'2F · 신세계백화점 강남점',parts,y,height);
+        const description = name==='루이비통' ? '여성 매장 · 루이비통 워치 & 주얼리 맞은편' : '2F · 신세계백화점 강남점';
+        registerShopFootprint(name,id,description,parts,y,height);
       }
     }
     // This fascia is visible from Central City's escalator before the queued
@@ -8202,6 +8207,19 @@ export function build(K) {
     const [u,v]=bridgeLiftFront[id], y=LV[id];
     const boundary=points=>points.map(([x,y])=>sourcePoint(id,x,y));
     const before=boundary(left), after=boundary(right);
+    // A narrow mouth beside Graff (2F) and Polo (4F) leads into a pocket
+    // behind the shop. Its outer wall meets the stepped boutique partition.
+    if (id === '2F' || id === '4F') {
+      const [endX,rearY] = left[0];
+      const [frontY,turnY] = id === '2F' ? [995,1027] : [1079,1111];
+      const [front,turn,end] = boundary([[881,frontY],[881,turnY],[endX,turnY]]);
+      const finish = {mat:0xe7e1d6,thick:.14};
+      wall(...front,...turn,y,y+clearH(id),finish);
+      wall(...turn,...end,y,y+clearH(id),finish);
+      before.unshift(sourcePoint(id,791,rearY));
+    } else {
+      before.unshift([0,before[0][1]]);
+    }
     if (id === '4F') {
       // The guide's black returns enclose the lift vestibule between Songzio
       // and Longchamp. Its public opening is on the cross-wing aisle.
@@ -8214,7 +8232,6 @@ export function build(K) {
         wall(...corner,...jamb,y,y+clearH(id),{mat:0xe7e1d6,thick:.14});
       }
     }
-    before.unshift([0,before[0][1]]);
     before.push([u,v-3.20]);
     after.unshift([u,v+3.20]);
     after.push([0,after[after.length-1][1]]);
@@ -14089,6 +14106,9 @@ export function build(K) {
     }
     for(const q of parts){
       const [u0,v0,u1,v1]=q,along=face==='N'||face==='S',Wf=along?u1-u0:v1-v0,Dp=along?v1-v0:u1-u0;
+      // The end of the 2F Louis Vuitton frontage continues inside its other arm.
+      const facadeStart=id==='2F'&&c.name==='루이비통'&&c.rect[0]===658 ? v1-upperPlanPoint(id,852,555)[1] : 0;
+      const facadeWidth=Wf-facadeStart, facadeCenter=facadeStart+facadeWidth/2;
       if (id==='3F' && c.name==='태그호이어' && q!==largest) {
         hq(u0+.04,v0+.04,u1-.04,v1-.04,y+.018,palette.floor);
         continue;
@@ -14558,7 +14578,7 @@ export function build(K) {
       fb(Wf/2,Dp-.29,Wf-.4,.04,y+.10,.055,palette.trim);
       if((luxury||palette.apple)&&!photoOpen){
         const pier=Math.min(.45,Wf*.11),lintel=palette.portal||palette.wall;
-        if(!(id==='3F'&&c.name==='예거 르쿨트르'))for(const a of [pier/2+.13,Wf-pier/2-.13]){
+        if(!(id==='3F'&&c.name==='예거 르쿨트르'))for(const a of [facadeStart+pier/2+.13,Wf-pier/2-.13]){
           // Rick Owens has two touching retained guide pieces. Do not put
           // a false facade pier where they share the same front opening.
           const joinedRick=id==='3F'&&c.name==='릭오웬스'&&face==='N'&&parts.some(o=>o!==q&&
@@ -14571,8 +14591,8 @@ export function build(K) {
             K.cyl({x:cx,z:cz,y:y+.02,r:.30,h:H-.04,mat:{tex:'marble',color:0xd6cbbb,gloss:.3},seg:24,solid:false});
           }else if(!joinedRick)fb(a,.29,pier,.34,y,H,lintel);
         }
-        fb(Wf/2,id==='2F'&&c.name==='티파니앤코'?.45:.29,Wf-.26,id==='2F'&&c.name==='티파니앤코'?.16:.34,y+3.03,.62,id==='2F'&&c.name==='불가리'?'ssg_bulgari_black_marble':id==='2F'&&c.name==='펜디'?0x6d5738:/펜디/.test(c.name)?0xcdc4be:/몽클레르/.test(c.name)?0x0e0f10:lintel);
-        fb(Wf/2,.10,Wf-.32,.04,y+3.02,.04,palette.trim);
+        fb(facadeCenter,id==='2F'&&c.name==='티파니앤코'?.45:.29,facadeWidth-.26,id==='2F'&&c.name==='티파니앤코'?.16:.34,y+3.03,.62,id==='2F'&&c.name==='불가리'?'ssg_bulgari_black_marble':id==='2F'&&c.name==='펜디'?0x6d5738:/펜디/.test(c.name)?0xcdc4be:/몽클레르/.test(c.name)?0x0e0f10:lintel);
+        fb(facadeCenter,.10,facadeWidth-.32,.04,y+3.02,.04,palette.trim);
         // Flanking lit window niches, with a generous central doorway.
         if(!palette.apple&&!/몽클레르|루이비통|펜디/.test(c.name)&&!(id==='2F'&&['샤넬','생 로랑','고야드','구찌','프라다','미우미우','버버리 여성','모이나','로로피아나','델보','보테가 베네타','반클리프 아펠','불가리'].includes(c.name))&&!(id==='3F'&&['피아제','아디르','브레게','쇼파드','예거 르쿨트르','꾸레쥬','랑에운트 죄네','로저드뷔','태그호이어','튜더','바쉐론 콘스탄틴','다미아니','오데마피게','부쉐론','끌로에','블랑팡','위블로'].includes(c.name))&&Wf>4.5&&Dp>2.3)for(const a of [Wf*.18,Wf*.82]){
           const ww=Math.min(1.55,Wf*.20);
@@ -14977,16 +14997,16 @@ export function build(K) {
           fb((door0+door1)/2,.20,door1-door0,.08,y+2.94,.08,frame);
         }
         if(c.name==='루이비통'&&id==='2F'&&Wf>3){
-          fb(.85,.25,1.2,.05,y+.08,2.8,{tex:'emit',color:0xfff4e0});
-          for(let h=.2;h<2.8;h+=.18)for(let a=.34;a<1.45;a+=.18)fb(a+((Math.round(h/.18)%2)*.09),.20,.07,.035,y+h,.07,0xcfc6b6);
+          fb(facadeStart+.85,.25,1.2,.05,y+.08,2.8,{tex:'emit',color:0xfff4e0});
+          for(let h=.2;h<2.8;h+=.18)for(let a=.34;a<1.45;a+=.18)fb(facadeStart+a+((Math.round(h/.18)%2)*.09),.20,.07,.035,y+h,.07,0xcfc6b6);
         }
         if(id==='2F'&&c.name==='루이비통'&&Wf>3){
           // Gangnam fashion boutique, as photographed in 2021: dark bronze
           // name band and luminous vertical fins alongside the shopfront.
           // https://www.ajunews.com/view/20210731154244111
-          fb(Wf/2,.16,Wf-.26,.10,y+3.03,.56,0x62452e);
+          fb(facadeCenter,.16,facadeWidth-.26,.10,y+3.03,.56,0x62452e);
           for(const side of [-1,1])for(let j=0;j<9;j++){
-            const a=(side<0?.3:Wf-1.1)+j*.1;
+            const a=(side<0?facadeStart+.3:Wf-1.1)+j*.1;
             fb(a,.15,.035,.035,y+.14,2.75,j%2?0xd9d8cf:0xaca89e);
           }
         }
@@ -16162,8 +16182,8 @@ export function build(K) {
         // Use the exposed frontage only. Le Mouton shares the remainder
         // of the west edge, and Longchamp the remainder of the north edge.
         const publicWidth=contemporaryHall?upperPlanPoint(id,1534,519)[0]-u0:
-          domesticHall?v1-upperPlanPoint(id,1205,950)[1]:Wf;
-        const frontAt=contemporaryHall?Wf-publicWidth/2:publicWidth/2;
+          domesticHall?v1-upperPlanPoint(id,1205,950)[1]:facadeWidth;
+        const frontAt=contemporaryHall?Wf-publicWidth/2:facadeStart+publicWidth/2;
         const sharedEntry=contemporaryHall||domesticHall;
         const fasciaName=shoeGroup?c.name.replace(/\s*\([^)]*\)\s*$/, ''):c.name;
         // The official guide lists the tenants only at the shared-hall
@@ -16760,7 +16780,7 @@ export const upperGuidePlans = {};
   // The guide's Louis Vuitton return begins at x852, not x821: the
   // intervening white strip belongs outside the grey selling area.
   // https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/10/16/1esU4Yqhl5TX.png
-  c('프라다',179,555,342,691,'W');c('구찌',372,555,627,618);c('루이비통',658,555,964,683,'S');c('루이비통',852,493,964,555,'W');
+  c('프라다',179,555,342,691,'W');c('구찌',372,555,627,618);c('루이비통',658,555,964,683,'N');c('루이비통',852,493,964,555,'W');
   c('버버리 여성',179,734,342,875,'W');c('셀린느',372,811,627,876,'N');
   r([658,740,820],734,876,'발렌시아가|생 로랑','N');c('보테가 베네타',853,744,968,877,'W');c('헬렌카민스키',917,710,986,744,'N','fashion');
   c('로로피아나',179,907,469,1000,'N');c('그라프',532,907,787,968,'N','jewel');
