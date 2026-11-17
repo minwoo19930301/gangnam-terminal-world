@@ -1,7 +1,31 @@
 {
+  "jewellery_passage_at_central_city_20261117": {
+    "guide": "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/08/06/DWUvdakUS5Xd.png",
+    "shop_photograph": "https://www.dreamsmagazine.co.kr/post/qeelin-opened-a-new-boutique-at-shinsegae-gangnam",
+    "layout": "Along the 1F jewellery arcade, the Central City passage is between Messika and Qeelin. Qeelin shares the angled partition with Spinelli Kilcollin. The model tapers the back of the Qeelin bay to preserve the existing terminal opening and both approaches. The taper, case position, panel dimensions and finish are reconstructed. Projecting shop names on the curved jewellery and eyewear frontages sit on the exposed face of their fascia."
+  },
+  "separate_shop_counters_on_the_floor_map_20261117": {
+    "guides": [
+      "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/08/06/DWUvdakUS5Xd.png",
+      "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/10/16/1esU4Yqhl5TX.png",
+      "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/08/26/XgByI9HjyXqX.png"
+    ],
+    "layout": "The 1F guide labels three Chanel cosmetics areas and two Dior cosmetics areas. On 2F it shows two separate Gucci areas across an aisle. On 3F it shows one Boucheron concession next to Diamy on the Gallery Jiban island and a second beside Breguet. The game identifies each destination by its neighbouring shop or public landmark. These are descriptions for finding the counters."
+  },
+  "third_floor_tag_heuer_lift_side_wall_20261117": {
+    "guide": "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/08/26/XgByI9HjyXqX.png",
+    "layout": "The L-shaped Tag Heuer shop reaches the perimeter behind Breitling. Its shop wall separates the sales floor from the public lift lobby. The recessed area formerly attributed to the lift foyer is part of the boutique. Both lift doors and the restroom are reached from the public side."
+  },
+  "shopping_partitions_and_public_routes_4f_5f_20261117": {
+    "guides": [
+      "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/11/10/pLc2zpesvkoW.png",
+      "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/11/10/CR8TldsBKpZG.png"
+    ],
+    "layout": "On 4F Hunter meets the casual shoe hall on a stepped boundary. Geumkang has separated sides towards the domestic and comfort shoe sections. The Casestudy rear follows the stepped restroom lobby, while the Vanessa Bruno and Sandro row backs onto the connecting lift area. On 5F, Zadig & Voltaire, Vuori and Aspesi meet along the guide boundaries, as do Shop Amomento and Budimoodra. The Dongwoo and Jindo fur shops back onto the corner lift. Hazzys has a separate rear edge. Positions follow the dark guide lines. The heights of partitions and display backs are model estimates."
+  },
   "main_atrium_repeated_crossing_20261117": {
     "guide": "https://www.shinsegae.com/store/floor.do?storeCd=SC00002",
-    "evidence": "The user's 7F photograph shows a low-going flight beside a high-going flight, the underside of the flight above, and a suspended floor number. The user identified the reverse slope across the atrium and a repeating arrangement up to about 10F. The upper-floor walk frame refs/walk/s6_ssg_upper/c2KRa-GjPZw_110.jpg also shows the opposing slopes. The official floor guides mark facilities on both sides of the main opening. The photographed slope alone does not identify the travel direction of a motor.",
+    "evidence": "The user's 7F photograph shows a low-going flight beside a high-going flight, the underside of the flight above, and a suspended floor number. The user confirmed that the opposing flights on both sides form an X, repeated up to about 10F, and did not recall the motor directions. The upper-floor walk frame refs/walk/s6_ssg_upper/c2KRa-GjPZw_110.jpg also shows the opposing slopes. The official floor guides mark facilities on both sides of the main opening. The photographed slope alone does not identify the travel direction of a motor.",
     "layout": "The game runs two upward and two downward flights per floor interval from 1F through 10F. At the intermediate floors the west boarding end faces south and the east boarding end faces north. A visitor at either end can choose the flight down on the left or up on the right. On leaving an upward flight the next upward flight is to the left across the level landing. The ground-floor banks flank the popup and also serve B1. The four axes, spacing, slope, motor directions and selection of 10F as the top of the main bank are reconstructed. They supersede the earlier single-up/single-down main bank and earlier floor-specific transfers in the historical notes."
   },
   "descending_escalator_landings_20261117": {
