@@ -1,4 +1,9 @@
 {
+  "main_atrium_repeated_crossing_20261117": {
+    "guide": "https://www.shinsegae.com/store/floor.do?storeCd=SC00002",
+    "evidence": "The user's 7F photograph shows a low-going flight beside a high-going flight, the underside of the flight above, and a suspended floor number. The user identified the reverse slope across the atrium and a repeating arrangement up to about 10F. The upper-floor walk frame refs/walk/s6_ssg_upper/c2KRa-GjPZw_110.jpg also shows the opposing slopes. The official floor guides mark facilities on both sides of the main opening. The photographed slope alone does not identify the travel direction of a motor.",
+    "layout": "The game runs two upward and two downward flights per floor interval from 1F through 10F. At the intermediate floors the west boarding end faces south and the east boarding end faces north. A visitor at either end can choose the flight down on the left or up on the right. On leaving an upward flight the next upward flight is to the left across the level landing. The ground-floor banks flank the popup and also serve B1. The four axes, spacing, slope, motor directions and selection of 10F as the top of the main bank are reconstructed. They supersede the earlier single-up/single-down main bank and earlier floor-specific transfers in the historical notes."
+  },
   "descending_escalator_landings_20261117": {
     "layout": "The down flights from the 2F shopping level and from 1F to B1, and the main and annex down flights above 2F, have a stationary top plate ending at the first sloping tread. This keeps the stationary landing and moving stair continuous for a player who releases the controls after boarding. The existing Members Bar mezzanine flight has its own level landing. The model plate lengths follow the rendered tread spacing. The small corners of the 9F and 10F annex landing extensions are reconstructed to meet the angled top step."
   },
