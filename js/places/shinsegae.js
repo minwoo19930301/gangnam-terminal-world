@@ -6897,6 +6897,14 @@ export function build(K) {
     // Outer faces of selling areas along their service cores and the back
     // of the main-to-annex passage, traced on the 2000 × 1500 floor guides.
     const backWalls = {
+      '3F': [
+        [[913,700],[913,637],[980,637]], // Horizon's short wing by the restroom
+        [[915,841],[1034,841]], // Horizon backs onto the gallery passage
+        [[1238,605],[1238,548]], [[1257,548],[1257,605]], // returns beside A. Lange & Söhne
+        [[193,1149],[327,1149]], // Jacquemus beside the corner lift lobby
+        [[775,1147],[775,1114],[845,1114],[845,1082]], // Phoebe Philo's stepped rear
+        [[915,1113],[963,1113]], // Boontheshop across the mouth of the pocket
+      ],
       '4F': [
         [[888,623],[934,623],[934,692],[1058,692]], // Casestudy at the restroom lobby
         [[898,1031],[1060,1031]], // Vanessa Bruno, Sandro and Songzio Paris
@@ -8217,6 +8225,9 @@ export function build(K) {
       wall(...front,...turn,y,y+clearH(id),finish);
       wall(...turn,...end,y,y+clearH(id),finish);
       before.unshift(sourcePoint(id,791,rearY));
+    } else if (id === '3F') {
+      // The recess behind Phoebe Philo turns at Khaite's rear corner.
+      before.unshift(...boundary([[650,1182],[650,1147]]));
     } else {
       before.unshift([0,before[0][1]]);
     }
