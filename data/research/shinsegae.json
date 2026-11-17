@@ -1,4 +1,23 @@
 {
+  "descending_escalator_landings_20261117": {
+    "layout": "The down flights from the 2F shopping level and from 1F to B1, and the main and annex down flights above 2F, have a stationary top plate ending at the first sloping tread. This keeps the stationary landing and moving stair continuous for a player who releases the controls after boarding. The existing Members Bar mezzanine flight has its own level landing. The model plate lengths follow the rendered tread spacing. The small corners of the 9F and 10F annex landing extensions are reconstructed to meet the angled top step."
+  },
+  "shopping_aisle_aed_landmarks_20261117": {
+    "guides": ["https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/08/06/DWUvdakUS5Xd.png", "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/08/26/XgByI9HjyXqX.png", "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/11/10/CR8TldsBKpZG.png"],
+    "layout": "The AED symbols mark the public side of Jo Malone by Gate 3 on 1F, the Omega corner across from the jewellery island on 3F, and the Lululemon and Yoonjin Fur corner beside the connecting lift on 5F. Model markers on these walls and their map destinations in the aisles follow the guides. The height and size of each sign are estimates."
+  },
+  "annex_shoe_shops_by_lifts_4f_20261117": {
+    "guide": "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/11/10/pLc2zpesvkoW.png",
+    "layout": "Tod’s and UGG have straight backs along the service passage leading to the annex lifts and restroom. The corner of each selling floor reaches this line. The entrance to Tod’s faces the shoe aisle. Hogan reaches the level landing beside the escalator opening. Its rear wall follows the same edge as its selling floor on the guide. The space reserved around the model lifts and escalator is approximate."
+  },
+  "annex_escalator_headroom_2f_to_3f_20261117": {
+    "guides": ["https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/10/16/1esU4Yqhl5TX.png", "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/08/26/XgByI9HjyXqX.png"],
+    "layout": "The up flight beside the 2F Hermès sales floor approaches 3F from below the annex landing. The floor opening follows the width of that flight and its handrails. The 3F guard returns around the opening, clear of the watch shops and the usable landing. The opening's exact dimensions are reconstructed."
+  },
+  "main_atrium_diagonal_shop_aisles_4f_20261117": {
+    "guide": "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/11/10/pLc2zpesvkoW.png",
+    "layout": "The main wing has two sloping passages between the atrium and the outer fashion aisle. One passes between BEAKER and ENFÖLD. The other passes between Sea New York and Maison Kitsuné. Each shop's floor finish and map outline follow the continuous diagonal on the guide. Display positions are schematic."
+  },
   "ground_floor_visitor_map_arrivals_20261117": {
     "guide": "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/08/06/DWUvdakUS5Xd.png",
     "layout": "The ground floor map destination is in the public entrance aisle facing the popup hall. The eyewear hall destination is on the shared customer approach. The east and west escalator map destinations are on the level aprons for their adjoining flights. The individual shops and the popup retain their own entries. The precise map arrival points are in-game walking positions.",

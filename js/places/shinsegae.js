@@ -949,6 +949,9 @@ export function build(K) {
   // inside its official tenant cells. Lower-floor finishes are untouched.
   for (const id of ['4F', '5F', '6F', '7F', '8F', '9F', '10F', '11F']) floorMat[id] = {tex:'marble',color:0xf2ede3,gloss:.5};
   floorMat['8F']={tex:'ssg_upper_tile',gloss:.3};
+  // The 2F annex up flight passes under the 3F apron at u=30. Its
+  // 1.2m treads and rails need headroom before they reach the main opening.
+  const annexUpHeadroom = [29.1,124.68,30.9,127.85];
   MAIN.forEach((id, s) => {
     const holes = id==='1F' ? [...nwLiftHoles] : id==='B1' ? [] : id==='B2' ? ELV.map(e=>rect(e.u-e.w/2,e.v-e.d/2,e.u+e.w/2,e.v+e.d/2)) : bridgeLiftFront[id] ? [] : [...elvHoles];
     // Ground NW lift bank has its own 1F/1M controls; upper banks follow their plan icons.
@@ -971,6 +974,7 @@ export function build(K) {
       K.slab(rect(29,145.1,35,146.3),LV[id],{mat:floorMat[id]??'ssg_marble',thick:.12,under:false,ceil:false,edge:false});
       const apronEnd=Math.min(145.3,Math.max(84.71,upperPlanPoint(id,1775,700)[1]+2.5)),a=upperPhysicalWell(id,true),q=[Math.max(0,a[0]),Math.max(84.7,a[1]),Math.min(UW,a[2]),Math.min(apronEnd,a[3])];
       const h=id==='3F'?[rect(...q),rect(36,125.3,39.8,127.5),rect(1.65,112.5,5.15,119.2)]:id==='2F'?[rect(32,129.1,36.5,134.2)]:id==='5F'?[[P(29.45,121.5),P(31.25,121.5),P(30.35,126.2),P(28.55,126.2)],[P(33.95,121.5),P(35.75,121.5),P(36.20,126.2),P(34.40,126.2)]]:(q[2]>q[0]&&q[3]>q[1]?[rect(...q)]:[]);
+      if(id==='3F')h.push(rect(...annexUpHeadroom));
       K.slab(rect(0,84.7,UW,apronEnd),LV[id],{mat:floorMat[id]??'ssg_marble',thick:thick(id),holes:id==='3F'?mergedHoles(h):h,under:CEIL,edge:false});
     }
   });
@@ -1200,12 +1204,25 @@ export function build(K) {
     }
   }
   K.texture('ssg_annex_escalator_clear',2,2,(g,w,h)=>g.clearRect(0,0,w,h),[1,1],{transparent:true});
+  // A high landing overlaps the visible top tread. The kit also extends the
+  // moving surface 5 cm past the flight. Give that whole level entry plate
+  // one stationary surface, so the first moving tread carries the rider on.
+  function descendingCombPlate(low, high, lowY, highY, width) {
+    const dx = low[0] - high[0], dz = low[1] - high[1];
+    const run = Math.hypot(dx,dz), ux = dx/run, uz = dz/run;
+    const tread = run / Math.round((highY-lowY)/.17);
+    const corner = (along,across) => [high[0]+ux*along-uz*across,high[1]+uz*along+ux*across];
+    const half = width/2;
+    const plate = [corner(-.055,-half),corner(tread,-half),corner(tread,half),corner(-.055,half)];
+    K.slab(plate,highY+.002,{mat:'metal',thick:.002,under:false,edge:false,ceil:false});
+  }
   upperStack.slice(0,-2).forEach((id,i)=>{
     const next=upperStack[i+1],r=upperAtriumRect(id),t=upperAtriumRect(next),rev=i>=5?1-i%2:i%2;
     for(const [lane,off] of upperLaneOffsets(i).entries()){
       const dir=lane===0?'up':'down';
       const a=P((r[0]+r[2])/2+off,mainFlightStartV(id,r,rev,lane)),b=P((i===0?(r[0]+r[2]):(t[0]+t[2]))/2+off+(i===1&&dir==='down'?.65:0),mainFlightEndV(id,t,rev,lane));
       K.escalator(...a,...b,{ya:LV[id],yb:LV[next],w:1.2,dir,speed:.6,sideMat:'ssg_annex_escalator_clear',truss:0xf3eee4});
+      if (dir==='down') descendingCombPlate(a,b,LV[id],LV[next],1.2);
       annexSlimHousing(...a,...b,LV[id],LV[next],1.2);
       if(id==='5F'){
         // This unsurveyed flight passes above the 5F floor. The engine has no
@@ -1303,6 +1320,28 @@ export function build(K) {
   // The white passage beside Bulgari meets the hotel at the end of the apron.
   const [jwAisleWest] = upperPlanPoint('2F', 1658, 463);
   const [jwAisleEast] = upperPlanPoint('2F', 1622, 439);
+  // The 1F, 3F and 5F guide symbols mark the public side of these corners.
+  // Mount each sign on the existing wall and keep the map arrival in the aisle.
+  const aedTexture=K.texture('ssg_aed_wayfinding',128,128,(g,w,h)=>{
+    g.fillStyle='#242424';g.fillRect(0,0,w,h);g.fillStyle='#fff';
+    g.textAlign='center';g.textBaseline='middle';g.font='bold 31px Arial, sans-serif';g.fillText('AED',64,29);
+    g.beginPath();g.moveTo(64,113);g.bezierCurveTo(50,101,22,83,22,66);
+    g.bezierCurveTo(22,44,48,39,64,55);g.bezierCurveTo(80,39,106,44,106,66);
+    g.bezierCurveTo(106,83,78,101,64,113);g.fill();
+    g.fillStyle='#242424';g.beginPath();g.moveTo(65,61);g.lineTo(54,82);g.lineTo(65,82);
+    g.lineTo(60,99);g.lineTo(77,75);g.lineTo(67,75);g.lineTo(74,61);g.closePath();g.fill();
+  },[1,1]);
+  const aedSign=K.material('ssg_aed_wayfinding_sign',new K.THREE.MeshBasicMaterial({map:K.T.surface(aedTexture).tex}));
+  const aedSites=[
+    {floor:'1F',approach:PLAN(1032,794),wallU:29,wallV:84.03,by:'3게이트 · 조말론 런던 옆'},
+    {floor:'3F',approach:upperPlanPoint('3F',1129,810),wallU:30.872,wallV:95.30,by:'오메가 옆 · 다이아미 건너편'},
+    {floor:'5F',approach:upperPlanPoint('5F',934,845),wallU:29.367,wallV:80.51,by:'룰루레몬 · 윤진모피 사이 연결부 엘리베이터'},
+  ];
+  for(const {floor,approach:[u,v],wallU,wallV,by} of aedSites){
+    const y=LV[floor];
+    faceQuad(aedSign,'E',wallV,y+1.58,.46,.46,.11,wallU);
+    zone('자동제세동기 (AED)',floor,'자동심장충격기 · '+by,[u-.4,v-.4,u+.4,v+.4],y,y+2.8,8);
+  }
   // The listings identify the floor but not the individual bays. Map searches
   // lead to representative notices on the passage walls before and after the two wings meet.
   const seasonalNotices = [
@@ -1455,6 +1494,7 @@ export function build(K) {
   function dressedEscalator(u0,v0,u1,v1,ya,yb,dir,thin=false) {
     const a=P(u0,v0),b=P(u1,v1),w=1.2;
     K.escalator(...a,...b,{ya,yb,w,dir,sideMat:thin?'ssg_ground_esc_transparent':'ssg_esc_clad',truss:'ssg_esc_clad'});
+    if (dir==='down' && yb!==LV['1M']) descendingCombPlate(a,b,ya,yb,w);
     if(thin){
       // Approximate the photographed sloping housing while retaining the
       // original treads and underside; the actual clearance is not surveyed.
@@ -6848,7 +6888,12 @@ export function build(K) {
     ...(id==='7F'?[[40.8,70.7,41.9,75.8]]:[]),
     ...(id==='11F'?[]:(()=>{const[a,b,c,d]=upperPierRect(id);return[[a-1.12,b-1.12,a+.02,b+.02],[c-.02,b-1.12,c+1.12,b+.02],[a-1.12,d-.02,a+.02,d+1.12],[c-.02,d-.02,c+1.12,d+1.12]];})()),
     ...(id==='11F'?[]:[upperPhysicalWell(id).map((n,i)=>n+(i<2?-.3:.3))]),
-    ...(id==='5F'?[[30.39,116.81,43.03,124.65],[30.50,124.75,35.70,128.75],[30.75,123.7,33.25,129.1],[29.2,118.6,37.35,126.7]]:[upperPhysicalWell(id,true).map((n,i)=>n+(i<2?-.3:.3))]), ...(bridgeLiftFront[id]?[]:[bridgeLobby(id)]),
+    ...(id==='5F'?[[30.39,116.81,43.03,124.65],[30.50,124.75,35.70,128.75],[30.75,123.7,33.25,129.1],[29.2,118.6,37.35,126.7]]:[]),
+    // The 4F level landing beside the well supports Hogan to its guide edge.
+    // UGG Men & Kids still meets the open well and the outgoing flight.
+    ...(id!=='5F' && !(id==='4F' && shopName==='호간') ?
+      [upperPhysicalWell(id,true).map((n,i)=>n+(i<2?-.3:.3))] : []),
+    ...(bridgeLiftFront[id]?[]:[bridgeLobby(id)]),
     // The former 2F–5F bridge is no longer built after the annex flights
     // moved. Keeping its reservation cuts mapped shops despite clear floor.
     ...(!['2F','3F','4F','5F'].includes(id)&&upperPhysicalWell(id,true)[3]>=81.1?[[29,79.85,upperPhysicalWell(id,true)[2]+.85,81.3]]:[]),
@@ -6866,9 +6911,10 @@ export function build(K) {
         const [u,v]=mainLiftCentre(id,b);
         return [u-2.8,v-2.8,u+1.7,v+2.8];
       }
-      if(b.key==='신관 화장실 옆'&&(id==='5F'||(id==='2F'&&shopName==='티파니앤코'))){
-        // Tiffany on 2F and the handbag shops on 5F have straight backs.
-        // The lift approaches fit between those walls and the two car doors.
+      if (b.key==='신관 화장실 옆' && (id==='5F' || (id==='2F' && shopName==='티파니앤코') ||
+          (id==='4F' && (shopName==='토즈' || shopName==='어그')))) {
+        // Tiffany, the 4F Tod's / UGG shops and the 5F handbag shops have
+        // straight backs. Their service aisle fits between those walls and the cars.
         return [b.u-3,b.v-1.2,b.u+3,b.v+1.2];
       }
       return b.face==='N'?[b.u-3,b.v-3.9,b.u+3,b.v+1.2]:b.face==='S'?[b.u-3,b.v-1.2,b.u+3,b.v+2.4]:[b.u-3.8,b.v-3,b.u+3.8,b.v+3];
@@ -6992,6 +7038,13 @@ export function build(K) {
     '프라다':'SW', '페라가모':'SE', '토즈':'NSE',
     '로저 비비에':'S', '타비오':'S', '어그 맨&키즈':'N', '호간':'N', '어그':'NSE'
   };
+  // Read the x coordinates of each sloping edge from the top and bottom
+  // of its grey cell on the 4F guide. The paired edges enclose a public aisle.
+  const aisleEdges4F = {
+    '비이커': ['S', 369, 338], '엔폴드': ['N', 400, 370],
+    '씨뉴욕': ['S', 597, 628], '메종 키츠네': ['N', 628, 660],
+    '포르테 포르테': ['S', 338, 370], '꼼데가르송 플레이': ['N', 370, 402],
+  };
   const northBoutiques3F = ['막스마라','브루넬로 쿠치넬리','로에베','끌로에','아크네스튜디오'];
   // An open shop face stays on its official white aisle. Stock is bounded to its cell.
   function buildUpperCell(id,c) {
@@ -7049,27 +7102,22 @@ export function build(K) {
     // N3: the two source rectangles form ONE L-shaped boutique. Its annex
     // has neither a second storefront nor a sealed room with spawned shoppers.
     let parts=[r];
-    // On the 4F guide the passage from the atrium to the pleated-clothing
-    // aisle slopes between forte_forte and Comme des Garçons. Keep each
-    // rectangular fit-out within the straight portion of its shop.
     let aisleOutline;
-    // The main aisle runs diagonally between Sea New York and Maison Kitsuné.
-    // The rectangle holds the displays; its open corner belongs to the same shop.
-    if (id === '4F' && c.name === '메종 키츠네') {
+    const slope = id === '4F' && aisleEdges4F[c.name];
+    if (slope) {
+      const [side, topX, bottomX] = slope;
+      const [,topV] = upperPlanPoint(id,topX,py);
+      const [,bottomV] = upperPlanPoint(id,bottomX,pY);
       const [u0,v0,u1,v1] = r;
-      const [,cornerV] = upperPlanPoint(id,628,634);
-      aisleOutline = [P(u0,v0), P(u1,cornerV), P(u1,v1), P(u0,v1)];
-    }
-    if (id === '4F' && c.name === '포르테 포르테') {
-      const [u0, v0, u1, v1] = r;
-      const [, endV] = upperPlanPoint(id, 370, 954);
-      aisleOutline = [P(u0,v0), P(u1,v0), P(u1,v1), P(u0,endV)];
-    }
-    if (id === '4F' && c.name === '꼼데가르송 플레이') {
-      const [u0, v0, u1, v1] = r;
-      const [, endV] = upperPlanPoint(id, 402, 954);
-      aisleOutline = [P(u0,endV), P(u1,v0), P(u1,v1), P(u0,v1)];
-      r[1] = endV;
+      // The floor and searchable footprint share the entire trapezoid.
+      // Only the rectangular portion carries stock, fittings and people.
+      if (side === 'N') {
+        aisleOutline = [P(u0,bottomV),P(u1,topV),P(u1,v1),P(u0,v1)];
+        r[1] = Math.max(topV,bottomV);
+      } else {
+        aisleOutline = [P(u0,v0),P(u1,v0),P(u1,topV),P(u0,bottomV)];
+        r[3] = Math.min(topV,bottomV);
+      }
     }
     const casualShoe=id==='4F'&&c.name.startsWith('캐주얼 슈즈');
     if(casualShoe){
@@ -7099,41 +7147,6 @@ export function build(K) {
       arm[1] = r[3];
       parts = [r.slice(), arm];
       r[3] = arm[3];
-    }
-    if(id==='4F'&&c.name==='비이커'){
-      // The 2026 Gangnam guide draws the east edge of BEAKER diagonally,
-      // widening from x338 at the lower corner to x370 at the upper corner.
-      // Its former rectangular cell omitted that entire wedge. Approximate
-      // the diagram with adjoining bands and retain a single shop frontage;
-      // the guide is schematic and does not measure the real store walls.
-      // https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/11/10/pLc2zpesvkoW.png
-      const baseEnd=r[3],bands=[[634,650,365],[650,666,357],[666,682,349],[682,697,341]];
-      parts=[r.slice()]; // r below is the enclosing extent, not a new full rectangle
-      for(const [y0,y1,x1] of bands){
-        const wing=upperRect(id,[338,y0,x1,y1]);
-        wing[0]=Math.max(wing[0],r[0]);wing[2]=Math.min(wing[2],r[2]);wing[1]=baseEnd;
-        if(wing[2]>wing[0]&&wing[3]>wing[1])parts.push(wing);
-      }
-      r[3]=Math.max(...parts.map(p=>p[3]));
-    }
-    if(id==='4F'&&['엔폴드','씨뉴욕'].includes(c.name)){
-      // The Gangnam guide draws these adjacent cells with opposite sloping
-      // outer edges. The previous full rectangles covered white space at the
-      // narrow ends. Approximate the diagram with bands while preserving one
-      // continuous shop, its existing frontage and its photographed fittings.
-      // https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/11/10/pLc2zpesvkoW.png
-      const en=c.name==='엔폴드',main=upperRect(id,en?[400,634,498,695]:[498,634,597,695]);
-      const body=[r[0],Math.max(r[1],main[1]),r[2],Math.min(r[3],main[3])];
-      const bands=en?[[634,649,396],[649,664,388],[664,679,380],[679,695,372]]:
-        [[634,649,601],[649,664,609],[664,679,617],[679,695,625]];
-      parts=[body];
-      for(const [y0,y1,x] of bands){
-        const w=upperRect(id,en?[x,y0,400,y1]:[597,y0,x,y1]);
-        w[0]=Math.max(w[0],r[0]);w[2]=Math.min(w[2],r[2]);
-        w[1]=Math.max(w[1],r[1]);w[3]=Math.min(w[3],r[3]);
-        if(en)w[3]=body[1];else w[1]=body[3];
-        if(w[2]-w[0]>.18&&w[3]-w[1]>.18)parts.push(w);
-      }
     }
     // The 4F guide shows parallel diagonal edges around the passage between
     // JUUN.J and the opening-soon area. Approximate its two trapezoids with
@@ -7658,6 +7671,7 @@ export function build(K) {
       // Islands have open perimeter displays, so all white passages remain permeable.
       // Rear dividers are confined to the actual grey cells and never span a corridor.
       for(const [f,u0,v0,u1,v1]of edges)if(f!==face&&((f==='N'&&Math.abs(b-r[1])<.01)||(f==='S'&&Math.abs(e-r[3])<.01)||(f==='W'&&Math.abs(a-r[0])<.01)||(f==='E'&&Math.abs(d-r[2])<.01))){
+        if (slope && f === slope[0]) continue; // The straight fixture edge is inside the selling floor.
         const glazed=(id==='2F'||id==='11F')&&c.model.aisleEdges.includes(f)&&!/입점 준비/.test(c.name),L=Math.hypot(u1-u0,v1-v0);
         const wallOptions={mat:glazed?'glass':0xe7e1d6,thick:glazed?.035:.08,solid:id==='2F'||id==='11F'};
         const adjacentAisleGap=id==='2F'&&((c.name==='생 로랑'&&f==='S')||(c.name==='발렌시아가'&&f==='N'))&&u1-u0>5;
@@ -7779,6 +7793,7 @@ export function build(K) {
 
       const slender=id==='2F'||id==='3F'||id==='4F'||id==='5F';
       if(id==='2F')annexHermesEsc(...a,...b,LV[id],LV[next],1.2,dir);else K.escalator(...a,...b,{ya:LV[id],yb:LV[next],w:1.2,dir,speed:.6,sideMat:slender?'ssg_annex_escalator_clear':0xeee7da,truss:0xf3eee4});
+      if (dir==='down') descendingCombPlate(a,b,LV[id],LV[next],1.2);
       if(slender)annexSlimHousing(...a,...b,LV[id],LV[next],1.2);
       if(id==='4F'){
         // Render tread front edges so descending flights remain legible from
@@ -7859,11 +7874,15 @@ export function build(K) {
   // Schematic 9F shared landing, split to avoid covering the moving down lane.
   // The guide does not give surveyed pad dimensions.
   {const y=LV['9F'];for(const r of [[35.0,68.0,38.3,69.5],[36.4,69.5,38.3,71.3],[35.0,71.3,38.3,75.6]])K.slab(rect(...r),y,{mat:floorMat['9F'],thick:.12,under:CEIL,edge:false});}
+  // Fill the triangular corner between the rectangular landing and the
+  // angled top step. Its tip ends at the outside of the tread, before the slope.
+  K.slab([[36.4,69.33],[36.4,70.16],[36.19,69.75]].map(p=>P(...p)),LV['9F'],
+    {mat:floorMat['9F'],thick:.12,under:CEIL,edge:false});
   // Protect open edges while leaving flight paths clear.
   {const y=LV['9F'];for(const [v0,v1] of [[68.0,69.5],[71.3,72.5]]){const safe=upperSafeWall(35,v0,35,v1,y,1.0,{mat:'ssg_annex_escalator_clear',thick:.04});upperGuardTrim(35,v0,35,v1,y+.96,.06,.06,0x383a39,safe);}}
   // Small supported approach to the 10F down-flight head; keep the moving
   // ramp clear and the neighbouring 10F store cells unchanged.
-  {const y=LV['10F'];K.slab(rect(24.15,80.4,24.75,81.95),y,{mat:floorMat['10F'],thick:.12,under:CEIL,edge:false});}
+  {const y=LV['10F'];K.slab([[24.15,80.4],[24.62,80.25],[25.17,81.33],[24.75,81.95],[24.15,81.95]].map(p=>P(...p)),y,{mat:floorMat['10F'],thick:.12,under:CEIL,edge:false});}
   // Connect the shorter 6F–7F pair to the 7F public landing.
   {const y=LV['7F'];K.slab(rect(38.6,70.5,41.05,75.5),y,{mat:floorMat['7F'],thick:.12,under:CEIL,edge:false});}
   // Restore a schematic public approach along the south side of the 6F
@@ -7910,13 +7929,17 @@ export function build(K) {
   // Guard and support the adjusted arriving flight; real dimensions are approximate.
   {const y=LV['3F'];K.slab(rect(37.75,118.8,39.65,122.1),y,{mat:floorMat['3F'],thick:.12,under:false,ceil:false,edge:false});
    for(const [a,b,c,d] of [[37.75,119.2,37.75,122.1],[39.65,119.2,39.65,122.1],[37.75,122.1,37.85,122.1],[39.55,122.1,39.65,122.1]])wall(a,b,c,d,y,y+1.05,{mat:'glass',thick:.045});}
-  {const y=LV['3F'];wall(27.58,125.55,31.15,125.55,y,y+1.05,{mat:'glass',thick:.045});wall(30.3,124.68,30.3,125.55,y+.42,y+1.05,{mat:'glass',thick:.045});}
-  // Restore the 3F well's narrow southern lip: the rectangular swept-well
-  // approximation removes this strip although all moving stairways clear it.
-  {const y=LV['3F'], r=[30,124.68,35.35,125.42];
-    K.slab(rect(...r),y,{mat:{tex:'marble',color:0xe8dfce},thick:.6,under:CEIL,edge:false});
-    for(const [u0,v0,u1,v1] of [[r[0],r[1],r[2],r[1]],[r[0],r[1],r[0],r[3]]])
-      upperSafeWall(u0,v0,u1,v1,y,1.05,{mat:'glass',thick:.045});
+  // Return the 3F guard around the two sides and far end of the cut.
+  // The level strip beside the well stays supported up to the right rail.
+  {
+    const y=LV['3F'], [left,near,right,far]=annexUpHeadroom;
+    const guard={mat:'glass',thick:.045};
+    wall(27.58,125.55,left,125.55,y,y+1.05,guard);
+    wall(left,125.33,left,far,y,y+1.05,guard);
+    wall(left,far,right,far,y,y+1.05,guard);
+    wall(right,near,right,far,y,y+1.05,guard);
+    K.slab(rect(right,near,35.35,125.42),y,{mat:{tex:'marble',color:0xe8dfce},thick:.6,under:CEIL,edge:false});
+    upperSafeWall(right,near,35.35,near,y,1.05,guard);
   }
   // Guard the 4F annex void outside the actual outgoing stair lanes.
   {const p=upperPhysicalWell('4F',true),y=LV['4F'];
@@ -14510,7 +14533,7 @@ export function build(K) {
       }
       // The narrow retained MOJO fragment joins the main selling floor. A
       // duplicate back wall there hid the open frontage but had no collision.
-      if(((id==='5F'&&['뷰오리','아스페시','룰루레몬','자딕앤 볼테르','럭키슈에뜨','헤지스','모조'].includes(c.name))||joinedMembers||(id==='3F'&&['호라이즌','분더샵 여성','브라이틀링'].includes(c.name))||(id==='4F'&&['케이스스터디','산드로','비이커','엔폴드','씨뉴욕'].includes(c.name)))&&q!==largest)continue;
+      if(((id==='5F'&&['뷰오리','아스페시','룰루레몬','자딕앤 볼테르','럭키슈에뜨','헤지스','모조'].includes(c.name))||joinedMembers||(id==='3F'&&['호라이즌','분더샵 여성','브라이틀링'].includes(c.name))||(id==='4F'&&['케이스스터디','산드로'].includes(c.name)))&&q!==largest)continue;
       if(id==='4F'&&/캐주얼 슈즈|컨템포러리 슈즈|국내 슈즈|컴포트 슈즈/.test(c.name))
         hq(u0+.14,v0+.14,u1-.14,v1-.14,y+3.15,0x1b2029,false);
       // The guide groups these five small jewellery concessions in one
