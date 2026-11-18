@@ -855,6 +855,24 @@ export function build(K) {
     const [u0,v0]=sourcePoint(id,x-52,far),[u1,v1]=sourcePoint(id,x+52,near);
     bridgeAisles[id]={bounds:[u0,v0,u1,v1],by};
   }
+  // Pixel coordinates in the same 1823-wide sheets as the adjacent shop cells.
+  // Each symbol sits on the back wall of a pocket opening towards smaller image Y.
+  const guidePockets={};
+  for(const [id,x0,x1,doorX,doorY,lipY,otherY] of [
+    ['8F',953,1080,1013,864,822,760],
+    ['9F',962,1056,1009,864,823,760],
+    ['10F',991,1082,1036,921,879,818]
+  ]){
+    const [back,mid]=upperPlanPoint(id,doorX,doorY);
+    const [lip,near]=upperPlanPoint(id,x0,lipY);
+    const [opposite,far]=upperPlanPoint(id,x1,otherY);
+    guidePockets[id]={back,mid,lip,near,far,opposite};
+    bridgeAisles[id]={bounds:[lip,near,opposite,far],by:'연결부 엘리베이터'};
+  }
+  function upperPairPosition(id,i){
+    const pocket=guidePockets[id];
+    return [(pocket?pocket.back-1.1:bridgeLiftU),(pocket?pocket.mid:82.2)+(i-.5)*2.7];
+  }
   function bridgeCar(id,i) {
     const [u,v] = bridgeLiftFront[id];
     return [u - 1.05, v + (i - 1) * 2.20];
@@ -1561,7 +1579,8 @@ export function build(K) {
         parts.push([cu, cv + (i - .5) * 2.7, LV[id], LV[id]]);
       }
     } else if (bank.key === '신관 화장실 옆') {
-      parts.push([bridgeLiftU, bank.v+(i-.5)*2.7, LV['6F'], LV[bank.top], 'E'], [u, 145, LV['2F'], LV['5F']]);
+      for(const id of ['6F','7F','8F','9F','10F','11F'])parts.push([...upperPairPosition(id,i),LV[id],LV[id],'E']);
+      parts.push([u,145,LV['2F'],LV['5F']]);
     } else {
       parts.push([u, v, LV['2F'], LV[bank.top]]);
     }
@@ -1579,6 +1598,9 @@ export function build(K) {
       const stops = byFloor ? ELV_FLOORS.filter(f => f.y >= LV['2F'] && f.y <= LV[bank.top]).map(f => {
         const [arrivalX, arrivalZ] = isCorner ? cornerLiftLanding(f.label,bank,i) : mainLiftLanding(f.label,bank,i);
         return {...f, dx:arrivalX-x, dz:arrivalZ-z};
+      }) : face==='E' && bank.key==='신관 화장실 옆' ? ELV_FLOORS.filter(f=>f.y>=LV['6F']).map(f=>{
+        const [u,v]=upperPairPosition(f.label,i),[tx,tz]=P(u+2.5,v);
+        return {...f,dx:tx-x,dz:tz-z};
       }) : floors;
       // Map markers describe the floors at this physical position. The E
       // menu retains every served floor and sends riders to its landing.
@@ -6742,13 +6764,13 @@ export function build(K) {
     // UGG Men & Kids still meets the open well and the outgoing flight.
     [ANNEX_WELL[0]-.3,ANNEX_WELL[1]-1.5,ANNEX_WELL[2]+.3,ANNEX_WELL[3]+1.5],
     ...(bridgeLiftFront[id]?[]:[bridgeLobby(id)]),
-    ...(LV[id]>=LV['6F']?[[bridgeLiftU-1.3,UPPER_BRIDGE[1]-.75,UPPER_BRIDGE[2]+.25,UPPER_BRIDGE[3]+.75]]:[]),
+    ...(guidePockets[id]?[[guidePockets[id].back-2.35,guidePockets[id].near,guidePockets[id].opposite,guidePockets[id].far]]:LV[id]>=LV['6F']?[[bridgeLiftU-1.3,UPPER_BRIDGE[1]-.75,UPPER_BRIDGE[2]+.25,UPPER_BRIDGE[3]+.75]]:[]),
     // The main restroom-side shaft's back extends roughly 1.2m from its
     // centre. Keep a further half-metre reservation for wall thickness and
     // player clearance, instead of excluding an extra 0.6m of retail on
     // 2F–5F. A 0.25m model-side margin remains beyond the paired cars;
     // neither the shaft location nor the margin is a surveyed measurement.
-    ...UPPER_BANKS.filter(b=>LV[id]<=LV[b.top]).map(b=>(b.key==='신관 화장실 옆'&&mainLiftFronts[id])?{...b,v:145}:b).map(b=>{
+    ...UPPER_BANKS.filter(b=>LV[id]<=LV[b.top]&&!(guidePockets[id]&&b.key==='신관 화장실 옆')).map(b=>(b.key==='신관 화장실 옆'&&mainLiftFronts[id])?{...b,v:145}:b).map(b=>{
       if(b.key==='본관 코너'&&cornerGuides[id]){
         const [u,v]=cornerLiftCentre(id,b);
         return [u-1.2,v-2.63,u+1.2,v+2.63];
@@ -7899,7 +7921,18 @@ export function build(K) {
         earlyGucciSigns.add(shop);
       }
     }
-    if(y>=LV['6F']){
+    const pocket=guidePockets[id];
+    if(pocket){
+      const {back,mid,lip,near,far,opposite}=pocket,h=clearH(id),finish={mat:0xdfd7cb,thick:.12};
+      for(const v of [near,far])wall(back,v,lip,v,y,y+h,finish);
+      for(const [a,b] of [[near,mid-2.55],[mid-.15,mid+.15],[mid+2.55,far]])wall(back,a,back,b,y,y+h,finish);
+      // Short returns mark the mouth on the guide. Face the open passage.
+      for(const [a,b] of [[near,mid-1.7],[mid+1.7,far]])if(b>a)wall(lip,a,lip,b,y,y+h,finish);
+      if(id==='10F'){
+        box(opposite-.48,mid,.84,far-near-1.5,y,.86,0xba9677);
+        sign('팝업',opposite-.94,mid,y+.66,'W',1.2,.28,{bg:'#584b42',fg:'#fff4e6'});
+      }
+    }else if(y>=LV['6F']){
       const [left,near,right,far]=UPPER_BRIDGE, h=clearH(id);
       const finish={mat:0xdfd7cb,thick:.12};
       for(const [a,b] of [[near,79.65],[82.04,82.36],[84.75,far]])wall(left,a,left,b,y,y+h,finish);
@@ -7916,7 +7949,7 @@ export function build(K) {
     const crossWing=bridgeAisles[id];
     zone('본관 · 신관 연결통로',id,crossWing?.by || '층별 매장 · 엘리베이터',
       crossWing?.bounds || [29.6,48.1,44.8,54.5],y,y+3.5,2);
-    zone('고객 엘리베이터',id,'본관 · 신관 연결부',bridgeLobby(id),y,y+3.4,2);
+    zone('고객 엘리베이터',id,'본관 · 신관 연결부',pocket?[pocket.back+.15,pocket.mid-2.5,pocket.lip-.4,pocket.mid+2.5]:bridgeLobby(id),y,y+3.4,2);
   }
   // The public retail aisle guard outside the 4F main well.
   wall(4.5,39.7,4.5,49.7,LV['4F'],LV['4F']+1.05,{mat:0x5c6166,thick:.05});
@@ -16251,6 +16284,9 @@ export function build(K) {
     if (bridgeLiftFront[id]) {
       const [u,v]=bridgeLiftFront[id];
       sign('엘리베이터',u+.07,v,y+2.78,'E',2.3,.30,{bg:'#36322b',fg:'#e3ceb1'});
+    } else if(guidePockets[id]){
+      const {back,mid}=guidePockets[id];
+      sign('엘리베이터',back+.12,mid,y+2.88,'E',2.1,.28,{bg:'#36322b',fg:'#e3ceb1'});
     } else sign('엘리베이터',5.5,80.14,y+2.55,'N',2.8,.32,{bg:'#36322b',fg:'#e3ceb1'});
     {
       const ar=upperAnnexAtriumRect(id);
@@ -16781,7 +16817,7 @@ export const upperPlanPoint = (id,px,py) => {
   // Keep the registered main-wing atrium and rooftop garden in place.
   // The remaining guide columns cover the full depth of the annex.
   const upperWingV=oldV+Math.max(0,px-1035)*(145.3-84.2)/(1775-1035);
-  const v=['2F','3F','4F','5F','6F'].includes(id)?expandedV:upperWingV;
+  const v=['7F','11F'].includes(id)?upperWingV:expandedV;
   return [y,v];
 };
 export const upperPlanRect=(id,r)=>{const a=upperPlanPoint(id,r[0],r[1]),b=upperPlanPoint(id,r[2],r[3]);return[b[0],a[1],a[0],b[1]];};
