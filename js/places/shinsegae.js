@@ -918,7 +918,7 @@ export function build(K) {
   const mezzArchCenters=Array.from({length:8},(_,i)=>mezzArchStart+(i+.5)*(mezzArchEnd-mezzArchStart)/8);
   // Mount the doors on the interior face of the existing east perimeter wall.
   const beautyLiftFront=UW-.38, beautyLiftMid=PLAN(807,459)[1];
-  const NWLIFTS=[-1.45,1.45].map(offset=>({u:beautyLiftFront,v:beautyLiftMid+offset,w:2.65,d:2.4}));
+  const NWLIFTS=[-1.45,1.45,4.35].map(offset=>({u:beautyLiftFront,v:beautyLiftMid+offset,w:2.65,d:2.4}));
   const beautyLiftLanding=e=>P(e.u-1.25,e.v);
   // From the main hall facing 3 GATE, the feet of the two flights are
   // on the outside. Their heads open onto the shared mezzanine aisle.
@@ -1675,7 +1675,7 @@ export function build(K) {
       const [x,z]=P(e.u,e.v),landing=beautyLiftLanding(e);
       const parking=P(ELV[i].u,ELV[i].v-2.2);
       const stops={'B2':parking,'B1':MARKET_B1_DEST,'1F':landing,'1M':P(36,81)};
-      const el=K.elevator({name:`남동 고객 엘리베이터 ${i+1}호기`,x,z,rotY:FACE.W,w:e.w,d:e.d,shaft:false,
+      const el=K.elevator({name:i===0?"남동 고객 엘리베이터 4호기":"남동 고객 엘리베이터",x,z,rotY:FACE.W,w:e.w,d:e.d,shaft:false,
         floors:ELV_FLOORS.filter(f=>f.y<7).map(f=>({...f,dx:stops[f.label][0]-x,dz:stops[f.label][1]-z}))});
       const [callX,callZ]=P(u-.62,e.v);
       Object.assign(K._.interactables.find(it=>it.elevator===el),{x:callX,z:callZ,y:0,r:1.5});
@@ -1683,10 +1683,12 @@ export function build(K) {
       box(u-.05,e.v,.08,1.64,0,2.37,'metal');
       box(u-.10,e.v,.015,.018,0,2.34,0x575956,{solid:false});
       sign('1',u-.10,e.v,2.60,'W',.48,.24,{bg:'#302e2b',fg:'#f9ead0'});
+      if(i===0)sign('4호기',u-.12,e.v-.99,1.68,'W',.42,.20,{bg:'#ece7db',fg:'#453e36'});
       box(u-.10,e.v+.99,.04,.12,.98,.28,0x484642,{solid:false});
+      box(u-1.01,e.v,.38,1.24,.006,.012,0xc4ae77,{solid:false});
       lightPanel(u-.9,e.v,3.44,1.5,1.65);
     }
-    zone('고객 엘리베이터 홀','1F','라메르 옆',[u-2.15,beautyLiftMid-2.65,u-.22,beautyLiftMid+2.65],0,3.2,4);
+    zone('고객 엘리베이터 홀','1F','라메르 옆',[u-2.15,beautyLiftMid-2.65,u-.22,NWLIFTS.at(-1).v+1.20],0,3.2,4);
   }
   cornerGroundDoors.forEach((v,i)=>{
     const [x,z]=P(cornerFrontU-1.2,v),ground=cornerGroundLanding(i);
@@ -1728,9 +1730,31 @@ export function build(K) {
       g.font='600 68px Arial, sans-serif';g.fillText('1M →',820,h*.51,180);
     },[1,1]);
     faceQuad(directory,'W',beautyLiftMid,3.0,4.5,.40,.10,beautyLiftFront);
+    const front=beautyLiftFront, finish={solid:false};
+    // Continue the lift-hall stone surround and warm cove to the cosmetics frontage.
+    for(const v of [beautyLiftMid-4.55,beautyLiftMid+5.72]){
+      box(front-.15,v,.35,.47,0,3.30,0xe6ddcc,finish);
+      box(front-.20,v,.43,.57,0,.17,0xc4b9a4,finish);
+    }
+    box(front-.15,beautyLiftMid+.6,.40,10.7,2.90,.10,0xd7ceba,finish);
+    box(front-.32,beautyLiftMid+.6,.07,10.6,2.88,.034,0xffebc9,finish);
+    // A wall display extends the DECORTÉ counter towards the lift approach.
+    const bay=PLAN(915,508)[1],width=4.7;
+    box(front-.19,bay,.28,width,0,2.85,'ssg_decorte_relief');
+    box(front-.35,bay,.10,width,2.47,.37,0x202222,finish);
+    immediateBeautyName('DECORTÉ',front-.42,bay,2.65,'W',2.10,.23);
+    box(front-.46,bay,.48,width-.22,0,.77,0x252828);
+    box(front-.52,bay,.60,width-.16,.77,.075,0xf3f1e9,finish);
+    for(const height of [1.18,1.74]){
+      box(front-.49,bay,.38,width-.62,height,.055,0xe8e6dc,finish);
+      box(front-.66,bay,.035,width-.72,height-.015,.025,0xffedca,finish);
+      for(let j=0;j<9;j++){
+        box(front-.48,bay+(j-4)*.37,.10,.13,height+.055,j%3===0?.21:.14,j%2?0xc9beb3:0xf4f1e8,finish);
+      }
+    }
     // The photographed lift-hall display sits to the side of the approach.
     // Keep its estimated position close to the wall and clear of the lift doors.
-    sign(['LA MER','모이스춰라이징 크림'],beautyLiftFront-.15,beautyLiftMid+3.45,1.5,'W',1.4,2.2,{bg:'#12326c',fg:'#d1edff',bold:false});
+    sign(['LA MER','모이스춰라이징 크림'],beautyLiftFront-.15,beautyLiftMid-3.5,1.5,'W',1.4,2.2,{bg:'#12326c',fg:'#d1edff',bold:false});
   });
 
   // ------------------------------------------------------------ stair cores (enclosed, alternating lanes)
