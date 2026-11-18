@@ -468,10 +468,8 @@ export function build(K) {
       continue;
     }
     const tower = y >= Y['8F'];
-    const poly = tower ? RECT(TW[0] + 0.06, TW[1] + 0.06, TW[2] - 0.06, TW[3] - 0.06) : ['3F','4F','5F','6F'].includes(k) ? RECT(UW + .06, 0, UE - .06, 60.5) : (y > 1 ? FPLI : FPL);   // inset: keeps the slab edge off the facade plane (z-fighting)
+    const poly = tower ? RECT(TW[0] + 0.06, TW[1] + 0.06, TW[2] - 0.06, TW[3] - 0.06) : ['3F','4F','5F','6F','7F'].includes(k) ? RECT(UW + .06, 0, UE - .06, 60.5) : (y > 1 ? FPLI : FPL);   // inset: keeps the slab edge off the facade plane (z-fighting)
     const holes = holesFor(k).map(h => RECT(...h));
-    // The annex escalators pass through the shared podium roof to the 7F shop floor.
-    if(k==='7F')holes.push(RECT(-2.4,-23.4,3.3,-12.4));
     K.slab(poly, y, { mat: floorMat[k] ?? (tower ? 'jwCarpet' : 'tile'), under: k === 'B4' ? false : { tex: 'ceiling', color: 0xf4efe6 }, thick: 0.3, holes, edgeMat: STONE_D });
   }
   // tower roof + podium roof is the 7F slab
@@ -502,7 +500,7 @@ export function build(K) {
   for (let u = -8; u <= 2; u += 6) if (Math.abs(u - 8) > 2.6) B({ u, v: vS(u) - 0.2, y: 0, w: 0.9, d: 0.7, h: 4.2, mat: { tex: 'jwStone' } });
   // 2F–5F department-store guide passages cross the north podium seam.
   // Their widths are plan-derived, not a claim about the unseen structure.
-  const seamRanges={'2F':[[.5,66.5]],'3F':[[.5,34.8],[36.8,66.5]],'4F':[[.5,66.5]],'5F':[[.5,66.5]],'6F':[[34,40]]};
+  const seamRanges={'2F':[[.5,66.5]],'3F':[[.5,34.8],[36.8,66.5]],'4F':[[.5,66.5]],'5F':[[.5,66.5]],'6F':[[.5,66.5]]};
   const storeLevel={'2F':7,'3F':11.8,'4F':16.6,'5F':21.4,'6F':26.2};
   for (const k of ['2F', '3F', '4F', '5F', '6F']) {
     const interior=(seamRanges[k]||[]).map(([a,b])=>{const u=-33.31+(a+b)/2*66.62/67,[x,z]=P(u,vN(u));return{x,z,w:(b-a)*66.62/67,y0:storeLevel[k],y1:storeLevel[k]+3.4};});
@@ -510,8 +508,8 @@ export function build(K) {
     K.polyWalls(FPL,Y[k],NEXT[k],{mat:{tex:'jwPodium'},inner:WARM,thick:.35,floorH:NEXT[k]-Y[k],openings:[...original,...interior]});
   }
   // podium cornice + 7F parapet (stone base + glass balustrade)
-  K.polyWalls(FPL, Y['7F'] - 0.6, Y['7F'] + 0.45, { mat: STONE_D, inner: STONE, thick: 0.5 });
-  K.polyWalls(FPL, Y['7F'] + 0.45, Y['7F'] + 1.25, { mat: GL, thick: 0.04 });
+  K.polyWalls(RECT(UW,0,UE,60.5), Y['7F'] - 0.6, Y['7F'] + 0.45, { mat: STONE_D, inner: STONE, thick: 0.5 });
+  K.polyWalls(RECT(UW,0,UE,60.5), Y['7F'] + 0.45, Y['7F'] + 1.25, { mat: GL, thick: 0.04 });
   // tower bands
   const twp = RECT(...TW);
   const opW = (u, v, w, y0, y1) => { const [x, z] = P(u, v); return { x, z, w, y0, y1 }; };

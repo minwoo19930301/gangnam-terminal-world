@@ -450,10 +450,10 @@ export function build(K) {
   // Only the north-facing upper extension is resolved as glazing; unseen sides stay plain.
   // On 2F–5F the guide spans both wings across this former building seam.
   // Preserve shop cells at the seam; open the guide's white public passages.
-  const seamRanges={'2F':[[.5,66.5]],'3F':[[.5,34.8],[36.8,66.5]],'4F':[[.5,66.5]],'5F':[[.5,66.5]],'6F':[[34,40]]};
+  const seamRanges={'2F':[[.5,66.5]],'3F':[[.5,34.8],[36.8,66.5]],'4F':[[.5,66.5]],'5F':[[.5,66.5]]};
   const seamOpenings=Object.entries(seamRanges).flatMap(([id,ranges])=>ranges.map(([a,b])=>({s:(a+b)/2,w:b-a,y0:LV[id],y1:LV[id]+3.4})));
   for (const [f, pl, s0, s1] of [['E', UW, VS, VD], ['W', 0, VS, VD], ['S', VD, 0, UW]])
-    exWall(f, pl, s0, s1, 7, LV.RF + 0.65, {mat:'ssg_granite',openings:f==='W'?[{s:75.1,w:1.8,y0:7,y1:9.6}]:f==='S'?seamOpenings:[]});
+    exWall(f, pl, s0, s1, 7, f==='S'?LV['6F']:LV.RF + 0.65, {mat:'ssg_granite',openings:f==='W'?[{s:75.1,w:1.8,y0:7,y1:9.6}]:f==='S'?seamOpenings:[]});
   exWall('N', 57.5, 0, UW, YB, LV.RF + 0.65, { mat: 'ssg_glass', floorH: 3.2, vBase: 7, openings:[{s:40,w:10,y0:YB,y1:YB+3.8}] });
   K.slab(rect(0, 57.5, UW, VD), LV.RF, { mat: 'roofgravel', under: CEIL, thick: TH.RF, edge: false });
   for (const [f, c, len, pl] of [['N', UW / 2, UW, 57.5], ['E', (57.5 + VD) / 2, VD - 57.5, UW], ['W', (57.5 + VD) / 2, VD - 57.5, 0], ['S', UW / 2, UW, VD]])
@@ -971,14 +971,15 @@ export function build(K) {
   for(const [a,b,c,d] of [[1.65,112.5,1.65,119.2],[5.15,112.5,5.15,119.2],[1.65,112.5,5.15,112.5],[1.65,119.2,3.55,119.2]])wall(a,b,c,d,11.8,12.8,{mat:0x4b4944,thick:.05});
   // Continue the annex landing and its public connection on the upper levels.
   for(const id of ['6F','7F','8F','9F','10F','11F']){
-    const y=LV[id], bounds=id==='6F'?[0,84.7,UW,145.3]:[28,84.55,40,136];
+    const y=LV[id], bounds=[0,VD,UW,145.3];
     K.slab(rect(...bounds),y,{mat:floorMat[id],thick:thick(id),holes:[rect(...ANNEX_WELL)],under:CEIL,edge:false});
     const [west,near,east,far]=bounds;
     const finish={mat:0xe1dace,thick:.12};
-    wall(west,near,west,far,y,y+3.9,finish);
-    wall(east,near,east,far,y,y+3.9,finish);
-    wall(west,far,east,far,y,y+3.9,finish);
-    if(id==='11F')K.hpoly(CEIL,rect(...bounds),y+3.9,false);
+    const top=LV[nextOf(id)];
+    wall(west,near,west,far,y,top,finish);
+    wall(east,near,east,far,y,top,finish);
+    wall(west,far,east,far,y,top,finish);
+    if(id==='11F')K.slab(rect(...bounds),top,{mat:'roofgravel',under:CEIL,thick:TH.RF,edge:false,walk:false});
     zone('신세계백화점 강남점',id,'신관 연결 통로',bounds,y,y+3.8,1);
   }
   // Aerial: dark membrane, mechanical penthouse, pale cooling boxes and an AC grid.
@@ -7707,7 +7708,7 @@ export function build(K) {
   const earlyGucciSigns=new Set();
   const earlyThreeSigns=new Set();
   for(const [id,guide]of Object.entries(upperGuidePlans)){
-    const y=LV[id];zone('신세계백화점 강남점',id,upperCats[id],[0,0,UW,['2F','3F','4F','5F'].includes(id)?145.3:VD],y,LV[nextOf(id)],1);
+    const y=LV[id];zone('신세계백화점 강남점',id,upperCats[id],[0,0,UW,145.3],y,LV[nextOf(id)],1);
     for(const c of guide.cells)buildUpperCell(id,c);
     buildShopPartitions(id,y);
     if (id==='2F') {
@@ -16739,7 +16740,10 @@ export const upperPlanPoint = (id,px,py) => {
   const p=upperGuidePlans[id];
   const y=66.5-66*(py-p.top)/(p.bottom-p.top);
   const oldV=8.7+(px-27)*75.5/1748,expandedV=8.7+(px-27)*.07859;
-  const v=['2F','3F','4F','5F','6F'].includes(id)?expandedV:oldV;
+  // Keep the registered main-wing atrium and rooftop garden in place.
+  // The remaining guide columns cover the full depth of the annex.
+  const upperWingV=oldV+Math.max(0,px-1035)*(145.3-84.2)/(1775-1035);
+  const v=['2F','3F','4F','5F','6F'].includes(id)?expandedV:upperWingV;
   return [y,v];
 };
 export const upperPlanRect=(id,r)=>{const a=upperPlanPoint(id,r[0],r[1]),b=upperPlanPoint(id,r[2],r[3]);return[b[0],a[1],a[0],b[1]];};
@@ -16768,7 +16772,7 @@ export function upperBuildRect(id,c) {
   // Match upperPlanPoint's expanded guide scale when deciding whether a
   // 1–4 pixel gap is just a divider. The old compressed scale incorrectly
   // widened the 5F Jill Stuart / Zadig & Voltaire gap into an extra aisle.
-  const dividerU=4*66/(plan.bottom-plan.top),dividerV=4*(['2F','3F','4F','5F','6F'].includes(id)?.07859:75.5/1748);
+  const dividerU=4*66/(plan.bottom-plan.top),dividerV=upperPlanPoint(id,c.rect[0]+4,c.rect[1])[1]-raw[1];
   for(const o of all){if(o===c)continue;const q=upperPlanRect(id,o.rect);
     if(Math.min(raw[2],q[2])-Math.max(raw[0],q[0])>.25){
       const n=raw[1]-q[3],s=q[1]-raw[3];

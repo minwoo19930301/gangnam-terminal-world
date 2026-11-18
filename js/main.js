@@ -103,16 +103,16 @@ async function boot() {
       if ((AREA.modules.includes(mid) && !(AREA.id.startsWith('in:') && !AREA.id.slice(3).split('+').includes(mid))) || mid === 'streets' || mid === 'hangang' || mid === 'jamwon_hangang') continue;
       for (const bid of v.claims) for (const b of osm.buildings.filter(b => b.id === bid)) {
         const h = b.height || (b.levels ? b.levels * 3.6 : 12);
-        // The registered 2F-5F Shinsegae retail apron covers the
+        // The registered 2F–11F Shinsegae retail apron covers the
         // northern part of the JW OSM footprint (local v=84.7..145.3).
         // Preserve the hotel beyond the apron, on the ground floor, and above
-        // 5F (6F starts at 26.2m). These are model coordinates, not a survey.
+        // the department store roof at 55m. These are model coordinates, not a survey.
         // The long-edge interpolation below depends on this exact OSM corner
         // order. If the footprint or heights change, use the original LOD.
         const expected=[[29.26,144.45],[-14.35,31.08],[-76.64,54.72],[-33.04,168.08]];
         const knownFootprint=Array.isArray(b.poly)&&b.poly.length===4&&
           expected.every((p,i)=>Array.isArray(b.poly[i])&&Math.hypot(b.poly[i][0]-p[0],b.poly[i][1]-p[1])<.25)&&
-          (!b.holes||b.holes.length===0)&&Number.isFinite(h)&&h>26.2&&(b.minHeight||0)<=0;
+          (!b.holes||b.holes.length===0)&&Number.isFinite(h)&&h>7&&(b.minHeight||0)<=0;
         if (AREA.id==='in:shinsegae' && mid==='jwmarriott' && bid===136986976 && knownFootprint) {
           const [se,ne,nw,sw] = b.poly;
           const length=Math.hypot(sw[0]-nw[0],sw[1]-nw[1]);
@@ -123,8 +123,8 @@ async function boot() {
           if(t>0&&t<1) {
             try {
               K.prism(b.poly,b.minHeight||0,7,{...opts,top:false});
-              K.prism(south,7,26.2,{...opts,top:false,bottom:false});
-              K.prism(b.poly,26.2,h,{...opts,bottom:false});
+              K.prism(south,7,Math.min(55,h),{...opts,top:h<=55?opts.mat:false,bottom:false});
+              if(h>55)K.prism(b.poly,55,h,{...opts,bottom:false});
               continue;
             } catch(e) { console.warn('Shinsegae/JW LOD cut failed; keeping full mass',e); }
           }
