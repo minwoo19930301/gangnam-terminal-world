@@ -106,13 +106,13 @@ const UPPER = new Set(); // Official 9F/10F have both wings; 11F has garden + re
 const UPPER_ELV = [2.5,5.5,8.5].map(u=>({u,v:83.5,w:2.4,d:2.2}));
 // The user's 7F photograph shows the lift and drop side by side. Both
 // ends of the atrium have this choice; the opposite bank faces back.
-const MAIN_WELL = [30, 39.8, 38.25, 51.7];
+const MAIN_WELL = [24.55, 39.8, 41.90, 51.7];
 const MAIN_APRONS = [MAIN_WELL[0]-.35, MAIN_WELL[1]-1.85, MAIN_WELL[2]+.35, MAIN_WELL[3]+1.85];
 const mainTracks = [
-  {u:30.9, dir:'up', northLow:true},   // west bank, moving south
-  {u:32.65,dir:'down',northLow:false},
-  {u:37.35,dir:'up', northLow:false},  // east bank, moving north
-  {u:35.60,dir:'down',northLow:true},
+  {u:25.45,dir:'up', northLow:true},   // west bank, moving south
+  {u:27.25,dir:'down',northLow:false},
+  {u:41.0, dir:'up', northLow:false},  // east bank, moving north
+  {u:39.2, dir:'down',northLow:true},
 ];
 const annexLaneOffsets = {1:[2,3.6], 2:[-5.19322,-3.59322], 7:[1.9,3.5]};
 const upperAnnexOffsets = i => annexLaneOffsets[i] || (i%2 ? [1.3,2.9] : [-2.9,-1.3]);
@@ -896,8 +896,8 @@ export function build(K) {
   // The lower banks flank the popup. At each public boarding end one flight
   // rises to 2F and its neighbour descends to B1. The opposite end is the exit.
   const beautyBanks = [
-    {side:'서측',up:25.45,down:27.25,board:MAIN_WELL[1],exit:MAIN_WELL[3]},
-    {side:'동측',up:41,down:39.2,board:MAIN_WELL[3],exit:MAIN_WELL[1]},
+    {side:'서측',up:mainTracks[0].u,down:mainTracks[1].u,board:MAIN_WELL[1],exit:MAIN_WELL[3]},
+    {side:'동측',up:mainTracks[2].u,down:mainTracks[3].u,board:MAIN_WELL[3],exit:MAIN_WELL[1]},
   ];
   // Each lane keeps its distance from the popup at both landings. The two
   // lanes in a bank cross in side elevation and repeat on the level below.
@@ -942,7 +942,7 @@ export function build(K) {
   MAIN.forEach((id, s) => {
     const holes = id==='1F' ? [...nwLiftHoles] : id==='B1' ? [] : id==='B2' ? ELV.map(e=>rect(e.u-e.w/2,e.v-e.d/2,e.u+e.w/2,e.v+e.d/2)) : bridgeLiftFront[id] ? [] : [...elvHoles];
     // Ground NW lift bank has its own 1F/1M controls; upper banks follow their plan icons.
-    if (id === '1F' || id === '2F') holes.push(...beautyHoles);
+    if (id === '1F') holes.push(...beautyHoles);
     // The old subway icon remaps outside this footprint; CC owns that well.
     if (id === 'B1') { /* no fabricated in-store subway pit */ }
     else if (s >= 3 && id !== '11F') holes.push(rect(...upperPhysicalWell(id)));
@@ -1030,7 +1030,7 @@ export function build(K) {
     if(next!=='11F'){
       for(const [lane,track] of mainTracks.entries()){
         const near=MAIN_WELL[1],far=MAIN_WELL[3];
-        upperFlightReservations.push({floor:id,annex:false,lane,dir:track.dir,ya:LV[id],yb:LV[next],
+        upperFlightReservations.push({floor:id,annex:false,lane,dir:i%2 ? track.dir : (track.dir==='up'?'down':'up'),ya:LV[id],yb:LV[next],
           a:[track.u,track.northLow?near:far],b:[track.u,track.northLow?far:near]});
       }
     }
@@ -1052,7 +1052,7 @@ export function build(K) {
     // The main escalators end on 10F. Its map destination is the level
     // entrance to the down flight, facing back along the same bank.
     const down = !annex && id==='10F';
-    const flight = upperFlightReservations.find(f=>f.floor===(down?'9F':id) && f.annex===annex && f.lane===(down?1:0));
+    const flight = upperFlightReservations.find(f=>f.floor===(down?'9F':id) && f.annex===annex && (annex ? f.lane===0 : f.dir===(down?'down':'up')));
     const [start,end] = down ? [flight.b,flight.a] : [flight.a,flight.b];
     const [ax,az]=P(...start),[bx,bz]=P(...end);
     const length=Math.hypot(bx-ax,bz-az),dx=(bx-ax)/length,dz=(bz-az)/length;
@@ -1066,8 +1066,8 @@ export function build(K) {
   // Reserve its two existing centre lines only when drawing the 2F guard's
   // non-colliding underside trim; the glass and physical guard stay intact.
   const centralCityUpperFlights=[
-    [[-33.3310535,76.9907096],[-27.1397030,87.2761157]],
-    [[-34.8250651,77.5633607],[-28.6337146,87.8487668]],
+    [[-31.6135400,75.6041500],[-27.1397030,87.2761157]],
+    [[-33.1075516,76.1768011],[-28.6337146,87.8487668]],
   ];
   const centralCityUpperTrimOpening=(u,v)=>{
     const [x,z]=P(u,v);
@@ -1301,8 +1301,8 @@ export function build(K) {
       lightPanel(u,v,yy,.14,.14,0xfff9eb);
     }
   }
-  // R19 D8: piers follow each floor's well corners, starting above the 1F plaza.
-  for(const id of upperStack.filter(id=>id!=='11F')){
+  // Keep the entire first transfer apron open beside the shopping hall.
+  for(const id of upperStack.filter(id=>id!=='11F'&&id!=='2F')){
     const [a,b,c,d]=MAIN_WELL,y=LV[id],H=LV[nextOf(id)]-y;
     for(const u of[a-.55,c+.55])for(const v of[b-.55,d+.55]){
       if(upperSafeIntervals(u-.55,v,u+.55,v,y,H).reduce((sum,r)=>sum+(r[1]-r[0])*1.1,0)<1.0)continue;
@@ -1359,7 +1359,6 @@ export function build(K) {
     dressedEscalator(u,from,u,to,LV.B1,0,dir,true);
     dressedEscalator(u,from,u,to,0,LV['2F'],dir,true);
     wellGuard(slot,0,entry,0xc9955b);
-    wellGuard(slot,LV['2F'],entry,0x333537);
   }
   for(const bank of beautyBanks){
     const {up,down,board,exit}=bank, toward=Math.sign(exit-board);
@@ -16499,7 +16498,7 @@ export function build(K) {
     const y=LV['2F'];
     // Preserve the canopy and its two light strips beside the up flight.
     // Its former outside edge reached into the space above the moving treads.
-    const left=MAIN_WELL[2]+.3,right=40.6;
+    const left=MAIN_WELL[2]+.3,right=left+2.05;
     for(const u of [left+.35,right-.35]){
       box(u,51,.04,.04,y+2.98,1.0,0xa5a49e,{solid:false});
       box(u,51,.09,6,y+3.87,.06,{tex:'emit',color:0xf3dfb5},{solid:false});
@@ -16526,7 +16525,7 @@ export function build(K) {
   // T1: the photographed winter island belongs in the aisle node by DEUS.
   // The 3.0 x 1.2 m island fits between DEUS and Patagonia, off the escalator landing.
   furnish('8F',()=>{
-    const y=LV['8F'],u=41.7,v=50.94;
+    const y=LV['8F'],u=MAIN_WELL[2]+2.3,v=50.94;
     hq(u-1.5,v-.6,u+1.5,v+.6,y+.012,0x171b1d);
     const wavy=[];
     for(let i=0;i<=16;i++)wavy.push(P(u-.98+i*.12,v-.4+.06*Math.sin(i*PI/4)));
@@ -16758,7 +16757,7 @@ export function build(K) {
     const [toU,toV]=upperPlanPoint(id,lookX,lookY);
     sp(name,u,v,LV[id],toU-u,toV-v);
   }
-  sp('8F 겨울 매장 · 에스컬레이터', 40.8, 49.2, LV['8F'], 1, 0);
+  sp('8F 겨울 매장 · 에스컬레이터', MAIN_WELL[2]+1.1, 49.2, LV['8F'], 1, 0);
   aisleStart('4F 슈즈','4F',1476,946,1275,833); // Gianvito Rossi and Louis Vuitton shoes
   sp('11F 전문식당가 · S GARDEN', 34, 57.5, LV['11F'], 0, 1);
   const retailStarts={

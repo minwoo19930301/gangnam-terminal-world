@@ -3823,13 +3823,10 @@ function hallR20(K) {
   // against Bulgari's perpendicular side wall; the fit is not surveyed.
   glassRail(29,2.5,31.42,2.5,7);
   glassRail(36.92,2.5,38,2.5,7);
-  // A Gangnam arrival photograph shows the Bulgari fascia on the left and
-  // the lift ahead while looking up between these escalator handrails.
-  // Rotate the pair approximately 10° and shift its top half a metre while
-  // keeping it within the existing landing. The dimensions are not surveyed.
-  // https://ratti-english.tistory.com/289
-  for (const [t, dir] of [[1.3, 'up'], [-.3, 'down']]) {
-    const foot = P(17.18, t + .5 - 2.10), top = P(29, t + .5);
+  // The two middle flights share the hall axis and boarding line with the
+  // outside mezzanine flights. Their upper ends meet the existing 2F landing.
+  for (const [t, dir] of [[1.8, 'up'], [.2, 'down']]) {
+    const foot = P(16.5, t), top = P(29, t);
     K.escalator(...foot, ...top, { ya: 0, yb: 7, w: 1.1, dir });
     // The 2F retail route continues along these treads to the level plaza.
     // Central City's hall on either side keeps the uphill rider in that scene
@@ -4303,7 +4300,7 @@ function hallR20(K) {
     for(const s of[8,10,12]){lbox(s,13,.42,.28,0,1.12,0x303936);lbox(s,13,.5,.18,1.12,.65,0x202723,{solid:false});lsign(['주문하기','포장 · 매장'],s,12.89,1.45,.45,.46,'W',{bg:'#e0e8d8',fg:'#2c473b'});}
     lsign('우리은행',20.4,12.02,1.6,3.2,1.55,'W',{bg:'#2779c3',fg:'#fff'});
     // Stainless entry warnings and the photographed mezzanine directory.
-    for(const [t,dir]of [[-1.45,'down'],[-.75,'up'],[-3.2,'mezz']]){lcyl(16,t,0,.09,1.05,0xaeb4b2);lsign(dir==='down'?'위험 진입금지':'↑ 걷거나 뛰지마세요',16,t,1.2,.5,.38,'N',{bg:dir==='down'?'#a83226':'#263c41',fg:'#fff'});}
+    for(const [t,dir]of [[-.50,'down'],[2.50,'up'],[-3.9,'mezz']]){lcyl(16,t,0,.09,1.05,0xaeb4b2);lsign(dir==='down'?'위험 진입금지':'↑ 걷거나 뛰지마세요',16,t,1.2,.5,.38,'N',{bg:dir==='down'?'#a83226':'#263c41',fg:'#fff'});}
     // The user's November 2026 walk shows a narrow illuminated direction
     // panel between the 2F escalators, indicating the department store and
     // hotel. This simplified screen is visual-only and does not embed the
@@ -4316,11 +4313,11 @@ function hallR20(K) {
       g.fillText('신세계백화점',w/2,h*.62,w*.94);g.fillText('JW 메리어트 호텔',w/2,h*.76,w*.94);
     },[1,1]);
     K.material('ccHallTwoFloorGuideLit',new K.THREE.MeshBasicMaterial({map:K.T.surface('ccHallTwoFloorGuide').tex,side:K.THREE.DoubleSide}));
-    lbox(15.84,-1.1,.20,.48,0,1.75,0x202326,{solid:false});
-    {const a=P(15.73,-1.33),b=P(15.73,-.87);
+    lbox(15.84,1.0,.20,.48,0,1.75,0x202326,{solid:false});
+    {const a=P(15.73,.77),b=P(15.73,1.23);
       K.quad('ccHallTwoFloorGuideLit',[[a[0],.15,a[1]],[b[0],.15,b[1]],[b[0],1.69,b[1]],[a[0],1.69,a[1]]],[-AX,0,-AZ],[[1,0],[0,0],[0,1],[1,1]]);}
     lbox(15.8,-4.5,.34,.72,0,2.6,0x242826);lsign(['↑ 중층 M1F','식당가 · 라이프','놀부보쌈족발·김치찜','삼맛종합분식 · 중화가정','순대실록 · 수라빔','르사이공 · 101번지 남산돈까스','샤브보트 · 온고지신','바디프랜드 · 이춘복참치'],15.61,-4.5,1.4,.69,2.25,'N',{bg:'#242826',fg:'#fff',pxPerM:180});
-    const[x,z]=P(15.5,-1.1);K.floorText('백화점 2F ↗',{x,z,y:.05,w:2.5,h:1,rotY:R+PI,fg:'#f4eee3'});
+    const[x,z]=P(15.5,1.0);K.floorText('백화점 2F ↑',{x,z,y:.05,w:2.5,h:1,rotY:R+PI,fg:'#f4eee3'});
     // No visual floor or people are placed over the Sweet Garden well.
     for(const[s,t]of[[3,-5],[7,5],[12,-8],[22,-7],[4,8],[26,10],[35,-7],[7,-17]])lperson(s,t,0,{rotY:R+.7,shirt:0x353d3d});
   });
