@@ -831,6 +831,28 @@ export function build(K) {
     }
   }, 10.37);
 
+  // Schedule the entrance artwork before the much larger 1F furnishing group.
+  DETAIL('1F', [-25,46,-20.5,51], '현관 홀 · 도자기 목걸이 조형물', () => {
+    setFit(-29.7,.95);
+    // 05/15: four irregular strands, joined by two small drooping necklace loops on the plinth.
+    CY(7.3, 48.5, 0, 2, .32, 0xa6a493, { seg: 64 });
+    CY(7.3, 48.5, .025, 2.008, .035, 0x474239, { seg: 64, solid: false });
+    const bead = (u, v, yy, i) => {
+      const r = i % 7 === 0 ? .176 : .103 + ((i * 7) % 5) * .011, [x, z] = P(u, v);
+      DK.dome({ x, y: yy, z, rx: r, ry: r * .95, rz: r, mat: i % 4 ? 0xf1ead9 : 0xd9c3a0, seg: 12, rings: 6, hemi: false });
+      CY(u, v, yy - .007, r * 1.005, .014, i % 4 ? 0xe7dfcb : 0xc5ad8b, { seg: 16, solid: false });
+    };
+    for (const [strand, du, dv] of [[0, -.07, -.66], [1, .04, -.23], [2, -.03, .23], [3, .06, .66]]) {
+      ROD([7.3 + du, .5, 48.5 + dv], [7.3 + du, 8.12, 48.5 + dv], .006, 0x8a8070);
+      for (let i = 0; i < 29; i++) bead(7.3 + du, 48.5 + dv, 7.94 - i * .26, i + strand * 3);
+    }
+    for (const mid of [-.445, .445]) for (let i = 0; i <= 14; i++) {
+      const a = i / 14 * Math.PI;
+      bead(7.3 + Math.sin(a) * .9, 48.5 + mid + Math.cos(a) * .215,
+        .66 - Math.min(1,Math.sin(a)*3)*.18, i + 2);
+    }
+    fit=ID;
+  },8.32);
   DETAIL('1F', [-33.2, 4, 2, 60.4], '호텔 현관 홀 · 승강기 로비', floor1, 8.32);
   DETAIL('2F', [UW, -6, 2, 60.9], '플레이버즈 · 파티세리 · 타마유라', floor2);
   floor3(); floor4();
@@ -918,22 +940,6 @@ export function build(K) {
     for (const v of [43.2, 45.6, 48, 50.4, 53.6]) B({ u: -1.15, v, y: .12, w: .06, d: .14, h: .06, mat: { tex: 'emit', color: 0xedc58d }, solid: false });
     ROUND(.3, 48.5, 0, .85, .8, 0x272421);
     FLOWER(.3, 48.5, .8, 2.6, [0x4f7a3a, 0x6b8f4a, 0xd98a3a, 0xe0a650], { stems: 104 });
-    // 05/15: four irregular strands, joined by two small drooping necklace loops on the plinth.
-    CY(7.3, 48.5, 0, 2, .32, 0xa6a493, { seg: 64 });
-    CY(7.3, 48.5, .025, 2.008, .035, 0x474239, { seg: 64, solid: false });
-    const bead = (u, v, yy, i) => {
-      const r = i % 7 === 0 ? .176 : .103 + ((i * 7) % 5) * .011, [x, z] = P(u, v);
-      DK.dome({ x, y: yy, z, rx: r, ry: r * .95, rz: r, mat: i % 4 ? 0xf1ead9 : 0xd9c3a0, seg: 16, rings: 8, hemi: false });
-      CY(u, v, yy - .007, r * 1.005, .014, i % 4 ? 0xe7dfcb : 0xc5ad8b, { seg: 16, solid: false });
-    };
-    for (const [strand, du, dv] of [[0, -.07, -.66], [1, .04, -.23], [2, -.03, .23], [3, .06, .66]]) {
-      ROD([7.3 + du, .5, 48.5 + dv], [7.3 + du, 8.12, 48.5 + dv], .006, 0x8a8070);
-      for (let i = 0; i < 29; i++) bead(7.3 + du, 48.5 + dv, 7.94 - i * .26, i + strand * 3);
-    }
-    for (const mid of [-.445, .445]) for (let i = 0; i <= 6; i++) {
-      const a = i / 6 * Math.PI;
-      bead(7.3 + Math.sin(a) * .11, 48.5 + mid + Math.cos(a) * .215, .66 - Math.sin(a) * .2, i + 2);
-    }
     for (const u of [5, 9.6]) for (const v of [46.2, 50.8]) { CY(u, v, 0, .1, .035, 0x827f76, { seg: 10, solid: false }); CY(u, v, .035, .012, .7, 0x9a988c, { seg: 6, solid: false }); }
     for (const v of [46.2, 50.8]) ROD([5, .68, v], [9.6, .68, v], .006, 0xb0a994);
     for (const u of [5, 9.6]) ROD([u, .68, 46.2], [u, .68, 50.8], .006, 0xb0a994);
@@ -2472,13 +2478,32 @@ export function build(K) {
   function exterior() {
     // South-facing doors and a covered pedestrian approach from the exit 3 side.
     const u=1.4,v=vS(u);
-    B({u,v:v+2.3,y:4.3,w:5.6,d:4.8,h:.46,mat:BRONZE,solid:false});
-    for (const side of [-1,1]) {
-      CY(u+side*2.62,v+4.35,0,.13,4.3,BRONZE,{seg:10});
+    // Haeahn's entrance elevation shows three glazed barrel vaults across the drop-off.
+    // The central arch shares the pedestrian axis through the Famille frontage.
+    const span=7, back=v+11.9, front=back+7.2;
+    const glass={tex:'glass',color:0xbad4dc},rim=0xb39b7a;
+    for(const bay of [-1,0,1]){
+      const mid=u+bay*span;
+      for(let i=0;i<12;i++){
+        const arch=t=>[mid-span/2*Math.cos(t),4.35+2.15*Math.sin(t)];
+        const [x0,y0]=arch(i*Math.PI/12),[x1,y1]=arch((i+1)*Math.PI/12);
+        const corners=[[x0,y0,back],[x1,y1,back],[x1,y1,front],[x0,y0,front]].map(([x,y,z])=>{
+          const [wx,wz]=P(x,z);return [wx,y,wz];
+        });
+        K.quad(glass,corners,[0,1,0]);
+        K.quad(glass,[...corners].reverse(),[0,-1,0]);
+        for(const depth of [back,(back+front)/2,front]) ROD([x0,y0,depth],[x1,y1,depth],.085,rim);
+        if(i%3===0) ROD([x0,y0,back],[x0,y0,front],.055,rim);
+      }
+    }
+    for(const edge of [-1.5,-.5,.5,1.5]) for(const depth of [back,front]){
+      CY(u+edge*span,depth,0,.17,4.35,rim,{seg:10});
+    }
+    for(const side of [-1,1]){
       B({u:u+side*1.76,v:v-.03,y:0,w:.78,d:.07,h:3.2,mat:GL,solid:false});
     }
-    SG('JW MARRIOTT',{u,v:v+4.73,y:4.54,w:4.5,h:.4,f:'S',bg:'#69563d',fg:'#fff2d2'});
-    SPAWN('JW 메리어트 남측 현관',u,v-2,0,0,-1);
+    SG('JW MARRIOTT',{u,v:v+.05,y:3.67,w:4.1,h:.42,f:'S',bg:'#69563d',fg:'#fff2d2'});
+    SPAWN('JW 메리어트 남측 현관',u,v-2,0,-22.765-u,48.5-(v-2));
     // sidewalk planters along the east side
     for (let v = -50; v <= 30; v += 10) { B({ u: 35.0, v, y: 0, w: 1.4, d: 3.6, h: 0.6, mat: { tex: 'jwStone' } }); TREE(35.0, v, 0.6, { h: 6, kind: 'zelkova' }); }
     CROWD([33.5, -40, 37.5, 36], 0, 8, 1501);
