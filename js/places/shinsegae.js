@@ -118,6 +118,9 @@ const mainTracks = [
 // swaps the two pairs and reverses the incline along the same hall axis.
 const ANNEX_AXES = [32.08,33.35,34.62,35.89];
 const ANNEX_WELL = [31.44,122.4,36.53,132.71];
+const PLAZA_ANNEX_WELL = [32.72,124.8,35.25,132.71];
+const UPPER_BRIDGE = [34.6,76,40.6,89];
+const bridgeLiftU=UPPER_BRIDGE[0]-1.1;
 const RIGHT_ATR = [27.6,74.2,39.4,78.0]; // legacy helper fallback; active wells are sheet-derived
 const UPPER_BANKS = [
   {key:"본관 화장실 옆",u:65,v:43.61,face:"W",top:"10F"},
@@ -955,7 +958,7 @@ export function build(K) {
       // Narrow level strip at the back of the relocated elevator cars.
       K.slab(rect(29,145.1,35,146.3),LV[id],{mat:floorMat[id]??'ssg_marble',thick:.12,under:false,ceil:false,edge:false});
       const apronEnd=Math.min(145.3,Math.max(84.71,upperPlanPoint(id,1775,700)[1]+2.5));
-      const h=[id==='2F'?rect(32.72,124.8,35.25,132.71):rect(...ANNEX_WELL)];
+      const h=[id==='2F'?rect(...PLAZA_ANNEX_WELL):rect(...ANNEX_WELL)];
       if(id==='3F')h.push(rect(1.65,112.5,5.15,119.2));
       K.slab(rect(0,84.7,UW,apronEnd),LV[id],{mat:floorMat[id]??'ssg_marble',thick:thick(id),holes:id==='3F'?mergedHoles(h):h,under:CEIL,edge:false});
     }
@@ -1558,15 +1561,15 @@ export function build(K) {
         parts.push([cu, cv + (i - .5) * 2.7, LV[id], LV[id]]);
       }
     } else if (bank.key === '신관 화장실 옆') {
-      parts.push([u, v, LV['6F'], LV[bank.top]], [u, 145, LV['2F'], LV['5F']]);
+      parts.push([bridgeLiftU, bank.v+(i-.5)*2.7, LV['6F'], LV[bank.top], 'E'], [u, 145, LV['2F'], LV['5F']]);
     } else {
       parts.push([u, v, LV['2F'], LV[bank.top]]);
     }
-    for (const [carU, vv, lo, hi] of parts) {
-      const [x, z] = P(carU, vv), dest = P(carU + du, vv + dv);
+    for (const [carU, vv, lo, hi, face=bank.face] of parts) {
+      const [x, z] = P(carU, vv), dest = face===bank.face ? P(carU + du, vv + dv) : P(carU+2.5,vv);
       const floors = ELV_FLOORS.filter(f => f.y >= lo && f.y <= hi)
         .map(f => ({...f, dx:dest[0]-x, dz:dest[1]-z}));
-      const el=K.elevator({name:`신세계 고객 엘리베이터 (${bank.key} ${i+1}호기)`,x,z,rotY:FACE[bank.face],w:2.4,d:2.2,floors,mat:0xc9c2b4,topH:lo===hi?4.65:3.2});
+      const el=K.elevator({name:`신세계 고객 엘리베이터 (${bank.key} ${i+1}호기)`,x,z,rotY:FACE[face],w:2.4,d:2.2,floors,mat:0xc9c2b4,topH:lo===hi?4.65:3.2});
       // Existing lower lobbies are remotely connected; they are not a
       // measured continuation of these upper-floor shafts. Preserve just the
       // return choices required by their corresponding lower-floor menus.
@@ -2623,7 +2626,7 @@ export function build(K) {
       const corner=UPPER_BANKS.find(b=>b.key==='본관 코너'),main=UPPER_BANKS.find(b=>b.key==='본관 화장실 옆'),annex=UPPER_BANKS.find(b=>b.key==='신관 화장실 옆');
       const remote=f=>{
         if(c.name==='마켓 엘리베이터')return cornerLiftLanding(f.label,corner,1);
-        if(f.label==='11F')return P(annex.u+1.35,annex.v-1.7);
+        if(f.label==='11F')return P(bridgeLiftU+2.5,annex.v+1.35);
         return mainLiftLanding(f.label, main, 1);
       };
       const parking=P(ELV[1].u,ELV[1].v-2.2),nw=P(NWLIFTS[0].u,NWLIFTS[0].v-2.8),mezz=P(36,81);
@@ -6739,9 +6742,7 @@ export function build(K) {
     // UGG Men & Kids still meets the open well and the outgoing flight.
     [ANNEX_WELL[0]-.3,ANNEX_WELL[1]-1.5,ANNEX_WELL[2]+.3,ANNEX_WELL[3]+1.5],
     ...(bridgeLiftFront[id]?[]:[bridgeLobby(id)]),
-    // The former 2F–5F bridge is no longer built after the annex flights
-    // moved. Keeping its reservation cuts mapped shops despite clear floor.
-    ...(!['2F','3F','4F','5F'].includes(id)&&upperPhysicalWell(id,true)[3]>=81.1?[[29,79.85,upperPhysicalWell(id,true)[2]+.85,81.3]]:[]),
+    ...(LV[id]>=LV['6F']?[[bridgeLiftU-1.3,UPPER_BRIDGE[1]-.75,UPPER_BRIDGE[2]+.25,UPPER_BRIDGE[3]+.75]]:[]),
     // The main restroom-side shaft's back extends roughly 1.2m from its
     // centre. Keep a further half-metre reservation for wall thickness and
     // player clearance, instead of excluding an extra 0.6m of retail on
@@ -7691,6 +7692,29 @@ export function build(K) {
     escalatorSkirt(...a,...b,f.ya,f.yb,1.1);
     if(f.dir==='down')descendingCombPlate(a,b,f.ya,f.yb,1.1);
   }
+  // Guard the floor cut on both long sides and across every end that has
+  // no comb plate at this height. On 2F the smaller cut serves the plaza pair.
+  for(const id of upperStack){
+    const y=LV[id], [west,near,east,far]=id==='2F'?PLAZA_ANNEX_WELL:ANNEX_WELL;
+    const guard=(a,b,c,d)=>{
+      if(Math.hypot(c-a,d-b)<.05)return;
+      wall(a,b,c,d,y,y+.98,{mat:0xd7cdbc,thick:.09});
+      wall(a,b,c,d,y+.98,y+1.05,{mat:0x63594b,thick:.12,solid:false});
+    };
+    guard(west,near,west,far);
+    guard(east,near,east,far);
+    for(const edge of [near,far]){
+      const entries=id==='2F'?(edge===far?ANNEX_AXES.slice(1,3):[]):
+        upperFlightReservations.filter(f=>f.annex).flatMap(f=>
+          f.ya===y&&f.a[1]===edge?[f.a[0]]:f.yb===y&&f.b[1]===edge?[f.b[0]]:[]).sort((a,b)=>a-b);
+      let start=west;
+      for(const u of entries){
+        if(u-.63>start)guard(start,edge,u-.63,edge);
+        start=Math.max(start,u+.63);
+      }
+      if(east>start)guard(start,edge,east,edge);
+    }
+  }
   for(const id of upperStack)registerEscalatorLanding('신관 에스컬레이터',id,'층별 매장 · 식당가',ANNEX_WELL,3,true);
   {const y=LV['2F'],[u0,v0,u1,v1]=hermesPassage;
     K.slab(rect(...hermesPassage),y+.028,{mat:{tex:'wood',color:0xc3a780,gloss:.3},walk:false,ceil:false,edge:false});
@@ -7874,6 +7898,20 @@ export function build(K) {
         }
         earlyGucciSigns.add(shop);
       }
+    }
+    if(y>=LV['6F']){
+      const [left,near,right,far]=UPPER_BRIDGE, h=clearH(id);
+      const finish={mat:0xdfd7cb,thick:.12};
+      for(const [a,b] of [[near,79.65],[82.04,82.36],[84.75,far]])wall(left,a,left,b,y,y+h,finish);
+      wall(right,near,right,far,y,y+h,finish);
+      // The popup occupies a shallow bay on the wall opposite the lift.
+      for(const v of [80.1,85.3]){
+        box(right-.62,v,1.0,2.35,y,.83,0xba9677);
+        box(right-.62,v,1.08,2.43,y+.83,.08,0xe3d4bc,{solid:false});
+        for(const offset of [-.62,.05,.68])box(right-.61,v+offset,.34,.30,y+.91,.31,0x938776,{solid:false});
+      }
+      sign('팝업 스토어',right-.09,82.7,y+2.45,'W',2.1,.36,{bg:'#584b42',fg:'#fff4e6'});
+      bridgeAisles[id]={bounds:UPPER_BRIDGE,by:'팝업 · 고객 엘리베이터'};
     }
     const crossWing=bridgeAisles[id];
     zone('본관 · 신관 연결통로',id,crossWing?.by || '층별 매장 · 엘리베이터',
