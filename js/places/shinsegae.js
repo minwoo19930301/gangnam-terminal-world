@@ -896,28 +896,39 @@ export function build(K) {
   // The lower banks flank the popup. At each public boarding end one flight
   // rises to 2F and its neighbour descends to B1. The opposite end is the exit.
   const beautyBanks = [
-    {side:'서측',up:25.8,down:29.9,basementDown:28.9,board:44,exit:55.5,up2:[30.9,51.7],down2:[32.65,39.8]},
-    {side:'동측',up:41,down:37.75,basementDown:38.35,board:52,exit:40.8,up2:[37.35,39.8],down2:[35.60,51.7]},
+    {side:'서측',up:25.45,down:27.25,board:MAIN_WELL[1],exit:MAIN_WELL[3]},
+    {side:'동측',up:41,down:39.2,board:MAIN_WELL[3],exit:MAIN_WELL[1]},
   ];
-  // Upstairs the visible opening only needs the high portion of each flight.
-  // A little overlap at its comb plate keeps the landing level across the tread.
-  function receivingSlot(low,high) {
-    const t=.45, u=low[0]+(high[0]-low[0])*t, v=low[1]+(high[1]-low[1])*t;
-    const end=high[1]-.025*Math.sign(high[1]-low[1]);
-    return [Math.min(u,high[0])-.85,Math.min(v,end),Math.max(u,high[0])+.85,Math.max(v,end)];
+  // Each lane keeps its distance from the popup at both landings. The two
+  // lanes in a bank cross in side elevation and repeat on the level below.
+  const beautyBankBounds = beautyBanks.map(({up,down,board,exit})=>[
+    Math.min(up,down)-.95, Math.min(board,exit)-1.15,
+    Math.max(up,down)+.95, Math.max(board,exit)+1.15,
+  ]);
+  const archScreens = beautyBanks.map(({up,down,board,exit})=>[
+    up+Math.sign(up-down)*1.35, Math.min(board,exit)-.3, Math.max(board,exit)+.3,
+  ]);
+  const beautyFlights = beautyBanks.flatMap(({up,down,board,exit})=>[
+    {u:up,from:board,to:exit,dir:'up'}, {u:down,from:exit,to:board,dir:'down'},
+  ]);
+  function receivingSlot({u,from,to}) {
+    const start=from+(to-from)*.45, end=to-.025*Math.sign(to-from);
+    return [u-.85,Math.min(start,end),u+.85,Math.max(start,end)];
   }
-  const beautyDownHoles=[], beautyUpHoles=[];
-  for(const bank of beautyBanks){
-    for(const [low,high] of [
-      [[bank.up,bank.board],[bank.up,bank.exit]], [[bank.basementDown,bank.exit],[bank.basementDown,bank.board]]
-    ])beautyDownHoles.push(rect(...receivingSlot(low,high)));
-    for(const [low,high] of [
-      [[bank.up,bank.board],bank.up2], [[bank.down,bank.exit],bank.down2]
-    ])beautyUpHoles.push(rect(...receivingSlot(low,high)));
-  }
-  for(const hole of beautyDownHoles)K.groundHole(hole);
-  const beautyDownSlots = beautyDownHoles.map(hole => hole.uvBounds);
-  const outsideBasementSlots = r => beautyDownSlots.reduce(
+  const beautySlots = beautyFlights.map(receivingSlot);
+  const beautyHoles = beautySlots.map(r=>rect(...r));
+  // Keep space for the comb plates and the transverse walk to the 3F flights.
+  const beautyLandingSpace = beautyFlights.map((flight,i)=>{
+    const [u0,v0,u1,v1]=beautySlots[i], south=flight.to>flight.from;
+    return [u0-.12,v0-(south ? .12 : 1.3),u1+.12,v1+(south ? 1.3 : .12)];
+  });
+  const westEdge=beautyBankBounds[0][0], eastEdge=beautyBankBounds[1][2];
+  beautyLandingSpace.push(
+    [westEdge,MAIN_WELL[1]-2.2,eastEdge,MAIN_WELL[1]],
+    [westEdge,MAIN_WELL[3],eastEdge,MAIN_WELL[3]+2.2],
+  );
+  for(const hole of beautyHoles)K.groundHole(hole);
+  const outsideBasementSlots = r => beautySlots.reduce(
     (parts, slot) => parts.flatMap(part => cutRect(part, slot)), [r]);
   // F13: keep the terracotta colour; stronger environment mixing washed it pink.
   const floorMat = { B2: { tex: 'concrete', color: 0x8c8d89 }, B1: 'ssg_marble', '1F': {tex:'ssg_1f_public_stone',gloss:.7}, '2F': {tex:'marble',color:0xf4efe4,gloss:.7}, '3F': {tex:'marble',color:0xf1ebdf,gloss:.5}, '11F': { tex: 'darkstone', color: 0xd4c5af } };
@@ -931,12 +942,11 @@ export function build(K) {
   MAIN.forEach((id, s) => {
     const holes = id==='1F' ? [...nwLiftHoles] : id==='B1' ? [] : id==='B2' ? ELV.map(e=>rect(e.u-e.w/2,e.v-e.d/2,e.u+e.w/2,e.v+e.d/2)) : bridgeLiftFront[id] ? [] : [...elvHoles];
     // Ground NW lift bank has its own 1F/1M controls; upper banks follow their plan icons.
-    if (id === '1F') holes.push(...beautyDownHoles);
+    if (id === '1F' || id === '2F') holes.push(...beautyHoles);
     // The old subway icon remaps outside this footprint; CC owns that well.
     if (id === 'B1') { /* no fabricated in-store subway pit */ }
     else if (s >= 3 && id !== '11F') holes.push(rect(...upperPhysicalWell(id)));
     if (s >= 4) holes.push(rect(...upperPhysicalWell(id,true)));
-    if (id === '2F') holes.push(...beautyUpHoles);
     // L09: retain all upper tenant registrations, opening only the photographed vertical atrium.
     if (id==='11F') holes.push(rect(...photoAtrium(id)));
     if (s >= 1) for (const c of (s===1||s>MAIN.indexOf('8F')?BASE_CORES:CORES)) if (s <= coreTop(c) && !(id==='1F'||id==='2F') && !(id==='B1'&&c.door==='W')) holes.push(stairHole(c, s));
@@ -1066,10 +1076,13 @@ export function build(K) {
       return t>=0&&t<=1&&Math.abs((x-a[0])*dz-(z-a[1])*dx)/Math.sqrt(l2)<.85;
     });
   };
+  const protectedFlights = [...upperFlightReservations, ...beautyFlights.map(({u,from,to})=>({
+    a:[u,from], b:[u,to], ya:0, yb:LV['2F'],
+  }))];
   function upperSafeIntervals(u0,v0,u1,v1,y,H,extraBlocked=null){
     const L=Math.hypot(u1-u0,v1-v0),n=Math.max(1,Math.ceil(L/.10)),safe=[];
     const aperture = photoAtriumAtHeight(Math.max(y, LV['2F']));
-    const blocked=(u,v)=>(extraBlocked&&extraBlocked(u,v))||(y>=6.0&&inR(u,v,aperture,-.02))||upperFlightReservations.some(f=>{
+    const blocked=(u,v)=>(extraBlocked&&extraBlocked(u,v))||(y>=6.0&&inR(u,v,aperture,-.02))||protectedFlights.some(f=>{
       if(f.ya>y+H+.1||f.yb<y-1.8)return false;
       const dx=f.b[0]-f.a[0],dz=f.b[1]-f.a[1],l2=dx*dx+dz*dz,t=((u-f.a[0])*dx+(v-f.a[1])*dz)/l2;
       if(t<-.06||t>1.06)return false;const h=f.ya+(f.yb-f.ya)*Math.max(0,Math.min(1,t));
@@ -1124,20 +1137,8 @@ export function build(K) {
       wall(u,v,U,V,y,y+1.02,{mat:'glass',thick:.045});
       upperGuardTrim(u,v,U,V,y+1.02,.055,.055,0x333537,[[0,1]]);
     };
-    if(id==='2F'){
-      // The ground flights enter at an angle. Follow the outside of their
-      // openings so the rail never crosses the stairs or their headroom.
-      for(const loop of unionRects([MAIN_WELL,...beautyUpHoles.map(h=>h.uvBounds)])){
-        for(let i=0;i<loop.length;i++){
-          const [u,v]=loop[i],[U,V]=loop[(i+1)%loop.length];
-          if(Math.abs(v-V)<.001 && (Math.abs(v-north)<.04 || Math.abs(v-south)<.04))continue;
-          guard(u,v,U,V);
-        }
-      }
-    }else{
-      guard(west,north,west,south);
-      guard(east,north,east,south);
-    }
+    guard(west,north,west,south);
+    guard(east,north,east,south);
     for(const edge of [north,south]){
       const axes=mainTracks.filter(t=>id!=='10F'||(t.northLow?south:north)===edge).map(t=>t.u).sort((a,b)=>a-b);
       let begin=west;
@@ -1338,8 +1339,7 @@ export function build(K) {
       K.quad({tex:'metal',color:0xc5c5bc},steel,[nx*side,0,nz*side]);
     }
     if(thin){
-      // Meet the entire angled tread at the top, including the corner that
-      // extends past the straight edge of the main floor. The underside is open.
+      // A level comb plate spans the full tread at the upper landing.
       const tip=(d,t)=>[b[0]+dx/len*d+nx*t,b[1]+dz/len*d+nz*t];
       K.slab([tip(-.02,-.65),tip(.85,-.65),tip(.85,.65),tip(-.02,.65)],yb-.004,
         {mat:'metal',thick:.025,under:false,edge:false,ceil:false});
@@ -1353,22 +1353,23 @@ export function build(K) {
       box((a[0]+b[0])/2,(a[1]+b[1])/2,Math.abs(b[0]-a[0])+.06,Math.abs(b[1]-a[1])+.06,y+1.05,.055,rail,{solid:false});
     }
   }
+  for(const flight of beautyFlights) {
+    const {u,from,to,dir}=flight;
+    const slot=receivingSlot(flight), entry=to>from?'S':'N';
+    dressedEscalator(u,from,u,to,LV.B1,0,dir,true);
+    dressedEscalator(u,from,u,to,0,LV['2F'],dir,true);
+    wellGuard(slot,0,entry,0xc9955b);
+    wellGuard(slot,LV['2F'],entry,0x333537);
+  }
   for(const bank of beautyBanks){
-    const {up,down,board,exit,up2,down2}=bank;
-    const toward=Math.sign(exit-board);
-    for(const [u,from,to,dir] of [[up,board,exit,'up'],[bank.basementDown,exit,board,'down']]){
-      dressedEscalator(u,from,u,to,LV.B1,0,dir,true);
-      wellGuard(receivingSlot([u,from],[u,to]),0,to>from?'S':'N',0xc9955b);
-    }
-    dressedEscalator(up,board,...up2,0,LV['2F'],'up',true);
-    dressedEscalator(down,exit,...down2,0,LV['2F'],'down',true);
+    const {up,down,board,exit}=bank, toward=Math.sign(exit-board);
     // Mount the destination at the rail, below eye height. The popup axis
     // and the view of the crossing flights stay clear.
     const marker={bg:'#34312c',fg:'#ffffff',twoSided:true};
     const edge=up>down?1:-1;
     sign('2층 ↑',up+edge*.75,board+toward*.25,.84,edge>0?'W':'E',.92,.30,marker);
-    sign('B1 ↓',bank.basementDown-edge*.75,board+toward*.25,.84,edge>0?'E':'W',.92,.30,marker);
-    const apron=board-toward*.90, lo=Math.min(up,bank.basementDown), hi=Math.max(up,bank.basementDown);
+    sign('B1 ↓',down-edge*.75,board+toward*.25,.84,edge>0?'E':'W',.92,.30,marker);
+    const apron=board-toward*.90, lo=Math.min(up,down), hi=Math.max(up,down);
     zoneAtApproach({name:bank.side+' 에스컬레이터',floor:'1F',sub:'2층 올라감 · B1 내려감',y0:0,y1:3.6,priority:4},
       rect(lo-.90,Math.min(board,exit)-.6,hi+.90,Math.max(board,exit)+.6),
       rect(lo-.30,apron-.28,hi+.30,apron+.28));
@@ -2306,7 +2307,7 @@ export function build(K) {
     const reserves=[
       [0,37.5,8.5,48], // J4 fixed public opening; plain passage through the market edge.
       [31,-.1,45,8], // J1 north connection is surveyed independently of the plan.
-      [24.65,42.5,27.0,56.6],[39.8,39,42.2,54], // photographed B1→1F feet and banks
+      ...beautyBankBounds, // B1 boarding and exit approaches
       [27,54,39,61.2], // open foot-to-skylight crossing
       [35,62,42.5,84.7], // NNW–SSE checkerboard public aisle from the south wall
       [20,59.5,26,66], // garland market portal and its approach
@@ -2440,7 +2441,7 @@ export function build(K) {
       cyl(u,v,yy+.065*scale,.056*scale,.085*scale,0xe9debd,false,8);
     }
     function deliCoffer(u,v,w,d){
-      if (beautyDownSlots.some(slot => intersects(slot,[u-w/2-.1,v-d/2-.1,u+w/2+.1,v+d/2+.1]))) return;
+      if (beautySlots.some(slot => intersects(slot,[u-w/2-.1,v-d/2-.1,u+w/2+.1,v+d/2+.1]))) return;
       const pts=[[-.5,-.35],[-.35,-.5],[.35,-.5],[.5,-.35],[.5,.35],[.35,.5],[-.35,.5],[-.5,.35]];
       const poly=pts.map(([a,b])=>P(u+a*w,v+b*d));
       K.hpoly({tex:'metal',color:0xc9a35a},poly,y+4.80,false);
@@ -2894,7 +2895,7 @@ export function build(K) {
           }
         }
         for(let u=u0+1.5;u<u1-1;u+=3)for(let v=v0+1.5;v<v1-1;v+=3){
-          if (beautyDownSlots.some(slot => inR(u,v,slot,.11))) continue;
+          if (beautySlots.some(slot => inR(u,v,slot,.11))) continue;
           const[x,z]=P(u,v);K.cyl({x,z,y:y+4.81,r:.085,h:.025,mat:0xb4a687,seg:10,solid:false});
           K.cyl({x,z,y:y+4.805,r:.07,h:.018,mat:{tex:'emit',color:0xffefd2},seg:10,solid:false});
         }
@@ -3100,9 +3101,10 @@ export function build(K) {
       festive(39,80.3,y+3.44,false,6.0);
       for(const v of[63,71,79,83])sign('비상구  ↑',39,v,y+4.12,'S',.6,.25,{bg:'#087c5b',fg:'#effff4',twoSided:true});
       // White backlit escalator side and granite pier; 'B1' hangs over the foot.
-      box(24.7,54.4,.34,.6,y,4.3,{tex:'marble',color:0x443e36,gloss:.7});
-      box(24.9,53.7,.04,1.2,y+.4,3.6,{tex:'emit',color:0xf3f2e9},{solid:false});
-      sign('B1',25.8,55.8,y+3.7,'S',.8,.55,{bg:'#302d29',fg:'#ffffff',twoSided:true});
+      const west=beautyBanks[0];
+      box(west.up-1.1,west.exit-1.1,.34,.6,y,4.3,{tex:'marble',color:0x443e36,gloss:.7});
+      box(west.up-.9,west.exit-1.8,.04,1.2,y+.4,3.6,{tex:'emit',color:0xf3f2e9},{solid:false});
+      sign('B1',west.up,west.exit+.3,y+3.7,'S',.8,.55,{bg:'#302d29',fg:'#ffffff',twoSided:true});
     });
     for(const[name,px,py]of [['B1 신세계 마켓',720,570],['B1 델리 · 8게이트',823,388],['B1 메가박스 원형 광장',648,1008],['B1 9게이트 · 스위트 파크 연결',1024,477]]){
       const[u,v]=BPLAN(px,py);if(!owned(u,v,1))continue;const[x,z]=P(u,v);K.spawn({name,x,z,y,yaw:RA});
@@ -3146,7 +3148,6 @@ export function build(K) {
   const planRect=(x0,y0,x1,y1,map=PLAN)=>{const a=map(x0,y0),b=map(x1,y1);return[Math.min(a[0],b[0]),Math.min(a[1],b[1]),Math.max(a[0],b[0]),Math.max(a[1],b[1])];};
   // The official cells retain their full plan footprint; furniture sits inside each cell,
   // leaving the shared aisles open. Fixtures are schematic, not surveyed brand fit-outs.
-  const BEAUTY_BANK_RECTS=[[38.2,39,42.1,53],[24.7,43,28.6,57]];
   const beautyObstacles=[];
   let beautyStaff=0;
   function beautyPerson(u,v,y,rotY,staff=false,index=0,bag=false) {
@@ -5725,7 +5726,7 @@ export function build(K) {
 
     // L02/D04: narrow illuminated gold arch screens on each bank's outer edge.
     // Neither screen crosses the bank end or the central popup walking axis.
-    for(const [u,v0,v1]of[[24.5,43.7,56.2],[42.5,39.7,52.2]])wall(u,v0,u,v1,0,2.38,{mat:0xf2f0e9,thick:.18});
+    for(const [u,v0,v1]of archScreens)wall(u,v0,u,v1,0,2.38,{mat:0xf2f0e9,thick:.18});
     // Shinsegae event 8681898 and the dated October Burberry programme use Seoul dates.
     // https://www.shinsegae.com/cms12/SC00002/info/theme/8681898_4465.txt
     // https://ktnews.com/news/articleView.html?idxno=149762
@@ -5755,9 +5756,8 @@ export function build(K) {
       // winter sculpture. The booth dimensions and display positions are approximate.
       // https://halcyonmagazine.com/jaeger-lecoultre-valley-of-invention-pop-up/
       const oak = {tex:'wood',color:0xcdab75}, brass = {tex:'metal',color:0xbe995e};
-      // Keep the corner exhibits inside the two returning escalator lanes.
-      // The southwest return fits between the 2F down flight and the gate axis.
-      const panels = [[30.10,36.70,1.65],[36.18,36.70,1.65],[32,51.10,1],[36.90,51.10,1.65]];
+      // Group the four corner exhibits along the two sides of the gate-to-gate aisle.
+      const panels = [[30.10,36.70,1.65],[37.00,36.70,1.65],[30.10,51.10,1],[37.00,51.10,1.65]];
       const displayUs = [30.5,36.5], displayVs = [39.3,47.4];
       for (const [u,v,width] of panels) {
         box(u,v,width,.18,0,3.18,oak);
@@ -5775,7 +5775,7 @@ export function build(K) {
         beautyObstacles.push([u-.37,v-.96,u+.37,v+.96]);
       }
       // Set the winter sculpture just off the central 1 Gate–3 Gate sightline.
-      const treeU = 35.80, treeV = 44.10;
+      const treeU = 36.65, treeV = 44.10;
       const [x,z] = P(treeU,treeV);
       const plinth = K.cyl({x,z,y:0,r:.57,h:.22,seg:16,mat:brass});
       cabinetLid(plinth,.22);
@@ -5813,8 +5813,8 @@ export function build(K) {
           faceQuad(litName,face,u,1.98,width-.14,.52,.145,v);
           faceQuad(banner,dir<0?'S':'N',u,.54,Math.min(1.05,width-.12),1.95,.12,v);
         }
-        // Suspend the southwest banner directly over the inset display.
-        for (const [u,v] of [[29.5,36.2],[37.5,36.2],[32,51.65],[37.5,51.65]]) {
+        // Suspend each banner at its pavilion.
+        for (const [u,v] of [[29.5,36.2],[37.5,36.2],[30.10,51.65],[37.5,51.65]]) {
           box(u,v,1.08,.035,4.24,3.42,0x77838b,dress);
           for (const face of ['N','S']) faceQuad(banner,face,u,4.24,1.08,3.42,.025,v);
         }
@@ -5877,7 +5877,7 @@ export function build(K) {
         stageFloor(r,.029,{tex:'marble',color:0xf3f0e9,gloss:.7});
       }
       const inlay = (r, triangle) => {
-        if (beautyDownSlots.some(slot => intersects(slot,r))) return;
+        if (beautySlots.some(slot => intersects(slot,r))) return;
         K.hpoly({tex:'marble',color:0xa3523f,gloss:.7},triangle.map(p=>P(...p)),.031);
       };
       for(let j=0;j<8;j++)for(const u of[28.2,37.9]){
@@ -6003,10 +6003,10 @@ export function build(K) {
         g.fillStyle='#748c98';for(const x of [.28,.38,.62,.72])g.fillRect(w*x,h*.52,w*.035,h*.15);
       },[1,1]);
       const mediaMat=K.material('ssg_atrium_arch_media_lit',new K.THREE.MeshBasicMaterial({map:K.T.surface(mediaKey).tex,side:K.THREE.DoubleSide}));
-      for(const [u,v0,v1]of[[24.5,43.7,56.2],[42.5,39.7,52.2]]){
+      for(const [u,v0,v1]of archScreens){
         const side=u<30?-1:1;
         for(let j=0;j<7;j++){
-          const v=v0+.9+j*1.77;
+          const v=v0+(j+.5)*(v1-v0)/7;
           // The user's walk shows open-backed bronze arch fins with a warm
           // illuminated line; the ceiling is visible between the uprights.
           arch(u,v,true,.81,2.38,4.63,.81,bronze,.11);
@@ -6054,7 +6054,7 @@ export function build(K) {
         // The 1 GATE to 3 GATE axis stays visible and walkable past the
         // central popup. Two old plan-derived columns fell directly across
         // that sightline, despite the user's walkthrough photographs.
-        if(BEAUTY_BANK_RECTS.some(r=>inR(u,v,r,.7))||(!photo&&u>30&&u<38&&v>5&&v<80))continue;
+        if(beautyBankBounds.some(r=>inR(u,v,r,.7))||(!photo&&u>30&&u<38&&v>5&&v<80))continue;
         const[x,z]=P(u,v);
         K.cyl({x,z,y:0,r:.58,h:.2,mat:{tex:'marble',color:cream,gloss:.3},seg:20});
         K.cyl({x,z,y:.2,r:.46,h:5.36,mat:cream,seg:24});
@@ -6068,7 +6068,7 @@ export function build(K) {
       }
       for(let u=14;u<60;u+=6.7)for(let v=8;v<64;v+=7){
         const r=[u,v,u+6.2,v+6.5],well=[29.4,29.5,38.6,52.5];
-        if([well,...BEAUTY_BANK_RECTS].some(b=>r[0]<b[2]+.4&&r[2]>b[0]-.4&&r[1]<b[3]+.4&&r[3]>b[1]-.4))continue;
+        if([well,...beautyBankBounds].some(b=>r[0]<b[2]+.4&&r[2]>b[0]-.4&&r[1]<b[3]+.4&&r[3]>b[1]-.4))continue;
         beautyCoffer(...r);
       }
       // The user's 1F approach photograph shows a moulded white coffer above
@@ -6245,7 +6245,7 @@ export function build(K) {
       // Keep the population density, with new route axes and popup walls reserved.
       const cells=[...BEAUTY_CELLS,...EDGE_BOUTIQUES].map(([,x0,y0,x1,y1])=>planRect(x0,y0,x1,y1));
       const rng=K.rand(111026),placed=[],target=Math.max(0,204-beautyStaff-12);
-      const safe=(u,v)=>u>9&&u<64&&v>12&&v<79&&!(u>31.6&&u<35&&v>27&&v<84)&&!(u<13&&(Math.abs(v-42.6)<4.5||Math.abs(v-68)<4.5))&&!BEAUTY_BANK_RECTS.some(r=>inR(u,v,r,1.0))&&!cells.some(r=>inR(u,v,r,.35))&&!beautyObstacles.some(r=>inR(u,v,r,.6))&&!placed.some(p=>Math.hypot(p[0]-u,p[1]-v)<.72);
+      const safe=(u,v)=>u>9&&u<64&&v>12&&v<79&&!(u>31.6&&u<35&&v>27&&v<84)&&!(u<13&&(Math.abs(v-42.6)<4.5||Math.abs(v-68)<4.5))&&!beautyBankBounds.some(r=>inR(u,v,r,1.0))&&!cells.some(r=>inR(u,v,r,.35))&&!beautyObstacles.some(r=>inR(u,v,r,.6))&&!placed.some(p=>Math.hypot(p[0]-u,p[1]-v)<.72);
       let guard=0;
       while(placed.length<target&&guard++<12000){
         const u=10+rng()*53,v=rng()<.62?34+rng()*22:13+rng()*64;if(!safe(u,v))continue;
@@ -6789,6 +6789,7 @@ export function build(K) {
       return b.face==='N'?[b.u-3,b.v-3.9,b.u+3,b.v+1.2]:b.face==='S'?[b.u-3,b.v-1.2,b.u+3,b.v+2.4]:[b.u-3.8,b.v-3,b.u+3.8,b.v+3];
     }),
     ...activeCores(id).map(c=>[c.uL-.7,c.v0-.6,c.uR+.2,c.v1+.6]),
+    ...(id==='2F'?beautyLandingSpace:[]),
     ...(id==='2F'?[[57.7,79.4,60.7,84.7],[0,72.6,7.5,77.5],[38.25,39.6,40.35,53],[28.0,51.6,30.9,57]]:[]),
   ];
   function cutRect(r,c) {
