@@ -3783,8 +3783,8 @@ function hallR20(K) {
   // Guard the remaining exposed 1M slab edges. Keep the upward escalator
   // landing and the Shinsegae and lift-side connections open; exact positions
   // are schematic, although the user's photos show metal gallery guards.
-  galleryEdge(32,-12,32,-4.15);
-  galleryEdge(32,-2.25,32,2.25);
+  galleryEdge(32,-12,32,-1.64);
+  galleryEdge(32,-.14,32,2.14);
   galleryEdge(32,8.75,32,11.5);
   galleryEdge(0,-5.2,0,3);
   galleryEdge(-11,-4,-11,-3.2);
@@ -3794,9 +3794,9 @@ function hallR20(K) {
   galleryEdge(43,11.5,43,17.5);
   galleryEdge(38,17.5,43,17.5);
   // Leave an opening for the short descending escalator's mezzanine landing.
-  galleryEdge(33,2.25,33,2.75);
-  galleryEdge(33,4.85,33,8.75);
-  galleryEdge(32,2.25,33,2.25);
+
+  galleryEdge(33,3.64,33,8.75);
+  galleryEdge(32,2.14,33,2.14);
   galleryEdge(32,8.75,33,8.75);
   galleryEdge(-11,17.5,-11,26);
   galleryEdge(-5.5,-29,0,-29);
@@ -3813,19 +3813,19 @@ function hallR20(K) {
   for(const ss of[-3.7,-1.3])glassRail(ss,-22,ss,-14.8,3.6);
   glassRail(-3.7,-22,-1.3,-22,3.6);
   // 2F flight and landing: kept separate from the 3.6m mezzanine.
-  slab(29,-1.5,38,2.5,7,{mat:marble});
+  slab(29,-1.55,38,3.55,7,{mat:marble});
   // The hotel ramp crosses the west edge of this landing. Keep its 4.5 m
   // opening clear while retaining the remaining guardrail on both sides.
-  glassRail(29,-1.5,32.42,-1.5,7);
+
   glassRail(36.92,-1.5,38,-1.5,7);
   // The two modeled floor slabs overlap past this guard. Stop it one metre
   // earlier so the 2F public connection is navigable without squeezing
   // against Bulgari's perpendicular side wall; the fit is not surveyed.
-  glassRail(29,2.5,31.42,2.5,7);
+
   glassRail(36.92,2.5,38,2.5,7);
   // The two middle flights share the hall axis and boarding line with the
   // outside mezzanine flights. Their upper ends meet the existing 2F landing.
-  for (const [t, dir] of [[1.8, 'up'], [.2, 'down']]) {
+  for (const [t, dir] of [[1.63, 'up'], [.37, 'down']]) {
     const foot = P(16.5, t), top = P(29, t);
     K.escalator(...foot, ...top, { ya: 0, yb: 7, w: 1.1, dir });
     // The 2F retail route continues along these treads to the level plaza.
@@ -3847,9 +3847,9 @@ function hallR20(K) {
       });
     }
   }
-  K.escalator(...P(16.5,-3.2),...P(32.4,-3.2),{ya:0,yb:3.6,w:1.1,dir:'up'});
+  K.escalator(...P(16.5,-.89),...P(32.4,-.89),{ya:0,yb:3.6,w:1.1,dir:'up'});
   // Opposite the short ascent, the mezzanine descends on the hall's left.
-  K.escalator(...P(16.5,3.8),...P(33.6,3.8),{ya:0,yb:3.6,w:1.1,dir:'down'});
+  K.escalator(...P(16.5,2.89),...P(33.6,2.89),{ya:0,yb:3.6,w:1.1,dir:'down'});
   // Four-lane Sweet Garden bank: the B1 owner leaves its approach empty.
   for(const [i,t]of [3.05,4.65,6.25,7.85].entries())K.escalator(...P(21,t),...P(33,t),{ya:K.LEVELS.B1,yb:0,w:1.13,dir:i<2?'up':'down'});
   glassRail(21,2.25,32,2.25,0);glassRail(21,8.75,32,8.75,0);glassRail(21,2.25,21,8.75,0);
@@ -4300,7 +4300,7 @@ function hallR20(K) {
     for(const s of[8,10,12]){lbox(s,13,.42,.28,0,1.12,0x303936);lbox(s,13,.5,.18,1.12,.65,0x202723,{solid:false});lsign(['주문하기','포장 · 매장'],s,12.89,1.45,.45,.46,'W',{bg:'#e0e8d8',fg:'#2c473b'});}
     lsign('우리은행',20.4,12.02,1.6,3.2,1.55,'W',{bg:'#2779c3',fg:'#fff'});
     // Stainless entry warnings and the photographed mezzanine directory.
-    for(const [t,dir]of [[-.50,'down'],[2.50,'up'],[-3.9,'mezz']]){lcyl(16,t,0,.09,1.05,0xaeb4b2);lsign(dir==='down'?'위험 진입금지':'↑ 걷거나 뛰지마세요',16,t,1.2,.5,.38,'N',{bg:dir==='down'?'#a83226':'#263c41',fg:'#fff'});}
+    for(const [t,dir]of [[-.26,'down'],[2.26,'up'],[-1.52,'mezz']]){lcyl(16,t,0,.09,1.05,0xaeb4b2,{solid:false});lsign(dir==='down'?'위험 진입금지':'↑ 걷거나 뛰지마세요',16,t,1.2,.5,.38,'N',{bg:dir==='down'?'#a83226':'#263c41',fg:'#fff'});}
     // The user's November 2026 walk shows a narrow illuminated direction
     // panel between the 2F escalators, indicating the department store and
     // hotel. This simplified screen is visual-only and does not embed the

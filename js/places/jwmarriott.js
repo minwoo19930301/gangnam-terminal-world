@@ -470,6 +470,8 @@ export function build(K) {
     const tower = y >= Y['8F'];
     const poly = tower ? RECT(TW[0] + 0.06, TW[1] + 0.06, TW[2] - 0.06, TW[3] - 0.06) : ['3F','4F','5F','6F'].includes(k) ? RECT(UW + .06, 0, UE - .06, 60.5) : (y > 1 ? FPLI : FPL);   // inset: keeps the slab edge off the facade plane (z-fighting)
     const holes = holesFor(k).map(h => RECT(...h));
+    // The annex escalators pass through the shared podium roof to the 7F shop floor.
+    if(k==='7F')holes.push(RECT(-2.4,-23.4,3.3,-12.4));
     K.slab(poly, y, { mat: floorMat[k] ?? (tower ? 'jwCarpet' : 'tile'), under: k === 'B4' ? false : { tex: 'ceiling', color: 0xf4efe6 }, thick: 0.3, holes, edgeMat: STONE_D });
   }
   // tower roof + podium roof is the 7F slab
