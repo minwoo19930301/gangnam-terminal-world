@@ -1494,7 +1494,7 @@ export function build(K) {
       const mapped=lo===hi;
       const shaft=K.elevator({name:`신세계 고객 엘리베이터 (연결부 ${i+1}호기)`,x:cx,z:cz,rotY:mapped?FACE.E:FACE.N,
         w:lo===LV['11F']?1.35:mapped?2.0:e.w,d:mapped?2.0:e.d,topH:mapped?4.5:3.2,floors:doors,mat:0xc9c2b4});
-      const menu={...shaft,floors:stops};
+      const menu={...shaft,floors:mapped ? stops.filter(f=>f.label!=='1M') : stops};
       const call=K._.interactables.find(it=>it.elevator===shaft);
       call.elevator=menu;
       call.y=lo;
@@ -1674,9 +1674,12 @@ export function build(K) {
     for(const [i,e] of NWLIFTS.entries()){
       const [x,z]=P(e.u,e.v),landing=beautyLiftLanding(e);
       const parking=P(ELV[i].u,ELV[i].v-2.2);
-      const stops={'B2':parking,'B1':MARKET_B1_DEST,'1F':landing,'1M':P(36,81)};
+      const stops={'B2':parking,'B1':MARKET_B1_DEST,'1F':landing};
       const el=K.elevator({name:i===0?"남동 고객 엘리베이터 4호기":"남동 고객 엘리베이터",x,z,rotY:FACE.W,w:e.w,d:e.d,shaft:false,
-        floors:ELV_FLOORS.filter(f=>f.y<7).map(f=>({...f,dx:stops[f.label][0]-x,dz:stops[f.label][1]-z}))});
+        floors:ELV_FLOORS.filter(f=>f.label!=='1M').map(f=>{
+          const [tx,tz]=stops[f.label] ?? bridgeLanding(f.label,i);
+          return {...f,dx:tx-x,dz:tz-z};
+        })});
       const [callX,callZ]=P(u-.62,e.v);
       Object.assign(K._.interactables.find(it=>it.elevator===el),{x:callX,z:callZ,y:0,r:1.5});
       box(u,e.v,.08,1.84,0,2.45,0x575956);

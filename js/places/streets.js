@@ -240,33 +240,35 @@ export function build(K) {
         const surveyed=surveyedCrossings.map(c=>{const a=c.pts[0],b=c.pts[c.pts.length-1],dx=b[0]-a[0],dz=b[1]-a[1],L=Math.hypot(dx,dz),x=(a[0]+b[0])/2,z=(a[1]+b[1])/2;
           return {c,x,z,L,d:Math.hypot(x-arm.x,z-arm.z),dot:Math.abs((dx*arm.u+dz*arm.v)/L)};})
           .filter(c=>c.L>=r.width*.65&&c.d<13&&c.dot<.4).sort((a,b)=>a.d-b.d)[0];
-        if(surveyed){const t=(surveyed.x-arm.x)*arm.u+(surveyed.z-arm.z)*arm.v;arm.x+=arm.u*t;arm.z+=arm.v*t;arm.crossing=surveyed.c.id;}
+        let walkX=arm.v,walkZ=-arm.u,span=r.width;
+        if(surveyed){
+          const pts=surveyed.c.pts,a=pts[0],b=pts[pts.length-1];
+          const hit=segmentCross(a,b,r.pts[i-1],r.pts[i]);
+          if(hit){
+            [arm.x,arm.z]=hit;
+            walkX=(b[0]-a[0])/surveyed.L;walkZ=(b[1]-a[1])/surveyed.L;
+            span=r.width/Math.abs(walkX*arm.v-walkZ*arm.u);
+          }
+        }
         j.arms.push(arm);if(!arm.owned)continue;
         // The full crossing strip, the 2.5m clearance and approach stop line
         // form one exclusion for every kind of longitudinal paint.
         const end=[arm.x+arm.u*5.45,arm.z+arm.v*5.45],start=[arm.x-arm.u*2.5,arm.z-arm.v*2.5];
         paintMasks.push(stripPoly(start,end,r.width+.3));
-        crosswalks.push({a:[arm.x+arm.v*r.width/2,arm.z-arm.u*r.width/2],b:[arm.x-arm.v*r.width/2,arm.z+arm.u*r.width/2],w:5,arm});
+        crosswalks.push({a:[arm.x+walkX*span/2,arm.z+walkZ*span/2],b:[arm.x-walkX*span/2,arm.z-walkZ*span/2],w:5,arm});
         if(arm.incoming)approaches.push(arm);
       }
     }
   }
-  // Node-only and footway crossings are projected square to the road being
-  // crossed. Diagonal OSM footway links are pedestrian routing, not paint.
+  // Surveyed ways retain their curb and median endpoints. Node-only crossings
+  // arrive here with endpoints inferred from the road's local normal.
   function addCrossing(pts,w=4.5,allowJunction=false){
     const a=pts[0],b=pts[pts.length-1],x=(a[0]+b[0])/2,z=(a[1]+b[1])/2;
     if(!allowJunction&&junctions.some(j=>insideJ(j,x,z,14)))return;
     if(crosswalks.some(c=>Math.hypot((c.a[0]+c.b[0])/2-x,(c.a[1]+c.b[1])/2-z)<8))return;
-    let best=null;
-    for(const r of roadNetwork)for(let i=1;i<r.pts.length;i++){
-      const hit=segmentCross(a,b,r.pts[i-1],r.pts[i]);if(!hit)continue;
-      const n=nearest(hit[0],hit[1],[r]),score=Math.abs(n.u*(b[1]-a[1])-n.v*(b[0]-a[0]));
-      if(!best||score>best.score)best={...n,score};
-    }
-    const q=best||nearest(x,z);if(!q.r)return;
-    const length=Math.max(q.r.width,Math.abs(-(b[0]-a[0])*q.v+(b[1]-a[1])*q.u));
-    const aa=[x+q.v*length/2,z-q.u*length/2],bb=[x-q.v*length/2,z+q.u*length/2];
-    crosswalks.push({a:aa,b:bb,w:Math.max(4,Math.min(6,w))});paintMasks.push(stripPoly(aa,bb,Math.max(4,Math.min(6,w))+.5));
+    const width=Math.max(4,Math.min(6,w));
+    crosswalks.push({a,b,w:width});
+    paintMasks.push(stripPoly(a,b,width+.5));
   }
   for(const r of crossings){const a=r.pts[0],b=r.pts[r.pts.length-1],x=(a[0]+b[0])/2,z=(a[1]+b[1])/2;
     // A module-owned zebra may cross a city-owned approach (Samho south).
@@ -495,6 +497,22 @@ export function build(K) {
         beam(P(0,cy-.05),P(side*.05,cy-.13),.015,col);
         beam(P(0,cy+.015),P(side*(green?.07:.04),cy-.035),.014,col);
       }
+    }
+  }
+  // Place the two street-facing complex markers inside their mapped parcels.
+  const residentialStreet=byId.get(523344140);
+  for(const [id,name,side] of [[413354835,'반포르엘',-1],[413367377,'신반포4차',1]]){
+    const parcel=K.osm.areas.find(a=>a.id===id);
+    const road=nearest(-94,-235,[residentialStreet]),nx=-road.v*side,nz=road.u*side;
+    K.zone({name,floor:'거리',sub:'신반포로23길',poly:parcel.poly,y0:0,y1:3,priority:2});
+    for(let off=road.r.width/2+2;off<45;off+=.5){
+      const x=road.x+nx*off,z=road.z+nz*off;
+      if(!K.pointInPoly(x,z,parcel.poly)||inBuilding(x,z))continue;
+      const rotY=Math.atan2(-nx,-nz);
+      K.box({x,z,y:.08,w:4.2,d:.48,h:1.25,rotY,mat:0x605d56});
+      K.sign(name,{x:x-nx*.26,z:z-nz*.26,y:.83,w:3.55,h:.52,rotY,bg:null,fg:'#fff4da'});
+      K.spawn({name:name+' · 신반포로23길',x:road.x+nx*(road.r.width/2+1),z:road.z+nz*(road.r.width/2+1),y:WALK,yaw:rotY,group:'고속터미널 거리'});
+      break;
     }
   }
   function zebra(a,b,w=5){

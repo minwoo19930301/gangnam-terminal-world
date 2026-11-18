@@ -171,11 +171,12 @@ export function build(K) {
   const inset=[0,0,4,8,11,14,17,20,23,25];
   // Photos01/08: inclined lower concrete supports, then projecting upper west tiers.
   // Upper ledges advance 1.6m per level; the east/yard terraces retain their setbacks.
-  const westInset=[0,0,4,8,6.4,4.8,3.2,1.6,0,-1.6];
+  const westInset=[0,10,10,8,6.4,4.8,3.2,1.6,0,-1.6];
   // Upper end faces are straight with two chamfers, wholly inside the OSM ground wall.
   // Retaining its three shallow south-edge segments on every floor made a rounded stack.
   const floorPoly=i=>{
-    if(i<2)return WEST;
+    if(i===0)return WEST;
+    if(i===1)return strip(westInset[i],75.7);
     const lo=westInset[i],hi=75.7-inset[i],c=Math.max(2.5,18-(inset[i]-4)*.72);
     return [[lo,0],[hi,0],[hi,154],[hi-c,159],[lo+c,159],[lo,154]].map(q=>W(...q));
   };
@@ -292,15 +293,15 @@ export function build(K) {
   K.material('gb_pier_clear',new K.THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false}));
   for(let v=22.4;v<146;v+=9){
     const q=(u,y,dv)=>{const[x,z]=W(u,v+dv);return[x,y,z];};
-    K.quad(CREAM,[q(-.1,0,-1.2),q(-.1,0,1.2),q(4,6,1.2),q(4,6,-1.2)],[-A[0],.6,-A[1]]);
-    K.quad(0xb8b4aa,[q(-.1,0,1.2),q(.7,0,1.2),q(4.8,6,1.2),q(4,6,1.2)],[B[0],0,B[1]]);
-    K.quad(CREAM,[q(.7,0,-1.2),q(-.1,0,-1.2),q(4,6,-1.2),q(4.8,6,-1.2)],[-B[0],0,-B[1]]);
-    K.quad(CREAM,[q(.7,0,1.2),q(.7,0,-1.2),q(4.8,6,-1.2),q(4.8,6,1.2)],[A[0],-.6,A[1]]);
+    K.quad(CREAM,[q(-.1,0,-1.2),q(-.1,0,1.2),q(7.6,16,1.2),q(7.6,16,-1.2)],[-A[0],.6,-A[1]]);
+    K.quad(0xb8b4aa,[q(-.1,0,1.2),q(.7,0,1.2),q(8.4,16,1.2),q(7.6,16,1.2)],[B[0],0,B[1]]);
+    K.quad(CREAM,[q(.7,0,-1.2),q(-.1,0,-1.2),q(7.6,16,-1.2),q(8.4,16,-1.2)],[-B[0],0,-B[1]]);
+    K.quad(CREAM,[q(.7,0,1.2),q(.7,0,-1.2),q(8.4,16,-1.2),q(8.4,16,1.2)],[A[0],-.6,A[1]]);
     lbox(.3,v,0,1.05,2.65,.27,0x292522,{solid:false});
     // K.quad is visual only. Invisible one-metre slices approximate the
     // sloping body so the player does not walk through its widened face.
-    for(let h=0;h<6;h++){
-      const u=.3+4.1*(h+.5)/6;
+    for(let h=0;h<16;h++){
+      const u=.3+7.7*(h+.5)/16;
       lwall(u,v-1.2,u,v+1.2,h,h+1,{mat:'gb_pier_clear',capMat:'gb_pier_clear',thick:1.48});
     }
   }
@@ -340,9 +341,10 @@ export function build(K) {
       lbox(9.93,vv,0,.07,.06,3.1,0x343b3b,{solid:false});
     }
   }
-  for(let v=23.5;v<146;v+=3){
-    lbox(5.1,v,5.48,9,.28,.22,0xc2c3bd,{solid:false});
-    lbox(5.1,v,5.46,9,.08,.035,0xa6a7a2,{solid:false});
+  K.hpoly(CREAM,rect(.6,22,10,146),ys[3]-.15,false);
+  for(let v=23.5;v<146;v+=6){
+    lbox(5.1,v,ys[3]-.38,9,.28,.22,0xc2c3bd,{solid:false});
+    lbox(5.1,v,ys[3]-.40,9,.08,.035,0xa6a7a2,{solid:false});
   }
   // Photo 05: aluminium-framed double doors and low cyan boards on the INSIDE face.
   // Leaves are static visual glazing, without a collision barrier through the existing openings.
@@ -727,7 +729,7 @@ export function build(K) {
     const inPocket=(u,v)=>pockets.some(r=>inRect(r,u,v,.2));
     // The photographed covered west passage has inclined outer supports;
     // the generic indoor column grid should not divide this walking strip.
-    columns(hallWest,0,3.28,(u,v)=>inPocket(u,v)||(u>68&&u<72)||(u<10&&v>23&&v<124));columns(NORTH,0,3.55,(u,v)=>v>16||u>258&&u<280);
+    columns(hallWest,0,3.28,(u,v)=>inPocket(u,v)||(u>68&&u<72)||(u<10&&v>=22&&v<=146));columns(NORTH,0,3.55,(u,v)=>v>16||u>258&&u<280);
     furnish(() => {
     // 600 mm T-bars align to the terminal, with 1.2 m rows of small downlights.
     const ceilStrip=(u0,v0,u1,v1,y)=>{const p=rect(u0,v0,u1,v1).map(([x,z])=>[x,y,z]);K.quad(0xc4c3bd,p,[0,-1,0]);};
