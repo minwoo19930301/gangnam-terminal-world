@@ -119,8 +119,7 @@ const mainTracks = [
 const ANNEX_AXES = [32.08,33.35,34.62,35.89];
 const ANNEX_WELL = [31.44,122.4,36.53,132.71];
 const PLAZA_ANNEX_WELL = [32.72,124.8,35.25,132.71];
-const UPPER_BRIDGE = [34.6,76,40.6,89];
-const bridgeLiftU=UPPER_BRIDGE[0]-1.1;
+
 const RIGHT_ATR = [27.6,74.2,39.4,78.0]; // legacy helper fallback; active wells are sheet-derived
 const UPPER_BANKS = [
   {key:"본관 화장실 옆",u:65,v:43.61,face:"W",top:"10F"},
@@ -457,10 +456,9 @@ export function build(K) {
   const seamOpenings=Object.entries(seamRanges).flatMap(([id,ranges])=>ranges.map(([a,b])=>({s:(a+b)/2,w:b-a,y0:LV[id],y1:LV[id]+3.4})));
   for (const [f, pl, s0, s1] of [['E', UW, VS, VD], ['W', 0, VS, VD], ['S', VD, 0, UW]])
     exWall(f, pl, s0, s1, 7, f==='S'?LV['6F']:LV.RF + 0.65, {mat:'ssg_granite',openings:f==='W'?[{s:75.1,w:1.8,y0:7,y1:9.6}]:f==='S'?seamOpenings:[]});
-  exWall('N', 57.5, 0, UW, YB, LV.RF + 0.65, { mat: 'ssg_glass', floorH: 3.2, vBase: 7, openings:[{s:40,w:10,y0:YB,y1:YB+3.8}] });
-  K.slab(rect(0, 57.5, UW, VD), LV.RF, { mat: 'roofgravel', under: CEIL, thick: TH.RF, edge: false });
-  for (const [f, c, len, pl] of [['N', UW / 2, UW, 57.5], ['E', (57.5 + VD) / 2, VD - 57.5, UW], ['W', (57.5 + VD) / 2, VD - 57.5, 0], ['S', UW / 2, UW, VD]])
-    faceBox(f, c, len, 0, 0.12, LV.RF + 0.65, 0.12, 0xa48e84, pl);
+  // The dining wing begins beyond the garden-to-restaurant bridge on 11F.
+  exWall('N',92,0,UW,YB,LV.RF+.65,{mat:'ssg_glass',floorH:3.2,vBase:7,
+    openings:[{s:34,w:6.3,y0:YB,y1:YB+3.8}]});
   // Occasional thin pale courses, not alternating metre-high stripes.
   for (const yy of [7, 16.6, 26.2, 35.8]) {
     for (const [f, c, len] of [['N', 11.5, 23], ['N', 55.5, 23], ['W', VD / 2, VD]])
@@ -857,9 +855,21 @@ export function build(K) {
   }
   // Pixel coordinates in the same 1823-wide sheets as the adjacent shop cells.
   // Each symbol sits on the back wall of a pocket opening towards smaller image Y.
+  // Centres read from the Gangnam guide images at 600x450. The rooftop
+  // has no main-wing restroom lift. Right-edge doors open into the annex.
+  const upperLiftIcons={};
+  for(const [id,corner,main,annex] of [
+    ['6F',[33,354],[272,171],[587,273]],['7F',[33,354],[267,171],[581,268]],
+    ['8F',[44,347],[264,180],[585,262]],['9F',[31,354],[275,171],[579,271]],
+    ['10F',[49,370],[284,193],[581,287]],['11F',[34,355],null,[575,269]]
+  ]){
+    const point=([x,y])=>upperPlanPoint(id,x*1823/600,y*1367/450);
+    upperLiftIcons[id]={corner:point(corner),main:main&&point(main),annex:point(annex)};
+  }
   const guidePockets={};
   for(const [id,x0,x1,doorX,doorY,lipY,otherY] of [
-    ['8F',953,1080,1013,864,822,760],
+    ['6F',966,1058,1014,863,821,760],['7F',967,1091,1014,893,821,760],
+    ['11F',960,1073,1012,866,825,765],['8F',953,1080,1013,864,822,760],
     ['9F',962,1056,1009,864,823,760],
     ['10F',991,1082,1036,921,879,818]
   ]){
@@ -867,15 +877,17 @@ export function build(K) {
     const [lip,near]=upperPlanPoint(id,x0,lipY);
     const [opposite,far]=upperPlanPoint(id,x1,otherY);
     guidePockets[id]={back,mid,lip,near,far,opposite};
+    bridgeLiftFront[id]=[back,mid];
     bridgeAisles[id]={bounds:[lip,near,opposite,far],by:'연결부 엘리베이터'};
   }
-  function upperPairPosition(id,i){
-    const pocket=guidePockets[id];
-    return [(pocket?pocket.back-1.1:bridgeLiftU),(pocket?pocket.mid:82.2)+(i-.5)*2.7];
+  function annexLiftCentre(id,i){
+    const [u,v]=upperLiftIcons[id]?.annex??[32,145];
+    // Keep the doors on the indoor face of the model's shared hotel perimeter.
+    return [u+(i-.5)*2.7,Math.min(v+1.1,145.8)];
   }
   function bridgeCar(id,i) {
     const [u,v] = bridgeLiftFront[id];
-    return [u - 1.05, v + (i - 1) * 2.20];
+    return [u - 1.05, v + (i - 1) * (id==='11F'?1.38:2.15)];
   }
   function bridgeLanding(id,i) {
     const [u,v]=bridgeCar(id,i);
@@ -999,7 +1011,14 @@ export function build(K) {
     const top=LV[nextOf(id)];
     wall(west,near,west,far,y,top,finish);
     wall(east,near,east,far,y,top,finish);
-    wall(west,far,east,far,y,top,finish);
+    const [first,v]=annexLiftCentre(id,0);
+    if(v+1.2>=far){
+      wall(west,far,first-1.3,far,y,top,finish);
+      wall(first+4,far,east,far,y,top,finish);
+      wall(first-1.3,far,first-1.3,v+1.25,y,top,finish);
+      wall(first+4,far,first+4,v+1.25,y,top,finish);
+      wall(first-1.3,v+1.25,first+4,v+1.25,y,top,finish);
+    }else wall(west,far,east,far,y,top,finish);
     if(id==='11F')K.slab(rect(...bounds),top,{mat:'roofgravel',under:CEIL,thick:TH.RF,edge:false,walk:false});
     zone('신세계백화점 강남점',id,'신관 연결 통로',bounds,y,y+3.8,1);
   }
@@ -1451,13 +1470,14 @@ export function build(K) {
         return bridgeLanding(f.label,i);
       }
       if (atBridge && f.label==='1M' && i<mezzBridgeDoors.length) return P(39.55,mezzBridgeDoors[i]);
+      if (f.label==='1F') return ground;
+      if (f.label==='1M') return mezz;
       if (f.label==='B1') return MARKET_B1_DEST;
       if (f.label==='B2') return [x+ARR.dx,z+ARR.dz];
       return legacyExit;
     }
     const sections = [
-      {u:ue.u,v:ue.v,lo:0,hi:LV['1M']},
-      {u:ue.u,v:ue.v,lo:LV['6F'],hi:LV['11F']}
+      {u:ue.u,v:ue.v,lo:0,hi:LV['1M']}
     ];
     for(const id of Object.keys(bridgeLiftFront)){
       const [u,v]=bridgeCar(id,i);
@@ -1472,7 +1492,7 @@ export function build(K) {
       const doors=stops.filter(f=>f.y>=lo&&f.y<=hi);
       const mapped=lo===hi;
       const shaft=K.elevator({name:`신세계 고객 엘리베이터 (연결부 ${i+1}호기)`,x:cx,z:cz,rotY:mapped?FACE.E:FACE.N,
-        w:mapped?2.0:e.w,d:mapped?2.0:e.d,topH:mapped?4.5:3.2,floors:doors,mat:0xc9c2b4});
+        w:lo===LV['11F']?1.35:mapped?2.0:e.w,d:mapped?2.0:e.d,topH:mapped?4.5:3.2,floors:doors,mat:0xc9c2b4});
       const menu={...shaft,floors:stops};
       const call=K._.interactables.find(it=>it.elevator===shaft);
       call.elevator=menu;
@@ -1527,7 +1547,7 @@ export function build(K) {
     mainLiftFronts[id]=upperPlanPoint(id,x*1823/2000,y*1367/1500);
   }
   const mainLiftCentre=(id,bank)=>{
-    const front = mainLiftFronts[id];
+    const front = upperLiftIcons[id]?.main??mainLiftFronts[id];
     if (!front) return [bank.u, bank.v];
     // On 4F the icon straddles the end of the bank beside the toilet
     // vestibule. Leave the whole vestibule clear of the second car.
@@ -1546,6 +1566,9 @@ export function build(K) {
     '5F': {door:[100,1095], left:[[145,1006],[145,1036],[56,1036],[56,1095]], right:[[145,1095],[145,1065],[176,1065],[176,1006]], water:[74,1036], by:'미스지 컬렉션 · 동우모피'}
   };
   function cornerLiftCentre(id,bank) {
+    if(upperLiftIcons[id]){
+      const [u,v]=upperLiftIcons[id].corner;return [u-1.1,v];
+    }
     const lobby=cornerGuides[id];
     if (!lobby) return [bank.u,bank.v];
     const [front,v]=upperPlanPoint(id,...lobby.door);
@@ -1562,7 +1585,8 @@ export function build(K) {
   const cornerGroundLanding = i => P(cornerFrontU+1.1, cornerGroundDoors[i]);
   // The 6F lobby is outside the retained Eleventy selling floor.
   {const bank=UPPER_BANKS.find(b=>b.key==='본관 화장실 옆');const y=LV['6F'];
-   zone('고객 엘리베이터','6F','본관 화장실 옆',[bank.u-3.8,bank.v-3,bank.u+1.2,bank.v+3],y,y+3.4,4);}
+   const [u,v]=mainLiftCentre('6F',bank);
+   zone('고객 엘리베이터','6F','본관 화장실 옆',[u-3.8,v-3,u+1.2,v+3],y,y+3.4,4);}
   for(const bank of UPPER_BANKS)for(let i=0;i<2;i++){
     const side=bank.face==='N'||bank.face==='S',u=bank.u+(side?(i-.5)*2.7:0),v=bank.v+(side?0:(i-.5)*2.7);
     const du=bank.face==='E'?2.5:bank.face==='W'?-2.5:0,dv=bank.face==='N'?-1.7:bank.face==='S'?2:0;
@@ -1573,13 +1597,12 @@ export function build(K) {
     const byFloor = isMainLift || isCorner;
     const parts = [];
     if (byFloor) {
-      parts.push([u, v, LV['6F'], LV[bank.top]]);
-      for (const id of Object.keys(mainLiftFronts)) {
+      for (const id of [...Object.keys(mainLiftFronts),...Object.keys(upperLiftIcons)].filter(id=>LV[id]<=LV[bank.top])) {
         const [cu, cv] = isCorner ? cornerLiftCentre(id,bank) : mainLiftCentre(id,bank);
         parts.push([cu, cv + (i - .5) * 2.7, LV[id], LV[id]]);
       }
     } else if (bank.key === '신관 화장실 옆') {
-      for(const id of ['6F','7F','8F','9F','10F','11F'])parts.push([...upperPairPosition(id,i),LV[id],LV[id],'E']);
+      for(const id of Object.keys(upperLiftIcons))parts.push([...annexLiftCentre(id,i),LV[id],LV[id]]);
       parts.push([u,145,LV['2F'],LV['5F']]);
     } else {
       parts.push([u, v, LV['2F'], LV[bank.top]]);
@@ -1598,8 +1621,8 @@ export function build(K) {
       const stops = byFloor ? ELV_FLOORS.filter(f => f.y >= LV['2F'] && f.y <= LV[bank.top]).map(f => {
         const [arrivalX, arrivalZ] = isCorner ? cornerLiftLanding(f.label,bank,i) : mainLiftLanding(f.label,bank,i);
         return {...f, dx:arrivalX-x, dz:arrivalZ-z};
-      }) : face==='E' && bank.key==='신관 화장실 옆' ? ELV_FLOORS.filter(f=>f.y>=LV['6F']).map(f=>{
-        const [u,v]=upperPairPosition(f.label,i),[tx,tz]=P(u+2.5,v);
+      }) : bank.key==='신관 화장실 옆' ? ELV_FLOORS.filter(f=>f.y>=LV['2F']).map(f=>{
+        const [u,v]=annexLiftCentre(f.label,i),[tx,tz]=P(u,v-2.25);
         return {...f,dx:tx-x,dz:tz-z};
       }) : floors;
       // Map markers describe the floors at this physical position. The E
@@ -2648,7 +2671,7 @@ export function build(K) {
       const corner=UPPER_BANKS.find(b=>b.key==='본관 코너'),main=UPPER_BANKS.find(b=>b.key==='본관 화장실 옆'),annex=UPPER_BANKS.find(b=>b.key==='신관 화장실 옆');
       const remote=f=>{
         if(c.name==='마켓 엘리베이터')return cornerLiftLanding(f.label,corner,1);
-        if(f.label==='11F')return P(bridgeLiftU+2.5,annex.v+1.35);
+        if(f.label==='11F'){const [u,v]=annexLiftCentre(f.label,1);return P(u,v-2.25);}
         return mainLiftLanding(f.label, main, 1);
       };
       const parking=P(ELV[1].u,ELV[1].v-2.2),nw=P(NWLIFTS[0].u,NWLIFTS[0].v-2.8),mezz=P(36,81);
@@ -6764,20 +6787,23 @@ export function build(K) {
     // UGG Men & Kids still meets the open well and the outgoing flight.
     [ANNEX_WELL[0]-.3,ANNEX_WELL[1]-1.5,ANNEX_WELL[2]+.3,ANNEX_WELL[3]+1.5],
     ...(bridgeLiftFront[id]?[]:[bridgeLobby(id)]),
-    ...(guidePockets[id]?[[guidePockets[id].back-2.35,guidePockets[id].near,guidePockets[id].opposite,guidePockets[id].far]]:LV[id]>=LV['6F']?[[bridgeLiftU-1.3,UPPER_BRIDGE[1]-.75,UPPER_BRIDGE[2]+.25,UPPER_BRIDGE[3]+.75]]:[]),
+    ...(guidePockets[id]?[[guidePockets[id].back-2.35,guidePockets[id].near,guidePockets[id].opposite,guidePockets[id].far]]:[]),
     // The main restroom-side shaft's back extends roughly 1.2m from its
     // centre. Keep a further half-metre reservation for wall thickness and
     // player clearance, instead of excluding an extra 0.6m of retail on
     // 2F–5F. A 0.25m model-side margin remains beyond the paired cars;
     // neither the shaft location nor the margin is a surveyed measurement.
-    ...UPPER_BANKS.filter(b=>LV[id]<=LV[b.top]&&!(guidePockets[id]&&b.key==='신관 화장실 옆')).map(b=>(b.key==='신관 화장실 옆'&&mainLiftFronts[id])?{...b,v:145}:b).map(b=>{
-      if(b.key==='본관 코너'&&cornerGuides[id]){
+    ...UPPER_BANKS.filter(b=>LV[id]<=LV[b.top]).map(b=>(b.key==='신관 화장실 옆'&&mainLiftFronts[id])?{...b,v:145}:b).map(b=>{
+      if(b.key==='본관 코너'&&(cornerGuides[id]||upperLiftIcons[id])){
         const [u,v]=cornerLiftCentre(id,b);
         return [u-1.2,v-2.63,u+1.2,v+2.63];
       }
-      if(b.key==='본관 화장실 옆'&&mainLiftFronts[id]){
+      if(b.key==='본관 화장실 옆'&&(mainLiftFronts[id]||upperLiftIcons[id]?.main)){
         const [u,v]=mainLiftCentre(id,b);
         return [u-2.8,v-2.8,u+1.7,v+2.8];
+      }
+      if(b.key==='신관 화장실 옆'&&upperLiftIcons[id]){
+        const [u,v]=annexLiftCentre(id,0);return [u-1.5,v-5,u+4.2,v+1.3];
       }
       if (b.key==='신관 화장실 옆' && (id==='5F' || (id==='2F' && shopName==='티파니앤코') ||
           (id==='3F' && shopName==='태그호이어') ||
@@ -7925,26 +7951,14 @@ export function build(K) {
     if(pocket){
       const {back,mid,lip,near,far,opposite}=pocket,h=clearH(id),finish={mat:0xdfd7cb,thick:.12};
       for(const v of [near,far])wall(back,v,lip,v,y,y+h,finish);
-      for(const [a,b] of [[near,mid-2.55],[mid-.15,mid+.15],[mid+2.55,far]])wall(back,a,back,b,y,y+h,finish);
+      const span=id==='11F'?2.05:3.16;
+      for(const [a,b] of [[near,mid-span],[mid+span,far]])if(b>a)wall(back,a,back,b,y,y+h,finish);
       // Short returns mark the mouth on the guide. Face the open passage.
       for(const [a,b] of [[near,mid-1.7],[mid+1.7,far]])if(b>a)wall(lip,a,lip,b,y,y+h,finish);
       if(id==='10F'){
         box(opposite-.48,mid,.84,far-near-1.5,y,.86,0xba9677);
         sign('팝업',opposite-.94,mid,y+.66,'W',1.2,.28,{bg:'#584b42',fg:'#fff4e6'});
       }
-    }else if(y>=LV['6F']){
-      const [left,near,right,far]=UPPER_BRIDGE, h=clearH(id);
-      const finish={mat:0xdfd7cb,thick:.12};
-      for(const [a,b] of [[near,79.65],[82.04,82.36],[84.75,far]])wall(left,a,left,b,y,y+h,finish);
-      wall(right,near,right,far,y,y+h,finish);
-      // The popup occupies a shallow bay on the wall opposite the lift.
-      for(const v of [80.1,85.3]){
-        box(right-.62,v,1.0,2.35,y,.83,0xba9677);
-        box(right-.62,v,1.08,2.43,y+.83,.08,0xe3d4bc,{solid:false});
-        for(const offset of [-.62,.05,.68])box(right-.61,v+offset,.34,.30,y+.91,.31,0x938776,{solid:false});
-      }
-      sign('팝업 스토어',right-.09,82.7,y+2.45,'W',2.1,.36,{bg:'#584b42',fg:'#fff4e6'});
-      bridgeAisles[id]={bounds:UPPER_BRIDGE,by:'팝업 · 고객 엘리베이터'};
     }
     const crossWing=bridgeAisles[id];
     zone('본관 · 신관 연결통로',id,crossWing?.by || '층별 매장 · 엘리베이터',
@@ -8182,35 +8196,35 @@ export function build(K) {
   // dining wing and enclosed links; the four gravel corners have no floor.
   // Extend the approximate 11F lobby behind the moved corner bank and guard
   // its exposed edges; keep the existing link into the garden clear.
-  const gardenLink=[30.9,gardenBar[3],37,59.4],cornerLobby=[6.8,8.85,13.1,15.6],cornerLink=[12.9,13.6,gardenBar[0]+.06,15.6];
-  const gardenLiftLobby=[19.6,50.0,30.95,55.3]; // guide's lift alcove; 0.6m north of the v51.8 arrival
-  const gardenServiceLink=[5.4,52.97,19.6,55.3],gardenServiceEntry=[6.9,51.5,9.6,53.05];
+  const gardenLink=[30.9,gardenBar[3],37,93.6],cornerLobby=[6.8,11.1,13.1,17.85],cornerLink=[12.9,15.85,gardenBar[0]+.06,17.85];
+  const gardenLiftLobby=[19.6,82.45,30.95,90.15]; // Side hall between the bridge and dining wing.
+  const gardenServiceLink=[5.4,86.9,19.6,90.15],gardenServiceEntry=[6.9,85.1,9.6,87.0];
   const gardenWalkRects=[gardenLink,cornerLobby,cornerLink,gardenLiftLobby,gardenServiceLink,gardenServiceEntry];
   const gardenFloor={mat:{tex:'tile',color:0xd8d4c9,gloss:.3},thick:.05,under:false,ceil:false,edge:false};
   K.slab(gardenCross.map(p=>P(...p)),LV['11F'],gardenFloor);
   for(const r of gardenWalkRects)K.slab(rect(...r),LV['11F'],gardenFloor);
-  K.slab(rect(0,56.4,UW,VD),LV['11F'],{...gardenFloor,mat:floorMat['11F'],holes:[]});
+  K.slab(rect(0,84.65,UW,VD),LV['11F'],{...gardenFloor,mat:floorMat['11F'],holes:[]});
   // 호경전's outlined northern edge projects 1.14m beyond the dining plate.
-  for(const c of upperGuidePlans['11F'].cells)for(const r of c.model.parts)if(r[1]<56.4)K.slab(rect(r[0],r[1],r[2],Math.min(r[3],56.4)),LV['11F'],{...gardenFloor,mat:floorMat['11F']});
-  const isGardenPublic=(u,v)=>v>=56.4||inR(u,v,gardenBar)||inR(u,v,gardenArm)||gardenWalkRects.some(r=>inR(u,v,r));
+  for(const c of upperGuidePlans['11F'].cells)for(const r of c.model.parts)if(r[1]<84.65)K.slab(rect(r[0],r[1],r[2],Math.min(r[3],84.65)),LV['11F'],{...gardenFloor,mat:floorMat['11F']});
+  const isGardenPublic=(u,v)=>v>=84.65||inR(u,v,gardenBar)||inR(u,v,gardenArm)||gardenWalkRects.some(r=>inR(u,v,r));
   K.zone({name:'S GARDEN',floor:'11F',sub:'옥상 정원',poly:gardenCross.map(p=>P(...p)),y0:LV['11F'],y1:LV.RF+3,priority:2});
   for(let i=0;i<gardenCross.length;i++){
     const a=gardenCross[i],b=gardenCross[(i+1)%gardenCross.length];
     let pieces=[[...a,...b]];
     // Open only the 6.1m dining corridor and the 2m corner-lift corridor.
     if(a[1]===gardenBar[3]&&b[1]===gardenBar[3])pieces=[[gardenBar[0],a[1],gardenLink[0],a[1]],[gardenLink[2],a[1],gardenBar[2],a[1]]];
-    if(a[0]===gardenBar[0]&&b[0]===gardenBar[0]&&Math.min(a[1],b[1])<13.6&&Math.max(a[1],b[1])>15.6)pieces=[[a[0],Math.min(a[1],b[1]),a[0],13.6],[a[0],15.6,a[0],Math.max(a[1],b[1])]];
+    if(a[0]===gardenBar[0]&&b[0]===gardenBar[0]&&Math.min(a[1],b[1])<15.85&&Math.max(a[1],b[1])>17.85)pieces=[[a[0],Math.min(a[1],b[1]),a[0],15.85],[a[0],17.85,a[0],Math.max(a[1],b[1])]];
     for(const p of pieces)wall(...p,LV['11F'],LV['11F']+1.1,{mat:'glass',thick:.05});
   }
   for(const [a,b]of[[0,gardenBar[0]],[gardenBar[2],UW]])wall(a,gardenBar[3],b,gardenBar[3],LV['11F'],LV['11F']+1.1,{mat:'glass',thick:.05});
   for(const u of[gardenLink[0],gardenLink[2]])wall(u,gardenLink[1],u,gardenLink[3],LV['11F'],LV['11F']+3.2,{mat:0xe7e1d6,thick:.15,
-    openings:u===gardenLink[0]?[{at:53.25-gardenLink[1],w:4.1,y0:LV['11F'],y1:LV['11F']+2.7}]:[]});
+    openings:u===gardenLink[0]?[{at:86.9-gardenLink[1],w:7.6,y0:LV['11F'],y1:LV['11F']+2.7}]:[]});
   hq(...gardenLink,LV['11F']+3.2,CEIL,false);
-  for(const p of[[13.1,8.85,13.1,13.6],[6.8,8.85,13.1,8.85],[13.1,13.6,gardenBar[0],13.6],[6.8,15.6,gardenBar[0],15.6],[6.8,8.85,6.8,15.6],
-    [19.6,50.0,30.9,50.0],[19.6,55.3,30.9,55.3],[19.6,50.0,19.6,52.97],
-    [5.4,52.97,6.9,52.97],[9.6,52.97,19.6,52.97],[5.4,55.3,19.6,55.3],[5.4,52.97,5.4,55.3],
-    [6.9,51.5,6.9,52.97],[9.6,51.5,9.6,52.97],[6.9,51.5,9.6,51.5]])wall(...p,LV['11F'],LV['11F']+2.7,{mat:0xe7e1d6,thick:.15});
-  hq(9.2,8.85,13.1,15.6,LV['11F']+2.7,CEIL,false);hq(...cornerLink,LV['11F']+2.7,CEIL,false);
+  for(const p of[[13.1,11.1,13.1,15.85],[6.8,11.1,13.1,11.1],[13.1,15.85,gardenBar[0],15.85],[6.8,17.85,gardenBar[0],17.85],[6.8,11.1,6.8,17.85],
+    [19.6,82.45,30.9,82.45],[19.6,90.15,30.9,90.15],[19.6,82.45,19.6,86.9],
+    [5.4,86.9,6.9,86.9],[9.6,86.9,19.6,86.9],[5.4,90.15,19.6,90.15],[5.4,86.9,5.4,90.15],
+    [6.9,85.1,6.9,86.9],[9.6,85.1,9.6,86.9],[6.9,85.1,9.6,85.1]])wall(...p,LV['11F'],LV['11F']+2.7,{mat:0xe7e1d6,thick:.15});
+  hq(9.2,11.1,13.1,17.85,LV['11F']+2.7,CEIL,false);hq(...cornerLink,LV['11F']+2.7,CEIL,false);
   hq(...gardenLiftLobby,LV['11F']+2.7,CEIL,false);
   hq(...gardenServiceLink,LV['11F']+2.7,CEIL,false);hq(...gardenServiceEntry,LV['11F']+2.7,CEIL,false);
   zone('S GARDEN 연결통로','11F','전문식당가 · 고객 엘리베이터',gardenLink,LV['11F'],LV['11F']+3.2,3);
@@ -16281,13 +16295,8 @@ export function build(K) {
       sign([`${id} ${upperCats[id]}`,'본관 ↔ 신관'],39.8,51,y+2.8,'N',5,.5,
         {bg:'#f1e9da',fg:'#4d4133',twoSided:true});
     }
-    if (bridgeLiftFront[id]) {
-      const [u,v]=bridgeLiftFront[id];
-      sign('엘리베이터',u+.07,v,y+2.78,'E',2.3,.30,{bg:'#36322b',fg:'#e3ceb1'});
-    } else if(guidePockets[id]){
-      const {back,mid}=guidePockets[id];
-      sign('엘리베이터',back+.12,mid,y+2.88,'E',2.1,.28,{bg:'#36322b',fg:'#e3ceb1'});
-    } else sign('엘리베이터',5.5,80.14,y+2.55,'N',2.8,.32,{bg:'#36322b',fg:'#e3ceb1'});
+    const [liftU,liftV]=bridgeLiftFront[id];
+    sign('엘리베이터',liftU+.07,liftV,y+2.78,'E',2.3,.30,{bg:'#36322b',fg:'#e3ceb1'});
     {
       const ar=upperAnnexAtriumRect(id);
       sign(`${id} · 에스컬레이터`,(ar[0]+ar[2])/2,ar[1]-.6,y+2.3,'N',2.5,.32,{bg:'#35332d',fg:'#f0e7d4'});
@@ -16452,7 +16461,7 @@ export function build(K) {
   wall(25,32.6,31,32.6,LV['11F'],LV['11F']+3.15,{mat:'glass',thick:.035,openings:[{at:3,w:1.6,y0:LV['11F'],y1:LV['11F']+2.7}]});
   furnish('11F',()=>{
     const y=LV['11F'],frameMat=0xf4f3ef,colors=[0xd9479a,0xf0a53a,0xf3d34a,0x6fbf5a,0x9a7ad8];
-    hq(.8,.8,66.2,56.4,y+.006,{tex:'roofgravel',color:0x9a958c});
+    hq(.8,.8,66.2,84.65,y+.006,{tex:'roofgravel',color:0x9a958c});
     K.hpoly({tex:'tile',color:0xd8d4c9,gloss:.3},gardenCross.map(p=>P(...p)),y+.012,true);
     for(const r of gardenWalkRects)hq(...r,y+.013,{tex:'tile',color:0xd8d4c9,gloss:.3});
     const films=colors.map((color,i)=>{
@@ -16587,7 +16596,7 @@ export function build(K) {
   }
   sp('8F 겨울 매장 · 에스컬레이터', MAIN_WELL[2]+1.1, 49.2, LV['8F'], 1, 0);
   aisleStart('4F 슈즈','4F',1476,946,1275,833); // Gianvito Rossi and Louis Vuitton shoes
-  sp('11F 전문식당가 · S GARDEN', 34, 57.5, LV['11F'], 0, 1);
+  sp('11F 전문식당가 · S GARDEN', 34, 93.5, LV['11F'], 0, 1);
   const retailStarts={
     '2F':[1628,666,1650,730],  // upper landing between Bulgari and Tiffany
     '3F':[1160,867,1155,920], // Omega and Breguet
@@ -16597,7 +16606,7 @@ export function build(K) {
   for (const id of Object.keys(upperGuidePlans)) {
     const name=`${id} ${upperCats[id]}`;
     if (retailStarts[id]) aisleStart(name,id,...retailStarts[id]);
-    else sp(name,id==='11F'?34:24.5,id==='11F'?57.5:56.2,LV[id],0,-1);
+    else sp(name,id==='11F'?34:24.5,id==='11F'?93.5:56.2,LV[id],0,-1);
   }
   K.spawn({ name: 'B1 고투몰 ↔ 신세계 연결통로', x: -70, y: LV.B1, z: -70, yaw: PI });
 }
@@ -16813,12 +16822,7 @@ export const upperRightPads={
 export const upperPlanPoint = (id,px,py) => {
   const p=upperGuidePlans[id];
   const y=66.5-66*(py-p.top)/(p.bottom-p.top);
-  const oldV=8.7+(px-27)*75.5/1748,expandedV=8.7+(px-27)*.07859;
-  // Keep the registered main-wing atrium and rooftop garden in place.
-  // The remaining guide columns cover the full depth of the annex.
-  const upperWingV=oldV+Math.max(0,px-1035)*(145.3-84.2)/(1775-1035);
-  const v=['7F','11F'].includes(id)?upperWingV:expandedV;
-  return [y,v];
+  return [y,8.7+(px-27)*.07859];
 };
 export const upperPlanRect=(id,r)=>{const a=upperPlanPoint(id,r[0],r[1]),b=upperPlanPoint(id,r[2],r[3]);return[b[0],a[1],a[0],b[1]];};
 const upperLegacy6PlanRect=r=>{const p=upperGuidePlans['6F'];const P=(px,py)=>[66.5-66*(py-p.top)/(p.bottom-p.top),8.7+(px-27)*75.5/1748];const a=P(r[0],r[1]),b=P(r[2],r[3]);return[b[0],a[1],a[0],b[1]];};
