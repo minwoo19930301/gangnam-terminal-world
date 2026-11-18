@@ -52,7 +52,12 @@ export function loadReModels({ THREE, scene, models, stand, from, onProgress }) 
       const m = queue.shift(); running++;
       loader.load(m.file, gltf => {
         const root = gltf.scene;
-        root.traverse(o => { if (o.isMesh) { o.material = Array.isArray(o.material) ? o.material.map(lambert) : lambert(o.material); o.matrixAutoUpdate = false; o.updateMatrix(); } });
+        root.traverse(o => {
+          if (!o.isMesh) return;
+          if (!m.sourceMaterial) o.material = Array.isArray(o.material) ? o.material.map(lambert) : lambert(o.material);
+          o.matrixAutoUpdate = false;
+          o.updateMatrix();
+        });
         root.position.set(m.x, m.y || 0, m.z); root.rotation.y = (m.yaw || 0) * Math.PI / 180; root.updateMatrixWorld(true);
         root.userData.re = m; scene.add(root); live.push(root);
         const s = stand.get(m.id); if (s) { scene.remove(s); s.traverse(o => o.geometry && o.geometry.dispose()); stand.delete(m.id); }

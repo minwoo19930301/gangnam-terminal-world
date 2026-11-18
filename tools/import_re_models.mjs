@@ -51,11 +51,14 @@ async function work(item) {
   // generic complex models that overlap a bespoke model are dropped (the bespoke one is better)
   const claims = bcent.filter(({ b, c }) => !moduleClaims.has(b.id) && (inPoly(c[0], c[1], rect) || b.poly.filter(p => inPoly(p[0], p[1], rect)).length * 2 >= b.poly.length)).map(({ b }) => b.id);
   const file = `assets/re/${a.id}.glb`;
-  if (!fs.existsSync(path.join(ROOT, file))) {
+  const sourceMaterial = ['apt-a10023673', 'apt-a13790828'].includes(a.id);
+  if (sourceMaterial) {
+    fs.copyFileSync(src, path.join(ROOT, file));
+  } else if (!fs.existsSync(path.join(ROOT, file))) {
     await doc.transform(F.dedup(), F.prune(), F.flatten(), F.join({ keepNamed: false }), F.weld(), F.quantize(), F.meshopt({ encoder: MeshoptEncoder, level: 'medium' }));
     await io.write(path.join(ROOT, file), doc);
   }
-  records.push({ id: a.id, name: a.nameKo || a.name || '', kind, category: a.category, x: Math.round(x * 100) / 100, z: Math.round(z * 100) / 100, y: a.groundOffsetM || 0, yaw, rect: rect.map(p => p.map(v => Math.round(v * 10) / 10)), height: Math.round(max[1] * 10) / 10, claims, file, bytes: fs.statSync(path.join(ROOT, file)).size });
+  records.push({ id: a.id, name: a.nameKo || a.name || '', kind, category: a.category, x: Math.round(x * 100) / 100, z: Math.round(z * 100) / 100, y: a.groundOffsetM || 0, yaw, rect: rect.map(p => p.map(v => Math.round(v * 10) / 10)), height: Math.round(max[1] * 10) / 10, claims, file, bytes: fs.statSync(path.join(ROOT, file)).size, ...(sourceMaterial ? { sourceMaterial } : {}) });
   if (++done % 20 === 0) console.log(done, '/', cand.length);
 }
 // bespoke first so overlapping generic complexes can be dropped afterwards
@@ -68,6 +71,6 @@ for (const r of records) if (!final.includes(r)) { try { fs.unlinkSync(path.join
 // one OSM building is replaced by at most one model
 for (const r of final) r.claims = r.claims.filter(id => !taken.has(id) && taken.add(id));
 final.sort((p, q) => p.id.localeCompare(q.id));
-fs.writeFileSync(path.join(ROOT, 'js/places/_re_models.json'), JSON.stringify({ source: 'github.com/minwoo19930301/seoul-real-estate-map (bespoke-manifest.json, manifest.json)', note: 'compressed copies (meshopt, quantized, meshes joined); placement from the source manifests', models: final }));
+fs.writeFileSync(path.join(ROOT, 'js/places/_re_models.json'), JSON.stringify({ source: 'github.com/minwoo19930301/seoul-real-estate-map (bespoke-manifest.json, manifest.json)', note: 'Original GLBs for sourceMaterial entries; other copies compressed with meshopt. Placement from the source manifests.', models: final }));
 const MB = final.reduce((s, r) => s + r.bytes, 0) / 1e6;
 console.log(`models ${final.length} (bespoke ${final.filter(r => r.kind === 'bespoke').length}, generic ${final.filter(r => r.kind === 'generic').length}), ${MB.toFixed(1)} MB, OSM buildings replaced ${final.reduce((s, r) => s + r.claims.length, 0)}`);
