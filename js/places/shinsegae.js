@@ -917,8 +917,10 @@ export function build(K) {
   const mezzArchStart=MPLAN(869,740)[0], mezzArchEnd=MPLAN(869,452)[0];
   const mezzArchCenters=Array.from({length:8},(_,i)=>mezzArchStart+(i+.5)*(mezzArchEnd-mezzArchStart)/8);
   // F03/F04: north-west lift bank backs onto the NNW wall band; doors face south.
-  const NWLIFTS=[57.6,60.6].map(u=>({u,v:64.5,w:2.65,d:2.4}));
-  const nwLiftHoles=NWLIFTS.map(e=>rect(e.u-e.w/2,e.v-e.d/2,e.u+e.w/2,e.v+e.d/2));
+  // The lift icon beside La Mer is inside the long wall facing the sales floor.
+  const [beautyLiftFront,beautyLiftMid]=PLAN(807,459);
+  const NWLIFTS=[-1.45,1.45].map(offset=>({u:beautyLiftFront+1.2,v:beautyLiftMid+offset,w:2.65,d:2.4}));
+  const beautyLiftLanding=e=>P(beautyLiftFront-1.25,e.v);
   // From the main hall facing 3 GATE, the feet of the two flights are
   // on the outside. Their heads open onto the shared mezzanine aisle.
   const mezzUpFoot=51, mezzDownFoot=21, mezzRun=6.4, mezzV=69.5;
@@ -973,7 +975,7 @@ export function build(K) {
   // The 2F annex up flight passes under the 3F apron at u=30. Its
   // 1.2m treads and rails need headroom before they reach the main opening.
   MAIN.forEach((id, s) => {
-    const holes = id==='1F' ? [...nwLiftHoles] : id==='B1' ? [] : id==='B2' ? ELV.map(e=>rect(e.u-e.w/2,e.v-e.d/2,e.u+e.w/2,e.v+e.d/2)) : bridgeLiftFront[id] ? [] : [...elvHoles];
+    const holes = id==='1F' ? [] : id==='B1' ? [] : id==='B2' ? ELV.map(e=>rect(e.u-e.w/2,e.v-e.d/2,e.u+e.w/2,e.v+e.d/2)) : bridgeLiftFront[id] ? [] : [...elvHoles];
     // Ground NW lift bank has its own 1F/1M controls; upper banks follow their plan icons.
     if (id === '1F') holes.push(...beautyHoles);
     // The old subway icon remaps outside this footprint; CC owns that well.
@@ -1457,7 +1459,7 @@ export function build(K) {
     const [x, z] = P(e.u, e.v);
     const basement=K.elevator({name:`신세계 지하 엘리베이터 ${i+1}호기`,x,z,rotY:RA+PI,w:e.w,d:e.d,topH:4.6,floors:ELV_FLOORS.filter(f=>f.label==='B2').map(f=>({...f,...ARR})),mat:0xc9c2b4});
     const ue=UPPER_ELV[i], [ux,uz]=P(ue.u,ue.v);
-    const nw=NWLIFTS[i%NWLIFTS.length],ground=P(nw.u,nw.v-2.8),mezz=P(36,81);
+    const nw=NWLIFTS[i%NWLIFTS.length],ground=beautyLiftLanding(nw),mezz=P(36,81);
     const lowerStops = ELV_FLOORS.filter(f => f.y < 7).map(f => {
       const dest = {B1:MARKET_B1_DEST,'1F':ground,'1M':mezz}[f.label];
       return {...f,...(dest ? {dx:dest[0]-x,dz:dest[1]-z} : ARR)};
@@ -1518,7 +1520,7 @@ export function build(K) {
   for(const [i,v] of mezzBridgeDoors.entries()){
     // Each photographed bridge door has a return route from the upper guide
     // lobbies. The real car numbers and served levels are not identified.
-    const u=40.35,[cx,cz]=P(39.55,v),upper=mezzBankCalls[2],local=P(39.55,v),nw=NWLIFTS[i],ground=P(nw.u,nw.v-2.8);
+    const u=40.35,[cx,cz]=P(39.55,v),upper=mezzBankCalls[2],local=P(39.55,v),nw=NWLIFTS[i],ground=beautyLiftLanding(nw);
     const floors=upper.floors.map(f=>{
       const dest=bridgeLiftFront[f.label] ? bridgeLanding(f.label,i) :
         f.label==='1M' ? local : f.label==='1F' ? ground : null;
@@ -1668,23 +1670,32 @@ export function build(K) {
       }
     }
   }
-  NWLIFTS.forEach((e,i)=>{
-    const[x,z]=P(e.u,e.v),parking=P(ELV[i].u,ELV[i].v-2.2);
-    const low=['1F'];
-    const el=K.elevator({name:`남동 고객 엘리베이터 ${i+1}호기`,x,z,rotY:FACE.N,w:e.w,d:e.d,shaft:false,
-      floors:ELV_FLOORS.filter(f=>f.y<7).map(f=>({...f,...(f.label==='B2'?{dx:parking[0]-x,dz:parking[1]-z}:f.label==='B1'?{dx:MARKET_B1_DEST[0]-x,dz:MARKET_B1_DEST[1]-z}:f.label==='1M'?{dx:P(36,81)[0]-x,dz:P(36,81)[1]-z}:{dx:-2.8*SA,dz:-2.8*CA})}))});
-    // A remote floor menu does not make a physical call point on those floors.
-    const call=K._.interactables.find(it=>it.elevator===el);if(call)call.y=1.8;
-    for(const label of low){
-      const y=LV[label],u0=e.u-e.w/2,u1=e.u+e.w/2,v0=e.v-e.d/2,v1=e.v+e.d/2;
-      for(const ab of [[u0,v0,u0,v1],[u0,v1,u1,v1],[u1,v0,u1,v1]])wall(...ab,y,y+3.1,{mat:{tex:'marble',color:0xe8e6df},thick:.12});
-      wall(u0,v0,u1,v0,y,y+3.1,{mat:'metal',thick:.12,openings:[{at:e.w/2,w:1.4,y0:y,y1:y+2.35}]});
-      K.slab(rect(u0,v0,u1,v1),y,{mat:'metal',thick:.05,ceil:false,edge:false});
-      sign('1',e.u,v0-.09,y+2.55,'N',.7,.24,{bg:null,fg:'#333333'});
-      sign(['층별 안내','1M  메자닌','B1  신세계 마켓'],e.u+.96,v0-.1,y+1.7,'N',.48,.9,{bg:'#eeeae4',fg:'#42423e',bold:false});
-      lightPanel(e.u,v0-1.2,y+3.08,1.8,1.6);
+  {
+    const u=beautyLiftFront, near=PLAN(760,459)[1], far=PLAN(1000,459)[1];
+    const finish={mat:{tex:'marble',color:0xe8e6df},thick:.14};
+    let start=near;
+    for(const [i,e] of NWLIFTS.entries()){
+      const [x,z]=P(e.u,e.v),landing=beautyLiftLanding(e);
+      const parking=P(ELV[i].u,ELV[i].v-2.2);
+      const stops={'B2':parking,'B1':MARKET_B1_DEST,'1F':landing,'1M':P(36,81)};
+      const el=K.elevator({name:`남동 고객 엘리베이터 ${i+1}호기`,x,z,rotY:FACE.W,w:e.w,d:e.d,shaft:false,
+        floors:ELV_FLOORS.filter(f=>f.y<7).map(f=>({...f,dx:stops[f.label][0]-x,dz:stops[f.label][1]-z}))});
+      const [callX,callZ]=P(u-.62,e.v);
+      Object.assign(K._.interactables.find(it=>it.elevator===el),{x:callX,z:callZ,y:0,r:1.5});
+      wall(u,start,u,e.v-.82,0,3.5,finish);
+      wall(u,e.v-.82,u,e.v+.82,2.37,3.5,finish);
+      box(u+.03,e.v,.12,1.64,0,2.37,'metal');
+      box(u-.04,e.v,.025,.016,0,2.34,0x575956,{solid:false});
+      sign('1',u-.1,e.v,2.60,'W',.48,.24,{bg:'#302e2b',fg:'#f9ead0'});
+      box(u-.1,e.v+.99,.04,.12,.98,.28,0x484642,{solid:false});
+      lightPanel(u-.9,e.v,3.44,1.5,1.65);
+      start=e.v+.82;
     }
-  });
+    wall(u,start,u,far,0,3.5,finish);
+    for(const v of [near,far])wall(u,v,UW-.15,v,0,3.5,finish);
+    K.hpoly(CEIL,rect(u,near,UW-.15,far),3.5,true);
+    zone('고객 엘리베이터 홀','1F','라메르 옆',[u-2.15,beautyLiftMid-2.65,u-.22,beautyLiftMid+2.65],0,3.2,4);
+  }
   cornerGroundDoors.forEach((v,i)=>{
     const [x,z]=P(cornerFrontU-1.2,v),ground=cornerGroundLanding(i);
     const corner=UPPER_BANKS.find(b=>b.key==='본관 코너'),parking=P(ELV[i].u,ELV[i].v-2.2),nw=P(36,81);
@@ -1724,10 +1735,10 @@ export function build(K) {
       g.fillText('VIA SHINSEGAE  /  JEWELRY  /  VECCHIA E NUOVO',40,h*.69,760);
       g.font='600 68px Arial, sans-serif';g.fillText('1M →',820,h*.51,180);
     },[1,1]);
-    faceQuad(directory,'N',56,3.25,4.5,.40,.04,61.8);
+    faceQuad(directory,'W',beautyLiftMid,3.0,4.5,.40,.10,beautyLiftFront);
     // The photographed lift-hall display sits to the side of the approach.
     // Keep its estimated position close to the wall and clear of the lift doors.
-    sign(['LA MER','모이스춰라이징 크림'],56.2,63.0,1.5,'N',1.4,2.2,{bg:'#12326c',fg:'#d1edff',bold:false});
+    sign(['LA MER','모이스춰라이징 크림'],beautyLiftFront-.11,beautyLiftMid+3.6,1.5,'W',1.4,2.2,{bg:'#12326c',fg:'#d1edff',bold:false});
   });
 
   // ------------------------------------------------------------ stair cores (enclosed, alternating lanes)
@@ -2674,7 +2685,7 @@ export function build(K) {
         if(f.label==='11F'){const [u,v]=annexLiftCentre(f.label,1);return P(u,v-2.25);}
         return mainLiftLanding(f.label, main, 1);
       };
-      const parking=P(ELV[1].u,ELV[1].v-2.2),nw=P(NWLIFTS[0].u,NWLIFTS[0].v-2.8),mezz=P(36,81);
+      const parking=P(ELV[1].u,ELV[1].v-2.2),nw=beautyLiftLanding(NWLIFTS[0]),mezz=P(36,81);
       // B2 has its own basement shaft; the upper-floor landing is not a
       // valid parking-level arrival and can trap the player inside a wall.
       const floorList=ELV_FLOORS.map(f=>({...f,...(f.label==='B1'?{dx:-1.8*CA,dz:1.8*SA}:f.label==='B2'?{dx:parking[0]-x,dz:parking[1]-z}:f.label==='1M'?{dx:mezz[0]-x,dz:mezz[1]-z}:f.label==='1F'?{dx:nw[0]-x,dz:nw[1]-z}:(()=>{const dest=remote(f);return{dx:dest[0]-x,dz:dest[1]-z};})())}));
