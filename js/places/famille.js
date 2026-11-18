@@ -443,7 +443,10 @@ function buildHall(K) {
   wall(22,0,70.56,0,0,8,{openings:[{at:3.2,w:5.6,y0:0,y1:4.1},...Array.from({length:6},(_,i)=>({at:9.7+i*6.5,w:5.3,y0:0,y1:4.1})),...Array.from({length:7},(_,i)=>({at:3.2+i*6.5,w:5.3,y0:5,y1:7.9}))]});
   wall(22,11.5,70.56,11.5,0,8,{openings:[...Array.from({length:7},(_,i)=>({at:3.2+i*6.5,w:5.3,y0:0,y1:4.1})),...Array.from({length:7},(_,i)=>({at:3.2+i*6.5,w:5.3,y0:5,y1:7.9}))]});
   // North shops remain shallow window displays at the shared JW boundary, not new interior claims.
-  for(let u=32;u<69;u+=6.5){B(u,-.13,0,5.25,.10,4.1,0x272620);B(u,11.62,0,5.25,.10,4.1,0x302c26);}
+  for(let u=38.5;u<69;u+=6.5){B(u,-.13,0,5.25,.10,4.1,0x272620);B(u,11.62,0,5.25,.10,4.1,0x302c26);}
+  // The second bay aligns with the hotel's south doors. Keep both ends open.
+  sign('JW MARRIOTT',31.7,11.72,3.68,4.6,.48,'v',{bg:'#69563d',fg:'#fff2d2'});
+  K.hpoly({tex:'darkstone',color:0xada499},rect(30.1,0,33.3,12.2),.022);
   // Continuous cream cornices, matching the retained gallery's brick-pier / fanlight grammar.
   for(const v of [0,11.5])for(const[y,h,d]of [[4.45,.18,.44],[4.66,.14,.6],[7.8,.2,.46]])B(46.28,v,y,48.56,d,h,cream);
   for(const v of [0,20])for(const[y,h,d]of [[4.7,.16,.48],[4.88,.13,.62],[9.2,.18,.5]])B(13,v,y,18,d,h,cream);
@@ -473,7 +476,7 @@ function buildHall(K) {
   }
   for(let u=28.8;u<70;u+=6.5)for(const v of [0,11.5]){B(u,v,0,.8,.65,8,brick,true);B(u,v,0,1,.85,.23,cream);B(u,v,4.45,1.1,.9,.42,cream);}
   K.zone({name:'파미에스테이션',floor:'1F',sub:'벽돌 홀 · 하우스 오브 신세계 · JAJU · 아그라',poly:hall,y0:0,y1:4.8,priority:18});
-  K.zone({name:'파미에스테이션',floor:'1F',sub:'유리 천창 갤러리 · 와필레',poly:gallery,y0:0,y1:8,priority:18});
+  for(const [start,end] of [[22,29.2],[34.2,70.56]]) K.zone({name:'파미에스테이션',floor:'1F',sub:'유리 천창 갤러리 · 와필레',poly:rect(start,0,end,11.5),y0:0,y1:8,priority:18});
   {const[x,z]=P(15,4);K.spawn({name:'파미에 1층 벽돌 홀',x,z,y:0,yaw:20*PI/180,group:'파미에스테이션'});}
   K.detail({name:'파미에 벽돌 홀 · 유리 천창 갤러리',floor:'1F',y0:0,y1:11,poly:[P(4,0),P(70.56,0),P(70.56,11.5),P(22,11.5),P(22,20),P(4,20)]},()=>{
     // Semicircular glass fanlight with three cream moulding courses, black fan muntins and plinth.
@@ -548,7 +551,7 @@ function buildHall(K) {
     const lamp=(u,v)=>{cyl(u,v,0,.20,.12,iron);cyl(u,v,.12,.07,2.65,iron);dome(u,v,2.9,.23,.23,.23,{tex:'emit',color:0xffedbc});for(let i=0;i<16;i++){const a=i*2*PI/16,b=(i+1)*2*PI/16;beam([u+.32*Math.cos(a),v,2.9+.38*Math.sin(a)],[u+.32*Math.cos(b),v,2.9+.38*Math.sin(b)],.035,iron);}cyl(u,v,3.31,.15,.05,iron);};
     for(const q of [[7,2.0],[14.6,2.2],[5.7,10.6],[5.8,17.5],[20.6,10.0]])plant(...q);
     for(const q of [[6.5,2.2],[14.8,2.2],[19.2,5.3],[6,18.1]])lamp(...q);
-    for(let u=31.4;u<68;u+=13)plant(u,9.5,4.1);
+    for(let u=44.4;u<68;u+=13)plant(u,9.5,4.1);
     for(let u=4.5;u<22;u+=.65){B(u,.32,9.35,.20,.43,.4,cream);B(u,19.66,9.35,.20,.43,.4,cream);}
     for(let v=.5;v<20;v+=.65)B(4.34,v,9.35,.43,.20,.4,cream);
     for(let u=28.8;u<70;u+=6.5)for(const v of [.50,11]){

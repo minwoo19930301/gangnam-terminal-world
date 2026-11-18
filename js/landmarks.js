@@ -16,6 +16,8 @@ export const LANDMARKS = [
   { name: '르본시티', sub: '귀금속', x: -232, z: 20, y: 40, place: 'lebon', color: '#b08d3c' },
   { name: '데블스도어', x: 380, z: 8, y: 12, place: 'gyeongbu_east', color: '#7a3b1e' },
   { name: '뉴코아아울렛', x: 270, z: -365, y: 24, place: 'newcore', color: '#4b4b4b' },
+  { name: '반포르엘', sub: '신반포로23길', x: -102.9, z: -231.6, y: 12, place: 'streets', color: '#4e6c70' },
+  { name: '신반포4차', sub: '신반포로23길', x: -87.8, z: -237.4, y: 20, place: 'streets', color: '#806c57' },
   { name: '반원상가', sub: '한신치킨', x: -125, z: -408, y: 17, place: 'banwon', color: '#e07a1f' },
   { name: '세빛섬', x: -850, z: -790, y: 22, place: 'hangang', color: '#2a8fbf' },
   { name: '달빛광장', sub: '반포대교 · 잠수교', x: -628, z: -707, y: 6, place: 'hangang', color: '#2a8fbf' },

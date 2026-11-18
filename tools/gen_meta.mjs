@@ -56,7 +56,7 @@ for (const id of PLACES) {
   const free = (x, z, y) => { const p = { x, z }; phys.resolve(p, R, y, y + H, STEP); return Math.hypot(p.x - x, p.z - z) < 0.05; };
   const floorAt = (x, z, y) => phys.support(x, z, y + STEP).y;
   const ownerAt = (x, y, z) => { const zn = phys.zoneAt(x, y + 0.1, z); return zn && zn.place && zn.place !== 'city' && !OUTDOOR.has(zn.place) ? zn.place : null; };
-  for (const [id] of mods) {
+  for (const [id,m] of mods) {
     if (OUTDOOR.has(id) || !out[id]) continue;
     const spots = [];
     for (const zn of K._.zonesList.filter(z => z.place === id && z.y0 > -1.6 && z.y0 < 1.6)) {
@@ -86,7 +86,10 @@ for (const id of PLACES) {
       const mid = (Math.max(...proj) + Math.min(...proj)) / 2;
       opens.push({ x: Math.round((cx + g[0].dx * mid) * 10) / 10, z: Math.round((cz + g[0].dz * mid) * 10) / 10, y: Math.round(g[0].y * 10) / 10, w: Math.round(w * 10) / 10, nx: Math.round(g[0].nx * 1000) / 1000, nz: Math.round(g[0].nz * 1000) / 1000, other: g[0].other || null });
     }
-    out[id].entrances = opens.filter(o => o.w >= 1);
+    const doors = opens.filter(o => o.w >= 1);
+    out[id].entrances = m.meta.streetEntrances
+      ? [...doors.filter(o => o.other), ...m.meta.streetEntrances]
+      : doors;
   }
   // junction directions (pa → pb) for the corridor doors
   for (const [id, v] of Object.entries(out)) for (const j of v.junctions) { const jj = JUNCTIONS.find(q => q.id === j.id); if (jj && !jj.streamOnly) { const dx = jj.pb[0] - jj.pa[0], dz = jj.pb[1] - jj.pa[1], L = Math.hypot(dx, dz) || 1; const s = jj.a === id ? 1 : -1; j.nx = Math.round(dx / L * s * 1000) / 1000; j.nz = Math.round(dz / L * s * 1000) / 1000; } }

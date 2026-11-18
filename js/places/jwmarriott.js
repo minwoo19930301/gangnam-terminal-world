@@ -10,9 +10,12 @@ export const meta = {
   claims: [136986976],
   claimRoads: [],
   claimAreas: [],
+  streetEntrances: [{x:-.6,z:155.8,y:0,w:4.4,nx:.359,nz:.933,other:null}],
   sources: [
     'https://ko.wikipedia.org/wiki/JW_메리어트_호텔_서울',
     'https://www.marriott.com/ko/hotels/seljw-jw-marriott-hotel-seoul/dining/',
+    'https://themargauxgrill.jwmarriottseoul.com/contact-location',
+    'https://www.haeahn.com/en/project/detail.do?prjctSeq=3123',
     'https://www.etoday.co.kr/news/view/1654095',
     'https://www.stayfolio.com/findstay/jw-marriott-hotel-seoul',
     'https://middleeasttraveller.com/jw-marriott-hotel-seoul-review/',
@@ -493,7 +496,7 @@ export function build(K) {
   EW('E', -30, 60.89, 0, 4.2, { mat: GL, thick: 0.06, openings: [{ s: 0, w: 5, y0: 0, y1: 3.4 }, { s: 44.5, w: 3.2, y0: 0, y1: 3.4 }, { s: 52.5, w: 3.2, y0: 0, y1: 3.4 }] });
   EW('E', -30, 60.89, 4.2, H1, { mat: { tex: 'jwStone' }, inner: WARM });
   EW('S', UW, -10, 0, H1, { mat: { tex: 'jwStone' }, inner: WARM });
-  EW('S', -10, 2.2, 0, 4.2, { mat: GL, thick: 0.06, openings: [{ s: -4, w: 4, y0: 0, y1: 3.4 }] });
+  EW('S', -10, 4, 0, 4.2, { mat: GL, thick: 0.06, openings: [{ s: -4, w: 4, y0: 0, y1: 3.4 }, { s: 1.4, w: 4.4, y0: 0, y1: 3.4 }] });
   EW('S', -10, 2.2, 4.2, H1, { mat: { tex: 'jwStone' }, inner: WARM });
   // 1F stone piers on the glass storefronts
   for (let v = -27; v <= 60; v += 6) if (Math.abs(v - 0) > 3.2 && Math.abs(v - 44.5) > 2.2 && Math.abs(v - 52.5) > 2.2) B({ u: UE - 0.2, v, y: 0, w: 0.7, d: 0.9, h: 4.2, mat: { tex: 'jwStone' } });
@@ -937,10 +940,6 @@ export function build(K) {
     for (const v of [44.7, 52.3]) B({ u: 3.1, v, y: 0, w: .6, d: 2.4, h: .45, mat: 0xb9b3a6 });
     LIGHTS([-1.4, 42.6, 16.5, 55], 7.92, 3.6, .16, 0xf3d3a1);
     // Low vestibule and concierge remain under the unchanged facade/entrance canopy.
-    const [rx, rz] = P(UE - .2, 48.5);
-    K.cyl({ x: rx, y: 0, z: rz, r: 1.45, h: 2.9, mat: GL, seg: 16, solid: false, caps: false });
-    K.cyl({ x: rx, y: 2.9, z: rz, r: 1.55, h: .35, mat: BRONZE, seg: 16, solid: false });
-    for (let i = 0; i < 4; i++) B({ u: UE - .2, v: 48.5, y: 0, w: .04, d: 2.8, h: 2.8, mat: GL, solid: false, r: i * Math.PI / 4 });
     for (const [u, label] of [[25.8, '컨시어지'], [19.8, '벨 데스크']]) {
       B({ u, v: 57.7, y: 0, w: 3.6, d: .9, h: .98, mat: 'jwWalnut', top: 'jwDarkMarble' });
       SG(label, { u, v: 57.22, y: .73, w: .85, h: .17, f: 'N', bg: null, fg: '#dfcfab' });
@@ -2468,25 +2467,18 @@ export function build(K) {
   }
 
   // =====================================================================
-  // EXTERIOR — porte-cochère (east), signage, flags, planters
+  // EXTERIOR — south entrance, signage, flags, planters
   // =====================================================================
   function exterior() {
-    // porte-cochère canopy over the drop-off on the 경부선 service-road side
-    B({ u: 36.4, v: 48.5, y: 4.6, w: 6.2, d: 15.5, h: 0.7, mat: BRONZE, bottom: { tex: 'ceiling', color: 0xe8dcc8 }, solid: false });
-    for (const v of [41.6, 55.4]) CY(38.9, v, 0, 0.32, 4.6, { tex: 'jwStone' }, { seg: 12 });
-    for (let v = 42.5; v <= 54.5; v += 2) K.quad({ tex: 'emit', color: 0xffe8c0 }, [P(34.4, v - 0.3), P(38.4, v - 0.3), P(38.4, v + 0.3), P(34.4, v + 0.3)].map(q => [q[0], 4.58, q[1]]), [0, -1, 0]);
-    SG(['JW MARRIOTT'], { u: 39.52, v: 48.5, y: 4.95, w: 7.5, h: 0.55, f: 'E', bg: '#7a5f40', fg: '#e8d29a' });
-    SG(['JW MARRIOTT'], { u: 36.4, v: 40.73, y: 4.95, w: 4.6, h: 0.5, f: 'N', bg: '#7a5f40', fg: '#e8d29a' });
-    HP({ tex: 'darkstone', color: 0x9c948a }, [33.3, 38, 40, 60], 0.015);
-    { const [x, z] = P(36.6, 45.5); K.vehicle({ x, y: 0, z, rotY: FACE.N, kind: 'taxi' }); }
-    { const [x, z] = P(36.6, 52.5); K.vehicle({ x, y: 0, z, rotY: FACE.N, kind: 'car', color: 0x16181c }); }
-    MAN(34.2, 46.5, 0, { shirt: 0x1d2433, rotY: FACE.E }); MAN(34.2, 50.8, 0, { shirt: 0x1d2433, rotY: FACE.E }); MAN(35.2, 53.6, 0, { rotY: FACE.W });
-    // flags
-    for (let i = 0; i < 3; i++) { const v = 36.2 + i * 1.6; CY(34.6, v, 0, 0.06, 9, 0xe8e8e8, { seg: 6 }); B({ u: 34.6, v: v + 0.75, y: 7.6, w: 0.03, d: 1.4, h: 0.9, mat: [0xf2f2f2, 0x1d2433, 0x8a1c2a][i], solid: false }); }
-    // big podium letters (east + south)
-    SG(['JW MARRIOTT'], { u: UE + 0.22, v: 48.5, y: 8.6, w: 15, h: 2.1, f: 'E', bg: '#d3c4aa', fg: '#4a3a28' });
-    SG(['JW 메리어트 호텔 서울'], { u: UE + 0.22, v: 48.5, y: 6.95, w: 8.5, h: 0.95, f: 'E', bg: '#d3c4aa', fg: '#4a3a28' });
-    SG(['JW MARRIOTT HOTEL SEOUL'], { u: 4, v: vS(4) + 0.22, y: 8.8, w: 22, h: 1.8, f: 'S', bg: '#d3c4aa', fg: '#4a3a28' });
+    // South-facing doors and a covered pedestrian approach from the exit 3 side.
+    const u=1.4,v=vS(u);
+    B({u,v:v+2.3,y:4.3,w:5.6,d:4.8,h:.46,mat:BRONZE,solid:false});
+    for (const side of [-1,1]) {
+      CY(u+side*2.62,v+4.35,0,.13,4.3,BRONZE,{seg:10});
+      B({u:u+side*1.76,v:v-.03,y:0,w:.78,d:.07,h:3.2,mat:GL,solid:false});
+    }
+    SG('JW MARRIOTT',{u,v:v+4.73,y:4.54,w:4.5,h:.4,f:'S',bg:'#69563d',fg:'#fff2d2'});
+    SPAWN('JW 메리어트 남측 현관',u,v-2,0,0,-1);
     // sidewalk planters along the east side
     for (let v = -50; v <= 30; v += 10) { B({ u: 35.0, v, y: 0, w: 1.4, d: 3.6, h: 0.6, mat: { tex: 'jwStone' } }); TREE(35.0, v, 0.6, { h: 6, kind: 'zelkova' }); }
     CROWD([33.5, -40, 37.5, 36], 0, 8, 1501);

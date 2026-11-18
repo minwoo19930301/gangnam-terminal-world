@@ -245,11 +245,11 @@ export function build(K) {
   for(let v=25;v<145;v+=5.2)door(-.1,v,3.7);
   // The user's walk shows the west arcade open between the inclined supports
   // toward the parking area, not a row of isolated exterior doorways.
-  {const[x,z]=W(-.38,83.5);doors.push({x,z,w:123,y0:0,y1:6});}
+  {const[x,z]=W(-.38,73);doors.push({x,z,w:146,y0:0,y1:6});}
   for(const u of [26,122,218,259])door(u,0,5);
   door(163,0,6); // gb_03: bright entrance behind the relocated pair of white arches.
   // Photo01: open north-end arcade under the first cantilever; glazing sits 6 m back.
-  {const[x,z]=W(38,0);doors.push({x,z,w:70,y0:0,y1:5.7});}
+  {const[x,z]=W(36.5,0);doors.push({x,z,w:73,y0:0,y1:6});}
   // Open the entire street arcade; the shop glazing is recessed behind its columns.
   {const[x,z]=W(196.2,0);doors.push({x,z,w:240.8,y0:0,y1:3.35});}
   door(38.5,161,6);door(316.7,18,4);
@@ -317,8 +317,8 @@ export function build(K) {
     g.fillStyle='#6b6d69';g.fillRect(0,0,w,2);g.fillRect(0,0,2,h);
     g.fillRect(w/2,0,1,h);g.fillRect(0,h/2,w,1);
   },[1.2,1.2]);
-  K.hpoly('gb_west_arcade_stone',rect(.8,22,10,146),.045);
-  K.hpoly('gb_tactile',rect(8.65,22,8.95,146),.049);
+  K.hpoly('gb_west_arcade_stone',rect(.8,0,10,146),.045);
+  K.hpoly('gb_tactile',rect(8.65,0,8.95,146),.049);
   // IMG_0968–1002 show a recessed terminal facade with small upper windows,
   // dark glazing and brick-coloured closed bays beside this covered walk.
   // Repeated openings preserve the modeled paths into the hall; their exact
@@ -581,11 +581,11 @@ export function build(K) {
     // Official #35 remains in place. The walk's portal is BESIDE its north wall,
     // opening onto the clear u66..75.7 hall, not through the UNIQLO stock room.
     const entries=[16,38,60,70];
-    lwall(3,6,73,6,0,3.5,{mat:'glass',thick:.045,openings:entries.map(at=>({at:at-3,w:4,y0:0,y1:3.5}))});
-    lwall(3,6.08,64,6.08,3.5,5.7,{mat:'gb_salmon_tile',thick:.16});
+    lwall(10,6,73,6,0,3.5,{mat:'glass',thick:.045,openings:entries.map(at=>({at:at-10,w:4,y0:0,y1:3.5}))});
+    lwall(10,6.08,64,6.08,3.5,5.7,{mat:'gb_salmon_tile',thick:.16});
     lwall(64,6.08,73,6.08,3.5,5.7,{mat:'glass',thick:.045});
-    for(let u=4;u<73;u+=2){if(entries.some(e=>Math.abs(u-e)<1.9))continue;lbox(u,5.98,0,.065,.1,3.5,0xaab4b8,{solid:false});}
-    for(let u=7;u<72;u+=6){
+    for(let u=12;u<73;u+=2){if(entries.some(e=>Math.abs(u-e)<1.9))continue;lbox(u,5.98,0,.065,.1,3.5,0xaab4b8,{solid:false});}
+    for(let u=13;u<72;u+=6){
       if(u>=64)continue;
       lbox(u,5.94,4.1,1.1,.1,1.1,0xaab4b8,{solid:false});lbox(u,5.87,4.15,1,.03,1,DARK,{solid:false});
     }
@@ -610,7 +610,7 @@ export function build(K) {
       K.quad(0xe8e4da,[p(-.45,.35,0),p(.45,.35,0),p(.45,5.95,5.7),p(-.45,5.95,5.7)],[B[0],-.7,B[1]]);
       lbox(u===63?65.55:u,u===63?5.55:0,0,1,.9,.15,0xd3d0c4,{solid:false});
     }
-    K.hpoly(0xe8e4da,rect(3,0,64,6),5.7,false);
+    K.hpoly(0xe8e4da,rect(10,0,64,6),5.7,false);
     K.hpoly(0x45494c,rect(64,0,73,6),5.62,false);
     lbox(68.5,-.025,5.05,9,.12,.65,0x45494c,{solid:false});
     lbox(68.5,-.53,5.72,9,.08,.55,0x45494c,{solid:false});
@@ -688,7 +688,10 @@ export function build(K) {
     }
     const detail = [];
     const furnish = fn => {const t=activePlacement;detail.push(t?()=>placeAssembly(t,fn):fn);};
-    K.zone({name:'서울고속버스터미널',floor:'1F',sub:'매표소 · 대합실 · 경부·영동선 승차홈',poly:P,y0:0,y1:6,priority:1});
+    const entryHall=clip(clip(lp,1,22,false),0,10,true);
+    for(const part of [entryHall,clip(lp,1,22,true)]){
+      K.zone({name:'서울고속버스터미널',floor:'1F',sub:'매표소 · 대합실 · 경부·영동선 승차홈',poly:part.map(p=>W(...p)),y0:0,y1:6,priority:1});
+    }
     // Round 6, gb_hall 01/02/10/16: small stone strips, shop units and a window-side aisle.
     K.texture('gb5_hallstone',256,256,(g,w,h)=>{
       const r=K.rand(521),col=['#b8b5ae','#aaa9a2','#c4c1b9','#a6a79f','#b9b9b0'];
@@ -721,7 +724,7 @@ export function build(K) {
       }
     }
     const ceilHoles=holes(hallWest,6).map(p=>{const q=p.map(p=>toL(...p));return[Math.min(...q.map(p=>p[0])),Math.min(...q.map(p=>p[1])),Math.max(...q.map(p=>p[0])),Math.max(...q.map(p=>p[1]))];});
-    cover(hallWest,[...pockets,...ceilHoles,[.1,22,10,146],[66.2,6.2,75.25,23],[30,67,54,84]],3.3);cover(NORTH,[...northVoids,[258,0,280,30],[77,17.5,118,22.6]],3.6);
+    cover(hallWest,[...pockets,...ceilHoles,[-1,0,10,146],[66.2,6.2,75.25,23],[30,67,54,84]],3.3);cover(NORTH,[...northVoids,[258,0,280,30],[77,17.5,118,22.6]],3.6);
     K.hpoly('gb_acoustic',rect(168,16.7,258,30),7.3,false);K.hpoly('gb_acoustic',rect(258,7,280,30),3.8,false);
     K.hpoly(0xf2f0eb,rect(77,17.5,118,22.6),3.5,false);
     cover(rect(...corridorRect),[[54,33,62,48],[54,67,62,84]],4.8,0xefeeea);
@@ -729,7 +732,7 @@ export function build(K) {
     const inPocket=(u,v)=>pockets.some(r=>inRect(r,u,v,.2));
     // The photographed covered west passage has inclined outer supports;
     // the generic indoor column grid should not divide this walking strip.
-    columns(hallWest,0,3.28,(u,v)=>inPocket(u,v)||(u>68&&u<72)||(u<10&&v>=22&&v<=146));columns(NORTH,0,3.55,(u,v)=>v>16||u>258&&u<280);
+    columns(hallWest,0,3.28,(u,v)=>inPocket(u,v)||(u>68&&u<72)||(u<10&&v<=146));columns(NORTH,0,3.55,(u,v)=>v>16||u>258&&u<280);
     furnish(() => {
     // 600 mm T-bars align to the terminal, with 1.2 m rows of small downlights.
     const ceilStrip=(u0,v0,u1,v1,y)=>{const p=rect(u0,v0,u1,v1).map(([x,z])=>[x,y,z]);K.quad(0xc4c3bd,p,[0,-1,0]);};
@@ -741,7 +744,7 @@ export function build(K) {
     for(let v=23;v<153;v+=.6){if(v>26&&v<35||v>54&&v<84)continue;ceilStrip(56,v,66,v+.018,4.49);}
     for(let u=68.4;u<75.1;u+=1.2)for(let v=30;v<153;v+=1.2){if(inRect(cafeRect,u,v)||inRect(doorRect,u,v)||(u>=71.4&&v>=54&&v<=93))continue;lcyl(u,v,4.46,.08,.025,'emit',{seg:6,solid:false});}
     for(let u=9;u<315;u+=6)for(let v=9;v<156;v+=6){
-      const [x,z]=W(u,v);if(!K.pointInPoly(x,z,P)||blocked(u,v,2)||inPocket(u,v)||(u<10&&v>22&&v<146)||u>118&&u<258&&v>16.7)continue;
+      const [x,z]=W(u,v);if(!K.pointInPoly(x,z,P)||blocked(u,v,2)||inPocket(u,v)||(u<10&&v<146)||u>118&&u<258&&v>16.7)continue;
       lbox(u,v,3.23,.2,1.45,.055,0xd2d1ca,{solid:false});for(const du of [-.055,.055])lbox(u+du,v,3.215,.045,1.3,.018,'emit',{solid:false});
     }
     for(let v=24;v<30;v+=3)for(const u of [68.5,72.8]){lbox(u,v,3.2,.3,1.2,.06,0xbfc2bc,{solid:false});for(const du of [-.07,.07])lbox(u+du,v,3.185,.04,1.1,.025,'emit',{solid:false});}
@@ -1365,7 +1368,7 @@ export function build(K) {
     // Restrooms sit at both ends of the main hall, as the official F1 map shows.
     // The end restroom sits inside the arcade facade; its size and doorway
     // are approximations because the official plan does not give dimensions.
-    for(const [a,b,c,d] of [[4,6,19,12],[12.2,138,19,142]]){
+    for(const [a,b,c,d] of [[10,6,19,12],[12.2,138,19,142]]){
       lwall(a,b,c,b,0,3.2,{mat:0xddd9cc,thick:.14});
       lwall(a,b,a,d,0,3.2,{mat:0xddd9cc,thick:.14});
       lwall(a,d,c,d,0,3.2,{mat:0xddd9cc,thick:.14});

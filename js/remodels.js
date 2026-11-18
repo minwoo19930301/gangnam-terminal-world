@@ -37,7 +37,14 @@ export function reModelStandIns({ THREE, K, osm, scene, models }) {
 export function loadReModels({ THREE, scene, models, stand, from, onProgress }) {
   const loader = new GLTFLoader(); loader.setMeshoptDecoder(MeshoptDecoder);
   const live = [], mats = new Map();
-  const lambert = src => { const k = src.color ? src.color.getHex() : 0xcccccc; if (!mats.has(k)) mats.set(k, new THREE.MeshLambertMaterial({ color: k, side: src.side ?? THREE.FrontSide, transparent: src.transparent && src.opacity < 1, opacity: src.opacity ?? 1 })); return mats.get(k); };
+  function lambert(src) {
+    const color=src.color?.getHex() ?? 0xffffff;
+    const key=[color,src.vertexColors,src.side,src.transparent,src.opacity].join('/');
+    if (!mats.has(key)) mats.set(key,new THREE.MeshLambertMaterial({
+      color,vertexColors:src.vertexColors,side:src.side,transparent:src.transparent,opacity:src.opacity
+    }));
+    return mats.get(key);
+  }
   const queue = models.slice().sort((a, b) => Math.hypot(a.x - from.x, a.z - from.z) - Math.hypot(b.x - from.x, b.z - from.z));
   let done = 0, running = 0;
   const next = () => {
