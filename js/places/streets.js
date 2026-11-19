@@ -611,6 +611,17 @@ export function build(K) {
       }
     }
   }
+  // The pink guide runs along the surface stalls. At the west end the
+  // vehicle aisle bends right; the service yard farther north is separate.
+  const lotAisle = byId.get(830683723), lotExit = byId.get(816395055);
+  const hotelApproach = byId.get(301889794);
+  if (lotAisle && lotExit && hotelApproach) {
+    const shared = lotExit.pts.findIndex(p => Math.hypot(p[0]-hotelApproach.pts[0][0],p[1]-hotelApproach.pts[0][1]) < .1);
+    if (shared >= 0) {
+      const approach = [...lotAisle.pts, ...lotExit.pts.slice(1,shared+1), hotelApproach.pts[1]];
+      pathPaint(path(approach),.65,.34,0xcf829e,0,0,ROAD+.034);
+    }
+  }
   function guideCurve(a,b,color,left=false){
     const p=movementPath(a,b,left),paired=a.j.name==='고속터미널교차로';
     for(const off of paired?[-.8,.8]:[0])pathPaint(p,off,.45,color);

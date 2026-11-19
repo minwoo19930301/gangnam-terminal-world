@@ -2501,13 +2501,14 @@ export function build(K) {
   lzone(168.3,-96,203.6,38,{name:'파미에스테이션',floor:'1F',sub:'1층 매장 · 1~7게이트',y0:0,y1:4.65,priority:5});
   lzone(187.8,-92,191.1,34,{name:'파미에스테이션 실내 거리',floor:'1F',sub:'1층 매장 안내',y0:0,y1:8.5,priority:6});
   const famGates=[[1,170.8,-28.7,'N'],[2,170.8,22,'N'],[3,189.3,22,'S'],[4,189.3,-54,'S'],[5,189.3,-96,'W'],[6,178,-86,'W'],[7,171,-70,'N']];
-  for(const [id,ss,tt,face]of famGates)planGate('파미에스테이션 '+id+'게이트',ss,tt,face,4.5);
+  for(const [id,ss,tt,face]of famGates)planGate('파미에스테이션 '+id+'게이트',ss,tt,face,id===2?7.6:4.5);
   // The two hall-side portals are genuine framed openings with brick returns and clear glazing.
   for(const [id,tt]of [[1,-28.7],[2,22]]){
-    for(const d of [-3.2,3.2]){lbox(170.8,tt+d,1.1,1.55,0,4.3,'ccFamBuffBrick');lbox(170.8,tt+d,1.25,1.7,3.35,.2,0xe6dcc8,{solid:false});}
-    lbox(170.8,tt,1.1,8,3.65,.65,'ccFamBuffBrick',{solid:false});
+    const jamb = id===2 ? 4.65 : 3.2;
+    for(const d of [-jamb,jamb]){lbox(170.8,tt+d,1.1,1.55,0,4.3,'ccFamBuffBrick');lbox(170.8,tt+d,1.25,1.7,3.35,.2,0xe6dcc8,{solid:false});}
+    lbox(170.8,tt,1.1,2*jamb+1.55,3.65,.65,'ccFamBuffBrick',{solid:false});
     lsign('파미에스테이션 '+id+'게이트',170.18,tt,3.24,5.7,.55,'N',{bg:'#324639',fg:'#fff1cd'});
-    for(const d of [-2.37,2.37])lbox(170.8,tt+d,1.0,.035,.1,3.35,'glass',{solid:false});
+    for(const d of [-(jamb-.83),jamb-.83])lbox(170.8,tt+d,1.0,.035,.1,3.35,'glass',{solid:false});
     for(let i=0;i<16;i++){const a=i*PI/16,b=(i+1)*PI/16;beam([170.12,tt+2.95*Math.cos(a),3.7+1.1*Math.sin(a)],[170.12,tt+2.95*Math.cos(b),3.7+1.1*Math.sin(b)],.16,0xe9dec8);}
     lbox(179.7,tt,17.8,.16,.033,.006,0x9b8257,{solid:false});
     lfloorText('파미에스테이션 ↑',174,tt,.042,3.3,1.0,'S',{fg:'#4c5c47'});
@@ -2515,11 +2516,12 @@ export function build(K) {
   // HgbY_flKpMI_29: a few steps down into the brick arcade, not a drop to B1.
   // Its surveyed location is unknown; fit the filmed threshold to Gate2 while
   // retaining a level passage on either side of the small central landing.
-  K.slab(RECT(164.4,19.7,169.4,25.5),.72,{mat:{tex:'tile',color:0xd6c4a7,gloss:.3},thick:.18});
+  K.slab(RECT(164.4,20.35,169.4,23.65),.72,{mat:{tex:'tile',color:0xd6c4a7,gloss:.3},thick:.18});
   {const a=P(162.3,22),b=P(164.4,22);K.stairs(...a,...b,{w:3,ya:0,yb:.72,mat:0xd8c6a8,steps:4,rails:false});}
   {const a=P(169.4,22),b=P(172.4,22);K.stairs(...a,...b,{w:3,ya:.72,yb:0,mat:0xd8c6a8,steps:4,rails:false});}
-  // Keep a level-width ramp beside the stair, as the filmed entrance permits.
-  {const a=P(169.4,24.7),b=P(175.4,24.7);K.ramp(...a,...b,{w:1.4,ya:.72,yb:0,mat:0xd8c6a8,rails:false});}
+  // The gallery-side lane stays at hall level alongside the short filmed steps.
+  lsign(['파미에스테이션 ↑','2게이트 · 식당가'],155,21.95,3.15,3.8,.65,'N',{bg:'#324639',fg:'#fff1cd'});
+  lsign(['호남선 터미널 ↑','승차홈 · 매표소'],171.48,22,3.22,4.6,.55,'S',{bg:'#324639',fg:'#fff1cd'});
   K.detail({name:'파미에 Gate2 · 영상의 짧은 계단과 구형 가로등',floor:'1F',y0:0,y1:4.8,poly:RECT(162.3,18.5,176,27.8)},()=>{
     for(const t of [18.9,26.5]){
       lbox(166,t,.65,.8,0,4.45,'ccFamBuffBrick');
