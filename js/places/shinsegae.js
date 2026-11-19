@@ -16329,7 +16329,7 @@ export function build(K) {
     sign('엘리베이터',liftU+.07,liftV,y+2.78,'E',2.3,.30,{bg:'#36322b',fg:'#e3ceb1'});
     {
       const ar=upperAnnexAtriumRect(id);
-      sign(`${id} · 에스컬레이터`,(ar[0]+ar[2])/2,ar[1]-.6,y+2.3,'N',2.5,.32,{bg:'#35332d',fg:'#f0e7d4'});
+      sign(id==='2F'?['2F · 에스컬레이터','호텔 연결통로 · 불가리 옆']:`${id} · 에스컬레이터`,(ar[0]+ar[2])/2,ar[1]-.6,y+2.3,'N',id==='2F'?3.2:2.5,id==='2F'?.55:.32,{bg:'#35332d',fg:'#f0e7d4'});
     }
   });
 

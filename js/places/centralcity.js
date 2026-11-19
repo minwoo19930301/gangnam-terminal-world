@@ -4803,6 +4803,9 @@ function hosUpperR20(K) {
       K.zone({name:'하우스 오브 신세계',floor,sub,poly,y0:y,y1:y+3.4,priority:10});
     }
   }
+  for (const y of [Y1,YM]) {
+    sig(['전용 승강기','L · JW 메리어트 로비'], -13,11.22,y+2.38,1.5,.35,'W',{bg:'#463a32',fg:'#eee0c3',twoSided:true});
+  }
   const houseLift=K.elevator({name:'하우스 오브 신세계 엘리베이터',x:lift[0],z:lift[1],rotY:R+PI/2,w:1.4,d:1.8,topH:2.85,floors:[{label:'1F',y:Y1,name:'와인셀러 · 레스토랑'},{label:'1M',y:YM,name:'아트 앤 라이프'}]});
   {
     // The kit gives its standard stops one door direction. Register L on the same car
