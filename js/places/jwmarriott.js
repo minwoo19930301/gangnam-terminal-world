@@ -2499,10 +2499,27 @@ export function build(K) {
     for(const edge of [-1.5,-.5,.5,1.5]) for(const depth of [back,front]){
       CY(u+edge*span,depth,0,.17,4.35,rim,{seg:10});
     }
-    for(const side of [-1,1]){
-      B({u:u+side*1.76,v:v-.03,y:0,w:.78,d:.07,h:3.2,mat:GL,solid:false});
+    // The public entrance meets the kerb under the middle vault. The recessed
+    // hotel wall behind the gallery is the inner threshold of this approach.
+    const bronze=0x835c4a, mullion=0x342e2a;
+    const facade=back-.15;
+    for (const side of [-1,1]) {
+      B({u:u+side*2.68,v:facade,y:0,w:.54,d:.35,h:3.94,mat:bronze});
+      // Fixed glass sidelights leave the centre open for walking in either direction.
+      B({u:u+side*1.92,v:facade,y:0,w:.94,d:.09,h:3.13,mat:GL,solid:true});
+      for (let i=0;i<5;i++) {
+        const x=u+side*(3+(.5+i)*1.48);
+        B({u:x,v:facade,y:0,w:1.48,d:.1,h:3.94,mat:{tex:'glass',color:0x505b61},solid:true});
+        B({u:x-side*.73,v:facade+.07,y:0,w:.06,d:.12,h:3.94,mat:mullion,solid:false});
+      }
     }
-    SG('JW MARRIOTT',{u,v:v+.05,y:3.67,w:4.1,h:.42,f:'S',bg:'#69563d',fg:'#fff2d2'});
+    B({u,v:facade,y:3.13,w:5.9,d:.36,h:.81,mat:bronze,solid:false});
+    B({u,v:facade,y:3.94,w:span*3,d:.4,h:.37,mat:0x604a40,solid:false});
+    B({u,v:facade-.12,y:4.31,w:span*3,d:.16,h:1.32,mat:0x796351,solid:false});
+    SG('JW MARRIOTT',{u,v:facade+.19,y:3.55,w:3.55,h:.38,f:'S',bg:null,fg:'#f3deae'});
+    for (const rib of [-1.5,-.5,.5,1.5]) {
+      B({u:u+rib*span,v:(back+front)/2,y:4.29,w:.15,d:front-back,h:.08,mat:{tex:'emit',color:0xffe4ad},solid:false});
+    }
     SPAWN('JW 메리어트 남측 현관',u,v-2,0,-22.765-u,48.5-(v-2));
     // sidewalk planters along the east side
     for (let v = -50; v <= 30; v += 10) { B({ u: 35.0, v, y: 0, w: 1.4, d: 3.6, h: 0.6, mat: { tex: 'jwStone' } }); TREE(35.0, v, 0.6, { h: 6, kind: 'zelkova' }); }

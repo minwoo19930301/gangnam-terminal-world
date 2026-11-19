@@ -2007,7 +2007,10 @@ function buildHotelDrive(K) {
   K.box({x:gx,z:gz,y:2.1,w:.24,d:2*half+.2,h:.52,rotY:FROT,mat:0x272629});
   K.sign(['신세계 파미에주차장       2.0m','SHINSEGAE FAMILLE PARKING LOT'],{
     x:gx-.14*FA,z:gz+.14*FB,y:2.37,w:5.65,h:.43,rotY:face,bg:'#272629',fg:'#fff'});
-  for(let u=32;u<36;u+=.82) K.hpoly(0xe6e4db,rect(u,13.25,u+.4,18.15),.073);
+  // Lay-by below the glass vaults, with a parallel surface lane on the garden side.
+  K.hpoly('asphalt',[FP(21,24.3),FP(24.8,17.5),FP(39,17.5),FP(42,21.2),FP(40,24),FP(26,24.4)],.062);
+  for (const u of [27,33,39]) K.hpoly(0xf0eee7,rect(u,19.9,u+2,20),.073);
+  for(let u=36.2;u<39.6;u+=.82) K.hpoly(0xe6e4db,rect(u,13.25,u+.4,18.15),.073);
   // A flush walking apron from the gallery opening to the covered kerb.
   K.hpoly({tex:'darkstone', color:0xbab3a5}, [FP(29,11.5),FP(39,11.5),FP(39,13.2),FP(29,13.2)], .056);
   const [x,z] = FP(35.8,12.55);
