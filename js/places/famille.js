@@ -2,7 +2,7 @@
 // Ground = 0; parking and restaurant street share +5 m (never +7 m).
 export const meta = {
   id: 'famille', name: '파미에스테이션 동관', claims: [414891732],
-  claimRoads: [593858532],
+  claimRoads: [],
   sources: [
     'refs/user_walk/20261107/manifest.json', 'refs/user_walk/20261107/places.json',
     '.codex-jobs/evidence/up20_famille.json',
@@ -20,21 +20,8 @@ export function build(K) {
   buildDeck(K);
   buildHall(K);
   buildUpper(K);
-  // Only the outside pieces of the claimed service road survive. Keep the
-  // separate 301889794 through-road unclaimed for the streets operator.
-  const road=K.osm.roads.find(r=>r.id===593858532);
-  if(road) for(let i=1;i<road.pts.length;i++){
-    const a=road.pts[i-1],b=road.pts[i],len=Math.hypot(b[0]-a[0],b[1]-a[1]);
-    const nx=-(b[1]-a[1])/len*2.5,nz=(b[0]-a[0])/len*2.5;
-    const n=Math.ceil(len/.6);
-    for(let j=0;j<n;j++){
-      const p=[a[0]+(b[0]-a[0])*j/n,a[1]+(b[1]-a[1])*j/n],q=[a[0]+(b[0]-a[0])*(j+1)/n,a[1]+(b[1]-a[1])*(j+1)/n];
-      const mx=(p[0]+q[0])/2,mz=(p[1]+q[1])/2,u=(29-mx)*FA+(mz-144)*FB,v=(mx-29)*FB+(mz-144)*FA;
-      if((u>1.5&&u<24.5&&v>-2.5&&v<22.5)||(u>-3.5&&u<6.5&&v>1.3&&v<20.1)||(u>=22&&u<73&&v>-2.5&&v<14))continue;
-      K.hpoly('asphalt',[[p[0]+nx,p[1]+nz],[q[0]+nx,q[1]+nz],[q[0]-nx,q[1]-nz],[p[0]-nx,p[1]-nz]],.012,true);
-    }
-  }
 }
+
 function familleMaterials(K){
   K.texture('famille-buff',512,512,(g,w,h)=>{
     g.fillStyle='#e6dfd2';g.fillRect(0,0,w,h);

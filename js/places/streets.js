@@ -20,7 +20,7 @@ export const meta = {
   id: 'streets', name: '고속터미널 거리 · 신반포로와 사평대로',
   claims: [886400346, 413367405, 413367408, 1137867801, 606009742, 431589113, 1173093430],
   // 831108569 is the footway through the east parking aisle, not service301889794.
-  claimRoads: [...ROAD_IDS, ...WALK_IDS, 831108565, 831108569, 1420100042, 1420100043,
+  claimRoads: [593858532, ...ROAD_IDS, ...WALK_IDS, 831108565, 831108569, 1420100042, 1420100043,
     1213763244, 1232132157, 1232132198, 1232132167, 1232132156], // crossing paint replaced here, avoiding city duplicates
   sources: ['data/osm.json', 'data/research/streets.json', 'refs/roadview/manifest.json',
     '.codex-jobs/evidence/audit_streets.json', '.codex-jobs/evidence/up20_streets.json',
@@ -55,7 +55,8 @@ export function build(K) {
   const PI = Math.PI, ROAD = 0.04, WALK = 0.15, BRIDGE = 6.2;
   const C = { steel: 0x48545d, silver: 0x9daab0, yellow: 0xf2c329, white: 0xf4f1e6, blue: 0x238bd2, green: 0x075847 };
   const byId = new Map(K.osm.roads.map(r => [r.id, r]));
-  const roads = meta.claimRoads.map(id => byId.get(id)).filter(Boolean);
+  buildHotelDrive(K);
+  const roads = meta.claimRoads.filter(id => id !== 593858532).map(id => byId.get(id)).filter(Boolean);
   const flyIds = new Set([480856735,480856736,1420100037,1420100038]);
   const tunnelIds = new Set([71105531,71105555,1499902351,1499902352,1499902353,1499902354]);
   const foot = r => ['footway','steps','pedestrian','path'].includes(r.hw);
@@ -1929,4 +1930,54 @@ function buildGsCaltex(K) {
     K.sign('GS칼텍스',{x:o2[0],z:o2[1],y:5.7,w:1.75,h:.4,rotY:ry,bg:'#168e9b',fg:'#fff',bold:true});
     K.sign('KIXX prime',{x:o2[0],z:o2[1],y:4.6,w:1.7,h:.34,rotY:ry,bg:'#e3561d',fg:'#fff',bold:true});
   }
+}
+
+// The parking aisle past Devil's Door is already drawn by the city road layer.
+// Join its western approach outside the Famille ground-floor walls, turning
+// parallel to the hotel doors between the two rows of canopy columns.
+function buildHotelDrive(K) {
+  // Same frontage frame as the Famille gallery (u west along the wall, v out).
+  const FA = 62 / Math.hypot(62,24), FB = 24 / Math.hypot(62,24);
+  const FROT = Math.atan2(FB,FA);
+  const FP = (u,v) => [29-FA*u+FB*v,144+FB*u+FA*v];
+  const parkingRoad = K.osm.roads.find(r => r.id === 593858532);
+  const eastRoad = K.osm.roads.find(r => r.id === 301889794);
+  if (!parkingRoad || !eastRoad) return;
+  const eastJunction = eastRoad.pts.find(p => Math.abs(p[0] - 49.88) < .01);
+  if (!eastJunction) return;
+
+  const stations = [
+    ...parkingRoad.pts.slice(0, 3),
+    [-10, 192.1], [-3, 191], [1, 187], FP(38, 20), FP(37.8, 17.7), FP(36, 15.7), FP(28, 15.7),
+    FP(25.5, 17.4), FP(24.8, 21.8), FP(22.5, 24.3),
+    FP(18, 25), FP(-6, 24), FP(-11, 23), eastJunction,
+  ];
+  const normal = (a, b) => {
+    const dx = b[0] - a[0], dz = b[1] - a[1], length = Math.hypot(dx, dz);
+    return [-dz / length, dx / length];
+  };
+  const sections = stations.map((p, i) => {
+    const prev = normal(stations[Math.max(0, i - 1)], stations[Math.max(1, i)]);
+    const next = normal(stations[Math.min(i, stations.length - 2)], stations[Math.min(i + 1, stations.length - 1)]);
+    const scale = 1 + prev[0] * next[0] + prev[1] * next[1];
+    return offset => p.map((axis, j) => axis + offset * (prev[j] + next[j]) / scale);
+  });
+  // Shared section corners keep the pavement and its edge paint continuous in bends.
+  for (let i = 1; i < sections.length; i++) {
+    const strip = (lo, hi, mat, y) => K.hpoly(mat, [
+      sections[i - 1](lo), sections[i](lo), sections[i](hi), sections[i - 1](hi),
+    ], y);
+    strip(-2.5, 2.5, 'asphalt', .061);
+    if (i > 1 && i < sections.length - 1) strip(-2.37, -2.25, 0xe7dfc9, .068);
+  }
+
+  // Fan into the six-metre mouth of Central City's rooftop parking ramp.
+  K.hpoly('asphalt', [[-11,190.1],[-5.1,187.9],[-2.8,191.5],[-10.8,193.3]], .063);
+
+  // A flush walking apron from the gallery opening to the covered kerb.
+  K.hpoly({tex:'darkstone', color:0xbab3a5}, [FP(29,11.5),FP(39,11.5),FP(39,13.2),FP(29,13.2)], .056);
+  const [x,z] = FP(35.8,12.55);
+  K.box({x,z,y:0,w:.86,d:.55,h:1.03,rotY:FROT,mat:0x483b30,solid:true});
+  K.sign('VALET',{x:x+.29*FB,z:z+.29*FA,y:.76,w:.71,h:.22,rotY:FROT,
+    bg:null,fg:'#f6e2b1'});
 }

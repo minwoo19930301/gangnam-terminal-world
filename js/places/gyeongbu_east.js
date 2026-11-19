@@ -308,6 +308,9 @@ export function build(K) {
   }
   // White stalls sit on open ground parking, not beneath another parking floor.
   K.hpoly('asphalt', rect(18, 19.7, 63, 24.8), .013);
+  // The open end of the parking stalls feeds the parallel service aisle
+  // (593858547), which joins the hotel approach via 921681575.
+  K.hpoly('asphalt', rect(31, 24.8, 63, 32.5), .019);
   // OSM footway 1067157385 meets this module at (339.44,32.31).
   // The narrow paved arcade joins it at ground level; no invented remote doorway.
   K.slab([[339.44, 32.31], [343, 33.25], W(18, 18.8), W(18, 16.9), W(0, 16.9)], 0, { mat: 'ge-pavers', thick: .08 });
