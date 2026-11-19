@@ -1971,9 +1971,32 @@ function buildHotelDrive(K) {
     if (i > 1 && i < sections.length - 1) strip(-2.37, -2.25, 0xe7dfc9, .068);
   }
 
-  // Fan into the six-metre mouth of Central City's rooftop parking ramp.
-  K.hpoly('asphalt', [[-11,190.1],[-5.1,187.9],[-2.8,191.5],[-10.8,193.3]], .063);
-
+  // March 2024 Naver panorama nOOQgVZmQWe4Z-qIb--3fg: the black
+  // 2.0 m gateway beside the canopy leads DOWN to Shinsegae Famille parking.
+  const rect = (u0,v0,u1,v1) => [FP(u0,v0),FP(u1,v0),FP(u1,v1),FP(u0,v1)];
+  const mouth = 23, end = 4, axis = 36, half = 3.2;
+  const well = rect(end-4,axis-half,mouth,axis+half);
+  K.groundHole(well);
+  K.hpoly('asphalt', [FP(24,23),FP(18,25),FP(mouth,axis-half),
+    FP(mouth,axis+half),FP(28,36),FP(29,29)], .062);
+  K.ramp(...FP(mouth,axis),...FP(end,axis),{ya:0,yb:-3.1,w:2*half,mat:'asphalt',rails:false});
+  K.slab(rect(end-4,axis-half,end,axis+half),-3.1,{mat:'asphalt',thick:.14});
+  for (const side of [-1,1]) {
+    const edge = axis + side*half;
+    K.wall(...FP(end-4,edge),...FP(mouth,edge),-3.2,.55,{mat:0xd5d2ca,thick:.18});
+  }
+  K.wall(...FP(end-4,axis-half),...FP(end-4,axis+half),-3.2,0,{mat:0x34363a});
+  K.slab(rect(end-4,axis-half,end+2,axis+half),0,{mat:'concrete',thick:.2});
+  const face = FROT - Math.PI/2;
+  for (const offset of [-half,half]) {
+    const [x,z] = FP(mouth,axis+offset);
+    K.box({x,z,y:0,w:.2,d:.26,h:2.45,rotY:FROT,mat:0x272629});
+  }
+  const [gx,gz] = FP(mouth,axis);
+  K.box({x:gx,z:gz,y:2.1,w:.24,d:2*half+.2,h:.52,rotY:FROT,mat:0x272629});
+  K.sign(['신세계 파미에주차장       2.0m','SHINSEGAE FAMILLE PARKING LOT'],{
+    x:gx-.14*FA,z:gz+.14*FB,y:2.37,w:5.65,h:.43,rotY:face,bg:'#272629',fg:'#fff'});
+  for(let u=32;u<36;u+=.82) K.hpoly(0xe6e4db,rect(u,13.25,u+.4,18.15),.073);
   // A flush walking apron from the gallery opening to the covered kerb.
   K.hpoly({tex:'darkstone', color:0xbab3a5}, [FP(29,11.5),FP(39,11.5),FP(39,13.2),FP(29,13.2)], .056);
   const [x,z] = FP(35.8,12.55);

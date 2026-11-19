@@ -109,10 +109,14 @@ export function buildCity(K, osm, { claimedBuildings = new Set(), claimedRoads =
     const m = areaMat[a.kind];
     if (!m) continue;
     const y = areaY[a.kind] ?? 0.012;
-    K.hpoly(m, a.poly, y, true, a.holes);
+    // The Famille garage descends under this landscaped island.
+    const holes = a.id === 593858539
+      ? [...(a.holes || []), ...K._.groundHoles.map(h => h.poly).filter(p => p.every(([x,z]) => pointInPoly(x,z,a.poly)))]
+      : a.holes;
+    K.hpoly(m, a.poly, y, true, holes);
     if (a.kind === 'man_made:pier') K.phys.addSurface(a.poly, y, {});
     if (a.kind === 'amenity:parking' && polyArea(a.poly) > 300) parkingLines(a);
-    if (/park|forest|wood|grass|garden/.test(a.kind)) fillTrees(a.poly, a.holes, a.kind.includes('forest') || a.kind.includes('wood') ? 90 : 260);
+    if (/park|forest|wood|grass|garden/.test(a.kind)) fillTrees(a.poly, holes, a.kind.includes('forest') || a.kind.includes('wood') ? 90 : 260);
   }
   function parkingLines(a) {
     // stall lines along the longest edge direction
