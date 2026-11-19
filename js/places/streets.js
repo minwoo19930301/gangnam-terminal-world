@@ -1954,14 +1954,14 @@ function buildHotelDrive(K) {
   const parkingRoad = K.osm.roads.find(r => r.id === 593858532);
   const eastRoad = K.osm.roads.find(r => r.id === 301889794);
   if (!parkingRoad || !eastRoad) return;
-  const eastJunction = eastRoad.pts.find(p => Math.abs(p[0] - 49.88) < .01);
+  const eastJunction = eastRoad.pts.find(p => Math.abs(p[0] - 71.54) < .01);
   if (!eastJunction) return;
 
   const stations = [
     ...parkingRoad.pts.slice(0, 3),
     [-10, 192.1], [-3, 191], [1, 187], FP(38, 20), FP(37.8, 17.7), FP(36, 15.7), FP(28, 15.7),
     FP(25.5, 17.4), FP(24.8, 21.8), FP(22.5, 24.3),
-    FP(18, 25), FP(-6, 24), FP(-11, 23), eastJunction,
+    FP(18, 25), [37,184], [54,191], eastJunction,
   ];
   const normal = (a, b) => {
     const dx = b[0] - a[0], dz = b[1] - a[1], length = Math.hypot(dx, dz);
@@ -1973,13 +1973,25 @@ function buildHotelDrive(K) {
     const scale = 1 + prev[0] * next[0] + prev[1] * next[1];
     return offset => p.map((axis, j) => axis + offset * (prev[j] + next[j]) / scale);
   });
-  // Shared section corners keep the pavement and its edge paint continuous in bends.
-  for (let i = 1; i < sections.length; i++) {
-    const strip = (lo, hi, mat, y) => K.hpoly(mat, [
-      sections[i - 1](lo), sections[i](lo), sections[i](hi), sections[i - 1](hi),
-    ], y);
-    strip(-2.5, 2.5, 'asphalt', .061);
-    if (i > 1 && i < sections.length - 1) strip(-2.37, -2.25, 0xe7dfc9, .068);
+  // Interpolate the vehicle approaches by distance. Keep the full turning
+  // apron level with the hotel door, above the Famille gallery roof.
+  const deck = 11.5;
+  const distance = [0];
+  for (let i=1;i<stations.length;i++) {
+    const [x,z]=stations[i], [px,pz]=stations[i-1];
+    distance.push(distance[i-1]+Math.hypot(x-px,z-pz));
+  }
+  const last=distance.at(-1);
+  const height=distance.map(d=>deck*Math.min(1,d/distance[5],(last-d)/(last-distance[12])));
+  for (let i=1;i<sections.length;i++) {
+    const a=stations[i-1], b=stations[i], ya=height[i-1], yb=height[i];
+    const strip=(lo,hi,y,mat)=>{
+      const pts=[sections[i-1](lo),sections[i](lo),sections[i](hi),sections[i-1](hi)];
+      K.quad(mat,pts.map(([x,z],j)=>[x,y+(j===0||j===3?ya:yb),z]),[0,1,0]);
+    };
+    strip(-2.5,2.5,.061,'asphalt');
+    K.phys.addRamp(...a,...b,2.55,ya+.061,yb+.061,{tag:'streets'});
+    if(i>1 && i<sections.length-1) strip(-2.37,-2.25,.068,0xe7dfc9);
   }
 
   // March 2024 Naver panorama nOOQgVZmQWe4Z-qIb--3fg: the black
@@ -2008,13 +2020,13 @@ function buildHotelDrive(K) {
   K.sign(['신세계 파미에주차장       2.0m','SHINSEGAE FAMILLE PARKING LOT'],{
     x:gx-.14*FA,z:gz+.14*FB,y:2.37,w:5.65,h:.43,rotY:face,bg:'#272629',fg:'#fff'});
   // Lay-by below the glass vaults, with a parallel surface lane on the garden side.
-  K.hpoly('asphalt',[FP(21,24.3),FP(24.8,17.5),FP(39,17.5),FP(42,21.2),FP(40,24),FP(26,24.4)],.062);
-  for (const u of [27,33,39]) K.hpoly(0xf0eee7,rect(u,19.9,u+2,20),.073);
-  for(let u=36.2;u<39.6;u+=.82) K.hpoly(0xe6e4db,rect(u,13.25,u+.4,18.15),.073);
+  K.slab([FP(21,24.3),FP(24.8,17.5),FP(39,17.5),FP(42,21.2),FP(40,24),FP(26,24.4)],deck+.062,{mat:'asphalt',thick:.24});
+  for (const u of [27,33,39]) K.hpoly(0xf0eee7,rect(u,19.9,u+2,20),deck+.073);
+  for(let u=36.2;u<39.6;u+=.82) K.hpoly(0xe6e4db,rect(u,13.25,u+.4,18.15),deck+.073);
   // A flush walking apron from the gallery opening to the covered kerb.
-  K.hpoly({tex:'darkstone', color:0xbab3a5}, [FP(29,11.5),FP(39,11.5),FP(39,13.2),FP(29,13.2)], .056);
+  K.slab(rect(21,11.4,42,15.7),deck+.056,{mat:'darkstone',thick:.24});
   const [x,z] = FP(35.8,12.55);
-  K.box({x,z,y:0,w:.86,d:.55,h:1.03,rotY:FROT,mat:0x483b30,solid:true});
-  K.sign('VALET',{x:x+.29*FB,z:z+.29*FA,y:.76,w:.71,h:.22,rotY:FROT,
+  K.box({x,z,y:deck,w:.86,d:.55,h:1.03,rotY:FROT,mat:0x483b30,solid:true});
+  K.sign('VALET',{x:x+.29*FB,z:z+.29*FA,y:deck+.76,w:.71,h:.22,rotY:FROT,
     bg:null,fg:'#f6e2b1'});
 }

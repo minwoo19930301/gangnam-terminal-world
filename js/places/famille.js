@@ -431,10 +431,7 @@ function buildHall(K) {
   wall(22,11.5,70.56,11.5,0,8,{openings:[...Array.from({length:7},(_,i)=>({at:3.2+i*6.5,w:5.3,y0:0,y1:4.1})),...Array.from({length:7},(_,i)=>({at:3.2+i*6.5,w:5.3,y0:5,y1:7.9}))]});
   // North shops remain shallow window displays at the shared JW boundary, not new interior claims.
   for(let u=38.5;u<69;u+=6.5){B(u,-.13,0,5.25,.10,4.1,0x272620);B(u,11.62,0,5.25,.10,4.1,0x302c26);}
-  // The hotel threshold is on the north wall. The gallery itself belongs to Famille.
-  for (const u of [29.4,34]) B(u,.11,0,.18,.24,3.96,0x69563d);
-  B(31.7,.11,3.42,4.78,.24,.55,0x69563d);
-  sign('JW MARRIOTT',31.7,.26,3.68,3.6,.42,'v',{bg:'#69563d',fg:'#fff2d2'});
+  B(31.7,-.13,0,5.3,.12,4.1,0x302c26,true);
   // Continuous cream cornices, matching the retained gallery's brick-pier / fanlight grammar.
   for(const v of [0,11.5])for(const[y,h,d]of [[4.45,.18,.44],[4.66,.14,.6],[7.8,.2,.46]])B(46.28,v,y,48.56,d,h,cream);
   for(const v of [0,20])for(const[y,h,d]of [[4.7,.16,.48],[4.88,.13,.62],[9.2,.18,.5]])B(13,v,y,18,d,h,cream);

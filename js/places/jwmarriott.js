@@ -10,7 +10,7 @@ export const meta = {
   claims: [136986976],
   claimRoads: [],
   claimAreas: [],
-  streetEntrances: [{x:-.6,z:155.8,y:0,w:4.4,nx:.359,nz:.933,other:null}],
+  streetEntrances: [{x:-.6,z:155.8,y:11.5,w:4.4,nx:.359,nz:.933,other:null}],
   sources: [
     'https://ko.wikipedia.org/wiki/JW_메리어트_호텔_서울',
     'https://www.marriott.com/ko/hotels/seljw-jw-marriott-hotel-seoul/dining/',
@@ -496,7 +496,7 @@ export function build(K) {
   EW('E', -30, 60.89, 0, 4.2, { mat: GL, thick: 0.06, openings: [{ s: 0, w: 5, y0: 0, y1: 3.4 }, { s: 44.5, w: 3.2, y0: 0, y1: 3.4 }, { s: 52.5, w: 3.2, y0: 0, y1: 3.4 }] });
   EW('E', -30, 60.89, 4.2, H1, { mat: { tex: 'jwStone' }, inner: WARM });
   EW('S', UW, -10, 0, H1, { mat: { tex: 'jwStone' }, inner: WARM });
-  EW('S', -10, 4, 0, 4.2, { mat: GL, thick: 0.06, openings: [{ s: -4, w: 4, y0: 0, y1: 3.4 }, { s: 1.4, w: 4.4, y0: 0, y1: 3.4 }] });
+  EW('S', -10, 4, 0, 4.2, { mat: GL, thick: 0.06 });
   EW('S', -10, 2.2, 4.2, H1, { mat: { tex: 'jwStone' }, inner: WARM });
   // 1F stone piers on the glass storefronts
   for (let v = -27; v <= 60; v += 6) if (Math.abs(v - 0) > 3.2 && Math.abs(v - 44.5) > 2.2 && Math.abs(v - 52.5) > 2.2) B({ u: UE - 0.2, v, y: 0, w: 0.7, d: 0.9, h: 4.2, mat: { tex: 'jwStone' } });
@@ -508,6 +508,10 @@ export function build(K) {
   for (const k of ['2F', '3F', '4F', '5F', '6F']) {
     const interior=(seamRanges[k]||[]).map(([a,b])=>{const u=-33.31+(a+b)/2*66.62/67,[x,z]=P(u,vN(u));return{x,z,w:(b-a)*66.62/67,y0:storeLevel[k],y1:storeLevel[k]+3.4};});
     const original=k==='2F'?[{x:-46,z:43.1,w:6.8,y0:6,y1:7.3},{x:-65.9,z:81.4,w:17,y0:6,y1:9.1},{x:15,z:149.9,w:30,y0:6,y1:9.5}]:[];
+    if (k==='3F') {
+      const [x,z]=P(1.4,vS(1.4));
+      interior.push({x,z,w:4.4,y0:Y[k],y1:Y[k]+3.4});
+    }
     K.polyWalls(FPL,Y[k],NEXT[k],{mat:{tex:'jwPodium'},inner:WARM,thick:.35,floorH:NEXT[k]-Y[k],openings:[...original,...interior]});
   }
   // podium cornice + 7F parapet (stone base + glass balustrade)
@@ -1289,7 +1293,7 @@ export function build(K) {
       }
     });
     fit=ID;
-    BOH([-33.1,53.5,4.9,60.4],y,yc-y);
+    BOH([-33.1,53.5,-1.6,60.4],y,yc-y);
     // prefunction (east band + corridor between rows)
     for (const [u, v, f] of [[10, 15.5, 'E'], [10, 21.5, 'E'], [26, 45.5, 'W'], [26, 51.5, 'W'], [10, 50, 'E']]) SOFA(u, v, y, 3.2, f, 0xbfae92);
     for (const v of [19.5, 45.5]) { B({ u: 12, v, y, w: 1.0, d: 4.2, h: 0.76, mat: 0xf2ede4, solid: true }); MAN(12.9, v, y, { rotY: FACE.W, shirt: 0x1d2433 }); }
@@ -2477,15 +2481,15 @@ export function build(K) {
   // =====================================================================
   function exterior() {
     // South-facing doors and a covered pedestrian approach from the exit 3 side.
-    const u=1.4,v=vS(u);
+    const u=1.4,v=vS(u), deck=Y['3F'];
     // Haeahn's entrance elevation shows three glazed barrel vaults across the drop-off.
-    // The central arch shares the pedestrian axis through the Famille frontage.
+    // The central arch shares the pedestrian axis above the Famille gallery.
     const span=7, back=v+11.9, front=back+7.2;
     const glass={tex:'glass',color:0xbad4dc},rim=0xb39b7a;
     for(const bay of [-1,0,1]){
       const mid=u+bay*span;
       for(let i=0;i<12;i++){
-        const arch=t=>[mid-span/2*Math.cos(t),4.35+2.15*Math.sin(t)];
+        const arch=t=>[mid-span/2*Math.cos(t),deck+4.35+2.15*Math.sin(t)];
         const [x0,y0]=arch(i*Math.PI/12),[x1,y1]=arch((i+1)*Math.PI/12);
         const corners=[[x0,y0,back],[x1,y1,back],[x1,y1,front],[x0,y0,front]].map(([x,y,z])=>{
           const [wx,wz]=P(x,z);return [wx,y,wz];
@@ -2497,30 +2501,34 @@ export function build(K) {
       }
     }
     for(const edge of [-1.5,-.5,.5,1.5]) for(const depth of [back,front]){
-      CY(u+edge*span,depth,0,.17,4.35,rim,{seg:10});
+      CY(u+edge*span,depth,deck,.17,4.35,rim,{seg:10});
     }
     // The public entrance meets the kerb under the middle vault. The recessed
     // hotel wall behind the gallery is the inner threshold of this approach.
     const bronze=0x835c4a, mullion=0x342e2a;
     const facade=back-.15;
     for (const side of [-1,1]) {
-      B({u:u+side*2.68,v:facade,y:0,w:.54,d:.35,h:3.94,mat:bronze});
+      B({u:u+side*2.68,v:facade,y:deck,w:.54,d:.35,h:3.94,mat:bronze});
       // Fixed glass sidelights leave the centre open for walking in either direction.
-      B({u:u+side*1.92,v:facade,y:0,w:.94,d:.09,h:3.13,mat:GL,solid:true});
+      B({u:u+side*1.92,v:facade,y:deck,w:.94,d:.09,h:3.13,mat:GL,solid:true});
       for (let i=0;i<5;i++) {
         const x=u+side*(3+(.5+i)*1.48);
-        B({u:x,v:facade,y:0,w:1.48,d:.1,h:3.94,mat:{tex:'glass',color:0x505b61},solid:true});
-        B({u:x-side*.73,v:facade+.07,y:0,w:.06,d:.12,h:3.94,mat:mullion,solid:false});
+        B({u:x,v:facade,y:deck,w:1.48,d:.1,h:3.94,mat:{tex:'glass',color:0x505b61},solid:true});
+        B({u:x-side*.73,v:facade+.07,y:deck,w:.06,d:.12,h:3.94,mat:mullion,solid:false});
       }
     }
-    B({u,v:facade,y:3.13,w:5.9,d:.36,h:.81,mat:bronze,solid:false});
-    B({u,v:facade,y:3.94,w:span*3,d:.4,h:.37,mat:0x604a40,solid:false});
-    B({u,v:facade-.12,y:4.31,w:span*3,d:.16,h:1.32,mat:0x796351,solid:false});
-    SG('JW MARRIOTT',{u,v:facade+.19,y:3.55,w:3.55,h:.38,f:'S',bg:null,fg:'#f3deae'});
+    B({u,v:facade,y:deck+3.13,w:5.9,d:.36,h:.81,mat:bronze,solid:false});
+    B({u,v:facade,y:deck+3.94,w:span*3,d:.4,h:.37,mat:0x604a40,solid:false});
+    B({u,v:facade-.12,y:deck+4.31,w:span*3,d:.16,h:1.32,mat:0x796351,solid:false});
+    SG('JW MARRIOTT',{u,v:facade+.19,y:deck+3.55,w:3.55,h:.38,f:'S',bg:null,fg:'#f3deae'});
     for (const rib of [-1.5,-.5,.5,1.5]) {
-      B({u:u+rib*span,v:(back+front)/2,y:4.29,w:.15,d:front-back,h:.08,mat:{tex:'emit',color:0xffe4ad},solid:false});
+      B({u:u+rib*span,v:(back+front)/2,y:deck+4.29,w:.15,d:front-back,h:.08,mat:{tex:'emit',color:0xffe4ad},solid:false});
     }
-    SPAWN('JW 메리어트 남측 현관',u,v-2,0,-22.765-u,48.5-(v-2));
+    SLAB([u-3,v-.4,u+3,facade+.35],deck,{mat:'jwHoney',thick:.24});
+    for (const side of [-1,1]) WL(u+side*3,v,u+side*3,facade,deck,deck+3.94,{mat:WARM});
+    SLAB([u-3,v,u+3,facade],deck+3.94,{mat:STONE,walk:false});
+    ZN('JW 메리어트 정문', '3F','발레 하차장 · 호텔 연결', [u-3,v-.4,u+3,facade+.35],deck-.08,deck+3.94,18);
+    SPAWN('JW 메리어트 정문',u,facade-1,deck,0,-1);
     // sidewalk planters along the east side
     for (let v = -50; v <= 30; v += 10) { B({ u: 35.0, v, y: 0, w: 1.4, d: 3.6, h: 0.6, mat: { tex: 'jwStone' } }); TREE(35.0, v, 0.6, { h: 6, kind: 'zelkova' }); }
     CROWD([33.5, -40, 37.5, 36], 0, 8, 1501);
