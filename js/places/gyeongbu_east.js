@@ -264,7 +264,18 @@ export function build(K) {
   wall(-2,16,18,16,0,4.2,{mat:'glass',openings:[{at:12,w:3,y0:0,y1:3.2}]});
   box(8,16.08,3.15,20,.28,1.05,0x42352c);
   sign('THE VIKING · 더 바이킹',8,16.26,3.65,7,.63,0,{bg:null,fg:'#f5dfb6'});
-  zone('더 바이킹','1F','파미에가든 BP4-8',-2,0,18,16,0,4.2,5);
+  for(const u of [-1.8,2.1,6,8.4,11.6,14.3,17.8]){
+    box(u,16.13,0,.17,.24,3.16,0x302f30);
+  }
+  box(10,16.65,3.05,4.3,1.6,.17,0x413a36);
+  for(const u of [1.8,5.6,14.4]){
+    box(u,11.6,.73,1.6,.85,.1,0x87674d);
+    box(u,11.6,0,.26,.36,.73,0x413a36);
+  }
+  box(1.5,5.3,0,4.6,1.3,.98,0x45423d);
+  box(1.5,5.3,.98,4.7,1.4,.12,0xd8d5ce);
+  box(1.5,5.75,1.1,4.5,.06,.48,'glass');
+  zone('더 바이킹','4F','파미에가든 BP4-8',-2,0,18,16,0,4.2,5);
   // Freestanding brick hall at the authoritative pub pin. All windows are cut out of the wall, including their
   // curved heads, so the hall is visible through the arcade and the glazing.
   slab(18, 1.5, 63, 15.9, 0, { mat: { tex: 'wood', color: 0x5a4030, gloss: .38 }, holes: [rect(31.9, 10.2, 40.2, 15.7)] });

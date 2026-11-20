@@ -2044,8 +2044,8 @@ function buildGardenTerrain(K) {
   const garden=12.6;
   const P=(s,v)=>[71.26+.89563*s+.4448*v,143.25-.4448*s+.89563*v];
   const rect=(a,b,c,d)=>[P(a,b),P(c,b),P(c,d),P(a,d)];
-  for(let a=0;a<412;a+=20){
-    const b=Math.min(a+20,412), mid=(a+b)/2;
+  for(let a=0;a<348;a+=20){
+    const b=Math.min(a+20,348), mid=(a+b)/2;
     const inner=a>=200?-4:a>=180?1:16.76;
     K.slab(rect(a,inner,b,45),garden-.08,{mat:'sidewalk',thick:.18});
     K.slab(rect(a,31,b,38),garden-.045,{mat:'asphalt',thick:.05});
@@ -2062,18 +2062,36 @@ function buildGardenTerrain(K) {
       }
     }
   }
-  // Seal the cut ends of the hillside as well as its top. From the lower
-  // road the sightline terminates on earth, including at either corner.
-  for(const station of [0,412]){
-    const inner=station===0?16.76:-4;
-    K.wall(...P(station,inner),...P(station,45),-.1,garden-.08,{mat:'concrete',thick:.1});
-    for(let v=45;v<91;v+=2){
-      const h=(91-v)/46*(garden-.10)+.02, next=(89-v)/46*(garden-.10)+.02;
-      const a=P(station,v),b=P(station,v+2);
-      K.quad('grass',[[a[0],-.1,a[1]],[b[0],-.1,b[1]],[b[0],next,b[1]],[a[0],h,a[1]]],
-        station===0?[-.89563,0,.4448]:[.89563,0,-.4448]);
-      K.phys.addWall(...a,...b,-.1,(h+next)/2,.05,'streets');
+  // At the east junction both the street and its banks descend to city grade.
+  const toe=400, crest=348, top=garden-.08;
+  const height=(s,v)=>.02+(top-.02)*Math.max(0,(toe-s)/(toe-crest))*
+    Math.min(1,(91-v)/46);
+  for(const [v0,v1,mat] of [[-4,31,'sidewalk'],[31,38,'asphalt'],[38,45,'sidewalk']]){
+    K.ramp(...P(crest,(v0+v1)/2),...P(toe,(v0+v1)/2),
+      {ya:top,yb:.02,w:v1-v0,mat,rails:false});
+  }
+  for(let s=crest;s<toe;s+=2){
+    for(const [v0,v1,mat] of [[45,53,'sidewalk'],[53,61,'grass'],[61,67,'sidewalk'],[67,84,'grass'],[84,91,'sidewalk']]){
+      const corners=[[s,v0],[s,v1],[s+2,v1],[s+2,v0]];
+      K.quad(mat,corners.map(([a,b])=>{const [x,z]=P(a,b);return [x,height(a,b),z];}),[0,1,0]);
+      K.phys.addRamp(...P(s+1,v0),...P(s+1,v1),1.01,height(s+1,v0),height(s+1,v1),{tag:'streets'});
     }
+  }
+  for(let s=crest+1;s+3<toe;s+=10){
+    K.quad(0xe4dbba,[[s,34.46],[s,34.55],[s+3,34.55],[s+3,34.46]].map(([a,b])=>{
+      const [x,z]=P(a,b);return [x,height(a,b)+.035,z];
+    }),[0,1,0]);
+  }
+  // Surface parking and planted islands along the approach to the restaurants.
+  for(const start of [222,248,274]){
+    K.slab(rect(start,23,start+18,30.9),top+.015,{mat:'asphalt',thick:.04});
+    for(let s=start+1;s<start+18;s+=2.65) K.hpoly(0xe4e0d4,rect(s,24,s+.1,29),top+.03);
+    const island=rect(start+5,21.2,start+13,22.5);
+    K.prism(island,top,top+.36,{mat:'concrete'});
+    K.prism(island,top+.36,top+.85,{mat:'grass'});
+    const [x,z]=P(start+2,22);
+    K.box({x,z,y:top,w:.13,d:.13,h:3.8,mat:0x404441});
+    K.box({x,z,y:top+3.8,w:.68,d:.68,h:.12,mat:0x424743});
   }
   for(const s of [62,212,326]){
     K.ramp(...P(s,91),...P(s,45),{ya:.045,yb:garden-.055,w:7,mat:'asphalt',rails:false});
@@ -2082,8 +2100,8 @@ function buildGardenTerrain(K) {
   }
   // Continue the ground beside the west garage approach to the valet court.
   const A=P(0,16.76), B=P(0,45), C=P(-53,15), D=P(-53,33);
-  const top=[[...C,11.5],[...A,garden-.08],[...B,garden-.08],[...D,11.5]];
-  const faces=top.map(([x,z,y])=>[x,y,z]);
+  const westApron=[[...C,11.5],[...A,garden-.08],[...B,garden-.08],[...D,11.5]];
+  const faces=westApron.map(([x,z,y])=>[x,y,z]);
   K.quad('sidewalk',faces,[0,1,0]);
   for(const [from,to] of [[C,A],[D,B]]){
     K.quad('concrete',[[from[0],0,from[1]],[to[0],0,to[1]],[to[0],garden-.08,to[1]],[from[0],11.5,from[1]]],[0,0,1]);

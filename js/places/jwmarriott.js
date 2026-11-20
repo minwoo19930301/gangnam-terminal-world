@@ -513,6 +513,10 @@ export function build(K) {
       const [x,z]=P(1.4,vS(1.4));
       interior.push({x,z,w:4.4,y0:Y[k],y1:Y[k]+3.4});
     }
+    if(k==='5F'){
+      const [x,z]=P(25,vS(25));
+      interior.push({x,z,w:4,y0:Y[k],y1:Y[k]+3.3});
+    }
     K.polyWalls(FPL,Y[k],NEXT[k],{mat:{tex:'jwPodium'},inner:WARM,thick:.35,floorH:NEXT[k]-Y[k],openings:[...original,...interior]});
   }
   // podium cornice + 7F parapet (stone base + glass balustrade)
@@ -2532,15 +2536,16 @@ export function build(K) {
     // Arrival lounge occupies the raised entrance gallery. Screen the salons
     // on the inner axis and leave room to pass the artwork on either side.
     const lounge=[u-7,v-.45,u+7,facade+.04], walnut=0x342823;
+    const ceiling=deck+8.6;
     SLAB(lounge,deck+.025,{mat:{tex:'marble',color:0x484039},thick:.20});
-    SLAB(lounge,deck+3.94,{mat:walnut,under:walnut,walk:false});
+    SLAB(lounge,ceiling,{mat:walnut,under:walnut,walk:false});
     for (const side of [-1,1]) {
-      WL(u+side*7,v-.45,u+side*7,facade,deck,deck+3.94,{mat:walnut});
-      SOFA(u+side*5.55,v+6,deck+.05,3.1,side>0?'W':'E',0x795b49);
+      WL(u+side*7,v-.45,u+side*7,facade,deck,ceiling,{mat:walnut,openings:side>0?[{at:8.45,w:3.5,y0:deck,y1:deck+4}]:[]});
+      SOFA(u+side*5.55,v+4.8,deck+.05,2.4,side>0?'W':'E',0x795b49);
       CY(u+side*4.15,v+6,deck+.05,.48,.39,0x514139,{seg:16});
-      B({u:u+side*6.88,v:v+6,y:deck+2.7,w:.09,d:8,h:.055,mat:{tex:'emit',color:0xffcf89}});
+      B({u:u+side*6.88,v:v+(side>0?4:6),y:deck+2.7,w:.09,d:side>0?4:8,h:.055,mat:{tex:'emit',color:0xffcf89}});
     }
-    WL(u-7,v+.35,u+7,v+.35,deck,deck+3.94,{mat:walnut,openings:[{at:7,w:3.4,y0:deck,y1:deck+3.5}]});
+    WL(u-7,v+.35,u+7,v+.35,deck,ceiling,{mat:walnut,openings:[{at:7,w:3.4,y0:deck,y1:deck+3.5}]});
     // Porcelain strands and a dark plinth recall the photographed necklace
     // installation in the entrance hall, scaled to this gallery ceiling.
     CY(u,v+3.55,deck+.04,1.03,.26,0x49443d,{seg:24});
@@ -2554,18 +2559,50 @@ export function build(K) {
       }
     }
     B({u,v:v+2.35,y:deck+.03,w:4.3,d:.18,h:3.87,mat:walnut});
-    ZN('JW 메리어트 현관 라운지','3F','조형물 · 샹들리에 · 백화점 연결',lounge,deck-.12,deck+3.94,22);
+    ZN('JW 메리어트 현관 라운지','3F','조형물 · 샹들리에 · 백화점 연결',lounge,deck-.12,ceiling,22);
     // Suspended strands leave the entrance sightline and walking headroom clear.
-    const crown=deck+3.9;
+    const crown=ceiling-.1;
     B({u,v:v+4.2,y:crown-.10,w:2.85,d:2.1,h:.10,mat:'jwWalnut',solid:false});
     for(let i=0;i<20;i++){
       const angle=i*Math.PI/10, cu=u+1.28*Math.cos(angle), cv=v+4.2+.88*Math.sin(angle);
-      const drop=.45+.64*(1+Math.sin(2*angle))/2;
+      const drop=2.1+1.05*(1+Math.sin(2*angle))/2;
       ROD([cu,crown,cv],[cu,crown-drop,cv],.014,BRONZE);
       const [x,z]=P(cu,cv);
       K.dome({x,z,y:crown-drop-.11,rx:.10,ry:.17,rz:.10,seg:8,rings:4,hemi:false,mat:{tex:'emit',color:i%3?0xffefd6:0xefcb88}});
     }
     SG('신세계백화점 2층 연결통로 →',{u,v:v+.6,y:deck+2.28,w:2.7,h:.32,f:'S',bg:'#49392f',fg:'#fff1d8'});
+
+    // The lower route turns into its own department-store passage behind
+    // the artwork. The salon floor occupies the far side of these partitions.
+    const passageMat={tex:'wood',color:0x49392e};
+    for(const [a,b,c,d] of [[-.9,60.6,-.9,56.5],[-.9,56.5,24.25,56.5],
+      [3.68,60.45,27.05,60.45],[27.05,60.45,27.05,29.2],[24.25,56.5,24.25,29.2]]){
+      WL(a,b,c,d,deck,deck+3.8,{mat:passageMat});
+    }
+    for(const r of [[-.9,56.5,27.05,60.45],[24.25,29.15,27.05,56.5]]){
+      SLAB(r,deck+.032,{mat:'jwGreyStone',thick:.05});
+      ZN('신세계백화점 연결통로','3F','신관 2층 방면',r,deck-.08,deck+3.8,28);
+    }
+    for(const x of [24.25,27.05]) WL(x,1.76,x,29.25,7,deck+3.7,{mat:passageMat});
+    // The escalator bank rises entirely outside the podium slabs and meets
+    // the actual ballroom foyer at its south doorway.
+    const upper=Y['5F'], lowU=u+7.15, highU=23.6;
+    SLAB([u+6.9,v+5.8,lowU+1,v+10.25],deck,{mat:'jwGreyStone'});
+    for(const [offset,dir] of [[7.2,'up'],[8.85,'down']]){
+      ESCL(lowU,v+offset,highU,v+offset,deck,upper,dir);
+    }
+    SLAB([highU-.05,60.35,27,v+10.15],upper,{mat:'jwGreyStone'});
+    for(const [a,b,c,d] of [[highU,60.75,highU,v+6.25],[27,60.75,27,v+10.15],[27,v+10.15,highU,v+10.15]]){
+      WL(a,b,c,d,upper,upper+1.1,{mat:'glass'});
+    }
+    const wing=[u+7,v-.4,27.2,facade];
+    SLAB(wing,upper+4.3,{mat:walnut,under:walnut,walk:false});
+    WL(u+7,facade,27.2,facade,deck,upper+4.3,{mat:walnut});
+    WL(27.2,v-.4,27.2,facade,deck,upper+4.3,{mat:walnut});
+    WL(u-7,facade,u+7,facade,deck+3.94,ceiling,{mat:walnut});
+    SG('연회장 ↑',{u:u+6.87,v:v+8,y:deck+3.55,w:2.1,h:.34,f:'W',bg:'#37291f',fg:'#ebd4a1'});
+    ZN('연회장 에스컬레이터','3F','현관 라운지 ↔ 그랜드 볼룸',wing,deck-.12,upper-.2,23);
+    ZN('그랜드 볼룸 입구','5F','연회장 포이어',[highU,58,27,v+10.15],upper-.15,upper+3.9,25);
     SPAWN('JW 메리어트 정문',u,facade-1,deck,0,-1);
     // sidewalk planters along the east side
     for (let v = -50; v <= 30; v += 10) { B({ u: 35.0, v, y: 0, w: 1.4, d: 3.6, h: 0.6, mat: { tex: 'jwStone' } }); TREE(35.0, v, 0.6, { h: 6, kind: 'zelkova' }); }
