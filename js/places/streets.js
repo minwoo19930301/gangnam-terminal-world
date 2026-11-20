@@ -1,3 +1,4 @@
+import { gradedGround } from './_gradedGround.js';
 // Detailed public right-of-way. x east / z south; all dimensions in metres.
 // Sources and assumptions: OSM centre lines are authoritative over prose research.
 // The Central City footbridge crosses SAPYEONG-DAERO, with a northern spiral.
@@ -1957,12 +1958,16 @@ function buildHotelDrive(K) {
   const eastJunction = eastRoad.pts.find(p => Math.abs(p[0] - 71.54) < .01);
   if (!eastJunction) return;
 
-  const stations = [
-    ...parkingRoad.pts.slice(0, 3),
-    [-10, 192.1], [-3, 191], [1, 187], FP(38, 20), FP(37.8, 17.7), FP(36, 15.7), FP(28, 15.7),
-    FP(25.5, 17.4), FP(24.8, 21.8), FP(22.5, 24.3),
-    FP(18, 25), [37,184], [54,191], eastJunction,
-  ];
+  const deck=11.5;
+  // Relative grades meet the existing hotel and parking thresholds.
+  const west=FP(45,27), east=FP(32,43), bend=FP(32,58), foot=FP(32,76);
+  const westFoot=parkingRoad.pts[0];
+  const crest=west.map((v,i)=>westFoot[i]+.8*(v-westFoot[i]));
+  gradedGround(K,westFoot,crest,.01,deck,12,'sidewalk');
+  gradedGround(K,crest,west,deck,deck,12,'sidewalk');
+  K.ramp(...eastJunction,...foot,{ya:.01,yb:.02,w:9,mat:'sidewalk',rails:false});
+  const stations = [westFoot,crest,west,FP(38,20),FP(36,15.7),FP(28,15.7),
+    FP(25.5,17.4),FP(30,24),east,bend,foot,eastJunction];
   const normal = (a, b) => {
     const dx = b[0] - a[0], dz = b[1] - a[1], length = Math.hypot(dx, dz);
     return [-dz / length, dx / length];
@@ -1975,14 +1980,9 @@ function buildHotelDrive(K) {
   });
   // Interpolate the vehicle approaches by distance. Keep the full turning
   // apron level with the hotel door, above the Famille gallery roof.
-  const deck = 11.5;
-  const distance = [0];
-  for (let i=1;i<stations.length;i++) {
-    const [x,z]=stations[i], [px,pz]=stations[i-1];
-    distance.push(distance[i-1]+Math.hypot(x-px,z-pz));
-  }
-  const last=distance.at(-1);
-  const height=distance.map(d=>deck*Math.min(1,d/distance[5],(last-d)/(last-distance[12])));
+  const height = stations.map(() => deck);
+  height[0] = 0;
+  height.splice(-3, 3, 4.4, .02, 0);
   for (let i=1;i<sections.length;i++) {
     const a=stations[i-1], b=stations[i], ya=height[i-1], yb=height[i];
     const strip=(lo,hi,y,mat)=>{
@@ -1998,27 +1998,33 @@ function buildHotelDrive(K) {
   // 2.0 m gateway beside the canopy leads DOWN to Shinsegae Famille parking.
   const rect = (u0,v0,u1,v1) => [FP(u0,v0),FP(u1,v0),FP(u1,v1),FP(u0,v1)];
   const mouth = 23, end = 4, axis = 36, half = 3.2;
-  const well = rect(end-4,axis-half,mouth,axis+half);
-  K.groundHole(well);
-  K.hpoly('asphalt', [FP(24,23),FP(18,25),FP(mouth,axis-half),
-    FP(mouth,axis+half),FP(28,36),FP(29,29)], .062);
-  K.ramp(...FP(mouth,axis),...FP(end,axis),{ya:0,yb:-3.1,w:2*half,mat:'asphalt',rails:false});
-  K.slab(rect(end-4,axis-half,end,axis+half),-3.1,{mat:'asphalt',thick:.14});
-  for (const side of [-1,1]) {
-    const edge = axis + side*half;
-    K.wall(...FP(end-4,edge),...FP(mouth,edge),-3.2,.55,{mat:0xd5d2ca,thick:.18});
+  const bank=[FP(16,25),FP(21,20),FP(21,11.45),FP(45,11.45),FP(51,23),
+    FP(51,43),FP(-2,43),FP(-2,axis+half),FP(mouth,axis+half),
+    FP(mouth,axis-half),FP(-2,axis-half),FP(-2,27),FP(16,27)];
+  K.prism(bank,-.09,deck,{mat:'sidewalk',side:'concrete',solid:false});
+  K.phys.addSurface(bank,deck,{tag:'streets'});
+  for(let i=0;i<bank.length;i++) K.phys.addWall(...bank[i],...bank[(i+1)%bank.length],-.09,deck-.04,.04);
+  // Garden embankment falls away from the forecourt toward Sapyeong-daero.
+  gradedGround(K,FP(24.5,43),FP(24.5,58),deck,4.4,53,'grass');
+  gradedGround(K,FP(24.5,58),FP(24.5,76),4.4,.02,53,'grass');
+  // Parking 4F is the open arrival level. The first descending aisle reaches 3F.
+  K.hpoly('asphalt',[FP(24,23),FP(18,25),FP(mouth,axis-half),
+    FP(mouth,axis+half),FP(28,36),FP(29,29)],deck+.025);
+  K.ramp(...FP(mouth,axis),...FP(end,axis),{ya:deck,yb:9,w:2*half,mat:'asphalt',rails:false});
+  K.slab(rect(-8,axis-half,end,axis+half),9,{mat:'asphalt',thick:.14});
+  for(const side of [-1,1]){
+    const edge=axis+side*half;
+    K.wall(...FP(-2,edge),...FP(mouth,edge),8.8,deck+.55,{mat:0xd5d2ca,thick:.18});
   }
-  K.wall(...FP(end-4,axis-half),...FP(end-4,axis+half),-3.2,0,{mat:0x34363a});
-  K.slab(rect(end-4,axis-half,end+2,axis+half),0,{mat:'concrete',thick:.2});
   const face = FROT - Math.PI/2;
   for (const offset of [-half,half]) {
     const [x,z] = FP(mouth,axis+offset);
-    K.box({x,z,y:0,w:.2,d:.26,h:2.45,rotY:FROT,mat:0x272629});
+    K.box({x,z,y:deck,w:.2,d:.26,h:2.45,rotY:FROT,mat:0x272629});
   }
   const [gx,gz] = FP(mouth,axis);
-  K.box({x:gx,z:gz,y:2.1,w:.24,d:2*half+.2,h:.52,rotY:FROT,mat:0x272629});
+  K.box({x:gx,z:gz,y:deck+2.1,w:.24,d:2*half+.2,h:.52,rotY:FROT,mat:0x272629});
   K.sign(['신세계 파미에주차장       2.0m','SHINSEGAE FAMILLE PARKING LOT'],{
-    x:gx-.14*FA,z:gz+.14*FB,y:2.37,w:5.65,h:.43,rotY:face,bg:'#272629',fg:'#fff'});
+    x:gx-.14*FA,z:gz+.14*FB,y:deck+2.37,w:5.65,h:.43,rotY:face,bg:'#272629',fg:'#fff'});
   // Lay-by below the glass vaults, with a parallel surface lane on the garden side.
   K.slab([FP(21,24.3),FP(24.8,17.5),FP(39,17.5),FP(42,21.2),FP(40,24),FP(26,24.4)],deck+.062,{mat:'asphalt',thick:.24});
   for (const u of [27,33,39]) K.hpoly(0xf0eee7,rect(u,19.9,u+2,20),deck+.073);

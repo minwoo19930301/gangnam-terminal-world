@@ -1,9 +1,10 @@
+import { gradedGround } from './_gradedGround.js';
 // Round 20. The user's 2026-11-07 photographs override the older GPS/plan fit.
 // The indoor restaurant street meets parking 2F. The garden is above parking 3F.
 export const meta = {
   id: 'famille', name: '파미에스테이션 동관', claims: [414891732],
   claimRoads: [],
-  additionalEntrances: [{"x":37.18,"z":142.98,"y":0,"w":2.7,"nx":0.933,"nz":-0.361,"other":null},{"x":74.47,"z":148.36,"y":12.6,"w":3.4,"nx":-0.956,"nz":0.295,"other":null},{"x":167.96,"z":104.16,"y":12.6,"w":3.4,"nx":0.624,"nz":0.782,"other":null}],
+  additionalEntrances: [{"x":37.18,"z":142.98,"y":0,"w":2.7,"nx":0.933,"nz":-0.361,"other":null},{"x":74.47,"z":148.36,"y":12.6,"w":3.4,"nx":-0.956,"nz":0.295,"other":null},{"x":73.44,"z":147.19,"y":9,"w":5,"nx":-0.896,"nz":0.445,"other":null},{"x":261.26,"z":86.28,"y":12.6,"w":10,"nx":0.896,"nz":-0.445,"other":null}],
   sources: [
     'refs/user_walk/20261107/manifest.json', 'refs/user_walk/20261107/places.json',
     '.codex-jobs/evidence/up20_famille.json',
@@ -286,7 +287,7 @@ function buildDeck(K) {
   for(const y of [0,5]){
     wall(0,0,0,2.5,y,y+3,{mat:0x303333,thick:.25});
     wall(0,6.4,0,11.1,y,y+3,{mat:0x303333,thick:.25});
-    wall(104.8,0,104.8,17.1,y,y+3,{mat:0xd8d7d0,thick:.25,openings:y===0?[{at:9,w:7,y0:0,y1:3}]:[]});
+    wall(104.8,0,104.8,17.1,y,y+3,{mat:0xd8d7d0,thick:.25,openings:[{at:9,w:7,y0:y,y1:y+3}]});
     // West toilets are the only full-height internal white wall.
     wall(11,5.25,22,5.25,y,y+2.85,{mat:0xeeeeea,thick:.15,openings:[{at:5,w:2.1,y0:y,y1:y+2.35}]});
     wall(11,.5,11,5.25,y,y+2.85,{mat:0xeeeeea,thick:.15});
@@ -350,14 +351,44 @@ function buildDeck(K) {
     }
   }
   const valet=FP(27,15.7);
-  K.ramp(...P(.6,6),...valet,{ya:garden,yb:11.56,w:3.4,mat:'sidewalk',rails:false});
+  K.ramp(...P(.6,6),...valet,{ya:garden,yb:11.56,w:9,mat:'sidewalk',rails:false});
   sign('JW 메리어트 정문 · 발레',2,7,garden+2.3,3.4,.4,faceEast);
-  sign('데블스도어 방면',97,7,garden+2.3,2.8,.4,faceEast+PI);
-  const lot=K.osm.roads.find(r=>r.id===830683723);
-  if(lot){
-    const exit=lot.pts.find(p=>p[0]>190 && p[0]<200);
-    if(exit) K.ramp(...P(104,8),...exit,{ya:garden,yb:.06,w:3.4,mat:'sidewalk',rails:true});
+  // Keep the public car park continuous past the short OSM western building.
+  // Bend the garden aisle around the separate transverse block at station 197.
+  const extension=[P(104,1),P(160,1),P(196,26),P(196,41),P(156,17),P(104,17)];
+  for(const level of [0,5,9,garden]) {
+    K.slab(extension,level,{mat:level===garden?'sidewalk':floor,thick:.24,under:concrete});
+    K.zone({name:level===garden?'파미에가든':'파미에 주차장',floor:String([0,5,9,garden].indexOf(level)+1)+'F',
+      sub:'동측 주차 구역 · 식당가',poly:extension,y0:level-.08,y1:level+2.8,priority:7});
   }
+  for(const edge of [[104,1,160,1],[160,1,196,26],[196,41,156,17],[156,17,104,17]]){
+    wall(...edge,-.1,garden,{mat:concrete,thick:.2});
+  }
+  wall(6.6,16.8,104.4,16.8,0,9,{mat:concrete,thick:.18});
+  for(let s=111;s<156;s+=4) for(const level of [0,5,9]){
+    box(s,3.6,level+.01,.1,.025,4.3,0xe5dcb6);
+    box(s,14.3,level+.01,.1,.025,4.3,0xe5dcb6);
+  }
+  for(const [s,name] of [[121,'모던눌랑'],[145,'더바이킹']]){
+    K.slab(R(s-7,1.5,s+7,7),garden+3.55,{mat:0x585046,thick:.22});
+    wall(s-7,1.5,s+7,1.5,garden,garden+3.55,{mat:0x685446});
+    for(const side of [-1,1]){
+      wall(s+side*7,1.5,s+side*7,7,garden,garden+3.55,{mat:0xa6967e});
+      box(s+side*4.4,7,garden,5,2.9,.09,{tex:'glass',color:0x72807d},true);
+      box(s+side*3,4,garden+.72,1.5,.12,.84,0x8a6348);
+    }
+    box(s,7,garden+2.9,14,.68,.24,0x453c34);
+    sign(name,s,7.15,garden+3.25,3.5,.41,faceSouth,'#453c34','#f5e9cf');
+  }
+  const ridge=P(195.5,33.5), forecourt=P(288,33.5);
+  gradedGround(K,ridge,forecourt,garden,4.1,14,'asphalt');
+  gradedGround(K,forecourt,P(316,33.5),4.1,4.1,14,'sidewalk');
+  gradedGround(K,P(316,33.5),P(326,24.5),4.1,.08,4.2,'sidewalk');
+  sign('데블스도어 →',283,30,5.8,3,.4,faceEast+PI);
+  // Lower lot still has its own approach to the upper shopping level.
+  gradedGround(K,P(152,16.5),[249.46,113.39],garden,.06,5,'asphalt');
+  const westDoor=P(1,4.5), garageEnd=FP(-6,36);
+  K.ramp(...garageEnd,...westDoor,{ya:9,yb:9,w:5.9,mat:'asphalt',rails:false});
   const start=P(72.8,8);
   K.spawn({name:'파미에 주차장 4층 · 파미에가든',x:start[0],z:start[1],y:garden,yaw:faceEast,group:'파미에스테이션'});
   K.spawn({name:'파미에 주차장 2층',x:103.9,y:5,z:135.3,yaw:103.1*PI/180,group:'파미에스테이션'});
