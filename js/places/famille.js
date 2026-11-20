@@ -1,4 +1,3 @@
-import { gradedGround } from './_gradedGround.js';
 // Round 20. The user's 2026-11-07 photographs override the older GPS/plan fit.
 // The indoor restaurant street meets parking 2F. The garden is above parking 3F.
 export const meta = {
@@ -369,7 +368,7 @@ function buildDeck(K) {
     box(s,3.6,level+.01,.1,.025,4.3,0xe5dcb6);
     box(s,14.3,level+.01,.1,.025,4.3,0xe5dcb6);
   }
-  for(const [s,name] of [[121,'모던눌랑'],[145,'더바이킹']]){
+  for(const [s,name] of [[121,'모던눌랑']]){
     K.slab(R(s-7,1.5,s+7,7),garden+3.55,{mat:0x585046,thick:.22});
     wall(s-7,1.5,s+7,1.5,garden,garden+3.55,{mat:0x685446});
     for(const side of [-1,1]){
@@ -380,13 +379,7 @@ function buildDeck(K) {
     box(s,7,garden+2.9,14,.68,.24,0x453c34);
     sign(name,s,7.15,garden+3.25,3.5,.41,faceSouth,'#453c34','#f5e9cf');
   }
-  const ridge=P(195.5,33.5), forecourt=P(288,33.5);
-  gradedGround(K,ridge,forecourt,garden,4.1,14,'asphalt');
-  gradedGround(K,forecourt,P(316,33.5),4.1,4.1,14,'sidewalk');
-  gradedGround(K,P(316,33.5),P(326,24.5),4.1,.08,4.2,'sidewalk');
-  sign('데블스도어 →',283,30,5.8,3,.4,faceEast+PI);
-  // Lower lot still has its own approach to the upper shopping level.
-  gradedGround(K,P(152,16.5),[249.46,113.39],garden,.06,5,'asphalt');
+  sign('데블스도어 · 더 바이킹 →',283,39,garden+1.65,4.6,.4,faceEast+PI);
   const westDoor=P(1,4.5), garageEnd=FP(-6,36);
   K.ramp(...garageEnd,...westDoor,{ya:9,yb:9,w:5.9,mat:'asphalt',rails:false});
   const start=P(72.8,8);

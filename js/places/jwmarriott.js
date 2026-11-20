@@ -10,7 +10,7 @@ export const meta = {
   claims: [136986976],
   claimRoads: [],
   claimAreas: [],
-  streetEntrances: [{x:-.6,z:155.8,y:11.5,w:4.4,nx:.359,nz:.933,other:null}],
+  streetEntrances: [{x:3.64,z:166.74,y:11.5,w:4.4,nx:.359,nz:.933,other:null}],
   sources: [
     'https://ko.wikipedia.org/wiki/JW_메리어트_호텔_서울',
     'https://www.marriott.com/ko/hotels/seljw-jw-marriott-hotel-seoul/dining/',
@@ -733,7 +733,7 @@ export function build(K) {
   SPAWN('플레이버즈 2F · 다이닝', -20.6757, 29, Y['2F'], -1, .4);
   SPAWN('그랜드 볼룸 5F · 포이어', 7, 35, Y['5F'], 1, 0);
   SPAWN('이그제큐티브 라운지 9F', 5.5, 22, Y['9F'], .5, -1);
-  SPAWN('JW 가든 (7F)', 4, -20, Y['7F'], 0, 1);
+  SPAWN('JW 가든 (7F)', 4, 3.5, Y['7F'], 0, 1);
   SPAWN('마르퀴스 수영장 (B3)', -6, -10, Y.B3, -.4, -1);
   SPAWN('객실 2006 (20F)', -1.3, 34.5, Y['20F'], -1, -.55);
 
@@ -2529,10 +2529,32 @@ export function build(K) {
     for (const rib of [-1.5,-.5,.5,1.5]) {
       B({u:u+rib*span,v:(back+front)/2,y:deck+4.29,w:.15,d:front-back,h:.08,mat:{tex:'emit',color:0xffe4ad},solid:false});
     }
-    SLAB([u-3,v-.4,u+3,facade+.35],deck,{mat:'jwHoney',thick:.24});
-    for (const side of [-1,1]) WL(u+side*3,v,u+side*3,facade,deck,deck+3.94,{mat:WARM});
-    SLAB([u-3,v,u+3,facade],deck+3.94,{mat:STONE,walk:false});
-    ZN('JW 메리어트 정문', '3F','발레 하차장 · 호텔 연결', [u-3,v-.4,u+3,facade+.35],deck-.08,deck+3.94,18);
+    // Arrival lounge occupies the raised entrance gallery. Screen the salons
+    // on the inner axis and leave room to pass the artwork on either side.
+    const lounge=[u-7,v-.45,u+7,facade+.04], walnut=0x342823;
+    SLAB(lounge,deck+.025,{mat:{tex:'marble',color:0x484039},thick:.20});
+    SLAB(lounge,deck+3.94,{mat:walnut,under:walnut,walk:false});
+    for (const side of [-1,1]) {
+      WL(u+side*7,v-.45,u+side*7,facade,deck,deck+3.94,{mat:walnut});
+      SOFA(u+side*5.55,v+6,deck+.05,3.1,side>0?'W':'E',0x795b49);
+      CY(u+side*4.15,v+6,deck+.05,.48,.39,0x514139,{seg:16});
+      B({u:u+side*6.88,v:v+6,y:deck+2.7,w:.09,d:8,h:.055,mat:{tex:'emit',color:0xffcf89}});
+    }
+    WL(u-7,v+.35,u+7,v+.35,deck,deck+3.94,{mat:walnut,openings:[{at:7,w:3.4,y0:deck,y1:deck+3.5}]});
+    // Porcelain strands and a dark plinth recall the photographed necklace
+    // installation in the entrance hall, scaled to this gallery ceiling.
+    CY(u,v+3.55,deck+.04,1.03,.26,0x49443d,{seg:24});
+    for(let strand=0;strand<4;strand++){
+      const sx=u+(strand-1.5)*.32, sz=v+3.55;
+      ROD([sx,deck+.48,sz],[sx,deck+3.83,sz],.013,BRONZE);
+      for(let i=0;i<13;i++){
+        const [x,z]=P(sx+.07*Math.sin(i*.6+strand),sz+.09*Math.cos(i*.5+strand));
+        const r=i%4===0?.138:.102;
+        K.dome({x,z,y:deck+.47+i*.235,rx:r,ry:r*.93,rz:r,seg:8,rings:4,hemi:false,mat:i%3?0xf2e5cf:0xd9c19c});
+      }
+    }
+    B({u,v:v+2.35,y:deck+.03,w:4.3,d:.18,h:3.87,mat:walnut});
+    ZN('JW 메리어트 현관 라운지','3F','조형물 · 샹들리에 · 백화점 연결',lounge,deck-.12,deck+3.94,22);
     // Suspended strands leave the entrance sightline and walking headroom clear.
     const crown=deck+3.9;
     B({u,v:v+4.2,y:crown-.10,w:2.85,d:2.1,h:.10,mat:'jwWalnut',solid:false});

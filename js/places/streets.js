@@ -1958,6 +1958,7 @@ function buildHotelDrive(K) {
   const eastJunction = eastRoad.pts.find(p => Math.abs(p[0] - 71.54) < .01);
   if (!eastJunction) return;
 
+  buildGardenTerrain(K);
   const deck=11.5;
   // Relative grades meet the existing hotel and parking thresholds.
   const west=FP(45,27), east=FP(32,43), bend=FP(32,58), foot=FP(32,76);
@@ -2035,4 +2036,62 @@ function buildHotelDrive(K) {
   K.box({x,z,y:deck,w:.86,d:.55,h:1.03,rotY:FROT,mat:0x483b30,solid:true});
   K.sign('VALET',{x:x+.29*FB,z:z+.29*FA,y:deck+.76,w:.71,h:.22,rotY:FROT,
     bg:null,fg:'#f6e2b1'});
+}
+
+// Both indoor areas load the street module. Keep the terrace in short sections
+// so exterior culling retains the pavement at either restaurant door.
+function buildGardenTerrain(K) {
+  const garden=12.6;
+  const P=(s,v)=>[71.26+.89563*s+.4448*v,143.25-.4448*s+.89563*v];
+  const rect=(a,b,c,d)=>[P(a,b),P(c,b),P(c,d),P(a,d)];
+  for(let a=0;a<412;a+=20){
+    const b=Math.min(a+20,412), mid=(a+b)/2;
+    const inner=a>=200?-4:a>=180?1:16.76;
+    K.slab(rect(a,inner,b,45),garden-.08,{mat:'sidewalk',thick:.18});
+    K.slab(rect(a,31,b,38),garden-.045,{mat:'asphalt',thick:.05});
+    for(let s=a+1;s+3<b;s+=10) K.hpoly(0xe4dbba,rect(s,34.46,s+3,34.55),garden-.035);
+    const grade=v=>.02+(91-v)/46*(garden-.10);
+    // Pavement and planted verges follow the rise along the parking frontage.
+    for(const [near,far,mat] of [[45,53,'sidewalk'],[53,61,'grass'],[61,67,'sidewalk'],[67,84,'grass'],[84,91,'sidewalk']]){
+      K.ramp(...P(mid,far),...P(mid,near),{ya:grade(far),yb:grade(near),w:b-a+.01,mat,rails:false});
+    }
+    if([62,212,326].every(crossing=>Math.abs(mid-crossing)>8)){
+      for(const v of [56,76]){
+        const [x,z]=P(mid,v);
+        K.tree(x,z,{y:grade(v),h:4.6,kind:'zelkova'});
+      }
+    }
+  }
+  // Seal the cut ends of the hillside as well as its top. From the lower
+  // road the sightline terminates on earth, including at either corner.
+  for(const station of [0,412]){
+    const inner=station===0?16.76:-4;
+    K.wall(...P(station,inner),...P(station,45),-.1,garden-.08,{mat:'concrete',thick:.1});
+    for(let v=45;v<91;v+=2){
+      const h=(91-v)/46*(garden-.10)+.02, next=(89-v)/46*(garden-.10)+.02;
+      const a=P(station,v),b=P(station,v+2);
+      K.quad('grass',[[a[0],-.1,a[1]],[b[0],-.1,b[1]],[b[0],next,b[1]],[a[0],h,a[1]]],
+        station===0?[-.89563,0,.4448]:[.89563,0,-.4448]);
+      K.phys.addWall(...a,...b,-.1,(h+next)/2,.05,'streets');
+    }
+  }
+  for(const s of [62,212,326]){
+    K.ramp(...P(s,91),...P(s,45),{ya:.045,yb:garden-.055,w:7,mat:'asphalt',rails:false});
+    K.ramp(...P(s+4.35,91),...P(s+4.35,45),{ya:.06,yb:garden-.04,w:1.7,mat:'sidewalk',rails:false});
+    for(let v=31.4;v<38;v+=1.05) K.hpoly(0xeee8dc,rect(s+3.1,v,s+5.6,v+.46),garden-.032);
+  }
+  // Continue the ground beside the west garage approach to the valet court.
+  const A=P(0,16.76), B=P(0,45), C=P(-53,15), D=P(-53,33);
+  const top=[[...C,11.5],[...A,garden-.08],[...B,garden-.08],[...D,11.5]];
+  const faces=top.map(([x,z,y])=>[x,y,z]);
+  K.quad('sidewalk',faces,[0,1,0]);
+  for(const [from,to] of [[C,A],[D,B]]){
+    K.quad('concrete',[[from[0],0,from[1]],[to[0],0,to[1]],[to[0],garden-.08,to[1]],[from[0],11.5,from[1]]],[0,0,1]);
+  }
+  // Interpolate support across the tapered connecting apron.
+  for(let i=0;i<24;i++){
+    const t=(i+.5)/24;
+    const at=(a,b)=>a.map((n,j)=>n+t*(b[j]-n));
+    K.phys.addRamp(...at(C,D),...at(A,B),.73,11.5,garden-.08,{tag:'streets'});
+  }
 }

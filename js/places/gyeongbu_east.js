@@ -3,6 +3,7 @@
 export const meta = {
   id: 'gyeongbu_east', name: '경부선 동측 주차빌딩 · 데블스도어',
   claims: [414891734], claimRoads: [], claimAreas: [],
+  additionalEntrances: [{"x":373.17,"z":14.53,"y":12.6,"w":2.7,"nx":0.445,"nz":0.896,"other":null},{"x":349.92,"z":26.18,"y":12.6,"w":3,"nx":0.445,"nz":0.896,"other":null},{"x":353.73,"z":15.92,"y":12.6,"w":1.2,"nx":-0.896,"nz":0.445,"other":null}],
   sources: ['data/osm.json', 'refs/roadview/manifest.json',
     'refs/roadview/gbeast_01_parking_deck.jpg', 'refs/roadview/gbeast_02_bus_yard_road.jpg',
     'refs/roadview/gbeast_03_bus_yard_hedge.jpg', 'refs/interior/famille_back/notes.json',
@@ -10,6 +11,37 @@ export const meta = {
     'refs/interior/audit_gyeongbu_east/03_reception_snfl_131716.jpg',
     'refs/interior/audit_gyeongbu_east/06_dd_drtitan_01.jpg', 'data/research/gyeongbu_east.json'],
 };
+
+// Restaurant drawings use the pub threshold as their local zero. Parking
+// drawings below them retain the terminal's street datum.
+const gardenLevel = 12.6;
+function gardenKit(base) {
+  const y = gardenLevel;
+  const kit = Object.create(base);
+  for (const name of ['box','cyl','dome','sign','floorText','spawn']) {
+    if (name === 'sign' || name === 'floorText') {
+      kit[name] = (text,o) => base[name](text,{...o,y:o.y+y});
+    } else {
+      kit[name] = o => base[name]({...o,y:o.y+y});
+    }
+  }
+  kit.slab = (poly,h,o) => base.slab(poly,h+y,o);
+  kit.wall = (x,z,X,Z,lo,hi,o={}) => base.wall(x,z,X,Z,lo+y,hi+y,{...o,
+    openings:o.openings?.map(g=>({...g,y0:g.y0+y,y1:g.y1+y}))});
+  kit.stairs = (x,z,X,Z,o) => base.stairs(x,z,X,Z,{...o,ya:o.ya+y,yb:o.yb+y});
+  kit.elevator = o => base.elevator({...o,floors:o.floors.map(f=>({...f,y:f.y+y}))});
+  kit.person = (x,h,z,o) => base.person(x,h+y,z,o);
+  kit.tree = (x,z,o) => base.tree(x,z,{...o,y:(o.y||0)+y});
+  kit.quad = (mat,points,...rest) => base.quad(mat,points.map(([x,h,z])=>[x,h+y,z]),...rest);
+  kit.hpoly = (mat,poly,h,...rest) => base.hpoly(mat,poly,h+y,...rest);
+  kit.addMesh = group => { group.position.y += y; return base.addMesh(group); };
+  const level = o => ({...o,y0:o.y0+y,y1:o.y1+y,floor:o.floor==='2F'?'5F':'4F'});
+  kit.zone = o => base.zone(level(o));
+  kit.detail = (o,fn) => base.detail(level(o),detail=>fn(gardenKit(detail)));
+  kit.phys = Object.create(base.phys);
+  kit.phys.addCeiling = (poly,h,o) => base.phys.addCeiling(poly,h+y,o);
+  return kit;
+}
 
 export function build(K) {
   const PI = Math.PI, L = Math.hypot(93.92, 46.63);
@@ -114,6 +146,15 @@ export function build(K) {
     // ramp/stair voids, preserving the original headroom and landings.
     holes: y === 3.8 ? [rect(2.8, .8, 14.2, 1.3), rect(68.5, .65, 99.5, 1.3)] : [],
   });
+  const parkingKit = K, diningKit = gardenKit(K);
+  // Beneath the raised dining hall, complete the three parking decks
+  // between the existing wings and the north parking aisle.
+  for(const level of [0,3.8,7.6]){
+    slab(16.8,1.3,64.4,16.8,level,{mat:'concrete',thick:.22});
+    for(let u=20;u<64;u+=8) box(u,14.4,level,.5,.5,3.6,0xc9c8c2);
+  }
+  wall(16.8,16.8,64.4,16.8,0,gardenLevel,{mat:'concrete'});
+  K = diningKit;
   // An internal mezzanine, with a proper lounge depth, replaces the thin
   // parking-linked gallery. Its stair opening is inside the hall envelope.
   slab(18.3, 1.8, 39.8, 9.2, 3.8, { mat: { tex: 'wood', gloss: .3 } });
@@ -131,7 +172,8 @@ export function build(K) {
   // A separate accessible lift is a modeling accommodation, not a surveyed fixture.
   const [lx, lz] = W(38.3, 7.35);
   K.elevator({ name: '데블스도어 라운지 승강기', x: lx, z: lz, rotY: ROT - PI / 2, w: 1.8, d: 1.8,
-    floors: [{ label: '1F', y: 0, name: '홀' }, { label: '2F', y: 3.8, name: '라운지 · 프라이빗룸' }] });
+    floors: [{ label: '4F', y: 0, name: '홀' }, { label: '5F', y: 3.8, name: '라운지 · 프라이빗룸' }] });
+  K = parkingKit;
   ramp(3, 2.2, 14, 2.2, 0, 3.8, 2.4, true);
   ramp(14, 5.4, 3, 5.4, 3.8, 7.6, 2.4, true);
   slab(13.9, .8, 16, 6.8, 3.8);
@@ -204,7 +246,7 @@ export function build(K) {
     box(u, (v0 + 16.8) / 2, 11.55, .5, 16.8 - v0, .25, deckWhite, { solid: false });
   }
   // Clear access in the south arcade and west/east ends; no continuous ground-level fence.
-  sign('데블스도어 센트럴시티', 28, 13.5, 7.65, 5.2, .42, 0, { bg: null, fg: '#e1c496' });
+  sign('데블스도어 센트럴시티', 28, 13.5, gardenLevel+7.65, 5.2, .42, 0, { bg: null, fg: '#e1c496' });
   sign('주차장 입구 →', 100.8, 16.99, 2.8, 4.3, .8, 0, { bg: '#25475b' });
   sign(['출구 ←', '잠원 · 논현 · 신사'], 102.8, 12.5, 2.45, 2.8, 1.1, -PI / 2, { bg: '#222a2c', fg: '#f2ca45' });
   for (const y of [0, 3.8, 7.6]) {
@@ -213,6 +255,16 @@ export function build(K) {
     sign(y === 0 ? '1층 주차장' : y === 3.8 ? '2층 주차장' : '3층 주차장', 66, 13.2, y + 2.3, 2.3, .5, 0);
   }
 
+  K = diningKit;
+  // The neighbouring BP4-8 storefront shares the arcade and its walkable sill.
+  slab(-2,0,18,19,0,{mat:'darkstone'});
+  wall(-2,0,18,0,0,4.2,{mat:'wood'});
+  wall(-2,0,-2,16,0,4.2,{mat:'wood'});
+  slab(-2,0,18,16,4.2,{mat:'darkstone',walk:false});
+  wall(-2,16,18,16,0,4.2,{mat:'glass',openings:[{at:12,w:3,y0:0,y1:3.2}]});
+  box(8,16.08,3.15,20,.28,1.05,0x42352c);
+  sign('THE VIKING · 더 바이킹',8,16.26,3.65,7,.63,0,{bg:null,fg:'#f5dfb6'});
+  zone('더 바이킹','1F','파미에가든 BP4-8',-2,0,18,16,0,4.2,5);
   // Freestanding brick hall at the authoritative pub pin. All windows are cut out of the wall, including their
   // curved heads, so the hall is visible through the arcade and the glazing.
   slab(18, 1.5, 63, 15.9, 0, { mat: { tex: 'wood', color: 0x5a4030, gloss: .38 }, holes: [rect(31.9, 10.2, 40.2, 15.7)] });
@@ -409,8 +461,10 @@ export function build(K) {
   // area loading as well. This is not an extra rendered flat ceiling.
   K.phys.addCeiling(rect(18, 1.5, 63, 15.9), 8.65);
   zone('데블스도어 센트럴시티', '1F', '측면 출입구', 17.1, 6, 18, 11.4, 0, 3.4, 4);
+  K = parkingKit;
   zone('동측 주차 안내사무실', '1F', '정산 부스', 99.8, 20.4, 102.2, 22.6, 0, 3.4, 2);
 
+  K = diningKit;
   detail('데블스도어 홀 · 양조시설과 테이블', '1F', 0, 8.6, rect(18, 1.5, 63, 15.9), () => {
     // Rounded metal counter, tanks underneath, paper notices and warm pendants.
     box(37, 12.65, .72, 4.6, .8, .24, { tex: 'metal', color: 0x343c3d });
@@ -608,6 +662,7 @@ export function build(K) {
     sign('라운지 · 바', 34, 1.68, 5.6, 2.6, .5, 0, { bg: null, fg: '#dec69f' });
   });
 
+  K = parkingKit;
   // Parking furniture is lazy, while all decks, ramps and guardrails already exist.
   // Rounded wheel profiles and sloping cabin glass replace the kit's cuboid car
   // silhouette locally; the chassis remains solid in the same parking stalls.
@@ -785,9 +840,9 @@ export function build(K) {
   // The close coach row is separate from gyeongbu's distant parking stock.
   buildYardEdge(K);
   K.spawn({name:'동측 주차빌딩 로드뷰',x:364.9,y:0,z:-20.1,yaw:204*PI/180});
-  spawn('데블스도어 정문', 36, 18.3, 0);
-  spawn('데블스도어 홀', 36, 9.3, 0, 1, 0);
-  spawn('데블스도어 2층 라운지', 30.4, 11.55, 3.8, 0, -1);
+  spawn('데블스도어 정문', 36, 18.3, gardenLevel);
+  spawn('데블스도어 홀', 36, 9.3, gardenLevel, 1, 0);
+  spawn('데블스도어 2층 라운지', 30.4, 11.55, gardenLevel+3.8, 0, -1);
   spawn('주차빌딩 2층', 65.3, 14.7, 3.8, 1, 0);
   spawn('주차빌딩 3층', 65.5, 14.7, 7.6, 1, 0);
   spawn('주차빌딩 계단', 2, 8, 0, 0, -1);
