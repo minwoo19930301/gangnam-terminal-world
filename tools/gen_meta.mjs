@@ -90,6 +90,7 @@ for (const id of PLACES) {
     out[id].entrances = m.meta.streetEntrances
       ? [...doors.filter(o => o.other), ...m.meta.streetEntrances]
       : doors;
+    out[id].entrances.push(...(m.meta.additionalEntrances || []));
   }
   // junction directions (pa → pb) for the corridor doors
   for (const [id, v] of Object.entries(out)) for (const j of v.junctions) { const jj = JUNCTIONS.find(q => q.id === j.id); if (jj && !jj.streamOnly) { const dx = jj.pb[0] - jj.pa[0], dz = jj.pb[1] - jj.pa[1], L = Math.hypot(dx, dz) || 1; const s = jj.a === id ? 1 : -1; j.nx = Math.round(dx / L * s * 1000) / 1000; j.nz = Math.round(dz / L * s * 1000) / 1000; } }

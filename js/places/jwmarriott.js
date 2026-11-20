@@ -457,6 +457,7 @@ export function build(K) {
     if (k === '6F') h.push([-19.3,.1,3,32]);
     if (k === 'B3') h.push(POOL, KIDS, SCUBA);
     if (k === '2F') h.push(HALL);
+    if (k === '3F') h.push([24.4,1.82,26.9,29.1]);
     if (k === '9F') h.push([3.0, 48.8, 5.2, 57]);
     return h;
   };
@@ -682,13 +683,17 @@ export function build(K) {
     }
     K.ramp(...P(1.94, 2.15), ...P(18.05, 2.15), { ya: 6, yb: 7, w: 2.6, mat: stone, sideMat: WARM, rails: false });
     // The entrance photograph shows the art corridor ending at dark timber.
-    WL(22.50, 1.77, 26.72, 1.77, 6.86, 10.38, { mat: timber, thick: .10 });
+    WL(22.50, 1.77, 26.72, 1.77, 6.86, 10.38, { mat: timber, thick: .10, openings:[{at:3.15,w:2.1,y0:7,y1:10.2}] });
     for (const [a,b,c,d] of [
       [26.72,0,26.72,1.77], [22.50,1.77,22.50,3.45], [2,3.45,18.15,3.45], [21.05,3.45,22.50,3.45],
       [2,.85,17.97,.85], [17.97,0,17.97,.85], [17.97,0,24.58,0],
     ]) WL(a,b,c,d,5.98,10.38, { mat: WARM, thick: .10 });
     ZN('하우스 전용 승강기 연결통로', '1F', '호텔 로비 · 하우스 오브 신세계', [21.04,4.54,23.87,6.70], 6.94,10.97,17);
     ZN('하우스 전용 승강기 연결통로', '1F', '호텔 로비 · 하우스 오브 신세계', [21.80,6.60,23.87,14.79], 6.94,10.97,17);
+    // Hotel and store use different floor datums. Land directly in the
+    // existing Bulgari gallery at its open side, below the entrance hall.
+    K.ramp(...P(25.65,1.7),...P(25.65,29.15),{ya:7,yb:Y['3F'],w:2.6,mat:stone,rails:false});
+    SG('신세계백화점 2층 · 불가리',{u:25.65,v:30.5,y:Y['3F']+2.5,w:2.5,h:.32,f:'S',bg:'#49392f',fg:'#fff1d8'});
     // Keep the north doorway opposite the pastry shop; its threshold is 1m higher.
     WL(-15.5,.35,1.99,.35,6,9.38, { mat: WARM, thick: .10, openings: [{ at: 10.5, w: 7, y0: 7, y1: 9.38 }] });
     ZN('호텔 식당층 연결통로', '2F', '호텔 현관 · 승강기', [-15.55,.35,2,3.5], 6,9.4,2);
@@ -2528,6 +2533,17 @@ export function build(K) {
     for (const side of [-1,1]) WL(u+side*3,v,u+side*3,facade,deck,deck+3.94,{mat:WARM});
     SLAB([u-3,v,u+3,facade],deck+3.94,{mat:STONE,walk:false});
     ZN('JW 메리어트 정문', '3F','발레 하차장 · 호텔 연결', [u-3,v-.4,u+3,facade+.35],deck-.08,deck+3.94,18);
+    // Suspended strands leave the entrance sightline and walking headroom clear.
+    const crown=deck+3.9;
+    B({u,v:v+4.2,y:crown-.10,w:2.85,d:2.1,h:.10,mat:'jwWalnut',solid:false});
+    for(let i=0;i<20;i++){
+      const angle=i*Math.PI/10, cu=u+1.28*Math.cos(angle), cv=v+4.2+.88*Math.sin(angle);
+      const drop=.45+.64*(1+Math.sin(2*angle))/2;
+      ROD([cu,crown,cv],[cu,crown-drop,cv],.014,BRONZE);
+      const [x,z]=P(cu,cv);
+      K.dome({x,z,y:crown-drop-.11,rx:.10,ry:.17,rz:.10,seg:8,rings:4,hemi:false,mat:{tex:'emit',color:i%3?0xffefd6:0xefcb88}});
+    }
+    SG('신세계백화점 2층 연결통로 →',{u,v:v+.6,y:deck+2.28,w:2.7,h:.32,f:'S',bg:'#49392f',fg:'#fff1d8'});
     SPAWN('JW 메리어트 정문',u,facade-1,deck,0,-1);
     // sidewalk planters along the east side
     for (let v = -50; v <= 30; v += 10) { B({ u: 35.0, v, y: 0, w: 1.4, d: 3.6, h: 0.6, mat: { tex: 'jwStone' } }); TREE(35.0, v, 0.6, { h: 6, kind: 'zelkova' }); }

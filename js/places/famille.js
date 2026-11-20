@@ -1,8 +1,9 @@
 // Round 20. The user's 2026-11-07 photographs override the older GPS/plan fit.
-// Ground = 0; parking and restaurant street share +5 m (never +7 m).
+// The indoor restaurant street meets parking 2F. The garden is above parking 3F.
 export const meta = {
   id: 'famille', name: '파미에스테이션 동관', claims: [414891732],
   claimRoads: [],
+  additionalEntrances: [{"x":37.18,"z":142.98,"y":0,"w":2.7,"nx":0.933,"nz":-0.361,"other":null},{"x":74.47,"z":148.36,"y":12.6,"w":3.4,"nx":-0.956,"nz":0.295,"other":null},{"x":167.96,"z":104.16,"y":12.6,"w":3.4,"nx":0.624,"nz":0.782,"other":null}],
   sources: [
     'refs/user_walk/20261107/manifest.json', 'refs/user_walk/20261107/places.json',
     '.codex-jobs/evidence/up20_famille.json',
@@ -277,7 +278,8 @@ function buildDeck(K) {
   const floor={tex:'concrete',color:0x8e918c,gloss:.3},concrete={tex:'concrete',color:0x5f5c57};
   // Structure. Thin slabs keep the station's underground network unobstructed.
   K.slab(poly,0,{mat:floor,under:concrete,thick:.18});
-  K.slab(poly,5,{mat:floor,under:concrete,thick:.32});
+  K.slab(poly,5,{mat:floor,under:concrete,thick:.32,holes:[R(48,3,62,5.5)]});
+  K.stairs(...P(48,4.25),...P(62,4.25),{ya:0,yb:5,w:1.9,mat:'metal',rails:true});
   // A3 white steel staircase visible in #227 climbs to the roof through this hole.
   const roofHole=R(33.7,.8,44.5,3.4);
   K.slab(poly,9,{mat:'parking',under:concrete,thick:1,holes:[roofHole]});
@@ -320,7 +322,44 @@ function buildDeck(K) {
   wall(43,-6,43,-.2,-2,0,{mat:0xb9bbaf,thick:.2});
   K.zone({name:'파미에 주차장',floor:'1F',sub:'주차 구역',poly,y0:0,y1:4.7,priority:5});
   K.zone({name:'파미에 주차장',floor:'2F',sub:'파미에스테이션 · 주차 구역 A',poly,y0:5,y1:8,priority:5});
-  K.zone({name:'파미에 주차장',floor:'옥상',sub:'옥상 주차장',poly,y0:9,y1:12,priority:4});
+  K.zone({name:'파미에 주차장',floor:'3F',sub:'A구역 · 파미에가든 계단',poly,y0:8.95,y1:12.4,priority:6});
+  const garden=12.6;
+  K.slab(poly,garden,{mat:'sidewalk',under:concrete,thick:.24,holes:[R(61,3,72.5,5.5)]});
+  K.stairs(...P(61,4.25),...P(72.5,4.25),{ya:9,yb:garden,w:1.9,mat:'metal',rails:true});
+  for (const v of [3,5.5]) wall(61,v,72.5,v,garden,garden+1.0,{mat:'metal',thick:.07});
+  // Rail the open roof edge, leaving the west bridge and east path free at their ends.
+  for(let i=0;i<poly.length;i++){
+    const a=poly[i], b=poly[(i+1)%poly.length];
+    if(Math.hypot(b[0]-a[0],b[1]-a[1])>40) K.wall(...a,...b,garden,garden+1,{mat:'glass',thick:.08});
+  }
+  for (let s=8;s<104;s+=8) {
+    box(s,.65,9,.55,3.36,.55,concrete,true);
+    box(s,15.7,9,.55,3.36,.55,concrete,true);
+    for(const v of [1,10]) box(s,v,9.015,.09,.025,4.2,0xe0d9ba);
+  }
+  K.zone({name:'파미에가든',floor:'4F',sub:'주차장 상부 · 텍사스데브라질 · 데블스도어 방면',poly,y0:garden-.12,y1:garden+4,priority:12});
+  wall(65,1,88,1,garden,garden+3.5,{mat:0x48372f,thick:.2});
+  wall(88,1,88,7,garden,garden+3.5,{mat:0x634536,thick:.2});
+  box(79,7,garden+2.8,16,.7,.3,0x47352e);
+  sign('텍사스데브라질',79,7.19,garden+3.14,5,.43,faceSouth,'#47352e','#f5dbac');
+  for (const s of [72.5,85.5]) {
+    box(s,7,garden,2.6,2.8,.12,{tex:'glass',color:0x7b7770},true);
+    for (const v of [3.3,5.7]) {
+      box(s,v,garden+.73,1.35,.09,.76,0x876441);
+      box(s,v,garden,.18,.73,.28,0x493f35);
+    }
+  }
+  const valet=FP(27,15.7);
+  K.ramp(...P(.6,6),...valet,{ya:garden,yb:11.56,w:3.4,mat:'sidewalk',rails:false});
+  sign('JW 메리어트 정문 · 발레',2,7,garden+2.3,3.4,.4,faceEast);
+  sign('데블스도어 방면',97,7,garden+2.3,2.8,.4,faceEast+PI);
+  const lot=K.osm.roads.find(r=>r.id===830683723);
+  if(lot){
+    const exit=lot.pts.find(p=>p[0]>190 && p[0]<200);
+    if(exit) K.ramp(...P(104,8),...exit,{ya:garden,yb:.06,w:3.4,mat:'sidewalk',rails:true});
+  }
+  const start=P(72.8,8);
+  K.spawn({name:'파미에 주차장 4층 · 파미에가든',x:start[0],z:start[1],y:garden,yaw:faceEast,group:'파미에스테이션'});
   K.spawn({name:'파미에 주차장 2층',x:103.9,y:5,z:135.3,yaw:103.1*PI/180,group:'파미에스테이션'});
 
   K.detail({name:'파미에 주차장 설비와 주차칸',floor:'2F',poly,y0:5,y1:9},()=>{
@@ -416,7 +455,11 @@ function buildHall(K) {
   // Hall north facade: broad bronze-framed opening, with a fully clear central 4m door.
   wall(4,0,22,0,0,10,{openings:[{at:6.15,w:8,y0:0,y1:4.35},{at:14.3,w:6.1,y0:0,y1:3.8}]});
   // East JAJU / Agra frontage. Upper openings preserve sight into the 2F restaurants.
-  wall(4,0,4,20,0,10,{openings:[{at:7.2,w:5.8,y0:0,y1:4.25},{at:14.2,w:5.8,y0:0,y1:4.25},{at:7.2,w:5.6,y0:5,y1:8.65},{at:14.2,w:5.6,y0:5,y1:8.65},{at:19.2,w:1.6,y0:5,y1:9.45}]});
+  wall(4,0,4,20,0,10,{openings:[{at:1.95,w:2.75,y0:0,y1:3.55},{at:7.2,w:5.8,y0:0,y1:4.25},{at:14.2,w:5.8,y0:0,y1:4.25},{at:7.2,w:5.6,y0:5,y1:8.65},{at:14.2,w:5.6,y0:5,y1:8.65},{at:19.2,w:1.6,y0:5,y1:9.45}]});
+  K.slab(rect(-9,.52,4.2,3.37),0,{mat:tile,thick:.16});
+  sign('나가는 곳',4.21,1.95,3.27,1.4,.24,'u');
+  sign('하우스 오브 신세계',10.15,.31,3.1,3.6,.3,'v',{bg:'#332d27'});
+  sign('호남선 터미널',68,7.6,2.9,2.4,.32,'u',{bg:'#33483e'});
   // South return stays under the upper landing; the upper doorway is open u8..14.
   wall(4,20,22,20,0,4.7);
   wall(4,20,8,20,4.7,10);wall(14,20,22,20,4.7,10);
@@ -430,7 +473,16 @@ function buildHall(K) {
   wall(22,0,70.56,0,0,8,{openings:[{at:3.2,w:5.6,y0:0,y1:4.1},...Array.from({length:6},(_,i)=>({at:9.7+i*6.5,w:5.3,y0:0,y1:4.1})),...Array.from({length:7},(_,i)=>({at:3.2+i*6.5,w:5.3,y0:5,y1:7.9}))]});
   wall(22,11.5,70.56,11.5,0,8,{openings:[...Array.from({length:7},(_,i)=>({at:3.2+i*6.5,w:5.3,y0:0,y1:4.1})),...Array.from({length:7},(_,i)=>({at:3.2+i*6.5,w:5.3,y0:5,y1:7.9}))]});
   // North shops remain shallow window displays at the shared JW boundary, not new interior claims.
-  for(let u=38.5;u<69;u+=6.5){B(u,-.13,0,5.25,.10,4.1,0x272620);B(u,11.62,0,5.25,.10,4.1,0x302c26);}
+  for(let u=38.5;u<69;u+=6.5){
+    B(u,-.13,0,5.25,.10,4.1,0x272620);
+    if(u>58) B(u,11.62,0,5.25,.10,4.1,0x302c26);
+  }
+  for(const u of [38.2,44.7,51.2,57.7]){
+    K.slab(rect(u-2.7,11.4,u+2.7,14.6),0,{mat:tile,thick:.16});
+    wall(u-2.7,14.6,u+2.7,14.6,0,4.1,{mat:0x856650});
+    wall(u-2.7,11.5,u-2.7,14.6,0,4.1);
+    K.slab(rect(u-2.7,11.4,u+2.7,14.6),4.1,{mat:cream,thick:.14});
+  }
   B(31.7,-.13,0,5.3,.12,4.1,0x302c26,true);
   // Continuous cream cornices, matching the retained gallery's brick-pier / fanlight grammar.
   for(const v of [0,11.5])for(const[y,h,d]of [[4.45,.18,.44],[4.66,.14,.6],[7.8,.2,.46]])B(46.28,v,y,48.56,d,h,cream);
@@ -524,6 +576,14 @@ function buildHall(K) {
       B(u,v,.79,.04,.22,.22,0x2b3338);
     };
     dining(.7,12.2);dining(.7,15.7);dining(2.6,15.7);
+    // Restaurant bays face the walk from JAJU to the Honam turn.
+    for (const u of [38.2,44.7,51.2,57.7]) {
+      B(u,13.96,.08,4.9,.44,.83,0x795741);
+      B(u,13.92,.91,5.05,.56,.08,cream);
+      B(u,14.4,1.6,1.48,.1,.8,'famille-ebt-menu');
+      dining(u-1.15,9.15);
+      dining(u+1.15,9.15);
+    }
     // Mint Wafille service front with display glass, stocked pastry shelves and brass chairs.
     B(25.2,-.15,0,5.1,.78,1.02,0x8fd3c4);B(25.2,-.15,1.02,5.2,.85,.07,0xd7c6aa);B(25.2,-.14,1.1,4.0,.65,.55,'glass');
     for(let n=0;n<12;n++){B(23.2+(n%6)*.7,-.12,1.17+Math.floor(n/6)*.18,.30,.34,.10,[0xbd8752,0xe0bf7f,0x9b653e][n%3]);}
