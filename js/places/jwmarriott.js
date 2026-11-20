@@ -2597,8 +2597,12 @@ export function build(K) {
     }
     const wing=[u+7,v-.4,27.2,facade];
     SLAB(wing,upper+4.3,{mat:walnut,under:walnut,walk:false});
-    WL(u+7,facade,27.2,facade,deck,upper+4.3,{mat:walnut});
-    WL(27.2,v-.4,27.2,facade,deck,upper+4.3,{mat:walnut});
+    // Seen from the raised driveway this wing continues the podium cladding.
+    const outerPanel={tex:'jwPodium'};
+    WL(u+7,facade,27.2,facade,deck,upper+4.3,{mat:outerPanel,mat2:walnut,floorH:4});
+    WL(27.2,v-.4,27.2,facade,deck,upper+4.3,{mat:walnut,mat2:outerPanel,floorH:4});
+    WL(u+7,facade,27.2,facade,8.7,deck,{mat:'jwGreyStone'});
+    WL(27.2,v-.4,27.2,facade,8.7,deck,{mat:'jwGreyStone'});
     WL(u-7,facade,u+7,facade,deck+3.94,ceiling,{mat:walnut});
     SG('연회장 ↑',{u:u+6.87,v:v+8,y:deck+3.55,w:2.1,h:.34,f:'W',bg:'#37291f',fg:'#ebd4a1'});
     ZN('연회장 에스컬레이터','3F','현관 라운지 ↔ 그랜드 볼룸',wing,deck-.12,upper-.2,23);

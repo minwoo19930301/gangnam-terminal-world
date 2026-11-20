@@ -3897,7 +3897,11 @@ export function build(K) {
     lelev('경찰 안내동 엘리베이터',36,172,'-v',[{label:'1층',y:0,name:'경찰 안내'},{label:'2층',y:3.2,name:'안내동'}],{topH:2.9});
     for(const [floor,y] of [['1F',0],['2F',3.2]])K.zone({name:'경찰 안내동',floor,sub:'',poly:pavilion,y0:y,y1:y+3.2,priority:3});
     // Access-road parked cars and low pines are visible in 01/08; keep doors clear.
-    for(let v=24;v<147;v+=6){if([48,105].some(d=>Math.abs(v-d)<6))continue;vehicle(-7,v,0,FACE['+u'], 'car',Math.round(v));}
+    for(let v=24;v<144;v+=6){
+      if([48,105].some(d=>Math.abs(v-d)<6))continue;
+      // Beyond the rear doors the service lane bends toward the building.
+      vehicle(v>=114?-4:-7,v,0,FACE['+u'],'car',Math.round(v));
+    }
     for(const v of [31,76,120]){const[x,z]=W(-2.5,v);K.tree(x,z,{h:5.5,kind:'pine'});}
   }
 }

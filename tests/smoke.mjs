@@ -86,6 +86,19 @@ for (const w of WELLS) {
 K._.finalize();
 K._.buildAllDetail(); // lazy floor detail groups too
 for (const e of K._.detailErrors) problems.push('detail group threw: ' + e);
+// The carriageways overlap in plan. Probe each at its own approach height so
+// a roof or a bridge cannot accidentally become the floor of the lower lane.
+if (loaded.has('streets')) {
+  for (const [x,z,y] of [[425.8,-47.6,0],[231.7,43.9,0],[166.1,56.6,0],
+    [6.2,32.2,0],[15.6,86.7,5.8],[27.2,118.2,9.3],[36.3,138.6,11.5],
+    [240.73,36.45,7.3],[190.47,70.22,11.5]]) {
+    const floor=phys.support(x,z,y+.4).y;
+    const pos={x,z};
+    phys.resolve(pos,.3,y+.03,y+1.75,.3);
+    if(Math.abs(floor-y)>.4 || Math.hypot(pos.x-x,pos.z-z)>.08)
+      problems.push(`rear parking drive obstructed at (${x},${z}), expected height ${y}, got ${floor}`);
+  }
+}
 // area loading reads js/places/_meta.json: warn when a module's claims are not what it says (run node tools/gen_meta.mjs)
 try {
   const META = JSON.parse(fs.readFileSync(path.join(ROOT, 'js/places/_meta.json'), 'utf8'));

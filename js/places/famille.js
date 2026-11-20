@@ -360,7 +360,7 @@ function buildDeck(K) {
     K.zone({name:level===garden?'파미에가든':'파미에 주차장',floor:String([0,5,9,garden].indexOf(level)+1)+'F',
       sub:'동측 주차 구역 · 식당가',poly:extension,y0:level-.08,y1:level+2.8,priority:7});
   }
-  for(const edge of [[104,1,160,1],[160,1,196,26],[196,41,156,17],[156,17,104,17]]){
+  for(const edge of [[196,41,156,17],[156,17,104,17]]){
     wall(...edge,-.1,garden,{mat:concrete,thick:.2});
   }
   wall(6.6,16.8,104.4,16.8,0,9,{mat:concrete,thick:.18});
@@ -368,7 +368,7 @@ function buildDeck(K) {
     box(s,3.6,level+.01,.1,.025,4.3,0xe5dcb6);
     box(s,14.3,level+.01,.1,.025,4.3,0xe5dcb6);
   }
-  for(const [s,name] of [[121,'모던눌랑']]){
+  for(const [s,name] of [[139,'모던눌랑']]){
     K.slab(R(s-7,1.5,s+7,7),garden+3.55,{mat:0x585046,thick:.22});
     wall(s-7,1.5,s+7,1.5,garden,garden+3.55,{mat:0x685446});
     for(const side of [-1,1]){
