@@ -3,6 +3,12 @@
 export const meta = {
   id: 'gyeongbu_east', name: '경부선 동측 주차빌딩 · 데블스도어',
   claims: [414891734], claimRoads: [], claimAreas: [],
+  // The open frame bays are not public portals. Access at terminal grade is
+  // through the marked north aisle or the supervised east corner opening.
+  streetEntrances: [
+    {x:379.36,z:-11.21,y:0,w:3.6,nx:-.445,nz:-.896,other:null},
+    {x:427.19,z:-31.50,y:0,w:4.3,nx:.896,nz:-.445,other:null},
+  ],
   additionalEntrances: [{"x":373.17,"z":14.53,"y":12.6,"w":2.7,"nx":0.445,"nz":0.896,"other":null},{"x":349.92,"z":26.18,"y":12.6,"w":3,"nx":0.445,"nz":0.896,"other":null},{"x":353.73,"z":15.92,"y":12.6,"w":1.2,"nx":-0.896,"nz":0.445,"other":null}],
   sources: ['data/osm.json', 'refs/roadview/manifest.json',
     'refs/roadview/gbeast_01_parking_deck.jpg', 'refs/roadview/gbeast_02_bus_yard_road.jpg',
@@ -214,11 +220,12 @@ export function build(K) {
   const deckWhite = 0xe9e9e4;
   K.material('ge-blue-deck-glass', new K.THREE.MeshLambertMaterial({ color: 0x5f86ad,
     transparent: true, opacity: .82, depthWrite: false, side: K.THREE.DoubleSide }));
-  for (const [v, spans] of [[-4.4, [[.15, 104.6]]], [16.85, [[.15, 16.8], [64.4, 104.6]]]]) {
+  for (const [v, spans] of [[-4.4, [[.15, 96]]], [16.85, [[.15, 16.8]]]]) {
     for (const [a, b] of spans) {
       const count = Math.ceil((b - a) / 6.8), pitch = (b - a) / count;
       for (let i = 0; i <= count; i++) {
         const u = a + i * pitch;
+        if(v<0 && Math.abs(u-53)<2.1) continue;
         box(u, v, 0, .3, .4, 11.55, deckWhite);
         // Orange columns are recessed behind the pale front struts.
         box(u, v + .42, 0, .36, .38, 2.65, orange, { solid: false });
@@ -239,15 +246,67 @@ export function build(K) {
   }
   // End walls seal the new strip; internal former end walls remain behind the
   // north face, so upper parking remains a continuous walkable gallery.
-  for (const [u, v0] of [[.18, -4.4], [16.8, 1.3], [64.4, 1.3], [104.65, -4.4]]) {
+  for (const [u, v0] of [[.18, -4.4], [16.8, 1.3], [64.4, 1.3]]) {
     railing(u, v0, u, 16.8, 3.8);
     wall(u, v0, u, 16.8, 7.6, 9.4, { mat: 'ge-blue-deck-glass', thick: .04 });
     wall(u, v0, u, 16.8, 9.4, 11.55, { mat: 'ge-ribbed-cladding', thick: .15 });
     box(u, (v0 + 16.8) / 2, 11.55, .5, 16.8 - v0, .25, deckWhite, { solid: false });
   }
+  // The January 2026 turn from Sapyeong-daero into the low bus aisle shows
+  // a tiled retaining face, a glazed corner above the P sign, and a projecting
+  // silver roof. The trussed garage elevation runs along the north aisle only.
+  K.texture('ge-stone-panel',256,128,(g,w,h)=>{
+    g.fillStyle='#aaa6a3';g.fillRect(0,0,w,h);
+    const rng=K.rand(4148917);
+    for(let n=0;n<1500;n++){
+      g.fillStyle=n%2?'#c7c3bf':'#9a9693';
+      g.fillRect(rng()*w,rng()*h,1,1);
+    }
+    g.fillStyle='#7f8080';g.fillRect(0,0,w,1);g.fillRect(0,0,1,h);
+  },[1.6,.8]);
+  const stone='ge-stone-panel', glassBlue=0x3c666e, mullion=0x939fa1;
+  wall(64.35,17.2,104.86,17.2,-.1,gardenLevel,{mat:stone,thick:.22});
+  wall(104.86,-4.5,104.86,17.2,-.1,7.6,{mat:stone,thick:.26,
+    openings:[{at:3.2,w:4.3,y0:-.1,y1:3.4}]});
+  wall(104.86,4.7,104.86,17.2,7.6,gardenLevel,{mat:stone,thick:.26});
+  wall(96,-4.5,104.86,-4.5,-.1,7.6,{mat:stone,thick:.22});
+  sign(['P   →','반포천 공영주차장'],101.6,-4.64,4.55,4.7,1.65,PI,
+    {bg:'#284b71',fg:'#ffffff'});
+
+  // The tall blue direction panel is visible before the two roads divide.
+  sign('P →',105.02,3.15,5.55,2.4,2.45,PI/2,{bg:'#2c5683',fg:'#ffffff'});
+  sign('반포천 공영주차장',105.025,3.15,3.95,2.4,.65,PI/2,{bg:'#3b4145',fg:'#ffffff'});
+
+  // Tinted curtain wall returns around the end. Opaque backing keeps the
+  // sloping city-side grade from showing through the pavilion into the garage.
+  box(100.45,.12,7.55,8.78,9.14,5.22,glassBlue);
+  for(let u=96.08;u<104.9;u+=1.46){
+    box(u,-4.49,7.58,.06,.09,5.17,mullion,{solid:false});
+  }
+  for(let v=-4.46;v<4.8;v+=1.5){
+    box(104.88,v,7.58,.09,.06,5.17,mullion,{solid:false});
+  }
+  for(const y of [7.65,9.13,10.59,12.06,12.65]){
+    box(100.45,-4.50,y,8.88,.09,.055,mullion,{solid:false});
+    box(104.90,.12,y,.09,9.18,.055,mullion,{solid:false});
+  }
+  box(100.35,.1,12.75,11.75,11.65,.18,0x697479,{solid:false});
+  box(100.35,.1,12.93,11.95,11.8,.28,0xc3c8c7,{solid:false});
+  // The garden-side service shops occupy the top of the solid plinth.
+  // Their long low canopy follows the existing restaurant walkway.
+  slab(64.4,5,104.78,17.05,gardenLevel,{mat:'darkstone'});
+  wall(64.4,5,104.78,5,gardenLevel,gardenLevel+3.35,{mat:stone});
+  wall(64.4,5,64.4,16.7,gardenLevel,gardenLevel+3.35,{mat:stone});
+  wall(104.78,5,104.78,16.7,gardenLevel,gardenLevel+3.35,{mat:stone});
+  for(let u=65.1;u<104.7;u+=4.3){
+    box(u,16.63,gardenLevel,.54,.49,3.05,stone);
+    if(u+4.3<104.7)box(u+2.15,16.31,gardenLevel+.18,3.66,.14,2.64,0x374944);
+  }
+  slab(63.94,4.65,105.22,17.55,gardenLevel+3.48,{mat:0x8c8c84,under:0x8b877d,thick:.29,walk:false});
+  box(84.55,17.56,gardenLevel+3.22,41.28,.14,.28,0xc1bba9,{solid:false});
+
   // Clear access in the south arcade and west/east ends; no continuous ground-level fence.
   sign('데블스도어 센트럴시티', 28, 13.5, gardenLevel+7.65, 5.2, .42, 0, { bg: null, fg: '#e1c496' });
-  sign('주차장 입구 →', 100.8, 16.99, 2.8, 4.3, .8, 0, { bg: '#25475b' });
   sign(['출구 ←', '잠원 · 논현 · 신사'], 102.8, 12.5, 2.45, 2.8, 1.1, -PI / 2, { bg: '#222a2c', fg: '#f2ca45' });
   for (const y of [0, 3.8, 7.6]) {
     for (const [a, b] of [[0, 17.1], [64.4, 104.8]]) zone('경부선 동측 주차빌딩', y === 0 ? '1F' : y === 3.8 ? '2F' : '3F', '주차장 · 계단 · 승강기', a, 0, b, 18.8, y, y + 3.79, 1);
@@ -755,7 +814,6 @@ export function build(K) {
       sign(['공영주차장','안내사무실'],101,11.68,2.22,1.55,.42,0,{bg:'#e7dfc7',fg:'#272a27'});
       sign(['반포천 공영주차장','주차 이용 안내'],101,11.68,.54,1.45,.5,0,{bg:'#e4e1d6',fg:'#383e3d'});
       sign('안내',101,11.7,1.05,.34,.17,0,{bg:'#eae8df',fg:'#3d4545'});
-      parkingCar(97.7,16.9,0,false,2);
       for(const u of [102.2,102.8]) {
         box(u,12.4,0,.4,.4,.05,0x8e3a30,{solid:false});
         for(let j=0;j<10;j++) {
@@ -765,70 +823,14 @@ export function build(K) {
             K.quad(mat,[conePoint(r0,lo,a),conePoint(r0,lo,b),conePoint(r1,hi,b),conePoint(r1,hi,a)],[Math.cos(a),.2,Math.sin(a)]);
         }
       }
-      // Beige booth reference and green-canopy reference are distinct objects.
-      box(101,21.5,0,1.9,1.75,.9,0xc5c9bf);
-      box(101,21.5,.9,1.9,1.75,1.05,{tex:'glass',color:0x485d61},{solid:false});
-      for (const du of [-1.15,1.15]) for (const dv of [-1.05,1.05]) box(101+du,21.5+dv,0,.075,.075,3.0,0x36564a);
-      for (const side of [-1,1]) {
-        const pts=[[99.7,3,21.5+side*1.25],[102.3,3,21.5+side*1.25],[102.3,3.4,21.5],[99.7,3.4,21.5]].map(([u,y,v])=>{const [x,z]=W(u,v);return[x,y,z];});
-        K.quad({tex:'glass',color:0x8aafa0},pts,[0,1,0]);
-        beam([99.7,3,21.5+side*1.25],[99.7,3.4,21.5],.06,0x416b57);
-        beam([102.3,3,21.5+side*1.25],[102.3,3.4,21.5],.06,0x416b57);
-      }
-      beam([99.7,3.4,21.5],[102.3,3.4,21.5],.06,0x416b57);
-      box(101,21.5,1.95,2.05,1.9,.15,0x6a7471,{solid:false});
-      box(100.5,21.6,2.1,.85,.55,.6,0xd1d4ca,{solid:false});
-      for(let j=0;j<7;j++)box(100.5,21.9,2.15+j*.065,.65,.025,.018,0x687b78,{solid:false});
-      sign('주차 관리',101,22.4,1.8,1.5,.3,0,{bg:'#263c37',fg:'#edeedf'});
-      box(97.2,22.6,0,3.4,2.6,.22,0x9d9f91);
-      box(97.2,22.6,.22,3.1,2.3,.12,'grass',{solid:false});
-      // Broad layered pine crowns and an offset trunk, as in the entry photo.
-      beam([97.2,.3,22.6],[96.9,3.7,22.4],.48,{tex:'wood',color:0x655948});
-      beam([96.9,3.7,22.4],[97.5,6.8,22.9],.26,{tex:'wood',color:0x655948});
-      for(const [du,dv,h,r] of [[-2,-.5,4.5,1.6],[1.9,-.8,4.9,1.8],[-1.5,1.2,5.7,1.7],[1.6,1,6.2,1.6],[.2,.2,7.1,1.6]]) {
-        beam([97.1,h-1.2,22.6],[97.2+du,h,22.6+dv],.12,0x665b49);
-        const [x,z]=W(97.2+du,22.6+dv); K.dome({x,z,y:h,rx:r,rz:r*.7,ry:.65,mat:0x375a3b,seg:12,rings:4});
-      }
-      // Directional sign on the approach island, with a clear lane each side.
-      box(94.6,22.5,0,1.1,2.3,.14,0x858980);
-      box(94.6,22.5,.14,.82,.23,3.15,0x202c2c);
-      sign(['↖','반포천 공영주차장','(파미에)','신세계백화점','JW 메리어트 호텔','파미에스테이션','경부선 터미널 ↗'],94.46,22.5,1.84,.78,2.75,-PI/2,{bg:'#202c2c',fg:'#eff0e8'});
-      sign(['↑ 반포천 공영주차장','(파미에)','← 사평로방향 출구'],99.5,23.15,1.6,.72,2.7,0,{bg:'#233c34',fg:'#f1efe4'});
-      parkingBollard(93.8,22.5); parkingBollard(99.5,18.2); parkingBollard(102.3,18.2);
-      // Exit control stays beside the through lane u~96..104, v~13.4.
-      box(98.6,11.65,0,.52,.56,1.25,0x56656b);
-      sign('출구',98.31,11.65,.96,.38,.2,-PI/2,{bg:'#17252b',fg:'#dcddc7'});
-      box(98.6,11.65,1.25,.55,.58,.1,0x2d3b40,{solid:false});
-      beam([98.6,1.18,11.65],[98.6,3.02,10.65],.09,white);
-      for (let n=0;n<5;n++) beam([98.6,1.25+n*.34,11.61-n*.185],[98.6,1.4+n*.34,11.53-n*.185],.095,0xc64f45);
-      for(const v of [10.7,15.0])parkingBollard(103.3,v,false);
-      sign(['← 출구','잠원 | 논현 | 신사','이수 | 사당(지하차도)','교대 방면'],103.55,16,1.62,1.7,2.45,-PI/2,{bg:'#1e292d',fg:'#f3e2b0'});
-      box(104.3,16.85,0,.2,.14,1.4,0xe4bf46,{solid:false});
-      for(let j=0;j<5;j++)beam([104.22,.12+j*.26,16.77],[104.38,.23+j*.26,16.77],.09,0x323b38);
-      floorText('↑',99,13.4,.035,1.1,2.9,PI/2,'#e7bc39');
-      for(let u=96;u<99;u+=.48)beam([u,.035,10.9],[u+1.1,.035,11.9],.075,white);
+      // Payment reader beside the street-level entrance at the north end
+      // of the stone return wall. Keep the driveway itself clear.
+      box(103.45,1.2,0,.42,.39,1.18,0x526067);
+      box(103.45,1.2,1.18,.46,.43,.10,0x353d40,{solid:false});
+      sign('출구',103.7,1.2,.93,.31,.21,PI/2,{bg:'#232d30',fg:'#f3ebcc'});
+      for(const edge of [-3.58,1.02]) parkingBollard(105.2,edge);
     }
   });
-
-  // Apron paint belongs to this entrance only; it does not rebuild the coach yard.
-  for(const [v,color] of [[20.8,0xb96a83],[24.5,0x437e9d]]) K.hpoly(color,rect(72,v-.32,92.6,v+.32),.033);
-  floorText('한신',77,20.8,.04,1.9,3,PI/2);
-  floorText('차고',77,24.5,.04,1.9,3,PI/2);
-  K.hpoly(0xd1b34f,rect(71.5,25.4,104,25.5),.034);
-  for(let u=73;u<93;u+=1.7) parkingBollard(u,25.3);
-  // Original curb equipment is retained, moved clear of the brick arcade and
-  // planter only along the hall; the door u36 and mapped path u53 remain open.
-  for (const [a, b] of [[1, 11], [20, 29], [42, 49], [61, 91]]) {
-    const rv=a>=20&&a<=61?19.8:17.7;
-    if(a===61){railing(a,19.8,63,19.8,0,.62,0x9a9e96);railing(63,17.7,b,17.7,0,.62,0x9a9e96);}
-    else railing(a, rv, b, rv, 0, .62, 0x9a9e96);
-    for (let u = a + 1; u < b; u += 4.5) {
-      const bv=u>=20&&u<=63?20.9:19.1;
-      for (const du of [-.75, .75]) cylinder(u + du, bv, 0, .055, .68, 0xc2ae43, { seg: 8 });
-      beam([u - .75, .68, bv], [u + .75, .68, bv], .11, 0xc2ae43);
-      for (const du of [-.75, .75]) cylinder(u + du, bv, .22, .057, .18, 0x6e705d, { solid: false, seg: 8 });
-    }
-  }
 
   // Roadview-specific curb equipment, with gaps at the mapped access u53.
   slab(34, -13.25, 55, -11.75, 0, { mat: 'ge-pavers', thick: .12 });
