@@ -1,5 +1,11 @@
 # 고속터미널 멀티버스
 
+<!-- LIVE-LINK:START -->
+<p align="center">
+  <a href="https://minwoo19930301.github.io/gangnam-terminal-world/"><img alt="바로 가기: minwoo19930301.github.io/gangnam-terminal-world" src="https://img.shields.io/badge/%E2%96%B6%20%EB%B0%94%EB%A1%9C%20%EA%B0%80%EA%B8%B0-minwoo19930301.github.io%2Fgangnam--terminal--world-ff5a5f?style=for-the-badge"></a>
+</p>
+<!-- LIVE-LINK:END -->
+
 서울 고속터미널 일대를 1인칭으로 걸어 다닐 수 있게 만든 웹 3D 월드입니다. OpenStreetMap 실측 배치(건물 외곽선·도로·지하철 출구) 위에, 공식 층별 안내와 블로그 후기를 참고해 주요 장소의 내부를 층마다 재현했습니다.
 
 - 고투몰(강남터미널 지하도상가), 고속터미널역(3·7·9호선)
