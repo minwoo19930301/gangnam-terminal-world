@@ -82,7 +82,7 @@ for (const s of K._.spawns) {
 // long routes along the underground mall and between modules (consecutive pairs must connect on foot)
 const ROUTES = [
   { name: '고투몰 서편→동편', y: -6, pts: [[-314.2, -12.9], [-189.3, -61.5], [-68.1, -102.9], [-20.6, -112.7], [-2.3, -121.2], [189.5, -190.6], [345.3, -257.8]], need: ['gotomall'] },
-  { name: '고투몰→3호선 B2', y: null, pts: [[-68.1, -102.9, -6], [-79, -151, -11]], need: ['gotomall', 'station'] },
+  { name: '고투몰→3호선 B2', y: null, pts: [[-68.1, -102.9, -6], [8.54, -3.42, -11]], need: ['gotomall', 'station'] },
   { name: '센트럴시티 B1→파미에 B1→7호선', y: -6, pts: [[-93.4, 57.8], [-60.5, 169.5], [-16.3, 174.5]], need: ['centralcity', 'station'] },
   { name: '고터→뉴코아 (신반포로·잠원로)', y: 0, pts: [[60, -128], [200, -200], [300, -240], [330, -320]], need: ['streets', 'newcore'] },
   { name: '고터→반원상가 (신반포로23길)', y: 0, pts: [[-60, -150], [-120, -300], [-159, -400]], need: ['streets', 'banwon'] },

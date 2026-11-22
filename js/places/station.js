@@ -51,6 +51,11 @@ export function build(K) {
   const CSS = { 3: '#e8731a', 7: '#8b9a4a', 9: '#c99b5e' };
   const mallHere=(()=>{const s=K.phys.support(-40,-110,B1+.5);return Math.abs(s.y-B1)<.3;})();
   const rect = (x0, z0, x1, z1) => [[x0,z0],[x1,z0],[x1,z1],[x0,z1]];
+  // Map audit (docs/map-audit): the real 3호선 runs NNW->SSE through the two ref-339 stop nodes (-1.77,-0.06) / (1.66,-1.38),
+  // i.e. through the world origin, along OSM rails 406947060 + 640473002. This is their mid line, +-97.5 m (ten 19.5 m cars)
+  // around the stop nodes, with the 1.2 deg bend at the station. The old platform was a straight N-S box at x=-90, z -225..-25.
+  const L3PTS=[[-37.23,-90.88],[-0.06,-0.72],[34.08,90.58]];
+  const nearL3=(x,z)=>{let b=1e9;for(let i=1;i<L3PTS.length;i++){const a=L3PTS[i-1],c=L3PTS[i],dx=c[0]-a[0],dz=c[1]-a[1];let t=((x-a[0])*dx+(z-a[1])*dz)/(dx*dx+dz*dz);t=Math.max(0,Math.min(1,t));b=Math.min(b,Math.hypot(x-a[0]-dx*t,z-a[1]-dz*t));}return b;};
   const box = o => K.box({ solid: false, ...o });
   const paint = (color) => ({ tex: 'emit', color });
   // Round 13 retains signed/shared floor levels, not the video's estimated
@@ -61,7 +66,7 @@ export function build(K) {
     ['B1','연결 대합실 · 상점과 벽돌 홀',[-205,115,65,285]],
     ['B1','중앙 대합실 · 초록 개찰구',[-94,-124,-60,-74]],
     ['B1','9호선 상층 · 타원과 출구 홀',[-65,-146,43,-109]],
-    ['B2','3호선 승강장 · 대리석 출구',[-110,-235,-70,-15]],
+    ['B2','3호선 하부 대합실 · 대리석 출구',[-110,-104,-70,-40]],
     ['B2','3·7·9호선 환승통로',[-80,-90,46,156]],
     ['B2','7호선 대합실 · 개찰구',[-153,116,64,283]],
     ['B3','7호선 곡선 승강장',[-153,116,64,283]],
@@ -69,13 +74,14 @@ export function build(K) {
     ['B1','9호선 긴 에스컬레이터',[-1,-137,40,-124]],
     ['B1','3호선 개찰구 대합실',[-105,-84,-79,-42]],
     ['B1','경부선 서문 · 3호선 엔터식스 대합실',[3,13,39,45.5]],
+    ['B2','3호선 승강장 (OSM 선형)',[-58,-112,58,100]],
   ].map(([floor,name,bounds])=>({floor,name,rect:bounds,y0:K.LEVELS[floor],y1:K.LEVELS[floor]+4.95,jobs:[]}));
   detailRooms[8].y0=B4; // visible from either landing of the 15 m descent
   let furnishing = false;
   function later(x,y,z,fn) {
     if(furnishing||y>=-.1)return false;
     const floor=y>=B1-.1?'B1':y>=B2-.1?'B2':y>=B3-.1?'B3':'B4';
-    const i=floor==='B1'?(x>3&&x<39&&z>13&&z<45.5?10:x<-79&&z>-84&&z<-42?9:z>0?0:x<-60?1:2):floor==='B2'?(z>100?5:x<-70&&z<-15?3:4):floor==='B3'?6:7;
+    const i=floor==='B1'?(x>3&&x<39&&z>13&&z<45.5?10:x<-79&&z>-84&&z<-42?9:z>0?0:x<-60?1:2):floor==='B2'?(z>100?5:nearL3(x,z)<18.4?11:x<-70&&z<-15?3:4):floor==='B3'?6:7;
     detailRooms[i].jobs.push(fn);return true;
   }
   const person=(x,y,z,o={})=>{if(!later(x,y,z,()=>person(x,y,z,o)))K.person(x,y,z,{h:1.68,...o});};
@@ -891,7 +897,7 @@ export function build(K) {
 
   // Real Line 7 curve, sampled from the two OSM track ways.
   const l7=frame([[49,130],[34.86,135.7],[4.24,146],[-22.5,160],[-40.4,172.4],[-73.2,198.1],[-112,238],[-133,264]]);
-  const l3=frame([[-90,-225],[-90,-25]]);
+  const l3=frame(L3PTS);
   const l9=frame([[42,-142],[-71.16,-99],[-171.42,-61.66]]);
 
   // Train bodies sit beyond continuous platform screen doors. Car lengths are
@@ -1146,7 +1152,11 @@ export function build(K) {
       localSlab(f,s-4,s+4,-width,width,y);
       const end=s+(s<0?-4:4),a=f.at(end,-width),b=f.at(end,width);
       K.wall(a.x,a.z,b.x,b.z,y,y+roofH,{mat:'station-ceramic',thick:.2});
-      for(const v of [-width,width]){const a=f.at(s-4,v),b=f.at(s+4,v);K.wall(a.x,a.z,b.x,b.z,y,y+roofH,{mat:'station-ceramic',thick:.2});}
+      for(const v of [-width,width]){
+        const a=f.at(s-4,v),b=f.at(s+4,v),L=Math.hypot(b.x-a.x,b.z-a.z),ops=[];
+        for(const o of opts.endOpenings||[]){const t=((o.x-a.x)*(b.x-a.x)+(o.z-a.z)*(b.z-a.z))/(L*L),d=Math.hypot(a.x+t*(b.x-a.x)-o.x,a.z+t*(b.z-a.z)-o.z);if(t>=0&&t<=1&&d<1.5)ops.push({at:t*L,w:o.w,y0:y,y1:y+3.2});}
+        K.wall(a.x,a.z,b.x,b.z,y,y+roofH,{mat:'station-ceramic',thick:.2,openings:ops});
+      }
       for(const side of [-1,1]){
         const p=f.at(s+ (s<0?-1:1)*4,side*2.7);
         localBox(f,s+(s<0?-1:1)*4.05,side*2.7,y-1.2,4.4,4.6,.18,0x131e25,true);
@@ -1166,7 +1176,30 @@ export function build(K) {
   });
   const well3=WELLS.find(w=>w.id==='W3'),well9=WELLS.find(w=>w.id==='W9');
   const concourse3Voids=[[-103,-66.2,-94.6,-47.8],[-86,-64,-80,-47.8]];
-  platform(l3,B2,3,{width:17,roofHoles:[well3.rect,...concourse3Voids],openings:[{x:-73,z:-50,w:18},{x:-73,z:-85,w:12}]});
+  // 3호선 platform on the OSM alignment. The east wall opens (6 m) to the corridor that runs along it; the west bank is entered
+  // through the north cross-platform bridge (s -8..0), whose west wall opens to the link from the old 3호선 lower hall.
+  const p3e=[l3.at(40,-17),l3.at(130,-17)].map(p=>({x:p.x,z:p.z,w:6}));
+  const b3w=l3.at(-4,17),b3e=l3.at(-4,-17);
+  platform(l3,B2,3,{width:17,roofHoles:[],openings:p3e,endOpenings:[{x:b3w.x,z:b3w.z,w:6},{x:b3e.x,z:b3e.z,w:6}]});
+  // 3호선 lower hall: what the old platform box provided under the B1 concourse (x -107..-73, z -104..-40) - W3 landing, the
+  // concourse escalator foot and the doors to the east. It is no longer a platform, so it has no tracks or trains.
+  const lowerHall3=hall([[-90,-104],[-90,-40]],34,B2,{h:3.18,mat:'station-marble',floor:'B2',name:'고속터미널역 3호선 하부 대합실',sub:'3호선 개찰구 · 승강장 연결통로',label:'3호선 타는 곳  ↑',roofHoles:[well3.rect,...concourse3Voids],openings:[{x:-73,z:-50,w:18},{x:-73,z:-85,w:12},{x:-73,z:-96,w:7}]});
+  // end walls: the old platform box ran on to z=-225 / -25 and was open there; the hall now ends at z=-104 (below the W3 collar) and z=-40
+  for(const z of [-104,-40])K.wall(-107,z,-73,z,B2,B2+3.18,{mat:'station-panels',thick:.18});
+  for(let ss=26;ss<58;ss+=12.5)for(const v of [-11.6,11.6]){const q=lowerHall3.at(ss,v);if(!concourse3Voids.some(r=>q.x>r[0]-2&&q.x<r[2]+2&&q.z>r[1]-2&&q.z<r[3]+2))column(lowerHall3,ss,v,B2,3,3.09);}
+  // Link hall: lower hall east door (-73,-96) -> mouth on the platform bridge west wall (s -7.5..-0.5). A trapezoid, so the floor
+  // meets the skew wall everywhere; it stays north of the 9호선 flight (z -86..-78).
+  {
+    const m1=l3.at(-7.5,17),m2=l3.at(-0.5,17),poly=[[-73,-99.5],[-73,-92.5],[m2.x,m2.z],[m1.x,m1.z]];
+    K.slab(poly,B2,{mat:'station-marble'});
+    K.slab(poly,B2+3.18,{mat:'concrete',under:'station-grid',walk:false,thick:.08});
+    K.wall(-73,-99.5,m1.x,m1.z,B2,B2+3.18,{mat:'station-panels',thick:.18});
+    K.wall(-73,-92.5,m2.x,m2.z,B2,B2+3.18,{mat:'station-panels',thick:.18});
+    K.zone({name:'고속터미널역 3호선 승강장 연결통로',floor:'B2',sub:'3호선 타는 곳 · 하부 대합실',poly,y0:B2,y1:B2+4.8,priority:4});
+    const c=[(-73+m1.x)/2,(-96+m1.z)/2];
+    sign('3호선 타는 곳  ↑',c[0],B2+2.9,c[1],5.2,.5,Math.atan2(-(c[0]+73),-(c[1]+96)),CSS[3]);
+    const lf=frame([[-73,-96],[(m1.x+m2.x)/2,(m1.z+m2.z)/2]]);for(const t of [.25,.75])light(lf,t*lf.length,0,B2+3.03,2.4);
+  }
   // st-01: opaque shaft upstands close the 1.82 m slot above the platform
   // roof. End walls stop at the upper floor, leaving its landing walkable.
   for(const r of concourse3Voids)K.polyWalls(rect(...r),B2+3.18,B1,{mat:'station-panels',inner:'station-panels',thick:.12});
@@ -1453,12 +1486,22 @@ export function build(K) {
   // Round 13 moves the east/west leg from z=-27 to -54, north of Shinsegae's
   // basement. Its 119 + 205 = 324 m centreline is a fitted model dimension,
   // not a claim to reproduce the cited 314 m walking-distance measurement.
-  const transfer=hall([[-79,-54],[40,-54],[40,151]],7,B2,{floor:'B2',name:'고속터미널역 환승통로',sub:'3호선 대합실 · 7호선 하부 홀 · 9호선 별도 통로',label:'7호선 갈아타는 곳  ↑    3·9호선  ↓',mat:'station-granite',ads:true,signStations:[119],openings:[{x:-79,z:-54,w:9},{x:-68,z:-54,w:11,full:true},{x:40,z:151,w:12}]});
+  // Old transfer hall start: the stub from the 3호선 lower hall to the 3<->9 gates / bypass stays; its far end is capped.
+  hall([[-79,-54],[-52,-54]],7,B2,{floor:'B2',name:'고속터미널역 환승통로',sub:'3호선 대합실 · 9호선 별도 통로',label:'9호선 갈아타는 곳  ↓',mat:'station-granite',ads:true,openings:[{x:-79,z:-54,w:9},{x:-68,z:-54,w:11,full:true}]});
+  K.wall(-52,-57.5,-52,-50.5,B2,B2+2.9,{mat:'station-panels',thick:.15});
+  // 환승통로 to 7호선: around the north end of the 3호선 platform (through the bridge), then along its east wall to the 7호선 hall.
+  // Old route: straight east along z=-54 to x=40 then south, which now would cut across the platform. 0.2 m off the platform wall.
+  const e3=l3.edge(-20.7),t3=l3.at(-8.5,-20.7);
+  const t4=l3.at(l3.length+10,-20.7); // keep going straight past the platform's south cross-bridge (s 195..203), then turn to the door of the 7호선 hall (concourse7 opening at (40,117.7)) and run on to (40,151) as before
+  const transfer=hall([[t3.x,t3.z],e3[1],[t4.x,t4.z],[40,117.7],[40,151]],7,B2,{floor:'B2',name:'고속터미널역 환승통로',sub:'3호선 승강장 · 7호선 하부 홀 · 9호선 별도 통로',label:'7호선 갈아타는 곳  ↑    3·9호선  ↓',mat:'station-granite',ads:true,signStations:[119],openings:[{x:b3e.x,z:b3e.z,w:6},...p3e,{x:40,z:151,w:12}]});
+  {const a=transfer.at(0,3.5),b=transfer.at(0,-3.5);K.wall(a.x,a.z,b.x,b.z,B2,B2+2.9,{mat:'station-panels',thick:.15});}
+  // seam strips: platform wall (v=-17) and corridor wall (v=-17.2) are 0.2 m apart; floor the seam at the doors and at the bridge mouth
+  for(const q of [b3e,...p3e]){const f0=l3.at(0,0);const pr=((q.x-L3PTS[0][0])*(L3PTS[1][0]-L3PTS[0][0])+(q.z-L3PTS[0][1])*(L3PTS[1][1]-L3PTS[0][1]))/Math.hypot(L3PTS[1][0]-L3PTS[0][0],L3PTS[1][1]-L3PTS[0][1])**2*Math.hypot(L3PTS[1][0]-L3PTS[0][0],L3PTS[1][1]-L3PTS[0][1]);void f0;const sq=Math.max(-8,Math.min(l3.length,pr)),a=l3.at(sq-3.5,-16.8),b=l3.at(sq+3.5,-16.8),c=l3.at(sq+3.5,-17.5),d=l3.at(sq-3.5,-17.5);K.slab([[a.x,a.z],[b.x,b.z],[c.x,c.z],[d.x,d.z]],B2,{mat:'station-granite'});}
   // NEW-3: preserve the corner's hanging wayfinding beyond the _212 sightline.
   hanging(transfer,129,B2,'7호선 갈아타는 곳  ↑    3·9호선  ↓',6);
   for(let s=7,i=0;s<transfer.length-4;s+=5,i++){const p=transfer.at(s,[1.2,2.1,.3][i%3]);person(p.x,B2,p.z,{shirt:[0x57554f,0xa0a8ad,0x3d526c,0xb19b87][i%4]});}
   // Two moving walks occupy one side, preserving a full pedestrian aisle.
-  for(const ends of [[35,85],[157,212]]){
+  for(const ends of [[35,85],[135,190]]){
     const a=transfer.at(ends[0],-1.6),b=transfer.at(ends[1],-1.6);
     K.ramp(a.x,a.z,b.x,b.z,{ya:B2+.03,yb:B2+.03,w:1.4,mat:0x49555c,move:.65,rails:true});
     localSign(transfer,ends[0]-2,-1.6,B2+2.35,'무빙워크  ↑',2.5,.45);
@@ -1490,7 +1533,10 @@ export function build(K) {
   const flight9End=-63+10/Math.tan(Math.PI/6);
   K.stairs(-63,-79.5,-33,-79.5,{ya:B2,yb:B4,w:2.0,mat:'darkstone'});
   down(-63,-84.4,flight9End,-84.4,B2,B4,1.5);up(-63,-82.2,flight9End,-82.2,B2,B4,1.5);
-  K.wall(-65,-80.95,-32,-80.95,B4,B2+3.9,{mat:{tex:'station-descent-stone',gloss:.5},thick:.12});
+  // The 3호선 platform (OSM alignment) now passes over this flight east of x=-48.7: keep the stone wall full height only west of
+  // the platform's west wall, and stop it under the platform floor (B2-0.4) from there on.
+  K.wall(-65,-80.95,-48.7,-80.95,B4,B2+3.9,{mat:{tex:'station-descent-stone',gloss:.5},thick:.12});
+  K.wall(-48.7,-80.95,-32,-80.95,B4,B2-.4,{mat:{tex:'station-descent-stone',gloss:.5},thick:.12});
   K.slab(rect(flight9End,-87,-25,-77),B4,{mat:'station-granite'});
   K.slab(rect(flight9End,-87,-34,-80.95),B4+4.5,{mat:'concrete',under:0xf2f2f0,walk:false});
   K.slab(rect(-34,-87,-25,-77),B4+4.5,{mat:'concrete',under:0xf2f2f0,walk:false});
@@ -2107,10 +2153,10 @@ export function build(K) {
     }
     K.slab(poly,top,{mat:'metal',under:'ceiling',walk:false});
   }
-  lift(-76,-82,0,[{label:'B1',y:B1,name:'고투몰 연결'},{label:'B2',y:B2,name:'3호선 승강장'},{label:'B4',y:B4,name:'9호선 연결'}],'3·9호선 환승 엘리베이터');
+  lift(-76,-82,0,[{label:'B1',y:B1,name:'고투몰 연결'},{label:'B2',y:B2,name:'3호선 하부 대합실'},{label:'B4',y:B4,name:'9호선 연결'}],'3·9호선 환승 엘리베이터');
   // The neighbour's J1 wall cannot be opened by this module. A local lift gives
   // the added concourse accessible access without crossing that property seam.
-  lift(-101,-70,0,[{label:'B1',y:B1,name:'3호선 개찰구 대합실'},{label:'B2',y:B2,name:'3호선 승강장'}],'3호선 대합실 엘리베이터');
+  lift(-101,-70,0,[{label:'B1',y:B1,name:'3호선 개찰구 대합실'},{label:'B2',y:B2,name:'3호선 하부 대합실'}],'3호선 대합실 엘리베이터');
   // B1 lift landing reaches the W3 gallery; B4 landing reaches Line 9's south side.
   if(!mallHere)hall([[-79,-79],[-70,-79],[-70,-106],[-79,-106]],5,B1,{label:'3·9호선 엘리베이터',openings:[{x:-76,z:-80.75,w:3},{x:-79,z:-106,w:10}]});
   hall([[-79,-79],[-69,-79],[-69,-90]],5,B4,{label:'9호선 타는 곳',openings:[{x:-76,z:-80.75,w:3},{x:-69,z:-86,w:11,full:true}]});
@@ -2158,7 +2204,8 @@ export function build(K) {
   detailRooms[3].jobs.push(()=>{
     // _24's large diagonal stone wall remains behind the existing cabinets
     // and advertising panels; it is a different surface from the pier sash.
-    K.quad({tex:'station-platform-diagonal',gloss:.3},[[-106.88,B2,-121],[-106.88,B2,-103],[-106.88,B2+3.1,-103],[-106.88,B2+3.1,-121]],[1,0,0],[[0,1],[5,1],[5,0],[0,0]]);
+    {const a=l3.at(104,16.88),b=l3.at(122,16.88);   // west wall bay (v=+17); was a fixed quad at x=-106.88, z -121..-103 of the old N-S box
+    K.quad({tex:'station-platform-diagonal',gloss:.3},[[a.x,B2,a.z],[b.x,B2,b.z],[b.x,B2+3.1,b.z],[a.x,B2+3.1,a.z]],[-a.nx,0,-a.nz],[[0,1],[5,1],[5,0],[0,0]]);}
     // _24: tall white purifier and red-front safety cabinet below the sign.
     localBox(l3,116.5,16.2,B2,.44,1.2,.7,{color:0xc8cbcd,gloss:.5},true);
     localSign(l3,116.5,15.95,B2+.88,'소',.17,.24,true,'#c8cbcd','#b42a2f');
@@ -2231,9 +2278,10 @@ export function build(K) {
     sign('교통카드를 미리 준비해 주세요',-86.5,B1+1.45,-61.65,2.7,.38,0,'#f5cf43','#303938');
   });
   detailRooms[3].jobs.push(()=>{
-    traveler(-101.6,B2,-136.1,12,{shirt:0x999ca0,pants:0xd8cdb8,rotY:Math.PI/2});
+    {const g=l3.at(88.9,11.6),g2=l3.at(88.9,11.76);   // was (-101.6,-136.1) on the old west bank
+    traveler(g.x,B2,g.z,12,{shirt:0x999ca0,pants:0xd8cdb8,rotY:Math.atan2(-g.nx,-g.nz)});
     // Plaid seams on the grey guide's shirt, as visible in _16.
-    for(let i=0;i<5;i++)box({x:-101.76,y:B2+.9+i*.085,z:-136.1,w:.018,h:.012,d:.31,mat:0xd1d0ce});
+    for(let i=0;i<5;i++)box({x:g2.x,y:B2+.9+i*.085,z:g2.z,w:.018,h:.012,d:.31,rotY:g2.rot,mat:0xd1d0ce});}
     for(let s=77,i=0;s<122;s+=3.3,i++){
       const p=l3.at(s,[8.7,13.1,14.6][i%3]);traveler(p.x,B2,p.z,i+40,{rotY:[Math.PI/2,0,Math.PI][i%3]});
     }
@@ -2272,7 +2320,7 @@ export function build(K) {
   K.spawn({name:'4번 출구 · 엘리베이터',x:-129,y:0,z:246,yaw:Math.PI/2});
   const p1=b1.at(66,0);K.spawn({name:'B1 · 센트럴시티 연결 대합실',x:p1.x,y:B1,z:p1.z,yaw:1.95});
   K.spawn({name:'B1 · 고투몰 3호선 입구',x:-79.625,y:B1,z:-109.3,yaw:Math.PI});
-  K.spawn({name:'B2 · 3호선 승강장',x:-79,y:B2,z:-151,yaw:0});
+  {const p=l3.at(98,-9);K.spawn({name:'B2 · 3호선 승강장',x:p.x,y:B2,z:p.z,yaw:Math.atan2(-l3.at(98).ux,-l3.at(98).uz)});}
   const p2=concourse7.at(105,-4);K.spawn({name:'B2 · 7호선 대합실',x:p2.x,y:B2,z:p2.z,yaw:2.1});
   const p3=l7.at(116,9);K.spawn({name:'B3 · 7호선 곡선 승강장',x:p3.x,y:B3,z:p3.z,yaw:2.34});
   const p4=l9.at(100,-9);K.spawn({name:'B4 · 9호선 승강장',x:p4.x,y:B4,z:p4.z,yaw:1.934});

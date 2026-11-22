@@ -584,7 +584,7 @@ function buildParkPassage(K,{F,C,P,L,strip,floor,corridor,paintStrip}){
   }
   K.zone({name:'한강공원 나들목',floor:'B1',sub:'원베일리 · 한강공원 연결',poly:strip(a,p(len-36),7.5),y0:F,y1:F+3.7,priority:4});
   K.zone({name:'한강공원 연결 경사로',floor:'B1',sub:'공원 출입구',poly:strip(p(len-36),b,7.5),y0:F,y1:2.5,priority:4});
-  K.zone({name:'원베일리 · 한강공원 입구',floor:'1F',sub:'지하 보행로',poly:strip(b,p(len+5),7),y0:0,y1:3.5,priority:3});
+  K.zone({name:'원베일리 · 한강공원 입구',floor:'1F',sub:'지하 보행로',poly:strip(b,p(len+8),7),y0:0,y1:3.5,priority:3});  // map audit: J_ONEBAILEY_PARK pa / exit spawn is p(len+8), was 3 m outside this zone
   K.slab(strip(b,p(len+4),7.6),3.4,{mat:'metal',under:0xe8eadf,thick:.2,walk:false});
   K.spawn({name:'원베일리 · 한강공원 출입구',x:exit[0],z:exit[1],y:0,yaw:Math.atan2(-d[0],-d[1])});
   K.texture('ob-river',768,256,(g,w,h)=>{g.fillStyle='#deeee9';g.fillRect(0,0,w,h);
