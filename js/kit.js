@@ -473,7 +473,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
   // ---------- gameplay registrations ----------
   function zone(o) {
     let poly = o.poly; if (!poly && o.rect) { const [x0, z0, x1, z1] = o.rect; poly = [[x0, z0], [x1, z0], [x1, z1], [x0, z1]]; }
-    const z = { name: o.name, sub: o.sub || '', floor: o.floor || '', poly, y0: o.y0 ?? -1, y1: o.y1 ?? 4, priority: o.priority || 0, place: current, color: o.color };
+    const z = { name: o.name, sub: o.sub || '', floor: o.floor || '', poly, y0: o.y0 ?? -1, y1: o.y1 ?? 4, priority: o.priority || 0, place: o.place || current, color: o.color };
     phys.addZone(z); zonesList.push(z); return z;
   }
   function spawn(o) { spawns.push({ group: o.group || perPlace[current]?.name || current, place: current, ...o }); }

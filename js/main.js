@@ -103,6 +103,20 @@ async function boot() {
       if ((AREA.modules.includes(mid) && !(AREA.id.startsWith('in:') && !AREA.id.slice(3).split('+').includes(mid))) || mid === 'streets' || mid === 'hangang' || mid === 'jamwon_hangang') continue;
       for (const bid of v.claims) for (const b of osm.buildings.filter(b => b.id === bid)) {
         const h = b.height || (b.levels ? b.levels * 3.6 : 12);
+        // The hotel mass shares a wall with the Famille dining gallery.
+        // The gallery supplies the visible interior faces at these openings.
+        if (AREA.id === 'in:famille+centralcity' && mid === 'jwmarriott' && bid === 136986976) {
+          const openings = [
+            { x: 16.88, z: 148.69, w: 18.1, y1: 9.8 }, // east hall, local u=4..22
+            { x: -12.27, z: 159.97, w: 44.6, y1: 8 }, // vaulted gallery, u=22..66.5
+          ];
+          const mat = { tex: 'concrete', color: 0xd3cbbf };
+          const bottom = b.minHeight || 0;
+          K.polyWalls(b.poly, bottom, h, { mat, openings, thick: .02, solid: false });
+          K.hpoly(mat, b.poly, h, true, b.holes);
+          K.hpoly(mat, b.poly, bottom, false, b.holes);
+          continue;
+        }
         // The registered 2F–11F Shinsegae retail apron covers the
         // northern part of the JW OSM footprint (local v=84.7..145.3).
         // Preserve the hotel beyond the apron, on the ground floor, and above
@@ -156,10 +170,13 @@ async function boot() {
       if (OUTDOOR.has(mid)) continue;
       const inArea = !OWNP && AREA.box && v.box && !(v.box[2] < AREA.box[0] - 150 || v.box[0] > AREA.box[2] + 150 || v.box[3] < AREA.box[1] - 150 || v.box[1] > AREA.box[3] + 150);
       for (const e of v.entrances || []) {
+        // Some same-floor connections are also recorded as street-level entrances.
+        // Both sides already exist in the same scene, including when viewed outdoors.
+        if (e.other && areaIdAt({ place: e.other }, 0, 0, 0) === areaIdAt({ place: mid }, 0, 0, 0)) continue;
         if (OWNP && OWNP.has(mid)) { // a door out of this building: walking along +n leaves
-          const tgt = e.other && !OWNP.has(e.other) ? areaIdAt({ place: e.other }, 0, 0, 0) : 'out:' + districtAt(e.x + e.nx * 3, e.z + e.nz * 3).id;
+          const tgt = e.other ? areaIdAt({ place: e.other }, 0, 0, 0) : 'out:' + districtAt(e.x + e.nx * 3, e.z + e.nz * 3).id;
           if (tgt === AREA.id) continue;
-          add(e.x, e.z, e.y, e.w, e.nx, e.nz, tgt, e.other && !OWNP.has(e.other) ? `${META[e.other]?.name || e.other} 가기` : `밖으로 · ${areaName(tgt, META)}`, `${e.other || 'street'}/1F`);
+          add(e.x, e.z, e.y, e.w, e.nx, e.nz, tgt, e.other ? `${META[e.other]?.name || e.other} 가기` : `밖으로 · ${areaName(tgt, META)}`, `${e.other || 'street'}/1F`);
         } else if (!OWNP && inArea) { // outdoors: a door into this building (walking against n enters)
           add(e.x, e.z, e.y, e.w, -e.nx, -e.nz, areaIdAt({ place: mid }, 0, 0, 0), `${v.name} 들어가기`, `${mid}/1F`);
         }

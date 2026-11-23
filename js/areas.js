@@ -7,7 +7,7 @@
 
 export const OUTDOOR = new Set(['streets', 'hangang', 'jamwon_hangang']);
 // modules that are walked through as one place (their corridors interleave at many points)
-export const CLUSTERS = [['gotomall', 'station']];
+export const CLUSTERS = [['gotomall', 'station'], ['famille', 'centralcity']];
 // x east, z south. First match wins; anything else falls to the side split below.
 export const DISTRICTS = [
   { id: 'core', name: '고속터미널 일대', box: [-430, -330, 560, 700] },
@@ -78,7 +78,11 @@ export function planArea(id, META, JUNCTIONS = []) {
       keepDetail(g) { return OUTDOOR.has(g.owner) ? inBox(B, (g.bb[0] + g.bb[2]) / 2, (g.bb[1] + g.bb[3]) / 2, 60) : g.y0 >= UNDER && g.y0 < 3; },
     };
   }
-  const own = id.slice(3).split('+'), ownSet = new Set(own);
+  // Old explicit area links may name just one half of a connected interior.
+  const interior = id.slice(3);
+  const own = interior.includes('+') ? interior.split('+') : clusterOf(interior);
+  id = 'in:' + own.join('+');
+  const ownSet = new Set(own);
   let B = null; for (const m of own) { const b = META[m]?.box; if (!b) continue; B = B ? [Math.min(B[0], b[0]), Math.min(B[1], b[1]), Math.max(B[2], b[2]), Math.max(B[3], b[3])] : b.slice(); }
   B = B || [-200, -200, 200, 200];
   // A building page builds that building only. Modules it connects to underground are built too (their floors and walls

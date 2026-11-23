@@ -3,7 +3,54 @@
   "id": "famille",
   "name": "파미에스테이션 동관",
   "round": 20,
-  "updated": "2026-11-07",
+  "updated": "2026-11-23",
+  "fourb_arcade_alignment_20261123": {
+    "storefront_photo": "https://www.shinsegaecentral.com/famille/fourb",
+    "reference": "사용자가 제공한 꽃집·이마트24 사이 복도 시점과 운영사 매장 사진을 기준으로 포비 바와 좌우 에스컬레이터의 위치를 조정했다.",
+    "layout": "1층 복도를 따라 들어오면 왼쪽에 포비의 벽돌 아치와 바가 보인다. 카페 앞에서 시계탑 양옆의 에스컬레이터가 시작되고 2층 식당가를 지나 3층 스타벅스로 이어진다.",
+    "dimensions": "1층 승차부를 기존 모델에서 복도 방향으로 21.8m 이동했다. 매장과 승차부의 실제 거리는 실측하지 않았다."
+  },
+  "fourb_atrium_20261122": {
+    "operator_plan_and_photo": "https://www.shinsegaecentral.com/famille",
+    "user_reference": "제공된 3층 사진에서 난간 아래로 두 층을 볼 수 있다. 중앙 시계탑 양편에 2층 벽돌 갤러리가 있고 좌우 에스컬레이터 사이로 새 조형물이 내려온다. 첫 번째 스크린샷의 꽃집·이마트24 사이에는 종전 모형이 잘못 붙인 실외 출입구 표지가 있었다.",
+    "visits": [
+      {
+        "url": "https://lamts.tistory.com/37",
+        "observed": "1층 포비가 스타벅스로 가는 에스컬레이터 바로 밑에 있다. 방문자가 중앙광장과 베이글 카운터를 함께 촬영했다."
+      },
+      {
+        "url": "https://overthemoon9.tistory.com/87",
+        "observed": "3번 출구에서 안쪽으로 들어왔을 때 보이는 첫 에스컬레이터와 별도로, 더 안쪽의 포비 쪽에 1·2·3층을 잇는 에스컬레이터가 있다. 최상층에는 스타벅스와 채광 돔이 있다."
+      },
+      {
+        "url": "https://hiiambk.tistory.com/840",
+        "observed": "3층 에스컬레이터에서 내리면 좌우로 스타벅스에 들어갈 수 있고 주문대는 오른편이 가깝다."
+      },
+      {
+        "url": "https://chloe-kim.tistory.com/74",
+        "observed": "중앙 난간을 감싸는 U자형 매장과 승강 중 보이는 새 조형물을 방문자가 촬영했다."
+      },
+      {
+        "url": "https://nonrilife.tistory.com/52",
+        "observed": "현장 방문 기록에 2층 카페·미용·식당이 함께 나온다. 점포명과 층은 운영사 안내를 기준으로 삼았다."
+      }
+    ],
+    "upper_gallery": [
+      {
+        "place": "신세계아카데미 강남점",
+        "url": "https://sacademy.shinsegae.com/sdotcom/web/HP0030P0/HP0030P5.do",
+        "observed": "파미에스테이션 2층 회원 라운지 및 강의실."
+      },
+      {
+        "place": "서초구 열린육아나눔터 키움",
+        "url": "https://familyseoul.or.kr/branch-info",
+        "visit": "https://mediahub.seoul.go.kr/archives/2007206",
+        "observed": "파미에스테이션 2층. 서울시 현장 기사에 신발장과 실내 놀이공간이 보인다."
+      }
+    ],
+    "walk_review": "일반 플레이어로 이마트24·꽃집 앞에서 포비 중앙광장에 들어가 좌측 두 에스컬레이터를 타고 3층에 도달했다. 반대쪽 두 대로 1층까지 내려와 출발점까지 24개 지점을 연속 보행했다. 엘리베이터·비행·층 선택을 쓰지 않았고 이동 중 페이지 전환이 없었다.",
+    "dimensions": "기존 건물 외곽과 상층 식당가에 맞춰 중앙 개방부의 폭, 층고와 회랑 길이를 추정했다. 테라스 및 집기의 치수는 실측값이 아니다."
+  },
   "primary_evidence": "User-approved 2026-11-07 photo route; verified fixes override official plans, raw GPS and earlier models.",
   "sources": [
     {
