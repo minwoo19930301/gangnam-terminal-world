@@ -8,11 +8,11 @@
 export const OUTDOOR = new Set(['streets', 'hangang', 'jamwon_hangang']);
 // modules that are walked through as one place (their corridors interleave at many points)
 export const CLUSTERS = [['gotomall', 'station'], ['famille', 'centralcity']];
-// x east, z south. First match wins; anything else falls to the side split below.
+// x east, z south. Cover the OSM extent and both banks of the authored Han River.
 export const DISTRICTS = [
-  { id: 'core', name: '고속터미널 일대', box: [-430, -330, 560, 700] },
+  { id: 'core', name: '고속터미널 일대', box: [-430, -330, 1000, 700] },
   { id: 'jamwon', name: '잠원 · 뉴코아 · 반원상가 · 잠원한강공원', box: [-60, -2900, 1600, -330] },
-  { id: 'banpo', name: '반포한강공원 · 세빛섬 · 서래', box: [-1950, -2300, -60, 700] },
+  { id: 'banpo', name: '반포한강공원 · 세빛섬 · 서래', box: [-1950, -2900, -60, 700] },
 ];
 const CITY_MARGIN = 220;   // generic city ground clutter (roads, markings, trees) kept this far beyond the area
 const EXT_MARGIN = 200;    // other buildings' exteriors kept this far beyond an interior area
@@ -22,7 +22,14 @@ const inBox = (b, x, z, m = 0) => x >= b[0] - m && x <= b[2] + m && z >= b[1] - 
 const boxesTouch = (a, b, m = 0) => a[0] - m <= b[2] && a[2] + m >= b[0] && a[1] - m <= b[3] && a[3] + m >= b[1];
 export function districtAt(x, z) {
   for (const d of DISTRICTS) if (inBox(d.box, x, z)) return d;
-  return x >= -60 ? DISTRICTS[1] : DISTRICTS[2];
+  // Links just beyond an imported edge should still load the nearest streets.
+  let nearest, shortest = Infinity;
+  for (const district of DISTRICTS) {
+    const [west, north, east, south] = district.box;
+    const distance = Math.hypot(Math.max(west - x, 0, x - east), Math.max(north - z, 0, z - south));
+    if (distance < shortest) { nearest = district; shortest = distance; }
+  }
+  return nearest ?? DISTRICTS[0];
 }
 const clusterOf = id => CLUSTERS.find(c => c.includes(id)) || [id];
 // does module m have anything (40 m cells, from _meta.json) within box b + margin?

@@ -5,7 +5,7 @@ import { buildGardenFrontage, frontageWays } from './_gardenFrontage.js';
 import { gardenPaving, gardenParkedCar } from './_gardenArrival.js';
 import { buildFamilleGarageEntry, familleRampOpening, garageWallOpening } from './_familleGarageEntry.js';
 import { buildRearParking } from './_rearParking.js';
-import { gradedGround } from './_gradedGround.js';
+import { buildHotelForecourtGarden } from './_hotelForecourtGarden.js';
 // Detailed public right-of-way. x east / z south; all dimensions in metres.
 // Sources and assumptions: OSM centre lines are authoritative over prose research.
 // The Central City footbridge crosses SAPYEONG-DAERO, with a northern spiral.
@@ -2072,7 +2072,11 @@ function buildHotelDrive(K,clipPavement) {
     K.slab(apron,deck+.07,{mat:'asphalt',under:'concrete',thick:.28});
     for(let s=first;s<=end+.01;s+=6.1) strip(s-.055,s+.055,.05,2.53,0xe2dfce,.09);
     strip(first,end,2.4,2.53,0xe2dfce,.092);
-    for(const [s,color] of [[first+3.05,0x46515a],[first+15.25,0xdedbd6],[first+21.35,0x42484b]]){
+    strip(first,end,2.56,2.77,0x616362,.096);
+    for(let s=first+.08;s<end-.08;s+=.24) strip(s,s+.09,2.59,2.74,0x303435,.099);
+    const cars=[0x46515a,0xc7cbcb,0xdedbd6,0x42484b,0x989d9d];
+    for(const [i,color] of cars.entries()){
+      const s=first+3.05+6.1*i;
       const [x,z]=lawnBay(s,1.23);
       gardenParkedCar(K,x,z,deck+.071,Math.atan2(.89563,-.4448)-.065,color,'streets');
     }
@@ -2198,8 +2202,7 @@ function buildHotelDrive(K,clipPavement) {
   const bankRetaining=[FP(48.64,18.45),FP(51,23),FP(51,43),FP(-2,43),
     FP(-2,27),FP(16,27),FP(16,25),FP(21,20)];
   onCourt(()=>courtDeck(bankRetaining,[FP(21,11.45),FP(45,11.45)],deck,'concrete',true));
-  gradedGround(K,FP(24.5,43),FP(24.5,58),deck,4.4,53,'grass');
-  gradedGround(K,FP(24.5,58),FP(24.5,76),4.4,.02,53,'grass');
+  buildHotelForecourtGarden(K);
   buildFamilleGarageEntry(K);
   // Lay-by below the glass vaults, with a parallel surface lane on the garden side.
   onCourt(()=>{

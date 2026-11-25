@@ -15,7 +15,7 @@
 
 조작: WASD 이동, 마우스 시점, Shift 달리기, E 엘리베이터, M 지도(클릭해서 이동), F 비행, N 밤.
 
-지도 데이터 © OpenStreetMap contributors (ODbL).
+지도 데이터 © OpenStreetMap contributors (ODbL). 단지 안 녹지와 수목은 Copernicus Sentinel-2와 Meta·WRI의 수관 높이 자료를 가공했습니다. [녹지·수목 자료 출처와 이용 조건](data/research/parcel-cover.md)
 
 개발 메모는 `AGENTS.md`, `docs/PLACE_API.md` 에 있습니다. 로컬 실행: `node tests/serve.mjs 8765` 후 http://127.0.0.1:8765/
 

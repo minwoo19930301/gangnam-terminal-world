@@ -1,8 +1,18 @@
 {
   "id": "streets",
   "name": "고속터미널 거리 · 신반포로와 사평대로",
-  "updated": "2026-11-07",
+  "updated": "2026-11-26",
   "sources": [
+    {
+      "url": "https://map.naver.com/p?p=nHFwOb1TMb4z9JZ7I7Mmcw,150,0,80,Float&c=15,0,0,3,adh",
+      "title": "JW 정문 맞은편 정원 정면 · 네이버 거리뷰, 2024년 3월",
+      "observation": "평행주차 열 뒤에 보도와 거의 같은 높이의 장방형 수경 공간이 있다. 분홍빛 화강석 보행로, 정원 양옆의 원뿔형 관목과 사각 조명 기둥, 후면 국기 게양대가 한 축에 정렬된다. 인공지형의 두 경사면을 차도와 접하는 옥상 정원으로 교체했다. 거리뷰로 확인하기 어려운 수반 깊이와 단면 높이는 주변 도로를 기준으로 근사했다."
+    },
+    {
+      "url": "https://map.naver.com/p?p=TGnQNykh2oyRz5X8wJVdXQ,240,0,80,Float&c=15,0,0,3,adh",
+      "title": "파미에주차장 입구에서 스타벅스 돔으로 보는 평행주차 열 · 네이버 거리뷰, 2024년 3월",
+      "observation": "정원과 호텔 캐노피 사이의 아스팔트 차로와 흰색 T자 주차선, 도로 양측의 배수 덮개, 낮은 화단 경계를 확인했다. 사진에서는 주차 차량 대수와 점유가 시점마다 다르다."
+    },
     {
       "url": "https://www.asiae.co.kr/en/article/2024121008343423332",
       "title": "Asiae: Banpo-dong Intersection crosswalk (Goter)",
