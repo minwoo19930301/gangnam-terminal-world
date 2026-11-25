@@ -1,3 +1,4 @@
+import { drawFurniture } from '../../assets/models/riverside-furniture/draw.js';
 import { gardenParkedCar } from './_gardenArrival.js';
 import { eastGardenLevel as gardenLevel, eastParkingSecond as secondDeck, eastParkingThird as thirdDeck, gardenPoint, gardenSurface } from './_gardenGrade.js';
 // OSM 414891734 / authoritative pub pin (372, 8). The brick south front remains
@@ -39,7 +40,8 @@ function gardenKit(base) {
   kit.elevator = o => base.elevator({...o,floors:o.floors.map(f=>({...f,y:f.y+y}))});
   kit.person = (x,h,z,o) => base.person(x,h+y,z,o);
   kit.tree = (x,z,o) => base.tree(x,z,{...o,y:(o.y||0)+y});
-  kit.quad = (mat,points,...rest) => base.quad(mat,points.map(([x,h,z])=>[x,h+y,z]),...rest);
+  for (const name of ['quad','triangle'])
+    kit[name] = (mat,points,...rest) => base[name](mat,points.map(([x,h,z])=>[x,h+y,z]),...rest);
   kit.hpoly = (mat,poly,h,...rest) => base.hpoly(mat,poly,h+y,...rest);
   kit.addMesh = group => { group.position.y += y; return base.addMesh(group); };
   const level = o => ({...o,y0:o.y0+y,y1:o.y1+y,floor:o.floor==='2F'?'5F':'4F'});
@@ -363,11 +365,9 @@ export function build(K) {
       const A = W(ua, v), B = W(ub, v);
       K.quad(brick, [[A[0], ya, A[1]], [B[0], yb, B[1]], [B[0], top, B[1]], [A[0], top, A[1]]], [V[0], 0, V[1]]);
       K.quad(brick, [[B[0], yb, B[1]], [A[0], ya, A[1]], [A[0], top, A[1]], [B[0], top, B[1]]], [-V[0], 0, -V[1]]);
-      beam([ua, ya, v + .04], [ub, yb, v + .04], .085, steel);
     }
-    for (const x of [u - r, u, u + r]) box(x, v, sill, .075, .09, spring - sill, steel, { solid: false });
-    for (const y of [sill, 2.8, spring]) if (y >= sill && y <= spring) box(u, v, y, width, .09, .07, steel, { solid: false });
-    for (const a of [PI / 4, PI / 2, PI * 3 / 4]) beam([u, spring, v], [u + r * Math.cos(a), spring + r * Math.sin(a), v], .055, steel);
+    const [x,z] = W(u,v);
+    drawFurniture(K,'arch',x,sill,z,ROT);
   }
   for (const u of windowUs) {
     archWindow(u, 15.91, .65, 2.15, 3.65);

@@ -5,7 +5,7 @@ import tempfile
 from pathlib import Path
 from mathutils import Vector
 
-ROOT=Path(__file__).resolve().parent
+ROOT=Path(bpy.data.filepath).resolve().parent
 REPO=ROOT.parents[2]
 deps=bpy.context.evaluated_depsgraph_get()
 with tempfile.TemporaryDirectory() as tmp:
@@ -14,7 +14,7 @@ with tempfile.TemporaryDirectory() as tmp:
         origin=Vector(coll['preview_origin'])
         selected=[]
         for lit in (False,True):
-            verts,faces,colors=[],[],[]
+            verts,faces,colors,smooth=[],[],[],[]
             for source in sorted(coll.all_objects,key=lambda o:o.name):
                 if source.type != 'MESH': continue
                 ev=source.evaluated_get(deps)
@@ -32,6 +32,7 @@ with tempfile.TemporaryDirectory() as tmp:
                             indices.append(remap[idx])
                         faces.append(indices)
                         colors.append(tuple(m.diffuse_color))
+                        smooth.append(face.use_smooth)
                 finally: ev.to_mesh_clear()
             if not faces:continue
             name='Diffuser' if lit else 'Surface'
@@ -39,7 +40,8 @@ with tempfile.TemporaryDirectory() as tmp:
             data.from_pydata(verts,[],faces)
             data.update()
             attr=data.color_attributes.new(name='COLOR_0',type='BYTE_COLOR',domain='CORNER')
-            for face,color in zip(data.polygons,colors):
+            for face,color,smoothed in zip(data.polygons,colors,smooth):
+                face.use_smooth=smoothed
                 for idx in face.loop_indices:attr.data[idx].color=color
             item=bpy.data.objects.new(name,data)
             bpy.context.scene.collection.objects.link(item)
