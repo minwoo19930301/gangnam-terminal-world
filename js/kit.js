@@ -1,3 +1,4 @@
+import { fleetInstances, vehicleSize } from './fleet.js';
 import { relief, terrainPieces } from './banpo_relief.js';
 // K = construction kit handed to every place module.  See docs/PLACE_API.md for the contract.
 // Coordinates: x=east, z=south, y=up, meters. Origin = 고속터미널역. Street level y=0.
@@ -19,7 +20,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
   const materials = new Map();
   const tmpC = new THREE.Color();
   const frameFns = [], interactables = [], spawns = [], zonesList = [], elevators = [], claims = new Set(), mapMarks = [];
-  const trees = [], people = [];
+  const trees = [], people = [], parked = [];
   const groundHoles = [];
   const stats = { boxes: 0, quads: 0, signs: 0 };
   let current = null; // current place id (for attribution in stats/errors)
@@ -483,24 +484,17 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
   function tree(x, z, o = {}) { if (keep && !keep(current, x, o.y ?? 0, z, 1)) return; trees.push({ place: current, x, z, y: (o.y ?? 0) + (anchorHeight===null ? 0 : terrainAt(anchorHeight,x,z)-relief(x,z)), h: o.h ?? (6 + ((x * 13.7 + z * 7.3) % 3)), kind: o.kind ?? 'zelkova' }); }
   function person(x, y, z, o = {}) { if (keep && !keep(current, x, y, z, 1)) return; people.push({ place: current, x, y:y + (anchorHeight===null ? 0 : terrainAt(anchorHeight,x,z)-relief(x,z)), z, rotY: o.rotY ?? ((x * 7 + z * 3) % 6.28), shirt: o.shirt, pants: o.pants, h: o.h ?? (1.6 + ((x * 31 + z * 17) % 0.25)), sit: !!o.sit }); }
   function crowd(poly, y, n, o = {}) { const rnd = rand(o.seed ?? (poly[0][0] * 1000 + poly[0][1])); const bb = polyBBox(poly); let k = 0, guard = 0; while (k < n && guard++ < n * 30) { const x = bb[0] + rnd() * (bb[2] - bb[0]), z = bb[1] + rnd() * (bb[3] - bb[1]); if (pointInPoly(x, z, poly)) { person(x, y, z, { rotY: rnd() * 6.28 }); k++; } } }
-  // vehicle (static, merged). kind: car|taxi|bus|cityBus|truck|van
+  // Parked vehicles share the traffic meshes. kind: car|taxi|bus|cityBus|truck|van
   function vehicle(o) {
     const { x = 0, y = 0, z = 0, rotY = 0, kind = 'car' } = o;
-    const dims = { car: [1.85, 1.45, 4.7], taxi: [1.85, 1.5, 4.8], bus: [2.5, 3.4, 12], cityBus: [2.5, 3.1, 11], truck: [2.3, 2.8, 7], van: [1.95, 1.95, 5.1] }[kind] || [1.85, 1.45, 4.7];
-    const [w, h, d] = dims; const c = Math.cos(rotY), s = Math.sin(rotY);
-    const at = (lz, ly) => ({ x: x + lz * s, z: z + lz * c, y: y + ly });
-    const col = o.color ?? ({ taxi: 0xf2a33a, bus: 0x2a5aa8, cityBus: 0x3a9d4a, truck: 0xe8e8e8 }[kind] ?? [0xf2f2f2, 0x1c1c1c, 0x8a9096, 0x24324a, 0x9b1b1b, 0xd9d9d9][Math.abs(Math.round(x * 3 + z * 7)) % 6]);
-    if (kind === 'bus' || kind === 'cityBus') {
-      box({ ...at(0, 0.35), w, h: h - 0.35, d, rotY, mat: col, solid: false });
-      box({ ...at(0, 1.45), w: w + 0.02, h: 1.2, d: d - 0.6, rotY, mat: 0x1d2a36, solid: false });
-      box({ ...at(d / 2 - 0.05, 0.6), w: w - 0.2, h: 2.2, d: 0.12, rotY, mat: 0x22303c, solid: false });
-      if (o.label) sign(o.label, { x: at(d / 2 + 0.02, 0).x, y: y + h - 0.35, z: at(d / 2 + 0.02, 0).z, w: 2.0, h: 0.32, rotY, bg: '#111', fg: '#ffb000' });
-    } else {
-      box({ ...at(0, 0.3), w, h: h * 0.45, d, rotY, mat: col, solid: false });
-      box({ ...at(-0.2, 0.3 + h * 0.45), w: w - 0.1, h: h * 0.38, d: d * 0.52, rotY, mat: 0x1e2830, solid: false });
-      if (kind === 'taxi') box({ ...at(-0.2, 0.3 + h * 0.83), w: 0.5, h: 0.18, d: 0.25, rotY, mat: 'emit', color: 0xffe08a, solid: false });
+    const [w, h, d] = vehicleSize(kind), c = Math.cos(rotY), s = Math.sin(rotY);
+    const color = o.color ?? ({ taxi: 0xf2a33a, bus: 0x2a5aa8, cityBus: 0x3a9d4a, truck: 0xe8e8e8 }[kind] ?? [0xf2f2f2, 0x1c1c1c, 0x8a9096, 0x24324a, 0x9b1b1b, 0xd9d9d9][Math.abs(Math.round(x * 3 + z * 7)) % 6]);
+    if (!keep || keep(current, x, y + h / 2, z, 0)) {
+      parked.push({ x, y, z, worldY: y + terrainAt(anchorHeight, x, z), rotY, kind, color, place: current });
     }
-    for (const lz of [-d / 2 + 0.9, d / 2 - 0.9]) for (const lx of [-w / 2 + 0.05, w / 2 - 0.05]) box({ x: x + lz * s + lx * c, y: y, z: z + lz * c - lx * s, w: 0.25, h: 0.65, d: 0.65, rotY, mat: 0x151515, solid: false });
+    if (o.label && (kind === 'bus' || kind === 'cityBus')) {
+      sign(o.label, { x: x + (d / 2 + .09) * s, y: y + h - .30, z: z + (d / 2 + .09) * c, w: 1.9, h: .27, rotY, bg: '#111', fg: '#ffb000' });
+    }
     if (o.solid !== false) { const hw = w / 2, hd = d / 2; const P = (lx, lz) => [x + lx * c + lz * s, z - lx * s + lz * c]; const poly = [P(-hw, -hd), P(hw, -hd), P(hw, hd), P(-hw, hd)]; phys.addPolyWalls(poly, y, y + h, 0.02, current); phys.addSurface(poly, y + h, {}); }
   }
   // ---------- gameplay registrations ----------
@@ -736,7 +730,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     buildInstanced();
     return out;
   }
-  let treesDone = 0, peopleDone = 0;
+  let treesDone = 0, peopleDone = 0, parkedDone = 0;
   // group instances by cell + tile so each group can be frustum-culled and cell-culled on its own
   function groupBy(n, at) {
     const groups = new Map();
@@ -781,6 +775,36 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
   }
   function buildInstanced() {
     const M = new THREE.Matrix4(), Q = new THREE.Quaternion(), S = new THREE.Vector3(), V = new THREE.Vector3(), C = new THREE.Color();
+    if (parked.length > parkedDone) {
+      const start = parkedDone;
+      parkedDone = parked.length;
+      const axis = new THREE.Vector3(0, 1, 0);
+      const groups = groupBy(parked.length - start, i => {
+        const v = parked[start + i]; return [v.x, v.y, v.z, v.place];
+      });
+      for (const group of groups) {
+        const kinds = new Map();
+        for (const i of group.idx) {
+          const v = parked[start + i];
+          if (!kinds.has(v.kind)) kinds.set(v.kind, []);
+          kinds.get(v.kind).push(v);
+        }
+        for (const [kind, list] of kinds) {
+          const meshes = fleetInstances(THREE, kind, list.length);
+          list.forEach((v, i) => {
+            M.compose(V.set(v.x, v.worldY, v.z), Q.setFromAxisAngle(axis, v.rotY), S.set(1, 1, 1));
+            for (const mesh of meshes) mesh.setMatrixAt(i, M);
+            meshes[0].setColorAt(i, C.setHex(v.color));
+          });
+          for (const mesh of meshes) {
+            mesh.userData.split = true;
+            mesh.computeBoundingSphere();
+            scene.add(mesh);
+            track(mesh, group.cell);
+          }
+        }
+      }
+    }
     if (trees.length > treesDone) {
       const trunk = new THREE.CylinderGeometry(0.12, 0.2, 1, 6); trunk.translate(0, 0.5, 0);
       const crown = new THREE.IcosahedronGeometry(1, 1); crown.translate(0, 0, 0);
