@@ -1,3 +1,4 @@
+import { loadArchitecture, fitTerminalSeat } from '../../assets/models/architectural-retail/place.js';
 // 서울고속버스터미널: OSM ground-contact outlines; aerial lots and photographed concrete tiers.
 // Reference/inference ledger: data/research/gyeongbu.json. No runtime animation/allocation.
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -15,9 +16,10 @@ async function loadFixtures(relativePath) {
   model.scene.updateMatrixWorld(true);
   return model.scene;
 }
-const [marketModel, daisoModel] = await Promise.all([
+const [marketModel, daisoModel, seatArchitecture] = await Promise.all([
   loadFixtures('../../assets/models/gyeongbu/market.glb'),
-  loadFixtures('../../assets/models/daiso/shop.glb')
+  loadFixtures('../../assets/models/daiso/shop.glb'),
+  loadArchitecture('terminal-seating.glb')
 ]);
 
 export const meta = {
@@ -1078,7 +1080,14 @@ export function build(K) {
     for(const [u,v] of [[18,113],[30,124]]){lbox(u,v,0,1,1,3.8,0x3f6a3a);for(let y=.2;y<3.8;y+=.4)for(const s of [-1,1]){lbox(u+s*.52,v,y,.08,.95,.32,0x527c45,{solid:false});lbox(u,v+s*.52,y,.95,.08,.32,0x527c45,{solid:false});}}
     furnish(() => {
     for(let u=8.1;u<34;u+=.25)lbox(u,119,3.8,.06,22,.15,0xc9a77c,{solid:false});for(let u=10;u<33;u+=1.6)lbox(u,119,3.77,.06,18,.03,'emit',{solid:false});
-    for(const [u,v,col] of [[13,113,0xe8741e],[26,113,0xe8741e],[13,124,0xe8741e],[26,124,0x2c2e2d]]){lbox(u,v,.12,5.4,1,.35,col);lbox(u,v+.4,.47,5.4,.2,.4,col,{solid:false});for(const s of [-1,1])for(let k=0;k<3;k++){const du=s*(2.7+k*.1),d=1-.15*k;lbox(u+du,v,.12,.1,d,.35,col,{solid:false});lbox(u+du,v+.4-.035*k,.47,.1,.2,.4,col,{solid:false});}}
+    for(const [u,v,model] of [[13,113,'HallSeatOrange'],[26,113,'HallSeatOrange'],[13,124,'HallSeatOrange'],[26,124,'HallSeatCharcoal']]){
+      // The authored cushions follow the previous seat envelope and player collision.
+      lbox(u,v,.12,5.4,1,.35,0x485052,{skip:['top','bottom','n','s','e','w']});
+      fitTerminalSeat(K,seatArchitecture,model,(x,height,z)=>{
+        const [wx,wz]=W(u+x,v+z);
+        return [wx,height,wz];
+      });
+    }
     for(const [u,v] of [[18,113],[30,124]]){
       for(const s of [-1,1]){
         lbox(u+s*.56,v,.2,.06,1.04,3.5,'gb8_foliage',{solid:false});

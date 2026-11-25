@@ -1,7 +1,10 @@
+import { loadArchitecture, fitArchitecture } from '../../assets/models/architectural-retail/place.js';
 import { upperFixtures } from '../../assets/models/newcore/upper-fixtures.js';
 
 // Exact OSM footprints; photo-based elevations; official floor uses. Metre
 // heights, core positions and indoor bay positions are documented estimates.
+const arcadeArchitecture=await loadArchitecture('newcore-arch.glb');
+
 export const meta = {
   id: 'newcore', name: '뉴코아아울렛 강남점',
   // 6169292 repeats the first three ways: suppress its generic solid shells too.
@@ -193,7 +196,7 @@ function arch(F, u, span, label, awning = C.black, height = 9.65, opaque = false
   for (let j = 0; j < 24; j++) {
     const a = j * Math.PI / 24, b = (j + 1) * Math.PI / 24;
     K.quad(infill, [pt(u, spring, -0.25), pt(u + Math.cos(a) * r, spring + Math.sin(a) * r, -0.25), pt(u + Math.cos(b) * r, spring + Math.sin(b) * r, -0.25), pt(u, spring, -0.25)], normal);
-    for (const [rr, thick, v, mat] of [[r, 0.18, -0.38, C.stone], [r + 0.2, 0.33, -0.48, C.trim], [r + 0.55, 0.12, -0.34, C.stone]]) {
+    if (opaque) for (const [rr, thick, v, mat] of [[r, 0.18, -0.38, C.stone], [r + 0.2, 0.33, -0.48, C.trim], [r + 0.55, 0.12, -0.34, C.stone]]) {
       const q = [pt(u + Math.cos(a) * rr, spring + Math.sin(a) * rr, v), pt(u + Math.cos(a) * (rr + thick), spring + Math.sin(a) * (rr + thick), v), pt(u + Math.cos(b) * (rr + thick), spring + Math.sin(b) * (rr + thick), v), pt(u + Math.cos(b) * rr, spring + Math.sin(b) * rr, v)];
       K.quad(mat, q, normal);
       K.quad(C.cream, [q[1], q[2], pt(u + Math.cos(b) * (rr + thick), spring + Math.sin(b) * (rr + thick), 0), pt(u + Math.cos(a) * (rr + thick), spring + Math.sin(a) * (rr + thick), 0)], normal);
@@ -201,6 +204,11 @@ function arch(F, u, span, label, awning = C.black, height = 9.65, opaque = false
   }
   // Window bars terminate at the arch, rather than stopping in mid glazing.
   if (!opaque) {
+    // Hall 2's pale projecting architrave and dark inner steel stop.
+    fitArchitecture(K,arcadeArchitecture,'NewcoreArch',(x,y,z)=>{
+      const [wx,wz]=P(u+x*r/3,-.265+z);
+      return [wx,spring+y*r/3,wz];
+    });
     for (const du of [-r * 0.5, 0, r * 0.5]) {
       const top = spring + Math.sqrt(r * r - du * du);
       B(u + du, 3.45, -0.31, 0.045, top - 3.45, 0.055, 0x535b57, { solid: false });
@@ -217,7 +225,7 @@ function arch(F, u, span, label, awning = C.black, height = 9.65, opaque = false
     B(x, 0.85, -0.59, 0.69, spring - 1.55, 0.055, C.stone, { solid: false });
     B(x, 0.93, -0.63, 0.53, spring - 1.71, 0.055, C.cream, { solid: false });
   }
-  B(u, height - 0.3, -0.53, 0.8, 0.85, 0.7, C.trim, { solid: false });
+  if (opaque) B(u, height - 0.3, -0.53, 0.8, 0.85, 0.7, C.trim, { solid: false });
   const aw = span - 1.6;
   const awningTop = opaque ? 4.3 : 3.7;
   K.quad(awning, [pt(u - aw / 2, awningTop, -0.3), pt(u + aw / 2, awningTop, -0.3), pt(u + aw / 2, 2.95, -2), pt(u - aw / 2, 2.95, -2)], [0, 1, 0]);
@@ -705,6 +713,19 @@ function retail(F, number) {
     names.forEach((name, i) => {
       const u = -L / 2 + 4 + (i + 0.5) * span;
       S(name, u, 3, depth + 0.08, span - 1.2, 0.7, name === 'OLIVE YOUNG' ? '#678735' : '#303937', { rotY: F.angle });
+      if (number===2 && (name==='DESIGNERS' || name==='luxury gallery')) {
+        // The exterior records establish the branch's dark fashion-window frames.
+        // The recesses in these two public-facing display bays are model estimates.
+        const factor=Math.min(span-.8,7.6)/7;
+        fitArchitecture(K,arcadeArchitecture,'BoutiqueWindow',(x,h,z)=>{
+          const [wx,wz]=F.P(u+x*factor,depth+.09+z);
+          return [wx,h,wz];
+        });
+        for(const side of [-1,1]){
+          const x=u+side*2.64*factor;
+          B(x,.31,depth+.218,1.60*factor,2.12,.018,{tex:'glass',color:0xc8ceca},{solid:false});
+        }
+      }
       B(u, 0, depth - 1, Math.min(span - 2.4, 5), 0.92, 0.78, name.includes('은행') ? 0xd1d4cd : C.wood);
       for (const du of [-span * 0.27, span * 0.27]) {
         if (name.includes('은행')) {

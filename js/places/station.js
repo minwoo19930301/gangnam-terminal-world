@@ -1,3 +1,5 @@
+import { loadFixtureScene, mountFixture } from '../../assets/models/onebailey/load.js';
+const stationSeats = await loadFixtureScene(new URL('../../assets/models/concourse-jewelry/station-seat.glb',import.meta.url));
 import { JUNCTIONS, WELLS } from './_junctions.js';
 
 export const meta = {
@@ -595,10 +597,9 @@ export function build(K) {
   }
   function bench(f,s,v,y) {
     const q=f.at(s,v);if(later(q.x,y,q.z,()=>bench(f,s,v,y)))return;
-    localBox(f,s,v,y+.42,.65,.11,3.5,'metal',true);
-    localBox(f,s,v+.28,y+.55,.09,.55,3.5,0x8d9ca3);
-    for(const q of [-1.3,1.3])localBox(f,s+q,v,y,.38,.42,.12,0x394951);
-    for(let q=-1.4;q<1.5;q+=.7)localBox(f,s+q,v,y+.54,.62,.025,.035,0x5e6b70);
+    box({x:q.x,z:q.z,y:y+.42,w:.65,h:.11,d:3.5,rotY:q.rot,mat:'metal',solid:true,
+      skip:['n','s','w','e','top','bottom']});
+    mountFixture(K,stationSeats,'StationSeat',[q.x,y,q.z],Math.atan2(-q.uz,q.ux));
   }
   function facilities(f,s,v,y) {
     const p=f.at(s,v);if(later(p.x,y,p.z,()=>facilities(f,s,v,y)))return;

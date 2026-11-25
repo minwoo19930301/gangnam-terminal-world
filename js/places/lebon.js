@@ -1,3 +1,5 @@
+import { loadFixtureScene, mountFixture } from '../../assets/models/onebailey/load.js';
+const jewelry = await loadFixtureScene(new URL('../../assets/models/concourse-jewelry/jewelry-tray.glb',import.meta.url));
 // 르본시티, round 13. OSM shell; photo-relative shop groups, NOT a measured shop plan.
 // s7's terminal/subway frames do not depict this building. Keep its separate 3F–6F flower market.
 // Local u runs east along the 신반포로 frontage, v runs into the building (south).
@@ -236,14 +238,8 @@ export function build(K) {
     const dims=ns?[.78,wide]:[wide,.78], backdims=ns?[.24,wide]:[wide,.24];
     box(cu,cv,0,...dims,.72,wood);box(cu,cv,.72,...dims,.06,metal);
     box(cu,cv,.78,...dims,.4,'glass',{solid:false});
-    // Red piping and black velvet; polished tiny gold rings/chain lines are visible through the glass.
-    box(cu,cv,.79,dims[0]-.1,dims[1]-.1,.045,0x9c1836,{solid:false});
-    box(cu,cv,.837,dims[0]-.16,dims[1]-.16,.022,0x191c20,{solid:false});
-    for(let row=0;row<3;row++)for(let j=0;j<5;j++){
-      const du=ns?(row-1)*.18:(j-2)*.3,dv=ns?(j-2)*.25:(row-1)*.18;
-      ring(cu+du,cv+dv,.89,.058+(j%2)*.015);
-      if(j===2)box(cu+du,cv+dv,.89,.06,.045,.03,{color:0xf6edd0,gloss:.7},{solid:false});
-    }
+    const [trayX,trayZ]=P(cu,cv);
+    mountFixture(K,jewelry,'JewelryTray',[trayX,.79,trayZ],F[face],[wide/1.7,1,1]);
     box(u-ns*.9,v-vs*.9,.25,...backdims,2.15,wood);
     for(let j=0;j<3;j++){
       const du=ns?0:(j-1)*.65,dv=ns?(j-1)*.43:0;

@@ -1,4 +1,7 @@
+import { loadArchitecture, fitArchitecture } from '../../assets/models/architectural-retail/place.js';
 import { displays as upperFloorDisplays } from '../../assets/models/shinsegae/displays.js';
+const wallArchitecture=await loadArchitecture('shinsegae-walls.glb');
+
 // 신세계백화점 강남점 — detailed place module (B2 주차장 ~ 11F 식당가 + 1M 메자닌 + J1 지하 연결통로)
 // Exterior: 2026 north/corner roadview towers and glazing; 2025 entrance and east parking.
 // Main/extension split and heights remain estimates: see modeling.guesses in the research file.
@@ -13202,17 +13205,14 @@ export function build(K) {
       // The 2024 Gangnam opening photographs show wood panels, an illuminated
       // wordmark, aluminum cases of different sizes and a two-tier accessory wall.
       const span = W - .55, back = D - .40;
-      const wood = {tex:'wood',color:0xd1b490}, trim = 0xbaac99;
-      B(W/2,back,span,.14,.08,2.79,wood);
-      B(W/2,back-.12,span-.05,.08,2.18,.56,0x776a5b);
+      fitArchitecture(K,wallArchitecture,'CaseGallery',(x,h,z)=>{
+        const [px,pz]=P(...ST(W/2+x*span/7,back+z));
+        return [px,y+h,pz];
+      });
       fsign('RIMOWA',W/2,back-.18,y+2.47,Math.min(3.1,span*.7),.44,{bg:null,fg:'#fff5e5',twoSided:true});
       const sizes = [.85, 1.03, 1.20], step = (span-.45)/3;
       for(let i=0;i<sizes.length;i++) {
         const a = .5+(i+.5)*step;
-        B(a,back-.50,step-.12,.77,.06,.23,trim);
-        B(a,back-.12,step-.24,.09,.29,1.86,0xd7c8b4);
-        B(a,back-.23,step-.23,.42,2.05,.07,trim);
-        B(a,back-.39,step-.38,.04,2.035,.02,{tex:'emit',color:0xffefd4});
         for(const [offset,scale] of [[-.54,sizes[i]],[.54,sizes[(i+1)%3]]]) {
           shopDisplay('case',a+offset,back-.60,y+.29,ST,scale);
         }
@@ -16017,13 +16017,12 @@ export function build(K) {
           }
         }
         if(id==='5F'&&c.name==='렉토'){
-          // The photographed 2022 Gangnam wall has broad convex timber
-          // waves; discrete shallow facets suggest the undulation within the
-          // unmeasured existing cell rather than reproducing exact curves.
-          for(let j=0;j<24;j++){
-            const t=(j+.5)/24,a=.22+(Wf-.44)*t,arc=.38*Math.pow(Math.sin(Math.PI*2*t),2);
-            fb(a,Dp-.29-arc,(Wf-.44)/24+.035,.10,y+.02,3.05,{tex:'wood',color:0x79432b});
-          }
+          // The 2022 branch photograph shows continuous convex timber veneers.
+          // The authored broad waves and shadow joints stay inside the established shop.
+          fitArchitecture(K,wallArchitecture,'RectoWall',(x,h,z)=>{
+            const [px,pz]=P(...ST(Wf/2+x*(Wf-.44)/8,Dp-.24+z));
+            return [px,y+.012+h,pz];
+          });
           // The Gangnam opening view shows a small white name on the timber
           // wall. Generate it immediately: the shared sign atlas can still be
           // queued when a player first reaches this floor. Exact placement is
