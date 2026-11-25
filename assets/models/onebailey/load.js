@@ -1,11 +1,12 @@
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 
 // Use the same exported mesh in browser graphics, headless tests and previews.
 export async function loadFixtureScene(url) {
   const buffer = url.protocol === 'file:'
     ? await (await import('node:fs/promises')).readFile(url)
     : new Uint8Array(await (await fetch(url)).arrayBuffer());
-  const gltf = await new GLTFLoader().parseAsync(
+  const gltf = await new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).parseAsync(
     buffer.buffer.slice(buffer.byteOffset,buffer.byteOffset+buffer.byteLength),'');
   gltf.scene.traverse(node => {
     if (!node.isMesh) return;

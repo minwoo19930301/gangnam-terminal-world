@@ -194,7 +194,7 @@ data, material_names = {}, list(PALETTE)
 for ix, (kind, size) in enumerate(DIMS.items()):
     collection = bpy.data.collections[kind]
     origin_x = collection.get('origin_x', (ix-3)*3.6)
-    vertices, faces = [], []
+    vertices, faces, tyre_contacts = [], [], []
     for obj in collection.objects:
         if obj.type != 'MESH':
             continue
@@ -206,6 +206,11 @@ for ix, (kind, size) in enumerate(DIMS.items()):
             for v in mesh.vertices:
                 x, y, z = evaluated.matrix_world @ v.co
                 vertices.extend(round(c*1000) for c in (x-origin_x,z,-y))
+            if obj.name.startswith("Tyre and wheel"):
+                shape = [vertices[i:i+3] for i in range(3*offset, len(vertices), 3)]
+                lowest = min(y for x,y,z in shape)
+                tread = [(x,z) for x,y,z in shape if y == lowest]
+                tyre_contacts.append([sum(v[i] for v in tread)/len(tread) for i in range(2)])
             for tri in mesh.loop_triangles:
                 name = mesh.materials[tri.material_index].name
                 if name not in material_names:
@@ -213,7 +218,11 @@ for ix, (kind, size) in enumerate(DIMS.items()):
                 faces.extend([*(i+offset for i in tri.vertices),material_names.index(name)])
         finally:
             evaluated.to_mesh_clear()
-    data[kind] = {'size':size,'mm':vertices,'faces':faces}
+    if len(tyre_contacts) != 4:
+        raise ValueError(f"{kind} needs four wheel meshes for road contact sampling")
+    # Metres between the centreline/origin and each pair of tyre contact patches.
+    contacts = [round(sum(abs(v[i]) for v in tyre_contacts)/4000, 4) for i in range(2)]
+    data[kind] = {'size': size, 'contacts': contacts, 'mm': vertices, 'faces': faces}
 
 colors = []
 for name in material_names:

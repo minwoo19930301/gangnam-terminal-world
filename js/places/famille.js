@@ -1,4 +1,5 @@
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 import { gardenSurface, gardenStation } from './_gardenGrade.js';
 import { relief } from '../banpo_relief.js';
 
@@ -7,7 +8,7 @@ const fixtureURL = new URL('../../assets/models/famille/gallery.glb', import.met
 const fixtureBytes = fixtureURL.protocol === 'file:'
   ? await (await import('node:fs/promises')).readFile(fixtureURL)
   : new Uint8Array(await (await fetch(fixtureURL)).arrayBuffer());
-const galleryFixtures = (await new GLTFLoader().parseAsync(
+const galleryFixtures = (await new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).parseAsync(
   fixtureBytes.buffer.slice(fixtureBytes.byteOffset, fixtureBytes.byteOffset + fixtureBytes.byteLength), ''
 )).scene;
 

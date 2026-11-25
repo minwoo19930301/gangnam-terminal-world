@@ -2,6 +2,7 @@
 import bpy
 import json
 import math
+import runpy
 from mathutils import Vector
 from pathlib import Path
 
@@ -81,6 +82,8 @@ for i in range(lanes):
         rims.bar(a,b,.12)
 
 runtime={"ribs":ribs.finish(),"rims":rims.finish()}
+# Restore the shared verified lightmap atlas without external packages.
+runpy.run_path(str(dest/'chavit_uv.py'))['apply_saved_layout']()
 bpy.context.preferences.filepaths.save_version=0
 bpy.ops.wm.save_as_mainfile(filepath=str(dest/"chavit-crown.blend"),compress=True)
 (dest/"chavit-crown.js").write_text("// Chavit exterior profiles. Rebuild with build_chavit.py in Blender.\nexport const chavitCrown="+json.dumps(runtime,separators=(',',':'))+";\n")

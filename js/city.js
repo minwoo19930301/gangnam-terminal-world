@@ -1,6 +1,6 @@
 import { withJamwonInlet } from './river-water.js';
 import { height as perstigeHeight, panels as perstigePanels } from '../assets/models/perstige/panels.js';
-import { fleetInstances, vehicleSize } from './fleet.js';
+import { fleetInstances, vehicleContacts } from './fleet.js';
 // Generic city layer from OpenStreetMap: everything not claimed by a detailed place module.
 import { pointInPoly, polyBBox, polyArea } from './physics.js';
 import { relief } from './banpo_relief.js';
@@ -896,11 +896,11 @@ export function createTraffic(K, roadsInfo, n = 160) {
   for (const kind of ['car', 'taxi', 'bus', 'minibus']) {
     const list = cars.filter(c => c.kind === kind); if (!list.length) continue;
     const model = kind === 'bus' ? 'cityBus' : kind;
-    const [w, , d] = vehicleSize(model);
+    const [halfTrack, halfWheelbase] = vehicleContacts(model);
     const meshes = fleetInstances(THREE, model, list.length);
     const color = new THREE.Color();
     list.forEach((c, i) => {
-      c.index = i; c.fleet = meshes; c.halfWheelbase = d * .32; c.halfTrack = w / 2;
+      c.index = i; c.fleet = meshes; c.halfWheelbase = halfWheelbase; c.halfTrack = halfTrack;
       meshes[0].setColorAt(i, color.setHex(c.color));
     });
     for (const mesh of meshes) { mesh.userData.dynamic = true; mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage); mesh.frustumCulled = false; K.scene.add(mesh); }
