@@ -1,5 +1,18 @@
 // 서울고속버스터미널: OSM ground-contact outlines; aerial lots and photographed concrete tiers.
 // Reference/inference ledger: data/research/gyeongbu.json. No runtime animation/allocation.
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
+
+// The kit builds synchronously in the browser and in the local route checker.
+const marketURL = new URL('../../assets/models/gyeongbu/market.glb', import.meta.url);
+const marketBytes = marketURL.protocol === 'file:'
+  ? await (await import('node:fs/promises')).readFile(marketURL)
+  : new Uint8Array(await (await fetch(marketURL)).arrayBuffer());
+const marketGLB = await new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).parseAsync(
+  marketBytes.buffer.slice(marketBytes.byteOffset, marketBytes.byteOffset + marketBytes.byteLength), ''
+);
+marketGLB.scene.updateMatrixWorld(true);
+
 export const meta = {
   id: 'gyeongbu', name: '서울고속버스터미널 (경부·영동선)',
   claims: [309352819, 356129682, 356129683, 1173093435],
@@ -263,7 +276,15 @@ export function build(K) {
   photoBayUs.forEach((u,i)=>bays.push({n:17+i,u,v:30.2,west:false}));
   bays.push({n:39,u:255,v:30.2,west:false});
   for(let n=40;n<=46;n++)bays.push({n,u:263+(n-40)*7.3,v:30.2,west:false});
-  const bayDestinations={1:'부산',2:'부산사상',3:'마산',4:'창원',5:'진주',6:'울산 · 통영 · 김해',7:'동대구',9:'포항 · 경주',10:'구미 · 상주',11:'대전',13:'세종',14:'천안',16:'공주 · 아산',18:'조치원 · 금산',19:'속초 · 양양',20:'삼척 · 동해',23:'강릉',24:'제천 · 정선',25:'원주',27:'용인',28:'이천',29:'여주',30:'영월 · 춘천',31:'안동 · 영주',32:'안성',33:'평택',34:'청주',35:'청주',36:'청주'};
+  // Operator's November 2026 boarding guide. The small signs use representative
+  // destinations where one bay serves a long list of stops.
+  const bayDestinations = [
+    '', '부산', '서부산', '마산', '창원', '진주', '울산 · 김해 · 통영', '동대구', '동대구',
+    '포항 · 경주 · 영천', '구미 · 상주 · 점촌', '대전', '대전청사', '세종', '천안', '천안',
+    '공주 · 유구 · 아산', '예비', '금산 · 조치원', '속초 · 양양', '동해 · 삼척', '예비', '예비',
+    '강릉 · 경포해변', '제천 · 정선', '원주', '원주혁신', '용인', '이천', '여주 · 여주아울렛',
+    '영월 · 춘천 · 부여 · 철원', '안동 · 영주 · 태백 외', '안성', '평택', '청주', '청주', '청주'
+  ];
   for(const b of bays)b.dest=b.n>=40?'도착':bayDestinations[b.n]||'';
   for(const b of bays)door(b.u,b.v,b.west?5.6:b.n===null?4:2.5);
   // Continuous boarding-side window wall; the 0.8m cream piers separate screens.
@@ -666,7 +687,7 @@ export function build(K) {
   lspawn('경부선 터미널 정문',163,-16,0,0,1);
   lspawn('1층 대합실',70.5,89,0,0,-1);
   lspawn('1층 매표·환불',58,38,0,1,0);
-  lspawn('1층 무인발권기',166,22,0,0,-1);
+  lspawn('1층 무인발권기',166,25.3,0,0,-1);
   lspawn('1층 할리스 아래 통로',173,25,0,0,-1);
   lspawn('승차홈과 버스 마당',77.2,98,0,0,-1);
   lspawn('3층 꽃도매상가',35,100,11,0,1);
@@ -1256,9 +1277,15 @@ export function build(K) {
         lbox(b.u,31,2.7,.8,.6,.6,0xf4f4f0,{solid:false});for(const y of [2.64,3.3])lbox(b.u,31,y,.86,.66,.07,0xe3b48c,{solid:false});
         lsign([String(b.n),b.dest||'승차홈'],b.u,31.32,3.02,.7,.5,'+v',{bg:null,fg:'#242626'});
       }
-      // The photo pod reuses the same detailed ticket-terminal constructor pattern.
-      rbox(163,17,169,19.3,0,3,0xf0f0ed);lsign('Ⓣ TICKETS 무인발권기',166,19.46,2.65,5.4,.38,'+v',{bg:null,fg:'#5f6262'});
-      for(let k=0;k<5;k++){const u=163.65+k*1.15;lbox(u,19.45,0,.64,.55,1.8,0xf0f1ee);lsign(['승차권 예매','경부선 · 영동선'],u,19.75,1.25,.48,.65,'+v',{bg:'#92bcde',fg:'#213f5b'});lbox(u,19.77,.61,.32,.025,.08,0x30383c,{solid:false});}
+      // The previous ticket pod straddled the GATE1 stair cut at u164..168.
+      // Keep the public five-machine bank beyond the closed return end of the stairwell.
+      const ticketU=166, ticketV=22.6;
+      addMarketFixtures('Tickets','경부 1F 무인발권기',[[ticketU,ticketV,0,0]]);
+      const mask={skip:['top','bottom','n','s','e','w']};
+      lbox(ticketU,ticketV-.83,0,5.95,.16,2.86,0,mask);
+      for (const side of [-1,1]) lbox(ticketU+side*2.89,ticketV-.05,0,.22,1.7,2.74,0,mask);
+      for (let k=-2;k<=2;k++) lbox(ticketU+k*1.08,ticketV+.21,0,.64,.56,1.8,0,mask);
+      lsign('무인발권기',ticketU,ticketV+.95,2.75,3.2,.32,'+v',{bg:null,fg:'#374854'});
       for(const v of [21,26])for(const u of [121,127,133,139]){const[x,z]=W(u,v);K.dome({x,z,y:6.3,rx:.36,ry:.3,rz:.36,mat:0x6d7174,seg:12,rings:4});lcyl(u,v,6.28,.31,.03,{tex:'emit',color:0xf2d23a},{seg:16,solid:false});lbox(u,v,6.6,.025,.025,.9,0x656c70,{solid:false});}
       for(let u=118;u<140;u+=.32){const[x,z]=W(u,25);K.dome({x,z,y:6.7,rx:.2,ry:.3,rz:.3,mat:u%1>.5?0xb9c0c1:0xd0d4d4,seg:10,rings:3,hemi:false});}
       lbox(126,17.7,0,6,.15,2.8,0xf1f0eb,{solid:false});lsign('층별 안내',126,17.81,1.75,1.6,1.2,'+v',{bg:'#e8e7de',fg:'#424943'});
@@ -1932,10 +1959,81 @@ export function build(K) {
     try{draw();}finally{K=owner;}
   }
 
+  function addMarketFixtures(key,name,placements) {
+    const TH=K.THREE;
+    const bay=marketGLB.scene.getObjectByName(key);
+    const material=new TH.MeshLambertMaterial({vertexColors:true,side:TH.DoubleSide});
+    bay.traverse(source => {
+      if (!source.isMesh) return;
+      const copies=new TH.InstancedMesh(source.geometry,material,placements.length);
+      copies.name=name;
+      const pose=new TH.Object3D();
+      placements.forEach(([u,v,y,angle],n) => {
+        const [x,z]=W(u,v);
+        pose.position.set(x,y,z);
+        pose.rotation.y=ROT+angle;
+        pose.updateMatrix();
+        copies.setMatrixAt(n,pose.matrix.multiply(source.matrixWorld));
+      });
+      copies.computeBoundingSphere();
+      K.addMesh(copies);
+    });
+  }
+
+  // The operator's F2/F4/F6/F7/F8 photographs show distinct merchandise and
+  // storefronts. These exhibit rows are illustrative; the photographs have no
+  // registered unit coordinates. Keep the stair/lift lobby outside the display.
+  function upperMarket(i, floorY) {
+    const floors = {
+      1: ['Bedding', '침구 · 홈패션'], 3: ['Curtains', '커튼 · 원단'],
+      5: ['Children', '아동복 · 의류'], 6: ['Suits', '신사복 · 넥타이'],
+      7: ['Womenswear', '여성복 · 의류']
+    };
+    if (!floors[i]) return;
+    const [key, label] = floors[i];
+    const floor = (i + 1) + 'F';
+    const wings = [[34.2, 1], [41.8, -1]];
+    const centers = [100.5, 109.5, 118.5, 127.5];
+    // A fixture's front (+z in the exported GLB) faces the centre aisle.
+    // Do not box in the stalls. Reserve collision only for the floor-standing
+    // fixtures, rear panels and side walls, leaving each doorless front open.
+    for (const [u, side] of wings) for (const v of centers) {
+      const fixture = (a, b, w, d, h) => lbox(u + side * b, v - side * a,
+        floorY, d, w, h, 0, {skip:['top','bottom','n','s','e','w']});
+      fixture(0,-1.3,5.2,.12,2.96);
+      for (const a of [-2.54,2.54]) fixture(a,-.05,.12,2.6,2.96);
+      if (key === 'Bedding') {
+        fixture(0,-1.02,4.65,.48,2.33);
+        fixture(-.85,.44,2.75,1.2,.70);
+        fixture(1.57,.14,1.27,1.17,.70);
+      } else if (key === 'Curtains') {
+        fixture(1.78,-1.02,1.1,.48,2.33);
+        fixture(1.28,.44,.66,.57,1.08);
+      } else {
+        fixture(0,-.80,4.5,.30,2.4);
+        fixture(-1.18,.56,2.0,.55,1.65);
+        if (key==='Children') fixture(1.23,.25,1.72,.93,1.1);
+        if (key==='Suits') fixture(1.36,.49,1.48,.48,1.69);
+        if (key==='Womenswear') for (const [a,b] of [[.68,.45],[1.69,.11]]) fixture(a,b,.75,.5,1.8);
+      }
+    }
+    lspawn(floor + ' ' + label,38,96.8,floorY,0,1);
+    ldetail({floor, y0:floorY, y1:floorY+3.2, poly:rect(32,97,44,131), name:label}, () => {
+      const placements=[];
+      for (const [u,side] of wings) for (const v of centers) {
+        placements.push([u,v,floorY,side*PI/2]);
+        lsign(label,u+side*1.353,v,floorY+2.83,3.7,.26,side>0?'+u':'-u',
+          {bg:null,fg:'#fff7e5',pxPerM:120});
+      }
+      addMarketFixtures(key,'경부 '+floor+' '+label,placements);
+    });
+  }
+
   function buildUpper(){
     for(let i=1;i<10;i++){
       const p=floorPoly(i),y=ys[i],top=i===9?48:ys[i+1];
       K.zone({name:i===2?'고속터미널 꽃도매상가':'서울고속버스터미널',floor:`${i+1}F`,sub:uses[i],poly:p,y0:y,y1:top,priority:1});
+      upperMarket(i,y);
       if(i<9&&i!==2){
         const voids=[[34,6,66,23],[54,33,62,48],[66,17,75.7,28],[16.4,66,25.2,92]];
         const omit=(u,v)=>i===1&&voids.some(r=>inRect(r,u,v,.35));
@@ -3656,7 +3754,7 @@ export function build(K) {
           const rot=FACE['-v']-.5,pts=corners(b.u+1.7,39,rot,3.2,13);
           line(pts[0],pts[3],.035);line(pts[1],pts[2],.035);
           lfloorText(String(b.n),b.u,33.3,.16,1.4,1.4,'+v',{bg:null,fg:'#ede9dc'});
-          if(b.n%4!==0)vehicle(b.u+1.7,39,0,rot,'bus',b.n,b.dest.split(' · ')[0]);
+          if(b.n%4!==0&&b.dest!=='예비')vehicle(b.u+1.7,39,0,rot,'bus',b.n,b.dest.split(' · ')[0]);
         }
       }
     }
