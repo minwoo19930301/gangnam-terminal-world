@@ -10,6 +10,7 @@ import { JUNCTIONS } from './places/_junctions.js';
 import { LANDMARKS } from './landmarks.js';
 import { pickReModels, reModelStandIns, loadReModels } from './remodels.js';
 
+import { installRelief, relief } from './banpo_relief.js';
 const Q = new URLSearchParams(location.search);
 const SHOT = Q.has('shot');
 const $ = id => document.getElementById(id);
@@ -33,6 +34,8 @@ async function boot() {
   const hashPos = hashR && new URLSearchParams(hashR[2] || '').get('p') ? new URLSearchParams(hashR[2] || '').get('p').split(',').map(Number) : null;
   const AREA_ID = (!META || SHOT || Q.get('places') || Q.get('area') === 'all') ? 'all' : (Q.get('area') || areaIdForKey(hashKey, hashPos, META));
   const AREA = META ? planArea(AREA_ID, META, JUNCTIONS) : { id: 'all', modules: PLACES, keep: null, keepDetail: null };
+  const exteriorTerrain = !AREA.id.startsWith('in:');
+  installRelief(THREE, exteriorTerrain);
   if (AREA.id !== 'all') status(`${areaName(AREA.id, META)} 불러오는 중…`);
   const wantIds = Q.get('places') ? Q.get('places').split(',') : PLACES.filter(id => AREA.modules.includes(id));
   const modP = wantIds.map(id => import(`./places/${id}.js`).then(m => ({ id, m }), e => ({ id, e })));
@@ -58,6 +61,7 @@ async function boot() {
   for (let i = 0; i < pos.count; i++) { const y = pos.getY(i) / 3000; const c = y > 0 ? hor.clone().lerp(top, Math.pow(y, 0.6)) : hor.clone().lerp(gnd, Math.min(1, -y * 4)); skyCol.push(c.r, c.g, c.b); }
   skyGeo.setAttribute('color', new THREE.Float32BufferAttribute(skyCol, 3));
   const sky = new THREE.Mesh(skyGeo, new THREE.MeshBasicMaterial({ vertexColors: true, side: THREE.BackSide, fog: false, depthWrite: false }));
+  sky.material.defines = { BANPO_RIGID: 1 };
   sky.renderOrder = -1; scene.add(sky);
   scene.fog = new THREE.Fog(0xcfe0ee, 350, 2600);
   const hemi = new THREE.HemisphereLight(0xf4f8ff, 0xb3ad9f, 1.55); scene.add(hemi); // bright ground colour so ceilings and slab undersides do not read muddy
@@ -143,7 +147,15 @@ async function boot() {
             } catch(e) { console.warn('Shinsegae/JW LOD cut failed; keeping full mass',e); }
           }
         }
-        try { K.prism(b.poly, b.minHeight || 0, h, { mat: { tex: 'concrete', color: 0xd3cbbf }, holes: b.holes, solid: AREA.lodSolid !== false }); } catch (e) { }
+        try {
+          const x = b.poly.reduce((sum,v) => sum + v[0], 0) / b.poly.length;
+          const z = b.poly.reduce((sum,v) => sum + v[1], 0) / b.poly.length;
+          const ground = relief(x,z);
+          const base = b.minHeight || Math.min(0,...b.poly.map(v => relief(...v)-ground));
+          K.withTerrainAnchor(x,z,() => K.prism(b.poly, base, h, {
+            mat: { tex: 'concrete', color: 0xd3cbbf }, holes: b.holes, solid: AREA.lodSolid !== false,
+          }));
+        } catch (e) { }
       }
     }
   }
@@ -156,7 +168,7 @@ async function boot() {
   mark('city'); status('메시 합치는 중…'); await new Promise(r => setTimeout(r, 0));
   K._.finalize(); mark('finalize');
   K._.cull(6, 1.6, -125, true);
-  const reStand = reModels.length ? reModelStandIns({ THREE, K, osm, scene, models: reModels }) : new Map();
+  const reStand = reModels.length ? reModelStandIns({ THREE, K, osm, scene, models: reModels, terrain: exteriorTerrain }) : new Map();
   const traffic = roadsInfo && Q.get('traffic') !== '0' ? createTraffic(K, roadsInfo, 180) : null;
 
   // ---- virtual doors: every way into another page is a visible door with a sign (js/places/_meta.json entrances/junctions) ----
@@ -518,7 +530,7 @@ async function boot() {
     };
     if (menuOpen || map.isOpen()) { resetTouch(); input.f = input.s = 0; }
     player.update(dt, input);
-    camera.position.set(player.x, player.y + player.eye, player.z);
+    camera.position.set(player.x, player.y + player.eye + relief(player.x, player.z), player.z);
     camera.rotation.set(player.pitch, player.yaw, 0, 'YXZ');
     sky.position.copy(camera.position);
     for (const f of K._.frameFns) { try { f(dt, t, player); } catch (e) { } }
@@ -536,11 +548,11 @@ async function boot() {
     hudPrompt.textContent = nearIt ? `E · ${nearIt.label}` : ''; hudPrompt.classList.toggle('show', !!nearIt);
     $('btn-use').classList.toggle('show', !!nearIt);
     frames++; { const now = performance.now(); if (now - fpsT0 > 1000) { fps = frames * 1000 / (now - fpsT0); frames = 0; fpsT0 = now; adaptResolution(fps); } }
-    hudCoord.textContent = `x ${player.x.toFixed(0)}  z ${player.z.toFixed(0)}  높이 ${player.y.toFixed(1)}m  ${player.fly ? '✈ ' : ''}${fps.toFixed(0)}fps${pixelRatio < Math.min(devicePixelRatio, 2) - 0.01 ? ` · 해상도 ${Math.round(pixelRatio / Math.min(devicePixelRatio, 2) * 100)}%` : ''}`;
+    hudCoord.textContent = `x ${player.x.toFixed(0)}  z ${player.z.toFixed(0)}  높이 ${(player.y + relief(player.x, player.z)).toFixed(1)}m  ${player.fly ? '✈ ' : ''}${fps.toFixed(0)}fps${pixelRatio < Math.min(devicePixelRatio, 2) - 0.01 ? ` · 해상도 ${Math.round(pixelRatio / Math.min(devicePixelRatio, 2) * 100)}%` : ''}`;
     map.update(dt);
     // lazy floor detail near the camera (bounded per frame); screenshots paint new sign text immediately
     if (K._.ensureDetail(player.x, player.y + player.eye, player.z, 60, 40) && SHOT && K._.atlas.pending()) { K._.atlas.flushAll(); for (const p of K._.atlas.pages) p.t.needsUpdate = true; }
-    K._.cull(camera.position.x, camera.position.y, camera.position.z);
+    K._.cull(player.x, player.y + player.eye, player.z);
     // progressive sign painting (≈5 ms per frame); only the painted rectangles are uploaded (texSubImage2D)
     if (signsGo && K._.atlas.pending()) uploadSignRects(K._.atlas.flush(5, player.x, player.z));
     renderer.render(scene, camera);
@@ -559,7 +571,7 @@ async function boot() {
   mark('ready');
   // real-estate-map apartments stream in after the page is up (nearest first)
   let reLive = null;
-  if (reModels.length) setTimeout(() => { reLive = loadReModels({ THREE, scene, models: reModels, stand: reStand, from: { x: player.x, z: player.z }, onProgress: (d, n) => { if (d === n) toast(`주변 아파트 ${n}동 불러옴`); } }); }, SHOT ? 0 : 400);
+  if (reModels.length) setTimeout(() => { reLive = loadReModels({ THREE, scene, models: reModels, stand: reStand, terrain: exteriorTerrain, from: { x: player.x, z: player.z }, onProgress: (d, n) => { if (d === n) toast(`주변 아파트 ${n}동 불러옴`); } }); }, SHOT ? 0 : 400);
   Object.assign(window.__world, { ready: true, area: AREA.id, wantedArea: () => wantedArea(phys.zoneAt(player.x, player.y + 0.1, player.z)), K, phys, player, camera, scene, renderer, map, places: placeInfo, stats: { ...K._.stats, phys: phys.stats, draw: () => renderer.info.render }, setNight });
   frame();
 }

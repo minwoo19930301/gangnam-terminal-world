@@ -45,10 +45,16 @@ const EMPTY = [];
 export function createPhysics() {
   const walls = new Grid(8), surfs = new Grid(8), holes = new Grid(16), zones = new Grid(16), ceilings = new Grid(8);
   const stats = { walls: 0, surfaces: 0, holes: 0, zones: 0 };
+  let heightOffset = null;
   const P = {
     stats,
+    withHeightOffset(offset, build) {
+      const previous = heightOffset;
+      heightOffset = offset;
+      try { return build(); } finally { heightOffset = previous; }
+    },
     addWall(ax, az, bx, bz, y0, y1, r = 0.12, tag) {
-      const w = { ax, az, bx, bz, y0, y1, r, tag };
+      const w = { ax, az, bx, bz, y0, y1, r, tag, heightOffset };
       walls.insert(w, Math.min(ax, bx) - r, Math.min(az, bz) - r, Math.max(ax, bx) + r, Math.max(az, bz) + r); stats.walls++;
       return w;
     },
@@ -56,18 +62,18 @@ export function createPhysics() {
     // walkable horizontal polygon at height y (top surface). holes: array of polys.
     addSurface(poly, y, opts = {}) {
       const bb = polyBBox(poly);
-      const s = { kind: 'poly', poly, holes: opts.holes || null, y, bb, slow: opts.slow || 0, tag: opts.tag, move: opts.move || null };
+      const s = { kind: 'poly', heightOffset, poly, holes: opts.holes || null, y, bb, slow: opts.slow || 0, tag: opts.tag, move: opts.move || null };
       surfs.insert(s, bb[0], bb[1], bb[2], bb[3]); stats.surfaces++; return s;
     },
     // inclined strip from A(ya) to B(yb), half-width hw. move: [vx,vz] conveyor (escalator)
     addRamp(ax, az, bx, bz, hw, ya, yb, opts = {}) {
       const dx = bx - ax, dz = bz - az, L = Math.hypot(dx, dz) || 1;
-      const s = { kind: 'ramp', ax, az, ux: dx / L, uz: dz / L, L, hw, ya, yb, move: opts.move || null, tag: opts.tag };
+      const s = { kind: 'ramp', heightOffset, ax, az, ux: dx / L, uz: dz / L, L, hw, ya, yb, move: opts.move || null, tag: opts.tag };
       surfs.insert(s, Math.min(ax, bx) - hw, Math.min(az, bz) - hw, Math.max(ax, bx) + hw, Math.max(az, bz) + hw); stats.surfaces++; return s;
     },
-    addCeiling(poly, y, opts = {}) { const bb = polyBBox(poly); const c = { poly, holes: opts.holes || null, y, bb }; ceilings.insert(c, ...bb); return c; },
+    addCeiling(poly, y, opts = {}) { const bb = polyBBox(poly); const c = { poly, holes: opts.holes || null, y, bb, heightOffset }; ceilings.insert(c, ...bb); return c; },
     addGroundHole(poly, inner) { const bb = polyBBox(poly); const h = { poly, bb, inner: inner && inner.length ? inner : null }; holes.insert(h, ...bb); stats.holes++; return h; },
-    addZone(z) { const bb = z.bb || polyBBox(z.poly); z.bb = bb; z.area ??= polyArea(z.poly); zones.insert(z, ...bb); stats.zones++; return z; },
+    addZone(z) { const bb = z.bb || polyBBox(z.poly); z.bb = bb; z.heightOffset = heightOffset; z.area ??= polyArea(z.poly); zones.insert(z, ...bb); stats.zones++; return z; },
     groundHole(x, z) {
       for (const h of holes.at(x, z)) if (x >= h.bb[0] && x <= h.bb[2] && z >= h.bb[1] && z <= h.bb[3] && pointInPoly(x, z, h.poly)) {
         if (h.inner && h.inner.some(q => pointInPoly(x, z, q))) continue;
@@ -82,16 +88,16 @@ export function createPhysics() {
       for (const s of surfs.at(x, z)) {
         let y;
         if (s.kind === 'poly') {
-          if (s.y > maxY || s.y <= best) continue;
+          y = s.y + (s.heightOffset ? s.heightOffset(x,z) : 0);
+          if (y > maxY || y <= best) continue;
           if (x < s.bb[0] || x > s.bb[2] || z < s.bb[1] || z > s.bb[3]) continue;
           if (!pointInPoly(x, z, s.poly)) continue;
           if (s.holes && s.holes.some(h => pointInPoly(x, z, h))) continue;
-          y = s.y;
         } else {
           const px = x - s.ax, pz = z - s.az, t = px * s.ux + pz * s.uz;
           if (t < -0.05 || t > s.L + 0.05) continue;
           if (Math.abs(-px * s.uz + pz * s.ux) > s.hw) continue;
-          y = s.ya + (s.yb - s.ya) * Math.min(1, Math.max(0, t / s.L));
+          y = s.ya + (s.yb - s.ya) * Math.min(1, Math.max(0, t / s.L)) + (s.heightOffset ? s.heightOffset(x,z) : 0);
           if (y > maxY || y <= best) continue;
         }
         best = y; bs = s;
@@ -101,17 +107,19 @@ export function createPhysics() {
     ceilingAbove(x, z, fromY, toY) {
       let lo = Infinity;
       for (const c of ceilings.at(x, z)) {
-        if (c.y <= fromY || c.y >= toY || c.y >= lo) continue;
+        const y = c.y + (c.heightOffset ? c.heightOffset(x,z) : 0);
+        if (y <= fromY || y >= toY || y >= lo) continue;
         if (x < c.bb[0] || x > c.bb[2] || z < c.bb[1] || z > c.bb[3] || !pointInPoly(x, z, c.poly)) continue;
         if (c.holes && c.holes.some(h => pointInPoly(x, z, h))) continue;
-        lo = c.y;
+        lo = y;
       }
       return lo;
     },
     zoneAt(x, y, z) {
       let best = null;
       for (const zn of zones.at(x, z)) {
-        if (y < zn.y0 - 0.3 || y > zn.y1) continue;
+        const level = y - (zn.heightOffset ? zn.heightOffset(x,z) : 0);
+        if (level < zn.y0 - 0.3 || level > zn.y1) continue;
         if (x < zn.bb[0] || x > zn.bb[2] || z < zn.bb[1] || z > zn.bb[3] || !pointInPoly(x, z, zn.poly)) continue;
         if (!best || (zn.priority || 0) > (best.priority || 0) || ((zn.priority || 0) === (best.priority || 0) && zn.area < best.area)) best = zn;
       }
@@ -124,7 +132,8 @@ export function createPhysics() {
       for (let it = 0; it < 3; it++) {
         let moved = false;
         for (const w of near) {
-          if (feet + step >= w.y1 || head <= w.y0) continue;
+          const offset = w.heightOffset ? w.heightOffset(pos.x,pos.z) : 0;
+          if (feet + step >= w.y1+offset || head <= w.y0+offset) continue;
           const dx = w.bx - w.ax, dz = w.bz - w.az, L2 = dx * dx + dz * dz || 1e-9;
           let t = ((pos.x - w.ax) * dx + (pos.z - w.az) * dz) / L2; t = t < 0 ? 0 : t > 1 ? 1 : t;
           const cx = w.ax + dx * t, cz = w.az + dz * t;

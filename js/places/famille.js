@@ -1,3 +1,6 @@
+import { relief, exteriorReliefEnabled } from '../banpo_relief.js';
+import { gardenSurface, hotelCourtDatum } from './_gardenGrade.js';
+
 // Round 20. The user's 2026-11-07 photographs override the older GPS/plan fit.
 // The indoor restaurant street meets parking 2F. The garden is above parking 3F.
 export const meta = {
@@ -349,8 +352,25 @@ function buildDeck(K) {
       box(s,v,garden,.18,.73,.28,0x493f35);
     }
   }
-  const valet=FP(27,15.7);
-  K.ramp(...P(.6,6),...valet,{ya:garden,yb:11.56,w:9,mat:'sidewalk',rails:false});
+  const walkStart=P(.6,6), valet=FP(27,15.7);
+  const dx=valet[0]-walkStart[0], dz=valet[1]-walkStart[1], startDatum=relief(...walkStart);
+  // The garden walk merges diagonally into the hotel forecourt. Once on
+  // the court, the full width of both pavements shares the same level.
+  K.withTerrainSurface((x,z)=>{
+    if (!exteriorReliefEnabled()) return 0;
+    const t=Math.max(0,Math.min(1,((x-walkStart[0])*dx+(z-walkStart[1])*dz)/(dx*dx+dz*dz)));
+    const f=Math.min(1,t/.24), blend=f*f*(3-2*f);
+    const endDatum=hotelCourtDatum(x,z)+(11.56-garden)*(1-t);
+    return startDatum+(endDatum-startDatum)*blend;
+  },()=>{
+    const sections=Math.ceil(Math.hypot(dx,dz)/3);
+    const point=t=>[walkStart[0]+dx*t,walkStart[1]+dz*t];
+    const level=t=>garden+(11.56-garden)*t;
+    for(let i=0;i<sections;i++) {
+      const a=i/sections,b=(i+1)/sections;
+      K.ramp(...point(a),...point(b),{ya:level(a),yb:level(b),w:9,mat:'sidewalk',rails:false});
+    }
+  });
   sign('JW 메리어트 정문 · 발레',2,7,garden+2.3,3.4,.4,faceEast);
   // Keep the public car park continuous past the short OSM western building.
   // Bend the garden aisle around the separate transverse block at station 197.
@@ -379,7 +399,7 @@ function buildDeck(K) {
     box(s,7,garden+2.9,14,.68,.24,0x453c34);
     sign(name,s,7.15,garden+3.25,3.5,.41,faceSouth,'#453c34','#f5e9cf');
   }
-  sign('데블스도어 · 더 바이킹 →',283,39,garden+1.65,4.6,.4,faceEast+PI);
+  sign('데블스도어 · 더 바이킹 →',283,39,gardenSurface(283,39)+1.65,4.6,.4,faceEast+PI);
   const westDoor=P(1,4.5), garageEnd=FP(-6,36);
   K.ramp(...garageEnd,...westDoor,{ya:9,yb:9,w:5.9,mat:'asphalt',rails:false});
   const start=P(72.8,8);

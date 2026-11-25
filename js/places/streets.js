@@ -1,6 +1,8 @@
-import { gardenPoint, gardenStation, gardenSurface } from './_gardenGrade.js';
+import { gardenPoint, gardenStation, gardenSurface, gardenKerb, gardenTerrainEdge, gardenSurveyY, hotelCourtDatum } from './_gardenGrade.js';
+import { relief, exteriorReliefEnabled } from '../banpo_relief.js';
 import { buildGardenPublicFork, publicForkRoads } from './_gardenPublicFork.js';
 import { buildGardenFrontage, frontageWays } from './_gardenFrontage.js';
+import { gardenPaving } from './_gardenArrival.js';
 import { buildRearParking } from './_rearParking.js';
 import { gradedGround } from './_gradedGround.js';
 // Detailed public right-of-way. x east / z south; all dimensions in metres.
@@ -66,10 +68,13 @@ export function build(K) {
   const PI = Math.PI, ROAD = 0.04, WALK = 0.15;
   const C = { steel: 0x48545d, silver: 0x9daab0, yellow: 0xf2c329, white: 0xf4f1e6, blue: 0x238bd2, green: 0x075847 };
   const byId = new Map(K.osm.roads.map(r => [r.id, r]));
-  buildHotelDrive(K);
   const roads = meta.claimRoads.filter(id => !gardenWays.includes(id)).map(id => byId.get(id)).filter(Boolean);
   const flyIds = new Set([480856735,480856736,1420100037,1420100038]);
   const tunnelIds = new Set([71105531,71105555,1499902351,1499902352,1499902353,1499902354]);
+  // OSM labels the approach sections at layer zero too. They belong to the
+  // structure throughout and cannot participate in a ground-level junction.
+  const separateCarriageways = K._.separateCarriageways ||= new Set();
+  for (const id of [...flyIds, ...tunnelIds]) separateCarriageways.add(id);
   const foot = r => ['footway','steps','pedestrian','path'].includes(r.hw);
   const surfaceRoads = roads.filter(r => !foot(r) && !r.tunnel && !r.bridge && !flyIds.has(r.id) && !tunnelIds.has(r.id));
   const major = r => ['primary','secondary'].includes(r.hw);
@@ -180,6 +185,7 @@ export function build(K) {
   },[1.6,.8]);
   K.texture('streets-tactile',64,64,(g,w,h)=>{g.fillStyle='#e1b52e';g.fillRect(0,0,w,h);g.fillStyle='#f5d85c';for(let x=8;x<w;x+=16)for(let y=8;y<h;y+=16){g.beginPath();g.arc(x,y,3,0,PI*2);g.fill();}},[.4,.4]);
   K.texture('streets-grate',64,64,(g,w,h)=>{g.fillStyle='#474e50';g.fillRect(0,0,w,h);g.fillStyle='#181e22';for(let i=5;i<64;i+=8)g.fillRect(i,5,4,54);},[.6,.6]);
+  buildHotelDrive(K);
   // Ground holes do not clip previously registered road surfaces. Subtract the
   // open cuts from our ground geometry before submitting it to the real kit.
   const cutPaths = [[[-433.45,473.1],[-211.18,362.25]],[[-79.33,301.845],[85.2,217.68]]];
@@ -378,6 +384,9 @@ export function build(K) {
   }
   // Sidewalks stop across side roads, crossings and building footprints. The
   // inner edge of a paired carriageway is rejected by the road proximity test.
+  const forkLanes=publicForkRoads.map(id=>byId.get(id)).filter(r=>r.hw!=='footway');
+  const forkApproaches=new Set([218681382,498559933,218870945,691602197]);
+  const forkCuts=forkLanes.flatMap(r=>r.pts.slice(1).map((b,i)=>stripPoly(r.pts[i],b,r.width+.25)));
   for(const r of surfaceRoads.filter(major)) {
     const p=path(r.pts);
     for(const side of [-1,1])for(let s=4;s<p.L-2;s+=7) {
@@ -385,7 +394,14 @@ export function build(K) {
       if(inG13(q.x,q.z)||onTerminalMedian(q.x,q.z))continue;
       if((n.r&&n.d<n.r.width/2+1.5)||inBuilding(q.x,q.z)||inCut(q.x,q.z))continue;
       const a=at(p,Math.max(0,s-3.6),off),b=at(p,Math.min(p.L,s+3.6),off);
-      flat([a.x,a.z],[b.x,b.z],3.7,WALK,'streets-pavers',true);
+      const fork=forkApproaches.has(r.id);
+      if(fork){
+        for(const poly of clipped(stripPoly([a.x,a.z],[b.x,b.z],3.7),forkCuts)){
+          K.slab(poly,WALK,{mat:'streets-pavers',thick:WALK,ceil:false});
+        }
+      }else flat([a.x,a.z],[b.x,b.z],3.7,WALK,'streets-pavers',true);
+      const nr=fork?nearest(q.x,q.z,forkLanes):null;
+      if(nr?.r && nr.d<nr.r.width/2+3.6) continue;
       const ca=at(p,Math.max(0,s-3.6),side*(r.width/2+.18)),cb=at(p,Math.min(p.L,s+3.6),side*(r.width/2+.18));
       if(!inCut(ca.x,ca.z)&&!inCut(cb.x,cb.z))K.wall(ca.x,ca.z,cb.x,cb.z,ROAD,WALK,{thick:.28,mat:0xbfc1ba,solid:false});
       if(Math.abs(q.x)<650&&q.z>-750&&q.z<650&&clearFurniture(q.x,q.z)&&furniture.every(a=>Math.hypot(a[0]-q.x,a[1]-q.z)>17)) {
@@ -488,7 +504,8 @@ export function build(K) {
   K.hpoly({tex:'grass',color:0x78944d},[[467,55],[471.8,54],[474,57],[472.5,59],[468.5,57]],.185);
   for(const [x,z] of [[469,55.5],[471.5,56],[472,58]])K.dome({x,z,y:.18,rx:.65,ry:.45,rz:.6,seg:8,rings:4,mat:0x56753e});
   flat([469.8,53],[472.5,53],.6,.19,'streets-tactile');
-  const pavement=(x,z)=>medianPlatforms.some(p=>K.pointInPoly(x,z,p))||roadNetwork.every(r=>nearest(x,z,[r]).d>r.width/2+.3);
+  const pavement=(x,z)=>!(x>346&&x<487&&z>-49&&z<86&&
+    forkLanes.some(r=>nearest(x,z,[r]).d<r.width/2+.3)) && (medianPlatforms.some(p=>K.pointInPoly(x,z,p))||roadNetwork.every(r=>nearest(x,z,[r]).d>r.width/2+.3));
   function curbSite(x,z,dx,dz){for(let t=0;t<=32;t+=.5){const xx=x+dx*t,zz=z+dz*t;if(pavement(xx,zz)&&!inBuilding(xx,zz)&&!inCut(xx,zz))return [xx,zz];}return null;}
   const pedestrianSites=[];
   function bollard(x,z,y=WALK){
@@ -551,34 +568,36 @@ export function build(K) {
     let site=curbSite(x,z,nx,nz);
     if(!site)for(const t of [4,8,12]){site=curbSite(x-a.u*t,z-a.v*t,nx,nz);if(site)break;}
     if(!site)return;[x,z]=site;
-    K.cyl({x,z,y:WALK,r:.14,h:6.8,seg:10,mat:C.silver});
-    K.box({x,z,y:WALK,w:.42,h:.22,d:.42,mat:0x8d9290});
-    beam([x,6.85,z],[x-nx*reach,6.85,z-nz*reach],.105,C.silver);
-    beam([x,6.3,z],[x-nx*2,6.85,z-nz*2],.065,C.silver);
-    const busy=Math.hypot(a.j.x-358,a.j.z+261)<20;
-    for(const offset of busy?[reach-.65,Math.max(3.4,reach*.47)]:[reach-.65]){
-      const hx=x-nx*offset,hz=z-nz*offset;
-      beam([hx,6.85,hz],[hx,6.27,hz],.045,C.steel);
-      K.box({x:hx,z:hz,y:6.03,w:1.35,h:.4,d:.28,rotY:rot,mat:0x20272b,solid:false});
-      for(let i=0;i<4;i++){
-        const px=hx+nx*(i-1.5)*.31+a.u*.155,pz=hz+nz*(i-1.5)*.31+a.v*.155;
-        K.box({x:px,z:pz,y:6.09,w:.245,h:.28,d:.11,rotY:rot,mat:0x10181b,solid:false});
-        if(i===2)K.sign('←',{x:px+a.u*.061,z:pz+a.v*.061,y:6.23,w:.19,h:.19,rotY:rot,bg:'#101b18',fg:'#274b37'});
-        else K.dome({x:px+a.u*.066,z:pz+a.v*.066,y:6.23,rx:.088,ry:.088,rz:.088,seg:10,rings:5,hemi:false,mat:i===0?emit(0xf73c35):i===1?0x493e22:0x214e38});
+    K.withTerrainAnchor(x, z, () => {
+      K.cyl({x,z,y:WALK,r:.14,h:6.8,seg:10,mat:C.silver});
+      K.box({x,z,y:WALK,w:.42,h:.22,d:.42,mat:0x8d9290});
+      beam([x,6.85,z],[x-nx*reach,6.85,z-nz*reach],.105,C.silver);
+      beam([x,6.3,z],[x-nx*2,6.85,z-nz*2],.065,C.silver);
+      const busy=Math.hypot(a.j.x-358,a.j.z+261)<20;
+      for(const offset of busy?[reach-.65,Math.max(3.4,reach*.47)]:[reach-.65]){
+        const hx=x-nx*offset,hz=z-nz*offset;
+        beam([hx,6.85,hz],[hx,6.27,hz],.045,C.steel);
+        K.box({x:hx,z:hz,y:6.03,w:1.35,h:.4,d:.28,rotY:rot,mat:0x20272b,solid:false});
+        for(let i=0;i<4;i++){
+          const px=hx+nx*(i-1.5)*.31+a.u*.155,pz=hz+nz*(i-1.5)*.31+a.v*.155;
+          K.box({x:px,z:pz,y:6.09,w:.245,h:.28,d:.11,rotY:rot,mat:0x10181b,solid:false});
+          if(i===2)K.sign('←',{x:px+a.u*.061,z:pz+a.v*.061,y:6.23,w:.19,h:.19,rotY:rot,bg:'#101b18',fg:'#274b37'});
+          else K.dome({x:px+a.u*.066,z:pz+a.v*.066,y:6.23,rx:.088,ry:.088,rz:.088,seg:10,rings:5,hemi:false,mat:i===0?emit(0xf73c35):i===1?0x493e22:0x214e38});
+        }
       }
-    }
-    if(busy){
-      // The existing mast bases stay on pavement. The closer side repeater,
-      // equipment box and camera make the photographed corner legible.
-      K.slab(rect(x,z,1.7,1.7),WALK,{mat:'streets-pavers',thick:.15,ceil:false});
-      K.box({x:x-nx*.23,z:z-nz*.23,y:3.45,w:.31,h:.9,d:.24,rotY:rot,mat:0x20272b,solid:false});
-      for(let i=0;i<3;i++)K.dome({x:x-nx*.23+a.u*.15,z:z-nz*.23+a.v*.15,y:4.18-i*.27,rx:.085,ry:.085,rz:.085,seg:8,rings:4,hemi:false,mat:i===0?emit(0xef4439):0x223b31});
-      K.box({x:x+nx*.25,z:z+nz*.25,y:.5,w:.38,h:.65,d:.25,rotY:rot,mat:0x8e9694,solid:false});
-      beam([x,7,z],[x+a.u*.8,7.3,z+a.v*.8],.035,C.silver);
-      K.box({x:x+a.u*.82,z:z+a.v*.82,y:7.22,w:.18,h:.17,d:.4,rotY:rot,mat:0xd8ddd8,solid:false});
-      K.box({x:x+a.u*1.02,z:z+a.v*1.02,y:7.25,w:.13,h:.1,d:.015,rotY:rot,mat:0x202a30,solid:false});
-    }
-    K.sign(a.r.name||'고속터미널',{x:x-nx*2.5,z:z-nz*2.5,y:6.23,w:3.2,h:.55,rotY:rot,bg:'#155b9c',fg:'#fff',twoSided:true,box:.08});
+      if(busy){
+        // The existing mast bases stay on pavement. The closer side repeater,
+        // equipment box and camera make the photographed corner legible.
+        K.slab(rect(x,z,1.7,1.7),WALK,{mat:'streets-pavers',thick:.15,ceil:false});
+        K.box({x:x-nx*.23,z:z-nz*.23,y:3.45,w:.31,h:.9,d:.24,rotY:rot,mat:0x20272b,solid:false});
+        for(let i=0;i<3;i++)K.dome({x:x-nx*.23+a.u*.15,z:z-nz*.23+a.v*.15,y:4.18-i*.27,rx:.085,ry:.085,rz:.085,seg:8,rings:4,hemi:false,mat:i===0?emit(0xef4439):0x223b31});
+        K.box({x:x+nx*.25,z:z+nz*.25,y:.5,w:.38,h:.65,d:.25,rotY:rot,mat:0x8e9694,solid:false});
+        beam([x,7,z],[x+a.u*.8,7.3,z+a.v*.8],.035,C.silver);
+        K.box({x:x+a.u*.82,z:z+a.v*.82,y:7.22,w:.18,h:.17,d:.4,rotY:rot,mat:0xd8ddd8,solid:false});
+        K.box({x:x+a.u*1.02,z:z+a.v*1.02,y:7.25,w:.13,h:.1,d:.015,rotY:rot,mat:0x202a30,solid:false});
+      }
+      K.sign(a.r.name||'고속터미널',{x:x-nx*2.5,z:z-nz*2.5,y:6.23,w:3.2,h:.55,rotY:rot,bg:'#155b9c',fg:'#fff',twoSided:true,box:.08});
+    });
   }
   for(const a of approaches){
     const r=a.r,lanes=laneCount(r),lw=r.width/lanes;
@@ -697,12 +716,14 @@ export function build(K) {
     const near=nearest(x,z,roadId?[byId.get(roadId)]:surfaceRoads),rot=near.rot-PI/2+(island?PI:0),c=Math.cos(rot),s=Math.sin(rot),P=(u,v)=>({x:x+u*c+v*s,z:z-u*s+v*c});
     K.box({x,z,y:base,w:island?26:8,h:WALK,d:island?3.2:3.1,rotY:rot,mat:'streets-pavers'});
     const tactile=P(0,1.35);K.box({...tactile,y:base+WALK+.006,w:island?25:7.7,h:.014,d:.35,rotY:rot,mat:'streets-tactile',solid:false});
-    K.box({x,z,y:base+2.9,w:6.6,h:.16,d:2.7,rotY:rot,mat:C.steel,solid:false});K.box({x,z,y:base+2.86,w:6.2,h:.025,d:1.9,rotY:rot,mat:emit(0xfff0d2),solid:false});
-    for(const u of [-3,0,3]) {const p=P(u,-.95);K.box({...p,y:base+WALK,w:.1,h:2.77,d:.1,mat:C.steel});}
-    for(const u of [-1.5,1.5]) {const p=P(u,-.98);K.box({...p,y:base+.65,w:2.85,h:2.02,d:.045,rotY:rot,mat:'glass',solid:true});}
-    for(const v of [-1.2,1.2]) {const p=P(0,v);K.sign([name,id?'정류소 '+id:'서울 시내버스'],{...p,y:base+2.61,w:5.5,h:.46,rotY:rot+(v<0?PI:0),bg:'#133b52',fg:'#fff'});}
-    const led=P(1.8,-.86);K.sign(['버스 도착 안내','노선 정보 확인'],{...led,y:base+2.03,w:1.7,h:.56,rotY:rot,bg:'#091718',fg:'#f2bd43',box:.05});
-    const map=P(-2.6,-.89);K.sign(['주변 안내','고속터미널역','반포한강공원'],{...map,y:base+1.52,w:.58,h:1.25,rotY:rot,bg:'#e8e7db',fg:'#254859'});
+    K.withTerrainAnchor(x,z,()=>{
+      K.box({x,z,y:base+2.9,w:6.6,h:.16,d:2.7,rotY:rot,mat:C.steel,solid:false});K.box({x,z,y:base+2.86,w:6.2,h:.025,d:1.9,rotY:rot,mat:emit(0xfff0d2),solid:false});
+      for(const u of [-3,0,3]) {const p=P(u,-.95), drop=relief(p.x,p.z)-relief(x,z);K.box({...p,y:base+WALK+drop,w:.1,h:2.77-drop,d:.1,mat:C.steel});}
+      for(const u of [-1.5,1.5]) {const p=P(u,-.98);K.box({...p,y:base+.65,w:2.85,h:2.02,d:.045,rotY:rot,mat:'glass',solid:true});}
+      for(const v of [-1.2,1.2]) {const p=P(0,v);K.sign([name,id?'정류소 '+id:'서울 시내버스'],{...p,y:base+2.61,w:5.5,h:.46,rotY:rot+(v<0?PI:0),bg:'#133b52',fg:'#fff'});}
+      const led=P(1.8,-.86);K.sign(['버스 도착 안내','노선 정보 확인'],{...led,y:base+2.03,w:1.7,h:.56,rotY:rot,bg:'#091718',fg:'#f2bd43',box:.05});
+      const map=P(-2.6,-.89);K.sign(['주변 안내','고속터미널역','반포한강공원'],{...map,y:base+1.52,w:.58,h:1.25,rotY:rot,bg:'#e8e7db',fg:'#254859'});
+    });
     const bench=P(-.4,-.6);K.box({...bench,y:base+.57,w:2.9,h:.09,d:.48,rotY:rot,mat:'wood'});for(const u of [-1.5,.8]){const p=P(u,-.6);K.box({...p,y:base+WALK,w:.12,h:.42,d:.4,mat:C.steel});}
     for(let i=0;i<4;i++){const p=P(-1.8+i*1.15,.4+(i%2)*.2);K.person(p.x,base+WALK,p.z,{shirt:[0xf1e3cc,0x283e55,0x914d3d,0x5e7967][i]});}
     const pole=P(4,0);K.cyl({...pole,y:base+WALK,r:.075,h:3.6,mat:C.steel});K.sign(['버스',id||name],{...pole,y:base+3.05,w:.9,h:.9,rotY:rot,bg:'#1768a5',fg:'#fff',twoSided:true});
@@ -710,9 +731,11 @@ export function build(K) {
       // street_01: paired narrow dark-steel shelters, upright information
       // screens, granite platform edge and black post-and-rail fencing.
       const second=P(-8.3,0);
-      K.box({...second,y:2.9,w:6.6,h:.16,d:2.7,rotY:rot,mat:0x2e383b,solid:false});
-      for(const u of [-11.3,-8.3,-5.3]){const a=P(u,-.95);K.box({...a,y:WALK,w:.09,h:2.77,d:.09,mat:C.steel});}
-      for(const u of [-9.8,-6.8]){const a=P(u,-.98);K.box({...a,y:.55,w:2.85,h:2.12,d:.035,rotY:rot,mat:'glass',solid:false});}
+      K.withTerrainAnchor(second.x,second.z,()=>{
+        K.box({...second,y:2.9,w:6.6,h:.16,d:2.7,rotY:rot,mat:0x2e383b,solid:false});
+        for(const u of [-11.3,-8.3,-5.3]){const a=P(u,-.95), drop=relief(a.x,a.z)-relief(second.x,second.z);K.box({...a,y:WALK+drop,w:.09,h:2.77-drop,d:.09,mat:C.steel});}
+        for(const u of [-9.8,-6.8]){const a=P(u,-.98);K.box({...a,y:.55,w:2.85,h:2.12,d:.035,rotY:rot,mat:'glass',solid:false});}
+      });
       const seat=P(-8.3,-.55);K.box({...seat,y:.57,w:3.1,h:.09,d:.48,rotY:rot,mat:'wood'});
       for(const u of [-11.4,2.9]){
         const a=P(u,-.55);K.box({...a,y:.2,w:.8,h:2.45,d:.16,rotY:rot,mat:0x202c31,solid:false});
@@ -947,23 +970,29 @@ export function build(K) {
 
   // Flyover: approach ways tagged layer=0 are real ramps, not flat end stubs.
   for(const id of flyIds) {
-    const r=byId.get(id),p=path(r.pts),w=14.2,H=s=>id===1420100038?mix(ROAD,6.5,s/p.L):id===480856736?mix(6.5,ROAD,s/p.L):6.5;
-    for(let s=0;s<p.L;s+=5){const e=Math.min(p.L,s+5),a=at(p,s),b=at(p,e),ya=H(s),yb=H(e);
-      K.ramp(a.x,a.z,b.x,b.z,{w,ya,yb,mat:'asphalt',rails:false});
-      const poly=stripPoly([a.x,a.z],[b.x,b.z],w);
-      K.quad(0x9ca7ad,[[poly[3][0],ya-.85,poly[3][1]],[poly[2][0],yb-.85,poly[2][1]],[poly[1][0],yb-.85,poly[1][1]],[poly[0][0],ya-.85,poly[0][1]]],[0,-1,0]);
-      for(const side of [-1,1]){const aa=at(p,s,side*(w/2+.05)),bb=at(p,e,side*(w/2+.05));
-        K.quad({tex:'concrete',color:0xb2bac0},[[aa.x,ya-.85,aa.z],[bb.x,yb-.85,bb.z],[bb.x,yb+.7,bb.z],[aa.x,ya+.7,aa.z]],[side*-a.v,0,side*a.u]);
-        rail([aa.x,aa.z],[bb.x,bb.z],ya,yb);
-        if(ya>4.5&&yb>4.5){K.quad('glass',[[aa.x,ya+.7,aa.z],[bb.x,yb+.7,bb.z],[bb.x,yb+2.2,bb.z],[aa.x,ya+2.2,aa.z]],[side*-a.v,0,side*a.u]);beam([aa.x,ya+.65,aa.z],[aa.x,ya+2.2,aa.z],.045,C.silver);beam([aa.x,ya+2.2,aa.z],[bb.x,yb+2.2,bb.z],.045,C.silver);}
+    const r=byId.get(id),p=path(r.pts),w=14.2, datum=relief(...r.pts[0]);
+    const start=id===1420100038?ROAD:6.5;
+    const finish=(id===480856736?ROAD:6.5)+relief(...r.pts.at(-1))-datum;
+    const H=s=>mix(start,finish,s/p.L);
+    K.withTerrainAnchor(...r.pts[0],()=>{
+      for(let s=0;s<p.L;s+=5){const e=Math.min(p.L,s+5),a=at(p,s),b=at(p,e),ya=H(s),yb=H(e);
+        K.ramp(a.x,a.z,b.x,b.z,{w,ya,yb,mat:'asphalt',rails:false});
+        const poly=stripPoly([a.x,a.z],[b.x,b.z],w);
+        K.quad(0x9ca7ad,[[poly[3][0],ya-.85,poly[3][1]],[poly[2][0],yb-.85,poly[2][1]],[poly[1][0],yb-.85,poly[1][1]],[poly[0][0],ya-.85,poly[0][1]]],[0,-1,0]);
+        for(const side of [-1,1]){const aa=at(p,s,side*(w/2+.05)),bb=at(p,e,side*(w/2+.05));
+          K.quad({tex:'concrete',color:0xb2bac0},[[aa.x,ya-.85,aa.z],[bb.x,yb-.85,bb.z],[bb.x,yb+.7,bb.z],[aa.x,ya+.7,aa.z]],[side*-a.v,0,side*a.u]);
+          rail([aa.x,aa.z],[bb.x,bb.z],ya,yb);
+          if(ya>4.5&&yb>4.5){K.quad('glass',[[aa.x,ya+.7,aa.z],[bb.x,yb+.7,bb.z],[bb.x,yb+2.2,bb.z],[aa.x,ya+2.2,aa.z]],[side*-a.v,0,side*a.u]);beam([aa.x,ya+.65,aa.z],[aa.x,ya+2.2,aa.z],.045,C.silver);beam([aa.x,ya+2.2,aa.z],[bb.x,yb+2.2,bb.z],.045,C.silver);}
+        }
       }
-    }
-    markings({...r,width:w,lanes:4},p,H);
-    for(let s=20;s<p.L-8;s+=30){const q=at(p,s),h=H(s);if(h<4.5)continue;K.cyl({x:q.x,z:q.z,y:0,r:.85,h:h-1,seg:12,mat:{tex:'concrete',color:0xc2c2b8}});K.box({x:q.x,z:q.z,y:h-1.2,w:11,h:.55,d:2,rotY:q.rot,mat:'concrete',solid:false});}
-    for(let s=28;s<p.L-15;s+=65){const q=at(p,s,2);K.vehicle({x:q.x,z:q.z,y:H(s),rotY:q.rot,kind:'car'});const l=at(p,s,-7.3);lamp(l.x,l.z,q.rot+PI/2,H(s));}
+      markings({...r,width:w,lanes:4},p,H);
+      for(let s=20;s<p.L-8;s+=30){const q=at(p,s),h=H(s),base=relief(q.x,q.z)-datum;if(h-base<4.5)continue;K.cyl({x:q.x,z:q.z,y:base,r:.85,h:h-base-1,seg:12,mat:{tex:'concrete',color:0xc2c2b8}});K.box({x:q.x,z:q.z,y:h-1.2,w:11,h:.55,d:2,rotY:q.rot,mat:'concrete',solid:false});}
+      for(let s=28;s<p.L-15;s+=65){const q=at(p,s,2);K.vehicle({x:q.x,z:q.z,y:H(s),rotY:q.rot,kind:'car'});const l=at(p,s,-7.3);lamp(l.x,l.z,q.rot+PI/2,H(s));}
+    });
     for(let i=1;i<r.pts.length;i++)K.zone({name:'강남터미널고가도로',floor:'고가',sub:'반포대로 · 반포대교 방면',poly:stripPoly(r.pts[i-1],r.pts[i],16),y0:3.5,y1:10,priority:5});
   }
-  K.sign('강남터미널고가도로',{x:-334.4,z:1,y:5.6,w:9,h:.7,rotY:PI/2+.43,bg:'#71858b',fg:'#fff'});
+  const signDeck=K.phys.support(-334.4,1,14).y;
+  K.sign('강남터미널고가도로',{x:-334.4,z:1,y:signDeck-.9,w:9,h:.7,rotY:PI/2+.43,bg:'#71858b',fg:'#fff'});
 
   // Sapyeong underpass: one continuous opening avoids overlapping ground holes.
   const tp=path([[-433.45,473.1],[-374.6,443.745],[-211.18,362.25],[-79.33,301.845],[74.27,222.13],[85.2,217.68]]);
@@ -1084,7 +1113,7 @@ export function build(K) {
   spawn('사평대로 · 보도육교 남쪽',94,WALK,240,0);
   const deck=at(fp,24);spawn('센트럴씨티보도육교 위',deck.x,BRIDGE,deck.z,24);
   const under=at(tp,(west+east)/2,6.8);spawn('사평지하차도 내부',under.x,-6,under.z,295);
-  const over=at(path(byId.get(480856735).pts),80,5.6);spawn('강남터미널고가도로 위',over.x,6.5,over.z,20);
+  const over=at(path(byId.get(480856735).pts),80,5.6);spawn('강남터미널고가도로 위',over.x,K.phys.support(over.x,over.z,14).y,over.z,20);
   spawn('잠원로 · 반포쇼핑타운',350,WALK,-303,180);
   buildRoadviewBuildings(K);
 }
@@ -1994,12 +2023,14 @@ function buildHotelDrive(K) {
   const eastJunction = eastRoad.pts.find(p => Math.abs(p[0] - 71.54) < .01);
   if (!eastJunction) return;
 
+  gardenPaving(K);
   buildGardenTerrain(K);
   buildGardenFrontage(K, road);
   buildGardenPublicFork(K);
   buildParkingFlyover(K);
   buildRearParking(K);
-  const deck=11.5;
+  const deck=11.5, exterior=exteriorReliefEnabled();
+  const onCourt=build=>K.withTerrainSurface(hotelCourtDatum,build);
   // Relative grades meet the existing hotel and parking thresholds.
   const west=FP(45,27);
   const westFoot=parkingRoad.pts[0];
@@ -2016,30 +2047,48 @@ function buildHotelDrive(K) {
   const chain=[0];
   for(let i=1;i<climb.length;i++) chain.push(chain[i-1]+Math.hypot(
     climb[i][0]-climb[i-1][0],climb[i][1]-climb[i-1][1]));
-  const approachHeight=chain.map(d=>deck*d/chain.at(-1));
+  const lower=exterior?gardenSurveyY(11.07)-.061:0,upper=deck+hotelCourtDatum(...climb.at(-1));
+  const mid=exterior?gardenSurveyY(15.55)-.061:deck*59.3/chain.at(-1);
+  // Only the abutments touch the terrain. Interpolate the raised road in
+  // world elevation so hills underneath it do not kink the visible grade.
+  const approachHeight=chain.map((d,i)=>(d<=59.3?lower+(mid-lower)*d/59.3:
+    mid+(upper-mid)*(d-59.3)/(chain.at(-1)-59.3))-relief(...climb[i]));
   // Bring the bend around the outside of the modelled gallery to the kerb.
   const valetTurn=[[38,146],[35,153],FP(3,15.7),FP(18,15.7),FP(28,15.7)];
+  const turnHeight=valetTurn.map(()=>deck);
   // The footway fills the inside of the turning court over the service level.
-  K.slab([[23.2,145.8],[33.7,139.5],[35.1,146],[32.3,152.2],[29.7,157.5],[27.5,157.6]],
-    deck,{mat:'sidewalk',under:'concrete',thick:.48});
+  onCourt(()=>K.slab([[23.2,145.8],[33.7,139.5],[35.1,146],[32.3,152.2],[29.7,157.5],[27.5,157.6]],
+    deck,{mat:'sidewalk',under:'concrete',thick:.48}));
   // Match the shallow grade of the existing garden walk as it joins the lay-by.
-  road([...climb,...valetTurn],[...approachHeight,deck,deck,11.97,11.75,deck],2.85,climb.length);
+  road(climb,approachHeight,2.85,climb.length);
+  onCourt(()=>road([climb.at(-1),...valetTurn],[deck,...turnHeight],2.85));
   // From the collector, turn at the footbridge and follow the garden side
   // of the hotel to the canopy. The parking portal is a separate downward turn.
   const eastEntry=[eastJunction,...eastRoad.pts.slice(1,5),[40,150],[36,151.6],
     [35,153],...valetTurn.slice(2)];
-  road(eastEntry,eastEntry.map((_,i)=>i===8?11.97:i===9?11.75:deck),2.85);
+  onCourt(()=>road(eastEntry,eastEntry.map(()=>deck),2.85));
   // The eastern kerb of the planted court runs down to this access street.
   const walk=[...eastEntry.slice(0,7)].map(([x,z])=>[x-3.2,z+1.45]);
-  for(let i=1;i<walk.length;i++) K.ramp(...walk[i-1],...walk[i],{ya:deck+.03,yb:deck+.03,w:2.2,mat:'sidewalk',rails:false});
-  const eastCourt=[[32.3,151],[38,142],[51.2,144],[59.4,169.8],[73.8,199.2],
-    [69,204],[48,209],FP(-2,43),FP(-2,27),FP(16,27),FP(16,25),
-    FP(19,20),FP(15,14),FP(3,13)];
-  K.prism(eastCourt,-.08,deck+.002,{mat:'sidewalk',side:0xa09385,solid:false});
-  K.phys.addSurface(eastCourt,deck+.002,{tag:'streets'});
+  onCourt(()=>{for(let i=1;i<walk.length;i++) K.ramp(...walk[i-1],...walk[i],{ya:deck+.03,yb:deck+.03,w:2.2,mat:'sidewalk',rails:false});});
+  // The arrival court is a roof over the occupied Famille hall. Only the
+  // exposed perimeter has an earth-retaining face down to the lower street.
+  function courtDeck(retainingEdge, overHall, height, side, solid) {
+    K.slab([...retainingEdge,...overHall],height,{mat:'sidewalk',under:'concrete',edgeMat:side,thick:.32});
+    for(let i=1;i<retainingEdge.length;i++){
+      // The last diagonal crosses the public dining corridor below the court.
+      // Fit the opening to its two faces (v=20.68 and 23.72) along this wall.
+      const a=retainingEdge[i-1],b=retainingEdge[i],length=Math.hypot(b[0]-a[0],b[1]-a[1]);
+      const openings=i===retainingEdge.length-1
+        ? [{at:(25-22.2)*length/5,w:3.04*length/5,y0:5,y1:8.23}] : [];
+      K.wall(...a,...b,-.09,height-.32,{mat:side,thick:.08,solid,openings});
+    }
+  }
+  const eastRetaining=[[38,142],[51.2,144],[59.4,169.8],[73.8,199.2],
+    [69,204],[48,209],FP(-2,43),FP(-2,27),FP(16,27),FP(16,25),FP(19,20)];
+  onCourt(()=>courtDeck(eastRetaining,[FP(15,14),FP(3,13),[32.3,151]],deck+.002,0xa09385,false));
   const [sx,sz]=eastEntry[2];
-  K.sign(['JW 메리어트  ↑','정문 · 발레'],{x:sx-4.3,z:sz+1.8,y:deck+2.15,w:2.25,h:.76,
-    rotY:Math.atan2(.42,.91),bg:'#443a32',fg:'#f4eadb',box:.08});
+  onCourt(()=>K.sign(['JW 메리어트  ↑','정문 · 발레'],{x:sx-4.3,z:sz+1.8,y:deck+2.15,w:2.25,h:.76,
+    rotY:Math.atan2(.42,.91),bg:'#443a32',fg:'#f4eadb',box:.08}));
 
   function road(stations,height,halfWidth,guardSegments=0){
     const normal = (a, b) => {
@@ -2106,12 +2155,10 @@ function buildHotelDrive(K) {
   // 2.0 m gateway beside the canopy leads DOWN to Shinsegae Famille parking.
   const rect = (u0,v0,u1,v1) => [FP(u0,v0),FP(u1,v0),FP(u1,v1),FP(u0,v1)];
   const mouth = 23, end = 4, axis = 36, half = 3.2;
-  const bank=[FP(16,25),FP(21,20),FP(21,11.45),FP(45,11.45),FP(51,23),
-    FP(51,43),FP(-2,43),FP(-2,axis+half),FP(mouth,axis+half),
-    FP(mouth,axis-half),FP(-2,axis-half),FP(-2,27),FP(16,27)];
-  K.prism(bank,-.09,deck,{mat:'sidewalk',side:'concrete',solid:false});
-  K.phys.addSurface(bank,deck,{tag:'streets'});
-  for(let i=0;i<bank.length;i++) K.phys.addWall(...bank[i],...bank[(i+1)%bank.length],-.09,deck-.04,.04);
+  const bankRetaining=[FP(48.64,18.45),FP(51,23),FP(51,43),FP(-2,43),
+    FP(-2,axis+half),FP(mouth,axis+half),FP(mouth,axis-half),FP(-2,axis-half),
+    FP(-2,27),FP(16,27),FP(16,25),FP(21,20)];
+  onCourt(()=>courtDeck(bankRetaining,[FP(21,11.45),FP(45,11.45)],deck,'concrete',true));
   // Garden embankment falls away from the forecourt toward Sapyeong-daero.
   gradedGround(K,FP(24.5,43),FP(24.5,58),deck,4.4,53,'grass');
   gradedGround(K,FP(24.5,58),FP(24.5,76),4.4,.02,53,'grass');
@@ -2134,6 +2181,7 @@ function buildHotelDrive(K) {
   K.sign(['신세계 파미에주차장       2.0m','SHINSEGAE FAMILLE PARKING LOT'],{
     x:gx-.14*FA,z:gz+.14*FB,y:deck+2.37,w:5.65,h:.43,rotY:face,bg:'#272629',fg:'#fff'});
   // Lay-by below the glass vaults, with a parallel surface lane on the garden side.
+  onCourt(()=>{
   K.slab([FP(21,24.3),FP(24.8,17.5),FP(39,17.5),FP(42,21.2),FP(40,24),FP(26,24.4)],deck+.062,{mat:'asphalt',thick:.24});
   for (const u of [27,33,39]) K.hpoly(0xf0eee7,rect(u,19.9,u+2,20),deck+.073);
   for(let u=36.2;u<39.6;u+=.82) K.hpoly(0xe6e4db,rect(u,13.25,u+.4,18.15),deck+.073);
@@ -2143,20 +2191,54 @@ function buildHotelDrive(K) {
   K.box({x,z,y:deck,w:.86,d:.55,h:1.03,rotY:FROT,mat:0x483b30,solid:true});
   K.sign('VALET',{x:x+.29*FB,z:z+.29*FA,y:deck+.76,w:.71,h:.22,rotY:FROT,
     bg:null,fg:'#f6e2b1'});
+  });
 }
 
 // Both indoor areas load the street module. Keep the terrace in short sections
 // so exterior culling retains the pavement at either restaurant door.
 function buildGardenTerrain(K) {
   const P=gardenPoint, H=gardenSurface;
+  const worldHeight=(s,v)=>H(s,v)+relief(...P(s,v));
+  K.texture('garden-stone-panels',256,256,g=>{
+    g.fillStyle='#af9e94';g.fillRect(0,0,256,256);
+    for(let j=0;j<4;j++)for(let i=-1;i<3;i++){
+      g.fillStyle=['#bfb1a8','#b9aba3','#c3b5ac'][(i+j+3)%3];
+      g.fillRect(i*128+(j%2)*64+1,j*64+1,126,62);
+    }
+  },[4,4]);
   const local=([x,z])=>[gardenStation(x,z),.4448*(x-71.26)+.89563*(z-143.25)];
   const surface=(outline,mat,lift=0)=>{
     const vertices=outline.map(([s,v])=>{
       const [x,z]=P(s,v);
-      return [x,H(s,v)+lift,z];
+      return [x,worldHeight(s,v)+lift,z];
     });
-    K.quad(mat,vertices,[0,1,0],outline.map(([s,v])=>[s/4,v/4]));
+    const uv=outline.map(([s,v],i)=>[s/4,mat==='garden-stone-panels'?vertices[i][1]/4:v/4]);
+    K.withTerrainSurface(0,()=>K.quad(mat,vertices,[0,1,0],uv));
   };
+  // Follow the crossfall of each rendered quad. A single ramp along the
+  // road centre gives both kerbs its centre height and creates steps at bends.
+  function supportPatch(outline,lift=0) {
+    let [a,b,c,d]=outline;
+    const mix=(p,q,u)=>[p[0]+(q[0]-p[0])*u,p[1]+(q[1]-p[1])*u];
+    const dist=(p,q)=>Math.hypot(q[0]-p[0],q[1]-p[1]);
+    const rise=(p,q)=>Math.abs(worldHeight(...p)-worldHeight(...q));
+    // Orient the support along the greater slope. Limit the height error
+    // across each strip on diagonal turns and cambered lanes.
+    if (rise(a,b)+rise(d,c)>rise(a,d)+rise(b,c)) [a,b,c,d]=[a,d,c,b];
+    const slices=Math.max(1,Math.ceil(Math.max(dist(a,b),dist(c,d))/1.5),
+      Math.ceil(Math.max(rise(a,b),rise(c,d))/.1));
+    for(let i=0;i<slices;i++){
+      const f=(i+.5)/slices, from=mix(a,b,f), to=mix(d,c,f);
+      const width=dist(from,to);
+      if(width<.001) continue;
+      const normalWidth=(p,q)=>Math.abs((q[0]-p[0])*(to[1]-from[1])-
+        (q[1]-p[1])*(to[0]-from[0]))/width;
+      const half=Math.max(normalWidth(a,b),normalWidth(d,c))/(2*slices)+.035;
+      const left=worldHeight(...a)+(worldHeight(...b)-worldHeight(...a))*f;
+      const right=worldHeight(...d)+(worldHeight(...c)-worldHeight(...d))*f;
+      K.withTerrainSurface(0,()=>K.phys.addRamp(...P(...from),...P(...to),half,left+lift,right+lift,{tag:'streets'}));
+    }
+  }
   const patch=(s0,v0,s1,v1,mat,lift)=>surface([[s0,v0],[s1,v0],[s1,v1],[s0,v1]],mat,lift);
   const rim=(s,v,t,w)=> {
     const a=P(s,v), b=P(t,w), ya=H(s,v), yb=H(t,w);
@@ -2166,8 +2248,8 @@ function buildGardenTerrain(K) {
   };
   // Keep the ground against the back of the parking structure. The north
   // service aisle and the P entrance at station 396, offset 2 stay at 1F.
-  const breaks=[0,104,160,196,291.6,325,347,355.6,367,372,390,396.5];
-  const outer=s=>s<=372?46.5:s<=390?46.5-(s-372)*5.7/18:40.8-(s-390)*6.3/6.5;
+  const breaks=[0,104,160,196,291.6,325,347,355.6,367,372,373.5,382.5,390,396.5];
+  const outer=gardenTerrainEdge;
   for(let i=1;i<breaks.length;i++){
     const begin=breaks[i-1], end=breaks[i];
     const north=begin>=291.6?19:begin>=196?-3.9:16.76;
@@ -2177,16 +2259,36 @@ function buildGardenTerrain(K) {
       const fa=outer(s),fb=outer(t);
       // Slice along the fall line. Adjacent bands share the same vertices
       // at the perimeter, including the narrowing end by the service fork.
+      const nose=s>=373.5;
       const bandWidth=s>=325&&s<367?2:s<105?4:8;
       const bands=Math.ceil((Math.max(fa,fb)-north)/bandWidth);
-      for(let j=0;j<bands;j++){
-        const v=north+(fa-north)*j/bands, w=north+(fb-north)*j/bands;
-        const V=north+(fa-north)*(j+1)/bands,W=north+(fb-north)*(j+1)/bands;
+      function section(station,endV){
+        if(nose){
+          const ledge=35-12*(station-373.5)/23;
+          return [north,ledge,ledge+1.38,ledge+5,ledge+9.3,endV];
+        }
+        if(s>=196 && s<373.5){
+          const last=gardenKerb(station)-3.55;
+          // Explicitly end the bank before the horizontal walking surface.
+          return [north,21.3,26,32,35.35,last,endV];
+        }
+        return Array.from({length:bands+1},(_,j)=>north+(endV-north)*j/bands);
+      }
+      const a=section(s,fa),b=section(t,fb);
+      for(let j=0;j<a.length-1;j++){
+        const v=a[j],V=a[j+1],w=b[j],W=b[j+1];
         const va=(v+V)/2,vb=(w+W)/2;
-        const mat=va<frontage+4?'sidewalk':(s<109?'sidewalk':'asphalt');
-        surface([[s,v],[t,w],[t,W],[s,V]],mat);
-        K.phys.addRamp(...P(s,va),...P(t,vb),Math.max(V-v,W-w)/2+.025,
-          H(s,va),H(t,vb),{tag:'streets'});
+        let mat=va<frontage+4||s<109?'sidewalk':'asphalt';
+        if(s>=196 && !nose && j===5)mat='garden-grey-paving';
+        if(nose)mat=j===1?'garden-stone-panels':j===2||j===3?{tex:'grass',color:0x7e8968}:'streets-pavers';
+        const outline=[[s,v],[t,w],[t,W],[s,V]];
+        surface(outline,mat);
+        if (Math.abs(worldHeight(s,V)-worldHeight(s,v))>.12 || Math.abs(worldHeight(t,W)-worldHeight(t,w))>.12) {
+          supportPatch(outline);
+        } else {
+          K.withTerrainSurface(0,()=>K.phys.addRamp(...P(s,va),...P(t,vb),Math.max(V-v,W-w)/2+.025,
+            worldHeight(s,va),worldHeight(t,vb),{tag:'streets'}));
+        }
       }
       // Where the garage has its own exterior walls the earthwork stops at
       // the wall. The approach between the two structures has a closed face.
@@ -2204,7 +2306,7 @@ function buildGardenTerrain(K) {
   const west=roads.get(356129686).pts.map(local),east=roads.get(921681575).pts.map(local);
   // Shared cross sections keep the surface and the narrow pink guidance line
   // continuous around the west return into the collector.
-  function ribbon(path,lo,hi,mat,lift){
+  function ribbon(path,lo,hi,mat,lift,walk=false){
     const normals=path.slice(1).map(([s,v],i)=>{
       const [a,b]=path[i], L=Math.hypot(s-a,v-b); return [-(v-b)/L,(s-a)/L];
     });
@@ -2220,22 +2322,19 @@ function buildGardenTerrain(K) {
       let prev=a;
       for(let j=1;j<=pieces;j++){
         const next=slice(j/pieces);
-        surface([prev[0],next[0],next[1],prev[1]],mat,lift);prev=next;
+        const outline=[prev[0],next[0],next[1],prev[1]];
+        surface(outline,mat,lift);
+        if (walk) supportPatch(outline,lift);
+        prev=next;
       }
     }
   }
   // The raised garage extension briefly occupies the aisle as it bends;
   // its existing roof height is 12.60. Keep the paint above that finish.
-  for(const path of [aisle,west,east]) ribbon(path,-3,3,'asphalt',.09);
+  for(const path of [aisle,west,east]) ribbon(path,-3,3,'asphalt',.09,true);
   ribbon(aisle,-1.45,-1.16,0xc57691,.111);
+  ribbon(east,-.45,-.13,0xc57691,.135);
   ribbon(west.slice(2),.62,.92,0xc57691,.111);
-  for(const path of [west,east]){
-    for(let i=1;i<path.length;i++){
-      const [s,v]=path[i-1],[t,w]=path[i];
-      K.phys.addRamp(...P(s,v),...P(t,w),3,H(s,v)+.09,H(t,w)+.09,{tag:'streets'});
-    }
-  }
-
   // Row of head-in surface spaces behind the pedestrian apron. Keep the
   // restaurant entries and the vehicle junction at station 268 clear.
   for(const [start,end] of [[135,177],[211,258],[282,311],[333,356]]){
@@ -2260,7 +2359,7 @@ function buildGardenTerrain(K) {
   K.phys.addWall(...P(373.4,28.8),...P(373.4,34.8),H(373.4,32)-.15,H(373.4,32)+.9,.1,'streets');
   // Long planting beds with rose stone edges divide the inner car park from
   // the public approach. Breaks connect the aisles at the mapped returns.
-  for(const [start,end] of [[120,179],[197,259],[282,337],[347,372]]){
+  for(const [start,end] of [[120,179],[197,207]]){
     for(let s=start;s<end;s+=4){
       const t=Math.min(s+4,end);
       patch(s,35.4,t,39.8,0xa68370,.32);
@@ -2282,7 +2381,25 @@ function buildGardenTerrain(K) {
 // The blue-girder parking ramp crosses the level bus-yard aisle. Its south
 // landing is on the garden deck. The hotel approach is farther west.
 function buildParkingFlyover(K) {
-  const points=K.osm.roads.find(r=>r.id===356129692).pts;
+  const points=K.osm.roads.find(r=>r.id===356129692).pts.slice();
+  // Add the transition to the level final 18 m even where OSM only records
+  // the bend endpoints.
+  let remaining=18;
+  for(let i=points.length-1;i>0;i--) {
+    const a=points[i-1], b=points[i], len=Math.hypot(b[0]-a[0],b[1]-a[1]);
+    if(len>remaining) {
+      const t=1-remaining/len;
+      points.splice(i,0,[a[0]+t*(b[0]-a[0]),a[1]+t*(b[1]-a[1])]);
+      break;
+    }
+    remaining-=len;
+  }
+  // This F002 spot lies 1.1 m off the elevated lane centre and on the
+  // blue span in the aerial. Its height belongs to the deck, not the aisle below.
+  const a=points[1], b=points[2];
+  const vx=b[0]-a[0],vz=b[1]-a[1];
+  const f=((206.50-a[0])*vx+(58.16-a[1])*vz)/(vx*vx+vz*vz);
+  points.splice(2,0,[a[0]+vx*f,a[1]+vz*f]);
   const chain=[0];
   const normals=[];
   for(let i=1;i<points.length;i++){
@@ -2291,51 +2408,62 @@ function buildParkingFlyover(K) {
     chain.push(chain[i-1]+length);
     normals.push([-dz/length,dx/length]);
   }
-  const width=5.6, deck=12.6;
-  const height=s=>.035+(deck-.035)*Math.min(1,s/(chain.at(-1)-18));
+  const width=5.6, datum=relief(...points[0]);
+  const deck=12.6+relief(...points.at(-1))-datum;
+  const riseRun=chain.at(-1)-18;
+  // Resolve heights at the two landings once. The concrete span crosses the
+  // lower service aisle independently of the relief directly beneath it.
+  const measured=exteriorReliefEnabled()?gardenSurveyY(18.22)-datum:
+    .035+(deck-.035)*chain[2]/riseRun;
+  const height=s=>s<=chain[2] ? .035+(measured-.035)*s/chain[2]:
+    measured+(deck-measured)*Math.min(1,(s-chain[2])/(riseRun-chain[2]));
   // A shared cross section at each bend keeps the deck and parapets continuous.
   const edges=points.map(([x,z],i)=>{
     const a=normals[Math.max(0,i-1)], b=normals[Math.min(i,normals.length-1)];
     const scale=width/2/(1+a[0]*b[0]+a[1]*b[1]);
     return [-1,1].map(side=>[x+side*scale*(a[0]+b[0]),z+side*scale*(a[1]+b[1])]);
   });
-  for(let i=1;i<points.length;i++){
-    const a=points[i-1], b=points[i], y0=height(chain[i-1]), y1=height(chain[i]);
-    const [l,r]=edges[i-1], [L,R]=edges[i];
-    const v=([x,z],y)=>[x,y,z];
-    const corners=[v(r,y0),v(R,y1),v(L,y1),v(l,y0)];
-    K.quad('asphalt',corners,[0,1,0]);
-    K.quad(0x324759,corners.slice().reverse().map(([x,y,z])=>[x,y-.88,z]),[0,-1,0]);
-    const length=chain[i]-chain[i-1];
-    K.phys.addRamp(...a,...b,width/2,y0,y1,{tag:'streets'});
-    if(i<points.length-1){
-      const [x,z]=b;
-      const joint=Array.from({length:12},(_,j)=>[x+width/2*Math.cos(j*Math.PI/6),z+width/2*Math.sin(j*Math.PI/6)]);
-      K.phys.addSurface(joint,y1,{tag:'streets'});
-    }
-    for(const [side,start,end] of [[1,r,R],[-1,l,L]]){
-      const normal=[normals[i-1][0]*side,0,normals[i-1][1]*side];
-      for(const [bottom,top,color] of [[-.9,-.23,0x355f80],[-.23,.47,0xaaa69d],[.79,.87,0xa9abab]]){
-        K.quad(color,[v(start,y0+bottom),v(end,y1+bottom),v(end,y1+top),v(start,y0+top)],normal);
+  K.withTerrainAnchor(...points[0], buildSpan);
+  function buildSpan() {
+    for(let i=1;i<points.length;i++){
+      const a=points[i-1], b=points[i], y0=height(chain[i-1]), y1=height(chain[i]);
+      const [l,r]=edges[i-1], [L,R]=edges[i];
+      const v=([x,z],y)=>[x,y,z];
+      const corners=[v(r,y0),v(R,y1),v(L,y1),v(l,y0)];
+      K.quad('asphalt',corners,[0,1,0]);
+      K.quad(0x324759,corners.slice().reverse().map(([x,y,z])=>[x,y-.88,z]),[0,-1,0]);
+      const length=chain[i]-chain[i-1];
+      K.phys.addRamp(...a,...b,width/2,y0,y1,{tag:'streets'});
+      if(i<points.length-1){
+        const [x,z]=b;
+        const joint=Array.from({length:12},(_,j)=>[x+width/2*Math.cos(j*Math.PI/6),z+width/2*Math.sin(j*Math.PI/6)]);
+        K.phys.addSurface(joint,y1,{tag:'streets'});
       }
-      const pieces=Math.ceil(length/3);
-      for(let j=0;j<pieces;j++){
-        const at=t=>start.map((n,k)=>n+(end[k]-n)*t);
-        const h=t=>y0+(y1-y0)*t;
-        const t=j/pieces, t2=(j+1)/pieces, [x,z]=at(t);
-        K.box({x,z,y:h(t)+.46,w:.075,d:.075,h:.37,mat:0xa8abac,solid:false});
-        K.phys.addWall(x,z,...at(t2),h(t)-.9,h(t2)+.9,.07,'streets');
+      for(const [side,start,end] of [[1,r,R],[-1,l,L]]){
+        const normal=[normals[i-1][0]*side,0,normals[i-1][1]*side];
+        for(const [bottom,top,color] of [[-.9,-.23,0x355f80],[-.23,.47,0xaaa69d],[.79,.87,0xa9abab]]){
+          K.quad(color,[v(start,y0+bottom),v(end,y1+bottom),v(end,y1+top),v(start,y0+top)],normal);
+        }
+        const pieces=Math.ceil(length/3);
+        for(let j=0;j<pieces;j++){
+          const at=t=>start.map((n,k)=>n+(end[k]-n)*t);
+          const h=t=>y0+(y1-y0)*t;
+          const t=j/pieces, t2=(j+1)/pieces, [x,z]=at(t);
+          K.box({x,z,y:h(t)+.46,w:.075,d:.075,h:.37,mat:0xa8abac,solid:false});
+          K.phys.addWall(x,z,...at(t2),h(t)-.9,h(t2)+.9,.07,'streets');
+        }
       }
-    }
-    // Supports are off the through lane at the crossing.
-    if(i===1||i===2){
-      for(const t of (i===1?[.32,.65]:[.42])){
-        const h=y0+(y1-y0)*t, x=a[0]+(b[0]-a[0])*t,z=a[1]+(b[1]-a[1])*t;
-        const rotY=Math.atan2(b[0]-a[0],b[1]-a[1]);
-        const whiteBase=Math.min(1.15,h-.9);
-        K.box({x,z,y:0,w:3.6,d:1.5,h:whiteBase,rotY,mat:0xe2e0db,solid:true});
-        K.box({x,z,y:whiteBase,w:3.6,d:1.5,h:h-.88-whiteBase,rotY,mat:'concrete',solid:true});
-        K.box({x,z,y:h-1.55,w:width-.15,d:1.65,h:.68,rotY,mat:'concrete',solid:false});
+      // Supports are off the through lane at the crossing.
+      if(i===1||i===2){
+        for(const t of (i===1?[.32,.65]:[.42])){
+          const h=y0+(y1-y0)*t, x=a[0]+(b[0]-a[0])*t,z=a[1]+(b[1]-a[1])*t;
+          const rotY=Math.atan2(b[0]-a[0],b[1]-a[1]);
+          const foot=relief(x,z)-datum-.1;
+          const whiteBase=Math.min(foot+1.15,h-.9);
+          if(whiteBase>foot) K.box({x,z,y:foot,w:3.6,d:1.5,h:whiteBase-foot,rotY,mat:0xe2e0db,solid:true});
+          if(h-.88>whiteBase) K.box({x,z,y:whiteBase,w:3.6,d:1.5,h:h-.88-whiteBase,rotY,mat:'concrete',solid:true});
+          K.box({x,z,y:h-1.55,w:width-.15,d:1.65,h:.68,rotY,mat:'concrete',solid:false});
+        }
       }
     }
   }

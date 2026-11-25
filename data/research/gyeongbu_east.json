@@ -1,9 +1,53 @@
 {
   "id": "gyeongbu_east",
   "name": "경부선 동측 주차빌딩 · 데블스도어",
-  "updated": "2026-11-07",
+  "updated": "2026-11-25",
   "round": 19,
+  "street_grade": {
+    "observation": "차고지 사잇길에서는 주차층이 보이고 사평대로에서는 건물 옆 하부 차로가 큰길과 같은 높이로 합류한다. 식당 앞 주차면에는 사평대로에서 갈라지는 짧은 오르막으로 진입한다.",
+    "model_deck_levels_m": [0, 3.15, 6.3, 9.3],
+    "measurement_basis": "주차층 간격은 거리뷰에 보이는 개방 주차층과 실내 층 연결을 반영한 모델 치수다. 서울시 표고점은 아래의 실제 측점에서만 관측한 값이며 도로의 중간 경사는 보간했다.",
+    "survey_controls": {
+      "lower_bus_yard_m": [10.20, 10.40, 10.93],
+      "upper_collector_m": [17.69, 17.69, 17.80],
+      "upper_parking_apron_m": 19.09,
+      "separate_west_hotel_ramp_midpoint_m": 15.55,
+      "hotel_forecourt_nearby_m": 19.08,
+      "blue_flyover_m": 18.22,
+      "limits": "북측 저지대와 동쪽 굽이의 모든 지점에서 실측한 것은 아니다. 서쪽 호텔 진입로 하단의 11.07m 측점은 진입로 시작에서 약 26m 떨어져 있다. 데블스도어 문턱과 호텔 문턱은 인접 표고점에서 추정했다."
+    }
+  },
   "sources": [
+    {
+      "url": "https://data.seoul.go.kr/dataList/OA-22241/F/1/datasetView.do",
+      "type": "official_spot_heights",
+      "title": "서울시 경사도 원자료의 2023·2025년 N3P_F002 표고점"
+    },
+    {
+      "url": "https://ms.smc.seoul.kr/attach/record/SEOUL/appendix/a11/A0058730.pdf#page=9",
+      "type": "public_record",
+      "title": "서울시의회 반포천 복개주차장 검토보고서 9쪽. 4층 외부는 JW메리어트호텔 입구, 1층 내부는 센트럴시티에 연결."
+    },
+    {
+      "url": "https://map.naver.com/p?p=GR-RStUQqcD3l98LD_f_jw,47.06,-8.12,80,Float&c=15.00,0,0,3,adh",
+      "type": "roadview",
+      "title": "사평대로 합류부의 평면 횡단보도, 포장 교통섬과 황색 노면 표시"
+    },
+    {
+      "url": "https://map.naver.com/p?p=HB_BMGqsaxFasvRvTtRyFA,-64,10,80,Float&c=17.00,0,0,3,adh",
+      "type": "roadview",
+      "title": "데블스도어 앞 주차면으로 오르는 진입로와 주차 안내 기둥"
+    },
+    {
+      "url": "https://map.naver.com/p?p=aCT2_emNgSI_1k6R5N2mnw,-64.33,-8.12,80,Float&c=15.00,0,0,3,adh",
+      "type": "roadview",
+      "title": "사평대로 측 녹색·분홍색 유도선, 회색 보행로, 석재 화단과 식당 전면"
+    },
+    {
+      "url": "https://map.naver.com/p?p=M-t110JzmFAQJ7-8qlw49g,-152.89,0.24,80,Float&c=15.00,0,0,3,adh",
+      "type": "roadview",
+      "title": "차고지와 주차빌딩 사이의 1층 통행로 및 외벽 개구부"
+    },
     {
       "url": "data/osm.json",
       "type": "geometry",

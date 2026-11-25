@@ -1,5 +1,6 @@
 // Generic city layer from OpenStreetMap: everything not claimed by a detailed place module.
 import { pointInPoly, polyBBox, polyArea } from './physics.js';
+import { relief } from './banpo_relief.js';
 
 const CAR = new Set(['motorway', 'trunk', 'trunk_link', 'primary', 'primary_link', 'secondary', 'secondary_link', 'tertiary', 'tertiary_link', 'residential', 'unclassified', 'service', 'busway', 'living_street', 'construction']);
 const MAJOR = new Set(['trunk', 'primary', 'secondary', 'motorway']);
@@ -49,7 +50,7 @@ export function buildCity(K, osm, { claimedBuildings = new Set(), claimedRoads =
   };
 
   // Include claimed roads in topology/clearance, but never paint their approaches.
-  const layout = roadLayout(osm, claimedRoads);
+  const layout = roadLayout(osm, claimedRoads, K._.separateCarriageways);
   const roadStats = { junctions: layout.junctions.length, signalised: layout.junctions.filter(j => j.signal).length,
     renderedSignalised: 0, approaches: 0, crosswalks: 0, reusedCrosswalks: 0, signalAssemblies: 0,
     signalHeads: 0, pedestrianSignals: 0, missingPedestrianSignals: 0, guidePaths: 0,
@@ -65,22 +66,32 @@ export function buildCity(K, osm, { claimedBuildings = new Set(), claimedRoads =
   }, [0.4, 0.4]);
 
   // ---------- elevation for bridges / flyovers ----------
-  const endCount = new Map(); const ek = p => Math.round(p[0] * 2) + ',' + Math.round(p[1] * 2);
-  for (const r of roads) if (r.bridge || r.layer > 0) for (const p of [r.pts[0], r.pts[r.pts.length - 1]]) endCount.set(ek(p), (endCount.get(ek(p)) || 0) + 1);
-  function heights(r) {
-    const n = r.pts.length; const hs = new Array(n).fill(0);
-    if (!(r.bridge || r.layer > 0) || r.tunnel) return hs;
-    const H = Math.max(1, r.layer || 1) * LAYER_H;
-    const cum = [0]; for (let i = 1; i < n; i++) cum.push(cum[i - 1] + Math.hypot(r.pts[i][0] - r.pts[i - 1][0], r.pts[i][1] - r.pts[i - 1][1]));
-    const L = cum[n - 1]; const freeA = (endCount.get(ek(r.pts[0])) || 0) < 2, freeB = (endCount.get(ek(r.pts[n - 1])) || 0) < 2;
-    const ramp = Math.min(80, L / 2.2);
-    for (let i = 0; i < n; i++) {
-      let h = H;
-      if (freeA && cum[i] < ramp) h = Math.min(h, H * cum[i] / ramp);
-      if (freeB && L - cum[i] < ramp) h = Math.min(h, H * (L - cum[i]) / ramp);
-      hs[i] = h;
+  // Bridge limits are survey points on the approaches. Connect adjoining
+  // raised ways at one shared datum, even across a split between OSM layers.
+  const elevatedWay = r => !r.tunnel && (r.bridge || r.layer > 0);
+  const bridgeEnds = new Map(), endKey = p => p.join(',');
+  for (const r of osm.roads.filter(elevatedWay)) {
+    for (const p of [r.pts[0], r.pts.at(-1)]) {
+      const key = endKey(p);
+      const connected = bridgeEnds.get(key) || { count: 0, layer: Infinity };
+      connected.count++;
+      connected.layer = Math.min(connected.layer, Math.max(1, r.layer || 1));
+      bridgeEnds.set(key, connected);
     }
-    return hs;
+  }
+  function bridgeEndHeight(p) {
+    const node = bridgeEnds.get(endKey(p));
+    const [x0,z0,x1,z1] = osm.bbox;
+    const clipped = p[0] <= x0+.05 || p[0] >= x1-.05 || p[1] <= z0+.05 || p[1] >= z1-.05;
+    return relief(...p) + (node.count > 1 || clipped ? node.layer * LAYER_H : 0);
+  }
+  function bridgeProfile(r, datum) {
+    const distances = [0], pts = r.pts;
+    for (let i=1;i<pts.length;i++)
+      distances.push(distances[i-1]+Math.hypot(pts[i][0]-pts[i-1][0],pts[i][1]-pts[i-1][1]));
+    const start = bridgeEndHeight(pts[0]), end = bridgeEndHeight(pts.at(-1));
+    const run = distances.at(-1) || 1;
+    return distances.map(s => start + (end-start)*s/run - datum);
   }
 
   // ---------- areas ----------
@@ -95,14 +106,24 @@ export function buildCity(K, osm, { claimedBuildings = new Set(), claimedRoads =
   for (const a of osm.areas) {
     if (claimedAreas.has(a.id)) continue;
     if (a.kind === 'natural:water') {
-      const big = polyArea(a.poly) > 20000;
-      const wy = big ? -1.4 : -0.5;
+      const wy = polyArea(a.poly) > 20000 ? -1.4 : -0.5;
       K.groundHole(a.poly, a.holes);
-      K.hpoly('water', a.poly, wy, true, a.holes);
-      K.phys.addSurface(a.poly, wy - 0.7, { holes: a.holes, slow: 0.7, tag: 'water' });
-      // revetment skirt
-      const ns = K.orient(a.poly);
-      for (let i = 0; i < a.poly.length; i++) { const p = a.poly[i], q = a.poly[(i + 1) % a.poly.length]; K.quad({ tex: 'concrete', color: 0x9a9890 }, [[p[0], wy - 1, p[1]], [q[0], wy - 1, q[1]], [q[0], 0.01, q[1]], [p[0], 0.01, p[1]]], [-ns[i][0], 0, -ns[i][1]]); }
+      const stream = a.id === 248405787; // Banpocheon's banks descend along the channel.
+      const datum = relief(...a.poly[0]);
+      const level = stream ? wy : wy + Math.min(...a.poly.map(p => relief(...p))) - datum;
+      function waterMesh() {
+        K.hpoly('water', a.poly, level, true, a.holes);
+        K.phys.addSurface(a.poly, level - 0.7, { holes: a.holes, slow: 0.7, tag: 'water' });
+        const ns = K.orient(a.poly);
+        for (let i = 0; i < a.poly.length; i++) {
+          const p = a.poly[i], q = a.poly[(i + 1) % a.poly.length];
+          const py = stream ? 0.01 : relief(...p) - datum + 0.01;
+          const qy = stream ? 0.01 : relief(...q) - datum + 0.01;
+          K.quad({ tex: 'concrete', color: 0x9a9890 }, [[p[0], level - 1, p[1]], [q[0], level - 1, q[1]], [q[0], qy, q[1]], [p[0], py, p[1]]], [-ns[i][0], 0, -ns[i][1]]);
+        }
+      }
+      if (stream) waterMesh();
+      else K.withTerrainAnchor(...a.poly[0], waterMesh);
       for (const h of a.holes || []) K.hpoly({ tex: 'grass', color: 0xd8e0b0 }, h, 0.0, true);
       continue;
     }
@@ -149,8 +170,7 @@ export function buildCity(K, osm, { claimedBuildings = new Set(), claimedRoads =
     if (r.tunnel || r.pts.length < 2) continue;
     if (r.hw === 'corridor' || (r.level && r.level.startsWith('-'))) continue;
     const car = CAR.has(r.hw);
-    const hs = heights(r);
-    const elevated = hs.some(h => h > 0.5);
+    const elevated = elevatedWay(r);
     let mat, y0;
     if (car) { mat = r.hw === 'busway' ? busMat : roadMat; y0 = r.hw === 'service' ? 0.02 : 0.03; }
     else if (r.hw === 'cycleway') { mat = { tex: 'asphalt', color: 0xc07060 }; y0 = 0.045; }
@@ -158,11 +178,19 @@ export function buildCity(K, osm, { claimedBuildings = new Set(), claimedRoads =
     else if (r.footway === 'crossing') { mat = null; y0 = 0.05; }
     else { mat = 'sidewalk'; y0 = 0.05; }
     const w = r.footway === 'crossing' ? 0 : (car ? r.width : Math.max(1.5, r.width));
-    if (mat && w > 0) ribbon(r.pts, hs, w, mat, y0, elevated);
-    if (elevated) elevatedExtras(r, hs, w || r.width);
-    if (car && !elevated && layout.byRoad.has(r.id) && r.width >= 6) countRoadDetail(() => markings(r, y0 + 0.012));
-    if (r.footway === 'crossing') countRoadDetail(() => zebra(r.pts, hs));
-    if (MAJOR.has(r.hw) && !elevated && !r.bridge) streetside(r);
+    function drawRoad(hs, datum) {
+      if (mat && w > 0) ribbon(r.pts, hs, w, mat, y0, elevated);
+      if (elevated) elevatedExtras(r, hs, w || r.width, datum);
+      if (r.footway === 'crossing') countRoadDetail(() => zebra(r.pts, hs));
+    }
+    if (elevated) {
+      const [x,z] = r.pts[0], datum = relief(x,z);
+      K.withTerrainAnchor(x,z,() => drawRoad(bridgeProfile(r,datum),datum));
+    } else {
+      drawRoad(new Array(r.pts.length).fill(0),0);
+      if (car && layout.byRoad.has(r.id) && r.width >= 6) countRoadDetail(() => markings(r,y0+.012));
+      if (MAJOR.has(r.hw)) streetside(r);
+    }
   }
   function ribbon(pts, hs, w, mat, y0, elevated) {
     const n = pts.length; const L = [], R = [];
@@ -186,7 +214,6 @@ export function buildCity(K, osm, { claimedBuildings = new Set(), claimedRoads =
         for (const [A, B, s] of [[L, L, 1], [R, R, -1]]) {
           K.quad({ tex: 'concrete', color: 0xc8c4bc }, [[A[i][0], ya - 1.2, A[i][1]], [B[i + 1][0], yb - 1.2, B[i + 1][1]], [B[i + 1][0], yb + 0.9, B[i + 1][1]], [A[i][0], ya + 0.9, A[i][1]]], [s * -(pts[i + 1][1] - pts[i][1]), 0, s * (pts[i + 1][0] - pts[i][0])]);
         }
-        const mx = (pts[i][0] + pts[i + 1][0]) / 2, mz = (pts[i][1] + pts[i + 1][1]) / 2;
         K.phys.addRamp(pts[i][0], pts[i][1], pts[i + 1][0], pts[i + 1][1], w / 2, ya, yb, { tag: 'road' });
         K.phys.addWall(L[i][0], L[i][1], L[i + 1][0], L[i + 1][1], Math.min(ya, yb) - 0.2, Math.max(ya, yb) + 0.9, 0.1, 'rail');
         K.phys.addWall(R[i][0], R[i][1], R[i + 1][0], R[i + 1][1], Math.min(ya, yb) - 0.2, Math.max(ya, yb) + 0.9, 0.1, 'rail');
@@ -194,15 +221,16 @@ export function buildCity(K, osm, { claimedBuildings = new Set(), claimedRoads =
       u += seg;
     }
   }
-  function elevatedExtras(r, hs, w) {
+  function elevatedExtras(r, hs, w, datum) {
     let acc = 0;
     for (let i = 0; i < r.pts.length - 1; i++) {
       const a = r.pts[i], b = r.pts[i + 1]; const seg = Math.hypot(b[0] - a[0], b[1] - a[1]);
       for (let t = (30 - acc % 30); t < seg; t += 30) {
-        const h = hs[i] + (hs[i + 1] - hs[i]) * t / seg; if (h < 3) continue;
+        const h = hs[i] + (hs[i + 1] - hs[i]) * t / seg;
         const x = a[0] + (b[0] - a[0]) * t / seg, z = a[1] + (b[1] - a[1]) * t / seg;
-        if (buildingAt(x, z)) continue;
-        K.cyl({ x, z, y: -1.5, r: Math.min(1.4, w / 8), h: h - 1.2 + 1.5, mat: { tex: 'concrete', color: 0xc8c4bc }, seg: 10 });
+        const ground = relief(x,z)-datum;
+        if (h-ground < 3 || buildingAt(x, z)) continue;
+        K.cyl({ x, z, y: ground-1.5, r: Math.min(1.4, w / 8), h: h-1.2-(ground-1.5), mat: { tex: 'concrete', color: 0xc8c4bc }, seg: 10 });
       }
       acc += seg;
     }
@@ -470,38 +498,40 @@ export function buildCity(K, osm, { claimedBuildings = new Set(), claimedRoads =
     a.signalPole = { x: pole.x, z: pole.z };
     poleSites.push({ x: pole.x, z: pole.z, kind: 'mast' });
     roadStats.signalAssemblies++;
-    const { ux, uz } = pole;
-    const reach = pole.reach;
-    K.cyl({ x: pole.x, z: pole.z, r: 0.14, h: 6.6, seg: 8, mat: 0x929ca3, solid: false });
-    K.box({ x: pole.x + ux * reach / 2, z: pole.z + uz * reach / 2, y: 6.3, w: 0.16, h: 0.2, d: reach,
-      rotY: Math.atan2(ux, uz), mat: 0x929ca3, solid: false });
-    const green = signalGreen(j, a), rotY = Math.atan2(p.dx, p.dz);
-    const headAt = reach - 0.65;
-    for (const t of a.r.width >= 12 ? [headAt, Math.max(1.1, headAt - 3)] : [headAt]) {
-      const x = pole.x + ux * t, z = pole.z + uz * t;
-      if (!layout.allCarAt(x, z, -0.6)) continue;
-      roadStats.signalHeads++;
-      // The lens centre is 5.8 m above the lanes. The projecting backplate
-      // separates the silhouette from the sky; each lamp has its own hood.
-      const cy = 5.8;
-      K.box({ x, z, y: cy + 0.21, w: 0.055, h: 6.3 - cy - 0.21, d: 0.055, rotY, mat: 0x737e85, solid: false });
-      K.box({ x: x - p.dx * 0.18, z: z - p.dz * 0.18, y: cy - 0.32,
-        w: 1.49, h: 0.64, d: 0.045, rotY, mat: 0x141a1d, solid: false });
-      K.box({ x, z, y: cy - 0.21, w: 1.25, h: 0.42, d: 0.3, rotY, mat: 0x242a2d, solid: false });
-      for (let k = 0; k < 4; k++) {
-        const off = (k - 1.5) * 0.3, hx = x + p.dz * off + p.dx * 0.16, hz = z - p.dx * off + p.dz * 0.16;
-        const color = k === 0 ? (green ? 0x421e1b : 0xff4135) : k === 1 ? 0x493b16 : k === 2 ? 0x163c2a : (green ? 0x39e88a : 0x163c2a);
-        if (k === 2) K.sign('←', { x: hx, z: hz, y: cy, w: 0.23, h: 0.23, rotY, bg: '#101a17', fg: '#265b3d' });
-        else lens(hx, cy, hz, p.dx, p.dz, 0.115, { tex: 'emit', color });
-        K.box({ x: hx + p.dx * 0.1, z: hz + p.dz * 0.1, y: cy + 0.135,
-          w: 0.275, h: 0.035, d: 0.26, rotY, mat: 0x141a1d, solid: false });
-        for (const side of [-1, 1]) K.box({ x: hx + p.dx * 0.1 + p.dz * side * 0.126,
-          z: hz + p.dz * 0.1 - p.dx * side * 0.126, y: cy - 0.12,
-          w: 0.023, h: 0.255, d: 0.26, rotY, mat: 0x141a1d, solid: false });
+    K.withTerrainAnchor(pole.x, pole.z, () => {
+      const { ux, uz } = pole;
+      const reach = pole.reach;
+      K.cyl({ x: pole.x, z: pole.z, r: 0.14, h: 6.6, seg: 8, mat: 0x929ca3, solid: false });
+      K.box({ x: pole.x + ux * reach / 2, z: pole.z + uz * reach / 2, y: 6.3, w: 0.16, h: 0.2, d: reach,
+        rotY: Math.atan2(ux, uz), mat: 0x929ca3, solid: false });
+      const green = signalGreen(j, a), rotY = Math.atan2(p.dx, p.dz);
+      const headAt = reach - 0.65;
+      for (const t of a.r.width >= 12 ? [headAt, Math.max(1.1, headAt - 3)] : [headAt]) {
+        const x = pole.x + ux * t, z = pole.z + uz * t;
+        if (!layout.allCarAt(x, z, -0.6)) continue;
+        roadStats.signalHeads++;
+        // The lens centre is 5.8 m above the lanes. The projecting backplate
+        // separates the silhouette from the sky; each lamp has its own hood.
+        const cy = 5.8;
+        K.box({ x, z, y: cy + 0.21, w: 0.055, h: 6.3 - cy - 0.21, d: 0.055, rotY, mat: 0x737e85, solid: false });
+        K.box({ x: x - p.dx * 0.18, z: z - p.dz * 0.18, y: cy - 0.32,
+          w: 1.49, h: 0.64, d: 0.045, rotY, mat: 0x141a1d, solid: false });
+        K.box({ x, z, y: cy - 0.21, w: 1.25, h: 0.42, d: 0.3, rotY, mat: 0x242a2d, solid: false });
+        for (let k = 0; k < 4; k++) {
+          const off = (k - 1.5) * 0.3, hx = x + p.dz * off + p.dx * 0.16, hz = z - p.dx * off + p.dz * 0.16;
+          const color = k === 0 ? (green ? 0x421e1b : 0xff4135) : k === 1 ? 0x493b16 : k === 2 ? 0x163c2a : (green ? 0x39e88a : 0x163c2a);
+          if (k === 2) K.sign('←', { x: hx, z: hz, y: cy, w: 0.23, h: 0.23, rotY, bg: '#101a17', fg: '#265b3d' });
+          else lens(hx, cy, hz, p.dx, p.dz, 0.115, { tex: 'emit', color });
+          K.box({ x: hx + p.dx * 0.1, z: hz + p.dz * 0.1, y: cy + 0.135,
+            w: 0.275, h: 0.035, d: 0.26, rotY, mat: 0x141a1d, solid: false });
+          for (const side of [-1, 1]) K.box({ x: hx + p.dx * 0.1 + p.dz * side * 0.126,
+            z: hz + p.dz * 0.1 - p.dx * side * 0.126, y: cy - 0.12,
+            w: 0.023, h: 0.255, d: 0.26, rotY, mat: 0x141a1d, solid: false });
+        }
       }
-    }
-    if (a.r.name) K.sign(a.r.name, { x: pole.x + ux * 1.5, z: pole.z + uz * 1.5, y: 5.82, w: 2.6, h: 0.48,
-      rotY, bg: '#175f9a', fg: '#fff', box: 0.08 });
+      if (a.r.name) K.sign(a.r.name, { x: pole.x + ux * 1.5, z: pole.z + uz * 1.5, y: 5.82, w: 2.6, h: 0.48,
+        rotY, bg: '#175f9a', fg: '#fff', box: 0.08 });
+    });
   }
   function lens(x, y, z, dx, dz, radius, mat) {
     // Eight-sided lens, two triangles per quad; all heads share the emit bucket.
@@ -626,18 +656,45 @@ export function buildCity(K, osm, { claimedBuildings = new Set(), claimedRoads =
   for (const p of stopNames.values()) {
     if (buildingAt(p.x, p.z)) continue;
     const s = onRoad(p.x, p.z, true, 8); let ang = 0; if (s) ang = Math.atan2(s.b[0] - s.a[0], s.b[1] - s.a[1]) + Math.PI / 2;
-    const c = Math.cos(ang), sn = Math.sin(ang);
-    K.box({ x: p.x, y: 2.6, z: p.z, w: 4.2, h: 0.12, d: 1.8, rotY: ang, mat: 0x404850, solid: false });
-    K.box({ x: p.x - sn * 0.8, y: 0, z: p.z - c * 0.8, w: 4.2, h: 2.5, d: 0.06, rotY: ang, mat: 'glass', solid: true });
-    for (const lx of [-2, 2]) K.box({ x: p.x + c * lx, y: 0, z: p.z - sn * lx, w: 0.1, h: 2.6, d: 0.1, rotY: ang, mat: 0x404850, solid: false });
-    K.box({ x: p.x - sn * 0.55, y: 0.45, z: p.z - c * 0.55, w: 2.6, h: 0.08, d: 0.4, rotY: ang, mat: 0x9a7a55, solid: false });
-    K.sign([p.name, p.ref], { x: p.x + c * 2.4, y: 2.2, z: p.z - sn * 2.4, w: 1.1, h: 0.8, rotY: ang, bg: '#1a4d8f', fg: '#fff', twoSided: true });
+    K.withTerrainAnchor(p.x, p.z, () => {
+      const c = Math.cos(ang), sn = Math.sin(ang);
+      K.box({ x: p.x, y: 2.6, z: p.z, w: 4.2, h: 0.12, d: 1.8, rotY: ang, mat: 0x404850, solid: false });
+      K.box({ x: p.x - sn * 0.8, y: 0, z: p.z - c * 0.8, w: 4.2, h: 2.5, d: 0.06, rotY: ang, mat: 'glass', solid: true });
+      const datum = relief(p.x, p.z);
+      for (const lx of [-2, 2]) {
+        const x = p.x + c * lx, z = p.z - sn * lx, foot = relief(x, z) - datum;
+        K.box({ x, y: foot, z, w: 0.1, h: 2.6-foot, d: 0.1, rotY: ang, mat: 0x404850, solid: false });
+      }
+      K.box({ x: p.x - sn * 0.55, y: 0.45, z: p.z - c * 0.55, w: 2.6, h: 0.08, d: 0.4, rotY: ang, mat: 0x9a7a55, solid: false });
+      K.sign([p.name, p.ref], { x: p.x + c * 2.4, y: 2.2, z: p.z - sn * 2.4, w: 1.1, h: 0.8, rotY: ang, bg: '#1a4d8f', fg: '#fff', twoSided: true });
+    });
   }
 
   // ---------- buildings ----------
   let nb = 0;
   for (const b of osm.buildings) {
     if (claimedBuildings.has(b.id) || b.layer < 0 || b.type === 'no' || b.type === 'roof') continue;
+    const [x0,z0,x1,z1] = b._bb;
+    const cx=(x0+x1)/2, cz=(z0+z1)/2;
+    K.withTerrainAnchor(cx,cz,() => buildBlock(b,relief(cx,cz)));
+    nb++;
+  }
+  function buildBlock(b,datum) {
+    // Carry the base below the lowest adjacent sidewalk. The numbered
+    // storeys and the parapet remain level as the street rises past them.
+    if (!b.minHeight) {
+      let low=0;
+      for(let i=0;i<b.poly.length;i++) {
+        const a=b.poly[i], c=b.poly[(i+1)%b.poly.length];
+        const n=Math.max(1,Math.ceil(Math.hypot(a[0]-c[0],a[1]-c[1])/10));
+        for(let j=0;j<n;j++) low=Math.min(low,relief(a[0]+(c[0]-a[0])*j/n,a[1]+(c[1]-a[1])*j/n)-datum);
+      }
+      if (low < -.03) {
+        const base = low - .12;
+        K.prism(b.poly, base, 0, { mat: 'concrete', top: false, bottom: false, holes: b.holes, solid: false });
+        for (const ring of [b.poly, ...(b.holes || [])]) K.phys.addPolyWalls(ring, base, 0, .02, 'city');
+      }
+    }
     const facade = facadeFor(b);
     const lv = b.levels || Math.max(1, Math.round(b.height / 3.3));
     const floorH = Math.max(2.6, (b.height - b.minHeight) / lv);
@@ -646,7 +703,6 @@ export function buildCity(K, osm, { claimedBuildings = new Set(), claimedRoads =
     // parapet
     if (b.height > 8) for (let i = 0; i < b.poly.length; i++) { const p = b.poly[i], q = b.poly[(i + 1) % b.poly.length]; K.wall(p[0], p[1], q[0], q[1], b.height, b.height + 0.9, { thick: 0.25, mat: 0xd8d6d0, solid: false }); }
     if (b.type === 'apartments' && b.height > 20) apartmentExtras(b, floorH);
-    nb++;
   }
   function facadeFor(b) {
     const n = b.name || '';
@@ -683,6 +739,10 @@ export function buildCity(K, osm, { claimedBuildings = new Set(), claimedRoads =
     if (!byBuilding.has(b)) byBuilding.set(b, []); byBuilding.get(b).push(p);
   }
   for (const [b, list] of byBuilding) {
+    const [x0,z0,x1,z1]=b._bb;
+    K.withTerrainAnchor((x0+x1)/2,(z0+z1)/2,()=>storefrontSigns(b,list));
+  }
+  function storefrontSigns(b,list) {
     const ns = K.orient(b.poly);
     const lv = b.levels || Math.max(1, Math.round(b.height / 3.3)); const fh = Math.max(3, (b.height - b.minHeight) / lv);
     list.forEach((p, k) => {
@@ -804,6 +864,8 @@ export function createTraffic(K, roadsInfo, n = 160) {
   // wheels, lamps and trim. The Seoul bus envelope is 11 x 2.5 x 3 metres.
   const bodyMat = new THREE.MeshLambertMaterial({ color: 0xffffff });
   const detailMat = new THREE.MeshLambertMaterial({ vertexColors: true });
+  bodyMat.defines = { BANPO_RIGID: 1 };
+  detailMat.defines = { BANPO_RIGID: 1 };
   const box = (w, h, d, x, y, z, color = 0xffffff) => ({ w, h, d, x, y, z, color });
   function geometry(parts) {
     const positions = [], normals = [], colors = [], color = new THREE.Color();
@@ -854,18 +916,29 @@ export function createTraffic(K, roadsInfo, n = 160) {
     }
     const meshes = [new THREE.InstancedMesh(geometry(shell), bodyMat, list.length), new THREE.InstancedMesh(geometry(detail), detailMat, list.length)];
     const color = new THREE.Color();
-    list.forEach((c, i) => { c.index = i; c.fleet = meshes; meshes[0].setColorAt(i, color.setHex(c.color)); });
+    list.forEach((c, i) => {
+      c.index = i; c.fleet = meshes; c.halfWheelbase = d * .32; c.halfTrack = w / 2;
+      meshes[0].setColorAt(i, color.setHex(c.color));
+    });
     for (const mesh of meshes) { mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage); mesh.frustumCulled = false; K.scene.add(mesh); }
     fleets.push(meshes);
   }
-  const M = new THREE.Matrix4(), Q = new THREE.Quaternion(), V = new THREE.Vector3(), S = new THREE.Vector3(1, 1, 1), Y = new THREE.Vector3(0, 1, 0);
+  const M = new THREE.Matrix4(), Q = new THREE.Quaternion(), V = new THREE.Vector3(), S = new THREE.Vector3(1, 1, 1), rotation = new THREE.Euler(0, 0, 0, 'YXZ');
   function update(dt) {
     for (const c of cars) {
       const r = c.route; c.t = (c.t + c.speed * dt) % r.L;
       let k = 1; while (k < r.cum.length - 1 && r.cum[k] < c.t) k++;
       const a = r.pts[k - 1], b = r.pts[k], length = r.cum[k] - r.cum[k - 1] || 1, t = (c.t - r.cum[k - 1]) / length;
       const x = a[0] + (b[0] - a[0]) * t, z = a[1] + (b[1] - a[1]) * t;
-      M.compose(V.set(x, 0.055, z), Q.setFromAxisAngle(Y, Math.atan2(b[0] - a[0], b[1] - a[1])), S);
+      const dx = (b[0] - a[0]) / length, dz = (b[1] - a[1]) / length;
+      const fx = dx * c.halfWheelbase, fz = dz * c.halfWheelbase;
+      const rx = dz * c.halfTrack, rz = -dx * c.halfTrack;
+      const fl = relief(x+fx-rx, z+fz-rz), fr = relief(x+fx+rx, z+fz+rz);
+      const bl = relief(x-fx-rx, z-fz-rz), br = relief(x-fx+rx, z-fz+rz);
+      const pitch = -Math.atan2(fl+fr-bl-br, 4*c.halfWheelbase);
+      const roll = Math.atan2(fr+br-fl-bl, 4*c.halfTrack);
+      rotation.set(pitch, Math.atan2(dx,dz), roll);
+      M.compose(V.set(x, (fl+fr+bl+br)/4 + .055, z), Q.setFromEuler(rotation), S);
       c.fleet[0].setMatrixAt(c.index, M); c.fleet[1].setMatrixAt(c.index, M);
     }
     for (const meshes of fleets) for (const mesh of meshes) mesh.instanceMatrix.needsUpdate = true;
@@ -876,9 +949,9 @@ export function createTraffic(K, roadsInfo, n = 160) {
 
 // Geometry-only road graph. Claimed ways participate in topology/clearance, but
 // the caller owns rendering and must only draw unclaimed edges and approaches.
-function roadLayout(osm, claimedRoads) {
+function roadLayout(osm, claimedRoads, separateCarriageways) {
   const SIGNAL = new Set(['primary', 'secondary', 'tertiary']);
-  const surface = r => !r.tunnel && !r.bridge && !(r.layer > 0) && !(r.level && String(r.level).startsWith('-'));
+  const surface = r => !r.tunnel && !r.bridge && !(r.layer > 0) && !separateCarriageways?.has(r.id) && !(r.level && String(r.level).startsWith('-'));
   const crossings = osm.roads.filter(r => surface(r) && r.footway === 'crossing');
   const edges = [], byRoad = new Map(), vertices = [], vertexGrid = new Map(), edgeGrid = new Map();
   const cell = 32, key = (x, z) => x + ',' + z;

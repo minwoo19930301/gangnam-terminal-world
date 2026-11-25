@@ -1,3 +1,4 @@
+import { eastGardenLevel as gardenLevel, eastParkingSecond as secondDeck, eastParkingThird as thirdDeck, gardenPoint, gardenSurface } from './_gardenGrade.js';
 // OSM 414891734 / authoritative pub pin (372, 8). The brick south front remains
 // independent; the June 2026 roadview establishes a continuous deck on its north side.
 export const meta = {
@@ -9,7 +10,7 @@ export const meta = {
     {x:379.36,z:-11.21,y:0,w:3.6,nx:-.445,nz:-.896,other:null},
     {x:427.19,z:-31.50,y:0,w:4.3,nx:.896,nz:-.445,other:null},
   ],
-  additionalEntrances: [{"x":373.17,"z":14.53,"y":12.6,"w":2.7,"nx":0.445,"nz":0.896,"other":null},{"x":349.92,"z":26.18,"y":12.6,"w":3,"nx":0.445,"nz":0.896,"other":null},{"x":353.73,"z":15.92,"y":12.6,"w":1.2,"nx":-0.896,"nz":0.445,"other":null}],
+  additionalEntrances: [{"x":373.17,"z":14.53,"y":gardenLevel,"w":2.7,"nx":0.445,"nz":0.896,"other":null},{"x":349.92,"z":26.18,"y":gardenLevel,"w":3,"nx":0.445,"nz":0.896,"other":null},{"x":353.73,"z":15.92,"y":gardenLevel,"w":1.2,"nx":-0.896,"nz":0.445,"other":null}],
   sources: ['data/osm.json', 'refs/roadview/manifest.json',
     'refs/roadview/gbeast_01_parking_deck.jpg', 'refs/roadview/gbeast_02_bus_yard_road.jpg',
     'refs/roadview/gbeast_03_bus_yard_hedge.jpg', 'refs/interior/famille_back/notes.json',
@@ -20,7 +21,6 @@ export const meta = {
 
 // Restaurant drawings use the pub threshold as their local zero. Parking
 // drawings below them retain the terminal's street datum.
-const gardenLevel = 12.6;
 function gardenKit(base) {
   const y = gardenLevel;
   const kit = Object.create(base);
@@ -141,23 +141,23 @@ export function build(K) {
   const ramp1 = rect(68.5, .65, 99.5, 5.75), ramp2 = rect(68.5, 6.35, 99.5, 11.45);
   const deckParts = [rect(0, 0, 16.8, 17.18), rect(64.4, 0, 104.86, 17.18)];
   for (let i = 0; i < deckParts.length; i++) {
-    K.slab(deckParts[i], 3.8, { mat: 'concrete', under: 0x5b5d5c, thick: .3, holes: i === 0 ? [stair1] : i === 1 ? [ramp1] : [] });
-    K.slab(deckParts[i], 7.6, { mat: 'concrete', under: 0x5b5d5c, thick: .3, holes: i === 0 ? [stair2] : i === 1 ? [ramp2] : [] });
-    K.slab(deckParts[i], 11.8, { mat: { tex: 'roofgravel', color: 0xe5e3dc }, under: 0x777a78, thick: .26, walk: false });
+    K.slab(deckParts[i], secondDeck, { mat: 'concrete', under: 0x5b5d5c, thick: .3, holes: i === 0 ? [stair1] : i === 1 ? [ramp1] : [] });
+    K.slab(deckParts[i], thirdDeck, { mat: 'concrete', under: 0x5b5d5c, thick: .3, holes: i === 0 ? [stair2] : i === 1 ? [ramp2] : [] });
+    K.slab(deckParts[i], gardenLevel-.28, { mat: { tex: 'roofgravel', color: 0xe5e3dc }, under: 0x777a78, thick: .26, walk: false });
   }
-  for (const y of [3.8, 7.6, 11.8]) slab(0, -4.5, 104.86, 1.3, y, {
-    mat: y === 11.8 ? { tex: 'roofgravel', color: 0xe5e3dc } : 'concrete',
-    under: 0x303538, thick: .3, walk: y !== 11.8,
+  for (const y of [secondDeck, thirdDeck, gardenLevel-.28]) slab(0, -4.5, 104.86, 1.3, y, {
+    mat: y === gardenLevel-.28 ? { tex: 'roofgravel', color: 0xe5e3dc } : 'concrete',
+    under: 0x303538, thick: .3, walk: y !== gardenLevel-.28,
     // The narrow overlap joins the existing wing slabs but stays out of their
     // ramp/stair voids, preserving the original headroom and landings.
-    holes: y === 3.8 ? [rect(2.8, .8, 14.2, 1.3), rect(68.5, .65, 99.5, 1.3)] : [],
+    holes: y === secondDeck ? [rect(2.8, .8, 14.2, 1.3), rect(68.5, .65, 99.5, 1.3)] : [],
   });
   const parkingKit = K, diningKit = gardenKit(K);
   // Beneath the raised dining hall, complete the three parking decks
   // between the existing wings and the north parking aisle.
-  for(const level of [0,3.8,7.6]){
+  for(const level of [0,secondDeck,thirdDeck]){
     slab(16.8,1.3,64.4,16.8,level,{mat:'concrete',thick:.22});
-    for(let u=20;u<64;u+=8) box(u,14.4,level,.5,.5,3.6,0xc9c8c2);
+    for(let u=20;u<64;u+=8) box(u,14.4,level,.5,.5,Math.min(3.6,gardenLevel-level),0xc9c8c2);
   }
   wall(16.8,16.8,64.4,16.8,0,gardenLevel,{mat:'concrete'});
   K = diningKit;
@@ -180,35 +180,35 @@ export function build(K) {
   K.elevator({ name: '데블스도어 라운지 승강기', x: lx, z: lz, rotY: ROT - PI / 2, w: 1.8, d: 1.8,
     floors: [{ label: '4F', y: 0, name: '홀' }, { label: '5F', y: 3.8, name: '라운지 · 프라이빗룸' }] });
   K = parkingKit;
-  ramp(3, 2.2, 14, 2.2, 0, 3.8, 2.4, true);
-  ramp(14, 5.4, 3, 5.4, 3.8, 7.6, 2.4, true);
-  slab(13.9, .8, 16, 6.8, 3.8);
-  slab(.4, 4, 3.1, 6.8, 7.6);
-  railing(3, .8, 14, .8, 3.8); railing(3, 3.6, 13.8, 3.6, 3.8);
-  railing(3, 4, 13.8, 4, 7.6); railing(3, 6.8, 14, 6.8, 7.6);
-  ramp(69, 3.2, 99, 3.2, 0, 3.8, 4.8);
-  ramp(99, 8.9, 69, 8.9, 3.8, 7.6, 4.8);
-  slab(98.9, .65, 99.7, 5.75, 3.8); // overlap the ramp and the deck beyond its void
-  slab(68.3, 6.35, 69.1, 11.45, 7.6);
-  for (const [y, v] of [[3.8, .65], [3.8, 5.75], [7.6, 6.35], [7.6, 11.45]]) railing(69, v, 99, v, y);
+  ramp(3, 2.2, 14, 2.2, 0, secondDeck, 2.4, true);
+  ramp(14, 5.4, 3, 5.4, secondDeck, thirdDeck, 2.4, true);
+  slab(13.9, .8, 16, 6.8, secondDeck);
+  slab(.4, 4, 3.1, 6.8, thirdDeck);
+  railing(3, .8, 14, .8, secondDeck); railing(3, 3.6, 13.8, 3.6, secondDeck);
+  railing(3, 4, 13.8, 4, thirdDeck); railing(3, 6.8, 14, 6.8, thirdDeck);
+  ramp(69, 3.2, 99, 3.2, 0, secondDeck, 4.8);
+  ramp(99, 8.9, 69, 8.9, secondDeck, thirdDeck, 4.8);
+  slab(98.9, .65, 99.7, 5.75, secondDeck); // overlap the ramp and the deck beyond its void
+  slab(68.3, 6.35, 69.1, 11.45, thirdDeck);
+  for (const [y, v] of [[secondDeck, .65], [secondDeck, 5.75], [thirdDeck, 6.35], [thirdDeck, 11.45]]) railing(69, v, 99, v, y);
   const [ex, ez] = W(15.8, 14.5);
   K.elevator({ name: '동측 주차빌딩 승강기', x: ex, z: ez, rotY: ROT, w: 2.15, d: 2.15, mat: 'glass',
-    floors: [{ label: '1F', y: 0, name: '주차장' }, { label: '2F', y: 3.8, name: '주차장' }, { label: '3F', y: 7.6, name: '주차장' }] });
-  for (const u of [14.55, 17.05]) for (const v of [13.25, 15.75]) box(u, v, 0, .13, .13, 10.9, steel, { solid: false });
-  for (const y of [2.8, 6.6, 10.4]) { box(15.8, 13.25, y, 2.6, .13, .12, steel, { solid: false }); sign('주차장 ↑', 15.8, 15.85, y, 1.7, .55, 0, { bg: '#22577b' }); }
+    floors: [{ label: '1F', y: 0, name: '주차장' }, { label: '2F', y: secondDeck, name: '주차장' }, { label: '3F', y: thirdDeck, name: '주차장' }] });
+  for (const u of [14.55, 17.05]) for (const v of [13.25, 15.75]) box(u, v, 0, .13, .13, gardenLevel+.3, steel, { solid: false });
+  for (const y of [2.45, secondDeck+2.45, thirdDeck+2.45]) { box(15.8, 13.25, y, 2.6, .13, .12, steel, { solid: false }); sign('주차장 ↑', 15.8, 15.85, y, 1.7, .55, 0, { bg: '#22577b' }); }
   // Transparent stair enclosure alongside the working elevator. Zig-zag
   // flights are visible through the glass, rather than a solid thin shaft.
-  for (const y of [0, 3.8, 7.6]) slab(10.1, 13.1, 14.55, 18.8, y, { mat: 'concrete', holes: y ? [rect(10.5, 13.6, 13.9, 17.6)] : [] });
-  for (const y of [0, 3.8]) {
-    K.stairs(...W(10.9, 17.5), ...W(10.9, 13.8), { ya: y, yb: y + 1.9, w: 1.15, mat: 'concrete' });
-    slab(10.3, 13.05, 13.9, 13.85, y + 1.9);
-    K.stairs(...W(13.2, 13.8), ...W(13.2, 17.5), { ya: y + 1.9, yb: y + 3.8, w: 1.15, mat: 'concrete' });
-    slab(10.3, 17.45, 14.55, 18.8, y + 3.8);
+  for (const y of [0, secondDeck, thirdDeck]) slab(10.1, 13.1, 14.55, 18.8, y, { mat: 'concrete', holes: y ? [rect(10.5, 13.6, 13.9, 17.6)] : [] });
+  for (const y of [0, secondDeck]) {
+    K.stairs(...W(10.9, 17.5), ...W(10.9, 13.8), { ya: y, yb: y + secondDeck/2, w: 1.15, mat: 'concrete' });
+    slab(10.3, 13.05, 13.9, 13.85, y + secondDeck/2);
+    K.stairs(...W(13.2, 13.8), ...W(13.2, 17.5), { ya: y + secondDeck/2, yb: y + secondDeck, w: 1.15, mat: 'concrete' });
+    slab(10.3, 17.45, 14.55, 18.8, y + secondDeck);
   }
-  for (const u of [10.05, 14.55]) wall(u, 13, u, 18.8, 0, 10.8, { mat: 'glass', thick: .04, solid: false });
-  wall(10.05, 18.8, 14.55, 18.8, 0, 10.8, { mat: 'glass', thick: .04, openings: [{ at: 2.2, w: 2.1, y0: 0, y1: 2.8 }] });
-  for (const u of [10.05, 12.3, 14.55]) for (const v of [13, 18.8]) box(u, v, 0, .11, .11, 10.85, white, { solid: false });
-  for (const y of [1.2, 3.8, 7.6, 10.8]) {
+  for (const u of [10.05, 14.55]) wall(u, 13, u, 18.8, 0, gardenLevel+.2, { mat: 'glass', thick: .04, solid: false });
+  wall(10.05, 18.8, 14.55, 18.8, 0, gardenLevel+.2, { mat: 'glass', thick: .04, openings: [{ at: 2.2, w: 2.1, y0: 0, y1: 2.8 }] });
+  for (const u of [10.05, 12.3, 14.55]) for (const v of [13, 18.8]) box(u, v, 0, .11, .11, gardenLevel+.25, white, { solid: false });
+  for (const y of [1.2, secondDeck, thirdDeck, gardenLevel+.2]) {
     box(12.3, 18.8, y, 4.5, .1, .12, white, { solid: false });
     box(12.3, 15.7, y + .16, 1.2, .12, .05, { tex: 'emit', color: 0xe7efea }, { solid: false });
   }
@@ -226,31 +226,31 @@ export function build(K) {
       for (let i = 0; i <= count; i++) {
         const u = a + i * pitch;
         if(v<0 && Math.abs(u-53)<2.1) continue;
-        box(u, v, 0, .3, .4, 11.55, deckWhite);
+        box(u, v, 0, .3, .4, gardenLevel-.53, deckWhite);
         // Orange columns are recessed behind the pale front struts.
         box(u, v + .42, 0, .36, .38, 2.65, orange, { solid: false });
-        box(u, v + .42, 3.8, .36, .38, 2.65, 0x32617c, { solid: false });
-        if (i < count) for (const y of [0, 3.8]) {
-          beam([u, y + .1, v], [u + pitch / 2, y + 3.5, v], .24, deckWhite, .32);
-          beam([u + pitch, y + .1, v], [u + pitch / 2, y + 3.5, v], .24, deckWhite, .32);
+        box(u, v + .42, secondDeck, .36, .38, 2.65, 0x32617c, { solid: false });
+        if (i < count) for (const y of [0, secondDeck]) {
+          beam([u, y + .1, v], [u + pitch / 2, y + secondDeck-.3, v], .24, deckWhite, .32);
+          beam([u + pitch, y + .1, v], [u + pitch / 2, y + secondDeck-.3, v], .24, deckWhite, .32);
         }
       }
-      for (const y of [3.5, 7.3]) box((a + b) / 2, v, y, b - a, .48, .3, deckWhite, { solid: false });
-      railing(a, v, b, v, 3.8, 1.05, 0xb6bdbb);
-      wall(a, v, b, v, 7.6, 9.4, { mat: 'ge-blue-deck-glass', thick: .04 });
-      wall(a, v, b, v, 9.4, 11.55, { mat: 'ge-ribbed-cladding', thick: .12 });
-      box((a + b) / 2, v, 11.55, b - a, .55, .25, deckWhite, { solid: false });
-      for (let u = a + 1.2; u < b; u += 1.2) box(u, v - .03, 7.6, .065, .12, 1.8, deckWhite, { solid: false });
-      for (const y of [7.7, 8.05, 9.35]) box((a + b) / 2, v - .04, y, b - a, .13, .06, deckWhite, { solid: false });
+      for (const y of [secondDeck-.3,thirdDeck-.3]) box((a + b) / 2, v, y, b - a, .48, .3, deckWhite, { solid: false });
+      railing(a, v, b, v, secondDeck, 1.05, 0xb6bdbb);
+      wall(a, v, b, v, thirdDeck, thirdDeck+1.8, { mat: 'ge-blue-deck-glass', thick: .04 });
+      wall(a, v, b, v, thirdDeck+1.8, gardenLevel-.53, { mat: 'ge-ribbed-cladding', thick: .12 });
+      box((a + b) / 2, v, gardenLevel-.53, b - a, .55, .25, deckWhite, { solid: false });
+      for (let u = a + 1.2; u < b; u += 1.2) box(u, v - .03, thirdDeck, .065, .12, 1.8, deckWhite, { solid: false });
+      for (const y of [thirdDeck+.1, thirdDeck+.45, thirdDeck+1.75]) box((a + b) / 2, v - .04, y, b - a, .13, .06, deckWhite, { solid: false });
     }
   }
   // End walls seal the new strip; internal former end walls remain behind the
   // north face, so upper parking remains a continuous walkable gallery.
   for (const [u, v0] of [[.18, -4.4], [16.8, 1.3], [64.4, 1.3]]) {
-    railing(u, v0, u, 16.8, 3.8);
-    wall(u, v0, u, 16.8, 7.6, 9.4, { mat: 'ge-blue-deck-glass', thick: .04 });
-    wall(u, v0, u, 16.8, 9.4, 11.55, { mat: 'ge-ribbed-cladding', thick: .15 });
-    box(u, (v0 + 16.8) / 2, 11.55, .5, 16.8 - v0, .25, deckWhite, { solid: false });
+    railing(u, v0, u, 16.8, secondDeck);
+    wall(u, v0, u, 16.8, thirdDeck, thirdDeck+1.8, { mat: 'ge-blue-deck-glass', thick: .04 });
+    wall(u, v0, u, 16.8, thirdDeck+1.8, gardenLevel-.53, { mat: 'ge-ribbed-cladding', thick: .15 });
+    box(u, (v0 + 16.8) / 2, gardenLevel-.53, .5, 16.8 - v0, .25, deckWhite, { solid: false });
   }
   // The January 2026 turn from Sapyeong-daero into the low bus aisle shows
   // a tiled retaining face, a glazed corner above the P sign, and a projecting
@@ -266,10 +266,10 @@ export function build(K) {
   },[1.6,.8]);
   const stone='ge-stone-panel', glassBlue=0x3c666e, mullion=0x939fa1;
   wall(64.35,17.2,104.86,17.2,-.1,gardenLevel,{mat:stone,thick:.22});
-  wall(104.86,-4.5,104.86,17.2,-.1,7.6,{mat:stone,thick:.26,
+  wall(104.86,-4.5,104.86,17.2,-.1,thirdDeck,{mat:stone,thick:.26,
     openings:[{at:3.2,w:4.3,y0:-.1,y1:3.4}]});
-  wall(104.86,4.7,104.86,17.2,7.6,gardenLevel,{mat:stone,thick:.26});
-  wall(96,-4.5,104.86,-4.5,-.1,7.6,{mat:stone,thick:.22});
+  wall(104.86,4.7,104.86,17.2,thirdDeck,gardenLevel,{mat:stone,thick:.26});
+  wall(96,-4.5,104.86,-4.5,-.1,thirdDeck,{mat:stone,thick:.22});
   sign(['P   →','반포천 공영주차장'],101.6,-4.64,4.55,4.7,1.65,PI,
     {bg:'#284b71',fg:'#ffffff'});
 
@@ -279,19 +279,19 @@ export function build(K) {
 
   // Tinted curtain wall returns around the end. Opaque backing keeps the
   // sloping city-side grade from showing through the pavilion into the garage.
-  box(100.45,.12,7.55,8.78,9.14,5.22,glassBlue);
+  box(100.45,.12,thirdDeck-.05,8.78,9.14,5.22,glassBlue);
   for(let u=96.08;u<104.9;u+=1.46){
-    box(u,-4.49,7.58,.06,.09,5.17,mullion,{solid:false});
+    box(u,-4.49,thirdDeck-.02,.06,.09,5.17,mullion,{solid:false});
   }
   for(let v=-4.46;v<4.8;v+=1.5){
-    box(104.88,v,7.58,.09,.06,5.17,mullion,{solid:false});
+    box(104.88,v,thirdDeck-.02,.09,.06,5.17,mullion,{solid:false});
   }
-  for(const y of [7.65,9.13,10.59,12.06,12.65]){
+  for(const y of [thirdDeck+.05,thirdDeck+1.53,thirdDeck+2.99,thirdDeck+4.46,thirdDeck+5.05]){
     box(100.45,-4.50,y,8.88,.09,.055,mullion,{solid:false});
     box(104.90,.12,y,.09,9.18,.055,mullion,{solid:false});
   }
-  box(100.35,.1,12.75,11.75,11.65,.18,0x697479,{solid:false});
-  box(100.35,.1,12.93,11.95,11.8,.28,0xc3c8c7,{solid:false});
+  box(100.35,.1,thirdDeck+5.15,11.75,11.65,.18,0x697479,{solid:false});
+  box(100.35,.1,thirdDeck+5.33,11.95,11.8,.28,0xc3c8c7,{solid:false});
   // The garden-side service shops occupy the top of the solid plinth.
   // Their long low canopy follows the existing restaurant walkway.
   slab(64.4,5,104.78,17.05,gardenLevel,{mat:'darkstone'});
@@ -308,10 +308,10 @@ export function build(K) {
   // Clear access in the south arcade and west/east ends; no continuous ground-level fence.
   sign('데블스도어 센트럴시티', 28, 13.5, gardenLevel+7.65, 5.2, .42, 0, { bg: null, fg: '#e1c496' });
   sign(['출구 ←', '잠원 · 논현 · 신사'], 102.8, 12.5, 2.45, 2.8, 1.1, -PI / 2, { bg: '#222a2c', fg: '#f2ca45' });
-  for (const y of [0, 3.8, 7.6]) {
-    for (const [a, b] of [[0, 17.1], [64.4, 104.8]]) zone('경부선 동측 주차빌딩', y === 0 ? '1F' : y === 3.8 ? '2F' : '3F', '주차장 · 계단 · 승강기', a, 0, b, 18.8, y, y + 3.79, 1);
-    zone('경부선 동측 주차빌딩', y === 0 ? '1F' : y === 3.8 ? '2F' : '3F', '북측 데크 · 연결 통로', 0, -4.5, 104.86, 1.3, y, y + 3.79, 1);
-    sign(y === 0 ? '1층 주차장' : y === 3.8 ? '2층 주차장' : '3층 주차장', 66, 13.2, y + 2.3, 2.3, .5, 0);
+  for (const y of [0, secondDeck, thirdDeck]) {
+    for (const [a, b] of [[0, 17.1], [64.4, 104.8]]) zone('경부선 동측 주차빌딩', y === 0 ? '1F' : y === secondDeck ? '2F' : '3F', '주차장 · 계단 · 승강기', a, 0, b, 18.8, y, (y===0?secondDeck:y===secondDeck?thirdDeck:gardenLevel)-.01, 1);
+    zone('경부선 동측 주차빌딩', y === 0 ? '1F' : y === secondDeck ? '2F' : '3F', '북측 데크 · 연결 통로', 0, -4.5, 104.86, 1.3, y, (y===0?secondDeck:y===secondDeck?thirdDeck:gardenLevel)-.01, 1);
+    sign(y === 0 ? '1층 주차장' : y === secondDeck ? '2층 주차장' : '3층 주차장', 66, 13.2, y + 2.3, 2.3, .5, 0);
   }
 
   K = diningKit;
@@ -422,26 +422,22 @@ export function build(K) {
   for (const [a, b] of [[19, 31], [40, 50], [55, 63]]) {
     box((a + b) / 2, 19.25, 0, b - a, .65, .62, { tex: 'darkstone', color: 0xb2a18a, gloss: .35 });
     box((a + b) / 2, 19.25, .62, b - a - .15, .6, .75, 'ge-privet');
-    for (let u = a; u < b; u += 2.7) {
-      box(u, 22.25, .025, .09, 4.8, .01, white, { solid: false });
-      box(u + 1.25, 20.4, .025, 1.6, .14, .1, 0x333735, { solid: false });
-      for (const du of [-.5, .5]) box(u + 1.25 + du, 20.4, .13, .23, .15, .012, 0xd0ad43, { solid: false });
-    }
   }
-  // White stalls sit on open ground parking, not beneath another parking floor.
-  K.hpoly('asphalt', rect(18, 19.7, 63, 24.8), .013);
-  // The open end of the parking stalls feeds the parallel service aisle
-  // (593858547), which joins the hotel approach via 921681575.
-  K.hpoly('asphalt', rect(31, 24.8, 63, 32.5), .019);
+  // The graded outside lot and all stall paint are built with the arrival
+  // road. A second horizontal surface here would hang above the parked cars.
   // OSM footway 1067157385 meets this module at (339.44,32.31).
   // The narrow paved arcade joins it at ground level; no invented remote doorway.
   K.slab([[339.44, 32.31], [343, 33.25], W(18, 18.8), W(18, 16.9), W(0, 16.9)], 0, { mat: 'ge-pavers', thick: .08 });
   sign(['← 파미에스테이션 · 스타벅스', '고속터미널역 3번 출구 방면'], 3.5, 19.4, 1.8, 3.6, .7, 0, { bg: '#253b35', fg: '#eeeadd' });
   for (const u of [8, 16, 35.8]) floorText(u === 35.8 ? '데블스도어 ↑' : '← 파미에스테이션', u, 18.15, .025, 2.3, .5, 0, '#ece9d9');
-  for (const v of [20.3, 21.1, 21.9, 22.7, 23.5, 24.3]) box(36, v, .028, 2.2, .32, .01, 0xe9e7dc, { solid: false });
-  // Small existing apron landscaping, without rebuilding any surrounding road.
-  K.hpoly('grass', rect(19, 25, 30, 27.5), .012);
-  for (const u of [20.5, 28]) { const [x, z] = W(u, 26.2); K.tree(x, z, { h: 8, kind: 'pine' }); }
+  // The crossing reaches the entrance from the parking aisle below it.
+  for (const v of [20.3,21.1,21.9,22.7,23.5,24.3]) {
+    const corners=rect(34.9,v-.16,37.1,v+.16);
+    parkingKit.quad(white,corners.map(([x,z])=>{
+      const dx=x-71.26,dz=z-143.25;
+      return [x,gardenSurface(.89563*dx-.4448*dz,.4448*dx+.89563*dz)+.07,z];
+    }),[0,1,0]);
+  }
 
   // Retained photographed glass-and-wood side door; no external 2F stair.
   slab(14, 6, 18, 11.4, 0, { mat: { tex: 'wood', color: 0x795c40 } });
@@ -736,9 +732,9 @@ export function build(K) {
   // Parking furniture is lazy, while all decks, ramps and guardrails already exist.
   // Rounded wheel profiles and sloping cabin glass replace the kit's cuboid car
   // silhouette locally; the chassis remains solid in the same parking stalls.
-  function parkingCar(u, v, y, parallel, i) {
+  function parkingCar(u, v, y, parallel, i, grade=0) {
     const color = [0xd2d5d4, 0x28323c, 0xf0eee6, 0x666c72, 0x715850][i % 5];
-    const P = (x, h, z) => { const q = parallel ? [u + z, v - x] : [u + x, v + z]; const p = W(...q); return [p[0], y + h, p[1]]; };
+    const P = (x, h, z) => { const q = parallel ? [u + z, v - x] : [u + x, v + z]; const p = W(...q); return [p[0], y + h + grade*z, p[1]]; };
     const uv = (x, z) => parallel ? [u + z, v - x] : [u + x, v + z];
     const face = (mat, pts) => {
       let world=pts.map(p=>P(...p));
@@ -748,8 +744,18 @@ export function build(K) {
       if(n.dot(mid.sub(center))<0){world=world.reverse();n.negate();}
       K.quad(mat,world,n.toArray());
     };
-    const hull = [[-.76,-2.32],[.76,-2.32],[.94,-2.05],[.94,1.95],[.76,2.32],[-.76,2.32],[-.94,1.95],[-.94,-2.05]].map(p => W(...uv(...p)));
-    K.prism(hull, y + .31, y + .88, { mat: color });
+    const corners=[[-.76,-2.32],[.76,-2.32],[.94,-2.05],[.94,1.95],[.76,2.32],[-.76,2.32],[-.94,1.95],[-.94,-2.05]];
+    const hull=corners.map(p=>W(...uv(...p)));
+    if(grade===0) K.prism(hull,y+.31,y+.88,{mat:color});
+    else {
+      const roof=corners.map(([x,z])=>[x,.88,z]);
+      for(let j=0;j<corners.length;j++){
+        const [x,z]=corners[j],[b,c]=corners[(j+1)%corners.length];
+        face(color,[[x,.31,z],[b,.31,c],[b,.88,c],[x,.88,z]]);
+        if(j>0&&j<corners.length-1)face(color,[roof[0],roof[j],roof[j+1],roof[j+1]]);
+      }
+      K.phys.addPolyWalls(hull,y-.08,y+1.45,.02,'gyeongbu_east');
+    }
     const glazing = 0x263d4b;
     face(glazing, [[-.78,.88,-1.55],[.78,.88,-1.55],[.68,1.48,-.88],[-.68,1.48,-.88]]);
     face(glazing, [[.78,.88,1.24],[-.78,.88,1.24],[-.68,1.48,.55],[.68,1.48,.55]]);
@@ -757,7 +763,7 @@ export function build(K) {
     for (const side of [-1, 1]) {
       face(glazing, [[side*.78,.88,-1.55],[side*.78,.88,1.24],[side*.68,1.48,.55],[side*.68,1.48,-.88]]);
       const a = uv(side*.73,-.18), b = uv(side*.73,-.18);
-      beam([a[0],y+.88,a[1]], [b[0],y+1.48,b[1]], .065, color);
+      beam([a[0],y+.88-grade*.18,a[1]], [b[0],y+1.48-grade*.18,b[1]], .065, color);
       for (const z of [-1.47, 1.47]) for (let j = 0; j < 16; j++) {
         const a0 = PI*2*j/16, a1 = PI*2*(j+1)/16;
         const rim = (x, a, r) => [side*x, .34 + r*Math.sin(a), z + r*Math.cos(a)];
@@ -768,40 +774,48 @@ export function build(K) {
       for (const z of [-2.325,2.325]) face(z > 0 ? 0xe8e4cb : 0xa62c2a, [[side*.29,.56,z],[side*.7,.56,z],[side*.7,.7,z],[side*.29,.7,z]]);
     }
   }
+  // Nose-in surface spaces face the garden. Pitch each parked car to the
+  // actual finished slope between its two axle positions.
+  for(const [i,s] of [230.,245.4,290.9,306.5,334.3,349.9,355.1].entries()){
+    const v=23.2,[x,z]=gardenPoint(s,v),dx=x-333.85,dz=z-16.3;
+    const lo=gardenSurface(s,v-1.47),hi=gardenSurface(s,v+1.47);
+    parkingCar(dx*U[0]+dz*U[1],dx*V[0]+dz*V[1],(hi+lo)/2+.07,false,i,(hi-lo)/2.94);
+  }
   function parkingBollard(u, v, red = true) {
     cylinder(u, v, 0, .13, .06, 0x494b48, { seg: 12 });
     cylinder(u, v, .06, .065, .82, red ? 0xda653d : 0x323b40, { seg: 10 });
     for (const y of [.45,.7]) cylinder(u, v, y, .068, .09, 0xe7e5d9, { solid: false, seg: 10 });
   }
-  for (const y of [0, 3.8]) detail('북측 개방 주차층 · 차량과 조명', y === 0 ? '1F' : '2F', y, y + 3.7, rect(16.8, -4.5, 64.4, 1.3), () => {
+  for (const y of [0, secondDeck]) detail('북측 개방 주차층 · 차량과 조명', y === 0 ? '1F' : '2F', y, y + secondDeck-.1, rect(16.8, -4.5, 64.4, 1.3), () => {
     // Four parallel cars leave over 3 m between their sides and the front
     // struts. The hall's u53 passage stays clear on both levels.
     for (const [i, u] of [24, 34, 44, 59].entries()) parkingCar(u, -.05, y, true, i);
-    // Slab bottoms are y3.5/7.3, not the nominal floor tops3.8/7.6.
-    for (const v of [-2.8, -.65]) box(40.6, v, y + 3.46, 47.6, .065, .025, { tex: 'emit', color: 0xe4e9e2 }, { solid: false });
+    // Mount the lights just below the concrete slab soffit.
+    for (const v of [-2.8, -.65]) box(40.6, v, y + secondDeck-.34, 47.6, .065, .025, { tex: 'emit', color: 0xe4e9e2 }, { solid: false });
   });
-  for (const [floor, y] of [['1F', 0], ['2F', 3.8], ['3F', 7.6]]) detail(`${floor} 주차 구획 · 차량 · 안내`, floor, y, y + 3.7, footprint, () => {
+  for (const [floor, y] of [['1F', 0], ['2F', secondDeck], ['3F', thirdDeck]]) detail(`${floor} 주차 구획 · 차량 · 안내`, floor, y, Math.min(y+secondDeck-.1,gardenLevel-.01), footprint, () => {
     const stalls = [];
     for (const u of [4.5, 7.3, 10.1]) stalls.push([u, 10]);
     if (y === 0) for (const u of [72, 77.6, 83.2, 88.8, 94.4]) stalls.push([u, 9.7]);
-    if (y === 3.8) for (const u of [72, 77.6, 83.2, 88.8, 94.4]) stalls.push([u, 14.1]);
-    if (y === 7.6) for (const u of [72, 77.6, 83.2, 88.8, 94.4]) stalls.push([u, 3.15]);
+    if (y === secondDeck) for (const u of [72, 77.6, 83.2, 88.8, 94.4]) stalls.push([u, 14.1]);
+    if (y === thirdDeck) for (const u of [72, 77.6, 83.2, 88.8, 94.4]) stalls.push([u, 3.15]);
     let i = 0;
     for (const [u, v] of stalls) {
-      const isParallel = u > 60 && y === 3.8;
+      const isParallel = u > 60 && y === secondDeck;
       const w = isParallel ? 5.3 : 2.5, d = isParallel ? 2.4 : 5.05;
       for (const du of [-w / 2, w / 2]) box(u + du, v, y + .018, .08, d, .009, 0xeee9d8, { solid: false });
       box(u, v - d / 2, y + .018, w, .08, .009, 0xeee9d8, { solid: false });
       box(u, v - d / 2 + .4, y, w * .6, .14, .1, 0x333938, { solid: false });
       parkingCar(u, v, y, isParallel, i++);
     }
+    const ceiling = Math.min(y+secondDeck-.32,gardenLevel-.56);
     for (const u of [5,10,71,77,83,89,95,102]) for (const v of [12.5,15.9]) {
-      box(u, v, y + 3.23, 1.5, .17, .07, 0x6d7474, { solid: false });
-      for (const dv of [-.05,.05]) box(u, v+dv, y + 3.2, 1.35, .035, .025, { tex: 'emit', color: 0xeaf0e3 }, { solid: false });
-      for (const du of [-.55,.55]) beam([u+du,y+3.3,v], [u+du,y+3.48,v], .015, steel);
+      box(u, v, ceiling - .25, 1.5, .17, .07, 0x6d7474, { solid: false });
+      for (const dv of [-.05,.05]) box(u, v+dv, ceiling - .28, 1.35, .035, .025, { tex: 'emit', color: 0xeaf0e3 }, { solid: false });
+      for (const du of [-.55,.55]) beam([u+du,ceiling-.18,v], [u+du,ceiling,v], .015, steel);
     }
-    for (const v of [12.1,12.7]) beam([68,y+3.35,v],[103,y+3.35,v],.055,0x737c7e);
-    for (let u=68;u<103;u+=.65) beam([u,y+3.35,12.1],[u,y+3.35,12.7],.035,0x737c7e);
+    for (const v of [12.1,12.7]) beam([68,ceiling-.13,v],[103,ceiling-.13,v],.055,0x737c7e);
+    for (let u=68;u<103;u+=.65) beam([u,ceiling-.13,12.1],[u,ceiling-.13,12.7],.035,0x737c7e);
     floorText('천천히', 65.3, 14.6, y + .025, 2, .85);
     floorText('↑', 101.7, 8.7, y + .025, 1.3, 2.5);
     if (y === 0) {
@@ -856,8 +870,8 @@ export function build(K) {
   spawn('데블스도어 정문', 36, 18.3, gardenLevel);
   spawn('데블스도어 홀', 36, 9.3, gardenLevel, 1, 0);
   spawn('데블스도어 2층 라운지', 30.4, 11.55, gardenLevel+3.8, 0, -1);
-  spawn('주차빌딩 2층', 65.3, 14.7, 3.8, 1, 0);
-  spawn('주차빌딩 3층', 65.5, 14.7, 7.6, 1, 0);
+  spawn('주차빌딩 2층', 65.3, 14.7, secondDeck, 1, 0);
+  spawn('주차빌딩 3층', 65.5, 14.7, thirdDeck, 1, 0);
   spawn('주차빌딩 계단', 2, 8, 0, 0, -1);
 }
 

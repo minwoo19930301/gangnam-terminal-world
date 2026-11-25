@@ -10,6 +10,7 @@ globalThis.__makeCanvas = (w, h) => ({ width: w, height: h, getContext: () => ct
 
 const { createPhysics } = await import('../js/physics.js');
 const { createKit } = await import('../js/kit.js');
+const { relief } = await import('../js/banpo_relief.js');
 const { buildCity } = await import('../js/city.js');
 const { PLACES } = await import('../js/places/index.js');
 const osm = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/osm.json'), 'utf8'));
@@ -89,14 +90,39 @@ for (const e of K._.detailErrors) problems.push('detail group threw: ' + e);
 // The carriageways overlap in plan. Probe each at its own approach height so
 // a roof or a bridge cannot accidentally become the floor of the lower lane.
 if (loaded.has('streets')) {
-  for (const [x,z,y] of [[425.8,-47.6,0],[231.7,43.9,0],[166.1,56.6,0],
-    [6.2,32.2,0],[15.6,86.7,5.8],[27.2,118.2,9.3],[36.3,138.6,11.5],
-    [240.73,36.45,7.3],[190.47,70.22,11.5]]) {
+  // Low aisle contacts use the authored 1F. On a stacked road, ask for
+  // the specific measured elevation so an overhead deck cannot mask a gap.
+  const datum=11.838;
+  const roadChecks=[
+    [425.8,-47.6,null],[231.7,43.9,null],[166.1,56.6,null],
+    [6.2,32.2,11.07],[16.79,89.9,15.55],[36.3,138.6,18.85],
+    [329.81,71.89,17.80],[373.17,14.53,19.09],[8.56,168.75,19.08],
+    [206.50,58.16,18.22],[240.73,36.45,16.10],[190.47,70.22,19.25],
+  ];
+  for(const [x,z,sourceHeight] of roadChecks){
+    const y=sourceHeight===null ? 0 : sourceHeight-datum-relief(x,z);
     const floor=phys.support(x,z,y+.4).y;
     const pos={x,z};
     phys.resolve(pos,.3,y+.03,y+1.75,.3);
     if(Math.abs(floor-y)>.4 || Math.hypot(pos.x-x,pos.z-z)>.08)
       problems.push(`rear parking drive obstructed at (${x},${z}), expected height ${y}, got ${floor}`);
+  }
+}
+// Both decks cross the same river channel. Sample the two surfaces separately
+// so a sag into the park DEM, a lost navigation hump or a raised kerb is visible.
+if (loaded.has('hangang')) {
+  const { waterHeight } = await import('../js/banpo_dem.js');
+  const stations = [
+    [-553.01,-558.75,waterHeight+20.4], [-814.45,-1230.57,waterHeight+20.4],
+    [-938.5,-1564.93,waterHeight+20.4], [-700,-934,waterHeight+2.7],
+    [-809,-1220,waterHeight+6.4], [-887,-1420,waterHeight+2.7],
+  ];
+  for (const [x,z] of [[-521.6,-441.74],[-1007.28,-1958.85],[-1000.03,-1960.26],[-590.01,-647.54],[-931.69,-1540.58]]) {
+    stations.push([x,z,relief(x,z)+.06]);
+  }
+  for (const [x,z,expected] of stations) {
+    const ground = relief(x,z), deck = phys.support(x,z,expected-ground+.3).y + ground;
+    if (Math.abs(deck-expected) > .13) problems.push(`bridge at (${x},${z}): expected ${expected}, found ${deck}`);
   }
 }
 // area loading reads js/places/_meta.json: warn when a module's claims are not what it says (run node tools/gen_meta.mjs)

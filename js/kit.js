@@ -1,3 +1,4 @@
+import { relief, terrainPieces } from './banpo_relief.js';
 // K = construction kit handed to every place module.  See docs/PLACE_API.md for the contract.
 // Coordinates: x=east, z=south, y=up, meters. Origin = 고속터미널역. Street level y=0.
 import { createTextures, createSignAtlas, makeCanvas } from './textures.js';
@@ -119,6 +120,26 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     return { key: gl + 'tex:' + name, c, scale: mat.scale || s.scale, facade: s.facade };
   }
 
+  // A road deck or building can share a surveyed anchor across its entire
+  // footprint. Physics stores the same offset in terrain-relative coordinates.
+  let anchorHeight = null;
+  function terrainAt(surface, x, z) {
+    if (typeof surface === 'number') return surface;
+    return (surface ?? relief)(x,z);
+  }
+  function withTerrainSurface(surface, build) {
+    const previous = anchorHeight;
+    anchorHeight = surface;
+    try { return phys.withHeightOffset((x,z) => terrainAt(surface,x,z) - relief(x,z), build); }
+    finally { anchorHeight = previous; }
+  }
+  function withTerrainAnchor(x, z, build) {
+    return withTerrainSurface(relief(x,z),build);
+  }
+  function recordAnchor(b) {
+    if (anchorHeight !== null) (b.anchors ||= new Map()).set(b.prim.length, anchorHeight);
+  }
+
   // ---------- buckets ----------
   function bucket(key, x, z) {
     const tk = key + '|' + Math.floor(x / TILE) + ',' + Math.floor(z / TILE);
@@ -126,8 +147,19 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     if (!b) { b = { key, pos: [], nor: [], uv: [], col: [], idx: [], prim: [], own: [] }; buckets.set(tk, b); }
     return b;
   }
+  function splitTerrainFace(sp, p, n, uvs) {
+    if (typeof anchorHeight === 'number') return false;
+    const pieces = terrainPieces(p, uvs);
+    if (!pieces) return false;
+    for (const poly of pieces) for (let i = 1; i + 1 < poly.length; i++) {
+      const corners = [poly[0], poly[i], poly[i+1]];
+      tri(sp, corners.map(v => v.slice(0,3)), n, corners.map(v => v.slice(3)), false);
+    }
+    return true;
+  }
   // emit a quad. p: 4 points [x,y,z], n: intended normal, uvs: 4 [u,v]
-  function quad(sp, p, n, uvs) {
+  function quad(sp, p, n, uvs, split = true) {
+    if (split && splitTerrainFace(sp, p, n, uvs)) return;
     const b = bucket(sp.key, p[0][0], p[0][2]);
     // winding check
     const ax = p[1][0] - p[0][0], ay = p[1][1] - p[0][1], az = p[1][2] - p[0][2];
@@ -141,10 +173,11 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     }
     if (flip) b.idx.push(base, base + 2, base + 1, base, base + 3, base + 2);
     else b.idx.push(base, base + 1, base + 2, base, base + 2, base + 3);
-    b.prim.push(4); b.own.push(current);
+    recordAnchor(b); b.prim.push(4); b.own.push(current);
     stats.quads++;
   }
-  function tri(sp, p, n, uvs) {
+  function tri(sp, p, n, uvs, split = true) {
+    if (split && splitTerrainFace(sp, p, n, uvs)) return;
     const b = bucket(sp.key, p[0][0], p[0][2]);
     const ax = p[1][0] - p[0][0], ay = p[1][1] - p[0][1], az = p[1][2] - p[0][2];
     const bx = p[2][0] - p[0][0], by = p[2][1] - p[0][1], bz = p[2][2] - p[0][2];
@@ -152,7 +185,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     const flip = cx * n[0] + cy * n[1] + cz * n[2] < 0;
     const base = b.pos.length / 3;
     for (let i = 0; i < 3; i++) { b.pos.push(p[i][0], p[i][1], p[i][2]); b.nor.push(n[0], n[1], n[2]); b.uv.push(uvs[i][0], uvs[i][1]); b.col.push(sp.c[0], sp.c[1], sp.c[2]); }
-    if (flip) b.idx.push(base, base + 2, base + 1); else b.idx.push(base, base + 1, base + 2); b.prim.push(3); b.own.push(current);
+    if (flip) b.idx.push(base, base + 2, base + 1); else b.idx.push(base, base + 1, base + 2); recordAnchor(b); b.prim.push(3); b.own.push(current);
   }
   // vertical face from (ax,az)->(bx,bz), y0..y1, normal given. u along length from uOff.
   function vface(sp, ax, az, bx, bz, y0, y1, nx, nz, uOff = 0, floorH = 0, vBase = 0) {
@@ -447,8 +480,8 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
   }
   // instanced things
   // trees count as ground clutter (ny 1) for area filtering
-  function tree(x, z, o = {}) { if (keep && !keep(current, x, o.y ?? 0, z, 1)) return; trees.push({ place: current, x, z, y: o.y ?? 0, h: o.h ?? (6 + ((x * 13.7 + z * 7.3) % 3)), kind: o.kind ?? 'zelkova' }); }
-  function person(x, y, z, o = {}) { if (keep && !keep(current, x, y, z, 1)) return; people.push({ place: current, x, y, z, rotY: o.rotY ?? ((x * 7 + z * 3) % 6.28), shirt: o.shirt, pants: o.pants, h: o.h ?? (1.6 + ((x * 31 + z * 17) % 0.25)), sit: !!o.sit }); }
+  function tree(x, z, o = {}) { if (keep && !keep(current, x, o.y ?? 0, z, 1)) return; trees.push({ place: current, x, z, y: (o.y ?? 0) + (anchorHeight===null ? 0 : terrainAt(anchorHeight,x,z)-relief(x,z)), h: o.h ?? (6 + ((x * 13.7 + z * 7.3) % 3)), kind: o.kind ?? 'zelkova' }); }
+  function person(x, y, z, o = {}) { if (keep && !keep(current, x, y, z, 1)) return; people.push({ place: current, x, y:y + (anchorHeight===null ? 0 : terrainAt(anchorHeight,x,z)-relief(x,z)), z, rotY: o.rotY ?? ((x * 7 + z * 3) % 6.28), shirt: o.shirt, pants: o.pants, h: o.h ?? (1.6 + ((x * 31 + z * 17) % 0.25)), sit: !!o.sit }); }
   function crowd(poly, y, n, o = {}) { const rnd = rand(o.seed ?? (poly[0][0] * 1000 + poly[0][1])); const bb = polyBBox(poly); let k = 0, guard = 0; while (k < n && guard++ < n * 30) { const x = bb[0] + rnd() * (bb[2] - bb[0]), z = bb[1] + rnd() * (bb[3] - bb[1]); if (pointInPoly(x, z, poly)) { person(x, y, z, { rotY: rnd() * 6.28 }); k++; } } }
   // vehicle (static, merged). kind: car|taxi|bus|cityBus|truck|van
   function vehicle(o) {
@@ -507,7 +540,12 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
   }
   function groundHole(poly, inner) { phys.addGroundHole(poly, inner); groundHoles.push({ poly, inner }); }
   function onFrame(fn) { frameFns.push(fn); }
-  function addMesh(mesh) { mesh.userData.owner ??= current; scene.add(mesh); return mesh; }
+  function addMesh(mesh) {
+    mesh.userData.owner ??= current;
+    if (mesh.isPointLight) mesh.position.y += terrainAt(anchorHeight,mesh.position.x,mesh.position.z);
+    scene.add(mesh);
+    return mesh;
+  }
   function texture(key, w, h, draw, scale = [1, 1], opts = {}) { if (!customTex.has(key)) { const r = T.custom(key, w, h, draw, scale, opts); customTex.set(key, { ...r, transparent: !!opts.transparent, doubleSide: !!opts.doubleSide }); } return key; }
   function material(key, m) { customMats.set(key, m); materials.set('cm:' + key, m); return key; }
   function mapMark(o) { mapMarks.push({ place: current, ...o }); }
@@ -534,7 +572,22 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
   function track(m, cell) {
     if (!m.geometry.boundingBox) m.geometry.computeBoundingBox();
     let bb = m.geometry.boundingBox;
-    if (m.isInstancedMesh) { m.computeBoundingBox(); m.computeBoundingSphere(); bb = m.boundingBox; }
+    if (m.isInstancedMesh) {
+      m.computeBoundingBox(); m.computeBoundingSphere(); bb = m.boundingBox;
+      // Kit batches store world-space instance origins under an identity root.
+      // The shader moves each rigid tree/person by the grade at that origin.
+      const matrices = m.instanceMatrix.array;
+      let low = Infinity, high = -Infinity;
+      for (let i = 0; i < m.count; i++) {
+        const h = relief(matrices[16*i+12], matrices[16*i+14]);
+        low = Math.min(low,h); high = Math.max(high,h);
+      }
+      if (m.count) {
+        m.boundingSphere.center.y += (low+high)/2;
+        m.boundingSphere.radius += (high-low)/2;
+        bb.min.y += low; bb.max.y += high;
+      }
+    }
     m.userData.cell = cell; m.userData.bb = [bb.min.x, bb.min.z, bb.max.x, bb.max.z];
     cullList.push(m);
   }
@@ -627,14 +680,31 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
       for (const nv of b.prim) {
         const s = which[pi++], ni = nv === 4 ? 6 : 3;
         if (!s) { vo += nv; io += ni; continue; }
-        const base = s.v;
+        const base = s.v, datum = b.anchors?.get(pi-1);
         for (let k = 0; k < nv; k++) {
           const v = vo + k, d = s.v++;
-          s.pos[d * 3] = P[v * 3]; s.pos[d * 3 + 1] = P[v * 3 + 1]; s.pos[d * 3 + 2] = P[v * 3 + 2];
+          s.pos[d * 3] = P[v * 3]; s.pos[d * 3 + 1] = P[v * 3 + 1] + terrainAt(datum,P[v*3],P[v*3+2]); s.pos[d * 3 + 2] = P[v * 3 + 2];
           s.nor[d * 3] = N[v * 3]; s.nor[d * 3 + 1] = N[v * 3 + 1]; s.nor[d * 3 + 2] = N[v * 3 + 2];
           s.uv[d * 2] = U[v * 2]; s.uv[d * 2 + 1] = U[v * 2 + 1];
           s.col[d * 3] = C[v * 3]; s.col[d * 3 + 1] = C[v * 3 + 1]; s.col[d * 3 + 2] = C[v * 3 + 2];
           if (ar) s.rect[d] = ar.layer;
+        }
+        // Grade the lighting of level road, paving, roofs and park faces as
+        // well as their silhouette. Survey clipping made each such face planar.
+        if (datum === undefined && Math.abs(N[vo*3+1]) > .999 && P[vo*3+1] === P[vo*3+4] && P[vo*3+1] === P[vo*3+7]) {
+          const v = 3*base, p = s.pos;
+          const ax = p[v+3]-p[v], ay = p[v+4]-p[v+1], az = p[v+5]-p[v+2];
+          const bx = p[v+6]-p[v], by = p[v+7]-p[v+1], bz = p[v+8]-p[v+2];
+          if (ay || by) {
+            const nx = ay*bz-az*by, ny = az*bx-ax*bz, nz = ax*by-ay*bx;
+            const length = Math.hypot(nx,ny,nz);
+            if (Math.abs(ny) > 1e-8 && length) {
+              const scale = Math.sign(ny * N[vo*3+1]) / length;
+              for (let d=v; d<v+3*nv; d+=3) {
+                s.nor[d] = nx*scale; s.nor[d+1] = ny*scale; s.nor[d+2] = nz*scale;
+              }
+            }
+          }
         }
         for (let k = 0; k < ni; k++) s.idx[s.i++] = I[io + k] - vo + base;
         vo += nv; io += ni;
@@ -651,7 +721,12 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
       if (s.rect) g.setAttribute('layer', new THREE.BufferAttribute(s.rect, 1));
       g.setIndex(new THREE.BufferAttribute(s.idx, 1));
       g.computeBoundingSphere(); g.computeBoundingBox();
-      const m = new THREE.Mesh(g, matFor(s.key));
+      // Static coordinates now include their surveyed elevation. Culling,
+      // bounding volumes and rendering all use the same world-space mesh.
+      const material = matFor(s.key);
+      material.defines ||= {};
+      material.defines.BANPO_RIGID = 1;
+      const m = new THREE.Mesh(g, material);
       if (s.key === 'glass' || s.key === 'water') m.renderOrder = 2;
       m.matrixAutoUpdate = false; m.updateMatrix();
       scene.add(m); out.push(m); track(m, s.cell);
@@ -726,7 +801,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
         });
         it.instanceMatrix.needsUpdate = ic.instanceMatrix.needsUpdate = true; if (ic.instanceColor) ic.instanceColor.needsUpdate = true;
         scene.add(it, ic); track(it, g.cell); track(ic, g.cell);
-        it.userData.lod = [trunk, trunkLo]; ic.userData.lod = [crown, crownLo]; it.computeBoundingBox?.(); lodList.push(it, ic);
+        it.userData.lod = [trunk, trunkLo]; ic.userData.lod = [crown, crownLo]; lodList.push(it, ic);
       }
     }
     if (people.length > peopleDone) {
@@ -804,6 +879,11 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
   function detail(o, fn) {
     let poly = o.poly; if (!poly && o.rect) { const [x0, z0, x1, z1] = o.rect; poly = [[x0, z0], [x1, z0], [x1, z1], [x0, z1]]; }
     const bb = poly ? polyBBox(poly) : [-1e9, -1e9, 1e9, 1e9];
+    const datum = anchorHeight;
+    if (datum !== null) {
+      const draw = fn;
+      fn = kit => withTerrainSurface(datum,() => draw(kit));
+    }
     details.push({ owner: current, meta: perPlace[current], floor: o.floor || '', y0: o.y0 ?? -1e9, y1: o.y1 ?? 1e9, bb, fn, built: false, name: o.name || '' });
   }
   function buildDetail(d) {
@@ -829,7 +909,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
   function buildAllDetail() { for (const d of details) if (!keepDetail || keepDetail(d)) buildDetail(d); }
 
   const K = {
-    THREE, scene, phys, osm, LEVELS, T,
+    THREE, scene, phys, osm, LEVELS, T, withTerrainAnchor, withTerrainSurface,
     box, prism, slab, wall, polyWalls, ramp, stairs: (ax, az, bx, bz, o = {}) => ramp(ax, az, bx, bz, { ...o, steps: true }), escalator, cyl, dome, sign, floorText,
     tree, person, crowd, vehicle, zone, spawn, interact, portal, elevator, groundHole, onFrame, addMesh, texture, material, mapMark, detail,
     osmBuilding, osmFind, claim, rand, quad: (mat, p, n, uvs) => quad(spec(mat), p, n, uvs || [[0, 0], [1, 0], [1, 1], [0, 1]]), hpoly: (mat, poly, y, up = true, holes) => hpoly(spec(mat), poly, y, up, holes),

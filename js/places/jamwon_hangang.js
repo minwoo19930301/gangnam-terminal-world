@@ -1,5 +1,6 @@
 // Local OSM is preserved at its real coordinates; unrecorded facilities are
 // separately anchored by source pins. Dimensions/heights are reconstructions.
+import { jamwonRiverExtension } from '../banpo_dem.js';
 const PATHS=[305677075,919393789,919393790,697678242,697678244,697678248,892370125,892370126,892370127,408858834,1497710475,1497710499,1497710500,949348575,949348576];
 export const meta={id:'jamwon_hangang',name:'잠원한강공원',claims:[],claimRoads:[...PATHS,282194887,282194888,703825832,1497710476],claimAreas:[981963451,1532626249],sources:['data/osm.json','refs/aerial/jamwon_park.jpg','refs/interior/jamwon_park/notes.json','https://hangang.seoul.go.kr/www/contents/657.do?mid=454','https://magazine.sfac.or.kr/html/view.asp?PubDate=202004&CateMasterCd=300&CateSubCd=2336','https://www.directwedding.co.kr/weddinghall/marevo-in-wave','https://mediahub.seoul.go.kr/archives/2017290']};
 export function build(K){
@@ -499,19 +500,33 @@ export function build(K){
     });
     spawn('잠원나들목 · 거리 입구',770,0,-1674,32);
     spawn('잠원나들목 · 공원 입구',677,0,-1808,212);
-    // The local OSM has no geometry past the clipped northern edge. These bank
-    // points are a conservative continuation, with facilities at source pins.
-    const bank=[[775.9,-2100],[850,-2190],[965,-2318],[1080,-2425],[1200,-2480],[1330,-2610],[1450,-2670]],inland=[[935.67,-2100],[1030,-2180],[1110,-2280],[1230,-2390],[1300,-2440],[1410,-2540],[1500,-2600]],extension=[...bank,...inland.slice().reverse()];
-    const sevenInlet=rect(1290,-2605,1394,-2573);
+    // Continue the same OSM river relation across the local export seam.
+    // The upstream shop occupies a small inlet omitted by the river polygon.
+    const water=jamwonRiverExtension;
+    const end=water.findIndex(p=>p[1]===-2850);
+    const bank=water.slice(0,end+1);
+    const bankAt=z=>{
+      const i=bank.findIndex(p=>p[1]<=z), a=bank[i-1], b=bank[i];
+      return [a[0]+(b[0]-a[0])*(z-a[1])/(b[1]-a[1]),z];
+    };
+    const inland=[[935.67,-2100],[1030,-2180],[1110,-2280],[1230,-2390],[1300,-2440],[1410,-2540],[1500,-2600],[1500,-2850]];
+    const extension=[...bank,...inland.slice().reverse()];
+    const mouthNorth=bankAt(-2605), mouthSouth=bankAt(-2573);
+    const sevenInlet=[mouthNorth,[1394,-2605],[1394,-2573],mouthSouth];
     for(const piece of subtract(extension,sevenInlet))slab(piece,0,{tex:'grass',color:0xb9caa0});
     K.phys.addGroundHole(sevenInlet);K.hpoly('water',sevenInlet,-1.4);K.phys.addSurface(sevenInlet,-2.1,{slow:.7,tag:'jamwon_hangang'});
     zone('잠원한강공원 · 한남대교',extension,0,'1F','수변 산책로 · 제4주차장',12);
     // Water extension shares only the z=-2100 seam with city-owned river152336.
-    const water=[[-198.12,-2100],...bank,[1450,-2850],[-198.12,-2850]];
     // No rendered base terrain exists outside osm.bbox. Remove only its global
     // physics ground here: an out-of-bounds Earcut hole would corrupt that mesh.
     K.phys.addGroundHole(water);K.hpoly('water',water,-1.4);K.phys.addSurface(water,-2.1,{slow:.7,tag:'jamwon_hangang'});
-    for(let i=1;i<bank.length;i++)K.wall(...bank[i-1],...bank[i],-2.4,0,{mat:{tex:'concrete',color:0xaaa699},thick:.15,solid:false});
+    K.hpoly('grass',[[-198.12,-2850],...water.slice(end+1)],0);
+    const bankWall=(p,q)=>K.wall(...p,...q,-2.4,0,{mat:{tex:'concrete',color:0xaaa699},thick:.15,solid:false});
+    for(let i=1;i<bank.length;i++) {
+      const p=bank[i-1], q=bank[i];
+      if(p[1]>mouthSouth[1] && q[1]<mouthNorth[1]) { bankWall(p,mouthSouth); bankWall(mouthNorth,q); }
+      else bankWall(p,q);
+    }
     parkWay([[791,-2085],[869,-2165],[989,-2295],[1100,-2394],[1200,-2445],[1348,-2570],[1450,-2630]]);
     hannam();
     // Photo12's roof explicitly says 잠원1호, not 잠원2호. Its address pin is
@@ -542,7 +557,7 @@ export function build(K){
     // The former huge -Y triangles fought the city water only 15 mm below.
     // Upward winding and a small depth bias keep one continuous grey-green river.
     const waterMat=new THREE.MeshPhongMaterial({color:0x7f877f,specular:0x252b26,shininess:12,side:THREE.DoubleSide,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-4});
-    for(const a of [...worldK.osm.areas.filter(a=>a.kind==='natural:water'&&Math.abs(worldK.polyArea(a.poly))>20000),{poly:leafWater}]){
+    for(const a of [...worldK.osm.areas.filter(a=>a.id===152336),{poly:jamwonRiverExtension},{poly:leafWater}]){
       const outline=a.poly.map(p=>new THREE.Vector2(...p)),holes=(a.holes||[]).map(h=>h.map(p=>new THREE.Vector2(...p)));
       const verts=[...outline,...holes.flat()],g=new THREE.BufferGeometry();
       g.setAttribute('position',new THREE.Float32BufferAttribute(verts.flatMap(p=>[p.x,-1.385,p.y]),3));

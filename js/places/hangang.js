@@ -1,10 +1,13 @@
+import { relief } from '../banpo_relief.js';
+import { waterHeight } from '../banpo_dem.js';
+
 // 반포 수변: OSM footprints are the building/deck boundaries, not illustrative circles.
 // Floor heights, partitions and furniture layouts are reconstructions, not surveyed plans.
 // Tenant labels follow data/research/hangang.json and named OSM POIs. No current-tenant claim.
 // Solbit's Mood Seoul and second-floor live performances follow Seoul's 2024 report;
 // exact elevations, furniture and current operations remain reconstruction assumptions.
-// Assumptions: upper bridge +15m, lower +1.6m (water -1.4m), with a navigation hump;
-// the south-bank approach shares the park's +0.10m datum and rises over the river.
+// Model coordinates on the bridges use the river datum. The decks meet the
+// surveyed roads at both ends and retain the lower span's navigation hump.
 // Gabit's retained 0 / 5 / 18 / 23m levels give the convention hall a 13m volume;
 // the precise floor elevations and 700-seat theatre arrangement are reconstruction choices.
 const PATHS = [305677069,305677070,305677072,305677073,305677074,305692222,305692223,359930728,359930764,532858557,547990902,585895794,697678235,697678236,697678237,697678238,697678239,697678240,697678241,697678250,697678251,697678480,697678481,697678482,697678484,697678486,697678487,697678488,802402467,815547952,815547953,815547954,831122214,838078383,892361591,892361592,892361593,892361594,892361595,892361596,892361597,892361598,892361599,892361600,895877915,895878160,919400909,919400910,919400911,1354859719,1494834732,1494834733,1494834734,1497710480,1497710481,1563032426,1563032427,1563032432,1563032433,1563032434,1563032435,1563032439,1563032440,1563032441,1568503150,1568503151,1568503152,1568503153,1568503154,414267188,697678249,697678489,697678491];
@@ -18,6 +21,8 @@ export const meta = {
   claimRoads: [...PATHS,...SEORAE_PATHS,37928409,674432572,1091571409,1091571410,596516315,560449165,713327919],
   claimAreas: [418249072,769712608,25979109,...LAWNS,...ISLETS,...PIERS,320797972,320797230,1091571021,1085504592,1538963197],
   sources: [
+    'https://futureheritage.seoul.go.kr/futureHeritageMeet/futureHeritage/view.do?htNo=308',
+    'https://futureheritage.seoul.go.kr/futureHeritageMeet/futureHeritage/view.do?htNo=292',
     'https://mediahub.seoul.go.kr/archives/2002598',
     'https://hangang.seoul.go.kr/archives/46727',
     'https://mediahub.seoul.go.kr/archives/2008745',
@@ -885,6 +890,35 @@ export function build(K) {
 
   // Main bridge frame, at the real centerline between the two one-way OSM carriageways.
   const bridge=[[-521.6,-441.74,0],[-552.5,-557.4,15],[-577.9,-624.7,15],[-651.2,-813.2,15],[-779.1,-1140.6,15],[-920.5,-1500.5,15],[-944.5,-1586.4,15],[-1003.65,-1959.55,0]];
+  // Seoul Future Heritage describes the nozzle as about 20m above the water
+  // and the low Jamsu deck as 2.7m above it. This is a reconstructed profile;
+  // a land contour beneath a pier is not a measurement of its road surface.
+  const spanDatum = waterHeight + 20 - 14.6;
+  const lowSpanDatum = waterHeight + 2.7 - 1.6;
+  const chainPosition = (x,z,a,b) =>
+    ((x-a[0])*(b[0]-a[0]) + (z-a[1])*(b[1]-a[1])) / Math.hypot(b[0]-a[0],b[1]-a[1]);
+  function endTie(x,z,road,endOfRamp) {
+    const length = Math.hypot(endOfRamp[0]-road[0],endOfRamp[1]-road[1]);
+    const s = Math.max(0,chainPosition(x,z,road,endOfRamp));
+    if (s >= length) return spanDatum;
+    const t = s/length;
+    const roadDatum = relief(road[0],road[1]) + .06;
+    // Within the last 40m of the land road, match its full transverse grade.
+    // Elsewhere the span is independent of the park, rail yard and floodplain.
+    const edge = Math.max(0,1-s/40) * (relief(x,z)+.06-roadDatum);
+    const linear = roadDatum + t*(spanDatum-roadDatum) + edge;
+    return Math.max(linear,relief(x,z)+.06 - 15*t);
+  }
+  const south = bridge[0], southSpan = bridge[1];
+  const north = bridge.at(-1), northSpan = bridge.at(-2);
+  const southTie = (x,z) => endTie(x,z,south,southSpan);
+  const northTie = (x,z) => endTie(x,z,north,northSpan);
+  function lowDatum(x,z) {
+    const southDistance = chainPosition(x,z,accessA,accessB);
+    const northDistance = chainPosition(x,z,[-931.69,-1540.58],[-912.02,-1486.06]);
+    const blend = Math.min(1,Math.max(0,(southDistance-120)/70),Math.max(0,northDistance/50));
+    return blend === 1 ? lowSpanDatum : (1-blend)*relief(x,z) + blend*lowSpanDatum;
+  }
   function bridgeSection(a,b) {
     const L=Math.hypot(b[0]-a[0],b[1]-a[1]),ux=(b[0]-a[0])/L,uz=(b[1]-a[1])/L,nx=-uz,nz=ux,rot=Math.atan2(ux,uz);
     K.ramp(...a.slice(0,2),...b.slice(0,2),{w:25,ya:a[2],yb:b[2],mat:{tex:'asphalt',color:0xb4b8b7},under:0xa8a39b,rails:false});
@@ -910,7 +944,10 @@ export function build(K) {
     // cylinders at +/-5.6m wrongly stood inside the walking/cycle lanes.
     for(let s=45;s<L;s+=110){const t=s/L;K.vehicle({x:a[0]+ux*s+nx*4.8,y:a[2]+(b[2]-a[2])*t,z:a[1]+uz*s+nz*4.8,rotY:rot,kind:'car',solid:true});}
   }
-  for(let i=1;i<bridge.length;i++)bridgeSection(bridge[i-1],bridge[i]);
+  for(let i=1;i<bridge.length;i++) {
+    const surface = i===1 ? southTie : i===bridge.length-1 ? northTie : spanDatum;
+    K.withTerrainSurface(surface,() => bridgeSection(bridge[i-1],bridge[i]));
+  }
   // Jamsu Bridge: no cars after 2026-10-26; preserve a pedestrian and cycle route.
   // Keep the river deck/spawn at +1.6m, but provide 3.35m of headroom over
   // both OSM park crossways. Rails and deck fascia never extend to the lawn.
@@ -935,6 +972,8 @@ export function build(K) {
     for(let s=0;s<=L;s+=2.4){const t=s/L,x=a[0]+(b[0]-a[0])*t,z=a[1]+(b[1]-a[1])*t;box(x,y,z,.07,1.25,.07,0xa8ada7);box(x,y,z,.38,.08,.48,0x656a63);}
     if(mesh)for(const h of [.2,.5,.8,1.1])K.wall(...a,...b,y+h,y+h+.018,{mat:0xa4afa9,thick:.025,solid:false});
   }
+  K.withTerrainSurface(lowDatum,buildLowerDeck);
+  function buildLowerDeck() {
   for(let i=1;i<lower.length;i++) {
     const a=lower[i-1],b=lower[i],L=lowerLengths[i-1],start=lowerStarts[i-1],nx=-(b[1]-a[1])/L,nz=(b[0]-a[0])/L;
     const point=(s,off=0)=>[a[0]+(b[0]-a[0])*s/L+nx*off,a[1]+(b[1]-a[1])*s/L+nz*off];
@@ -998,14 +1037,17 @@ export function build(K) {
     }
     for(let s=9;s<L;s+=2){const p=point(s,4.1),y=height(s);box(p[0],y,p[1],.13,.72,.13,0xdc653e);box(p[0],y+.39,p[1],.15,.14,.15,0xe8e9e2);}
   }
+  }
   // Rectangular concrete portals at the margins frame the actual lower-level
   // vista in the city photos. Circular waterline footings remain below them.
+  K.withTerrainSurface(spanDatum,() => {
   for(let s=85;s<lowerStarts.at(-1)-45;s+=34) {
     const p=lowerAt(s),rot=Math.atan2(p.ux,p.uz);
     box(p.x,12.1,p.z,25,1.6,2.15,concrete,true,rot);
     for(const side of[-1,1]) {
-      const q=lowerAt(s,side*10.15),h=p.y-.2;
-      K.cyl({x:q.x,y:-2.2,z:q.z,r:1.55,h:h+2.2,seg:16,mat:{tex:'concrete',color:0x929e94}});
+      const q=lowerAt(s,side*10.15),h=q.y+lowDatum(q.x,q.z)-spanDatum-.2;
+      const foot = Math.min(h-.3, relief(q.x,q.z)-spanDatum-2.2,waterHeight-spanDatum-1);
+      K.cyl({x:q.x,y:foot,z:q.z,r:1.55,h:h-foot,seg:16,mat:{tex:'concrete',color:0x929e94}});
       const bankPier=s===85||s===119;
       box(q.x,h,q.z,bankPier?3.5:1.55,12.1-h,bankPier?2.5:2.1,bankPier?0xc9c5bc:concrete,true,rot);
       const a=lowerAt(s,side*9.38),b=lowerAt(s,side*7.65);
@@ -1016,6 +1058,8 @@ export function build(K) {
     // structure readable without inventing a separate elevated pedestrian deck.
     for(const off of[-9,-3,3,9]){const q=lowerAt(s,off);box(q.x,13.35,q.z,.23,1.35,2.2,0x99968e,false,rot);}
   }
+  });
+  K.withTerrainSurface(lowDatum,() => {
   for(const [j,bay] of viewingBays.entries())for(const side of[-1,1]) {
     const s=bay.s,t=s-bay.half,u=s+bay.half,a=lowerAt(t,side*10.6),b=lowerAt(u,side*10.6);
     K.ramp(a.x,a.z,b.x,b.z,{w:3.6,ya:a.y,yb:b.y,mat:0xd18c53,under:0x6c7772,rails:false});
@@ -1035,6 +1079,7 @@ export function build(K) {
     const a=lowerAt(s,-7.1),b=lowerAt(s+12,-7.1);barrier(point2(a),point2(b),Math.min(a.y,b.y),true);
     const p=lowerAt(s+5,-7.8);sign(['차량 통행 금지','2026.10.26부터 · 보행·자전거 통행'],p.x,p.y+1.65,p.z,5.2,1.1,Math.atan2(-p.ux,-p.uz),'#3e493c','#f6d48b');
   }
+  });
   // HG-L2: road and plaza meet at grade. No shore-side wave rail or stair enclosure.
   for(const side of [-1,1]) {
     const p=(u,o)=>accessPoint(u,side*o);
@@ -1065,10 +1110,13 @@ export function build(K) {
   sign(['잠수교 · 차량 통행 금지','보행전용교 조성 공사 · 보행·자전거 통행'], -600,2.6,-672,7,1.4,.37);
   sign(['보행전용교 조성 계획','전망쉼터 22곳 · 투명 바닥 2곳 · 2027년 하반기 개장 예정'],-607,1.6,-706,7,1.2,.37,'#96613e');
   sign(['잠원한강공원 · 서울웨이브 →','강변 산책로'], -579,2,-800,5.6,1.0,Math.PI/2);
-  sign(['반포대교','용산 · 녹사평 방면'], -621,19,-737,9,1.8,.37,'#18734c');
+  K.withTerrainSurface(spanDatum,() => {
+    sign(['반포대교','용산 · 녹사평 방면'], -621,19,-737,9,1.8,.37,'#18734c');
+    K.zone({name:'반포대교',floor:'상층',sub:'달빛무지개분수 · 용산 방면',poly:area(1085504592).poly,y0:12,y1:25,priority:3});
+  });
+  K.withTerrainSurface(lowDatum,() => {
   K.floorText('보행로',{x:-700,y:1.64,z:-924,w:2.5,h:3.5,rotY:-.37,fg:'#fff4d7'});
   K.zone({name:'잠수교',floor:'하층',sub:'보행전용교 공사 중 · 보행·자전거 통행',poly:area(1091571021).poly,y0:0,y1:7,priority:4});
-  K.zone({name:'반포대교',floor:'상층',sub:'달빛무지개분수 · 용산 방면',poly:area(1085504592).poly,y0:12,y1:25,priority:3});
   K.detail({name:'잠수교 산책객',floor:'하층',y0:0,y1:6,rect:[-940,-1548,-578,-640]},K=>{
   for(let i=1;i<lower.length;i++) {
     const a=lower[i-1],b=lower[i],L=Math.hypot(b[0]-a[0],b[1]-a[1]),nx=-(b[1]-a[1])/L,nz=(b[0]-a[0])/L;
@@ -1083,7 +1131,7 @@ export function build(K) {
   for(const d of[-.55,.55]){
     const p=lowerAt(125+d,5.5);
     const wheel=new THREE.Mesh(new THREE.TorusGeometry(.33,.03,5,14),new THREE.MeshLambertMaterial({color:0x333b3c}));
-    wheel.rotation.y=Math.atan2(cyclist.ux,cyclist.uz)+Math.PI/2;wheel.position.set(p.x,p.y+.36,p.z);K.addMesh(wheel);
+    wheel.rotation.y=Math.atan2(cyclist.ux,cyclist.uz)+Math.PI/2;wheel.position.set(p.x,p.y+.36+lowDatum(p.x,p.z)-relief(p.x,p.z),p.z);K.addMesh(wheel);
   }
   const wa=lowerAt(124.45,5.5),wb=lowerAt(125.55,5.5);
   rod3([wa.x,wa.y+.36,wa.z],[wb.x,wb.y+.36,wb.z],.03,0x526d77);
@@ -1166,6 +1214,8 @@ export function build(K) {
     });
   }
 
+  });
+
   // MQ_2320: stepped stone bank, seated visitors and moored boats beside Gavit.
   // Preserve the river/ground datum and the mapped lower-deck approaches.
   K.slab([[-689,-811],[-666,-822],[-655,-800],[-678,-790]],.075,{mat:{tex:'concrete',color:0xc3c1b7},thick:.2,ceil:false});
@@ -1185,7 +1235,9 @@ export function build(K) {
   const positions=new Float32Array(verts*3),colors=new Float32Array(verts*3);
   const fg=new THREE.BufferGeometry();fg.setAttribute('position',new THREE.BufferAttribute(positions,3).setUsage(THREE.DynamicDrawUsage));fg.setAttribute('color',new THREE.BufferAttribute(colors,3));
   const fm=new THREE.MeshBasicMaterial({vertexColors:true,side:THREE.DoubleSide,transparent:true,opacity:.32,depthWrite:false});
+  fm.defines = { BANPO_RIGID: 1 };
   const fountain=K.addMesh(new THREE.Mesh(fg,fm));fountain.frustumCulled=false;
+  fountain.position.y = spanDatum;
   fountain.visible=sceneOptions.has('night')||sceneOptions.get('fountain')==='1';
   const fux=-.3636,fuz=-.93155,fnx=.93155,fnz=-.3636,fc=new THREE.Color();
   function fountainColors(night) {
@@ -1197,13 +1249,14 @@ export function build(K) {
   }
   function animateWater(t) {
     let k=0;
+    const fall = 14.6 + spanDatum + 3 - waterHeight;
     for(let i=0;i<nozzleCount;i++) {
       const side=i<190?-1:1,q=i%190,s=24+q*570/189;
       const ox=-651+fux*s+fnx*side*12.7,oz=-813+fuz*s+fnz*side*12.7;
       const reach=16.5+Math.sin(t*.9+q*.09)*1.2;
       for(let j=0;j<steps;j++) {
         const u=j/steps,v=(j+1)/steps;
-        const au=u*reach,av=v*reach,ay=14.6+3*u-19*u*u,by=14.6+3*v-19*v*v;
+        const au=u*reach,av=v*reach,ay=14.6+3*u-fall*u*u,by=14.6+3*v-fall*v*v;
         const ax=ox+fnx*side*au,az=oz+fnz*side*au,bx=ox+fnx*side*av,bz=oz+fnz*side*av;
         const w=.025+u*u*.045+Math.max(0,u-.6)/.4*.08,wx=fux*w,wz=fuz*w;
         positions[k++]=ax-wx;positions[k++]=ay;positions[k++]=az-wz;
@@ -1216,10 +1269,12 @@ export function build(K) {
     }
     fg.attributes.position.needsUpdate=true;
   }
+  K.withTerrainSurface(spanDatum,() => {
   for(let i=0;i<190;i++)for(const side of [-1,1]) {
     const s=24+i*570/189,x=-651+fux*s+fnx*side*12.7,z=-813+fuz*s+fnz*side*12.7;
     box(x,14.4,z,.22,.17,.4,metal);box(x,14.25,z,.18,.1,.22,{tex:'emit',color:[0xe579a3,0x8bb1ef,0xb7dcba][Math.floor(i/20)%3]});
   }
+  });
   // HG-L1: the falling mist follows the landing fan, only north of s=24.
   const mistPixels=new Uint8Array(64*64*4);
   for(let y=0;y<64;y++)for(let x=0;x<64;x++){
@@ -1229,10 +1284,11 @@ export function build(K) {
   }
   const mistTex=new THREE.DataTexture(mistPixels,64,64,THREE.RGBAFormat);mistTex.needsUpdate=true;
   const mistMat=new THREE.MeshBasicMaterial({map:mistTex,transparent:true,opacity:.7,depthWrite:false,side:THREE.DoubleSide});
+  mistMat.defines = { BANPO_RIGID: 1 };
   const sprayMist=[];
   for(const side of[-1,1])for(let s=24;s<594;s+=30){
     const p=(u,y,off)=>new THREE.Vector3(-651+fux*u+fnx*side*off,y,-813+fuz*u+fnz*side*off);
-    const a=p(s,-1.35,30),b=p(Math.min(594,s+34),-1.35,30),c=p(Math.min(594,s+34),9,24),d=p(s,9,24);
+    const a=p(s,waterHeight+.05,30),b=p(Math.min(594,s+34),waterHeight+.05,30),c=p(Math.min(594,s+34),spanDatum+9,24),d=p(s,spanDatum+9,24);
     const g=new THREE.BufferGeometry().setFromPoints([a,b,c,a,c,d]);g.setAttribute('uv',new THREE.Float32BufferAttribute([0,0,1,0,1,1,0,0,1,1,0,1],2));
     const mesh=K.addMesh(new THREE.Mesh(g,mistMat));sprayMist.push(mesh);
   }
@@ -1255,7 +1311,7 @@ export function build(K) {
     const light=new THREE.PointLight(0xffcf75,0,26,2);light.position.set(x,5,z);K.addMesh(light);nightLamps.push(light);
   }
   for(const s of[100,168,236]){
-    const p=lowerAt(s,-8);const light=new THREE.PointLight(0xffcf75,0,22,2);light.position.set(p.x,11.7,p.z);K.addMesh(light);nightLamps.push(light);
+    const p=lowerAt(s,-8);const light=new THREE.PointLight(0xffcf75,0,22,2);light.position.set(p.x,11.7,p.z);K.withTerrainSurface(spanDatum,() => K.addMesh(light));nightLamps.push(light);
   }
   const reflectMat=new THREE.MeshBasicMaterial({map:mistTex,color:0xffc66a,transparent:true,opacity:.55,depthWrite:false,side:THREE.DoubleSide});
   for(const [x,z] of[[-844,-758],[-762,-814],[-869,-828]])for(let i=0;i<4;i++){
@@ -1444,8 +1500,8 @@ export function build(K) {
     {name:'가빛섬 · 비스타 루프탑 전망',x:-881,y:23,z:-731,yaw:-.9},
     {name:'채빛섬 · 채빛 퀴진',x:-775,y:7,z:-816,yaw:1.2},
     {name:'솔빛섬 · 무드서울',x:-883,y:0,z:-828,yaw:1.57},
-    {name:'잠수교 · 한강 산책',x:-700,y:1.6,z:-934,yaw:.37},
-    {name:'반포대교 · 상층',x:-689.1,y:15.13,z:-940,yaw:.37},
+    {name:'잠수교 · 한강 산책',x:-700,y:1.6+lowDatum(-700,-934)-relief(-700,-934),z:-934,yaw:.37},
+    {name:'반포대교 · 상층',x:-689.1,y:15.13+spanDatum-relief(-689.1,-940),z:-940,yaw:.37},
     {name:'반포나들목 · 공원 입구',x:-297.9343132274,y:0,z:-791.0994577995,yaw:.56},
   ])K.spawn({...s,group:'반포한강공원 · 세빛섬'});
 }

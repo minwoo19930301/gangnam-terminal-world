@@ -1,3 +1,4 @@
+import { parkingRoof, eastParkingSecond, eastParkingThird } from './_gardenGrade.js';
 // The outdoor aisle is at terminal grade. Its roof-level neighbour is the
 // restaurant garden. Naver's January 2026 drive follows the north frontage.
 export function buildRearParking(K) {
@@ -52,7 +53,7 @@ export function buildRearParking(K) {
     if(b<=197) K.slab(footprint,12.6,{mat:'sidewalk',under:0x626564,thick:.3});
   }
   // Merge the upper decks down to the east wing's actual slab heights.
-  for(const [y0,y1] of [[0,0],[5,3.8],[9,7.6]]){
+  for(const [y0,y1] of [[0,0],[5,eastParkingSecond],[9,eastParkingThird]]){
     K.ramp(...P(270,7.8),...P(291.72,7.8),{ya:y0,yb:y1,w:18.4,mat:floor,rails:false});
   }
   const pale=0xd5d7d4;
@@ -60,10 +61,10 @@ export function buildRearParking(K) {
     const count=Math.ceil((b-a)/7.5);
     for(let i=0;i<=count;i++){
       const s=a+(b-a)*i/count;
-      box(s,front+.12,0,.35,.42,12.45,pale,true);
+      box(s,front+.12,0,.35,.42,parkingRoof(s)-.15,pale,true);
       if(i===count) continue;
       const pitch=(b-a)/count, mid=s+pitch/2, blend=Math.min(1,Math.max(0,(mid-270)/21.72));
-      const second=5-1.2*blend, third=9-1.4*blend;
+      const second=5+(eastParkingSecond-5)*blend, third=9+(eastParkingThird-9)*blend;
       box(mid,front,second-.35,pitch,.47,.35,pale);
       // Upper stair landings open into the parking deck on the west side of the tower.
       const strips=[];
@@ -73,17 +74,18 @@ export function buildRearParking(K) {
         const c=(left+right)/2, width=right-left;
         for(const h of [.28,.62,.98]) box(c,front,second+h,width,.06,.048,0x565f61);
         K.phys.addWall(...P(left,front),...P(right,front),second,second+1.05,.04,'streets');
-        box(c,front,third,width,.14,12.36-third,0x909a9e);
+        box(c,front,third,width,.14,parkingRoof(c)-.24-third,0x909a9e);
         box(c,front-.09,third+.28,Math.max(.1,width-.22),.07,1.46,0x4e656a);
         for(const j of [1,2,3]) box(left+width*j/4,front-.15,third+.28,.065,.07,1.46,pale);
       }
       box(mid,front,third-.33,pitch,.47,.33,pale);
-      box(mid,front,12.37,pitch,.46,.22,pale);
+      box(mid,front,parkingRoof(mid)-.23,pitch,.46,.22,pale);
     }
   }
   // Glazed pedestrian stair tower in the January panorama near station 222.
   for(const s of [219,223.2])for(const v of [-4.8,-1.5])box(s,v,0,.14,.14,15,0x768596);
-  for(const [lo,hi] of [[0,5],[5,9],[9,12.6]]){
+  const stairRoof = parkingRoof(219.8);
+  for(const [lo,hi] of [[0,5],[5,9],[9,stairRoof]]){
     const mid=(lo+hi)/2;
     K.stairs(...P(219.8,-3.92),...P(222.4,-3.92),{ya:lo,yb:mid,w:1,mat:'metal',rails:false});
     K.slab(rect(222.4,-4.6,223.2,-1.5),mid,{mat:'metal',thick:.12});

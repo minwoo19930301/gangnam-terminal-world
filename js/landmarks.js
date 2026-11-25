@@ -1,3 +1,4 @@
+import { eastGardenLevel } from './places/_gardenGrade.js';
 // Key places shown as pins on the map and as floating pins in 3D (outdoors). x east, z south, y = pin base height
 // (roof or a little above street level), place = the module whose page it opens (map "여기로 이동").
 // Positions: OSM footprint centroids or the modules' own coordinates (see data/research/<id>.json).
@@ -14,7 +15,7 @@ export const LANDMARKS = [
   { name: '반포쇼핑타운', x: 60, z: -190, y: 20, place: 'banpo_shoppingtown', color: '#8a5a44' },
   { name: '반포지구대', x: 25, z: -102, y: 11, place: 'streets', color: '#1f4e9a' },
   { name: '르본시티', sub: '귀금속', x: -232, z: 20, y: 40, place: 'lebon', color: '#b08d3c' },
-  { name: '데블스도어', x: 380, z: 8, y: 12, place: 'gyeongbu_east', color: '#7a3b1e' },
+  { name: '데블스도어', x: 380, z: 8, y: eastGardenLevel, place: 'gyeongbu_east', color: '#7a3b1e' },
   { name: '뉴코아아울렛', x: 270, z: -365, y: 24, place: 'newcore', color: '#4b4b4b' },
   { name: '반포르엘', sub: '신반포로23길', x: -102.9, z: -231.6, y: 12, place: 'streets', color: '#4e6c70' },
   { name: '신반포4차', sub: '신반포로23길', x: -87.8, z: -237.4, y: 20, place: 'streets', color: '#806c57' },
