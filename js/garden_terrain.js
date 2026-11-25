@@ -23,7 +23,7 @@ export function gardenReference(x,z,ground) {
   // At the western T beside the Starbucks dome, the collector, the hotel
   // ramp foot and the street beyond share the uncovered survey surface.
   // Keep the lower 1F reference under the occupied building and bus aisle.
-  const westStreet=(1-blend(-89,-65,s))*blend(32,40,v);
+  const westStreet=(1-blend(-89,-65,s))*blend(37,46,v);
   const weight=blend(-139,-95,s)*(1-blend(425,454,s))*
     blend(northEdge,northEdge+19,v)*(1-blend(outside,outside+6.5,v))*(1-westStreet);
 
