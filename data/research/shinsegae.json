@@ -1,4 +1,21 @@
 {
+  "rimowa_6f_display_review": {
+    "checked": "2026-11-25",
+    "sources": [
+      "https://www.rimowa.com/kr/ko/storedetails/seoul/rimowa-seoul%20%E2%80%93%20shinsegae%20gangnam-1111825",
+      "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/10/22/ogKqbBuYpuah.png",
+      "https://www.stylechosun.co.kr/online/spirit-journey/",
+      "https://www.rimowa.com/kr/ko/luggage-collection-original-cabin/92553044.html"
+    ],
+    "evidence": "리모와 공식 매장 페이지와 백화점 공식 6F 안내도를 대조했다. 2024년 4월 매장을 촬영한 스타일조선 사진 1~4는 목재와 알루미늄 마감, 곡선 파이프 선반, 여러 크기의 실버 여행 가방, 소형 크로스백 진열을 보여준다.",
+    "model": "목재 패널과 조명을 단 벽면에 세 가지 크기의 실버 캐리어를 진열했다. 캐리어의 모서리 보강재·잠금장치·손잡이, 작은 가방의 홈·걸쇠·끈, 둥글게 굽힌 알루미늄 파이프 매대는 Blender 메시다. 매대 위치와 개수, 가구 치수, 색, 로고 위치와 현재 재고는 현장 미확인이며 2024년 자료를 바탕으로 재구성했다.",
+    "assets": [
+      "assets/models/shinsegae/upper-floor-displays.blend",
+      "assets/models/shinsegae/build_displays.py",
+      "assets/models/shinsegae/displays.js",
+      "assets/models/shinsegae/customer-review.jpg"
+    ]
+  },
   "upper_floor_survey_20261125": {
     "확인일": "2026-11-25",
     "점포": "신세계백화점 강남점 SC00002",
