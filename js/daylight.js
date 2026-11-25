@@ -122,7 +122,7 @@ export function createDaylight(THREE, scene, site, bounce, initialMode, onChange
     const clock=seoulClock(instant), previous=state;
     state={mode,instant,clock,phase,altitude,direction,night};
     if (!previous || previous.night!==night) for(const fn of handlers) fn(night);
-    if (!previous || previous.clock!==clock || previous.phase!==phase || previous.mode!==mode) onChange(state);
+    if (!previous || previous.clock!==clock || previous.phase!==phase || previous.night!==night || previous.mode!==mode) onChange(state);
   }
   sync();
   return {sky,sync,get state(){return state;},
