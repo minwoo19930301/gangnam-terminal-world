@@ -1,3 +1,5 @@
+import { upperFixtures } from '../../assets/models/newcore/upper-fixtures.js';
+
 // Exact OSM footprints; photo-based elevations; official floor uses. Metre
 // heights, core positions and indoor bay positions are documented estimates.
 export const meta = {
@@ -1085,6 +1087,128 @@ function kimsHall(F, ci) {
     for (const [u, v, shirt] of [[-7, 14.1, 0x424b58], [-4, 12.9, 0xb9ad93], [2, 14.7, 0x787056], [9, 13.6, 0x564b4b]]) person(u, 0, v, { shirt });
   });
 }
+// The operator publishes the upper-floor diagrams without north arrows.
+// The two rows preserve selected left-to-right tenant groupings. The existing
+// stairs and lift set the usable width of the return aisle on the rear side.
+const upperBays = {
+  1: {
+    '2F': [['우리은행|lounge', '이헌영', '모라도', '애니바디'], ['파올라', '이상봉', '마담포라']],
+    '3F': [['캘리클럽|kids', '뉴발란스 키즈', '베네통 키즈', '해피랜드 하우스|kids'], ['신디키즈', '탑텐키즈', '스파오 키즈']],
+    '4F': [['침구류|lounge', '키즈|kids', '홈데코|homeware', '주방용품|homeware'], ['수납|homeware', '가전|homeware', '갤러리 가구|lounge']],
+    '5F': [['문화센터|lounge', '애슐리퀸즈|dining', '옥소반|dining'], ['LOUNGE·E|lounge', '유천냉면|dining']],
+  },
+  2: {
+    '2F': [['잇미샤', 'JJ지고트', '베네통'], ['보브', '시슬리', '톰보이']],
+    '3F': [['요하넥스', '모조에스핀', '미샤'], ['보티첼리', '오브제', '앤클라인']],
+    '4F': [['뉴발란스', '스케쳐스', '게스진'], ['아디다스', 'NBA', '지오다노']],
+    '5F': [['볼빅|golf', '루이까스텔|golf', '파크랜드'], ['AK 골프|golf', '로가디스', '닥스/마에스트로']],
+  },
+};
+
+function fixture(F, kind, u, y, v, reversed) {
+  const model = upperFixtures[kind], dir = reversed ? -1 : 1;
+  const points = model.mm.map(([dx, dy, dz]) => {
+    const [x, z] = F.P(u + dir * dx / 1000, v + dir * dz / 1000);
+    return [x, y + dy / 1000, z];
+  });
+  const a = new F.K.THREE.Vector3(), b = a.clone(), c = a.clone();
+  for (const [material, first, second, third, fourth = third] of model.faces) {
+    const p = [points[first], points[second], points[third], points[fourth]];
+    a.fromArray(p[0]); b.fromArray(p[1]).sub(a); c.fromArray(p[2]).sub(a);
+    F.K.quad(model.colors[material], p, b.cross(c).normalize().toArray());
+  }
+  // The open frame and thin furniture meshes share one collision footprint.
+  const size = { dining: [1.83, 1.8], lounge: [1.93, 1.25], golf: [2.25, 1.05],
+    rail: [2.34, .72], homeware: [2.25, .78], kids: [2.1, 1] }[kind];
+  F.B(u, y, v, size[0], kind === 'kids' ? .53 : .74, size[1], C.wood,
+    { skip: ['top', 'bottom', 'n', 's', 'e', 'w'] });
+}
+
+function backWallDisplay(F, kind, u, y, v, width, inward) {
+  const { B } = F, solid = { solid: false };
+  const finish = kind === 'golf' ? 0x415044 : 0x896e53;
+  B(u, y, v + inward * .46, width, .42, .8, finish);
+  if (kind === 'dining' || kind === 'lounge') {
+    // Timber banquette, horizontal welt, brass sconces and pendant shades.
+    B(u, y + .43, v + inward * .48, width - .12, .15, .70, 0x8e7165, solid);
+    B(u, y + .52, v + inward * .17, width - .12, .65, .18, 0x91766a, solid);
+    for (let x = -.44 * width; x <= .44 * width; x += .44) {
+      B(u + x, y + 1.18, v + inward * .08, .065, 1.30, .13, 0xb99973, solid);
+    }
+    for (const x of [-.26 * width, .26 * width]) {
+      F.cyl(u + x, y + 2.98, v + inward * 1.1, .018, .71, 0x4a433d, 6);
+      F.cyl(u + x, y + 2.79, v + inward * 1.1, .27, .21, 0xa98855, 12);
+      F.cyl(u + x, y + 2.78, v + inward * 1.1, .23, .025, {tex:'emit', color:0xffe2a4}, 12);
+    }
+    return;
+  }
+  const palette = kind === 'kids' ? [0xcea392,0x9db3a5,0xc2b177] :
+    kind === 'golf' ? [0x404f47,0xe2ded0,0x9c856c] : [0x625b57,0xeee3ca,0x819393];
+  // Shallow wall cases keep the floor displays visible from the public aisle.
+  const columns = Math.max(3, Math.floor(width / 1.45));
+  for (let col = 0; col < columns; col++) {
+    const x = u + ((col + .5) / columns - .5) * width;
+    for (let row = 0; row < 3; row++) {
+      const h = y + .78 + row * .55;
+      B(x, h, v + inward * .34, width / columns - .09, .055, .53, 0xb19776, solid);
+      if (kind === 'homeware') {
+        F.cyl(x, h + .055, v + inward * .38, .17, .23, palette[(col + row) % 3], 8);
+      } else {
+        for (let stack=0; stack<3; stack++) B(x, h + .055 + stack * .064, v + inward * .39,
+          .52 - stack * .022, .058, .32, palette[(col + row + (stack === 2 ? 1 : 0)) % 3], solid);
+      }
+    }
+  }
+}
+
+function upperSalesFloor(F, num, floor) {
+  const { B, S, L, W } = F, y = floor.y, rows = upperBays[num][floor.label];
+  const finishes = {
+    dining: [0x76604b, 0xd9c7a8], lounge: [0x58635b, 0xcac3aa], homeware: [0x86765c, 0xe3dbcb],
+    kids: [0x668e89, 0xefdbbd], golf: [0x506650, 0xb7c4ae], rail: [0x6c6060, 0xe0d0c6],
+  };
+  const bays = [];
+  rows.forEach((row, side) => {
+    // Preserve the complete approach to both rear core landings and the elevator.
+    const start = side ? -L / 2 + 21 : -L / 2 + 1.4, end = L / 2 - 1.4;
+    const width = (end - start) / row.length;
+    const inset = side ? -1 : 1, front = W * .5 - inset * 3.25, depth = W * .26;
+    for (let i = 0; i < row.length; i++) {
+      const u = start + width * (i + .5), [label, kind = 'rail'] = row[i].split('|');
+      const [accent, wall] = finishes[kind], back = front - inset * depth;
+      const bayWidth = width - 1.35;
+      B(u, y + .015, front - inset * depth / 2, bayWidth, .018, depth, side ? 0xd8d1c3 : 0xe9dece, { solid:false });
+      B(u, y, back, bayWidth, 3.58, .16, wall);
+      B(u - bayWidth / 2, y, front - inset * depth / 2, .15, 3.58, depth, wall);
+      for (const sign of [-1, 1]) B(u + sign * (bayWidth / 2 - .25), y, front, .31, 3.12, .32, accent);
+      B(u, y + 2.99, front, bayWidth, .58, .41, accent);
+      bays.push({u, front, back, depth, inset, bayWidth, kind, label, side, i});
+    }
+  });
+  for (const off of [-1,1]) B(0, y + .017, W / 2 + off * 2.76, L - 3, .012, .085, 0xac987a, {solid:false});
+  return () => {
+    for (const {u, front, back, depth, inset, bayWidth, kind, label, side, i} of bays) {
+      B(u, y + 2.96, front + inset * .18, bayWidth - .45, .035, .10, { tex:'emit', color:0xffefd1 }, {solid:false});
+      S(label, u, y + 3.28, front + inset * .22, Math.min(7, bayWidth - .8), .43, null,
+        {rotY: F.angle + (side ? Math.PI : 0), fg:'#fff9ef'});
+      // Light-washed backboards and a suspended rail give long stores readable depth.
+      for (const t of [-.32, 0, .32]) {
+        B(u + t * bayWidth, y + .45, back + inset * .11, bayWidth * .28, 2.48, .085, i % 2 ? 0xefe9da : 0xd9ccbb, {solid:false});
+        B(u + t * bayWidth, y + 3.42, front - inset * depth * .49, 1.25, .055, .21, {tex:'emit', color:0xffedcf}, {solid:false});
+      }
+      for (const dx of [-.27, .27]) backWallDisplay(F, kind, u + dx * bayWidth, y + .034, back + inset * .16, bayWidth * .40, inset);
+      if (kind === 'dining') {
+        fixture(F, kind, u - bayWidth * .28, y + .034, front - inset * depth * .46, side);
+        F.person(u - bayWidth * .28 - 1.65, y + .034, front - inset * depth * .46, {shirt:0xd9c4a6});
+      }
+      fixture(F, kind, u, y + .034, front - inset * depth * .36, !side);
+      if (kind === 'dining' || kind === 'homeware' || kind === 'golf') {
+        fixture(F, kind, u + bayWidth * .27, y + .034, front - inset * depth * .70, side);
+      }
+    }
+  };
+}
+
 function parkingBlock(F) {
   const { K, L, W, B, S, P } = F;
   // OSM tags confirm parking, but deck count/height is an aerial estimate.
@@ -1182,14 +1306,17 @@ export function build(K) {
       for (const u of [-20, 8, 33]) F.S(['←  계단 · 엘리베이터', 'B1  킴스 푸드 스트리트'], u, 3.1, 15.3, 4.5, 0.7, '#353b37', { rotY: F.angle });
       F.S(['B1  킴스 푸드 스트리트', '계단 · 엘리베이터'], ci.b + 4, 2.8, F.W - 5.8, 4.1, 0.8, '#353b37');
     } else market(F, ci);
-    // User requested upper floors as simple slabs/facade. Circulation remains
-    // reachable on foot and by elevator; only verified category signs added.
-    for (let i = 2; i < floors.length; i++) K.detail({ name: num + '관 ' + floors[i].label, floor: floors[i].label, poly: F.p, y0: floors[i].y, y1: floors[i].y + 4.5 }, () => {
-      for (let u = -F.L / 2 + 5; u < F.L / 2 - 3; u += 8) for (const v of [7, F.W / 2]) F.B(u, floors[i].y + 3.8, v, 2.4, 0.07, 0.45, { tex: 'emit', color: 0xffedc5 }, { solid: false });
-      F.S(labels[i], 8, floors[i].y + 2.7, F.W - 1, 11, 0.8, '#66685c');
-      // Photo08's 5F guide confirms Ashley; PizzaMall is B1 (also official).
-      if (num === 1 && floors[i].label === '5F') F.S(['5F 전문식당가', '애슐리 퀸즈'], ci.b + 10, floors[i].y + 2.3, F.W - 6, 4.1, 0.9, '#353b37');
-    });
+    // Public upper sales floors are furnished when the player approaches.
+    for (let i = 2; i < floors.length; i++) {
+      const furnish = upperSalesFloor(F, num, floors[i]);
+      K.detail({ name: num + '관 ' + floors[i].label, floor: floors[i].label, poly: F.p, y0: floors[i].y, y1: floors[i].y + 4.5 }, () => {
+        furnish();
+        for (let u = -F.L / 2 + 5; u < F.L / 2 - 3; u += 8) for (const v of [7, F.W / 2]) F.B(u, floors[i].y + 3.8, v, 2.4, 0.07, 0.45, { tex: 'emit', color: 0xffedc5 }, { solid: false });
+        F.S(labels[i], 8, floors[i].y + 2.7, F.W - 1, 11, 0.8, '#66685c');
+        // Photo08's 5F guide confirms Ashley; PizzaMall is B1 (also official).
+        if (num === 1 && floors[i].label === '5F') F.S(['5F 전문식당가', '애슐리 퀸즈'], ci.b + 10, floors[i].y + 2.3, F.W - 6, 4.1, 0.9, '#353b37');
+      });
+    }
   }
   basementLink(one, two);
   parkingBlock(park);
