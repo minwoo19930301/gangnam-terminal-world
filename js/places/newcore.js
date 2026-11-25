@@ -1308,7 +1308,10 @@ export function build(K) {
     } else market(F, ci);
     // Public upper sales floors are furnished when the player approaches.
     for (let i = 2; i < floors.length; i++) {
-      const furnish = upperSalesFloor(F, num, floors[i]);
+      const floor = floors[i];
+      const [x, z] = F.P(0, F.W / 2);
+      K.spawn({name: num + '관 ' + floor.label + ' · ' + floor.name, x, z, y: floor.y, yaw: F.angle + Math.PI / 2});
+      const furnish = upperSalesFloor(F, num, floor);
       K.detail({ name: num + '관 ' + floors[i].label, floor: floors[i].label, poly: F.p, y0: floors[i].y, y1: floors[i].y + 4.5 }, () => {
         furnish();
         for (let u = -F.L / 2 + 5; u < F.L / 2 - 3; u += 8) for (const v of [7, F.W / 2]) F.B(u, floors[i].y + 3.8, v, 2.4, 0.07, 0.45, { tex: 'emit', color: 0xffedc5 }, { solid: false });
