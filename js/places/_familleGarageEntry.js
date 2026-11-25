@@ -61,7 +61,7 @@ export function buildFamilleGarageEntry(K) {
   };
   const lane=(a,vA,b,vB,halfWidth)=>{
     K.slab([P(a,vA-halfWidth),P(b,vB-halfWidth),P(b,vB+halfWidth),P(a,vA+halfWidth)],0,
-      {mat:'asphalt',under:'concrete',thick:.14,edge:false});
+      {mat:a>=roof?{tex:'asphalt',color:0x737577}:'asphalt',under:'concrete',thick:.14,edge:false});
   };
   const approach=-72, start=-60;
   K.withTerrainSurface(datum,()=>{
@@ -76,8 +76,10 @@ export function buildFamilleGarageEntry(K) {
       const v=axis(mouth)+side*(half+.04);
       for(let s=mouth;s<roof;s+=1.5){
         const end=Math.min(roof,s+1.5);
-        const wallHeight=Math.max(.43,11.57+hotelCourtDatum(...P(end,v))-height(end)+.25);
-        K.wall(...P(s,axis(s)+side*(half+.04)),...P(end,axis(end)+side*(half+.04)),-.08,wallHeight,{mat:white,thick:.20});
+        const offset=side*(half+.04);
+        const a=P(s,axis(s)+offset), b=P(end,axis(end)+offset);
+        const bottom=Math.min(height(s)-hotelCourtDatum(...a),height(end)-hotelCourtDatum(...b))-.08;
+        K.withTerrainSurface(hotelCourtDatum,()=>K.wall(...a,...b,bottom,11.97,{mat:white,thick:.20}));
       }
       box(mouth,v,0,.26,.28,2.5,black,true);
       for(let i=0;i<4;i++)box(mouth-.035,v,.13+i*.21,.31,.31,.1,yellow);
@@ -101,12 +103,12 @@ export function buildFamilleGarageEntry(K) {
     for(let s=roof;s<5;s+=2){
       const end=Math.min(s+2,5), mid=(s+end)/2;
       const quad=[P(s,axis(s)-half),P(end,axis(end)-half),P(end,axis(end)+half),P(s,axis(s)+half)];
-      K.hpoly(0x898980,quad,2.09,false);
+      K.hpoly(0x565952,quad,2.09,false);
       K.phys.addCeiling(quad,2.09);
       if(s < 1){
         for(const side of [-1,1]){
           const offset=side*(half+.04), stop=Math.min(end,1);
-          K.wall(...P(s,axis(s)+offset),...P(stop,axis(stop)+offset),-.08,2.10,{mat:0xb1b0a8,thick:.18});
+          K.wall(...P(s,axis(s)+offset),...P(stop,axis(stop)+offset),-.08,2.10,{mat:0x73756d,thick:.18});
         }
       }
       if(Math.round((s-roof)/2)%3===0)

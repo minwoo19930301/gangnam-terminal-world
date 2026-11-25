@@ -20,8 +20,12 @@ export function gardenReference(x,z,ground) {
   // turns around the end of the garage; its parallel slip rejoins the street.
   const outside=mix(52.5,27,blend(372,415,s));
   const northEdge=mix(-153,-119,blend(20,115,s));
+  // At the western T beside the Starbucks dome, the collector, the hotel
+  // ramp foot and the street beyond share the uncovered survey surface.
+  // Keep the lower 1F reference under the occupied building and bus aisle.
+  const westStreet=(1-blend(-89,-65,s))*blend(32,40,v);
   const weight=blend(-139,-95,s)*(1-blend(425,454,s))*
-    blend(northEdge,northEdge+19,v)*(1-blend(outside,outside+6.5,v));
+    blend(northEdge,northEdge+19,v)*(1-blend(outside,outside+6.5,v))*(1-westStreet);
 
   // Model height of the upper finished surface above authored 1F. This
   // locates the bases of separately modelled buildings, not the DEM itself.
