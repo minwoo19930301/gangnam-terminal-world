@@ -1119,7 +1119,8 @@ function fixture(F, kind, u, y, v, reversed) {
   }
   // The open frame and thin furniture meshes share one collision footprint.
   const size = { dining: [1.83, 1.8], lounge: [1.93, 1.25], golf: [2.25, 1.05],
-    rail: [2.34, .72], homeware: [2.25, .78], kids: [2.1, 1] }[kind];
+    rail: [2.34, .72], homeware: [2.25, .78], kids: [2.1, 1], folds: [2.44, 1.13],
+    forms: [1.90, .86], junior: [2.10, .81], trainers: [2.12, .88], stockrail: [2.81, 1.08] }[kind];
   F.B(u, y, v, size[0], kind === 'kids' ? .53 : .74, size[1], C.wood,
     { skip: ['top', 'bottom', 'n', 's', 'e', 'w'] });
 }
@@ -1175,7 +1176,9 @@ function upperSalesFloor(F, num, floor) {
     const inset = side ? -1 : 1, front = W * .5 - inset * 3.25, depth = W * .26;
     for (let i = 0; i < row.length; i++) {
       const u = start + width * (i + .5), [label, kind = 'rail'] = row[i].split('|');
-      const [accent, wall] = finishes[kind], back = front - inset * depth;
+      const clothingFinishes = [[0x665758, 0xe4d8cd], [0x48575c, 0xd9e1dc], [0x836347, 0xe7d8b8]];
+      const [accent, wall] = kind === 'rail' ? clothingFinishes[(i + side + num) % 3] : finishes[kind];
+      const back = front - inset * depth;
       const bayWidth = width - 1.35;
       B(u, y + .015, front - inset * depth / 2, bayWidth, .018, depth, side ? 0xd8d1c3 : 0xe9dece, { solid:false });
       B(u, y, back, bayWidth, 3.58, .16, wall);
@@ -1196,13 +1199,58 @@ function upperSalesFloor(F, num, floor) {
         B(u + t * bayWidth, y + .45, back + inset * .11, bayWidth * .28, 2.48, .085, i % 2 ? 0xefe9da : 0xd9ccbb, {solid:false});
         B(u + t * bayWidth, y + 3.42, front - inset * depth * .49, 1.25, .055, .21, {tex:'emit', color:0xffedcf}, {solid:false});
       }
-      for (const dx of [-.27, .27]) backWallDisplay(F, kind, u + dx * bayWidth, y + .034, back + inset * .16, bayWidth * .40, inset);
+      const apparel = kind === 'rail' || kind === 'golf';
+      const childrenswear = num === 1 && floor.label === '3F';
+      const sportswear = num === 2 && floor.label === '4F';
+      const frontDisplay = childrenswear ? 'junior' : sportswear ? 'trainers' : 'forms';
+      for (const dx of [-.27, .27]) {
+        const center = u + dx * bayWidth;
+        if (apparel && (i % 2 ? dx > 0 : dx < 0)) {
+          // One wall mixes hanging stock with a framed fitting mirror.
+          fixture(F, 'rail', center - 1.02, y + .034, back + inset * .7, side);
+          B(center + 1.16, y + .25, back + inset * .24, 1.35, 2.38, .13, 0x695a46, {solid:false});
+          B(center + 1.16, y + .34, back + inset * .32, 1.18, 2.19, .035, 0xb5c3be, {solid:false});
+        } else {
+          backWallDisplay(F, kind, center, y + .034, back + inset * .16, bayWidth * .40, inset);
+        }
+      }
+      if (apparel) {
+        // Stock islands flank a clear line from the threshold to the back wall.
+        // The operator's guides identify the sales category. This furniture layout is approximate.
+        const handed = i % 2 ? -1 : 1;
+        const stock = kind === 'golf' ? 'golf' : 'rail';
+        const sideWall = u - bayWidth / 2, wallCenter = front - inset * depth * .52;
+        const wallFinish = childrenswear ? 0xafbfaf : sportswear ? 0x495b63 : i % 2 ? 0x896f59 : 0x667472;
+        const trim = {solid:false};
+        // A display wall follows the side partition and leaves the centre aisle open.
+        B(sideWall + .13, y + .2, wallCenter, .11, 2.55, depth * .66, wallFinish, trim);
+        for (let k = -3; k <= 3; k++) {
+          B(sideWall + .21, y + .23, wallCenter + k * depth * .092, .08, 2.48, .045, 0xb5a88c, trim);
+        }
+        for (const h of [.77, 1.43]) {
+          B(sideWall + .28, y + h, wallCenter, .42, .055, depth * .58, 0xc5ae8e, trim);
+          for (let k = -2; k <= 2; k++) {
+            const v = wallCenter + k * depth * .112;
+            for (let layer = 0; layer < 3; layer++) B(sideWall + .30, y + h + .055 + layer * .062, v,
+              .32, .057, .45 - layer * .018, [0xe6d9bf, 0x606e75, 0x9c7860][(k + i + 2) % 3], trim);
+          }
+        }
+        S(label, u, y + 2.48, back + inset * .22, Math.min(4.2, bayWidth * .37), .46, null,
+          {rotY:F.angle + (side ? Math.PI : 0), fg:'#3c4544'});
+        fixture(F, frontDisplay, u - handed * bayWidth * .28, y + .034, front - inset * depth * .24, side);
+        fixture(F, stock, u + handed * bayWidth * .24, y + .034, front - inset * depth * .32, !side);
+        fixture(F, 'folds', u - handed * bayWidth * .22, y + .034, front - inset * depth * .64, side);
+        fixture(F, 'stockrail', u + handed * bayWidth * .27, y + .034, front - inset * depth * .72, !side);
+        fixture(F, 'stockrail', u - handed * bayWidth * .39, y + .034, front - inset * depth * .48, side);
+        continue;
+      }
+      if (kind === 'kids') fixture(F, 'junior', u - bayWidth * .25, y + .034, front - inset * depth * .68, side);
       if (kind === 'dining') {
         fixture(F, kind, u - bayWidth * .28, y + .034, front - inset * depth * .46, side);
         F.person(u - bayWidth * .28 - 1.65, y + .034, front - inset * depth * .46, {shirt:0xd9c4a6});
       }
       fixture(F, kind, u, y + .034, front - inset * depth * .36, !side);
-      if (kind === 'dining' || kind === 'homeware' || kind === 'golf') {
+      if (kind === 'dining' || kind === 'homeware') {
         fixture(F, kind, u + bayWidth * .27, y + .034, front - inset * depth * .70, side);
       }
     }
