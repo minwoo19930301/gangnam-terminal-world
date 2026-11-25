@@ -4,14 +4,21 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 
 // The kit builds synchronously in the browser and in the local route checker.
-const marketURL = new URL('../../assets/models/gyeongbu/market.glb', import.meta.url);
-const marketBytes = marketURL.protocol === 'file:'
-  ? await (await import('node:fs/promises')).readFile(marketURL)
-  : new Uint8Array(await (await fetch(marketURL)).arrayBuffer());
-const marketGLB = await new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).parseAsync(
-  marketBytes.buffer.slice(marketBytes.byteOffset, marketBytes.byteOffset + marketBytes.byteLength), ''
-);
-marketGLB.scene.updateMatrixWorld(true);
+async function loadFixtures(relativePath) {
+  const url = new URL(relativePath, import.meta.url);
+  const bytes = url.protocol === 'file:'
+    ? await (await import('node:fs/promises')).readFile(url)
+    : new Uint8Array(await (await fetch(url)).arrayBuffer());
+  const model = await new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).parseAsync(
+    bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength), ''
+  );
+  model.scene.updateMatrixWorld(true);
+  return model.scene;
+}
+const [marketModel, daisoModel] = await Promise.all([
+  loadFixtures('../../assets/models/gyeongbu/market.glb'),
+  loadFixtures('../../assets/models/daiso/shop.glb')
+]);
 
 export const meta = {
   id: 'gyeongbu', name: '서울고속버스터미널 (경부·영동선)',
@@ -176,6 +183,33 @@ export function build(K) {
       if(ia)out.push(a);
       if(ia!==ib){const t=(bound-a[axis])/(b[axis]-a[axis]);out.push([a[0]+t*(b[0]-a[0]),a[1]+t*(b[1]-a[1])]);}
     }return out;
+  }
+  // The GATE 4 public parking stair cuts the edge of the north parking lot.
+  // Work in its own frame so the lot surface and kerb stop at the same opening.
+  const parkingRun=Math.hypot(7.5,3);
+  const stairUV=([x,z])=>[((x-247)*7.5-(z+168)*3)/parkingRun,((x-247)*3+(z+168)*7.5)/parkingRun];
+  const stairXZ=([s,t])=>[247+(s*7.5+t*3)/parkingRun,-168+(-s*3+t*7.5)/parkingRun];
+  const stairHole=[[0,-2.4],[parkingRun,-2.4],[parkingRun,2.4],[0,2.4]].map(stairXZ);
+  function outsideParkingStair(poly){
+    const points=poly.map(stairUV);
+    const middle=clip(clip(points,0,0,true),0,parkingRun,false);
+    return [clip(points,0,0,false),clip(points,0,parkingRun,true),clip(middle,1,-2.4,false),clip(middle,1,2.4,true)]
+      .filter(part=>part.length>=3).map(part=>part.map(stairXZ));
+  }
+  function outsideParkingStairEdge(a,b){
+    const start=stairUV(a),end=stairUV(b),cuts=[0,1];
+    for(const [axis,bound] of [[0,0],[0,parkingRun],[1,-2.4],[1,2.4]]){
+      const t=(bound-start[axis])/(end[axis]-start[axis]);
+      if(t>0&&t<1)cuts.push(t);
+    }
+    cuts.sort((p,q)=>p-q);
+    const point=t=>[a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t];
+    const spans=[];
+    for(let i=1;i<cuts.length;i++){
+      const [s,t]=stairUV(point((cuts[i-1]+cuts[i])/2));
+      if(s<=0||s>=parkingRun||Math.abs(t)>=2.4)spans.push([point(cuts[i-1]),point(cuts[i])]);
+    }
+    return spans;
   }
   const strip=(a,b)=>clip(clip(lp,0,a,true),0,b,false).map(q=>W(...q));
   const WEST=strip(-1,75.7),NORTH=strip(75.7,317);
@@ -1188,7 +1222,8 @@ export function build(K) {
     for(const v of [.8,3,5.3])lwall(265.5,v,278,v,0,3.3,{mat:v===.8?0xe6ded0:0x2f2f30,thick:.12});
     for(const v of [.85,2.95])lbox(265.45,v,0,.16,.18,2.7,0xd7262b);
     lbox(265.45,1.9,2.4,.18,2.3,.4,0xd7262b,{solid:false});lsign('GATE 3',265.33,1.9,2.6,1.7,.3,'-u',{bg:null,fg:'#fff'});
-    lzone('다이소 GATE 3','1F','B&C 현관 · 지하 매장 계단',258.5,0,278,7,-4,4.2,7);
+    lzone('다이소 GATE 3','1F','B&C 현관 · 지하 매장 계단',258.5,0,278,7,-.05,4.2,7);
+    lzone('다이소 GATE 3 계단','B1','B&C 현관에서 매장으로',265.5,1.05,278,2.75,-4,-.05,7);
     // GATE 3 vestibule: brick, mosaic, inner door screen and black linear ceiling.
     K.hpoly({tex:'gb20_mosaic',gloss:.35},rect(258.5,0,265.5,7),.042);
     K.hpoly('gb_tactile',rect(261.75,0,262.05,7),.045);
@@ -1812,7 +1847,14 @@ export function build(K) {
       for(const u of [245.7,253.5])for(const v of [-8.8,-1])lbox(u,v,y,.6,.6,3,0xb9a5da,{solid:false});
       // Disney merchandise retains stocked shelves; illustrated character-name panels match the photographed branch.
       for(const [u,t,bg] of [[245.7,'Mickey & Friends','#b9a5da'],[253.5,'Winnie the Pooh','#e7c47a']])lsign(t,u,-4,y+2.2,2.6,.6,u<250?'+u':'-u',{bg,fg:'#433553'});
+      const selfCheckouts=[];
       function checkout(u,v,n,face='-v',staff=false){
+        if(!staff){
+          selfCheckouts.push([u,v,y,PI]);
+          lbox(u,v,y,.87,.83,.94,0,{skip:['top','bottom','n','s','e','w']});
+          lsign(String(n),u,v,y+2.2,.55,.28,face,{bg:'#26333a',fg:'#e5d33b'});
+          return;
+        }
         lbox(u,v,y,staff?1.45:.82,.85,.93,0xf1f0ea);lbox(u,v,y+.93,staff?1.5:.87,.92,.05,0x969c99,{solid:false});
         lbox(u-.08,v,y+.98,.46,.28,.75,0xf6f5ee,{solid:false});lsign('셀프 결제',u-.08,v-.16,y+1.48,.38,.43,face,{bg:n%2?'#205fa6':'#b92f3c',fg:'#fff'});
         lsign(String(n),u,v,y+2.2,.55,.28,face,{bg:'#26333a',fg:'#e5d33b'});
@@ -1822,6 +1864,7 @@ export function build(K) {
       checkout(259.8,-11.2,11,'-v',true);checkout(259.8,-15.4,12);
       for(const [u,n] of [[247,1],[252,2]])checkout(u,-5,n);
       for(let i=0;i<3;i++)checkout(173.3+i*2.1,15.2,i+1,'-v',i===2);
+      addMarketFixtures('SelfCheckout','다이소 셀프 계산대',selfCheckouts,daisoModel);
       lwall(245,-17.7,263.6,-17.7,y,y+2.8,{mat:'gb7_daiso_circles',thick:.04,solid:false});
       lsign('계산하는 곳',251.7,-10,y+2.65,5,.4,'+v',{bg:'#292d30',fg:'#f5d23f'});
       lsign('계산하는 곳',176,13.7,y+2.65,3.4,.4,'-v',{bg:'#292d30',fg:'#f5d23f'});
@@ -1835,7 +1878,7 @@ export function build(K) {
       for(const v of [6,16]){
         for(const q of [v-2,v+2])lbox(170,q,y,.22,.15,2.95,0xc8102e,{solid:false});
         lbox(170,v,y+2.5,.25,4.15,.45,0xc8102e,{solid:false});
-        lsign('daiso 다이소',169.84,v,y+2.72,3.7,.38,'-u',{bg:'#fff',fg:'#c8102e'});
+        addMarketFixtures('DaisoSign','다이소 1번 출입구 간판',[[169.84,v,y+2.49,-PI/2]],daisoModel);
         for(const q of [v-1.45,v+1.45])lbox(170,q,y+.03,.04,.9,2.36,doorGlass,{solid:false});
         for(const q of [v-.85,v+.85]){lsign('자동문 주의',169.81,q,y+1.15,.6,.17,'-u',{bg:'#f4d927',fg:'#292824'});lbox(171,q,y,.12,.4,1.4,0xc5cbca,{solid:false});}
         lfloorText('매장입구 ↑',169,v,y+.02,3.3,.5,'+u',{bg:'#c8102e',fg:'#fff'});
@@ -1861,7 +1904,7 @@ export function build(K) {
       for(const v of [3,5,8,10])lbox(248.5,v,y,.07,.07,2.7,0xaab2b0,{solid:false});
       for(const v of [4,9])lbox(248.5,v,y+.02,.025,1.8,2.5,doorGlass,{solid:false});
       for(const v of [5.1,7.9]){lbox(248.1,v,y,.85,.36,1.1,0xaeb9b7);lsign('입구',247.65,v,y+.85,.28,.2,'-u',{bg:'#263132',fg:'#fff'});}
-      lsign('나가는 곳',248.45,6.5,y+2.8,1.4,.28,'-u',{bg:'#318b60',fg:'#fff'});
+      lsign('GATE 3 · 입구전용',248.45,6.5,y+2.8,1.8,.28,'-u',{bg:'#fff',fg:'#b82e40'});
       for(const [n,u,v] of [[1,166.9,10.75],[2,210.5,23.2]]){
         lbox(u,v,2.35,n===1?3.3:7.8,.25,.6,0xc8102e,{solid:false});lsign(`GATE ${n}  다이소`,u,v+.14,2.65,n===1?3:7,.4,'+v',{bg:null,fg:'#fff'});
       }
@@ -1903,9 +1946,7 @@ export function build(K) {
     K.wall(241.4,-165.2,249.3,-165.2,y,y+3,{mat:granite,thick:.18});
     K.wall(241.4,-173.5,249.3,-173.5,y,y+3,{mat:granite,thick:.18,openings:[{at:4.8,w:6,y0:y,y1:y+3}]});
     K.stairs(247,-168,254.5,-171,{ya:y,yb:0,w:4.5,steps:24,mat:granite,rails:true});
-    const dx=7.5,dz=-3,len=Math.hypot(dx,dz),nx=-dz/len*2.4,nz=dx/len*2.4;
-    const hole=[[247+nx,-168+nz],[254.5+nx,-171+nz],[254.5-nx,-171-nz],[247-nx,-168-nz]];
-    K.groundHole(hole);
+    K.groundHole(stairHole);
     // All handrails and the folded yellow wheelchair lift are outside the clear stair lanes.
     K.stairs(246.5,-172,245.5,-178,{ya:y,yb:-6,w:5.6,steps:13,mat:granite,rails:true});
     const lower=[[242.65,-178],[248.35,-178],[247.65,-183],[241.95,-183]];
@@ -1959,9 +2000,9 @@ export function build(K) {
     try{draw();}finally{K=owner;}
   }
 
-  function addMarketFixtures(key,name,placements) {
+  function addMarketFixtures(key,name,placements,model=marketModel) {
     const TH=K.THREE;
-    const bay=marketGLB.scene.getObjectByName(key);
+    const bay=model.getObjectByName(key);
     const material=new TH.MeshLambertMaterial({vertexColors:true,side:TH.DoubleSide});
     bay.traverse(source => {
       if (!source.isMesh) return;
@@ -3123,10 +3164,27 @@ export function build(K) {
         }
       }
     }
+    // Centres facing the long public aisle or the kitchen/home aisles. The previous
+    // crosswise gondolas still stock the deeper rows behind these shelf fronts.
+    const shelves=[
+      ['PaperGoods','문구 · 사무',175.5,4.46,0],
+      ['GiftWrap','선물 · 포장',188.7,4.46,0],
+      ['Snacks','스낵 · 간식',201.9,4.46,0],
+      ['CosmeticPads','뷰티 · 스킨케어',238.5,4.46,0],
+      ['Tableware','도자기 · 식기',257.4,10.88,PI],
+      ['Organizers','수납 · 정리',280.85,.94,0]
+    ];
+    for(const [key,label,u,v,angle] of shelves){
+      lbox(u,v,y,3,.55,1.96,0,{skip:['top','bottom','n','s','e','w']});
+      ldetail({floor:'B1',y0:y,y1:y+3,poly:rect(u-2,v-1,u+2,v+1),name:'다이소 '+label},()=>{
+        addMarketFixtures(key,'다이소 '+label,[[u,v,y,angle]],daisoModel);
+      });
+    }
     for(const [lo,hi] of [[174,207],[215,243]])ldetail({floor:'B1',y0:y,y1:y+3.1,poly:rect(lo,0,hi,15),name:`다이소 보존 진열 ${lo}`},()=>{
       for(let a=lo;a<hi-2;a+=4.4){
         const b=Math.min(hi,a+3);
-        run(a,b,4.05,1);
+        // These frontages carry the six documented merchandise categories below.
+        if(![174,187.2,200.4,237].some(start=>Math.abs(a-start)<.01)) run(a,b,4.05,1);
         // The retained PET/pouch, dog-clothing and paint closeups occupy these south faces.
         if(!((a<221&&b>216)||(a<182&&b>179)))run(a,b,8.95,-1);
       }
@@ -3699,13 +3757,15 @@ export function build(K) {
       if(occupied)vehicle(u,v,y,rot,kind,idx);
       return true;
     }
-    function boundary(poly,y,openings=[]){
+    function boundary(poly,y,openings=[],clearStair=false){
       // Low kerbs with explicit vehicle entrances, never a solid fence across the entry aisle.
       for(let i=0;i<poly.length;i++){
         const a=poly[i],b=poly[(i+1)%poly.length],L=Math.hypot(b[0]-a[0],b[1]-a[1]);
         if(openings.includes(i))continue;
-        K.wall(...a,...b,y,y+.16,{mat:0xb0ada2,thick:.2});
-        line(a,b,y+.18,yellow,.11);
+        for(const [p,q] of clearStair?outsideParkingStairEdge(a,b):[[a,b]]){
+          K.wall(...p,...q,y,y+.16,{mat:0xb0ada2,thick:.2});
+          line(p,q,y+.18,yellow,.11);
+        }
       }
     }
     function lamp(u,v,y=0){
@@ -3793,7 +3853,9 @@ export function build(K) {
       {id:1173096051,rows:[291,312,329],v0:-37,v1:-12},
     ];
     for(const lot of lots){
-      const poly=area(lot.id);K.hpoly(asphalt,poly,.023);boundary(poly,0,[0]);
+      const poly=area(lot.id),clearStair=lot.id===1173096051;
+      for(const part of clearStair?outsideParkingStair(poly):[poly]) K.hpoly(asphalt,part,.023);
+      boundary(poly,0,[0],clearStair);
       let idx=0;
       for(let row=0;row<lot.rows.length;row++)for(let v=lot.v0;v<lot.v1;v+=3.35){
         const u=lot.rows[row];stall(poly,u,v,0,FACE[row%2?'-u':'+u'],'bus',++idx,idx%13!==0);
