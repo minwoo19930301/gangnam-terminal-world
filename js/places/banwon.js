@@ -222,9 +222,39 @@ export function build(K) {
   triangle(.55,2.03,0xb83428,0);triangle(.42,2.03,0xf2ca48,.012);
   sign('과속방지턱',-8.4,1.95,21.3,.62,.16,west,null,'#222222');
   // As seen from the road: black tower, then pharmacy, then the blue bank fascia.
-  sign('서초21세기약국',-.25,3.95,26.7,6.4,.8,west,'#256eaf','#fff3cc');
-  sign('우리은행 WOORI BANK',-.24,3.95,34.8,9.3,.8,west,'#174b89','#fff');
-  sign('반원 태권도 · 줄넘기',-.24,8,33.2,10,.68,west,'#f0f0e9','#20282c');
+  // January 2026 street view: continuous deep-blue cabinets with a projecting
+  // Woori medallion. The upper parapet has two separate tenant signs.
+  for (const [v,w,color] of [[26.7,6.4,0x225397],[34.85,9.85,0x183e80]]) {
+    B(-.235,3.43,v,.315,1.02,w,color,{solid:false});
+    B(-.31,3.40,v,.28,.055,w,0x899296,{solid:false});
+  }
+  sign('서초21세기약국',-.41,3.95,26.7,5.9,.74,west,null,'#ffffff');
+  sign('우리금융그룹',-.41,3.95,30.98,1.55,.31,west,null,'#e1eef7');
+  sign('우리은행  WOORI BANK',-.41,3.95,36.05,6.8,.70,west,null,'#ffffff');
+  const badge = (across, up, depth) => { const [x,z]=P(-.41-depth,32.3+across); return [x,3.96+up,z]; };
+  const outward = [Math.sin(west),0,Math.cos(west)];
+  const rimRadius = .36;
+  for (let i=0;i<24;i++) {
+    const a=i*Math.PI/12, b=(i+1)*Math.PI/12;
+    const ax=rimRadius*Math.cos(a), ay=rimRadius*Math.sin(a);
+    const bx=rimRadius*Math.cos(b), by=rimRadius*Math.sin(b);
+    K.quad(0xa2b3c5,[badge(ax,ay,0),badge(bx,by,0),badge(bx,by,.075),badge(ax,ay,.075)],
+      [Math.cos((a+b)/2)*Math.cos(west),Math.sin((a+b)/2),-Math.cos((a+b)/2)*Math.sin(west)]);
+  }
+  // The light curves upward at the centre of the circular blue symbol.
+  for (let i=0;i<18;i++) {
+    const a=(i/18-.5)*Math.PI, b=((i+1)/18-.5)*Math.PI;
+    const left=rimRadius*Math.sin(a), right=rimRadius*Math.sin(b);
+    const ly=rimRadius*Math.cos(a), ry=rimRadius*Math.cos(b);
+    const levels=t=>[-t,-.42*t+.25*t*t/rimRadius,.04*t+.27*t*t/rimRadius,.66*t,t];
+    const l=levels(ly), r=levels(ry);
+    [0x204c9b,0xd4ecf0,0x65a7d3,0x428cbb].forEach((tint,j)=>{
+      K.quad(tint,[badge(left,l[j],.077),badge(right,r[j],.077),badge(right,r[j+1],.077),badge(left,l[j+1],.077)],outward);
+    });
+  }
+  B(-.18,7.57,31.75,.24,.84,14.5,0xc9c7c4,{solid:false});
+  sign('탑스터디 학원',-.321,8,29.5,5.65,.65,west,'#e9e6e3','#28292b');
+  sign('반원 태권도 · 줄넘기',-.321,8,36.0,6.6,.65,west,'#eae6e2','#29292c');
   sign('이비',-.23,6.5,14.4,2.5,.94,west,'#f3f3ed','#183b4a');sign('조현',-.24,6.5,11.5,2.5,.94,west,'#f3f3ed','#183b4a');
   sign('제일의학과',-.24,8,7.5,11.5,.6,west,'#477eac','#edf1f2');
   // Only the initial 더 is legible on this blue lightbox; do not expand the tenant name.
