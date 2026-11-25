@@ -1,4 +1,31 @@
 {
+  "retail_transfers_and_ashley": {
+    "checked": "2026-11-25",
+    "official_guides": [
+      "https://www.elandretail.com/store02.do?BDID=0003001B&branchID=00110001&lang=000600KO",
+      "https://www.elandretail.com/store02.do?BDID=0003002B&branchID=00110001&lang=000600KO"
+    ],
+    "lower_maps": {
+      "1관 B1": "https://www.elandretail.com/upload/20260810172519901_0.jpg",
+      "1관 1F": "https://www.elandretail.com/upload/20260603113655521_0.jpg",
+      "2관 B1": "https://www.elandretail.com/upload/20261111151036_5.jpg",
+      "2관 1F": "https://www.elandretail.com/upload/20261111151035_4.jpg"
+    },
+    "guide_observations": "1·2관 B1~5F 공식 안내도 12장 대조. 1관 중앙에서 오른쪽에는 일반 에스컬레이터 표시가 여섯 층에 이어진다. 2관의 중앙 에스컬레이터는 1~5F 안내도에 보인다. 2관 B1에는 중앙 뱅크와 별도로 뒤쪽에 카트 그림과 상행·하행 표시가 있다. 2관 1F에도 B1로 이어지는 카트 표시가 있다. 2~5F 공식 이미지 8개는 upper_floor_review.floor_guides에 수록했다.",
+    "model": "1관 일반 5쌍, 2관 일반 4쌍과 B1~1F 카트 무빙워크 1쌍. 상·하행 2열로 재구성하고 슬래브와 B1 천장에 개구부를 냈다. 운영사 약도로 층과 구역을 식별했다. 좌우 운행 지정, 각 열의 실제 수, 월드 좌표, 개구부 크기, 길이, 폭, 경사와 속도는 추정이다. 카트 벨트와 난간의 재질은 일반 형식으로 표현했다.",
+    "verification": "node tests/newcore-transfers.mjs가 가구를 포함한 실제 플레이어 물리에서 20개 열의 자동 운행과 양 끝 0.75m 승하차를 확인한다. 중앙선 각 101개 지점의 바닥, 반경 0.32m 충돌과 1.75m 머리 공간을 검사한다. 이번 결과 20/20 운행·승하차, 2,020/2,020 표본 통과. 모델 검증이며 현장 실측 자료는 없다.",
+    "ashley_sources": [
+      "https://www.elandretail.com/store05.do?branchID=00110001&lang=000600KO",
+      "https://www.elandretail.com/upload/20251107133441030_0.jpg",
+      "https://everyjourney.tistory.com/65?category=1070579"
+    ],
+    "ashley": "1·2관 영업층 안내의 최상층은 5F다. 1관 5F 애슐리퀸즈에 Blender 배식대, 온열등, 집게, 세 개의 음식 팬과 쌓은 접시를 배치했다. 운영사는 상호와 층을 확인해 준다. 2025년 방문기의 즉석 조리·샐러드 구성을 참조했으며 음식 종류·수량·배식대 규격과 위치는 예시다.",
+    "assets": [
+      "assets/models/newcore/upper-fixtures.blend",
+      "assets/models/newcore/upper-fixtures.js",
+      "assets/models/newcore/customer-review.jpg"
+    ]
+  },
   "id": "newcore",
   "name": "뉴코아아울렛 강남점",
   "updated": "2026-11-25",
@@ -55,7 +82,7 @@
       }
     ],
     "scope": "이랜드 층별안내에서 1·2관의 영업층은 B1~5F, 3관은 1F 푸드. 이번 작업은 1·2관 2~5F의 대표 점포·코너 50곳과 이를 잇는 복도를 구현했다.",
-    "layout": "공식 안내도에 표시된 상호·층과 상대 배열을 참조했다. 좌표·북쪽·층고·구획 폭·대표 매장 사이의 길이·가구 배치는 근사값이다. 모든 점포의 경계를 복원한 것은 아니다. 층별 실제 엘리베이터·에스컬레이터 위치와 수는 기존 계단/승강기 1조 구성과 차이가 있다.",
+    "layout": "공식 안내도에 표시된 상호·층과 상대 배열을 참조했다. 좌표·북쪽·층고·구획 폭·대표 매장 사이의 길이·가구 배치는 근사값이다. 모든 점포의 경계를 복원한 것은 아니다. 층별 엘리베이터, 에스컬레이터와 계단의 현장 위치·수량은 미측정이다. 1·2관 에스컬레이터 및 카트 무빙워크는 retail_transfers_and_ashley에서 별도로 검토했다.",
     "sixth_floor_evidence": [
       {
         "url": "https://www.elandretail.com/store02.do?BDID=0003003B&branchID=00110001&lang=000600KO",
@@ -77,7 +104,7 @@
         "NewCore • Upper floors",
         "Fixture workshop"
       ],
-      "reference": "NewCore 장면에 웹 모델과 같은 여덟 층의 구획과 집기 238개를 배치했다. Fixture workshop에 있는 원형 11종은 내장 export_mesh.py로 웹용 메시를 다시 내보낼 수 있다. 대표 의류·골프 매장 35곳에는 진열열 두 줄, 옷걸이와 접은 옷 테이블을 배치했다. 매장에 따라 성인·아동 마네킹, 운동화 단상, 골프백을 전시한다. 실제 점포별 가구와 상품 배열은 확인하지 못해 업종에 맞춰 재구성했다."
+      "reference": "NewCore 장면에 웹 모델과 같은 여덟 층의 구획과 집기 238개를 배치했다. Fixture workshop에 있는 원형 12종은 내장 export_mesh.py로 웹용 메시를 다시 내보낼 수 있다. 대표 의류·골프 매장 35곳에는 진열열 두 줄, 옷걸이와 접은 옷 테이블을 배치했다. 매장에 따라 성인·아동 마네킹, 운동화 단상, 골프백을 전시한다. 실제 점포별 가구와 상품 배열은 확인하지 못해 업종에 맞춰 재구성했다."
     },
     "walking_check": "프로젝트 충돌·바닥 엔진에서 반경 0.32m, 높이 1.75m인 보행자로 0.4m 간격을 검사했다. 8개 층의 승강기 앞에서 대표 매장·코너 50곳의 입구 안쪽 50/50곳과 매장 깊이의 83% 지점 50/50곳까지 걸어서 도달했다. 실제 현장 길이는 미측정."
   },
