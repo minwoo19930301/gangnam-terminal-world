@@ -1,4 +1,4 @@
-import { loadFixtureScene } from '../../assets/models/onebailey/load.js';
+import { loadFixtureScene, mountFixture } from '../../assets/models/onebailey/load.js';
 import { shopInteriors } from '../../assets/models/gotomall/shop-interiors.js';
 
 const westTextileFixtures=await loadFixtureScene(new URL('../../assets/models/onebailey/west.glb',import.meta.url));
@@ -1214,12 +1214,10 @@ export function build(K) {
   }
   function directoryInterior(loc, info, W, D) {
     if (info.specialty === 'scarves' || info.specialty === 'quilts') {
-      const model = westTextileFixtures.getObjectByName(info.specialty === 'scarves' ? 'Emet' : 'AnHouse');
-      const [x,z] = P(...Lp(loc,W/2,.04)), facing = FACE[outFace(loc)];
-      const fixture = new K.THREE.Mesh(model.geometry,new K.THREE.MeshLambertMaterial({vertexColors:true}));
-      fixture.name=info.name;fixture.position.set(x,FL+.014,z);fixture.rotation.y=facing;
-      fixture.scale.set((W-.16)/3.6,1,(D-.10)/3.0);K.addMesh(fixture);
-      for (const [a,b] of [[.035,.345],[.655,.965]]) lbox(loc,W*a,W*b,.065*D,.34*D,FL,.74,0xffffff,
+      const key = info.specialty === 'scarves' ? 'Emet' : 'AnHouse';
+      const [x,z] = P(...Lp(loc,W/2,.04));
+      mountFixture(K,westTextileFixtures,key,[x,FL+.014,z],FACE[outFace(loc)],[(W-.16)/3.6,1,(D-.10)/3.0]);
+      for (const [a,b] of [[.035,.27],[.73,.965]]) lbox(loc,W*a,W*b,.065*D,.34*D,FL,.74,0xffffff,
         {skip:['top','bottom','n','s','e','w']});
       const leftEdge=loc.fr.dv>0?W-.25:.25;
       lsign(loc,info.name,leftEdge,-.16,FL+2.16,.60,.27,outFace(loc),

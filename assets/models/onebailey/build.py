@@ -230,6 +230,23 @@ for side in [-1,1]:
         cushion.rotation_euler.x=-.14
         oval("Two-colour cushion motif",(x,1.26,1.31),(.089,.012,.07),cream)
 for i in range(5):cloth("Hanging cover panel",-1.30+i*.65,2.64,2.13,.62,1.54,fabric[(i+4)%8],True)
+# Fit the two photographed flank carts into the narrower model bays while
+# preserving the customer aisle and the full-width overhead lintel.
+bpy.context.view_layer.update()
+for group_name in ['Emet','AnHouse']:
+    coll=bpy.data.collections[group_name]
+    origin=Vector(coll['origin'])
+    for obj in coll.objects:
+        centre=obj.matrix_world.translation-origin
+        if not (.35<abs(centre.x) and centre.y<1.68 and centre.z<1.92):
+            continue
+        undo=obj.matrix_world.inverted()
+        side=1 if centre.x>0 else -1
+        for vertex in obj.data.vertices:
+            pos=obj.matrix_world @ vertex.co
+            pos.x=origin.x+side*(.85+.62*(side*(pos.x-origin.x)-.35))
+            vertex.co=undo @ pos
+
 bpy.context.preferences.filepaths.save_version=0
 bpy.ops.wm.save_as_mainfile(filepath=str(directory/'retail.blend'),compress=True)
 runpy.run_path(str(directory/'export.py'))

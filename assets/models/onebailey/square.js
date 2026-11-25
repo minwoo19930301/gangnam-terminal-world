@@ -1,4 +1,4 @@
-import { loadFixtureScene } from './load.js';
+import { loadFixtureScene, mountFixture } from './load.js';
 
 // The sales-floor plan is digitised in a 1450-pixel-wide reference frame. Its
 // road edge is fitted to the two ends of the OSM retail footprint (1177226165).
@@ -28,7 +28,6 @@ export function buildRetailSquare(K) {
   const wall=(a,b,y0=F,y1=H,mat=0xcac6bc,options={})=>K.wall(...p(...a),...p(...b),y0,y1,{mat,thick:.12,...options});
   const box=(x,y,base,w,h,d,mat,solid=false,r=rot)=>{const [wx,wz]=p(x,y);K.box({x:wx,z:wz,y:F+base,w,h,d,rotY:r,mat,solid});};
   const sign=(text,x,y,base,w,h,angle,fg,bg=null)=>{const [wx,wz]=p(x,y);K.sign(text,{x:wx,z:wz,y:F+base,w,h,rotY:angle,fg,bg,pxPerM:125});};
-  const meshMat=new K.THREE.MeshLambertMaterial({vertexColors:true});
   const corridor=(x0,y0,x1,y1)=>{const a=rect(x0,y0,x1,y1);slab(a);roof(a);zone('원베일리 스퀘어 공용 복도','B1 상가',a);};
   // Circulation around the central retail island matches the white route in
   // the B1 plan. B101/B110 face north; B150 faces the cross aisle to the south.
@@ -65,8 +64,7 @@ export function buildRetailSquare(K) {
     }
     const standY=front+inside*shop.depth,[mx,mz]=p(mid,standY);
     K.detail({name:shop.name,floor:'B1',poly:room,y0:F,y1:H},()=>{
-      const fixture=new K.THREE.Mesh(fixtures.getObjectByName(shop.model).geometry,meshMat);
-      fixture.name=shop.model;fixture.position.set(mx,F+.014,mz);fixture.rotation.y=angle;K.addMesh(fixture);
+      mountFixture(K,fixtures,shop.model,[mx,F+.014,mz],angle);
       // Clear panes, removable displays and menus are separate from the opaque GLB.
       const fy=(d)=>standY+inside*d/k,fx=(a)=>mid+face*a/k;
       if(shop.id!=='B150'){

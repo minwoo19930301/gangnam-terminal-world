@@ -1,7 +1,48 @@
 {
  "id": "gotomall",
  "name": "강남터미널 지하도상가 (GOTO MALL 고투몰)",
- "updated": "2026-11-25",
+ "updated": "2026-11-26",
+ "retail_and_g2_20261126": {
+  "checked": "2026-11-26",
+  "sources": {
+   "에메트 점포사진 및 주소": "https://gotomall.kr/stores/4718ae88-fc43-42ea-ad88-a128086d7f0a",
+   "앤하우스 점포사진 및 주소": "https://gotomall.kr/stores/fe195720-e851-47e3-a49b-3d7b8e073e1c",
+   "B110 상점 제공 G2 방문 경로": "https://map.naver.com/p/entry/place/1450933392",
+   "원베일리 스퀘어 B1 판매도면": "https://rmaonebailey.cafe24.com/img/floor_img01_big.jpg",
+   "연결 설비 안내": "https://sisul.or.kr/open_content/undershop/qna/qnaMsgDetail.do?qnaid=QNAS20261116000003"
+  },
+  "shops": [
+   {
+    "unit": "B-004",
+    "name": "에메트",
+    "observed": "운영사 점포사진에서 행거 상단의 고리 모양 스카프, 좌측 목재 매대의 여러 색 패브릭 가방, 우측 매대 모서리로 늘어뜨린 스카프, 작은 돌출 상호판을 판독했다.",
+    "model": "Emet"
+   },
+   {
+    "unit": "C-006",
+    "name": "앤하우스",
+    "observed": "운영사 점포사진에서 전면 폭을 잇는 흰 레이스 커튼, 가운데 손님 길 양쪽의 바퀴 달린 진열대, 접어 쌓은 다층 침구와 뒤쪽 무늬 방석을 판독했다.",
+    "model": "AnHouse"
+   }
+  ],
+  "placement": "운영사 주소에 해당하는 기존 서편 B/C열의 생성 호수를 그대로 사용했다. B004·C006은 앞선 17개 점포와 별개인 두 곳이다. 진열대 폭과 간격·무늬·수량은 월드의 점포 칸과 보행 폭에 맞춘 근사치다.",
+  "g2": "서편 계단 직전 공용복도의 왼쪽 벽을 열어 원베일리 스퀘어 광장으로 이어지게 했다. 회전문은 상가 동측 방풍실에 설치했다. 기존 공공보행통로 쪽 접점은 이전 영상과 호환된다.",
+  "asset": {
+   "blend": "assets/models/onebailey/retail.blend",
+   "meshes": "assets/models/onebailey/west.glb",
+   "photos": "원본 사진은 배포하지 않고 실물 특징을 독립 모델링했다."
+  },
+  "verification": {
+   "model": "실제 player 반경 0.32m, 키 1.75m, 0.25m 보행 격자. 모든 장소, 도시, 지연 생성 진열대의 충돌을 포함.",
+   "shop_walk": [
+    "B004 에메트 매대 사이 389셀",
+    "C006 앤하우스 매대 사이 411셀"
+   ],
+   "route": "G2 내부→왼쪽 갈림길→선큰광장→회전문 방풍실→B101→B110→B150→벽화 공공보행로·역방향 총 8구간과 서편 매장 2곳, 총 10개 여정을 모두 통과.",
+   "adjacent_walk": "onebailey, gotomall, banpo_shoppingtown, hangang 표준 보행검사 133개 통과.",
+   "visual": "headless Chrome WebGL 10시점과 매장 근접 재진입 확인. 미리보기는 실제 월드 화면을 사용."
+  }
+ },
  "public_walk_and_shops_20261125": {
   "checked": "2026-11-25",
   "sources": {
@@ -591,7 +632,12 @@
    "date": "2026-11-07",
    "primary": true,
    "notes": "adjusted 항목은 fix_original이 아닌 fix를 적용한다. GM-L5 계단의 절대좌표·실내 나침반은 낮은 신뢰도이며 보도 상단과 보행 연결에 맞춰 근사한다."
-  }
+  },
+  "https://gotomall.kr/stores/4718ae88-fc43-42ea-ad88-a128086d7f0a",
+  "https://gotomall.kr/stores/fe195720-e851-47e3-a49b-3d7b8e073e1c",
+  "https://map.naver.com/p/entry/place/1450933392",
+  "https://rmaonebailey.cafe24.com/img/floor_img01_big.jpg",
+  "https://sisul.or.kr/open_content/undershop/qna/qnaMsgDetail.do?qnaid=QNAS20261116000003"
  ],
  "building": {
   "floors_above": 0,
