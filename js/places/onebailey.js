@@ -1,3 +1,5 @@
+import { buildRetailSquare } from '../../assets/models/onebailey/square.js';
+
 // Original procedural illustrations; no reference photographs are published or loaded.
 // B1 alignment is inferred inside OSM area 412953594. The west park tunnel follows
 // way 1481658416. The east Banpo tunnel 560449165 remains owned by hangang.
@@ -7,7 +9,8 @@ export const meta = {
   sources:['https://mediahub.seoul.go.kr/archives/2011689','https://mediahub.seoul.go.kr/archives/2011692',
     'https://www.tfmedia.co.kr/news/article.html?no=170057','https://www.segye.com/newsView/20260427513557',
     'https://www.heraldk.com/article/2026042313575353478',
-    'https://www.youtube.com/watch?v=F9MdeqY0Rro','https://www.youtube.com/watch?v=wvUnarSte1A','https://www.youtube.com/watch?v=PN3QyVXbUNg'],
+    'https://rmaonebailey.cafe24.com/bbs/content.php?co_id=floor&code_page=floor&po=1',
+    'data/research/onebailey.json', 'https://www.youtube.com/watch?v=F9MdeqY0Rro','https://www.youtube.com/watch?v=wvUnarSte1A','https://www.youtube.com/watch?v=PN3QyVXbUNg'],
 };
 const PI=Math.PI, A=[-410,-45], B=[-540,-380], L=Math.hypot(B[0]-A[0],B[1]-A[1]);
 const U=[(B[0]-A[0])/L,(B[1]-A[1])/L], V=[U[1],-U[0]], ROT=Math.atan2(U[0],U[1]);
@@ -154,8 +157,8 @@ export function build(K){
   K.wall(...courtPoint(stairLength+4,-9),...courtPoint(stairLength+4,8),-.2,1.1,{mat:0xc8c8c4,thick:.28});
   const blackCol=courtPoint(-1,5);K.box({x:blackCol[0],z:blackCol[1],y:F,w:.8,h:3.8,d:.8,mat:0x23262b});
   for(const [x,z] of [[-343,-68],[-336,-69],[-313,-64],[-311,-54]])K.box({x,z,y:C-.025,w:.16,h:.04,d:.16,mat:{tex:'emit',color:0xfff2d4},solid:false});
-  K.zone({name:'고투몰 G2 · 원베일리 공개공지',floor:'B1',sub:'계단 · 공공보행통로 입구',poly:plaza,y0:F,y1:C,priority:3});
-  K.zone({name:'원베일리 보행로 입구',floor:'1F',sub:'고투몰 G2 연결',rect:[-350,-48,-307,-25],y0:0,y1:3.8,priority:4});
+  K.zone({name:'원베일리 공공보행통로 공개공지',floor:'B1',sub:'계단 · 공공보행통로 입구',poly:plaza,y0:F,y1:C,priority:3});
+  K.zone({name:'원베일리 보행로 입구',floor:'1F',sub:'원베일리 공공보행통로 연결',rect:[-350,-48,-307,-25],y0:0,y1:3.8,priority:4});
   // Lift is outside the rotated stair flank and joins its head without roofing the flight.
   const lift=courtPoint(stairLength+2,8.5),liftFront=[lift[0],lift[1]+2.4];
   K.slab([[lift[0]-3,lift[1]-3],[lift[0]+3,lift[1]-3],[lift[0]+3,lift[1]+4],[lift[0]-3,lift[1]+4]],F,{mat:floor});
@@ -163,11 +166,11 @@ export function build(K){
   K.slab([[lift[0]-3,lift[1]-3],[lift[0]+3,lift[1]-3],[lift[0]+3,lift[1]+4],[lift[0]-3,lift[1]+4]],0,{mat:floor});
   K.slab(strip(liftFront,courtPoint(stairLength+2,3.5),4),0,{mat:floor});
   K.elevator({name:'원베일리 공개공지 승강기',x:lift[0],z:lift[1],rotY:0,w:2.5,d:2.5,
-    floors:[{label:'B1',y:F,name:'지하 보행로'},{label:'1F',y:0,name:'고투몰 G2 방면'}]});
-  K.spawn({name:'고투몰 G2 · 원베일리 광장',x:-332,z:-66,y:F,yaw:PI/2});
+    floors:[{label:'B1',y:F,name:'지하 보행로'},{label:'1F',y:0,name:'공개공지 지상 입구'}]});
+  K.spawn({name:'원베일리 공공보행통로 광장',x:-332,z:-66,y:F,yaw:PI/2});
   K.sign(['원베일리 공공보행통로','고터·세빛 관광안내센터 · 한강공원'],{x:-316,y:2.6,z:-32.2,w:8,h:.8,bg:'#eef0e4',fg:'#263d4d'});
   // Exact B1 landing of J_ONEBAILEY_G2, already opened by gotomall.
-  corridor([-289.8764,-36.3812],[-294,-47],2.8,'고투몰 G2 연결부');corridor([-294,-47],[-310,-58],4.5,'고투몰 G2 연결부');
+  corridor([-289.8764,-36.3812],[-294,-47],2.8,'고투몰 · 공공보행통로 연결부');corridor([-294,-47],[-310,-58],4.5,'고투몰 · 공공보행통로 연결부');
   K.slab(strip([-310,-58],[-326,-61],5),F,{mat:floor});
   K.detail({name:'G2 공개공지',floor:'B1',poly:plaza,y0:F,y1:C},()=>{
     K.sign(['고터·세빛 관광안내센터 및 피카소 벽화 가는 길','반포한강공원 →'],{x:-344,y:F+2.8,z:-58,w:8.3,h:.8,rotY:PI/2,bg:'#ead9d5',fg:'#1e2d39'});
@@ -322,6 +325,7 @@ export function build(K){
   K.detail({name:'공개공지 보행자',floor:'B1',poly:plaza,y0:F,y1:C},()=>{
     for(const [x,z,a] of [[-327,-63,3.5],[-337,-62,.9],[-335.8,-61.5,1.2]])K.person(x,F,z,{rotY:a,shirt:a>3?0x363a40:0xb2a79c,pants:0x555b62});
   });
+  buildRetailSquare(K);
   buildParkPassage(K,{F,C,P,L,strip,floor,corridor,paintStrip});
 }
 
