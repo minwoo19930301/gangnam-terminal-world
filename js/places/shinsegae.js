@@ -1,3 +1,4 @@
+import { displays as upperFloorDisplays } from '../../assets/models/shinsegae/displays.js';
 // 신세계백화점 강남점 — detailed place module (B2 주차장 ~ 11F 식당가 + 1M 메자닌 + J1 지하 연결통로)
 // Exterior: 2026 north/corner roadview towers and glazing; 2025 entrance and east parking.
 // Main/extension split and heights remain estimates: see modeling.guesses in the research file.
@@ -9109,6 +9110,24 @@ export function build(K) {
   let upperSeed=0;
   // Round16 stock is category-specific, bounded to the unchanged official cell.
   // a runs along the storefront; b points into the shop. Keep the centre aisle open.
+  // Bake the Blender display into the floor's existing material batches. The
+  // same local-to-world and terrain transform is used for its shelf and stock.
+  function shopDisplay(key, a, b, height, ST, scale = 1) {
+    const { mm, faces } = upperFloorDisplays[key];
+    const points = mm.map(([dx,dy,dz]) => {
+      const [x,z] = P(...ST(a + dx * scale / 1000, b + dy * scale / 1000));
+      return [x, height + dz * scale / 1000, z];
+    });
+    for (const [color, i, j, k, l = k] of faces) {
+      const A = points[i], B = points[j], C = points[k];
+      const ux = B[0]-A[0], uy = B[1]-A[1], uz = B[2]-A[2];
+      const vx = C[0]-A[0], vy = C[1]-A[1], vz = C[2]-A[2];
+      const n = [uy*vz-uz*vy, uz*vx-ux*vz, ux*vy-uy*vx];
+      const length = Math.hypot(...n);
+      if (length > 1e-9) K.quad(color, [A,B,C,points[l]], n.map(v => v / length));
+    }
+  }
+
   function furnishUpperMerch(ctx) {
     const {id,name,kind,Wf:W,Dp:D,y,face,fb,fdisk,fball,fsign,person,seed,palette:p,ST}=ctx;
     if(W<1.05||(D<1.05&&!(id==='4F'&&name==='금강'&&D>=.45)))return;
@@ -13188,6 +13207,7 @@ export function build(K) {
       }
       if(/리모와|투미|쌤소나이트|만다리나덕/.test(name))for(let i=0;i<Math.min(4,slots);i++){
         const a=.65+i*(W-1.3)/Math.max(1,Math.min(4,slots)-1),b=D-.75;
+        if(id==='6F'&&name==='리모와'){shopDisplay('case',a,b,y+.05,ST);continue;}
         B(a,b,.45,.29,.05,.63,metal);for(let k=0;k<5;k++)B(a-.17+k*.085,b-.15,.025,.018,.10,.52,0x777e80);
         for(const da of[-.12,.12])B(a+da,b,.025,.035,.68,.23,metal);B(a,b,.26,.035,.91,.025,dark);
       }
@@ -13514,7 +13534,10 @@ export function build(K) {
       for(const [i,a]of islands.entries()){
         const b=Math.max(1.15,D*.35),w=Math.min(1.4,sideWidth-.2);
         B(a,b,w,.68,.04,.45,ivory);
-        if(id==='4F'&&name==='어그'){uggBoot(a-.18,b,.5,0xb68458,.85);uggBoot(a+.18,b,.5,0x62554a,.85);}
+        if(id==='8F'&&name==='오니츠카 타이거'){
+          shopDisplay('shoe',a-.15,b,y+.49,ST);
+          shopDisplay('shoe',a+.15,b+.04,y+.49,ST);
+        }else if(id==='4F'&&name==='어그'){uggBoot(a-.18,b,.5,0xb68458,.85);uggBoot(a+.18,b,.5,0x62554a,.85);}
         else{shoe(a-.18,b,.5,stock[(i+seed)%6]);shoe(a+.18,b,.5,stock[(i+seed)%6]);}
         if(i===0&&D>4)B(a,D*.62,w,.64,.07,.40,0xa3917b);
       }
@@ -13522,6 +13545,7 @@ export function build(K) {
       apparel();
       for(let i=0;i<Math.min(3,Math.floor(W/2));i++){
         const a=.65+i*.58,b=Math.min(D-.7,2.15),col=[0xe5e1d7,0x2d4245,0x9a7750][i];
+        if(id==='7F'&&name==='PXG'){shopDisplay('golf',a,b,y+.02,ST);continue;}
         B(a,b,.33,.36,.08,.8,col);B(a,b-.19,.27,.12,.25,.34,col);
         for(let j=0;j<4;j++){B(a-.1+j*.065,b,.018,.018,.79,.60+j*.025,metal);B(a-.08+j*.065,b,.095,.07,1.39+j*.025,.045,metal);}
       }
@@ -13556,6 +13580,10 @@ export function build(K) {
       eachStock((a,b,h,i)=>dish(a,b,h,i));
       for(const a of islands){const w=Math.min(1.8,sideWidth-.2),b=D*.42;table(a,b,w,.8,.83,ivory);for(let i=0;i<3;i++)dish(a+(i-1)*w*.28,b,.91,i);}
     }else if(kind==='elec'){
+      if(id==='9F'&&name==='포칼'){
+        // This narrow listening room has no centre island. Keep its middle aisle free.
+        for(const a of [.47,W-.47])shopDisplay('speaker',a,2.1,y+.02,ST);
+      }
       const camera=/라이카|핫셀블라드|캐논|소니/.test(name),coffee=/유라|라마르조코|드롱기|브레빌/.test(name),big=/LG|삼성|밀레|리페르|가게나우/.test(name);
       if(big){
         const n=Math.min(5,Math.max(2,Math.floor(W/.9)));
@@ -13726,7 +13754,7 @@ export function build(K) {
       B(W/2,b,w,.6,.07,.95,p.dark?walnut:oak);B(W/2,b,w+.05,.65,1.02,.055,ivory);
       for(let i=0;i<Math.min(4,slots);i++){const a=W/2-w/2+.4+i*(w-.8)/Math.max(1,Math.min(4,slots)-1);B(a,b,.24,.25,1.08,.28,metal);}
       if(cafe){B(W*.45,b,.65,.42,1.08,.45,metal);B(W*.45,b-.22,.53,.025,1.20,.17,dark);}
-      else if(/일 포노/.test(name)){B(W*.4,b,.9,.65,1.08,.6,0xb6a58b);B(W*.4,b-.34,.50,.025,1.13,.33,dark);}
+      else if(id==='11F'&&/일 포노/.test(name))shopDisplay('oven',W*.4,b,y+1.075,ST,Math.min(1,w/2,.65/.92));
       for(const a of cols){B(a,D*.5,.025,.025,2.6,.55,gold);B(a,D*.5,.45,.35,2.47,.14,{tex:'emit',color:0xffe1a8});}
     }else if(kind==='service'){
       B(W*.25,D*.4,Math.min(1.4,sideWidth),.7,.04,.78,ivory);B(W*.25,D*.4,.40,.04,.84,.28,dark);
@@ -13735,7 +13763,9 @@ export function build(K) {
       const baby=/에그|부가부|스토케|아티포페|바베파파/.test(name),underwear=kind==='lingerie'||/바바라|트라이엄프|비비안/.test(name);
       if(baby){
         for(const a of islands)for(let r=0;r<Math.min(2,Math.floor(D/2.4));r++){
-          const b=1.4+r*2.3;B(a,b,.55,.75,.42,.18,stock[(seed+r)%6]);B(a,b+.28,.55,.14,.6,.5,stock[(seed+r)%6]);
+          const b=1.4+r*2.3;
+          if(id==='10F'&&name==='부가부'){shopDisplay('stroller',a,b,y+.02,ST);continue;}
+          B(a,b,.55,.75,.42,.18,stock[(seed+r)%6]);B(a,b+.28,.55,.14,.6,.5,stock[(seed+r)%6]);
           for(const da of[-.26,.26])for(const db of[-.3,.3])B(a+da,b+db,.10,.12,.06,.16,dark);
           for(const da of[-.24,.24])B(a+da,b+.37,.035,.035,.5,.73,metal);B(a,b+.37,.50,.045,1.23,.04,dark);
         }
@@ -16631,7 +16661,13 @@ export function build(K) {
     '2F':[1628,666,1650,730],  // upper landing between Bulgari and Tiffany
     '3F':[1160,867,1155,920], // Omega and Breguet
     '4F':[994,790,1238,790],  // from the cross-wing passage towards the shoe hall
-    '5F':[1534,837,1634,854], // bag aisle opposite vunque and DAKS
+    '5F':[1520,860,1634,854], // supported landing near the bag aisle
+    '6F':[1635,690,1690,690], // Rimowa
+    '7F':[448,623,448,563], // PXG
+    '8F':[1190,866,1135,866], // Onitsuka Tiger
+    '9F':[1193,916,1140,916], // Focal
+    '10F':[1219,735,1150,735], // Bugaboo
+    '11F':[1270,793,1270,750], // dining aisle beside Il Forno
   };
   for (const id of Object.keys(upperGuidePlans)) {
     const name=`${id} ${upperCats[id]}`;
@@ -16776,7 +16812,7 @@ export const upperGuidePlans = {};
   c('아디다스',51,567,190,720,'E');c('프리스비 (애플)',28,721,164,845,'E','elec');c('데상트',51,845,164,965,'E');
   c('라코스테 스포츠',190,690,270,785,'W');c('휠라',271,690,350,738,'E');c('르꼬끄',271,739,350,785,'E');
   r([429,511,591],643,701,'디아도라|커버낫');c('브라운브레스',808,593,895,672,'W');c('디스커버리',808,673,895,760,'W');c('데우스 엑스 마키나',896,661,956,760,'W');
-  c('슈퍼드라이',645,679,766,729,'E');c('락피쉬웨더웨어',645,730,766,775,'E');c('다이나핏',190,807,270,903,'W');c('반스',271,807,350,855,'E');c('디앤드렉션',271,856,350,903,'E');
+  c('슈퍼드라이',645,679,766,729,'E');c('락피쉬웨더웨어',645,730,766,775,'E');c('다이나핏',190,807,270,903,'W');c('반스',271,807,350,855,'E');c('디앤드퀘스천',271,856,350,903,'E');
   c('지샥',362,771,386,828,'W','watch');r([397,499,579],895,952,'엄브로|LEE','N');c('이미스',645,804,766,852,'E');c('글로니',645,853,766,897,'E');
   c('에잇디비전',794,822,888,1001,'W');c('포터리',889,822,953,932,'W');c('외국인 통합서비스센터',142,938,217,996,'E','service');c('상품권숍 · 고객서비스센터 (신한·삼성·BC카드)',246,928,397,1024,'N','service');
   r([397,481,549,577],979,1090,'MLB|마리떼 프랑소와 저버|로우로우','N');r([602,690,772],932,1024,'브라운야드|마르디 메크르디','N');
@@ -16794,7 +16830,7 @@ export const upperGuidePlans = {};
   c('RO 레스트 오브젝트',167,631,211,698,'W');c('팝업',212,631,262,665,'N','popup');c('에싸',212,666,262,698,'S');c('팝업',263,631,314,698,'E','popup');
   r([341,402,467,533,595],631,686,'프레쉬 파인드|코지네스트|세사|클라르하임');c('랄프로렌홈',624,631,772,687,'E');c('팝업',624,688,772,771,'E','popup');
   r([167,229,314],724,845,'허먼 밀러|USM','W');c('팝업',322,773,340,814,'W','popup');c('더 조선 호텔',800,569,850,671,'W');c('바카라',800,672,850,760,'W');c('피숀',851,632,962,760,'W');
-  c('에르뻬 보쎄',167,885,234,952,'W');c('칼한센',235,885,314,921,'E');c('보컨셉',235,922,314,952,'E');r([341,474,595],897,952,'타임&스타일|몰테니&C','N');
+  c('에르뽀 · 보쎄',167,885,234,952,'W');c('칼한센',235,885,314,921,'E');c('보컨셉',235,922,314,952,'E');r([341,474,595],897,952,'타임&스타일|몰테니&C','N');
   c('로쉐보보아',624,812,772,883,'E');c('보에',624,884,772,952,'E');r([800,860,913,962],823,916,'에르메스 메종|크리스토플|라리끄','N');c('생루이',800,917,860,1015,'W');
   r([143,235,327,603,699,783],976,1078,'까시나|에드라|놀/폴트로나프라우/체코티콜레지오니|비앤비 이탈리아|라잇나우','N');
   c('고객상담실 · 퇴점브랜드 수선 접수 센터',1056,447,1231,518,'S','service');c('JAJU 테이블',1231,447,1603,544,'S','rest');c('쿠킹스튜디오 (쿠쿠/에피큐리언)',1426,510,1603,546,'S','kitchen');
