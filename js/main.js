@@ -2,6 +2,8 @@ import * as THREE from 'three';
 import { createDaylight, timeModes } from './daylight.js';
 import { createPhysics, createPlayer } from './physics.js';
 import { createKit } from './kit.js';
+import { applyRoadEdits } from './blender-roads.js';
+import { drawBlenderBuilding } from './blender-buildings.js';
 import { buildCity, createTraffic } from './city.js';
 import { PLACES } from './places/index.js';
 import { createMap } from './map.js';
@@ -40,7 +42,7 @@ async function boot() {
   if (AREA.id !== 'all') status(`${areaName(AREA.id, META)} 불러오는 중…`);
   const wantIds = Q.get('places') ? Q.get('places').split(',') : PLACES.filter(id => AREA.modules.includes(id));
   const modP = wantIds.map(id => import(`./places/${id}.js`).then(m => ({ id, m }), e => ({ id, e })));
-  const osm = await osmP; mark('osm');
+  const osm = applyRoadEdits(await osmP); mark('osm');
 
   // Quality: ?q=low forces the light path (no MSAA, lower pixel-ratio ceiling); phones and small-memory devices
   // pick it automatically. Geometry is never reduced — only the render resolution adapts (see adaptResolution).
@@ -163,9 +165,12 @@ async function boot() {
           const z = b.poly.reduce((sum,v) => sum + v[1], 0) / b.poly.length;
           const ground = relief(x,z);
           const base = b.minHeight || Math.min(0,...b.poly.map(v => relief(...v)-ground));
-          K.withTerrainAnchor(x,z,() => K.prism(b.poly, base, h, {
-            mat: { tex: 'concrete', color: 0xd3cbbf }, holes: b.holes, solid: AREA.lodSolid !== false,
-          }));
+          K.withTerrainAnchor(x,z,() => {
+            const authored=drawBlenderBuilding(K,b,0xffffff,'landmark');
+            K.prism(b.poly,base,h,{mat:{tex:'concrete',color:0xd3cbbf},holes:b.holes,
+              side:authored ? false : undefined,top:authored ? false : undefined,
+              bottom:authored ? false : undefined,solid:AREA.lodSolid!==false});
+          });
         } catch (e) { }
       }
     }
@@ -320,7 +325,11 @@ async function boot() {
   const canvas = renderer.domElement;
   const lock = e => {
     if (e?.pointerType === 'touch' || e?.sourceCapabilities?.firesTouchEvents) return;
-    if (!SHOT && !menuOpen && !map.isOpen()) canvas.requestPointerLock?.();
+    if (!SHOT && !menuOpen && !map.isOpen() && document.hasFocus() && canvas.isConnected) {
+      canvas.requestPointerLock?.()?.catch(error => {
+        if (!['WrongDocumentError','NotAllowedError','AbortError','SecurityError'].includes(error.name)) console.warn(error);
+      });
+    }
   };
   canvas.addEventListener('click', lock);
   $('start').addEventListener('click', e => { $('start').classList.add('hidden'); lock(e); });

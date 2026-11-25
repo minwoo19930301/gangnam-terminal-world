@@ -83,6 +83,17 @@
     ],
     "scope": "이랜드 층별안내에서 1·2관의 영업층은 B1~5F, 3관은 1F 푸드. 이번 작업은 1·2관 2~5F의 대표 점포·코너 50곳과 이를 잇는 복도를 구현했다.",
     "layout": "공식 안내도에 표시된 상호·층과 상대 배열을 참조했다. 좌표·북쪽·층고·구획 폭·대표 매장 사이의 길이·가구 배치는 근사값이다. 모든 점포의 경계를 복원한 것은 아니다. 층별 엘리베이터, 에스컬레이터와 계단의 현장 위치·수량은 미측정이다. 1·2관 에스컬레이터 및 카트 무빙워크는 retail_transfers_and_ashley에서 별도로 검토했다.",
+    "sixth_floor_model_check": {
+      "checked": "2026-11-26",
+      "official_guides": {
+        "1관": "https://www.elandretail.com/store02.do?BDID=0003001B&branchID=00110001&lang=000600KO",
+        "2관": "https://www.elandretail.com/store02.do?BDID=0003002B&branchID=00110001&lang=000600KO",
+        "3관": "https://www.elandretail.com/store02.do?BDID=0003003B&branchID=00110001&lang=000600KO"
+      },
+      "result": "공식 영업층 안내에서 1관은 B1~5F(최상층 전문식당가·문화센터·VIP라운지), 2관은 B1~5F(최상층 남성·골프), 3관은 1F 푸드만 확인했다. 세 관 모두 6층 이상에 고객용 매장을 확인할 근거가 없다. 주차타워의 층 표기로 매장 유무나 건물 전체 층수를 판단할 수 없다.",
+      "browser_check": "Chrome에서 게임의 뉴코아 5F 주소로 입장해 두 관의 5층 목적지에서 층·용도 표시를 확인했다. 등록된 구역과 엘리베이터 메뉴 자료에는 3관 1F 식당가·카페, 옥상 주차장이 구분되며 별도 주차동 1~4F는 모두 주차장이다. 이 네 건물에서 6층 이상 상업층을 표시하는 항목은 0개였다.",
+      "parking_scope": "3관 옥상 주차장 및 별도 주차동의 실제 데크 수, 높이, 현재 개방 여부는 공식 판매층 안내의 조사 범위 밖이다."
+    },
     "sixth_floor_evidence": [
       {
         "url": "https://www.elandretail.com/store02.do?BDID=0003003B&branchID=00110001&lang=000600KO",

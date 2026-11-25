@@ -1,3 +1,8 @@
+import { visitors } from '../assets/models/visitors/geometry.js';
+import { drawHardware } from '../assets/models/street-and-lift/draw.js';
+import { makeStep, drawStepRails } from '../assets/models/staircase/render.js';
+import { createEscalatorRenderer } from '../assets/models/escalator/render.js';
+import { treeInstances } from './streetscape.js';
 import { createRiverWater } from './river-water.js';
 import { fleetInstances, vehicleSize } from './fleet.js';
 import { relief, terrainPieces } from './banpo_relief.js';
@@ -255,7 +260,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
   // extruded polygon. opts: mat, top, bottom (false to skip), side, holes, solid(default true), walkTop(default=solid), floorH
   function prism(poly, y0, y1, o = {}) {
     const sp = spec(o.mat, o.color);
-    const spSide = o.side !== undefined ? spec(o.side) : sp;
+    const spSide = o.side === undefined || o.side === false ? sp : spec(o.side);
     const ns = orient(poly);
     let u = 0;
     if (o.side !== false) for (let i = 0; i < poly.length; i++) {
@@ -373,20 +378,25 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     const sp = spec(o.mat ?? (o.steps ? 'darkstone' : 'concrete'));
     if (o.steps) {
       const rise = Math.abs(yb - ya), n = Math.max(1, Math.round(rise / 0.17)), run = L / n, dir = Math.sign(yb - ya) || 1;
+      const nosing = o.nosing === undefined ? null : spec(o.nosing);
+      const drawStep = o.blenderTreads || o.move ? null : makeStep(quad,tri,w,run,rise/n,dir,ux,uz,sp,nosing);
       for (let i = 0; i < n; i++) {
         const t0 = i * run, t1 = (i + 1) * run; const yTop = ya + dir * (i + 1) * rise / n; const yLow = Math.min(ya, yb) - 0.2;
         const cx0 = ax + ux * t0, cz0 = az + uz * t0, cx1 = ax + ux * t1, cz1 = az + uz * t1;
         const stepY = dir > 0 ? yTop : ya + dir * i * rise / n;
-        // tread
-        quad(sp, [[cx0 + nx, stepY, cz0 + nz], [cx1 + nx, stepY, cz1 + nz], [cx1 - nx, stepY, cz1 - nz], [cx0 - nx, stepY, cz0 - nz]], [0, 1, 0], [[0, 0], [w, 0], [w, run], [0, run]]);
-        if (o.nosing !== undefined) {
-          const edge = dir > 0 ? t0 : t1, inset = Math.min(.029, run * .13) * dir;
-          const P = (along, side) => [ax + ux * along + nx * side, stepY + .003, az + uz * along + nz * side];
-          quad(spec(o.nosing), [P(edge,-1), P(edge,1), P(edge+inset,1), P(edge+inset,-1)], [0,1,0], [[0,0],[1,0],[1,1],[0,1]]);
+        if (drawStep) drawStep(dir>0 ? cx0 : cx1,stepY,dir>0 ? cz0 : cz1);
+        else if (!o.blenderTreads) {
+          // Legacy place-authored moving steps keep their independent treads and motion.
+          quad(sp, [[cx0 + nx, stepY, cz0 + nz], [cx1 + nx, stepY, cz1 + nz], [cx1 - nx, stepY, cz1 - nz], [cx0 - nx, stepY, cz0 - nz]], [0, 1, 0], [[0, 0], [w, 0], [w, run], [0, run]]);
+          if (nosing) {
+            const edge = dir > 0 ? t0 : t1, inset = Math.min(.029, run * .13) * dir;
+            const P = (along, side) => [ax + ux * along + nx * side, stepY + .003, az + uz * along + nz * side];
+            quad(nosing, [P(edge,-1), P(edge,1), P(edge+inset,1), P(edge+inset,-1)], [0,1,0], [[0,0],[1,0],[1,1],[0,1]]);
+          }
+          // riser (front)
+          const rx = dir > 0 ? cx0 : cx1, rz = dir > 0 ? cz0 : cz1, rLow = stepY - rise / n;
+          quad(sp, [[rx - nx, rLow, rz - nz], [rx + nx, rLow, rz + nz], [rx + nx, stepY, rz + nz], [rx - nx, stepY, rz - nz]], [-ux * dir, 0, -uz * dir], [[0, 0], [1, 0], [1, 0.2], [0, 0.2]]);
         }
-        // riser (front)
-        const rx = dir > 0 ? cx0 : cx1, rz = dir > 0 ? cz0 : cz1, rLow = stepY - rise / n;
-        quad(sp, [[rx - nx, rLow, rz - nz], [rx + nx, rLow, rz + nz], [rx + nx, stepY, rz + nz], [rx - nx, stepY, rz - nz]], [-ux * dir, 0, -uz * dir], [[0, 0], [1, 0], [1, 0.2], [0, 0.2]]);
         // side skirts
         const ss = spec(o.sideMat ?? 0x8c8882);
         quad(ss, [[cx0 + nx, yLow, cz0 + nz], [cx1 + nx, yLow, cz1 + nz], [cx1 + nx, stepY, cz1 + nz], [cx0 + nx, stepY, cz0 + nz]], [nx, 0, nz], [[0, 0], [1, 0], [1, 1], [0, 1]]);
@@ -403,38 +413,34 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     }
     if (o.rails !== false) {
       const rm = spec(o.railMat ?? 0x8a9096);
+      const profiled = o.steps && !o.blenderTreads && !o.move;
+      if (profiled) drawStepRails(quad,tri,ax,az,bx,bz,ya,yb,w,ux,uz,rm);
       for (const sgn of [1, -1]) {
         const ox = nx * sgn, oz = nz * sgn;
-        quad(rm, [[ax + ox, ya + 0.9, az + oz], [bx + ox, yb + 0.9, bz + oz], [bx + ox, yb + 1.0, bz + oz], [ax + ox, ya + 1.0, az + oz]], [ox, 0, oz], [[0, 0], [1, 0], [1, 1], [0, 1]]);
+        if (!profiled) quad(rm, [[ax + ox, ya + 0.9, az + oz], [bx + ox, yb + 0.9, bz + oz], [bx + ox, yb + 1.0, bz + oz], [ax + ox, ya + 1.0, az + oz]], [ox, 0, oz], [[0, 0], [1, 0], [1, 1], [0, 1]]);
         if (o.railWalls !== false) slopedWall(ax + ox, az + oz, bx + ox, bz + oz, ya, yb, 1.0);
       }
     }
     const mv = o.move ? [ux * o.move, uz * o.move] : null;
     phys.addRamp(ax, az, bx, bz, w / 2, ya, yb, { move: mv, tag: current });
   }
+  const drawEscalator = createEscalatorRenderer(THREE, addMesh, onFrame);
   function escalator(ax, az, bx, bz, o = {}) {
     const w = o.w ?? 1.1, ya = o.ya ?? 0, yb = o.yb ?? 5;
     const L = Math.hypot(bx - ax, bz - az), ux = (bx - ax) / L, uz = (bz - az) / L;
-    const tread = texture('escalator-ribbed-tread', 256, 32, (g,w,h) => {
-      g.fillStyle = '#858b8e'; g.fillRect(0,0,w,h);
-      for (let i=0;i<w;i+=4) {
-        g.fillStyle='#50595d'; g.fillRect(i,0,1,h);
-        g.fillStyle='#a2a9aa'; g.fillRect(i+2,0,1,h);
-      }
-    }, [1,1]);
-    ramp(ax, az, bx, bz, { w, ya, yb, steps: true, mat: o.mat ?? tread, sideMat: o.sideMat ?? 0xc7ccd1, rails: false, nosing: 0xcba83b });
-    const plate = spec(tread);
-    for (const [x,z,y,sign] of [[ax,az,ya,-1],[bx,bz,yb,1]]) {
-      const P = (along, across) => [x+ux*along-uz*across, y+.009, z+uz*along+ux*across];
-      const half=w/2, length=.33*sign;
-      quad(plate,[P(0,-half),P(0,half),P(length,half),P(length,-half)],[0,1,0],[[0,0],[w,0],[w,.33],[0,.33]]);
-    }
+    ramp(ax, az, bx, bz, {w, ya, yb, steps:true, blenderTreads:true, sideMat:o.sideMat ?? 0xc7ccd1, rails:false});
+    const a = [ax, ya + terrainAt(anchorHeight,ax,az), az], b = [bx, yb + terrainAt(anchorHeight,bx,bz), bz];
+    const tread = o.mat != null ? spec(o.mat) : null;
+    const map = tread && tread.key !== 'vc' ? matFor(tread.key).map : null;
+    const tint = typeof o.mat === 'number' || o.mat?.color != null ? tread.c : null;
+    const steps = Math.max(2, Math.round(Math.abs(yb-ya)/.17));
+    const speed = (o.dir === 'down' ? -1 : 1) * (o.speed ?? .6);
+    drawEscalator(ya <= yb ? a : b, ya <= yb ? b : a, w, steps, speed, tint, map);
     const nx = -uz * (w / 2 + 0.08), nz = ux * (w / 2 + 0.08);
-    const gl = spec('glass'), hr = spec(0x1c1c1c);
+    const gl = spec('glass');
     for (const s of [1, -1]) {
       const ox = nx * s, oz = nz * s;
       quad(gl, [[ax + ox, ya, az + oz], [bx + ox, yb, bz + oz], [bx + ox, yb + 0.95, bz + oz], [ax + ox, ya + 0.95, az + oz]], [ox, 0, oz], [[0, 0], [1, 0], [1, 1], [0, 1]]);
-      quad(hr, [[ax + ox, ya + 0.95, az + oz], [bx + ox, yb + 0.95, bz + oz], [bx + ox, yb + 1.05, bz + oz], [ax + ox, ya + 1.05, az + oz]], [ox, 0, oz], [[0, 0], [1, 0], [1, 1], [0, 1]]);
       slopedWall(ax + ox, az + oz, bx + ox, bz + oz, ya, yb, 1.05);
     }
     // underside truss
@@ -501,7 +507,14 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
   }
   // instanced things
   // trees count as ground clutter (ny 1) for area filtering
-  function tree(x, z, o = {}) { if (keep && !keep(current, x, o.y ?? 0, z, 1)) return; trees.push({ place: current, x, z, y: (o.y ?? 0) + (anchorHeight===null ? 0 : terrainAt(anchorHeight,x,z)-relief(x,z)), h: o.h ?? (6 + ((x * 13.7 + z * 7.3) % 3)), kind: o.kind ?? 'zelkova' }); }
+  function tree(x, z, o = {}) {
+    if (keep && !keep(current, x, o.y ?? 0, z, 1)) return;
+    const [sourceX, sourceZ] = o.sourceXZ ?? [x, z];
+    const y = (o.y ?? 0) + (anchorHeight === null ? 0 : terrainAt(anchorHeight,x,z) - relief(x,z));
+    const t = { place: current, x, z, y, h: o.h ?? (6 + ((sourceX * 13.7 + sourceZ * 7.3) % 3)), kind: o.kind ?? 'zelkova' };
+    if (o.sourceXZ) t.sourceXZ = o.sourceXZ;
+    trees.push(t);
+  }
   function person(x, y, z, o = {}) { if (keep && !keep(current, x, y, z, 1)) return; people.push({ place: current, x, y:y + (anchorHeight===null ? 0 : terrainAt(anchorHeight,x,z)-relief(x,z)), z, rotY: o.rotY ?? ((x * 7 + z * 3) % 6.28), shirt: o.shirt, pants: o.pants, h: o.h ?? (1.6 + ((x * 31 + z * 17) % 0.25)), sit: !!o.sit }); }
   function crowd(poly, y, n, o = {}) { const rnd = rand(o.seed ?? (poly[0][0] * 1000 + poly[0][1])); const bb = polyBBox(poly); let k = 0, guard = 0; while (k < n && guard++ < n * 30) { const x = bb[0] + rnd() * (bb[2] - bb[0]), z = bb[1] + rnd() * (bb[3] - bb[1]); if (pointInPoly(x, z, poly)) { person(x, y, z, { rotY: rnd() * 6.28 }); k++; } } }
   // Parked vehicles share the traffic meshes. kind: car|taxi|bus|cityBus|truck|van
@@ -544,15 +557,13 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
         const fx = (poly[2][0] + poly[3][0]) / 2 + nx * 0.09, fz = (poly[2][1] + poly[3][1]) / 2 + nz * 0.09;
         sign([f.label], { x: fx + nx * 0.02, y: f.y + 2.45, z: fz + nz * 0.02, w: 0.5, h: 0.25, rotY, bg: '#111', fg: '#ff5a2a' });
         const doorWidth = Math.min(1.2, w-.3), tx = Math.cos(rotY), tz = -Math.sin(rotY);
-        const trim = (side, bottom, width, height, depth, mat, offset=0) => box({
-          x:fx+tx*side+nx*offset, z:fz+tz*side+nz*offset, y:f.y+bottom,
-          w:width,h:height,d:depth,rotY,mat,solid:false,
-        });
-        for (const side of [-1,1]) trim(side*(doorWidth/2+.045),0,.075,2.40,.09,0x939c9f);
-        trim(0,2.38,doorWidth+.15,.08,.09,0xacb1b1);
-        trim(0,.002,doorWidth,.012,.18,0x747b7c);
+        for (const sign of [-1,1]) {
+          const offset=sign*(doorWidth/2+.045);
+          drawHardware(K,'LiftJamb',fx+tx*offset,f.y,fz+tz*offset,rotY,sign);
+        }
+        drawHardware(K,'LiftHead',fx,f.y,fz,rotY,doorWidth+.15);
         const side = doorWidth/2 + .195;
-        trim(side,.98,.145,.28,.047,0x565e63,.02);
+        drawHardware(K,'LiftCallPlate',fx+tx*side,f.y,fz+tz*side,rotY);
         const buttons = [];
         if (f.y < ys.at(-1)) buttons.push('▲');
         if (f.y > ys[0]) buttons.push('▼');
@@ -627,7 +638,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     for (const m of lodList) {
       const bb = m.userData.bb || m.userData.lodBB || (m.userData.lodBB = (() => { const b = new THREE.Box3(), M = new THREE.Matrix4(), V = new THREE.Vector3(); for (let i = 0; i < m.count; i++) { m.getMatrixAt(i, M); b.expandByPoint(V.setFromMatrixPosition(M)); } return [b.min.x, b.min.z, b.max.x, b.max.z]; })());
       const dx = x < bb[0] ? bb[0] - x : x > bb[2] ? x - bb[2] : 0, dz = z < bb[1] ? bb[1] - z : z > bb[3] ? z - bb[3] : 0;
-      const g = Math.hypot(dx, dz) > 150 ? m.userData.lod[1] : m.userData.lod[0];
+      const g = Math.hypot(dx, dz) > (m.userData.lodDistance ?? 150) ? m.userData.lod[1] : m.userData.lod[0];
       if (m.geometry !== g) m.geometry = g;
     }
   }
@@ -840,33 +851,27 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
       }
     }
     if (trees.length > treesDone) {
-      const trunk = new THREE.CylinderGeometry(0.12, 0.2, 1, 6); trunk.translate(0, 0.5, 0);
-      const crown = new THREE.IcosahedronGeometry(1, 1); crown.translate(0, 0, 0);
-      // far trees (beyond ~150 m) swap to coarser geometry: same silhouette and colour at a quarter of the triangles
-      const trunkLo = new THREE.CylinderGeometry(0.12, 0.2, 1, 3); trunkLo.translate(0, 0.5, 0);
-      const crownLo = new THREE.IcosahedronGeometry(1, 0);
-      const mt = new THREE.MeshLambertMaterial({ color: 0x5b4636 });
-      const mc = new THREE.MeshLambertMaterial({ color: 0xffffff });
-      const pal = { zelkova: [0x4f7f3a, 0x5c8a40, 0x46733a], ginkgo: [0x8fae3c, 0x9db845, 0x7fa035], pine: [0x2f5a35, 0x36603a], cherry: [0x6f9a4a, 0x7da653], maple: [0x7a8f3a, 0x8a5a2a] };
-      const t0 = treesDone; treesDone = trees.length;
-      for (const g of groupBy(trees.length - t0, i => [trees[t0 + i].x, trees[t0 + i].y, trees[t0 + i].z, trees[t0 + i].place])) {
-        const it = new THREE.InstancedMesh(trunk, mt, g.idx.length), ic = new THREE.InstancedMesh(crown, mc, g.idx.length);
-        g.idx.forEach((ti, i) => {
-          const t = trees[t0 + ti], h = t.h; M.compose(V.set(t.x, t.y, t.z), Q.identity(), S.set(1, h * 0.45, 1)); it.setMatrixAt(i, M);
-          const cr = t.kind === 'pine' ? [1.6, h * 0.35, 1.6] : t.kind === 'ginkgo' ? [1.5, h * 0.42, 1.5] : [h * 0.33, h * 0.3, h * 0.33];
-          M.compose(V.set(t.x, t.y + h * 0.62, t.z), Q.setFromAxisAngle(V.clone().set(0, 1, 0), (t.x * 3 + t.z) % 6), S.set(...cr)); ic.setMatrixAt(i, M);
-          const p = pal[t.kind] || pal.zelkova; ic.setColorAt(i, C.setHex(p[Math.abs(Math.round(t.x * 7 + t.z * 3)) % p.length]));
-        });
-        it.instanceMatrix.needsUpdate = ic.instanceMatrix.needsUpdate = true; if (ic.instanceColor) ic.instanceColor.needsUpdate = true;
-        scene.add(it, ic); track(it, g.cell); track(ic, g.cell);
-        it.userData.lod = [trunk, trunkLo]; ic.userData.lod = [crown, crownLo]; lodList.push(it, ic);
+      const first = treesDone;
+      treesDone = trees.length;
+      for (const group of groupBy(treesDone - first, i => {
+        const t = trees[first + i]; return [t.x, t.y, t.z, t.place];
+      })) {
+        for (const mesh of treeInstances(THREE, group.idx.map(i => trees[first + i]))) {
+          scene.add(mesh);
+          track(mesh, group.cell);
+          lodList.push(mesh);
+        }
       }
     }
     if (people.length > peopleDone) {
       // People: low-poly figures (legs, shoes, torso with arms, neck/head/hands, hair, some carry a shopping bag),
       // built for a 1.7 m person and scaled per instance; standing and seated variants; each instance faces rotY.
-      const P = personGeos || (personGeos = makePersonGeos());
-      const mats = personMats || (personMats = { cloth: new THREE.MeshLambertMaterial({ color: 0xffffff }), skin: new THREE.MeshLambertMaterial({ color: 0xffffff }), shoe: new THREE.MeshLambertMaterial({ color: 0x232323 }) });
+      const P = visitors;
+      const mats = personMats || (personMats = {
+        cloth: new THREE.MeshLambertMaterial({vertexColors:true}),
+        skin: new THREE.MeshLambertMaterial({vertexColors:true}),
+        shoe: new THREE.MeshLambertMaterial({color:0x232323,vertexColors:true})
+      });
       const shirts = [0x2b3a55, 0xf2f2f2, 0x9b2c2c, 0x1d1d1d, 0xc9b28a, 0x4a6b3a, 0x7a5aa0, 0xe8a0a0, 0x3b6ea8, 0x6a6a6a, 0xd9cbb3, 0x8a3b4f, 0xf0e3c8, 0x2f5e5a];
       const pants = [0x1e2430, 0x2b2b2b, 0x4a4a55, 0x22314f, 0x7a6a55, 0xc8bba4, 0x3a3a3a, 0x5d6b7a];
       const skins = [0xe0b896, 0xd8ab84, 0xecc8a6, 0xc99a74, 0xe6bf9b];
@@ -891,42 +896,22 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
             hair.setColorAt(i, C.setHex(hairs[(hx >>> 11) % hairs.length]));
             if (bag && withBag.includes(pi0)) { bag.setMatrixAt(bi, M); bag.setColorAt(bi, C.setHex(bags[(hx >>> 5) % bags.length])); bi++; }
           });
-          for (const m of [legs, shoes, top, skin, hair, bag]) { if (!m) continue; m.instanceMatrix.needsUpdate = true; if (m.instanceColor) m.instanceColor.needsUpdate = true; scene.add(m); track(m, g.cell); }
+          for (const mesh of [legs,shoes,top,skin,hair,bag]) {
+            if (!mesh) continue;
+            mesh.instanceMatrix.needsUpdate=true;
+            if (mesh.instanceColor) mesh.instanceColor.needsUpdate=true;
+            mesh.userData.lod=[mesh.geometry,P[mesh.geometry.name+'Far']];
+            mesh.userData.lodDistance=40;
+            scene.add(mesh);
+            track(mesh,g.cell);
+            lodList.push(mesh);
+          }
         }
       }
     }
   }
-  let personGeos = null, personMats = null;
+  let personMats = null;
   const V2 = new THREE.Vector3();
-  // one geometry per body part for all people (metres, a 1.7 m person standing at the origin facing +z)
-  function makePersonGeos() {
-    const parts = list => { // merge non-indexed copies of the given positioned geometries
-      const geos = list.map(([g, x, y, z, rx = 0, rz = 0]) => { const q = g.index ? g.toNonIndexed() : g.clone(); if (rx) q.rotateX(rx); if (rz) q.rotateZ(rz); q.translate(x, y, z); return q; });
-      let n = 0; for (const q of geos) n += q.attributes.position.count;
-      const pos = new Float32Array(n * 3), nor = new Float32Array(n * 3); let o = 0;
-      for (const q of geos) { pos.set(q.attributes.position.array, o * 3); nor.set(q.attributes.normal.array, o * 3); o += q.attributes.position.count; }
-      const out = new THREE.BufferGeometry(); out.setAttribute('position', new THREE.BufferAttribute(pos, 3)); out.setAttribute('normal', new THREE.BufferAttribute(nor, 3)); out.computeBoundingSphere(); return out;
-    };
-    const cyl = (r0, r1, h, seg = 7) => new THREE.CylinderGeometry(r1, r0, h, seg, 1);
-    const box = (w, h, d) => new THREE.BoxGeometry(w, h, d);
-    const sph = (r, w = 8, hh = 6) => new THREE.SphereGeometry(r, w, hh);
-    const leg = cyl(0.062, 0.05, 0.74), arm = cyl(0.04, 0.034, 0.56, 6);
-    const torso = cyl(0.17, 0.15, 0.56, 8); torso.scale(1, 1, 0.62);
-    return {
-      legs: parts([[leg, -0.085, 0.45, 0], [leg, 0.085, 0.45, 0], [box(0.32, 0.12, 0.2), 0, 0.82, 0]]),
-      shoes: parts([[box(0.1, 0.07, 0.24), -0.085, 0.035, 0.03], [box(0.1, 0.07, 0.24), 0.085, 0.035, 0.03]]),
-      top: parts([[torso, 0, 1.13, 0], [arm, -0.215, 1.11, 0, 0, -0.08], [arm, 0.215, 1.11, 0, 0, 0.08], [sph(0.058, 6, 4), -0.19, 1.37, 0], [sph(0.058, 6, 4), 0.19, 1.37, 0]]),
-      skin: parts([[cyl(0.045, 0.045, 0.08, 6), 0, 1.45, 0], [sph(0.105), 0, 1.57, 0.01], [sph(0.04, 6, 4), -0.24, 0.81, 0], [sph(0.04, 6, 4), 0.24, 0.81, 0]]),
-      hair: parts([[(() => { const h = new THREE.SphereGeometry(0.112, 8, 5, 0, Math.PI * 2, 0, Math.PI * 0.55); return h; })(), 0, 1.585, -0.008]]),
-      bag: parts([[box(0.26, 0.32, 0.1), 0.3, 0.62, 0], [box(0.02, 0.18, 0.02), 0.3, 0.86, 0]]),
-      sitHair: parts([[(() => new THREE.SphereGeometry(0.112, 8, 5, 0, Math.PI * 2, 0, Math.PI * 0.55))(), 0, 1.275, -0.008]]),
-      // seated: thighs forward at chair height (0.45), shins down, arms resting forward
-      sitLegs: parts([[box(0.13, 0.13, 0.46), -0.085, 0.47, 0.2], [box(0.13, 0.13, 0.46), 0.085, 0.47, 0.2], [cyl(0.05, 0.045, 0.42), -0.085, 0.22, 0.42], [cyl(0.05, 0.045, 0.42), 0.085, 0.22, 0.42]]),
-      sitShoes: parts([[box(0.1, 0.07, 0.24), -0.085, 0.035, 0.47], [box(0.1, 0.07, 0.24), 0.085, 0.035, 0.47]]),
-      sitTop: parts([[torso, 0, 0.82, 0], [arm, -0.215, 0.8, 0.12, -0.55, -0.05], [arm, 0.215, 0.8, 0.12, -0.55, 0.05], [sph(0.058, 6, 4), -0.19, 1.06, 0], [sph(0.058, 6, 4), 0.19, 1.06, 0]]),
-      sitSkin: parts([[cyl(0.045, 0.045, 0.08, 6), 0, 1.14, 0], [sph(0.105), 0, 1.26, 0.01], [sph(0.04, 6, 4), -0.22, 0.62, 0.3], [sph(0.04, 6, 4), 0.22, 0.62, 0.3]]),
-    };
-  }
 
   // ---------- lazy detail groups ----------
   // K.detail({floor, y0, y1, poly|rect}, fn): fn builds furnishing detail (stock, furniture, fixtures, signage,
@@ -971,6 +956,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     box, prism, slab, wall, polyWalls, ramp, stairs: (ax, az, bx, bz, o = {}) => ramp(ax, az, bx, bz, { ...o, steps: true }), escalator, cyl, dome, sign, floorText,
     tree, person, crowd, vehicle, zone, spawn, interact, portal, elevator, groundHole, onFrame, addMesh, texture, material, mapMark, detail,
     osmBuilding, osmFind, claim, rand, quad: (mat, p, n, uvs) => quad(spec(mat), p, n, uvs || [[0, 0], [1, 0], [1, 1], [0, 1]]), hpoly: (mat, poly, y, up = true, holes) => hpoly(spec(mat), poly, y, up, holes),
+    triangle: (mat, points, normal, uv) => tri(spec(mat), points, normal, uv),
     pointInPoly, polyBBox, polyArea, orient,
     // internals for engine
     _: { bounce, cull, cullList, finalize, details, detailErrors, ensureDetail, buildAllDetail, frameFns, interactables, spawns, zonesList, elevators, claims, mapMarks, groundHoles, stats, atlas, trees, people, setCurrent: (id, meta) => { current = id; if (meta) perPlace[id] = meta; } },

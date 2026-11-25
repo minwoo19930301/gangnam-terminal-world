@@ -1,3 +1,8 @@
+import { applyRoadEdits } from './blender-roads.js';
+import { drawHardware } from '../assets/models/street-and-lift/draw.js';
+import { streetPlacement } from './street-layout.js';
+import { drawBlenderBuilding } from './blender-buildings.js';
+import { addStreetLamps } from './streetscape.js';
 import { withJamwonInlet } from './river-water.js';
 import { height as perstigeHeight, panels as perstigePanels } from '../assets/models/perstige/panels.js';
 import { fleetInstances, vehicleContacts } from './fleet.js';
@@ -11,12 +16,14 @@ const SIGNAL_ROADS = new Set(['primary', 'secondary', 'tertiary']);
 const PAINT = { white: 0xf4f1e6, yellow: 0xf2c329, blue: 0x238bd2, pink: 0xe477a1, mint: 0x50cbb1 };
 const LAYER_H = 7.5;
 
-export function buildCity(K, osm, { claimedBuildings = new Set(), claimedRoads = new Set(), claimedAreas = new Set(), log = () => {} } = {}) {
+export function buildCity(K, osm, { claimedBuildings = new Set(), claimedRoads = new Set(), claimedAreas = new Set(), log = () => {}, inspectStreetPlacement, streetPlacementEdits } = {}) {
+  applyRoadEdits(osm);
   const { THREE } = K;
   const rnd = K.rand(42);
   const streetLampLens = new THREE.MeshLambertMaterial({color:0xb9c1c1,emissive:0xffddaa,emissiveIntensity:0});
   streetLampLens.name = '가로등 발광렌즈';
-  K.material('street-lamp-lens',streetLampLens);
+  const streetLamps = [];
+  const streetscape = streetPlacement(K, streetLamps, inspectStreetPlacement, streetPlacementEdits);
   K.onNight?.(night => { streetLampLens.emissiveIntensity = night ? 1.35 : 0; });
   // ---------- building index (for tree/POI placement tests) ----------
   const bGrid = new Map(); const CELL = 40;
@@ -166,7 +173,7 @@ export function buildCity(K, osm, { claimedBuildings = new Set(), claimedRoads =
     while (k < n && g++ < n * 8) {
       const x = bb[0] + rnd() * (bb[2] - bb[0]), z = bb[1] + rnd() * (bb[3] - bb[1]);
       if (!pointInPoly(x, z, poly) || (holes && holes.some(h => pointInPoly(x, z, h))) || buildingAt(x, z, 2) || onRoad(x, z, false, 1)) continue;
-      K.tree(x, z, { kind: rnd() < 0.2 ? 'pine' : rnd() < 0.5 ? 'cherry' : 'zelkova', h: 6 + rnd() * 6 }); k++;
+      streetscape.tree(x, z, { kind: rnd() < 0.2 ? 'pine' : rnd() < 0.5 ? 'cherry' : 'zelkova', h: 6 + rnd() * 6 }); k++;
     }
   }
   // residential landuse: apartment complex greenery
@@ -331,15 +338,11 @@ export function buildCity(K, osm, { claimedBuildings = new Set(), claimedRoads =
       for (let s = 4; s < segL; s += 10) for (const sg of [1, -1]) {
         const tx = x + dx * s + nx * off * sg, tz = z + dz * s + nz * off * sg;
         if (buildingAt(tx, tz, 1.5) || onRoad(tx, tz, true, 0.6)) continue;
-        K.tree(tx, tz, { kind: r.hw === 'primary' ? 'ginkgo' : 'zelkova', h: 7 + rnd() * 3 });
+        streetscape.tree(tx, tz, { kind: r.hw === 'primary' ? 'ginkgo' : 'zelkova', h: 7 + rnd() * 3 });
         if (Math.round(s) % 30 < 10) { // street lamp
           const lx = tx + dx * 5, lz = tz + dz * 5;
           if (!buildingAt(lx, lz, 1)) {
-            const rotY = Math.atan2(nx,nz);
-            K.cyl({x:lx,z:lz,r:.09,h:9,mat:0x6d7378,seg:6,solid:false});
-            K.box({x:lx-nx*sg*1.2,y:8.8,z:lz-nz*sg*1.2,w:.35,h:.18,d:2.4,rotY,mat:0x5a6066,solid:false});
-            K.box({x:lx-nx*sg*1.93,y:8.748,z:lz-nz*sg*1.93,w:.30,h:.052,d:.78,rotY,
-              mat:'street-lamp-lens',skip:['top'],solid:false});
+            streetscape.lamp(lx, lz, Math.atan2(-nx * sg, -nz * sg));
           }
         }
       }
@@ -528,20 +531,13 @@ export function buildCity(K, osm, { claimedBuildings = new Set(), claimedRoads =
         // The lens centre is 5.8 m above the lanes. The projecting backplate
         // separates the silhouette from the sky; each lamp has its own hood.
         const cy = 5.8;
-        K.box({ x, z, y: cy + 0.21, w: 0.055, h: 6.3 - cy - 0.21, d: 0.055, rotY, mat: 0x737e85, solid: false });
-        K.box({ x: x - p.dx * 0.18, z: z - p.dz * 0.18, y: cy - 0.32,
-          w: 1.49, h: 0.64, d: 0.045, rotY, mat: 0x141a1d, solid: false });
-        K.box({ x, z, y: cy - 0.21, w: 1.25, h: 0.42, d: 0.3, rotY, mat: 0x242a2d, solid: false });
+        drawHardware(K,'TrafficHousing',x,cy,z,rotY);
         for (let k = 0; k < 4; k++) {
           const off = (k - 1.5) * 0.3, hx = x + p.dz * off + p.dx * 0.16, hz = z - p.dx * off + p.dz * 0.16;
           const color = k === 0 ? (green ? 0x421e1b : 0xff4135) : k === 1 ? 0x493b16 : k === 2 ? 0x163c2a : (green ? 0x39e88a : 0x163c2a);
           if (k === 2) K.sign('←', { x: hx, z: hz, y: cy, w: 0.23, h: 0.23, rotY, bg: '#101a17', fg: '#265b3d' });
           else lens(hx, cy, hz, p.dx, p.dz, 0.115, { tex: 'emit', color });
-          K.box({ x: hx + p.dx * 0.1, z: hz + p.dz * 0.1, y: cy + 0.135,
-            w: 0.275, h: 0.035, d: 0.26, rotY, mat: 0x141a1d, solid: false });
-          for (const side of [-1, 1]) K.box({ x: hx + p.dx * 0.1 + p.dz * side * 0.126,
-            z: hz + p.dz * 0.1 - p.dx * side * 0.126, y: cy - 0.12,
-            w: 0.023, h: 0.255, d: 0.26, rotY, mat: 0x141a1d, solid: false });
+
         }
       }
       if (a.r.name) K.sign(a.r.name, { x: pole.x + ux * 1.5, z: pole.z + uz * 1.5, y: 5.82, w: 2.6, h: 0.48,
@@ -559,8 +555,7 @@ export function buildCity(K, osm, { claimedBuildings = new Set(), claimedRoads =
     roadStats.pedestrianSignals++; poleSites.push({ x, z, kind: 'pedestrian' });
     const rotY = Math.atan2(dx, dz);
     K.cyl({ x, z, r: 0.065, h: 3.1, seg: 6, mat: 0x737e85, solid: false });
-    K.box({ x: x - dx * 0.01, z: z - dz * 0.01, y: 2.19, w: 0.44, h: 0.84, d: 0.04, rotY, mat: 0x141a1d, solid: false });
-    K.box({ x: x + dx * 0.13, z: z + dz * 0.13, y: 2.25, w: 0.34, h: 0.72, d: 0.24, rotY, mat: 0x202629, solid: false });
+    drawHardware(K,'WalkHousing',x,2.61,z,rotY);
     for (const [walking, cy, lit] of [[false, 2.78, !green], [true, 2.44, green]]) {
       const mat = { tex: 'emit', color: lit ? (walking ? 0x42ed96 : 0xff4439) : 0x17322b };
       const P = (u, v) => [x + dx * 0.257 + dz * u * 1.15, cy + v * 1.15, z + dz * 0.257 - dx * u * 1.15];
@@ -731,9 +726,11 @@ export function buildCity(K, osm, { claimedBuildings = new Set(), claimedRoads =
     const lv = b.levels || Math.max(1, Math.round(b.height / 3.3));
     const floorH = Math.max(2.6, (b.height - b.minHeight) / lv);
     const tint = b.type === 'apartments' ? [0xf4f2ec, 0xeceae2, 0xf0ece4, 0xe6e6e0][b.id % 4] : [0xffffff, 0xf0ece6, 0xe8e4dc, 0xf6f0e8, 0xe0e4e8][b.id % 5];
-    K.prism(b.poly, b.minHeight, b.height, { mat: { tex: facade, color: tint }, top: { tex: 'roofgravel' }, bottom: false, floorH, holes: b.holes });
+    const authored = drawBlenderBuilding(K,b,tint);
+    K.prism(b.poly, b.minHeight, b.height, { mat: { tex: facade, color: tint }, side: authored ? false : undefined,
+      top: authored ? false : { tex: 'roofgravel' }, bottom: false, floorH, holes: b.holes });
     // parapet
-    if (b.height > 8) for (let i = 0; i < b.poly.length; i++) { const p = b.poly[i], q = b.poly[(i + 1) % b.poly.length]; K.wall(p[0], p[1], q[0], q[1], b.height, b.height + 0.9, { thick: 0.25, mat: 0xd8d6d0, solid: false }); }
+    if (!authored && b.height > 8) for (let i = 0; i < b.poly.length; i++) { const p = b.poly[i], q = b.poly[(i + 1) % b.poly.length]; K.wall(p[0], p[1], q[0], q[1], b.height, b.height + 0.9, { thick: 0.25, mat: 0xd8d6d0, solid: false }); }
     if (b.type === 'apartments' && b.height > 20) apartmentExtras(b, floorH);
   }
   function facadeFor(b) {
@@ -790,8 +787,9 @@ export function buildCity(K, osm, { claimedBuildings = new Set(), claimedRoads =
       K.sign(p.name.replace(/\(.*?\)/g, '').trim().slice(0, 18), { x, y: b.minHeight + floor * fh + (floor === 0 ? 3.0 : fh * 0.5), z, w: Math.min(4.6, L * 0.85), h: 0.75, rotY: Math.atan2(ns[bi][0], ns[bi][1]), bg, fg, offset: 0.12 });
     });
   }
+  addStreetLamps(K, streetLamps, streetLampLens);
   // OSM trees
-  for (const [x, z] of osm.trees) K.tree(x, z, { kind: 'zelkova' });
+  for (const [x, z] of osm.trees) streetscape.tree(x, z, { kind: 'zelkova' });
   log(`city: ${nb} buildings, ${roads.length} roads; ${roadStats.junctions} junctions, ${roadStats.signalised} signalised (${roadStats.renderedSignalised} unclaimed), ${roadStats.quads} road-detail quads`);
   return { buildingAt, onRoad, roads, roadStats, junctions: layout.junctions, poleSites, crossingSites };
 }

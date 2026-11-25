@@ -599,7 +599,9 @@ export function build(K) {
     const q=f.at(s,v);if(later(q.x,y,q.z,()=>bench(f,s,v,y)))return;
     box({x:q.x,z:q.z,y:y+.42,w:.65,h:.11,d:3.5,rotY:q.rot,mat:'metal',solid:true,
       skip:['n','s','w','e','top','bottom']});
-    mountFixture(K,stationSeats,'StationSeat',[q.x,y,q.z],Math.atan2(-q.uz,q.ux));
+    // The backrest belongs on the wall side of each concourse.
+    const seatYaw=Math.atan2(-q.uz,q.ux)+(v<0 ? Math.PI : 0);
+    mountFixture(K,stationSeats,'StationSeat',[q.x,y,q.z],seatYaw);
   }
   function facilities(f,s,v,y) {
     const p=f.at(s,v);if(later(p.x,y,p.z,()=>facilities(f,s,v,y)))return;
