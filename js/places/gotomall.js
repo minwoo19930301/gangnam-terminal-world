@@ -1,3 +1,4 @@
+import { loadArchitecture, placeArchitecture } from '../../assets/models/interior-architecture/model.js';
 import { loadFixtureScene, mountFixture } from '../../assets/models/onebailey/load.js';
 import { shopInteriors } from '../../assets/models/gotomall/shop-interiors.js';
 
@@ -8,6 +9,8 @@ const westTextileFixtures=await loadFixtureScene(new URL('../../assets/models/on
 // 서편 푸드코트 (west bulge under the 고가), 3호선 개찰구 홀 (G7, well W3), 9호선 개찰구 홀 (well W9) with the
 // planted rest area, 동편 푸드코트 at the 잠원로 end, street gates (subway exits 1·8·8-1·8-2 + GOTO MALL G-gates).
 // All layout is done in a local frame: u = along the mall (east), v = across (south). See research json for sources.
+const shoppingCeiling = await loadArchitecture('mall-ceiling.glb');
+
 export const meta = {
   id: 'gotomall',
   name: '강남터미널 지하도상가 (고투몰)',
@@ -178,6 +181,7 @@ const G13_DROW_U0 = 361.9; // first south-row unit east of the G13 door bay (#20
 // keep the side of a convex xz polygon where n·p <= c
 const clipHalfXZ = (poly, n, c) => { const out = []; for (let i = 0; i < poly.length; i++) { const a = poly[i], b = poly[(i + 1) % poly.length], da = n[0] * a[0] + n[1] * a[1] - c, db = n[0] * b[0] + n[1] * b[1] - c; if (da <= 0) out.push(a); if ((da < 0) !== (db < 0) && da !== db) { const t = da / (da - db); out.push([a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t]); } } return out; };
 const dotXZ = (a, b) => a[0] * b[0] + a[1] * b[1];
+const PINK_CEILING_PANELS = [-280,-245,-202];
 const G13_SIGN_COL = [357.6, 12.6]; // uv of the 동편광장 sign column beside the G13 doors (#205/#206)
 
 export function build(K) {
@@ -1571,7 +1575,8 @@ export function build(K) {
         if (b.passage && side === 'N') tactilePath([[ceilingU - 3.1, cm], [ceilingU - 3.1, (Ly.fC + Ly.fD) / 2]]);
         if (side === 'N' && [55, 60].includes(b.k)) sg(['교환·환불·카드결제를 거부하지 않습니다', '고투몰에서 즐거운 쇼핑 하세요'], ceilingU + 1.4, cm, FL + 2.79, 4.6, 0.32, '-u', { bg: '#f8f4ed', fg: '#992e3a', pxPerM: 100 });
         if (b.k % 4 === 0 || sec.key === 'center' && b.k % 4 === 2) exitPictogram(ua + 0.8, cm, FL + 2.7, '-u');
-        if (ceilingU < 240 && !(side === 'S' && [2, 3].includes(b.k))) {
+        const overPinkPanel = side === 'N' && PINK_CEILING_PANELS.some(u => Math.abs(u-(ua+1.8)) < 3.25);
+        if (ceilingU < 240 && !overPinkPanel && !(side === 'S' && [2, 3].includes(b.k))) {
           const u = ua + 1.8;
           bx(u - 0.015, u + 0.015, cm - 0.015, cm + 0.015, AY - 0.15, 0.15, 0x77736e, { solid: false });
           sg('✦', u, cm, AY - 0.43, 0.30, 0.60, '+u', { rotY: FACE['+u'] + 0.28, bg: '#a02030', fg: '#f2c230', twoSided: true, pxPerM: 180 });
@@ -3253,13 +3258,12 @@ export function build(K) {
     sg(['나가는 길 안내', 'G9 → 한가람문구 · 다이소'], X.uc - 2.7, lay(X.uc).fD - 0.11, FL + 1.85, 1.7, 1.05, '-v', { bg: '#fffdf5', fg: '#b45e1f', sub: '한가람문구를 지나 다이소 1번 출입구', pxPerM: 120 });
   }); }
 
-  // The audited municipal article confirms pink ceiling wayfinding to the river.
-  // Only signs are added: an unlocated 360m gallery is not invented under this mall.
-  // Keep the researched pink river wayfinding, but outside _170's close
-  // foreground: its old u-210 panel cropped across the G5/G6 camera.
-  for (const u of [-280, -245, -202]) furnish(u, () => {
-    const v = (lay(u).fA + lay(u).fB) / 2;
-    sg('← 반포한강공원', u, v, FL + 2.74, 2.3, 0.32, '+u', { bg: '#dc789c', fg: '#ffffff', sub: '지하보도 · 스트리트갤러리', pxPerM: 110 });
+  // The city photograph shows burgundy panels on the underside of white metal
+  // baffles. Fit the panels to the three existing indicative sign positions.
+  for (const u of PINK_CEILING_PANELS) furnish(u, () => {
+    const L = lay(u);
+    const [x,z] = P(u,(L.fA+L.fB)/2);
+    placeArchitecture(K,shoppingCeiling,'고투몰 서편 핑크라인 천장',[[x,AY-.19,z,ROT,1,1,Math.min(1,(L.fB-L.fA-.25)/3.45)]]);
   });
 
   // ---------- 안내도: photos 10/11, charcoal ground / three coloured zones / pale twin spine ----------
