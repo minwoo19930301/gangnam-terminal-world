@@ -376,6 +376,11 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
         const stepY = dir > 0 ? yTop : ya + dir * i * rise / n;
         // tread
         quad(sp, [[cx0 + nx, stepY, cz0 + nz], [cx1 + nx, stepY, cz1 + nz], [cx1 - nx, stepY, cz1 - nz], [cx0 - nx, stepY, cz0 - nz]], [0, 1, 0], [[0, 0], [w, 0], [w, run], [0, run]]);
+        if (o.nosing !== undefined) {
+          const edge = dir > 0 ? t0 : t1, inset = Math.min(.029, run * .13) * dir;
+          const P = (along, side) => [ax + ux * along + nx * side, stepY + .003, az + uz * along + nz * side];
+          quad(spec(o.nosing), [P(edge,-1), P(edge,1), P(edge+inset,1), P(edge+inset,-1)], [0,1,0], [[0,0],[1,0],[1,1],[0,1]]);
+        }
         // riser (front)
         const rx = dir > 0 ? cx0 : cx1, rz = dir > 0 ? cz0 : cz1, rLow = stepY - rise / n;
         quad(sp, [[rx - nx, rLow, rz - nz], [rx + nx, rLow, rz + nz], [rx + nx, stepY, rz + nz], [rx - nx, stepY, rz - nz]], [-ux * dir, 0, -uz * dir], [[0, 0], [1, 0], [1, 0.2], [0, 0.2]]);
@@ -407,8 +412,20 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
   function escalator(ax, az, bx, bz, o = {}) {
     const w = o.w ?? 1.1, ya = o.ya ?? 0, yb = o.yb ?? 5;
     const L = Math.hypot(bx - ax, bz - az), ux = (bx - ax) / L, uz = (bz - az) / L;
-    // flat landings 1m at each end + ribbed steps
-    ramp(ax, az, bx, bz, { w, ya, yb, steps: true, mat: o.mat ?? 0x5d6166, sideMat: o.sideMat ?? 0xc7ccd1, rails: false, move: (o.dir === 'down' ? -1 : 1) * (o.speed ?? 0.55) * 0 });
+    const tread = texture('escalator-ribbed-tread', 256, 32, (g,w,h) => {
+      g.fillStyle = '#858b8e'; g.fillRect(0,0,w,h);
+      for (let i=0;i<w;i+=4) {
+        g.fillStyle='#50595d'; g.fillRect(i,0,1,h);
+        g.fillStyle='#a2a9aa'; g.fillRect(i+2,0,1,h);
+      }
+    }, [1,1]);
+    ramp(ax, az, bx, bz, { w, ya, yb, steps: true, mat: o.mat ?? tread, sideMat: o.sideMat ?? 0xc7ccd1, rails: false, nosing: 0xcba83b });
+    const plate = spec(tread);
+    for (const [x,z,y,sign] of [[ax,az,ya,-1],[bx,bz,yb,1]]) {
+      const P = (along, across) => [x+ux*along-uz*across, y+.009, z+uz*along+ux*across];
+      const half=w/2, length=.33*sign;
+      quad(plate,[P(0,-half),P(0,half),P(length,half),P(length,-half)],[0,1,0],[[0,0],[w,0],[w,.33],[0,.33]]);
+    }
     const nx = -uz * (w / 2 + 0.08), nz = ux * (w / 2 + 0.08);
     const gl = spec('glass'), hr = spec(0x1c1c1c);
     for (const s of [1, -1]) {
@@ -420,8 +437,8 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     // underside truss
     const tb = spec(o.truss ?? 0xb9bec4); const dx = -uz * w / 2, dz = ux * w / 2;
     quad(tb, [[ax - dx, ya - 0.9, az - dz], [bx - dx, yb - 0.9, bz - dz], [bx + dx, yb - 0.9, bz + dz], [ax + dx, ya - 0.9, az + dz]], [0, -1, 0], [[0, 0], [1, 0], [1, 1], [0, 1]]);
-    // conveyor: replace the ramp's move (registered above with 0) with a real one
-    const dir = o.dir === 'down' ? -1 : 1;
+    // A caller may give the higher endpoint first. Up always increases elevation.
+    const dir = (o.dir === 'down' ? -1 : 1) * (Math.sign(yb-ya) || 1);
     phys.addRamp(ax, az, bx, bz, w / 2, ya + 0.001, yb + 0.001, { move: [ux * dir * (o.speed ?? 0.6), uz * dir * (o.speed ?? 0.6)], tag: current });
   }
   function cyl(o) {
@@ -523,7 +540,21 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
       for (const f of floors) {
         const fx = (poly[2][0] + poly[3][0]) / 2 + nx * 0.09, fz = (poly[2][1] + poly[3][1]) / 2 + nz * 0.09;
         sign([f.label], { x: fx + nx * 0.02, y: f.y + 2.45, z: fz + nz * 0.02, w: 0.5, h: 0.25, rotY, bg: '#111', fg: '#ff5a2a' });
-        box({ x: fx + Math.cos(rotY) * (w / 2 + 0.25), y: f.y + 1.0, z: fz - Math.sin(rotY) * (w / 2 + 0.25), w: 0.12, h: 0.22, d: 0.04, rotY, mat: 0x333333, solid: false });
+        const doorWidth = Math.min(1.2, w-.3), tx = Math.cos(rotY), tz = -Math.sin(rotY);
+        const trim = (side, bottom, width, height, depth, mat, offset=0) => box({
+          x:fx+tx*side+nx*offset, z:fz+tz*side+nz*offset, y:f.y+bottom,
+          w:width,h:height,d:depth,rotY,mat,solid:false,
+        });
+        for (const side of [-1,1]) trim(side*(doorWidth/2+.045),0,.075,2.40,.09,0x939c9f);
+        trim(0,2.38,doorWidth+.15,.08,.09,0xacb1b1);
+        trim(0,.002,doorWidth,.012,.18,0x747b7c);
+        const side = doorWidth/2 + .195;
+        trim(side,.98,.145,.28,.047,0x565e63,.02);
+        const buttons = [];
+        if (f.y < ys.at(-1)) buttons.push('▲');
+        if (f.y > ys[0]) buttons.push('▼');
+        if (buttons.length) sign(buttons, { x:fx+tx*side+nx*.066, z:fz+tz*side+nz*.066,
+          y:f.y+1.12,w:.135,h:.225,rotY,bg:'#474f55',fg:'#f1d797',padding:.01,pxPerM:160 });
         slab(poly, f.y, { mat: 'metal', thick: 0.05, edge: false, ceil: false });
       }
       // front wall (door side) with openings at each floor

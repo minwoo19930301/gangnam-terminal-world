@@ -277,7 +277,7 @@ async function boot() {
   const hudZone = $('zone'), hudSub = $('zone-sub'), hudPrompt = $('prompt'), hudCoord = $('coord');
   let menuOpen = false, nearIt = null;
   // ---- leaving the area: reload at the new address with a loading screen ----
-  let leaving = false;
+  let leaving = false, reloadTimer;
   function reloadAt(key, x, y, z, yawDeg, why) {
     if (leaving || SHOT || AREA.id === 'all') return false;
     // loop guard: never bounce between areas more than 4 times in 20 s
@@ -290,10 +290,11 @@ async function boot() {
     const lt = $('loading-text'); if (lt) lt.textContent = `${why} 불러오는 중…`;
     $('loading').classList.remove('hidden'); document.exitPointerLock?.();
     history.pushState(null, '', location.pathname + location.search + href);
-    setTimeout(() => location.reload(), 60);
+    reloadTimer = setTimeout(() => location.reload(), 60);
     return true;
   }
   function leaveArea(x, y, z, yaw) {
+    if (leaving) return true;
     if (AREA.id === 'all') return false;
     const zn = phys.zoneAt(x, (y ?? 0) + 0.1, z);
     const id = areaIdAt(zn, x, y ?? 0, z);
@@ -440,8 +441,15 @@ async function boot() {
       return false;
     }
     addEventListener('popstate', () => {
+      clearTimeout(reloadTimer);
       const r = parse(location.hash);
-      if (META && AREA.id !== 'all' && r && areaIdForKey(r.key, r.pos, META) !== AREA.id) { location.reload(); return; }
+      if (META && AREA.id !== 'all' && areaIdForKey(r?.key, r?.pos, META) !== AREA.id) {
+        leaving = true;
+        location.reload();
+        return;
+      }
+      if (leaving) $('loading').classList.add('hidden');
+      leaving = false;
       go(r);
     });
     return {
@@ -537,7 +545,8 @@ async function boot() {
     if (traffic) traffic.update(dt);
     // zone + interactables
     currentZone = phys.zoneAt(player.x, player.y + 0.1, player.z);
-    route.update(currentZone);
+    // Keep the destination hash until the scheduled area reload reads it.
+    if (!leaving) route.update(currentZone);
     areaWatch(currentZone); portalCheck(); pinUpdate();
     if (reLive && (frames & 63) === 0) reLive.update(player.x, player.z);
     const zname = currentZone ? currentZone.name : (player.y < -2 ? '지하' : '거리');
