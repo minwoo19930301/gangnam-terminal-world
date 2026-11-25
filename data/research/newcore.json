@@ -1,7 +1,86 @@
 {
   "id": "newcore",
   "name": "뉴코아아울렛 강남점",
-  "updated": "2026-11-07",
+  "updated": "2026-11-25",
+  "upper_floor_review": {
+    "checked": "2026-11-25",
+    "floor_guides": [
+      {
+        "building": "1관",
+        "floor": "5F",
+        "use": "전문식당가·문화센터·VIP라운지",
+        "map": "https://www.elandretail.com/upload/20251107133441030_0.jpg"
+      },
+      {
+        "building": "1관",
+        "floor": "4F",
+        "use": "모던하우스",
+        "map": "https://www.elandretail.com/upload/20251107142056502_0.jpg"
+      },
+      {
+        "building": "1관",
+        "floor": "3F",
+        "use": "아동·유아휴게실",
+        "map": "https://www.elandretail.com/upload/20260923101226175_0.jpg"
+      },
+      {
+        "building": "1관",
+        "floor": "2F",
+        "use": "여성·마담·란제리",
+        "map": "https://www.elandretail.com/upload/20261111151257_3.jpg"
+      },
+      {
+        "building": "2관",
+        "floor": "5F",
+        "use": "남성·골프",
+        "map": "https://www.elandretail.com/upload/20261111151159_0.jpg"
+      },
+      {
+        "building": "2관",
+        "floor": "4F",
+        "use": "스포츠·캐주얼",
+        "map": "https://www.elandretail.com/upload/20260826114444422_0.jpg"
+      },
+      {
+        "building": "2관",
+        "floor": "3F",
+        "use": "여성 전문관",
+        "map": "https://www.elandretail.com/upload/20260529132506120_0.jpg"
+      },
+      {
+        "building": "2관",
+        "floor": "2F",
+        "use": "컨템포러리·영캐주얼",
+        "map": "https://www.elandretail.com/upload/20260826114444041_0.jpg"
+      }
+    ],
+    "scope": "이랜드 층별안내에서 1·2관의 영업층은 B1~5F, 3관은 1F 푸드. 이번 작업은 1·2관 2~5F의 대표 점포·코너 50곳과 이를 잇는 복도를 구현했다.",
+    "layout": "공식 안내도에 표시된 상호·층과 상대 배열을 참조했다. 좌표·북쪽·층고·구획 폭·대표 매장 사이의 길이·가구 배치는 근사값이다. 모든 점포의 경계를 복원한 것은 아니다. 층별 실제 엘리베이터·에스컬레이터 위치와 수는 기존 계단/승강기 1조 구성과 차이가 있다.",
+    "sixth_floor_evidence": [
+      {
+        "url": "https://www.elandretail.com/store02.do?BDID=0003003B&branchID=00110001&lang=000600KO",
+        "observed": "운영사 3관 층안내에 1F 식당가만 표시. 1·2관 6F 이상 고객용 판매층에 관한 운영사 안내 없음."
+      },
+      {
+        "url": "https://www.co-op.co.kr/coop04/data_invest/Newcore_Gangnam.asp",
+        "observed": "옛 기업구조조정리츠 자료에 신관 지상5층, 주차빌딩 포함 킴스클럽 지상6층 표기. 현행 상가 층별 안내·승강기 정차 번호와는 별도 기준."
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=jTnEIVyNsU8",
+        "observed": "3관 킴스주차타워 탑승자 영상 제목에 지상 1·3·5·7·9·11 정차 표기. 항목은 게시자 표기이며 개별 데크 단면, 실높이, 현행 통행 가능 여부는 확인되지 않음."
+      }
+    ],
+    "assets": {
+      "editable": "assets/models/newcore/upper-fixtures.blend",
+      "runtime": "assets/models/newcore/upper-fixtures.js",
+      "scenes": [
+        "NewCore • Upper floors",
+        "Fixture workshop"
+      ],
+      "reference": "NewCore 장면에 웹 모델과 같은 여덟 층의 구획과 집기 238개를 배치했다. Fixture workshop에 있는 원형 11종은 내장 export_mesh.py로 웹용 메시를 다시 내보낼 수 있다. 대표 의류·골프 매장 35곳에는 진열열 두 줄, 옷걸이와 접은 옷 테이블을 배치했다. 매장에 따라 성인·아동 마네킹, 운동화 단상, 골프백을 전시한다. 실제 점포별 가구와 상품 배열은 확인하지 못해 업종에 맞춰 재구성했다."
+    },
+    "walking_check": "프로젝트 충돌·바닥 엔진에서 반경 0.32m, 높이 1.75m인 보행자로 0.4m 간격을 검사했다. 8개 층의 승강기 앞에서 대표 매장·코너 50곳의 입구 안쪽 50/50곳과 매장 깊이의 83% 지점 50/50곳까지 걸어서 도달했다. 실제 현장 길이는 미측정."
+  },
   "sources": [
     {
       "url": "https://www.elandretail.com/store02.do?BDID=0003001B&branchID=00110001&lang=000600KO",
