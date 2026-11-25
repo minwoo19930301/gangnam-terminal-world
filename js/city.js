@@ -1,3 +1,4 @@
+import { fleetInstances, vehicleSize } from './fleet.js';
 // Generic city layer from OpenStreetMap: everything not claimed by a detailed place module.
 import { pointInPoly, polyBBox, polyArea } from './physics.js';
 import { relief } from './banpo_relief.js';
@@ -860,67 +861,18 @@ export function createTraffic(K, roadsInfo, n = 160) {
   }
   if (!cars.length) return null;
 
-  // Two instanced meshes per fleet: a tintable body and fixed-colour windows,
-  // wheels, lamps and trim. The Seoul bus envelope is 11 x 2.5 x 3 metres.
-  const bodyMat = new THREE.MeshLambertMaterial({ color: 0xffffff });
-  const detailMat = new THREE.MeshLambertMaterial({ vertexColors: true });
-  bodyMat.defines = { BANPO_RIGID: 1 };
-  detailMat.defines = { BANPO_RIGID: 1 };
-  const box = (w, h, d, x, y, z, color = 0xffffff) => ({ w, h, d, x, y, z, color });
-  function geometry(parts) {
-    const positions = [], normals = [], colors = [], color = new THREE.Color();
-    for (const part of parts) {
-      let g;
-      if (part.wheel) { g = new THREE.CylinderGeometry(part.wheel, part.wheel, part.w, 10).toNonIndexed(); g.rotateZ(Math.PI / 2); }
-      else g = new THREE.BoxGeometry(part.w, part.h, part.d).toNonIndexed();
-      g.translate(part.x, part.y, part.z); color.setHex(part.color);
-      positions.push(...g.attributes.position.array); normals.push(...g.attributes.normal.array);
-      for (let i = 0; i < g.attributes.position.count; i++) colors.push(color.r, color.g, color.b);
-      g.dispose();
-    }
-    const g = new THREE.BufferGeometry();
-    g.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
-    g.setAttribute('normal', new THREE.Float32BufferAttribute(normals, 3));
-    g.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
-    return g;
-  }
   const fleets = [];
   for (const kind of ['car', 'taxi', 'bus', 'minibus']) {
     const list = cars.filter(c => c.kind === kind); if (!list.length) continue;
-    const bus = kind === 'bus' || kind === 'minibus', w = kind === 'bus' ? 2.5 : kind === 'minibus' ? 2.35 : 1.8;
-    const h = kind === 'bus' ? 3 : kind === 'minibus' ? 2.9 : 1.55, d = kind === 'bus' ? 11 : kind === 'minibus' ? 8.4 : 4.5;
-    const shell = bus ? [box(w, h - 0.55, d, 0, (h + 0.35) / 2, 0)] : [box(w, 0.7, d, 0, 0.68, 0), box(1.62, 0.18, 2.3, 0, 1.45, 0.05)];
-    const detail = [];
-    if (bus) {
-      detail.push(box(w - 0.08, 0.16, d - 0.06, 0, h - 0.08, 0, 0xe8edf0));
-      // Individual window bays and front/rear glass leave visible body pillars.
-      for (let z = -d / 2 + 0.75; z < d / 2 - 0.7; z += 1.45) for (const side of [-1, 1])
-        detail.push(box(0.025, 1.02, 1.28, side * (w / 2 + 0.008), h - 0.81, z, 0x223b48));
-      for (const end of [-1, 1]) detail.push(box(w - 0.2, 1.2, 0.025, 0, h - 0.92, end * (d / 2 + 0.01), 0x263f4b));
-      detail.push(box(w + 0.02, 0.19, d + 0.02, 0, 1.16, 0, 0xe9f0ef));
-      detail.push(box(0.035, 1.86, 1.05, -w / 2 - 0.02, 1.5, d / 2 - 1.3, 0x172c35));
-      detail.push(box(1.4, 0.23, 0.04, 0, h - 0.36, d / 2 + 0.03, 0xd6e5b1));
-    } else {
-      detail.push(box(1.59, 0.47, 2.24, 0, 1.2, 0.05, 0x263b47));
-      for (const side of [-1, 1]) detail.push(box(0.025, 0.48, 0.13, side * 0.81, 1.23, 0, 0x5b6265));
-      if (kind === 'taxi') detail.push(box(0.57, 0.22, 0.3, 0, 1.65, 0.15, 0xe9efdc));
-    }
-    const radius = bus ? 0.44 : 0.31;
-    for (const side of [-1, 1]) for (const end of [-1, 1]) {
-      detail.push({ wheel: radius, w: 0.18, x: side * w / 2, y: radius, z: end * d * 0.32, color: 0x181c21 });
-      detail.push({ wheel: radius * 0.5, w: 0.19, x: side * (w / 2 + 0.01), y: radius, z: end * d * 0.32, color: 0x9ba5ac });
-    }
-    for (const side of [-1, 1]) {
-      detail.push(box(bus ? 0.34 : 0.32, 0.15, 0.035, side * w * 0.34, 0.72, d / 2 + 0.025, 0xf7efc3));
-      detail.push(box(0.24, 0.2, 0.035, side * w * 0.36, 0.75, -d / 2 - 0.025, 0xb92e23));
-    }
-    const meshes = [new THREE.InstancedMesh(geometry(shell), bodyMat, list.length), new THREE.InstancedMesh(geometry(detail), detailMat, list.length)];
+    const model = kind === 'bus' ? 'cityBus' : kind;
+    const [w, , d] = vehicleSize(model);
+    const meshes = fleetInstances(THREE, model, list.length);
     const color = new THREE.Color();
     list.forEach((c, i) => {
       c.index = i; c.fleet = meshes; c.halfWheelbase = d * .32; c.halfTrack = w / 2;
       meshes[0].setColorAt(i, color.setHex(c.color));
     });
-    for (const mesh of meshes) { mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage); mesh.frustumCulled = false; K.scene.add(mesh); }
+    for (const mesh of meshes) { mesh.userData.dynamic = true; mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage); mesh.frustumCulled = false; K.scene.add(mesh); }
     fleets.push(meshes);
   }
   const M = new THREE.Matrix4(), Q = new THREE.Quaternion(), V = new THREE.Vector3(), S = new THREE.Vector3(1, 1, 1), rotation = new THREE.Euler(0, 0, 0, 'YXZ');
