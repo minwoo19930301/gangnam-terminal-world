@@ -142,8 +142,12 @@ export function build(K) {
   const ramp1 = rect(68.5, .65, 99.5, 5.75), ramp2 = rect(68.5, 6.35, 99.5, 11.45);
   const deckParts = [rect(0, 0, 16.8, 17.18), rect(64.4, 0, 104.86, 17.18)];
   for (let i = 0; i < deckParts.length; i++) {
-    K.slab(deckParts[i], secondDeck, { mat: 'concrete', under: 0x5b5d5c, thick: .3, holes: i === 0 ? [stair1] : i === 1 ? [ramp1] : [] });
-    K.slab(deckParts[i], thirdDeck, { mat: 'concrete', under: 0x5b5d5c, thick: .3, holes: i === 0 ? [stair2] : i === 1 ? [ramp2] : [] });
+    // The outside stair meets the south edge of the first parking deck. A
+    // notch, instead of a hole extending past the edge, also works in earcut.
+    const deck = i === 0 ? [[0,0],[16.8,0],[16.8,17.18],[14.03,17.18],
+      [14.03,13.50],[10.17,13.50],[10.17,17.18],[0,17.18]].map(p=>W(...p)) : deckParts[i];
+    K.slab(deck, secondDeck, { mat: 'concrete', under: 0x5b5d5c, thick: .3, holes: i === 0 ? [stair1] : i === 1 ? [ramp1] : [] });
+    K.slab(deck, thirdDeck, { mat: 'concrete', under: 0x5b5d5c, thick: .3, holes: i === 0 ? [stair2] : i === 1 ? [ramp2] : [] });
     K.slab(deckParts[i], gardenLevel-.28, { mat: { tex: 'roofgravel', color: 0xe5e3dc }, under: 0x777a78, thick: .26, walk: false });
   }
   for (const y of [secondDeck, thirdDeck, gardenLevel-.28]) slab(0, -4.5, 104.86, 1.3, y, {
@@ -199,7 +203,7 @@ export function build(K) {
   for (const y of [2.45, secondDeck+2.45, thirdDeck+2.45]) { box(15.8, 13.25, y, 2.6, .13, .12, steel, { solid: false }); sign('주차장 ↑', 15.8, 15.85, y, 1.7, .55, 0, { bg: '#22577b' }); }
   // Transparent stair enclosure alongside the working elevator. Zig-zag
   // flights are visible through the glass, rather than a solid thin shaft.
-  for (const y of [0, secondDeck, thirdDeck]) slab(10.1, 13.1, 14.55, 18.8, y, { mat: 'concrete', holes: y ? [rect(10.5, 13.6, 13.9, 17.6)] : [] });
+  for (const y of [0, secondDeck, thirdDeck]) slab(10.1, 13.1, 14.55, 18.8, y, { mat: 'concrete', holes: y ? [rect(10.25, 13.6, 14.03, 17.6)] : [] });
   for (const y of [0, secondDeck]) {
     K.stairs(...W(10.9, 17.5), ...W(10.9, 13.8), { ya: y, yb: y + secondDeck/2, w: 1.15, mat: 'concrete' });
     slab(10.3, 13.05, 13.9, 13.85, y + secondDeck/2);
@@ -221,7 +225,7 @@ export function build(K) {
   const deckWhite = 0xe9e9e4;
   K.material('ge-blue-deck-glass', new K.THREE.MeshLambertMaterial({ color: 0x5f86ad,
     transparent: true, opacity: .82, depthWrite: false, side: K.THREE.DoubleSide }));
-  for (const [v, spans] of [[-4.4, [[.15, 96]]], [16.85, [[.15, 16.8]]]]) {
+  for (const [v, spans] of [[-4.4, [[.15, 96]]], [16.85, [[.15, 10.05], [14.55, 16.8]]]]) {
     for (const [a, b] of spans) {
       const count = Math.ceil((b - a) / 6.8), pitch = (b - a) / count;
       for (let i = 0; i <= count; i++) {
