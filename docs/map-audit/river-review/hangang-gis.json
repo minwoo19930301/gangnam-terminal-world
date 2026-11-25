@@ -1,0 +1,136 @@
+{
+  "reproduce": "uv run --python 3.12 tools/check_hangang_gis.py",
+  "naver_aerial": "https://map.naver.com/p?c=14137190.461,4510690.326,16,0,0,2,dh",
+  "observed": "2026-11-26 KST",
+  "method": "WGS84 측지선과 Korea 2000 / Unified CS(EPSG:5179) 직선. 게임 좌표를 경위도로 되돌린 뒤 같은 투영에서 각 폴리곤과 연장 단면을 교차했다.",
+  "scope": "OSM way 418249072의 게임 범위 내 조각과 현재 공원 HUD 외곽. 세 단면은 네이버 영상으로 보정했던 동일 지점의 계산 검산이다. 지도 경계 판독 오차 ±4 m. 서울시 전체 공원 면적이나 현장 측량값과 별개다.",
+  "outlines_valid": {
+    "osm": true,
+    "runtime": true
+  },
+  "area_epsg5179": {
+    "osm_clipped_m2": 319483.66,
+    "runtime_zone_m2": 301041.23,
+    "overlap_m2": 301041.23,
+    "osm_only_m2": 18442.44,
+    "runtime_only_m2": 0.0
+  },
+  "width_rmse_against_naver_m": {
+    "osm": 30.95,
+    "runtime": 0.7
+  },
+  "terrain_tiles": "https://raw.githubusercontent.com/minwoo19930301/seoul-elevation-local/ede67d9f3909395d346ab67e492d63fd10142d08/public/data/terrain",
+  "terrain_source": "https://data.seoul.go.kr/dataList/OA-22241/F/1/datasetView.do",
+  "terrain_sampling": "서울시 등고선·표고점에서 보간한 z14 Terrain-RGB 원타일. 각 단면 양 끝을 포함해 8등분한 9개 위치의 픽셀을 읽고 유효성 마스크 255만 채택했다. 이 위도에서 픽셀 한 변은 약 7.6 m. 높이 기준면은 원자료에 명시되지 않았으며 물가선·다리 상판 높이 판별에 쓰지 않았다.",
+  "sections": [
+    {
+      "site": "가빛 진입부 동측·제2주차장 뒤편",
+      "north_south_wgs84_lat_lon": [
+        [
+          37.51126,
+          126.995829
+        ],
+        [
+          37.50932,
+          126.995829
+        ]
+      ],
+      "naver_ruler_m": 216.0,
+      "wgs84_geodesic_m": 215.32,
+      "epsg5179_segment_m": 215.23,
+      "osm_crossing_m": 228.55,
+      "runtime_crossing_m": 215.27,
+      "runtime_minus_naver_m": -0.73,
+      "dem": {
+        "tile_xyz": [
+          "14/13971/6347",
+          "14/13971/6348"
+        ],
+        "valid_samples": 9,
+        "north_to_south_source_height_m": [
+          5.4,
+          5.0,
+          6.0,
+          6.9,
+          6.4,
+          6.5,
+          7.0,
+          8.4,
+          9.5
+        ]
+      }
+    },
+    {
+      "site": "반포대교 동측·남단 진입 회전부 서측 끝",
+      "north_south_wgs84_lat_lon": [
+        [
+          37.512758,
+          126.998458
+        ],
+        [
+          37.510733,
+          126.998458
+        ]
+      ],
+      "naver_ruler_m": 225.5,
+      "wgs84_geodesic_m": 224.75,
+      "epsg5179_segment_m": 224.66,
+      "osm_crossing_m": 261.15,
+      "runtime_crossing_m": 224.72,
+      "runtime_minus_naver_m": -0.78,
+      "dem": {
+        "tile_xyz": [
+          "14/13971/6347"
+        ],
+        "valid_samples": 9,
+        "north_to_south_source_height_m": [
+          5.6,
+          5.0,
+          5.5,
+          6.9,
+          6.6,
+          6.7,
+          6.8,
+          7.9,
+          8.9
+        ]
+      }
+    },
+    {
+      "site": "동측 잔디마당·도로측 경사면",
+      "north_south_wgs84_lat_lon": [
+        [
+          37.513243,
+          127.000496
+        ],
+        [
+          37.51166,
+          127.000496
+        ]
+      ],
+      "naver_ruler_m": 176.2,
+      "wgs84_geodesic_m": 175.69,
+      "epsg5179_segment_m": 175.63,
+      "osm_crossing_m": 214.21,
+      "runtime_crossing_m": 175.62,
+      "runtime_minus_naver_m": -0.58,
+      "dem": {
+        "tile_xyz": [
+          "14/13971/6347"
+        ],
+        "valid_samples": 9,
+        "north_to_south_source_height_m": [
+          5.0,
+          5.2,
+          5.8,
+          6.5,
+          6.9,
+          7.6,
+          8.4,
+          9.7,
+          9.7
+        ]
+      }
+    }
+  ]
+}
