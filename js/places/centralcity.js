@@ -170,6 +170,23 @@ export function build(K) {
     }
     return out;
   }
+  const localS=q=>(q[0]-OX)*AX+(q[1]-OZ)*AZ;
+  const localT=q=>(q[0]-OX)*EX+(q[1]-OZ)*EZ;
+  const subtractFloorRects=(poly,holes)=>{
+    let pieces=[poly];
+    for(const h of holes){
+      const ss=h.map(localS),tt=h.map(localT),s0=Math.min(...ss),s1=Math.max(...ss),t0=Math.min(...tt),t1=Math.max(...tt),next=[];
+      for(const piece of pieces){
+        let rest=piece;
+        for(const f of [q=>localT(q)-t0,q=>t1-localT(q),q=>localS(q)-s0,q=>s1-localS(q)]){
+          const outside=clipHalf(rest,f);if(outside.length>=3&&Math.abs(K.polyArea(outside))>.001)next.push(outside);
+          rest=clipHalf(rest,q=>-f(q));if(rest.length<3)break;
+        }
+      }
+      pieces=next;
+    }
+    return pieces;
+  };
   // station's B1 hall follows (45,150)->(-45,186)->(-68,195)->(-88,220)->(-175,262), 14 m wide: keep ≥7.6 m from it
   const sE9 = t => 204.1 - (t + 98.9) * (1.3 / 135.8);
   const B1POLY = [T(0), T(1), T(2), T(3), T(4), T(5), T(6), T(7), T(8), T(9), P(sE9(-33), -33), P(201.2, -26.5), P(196.3, -18.5), P(191.6, -10.5), P(189.4, -4), P(189.4, 37.8), T(11), T(12)];
@@ -959,32 +976,47 @@ export function build(K) {
   // The dimensions are an approximate 0.13 m/pixel photographic fit.
   const B1_SCALE=.13;
   const BPst=(px,py)=>[74.05068+B1_SCALE*(px-1032),75.24268-B1_SCALE*(py-477)];
-  // The House guide is schematic, wider than this OSM strip. Keep its tenant
-  // adjacency/orientation, but register its three-floor court to the photographed
-  // interior court, not the bus apron. These explicit piecewise axes insert the
-  // 16x12m void; this local fit is not a surveyed scale (see research round19).
-  const hosAxis=(v,knots)=>{
-    let i=0;while(i<knots.length-2&&v>knots[i+1][0])i++;
-    const[a,b]=[knots[i],knots[i+1]];return a[1]+(v-a[0])*(b[1]-a[1])/(b[0]-a[0]);
+  // The published B1 guide spans both districts. Its west seam uses the 9GATE
+  // fit. At the other end pin the lounge under the upper court and the public
+  // escalator symbol to the photographed landing. The intervening fit is schematic.
+  const houseCourt=[3.53,135.79], houseLanding=[18.9,134.5];
+  const gx=1750-1632,gy=375-457,guideLength2=gx*gx+gy*gy;
+  const dx=houseLanding[0]-houseCourt[0],dz=houseLanding[1]-houseCourt[1];
+  const hx=(dx*gx+dz*gy)/guideLength2,hz=(dz*gx-dx*gy)/guideLength2;
+  const houseEast=(px,py)=>[houseCourt[0]+hx*(px-1632)-hz*(py-457),houseCourt[1]+hz*(px-1632)+hx*(py-457)];
+  const HP=(px,py)=>{
+    if(px<=1400)return P(...BPst(px,py));
+    if(px>=1587)return houseEast(px,py);
+    const west=P(...BPst(1400,py)),east=houseEast(1587,py),u=(px-1400)/187;
+    return west.map((value,i)=>value+(east[i]-value)*u);
   };
-  const hosMap=(s,t)=>[hosAxis(s,[[-22.402,78],[-9.56959,89.8],[-7.2483,93.8],[-.836,99],[9.468,115],[45.122,138]]),hosAxis(t,[[-34.845,18],[-22.284,21.5],[-13.084,33.5],[11.435,38.2]])];
-  const HPst=(px,py)=>hosMap(21.75+(.092/(1823/2000))*(py-630.30225),18.15-(.092/(1823/2000))*(px-1277.46725));
-  const HP=(px,py)=>P(...HPst(px,py));
-  const HRect=(x0,y0,x1,y1)=>[HP(x0,y0),HP(x1,y0),HP(x1,y1),HP(x0,y1)];
+  const HPst=(px,py)=>{const q=HP(px,py);return[localS(q),localT(q)];};
+  // Include the two registration seams on long edges when projecting a room.
+  const HRect=(x0,y0,x1,y1)=>{
+    const xs=[x0,1400,1587,x1].filter((x,i)=>i===0||i===3||(x>x0&&x<x1));
+    return [...xs.map(x=>HP(x,y0)),...xs.reverse().map(x=>HP(x,y1))];
+  };
   const BP=(px,py)=>P(...BPst(px,py));
   const BRect=(x0,y0,x1,y1)=>[BP(x0,y0),BP(x1,y0),BP(x1,y1),BP(x0,y1)];
   // The official HOS plan has real notches, not filled bounding rectangles.
   const B1_WHITE=[[1531,534,1564,551],[1463,502,1488,589],[1521,418,1550,432],[1675,563,1698,589]];
-  const BPrism=(r,y,h,mat,solid=true,project=BRect)=>{
+  const BPrism=(r,y,h,mat,solid=true,project=BRect,cutout)=>{
     let pieces=[r];
     for(const cut of B1_WHITE){const next=[];for(const q of pieces){
       const a=Math.max(q[0],cut[0]),b=Math.max(q[1],cut[1]),c=Math.min(q[2],cut[2]),d=Math.min(q[3],cut[3]);
       if(a>=c||b>=d){next.push(q);continue;}
       for(const v of [[q[0],q[1],a,q[3]],[c,q[1],q[2],q[3]],[a,q[1],c,b],[a,d,c,q[3]]])if(v[2]-v[0]>.01&&v[3]-v[1]>.01)next.push(v);
     }pieces=next;}
-    for(const q of pieces)K.prism(project(...q),y,y+h,{mat,solid,walkTop:solid});
+    for(const q of pieces){
+      const poly=project(...q);
+      const fragments=cutout&&polygonsOverlap(poly,cutout)?subtractFloorRects(poly,[cutout]):[poly];
+      for(const fragment of fragments)K.prism(fragment,y,y+h,{mat,solid,walkTop:solid});
+    }
   };
   const BWall=(a,b,mat=0xd8cdb9,project=BP,top=-1.8)=>{
+    if(project===HP)for(const px of [1400,1587]){
+      if((a[0]-px)*(b[0]-px)<0){const cut=[px,a[1]+(b[1]-a[1])*(px-a[0])/(b[0]-a[0])];BWall(a,cut,mat,project,top);BWall(cut,b,mat,project,top);return;}
+    }
     const qa=project(...a),qb=project(...b),L=Math.hypot(qb[0]-qa[0],qb[1]-qa[1]),n=Math.max(1,Math.ceil(L/.22));
     let run=null;
     for(let i=0;i<=n;i++){
@@ -1004,7 +1036,10 @@ export function build(K) {
     sign(name,{x:m[0]+nx*.12,z:m[1]+nz*.12,y:YB1+height,w:Math.max(.65,L-.2),h:.42,rotY:Math.atan2(nx,nz),bg:'#43382f',fg:'#fff5dd',bold:true,box:0});
   };
   const sweetLiftST=(px,py)=>BPst(px,py);
-  const B1_KEEP_CLEAR=[[-4,15.7,11,20.6],[31,15.7,46,20.6],[13.25,33.4,15.75,38.15],[157,-8.2,164,-3.4],[19.7,32,22.3,43.5],[-26,10,-6.5,15.5],
+  // Both photographed Famille escalator lanes need clearance along the full incline.
+  const rampEnds=[[18.9,134.5],[22.9,144.8]].map(([x,z])=>[(x-OX)*AX+(z-OZ)*AZ,(x-OX)*EX+(z-OZ)*EZ]);
+  const rampClear=[rampEnds[0][0]-1.3,Math.min(...rampEnds.map(q=>q[1]))-1.75,rampEnds[1][0]+1.3,Math.max(...rampEnds.map(q=>q[1]))+1.75];
+  const B1_KEEP_CLEAR=[rampClear,[-4,15.7,11,20.6],[31,15.7,46,20.6],[13.25,33.4,15.75,38.15],[157,-8.2,164,-3.4],[19.7,32,22.3,43.5],[-26,10,-6.5,15.5],
     ...[[1054,523],[1411,472]].map(q=>{const[s,t]=sweetLiftST(...q);return q[0]===1411?[s-1.55,t-1.4,s+1.55,t+3.8]:[s-1.55,t-3.8,s+1.55,t+1.4];}),
     (()=>{const[s,t]=HPst(1544,459);return[s-4,t-1.1,s+1.55,t+1.1];})(),[73.6,14.6,78.4,17.5]];
   // A retained through-route starts inside the schematic Kikukawa cell after the gate/core fit.
@@ -1063,7 +1098,8 @@ export function build(K) {
     g.clearRect(0,0,w,h);const grad=g.createRadialGradient(w/2,h*.96,2,w/2,h*.9,h*.85);
     grad.addColorStop(0,'rgba(255,239,132,.92)');grad.addColorStop(.24,'rgba(255,196,64,.48)');grad.addColorStop(1,'rgba(255,176,45,0)');g.fillStyle=grad;g.fillRect(0,0,w,h);
   },[1,1],{transparent:true});
-  const housePrism=(r,y,h,mat,solid=true)=>BPrism(r,y,h,mat,solid,HRect);
+  const rampClearPoly=RECT(...rampClear);
+  const housePrism=(r,y,h,mat,solid=true)=>BPrism(r,y,h,mat,solid,HRect,rampClearPoly);
   const houseSafe=r=>b1Safe(r,HPst);
   const hosB1Cell=cell=>{
     const BP=HP,BPst=HPst,BRect=HRect,BPrism=housePrism,b1Safe=houseSafe;
@@ -1076,7 +1112,7 @@ export function build(K) {
     const len=Math.hypot(b[0]-a[0],b[1]-a[1]),dep=Math.hypot(...wp(.5,1).map((v,i)=>v-m[i]));
     const nx=(m[0]-c[0])/Math.hypot(m[0]-c[0],m[1]-c[1]),nz=(m[1]-c[1])/Math.hypot(m[0]-c[0],m[1]-c[1]),rot=Math.atan2(nx,nz);
     const box=(u0,v0,u1,v1,y,h,mat,solid=false)=>{const rr=wr(u0,v0,u1,v1);if(!solid||b1Safe(rr))BPrism(rr,YB1+y,h,mat,solid);};
-    const cyl=(u,v,y,rad,h,mat)=>{const q=wp(u,v);K.cyl({x:q[0],z:q[1],y:YB1+y,r:rad,h,mat,seg:12,solid:false});};
+    const cyl=(u,v,y,rad,h,mat)=>{const q=wp(u,v);if(K.pointInPoly(...q,rampClearPoly))return;K.cyl({x:q[0],z:q[1],y:YB1+y,r:rad,h,mat,seg:12,solid:false});};
     const plinth=superstar?0xc2452d:arabica?0xece6da:{tex:'wood',color:0x6b4226};
     K.hpoly(superstar?{tex:'ccHosParquet',gloss:.5}:{tex:'wood',color:0xd4b17b,gloss:.3},BRect(...r),YB1+.031,true);
     // Honey/charcoal rear wall with an amber wash; every fixture remains within its tenant cell.
@@ -1161,7 +1197,7 @@ export function build(K) {
   };
   const hosB1Finish=()=>{
     const BP=HP,BPst=HPst,BRect=HRect,BPrism=housePrism;
-    // The official schematic neck is only 23 display pixels (~2.32m). Keep it
+    // The official schematic neck is 23 display pixels wide. Keep it
     // within that white strip instead of moving shops to force the photo's ~4m width.
     const x0=1344,x1=1618,y0=320.5,y1=342.5,ym=(y0+y1)/2;
     for(const r of [[1344,320,1785,343],[1559,343,1580,589],[1698,398,1714,589]])K.hpoly({tex:'ccHosParquet',gloss:.5},BRect(...r),YB1+.033,true);
@@ -1296,7 +1332,7 @@ export function build(K) {
     ['sweet_north','스위트 파크 북측', [1032,266,1400,488]],
     ['sweet','스위트 파크 외곽 매장',[1032,488,1400,895]],
     ['sweet_islands','스위트 파크 디저트 아일랜드',[1089,540,1268,780]],
-    ['hos','하우스 오브 신세계 푸드홀',[1344,266,1786,718]],
+    ['hos','하우스 오브 신세계 푸드홀',[1400,266,1786,589]],
   ];
   // FeFx7kfWgdo_181/193: pale marble field with small black diamonds, not
   // the former equal-area dark checkerboard. Cream coves and brass remain.
@@ -1548,7 +1584,35 @@ export function build(K) {
     // A core-covered cell keeps its frontage; only its fitted cabinet is clipped.
     return candidates[0]?.plan??null;
   };
+  // Operator opening photograph: dark sign, timber jambs, red checker tile
+  // and dining tables visible directly from the public arcade.
+  const fiveGuys=cell=>{
+    const [x0,y0,x1,y1]=cell.rect_display,[s0,t0,s1,t1]=spBounds(cell.rect_display),mid=(t0+t1)/2;
+    const timber={tex:'wood',color:0x956134},steel={tex:'metal',color:0xbec1bf};
+    K.hpoly(0x777772,BRect(...cell.rect_display),YB1+.037,true);
+    for(const t of[t0+.18,t1-.18])lbox(s0+.15,t,.30,.28,YB1,3.05,timber);
+    lbox(s0+.15,mid,.30,t1-t0,YB1+2.56,.49,0x302b27,{solid:false});
+    lsign('FIVE GUYS',s0-.02,mid,YB1+2.79,Math.min(3.3,t1-t0-.65),.35,'N',{bg:null,fg:'#fff9ed',bold:true,pxPerM:136});
+    // The service counter sits back from the threshold; the south end is the
+    // open customer route on both parts of the directory footprint.
+    const back=[x1-11,y0+5,x1-3,y1-17];
+    BPrism(back,YB1,.88,0xc6c8c4);BPrism(back,YB1+.88,.06,steel,false);
+    lbox(s1-.05,mid,.08,t1-t0-.3,YB1,2.48,0xe7e4df,{solid:false});
+    for(let i=0;i<Math.floor((t1-t0-.5)/.30);i++)for(let j=0;j<2;j++)
+      if((i+j)%2===0)lbox(s1-.11,t0+.28+i*.30,.035,.29,YB1+.97+j*.30,.29,0xae292d,{solid:false});
+    const aisleS=(s0+s1)/2;
+    for(let t=t0+2.6;t<t1-1.0;t+=2.6){
+      lbox(aisleS,t,.78,.72,YB1+.72,.07,timber);
+      lbox(aisleS,t,.12,.12,YB1,.72,0x343438,{solid:false});
+      for(const d of[-.63,.63]){
+        lbox(aisleS,t+d,.43,.41,YB1+.42,.08,0x654530,{solid:false});
+        lbox(aisleS,t+d+Math.sign(d)*.19,.43,.055,YB1+.48,.32,0x493b32,{solid:false});
+        for(const u of[-.16,.16])for(const v of[-.14,.14])lbox(aisleS+u,t+d+v,.036,.036,YB1,.42,0x393b39,{solid:false});
+      }
+    }
+  };
   const spCell=(cell,index)=>{
+    if(cell.name==='파이브가이즈'){fiveGuys(cell);return;}
     const r=cell.rect_display,[x0,y0,x1,y1]=r,[s0,t0,s1,t1]=spBounds(r),front=cell.front,face={N:'E',S:'W',E:'S',W:'N'}[front];
     const retail=['beauty','accessory'].includes(cell.kind),west=x0===1032&&y0>=540&&y1<=777;
     const i=3,depth=Math.min(11,(y1-y0)*.45),sideDepth=Math.min(11,(x1-x0)*.45);
@@ -1662,11 +1726,11 @@ export function build(K) {
     const isHouse=Math.min(a[0],b[0])>=1424||a[0]===1389||b[0]===1389||(a[0]===1344&&a[1]<=462&&b[1]<=462);
     BWall(a,b,isHouse?'ccHosHoney':0xd8cdb9,isHouse?HP:BP);
   }
-  // Full-height House envelope and a four-metre entrance in the east return.
-  const hosB1Poly=HRect(1344,266,1786,718);
+  // The public plan ends at the south restaurant row. The north approach is
+  // also continuous with Sweet Park at the white passage, between the flanking cells.
+  const hosB1Poly=HRect(1400,266,1786,589);
   K.slab(hosB1Poly,YB1,{mat:'ccHosParquet',under:false,ceil:false,edge:false});
-  for(const[a,b]of [[[1344,266],[1786,266]],[[1786,266],[1786,320.5]],[[1786,342.5],[1786,718]],[[1786,718],[1344,718]]])BWall(a,b,'ccHosHoney',HP,CB);
-  for(const[a,b]of [[[1344,266],[1344,320.5]],[[1344,342.5],[1344,718]]])BWall(a,b,'ccHosHoney',HP,CB);
+  for(const[a,b]of [[[1400,266],[1786,266]],[[1786,266],[1786,589]],[[1786,589],[1400,589]]])BWall(a,b,'ccHosHoney',HP,CB);
   // Plan services: toilet cores, elevator faces and the Sweet Garden waiting island.
   const b1Service=(name,r,front)=>{BSign(name,r,front,2.55);const[x0,y0,x1,y1]=r;for(const[f,a,b]of [['N',[x0,y0],[x1,y0]],['E',[x1,y0],[x1,y1]],['S',[x0,y1],[x1,y1]],['W',[x0,y0],[x0,y1]]])if(f!==front)BWall(a,b);};
   for(const[a,b]of [[[1389,378],[1424,378]],[[1389,378],[1389,437]],[[1424,378],[1424,437]]])BWall(a,b,'ccHosHoney',HP);
@@ -2345,69 +2409,42 @@ export function build(K) {
   planGate('센트럴시티 1게이트',-12,10.4,'W',4);
   planGate('센트럴시티 2게이트',-12,24,'W',4);
   // Round20: hall, escalators and black HOS entry are built under JW below.
-  // Round18: the former s75 HOS descent was tied to the displaced upper court.
-  // The court flights below share the interior B1/1F/1M void.
-  // Round18 L1/L2: the same court is registered through all three floors.
-  // These official guides are schematic: the east edge of this provisional
-  // registration is now explicitly constrained to the existing interior court.
-  // Its schematic source cannot supply one exterior-consistent metric scale.
-  // Register every retained upper tenant, furnishing and railing to the same
-  // interior court as B1. No part of this stack occupies the restored apron.
-  const hosOuter={P,lbox,lsign,lwall,lcyl,lperson,rail,elev,lzone};
-  {
-  const P=(s,t)=>hosOuter.P(...hosMap(s,t));
-  const RECT=(s0,t0,s1,t1)=>[P(s0,t0),P(s1,t0),P(s1,t1),P(s0,t1)];
-  const lbox=(s,t,ds,dt,y,h,mat,o={})=>{const a=hosMap(s-ds/2,t-dt/2),b=hosMap(s+ds/2,t+dt/2);return hosOuter.lbox((a[0]+b[0])/2,(a[1]+b[1])/2,b[0]-a[0],b[1]-a[1],y,h,mat,o);};
-  const lsign=(text,s,t,y,w,h,face,o={})=>{const q=hosMap(s,t);return hosOuter.lsign(text,...q,y,Math.min(w,face==='N'||face==='S'?7:6),h,face,o);};
-  const lwall=(a,b,c,d,y0,y1,o={})=>hosOuter.lwall(...hosMap(a,b),...hosMap(c,d),y0,y1,o);
-  const lcyl=(s,t,...args)=>hosOuter.lcyl(...hosMap(s,t),...args);
-  const lperson=(s,t,...args)=>hosOuter.lperson(...hosMap(s,t),...args);
-  const rail=(a,b,c,d,...args)=>hosOuter.rail(...hosMap(a,b),...hosMap(c,d),...args);
-  const elev=(name,s,t,...args)=>hosOuter.elev(name,...hosMap(s,t),...args);
-  const lzone=(a,b,c,d,o)=>hosOuter.lzone(...hosMap(a,b),...hosMap(c,d),o);
-  const entryTube=(a,b,...args)=>{const qa=P(a[0],a[1]),qb=P(b[0],b[1]);entryTubeWorld([qa[0],a[2],qa[1]],[qb[0],b[2],qb[1]],...args);};
-  const hosB1Void=RECT(-.836,-22.284,9.468,-13.084);
-  const H1=(px,py)=>[4.316+(py-680.5)*(.092*85/126),-17.684-(px-1482.5)*(.092*85/126)];
-  const HM=(px,py)=>[4.316+(py-695.5)*.039,-17.684-(px-1204.5)*.039];
-  const upperPoly=(coords,fn=H1)=>coords.map(q=>P(...fn(...q)));
-  const upperRect=(r,fn=H1)=>upperPoly([[r[0],r[1]],[r[2],r[1]],[r[2],r[3]],[r[0],r[3]]],fn);
-  const hosDeck=upperRect([1149,250,1759,1338]);
-  // Round20 ccm/L7: upper HOS court, tenants, deck, lift and flights move to cc1f under JW.
-  // Keep this B1-owned wrapper/void datum for the ccb1 registration merge.
-  K.detail({name:'하우스 보이드 · 허니 우드와 앰버 업라이트',floor:'B1',y0:YB1,y1:7.2,poly:hosDeck},()=>{
-    for(const t of [-22.46,-12.91]){
-      lbox(4.316,t,10.304,.18,YB1,-YB1,'ccHosHoney',{solid:false});
-      for(let ss=-.55;ss<9.4;ss+=.96){
-        lbox(ss,t,.045,.20,YB1,-YB1,0x6b4226,{solid:false});
-        lbox(ss,t+(t<-17? .13:-.13),.12,.07,YB1+.1,.08,{tex:'emit',color:0xffc98a},{solid:false});
-        const a=P(ss-.34,t+(t<-17?.12:-.12)),b=P(ss+.34,t+(t<-17?.12:-.12));
-        K.quad('ccHosUplight',[[a[0],YB1+.12,a[1]],[b[0],YB1+.12,b[1]],[b[0],-.02,b[1]],[a[0],-.02,a[1]]],[EX,0,EZ]);
+  // Same court and opening as the photographed 1F / 1M stack below JW.
+  const courtR=Math.atan2(.358,.934),courtA=Math.sin(courtR),courtB=Math.cos(courtR);
+  const courtP=(s,t)=>[4+courtA*s+courtB*t,137+courtB*s-courtA*t];
+  const courtRect=(a,b,c,d)=>[courtP(a,b),courtP(c,b),courtP(c,d),courtP(a,d)];
+  const courtBox=(s,t,ds,dt,y,h,mat,o={})=>{const[x,z]=courtP(s,t);return K.box({x,z,w:dt,d:ds,y,h,rotY:courtR,mat,...o});};
+  const hosRoofHole=courtRect(-8,-6,5.4,6),hosEntryWell=courtRect(2.6,12.9,14.04,16.8);
+  K.detail({name:'하우스 보이드 · 허니 우드와 앰버 업라이트',floor:'B1',y0:YB1,y1:0,poly:hosRoofHole},()=>{
+    for(const t of [-6,6]){
+      // Stop the wall at the ring aisle so people can pass the lounging islands.
+      courtBox(-1.3,t,13.4,.18,-.48,.46,'ccHosHoney',{solid:false});
+      for(let ss=-7.5;ss<5.4;ss+=1.25){
+        courtBox(ss,t,.12,.20,YB1,5.98,'ccHosHoney',{solid:false});
+        courtBox(ss,t-Math.sign(t)*.13,.12,.07,YB1+.1,.08,{tex:'emit',color:0xffc98a},{solid:false});
+        const a=courtP(ss-.34,t-Math.sign(t)*.12),b=courtP(ss+.34,t-Math.sign(t)*.12);
+        K.quad('ccHosUplight',[[a[0],YB1+.12,a[1]],[b[0],YB1+.12,b[1]],[b[0],-.5,b[1]],[a[0],-.5,a[1]]],[-Math.sign(t)*courtB,0,Math.sign(t)*courtA]);
       }
     }
-    for(const ss of[-1.0,9.7])for(const tt of[-22.9,-12.4]){
-      lbox(ss,tt,.32,.32,YB1,-YB1,{color:0xc7b27c,gloss:.7},{solid:false});
-      for(const d of[-.18,.18])lbox(ss+d,tt,.025,.35,YB1,-YB1,0x997537,{solid:false});
-    }
-    for(const y of [-.25])for(const tt of[-22.8,-12.55])lbox(4.3,tt,17.8,.16,y,.12,0xf1e6d2,{solid:false});
-    for(const y of [-.12])for(const tt of[-22.72,-12.63])lbox(4.3,tt,17.8,.045,y,.045,{tex:'emit',color:0xffd69a},{solid:false});
   });
   K.texture('ccHosPersian',384,512,(g,w,h)=>{
     g.fillStyle='#914132';g.fillRect(0,0,w,h);
     for(const [i,c,b]of [[8,'#d8bc88',13],[24,'#243c52',8],[39,'#d6b68a',5]]){g.strokeStyle=c;g.lineWidth=b;g.strokeRect(i,i,w-i*2,h-i*2);}
     for(let y=50;y<h-40;y+=34)for(let x=45;x<w-30;x+=36){g.strokeStyle='#d4af7a';g.lineWidth=2;g.beginPath();g.moveTo(x,y-7);g.lineTo(x+6,y);g.lineTo(x,y+7);g.lineTo(x-6,y);g.closePath();g.stroke();}
   },[2.25,1.95]);
-  }
   // Restore the already reviewed sofa/tub-chair islands, now on the correct B1
   // floor beneath the interior court. No terminal furniture is placed outdoors.
-  const hosLoungeKit=K,hosLoungeBox=lbox,hosLoungeCyl=lcyl,hosLoungePerson=lperson;
-  K.detail({name:'하우스 라운지 · 여섯 러그와 소파 · 28명',floor:'B1',y0:YB1,y1:0,poly:RECT(98.5,21,115.5,34)},()=>{
+  const hosLoungeKit=K;
+  K.detail({name:'하우스 라운지 · 여섯 러그와 소파 · 28명',floor:'B1',y0:YB1,y1:0,poly:hosRoofHole},()=>{
     const K={...hosLoungeKit,
       box:o=>hosLoungeKit.box({...o,y:(o.y??0)+YB1}),
       cyl:o=>hosLoungeKit.cyl({...o,y:(o.y??0)+YB1}),
       hpoly:(mat,poly,y,...args)=>hosLoungeKit.hpoly(mat,poly,y+YB1,...args)};
-    const lbox=(s,t,ds,dt,y,...args)=>hosLoungeBox(s,t,ds,dt,y+YB1,...args);
-    const lcyl=(s,t,y,...args)=>hosLoungeCyl(s,t,y+YB1,...args);
-    const lperson=(s,t,y,...args)=>hosLoungePerson(s,t,y+YB1,...args);
+    const R=courtR,P=(s,t)=>courtP((s-107)*.82-1.3,t-27.5);
+    const RECT=(a,b,c,d)=>[P(a,b),P(c,b),P(c,d),P(a,d)];
+    const lbox=(s,t,ds,dt,y,...args)=>courtBox((s-107)*.82-1.3,t-27.5,ds*.82,dt,y+YB1,...args);
+    const lcyl=(s,t,y,r,h,mat,o={})=>{const[x,z]=P(s,t);return K.cyl({x,z,y,r,h,mat,seg:12,...o});};
+    const lperson=(s,t,y,o)=>{const[x,z]=P(s,t);return K.person(x,y+YB1,z,o);};
 
     // 8xxIIvP9uAY_10: six separate islands; 9.5 m between escalator centre lines.
     // Rugs/furniture fill the court, with stone cross aisles and a central walnut bar.
@@ -3174,8 +3211,6 @@ export function build(K) {
   K.slab(B1POLY,YB1,{mat:'ccLinkMarble',under:false,ceil:false,holes:H.b1,edge:false});
   const terminalF1Holes=H.f1.filter(h=>h.some(q=>K.pointInPoly(...q,F1POLY)));
   K.slab(F1POLY,Y1,{mat:M.hallFloor,under:false,holes:terminalF1Holes,thick:.3});
-  const localS=q=>(q[0]-OX)*AX+(q[1]-OZ)*AZ;
-  const localT=q=>(q[0]-OX)*EX+(q[1]-OZ)*EZ;
   const center=poly=>poly.reduce((a,q)=>[a[0]+q[0]/poly.length,a[1]+q[1]/poly.length],[0,0]);
   // B1 coffer ceiling sits below the structural underside; keep the existing escalator openings.
   K.hpoly(0xeee6d6,F1POLY,-.3,false,terminalF1Holes);
@@ -3183,9 +3218,8 @@ export function build(K) {
   const planCeilingHoles=H.f1.filter(h=>h.some(q=>K.pointInPoly(...q,b1PlanOutline)));
   K.hpoly(0xf0e5d3,b1PlanOutline,-.31,false,planCeilingHoles);
   K.phys.addCeiling(b1PlanOutline,-.31,{holes:planCeilingHoles});
-  const hosRoofHole=RECT(99,21.5,115,33.5);
-  K.hpoly(0xe9d9bc,hosB1Poly,-.32,false,[hosRoofHole]);
-  K.phys.addCeiling(hosB1Poly,-.32,{holes:[hosRoofHole]});
+  K.hpoly(0xe9d9bc,hosB1Poly,-.32,false,[hosRoofHole,hosEntryWell]);
+  K.phys.addCeiling(hosB1Poly,-.32,{holes:[hosRoofHole,hosEntryWell]});
   // Close the unused southern B1 floorplate. One eight-metre passage skirts
   // the interior House on its west and rejoins the J7/station approach.
   lwall(63.3,0,63.3,14.6,YB1,CB,{mat:0xe3d8c3});
@@ -3208,21 +3242,6 @@ export function build(K) {
   const south2=clipHalf(TERM,q=>151-localS(q));
   // Round11: holes touching the outer edge produced an invalid Earcut triangle over HOS at y5,
   // even though physics excluded the hole. Explicit disjoint polygon pieces remove the visual slab too.
-  const subtractFloorRects=(poly,holes)=>{
-    let pieces=[poly];
-    for(const h of holes){
-      const ss=h.map(localS),tt=h.map(localT),s0=Math.min(...ss),s1=Math.max(...ss),t0=Math.min(...tt),t1=Math.max(...tt),next=[];
-      for(const piece of pieces){
-        let rest=piece;
-        for(const f of [q=>localT(q)-t0,q=>t1-localT(q),q=>localS(q)-s0,q=>s1-localS(q)]){
-          const outside=clipHalf(rest,f);if(outside.length>=3&&Math.abs(K.polyArea(outside))>.001)next.push(outside);
-          rest=clipHalf(rest,q=>-f(q));if(rest.length<3)break;
-        }
-      }
-      pieces=next;
-    }
-    return pieces;
-  };
   const eastPieces=[clipHalf(east2,q=>localS(q)-61.5),clipHalf(east2,q=>138.5-localS(q))];
   for(const poly of eastPieces)for(const piece of subtractFloorRects(poly,H.f2))
     K.slab(piece,Y2,{mat:M.f2Floor,under:0xeee6d8,thick:.3});
@@ -3690,7 +3709,7 @@ export function build(K) {
   sp('호남선 대합실 · 동상 벤치', 33, 22, 0, 'W');
   sp('호남선 승차홈 (8번)', bays.find(b => b.p === 8).s, 4.6, Y1 + 0.12, 'W');
   sp('스위트 파크 · 호남선 연결통로 (B1)', 7, 25, YB1, 'S');
-  sp('하우스 오브 신세계 · B1 라운지', 115.9, 26.5, YB1, 'N');
+  {const [x,z]=courtP(5.2,-1);K.spawn({name:'하우스 오브 신세계 · B1 라운지',x,z,y:YB1,yaw:courtR+PI});}
   sp('호남선 대합실 · 매표소와 B1 연결', 124.5, 28.5, 0, 'N');
   sp('지하철 7호선 연결통로 (B1)', 173.4, -28, YB1, 'S');
   sp('파미에스테이션 1층 · 호호식당', 189.5, -58, Y1, 'N');

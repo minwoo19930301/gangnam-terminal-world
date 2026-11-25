@@ -576,8 +576,11 @@ export function build(K) {
   // CORE: stairs + guest elevator + service blocks (B4 → 33F)
   // =====================================================================
   const hotelKit=K;
+  // The hotel's B1 core continues in the west podium band. Its former tower
+  // position cut through the public House food hall and its open court.
+  const westCoreBase=Y.B1;
   const corePieces=(lo,hi,draw)=>{
-    for(const[a,b,du]of[[lo,Math.min(hi,0),0],[Math.max(lo,0),Math.min(hi,9.5),-21],[Math.max(lo,9.5),hi,0]]){
+    for(const[a,b,du]of[[lo,Math.min(hi,westCoreBase),0],[Math.max(lo,westCoreBase),Math.min(hi,9.5),-21],[Math.max(lo,9.5),hi,0]]){
       if(b<=a)continue;const before=fit;setFit(du);try{draw(a,b);}finally{fit=before;}
     }
   };
@@ -585,9 +588,9 @@ export function build(K) {
     if(key==='prism')return(poly,a,b,o)=>corePieces(a,b,(lo,hi)=>target.prism(poly,lo,hi,o));
     if(key==='wall')return(ax,az,bx,bz,a,b,o)=>corePieces(a,b,(lo,hi)=>target.wall(ax,az,bx,bz,lo,hi,o));
     if(key==='box')return o=>corePieces(o.y,o.y+o.h,(lo,hi)=>target.box({...o,y:lo,h:hi-lo}));
-    if(key==='slab')return(poly,y,o)=>{const before=fit;if(y>=0&&y<9.5)setFit(-21);try{return target.slab(poly,y,o);}finally{fit=before;}};
-    if(key==='stairs')return(ax,az,bx,bz,o)=>{if(o.ya<0&&o.yb>-.01||o.ya>=6&&o.ya<9.5)return;const before=fit;if(o.ya>=0&&o.ya<9.5)setFit(-21);try{return target.stairs(ax,az,bx,bz,o);}finally{fit=before;}};
-    if(key==='sign')return(text,o)=>{const before=fit;if(o.y>=0&&o.y<9.5)setFit(-21);try{return target.sign(text,o);}finally{fit=before;}};
+    if(key==='slab')return(poly,y,o)=>{const before=fit;if(y>=westCoreBase&&y<9.5)setFit(-21);try{return target.slab(poly,y,o);}finally{fit=before;}};
+    if(key==='stairs')return(ax,az,bx,bz,o)=>{if(o.ya>=westCoreBase&&o.ya<0||o.ya>=6&&o.ya<9.5)return;const before=fit;if(o.ya>=0&&o.ya<9.5)setFit(-21);try{return target.stairs(ax,az,bx,bz,o);}finally{fit=before;}};
+    if(key==='sign')return(text,o)=>{const before=fit;if(o.y>=westCoreBase&&o.y<9.5)setFit(-21);try{return target.sign(text,o);}finally{fit=before;}};
     if(key==='zone')return o=>{if(o.floor==='B1')return;const before=fit;if(o.y0>=0&&o.y0<9.5)setFit(-21);try{return target.zone(o);}finally{fit=before;}};
     if(key==='groundHole')return()=>{};
     return target[key];
