@@ -1,3 +1,4 @@
+import { withJamwonInlet } from './river-water.js';
 import { height as perstigeHeight, panels as perstigePanels } from '../assets/models/perstige/panels.js';
 import { fleetInstances, vehicleSize } from './fleet.js';
 // Generic city layer from OpenStreetMap: everything not claimed by a detailed place module.
@@ -13,6 +14,10 @@ const LAYER_H = 7.5;
 export function buildCity(K, osm, { claimedBuildings = new Set(), claimedRoads = new Set(), claimedAreas = new Set(), log = () => {} } = {}) {
   const { THREE } = K;
   const rnd = K.rand(42);
+  const streetLampLens = new THREE.MeshLambertMaterial({color:0xb9c1c1,emissive:0xffddaa,emissiveIntensity:0});
+  streetLampLens.name = '가로등 발광렌즈';
+  K.material('street-lamp-lens',streetLampLens);
+  K.onNight?.(night => { streetLampLens.emissiveIntensity = night ? 1.35 : 0; });
   // ---------- building index (for tree/POI placement tests) ----------
   const bGrid = new Map(); const CELL = 40;
   const bkey = (i, j) => i * 10007 + j;
@@ -108,24 +113,26 @@ export function buildCity(K, osm, { claimedBuildings = new Set(), claimedRoads =
   for (const a of osm.areas) {
     if (claimedAreas.has(a.id)) continue;
     if (a.kind === 'natural:water') {
-      const wy = polyArea(a.poly) > 20000 ? -1.4 : -0.5;
-      K.groundHole(a.poly, a.holes);
+      const han = a.id === 152336;
+      const outline = han && claimedAreas.has(981963451) ? withJamwonInlet(a.poly) : a.poly;
+      const wy = polyArea(outline) > 20000 ? -1.4 : -0.5;
+      K.groundHole(outline, a.holes);
       const stream = a.id === 248405787; // Banpocheon's banks descend along the channel.
-      const datum = relief(...a.poly[0]);
-      const level = stream ? wy : wy + Math.min(...a.poly.map(p => relief(...p))) - datum;
+      const datum = relief(...outline[0]);
+      const level = stream ? wy : wy + Math.min(...outline.map(p => relief(...p))) - datum;
       function waterMesh() {
-        K.hpoly('water', a.poly, level, true, a.holes);
-        K.phys.addSurface(a.poly, level - 0.7, { holes: a.holes, slow: 0.7, tag: 'water' });
-        const ns = K.orient(a.poly);
-        for (let i = 0; i < a.poly.length; i++) {
-          const p = a.poly[i], q = a.poly[(i + 1) % a.poly.length];
+        K.hpoly(han ? 'hanRiver' : 'water', outline, level, true, a.holes);
+        K.phys.addSurface(outline, level - 0.7, { holes: a.holes, slow: 0.7, tag: 'water' });
+        const ns = K.orient(outline);
+        for (let i = 0; i < outline.length; i++) {
+          const p = outline[i], q = outline[(i + 1) % outline.length];
           const py = stream ? 0.01 : relief(...p) - datum + 0.01;
           const qy = stream ? 0.01 : relief(...q) - datum + 0.01;
           K.quad({ tex: 'concrete', color: 0x9a9890 }, [[p[0], level - 1, p[1]], [q[0], level - 1, q[1]], [q[0], qy, q[1]], [p[0], py, p[1]]], [-ns[i][0], 0, -ns[i][1]]);
         }
       }
       if (stream) waterMesh();
-      else K.withTerrainAnchor(...a.poly[0], waterMesh);
+      else K.withTerrainAnchor(...outline[0], waterMesh);
       for (const h of a.holes || []) K.hpoly({ tex: 'grass', color: 0xd8e0b0 }, h, 0.0, true);
       continue;
     }
@@ -327,7 +334,13 @@ export function buildCity(K, osm, { claimedBuildings = new Set(), claimedRoads =
         K.tree(tx, tz, { kind: r.hw === 'primary' ? 'ginkgo' : 'zelkova', h: 7 + rnd() * 3 });
         if (Math.round(s) % 30 < 10) { // street lamp
           const lx = tx + dx * 5, lz = tz + dz * 5;
-          if (!buildingAt(lx, lz, 1)) { K.cyl({ x: lx, z: lz, r: 0.09, h: 9, mat: 0x6d7378, seg: 6, solid: false }); K.box({ x: lx - nx * sg * 1.2, y: 8.8, z: lz - nz * sg * 1.2, w: 0.35, h: 0.18, d: 2.4, rotY: Math.atan2(nx, nz), mat: 0x5a6066, solid: false }); }
+          if (!buildingAt(lx, lz, 1)) {
+            const rotY = Math.atan2(nx,nz);
+            K.cyl({x:lx,z:lz,r:.09,h:9,mat:0x6d7378,seg:6,solid:false});
+            K.box({x:lx-nx*sg*1.2,y:8.8,z:lz-nz*sg*1.2,w:.35,h:.18,d:2.4,rotY,mat:0x5a6066,solid:false});
+            K.box({x:lx-nx*sg*1.93,y:8.748,z:lz-nz*sg*1.93,w:.30,h:.052,d:.78,rotY,
+              mat:'street-lamp-lens',skip:['top'],solid:false});
+          }
         }
       }
     });
