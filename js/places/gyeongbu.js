@@ -837,7 +837,11 @@ export function build(K) {
         furnish(() => {
         lbox(66.95,v,2.9,.3,step-.08,.4,0x2a2d30,{solid:false});lsign(name==='죠 샌드위치'?'CAFE JOE’S SANDWICH':name,67.13,v,3.1,Math.min(name==='죠 샌드위치'?4.8:3.2,step-.45),.24,'+u',{bg:null,fg:'#e7f3fc',padding:.015,pxPerM:160});
         for(let vv=a;vv<b;vv+=1.2)lbox(66.73,vv,3.4,.025,.022,1.1,0xbdb39c,{solid:false});
-        if(name!=='죠 샌드위치')lbox(58.5,v,.1,.65,step-.8,2.1,0xe2d9c6,{side:'gb_shelf'});lbox(63,v,3.17,.6,step-.8,.025,'emit',{solid:false});
+        // The two shop backs adjoin the open B1–1F escalator well. Set shelves
+        // against the shop side so stock does not project above rising riders.
+        const besideWell = v0 === 73 && j < 2;
+        if(name!=='죠 샌드위치') lbox(besideWell ? 63.6 : 58.5,v,.1,.65,step-.8,2.1,0xe2d9c6,{side:'gb_shelf'});
+        lbox(63,v,3.17,.6,step-.8,.025,'emit',{solid:false});
         if(food){
           lbox(66.65,v,0,.6,step-.35,1,'gb6_countertile');lbox(66.7,v,1,.8,step-.3,.055,0xc9cdcf,{solid:false});
           for(let vv=a+.6;vv<b-.4;vv+=1.05){lbox(67.55,vv,.75,.43,.43,.075,0x886848);for(const du of [-.17,.17])lbox(67.55+du,vv,0,.035,.34,.75,0x3c3a35,{solid:false});lbox(67.77,vv,.82,.045,.4,.36,0x646a67,{solid:false});}
@@ -1536,7 +1540,12 @@ export function build(K) {
       }
       for(const [i,name] of ['금호(속리산)','오피스','천일사무실','천일영업소','동양영업소','브레드가든'].entries()){
         const u=284.65+i*5.3;lsign(name,u,13.13,NORTH_2F+2.8,4.8,.38,'+v',{bg:'#5e695f',fg:'#fff'});
-        lbox(u,5,NORTH_2F,3.3,.8,.75,0xc5baa4);lbox(u,3,NORTH_2F,3.8,.5,2.2,0xdad5c8,{side:'gb_shelf'});
+        // The west label is above the stair well. Keep the floor furniture in
+        // the five solid bays; the first desk and shelf formerly hung in air.
+        if(i>0){
+          lbox(u,5,NORTH_2F,3.3,.8,.75,0xc5baa4);
+          lbox(u,3,NORTH_2F,3.8,.5,2.2,0xdad5c8,{side:'gb_shelf'});
+        }
       }
       lsign('2층 식당가 · 할리스커피',259,18,7.05,5.2,.48,'+u',{bg:'#42675d',fg:'#fff',twoSided:true});
     });
