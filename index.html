@@ -16,6 +16,10 @@
   <div id="hud">
     <div id="zone">불러오는 중</div>
     <div id="zone-sub"></div>
+    <div id="sky-time"><select id="sky-mode" aria-label="서울 하늘 시간">
+      <option value="live">서울 실시간</option><option value="sunrise">아침 보기</option>
+      <option value="day">낮 보기</option><option value="sunset">노을 보기</option><option value="night">밤 보기</option>
+    </select> <span id="sky-clock"></span></div>
     <div id="coord"></div>
   </div>
   <div id="cross"></div>
@@ -26,7 +30,7 @@
     <b>조작</b><br>
     WASD 이동 · 마우스 시점 · Shift 달리기 · Space 점프<br>
     E 엘리베이터/상호작용 · M 지도(클릭해서 순간이동) · F 비행 모드 (Space/C 상하)<br>
-    N 밤/낮 · R 처음 위치 · H 도움말
+    N 밤/낮 · Shift+N 서울 실시간 · R 처음 위치 · H 도움말
   </div>
   <div id="stick" aria-label="이동 패드"><div id="knob"></div></div>
   <div id="touch-btns"><button id="btn-use">E</button><button id="btn-run">달리기</button><button id="btn-fly">비행</button><button id="btn-map">지도</button></div>
