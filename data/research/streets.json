@@ -1,8 +1,10 @@
 {
   "id": "streets",
   "name": "고속터미널 거리 · 신반포로와 사평대로",
-  "updated": "2026-11-07",
+  "updated": "2026-11-25",
   "sources": [
+    {"url":"https://map.naver.com/p?c=18.00,0,0,0,adh&p=mU8aHacBJYgq0X7dtSPrtw,-88,10,80,Float","title":"고속터미널사거리 서향 · 2026년 1월 네이버 거리뷰","evidence":"가로 지지대, 복수 차량 신호면, 흰 횡단보도."},
+    {"url":"https://map.naver.com/p?c=18.00,0,0,0,adh&p=mU8aHacBJYgq0X7dtSPrtw,-58,0,40,Float","title":"고투몰 G14·뉴코아 측 교통섬 · 같은 파노라마 확대","evidence":"서로 다른 방향 신호면과 적색 보행 신호, 볼라드·황색 점자블록. 높이와 신호 주기 미확인."},
     {
       "url": "https://www.asiae.co.kr/en/article/2024121008343423332",
       "title": "Asiae: Banpo-dong Intersection crosswalk (Goter)",
