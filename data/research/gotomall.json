@@ -1,7 +1,308 @@
 {
  "id": "gotomall",
  "name": "강남터미널 지하도상가 (GOTO MALL 고투몰)",
- "updated": "2026-11-07",
+ "updated": "2026-11-25",
+ "public_walk_and_shops_20261125": {
+  "checked": "2026-11-25",
+  "sources": {
+   "공단 시설안내": "https://www.sisul.or.kr/open_content/undershop/guide/terminal/gangnam.jsp",
+   "공단 배치도 페이지": "https://www.sisul.or.kr/open_content/undershop/undershop/undershopDetail.do?menu_div=euljiro&page_div=02&shop_seq=32",
+   "운영사 매장 목록": "https://gotomall.kr/stores?view=all",
+   "운영사 안내도": "https://gotomall.kr/map",
+   "서초구 G2 공공보행통로": "https://www.seocho.go.kr/site/seocho/04/10404081200002017101702.jsp",
+   "서편 사거리 네이버 지도": "https://map.naver.com/p?c=14137701,4509729,18,0,0,0,dh",
+   "G1 신반포로 네이버 거리뷰": "https://map.naver.com/p?c=18,0,0,0,adh&p=hjTPhNZ3xQr6lozhU0XS9w,163,10,80,Float",
+   "G15 승강기 탑승자 촬영": "https://www.youtube.com/watch?v=94neW5rpygA",
+   "공단 1구역 원본 JPG": "https://www.sisul.or.kr/open_content/com/common/upfiles.do?program=undershop!0923_gosokteomineol_1chabaechido_(1guyeok).jpg",
+   "공단 2구역 원본 JPG": "https://www.sisul.or.kr/open_content/com/common/upfiles.do?program=undershop!0923_gosokteomineol_1chabaechido_(2guyeok).jpg",
+   "공단 3구역 원본 JPG": "https://www.sisul.or.kr/open_content/com/common/upfiles.do?program=undershop!0923_gosokteomineol_1chabaechido_(3guyeok).jpg"
+  },
+  "counts": "공단은 점포 규모를 620개, 운영사 공개 목록은 조회일에 613개로 표시했다. 구역도 세 장과 공개 목록의 상호·호수·업종을 대조하고 선별된 현재 점포 17곳을 상세 모델링했다.",
+  "method": "공단 도면은 1~3구역의 공용 출입구와 A/B/C/D/G/T 점포를 보여 준다. 굽은 구간이나 페이지가 나누어진 부분의 화면상 거리를 현장 실측 거리로 사용하지 않았다. 1구역 반포사거리 네 갈래를 실제 네이버 지도 확대 18단계 바닥 도형과 대조했다. 서편 4개 출구는 각 모퉁이 대표 갈래의 지상 위치를 근사했다. 에스컬레이터는 표기된 출구에 맞춰 모델 하부 한 구간에 병설했다. 계단 회전·개별 대수·운행 방향·캐빈 중심은 추정이다.",
+  "entrances": [
+   {
+    "gate": "G1",
+    "sheet": "1",
+    "public_guide": "서편 G열 남서, 반포4동·래미안퍼스티지 방면. 분기·계단·에스컬레이터 기호.",
+    "model": "네이버 반포사거리 남서 갈래를 기준으로 지상 연결 1곳과 에스컬레이터·갈색 루버 캐노피 구현. 다른 갈래 상단의 정확한 선형은 미측정."
+   },
+   {
+    "gate": "G2",
+    "sheet": "1",
+    "public_guide": "서편 G열 북서, 반포2동·신반포중학교. 승강기와 에스컬레이터 기호. 서초구가 G2에서 고터세빛 관광안내센터·한강공원으로 연결된다고 안내.",
+    "model": "북서 계단, 에스컬레이터와 독립 승강기. 원베일리의 기존 지하 연결 문턱을 유지하며 두 접근 지점을 구별."
+   },
+   {
+    "gate": "G3",
+    "sheet": "1",
+    "public_guide": "D001 서측에서 르본시티·위너스시티 방면, 승강기 기호.",
+    "model": "네이버 남동쪽 갈래에 맞춰 B1–지상 계단과 승강기 추가. 건물 내부 연결의 실측 평면은 미확인."
+   },
+   {
+    "gate": "G4",
+    "sheet": "1",
+    "public_guide": "A001 서측, 반포대교·반포한강공원 쪽, 에스컬레이터 기호.",
+    "model": "북동 모퉁이로 표면 재배치. 기존 사진 판독 게이트 헤더와 하부 에스컬레이터 재사용. G-002·G-022 매장 안내."
+   },
+   {
+    "gate": "G5",
+    "sheet": "1·2",
+    "public_guide": "D026/027 부근 남측 계단. 센트럴시티·호남선 방면.",
+    "model": "기존 계단·별도 센트럴시티 연결, 지상 좌표 추정."
+   },
+   {
+    "gate": "G6",
+    "sheet": "1·2",
+    "public_guide": "A028/029 부근 북측, 계단과 에스컬레이터 기호.",
+    "model": "기존 북측 계단에 에스컬레이터 병설."
+   },
+   {
+    "gate": "G7-1",
+    "sheet": "2",
+    "public_guide": "D056–057 사이 남측 계단 기호.",
+    "model": "기존 3·7호선/터미널 접점 주변. 7-1의 개별 분기와 도착층에 대응하는 실측 연결 미확인."
+   },
+   {
+    "gate": "G7",
+    "sheet": "2",
+    "public_guide": "D057–058 사이 남측 계단, 고속버스터미널·철도역 방향.",
+    "model": "3호선 G7 홀과 다른 모듈의 공용 W3 계단 연계. 공단의 세 분기 모두를 별도 출구로 구현한 상태는 아님."
+   },
+   {
+    "gate": "G7-2",
+    "sheet": "2",
+    "public_guide": "D058–059 사이 남측에 계단·승강기 기호.",
+    "model": "기존 역·터미널 보행 연결. 독립된 7-2 승강기의 도착층·샤프트 정합은 보류."
+   },
+   {
+    "gate": "G8 / 8-1",
+    "sheet": "2",
+    "public_guide": "A057·058과 059·060 사이 북측 고속터미널역 방향. 구역도에 승강기 1개, 서·동 계단/에스컬레이터 표기.",
+    "model": "8-1의 독립 승강기는 별도 사진 근거. 서편 8-1 계단에 에스컬레이터를 병설. 역 번호는 OSM/네이버 표기와 병용."
+   },
+   {
+    "gate": "G8 / 8-2",
+    "sheet": "2",
+    "public_guide": "같은 홀 반원초등학교 방향 계단 및 에스컬레이터.",
+    "model": "기존 8-2 계단·캐노피에 에스컬레이터 추가. 8-2 전용 승강기는 근거가 없어 표시하지 않음."
+   },
+   {
+    "gate": "역 8번",
+    "sheet": "역 공용",
+    "public_guide": "신세계·센트럴시티 쪽 역 출구.",
+    "model": "기존 OSM 위치의 남측 계단. 몰 게이트 8 및 8-1·8-2와 별도."
+   },
+   {
+    "gate": "G9 / 역 1번",
+    "sheet": "2",
+    "public_guide": "D084·085 사이 남측 경부선 방면, 계단 분기.",
+    "model": "기존 모델의 역 1번 계단과 한가람문구·다이소 1번 연결(J2). 번호의 일대일 등치는 근사."
+   },
+   {
+    "gate": "G10",
+    "sheet": "2",
+    "public_guide": "A087–088 사이 북측, 에스컬레이터 기호.",
+    "model": "기존 북측 계단에 에스컬레이터 병설."
+   },
+   {
+    "gate": "G11",
+    "sheet": "3",
+    "public_guide": "D116–117 남측 단차 및 경부·영동선/골드애비뉴 방향 연결 표기.",
+    "model": "2026-11-07 사진 근거의 중앙광장–다이소 GATE 4, B1 -6m→다이소 -4m 계단 유지."
+   },
+   {
+    "gate": "G12",
+    "sheet": "3",
+    "public_guide": "A119–120 북측에 계단·승강기 기호. 반포쇼핑타운 6·7동 방향.",
+    "model": "기존 북측 출구 옆 운영사 도면 기호에 따라 승강기 추가. 개별 캐빈 중심·치수는 추정."
+   },
+   {
+    "gate": "G13",
+    "sheet": "3",
+    "public_guide": "D141 끝 남측, 경부·영동선/삼호가든 방향, 승강기 기호.",
+    "model": "기존 촬영에 정합된 회전계단과 (339,-232) 승강기. 지상 캐노피/보도는 streets 모듈."
+   },
+   {
+    "gate": "G14",
+    "sheet": "3",
+    "public_guide": "A144 끝 북측, 양쪽 계단에 에스컬레이터 기호.",
+    "model": "뉴코아 방향 계단·하부 에스컬레이터. 개별 지상 분기의 세부 대수 미측정."
+   },
+   {
+    "gate": "G15",
+    "sheet": "3",
+    "public_guide": "동편 T열 남동, 반포자이 연결과 승강기 기호.",
+    "model": "기존 계단과 승강기로 B1/지상 접근. 탑승 영상에는 중간 상가층이 있으나 그 층의 실내와 현행 번호는 미복원."
+   },
+   {
+    "gate": "G16",
+    "sheet": "3",
+    "public_guide": "동편 T열 북동, 반포역·잠원동 방향, 계단 분기.",
+    "model": "기존 북측 계단과 별도 반포역 방향 모형 연결. 각 지상 분기까지의 실측 선형은 미확인."
+   }
+  ],
+  "retail": [
+   {
+    "name": "애니타임",
+    "directory_unit": "A-008",
+    "category": [
+     "여성의류"
+    ],
+    "guide": "https://gotomall.kr/stores/65e3d4b6-f7ee-4898-bdba-8282f5e004a9",
+    "blender_set": "apparel"
+   },
+   {
+    "name": "레몬상자",
+    "directory_unit": "A-012",
+    "category": [
+     "타로/체험"
+    ],
+    "guide": "https://gotomall.kr/stores/92cd3798-b1d0-4221-968a-2a74517d1cab",
+    "blender_set": "tarot"
+   },
+   {
+    "name": "클릭",
+    "directory_unit": "D-016",
+    "category": [
+     "여성의류"
+    ],
+    "guide": "https://gotomall.kr/stores/60950fe3-879d-4a1d-91fe-46784fcf8f17",
+    "blender_set": "apparel"
+   },
+   {
+    "name": "미나키즈",
+    "directory_unit": "A-021",
+    "category": [
+     "유아동/주니어"
+    ],
+    "guide": "https://gotomall.kr/stores/108c0bf1-91cc-45a8-a114-448a732c881c",
+    "blender_set": "junior"
+   },
+   {
+    "name": "제원 · 블레스드진",
+    "directory_unit": "C-028",
+    "category": [
+     "여성의류"
+    ],
+    "guide": "https://gotomall.kr/stores/dce71f28-78f8-499b-a956-aa4e4b001e9c",
+    "blender_set": "apparel"
+   },
+   {
+    "name": "보니따",
+    "directory_unit": "B-052",
+    "category": [
+     "여성의류"
+    ],
+    "guide": "https://gotomall.kr/stores/4bdfbbb4-cad2-4801-ae4e-073f029fad96",
+    "blender_set": "apparel"
+   },
+   {
+    "name": "스토리지21",
+    "directory_unit": "D-069,070",
+    "category": [
+     "여성의류"
+    ],
+    "guide": "https://gotomall.kr/stores/955be87f-af6e-41d6-8d87-70ecbe032766",
+    "blender_set": "apparel"
+   },
+   {
+    "name": "리스본",
+    "directory_unit": "A-083",
+    "category": [
+     "여성의류"
+    ],
+    "guide": "https://gotomall.kr/stores/e13fb0b1-d458-4d59-9083-1bde55ffc4ca",
+    "blender_set": "apparel"
+   },
+   {
+    "name": "비앤드제이",
+    "directory_unit": "B-075",
+    "category": [
+     "생활소품/침구류"
+    ],
+    "guide": "https://gotomall.kr/stores/e7865f1f-0865-47e7-b8ba-da3d879bfd40",
+    "blender_set": "linen"
+   },
+   {
+    "name": "헤쎄드",
+    "directory_unit": "D-086",
+    "category": [
+     "모자/악세서리",
+     "가방"
+    ],
+    "guide": "https://gotomall.kr/stores/1429441b-a03a-46fb-9133-417cc4a676ea",
+    "blender_set": "bags"
+   },
+   {
+    "name": "델라",
+    "directory_unit": "A-110",
+    "category": [
+     "여성의류"
+    ],
+    "guide": "https://gotomall.kr/stores/105c7e99-bbb4-47ca-9b04-5634018dc412",
+    "blender_set": "apparel"
+   },
+   {
+    "name": "모노",
+    "directory_unit": "A-116",
+    "category": [
+     "주방/건강"
+    ],
+    "guide": "https://gotomall.kr/stores/3a719bc7-9269-4d1e-aa8a-b98f23cadc6b",
+    "blender_set": "kitchen"
+   },
+   {
+    "name": "고려주방",
+    "directory_unit": "A-118",
+    "category": [
+     "주방/건강"
+    ],
+    "guide": "https://gotomall.kr/stores/973055b7-f931-40b8-bbe8-50db0e326e7a",
+    "blender_set": "kitchen"
+   },
+   {
+    "name": "틸다블루",
+    "directory_unit": "A-125",
+    "category": [
+     "침구/소품"
+    ],
+    "guide": "https://gotomall.kr/stores/993869af-caa9-4d5e-bac9-a41c35fe2b47",
+    "blender_set": "linen"
+   },
+   {
+    "name": "숲으로",
+    "directory_unit": "B-122",
+    "category": [
+     "원예/화훼"
+    ],
+    "guide": "https://gotomall.kr/stores/89e06a2a-7e8b-457b-849e-d18acb07242a",
+    "blender_set": "flowers"
+   },
+   {
+    "name": "느릅나무",
+    "directory_unit": "D-135",
+    "category": [
+     "침구/소품"
+    ],
+    "guide": "https://gotomall.kr/stores/32209ac6-a359-423d-9e72-5c130e7938b2",
+    "blender_set": "linen"
+   },
+   {
+    "name": "명플라워",
+    "directory_unit": "A-144",
+    "category": [
+     "원예/화훼"
+    ],
+    "guide": "https://gotomall.kr/stores/2262a6d2-4ea7-47c4-97ea-e8ec3f9d95ae",
+    "blender_set": "flowers"
+   }
+  ],
+  "store_evidence": "공개 대표사진의 업종과 대표적인 집기·재질·상품 구성을 참고했다. 틸다블루 세로 줄무늬 차양, 고려주방 청색 헤더, 레몬상자의 목재 마감과 세로 안내판, 헤쎄드의 벽면 가방, 꽃집의 꽃단/화분 등이 보인다. 나머지 간판은 확인한 상호의 레터링 재구성으로 실제 글꼴·인증 로고 복제가 아니다. 내부 치수·당일 재고·가격은 실측하지 않았다. 블루제이 등 업종과 대표사진이 불일치하는 점포는 이번 모델 대상에서 제외했다.",
+  "shop_addresses": "공식 호수와 점포 열은 실제 정보이며, 칸 경계는 기존 모델을 사용했다. 이전 실사기록이 우선하는 숲으로는 기존 위치를 보존, 운영사 표기 B-122를 기록. 다중 호수인 스토리지21의 실제 점포 폭과 모델 단일 칸 폭은 다르다.",
+  "wayfinding": "G4 옆 메가MGC커피와 기존 청년떡볶이는 네이버 매장 카드 및 운영사 G-002/G-022를 대조해 G4 안내판에 표기했다. 라떼야커피·청년손튀김은 자료 간 상호 일치가 확정되지 않아 매장을 추가하지 않았다.",
+  "asset": "assets/models/gotomall/shop-interiors.blend 안의 7개 편집 가능한 점포 컬렉션과 export_mesh.py로 같은 면·색상·센티미터 정점의 웹 모듈을 생성했다. 17곳에 실제 적용.",
+  "verification": "실제 프로젝트 바닥/충돌 엔진(반경 0.32m, 키 1.75m, 0.25m 간격)으로 대표 매장 17곳의 문 앞에서 깊이 65% 지점까지 모두 도달. 일반 지상계단 15곳 전부 B1 공용 보행공간에서 지상 착지까지 도달. G11 다이소 내부 연결과 G13 별도 계단은 전용 경로로 별도 확인. 사진은 모델 화면이며 실제 운영상태는 미확인."
+ },
  "sources": [
   {
    "url": "https://sisul.or.kr/open_content/undershop/guide/terminal/gangnam.jsp",
