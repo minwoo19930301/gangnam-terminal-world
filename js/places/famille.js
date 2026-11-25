@@ -1,5 +1,5 @@
-import { relief, exteriorReliefEnabled } from '../banpo_relief.js';
-import { gardenSurface, hotelCourtDatum } from './_gardenGrade.js';
+import { gardenSurface, gardenStation } from './_gardenGrade.js';
+import { relief } from '../banpo_relief.js';
 
 // Round 20. The user's 2026-11-07 photographs override the older GPS/plan fit.
 // The indoor restaurant street meets parking 2F. The garden is above parking 3F.
@@ -352,37 +352,31 @@ function buildDeck(K) {
       box(s,v,garden,.18,.73,.28,0x493f35);
     }
   }
-  const walkStart=P(.6,6), valet=FP(27,15.7);
-  const dx=valet[0]-walkStart[0], dz=valet[1]-walkStart[1], startDatum=relief(...walkStart);
-  // The garden walk merges diagonally into the hotel forecourt. Once on
-  // the court, the full width of both pavements shares the same level.
-  K.withTerrainSurface((x,z)=>{
-    if (!exteriorReliefEnabled()) return 0;
-    const t=Math.max(0,Math.min(1,((x-walkStart[0])*dx+(z-walkStart[1])*dz)/(dx*dx+dz*dz)));
-    const f=Math.min(1,t/.24), blend=f*f*(3-2*f);
-    const endDatum=hotelCourtDatum(x,z)+(11.56-garden)*(1-t);
-    return startDatum+(endDatum-startDatum)*blend;
-  },()=>{
-    const sections=Math.ceil(Math.hypot(dx,dz)/3);
-    const point=t=>[walkStart[0]+dx*t,walkStart[1]+dz*t];
-    const level=t=>garden+(11.56-garden)*t;
-    for(let i=0;i<sections;i++) {
-      const a=i/sections,b=(i+1)/sections;
-      K.ramp(...point(a),...point(b),{ya:level(a),yb:level(b),w:9,mat:'sidewalk',rails:false});
-    }
-  });
-  sign('JW 메리어트 정문 · 발레',2,7,garden+2.3,3.4,.4,faceEast);
+  // The walk from the restaurant roof ends at the upper parking apron.
+  // The approach across the next block and the hotel canopy is a separate
+  // vehicular court, owned by streets, with its own kerbs and crossings.
+  const roofExit=P(4,11), apron=P(4,20);
+  K.ramp(...roofExit,...apron,{ya:garden,yb:gardenSurface(4,20),w:2.1,mat:'sidewalk',rails:false});
   // Keep the public car park continuous past the short OSM western building.
   // Bend the garden aisle around the separate transverse block at station 197.
   const extension=[P(104,1),P(160,1),P(196,26),P(196,41),P(156,17),P(104,17)];
+  // The upper drive cuts across this garage wing. Its wearing course and
+  // the planted deck share a surveyed grade; the three decks below stay level.
+  // Preserve the restaurant sill and the joint to the older west building.
+  const roofDatum=(x,z)=>{
+    const s=gardenStation(x,z),v=nx*(x-71.26)+nz*(z-143.25);
+    const blend=Math.min(1,Math.max(0,(v-9)/7))*Math.min(1,Math.max(0,(s-104)/8));
+    return relief(x,z)+blend*(gardenSurface(s,v)-garden-.03);
+  };
   for(const level of [0,5,9,garden]) {
-    K.slab(extension,level,{mat:level===garden?'sidewalk':floor,thick:.24,under:concrete});
+    if(level===garden) K.withTerrainSurface(roofDatum,()=>K.slab(extension,garden,{mat:'sidewalk',thick:.24,under:concrete}));
+    else K.slab(extension,level,{mat:floor,thick:.24,under:concrete});
     K.zone({name:level===garden?'파미에가든':'파미에 주차장',floor:String([0,5,9,garden].indexOf(level)+1)+'F',
       sub:'동측 주차 구역 · 식당가',poly:extension,y0:level-.08,y1:level+2.8,priority:7});
   }
-  for(const edge of [[196,41,156,17],[156,17,104,17]]){
-    wall(...edge,-.1,garden,{mat:concrete,thick:.2});
-  }
+  K.withTerrainSurface(roofDatum,()=>{
+    for(const edge of [[196,41,156,17],[156,17,104,17]]) wall(...edge,-.1,garden-.24,{mat:concrete,thick:.2});
+  });
   wall(6.6,16.8,104.4,16.8,0,9,{mat:concrete,thick:.18});
   for(let s=111;s<156;s+=4) for(const level of [0,5,9]){
     box(s,3.6,level+.01,.1,.025,4.3,0xe5dcb6);
@@ -400,8 +394,6 @@ function buildDeck(K) {
     sign(name,s,7.15,garden+3.25,3.5,.41,faceSouth,'#453c34','#f5e9cf');
   }
   sign('데블스도어 · 더 바이킹 →',283,39,gardenSurface(283,39)+1.65,4.6,.4,faceEast+PI);
-  const westDoor=P(1,4.5), garageEnd=FP(-6,36);
-  K.ramp(...garageEnd,...westDoor,{ya:9,yb:9,w:5.9,mat:'asphalt',rails:false});
   const start=P(72.8,8);
   K.spawn({name:'파미에 주차장 4층 · 파미에가든',x:start[0],z:start[1],y:garden,yaw:faceEast,group:'파미에스테이션'});
   K.spawn({name:'파미에 주차장 2층',x:103.9,y:5,z:135.3,yaw:103.1*PI/180,group:'파미에스테이션'});

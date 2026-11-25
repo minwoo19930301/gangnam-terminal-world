@@ -19,6 +19,18 @@
   },
   "sources": [
     {
+      "url": "https://map.naver.com/p?p=nOOQgVZmQWe4Z-qIb--3fg,105,0,80,Float&c=15,0,0,3,adh",
+      "type": "street_view",
+      "title": "파미에주차장 상부 진입구 · 2024년 3월 거리뷰",
+      "observation": "호텔 앞 주차 열 끝에서 동북동쪽으로 내려가는 입구에 신세계 파미에주차장·2.0m 표지, 흰 측벽, 노랑·검정 중앙분리대가 보인다. 진입구 아래부터 3층 차로까지의 경사는 기존 모델의 주차층 높이에 맞췄다."
+    },
+    {
+      "url": "https://ihcf.or.kr/uploaded/board/scheduling/_5c5692d73c7394d0c337df2a9c688ef71.pdf#page=1",
+      "type": "annotated_aerial",
+      "title": "JW 메리어트 호텔 서울 행사장 주차 안내",
+      "observation": "호텔에서 사평대로를 바라본 사진에 파미에주차장 입구 두 곳과 별도의 JW 메리어트·신세계 주차장 입구가 표시돼 있다. 호텔 앞 차로에서 중앙 식재대 옆 주차면, 횡단보도와 파미에 진입로가 보인다. 실내 경사로의 선형과 층고는 이 사진에서 확인할 수 없다."
+    },
+    {
       "url": "https://data.seoul.go.kr/dataList/OA-22241/F/1/datasetView.do",
       "type": "official_spot_heights",
       "title": "서울시 경사도 원자료의 2023·2025년 N3P_F002 표고점"

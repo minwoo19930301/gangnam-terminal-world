@@ -2,7 +2,8 @@ import { gardenPoint, gardenStation, gardenSurface, gardenKerb, gardenTerrainEdg
 import { relief, exteriorReliefEnabled } from '../banpo_relief.js';
 import { buildGardenPublicFork, publicForkRoads } from './_gardenPublicFork.js';
 import { buildGardenFrontage, frontageWays } from './_gardenFrontage.js';
-import { gardenPaving } from './_gardenArrival.js';
+import { gardenPaving, gardenParkedCar } from './_gardenArrival.js';
+import { buildFamilleGarageEntry, familleRampOpening, garageWallOpening } from './_familleGarageEntry.js';
 import { buildRearParking } from './_rearParking.js';
 import { gradedGround } from './_gradedGround.js';
 // Detailed public right-of-way. x east / z south; all dimensions in metres.
@@ -24,7 +25,7 @@ const inG13 = (x,z) => x>=313&&x<=348&&z>=-243&&z<=-225;
 const ROAD_IDS = [37402467,71105531,71105555,97847428,131326713,131327735,218681382,218722041,218722042,218722043,218870939,218870945,218913526,218913527,301889788,309355890,443523921,473798788,473798790,480856735,480856736,480856737,480856741,480856742,498559927,498559932,498559933,522783547,522946367,522946368,523144216,523341064,523344135,523344137,523344143,525738543,525738544,525738545,525738546,547990887,547990890,547990891,547990895,562661077,623304593,655403256,674432577,674432580,691602197,799014370,799014371,799014372,816395058,816395059,816395060,828782197,828782198,831108561,831108562,831108563,831108564,845497255,868689632,921261337,921681811,1011881496,1033191354,1033191355,1252436243,1263366775,1389238182,1389238183,1389238184,1389238185,1420100037,1420100038,1472739714,1497710490,1497710491,1498239506,1499902350,1499902351,1499902352,1499902353,1499902354,1499902355,1532298610,218722037,218722038,282194887,418110854,799014358,799014359,1252436244];
 const WALK_IDS = [301889787,301889789,308003937,606009741,665106093,665106094,665106095,665106096,665106097,816395057,845497271,845497273,1213763241,1213763242,1213763243,1232132158,1232132177,1232132196,1232132199,1481658419,1481658421,1481658423,1481658424,1481658425,1497710483,1497710484,1497710485,1497710486,1497710487,1497710488,1497710489,1497710492,1497710493,1497710494,1497710495,309355888,845497252,845497256,845497259,845497272];
 // These ways are built once at the parking district's local elevations.
-const gardenWays = [...frontageWays, 593858541, 356129692, 593858532, 356129686, 593858542, 593858547, 921681575,
+const gardenWays = [...frontageWays, 593858541, 1232132207, 593858544, 356129692, 593858532, 356129686, 593858542, 593858547, 921681575,
   ...publicForkRoads];
 export const meta = {
   id: 'streets', name: '고속터미널 거리 · 신반포로와 사평대로',
@@ -185,7 +186,7 @@ export function build(K) {
   },[1.6,.8]);
   K.texture('streets-tactile',64,64,(g,w,h)=>{g.fillStyle='#e1b52e';g.fillRect(0,0,w,h);g.fillStyle='#f5d85c';for(let x=8;x<w;x+=16)for(let y=8;y<h;y+=16){g.beginPath();g.arc(x,y,3,0,PI*2);g.fill();}},[.4,.4]);
   K.texture('streets-grate',64,64,(g,w,h)=>{g.fillStyle='#474e50';g.fillRect(0,0,w,h);g.fillStyle='#181e22';for(let i=5;i<64;i+=8)g.fillRect(i,5,4,54);},[.6,.6]);
-  buildHotelDrive(K);
+  buildHotelDrive(K,clipped);
   // Ground holes do not clip previously registered road surfaces. Subtract the
   // open cuts from our ground geometry before submitting it to the real kit.
   const cutPaths = [[[-433.45,473.1],[-211.18,362.25]],[[-79.33,301.845],[85.2,217.68]]];
@@ -2009,10 +2010,9 @@ function buildGsCaltex(K) {
   }
 }
 
-// The parking aisle past Devil's Door is already drawn by the city road layer.
-// Join its western approach outside the Famille ground-floor walls, turning
-// parallel to the hotel doors between the two rows of canopy columns.
-function buildHotelDrive(K) {
+// Draw the raised restaurant aisles and the hotel motor court at their own
+// levels, above the ground-level services for the terminal and the hotel.
+function buildHotelDrive(K,clipPavement) {
   // Same frontage frame as the Famille gallery (u west along the wall, v out).
   const FA = 62 / Math.hypot(62,24), FB = 24 / Math.hypot(62,24);
   const FROT = Math.atan2(FB,FA);
@@ -2032,13 +2032,51 @@ function buildHotelDrive(K) {
   const deck=11.5, exterior=exteriorReliefEnabled();
   const onCourt=build=>K.withTerrainSurface(hotelCourtDatum,build);
   // Relative grades meet the existing hotel and parking thresholds.
-  const west=FP(45,27);
-  const westFoot=parkingRoad.pts[0];
-  const crest=west.map((v,i)=>westFoot[i]+.8*(v-westFoot[i]));
-  gradedGround(K,westFoot,crest,.01,deck,12,'sidewalk');
-  gradedGround(K,crest,west,deck,deck,12,'sidewalk');
-  const westStations = [westFoot,crest,west,FP(38,20),FP(36,15.7),FP(28,15.7)];
-  road(westStations,westStations.map((_,i)=>i===0?.01:deck),2.7);
+  // At the west return, OSM 593858532 runs round the rectangular lawn.
+  // Its east–west section is a vehicle aisle with parallel spaces on the
+  // lawn side, visible in the hotel's event-arrival aerial. Keep the old
+  // lower street contact and reach the court at the end of the long bend.
+  const westFoot=parkingRoad.pts[0], westBend=parkingRoad.pts[2];
+  const at=(s,v)=>gardenPoint(s,v);
+  const westStations=[westFoot,parkingRoad.pts[1],westBend,at(-104,3.35),at(-91,4.60),
+    at(-75,5.65),at(-61,6.25),at(-58,4.8),at(-56.9,2),FP(18,15.7)];
+  const westLengths=[0];
+  for(let i=1;i<3;i++) westLengths.push(westLengths[i-1]+Math.hypot(
+    westStations[i][0]-westStations[i-1][0],westStations[i][1]-westStations[i-1][1]));
+  const westGround=.041+relief(...westFoot);
+  const westHigh=deck+hotelCourtDatum(...westBend);
+  const heights=westStations.map((point,i)=>i<2?
+    westGround+(westHigh-westGround)*westLengths[i]/westLengths[2]:deck+hotelCourtDatum(...point));
+  // Continuous concrete below the western approach keeps the carriageway
+  // above the first-floor access street. Both edges follow the same bends.
+  const visual=westStations.slice(0,4);
+  for(let i=1;i<visual.length;i++){
+    const a=visual[i-1],b=visual[i],dx=b[0]-a[0],dz=b[1]-a[1],l=Math.hypot(dx,dz);
+    for(const side of [-1,1]){
+      const edge=p=>[p[0]-side*dz/l*3.3,p[1]+side*dx/l*3.3];
+      const start=edge(a),end=edge(b);
+      K.withTerrainSurface(0,()=>K.quad('concrete',[[start[0],relief(...start)-.12,start[1]],
+        [end[0],relief(...end)-.12,end[1]],[end[0],heights[i]+.04,end[1]],[start[0],heights[i-1]+.04,start[1]]],
+        [side*-dz/l,0,side*dx/l]));
+    }
+  }
+  K.withTerrainSurface(0,()=>road(westStations,heights,3.3));
+  // Parallel parking along the lawn, with a clear gap before the separate
+  // Famille garage turn. The bay sizes and car occupancy are reconstructed.
+  const lawnBay=(s,v)=>at(s,7.8+(s+104)*.065+v);
+  onCourt(()=>{
+    const strip=(s0,s1,v0,v1,material,y)=>K.hpoly(material,
+      [lawnBay(s0,v0),lawnBay(s1,v0),lawnBay(s1,v1),lawnBay(s0,v1)],deck+y);
+    const first=-103,end=-72.5;
+    const apron=[lawnBay(first-2,-.7),lawnBay(end+2,-.7),lawnBay(end,2.8),lawnBay(first,2.8)];
+    K.slab(apron,deck+.07,{mat:'asphalt',under:'concrete',thick:.28});
+    for(let s=first;s<=end+.01;s+=6.1) strip(s-.055,s+.055,.05,2.53,0xe2dfce,.09);
+    strip(first,end,2.4,2.53,0xe2dfce,.092);
+    for(const [s,color] of [[first+3.05,0x46515a],[first+15.25,0xdedbd6],[first+21.35,0x42484b]]){
+      const [x,z]=lawnBay(s,1.23);
+      gardenParkedCar(K,x,z,deck+.071,Math.atan2(.89563,-.4448)-.065,color,'streets');
+    }
+  });
   // Successive street-view stations from the lower fork beside the bus yard
   // to the bend at the hotel. Distances follow the cameras; heights interpolate
   // between the surveyed flat aisle and the existing raised hotel threshold.
@@ -2059,7 +2097,7 @@ function buildHotelDrive(K) {
   // The footway fills the inside of the turning court over the service level.
   onCourt(()=>K.slab([[23.2,145.8],[33.7,139.5],[35.1,146],[32.3,152.2],[29.7,157.5],[27.5,157.6]],
     deck,{mat:'sidewalk',under:'concrete',thick:.48}));
-  // Match the shallow grade of the existing garden walk as it joins the lay-by.
+  // The eastern vehicle approach and the canopy share a flush landing.
   road(climb,approachHeight,2.85,climb.length);
   onCourt(()=>road([climb.at(-1),...valetTurn],[deck,...turnHeight],2.85));
   // From the collector, turn at the footbridge and follow the garden side
@@ -2073,13 +2111,16 @@ function buildHotelDrive(K) {
   // The arrival court is a roof over the occupied Famille hall. Only the
   // exposed perimeter has an earth-retaining face down to the lower street.
   function courtDeck(retainingEdge, overHall, height, side, solid) {
-    K.slab([...retainingEdge,...overHall],height,{mat:'sidewalk',under:'concrete',edgeMat:side,thick:.32});
+    for (const piece of clipPavement([...retainingEdge,...overHall],[familleRampOpening])) {
+      K.slab(piece,height,{mat:'sidewalk',under:'concrete',edge:false,thick:.32});
+    }
     for(let i=1;i<retainingEdge.length;i++){
       // The last diagonal crosses the public dining corridor below the court.
       // Fit the opening to its two faces (v=20.68 and 23.72) along this wall.
       const a=retainingEdge[i-1],b=retainingEdge[i],length=Math.hypot(b[0]-a[0],b[1]-a[1]);
       const openings=i===retainingEdge.length-1
         ? [{at:(25-22.2)*length/5,w:3.04*length/5,y0:5,y1:8.23}] : [];
+      openings.push(...garageWallOpening(a,b,-.09,height-.32));
       K.wall(...a,...b,-.09,height-.32,{mat:side,thick:.08,solid,openings});
     }
   }
@@ -2154,32 +2195,12 @@ function buildHotelDrive(K) {
   // March 2024 Naver panorama nOOQgVZmQWe4Z-qIb--3fg: the black
   // 2.0 m gateway beside the canopy leads DOWN to Shinsegae Famille parking.
   const rect = (u0,v0,u1,v1) => [FP(u0,v0),FP(u1,v0),FP(u1,v1),FP(u0,v1)];
-  const mouth = 23, end = 4, axis = 36, half = 3.2;
   const bankRetaining=[FP(48.64,18.45),FP(51,23),FP(51,43),FP(-2,43),
-    FP(-2,axis+half),FP(mouth,axis+half),FP(mouth,axis-half),FP(-2,axis-half),
     FP(-2,27),FP(16,27),FP(16,25),FP(21,20)];
   onCourt(()=>courtDeck(bankRetaining,[FP(21,11.45),FP(45,11.45)],deck,'concrete',true));
-  // Garden embankment falls away from the forecourt toward Sapyeong-daero.
   gradedGround(K,FP(24.5,43),FP(24.5,58),deck,4.4,53,'grass');
   gradedGround(K,FP(24.5,58),FP(24.5,76),4.4,.02,53,'grass');
-  // Parking 4F is the open arrival level. The first descending aisle reaches 3F.
-  K.hpoly('asphalt',[FP(24,23),FP(18,25),FP(mouth,axis-half),
-    FP(mouth,axis+half),FP(28,36),FP(29,29)],deck+.025);
-  K.ramp(...FP(mouth,axis),...FP(end,axis),{ya:deck,yb:9,w:2*half,mat:'asphalt',rails:false});
-  K.slab(rect(-8,axis-half,end,axis+half),9,{mat:'asphalt',thick:.14});
-  for(const side of [-1,1]){
-    const edge=axis+side*half;
-    K.wall(...FP(-2,edge),...FP(mouth,edge),8.8,deck+.55,{mat:0xd5d2ca,thick:.18});
-  }
-  const face = FROT - Math.PI/2;
-  for (const offset of [-half,half]) {
-    const [x,z] = FP(mouth,axis+offset);
-    K.box({x,z,y:deck,w:.2,d:.26,h:2.45,rotY:FROT,mat:0x272629});
-  }
-  const [gx,gz] = FP(mouth,axis);
-  K.box({x:gx,z:gz,y:deck+2.1,w:.24,d:2*half+.2,h:.52,rotY:FROT,mat:0x272629});
-  K.sign(['신세계 파미에주차장       2.0m','SHINSEGAE FAMILLE PARKING LOT'],{
-    x:gx-.14*FA,z:gz+.14*FB,y:deck+2.37,w:5.65,h:.43,rotY:face,bg:'#272629',fg:'#fff'});
+  buildFamilleGarageEntry(K);
   // Lay-by below the glass vaults, with a parallel surface lane on the garden side.
   onCourt(()=>{
   K.slab([FP(21,24.3),FP(24.8,17.5),FP(39,17.5),FP(42,21.2),FP(40,24),FP(26,24.4)],deck+.062,{mat:'asphalt',thick:.24});
@@ -2278,7 +2299,8 @@ function buildGardenTerrain(K) {
       for(let j=0;j<a.length-1;j++){
         const v=a[j],V=a[j+1],w=b[j],W=b[j+1];
         const va=(v+V)/2,vb=(w+W)/2;
-        let mat=va<frontage+4||s<109?'sidewalk':'asphalt';
+        let mat=va<frontage+4?'sidewalk':'asphalt';
+        if(s<109 && (va<19 || va>38.5)) mat='sidewalk';
         if(s>=196 && !nose && j===5)mat='garden-grey-paving';
         if(nose)mat=j===1?'garden-stone-panels':j===2||j===3?{tex:'grass',color:0x7e8968}:'streets-pavers';
         const outline=[[s,v],[t,w],[t,W],[s,V]];
@@ -2329,9 +2351,26 @@ function buildGardenTerrain(K) {
       }
     }
   }
-  // The raised garage extension briefly occupies the aisle as it bends;
-  // its existing roof height is 12.60. Keep the paint above that finish.
-  for(const path of [aisle,west,east]) ribbon(path,-3,3,'asphalt',.09,true);
+  // OSM 1232132207 is the inner service road in front of the western
+  // building, distinct from both the bus stop roadway and the public
+  // collector. Both mouths join 593858541 at shared OSM nodes.
+  const westLoop=roads.get(1232132207).pts.map(local);
+  const innerTurn=lotTurn.pts.slice(1).map(local);
+  for(const path of [aisle,west,east,westLoop,innerTurn]) ribbon(path,-3,3,'asphalt',.09,true);
+  // Two rows of vehicles parallel to the upper western aisles in the
+  // aerial. Keep a crossable tail at both ends for each swept turn.
+  const parkRot=Math.atan2(.89563,-.4448);
+  for(const [v,start,end] of [[21.3,18,79],[31.1,30,78.8]]) {
+    patch(start,v-1.1,end,v+1.1,'asphalt',.072);
+    for(let s=start;s<=end+.01;s+=6.1) patch(s-.052,v-1.1,s+.052,v+1.1,0xe1dfd2,.087);
+    patch(start,v-1.13,end,v-1.02,0xe1dfd2,.086);
+    for(let i=0;i<Math.round((end-start)/6.1);i++){
+      if((i+(v<25?1:2))%4===0)continue;
+      const s=start+(i+.5)*6.1,[x,z]=P(s,v);
+      const color=[0x414a4f,0xdfdfd9,0xa9adaf,0xe5e0da,0x4e4844][i%5];
+      K.withTerrainSurface(worldHeight(s,v),()=>gardenParkedCar(K,x,z,.09,parkRot,color,'streets'));
+    }
+  }
   ribbon(aisle,-1.45,-1.16,0xc57691,.111);
   ribbon(east,-.45,-.13,0xc57691,.135);
   ribbon(west.slice(2),.62,.92,0xc57691,.111);

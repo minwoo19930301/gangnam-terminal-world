@@ -3297,16 +3297,46 @@ export function build(K) {
     for (const t of [-70]) lbox(200, t, 3, 6, YR, 2.4, 0xb8bcc0, { top: 0x8f969c });
     lbox(62, 24.7, 2.6, 2.6, YR + 3.2, 0.3, 0xbab6ae, { solid: false });
     lsign('엘리베이터  1F · 2F · B1', 60.6, 24.7, YR + 2.7, 2.4, 0.35, 'N', { bg: '#1d3557', fg: '#fff' });
-    // east ramp down to ground (OSM 593858534: (-33,180)->(-29,179)->(-14,173)->(-8,189))
-    const rp = [[-30.6, 179.4, YR], [-14, 173, 4.6], [-8, 189, 0]];
+    // Layer-1 way 593858534 joins the terminal roof to the raised garden
+    // court. Its bend sits behind the vault over the 1F restaurant windows.
+    const rp = [[-34.4,181.3,YR],[-29.4,182.5,9.4],[-12.8,176.1,10.45],[-8,189,11.53]];
+    const halfWidth=3.1;
+    const normals=rp.slice(1).map(([x,z],i)=>{
+      const dx=x-rp[i][0],dz=z-rp[i][1],length=Math.hypot(dx,dz);
+      return [-dz/length,dx/length];
+    });
+    const edges=rp.map(([x,z],i)=>{
+      const a=normals[Math.max(0,i-1)],b=normals[Math.min(i,normals.length-1)];
+      const m=halfWidth/(1+a[0]*b[0]+a[1]*b[1]);
+      return [-1,1].map(side=>[x+side*m*(a[0]+b[0]),z+side*m*(a[1]+b[1])]);
+    });
     for (let i = 0; i < rp.length - 1; i++) {
       const [ax, az, ya] = rp[i], [bx, bz, yb] = rp[i + 1];
-      K.ramp(ax, az, bx, bz, { w: 6.2, ya, yb, mat: 0x8e8c86, railMat: 0xb0aca4 });
-      const L = Math.hypot(bx - ax, bz - az), nx = -(bz - az) / L * 3.1, nz = (bx - ax) / L * 3.1;
-      for (const sg of [1, -1]) K.quad({ tex: 'concrete', color: 0xc8c4bc }, [[ax + nx * sg, 0, az + nz * sg], [bx + nx * sg, 0, bz + nz * sg], [bx + nx * sg, yb + 1.0, bz + nz * sg], [ax + nx * sg, ya + 1.0, az + nz * sg]], [nx * sg, 0, nz * sg]);
+      const a=edges[i],b=edges[i+1],n=normals[i];
+      const pt=([x,z],y)=>[x,y,z];
+      const surface=dy=>[pt(a[0],ya+dy),pt(b[0],yb+dy),pt(b[1],yb+dy),pt(a[1],ya+dy)];
+      K.quad('asphalt',surface(0),[0,1,0]);
+      K.quad('concrete',surface(-.25),[0,-1,0]);
+      K.phys.addRamp(ax,az,bx,bz,halfWidth,ya,yb,{tag:'centralcity'});
+      // The ramp meets the hotel motor aisle at a T. Its guardrails
+      // end at the near kerb, before the swept turn into the through lane.
+      const guardT=i===rp.length-2?1-6.4/Math.hypot(bx-ax,bz-az):1;
+      const guardY=ya+(yb-ya)*guardT;
+      for(const [j,side] of [[0,-1],[1,1]]){
+        const end=a[j].map((v,k)=>v+(b[j][k]-v)*guardT);
+        for(const [lo,hi,mat] of [[-.25,.18,'concrete'],[.85,1,0xb0aca4]]){
+          K.quad(mat,[pt(a[j],ya+lo),pt(end,guardY+lo),pt(end,guardY+hi),pt(a[j],ya+hi)],[n[0]*side,0,n[1]*side]);
+        }
+        K.phys.addWall(...a[j],...end,ya-.25,guardY+1,.06,'centralcity');
+      }
+      if(i+2<rp.length){
+        // Rectangular ramp colliders leave a wedge outside a mitred bend.
+        const next=normals[i+1],side=-Math.sign(n[0]*next[1]-n[1]*next[0]);
+        const offset=v=>[bx+v[0]*halfWidth*side,bz+v[1]*halfWidth*side];
+        K.phys.addSurface([[bx,bz],offset(n),b[side<0?0:1],offset(next)],yb,{tag:'centralcity'});
+      }
     }
-    { const [x, z] = [-14, 173]; K.box({ x, z, y: 0, w: 6.4, d: 1.2, h: 4.6, rotY: Math.atan2(16, 6), mat: { tex: 'concrete', color: 0xc8c4bc } }); }
-    sign(['출구', '사평대로 · 반포대로'], { x: -12.5, z: 180, y: 5.6, w: 3.6, h: 0.9, rotY: Math.atan2(-6.4 / 17.2, 16 / 17.2) + PI, bg: '#1b5e20', fg: '#fff', twoSided: true });
+    sign(['출구', '사평대로 · 반포대로'], { x: -12.5, z: 180, y: 12.5, w: 3.6, h: 0.9, rotY: Math.atan2(-6.4 / 17.2, 16 / 17.2) + PI, bg: '#1b5e20', fg: '#fff', twoSided: true });
     K.zone({ name: '센트럴시티 옥상 주차장', floor: 'R', sub: '옥상 주차장 · 일방통행 순환로 · 승용차 주차', poly: TERM, y0: YR - 0.3, y1: YR + 6, priority: 1 });
   }
   // ---- bridge: roof north tip → 타워주차장 roof (OSM 1128012726), y=9
