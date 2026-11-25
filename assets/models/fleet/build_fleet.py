@@ -1,6 +1,7 @@
 """Run with Blender --background --python assets/models/fleet/build_fleet.py."""
 import json
 import math
+import sys
 from pathlib import Path
 
 import bpy
@@ -18,12 +19,7 @@ DIMS = {
     "bus": (2.5, 3.4, 12.0), "cityBus": (2.5, 3.1, 11.0),
     "minibus": (2.35, 2.9, 8.4),
 }
-bpy.ops.wm.read_factory_settings(use_empty=True)
 materials = {}
-for name, color in PALETTE.items():
-    m = bpy.data.materials.new(name)
-    m.diffuse_color = [((color >> s & 255) / 255) ** 2.2 for s in (16, 8, 0)] + [1]
-    materials[name] = m
 
 
 def component(name, vertices, faces, material):
@@ -165,42 +161,68 @@ def commercial(kind, w, h, d):
     block("Roof climate unit",0,h+.063,-d*.13,w*.62,.126,d*.31,"cargo")
 
 
-data = {}
-for ix, (kind, (w,h,d)) in enumerate(DIMS.items()):
-    collection = bpy.data.collections.new(kind)
-    bpy.context.scene.collection.children.link(collection)
-    if kind in ("car", "taxi", "van"):
-        passenger(kind,w,h,d)
-    else:
-        commercial(kind,w,h,d)
-    radius = .34 if kind in ("car","taxi","van") else .45
-    for side in [-1,1]:
-        for z in [-d*.32,d*.32]:
-            wheel(side,radius,z,w)
-        for end, mat in [(1,"headlamp"),(-1,"tail")]:
-            block("Lamp assembly",side*w*.33,.62,end*(d*.5+.004),w*.19,.135,.045,mat)
-    block("Front grille",0,.52,d*.5+.012,w*.37,.15,.035,"pillar")
-    bpy.context.view_layer.update()
+if '--export-current' not in sys.argv:
+    bpy.ops.wm.read_factory_settings(use_empty=True)
+    for name, color in PALETTE.items():
+        m = bpy.data.materials.new(name)
+        m.diffuse_color = [((color >> shift & 255) / 255) ** 2.2 for shift in (16, 8, 0)] + [1]
+        materials[name] = m
+    for ix, (kind, (w,h,d)) in enumerate(DIMS.items()):
+        collection = bpy.data.collections.new(kind)
+        bpy.context.scene.collection.children.link(collection)
+        if kind in ("car", "taxi", "van"):
+            passenger(kind,w,h,d)
+        else:
+            commercial(kind,w,h,d)
+        radius = .34 if kind in ("car","taxi","van") else .45
+        for side in [-1,1]:
+            for z in [-d*.32,d*.32]:
+                wheel(side,radius,z,w)
+            for end, mat in [(1,"headlamp"),(-1,"tail")]:
+                block("Lamp assembly",side*w*.33,.62,end*(d*.5+.004),w*.19,.135,.045,mat)
+        block("Front grille",0,.52,d*.5+.012,w*.37,.15,.035,"pillar")
+        collection['origin_x'] = (ix-3)*3.6
+        for obj in collection.objects:
+            obj.location.x += collection['origin_x']
+    bpy.context.preferences.filepaths.save_version = 0
+    bpy.ops.wm.save_as_mainfile(filepath=str(OUT/'terminal-fleet.blend'),compress=True)
+
+# Re-export the artist's edited scene (including modifiers) without rebuilding it.
+bpy.context.view_layer.update()
+graph = bpy.context.evaluated_depsgraph_get()
+data, material_names = {}, list(PALETTE)
+for ix, (kind, size) in enumerate(DIMS.items()):
+    collection = bpy.data.collections[kind]
+    origin_x = collection.get('origin_x', (ix-3)*3.6)
     vertices, faces = [], []
     for obj in collection.objects:
-        mesh = obj.data
-        mesh.calc_loop_triangles()
-        offset = len(vertices)//3
-        for v in mesh.vertices:
-            x, y, z = obj.matrix_world @ v.co
-            vertices.extend(round(c*1000) for c in (x,z,-y))
-        for tri in mesh.loop_triangles:
-            material = mesh.materials[tri.material_index].name
-            faces.extend([*(i+offset for i in tri.vertices),list(PALETTE).index(material)])
-    data[kind] = {"size":[w,h,d],"mm":vertices,"faces":faces}
-    for obj in collection.objects:
-        obj.location.x += (ix-3)*3.6
+        if obj.type != 'MESH':
+            continue
+        evaluated = obj.evaluated_get(graph)
+        mesh = evaluated.to_mesh()
+        try:
+            mesh.calc_loop_triangles()
+            offset = len(vertices)//3
+            for v in mesh.vertices:
+                x, y, z = evaluated.matrix_world @ v.co
+                vertices.extend(round(c*1000) for c in (x-origin_x,z,-y))
+            for tri in mesh.loop_triangles:
+                name = mesh.materials[tri.material_index].name
+                if name not in material_names:
+                    material_names.append(name)
+                faces.extend([*(i+offset for i in tri.vertices),material_names.index(name)])
+        finally:
+            evaluated.to_mesh_clear()
+    data[kind] = {'size':size,'mm':vertices,'faces':faces}
 
-bpy.context.preferences.filepaths.save_version = 0
-bpy.ops.wm.save_as_mainfile(filepath=str(OUT/"terminal-fleet.blend"),compress=True)
+colors = []
+for name in material_names:
+    rgb = bpy.data.materials[name].diffuse_color[:3]
+    r,g,b = (max(0,min(255,round(c**(1/2.2)*255))) for c in rgb)
+    colors.append((r<<16) | (g<<8) | b)
 with (OUT/"meshes.js").open("w") as f:
     f.write("// Blender export. Positions in mm, face records [a,b,c,material].\n")
-    f.write("export const palette = "+json.dumps(list(PALETTE.values()))+";\n")
+    f.write("export const palette = "+json.dumps(colors)+";\n")
     f.write("export const vehicles = {\n")
     for k, v in data.items():
         f.write('  '+json.dumps(k)+':'+json.dumps(v,separators=(",",":"))+',\n')
