@@ -57,6 +57,8 @@ const sources = [
   ['centralcity','B1','sweet-cake-counters/cakes.blend','스위트 파크 · 쇼토 케이크 진열','SweetShoto'],
   ['centralcity','B1','chipotle-gangnam/counter.blend','치폴레 강남신세계점 · 주문대','ChipotleGangnamOrderBar'],
   ['centralcity','B1','five-guys-gangnam/front.blend','파이브가이즈 고속터미널 · 창과 음료대','FiveGuysGangnamFront'],
+  ['centralcity','1F','house-entry-gallery/vestibule.blend','하우스 오브 신세계 · 경사 통로 천장과 벽','HouseEntryRampBay'],
+  ['centralcity','1F','house-entry-gallery/vestibule.blend','하우스 오브 신세계 · 청동 벽과 식재 입구','HouseEntryGallery'],
   ['centralcity','B1','sweet-garden-soffit/soffit.blend','스위트 가든 · 에스컬레이터 공통 하부','SweetGardenBankSoffit'],
   ['centralcity','B1','sweet-chefs-stage/counter.blend','스위트 파크 · 셰프스 스테이지와 르솔레이','SweetPark_ChefsStage'],
   ['shinsegae','B1','megabox-central/entrance.blend','메가박스 센트럴 · 부티크 아치 입면','MegaboxBoutiquePublicFront'],

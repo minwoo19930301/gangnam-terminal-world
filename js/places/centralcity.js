@@ -1,3 +1,4 @@
+import {houseEntryGallery,houseEntryRamp} from '../../assets/models/house-entry-gallery/model.js';
 import {restaurantFront} from '../../assets/models/sweet-arcade/restaurant-fronts.js';
 import {sweetGardenSoffit} from '../../assets/models/sweet-garden-soffit/model.js';
 import {cakeCounter} from '../../assets/models/sweet-cake-counters/model.js';
@@ -4523,9 +4524,9 @@ function hallR20(K) {
   // The plaza walk places the full L'Occitane on the Sweet Garden arcade.
   // The HOS 1F guide continues past its south wall to Yoon and the court.
   // Both are 1F. The restaurant's entrance film turns left behind the
-  // plaza store and right into a light-wood passage. Its grade is fitted here
+  // plaza store and right into a bronze-lined passage. Its grade is fitted here
   // to meet the separately registered restaurant floor and lift apron.
-  const hosEntryFloor={tex:'wood',color:0xc7a67d,gloss:.25};
+  const hosEntryFloor=0xd6c6b0;
   const flatPassage=[
     [[37.8,8.8,40.7,12]],[[38.05,11.95,40.7,25.6]],
     [[33.3,23.2,38.05,25.6],[34.5,24.4,R-PI/2]],
@@ -4550,7 +4551,8 @@ function hallR20(K) {
   K.ramp(...P(passageLo,mid),...P(passageHi,mid),{w:sideB-sideA,ya:.008,yb:2.1,mat:hosEntryFloor,rails:false});
   const passage=RECT(passageLo,sideA,passageHi,sideB);
   entryZone(passage,'센트럴시티 · 하우스 오브 신세계 연결통로');
-  const lining={mat:{tex:'wood',color:0x685447},thick:.13};
+  // The public restaurant film shows smooth, brown metal panels and pale stone flooring.
+  const lining={mat:0x866c5d,thick:.13};
   for(const [a,b,c,d] of [[40.7,23,40.7,25.6],[40.7,25.6,35.7,25.6],
     [35.7,25.6,35.7,sideA],[38.05,23.2,33.3,23.2],[33.3,23.2,33.3,sideB],[33.3,sideB,35.7,sideB]]){
     lwall(a,b,c,d,0,3.25,lining);
@@ -4567,6 +4569,18 @@ function hallR20(K) {
   for(const r of [[38.05,23,40.7,25.6],[33.3,23.2,38.05,25.6],[33.3,25.6,35.7,sideB]]){
     K.slab(RECT(...r),3.25,passageCeiling);
   }
+  const [galleryX,galleryZ]=P(34.5,25.6);
+  houseEntryGallery(K,galleryX,galleryZ,R);
+  houseEntryRamp(K,P,R,38.1,passageHi,mid,passageLo);
+  const [footX,footZ]=P(passageLo,mid),risePerMetre=(2.1-.008)/(passageHi-passageLo);
+  const ceilingRise=(x,z)=>((x-footX)*AX+(z-footZ)*AZ)*risePerMetre;
+  K.phys.withHeightOffset(ceilingRise,()=>{
+    K.phys.addCeiling(RECT(38.1,sideA,passageHi,sideB),3.008);
+  });
+  for(const section of [[33.40,23.32,40.58,25.47],[33.40,25.47,35.60,28.80],[35.60,26.38,38.03,28.80]]){
+    K.phys.addCeiling(RECT(...section),3.115,{});
+  }
+  K.phys.addPolyWalls(RECT(33.445,23.51,33.69,25.27),.008,1.28,.012,'centralcity');
   // Enclosure and corridor soffits. The west beam is the handoff to honamR20.
   lwall(-19.5,-3.3,-7,-3.3,0,3.35,{mat:{tex:'marble',color:0xeceae5},thick:.14});
   lwall(-19.5,3.3,-7,3.3,0,3.35,{mat:{tex:'marble',color:0xeceae5},thick:.14});
