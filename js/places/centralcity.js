@@ -2,6 +2,7 @@ import {terminalOrigin,terminalRotation as R,terminalPoint as P,sweetParkLocal a
 import {transverseFloor} from '../../assets/models/megabox-central/layout.js';
 import {publicFloorOpening,court,westApron} from '../../assets/models/cinema-rotary/layout.js';
 import {arcadePiers} from '../../assets/models/sweet-arcade/model.js';
+import {marcoliniShop} from '../../assets/models/sweet-marcolini/model.js';
 import {arabicaFront} from '../../assets/models/sweet-arabica/model.js';
 import {chefStageSigns} from '../../assets/models/sweet-chefs-stage/model.js';
 import {marketWestReturn, cinemaAisleMouth} from './shinsegae-b1-plan.js';
@@ -1451,6 +1452,8 @@ export function build(K) {
     }
   },[1.2,.6]);
   const spBounds=r=>{const a=BPst(r[0],r[1]),b=BPst(r[2],r[3]);return[Math.min(a[0],b[0]),Math.min(a[1],b[1]),Math.max(a[0],b[0]),Math.max(a[1],b[1])];};
+  const chocolateCell=B1_CELLS.find(cell=>cell.name==='피에르 마르콜리니');
+  const [chocS0,chocT0,chocS1,chocT1]=spBounds(chocolateCell.rect_display);
   const spFinish=(r,y,mat,repeat=1.3)=>{
     const[s0,t0,s1,t1]=spBounds(r);
     // A single 48 × 53 m face can have its centre outside the neighbouring
@@ -1525,7 +1528,9 @@ export function build(K) {
       entryTube([a[0],a[1],a[2]-.10],[b[0],b[1],b[2]-.10],.07,trim);
       entryTube([a[0]+.10,a[1],a[2]+.015],[b[0]+.10,b[1],b[2]+.015],.035,{tex:'emit',color:0xffe5ad});
     }
-    spChandelier(cs,ct,{tex,color:b1Brass});
+    // This tenant has its own copper ceiling and suspended opal tubes.
+    // Keep the public vault at its edges without hanging a second light inside.
+    if(cs<chocS0 || cs>chocS1 || ct<chocT0 || ct>chocT1)spChandelier(cs,ct,{tex,color:b1Brass});
     for(const[a,b]of [[-.5,-.2],[.4,-.6],[-.35,.55],[.5,.3]])lcyl(cs+a*hs,ct+b*ht,height(a,b)-.04,.045,.025,{tex:'emit',color:0xfff2dc},{solid:false});
   };
   const spPillar=(s,t)=>{
@@ -1679,8 +1684,15 @@ export function build(K) {
       }
     }
   };
+  const [chocolateX,chocolateZ]=P(chocS1-.13,(chocT0+chocT1)/2);
+  const drawChocolatier=marcoliniShop(K,chocolateX,YB1,chocolateZ,R);
   const spCell=(cell,index)=>{
     if(cell.name==='파이브가이즈'){fiveGuys(cell);return;}
+    if(cell===chocolateCell){
+      spArchFront(cell);
+      drawChocolatier();
+      return;
+    }
     const r=cell.rect_display,[x0,y0,x1,y1]=r,[s0,t0,s1,t1]=spBounds(r),front=cell.front,face={N:'E',S:'W',E:'S',W:'N'}[front];
     const retail=['beauty','accessory'].includes(cell.kind),west=x0===1032&&y0>=540&&y1<=777;
     const i=3,depth=Math.min(11,(y1-y0)*.45),sideDepth=Math.min(11,(x1-x0)*.45);

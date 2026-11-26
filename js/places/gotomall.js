@@ -1441,7 +1441,7 @@ export function build(K) {
     });
     // shop zone (HUD + map)
     const p0 = Lp(loc, 0, 0), p1 = Lp(loc, W, D);
-    K.zone({ name: info.zname || name, floor: 'B1', sub: info.zsub, poly: R(Math.min(p0[0], p1[0]), Math.min(p0[1], p1[1]), Math.max(p0[0], p1[0]), Math.max(p0[1], p1[1])), y0: FL - 0.5, y1: CY, priority: 3 });
+    K.zone({ name: info.zname || name, floor: 'B1', sub: info.zsub, poly: R(Math.min(p0[0], p1[0]), Math.min(p0[1], p1[1]), Math.max(p0[0], p1[0]), Math.max(p0[1], p1[1])), y0: FL - 0.5, y1: CY, priority: 4 });
   }
 
   // ---------- sections ----------
@@ -1918,7 +1918,7 @@ export function build(K) {
     ];
     for (const { a, b, depth, name } of plazaUnits) {
       const back = Math.min(vS(a), vS(b)) - 0.16;
-      K.zone({ name, floor: 'B1', sub: '중앙광장 상점', poly: R(a, back - depth, b, back), y0: FL - 0.5, y1: CY, priority: 4 });
+      K.zone({ name, floor: 'B1', sub: '중앙광장 상점', poly: R(a, back - depth, b, back), y0: FL - 0.5, y1: CY, priority: 5 });
     }
     // The documented pale planted seating is near the line 9 gallery. The dark granite seats belong to the west lounge.
     const arcPoly = (u, v, rx, rz, a0, a1, n = 20) => Array.from({ length: n + 1 }, (_, i) => {

@@ -44,6 +44,23 @@ try {
       return {y:p.y,yaw:p.yaw,push:Math.hypot(q.x-p.x,q.z-p.z)};
     });
     assert.ok(Math.abs(state.y+6)<.1 && state.push<.04 && Math.cos(state.yaw-arrival.yaw)>.999);
+    if(id==='megabox'){
+      const start=page.locator('#start');
+      if(await start.isVisible())await start.click();
+      // Cross the poster frontage into the ticket lobby, then return to the public aisle.
+      // An arrival on the opposite side of the shop wall also passes a stationary floor test.
+      for(const [key,enter] of [['w',true],['s',false]]){
+        await page.keyboard.down(key);
+        try{
+          await page.waitForFunction(({arrival,enter})=>{
+            const w=window.__world;
+            if(!w?.ready || w.area!=='in:shinsegae' || Math.abs(w.player.y+6)>.1)return false;
+            const advance=(arrival.x-w.player.x)*Math.sin(arrival.yaw)+(arrival.z-w.player.z)*Math.cos(arrival.yaw);
+            return enter ? advance>3.4 : advance<.2;
+          },{arrival,enter},{timeout:4000});
+        }finally{await page.keyboard.up(key);}
+      }
+    }
     assert.deepEqual(errors,[]);
     console.log(korean,await page.locator('#zone').innerText());
     const deepLink = 'http://127.0.0.1:'+server.address().port+'/?q=low&traffic=0#/'+place+'/B1?destination='+id;

@@ -269,7 +269,7 @@ function buildTransfer(F, bank, lo, hi) {
       }
     } else {
       F.K.escalator(...F.P(a,center), ...F.P(b,center), {
-        w: 1.26, ya: lo.y, yb: hi.y, dir, mat: 0x7b8383, railMat: 0x454d4c,
+        w: 1.26, ya: lo.y, yb: hi.y, dir, openTruss: true, mat: 0x7b8383, railMat: 0x454d4c,
       });
     }
   }

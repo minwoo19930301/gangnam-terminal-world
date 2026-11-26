@@ -97,7 +97,10 @@ export function createEscalatorRenderer(T, addMesh, onFrame) {
     const skirts = [], returns = [];
     for (const side of [-1,1]) {
       const offset = side*(width/2+.08);
-      skirts.push(pose(offset,0,0,1,1,length,rise));
+      // Rotate the opposite skirt end for end. The brush faces the tread on
+      // both sides, and both instance transforms keep positive determinant.
+      skirts.push(side>0 ? pose(offset,0,0,1,1,length,rise)
+                         : pose(offset,length,rise,-1,1,-length,-rise));
       returns.push(pose(offset,0,0,1,1,1), pose(offset,length,rise,-1,1,-1));
     }
     batch('Skirt', trim, skirts);

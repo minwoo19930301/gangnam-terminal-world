@@ -187,6 +187,7 @@ export function createMap(opts) {
   // A named game entrance supersedes an OSM business point with no arrival floor.
   const arrivalPoiIds = new Set(Object.values(opts.directory || {}).flatMap(entry =>
     (entry.mapDestinations || []).flatMap(arrival => arrival.poiIds || [])));
+  for (const landmark of LANDMARKS) for (const id of landmark.poiIds || []) arrivalPoiIds.add(id);
   const poiRecords = (osm.pois || []).filter(p => !arrivalPoiIds.has(p.id) && p.name && p.kind !== 'platform' && p.kind !== 'stop_position' && p.kind !== 'subway_entrance').map(p => ({ ...p, color: /cafe|bakery/.test(p.kind) ? '#9b6c43' : /restaurant|food/.test(p.kind) ? '#e38354' : /pharmacy|hospital/.test(p.kind) ? '#418e7a' : '#8b79ac', label: label(p.name, p.x, p.z, 11), type: kindNames[p.kind] || '장소', indoorPlace: placeAt(p.x, p.z)?.id }));
   const elevatorRecords = elevators.map(e => ({ ...e, label: label(e.name, e.x, e.z, 10) }));
   const searchItems = [], searchKeys = new Set(), destinationMarks = [];
@@ -209,7 +210,8 @@ export function createMap(opts) {
   for (const p of placeMarks) addSearch({ name: p.name, x: p.x, z: p.z, y: p.y, place: p.id, type: '탐색 장소' });
   for (const r of zoneRecords) addSearch({ name: r.source.name, sub: r.source.sub, floor: r.floor, x: r.x, z: r.z, y: r.y0, ...r.source.mapArrival, place: r.place, zone: r.source, type: '층별 공간', group: placeIndex.get(r.place)?.name });
   for (const p of poiRecords) addSearch({ name: p.name, x: p.x, z: p.z, y: p.level == null ? undefined : Number(p.level) < 0 ? (K?.LEVELS?.[`B${Math.abs(Number(p.level))}`] ?? Number(p.level) * 5) : undefined, type: p.type });
-  for (const b of buildingRecords) if (b.name) addSearch({ name: b.name, x: b.x, z: b.z, type: '건물', place: b.place });
+  const landmarkBuildings = new Set(LANDMARKS.flatMap(l => l.buildingIds || []));
+  for (const b of buildingRecords) if (b.name && !landmarkBuildings.has(b.id)) addSearch({ name: b.name, x: b.x, z: b.z, type: '건물', place: b.place });
 
   const levelLabels = Object.entries(K?.LEVELS || { B1: -6, B2: -11, B3: -16, B4: -21, B5: -26, B6: -31 }).sort((a, b) => b[1] - a[1]);
   let floorLevel = 0;
@@ -454,7 +456,23 @@ export function createMap(opts) {
     const q = search.value.normalize('NFKC').toLocaleLowerCase().replace(/\s/g, ''); results.replaceChildren();
     if (q) {
       const matches = searchItems.filter(s => s.match.includes(q)); sectionTitle.textContent = `검색 결과 ${matches.length}`;
-      for (const s of matches.slice(0, 80)) resultButton(results, s);
+      let shown = 0;
+      function appendResults() {
+        const previous = shown;
+        for (const item of matches.slice(previous, previous + 80)) {
+          resultButton(results, item);
+          shown++;
+        }
+        if (previous) results.children[previous]?.focus({preventScroll:true});
+        if (shown < matches.length) {
+          const more = button(results, '검색 결과 더 보기', 'gt-more-results', () => {
+            more.remove();
+            appendResults();
+          });
+          more.textContent = '결과 더 보기';
+        }
+      }
+      appendResults();
       if (!matches.length) el('p', 'gt-empty', '검색 결과가 없어요. 장소 이름을 짧게 입력해 보세요.', results);
     } else {
       sectionTitle.textContent = '바로 가기';

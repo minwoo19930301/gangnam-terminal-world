@@ -1,4 +1,5 @@
 """Miele Gangnam reopening display. Metres, +Y into the showroom, +Z up."""
+import json
 import math
 import runpy
 from pathlib import Path
@@ -105,6 +106,25 @@ for x in [-.93,0,.97]:
 box('Downdraft throat',0,-.16,.939,.12,.37,.005,shadow)
 for i in range(6):
     box('Extractor vane',(i-2.5)*.017,-.16,.944,.006,.35,.009,metal)
+# Two contrasting coffee machines sit along the rear edge of the island
+# in Miele Korea's 2025 reopening photograph. Keep both behind the hob.
+for x,finish in [(-1.10,graphite),(-.49,stone)]:
+    tray=.927
+    box('Coffee machine side housing',x,.153,tray+.22,.264,.255,.438,finish)
+    box('Curved front control strip',x,.020,tray+.375,.269,.025,.123,glass)
+    box('Soft-key display',x,.005,tray+.382,.105,.004,.036,blue)
+    for k in [-1,1]:
+        for i in range(2):
+            box('Touch key',x+k*(.083+.021*i),.003,tray+.383,.012,.002,.005,led)
+    box('Bean container lid',x,.166,tray+.442,.218,.189,.009,shadow)
+    box('Dispenser inset',x,.016,tray+.187,.200,.014,.213,shadow)
+    box('Adjustable central spout',x,-.011,tray+.26,.111,.064,.135,finish)
+    for off in [-.034,.034]:
+        turned('Twin outlet',(x+off,-.031,tray+.19),(0,0,-1),[(0,.011),(.024,.009)],metal,12)
+    box('Projecting drip tray',x,-.042,tray+.024,.274,.235,.046,finish)
+    box('Stainless cup rest',x,-.057,tray+.050,.238,.193,.009,metal)
+    for i in range(7):
+        box('Drip tray slot',x+(i-3)*.026,-.060,tray+.056,.008,.143,.002,glass)
 # Pull the right-hand dishwasher forward with its door open, as in photo five.
 dx=1.045
 box('Stainless tub',dx,-.615,.48,.596,.035,.73,metal)
@@ -132,7 +152,9 @@ for i in range(5):
 # Back bank: paired stainless refrigeration doors, lit wine racks and laundry.
 box('Graphite portal',0,1.88,1.33,4.51,.65,2.66,graphite)
 box('Red brand tablet',0,1.545,2.38,.88,.034,.30,wine)
-title('Miele',0,1.52,2.38,.235,stone)
+logo=json.loads((OUT/'wordmark-mesh.json').read_text())
+mesh('Miele official raised wordmark', [((x-50)*.0088,1.52,2.38+(19.15-z)*.0088)
+     for x,z in logo['vertices']], [tuple(reversed(f)) for f in logo['faces']],stone)
 for x in [-1.82,-1.14]:
     box('MasterCool brushed panel',x,1.531,1.12,.667,.056,2.12,metal)
     box('Panel edge',x-.309,1.496,1.12,.008,.013,2.07,rim)
@@ -167,6 +189,21 @@ for x in [1.18,1.84]:
         turned('Drum window',(x,1.261,z+.391),(0,-1,0),[(0,.178),(.018,.158),(.024,.111)],blue)
         rod('Door grip',(x+.183,1.258,z+.333),(x+.183,1.258,z+.448),.012,rim)
         box('Service flap',x+.213,1.32,z+.078,.121,.014,.093,metal)
+# The branch photograph shows a glossy built-in oven bank turning the corner
+# beside the white laundry pair. Keep the front and the central aisle open.
+box('Right return cabinet',2.18,.59,1.24,.15,1.47,2.48,graphite)
+for d in [.24,.935]:
+    for z in [.64,1.24]:
+        box('Black oven glass face',2.097,d,z,.023,.61,.53,glass)
+        box('Oven door viewing window',2.082,d,z-.035,.013,.48,.34,blue)
+        for i in range(3):
+            box('Rack behind viewing window',2.074,d,z-.13+i*.065,.003,.405,.005,metal)
+        box('Slim programme fascia',2.078,d,z+.17,.011,.54,.079,shadow)
+        box('Oven display',2.071,d,z+.17,.007,.086,.034,led)
+        for offset in [-.21,.21]:
+            box('Handle foot',2.058,d+offset,z+.095,.067,.014,.021,metal)
+        box('Oven handle',2.029,d,z+.095,.027,.476,.024,rim)
+box('Oven bank reveal light',2.095,.59,2.42,.014,1.35,.014,stone)
 # Low handled saucepan on the central extractor hob, forward of the inlet.
 pan=(-.235,-.18,.939)
 turned('Saucepan rolled rim',pan,(0,0,1),[(0,.071),(.009,.091),(.102,.102),(.109,.107),(.112,.099),(.014,.088)],metal)

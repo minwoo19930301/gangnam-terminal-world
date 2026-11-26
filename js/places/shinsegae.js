@@ -1,5 +1,6 @@
 import {rawrowDisplay} from '../../assets/models/ssg-rawrow/model.js';
 import {boutiqueLobby} from '../../assets/models/megabox-central/place.js';
+import {angle as cinemaYaw,point as cinemaPoint} from '../../assets/models/megabox-central/layout.js';
 import {marketProduceCeiling} from '../../assets/models/ssg-market-ceiling/model.js';
 import {giftConcierge} from '../../assets/models/ssg-market-gift/model.js';
 import {marketEntrance} from '../../assets/models/ssg-market-entrance/model.js';
@@ -3296,14 +3297,13 @@ export function build(K) {
     const [marketX,marketZ]=P(27.6,63.4),[doorX,doorZ]=P(22.5,63.4);
     K.spawn({name:'신세계 마켓 입구',place:'shinsegae',floor:'B1',arrivalFloor:'B1',mapDestination:true,x:marketX,z:marketZ,y,
       yaw:Math.atan2(marketX-doorX,marketZ-doorZ)});
-    // Approach the cinema from the public rotary, facing the opening in its poster frontage.
+    // The opposite storefront is 3.95 m from the cinema. Arrive within the public aisle.
     {
-      const [frontX,frontZ]=BP(730,939), a=BP(697,969), b=BP(760,911);
-      const yaw=Math.atan2(b[1]-a[1],a[0]-b[0]);
+      const [x,z]=cinemaPoint(0,2.8);
       K.spawn({name:'메가박스 센트럴 입구',destinationId:'megabox',
         aliases:['Megabox Central','더 부티크','메가박스중앙(주)센트럴시티지점'],
         poiIds:[368634400,12079247768],place:'shinsegae',floor:'B1',mapDestination:true,
-        x:frontX+4*Math.sin(yaw),y,z:frontZ+4*Math.cos(yaw),yaw});
+        x,y,z,yaw:cinemaYaw});
     }
     for(const[name,px,py]of [['B1 델리 · 8게이트',823,388],['B1 메가박스 원형 광장',648,1008],['B1 9게이트 · 스위트 파크 연결',1024,477]]){
       const[u,v]=BPLAN(px,py);if(!owned(u,v,1))continue;const[x,z]=P(u,v);K.spawn({name,x,z,y,yaw:RA});
@@ -8370,7 +8370,7 @@ export function build(K) {
       const [mx,mz]=P(mu,mv),[mrx,mrz]=P(mu-1,mv);
       const mieleYaw=Math.atan2(mz-mrz,mrx-mx);
       registerMiele(K,{poly:rect(...mieleRoom),x:mx,y,z:mz,yaw:mieleYaw});
-      for(const [side,back,w,d,h] of [[0,-.17,2.85,.85,.92],[1.045,-.94,.58,.65,.52],[0,1.77,4.50,.82,2.66]]){
+      for(const [side,back,w,d,h] of [[0,-.17,2.85,.85,.92],[1.045,-.94,.58,.65,.52],[0,1.77,4.50,.82,2.66],[2.16,.59,.20,1.47,2.48]]){
         K.box({x:mx+side*Math.cos(mieleYaw)-back*Math.sin(mieleYaw),y,
           z:mz-side*Math.sin(mieleYaw)-back*Math.cos(mieleYaw),
           w,d,h,rotY:mieleYaw,mat:0x353638,skip:['top','bottom','n','s','e','w']});

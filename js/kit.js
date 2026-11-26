@@ -528,7 +528,14 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
   function escalator(ax, az, bx, bz, o = {}) {
     const w = o.w ?? 1.1, ya = o.ya ?? 0, yb = o.yb ?? 5;
     const L = Math.hypot(bx - ax, bz - az), ux = (bx - ax) / L, uz = (bz - az) / L;
-    ramp(ax, az, bx, bz, {w, ya, yb, steps:true, blenderTreads:true, sideMat:o.sideMat ?? 0xc7ccd1, rails:false});
+    const sideMat = o.sideMat ?? 0xc7ccd1;
+    if (o.openTruss) {
+      // A stacked flight has open space below its inclined casing. Preserve
+      // the same support as the solid stair block while rendering the casing.
+      phys.addRamp(ax, az, bx, bz, w / 2, ya, yb, {move:null,tag:current});
+    } else {
+      ramp(ax, az, bx, bz, {w, ya, yb, steps:true, blenderTreads:true, sideMat, rails:false});
+    }
     const speed = (o.dir === 'down' ? -1 : 1) * (o.speed ?? .6);
     renderEscalatorParts(ax, az, bx, bz, w, ya, yb, speed, o.mat, true);
     const nx = -uz * (w / 2 + 0.08), nz = ux * (w / 2 + 0.08);
@@ -553,6 +560,18 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     }
     // underside truss
     const tb = spec(o.truss ?? 0xb9bec4); const dx = -uz * w / 2, dz = ux * w / 2;
+    if (o.openTruss) {
+      const caseMat=spec(sideMat);
+      for(const side of [-1,1]){
+        const ax0=ax+side*dx, az0=az+side*dz, bx0=bx+side*dx, bz0=bz+side*dz;
+        quad(caseMat,[[ax0,ya-.9,az0],[bx0,yb-.9,bz0],[bx0,yb,bz0],[ax0,ya,az0]],
+          [side*-uz,0,side*ux],[[0,0],[L,0],[L,1],[0,1]]);
+      }
+      for(const [x,z,y,sign] of [[ax,az,ya,-1],[bx,bz,yb,1]]){
+        quad(caseMat,[[x-dx,y-.9,z-dz],[x+dx,y-.9,z+dz],[x+dx,y,z+dz],[x-dx,y,z-dz]],
+          [sign*ux,0,sign*uz],[[0,0],[1,0],[1,1],[0,1]]);
+      }
+    }
     quad(tb, [[ax - dx, ya - 0.9, az - dz], [bx - dx, yb - 0.9, bz - dz], [bx + dx, yb - 0.9, bz + dz], [ax + dx, ya - 0.9, az + dz]], [0, -1, 0], [[0, 0], [1, 0], [1, 1], [0, 1]]);
     // A caller may give the higher endpoint first. Up always increases elevation.
     const dir = (o.dir === 'down' ? -1 : 1) * (Math.sign(yb-ya) || 1);

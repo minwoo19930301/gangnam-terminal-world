@@ -22,9 +22,9 @@ export function fitArchitecture(K,library,name,point) {
   K.addMesh(root);
 }
 
-// The terminal's existing relocated waiting lounge transforms kit faces in its
-// own assembly context. Send the authored triangles through that same context.
+// The terminal provides the final placement for each indexed Blender vertex.
 const triangleCache=new WeakMap();
+const triangleUV=[[0,0],[1,0],[1,1]];
 export function fitTerminalSeat(K,library,name,point) {
   const source=library.getObjectByName(name);
   let parts=triangleCache.get(source);
@@ -46,15 +46,16 @@ export function fitTerminalSeat(K,library,name,point) {
     });
     triangleCache.set(source,parts);
   }
-  const edge=new K.THREE.Vector3(),normal=new K.THREE.Vector3();
+  const start=new K.THREE.Vector3(),edge=new K.THREE.Vector3(),normal=new K.THREE.Vector3();
   for(const part of parts){
-    const vertices=part.verts.map(v=>new K.THREE.Vector3(...point(v.x,v.y,v.z)));
+    const vertices=part.verts.map(v=>point(v.x,v.y,v.z));
     for(const [a,b,c,colour] of part.faces){
       const pa=vertices[a],pb=vertices[b],pc=vertices[c];
-      edge.subVectors(pb,pa);
-      normal.subVectors(pc,pa).crossVectors(edge,normal).normalize();
-      const last=pc.toArray();
-      K.quad(colour,[pa.toArray(),pb.toArray(),last,last],normal.toArray());
+      start.fromArray(pa);
+      edge.fromArray(pb).sub(start);
+      normal.fromArray(pc).sub(start);
+      normal.crossVectors(edge,normal).normalize();
+      K.triangle(colour,[pa,pb,pc],normal.toArray(),triangleUV);
     }
   }
 }
