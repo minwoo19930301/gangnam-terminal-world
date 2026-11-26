@@ -55,6 +55,7 @@ for shelf in gallery.collection.children:
 rows.sort()
 assert all(b[0] - a[1] > 5.9 for a, b in zip(rows, rows[1:]))
 bpy.context.window.scene = city
+runpy.run_path(str(here.parent / 'shinsegae-gate-canopy' / 'check-native.py'))['check_north_entrance'](city)
 assert len(city.timeline_markers) == 4
 sun = city.objects["서울 태양"]
 city.frame_set(750)

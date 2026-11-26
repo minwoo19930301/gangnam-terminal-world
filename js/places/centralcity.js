@@ -23,6 +23,7 @@ import {hazBakery} from '../../assets/models/haz-bakery/model.js';
 import {arabicaFront} from '../../assets/models/sweet-arabica/model.js';
 import {imDonut} from '../../assets/models/im-donut/model.js';
 import {vanLeeuwen} from '../../assets/models/van-leeuwen/model.js';
+import {chageeCounter} from '../../assets/models/sweet-chagee/model.js';
 import {buchangWalnutCounter} from '../../assets/models/buchang-walnut/model.js';
 import {anotherPalmEdition} from '../../assets/models/another-palm-astro/model.js';
 import {chefStageSigns} from '../../assets/models/sweet-chefs-stage/model.js';
@@ -1315,7 +1316,7 @@ export function build(K) {
     {"zone":"sweet","name":"치폴레","rect_display":[1344,625,1400,718],"front":"W","kind":"food","arrival":[1332,671.5],"aliases":["Chipotle"]},
     {"zone":"sweet","name":"파이브가이즈","rect_display":[1276,550,1328,605],"front":"W","kind":"food","arrival":[1254,541],"lookAt":[1279,577],"pitchDeg":7,"aliases":["Five Guys"]},
     {"zone":"sweet","name":"치폴레","rect_display":[1281,610,1328,718],"front":"W","kind":"food"},
-    {"zone":"sweet","name":"차지","rect_display":[1277,731,1332,777],"front":"N","kind":"cafe","arrival":[1304.5,723]},
+    {"zone":"sweet","name":"차지","rect_display":[1277,731,1332,777],"front":"N","kind":"cafe","arrival":[1284,723],"lookAt":[1304,744],"pitchDeg":5,"aliases":["CHAGEE"]},
     {"zone":"sweet","name":"부창제과","rect_display":[1223,732,1265,777],"front":"W","kind":"bakery","arrival":[1211,754.5]},
     {"zone":"sweet_islands","name":"크림한상 / 1994 양과점","rect_display":[1095,551,1120,578],"front":"N","kind":"bakery","arrival":[1107.5,539]},
     {"zone":"sweet_islands","name":"구뜨몽떼","rect_display":[1122,551,1147,564],"front":"N","kind":"bakery","arrival":[1134.5,539]},
@@ -1481,6 +1482,7 @@ export function build(K) {
   const spBounds=r=>{const a=BPst(r[0],r[1]),b=BPst(r[2],r[3]);return[Math.min(a[0],b[0]),Math.min(a[1],b[1]),Math.max(a[0],b[0]),Math.max(a[1],b[1])];};
   const chocolateCell=B1_CELLS.find(cell=>cell.name==='피에르 마르콜리니');
   const [chocS0,chocT0,chocS1,chocT1]=spBounds(chocolateCell.rect_display);
+  const chageeCeiling=spBounds([1280,737,1329,760]);
   const spFinish=(r,y,mat,repeat=1.3)=>{
     const[s0,t0,s1,t1]=spBounds(r);
     // A single 48 × 53 m face can have its centre outside the neighbouring
@@ -1555,9 +1557,10 @@ export function build(K) {
       entryTube([a[0],a[1],a[2]-.10],[b[0],b[1],b[2]-.10],.07,trim);
       entryTube([a[0]+.10,a[1],a[2]+.015],[b[0]+.10,b[1],b[2]+.015],.035,{tex:'emit',color:0xffe5ad});
     }
-    // This tenant has its own copper ceiling and suspended opal tubes.
-    // Keep the public vault at its edges without hanging a second light inside.
-    if(cs<chocS0 || cs>chocS1 || ct<chocT0 || ct>chocT1)spChandelier(cs,ct,{tex,color:b1Brass});
+    // The chocolate shop and the tea bar have photographed pendant or backlit ceilings.
+    const tenantLamps=(cs>=chocS0&&cs<=chocS1&&ct>=chocT0&&ct<=chocT1)
+      ||(cs>=chageeCeiling[0]&&cs<=chageeCeiling[2]&&ct>=chageeCeiling[1]&&ct<=chageeCeiling[3]);
+    if(!tenantLamps)spChandelier(cs,ct,{tex,color:b1Brass});
     for(const[a,b]of [[-.5,-.2],[.4,-.6],[-.35,.55],[.5,.3]])lcyl(cs+a*hs,ct+b*ht,height(a,b)-.04,.045,.025,{tex:'emit',color:0xfff2dc},{solid:false});
   };
   const spPillar=(s,t)=>{
@@ -1572,13 +1575,18 @@ export function build(K) {
     const ds=face==='N'?-.14:face==='S'?.14:0,dt=face==='E'?.14:face==='W'?-.14:0;
     lbox(s+ds,t+dt,face==='N'||face==='S'?.045:.32,face==='N'||face==='S'?.32:.045,YB1+.49,.58,0x3f6b45,{solid:false});
   };
-  const spVitrine=(r,seed=0,stock=true,middleShelf=true)=>{
+  const spVitrine=(r,seed=0,stock=true,middleShelf=true,customDisplay)=>{
     if(!b1Safe(r))return false;
     const[s0,t0,s1,t1]=spBounds(r),s=(s0+s1)/2,t=(t0+t1)/2,ds=s1-s0,dt=t1-t0,cut=Math.min(.25,ds*.22,dt*.16);
     const shape=(pad=0)=>[[s0+cut-pad,t0-pad],[s1-cut+pad,t0-pad],[s1+pad,t0+cut-pad],[s1+pad,t1-cut+pad],[s1-cut+pad,t1+pad],[s0+cut-pad,t1+pad],[s0-pad,t1-cut+pad],[s0-pad,t0+cut-pad]].map(p=>P(...p));
     // 30 cm white marble apron, then an 8 cm dark outline; no raised collision curb.
     K.hpoly({tex:'marble',color:0x17191a},shape(.38),YB1+.028,true);
     K.hpoly({tex:'marble',color:0xf2eee4},shape(.30),YB1+.030,true);
+    if(customDisplay){
+      K.prism(shape(),YB1,YB1+1.0,{side:false,top:false,bottom:false});
+      customDisplay(s,t);
+      return true;
+    }
     K.prism(shape(),YB1,YB1+.70,{mat:{tex:'wood',color:0x63422a}});
     K.prism(shape(.06),YB1+.70,YB1+.80,{mat:{tex:'marble',color:0xece3cf,gloss:.7},solid:false});
     K.prism(shape(-.025),YB1+.81,YB1+1.13,{mat:'glass',solid:false});
@@ -1803,6 +1811,15 @@ export function build(K) {
     if(['크림한상 / 1994 양과점','마망갸또','만나당'].includes(cell.name))caseRect=[x0+3,y0+3,x1-3,y1-3];
     if(cell.name==='한정선')caseRect=[x0+3,y1-15,x1-3,y1-6];
     caseRect=spSafeCounter(cell,caseRect);
+    if(cell.name==='차지'&&caseRect){
+      spVitrine(caseRect,index,false,false,(s,t)=>{
+        const [x,z]=P(s,t);
+        chageeCounter(K,x,YB1,z,F.E);
+        spStaff(s0+2,(t0+t1)/2,face);
+        K.phys.addWall(...P(s-3.22,t-2.55),...P(s+3.22,t-2.55),YB1,YB1+3.14,.055,'centralcity');
+      });
+      return;
+    }
     if(west)spArchFront(cell);else if(cell.zone!=='sweet_islands')BSign(cell.name,r,cell.entrance||front,2.65);
     if(cell.name==='하츠베이커리'){
       // The full two-table footprint fits behind the plan-east frontage.

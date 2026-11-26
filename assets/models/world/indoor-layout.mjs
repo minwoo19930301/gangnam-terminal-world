@@ -31,6 +31,7 @@ import {relief} from '../../../js/banpo_relief.js';
 const sources = [
   ['station','1F','exit4-pavilion/pavilion.blend','4번 출구 · 유리 승강장과 돌출 차양','Exit4LiftPavilion','Exit4LiftGlazing'],
   ['station','1F','exit4-pavilion/pavilion.blend','4번 출구 · 관찰창이 있는 승강기 문짝','Exit4LiftLeaf'],
+  ['shinsegae','지상','shinsegae-gate-canopy/north-gate.blend','신세계 강남점 정문 · 곡면 유리 캐노피','GangnamNorthGateCanopy','GangnamNorthGateSupports'],
   ['centralcity','지상','central-plaza-canopy/canopy.blend','센트럴시티 조각 광장 · 열린 캐노피와 의자','CentralCityCourtCanopy'],
   ['centralcity','지상','central-plaza-seatwall/seatwall.blend','센트럴시티 정문 · 동측 석재 앉음벽과 생울타리','CentralCityEastSeatWall'],
   ['streets','지상','sinbanpo-crossing/signal.blend','신반포로 · 황색 뒷덮개 보행등','SinbanpoPedestrianHead'],
@@ -68,6 +69,7 @@ const sources = [
   ['gyeongbu','8F','gyeongbu-clothing-fronts/eight/knit-front.blend','경부선 8층 · 긴 니트와 스카프 전면','8층 여성복 · 긴 니트와 스카프 전면'],
   ['shinsegae','B1','ypbooks-rotary/reading.blend','영풍문고 · 계단식 독서 공간','YPBooksReadingBay'],
   ['shinsegae','B1','ypbooks-rotary/front.blend','영풍문고 강남신세계점 · 원형 광장 입구','YPBooksRotaryFront'],
+  ['centralcity','B1','sweet-chagee/counter.blend','스위트 파크 · 차지 목재 격자 티 바','ChageeGangnamShop'],
   ['centralcity','B1','buchang-walnut/counter.blend','부창제과 · 호두과자 철판과 선물 상자','BuchangWalnutCounter'],
   ['centralcity','B1','another-palm-astro/display.blend','어나더팜 · 아톰 에디션','AnotherPalmAstro'],
   ['centralcity','B1','biscuiterie-mo/biscuiterie.blend','비스퀴테리 M.O · 마들렌과 번호 틴 진열장','BiscuiterieMO','MO glazing','MO lit fittings'],
@@ -176,6 +178,7 @@ const sources = [
     const native=label==='승객용 전광판과 안내 케이스'?'중앙차로 승차대 · 승객 전광판과 안내함':name;
     return ['streets','지상','sinbanpo-bus-shelters/shelters.blend',name,native];
   }),
+  ['gyeongbu','1F','gyeongbu-escalator-directory/directory.blend','경부선 1층 에스컬레이터 · 혼수와 홈패션','본관 에스컬레이터 · 혼수와 홈패션'],
   ['gyeongbu','1F','gyeongbu-waiting-ceiling/waiting-ceiling.blend','경부선 대합실 좌석 · 목재 루버와 매입등','1F waiting lounge · editable ceiling sections'],
   ['gyeongbu','1F','gyeongbu-planted-columns/planted-column.blend','경부선 대합실 · 식물 기둥','대합실 · 네 면을 감싼 식물 기둥'],
   ['gyeongbu','1F','gyeongbu-front-entrance/portal.blend','경부선 정문 · 석재 차양과 영문 명판','정문 · 경사 기둥과 영문 채널 문자'],
