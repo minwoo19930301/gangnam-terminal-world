@@ -1,4 +1,5 @@
 import {placePharmacy} from '../../assets/models/gyeongbu-pharmacy/model.js';
+import {placeFramingShop} from '../../assets/models/gyeongbu-hangaram/model.js';
 import { placeRooftopDining, patioTables } from '../../assets/models/gyeongbu-rooftop/model.js';
 import { placeTicketOffice } from '../../assets/models/gyeongbu-ticket-office/model.js';
 import { placeDeparturePortal } from '../../assets/models/gyeongbu-boards/model.js';
@@ -1794,6 +1795,35 @@ export function build(K) {
   }
 
   function buildRound20B1Details(y,cove,diagonal){
+    // Replace the south frame shop bay alone. The neighboring hoardings and public B1 passage keep their photo-walk addresses.
+    const frameU=92.70,frameV=12.80;
+    const [frameX,frameZ]=W(frameU,frameV);
+    placeFramingShop(K,[frameX,y,frameZ],ROT+PI);
+    const frameFoot=(x,d,w,depth,h)=>lbox(frameU-x,frameV-d,y,w,depth,h,0,{skip:['top','bottom','n','s','e','w']});
+    frameFoot(0,-4.97,6.3,.09,2.72);
+    for(const x of [-3.12,3.12])frameFoot(x,-2.48,.08,4.92,2.73);
+    for(const [x,w] of [[-2.23,1.79],[1.74,2.81]])frameFoot(x,-.20,w,.42,2.31);
+    frameFoot(0,-4.43,5.72,.89,.47);
+    for(const x of [1.18,2.49])frameFoot(x,-1.97,1.11,.68,.99);
+    frameFoot(-2.37,-2.46,.58,.69,1.94);frameFoot(-1.88,-1.96,.49,.54,1.64);
+    frameFoot(-2.70,-3.21,.56,.57,1.75);frameFoot(2.49,-3.04,.48,.53,1.57);
+    // A very light sheet lets shoppers see the profile of each frame from the hall.
+    const glassId='gb_hangaram_clear';
+    K.material(glassId,new K.THREE.MeshPhongMaterial({color:0xd8e5df,transparent:true,opacity:.047,depthWrite:false,side:K.THREE.DoubleSide}));
+    for(const [x,w] of [[-2.23,1.70],[1.74,2.67]]){
+      lwall(frameU-x-w/2,frameV,frameU-x+w/2,frameV,y+.09,y+2.30,{mat:{tex:glassId},thick:.008,solid:false});
+    }
+    for(const side of [-1,1]){
+      const su=frameU-2.86+side*.053;
+      lsign('맞춤액자',su,frameV-.503,y+2.453,.61,.155,side>0?'+u':'-u',{bg:null,fg:'#f4f1e1',padding:0,pxPerM:230});
+      lsign('Frames',su,frameV-.503,y+2.299,.31,.075,side>0?'+u':'-u',{bg:null,fg:'#f4f1e1',padding:0,pxPerM:250});
+    }
+    lsign('센터',frameU-.28,frameV-.041,y+2.363,.19,.099,'-v',{bg:null,fg:'#faf6eb',padding:0,pxPerM:265});
+    for(const ax of [-1.76,1.76])for(const depth of [1.38,3.64]){
+      lbox(frameU-ax,frameV+depth,y+2.699,.55,.54,.004,'emit',{solid:false});
+    }
+    lzone('한가람문구 · 맞춤액자','B1','반포본점 · 미술재료',frameU-3.23,frameV-.23,frameU+3.23,frameV+5.01,y,y+2.84,7);
+    lspawn('지하 1층 한가람문구 맞춤액자',frameU+.50,frameV-2.07,y,0,1);
     ldetail({floor:'B1',y0:-7.5,y1:0,poly:rect(-2,0,170,118),name:'사진 보행 B1 마감 · 안내 · 한가람 · 단차 · 보석'},()=>{
       // Main B1 tile rhythm, stone edge bands, tactile spines and square LED fittings.
       for(const r of [[9,46,10,84],[14.5,46,15.5,84],[21,46,22.1,80],[0,94,28,95],[0,40,49,41]])K.hpoly({color:0x6c6d6f,gloss:.5},rect(...r),y+.02);
@@ -1817,6 +1847,7 @@ export function build(K) {
       for(const [u,v] of [[51.8,32.8],[53.8,30.3],[55.9,27.7]])lcyl(u,v,y,.9,.45,{color:0x252326,gloss:.3},{seg:20});
       // HanGaram: both sides, oak window frames, grey hoardings and maroon fascias.
       for(const [side,fv] of [['n',6.4],['s',12.8]])for(let u=70;u<122;u+=6.5){if(side==='n'&&u<81&&u+6.5>76||side==='s'&&u<116&&u+6.5>102.5)continue;
+        if(side==='s'&&u===89.5)continue;
         const face=side==='n'?'+v':'-v',out=side==='n'?1:-1;
         lbox(u+3.2,fv,y+2.35,6.4,.25,.5,0x5a1a28,{solid:false});lsign('한가람문구',u+3.2,fv+out*.16,y+2.59,3.8,.3,face,{bg:null,fg:'#fff'});
         const hoard=side==='n'&&Math.round(u)%2===0;
@@ -1836,7 +1867,7 @@ export function build(K) {
       for(const [v,col] of [[18.2,0xef762d],[19.2,0x233c6b]]){lbox(102,v,y,.55,.6,1.9,col);lbox(101.71,v,y+.85,.03,.4,.42,0x99b8ca,{solid:false});lsign(['환전','안내'],101.69,v,y+1.55,.45,.45,'-u',{bg:'#243c68',fg:'#fff'});}
       lsign('WOWPASS',101.68,18.2,y+1.78,.48,.16,'-u',{bg:'#243c68',fg:'#fff'});
       lsign(['고속버스터미널 ↑','경부선 · 영동선','부산 · 대구 · 대전 · 청주'],102.4,20.6,y+1.9,2.2,.9,'-u',{bg:'#f5f3ee',fg:'#263f72'});
-      for(const [u,t] of [[95,'맞춤액자'],[98,'출력센터 Printing']])lsign(t,u,11.4,y+2.18,1.3,.35,'-u',{bg:'#171c23',fg:'#fff',twoSided:true});
+      lsign('출력센터 Printing',98,11.4,y+2.18,1.3,.35,'-u',{bg:'#171c23',fg:'#fff',twoSided:true});
       lsign('WARHAMMER',70.4,11.4,y+1.5,1.5,.6,'-v',{bg:'#282421',fg:'#e6d5a0'});
       for(const u of [76,81])lwall(u,0,u,6.4,y,y+2.85,{mat:u===81?doorGlass:0x959799,thick:.06});
       K.hpoly({tex:'gb_b1_granite',gloss:.7},rect(76,0,81,6.4),y+.02);lsign('미대오빠',78.5,.3,y+2.4,3.5,.4,'+v',{bg:'#55473c',fg:'#fff'});
