@@ -28,6 +28,28 @@ window.__world = { ready: false, errors, timing: {} };
 const mark = (k) => { window.__world.timing[k] = Math.round(performance.now()); };
 const fail = (where, e) => { console.error(where, e); errors.push(`${where}: ${e && e.message || e}`); };
 
+async function prepareStreetView(THREE,renderer,scene,camera) {
+  if (!renderer.extensions.has('KHR_parallel_shader_compile')) return;
+  scene.updateMatrixWorld();
+  camera.updateWorldMatrix(true,false);
+  const frustum=new THREE.Frustum().setFromProjectionMatrix(
+    new THREE.Matrix4().multiplyMatrices(camera.projectionMatrix,camera.matrixWorldInverse));
+  const visible=new THREE.Group(),box=new THREE.Box3();
+  // Ask Three for the same programs as the first view, with the real lights,
+  // fog, geometry and instancing flags. Keep the objects in their scene parents.
+  scene.traverseVisible(object=>{
+    const material=object.material;
+    if (!material || object.children.length || !object.layers.test(camera.layers)) return;
+    if (Array.isArray(material) ? !material.every(m=>m?.visible) : !material.visible) return;
+    if (material.defines?.BANPO_RIGID && !object.isInstancedMesh && object.geometry.boundingBox &&
+        !frustum.intersectsBox(box.copy(object.geometry.boundingBox).applyMatrix4(object.matrixWorld))) return;
+    if (!object.frustumCulled || (object.isSprite ? frustum.intersectsSprite(object) : frustum.intersectsObject(object))) {
+      visible.children.push(object);
+    }
+  });
+  await renderer.compileAsync(visible,camera,scene);
+}
+
 async function boot() {
   // Fonts are only needed when sign text is painted (after the world is up), so they load in parallel with the
   // map data and the place modules instead of blocking them.
@@ -231,7 +253,10 @@ async function boot() {
       Math.max(...riverX,META?.jamwon_hangang?.box?.[2] ?? 1500),osm.bbox[1]]);
   }
   mark('city'); status('메시 합치는 중…'); await new Promise(r => setTimeout(r, 0));
-  K._.finalize(); mark('finalize');
+  const streetArrival=AREA.id.startsWith('out:') && !SHOT;
+  if (streetArrival) await K._.finalizeStreet();
+  else K._.finalize();
+  mark('finalize');
   const gl = renderer.getContext();
   installElectricLighting(THREE,K,phys,streetLuminaires,gl.getParameter(gl.MAX_3D_TEXTURE_SIZE));
   K._.cull(6, 1.6, -125, true);
@@ -711,6 +736,11 @@ async function boot() {
   // First upload and draw the visible room under the arrival screen. The next
   // presented frame is available for input without paying that upload cost.
   if (!SHOT) {
+    if (streetArrival) {
+      status('거리 화면 준비 중…');
+      K._.cull(player.x,player.y+player.eye,player.z,true,camera);
+      await prepareStreetView(THREE,renderer,scene,camera);
+    }
     renderer.render(scene,camera);
     await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
   }

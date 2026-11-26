@@ -4,19 +4,23 @@ import * as THREE from 'three';
 import { createKit } from '../js/kit.js';
 import { createPhysics } from '../js/physics.js';
 
-const K = createKit(THREE, new THREE.Scene(), {osm: {}, phys: createPhysics()});
+const kit = () => createKit(THREE, new THREE.Scene(), {osm: {}, phys: createPhysics()});
 const faces = [
   {x: 5, color: 0xff0000, normal: [0,0,1], triangles: 2},
   {x: 8, color: 0x00ff00, normal: [0,0,-1], triangles: 2},
   {x: 11, color: 0x0000ff, normal: [0,1,0], triangles: 1},
   {x: 14, color: 0xffffff, normal: [0,-1,0], triangles: 1},
 ];
-K.withTerrainAnchor(0, 0, () => {
-  for (const {x, color, normal, triangles} of faces) {
-    if (triangles === 2) K.quad(color, [[x,1,1],[x+1,1,1],[x+1,2,1],[x,2,1]], normal);
-    else K.hpoly(color, [[x,1],[x+1,1],[x+1,2]], 1, normal[1] > 0);
-  }
-});
+function emitFaces(K) {
+  K.withTerrainAnchor(0, 0, () => {
+    for (const {x, color, normal, triangles} of faces) {
+      if (triangles === 2) K.quad(color, [[x,1,1],[x+1,1,1],[x+1,2,1],[x,2,1]], normal);
+      else K.hpoly(color, [[x,1],[x+1,1],[x+1,2]], 1, normal[1] > 0);
+    }
+  });
+}
+const K=kit();
+emitFaces(K);
 const [mesh] = K._.finalize();
 const g = mesh.geometry;
 assert.equal(g.index.count, 18);
@@ -42,4 +46,13 @@ g.computeBoundingBox();
 g.computeBoundingSphere();
 assert.ok(g.boundingBox.equals(boundingBox));
 assert.ok(g.boundingSphere.equals(boundingSphere));
+const street=kit();
+emitFaces(street);
+const [arrival]=await street._.finalizeStreet();
+assert.deepEqual(arrival.geometry.index.array,g.index.array);
+for(const [key,attribute] of Object.entries(g.attributes)) {
+  assert.deepEqual(arrival.geometry.attributes[key].array,attribute.array,key);
+}
+assert.ok(arrival.geometry.boundingBox.equals(g.boundingBox));
+assert.ok(arrival.geometry.boundingSphere.equals(g.boundingSphere));
 console.log('Static batch winding, vertex colors, normals and culling bounds passed.');

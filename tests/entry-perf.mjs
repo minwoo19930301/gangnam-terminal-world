@@ -22,12 +22,26 @@ try {
       const page = await browser.newPage({viewport: {width: 1100, height: 650}, deviceScaleFactor: 1});
       const errors = [];
       page.on('pageerror', e => errors.push(e.message));
-      await page.addInitScript(() => sessionStorage.setItem('sky-mode', 'day'));
+      await page.addInitScript(() => {
+        sessionStorage.setItem('sky-mode','day');
+        const loading=window.__entryFrames={count:0,longestGapMs:0};
+        let last;
+        function sample(){
+          const now=performance.now();
+          if(last!==undefined)loading.longestGapMs=Math.max(loading.longestGapMs,now-last);
+          if(window.__world?.ready)return;
+          if(document.getElementById('loading'))loading.count++;
+          last=now;
+          requestAnimationFrame(sample);
+        }
+        requestAnimationFrame(sample);
+      });
       await page.goto(url + hash, {waitUntil: 'domcontentloaded'});
       await page.waitForFunction(() => window.__world?.ready || window.__world?.errors.length, null, {timeout: 180000});
       const observed = await page.evaluate(() => ({
         readyMs: Math.round(performance.now()), builtMs: window.__world.timing.ready,
         area: window.__world.area, errors: window.__world.errors,
+        loadingFrames:window.__entryFrames.count, longestGapMs:Math.round(window.__entryFrames.longestGapMs),
       }));
       assert.deepEqual([...errors, ...observed.errors], []);
       assert.equal(observed.area, area);
