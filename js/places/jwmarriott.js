@@ -1,3 +1,4 @@
+import {registerLoungeService} from '../../assets/models/lounge-table-service/model.js';
 import {registerTamayura} from '../../assets/models/tamayura/model.js';
 import { registerMobo, seatX as moboChairs } from '../../assets/models/mobo-bar/model.js';
 import { registerCellar } from '../../assets/models/margaux-cellar/model.js';
@@ -1836,6 +1837,7 @@ export function build(K) {
   // =====================================================================
   function floor8() {
     const y = Y['8F'], yc = y + 5.2;
+    registerLoungeService(K,P,R,y);
     HP({ tex: 'jwLoungeStone', gloss: .5 }, [-7.85, 6.15, 15.85, 57.85], y + .008, true, [ELH, STH]);
     // Separate rug islands preserve the polished honey-stone circulation between seating bays.
     HP('jwLoungeRug', [-7.4, 14.1, 2.3, 24.5], y + .018);
@@ -1973,8 +1975,7 @@ export function build(K) {
     B({ u: -3.45, v: 36.35, y: y + .35, w: 1.85, d: 1.25, h: .075, mat: { tex: 'wood', color: 0xb2713f, gloss: .3 }, solid: false });
     B({ u: -3.45, v: 36.35, y: y + .35, w: 1.87, d: 1.27, h: .018, mat: 0xbd8452, solid: false });
     B({ u: -3.45, v: 36.35, y, w: 1.35, d: .8, h: .35, mat: 0x27201b });
-    FLOWER(-3.6, 34.15, y + .44, .32); FLOWER(-3.45, 36.35, y + .45, .23);
-    fixture('tea',-3.46,33.56,y+.443);
+    FLOWER(-3.45, 36.35, y + .45, .23);
     fixture('tea',-3.8,36.66,y+.426,Math.PI/2,.85);
     for (const [u, v] of [[-4.0, 34.6], [-3.1, 35.95]]) {
       CY(u, v, y + .447, .1, .014, 0xf1ebde, { seg: 14, solid: false });
@@ -2008,7 +2009,7 @@ export function build(K) {
     for (const [u, v] of [[-3.8, 20], [.4, 25.7], [.3, 28.6], [.5, 45.7], [1.6, 14.8]]) {
       ROUND(u, v, y, .62, .62, { tex: 'marble', color: 0xe8dcc8, gloss: .5 });
       tub(u - 1.1, v, 'E', v === 20 || v < 18); tub(u + 1.1, v, 'W', v === 20 || v < 18);
-      FLOWER(u, v, y + .63, .18, [0x763553, 0xa14f71, 0x567442]);
+      if(v!==20&&v!==25.7) FLOWER(u, v, y + .63, .18, [0x763553, 0xa14f71, 0x567442]);
     }
     // Photos 01/04 show the fan-back cane chairs and dusty rose cushions.
     // Keep circulation in the normal build; the woven set is shared by the five seats.
