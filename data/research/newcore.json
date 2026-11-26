@@ -1,4 +1,11 @@
 {
+  "ashley_dessert": {
+    "checked": "2026-11-26",
+    "place": "1관 5층 애슐리퀸즈 뉴코아 강남점",
+    "sources": ["https://map.naver.com/p/entry/place/1920897502", "https://pcmap.place.naver.com/restaurant/1920897502/photo", "https://www.elandretail.com/store05.do?branchID=00110001&lang=000600KO", "https://krcaus.tistory.com/m/210", "https://veritas-lux-mea-72421.tistory.com/481"],
+    "observed": "11월 10일 초콜릿 분수 클립, 11월 22일 매장 전경과 황동 레일, 11월 26일 스테이크 접시. 지난 방문 사진에서 이중 와플 프레스, 12칸 토핑 접시, 벽의 구움틀을 대조했다.",
+    "estimated": "게임 내 카운터·테이블·바닥 타일 간격, 높이와 세부 배치는 공간에 맞춘 근사값이다."
+  },
   "adidas_golf": {
     "floor": "2관 5F 남성·골프",
     "verified": "2026-11-26",

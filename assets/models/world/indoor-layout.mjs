@@ -1,3 +1,5 @@
+import {parts as ashleyParts,prefix as ashleyPrefix} from '../newcore-dessert/layout.js';
+import {names as yogurtNames} from '../gotomall-yogurtworld/layout.js';
 import {parts as crossingParts,prefix as crossingPrefix} from '../goter-crossing/layout.js';
 import {parts as floristParts,prefix as floristPrefix} from '../lejardin-shop/layout.js';
 import {parts as loungeTableParts,prefix as loungeTablePrefix} from '../lounge-table-service/layout.js';
@@ -18,10 +20,19 @@ import {relief} from '../../../js/banpo_relief.js';
 // Scene object (or a uniquely identifying child) -> editable native source.
 // Geometry decoder matrices and decorative LOD offsets live *below* the placement.
 const sources = [
+  ...[['arch','자연목 아치와 걸이 공중식물'],['stand','백색 철제 선반과 입구 마루'],['left','왼편 산세베리아와 화분'],
+      ['right','오른편 잎식물과 다육 트레이'],['timber','자작 통나무와 고목 진열']].map(([key,label])=>
+    ['gyeongbu','3F','gyeongbu-terrarium/'+key+'/'+key+'.blend','경부선 박테라리움 · '+label,'박테라리움 · '+label]),
+  ...Object.values(ashleyParts).map(([label])=>{
+    const name=ashleyPrefix+label;return ['newcore','5F','newcore-dessert/dessert-room.blend',name,name];
+  }),
   ...[['ribbon','색상별 리본과 꽃 포장','색상별 리본과 꽃 포장 진열'],
       ['case','원목 진열장과 황동 촛대','원목 진열장과 황동 촛대'],
       ['crystal','절삭 유리 화기와 고블릿','절삭 유리 화기와 고블릿']].map(([key,label,original])=>
     ['gyeongbu','3F','gyeongbu-florist-stock/'+key+'/'+key+'.blend','경부선 현대데코 · '+label,'현대데코 · '+original]),
+  ...Object.values(yogurtNames).map(label=>{
+    const name='요거트월드 · '+label;return ['gotomall','B1','gotomall-yogurtworld/g012.blend',name,name];
+  }),
   ...Object.values(crossingParts).map(([label])=>{
     const name=crossingPrefix+label;return ['streets','지상','goter-crossing/signals.blend',name,name];
   }),
