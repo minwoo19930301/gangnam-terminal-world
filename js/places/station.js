@@ -1393,11 +1393,27 @@ export function build(K) {
   // Close the flat lower landing after the inclined enclosure ends at x=30.
   K.slab(rect(30,-138,40,-124),B4+4.6,{mat:'concrete',under:'station-grid',thick:.08,walk:false});
   sign('⑨  고속터미널  |  타는 곳 ↓',-1.1,B1+2.75,-132,7.3,.65,-Math.PI/2,'#d8d2c4','#3d3f8f');
+  // The public flight is between registered halls. Keep each band of the
+  // incline in the station page without adding intermediate stops to the map.
+  for(const [x0,x1,level] of [[0,5,'B1'],[5,15,'B2'],[15,25,'B3'],[25,30,'B4']]){
+    K.phys.addZone({name:'9호선 연결 에스컬레이터',sub:'지하상가 · 9호선 승강장',place:'station',
+      floor:level,poly:rect(x0,-136,x1,-128),y0:B1-x1/2-.15,y1:B1-x0/2+1,priority:-1});
+  }
   // Inclined walls/ceiling around the long W9 well, rather than an opaque lid.
   for(const z of [-136.2,-127.8]){
     K.quad('station-ceramic',[[0,B1,z],[30,B4,z],[30,B4+4.6,z],[0,B1+4.6,z]],[0,0,z<-132?1:-1]);
   }
   K.quad('ceiling',[[0,B1+4.6,-136.2],[30,B4+4.6,-136.2],[30,B4+4.6,-127.8],[0,B1+4.6,-127.8]],[0,-1,0]);
+  // Below the guarded B1 opening, the exterior faces of the shaft enclose
+  // the space above the descending soffit. The west boarding end stays open.
+  const roofAtFloor=30*4.6/(B1-B4),bottom=B4+4.6;
+  K.quad('concrete',[[roofAtFloor,B1,-127.8],[30,bottom,-127.8],
+    [30,bottom,-136.2],[roofAtFloor,B1,-136.2]],[.5,1,0]);
+  for(const z of [-136,-128]){
+    K.triangle('station-ceramic',[[roofAtFloor,B1,z],[30,B1,z],[30,bottom,z]],
+      [0,0,z===-136?1:-1],[[0,0],[(30-roofAtFloor)/2,0],[(30-roofAtFloor)/2,(B1-bottom)/2]]);
+  }
+  K.quad('station-ceramic',[[30,bottom,-136],[30,B1,-136],[30,B1,-128],[30,bottom,-128]],[-1,0,0]);
   // The shaft floor is also the enclosed sloping soffit seen from the B4 hall.
   K.quad('station-grid',[[0,B1,-136.2],[30,B4,-136.2],[30,B4,-127.8],[0,B1,-127.8]],[-.5,-1,0],[[0,0],[25,0],[25,7],[0,7]]);
   detailRooms[8].jobs.push(()=>{
