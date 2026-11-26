@@ -727,7 +727,15 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     scene.add(mesh);
     return mesh;
   }
-  function texture(key, w, h, draw, scale = [1, 1], opts = {}) { if (!customTex.has(key)) { const r = T.custom(key, w, h, draw, scale, opts); customTex.set(key, { ...r, transparent: !!opts.transparent, doubleSide: !!opts.doubleSide }); } return key; }
+  function texture(key, w, h, draw, scale = [1, 1], opts = {}) {
+    if (!customTex.has(key)) {
+      const record = T.custom(key, w, h, draw, scale, opts);
+      record.transparent = !!opts.transparent;
+      record.doubleSide = !!opts.doubleSide;
+      customTex.set(key, record);
+    }
+    return key;
+  }
   function material(key, m) { customMats.set(key, m); materials.set('cm:' + key, m); return key; }
   function mapMark(o) { mapMarks.push({ place: current, ...o }); }
   function osmBuilding(id) { return osm.buildings.filter(b => b.id === id); }
@@ -1236,7 +1244,16 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
       fn = kit => withTerrainSurface(datum,() => draw(kit));
     }
     const rectangular=poly?.length===4 && poly.every(([x,z])=>(x===bb[0]||x===bb[2]) && (z===bb[1]||z===bb[3]));
-    details.push({ poly, exactDistance:!!poly&&!rectangular, owner: current, meta: perPlace[current], floor: o.floor || '', y0: o.y0 ?? -1e9, y1: o.y1 ?? 1e9, bb, fn, built: false, name: o.name || '', visibleFrom: o.visibleFrom });
+    details.push({ poly, exactDistance:!!poly&&!rectangular, owner: current, meta: perPlace[current], floor: o.floor || '', y0: o.y0 ?? -1e9, y1: o.y1 ?? 1e9, bb, fn, resource:o.resource, built: false, name: o.name || '', visibleFrom: o.visibleFrom });
+  }
+  // Pure visual batches can share a download. Complete it before entering the
+  // synchronous kit build so the original place, terrain and material batches apply.
+  const loadingResources = new WeakSet();
+  function prepareDetail(resource) {
+    if (loadingResources.has(resource)) return;
+    loadingResources.add(resource);
+    const wake = () => { loadingResources.delete(resource); lastView = null; };
+    resource.load().then(wake, () => setTimeout(wake, 5000));
   }
   function buildDetail(d) {
     if (d.built) return []; d.built = true;
@@ -1334,13 +1351,22 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     while (waiting.length) {
       const {d} = waiting.pop();
       if (d.built) continue;
+      if (d.resource && !d.resource.ready) { prepareDetail(d.resource); continue; }
       buildDetail(d); n++;
       if (performance.now() - t0 >= budgetMs) break;
     }
     if (n) cull(x,y,z,true);
     return n;
   }
-  function buildAllDetail() { for (const d of details) if (!keepDetail || keepDetail(d)) buildDetail(d); }
+  function buildAllDetail() {
+    const pending = new Set();
+    for (const d of details) {
+      if (d.built || (keepDetail && !keepDetail(d))) continue;
+      if (d.resource && !d.resource.ready) pending.add(d.resource);
+      else buildDetail(d);
+    }
+    if (pending.size) return Promise.all([...pending].map(resource => resource.load())).then(buildAllDetail);
+  }
 
   const K = {
     THREE, scene, phys, osm, LEVELS, T, withTerrainAnchor, withTerrainSurface, withParkedVehicle,

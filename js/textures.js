@@ -213,9 +213,22 @@ export function createTextures(THREE, { maxAniso = 8 } = {}) {
   }
   function custom(key, w, h, draw, scale = [1, 1], opts = {}) {
     if (cache.has(key)) return cache.get(key);
-    const c = makeCanvas(w, h); draw(c.getContext('2d'), w, h);
-    const t = tex(THREE, c, opts); const r = { tex: t, scale, facade: !!opts.facade };
-    cache.set(key, r); return r;
+    function paint() {
+      const c = makeCanvas(w, h); draw(c.getContext('2d'), w, h);
+      return tex(THREE, c, opts);
+    }
+    const record = {scale, facade: !!opts.facade};
+    if (opts.lazy) {
+      // A floor can define finishes used only by distant shops. UVs need the scale,
+      // while the canvas is first needed by a visible material or texture array.
+      Object.defineProperty(record, 'tex', {configurable: true, enumerable: true, get() {
+        const value = paint();
+        Object.defineProperty(record, 'tex', {value, enumerable: true});
+        return value;
+      }});
+    } else record.tex = paint();
+    cache.set(key, record);
+    return record;
   }
   return { surface, custom, names: [...Object.keys(PAINTERS), ...Object.keys(FACADES)], facades: Object.keys(FACADES) };
 }

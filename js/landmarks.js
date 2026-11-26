@@ -5,7 +5,7 @@ import { eastGardenLevel } from './places/_gardenGrade.js';
 export const LANDMARKS = [
   { name: '고속터미널역', sub: '3·7·9호선', x: -33, z: -128, y: 4, place: 'station', color: '#3b6ea8' },
   { name: '고투몰', sub: '강남터미널 지하도상가', x: -2, z: -121, y: 4, place: 'gotomall', color: '#9a5a2b', under: -6 },
-  { name: '신세계백화점 강남점', x: -61, z: 3, y: 36, place: 'shinsegae', color: '#b23a31' },
+  { name: '신세계백화점 강남점', x: -61, z: 3, y: 36, roofPin: [-75.8, 55, -36.1], place: 'shinsegae', color: '#b23a31' },
   { name: 'JW 메리어트 서울', x: -24, z: 100, y: 146, place: 'jwmarriott', color: '#5a4a3a' },
   { name: '센트럴시티 · 호남선', x: -116, z: 83, y: 14, place: 'centralcity', color: '#2f7d6d' },
   { name: '파미에스테이션', x: -47, z: 215, y: 10, place: 'centralcity', color: '#a0522d' },

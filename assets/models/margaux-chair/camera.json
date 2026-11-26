@@ -1,0 +1,13 @@
+{
+  "floor": "7F",
+  "x": -6.19843,
+  "y": 30.5,
+  "z": 142.83547,
+  "yaw": -100.9665,
+  "pitch": -21,
+  "area": "in:jwmarriott",
+  "sourceBlend": "chair.blend",
+  "sourceCollection": "MargauxDiningChair",
+  "meshName": "더 마고 그릴 · 다이닝 가죽 의자",
+  "gameView": "?pitch=-21#/jwmarriott/7F?p=-6.19843,30.5,142.83547,-100.9665"
+}

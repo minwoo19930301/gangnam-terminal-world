@@ -18,7 +18,7 @@ for (const id of PLACES) {
   const m = await import(url.pathToFileURL(path.join(ROOT, 'js/places', id + '.js')).href);
   const K = createKit(THREE, new THREE.Scene(), { osm, phys: createPhysics() }); K.onNight = () => { };
   K._.setCurrent(id, m.meta); m.build(K);
-  const mapDestinations = K._.spawns.filter(s => s.mapDestination).map(({name, floor, x, y, z, yaw}) => ({name, floor, x, y, z, yaw}));
+  const mapDestinations = K._.spawns.filter(s => s.mapDestination).map(({name, aliases, poiIds, floor, x, y, z, yaw}) => ({name, aliases, poiIds, floor, x, y, z, yaw}));
   modules.set(id, { meta: m.meta, builtZones: K._.zonesList, mapDestinations });
   for (const zone of K._.zonesList) {
     if (zone.place === id || !zone.place) continue;

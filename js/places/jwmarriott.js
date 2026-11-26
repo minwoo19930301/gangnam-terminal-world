@@ -1,3 +1,4 @@
+import {margauxChairs} from '../../assets/models/margaux-chair/model.js';
 import {registerExecutiveSeats} from '../../assets/models/executive-seating/model.js';
 import {tables as executiveTables} from '../../assets/models/executive-seating/layout.js';
 import {registerLoungeService} from '../../assets/models/lounge-table-service/model.js';
@@ -1730,14 +1731,25 @@ export function build(K) {
     for (const v of [43.5, 47, 51, 54.5]) MAN(13.6, v, y, { shirt: 0xf2f2f2, rotY: FACE.W });
     // The architect's 7F photographs show cream banquettes enclosed by oak
     // returns and individual bronze lanterns. Keep the eastern kitchen aisle clear.
-    for (const u of [-5.5, -1.5, 2.5, 6.5]) for (const v of [43.5, 47.5, 51.5, 55.5]) {
-      if(u===-5.5){
-        fixture('booth',u-1.0,v,y,-Math.PI/2);
-        B({u:u-1.0,v,y,w:.85,d:2.38,h:.50,solid:true,skip:['top','bottom','n','s','e','w']});
-        TABLE(u,v,y,{square:true,r:.5,chairs:0,top:0xb58e68});
-        CHAIR(u+.86,v,y,'W',0x615244);
-      }else TABLE(u,v,y,{square:true,r:.5,chairs:4,rot:Math.PI/4,chair:0x4a3426,top:0xb58e68});
+    const tableDepths=[43.5,47.5,51.5,55.5];
+    for(const v of tableDepths){
+      fixture('booth',-6.5,v,y,-Math.PI/2);
+      B({u:-6.5,v,y,w:.85,d:2.38,h:.50,solid:true,skip:['top','bottom','n','s','e','w']});
+      TABLE(-5.5,v,y,{square:true,r:.5,chairs:0,top:0xb58e68});
+      CHAIR(-4.64,v,y,'W',0x615244);
     }
+    const diningRows=[-1.5,2.5,6.5].map(u=>{
+      const row=[];
+      for(const v of tableDepths){
+        TABLE(u,v,y,{square:true,r:.5,chairs:0,top:0xb58e68});
+        for(const [du,dv,angle] of [[0,.88,0],[-.88,0,-Math.PI/2],[0,-.88,Math.PI],[.88,0,Math.PI/2]]){
+          const [x,z]=P(u+du,v+dv);
+          row.push([x,y,z,R+angle]);
+        }
+      }
+      return row;
+    });
+    DEC(()=>margauxChairs(baseKit,diningRows));
     fixture('display',6.05,40.23,y+.70);
     // Herb beds sit inside the existing lawn edge along the public garden path.
     for (const v of [-13, -15, -17]) fixture('herbs', -7.85, v, y + .03, Math.PI / 2);

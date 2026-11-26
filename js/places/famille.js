@@ -1,3 +1,4 @@
+import {galleryShopfronts} from '../../assets/models/famille-shopfront/model.js';
 import {FA,FB,upperPoint as FP,diningSpan} from './_familleUpperPlan.js';
 import {placeCharDining} from '../../assets/models/char-dining/place.js';
 import { loadArchitecture, placeArchitecture } from '../../assets/models/interior-architecture/model.js';
@@ -566,8 +567,16 @@ function buildHall(K) {
     K.slab(rect(u-2.7,11.4,u+2.7,14.6),4.1,{mat:cream,thick:.14});
   }
   B(31.7,-.13,0,5.3,.12,4.1,0x302c26,true);
+  // The operator photograph shows rectangular casements across from the fanlights.
+  // IDBR's gallery photograph places the Wafille sign on the arched side.
+  const diningBays=[38.2,44.7,51.2,57.7];
+  const diningPiers=[35.3,41.8,48.3,54.8,61.3];
+  galleryShopfronts(K,P,R,diningBays,diningPiers);
   // Continuous cream cornices, matching the retained gallery's brick-pier / fanlight grammar.
-  for(const v of [0,11.5])for(const[y,h,d]of [[4.45,.18,.44],[4.66,.14,.6],[7.8,.2,.46]])B(46.28,v,y,48.56,d,h,cream);
+  for(const v of [0,11.5])for(const[y,h,d]of [[4.45,.18,.44],[4.66,.14,.6],[7.8,.2,.46]]){
+    const strips=v===11.5&&y<7?[[22,35.3],[61.3,70.56]]:[[22,70.56]];
+    for(const [a,b] of strips)B((a+b)/2,v,y,b-a,d,h,cream);
+  }
   for(const v of [0,20])for(const[y,h,d]of [[4.7,.16,.48],[4.88,.13,.62],[9.2,.18,.5]])B(13,v,y,18,d,h,cream);
   for(const[y,h,w]of [[4.7,.16,.48],[4.88,.13,.62],[9.2,.18,.5]])B(4,10,y,w,20,h,cream);
   // The gallery is a full-width white barrel vault, with glazing only in the central crown strip.
@@ -605,7 +614,12 @@ function buildHall(K) {
     if(corner)B(u,v+.85,5,1.05,1.05,4.3,brick,true);
     B(u,v+(corner?.85:0),9.1,1.3,1.3,.22,cream);
   }
-  for(let u=28.8;u<70;u+=6.5)for(const v of [0,11.5]){B(u,v,0,.8,.65,8,brick,true);B(u,v,0,1,.85,.23,cream);B(u,v,4.45,1.1,.9,.42,cream);}
+  for(const u of [28.8,...diningPiers,67.8])for(const v of [0,11.5]){
+    B(u,v,0,.8,.65,8,brick,true);
+    if(v===11.5&&diningPiers.includes(u))continue;
+    B(u,v,0,1,.85,.23,cream);
+    B(u,v,4.45,1.1,.9,.42,cream);
+  }
   K.zone({name:'파미에스테이션',floor:'1F',sub:'벽돌 홀 · 하우스 오브 신세계 · JAJU · 아그라',poly:hall,y0:0,y1:4.8,priority:18});
   K.zone({name:'파미에스테이션',floor:'1F',sub:'유리 천창 갤러리 · 와필레',poly:gallery,y0:0,y1:8,priority:18});
   {const[x,z]=P(15,4);K.spawn({name:'파미에 1층 벽돌 홀',x,z,y:0,yaw:20*PI/180,group:'파미에스테이션'});}
@@ -627,13 +641,20 @@ function buildHall(K) {
   for (let bay=0; bay<7; bay+=2) {
     const first=25.2+bay*6.5, last=25.2+Math.min(bay+1,6)*6.5;
     K.detail({name:'파미에 갤러리 반원창',floor:'1F',y0:0,y1:10,poly:rect(first-3,0,last+3,11.5)},()=>{
-      for(let u=first;u<=last+.01;u+=6.5){fan(u,.18,5.25);fan(u,11.32,5.25);}
+      for(let u=first;u<=last+.01;u+=6.5){
+        fan(u,.18,5.25);
+        if(!diningBays.includes(u))fan(u,11.32,5.25);
+      }
     });
   }
   K.detail({name:'파미에 벽돌 홀 · 유리 천창 갤러리',floor:'1F',y0:0,y1:11,poly:[P(4,0),P(70.56,0),P(70.56,11.5),P(22,11.5),P(22,20),P(4,20)]},()=>{
     fan(4.2,7.2,5.5,'u');fan(4.2,14.2,5.5,'u');
     // Lower fascia and transom follow the brick bays; unnamed units receive no invented brand.
-    for(let u=25.2;u<69;u+=6.5)for(const v of [.12,11.38]){B(u,v,3.3,5.5,.17,.65,0x151514);B(u,v,4.02,5.5,.13,.35,'glass');}
+    for(let u=25.2;u<69;u+=6.5)for(const v of [.12,11.38]){
+      if(v===11.38&&diningBays.includes(u))continue;
+      B(u,v,3.3,5.5,.17,.65,0x151514);
+      B(u,v,4.02,5.5,.13,.35,'glass');
+    }
     for(const v of [7.2,14.2]){B(4.15,v,3.35,.20,5.8,.7,0x101217);B(4.15,v,4.1,.18,5.8,.42,'glass');}
     sign('JAJU',4.32,7.2,3.67,3.2,.48,'u',{fg:'#f7ffff'});sign('Agra',4.32,14.2,3.67,3.0,.48,'u',{fg:'#acdcff'});
     sign('Wafille',25.2,.27,3.62,3.0,.43,'v',{fg:'#b4e1ff'});

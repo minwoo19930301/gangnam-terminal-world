@@ -183,12 +183,15 @@ export function createMap(opts) {
   const exitRecords = (osm.exits || []).map(p => ({ ...p, text: String(p.ref || '출구'), label: label(`${p.ref || ''}번 출구`, p.x, p.z, 11) }));
   const busRecords = (osm.nodes || []).filter(p => p.k === 'bus_stop').map(p => ({ ...p, label: p.name ? label(p.name, p.x, p.z, 11) : null }));
   const kindNames = { restaurant: '음식점', cafe: '카페', fast_food: '음식점', bakery: '베이커리', convenience: '편의점', pharmacy: '약국', bank: '은행', toilets: '화장실', cinema: '영화관', supermarket: '마트', clothes: '의류', hotel: '호텔' };
-  const poiRecords = (osm.pois || []).filter(p => p.name && p.kind !== 'platform' && p.kind !== 'stop_position' && p.kind !== 'subway_entrance').map(p => ({ ...p, color: /cafe|bakery/.test(p.kind) ? '#9b6c43' : /restaurant|food/.test(p.kind) ? '#e38354' : /pharmacy|hospital/.test(p.kind) ? '#418e7a' : '#8b79ac', label: label(p.name, p.x, p.z, 11), type: kindNames[p.kind] || '장소', indoorPlace: placeAt(p.x, p.z)?.id }));
+  // A named game entrance supersedes an OSM business point with no arrival floor.
+  const arrivalPoiIds = new Set(Object.values(opts.directory || {}).flatMap(entry =>
+    (entry.mapDestinations || []).flatMap(arrival => arrival.poiIds || [])));
+  const poiRecords = (osm.pois || []).filter(p => !arrivalPoiIds.has(p.id) && p.name && p.kind !== 'platform' && p.kind !== 'stop_position' && p.kind !== 'subway_entrance').map(p => ({ ...p, color: /cafe|bakery/.test(p.kind) ? '#9b6c43' : /restaurant|food/.test(p.kind) ? '#e38354' : /pharmacy|hospital/.test(p.kind) ? '#418e7a' : '#8b79ac', label: label(p.name, p.x, p.z, 11), type: kindNames[p.kind] || '장소', indoorPlace: placeAt(p.x, p.z)?.id }));
   const elevatorRecords = elevators.map(e => ({ ...e, label: label(e.name, e.x, e.z, 10) }));
   const searchItems = [], searchKeys = new Set(), destinationMarks = [];
   function addSearch(item) {
     const key = `${item.name}/${item.x}/${item.z}/${item.y}`; if (searchKeys.has(key)) return; searchKeys.add(key);
-    item.match = `${item.name} ${item.group || ''} ${item.floor || ''} ${item.sub || ''}`.normalize('NFKC').toLocaleLowerCase().replace(/\s/g, ''); searchItems.push(item);
+    item.match = `${item.name} ${item.aliases?.join(' ') || ''} ${item.group || ''} ${item.floor || ''} ${item.sub || ''}`.normalize('NFKC').toLocaleLowerCase().replace(/\s/g, ''); searchItems.push(item);
   }
   // These public arrivals can be found before the shop's area has been loaded.
   // Use the very same walking position and viewing direction as its local spawn.

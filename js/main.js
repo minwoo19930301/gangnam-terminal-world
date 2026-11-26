@@ -61,7 +61,10 @@ async function boot() {
   installRelief(THREE, exteriorTerrain);
   if (AREA.id !== 'all') status(`${areaName(AREA.id, META)} 불러오는 중…`);
   const wantIds = Q.get('places') ? Q.get('places').split(',') : PLACES.filter(id => AREA.modules.includes(id));
-  const modP = wantIds.map(id => import(`./places/${id}.js`).then(m => ({ id, m }), e => ({ id, e })));
+  const modP = wantIds.map(id => import(`./places/${id}.js`).then(async m => {
+    if (AREA.id === 'all') await m.prepareFullDetail?.();
+    return {id, m};
+  }).catch(e => ({id, e})));
   const osm = applyRoadEdits(await osmP); mark('osm');
 
   // Quality: ?q=low forces the light path (no MSAA, lower pixel-ratio ceiling); phones and small-memory devices
@@ -306,8 +309,9 @@ async function boot() {
       cx.fillStyle = '#fff'; cx.textAlign = 'center'; cx.textBaseline = 'middle'; cx.fillText(L.name, 256, 50, 450);
       if (L.sub) { cx.font = `500 30px ${FONT}`; cx.fillStyle = '#20303a'; cx.fillText(L.sub, 256, 140, 470); }
       const tex = new THREE.CanvasTexture(cv); tex.colorSpace = THREE.SRGBColorSpace;
-      const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, depthTest: false, fog: false, transparent: true }));
-      sp.position.set(L.x, (L.y || 10) + 6, L.z); sp.renderOrder = 10; scene.add(sp); pins.push({ L, sp });
+      const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, depthWrite: false, fog: false, transparent: true }));
+      const [x, y, z] = L.roofPin ?? [L.x, L.y ?? 10, L.z];
+      sp.position.set(x, y + 6, z); sp.renderOrder = 10; scene.add(sp); pins.push({ L, sp });
     }
   }
   function pinUpdate() {
@@ -483,7 +487,7 @@ async function boot() {
     function parse(h) {
       const m = /^#\/([^?]*)(?:\?(.*))?$/.exec(h || ''); if (!m) return null;
       const key = m[1].split('/').map(decodeURIComponent).join('/'), q = new URLSearchParams(m[2] || ''), p = q.get('p');
-      return { key, pos: p ? p.split(',').map(Number) : null };
+      return { key, destination:q.get('destination'), pos: p ? p.split(',').map(Number) : null };
     }
     function go(r) {
       if (!r) return false;
@@ -491,7 +495,9 @@ async function boot() {
       if (r.pos && r.pos.length >= 3 && r.pos.every(Number.isFinite)) { player.teleport(r.pos[0], r.pos[1], r.pos[2], r.pos[3] != null ? r.pos[3] * Math.PI / 180 : player.yaw); return true; }
       const [addressPlace, floor] = r.key.split('/');
       const place = META?.[addressPlace]?.floorAliases?.[floor] ?? addressPlace;
-      const sp = (floor && floorArrival(phys, K._, player, place, floor)) || spawns.find(s => s.place === place);
+      const entrance = r.destination && spawns.find(s => s.mapDestination && s.place === place &&
+        s.floor === floor && s.destinationId === r.destination);
+      const sp = entrance || (floor && floorArrival(phys, K._, player, place, floor)) || spawns.find(s => s.place === place);
       if (sp) { player.teleport(sp.x, sp.y ?? 0, sp.z, sp.yaw); return true; }
       return false;
     }

@@ -28,6 +28,8 @@ import {relief} from '../../../js/banpo_relief.js';
 // Scene object (or a uniquely identifying child) -> editable native source.
 // Geometry decoder matrices and decorative LOD offsets live *below* the placement.
 const sources = [
+  ['centralcity','B1','sweet-chefs-stage/counter.blend','스위트 파크 · 셰프스 스테이지와 르솔레이','SweetPark_ChefsStage'],
+  ['shinsegae','B1','megabox-central/entrance.blend','메가박스 센트럴 · 부티크 아치 입면','MegaboxBoutiquePublicFront'],
   ['jwmarriott','9F','executive-seating/seating.blend','JW 9층 좌석 · 아이보리 원탁과 검은 에이프런','JW 9층 좌석 · 아이보리 원탁과 검은 에이프런'],
   ...Object.values(executiveSeatTypes).map(label=>{const name=seatPrefix+label;return ['jwmarriott','9F','executive-seating/seating.blend',name,name];}),
   ...Object.values(ceramicParts).map(([label])=>{const name=ceramicPrefix+label;return ['gyeongbu','B1','daiso-ceramics/ceramics.blend',name,name];}),
@@ -179,10 +181,13 @@ const sources = [
   ...[['포석정 · 옥상 점포와 좌석','포석정 · 옥상 점포와 좌석'],['포석정 · 일곱 식탁의 배치','포석정 · 공용 4인 식탁과 의자'],
       ['포석정 · 불판과 상차림','포석정 · 불판과 상차림'],['경부선 옥상 · 대형 청색 채널 글자','청색 옥상 대형 간판']]
     .map(([mesh,native])=>['gyeongbu','10F','gyeongbu-rooftop/poseokjeong-rooftop.blend',mesh,native]),
+  ['jwmarriott','7F','margaux-chair/chair.blend','더 마고 그릴 · 다이닝 가죽 의자','MargauxDiningChair'],
   ...['병 선반','와인 진열 카트','나무 와인 상자','벽돌 궁륭과 석재 바닥'].map(label=>{
     const name='더 마고 그릴 · '+label;
     return ['jwmarriott','7F','margaux-cellar/cellar.blend',name,name];
   }),
+  ['famille','1F','famille-shopfront/shopfront.blend','파미에 식당가 · 접이식 격자창과 점포 띠','FamilleShopfrontBay'],
+  ['famille','1F','famille-shopfront/shopfront.blend','파미에 식당가 · 석재 덧기둥','FamilleLimestonePier'],
   ...await retailSources(),
   ['gyeongbu','1F','gyeongbu-ticket-office/gyeongbu-ticket-office.blend','경부선 · 통합매표소','TicketOffice','Glass','Lit'],
   ...['노란 아치와 침대','베개 진열대','물병과 도시락'].map(label=>{
