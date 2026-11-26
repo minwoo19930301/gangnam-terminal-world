@@ -28,6 +28,7 @@ import { registerMicroScooter } from './shinsegae-microscooter.js';
 import { registerComfPro } from './shinsegae-comfpro.js';
 import { registerStokke } from './shinsegae-stokke.js';
 import { registerKisara } from './shinsegae-kisara.js';
+import { registerMilhwa } from './shinsegae-milhwa.js';
 import { registerHibarin } from './shinsegae-hibarin.js';
 import { registerMyeonok } from './shinsegae-myeonok.js';
 import { registerCollage } from './shinsegae-collage.js';
@@ -8221,6 +8222,16 @@ export function build(K) {
         K.box({x:hx+dx*Math.cos(hyaw),y,z:hz-dx*Math.sin(hyaw),w,d,h,
           rotY:hyaw,mat:0xab794d,skip:['top','bottom','n','s','e','w']});
       }
+      const milhwa=guide.cells.find(c=>c.name.startsWith('밀화'));
+      const mr=upperBuildRect(id,milhwa);
+      const mu=mr[0]+1.5, mv=mr[1]+(mr[3]-mr[1])*.23;
+      const [mx,mz]=P(mu,mv), [max,maz]=P(mu+1,mv);
+      const myaw=Math.atan2(mz-maz,max-mx);
+      registerMilhwa(K,{poly:rect(...mr),x:mx,y,z:mz,yaw:myaw});
+      for(const [offset,w,d,h] of [[0,1.08,1.35,.772],[-.78,.45,.46,.47],[.78,.45,.46,.47]]){
+        K.box({x:mx+offset*Math.cos(myaw),y,z:mz-offset*Math.sin(myaw),w,d,h,
+          rotY:myaw,mat:0x614231,skip:['top','bottom','n','s','e','w']});
+      }
       const myeonok=guide.cells.find(c=>c.name.startsWith('평양면옥'));
       const bay=upperBuildRect(id,myeonok);
       // Replace the first two-seat table on the west-facing shop's left row.
@@ -14180,7 +14191,7 @@ export function build(K) {
       const rows=Math.min(4,Math.max(1,Math.floor((D-2)/2.15))),cols=W>7?islands:W>3.8?[W*.24]:[];
       for(const [i,a]of cols.entries())for(let r=0;r<rows;r++){
         if(id==='11F'&&name.startsWith('꼴라주')&&i===0&&r===1)continue;
-        if(id==='11F'&&(name.startsWith('평양면옥')||name.startsWith('히바린')||name.startsWith('키사라'))&&i===0&&r===0)continue;
+        if(id==='11F'&&(name.startsWith('밀화')||name.startsWith('평양면옥')||name.startsWith('히바린')||name.startsWith('키사라'))&&i===0&&r===0)continue;
         const b=1.5+r*2.1,w=Math.min(1.25,sideWidth-.1);table(a,b,w,.8,.72,jaju?oak:cafe?ivory:walnut);
         for(const db of[-.65,.65]){
           B(a,b+db,.43,.43,.08,.35,p.trim);B(a,b+db+(db<0?-.2:.2),.43,.07,.43,.42,p.trim);
