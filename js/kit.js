@@ -1,4 +1,4 @@
-import { visitors } from '../assets/models/visitors/geometry.js';
+import { visitorInstances } from './visitors.js';
 import { drawHardware } from '../assets/models/street-and-lift/draw.js';
 import { makeStep, drawStepRails } from '../assets/models/staircase/render.js';
 import { createEscalatorRenderer } from '../assets/models/escalator/render.js';
@@ -692,8 +692,27 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
   let last = { x: 1e9, y: 1e9, z: 1e9, n: 0 }, under = false;
   // x, y, z = camera (eye) position. "Underground" means: eye below -1 m, a ceiling over the head and standing in a
   // zone of an indoor place — so stairs, open ramps and road underpasses never count.
-  const lodList = [];
+  const lodList = [], wheelBatches = [];
   function lodUpdate(x, z) {
+    // A car beside the player must not select full-detail wheels for an
+    // entire car park. Repack the two draws only when a car crosses its LOD.
+    for (const group of wheelBatches) {
+      const {near,far,source,vehicles,close} = group;
+      let changed = false;
+      for (let i=0;i<vehicles.length;i++) {
+        const car = vehicles[i], dx = car.x-x, dz = car.z-z;
+        const value = dx*dx+dz*dz < (close[i] === 1 ? 68 : 62)**2 ? 1 : 0;
+        if (close[i] !== value) { close[i] = value; changed = true; }
+      }
+      if (!changed) continue;
+      near.count = far.count = 0;
+      for (let i=0;i<vehicles.length;i++) {
+        const batch = close[i] ? near : far;
+        batch.instanceMatrix.array.set(source.subarray(64*i,64*(i+1)),16*batch.count);
+        batch.count += 4;
+      }
+      near.instanceMatrix.needsUpdate = far.instanceMatrix.needsUpdate = true;
+    }
     for (const m of lodList) {
       const bb = m.userData.bb || m.userData.lodBB || (m.userData.lodBB = (() => { const b = new THREE.Box3(), M = new THREE.Matrix4(), V = new THREE.Vector3(); for (let i = 0; i < m.count; i++) { m.getMatrixAt(i, M); b.expandByPoint(V.setFromMatrixPosition(M)); } return [b.min.x, b.min.z, b.max.x, b.max.z]; })());
       const dx = x < bb[0] ? bb[0] - x : x > bb[2] ? x - bb[2] : 0, dz = z < bb[1] ? bb[1] - z : z > bb[3] ? z - bb[3] : 0;
@@ -884,7 +903,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
       const axis = new THREE.Vector3(0, 1, 0);
       const groups = groupBy(parked.length - start, i => {
         const v = parked[start + i]; return [v.x, v.y, v.z, v.place];
-      }, 192);
+      });
       for (const group of groups) {
         const kinds = new Map();
         for (const i of group.idx) {
@@ -919,7 +938,16 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
             mesh.computeBoundingSphere();
             scene.add(mesh);
             track(mesh, group.cell);
-            if (mesh.userData.lod) lodList.push(mesh);
+            if (mesh === tires) {
+              const far = new THREE.InstancedMesh(mesh.userData.lod[1],mesh.material,mesh.count);
+              far.name = kind + ' distant wheels';
+              far.userData.parkedFleet = far.userData.split = true;
+              far.instanceMatrix.array.set(mesh.instanceMatrix.array);
+              scene.add(far);
+              track(far,group.cell);
+              far.count = 0;
+              wheelBatches.push({near:mesh,far,source:mesh.instanceMatrix.array.slice(),vehicles:list,close:new Uint8Array(list.length).fill(255)});
+            }
           }
         }
       }
@@ -938,55 +966,19 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
       }
     }
     if (people.length > peopleDone) {
-      // People: low-poly figures (legs, shoes, torso with arms, neck/head/hands, hair, some carry a shopping bag),
-      // built for a 1.7 m person and scaled per instance; standing and seated variants; each instance faces rotY.
-      const P = visitors;
-      const mats = personMats || (personMats = {
-        cloth: new THREE.MeshLambertMaterial({vertexColors:true}),
-        skin: new THREE.MeshLambertMaterial({vertexColors:true}),
-        shoe: new THREE.MeshLambertMaterial({color:0x232323,vertexColors:true})
-      });
-      const shirts = [0x2b3a55, 0xf2f2f2, 0x9b2c2c, 0x1d1d1d, 0xc9b28a, 0x4a6b3a, 0x7a5aa0, 0xe8a0a0, 0x3b6ea8, 0x6a6a6a, 0xd9cbb3, 0x8a3b4f, 0xf0e3c8, 0x2f5e5a];
-      const pants = [0x1e2430, 0x2b2b2b, 0x4a4a55, 0x22314f, 0x7a6a55, 0xc8bba4, 0x3a3a3a, 0x5d6b7a];
-      const skins = [0xe0b896, 0xd8ab84, 0xecc8a6, 0xc99a74, 0xe6bf9b];
-      const hairs = [0x15110e, 0x231a14, 0x3a2a1e, 0x1c1c1c, 0x5a4636, 0x8a8a86, 0x2a2420];
-      const bags = [0xf4efe6, 0xc8a15a, 0x1b1b1b, 0xd94c3d, 0x9fb7c9, 0xffffff];
-      const p0 = peopleDone; peopleDone = people.length;
-      for (const g of groupBy(people.length - p0, i => [people[p0 + i].x, people[p0 + i].y, people[p0 + i].z, people[p0 + i].place], 128)) {
-        for (const sit of [false, true]) {
-          const idx = g.idx.filter(i => !!people[p0 + i].sit === sit); if (!idx.length) continue;
-          const n = idx.length, withBag = sit ? [] : idx.filter(i => ((p0 + i) * 2654435761 >>> 0) % 5 < 2);
-          const legs = new THREE.InstancedMesh(sit ? P.sitLegs : P.legs, mats.cloth, n), shoes = new THREE.InstancedMesh(sit ? P.sitShoes : P.shoes, mats.shoe, n);
-          const top = new THREE.InstancedMesh(sit ? P.sitTop : P.top, mats.cloth, n), skin = new THREE.InstancedMesh(sit ? P.sitSkin : P.skin, mats.skin, n), hair = new THREE.InstancedMesh(sit ? P.sitHair : P.hair, mats.cloth, n);
-          const bag = withBag.length ? new THREE.InstancedMesh(P.bag, mats.cloth, withBag.length) : null;
-          let bi = 0;
-          idx.forEach((pi0, i) => {
-            const pi = p0 + pi0, p = people[pi], k = p.h / 1.7, hx = (pi * 2654435761) >>> 0;
-            M.compose(V.set(p.x, p.y, p.z), Q.setFromAxisAngle(V2.set(0, 1, 0), p.rotY || 0), S.set(k, k, k));
-            for (const m of [legs, shoes, top, skin, hair]) m.setMatrixAt(i, M);
-            legs.setColorAt(i, C.setHex(p.pants ?? pants[hx % pants.length]));
-            top.setColorAt(i, C.setHex(p.shirt ?? shirts[(hx >>> 3) % shirts.length]));
-            skin.setColorAt(i, C.setHex(skins[(hx >>> 7) % skins.length]));
-            hair.setColorAt(i, C.setHex(hairs[(hx >>> 11) % hairs.length]));
-            if (bag && withBag.includes(pi0)) { bag.setMatrixAt(bi, M); bag.setColorAt(bi, C.setHex(bags[(hx >>> 5) % bags.length])); bi++; }
-          });
-          for (const mesh of [legs,shoes,top,skin,hair,bag]) {
-            if (!mesh) continue;
-            mesh.instanceMatrix.needsUpdate=true;
-            if (mesh.instanceColor) mesh.instanceColor.needsUpdate=true;
-            mesh.userData.lod=[mesh.geometry,P[mesh.geometry.name+'Far']];
-            mesh.userData.lodDistance=40;
-            mesh.userData.split=true;
-            scene.add(mesh);
-            track(mesh,g.cell);
-            lodList.push(mesh);
-          }
+      const start = peopleDone;
+      peopleDone = people.length;
+      for (const group of groupBy(peopleDone-start, i => {
+        const p = people[start+i]; return [p.x,p.y,p.z,p.place];
+      }, 96)) {
+        for (const mesh of visitorInstances(THREE,people,group.idx.map(i => start+i))) {
+          scene.add(mesh);
+          track(mesh,group.cell);
+          lodList.push(mesh);
         }
       }
     }
   }
-  let personMats = null;
-  const V2 = new THREE.Vector3();
 
   // ---------- lazy detail groups ----------
   // K.detail({floor, y0, y1, poly|rect}, fn): fn builds furnishing detail (stock, furniture, fixtures, signage,

@@ -77,6 +77,65 @@ function estateLevels(sites) {
   };
 }
 
+// The imported apartment palette uses one Lambert material per paint colour.
+// Pack the small opaque pieces of each tower into one vertex-coloured draw,
+// preserving the geometry, vertex shades and per-footprint terrain data.
+function batchFacadeParts(THREE, root, parts, terrain, level) {
+  const groups = new Map(), inverse = root.matrixWorld.clone().invert();
+  for (const mesh of parts) {
+    const {geometry,material} = mesh;
+    if (Array.isArray(material) || material.transparent || !geometry.index || !geometry.attributes.normal ||
+        geometry.attributes.position.count > 12000 || mesh.matrixWorld.determinant() < 0) continue;
+    const box = new THREE.Box3().setFromObject(mesh);
+    const key = [material.side, Math.floor((box.min.x+box.max.x)/240), Math.floor((box.min.z+box.max.z)/240)].join(',');
+    if (!groups.has(key)) groups.set(key,[]);
+    groups.get(key).push(mesh);
+  }
+  for (const list of groups.values()) {
+    if (list.length < 2) continue;
+    const vertices = list.reduce((n,m) => n+m.geometry.attributes.position.count,0);
+    const indexCount = list.reduce((n,m) => n+m.geometry.index.count,0);
+    const pos = new Float32Array(vertices*3), normals = new Float32Array(vertices*3);
+    const colorSize = list.some(m => m.material.vertexColors && m.geometry.attributes.color?.itemSize === 4) ? 4 : 3;
+    const colors = new Float32Array(vertices*colorSize);
+    const foundation = list[0].geometry.attributes.foundationLevel ? new Float32Array(vertices) : null;
+    const index = vertices > 65535 ? new Uint32Array(indexCount) : new Uint16Array(indexCount);
+    const matrix = new THREE.Matrix4(), normal = new THREE.Matrix3(), v = new THREE.Vector3();
+    let vertex = 0, face = 0;
+    for (const mesh of list) {
+      const g = mesh.geometry, a = g.attributes, tint = mesh.material.color;
+      matrix.multiplyMatrices(inverse,mesh.matrixWorld);
+      normal.getNormalMatrix(matrix);
+      for (let i=0;i<a.position.count;i++) {
+        const j=3*(vertex+i);
+        v.fromBufferAttribute(a.position,i).applyMatrix4(matrix).toArray(pos,j);
+        v.fromBufferAttribute(a.normal,i).applyNormalMatrix(normal).toArray(normals,j);
+        if (mesh.material.vertexColors && a.color) v.fromBufferAttribute(a.color,i);
+        else v.set(1,1,1);
+        const k = (vertex+i)*colorSize;
+        colors[k]=v.x*tint.r; colors[k+1]=v.y*tint.g; colors[k+2]=v.z*tint.b;
+        if (colorSize === 4) colors[k+3] = a.color?.itemSize === 4 && mesh.material.vertexColors ? a.color.getW(i) : 1;
+        if (foundation) foundation[vertex+i]=a.foundationLevel.getX(i);
+      }
+      for (let i=0;i<g.index.count;i++) index[face++]=vertex+g.index.getX(i);
+      vertex+=a.position.count;
+      mesh.removeFromParent();
+    }
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute('position',new THREE.BufferAttribute(pos,3));
+    geometry.setAttribute('normal',new THREE.BufferAttribute(normals,3));
+    geometry.setAttribute('color',new THREE.BufferAttribute(colors,colorSize));
+    if (foundation) geometry.setAttribute('foundationLevel',new THREE.BufferAttribute(foundation,1));
+    geometry.setIndex(new THREE.BufferAttribute(index,1));
+    const material = new THREE.MeshLambertMaterial({vertexColors:true,side:list[0].material.side});
+    if (terrain) facadeMaterial(material,level);
+    const batch = new THREE.Mesh(geometry,material);
+    batch.name = 'Apartment facade';
+    batch.matrixAutoUpdate = false;
+    root.add(batch);
+  }
+}
+
 // which models this page uses: everything whose footprint is near the area
 export function pickReModels(data, box, margin) {
   if (!data || !data.models) return [];
@@ -122,6 +181,21 @@ export function loadReModels({ THREE, scene, models, stand, from, onProgress, te
   const loader = new GLTFLoader(); loader.setMeshoptDecoder(MeshoptDecoder);
   const live = [];
   const queue = models.slice().sort((a, b) => Math.hypot(a.x - from.x, a.z - from.z) - Math.hypot(b.x - from.x, b.z - from.z));
+  let viewerX = from.x, viewerZ = from.z;
+  // Only fine sash bars and panel joints drop out beyond this distance. The
+  // original glazing, wall finishes, balcony shapes, and roof lines stay visible.
+  function updateRoot(root) {
+    const m = root.userData.re;
+    root.visible = Math.hypot(m.x - viewerX, m.z - viewerZ) < 1400;
+    if (!root.visible || !root.userData.fittings.length) return;
+    const box = root.userData.extent;
+    const dx = Math.max(0, box.min.x - viewerX, viewerX - box.max.x);
+    const dz = Math.max(0, box.min.z - viewerZ, viewerZ - box.max.z);
+    const visible = dx*dx + dz*dz < (root.userData.fittingsVisible ? 235 : 210)**2;
+    if (root.userData.fittingsVisible === visible) return;
+    root.userData.fittingsVisible = visible;
+    for (const part of root.userData.fittings) part.visible = visible;
+  }
   let done = 0, running = 0;
   const next = () => {
     while (running < 4 && queue.length) {
@@ -144,8 +218,11 @@ export function loadReModels({ THREE, scene, models, stand, from, onProgress, te
           materials.set(src,mat);
           return mat;
         }
+        const fittings = [], shell = [];
         root.traverse(o => {
           if (!o.isMesh) return;
+          if (/window[ _]frames?|window[ _]mullions?|unequal[ _]sash|cladding[ _]joint/i.test(o.name)) fittings.push(o);
+          else if (!m.sourceMaterial) shell.push(o);
           if (levels) {
             if (o.geometry.hasAttribute('foundationLevel')) o.geometry = o.geometry.clone();
             const pos = o.geometry.attributes.position, values = new Float32Array(pos.count);
@@ -158,8 +235,13 @@ export function loadReModels({ THREE, scene, models, stand, from, onProgress, te
           o.material = Array.isArray(o.material) ? o.material.map(material) : material(o.material);
           o.matrixAutoUpdate = false;
         });
+        batchFacadeParts(THREE,root,shell,terrain,level);
         if (terrain) fitTerrainBounds(THREE, root, levels ? sites.map(site => site.level) : [level]);
-        root.userData.re = m; scene.add(root); live.push(root);
+        root.userData.re = m;
+        root.userData.fittings = fittings;
+        if (fittings.length) root.userData.extent = new THREE.Box3().setFromObject(root);
+        updateRoot(root);
+        scene.add(root); live.push(root);
         if (s) { scene.remove(s); s.traverse(o => o.geometry && o.geometry.dispose()); stand.delete(m.id); }
         running--; done++; onProgress && onProgress(done, models.length); next();
       }, undefined, () => { running--; done++; onProgress && onProgress(done, models.length); next(); });
@@ -167,6 +249,10 @@ export function loadReModels({ THREE, scene, models, stand, from, onProgress, te
   };
   next();
   return {
-    update(x, z) { for (const r of live) { const m = r.userData.re; r.visible = Math.hypot(m.x - x, m.z - z) < 1400; } },
+    update(x, z) {
+      if (Math.abs(viewerX - x) + Math.abs(viewerZ - z) < 2) return;
+      viewerX = x; viewerZ = z;
+      for (const root of live) updateRoot(root);
+    },
   };
 }

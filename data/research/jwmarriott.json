@@ -120,6 +120,10 @@
 },
   "shared_podium_escalator_opening_20261118": "The shared podium roof has a local opening for the department store annex escalators between retail 6F and 7F.",
  "famille_approach_20261126": {
+  "naver_places": [
+   {"url":"https://map.naver.com/p/entry/place/1329894048","name":"파미에스테이션","address":"서울 서초구 사평대로 205"},
+   {"url":"https://map.naver.com/p/entry/place/11583195","name":"JW 메리어트 호텔 서울","address":"서울 서초구 신반포로 176"}
+  ],
   "hotel_directions": "https://themargauxgrill.jwmarriottseoul.com/contact-location",
   "house_connection": "https://www.shinsegaegroupnewsroom.com/luxury-space-creation-house-of/",
   "observed": "호텔 방문 안내는 파미에 연결통로 쪽에서 스위트 파크와 신세계백화점 2층을 거쳐 호텔에 들어가는 길을 안내한다. 신세계는 하우스 오브 신세계가 백화점 명품관과 호텔을 잇는다고 설명한다.",

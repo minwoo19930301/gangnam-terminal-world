@@ -30,6 +30,7 @@ WASD로 걷고 마우스로 시점을 돌립니다. Shift는 달리기, E는 엘
 - `node tests/walk.mjs`: 연결 통로, 엘리베이터 각 층 출입, 스폰, 지하상가 장거리 경로를 실제로 걸어서(경로 탐색) 확인합니다.
 - `node tests/shot.mjs --gpu --out shots/x --views "이름:x,y,z,yaw,pitch"`: 1인칭 스크린샷을 찍습니다.
 - 디버그: `tests/floormap.mjs`(층 평면 통행 지도), `tests/walls_near.mjs`(어떤 코드가 벽을 세웠는지), `tests/atlas_stats.mjs`(간판 텍스처 사용량).
+- `node tests/entry-perf.mjs`는 거리, 호텔 8층, 파미에 1층 주소를 새 브라우저 세션에서 세 번씩 열어 첫 진입 시간을 잽니다.
 - 성능: `node tests/perf.mjs [--cpu 4]`(실제 GPU, CPU 감속으로 저사양 흉내), 화면 회귀: `tests/regress_views.txt` 시점을 `shot.mjs`로 찍어 이전 결과와 비교.
 
 ## 저사양 대응

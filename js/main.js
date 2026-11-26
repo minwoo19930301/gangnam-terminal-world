@@ -576,7 +576,7 @@ async function boot() {
     daylight.sky.position.copy(camera.position);
     daylight.sync();
     for (const f of K._.frameFns) { try { f(dt, t, player); } catch (e) { } }
-    if (traffic) traffic.update(dt);
+    if (traffic) traffic.update(dt,camera);
     // zone + interactables
     currentZone = phys.zoneAt(player.x, player.y + 0.1, player.z);
     // Keep the destination hash until the scheduled area reload reads it.

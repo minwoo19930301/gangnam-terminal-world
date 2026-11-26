@@ -5,10 +5,10 @@ import { drawBlenderBuilding } from './blender-buildings.js';
 import { addStreetLamps } from './streetscape.js';
 import { withJamwonInlet } from './river-water.js';
 import { height as perstigeHeight, panels as perstigePanels } from '../assets/models/perstige/panels.js';
-import { fleetInstances, vehicleContacts } from './fleet.js';
+import { fleetInstances, vehicleContacts, vehicleSize } from './fleet.js';
 // Generic city layer from OpenStreetMap: everything not claimed by a detailed place module.
 import { pointInPoly, polyBBox, polyArea } from './physics.js';
-import { relief } from './banpo_relief.js';
+import { maxReliefInBounds, relief } from './banpo_relief.js';
 import { wheelContacts } from './vehicle_ground.js';
 import { cutSurface } from './ground.js';
 import { parcelCover } from './parcel_cover.js';
@@ -923,7 +923,7 @@ export function createTraffic(K, roadsInfo, n = 160) {
   function add(route, t, speed, kind, junction = false) {
     if (cars.length >= n) return;
     const color = kind === 'bus' ? 0x146dc0 : kind === 'minibus' ? 0x65b82e : kind === 'taxi' ? (counts.taxis % 2 ? 0xf6f4e9 : 0xed862c) : palette[cars.length % palette.length];
-    cars.push({ route, t, speed, kind, color, index: 0 });
+    cars.push({ route, t, speed, kind, color });
     counts[kind === 'bus' ? 'cityBuses' : kind === 'minibus' ? 'villageBuses' : kind === 'taxi' ? 'taxis' : 'cars']++;
     if (junction) counts.junctionVehicles++;
   }
@@ -979,11 +979,15 @@ export function createTraffic(K, roadsInfo, n = 160) {
     const model = kind === 'bus' ? 'cityBus' : kind;
     const [halfTrack, halfWheelbase] = vehicleContacts(model);
     const meshes = fleetInstances(THREE, model, list.length, {separateWheels:true});
-    const color = new THREE.Color();
-    list.forEach((c, i) => {
-      c.index = i; c.fleet = meshes; c.halfWheelbase = halfWheelbase; c.halfTrack = halfTrack;
-      meshes[0].setColorAt(i, color.setHex(c.color));
-    });
+    const [width,height,length] = vehicleSize(model);
+    const radius = Math.hypot(width/2,height,length/2) + .75;
+    const farWheels = new THREE.InstancedMesh(meshes[2].userData.lod[1],meshes[2].material,list.length*4);
+    farWheels.name = 'traffic-' + kind + '-distant-wheels';
+    meshes.push(farWheels);
+    for (const c of list) {
+      c.fleet = meshes; c.halfWheelbase = halfWheelbase; c.halfTrack = halfTrack;
+      c.radius = radius; c.paint = new THREE.Color(c.color);
+    }
     meshes.forEach((mesh, i) => {
       if (i === 2) mesh.name = 'traffic-' + kind + '-wheels';
       mesh.userData.dynamic = true; // Lazy detail loads must keep the live instance matrices.
@@ -998,13 +1002,26 @@ export function createTraffic(K, roadsInfo, n = 160) {
   const leftWheel = new THREE.Quaternion(), flipWheel = new THREE.Quaternion().setFromAxisAngle(up, Math.PI);
   const asphalt = (x,z) => relief(x,z) + .03;
   const road = s => s.kind === 'ramp' && (s.tag === 'road' || s.tag === 'streets') && !s.move;
-  const contacts = [];
-  function update(dt) {
+  const contacts = [], frustum = new THREE.Frustum(), projection = new THREE.Matrix4(), box = new THREE.Box3();
+  // All four road contacts stay within .45 m of the surveyed asphalt. Full
+  // survey bounds allow the early test to cover both a slope and a level deck.
+  const gradeLimit = maxReliefInBounds(-Infinity,-Infinity,Infinity,Infinity) + .5;
+  function update(dt, camera) {
+    if (camera) {
+      camera.updateWorldMatrix(true,false);
+      frustum.setFromProjectionMatrix(projection.multiplyMatrices(camera.projectionMatrix,camera.matrixWorldInverse));
+    }
+    for (const meshes of fleets) for (const mesh of meshes) mesh.count = 0;
     for (const c of cars) {
       const r = c.route; c.t = (c.t + c.speed * dt) % r.L;
       let k = 1; while (k < r.cum.length - 1 && r.cum[k] < c.t) k++;
       const a = r.pts[k - 1], b = r.pts[k], length = r.cum[k] - r.cum[k - 1] || 1, t = (c.t - r.cum[k - 1]) / length;
       const x = a[0] + (b[0] - a[0]) * t, z = a[1] + (b[1] - a[1]) * t;
+      if (camera) {
+        box.min.set(x-c.radius,-gradeLimit-c.radius,z-c.radius);
+        box.max.set(x+c.radius,gradeLimit+c.radius,z+c.radius);
+        if (!frustum.intersectsBox(box)) continue;
+      }
       const dx = (b[0] - a[0]) / length, dz = (b[1] - a[1]) / length;
       const fx = dx * c.halfWheelbase, fz = dz * c.halfWheelbase;
       const rx = dz * c.halfTrack, rz = -dx * c.halfTrack;
@@ -1013,17 +1030,26 @@ export function createTraffic(K, roadsInfo, n = 160) {
       Q.setFromUnitVectors(up,V.set(-forward*dx-right*dz,1,-forward*dz+right*dx).normalize());
       Q.multiply(yaw.setFromAxisAngle(up,Math.atan2(dx,dz)));
       M.compose(V.set(x,height,z),Q,S);
-      c.fleet[0].setMatrixAt(c.index, M); c.fleet[1].setMatrixAt(c.index, M);
+      const [paint,trim,nearWheels,farWheels] = c.fleet;
+      paint.setColorAt(paint.count,c.paint);
+      paint.setMatrixAt(paint.count++,M); trim.setMatrixAt(trim.count++,M);
+      const eye = camera?.matrixWorld.elements;
+      const distant = eye && (x-eye[12])**2 + (z-eye[14])**2 > 65**2;
+      const wheels = distant ? farWheels : nearWheels;
       leftWheel.copy(Q).multiply(flipWheel);
       for (let i=0; i<4; i++) {
         const side = i%2 ? 1 : -1, end = i<2 ? -1 : 1;
         M.compose(V.set(x + side*rx + end*fx, contacts[i], z + side*rz + end*fz), side < 0 ? leftWheel : Q, S);
-        c.fleet[2].setMatrixAt(c.index*4+i, M);
+        wheels.setMatrixAt(wheels.count++, M);
       }
     }
-    for (const meshes of fleets) for (const mesh of meshes) mesh.instanceMatrix.needsUpdate = true;
+    for (const meshes of fleets) {
+      meshes[0].instanceColor.needsUpdate = true;
+      for (const mesh of meshes) if (mesh.count) mesh.instanceMatrix.needsUpdate = true;
+    }
   }
   update(0);
+  for (const meshes of fleets) meshes[0].instanceColor.setUsage(THREE.DynamicDrawUsage);
   return { update, counts };
 }
 
