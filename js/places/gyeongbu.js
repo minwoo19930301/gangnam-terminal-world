@@ -2527,6 +2527,14 @@ export function build(K) {
     const localAisle=wholesaleAisles[key];
     const fittedFront=key==='Suits'||key==='Womenswear';
     const isClothingFront=(u,v)=>fittedFront&&u===wings[1][0]&&v===centers[0];
+    if(key==='Children'){
+      const [x,z]=W(38,96.8);
+      // The floor is identified as children's clothing in the operator's public photograph.
+      // Give its aisle a lower priority than the individually searchable yarn and dress stall.
+      K.zone({name:'의류도매상가 · 아동복',floor,sub:'서울고속버스터미널 본관 · 아동 의류',
+        poly:rect(32.82,96.3,43.16,130.3),y0:floorY,y1:floorY+3.1,priority:3,
+        mapArrival:{x,z,yaw:yawL(0,1)}});
+    }
     if(fittedFront){
       const u=wings[1][0],v=centers[0],[x,z]=W(u,v);
       lzone('의류도매상가 · '+(key==='Suits'?'신사복':'여성복'),floor,
