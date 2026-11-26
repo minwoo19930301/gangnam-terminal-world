@@ -12,6 +12,8 @@ SHELVES = {
     "banpo-stream-bridge": "반포천1교 · 보도 난간",
     "cinema-rotary": "원형 광장 · 카멜커피",
     "sweet-cake-counters": "스위트 파크 · 키친205와 쇼토",
+    "chipotle-gangnam": "치폴레 강남신세계점 · 주문대",
+    "five-guys-gangnam": "파이브가이즈 고속터미널 · 음료대",
     "sweet-arcade": "스위트 파크 · 디저트 홀 타일 기둥",
     "intelligentsia-gangnam": "인텔리젠시아 강남 · 커피 바와 오렌지 선반",
     "another-palm-astro": "어나더팜 · 아톰 에디션",
