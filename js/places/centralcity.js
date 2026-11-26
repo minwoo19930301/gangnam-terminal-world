@@ -2305,14 +2305,33 @@ export function build(K) {
 
     // cc_01 forecourt: light granite paving, leafy trees, three dark stone spheres
     // and the red tubular bench at the west side. Keep the door approach clear.
+    // Editable stone dimensions and colours from central-plaza-granite/plaza.blend.
+    // BEGIN PLAZA SWATCH
+    const swatch={
+      mm:[3880,3880],
+      x:[4,236,244,756,764,1276,1284,1796,1804,2316,2324,2836,2844,3356,3364,3876],
+      y:[4,236,244,756,764,1276,1284,1796,1804,2316,2324,2836,2844,3356,3364,3876],
+      joint:"#78766e",
+      palette:["#706e65","#abb0a8","#ad8d7e","#adada5","#afafa6","#b19484","#b79989","#b7b6ac","#bcb8ac"],
+      rows:["AGCGFFFC","GDIIHBIB","GEBBHDDB","GHIHIHBE","FBIHBDHI","CHIDDIBH","GEBHEDIH","FHDIIEDE"],
+    };
+    // END PLAZA SWATCH
     K.texture('ccPlazaGranite',256,256,(g,w,h)=>{
-      g.fillStyle='#b1aea5';g.fillRect(0,0,w,h);
+      g.fillStyle=swatch.joint;g.fillRect(0,0,w,h);
+      swatch.rows.forEach((row,j)=>{
+        const y=swatch.y[2*j]*h/swatch.mm[1],height=(swatch.y[2*j+1]-swatch.y[2*j])*h/swatch.mm[1];
+        for(let i=0;i<row.length;i++){
+          g.fillStyle=swatch.palette[row.charCodeAt(i)-65];
+          g.fillRect(swatch.x[2*i]*w/swatch.mm[0],y,(swatch.x[2*i+1]-swatch.x[2*i])*w/swatch.mm[0],height);
+        }
+      });
       const noise=K.rand(431);
-      for(let i=0;i<2300;i++){const v=145+Math.floor(noise()*56);g.fillStyle=`rgb(${v},${v},${v-5})`;g.fillRect(noise()*w,noise()*h,1,1);}
-      g.strokeStyle='#8b8981';g.lineWidth=1;
-      for(let q=0;q<=256;q+=64){g.beginPath();g.moveTo(q,0);g.lineTo(q,h);g.moveTo(0,q);g.lineTo(w,q);g.stroke();}
-    },[2.4,2.4]);
-    K.hpoly('ccPlazaGranite',RECT(-50,0,-26.6,38.5),.018,true);
+      for(const grain of ['rgba(53,45,38,.085)','rgba(245,240,224,.11)']){
+        g.fillStyle=grain;
+        for(let i=0;i<950;i++)g.fillRect(noise()*w,noise()*h,1+noise(),1);
+      }
+    },swatch.mm.map(mm=>mm/1000),{lazy:true});
+    K.hpoly('ccPlazaGranite',RECT(-50,0,-26.6,38.5),.018,true,null,R);
     for(const [t0,t1] of [[0,14],[25,38]]){
       lbox(-27.5,(t0+t1)/2,1.8,t1-t0,0,.42,gateStone);
       lbox(-27.5,(t0+t1)/2,1.4,t1-t0-.4,.43,.22,0x40533b,{solid:false});

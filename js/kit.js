@@ -1475,7 +1475,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     THREE, scene, phys, osm, LEVELS, T, withTerrainAnchor, withTerrainSurface, withParkedVehicle, withSharedShell,
     box, prism, slab, wall, polyWalls, ramp, stairs: (ax, az, bx, bz, o = {}) => ramp(ax, az, bx, bz, { ...o, steps: true }), escalator, escalatorTreads, cyl, stockCylinders, stockEllipsoids, dome, sign, floorText,
     tree, person, crowd, vehicle, zone, spawn, interact, portal, elevator, groundHole, onFrame, addMesh, texture, material, mapMark, detail,
-    osmBuilding, osmFind, claim, rand, quad: (mat, p, n, uvs) => quad(spec(mat), p, n, uvs || [[0, 0], [1, 0], [1, 1], [0, 1]]), hpoly: (mat, poly, y, up = true, holes) => hpoly(spec(mat), poly, y, up, holes),
+    osmBuilding, osmFind, claim, rand, quad: (mat, p, n, uvs) => quad(spec(mat), p, n, uvs || [[0, 0], [1, 0], [1, 1], [0, 1]]), hpoly: (mat, poly, y, up = true, holes, rotUV = 0) => hpoly(spec(mat), poly, y, up, holes, rotUV),
     triangle: (mat, points, normal, uv) => tri(spec(mat), points, normal, uv),
     pointInPoly, polyBBox, polyArea, orient,
     occludingSlab(options) {
