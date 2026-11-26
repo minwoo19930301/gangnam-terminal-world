@@ -1,4 +1,7 @@
+import { loadFixtureScene, mountFixture } from '../../assets/models/onebailey/load.js';
 import { shopInteriors } from '../../assets/models/gotomall/shop-interiors.js';
+
+const westTextileFixtures=await loadFixtureScene(new URL('../../assets/models/onebailey/west.glb',import.meta.url));
 
 // 강남터미널 지하도상가 (GOTO MALL 고투몰) — B1 under 신반포로, on the real OSM polygon 1354860678.
 // Layout: two parallel corridors, four shop lines A (north outer) · B / C (central back-to-back) · D (south outer),
@@ -148,6 +151,8 @@ const LINE = { 3: '#EF7C1C', 7: '#747F00', 9: '#BDB092' };
 // The public unit plates and shop photographs identify these tenants. Chainage
 // is fitted between the gate bays on the three Seoul Facilities Corporation plans.
 const directoryBays = [
+  ['B', -285.8, 'B-004', '에메트', 'scarves', '#302e29', '#faf7e7'],
+  ['C', -274.6, 'C-006', '앤하우스', 'quilts', '#48423b', '#faf5e9'],
   ['A', -283, 'A-008', '애니타임', 'apparel', '#33383b', '#fff9e7'],
   ['A', -265, 'A-012', '레몬상자', 'tarot', '#6d4334', '#ffe6b3'],
   ['A', -215, 'A-021', '미나키즈', 'junior', '#f5efe1', '#51777c'],
@@ -1208,6 +1213,17 @@ export function build(K) {
     else if (fx === 'dishes' || fx === 'deco') lbox(loc, a0, a1, 0.12, 0.72, FL, 0.8, 0xb79c78, { top: { tex: 'gt_dishes' } });
   }
   function directoryInterior(loc, info, W, D) {
+    if (info.specialty === 'scarves' || info.specialty === 'quilts') {
+      const key = info.specialty === 'scarves' ? 'Emet' : 'AnHouse';
+      const [x,z] = P(...Lp(loc,W/2,.04));
+      mountFixture(K,westTextileFixtures,key,[x,FL+.014,z],FACE[outFace(loc)],[(W-.16)/3.6,1,(D-.10)/3.0]);
+      for (const [a,b] of [[.035,.27],[.73,.965]]) lbox(loc,W*a,W*b,.065*D,.34*D,FL,.74,0xffffff,
+        {skip:['top','bottom','n','s','e','w']});
+      const leftEdge=loc.fr.dv>0?W-.25:.25;
+      lsign(loc,info.name,leftEdge,-.16,FL+2.16,.60,.27,outFace(loc),
+        {bg:info.bg,fg:info.fg,pxPerM:180,box:.045});
+      return;
+    }
     const model = shopInteriors[info.specialty];
     const sx = (W - .22) / 3.6, sz = (D - .15) / 3.0;
     const points = model.cm.map(([a, h, depth]) => {
@@ -1445,7 +1461,7 @@ export function build(K) {
           const documented = directoryBays.find(([row, u]) => row === S.line && u >= S.a0 && u < S.a1);
           if (documented) {
             const [, , unit, name, specialty, bg, fg] = documented;
-            const category = {apparel:'women',junior:'kids',linen:'bedding',flowers:'flowers',kitchen:'dishes',bags:'bags'}[specialty];
+            const category = {scarves:'hats',quilts:'bedding',apparel:'women',junior:'kids',linen:'bedding',flowers:'flowers',kitchen:'dishes',bags:'bags'}[specialty];
             const label = category ? CAT[category].label : '타로·사주';
             info = {name, specialty, fx:category ? CAT[category].fx : 'experience', bg, fg, zsub:unit+' · '+label};
             S.num = unit; S.named = true; S.col = bg;
@@ -2577,7 +2593,14 @@ export function build(K) {
     }
     K.slab(R(pu0 - 0.1, pv0, pu1 + 0.1, pv1), CY + 0.3, { mat: 'concrete', under: M.ceil, thick: 0.3, walk: false, edge: false });
     if (pv1 - pv0 > 0.7) {
-      wallV(pu0, pv0, pv1, FL, CY, { mat: M.wall, thick: 0.2 }); wallV(pu1, pv0, pv1, FL, CY, { mat: M.wall, thick: 0.2 });
+      if (X.id === 'G2') {
+        // From the mall, the retail branch turns left before the stairs (B110 merchant directions).
+        const mid = (pv0 + pv1) / 2;
+        wallV(pu0, pv0, pv1, FL, CY, { mat: M.wall, thick: .2,
+          openings: [{ at: mid - pv0, w: 2.68, y0: FL, y1: FL + 2.77 }] });
+        sg('원베일리 스퀘어', pu0 + .11, mid, FL + 2.94, 2.62, .27, '+u', { bg: '#333c43', fg: '#fbf7e8' });
+      } else wallV(pu0, pv0, pv1, FL, CY, { mat: M.wall, thick: .2 });
+      wallV(pu1, pv0, pv1, FL, CY, { mat: M.wall, thick: .2 });
       fq(M.led, (pu0 + pu1) / 2 - 0.12, pv0 + 0.3, (pu0 + pu1) / 2 + 0.12, pv1 - 0.3, CY - 0.012, false);
       if (pv1 - pv0 > 4) for (let v = pv0 + 1.2; v < pv1 - 2.2; v += 3.2) { // ad lightboxes on the passage walls
         const ad = ADS[(adN++) % ADS.length], ad2 = ADS[(adN++) % ADS.length];

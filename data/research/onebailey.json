@@ -1,7 +1,74 @@
 {
   "id": "onebailey",
   "name": "원베일리 공공보행통로",
-  "updated": "2026-11-07",
+  "updated": "2026-11-26",
+  "retail_and_g2_20261126": {
+    "checked": "2026-11-26",
+    "plans": {
+      "public_sales_page": "https://rmaonebailey.cafe24.com/bbs/content.php?co_id=floor&code_page=floor&po=1",
+      "B1": "https://rmaonebailey.cafe24.com/img/floor_img01_big.jpg",
+      "1F": "https://rmaonebailey.cafe24.com/img/floor_img02_big.jpg",
+      "year": 2023,
+      "observed": "분양 당시 B1 배치도 동측 공개공지에 선큰광장, 북쪽 끝에 한강공원으로 가는 공공보행통로, 서쪽 방풍실에 세 날개 회전문과 그 양쪽의 여닫이 출입구가 그려져 있다. 흰 공용복도에 B101, B110, B150 호수가 면한다. 1층 도면은 고투몰 2번 출입구와 광장 경계의 공중보행로를 표시한다.",
+      "limits": "분양본은 준공 후 실측도와 다를 수 있다. 상가 남쪽 경계를 OSM 1177226165에 맞춰 축척과 방향을 추정했다. G2 계단과 선큰광장 사이의 굴절·폭·천장고, 개별 출입문 폭, 정확한 집기 치수는 모델 추정."
+    },
+    "shops": [
+      {
+        "unit": "B101",
+        "name": "빽다방 반포원베일리스퀘어점",
+        "source": "https://map.naver.com/p/entry/place/1691481227",
+        "observed": "네이버 지도의 매장 사진에서 노란 파사드, 파란 PAIK’S COFFEE, 왼쪽 냉장 쇼케이스, 세로 줄눈 카운터, 파란 메뉴 보드를 확인.",
+        "estimated": "장비 상세, 화면 내용, 옆 수납대, 제품 배치와 치수."
+      },
+      {
+        "unit": "B110",
+        "name": "본크라상 원베일리점",
+        "source": "https://map.naver.com/p/entry/place/1450933392",
+        "observed": "네이버 지도에 지하 1층 110호와 G2 왼쪽 회전문을 통한 방문법을 점주가 기재. 점주 사진의 계절 케이크, 매장의 크라상·바게트류를 반영했다.",
+        "estimated": "매장 글꼴·마감 색, 냉장 진열장·나무 판매대의 위치와 빵 수량은 상품 진열을 재구성한 것."
+      },
+      {
+        "unit": "B150",
+        "name": "베이크드뮬란 원베일리점",
+        "source": "https://map.naver.com/p/entry/place/1389447607",
+        "observed": "네이버 지도에 지하 1층 150호. 공개 사진에서 BAKED MÜLAN, 짙은색 목재 선반, 분홍 Bakery 표기와 트레이에 늘어놓은 빵을 확인.",
+        "estimated": "조명 배치, 트레이 수량·깊이·선반 간격."
+      }
+    ],
+    "journey": [
+      "고투몰 서편 푸드코트 G2 안쪽",
+      "계단 전 왼쪽 상가 접근로",
+      "선큰광장",
+      "회전문·옆 여닫이 출입구",
+      "동측 B1 복도와 3개 점포",
+      "선큰광장 북쪽에서 기존 공공 보행로 벽화길"
+    ],
+    "prior_link": "이전 J_ONEBAILEY_G2는 현장 영상에서 확인된 공공보행통로 공개공지와 기존 월드의 접점이다. 종전 추정 좌표는 새 상가 접점에서 약 79m 떨어져 있다. 이 좌표를 두 번째 G2 계단이나 두 번째 상가 회전문으로 식별할 근거는 없다. 공개공지 스폰과 해당 연결부의 중복 G2 표시를 일반 공공보행통로 명칭으로 바로잡았다.",
+    "equipment": {
+      "source": "https://sisul.or.kr/open_content/undershop/qna/qnaMsgDetail.do?qnaid=QNAS20261116000003",
+      "date": "2026-11-16",
+      "note": "서울시설공단은 상가와 지하도상가 사이 연결통로의 시설물 운행 중단에 답변했다. 이후 재가동 여부와 도면의 개별 설비 식별은 미확인. 이번 B1 보행 검사는 에스컬레이터 또는 승강기 탑승을 사용하지 않는다."
+    },
+    "model": {
+      "source": "assets/models/onebailey/retail.blend",
+      "reexport": "blender -b assets/models/onebailey/retail.blend -P assets/models/onebailey/export.py",
+      "runtime": [
+        "assets/models/onebailey/retail.glb",
+        "assets/models/onebailey/west.glb"
+      ],
+      "scope": "일반 방문객이 사용하는 상가와 공공 보행로."
+    },
+    "verification": {
+      "model": "실제 player 반경 0.32m, 키 1.75m, 0.25m 보행 격자. 모든 장소, 도시, 지연 생성 진열대의 충돌을 포함.",
+      "shop_walk": [
+        "B004 에메트 매대 사이 389셀",
+        "C006 앤하우스 매대 사이 411셀"
+      ],
+      "route": "G2 내부→왼쪽 갈림길→선큰광장→회전문 방풍실→B101→B110→B150→벽화 공공보행로·역방향 총 8구간과 서편 매장 2곳, 총 10개 여정을 모두 통과.",
+      "adjacent_walk": "onebailey, gotomall, banpo_shoppingtown, hangang 표준 보행검사 133개 통과.",
+      "visual": "headless Chrome WebGL 10시점과 매장 근접 재진입 확인. 미리보기는 실제 월드 화면을 사용."
+    }
+  },
   "sources": [
     "https://mediahub.seoul.go.kr/archives/2011689",
     "https://mediahub.seoul.go.kr/archives/2011692",
@@ -16,7 +83,14 @@
     "https://www.data.go.kr/catalog/15157853/fileData.json",
     "https://www.youtube.com/watch?v=F9MdeqY0Rro",
     "https://www.youtube.com/watch?v=wvUnarSte1A",
-    "https://www.youtube.com/watch?v=PN3QyVXbUNg"
+    "https://www.youtube.com/watch?v=PN3QyVXbUNg",
+    "https://rmaonebailey.cafe24.com/bbs/content.php?co_id=floor&code_page=floor&po=1",
+    "https://rmaonebailey.cafe24.com/img/floor_img01_big.jpg",
+    "https://rmaonebailey.cafe24.com/img/floor_img02_big.jpg",
+    "https://map.naver.com/p/entry/place/1691481227",
+    "https://map.naver.com/p/entry/place/1450933392",
+    "https://map.naver.com/p/entry/place/1389447607",
+    "https://sisul.or.kr/open_content/undershop/qna/qnaMsgDetail.do?qnaid=QNAS20261116000003"
   ],
   "evidence_source": ".codex-jobs/evidence/research_onebailey_walk.json",
   "evidence_facts": [

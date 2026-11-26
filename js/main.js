@@ -195,9 +195,9 @@ async function boot() {
       for (const e of v.entrances || []) {
         // Some same-floor connections are also recorded as street-level entrances.
         // Both sides already exist in the same scene, including when viewed outdoors.
-        if (e.other && areaIdAt({ place: e.other }, 0, 0, 0) === areaIdAt({ place: mid }, 0, 0, 0)) continue;
+        if (e.other && areaIdAt({ place: e.other }, e.x, e.y, e.z) === areaIdAt({ place: mid }, 0, 0, 0)) continue;
         if (OWNP && OWNP.has(mid)) { // a door out of this building: walking along +n leaves
-          const tgt = e.other ? areaIdAt({ place: e.other }, 0, 0, 0) : 'out:' + districtAt(e.x + e.nx * 3, e.z + e.nz * 3).id;
+          const tgt = e.other ? areaIdAt({ place: e.other }, e.x, e.y, e.z) : 'out:' + districtAt(e.x + e.nx * 3, e.z + e.nz * 3).id;
           if (tgt === AREA.id) continue;
           add(e.x, e.z, e.y, e.w, e.nx, e.nz, tgt, e.other ? `${META[e.other]?.name || e.other} 가기` : `밖으로 · ${areaName(tgt, META)}`, `${e.other || 'street'}/1F`);
         } else if (!OWNP && inArea) { // outdoors: a door into this building (walking against n enters)
@@ -206,7 +206,8 @@ async function boot() {
       }
       if (OWNP && OWNP.has(mid)) for (const j of v.junctions || []) { // corridors to the next building
         if (OWNP.has(j.other) || j.nx == null) continue;
-        add(j.x, j.z, j.y, 7, j.nx, j.nz, areaIdAt({ place: j.other }, 0, 0, 0), `${META[j.other]?.name || j.other} 가기`, `${j.other}/${j.y < -1 ? 'B1' : '1F'}`);
+        const width = JUNCTIONS.find(link => link.id === j.id)?.width || 7;
+        add(j.x, j.z, j.y, width, j.nx, j.nz, areaIdAt({ place: j.other }, j.x, j.y, j.z), `${META[j.other]?.name || j.other} 가기`, `${j.other}/${j.y < -1 ? 'B1' : '1F'}`);
       }
     }
     // the visible door: thin glowing frame, a light curtain and a sign above (one sign per 18 m cluster of doors to the same place)
