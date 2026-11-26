@@ -194,7 +194,7 @@ data, material_names = {}, list(PALETTE)
 for ix, (kind, size) in enumerate(DIMS.items()):
     collection = bpy.data.collections[kind]
     origin_x = collection.get('origin_x', (ix-3)*3.6)
-    vertices, faces, tyre_contacts = [], [], []
+    vertices, faces, tyre_parts = [], [], []
     for obj in collection.objects:
         if obj.type != 'MESH':
             continue
@@ -206,23 +206,28 @@ for ix, (kind, size) in enumerate(DIMS.items()):
             for v in mesh.vertices:
                 x, y, z = evaluated.matrix_world @ v.co
                 vertices.extend(round(c*1000) for c in (x-origin_x,z,-y))
-            if obj.name.startswith("Tyre and wheel"):
+            wheel_start = len(faces)//4
+            is_wheel = obj.name.startswith("Tyre and wheel")
+            if is_wheel:
                 shape = [vertices[i:i+3] for i in range(3*offset, len(vertices), 3)]
                 lowest = min(y for x,y,z in shape)
                 tread = [(x,z) for x,y,z in shape if y == lowest]
-                tyre_contacts.append([sum(v[i] for v in tread)/len(tread) for i in range(2)])
+                cx, cz = (sum(v[i] for v in tread)/len(tread) for i in range(2))
             for tri in mesh.loop_triangles:
                 name = mesh.materials[tri.material_index].name
                 if name not in material_names:
                     material_names.append(name)
                 faces.extend([*(i+offset for i in tri.vertices),material_names.index(name)])
+            if is_wheel:
+                tyre_parts.append([wheel_start, len(faces)//4, cx, lowest, cz])
         finally:
             evaluated.to_mesh_clear()
-    if len(tyre_contacts) != 4:
-        raise ValueError(f"{kind} needs four wheel meshes for road contact sampling")
+    quadrants = {(cx > 0, cz > 0) for _, _, cx, _, cz in tyre_parts if cx and cz}
+    if len(tyre_parts) != 4 or len(quadrants) != 4:
+        raise ValueError(f"{kind} requires one wheel in each quadrant for independent road contact")
     # Metres between the centreline/origin and each pair of tyre contact patches.
-    contacts = [round(sum(abs(v[i]) for v in tyre_contacts)/4000, 4) for i in range(2)]
-    data[kind] = {'size': size, 'contacts': contacts, 'mm': vertices, 'faces': faces}
+    contacts = [round(sum(abs(v[i]) for v in tyre_parts)/4000, 4) for i in (2,4)]
+    data[kind] = {'size': size, 'contacts': contacts, 'wheels': tyre_parts, 'mm': vertices, 'faces': faces}
 
 colors = []
 for name in material_names:
@@ -230,7 +235,7 @@ for name in material_names:
     r,g,b = (max(0,min(255,round(c**(1/2.2)*255))) for c in rgb)
     colors.append((r<<16) | (g<<8) | b)
 with (OUT/"meshes.js").open("w") as f:
-    f.write("// Blender export. Positions in mm, face records [a,b,c,material].\n")
+    f.write("// Blender export. Positions in mm, faces [a,b,c,material]; wheels [first triangle, end, contact X/Y/Z in mm].\n")
     f.write("export const palette = "+json.dumps(colors)+";\n")
     f.write("export const vehicles = {\n")
     for k, v in data.items():

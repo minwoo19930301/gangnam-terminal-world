@@ -10,38 +10,56 @@ export function vehicleContacts(kind) {
 }
 
 const caches = new WeakMap();
-export function fleetInstances(THREE, kind, count) {
-  let library = caches.get(THREE);
-  if (!library) {
-    const materials = [new THREE.MeshLambertMaterial(), new THREE.MeshLambertMaterial({ vertexColors: true })];
-    for (const m of materials) m.defines = { BANPO_RIGID: 1 };
-    library = { materials, geometries: new Map() };
-    caches.set(THREE, library);
-  }
-  if (!library.geometries.has(kind)) {
-    const { mm, faces } = vehicles[kind] || vehicles.car;
-    const parts = [{ positions: [], colors: [] }, { positions: [], colors: [] }];
-    const colors = palette.map(hex => new THREE.Color(hex));
-    for (let i = 0; i < faces.length; i += 4) {
-      const material = faces[i + 3], part = parts[material === 0 ? 0 : 1];
-      for (let k = i; k < i + 3; k++) {
-        const j = faces[k] * 3;
-        part.positions.push(mm[j] / 1000, mm[j + 1] / 1000, mm[j + 2] / 1000);
-        if (material) part.colors.push(colors[material].r, colors[material].g, colors[material].b);
+
+function buildGeometries(THREE, vehicle, colors, separateWheels) {
+  const { mm, faces, wheels } = vehicle;
+  const parts = Array.from({length: separateWheels ? 3 : 2}, () => ({ positions:[], colors:[] }));
+  // The editable tyre has one outside hub face. Use the right rear wheel as
+  // the prototype; a half turn about Y exposes the hub on a left-hand wheel.
+  const prototype = separateWheels && wheels.find(([, , x, , z]) => x > 0 && z < 0);
+  for (let i = 0; i < faces.length; i += 4) {
+    const material = faces[i+3];
+    const wheel = separateWheels && wheels.find(([first, end]) => i >= 4*first && i < 4*end);
+    if (wheel && wheel !== prototype) continue;
+    const part = parts[wheel ? 2 : material === 0 ? 0 : 1];
+    for (let k = i; k < i+3; k++) {
+      const vertex = faces[k]*3;
+      for (let axis = 0; axis < 3; axis++) {
+        // Wheel origins are the actual tread contact extracted from Blender.
+        part.positions.push((mm[vertex+axis] - (wheel ? wheel[2+axis] : 0)) / 1000);
+      }
+      if (wheel || material !== 0) {
+        const color = colors[material];
+        part.colors.push(color.r,color.g,color.b);
       }
     }
-    library.geometries.set(kind, parts.map(({ positions, colors }) => {
-      const geometry = new THREE.BufferGeometry();
-      geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
-      if (colors.length) geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
-      geometry.computeVertexNormals();
-      geometry.computeBoundingSphere();
-      return geometry;
-    }));
   }
-  return library.geometries.get(kind).map((g, i) => {
-    const mesh = new THREE.InstancedMesh(g, library.materials[i], count);
-    mesh.name = kind + (i ? ' trim' : ' paint');
+  return parts.map(({positions,colors}) => {
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions,3));
+    if (colors.length) geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors,3));
+    geometry.computeVertexNormals();
+    geometry.computeBoundingSphere();
+    return geometry;
+  });
+}
+
+export function fleetInstances(THREE, kind, count, {separateWheels=false} = {}) {
+  let library = caches.get(THREE);
+  if (!library) {
+    const paint = new THREE.MeshLambertMaterial();
+    const trim = new THREE.MeshLambertMaterial({vertexColors:true});
+    for (const m of [paint,trim]) m.defines = {BANPO_RIGID:1};
+    library = { materials:[paint,trim,trim], colors:palette.map(hex => new THREE.Color(hex)), geometries:new Map() };
+    caches.set(THREE, library);
+  }
+  const key = kind + (separateWheels ? '/wheels' : '/complete');
+  if (!library.geometries.has(key)) {
+    library.geometries.set(key, buildGeometries(THREE, vehicles[kind] || vehicles.car, library.colors, separateWheels));
+  }
+  return library.geometries.get(key).map((geometry,i) => {
+    const mesh = new THREE.InstancedMesh(geometry, library.materials[i], i === 2 ? count*4 : count);
+    mesh.name = kind + [' paint',' trim',' wheels'][i];
     return mesh;
   });
 }

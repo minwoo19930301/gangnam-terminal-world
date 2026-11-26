@@ -6,13 +6,21 @@ import * as THREE from 'three';
 import { createPhysics } from '../../../js/physics.js';
 import { createKit } from '../../../js/kit.js';
 import { buildCity } from '../../../js/city.js';
+import { PLACES } from '../../../js/places/index.js';
+import { applyRoadEdits } from '../../../js/blender-roads.js';
 import { relief } from '../../../js/banpo_relief.js';
 import { streetEdits } from './street-edits.js';
 
 export async function writeStreetLayout(directory) {
   const read = async name => JSON.parse(await fs.readFile(new URL(name, import.meta.url), 'utf8'));
-  const [osm, meta] = await Promise.all([read('../../../data/osm.json'), read('../../../js/places/_meta.json')]);
-  const claims = field => new Set(Object.values(meta).flatMap(m => m[field]));
+  const [rawOsm, apartments, places] = await Promise.all([
+    read('../../../data/osm.json'), read('../../../js/places/_re_models.json'),
+    Promise.all(PLACES.map(id => import('../../../js/places/' + id + '.js'))),
+  ]);
+  const osm = applyRoadEdits(rawOsm);
+  const claims = field => new Set(places.flatMap(({meta}) => meta[field] || []));
+  const claimedBuildings = claims('claims');
+  for (const model of apartments.models) for (const id of model.claims) claimedBuildings.add(id);
   const canvas = globalThis.__makeCanvas;
   const ctx = new Proxy({
     measureText: text => ({width: String(text).length * 10}),
@@ -24,10 +32,17 @@ export async function writeStreetLayout(directory) {
   const points = [];
   try {
     globalThis.__makeCanvas = (width, height) => ({width, height, style:{}, getContext:()=>ctx});
-    const K = createKit(THREE, new THREE.Scene(), {osm, phys:createPhysics()});
+    // As in the complete player scene, build the places before the city to register
+    // the stairwells and river cuts that exclude planting. Skip unrelated render batches.
+    const K = createKit(THREE, new THREE.Scene(), {osm, phys:createPhysics(), keep:owner => owner === 'city'});
+    K.onNight = () => {};
+    for (const {meta, build} of places) {
+      K._.setCurrent(meta.id, meta);
+      build(K);
+    }
     K._.setCurrent('city');
     buildCity(K, osm, {
-      claimedBuildings:claims('claims'), claimedRoads:claims('claimRoads'), claimedAreas:claims('claimAreas'),
+      claimedBuildings, claimedRoads:claims('claimRoads'), claimedAreas:claims('claimAreas'),
       streetPlacementEdits: {},
       inspectStreetPlacement(key, kind, x, y, z, h, yaw) {
         const source = [x, -z, y + relief(x,z)];

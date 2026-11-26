@@ -9,6 +9,9 @@ import { fleetInstances, vehicleContacts } from './fleet.js';
 // Generic city layer from OpenStreetMap: everything not claimed by a detailed place module.
 import { pointInPoly, polyBBox, polyArea } from './physics.js';
 import { relief } from './banpo_relief.js';
+import { wheelContacts } from './vehicle_ground.js';
+import { cutSurface } from './ground.js';
+import { parcelCover } from './parcel_cover.js';
 
 const CAR = new Set(['motorway', 'trunk', 'trunk_link', 'primary', 'primary_link', 'secondary', 'secondary_link', 'tertiary', 'tertiary_link', 'residential', 'unclassified', 'service', 'busway', 'living_street', 'construction']);
 const MAJOR = new Set(['trunk', 'primary', 'secondary', 'motorway']);
@@ -20,11 +23,8 @@ export function buildCity(K, osm, { claimedBuildings = new Set(), claimedRoads =
   applyRoadEdits(osm);
   const { THREE } = K;
   const rnd = K.rand(42);
-  const streetLampLens = new THREE.MeshLambertMaterial({color:0xb9c1c1,emissive:0xffddaa,emissiveIntensity:0});
-  streetLampLens.name = '가로등 발광렌즈';
   const streetLamps = [];
   const streetscape = streetPlacement(K, streetLamps, inspectStreetPlacement, streetPlacementEdits);
-  K.onNight?.(night => { streetLampLens.emissiveIntensity = night ? 1.35 : 0; });
   // ---------- building index (for tree/POI placement tests) ----------
   const bGrid = new Map(); const CELL = 40;
   const bkey = (i, j) => i * 10007 + j;
@@ -117,11 +117,36 @@ export function buildCity(K, osm, { claimedBuildings = new Set(), claimedRoads =
     'highway:pedestrian': 'sidewalk', 'leisure:fitness_station': 'sidewalk', 'landuse:construction': { tex: 'concrete', color: 0xc8b090 },
   };
   const areaY = { 'amenity:parking': 0.018, 'leisure:pitch': 0.016, 'leisure:track': 0.017, 'leisure:playground': 0.017, 'man_made:pier': 0.25 };
+  const precinctY = -.014;
+  const precinctMat = {
+    'landuse:residential': { tex: 'concrete', color: 0xb6b5ae },
+    'amenity:school': { tex: 'concrete', color: 0xd0c8b6 },
+    'landuse:commercial': { tex: 'sidewalk', color: 0xd0c9bd },
+    'place:square': 'sidewalk',
+  };
+  const plantedKinds = new Set(['leisure:park', 'landuse:grass', 'leisure:garden',
+    'natural:grassland', 'landuse:forest', 'natural:wood']);
+  const waterOutline = a => a.id === 152336 && claimedAreas.has(981963451) ? withJamwonInlet(a.poly) : a.poly;
+  const channelCuts = osm.areas.filter(a => a.kind === 'natural:water' && !claimedAreas.has(a.id))
+    .map(a => ({poly: waterOutline(a), inner: a.holes}));
+  const cuts = [...K._.groundHoles, ...channelCuts].map(c => ({...c, bounds: polyBBox(c.poly)}));
+  function cutsAt(poly) {
+    const [x0,z0,x1,z1] = polyBBox(poly);
+    return cuts.filter(({bounds: b}) => b[0] <= x1 && b[2] >= x0 && b[1] <= z1 && b[3] >= z0);
+  }
+  function inOpening(x, z, nearby) {
+    return nearby.some(c => pointInPoly(x,z,c.poly) && !(c.inner || []).some(r => pointInPoly(x,z,r)));
+  }
+  function groundCover(material, poly, y, inner, nearby) {
+    if (!nearby.length) return K.hpoly(material,poly,y,true,inner);
+    const holes = [...nearby, ...(inner || []).map(r => ({poly:r}))];
+    cutSurface(poly, holes, piece => K.hpoly(material,piece,y));
+  }
   for (const a of osm.areas) {
     if (claimedAreas.has(a.id)) continue;
     if (a.kind === 'natural:water') {
       const han = a.id === 152336;
-      const outline = han && claimedAreas.has(981963451) ? withJamwonInlet(a.poly) : a.poly;
+      const outline = waterOutline(a);
       const wy = polyArea(outline) > 20000 ? -1.4 : -0.5;
       K.groundHole(outline, a.holes);
       const stream = a.id === 248405787; // Banpocheon's banks descend along the channel.
@@ -143,41 +168,94 @@ export function buildCity(K, osm, { claimedBuildings = new Set(), claimedRoads =
       for (const h of a.holes || []) K.hpoly({ tex: 'grass', color: 0xd8e0b0 }, h, 0.0, true);
       continue;
     }
-    const m = areaMat[a.kind];
-    if (!m) continue;
-    const y = areaY[a.kind] ?? 0.012;
-    // The Famille garage descends under this landscaped island.
-    const holes = a.id === 593858539
-      ? [...(a.holes || []), ...K._.groundHoles.map(h => h.poly).filter(p => p.every(([x,z]) => pointInPoly(x,z,a.poly)))]
-      : a.holes;
-    K.hpoly(m, a.poly, y, true, holes);
-    if (a.kind === 'man_made:pier') K.phys.addSurface(a.poly, y, {});
-    if (a.kind === 'amenity:parking' && polyArea(a.poly) > 300) parkingLines(a);
-    if (/park|forest|wood|grass|garden/.test(a.kind)) fillTrees(a.poly, holes, a.kind.includes('forest') || a.kind.includes('wood') ? 90 : 260);
+    if (a.kind === 'amenity:parking' &&
+        (a.layer || a.parking === 'underground' || a.parking === 'multi-storey')) continue;
+    const precinct = precinctMat[a.kind];
+    const material = precinct || areaMat[a.kind];
+    if (!material) continue;
+    const y = precinct ? precinctY : (areaY[a.kind] ?? .012);
+    const nearby = cutsAt(a.poly);
+    if (a.kind === 'man_made:pier') {
+      K.hpoly(material, a.poly, y, true, a.holes);
+      K.phys.addSurface(a.poly, y, {});
+    } else {
+      groundCover(material, a.poly, y, a.holes, nearby);
+    }
+    const cover = parcelCover[a.id];
+    if (cover) {
+      for (const [outer,...inner] of cover.green) {
+        groundCover({tex:'grass',color:0xb7c89e},outer,.003,inner,cutsAt(outer));
+      }
+      for (const [x,z,height] of cover.trees) {
+        if (!inOpening(x,z,nearby)) streetscape.tree(x,z,{h:height,kind:'zelkova'});
+      }
+    }
+    if (a.kind === 'amenity:parking' && polyArea(a.poly) > 300) parkingLines(a, nearby);
+    if (plantedKinds.has(a.kind)) fillTrees(a.poly, a.holes, nearby,
+      a.kind === 'landuse:forest' || a.kind === 'natural:wood' ? 90 : 260);
   }
-  function parkingLines(a) {
+  function parkingLines(a, nearby) {
     // stall lines along the longest edge direction
     let best = 0, dir = [1, 0];
     for (let i = 0; i < a.poly.length; i++) { const p = a.poly[i], q = a.poly[(i + 1) % a.poly.length]; const L = Math.hypot(q[0] - p[0], q[1] - p[1]); if (L > best) { best = L; dir = [(q[0] - p[0]) / L, (q[1] - p[1]) / L]; } }
     const bb = polyBBox(a.poly); const cx = (bb[0] + bb[2]) / 2, cz = (bb[1] + bb[3]) / 2; const R = Math.hypot(bb[2] - bb[0], bb[3] - bb[1]) / 2;
     const nx = -dir[1], nz = dir[0];
+    const free = (x,z) => pointInPoly(x,z,a.poly) && !(a.holes || []).some(h => pointInPoly(x,z,h))
+      && !inOpening(x,z,nearby) && !buildingAt(x,z) && !onRoad(x,z,false,.15);
     for (let row = -R; row < R; row += 11) for (let t = -R; t < R; t += 2.5) {
       const x = cx + dir[0] * t + nx * row, z = cz + dir[1] * t + nz * row;
-      if (!pointInPoly(x, z, a.poly) || !pointInPoly(x + nx * 5, z + nz * 5, a.poly)) continue;
+      if (![0,2.5,5].every(d => free(x+nx*d,z+nz*d))) continue;
       K.quad(0xf2f2f2, [[x, 0.022, z], [x + nx * 5, 0.022, z + nz * 5], [x + nx * 5 + dir[0] * 0.12, 0.022, z + nz * 5 + dir[1] * 0.12], [x + dir[0] * 0.12, 0.022, z + dir[1] * 0.12]], [0, 1, 0]);
-      if (rnd() < 0.55 && pointInPoly(x + nx * 2.5 + dir[0] * 1.25, z + nz * 2.5 + dir[1] * 1.25, a.poly)) K.vehicle({ x: x + nx * 2.5 + dir[0] * 1.25, z: z + nz * 2.5 + dir[1] * 1.25, rotY: Math.atan2(nx, nz), kind: rnd() < 0.15 ? 'van' : 'car', solid: true });
+      if (rnd() < 0.55 && [0,2.5,5].every(d => free(x+nx*d+dir[0]*2.4,z+nz*d+dir[1]*2.4))) K.vehicle({ y: areaY['amenity:parking'], x: x + nx * 2.5 + dir[0] * 1.25, z: z + nz * 2.5 + dir[1] * 1.25, rotY: Math.atan2(nx, nz), kind: rnd() < 0.15 ? 'van' : 'car', solid: true });
     }
   }
-  function fillTrees(poly, holes, perTree) {
+  // The surface courts beside Mido 306/307 have perpendicular parking on the
+  // photographed apartment-facing aprons. Use the surveyed OSM service ways
+  // to orient the rows and leave every cross aisle and mapped opening clear.
+  const mido = osm.areas.find(a => a.id === 414891728 && !claimedAreas.has(a.id));
+  if (mido) {
+    const rows = [[913880499,1,4], [913880501,7,15], [913880498,0,3]];
+    const plantings = parcelCover[mido.id]?.green || [];
+    const nearby = cutsAt(mido.poly);
+    const randomCar = K.rand(306307);
+    const occupied = [];
+    function clearApron(x,z) {
+      return pointInPoly(x,z,mido.poly) && !inOpening(x,z,nearby) &&
+        !buildingAt(x,z,.5) && !onRoad(x,z,false,.15) &&
+        !plantings.some(([outer,...inner]) => pointInPoly(x,z,outer) && !inner.some(h => pointInPoly(x,z,h)));
+    }
+    for (const [id,first,last] of rows) {
+      const way = roads.find(r => r.id === id);
+      if (!way || way.pts.length <= last) continue;
+      for (let i=first; i<last; i++) {
+        const [ax,az] = way.pts[i], [bx,bz] = way.pts[i+1];
+        const length = Math.hypot(bx-ax,bz-az);
+        const dx=(bx-ax)/length, dz=(bz-az)/length;
+        for (const side of [-1,1]) {
+          const nx=-dz*side, nz=dx*side;
+          for (let s=1.5; s+2.7<length; s+=2.7) {
+            const pos=(u,v)=>[ax+dx*(s+u)+nx*(way.width/2+.6+v), az+dz*(s+u)+nz*(way.width/2+.6+v)];
+            const sample=[pos(0,0),pos(0,4.8),pos(2.55,4.8),pos(2.55,0),pos(1.275,2.4)];
+            if (!sample.every(p=>clearApron(...p))) continue;
+            const [x,z]=sample[4];
+            if (occupied.some(([cx,cz])=>Math.hypot(x-cx,z-cz)<2.6)) continue;
+            occupied.push([x,z]);
+            K.hpoly(0xe4e0d6,[pos(0,4.71),pos(0,4.8),pos(2.55,4.8),pos(2.55,4.71)],.016);
+            K.hpoly(0xe4e0d6,[pos(0,0),pos(0,4.8),pos(.09,4.8),pos(.09,0)],.016);
+            if (randomCar()<.66) K.vehicle({x,z,y:precinctY,rotY:Math.atan2(nx,nz)+(randomCar()<.5?Math.PI:0),kind:'car',solid:true});
+          }
+        }
+      }
+    }
+  }
+  function fillTrees(poly, holes, nearby, perTree) {
     const n = Math.min(400, Math.floor(polyArea(poly) / perTree)); const bb = polyBBox(poly); let k = 0, g = 0;
     while (k < n && g++ < n * 8) {
       const x = bb[0] + rnd() * (bb[2] - bb[0]), z = bb[1] + rnd() * (bb[3] - bb[1]);
-      if (!pointInPoly(x, z, poly) || (holes && holes.some(h => pointInPoly(x, z, h))) || buildingAt(x, z, 2) || onRoad(x, z, false, 1)) continue;
+      if (!pointInPoly(x, z, poly) || inOpening(x,z,nearby) || (holes && holes.some(h => pointInPoly(x, z, h))) || buildingAt(x, z, 2) || onRoad(x, z, false, 1)) continue;
       streetscape.tree(x, z, { kind: rnd() < 0.2 ? 'pine' : rnd() < 0.5 ? 'cherry' : 'zelkova', h: 6 + rnd() * 6 }); k++;
     }
   }
-  // residential landuse: apartment complex greenery
-  for (const a of osm.areas) if (a.kind === 'landuse:residential' && !claimedAreas.has(a.id)) fillTrees(a.poly, a.holes, 420);
 
   // ---------- roads ----------
   const roadMat = { tex: 'asphalt' };
@@ -787,7 +865,12 @@ export function buildCity(K, osm, { claimedBuildings = new Set(), claimedRoads =
       K.sign(p.name.replace(/\(.*?\)/g, '').trim().slice(0, 18), { x, y: b.minHeight + floor * fh + (floor === 0 ? 3.0 : fh * 0.5), z, w: Math.min(4.6, L * 0.85), h: 0.75, rotY: Math.atan2(ns[bi][0], ns[bi][1]), bg, fg, offset: 0.12 });
     });
   }
-  addStreetLamps(K, streetLamps, streetLampLens);
+  if (streetLamps.length) {
+    const lens = new THREE.MeshLambertMaterial({color:0xb9c1c1,emissive:0xffddaa,emissiveIntensity:0});
+    lens.name = '가로등 발광렌즈';
+    K.onNight?.(night => { lens.emissiveIntensity = night ? 1.35 : 0; });
+    addStreetLamps(K, streetLamps, lens);
+  }
   // OSM trees
   for (const [x, z] of osm.trees) streetscape.tree(x, z, { kind: 'zelkova' });
   log(`city: ${nb} buildings, ${roads.length} roads; ${roadStats.junctions} junctions, ${roadStats.signalised} signalised (${roadStats.renderedSignalised} unclaimed), ${roadStats.quads} road-detail quads`);
@@ -895,16 +978,27 @@ export function createTraffic(K, roadsInfo, n = 160) {
     const list = cars.filter(c => c.kind === kind); if (!list.length) continue;
     const model = kind === 'bus' ? 'cityBus' : kind;
     const [halfTrack, halfWheelbase] = vehicleContacts(model);
-    const meshes = fleetInstances(THREE, model, list.length);
+    const meshes = fleetInstances(THREE, model, list.length, {separateWheels:true});
     const color = new THREE.Color();
     list.forEach((c, i) => {
       c.index = i; c.fleet = meshes; c.halfWheelbase = halfWheelbase; c.halfTrack = halfTrack;
       meshes[0].setColorAt(i, color.setHex(c.color));
     });
-    for (const mesh of meshes) { mesh.userData.dynamic = true; mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage); mesh.frustumCulled = false; K.scene.add(mesh); }
+    meshes.forEach((mesh, i) => {
+      if (i === 2) mesh.name = 'traffic-' + kind + '-wheels';
+      mesh.userData.dynamic = true; // Lazy detail loads must keep the live instance matrices.
+      mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+      mesh.frustumCulled = false;
+      K.scene.add(mesh);
+    });
     fleets.push(meshes);
   }
-  const M = new THREE.Matrix4(), Q = new THREE.Quaternion(), V = new THREE.Vector3(), S = new THREE.Vector3(1, 1, 1), rotation = new THREE.Euler(0, 0, 0, 'YXZ');
+  const M = new THREE.Matrix4(), Q = new THREE.Quaternion(), yaw = new THREE.Quaternion();
+  const V = new THREE.Vector3(), up = new THREE.Vector3(0,1,0), S = new THREE.Vector3(1,1,1);
+  const leftWheel = new THREE.Quaternion(), flipWheel = new THREE.Quaternion().setFromAxisAngle(up, Math.PI);
+  const asphalt = (x,z) => relief(x,z) + .03;
+  const road = s => s.kind === 'ramp' && (s.tag === 'road' || s.tag === 'streets') && !s.move;
+  const contacts = [];
   function update(dt) {
     for (const c of cars) {
       const r = c.route; c.t = (c.t + c.speed * dt) % r.L;
@@ -914,13 +1008,18 @@ export function createTraffic(K, roadsInfo, n = 160) {
       const dx = (b[0] - a[0]) / length, dz = (b[1] - a[1]) / length;
       const fx = dx * c.halfWheelbase, fz = dz * c.halfWheelbase;
       const rx = dz * c.halfTrack, rz = -dx * c.halfTrack;
-      const fl = relief(x+fx-rx, z+fz-rz), fr = relief(x+fx+rx, z+fz+rz);
-      const bl = relief(x-fx-rx, z-fz-rz), br = relief(x-fx+rx, z-fz+rz);
-      const pitch = -Math.atan2(fl+fr-bl-br, 4*c.halfWheelbase);
-      const roll = Math.atan2(fr+br-fl-bl, 4*c.halfTrack);
-      rotation.set(pitch, Math.atan2(dx,dz), roll);
-      M.compose(V.set(x, (fl+fr+bl+br)/4 + .055, z), Q.setFromEuler(rotation), S);
+      wheelContacts(K.phys,x,z,dx,dz,c.halfTrack,c.halfWheelbase,asphalt,contacts,road);
+      const {forward,right,height} = contacts;
+      Q.setFromUnitVectors(up,V.set(-forward*dx-right*dz,1,-forward*dz+right*dx).normalize());
+      Q.multiply(yaw.setFromAxisAngle(up,Math.atan2(dx,dz)));
+      M.compose(V.set(x,height,z),Q,S);
       c.fleet[0].setMatrixAt(c.index, M); c.fleet[1].setMatrixAt(c.index, M);
+      leftWheel.copy(Q).multiply(flipWheel);
+      for (let i=0; i<4; i++) {
+        const side = i%2 ? 1 : -1, end = i<2 ? -1 : 1;
+        M.compose(V.set(x + side*rx + end*fx, contacts[i], z + side*rz + end*fz), side < 0 ? leftWheel : Q, S);
+        c.fleet[2].setMatrixAt(c.index*4+i, M);
+      }
     }
     for (const meshes of fleets) for (const mesh of meshes) mesh.instanceMatrix.needsUpdate = true;
   }

@@ -59,7 +59,14 @@ city.view_layers[0].update()
 exporter(out / "changed.gz")
 roads(here, out / "changed-roads.mjs")
 terrain(here, out / "changed-height.mjs")
+placement_groups = [o for o in city.objects if o.get("street_layout_kind")]
+placement_counts = {
+    o["street_layout_kind"]: len(o.data.vertices) for o in placement_groups
+}
+assert placement_counts.get("roadLamp", 0) > 0 and len(placement_counts) > 1
 summary = {
+    "roadLamps": placement_counts["roadLamp"],
+    "trees": sum(placement_counts.values()) - placement_counts["roadLamp"],
     "libraryFiles": len(libs),
     "galleryInstances": len(gallery.objects),
     "gameShell": target["shell_key"],

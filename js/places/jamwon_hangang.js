@@ -516,12 +516,10 @@ export function build(K){
     const mouthNorth=bankAt(-2605), mouthSouth=bankAt(-2573);
     const sevenInlet=[mouthNorth,[1394,-2605],[1394,-2573],mouthSouth];
     for(const piece of subtract(extension,sevenInlet))slab(piece,0,{tex:'grass',color:0xb9caa0});
-    K.phys.addGroundHole(sevenInlet);K.hpoly('hanRiver',sevenInlet,-1.4);K.phys.addSurface(sevenInlet,-2.1,{slow:.7,tag:'jamwon_hangang'});
+    K.groundHole(sevenInlet);K.hpoly('hanRiver',sevenInlet,-1.4);K.phys.addSurface(sevenInlet,-2.1,{slow:.7,tag:'jamwon_hangang'});
     zone('잠원한강공원 · 한남대교',extension,0,'1F','수변 산책로 · 제4주차장',12);
     // Water extension shares only the z=-2100 seam with city-owned river152336.
-    // No rendered base terrain exists outside osm.bbox. Remove only its global
-    // physics ground here: an out-of-bounds Earcut hole would corrupt that mesh.
-    K.phys.addGroundHole(water);K.hpoly('hanRiver',water,-1.4);K.phys.addSurface(water,-2.1,{slow:.7,tag:'jamwon_hangang'});
+    K.groundHole(water);K.hpoly('hanRiver',water,-1.4);K.phys.addSurface(water,-2.1,{slow:.7,tag:'jamwon_hangang'});
     K.hpoly('grass',[[-198.12,-2850],...water.slice(end+1)],0);
     const bankWall=(p,q)=>K.wall(...p,...q,-2.4,0,{mat:{tex:'concrete',color:0xaaa699},thick:.15,solid:false});
     for(let i=1;i<bank.length;i++) {

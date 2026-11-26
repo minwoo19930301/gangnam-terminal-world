@@ -163,9 +163,12 @@ export function buildGardenArrival(K) {
 // The same rounded sedan silhouette is visible on the private aisles and
 // inside the garage. Keep the body, wheel contact and collision hull together.
 export function gardenParkedCar(K, x, z, y, rot, color, owner, grade=0) {
+  K.withParkedVehicle(x,y,z,rot,.945,1.47,grade,atWheel => drawGardenCar(K,x,y,z,rot,color,owner,grade,atWheel));
+}
+function drawGardenCar(K,x,y,z,rot,color,owner,grade,atWheel) {
   const c=Math.cos(rot),s=Math.sin(rot);
   const uv=(across,along)=>[x+c*across+s*along,z-s*across+c*along];
-  const P=(across,h,along)=>{const [px,pz]=uv(across,along);return [px,y+h+grade*along,pz];};
+  const P=(across,h,along)=>{const [px,pz]=uv(across,along);return [px,y+h,pz];};
   const face = (mat, pts) => {
     let world=pts.map(p=>P(...p));
     const a=new K.THREE.Vector3(...world[0]), b=new K.THREE.Vector3(...world[1]), c=new K.THREE.Vector3(...world[2]);
@@ -193,13 +196,15 @@ export function gardenParkedCar(K, x, z, y, rot, color, owner, grade=0) {
   for (const side of [-1, 1]) {
     face(glazing, [[side*.78,.88,-1.55],[side*.78,.88,1.24],[side*.68,1.48,.55],[side*.68,1.48,-.88]]);
     face(color,[[side*.785,.88,-.21],[side*.785,.88,-.12],[side*.685,1.48,-.12],[side*.685,1.48,-.21]]);
-    for (const z of [-1.47, 1.47]) for (let j = 0; j < 16; j++) {
-      const a0 = Math.PI*2*j/16, a1 = Math.PI*2*(j+1)/16;
-      const rim = (x, a, r) => [side*x, .34 + r*Math.sin(a), z + r*Math.cos(a)];
-      face(0x191c1f, [rim(.88,a0,.34),rim(1.01,a0,.34),rim(1.01,a1,.34),rim(.88,a1,.34)]);
-      face(0x1d2023, [[side*1.012,.34,z],rim(1.012,a0,.34),rim(1.012,a1,.34),[side*1.012,.34,z]]);
-      face(0xa4abb0, [[side*1.015,.34,z],rim(1.015,a0,.21),rim(1.015,a1,.21),[side*1.015,.34,z]]);
-    }
+    for (const z of [-1.47, 1.47]) atWheel((z>0 ? 2 : 0) + (side>0 ? 1 : 0), () => {
+      for (let j = 0; j < 16; j++) {
+        const a0 = Math.PI*2*j/16, a1 = Math.PI*2*(j+1)/16;
+        const rim = (x, a, r) => [side*x, .34 + r*Math.sin(a), z + r*Math.cos(a)];
+        face(0x191c1f, [rim(.88,a0,.34),rim(1.01,a0,.34),rim(1.01,a1,.34),rim(.88,a1,.34)]);
+        face(0x1d2023, [[side*1.012,.34,z],rim(1.012,a0,.34),rim(1.012,a1,.34),[side*1.012,.34,z]]);
+        face(0xa4abb0, [[side*1.015,.34,z],rim(1.015,a0,.21),rim(1.015,a1,.21),[side*1.015,.34,z]]);
+      }
+    });
     for (const z of [-2.325,2.325]) face(z > 0 ? 0xe8e4cb : 0xa62c2a, [[side*.29,.56,z],[side*.7,.56,z],[side*.7,.7,z],[side*.29,.7,z]]);
   }
 }

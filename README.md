@@ -20,7 +20,7 @@ WASD로 걷고 마우스로 시점을 돌립니다. Shift는 달리기, E는 엘
 
 하늘은 서울의 현재 날짜와 시각을 따릅니다. 화면 시간 선택기로 아침·낮·노을·밤을 미리 볼 수 있습니다. N은 밤·낮을 전환하고 Shift+N은 서울 실시간으로 돌아갑니다.
 
-지도 데이터 © OpenStreetMap contributors (ODbL).
+지도 데이터 © OpenStreetMap contributors (ODbL). 단지 안 녹지와 수목은 Copernicus Sentinel-2와 Meta·WRI의 수관 높이 자료를 가공했습니다. [녹지·수목 자료 출처와 이용 조건](data/research/parcel-cover.md)
 
 개발 메모는 `AGENTS.md`, `docs/PLACE_API.md` 에 있습니다. 로컬 실행: `node tests/serve.mjs 8765` 후 http://127.0.0.1:8765/
 

@@ -82,10 +82,11 @@ export function createPhysics() {
       return false;
     },
     // returns {y, s} : highest walkable surface at (x,z) with y <= maxY
-    support(x, z, maxY) {
+    support(x, z, maxY, accept) {
       let best = -Infinity, bs = null;
       if (0 <= maxY && !P.groundHole(x, z)) { best = 0; bs = GROUND; }
       for (const s of surfs.at(x, z)) {
+        if (accept && !accept(s)) continue;
         let y;
         if (s.kind === 'poly') {
           y = s.y + (s.heightOffset ? s.heightOffset(x,z) : 0);

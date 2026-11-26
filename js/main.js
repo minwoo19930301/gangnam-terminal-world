@@ -14,6 +14,8 @@ import { LANDMARKS } from './landmarks.js';
 import { pickReModels, reModelStandIns, loadReModels } from './remodels.js';
 
 import { installRelief, relief } from './banpo_relief.js';
+import { jamwonRiverExtension } from './banpo_dem.js';
+import { cutSurface } from './ground.js';
 const Q = new URLSearchParams(location.search);
 const SHOT = Q.has('shot');
 const $ = id => document.getElementById(id);
@@ -175,12 +177,19 @@ async function boot() {
       }
     }
   }
-  // ground with holes
-  const [bx0, bz0, bx1, bz1] = osm.bbox;
-  const holes = K._.groundHoles.map(h => h.poly);
   K._.setCurrent('ground');
-  try { K.hpoly({ tex: 'concrete', color: 0xc9c6bf }, [[bx0, bz0], [bx1, bz0], [bx1, bz1], [bx0, bz1]], -0.04, true, holes); }
-  catch (e) { fail('ground', e); K.hpoly({ tex: 'concrete', color: 0xc9c6bf }, [[bx0, bz0], [bx1, bz0], [bx1, bz1], [bx0, bz1]], -0.04, true); }
+  const drawGround = ([x0,z0,x1,z1]) => cutSurface(
+    [[x0,z0],[x1,z0],[x1,z1],[x0,z1]], K._.groundHoles,
+    piece => K.hpoly({tex:'concrete',color:0xc9c6bf},piece,-.04)
+  );
+  drawGround(osm.bbox);
+  // The authored upstream shore continues past the north edge of the OSM
+  // export. Water and the inlet use the same ground openings as physics.
+  if (mods.some(({id}) => id === 'jamwon_hangang')) {
+    const riverX=jamwonRiverExtension.map(p=>p[0]), riverZ=jamwonRiverExtension.map(p=>p[1]);
+    drawGround([Math.min(...riverX),Math.min(...riverZ),
+      Math.max(...riverX,META?.jamwon_hangang?.box?.[2] ?? 1500),osm.bbox[1]]);
+  }
   mark('city'); status('메시 합치는 중…'); await new Promise(r => setTimeout(r, 0));
   K._.finalize(); mark('finalize');
   K._.cull(6, 1.6, -125, true);

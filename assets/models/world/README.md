@@ -39,4 +39,6 @@ blender assets/models/world/gangnam-terminal.blend -P assets/models/world/seoul-
 
 `node tests/blender-world.mjs`는 Blender를 백그라운드로 열어 상대경로 라이브러리, 서울 시각, 게임 메시의 재수출을 검사합니다. 임시 변경으로 건물을 1.25m 올리고 도로 점·폭과 지형 표고를 수정해 나온 데이터도 확인합니다.
 
+단지와 학교의 식재 경계에는 저장소의 Sentinel-2 및 수관 자료도 반영했습니다. [식생 자료와 출처](../../../data/research/parcel-cover.md)
+
 거리뷰와 시설 안내는 모양과 용도를 대조하는 자료입니다. 이번 작업에서 현장 측량한 거리는 없습니다. 매장 진열과 외관의 세부 치수에는 사진에 맞춰 정한 비례가 포함됩니다. [네이버 지도 호텔 외부 거리뷰](https://map.naver.com/p/?p=Cy3jmhWfofOZSFQ5RWAIbA,104.03,2.78,80,Float) · [OpenStreetMap 자료와 저작자](https://www.openstreetmap.org/copyright)

@@ -19,7 +19,7 @@ scene.unit_settings.system = "METRIC"
 scene.world = bpy.data.worlds.new("Seoul daylight")
 scene.world.color = (0.4, 0.5, 0.62)
 scene["source"] = (
-    "© OpenStreetMap contributors; Seoul terrain reference in js/banpo_dem.js"
+    "© OpenStreetMap contributors. Contains modified Copernicus Sentinel data (2025). Canopy: Meta and WRI, 2026; source imagery © 2016 Vantor. See data/research/parcel-cover.md and js/banpo_dem.js."
 )
 scene["axis"] = "Blender X east, Y north, Z up; metres"
 

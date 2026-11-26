@@ -4,8 +4,9 @@ import { makeStep, drawStepRails } from '../assets/models/staircase/render.js';
 import { createEscalatorRenderer } from '../assets/models/escalator/render.js';
 import { treeInstances } from './streetscape.js';
 import { createRiverWater } from './river-water.js';
-import { fleetInstances, vehicleSize } from './fleet.js';
+import { fleetInstances, vehicleContacts, vehicleSize } from './fleet.js';
 import { relief, terrainPieces } from './banpo_relief.js';
+import { wheelContacts } from './vehicle_ground.js';
 // K = construction kit handed to every place module.  See docs/PLACE_API.md for the contract.
 // Coordinates: x=east, z=south, y=up, meters. Origin = 고속터미널역. Street level y=0.
 import { createTextures, createSignAtlas, makeCanvas } from './textures.js';
@@ -132,6 +133,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
   // A road deck or building can share a surveyed anchor across its entire
   // footprint. Physics stores the same offset in terrain-relative coordinates.
   let anchorHeight = null;
+  let parkedPose = null;
   function terrainAt(surface, x, z) {
     if (typeof surface === 'number') return surface;
     return (surface ?? relief)(x,z);
@@ -144,6 +146,36 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
   }
   function withTerrainAnchor(x, z, build) {
     return withTerrainSurface(relief(x,z),build);
+  }
+  function withParkedVehicle(x, y, z, yaw, halfTrack, halfAxle, grade, build) {
+    const prior = anchorHeight, sin = Math.sin(yaw), cos = Math.cos(yaw);
+    const expected = (px, pz) => terrainAt(prior, px, pz) + y + grade * ((px-x)*sin + (pz-z)*cos);
+    const wheels = wheelContacts(phys, x, z, sin, cos, halfTrack, halfAxle, expected, []);
+    const gx = wheels.right*cos + wheels.forward*sin, gz = wheels.forward*cos - wheels.right*sin;
+    const plane = (px, pz) => wheels.height - y + gx*(px-x) + gz*(pz-z);
+    // Rotate the whole chassis onto the supporting plane. Wheels can travel
+    // independently when the pavement changes slope between the two axles.
+    const normal = new THREE.Vector3(-gx, 1, -gz).normalize();
+    const tilt = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0,1,0), normal);
+    const v = new THREE.Vector3();
+    let travel = 0;
+    const previous = parkedPose;
+    parkedPose = (points, n) => {
+      const corners = points.map(([px, py, pz]) => {
+        v.set(px-x, py-y, pz-z).applyQuaternion(tilt);
+        const tx = x+v.x, tz = z+v.z;
+        return [tx, wheels.height + v.y + travel - plane(tx,tz), tz];
+      });
+      return [corners, v.fromArray(n).applyQuaternion(tilt).toArray()];
+    };
+    const atWheel = (i, draw) => {
+      const across = (i%2 ? 1 : -1)*halfTrack, along = (i<2 ? -1 : 1)*halfAxle;
+      v.set(across*cos + along*sin, 0, along*cos - across*sin).applyQuaternion(tilt);
+      travel = wheels[i] - wheels.height - v.y;
+      try { draw(); } finally { travel = 0; }
+    };
+    try { return withTerrainSurface(plane, () => build(atWheel, wheels, tilt)); }
+    finally { parkedPose = previous; }
   }
   function recordAnchor(b) {
     if (anchorHeight !== null) (b.anchors ||= new Map()).set(b.prim.length, anchorHeight);
@@ -168,7 +200,8 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
   }
   // emit a quad. p: 4 points [x,y,z], n: intended normal, uvs: 4 [u,v]
   function quad(sp, p, n, uvs, split = true) {
-    if (split && splitTerrainFace(sp, p, n, uvs)) return;
+    if (parkedPose) [p,n] = parkedPose(p,n);
+    else if (split && splitTerrainFace(sp, p, n, uvs)) return;
     const b = bucket(sp.key, p[0][0], p[0][2]);
     // winding check
     const ax = p[1][0] - p[0][0], ay = p[1][1] - p[0][1], az = p[1][2] - p[0][2];
@@ -186,7 +219,8 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     stats.quads++;
   }
   function tri(sp, p, n, uvs, split = true) {
-    if (split && splitTerrainFace(sp, p, n, uvs)) return;
+    if (parkedPose) [p,n] = parkedPose(p,n);
+    else if (split && splitTerrainFace(sp, p, n, uvs)) return;
     const b = bucket(sp.key, p[0][0], p[0][2]);
     const ax = p[1][0] - p[0][0], ay = p[1][1] - p[0][1], az = p[1][2] - p[0][2];
     const bx = p[2][0] - p[0][0], by = p[2][1] - p[0][1], bz = p[2][2] - p[0][2];
@@ -520,15 +554,23 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
   // Parked vehicles share the traffic meshes. kind: car|taxi|bus|cityBus|truck|van
   function vehicle(o) {
     const { x = 0, y = 0, z = 0, rotY = 0, kind = 'car' } = o;
-    const [w, h, d] = vehicleSize(kind), c = Math.cos(rotY), s = Math.sin(rotY);
+    const [w, h, d] = vehicleSize(kind), [halfTrack, halfAxle] = vehicleContacts(kind);
+    const c = Math.cos(rotY), s = Math.sin(rotY);
     const color = o.color ?? ({ taxi: 0xf2a33a, bus: 0x2a5aa8, cityBus: 0x3a9d4a, truck: 0xe8e8e8 }[kind] ?? [0xf2f2f2, 0x1c1c1c, 0x8a9096, 0x24324a, 0x9b1b1b, 0xd9d9d9][Math.abs(Math.round(x * 3 + z * 7)) % 6]);
-    if (!keep || keep(current, x, y + h / 2, z, 0)) {
-      parked.push({ x, y, z, worldY: y + terrainAt(anchorHeight, x, z), rotY, kind, color, place: current });
-    }
-    if (o.label && (kind === 'bus' || kind === 'cityBus')) {
-      sign(o.label, { x: x + (d / 2 + .09) * s, y: y + h - .30, z: z + (d / 2 + .09) * c, w: 1.9, h: .27, rotY, bg: '#111', fg: '#ffb000' });
-    }
-    if (o.solid !== false) { const hw = w / 2, hd = d / 2; const P = (lx, lz) => [x + lx * c + lz * s, z - lx * s + lz * c]; const poly = [P(-hw, -hd), P(hw, -hd), P(hw, hd), P(-hw, hd)]; phys.addPolyWalls(poly, y, y + h, 0.02, current); phys.addSurface(poly, y + h, {}); }
+    withParkedVehicle(x, y, z, rotY, halfTrack, halfAxle, 0, (_atWheel, wheels, tilt) => {
+      if (!keep || keep(current, x, y + h / 2, z, 0)) {
+        parked.push({ x, y, z, rotY, kind, color, wheels, tilt, place: current });
+      }
+      if (o.label && (kind === 'bus' || kind === 'cityBus')) {
+        sign(o.label, { x: x + (d / 2 + .09) * s, y: y + h - .30, z: z + (d / 2 + .09) * c, w: 1.9, h: .27, rotY, bg: '#111', fg: '#ffb000' });
+      }
+      if (o.solid !== false) {
+        const P = (lx,lz) => [x + lx*c + lz*s, z - lx*s + lz*c];
+        const poly = [P(-w/2,-d/2), P(w/2,-d/2), P(w/2,d/2), P(-w/2,d/2)];
+        phys.addPolyWalls(poly, y, y+h, .02, current);
+        phys.addSurface(poly, y+h, {});
+      }
+    });
   }
   // ---------- gameplay registrations ----------
   function zone(o) {
@@ -835,13 +877,28 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
           kinds.get(v.kind).push(v);
         }
         for (const [kind, list] of kinds) {
-          const meshes = fleetInstances(THREE, kind, list.length);
+          const meshes = fleetInstances(THREE, kind, list.length, {separateWheels:true});
+          const [paint,trim,tires] = meshes;
+          tires.name = kind + ' wheels';
+          const [halfTrack,halfAxle] = vehicleContacts(kind);
+          const hubTurn = new THREE.Quaternion().setFromAxisAngle(axis, Math.PI);
+          const leftFacing = new THREE.Quaternion();
+          S.set(1,1,1);
           list.forEach((v, i) => {
-            M.compose(V.set(v.x, v.worldY, v.z), Q.setFromAxisAngle(axis, v.rotY), S.set(1, 1, 1));
-            for (const mesh of meshes) mesh.setMatrixAt(i, M);
-            meshes[0].setColorAt(i, C.setHex(v.color));
+            Q.setFromAxisAngle(axis,v.rotY).premultiply(v.tilt);
+            M.compose(V.set(v.x,v.wheels.height,v.z),Q,S);
+            paint.setMatrixAt(i,M); trim.setMatrixAt(i,M);
+            paint.setColorAt(i,C.setHex(v.color));
+            leftFacing.copy(Q).multiply(hubTurn);
+            const sin=Math.sin(v.rotY), cos=Math.cos(v.rotY);
+            for (let j=0; j<4; j++) {
+              const across=(j%2 ? 1 : -1)*halfTrack, along=(j<2 ? -1 : 1)*halfAxle;
+              V.set(v.x+across*cos+along*sin,v.wheels[j],v.z-across*sin+along*cos);
+              tires.setMatrixAt(i*4+j,M.compose(V,j%2 ? Q : leftFacing,S));
+            }
           });
           for (const mesh of meshes) {
+            mesh.userData.parkedFleet = true;
             mesh.userData.split = true;
             mesh.computeBoundingSphere();
             scene.add(mesh);
@@ -952,7 +1009,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
   function buildAllDetail() { for (const d of details) if (!keepDetail || keepDetail(d)) buildDetail(d); }
 
   const K = {
-    THREE, scene, phys, osm, LEVELS, T, withTerrainAnchor, withTerrainSurface,
+    THREE, scene, phys, osm, LEVELS, T, withTerrainAnchor, withTerrainSurface, withParkedVehicle,
     box, prism, slab, wall, polyWalls, ramp, stairs: (ax, az, bx, bz, o = {}) => ramp(ax, az, bx, bz, { ...o, steps: true }), escalator, cyl, dome, sign, floorText,
     tree, person, crowd, vehicle, zone, spawn, interact, portal, elevator, groundHole, onFrame, addMesh, texture, material, mapMark, detail,
     osmBuilding, osmFind, claim, rand, quad: (mat, p, n, uvs) => quad(spec(mat), p, n, uvs || [[0, 0], [1, 0], [1, 1], [0, 1]]), hpoly: (mat, poly, y, up = true, holes) => hpoly(spec(mat), poly, y, up, holes),
