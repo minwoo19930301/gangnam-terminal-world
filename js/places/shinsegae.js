@@ -7,6 +7,11 @@ import {boutiqueLobby} from '../../assets/models/megabox-central/place.js';
 import {angle as cinemaYaw,point as cinemaPoint} from '../../assets/models/megabox-central/layout.js';
 import {placeAtriumCeiling} from '../../assets/models/ssg-atrium-soffit/model.js';
 import {marketProduceCeiling} from '../../assets/models/ssg-market-ceiling/model.js';
+import {shopArrival as onimaruArrival} from '../../assets/models/kyoto-onimaru/layout.js';
+import {placeAgingCabinet} from '../../assets/models/ssg-market-butcher/model.js';
+import {placeGuo} from '../../assets/models/guo-dumpling/model.js';
+import {placeSpringRolls} from '../../assets/models/blue-butterfly/model.js';
+import {placeOnimaru} from '../../assets/models/kyoto-onimaru/model.js';
 import {giftConcierge} from '../../assets/models/ssg-market-gift/model.js';
 import {marketEntrance} from '../../assets/models/ssg-market-entrance/model.js';
 import {b1Plan as B1_PLAN, departmentPoint as P, departmentWidth as UW, departmentDepth as VD, marketOutline, marketWestReturn, cinemaAisleSides, cinemaAisleMouth} from './shinsegae-b1-plan.js';
@@ -2509,7 +2514,7 @@ export function build(K) {
     for(const[id,name,r]of zoneSpecs)if(id!=='market'&&BPOLY(BRECT(...r)).length>=3)K.zone({name,floor:'B1',sub:'신세계백화점 강남점 · 지하1층',poly:BPOLY(BRECT(...r)),y0:y,y1:0,priority:3});
     for(const c of cells){
       if(worldPoly(c).length<3)continue;
-      K.zone({name:c.name,floor:'B1',sub:c.brands?c.brands.join(' · '):'신세계 강남점 지하1층',poly:c.name==='대형 캐리어 무인 물품보관함'?rect(...(()=>{const [u0,v0,u1]=uvRect(c);return[u0+.2,v0+.08,u1-.2,v0+.53];})()):worldPoly(c),y0:y,y1:-1,priority:c.kind==='service'?6:5});
+      K.zone({name:c.name,floor:'B1',...(c.name==='교토 오니마루'?{mapArrival:onimaruArrival}:{}),sub:c.brands?c.brands.join(' · '):'신세계 강남점 지하1층',poly:c.name==='대형 캐리어 무인 물품보관함'?rect(...(()=>{const [u0,v0,u1]=uvRect(c);return[u0+.2,v0+.08,u1-.2,v0+.53];})()):worldPoly(c),y0:y,y1:-1,priority:c.kind==='service'?6:5});
     }
     // Finish the area of the B1 sales floor that extends under the neighbouring building.
     const marketCeiling=LV['1F']-thick('1F');
@@ -2649,7 +2654,7 @@ export function build(K) {
       bb(W/2,t,w,d,y+2.6,.37,{tex:'ssg_deli_quatrefoil',gloss:.5});
       bb(W/2,t,w+.03,d+.03,y+2.98,.10,{color:0x1e1c1a,gloss:.7});
       bb(W/2,t,w,d,y+2.56,.045,0x292620);
-      const name=c.name==='블루버터플라이'?'Blue butterfly':c.name;
+      const name=c.name==='블루버터플라이'?'Blue Butterfly':c.name;
       sg(name,W/2,.025,y+2.79,Math.max(.45,w-.10),.24,{bg:'#1e1c1a',fg:'#fff6df',bold:false,font:c.name==='블루버터플라이'?'cursive':'Georgia, serif',twoSided:false});
       deliCoffer(...at(W/2,t),Math.min(3,Math.max(.7,w)),Math.min(3,d));
       if(c.name==='블루버터플라이'){
@@ -2724,7 +2729,7 @@ export function build(K) {
       }
       const sU=Math.max(u0+.35,Math.min(u1-.35,preferred[0])),sV=Math.max(v0+.35,Math.min(v1-.35,preferred[1]));
       const signName=c.name==='건강식품 복합셀'?'정관장 · 건강식품':c.name==='기프트 컨시어지'?'GIFT CONCIERGE':c.name==='팝업'&&c.rect[0]>780?'POP-UP':c.name;
-      if(!['보앤미','발효곳간','비첸향'].includes(c.name)&&!(c.zone==='north_deli'&&c.kind==='deli'))
+      if(!['보앤미','발효곳간','비첸향','교토 오니마루','구오 X 여경래'].includes(c.name)&&!(c.zone==='north_deli'&&c.kind==='deli'))
         sign(signName,sU,sV,y+2.25,face,Math.max(.8,Math.min(horizontal?W-.2:D-.2,6.4)),.40,{bg:c.kind==='popup'?'#6f2334':'#3b382d',fg:'#f4e4bd',twoSided:true,pxPerM:120});
       // A retained structural core may consume a tiny schematic cell. Keep its
       // plan sign at that cell, record the exception instead of moving its shop.
@@ -2732,8 +2737,29 @@ export function build(K) {
         sign(signName,sU,sV,y+2.25,face,Math.max(.65,Math.min(horizontal?W-.2:D-.2,6.4)),.34,{bg:'#302c24',fg:'#f4ead9',twoSided:true});
         return;
       }
-      const[u,v]=at,wood=c.name==='카멜커피'?0xd9b98a:c.name==='보앤미'?0xc8a77b:c.name==='블루버터플라이'?0x63422a:c.kind==='wine'?0x493529:c.kind==='deli'?0xb8925d:0x7e6044;
+      const[u,v]=at,wood=c.name==='카멜커피'?0xd9b98a:c.name==='보앤미'?0xc8a77b:c.kind==='wine'?0x493529:c.kind==='deli'?0xb8925d:0x7e6044;
       const darkDeli=c.zone==='north_deli'&&c.kind==='deli', boAndMie=c.name==='보앤미';
+      if(c.name==='블루버터플라이'){
+        const [x,z]=P(u,v);
+        box(u,v,w,d,y,.83,0x694733,{skip:['top','bottom','n','s','e','w']});
+        placeSpringRolls(K,x,z,RA-Math.PI/2,y);
+        if(fits(c,u+.8,v,.35,.35))customer(u+.8,v,true);
+        deliPavilion(c);
+        return;
+      }
+      if(c.name==='구오 X 여경래'){
+        const [x,z]=P(u,v);
+        box(u,v,w,d,y,.83,0x55463e,{skip:['top','bottom','n','s','e','w']});
+        placeGuo(K,x,z,RA,y);
+        if(fits(c,u,v-.85,.35,.35))customer(u,v-.85,true);
+        return;
+      }
+      if(c.name==='교토 오니마루'){
+        const [x,z]=P(u,v);
+        box(u,v,w,d,y,.83,0x393735,{skip:['top','bottom','n','s','e','w']});
+        placeOnimaru(K,x,z,RA,y);
+        return;
+      }
       if(c.name==='기프트 컨시어지'){
         // Keep the guide-fitted counter and its walking clearance; this cell holds the wrapping service.
         const [x,z]=P(u,v);
@@ -2741,13 +2767,9 @@ export function build(K) {
         box(u,v,w,d,y,.83,0xcfcbc0,{skip:['top','bottom','n','s','e','w']});
         return;
       }
-      const base=darkDeli&&c.name!=='블루버터플라이'?'ssg_deli_black_glaze':c.name==='카멜커피'?wood:{tex:'wood',color:wood};
+      const base=darkDeli?'ssg_deli_black_glaze':c.name==='카멜커피'?wood:{tex:'wood',color:wood};
       box(u,v,w,d,y,.83,boAndMie?{tex:'marble',color:0xe9d9c4}:base);
       box(u,v,w+.025,d+.025,y+.83,.06,{tex:'marble',color:darkDeli||c.name==='카멜커피'?0x292824:0xe9debf,gloss:.7},{solid:false});
-      if(c.name==='블루버터플라이'){
-        for(const du of [-w/2+.03,w/2-.03])box(u+du,v,.025,d+.015,y+.10,.65,BRASS,{solid:false});
-        for(const yy of [.10,.74])box(u,v,w+.02,d+.02,y+yy,.025,BRASS,{solid:false});
-      }
       if(['deli','bakery'].includes(c.kind)){
         const glass=boAndMie?K.material('ssg_bonmie_case_glass',new K.THREE.MeshLambertMaterial({
           color:0xe2e8e0,transparent:true,opacity:.12,depthWrite:false,side:K.THREE.DoubleSide
@@ -2920,6 +2942,7 @@ export function build(K) {
         const c=cells.find(c=>c.kind==='supermarket'),core=[541,598,614,656].map(Number),[cu0,cv0,cu1,cv1]=BOUNDS(core);
         const clear=(u,v,w,d)=>fits(c,u,v,w,d)&&!inR(u,v,[cu0-1.2,cv0-1.2,cu1+1.2,cv1+2.5]);
         const[mU0,mV0,mU1,mV1]=uvRect(c);
+        const du=mU0+1.8,dv=mV0+9.1;
         const bottleRows = new Map(), fruitRows = new Map();
         for(let u=mU0+1.8;u<mU1-1;u+=3.1)for(let v=mV0+3;v<mV1-2.2;v+=6.1){
           if(!clear(u,v,1.1,4.4))continue;
@@ -2930,7 +2953,8 @@ export function build(K) {
             box(u,v,1.1,4.4,y,1.2,0,{skip:['top','bottom','n','s','e','w']});
             continue;
           }
-          if(u<mU0+2&&v>55&&v<60)continue; // this same fixture footprint is the dry-aging cabinet below
+          if(u<mU0+2&&v>55&&v<60)continue; // Retain the open bay in the outer grocery row.
+          if(Math.abs(u-du)<.01&&Math.abs(v-dv)<.01)continue; // The aging cabinet occupies this exact fixture.
           // M27U-isS4EA_200: a pink-covered produce island takes a grocery fixture's
           // own footprint; its precise position within the official market cell is inferred.
           if(u<mU0+2&&v>60){
@@ -3014,21 +3038,15 @@ export function build(K) {
         }
         for(const fruit of fruitRows.values())K.stockEllipsoids('신세계 마켓 · 과일 상자',{rx:.095,ry:.105,rz:.11,seg:8,rings:4},fruit);
         for(const stock of bottleRows.values())K.stockCylinders('신세계 마켓 · 그로서리 진열병',stock);
-        // p5QE9cVtWDM_300: dark dry-aging glass cabinet, hanging meat, stainless worktop.
-        const du=mU0+1.8,dv=mV0+9.1;
+        // Preserve the cabinet's back, two ends, plinth and closing front in the collision model.
         if(clear(du,dv,1.1,4.4)){
-          box(du-.5,dv,.1,4.4,y,2.65,0x171d1c);
-          for(const vv of [dv-2.16,dv+2.16])box(du,vv,1.1,.08,y,2.65,0x171d1c);
-          box(du,dv,1.1,4.4,y,.18,0x171d1c);box(du,dv,1.1,4.4,y+2.56,.09,0x171d1c,{solid:false});
-          box(du+.565,dv,.025,4.15,y+.2,2.24,'glass');
-          for(let k=0;k<5;k++){
-            const vv=dv-1.66+k*.83;box(du+.59,vv,.035,.04,y+.16,2.39,BRASS,{solid:false});
-            box(du+.47,vv+.15,.06,.025,y+1.94,.38,'metal',{solid:false});
-            const[xx,zz]=P(du+.42,vv+.15);K.dome({x:xx,z:zz,y:y+1.55,rx:.15,ry:.34,rz:.23,hemi:false,seg:8,rings:5,mat:0x983f43});
-            box(du+.60,vv+.32,.01,.18,y+.54,.10,0xe8e2d3,{solid:false});
-          }
-          for(const yy of [.32,1.1,2.5])box(du+.52,dv,.035,4.15,y+yy,.035,{tex:'emit',color:0xffe5bc},{solid:false});
-          sign('숙성 정육',du+.61,dv,y+2.77,'E',2.4,.28,{bg:'#222827',fg:'#e9d1a0'});
+          const hidden={skip:['top','bottom','n','s','e','w']};
+          box(du-.5,dv,.1,4.4,y,2.65,0x171d1c,hidden);
+          for(const vv of [dv-2.16,dv+2.16])box(du,vv,1.1,.08,y,2.65,0x171d1c,hidden);
+          box(du,dv,1.1,4.4,y,.18,0x171d1c,hidden);
+          box(du+.565,dv,.025,4.15,y+.2,2.24,'glass',hidden);
+          const [x,z]=P(du,dv);
+          placeAgingCabinet(K,x,z,RA+PI/2,y);
         }
         for(const [u,v]of [[mU0+6.35,mV0+6],[mU0+1.8,mV0+15.2]])if(clear(u,v,1.05,1.05)){
           cyl(u,v,y,.49,4.68,0xf0eade,false,24);

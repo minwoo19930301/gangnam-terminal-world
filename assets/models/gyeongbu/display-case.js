@@ -8,7 +8,7 @@ function displayObject(mesh, source) {
 }
 
 // Each counter keeps its own cached mesh library. The coarse body is the visibility probe.
-export function displayCase({url,name,width,height,depth,baseColor,bodyName,lightName,enter=10,leave=14,visibleBounds,proxy}){
+export function displayCase({url,name,width,height,depth,baseColor,bodyName,lightName,enter=10,leave=14,visibleBounds,proxy,bodyMaterial}){
   let library,loading,retryAt=0;
   function request(){
     if(library || loading || performance.now()<retryAt)return;
@@ -28,7 +28,7 @@ export function displayCase({url,name,width,height,depth,baseColor,bodyName,ligh
     if(floorY!==undefined)stand.userData.terrainApplied=true;
     const coarse=proxy?proxy(T):new T.BoxGeometry(width,height,depth).translate(0,height/2,0);
     const base=new T.MeshLambertMaterial({color:baseColor,vertexColors:coarse.hasAttribute('color')});
-    const painted=new T.MeshLambertMaterial({vertexColors:true,side:T.DoubleSide});
+    let painted=bodyMaterial?undefined:new T.MeshLambertMaterial({vertexColors:true,side:T.DoubleSide});
     const glass=new T.MeshPhongMaterial({color:0xcbdde0,transparent:true,opacity:.075,depthWrite:false,
       side:T.DoubleSide,specular:0xffffff,shininess:80});
     const body=new T.Mesh(coarse,base),pane=new T.Mesh(coarse,glass);
@@ -56,6 +56,7 @@ export function displayCase({url,name,width,height,depth,baseColor,bodyName,ligh
       }
       if(near && !library)request();
       if(near && library && !pane.visible){
+        if(!painted)painted=bodyMaterial(T,library.body.material);
         displayObject(body,library.body);body.material=painted;
         displayObject(pane,library.glass);pane.visible=true;
         if(displayLight){displayObject(displayLight,library.light);displayLight.visible=true;}
