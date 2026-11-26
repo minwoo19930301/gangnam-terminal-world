@@ -18,6 +18,7 @@ import {angle as prunierAngle,point as prunierPoint} from '../../assets/models/s
 import {placeCrepeAndWaffle} from '../../assets/models/godiva-emack/model.js';
 import {placeAgingCabinet} from '../../assets/models/ssg-market-butcher/model.js';
 import {placeGuo} from '../../assets/models/guo-dumpling/model.js';
+import {placeOakberry} from '../../assets/models/oakberry-gangnam/model.js';
 import {bakeCounter} from '../../assets/models/bake-gangnam/model.js';
 import {placeSpringRolls} from '../../assets/models/blue-butterfly/model.js';
 import {placeOnimaru} from '../../assets/models/kyoto-onimaru/model.js';
@@ -2573,6 +2574,15 @@ export function build(K) {
     const bakeArrival={x:bakeX,z:bakeZ,yaw:RA-PI/2,pitchDeg:-1};
     K.spawn({name:'베이크',aliases:['BAKE','베이크 치즈타르트'],place:'shinsegae',floor:'B1',
       mapDestination:true,y,...bakeArrival});
+    const oakCell=cells.find(c=>c.name==='오크베리 아사이');
+    const oakFit=fitFoodCounter(oakCell);
+    const [oakU,oakV]=oakFit.at??oakFit.preferred;
+    const [oakX,oakZ]=P(oakU-1.15,oakV+2.26);
+    const [oakCounterX,oakCounterZ]=P(oakU,oakV);
+    const oakArrival={x:oakX,z:oakZ,yaw:Math.atan2(oakX-oakCounterX,oakZ-oakCounterZ),pitchDeg:-11};
+    K.spawn({name:oakCell.name,aliases:['OAKBERRY','OAKBERRY AÇAÍ'],place:'shinsegae',floor:'B1',
+      mapDestination:true,y,...oakArrival});
+    const counterArrivals=new Map([['교토 오니마루',onimaruArrival],[bakeCell.name,bakeArrival],[oakCell.name,oakArrival]]);
     // Five public zones: structural registration is immediate, stock/people lazy.
     const zoneSpecs=[
       // Include the white public aisle between the west counters and the deli.
@@ -2585,7 +2595,7 @@ export function build(K) {
     for(const[id,name,r]of zoneSpecs)if(id!=='market'&&BPOLY(BRECT(...r)).length>=3)K.zone({name,floor:'B1',sub:'신세계백화점 강남점 · 지하1층',poly:BPOLY(BRECT(...r)),y0:y,y1:0,priority:3});
     for(const c of cells){
       if(worldPoly(c).length<3)continue;
-      K.zone({name:c.name,floor:'B1',...(c.name==='교토 오니마루'?{mapArrival:onimaruArrival}:c.name==='베이크'?{mapArrival:bakeArrival}:{}),sub:c.brands?c.brands.join(' · '):'신세계 강남점 지하1층',poly:c.name==='대형 캐리어 무인 물품보관함'?rect(...(()=>{const [u0,v0,u1]=uvRect(c);return[u0+.2,v0+.08,u1-.2,v0+.53];})()):worldPoly(c),y0:y,y1:-1,priority:c.kind==='service'?6:5});
+      K.zone({name:c.name,floor:'B1',mapArrival:counterArrivals.get(c.name),sub:c.brands?c.brands.join(' · '):'신세계 강남점 지하1층',poly:c.name==='대형 캐리어 무인 물품보관함'?rect(...(()=>{const [u0,v0,u1]=uvRect(c);return[u0+.2,v0+.08,u1-.2,v0+.53];})()):worldPoly(c),y0:y,y1:-1,priority:c.kind==='service'?6:5});
     }
     // Finish the area of the B1 sales floor that extends under the neighbouring building.
     const marketCeiling=LV['1F']-thick('1F');
@@ -2822,6 +2832,12 @@ export function build(K) {
         placeCrepeAndWaffle(K,x,z,RA+PI/2,y);
         if(fits(c,u-.8,v,.35,.35))customer(u-.8,v,true);
         deliPavilion(c,true);
+        return;
+      }
+      if(c===oakCell){
+        const [x,z]=P(u,v);
+        box(u,v,w,d,y,.96,0x855b3b,{skip:['top','bottom','n','s','e','w']});
+        placeOakberry(K,x,y,z,RA-PI/2);
         return;
       }
       if(c.name==='베이크'){

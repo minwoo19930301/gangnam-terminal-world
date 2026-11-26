@@ -60,6 +60,7 @@ const sources = [
   ['shinsegae','B1','salt-house-gangnam/shop.blend','소금집 강남 · 샌드위치 주문대와 숙성 진열장','SaltHouseGangnam'],
   ['shinsegae','B1','godiva-emack/counter.blend','에맥앤볼리오스 · 고디바 크레페 창가 매대','GangnamCrepeAndWaffle'],
   ['shinsegae','B1','guo-dumpling/counter.blend','구오 X 여경래 · 생전포 철판과 지짐만두','GuoDumpling'],
+  ['shinsegae','B1','oakberry-gangnam/counter.blend','오크베리 아사이 · 월넛과 대리석 매대','GangnamOakberryCounter'],
   ['shinsegae','B1','bake-gangnam/counter.blend','베이크 강남 · 치즈 타르트 매대','BakeGangnam'],
   ['shinsegae','B1','blue-butterfly/counter.blend','블루버터플라이 · 스프링롤 쇼케이스','BlueButterfly'],
   ['shinsegae','B1','kyoto-onimaru/counter.blend','교토 오니마루 · 곡면 진열대와 야끼무스비','KyotoOnimaru'],
