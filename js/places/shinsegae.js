@@ -1,6 +1,7 @@
 import { registerSnowPeak } from './shinsegae-snowpeak.js';
 import { registerCdg } from './shinsegae-cdg.js';
 import { registerCollect } from './shinsegae-collect.js';
+import { registerFrisbee } from './shinsegae-frisbee.js';
 import { registerGarmin } from './shinsegae-garmin.js';
 import { registerBarrel } from './shinsegae-barrel.js';
 import { registerBrompton } from './shinsegae-brompton.js';
@@ -7945,6 +7946,16 @@ export function build(K) {
           z:sz-side*Math.sin(swimYaw)+front*Math.cos(swimYaw),w,d,h,rotY:swimYaw,
           mat:0x183d70,skip:['top','bottom','n','s','e','w']});
       }
+      const frisbee=upperBuildRect(id,guide.cells.find(c=>c.name==='프리스비 (애플)'));
+      const fu=(frisbee[0]+frisbee[2])/2,fv=13.55;
+      const [fx,fz]=P(fu,fv),[frx,frz]=P(fu+1,fv),fyaw=Math.atan2(fz-frz,frx-fx);
+      registerFrisbee(K,{poly:rect(...frisbee),x:fx,y,z:fz,yaw:fyaw});
+      for(const [side,front,w,d,h] of [[0,0,2.16,1.13,.9],[-2.84,-1.45,2.14,1.14,.9],
+          [-2.8,-4.28,2.5,.48,2.68],[2.8,-4.28,2.5,.48,2.68],[0,-4.27,2.88,.12,2.52],[0,-4.08,2.86,.55,.76]]){
+        K.box({x:fx+side*Math.cos(fyaw)+front*Math.sin(fyaw),y,
+          z:fz-side*Math.sin(fyaw)+front*Math.cos(fyaw),w,d,h,rotY:fyaw,
+          mat:0xeeeae5,skip:['top','bottom','n','s','e','w']});
+      }
       const garmin=upperBuildRect(id,guide.cells.find(c=>c.name==='가민'));
       const gu=(garmin[0]+garmin[2])/2,gv=garmin[1]+1.645;
       const [gx,gz]=P(gu,gv),[right,rz0]=P(gu+1,gv),turn=Math.atan2(gz-rz0,right-gx);
@@ -9510,7 +9521,7 @@ export function build(K) {
     // The photo predates 2025 and does not establish the current fit-out.
     // https://m.blog.naver.com/redzone72/223768195242
     if(id==='2F'&&n==='생 로랑')Object.assign(p,{wall:0xf1f2ef,portal:0x171919,trim:0x242727,accent:0x222525,dark:true,floor:{color:0xd7d9d6,gloss:.25}});
-    if(n==='프리스비 (애플)')Object.assign(p,{wall:0xf8f7f2,trim:0xbfbeb6,accent:0x3c4244,floor:{tex:'tile',color:0xeeeae1,gloss:.3},apple:true});
+    if(n==='프리스비 (애플)')Object.assign(p,{wall:0xf8f7f2,trim:0xbfbeb6,accent:0x3c4244,floor:{tex:'tile',color:0x555451,gloss:.12},apple:true});
     if(/레고/.test(n))Object.assign(p,{wall:0xfff3cf,trim:0xe7bd27,accent:0xc92d28});
     if(/아이큐박스|키움하우스|스누피/.test(n))Object.assign(p,{wall:0xf5eee0,trim:0xd5bc85,accent:0x81aaa1});
     if(/호경전|살롱드호우섬/.test(n))Object.assign(p,{wall:0xe3d7c3,trim:0x3c4c41,accent:0x82483c});
@@ -11636,32 +11647,8 @@ export function build(K) {
         for(let i=0;i<3;i++)glasses(a+(i-1)*Math.min(.42,w*.25),b,.91);
       }
     }else if(apple){
-      const aw=Math.min(W-.6,6.4);
-      shelf(W/2,D-.55,aw,3,ivory);
-      for(let r=0;r<3;r++)for(let i=0;i<Math.min(10,Math.floor(aw/.42));i++){
-        const a=W/2-aw/2+.27+i*.42;
-        B(a,D-.68,.25,.12,.59+r*.61,.35,0xf4f3ed);
-        B(a,D-.747,.16,.015,.65+r*.61,.18,[0x8fa5b7,0xc3a3b7,0x7e9687][(i+r)%3]);
-      }
-      const centers=W>10?[W*.16,W*.36,W*.65,W*.85]:W>5.5?[W*.24,W*.76]:[W*.27];
-      for(const [ci,a]of centers.entries())for(let r=0;r<Math.min(3,Math.max(1,Math.floor((D-1.8)/2.3)));r++){
-        const b=1.45+r*2.3,w=Math.min(2.3,W>10?W*.15:sideWidth-.15);if(w<.8)continue;
-        table(a,b,w,1.1,.84,oak);
-        for(let i=0;i<3;i++){
-          const aa=a+(i-1)*Math.min(.65,w*.27);
-          if((ci+r)%3===0){
-            B(aa,b,.37,.26,.925,.025,metal);B(aa,b+.10,.37,.025,.95,.24,dark);
-            B(aa,b+.083,.34,.012,.97,.19,{tex:'emit',color:0x99b8c8});
-          }else if((ci+r)%3===1){
-            B(aa,b,.15,.29,.925,.018,dark);B(aa,b-.005,.13,.25,.944,.008,{tex:'emit',color:0xc8a8cf});
-          }else{
-            B(aa,b,.16,.13,.925,.035,metal);B(aa,b+.025,.04,.06,.96,.16,metal);B(aa,b+.06,.46,.04,1.1,.32,metal);
-            B(aa,b+.035,.42,.012,1.12,.27,{tex:'emit',color:0x91c6c0});
-          }
-          B(aa+.15,b-.34,.11,.10,.925,.012,ivory);
-        }
-      }
-      fsign('액세서리',W/2,D-.78,y+2.58,Math.min(W-.5,3),.22,{bg:null,fg:'#565650',bold:false});
+      // The Gangnam reseller's photographed Mac tables occupy this bay.
+      return;
     }else if(id==='2F'&&name==='그라프'){
       // A 2026 Gangnam display photograph shows a softly lit grey niche,
       // slim warm-metal frame and dark jewellery busts. The rest of the
