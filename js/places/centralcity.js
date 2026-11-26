@@ -4,6 +4,7 @@ import {publicFloorOpening,court,westApron} from '../../assets/models/cinema-rot
 import {arcadePiers} from '../../assets/models/sweet-arcade/model.js';
 import {houseWineDisplays} from '../../assets/models/house-wine-cellar/model.js';
 import {marcoliniShop} from '../../assets/models/sweet-marcolini/model.js';
+import {hazBakery} from '../../assets/models/haz-bakery/model.js';
 import {arabicaFront} from '../../assets/models/sweet-arabica/model.js';
 import {anotherPalmEdition} from '../../assets/models/another-palm-astro/model.js';
 import {chefStageSigns} from '../../assets/models/sweet-chefs-stage/model.js';
@@ -1279,7 +1280,7 @@ export function build(K) {
     {"zone":"sweet","name":"S.style ACC","rect_display":[1033,398,1097,453],"front":"S","kind":"accessory"},
     {"zone":"sweet","name":"배스 앤 바디 웍스","rect_display":[1098,398,1164,453],"front":"S","kind":"beauty"},
     {"zone":"sweet","name":"포트넘앤메이슨","rect_display":[1059,509,1164,533],"front":"S","kind":"tea"},
-    {"zone":"sweet","name":"후쿠요시 카페 미친맛집","rect_display":[1032,540,1079,595],"front":"E","kind":"cafe"},
+    {"zone":"sweet","name":"하츠베이커리","rect_display":[1032,540,1079,595],"front":"E","kind":"bakery"},
     {"zone":"sweet","name":"스탠다드브레드","rect_display":[1032,596,1079,654],"front":"E","kind":"bakery"},
     {"zone":"sweet","name":"비스퀴테리 M.O","rect_display":[1032,655,1079,716],"front":"E","kind":"bakery"},
     {"zone":"sweet","name":"피에르 마르콜리니","rect_display":[1032,717,1079,777],"front":"E","kind":"chocolate"},
@@ -1703,6 +1704,17 @@ export function build(K) {
     if(cell.name==='한정선')caseRect=[x0+3,y1-15,x1-3,y1-6];
     caseRect=spSafeCounter(cell,caseRect);
     if(west)spArchFront(cell);else if(cell.zone!=='sweet_islands')BSign(cell.name,r,front,2.65);
+    if(cell.name==='하츠베이커리'){
+      // The full two-table footprint fits behind the plan-east frontage.
+      const tableRect=[1068,560,1074,580];
+      if(!b1Safe(tableRect))return;
+      const [a,b,c,d]=spBounds(tableRect),s=(a+c)/2,t=(b+d)/2;
+      const [x,z]=P(s,t);
+      // Use the baked table for the visible top. Its walk blocker stays inside the tenant cell.
+      lbox(s,t,.77,2.55,YB1,.84,0xf1debe,{skip:['top','bottom','e','w','n','s']});
+      hazBakery(K,x,YB1+.80,z,R);
+      return;
+    }
     const chefStage=cell.name==='깰끄쇼즈 / 르솔레이 / 아우치+터치';
     if(retail){
       if(caseRect){BPrism(caseRect,YB1,.9,{tex:'wood',color:0xd3c6af});for(let j=0;j<4;j++)BPrism(caseRect,YB1+.9+j*.4,.04,0xe6dcc9,false);}

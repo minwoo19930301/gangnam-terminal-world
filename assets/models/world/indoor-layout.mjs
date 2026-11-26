@@ -44,6 +44,7 @@ const sources = [
   ['gyeongbu','8F','gyeongbu-clothing-fronts/eight/knit-front.blend','경부선 8층 · 긴 니트와 스카프 전면','8층 여성복 · 긴 니트와 스카프 전면'],
   ['shinsegae','B1','ypbooks-rotary/front.blend','영풍문고 강남신세계점 · 원형 광장 입구','YPBooksRotaryFront'],
   ['centralcity','B1','another-palm-astro/display.blend','어나더팜 · 아톰 에디션','AnotherPalmAstro'],
+  ['centralcity','B1','haz-bakery/display.blend','하츠베이커리 · 샌드베이글과 포장','HazBakeryCounter'],
   ['centralcity','B1','sweet-arabica/entrance.blend','스위트 파크 · %아라비카 입면','ArabicaGangnamFront'],
   ['centralcity','B1','sweet-chefs-stage/counter.blend','스위트 파크 · 셰프스 스테이지와 르솔레이','SweetPark_ChefsStage'],
   ['shinsegae','B1','megabox-central/entrance.blend','메가박스 센트럴 · 부티크 아치 입면','MegaboxBoutiquePublicFront'],
