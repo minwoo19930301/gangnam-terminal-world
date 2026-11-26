@@ -29,3 +29,5 @@ blender -b assets/models/banpo-apartments/banpo-apartments.blend --python-exit-c
 blender --factory-startup -b --python-exit-code 1 \
   -P assets/models/banpo-apartments/build.py -- /path/to/seoul-real-estate-map/public/models
 ```
+
+게임의 실제 보도 시점에서 서울 시각 12시 30분과 0시 30분을 비교했다. 창문 발광만 껐을 때와 비교해 밤 화면 상단에서 달라진 픽셀 수는 반포르엘 4,038개, 반포센트럴자이 8,251개, 신반포4차 6,984개였다. 같은 시점의 낮에는 모두 0개였다. 반포센트럴자이 앞 공공 보도에 서울시 가로수 대장의 대왕참나무 10그루를 반영했다. 줄기 위치는 대장 좌표를 따르고 나무 높이는 약 8m로 표현했다. [게임에서 본 세 단지의 낮과 밤](game-night.jpg) · [가로수 전후](../../../docs/map-audit/banpo-central-xi-street-trees.jpg) · [서울시 자치구 가로수 위치정보](https://data.seoul.go.kr/dataList/OA-23040/S/1/datasetView.do)
