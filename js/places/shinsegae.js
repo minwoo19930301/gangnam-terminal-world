@@ -9148,6 +9148,9 @@ export function build(K) {
     [6.9,85.1,6.9,86.9],[9.6,85.1,9.6,86.9],[6.9,85.1,9.6,85.1]])wall(...p,LV['11F'],LV['11F']+2.7,{mat:0xe7e1d6,thick:.15});
   hq(9.2,11.1,13.1,17.85,LV['11F']+2.7,CEIL,false);hq(...cornerLink,LV['11F']+2.7,CEIL,false);
   hq(...gardenLiftLobby,LV['11F']+2.7,CEIL,false);
+  // This enclosed lift hall, partly outside the dining-wing slab, already
+  // has a soffit. Its covered end sees the same interior light as the doors.
+  K.phys.addCeiling(rect(...gardenLiftLobby),LV['11F']+2.7,{});
   hq(...gardenServiceLink,LV['11F']+2.7,CEIL,false);hq(...gardenServiceEntry,LV['11F']+2.7,CEIL,false);
   zone('S GARDEN 연결통로','11F','전문식당가 · 고객 엘리베이터',gardenLink,LV['11F'],LV['11F']+3.2,3);
 
