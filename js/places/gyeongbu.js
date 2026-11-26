@@ -1,3 +1,4 @@
+import {placePharmacy} from '../../assets/models/gyeongbu-pharmacy/model.js';
 import { placeRooftopDining, patioTables } from '../../assets/models/gyeongbu-rooftop/model.js';
 import { placeTicketOffice } from '../../assets/models/gyeongbu-ticket-office/model.js';
 import { placeDeparturePortal } from '../../assets/models/gyeongbu-boards/model.js';
@@ -1564,6 +1565,7 @@ export function build(K) {
     const utilityPlacements={12:[24.5,10.5],13:[29.5,16.5],14:[43,27],15:[43,36],19:[47,60],20:[37,92],22:[37,104],23:[47,104],24:[37,134]};
     const utilityPlacement=(no,v)=>({from:[10.5,v],to:utilityPlacements[no],sx:[14,15].includes(no)?1:[22,23].includes(no)?8/13:4.5/13,sz:[14,15].includes(no)?1:[22,23].includes(no)?6/7:4.6/7});
     for(const [i,[name,no]] of utilityUnits.entries()){
+      if(no===24)continue;
       const a=37+i*7,b=a+7,v=(a+b)/2;
       placeAssembly(utilityPlacement(no,v),()=>{
         lwall(4,a,17,a,0,3.3,{mat:0xe5dfd2,thick:.12});
@@ -1572,6 +1574,35 @@ export function build(K) {
         lzone(name,'1F',`본관 ${no}호`,4,a,17,b,0,3.4,4);
       });
     }
+    // #24 is the operator's floor-guide index. The Naver pin is ~20 m from this diagram registration.
+    // Retain its relationship to the hall's modelled Starbucks and keep both ends of the passage open.
+    const pharmacyU=39.25,pharmacyV=134;
+    const border={tex:'gb_terrazzo',color:0x72716e,gloss:.32};
+    K.hpoly(border,rect(34.76,130.76,40.54,131.70),.047);
+    K.hpoly(border,rect(39.25,131.70,40.54,136.31),.047);
+    K.hpoly({tex:'tile',color:0xe4e2d7,gloss:.27},rect(39.24,133.67,40.40,135.34),.049);
+    const pharmacyFoot=(x,d,w,depth,h,y=0)=>lbox(pharmacyU+d,pharmacyV-x,y,depth,w,h,0,{skip:['top','bottom','n','s','e','w']});
+    const pharmacyShell=(x,d,w,depth,h,y=0)=>lbox(pharmacyU+d,pharmacyV-x,y,depth,w,h,0xebe7dc);
+    pharmacyShell(0,-4.47,4.58,.085,2.74);
+    pharmacyShell(-2.26,-2.26,.07,4.29,2.74);
+    pharmacyShell(-1.83,-.32,.91,.19,2.74);
+    pharmacyShell(.99,-.19,1.27,.15,2.74);
+    pharmacyShell(1.96,-.38,.53,.32,2.74);
+    pharmacyShell(0,-.19,4.52,.10,.404,2.76);
+    pharmacyFoot(2.25,-2.46,.08,3.73,2.40);
+    pharmacyFoot(.003,-4.05,3.93,.48,2.21);
+    pharmacyFoot(1.84,-2.56,.48,3.20,2.18);
+    pharmacyFoot(-.19,-2.87,3.04,.64,.90);
+    pharmacyFoot(-1.61,.41,.48,.40,.80);
+    pharmacyFoot(1.29,.44,1.05,.43,1.40);pharmacyFoot(1.99,.27,.39,.43,.60);
+    pharmacyFoot(.73,.21,.54,.25,1.51);
+    const [pharmacyX,pharmacyZ]=W(pharmacyU,pharmacyV);
+    placePharmacy(K,pharmacyX,pharmacyZ,ROT+PI/2);
+    lsign('✚ 药店',pharmacyU+.038,pharmacyV-.82,1.16,.54,.13,'+u',{bg:null,fg:'#26332f',padding:0,pxPerM:210});
+    lsign(['덴탈마스크','일회용마스크','국내산마스크'],pharmacyU+.11,pharmacyV-1.25,.953,.35,.14,'+u',{bg:null,fg:'#a94441',padding:0,pxPerM:270});
+    lperson(pharmacyU-1.78,pharmacyV-.73,0,{rotY:ROT-PI/2,shirt:0x484b49});
+    lzone('고속터미널약국','1F','경부선 본관 · 약국',pharmacyU-4.48,pharmacyV-2.31,pharmacyU+.81,pharmacyV+2.31,0,3.40,7);
+    lspawn('1층 고속터미널약국',pharmacyU+1.85,pharmacyV+.57,0,-1,0);
     const ur=[34,6,66,23],stairHole=rect(35.5,8,40.5,20);
     for(const y of [0,6]){
       for(const [u0,v0,u1,v1] of [[34,6,66,6],[34,6,34,23]])lwall(u0,v0,u1,v1,y,y+4.7,{mat:0xf0efeb,thick:.15});
@@ -1598,9 +1629,10 @@ export function build(K) {
     }
     ldetail({floor:'1F',y0:0,y1:6,poly:WEST,name:'공식 본관 매장 · 편의시설'},()=>{
       for(const [i,[name,no]] of utilityUnits.entries()){
+        if(no===24)continue;
         const a=37+i*7,v=a+3.5;
         placeAssembly(utilityPlacement(no,v),()=>{
-        lbox(17.06,v,2.6,.18,6.9,.65,name==='고속터미널약국'?0x33775f:0x48423a,{solid:false});
+        lbox(17.06,v,2.6,.18,6.9,.65,0x48423a,{solid:false});
         lsign(name,17.17,v,2.94,6.2,.42,'+u',{bg:null,fg:'#fff'});
         lsign(`본관 ${no}호`,17.18,a+.65,2.54,.9,.16,'+u',{bg:'#eeeadd',fg:'#514d44'});
         lbox(11,v,0,.85,3.2,.98,0xd5c6ac);lbox(11,v,1,.96,3.25,.05,0x444e4b,{solid:false});
@@ -1616,7 +1648,6 @@ export function build(K) {
             lbox(5.56,a+.85+j*1.1,.37+k*.65,.025,.12,.065,0x3e4645,{solid:false});
           }
         }
-        if(name==='고속터미널약국')lsign('약',17.21,v,1.65,1.1,1.1,'+u',{bg:'#f7f5e9',fg:'#278164'});
         lbox(10,v,3.19,.6,4,.04,'emit',{solid:false});
         });
       }
