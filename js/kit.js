@@ -490,6 +490,11 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     }
     const mv = o.move ? [ux * o.move, uz * o.move] : null;
     phys.addRamp(ax, az, bx, bz, w / 2, ya, yb, { move: mv, tag: current });
+    if (o.steps && o.blenderTreads && o.move) {
+      // Bespoke balustrades already include their own handrails and truss.
+      const speed = o.move * (Math.sign(yb-ya) || 1);
+      renderEscalatorParts(ax, az, bx, bz, w, ya, yb, speed, o.mat, false);
+    }
   }
   const fixedEscalators = [], indoorEscalators = [], indoorStock = [];
   const drawEscalator = createEscalatorRenderer(THREE, (mesh,moving) => {
@@ -501,17 +506,20 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
       indoorEscalators.push({mesh,moving,bounds:null});
     }
   }, onFrame);
+  function renderEscalatorParts(ax, az, bx, bz, w, ya, yb, speed, mat, withBalustrade) {
+    const a = [ax, ya + terrainAt(anchorHeight,ax,az), az], b = [bx, yb + terrainAt(anchorHeight,bx,bz), bz];
+    const tread = mat != null ? spec(mat) : null;
+    const map = tread && tread.key !== 'vc' ? matFor(tread.key).map : null;
+    const tint = typeof mat === 'number' || mat?.color != null ? tread.c : null;
+    const steps = Math.max(2, Math.round(Math.abs(yb-ya)/.17));
+    drawEscalator(ya <= yb ? a : b, ya <= yb ? b : a, w, steps, speed, tint, map, withBalustrade);
+  }
   function escalator(ax, az, bx, bz, o = {}) {
     const w = o.w ?? 1.1, ya = o.ya ?? 0, yb = o.yb ?? 5;
     const L = Math.hypot(bx - ax, bz - az), ux = (bx - ax) / L, uz = (bz - az) / L;
     ramp(ax, az, bx, bz, {w, ya, yb, steps:true, blenderTreads:true, sideMat:o.sideMat ?? 0xc7ccd1, rails:false});
-    const a = [ax, ya + terrainAt(anchorHeight,ax,az), az], b = [bx, yb + terrainAt(anchorHeight,bx,bz), bz];
-    const tread = o.mat != null ? spec(o.mat) : null;
-    const map = tread && tread.key !== 'vc' ? matFor(tread.key).map : null;
-    const tint = typeof o.mat === 'number' || o.mat?.color != null ? tread.c : null;
-    const steps = Math.max(2, Math.round(Math.abs(yb-ya)/.17));
     const speed = (o.dir === 'down' ? -1 : 1) * (o.speed ?? .6);
-    drawEscalator(ya <= yb ? a : b, ya <= yb ? b : a, w, steps, speed, tint, map);
+    renderEscalatorParts(ax, az, bx, bz, w, ya, yb, speed, o.mat, true);
     const nx = -uz * (w / 2 + 0.08), nz = ux * (w / 2 + 0.08);
     const gl = spec('glass');
     for (const s of [1, -1]) {

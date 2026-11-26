@@ -65,7 +65,7 @@ export function createEscalatorRenderer(T, addMesh, onFrame) {
     addMesh(mesh,name==='Tread');
   }
 
-  return function flight(low, high, width, steps, speed, color, map) {
+  return function flight(low, high, width, steps, speed, color, map, withBalustrade) {
     const [x,y,z] = low;
     const length = Math.hypot(high[0]-x, high[2]-z), rise = high[1]-y;
     const ux = (high[0]-x)/length, uz = (high[2]-z)/length;
@@ -93,6 +93,7 @@ export function createEscalatorRenderer(T, addMesh, onFrame) {
     for (let i=-1; i<steps; i++) chain.push(pose(0,i*run,Math.max(0,i)*stepHeight,width,verticalScale,run));
     batch('Tread', material, chain);
     batch('Comb', trim, [pose(0,0,0,width,1,1), pose(0,length,rise,-width,1,-1)]);
+    if (!withBalustrade) return;
     const skirts = [], returns = [];
     for (const side of [-1,1]) {
       const offset = side*(width/2+.08);

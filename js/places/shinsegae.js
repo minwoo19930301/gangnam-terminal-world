@@ -7792,7 +7792,7 @@ export function build(K) {
   // passage passes under a flight, including the passage beside Hermès.
   function shallowEscalator(ax,az,bx,bz,ya,yb,w,dir,glazed=true){
     const L=Math.hypot(bx-ax,bz-az),ux=(bx-ax)/L,uz=(bz-az)/L;
-    K.ramp(ax,az,bx,bz,{ya,yb,w,steps:true,rails:false,sideMat:'ssg_annex_escalator_clear',mat:0x5d6166,move:(dir==='down'?-.6:.6)});
+    K.ramp(ax,az,bx,bz,{ya,yb,w,steps:true,blenderTreads:true,rails:false,sideMat:'ssg_annex_escalator_clear',mat:0x5d6166,move:(dir==='down'?-.6:.6)});
     const nx=-uz*(w/2+.08),nz=ux*(w/2+.08);
     for(const side of [-1,1]){
       const ox=nx*side,oz=nz*side;
