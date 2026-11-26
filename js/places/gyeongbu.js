@@ -11,6 +11,7 @@ import { placeWarmer } from '../../assets/models/gyeongbu-pretzels/model.js';
 import { placeUpperShowroom } from '../../assets/models/gyeongbu-apparel/model.js';
 import {placeFixtureDisplay} from '../../assets/models/gyeongbu-fixtures/model.js';
 import {placeChildrensAisle} from '../../assets/models/gyeongbu-childrens-aisle/model.js';
+import {placeYarnAndDresses} from '../../assets/models/gyeongbu-yarn-and-dresses/model.js';
 import {placeSuitingAisle} from '../../assets/models/gyeongbu-suiting-aisle/model.js';
 import {placeWomensAisle} from '../../assets/models/gyeongbu-womens-aisle/model.js';
 import {placeHanbokShowroom} from '../../assets/models/gyeongbu-hanbok/model.js';
@@ -2461,6 +2462,7 @@ export function build(K) {
     const centers = [100.5, 109.5, 118.5, 127.5];
     const localAisle=wholesaleAisles[key];
     const hanbokAt=(u,v)=>key==='Curtains'&&u===wings[0][0]&&v===centers[2];
+    const yarnAt=(u,v)=>key==='Children'&&u===wings[0][0]&&v===centers[2];
     if(localAisle){
       const hidden={skip:['top','bottom','n','s','e','w']};
       for(const [u,v,w,d,h] of localAisle.fixtures)lbox(u,v,floorY,w,d,h,0,hidden);
@@ -2480,6 +2482,27 @@ export function build(K) {
         floorY, d, w, h, 0, {skip:['top','bottom','n','s','e','w']});
       fixture(0,-1.3,5.2,.12,2.96);
       for (const a of [-2.54,2.54]) fixture(a,-.05,.12,2.6,2.96);
+      if(yarnAt(u,v)){
+        fixture(1.26,-.74,2.18,.54,2.28);
+        fixture(1.24,.62,2.03,.65,1.56);
+        fixture(-1.29,-.51,2.22,.53,2.43);
+        fixture(-1.43,.65,1.94,.33,.87);
+        fixture(-.02,-.09,.36,.98,2.17);
+        const [x,z]=W(u,v);
+        const sections=[
+          ['booth',u-1.36,v-2.58,u+1.27,v+2.58],
+          ['yarn',u-1.06,v-2.39,u+1.08,v-.12],
+          ['wrap',u+.33,v-2.24,u+.89,v-.21],
+          ['dresses',u-.89,v-.22,u+.88,v+2.45]
+        ];
+        for(const [part,a,b,c,d] of sections){
+          ldetail({floor,y0:floorY,y1:floorY+2.94,poly:rect(a,b,c,d),name:'6층 면사·울사와 드레스 · '+part},()=>{
+            placeYarnAndDresses(K,x,floorY,z,ROT+PI/2,part);
+          });
+        }
+        lzone('면사 · 울사와 아동 드레스',floor,'의류 도매상가',u-1.3,v-2.55,u+1.25,v+2.55,floorY,floorY+2.88,4);
+        continue;
+      }
       if(hanbokAt(u,v)){
         // The public fitting display has two individual forms and a counter at
         // its threshold. Its open middle still leads into the sample bay.
@@ -2519,7 +2542,7 @@ export function build(K) {
     ldetail({floor, y0:floorY, y1:floorY+3.2, poly:rect(32,97,44,131), name:label}, () => {
       const placements=[];
       for (const [u,side] of wings) for (const v of centers) {
-        if((localAisle&&v===centers[1])||hanbokAt(u,v))continue;
+        if((localAisle&&v===centers[1])||hanbokAt(u,v)||yarnAt(u,v))continue;
         if(u!==sampleU || v!==sampleV)placements.push([u,v,floorY,side*PI/2]);
         const curtainSign=key==='Curtains' && u===sampleU && v===sampleV;
         lsign(curtainSign?'R A I N B O W  무지개장식':label,u+side*1.353,v,floorY+2.83,3.7,.26,side>0?'+u':'-u',
