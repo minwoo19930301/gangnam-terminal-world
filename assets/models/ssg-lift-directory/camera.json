@@ -1,0 +1,11 @@
+{
+  "floor": "8F",
+  "x": -32.37409,
+  "z": 21.14732,
+  "yaw": -79.26665,
+  "pitch": 4,
+  "meshName": "본관 8층 · 백화점 층별 안내",
+  "sourceBlend": "directory.blend",
+  "sourceCollection": "GangnamMainLiftDirectory",
+  "nativeLabel": "본관 고객 엘리베이터 층별 안내와 두 단 문틀"
+}

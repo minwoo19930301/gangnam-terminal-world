@@ -31,6 +31,7 @@ import {relief} from '../../../js/banpo_relief.js';
 const sources = [
   ['centralcity','지상','central-plaza-canopy/canopy.blend','센트럴시티 조각 광장 · 열린 캐노피와 의자','CentralCityCourtCanopy'],
   ['centralcity','지상','central-plaza-seatwall/seatwall.blend','센트럴시티 정문 · 동측 석재 앉음벽과 생울타리','CentralCityEastSeatWall'],
+  ['streets','지상','sinbanpo-crossing/signal.blend','신반포로 · 황색 뒷덮개 보행등','SinbanpoPedestrianHead'],
   ['streets','지상','sinbanpo-public-oaks/pin-oak.blend','반포센트럴자이 앞 신반포로 · 대왕참나무','SinbanpoPublicPinOak'],
   ...[['서쪽 녹청 구체','CentralCityPatinatedSphere'],['가운데 갈색 구체','CentralCityBronzeSphere'],['동쪽 잔물결 구체','CentralCityRippledSphere']]
     .map(([label,collection])=>['centralcity','지상','central-plaza-spheres/spheres.blend','센트럴시티 광장 · '+label,collection]),
@@ -282,6 +283,7 @@ const sources = [
   ['shinsegae','9F','hypnos-showroom/hypnos.blend','히프노스 침대 · 원거리','히프노스 · 신세계 강남 9층'],
   ['shinsegae','6F','architectural-retail/retail-architecture.blend','CaseGallery','CaseGallery'],
   ['shinsegae','5F','architectural-retail/retail-architecture.blend','RectoWall','RectoWall'],
+  ['centralcity','1F','open-stage-media/cabinet.blend','오픈 스테이지 · 미디어 기둥 외장','오픈 스테이지 · 미디어 기둥 외장'],
   ['centralcity','1F','open-stage-coffer/coffer.blend','오픈 스테이지 · 코퍼 몰딩','오픈 스테이지 · 코퍼 몰딩'],
   ['centralcity','1F','open-stage-lounge/lounge.blend','오픈 스테이지 · 흰 소파와 낮은 테이블','오픈 스테이지 · 흰 소파와 낮은 테이블'],
   ['centralcity','1F','famille-atrium/atrium-fittings.blend','광장 · 고리형 청동 조명','광장 벽등 · 고리와 유백 갓'],

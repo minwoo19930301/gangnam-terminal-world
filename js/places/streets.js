@@ -1,3 +1,5 @@
+import {placePedestrianHead} from '../../assets/models/sinbanpo-crossing/model.js';
+import {crossingWay as flyoverCrossingWay,carriageways as flyoverRoads,markingWidth as flyoverWidth,markingFaces as flyoverMarkings,landings as flyoverLandings} from '../../assets/models/sinbanpo-crossing/layout.js';
 import {placeSingleDetail} from '../../assets/models/interior-architecture/single-detail.js';
 import {crossingWay as banpoStopWay, markingFaces as banpoStopMarkings, markingColor as banpoStopPaint} from '../../assets/models/banpo-stop-crossing/layout.js';
 import {diningWallOpening} from './_familleUpperPlan.js';
@@ -248,6 +250,9 @@ export function build(K) {
   const laneCount=r=>r.lanes||Math.max(r.oneway?1:2,Math.min(r.oneway?4:6,Math.round(r.width/3.4/(!r.oneway?2:1))*(!r.oneway?2:1)));
   const roadNetwork=K.osm.roads.filter(r=>['primary','secondary','tertiary','residential','unclassified','service','busway'].includes(r.hw)&&!r.bridge&&!r.tunnel&&r.layer<=0&&!flyIds.has(r.id)&&!tunnelIds.has(r.id));
   const owned=new Set(meta.claimRoads),crossings=roads.filter(r=>r.footway==='crossing');
+  const flyoverCrossing=byId.get(flyoverCrossingWay);
+  const flyoverEnds=flyoverCrossing&&[flyoverCrossing.pts[0],flyoverCrossing.pts.at(-1)];
+  const flyoverLandingPads=flyoverEnds?flyoverLandings(...flyoverEnds):[];
   const surveyedCrossings=K.osm.roads.filter(r=>r.footway==='crossing');
   const junctions=[],approaches=[],crosswalks=[],paintMasks=[];
   // OSM splits a junction into several ways and several signal nodes. Treat
@@ -307,7 +312,9 @@ export function build(K) {
         // form one exclusion for every kind of longitudinal paint.
         const end=[arm.x+arm.u*5.45,arm.z+arm.v*5.45],start=[arm.x-arm.u*2.5,arm.z-arm.v*2.5];
         paintMasks.push(stripPoly(start,end,r.width+.3));
-        crosswalks.push({a:[arm.x+walkX*span/2,arm.z+walkZ*span/2],b:[arm.x-walkX*span/2,arm.z-walkZ*span/2],w:5,arm});
+        // The two carriageways share one continuous, marked public crossing.
+        const sharesFlyoverCrossing=flyoverCrossing&&flyoverRoads.includes(r.id)&&nearest(arm.x,arm.z,[flyoverCrossing]).d<10;
+        if(!sharesFlyoverCrossing)crosswalks.push({a:[arm.x+walkX*span/2,arm.z+walkZ*span/2],b:[arm.x-walkX*span/2,arm.z-walkZ*span/2],w:5,arm});
         if(arm.incoming)approaches.push(arm);
       }
     }
@@ -326,7 +333,8 @@ export function build(K) {
     // A module-owned zebra may cross a city-owned approach (Samho south).
     // The city reuses this claimed way, so this module must still paint it.
     const shared=junctions.some(j=>j.arms.some(a=>!a.owned&&Math.hypot(a.x-x,a.z-z)<14));
-    addCrossing(r.pts,r.width,shared,r.id);
+    const flyover=r.id===flyoverCrossingWay;
+    addCrossing(r.pts,flyover?flyoverWidth:r.width,shared||flyover,r.id);
   }
   for(const n of K.osm.nodes.filter(n=>n.k==='crossing')){
     const q=nearest(n.x,n.z);if(!q.r||q.d>q.r.width/2||!major(q.r))continue;
@@ -591,6 +599,10 @@ export function build(K) {
   K.hpoly({tex:'grass',color:0x78944d},[[467,55],[471.8,54],[474,57],[472.5,59],[468.5,57]],.185);
   for(const [x,z] of [[469,55.5],[471.5,56],[472,58]])K.dome({x,z,y:.18,rx:.65,ry:.45,rz:.6,seg:8,rings:4,mat:0x56753e});
   flat([469.8,53],[472.5,53],.6,.19,'streets-tactile');
+  for(const {curb,warning} of flyoverLandingPads){
+    K.slab(curb,WALK,{mat:'streets-pavers',thick:.15,ceil:false});
+    K.hpoly('streets-tactile',warning,WALK+.006);
+  }
   const pavement=(x,z)=>!(x>346&&x<487&&z>-49&&z<86&&
     forkLanes.some(r=>nearest(x,z,[r]).d<r.width/2+.3)) && (medianPlatforms.some(p=>K.pointInPoly(x,z,p))||roadNetwork.every(r=>nearest(x,z,[r]).d>r.width/2+.3));
   function curbSite(x,z,dx,dz){for(let t=0;t<=32;t+=.5){const xx=x+dx*t,zz=z+dz*t;if(pavement(xx,zz)&&!inBuilding(xx,zz)&&!inCut(xx,zz))return [xx,zz];}return null;}
@@ -651,7 +663,13 @@ export function build(K) {
     const p=path([a,b]);
     if(wayId===banpoStopWay){
       for(const face of banpoStopMarkings(a,b))K.hpoly(banpoStopPaint,face,ROAD+.034);
+    }else if(wayId===flyoverCrossingWay){
+      for(const face of flyoverMarkings(a,b))K.hpoly(C.white,face,ROAD+.034);
     }else for(let s=.24;s<p.L-.2;s+=.96){const q=at(p,s),r=at(p,Math.min(p.L-.15,s+.48));flat([q.x,q.z],[r.x,r.z],w,ROAD+.034,C.white);}
+    if(wayId===flyoverCrossingWay){
+      for(const landing of flyoverLandingPads)placePedestrianHead(K,landing,WALK);
+      return;
+    }
     const signalised = hasPedestrianSignal(a, b);
     for(const [end,sgn] of [[0,-1],[p.L,1]]){
       const q=at(p,end),x=q.x+q.u*sgn*.6,z=q.z+q.v*sgn*.6;
@@ -743,12 +761,17 @@ export function build(K) {
     }
     pts.push(end);return path(pts);
   }
-  function pathPaint(p,off,width,color,dash=0,gap=0,y=ROAD+.031){
+  function pathPaint(p,off,width,color,dash=0,gap=0,y=ROAD+.031,mask=null){
     for(let s=0;s<p.L;s+=dash?dash+gap:p.L){
       const end=Math.min(p.L,s+(dash||p.L));
       for(let t=s;t<end-.001;){
         const next=p.cum.find(v=>v>t+.001),e=Math.min(end,next??end),a=at(p,t,off),b=at(p,e,off);
-        flat([a.x,a.z],[b.x,b.z],width,y,color);t=e;
+        if(mask && Math.max(a.x,b.x)+width>=mask.bb[0] && Math.max(a.z,b.z)+width>=mask.bb[1] &&
+           Math.min(a.x,b.x)-width<=mask.bb[2] && Math.min(a.z,b.z)-width<=mask.bb[3]){
+          const poly=stripPoly([a.x,a.z],[b.x,b.z],width);
+          for(const piece of clipped(poly,[mask.poly]))K.hpoly(color,piece,y);
+        }else flat([a.x,a.z],[b.x,b.z],width,y,color);
+        t=e;
       }
     }
   }
@@ -763,9 +786,12 @@ export function build(K) {
       pathPaint(path(approach),.65,.34,0xcf829e,0,0,ROAD+.034);
     }
   }
+  const flyoverStrip=flyoverEnds&&stripPoly(...flyoverEnds,flyoverWidth+.12);
+  const flyoverPaintMask=flyoverStrip&&{poly:flyoverStrip,bb:K.polyBBox(flyoverStrip)};
   function guideCurve(a,b,color,left=false){
     const p=movementPath(a,b,left),paired=a.j.name==='고속터미널교차로';
-    for(const off of paired?[-.8,.8]:[0])pathPaint(p,off,.45,color);
+    const mask=a.j.arms.some(arm=>flyoverRoads.includes(arm.r.id))?flyoverPaintMask:null;
+    for(const off of paired?[-.8,.8]:[0])pathPaint(p,off,.45,color,0,0,ROAD+.031,mask);
   }
   for(const j of junctions.filter(j=>j.arms.length>=4&&j.hu+j.hv>31)){
     const incoming=j.arms.filter(a=>a.owned&&a.incoming),paired=incoming.filter(a=>a.r.oneway);
