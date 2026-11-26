@@ -985,7 +985,8 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
   // K.detail({floor, y0, y1, poly|rect}, fn): fn builds furnishing detail (stock, furniture, fixtures, signage,
   // people) for one floor area and runs only when the camera comes near — floors stay light until visited.
   // Structure that must exist before you arrive (slabs, walls, stairs, escalators, elevators, zones, spawns,
-  // junctions) belongs in the normal build, not in a detail group.
+  // junctions) belongs in the normal build, not in a detail group. An optional
+  // visibleFrom(x,y,z) tests a solid room partition in the same terrain-relative frame as y0/y1.
   const details = []; const detailErrors = [];
   function detail(o, fn) {
     let poly = o.poly; if (!poly && o.rect) { const [x0, z0, x1, z1] = o.rect; poly = [[x0, z0], [x1, z0], [x1, z1], [x0, z1]]; }
@@ -995,7 +996,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
       const draw = fn;
       fn = kit => withTerrainSurface(datum,() => draw(kit));
     }
-    details.push({ poly, owner: current, meta: perPlace[current], floor: o.floor || '', y0: o.y0 ?? -1e9, y1: o.y1 ?? 1e9, bb, fn, built: false, name: o.name || '' });
+    details.push({ poly, owner: current, meta: perPlace[current], floor: o.floor || '', y0: o.y0 ?? -1e9, y1: o.y1 ?? 1e9, bb, fn, built: false, name: o.name || '', visibleFrom: o.visibleFrom });
   }
   function buildDetail(d) {
     if (d.built) return []; d.built = true;
@@ -1024,8 +1025,8 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
       // Floors on either side of a hotel atrium remain visible through its void. A solid
       // intervening slab can occlude furniture several storeys below or above the eye.
       const dx = Math.max(0, d.bb[0] - x, x - d.bb[2]), dz = Math.max(0, d.bb[1] - z, z - d.bb[3]);
-      let hidden = false;
-      if (dx === 0 && dz === 0) {
+      let hidden = !!d.visibleFrom && !d.visibleFrom(x,y,z);
+      if (!hidden && dx === 0 && dz === 0) {
         if (y > d.y1 + 10) hidden = phys.ceilingAbove(x, z, d.y1 + .1, y) < Infinity;
         else if (y < d.y0 - 10) hidden = phys.ceilingAbove(x, z, y, d.y0 - .1) < Infinity;
       }
@@ -1078,7 +1079,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
         const dx = Math.max(0, d.bb[0]-x, x-d.bb[2]), dz = Math.max(0, d.bb[1]-z, z-d.bb[3]);
         const vertical = Math.max(0, d.y0-y, y-d.y1), distance = dx*dx + dz*dz;
         if (distance > reach*reach || vertical > 8) continue;
-        if (camera && !visibleDetail(d,x,y,z,camera,distance,vertical)) continue;
+        if (camera && ((d.visibleFrom && !d.visibleFrom(x,y,z)) || !visibleDetail(d,x,y,z,camera,distance,vertical))) continue;
         waiting.push({d,vertical,distance});
       }
       // Pop from the end while preserving registration order for equal priorities.

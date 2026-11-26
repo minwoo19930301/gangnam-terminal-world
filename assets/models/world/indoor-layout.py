@@ -67,6 +67,8 @@ def source_collections(model_dir, rows):
 
 
 def source_origin(collection, fallback):
+    if 'display_offset_x' in collection:
+        return Vector((collection['display_offset_x'],collection['display_offset_y'],0))
     return Vector(collection.get('preview_origin',collection.get('origin',fallback)))
 
 

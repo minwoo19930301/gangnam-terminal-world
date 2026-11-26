@@ -1,20 +1,11 @@
 import { placeHessed } from '../../assets/models/gotomall-hessed/place.js';
-import { loadArchitecture, placeArchitecture } from '../../assets/models/interior-architecture/model.js';
-import { loadFixtureScene, mountFixture } from '../../assets/models/onebailey/load.js';
-import { shopInteriors } from '../../assets/models/gotomall/shop-interiors.js';
-
-const westTextileFixtures=await loadFixtureScene(new URL('../../assets/models/onebailey/west.glb',import.meta.url));
+import { placeShopStock, fixtureSilhouette, streamAislePart } from '../../assets/models/gotomall/stock.js';
 
 // 강남터미널 지하도상가 (GOTO MALL 고투몰) — B1 under 신반포로, on the real OSM polygon 1354860678.
 // Layout: two parallel corridors, four shop lines A (north outer) · B / C (central back-to-back) · D (south outer),
 // 서편 푸드코트 (west bulge under the 고가), 3호선 개찰구 홀 (G7, well W3), 9호선 개찰구 홀 (well W9) with the
 // planted rest area, 동편 푸드코트 at the 잠원로 end, street gates (subway exits 1·8·8-1·8-2 + GOTO MALL G-gates).
 // All layout is done in a local frame: u = along the mall (east), v = across (south). See research json for sources.
-const [shoppingCeiling, ribbonHat] = await Promise.all([
-  loadArchitecture('mall-ceiling.glb'),
-  loadArchitecture('../interior-finish/millinery-hat.glb'),
-]);
-
 export const meta = {
   id: 'gotomall',
   name: '강남터미널 지하도상가 (고투몰)',
@@ -194,8 +185,9 @@ export function build(K) {
   const rnd = K.rand(20261106);
   const pick = (pool, r) => { let t = 0; for (const [, w] of pool) t += w; let x = r * t; for (const [k, w] of pool) { x -= w; if (x <= 0) return k; } return pool[0][0]; };
 
-  // Furnishings are queued by contiguous large B1 rooms; structure and gameplay are built immediately.
+  // Keep structure and gameplay immediate. Shared hall details use rooms; shop stock uses aisle groups.
   // Each callback has a stable local seed so the arrival order never changes shop stock or crowds.
+  const shopRows = new Map(), centralSpines = [];
   const detailRooms = [
     [-410, -320.8, '서편 푸드코트'], [-320.8, -220, 'WEST ZONE 서편 통로'],
     [-220, -102.2, 'WEST ZONE 통로'], [-102.2, -10.07, '3호선 홀·중앙 상점'],
@@ -208,6 +200,56 @@ export function build(K) {
     if (!room) throw new Error('고투몰 detail outside room: ' + u);
     room.jobs.push(fn);
   };
+
+  // Batch neighbouring stock and shoppers along the same aisle. Keep the two
+  // sides of the central island independent: its wall can hide one whole aisle.
+  function aisleGroup(middle, side) {
+    const index = Math.floor((middle - GRID0) / (2 * GRID));
+    const key = (side < 0 ? '북' : '남') + ' ' + index;
+    let group = shopRows.get(key);
+    if (!group) {
+      group = { name: '고투몰 진열 구간 ' + key, side, u0: Infinity, u1: -Infinity,
+        v0: Infinity, v1: -Infinity, front0: Infinity, front1: -Infinity, jobs: [] };
+      shopRows.set(key, group);
+    }
+    return group;
+  }
+
+  function furnishShop(loc, width, depth, job) {
+    const [middle] = Lp(loc, width / 2, 0);
+    if (!['A', 'B', 'C', 'D'].includes(loc.line)) { furnish(middle, job); return; }
+    const row = aisleGroup(middle, ['A', 'B'].includes(loc.line) ? -1 : 1);
+    // Stores have solid side partitions and back walls. Other shoppers can see
+    // their stock through the open frontage, including the racks just outside it.
+    for (const a of [-.24, width + .24]) {
+      const [u, front] = Lp(loc, a, 0);
+      const [, back] = Lp(loc, a, depth + .22), [, lip] = Lp(loc, a, -.7);
+      row.u0 = Math.min(row.u0, u); row.u1 = Math.max(row.u1, u);
+      row.v0 = Math.min(row.v0, back, lip); row.v1 = Math.max(row.v1, back, lip);
+      row.front0 = Math.min(row.front0, front - .7);
+      row.front1 = Math.max(row.front1, front + .7);
+    }
+    row.jobs.push(job);
+  }
+
+  function shopVisible(row, x, y, z) {
+    if (y < FL - .6 || y > CY + .6) return true;
+    const [u, v] = UV(x, z);
+    for (const wall of centralSpines) {
+      if (row.side < 0 ? v <= wall.hi + .15 || row.front1 >= wall.lo :
+                         v >= wall.lo - .15 || row.front0 <= wall.hi) continue;
+      // Intersect rays to the four edges of the visible frontage with the
+      // full range of offsets along the contiguous wall. A partially visible
+      // group must survive, including when looking diagonally into a crossing.
+      const t0 = (wall.lo-v)/(row.front0-v), t1 = (wall.hi-v)/(row.front0-v);
+      const t2 = (wall.lo-v)/(row.front1-v), t3 = (wall.hi-v)/(row.front1-v);
+      const a = Math.min(t0,t1,t2,t3), b = Math.max(t0,t1,t2,t3);
+      const left = Math.min(u + (row.u0-u)*a, u + (row.u0-u)*b);
+      const right = Math.max(u + (row.u1-u)*a, u + (row.u1-u)*b);
+      if (left > wall.a + .25 && right < wall.b - .25) return false;
+    }
+    return true;
+  }
 
   // ---------- geometry helpers ----------
   const bx = (u0, u1, v0, v1, y, h, mat, o = {}) => K.box({ x: P((u0 + u1) / 2, (v0 + v1) / 2)[0], z: P((u0 + u1) / 2, (v0 + v1) / 2)[1], y, h, w: Math.abs(u1 - u0), d: Math.abs(v1 - v0), rotY: ROT, mat, skip: o.skip ?? ['bottom'], ...o });
@@ -722,20 +764,18 @@ export function build(K) {
   function flushHats() {
     if (!hats.length) return;
     const pose = new K.THREE.Object3D(), tint = new K.THREE.Color();
-    for (const part of ribbonHat) {
-      const batch = new K.THREE.InstancedMesh(part.geometry, hatMaterial, hats.length);
-      batch.name = '고투몰 리본 모자';
-      hats.forEach((hat, i) => {
-        pose.position.set(hat.x, hat.y, hat.z);
-        pose.rotation.y = hat.rotation;
-        pose.scale.set(hat.width, hat.height, hat.width);
-        pose.updateMatrix();
-        batch.setMatrixAt(i, pose.matrix);
-        batch.setColorAt(i, tint.setHex(hat.color));
-      });
-      batch.computeBoundingSphere();
-      K.addMesh(batch);
-    }
+    const batch = new K.THREE.InstancedMesh(fixtureSilhouette(K.THREE,'hat'),hatMaterial,hats.length);
+    batch.name = '고투몰 리본 모자';
+    hats.forEach((hat, i) => {
+      pose.position.set(hat.x,hat.y,hat.z);
+      pose.rotation.y = hat.rotation;
+      pose.scale.set(hat.width,hat.height,hat.width);
+      pose.updateMatrix();
+      batch.setMatrixAt(i,pose.matrix);
+      batch.setColorAt(i,tint.setHex(hat.color));
+    });
+    streamAislePart(batch,'../interior-finish/millinery-hat.glb','Surface');
+    K.addMesh(batch);
     hats.length = 0;
   }
   function shelfStock(S, W, D, kind) {
@@ -1262,7 +1302,7 @@ export function build(K) {
     if (info.specialty === 'scarves' || info.specialty === 'quilts') {
       const key = info.specialty === 'scarves' ? 'Emet' : 'AnHouse';
       const [x,z] = P(...Lp(loc,W/2,.04));
-      mountFixture(K,westTextileFixtures,key,[x,FL+.014,z],FACE[outFace(loc)],[(W-.16)/3.6,1,(D-.10)/3.0]);
+      placeShopStock(K,key,[x,FL+.014,z],FACE[outFace(loc)],[(W-.16)/3.6,1,(D-.10)/3.0]);
       for (const [a,b] of [[.035,.27],[.73,.965]]) lbox(loc,W*a,W*b,.065*D,.34*D,FL,.74,0xffffff,
         {skip:['top','bottom','n','s','e','w']});
       const leftEdge=loc.fr.dv>0?W-.25:.25;
@@ -1270,21 +1310,9 @@ export function build(K) {
         {bg:info.bg,fg:info.fg,pxPerM:180,box:.045});
       return;
     }
-    const model = shopInteriors[info.specialty];
     const sx = (W - .22) / 3.6, sz = (D - .15) / 3.0;
-    const points = model.cm.map(([a, h, depth]) => {
-      const [x,z] = P(...Lp(loc, W / 2 + a * sx / 100, .045 + depth * sz / 100));
-      return [x, FL + .02 + h / 100, z];
-    });
-    const edge = new K.THREE.Vector3(), normal = edge.clone(), start = edge.clone();
-    for (const [material, a, b, c, d = c] of model.faces) {
-      const corners = loc.fr.dv > 0 ? [points[a],points[b],points[c],points[d]] :
-        [points[a],points[d],points[c],points[b]];
-      start.fromArray(points[a]); edge.fromArray(points[b]).sub(start);
-      normal.fromArray(points[c]).sub(start); edge.cross(normal).normalize();
-      if (loc.fr.dv < 0) edge.negate();
-      K.quad(model.colors[material],corners,edge.toArray());
-    }
+    const [x,z] = P(...Lp(loc,W/2,.045));
+    placeShopStock(K,info.specialty,[x,FL+.02,z],ROT,[sx,1,sz*loc.fr.dv]);
     // The Blender bays have islands against the flanks and a clear customer aisle.
     const islands = info.specialty === 'tarot' ? [[-1.57,-.26,.81,2.46],[.94,1.6,1.55,2.29]] :
       [[-1.54,-.69,.41,1.12],[.69,1.54,.43,1.19]];
@@ -1323,7 +1351,7 @@ export function build(K) {
     lquadV(loc, 0.02, W - 0.02, 0, shopY, AY + 0.04, 'gt_shop_wall');
     // glass shopfront (cosmetics etc.)
     if (info.glass) { const p = Lp(loc, 0.05, 0.05), q = Lp(loc, W - 0.05, 0.05); wl(p[0], p[1], q[0], q[1], FL, FY, { mat: 'glass', thick: 0.03, openings: [{ at: W / 2, w: Math.min(1.8, W - 0.8), y0: FL, y1: FL + 2.4 }] }); }
-    furnish(Lp(loc, W / 2, 0)[0], () => {
+    furnishShop(loc, W, D, () => {
     for (const d of [0.4, Math.max(0.9, D * 0.7)]) {
       if (d === 0.4) lbox(loc, 0.2, W - 0.2, d - 0.025, d + 0.025, shopY - 0.055, 0.04, 0x252525, frontStockOpt(loc));
       for (let a = 0.55; a < W - 0.15; a += 1.15) {
@@ -1521,7 +1549,15 @@ export function build(K) {
     }
     // central block: spine wall / end walls
     if (b.central) {
-      wallU(ua, b.k === 79 ? ub - 1.8 : ub, Ly.mid, FL, CY, { mat: M.spine, thick: 0.2 });
+      const end = b.k === 79 ? ub-1.8 : ub;
+      wallU(ua, end, Ly.mid, FL, CY, {mat:M.spine, thick:.2});
+      const last = centralSpines.at(-1);
+      if (last && Math.abs(last.b - ua) < .01 && Math.abs(last.offset - Ly.mid) < .2) {
+        last.b = end;
+        last.offset = Ly.mid;
+        last.lo = Math.min(last.lo, Ly.mid);
+        last.hi = Math.max(last.hi, Ly.mid);
+      } else centralSpines.push({a:ua, b:end, lo:Ly.mid, hi:Ly.mid, offset:Ly.mid});
       const prev = bays[b.k - 1], next = bays[b.k + 1];
       for (const [cond, u, face] of [[!prev || !prev.central, ua, '-u'], [!next || !next.central, ub, '+u']]) {
         if (!cond) continue;
@@ -1586,9 +1622,32 @@ export function build(K) {
         });
       }
     }
+    // Preserve the original per-bay random sequence for both crowds regardless
+    // of which aisle is visited first. Each crowd shares its nearby shop batch.
+    if (![67,68].includes(b.k)) {
+      const crowdRand = K.rand(7000 + b.k), base = GRID0 + b.k * GRID, middle = base + GRID / 2;
+      for (const [c0, c1, side] of [[Ly.fA, Ly.fB, 'N'], [Ly.fC, Ly.fD, 'S']]) {
+        const row = aisleGroup(middle, side === 'N' ? -1 : 1), cm = (c0+c1)/2;
+        row.u0 = Math.min(row.u0, base); row.u1 = Math.max(row.u1, base + GRID);
+        row.v0 = Math.min(row.v0, c0); row.v1 = Math.max(row.v1, c1);
+        row.front0 = Math.min(row.front0, c0); row.front1 = Math.max(row.front1, c1);
+        const quiet = side === 'N' && middle > -285 && middle < -240;
+        const retailCrowd = ['west', 'center', 'east'].includes(sec.key);
+        const n = retailCrowd ? (quiet ? 4 : (middle > -290 && middle < -190 ? 7 : 6) + (crowdRand() * 3 | 0)) : 3 + (crowdRand() * 3 | 0);
+        for (let i = 0; i < n; i++) {
+          const cluster = Math.floor(i / 4), rackSide = (b.k + cluster) % 2 ? 1 : -1;
+          const u = base + 0.6 + cluster * 3.2 + (i % 4) * 0.64 + crowdRand() * 0.25;
+          const browse = i % 4 < 2;
+          const v = cm + (browse ? rackSide * ((c1 - c0) / 2 - 0.85) : (i % 4 === 2 ? -1 : 1) * (0.4 + crowdRand() * 1.0));
+          if (!blocked(u, v - 0.3, v + 0.3)) {
+            const facing = browse ? FACE[rackSide > 0 ? '+v' : '-v'] : FACE[i % 3 ? '+u' : '-u'];
+            row.jobs.push(() => shopper(u, v, b.k * 11 + i, facing));
+          }
+        }
+      }
+    }
     furnish(b.uc, () => {
     if ([67,68].includes(b.k)) return; // one continuous user-photo plaza ceiling below
-    const rnd = K.rand(7000 + b.k);
     // L3 moves the shop opening, not the photographed sign/light sequence.
     const ua = GRID0 + b.k * GRID, ub = ua + GRID, ceilingU = (ua + ub) / 2;
     // 01/19: warm grey soffit, one closed white oval per three bays, downlights in between.
@@ -1637,16 +1696,6 @@ export function build(K) {
       } else {
         hallCoffer(ceilingU, cm, GRID - 0.4, c1 - c0 - 0.5);
         for (const u of [ua + 1.4, ua + 4.2, ua + 7]) downlight(u, cm, CY - 0.10);
-      }
-      const quiet = side === 'N' && ceilingU > -285 && ceilingU < -240;
-      const retailCrowd = ['west', 'center', 'east'].includes(sec.key);
-      const n = retailCrowd ? (quiet ? 4 : (ceilingU > -290 && ceilingU < -190 ? 7 : 6) + (rnd() * 3 | 0)) : 3 + (rnd() * 3 | 0);
-      for (let i = 0; i < n; i++) {
-        const cluster = Math.floor(i / 4), rackSide = (b.k + cluster) % 2 ? 1 : -1;
-        const u = ua + 0.6 + cluster * 3.2 + (i % 4) * 0.64 + rnd() * 0.25;
-        const browse = i % 4 < 2;
-        const v = cm + (browse ? rackSide * ((c1 - c0) / 2 - 0.85) : (i % 4 === 2 ? -1 : 1) * (0.4 + rnd() * 1.0));
-        if (!blocked(u, v - 0.3, v + 0.3)) shopper(u, v, b.k * 11 + i, browse ? FACE[rackSide > 0 ? '+v' : '-v'] : FACE[i % 3 ? '+u' : '-u']);
       }
     }
     if (!b.central) { // hall / passage ceiling panels
@@ -3305,7 +3354,18 @@ export function build(K) {
   for (const u of PINK_CEILING_PANELS) furnish(u, () => {
     const L = lay(u);
     const [x,z] = P(u,(L.fA+L.fB)/2);
-    placeArchitecture(K,shoppingCeiling,'고투몰 서편 핑크라인 천장',[[x,AY-.19,z,ROT,1,1,Math.min(1,(L.fB-L.fA-.25)/3.45)]]);
+    const T=K.THREE, pose=new T.Object3D();
+    pose.position.set(x,AY-.19,z); pose.rotation.y=ROT;
+    pose.scale.z=Math.min(1,(L.fB-L.fA-.25)/3.45);
+    pose.updateMatrix();
+    for(const key of ['Surface','Diffuser']) {
+      const finish=key==='Diffuser' ? T.MeshBasicMaterial : T.MeshLambertMaterial;
+      const batch=new T.InstancedMesh(fixtureSilhouette(T,key),new finish({vertexColors:true,side:T.DoubleSide}),1);
+      batch.name='고투몰 서편 핑크라인 천장'+(key==='Diffuser'?' · 발광면':'');
+      batch.setMatrixAt(0,pose.matrix);
+      streamAislePart(batch,'../interior-architecture/mall-ceiling.glb',key);
+      K.addMesh(batch);
+    }
   });
 
   // ---------- 안내도: photos 10/11, charcoal ground / three coloured zones / pale twin spine ----------
@@ -3408,6 +3468,16 @@ export function build(K) {
   const sp = (name, u, v, y, du, dv) => { const [x, z] = P(u, v); K.spawn({ name, x, y, z, yaw: yawOf(du, dv) }); };
   const Lw = lay(-200), Le = lay(200), Lc = lay(-24);
   flushTallSigns();
+  for (const row of shopRows.values()) {
+    const poly = R(row.u0, row.v0, row.u1, row.v1);
+    K.detail({floor:'B1', y0:FL, y1:CY, poly, name:row.name,
+      visibleFrom:(x,y,z)=>shopVisible(row,x,y,z)}, () => {
+      for (const job of row.jobs) job();
+      row.jobs.length = 0;
+      flushHats();
+      flushTallSigns();
+    });
+  }
   for (const room of detailRooms) {
     K.detail({ floor: 'B1', y0: FL, y1: CY, poly: R(room.u0, -45, room.u1, 65), name: room.name }, K => {
       for (const fn of room.jobs) fn();

@@ -47,7 +47,8 @@ for row in rows:
         assert c.name==name and c.library.filepath=='//../'+row['library'],(name,c.library.filepath)
         sampling=next(o for o in c.all_objects if o.type=='MESH' and o.data.vertices)
         part=sampling.evaluated_get(dg)
-        origin=Vector(c.get('preview_origin',c.get('origin',fallback)))
+        origin=(Vector((c['display_offset_x'],c['display_offset_y'],0)) if 'display_offset_x' in c
+                else Vector(c.get('preview_origin',c.get('origin',fallback))))
         for i in {0,len(part.data.vertices)//2,len(part.data.vertices)-1}:
             vertex=part.matrix_world@part.data.vertices[i].co
             observed=ob.evaluated_get(dg).matrix_world@(vertex-c.instance_offset)
