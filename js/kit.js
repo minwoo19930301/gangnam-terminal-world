@@ -223,10 +223,17 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
   // The area predicate is immutable for this page. Drop hidden faces before
   // allocating positions, colours and UVs, using the same post-split centroid
   // as the tile builder. Collision and zone registration are independent.
+  let sharedShell = null;
+  function withSharedShell(place, build) {
+    const previous = sharedShell;
+    sharedShell = place;
+    try { return build(); }
+    finally { sharedShell = previous; }
+  }
   function outsideArea(p, ny) {
     let x = 0, y = 0, z = 0;
     for (const v of p) { x += v[0]; y += v[1]; z += v[2]; }
-    if (keep(current, x/p.length, y/p.length, z/p.length, ny)) return false;
+    if (keep(current, x/p.length, y/p.length, z/p.length, ny, sharedShell)) return false;
     stats.areaDropped = (stats.areaDropped || 0) + 1;
     return true;
   }
@@ -1370,7 +1377,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
   }
 
   const K = {
-    THREE, scene, phys, osm, LEVELS, T, withTerrainAnchor, withTerrainSurface, withParkedVehicle,
+    THREE, scene, phys, osm, LEVELS, T, withTerrainAnchor, withTerrainSurface, withParkedVehicle, withSharedShell,
     box, prism, slab, wall, polyWalls, ramp, stairs: (ax, az, bx, bz, o = {}) => ramp(ax, az, bx, bz, { ...o, steps: true }), escalator, escalatorTreads, cyl, stockCylinders, dome, sign, floorText,
     tree, person, crowd, vehicle, zone, spawn, interact, portal, elevator, groundHole, onFrame, addMesh, texture, material, mapMark, detail,
     osmBuilding, osmFind, claim, rand, quad: (mat, p, n, uvs) => quad(spec(mat), p, n, uvs || [[0, 0], [1, 0], [1, 1], [0, 1]]), hpoly: (mat, poly, y, up = true, holes) => hpoly(spec(mat), poly, y, up, holes),

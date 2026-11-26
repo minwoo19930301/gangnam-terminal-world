@@ -1336,7 +1336,7 @@ export function build(K) {
     {"zone":"sweet","name":"팝업","rect_display":[1059,487,1164,507],"front":"S","kind":"bakery"}
   ];
   const b1PlanOutline=[[1032,345],[1078,345],[1078,266],[1400,266],[1400,755],[1343,755],[1343,894],[1032,894]].map(q=>BP(...q));
-  K.slab(b1PlanOutline,YB1,{mat:{tex:'marble',color:0xe5dacc,gloss:.5},under:false,ceil:false,edge:false,holes:H.b1});
+  K.withSharedShell('shinsegae',()=>K.slab(b1PlanOutline,YB1,{mat:{tex:'marble',color:0xe5dacc,gloss:.5},under:false,ceil:false,edge:false,holes:H.b1}));
   // 9GATE bridges the market's south wall and the newly registered B1 plan.
   // The exact fit is approximate; its direction and extent follow the supplied
   // photo walk, rather than the old J4 entrance on the opposite side.
@@ -1820,22 +1820,31 @@ export function build(K) {
   // Actual black-line room boundaries in the official east plan. Open grey islands receive no walls.
   // The northern shop backs meet the B1 slab. A partition-height top left
   // the outdoor building visible over the shops from the indoor escalator.
-  BWall([1116,266],[1400,266],0xd8cdb9,BP,-.31);
   for(const[a,b]of [
     [[1237,266],[1237,320]],[[1264,266],[1264,320]],[[1333,266],[1333,320]],[[1400,266],[1400,320]],
     [[1344,343],[1389,343]],[[1389,343],[1389,462]],[[1344,343],[1344,373]],[[1344,411],[1344,462]],[[1344,462],[1389,462]],
-    [[1344,488],[1400,488]],[[1400,488],[1400,718]],[[1344,545],[1400,545]],[[1344,625],[1400,625]],
+    [[1344,488],[1400,488]],[[1344,545],[1400,545]],[[1344,625],[1400,625]],
     [[1424,285],[1493,285]],[[1493,266],[1493,320]],[[1533,285],[1618,285]],
     [[1435,343],[1493,343]],[[1493,343],[1493,432]],[[1435,432],[1493,432]],
     [[1463,444],[1531,444]],[[1463,444],[1463,502]],[[1463,502],[1488,502]],[[1488,502],[1488,589]],
     [[1698,529],[1698,563]],[[1675,563],[1698,563]],
     [[1558,589],[1786,589]],[[1714,397],[1786,397]],[[1714,443],[1786,443]],[[1714,489],[1786,489]],
     [[1032,540],[1079,540]],[[1032,595],[1079,595]],[[1032,654],[1079,654]],[[1032,716],[1079,716]],
-    [[1136,809],[1210,809]],[[1210,809],[1210,850]],[[1032,894],[1343,894]],
+    [[1136,809],[1210,809]],[[1210,809],[1210,850]],
   ]){
     const isHouse=Math.min(a[0],b[0])>=1424||a[0]===1389||b[0]===1389||(a[0]===1344&&a[1]<=462&&b[1]<=462);
     BWall(a,b,isHouse?'ccHosHoney':0xd8cdb9,isHouse?HP:BP);
   }
+  // Carry the black shop backs and the hall soffit into the neighbouring
+  // view. The white café aisle, 9GATE and the House passage stay open.
+  K.withSharedShell('shinsegae',()=>{
+    for(const [a,b] of [
+      [[1032,457],[1032,345]],[[1032,345],[1078,345]],[[1078,345],[1078,266]],
+      [[1116,266],[1400,266]],
+      [[1032,480],[1032,775]],[[1032,810],[1032,894]],[[1032,894],[1343,894]],
+      [[1343,894],[1343,755]],[[1343,755],[1400,755]],[[1400,755],[1400,488]],
+    ])BWall(a,b,0xd8cdb9,BP,-.31);
+  });
   // The public plan ends at the south restaurant row. The north approach is
   // also continuous with Sweet Park at the white passage, between the flanking cells.
   const hosB1Poly=HRect(1400,266,1786,589);
@@ -3389,7 +3398,7 @@ export function build(K) {
   K.hpoly(0xeee6d6,F1POLY,-.3,false,terminalF1Holes);
   // Both B1 regions have enclosed soffits; the House retains its stacked void.
   const planCeilingHoles=H.f1.filter(h=>h.some(q=>K.pointInPoly(...q,b1PlanOutline)));
-  K.hpoly(0xf0e5d3,b1PlanOutline,-.31,false,planCeilingHoles);
+  K.withSharedShell('shinsegae',()=>K.hpoly(0xf0e5d3,b1PlanOutline,-.31,false,planCeilingHoles));
   K.phys.addCeiling(b1PlanOutline,-.31,{holes:planCeilingHoles});
   K.hpoly(0xe9d9bc,hosB1Poly,-.32,false,[hosRoofHole,hosEntryWell]);
   K.phys.addCeiling(hosB1Poly,-.32,{holes:[hosRoofHole,hosEntryWell]});
