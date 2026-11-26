@@ -1,3 +1,4 @@
+import {galleryLights} from '../../assets/models/famille-atrium/model.js';
 import {placeLejardin} from '../../assets/models/lejardin-shop/model.js';
 import {tianjinShop} from '../../assets/models/tianjin-baozi/room.js';
 import {warakuShop} from '../../assets/models/waraku/room.js';
@@ -2642,13 +2643,14 @@ export function build(K) {
   lzone(168.3,-96,203.6,38,{place:'famille',name:'파미에스테이션',floor:'1F',sub:'1층 매장 · 1~7게이트',y0:0,y1:4.65,priority:5});
   lzone(187.8,-92,191.1,34,{place:'famille',name:'파미에스테이션 실내 거리',floor:'1F',sub:'1층 매장 안내',y0:0,y1:8.5,priority:6});
   const famGates=[[1,170.8,-28.7,'N'],[2,170.8,22,'N'],[4,189.3,-54,'S'],[5,189.3,-96,'W'],[6,178,-86,'W'],[7,171,-70,'N']];
-  for(const [id,ss,tt,face]of famGates)planGate('파미에스테이션 '+id+'게이트',ss,tt,face,id===2?7.6:4.5);
+  // Gate 2 has its own brick frame and head sign below.
+  for(const [id,ss,tt,face]of famGates)if(id!==2)planGate('파미에스테이션 '+id+'게이트',ss,tt,face,4.5);
   // The two hall-side portals are genuine framed openings with brick returns and clear glazing.
   for(const [id,tt]of [[1,-28.7],[2,22]]){
     const jamb = id===2 ? 4.65 : 3.2;
     for(const d of [-jamb,jamb]){lbox(170.8,tt+d,1.1,1.55,0,4.3,'ccFamBuffBrick');lbox(170.8,tt+d,1.25,1.7,3.35,.2,0xe6dcc8,{solid:false});}
     lbox(170.8,tt,1.1,2*jamb+1.55,3.65,.65,'ccFamBuffBrick',{solid:false});
-    lsign('파미에스테이션 '+id+'게이트',170.18,tt,3.24,5.7,.55,'N',{bg:'#324639',fg:'#fff1cd'});
+    lsign('파미에스테이션 '+id+'게이트',170.18,tt,id===2?3.67:3.24,5.7,.55,'N',{bg:'#324639',fg:'#fff1cd'});
     for(const d of [-(jamb-.83),jamb-.83])lbox(170.8,tt+d,1.0,.035,.1,3.35,'glass',{solid:false});
     for(let i=0;i<16;i++){const a=i*PI/16,b=(i+1)*PI/16;beam([170.12,tt+2.95*Math.cos(a),3.7+1.1*Math.sin(a)],[170.12,tt+2.95*Math.cos(b),3.7+1.1*Math.sin(b)],.16,0xe9dec8);}
     lbox(179.7,tt,17.8,.16,.033,.006,0x9b8257,{solid:false});
@@ -2657,7 +2659,7 @@ export function build(K) {
   // The arcade is level. A short stone flight meets the slightly raised
   // Honam landing; the terminal-side approach grades into the hall floor.
   // Use the existing gameplay threshold as the vertical reference.
-  const honamLanding = .68;
+  const honamLanding = 1.36;
   const landingFinish = {tex:'tile',color:0xd6c9b4,gloss:.3};
   const landingWidth = 3.3;
   K.slab(RECT(164.4,20.35,169.4,23.65),honamLanding,{mat:landingFinish,thick:honamLanding});
@@ -2670,11 +2672,11 @@ export function build(K) {
     K.quad(landingFinish,[[ax,0,az],[bx,0,bz],[bx,honamLanding,bz],[ax,.015,az]],
       [side*EX,0,side*EZ]);
   }
-  K.stairs(...P(169.4,22),...P(171.0,22),{
-    w:landingWidth,ya:honamLanding,yb:0,mat:0xd8c9b5,nosing:0xae9d80,rails:false,
+  K.stairs(...P(169.4,22),...P(172.28,22),{
+    w:landingWidth,ya:honamLanding,yb:0,mat:0xe4ded2,nosing:0x60564f,rails:false,
   });
   lsign(['파미에스테이션 ↑','2게이트 · 식당가'],155,21.95,3.15,3.8,.65,'N',{bg:'#324639',fg:'#fff1cd'});
-  lsign(['호남선 터미널 ↑','승차홈 · 매표소'],171.48,22,3.22,4.6,.55,'S',{bg:'#324639',fg:'#fff1cd'});
+  lsign(['호남선 터미널 ↑','승차홈 · 매표소'],171.48,22,3.72,4.6,.55,'S',{bg:'#324639',fg:'#fff1cd'});
   K.detail({name:'파미에 Gate2 · 영상의 짧은 계단과 구형 가로등',floor:'1F',y0:0,y1:4.8,poly:RECT(162.3,18.5,176,27.8)},()=>{
     for(const t of [18.9,26.5]){
       lbox(166,t,.65,.8,0,4.45,'ccFamBuffBrick');
@@ -2690,20 +2692,29 @@ export function build(K) {
       }
       for(const a of [PI/4,PI/2,3*PI/4])entryTube([175.02,t,3.42],[175.02,t+1.42*Math.cos(a),3.42+.88*Math.sin(a)],.025,0x685f50);
     }
+    // Seoul St Mary's Hospital's public walk, 29–32s: dark stone edges,
+    // arched iron pickets, amber warning tiles, and ringed white globe lamps.
     for(const t of [20.35,23.65]){
-      for(const s of [169.4,170.2,171]){
-        const yy=honamLanding*(171-s)/1.6;
-        lbox(s,t,.055,.055,yy,1.05,0x3f352d,{solid:false});
+      const elevation=s=>honamLanding*(172.28-s)/2.88;
+      for(const s of [169.4,170.84,172.28])lbox(s,t,.055,.055,elevation(s),1.04,0x44392f,{solid:false});
+      for(const h of [.12,.91,1.04])entryTube([169.4,t,honamLanding+h],[172.28,t,h],.045,0x493b33);
+      for(let i=0;i<9;i++){
+        const start=169.4+i*.32;
+        for(const x of [start+.025,start+.295])entryTube([x,t,elevation(x)+.12],[x,t,elevation(x)+.76],.018,0x493b33);
+        for(let j=0;j<6;j++){
+          const arch=k=>{const a=k*PI/6,x=start+.16-.135*Math.cos(a);return [x,t,elevation(x)+.76+.135*Math.sin(a)];};
+          entryTube(arch(j),arch(j+1),.018,0x493b33);
+        }
       }
-      for(const h of [.45,1.05])entryTube([169.4,t,honamLanding+h],[171,t,h],.06,0x3f352d);
     }
-    // The filmed lamp is on the viewer's right when descending (+s).
-    const s=168.75,t=19.85;
-    lcyl(s,t,honamLanding,.13,2.8,0x37352c,{seg:10,solid:false});
-    lcyl(s,t,honamLanding,.27,.13,0x37352c,{seg:10,solid:false});
-    const q=P(s,t);K.dome({x:q[0],z:q[1],y:3.52,rx:.3,ry:.3,rz:.3,hemi:false,mat:{tex:'emit',color:0xf0e4c4},seg:12,rings:8});
-    for(const dt of [-.31,.31])entryTube([s,t+dt,3.2],[s,t+dt,3.7],.035,0x39352b);
-    lcyl(s,t,3.78,.35,.06,0x37352c,{seg:12,solid:false});
+    for(const [s,h] of [[169.15,honamLanding],[172.55,.032]]){
+      lbox(s,22,.32,3.23,h+.005,.009,0xc79c48,{solid:false});
+      for(let i=0;i<3;i++)for(let j=0;j<33;j++)lcyl(s+(i-1)*.089,22+(j-16)*.097,h+.014,.015,.005,0xddb766,{seg:6,solid:false});
+    }
+    const lights=[[168.75,19.85,honamLanding],[172.45,19.95,0],[172.45,24.05,0]].map(([s,t,h])=>{
+      const [x,z]=P(s,t);return [x,h,z,R];
+    });
+    galleryLights(K,lights);
   });
   // Officialterminaldrop-offside36..42:unknownnamesstaynumbered, no guessedbrandbinding.
   for(const [id,a,b]of [[38,153,156],[39,156,159],[40,159,161.5],[41,161.5,164],[42,164,167.5]])officialShop(id+'번 매장',a,29,b,38,'W','store');
@@ -2983,7 +2994,7 @@ export function build(K) {
   // The authoritative 1F guide places both terminal gates on the same floor;
   // keep the two existing level connections and lead onward to the real exit.
   for (const [side,face,label] of [[-1,'N','파미에스테이션 ↑'],[1,'S','호남선 터미널 ↑']]) {
-    lsign(label,167+side*.015,21.8,3.12,4.7,.5,face,{bg:'#302d26',fg:'#f7d66a'});
+    lsign(label,167+side*.015,21.8,3.77,4.7,.5,face,{bg:'#302d26',fg:'#f7d66a'});
   }
   buildGardenGallery(K,{P,RECT,lbox,lwall,lcyl,lsign,lzone,beam,y:Y2});
 
