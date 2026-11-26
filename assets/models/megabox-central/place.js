@@ -12,14 +12,31 @@ export function boutiqueLobby(K,y){
       g.fillStyle=col;g.fillRect(x+1,z+1,127,127);
     }
   },[1.48,1.48]);
-  K.texture('megabox_lobby_mosaic',128,128,(g,w,h)=>{
-    g.fillStyle='#625947';g.fillRect(0,0,w,h);
-    for(let row=-8;row<17;row++)for(let col=-8;col<17;col++){
-      const x=col*16,z=row*16;
-      g.strokeStyle=(row+col)%3?'#a89478':'#bcaa8e';g.lineWidth=2;
-      g.beginPath();g.moveTo(x,z);g.lineTo(x+7,z+7);g.lineTo(x+15,z);g.stroke();
+  // The concession photographs show concentric hexagons composed of
+  // individual near-black and ivory tesserae. Two staggered centres repeat
+  // exactly over 18 columns × 12 rows, including the tiles at each edge.
+  K.texture('megabox_lobby_mosaic',256,256,(g,w,h)=>{
+    g.fillStyle='#83796c';g.fillRect(0,0,w,h);
+    const pitch=w/18,rowH=h/12;
+    const dark=['#332f2c','#38332f','#302d2b'],ivory=['#d6cbb5','#d1c5af','#ded2bd'];
+    for(let row=-1;row<=12;row++)for(let col=-1;col<=18;col++){
+      const q=col-Math.floor(row/2),cx=(q+row*.5)*pitch,cy=row*rowH;
+      let distance=Infinity;
+      for(let a=-2;a<=3;a++)for(let b=-3;b<=2;b++){
+        const dq=q-6*(a-b),dr=row-6*(a+2*b);
+        distance=Math.min(distance,Math.max(Math.abs(dq),Math.abs(dr),Math.abs(dq+dr)));
+      }
+      const tone=distance%2?ivory:dark;
+      const variant=((col%18+18)%18*7+(row%12+12)%12*5)%3;
+      g.fillStyle=tone[variant];g.beginPath();
+      for(let i=0;i<6;i++){
+        const angle=(i+.5)*Math.PI/3;
+        const x=cx+pitch*.54*Math.cos(angle),z=cy+rowH*.624*Math.sin(angle);
+        if(i===0)g.moveTo(x,z);else g.lineTo(x,z);
+      }
+      g.closePath();g.fill();
     }
-  },[.42,.42]);
+  },[.48,.277]);
   // The B1 guide shows a white diagonal aisle joining the narrow aisle beside
   // the department's food counters. Both lie beyond its above-ground outline.
   K.hpoly('megabox_plaza_stone',publicAisle,y+.008,true);

@@ -1,3 +1,4 @@
+import {hanjungsunIsland} from '../../assets/models/hanjungsun/model.js';
 import {courtBounds,pavingLevel} from '../../assets/models/central-plaza-granite/layout.js';
 import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
 import {placeSingleDetail} from '../../assets/models/interior-architecture/single-detail.js';
@@ -1628,15 +1629,16 @@ export function build(K) {
     lsign(cell.name==='시즈니크'?'SEASONIQUE':cell.name,s+ds,t+dt,YB1+1.35,.45,.30,face,{bg:'#151718',fg:'#f3efe5',font:SERIF,bold:false,pxPerM:320});
   };
   const spQueue=(cell)=>{
-    const[s0,t0,s1,t1]=spBounds(cell.rect_display),rows=4,cols=6;
+    const[s0,t0,,t1]=spBounds(cell.rect_display),rows=4,cols=6;
+    const front=t0+2.17,back=t1-.28;
     // Two folded lanes (12 people each) stay inside the official 한정선 cell.
     for(let row=0;row<rows;row++)for(let col=0;col<cols;col++){
-      const s=s0+.52+row*.72,t=t0+.60+col*(t1-t0-1.2)/(cols-1);
+      const s=s0+.52+row*.72,t=front+.31+col*(back-front-.63)/(cols-1);
       if(!b1Reserved(...P(s,t),.36))lperson(s,t,YB1,{shirt:[0x555c59,0x918d84,0x383c3d,0xaaa598,0x64705a,0xc9c1b4][(row+col)%6],pants:0x303334,rotY:col%2?F.S:F.N});
     }
     for(const s of [s0+.18,s0+1.62,s0+3.12]){
-      for(const t of [t0+.28,t1-.28]){lcyl(s,t,YB1,.15,.035,0x282728,{solid:false});lcyl(s,t,YB1+.035,.025,.91,0x252426,{solid:false});}
-      lbox(s,(t0+t1)/2,.025,t1-t0-.56,YB1+.84,.065,0xcfc4ab,{solid:false});
+      for(const t of [front,back]){lcyl(s,t,YB1,.15,.035,0x282728,{solid:false});lcyl(s,t,YB1+.035,.025,.91,0x252426,{solid:false});}
+      lbox(s,(front+back)/2,.025,back-front,YB1+.84,.065,0xcfc4ab,{solid:false});
     }
     lsign(['한정선','대기 안내'],s0+.22,t1-.31,YB1+1.04,.62,.68,'N',{bg:'#754c43',fg:'#f4e9d5',font:SERIF,bold:false});
   };
@@ -1805,6 +1807,14 @@ export function build(K) {
       hazBakery(K,x,YB1+.80,z,R);
       return;
     }
+    if(cell.name==='한정선'){
+      if(caseRect){
+        const [a,b,c,d]=spBounds(caseRect),[x,z]=P((a+c)/2,(b+d)/2);
+        hanjungsunIsland(K,x,YB1,z,F.W);
+      }
+      spQueue(cell);
+      return;
+    }
     const chefStage=cell.name==='깰끄쇼즈 / 르솔레이 / 아우치+터치';
     const cake=cell.name==='키친205'||cell.name==='쇼토';
     if(retail){
@@ -1824,7 +1834,7 @@ export function build(K) {
       }else spCounterStand(cell,caseRect,face);
     }
     const cs=(s0+s1)/2,ct=(t0+t1)/2;
-    const ss=cell.name==='한정선'?s1-.18:front==='N'?Math.min(s1-.35,s0+2):front==='S'?Math.max(s0+.35,s1-2):cs;
+    const ss=front==='N'?Math.min(s1-.35,s0+2):front==='S'?Math.max(s0+.35,s1-2):cs;
     const tt=front==='W'?Math.max(t0+.35,t1-2):front==='E'?Math.min(t1-.35,t0+2):ct;
     if(caseRect&&s1-s0>2.1&&t1-t0>1.6){
       const[a,b,c,d]=spBounds(caseRect);
@@ -1834,7 +1844,6 @@ export function build(K) {
       const[a,b,c,d]=spBounds(caseRect),cols=Math.min(3,Math.max(1,Math.floor((d-b-.15)/.24)));
       for(let j=0;j<cols;j++)for(let level=0;level<2;level++)lbox((a+c)/2,(b+d)/2+(j-(cols-1)/2)*.24,.12,.20,YB1+.82+level*.065,.06,level?0xe2cfae:0xc8ac7d,{solid:false});
     }
-    if(cell.name==='한정선')spQueue(cell);
   };
   const canStand=(q)=>{
     if(b1Reserved(...q,.45))return false;
@@ -4292,7 +4301,7 @@ export function build(K) {
   // Public aisle in front of the first row of dessert islands, facing the display.
   {
     const [x,z]=BP(1215,543),[lookX,lookZ]=BP(1243.5,559.5);
-    K.spawn({name:'스위트 파크 입구',destinationId:'sweet-park',aliases:['신세계 스위트파크','Sweet Park'],
+    K.spawn({name:'디저트 아일랜드 앞',destinationId:'sweet-park',aliases:['디저트 매대'],
       place:'centralcity',floor:'B1',mapDestination:true,x,y:YB1,z,yaw:Math.atan2(x-lookX,z-lookZ)});
   }
   // Customer positions are in the same 1823 × 1367 operator guide as the cells.

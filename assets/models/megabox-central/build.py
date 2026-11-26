@@ -242,6 +242,132 @@ font_path=Path('/System/Library/Fonts/Supplemental/Arial Bold.ttf')
 if not font_path.exists():
     font_path=Path('/usr/share/fonts/truetype/liberation2/LiberationSans-Bold.ttf')
 font=bpy.data.fonts.load(str(font_path)) if font_path.exists() else bpy.data.fonts.get('Bfont')
+# Staffed service bay in the photograph dated July 6, 2023. Surrounding
+# screens, warmers, drink cabinet and mezzanine are existing separate objects.
+def service_profile(cx,cy,levels,segments=14):
+    for (z0,rx0,ry0,_),(z1,rx1,ry1,tone) in zip(levels,levels[1:]):
+        for i in range(segments):
+            a=i*math.tau/segments;b=(i+1)*math.tau/segments
+            face([(cx+rx0*math.cos(a),cy+ry0*math.sin(a),z0),
+                  (cx+rx0*math.cos(b),cy+ry0*math.sin(b),z0),
+                  (cx+rx1*math.cos(b),cy+ry1*math.sin(b),z1),
+                  (cx+rx1*math.cos(a),cy+ry1*math.sin(a),z1)],tone)
+
+def limb(a,b,ra,rb,color):
+    delta=(Vector(b)-Vector(a)).normalized()
+    seed=Vector((0,0,1)) if abs(delta.z)<.9 else Vector((0,1,0))
+    side=delta.cross(seed).normalized();up=delta.cross(side).normalized()
+    rings=[[tuple(Vector(c)+r*(side*math.cos(t*math.tau/9)+up*math.sin(t*math.tau/9))) for t in range(9)] for c,r in [(a,ra),(b,rb)]]
+    for i in range(9):face([rings[0][i],rings[0][(i+1)%9],rings[1][(i+1)%9],rings[1][i]],color)
+
+def attendant(cx,cy,flip):
+    # A neutral anonymous uniform, without recreating either photographed employee.
+    def p(x,d,z):return (cx+flip*x,cy+d,z)
+    service_profile(cx,cy,[(.08,.16,.10,''),(.87,.173,.099,'353434'),(.97,.175,.105,'242627'),
+        (1.10,.169,.113,'373938'),(1.31,.219,.124,'303332'),(1.41,.187,.118,'393a37'),(1.45,.071,.065,'393a39')])
+    face([p(-.13,-.106,.85),p(.13,-.106,.85),p(.12,-.13,1.24),p(-.12,-.13,1.24)],'282a29')
+    for side in [-1,1]:
+        limb(p(side*.12,-.105,1.20),p(side*.066,-.075,1.41),.012,.009,'474840')
+    service_profile(cx,cy-.018,[(1.391,.069,.058,''),(1.48,.086,.07,'b78265'),(1.52,.108,.091,'c89477'),
+        (1.64,.117,.096,'d1a286'),(1.70,.097,.084,'272825'),(1.73,.048,.052,'242421')])
+    for side in [-1,1]:
+        block(cx+side*.043,cy-.109,1.608,.032,.008,.006,'59483f')
+    face([p(-.089,-.084,1.593),p(0,-.122,1.593),p(0,-.124,1.49),p(-.071,-.091,1.517)],'e2ded6')
+    face([p(0,-.122,1.593),p(.089,-.084,1.593),p(.071,-.091,1.517),p(0,-.124,1.49)],'d3cec7')
+    service_profile(cx,cy-.007,[(1.643,.113,.096,''),(1.664,.124,.107,'272b2b'),
+        (1.706,.118,.101,'343936'),(1.746,.083,.071,'373b37'),(1.755,.018,.021,'41443f')])
+    bill=[p(-.115,-.051,1.659),p(-.12,-.10,1.654),p(-.074,-.169,1.638),
+          p(0,-.186,1.633),p(.098,-.155,1.643),p(.115,-.090,1.652),p(.105,-.048,1.659)]
+    face(bill,'252928')
+    for side in [-1,1]:
+        shoulder=p(side*.173,0,1.35);elbow=p(side*.218,-.048,1.151)
+        wrist=p(side*(.089 if side>0 else .070),-.215,1.118)
+        limb(shoulder,elbow,.091,.064,'303533')
+        limb(elbow,wrist,.047,.037,'c69b7c')
+        limb(wrist,p(side*.028,-.243,1.116),.034,.023,'cfa58a')
+    finish('매점 · 주문을 받는 익명의 직원 '+str(cx))
+attendant(-3.69,4.24,1)
+attendant(-1.62,4.20,-1)
+
+# White rims and hollow top distinguish nested paper stock from cans.
+for col,(x,y,r,n,tone) in enumerate([(-1.20,3.57,.078,5,'d2c0a4'),(-1.01,3.59,.085,7,'e4d4bd'),
+                                      (-.805,3.62,.091,5,'dac6ab'),(-.626,3.59,.073,4,'d9c8ad')]):
+    for j in range(n):
+        z=1.102+j*.019
+        service_profile(x,y,[(z,r*.64,r*.64,''),(z+.156,r,r,tone),
+                             (z+.166,r*1.04,r*1.04,'f3e6cf'),(z+.171,r,r,'c3b79f')],12)
+    service_profile(x,y,[(z+.170,r*.93,r*.93,''),(z+.158,r*.87,r*.87,'a38f76'),(z+.141,.001,.001,'a49480')],12)
+finish('매점 · 겹쳐 놓은 종이컵과 팝콘 용기')
+
+# The red cabinet header and two front panels appear above and beside, not in,
+# the existing refrigerated bottles. The photograph obscures its lower fittings.
+for x,w,c in [(.768,.25,'b3362d'),(1.196,.61,'34383a')]:
+    block(x,4.61,1.115,w,.39,.694,c)
+block(1.196,4.398,1.626,.592,.012,.171,'ad342e')
+block(1.196,4.391,1.443,.592,.016,.163,'2c6259')
+for side in [-1,1]:block(1.196+side*.300,4.389,1.434,.014,.028,.371,'aeaaa0')
+for z in [1.610,1.801]:block(1.196,4.389,z,.61,.028,.016,'989891')
+block(.701,4.391,1.465,.021,.017,.308,'ded4ba')
+finish('매점 · 냉장고 뒤 붉은 음료 기기')
+
+def service_mark(name,curve,position,color):
+    curve.dimensions='2D';curve.fill_mode='BOTH';curve.resolution_u=2
+    ob=bpy.data.objects.new(name,curve);collection.objects.link(ob)
+    ob.rotation_euler.x=math.pi/2;ob.location=position
+    bpy.ops.object.select_all(action='DESELECT');ob.select_set(True);bpy.context.view_layer.objects.active=ob
+    bpy.ops.object.convert(target='MESH');me=ob.data
+    attr=me.color_attributes.new(name='COLOR_0',type='BYTE_COLOR',domain='CORNER')
+    for el in attr.data:el.color_srgb=(*color,1)
+    me.materials.append(paint)
+    return ob
+
+import json
+logo=json.loads((OUT/'service-wordmark.json').read_text())
+for z in [1.715,1.522]:
+    curve=bpy.data.curves.new('음료 기기 스크립트','CURVE')
+    for loop in logo['rings']:
+        spline=curve.splines.new('POLY');spline.points.add(len(loop)-1);spline.use_cyclic_u=True
+        for pt,(lx,ly) in zip(spline.points,loop):
+            pt.co=((lx/logo['width']-.5)*.405,(logo['height']*.5-ly)/logo['width']*.405,0,1)
+    service_mark('매점 · 음료 기기 글자',curve,(1.196,4.379,z),(.95,.91,.83))
+for x in [-2.75,-.05]:
+    block(x,3.703,1.724,.65,.020,.082,'595953')
+    finish('매점 · 팝콘 가열함 조명 명판')
+    curve=bpy.data.curves.new('POPCORN','FONT');curve.body='POPCORN';curve.font=font
+    curve.align_x='CENTER';curve.align_y='CENTER';curve.size=.081
+    service_mark('매점 · POPCORN',curve,(x,3.688,1.764),(.98,.93,.79))
+
+# The March 2024 branch photograph shows the projecting lightbox and pickup
+# and cash register headers. Film promotions and changeable prices are omitted.
+def counter_label(name,body,x,y,z,width,height,color,chosen_font=font,turn=0):
+    curve=bpy.data.curves.new(name,'FONT');curve.body=body;curve.font=chosen_font
+    curve.align_x='CENTER';curve.align_y='CENTER';curve.size=.20
+    ob=service_mark(name,curve,(x,y,z),color)
+    coords=[v.co for v in ob.data.vertices]
+    ob.scale=(width/(max(v.x for v in coords)-min(v.x for v in coords)),
+              height/(max(v.y for v in coords)-min(v.y for v in coords)),1)
+    ob.rotation_euler.z=turn
+ko_path=Path('/System/Library/Fonts/AppleSDGothicNeo.ttc')
+if not ko_path.exists():ko_path=Path('/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc')
+ko=bpy.data.fonts.load(str(ko_path)) if ko_path.exists() else font
+# Project into the view along the counter. Both long faces are backlit.
+block(-4.25,4.55,1.879,.098,.21,.125,'464846')
+block(-4.25,4.224,1.869,.127,.566,.183,'323635')
+for side in [-1,1]:
+    block(-4.25+side*.066,4.224,1.885,.009,.532,.153,'cceae5')
+    counter_label('매점 · SNACK BAR','SNACK BAR',-4.25+side*.074,4.224,1.962,.448,.101,
+                  (.10,.13,.13),turn=side*math.pi/2)
+finish('매점 · 양면 SNACK BAR 돌출등')
+block(-3.53,3.57,1.10,.37,.19,.052,'343535')
+block(-3.53,3.59,1.15,.082,.067,.28,'55534d')
+block(-3.53,3.58,1.365,.60,.042,.286,'292a28')
+block(-3.53,3.556,1.48,.55,.008,.008,'a39989')
+counter_label('매점 · PICK UP','PICK UP',-3.53,3.555,1.57,.385,.052,(.85,.84,.78))
+counter_label('매점 · 픽업창구','픽업창구',-3.53,3.551,1.429,.377,.085,(.96,.82,.62),ko)
+finish('매점 · 픽업창구 안내판')
+block(1.08,4.06,1.535,.46,.035,.109,'2d302e')
+counter_label('매점 · 현금창구','현금창구',1.08,4.035,1.589,.305,.069,(.92,.85,.73),ko)
+finish('매점 · 현금창구 표지')
 curve=bpy.data.curves.new('MEGABOX channel lettering','FONT')
 curve.body='MEGABOX';curve.font=font;curve.align_x='CENTER';curve.size=.35;curve.resolution_u=5;curve.bevel_resolution=1;curve.extrude=.022;curve.bevel_depth=.003
 obj=bpy.data.objects.new('입체 문자 · MEGABOX',curve);collection.objects.link(obj)
@@ -250,4 +376,5 @@ bpy.context.view_layer.objects.active=obj;obj.select_set(True);bpy.ops.object.co
 obj=bpy.context.object;attr=obj.data.color_attributes.new(name='COLOR_0',type='BYTE_COLOR',domain='CORNER')
 for el in attr.data:el.color_srgb=(.84,.95,1,1)
 obj.data.materials.append(paint)
+bpy.context.preferences.filepaths.save_version=0
 bpy.ops.wm.save_as_mainfile(filepath=str(OUT/'entrance.blend'),compress=True)
