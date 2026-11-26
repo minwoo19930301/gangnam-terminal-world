@@ -1,3 +1,4 @@
+import { registerFloorFinishes, floorSamples } from '../../assets/models/newcore-floor/surfaces.js';
 import { loadArchitecture, fitArchitecture } from '../../assets/models/architectural-retail/place.js';
 import { upperFixtures } from '../../assets/models/newcore/upper-fixtures.js';
 
@@ -51,6 +52,7 @@ function localFrame(K, F) {
   return { ...F, K, B, S, Q, wall, cyl, person };
 }
 function textures(K) {
+  registerFloorFinishes(K);
   K.texture('newcore-cart-belt', 128, 128, (g, w, h) => {
     g.fillStyle = '#777e7d'; g.fillRect(0, 0, w, h);
     for (let y = 0; y < h; y += 4) {
@@ -70,17 +72,6 @@ function textures(K) {
     g.fillStyle = '#879399'; g.fillRect(0, 0, w, h); g.strokeStyle = '#626e76'; g.lineWidth = 2;
     for (let j = 0; j < 4; j++) for (let i = -1; i < 5; i++) g.strokeRect(i * 128 + (j % 2) * 64, j * 64, 128, 64);
   }, [2, 1]);
-  K.texture('newcore-pavers', 512, 512, (g, w, h) => {
-    // Interlocking 1:2 bricks, not disconnected rectangles. 10 x 20 cm.
-    g.fillStyle = '#504f49'; g.fillRect(0, 0, w, h);
-    const rand = K.rand(933), pal = ['#86857a', '#a29b89', '#747870', '#969382'];
-    for (let row = -8; row < 16; row++) for (let col = -8; col < 16; col++) {
-      const x = (col * 2 + row) * 64, yy = row * 64 - col * 2 * 64;
-      g.fillStyle = pal[Math.floor(rand() * pal.length)]; g.fillRect(x + 2, yy + 2, 124, 60);
-      g.fillStyle = pal[Math.floor(rand() * pal.length)]; g.fillRect(x + 130, yy - 62, 60, 124);
-    }
-    for (let i = 0; i < 18000; i++) { g.fillStyle = i % 2 ? 'rgba(255,255,242,.07)' : 'rgba(29,29,24,.09)'; g.fillRect(rand() * w, rand() * h, 2, 2); }
-  }, [0.8, 0.8]);
   for (const [key, base, scale] of [['newcore-polished-stone', '#b8afa0', 0.6], ['newcore-grey-paving', '#a3a4a1', 0.3]]) {
     K.texture(key, 256, 256, (g, w, h) => {
       const rand = K.rand(904); g.fillStyle = base; g.fillRect(0, 0, w, h);
@@ -109,15 +100,6 @@ function textures(K) {
       g.fillStyle = '#fcf9ee'; g.fillRect(x + 4, yy + 3, 184, 2);
     }
   }, [0.8, 0.4]);
-  K.texture('newcore-market-floor', 256, 256, (g, w, h) => {
-    // R19: the previous #8e8e8b rendered #a59f96 under the kit's warm gloss.
-    const rand = K.rand(941); g.fillStyle = '#77716a'; g.fillRect(0, 0, w, h);
-    for (let i = 0; i < 5000; i++) {
-      g.fillStyle = i % 2 ? 'rgba(255,255,250,.12)' : 'rgba(52,57,55,.08)';
-      g.fillRect(rand() * w, rand() * h, 2, 2);
-    }
-    g.strokeStyle = '#6e6963'; g.lineWidth = 1; g.strokeRect(0, 0, w, h);
-  }, [1.2, 1.2]);
   K.texture('newcore-market-column-poster', 256, 512, (g, w, h) => {
     // _800 resolves a dark poster, but not its actual copy or product brand.
     g.fillStyle = '#262826'; g.fillRect(0, 0, w, h);
@@ -243,7 +225,7 @@ function doors(F, u, w = 4.4) {
 // E-Land's plans show the stepped bank on B1–5F in hall 1 and 1F–5F in
 // hall 2. The separate paired B1 cart symbols in hall 2 have continuous belts.
 function retailTransfers(F, hall) {
-  if (!hall) return [];
+  if (hall !== 1 && hall !== 2) return [];
   const mainU = hall === 1 ? F.L * .19 + 1.35 : F.L * .075;
   const main = {u: mainU, v: F.W / 2 + .80, run: 10.4, cart: false};
   const cart = {u: F.L * .205, v: F.W - 3.05, run: 27.5, cart: true};
@@ -299,7 +281,15 @@ function core(F, floors, name, roof, retailHall=0) {
   K.elevator({ name: name + ' 엘리베이터', x, z, rotY: F.angle + Math.PI, w: 2.5, d: 2.5, floors });
   floors.forEach((f, i) => {
     const next = floors[i + 1];
-    K.slab(F.p, f.y, { mat: f.y < 0 ? 'newcore-pavers' : 'tile', under: f.y === 0 ? C.black : 'ceiling', holes: i ? [hole,...(transfers[i-1]?[transfers[i-1].hole]:[])] : [], thick: 0.28 });
+    let finish = 'tile';
+    if (retailHall && f.label !== '옥상') {
+      finish = f.y >= 0 ? 'newcore-sales-porcelain' :
+        retailHall === 2 ? 'newcore-market-floor' : 'newcore-pavers';
+    }
+    const mat = finish === 'newcore-market-floor' ? { tex: finish, gloss: .6 } : finish;
+    K.slab(F.p, f.y, { mat, under: f.y === 0 ? C.black : 'ceiling',
+      holes: i ? [hole, ...(transfers[i - 1] ? [transfers[i - 1].hole] : [])] : [],
+      thick: floorSamples[finish]?.thickness ?? .28 });
     K.zone({ name, floor: f.label, sub: f.name, poly: F.p, y0: f.y, y1: next?.y ?? Math.max(roof, f.y + 3.2) });
     S([f.label, f.name], b + 7.8, f.y + 2.05, W - 1.8, 3.1, 0.8, '#3c403d');
     if (i) {
@@ -621,7 +611,7 @@ function foodRoom(F, ci) {
   for (let u = -32; u < L / 2 - 4; u += 16) B(u, y, 21.5, 0.65, 3.35, 0.65, 0xd5cbb5);
   K.detail({ name: '1관 킴스 푸드 스트리트', floor: 'B1', poly: F.p, y0: y, y1: 0 }, () => {
     // Large pale tiles in seating areas, contrasting herringbone aisle.
-    K.hpoly({ tex: 'tile', color: 0xd4cebc }, Q(-L / 2 + 2, 17.5, L / 2 - 2, 21), y + 0.012, true);
+    K.hpoly({ tex: 'newcore-sales-porcelain', color: 0xd4cebc }, Q(-L / 2 + 2, 17.5, L / 2 - 2, 21), y + 0.012, true);
     for (let u = -L / 2 + 3; u < L / 2 - 1; u += 5.5) {
       B(u, y + 3.05, W / 2, 0.15, 0.17, W - 1, C.metal, { solid: false });
       for (const v of [5, 14.3, 21]) {
@@ -916,7 +906,6 @@ function market(F, ci) {
   for (const u of [-20, -12, -4, 4, 12, 20, 28]) B(u, y, 14, 1, 3.65, 1, 0xeeeDE7);
   // _800: grey polished floor, white square columns, dark exposed services.
   // Preserve the real-kit stair void in the lower visual ceiling as well.
-  K.hpoly({ tex: 'newcore-market-floor', gloss: 0.6 }, F.p, y + 0.012, true);
   K.hpoly(0xb8b8b3, F.p, y + 3.65, false, [ci.hole,ci.transfers[0].hole]);
   K.detail({ name: '2관 킴스클럽 델리', floor: 'B1', poly: F.p, y0: y, y1: 0 }, () => {
     for (let u = -L / 2 + 5; u < L / 2 - 4; u += 5.8) for (const [row, v] of rackRows) {
@@ -1054,7 +1043,7 @@ function basementLink(one, two) {
   const a0 = two.P(two.L / 2 - 0.6, 18 - half), a1 = two.P(two.L / 2 - 0.6, 18 + half);
   const b0 = one.P(-one.L / 2 + 0.6, 14.7 - half), b1 = one.P(-one.L / 2 + 0.6, 14.7 + half);
   const poly = [a0, b0, b1, a1];
-  K.slab(poly, y, { mat: 'newcore-pavers', thick: 0.28 });
+  K.slab(poly, y, { mat: 'newcore-pavers', thick: floorSamples['newcore-pavers'].thickness });
   K.slab(poly, y + 3.35, { mat: 'concrete', under: C.black, thick: 0.2, walk: false });
   for (const [a, b] of [[a0, b0], [a1, b1]]) K.wall(...a, ...b, y, y + 3.35, { mat: 0xe1d8c7, thick: 0.18 });
   K.zone({ name: '뉴코아아울렛', floor: 'B1', sub: '1관 푸드스트리트 · 2관 킴스클럽 연결통로', poly, y0: y, y1: y + 3.35 });
@@ -1459,7 +1448,7 @@ export function build(K) {
   }
   basementLink(one, two);
   parkingBlock(park);
-  const tc = core(three, [{ label: '1F', y: 0, name: '식당가 · 카페' }, { label: '옥상', y: 10.8, name: '옥상 주차장' }], '뉴코아 3관', 10.8);
+  const tc = core(three, [{ label: '1F', y: 0, name: '식당가 · 카페' }, { label: '옥상', y: 10.8, name: '옥상 주차장' }], '뉴코아 3관', 10.8, 3);
   streetFront(three, 3, 10.8); kimsHall(three, tc);
   K.polyWalls(three.p, 10.8, 11.65, { mat: C.cream, thick: 0.2 });
   for (let u = -3; u < three.L / 2 - 3; u += 2.6) three.B(u, 10.82, 20, 0.1, 0.015, 5, 0xf4f1db, { solid: false });
