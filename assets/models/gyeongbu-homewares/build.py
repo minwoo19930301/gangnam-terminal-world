@@ -2,6 +2,7 @@
 from math import cos, exp, pi, sin, sqrt
 from pathlib import Path
 import runpy
+import os
 
 import bpy
 from mathutils import Vector
@@ -219,6 +220,45 @@ def cushion(x,d,z,w,h,depth,angle,colors,pattern=0):
 
 
 shop('quilt-shop','Bedding',0,0)
+# The operator's 2F photograph shows an open, pale ceiling with hanging
+# cylindrical lamps and a continuous three-panel fascia above the bedding.
+for item in list(display.objects):
+    if item.name.split('.')[0] == '상부 돌림띠':
+        bpy.data.objects.remove(item,do_unlink=True)
+box('침구점 · 천장 앞 얇은 마감',0,1.22,2.94,5.20,.12,.10,ivory)
+enamel=textile('간판 · 주홍 법랑','ba412b')
+cable=textile('펜던트 · 검정 소켓','362f2a')
+milk=textile('펜던트 · 우윳빛 유리','fff9e6')
+box('침구점 · 알루미늄 간판틀',0,-.97,2.34,4.68,.12,.47,silver)
+for x,width,mat in [(-1.55,1.52,ivory),(0,1.56,enamel),(1.55,1.52,ivory)]:
+    box('침구점 · 간판 면판',x,-.89,2.36,width,.035,.42,mat)
+font_file=next((p for p in [os.getenv('GTW_KOREAN_FONT'),'/System/Library/Fonts/AppleSDGothicNeo.ttc',
+    '/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc','/usr/share/fonts/truetype/nanum/NanumGothic.ttf']
+    if p and Path(p).is_file()),None)
+if not font_file:
+    raise ValueError('Set GTW_KOREAN_FONT to a Korean typeface to rebuild the photographed fascia')
+font=bpy.data.fonts.load(font_file)
+for x,text,size,mat in [(-1.55,'침구',.23,cable),(0,'연희침구',.39,ivory),(1.55,'혼수전문',.23,cable)]:
+    curve=bpy.data.curves.new(text,'FONT')
+    curve.body=text;curve.font=font;curve.align_x='CENTER';curve.align_y='CENTER'
+    curve.size=size;curve.resolution_u=3;curve.offset=.0025
+    curve.materials.append(mat)
+    glyphs=bpy.data.objects.new(text,curve)
+    display.objects.link(glyphs)
+    glyphs.rotation_euler.x=pi/2
+    glyphs.location=(x,.867,2.57)
+    bpy.context.view_layer.update()
+    data=bpy.data.meshes.new_from_object(glyphs.evaluated_get(bpy.context.evaluated_depsgraph_get()))
+    letters=bpy.data.objects.new('간판 글자 · '+text,data)
+    display.objects.link(letters);letters.matrix_world=glyphs.matrix_world.copy()
+    bpy.data.objects.remove(glyphs,do_unlink=True)
+for x,d,drop in [(-1.77,.68,.32),(-.71,-.20,.43),(.43,.67,.30),(1.64,-.16,.43)]:
+    bottom=2.975-drop
+    lathe('펜던트 · 천장 고정판',x,d,[(2.958,.045),(2.984,.048)],silver,10)
+    tube('펜던트 · 매단 줄',[(x,d,bottom+.12),(x,d,2.964)],.007,cable)
+    lathe('펜던트 · 짙은 소켓',x,d,[(bottom+.053,.047),(bottom+.11,.046),(bottom+.124,.023)],cable,12)
+    lathe('펜던트 · 세로 유리 확산관',x,d,[(bottom-.165,.025),(bottom-.151,.049),
+          (bottom-.115,.053),(bottom+.039,.052),(bottom+.055,.043)],milk,14)
 for level in range(4):
     for col in range(7):
         low=[cream,sky,pink,pearl,salmon,ivory,aqua][(level*2+col)%7]

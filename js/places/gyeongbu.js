@@ -2579,17 +2579,28 @@ export function build(K) {
     }
     lspawn(floor + ' ' + label,38,96.8,floorY,0,1);
     const sampleU=wings[0][0],sampleV=centers[0];
+    if(key==='Bedding'){
+      lspawn('2층 침구 · 홈패션 매장 앞',38.2,sampleV, floorY,-1,0,
+        {floor,mapDestination:true,aliases:['연희침구','침구도매','혼수침구']});
+      lzone('침구 · 홈패션 매장 앞',floor,'운영사 2층 사진의 연희침구 진열',
+        sampleU+1.35,sampleV-2.60,38.55,sampleV+2.60,floorY,floorY+3.12,4);
+    }
     ldetail({floor,y0:floorY,y1:floorY+3.1,poly:rect(sampleU-1.40,sampleV-2.65,sampleU+1.40,sampleV+2.65),name:label+' · 전면 상품'},()=>{
       const [x,z]=W(sampleU,sampleV);
-      placeUpperShowroom(K,key,feature,x,floorY,z,ROT+PI/2);
-      if(key==='Bedding')lsign('연희침구',sampleU-.75,sampleV+.55,floorY+2.44,1.14,.25,'+u',
-        {bg:'#d64f2c',fg:'#fff5db',pxPerM:135,padding:.03});
+      // The rear wall and two full-height returns enclose this display. Keep the
+      // underlying market shell visible when the detailed contents are occluded.
+      const beddingVisible=({x,z})=>{
+        const [u,v]=toL(x,z);
+        return u>=sampleU+1.32 || (u>=sampleU-1.24 && Math.abs(v-sampleV)<2.50);
+      };
+      placeUpperShowroom(K,key,feature,x,floorY,z,ROT+PI/2,key==='Bedding'?beddingVisible:undefined);
     });
     ldetail({floor, y0:floorY, y1:floorY+3.2, poly:rect(32,97,44,131), name:label}, () => {
       const placements=[];
       for (const [u,side] of wings) for (const v of centers) {
         if((localAisle&&v===centers[1])||hanbokAt(u,v)||yarnAt(u,v)||isClothingFront(u,v))continue;
         if(u!==sampleU || v!==sampleV)placements.push([u,v,floorY,side*PI/2]);
+        if(key==='Bedding' && u===sampleU && v===sampleV)continue;
         const curtainSign=key==='Curtains' && u===sampleU && v===sampleV;
         lsign(curtainSign?'R A I N B O W  무지개장식':label,u+side*1.353,v,floorY+2.83,3.7,.26,side>0?'+u':'-u',
           {bg:null,fg:'#fff7e5',pxPerM:120});

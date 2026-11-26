@@ -150,7 +150,8 @@ export function placeFixtureDisplay(K,key,name,placements,feature){
     }
     const closeRange=body.userData.fixtureDetail==='native'?25:19;
     const featureRange=body.userData.fixtureDetail==='featured'?16:12;
-    const featured=feature&&minSquared<featureRange*featureRange;
+    const featured=feature&&minSquared<featureRange*featureRange&&
+      (!feature.visibleFrom||feature.visibleFrom(camera.position));
     if(minSquared<54*54)request(state.distant,()=>distant(T,key));
     if(featured)request(featureState,()=>native(T,feature.url,feature.file,'근접 상품 진열 · '+feature.file));
     else if(minSquared<closeRange*closeRange)request(state.close,()=>native(T,bufferUrl(key,'.glb'),key,'기본 상품 진열 · '+key));
