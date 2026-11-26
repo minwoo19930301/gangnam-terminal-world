@@ -1,3 +1,4 @@
+import {nespressoDisplay} from '../nespresso-gangnam/model.js';
 import {gangnamCoffeebar} from '../intelligentsia-gangnam/model.js';
 import {plan} from '../cinema-rotary/layout.js';
 import {point,transverseGuide,transverseNorth} from './layout.js';
@@ -43,7 +44,8 @@ export function eastShoppingArcade(K,y){
     wall(a,left);wall(left,right,0,height,finish);wall(right,b);
     wall(a,b,3.22,height);const x=(a[0]+b[0])/2;
     const centre=plan(x,a[1]-side*.67),front=plan(x,a[1]-side*2);
-    K.sign(name,{x:centre[0],z:centre[1],y:y+3.62,w:2.45,h:.4,bg:'#ded8cd',fg:'#3b3731',
+    if(name==='네스프레소')nespressoDisplay(K,y);
+    else K.sign(name,{x:centre[0],z:centre[1],y:y+3.62,w:2.45,h:.4,bg:'#ded8cd',fg:'#3b3731',
       rotY:Math.atan2(front[0]-centre[0],front[1]-centre[1])});
     K.zone({name,sub:'신세계 강남점 · 지하1층',floor:'B1',poly,y0:y-.2,y1:top,priority:5});
   }
