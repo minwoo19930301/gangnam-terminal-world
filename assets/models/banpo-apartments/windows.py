@@ -87,5 +87,15 @@ def install_windows(material, group):
     lamps.node_tree = group
     lamps.location = (add.location.x - 220, add.location.y - 220)
     tree.links.new(shader, add.inputs[0])
-    tree.links.new(lamps.outputs[0], add.inputs[1])
+    atlas = tree.nodes.get("Storey glazing")
+    emission = lamps.outputs[0]
+    if atlas:
+        # The game discards these pixels via glTF alphaMask before lighting.
+        # Apply the same window opening to the native additive emission.
+        cutout = tree.nodes.new("ShaderNodeMixShader")
+        cutout.name = "Exterior window cutout"
+        tree.links.new(atlas.outputs["Alpha"], cutout.inputs[0])
+        tree.links.new(emission, cutout.inputs[2])
+        emission = cutout.outputs[0]
+    tree.links.new(emission, add.inputs[1])
     tree.links.new(add.outputs[0], surface)

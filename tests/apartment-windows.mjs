@@ -61,16 +61,16 @@ try {
   const near=await difference('night','glass');
   await page.waitForFunction(()=>__world.scene.children.some(o=>o.visible&&o.userData.re?.id==='apt-a10024913'),
     null,{timeout:60000});
-  const originalMaterials = await page.evaluate(() => {
+  const facadeMaterials = await page.evaluate(() => {
     const estate = __world.scene.children.find(o => o.visible && o.userData.re?.id === 'apt-a10024913');
     const finishes = [];
-    estate.traverse(o => { if (o.isMesh) finishes.push([o.material.name, o.material.roughness, o.material.metalness]); });
+    estate.traverse(o => { if (o.isMesh) finishes.push([o.material.name, o.material.roughness, o.material.metalness, o.material.alphaTest, !!o.material.map]); });
     return finishes;
   });
-  assert.ok(originalMaterials.some(([name, roughness, metalness]) => name === 'Window glazing' &&
-    Math.abs(roughness - .32) < .001 && Math.abs(metalness - .18) < .001));
+  assert.ok(facadeMaterials.some(([name, roughness, metalness, cutoff, textured]) => /^Window glazing(?:\.\d+)?$/.test(name) &&
+    textured && Math.abs(cutoff - .48) < .001 && Math.abs(roughness - .57) < .001 && Math.abs(metalness - .045) < .001));
   const day=await difference('day');
-  // Centre Xi now retains its original PBR glazing; use a nearby streamed Lambert
+  // Central Xi has individually textured PBR glazing. Use a nearby streamed Lambert
   // estate on the same public street to exercise the batched window shader.
   await page.goto(url.replace('-178,0,-112&yaw=-3&pitch=18','-154,0,-383&yaw=56&pitch=17'));
   await page.waitForFunction(()=>window.__world?.ready && __world.scene.children.some(o =>

@@ -2,6 +2,7 @@
 import bpy
 import json
 import os
+import subprocess
 import sys
 import tempfile
 from mathutils import Vector
@@ -58,6 +59,11 @@ with tempfile.TemporaryDirectory(dir=target) as temp:
                 export_all_vertex_colors=True, export_cameras=False, export_lights=False,
                 export_extras=False,
             )
+            if model_id in ("apt-a10023673","apt-a10024913"):
+                subprocess.run(["node", str(folder/"pack.mjs"), str(path)], check=True)
+                compact = stage / (model_id + "-packed.glb")
+                subprocess.run(["node", str(repo/"tools/optimize_model.mjs"), str(path), str(compact)], check=True)
+                os.replace(compact,path)
             if publish:
                 graph = bpy.context.evaluated_depsgraph_get()
                 corners = []
