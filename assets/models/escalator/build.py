@@ -61,7 +61,7 @@ for s in (-1,1):
     mid=s*.479
     strip('가장자리 황색 띠',mid-.013,mid+.013,.012,.088,.974,'d1b144')
 for i in range(24):
-    x=-.45+i*.039
+    x=(i-11.5)*.039-.011
     # A raised crown and a bevel catch opposing light even while the chain moves.
     flat('디딤판 리브 경사면',[(x,.009,.092),(x,.009,.974),(x+.007,.022,.974),(x+.007,.022,.092)],'717c82')
     strip('디딤판 리브 마루',x+.007,x+.015,.022,.092,.974,'b4b9b8')
@@ -70,24 +70,37 @@ for i in range(24):
 
 coll=group('Comb',(0,0,0))
 # Z=0 is the threshold and +Z points onto the tread chain; the deck extends behind it.
-strip('검사판 바닥',-.5,.5,.010,-.33,-.018,'889297')
-for i in range(24):
-    x=-.454+i*.039
-    strip('바닥판 홈',x,x+.009,.012,-.325,-.060,'5b676e')
+# Two stationary silver floor-cover panels, with a recessed joint and
+# brushed longitudinal ribs. The original entrance lip is still at z=0.
+strip('승강장 바닥판 둘레',-.5,.5,.010,-.90,-.018,'707c81')
+for lo,hi in [(-.886,-.460),(-.451,-.068)]:
+    strip('고정식 은색 점검판',-.487,.487,.012,lo,hi,'adb5b6')
+    for i in range(35):
+        mid=(i-17)*.027
+        strip('점검판 선형 홈',mid-.0032,mid+.0032,.013,lo+.012,hi-.012,'778489')
+    for x in [-.470,.470]:
+        strip('가장자리 나사',x-.004,x+.004,.014,lo+.025,lo+.034,'5b666c')
 strip('빗살 고정대',-.50,.50,.015,-.070,-.010,'d4b54c')
-for i in range(24):
-    x=-.453+i*.039
-    flat('빗살판 낱개 이',[(x,.016,-.014),(x+.003,.012,.030),(x+.024,.012,.030),(x+.028,.016,-.014)],'e0bd4e')
+# Put each tapered comb tooth in the gap between adjacent tread crowns.
+# A symmetric pitch keeps the upper, rotated comb meshed with the same chain.
+for i in range(23):
+    mid=(i-11)*.039
+    flat('빗살판 낱개 이',[(mid-.010,.016,-.014),(mid-.005,.012,.040),
+                        (mid+.005,.012,.040),(mid+.010,.016,-.014)],'e0bd4e')
 for seam in (-.5,.167,-.167,.5):
     strip('분할 빗살판 이음',max(-.5,seam-.003),min(.5,seam+.003),.016,-.070,-.010,'4e5658')
 for x in (-.452,-.21,-.12,.12,.21,.452):
     strip('접시머리 고정 나사',x-.007,x+.007,.017,-.052,-.038,'b4bcc0')
     strip('나사 머리 홈',x-.004,x+.004,.018,-.047,-.044,'404a51')
-strip('검사판 뒤쪽 줄눈',-.5,.5,.014,-.328,-.318,'414d53')
+strip('검사판 뒤쪽 줄눈',-.5,.5,.014,-.900,-.891,'505b5e')
 
 coll=group('Skirt',(1.5,0,0))
 profile('스테인리스 하부 내외 측판',[(-.049,.012),(.049,.012),(.049,.235),(.029,.269),(-.027,.269),(-.049,.235)],0,1,'a6afb0')
-profile('측판의 어두운 고무 띠',[(-.056,.18),(.056,.18),(.056,.193),(-.056,.193)],0,1,'4d5659')
+# The inboard brush slopes towards the tread. Three continuous bands read
+# as a brush at walking distance without rendering individual bristles.
+profile('측판 브러시 금속 홀더',[(-.071,.157),(-.047,.161),(-.047,.190),(-.064,.192)],0,1,'737d7e')
+profile('측판 브러시 모근',[(-.077,.150),(-.063,.157),(-.061,.181),(-.075,.175)],0,1,'31393a')
+profile('측판 브러시 끝',[(-.104,.140),(-.074,.154),(-.074,.174),(-.105,.155)],0,1,'454b49')
 profile('밸러스트레이드 상단 유리 가이드',[(-.029,.888),(.029,.888),(.029,.952),(-.029,.952)],0,1,'9fa9a8')
 rail=[(.060*cos(2*pi*i/12),.993+.048*sin(2*pi*i/12)) for i in range(12)]
 profile('고무 손잡이 벨트',rail,0,1,'2e3335')
