@@ -1,0 +1,13 @@
+{
+  "place": "centralcity",
+  "floor": "B1",
+  "plan": [
+    1328,
+    516
+  ],
+  "lookAtPlan": [
+    1348,
+    516
+  ],
+  "game": "/#/centralcity/B1?p=-29.39037,-6,89.18191,-158.66139"
+}
