@@ -39,7 +39,7 @@ function roomLightVolume(THREE, zones, physics, maxSize) {
         // first solid ceiling well above that boundary. Basement passages can
         // instead sit under terrain with no collision ceiling of their own.
         const zoneTop = zone.y1 + offset;
-        const roof = physics.ceilingAbove(x,z,floor+.65,zoneTop+8);
+        const roof = physics.ceilingAbove(x,z,floor+.65,zone.roofLimit ?? zoneTop+8);
         const top = Number.isFinite(roof) ? roof : Math.min(zoneTop, -.7);
         if (top <= floor) continue;
         const ground = relief(x,z);
@@ -122,7 +122,7 @@ vec3 electricDiffuse(vec3 worldPos, vec3 surfaceNormal, float room) {
 // The relief shader has already put the fragment in the same elevation frame
 // as the camera. This also works for moving vehicles and Blender instances.
 export function installElectricLighting(THREE, kit, physics, lamps, maxSize) {
-  const rooms=roomLightVolume(THREE,kit._.zonesList,physics,maxSize);
+  const rooms=roomLightVolume(THREE,[...kit._.zonesList,...kit._.coveredWells],physics,maxSize);
   const streets=streetLightTiles(THREE,lamps);
   // Three clones ShaderLib uniforms for each material. Texture.copy() marks the
   // shared source dirty, reuploading these same lookup tables on the next draw.

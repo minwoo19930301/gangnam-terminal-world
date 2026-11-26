@@ -1172,6 +1172,9 @@ export function build(K) {
     const corner=(back,side)=>[ax-back*dx-side*dz,az-back*dz+side*dx];
     const location={name,floor:id,sub,y0:y,y1:y+zoneHeight,priority:2};
     K.zone({...location,poly:[corner(.35,-.50),corner(.95,-.50),corner(.95,.50),corner(.35,.50)]});
+    // The ceiling above the continuous opening can be several floors away.
+    // The existing moving Blender treads use the same room light as the landing.
+    K.coveredLightWell(rect(...well),y,annex ? LV.RF : LV['11F']);
     const publicLanding = annex ? well : MAIN_APRONS;
     K.phys.addZone({...location,place:meta.id,poly:rect(...publicLanding)});
   }
