@@ -45,7 +45,8 @@ export function placeSingleDetail(K, {name, file, at, angle, fallback, fallbackM
     const geometry=surface?.geometry??fallback;
     if(item.geometry===geometry)return;
     item.geometry=geometry;
-    item.material=surface?material:fallbackMaterial;
+    // A baked interior can keep its native glTF map/material as well as its mesh.
+    item.material=surface?(material??surface.material):fallbackMaterial;
     item.matrixAutoUpdate=false;
     if(surface)item.matrix.copy(surface.matrixWorld);
     else item.matrix.identity();

@@ -1,3 +1,4 @@
+import { registerCellar } from '../../assets/models/margaux-cellar/model.js';
 import { placeCornerSofa } from '../../assets/models/lounge-upholstery/model.js';
 import { placeDrapery } from '../../assets/models/lounge-drapery/model.js';
 import { placePiano } from '../../assets/models/lounge-piano/model.js';
@@ -282,11 +283,11 @@ export function build(K) {
     return detailQueue?detailQueue.push(draw):draw();
   };
   const STRUCT = fn => { const prev = detailQueue; detailQueue = null; try { return fn(); } finally { detailQueue = prev; } };
-  const DETAIL = (floor, rect, name, fn, y1 = NEXT[floor]) => {
+  const DETAIL = (floor, rect, name, fn, y1 = NEXT[floor], visibleFrom) => {
     const commands = [], prev = detailQueue;
     detailQueue = commands;
     try { fn(); } finally { detailQueue = prev; }
-    K.detail({ floor, y0: Y[floor], y1, poly: RECT(...rect), name }, () => {
+    K.detail({ floor, y0: Y[floor], y1, poly: RECT(...rect), name, visibleFrom }, () => {
       for (const draw of commands) draw();
       commands.length = 0;
     });
@@ -906,7 +907,15 @@ export function build(K) {
   DETAIL('1F', [-33.2, 4, 2, 60.4], '호텔 현관 홀 · 승강기 로비', floor1, 8.32);
   DETAIL('2F', [UW, -6, 2, 60.9], '플레이버즈 · 파티세리 · 타마유라', floor2);
   floor3(); floor4();
-  DETAIL('5F', [UW, -60.7, UE, 60.9], '그랜드 볼룸 · 포이어', floor5, 28.4);
+  // The ballroom's double-height event space is visible from the sixth floor.
+  // Its broad bounds also cover the 7F pavilion, where the opaque roof slab
+  // under the wine cellar and restaurant foyer prevents any view into it.
+  const ballroomVisible=(x,height,z)=>{
+    if(height<Y['7F'])return true;
+    const dx=x-C0[0],dz=z-C0[1];
+    return !inR(dx*EV[0]+dz*EV[1],dx*SV[0]+dz*SV[1],[-7.92,22,8.95,40]);
+  };
+  DETAIL('5F', [UW, -60.7, UE, 60.9], '그랜드 볼룸 · 포이어', floor5, 28.4,ballroomVisible);
   floor6(); floor7();
   DETAIL('8F', TW, '더 라운지 · 프런트', floor8);
   floors9to11(); roomFloors(); floor33(); basements(); exterior();
@@ -1729,9 +1738,14 @@ export function build(K) {
     HP({ tex: 'darkstone', color: 0x7c7064 }, [-7.85, 22, 8.85, 40], y + 0.01);
     WL(-1, 24, -1, 38, y, y + 3.4, { mat: GL, thick: 0.05, openings: [{ at: 7, w: 1.4, y0: y, y1: y + 2.4 }] });
     WL(-7.85, 24, -1, 24, y, y + 3.4, { mat: GL, thick: 0.05 }); WL(-7.85, 38, -1, 38, y, y + 3.4, { mat: GL, thick: 0.05 });
-    B({ u: -7.2, v: 31, y, w: 1.0, d: 13.6, h: 3.3, mat: 'jwWine' });
-    for (const v of [26.5, 30, 33.5]) B({ u: -4.2, v, y, w: 3.6, d: 0.8, h: 2.2, mat: 'jwWine' });
-    B({ u: -4.2, v: 36.2, y, w: 1.4, d: 1.4, h: 1.0, mat: 0x5a3e2a, top: 0x2a2a2a });
+    const cellarRacks=registerCellar(baseKit,{P,rect:RECT,angle:R,y});
+    const unseen=['top','bottom','n','s','e','w'];
+    for(const [u,v,turn] of cellarRacks){
+      const end=turn===R||turn===R+Math.PI;
+      B({u,v,y,w:end?1.96:.53,d:end?.53:1.96,h:2.43,mat:0x302927,skip:unseen});
+    }
+    B({u:-4.43,v:32.76,y,w:1.14,d:.61,h:.88,mat:0xb99d73,skip:unseen});
+    for(const v of [26.25,35.51])B({u:-4.43,v,y,w:1.16,d:.44,h:.74,mat:0xb98e65,skip:unseen});
     SG(['WINE CELLAR'], { u: -0.9, v: 31, y: y + 3.0, w: 2.6, h: 0.4, f: 'E', bg: '#1f1a16', fg: '#e0b870', sub: '더 마고 그릴 · 와인 셀러' });
     SUBZ('와인 셀러', '7F', '더 마고 그릴', [-8, 24, -1, 38]);
     B({ u: 4.5, v: 31, y, w: 0.8, d: 1.4, h: 1.15, mat: WALNUT }); MAN(5.3, 31, y, { shirt: 0x1d2433, rotY: FACE.W });
