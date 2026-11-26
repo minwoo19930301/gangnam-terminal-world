@@ -25,3 +25,16 @@ export const LANDMARKS = [
   { name: '달빛광장', sub: '반포대교 · 잠수교', x: -628, z: -707, y: 6, place: 'hangang', color: '#2a8fbf' },
   { name: '잠원한강공원', x: 300, z: -1450, y: 6, place: 'jamwon_hangang', color: '#3e8e41' },
 ];
+
+// World registration shared by the gate model and its point on the map.
+export const xiPortal = {x:-188.35,z:-124.93,angle:.358};
+
+// Point destinations listed in search, without another floating rooftop label.
+export const STREET_VIEWS = [
+  {name:'반포센트럴자이 문주',aliases:['은빛 문주','반센자이 문주'],sub:'은빛 문주 앞 보도',
+    x:xiPortal.x,z:xiPortal.z,exteriorView:{
+      x:-186.61,z:-103.16,yaw:4.57,pitch:4,
+      // A longer public curb view fits the two feet through the narrow camera.
+      portrait:{x:-179.37,z:-86.65,yaw:13.82,pitch:3},
+    }},
+];
