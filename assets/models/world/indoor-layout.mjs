@@ -29,6 +29,11 @@ const sources = [
     const name='다이소 · '+label;
     return ['gyeongbu','B1','daiso-accessories/accessories.blend',name,name];
   }),
+  ...['체크 바닥과 검은 상호 외벽','물결 선반과 선물 상자','둥근 주문대와 사선 견본장','통초콜릿과 잘라 보인 단면',
+      '개별 포장 롤리팝과 사탕','둥근 전시대의 포장 선물','둥근 정면 쇼윈도 유리','견본장의 사선 보호유리'].map(label=>{
+    const name='씨즈캔디 · '+label;
+    return ['centralcity','1F','sees/fp104.blend',name,name];
+  }),
   ...['갈색 아치와 청색 커피 벽','흰 곡면 커피바와 추출 장비','각진 스툴과 창가 금속 벤치','버터바와 약과 쿠키 진열장','버터크림라떼와 바통 휘낭시에'].map(label=>{
     const name='하프커피 · '+label;
     return ['centralcity','2F','halff/fp212.blend',name,name];

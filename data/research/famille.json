@@ -1,4 +1,17 @@
 {
+  "sees_fp104_20261126": {
+    "floor": "파미에스테이션 1층 FP-104, 운영사 도면 점포 20번",
+    "branch": "https://www.ksees.co.kr/location",
+    "naver": "https://map.naver.com/p/entry/place/36444725",
+    "floor_map": "https://www.shinsegaecentral.com/public/img/famille_floor_1_ko_map.png",
+    "operator_photo": "https://seeskr.cafe24.com/bbs/board.php?bo_table=notice&page=2&wr_id=62",
+    "branch_photos_2025": "https://jidoman.tistory.com/761",
+    "branch_photos_2024": "https://yooji22.tistory.com/5",
+    "observed": "정면 둥근 모서리 유리창과 검은 상호 띠, 모서리에서 회랑으로 열린 사선 유리 견본장, 흑백 체크 바닥, 흰 물결 칸막이와 선물 상자, 원형 선물대, 통초콜릿과 반으로 자른 견본의 짝, 호일에 개별 포장한 롤리팝과 흰 막대가 보인다.",
+    "fit": "공개 도면 20번 칸의 회랑 모서리에 가로 7.88m·깊이 7.22m로 맞췄다. 사진에 축척이 없어 창과 진열장의 실제 치수·각도, 상자와 견본 수, 판매 목록, 후벽 뒤 구조는 실측하지 못했다.",
+    "model": "assets/models/sees/fp104.blend",
+    "comparison": "assets/models/sees/play.jpg"
+  },
   "halff_fp212_20261126": {
     "floor": "파미에스테이션 2층 FP212호, 운영사 도면 1번",
     "naver": "https://map.naver.com/p/entry/place/1868037252",

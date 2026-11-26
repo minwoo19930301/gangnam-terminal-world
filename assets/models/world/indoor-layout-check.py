@@ -68,7 +68,8 @@ sync=layout['sync_layout']
 sync(here,rows)
 assert pointers=={o.as_pointer() for o in scene.objects}
 sample=next(iter(anchors.values()))
-sample.name+=' · 편집 검증'
+# Blender limits ID names by byte length; a long Korean source name must still exercise renaming.
+sample.name='실내 배치 편집 검증'
 sample.location.x+=.738
 sample.scale.z*=1.067
 sample['artist_note']='편집 검증'

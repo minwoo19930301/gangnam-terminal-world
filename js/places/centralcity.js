@@ -1,3 +1,4 @@
+import {seesShop} from '../../assets/models/sees/room.js';
 import { halffCoffee } from '../../assets/models/halff/room.js';
 import { dimDimsum } from '../../assets/models/dimdimsum/restaurant.js';
 import { beanBrothers } from '../../assets/models/bean-brothers/room.js';
@@ -2552,6 +2553,7 @@ export function build(K) {
     const plazaRoom=[17,18].includes(id),s0=plazaRoom?171.1:base0+shift;
     const s1=plazaRoom?178.7:(annex?171.2:Math.max(base0+2.3,Math.max(a[0],b[0])))+shift;
     const t0=a[1]+.12,t1=b[1]-.12,name=raw||id+'번 매장';
+    if(id===20){seesShop(K,{P,R,lbox,lwall,lzone},s0,t0,s1,t1);continue;}
     if(id===28)famOpenShell(s0,t0,s1,t1,0);else officialShop(name,s0,t0,s1,t1,face,kind,0,plazaRoom?{tableRows:3,seed:Math.abs(Math.round(base0*31+t0))}:{});
     famProjected.push({id,name:raw,s0,t0,s1,t1,face});
     // Every plan cell has a floor-rooted framed shopfront, including unassigned units.
@@ -2723,13 +2725,13 @@ export function build(K) {
       lbox(189.45,tt,.08,5.8,8.1,.12,0x9c8d73,{solid:false});
     });
   }
-  const fittedShops=new Set(['JAJU','씨즈캔디','호호식당','아그라','일상정원']);
+  const fittedShops=new Set(['JAJU','호호식당','아그라','일상정원']);
   for(const {name,s0,s1,t0,t1} of famProjected){
     if(!name || (!fittedShops.has(name) && !name.includes('이마트'))) continue;
     groundDetail(name+' 집기',RECT(s0,t0,s1,t1),()=>{
       const ss=(s0+s1)/2,tt=(t0+t1)/2;
       // Every known unit gets stock/menus/tableware in its own cell, never an inferred neighboring tenant.
-      if(name.includes('이마트')||name==='JAJU'||name==='씨즈캔디'){
+      if(name.includes('이마트')||name==='JAJU'){
         // Backboards, upright standards, plinth and actual shelf boards anchor the stock.
         lbox(s0+.65,tt,.42,Math.max(1,t1-t0-1),0,2.25,0xbba98c);
         for(const yy of [.38,.98,1.58]){
