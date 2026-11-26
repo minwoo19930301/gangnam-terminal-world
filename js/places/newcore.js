@@ -1,6 +1,7 @@
 import { registerFloorFinishes, floorSamples } from '../../assets/models/newcore-floor/surfaces.js';
 import { loadArchitecture, fitArchitecture } from '../../assets/models/architectural-retail/place.js';
 import { upperFixtures } from '../../assets/models/newcore/upper-fixtures.js';
+import { registerKidsFixture } from '../../assets/models/modernhouse-kids/model.js';
 import { registerProvence } from '../../assets/models/modernhouse-provence/model.js';
 import { registerOksobanTable } from '../../assets/models/newcore/oksoban.js';
 
@@ -1239,7 +1240,7 @@ function backWallDisplay(F, kind, u, y, v, width, inward) {
 
 // A camera can see a backed display from its own bay, or through its open
 // frontage. Use its full visible width so turning around the edge never pops it.
-function upperBayView(F,u,front,depth,width,inset,displayV,halfDisplay){
+function upperBayView(F,u,front,depth,width,inset,displayV,halfDisplay,offset=0){
   const [ox,oz]=F.P(u,front);
   const ux=Math.cos(F.angle),uz=-Math.sin(F.angle);
   const target=(displayV-front)*inset;
@@ -1249,7 +1250,7 @@ function upperBayView(F,u,front,depth,width,inset,displayV,halfDisplay){
     if(along < -depth-.15)return false;
     if(along<=0)return Math.abs(across)<width/2;
     const ratio=along/(along-target);
-    return Math.abs(across*(1-ratio))-halfDisplay*ratio<width/2-.15;
+    return Math.abs(across*(1-ratio)+offset*ratio)-halfDisplay*ratio<width/2-.15;
   };
 }
 
@@ -1268,6 +1269,7 @@ function upperSalesFloor(F, num, floor) {
     for (let i = 0; i < row.length; i++) {
       const u = start + width * (i + .5), [label, kind = 'rail'] = row[i].split('|');
       const clothingFinishes = [[0x665758, 0xe4d8cd], [0x48575c, 0xd9e1dc], [0x836347, 0xe7d8b8]];
+      const kidsRoom = num === 1 && floor.label === '4F' && label === '키즈';
       const provence = num === 1 && floor.label === '4F' && label === '주방용품';
       const hotpot = num === 1 && floor.label === '5F' && label === '옥소반';
       const [accent, wall] = hotpot ? [0x9e4831, 0xc3b5a2] :
@@ -1279,17 +1281,25 @@ function upperSalesFloor(F, num, floor) {
       B(u - bayWidth / 2, y, front - inset * depth / 2, .15, 3.58, depth, wall);
       for (const sign of [-1, 1]) B(u + sign * (bayWidth / 2 - .25), y, front, .31, 3.12, .32, accent);
       B(u, y + 2.99, front, bayWidth, .58, .41, accent);
+      if (kidsRoom) {
+        // This photographed bedding department shares the open Modern House sales floor.
+        const items=[['arches',0,back+inset*.64,3.52],['pillows',0,front-inset*depth*.36,1.72],
+          ['gifts',-2.8,front-inset*depth*.59,1.24]];
+        for(const [key,off,position,half] of items) {
+          registerKidsFixture(F,key,u+off,y+.034,position,upperBayView(F,u,front,depth,bayWidth,inset,position,half,off));
+        }
+      }
       if (provence) {
         const displayV=front-inset*depth*.36;
         registerProvence(F,u,y+.034,displayV,upperBayView(F,u,front,depth,bayWidth,inset,displayV,1.83));
       }
       if (hotpot) registerOksobanTable(F, u, y + .034, front - inset * depth * .36);
-      bays.push({u, front, back, depth, inset, bayWidth, kind, label, side, i, hotpot, provence});
+      bays.push({u, front, back, depth, inset, bayWidth, kind, label, side, i, hotpot, provence, kidsRoom});
     }
   });
   for (const off of [-1,1]) B(0, y + .017, W / 2 + off * 2.76, L - 3, .012, .085, 0xac987a, {solid:false});
   return () => {
-    for (const {u, front, back, depth, inset, bayWidth, kind, label, side, i, hotpot, provence} of bays) {
+    for (const {u, front, back, depth, inset, bayWidth, kind, label, side, i, hotpot, provence, kidsRoom} of bays) {
       B(u, y + 2.96, front + inset * .18, bayWidth - .45, .035, .10, { tex:'emit', color:0xffefd1 }, {solid:false});
       S(label, u, y + 3.28, front + inset * .22, Math.min(7, bayWidth - .8), .43, null,
         {rotY: F.angle + (side ? Math.PI : 0), fg:'#fff9ef'});
@@ -1298,6 +1308,7 @@ function upperSalesFloor(F, num, floor) {
         B(u + t * bayWidth, y + .45, back + inset * .11, bayWidth * .28, 2.48, .085, i % 2 ? 0xefe9da : 0xd9ccbb, {solid:false});
         B(u + t * bayWidth, y + 3.42, front - inset * depth * .49, 1.25, .055, .21, {tex:'emit', color:0xffedcf}, {solid:false});
       }
+      if(kidsRoom)continue;
       const apparel = kind === 'rail' || kind === 'golf';
       const childrenswear = num === 1 && floor.label === '3F';
       const sportswear = num === 2 && floor.label === '4F';
