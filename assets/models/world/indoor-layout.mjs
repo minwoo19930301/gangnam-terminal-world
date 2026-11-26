@@ -10,6 +10,12 @@ import {relief} from '../../../js/banpo_relief.js';
 // Scene object (or a uniquely identifying child) -> editable native source.
 // Geometry decoder matrices and decorative LOD offsets live *below* the placement.
 const sources = [
+  ...['목재 카운터와 창 블라인드','새들 가죽 하이체어','증류주 병과 유리잔','칵테일과 바 도구','철제 선반의 허브 화분','석재 바닥과 접촉 그림자','호박빛 전구 갓'].map(label=>{
+    const name='모보 바 · '+label;
+    return ['jwmarriott','7F','mobo-bar/mobo.blend',name,name];
+  }),
+  ['gyeongbu','B1','gyeongbu-hangaram/hangaram-framing.blend','한가람문구 · 맞춤액자 코너','한가람 반포 · 액자 코너'],
+  ['gyeongbu','B1','gyeongbu-hangaram/hangaram-framing.blend','한가람문구 · 액자 금박과 견본화','근접 · 몰딩 새김과 그림'],
   ['gyeongbu','1F','gyeongbu-pharmacy/gyeongbu-pharmacy.blend','고속터미널약국 · 곡면 입구와 쇼윈도','Pharmacy','Glass','Lit'],
   ...['다이소 · 홈가드닝 화분 진열','다이소 · 화분 옆 조화 진열'].map(name=>['gyeongbu','B1','daiso-garden/garden.blend',name,name]),
   ['gyeongbu','1F','gyeongbu-boards/gates-5-to-10.blend','경부선 · 5~10번 승차홈 전광판','Housing','Lightboxes'],
