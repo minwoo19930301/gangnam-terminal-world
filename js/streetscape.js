@@ -83,7 +83,9 @@ function canopyMaterial(THREE) {
     map.wrapS = map.wrapT = THREE.RepeatWrapping;
     map.magFilter = THREE.LinearFilter; map.minFilter = THREE.LinearMipmapLinearFilter;
     map.generateMipmaps = true; map.needsUpdate = true;
-    canopyMaterials.set(THREE, new THREE.MeshLambertMaterial({ map, vertexColors: true }));
+    const material=new THREE.MeshLambertMaterial({map,vertexColors:true});
+    material.defines={STREET_TREE:1};
+    canopyMaterials.set(THREE,material);
   }
   return canopyMaterials.get(THREE);
 }

@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import {loadReflectionAtlas} from '../interior-architecture/reflection-atlas.js';
 import {loadArchitecture} from '../interior-architecture/model.js';
 import {placeSingleDetail} from '../interior-architecture/single-detail.js';
 import {boxSilhouette} from '../interior-architecture/box-silhouette.js';
@@ -35,22 +36,12 @@ const shapes={
 const proxy=new Map();
 function fallback(key){if(!proxy.has(key))proxy.set(key,boxSilhouette(THREE,shapes[key]));return proxy.get(key);}
 
-let finishes,environment;
+let finishes;
 const materials=new Map();
 function atlas(){
   finishes??=new THREE.TextureLoader().loadAsync(new URL('./surfaces.webp',import.meta.url).href).then(t=>{
     t.flipY=false;t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=4;return t;
   }).catch(error=>{finishes=null;throw error;});return finishes;
-}
-function reflection(){
-  environment??=new THREE.ImageLoader().loadAsync(new URL('./lounge-reflection.webp',import.meta.url).href).then(image=>{
-    const size=image.width/3;
-    const faces=Array.from({length:6},(_,i)=>{
-      const canvas=document.createElement('canvas');canvas.width=canvas.height=size;
-      canvas.getContext('2d').drawImage(image,i%3*size,Math.floor(i/3)*size,size,size,0,0,size,size);return canvas;
-    });
-    const cube=new THREE.CubeTexture(faces);cube.colorSpace=THREE.SRGBColorSpace;cube.needsUpdate=true;return cube;
-  }).catch(error=>{environment=null;throw error;});return environment;
 }
 function finish(map,env,glass){
   const mat=new THREE.MeshPhongMaterial({map,envMap:env,combine:THREE.MixOperation,reflectivity:glass?.76:.44,
@@ -72,7 +63,7 @@ function finish(map,env,glass){
 }
 async function loadSurface(file){
   const key=file.split('/').at(-1).slice(0,-4),glass=key.endsWith('Glass');
-  const [[mesh],map,env]=await Promise.all([loadArchitecture(file),atlas(),reflection()]);
+  const [[mesh],map,env]=await Promise.all([loadArchitecture(file),atlas(),loadReflectionAtlas(new URL('./lounge-reflection.webp',import.meta.url).href)]);
   if(!materials.has(glass))materials.set(glass,finish(map,env,glass));
   mesh.material=materials.get(glass);return [mesh];
 }

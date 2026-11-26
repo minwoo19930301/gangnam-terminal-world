@@ -37,7 +37,7 @@ function swapGeometry(target,source){
   target.boundingSphere=source.boundingSphere;
 }
 
-export function placeMarketDisplay(K,{name,file,at,angle,focus,silhouette,initialGeometry=starter,frontage}){
+export function placeMarketDisplay(K,{name,file,at,angle,focus,silhouette,initialGeometry=starter,loadSurface,fallbackMaterial,frontage,localSight,range=16,exitRange=22}){
   const T=K.THREE;
   let state=displays.get(file);
   if(!state){
@@ -48,13 +48,14 @@ export function placeMarketDisplay(K,{name,file,at,angle,focus,silhouette,initia
   // From inside a neighbouring unit the shop can lie in the camera frustum
   // behind an opaque party wall. Only its open/glazed front admits this sightline.
   const sin=Math.sin(angle),cos=Math.cos(angle);
-  const visibleFrom=frontage&&((eye)=>{
+  const visibleFrom=(frontage||localSight)&&((eye)=>{
     const dx=eye.x-at[0],dz=eye.z-at[2];
     const depth=dx*sin+dz*cos,width=dx*cos-dz*sin;
+    if(localSight)return localSight(width,depth);
     return depth>=frontage.front-.08||(Math.abs(width)<=frontage.halfWidth+.08&&depth>=frontage.back-.08);
   });
   const root=placeSingleDetail(K,{name,file,at,angle,viewBounds,fallback:state.geometry,
-    fallbackMaterial:new T.MeshLambertMaterial({vertexColors:true}),range:16,exitRange:22,eyeHeight:1.6,
+    loadSurface,fallbackMaterial:fallbackMaterial??new T.MeshLambertMaterial({vertexColors:true}),range,exitRange,eyeHeight:1.6,
     floorTolerance:2.0,closeVisibleFrom:visibleFrom});
   const [x,y,z]=at,ground=relief(x,z),eye=y+ground+1.6;
   const item=root.children[0],near=item.onBeforeRender;

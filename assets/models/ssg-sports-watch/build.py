@@ -4,18 +4,26 @@ from math import sin, cos, pi, radians
 import bpy
 import bmesh
 from mathutils import Matrix, Vector
+import sys
 
 OUT = Path(__file__).resolve().parent
+sys.dont_write_bytecode=True
+sys.path.insert(0,str(OUT))
+import screens
+import trainer
 bpy.ops.wm.read_factory_settings(use_empty=True)
+images=screens.construct(OUT)
 gallery = bpy.data.collections.new('SSG_8F_Garmin')
 bpy.context.scene.collection.children.link(gallery)
 transform = Matrix.Identity(4)
 pieces = {}
+creating_trainer=False
+watch_position='fixture'
 batch = 'GarminGangnamFixtures'
 palette = dict(lime='DCF040', cyan='4ACCDD', glass='101C28', paper='F2F1ED',
     cement='BBBAB4', basalt='545458', slate='787B80', steel='9DA5A6', ink='212526',
     charcoal='34383A', silver='B8C1C6', ivory='E7DBC8', white='F7F2E4',
-    grout='99958C', tile='C6C2B6', tile2='C9C5B9')
+    tacxBlue='159CCB', rubber='25282B', red='A82430', grout='99958C', tile='C6C2B6', tile2='C9C5B9')
 materials = {}
 def linear(c):
     s = int(c,16)/255
@@ -51,8 +59,9 @@ def part(name, vertices, faces, color, bevel=0):
     offset = Matrix.Translation(transform.translation)
     mesh.transform(offset.inverted() @ transform)
     ob.matrix_world=offset
-    metal = batch=='GarminGangnamWatches' and name.startswith(('티타늄','버클','측면 버튼','러그 나사','러그 핀'))
+    metal = (creating_trainer and color in ('steel','silver')) or batch=='GarminGangnamWatches' and name.startswith(('티타늄','버클','측면 버튼','러그 나사','러그 핀'))
     pieces.setdefault('GarminGangnamMetal' if metal else batch,[]).append(ob)
+    if batch=='GarminGangnamWatches' and not creating_trainer:ob['watchView']=watch_position
     return ob
 
 def skins(name, rings, color, bevel=0, cap=True):
@@ -91,10 +100,12 @@ def place(x=0,y=0,z=0,angle=0):
     global transform
     transform=Matrix.Translation((x,y,z)) @ Matrix.Rotation(radians(angle),4,'Z')
 
-def disk(name,x,y,z,profile,col,n=40):
+def disk(name,x,y,z,profile,col,n=64):
     # Turn a stepped case profile about the dial normal, in the XZ plane.
     rings=[[(x+r*cos(i*2*pi/n),y+dep,z+r*sin(i*2*pi/n)) for i in range(n)] for r,dep in profile]
-    return skins(name,rings,col)
+    ob=skins(name,rings,col)
+    for f in ob.data.polygons:f.use_smooth=len(f.vertices)==4
+    return ob
 
 def textplate(word,x,y,z,size,col):
     curve=bpy.data.curves.new(word,'FONT')
@@ -118,7 +129,7 @@ def textplate(word,x,y,z,size,col):
 def band_point(t,x,r):
     return (x,-(.031+r)*cos(t),(.034+r)*sin(t))
 
-def strap(col,lining):
+def strap(col,lining,fenix):
     # Solid strips with through-slots and a second colour on the wrist side.
     for side in [-1,1]:
         angles=[side*radians(43+i*3.425) for i in range(41)]
@@ -147,17 +158,59 @@ def strap(col,lining):
             points=[band_point(t+dt,side*x,.00218) for dt,x in
                     [(0,.0062),(.012,.0062),(.018,.0104),(.006,.0104)]]
             part('밴드 미세 사선 홈',points,[(0,1,2,3)],'slate' if col=='white' else 'charcoal')
+    for angle in ([129,151] if fenix else [136]):
+        pts=[];fs=[]
+        profiles=[(-.0129,-.0011),(.0129,-.0011),(.0129,.0048),(-.0129,.0048),
+                  (-.0110,-.00015),(.0110,-.00015),(.0110,.0024),(-.0110,.0024)]
+        for a in [radians(angle)-.064,radians(angle)+.064]:
+            for x,rad in profiles:pts.append(band_point(a,x,rad))
+        for k in range(4):
+            n=(k+1)%4
+            fs.extend([(k,n,8+n,8+k),(4+k,12+k,12+n,4+n),(k,4+k,4+n,n),(8+k,8+n,12+n,12+k)])
+        part('실리콘 고정 고리',pts,fs,'ink' if fenix else col,.00034)
     for x in [-.012,.012]:rod('버클 측면',(x,.031,-.008),(x,.034,.006),.0013,'silver')
     for z,y in [(-.008,.031),(.006,.034)]:rod('버클 가로핀',(-.012,y,z),(.012,y,z),.0013,'silver')
     rod('버클 혀',(0,.034,.006),(0,.033,-.006),.00085,'steel')
 
-def dial_arc(radius,start,end,width,col):
-    angle=[radians(start+(end-start)*i/16) for i in range(17)]
-    pts=[(r*cos(t),-.03755,r*sin(t)) for t in angle for r in [radius-width,radius]]
-    part('화면 예시 · 구간',pts,[(i,i+1,i+3,i+2) for i in range(0,32,2)],col)
+display_material=bpy.data.materials.new('가민 실제 표시 견본');display_material.use_nodes=True
+screens.shade(display_material,images)
+def display_quad(name,coords,area):
+    obj=part(name,coords,[(0,1,2,3)],'paper')
+    obj.data.materials[0]=display_material
+    screens.map_uv(obj,area,[(0,0),(1,0),(1,1),(0,1)])
+    return obj
+rim_material=bpy.data.materials.new('티타늄에 새긴 버튼 문자');rim_material.use_nodes=True
+screens.shade(rim_material,images,glow=False)
+rim_material.node_tree.nodes['Principled BSDF'].inputs['Metallic'].default_value=.67
+rim_material.node_tree.nodes['Principled BSDF'].inputs['Roughness'].default_value=.30
+def bezel(fenix):
+    n=80;rmax=.0231;rmin=.0196 if fenix else .02025
+    vs=[];uv=[];fs=[]
+    for i,rad in enumerate([rmin,rmin+.0003,rmax-.00028,rmax]):
+        depth=-.03586-(rmax-rad)*.355
+        for j in range(n):
+            a=2*pi*j/n
+            vs.append((rad*cos(a),depth,rad*sin(a)))
+            uv.append((.5+.5*rad/rmax*cos(a),.5+.5*rad/rmax*sin(a)))
+            if i:
+                k=(i-1)*n+j;kk=(i-1)*n+(j+1)%n
+                fs.append((k,k+n,kk+n,kk))
+    ob=part('티타늄 각인 베젤',vs,fs,'steel')
+    ob.data.materials[0]=rim_material
+    for f in ob.data.polygons:f.use_smooth=True
+    screens.map_uv(ob,'rim-fenix' if fenix else 'rim-runner',uv)
+def face_art(fenix):
+    n=72;r=.01915 if fenix else .0197
+    verts=[(0,-.03757,0)]+[(r*cos(i*2*pi/n),-.03757,r*sin(i*2*pi/n)) for i in range(n)]
+    faces=[(0,1+i,1+(i+1)%n) for i in range(n)]
+    ob=part('반사형 MIP 화면' if fenix else '컬러 AMOLED 화면',verts,faces,'paper')
+    bpy.context.view_layer.update()
+    ob.data.materials[0]=display_material
+    uv=[(.5,.5)]+[(.5+.5*cos(i*2*pi/n),.5+.5*sin(i*2*pi/n)) for i in range(n)]
+    screens.map_uv(ob,'fenix' if fenix else 'runner',uv)
 
 def watch(fenix,col):
-    strap(col,'slate' if col!='lime' else 'ink')
+    strap(col,'slate' if col!='lime' else 'ink',fenix)
     housing='ivory' if col=='white' else 'charcoal'
     disk('폴리머 케이스',0,0,0,[(.020,-.021),(.0234,-.023),(.0234,-.032)],housing)
     for sign in [-1,1]:
@@ -165,36 +218,25 @@ def watch(fenix,col):
             x=side*.0136
             rings=[[(x+dx,y,sign*z) for dx,y in [(-w,-.032),(w,-.032),(w,-.020),(-w,-.020)]]
                    for w,z in [(.004,.013),(.0027,.026)]]
-            skins('스트랩 러그',rings,housing)
-            if fenix:disk('러그 나사',x,-.0325,sign*.021,[(.0015,0),(.0013,-.0005)],'silver',10)
+            skins('스트랩 러그',rings,housing,.00075)
+            if fenix:
+                bolt_z=sign*.021
+                disk('러그 나사 테',x,-.0325,bolt_z,[(.00175,0),(.00158,-.00032),(.00136,-.00052)],'steel',18)
+                points=[(x,-.033055,bolt_z)]+[(x+rr*cos(k*pi/6),-.033055,bolt_z+rr*sin(k*pi/6))
+                        for k in range(12) for rr in [(.00089 if k%2 else .00046)]]
+                part('러그 나사 별홈',points,[(0,k+1,(k+1)%12+1) for k in range(12)],'ink')
         rod('러그 핀',(-.016,-.022,sign*.025),(.016,-.022,sign*.025),.0011,'steel')
     disk('티타늄 베젤',0,0,0,[(.0233,-.031),(.0238,-.033),(.0231,-.0357),(.020,-.0368)],
          'slate' if fenix or col!='white' else 'silver')
     disk('글라스 가장자리',0,0,0,[(.0204,-.0366),(.0199,-.0372),(.0191,-.0374)],'glass')
-    for i in range(24):
-        t=i*pi/12
-        pts=[(r*cos(t+d),-.03748,r*sin(t+d)) for r,d in
-             [(.0195,-.009),(.0195,.009),(.0185,.009),(.0185,-.009)]]
-        part('베젤 눈금',pts,[(0,1,2,3)],'silver')
     for side,heights in [(-1,[-.011,0,.011]),(1,[-.010,.010])]:
         for h in heights:
             x=(.023**2-h*h)**.5
             a=(side*(x-.0005),-.027,h);b=(side*(x+.0021),-.027,h*1.09)
             rod('측면 버튼 몸통',a,b,.0025 if fenix else .002,'steel')
             rod('푸셔 캡',b,(b[0]+side*.0006,b[1],b[2]),.00225,'charcoal')
-    if fenix:
-        dial_arc(.015,32,145,.0011,'silver')
-        dial_arc(.015,210,294,.0011,'silver')
-        textplate('FENIX PRO',0,-.0377,.004,.0040,'paper')
-        for i in range(8):
-            h=(2+(i*5)%7)*.0008
-            xx=-.008+i*.0022
-            part('고도 예시',[(xx,-.0378,-.008),(xx+.0014,-.0378,-.008),(xx+.0014,-.0378,h-.008),(xx,-.0378,h-.008)],[(0,1,2,3)],'silver')
-    else:
-        dial_arc(.016,40,176,.0018,'cyan')
-        dial_arc(.016,190,290,.0018,'lime')
-        textplate('965',0,-.0377,-.0045,.0125,'cyan')
-    textplate('GARMIN',0,-.0377,-.0139,.0026,'paper')
+    bezel(fenix)
+    face_art(fenix)
 
 # The photographed concession is paved in warm grey stone with narrow joints.
 for ix in range(5):
@@ -224,32 +266,49 @@ for i,(x,col) in enumerate([(-.78,'lime'),(-.35,'white'),(.08,'ink'),(.67,'ink')
     batch='GarminGangnamWatches'
     place(x,-1.918,1.19,[-18,4,20,-24,0,24][i])
     transform=transform @ Matrix.Rotation(radians(-27),4,'X')
+    watch_position='counter'
     watch(i>=3,col)
     place()
     batch='GarminGangnamFixtures'
 
 # Stepped topographic podium and standing portrait display in the branch photo.
 cx,cy=-1.65,-2.23
-for k,(scale,h,shade) in enumerate([(1,.075,'paper'),(.91,.064,'cement'),(.77,.064,'slate'),(.60,.064,'basalt')]):
-    z=.025+sum([.075,.064,.064,.064][:k])
-    rings=[]
-    for height in [z,z+h]:
-        loop=[]
-        for j in range(64):
-            t=j*pi/32
-            r=1+.115*cos(3*t+.4)+.10*sin(5*t)+.045*cos(7*t)
-            loop.append((cx+.76*scale*r*cos(t),cy+.57*scale*r*sin(t),height))
-        rings.append(loop)
-    skins('등고선 받침',rings,shade)
+def contour(name,x,y,z,rx,ry,h,shade,phase):
+    rows=[]
+    for dh in [0,h]:
+        ring=[]
+        for j in range(76):
+            t=j*2*pi/76
+            f=1+.093*cos(3*t+.59+phase)+.068*sin(5*t+.2)+.036*cos(8*t+.7)
+            ring.append((x+rx*f*cos(t),y+ry*f*sin(t),z+dh))
+        rows.append(ring)
+    return skins(name,rows,shade,.004)
+levels=[(.025,.075,0,-.015,.753,.644,'paper'),(.100,.064,-.009,.012,.685,.557,'cement'),
+        (.164,.064,-.018,.040,.621,.470,'slate'),(.228,.064,-.023,.124,.586,.285,'basalt')]
+for k,(z,h,dx,dy,rx,ry,shade) in enumerate(levels):
+    contour('등고선 지형대',cx+dx,cy+dy,z,rx,ry,h,shade,.12*k)
+# A separate dark summit in front of the main island is visible in the
+# branch photograph. Its upper red inscription is indistinct at this scale.
+contour('분리된 앞쪽 봉우리',cx+.093,cy-.346,.228,.169,.117,.064,'basalt',.18)
+def top_text(word,x,y,z,size,color):
+    curve=bpy.data.curves.new(word,'FONT');curve.body=word;curve.align_x='CENTER';curve.size=size;curve.resolution_u=3
+    native=bpy.data.objects.new(word,curve);gallery.objects.link(native)
+    me=bpy.data.meshes.new_from_object(native.evaluated_get(bpy.context.evaluated_depsgraph_get()))
+    ob=bpy.data.objects.new(word,me);gallery.objects.link(ob);ob.location=(x,y,z);me.materials.append(finish(color))
+    pieces.setdefault(batch,[]).append(ob);bpy.data.objects.remove(native,do_unlink=True)
+for word,dy,z,shade in [('1400m',-.616,.1003,'ink'),('1600m',-.498,.1643,'ink'),('1800m',-.390,.2283,'paper')]:
+    top_text(word,cx-.030,cy+dy,z,.047,shade)
+top_text('▲',cx+.108,cy-.358,.2924,.047,'red')
 plate('세로형 전시 화면',cx,cy,.292,.72,.16,1.54,.021,'charcoal')
 plate('화면 패널',cx,cy-.084,.442,.637,.013,1.23,.018,'glass')
 textplate('GARMIN',cx,cy-.092,.335,.081,'white')
-textplate('FORERUNNER 965',cx,cy-.094,1.556,.065,'paper')
+
 # Printed product image represented by a flattened sculptural relief.
 batch='GarminGangnamWatches'
 place(cx,cy-.12,1.02)
 transform=transform @ Matrix.Diagonal((9.1,.65,10,1)) @ Matrix.Rotation(radians(15),4,'Y') @ Matrix.Rotation(radians(-16),4,'Z')
-watch(False,'lime')
+watch_position='kiosk'
+watch(True,'ink')
 place()
 batch='GarminGangnamFixtures'
 # Dark two-tier illuminated back display and a side wordmark on cement panels.
@@ -268,31 +327,24 @@ for j,h in enumerate([.673,1.265]):
         place(x,1.10,h+.088,(-1)**i*12)
         transform=transform @ Matrix.Rotation(radians(-21),4,'X')
         batch='GarminGangnamWatches'
+        watch_position='wall'
         watch(i>=3,['white','lime','ink'][i%3] if i<3 else 'ink')
         place()
         batch='GarminGangnamFixtures'
 
+# A paired-fan trainer stands beside the display in Garmin Korea's branch photograph.
+# Holding clearance to both the island and the back shelving is more important
+# than assuming an exact position from the one oblique photograph.
+batch='GarminGangnamWatches'
+creating_trainer=True
+place(-1.50,-.70,.032,12)
+trainer.make(part,skins,plate,rod,display_quad)
+creating_trainer=False
+place()
+for group,objects in pieces.items():
+    for ob in objects:ob['retailDrawGroup']=group
 bpy.context.scene.unit_settings.system='METRIC'
 bpy.context.preferences.filepaths.save_version=0
 bpy.ops.wm.save_as_mainfile(filepath=str(OUT/'gallery.blend'),compress=True)
-for group,objects in pieces.items():
-    bpy.ops.object.select_all(action='DESELECT')
-    material=bpy.data.materials.new(group)
-    material.use_nodes=True
-    shader=material.node_tree.nodes.get('Principled BSDF')
-    colors=material.node_tree.nodes.new('ShaderNodeVertexColor')
-    colors.layer_name='Finish'
-    material.node_tree.links.new(colors.outputs['Color'],shader.inputs['Base Color'])
-    shader.inputs['Roughness'].default_value=.28 if group.endswith('Metal') else .56
-    shader.inputs['Metallic'].default_value=.46 if group.endswith('Metal') else 0
-    for ob in objects:
-        mesh=ob.data
-        attr=mesh.color_attributes.new(name='Finish',type='BYTE_COLOR',domain='CORNER')
-        for poly in mesh.polygons:
-            rgba=mesh.materials[poly.material_index].diffuse_color
-            for i in poly.loop_indices:attr.data[i].color=rgba
-        mesh.materials.clear();mesh.materials.append(material)
-        ob.select_set(True)
-    bpy.context.view_layer.objects.active=objects[0]
-    bpy.ops.object.join();bpy.context.object.name=group
-bpy.ops.export_scene.gltf(filepath=str(OUT/'gallery.glb'),export_format='GLB',export_animations=False,export_texcoords=False)
+file=OUT/'export.py'
+exec(compile(file.read_text(),str(file),'exec'),{'__file__':str(file)})

@@ -1,0 +1,11 @@
+{
+  "floor": "11F",
+  "x": -51.556189,
+  "z": 67.465881,
+  "yaw": 202.0,
+  "pitch": -54.0,
+  "meshName": "HokyungSizzlingRice",
+  "sourceBlend": "hokyung.blend",
+  "sourceCollection": "SSG_11F_Hokyung_Dining",
+  "nativeLabel": "호경전"
+}

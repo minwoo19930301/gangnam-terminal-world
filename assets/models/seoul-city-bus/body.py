@@ -160,6 +160,47 @@ def window_bays(side):
     return [(a+.031,b-.031) for a,b in zip(divs,divs[1:]) if not(side<0 and (a,b) in DOORS)]
 
 
+def exterior_mirror(side):
+    # Hyundai's Elec City close-up shows a triangular stay, two mirror
+    # surfaces and three distinct amber elements in the forward-facing lens.
+    def frame(name,sections,color):
+        verts=[]
+        for d,cx,cz,w,h in sections:
+            for j in range(16):
+                a=tau*j/16
+                # Rounded-rectangle perimeter. The top is slightly wider.
+                dx=(1 if cos(a)>=0 else -1)*abs(cos(a))**.60
+                dz=(1 if sin(a)>=0 else -1)*abs(sin(a))**.60
+                verts.append((side*(cx+w*dx*(.96+.04*dz)),d,cz+h*dz))
+        faces=[tuple(reversed(range(16)))]
+        for row in range(len(sections)-1):
+            for j in range(16):
+                i=row*16+j;k=row*16+(j+1)%16
+                faces.append((i,k,k+16,i+16))
+        faces.append(tuple(range(len(verts)-16,len(verts))))
+        if side*(sections[-1][0]-sections[0][0])>0:
+            faces=[f[::-1] for f in faces]
+        obj=P(name,verts,faces,color)
+        for face in obj.data.polygons: face.use_smooth=True
+    R('미러 · 위쪽 지지암',[(side*1.098,5.002,2.70),(side*1.36,5.115,2.685),
+      (side*1.495,5.245,2.641)],.022,'black',8)
+    R('미러 · 아래쪽 삼각 버팀대',[(side*1.109,5.005,2.55),(side*1.31,5.096,2.57),
+      (side*1.465,5.221,2.641)],.016,'black',8)
+    R('미러 · 회전 소켓',[(side*1.495,5.245,2.65),(side*1.49,5.268,2.38)],.020,'gasket',8)
+    frame('길게 내려온 미러 외피',[(5.234,1.480,2.336,.081,.188),(5.257,1.482,2.335,.093,.210),
+          (5.308,1.482,2.332,.092,.207),(5.352,1.484,2.334,.072,.184)],'black')
+    frame('하부 거울과 검은 림',[(5.236,1.480,2.336,.077,.179),(5.231,1.480,2.336,.073,.174)],'mirror')
+    frame('상단 보조 거울 외피',[(5.223,1.486,2.595,.091,.073),(5.246,1.488,2.596,.100,.078),
+          (5.296,1.490,2.594,.092,.073),(5.316,1.492,2.592,.072,.055)],'black')
+    frame('상단 볼록 거울',[(5.226,1.486,2.595,.086,.065),(5.217,1.486,2.595,.078,.057),
+          (5.214,1.486,2.595,.049,.034)],'mirror')
+    frame('방향지시등 · 어두운 테',[(5.347,1.482,2.326,.046,.022),(5.357,1.482,2.326,.043,.018)],'gasket')
+    frame('방향지시등 · 호박색 렌즈',[(5.358,1.482,2.326,.039,.014),(5.360,1.482,2.326,.036,.012)],'indicator')
+    for dx in [-.024,0,.024]:
+        ring('방향지시등 · LED 소자',(side*(1.482+dx),5.361,2.326),'d',
+             [(0,.008),(.002,.006),(.003,.001)],'amber',8)
+
+
 def surrounds():
     for side in [-1,1]:
         x=side*(HALF+.002)
@@ -181,10 +222,7 @@ def surrounds():
         R('전면 모서리 검은 창틀',[(s*1.074,5.341,1.04),(s*1.108,5.164,2.42),(s*1.07,5.115,2.64)],.054,'black',10)
         R('앞유리 평행 와이퍼',[(s*.57,5.483,1.085),(s*.42,5.488,1.22),(s*.25,5.474,1.34)],.017,'black',8)
         R('와이퍼 고무 날',[(s*.88,5.415,1.44),(s*.46,5.473,1.36),(s*.06,5.492,1.29)],.016,'rubber-edge',8)
-        R('미러의 꺾인 암',[(s*1.08,5.03,2.67),(s*1.425,5.09,2.55),(s*1.463,5.30,2.46)],.038,'black',10)
-        B('미러 하우징',s*1.455,5.30,2.14,.145,.118,.35,'black',.037)
-        B('미러 은색 유리',s*1.455,5.243,2.17,.109,.011,.279,'mirror',.021)
-        B('미러 방향 지시등',s*1.455,5.36,2.27,.096,.012,.028,'amber',.005)
+        exterior_mirror(s)
         # A continuous charcoal mask wraps the windscreen sill and narrows toward the nose.
         trim=[(.02,5.454,1.076),(.85,5.431,1.061),(1.075,5.369,1.124),
               (1.096,5.337,1.192),(.86,5.444,1.139),(.02,5.469,1.112)]

@@ -70,7 +70,7 @@ function batchFallback(T, group) {
   group.add(new T.Mesh(geometry,material));
 }
 
-export function mountRetailDisplay(K, {root, fallback, source, batches, x, y, z}) {
+export function mountRetailDisplay(K, {root, fallback, source, batches, x, y, z, nearDistance=11, displayDistance=22}) {
   const T = K.THREE;
   root.userData.terrainApplied = true;
   root.updateWorldMatrix(true,true);
@@ -95,6 +95,7 @@ export function mountRetailDisplay(K, {root, fallback, source, batches, x, y, z}
   });
   K.addMesh(root);
 
+  const nearSq=nearDistance*nearDistance, displaySq=displayDistance*displayDistance;
   let ready = false, loading = false, near = false, retryAt = 0;
   async function load() {
     loading = true;
@@ -142,8 +143,8 @@ export function mountRetailDisplay(K, {root, fallback, source, batches, x, y, z}
   K.onFrame((_dt,_time,player) => {
     const dx = x - player.x, dz = z - player.z, distanceSq = dx*dx + dz*dz;
     const sameFloor = player.y >= y-.20 && player.y < y+4.6;
-    root.visible = sameFloor && distanceSq < 22*22;
-    near = root.visible && distanceSq < 11*11;
+    root.visible = sameFloor && distanceSq < displaySq;
+    near = root.visible && distanceSq < nearSq;
     fallback.visible = !(ready && near);
     for (const mesh of slots) mesh.visible = ready && near;
   });

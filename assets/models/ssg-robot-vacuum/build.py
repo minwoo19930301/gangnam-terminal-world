@@ -3,9 +3,13 @@ import bpy
 from math import sin, cos, pi, radians, exp
 from pathlib import Path
 from mathutils import Matrix, Vector
-from random import Random
+import sys
 
 OUT = Path(__file__).resolve().parent
+sys.dont_write_bytecode=True
+sys.path.insert(0,str(OUT))
+import surfaces
+import demonstrator
 bpy.ops.wm.read_factory_settings(use_empty=True)
 bpy.context.preferences.filepaths.save_version = 0
 gallery = bpy.data.collections.new("SSG_9F_Roborock")
@@ -117,66 +121,29 @@ def label(s,loc,size,mat=ink,tilt=pi/2):
 
 
 korean=bpy.data.fonts.load('/System/Library/Fonts/AppleSDGothicNeo.ttc')
-# A continuous veneer top, with staggered grain and a cut edge at each end.
-rng=Random(30)
-w,h=512,192
-img=bpy.data.images.new("시연대 참나무 결",width=w,height=h)
-pixels=[]
-for j in range(h):
-    tone=rng.uniform(-.011,.011)
-    for i in range(w):
-        wave=j*.82+sin(i*.011+j*.018)*1.8+sin(i*.031+j*.042)*.36
-        knot=exp(-((i-362)/84)**2-((j-70)/16)**2)
-        g=.032*sin(wave+7*knot)+.018*sin(wave*.22)+tone+rng.uniform(-.008,.008)
-        pixels.extend((.84+g,.71+g,.53+g,1))
-img.pixels[:]=pixels
-img.pack()
-tex=oak.node_tree.nodes.new('ShaderNodeTexImage')
-tex.image=img
-oak.node_tree.links.new(tex.outputs['Color'],oak.node_tree.nodes.get('Principled BSDF').inputs['Base Color'])
-
+# The same packed atlas serves the veneer, dealer cards and textile. These
+# pieces can be exported as a single material while keeping separate editable objects.
+surfaces.prepare(OUT,oak)
 top=.77
 box("후퇴한 받침",(0,0,.05),(2.25,.78,.10),grey,.025)
 box("흰색 시연대",(0,0,.40),(2.43,.95,.68),ivory,.032)
 board=box("참나무 시연판",(0,0,.74),(2.40,.93,.06),oak,.012)
+board.data.uv_layers.active.name="Showroom"
 uv=board.data.uv_layers.active.data
 for poly in board.data.polygons:
     for k in poly.loop_indices:
         v=board.data.vertices[board.data.loops[k].vertex_index].co
-        uv[k].uv=(v.x/2.4+.5,v.y/.93+.5)
+        uv[k].uv=surfaces.uv("wood",v.x/2.4+.5,v.y/.93+.5)
 box("뒤쪽 턱",(0,.455,.883),(2.43,.045,.285),ivory,.016)
 for x in (-1.195,1.195):
     box("낮은 옆 턱",(x,0,.807),(.04,.94,.12),ivory,.016)
 label("roborock",(0,-.477,.37),.142)
-# Dock. The black wash bay is recessed between two side pillars and the water tanks.
+# The two adjacent white docks and underside sample can all be seen in the
+# department store's Gangnam photograph. The left cover is lower and more reflective.
 dx,dy=.46,.145
-box("도크 세척 트레이",(dx,dy-.10,top+.017),(.445,.49,.034),dark,.016)
-for side in (-1,1):
-    box("도킹 가이드",(dx+side*.194,dy-.12,top+.026),(.027,.425,.026),rubber,.011)
-    box("도크 측면 기둥",(dx+side*.192,dy,top+.202),(.054,.305,.38),ivory,.025)
-box("충전 배면",(dx,dy+.094,top+.139),(.397,.125,.263),glass,.016)
-box("본체 회수구",(dx,dy,top+.302),(.43,.315,.227),ivory,.030)
-box("도크 전면 마스크",(dx,dy-.153,top+.258),(.421,.035,.132),dark,.016)
-box("새틴색 먼지함 덮개",(dx,dy-.177,top+.262),(.411,.034,.12),silver,.012)
-label("roborock",(dx,dy-.195,top+.26),.021)
-for side in (-1,1):
-    ax=dx+side*.106
-    box("분리형 물통",(ax,dy,top+.442),(.205,.300,.097),white,.018)
-    box("물통 뚜껑",(ax,dy,top+.492),(.201,.291,.016),ivory,.008)
-    for edge in (-1,1):
-        by=dy+(.058 if side==1 else .10)
-        bar("물통 손잡이 지주",(ax+edge*.072,by,top+.50),
-            (ax+edge*.072,by-.04,top+(.599 if side==1 else .519)),.007,grey)
-    box("물통 손잡이",(ax,by-.04,top+(.599 if side==1 else .519)),(.155,.017,.014),white,.006)
-# Original display graphics. Two red-headed cards on the photographed dock.
-def card(title,line,x,y,z,width,height):
-    box("제품 안내 카드",(x,y,z),(width,.006,height),ivory,.003)
-    box("붉은 머리글",(x,y-.004,z+height*.325),(width-.003,.002,height*.31),red)
-    label(title,(x,y-.006,z+height*.24),height*.22,ivory)
-    label(line,(x,y-.006,z-height*.21),height*.19)
-card("로보락","올인원 도크",dx,dy-.163,top+.39,.28,.071)
-card("브러시 비교","듀얼 롤러",-.54,.06,top+.24,.245,.09)
-box("안내판 받침",(-.54,.08,top+.12),(.05,.04,.22),silver,.008)
+materials=dict(ivory=ivory,white=white,grey=grey,dark=dark,rubber=rubber,silver=silver,glass=glass,lens=lens,red=red,redlight=redlight,pad=pad,ink=ink,atlas=oak)
+tools=dict(box=box,bar=bar,mesh=mesh,wheel=wheel,revolved=revolved,finish=finish,label=label)
+demonstrator.showroom(top,dx,dy,tools,materials)
 
 def robot(x,y,z):
     base=(x,y,z)
@@ -190,10 +157,7 @@ def robot(x,y,z):
         a=i*pi/2+.22
         box("라이다 창 기둥",(rev[0]+.044*cos(a),rev[1]+.044*sin(a),rev[2]+.010),(.009,.009,.012),grey,.002)
     revolved("라이다 센서탑 덮개",rev,[(.014,.047),(.018,.049),(.023,.044),(.024,.037)],ivory,48)
-    label("Z",(x,y+.013,z+.111),.027,grey,0)
-    box("버튼 베젤",(x,y-.083,z+.087),(.064,.022,.003),white,.001)
-    for j in (-1,0,1):
-        revolved("작동 키",(x+j*.019,y-.083,z+.090),[(0,.005),(.001,.005)],grey,18)
+    demonstrator.upper_details(x,y,z,tools,materials)
     box("전방 장애물 센서",(x,y-.170,z+.053),(.088,.017,.042),glass,.008)
     for i in (-1,0,1):
         o=revolved("전방 센서 렌즈",(x+i*.024,y-.179,z+.054),[(0,.008),(.002,.007)],lens,20)
@@ -205,8 +169,7 @@ def robot(x,y,z):
         a=.48+i*.099
         vent=box("배기 슬롯",(x+.173*cos(a),y+.173*sin(a),z+.049),(.003,.005,.023),rubber,.001)
         vent.rotation_euler.z=a
-robot(dx,dy-.284,top+.032)
-robot(-.035,-.13,top)
+robot(dx,dy-.267,top+.032)
 # Underside demonstrator with the wheels, pad and silicone flights facing the shopper.
 start=set(gallery.objects)
 revolved("시연용 뒤집은 본체",(0,0,0),[(-.065,.159),(-.058,.172),(-.018,.174),(-.012,.17)],ivory)
@@ -230,10 +193,7 @@ for row in range(2):
                 verts.append((x,cy+r*cos(a+delta),.025+r*sin(a+delta)))
         faces=[(3*i+j,3*(i+1)+j,3*(i+1)+j+1,3*i+j+1) for i in range(28) for j in range(2)]
         mesh("나선형 고무 날",verts,faces,redlight if row==0 else rubber)
-for i in range(16):
-    y=.047+i*.0065
-    width=2*(.155**2-y*y)**.5
-    box("극세사 패드 골",(0,y,.004),(width,.0077,.013),pad if i%3 else white,.003)
+demonstrator.underbody(tools,materials)
 for i in range(3):
     a=.65+i*2*pi/3
     ax,ay=-.10,-.092
@@ -249,9 +209,6 @@ tilt=Matrix.Translation((-.59,-.12,top+.134)) @ Matrix.Rotation(radians(28),4,'X
 bpy.context.view_layer.update()
 for obj in set(gallery.objects)-start: obj.matrix_world=tilt @ obj.matrix_world
 box("경사 견본 받침",(-.59,-.11,top+.05),(.25,.21,.1),dark,.015)
-# Standing branch-style rounded brand plaque.
-box("브랜드 표지",(-.95,.28,top+.16),(.29,.045,.25),ivory,.022)
-label("roborock",(-.95,.255,top+.146),.057)
 bpy.context.view_layer.update()
 print('Editable pieces:',len(gallery.objects))
 bpy.ops.wm.save_as_mainfile(filepath=str(OUT/'gallery.blend'),compress=True)

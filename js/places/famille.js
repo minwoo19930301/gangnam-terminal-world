@@ -1,3 +1,5 @@
+import {FA,FB,upperPoint as FP,diningSpan} from './_familleUpperPlan.js';
+import {placeCharDining} from '../../assets/models/char-dining/place.js';
 import { loadArchitecture, placeArchitecture } from '../../assets/models/interior-architecture/model.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
@@ -28,9 +30,6 @@ export const meta = {
     '.codex-jobs/evidence/centralcity_r19_snapshot.js', 'data/research/famille.json',
   ],
 };
-const FA = 62 / Math.hypot(62,24), FB = 24 / Math.hypot(62,24);
-// u runs WSW along JW's south wall; v runs SSE away from that wall.
-const FP = (u,v) => [29-FA*u+FB*v,144+FB*u+FA*v];
 const FR = (a,b,c,d) => [FP(a,b),FP(c,b),FP(c,d),FP(a,d)];
 const FROT = Math.atan2(FB,FA);
 
@@ -147,6 +146,9 @@ function buildUpper(K){
   K.spawn({name:'파미에 에스컬레이터 상단',x:25.5,y:5,z:167.2,yaw:21*Math.PI/180,group:'파미에스테이션'});
 
   W(-27,17.9,-5.5,17.9,5,6.1,'glass',{thick:.035,openings:[{at:3.6,w:1.2,y0:5,y1:6.1},{at:13.2,w:1.2,y0:5,y1:6.1},{at:18.6,w:1.2,y0:5,y1:6.1}]});
+  // The 2F indoor dining span has a continuous floor and structural ceiling.
+  for(const yy of [5,8.43])K.occludingSlab({poly:FR(...diningSpan),y:yy,eyeMin:5.05,eyeMax:8.37});
+  placeCharDining(K,FP,FROT);
   upperDetails(K,{B,W,S,slab});
 }
 // Small faceted rods merge into the kit batches (no per-object draw calls).
@@ -215,8 +217,6 @@ function upperDetails(K,{B,W,S,slab}){
     for(let u=-27;u<8;u+=.48)B(u,18.5,u<-14?8.43:9.32,.035,u<-14?6.4:13,.12,0x242424,{solid:false});
     for(let u=-26;u<7;u+=3.8)B(u,19.4,u<-14?8.37:9.27,1.45,.14,.045,{tex:'emit',color:0xf6f2df},{solid:false});
     for(const [a,b] of [[-27,-24],[-22.8,-14.4],[-13.2,-9],[-7.8,-5.5]])railing(a,b,17.84,5);
-    for(let u=-24;u<-14;u+=3.2){S(['차알','신메뉴 BEST'],u,17.74,6.6,1.1,1.35,'v',{bg:'#f6ece0',fg:'#bd4437'});table(u,15.9,5);}
-    S('차알',-23,12.03,7.65,2.5,.45,'v',{fg:'#f2e3d2'});
     // Photo #249: 15 individual brass plaques, retained as a directory rather
     // than incorrectly treating their plan numbers as geographic positions.
     const names=['KEY COFFEE COMPANY','FOURB ROASTERY BAGEL','hoho','한우리','CREAM LABEL','天津包子','오장동 함흥냉면','와라쿠 샤샤','crispy fresh',"Buddha’s Belly",'FAMILLE STATION','갓덴스시','CENTRAL YONSEI','Mi&Mi','JAJU'];
@@ -297,7 +297,7 @@ function upperDetails(K,{B,W,S,slab}){
     for(const [u,v,y]of [[-24,18.2,5]]){
       B(u,v,y,.52,.32,2.15,0x272925);S(['↑ 2층 식당가 · 뷰티살롱','차알 · 무월식탁 · 매우매오','ebt PIZZA · KERVAN','BEAN BROTHERS · halff coffee'],u,v+.18,y+1.25,.8,1.2,'v',{bg:'#272925',fg:'#eee6d3'});
     }
-    for(const [u,v,shirt]of [[-9,19.3,0x404841],[-2,20.5,0xb9a88a],[5.5,20.2,0x5f5852],[-19,16.4,0x656768]]){const[x,z]=FP(u,v);K.person(x,5,z,{shirt,pants:0x3a3937,rotY:FROT});}
+    for(const [u,v,shirt]of [[-9,19.3,0x404841],[-2,20.5,0xb9a88a],[5.5,20.2,0x5f5852],[-18.52,19.70,0x656768]]){const[x,z]=FP(u,v);K.person(x,5,z,{shirt,pants:0x3a3937,rotY:FROT});}
     S('1층 ↓',11.5,20.7,8.6,1.2,.3,'-v',{bg:'#278878',fg:'#f8fff3'});
   });
 }

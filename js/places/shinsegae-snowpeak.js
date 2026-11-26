@@ -4,6 +4,48 @@ import {mountRetailDisplay} from './shinsegae-retail-display.js';
 const source = new URL('../../assets/models/ssg-helinox/gallery.glb',import.meta.url);
 const batches = ['SnowPeakGangnamCanvas','SnowPeakGangnamHardware','SnowPeakGangnamWeave'];
 
+// The original metal work keeps its normal PBR response. The R mask marks
+// the kettle and titanium cup for the baked tent reflection in the same draw.
+function tentReflections(mesh,angle) {
+  const original=mesh.onBeforeRender;
+  let installed;
+  mesh.onBeforeRender=function(renderer,scene,camera,geometry,material,...rest) {
+    original.call(this,renderer,scene,camera,geometry,material,...rest);
+    if(material===installed || !material.emissiveMap || !material.roughnessMap)return;
+    installed=material;
+    const previous=material.onBeforeCompile, cacheKey=material.customProgramCacheKey();
+    material.onBeforeCompile=function(shader,renderer) {
+      previous.call(this,shader,renderer);
+      shader.uniforms.campYaw={value:angle};
+      shader.fragmentShader=shader.fragmentShader.replace('#include <common>',`
+        #include <common>
+        uniform vec2 campYaw;`).replace('#include <roughnessmap_fragment>',`
+        float roughnessFactor=roughness;
+        float campPolish=0.;
+        #ifdef USE_ROUGHNESSMAP
+          vec4 campFinish=texture2D(roughnessMap,vRoughnessMapUv);
+          campPolish=campFinish.r;
+          roughnessFactor*=campFinish.g;
+        #endif`).replace('#include <opaque_fragment>',`
+        #ifdef USE_EMISSIVEMAP
+          if(campPolish>.02) {
+            vec3 eye=normalize(vViewPosition);
+            vec3 d=inverseTransformDirection(reflect(-eye,normal),viewMatrix);
+            float side=dot(d.xz,vec2(campYaw.x,-campYaw.y));
+            float front=dot(d.xz,campYaw.yx);
+            vec2 uv=vec2(.5+atan(-front,side)*.15915494,.5-asin(clamp(d.y,-1.,1.))*.31830989);
+            vec3 room=texture2D(emissiveMap,uv).rgb;
+            float fresnel=pow(1.-abs(dot(eye,normal)),3.);
+            float light=clamp(.55+dot(outgoingLight,vec3(.213,.715,.072)),.52,1.03);
+            outgoingLight=mix(outgoingLight,room*light,campPolish*(.26+.30*fresnel));
+          }
+        #endif
+        #include <opaque_fragment>`);
+    };
+    material.customProgramCacheKey=()=>cacheKey+':snowpeak-camp-reflection-v1';
+    material.needsUpdate=true;
+  };
+}
 export function registerSnowPeak(K,{poly,x,y,z,yaw}) {
   K.detail({floor:'8F',y0:y,y1:y+4.8,poly,name:'스노우피크 · 캠핑용품 전시'}, () => {
     const T=K.THREE, root=new T.Group(), fallback=new T.Group();
@@ -40,5 +82,6 @@ export function registerSnowPeak(K,{poly,x,y,z,yaw}) {
     piece(box,0xbcc4c4,1.21,.22,1.34,.42,.21,.42);
     piece(box,0xbe8d54,1.47,1.845,-1.47,1.27,.43,.068);
     mountRetailDisplay(K,{root,fallback,source,batches,x,y,z});
+    tentReflections(root.getObjectByName(batches[1]),new T.Vector2(Math.cos(yaw),Math.sin(yaw)));
   });
 }

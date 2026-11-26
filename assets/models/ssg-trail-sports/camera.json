@@ -1,0 +1,15 @@
+{
+  "floor": "8F",
+  "x": -59.59467816172972,
+  "z": 76.05591034203246,
+  "yaw": 103.42794282488292,
+  "pitch": -7,
+  "meshName": "SalomonTrailEquipment",
+  "sourceBlend": "gallery.blend",
+  "sourceCollection": "SSG_8F_Salomon",
+  "nativeLabel": "살로몬",
+  "y": 35.82,
+  "area": "in:shinsegae",
+  "gameView": "?area=in:shinsegae&pos=-59.595,35.82,76.056&yaw=103.428&pitch=-7",
+  "footwearView": "?area=in:shinsegae&pos=-60.795,35.82,77.46&yaw=111.04&pitch=-13"
+}

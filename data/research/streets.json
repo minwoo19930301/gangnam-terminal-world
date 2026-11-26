@@ -1,4 +1,12 @@
 {
+  "goter_pedestrian_island": {
+    "checked": "2026-11-26",
+    "roadview_dates": "2026-01-23",
+    "sources": ["https://map.naver.com/p?p=HK5BFh1JiYwO0LFmRGUw-A,19,0,80,Float", "https://map.naver.com/p?p=Xj8lR0my1cNJYr0iBlNBng,156,0,80,Float", "https://www.seocho.go.kr/site/seocho/ex/bbs/View.do?bcIdx=406159&cbIdx=61"],
+    "observed": "갈색 원형 신호주, 양면 도로명판, 두 방향 보행등, 차광판 달린 사색등, 점·선형 유도 블록과 흰 반사띠 볼라드.",
+    "estimated": "두 거리뷰 방위로 기둥을 맞췄다. 보행섬 외곽은 기존 우회전 차로 폭에 맞춘 근사 도형이며 신호 높이와 개별 시설 간격은 현장 실측값이 아니다.",
+    "model": "assets/models/goter-crossing/signals.blend"
+  },
   "id": "streets",
   "name": "고속터미널 거리 · 신반포로와 사평대로",
   "updated": "2026-11-26",
