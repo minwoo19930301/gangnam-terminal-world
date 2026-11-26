@@ -1,0 +1,12 @@
+{
+  "floor": "10F",
+  "x": -67.60033,
+  "y": 45.4,
+  "z": 2.57592,
+  "yaw": 274.917,
+  "pitch": 12,
+  "meshName": "신세계 본관 10층 · 에스컬레이터 위 천장",
+  "sourceBlend": "atrium-ceiling.blend",
+  "sourceCollection": "본관 에스컬레이터 · 천장 프레임",
+  "nativeLabel": "본관 에스컬레이터 천장"
+}
