@@ -11,6 +11,7 @@ import { placeWarmer } from '../../assets/models/gyeongbu-pretzels/model.js';
 import { placeUpperShowroom } from '../../assets/models/gyeongbu-apparel/model.js';
 import {placeChildrensAisle} from '../../assets/models/gyeongbu-childrens-aisle/model.js';
 import {placeSuitingAisle} from '../../assets/models/gyeongbu-suiting-aisle/model.js';
+import {placeWomensAisle} from '../../assets/models/gyeongbu-womens-aisle/model.js';
 import { coachGlazing } from '../../assets/models/coach-cabin/windows.js';
 import { placeCutFlowers } from '../../assets/models/gyeongbu-cutflowers/model.js';
 import { placeWaitingBenches } from '../../assets/models/gyeongbu-seating/model.js';
@@ -48,6 +49,28 @@ export const meta = {
     'refs/photos/gyeongbu/05_gate_hall_departure_boards.jpg', 'refs/photos/gyeongbu/08_diagonal_facade_struts.jpg',
     'data/research/gyeongbu_visual.json', 'https://news.seoul.go.kr/traffic/?p=508344',
     'https://mediahub.seoul.go.kr/archives/1220355', 'https://m.seoul.co.kr/news/2013/01/07/20130107500012'],
+};
+
+// These adjacent stalls share the corridor finish. Shop furniture keeps its
+// own collision even when the camera has unloaded the close merchandise.
+const wholesaleAisles={
+  Children:{place:placeChildrensAisle,name:'6층 아동복 철망 진열 통로',fixtures:[
+    [36.19,109.5,.12,5.40,2.64],[33.06,109.5,.09,5.65,2.71],
+    [34.62,106.69,3.18,.085,2.69],[34.62,112.31,3.18,.085,2.69],[42.88,109.5,.09,5.65,2.72],
+    [41.44,106.67,2.89,.085,2.69],[41.44,112.33,2.89,.085,2.69],
+    [39.87,108.12,1.14,2.50,.84],[39.87,111.03,1.14,2.18,.84]]},
+  Suits:{place:placeSuitingAisle,name:'7층 신사복 이단 행거 통로',fixtures:[
+    [33.20,109.5,.08,6.26,2.79],[42.80,109.5,.08,6.26,2.79],
+    [34.30,106.36,2.24,.09,2.73],[34.30,112.64,2.24,.09,2.73],
+    [41.70,106.36,2.24,.09,2.73],[41.70,112.64,2.24,.09,2.73],
+    [36.33,109.59,.65,5.48,2.64],[39.67,109.59,.65,5.48,2.64],
+    [36.48,106.68,.70,.40,1.80],[39.61,106.78,.70,.40,1.80]]},
+  Womenswear:{place:placeWomensAisle,name:'8층 여성복 니트와 외투 통로',fixtures:[
+    [33.14,109.5,.08,6.3,2.76],[42.86,109.5,.08,6.3,2.76],
+    [34.27,106.35,2.30,.076,2.72],[34.27,112.65,2.30,.076,2.72],
+    [41.73,106.35,2.30,.076,2.72],[41.73,112.65,2.30,.076,2.72],
+    [39.40,109.53,.56,5.53,2.43],[36.79,107.26,.58,.65,1.65],[36.69,108.40,.58,.65,1.65],
+    [35.31,110.68,.59,3.31,2.37]]}
 };
 
 export function build(K) {
@@ -2405,28 +2428,15 @@ export function build(K) {
     const floor = (i + 1) + 'F';
     const wings = [[34.2, 1], [41.8, -1]];
     const centers = [100.5, 109.5, 118.5, 127.5];
-    const childrens=key==='Children',suiting=key==='Suits';
-    const localAisle=childrens||suiting;
+    const localAisle=wholesaleAisles[key];
     if(localAisle){
       const hidden={skip:['top','bottom','n','s','e','w']};
-      // Collision remains active when the close display is unloaded.
-      const fixtures=childrens?
-        [[36.19,109.5,.12,5.40,2.64],[33.06,109.5,.09,5.65,2.71],
-         [34.62,106.69,3.18,.085,2.69],[34.62,112.31,3.18,.085,2.69],[42.88,109.5,.09,5.65,2.72],
-         [41.44,106.67,2.89,.085,2.69],[41.44,112.33,2.89,.085,2.69],
-         [39.87,108.12,1.14,2.50,.84],[39.87,111.03,1.14,2.18,.84]]:
-        [[33.20,109.5,.08,6.26,2.79],[42.80,109.5,.08,6.26,2.79],
-         [34.30,106.36,2.24,.09,2.73],[34.30,112.64,2.24,.09,2.73],
-         [41.70,106.36,2.24,.09,2.73],[41.70,112.64,2.24,.09,2.73],
-         [36.33,109.59,.65,5.48,2.64],[39.67,109.59,.65,5.48,2.64],
-         [36.48,106.68,.70,.40,1.80],[39.61,106.78,.70,.40,1.80]];
-      for(const [u,v,w,d,h] of fixtures)lbox(u,v,floorY,w,d,h,0,hidden);
+      for(const [u,v,w,d,h] of localAisle.fixtures)lbox(u,v,floorY,w,d,h,0,hidden);
       const footprint=rect(33.0,105.35,43.04,113.65);
       K.phys.addCeiling(footprint,floorY+2.923);
       for(const [a,b] of [[96.70,105.35],[113.65,130.30]])K.phys.addCeiling(rect(35.55,a,40.45,b),floorY+2.925);
-      const placeAisle=childrens?placeChildrensAisle:placeSuitingAisle;
-      ldetail({floor,y0:floorY,y1:floorY+3.05,poly:footprint,name:childrens?'6층 아동복 철망 진열 통로':'7층 신사복 이단 행거 통로'},()=>{
-        const [x,z]=W(38,109.5);placeAisle(K,x,floorY,z,ROT);
+      ldetail({floor,y0:floorY,y1:floorY+3.05,poly:footprint,name:localAisle.name},()=>{
+        const [x,z]=W(38,109.5);localAisle.place(K,x,floorY,z,ROT);
       });
     }
     // A fixture's front (+z in the exported GLB) faces the centre aisle.
