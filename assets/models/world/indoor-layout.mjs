@@ -10,11 +10,11 @@ import {relief} from '../../../js/banpo_relief.js';
 // Scene object (or a uniquely identifying child) -> editable native source.
 // Geometry decoder matrices and decorative LOD offsets live *below* the placement.
 const sources = [
-  ...[['9F','marzocco','MarzoccoEnamel','SSG_9F_LaMarzocco'],
-      ['9F','twl','TWLOak','SSG_9F_TWL'],
-      ['9F','herman-miller','HMFrame','SSG_9F_HermanMiller'],
-      ['10F','stokke','StokkeChairs','SSG_10F_Stokke']]
-    .map(([floor,shop,mesh,collection])=>['shinsegae',floor,'ssg-'+shop+'/gallery.blend',mesh,collection]),
+  ...[['9F','ssg-marzocco/gallery.blend','MarzoccoEnamel','SSG_9F_LaMarzocco'],
+      ['9F','ssg-twl/gallery.blend','TWLOak','SSG_9F_TWL'],
+      ['9F','ssg-herman-miller/seating.blend','HMFrame','SSG_9F_HermanMiller'],
+      ['10F','ssg-stokke/gallery.blend','StokkeChairs','SSG_10F_Stokke']]
+    .map(([floor,library,mesh,collection])=>['shinsegae',floor,library,mesh,collection]),
   ['gyeongbu','1F','gyeongbu-pretzels/seoul-warmer.blend','앤티앤스 · 프레즐 진열대','Warmer','Glass'],
   ...[['2F','Bedding','quilt-shop'],['4F','Curtains','drapery-shop']]
     .map(([floor,key,collection])=>['gyeongbu',floor,'gyeongbu-homewares/homewares.blend','경부선 도매 점포 · '+key,collection]),
