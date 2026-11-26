@@ -50,6 +50,7 @@ const sources = [
   ['centralcity','B1','another-palm-astro/display.blend','어나더팜 · 아톰 에디션','AnotherPalmAstro'],
   ['centralcity','B1','biscuiterie-mo/biscuiterie.blend','비스퀴테리 M.O · 마들렌과 번호 틴 진열장','BiscuiterieMO','MO glazing','MO lit fittings'],
   ['centralcity','B1','fortnum-tea-shop/tea-shop.blend','포트넘앤메이슨 · 목재 입구와 홍차 진열대','FortnumSweetPark'],
+  ['centralcity','B1','pompompurin-bakery/display.blend','폼폼푸린 · 오븐과 캐릭터 빵','PompompurinBakery'],
   ['centralcity','B1','haz-bakery/display.blend','하츠베이커리 · 샌드베이글과 포장','HazBakeryCounter'],
   ['centralcity','B1','sweet-arabica/entrance.blend','스위트 파크 · %아라비카 입면','ArabicaGangnamFront'],
   ['centralcity','B1','sweet-cake-counters/cakes.blend','스위트 파크 · 키친205 케이크 진열','SweetKitchen205'],

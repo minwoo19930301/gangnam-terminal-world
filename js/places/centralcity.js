@@ -9,6 +9,7 @@ import {houseWineDisplays} from '../../assets/models/house-wine-cellar/model.js'
 import {marcoliniShop} from '../../assets/models/sweet-marcolini/model.js';
 import {biscuiterieShop} from '../../assets/models/biscuiterie-mo/model.js';
 import {fortnumShop} from '../../assets/models/fortnum-tea-shop/model.js';
+import {bakeryCafe} from '../../assets/models/pompompurin-bakery/model.js';
 import {hazBakery} from '../../assets/models/haz-bakery/model.js';
 import {arabicaFront} from '../../assets/models/sweet-arabica/model.js';
 import {anotherPalmEdition} from '../../assets/models/another-palm-astro/model.js';
@@ -1607,6 +1608,13 @@ export function build(K) {
       lbox(s,t+offset,.10,.045,YB1+3.04,height,oak,{solid:false});
     }
     for(const h of [.32,.66])lbox(s,t,.09,w*Math.sqrt(1-(h/1.05)**2),YB1+3.02+h,.045,oak,{solid:false});
+    if(cell.name==='폼폼푸린 베이커리 카페'){
+      const [s,t]=BPst(1060.5,851),[x,z]=P(s,t);
+      bakeryCafe(K,x,YB1,z,F.E);
+      K.phys.addWall(...P(s-3.10,t-1.17),...P(s+3.10,t-1.17),YB1,YB1+3.1,.075,'centralcity');
+      K.phys.addPolyWalls(RECT(s-2.16,t-.69,s+2.16,t+.39),YB1,YB1+.99,.02,'centralcity');
+      return;
+    }
     if(cell.kind==='upcoming')lbox(s-.40,t,.12,w,YB1,2.20,0xc8c0b5);
   };
   const spCounterStand=(cell,r,face)=>{
@@ -1740,6 +1748,13 @@ export function build(K) {
       }
       K.phys.addWall(...P(s-3.93,t-1.44),...P(s-3.93,t+1.44),YB1,YB1+2.5,.05,'centralcity');
       K.phys.addPolyWalls(RECT(s-2.56,t-.59,s-1.98,t+.59),YB1,YB1+.73,.02,'centralcity');
+      return;
+    }
+    if(cell.name==='폼폼푸린 베이커리 카페'){
+      const [s,t]=BPst(1060.5,851),[x,z]=P(s,t);
+      bakeryCafe(K,x,YB1,z,F.E);
+      K.phys.addWall(...P(s-3.10,t-1.17),...P(s+3.10,t-1.17),YB1,YB1+3.1,.075,'centralcity');
+      K.phys.addPolyWalls(RECT(s-2.16,t-.69,s+2.16,t+.39),YB1,YB1+.99,.02,'centralcity');
       return;
     }
     if(cell.kind==='upcoming'){spArchFront(cell);return;}

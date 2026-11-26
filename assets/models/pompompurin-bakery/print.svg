@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+<defs>
+  <g id="dog" stroke="#774b34" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M-26,5 Q-44,19 -47,10 Q-48,5 -35,-2 Q-26,-20 -2,-22 Q21,-24 31,-7 Q44,-4 48,7 Q46,16 30,10 Q23,19 0,19 Q-20,20 -26,5Z" fill="#f5d783"/>
+    <ellipse cx="-12" cy="-2" rx="1.7" ry="2.3" fill="#68402a" stroke="none"/><ellipse cx="12" cy="-2" rx="1.7" ry="2.3" fill="#68402a" stroke="none"/>
+    <path d="M-2,0Q0,-1 2,0Q1,3 0,3Q-1,3 -2,0M0,3Q-4,11 -8,6M0,3Q4,11 8,6" fill="none"/>
+    <path d="M-12,-20L-13,-25Q-23,-29 -15,-35Q-12,-38 -8,-35Q-3,-42 2,-36Q10,-40 12,-34Q17,-28 9,-25L9,-21Z" fill="#e6a163"/>
+  </g>
+  <g id="toast" stroke="#a06b43" stroke-width="2.6" stroke-linejoin="round"><path d="M-20,-11Q-26,-16 -20,-21Q-6,-28 13,-24Q28,-24 26,-14L21,-9V19H-19Z" fill="#e4a562"/><path d="M-16,-10Q-20,-18 -12,-20Q1,-24 16,-19Q22,-18 17,-11V15H-15Z" fill="#f5dba5"/><path d="M-9,-2L-7,-2M6,-2H8M-4,4Q0,8 3,3" stroke="#865a3b" fill="none"/></g>
+  <g id="loaf" stroke="#a66b3e" stroke-width="2.4"><path d="M-30,5Q-26,-12 -2,-15Q28,-16 29,-4Q30,9 0,14Q-22,20 -30,9Z" fill="#dca05b"/><path d="M-15,0l3,7M-4,-5l3,9M6,-7l3,9M17,-9l2,7" fill="none" stroke="#f6d49b"/></g>
+  <g id="bun" stroke="#b57e48" stroke-width="2"><path d="M-19,2Q-11,-20 8,-14Q18,-12 21,1Q27,14 10,15L-13,15Q-23,11 -19,2Z" fill="#f0c574"/><path d="M-8,-5q3,-6 7,-5M2,-8q5,-3 9,3" fill="none" stroke="#fbe0a2"/></g>
+</defs>
+<rect width="512" height="512" fill="#fff"/>
+<!-- The paper carrier field. The printed drawings are original vector artwork. -->
+<rect x="4" y="4" width="330" height="428" fill="#f8dea7"/>
+<g fill="#e5bc79"><path d="M8 89h23v9H8zm35-5h19v8H43zm253-2h25v11h-25zM25 297h23v9H25zm-9 15h25v8H16zm272-136h24v8h-24zm-13 14h20v8h-20z"/></g>
+<path d="M4 4h330v46H4z" fill="#e4a65c"/>
+<g fill="#a86942"><path d="M4,4h41v48q-19,25 -41,0zM86,4h41v48q-21,24 -41,0zM168,4h41v48q-19,25 -41,0zM250,4h41v48q-19,25 -41,0z"/></g>
+<g fill="#edbd70"><path d="M45,4h41v48q-19,24 -41,0zM127,4h41v48q-21,25 -41,0zM209,4h41v48q-21,24 -41,0zM291,4h42v48q-18,24 -42,0z"/></g>
+<g font-family="Arial Rounded MT Bold, Arial, sans-serif" font-weight="bold" text-anchor="middle" fill="#ffe4a2" stroke="#97603e" stroke-width="4.5" paint-order="stroke">
+  <text x="169" y="103" font-size="21" transform="rotate(-2 169 103)">BAKERY CAFE</text>
+  <text x="169" y="133" font-size="31" transform="rotate(-2 169 133)">POMPOMPURIN</text>
+</g>
+<use href="#toast" transform="translate(276 186) rotate(12) scale(.88)"/><use href="#loaf" transform="translate(49 172) rotate(-19) scale(.75)"/>
+<use href="#bun" transform="translate(157 163) rotate(8) scale(.55)"/><use href="#dog" transform="translate(190 291) scale(1.34)"/>
+<use href="#loaf" transform="translate(49 339) rotate(-19) scale(.84)"/><use href="#toast" transform="translate(279 354) rotate(12) scale(.75)"/>
+<g transform="translate(65 247) rotate(-29)" stroke="#9d785b" fill="none" stroke-width="3">
+ <ellipse cy="-16" rx="17" ry="29"/><ellipse cy="-16" rx="9" ry="29"/><path d="M0 -44v57m-4 0v48q4 8 8 0V13z" fill="#dec29b"/>
+</g>
+<g fill="#deaa61"><circle cx="119" cy="226" r="4"/><circle cx="295" cy="267" r="3"/><circle cx="119" cy="352" r="3"/>
+<path d="M130 198l7 -5 7 6 -6 5zM215 365l8 -4 6 7 -7 3z"/></g>
+<use href="#bun" transform="translate(131 393) rotate(-11) scale(.77)"/><use href="#loaf" transform="translate(211 406) rotate(12) scale(.51)"/>
+<!-- Toast crumb print, deliberately a two-colour bran stamp. -->
+<rect x="346" y="8" width="155" height="153" fill="#f6d8a5"/>
+<g transform="translate(423 91) scale(1.17)" fill="none" stroke="#9c734f" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round">
+ <path d="M-25,1Q-44,10 -39,1Q-37,-5 -28,-8Q-18,-21 0,-20Q20,-21 28,-8Q39,-5 42,3Q43,10 28,5Q23,15 1,16Q-19,17 -25,1Z"/>
+ <path d="M-12,-19L-13,-25Q-21,-29 -15,-34Q-10,-38 -7,-34Q-3,-41 3,-35Q9,-40 13,-34Q19,-28 9,-24L9,-20Z"/>
+ <circle cx="-9" cy="-4" r="1.5"/><circle cx="10" cy="-4" r="1.5"/><path d="M-2,-1h4l-2,3zM0,2Q-4,8 -7,4M0,2Q4,8 7,4"/>
+ <path d="M-13,15Q-19,26 -17,32Q-9,40 2,34Q13,39 20,32Q19,22 12,15"/>
+</g>
+<!-- Black cocoa mark for an actual face-shaped bread. White areas receive the crust colour. -->
+<g transform="translate(423 257)" fill="#66402b" stroke="#66402b" stroke-linecap="round">
+ <ellipse cx="-33" cy="-13" rx="4.7" ry="6.1"/><ellipse cx="33" cy="-13" rx="4.7" ry="6.1"/>
+ <path d="M-7,0Q0,-5 7,0Q6,7 0,8Q-5,7 -7,0Z"/>
+ <path d="M0,6Q-1,21 -11,20Q-16,19 -16,14M0,6Q3,20 12,20Q17,20 18,14" fill="none" stroke-width="4.2"/>
+</g>
+<g transform="translate(424 386) scale(.91)"><use href="#dog"/></g>
+<text x="425" y="339" font-family="Arial,sans-serif" font-weight="bold" font-size="12" text-anchor="middle" fill="#795331">POMPOMPURIN</text>
+</svg>
