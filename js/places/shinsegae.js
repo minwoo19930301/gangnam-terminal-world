@@ -1,3 +1,4 @@
+import {parkSedanTrim} from '../../assets/models/sedan-curb/model.js';
 import {registerGlxyStudio} from '../../assets/models/ssg-glxy-studio/model.js';
 import {registerBrownyard} from '../../assets/models/ssg-brownyard/model.js';
 import {haenyeoSeafood} from '../../assets/models/ssg-market-haenyeo/model.js';
@@ -851,6 +852,7 @@ export function build(K) {
   const LOT_Y = 0.035; // city service-road surface is y=.02; no coplanar asphalt
   K.slab(rect(70.7, -12, 91.2, 39.9), LOT_Y, { mat: 'asphalt', thick: 0.08, under: false, ceil: false });
   K.slab(rect(74.4, 39.9, 91.2, 55), LOT_Y, { mat: 'asphalt', thick: 0.08, under: false, ceil: false });
+  const curbSedans = [];
   const parkedColors = [0xf0f0eb, 0xc3c7c7, 0xe7e8e5, 0xaeb4b7, 0xf2f1ed, 0x292e32, 0xd4d6d4, 0xf4f4f0];
   for (const [row, u0, u1, count] of [['A', 70.7, 75.7, 17], ['B', 85.6, 90.6, 24]]) {
     for (let i = 0; i < count; i++) {
@@ -869,10 +871,12 @@ export function build(K) {
       }
       if (accessible ? i === 5 : (i + (row === 'B' ? 1 : 0)) % 4 !== 0) {
         const [x, z] = P((u0 + u1) / 2, v);
-        K.vehicle({ x, z, y: LOT_Y, kind: 'car', rotY: RA + (row === 'A' ? -PI / 2 : PI / 2), color: parkedColors[(i + (row === 'B' ? 3 : 0)) % parkedColors.length] });
+        const sedan = K.vehicle({ x, z, y: LOT_Y, kind: 'car', rotY: RA + (row === 'A' ? -PI / 2 : PI / 2), color: parkedColors[(i + (row === 'B' ? 3 : 0)) % parkedColors.length] });
+        if (sedan) curbSedans.push(sedan);
       }
     }
   }
+  parkSedanTrim(K, curbSedans, rect(65, -20, 95, 61));
   // ssg_04 shows compact payment/barrier equipment at the north end of the lot.
   // Keep it on the building-side apron; the shared service-road aisle stays clear.
   for (const u of [71.2, 74.8]) {
