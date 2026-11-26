@@ -1,9 +1,12 @@
+import {cakeCounter} from '../../assets/models/sweet-cake-counters/model.js';
 import {terminalOrigin,terminalRotation as R,terminalPoint as P,sweetParkLocal as BPst} from './sweet-park-plan.js';
 import {transverseFloor} from '../../assets/models/megabox-central/layout.js';
 import {publicFloorOpening,court,westApron} from '../../assets/models/cinema-rotary/layout.js';
 import {arcadePiers} from '../../assets/models/sweet-arcade/model.js';
 import {houseWineDisplays} from '../../assets/models/house-wine-cellar/model.js';
 import {marcoliniShop} from '../../assets/models/sweet-marcolini/model.js';
+import {fortnumShop} from '../../assets/models/fortnum-tea-shop/model.js';
+import {hazBakery} from '../../assets/models/haz-bakery/model.js';
 import {arabicaFront} from '../../assets/models/sweet-arabica/model.js';
 import {anotherPalmEdition} from '../../assets/models/another-palm-astro/model.js';
 import {chefStageSigns} from '../../assets/models/sweet-chefs-stage/model.js';
@@ -1271,62 +1274,62 @@ export function build(K) {
   };
   // Canonical cells, not a generated tenant sequence. Black partitions are traced separately below.
   const B1_CELLS=[
-    {"zone":"sweet_north","name":"시코르","rect_display":[1116,266,1237,320],"front":"S","kind":"beauty"},
+    {"zone":"sweet_north","name":"시코르","rect_display":[1116,266,1237,320],"front":"S","kind":"beauty","arrival":[1176.5,336],"aliases":["CHICOR"]},
     {"zone":"sweet_north","name":"팝업","rect_display":[1237,266,1264,320],"front":"S","kind":"bakery"},
-    {"zone":"sweet_north","name":"아임도넛","rect_display":[1264,266,1333,320],"front":"S","kind":"bakery"},
-    {"zone":"sweet_north","name":"렌위치","rect_display":[1333,266,1400,320],"front":"S","kind":"bakery"},
-    {"zone":"sweet","name":"케이스티파이","rect_display":[1033,345,1078,397],"front":"E","kind":"accessory"},
-    {"zone":"sweet","name":"S.style ACC","rect_display":[1033,398,1097,453],"front":"S","kind":"accessory"},
-    {"zone":"sweet","name":"배스 앤 바디 웍스","rect_display":[1098,398,1164,453],"front":"S","kind":"beauty"},
-    {"zone":"sweet","name":"포트넘앤메이슨","rect_display":[1059,509,1164,533],"front":"S","kind":"tea"},
-    {"zone":"sweet","name":"후쿠요시 카페 미친맛집","rect_display":[1032,540,1079,595],"front":"E","kind":"cafe"},
-    {"zone":"sweet","name":"스탠다드브레드","rect_display":[1032,596,1079,654],"front":"E","kind":"bakery"},
-    {"zone":"sweet","name":"비스퀴테리 M.O","rect_display":[1032,655,1079,716],"front":"E","kind":"bakery"},
-    {"zone":"sweet","name":"피에르 마르콜리니","rect_display":[1032,717,1079,777],"front":"E","kind":"chocolate"},
-    {"zone":"sweet","name":"어나더팜","rect_display":[1136,809,1210,850],"front":"N","kind":"grocery"},
-    {"zone":"sweet","name":"폼폼푸린 베이커리 카페","rect_display":[1032,842,1089,894],"front":"N","kind":"cafe"},
-    {"zone":"sweet","name":"마리메꼬","rect_display":[1090,842,1134,894],"front":"N","kind":"accessory"},
-    {"zone":"sweet","name":"밴루엔 아이스크림","rect_display":[1344,488,1400,544],"front":"W","kind":"icecream"},
+    {"zone":"sweet_north","name":"아임도넛","rect_display":[1264,266,1333,320],"front":"S","kind":"bakery","arrival":[1308.85,340],"aliases":["I’m donut?","I'm donut?"]},
+    {"zone":"sweet_north","name":"렌위치","rect_display":[1333,266,1400,320],"front":"S","kind":"bakery","arrival":[1366.5,336],"aliases":["Lenwich"]},
+    {"zone":"sweet","name":"케이스티파이","rect_display":[1033,345,1078,397],"front":"E","kind":"accessory","arrival":[1094,371],"aliases":["CASETiFY"]},
+    {"zone":"sweet","name":"S.style ACC","rect_display":[1033,398,1097,453],"front":"S","kind":"accessory","arrival":[1065,459]},
+    {"zone":"sweet","name":"배스 앤 바디 웍스","rect_display":[1098,398,1164,453],"front":"S","kind":"beauty","arrival":[1172,425],"lookAt":[1131,425.5],"aliases":["Bath & Body Works"]},
+    {"zone":"sweet","name":"포트넘앤메이슨","rect_display":[1081,509,1164,533],"front":"E","kind":"tea","arrival":[1189,521],"aliases":["Fortnum & Mason"],"pitchDeg":3},
+    {"zone":"sweet","name":"하츠베이커리","rect_display":[1032,540,1079,595],"front":"E","kind":"bakery","arrival":[1087,570],"aliases":["HAZ Bakery","하츠 베이커리"],"pitchDeg":-5},
+    {"zone":"sweet","name":"OPENING SOON","rect_display":[1032,596,1079,654],"front":"E","kind":"upcoming"},
+    {"zone":"sweet","name":"비스퀴테리 M.O","rect_display":[1032,655,1079,716],"front":"E","kind":"bakery","arrival":[1087,685.5],"aliases":["Biscuiterie M.O"]},
+    {"zone":"sweet","name":"피에르 마르콜리니","rect_display":[1032,717,1079,777],"front":"E","kind":"chocolate","arrival":[1087,747],"aliases":["Pierre Marcolini"]},
+    {"zone":"sweet","name":"어나더팜","rect_display":[1136,809,1210,850],"front":"N","entrance":"W","kind":"grocery","arrival":[1173,832],"aliases":["Another Palm"]},
+    {"zone":"sweet","name":"폼폼푸린 베이커리 카페","rect_display":[1032,842,1089,894],"front":"N","kind":"cafe","arrival":[1060.5,826],"aliases":["Pompompurin"]},
+    {"zone":"sweet","name":"마리메꼬","rect_display":[1090,842,1134,894],"front":"N","kind":"accessory","arrival":[1112,826]},
+    {"zone":"sweet","name":"밴루엔 아이스크림","rect_display":[1344,488,1400,544],"front":"W","kind":"icecream","arrival":[1328,516]},
     {"zone":"sweet","name":"파이브가이즈","rect_display":[1344,545,1400,624],"front":"W","kind":"food"},
-    {"zone":"sweet","name":"치폴레","rect_display":[1344,625,1400,718],"front":"W","kind":"food"},
-    {"zone":"sweet","name":"파이브가이즈","rect_display":[1276,550,1328,605],"front":"W","kind":"food"},
+    {"zone":"sweet","name":"치폴레","rect_display":[1344,625,1400,718],"front":"W","kind":"food","arrival":[1332,671.5],"aliases":["Chipotle"]},
+    {"zone":"sweet","name":"파이브가이즈","rect_display":[1276,550,1328,605],"front":"W","kind":"food","arrival":[1268,549],"lookAt":[1277,577.5],"pitchDeg":12,"aliases":["Five Guys"]},
     {"zone":"sweet","name":"치폴레","rect_display":[1281,610,1328,718],"front":"W","kind":"food"},
-    {"zone":"sweet","name":"차지","rect_display":[1277,731,1332,777],"front":"N","kind":"cafe"},
-    {"zone":"sweet","name":"부창제과","rect_display":[1223,732,1265,777],"front":"W","kind":"bakery"},
-    {"zone":"sweet_islands","name":"크림한상 / 1994 양과점","rect_display":[1095,551,1120,578],"front":"N","kind":"bakery"},
-    {"zone":"sweet_islands","name":"구뜨몽떼","rect_display":[1122,551,1147,564],"front":"N","kind":"bakery"},
-    {"zone":"sweet_islands","name":"레브두","rect_display":[1122,565,1147,578],"front":"N","kind":"bakery"},
+    {"zone":"sweet","name":"차지","rect_display":[1277,731,1332,777],"front":"N","kind":"cafe","arrival":[1304.5,723]},
+    {"zone":"sweet","name":"부창제과","rect_display":[1223,732,1265,777],"front":"W","kind":"bakery","arrival":[1211,754.5]},
+    {"zone":"sweet_islands","name":"크림한상 / 1994 양과점","rect_display":[1095,551,1120,578],"front":"N","kind":"bakery","arrival":[1107.5,539]},
+    {"zone":"sweet_islands","name":"구뜨몽떼","rect_display":[1122,551,1147,564],"front":"N","kind":"bakery","arrival":[1134.5,539]},
+    {"zone":"sweet_islands","name":"레브두","rect_display":[1122,565,1147,578],"front":"E","kind":"bakery","arrival":[1151,571.5]},
     {"zone":"sweet_islands","name":"팝업","rect_display":[1095,579,1120,605],"front":"N","kind":"bakery"},
-    {"zone":"sweet_islands","name":"마담 피에르 오제","rect_display":[1122,579,1147,605],"front":"N","kind":"bakery"},
-    {"zone":"sweet_islands","name":"키친205","rect_display":[1155,551,1178,578],"front":"N","kind":"bakery"},
-    {"zone":"sweet_islands","name":"쇼토","rect_display":[1180,551,1206,578],"front":"N","kind":"bakery"},
-    {"zone":"sweet_islands","name":"시즈니크","rect_display":[1155,580,1178,605],"front":"N","kind":"bakery"},
-    {"zone":"sweet_islands","name":"쉐프조","rect_display":[1180,580,1206,605],"front":"N","kind":"bakery"},
-    {"zone":"sweet_islands","name":"깰끄쇼즈 / 르솔레이 / 아우치+터치","rect_display":[1223,551,1264,578],"front":"N","kind":"bakery"},
-    {"zone":"sweet_islands","name":"크라눌레","rect_display":[1223,580,1244,605],"front":"N","kind":"bakery"},
+    {"zone":"sweet_islands","name":"마담 피에르 오제","rect_display":[1122,579,1147,605],"front":"E","kind":"bakery","arrival":[1151,592]},
+    {"zone":"sweet_islands","name":"키친205","rect_display":[1155,551,1178,578],"front":"N","kind":"bakery","arrival":[1166.5,539],"aliases":["Kitchen 205"]},
+    {"zone":"sweet_islands","name":"쇼토","rect_display":[1180,551,1206,578],"front":"N","kind":"bakery","arrival":[1193,535]},
+    {"zone":"sweet_islands","name":"시즈니크","rect_display":[1155,580,1178,605],"front":"W","kind":"bakery","arrival":[1149,592.5],"aliases":["Seasonique"]},
+    {"zone":"sweet_islands","name":"쉐프조","rect_display":[1180,580,1206,605],"front":"E","kind":"bakery","arrival":[1218,592.5]},
+    {"zone":"sweet_islands","name":"깰끄쇼즈 / 르솔레이 / 아우치+터치","rect_display":[1223,551,1264,578],"front":"N","kind":"bakery","arrival":[1243.5,535]},
+    {"zone":"sweet_islands","name":"크라눌레","rect_display":[1223,580,1244,605],"front":"W","kind":"bakery","arrival":[1211,592.5]},
     {"zone":"sweet_islands","name":"팝업","rect_display":[1245,580,1264,605],"front":"N","kind":"bakery"},
-    {"zone":"sweet_islands","name":"마망갸또","rect_display":[1095,610,1120,636],"front":"N","kind":"bakery"},
-    {"zone":"sweet_islands","name":"만나당","rect_display":[1122,610,1147,636],"front":"N","kind":"bakery"},
-    {"zone":"sweet_islands","name":"이스트우드","rect_display":[1155,610,1178,636],"front":"N","kind":"bakery"},
-    {"zone":"sweet_islands","name":"삐아프","rect_display":[1180,610,1206,636],"front":"N","kind":"bakery"},
+    {"zone":"sweet_islands","name":"마망갸또","rect_display":[1095,610,1120,636],"front":"W","kind":"bakery","arrival":[1087,623]},
+    {"zone":"sweet_islands","name":"만나당","rect_display":[1122,610,1147,636],"front":"E","kind":"bakery","arrival":[1151,623]},
+    {"zone":"sweet_islands","name":"이스트우드","rect_display":[1155,610,1178,636],"front":"W","kind":"bakery","arrival":[1149,623]},
+    {"zone":"sweet_islands","name":"삐아프","rect_display":[1180,610,1206,636],"front":"E","kind":"bakery","arrival":[1218,623]},
     {"zone":"sweet_islands","name":"팝업","rect_display":[1223,610,1264,636],"front":"N","kind":"bakery"},
-    {"zone":"sweet_islands","name":"한과미의식","rect_display":[1095,638,1147,662],"front":"N","kind":"bakery"},
+    {"zone":"sweet_islands","name":"한과미의식","rect_display":[1095,638,1147,662],"front":"W","kind":"bakery","arrival":[1087,650]},
     {"zone":"sweet_islands","name":"팝업","rect_display":[1155,638,1178,662],"front":"N","kind":"bakery"},
-    {"zone":"sweet_islands","name":"해피해피 케이크","rect_display":[1180,638,1206,662],"front":"N","kind":"bakery"},
+    {"zone":"sweet_islands","name":"해피해피 케이크","rect_display":[1180,638,1206,662],"front":"E","kind":"bakery","arrival":[1218,650]},
     {"zone":"sweet_islands","name":"팝업","rect_display":[1223,638,1264,662],"front":"N","kind":"bakery"},
-    {"zone":"sweet_islands","name":"프랑스 루브르바게트","rect_display":[1095,665,1147,691],"front":"N","kind":"bakery"},
-    {"zone":"sweet_islands","name":"산스커피","rect_display":[1095,693,1147,718],"front":"N","kind":"bakery"},
-    {"zone":"sweet_islands","name":"한정선","rect_display":[1155,665,1206,718],"front":"N","kind":"bakery"},
-    {"zone":"sweet_islands","name":"오뜨르 베이커리","rect_display":[1223,665,1264,691],"front":"N","kind":"bakery"},
-    {"zone":"sweet_islands","name":"고리","rect_display":[1223,693,1264,718],"front":"N","kind":"bakery"},
-    {"zone":"sweet_islands","name":"태극당","rect_display":[1095,730,1124,750],"front":"N","kind":"bakery"},
-    {"zone":"sweet_islands","name":"르뱅룰즈","rect_display":[1125,730,1160,750],"front":"N","kind":"bakery"},
-    {"zone":"sweet_islands","name":"르빵","rect_display":[1161,730,1206,750],"front":"N","kind":"bakery"},
-    {"zone":"sweet_islands","name":"스코프","rect_display":[1095,752,1150,777],"front":"N","kind":"bakery"},
-    {"zone":"sweet_islands","name":"장 블랑제리","rect_display":[1152,752,1206,777],"front":"N","kind":"bakery"},
+    {"zone":"sweet_islands","name":"프랑스 루브르바게트","rect_display":[1095,665,1147,691],"front":"W","kind":"bakery","arrival":[1087,678]},
+    {"zone":"sweet_islands","name":"산스커피","rect_display":[1095,693,1147,718],"front":"W","kind":"bakery","arrival":[1087,705.5]},
+    {"zone":"sweet_islands","name":"한정선","rect_display":[1155,665,1206,718],"front":"E","kind":"bakery","arrival":[1214,719],"lookAt":[1186,711],"pitchDeg":-4},
+    {"zone":"sweet_islands","name":"오뜨르 베이커리","rect_display":[1223,665,1264,691],"front":"E","kind":"bakery","arrival":[1276,678]},
+    {"zone":"sweet_islands","name":"고리","rect_display":[1223,693,1264,718],"front":"E","kind":"bakery","arrival":[1276,705.5]},
+    {"zone":"sweet_islands","name":"태극당","rect_display":[1094,725,1129,749],"front":"W","kind":"bakery","arrival":[1087,740]},
+    {"zone":"sweet_islands","name":"버터베이커리","rect_display":[1132,725,1168,749],"front":"N","kind":"bakery","arrival":[1150,721],"aliases":["Butter Bakery"]},
+    {"zone":"sweet_islands","name":"르빵","rect_display":[1170,725,1206,749],"front":"E","kind":"bakery","arrival":[1218,740]},
+    {"zone":"sweet_islands","name":"스코프","rect_display":[1095,752,1150,777],"front":"S","kind":"bakery","arrival":[1122.5,793]},
+    {"zone":"sweet_islands","name":"장 블랑제리","rect_display":[1152,752,1206,777],"front":"S","kind":"bakery","arrival":[1179,793],"aliases":["쟝블랑제리"]},
     {"zone":"hos","name":"키쿠카와","rect_display":[1424,285,1493,320],"front":"S","kind":"food"},
     {"zone":"hos","name":"슈퍼스타","rect_display":[1533,285,1618,320],"front":"S","kind":"bar"},
-    {"zone":"hos","name":"%아라비카","rect_display":[1344,343,1389,462],"front":"W","kind":"cafe"},
+    {"zone":"hos","name":"%아라비카","rect_display":[1344,343,1389,462],"front":"W","kind":"cafe","arrival":[1328,402.5],"aliases":["응커피","% Arabica"]},
     {"zone":"hos","name":"키쿠카와","rect_display":[1435,343,1493,377],"front":"N","kind":"food"},
     {"zone":"hos","name":"타치바나","rect_display":[1494,343,1548,432],"front":"E","kind":"food"},
     {"zone":"hos","name":"키보 아츠아츠","rect_display":[1600,345,1660,400],"front":"S","kind":"food"},
@@ -1547,7 +1550,7 @@ export function build(K) {
     const ds=face==='N'?-.14:face==='S'?.14:0,dt=face==='E'?.14:face==='W'?-.14:0;
     lbox(s+ds,t+dt,face==='N'||face==='S'?.045:.32,face==='N'||face==='S'?.32:.045,YB1+.49,.58,0x3f6b45,{solid:false});
   };
-  const spVitrine=(r,seed=0,stock=true)=>{
+  const spVitrine=(r,seed=0,stock=true,middleShelf=true)=>{
     if(!b1Safe(r))return false;
     const[s0,t0,s1,t1]=spBounds(r),s=(s0+s1)/2,t=(t0+t1)/2,ds=s1-s0,dt=t1-t0,cut=Math.min(.25,ds*.22,dt*.16);
     const shape=(pad=0)=>[[s0+cut-pad,t0-pad],[s1-cut+pad,t0-pad],[s1+pad,t0+cut-pad],[s1+pad,t1-cut+pad],[s1-cut+pad,t1+pad],[s0+cut-pad,t1+pad],[s0-pad,t1-cut+pad],[s0-pad,t0+cut-pad]].map(p=>P(...p));
@@ -1559,7 +1562,7 @@ export function build(K) {
     K.prism(shape(-.025),YB1+.81,YB1+1.13,{mat:'glass',solid:false});
     for(const yy of [.08,.66,1.13])K.prism(shape(.015),YB1+yy,YB1+yy+.025,{mat:b1Brass,solid:false,top:false,bottom:false});
     const pp=shape(-.025);for(const[x,z]of pp)entryTubeWorld([x,YB1+.80,z],[x,YB1+1.14,z],.022,b1Brass);
-    lbox(s,t,ds-.14,dt-.14,YB1+.96,.012,'glass',{solid:false});
+    if(middleShelf)lbox(s,t,ds-.14,dt-.14,YB1+.96,.012,'glass',{solid:false});
     const rows=Math.max(1,Math.floor((ds-.22)/.27)),cols=Math.max(1,Math.floor((dt-.22)/.27));
     for(let i=0;stock&&i<rows;i++)for(let j=0;j<cols;j++){
       const ss=s0+.14+(i+.5)*(ds-.28)/rows,tt=t0+.14+(j+.5)*(dt-.28)/cols;
@@ -1579,38 +1582,28 @@ export function build(K) {
     return true;
   };
   const spArchFront=(cell)=>{
-    const[s0,t0,s1,t1]=spBounds(cell.rect_display),s=(s0+s1)/2,t=t0+.03,w=s1-s0-.35,oak={tex:'wood',color:0xad8151,gloss:.3};
-    // The west perimeter's four fronts look into the plan-east aisle (-t).
-    for(const ss of [s0+.18,s1-.18])spPillar(ss,t+.15);
-    lbox(s,t,.0+w,.30,YB1+2.20,.42,'ccSweetFieldstone',{solid:false});
-    lbox(s,t-.10,w,.18,YB1+2.64,.42,oak,{solid:false});
-    const text=cell.name==='스탠다드브레드'?'Standard Bread':cell.name;
-    lsign(text,s,t-.21,YB1+2.73,w*.76,.26,'W',{bg:'#191e1b',fg:'#f5e5b7',font:text==='Standard Bread'?'"Comic Sans MS",cursive':SERIF,bold:false,pxPerM:150});
+    // The eastern edge on the customer guide is +s. All four arches face
+    // this continuous aisle, with the width of each shop spanning local t.
+    const [,t0,s1,t1]=spBounds(cell.rect_display),t=(t0+t1)/2,s=s1-.03,w=t1-t0-.35;
+    const oak={tex:'wood',color:0xad8151,gloss:.3};
+    for(const side of [t0+.18,t1-.18])spPillar(s-.15,side);
+    lbox(s,t,.30,w,YB1+2.20,.42,'ccSweetFieldstone',{solid:false});
+    lbox(s+.10,t,.18,w,YB1+2.64,.42,oak,{solid:false});
+    lsign(cell.name,s+.21,t,YB1+2.73,w*.76,.26,'S',{bg:'#191e1b',fg:'#f5e5b7',font:SERIF,bold:false,pxPerM:150});
+    const glassPoint=(offset,height)=>{const[x,z]=P(s-.04,t+offset);return[x,height,z];};
     for(let i=0;i<20;i++){
       const a=PI*i/20,b=PI*(i+1)/20;
-      entryTube([s+Math.cos(a)*w/2,t,YB1+3.02+1.05*Math.sin(a)],[s+Math.cos(b)*w/2,t,YB1+3.02+1.05*Math.sin(b)],.14,oak);
-      const q=(u,y)=>{const[x,z]=P(u,t+.04);return[x,y,z];};
-      K.quad('glass',[q(s,YB1+3.02),q(s+Math.cos(a)*w/2,YB1+3.02+1.05*Math.sin(a)),q(s+Math.cos(b)*w/2,YB1+3.02+1.05*Math.sin(b)),q(s,YB1+3.02)],[-EX,0,-EZ]);
+      const ta=Math.cos(a)*w/2,tb=Math.cos(b)*w/2,base=YB1+3.02;
+      const ha=base+1.05*Math.sin(a),hb=base+1.05*Math.sin(b);
+      entryTube([s,t+ta,ha],[s,t+tb,hb],.14,oak);
+      K.quad('glass',[glassPoint(0,base),glassPoint(ta,ha),glassPoint(tb,hb),glassPoint(0,base)],[AX,0,AZ]);
     }
-    for(let ds=-w/2+.25;ds<w/2;ds+=.40){const h=1.02*Math.sqrt(Math.max(0,1-ds*ds/(w*w/4)));lbox(s+ds,t,.045,.10,YB1+3.04,h,oak,{solid:false});}
-    for(const yy of [.32,.66])lbox(s,t,w*Math.sqrt(1-(yy/1.05)**2),.09,YB1+3.02+yy,.045,oak,{solid:false});
-    if(cell.name==='스탠다드브레드'){
-      // Photo13: a bakery with a dark stone arch, display and oven wall,
-      // not a doorway through the shop. J4 is now on the white 9GATE strip.
-      lwall(s0+.1,t1-.13,s1-.1,t1-.13,YB1,YB1+3.15,{mat:0x2a2626,thick:.16});
-      for(const ss of [s0+.42,s1-.42])lbox(ss,t+.19,.55,.38,YB1,2.2,'ccSweetFieldstone');
-      const rear=t1-.42;
-      lbox(s,rear,Math.min(3.2,w-.6),.42,YB1+.65,1.75,0x2a2626,{solid:false});
-      for(const dy of [.82,1.35,1.88]){
-        lbox(s,rear-.24,Math.min(2.6,w-.9),.04,YB1+dy,.36,0x121212,{solid:false});
-        lbox(s,rear-.27,Math.min(2.4,w-1.1),.025,YB1+dy+.04,.05,{tex:'emit',color:0xc63332},{solid:false});
-        lbox(s,rear-.29,Math.min(2.5,w-1),.035,YB1+dy-.02,.035,0x9c9b8f,{solid:false});
-      }
-      for(const ss of [s0+.8,s1-.8]){
-        lbox(ss,t1-1.05,.72,1.1,YB1,.84,oak);
-        for(const dt of [-.3,0,.3]){const[x,z]=P(ss,t1-1.05+dt);K.dome({x,z,y:YB1+.87,rx:.22,ry:.11,rz:.12,mat:0xbd8b51,seg:10,rings:4});}
-      }
+    for(let offset=-w/2+.25;offset<w/2;offset+=.40){
+      const height=1.02*Math.sqrt(Math.max(0,1-offset*offset/(w*w/4)));
+      lbox(s,t+offset,.10,.045,YB1+3.04,height,oak,{solid:false});
     }
+    for(const h of [.32,.66])lbox(s,t,.09,w*Math.sqrt(1-(h/1.05)**2),YB1+3.02+h,.045,oak,{solid:false});
+    if(cell.kind==='upcoming')lbox(s-.40,t,.12,w,YB1,2.20,0xc8c0b5);
   };
   const spCounterStand=(cell,r,face)=>{
     // Photos11/15: small brass-framed acrylic cards sit on the cases, leaving
@@ -1689,6 +1682,24 @@ export function build(K) {
   const [chocolateX,chocolateZ]=P(chocS1-.13,(chocT0+chocT1)/2);
   const drawChocolatier=marcoliniShop(K,chocolateX,YB1,chocolateZ,R);
   const spCell=(cell,index)=>{
+    if(cell.name==='포트넘앤메이슨'){
+      const [,t0,s1,t1]=spBounds(cell.rect_display),s=s1-.09,t=(t0+t1)/2;
+      const [x,z]=P(s,t);
+      fortnumShop(K,x,YB1,z,R);
+      // The channel letters and display drums leave the middle of the threshold open.
+      for(const side of [-1,1]){
+        const [cx,cz]=P(s-.56,t+side*.99);
+        K.phys.addWall(cx,cz,cx,cz,YB1,YB1+1.52,.325,'centralcity');
+      }
+      for(const side of [-1,1]){
+        const front=P(s-.16,t+side*1.437),back=P(s-3.96,t+side*1.437);
+        K.phys.addWall(...front,...back,YB1,YB1+2.5,.031,'centralcity');
+      }
+      K.phys.addWall(...P(s-3.93,t-1.44),...P(s-3.93,t+1.44),YB1,YB1+2.5,.05,'centralcity');
+      K.phys.addPolyWalls(RECT(s-2.56,t-.59,s-1.98,t+.59),YB1,YB1+.73,.02,'centralcity');
+      return;
+    }
+    if(cell.kind==='upcoming'){spArchFront(cell);return;}
     if(cell.name==='파이브가이즈'){fiveGuys(cell);return;}
     if(cell===chocolateCell){
       spArchFront(cell);
@@ -1702,11 +1713,23 @@ export function build(K) {
     if(['크림한상 / 1994 양과점','마망갸또','만나당'].includes(cell.name))caseRect=[x0+3,y0+3,x1-3,y1-3];
     if(cell.name==='한정선')caseRect=[x0+3,y1-15,x1-3,y1-6];
     caseRect=spSafeCounter(cell,caseRect);
-    if(west)spArchFront(cell);else if(cell.zone!=='sweet_islands')BSign(cell.name,r,front,2.65);
+    if(west)spArchFront(cell);else if(cell.zone!=='sweet_islands')BSign(cell.name,r,cell.entrance||front,2.65);
+    if(cell.name==='하츠베이커리'){
+      // The full two-table footprint fits behind the plan-east frontage.
+      const tableRect=[1068,560,1074,580];
+      if(!b1Safe(tableRect))return;
+      const [a,b,c,d]=spBounds(tableRect),s=(a+c)/2,t=(b+d)/2;
+      const [x,z]=P(s,t);
+      // Use the baked table for the visible top. Its walk blocker stays inside the tenant cell.
+      lbox(s,t,.77,2.55,YB1,.84,0xf1debe,{skip:['top','bottom','e','w','n','s']});
+      hazBakery(K,x,YB1+.80,z,R);
+      return;
+    }
     const chefStage=cell.name==='깰끄쇼즈 / 르솔레이 / 아우치+터치';
+    const cake=cell.name==='키친205'||cell.name==='쇼토';
     if(retail){
       if(caseRect){BPrism(caseRect,YB1,.9,{tex:'wood',color:0xd3c6af});for(let j=0;j<4;j++)BPrism(caseRect,YB1+.9+j*.4,.04,0xe6dcc9,false);}
-    }else if(caseRect)spVitrine(caseRect,index,!chefStage);
+    }else if(caseRect)spVitrine(caseRect,index,!chefStage&&!cake,!cake);
     if(cell.name==='어나더팜'&&caseRect){
       const [a,b,c,d]=spBounds(caseRect),[x,z]=P((a+c)/2,(b+d)/2);
       anotherPalmEdition(K,x,YB1+1.155,z,F[face]+PI);
@@ -1715,6 +1738,9 @@ export function build(K) {
       if(chefStage){
         const [a,b,c,d]=spBounds(caseRect),[x,z]=P((a+c)/2,(b+d)/2);
         chefStageSigns(K,x,YB1,z,F[face],c-a,d-b);
+      }else if(cake){
+        const [a,b,c,d]=spBounds(caseRect),[x,z]=P((a+c)/2,(b+d)/2);
+        cakeCounter(K,cell.name,x,YB1+.80,z,F[face]);
       }else spCounterStand(cell,caseRect,face);
     }
     const cs=(s0+s1)/2,ct=(t0+t1)/2;
@@ -3924,6 +3950,18 @@ export function build(K) {
     const [x,z]=BP(1215,543),[lookX,lookZ]=BP(1243.5,559.5);
     K.spawn({name:'스위트 파크 입구',destinationId:'sweet-park',aliases:['신세계 스위트파크','Sweet Park'],
       place:'centralcity',floor:'B1',mapDestination:true,x,y:YB1,z,yaw:Math.atan2(x-lookX,z-lookZ)});
+  }
+  // Customer positions are in the same 1823 × 1367 operator guide as the cells.
+  // Aim across the counter perpendicular to its edge, including offset arrivals in narrow aisles.
+  for(const cell of B1_CELLS){
+    if(!cell.arrival)continue;
+    const [u,v]=cell.arrival,[left,top,right,bottom]=cell.rect_display;
+    const [lookU,lookV]=cell.lookAt||{
+      N:[u,top+2],S:[u,bottom-2],W:[left+2,v],E:[right-2,v]
+    }[cell.front];
+    const [x,z]=BP(u,v),[lookX,lookZ]=BP(lookU,lookV);
+    K.spawn({name:cell.name,aliases:cell.aliases,pitchDeg:cell.pitchDeg,place:'centralcity',floor:'B1',
+      mapDestination:true,x,y:YB1,z,yaw:Math.atan2(x-lookX,z-lookZ)});
   }
   {const [x,z]=courtP(5.2,-1);K.spawn({name:'하우스 오브 신세계 · B1 라운지',x,z,y:YB1,yaw:courtR+PI});}
   sp('호남선 대합실 · 매표소와 B1 연결', 124.5, 28.5, 0, 'N', '1F');

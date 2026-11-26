@@ -1,5 +1,6 @@
-import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
 import {loadFixtureScene} from '../onebailey/load.js';
+
+import * as front from './arrival-front.js';
 
 let source;
 function loadSurface(T){
@@ -18,20 +19,45 @@ function loadSurface(T){
   return source;
 }
 
-export function cinemaEntrance(K,x,y,z,angle){
-  const T=K.THREE,parts=[];
-  function piece(geometry,x,y,z,color){
-    geometry.translate(x,y,z);
-    const paint=new T.Color(color),colors=new Float32Array(geometry.attributes.position.count*3);
-    for(let i=0;i<colors.length;i+=3)paint.toArray(colors,i);
-    geometry.setAttribute('color',new T.Float32BufferAttribute(colors,3));
-    parts.push(geometry);
+// Resolve the tiny synchronous first-view mesh before any renderer can see it.
+// Older browsers can use Three's bundled decompressor without adding a common dependency.
+const compressed=Uint8Array.from(atob(front.packed),c=>c.charCodeAt(0));
+const bytes=typeof DecompressionStream==='function'
+  ? new Uint8Array(await new Response(new Blob([compressed]).stream().pipeThrough(new DecompressionStream('deflate'))).arrayBuffer())
+  : (await import('three/addons/libs/fflate.module.js')).unzlibSync(compressed);
+let arrivalGeometry;
+function entranceFront(T){
+  if(arrivalGeometry)return arrivalGeometry;
+  let cursor=0;
+  function unsigned(){
+    let n=0,scale=1,b;
+    do{b=bytes[cursor++];n+=(b&127)*scale;scale*=128;}while(b&128);
+    return n;
   }
-  for(const side of [-1,1])piece(new T.BoxGeometry(4.18,4.38,.21),side*3.96,2.19,-.16,0xcac0b1);
-  piece(new T.BoxGeometry(3.76,1.85,.19),0,3.465,-.13,0xb3bcb2);
-  piece(new T.BoxGeometry(12.1,.11,.24),0,2.465,.03,0x303436);
-  const proxy=mergeGeometries(parts);
-  parts.forEach(g=>g.dispose());
+  function readDeltas(target,offset,stride,unit){
+    let value=0;
+    for(let i=offset;i<target.length;i+=stride){
+      const n=unsigned();
+      value+=n&1?-(n+1)/2:n/2;
+      target[i]=value*unit;
+    }
+  }
+  const vertices=unsigned(),entries=unsigned();
+  const positions=new Float32Array(vertices*3),colors=new Uint8Array(vertices*3),indices=new Uint16Array(entries);
+  for(let axis=0;axis<3;axis++)readDeltas(positions,axis,3,.001);
+  for(let i=0;i<vertices;i++)colors.set(front.palette[bytes[cursor++]],i*3);
+  readDeltas(indices,0,1,1);
+  const geometry=new T.BufferGeometry();
+  geometry.setAttribute('position',new T.BufferAttribute(positions,3));
+  geometry.setAttribute('color',new T.BufferAttribute(colors,3,true));
+  geometry.setIndex(new T.BufferAttribute(indices,1));
+  geometry.computeVertexNormals();
+  geometry.boundingSphere=new T.Sphere(new T.Vector3(0,2,-1.95),7.0);
+  return arrivalGeometry=geometry;
+}
+
+export function cinemaEntrance(K,x,y,z,angle){
+  const T=K.THREE,proxy=entranceFront(T);
   const material=new T.MeshPhongMaterial({vertexColors:true,side:T.DoubleSide,specular:0x28241e,shininess:33});
   // The blue-white channel letters and golden bowl liners are self-lit surfaces.
   material.onBeforeCompile=shader=>{
@@ -41,7 +67,6 @@ export function cinemaEntrance(K,x,y,z,angle){
     totalEmissiveRadiance += channel*vec3(.34,.62,.81)+lamp*vec3(.46,.32,.12);`);
   };
   const mesh=new T.Mesh(proxy,material);
-  proxy.boundingSphere=new T.Sphere(new T.Vector3(0,2,-1.95),7.0);
   mesh.name='메가박스 센트럴 · 부티크 아치 입면';
   mesh.position.set(x,y,z);
   mesh.rotation.y=angle;

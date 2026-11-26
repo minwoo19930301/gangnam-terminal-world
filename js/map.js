@@ -494,9 +494,10 @@ export function createMap(opts) {
     const x = clamp(view?.x ?? target.x, bounds[0], bounds[2]), z = clamp(view?.z ?? target.z, bounds[1], bounds[3]);
     const yaw = view ? view.yaw * Math.PI / 180 : target.yaw;
     const address = target.mapDestination && !ground ? target : undefined;
+    const pitchDeg = view?.pitch ?? address?.pitchDeg;
     const selectedZone = ground ? null : target.zone;
     const basementPin = !ground && target.basementPin;
-    if (!selectedZone && opts.leaveArea && opts.leaveArea(x, Number.isFinite(target.y) && !ground ? target.y : null, z, yaw, address, view?.pitch, basementPin)) { if (open) toggle(); return; }
+    if (!selectedZone && opts.leaveArea && opts.leaveArea(x, Number.isFinite(target.y) && !ground ? target.y : null, z, yaw, address, pitchDeg, basementPin)) { if (open) toggle(); return; }
     let destination = null;
     if (basementPin) {
       destination = basementLanding(x, target.y, z);
@@ -517,7 +518,7 @@ export function createMap(opts) {
     if (selectedZone && opts.leaveArea?.(destination.x, destination.y, destination.z, yaw, target)) { if (open) toggle(); return; }
     // The engine's teleport snaps again within +1m; compensate to retain the checked floor.
     player.teleport(destination.x, destination.y, destination.z, yaw ?? player.yaw);
-    if (view) player.pitch = view.pitch * Math.PI / 180;
+    if (Number.isFinite(pitchDeg)) player.pitch = clamp(pitchDeg * Math.PI / 180, -1.5, 1.5);
     player.y = destination.y; player.vy = 0;
     toggle(); miniClock = 1;
   }
