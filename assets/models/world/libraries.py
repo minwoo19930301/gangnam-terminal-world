@@ -54,6 +54,7 @@ SHELVES = {
     "megabox-central": "메가박스 센트럴 · B1 매표 로비",
     "gyeongbu-basket-display": "경부선 3층 · 꽃바구니 진열",
     "gyeongbu-flower-bank": "경부선 3층 · 생화 절지 진열대",
+    "open-stage-media": "센트럴시티 1층 · 미디어 기둥 외장",
     "open-stage-coffer": "센트럴시티 1층 · 오픈 스테이지 격자 천장",
     "gyeongbu-waiting-ceiling": "경부선 1층 · 대합실 목재 루버와 매입등",
     "gyeongbu-planted-columns": "경부선 1층 · 대합실 식물 기둥",

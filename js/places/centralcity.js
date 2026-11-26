@@ -24,6 +24,7 @@ import {buchangWalnutCounter} from '../../assets/models/buchang-walnut/model.js'
 import {anotherPalmEdition} from '../../assets/models/another-palm-astro/model.js';
 import {chefStageSigns} from '../../assets/models/sweet-chefs-stage/model.js';
 import {marketWestReturn, cinemaAisleMouth} from './shinsegae-b1-plan.js';
+import {placeStageMedia} from '../../assets/models/open-stage-media/model.js';
 import {placeStageCoffers} from '../../assets/models/open-stage-coffer/model.js';
 import {placeOpenStageLounge} from '../../assets/models/open-stage-lounge/model.js';
 import {galleryLights} from '../../assets/models/famille-atrium/model.js';
@@ -4740,7 +4741,7 @@ function hallR20(K) {
   {
     const [x,z]=P(27.32,-7.55),[doorX,doorZ]=P(33.2,-8.45);
     K.spawn({name:'르자당 센트럴시티점 입구',destinationId:'lejardin',
-      aliases:['르자당 꽃집','Le Jardin','센트럴시티 꽃집','122-1호'],
+      aliases:['르자당 꽃집','르자르댕','르자르뎅','Le Jardin','센트럴시티 꽃집','122-1호'],
       place:'centralcity',floor:'1F',mapDestination:true,x,y:0,z,yaw:Math.atan2(x-doorX,z-doorZ)});
   }
   // Units 20/21 are distinct from STARBUCKS central F1. Retain their fitout by the east passage.
@@ -5041,20 +5042,39 @@ function hallR20(K) {
   zone('오픈 스테이지','1F',3,-32,33,-13,0,3.25,
     lexusShow ? '센트럴시티 팝업 광장 · 렉서스 올 뉴 ES' : '센트럴시티 팝업 광장');
   K.texture('ccR20Led',256,512,(g,w,h)=>{
-    const grad=g.createLinearGradient(0,0,w,h);grad.addColorStop(0,'#061321');grad.addColorStop(.45,'#1e6fe0');grad.addColorStop(1,'#3fd0e8');g.fillStyle=grad;g.fillRect(0,0,w,h);
-    g.fillStyle='#08121c';g.fillRect(0,0,w,70);g.fillRect(0,h-45,w,45);g.strokeStyle='#c0e9f6';g.lineWidth=3;
-    for(let i=0;i<6;i++){g.beginPath();g.ellipse(w*.5,h*.45,68+i*2,85-i*3,0,0,PI*2);g.stroke();}
-    g.fillStyle='#f2f6fc';g.textAlign='center';g.font='bold 23px sans-serif';
-    if(lexusShow) g.fillText('LEXUS LOUNGE',w/2,400);
-    g.font='17px sans-serif';g.fillText('오픈 스테이지',w/2,440);
-  },[1.6,5]);
+    // A single abstract blue-water composition per face; exhibition programmes rotate.
+    const grad=g.createLinearGradient(0,0,w*.4,h);
+    grad.addColorStop(0,'#081629');grad.addColorStop(.44,'#064989');grad.addColorStop(.78,'#177cb0');grad.addColorStop(1,'#092d59');
+    g.fillStyle=grad;g.fillRect(0,0,w,h);
+    for(let i=0;i<18;i++){
+      const y=h*(i/16-.07),bend=Math.sin(i*1.45)*h*.10;
+      const ribbon=g.createLinearGradient(0,y,w,y+h*.14);
+      ribbon.addColorStop(0,'rgba(16,44,105,.5)');ribbon.addColorStop(.5,'rgba(93,203,223,.6)');ribbon.addColorStop(1,'rgba(22,69,136,.15)');
+      g.fillStyle=ribbon;g.beginPath();g.moveTo(-20,y);
+      g.bezierCurveTo(w*.31,y+h*.13+bend,w*.51,y-h*.18,w+20,y+h*.14);
+      g.bezierCurveTo(w*.56,y-h*.11,w*.33,y+h*.17+bend,-20,y+.045*h);g.closePath();g.fill();
+    }
+    if(lexusShow){
+      g.fillStyle='#f2f6fc';g.textAlign='center';g.font='bold 23px sans-serif';
+      g.fillText('LEXUS LOUNGE',w/2,400);
+    }
+  },[1,1]);
   K.material('ccR20LedGlow',new K.THREE.MeshBasicMaterial({map:K.T.surface('ccR20Led').tex,color:0xffffff,side:K.THREE.DoubleSide}));
   K.detail({name:'오픈 스테이지 · LED 기둥',floor:'1F',y0:0,y1:6.5,poly:RECT(3,-32,33,-13)},()=>{
+    const centers=[];
     for(const s of[5.5,14.5,23.5,31])for(const t of[-16,-27]){
-      lbox(s,t,1.6,1.6,0,6.2,0x111114);
+      centers.push([t+21.5,0,s-18.25]);
+      // Preserve the full-height original physics; the instanced cabinet supplies its finish.
+      lbox(s,t,1.6,1.6,0,6.2,0x222227,{skip:['top','bottom','n','s','e','w']});
       const pts=RECT(s-.81,t-.81,s+.81,t+.81);
-      for(let k=0;k<4;k++){const a=pts[k],b=pts[(k+1)%4];face('ccR20LedGlow',[[a[0],.4,a[1]],[b[0],.4,b[1]],[b[0],5.25,b[1]],[a[0],5.25,a[1]]],true);}
+      for(let k=0;k<4;k++){
+        const a=pts[k],b=pts[(k+1)%4],dx=b[0]-a[0],dz=b[1]-a[1],length=Math.hypot(dx,dz);
+        K.quad('ccR20LedGlow',[[a[0],.76,a[1]],[b[0],.76,b[1]],[b[0],4.44,b[1]],[a[0],4.44,a[1]]],
+          [-dz/length,0,dx/length],[[0,0],[1,0],[1,1],[0,1]]);
+      }
     }
+    const [x,z]=P(18.25,-21.5);
+    placeStageMedia(K,x,z,R,centers);
   });
   // Reuse the detailed lounge, tableware and Lexus installation by a rigid translation
   // in the new hall frame. No copies remain in the terminal strip.
