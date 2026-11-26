@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import {readFileSync,writeFileSync} from 'node:fs';
 import {boutiqueLobby} from '../megabox-central/place.js';
 import {transverseFloor,transverseGuide,transverseNorth} from '../megabox-central/layout.js';
-import {plan} from '../cinema-rotary/layout.js';
+import {eventWallOffset,plan,westApron,westSides} from '../cinema-rotary/layout.js';
 import {relief} from '../../../js/banpo_relief.js';
 import {pathToFileURL} from 'node:url';
 
@@ -44,7 +44,7 @@ export function captureShell() {
       [b[0]+dz*scale,b[1]-dx*scale],[a[0]+dz*scale,a[1]-dx*scale]];
     return {points:[bottom,top].flatMap(y=>ring.map(([x,z])=>[x,-z,y+relief(x,z)])),mat};
   });
-  return {surfaces,walls:partitions};
+  return {surfaces,walls:partitions,westCornerIndex:westApron.indexOf(westSides[0][0])};
 }
 
 function writeEdge(vertices,output) {
@@ -69,8 +69,26 @@ function writeEdge(vertices,output) {
   writeFileSync(output??file,source.replace(field,'export const transverseNorth = '+next+';'));
 }
 
+function writeWestCorner(vertices,output) {
+  const index=westApron.indexOf(westSides[0][0]);
+  if(vertices.length!==westApron.length || vertices.some((p,i)=>
+    p.length!==2 || p.some(v=>!Number.isFinite(v)) || (i!==index && Math.hypot(p[0]-westApron[i][0],p[1]-westApron[i][1])>.001)))
+    throw Error('Move only the vertex in the Event wall corner group.');
+  const area=(a,b,c)=>(b[0]-a[0])*(c[1]-a[1])-(b[1]-a[1])*(c[0]-a[0]);
+  for(const [i,j,k] of THREE.ShapeUtils.triangulateShape(westApron.map(p=>new THREE.Vector2(...p)),[])){
+    if(area(vertices[i],vertices[j],vertices[k])*area(westApron[i],westApron[j],westApron[k])<=0)
+      throw Error('The moved corner crosses an existing face of the walking floor.');
+  }
+  const delta=vertices[index].map((v,axis)=>Number((v-westApron[index][axis]+eventWallOffset[axis]).toFixed(3)));
+  const file=new URL('../cinema-rotary/layout.js',import.meta.url),source=readFileSync(file,'utf8');
+  const field='export const eventWallOffset = '+JSON.stringify(eventWallOffset)+';';
+  if(source.split(field).length!==2)throw Error('Cannot identify the saved event-wall corner.');
+  writeFileSync(output??file,source.replace(field,'export const eventWallOffset = '+JSON.stringify(delta)+';'));
+}
+
 if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href){
   if(process.argv[2]==='read')console.log(JSON.stringify(captureShell()));
   else if(process.argv[2]==='write')writeEdge(JSON.parse(readFileSync(0,'utf8')),process.argv[3]);
-  else throw Error('Expected read or write.');
+  else if(process.argv[2]==='write-west')writeWestCorner(JSON.parse(readFileSync(0,'utf8')),process.argv[3]);
+  else throw Error('Expected read, write or write-west.');
 }

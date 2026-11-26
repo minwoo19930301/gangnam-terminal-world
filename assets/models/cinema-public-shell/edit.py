@@ -10,6 +10,7 @@ HERE = Path(__file__).resolve().parent
 NATIVE = HERE / "public-shell.blend"
 COLLECTION = "Shinsegae_B1_Cinema_Public_Shell"
 CONTROL = "East cross-aisle floor"
+WEST_FLOOR = "원형 광장 옆 통로 · floor"
 args = sys.argv[sys.argv.index("--")+1:]
 command = ["node", str(HERE / "shell.mjs")]
 
@@ -44,7 +45,7 @@ def capture():
     for surface in data["surfaces"]:
         obj = mesh_object(surface["name"], surface["points"], surface["faces"],
                           floors if surface["up"] else ceilings, surface["mat"])
-        obj.hide_select = obj.name != CONTROL
+        obj.hide_select = obj.name not in {CONTROL, WEST_FLOOR}
         obj["game_y_m"] = surface["y"]
         if surface["up"]:
             obj["walkable_y_m"] = surface["support"]
@@ -64,6 +65,9 @@ def capture():
     # contains every ceiling; its own view layer controls visibility.
     bpy.context.view_layer.layer_collection.children[root.name].children[ceilings.name].hide_viewport=True
     bpy.context.scene.unit_settings.system='METRIC'
+    west=bpy.data.objects[WEST_FLOOR]
+    west.vertex_groups.new(name="Event wall corner").add([data["westCornerIndex"]], 1, "REPLACE")
+    west["editable_boundary"]="Move the Event wall corner horizontally to adjust its floor, ceiling and wall together."
     control=bpy.data.objects[CONTROL]
     control["editable_boundary"]="Move the North edge vertex group horizontally, then export and recapture."
     control.vertex_groups.new(name="North edge").add([0,1,2],1,'REPLACE')
@@ -81,18 +85,19 @@ def capture():
     bpy.context.preferences.filepaths.save_version=0
     bpy.ops.wm.save_as_mainfile(filepath=str(Path(args[1]).resolve() if len(args)>1 else NATIVE),compress=True)
 
-def export():
-    control=bpy.data.collections[COLLECTION].all_objects[CONTROL]
+def export(control_name, action):
+    control=bpy.data.collections[COLLECTION].all_objects[control_name]
     vertices=[control.matrix_world @ v.co for v in control.data.vertices]
     source=json.loads(subprocess.check_output(command+["read"]))
-    original=next(s for s in source["surfaces"] if s["name"]==CONTROL)
+    original=next(s for s in source["surfaces"] if s["name"]==control_name)
     topology={tuple(sorted(p.vertices)) for p in control.data.polygons}
     if len(vertices)!=len(original["points"]) or topology!={tuple(sorted(f)) for f in original["faces"]}:
-        raise ValueError("Preserve the cross-aisle's original vertices and face topology.")
+        raise ValueError("Preserve the floor's original vertices and face topology.")
     if any(abs(v.z-p[2])>.001 for v,p in zip(vertices,original["points"])):
-        raise ValueError("Move the north edge horizontally. Recapture will reapply terrain at its new position.")
-    subprocess.run(command+["write"]+args[1:],input=json.dumps([(v.x,-v.y) for v in vertices]),text=True,check=True)
+        raise ValueError("Move the floor boundary horizontally. Recapture will update its terrain height.")
+    subprocess.run(command+[action]+args[1:],input=json.dumps([(v.x,-v.y) for v in vertices]),text=True,check=True)
 
 if args[0]=="import": capture()
-elif args[0]=="export": export()
-else: raise ValueError("Expected import or export.")
+elif args[0]=="export": export(CONTROL,"write")
+elif args[0]=="export-west": export(WEST_FLOOR,"write-west")
+else: raise ValueError("Expected import, export or export-west.")
