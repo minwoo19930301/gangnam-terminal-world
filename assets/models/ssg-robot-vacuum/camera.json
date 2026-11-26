@@ -1,0 +1,11 @@
+{
+  "floor": "9F",
+  "x": -50.0415,
+  "z": 76.70306,
+  "yaw": 97.4914,
+  "pitch": -31,
+  "meshName": "RoborockDisplay",
+  "sourceBlend": "gallery.blend",
+  "sourceCollection": "SSG_9F_Roborock",
+  "nativeLabel": "로보락"
+}
