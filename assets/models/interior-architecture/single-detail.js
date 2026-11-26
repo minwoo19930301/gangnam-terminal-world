@@ -6,7 +6,7 @@ const models = new Map();
 // One draw at either distance. Quantized glTFs store their decode transform on
 // the node. Keep that separate from the architectural placement transform.
 export function placeSingleDetail(K, {name, file, at, angle, fallback, fallbackMaterial,
-                                      material, loadSurface=loadArchitecture, range, exitRange, floorTolerance, eyeHeight=0, viewBounds, closeVisibleFrom, translations}) {
+                                      material, loadSurface=loadArchitecture, range, exitRange, floorTolerance, eyeHeight=0, viewBounds, closeVisibleFrom, translations, rigidGround}) {
   const T = K.THREE;
   let state = models.get(file);
   if (!state) {
@@ -33,17 +33,18 @@ export function placeSingleDetail(K, {name, file, at, angle, fallback, fallbackM
     placeInstances(null);
   }
   root.name = name;
-  root.position.set(x,y,z);
+  root.position.set(x,y+(rigidGround??0),z);
+  if(rigidGround!==undefined)root.userData.terrainApplied=true;
   root.rotation.y = angle;
   root.add(item);
-  const ground = relief(x,z);
+  const ground = rigidGround??relief(x,z);
   const center = new T.Vector3(x,y+ground+eyeHeight,z);
   const frustum=new T.Frustum(), matrix=new T.Matrix4(), globalPlacement=new T.Matrix4();
   fallback.computeBoundingBox();
   const bounds=viewBounds??(placements?placements.map(m=>fallback.boundingBox.clone().applyMatrix4(m)):[fallback.boundingBox]);
   function inView(camera) {
     globalPlacement.copy(root.matrixWorld);
-    globalPlacement.elements[13]+=ground;
+    if(rigidGround===undefined)globalPlacement.elements[13]+=ground;
     matrix.multiplyMatrices(camera.projectionMatrix,camera.matrixWorldInverse).multiply(globalPlacement);
     frustum.setFromProjectionMatrix(matrix);
     return bounds.some(box=>frustum.intersectsBox(box));

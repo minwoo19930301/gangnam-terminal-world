@@ -8,6 +8,9 @@ from mathutils import Vector
 
 
 SHELVES = {
+    "goter-crossing": "신반포로 · 고터사거리 보행 신호주",
+    "parka-rail": "경부선 유니클로 · 경량 파카 행거",
+    "blouse-rail": "경부선 유니클로 · 시어서커 블라우스 행거",
     "seoul-city-bus": "신반포로 · 서울 간선버스",
     "gyeongbu-front-cafes": "경부선 정문 옆 · 이디야와 달리나인",
     "sinbanpo-bus-shelters": "신반포로 · 고속터미널 중앙정류소",
@@ -150,8 +153,8 @@ def link_asset_gallery(world_dir):
                         for part in instance.instance_collection.all_objects if part.library}
     represented = {Path(bpy.path.abspath(lib.filepath)).resolve() for lib in source_libraries}
     added_shelves = []
-    for path in sorted(world_dir.parent.glob("*/*.blend")):
-        if path.parent == world_dir or path.resolve() in represented:
+    for path in sorted(world_dir.parent.rglob("*.blend")):
+        if world_dir in path.parents or path.resolve() in represented:
             continue
         if path.parent.name.startswith("ssg-"):
             retail = json.loads((path.parent / "camera.json").read_text(encoding="utf-8"))

@@ -1,5 +1,7 @@
+import {parts as crossingParts,prefix as crossingPrefix} from '../goter-crossing/layout.js';
 import {parts as floristParts,prefix as floristPrefix} from '../lejardin-shop/layout.js';
 import {parts as loungeTableParts,prefix as loungeTablePrefix} from '../lounge-table-service/layout.js';
+import {names as tianjinNames} from '../tianjin-baozi/layout.js';
 import {names as warakuNames} from '../waraku/layout.js';
 import {catalog as golfCatalog,prefix as golfPrefix} from '../newcore-golf/layout.js';
 import {labels as sebitGalleryLabels} from '../sebit-gallery/gallery.js';
@@ -16,6 +18,17 @@ import {relief} from '../../../js/banpo_relief.js';
 // Scene object (or a uniquely identifying child) -> editable native source.
 // Geometry decoder matrices and decorative LOD offsets live *below* the placement.
 const sources = [
+  ...[['ribbon','색상별 리본과 꽃 포장','색상별 리본과 꽃 포장 진열'],
+      ['case','원목 진열장과 황동 촛대','원목 진열장과 황동 촛대'],
+      ['crystal','절삭 유리 화기와 고블릿','절삭 유리 화기와 고블릿']].map(([key,label,original])=>
+    ['gyeongbu','3F','gyeongbu-florist-stock/'+key+'/'+key+'.blend','경부선 현대데코 · '+label,'현대데코 · '+original]),
+  ...Object.values(crossingParts).map(([label])=>{
+    const name=crossingPrefix+label;return ['streets','지상','goter-crossing/signals.blend',name,name];
+  }),
+  ...Object.values(tianjinNames).map(label=>{
+    const name='천진포자 · '+label;
+    return ['centralcity','1F','tianjin-baozi/restaurant.blend',name,name];
+  }),
   ...Object.values(floristParts).map(([label])=>{
     const name=floristPrefix+label;return ['centralcity','1F','lejardin-shop/flowershop.blend',name,name];
   }),
@@ -39,6 +52,11 @@ const sources = [
     '간선버스 · 도장 차체와 경량 휠','간선버스 · 저상 승객석과 입석 손잡이','간선버스 · 곡면 유리와 출입문',
     '간선버스 · 전조등과 차폭등','간선버스 · '+route+'번 노선 표시',
   ]),
+  ...['1F','2F'].flatMap(floor=>[
+    ['gyeongbu',floor,'gyeongbu-uniqlo-rails/parka/parka-rail.blend','경부선 유니클로 '+floor+' · 경량 후드 파카 행거','유니클로 · 경량 후드 파카 양면 행거'],
+    ['gyeongbu',floor,'gyeongbu-uniqlo-rails/blouse/blouse-rail.blend','경부선 유니클로 '+floor+' · 시어서커 블라우스 행거','유니클로 · 시어서커 블라우스 양면 행거'],
+  ]),
+  ['gyeongbu','2F','gyeongbu-uniqlo-finish/upstairs/oak-and-lighting.blend','경부선 유니클로 · 2층 참나무 판매층과 열린 계단','본관 2층 유니클로 · 열린 계단 주위의 참나무 바닥과 노출 천장'],
   ['gyeongbu','1F','gyeongbu-uniqlo/entrance-fashion.blend','경부선 유니클로 · 에어리즘과 입구 코디','본관 1층 유니클로 · 에어리즘 진열과 토르소'],
   ['gyeongbu','1F','gyeongbu-uniqlo-finish/oak-and-lighting.blend','경부선 유니클로 · 참나무 판매층과 흰 노출 천장','본관 1층 유니클로 · 참나무 바닥과 노출 천장'],
   ['gyeongbu','2F','gyeongbu-baking/baking-shop.blend','경부선 부속상가 · 비앤씨마켓 반죽기와 제과 도구','부속상가 2층 비앤씨마켓 · 반죽기와 제과 도구'],
