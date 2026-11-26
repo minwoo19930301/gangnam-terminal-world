@@ -59,7 +59,8 @@ with tempfile.TemporaryDirectory(dir=target) as temp:
                 export_all_vertex_colors=True, export_cameras=False, export_lights=False,
                 export_extras=False,
             )
-            if model_id in ("apt-a10023673","apt-a10024913"):
+            if any(mat and mat.use_nodes and mat.node_tree.nodes.get("Storey glazing")
+                   for obj in parts for mat in (slot.material for slot in obj.material_slots)):
                 subprocess.run(["node", str(folder/"pack.mjs"), str(path)], check=True)
                 compact = stage / (model_id + "-packed.glb")
                 subprocess.run(["node", str(repo/"tools/optimize_model.mjs"), str(path), str(compact)], check=True)

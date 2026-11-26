@@ -1,4 +1,4 @@
-"""Interpret the two published exterior palettes on the source tower wall planes."""
+"""Interpret the published exterior palettes on the source tower wall planes."""
 from math import floor
 import struct
 import zlib
@@ -88,6 +88,45 @@ def finish(obj,model_id):
 
         roof=height-.26
         courses=max(2,round(roof/2.92));rise=roof/courses
+        if model_id == 'apt-a13790828':
+            # The existing slabs photographed in February 2024 have unlike long
+            # elevations: shaded gallery bands and enclosed blue-green balconies.
+            # Follow the source wall orientation without assigning individual units.
+            if length < 3:
+                panel(0,length,.02,roof,.012,0,'C6B8A3')
+                continue
+            count=max(1,round(length/4.0))
+            bay=length/count
+            gallery=length>=16 and normal.y<0
+            for col in range(count):
+                left=col*bay
+                right=left+bay
+                if gallery:
+                    panel(left,right,.02,roof,.013,0,'70665C')
+                    # A darker opening behind the front parapet gives selective
+                    # light at night while the gallery slab itself stays dark.
+                    panel(left+bay*.18,left+bay*.78,.16,roof,.031,1,
+                          '5C635E','777A6C',courses)
+                    pier='C39885' if col%4==0 else 'BCAB97'
+                    panel(left,left+.22,.06,roof,.094,0,pier)
+                else:
+                    panel(left,right,.02,roof,.013,0,'CBBEA9')
+                    margin=.35 if length>=16 else bay*.29
+                    panel(left+margin,right-margin,.14,roof,.034,1,
+                          ['466466','4A6566','536E6C'][col%3],'789089',courses)
+                    centre=left+bay*.51
+                    panel(centre-.052,centre+.052,.09,roof-.04,.056,0,'9C9C8D')
+            for row in range(courses):
+                sill=row*rise
+                if gallery:
+                    panel(.03,length-.03,sill+.08,sill+.80,.079,0,'BDA997','D6C6AD')
+                    panel(0,length,sill+.80,sill+.94,.15,0,'A29584')
+                elif length>=16:
+                    panel(.08,length-.08,sill+.15,sill+.31,.076,0,'918579')
+            if gallery:
+                for col in range(0,count,4):
+                    panel(col*bay,col*bay+.27,.06,roof,.105,0,'BC9783')
+            continue
         n=max(1,round(length/3.25));bay=length/n
         orientation=normal.x*normal.y<0
         for col in range(n):
