@@ -7745,6 +7745,13 @@ export function build(K) {
         wall(lo,leftV,hi,rightV,y,y+3.05,{mat:'glass',thick:.035,openings:[{at:L/2,w:1.8,y0:y,y1:y+2.75}]});
         wall(lo,leftV,hi,rightV,y+3.05,y+3.4,{mat:0x373c3b,thick:.09});
       }
+    }else if(id==='8F'&&c.name==='배럴'){
+      // The centroid falls inside the mannequin on the blue wave plinth.
+      // Stand on the open front corner within the original sales floor.
+      const u=r[0]+.18,v=r[1]+.92,[x,z]=P(u,v);
+      const yaw=yawTo(r[2]-1.38-u,(r[1]+r[3])/2-v);
+      K.zone({name:shopName,floor:id,sub:shopDescription,poly:rect(...r),y0:y,y1:y+H,
+        priority:3,mapArrival:{x,z,yaw}});
     }else if(aisleOutline){
       K.zone({name:shopName,floor:id,sub:shopDescription,poly:aisleOutline,y0:y,y1:y+H,priority:3});
     }else if(hasMappedShops||(id==='6F'&&c.name==='일레븐티')||tag||chanel||amomento||casualShoe||theilma||galleryNeighbors){
