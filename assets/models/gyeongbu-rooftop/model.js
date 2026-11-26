@@ -11,6 +11,8 @@ function placeTableInstances(K,at,yaw){
   const T=K.THREE;
   tableProxy??=boxSilhouette(T,[[0,.68,0,1.44,.075,.98,0x5f584c],[0,.07,0,.67,.61,.42,0x514e44]]);
   const root=new T.Group(),tables=new T.InstancedMesh(tableProxy,paint,patioTables.length);
+  tables.name='포석정 · 일곱 식탁의 배치';
+  tables.userData.nativePlacementInstances=true;
   root.name='포석정 · 공용 4인 식탁과 의자';root.position.set(...at);root.rotation.y=yaw;root.add(tables);
   const matrix=new T.Matrix4(),projection=new T.Matrix4(),frustum=new T.Frustum();
   const boxes=patioTables.map(([x,d])=>new T.Box3(new T.Vector3(x-.73,0,d-.98),new T.Vector3(x+.73,.91,d+.98)));

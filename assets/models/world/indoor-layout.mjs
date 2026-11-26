@@ -20,6 +20,17 @@ const sources = [
     .map(name=>['famille','2F','kervan/fp216.blend',name,name]),
   ...['담꽃 · 다기와 보자기 진열장','담꽃 · 백색 주문대와 검은 의자','담꽃 · 밤대추팥빙수 한 상']
     .map(name=>['centralcity','2F','damccot/fp204.blend',name,name]),
+  ...['계단식 휴게 좌석','꽃이삭 화분','벽면 투사와 조명 레일'].map(label=>{
+    const name='고터·세빛 라운지 · '+label;
+    return ['onebailey','B1','sebit-lounge/lounge.blend',name,name];
+  }),
+  ...[['포석정 · 옥상 점포와 좌석','포석정 · 옥상 점포와 좌석'],['포석정 · 일곱 식탁의 배치','포석정 · 공용 4인 식탁과 의자'],
+      ['포석정 · 불판과 상차림','포석정 · 불판과 상차림'],['경부선 옥상 · 대형 청색 채널 글자','청색 옥상 대형 간판']]
+    .map(([mesh,native])=>['gyeongbu','10F','gyeongbu-rooftop/poseokjeong-rooftop.blend',mesh,native]),
+  ...['병 선반','와인 진열 카트','나무 와인 상자','벽돌 궁륭과 석재 바닥'].map(label=>{
+    const name='더 마고 그릴 · '+label;
+    return ['jwmarriott','7F','margaux-cellar/cellar.blend',name,name];
+  }),
   ...await retailSources(),
   ['gyeongbu','1F','gyeongbu-ticket-office/gyeongbu-ticket-office.blend','경부선 · 통합매표소','TicketOffice','Glass','Lit'],
   ...['노란 아치와 침대','베개 진열대','물병과 도시락'].map(label=>{
@@ -105,10 +116,12 @@ export async function captureIndoorLayout() {
         if(!rule)return placed;
         root.updateWorldMatrix(true,true);
         const [,floor,library,subject,...collections]=rule;
+        const match=root.getObjectByName(subject);
+        const placements=match.userData.nativePlacementInstances?match:root;
         const local=new THREE.Matrix4(),world=new THREE.Matrix4();
-        for(let index=0;index<(root.isInstancedMesh?root.count:1);index++){
-          world.copy(root.matrixWorld);
-          if(root.isInstancedMesh){root.getMatrixAt(index,local);world.multiply(local);}
+        for(let index=0;index<(placements.isInstancedMesh?placements.count:1);index++){
+          world.copy(placements.matrixWorld);
+          if(placements.isInstancedMesh){placements.getMatrixAt(index,local);world.multiply(local);}
           const ordinal=counts.get(subject)||0;
           counts.set(subject,ordinal+1);
           const [x,y,z]=world.elements.slice(12,15);
