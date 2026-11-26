@@ -33,10 +33,11 @@ async function visitAddresses() {
         await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
         const {player, phys, renderer, K, errors} = window.__world;
         const {x,y,z} = player, zone = phys.zoneAt(x,y+.1,z);
-        return {owner:zone?.place, floor:zone?.floor || '1F', draws:renderer.info.render.calls,
+        return {owner:zone?.place, name:zone?.name, floor:zone?.floor || '1F', draws:renderer.info.render.calls,
           grounded:Math.abs(phys.support(x,z,y+.5).y-y)<.55, errors:[...errors,...K._.detailErrors]};
       });
       assert.deepEqual([actual.owner, actual.floor], [owner, floor], url);
+      if(id==='centralcity' && floor==='1F') assert.equal(actual.name,'호남선 대합실',url);
       assert.ok(actual.grounded && actual.draws > 0, url);
       assert.deepEqual([...errors, ...actual.errors], [], url);
     } finally { await page.close(); }
