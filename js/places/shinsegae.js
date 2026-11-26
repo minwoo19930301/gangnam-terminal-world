@@ -26,6 +26,7 @@ import { registerStokke } from './shinsegae-stokke.js';
 import { registerKisara } from './shinsegae-kisara.js';
 import { registerHibarin } from './shinsegae-hibarin.js';
 import { registerMyeonok } from './shinsegae-myeonok.js';
+import { registerCollage } from './shinsegae-collage.js';
 import { registerHaoSum } from './shinsegae-haosum.js';
 import { registerMauviel } from './shinsegae-mauviel.js';
 import { registerMiele } from './shinsegae-miele.js';
@@ -8144,6 +8145,16 @@ export function build(K) {
       K.box({x,y,z,w:3.74,h:.875,d:.61,rotY:yaw,mat:0x454747,skip:['top','bottom','n','s','e','w']});
     }
     if (id==='11F') {
+      const collage=guide.cells.find(c=>c.name.startsWith('꼴라주'));
+      const room=upperBuildRect(id,collage);
+      const cu=room[2]-3.6, cv=room[3]-(room[3]-room[1])*.23;
+      const [cx,cz]=P(cu,cv), [ex,ez]=P(cu+1,cv);
+      const angle=Math.atan2(cz-ez,ex-cx)+Math.PI;
+      registerCollage(K,{poly:rect(...room),x:cx,y,z:cz,yaw:angle});
+      for(const [a,b,w,d,h] of [[0,0,1.19,.84,.79],[0,.75,1.62,.59,1.2],[-.28,-.68,.41,.43,.5],[0,1.91,2.94,.05,2.8]]){
+        K.box({x:cx+a*Math.cos(angle)-b*Math.sin(angle),y,z:cz-a*Math.sin(angle)-b*Math.cos(angle),
+          rotY:angle,w,d,h,mat:0x513426,skip:['top','bottom','n','s','e','w']});
+      }
       const kisara=guide.cells.find(c=>c.name.startsWith('키사라'));
       const kr=upperBuildRect(id,kisara);
       const ku=kr[2]-1.5, kv=kr[3]-(kr[3]-kr[1])*.23;
@@ -14147,6 +14158,7 @@ export function build(K) {
       const cafe=kind==='cafe',jaju=/JAJU/.test(name);
       const rows=Math.min(4,Math.max(1,Math.floor((D-2)/2.15))),cols=W>7?islands:W>3.8?[W*.24]:[];
       for(const [i,a]of cols.entries())for(let r=0;r<rows;r++){
+        if(id==='11F'&&name.startsWith('꼴라주')&&i===0&&r===1)continue;
         if(id==='11F'&&(name.startsWith('평양면옥')||name.startsWith('히바린')||name.startsWith('키사라'))&&i===0&&r===0)continue;
         const b=1.5+r*2.1,w=Math.min(1.25,sideWidth-.1);table(a,b,w,.8,.72,jaju?oak:cafe?ivory:walnut);
         for(const db of[-.65,.65]){
