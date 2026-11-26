@@ -18,15 +18,12 @@ const sources = [
   ['gyeongbu','1F','gyeongbu-icecream/gyeongbu-scoop-parlor.blend','배스킨라빈스 · 스쿱·케이크 매장','Parlor','Glass','Lit'],
   ...['케르반 · 제과와 포장 진열','케르반 · 청록색 주방창','케르반 · 모자이크 등','케르반 · 라바시와 차 한 상']
     .map(name=>['famille','2F','kervan/fp216.blend',name,name]),
-  ...[['10F','ssg-kids-footwear/gallery.blend','ToeboxFootwear','SSG_10F_Toebox'],
-      ['11F','ssg-gentle-espresso/meal.blend','HaoMeal','SSG_11F_SalonDeHaoSum'],
-      ['9F','ssg-smeg/showroom.blend','MieleCabinet','SSG_9F_Miele'],
-      ['8F','ssg-outdoors/gallery.blend','ArcOutdoorEquipment','SSG_8F_Arcteryx'],
-      ['9F','ssg-marzocco/gallery.blend','MarzoccoEnamel','SSG_9F_LaMarzocco'],
-      ['9F','ssg-twl/gallery.blend','TWLOak','SSG_9F_TWL'],
-      ['9F','ssg-herman-miller/seating.blend','HMFrame','SSG_9F_HermanMiller'],
-      ['10F','ssg-stokke/gallery.blend','StokkeChairs','SSG_10F_Stokke']]
-    .map(([floor,library,mesh,collection])=>['shinsegae',floor,library,mesh,collection]),
+  ...await retailSources(),
+  ['gyeongbu','1F','gyeongbu-ticket-office/gyeongbu-ticket-office.blend','경부선 · 통합매표소','TicketOffice','Glass','Lit'],
+  ...['노란 아치와 침대','베개 진열대','물병과 도시락'].map(label=>{
+    const name='모던하우스 키즈 · '+label;
+    return ['newcore','4F','modernhouse-kids/kids.blend',name,name];
+  }),
   ['gyeongbu','1F','gyeongbu-pretzels/seoul-warmer.blend','앤티앤스 · 프레즐 진열대','Warmer','Glass'],
   ...[['2F','Bedding','quilt-shop'],['4F','Curtains','drapery-shop']]
     .map(([floor,key,collection])=>['gyeongbu',floor,'gyeongbu-homewares/homewares.blend','경부선 도매 점포 · '+key,collection]),
@@ -56,6 +53,22 @@ const sources = [
   ['centralcity','1F','famille-atrium/atrium-fittings.blend','포비 앞 · 빨간 철제 테이블과 의자','광장 포비 앞 · 빨간 비스트로 테이블'],
   ['centralcity','1F','famille-atrium/atrium-fittings.blend','포비 앞 · 석재 화분과 관엽수','광장 포비 앞 · 석재 화분과 관엽수'],
 ];
+
+// The retail author verifies these names against both the production mesh and
+// the native collection when exporting the store's camera record.
+async function retailSources(){
+  const models=new URL('../',import.meta.url);
+  const items=await fs.readdir(models,{withFileTypes:true});
+  const folders=items.filter(entry=>entry.isDirectory()&&entry.name.startsWith('ssg-')).map(entry=>entry.name).sort();
+  return Promise.all(folders.map(async folder=>{
+    const record=JSON.parse(await fs.readFile(new URL(folder+'/camera.json',models),'utf8'));
+    const {floor,sourceBlend,sourceCollection,meshName}=record;
+    if(!floor||!sourceCollection||!meshName||!sourceBlend?.endsWith('.blend')||sourceBlend.includes('/')){
+      throw Error('Incomplete retail source for '+folder);
+    }
+    return ['shinsegae',floor,folder+'/'+sourceBlend,meshName,sourceCollection];
+  }));
+}
 
 const rounded = value => Math.round(value*1e8)/1e8;
 

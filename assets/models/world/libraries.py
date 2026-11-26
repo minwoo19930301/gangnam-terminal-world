@@ -1,27 +1,22 @@
 """Link each original Blender model into an editable, metre-scale model gallery."""
 
 from pathlib import Path
+import json
 
 import bpy
 from mathutils import Vector
 
 
 SHELVES = {
+    "gyeongbu-ticket-office": "경부선 1층 · 통합매표소",
+    "modernhouse-kids": "뉴코아 1관 4층 · 키즈 침구",
     "modernhouse-provence": "뉴코아 1관 4층 · 마르셰 프로방스",
     "gyeongbu-icecream": "경부선 1층 · 배스킨라빈스",
     "kervan": "파미에 2층 · 케르반",
-    "ssg-kids-footwear": "신세계 10층 · 토박스",
-    "ssg-gentle-espresso": "신세계 11층 · 살롱드호우섬",
-    "ssg-smeg": "신세계 9층 · 밀레",
-    "ssg-outdoors": "신세계 8층 · 아크테릭스",
     "gyeongbu-boards": "경부선 1층 · 출발 안내 전광판",
     "bean-brothers": "파미에 2층 · 빈브라더스",
     "lounge-drapery": "JW 8층 · 더 라운지 주름 커튼",
     "lounge-upholstery": "JW 8층 · 더 라운지 코너 소파",
-    "ssg-marzocco": "신세계 9층 · 라마르조코",
-    "ssg-twl": "신세계 9층 · TWL 공예 식기",
-    "ssg-herman-miller": "신세계 9층 · 허먼밀러",
-    "ssg-stokke": "신세계 10층 · 스토케",
     "gyeongbu-pretzels": "경부선 1층 · 앤티앤스 진열",
     "gyeongbu-homewares": "경부선 2·4층 · 침구와 커튼",
     "lounge-piano": "JW 8층 · 더 라운지 피아노",
@@ -134,9 +129,12 @@ def link_asset_gallery(world_dir):
     for path in sorted(world_dir.parent.glob("*/*.blend")):
         if path.parent == world_dir or path.resolve() in represented:
             continue
-        shelf = bpy.data.collections.new(
-            SHELVES.get(path.stem, SHELVES.get(path.parent.name, path.stem)) + " · 모델"
-        )
+        if path.parent.name.startswith("ssg-"):
+            retail = json.loads((path.parent / "camera.json").read_text(encoding="utf-8"))
+            label = f"신세계 {retail['floor'].removesuffix('F')}층 · {retail['nativeLabel']}"
+        else:
+            label = SHELVES.get(path.stem, SHELVES.get(path.parent.name, path.stem))
+        shelf = bpy.data.collections.new(label + " · 모델")
         gallery.collection.children.link(shelf)
         added_shelves.append(shelf)
         with bpy.data.libraries.load(str(path), link=True, relative=True) as (
