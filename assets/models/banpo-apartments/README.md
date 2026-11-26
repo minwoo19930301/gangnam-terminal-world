@@ -1,12 +1,16 @@
 # 신반포로 아파트 외관
 
-[Blender 세 단지 열기](banpo-apartments.blend) · [게임의 보도 시점](street-views.jpg) · [Blender의 낮·밤](native-night.jpg)
+[Blender 세 단지 열기](banpo-apartments.blend) · [신반포4차 보도에서 본 낮과 밤](shinbanpo4-facade.jpg) · [반포르엘·센트럴자이 낮](facade-finishes.jpg) · [반포르엘·센트럴자이 밤](facade-night.jpg)
 
-| 게임 지도 검색 | 게임용 외관 | 원본 삼각형 |
-| --- | --- | ---: |
-| 신반포4차 | [apt-a13790828.glb](../../re/apt-a13790828.glb) | 5,871 |
-| 반포르엘 | [apt-a10023673.glb](../../re/apt-a10023673.glb) | 3,926 |
-| 반포센트럴자이 또는 반센자이 | [apt-a10024913.glb](../../re/apt-a10024913.glb) | 6,229 |
+게임에서는 **M → 단지명 검색 → 여기로 이동**으로 외벽을 볼 수 있는 보도에 도착한다.
+
+| 게임 지도 검색 | 게임용 외관 | 현재 삼각형 | 파일 크기 |
+| --- | --- | ---: | ---: |
+| 신반포4차 | [apt-a13790828.glb](../../re/apt-a13790828.glb) | 5,681 | 114,252 B |
+| 반포르엘 | [apt-a10023673.glb](../../re/apt-a10023673.glb) | 8,984 | 176,396 B |
+| 반포센트럴자이 또는 반센자이 | [apt-a10024913.glb](../../re/apt-a10024913.glb) | 10,027 | 218,692 B |
+
+네이버 지도 검색에서 잠원동 세 단지의 이름을 대조했다. 신반포4차는 서울시 정비사업 현황에 잠원동 70의 기존 단지로 올라 있다. 외벽의 무늬와 색은 아래에 명시한 연도의 사진을 참고했다. [네이버 지도 신반포4차](https://map.naver.com/p/search/신반포4차아파트) · [반포르엘](https://map.naver.com/p/search/반포르엘아파트) · [반포센트럴자이](https://map.naver.com/p/search/반포센트럴자이) · [서울시 정비사업 현황](https://cleanup.seoul.go.kr/cafe/mastr-cleanup-bsnsSumry/execute.do?cafeId=650900000560N91&div=sumry&stepSeCode=102)
 
 세 단지의 외곽과 옥상은 서울 부동산 지도의 게임용 모델에서 가져왔다. 세 단지는 기존 외벽의 좌표와 지면 높이를 유지하고 공개 사진을 참고해 입면을 다시 그렸다. [원본 모델 기록](https://github.com/minwoo19930301/seoul-real-estate-map/blob/ede67d9f3909395d346ab67e492d63fd10142d08/public/models/manifest.json)
 
@@ -44,4 +48,4 @@ blender --factory-startup -b --python-exit-code 1 \
   -P assets/models/banpo-apartments/build.py -- /path/to/seoul-real-estate-map/public/models
 ```
 
-입면 마감을 바꾸기 전 게임의 실제 보도 시점에서 서울 시각 12시 30분과 0시 30분을 비교했다. 창문 발광만 껐을 때와 비교해 밤 화면 상단에서 달라진 픽셀 수는 반포르엘 4,038개, 반포센트럴자이 8,251개, 신반포4차 6,984개였다. 같은 시점의 낮에는 모두 0개였다. 반포센트럴자이 앞 공공 보도에 서울시 가로수 대장의 대왕참나무 10그루를 반영했다. 줄기 위치는 대장 좌표를 따르고 나무 높이는 약 8m로 표현했다. [게임에서 본 세 단지의 낮과 밤](game-night.jpg) · [가로수 전후](../../../docs/map-audit/banpo-central-xi-street-trees.jpg) · [서울시 자치구 가로수 위치정보](https://data.seoul.go.kr/dataList/OA-23040/S/1/datasetView.do)
+입면 마감을 바꾸기 전 최초 외관 복원 시점의 기록이다. 당시 게임의 보도 시점에서 서울 시각 12시 30분과 0시 30분을 비교했다. 창문 발광만 껐을 때와 비교해 밤 화면 상단에서 달라진 픽셀 수는 반포르엘 4,038개, 반포센트럴자이 8,251개, 신반포4차 6,984개였다. 같은 시점의 낮에는 모두 0개였다. 반포센트럴자이 앞 공공 보도에 서울시 가로수 대장의 대왕참나무 10그루를 반영했다. 줄기 위치는 대장 좌표를 따르고 나무 높이는 약 8m로 표현했다. [게임에서 본 세 단지의 낮과 밤](game-night.jpg) · [가로수 전후](../../../docs/map-audit/banpo-central-xi-street-trees.jpg) · [서울시 자치구 가로수 위치정보](https://data.seoul.go.kr/dataList/OA-23040/S/1/datasetView.do)
