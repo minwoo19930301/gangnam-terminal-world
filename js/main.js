@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { installElectricLighting } from './night-lighting.js';
 import { createDaylight, timeModes } from './daylight.js';
 import { createPhysics, createPlayer } from './physics.js';
+import { floorArrival } from './floor-arrival.js';
 import { createKit } from './kit.js';
 import { applyRoadEdits } from './blender-roads.js';
 import { drawBlenderBuilding, loadBuildingArea } from './blender-buildings.js';
@@ -78,7 +79,7 @@ async function boot() {
   addEventListener('resize', () => { camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); });
 
   const phys = createPhysics();
-  const K = createKit(THREE, scene, { osm, phys, maxAniso: renderer.capabilities.getMaxAnisotropy(), maxTex: renderer.capabilities.maxTextureSize, low: LOW, keep: AREA.keep, keepDetail: AREA.keepDetail, streetView: AREA.id.startsWith('out:') });
+  const K = createKit(THREE, scene, { osm, phys, maxAniso: renderer.capabilities.getMaxAnisotropy(), maxTex: renderer.capabilities.maxTextureSize, low: LOW, keep: AREA.keep, keepDetail: AREA.keepDetail, streetView: AREA.id.startsWith('out:'), interiorView: AREA.id.startsWith('in:') });
   K._.atlas.start(); // sign rects are reserved during the build; text is painted once the fonts are in
   const timeControl = $('sky-mode'), timeLabel = $('sky-clock');
   let storedMode;
@@ -486,9 +487,9 @@ async function boot() {
       if (!r) return false;
       applying = true; setTimeout(() => { applying = false; }, 800);
       if (r.pos && r.pos.length >= 3 && r.pos.every(Number.isFinite)) { player.teleport(r.pos[0], r.pos[1], r.pos[2], r.pos[3] != null ? r.pos[3] * Math.PI / 180 : player.yaw); return true; }
-      const [place, floor] = r.key.split('/');
-      const zoneOfSpawn = s => phys.zoneAt(s.x, (s.y ?? 0) + 0.1, s.z);
-      const sp = spawns.find(s => { const z = zoneOfSpawn(s); return z && z.place === place && (z.floor || '1F') === floor; }) || spawns.find(s => s.place === place);
+      const [addressPlace, floor] = r.key.split('/');
+      const place = META?.[addressPlace]?.floorAliases?.[floor] ?? addressPlace;
+      const sp = (floor && floorArrival(phys, K._, player, place, floor)) || spawns.find(s => s.place === place);
       if (sp) { player.teleport(sp.x, sp.y ?? 0, sp.z, sp.yaw); return true; }
       return false;
     }
@@ -595,14 +596,19 @@ async function boot() {
     reloadAt(key, player.x, player.y, player.z, player.yaw * 180 / Math.PI, areaName(id, META));
   }
   function frame() {
-    const dt = Math.min(clock.getDelta(), 0.05); t += dt;
+    const elapsed = clock.getDelta();
+    const dt = Math.min(elapsed, 0.05); t += dt;
     const input = {
       f: (keys.KeyW || keys.ArrowUp ? 1 : 0) - (keys.KeyS || keys.ArrowDown ? 1 : 0) - touch.mz,
       s: (keys.KeyD || keys.ArrowRight ? 1 : 0) - (keys.KeyA || keys.ArrowLeft ? 1 : 0) + touch.mx,
       run: keys.ShiftLeft || keys.ShiftRight || touch.run, jump: keys.Space, up: keys.Space, down: keys.KeyC || keys.ControlLeft,
     };
     if (menuOpen || map.isOpen()) { resetTouch(); input.f = input.s = 0; }
-    player.update(dt, input);
+    // Low frame rates should not shorten every step. Keep collision and gravity
+    // substeps small, and discard elapsed time after tab suspension or a long pause.
+    const movementTime = elapsed > 0.5 ? dt : Math.min(elapsed, 0.15);
+    const movementSteps = Math.max(1, Math.ceil(movementTime / 0.05));
+    for (let i = 0; i < movementSteps; i++) player.update(movementTime / movementSteps, input);
     camera.position.set(player.x, player.y + player.eye + relief(player.x, player.z), player.z);
     camera.rotation.set(player.pitch, player.yaw, 0, 'YXZ');
     daylight.sky.position.copy(camera.position);

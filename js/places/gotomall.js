@@ -1,3 +1,6 @@
+import {placeMadang} from '../../assets/models/gotomall-madang/place.js';
+import {placeWestCorner} from '../../assets/models/gotomall-west-corner/place.js';
+import {placeYogurtWorld} from '../../assets/models/gotomall-yogurtworld/room.js';
 import {westSeatCollisions,westSeatFixtures} from '../../assets/models/gotomall-west-seats/place.js';
 import {placeGardenFixture} from '../../assets/models/gotomall-rest-garden/place.js';
 import { placeHessed } from '../../assets/models/gotomall-hessed/place.js';
@@ -129,7 +132,8 @@ const NAMED = [
 // fitted from the public zone plans and Naver's surface map. Detailed confidence is recorded in the research file.
 const EXITS = [
   { id: 'G1', side: 'S', top: [-380.3,39.4], fixedTop:true, a:[0,-1], escalator:true, kind:'mall', dest:'래미안퍼스티지 중심상가 · 반포4동' },
-  { id: 'G2', side: 'N', top: [-393,-26], a: [1, 0], escalator:true, guideLift:true, kind:'mall', dest:'반포2동 · 신반포중학교 · 한강공원' },
+  // The food hall's north front is at -16.8; the generic retail aisle line crossed G010's tables.
+  { id: 'G2', side: 'N', doorV: -16.8, top: [-393,-26], a: [1, 0], escalator:true, guideLift:true, kind:'mall', dest:'반포2동 · 신반포중학교 · 한강공원' },
   { id: '원베일리 연결통로', side:'N', u:-316, a:[1,0], connectorOnly:true, kind:'mall', dest:'원베일리 · 고터세빛 관광안내센터' },
   { id: 'G3', side: 'S', top: [-333.5,32.1], fixedTop:true, a:[0,-1], guideLift:true, kind:'mall', dest:'위너스시티 · 르본시티 방면' },
   { id: 'G4', side: 'N', top:[-325,-22.3], a: [1, 0], escalator:true, kind:'mall', dest:'반포한강공원 · 반포대교' },
@@ -579,6 +583,11 @@ export function build(K) {
   const holeW9 = [[W9[0], W9[1]], [W9[2], W9[1]], [W9[2], W9[3]], [W9[0], W9[3]]];
   K.slab(band, FL, { mat: M.floor, under: false, thick: 0.3, holes: [holeW3, holeW9], edgeMat: 0x9a968f });
   K.slab(band, CY + 0.3, { mat: 'concrete', under: M.ceil, thick: 0.3, walk: false, edge: false });
+  // The continuous concrete soffit ends at the mall perimeter; the station wells cut the floor.
+  // Keep the existing external stair roofs and side entrances outside these two footprints.
+  const mallObserver = { poly: band, eyeMin: FL + .05, eyeMax: CY - .05 };
+  K.occludingSlab({ ...mallObserver, y: FL, holes: [holeW3, holeW9] });
+  K.occludingSlab({ ...mallObserver, y: CY });
   K.polyWalls(band, FL, CY + 0.3, { mat: 'concrete', inner: M.wall, thick: 0.25, openings: envOpen });
   // _5/_20 show several column bays before the food-street opening. The 44m
   // mall-side approach is a frame fit, not a surveyed extension of Line 7.
@@ -1772,8 +1781,8 @@ export function build(K) {
   });
 
   // gm-D4: thin bars only at crossings, not a repeated sign every third shop bay.
-  const destE = u => u < -102 ? ['3·7·9호선 고속터미널역 →', '신세계백화점 · 센트럴시티 · G7'] : u < -3 ? ['9호선 · 경부선 터미널 →', 'EAST ZONE · 1번 출구'] : u < 300 ? ['EAST ZONE · 동편 푸드코트 →', '잠원로 · G13 · G15'] : ['동편 푸드코트 · 화장실 →', 'Cafe 헤이와'];
-  const destW = u => u > 40 ? ['← 3·7·9호선 고속터미널역', '경부선 터미널 · 신세계백화점'] : u > -68 ? ['← 3호선 · 센트럴시티', 'WEST ZONE · 8-1번 출구'] : u > -300 ? ['← 서편 푸드코트 · 화장실', 'WEST ZONE · G2 · G4'] : ['← 서편 푸드코트', '얌샘김밥 · 화장실'];
+  const destE = u => u < -102 ? ['3·7·9호선 고속터미널역 →', '신세계백화점 · 센트럴시티 · G7'] : u < -3 ? ['9호선 · 경부선 터미널 →', 'EAST ZONE · 1번 출구'] : u < 300 ? ['EAST ZONE · 동편 푸드코트 →', '잠원로 · G13 · G15'] : ['동편 푸드코트 · 화장실 →', '반포역 방면 연결통로'];
+  const destW = u => u > 40 ? ['← 3·7·9호선 고속터미널역', '경부선 터미널 · 신세계백화점'] : u > -68 ? ['← 3호선 · 센트럴시티', 'WEST ZONE · 8-1번 출구'] : u > -300 ? ['← 서편 푸드코트 · 화장실', 'WEST ZONE · G2 · G4'] : ['← 서편 푸드코트', '요거트월드 G-012 · 화장실'];
   for (const b of bays) {
     if (!b.passage || b.k === 12 || b.uc >= 240) continue;
     furnish(b.uc, () => {
@@ -2160,8 +2169,10 @@ export function build(K) {
       poly = out;
     }
     foodTextures();
-    K.hpoly(M.hallFloor, ptsXZ(poly), FL + 0.008, true);
-    K.hpoly(0xeceae4, ptsXZ(poly), yCeil, false);
+    const finish = ptsXZ(poly);
+    K.hpoly(M.hallFloor, finish, FL + 0.008, true);
+    K.hpoly(0xeceae4, finish, yCeil, false);
+    K.occludingSlab({poly:finish, y:yCeil, eyeMin:FL+.05, eyeMax:yCeil-.05});
   }
   function foodAC(u, v, y) {
     bx(u - 0.45, u + 0.45, v - 0.45, v + 0.45, y - 0.045, 0.045, 0xf2f2f0, { solid: false, skip: ['top'] });
@@ -2169,10 +2180,11 @@ export function build(K) {
     for (let q = -0.25; q <= 0.25; q += 0.10) fq(0xaeb2ac, u - 0.28, v + q - 0.012, u + 0.28, v + q + 0.012, y - 0.05, false);
   }
   function drainCover(u, v) { fq('gt_drain', u - 0.5, v - 0.3, u + 0.5, v + 0.3, FL + 0.018); }
-  function toilets(u0, u1, v0, vBack, doorFace) { // block between u0..u1, front at v0, back toward vBack (outer wall)
+  function toilets(u0, u1, v0, vBack, doorFace, freestanding = false) { // block between u0..u1, front at v0, back toward vBack (outer wall)
     const um = (u0 + u1) / 2, dir = Math.sign(vBack - v0);
     wallU(u0, u1, v0, FL, CY, { mat: M.wall, thick: 0.2, openings: [{ at: (um - u0) / 2, w: 1.5, y0: FL, y1: FL + 2.3 }, { at: (um - u0) * 1.5, w: 1.5, y0: FL, y1: FL + 2.3 }] });
-    for (const u of [u0, um, u1]) wallV(u, v0, (dir > 0 ? vS(u) : vN(u)) - dir * 0.14, FL, CY, { mat: M.wall, thick: 0.2 });
+    for (const u of [u0, um, u1]) wallV(u, v0, freestanding ? vBack : (dir > 0 ? vS(u) : vN(u)) - dir * 0.14, FL, CY, { mat: M.wall, thick: 0.2 });
+    if (freestanding) wallU(u0, u1, vBack, FL, CY, { mat: M.wall, thick: 0.2 });
     for (const [ua, ub2, label, col] of [[u0, um, '남자 화장실', '#1f5fa8'], [um, u1, '여자 화장실', '#c0392b']]) {
       const c = (ua + ub2) / 2; furnish(c, () => sg(label, c, v0 - dir * 0.12, FL + 2.75, 2.2, 0.45, doorFace, { bg: col, fg: '#fff', sub: '수유실 · 장애인 화장실 옆' }));
       for (let i = 0; i < 3; i++) { const uu = ua + 0.6 + i * 1.35; if (uu + 1.2 > ub2 - 0.3) break; const vb = vBack - dir * 0.2; bx(uu, uu + 0.06, Math.min(vb, vb - dir * 1.6), Math.max(vb, vb - dir * 1.6), FL, 2.0, 0xc9d3dc); }
@@ -2186,6 +2198,8 @@ export function build(K) {
     K.zone({ name: '화장실 · 수유실', floor: 'B1', sub: '남자 · 여자 화장실', poly: R(u0, Math.min(v0, vBack), u1, Math.max(v0, vBack)), y0: FL - 0.5, y1: CY, priority: 4 });
   }
 
+  placeYogurtWorld(K,P,ROT,FL);
+  placeWestCorner(K,P,ROT,FL);
   { // ---- 서편 푸드코트 (west bulge, under the 강남터미널 고가) ----
     const north = [
       { name: '얌샘김밥', sub: '얌샘김밥 플러스 · 반포고투몰점', bg: '#1f6b3a', fg: '#fff', menu: ['김밥 · 라면 · 떡볶이', '돈가스 · 덮밥'] },
@@ -2198,15 +2212,11 @@ export function build(K) {
     const fv = -16.8; // front line of the north stalls
     // _910: EDIYA is behind a closed shutter, identified by its small pier plate.
     stallRow(north.slice(0, 5), { pu: 0, pv: fv, au: 1, av: 0, du: 0, dv: -1 }, -378.5, -347.7, u => fv - vN(u) - 0.14, '서편 푸드코트');
-    const west = [
-      { name: '칼국수', sub: '푸드코트', bg: '#6b3a1e', menu: ['칼국수 · 만두', '수제비'] },
-      { name: '떡볶이', sub: '푸드코트', bg: '#b3261e', menu: ['떡볶이 · 순대', '튀김 · 어묵'] },
-      { name: '돈가스 · 덮밥', sub: '푸드코트', bg: '#4b3b2b', menu: ['돈가스 · 제육덮밥', '우동'] },
-    ];
-    const fu = -382.0;
-    const uW = v => edgesAtV(v)[0];
-    stallRow(west, { pu: fu, pv: 0, au: 0, av: 1, du: -1, dv: 0 }, -10.5, 13.5, v => fu - uW(v) - 0.14, '서편 푸드코트');
-    toilets(-372, -354, 20.2, 25.6, '-v');
+    // The west block in zone 1 holds G010, G011 and the L-shaped G012. Across the south side window is
+    // a public passage to the WC and G013. Leave the existing G1/G2 landing approaches clear around it.
+    placeMadang(K,P,ROT,FL);
+    toilets(-386.0,-380.48,6.80,12.18,'-v',true);
+    furnish(-382,()=>tactilePath([[-376.9,5.42],[-382.1,5.42],[-382.1,6.49]]));
     const cols = [];
     for (const u of [-345.8, -354.2, -362.6, -371.0]) for (const v of [-8, 0, 8]) { cols.push([u, v]); bx(u - 0.35, u + 0.35, v - 0.35, v + 0.35, FL, CY - FL, M.col, { skip: ['bottom', 'top'] }); }
     bx(-343.8, -342.8, -13.9, -12.9, FL, CY - FL, 0xd8d0c0);
@@ -2281,7 +2291,7 @@ export function build(K) {
     // sit against the north food frontage outside that view.
     sg('서편 푸드코트 · 화장실 →', -330, -15.8, FL + 2.65, 5.1, 0.30, '+v', { bg: '#1b2233', fg: '#fff', pxPerM: 170 });
     });
-    K.zone({ name: '고투몰 서편 푸드코트', floor: 'B1', sub: '얌샘김밥 · 냉면 · 비빔밥 · 화장실', poly: ptsXZ(bandUV.filter(p => p[0] < -320.5).concat([[-320.8, 16.4], [-320.8, -13.6]])), y0: FL - 0.5, y1: CY, priority: 1 });
+    K.zone({ name: '고투몰 서편 푸드코트', floor: 'B1', sub: '얌샘김밥 · 요거트월드 G-012 · 화장실', poly: ptsXZ(bandUV.filter(p => p[0] < -320.5).concat([[-320.8, 16.4], [-320.8, -13.6]])), y0: FL - 0.5, y1: CY, priority: 1 });
   }
   // _445: the right-hand rest-pocket columns are separate from the retail pilasters.
   for (const u of [-309, -316]) {
@@ -2378,7 +2388,7 @@ export function build(K) {
     stallRow(east.slice(0, 3), eastFront, -15.5, -3.7, v => uE(v) - 0.14 - fu, '동편 푸드코트');
     stallRow(east.slice(3), { pu: 0, pv: 7.0, au: 1, av: 0, du: 0, dv: 1 }, 370.5, 386.8, u => Math.min(6.2, vS(u) - 7.14), '동편 푸드코트');
     wallV(fu, 3.7, 9.5, FL, CY, { mat: 0xe1ddd4, thick: 0.14 });
-    stallRow([{ name: 'Cafe 헤이와', sub: '동편 가장 안쪽 · G012', bg: '#efe6d6', fg: '#4a3324', fx: 'cafe', menu: ['핸드드립 · 라떼', '디저트'] }], { pu: fu, pv: 0, au: 0, av: 1, du: 1, dv: 0 }, 10.0, 15.2, v => uE(v) - 0.14 - fu, '동편 푸드코트');
+    stallRow([{ name: '카페', sub: '동편 식당가', bg: '#efe6d6', fg: '#4a3324', fx: 'cafe', menu: ['커피 · 음료'] }], { pu: fu, pv: 0, au: 0, av: 1, du: 1, dv: 0 }, 10.0, 15.2, v => uE(v) - 0.14 - fu, '동편 푸드코트');
     const north = [{ name: '떡볶이 · 튀김', sub: '푸드코트', bg: '#b3261e', menu: ['떡볶이 · 튀김 · 순대'] }, { name: 'COMPOSE COFFEE', sub: '컴포즈커피', bg: '#22221f', fg: '#f4ce20', fx: 'cafe', menu: ['커피 · 음료'] }, { name: '돈가스', sub: '푸드코트', bg: '#4b3b2b', menu: ['돈가스 · 우동'] }];
     const fv = -14.6;
     stallRow(north, { pu: 0, pv: fv, au: 1, av: 0, du: 0, dv: -1 }, 372.5, 396.5, u => fv - vN(u) - 0.14, '동편 푸드코트');
@@ -2513,7 +2523,7 @@ export function build(K) {
     for (const [face, du] of [['+u', 0.045], ['-u', -0.045]]) sg(face === '-u' ? '동편 푸드코트 · 화장실' : '3·7·9호선 고속터미널역 →', 364 + du, 2, FL + 3.05, 5.1, 0.20, face, { bg: '#1b2233', fg: '#fff', pxPerM: 180 });
     bx(363.965, 364.035, -0.65, 4.65, FL + 2.875, 0.35, 0x1b2233, { solid: false });
     });
-    K.zone({ name: '고투몰 동편 푸드코트', floor: 'B1', sub: 'Cafe 헤이와 · 압구정칼국수 · 화장실', poly: ptsXZ(RUV(368.3, -18.6, 404, 19.7)), y0: FL - 0.5, y1: CY, priority: 1 });
+    K.zone({ name: '고투몰 동편 푸드코트', floor: 'B1', sub: '압구정칼국수 · 화장실 · 반포역 방면', poly: ptsXZ(RUV(368.3, -18.6, 404, 19.7)), y0: FL - 0.5, y1: CY, priority: 1 });
   }
 
   // Polish (#207/#208, walk 2026-11-07): east of MAYO the island runs on with the 수제도장 stall,

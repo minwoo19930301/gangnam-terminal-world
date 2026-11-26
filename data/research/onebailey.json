@@ -1,4 +1,15 @@
 {
+  "sebit_gallery_media_20261126": {
+    "primary": "https://www.seocho.go.kr/site/seocho/ex/bbs/View.do?bcIdx=406540&cbIdx=61",
+    "gallery_photo_january": "https://mediahub.seoul.go.kr/archives/2016771",
+    "district_photo_october": "https://cdnimage.dailian.co.kr/news/202610/news_1793174694495_1707525_m_2.png",
+    "district_walking_tour": "https://www.seocho.go.kr/site/seocho/04/10404081200002017101702.jsp",
+    "nearby_naver_place": "https://map.naver.com/p/entry/place/1229683443",
+    "observed": "서울시는 2026년 1월 원형 파란 기둥과 벤치, 벽화 레일 조명, 맞은편 LED 영상과 여러 색으로 밝아지는 벽면 선형등을 사진으로 공개했다. 10월 서초구 제공 사진에는 파란색과 흰색의 등받이 없는 절곡 벤치, 개방된 하부와 작은 상판 금속 표지가 보인다.",
+    "fit": "벤치 크기와 세부 인쇄 선, 등기구 각도, 모듈 간격과 화면 크기는 사진에서 추정했다. 시설 위치는 게임 벽화길의 기둥과 기존 전시를 기준으로 맞췄다. 고투몰에 관한 세 가지 홍보 화면은 이 프로젝트의 자체 그림이다. 네이버 지점 링크는 같은 공공보행통로의 관광안내센터 기준점이다.",
+    "model": "assets/models/sebit-gallery/gallery.blend",
+    "comparison": "assets/models/sebit-gallery/play.jpg"
+  },
   "id": "onebailey",
   "name": "원베일리 공공보행통로",
   "updated": "2026-11-26",
@@ -40,8 +51,8 @@
       "B1": "https://rmaonebailey.cafe24.com/img/floor_img01_big.jpg",
       "1F": "https://rmaonebailey.cafe24.com/img/floor_img02_big.jpg",
       "year": 2023,
-      "observed": "분양 당시 B1 배치도 동측 공개공지에 선큰광장, 북쪽 끝에 한강공원으로 가는 공공보행통로, 서쪽 방풍실에 세 날개 회전문과 그 양쪽의 여닫이 출입구가 그려져 있다. 흰 공용복도에 B101, B110, B150 호수가 면한다. 1층 도면은 고투몰 2번 출입구와 광장 경계의 공중보행로를 표시한다.",
-      "limits": "분양본은 준공 후 실측도와 다를 수 있다. 상가 남쪽 경계를 OSM 1177226165에 맞춰 축척과 방향을 추정했다. G2 계단과 선큰광장 사이의 굴절·폭·천장고, 개별 출입문 폭, 정확한 집기 치수는 모델 추정."
+      "observed": "분양 당시 B1 배치도 동측 공개공지에 선큰광장, 북쪽 끝에 한강공원으로 가는 공공보행통로, 서쪽 방풍실에 세 날개 회전문과 그 양쪽의 여닫이 출입구가 그려져 있다. 흰 공용복도에 B101, B110, B150 호수가 면한다. 1층 도면에는 고투몰 2번 출입구와 개방된 두 공간 사이 상가 앞 포장면이 그려져 있다. 대각선 차량 진입로의 보행 가능 여부는 확인되지 않았다.",
+      "limits": "분양본은 준공 후 실측도와 다를 수 있다. 상가 남쪽 경계를 OSM 1177226165에 맞춰 축척과 방향을 추정했다. G2 계단과 선큰광장 사이의 굴절·폭·천장고, 개별 출입문 폭, 정확한 집기 치수는 모델 추정. 1층 포장면은 두 도면에서 위치가 겹치는 일부만 복원했다. 상판 윤곽과 난간은 게임에서 아래층과의 경계를 표현하는 추정 형상이다."
     },
     "shops": [
       {
