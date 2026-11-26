@@ -84,6 +84,15 @@ for x in [-.083,.083]:
 block('Pull handle',(0,.078,.944),(.19,.035,.031),DARK,.013)
 for x in [-.205,.205]: block('Corner protector',(x,-.13,.63),(.025,.028,.095),0xafb7bc,.009)
 
+# The 6F shop displays ribbed cases and compact crossbody bags on timber shelving.
+for side in [-1,1]:
+    block('Side seam edging',(side*.220,0,.40),(.009,.018,.505),0x8c9290)
+    for z in [.22,.55]:
+        block('Recessed catch',(side*.224,-.017,z),(.011,.066,.068),0x929b99,.004)
+    block('Upper corner cap',(side*.196,.01,.704),(.042,.22,.022),0xb5bdbb,.008)
+for x in [-.08,.08]: rod('Carry handle mount',(x,-.022,.708),(x,-.022,.751),.012,DARK)
+block('Leather carry handle',(0,-.022,.755),(.17,.033,.025),DARK,.01)
+
 start('golf','7F · Golf bag and irons')
 def ovalrow(rx,ry,z,y=0,n=12):
     return [(rx*math.cos(i*2*math.pi/n), y+ry*math.sin(i*2*math.pi/n),z) for i in range(n)]
@@ -155,6 +164,38 @@ mouth=[(-.2,.101),(.2,.101)]+[(.20*math.cos(math.pi*i/14),.12+.20*math.sin(math.
 shell('Oven mouth',[[(x,-.428,z) for x,z in mouth],[(x,-.432,z) for x,z in mouth]],0x302c27)
 rod('Flue',(0,-.13,.50),(0,-.13,.78),.064,0x5e6463,12)
 rod('Chimney cap',(0,-.13,.78),(0,-.13,.81),.083,0x404542,12)
+
+# Raised grooves and the long strap distinguish this accessory from the adjoining bags.
+start('crossbody','6F · Small ridged crossbody case')
+block('Crossbody shell',(0,0,.135),(.32,.13,.235),0xaab0ae,.027)
+for x in [-.12,-.08,-.04,0,.04,.08,.12]:
+    block('Groove bead',(x,-.066,.13),(.010,.009,.16),0xd9dbd1,.003)
+for x in [-.127,.127]:
+    rod('Swivel mount',(x,0,.233),(x,0,.271),.009,0xb4a07d,8)
+for a,b in [((-.129,0,.261),(-.094,.04,.453)),((-.094,.04,.453),(.061,.04,.463)),((.061,.04,.463),(.130,0,.261))]:
+    rod('Leather shoulder strap',a,b,.012,0x6d4e3b,8)
+block('Central clasp',(0,-.070,.225),(.053,.014,.030),0x727c78,.005)
+
+# The 2024 Gangnam opening used bent aluminium tubes around its display shelves.
+start('pipeShelf','6F · Curved tube accessory shelving')
+for y in [-.23,.23]:
+    radius = .21
+    path = [(-.88,y,.09),(-.88,y,1.47)]
+    for j in range(1,9):
+        angle = math.pi - j*math.pi/16
+        path.append((-.67 + radius*math.cos(angle), y, 1.47 + radius*math.sin(angle)))
+    path.append((.67,y,1.68))
+    for j in range(1,9):
+        angle = math.pi/2 - j*math.pi/16
+        path.append((.67 + radius*math.cos(angle), y, 1.47 + radius*math.sin(angle)))
+    path.append((.88,y,.09))
+    for first,second in zip(path,path[1:]):
+        rod('Bent aluminium frame',first,second,.027,0xb9c2c2,8)
+block('Timber plinth',(0,0,.115),(1.83,.55,.19),0xb49b7e,.018)
+for z in [.68,1.27]:
+    block('Timber shelf',(0,0,z+.032),(1.72,.52,.064),0xc4ad91,.012)
+    for x in [-.85,.85]:
+        rod('Transverse support',(x,-.23,z-.018),(x,.23,z-.018),.021,STEEL)
 
 # Preserve the named, selectable parts in Blender. Bake only the evaluated mesh for the game.
 bpy.context.view_layer.update()

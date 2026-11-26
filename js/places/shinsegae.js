@@ -13198,6 +13198,33 @@ export function build(K) {
         const side=W-.40,z=Math.min(D-.85,D*.62);
         for(let i=0;i<7;i++)B(side,z+(i-3)*.14,.045,.045,.08,2.38,timber);
       }
+    }else if(id==='6F' && name==='리모와'){
+      // The 2024 Gangnam opening photographs show wood panels, an illuminated
+      // wordmark, aluminum cases of different sizes and a two-tier accessory wall.
+      const span = W - .55, back = D - .40;
+      const wood = {tex:'wood',color:0xd1b490}, trim = 0xbaac99;
+      B(W/2,back,span,.14,.08,2.79,wood);
+      B(W/2,back-.12,span-.05,.08,2.18,.56,0x776a5b);
+      fsign('RIMOWA',W/2,back-.18,y+2.47,Math.min(3.1,span*.7),.44,{bg:null,fg:'#fff5e5',twoSided:true});
+      const sizes = [.85, 1.03, 1.20], step = (span-.45)/3;
+      for(let i=0;i<sizes.length;i++) {
+        const a = .5+(i+.5)*step;
+        B(a,back-.50,step-.12,.77,.06,.23,trim);
+        B(a,back-.12,step-.24,.09,.29,1.86,0xd7c8b4);
+        B(a,back-.23,step-.23,.42,2.05,.07,trim);
+        B(a,back-.39,step-.38,.04,2.035,.02,{tex:'emit',color:0xffefd4});
+        for(const [offset,scale] of [[-.54,sizes[i]],[.54,sizes[(i+1)%3]]]) {
+          shopDisplay('case',a+offset,back-.60,y+.29,ST,scale);
+        }
+      }
+      const side = W*.25;
+      shopDisplay('pipeShelf',side,1.06,y+.035,ST);
+      for (const h of [.68,1.27]) {
+        for (const offset of [-.39,.39]) shopDisplay('crossbody',side+offset,1.06,y+h+.100,ST,1.08);
+      }
+      person(W*.78,D*.87,{shirt:staffColor,pants:0x222828});
+      return;
+
     }else if(kind==='lux'||kind==='bag'){
       eachStock((a,b,h,i,r)=>bag(a,b,h,stock[(seed+i+r)%6]));
       for(const [i,a]of islands.entries()){
@@ -13207,7 +13234,6 @@ export function build(K) {
       }
       if(/리모와|투미|쌤소나이트|만다리나덕/.test(name))for(let i=0;i<Math.min(4,slots);i++){
         const a=.65+i*(W-1.3)/Math.max(1,Math.min(4,slots)-1),b=D-.75;
-        if(id==='6F'&&name==='리모와'){shopDisplay('case',a,b,y+.05,ST);continue;}
         B(a,b,.45,.29,.05,.63,metal);for(let k=0;k<5;k++)B(a-.17+k*.085,b-.15,.025,.018,.10,.52,0x777e80);
         for(const da of[-.12,.12])B(a+da,b,.025,.035,.68,.23,metal);B(a,b,.26,.035,.91,.025,dark);
       }
