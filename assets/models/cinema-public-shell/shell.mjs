@@ -20,7 +20,7 @@ export function captureShell() {
     wall:(ax,az,bx,bz,bottom,top,options)=>{
       if(options.solid!==false)walls.push({a:[ax,az],b:[bx,bz],bottom,top,width:options.thick??.2,mat:options.mat});
     },
-    phys:{addSurface:(poly,y)=>supports.push({poly,y}),addCeiling:ignore,addWall:ignore}
+    phys:{addSurface:(poly,y)=>supports.push({poly,y}),addCeiling:ignore,addWall:ignore,addPolyWalls:ignore}
   };
   boutiqueLobby(K,-6);
   const key=poly=>JSON.stringify(poly);

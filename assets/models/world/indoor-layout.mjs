@@ -45,6 +45,7 @@ const sources = [
   ['famille','1F','interior-architecture/interiors.blend','파미에 갤러리 아치와 벽등','gallery-rib'],
   ['centralcity','B1','sweet-arcade/pier.blend','스위트 파크 · 디저트 홀 타일 기둥','SweetParkArcadePier'],
   ['shinsegae','B1','sports-shoe-rotary/entry.blend','스포츠 슈 전문관 · 브랜드 간판과 계단','GangnamSportsShoeEntry'],
+  ['shinsegae','B1','sweetpark-threshold/threshold.blend','스위트 파크 · 카페 통로 목재 입구','SweetParkCoffeeThreshold'],
   ['shinsegae','B1','osulloc-matcha/station.blend','오설록 강남 · 말차 스테이션','OsullocGangnamMatchaStation'],
   ['shinsegae','B1','salt-house-gangnam/shop.blend','소금집 강남 · 샌드위치 주문대와 숙성 진열장','SaltHouseGangnam'],
   ['shinsegae','B1','godiva-emack/counter.blend','에맥앤볼리오스 · 고디바 크레페 창가 매대','GangnamCrepeAndWaffle'],
