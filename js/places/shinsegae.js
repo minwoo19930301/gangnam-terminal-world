@@ -510,16 +510,37 @@ export function build(K) {
   // A cylinder segment inside the stone recess, never a bow across the whole facade.
   // ssg_06 shows two glazed sections separated by a black recessed horizontal band.
   const BAY_BACK = 8, BAY_TOP = YB, GLASS_TOP = LV['11F'];
+  // The operator's Gangnam exterior photo shows continuous sky-blue glazing
+  // divided by silver transoms. Paint the reflection once over the full height
+  // so each storey doesn't restart the same opaque grey gradient.
+  const curtainHeight = BAY_TOP - 7;
+  K.texture('ssg_north_curtain', 128, 512, (g,w,h) => {
+    const sky = g.createLinearGradient(0,0,0,h);
+    sky.addColorStop(0,'#78aaca');
+    sky.addColorStop(.48,'#74a7c3');
+    sky.addColorStop(.78,'#88b1bf');
+    sky.addColorStop(1,'#758d91');
+    g.fillStyle = sky;
+    g.fillRect(0,0,w,h);
+    for (let rise=0; rise<curtainHeight; rise+=3.2) {
+      const seam = h*(1-rise/curtainHeight);
+      g.fillStyle='#566f7e'; g.fillRect(0,seam-2,w,2);
+      g.fillStyle='#d0d9da'; g.fillRect(0,seam-4,w,2);
+    }
+  },[1,curtainHeight]);
   const bay = [];
   for (let i = 0; i <= 24; i++) {
     const theta = PI * i / 24;
     bay.push([ENTRY - 6 * Math.cos(theta), BAY_BACK - 6 * Math.sin(theta)]);
   }
   const bayPlan = bay.map(p => P(...p));
-  exWall('N', BAY_BACK, 23, 44, 7, BAY_TOP, { mat: 'ssg_glass', floorH: 3.2, vBase: 7 });
+  exWall('N', BAY_BACK, 23, 44, 7, BAY_TOP, { mat: {tex:'ssg_north_curtain',color:0xa9c2d2}, vBase: 7 });
   for (const [y0, y1] of [[7, 20], [24, BAY_TOP]]) {
     for (let i = 0; i < bay.length - 1; i++) {
-      wall(...bay[i], ...bay[i + 1], y0, y1, { mat: 'ssg_glass', thick: 0.06, floorH: 3.2, vBase: 7 });
+      // Reflection changes gradually across the curved bay; reuse the same batched finish.
+      const facing = Math.sin((i+.5)*PI/(bay.length-1));
+      const tint = Math.round(205+50*facing);
+      wall(...bay[i], ...bay[i + 1], y0, y1, { mat: {tex:'ssg_north_curtain',color:tint*0x010101}, thick: 0.06, vBase: 7 });
       if (i % 2 === 0) box(bay[i][0], bay[i][1], 0.04, 0.06, y0, y1 - y0, 0x9caeb7, { solid: false });
     }
     const end = bay.at(-1);
@@ -562,7 +583,9 @@ export function build(K) {
   // Occasional thin pale courses, not alternating metre-high stripes.
   for (const yy of [7, 16.6, 26.2, 35.8]) {
     for (const [f, c, len] of [['N', 11.5, 23], ['N', 55.5, 23], ['W', VD / 2, VD]])
-      faceBox(f, c, len, 0.015, 0.025, yy, 0.045, 0xd2c3c0);
+      // Follow the two wall endpoints. A subpixel rotated box intersected the
+      // bilinear facade and left broken white dashes across the stone.
+      faceQuad(0xb9a6a0, f, c, yy, len, .075, .085);
   }
   for (const yy of [8, 10.5]) faceBox('E', VS / 2, VS, 0.015, 0.025, yy, 0.07, 0xd2c3c0);
   // y is the bottom of the aperture; width and height are independent.
