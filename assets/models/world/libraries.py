@@ -7,6 +7,10 @@ from mathutils import Vector
 
 
 SHELVES = {
+    "ssg-marzocco": "신세계 9층 · 라마르조코",
+    "ssg-twl": "신세계 9층 · TWL 공예 식기",
+    "ssg-herman-miller": "신세계 9층 · 허먼밀러",
+    "ssg-stokke": "신세계 10층 · 스토케",
     "gyeongbu-pretzels": "경부선 1층 · 앤티앤스 진열",
     "gyeongbu-homewares": "경부선 2·4층 · 침구와 커튼",
     "lounge-piano": "JW 8층 · 더 라운지 피아노",
