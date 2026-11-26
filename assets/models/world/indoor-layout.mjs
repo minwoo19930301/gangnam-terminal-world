@@ -213,6 +213,7 @@ const sources = [
   ['shinsegae','9F','hypnos-showroom/hypnos.blend','히프노스 침대 · 원거리','히프노스 · 신세계 강남 9층'],
   ['shinsegae','6F','architectural-retail/retail-architecture.blend','CaseGallery','CaseGallery'],
   ['shinsegae','5F','architectural-retail/retail-architecture.blend','RectoWall','RectoWall'],
+  ['centralcity','1F','open-stage-lounge/lounge.blend','오픈 스테이지 · 흰 소파와 낮은 테이블','오픈 스테이지 · 흰 소파와 낮은 테이블'],
   ['centralcity','1F','famille-atrium/atrium-fittings.blend','광장 · 고리형 청동 조명','광장 벽등 · 고리와 유백 갓'],
   ['centralcity','1F','famille-atrium/atrium-fittings.blend','메모리얼 광장 · 미디어 캐비닛','세로형 전광판 · 캐비닛과 매체','전광판 · 교체 가능한 화면 원화'],
   ['centralcity','1F','famille-atrium/atrium-fittings.blend','포비 앞 · 빨간 철제 테이블과 의자','광장 포비 앞 · 빨간 비스트로 테이블'],

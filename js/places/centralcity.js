@@ -1,3 +1,4 @@
+import {placeOpenStageLounge} from '../../assets/models/open-stage-lounge/model.js';
 import {galleryLights} from '../../assets/models/famille-atrium/model.js';
 import {placeLejardin} from '../../assets/models/lejardin-shop/model.js';
 import {tianjinShop} from '../../assets/models/tianjin-baozi/room.js';
@@ -4486,16 +4487,15 @@ function hallR20(K) {
     K.detail({name:'오픈 스테이지 · 이전한 라운지와 테이블',floor:'1F',y0:0,y1:3,poly:RECT(50,8,78,23)},()=>{
     // CC-D2: the white lounge is right of the 236-degree camera axis.
     // Its six-by-four-metre pocket stays between the s50 and s59.5 LED piers.
+    const [loungeX,loungeZ]=P(54.8,20.45);
+    placeOpenStageLounge(K,loungeX,loungeZ,R-PI/2);
+    const collider={skip:['top','bottom','n','s','e','w']};
     for(const [ss,tt,reverse]of[[54.8,18.4,false],[54.8,22.5,true]]){
-      lbox(ss,tt,2.75,.92,.14,.29,0xefeee7);
-      lbox(ss,tt+(reverse?.39:-.39),2.75,.17,.43,.42,0xe4e3dc,{solid:false});
-      for(const d of[-1.29,1.29])lbox(ss+d,tt,.17,.92,.43,.24,0xf6f4ee,{solid:false});
-      for(const d of[-.83,0,.83])lbox(ss+d,tt,.79,.69,.43,.08,0xfcf8ef,{solid:false});
+      // Preserve the seat and tabletop support heights of the original arrangement.
+      lbox(ss,tt,2.75,.92,.14,.29,0xefeee7,collider);
       lperson(ss-.55,tt+(reverse?-.15:.15),0,{sit:true,rotY:reverse?F.W:F.E,shirt:reverse?0x596565:0xebe5da});
       const tableT=tt+(reverse?-1.1:1.1);
-      lbox(ss,tableT,1.3,.72,.48,.07,{tex:'marble',color:0xf2efe6,gloss:.5});
-      for(const d of[-.5,.5])lbox(ss+d,tableT,.05,.48,.07,.41,0xbfc0b5,{solid:false});
-      lcyl(ss+.3,tableT,.55,.07,.11,0xf5eee2,{solid:false,seg:10});
+      lbox(ss,tableT,1.3,.72,.48,.07,0xf2efe6,collider);
     }
 
     });
