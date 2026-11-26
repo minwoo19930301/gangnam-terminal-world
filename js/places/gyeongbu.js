@@ -1475,7 +1475,10 @@ export function build(K) {
     for(const v of [.8,3,5.3])lwall(265.5,v,278,v,0,3.3,{mat:v===.8?0xe6ded0:0x2f2f30,thick:.12});
     for(const v of [.85,2.95])lbox(265.45,v,0,.16,.18,2.7,0xd7262b);
     lbox(265.45,1.9,2.4,.18,2.3,.4,0xd7262b,{solid:false});lsign('GATE 3',265.33,1.9,2.6,1.7,.3,'-u',{bg:null,fg:'#fff'});
-    lzone('다이소 GATE 3','1F','B&C 현관 · 지하 매장 계단',258.5,0,278,7,-.05,4.2,7);
+    const [gate3X,gate3Z]=W(262.05,1.94);
+    K.zone({name:'다이소 GATE 3',floor:'1F',sub:'B&C 현관 · 지하 매장 계단',
+      poly:rect(258.5,0,278,7),y0:-.05,y1:4.2,priority:7,
+      mapArrival:{x:gate3X,z:gate3Z,yaw:yawL(1,0)}});
     lzone('다이소 GATE 3 계단','B1','B&C 현관에서 매장으로',265.5,1.05,278,2.75,-4,-.05,7);
     // GATE 3 vestibule: brick, mosaic, inner door screen and black linear ceiling.
     K.hpoly({tex:'gb20_mosaic',gloss:.35},rect(258.5,0,265.5,7),.042);
