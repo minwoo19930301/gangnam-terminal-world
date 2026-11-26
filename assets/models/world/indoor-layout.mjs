@@ -351,6 +351,15 @@ export async function captureIndoorLayout() {
       const rules=sources.filter(row=>row[0]===place), counts=new Map();
       const {build,meta}=await import('../../../js/places/'+place+'.js');
       const kit=createKit(THREE,new THREE.Scene(),{osm,phys:createPhysics(),keep:()=>false});
+      if(place==='centralcity'){
+        kit.recordHonamFrame=([x,z],angle)=>{
+          const matrix=new THREE.Matrix4().makeRotationY(angle).setPosition(x,0,z);
+          const ground=rounded(relief(x,z));
+          result.push({id:'centralcity/FamilleHonamSteps/1',place,placeName:meta.name,floor:'1F',
+            library:'famille-honam-steps/steps.blend',collections:['FamilleHonamSteps'],subject:'파미에 · 호남선 반계단과 윗참',
+            ground,terrain:ground,matrix:matrix.toArray().map(rounded)});
+        };
+      }
       // A dedicated hotel page uses level floor plates. Register them on the
       // same footprint midpoint as the hotel podium in the native city builder.
       let hotelDatum;
