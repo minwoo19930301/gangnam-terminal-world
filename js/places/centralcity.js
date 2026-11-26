@@ -1,3 +1,4 @@
+import { dimDimsum } from '../../assets/models/dimdimsum/restaurant.js';
 import { beanBrothers } from '../../assets/models/bean-brothers/room.js';
 import { OPEN_STAGE_FRONT } from './_junctions.js';
 import { loadArchitecture, placeArchitecture } from '../../assets/models/interior-architecture/model.js';
@@ -2841,7 +2842,7 @@ export function build(K) {
     [8,'케르반 레스토랑',[293,51,342,98],'N','food'],
     [10,'소이연남',[169,51,220,134],'N','food'],
     [12,'차알',[95,177,201,215],'S','food'],
-    [13,'딤딤섬',[36,177,94,215],'S','food']
+    [13,null,[36,177,94,215],'S',null]
   ];
   const fam2Projected=[];
   for(const [id,name,r,front,kind]of fam2Cells){
@@ -2851,6 +2852,14 @@ export function build(K) {
     // Soi's back is inset to leave a continuous 1.2m upper gallery around the
     // enlarged 1F viewing bay. The two dining rows retain all ten tables.
     const s0=id===10?177.2:id===5?181.3:Math.min(a[0],b[0]),s1=id===10?183.6:id===5?187.4:Math.max(a[0],b[0]),t0=a[1]+.12,t1=b[1]-.12;
+    // The operator's 2F key conflicts with its named mezzanine drawing and the branch's
+    // directions. Keep the western cell and its existing public door without a second restaurant.
+    if(id===13){
+      famOpenShell(s1,t0,s0,t1,Y2);
+      lwall(s1,t0,s1,t1,Y2,Y2+3.9,{mat:'glass',thick:.04,
+        openings:[{at:(t1-t0)/2,w:Math.min(3.2,(t1-t0)*.45),y0:Y2,y1:Y2+3.0}]});
+      continue;
+    }
     fam2Projected.push({id,name,s0,s1,t0,t1,front});
     if(id===4){
       KNOWN.add(name);
@@ -2965,7 +2974,7 @@ export function build(K) {
 
   // Official Famille M1F drawing: Outback long west bar and DimDimSum east corner, not1F shops.
   officialShop('아웃백',193,-48,202,-5,'N','food',5);
-  officialShop('딤딤섬',193,2,202,18,'N','food',5);
+  dimDimsum(K,{P,RECT,R,lbox,lwall,lsign,lzone});
   lzone(190,-50,203,20,{name:'파미에스테이션 중층',floor:'1M',sub:'아웃백 · 딤딤섬',y0:5,y1:8.6,priority:8});
   // Round20 famille/L2: the paired 2F↔1F flights are rebuilt at (26,166)→(22,156) by famille.
   // No ghost flight, slab hole, landing rails or directional sign at this gallery end.

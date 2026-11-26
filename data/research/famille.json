@@ -1,4 +1,17 @@
 {
+  "dimdimsum_mezzanine_20261126": {
+    "floor": "파미에스테이션 중층. 네이버 지점은 하차장 옆 2층, 파미에 에스컬레이터 2층 아웃백 옆으로 안내.",
+    "naver": "https://map.naver.com/p/entry/place/1280841149",
+    "operator": "https://www.shinsegaecentral.com/famille/DimDimSum",
+    "m1f": "https://www.shinsegaecentral.com/public/20211116/M1F.png",
+    "second_floor": "https://www.shinsegaecentral.com/public/img/famille_floor_2_ko_map.png",
+    "directory": "https://www.shinsegaecentral.com/famille",
+    "visitor_photos": "https://h-man.tistory.com/m/194",
+    "observed": "운영사 중층 도면과 지점 안내가 일치. 2층 서쪽 범례 13번에도 같은 점포명이 있어 중층 한 곳으로 통합. 공개 사진에 접수대, 유아의자, 유리 가림막과 유리블록, 목제 식탁과 검은 의자, 대나무 조명, 하가우·샤오롱바오·피기 커스터드 번.",
+    "fit": "기존 게임 16 × 9m 점포. 가구 치수와 수, 테이블의 메뉴 조합, 조리창 내부와 벽 장식은 추정.",
+    "model": "assets/models/dimdimsum/restaurant.blend",
+    "review": "assets/models/dimdimsum/play.jpg"
+  },
   "damccot_fp204_20261126": {
     "floor": "파미에스테이션 2층 204호",
     "operator": "https://damccot.com/shopinfo/store.html",
