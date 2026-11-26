@@ -1,3 +1,4 @@
+import {buildSebitLounge} from '../../assets/models/sebit-lounge/lounge.js';
 import { buildRetailSquare } from '../../assets/models/onebailey/square.js';
 
 // Original procedural illustrations; no reference photographs are published or loaded.
@@ -10,7 +11,7 @@ export const meta = {
     'https://www.tfmedia.co.kr/news/article.html?no=170057','https://www.segye.com/newsView/20260427513557',
     'https://www.heraldk.com/article/2026042313575353478',
     'https://rmaonebailey.cafe24.com/bbs/content.php?co_id=floor&code_page=floor&po=1',
-    'data/research/onebailey.json', 'https://www.youtube.com/watch?v=F9MdeqY0Rro','https://www.youtube.com/watch?v=wvUnarSte1A','https://www.youtube.com/watch?v=PN3QyVXbUNg'],
+    'https://mediahub.seoul.go.kr/archives/2016771','data/research/onebailey.json', 'https://www.youtube.com/watch?v=F9MdeqY0Rro','https://www.youtube.com/watch?v=wvUnarSte1A','https://www.youtube.com/watch?v=PN3QyVXbUNg'],
 };
 const PI=Math.PI, A=[-410,-45], B=[-540,-380], L=Math.hypot(B[0]-A[0],B[1]-A[1]);
 const U=[(B[0]-A[0])/L,(B[1]-A[1])/L], V=[U[1],-U[0]], ROT=Math.atan2(U[0],U[1]);
@@ -56,7 +57,8 @@ export function build(K){
   K.slab(R(-26,-7,L,7),F,{mat:floor});
   K.slab(R(-26,-7,280,7),C+.25,{mat:'concrete',under:'ob-exposed-ceiling',thick:.25,walk:false});
   K.slab(R(280,-7,L,7),C+.25,{mat:'concrete',under:0xd8d9d4,thick:.25,walk:false});
-  wall(-16,-7,L,-7,F,C,'ob-charcoal-tile');
+  wall(-16,-7,345,-7,F,C,'ob-charcoal-tile');
+  wall(345,-7,L,-7,F,C,'ob-plaza-tile');
   for(const [a,b] of [[-16,31],[39,52],[56,88],[92,155]])wall(a,7,b,7,F,C,{tex:'tile',color:0xd9dad6});
   wall(213,7,L,7,F,C,{tex:'tile',color:0xd9dad6});
   wall(178,7,182,7,F,C,0x565f62);wall(210,7,213,7,F,C,0x565f62);
@@ -108,10 +110,10 @@ export function build(K){
   K.zone({name:'원베일리 야외무대 상부',floor:'1F',sub:'공공개방시설 · 지하보행로 계단',poly:R(48,38,80,42),y0:0,y1:3,priority:5});
 
   // Open-ended connectors. Cut their sidewalls back at turns so elbow landings stay traversable.
-  const corridor=(a,b,w,name)=>{
+  const corridor=(a,b,w,name,trim=true)=>{
     const poly=strip(a,b,w),l=Math.hypot(b[0]-a[0],b[1]-a[1]),d=[(b[0]-a[0])/l,(b[1]-a[1])/l],cut=Math.min(w*.65,l*.24);
     K.slab(poly,F,{mat:floor});K.slab(poly,C+.25,{mat:'concrete',under:'ob-ceiling',thick:.25,walk:false});
-    const sides=strip([a[0]+d[0]*cut,a[1]+d[1]*cut],[b[0]-d[0]*cut,b[1]-d[1]*cut],w);
+    const sides=trim?strip([a[0]+d[0]*cut,a[1]+d[1]*cut],[b[0]-d[0]*cut,b[1]-d[1]*cut],w):poly;
     for(const [i,j] of [[0,1],[3,2]])K.wall(...sides[i],...sides[j],F,C,{mat:{tex:'tile',color:0xc6cbc3},thick:.18});
     K.zone({name,floor:'B1',sub:'지하 보행로',poly,y0:F,y1:C,priority:2});
     K.detail({name,floor:'B1',poly,y0:F,y1:C},()=>{
@@ -302,9 +304,8 @@ export function build(K){
     for(const s of [284,289,300,308,316])sign(['원더스트리트','도란도란','함께 걷는 조각 전시'],s,6.83,F+1.7,1.15,1.45,ROT-PI/2,{bg:'#f0eee8',fg:'#4b5356',bold:false});
     for(const [s,v] of [[305,1.8],[330,-1.9]]){const [x,z]=P(s,v);K.person(x,F,z,{shirt:s===305?0x34383c:0xc3b2a0,pants:0x555d64,rotY:ROT});}
   });
-  detail('관광특구 라운지',345,-7,L,7,()=>{
-    sign('관광특구 라운지',350,6.8,F+2.8,8,.6,ROT-PI/2,{bg:null,fg:'#3e5d63'});
-    for(const s of [348,354])for(const v of [-5.7,5.7]){box(s,v,F+.08,.7,.36,3.2,0x5f7373,true);box(s,v,F+.44,.8,.09,3.4,{tex:'wood',gloss:.3});box(s,v+(v>0?.36:-.36),F+.5,.09,.45,3.4,0x7d8880);}
+  buildSebitLounge(K,{P,R,F,C,ROT,sign});
+  detail('관광특구 라운지 길찾기',345,-7,L,7,()=>{
     sign('한강공원 ↑',L-2,0,F+2.9,4,.55);sign('고투몰 G2 ↑',348,0,F+2.9,4,.55,ROT);
   });
   // Small parties, opposing walkers and viewers. The tactile centre and door gaps
@@ -566,7 +567,31 @@ function buildParkPassage(K,{F,C,P,L,strip,floor,corridor,paintStrip}){
   const a=[-513.03,-465.14],b=[-565.03,-596.26],len=Math.hypot(b[0]-a[0],b[1]-a[1]);
   const d=[(b[0]-a[0])/len,(b[1]-a[1])/len],n=[-d[1],d[0]],rot=Math.atan2(d[0],d[1]);
   const p=(s,v=0)=>[a[0]+d[0]*s+n[0]*v,a[1]+d[1]*s+n[1]*v];
-  corridor(P(L-1),[-526,-420],9,'한강공원 연결 보행로');corridor([-526,-420],a,8,'나들목 진입 보행로');
+  // Join the 14 m lounge and rotated 9 m passage edge-to-edge. Trimming both
+  // walls at this turn previously exposed the street from below the lounge roof.
+  const parkName='한강공원 연결 보행로',tunnelName='나들목 진입 보행로';
+  const start=P(L-1),bend=[-526,-420];
+  function along(from,to,metres){
+    const t=metres/Math.hypot(to[0]-from[0],to[1]-from[1]);
+    return from.map((q,i)=>q+(to[i]-q)*t);
+  }
+  function throat(name,upLeft,upRight,downLeft,downRight,midIn,midOut,inWidth=.35){
+    const elbow=[upLeft,downLeft,downRight,upRight];
+    K.slab(elbow,F,{mat:floor});K.slab(elbow,C+.25,{mat:'concrete',under:'ob-ceiling',thick:.25,walk:false});
+    for(const [a,b] of [[upLeft,downLeft],[upRight,downRight]])
+      K.wall(...a,...b,F,C,{mat:{tex:'tile',color:0xc6cbc3},thick:.18});
+    K.zone({name,floor:'B1',sub:'지하 보행로',poly:elbow,y0:F,y1:C,priority:3});
+    const edge=(m,left,right,width)=>along(m,[m[0]+left[0]-right[0],m[1]+left[1]-right[1]],width/2);
+    K.hpoly('ob-tactile',[edge(midIn,upLeft,upRight,inWidth),edge(midOut,downLeft,downRight,.35),
+      edge(midOut,downRight,downLeft,.35),edge(midIn,upRight,upLeft,inWidth)],F+.013);
+  }
+  const next=along(start,bend,5.85),beforeBend=along(bend,start,4),afterBend=along(bend,a,4),beforeTunnel=along(a,bend,4);
+  const first=strip(next,beforeBend,9),second=strip(afterBend,beforeTunnel,8),tunnel=strip(a,b,7.1);
+  throat(parkName,P(L,-7),P(L,7),first[0],first[3],P(L),next,.38);
+  corridor(next,beforeBend,9,parkName,false);
+  throat(parkName,first[1],first[2],second[0],second[3],beforeBend,afterBend);
+  corridor(afterBend,beforeTunnel,8,tunnelName,false);
+  throat(tunnelName,second[1],second[2],tunnel[0],tunnel[3],beforeTunnel,a);
   K.slab(strip(a,p(len-36),7),F,{mat:floor});K.slab(strip(a,p(len-36),7.5),F+3.7,{mat:'concrete',under:'ob-white-tile',thick:.25,walk:false});
   K.ramp(...p(len-36),...b,{w:7,ya:F,yb:0,mat:floor,rails:true});K.groundHole(strip(p(len-37),p(len+3),7.8));
   // _19 visibly looks DOWN a final outdoor flight. Keep the accessible route alongside it;
