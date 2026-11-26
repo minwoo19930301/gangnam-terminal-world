@@ -43,7 +43,7 @@ export function registerGardenWindow(K,{P,rect,angle,y}) {
       [-11.94,4.34,0,.18,.18,17.78,0x403e39],[0,4.34,8.935,23.84,.18,.18,0x403e39],
       [-13.87,3.65,0,.13,.14,17.78,0x484741]];
     for(const v of [-8.85,-6.64,-4.43,-2.22,-.20,2.20,4.41,6.62,8.85])
-      proxy.push([-11.94,0,v,.15,4.48,.09,0x494741]);
+      for(const u of [-11.94,11.94])proxy.push([u,0,v,.15,4.48,.09,0x494741]);
     for(const u of [-11.92,-9.83,-7.74,-5.65,-3.56,-1.62,1.62,3.67,5.72,7.77,9.82,11.92])
       proxy.push([u,0,8.935,.09,4.48,.15,0x494741]);
     const shells=[[-4.30,2.54,7.63],[-3.85,2.81,7.42],[-3.43,2.64,7.60]];
@@ -51,7 +51,7 @@ export function registerGardenWindow(K,{P,rect,angle,y}) {
     const box=(lo,hi)=>new T.Box3(new T.Vector3(...lo),new T.Vector3(...hi));
     const settingsBounds=box([-9.95,.72,-5.85],[2.95,.89,6.85]);
     const frameBounds=[settingsBounds,box([-12.05,4.32,-8.92],[12.05,4.72,8.99]),
-      box([-14,0,-8.92],[-11.8,4.52,8.99]),box([-12,0,8.80],[12,4.52,9.05])];
+      box([-14,0,-8.92],[-11.8,4.52,8.99]),box([11.80,0,-8.92],[12.05,4.52,8.99]),box([-12,0,8.80],[12,4.52,9.05])];
     const glassBounds=[box([-13.95,3.6,-8.88],[-11.85,4.55,8.88]),box([-4.42,2.51,7.29],[-3.30,3.54,7.76]),settingsBounds];
     const parts=[
       ['GardenSteel','프레임과 천장',frame,proxy,frameBounds],

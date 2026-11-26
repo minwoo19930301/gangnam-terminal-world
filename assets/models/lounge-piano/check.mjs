@@ -38,4 +38,22 @@ try {
     assert.deepEqual(errors,[]);assert.equal(files.length,name==='upstairs'?0:1);
     console.log(name,files.length,'piano file requests');await page.close();
   }
+  const page=await browser.newPage();
+  await page.goto(base+view(35.5,55,-6,'8F'));
+  await page.waitForFunction(()=>window.__world?.ready,null,{timeout:90000});
+  if(await page.locator('#start').isVisible())await page.locator('#start').click();
+  await page.keyboard.press('m');
+  await page.locator('#map-search').fill('그랜드 피아노');
+  await page.locator('.gt-result').filter({has:page.locator('b',{hasText:'그랜드 피아노'})}).first().click();
+  await page.locator('.gt-teleport').click();
+  await page.waitForFunction(()=>!__world.map.isOpen());
+  const arrival=await page.evaluate(key=>{
+    const w=__world,pl=w.player,piano=w.scene.getObjectByName(key);
+    const dx=piano.position.x-pl.x,dz=piano.position.z-pl.z,d=Math.hypot(dx,dz);
+    return {venue:w.phys.zoneAt(pl.x,pl.y+.10,pl.z)?.name,d,facing:(-Math.sin(pl.yaw)*dx-Math.cos(pl.yaw)*dz)/d};
+  },subject);
+  assert.equal(arrival.venue,'그랜드 피아노');
+  assert.ok(arrival.d>1.9&&arrival.facing>.95,'The map opens in front of the piano looking at the instrument');
+  console.log('Map arrival outside the rim',arrival.d.toFixed(2),'m');
+  await page.close();
 }finally{await browser.close();await new Promise(r=>server.close(r));}

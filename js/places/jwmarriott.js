@@ -1,3 +1,5 @@
+import {registerMargauxHearth} from '../../assets/models/margaux-woodfire/model.js';
+import {registerRetailGallery} from '../../assets/models/jw-retail-gallery/model.js';
 import {registerGardenWindow} from '../../assets/models/margaux-garden-window/model.js';
 import {margauxChairs} from '../../assets/models/margaux-chair/model.js';
 import {registerExecutiveSeats} from '../../assets/models/executive-seating/model.js';
@@ -166,6 +168,38 @@ export function build(K) {
     for (let i = 0; i < 900; i++) { const c = 170 + (i * 13) % 50; g.fillStyle = `rgba(${c},${c - 15},${c - 40},0.25)`; g.fillRect((i * 71) % w, (i * 37) % h, 2 + i % 3, 2); }
     g.strokeStyle = 'rgba(80,60,40,0.22)'; g.lineWidth = 2; g.strokeRect(1, 1, w - 2, h - 2); g.beginPath(); g.moveTo(0, h / 2); g.lineTo(w, h / 2); g.stroke();
   }, [1.6, 1.6]);
+  K.texture('jwPassageTravertine',256,256,(g,w,h)=>{
+    g.fillStyle='#d9cbb5';g.fillRect(0,0,w,h);
+    for(let j=0;j<128;j++){
+      const y=(j*103.61)%h;
+      g.strokeStyle=j%5===0?'rgba(255,249,227,.21)':'rgba(125,112,88,.11)';
+      g.lineWidth=.38+(j%4)*.18;g.beginPath();
+      for(let x=0;x<=w;x+=4){
+        const dy=Math.sin(x*Math.PI*2/w+j*1.37)*.75+Math.sin(x*Math.PI*6/w+j*2)*.28;
+        if(x===0)g.moveTo(x,y+dy);else g.lineTo(x,y+dy);
+      }
+      g.stroke();
+    }
+    g.strokeStyle='rgba(94,84,70,.33)';g.lineWidth=.75;
+    g.strokeRect(.4,.4,w-.8,h-.8);
+  },[1.46,1.03]);
+  K.texture('jwGalleryFloor',128,128,(g,w,h)=>{
+    g.fillStyle='#ccbda4';g.fillRect(0,0,w,h);
+    for(let n=0;n<110;n++){
+      const x=(n*73.17)%w,y=(n*47.32)%h;
+      g.fillStyle=n%3?'rgba(253,243,219,.13)':'rgba(115,103,86,.10)';
+      g.fillRect(x,y,1+n%3,.7);
+    }
+    g.strokeStyle='rgba(100,92,77,.36)';g.lineWidth=.8;g.strokeRect(.4,.4,w-.8,h-.8);
+  },[.88,.88]);
+  K.texture('jwPassageSoffit',64,128,(g,w,h)=>{
+    g.fillStyle='#55483f';g.fillRect(0,0,w,h);
+    for(let n=0;n<19;n++){
+      g.fillStyle=n%4?'rgba(74,52,43,.12)':'rgba(192,164,132,.10)';
+      g.fillRect(0,n*6.57,w,1);
+    }
+    g.fillStyle='#39332e';g.fillRect(0,0,w,1.1);
+  },[1.1,.46]);
   K.texture('jwCarpet', 256, 256, (g, w, h) => {
     g.fillStyle = '#6d5646'; g.fillRect(0, 0, w, h);
     g.strokeStyle = 'rgba(214,180,120,0.55)'; g.lineWidth = 3;
@@ -1765,8 +1799,9 @@ export function build(K) {
     HP({ tex: 'tile', color: 0xcbb9a7 }, [-7.85, 40, 15.85, 57.9], y + 0.01);
     B({ u: 11.6, v: 49, y, w: 1.2, d: 14, h: 1.0, mat: 0x2a2018, top: 0x4a4a4a });
     B({ u: 14.6, v: 49, y, w: 2.2, d: 14, h: 0.95, mat: 0x5a5a5a, top: 0x3a3a3a });
-    B({ u: 14.6, v: 49, y: y + 0.95, w: 1.6, d: 3, h: 0.7, mat: 0x2a2a2a }); B({ u: 14.4, v: 49, y: y + 1.0, w: 1.0, d: 2.6, h: 0.4, mat: { tex: 'emit', color: 0xff8a30 }, solid: false });
-    B({ u: 14.6, v: 49, y: y + 2.9, w: 2.4, d: 6, h: 1.4, mat: 0x6a6a6a, solid: false });
+    // Keep the existing collision volume. Its old solid front hid the entire fire.
+    B({u:14.6,v:49,y:y+.95,w:1.6,d:3,h:.7,mat:0x2a2a2a,skip:['top','bottom','n','s','e','w']});
+    registerMargauxHearth(baseKit,{P,rect:RECT,angle:R,y});
     for (const v of [43.5, 47, 51, 54.5]) MAN(13.6, v, y, { shirt: 0xf2f2f2, rotY: FACE.W });
     // The architect's 7F photographs show cream banquettes enclosed by oak
     // returns and individual bronze lanterns. Keep the eastern kitchen aisle clear.
@@ -1826,7 +1861,15 @@ export function build(K) {
     B({ u: -20.5, v: 56.8, y, w: 4.4, d: 0.6, h: 1.2, mat: { tex: 'jwStone' } }); SG(['JW 가든'], { u: -20.5, v: 56.45, y: y + 0.8, w: 3.4, h: 0.5, f: 'N', bg: '#d9ccb6', fg: '#5a4630' });
     SG(['JW GARDEN'], { u: -20.5, v: 7, y: y + 2.4, w: 3.2, h: 0.45, f: 'N', bg: '#2b241d', fg: '#efe2c4', twoSided: true });
     CROWD([-23.5, 9, -17.5, 22], y, 10, 703); CROWD([-7, 1, 15, 5], y, 8, 704);
-    SUBZ('리플렉팅 풀', '7F', 'JW 가든 수경 시설', [-22.05, 22.5, -18.95, 39.5]); SUBZ('모보 바 테라스', '7F', '파라솔 좌석 · 퍼골라', [-8, .45, 16, 5.9]); SUBZ('정원 산책로', '7F', 'JW 가든', [-23.6, 5.5, -17.4, 57]); SUBZ('그릴 오픈 키친', '7F', '더 마고 그릴 · 우드 파이어', [10.8, 41, 15.85, 57]);
+    SUBZ('리플렉팅 풀', '7F', 'JW 가든 수경 시설', [-22.05, 22.5, -18.95, 39.5]); SUBZ('모보 바 테라스', '7F', '파라솔 좌석 · 퍼골라', [-8, .45, 16, 5.9]); SUBZ('정원 산책로', '7F', 'JW 가든', [-23.6, 5.5, -17.4, 57]);
+    // Guests view the grill across the serving counter. Keep the existing
+    // floor area and include its spectator bay rather than dropping them behind the counter.
+    const [guestX,guestZ]=P(9.22,47.1);
+    const hearthFront=[[10.8,41],[15.85,41],[15.85,57],[10.8,57],[10.8,48.35],
+      [8.92,48.35],[8.92,46.65],[10.8,46.65]];
+    K.zone({name:'그릴 오픈 키친',floor:'7F',sub:meta.name+' · 더 마고 그릴 · 우드 파이어',
+      poly:hearthFront.map(([u,v])=>P(u,v)),y0:y,y1:NEXT['7F'],priority:1,
+      mapArrival:{x:guestX,z:guestZ,yaw:yawTo(14.6-9.22,49-47.1)}});
     SUBZ('JW 가든', '7F', '루프탑 정원 · 모보 바 테라스', [-33, .25, -8.1, 60.3]);
   }
 
@@ -1950,7 +1993,7 @@ export function build(K) {
     }
     MAN(-.4, 8.0, y, { shirt: 0x2c2925, rotY: FACE.S });
     SG('THE LOUNGE', { u: 4.65, v: 12.6, y: y + 1.6, w: .95, h: .22, f: 'S', bg: null, fg: '#c7a573', bold: false });
-    // The piano and bench share the original seat collision and rug.
+    // The bench remains separate from the curved piano rim on the same rug.
     const [pianoX,pianoZ]=P(-4.8,41.0);
     B({u:-4.8,v:42.8,y:y+.42,w:.85,d:.38,h:.1,mat:0,skip:['top','bottom','n','s','e','w']});
     placePiano(K,pianoX,y,pianoZ,R);
@@ -2046,7 +2089,12 @@ export function build(K) {
     COVE([5.2, 24.2, 8.7, 39.5], y + 3.5);
     HP(0xe4dccd, [6, 48.5, 15.8, 53.5], yc, false);
     SUBZ('프런트 데스크', '8F', '체크인 · 체크아웃', [5.2, 44, 16, 53.5]);
-    SUBZ('그랜드 피아노', '8F', '더 라운지', [-6, 39.3, -3.6, 43.3]);
+    // The old map centre lay under the open lid. Aim across the keys from
+    // the front corner of the same listening area, beside the bench.
+    const [listenerX,listenerZ]=P(-3.74,43.14);
+    K.zone({name:'그랜드 피아노',floor:'8F',sub:meta.name+' · 더 라운지',
+      poly:RECT(-6,39.3,-3.6,43.3),y0:y,y1:NEXT['8F'],priority:1,
+      mapArrival:{x:listenerX,z:listenerZ,yaw:yawTo(-1.06,-2.14)}});
     SUBZ('더 라운지 바', '8F', '대리석 바 · 월넛 패널', [-7.85, 6.1, 4.8, 13.4]);
     SUBZ('더 라운지', '8F', '구리빛 커튼 · 크림 소파 · 피아노', [-8, 14, 5.2, 48]);
     SUBZ('엘리베이터 홀', '8F', '객실 · 레스토랑 층 연결', [5.2, 24.2, 8.8, 39.5]);
@@ -2603,18 +2651,31 @@ export function build(K) {
     // The lower route turns into its own department-store passage behind
     // the artwork. The salon floor occupies the far side of these partitions.
     const passageMat={tex:'wood',color:0x49392e};
+    // The public display arcade has pale travertine, while the rooms on the reverse
+    // side of these same partitions keep their original finish.
+    const limestone={tex:'jwPassageTravertine'};
     for(const [a,b,c,d] of [[-.9,60.6,-.9,56.5],[-.9,56.5,24.25,56.5],
       [3.68,60.45,27.05,60.45],[27.05,60.45,27.05,29.2],
       // Recess this partition beside the 4F down flight; its former straight
       // run occupied the tread centre while the adjacent up flight stayed clear.
       [24.25,56.5,24.25,42.0],[24.25,42.0,25.12,41.4],
       [25.12,41.4,25.12,31.0],[25.12,31.0,24.25,30.2],[24.25,30.2,24.25,29.2]]){
-      WL(a,b,c,d,deck,deck+3.8,{mat:passageMat});
+      const mu=(a+c)/2,mv=(b+d)/2;
+      const vLeg=Math.abs(c-a)<Math.abs(d-b);
+      const facing= vLeg ? -(d-b)*((mv>56.5?13.05:25.65)-mu) : (c-a)*(58.47-mv);
+      const arcSide=facing>=0;
+      WL(a,b,c,d,deck,deck+3.8,{mat:arcSide?limestone:passageMat,mat2:arcSide?passageMat:limestone});
     }
     for(const r of [[-.9,56.5,27.05,60.45],[24.25,29.15,27.05,56.5]]){
-      SLAB(r,deck+.032,{mat:'jwGreyStone',thick:.05});
+      SLAB(r,deck+.032,{mat:{tex:'jwGalleryFloor',gloss:.30},thick:.05});
       ZN('신세계백화점 연결통로','3F','신관 2층 방면',r,deck-.08,deck+3.8,28);
     }
+    const soffit={mat:passageMat,under:'jwPassageSoffit',thick:.07,walk:false};
+    SLAB([-.9,56.5,27.05,60.45],deck+3.46,soffit);
+    // Follow the same recess as the wall so the adjacent rising escalator remains uncovered.
+    K.slab([[24.25,29.15],[27.05,29.15],[27.05,56.5],[24.25,56.5],[24.25,42],
+      [25.12,41.4],[25.12,31],[24.25,30.2]].map(([u,v])=>P(u,v)),deck+3.46,soffit);
+    registerRetailGallery(baseKit,P,RECT,R,deck);
     for(const x of [24.25,27.05]) WL(x,1.76,x,29.25,7,deck+3.7,{mat:passageMat});
     // The escalator bank rises entirely outside the podium slabs and meets
     // the actual ballroom foyer at its south doorway.

@@ -60,6 +60,8 @@ const sources = [
   ['centralcity','B1','sweet-cake-counters/cakes.blend','스위트 파크 · 쇼토 케이크 진열','SweetShoto'],
   ['centralcity','B1','chipotle-gangnam/counter.blend','치폴레 강남신세계점 · 주문대','ChipotleGangnamOrderBar'],
   ['centralcity','B1','five-guys-gangnam/front.blend','파이브가이즈 고속터미널 · 창과 음료대','FiveGuysGangnamFront'],
+  ...[['보석 진열창','JewelryShadowbox'],['세로형 광고 화면','RetailPortrait'],['사각 매입등','SquareDownlightPair']].map(([label,source])=>
+    ['jwmarriott','3F','jw-retail-gallery/finishes.blend','신세계 연결 갤러리 · '+label,source]),
   ['centralcity','1F','house-entry-gallery/vestibule.blend','하우스 오브 신세계 · 경사 통로 천장과 벽','HouseEntryRampBay'],
   ['centralcity','1F','house-entry-gallery/vestibule.blend','하우스 오브 신세계 · 청동 벽과 식재 입구','HouseEntryGallery'],
   ['centralcity','B1','sweet-garden-soffit/soffit.blend','스위트 가든 · 에스컬레이터 공통 하부','SweetGardenBankSoffit'],
@@ -218,6 +220,8 @@ const sources = [
   ...[['포석정 · 옥상 점포와 좌석','포석정 · 옥상 점포와 좌석'],['포석정 · 일곱 식탁의 배치','포석정 · 공용 4인 식탁과 의자'],
       ['포석정 · 불판과 상차림','포석정 · 불판과 상차림'],['경부선 옥상 · 대형 청색 채널 글자','청색 옥상 대형 간판']]
     .map(([mesh,native])=>['gyeongbu','10F','gyeongbu-rooftop/poseokjeong-rooftop.blend',mesh,native]),
+  ...[['HearthMasonry','벽돌과 숯받이'],['HearthIron','쇠바구니와 선반'],['HearthEmbers','숯불']].map(([collection,label])=>
+    ['jwmarriott','7F','margaux-woodfire/hearth.blend','더 마고 그릴 · 화덕 '+label,collection]),
   ['jwmarriott','7F','margaux-chair/chair.blend','더 마고 그릴 · 다이닝 가죽 의자','MargauxDiningChair'],
   ...[['GardenSteel','프레임과 천장'],['GardenGlass','홈유리'],['GardenLight','펜던트 발광면'],['GardenFloor','카펫과 석재']].map(([collection,label])=>
     ['jwmarriott','7F','margaux-garden-window/window.blend','더 마고 그릴 · 정원창 '+label,collection]),
