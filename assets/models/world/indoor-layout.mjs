@@ -68,6 +68,7 @@ const sources = [
   ['centralcity','B1','biscuiterie-mo/biscuiterie.blend','비스퀴테리 M.O · 마들렌과 번호 틴 진열장','BiscuiterieMO','MO glazing','MO lit fittings'],
   ['centralcity','B1','fortnum-tea-shop/tea-shop.blend','포트넘앤메이슨 · 목재 입구와 홍차 진열대','FortnumSweetPark'],
   ['centralcity','B1','im-donut/display.blend','아임도넛 · 생도넛과 공개 조리창','ImDonutGangnam'],
+  ['centralcity','B1','hanjungsun/island.blend','한정선 · 달항아리장과 과일 찹쌀떡','HanjungsunGangnam'],
   ['centralcity','B1','van-leeuwen/display.blend','밴루엔 · 아이스크림과 밀크셰이크','VanLeeuwen'],
   ['centralcity','B1','pompompurin-bakery/display.blend','폼폼푸린 · 오븐과 캐릭터 빵','PompompurinBakery'],
   ['centralcity','B1','haz-bakery/display.blend','하츠베이커리 · 샌드베이글과 포장','HazBakeryCounter'],

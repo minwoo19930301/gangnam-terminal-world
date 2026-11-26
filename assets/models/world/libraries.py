@@ -32,6 +32,7 @@ SHELVES = {
     "biscuiterie-mo": "스위트 파크 · 비스퀴테리 M.O 마들렌과 틴 진열장",
     "fortnum-tea-shop": "스위트 파크 · 포트넘앤메이슨 홍차 매장",
     "im-donut": "스위트 파크 · 아임도넛",
+    "hanjungsun": "스위트 파크 · 한정선 달항아리장",
     "van-leeuwen": "스위트 파크 · 밴루엔 아이스크림",
     "pompompurin-bakery": "스위트 파크 · 폼폼푸린 베이커리 카페",
     "buchang-walnut": "스위트 파크 · 부창제과 호두과자",
