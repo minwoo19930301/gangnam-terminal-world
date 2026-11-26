@@ -234,7 +234,7 @@ function* prepareModel(THREE, gltf, m, stand, terrain) {
     });
     if (terrain) facadeMaterial(mat,level);
     if(s?.userData.apartmentNight &&
-        /glazing|glass|openable[ _]window/i.test(src.name) && !/frame|mullion|rail|balustrade|lounge/i.test(src.name)){
+        /glazing|glass|openable[ _]window|grouped windows|window pair|recessed blue green window/i.test(src.name) && !/frame|mullion|rail|balustrade|lounge/i.test(src.name)){
       mat.userData.apartmentGlass=true;
       lightApartmentWindows(mat,s.userData.apartmentNight,'glass');
     }
