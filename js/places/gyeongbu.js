@@ -12,7 +12,9 @@ import { placeUpperShowroom } from '../../assets/models/gyeongbu-apparel/model.j
 import { coachGlazing } from '../../assets/models/coach-cabin/windows.js';
 import { placeCutFlowers } from '../../assets/models/gyeongbu-cutflowers/model.js';
 import { placeWaitingBenches } from '../../assets/models/gyeongbu-seating/model.js';
+import {placeCushionBay} from '../../assets/models/concourse-fixtures/cushions.js';
 import {accessoryShelf} from '../../assets/models/daiso-accessories/shelf.js';
+import {drawAisleFaces} from '../../assets/models/daiso/aisle-stock.js';
 import {gardenShelf,gardenFlowers} from '../../assets/models/daiso-garden/shelf.js';
 import { placeDaisoEndcap } from '../../assets/models/daiso-merchandise/place.js';
 import { loadArchitecture, fitTerminalSeat as fitHallDetail } from '../../assets/models/architectural-retail/place.js';
@@ -25,7 +27,7 @@ const [marketModel, daisoModel, seatArchitecture, concourseFixtures] = await Pro
   loadFixtures('../../assets/models/gyeongbu/market.glb'),
   loadFixtures('../../assets/models/daiso/shop.glb'),
   loadArchitecture('terminal-seating.glb'),
-  loadFixtures('../../assets/models/concourse-fixtures/fixtures.glb')
+  loadFixtures('../../assets/models/concourse-fixtures/ticket-kiosk.glb')
 ]);
 
 export const meta = {
@@ -2024,6 +2026,7 @@ export function build(K) {
     lstairs(167,20,167,11,{ya:-2,yb:0,w:1.7,steps:12,mat:0xb6b4ae,rails:true});
     for(const u of [164,168])lwall(u,11,u,21.4,y,1.05,{mat:doorGlass,thick:.05});
     lzone('다이소 강남고속버스터미널점','B1','문구 · 완구 · 식품 · 반려동물 · 뷰티 · 주방 · 생활용품',170,0,284,30,y,y+3.1,5);
+    lzone('다이소 홈·욕실·청소용품','B1','생활용품 벽면 진열',264,-3,284,0,y,y+3.1,6);
     lzone('다이소 디즈니 · 계산하는 곳','B1','GATE 4 · 고투몰 방면',238,-18,264,4,y,y+3.1,6);
     lzone('다이소 1번 출입구','1F','지하 매장 · 승차홈 22~24',164,9,168,12,0,3.3,7);
     lzone('다이소 2번 출입구','1F','지하 매장 입구전용',206.5,22,214.5,25,0,3.3,7);
@@ -2082,9 +2085,23 @@ export function build(K) {
     for(const u of [238.7,242.7])rack(u,-13,6.8,80+Math.round(u));
     for(const [key,rows] of banks){
       const us=rows.map(([u])=>u), fronts=rows.map(([,v,len])=>v-len/2), backs=rows.map(([,v,len])=>v+len/2);
-      const poly=rect(Math.min(...us)-.56,Math.min(...fronts)-.09,Math.max(...us)+.56,Math.max(...backs)+.09);
-      ldetail({floor:'B1',y0:y,y1:y+2,poly,name:'다이소 매대 재고 '+key},()=>{
+      const u0=Math.min(...us)-.56,v0=Math.min(...fronts)-.09,u1=Math.max(...us)+.56,v1=Math.max(...backs)+.09;
+      const poly=rect(u0,v0,u1,v1);
+      let detailed=false;
+      const withinAisle=(x,eye,z)=>{
+        if(eye<y-.5||eye>y+3.4)return false;
+        const [u,v]=toL(x,z),du=Math.max(0,u0-u,u-u1),dv=Math.max(0,v0-v,v-v1);
+        return du*du+dv*dv<9*9;
+      };
+      ldetail({floor:'B1',y0:y,y1:y+2,poly,name:'다이소 매대 재고 '+key,visibleFrom:withinAisle},()=>{
         for(const row of rows)furnishRack(...row);
+        detailed=true;
+      });
+      ldetail({floor:'B1',y0:y,y1:y+2,poly,name:'다이소 원거리 상품 '+key,
+        visibleFrom:(x,eye,z)=>!detailed||!withinAisle(x,eye,z)},()=>{
+        for(const [u,v,len,idx,end] of rows){
+          drawAisleFaces(K,{W,A,B},u,v,len,idx,y,stock,end);
+        }
       });
     }
     for(const [key,label,u,v,side] of [
@@ -2114,24 +2131,22 @@ export function build(K) {
       for(const [u,t] of [[254,'와인용품'],[259,'도자기'],[264,'내추럴용품'],[269,'조리도구'],[274,'일회용품'],[279,'일회·친환']])lsign(t,u,10.7,y+2.35,3,.33,'-v',{bg:'#73a797',fg:'#fff'});
       for(const [u,t] of [[253,'홈데코'],[261,'욕실'],[269,'청소 · 세탁'],[277,'수납']])lsign(t,u,-2.6,y+2.35,4,.33,'+v',{bg:'#b9a5da',fg:'#fff'});
     });
+    // Group whole bays so the three-column shelf and its nine cushions change detail together.
     const displayV=-2.91;
-    for(let first=0;first<42;first+=14)fixtureArea('쿠션 선반 '+(first/14+1),
-      254.3+first*.65,-3.8,255.7+(first+13)*.65,-2.1,()=>{
-      const cushionStyles = ['CushionLinen','CushionSage','CushionRose','CushionIvory'];
-      const cushions = cushionStyles.map(()=>[]);
-      const cushionStands = [];
-      // The rail fits just ahead of the crosswise gondola endcaps.
-      for(let column=first;column<first+14;column++){
-        const u = 255 + column*.65;
-        if(column%3===1) cushionStands.push([u,displayV,y,PI]);
-        for(let tier=0;tier<3;tier++){
-          const style = Math.floor(u+tier)%cushionStyles.length;
-          cushions[style].push([u,displayV,y+.28+tier*.55,PI]);
+    for(let bank=0;bank<3;bank++){
+      const firstBay=bank*5,endBay=Math.min(14,firstBay+5);
+      fixtureArea('쿠션 선반 '+(bank+1),254.6+firstBay*1.95,-3.8,254.8+endBay*1.95,-2.1,()=>{
+        for(let bay=firstBay;bay<endBay;bay++){
+          const column=bay*3,u=255+(column+1)*.65,[x,z]=W(u,displayV);
+          // The short west run faces the open shopping aisle. The east section sits
+          // against the solid homewares wall at v=-3, with its embroidery facing shoppers.
+          const facesSouthAisle=u<263.4;
+          const starts=[0,1,2].map(i=>Math.floor(255+(column+i)*.65)%4);
+          if(facesSouthAisle)starts.reverse();
+          placeCushionBay(K,[x,y,z],facesSouthAisle?ROT+PI:ROT,starts);
         }
-      }
-      addMarketFixtures('CushionRack','다이소 쿠션 진열대',cushionStands,concourseFixtures);
-      cushionStyles.forEach((key,i)=>addMarketFixtures(key,'다이소 쿠션 '+key,cushions[i],concourseFixtures));
-    });
+      });
+    }
     fixtureArea('디즈니 캐릭터 코너',244.5,-9.3,254.6,-.5,()=>{
       for(const v of [-8.8,-1]){lbox(249.6,v,y+2.45,8.8,.5,.55,0xb9a5da,{solid:false});lsign('디즈니',249.6,v+.26,y+2.7,3.2,.4,'+v',{bg:'#b9a5da',fg:'#fff'});}
       for(const u of [245.7,253.5])for(const v of [-8.8,-1])lbox(u,v,y,.6,.6,3,0xb9a5da,{solid:false});

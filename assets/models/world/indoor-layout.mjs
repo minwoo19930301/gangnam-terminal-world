@@ -10,6 +10,8 @@ import {relief} from '../../../js/banpo_relief.js';
 // Scene object (or a uniquely identifying child) -> editable native source.
 // Geometry decoder matrices and decorative LOD offsets live *below* the placement.
 const sources = [
+  ...['CushionRack','CushionLinen','CushionSage','CushionRose','CushionIvory'].map(name=>
+    ['gyeongbu','B1','concourse-fixtures/concourse-fixtures.blend','다이소 패브릭 · '+name,name]),
   ...['검은 강재 차양과 승객 벤치','강화유리와 반투명 수평 띠','한강과 서래섬 포스터','승객용 전광판과 안내 케이스','차양등과 보도 빛'].map(label=>{
     const name='중앙차로 승차대 · '+label;
     const native=label==='승객용 전광판과 안내 케이스'?'중앙차로 승차대 · 승객 전광판과 안내함':name;
@@ -134,6 +136,29 @@ const legacyRetailId={
 
 const rounded = value => Math.round(value*1e8)/1e8;
 
+// Repeat a native collection inside a merged display without adding game draw calls or edit-only scene nodes.
+function* nativeTransforms(root,rules){
+  if(root.userData.nativeComponents){
+    root.updateWorldMatrix(true,false);
+    for(const part of root.userData.nativeComponents){
+      const rule=rules.find(row=>row[3]===part.subject);
+      if(rule)yield [rule,new THREE.Matrix4().makeTranslation(...part.translation).premultiply(root.matrixWorld)];
+    }
+    return;
+  }
+  const rule=rules.find(row=>root.getObjectByName(row[3]));
+  if(!rule)return;
+  root.updateWorldMatrix(true,true);
+  const match=root.getObjectByName(rule[3]);
+  const group=match.userData.nativePlacementInstances?match:root;
+  const local=new THREE.Matrix4(),world=new THREE.Matrix4();
+  for(let i=0;i<(group.isInstancedMesh?group.count:1);i++){
+    world.copy(group.matrixWorld);
+    if(group.isInstancedMesh){group.getMatrixAt(i,local);world.multiply(local);}
+    yield [rule,world];
+  }
+}
+
 export async function captureIndoorLayout() {
   const osm = applyRoadEdits(JSON.parse(await fs.readFile(new URL('../../../data/osm.json',import.meta.url),'utf8')));
   const previous = globalThis.__makeCanvas;
@@ -153,16 +178,8 @@ export async function captureIndoorLayout() {
       kit.onNight=()=>{};
       kit.addMesh=root=>{
         const placed=addMesh(root);
-        const rule=rules.find(row=>root.getObjectByName(row[3]));
-        if(!rule)return placed;
-        root.updateWorldMatrix(true,true);
-        const [,floor,library,subject,...collections]=rule;
-        const match=root.getObjectByName(subject);
-        const placements=match.userData.nativePlacementInstances?match:root;
-        const local=new THREE.Matrix4(),world=new THREE.Matrix4();
-        for(let index=0;index<(placements.isInstancedMesh?placements.count:1);index++){
-          world.copy(placements.matrixWorld);
-          if(placements.isInstancedMesh){placements.getMatrixAt(index,local);world.multiply(local);}
+        for(const [rule,world] of nativeTransforms(root,rules)){
+          const [,floor,library,subject,...collections]=rule;
           const ordinal=counts.get(subject)||0;
           counts.set(subject,ordinal+1);
           const [x,y,z]=world.elements.slice(12,15);
