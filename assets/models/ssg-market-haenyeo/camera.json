@@ -1,0 +1,14 @@
+{
+  "floor": "B1",
+  "x": -69.01703557602423,
+  "y": -6,
+  "z": 22.292274281717738,
+  "yaw": 110.80409754120019,
+  "pitch": -13.18,
+  "meshName": "신세계 마켓 · 해녀의 신세계",
+  "sourceBlend": "counter.blend",
+  "sourceCollection": "MarketHaenyeoSeafood",
+  "nativeLabel": "해녀의 신세계 제주 해산물 매대",
+  "area": "in:shinsegae",
+  "gameView": "?pitch=-13.18#/shinsegae/B1?p=-69.01704,-6,22.29227,110.80410"
+}

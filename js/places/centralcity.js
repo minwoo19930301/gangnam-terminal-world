@@ -13,6 +13,7 @@ import {fortnumShop} from '../../assets/models/fortnum-tea-shop/model.js';
 import {bakeryCafe} from '../../assets/models/pompompurin-bakery/model.js';
 import {hazBakery} from '../../assets/models/haz-bakery/model.js';
 import {arabicaFront} from '../../assets/models/sweet-arabica/model.js';
+import {buchangWalnutCounter} from '../../assets/models/buchang-walnut/model.js';
 import {anotherPalmEdition} from '../../assets/models/another-palm-astro/model.js';
 import {chefStageSigns} from '../../assets/models/sweet-chefs-stage/model.js';
 import {marketWestReturn, cinemaAisleMouth} from './shinsegae-b1-plan.js';
@@ -1749,6 +1750,12 @@ export function build(K) {
       bakeryCafe(K,x,YB1,z,F.E);
       K.phys.addWall(...P(s-3.10,t-1.17),...P(s+3.10,t-1.17),YB1,YB1+3.1,.075,'centralcity');
       K.phys.addPolyWalls(RECT(s-2.16,t-.69,s+2.16,t+.39),YB1,YB1+.99,.02,'centralcity');
+      return;
+    }
+    if(cell.name==='부창제과'){
+      const [s,t]=BPst(1232,754.5),[x,z]=P(s,t);
+      buchangWalnutCounter(K,x,YB1,z,F.N);
+      K.phys.addPolyWalls(RECT(s-.43,t-2.15,s+.52,t+2.15),YB1,YB1+.94,.015,'centralcity');
       return;
     }
     if(cell.kind==='upcoming'){spArchFront(cell);return;}
