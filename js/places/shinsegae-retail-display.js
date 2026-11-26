@@ -32,6 +32,16 @@ function getLoader() {
   return loaderPromise;
 }
 
+// The root already carries the CPU terrain height in full-world views.
+function rigidMaterial(material) {
+  for (const part of Array.isArray(material) ? material : [material]) {
+    if (part.defines?.BANPO_RIGID === 1) continue;
+    part.defines = {...part.defines, BANPO_RIGID:1};
+    part.needsUpdate = true;
+  }
+  return material;
+}
+
 // The coarse displays consist of opaque, solid-color shop fixtures. Bake their
 // transforms and colors together before K.detail captures layer ownership.
 function batchFallback(T, group) {
@@ -62,6 +72,7 @@ function batchFallback(T, group) {
 
 export function mountRetailDisplay(K, {root, fallback, source, batches, x, y, z}) {
   const T = K.THREE;
+  root.userData.terrainApplied = true;
   root.updateWorldMatrix(true,true);
   const worldToLocal = fallback.matrixWorld.clone().invert();
   const localBounds = [];
@@ -74,7 +85,7 @@ export function mountRetailDisplay(K, {root, fallback, source, batches, x, y, z}
   });
   batchFallback(T, fallback);
   const empty = new T.BufferGeometry();
-  const temporaryMaterial = new T.MeshBasicMaterial();
+  const temporaryMaterial = rigidMaterial(new T.MeshBasicMaterial());
   const slots = batches.map(name => {
     const mesh = new T.Mesh(empty,temporaryMaterial);
     mesh.name = name;
@@ -98,7 +109,7 @@ export function mountRetailDisplay(K, {root, fallback, source, batches, x, y, z}
       for (const [index, part] of parts.entries()) {
         const mesh = slots[index];
         mesh.geometry = part.geometry;
-        mesh.material = part.material;
+        mesh.material = rigidMaterial(part.material);
         mesh.matrix.copy(part.matrixWorld);
         mesh.matrixAutoUpdate = false;
         mesh.matrixWorldNeedsUpdate = true;
@@ -117,6 +128,7 @@ export function mountRetailDisplay(K, {root, fallback, source, batches, x, y, z}
   // tighter display box too, e.g. when a wide shelf sphere surrounds the eye.
   fallback.traverse(part => {
     if (!part.isMesh) return;
+    rigidMaterial(part.material);
     const previous = part.onBeforeRender;
     part.onBeforeRender = function(renderer,scene,camera,...rest) {
       previous.call(this,renderer,scene,camera,...rest);
