@@ -14,12 +14,17 @@ const osm = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/osm.json'), 'utf8')
 const out = {};
 const modules = new Map();
 const hostedZones = new Map();
+const arrivalsByPlace = new Map();
 for (const id of PLACES) {
   const m = await import(url.pathToFileURL(path.join(ROOT, 'js/places', id + '.js')).href);
   const K = createKit(THREE, new THREE.Scene(), { osm, phys: createPhysics() }); K.onNight = () => { };
   K._.setCurrent(id, m.meta); m.build(K);
-  const mapDestinations = K._.spawns.filter(s => s.mapDestination).map(({name, aliases, poiIds, floor, x, y, z, yaw}) => ({name, aliases, poiIds, floor, x, y, z, yaw}));
-  modules.set(id, { meta: m.meta, builtZones: K._.zonesList, mapDestinations });
+  for (const {place, name, aliases, poiIds, floor, x, y, z, yaw, mapDestination} of K._.spawns) {
+    if (!mapDestination) continue;
+    if (!arrivalsByPlace.has(place)) arrivalsByPlace.set(place, []);
+    arrivalsByPlace.get(place).push({name, aliases, poiIds, floor, x, y, z, yaw});
+  }
+  modules.set(id, { meta: m.meta, builtZones: K._.zonesList });
   for (const zone of K._.zonesList) {
     if (zone.place === id || !zone.place) continue;
     if (!hostedZones.has(zone.place)) hostedZones.set(zone.place, []);
@@ -28,7 +33,8 @@ for (const id of PLACES) {
 }
 // A physical module can host a neighbouring tenant. Include the zone in both
 // the builder's spatial coverage and the public place used for navigation.
-for (const [id, { meta, builtZones, mapDestinations }] of modules) {
+for (const [id, { meta, builtZones }] of modules) {
+  const mapDestinations = arrivalsByPlace.get(id) || [];
   const zones = builtZones.concat(hostedZones.get(id) || []);
   let x0 = Infinity, z0 = Infinity, x1 = -Infinity, z1 = -Infinity, y0 = Infinity, y1 = -Infinity;
   const grow = (x, z) => { x0 = Math.min(x0, x); z0 = Math.min(z0, z); x1 = Math.max(x1, x); z1 = Math.max(z1, z); };

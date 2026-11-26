@@ -85,6 +85,7 @@ for model_id, (name, expected) in files.items():
         old.objects.unlink(mesh_object)
     coll.objects.link(mesh_object)
     objects[model_id] = mesh_object
+    runpy.run_path(str(here/"facades.py"))["finish"](mesh_object,model_id)
     points[model_id] = [list(v.co[:2]) for v in mesh_object.data.vertices]
 
 levels = json.loads(subprocess.run(
