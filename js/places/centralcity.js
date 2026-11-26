@@ -5,6 +5,7 @@ import {publicFloorOpening,court,westApron} from '../../assets/models/cinema-rot
 import {arcadePiers} from '../../assets/models/sweet-arcade/model.js';
 import {houseWineDisplays} from '../../assets/models/house-wine-cellar/model.js';
 import {marcoliniShop} from '../../assets/models/sweet-marcolini/model.js';
+import {biscuiterieShop} from '../../assets/models/biscuiterie-mo/model.js';
 import {fortnumShop} from '../../assets/models/fortnum-tea-shop/model.js';
 import {hazBakery} from '../../assets/models/haz-bakery/model.js';
 import {arabicaFront} from '../../assets/models/sweet-arabica/model.js';
@@ -1284,7 +1285,7 @@ export function build(K) {
     {"zone":"sweet","name":"포트넘앤메이슨","rect_display":[1081,509,1164,533],"front":"E","kind":"tea","arrival":[1189,521],"aliases":["Fortnum & Mason"],"pitchDeg":3},
     {"zone":"sweet","name":"하츠베이커리","rect_display":[1032,540,1079,595],"front":"E","kind":"bakery","arrival":[1087,570],"aliases":["HAZ Bakery","하츠 베이커리"],"pitchDeg":-5},
     {"zone":"sweet","name":"OPENING SOON","rect_display":[1032,596,1079,654],"front":"E","kind":"upcoming"},
-    {"zone":"sweet","name":"비스퀴테리 M.O","rect_display":[1032,655,1079,716],"front":"E","kind":"bakery","arrival":[1087,685.5],"aliases":["Biscuiterie M.O"]},
+    {"zone":"sweet","name":"비스퀴테리 M.O","rect_display":[1032,655,1079,716],"front":"E","kind":"bakery","arrival":[1089,666],"lookAt":[1062,688],"pitchDeg":5,"aliases":["Biscuiterie M.O","비스퀴테리 엠오"]},
     {"zone":"sweet","name":"피에르 마르콜리니","rect_display":[1032,717,1079,777],"front":"E","kind":"chocolate","arrival":[1087,747],"aliases":["Pierre Marcolini"]},
     {"zone":"sweet","name":"어나더팜","rect_display":[1136,809,1210,850],"front":"N","entrance":"W","kind":"grocery","arrival":[1173,832],"aliases":["Another Palm"]},
     {"zone":"sweet","name":"폼폼푸린 베이커리 카페","rect_display":[1032,842,1089,894],"front":"N","kind":"cafe","arrival":[1060.5,826],"aliases":["Pompompurin"]},
@@ -1683,6 +1684,13 @@ export function build(K) {
   const [chocolateX,chocolateZ]=P(chocS1-.13,(chocT0+chocT1)/2);
   const drawChocolatier=marcoliniShop(K,chocolateX,YB1,chocolateZ,R);
   const spCell=(cell,index)=>{
+    if(cell.name==='비스퀴테리 M.O'){
+      const [,t0,s1,t1]=spBounds(cell.rect_display),s=s1-.13;
+      for(const t of [t0+.18,t1-.18])spPillar(s-.05,t);
+      const [x,z]=P(s,(t0+t1)/2);
+      biscuiterieShop(K,x,YB1,z,R);
+      return;
+    }
     if(cell.name==='포트넘앤메이슨'){
       const [,t0,s1,t1]=spBounds(cell.rect_display),s=s1-.09,t=(t0+t1)/2;
       const [x,z]=P(s,t);

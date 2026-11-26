@@ -15,6 +15,7 @@ SHELVES = {
     "sweet-arcade": "스위트 파크 · 디저트 홀 타일 기둥",
     "intelligentsia-gangnam": "인텔리젠시아 강남 · 커피 바와 오렌지 선반",
     "another-palm-astro": "어나더팜 · 아톰 에디션",
+    "biscuiterie-mo": "스위트 파크 · 비스퀴테리 M.O 마들렌과 틴 진열장",
     "fortnum-tea-shop": "스위트 파크 · 포트넘앤메이슨 홍차 매장",
     "haz-bakery": "스위트 파크 · 하츠베이커리",
     "sweet-arabica": "스위트 파크 · %아라비카 입구",

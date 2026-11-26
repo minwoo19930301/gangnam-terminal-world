@@ -8,8 +8,10 @@ const io=new NodeIO().registerExtensions(ALL_EXTENSIONS).registerDependencies({'
 const doc=await io.read(process.argv[2]);
 await doc.transform(weld());
 const root=doc.getRoot(),nodes=root.listNodes();
-const samples=nodes.find(n=>n.getName()==='CopperLightSamples');
-const body=nodes.find(n=>n.getName()==='GangnamChocolatier').getMesh();
+const [bodyName, sampleName]=process.argv.slice(4);
+const samples=nodes.find(n=>n.getName()===sampleName);
+const body=nodes.find(n=>n.getName()===bodyName)?.getMesh();
+if(!samples?.getMesh()||!body)throw new Error('Expected a solid display and its baked light samples');
 for(const mesh of root.listMeshes()){
   if(mesh===samples.getMesh())continue;
   for(const primitive of mesh.listPrimitives())simplifyPrimitive(primitive,{simplifier:MeshoptSimplifier,ratio:.62,error:.001});
