@@ -1,4 +1,14 @@
 {
+ "arrival_reference_20261126": {
+  "hotel_photograph": "https://www.marriott.com/ko/hotels/seljw-jw-marriott-hotel-seoul/photos/",
+  "naver_place": "https://map.naver.com/p/entry/place/11583195",
+  "naver_june": "https://m.blog.naver.com/ssunnyp/224463195614",
+  "naver_august": "https://m.blog.naver.com/l_ovelyoon/224395705177",
+  "artist_interview": "https://www.elle.co.kr/article/1671",
+  "dimensions_and_count": "https://www.imagazinekorea.com/neighbor/view.asp?SearchGubun=&SearchWord=&no=8489&pType=C&page=2",
+  "observed": "두 방문 사진의 원형 받침과 미세한 금속 줄, 네 줄로 보이는 무라노 유리 목걸이 두 개, 월넛 기둥, 목재와 청동 칸막이, 뒤편 검은 화병과 잎이 무성한 황색 꽃. 8월 사진 오른쪽에 벨 카트와 어두운 외투가 보인다. 공식 호텔 홍보 사진은 얇은 사각 단이 설치된 이전 모습을 보여 준다.",
+  "scale": "현관 작품의 문헌상 높이 약 15m, 유리알 512개를 반영했다. 유리알 개개 형태·위치, 천장 개구부와 주변 연회실 사이 벽선, 진열 외투·여행 가방은 사진을 기준으로 재구성했다."
+ },
  "public_lounge_menu_20261126": {
   "naver": "https://map.naver.com/p/entry/place/1780808607",
   "hotel_gallery": "https://www.marriott.com/ko/hotels/seljw-jw-marriott-hotel-seoul/photos/",
@@ -502,7 +512,7 @@
      "14",
      "15"
     ],
-    "trace": "꿀빛/크림 광택 석재 바닥, 지름 약 1.2m의 짙은 월넛 원형 기둥 두 개, 작은 비대칭 직사각형으로 짜인 어두운 목재 격자 천장, 세로 루버와 호박색 간접조명, 원형 받침 위 흰 도자기 구슬 목걸이 조형물, 청동 프레임 유리벽·상부 유리 난간, 낮은 검은 받침 위 큰 꽃 장식. 통로는 약 3m로 추정."
+    "trace": "꿀빛/크림 광택 석재 바닥, 지름 약 1.2m의 짙은 월넛 원형 기둥 두 개, 작은 비대칭 직사각형으로 짜인 어두운 목재 격자 천장, 세로 루버와 호박색 간접조명, 원형 받침 위 아이보리색 무라노 유리알 목걸이 조형물, 청동 프레임 유리벽·상부 유리 난간, 낮은 검은 받침 위 큰 꽃 장식. 통로는 약 3m로 추정."
    },
    {
     "space": "L / 1F 승강기 로비",
@@ -938,7 +948,7 @@
      1.9,
      48.5
     ],
-    "built": "네 가닥 세라믹 구슬·두 하단 목걸이 루프·원형 단·보호 로프·짐수레"
+    "built": "무라노 유리로 된 두 목걸이·원형 단·보호줄·짐수레"
    },
    {
     "spot": "트래버틴 승강기 로비",

@@ -6,7 +6,8 @@ import { placeCornerSofa } from '../../assets/models/lounge-upholstery/model.js'
 import { placeDrapery } from '../../assets/models/lounge-drapery/model.js';
 import { placePiano } from '../../assets/models/lounge-piano/model.js';
 import { OPEN_STAGE_FRONT } from './_junctions.js';
-import { loadArchitecture, placeArchitecture } from '../../assets/models/interior-architecture/model.js';
+import {registerArrival,upperWell} from '../../assets/models/jw-arrival/model.js';
+import {registerCoffers,registerPendant,ceilingZones} from '../../assets/models/jw-arrival/ceiling.js';
 import { placeDesserts } from '../../assets/models/patisserie/model.js';
 import { placeLoungeChairs } from '../../assets/models/lounge-chair/model.js';
 import { fixtures } from '../../assets/models/jwmarriott/fixtures.js';
@@ -17,11 +18,6 @@ import { fixtures } from '../../assets/models/jwmarriott/fixtures.js';
 // The hotel retains its tower, documented southern entrance and upper hotel floors.
 // Podium 1F–6F over the whole footprint, 7F = podium roof (JW 가든 + 더 마고 그릴 / 모보 바 pavilion),
 // tower 8F (체크인 로비 · 더 라운지) – 33F (펜트하우스), crown to 144 m (= OSM height).
-const [lobbyCoffer, arrivalPendant] = await Promise.all([
-  loadArchitecture('hotel-lattice.glb'),
-  loadArchitecture('../interior-finish/hotel-pendant.glb'),
-]);
-
 export const meta = {
   id: 'jwmarriott',
   name: 'JW 메리어트 호텔 서울',
@@ -492,7 +488,7 @@ export function build(K) {
     if (k === '6F') h.push([-19.3,.1,3,32]);
     if (k === 'B3') h.push(POOL, KIDS, SCUBA);
     if (k === '2F') h.push(HALL);
-    if (k === '3F') h.push([24.4,1.82,26.9,29.1]);
+    if (k === '3F') h.push([24.4,1.82,26.9,29.1],upperWell);
     if (k === '9F') h.push([3.0, 48.8, 5.2, 57]);
     return h;
   };
@@ -890,29 +886,9 @@ export function build(K) {
     }
   }, 10.37);
 
-  // Schedule the entrance artwork before the much larger 1F furnishing group.
-  DETAIL('1F', [-25,46,-20.5,51], '현관 홀 · 도자기 목걸이 조형물', () => {
-    setFit(-29.7,.95);
-    // 05/15: four irregular strands, joined by two small drooping necklace loops on the plinth.
-    CY(7.3, 48.5, 0, 2, .32, 0xa6a493, { seg: 64 });
-    CY(7.3, 48.5, .025, 2.008, .035, 0x474239, { seg: 64, solid: false });
-    const bead = (u, v, yy, i) => {
-      const r = i % 7 === 0 ? .176 : .103 + ((i * 7) % 5) * .011, [x, z] = P(u, v);
-      DK.dome({ x, y: yy, z, rx: r, ry: r * .95, rz: r, mat: i % 4 ? 0xf1ead9 : 0xd9c3a0, seg: 12, rings: 6, hemi: false });
-      CY(u, v, yy - .007, r * 1.005, .014, i % 4 ? 0xe7dfcb : 0xc5ad8b, { seg: 16, solid: false });
-    };
-    for (const [strand, du, dv] of [[0, -.07, -.66], [1, .04, -.23], [2, -.03, .23], [3, .06, .66]]) {
-      ROD([7.3 + du, .5, 48.5 + dv], [7.3 + du, 8.12, 48.5 + dv], .006, 0x8a8070);
-      for (let i = 0; i < 29; i++) bead(7.3 + du, 48.5 + dv, 7.94 - i * .26, i + strand * 3);
-    }
-    for (const mid of [-.445, .445]) for (let i = 0; i <= 14; i++) {
-      const a = i / 14 * Math.PI;
-      bead(7.3 + Math.sin(a) * .9, 48.5 + mid + Math.cos(a) * .215,
-        .66 - Math.min(1,Math.sin(a)*3)*.18, i + 2);
-    }
-    fit=ID;
-  },8.32);
-  DETAIL('1F', [-33.2, 4, 2, 60.4], '호텔 현관 홀 · 승강기 로비', floor1, 8.32);
+  registerArrival(baseKit,P,RECT,R);
+  registerCoffers(baseKit,P,RECT,R);
+  DETAIL('1F', [-33.2, 4, 2, 60.4], '호텔 현관 홀 · 승강기 로비', floor1, 15.77);
   DETAIL('2F', [UW, -6, 2, 60.9], '플레이버즈 · 파티세리 · 타마유라', floor2);
   floor3(); floor4();
   // The ballroom's double-height event space is visible from the sixth floor.
@@ -939,20 +915,20 @@ export function build(K) {
     // loading rooms, poster walls and full-width connecting arcade were invented.
     // centralcity now constructs the hall/1M arcade and the HOS upper floor.
     // ---- ground entrance hall, photos 05/11/12/14/15 ----
-    // A local void in 2F makes the photographed ~8 m room without altering facade bands.
+    // The lower hall opens through 2F. Its central well continues through the back of the modelled 3F salon.
     HP('jwHoney', [-3.7, 4, 33, 60.4], .009, true, [[21.4, 29.5, 29.8, 41.8], [8.8, 24.2, 15.9, 39.5]]);
     HP('jwWalnut', [-3.7, 4, 33, 60.4], 5.66, false, [HALL, [8.8, 24.2, 15.9, 39.5], [21.4, 29.5, 29.8, 41.8]]);
-    PR(HALL, 8.15, 8.32, { mat: { tex: 'emit', color: 0x6b4528 }, top: false, walkTop: false });
-    // Interlocking walnut lattice photographed over the entrance hall. The 1.8 m
-    // Blender tile follows the existing fitted room and the same amber backing.
-    DEC(() => {
-      const sections = [];
-      for (let i=0;i<10;i++) for (let j=0;j<7;j++) {
-        const [x,z] = mapPoint(...P(-2.0+(i+.5)*1.8,42.0+(j+.5)*1.8));
-        sections.push([x,7.93,z,R,fit.su,1,fit.sv]);
-      }
-      placeArchitecture(baseKit,lobbyCoffer,'현관 홀 월넛 격자 천장',sections);
-    });
+    fit=ID;
+    for(const [u,v,U,V,h] of ceilingZones)HP(0x483328,[u,v,U,V],h+.205,false);
+    const [a,b,c,e]=upperWell;
+    for(const [u,v,U,V] of [[a,b,c,b],[c,b,c,e],[c,e,a,e],[a,e,a,b]]){
+      WL(u,v,U,V,11.22,15.57,{mat:'jwWalnut',thick:.105});
+      WL(u,v,U,V,13.03,13.22,{mat:0x392d26,thick:.15,solid:false});
+      WL(u,v,U,V,13.08,13.11,{mat:{tex:'emit',color:0xdca575},thick:.157,solid:false});
+    }
+    for(const v of [42.04,54.96])WL(-31.56,v,-14.06,v,8.07,11.37,{mat:'jwWalnut',thick:.08});
+    for(const u of [-31.55,-14.07])WL(u,42.05,u,54.95,8.07,11.37,{mat:'jwWalnut',thick:.08});
+    setFit(-29.7,.95);
     // Upper galleries: inset glazing, walnut blades, continuous warm wash under the screen.
     for (const v of [42.08, 54.92]) {
       WL(-1.9, v, 16.4, v, 6, 8.15, { mat: GL, thick: .045 });
@@ -979,26 +955,9 @@ export function build(K) {
     SLATS('u', 16.3, 42.2, 54.8, 3.6, 4.5, .15, { w: .05, d: .12 });
     B({ u: 16.27, v: 48.5, y: 5.48, w: .3, d: 13, h: .45, mat: 0x241c17, solid: false });
     B({ u: 16.3, v: 48.5, y: 3.3, w: .35, d: 13, h: .3, mat: 0x241c17, solid: false });
-    // Two large dark-walnut cylinders with narrow stone shoes (diameter 1.2 m).
-    for (const v of [44.6, 52.4]) {
-      CY(11, v, 0, .69, .16, 0x99998c, { seg: 24, structural: true });
-      CY(11, v, .16, .6, 7.8, 'jwWalnut', { seg: 36, structural: true });
-      for (const yy of [2.8, 5.4]) CY(11, v, yy, .603, .014, 0x38271f, { seg: 28, solid: false });
-    }
-    for (const v of [44.6, 52.4]) {
-      CY(4.2, v, 0, .62, .15, 0xa4a091, { seg: 20, structural: true });
-      CY(4.2, v, .15, .55, 7.8, 'jwWalnut', { seg: 32, structural: true });
-    }
     for (const v of [45.6, 51.4]) {
       CY(.6, v, 0, .5, 3.4, 'jwWalnut', { seg: 24, structural: true });
       B({ u: .6, v, y: 3.4, w: 1.1, d: 1.15, h: .28, mat: 0x241c17, solid: false });
-    }
-    for (const v of [45.2, 51.8]) {
-      for (const du of [-.31, .31]) for (const dv of [-.71, .71]) B({ u: 9 + du, v: v + dv, y: 0, w: .08, d: .08, h: 4, mat: 0xc2a27c, solid: false });
-      for (const yy of [0, 3.92]) {
-        B({ u: 9, v, y: yy, w: .7, d: 1.5, h: .08, mat: 0xc2a27c, solid: false });
-      }
-      for (const dv of [-.4, 0, .4]) B({ u: 9, v: v + dv, y: .08, w: .55, d: .07, h: 3.84, mat: 0xc2a27c, solid: false });
     }
     // A glazed bronze screen with pale layered timber in the lower rear wall (12/14).
     for (let v = 42.7; v < 54.7; v += .62) {
@@ -1008,32 +967,14 @@ export function build(K) {
     WL(-1.3, 42.2, -1.3, 54.8, .12, 3.3, { mat: { tex: 'glass', color: 0xc2bba9 }, thick: .03, solid: false });
     for (const yy of [.12, 1.65, 3.3]) B({ u: -1.26, v: 48.5, y: yy, w: .07, d: 12.6, h: .045, mat: 0x302824, solid: false });
     for (const v of [43.2, 45.6, 48, 50.4, 53.6]) B({ u: -1.15, v, y: .12, w: .06, d: .14, h: .06, mat: { tex: 'emit', color: 0xedc58d }, solid: false });
-    ROUND(.3, 48.5, 0, .85, .8, 0x272421);
-    FLOWER(.3, 48.5, .8, 2.6, [0x4f7a3a, 0x6b8f4a, 0xd98a3a, 0xe0a650], { stems: 104 });
-    for (const u of [5, 9.6]) for (const v of [46.2, 50.8]) { CY(u, v, 0, .1, .035, 0x827f76, { seg: 10, solid: false }); CY(u, v, .035, .012, .7, 0x9a988c, { seg: 6, solid: false }); }
-    for (const v of [46.2, 50.8]) ROD([5, .68, v], [9.6, .68, v], .006, 0xb0a994);
-    for (const u of [5, 9.6]) ROD([u, .68, 46.2], [u, .68, 50.8], .006, 0xb0a994);
     for (const v of [44.7, 52.3]) B({ u: 3.1, v, y: 0, w: .6, d: 2.4, h: .45, mat: 0xb9b3a6 });
-    LIGHTS([-1.4, 42.6, 16.5, 55], 7.92, 3.6, .16, 0xf3d3a1);
+    LIGHTS([-1.4, 42.6, 16.5, 55], 11.14, 3.6, .16, 0xf3d3a1,(u,v)=>inR(-29.7+u*.95,v,upperWell,.10));
     // Low vestibule and concierge remain under the unchanged facade/entrance canopy.
     for (const [u, label] of [[25.8, '컨시어지'], [19.8, '벨 데스크']]) {
       B({ u, v: 57.7, y: 0, w: 3.6, d: .9, h: .98, mat: 'jwWalnut', top: 'jwDarkMarble' });
       SG(label, { u, v: 57.22, y: .73, w: .85, h: .17, f: 'N', bg: null, fg: '#dfcfab' });
     }
     MAN(25.8, 58.7, 0, { shirt: 0x292623 });
-    // 05: luggage trolleys beside the bell desk, small castors and arched bronze rails.
-    for (const [u, v] of [[22.2, 54.4], [23.5, 54.4]]) {
-      B({ u, v, y: .13, w: .85, d: 1.12, h: .12, mat: 0x44352a });
-      for (const du of [-.36, .36]) for (const dv of [-.44, .44]) CY(u + du, v + dv, .02, .065, .11, 0x302a23, { seg: 12, solid: false });
-      for (const dv of [-.44, .44]) {
-        for (const du of [-.36, .36]) ROD([u + du, .24, v + dv], [u + du, 1.65, v + dv], .021, 0xaea18b);
-        for (let i = 0; i < 12; i++) { const a = i / 12 * Math.PI, b = (i + 1) / 12 * Math.PI; ROD([u + Math.cos(a) * .36, 1.65 + Math.sin(a) * .3, v + dv], [u + Math.cos(b) * .36, 1.65 + Math.sin(b) * .3, v + dv], .021, 0xaea18b); }
-      }
-      for (const du of [-.2, .21]) {
-        B({ u: u + du, v, y: .25, w: .34, d: .55, h: du < 0 ? .7 : .51, mat: du < 0 ? 0x292827 : 0x766052 });
-        for (let i = 0; i < 6; i++) B({ u: u + du - .14 + i * .055, v: v - .282, y: .29, w: .012, d: .012, h: .44, mat: 0x49433c, solid: false });
-      }
-    }
     CHAIR(13.8, 52.8, 0, 'W', 0x93836d); MAN(13.8, 52.8, 0, { sit: true, shirt: 0x34302a, rotY: FACE.W });
     // Preserve the 1F/2F escalator and its open landing.
     setFit(-24.4);
@@ -1125,7 +1066,7 @@ export function build(K) {
     setFit(-21);
     SG(['체크인 · 더 라운지 8층', '3층에서 상층 엘리베이터로 환승'], { u: 4.25, v: 40.2, y: 1.5, w: 1.35, h: .37, f: 'S', bg: '#594250', fg: '#ece2db' });
     setFit(-29.7,.95);
-    SUBZ('목걸이 조형물 · 현관 홀', '1F', '목재 격자 천장 · 도자기 구슬 조형물', HALL, 8.15);
+    SUBZ('목걸이 조형물 · 현관 홀', '1F', '장미셸 오토니엘 · 아이보리 더블 네크리스', HALL, 15.76);
     setFit(-21);
     SUBZ('엘리베이터 홀', '1F', '트래버틴 벽 · 층별 안내', [4.2, 24.2, 8.8, 39.6]);
     setFit(-29.7,.95);
@@ -1388,10 +1329,14 @@ export function build(K) {
     WL(3.5, -58, 3.5, -38, y, yc, { mat: WARM }); WL(3.5, -32, 3.5, -12, y, yc, { mat: WARM });
     bins.forEach(([a, b], i) => {
       for (const [v0, v1, n] of [[-58, -38, i + 1], [-32, -12, i + 4]]) {
-        HP('jwBallCarpet', [a, v0, b, v1], y + 0.01);
+        const well=n===4?[upperWell[0],upperWell[1]-65.5,upperWell[2],upperWell[3]-65.5]:null;
+        HP('jwBallCarpet', [a, v0, b, v1], y + 0.01,true,well?[well]:undefined);
         CHAND((a + b) / 2, (v0 + v1) / 2, yc, 1.0);
-        for (const du of [-2.8, 2.8]) for (const dv of [-4.5, 0, 4.5]) TABLE((a + b) / 2 + du, (v0 + v1) / 2 + dv, y, { r: 0.75, chairs: 6, cover: true, chair: IVORY });
-        LIGHTS([a, v0, b, v1], yc, 3.8, 0.7, 0xfff0d6);
+        for (const du of [-2.8, 2.8]) for (const dv of [-4.5, 0, 4.5]) {
+          const u=(a+b)/2+du,v=(v0+v1)/2+dv;
+          if(!well||!inR(u,v,well,1.37))TABLE(u,v,y,{r:.75,chairs:6,cover:true,chair:IVORY});
+        }
+        LIGHTS([a, v0, b, v1], yc, 3.8, 0.7, 0xfff0d6,well?(u,v)=>inR(u,v,well,.45):undefined);
         SUBZ(`살롱 ${n}`, '3F', '연회 · 미팅 · 스몰 웨딩', [a, v0, b, v1]);
       }
     });
@@ -2624,23 +2569,9 @@ export function build(K) {
       }
       B({u:u+side*4.45,v:v+.54,y:deck+.22,w:4.85,d:.05,h:.042,mat:{tex:'emit',color:0xffd394},solid:false});
     }
-    // Porcelain strands and a dark plinth recall the photographed necklace
-    // installation in the entrance hall, scaled to this gallery ceiling.
-    CY(u,v+3.55,deck+.04,1.03,.26,0x49443d,{seg:24});
-    for(let strand=0;strand<4;strand++){
-      const sx=u+(strand-1.5)*.32, sz=v+3.55;
-      ROD([sx,deck+.48,sz],[sx,deck+3.83,sz],.013,BRONZE);
-      for(let i=0;i<13;i++){
-        const [x,z]=P(sx+.07*Math.sin(i*.6+strand),sz+.09*Math.cos(i*.5+strand));
-        const r=i%4===0?.138:.102;
-        K.dome({x,z,y:deck+.47+i*.235,rx:r,ry:r*.93,rz:r,seg:8,rings:4,hemi:false,mat:i%3?0xf2e5cf:0xd9c19c});
-      }
-    }
     B({u,v:v+2.35,y:deck+.03,w:4.3,d:.18,h:3.87,mat:walnut});
-    ZN('JW 메리어트 현관 라운지','3F','조형물 · 샹들리에 · 백화점 연결',lounge,deck-.12,ceiling,22);
-    const [pendantX, pendantZ] = P(u, v + 4.2);
-    placeArchitecture(baseKit, arrivalPendant, 'JW 현관 유리 드롭 샹들리에',
-      [[pendantX, ceiling - ceilingThickness, pendantZ, R]]);
+    ZN('JW 메리어트 현관 라운지','3F','유리 샹들리에 · 백화점 연결',lounge,deck-.12,ceiling,22);
+    registerPendant(baseKit,P,RECT,R,u,v+4.2,ceiling-ceilingThickness);
     SG('신세계백화점 2층 연결통로 →',{u,v:v+.6,y:deck+2.28,w:2.7,h:.32,f:'S',bg:'#49392f',fg:'#fff1d8'});
 
     // The lower route turns into its own department-store passage behind

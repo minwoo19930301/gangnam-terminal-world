@@ -1,3 +1,5 @@
+import {parts as arrivalParts,prefix as arrivalPrefix} from '../jw-arrival/layout.js';
+import {parts as westCornerParts} from '../gotomall-west-corner/layout.js';
 import {parts as ashleyParts,prefix as ashleyPrefix} from '../newcore-dessert/layout.js';
 import {names as yogurtNames} from '../gotomall-yogurtworld/layout.js';
 import {parts as crossingParts,prefix as crossingPrefix} from '../goter-crossing/layout.js';
@@ -20,9 +22,12 @@ import {relief} from '../../../js/banpo_relief.js';
 // Scene object (or a uniquely identifying child) -> editable native source.
 // Geometry decoder matrices and decorative LOD offsets live *below* the placement.
 const sources = [
+  ...Object.values(arrivalParts).map(([label])=>{const name=arrivalPrefix+label;return ['jwmarriott','1F','jw-arrival/arrival.blend',name,name];}),
+  ['jwmarriott','1F','interior-architecture/interiors.blend','현관 홀 월넛 격자 천장','hotel-lattice'],
   ...[['arch','자연목 아치와 걸이 공중식물'],['stand','백색 철제 선반과 입구 마루'],['left','왼편 산세베리아와 화분'],
       ['right','오른편 잎식물과 다육 트레이'],['timber','자작 통나무와 고목 진열']].map(([key,label])=>
     ['gyeongbu','3F','gyeongbu-terrarium/'+key+'/'+key+'.blend','경부선 박테라리움 · '+label,'박테라리움 · '+label]),
+  ...Object.values(westCornerParts).map(([name])=>['gotomall','B1','gotomall-west-corner/west-corner.blend',name,name]),
   ...Object.values(ashleyParts).map(([label])=>{
     const name=ashleyPrefix+label;return ['newcore','5F','newcore-dessert/dessert-room.blend',name,name];
   }),
