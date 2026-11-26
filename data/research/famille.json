@@ -1,4 +1,17 @@
 {
+  "waraku_114_20261126": {
+    "floor": "파미에스테이션 1층 114호, 신세계 센트럴 안내 27번",
+    "naver": "https://map.naver.com/p/entry/place/35992316",
+    "operator": "https://www.shinsegaecentral.com/famille/WarakuShaSha",
+    "floor_map": "https://www.shinsegaecentral.com/public/img/famille_floor_1_ko_map.png",
+    "shop_and_food_2025": "https://vegan-oriented.tistory.com/142",
+    "food_and_table": "https://mementomori24.tistory.com/542",
+    "observed": "회랑을 향해 열린 현관, 흰 붓글씨·붉은 낙관 간판, 낮은 목재 창살, 검은 문발과 금붕어 무늬, 현관 우측 유리 음식 견본장과 메뉴대가 보인다. 식탁에는 개별 인덕션이 두 개 있고, 짙은 타일을 두른 벽 쪽에 회색 줄무늬 긴 의자가 있다. 지점 사진의 스키야키, 대나무 발에 담긴 우동, 새우튀김 우동을 참고했다.",
+    "fit": "게임 내 1게이트 기둥과 하차장 통로를 유지하면서 공개 전면과 식탁 하나의 두 자리까지 모델링했다. 4.36 × 2.76m는 게임 배치 치수다. 그릇·메뉴·견본 위치와 수량, 재료 배합, 조명 위치·출력은 사진에 맞춰 구성한 값이다.",
+    "model": "assets/models/waraku/dining.blend",
+    "comparison": "assets/models/waraku/play.jpg",
+    "lighting": "assets/models/waraku/lighting.jpg"
+  },
   "gelati_shop22_20261126": {
     "floor": "파미에스테이션 1층, 운영사 도면의 22번 점포",
     "naver": "https://map.naver.com/p/entry/place/36324317",
