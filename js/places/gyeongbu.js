@@ -224,6 +224,16 @@ export function build(K) {
   const strip=(a,b)=>clip(clip(lp,0,a,true),0,b,false).map(q=>W(...q));
   const WEST=strip(-1,75.7),NORTH=strip(75.7,317);
   const NORTH_2F=4.2,NORTH_ROOF=8.4,TAN=0xb88f66;
+  const cafeEnd=99.1,cafeRear=3.70;
+  // The two shop fronts have a lower canopy. Keep the parking roof and its
+  // guard behind the photographed cornice over just these bays.
+  const northRoof=NORTH.flatMap((p,i)=>{
+    const [u,v]=toL(...p),[nextU,nextV]=toL(...NORTH[(i+1)%NORTH.length]);
+    const corner=u<76&&v<.15?W(u,cafeRear):p;
+    if(v>=.15||nextV>=.15||(u-cafeEnd)*(nextU-cafeEnd)>=0)return [corner];
+    const front=W(cafeEnd,v+(nextV-v)*(cafeEnd-u)/(nextU-u)),rear=W(cafeEnd,cafeRear);
+    return u>cafeEnd?[corner,front,rear]:[corner,rear,front];
+  });
   const ys=[0,6,11,16,20.5,25,29.5,34,38.5,43];
   const inset=[0,0,4,8,11,14,17,20,23,25];
   // Photos01/08: inclined lower concrete supports, then projecting upper west tiers.
@@ -293,7 +303,8 @@ export function build(K) {
   }
   const northVoids=[rect(168,16.7,258,30),rect(118,16.7,140,30)];
   K.slab(NORTH,NORTH_2F,{mat:'tile',under:'gb_acoustic',holes:[...holes(NORTH,NORTH_2F),...northVoids]});
-  K.slab(NORTH,NORTH_ROOF,{mat:asphalt,under:'gb_acoustic',holes:[...holes(NORTH,NORTH_ROOF),rect(118,16.7,140,30)]});
+  K.slab(northRoof,NORTH_ROOF,{mat:asphalt,under:'gb_acoustic',holes:[...holes(northRoof,NORTH_ROOF),rect(118,16.7,140,30)]});
+  K.slab(rect(75.7,0,cafeEnd,cafeRear),7.67,{mat:'roofgravel',under:false,edge:false});
   K.slab(pent,48,{mat:'roofgravel',under:'gb_acoustic'});
   const doors=[];
   const door=(u,v,w=4)=>{const [x,z]=W(u,v);doors.push({x,z,w,y0:0,y1:3.1});};
@@ -309,6 +320,7 @@ export function build(K) {
   {const[x,z]=W(37.90,0);doors.push({x,z,w:75.80,y0:0,y1:6});}
   // Open the entire street arcade; the shop glazing is recessed behind its columns.
   {const[x,z]=W(196.2,0);doors.push({x,z,w:240.8,y0:0,y1:3.35});}
+  {const[x,z]=W((75.75+cafeEnd)/2,0);doors.push({x,z,w:cafeEnd-75.75,y0:3.35,y1:NORTH_2F});}
   door(38.5,161,6);door(316.7,18,4);
   // OSM boarding points set the row rhythm; numbering is the researched correspondence, not surveyed.
   const points=K.osm.pois.filter(p=>p.kind==='platform'&&p.ref==='010').map(p=>toL(p.x,p.z));
@@ -495,6 +507,7 @@ export function build(K) {
   }
   K.polyWalls(NORTH,NORTH_2F,NORTH_ROOF,{mat:TAN,inner:CREAM,thick:.25,openings:[
     {x:W(196.2,0)[0],z:W(196.2,0)[1],w:240.8,y0:NORTH_2F,y1:7.5},
+    {x:W((75.75+cafeEnd)/2,0)[0],z:W((75.75+cafeEnd)/2,0)[1],w:cafeEnd-75.75,y0:7.5,y1:NORTH_ROOF},
     {x:W(173,30.05)[0],z:W(173,30.05)[1],w:5,y0:NORTH_2F,y1:8.15}
   ]});
   // Photos01/08: inclined panels and struts belong only on the west road facade.
@@ -652,20 +665,27 @@ export function build(K) {
 
   function buildNorthArcade(){
     const openings=[80,122,163,218,230.5,262];
-    lwall(76,.5,317,.5,0,3.3,{mat:'glass',thick:.04,openings:openings.map(u=>({at:u-76,w:u===262?7:3,y0:0,y1:3.3}))});
-    for(let u=76;u<317;u+=6){if(openings.some(x=>Math.abs(x-u)<2.8)||u>264&&u<273)continue;lbox(u,.5,0,.8,.65,3.3,{tex:'brick',color:0xc49a6a});}
-    lbox(196.5,.15,3.3,241,.7,.3,0xf0efea,{solid:false});
-    lbox(196.5,.2,3.6,241,.3,.6,{tex:'brick',color:0x8a6250},{solid:false});
+    const [cx,cz]=W(87.5,-.05);
+    placeGyeongbuEntrance(K,'cafes',cx,cz,ROT+PI);
+    // The native facade replaces the first strip of generic glazing. Carry
+    // the existing three-metre public opening at u80 through the replacement.
+    const concealed={skip:['top','bottom','n','s','e','w']};
+    for(const [a,b] of [[76,78.5],[81.5,cafeEnd]])lbox((a+b)/2,.50,0,b-a,.04,3.3,0,concealed);
+    lwall(cafeEnd,.5,317,.5,0,3.3,{mat:'glass',thick:.04,openings:openings.filter(u=>u>cafeEnd).map(u=>({at:u-cafeEnd,w:u===262?7:3,y0:0,y1:3.3}))});
+    for(let u=100;u<317;u+=6){if(openings.some(x=>Math.abs(x-u)<2.8)||u>264&&u<273)continue;lbox(u,.5,0,.8,.65,3.3,{tex:'brick',color:0xc49a6a});}
+    lbox((cafeEnd+317)/2,.15,3.3,317-cafeEnd,.7,.3,0xf0efea,{solid:false});
+    lbox((cafeEnd+317)/2,.2,3.6,317-cafeEnd,.3,.6,{tex:'brick',color:0x8a6250},{solid:false});
     // The recessed upper balcony exists only west of the photographed vestibule.
-    lwall(76,3.7,258.5,3.7,4.2,7.5,{mat:'glass',thick:.04,openings:[{at:87,w:4,y0:4.2,y1:7.2}]});
-    for(let u=76;u<258;u+=6)lbox(u,.5,4.2,.4,.5,3.3,0x9c7551);
-    for(let u=76;u<258;u+=1.2)lbox(u,.2,4.3,.045,.065,1,0xaaa38c,{solid:false});
-    lbox(167,.2,5.3,182,.07,.07,0xaaa38c,{solid:false});
+    lbox((76+cafeEnd)/2,3.7,4.2,cafeEnd-76,.04,3.3,0,concealed);
+    lwall(cafeEnd,3.7,258.5,3.7,4.2,7.5,{mat:'glass',thick:.04,openings:[{at:163-cafeEnd,w:4,y0:4.2,y1:7.2}]});
+    for(let u=100;u<258;u+=6)lbox(u,.5,4.2,.4,.5,3.3,0x9c7551);
+    for(let u=100;u<258;u+=1.2)lbox(u,.2,4.3,.045,.065,1,0xaaa38c,{solid:false});
+    lbox((258+cafeEnd)/2,.2,5.3,258-cafeEnd,.07,.07,0xaaa38c,{solid:false});
     lwall(258.5,.5,280,.5,4.2,7.7,{mat:{tex:'brick',color:0x8a6250},thick:.18});
     for(const u of [264,271,277]){lbox(u,.36,5,4.8,.04,2.1,0xe8d9dd,{solid:false});lsign('B&C MARKET',u,.3,6.1,4.1,.65,'-v',{bg:'#eee4e4',fg:'#6e3d55'});}
     lwall(280,.45,317,.45,0,8.4,{mat:0xc8cacb,thick:.18,openings:[{at:5,w:6,y0:0,y1:3.1},{at:20,w:4,y0:0,y1:3.1}]});
     lsign('제로데이택배',298,.3,5.9,27,1.4,'-v',{bg:'#f5f5f0',fg:'#333b40'});
-    lbox(196.5,.3,7.7,241,.5,1.3,{tex:'brick',color:0x8a6250},{solid:false});
+    lbox((cafeEnd+317)/2,.3,7.7,317-cafeEnd,.5,1.3,{tex:'brick',color:0x8a6250},{solid:false});
     lsign(['고속터미널','부속상가'],250,-.05,5.5,.8,3.7,'-v',{bg:'#6a273b',fg:'#eee8dc'});
   }
 
@@ -4377,10 +4397,15 @@ export function build(K) {
     K.zone({name:'경부선 주차장',floor:'2F',sub:'옥외 승용차 주차',poly:deck,y0:6,y1:11,priority:3});
     lsign('경부선 주차장',197,112,8.2,5,.7,'+u',{bg:'#ece8dc',fg:'#235772'});
     // gb_01/02: a clean warm-tan parapet and pale railing screen the set-back cars.
-    K.polyWalls(NORTH,NORTH_ROOF,NORTH_ROOF+.4,{mat:TAN,thick:.18});
-    lwall(76,0,245,0,NORTH_ROOF,NORTH_ROOF+1.1,{mat:TAN,thick:.2});
-    for(let u=76;u<=245;u+=2)lcyl(u,0,NORTH_ROOF+1.1,.035,1.2,0xc5c7c0,{seg:6,solid:false});
-    for(const h of [.42,1.12])lbox(160.5,0,NORTH_ROOF+1.1+h,169,.06,.06,0xc5c7c0,{solid:false});
+    const [shopX,shopZ]=W((75.7+cafeEnd)/2,cafeRear);
+    K.polyWalls(northRoof,NORTH_ROOF,NORTH_ROOF+.4,{mat:TAN,thick:.18,openings:[{x:shopX,z:shopZ,w:cafeEnd-75.7,y0:NORTH_ROOF,y1:NORTH_ROOF+.4}]});
+    lwall(75.7,cafeRear,cafeEnd,cafeRear,7.65,NORTH_ROOF+.28,{mat:0x868a88,thick:.11});
+    lbox((75.7+cafeEnd)/2,cafeRear,NORTH_ROOF+.28,cafeEnd-75.7,.08,1.04,0,{skip:['top','bottom','n','s','e','w']});
+    for(let u=76;u<cafeEnd;u+=2.2)lbox(u,cafeRear,NORTH_ROOF+.28,.043,.06,1.01,0x647074,{solid:false});
+    for(const y of [.71,1.27])lbox((75.7+cafeEnd)/2,cafeRear,NORTH_ROOF+y,cafeEnd-75.7,.049,.046,0x717b7d,{solid:false});
+    lwall(cafeEnd,0,245,0,NORTH_ROOF,NORTH_ROOF+1.1,{mat:TAN,thick:.2});
+    for(let u=100;u<=245;u+=2)lcyl(u,0,NORTH_ROOF+1.1,.035,1.2,0xc5c7c0,{seg:6,solid:false});
+    for(const h of [.42,1.12])lbox((cafeEnd+245)/2,0,NORTH_ROOF+1.1+h,245-cafeEnd,.06,.06,0xc5c7c0,{solid:false});
     for(const u of [110,160,200,240]){
       lcyl(u,14,NORTH_ROOF,.075,6,0x9a9e98,{seg:6,solid:false});
       lbox(u,14,NORTH_ROOF+5.9,1.5,.18,.12,0x9a9e98,{solid:false});

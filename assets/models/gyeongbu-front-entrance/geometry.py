@@ -5,7 +5,6 @@ import struct
 
 import bpy
 from mathutils import Vector
-from surfaces import COLOURS
 
 
 def lin(c):
@@ -94,7 +93,7 @@ class Part:
         return obj
 
 
-def write_proxy(parts,file):
+def write_proxy(parts,file,palette):
     vertices=bytearray();indices=[];unique={}
     for p in parts:
         if p.finish=='Glass':continue
@@ -104,7 +103,7 @@ def write_proxy(parts,file):
             for index in poly:
                 sw,uv,tint=p.loops[cursor];cursor+=1
                 x,negd,z=p.verts[index]
-                rgb=tuple(round(lin(c/255)*v*255) for c,v in zip(COLOURS[sw],tint[:3]))
+                rgb=tuple(round(lin(c/255)*v*255) for c,v in zip(palette[sw],tint[:3]))
                 key=(round(x*100),round(z*100),round(-negd*100),*rgb)
                 if key not in unique:
                     unique[key]=len(unique);vertices+=struct.pack('<3h3B',*key)

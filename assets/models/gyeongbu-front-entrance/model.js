@@ -1,11 +1,13 @@
 import * as lowPortal from './portal-proxy.js';
 import * as lowTower from './tower-proxy.js';
+import * as lowCafes from '../gyeongbu-front-cafes/cafes-proxy.js';
 import {loadFixtureScene} from '../onebailey/load.js';
 import {relief} from '../../../js/banpo_relief.js';
 
 const sources={
   portal:{proxy:lowPortal,range:43,leave:53,behind:-12,height:12,focus:[-7.1,.12,2.48,7.9,8.67,2.68],name:'경부선 정문 · 석재 차양과 영문 명판'},
   tower:{proxy:lowTower,range:71,leave:83,behind:-7,height:51,focus:[-5.6,5.4,-.52,3.3,46,.72],name:'경부선 명판탑 · 한글 채널 문자와 적갈색 외벽'},
+  cafes:{proxy:lowCafes,file:'../gyeongbu-front-cafes/cafes.glb',range:46,leave:56,behind:-3,height:19,focus:[-11.60,.10,-.27,10.75,7.67,.48],upper:[-4.8,7.67,-4.91,3.63,16.18,-1.41],name:'경부선 부속상가 · 이디야와 달리나인 거리 정면'},
 };
 
 function distantGeometry(T,source){
@@ -32,6 +34,7 @@ export function placeGyeongbuEntrance(K,key,x,z,angle){
   body.matrixAutoUpdate=false;root.add(body);
   const plane=new T.Matrix4(),projection=new T.Matrix4(),frustum=new T.Frustum(),ground=relief(x,z);
   const focus=new T.Box3(new T.Vector3(...s.focus.slice(0,3)),new T.Vector3(...s.focus.slice(3)));
+  const upper=s.upper&&new T.Box3(new T.Vector3(...s.upper.slice(0,3)),new T.Vector3(...s.upper.slice(3)));
   const overhead=new T.Box3(new T.Vector3(-4.5,5.48,-3.97),new T.Vector3(5.5,5.54,2.56));
   const outwardX=Math.sin(angle),outwardZ=Math.cos(angle);
   const enclosures=K.osmFind(b=>b.type!=='no'&&b.type!=='roof'&&b.poly.every(([bx,bz])=>
@@ -48,6 +51,7 @@ export function placeGyeongbuEntrance(K,key,x,z,angle){
       projection.multiplyMatrices(camera.projectionMatrix,camera.matrixWorldInverse).multiply(plane);
       frustum.setFromProjectionMatrix(projection,camera.coordinateSystem);
       visible=frustum.intersectsBox(focus);
+      if(!visible&&upper)visible=frustum.intersectsBox(upper);
       if(!visible&&key==='portal'&&d<2.60&&-camera.matrixWorld.elements[9]>.15)visible=frustum.intersectsBox(overhead);
       // From beside the lettering the player can also study the ceramic seams at arm's length.
       const along=dx*outwardZ-dz*outwardX;
@@ -61,7 +65,7 @@ export function placeGyeongbuEntrance(K,key,x,z,angle){
       }
     }
     if(visible&&!s.parts&&!s.pending&&performance.now()>=(s.retryAt||0)){
-      s.pending=loadFixtureScene(new URL('./'+key+'.glb',import.meta.url)).then(scene=>{
+      s.pending=loadFixtureScene(new URL(s.file||'./'+key+'.glb',import.meta.url)).then(scene=>{
         s.parts={stone:scene.getObjectByName(key+'_Stone'),others:scene.children.filter(p=>p.isMesh&&p.name!==key+'_Stone')};
       }).catch(()=>{s.retryAt=performance.now()+10000;}).finally(()=>{s.pending=undefined;});
     }
