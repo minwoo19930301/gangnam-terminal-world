@@ -1,0 +1,11 @@
+{
+  "floor": "9F",
+  "x": -53.8076,
+  "z": 66.94512,
+  "yaw": 105.0048,
+  "pitch": -22.0,
+  "meshName": "GatevisionLR4Shell",
+  "sourceBlend": "boutique.blend",
+  "sourceCollection": "SSG_9F_Gatevision",
+  "nativeLabel": "로라스타/리터로봇"
+}
