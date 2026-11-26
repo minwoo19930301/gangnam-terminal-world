@@ -3790,7 +3790,13 @@ export function build(K) {
   sp('센트럴시티 정문 (신반포로)', -30, 19.5, 0, 'S');
   sp('호남선 대합실 · 동상 벤치', 33, 22, 0, 'W');
   sp('호남선 승차홈 (8번)', bays.find(b => b.p === 8).s, 4.6, Y1 + 0.12, 'W');
-  sp('스위트 파크 · 호남선 연결통로 (B1)', 7, 25, YB1, 'S');
+  sp('호남선 지하 연결통로 (B1)', 7, 25, YB1, 'S');
+  // Public aisle in front of the first row of dessert islands, facing the display.
+  {
+    const [x,z]=BP(1215,543),[lookX,lookZ]=BP(1188,556);
+    K.spawn({name:'스위트 파크 입구',destinationId:'sweet-park',aliases:['신세계 스위트파크','Sweet Park'],
+      place:'centralcity',floor:'B1',mapDestination:true,x,y:YB1,z,yaw:Math.atan2(x-lookX,z-lookZ)});
+  }
   {const [x,z]=courtP(5.2,-1);K.spawn({name:'하우스 오브 신세계 · B1 라운지',x,z,y:YB1,yaw:courtR+PI});}
   sp('호남선 대합실 · 매표소와 B1 연결', 124.5, 28.5, 0, 'N', '1F');
   sp('지하철 7호선 연결통로 (B1)', 173.4, -28, YB1, 'S');

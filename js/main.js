@@ -487,7 +487,7 @@ async function boot() {
     function parse(h) {
       const m = /^#\/([^?]*)(?:\?(.*))?$/.exec(h || ''); if (!m) return null;
       const key = m[1].split('/').map(decodeURIComponent).join('/'), q = new URLSearchParams(m[2] || ''), p = q.get('p');
-      return { key, pos: p ? p.split(',').map(Number) : null };
+      return { key, destination:q.get('destination'), pos: p ? p.split(',').map(Number) : null };
     }
     function go(r) {
       if (!r) return false;
@@ -495,7 +495,9 @@ async function boot() {
       if (r.pos && r.pos.length >= 3 && r.pos.every(Number.isFinite)) { player.teleport(r.pos[0], r.pos[1], r.pos[2], r.pos[3] != null ? r.pos[3] * Math.PI / 180 : player.yaw); return true; }
       const [addressPlace, floor] = r.key.split('/');
       const place = META?.[addressPlace]?.floorAliases?.[floor] ?? addressPlace;
-      const sp = (floor && floorArrival(phys, K._, player, place, floor)) || spawns.find(s => s.place === place);
+      const entrance = r.destination && spawns.find(s => s.mapDestination && s.place === place &&
+        s.floor === floor && s.destinationId === r.destination);
+      const sp = entrance || (floor && floorArrival(phys, K._, player, place, floor)) || spawns.find(s => s.place === place);
       if (sp) { player.teleport(sp.x, sp.y ?? 0, sp.z, sp.yaw); return true; }
       return false;
     }
