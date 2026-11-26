@@ -321,7 +321,17 @@ export function build(K) {
     K.zone({...details, poly:approach});
   }
 
-  // One deferred furnishing batch per retail floor; structure/zones are registered immediately.
+  // Both streaming areas can see 2F across the plaza. Build each shared
+  // group once even when the two areas are loaded together.
+  function retailDetail(opt, build) {
+    if (opt.floor !== '2F') { K.detail(opt, build); return; }
+    let built = false;
+    const once = () => { if (!built) { built = true; build(); } };
+    K.detail(opt, once);
+    K._.setCurrent('centralcity');
+    K.detail(opt, once);
+    K._.setCurrent('shinsegae');
+  }
   // K.detail invokes the same construction kit, so the local survey helpers retain their frame.
   const furnishings = new Map();
   function furnish(floor, fn) {
@@ -331,11 +341,7 @@ export function build(K) {
       const shared=['2F','3F','4F','5F','6F'].includes(floor), opt={ floor, y0: y, y1: floor === '1M' ? LV['2F'] : LV[nextOf(floor)],
         poly: shared ? rect(0, 0, UW, 150) : floor === '1M' ? rect(...MEZZ) : UPPER.has(floor) ? rect(0, VS, UW, VD) : FULL,
         name: `${floor} 매장 집기` };
-      let built=false; const buildOnce=()=>{if(built)return;built=true;for(const build of queue)build();};
-      K.detail(opt,buildOnce);
-      // Area streaming retains details only for the active building. The
-      // adjoining plaza must also load the shared upper retail sightline.
-      if(floor==='2F'){K._.setCurrent('centralcity');K.detail(opt,buildOnce);K._.setCurrent('shinsegae');}
+      retailDetail(opt, () => { for (const build of queue) build(); });
     }
     furnishings.get(floor).push(fn);
   }
@@ -14525,8 +14531,7 @@ export function build(K) {
     }
     return true;
   }
-  function fitUpperCell(id,c) {
-    const seed=upperSeed++;
+  function fitUpperCell(id,c,seed) {
     if (c.kind==='closed' && (id==='2F'||id==='5F')) return;
     if (id==='3F' && c.name==='신세계 갤러리') {
       // The Gangnam Art Wall exhibition photos show shallow recesses opening
@@ -16993,6 +16998,27 @@ export function build(K) {
       if(i%3===0){box(u+.24,v,.23,.12,y+.60,.32,0xbea27a,{solid:false});}
     }
   }
+  // Shop partitions are already in the structural pass. Schedule their stock
+  // from the actual guide footprints so a view of one wing can load it alone.
+  const secondFloorGuide = upperGuidePlans['2F'];
+  // Reserve the original consecutive seeds at first use, regardless of which
+  // storefront is approached first. Other floors keep their visit order.
+  let secondFloorSeed;
+  function secondFloorSeedAt(index) {
+    if (secondFloorSeed === undefined) {
+      secondFloorSeed = upperSeed;
+      upperSeed += secondFloorGuide.cells.length;
+    }
+    return secondFloorSeed + index;
+  }
+  secondFloorGuide.cells.forEach((cell, index) => {
+    const parts = cell.model.parts;
+    if (!parts.length || cell.kind === 'closed') return;
+    const bounds = [Math.min(...parts.map(p=>p[0])), Math.min(...parts.map(p=>p[1])),
+      Math.max(...parts.map(p=>p[2])), Math.max(...parts.map(p=>p[3]))];
+    retailDetail({floor:'2F', y0:LV['2F'], y1:LV['3F'], poly:rect(...bounds),
+      name:`2F ${cell.name} 집기`}, () => fitUpperCell('2F', cell, secondFloorSeedAt(index)));
+  });
   for(const [id,guide]of Object.entries(upperGuidePlans))furnish(id,()=>{
     const y=LV[id],H=clearH(id);
     if(['3F','4F','5F'].includes(id)){
@@ -17030,7 +17056,8 @@ export function build(K) {
       for(const [a,b,c,d] of [[28.8,145.3,28.8,147],[35.2,145.3,35.2,147],[28.8,147,35.2,147]])wall(a,b,c,d,y,y+4.1,{mat:0xe9e5dc,thick:.08,solid:false});
       K.hpoly(CEIL,rect(28.8,145.3,35.2,147),y+4.1,false);
     }
-    for(const c of guide.cells)fitUpperCell(id,c);
+    if(id==='2F')secondFloorSeedAt(0);
+    else for(const c of guide.cells)fitUpperCell(id,c,upperSeed++);
     // R19 N4: remove obsolete advertising panels; locate slots from this well.
     // D8 supplies the matching corner piers in the structural pass.
     if(id==='2F'||id==='3F'){
