@@ -22,7 +22,7 @@ layout=json.loads(subprocess.check_output(['node','--input-type=module','-e',
 palette={'brown':'514644','base':'59504b','shade':'1a1e20','rim':'303335','rubber':'222527','edge':'646968',
          'zinc':'a8aeaa','bolt':'bec3be','optic':'232d2d','blue':'204496','ivory':'f0f2eb','sun':'e4ae3e',
          'road':'787975','joint':'656664','stone1':'adaea7','stone2':'a5a6a1','stone3':'a2a39e',
-         'curb':'bdbdb3','warn':'dbab43','summit':'e4b44d','red':'ff4136','redlow':'7c2b29',
+         'curb':'bdbdb3','warn':'dbab43','summit':'e4b44d','red':'ff4136','redlow':'b62f27',
          'greenoff':'263c36','amberoff':'4c3d2b','redoff':'402c2b','white':'d8dcd6','letter':'e1e5d8'}
 m.palette={k:m.material(k,v,.51 if k in ('zinc','bolt','edge') else .14 if k in ('brown','base','shade') else 0) for k,v in palette.items()}
 bs=m.palette['red'].node_tree.nodes['Principled BSDF']
@@ -119,15 +119,17 @@ def numbers(x,y):
     return False
 def matrix_face(label,x,z,r,predicate,ink):
     face_disc(label+' · 검은 다공 렌즈',x,-.002,z,r,.010,'optic',40)
-    verts=[];faces=[]
+    verts=[];faces=[];glow=[]
     for i in range(-14,15):
         for j in range(-14,15):
             xx=i/14; yy=j/14
             if xx*xx+yy*yy>.927 or not predicate(xx,yy):continue
-            n=len(verts);size=r*.0254
+            n=len(verts);size=r*(.031 if ink=='red' else .0254)
             for k in range(6):
-                a=tau*k/6;verts.append((x+r*xx+size*cos(a),-.00345,z+r*yy+size*sin(a)))
+                a=tau*k/6;verts.append((x+r*xx+size*cos(a),-.0041,z+r*yy+size*sin(a)))
+                if ink=='red':glow.append((x+r*xx+r*.044*cos(a),-.00275,z+r*yy+r*.044*sin(a)))
             faces.append(tuple(n+k for k in range(6)))
+    if glow:m.piece(label+' · 렌즈에 번지는 빛',glow,faces,'redlow')
     if faces:m.piece(label+' · 육각 LED 군',verts,faces,ink)
 group('pixels')
 matrix_face('서 있는 사람',0,.816,.135,lambda x,y:person(x,y,False),'red')

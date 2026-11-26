@@ -40,6 +40,15 @@ export function placeGoterCrossing(K){
   const lamps=new T.MeshBasicMaterial({vertexColors:true,side:T.DoubleSide,toneMapped:false});
   // CPU frustum bounds and physical ground share the same fixed mast height.
   paint.defines={BANPO_RIGID:1};lamps.defines={BANPO_RIGID:1};
+  const daylight={value:1};
+  K.onSolarAltitude?.(altitude=>{daylight.value=T.MathUtils.smoothstep(altitude,-7,4);});
+  lamps.onBeforeCompile=shader=>{
+    shader.uniforms.crossingDaylight=daylight;
+    shader.fragmentShader=shader.fragmentShader.replace('#include <common>','#include <common>\nuniform float crossingDaylight;')
+      .replace('#include <color_fragment>',`#include <color_fragment>
+        float activeLED=smoothstep(.08,.29,diffuseColor.r-diffuseColor.g);
+        diffuseColor.rgb*=mix(mix(.075,2.2,activeLED),1.,crossingDaylight);`);
+  };
   const geometry=silhouettes(T);
   const terrain=relief(...origin);
   const granite=paint.clone();granite.defines={BANPO_RIGID:1};

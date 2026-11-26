@@ -83,7 +83,7 @@ const sources = [
     ['gyeongbu',floor,'gyeongbu-uniqlo-rails/parka/parka-rail.blend','경부선 유니클로 '+floor+' · 경량 후드 파카 행거','유니클로 · 경량 후드 파카 양면 행거'],
     ['gyeongbu',floor,'gyeongbu-uniqlo-rails/blouse/blouse-rail.blend','경부선 유니클로 '+floor+' · 시어서커 블라우스 행거','유니클로 · 시어서커 블라우스 양면 행거'],
   ]),
-  ['gyeongbu','2F','gyeongbu-uniqlo-finish/upstairs/oak-and-lighting.blend','경부선 유니클로 · 2층 참나무 판매층과 열린 계단','본관 2층 유니클로 · 열린 계단 주위의 참나무 바닥과 노출 천장'],
+  ['gyeongbu','2F','gyeongbu-uniqlo-finish/upstairs/oak-and-lighting.blend','경부선 유니클로 · 2층 참나무 판매층과 열린 계단','유니클로 2층 · 참나무 바닥과 계단 개구부'],
   ['gyeongbu','1F','gyeongbu-uniqlo/entrance-fashion.blend','경부선 유니클로 · 에어리즘과 입구 코디','본관 1층 유니클로 · 에어리즘 진열과 토르소'],
   ['gyeongbu','1F','gyeongbu-uniqlo-finish/oak-and-lighting.blend','경부선 유니클로 · 참나무 판매층과 흰 노출 천장','본관 1층 유니클로 · 참나무 바닥과 노출 천장'],
   ['gyeongbu','2F','gyeongbu-baking/baking-shop.blend','경부선 부속상가 · 비앤씨마켓 반죽기와 제과 도구','부속상가 2층 비앤씨마켓 · 반죽기와 제과 도구'],
