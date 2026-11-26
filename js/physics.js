@@ -67,8 +67,16 @@ export function createPhysics() {
       heightOffset = offset;
       try { return build(); } finally { heightOffset = previous; }
     },
-    addWall(ax, az, bx, bz, y0, y1, r = 0.12, tag) {
+    addWall(ax, az, bx, bz, y0, y1, r = 0.12, tag, rise = 0) {
       const w = { ax, az, bx, bz, y0, y1, r, tag, heightOffset };
+      if (rise !== 0) {
+        const dx = bx - ax, dz = bz - az, lengthSq = dx * dx + dz * dz;
+        const terrain = heightOffset;
+        if (lengthSq > 0) w.heightOffset = (x, z) => {
+          const along = Math.max(0, Math.min(1, ((x - ax) * dx + (z - az) * dz) / lengthSq));
+          return (terrain?.(x, z) ?? 0) + along * rise;
+        };
+      }
       walls.insert(w, Math.min(ax, bx) - r, Math.min(az, bz) - r, Math.max(ax, bx) + r, Math.max(az, bz) + r); stats.walls++;
       return w;
     },

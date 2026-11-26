@@ -4,7 +4,7 @@ import math
 
 
 # Detailed exterior decks are built in river-landmarks.py.
-RIVER_DECKS = {37928409, 674432572, 1091571409, 1091571410, 596516315}
+RIVER_DECKS = {37928409, 674432572, 1091571409, 1091571410, 596516315,604527964,1232132154,1232132187}
 
 
 def build_roads(context, seed, mesh_object, material, surfaces):
@@ -14,13 +14,9 @@ def build_roads(context, seed, mesh_object, material, surfaces):
     strips = {}
 
     def elevation(x, z, fallback):
-        fine = seed["groundGrids"]["garden"]
-        grid = (
-            fine
-            if fine["x"] <= x < fine["x"] + (fine["width"] - 1) * fine["step"]
-            and fine["z"] <= z < fine["z"] + (fine["height"] - 1) * fine["step"]
-            else seed["ground"]
-        )
+        grid = next((g for k, g in seed["groundGrids"].items() if k != "city"
+                     and g["x"] <= x < g["x"]+(g["width"]-1)*g["step"]
+                     and g["z"] <= z < g["z"]+(g["height"]-1)*g["step"]), seed["ground"])
         u = (x - grid["x"]) / grid["step"]
         v = (z - grid["z"]) / grid["step"]
         i, j = math.floor(u), math.floor(v)

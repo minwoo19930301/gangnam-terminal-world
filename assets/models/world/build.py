@@ -348,6 +348,7 @@ runpy.run_path(str(here.parent / "banpo-apartments/mount.py"))["mount_apartments
 runpy.run_path(str(here / "river-landmarks.py"))["build_river_landmarks"](
     scene, seed, here
 )
+runpy.run_path(str(here.parent / "banpo-stream-bridge/mount.py"))["mount"](scene, here.parent, seed["streamBridge"])
 runpy.run_path(str(here / "street-layout.py"))["build_street_layout"](
     scene, seed_dir, here
 )

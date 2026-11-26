@@ -73,7 +73,7 @@ def export_controls(world_dir, target=None):
             if abs(p.z - source.data[i].value) > 0.001:
                 changes[str(edit_key(key, obj["grid_shape"], i))] = round(p.z, 3)
         result[key] = changes
-    if set(result) != {"city", "garden"}:
+    if not {"city", "garden"}.issubset(result) or result.keys() - {"city", "garden", "creek"}:
         raise ValueError("Missing survey control grid")
     target = Path(target) if target else world_dir / "height-edits.js"
     target.write_text(
