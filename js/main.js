@@ -28,7 +28,7 @@ window.__world = { ready: false, errors, timing: {} };
 const mark = (k) => { window.__world.timing[k] = Math.round(performance.now()); };
 const fail = (where, e) => { console.error(where, e); errors.push(`${where}: ${e && e.message || e}`); };
 
-async function prepareStreetView(THREE,renderer,scene,camera) {
+async function prepareArrivalView(THREE,renderer,scene,camera) {
   if (!renderer.extensions.has('KHR_parallel_shader_compile')) return;
   scene.updateMatrixWorld();
   camera.updateWorldMatrix(true,false);
@@ -736,10 +736,10 @@ async function boot() {
   // First upload and draw the visible room under the arrival screen. The next
   // presented frame is available for input without paying that upload cost.
   if (!SHOT) {
-    if (streetArrival) {
-      status('거리 화면 준비 중…');
+    if (streetArrival || AREA.id.startsWith('in:')) {
+      status(streetArrival ? '거리 화면 준비 중…' : '실내 화면 준비 중…');
       K._.cull(player.x,player.y+player.eye,player.z,true,camera);
-      await prepareStreetView(THREE,renderer,scene,camera);
+      await prepareArrivalView(THREE,renderer,scene,camera);
     }
     renderer.render(scene,camera);
     await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
