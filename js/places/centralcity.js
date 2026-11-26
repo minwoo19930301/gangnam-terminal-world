@@ -2013,6 +2013,10 @@ export function build(K) {
           const crossing=publicFloorOpening(a[0]+ix,a[1]+iz,b[0]+ix,b[1]+iz,[court,westApron]);
           if(crossing)ops.push({...crossing,y0:YB1,y1:YB1+4.46});
         }
+        // The open Sweet Park sales floor continues on both sides of the old
+        // podium perimeter. Retain that perimeter outside the operator's plan.
+        const sweetHall=publicFloorOpening(a[0]+ix,a[1]+iz,b[0]+ix,b[1]+iz,[b1PlanOutline]);
+        if(sweetHall?.w>.02)ops.push({...sweetHall,y0:YB1,y1:CB});
         K.wall(a[0] + ix, a[1] + iz, b[0] + ix, b[1] + iz, YB1, CB, { mat: M.wallB1, thick: 0.3, openings: ops });
       }
     }

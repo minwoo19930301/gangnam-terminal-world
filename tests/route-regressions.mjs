@@ -10,6 +10,7 @@ import * as shinsegae from '../js/places/shinsegae.js';
 import * as centralcity from '../js/places/centralcity.js';
 import * as jwmarriott from '../js/places/jwmarriott.js';
 import {plan as foodHallPoint} from '../assets/models/cinema-rotary/layout.js';
+import {sweetParkPoint} from '../js/places/sweet-park-plan.js';
 import {point as cinemaPoint} from '../assets/models/megabox-central/layout.js';
 import { JUNCTIONS } from '../js/places/_junctions.js';
 
@@ -84,6 +85,7 @@ console.log('OK Shinsegae entrance axis');
 for(const [label,path] of [
   ['market to cinema lobby',[[833,547],[826,574],[835,585],[835,601],[832,608],[832,670],[832,749],[830,817],[793,855]].map(p=>foodHallPoint(...p)).concat([cinemaPoint(0,2),cinemaPoint(0,-2)])],
   ['food hall transverse café aisle',[[830,787],[871,787],[933,787],[990,787],[1026,787]].map(p=>foodHallPoint(...p))],
+  ['café aisle into the Sweet Park dessert hall',[foodHallPoint(1026,787),...[[1032,787],[1146,787],[1213.5,787],[1213.5,755]].map(p=>sweetParkPoint(...p))]],
 ]){
   for(let i=1;i<path.length;i++){
     const [x,z]=path[i-1],[endX,endZ]=path[i];
