@@ -16,6 +16,11 @@ export function outward(pt,depth){
   const x=pt[0]-centre[0],z=pt[1]-centre[1],l=Math.hypot(x,z);
   return [pt[0]+x/l*depth,pt[1]+z/l*depth];
 }
+// The shoe hall adjoins the bookshop at the south edge of the rotary. The
+// black shopfront line stops at the start of the rounded, open showroom edge.
+export const shoeFront=[plan(593,1057),...arc(135,130,2).map(p=>plan(...p)),...arc(61,130,11).slice(10,11).map(p=>plan(...p))];
+export const shoeRear=[plan(593,1082),plan(614,1082)];
+export const shoeThreshold=[...shoeFront,...[...shoeRear].reverse()];
 export const bookFloor=[...bookEdge,...bookEdge.map(p=>outward(p,1.65)).reverse()];
 const ends=[[710,1028],[686,1063]].map(p=>plan(...p));
 export const cafeFront=[(ends[0][0]+ends[1][0])/2,(ends[0][1]+ends[1][1])/2];
@@ -36,7 +41,7 @@ const inner=[...arc(135,218,15)].reverse();
 export const westApron=[...inner,[434,1057],[406,1030],[372,1030],[372,998],[570,998],
   [548,984],[519,963],[496,943],[480,922],[470,896],[467,872],[467,726.6543779747],
   [498,726.6543779747],[498,872],[502,894],[513,915],[530,932],[552,947],[575,958],[594,961]].map(p=>plan(...p));
-const regions=[court,cafeFloor,bookFloor,westApron].map(poly=>({poly,box:polyBBox(poly)}));
+const regions=[court,cafeFloor,bookFloor,shoeThreshold,westApron].map(poly=>({poly,box:polyBBox(poly)}));
 export function rotaryPreview(x,y,z){
   if(y< -6.25 || y> -1.42)return false;
   return regions.some(({poly,box:[x0,z0,x1,z1]})=>x>=x0-.65 && x<=x1+.65 &&
@@ -49,9 +54,9 @@ export function rotaryPreview(x,y,z){
 
 // Intersect the old above-ground podium edge with the two touching white
 // basement floor areas. Only their common public span gets an opening.
-export function podiumOpening(ax,az,bx,bz){
+export function publicFloorOpening(ax,az,bx,bz,polygons){
   const dx=bx-ax,dz=bz-az,L=Math.hypot(dx,dz),hits=[];
-  for(const poly of [court,westApron])for(let i=0;i<poly.length;i++){
+  for(const poly of polygons)for(let i=0;i<poly.length;i++){
     const [x,z]=poly[i],[u,v]=poly[(i+1)%poly.length],sx=u-x,sz=v-z;
     const cross=dx*sz-dz*sx;
     if(Math.abs(cross)<1e-9)continue;

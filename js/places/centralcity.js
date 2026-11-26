@@ -1,4 +1,5 @@
-import {podiumOpening} from '../../assets/models/cinema-rotary/layout.js';
+import {transverseFloor} from '../../assets/models/megabox-central/layout.js';
+import {publicFloorOpening,court,westApron} from '../../assets/models/cinema-rotary/layout.js';
 import {arabicaFront} from '../../assets/models/sweet-arabica/model.js';
 import {chefStageSigns} from '../../assets/models/sweet-chefs-stage/model.js';
 import {marketWestReturn, cinemaAisleMouth} from './shinsegae-b1-plan.js';
@@ -1991,7 +1992,7 @@ export function build(K) {
         const offset = Math.abs((mouthX-a[0]-ix)*(b[1]-a[1])-(mouthZ-a[1]-iz)*(b[0]-a[0]))/L;
         if (offset<.45 && at>0 && at<L) ops.push({at,w:width,y0:YB1,y1:YB1+4.45});
         if(i===5){
-          const crossing=podiumOpening(a[0]+ix,a[1]+iz,b[0]+ix,b[1]+iz);
+          const crossing=publicFloorOpening(a[0]+ix,a[1]+iz,b[0]+ix,b[1]+iz,[court,westApron]);
           if(crossing)ops.push({...crossing,y0:YB1,y1:YB1+4.46});
         }
         K.wall(a[0] + ix, a[1] + iz, b[0] + ix, b[1] + iz, YB1, CB, { mat: M.wallB1, thick: 0.3, openings: ops });
@@ -3373,7 +3374,9 @@ export function build(K) {
   // Close the unused southern B1 floorplate. One eight-metre passage skirts
   // the interior House on its west and rejoins the J7/station approach.
   lwall(63.3,0,63.3,14.6,YB1,CB,{mat:0xe3d8c3});
-  lwall(63.3,22.6,63.3,39,YB1,CB,{mat:0xe3d8c3});
+  // The mall crosses this podium partition along the published café aisle.
+  const cafePassage=publicFloorOpening(...P(63.3,22.6),...P(63.3,39),[transverseFloor]);
+  lwall(63.3,22.6,63.3,39,YB1,CB,{mat:0xe3d8c3,openings:cafePassage?[{...cafePassage,y0:YB1,y1:YB1+4.45}]:[]});
   const linkRuns=[[63.3,14.6,69.6,22.6],[69.6,8.6,78.4,22.6],[78.4,8.6,138.4,16.6],[138.4,8.6,146.4,22.6],[146.4,14.6,169,22.6]];
   for(const[a,b,c,d]of linkRuns){
     const x0=Math.max(a,74.35),z0=Math.max(b,16.4),x1=Math.min(c,77.65),z1=Math.min(d,28.5);

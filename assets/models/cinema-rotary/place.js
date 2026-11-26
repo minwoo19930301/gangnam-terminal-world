@@ -1,11 +1,11 @@
 import {boxSilhouette} from '../interior-architecture/box-silhouette.js';
 import {placeSingleDetail} from '../interior-architecture/single-detail.js';
-import {arc,bookEdge,bookFloor,outward,cafeFloor,cafeFront,cafePoint,centre,court,plan,rotation,westApron} from './layout.js';
+import {arc,bookEdge,bookFloor,outward,cafeFloor,cafeFront,cafePoint,centre,court,plan,rotation,shoeFront,shoeRear,shoeThreshold,westApron} from './layout.js';
 
 export function publicRotary(K,y){
   const top=y+4.45;
   const stone='megabox_plaza_stone', ceiling='ssg_ceil';
-  for(const [poly,mat] of [[court,stone],[westApron,stone],[bookFloor,0x9b8f7b],[cafeFloor,0x353434]]){
+  for(const [poly,mat] of [[court,stone],[westApron,stone],[bookFloor,0x9b8f7b],[cafeFloor,0x353434],[shoeThreshold,0xb3afa8]]){
     K.hpoly(mat,poly,y+.008,true);
     K.phys.addSurface(poly,y);
     K.hpoly(ceiling,poly,top+.005,false);
@@ -21,6 +21,11 @@ export function publicRotary(K,y){
   // The cinema wall and the bookstore front enclose the public side. Openings
   // on the customer guide remain open to the existing diagonal and the west.
   edge([[696,971],...arc(-32,13,8),[710,1028]].map(p=>plan(...p)),0xcac1b2);
+  // Close the visible end of the B1 showroom with a recessed public bay.
+  // The 2024 branch photograph shows gray masonry and bands of warm ceiling light.
+  K.zone({name:'스포츠 슈 전문관',sub:'신세계 강남점 · 원형 광장 옆',floor:'B1',poly:shoeThreshold,y0:y-.25,y1:top,priority:6});
+  edge([shoeFront[0],...shoeRear,shoeFront.at(-1)],0xa39d94);
+  for(const h of [2.95,3.55])wall(shoeRear[0],shoeRear[1],h,h+.05,{tex:'emit',color:0xffeed6},false);
   const bookArc=arc(61,130,11).map(p=>plan(...p));
   edge([plan(686,1063),...bookArc.slice(0,3)],0xc0b4a4);
   edge(bookArc.slice(7,11),0xc0b4a4);

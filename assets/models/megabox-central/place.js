@@ -1,3 +1,4 @@
+import {eastShoppingArcade} from './arcade.js';
 import {publicRotary} from '../cinema-rotary/place.js';
 import {angle,normal,origin,point,publicAisle} from './layout.js';
 import {cinemaEntrance} from './model.js';
@@ -100,5 +101,6 @@ export function boutiqueLobby(K,y){
     K.phys.addWall(...a,...b,y,y+1.8,.18);
   }
   cinemaEntrance(K,origin[0],y,origin[1],angle);
+  eastShoppingArcade(K,y);
   publicRotary(K,y);
 }

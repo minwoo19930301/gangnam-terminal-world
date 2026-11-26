@@ -9,6 +9,8 @@ import * as gyeongbu from '../js/places/gyeongbu.js';
 import * as shinsegae from '../js/places/shinsegae.js';
 import * as centralcity from '../js/places/centralcity.js';
 import * as jwmarriott from '../js/places/jwmarriott.js';
+import {plan as foodHallPoint} from '../assets/models/cinema-rotary/layout.js';
+import {point as cinemaPoint} from '../assets/models/megabox-central/layout.js';
 import { JUNCTIONS } from '../js/places/_junctions.js';
 
 const context = new Proxy({}, {
@@ -76,6 +78,27 @@ for (let v=6; v<=84; v+=.25) {
     throw new Error(`Shinsegae entrance axis obstructed at v=${v}`);
 }
 console.log('OK Shinsegae entrance axis');
+
+// Walk the published white aisles directly. A pathfinder is free to detour
+// around a blocking partition or escalator, which would miss this regression.
+for(const [label,path] of [
+  ['market to cinema lobby',[[832,670],[832,749],[830,817],[793,855]].map(p=>foodHallPoint(...p)).concat([cinemaPoint(0,2),cinemaPoint(0,-2)])],
+  ['food hall transverse café aisle',[[830,787],[871,787],[933,787],[990,787],[1026,787]].map(p=>foodHallPoint(...p))],
+]){
+  for(let i=1;i<path.length;i++){
+    const [x,z]=path[i-1],[endX,endZ]=path[i];
+    const n=Math.ceil(Math.hypot(endX-x,endZ-z)/.20);
+    for(let j=0;j<=n;j++){
+      const px=x+(endX-x)*j/n,pz=z+(endZ-z)*j/n,pos={x:px,z:pz};
+      const floor=floorAt(px,pz,-6),ceiling=phys.ceilingAbove(px,pz,-5.9,-.1);
+      phys.resolve(pos,radius,-6,-6+height,step);
+      if(Math.abs(floor+6)>.04 || !Number.isFinite(ceiling) || ceiling<=-6+height || Math.hypot(pos.x-px,pos.z-pz)>.05)
+        throw new Error(`${label} interrupted on segment ${i} at (${px.toFixed(2)}, ${pz.toFixed(2)})`);
+    }
+  }
+  console.log('OK '+label);
+}
+
 
 for (const [name,from,to] of [
   ['user link to Central City atrium', [-52.1,109.8,0], [-36,72,0]],
