@@ -128,6 +128,12 @@ def finish(obj,model_id):
                     panel(col*bay,col*bay+.27,.06,roof,.105,0,'BC9783')
             continue
         n=max(1,round(length/3.25));bay=length/n
+        # Long south-east elevation of 101-dong, fixed to the existing source wall.
+        # The eastern four-storey shoulder and the shadow beneath its thin cap
+        # are visible from Sinbanpo-ro. No other tower uses this finish.
+        middle=obj.location+(start+end)*.5
+        street_crown=(leel and abs(middle.x+115.69)<.8 and abs(middle.y-192.07)<.8
+                      and 29<length<30 and normal.y<-.9)
         orientation=normal.x*normal.y<0
         for col in range(n):
             x0=col*bay;x1=(col+1)*bay;t=(col+.5)/n
@@ -137,6 +143,8 @@ def finish(obj,model_id):
             salmon=(not leel and n>=4 and col==(n-1 if orientation else 0))
             shell='506B86' if leel and cobalt else 'C6D0D7' if leel else '9FAEB8' if cobalt else 'DFDCD6'
             panel(x0,x1,.018,roof,.011,0,shell)
+            if street_crown and t>=.31 and not cobalt:
+                panel(x0,x1,(courses-6)*rise,roof,.028,0,'516779')
             if salmon:
                 panel(x0+.035,x0+bay*.67,.03,roof,.028,0,'B78678')
                 panel(x0+bay*.65,x0+bay*.68,.03,roof,.032,0,'836D68')
@@ -146,11 +154,12 @@ def finish(obj,model_id):
             if length<2.5:continue
             for row in range(0,courses,4):
                 end_row=min(courses,row+4);idx=(row//4*3+col+shift)%7
+                upper_blue=street_crown and t>=.31 and row>=courses-6
                 if leel:
-                    border=.16 if cobalt else .39
-                    glass=(['284C79','2E5684','355A83','2C4A73','395C81','31577B','365678'] if cobalt else
+                    border=.16 if cobalt or upper_blue else .39
+                    glass=(['284C79','2E5684','355A83','2C4A73','395C81','31577B','365678'] if cobalt or upper_blue else
                            ['496780','4C708C','486980','607789','526C7C','506C83','56748A'])[idx]
-                    upper='456A91' if cobalt else '6B859B'
+                    upper='456A91' if cobalt or upper_blue else '6B859B'
                 else:
                     border=.23 if cobalt else .35
                     glass=['405967','4A616B','526975','415765','4A6676','566974','49606D'][idx]
@@ -170,6 +179,28 @@ def finish(obj,model_id):
             if blue:
                 for row in range(1,courses):
                     panel(blue[0]*bay+.09,(blue[-1]+1)*bay-.09,row*rise+.02,row*rise+.18,.050,0,'A2B6C4')
+        if street_crown:
+            # Recessed dark clerestory below a pale rim. Taper the returns into
+            # the existing roof plane and retain the original height.
+            left=length*.317;right=length-.45
+            panel(left,right,roof-1.42,roof-.17,.081,0,'383D43','272F38')
+            for i in range(5):
+                pos=left+(right-left)*i/4
+                panel(max(left,pos-.085),min(right,pos+.085),roof-1.42,roof-.14,.11,0,'899198')
+            a=start+tangent*left;b=start+tangent*right
+            # Walk around each visible face to keep its normal pointing out.
+            def rim_point(point,depth,z):
+                v=point+normal*depth
+                return (v.x,v.y,z)
+            back=.064;front=.64;lo=roof-.17;hi=roof+.03
+            aa,bb,cc,dd=[rim_point(p,d,lo) for p,d in
+                         ((a,back),(b,back),(b,front),(a,front))]
+            ee,ff,gg,hh=[(v[0],v[1],hi) for v in (aa,bb,cc,dd)]
+            for corners,tone in [
+                    ((aa,bb,cc,dd),'3A4148'),((hh,gg,ff,ee),'7C848A'),
+                    ((dd,cc,gg,hh),'B1B8BC'),((aa,dd,hh,ee),'7C848A'),
+                    ((cc,bb,ff,gg),'7C848A')]:
+                face(corners,0,[colour(tone)]*4)
     replacement=bpy.data.meshes.new(obj.name+' · 외관 마감과 유리')
     replacement.from_pydata(verts,[],polygons);replacement.update()
     for m in old.materials:replacement.materials.append(m)
