@@ -106,6 +106,7 @@ SHELVES = {
     "daiso-merchandise": "다이소 주방·문구 매대",
     "gyeongbu-seating": "경부선 · 대합실 연석",
     "lounge-chair": "JW 8층 라운지 · 라탄 암체어",
+    "ssg-market-prunier": "신세계 마켓 · 프루니에 캐비아",
     "ssg-market-butcher": "신세계 마켓 · 숙성 정육 진열장",
     "godiva-emack": "식품관 · 고디바 크레페와 에맥앤볼리오스",
     "guo-dumpling": "신세계 델리 · 구오 만두",

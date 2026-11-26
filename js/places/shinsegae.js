@@ -8,6 +8,7 @@ import {angle as cinemaYaw,point as cinemaPoint} from '../../assets/models/megab
 import {placeAtriumCeiling} from '../../assets/models/ssg-atrium-soffit/model.js';
 import {marketProduceCeiling} from '../../assets/models/ssg-market-ceiling/model.js';
 import {shopArrival as onimaruArrival} from '../../assets/models/kyoto-onimaru/layout.js';
+import {prunierCase} from '../../assets/models/ssg-market-prunier/model.js';
 import {placeCrepeAndWaffle} from '../../assets/models/godiva-emack/model.js';
 import {placeAgingCabinet} from '../../assets/models/ssg-market-butcher/model.js';
 import {placeGuo} from '../../assets/models/guo-dumpling/model.js';
@@ -3079,7 +3080,15 @@ export function build(K) {
         // Rectangular dark timber display frames around the market perimeter;
         // M27U_200 does not establish arched transoms here.
         for(let v=mV0+3;v<mV1-2;v+=3){
-          const u=mU1-.35;if(!clear(u,v,.5,2.6))continue;
+          // The market polygon starts just inside its guide bounding box.
+          // Keep the timber stock 10 cm farther in so the eligible bays pass the same perimeter test.
+          const u=mU1-.45;if(!clear(u,v,.5,2.6))continue;
+          if(Math.abs(v-(mV0+18))<.01&&clear(mU1-.54,v,.68,2.55)){
+            // One open-front refrigerated bay within the existing timber perimeter.
+            const [x,z]=P(mU1-.54,v);
+            prunierCase(K,x,y,z,RA-PI/2);
+            continue;
+          }
           box(u,v,.16,2.55,y+.12,2.8,{tex:'wood',color:0x65482f},{solid:false});
           for(const vv of [v-1.24,v+1.24])box(u-.12,vv,.23,.10,y+.14,2.78,{tex:'wood',color:0x65482f},{solid:false});
           for(const yy of [.15,1.1,2.84])box(u-.15,v,.28,2.55,y+yy,.10,{tex:'wood',color:0x65482f},{solid:false});
