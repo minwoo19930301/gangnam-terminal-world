@@ -78,9 +78,16 @@ ivory=solid('회백 유약',(219,214,191))
 ochre=solid('갈색 유약',(138,87,53))
 charcoal=solid('검은 철물',(62,55,46))
 ink=solid('짙은 쪽빛',(54,67,77))
-paper=material('미노 화지',(255,228,181),.88,'TimeStyleSpacecraft')
+import sys
+sys.dont_write_bytecode=True
+sys.path.insert(0,str(OUT))
+import washi
+paper=material('미노 화지',(239,220,184),.88,'TimeStyleSpacecraft',
+               packed_image('MinoWashi',washi.paper_field()))
 bs=paper.node_tree.nodes.get('Principled BSDF')
-(bs.inputs.get('Emission Color') or bs.inputs.get('Emission')).default_value=(1,.63,.32,1)
+emission=bs.inputs.get('Emission Color') or bs.inputs.get('Emission')
+tex=next(n for n in paper.node_tree.nodes if n.type=='TEX_IMAGE')
+paper.node_tree.links.new(tex.outputs['Color'],emission)
 bs.inputs['Emission Strength'].default_value=.33
 
 
@@ -208,22 +215,7 @@ profile=[(.12,0),(.14,.006),(.161,.041),(.196,.072),(.254,.094),(.36,.101),
          (.408,.106),(.432,.125),(.439,.147),(.432,.20),(.421,.253),(.412,.275),
          (.389,.289),(.309,.299),(.255,.316),(.208,.349),(.172,.396),(.154,.438),(.143,.449)]
 z0=1.78
-ribcount=16
-rings=[]
-for radius,h in profile:
-    row=[]
-    for i in range(ribcount*3):
-        a=2*pi*i/(ribcount*3)
-        radius_at=radius*(1-.012*sin(pi*(i%3)/3)**2)
-        row.append((radius_at*cos(a),radius_at*sin(a),z0+h))
-    rings.append(row)
-skin('Spacecraft · 한지 갓',rings,paper)
-for i in range(ribcount):
-    a=2*pi*i/ribcount
-    pts=[((r+.003)*cos(a),(r+.003)*sin(a),z0+h) for r,h in profile]
-    tube('Spacecraft · 삼나무 휨살',pts,[.0048]*len(pts),cedar)
-for z,r in [(z0,.12),(z0+.449,.143)]:
-    turned('Spacecraft · 마감 고리',0,0,z,[(r,0),(r+.002,.008),(r-.008,.008)],cedar,48)
+washi.shade(profile,z0,paper,cedar,skin)
 rod('조명 선', (0,0,2.221),(0,0,3.81),.0045,.0045,charcoal)
 turned('천장 받침',0,0,3.79,[(.05,0),(.05,.045)],charcoal)
 
