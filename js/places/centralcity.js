@@ -2549,6 +2549,49 @@ export function build(K) {
       glass.name='광장 보행등 · 처마 밑 확산판';
       glass.position.set(lampX,lampBase+ground,lampZ);glass.rotation.y=R;kit.addMesh(glass);
     });
+    // Seoul Institute's 2020 plaza photograph and the 2022/2026 street views show
+    // the open canopy off the gate approach, between the east bed and the three spheres.
+    // BEGIN COURT CANOPY OUTLINE
+    const courtCanopyOutline=[
+      ["post",-2.3975,-1.1225,0.0906,-2.1625,-0.8775,2.37,"be814a"],
+      ["post",-2.3975,0.8775,-0.1623,-2.1625,1.1225,2.37,"be814a"],
+      ["post",2.1625,-1.1225,0.2735,2.3975,-0.8775,2.37,"be814a"],
+      ["post",2.1625,0.8775,0.0354,2.3975,1.1225,2.37,"be814a"],
+      ["roof",-2.5,-1.2,2.39,2.5,1.2,2.728,"ccc9b9"],
+      ["louver",-1.325,-0.6,2.753,1.325,0.52,3.006,"ae6740"],
+      ["bench",-0.78,-0.8275,0.5085,0.78,-0.3925,0.5955,"c8c8b9"],
+      ["bench",-0.78,0.3925,0.3542,0.78,0.8275,0.4412,"c8c8b9"],
+      ["panel",-0.305,-0.0975,0.004,0.305,0.0975,2.36,"a7aaa4"],
+      ["shelf",-0.865,-0.235,0.82,0.605,0.235,0.88,"c8c8b9"],
+    ];
+    // END COURT CANOPY OUTLINE
+    const canopyName='센트럴시티 조각 광장 · 열린 캐노피와 의자',canopyS=-32.2,canopyT=26.85;
+    const [canopyX,canopyZ]=P(canopyS,canopyT);
+    K.withTerrainAnchor(canopyX,canopyZ,()=>{
+      for(const [role,x0,y0,z0,x1,y1,z1] of courtCanopyOutline){
+        const poly=RECT(canopyS-y1,canopyT+x0,canopyS-y0,canopyT+x1);
+        if(role==='roof')K.phys.addCeiling(poly,z0,{});
+        if(role==='bench')K.phys.addSurface(poly,z1,{tag:'centralcity'});
+        if(role==='post'||role==='panel'||role==='bench'||role==='shelf')
+          K.phys.addPolyWalls(poly,role==='bench'?-0.4:z0-.08,z1,.012,'centralcity');
+      }
+    });
+    K.detail({name:canopyName,floor:'지상',poly:RECT(canopyS-1.23,canopyT-2.52,canopyS+1.23,canopyT+2.52),
+      y0:0,y1:3.25,visualOnly:true,silhouetteDistance:140,
+      visibleFrom:(x,y,z)=>y>-1 && y<10 && (x-canopyX)*AX+(z-canopyZ)*AZ<8.8},kit=>{
+      const T=kit.THREE,parts=[];
+      for(const [,x0,y0,z0,x1,y1,z1,tone] of courtCanopyOutline){
+        const surface=new T.BoxGeometry(x1-x0,z1-z0,y1-y0).translate((x0+x1)/2,(z0+z1)/2,-(y0+y1)/2);
+        const colors=[],color=new T.Color('#'+tone);
+        for(let i=0;i<surface.attributes.position.count;i++)colors.push(color.r,color.g,color.b);
+        surface.setAttribute('color',new T.Float32BufferAttribute(colors,3));parts.push(surface);
+      }
+      const silhouette=mergeGeometries(parts);for(const part of parts)part.dispose();
+      const paint=new T.MeshLambertMaterial({vertexColors:true});paint.defines={BANPO_RIGID:1};
+      placeSingleDetail(kit,{name:canopyName,file:'../central-plaza-canopy/canopy.glb',at:[canopyX,0,canopyZ],
+        angle:R,rigidGround:relief(canopyX,canopyZ),fallback:silhouette,fallbackMaterial:paint,
+        material:paint,eyeHeight:1.55,range:30,exitRange:36,floorTolerance:7});
+    });
     const benchAt=(u,y)=>{const q=P(-31,5+u);return[q[0],y,q[1]];};
     const benchCurve=[[-3,.55],[-1.2,.55],[-.7,.75],[-.25,1.15],[.2,1.22],[.65,.85],[1.1,.55],[3,.55]];
     for(let i=0;i<benchCurve.length-1;i++)entryTubeWorld(benchAt(...benchCurve[i]),benchAt(...benchCurve[i+1]),.24,0xb62436);
