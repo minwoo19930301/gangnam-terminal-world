@@ -7,7 +7,7 @@ const server=await serve(0);
 const browser=await chromium.launch({channel:'chromium',args:['--use-angle=metal','--enable-gpu','--ignore-gpu-blocklist']});
 const base='http://127.0.0.1:'+server.address().port;
 try {
-  for(const [floor,hash] of [['8F','8F'],['B1','B1?p=-60.701,-6,25.731,111.26']]){
+  for(const [floor,hash] of [['8F','8F'],['B1','B1?p=-60.701,-6,25.731,111.26'],['produce','B1?p=-94.1752,-6,-15.8372,-158.9725']]){
     const page=await browser.newPage({viewport:{width:960,height:600}});
     await page.goto(base+'/?fixedres=1#/shinsegae/'+hash);
     await page.waitForFunction(()=>window.__world?.ready,null,{timeout:120000});
@@ -31,18 +31,23 @@ try {
       assert.ok(count>1,'expected spatially divided stock');
       const checks=await page.evaluate(async()=>{
         const w=__world,stock=w.scene.children.filter(o=>o.name==='신세계 마켓 · 그로서리 진열병');
-        const seen=new Set();
+        const fruit=w.scene.children.filter(o=>o.name==='신세계 마켓 · 과일 상자');
+        const seen=new Set(), seenFruit=new Set(), fruitDraws=[];
+        for(const o of fruit){o.onBeforeRender=()=>seenFruit.add(o.id);}
         for(const o of stock){o.onBeforeRender=()=>seen.add(o.id);}
         const draws=[];
         for(const angle of [0,Math.PI]){
           w.player.yaw+=angle;
           await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
-          seen.clear();w.renderer.render(w.scene,w.camera);draws.push(seen.size);
+          seen.clear();seenFruit.clear();w.renderer.render(w.scene,w.camera);
+          draws.push(seen.size);fruitDraws.push(seenFruit.size);
         }
-        return {total:stock.reduce((n,o)=>n+o.count,0),draws,errors:w.K._.detailErrors};
+        return {total:stock.reduce((n,o)=>n+o.count,0),draws,fruitDraws,errors:w.K._.detailErrors};
       });
       assert.ok(checks.total>0&&checks.total%4===0,'a bottle lost its body, neck, lid or label');
-      assert.ok(checks.draws[0]>checks.draws[1],'turning away should cull the shelves');
+      if(floor==='B1')assert.ok(checks.draws[0]>checks.draws[1],'turning away should cull the shelves');
+      console.log('Visible fruit rows:',floor,checks.fruitDraws);
+      if(floor==='produce')assert.ok(checks.fruitDraws[0]>0 && checks.fruitDraws[1]<checks.fruitDraws[0]);
       assert.deepEqual(checks.errors,[]);
       console.log(count+' clusters, '+checks.total/4+' bottles; visible groups '+checks.draws.join(' → '));
     }
