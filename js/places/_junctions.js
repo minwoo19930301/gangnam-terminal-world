@@ -44,7 +44,9 @@ export const JUNCTIONS = [
   { id: 'J_G11_DAISO', a: 'gotomall', b: 'gyeongbu', y: LEVELS.B1, pa: [244.8, -181.5], pb: [245.3, -179.5], width: 4.5, owner: 'gyeongbu',
     note: '고투몰 중앙광장 G11 문 → 다이소 GATE 4: 양 끝점은 B1 -6m 문과 계단 아래참. 이후 경부 모듈 계단을 올라 GATE 4와 다이소 -4m 홀로 연결된다.' },
   { id: 'J_ONEBAILEY_G2', a: 'gotomall', b: 'onebailey', y: LEVELS.B1, pa: [-287.479, -29.9796], pb: [-290.8408, -38.9565], width: 2.8, owner: 'onebailey',
-    note: '고투몰 G2 → 원베일리 공공보행통로 (24시간 벽화 거리). gotomall leaves the G2 wall open.' },
+    note: '서편 연결부에서 원베일리 공공보행통로로 이어지는 기존 모델 동선. G2 왼편 상가 출입구는 J_G2_SQUARE에 등록한다.' },
+  { id: 'J_G2_SQUARE', a: 'gotomall', b: 'onebailey', y: LEVELS.B1, pa: [-364.266,-14.038], pb: [-365.951,-13.407], width: 2.68, owner: 'onebailey',
+    note: '고투몰 G2 계단 왼편에서 원베일리스퀘어 선큰광장·회전문으로 이어지는 상가 출입구.' },
   { id: 'J_ONEBAILEY_PARK', a: 'onebailey', b: 'hangang', y: 0, pa: [-567.9792, -603.6965], pb: [-592, -625], width: 5, owner: 'onebailey',
     note: '보행통로 끝 → 반포나들목 지하차도 → 반포한강공원.' },
   // ---- famille (round 20) ----

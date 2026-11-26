@@ -1,3 +1,4 @@
+import { drawFurniture } from '../../assets/models/riverside-furniture/draw.js';
 // Local OSM is preserved at its real coordinates; unrecorded facilities are
 // separately anchored by source pins. Dimensions/heights are reconstructions.
 import { jamwonRiverExtension } from '../banpo_dem.js';
@@ -20,7 +21,7 @@ export function build(K){
   function paint(a,b,w=.1,y=.085,mat=0xf2eee0){K.hpoly(mat,band(a,b,w),y);}
   function beam(a,b,r=.065,mat=C.steel){const dx=b[0]-a[0],dy=b[1]-a[1],dz=b[2]-a[2],L=Math.hypot(dx,dy,dz)||1;let nx=-dz,nz=dx,nl=Math.hypot(nx,nz);if(nl<.001){nx=1;nz=0;nl=1;}nx=nx/nl*r;nz=nz/nl*r;const v=[-dy*nz/L,(dz*nx-dx*nz)/L,dy*nx/L],p=(q,s,t)=>[q[0]+s*nx+t*v[0],q[1]+t*v[1],q[2]+s*nz+t*v[2]];for(const s of[-1,1]){K.quad(mat,[p(a,s,-1),p(b,s,-1),p(b,s,1),p(a,s,1)],[s*nx,0,s*nz]);K.quad(mat,[p(a,-1,s),p(a,1,s),p(b,1,s),p(b,-1,s)],v.map(n=>n*s));}}
   function rail(a,b,y=0,truss=false){const L=Math.hypot(b[0]-a[0],b[1]-a[1]),n=Math.ceil(L/2.4);K.wall(...a,...b,y,y+1.15,{thick:.06,mat:C.steel,openings:[{at:L/2,w:L,y0:y+.12,y1:y+1.04}]});for(let i=0;i<=n;i++){const p=mix(a,b,i/n);box(p[0],y,p[1],.07,1.2,.07,C.steel);}beam([a[0],y+.5,a[1]],[b[0],y+.5,b[1]],.025);if(truss)for(let i=0;i<n;i++){const p=mix(a,b,i/n),q=mix(a,b,(i+1)/n);beam([p[0],y+.17,p[1]],[q[0],y+1.02,q[1]],.03);beam([p[0],y+1.02,p[1]],[q[0],y+.17,q[1]],.03);}}
-  function bench(x,z,a=0,y=0){const P=frame(x,z,a);for(let i=0;i<4;i++){const p=P(0,(i-1.5)*.13);box(p[0],y+.42,p[1],1.9,.07,.10,'wood',false,a);}const p=P(0,.27);box(p[0],y+.55,p[1],1.9,.43,.08,'wood',false,a);for(const u of[-.7,.7]){const q=P(u,0);box(q[0],y,q[1],.09,.44,.55,C.dark,false,a);}}
+  function bench(x,z,a=0,y=0){drawFurniture(K,'bench',x,y,z,a);}
   function lamp(x,z,banner=false,y=0){K.cyl({x,y,z,r:.075,h:4.8,mat:C.dark,seg:6});box(x,y+4.75,z,.85,.12,.4,C.white);box(x,y+4.7,z,.7,.03,.3,'emit');if(banner)sign(['잠원한강공원','함께 걷는 한강'],x+.43,y+3.35,z,.8,1.4,0,'#305b87','#f4e8bc');}
   function chair(x,y,z,a=0,col=C.yellow){const P=frame(x,z,a);box(x,y+.43,z,.46,.07,.46,col,false,a);const q=P(0,.22);box(q[0],y+.5,q[1],.46,.42,.05,col,false,a);for(const u of[-.18,.18])for(const v of[-.18,.18]){const p=P(u,v);box(p[0],y,p[1],.035,.43,.035,col);}}
   function table(x,y,z){box(x,y+.71,z,1.1,.07,.8,'wood',true);for(const dx of[-.43,.43])for(const dz of[-.28,.28])box(x+dx,y,z+dz,.045,.71,.045,C.dark);}
@@ -267,8 +268,9 @@ export function build(K){
   // JW-C2: keep the surveyed-side leaf viewpoint; yaw77 looks between vessel
   // and bank. Tape is perpendicular at2m and water begins2.5m beyond it.
   const leafYaw=77*Math.PI/180,leafP=(s,t)=>[203-Math.sin(leafYaw)*s+Math.cos(leafYaw)*t,-1447.8-Math.cos(leafYaw)*s-Math.sin(leafYaw)*t];
-  const leafWater=[leafP(4.5,-11),leafP(4.5,11),leafP(30,11),leafP(30,-11)];
-  cutouts.push(leafWater);K.groundHole(leafWater);K.hpoly({tex:'water',color:0x7f877f},leafWater,-1.4);
+  // City-owned river geometry includes the small landward part of this inlet.
+  // Cut the full patch out of park grass without rendering a second water face.
+  cutouts.push([leafP(4.5,-11),leafP(4.5,11),leafP(30,11),leafP(30,-11)]);
   // Keep trunks outside the whole adjoining walking/cycle width, including bends.
   // Invoked by lazy detail only, after bikeLink below has been initialized.
   function vergePoint(x,z){
@@ -514,10 +516,10 @@ export function build(K){
     const mouthNorth=bankAt(-2605), mouthSouth=bankAt(-2573);
     const sevenInlet=[mouthNorth,[1394,-2605],[1394,-2573],mouthSouth];
     for(const piece of subtract(extension,sevenInlet))slab(piece,0,{tex:'grass',color:0xb9caa0});
-    K.groundHole(sevenInlet);K.hpoly('water',sevenInlet,-1.4);K.phys.addSurface(sevenInlet,-2.1,{slow:.7,tag:'jamwon_hangang'});
+    K.groundHole(sevenInlet);K.hpoly('hanRiver',sevenInlet,-1.4);K.phys.addSurface(sevenInlet,-2.1,{slow:.7,tag:'jamwon_hangang'});
     zone('잠원한강공원 · 한남대교',extension,0,'1F','수변 산책로 · 제4주차장',12);
     // Water extension shares only the z=-2100 seam with city-owned river152336.
-    K.groundHole(water);K.hpoly('water',water,-1.4);K.phys.addSurface(water,-2.1,{slow:.7,tag:'jamwon_hangang'});
+    K.groundHole(water);K.hpoly('hanRiver',water,-1.4);K.phys.addSurface(water,-2.1,{slow:.7,tag:'jamwon_hangang'});
     K.hpoly('grass',[[-198.12,-2850],...water.slice(end+1)],0);
     const bankWall=(p,q)=>K.wall(...p,...q,-2.4,0,{mat:{tex:'concrete',color:0xaaa699},thick:.15,solid:false});
     for(let i=1;i<bank.length;i++) {
@@ -544,42 +546,19 @@ export function build(K){
   }
 
   function seoulWave(worldK=K){
-    // HF1iiczAe6M is a rainy walk. Own the temporary weather overlay here,
-    // restoring the scene when leaving this corridor or switching to night.
-    // ?jamwonWeather=sunny/rain also lets the operator match another dated clip.
-    const weather=typeof location==='undefined'?'auto':new URLSearchParams(location.search).get('jamwonWeather')||'auto';
-    const {THREE}=worldK,scene=worldK.scene;
-    const rainSky=new THREE.Mesh(new THREE.SphereGeometry(2900,16,8),new THREE.MeshBasicMaterial({color:0xcfd2d3,side:THREE.BackSide,fog:false,depthWrite:false}));
-    rainSky.renderOrder=-.5;rainSky.visible=false;rainSky.userData.dynamic=true;worldK.addMesh(rainSky);
-    const rainWater=new THREE.Group();rainWater.userData.dynamic=true;rainWater.visible=false;
-    // The former huge -Y triangles fought the city water only 15 mm below.
-    // Upward winding and a small depth bias keep one continuous grey-green river.
-    const waterMat=new THREE.MeshPhongMaterial({color:0x7f877f,specular:0x252b26,shininess:12,side:THREE.DoubleSide,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-4});
-    for(const a of [...worldK.osm.areas.filter(a=>a.id===152336),{poly:jamwonRiverExtension},{poly:leafWater}]){
-      const outline=a.poly.map(p=>new THREE.Vector2(...p)),holes=(a.holes||[]).map(h=>h.map(p=>new THREE.Vector2(...p)));
-      const verts=[...outline,...holes.flat()],g=new THREE.BufferGeometry();
-      g.setAttribute('position',new THREE.Float32BufferAttribute(verts.flatMap(p=>[p.x,-1.385,p.y]),3));
-      const triangles=THREE.ShapeUtils.triangulateShape(outline,holes).map(f=>{
-        const [a,b,c]=f.map(i=>verts[i]),up=(b.y-a.y)*(c.x-a.x)-(b.x-a.x)*(c.y-a.y);
-        return up<0?[f[0],f[2],f[1]]:f;
-      });
-      g.setIndex(triangles.flat());g.computeVertexNormals();rainWater.add(new THREE.Mesh(g,waterMat));
-    }
-    worldK.addMesh(rainWater);
-    // The near shore fades after 400m, while the verified downriver pylon must
-    // retain a faint silhouette at about 500m; full extinction is at 650m.
-    const rainFog=new THREE.Fog(0xcfd2d3,80,650),lights=scene.children.filter(o=>o.isLight),normalLights=lights.map(o=>o.intensity);
-    let savedFog=scene.fog,wet=false,night=false;
-    worldK.onNight(v=>{night=v;if(savedFog)savedFog.color.setHex(v?0x1a2238:0xcfe0ee);rainFog.color.setHex(0xcfd2d3);});
-    worldK.onFrame((dt,t,player)=>{
-      const near=player.x>65&&player.x<380&&player.z<-1220&&player.z>-1610;
-      const want=!night&&weather!=='sunny'&&(weather==='rain'||near);
-      if(want!==wet){
-        if(want){savedFog=scene.fog;scene.fog=rainFog;for(let i=0;i<lights.length;i++)lights[i].intensity=lights[i].isDirectionalLight?.22:normalLights[i];}
-        else{scene.fog=savedFog;for(let i=0;i<lights.length;i++)lights[i].intensity=night?(lights[i].isDirectionalLight?.08:lights[i].isHemisphereLight?.35:normalLights[i]):normalLights[i];}
-        wet=want;rainSky.visible=want;rainWater.visible=want;
-      }
-      if(wet)rainSky.position.set(player.x,player.y+1.62,player.z);
+    // The documented rainy corridor changes the shared weather state. The
+    // environment retains ownership of the actual sky, fog and time-of-day lights.
+    const weather = new URLSearchParams(globalThis.location?.search || '').get('jamwonWeather') || 'auto';
+    const {THREE} = worldK;
+    let night = false;
+    worldK.onNight(on => { night = on; });
+    worldK.onFrame((dt,t,player) => {
+      const near = player.x>65 && player.x<380 && player.z<-1220 && player.z>-1610;
+      const wet = !night && (weather === 'rain' || (weather === 'auto' && near));
+      const state = worldK.scene.userData;
+      const target = wet ? 1 : 0;
+      const previous = state.riverCloudiness ?? 0;
+      state.riverCloudiness = previous + (target-previous)*Math.min(1, dt*2);
     });
     // R19: retain the 45-degree orientation and bring the vessel 6 m shoreward.
     // A rigid transform also moves collision, detail bounds, stairs and cameras;

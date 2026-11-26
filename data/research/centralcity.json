@@ -1,4 +1,15 @@
 {
+  "b1_walk_20261125": {
+    "floorGuide": "https://www.shinsegae.com/store/floor.do?storeCd=SC00002",
+    "floorGuideImage": "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/11/25/GnV7UuBEdq7K.png",
+    "fiveGuysOpening": "https://www.hanwhagalleria.co.kr/promotion/news/id/839ddb4c-63ba-4a89-9e41-05cb6d50e52d?p=0",
+    "interiorPhoto": "https://cdndept.galleria.co.kr/upload/official/promotion/ie/ej/224867718/news/contentImage/ag224867746bu.jpg",
+    "observed": "11월 25일 공개된 신세계 B1 안내도는 신세계 마켓, 스위트 파크, 하우스 오브 신세계를 한 도면에 표시한다. 디저트 매장과 푸드홀 사이의 흰색 통로, 푸드홀 중앙 라운지, 파미에스테이션 방면 에스컬레이터 표시, 두 파이브가이즈 구획을 확인했다. 한화갤러리아의 개점 사진에는 통로에 열린 목재 매장 전면, 어두운 간판, 회색 바닥, 빨강·흰 타일과 식탁이 보인다.",
+    "registration": "기존에 검토한 파미에 남측 로비 계단 입구와 하우스 상층 중정에 B1 라운지와 계단 하부를 맞췄다. 기존 모델 도면 좌표 기준으로 서쪽 x=1400에서 스위트 파크와 만나며 x=1587까지 두 정합 사이를 보간한다. 도면 [1632,457]은 상층 중정 아래, [1750,375]는 남측 에스컬레이터 하부에 대응시켰다. 층별안내에 실측 축척·층간 기준점이 없어 안내도 곡선과 실제 기둥·계단 좌표의 대응은 근사값이다.",
+    "scope": "JW의 가설 코어는 B1에서 1층의 서측 배치를 따른다. B2와 그 아래의 호텔 시설 및 승강장 좌표는 유지했다. 기존 모델의 B1 호텔 고객용 승강장 목록에는 정차가 없다. 스위트 파크 안에서 기존 경로 지점 [-39.6,100]은 도면 [1377,619]의 파이브가이즈 구획 안에 해당한다. 통로에서 식당 내부로 진입할 수 있도록 진열대 대신 고객석과 뒤쪽 주문대를 배치했다. 매장 치수, 좌석 수, 카운터와 호텔 코어의 정확한 배치는 실측되지 않았다.",
+    "verification": "tests/walk.mjs의 센트럴시티 홀–스위트 가든–하우스 경로 9구간 및 사진 동선 5의 10구간을 원래의 좌표·층·통과 범위 그대로 검사했다. 기존 11개 차단이 해소되어 두 경로의 19구간 모두 통과했다. 두 에스컬레이터의 상부부터 하부까지 각 9개 점, B1 하부에서 라운지 좌표까지도 실제 충돌·이동면으로 확인했다.",
+    "preview": "assets/models/centralcity/b1-route-review.jpg"
+  },
   "compact_plaza_escalators_20261118": "The four parallel ground flights share a boarding line and have 1.26 m between axes, matching the outer handrails of the 1.1 m treads. The outer flights serve the mezzanine and the middle flights serve department store 2F.",
   "plaza_escalator_alignment_20261118": "The visitor identified a lateral turn in the game at the Le Jardin plaza. Both central 2F flights now rise parallel to the outside mezzanine flights from the same ground boarding line. The high landing stays on the Bulgari side. The offsets follow the modeled landing and are approximate.",
   "restaurant_gallery_1m_20261117": {

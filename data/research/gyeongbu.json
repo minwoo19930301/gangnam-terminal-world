@@ -1,4 +1,83 @@
 {
+  "daiso_store_20261125": {
+    "지점": "아성다이소 공식 매장검색은 신반포로 194의 강남고속버스터미널점 B1과 강남고속버스터미널2호점 1F를 별도 지점으로 등록한다. 이 모델의 긴 B1 매장과 네 출입구는 전자다. 2호점 문 위치는 해당 검색 결과로 확정할 수 없다.",
+    "출처": [
+      {
+        "url": "https://www.daiso.co.kr/cs/shop?name_address=%EA%B0%95%EB%82%A8",
+        "확인": "아성다이소 공식 지점명과 주소·층."
+      },
+      {
+        "url": "https://exterminal.co.kr/floor.asp",
+        "확인": "터미널 운영사 층별 안내. 부속상가 B1 도면을 기준으로 기존 B1 구획을 보존."
+      },
+      {
+        "url": "https://www.daiso.co.kr/company/bi",
+        "확인": "여섯 원 심볼 구성, 브랜드 빨강 RGB 215,0,17, 백색. 웹 자산에는 직접 그린 입체 간판 사용."
+      },
+      {
+        "url": "https://noopy0402.tistory.com/464",
+        "촬영": "2026-04-06 게시 방문 사진. 1층과 B1 접근, 검색대·문구·선물포장·뷰티 및 패드·수납 바스켓·주방 도자기와 진열 방식 확인."
+      },
+      {
+        "url": "https://soon-life.tistory.com/68",
+        "촬영": "2021-05-08 게시 방문 사진. 현장 안내도, 네 출입구, 1·4번 쪽 계산과 2·3번 입장 안내, 셀프 계산대와 포장용 자재 확인. 개수·현행 운영시간은 별도."
+      }
+    ],
+    "Blender": {
+      "원본": "assets/models/daiso/shop.blend",
+      "웹": "assets/models/daiso/shop.glb",
+      "장면": "문구, 선물포장, 스낵, 스킨케어, 도자기, 수납, 셀프 계산대, 입구 브랜드 간판의 여덟 컬렉션. 내장 export_shop.py로 편집한 컬렉션들을 다시 내보낼 수 있다.",
+      "재구성": "진열 수량·상품 포장 그림과 문구·가구 치수·위치는 사진을 참고한 예시다. 실제 브랜드 상품 코드 또는 현재 재고를 표시하지 않는다."
+    },
+    "동선": {
+      "GATE1": "B1 서쪽 진입과 유리문, 두 번 꺾이는 본관 1층 계단. 새 간판은 개구부 위에 있다.",
+      "GATE2": "B1 매장으로 들어오는 계단과 하행 에스컬레이터.",
+      "GATE3": "B&C 1층 현관과 두 계단, B1 입구전용 안내. 1층 구역이 지하 쇼핑객에게도 표시되던 층 범위를 바로잡았다.",
+      "GATE4": "고투몰 G11 계단의 중앙 손잡이 양측 통행로, 광장주차장 상행 계단. 모델의 16cm 주차장 연석이 계단 위를 가로지르던 구간과 포장면을 계단실 개구부에 맞춰 절단했다.",
+      "승강기": "기존 북측 동 승강기 B1 앞 지지면·진입 공간을 검사했다. 공식 매장검색으로는 이 승강기의 정확한 현장 위치나 독립적인 무단차 경로를 확인할 수 없다."
+    },
+    "모델검증": "경부 단독과 고투몰·역 동시 smoke, 경부 단독 실제 물리 walk 71/71. 네 출입구 단면·계단·에스컬레이터·승강기 앞, 여섯 진열대와 대표 계산대의 18개 구간에서 최대 22cm 간격으로 578점 표본을 검사했다. 모델 보행자 반경 0.32m, 키 1.75m에서 지지면 누락, 3.1cm 초과 수평 밀림, 머리 공간 부족이 없었다. 실제 접근성 측량은 미실시.",
+    "게임화면": "assets/models/daiso/preview.jpg"
+  },
+  "upper_markets_20261125": {
+    "운영사": "https://exterminal.co.kr/floor.asp",
+    "승차층안내": "https://exterminal.co.kr/take.asp",
+    "승차홈": "운영사 페이지의 현행 안내(https://exterminal.co.kr/include/take_261106.html)에 있는 1~36번 표를 대조. 행선지 표기에서 8·12·15·17·21·22·26번 누락 보완. 작은 명판에는 대표 행선지를 사용. 37번 이상은 이 운영사 출발 승차홈 표의 확인 범위 밖.",
+    "1F부스": "기존 사진 판독의 무인발권기 5대를 Blender 모델로 교체. 기존 부스가 다이소 GATE1 계단 상부와 겹쳐 본관 로컬 좌표 u166 v22.6로 이동. 사진상 같은 대합실 안에서 계단 폭을 보전하는 재구성이며 실측 위치·기기 제조사 치수는 미확인.",
+    "층사진": {
+      "2F": [
+        "https://exterminal.co.kr/images/n_floor02.jpg",
+        "침구 더미와 쿠션, 후면 진열대"
+      ],
+      "4F": [
+        "https://exterminal.co.kr/images/n_floor04-new-1.jpg",
+        "https://exterminal.co.kr/images/n_floor04-new-2.jpg",
+        "청록색 문선, 묶은 커튼과 원단, 실내 스탠드와 의자"
+      ],
+      "6F": [
+        "https://exterminal.co.kr/images/floor06.jpg",
+        "밝은 아동복과 접은 상품"
+      ],
+      "7F": [
+        "https://exterminal.co.kr/images/floor07.jpg",
+        "어두운 정장 행거, 넥타이, 양쪽 의류 진열"
+      ],
+      "8F": [
+        "https://exterminal.co.kr/images/floor08.jpg",
+        "색상 있는 의류와 마네킹"
+      ]
+    },
+    "모델": "Blender에서 미터 단위 점포 샘플 5종 제작. 2·4·6·7·8층에 각각 8개 예시 매대 배치. 점포 위치, 폭과 깊이, 상품 수량은 사진에 실측·호수 정보가 없어 추정. 모델 내 상층 매대 간 간격은 실제 동선 측량값이 아님. 공식 페이지의 사진 촬영일과 현재 입점 여부는 미확인.",
+    "원본": "assets/models/gyeongbu/market.blend",
+    "웹": "assets/models/gyeongbu/market.glb",
+    "모델_통행_검증": {
+      "방법": "tests/walk.mjs와 동일한 실제 물리 월드, 캡슐 반경 0.32 m, 키 1.75 m, 격자 간격 0.25 m. 모든 실내 가구 생성 후 검사.",
+      "상층": "2·4·6·7·8층 각각 계단참 인근→매장 열 입구→열 끝 통행, 중앙 보행로→8개 점포 전면 통과(40/40).",
+      "발권기": "1층 점자블록 보행축(v26 부근)에서 5대 앞 접근 5/5 통과.",
+      "계단": "다이소 GATE1 상행 계단 중심 u167, v11.25~19.75를 0.25 m마다 검사. 수정 전 v17.25~18.75의 7개 지점에서 머리 위 여유가 1.39~1.72 m였고 수정 후 1.75 m 미만 지점은 0개."
+    },
+    "검토일": "2026-11-25"
+  },
   "west_facade_door_and_restroom_recheck_20261115": "This follow-up supersedes the straight-line-only doorway interpretation in west_covered_walk_facade_20261115. Grid searches followed by actual-player replays found that eight of the nine previously unsuccessful straight samples could turn around existing interior fixtures to reach the public hall; the final exterior opening was also connected to the covered walkway. One approximate opening that led only into the overlapping end restroom was closed. The formerly modeled restroom at u=4..12 crossed the new u=10 facade and made a sink and restroom HUD visible from the exterior walkway. An approximate restroom at local u=12.2..19,v=138..142, with its sink and hall-facing door, replaces that conflicting placement. The official F1 guide places an end restroom by the hall but does not establish its measured boundary or door orientation. Same-position normal-game outside and inside views were inspected. Player samples round-tripped three restroom approaches, the 13 retained facade openings, nine amenity frontages, and the Shinsegae–Gyeongbu connection; a 0.8m public grid grew from 11,549 to 11,559 points. Connected smoke, 66 Gyeongbu walk checks and route regressions passed. These are finite model samples, not proof of every route or real-phone behavior; private photos were not packaged.",
   "west_covered_walk_facade_20261115": "The user's private Downloads photographs IMG_0968–1002 show the covered pedestrian walkway between the terminal and Shinsegae, with a pale upper facade, small windows, dark framed glazing, doors and red-brown closed bays along the terminal side. The model previously left this side largely open to the interior. A simplified facade was added at local u=10 over v=22–146 with upper windows, glazing, brick-coloured bays and regularly spaced openings. The precise real materials, door positions and bay spacing are not measured: the opening rhythm is a model approximation. Same-view normal-game images were checked. In combined model physics, 42m longitudinal player-update round trips at four lateral positions and sampled Shinsegae–terminal round trips matched baseline. Four model doorway samples completed 7m in-and-out; nine others did not complete because of pre-existing interior obstacles, so the results do not prove all doors accessible. A local 0.8m grid with midpoint checks and nine existing shop-front samples retained baseline connectivity. Connected-place smoke, 66 Gyeongbu walking checks and route regressions passed. The private photographs were not packaged.",
   "west_arcade_walk_surface_canopy_20261115": "The private walk IMG_0962–1002 shows a broad grey-tiled covered west arcade, a yellow tactile line by the recessed terminal frontage, and close-spaced transverse ceiling beams under inclined supports. The model had a uniform indoor white floor and its generic 3.3m indoor ceiling concealed the roof. A visual-only grey stone strip and tactile guide line were added, the generic ceiling and fluorescent fixtures omitted only over the walking strip, and simplified cross beams added beneath the existing 5.7m slab. Width, spacing and placement are approximate; the recessed frontage remains simplified. In the combined Shinsegae/Central City/terminal/city physics, a 0.8m accessibility grid retained 11,492 reachable points and all named 1F zones sampled; five player-update walks of 42m each returned to their start, thirteen transverse walks reached 5.61–5.95m, and nine sampled shop entries were each walked in and out. Same-position normal browser views were examined; no phone touch was tested. No private photograph is packaged. The known blue area portal and other-building LOD limitations are unchanged.",

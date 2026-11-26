@@ -1,9 +1,12 @@
+import { loadFixtureScene, mountFixture } from '../../assets/models/onebailey/load.js';
+const jewelry = await loadFixtureScene(new URL('../../assets/models/concourse-jewelry/jewelry-tray.glb',import.meta.url));
 // 르본시티, round 13. OSM shell; photo-relative shop groups, NOT a measured shop plan.
 // s7's terminal/subway frames do not depict this building. Keep its separate 3F–6F flower market.
 // Local u runs east along the 신반포로 frontage, v runs into the building (south).
 export const meta = {
   id: 'lebon', name: '르본시티 · 강남귀금속타운', claims: [413280002],
-  sources: ['data/osm.json', '.codex-jobs/evidence/research_lebon.json',
+  sources: ['data/osm.json', 'data/research/streets.json',
+    'https://map.naver.com/p?c=18,0,0,0,adh&p=FmNf2XmJtk1RjDP3k0TI7A,230,18,51,Float', '.codex-jobs/evidence/research_lebon.json',
     'refs/interior/lebon/kakao_roadview_20260625_left.jpg',
     'refs/interior/lebon/blog_2026-09_yeboh_resetting_06.jpg',
     'refs/interior/lebon/blog_2026-09_yeboh_resetting_07.jpg',
@@ -114,6 +117,7 @@ export function build(K) {
       stairs(42.1,33.5,42.1,25,mid,top,2.5);
     }
   }
+  buildRoofDisplay(K);
   K.slab(footprint,38,{mat:'roofgravel',under:white});
   // Lobby elevators as seen in the 2024 photo: paired stainless doors with a directory between.
   for(const u of [7,11.3]){const [x,z]=P(u,3.1);K.elevator({name:'르본시티 승강기',x,z,rotY:R,w:2.5,d:2.5,floors,mat:0xd5d1c5,doorMat:metal});}
@@ -234,14 +238,8 @@ export function build(K) {
     const dims=ns?[.78,wide]:[wide,.78], backdims=ns?[.24,wide]:[wide,.24];
     box(cu,cv,0,...dims,.72,wood);box(cu,cv,.72,...dims,.06,metal);
     box(cu,cv,.78,...dims,.4,'glass',{solid:false});
-    // Red piping and black velvet; polished tiny gold rings/chain lines are visible through the glass.
-    box(cu,cv,.79,dims[0]-.1,dims[1]-.1,.045,0x9c1836,{solid:false});
-    box(cu,cv,.837,dims[0]-.16,dims[1]-.16,.022,0x191c20,{solid:false});
-    for(let row=0;row<3;row++)for(let j=0;j<5;j++){
-      const du=ns?(row-1)*.18:(j-2)*.3,dv=ns?(j-2)*.25:(row-1)*.18;
-      ring(cu+du,cv+dv,.89,.058+(j%2)*.015);
-      if(j===2)box(cu+du,cv+dv,.89,.06,.045,.03,{color:0xf6edd0,gloss:.7},{solid:false});
-    }
+    const [trayX,trayZ]=P(cu,cv);
+    mountFixture(K,jewelry,'JewelryTray',[trayX,.79,trayZ],F[face],[wide/1.7,1,1]);
     box(u-ns*.9,v-vs*.9,.25,...backdims,2.15,wood);
     for(let j=0;j<3;j++){
       const du=ns?0:(j-1)*.65,dv=ns?(j-1)*.43:0;
@@ -389,4 +387,30 @@ export function build(K) {
   for(const [name,u,v,yaw] of [['강남귀금속타운 정문',U,-5,R+PI],['강남귀금속타운 후문',W+1.5,17.8,R+PI/2]]){
     const [x,z]=P(u,v);K.spawn({name,x,z,y:0,yaw,group:'르본시티'});
   }
+}
+
+function buildRoofDisplay(K) {
+  // January 2026 road view: pale notice screen, red heading and rows of
+  // dark type. The text is below legibility; paint only its observed layout.
+  K.texture('lebon-roof-led-art',512,288,(g,w,h)=>{
+    g.fillStyle='#e5e6e2'; g.fillRect(0,0,w,h);
+    const textRow = (x,y,width,height,color) => {
+      g.fillStyle=color;
+      for(let offset=0;offset<width;offset+=7){
+        if(offset%49===42)continue;
+        g.fillRect(x+offset,y,4,height);
+        g.fillRect(x+offset+4,y+1,1,height-2);
+      }
+    };
+    textRow(95,35,322,13,'#9b4640');
+    for(const [row,width] of [378,348,365,285,340,241].entries()){
+      textRow(59,81+row*24,width,6,'#62655f');
+    }
+  },[1,1]);
+  K.material('lebon-roof-led',new K.THREE.MeshBasicMaterial({map:K.T.surface('lebon-roof-led-art').tex,vertexColors:true}));
+  const x=-224,z=6,rot=105*Math.PI/180,u=[Math.cos(rot),-Math.sin(rot)],n=[Math.sin(rot),Math.cos(rot)];
+  K.box({x,z,y:39,w:11.6,h:7,d:.45,rotY:rot,mat:0x282b2a,solid:false});
+  const P=(s,y)=>[x+u[0]*s+n[0]*.24,y,z+u[1]*s+n[1]*.24];
+  K.quad('lebon-roof-led',[P(-5.5,39.25),P(5.5,39.25),P(5.5,45.75),P(-5.5,45.75)],[n[0],0,n[1]]);
+  for(const s of [-3.7,3.7])K.box({x:x+u[0]*s,z:z+u[1]*s,y:38,w:.26,h:1.1,d:.4,rotY:rot,mat:0x55534b,solid:false});
 }

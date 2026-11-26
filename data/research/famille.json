@@ -1,4 +1,42 @@
 {
+  "public_gallery_20261125": {
+  "date": "2026-11-25",
+  "sources": [
+    {
+      "url": "https://www.shinsegaecentral.com/famille",
+      "observed": "운영사 파미에스테이션 1층 목록의 29번 와필레. 브랜드 타일의 전면 사진에는 왼쪽 민트색 카운터·작은 유리 진열대, 오른쪽 뒤로 이어지는 좌석, 어두운 간판에 밝은 색 Wafille 글자가 보인다. 실제 호수·면적을 확정할 수 있는 실측도는 아니다."
+    },
+    {
+      "url": "https://www.shinsegaecentral.com/famille/Wafille",
+      "observed": "상단의 매장 안쪽 사진에서 민트색 세로 골 등받이와 타일, 분홍·크림 체크 벽지, 액자, 금속 다리 탁자와 의자, 뒤쪽 나무 수납벽을 확인했다. 페이지 하단의 츄러스 자료는 매장 배치 근거로 사용하지 않았다."
+    },
+    {
+      "url": "https://idbr.co.kr/famille",
+      "observed": "파미에스테이션 브랜드 설계사가 공개한 적용 사진에서 벽돌 기둥의 돌출 사각 양면시계, 황동색 가는 테두리의 어두운 FAMILLE STATION 표찰, 폭이 좁은 채광 유리칸이 큰 아치 사이로 반복되는 모습을 판독했다."
+    },
+    {
+      "url": "https://cdn.imweb.me/thumbnail/20240802/0f0952339cac9.png",
+      "observed": "IDBR의 아케이드 시계·채광창 사진. 개별 시계·유리살의 수치와 현 시점의 설치 위치는 확인되지 않았다."
+    }
+  ],
+  "changes": {
+    "cafe": "전면 전체를 가로막던 모형 카운터를 사진처럼 왼쪽에 두고, 매장 오른쪽에 붙박이 좌석 1열·탁자 2조를 넣었다. 좁은 모형 안에서 중앙 통로와 주문 접근을 확보했다. 실제 촬영된 작품 대신 와플을 소재로 만든 자체 액자를 사용했다.",
+    "arcade": "기존 볼트와 채광창 사이에 가는 지붕 가로살과 마루 캡을 보완하고, 피어에 양면 시계와 브랜드 명판을 놓았다. 원래 홀·갤러리·에스컬레이터 층과 건물 경계를 기준으로 삼았다."
+  },
+  "limits": "좌석 수·매장 깊이·시계 위치·눈금과 시각·유리 세부 모듈은 공개 사진의 비례를 적용한 모델값. 사진의 포스터 제작물 및 원본 이미지 파일은 패키지에 포함하지 않았다. 지붕 검토컷은 파미에스테이션을 단독 표시했다.",
+  "assets": {
+    "editable": "assets/models/famille/gallery.blend",
+    "browser": "assets/models/famille/gallery.glb",
+    "export_edited": "blender -b assets/models/famille/gallery.blend -P assets/models/famille/export.py && npm run optimize:model -- assets/models/famille/gallery.glb assets/models/famille/gallery.glb",
+    "rebuild": "blender -b -P assets/models/famille/build.py",
+    "details": "두 개의 편집 컬렉션을 색상 정보를 가진 2개 메시로 내보낸다. 와필레와 시계는 게임의 1층 세부 모델로 로드된다."
+  },
+  "verification": {
+    "views": "assets/models/famille/preview.jpg. 매장 전면·안쪽, 벽시계, 천창, 아케이드 통합 화면 5개와 단독 지붕 화면 1개.",
+    "walking": "0.25m 격자 탐색으로 와필레 앞 갤러리에서 매장 좌석 옆·주문대 접근 및 하우스 오브 신세계 이음부까지, 시계 아래 복도를 검수했다.",
+    "metadata": "와필레의 뒤쪽에 있던 잘못된 실외 전환문(월드 x4.6,z153.4)이 실내 고객 구역을 반영한 출입구 생성에서 사라진다."
+  }
+},
   "jw_dome_level_registration_probe_20261116": "The 2014 Famille Station visit https://www.seoulfoodie.com/blog-1/famille-station-food-court-central-city includes a historical level directory with Starbucks on 3F and escalators in the 2F central area; shop listings may have changed. Contemporary route descriptions https://kr.trip.com/moments/detail/seoul-234-133203835/ and https://blue-seal.tistory.com/entry/JW%EB%A9%94%EB%A6%AC%EC%96%B4%ED%8A%B8%ED%98%B8%ED%85%94-%EA%B0%95%EB%82%A8%EA%B3%A0%EC%86%8D%ED%84%B0%EB%AF%B8%EB%84%90-%EC%88%99%EB%B0%95-%ED%9B%84%EA%B8%B0 relate the dome Starbucks to the JW entrance, but do not supply measured elevations. The existing model labels the dome Starbucks 1F at y0, while an experimental re-registered JW lobby uses y7. Raising the entire modeled dome by 7m made the existing J7 station path lose support; a separate trial preserving the station floor and inventing intermediate flights restored a sampled physical route but did not establish the real flights, road, all shops or a plausible rendered result. Neither trial is integrated. Reconstruct floors, entrance road, station connection and tenant access together with stronger evidence; values are model units, not surveyed heights.",
   "id": "famille",
   "name": "파미에스테이션 동관",

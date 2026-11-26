@@ -1,6 +1,9 @@
 import * as THREE from 'three';
+import { createDaylight, timeModes } from './daylight.js';
 import { createPhysics, createPlayer } from './physics.js';
 import { createKit } from './kit.js';
+import { applyRoadEdits } from './blender-roads.js';
+import { drawBlenderBuilding } from './blender-buildings.js';
 import { buildCity, createTraffic } from './city.js';
 import { PLACES } from './places/index.js';
 import { createMap } from './map.js';
@@ -41,7 +44,7 @@ async function boot() {
   if (AREA.id !== 'all') status(`${areaName(AREA.id, META)} 불러오는 중…`);
   const wantIds = Q.get('places') ? Q.get('places').split(',') : PLACES.filter(id => AREA.modules.includes(id));
   const modP = wantIds.map(id => import(`./places/${id}.js`).then(m => ({ id, m }), e => ({ id, e })));
-  const osm = await osmP; mark('osm');
+  const osm = applyRoadEdits(await osmP); mark('osm');
 
   // Quality: ?q=low forces the light path (no MSAA, lower pixel-ratio ceiling); phones and small-memory devices
   // pick it automatically. Geometry is never reduced — only the render resolution adapts (see adaptResolution).
@@ -57,24 +60,34 @@ async function boot() {
   const camera = new THREE.PerspectiveCamera(72, innerWidth / innerHeight, 0.08, 4000);
   addEventListener('resize', () => { camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); });
 
-  // sky + light
-  const skyGeo = new THREE.SphereGeometry(3000, 32, 16); const skyCol = []; const pos = skyGeo.attributes.position;
-  const top = new THREE.Color(0x4f86c6), hor = new THREE.Color(0xcfe0ee), gnd = new THREE.Color(0x9aa3a8);
-  for (let i = 0; i < pos.count; i++) { const y = pos.getY(i) / 3000; const c = y > 0 ? hor.clone().lerp(top, Math.pow(y, 0.6)) : hor.clone().lerp(gnd, Math.min(1, -y * 4)); skyCol.push(c.r, c.g, c.b); }
-  skyGeo.setAttribute('color', new THREE.Float32BufferAttribute(skyCol, 3));
-  const sky = new THREE.Mesh(skyGeo, new THREE.MeshBasicMaterial({ vertexColors: true, side: THREE.BackSide, fog: false, depthWrite: false }));
-  sky.material.defines = { BANPO_RIGID: 1 };
-  sky.renderOrder = -1; scene.add(sky);
-  scene.fog = new THREE.Fog(0xcfe0ee, 350, 2600);
-  const hemi = new THREE.HemisphereLight(0xf4f8ff, 0xb3ad9f, 1.55); scene.add(hemi); // bright ground colour so ceilings and slab undersides do not read muddy
-  const sun = new THREE.DirectionalLight(0xfff4e0, 1.5); sun.position.set(-300, 600, 400); scene.add(sun);
-  const amb = new THREE.AmbientLight(0xffffff, 0.25); scene.add(amb);
-
   const phys = createPhysics();
   const K = createKit(THREE, scene, { osm, phys, maxAniso: renderer.capabilities.getMaxAnisotropy(), maxTex: renderer.capabilities.maxTextureSize, low: LOW, keep: AREA.keep, keepDetail: AREA.keepDetail });
   K._.atlas.start(); // sign rects are reserved during the build; text is painted once the fonts are in
-  // modules may register night handlers while they build, so this must exist before any build()
-  const nightFns = []; K.onNight = fn => nightFns.push(fn);
+  const timeControl = $('sky-mode'), timeLabel = $('sky-clock');
+  let storedMode;
+  try { storedMode = sessionStorage.getItem('sky-mode'); } catch {}
+  const initialMode = Q.has('night') ? 'night' : SHOT ? 'day' : storedMode || 'live';
+  const daylight = createDaylight(THREE, scene, osm.origin, K._.bounce, initialMode, state => {
+    timeControl.value = state.mode;
+    timeLabel.textContent = state.clock + ' · ' + state.phase;
+    document.body.classList.toggle('night', state.night);
+  });
+  K.onNight = daylight.onNight;
+  function setTimeMode(mode) {
+    if (!timeModes.includes(mode)) return;
+    if (!SHOT) {
+      try { sessionStorage.setItem('sky-mode', mode); } catch {}
+      if (Q.has('night')) {
+        Q.delete('night');
+        const url = new URL(location.href); url.searchParams.delete('night');
+        history.replaceState(history.state, '', url);
+      }
+    }
+    daylight.setMode(mode);
+  }
+  const setNight = on => setTimeMode(on ? 'night' : 'day');
+  timeControl.addEventListener('change', () => { setTimeMode(timeControl.value); timeControl.blur(); });
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) daylight.sync(Date.now(), true); });
 
   // ---- places ----
   const mods = [];
@@ -154,9 +167,12 @@ async function boot() {
           const z = b.poly.reduce((sum,v) => sum + v[1], 0) / b.poly.length;
           const ground = relief(x,z);
           const base = b.minHeight || Math.min(0,...b.poly.map(v => relief(...v)-ground));
-          K.withTerrainAnchor(x,z,() => K.prism(b.poly, base, h, {
-            mat: { tex: 'concrete', color: 0xd3cbbf }, holes: b.holes, solid: AREA.lodSolid !== false,
-          }));
+          K.withTerrainAnchor(x,z,() => {
+            const authored=drawBlenderBuilding(K,b,0xffffff,'landmark');
+            K.prism(b.poly,base,h,{mat:{tex:'concrete',color:0xd3cbbf},holes:b.holes,
+              side:authored ? false : undefined,top:authored ? false : undefined,
+              bottom:authored ? false : undefined,solid:AREA.lodSolid!==false});
+          });
         } catch (e) { }
       }
     }
@@ -193,9 +209,9 @@ async function boot() {
       for (const e of v.entrances || []) {
         // Some same-floor connections are also recorded as street-level entrances.
         // Both sides already exist in the same scene, including when viewed outdoors.
-        if (e.other && areaIdAt({ place: e.other }, 0, 0, 0) === areaIdAt({ place: mid }, 0, 0, 0)) continue;
+        if (e.other && areaIdAt({ place: e.other }, e.x, e.y, e.z) === areaIdAt({ place: mid }, 0, 0, 0)) continue;
         if (OWNP && OWNP.has(mid)) { // a door out of this building: walking along +n leaves
-          const tgt = e.other ? areaIdAt({ place: e.other }, 0, 0, 0) : 'out:' + districtAt(e.x + e.nx * 3, e.z + e.nz * 3).id;
+          const tgt = e.other ? areaIdAt({ place: e.other }, e.x, e.y, e.z) : 'out:' + districtAt(e.x + e.nx * 3, e.z + e.nz * 3).id;
           if (tgt === AREA.id) continue;
           add(e.x, e.z, e.y, e.w, e.nx, e.nz, tgt, e.other ? `${META[e.other]?.name || e.other} 가기` : `밖으로 · ${areaName(tgt, META)}`, `${e.other || 'street'}/1F`);
         } else if (!OWNP && inArea) { // outdoors: a door into this building (walking against n enters)
@@ -204,7 +220,8 @@ async function boot() {
       }
       if (OWNP && OWNP.has(mid)) for (const j of v.junctions || []) { // corridors to the next building
         if (OWNP.has(j.other) || j.nx == null) continue;
-        add(j.x, j.z, j.y, 7, j.nx, j.nz, areaIdAt({ place: j.other }, 0, 0, 0), `${META[j.other]?.name || j.other} 가기`, `${j.other}/${j.y < -1 ? 'B1' : '1F'}`);
+        const width = JUNCTIONS.find(link => link.id === j.id)?.width || 7;
+        add(j.x, j.z, j.y, width, j.nx, j.nz, areaIdAt({ place: j.other }, j.x, j.y, j.z), `${META[j.other]?.name || j.other} 가기`, `${j.other}/${j.y < -1 ? 'B1' : '1F'}`);
       }
     }
     // the visible door: thin glowing frame, a light curtain and a sign above (one sign per 18 m cluster of doors to the same place)
@@ -286,7 +303,7 @@ async function boot() {
   const hudZone = $('zone'), hudSub = $('zone-sub'), hudPrompt = $('prompt'), hudCoord = $('coord');
   let menuOpen = false, nearIt = null;
   // ---- leaving the area: reload at the new address with a loading screen ----
-  let leaving = false;
+  let leaving = false, reloadTimer;
   function reloadAt(key, x, y, z, yawDeg, why) {
     if (leaving || SHOT || AREA.id === 'all') return false;
     // loop guard: never bounce between areas more than 4 times in 20 s
@@ -299,10 +316,11 @@ async function boot() {
     const lt = $('loading-text'); if (lt) lt.textContent = `${why} 불러오는 중…`;
     $('loading').classList.remove('hidden'); document.exitPointerLock?.();
     history.pushState(null, '', location.pathname + location.search + href);
-    setTimeout(() => location.reload(), 60);
+    reloadTimer = setTimeout(() => location.reload(), 60);
     return true;
   }
   function leaveArea(x, y, z, yaw) {
+    if (leaving) return true;
     if (AREA.id === 'all') return false;
     const zn = phys.zoneAt(x, (y ?? 0) + 0.1, z);
     const id = areaIdAt(zn, x, y ?? 0, z);
@@ -316,20 +334,26 @@ async function boot() {
   const canvas = renderer.domElement;
   const lock = e => {
     if (e?.pointerType === 'touch' || e?.sourceCapabilities?.firesTouchEvents) return;
-    if (!SHOT && !menuOpen && !map.isOpen()) canvas.requestPointerLock?.();
+    if (!SHOT && !menuOpen && !map.isOpen() && document.hasFocus() && canvas.isConnected) {
+      canvas.requestPointerLock?.()?.catch(error => {
+        if (!['WrongDocumentError','NotAllowedError','AbortError','SecurityError'].includes(error.name)) console.warn(error);
+      });
+    }
   };
   canvas.addEventListener('click', lock);
   $('start').addEventListener('click', e => { $('start').classList.add('hidden'); lock(e); });
   document.addEventListener('pointerlockchange', () => document.body.classList.toggle('locked', document.pointerLockElement === canvas));
   document.addEventListener('mousemove', e => { if (document.pointerLockElement === canvas) { player.yaw -= e.movementX * 0.0022; player.pitch = Math.max(-1.5, Math.min(1.5, player.pitch - e.movementY * 0.0022)); } });
   addEventListener('keydown', e => {
-    if (e.target.tagName === 'INPUT') return;
+    if (e.target.matches?.('input, select')) return;
     keys[e.code] = true;
     if (menuOpen) { if (/^Digit\d$|^Numpad\d$/.test(e.code)) pickFloorByKey(e.code); if (e.code === 'Escape' || e.code === 'KeyE') closeMenu(); return; }
     if (e.code === 'KeyF') { player.fly = !player.fly; player.vy = 0; toast(player.fly ? '비행 모드 (Space 위 / C 아래)' : '걷기 모드'); }
     if (e.code === 'KeyE' && nearIt) use(nearIt);
     if (e.code === 'KeyM') { map.toggle(); if (map.isOpen()) document.exitPointerLock?.(); }
-    if (e.code === 'KeyN') setNight(!night);
+    if (e.code === 'KeyN' && !e.repeat) {
+      if (e.shiftKey) setTimeMode('live'); else setNight(!daylight.state.night);
+    }
     if (e.code === 'KeyH') $('help').classList.toggle('hidden');
     if (e.code === 'KeyR') { const r = player.respawn; player.teleport(r.x, r.y, r.z, r.yaw); }
   });
@@ -362,7 +386,7 @@ async function boot() {
         if (touch.id === null) { touch.id = t.identifier; stick.classList.add('on'); movePad(t); }
         continue;
       }
-      if (t.target.closest?.('button,#map-full,#elev,#start,.gt-mini')) continue;
+      if (t.target.closest?.('button,select,#map-full,#elev,#start,.gt-mini')) continue;
       if (touch.lookId === null) { touch.lookId = t.identifier; touch.lx = t.clientX; touch.ly = t.clientY; }
     }
   }, { passive: true });
@@ -410,19 +434,6 @@ async function boot() {
   function pickFloorByKey(code) { const n = code.slice(-1); const f = menuEl.floors.find(f => f.label.replace(/[^0-9B]/g, '') === n || f.label === n + 'F' || f.label === n + '층'); if (f) goFloor(f); }
   function closeMenu() { menuOpen = false; $('elev').classList.add('hidden'); }
 
-  // night mode
-  let night = Q.has('night');
-  function setNight(v) {
-    night = v; document.body.classList.toggle('night', v);
-    hemi.intensity = v ? 0.35 : 1.55; sun.intensity = v ? 0.08 : 1.5; amb.intensity = v ? 0.25 : 0.25; K._.bounce.value = v ? 0.38 : 0.55;
-    const t = v ? 0x0b1530 : 0x4f86c6, h = v ? 0x223050 : 0xcfe0ee; const cols = sky.geometry.attributes.color;
-    const T1 = new THREE.Color(t), H1 = new THREE.Color(h), G1 = new THREE.Color(v ? 0x10141c : 0x9aa3a8);
-    for (let i = 0; i < pos.count; i++) { const y = pos.getY(i) / 3000; const c = y > 0 ? H1.clone().lerp(T1, Math.pow(y, 0.6)) : H1.clone().lerp(G1, Math.min(1, -y * 4)); cols.setXYZ(i, c.r, c.g, c.b); }
-    cols.needsUpdate = true; scene.fog.color.setHex(v ? 0x1a2238 : 0xcfe0ee);
-    for (const f of nightFns) f(v);
-  }
-  if (night) setNight(true);
-
   // ---- loop ----
   // ---- routes: every room/floor has its own address (#/place/floor?p=x,y,z,yaw) ----
   // Walking into another place/floor pushes a history entry (so Back returns to the previous room); the position
@@ -449,8 +460,15 @@ async function boot() {
       return false;
     }
     addEventListener('popstate', () => {
+      clearTimeout(reloadTimer);
       const r = parse(location.hash);
-      if (META && AREA.id !== 'all' && r && areaIdForKey(r.key, r.pos, META) !== AREA.id) { location.reload(); return; }
+      if (META && AREA.id !== 'all' && areaIdForKey(r?.key, r?.pos, META) !== AREA.id) {
+        leaving = true;
+        location.reload();
+        return;
+      }
+      if (leaving) $('loading').classList.add('hidden');
+      leaving = false;
       go(r);
     });
     return {
@@ -541,12 +559,14 @@ async function boot() {
     player.update(dt, input);
     camera.position.set(player.x, player.y + player.eye + relief(player.x, player.z), player.z);
     camera.rotation.set(player.pitch, player.yaw, 0, 'YXZ');
-    sky.position.copy(camera.position);
+    daylight.sky.position.copy(camera.position);
+    daylight.sync();
     for (const f of K._.frameFns) { try { f(dt, t, player); } catch (e) { } }
     if (traffic) traffic.update(dt);
     // zone + interactables
     currentZone = phys.zoneAt(player.x, player.y + 0.1, player.z);
-    route.update(currentZone);
+    // Keep the destination hash until the scheduled area reload reads it.
+    if (!leaving) route.update(currentZone);
     areaWatch(currentZone); portalCheck(); pinUpdate();
     if (reLive && (frames & 63) === 0) reLive.update(player.x, player.z);
     const zname = currentZone ? currentZone.name : (player.y < -2 ? '지하' : '거리');
@@ -581,7 +601,7 @@ async function boot() {
   // real-estate-map apartments stream in after the page is up (nearest first)
   let reLive = null;
   if (reModels.length) setTimeout(() => { reLive = loadReModels({ THREE, scene, models: reModels, stand: reStand, terrain: exteriorTerrain, from: { x: player.x, z: player.z }, onProgress: (d, n) => { if (d === n) toast(`주변 아파트 ${n}동 불러옴`); } }); }, SHOT ? 0 : 400);
-  Object.assign(window.__world, { ready: true, area: AREA.id, wantedArea: () => wantedArea(phys.zoneAt(player.x, player.y + 0.1, player.z)), K, phys, player, camera, scene, renderer, map, places: placeInfo, stats: { ...K._.stats, phys: phys.stats, draw: () => renderer.info.render }, setNight });
+  Object.assign(window.__world, { ready: true, area: AREA.id, wantedArea: () => wantedArea(phys.zoneAt(player.x, player.y + 0.1, player.z)), K, phys, player, camera, scene, renderer, map, places: placeInfo, stats: { ...K._.stats, phys: phys.stats, draw: () => renderer.info.render }, setNight, setTimeMode, daylight });
   frame();
 }
 boot().catch(e => { fail('boot', e); status('오류: ' + e.message); });

@@ -1,8 +1,13 @@
+import { loadFixtureScene, mountFixture } from '../../assets/models/onebailey/load.js';
+const stationSeats = await loadFixtureScene(new URL('../../assets/models/concourse-jewelry/station-seat.glb',import.meta.url));
 import { JUNCTIONS, WELLS } from './_junctions.js';
 
 export const meta = {
   id: 'station', name: '고속터미널역 · 3·7·9호선', claims: [],
   sources: [
+    'https://www.shinsegaecentral.com/about',
+    'https://map.naver.com/p/entry/place/11567199',
+    'https://map.naver.com/p/entry/place/11815569',
     'https://mediahub.seoul.go.kr/archives/2016717',
     'https://mediahub.seoul.go.kr/archives/162098',
     'https://mediahub.seoul.go.kr/archives/1139258',
@@ -592,10 +597,11 @@ export function build(K) {
   }
   function bench(f,s,v,y) {
     const q=f.at(s,v);if(later(q.x,y,q.z,()=>bench(f,s,v,y)))return;
-    localBox(f,s,v,y+.42,.65,.11,3.5,'metal',true);
-    localBox(f,s,v+.28,y+.55,.09,.55,3.5,0x8d9ca3);
-    for(const q of [-1.3,1.3])localBox(f,s+q,v,y,.38,.42,.12,0x394951);
-    for(let q=-1.4;q<1.5;q+=.7)localBox(f,s+q,v,y+.54,.62,.025,.035,0x5e6b70);
+    box({x:q.x,z:q.z,y:y+.42,w:.65,h:.11,d:3.5,rotY:q.rot,mat:'metal',solid:true,
+      skip:['n','s','w','e','top','bottom']});
+    // The backrest belongs on the wall side of each concourse.
+    const seatYaw=Math.atan2(-q.uz,q.ux)+(v<0 ? Math.PI : 0);
+    mountFixture(K,stationSeats,'StationSeat',[q.x,y,q.z],seatYaw);
   }
   function facilities(f,s,v,y) {
     const p=f.at(s,v);if(later(p.x,y,p.z,()=>facilities(f,s,v,y)))return;
@@ -689,11 +695,10 @@ export function build(K) {
   // Public B1 band stays outside the hotel and skirts the north of the rotunda.
   const b1Path=[[45,150],[-45,186],[-68,195],[-88,220],[-175,262]];
   const b1Voids=[[17,145,25,163],[-126,235,-118,251]];
-  // Round 10: destination labels and stair bearings remain unverified. OSM
-  // exit points do not establish which building each underground door serves.
+  // Destinations follow public visitor guides. Stair bearings and corridor turns are inferred.
   const exitSpecs=[
-    ['2',55.11,124.19,0,1, [45,150],'반포미도아파트 · 경부선 주차장'],
-    ['7',37.5,131.19,0,1,[37,153],'JW메리어트 · 센트럴시티'],
+    ['2',55.11,124.19,0,1, [45,150],'경부·영동선 터미널 · 반포미도아파트'],
+    ['7',37.5,131.19,0,1,[37,153],'센트럴시티 호남선 · 신세계백화점 · JW메리어트'],
     ['3',52.11,179.03,0,-1,[45,153],'사평대로 · JW메리어트 · 파미에스테이션'],
     ['4',-130.48,250.07,-.89,.455,[-148,248],'서울성모병원'],
     ['5',-185.64,276.89,.89,-.455,[-174,261],'국립중앙도서관'],
@@ -1703,9 +1708,9 @@ export function build(K) {
       sign('소화전',-80.38,B1+1.3,z,.38,.17,-Math.PI/2,'#a93e36');
     }
     sign('E',-80.4,B1+2.18,-66.1,.38,.4,-Math.PI/2,'#edece6','#b87649');
-    const exits=[['3','사평대로 · 파미에스테이션'],['4','서울성모병원'],['5','국립중앙도서관'],['6','래미안퍼스티지'],['7','JW메리어트'],['8','센트럴시티 · 신세계'],['8-1','반포한강공원'],['8-2','서울반원초등학교']];
+    const exits=[['1','경부·영동선 터미널'],['2','경부·영동선 터미널'],['3','사평대로 · 파미에스테이션'],['4','서울성모병원'],['5','국립중앙도서관'],['6','래미안퍼스티지'],['7','센트럴시티 호남선'],['8','호남선 · 신세계백화점'],['8-1','반포한강공원'],['8-2','서울반원초등학교']];
     sign('나가는 곳',-86.15,B1+2.18,-58.6,1.35,.27,-Math.PI/2,'#303538');
-    exits.forEach(([n,d],i)=>sign(n+'  '+d,-86.15,B1+1.92-i*.2,-58.6,1.35,.19,-Math.PI/2,i%2?'#25292b':'#b99b39',i%2?'#f6d158':'#24292a'));
+    exits.forEach(([n,d],i)=>sign(n+'  '+d,-86.15,B1+1.93-i*.17,-58.6,1.35,.16,-Math.PI/2,i%2?'#25292b':'#b99b39',i%2?'#f6d158':'#24292a'));
     for(const [z,w,h,tex] of [[-60,1.15,1.8,'station-local-map'],[-57.2,1.2,1.9,'station-violet-screen']]){
       box({x:-86.15,z,y:B1+.27,w:.1,h:h+.1,d:w+.09,mat:0x262e33});
       K.quad(tex,[[-86.22,B1+.32,z-w/2],[-86.22,B1+.32,z+w/2],[-86.22,B1+.32+h,z+w/2],[-86.22,B1+.32+h,z-w/2]],[-1,0,0],[[0,0],[1,0],[1,1],[0,1]]);

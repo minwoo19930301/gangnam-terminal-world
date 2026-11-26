@@ -16,6 +16,10 @@
   <div id="hud">
     <div id="zone">불러오는 중</div>
     <div id="zone-sub"></div>
+    <div id="sky-time"><select id="sky-mode" aria-label="서울 하늘 시간">
+      <option value="live">서울 실시간</option><option value="sunrise">아침 보기</option>
+      <option value="day">낮 보기</option><option value="sunset">노을 보기</option><option value="night">밤 보기</option>
+    </select> <span id="sky-clock"></span></div>
     <div id="coord"></div>
   </div>
   <div id="cross"></div>
@@ -26,7 +30,7 @@
     <b>조작</b><br>
     WASD 이동 · 마우스 시점 · Shift 달리기 · Space 점프<br>
     E 엘리베이터/상호작용 · M 지도(클릭해서 순간이동) · F 비행 모드 (Space/C 상하)<br>
-    N 밤/낮 · R 처음 위치 · H 도움말<br>
+    N 밤/낮 · Shift+N 서울 실시간 · R 처음 위치 · H 도움말<br>
     <a href="data/research/parcel-cover.md" target="_blank" rel="noopener">지도·식생 자료 출처</a>
   </div>
   <div id="stick" aria-label="이동 패드"><div id="knob"></div></div>
@@ -35,7 +39,7 @@
     <h1>고속터미널 멀티버스</h1>
     <p>고투몰 · 신세계백화점 강남점 · JW 메리어트 · 꽃시장 · 경부선/호남선 · 다이소 · 노브랜드 · 파미에스테이션 · 데블스도어 · 반포쇼핑타운 · 반포지구대 · 뉴코아아울렛 · 반원상가 · 반포한강공원 · 잠원한강공원</p>
     <p class="small">OpenStreetMap 실측 배치 위에 블로그·공식 안내를 참고해 층별 내부까지 재현했습니다.</p>
-    <p class="keys">WASD 이동 · 마우스 시점 · E 엘리베이터 · M 지도 · F 비행 · N 밤</p>
+    <p class="keys">WASD 이동 · 마우스 시점 · E 엘리베이터 · M 지도 · F 비행 · N 밤/낮</p>
     <p class="touch-keys">왼쪽 원을 움직여 이동하고, 화면을 드래그해 둘러보세요.</p>
     <button>들어가기</button>
   </div></div>

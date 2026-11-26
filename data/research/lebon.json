@@ -1,10 +1,12 @@
 {
   "id": "lebon",
   "name": "르본시티 · 강남귀금속타운",
-  "updated": "2026-11-07",
+  "updated": "2026-11-25",
   "round": 13,
   "source_research": ".codex-jobs/evidence/research_lebon.json",
   "sources": [
+    {"reference":"https://map.naver.com/p?c=18,0,0,0,adh&p=FmNf2XmJtk1RjDP3k0TI7A,230,18,51,Float","topic":"2026년 1월 신반포로 거리뷰","access":"황갈색 건물 옥상 가로 전광판, 흰 화면·붉은 머리글·어두운 본문 줄·어두운 테두리 확인. 전문·픽셀 피치·치수는 판독 불가."},
+    {"reference":"data/research/streets.json","topic":"신반포로에서 보이는 옥상 전광판","access":"기존 거리뷰 cc_02 관찰 기록 및 기존 streets 모델의 추정 방향·크기을 건물 모듈로 이관. 렌더 위치를 검증했으며 현재 광고와 현장 치수는 미확인."},
     {
       "reference": "https://search.map.kakao.com/mapsearch/map.daum?q=르본시티",
       "topic": "identity & address",

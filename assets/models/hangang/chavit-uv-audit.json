@@ -1,0 +1,49 @@
+{
+  "width": 2048,
+  "height": 2048,
+  "charts": 1032,
+  "padding": 4,
+  "libraries": {
+    "xatlas": "0.0.11",
+    "trimesh": "5.2.2",
+    "numpy": "1.26.4",
+    "shapely": "2.2.0"
+  },
+  "layers": [
+    "UVMap",
+    "LightmapUV"
+  ],
+  "objects": [
+    {
+      "object": "외피 교차 트러스",
+      "vertices": 1536,
+      "polygons": 768,
+      "triangles": 1536,
+      "surface_m2": 794.553949,
+      "uv_area_fraction": 0.169372323,
+      "min_uv_triangle_area": 7.331192318815738e-05,
+      "geometry_sha256": "ddeabcf85aefc70fbd7e8fb28128f71e78693346b8716af0e2b413e3c54217d8",
+      "primary_uv": "UVMap",
+      "primary_uv_sha256": "f3963db15f3fb2cb558e02c17a472733076db87abe45a4d69c371f986460b288"
+    },
+    {
+      "object": "은색 지붕 테두리",
+      "vertices": 528,
+      "polygons": 264,
+      "triangles": 528,
+      "surface_m2": 267.28524,
+      "uv_area_fraction": 0.058239884,
+      "min_uv_triangle_area": 8.726117812329903e-05,
+      "geometry_sha256": "223ea0f9726f1d036b895e4f80bc05c501e95c85b864d239caade5a7407d8dae",
+      "primary_uv": "UVMap",
+      "primary_uv_sha256": "14833564f3a8ad6bfe0350ace48ec6ffbec0d40b206e12af0930a4b9718ea87e"
+    }
+  ],
+  "total_triangles": 2064,
+  "shared_atlas_fraction": 0.227612207,
+  "touching_triangle_pairs_checked": 1032,
+  "max_uv_intersection_area": 0.0,
+  "positive_area_overlap_pairs": 0,
+  "uv_area_tolerance": 1e-12,
+  "runtime_geometry_sha256": "e0c4ef9baf6508c3d650d7464cdb506714bf3ec7ea70f58c6e70bffb61edb26a"
+}

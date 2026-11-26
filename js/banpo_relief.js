@@ -1,4 +1,5 @@
 import { samples, x0, z0, step, width, height } from './banpo_dem.js';
+import { heightEdits } from '../assets/models/world/height-edits.js';
 import { gardenReference } from './garden_terrain.js';
 
 // Model floors, portal URLs and movement use the terminal's local reference.
@@ -9,7 +10,9 @@ const lastX = width - 1, lastZ = height - 1;
 
 export function exteriorReliefEnabled() { return enabled; }
 
-const city = {x0,z0,step,width,height,samples};
+const survey = {x0,z0,step,width,height,samples};
+const city = {...survey, samples:Object.keys(heightEdits.city).length ? samples.slice() : samples};
+for (const [index,metres] of Object.entries(heightEdits.city)) city.samples[index]=metres;
 const garden = {x0:-150,z0:-175,step:5,width:131,height:96};
 const inGarden = (x,z) => x>=garden.x0 && x<=garden.x0+(garden.width-1)*garden.step &&
   z>=garden.z0 && z<=garden.z0+(garden.height-1)*garden.step;
@@ -28,14 +31,26 @@ const changedCells=new Uint8Array(lastX*lastZ);
 for(let j=0;j<garden.height;j++) for(let i=0;i<garden.width;i++) {
   const x=garden.x0+i*garden.step, z=garden.z0+j*garden.step;
   const ground=sample(city,x,z), registered=gardenReference(x,z,ground);
-  garden.samples[j*garden.width+i]=registered;
-  if (Math.abs(registered-ground)<1e-7) continue;
+  const index=j*garden.width+i;
+  garden.samples[index]=heightEdits.garden[index] ?? registered;
+  if (Math.abs(garden.samples[index]-ground)<1e-7) continue;
   // A changed node can influence both sides of a coarse grid boundary.
   for(const dx of [-.01,.01]) for(const dz of [-.01,.01])
     changedCells[Math.floor((z+dz-z0)/step)*lastX+Math.floor((x+dx-x0)/step)]=1;
 }
 
-export function surveyElevation(x,z) { return sample(city,x,z); }
+export function surveyElevation(x,z) { return sample(survey,x,z); }
+
+// The Blender seed carries both baseline and authored values. Baking/exporting
+// again therefore preserves sparse edits without altering the source survey.
+export function editableGroundGrids() {
+  const baseline=Array.from(garden.samples,(_,index)=>{
+    const x=garden.x0+(index%garden.width)*garden.step, z=garden.z0+Math.floor(index/garden.width)*garden.step;
+    return gardenReference(x,z,sample(city,x,z));
+  });
+  const record=(grid,base)=>({x:grid.x0,z:grid.z0,width:grid.width,height:grid.height,step:grid.step,rows:Array.from(grid.samples),base:Array.from(base)});
+  return {city:record(city,survey.samples),garden:record(garden,baseline)};
+}
 
 export function relief(x,z) {
   if (!enabled) return 0;
@@ -52,7 +67,7 @@ export function maxReliefInBounds(minX, minZ, maxX, maxZ) {
   const zMax = Math.max(0, Math.min(lastZ, Math.ceil((maxZ-z0) / step)));
   let limit = 0;
   for (let j = zMin; j <= zMax; j++) {
-    for (let i = xMin; i <= xMax; i++) limit = Math.max(limit, Math.abs(samples[j * width + i]));
+    for (let i = xMin; i <= xMax; i++) limit = Math.max(limit, Math.abs(city.samples[j * width + i]));
   }
   if (minX<=garden.x0+(garden.width-1)*garden.step && maxX>=garden.x0 &&
       minZ<=garden.z0+(garden.height-1)*garden.step && maxZ>=garden.z0) {

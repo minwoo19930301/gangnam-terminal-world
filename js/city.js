@@ -1,3 +1,11 @@
+import { applyRoadEdits } from './blender-roads.js';
+import { drawHardware } from '../assets/models/street-and-lift/draw.js';
+import { streetPlacement } from './street-layout.js';
+import { drawBlenderBuilding } from './blender-buildings.js';
+import { addStreetLamps } from './streetscape.js';
+import { withJamwonInlet } from './river-water.js';
+import { height as perstigeHeight, panels as perstigePanels } from '../assets/models/perstige/panels.js';
+import { fleetInstances, vehicleContacts } from './fleet.js';
 // Generic city layer from OpenStreetMap: everything not claimed by a detailed place module.
 import { pointInPoly, polyBBox, polyArea } from './physics.js';
 import { relief } from './banpo_relief.js';
@@ -11,9 +19,12 @@ const SIGNAL_ROADS = new Set(['primary', 'secondary', 'tertiary']);
 const PAINT = { white: 0xf4f1e6, yellow: 0xf2c329, blue: 0x238bd2, pink: 0xe477a1, mint: 0x50cbb1 };
 const LAYER_H = 7.5;
 
-export function buildCity(K, osm, { claimedBuildings = new Set(), claimedRoads = new Set(), claimedAreas = new Set(), log = () => {} } = {}) {
+export function buildCity(K, osm, { claimedBuildings = new Set(), claimedRoads = new Set(), claimedAreas = new Set(), log = () => {}, inspectStreetPlacement, streetPlacementEdits } = {}) {
+  applyRoadEdits(osm);
   const { THREE } = K;
   const rnd = K.rand(42);
+  const streetLamps = [];
+  const streetscape = streetPlacement(K, streetLamps, inspectStreetPlacement, streetPlacementEdits);
   // ---------- building index (for tree/POI placement tests) ----------
   const bGrid = new Map(); const CELL = 40;
   const bkey = (i, j) => i * 10007 + j;
@@ -115,8 +126,9 @@ export function buildCity(K, osm, { claimedBuildings = new Set(), claimedRoads =
   };
   const plantedKinds = new Set(['leisure:park', 'landuse:grass', 'leisure:garden',
     'natural:grassland', 'landuse:forest', 'natural:wood']);
+  const waterOutline = a => a.id === 152336 && claimedAreas.has(981963451) ? withJamwonInlet(a.poly) : a.poly;
   const channelCuts = osm.areas.filter(a => a.kind === 'natural:water' && !claimedAreas.has(a.id))
-    .map(a => ({poly: a.poly, inner: a.holes}));
+    .map(a => ({poly: waterOutline(a), inner: a.holes}));
   const cuts = [...K._.groundHoles, ...channelCuts].map(c => ({...c, bounds: polyBBox(c.poly)}));
   function cutsAt(poly) {
     const [x0,z0,x1,z1] = polyBBox(poly);
@@ -133,24 +145,26 @@ export function buildCity(K, osm, { claimedBuildings = new Set(), claimedRoads =
   for (const a of osm.areas) {
     if (claimedAreas.has(a.id)) continue;
     if (a.kind === 'natural:water') {
-      const wy = polyArea(a.poly) > 20000 ? -1.4 : -0.5;
-      K.groundHole(a.poly, a.holes);
+      const han = a.id === 152336;
+      const outline = waterOutline(a);
+      const wy = polyArea(outline) > 20000 ? -1.4 : -0.5;
+      K.groundHole(outline, a.holes);
       const stream = a.id === 248405787; // Banpocheon's banks descend along the channel.
-      const datum = relief(...a.poly[0]);
-      const level = stream ? wy : wy + Math.min(...a.poly.map(p => relief(...p))) - datum;
+      const datum = relief(...outline[0]);
+      const level = stream ? wy : wy + Math.min(...outline.map(p => relief(...p))) - datum;
       function waterMesh() {
-        K.hpoly('water', a.poly, level, true, a.holes);
-        K.phys.addSurface(a.poly, level - 0.7, { holes: a.holes, slow: 0.7, tag: 'water' });
-        const ns = K.orient(a.poly);
-        for (let i = 0; i < a.poly.length; i++) {
-          const p = a.poly[i], q = a.poly[(i + 1) % a.poly.length];
+        K.hpoly(han ? 'hanRiver' : 'water', outline, level, true, a.holes);
+        K.phys.addSurface(outline, level - 0.7, { holes: a.holes, slow: 0.7, tag: 'water' });
+        const ns = K.orient(outline);
+        for (let i = 0; i < outline.length; i++) {
+          const p = outline[i], q = outline[(i + 1) % outline.length];
           const py = stream ? 0.01 : relief(...p) - datum + 0.01;
           const qy = stream ? 0.01 : relief(...q) - datum + 0.01;
           K.quad({ tex: 'concrete', color: 0x9a9890 }, [[p[0], level - 1, p[1]], [q[0], level - 1, q[1]], [q[0], qy, q[1]], [p[0], py, p[1]]], [-ns[i][0], 0, -ns[i][1]]);
         }
       }
       if (stream) waterMesh();
-      else K.withTerrainAnchor(...a.poly[0], waterMesh);
+      else K.withTerrainAnchor(...outline[0], waterMesh);
       for (const h of a.holes || []) K.hpoly({ tex: 'grass', color: 0xd8e0b0 }, h, 0.0, true);
       continue;
     }
@@ -173,7 +187,7 @@ export function buildCity(K, osm, { claimedBuildings = new Set(), claimedRoads =
         groundCover({tex:'grass',color:0xb7c89e},outer,.003,inner,cutsAt(outer));
       }
       for (const [x,z,height] of cover.trees) {
-        if (!inOpening(x,z,nearby)) K.tree(x,z,{h:height,kind:'zelkova'});
+        if (!inOpening(x,z,nearby)) streetscape.tree(x,z,{h:height,kind:'zelkova'});
       }
     }
     if (a.kind === 'amenity:parking' && polyArea(a.poly) > 300) parkingLines(a, nearby);
@@ -239,7 +253,7 @@ export function buildCity(K, osm, { claimedBuildings = new Set(), claimedRoads =
     while (k < n && g++ < n * 8) {
       const x = bb[0] + rnd() * (bb[2] - bb[0]), z = bb[1] + rnd() * (bb[3] - bb[1]);
       if (!pointInPoly(x, z, poly) || inOpening(x,z,nearby) || (holes && holes.some(h => pointInPoly(x, z, h))) || buildingAt(x, z, 2) || onRoad(x, z, false, 1)) continue;
-      K.tree(x, z, { kind: rnd() < 0.2 ? 'pine' : rnd() < 0.5 ? 'cherry' : 'zelkova', h: 6 + rnd() * 6 }); k++;
+      streetscape.tree(x, z, { kind: rnd() < 0.2 ? 'pine' : rnd() < 0.5 ? 'cherry' : 'zelkova', h: 6 + rnd() * 6 }); k++;
     }
   }
 
@@ -402,10 +416,12 @@ export function buildCity(K, osm, { claimedBuildings = new Set(), claimedRoads =
       for (let s = 4; s < segL; s += 10) for (const sg of [1, -1]) {
         const tx = x + dx * s + nx * off * sg, tz = z + dz * s + nz * off * sg;
         if (buildingAt(tx, tz, 1.5) || onRoad(tx, tz, true, 0.6)) continue;
-        K.tree(tx, tz, { kind: r.hw === 'primary' ? 'ginkgo' : 'zelkova', h: 7 + rnd() * 3 });
+        streetscape.tree(tx, tz, { kind: r.hw === 'primary' ? 'ginkgo' : 'zelkova', h: 7 + rnd() * 3 });
         if (Math.round(s) % 30 < 10) { // street lamp
           const lx = tx + dx * 5, lz = tz + dz * 5;
-          if (!buildingAt(lx, lz, 1)) { K.cyl({ x: lx, z: lz, r: 0.09, h: 9, mat: 0x6d7378, seg: 6, solid: false }); K.box({ x: lx - nx * sg * 1.2, y: 8.8, z: lz - nz * sg * 1.2, w: 0.35, h: 0.18, d: 2.4, rotY: Math.atan2(nx, nz), mat: 0x5a6066, solid: false }); }
+          if (!buildingAt(lx, lz, 1)) {
+            streetscape.lamp(lx, lz, Math.atan2(-nx * sg, -nz * sg));
+          }
         }
       }
     });
@@ -593,20 +609,13 @@ export function buildCity(K, osm, { claimedBuildings = new Set(), claimedRoads =
         // The lens centre is 5.8 m above the lanes. The projecting backplate
         // separates the silhouette from the sky; each lamp has its own hood.
         const cy = 5.8;
-        K.box({ x, z, y: cy + 0.21, w: 0.055, h: 6.3 - cy - 0.21, d: 0.055, rotY, mat: 0x737e85, solid: false });
-        K.box({ x: x - p.dx * 0.18, z: z - p.dz * 0.18, y: cy - 0.32,
-          w: 1.49, h: 0.64, d: 0.045, rotY, mat: 0x141a1d, solid: false });
-        K.box({ x, z, y: cy - 0.21, w: 1.25, h: 0.42, d: 0.3, rotY, mat: 0x242a2d, solid: false });
+        drawHardware(K,'TrafficHousing',x,cy,z,rotY);
         for (let k = 0; k < 4; k++) {
           const off = (k - 1.5) * 0.3, hx = x + p.dz * off + p.dx * 0.16, hz = z - p.dx * off + p.dz * 0.16;
           const color = k === 0 ? (green ? 0x421e1b : 0xff4135) : k === 1 ? 0x493b16 : k === 2 ? 0x163c2a : (green ? 0x39e88a : 0x163c2a);
           if (k === 2) K.sign('←', { x: hx, z: hz, y: cy, w: 0.23, h: 0.23, rotY, bg: '#101a17', fg: '#265b3d' });
           else lens(hx, cy, hz, p.dx, p.dz, 0.115, { tex: 'emit', color });
-          K.box({ x: hx + p.dx * 0.1, z: hz + p.dz * 0.1, y: cy + 0.135,
-            w: 0.275, h: 0.035, d: 0.26, rotY, mat: 0x141a1d, solid: false });
-          for (const side of [-1, 1]) K.box({ x: hx + p.dx * 0.1 + p.dz * side * 0.126,
-            z: hz + p.dz * 0.1 - p.dx * side * 0.126, y: cy - 0.12,
-            w: 0.023, h: 0.255, d: 0.26, rotY, mat: 0x141a1d, solid: false });
+
         }
       }
       if (a.r.name) K.sign(a.r.name, { x: pole.x + ux * 1.5, z: pole.z + uz * 1.5, y: 5.82, w: 2.6, h: 0.48,
@@ -624,8 +633,7 @@ export function buildCity(K, osm, { claimedBuildings = new Set(), claimedRoads =
     roadStats.pedestrianSignals++; poleSites.push({ x, z, kind: 'pedestrian' });
     const rotY = Math.atan2(dx, dz);
     K.cyl({ x, z, r: 0.065, h: 3.1, seg: 6, mat: 0x737e85, solid: false });
-    K.box({ x: x - dx * 0.01, z: z - dz * 0.01, y: 2.19, w: 0.44, h: 0.84, d: 0.04, rotY, mat: 0x141a1d, solid: false });
-    K.box({ x: x + dx * 0.13, z: z + dz * 0.13, y: 2.25, w: 0.34, h: 0.72, d: 0.24, rotY, mat: 0x202629, solid: false });
+    drawHardware(K,'WalkHousing',x,2.61,z,rotY);
     for (const [walking, cy, lit] of [[false, 2.78, !green], [true, 2.44, green]]) {
       const mat = { tex: 'emit', color: lit ? (walking ? 0x42ed96 : 0xff4439) : 0x17322b };
       const P = (u, v) => [x + dx * 0.257 + dz * u * 1.15, cy + v * 1.15, z + dz * 0.257 - dx * u * 1.15];
@@ -775,13 +783,32 @@ export function buildCity(K, osm, { claimedBuildings = new Set(), claimedRoads =
         for (const ring of [b.poly, ...(b.holes || [])]) K.phys.addPolyWalls(ring, base, 0, .02, 'city');
       }
     }
+    if (b.id === 412970176) {
+      K.prism(b.poly, 0, perstigeHeight, { mat: 0x797681, top: 'roofgravel', bottom: false });
+      for (const [x,z,y,w,h,d,rotY,mat] of perstigePanels)
+        K.box({ x,z,y,w,h,d,rotY,mat,solid:false });
+      // Lettering is legible in Naver's January 2026 view of the public north corner.
+      const [a, edgeEnd] = [b.poly[6], b.poly[7]];
+      const length = Math.hypot(edgeEnd[0]-a[0], edgeEnd[1]-a[1]);
+      const ux = (edgeEnd[0]-a[0])/length, uz = (edgeEnd[1]-a[1])/length;
+      const nx = -uz, nz = ux, rotY = Math.atan2(nx,nz);
+      const fascia = (text, along, y, w, h, bg, fg) => K.sign(text, {
+        x:a[0]+ux*along+nx*.28, z:a[1]+uz*along+nz*.28, y, w, h, rotY, bg, fg, bold:true,
+      });
+      fascia('래미안 퍼스티지 중심상가',4.3,18.75,7.7,.53,null,'#ede6cc');
+      fascia('비앤씨 3F 치과',13.9,9.23,5.4,.72,'#41768c','#f4f6ef');
+      fascia('하나은행',13.9,7.19,5.5,.46,'#23766b','#f3f6ee');
+      return;
+    }
     const facade = facadeFor(b);
     const lv = b.levels || Math.max(1, Math.round(b.height / 3.3));
     const floorH = Math.max(2.6, (b.height - b.minHeight) / lv);
     const tint = b.type === 'apartments' ? [0xf4f2ec, 0xeceae2, 0xf0ece4, 0xe6e6e0][b.id % 4] : [0xffffff, 0xf0ece6, 0xe8e4dc, 0xf6f0e8, 0xe0e4e8][b.id % 5];
-    K.prism(b.poly, b.minHeight, b.height, { mat: { tex: facade, color: tint }, top: { tex: 'roofgravel' }, bottom: false, floorH, holes: b.holes });
+    const authored = drawBlenderBuilding(K,b,tint);
+    K.prism(b.poly, b.minHeight, b.height, { mat: { tex: facade, color: tint }, side: authored ? false : undefined,
+      top: authored ? false : { tex: 'roofgravel' }, bottom: false, floorH, holes: b.holes });
     // parapet
-    if (b.height > 8) for (let i = 0; i < b.poly.length; i++) { const p = b.poly[i], q = b.poly[(i + 1) % b.poly.length]; K.wall(p[0], p[1], q[0], q[1], b.height, b.height + 0.9, { thick: 0.25, mat: 0xd8d6d0, solid: false }); }
+    if (!authored && b.height > 8) for (let i = 0; i < b.poly.length; i++) { const p = b.poly[i], q = b.poly[(i + 1) % b.poly.length]; K.wall(p[0], p[1], q[0], q[1], b.height, b.height + 0.9, { thick: 0.25, mat: 0xd8d6d0, solid: false }); }
     if (b.type === 'apartments' && b.height > 20) apartmentExtras(b, floorH);
   }
   function facadeFor(b) {
@@ -838,8 +865,14 @@ export function buildCity(K, osm, { claimedBuildings = new Set(), claimedRoads =
       K.sign(p.name.replace(/\(.*?\)/g, '').trim().slice(0, 18), { x, y: b.minHeight + floor * fh + (floor === 0 ? 3.0 : fh * 0.5), z, w: Math.min(4.6, L * 0.85), h: 0.75, rotY: Math.atan2(ns[bi][0], ns[bi][1]), bg, fg, offset: 0.12 });
     });
   }
+  if (streetLamps.length) {
+    const lens = new THREE.MeshLambertMaterial({color:0xb9c1c1,emissive:0xffddaa,emissiveIntensity:0});
+    lens.name = '가로등 발광렌즈';
+    K.onNight?.(night => { lens.emissiveIntensity = night ? 1.35 : 0; });
+    addStreetLamps(K, streetLamps, lens);
+  }
   // OSM trees
-  for (const [x, z] of osm.trees) K.tree(x, z, { kind: 'zelkova' });
+  for (const [x, z] of osm.trees) streetscape.tree(x, z, { kind: 'zelkova' });
   log(`city: ${nb} buildings, ${roads.length} roads; ${roadStats.junctions} junctions, ${roadStats.signalised} signalised (${roadStats.renderedSignalised} unclaimed), ${roadStats.quads} road-detail quads`);
   return { buildingAt, onRoad, roads, roadStats, junctions: layout.junctions, poleSites, crossingSites };
 }
@@ -940,69 +973,19 @@ export function createTraffic(K, roadsInfo, n = 160) {
   }
   if (!cars.length) return null;
 
-  // Separate wheel instances let each tyre follow the road at a grade break.
-  const bodyMat = new THREE.MeshLambertMaterial({ color: 0xffffff });
-  const detailMat = new THREE.MeshLambertMaterial({ vertexColors: true });
-  bodyMat.defines = { BANPO_RIGID: 1 };
-  detailMat.defines = { BANPO_RIGID: 1 };
-  const box = (w, h, d, x, y, z, color = 0xffffff) => ({ w, h, d, x, y, z, color });
-  function geometry(parts) {
-    const positions = [], normals = [], colors = [], color = new THREE.Color();
-    for (const part of parts) {
-      let g;
-      if (part.wheel) { g = new THREE.CylinderGeometry(part.wheel, part.wheel, part.w, 10).toNonIndexed(); g.rotateZ(Math.PI / 2); }
-      else g = new THREE.BoxGeometry(part.w, part.h, part.d).toNonIndexed();
-      g.translate(part.x, part.y, part.z); color.setHex(part.color);
-      positions.push(...g.attributes.position.array); normals.push(...g.attributes.normal.array);
-      for (let i = 0; i < g.attributes.position.count; i++) colors.push(color.r, color.g, color.b);
-      g.dispose();
-    }
-    const g = new THREE.BufferGeometry();
-    g.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
-    g.setAttribute('normal', new THREE.Float32BufferAttribute(normals, 3));
-    g.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
-    return g;
-  }
   const fleets = [];
   for (const kind of ['car', 'taxi', 'bus', 'minibus']) {
     const list = cars.filter(c => c.kind === kind); if (!list.length) continue;
-    const bus = kind === 'bus' || kind === 'minibus', w = kind === 'bus' ? 2.5 : kind === 'minibus' ? 2.35 : 1.8;
-    const h = kind === 'bus' ? 3 : kind === 'minibus' ? 2.9 : 1.55, d = kind === 'bus' ? 11 : kind === 'minibus' ? 8.4 : 4.5;
-    const shell = bus ? [box(w, h - 0.55, d, 0, (h + 0.35) / 2, 0)] : [box(w, 0.7, d, 0, 0.68, 0), box(1.62, 0.18, 2.3, 0, 1.45, 0.05)];
-    const detail = [];
-    if (bus) {
-      detail.push(box(w - 0.08, 0.16, d - 0.06, 0, h - 0.08, 0, 0xe8edf0));
-      // Individual window bays and front/rear glass leave visible body pillars.
-      for (let z = -d / 2 + 0.75; z < d / 2 - 0.7; z += 1.45) for (const side of [-1, 1])
-        detail.push(box(0.025, 1.02, 1.28, side * (w / 2 + 0.008), h - 0.81, z, 0x223b48));
-      for (const end of [-1, 1]) detail.push(box(w - 0.2, 1.2, 0.025, 0, h - 0.92, end * (d / 2 + 0.01), 0x263f4b));
-      detail.push(box(w + 0.02, 0.19, d + 0.02, 0, 1.16, 0, 0xe9f0ef));
-      detail.push(box(0.035, 1.86, 1.05, -w / 2 - 0.02, 1.5, d / 2 - 1.3, 0x172c35));
-      detail.push(box(1.4, 0.23, 0.04, 0, h - 0.36, d / 2 + 0.03, 0xd6e5b1));
-    } else {
-      detail.push(box(1.59, 0.47, 2.24, 0, 1.2, 0.05, 0x263b47));
-      for (const side of [-1, 1]) detail.push(box(0.025, 0.48, 0.13, side * 0.81, 1.23, 0, 0x5b6265));
-      if (kind === 'taxi') detail.push(box(0.57, 0.22, 0.3, 0, 1.65, 0.15, 0xe9efdc));
-    }
-    const radius = bus ? 0.44 : 0.31;
-    const wheel = [
-      { wheel: radius, w: .18, x: 0, y: radius, z: 0, color: 0x181c21 },
-      { wheel: radius*.5, w: .21, x: 0, y: radius, z: 0, color: 0x9ba5ac }
-    ];
-    for (const side of [-1, 1]) {
-      detail.push(box(bus ? 0.34 : 0.32, 0.15, 0.035, side * w * 0.34, 0.72, d / 2 + 0.025, 0xf7efc3));
-      detail.push(box(0.24, 0.2, 0.035, side * w * 0.36, 0.75, -d / 2 - 0.025, 0xb92e23));
-    }
-    const meshes = [new THREE.InstancedMesh(geometry(shell), bodyMat, list.length),
-      new THREE.InstancedMesh(geometry(detail), detailMat, list.length),
-      new THREE.InstancedMesh(geometry(wheel), detailMat, list.length*4)];
+    const model = kind === 'bus' ? 'cityBus' : kind;
+    const [halfTrack, halfWheelbase] = vehicleContacts(model);
+    const meshes = fleetInstances(THREE, model, list.length, {separateWheels:true});
     const color = new THREE.Color();
     list.forEach((c, i) => {
-      c.index = i; c.fleet = meshes; c.halfWheelbase = d * .32; c.halfTrack = w / 2;
+      c.index = i; c.fleet = meshes; c.halfWheelbase = halfWheelbase; c.halfTrack = halfTrack;
       meshes[0].setColorAt(i, color.setHex(c.color));
     });
     meshes.forEach((mesh, i) => {
-      mesh.name = 'traffic-' + kind + '-' + ['body','trim','wheels'][i];
+      if (i === 2) mesh.name = 'traffic-' + kind + '-wheels';
       mesh.userData.dynamic = true; // Lazy detail loads must keep the live instance matrices.
       mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
       mesh.frustumCulled = false;
@@ -1012,6 +995,7 @@ export function createTraffic(K, roadsInfo, n = 160) {
   }
   const M = new THREE.Matrix4(), Q = new THREE.Quaternion(), yaw = new THREE.Quaternion();
   const V = new THREE.Vector3(), up = new THREE.Vector3(0,1,0), S = new THREE.Vector3(1,1,1);
+  const leftWheel = new THREE.Quaternion(), flipWheel = new THREE.Quaternion().setFromAxisAngle(up, Math.PI);
   const asphalt = (x,z) => relief(x,z) + .03;
   const road = s => s.kind === 'ramp' && (s.tag === 'road' || s.tag === 'streets') && !s.move;
   const contacts = [];
@@ -1030,9 +1014,10 @@ export function createTraffic(K, roadsInfo, n = 160) {
       Q.multiply(yaw.setFromAxisAngle(up,Math.atan2(dx,dz)));
       M.compose(V.set(x,height,z),Q,S);
       c.fleet[0].setMatrixAt(c.index, M); c.fleet[1].setMatrixAt(c.index, M);
+      leftWheel.copy(Q).multiply(flipWheel);
       for (let i=0; i<4; i++) {
         const side = i%2 ? 1 : -1, end = i<2 ? -1 : 1;
-        M.setPosition(x + side*rx + end*fx, contacts[i], z + side*rz + end*fz);
+        M.compose(V.set(x + side*rx + end*fx, contacts[i], z + side*rz + end*fz), side < 0 ? leftWheel : Q, S);
         c.fleet[2].setMatrixAt(c.index*4+i, M);
       }
     }

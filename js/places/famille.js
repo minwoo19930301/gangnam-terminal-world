@@ -1,8 +1,22 @@
+import { loadArchitecture, placeArchitecture } from '../../assets/models/interior-architecture/model.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 import { gardenSurface, gardenStation } from './_gardenGrade.js';
 import { relief } from '../banpo_relief.js';
 
+// Local route tests and the browser share the two meshes exported from gallery.blend.
+const fixtureURL = new URL('../../assets/models/famille/gallery.glb', import.meta.url);
+const fixtureBytes = fixtureURL.protocol === 'file:'
+  ? await (await import('node:fs/promises')).readFile(fixtureURL)
+  : new Uint8Array(await (await fetch(fixtureURL)).arrayBuffer());
+const galleryFixtures = (await new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).parseAsync(
+  fixtureBytes.buffer.slice(fixtureBytes.byteOffset, fixtureBytes.byteOffset + fixtureBytes.byteLength), ''
+)).scene;
+
 // Round 20. The user's 2026-11-07 photographs override the older GPS/plan fit.
 // The indoor restaurant street meets parking 2F. The garden is above parking 3F.
+const galleryRib = await loadArchitecture('gallery-rib.glb');
+
 export const meta = {
   id: 'famille', name: '파미에스테이션 동관', claims: [414891732],
   claimRoads: [],
@@ -41,6 +55,15 @@ function familleMaterials(K){
       g.fillRect(c*128+(r%4)*32+1,r*32+1,126,30);
     }
   },[2.4,2.4]);
+  K.texture('famille-gingham',64,64,(g,w,h)=>{
+    g.fillStyle='#f4e3d5';g.fillRect(0,0,w,h);
+    g.fillStyle='#e7b6ac';g.fillRect(0,0,w/2,h);g.fillRect(0,0,w,h/2);
+    g.fillStyle='#d99e97';g.fillRect(0,0,w/2,h/2);
+  },[.19,.19]);
+  K.texture('famille-mint-tiles',64,64,(g,w,h)=>{
+    g.fillStyle='#b5cdc1';g.fillRect(0,0,w,h);
+    g.fillStyle='#95b3a7';g.fillRect(1,1,w-2,h-2);
+  },[.095,.095]);
   // Port the r19 food-led poster vocabulary with original procedural artwork.
   K.texture('famille-ebt-menu',256,320,(g,w,h)=>{
     g.fillStyle='#e7b956';g.fillRect(0,0,w,h);
@@ -508,6 +531,18 @@ function buildHall(K) {
   // Photo-proven Wafille bay, followed by architectural bays with names unassigned.
   wall(22,0,70.56,0,0,8,{openings:[{at:3.2,w:5.6,y0:0,y1:4.1},...Array.from({length:6},(_,i)=>({at:9.7+i*6.5,w:5.3,y0:0,y1:4.1})),...Array.from({length:7},(_,i)=>({at:3.2+i*6.5,w:5.3,y0:5,y1:7.9}))]});
   wall(22,11.5,70.56,11.5,0,8,{openings:[...Array.from({length:7},(_,i)=>({at:3.2+i*6.5,w:5.3,y0:0,y1:4.1})),...Array.from({length:7},(_,i)=>({at:3.2+i*6.5,w:5.3,y0:5,y1:7.9}))]});
+  // Wafille's photographer faces a left-hand counter and a mint banquette along
+  // the right wall. Fit the two-table vignette in a shallow bay clear of JF1.
+  const cafe=rect(22.55,-2.44,27.85,.10);
+  K.slab(cafe,.012,{mat:{tex:'wood',color:0xb29173},thick:.085});
+  K.slab(cafe,3.33,{mat:cream,under:cream,walk:false,thick:.09});
+  wall(22.55,-2.44,27.85,-2.44,.012,3.33,{mat:0x705442});
+  wall(27.85,-2.44,27.85,0,.012,3.33,{mat:0x705442});
+  wall(22.55,0,22.55,-2.44,.012,3.33,{mat:0x9dc0b7});
+  B(22.695,-1.2,.83,.043,2.4,.49,'famille-mint-tiles');
+  B(22.695,-1.2,1.32,.043,2.4,1.92,'famille-gingham');
+  B(25.2,-2.31,2.65,5.12,.06,.61,'famille-gingham');
+  K.zone({name:'와필레',floor:'1F',sub:'파미에스테이션 · 디저트 카페',poly:cafe,y0:0,y1:3.3,priority:21});
   // North shops remain shallow window displays at the shared JW boundary, not new interior claims.
   for(let u=38.5;u<69;u+=6.5){
     B(u,-.13,0,5.25,.10,4.1,0x272620);
@@ -532,8 +567,20 @@ function buildHall(K) {
       K.quad(mat,[xyz([u0,v0,y0]),xyz([u1,v0,y0]),xyz([u1,v1,y1]),xyz([u0,v1,y1])],[0,-1,0]);
       if(mat!=='glass')K.quad(0xe3e0d6,[xyz([u0,v0,y0+.1]),xyz([u1,v0,y0+.1]),xyz([u1,v1,y1+.1]),xyz([u0,v1,y1+.1])],[0,1,0]);
     }
-    for(let u=u0;u<=u1+.01;u+=6.5)for(let i=0;i<24;i++){const a=i*PI/24,b=(i+1)*PI/24;beam([u,5.75-5.75*Math.cos(a),7.98+3*Math.sin(a)],[u,5.75-5.75*Math.cos(b),7.98+3*Math.sin(b)],.13,0xf4f1e8);}
+    const spans=[];
+    for(let u=u0;u<=u1+.01;u+=6.5) {
+      const [x,z]=P(u,5.75); spans.push([x,8,z,R]);
+    }
+    placeArchitecture(K,galleryRib,'파미에 갤러리 아치와 벽등',spans);
     for(const v of [3.2,5.75,8.3]){const y=8+3*Math.sqrt(1-((v-5.75)/5.75)**2);beam([u0,v,y],[u1,v,y],.075,0xc7c7be);}
+    // IDBR's gallery photograph shows several narrow glazed lights between
+    // the large structural arches. The framing follows the existing crown.
+    const crownY=v=>8+3*Math.sqrt(1-((v-5.75)/5.75)**2);
+    for(let u=u0+1.625;u<u1;u+=1.625){
+      for(const [a,b] of [[3.2,5.75],[5.75,8.3]])
+        beam([u,a,crownY(a)+.024],[u,b,crownY(b)+.024],.049,0x999c9a);
+    }
+    beam([u0,5.75,11.045],[u1,5.75,11.045],.09,0xafb0a9);
   };roof(22,70.56);
   // Hall north shares the white vault; the escalator bay has the photographed luminous black-grid ceiling.
   for(let v=0;v<8;v+=.5){const y=9.8+.55*Math.sin(v*PI/8);B(13,v+.25,y,18,.53,.12,0xeeeae0);}
@@ -620,10 +667,30 @@ function buildHall(K) {
       dining(u-1.15,9.15);
       dining(u+1.15,9.15);
     }
-    // Mint Wafille service front with display glass, stocked pastry shelves and brass chairs.
-    B(25.2,-.15,0,5.1,.78,1.02,0x8fd3c4);B(25.2,-.15,1.02,5.2,.85,.07,0xd7c6aa);B(25.2,-.14,1.1,4.0,.65,.55,'glass');
-    for(let n=0;n<12;n++){B(23.2+(n%6)*.7,-.12,1.17+Math.floor(n/6)*.18,.30,.34,.10,[0xbd8752,0xe0bf7f,0x9b653e][n%3]);}
-    for(const u of [23.3,27.0]){B(u,1.1,.43,.45,.46,.07,0xb7a66c);for(const du of [-.18,.18])for(const dv of [-.18,.18])B(u+du,1.1+dv,0,.025,.025,.44,brass);B(u,1.32,.5,.44,.04,.42,brass);}
+    // The ceiling strip, menu and side seating face the gallery in the operator's storefront photograph.
+    const fixtureMat=new K.THREE.MeshLambertMaterial({vertexColors:true});
+    function mountFixture(key,u,v,y){
+      const source=galleryFixtures.getObjectByName(key), mesh=new K.THREE.Mesh(source.geometry,fixtureMat);
+      const [x,z]=P(u,v);
+      mesh.name=key;
+      mesh.position.set(x,y,z);
+      mesh.rotation.y=R;
+      K.addMesh(mesh);
+    }
+    mountFixture('Wafille',25.2,0,.013);
+    // Collision silhouettes follow the visible counter, bench and two tables.
+    B(26.34,-.55,.012,2.40,.76,.97,0xb0d7cc,true);
+    B(22.88,-.84,.012,.41,2.60,.38,0x7a503b,true);
+    for(const v of [-.03,-1.32]) B(23.50,v,.67,.70,.71,.06,0xb0d7cc,true);
+    B(27.09,-.52,1.1,.54,.48,.38,'glass');
+    B(27.48,.02,.03,.60,.10,2.94,0x392f2a);
+    B(27.48,.086,1.20,.47,.01,.76,'famille-ebt-menu');
+    B(24.64,-2.285,1.70,3.75,.10,.68,0x463a32);
+    for(let n=0;n<10;n++) B(23.04+n*.35,-2.205,1.78,.27,.09,.30, n%2?0xddd7c7:0xc5c7b3);
+    for(const u of [23.66,25.05,26.44]) B(u,-1.14,3.205,1.0,.65,.05,{tex:'emit',color:0xffefda});
+    mountFixture('GalleryClock',41.80,1.15,3.47);
+    B(35.30,.37,2.32,.78,.062,.25,0x4c4237);
+    sign('FAMILLE STATION',35.30,.411,2.445,.70,.11,'v',{fg:'#ded1b3',pxPerM:180});
     // Light architectural trim remains detailed: dentils, sconce stems, globes and leaf clusters.
     const plant=(u,v,h=3.5)=>{
       cyl(u,v,0,.54,.52,0xece9df);cyl(u,v,.52,.47,.08,0x756e56);cyl(u,v,.57,.075,h-.9,0x69553a);

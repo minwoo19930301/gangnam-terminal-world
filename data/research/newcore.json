@@ -1,7 +1,124 @@
 {
+  "retail_transfers_and_ashley": {
+    "checked": "2026-11-25",
+    "official_guides": [
+      "https://www.elandretail.com/store02.do?BDID=0003001B&branchID=00110001&lang=000600KO",
+      "https://www.elandretail.com/store02.do?BDID=0003002B&branchID=00110001&lang=000600KO"
+    ],
+    "lower_maps": {
+      "1관 B1": "https://www.elandretail.com/upload/20260810172519901_0.jpg",
+      "1관 1F": "https://www.elandretail.com/upload/20260603113655521_0.jpg",
+      "2관 B1": "https://www.elandretail.com/upload/20261111151036_5.jpg",
+      "2관 1F": "https://www.elandretail.com/upload/20261111151035_4.jpg"
+    },
+    "guide_observations": "1·2관 B1~5F 공식 안내도 12장 대조. 1관 중앙에서 오른쪽에는 일반 에스컬레이터 표시가 여섯 층에 이어진다. 2관의 중앙 에스컬레이터는 1~5F 안내도에 보인다. 2관 B1에는 중앙 뱅크와 별도로 뒤쪽에 카트 그림과 상행·하행 표시가 있다. 2관 1F에도 B1로 이어지는 카트 표시가 있다. 2~5F 공식 이미지 8개는 upper_floor_review.floor_guides에 수록했다.",
+    "model": "1관 일반 5쌍, 2관 일반 4쌍과 B1~1F 카트 무빙워크 1쌍. 상·하행 2열로 재구성하고 슬래브와 B1 천장에 개구부를 냈다. 운영사 약도로 층과 구역을 식별했다. 좌우 운행 지정, 각 열의 실제 수, 월드 좌표, 개구부 크기, 길이, 폭, 경사와 속도는 추정이다. 카트 벨트와 난간의 재질은 일반 형식으로 표현했다.",
+    "verification": "node tests/newcore-transfers.mjs가 가구를 포함한 실제 플레이어 물리에서 20개 열의 자동 운행과 양 끝 0.75m 승하차를 확인한다. 중앙선 각 101개 지점의 바닥, 반경 0.32m 충돌과 1.75m 머리 공간을 검사한다. 이번 결과 20/20 운행·승하차, 2,020/2,020 표본 통과. 모델 검증이며 현장 실측 자료는 없다.",
+    "ashley_sources": [
+      "https://www.elandretail.com/store05.do?branchID=00110001&lang=000600KO",
+      "https://www.elandretail.com/upload/20251107133441030_0.jpg",
+      "https://everyjourney.tistory.com/65?category=1070579"
+    ],
+    "ashley": "1·2관 영업층 안내의 최상층은 5F다. 1관 5F 애슐리퀸즈에 Blender 배식대, 온열등, 집게, 세 개의 음식 팬과 쌓은 접시를 배치했다. 운영사는 상호와 층을 확인해 준다. 2025년 방문기의 즉석 조리·샐러드 구성을 참조했으며 음식 종류·수량·배식대 규격과 위치는 예시다.",
+    "assets": [
+      "assets/models/newcore/upper-fixtures.blend",
+      "assets/models/newcore/upper-fixtures.js",
+      "assets/models/newcore/customer-review.jpg"
+    ]
+  },
   "id": "newcore",
   "name": "뉴코아아울렛 강남점",
-  "updated": "2026-11-07",
+  "updated": "2026-11-25",
+  "upper_floor_review": {
+    "checked": "2026-11-25",
+    "floor_guides": [
+      {
+        "building": "1관",
+        "floor": "5F",
+        "use": "전문식당가·문화센터·VIP라운지",
+        "map": "https://www.elandretail.com/upload/20251107133441030_0.jpg"
+      },
+      {
+        "building": "1관",
+        "floor": "4F",
+        "use": "모던하우스",
+        "map": "https://www.elandretail.com/upload/20251107142056502_0.jpg"
+      },
+      {
+        "building": "1관",
+        "floor": "3F",
+        "use": "아동·유아휴게실",
+        "map": "https://www.elandretail.com/upload/20260923101226175_0.jpg"
+      },
+      {
+        "building": "1관",
+        "floor": "2F",
+        "use": "여성·마담·란제리",
+        "map": "https://www.elandretail.com/upload/20261111151257_3.jpg"
+      },
+      {
+        "building": "2관",
+        "floor": "5F",
+        "use": "남성·골프",
+        "map": "https://www.elandretail.com/upload/20261111151159_0.jpg"
+      },
+      {
+        "building": "2관",
+        "floor": "4F",
+        "use": "스포츠·캐주얼",
+        "map": "https://www.elandretail.com/upload/20260826114444422_0.jpg"
+      },
+      {
+        "building": "2관",
+        "floor": "3F",
+        "use": "여성 전문관",
+        "map": "https://www.elandretail.com/upload/20260529132506120_0.jpg"
+      },
+      {
+        "building": "2관",
+        "floor": "2F",
+        "use": "컨템포러리·영캐주얼",
+        "map": "https://www.elandretail.com/upload/20260826114444041_0.jpg"
+      }
+    ],
+    "scope": "이랜드 층별안내에서 1·2관의 영업층은 B1~5F, 3관은 1F 푸드. 이번 작업은 1·2관 2~5F의 대표 점포·코너 50곳과 이를 잇는 복도를 구현했다.",
+    "layout": "공식 안내도에 표시된 상호·층과 상대 배열을 참조했다. 좌표·북쪽·층고·구획 폭·대표 매장 사이의 길이·가구 배치는 근사값이다. 모든 점포의 경계를 복원한 것은 아니다. 층별 엘리베이터, 에스컬레이터와 계단의 현장 위치·수량은 미측정이다. 1·2관 에스컬레이터 및 카트 무빙워크는 retail_transfers_and_ashley에서 별도로 검토했다.",
+    "sixth_floor_model_check": {
+      "checked": "2026-11-26",
+      "official_guides": {
+        "1관": "https://www.elandretail.com/store02.do?BDID=0003001B&branchID=00110001&lang=000600KO",
+        "2관": "https://www.elandretail.com/store02.do?BDID=0003002B&branchID=00110001&lang=000600KO",
+        "3관": "https://www.elandretail.com/store02.do?BDID=0003003B&branchID=00110001&lang=000600KO"
+      },
+      "result": "공식 영업층 안내에서 1관은 B1~5F(최상층 전문식당가·문화센터·VIP라운지), 2관은 B1~5F(최상층 남성·골프), 3관은 1F 푸드만 확인했다. 세 관 모두 6층 이상에 고객용 매장을 확인할 근거가 없다. 주차타워의 층 표기로 매장 유무나 건물 전체 층수를 판단할 수 없다.",
+      "browser_check": "Chrome에서 게임의 뉴코아 5F 주소로 입장해 두 관의 5층 목적지에서 층·용도 표시를 확인했다. 등록된 구역과 엘리베이터 메뉴 자료에는 3관 1F 식당가·카페, 옥상 주차장이 구분되며 별도 주차동 1~4F는 모두 주차장이다. 이 네 건물에서 6층 이상 상업층을 표시하는 항목은 0개였다.",
+      "parking_scope": "3관 옥상 주차장 및 별도 주차동의 실제 데크 수, 높이, 현재 개방 여부는 공식 판매층 안내의 조사 범위 밖이다."
+    },
+    "sixth_floor_evidence": [
+      {
+        "url": "https://www.elandretail.com/store02.do?BDID=0003003B&branchID=00110001&lang=000600KO",
+        "observed": "운영사 3관 층안내에 1F 식당가만 표시. 1·2관 6F 이상 고객용 판매층에 관한 운영사 안내 없음."
+      },
+      {
+        "url": "https://www.co-op.co.kr/coop04/data_invest/Newcore_Gangnam.asp",
+        "observed": "옛 기업구조조정리츠 자료에 신관 지상5층, 주차빌딩 포함 킴스클럽 지상6층 표기. 현행 상가 층별 안내·승강기 정차 번호와는 별도 기준."
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=jTnEIVyNsU8",
+        "observed": "3관 킴스주차타워 탑승자 영상 제목에 지상 1·3·5·7·9·11 정차 표기. 항목은 게시자 표기이며 개별 데크 단면, 실높이, 현행 통행 가능 여부는 확인되지 않음."
+      }
+    ],
+    "assets": {
+      "editable": "assets/models/newcore/upper-fixtures.blend",
+      "runtime": "assets/models/newcore/upper-fixtures.js",
+      "scenes": [
+        "NewCore • Upper floors",
+        "Fixture workshop"
+      ],
+      "reference": "NewCore 장면에 웹 모델과 같은 여덟 층의 구획과 집기 238개를 배치했다. Fixture workshop에 있는 원형 12종은 내장 export_mesh.py로 웹용 메시를 다시 내보낼 수 있다. 대표 의류·골프 매장 35곳에는 진열열 두 줄, 옷걸이와 접은 옷 테이블을 배치했다. 매장에 따라 성인·아동 마네킹, 운동화 단상, 골프백을 전시한다. 실제 점포별 가구와 상품 배열은 확인하지 못해 업종에 맞춰 재구성했다."
+    },
+    "walking_check": "프로젝트 충돌·바닥 엔진에서 반경 0.32m, 높이 1.75m인 보행자로 0.4m 간격을 검사했다. 8개 층의 승강기 앞에서 대표 매장·코너 50곳의 입구 안쪽 50/50곳과 매장 깊이의 83% 지점 50/50곳까지 걸어서 도달했다. 실제 현장 길이는 미측정."
+  },
   "sources": [
     {
       "url": "https://www.elandretail.com/store02.do?BDID=0003001B&branchID=00110001&lang=000600KO",

@@ -417,7 +417,7 @@ export function createMap(opts) {
   function teleportTo(target, ground) {
     const x = clamp(target.x, bounds[0], bounds[2]), z = clamp(target.z, bounds[1], bounds[3]);
     // a spot in another area: the page reloads there (area loading, js/areas.js)
-    if (opts.leaveArea && opts.leaveArea(x, Number.isFinite(target.y) && !ground ? target.y : null, z, target.yaw)) { toggle(); return; }
+    if (opts.leaveArea && opts.leaveArea(x, Number.isFinite(target.y) && !ground ? target.y : null, z, target.yaw)) { if (open) toggle(); return; }
     // try the requested floor, then street level, then whatever walkable surface is highest there
     const tries = [];
     if (!ground && Number.isFinite(target.y)) tries.push(target.y);

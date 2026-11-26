@@ -1,8 +1,11 @@
 {
   "id": "station",
   "name": "고속터미널역 (서울 지하철 3·7·9호선)",
-  "updated": "2026-11-07",
+  "updated": "2026-11-25",
   "sources": [
+    {"url":"https://www.shinsegaecentral.com/about","title":"센트럴시티 운영사 교통안내","evidence":"경부·영동선 1·2번, 호남선·신세계 7·8번 출구 방면."},
+    {"url":"https://map.naver.com/p/entry/place/11567199","title":"네이버 지도 서울고속버스터미널","evidence":"2026-11-25 장소 화면에서 1번 출구 153m 안내 확인."},
+    {"url":"https://map.naver.com/p/entry/place/11815569","title":"네이버 지도 센트럴시티터미널","evidence":"2026-11-25 장소 화면에서 7번 출구 26m 안내 확인. 거리 표시는 장소 안내 기준."},
     {
       "url": "https://itwiki.kr/w/%EA%B3%A0%EC%86%8D%ED%84%B0%EB%AF%B8%EB%84%90%EC%97%AD",
       "title": "고속터미널역 (itwiki, 위키 미러)",

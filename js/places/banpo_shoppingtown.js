@@ -1,3 +1,7 @@
+import { loadArchitecture, placeArchitecture } from '../../assets/models/interior-architecture/model.js';
+
+const damunCooler = await loadArchitecture('../neighborhood-shops/damun-cooler.glb');
+
 // 반포쇼핑타운: eight independent OSM footprints, one continuous neighbourhood.
 // Evidence correction: research's 6–7F/apartment description is explicitly a guess.
 // 1981 construction report and 2011 existing-building report both describe B1+5F:
@@ -140,13 +144,20 @@ function buildPhotoRestaurant(K, C) {
   cyl(cu - counterW * 0.33, y + 0.94, cd, 0.20, 0.25, 0xc9ceca);
   cyl(cu - counterW * 0.33, y + 1.19, cd, 0.21, 0.035, 0x9caaa6);
   const fu = q - 0.47;
-  B(fu, y, depth - 0.45, 0.72, 1.95, 0.67, beef ? 0xd8d7d0 : 0xb9c4c4);
-  B(fu, y + 0.25, depth - 0.80, 0.59, 1.38, 0.025, 0x557a7d, { solid: false });
-  for (let row = 0; row < 4; row++) {
-    B(fu, y + 0.31 + row * 0.31, depth - 0.83, 0.55, 0.025, 0.025, 0xd5dcd5, { solid: false });
-    for (let j = 0; j < 4; j++) B(fu - 0.21 + j * 0.14, y + 0.36 + row * 0.31, depth - 0.85, 0.07, 0.19, 0.025, [0x3c6949, 0xa9a665, 0xb8d0c6][(j + row) % 3], { solid: false });
+  if (damun) {
+    // Preserve the cabinet's existing collision envelope, with an open display front.
+    B(fu,y,depth-.45,.72,1.95,.67,0xb9c4c4,{skip:['top','bottom','n','s','e','w']});
+    const [x,z]=P(fu,V(depth-.45));
+    placeArchitecture(K,damunCooler,'담은 전통주 냉장 진열장',[[x,y,z,outRot]]);
+  } else {
+    B(fu, y, depth - 0.45, 0.72, 1.95, 0.67, beef ? 0xd8d7d0 : 0xb9c4c4);
+    B(fu, y + 0.25, depth - 0.80, 0.59, 1.38, 0.025, 0x557a7d, { solid: false });
+    for (let row = 0; row < 4; row++) {
+      B(fu, y + 0.31 + row * 0.31, depth - 0.83, 0.55, 0.025, 0.025, 0xd5dcd5, { solid: false });
+      for (let j = 0; j < 4; j++) B(fu - 0.21 + j * 0.14, y + 0.36 + row * 0.31, depth - 0.85, 0.07, 0.19, 0.025, [0x3c6949, 0xa9a665, 0xb8d0c6][(j + row) % 3], { solid: false });
+    }
+    B(fu + 0.23, y + 0.76, depth - 0.87, 0.028, 0.56, 0.04, 0xd5d9d3, { solid: false });
   }
-  B(fu + 0.23, y + 0.76, depth - 0.87, 0.028, 0.56, 0.04, 0xd5d9d3, { solid: false });
   // Two table rows on either side of a >=1m centre aisle; depth determines
   // capacity rather than forcing the same oversized dining set into every bay.
   const cols = width >= 4.6 ? [a + 1.08, q - 1.08] : [a + 1.0];

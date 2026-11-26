@@ -1,4 +1,20 @@
-// Procedural textures + text-sign atlas. Works in browser; in node tests a stub canvas is injected.
+// Shared surface textures + text-sign atlas. Headless geometry tests supply their own canvas.
+// BEGIN Blender suspended ceiling swatch
+// Rebuild with assets/models/shared-ceiling/export.py. Units are pixels in a 256px tile.
+const ceilingScale = [2.4, 2.4];
+const ceilingBaseColor = "#e9e7e2";
+const ceilingSpans = [
+  ["#b6b5ae", [201,152,44,1,201,153,1,2,244,153,1,2,201,155,44,1,201,156,1,3,244,156,1,3,201,159,44,1,201,160,1,2,244,160,1,2,201,162,44,1,201,163,1,2,244,163,1,2,201,165,44,1,201,166,1,3,244,166,1,3,201,169,44,1,201,170,1,2,244,170,1,2,201,172,44,1,201,173,1,3,244,173,1,3,201,176,44,1]],
+  ["#cbc8c2", [0,0,256,1,0,1,1,62,63,1,2,62,127,1,2,62,191,1,2,62,255,1,1,62,0,63,256,2,0,65,1,62,63,65,2,62,191,65,2,62,255,65,1,62,0,127,256,2,0,129,1,62,63,129,2,62,127,129,2,62,191,129,2,62,255,129,1,62,0,191,256,2,0,193,1,62,63,193,2,62,127,193,2,62,191,193,2,62,255,193,1,62,0,255,256,1]],
+  ["#d2d1cb", [202,153,42,2,202,156,42,3,202,160,42,2,202,163,42,2,202,166,42,3,202,170,42,2,202,173,42,3]],
+  ["#dad8d1", [65,65,126,2,65,67,2,58,189,67,2,58,65,125,126,2,200,150,46,2,200,152,1,25,245,152,1,25,200,177,46,1]],
+  ["#e7e5df", [129,193,62,62]],
+  ["#e9e7e1", [67,67,122,1,67,68,1,56,188,68,1,56,67,124,122,1]],
+  ["#ebe9e4", [129,1,62,62,1,193,62,62]],
+  ["#f8f5eb", [75,69,1,54,83,69,1,54,90,69,1,54,98,69,1,54,105,69,1,54,113,69,1,54,120,69,1,54,127,69,2,54,135,69,1,54,142,69,1,54,150,69,1,54,157,69,1,54,165,69,1,54,172,69,1,54,180,69,1,54]],
+  ["#fffdf4", [68,68,120,1,68,69,7,54,76,69,7,54,84,69,6,54,91,69,7,54,99,69,6,54,106,69,7,54,114,69,6,54,121,69,6,54,129,69,6,54,136,69,6,54,143,69,7,54,151,69,6,54,158,69,7,54,166,69,6,54,173,69,7,54,181,69,7,54,68,123,120,1]],
+];
+// END Blender suspended ceiling swatch
 export const FONT = '"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif';
 
 export function makeCanvas(w, h) {
@@ -85,12 +101,17 @@ const PAINTERS = {
     for (let i = 0; i < 1500; i++) { g.fillStyle = 'rgba(255,255,255,0.05)'; g.fillRect(R() * w, R() * h, 2, 2); }
     return [6, 6];
   },
-  ceiling(g, w, h) { // 600 grid ceiling with light panel
-    g.fillStyle = '#e9e7e2'; g.fillRect(0, 0, w, h);
-    g.strokeStyle = '#c9c6c0'; g.lineWidth = 2;
-    for (let i = 0; i <= 4; i++) { g.beginPath(); g.moveTo(i * w / 4, 0); g.lineTo(i * w / 4, h); g.stroke(); g.beginPath(); g.moveTo(0, i * h / 4); g.lineTo(w, i * h / 4); g.stroke(); }
-    g.fillStyle = '#fffdf4'; g.fillRect(w / 4 + 3, h / 4 + 3, w / 2 - 6, h / 4 - 6);
-    return [2.4, 2.4];
+  ceiling(g, w, h) {
+    g.fillStyle = ceilingBaseColor;
+    g.fillRect(0, 0, w, h);
+    const sx = w / 256, sy = h / 256;
+    for (const [color, spans] of ceilingSpans) {
+      g.fillStyle = color;
+      for (let i = 0; i < spans.length; i += 4) {
+        g.fillRect(spans[i] * sx, spans[i + 1] * sy, spans[i + 2] * sx, spans[i + 3] * sy);
+      }
+    }
+    return [...ceilingScale];
   },
   metal(g, w, h) {
     const gr = g.createLinearGradient(0, 0, w, 0); gr.addColorStop(0, '#9aa0a6'); gr.addColorStop(0.5, '#c8ccd0'); gr.addColorStop(1, '#8e949a');

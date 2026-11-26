@@ -1,5 +1,11 @@
+import { registerFloorFinishes, floorSamples } from '../../assets/models/newcore-floor/surfaces.js';
+import { loadArchitecture, fitArchitecture } from '../../assets/models/architectural-retail/place.js';
+import { upperFixtures } from '../../assets/models/newcore/upper-fixtures.js';
+
 // Exact OSM footprints; photo-based elevations; official floor uses. Metre
 // heights, core positions and indoor bay positions are documented estimates.
+const arcadeArchitecture=await loadArchitecture('newcore-arch.glb');
+
 export const meta = {
   id: 'newcore', name: '뉴코아아울렛 강남점',
   // 6169292 repeats the first three ways: suppress its generic solid shells too.
@@ -46,6 +52,15 @@ function localFrame(K, F) {
   return { ...F, K, B, S, Q, wall, cyl, person };
 }
 function textures(K) {
+  registerFloorFinishes(K);
+  K.texture('newcore-cart-belt', 128, 128, (g, w, h) => {
+    g.fillStyle = '#777e7d'; g.fillRect(0, 0, w, h);
+    for (let y = 0; y < h; y += 4) {
+      g.fillStyle = '#565e5c'; g.fillRect(0, y, w, 1);
+      g.fillStyle = '#9ea5a2'; g.fillRect(0, y + 1, w, 1);
+    }
+    g.fillStyle = '#575e5b'; g.fillRect(0, 0, 2, h);
+  }, [.42, .80]);
   K.texture('newcore-limestone', 512, 512, (g, w, h) => {
     g.fillStyle = '#ddd2ba'; g.fillRect(0, 0, w, h); g.strokeStyle = '#c8bda8'; g.lineWidth = 2;
     for (let row = 0; row < 4; row++) {
@@ -57,17 +72,6 @@ function textures(K) {
     g.fillStyle = '#879399'; g.fillRect(0, 0, w, h); g.strokeStyle = '#626e76'; g.lineWidth = 2;
     for (let j = 0; j < 4; j++) for (let i = -1; i < 5; i++) g.strokeRect(i * 128 + (j % 2) * 64, j * 64, 128, 64);
   }, [2, 1]);
-  K.texture('newcore-pavers', 512, 512, (g, w, h) => {
-    // Interlocking 1:2 bricks, not disconnected rectangles. 10 x 20 cm.
-    g.fillStyle = '#504f49'; g.fillRect(0, 0, w, h);
-    const rand = K.rand(933), pal = ['#86857a', '#a29b89', '#747870', '#969382'];
-    for (let row = -8; row < 16; row++) for (let col = -8; col < 16; col++) {
-      const x = (col * 2 + row) * 64, yy = row * 64 - col * 2 * 64;
-      g.fillStyle = pal[Math.floor(rand() * pal.length)]; g.fillRect(x + 2, yy + 2, 124, 60);
-      g.fillStyle = pal[Math.floor(rand() * pal.length)]; g.fillRect(x + 130, yy - 62, 60, 124);
-    }
-    for (let i = 0; i < 18000; i++) { g.fillStyle = i % 2 ? 'rgba(255,255,242,.07)' : 'rgba(29,29,24,.09)'; g.fillRect(rand() * w, rand() * h, 2, 2); }
-  }, [0.8, 0.8]);
   for (const [key, base, scale] of [['newcore-polished-stone', '#b8afa0', 0.6], ['newcore-grey-paving', '#a3a4a1', 0.3]]) {
     K.texture(key, 256, 256, (g, w, h) => {
       const rand = K.rand(904); g.fillStyle = base; g.fillRect(0, 0, w, h);
@@ -96,15 +100,6 @@ function textures(K) {
       g.fillStyle = '#fcf9ee'; g.fillRect(x + 4, yy + 3, 184, 2);
     }
   }, [0.8, 0.4]);
-  K.texture('newcore-market-floor', 256, 256, (g, w, h) => {
-    // R19: the previous #8e8e8b rendered #a59f96 under the kit's warm gloss.
-    const rand = K.rand(941); g.fillStyle = '#77716a'; g.fillRect(0, 0, w, h);
-    for (let i = 0; i < 5000; i++) {
-      g.fillStyle = i % 2 ? 'rgba(255,255,250,.12)' : 'rgba(52,57,55,.08)';
-      g.fillRect(rand() * w, rand() * h, 2, 2);
-    }
-    g.strokeStyle = '#6e6963'; g.lineWidth = 1; g.strokeRect(0, 0, w, h);
-  }, [1.2, 1.2]);
   K.texture('newcore-market-column-poster', 256, 512, (g, w, h) => {
     // _800 resolves a dark poster, but not its actual copy or product brand.
     g.fillStyle = '#262826'; g.fillRect(0, 0, w, h);
@@ -183,7 +178,7 @@ function arch(F, u, span, label, awning = C.black, height = 9.65, opaque = false
   for (let j = 0; j < 24; j++) {
     const a = j * Math.PI / 24, b = (j + 1) * Math.PI / 24;
     K.quad(infill, [pt(u, spring, -0.25), pt(u + Math.cos(a) * r, spring + Math.sin(a) * r, -0.25), pt(u + Math.cos(b) * r, spring + Math.sin(b) * r, -0.25), pt(u, spring, -0.25)], normal);
-    for (const [rr, thick, v, mat] of [[r, 0.18, -0.38, C.stone], [r + 0.2, 0.33, -0.48, C.trim], [r + 0.55, 0.12, -0.34, C.stone]]) {
+    if (opaque) for (const [rr, thick, v, mat] of [[r, 0.18, -0.38, C.stone], [r + 0.2, 0.33, -0.48, C.trim], [r + 0.55, 0.12, -0.34, C.stone]]) {
       const q = [pt(u + Math.cos(a) * rr, spring + Math.sin(a) * rr, v), pt(u + Math.cos(a) * (rr + thick), spring + Math.sin(a) * (rr + thick), v), pt(u + Math.cos(b) * (rr + thick), spring + Math.sin(b) * (rr + thick), v), pt(u + Math.cos(b) * rr, spring + Math.sin(b) * rr, v)];
       K.quad(mat, q, normal);
       K.quad(C.cream, [q[1], q[2], pt(u + Math.cos(b) * (rr + thick), spring + Math.sin(b) * (rr + thick), 0), pt(u + Math.cos(a) * (rr + thick), spring + Math.sin(a) * (rr + thick), 0)], normal);
@@ -191,6 +186,11 @@ function arch(F, u, span, label, awning = C.black, height = 9.65, opaque = false
   }
   // Window bars terminate at the arch, rather than stopping in mid glazing.
   if (!opaque) {
+    // Hall 2's pale projecting architrave and dark inner steel stop.
+    fitArchitecture(K,arcadeArchitecture,'NewcoreArch',(x,y,z)=>{
+      const [wx,wz]=P(u+x*r/3,-.265+z);
+      return [wx,spring+y*r/3,wz];
+    });
     for (const du of [-r * 0.5, 0, r * 0.5]) {
       const top = spring + Math.sqrt(r * r - du * du);
       B(u + du, 3.45, -0.31, 0.045, top - 3.45, 0.055, 0x535b57, { solid: false });
@@ -207,7 +207,7 @@ function arch(F, u, span, label, awning = C.black, height = 9.65, opaque = false
     B(x, 0.85, -0.59, 0.69, spring - 1.55, 0.055, C.stone, { solid: false });
     B(x, 0.93, -0.63, 0.53, spring - 1.71, 0.055, C.cream, { solid: false });
   }
-  B(u, height - 0.3, -0.53, 0.8, 0.85, 0.7, C.trim, { solid: false });
+  if (opaque) B(u, height - 0.3, -0.53, 0.8, 0.85, 0.7, C.trim, { solid: false });
   const aw = span - 1.6;
   const awningTop = opaque ? 4.3 : 3.7;
   K.quad(awning, [pt(u - aw / 2, awningTop, -0.3), pt(u + aw / 2, awningTop, -0.3), pt(u + aw / 2, 2.95, -2), pt(u - aw / 2, 2.95, -2)], [0, 1, 0]);
@@ -222,14 +222,74 @@ function doors(F, u, w = 4.4) {
   F.B(u, 2.72, 0, w, 0.2, 0.2, C.black, { solid: false });
 }
 
-function core(F, floors, name, roof) {
+// E-Land's plans show the stepped bank on B1–5F in hall 1 and 1F–5F in
+// hall 2. The separate paired B1 cart symbols in hall 2 have continuous belts.
+function retailTransfers(F, hall) {
+  if (hall !== 1 && hall !== 2) return [];
+  const mainU = hall === 1 ? F.L * .19 + 1.35 : F.L * .075;
+  const main = {u: mainU, v: F.W / 2 + .80, run: 10.4, cart: false};
+  const cart = {u: F.L * .205, v: F.W - 3.05, run: 27.5, cart: true};
+  return Array.from({length: 5}, (_, i) => {
+    const bank = hall === 2 && i === 0 ? cart : main;
+    const hole = F.Q(bank.u-bank.run/2, bank.v-1.52, bank.u+bank.run/2, bank.v+1.52);
+    return {...bank, hole};
+  });
+}
+
+function buildTransfer(F, bank, lo, hi) {
+  const {u, v, run, cart} = bank;
+  const a = u - run/2, b = u + run/2;
+  for (const [offset, dir] of [[-.77, 'up'], [.77, 'down']]) {
+    const center = v + offset;
+    if (cart) {
+      F.K.ramp(...F.P(a,center), ...F.P(b,center), {
+        w: 1.28, ya: lo.y, yb: hi.y, move: dir === 'up' ? .55 : -.55,
+        mat: 'newcore-cart-belt', railMat: 0x343937,
+      });
+      // Glazed sides, ribbed belts and flush ends keep the cart lanes
+      // visually distinct from the pairs of stepped escalators.
+      for (const side of [-1,1]) {
+        const [ax,az] = F.P(a,center+side*.64), [bx,bz] = F.P(b,center+side*.64);
+        const pane = [[ax,lo.y+.12,az],[bx,hi.y+.12,bz],[bx,hi.y+.89,bz],[ax,lo.y+.89,az]];
+        const nx = -(bz-az)/run, nz = (bx-ax)/run;
+        F.K.quad('glass',pane,[nx,0,nz]);
+        F.K.quad('glass',[...pane].reverse(),[-nx,0,-nz]);
+      }
+      for (const [end, y, side] of [[a, lo.y, -1], [b, hi.y, 1]]) {
+        F.B(end+side*.18, y+.007, center, .36, .01, 1.28, 0xa5aaa2, {solid:false});
+        F.B(end+side*.035, y+.018, center, .045, .012, 1.23, 0xe0b954, {solid:false});
+      }
+    } else {
+      F.K.escalator(...F.P(a,center), ...F.P(b,center), {
+        w: 1.26, ya: lo.y, yb: hi.y, dir, mat: 0x7b8383, railMat: 0x454d4c,
+      });
+    }
+  }
+  for (const side of [-1,1]) {
+    F.wall(a,v+side*1.52,b,v+side*1.52,hi.y,hi.y+1.02,{mat:'glass',thick:.065});
+  }
+  const name = cart ? '카트 무빙워크' : '에스컬레이터';
+  F.S(name+'   '+lo.label+' · '+hi.label, a-.38, lo.y+.70, v+2.05, 1.6, .26,
+    '#34443f', {rotY:F.angle+Math.PI/2});
+}
+
+function core(F, floors, name, roof, retailHall=0) {
   const { K, L, W, P, Q, wall, S } = F;
   const a = -L / 2 + 4, b = a + 7.4, v0 = W - 9.4, v1 = W - 3.2;
   const hole = Q(a - 0.2, v0 - 1.4, b + 3, v1 + 1.4), [x, z] = P(b + 8, W - 3.5);
+  const transfers=retailTransfers(F,retailHall);
   K.elevator({ name: name + ' 엘리베이터', x, z, rotY: F.angle + Math.PI, w: 2.5, d: 2.5, floors });
   floors.forEach((f, i) => {
     const next = floors[i + 1];
-    K.slab(F.p, f.y, { mat: f.y < 0 ? 'newcore-pavers' : 'tile', under: f.y === 0 ? C.black : 'ceiling', holes: i ? [hole] : [], thick: 0.28 });
+    let finish = 'tile';
+    if (retailHall && f.label !== '옥상') {
+      finish = f.y >= 0 ? 'newcore-sales-porcelain' :
+        retailHall === 2 ? 'newcore-market-floor' : 'newcore-pavers';
+    }
+    const mat = finish === 'newcore-market-floor' ? { tex: finish, gloss: .6 } : finish;
+    K.slab(F.p, f.y, { mat, under: f.y === 0 ? C.black : 'ceiling',
+      holes: i ? [hole, ...(transfers[i - 1] ? [transfers[i - 1].hole] : [])] : [],
+      thick: floorSamples[finish]?.thickness ?? .28 });
     K.zone({ name, floor: f.label, sub: f.name, poly: F.p, y0: f.y, y1: next?.y ?? Math.max(roof, f.y + 3.2) });
     S([f.label, f.name], b + 7.8, f.y + 2.05, W - 1.8, 3.1, 0.8, '#3c403d');
     if (i) {
@@ -239,6 +299,7 @@ function core(F, floors, name, roof) {
       K.slab(Q(a - 2.2, v0 - 1.4, a + 0.1, v1 + 1.4), f.y, { mat: 'tile', thick: 0.18 });
     }
     if (!next) return;
+    if(transfers[i]) buildTransfer(F,transfers[i],f,next);
     const mid = (f.y + next.y) / 2;
     // The roof-parking stair is steeper than the retail-storey stair runs.
     K.stairs(...P(a, v0), ...P(b, v0), { ya: f.y, yb: mid, w: 2.4, mat: 0xb5b6ae, rails: true });
@@ -249,7 +310,7 @@ function core(F, floors, name, roof) {
   if (name === '뉴코아아울렛 1관') stairLanding(F, { a, b, v0, v1, hole });
   // Do not cap a roof-parking stairwell at its top landing.
   if (roof > floors[floors.length - 1].y + 0.1) K.slab(F.p, roof, { mat: 'roofgravel', under: 'ceiling', thick: 0.3 });
-  return { hole, a, b, v0, v1, lift: [b + 8, W - 3.5] };
+  return { hole, transfers, a, b, v0, v1, lift: [b + 8, W - 3.5] };
 }
 
 function streetFront(F, number, roof) {
@@ -546,11 +607,11 @@ function foodRoom(F, ci) {
   K.zone({ name: '킴스 푸드 스트리트', floor: 'B1', sub: '솥내음 · 봉혜자 · 공용 좌석', poly: Q(-L / 2 + 1, 1, L / 2 - 1, 21), y0: y, y1: -2.7, priority: 2 });
   K.zone({ name: '킴스 푸드 스트리트', floor: 'B1', sub: '솥내음 · 안쪽 통로', poly: Q(9.5, 21, 20.5, W - 0.1), y0: y, y1: -2.7, priority: 2 });
   // Separate exposed ceiling below the 6m structural floor interval.
-  K.hpoly(C.black, F.p, y + 3.35, false, [ci.hole]);
+  K.hpoly(C.black, F.p, y + 3.35, false, [ci.hole,ci.transfers[0].hole]);
   for (let u = -32; u < L / 2 - 4; u += 16) B(u, y, 21.5, 0.65, 3.35, 0.65, 0xd5cbb5);
   K.detail({ name: '1관 킴스 푸드 스트리트', floor: 'B1', poly: F.p, y0: y, y1: 0 }, () => {
     // Large pale tiles in seating areas, contrasting herringbone aisle.
-    K.hpoly({ tex: 'tile', color: 0xd4cebc }, Q(-L / 2 + 2, 17.5, L / 2 - 2, 21), y + 0.012, true);
+    K.hpoly({ tex: 'newcore-sales-porcelain', color: 0xd4cebc }, Q(-L / 2 + 2, 17.5, L / 2 - 2, 21), y + 0.012, true);
     for (let u = -L / 2 + 3; u < L / 2 - 1; u += 5.5) {
       B(u, y + 3.05, W / 2, 0.15, 0.17, W - 1, C.metal, { solid: false });
       for (const v of [5, 14.3, 21]) {
@@ -596,6 +657,8 @@ function foodRoom(F, ci) {
     });
     for (let u = -L / 2 + 5; u < L / 2 - 4; u += 3.5) {
       // Open the right turn without dropping the existing seating detail.
+      const bank=ci.transfers[0];
+      if(Math.abs(u-bank.u)<bank.run/2+1.5) continue;
       const inBranch = u > 8 && u < 14;
       table(F, inBranch ? u + 25 : u, y, inBranch ? 24 : 19, Math.round(u) % 3 === 0);
     }
@@ -640,6 +703,19 @@ function retail(F, number) {
     names.forEach((name, i) => {
       const u = -L / 2 + 4 + (i + 0.5) * span;
       S(name, u, 3, depth + 0.08, span - 1.2, 0.7, name === 'OLIVE YOUNG' ? '#678735' : '#303937', { rotY: F.angle });
+      if (number===2 && (name==='DESIGNERS' || name==='luxury gallery')) {
+        // The exterior records establish the branch's dark fashion-window frames.
+        // The recesses in these two public-facing display bays are model estimates.
+        const factor=Math.min(span-.8,7.6)/7;
+        fitArchitecture(K,arcadeArchitecture,'BoutiqueWindow',(x,h,z)=>{
+          const [wx,wz]=F.P(u+x*factor,depth+.09+z);
+          return [wx,h,wz];
+        });
+        for(const side of [-1,1]){
+          const x=u+side*2.64*factor;
+          B(x,.31,depth+.218,1.60*factor,2.12,.018,{tex:'glass',color:0xc8ceca},{solid:false});
+        }
+      }
       B(u, 0, depth - 1, Math.min(span - 2.4, 5), 0.92, 0.78, name.includes('은행') ? 0xd1d4cd : C.wood);
       for (const du of [-span * 0.27, span * 0.27]) {
         if (name.includes('은행')) {
@@ -830,8 +906,7 @@ function market(F, ci) {
   for (const u of [-20, -12, -4, 4, 12, 20, 28]) B(u, y, 14, 1, 3.65, 1, 0xeeeDE7);
   // _800: grey polished floor, white square columns, dark exposed services.
   // Preserve the real-kit stair void in the lower visual ceiling as well.
-  K.hpoly({ tex: 'newcore-market-floor', gloss: 0.6 }, F.p, y + 0.012, true);
-  K.hpoly(0xb8b8b3, F.p, y + 3.65, false, [ci.hole]);
+  K.hpoly(0xb8b8b3, F.p, y + 3.65, false, [ci.hole,ci.transfers[0].hole]);
   K.detail({ name: '2관 킴스클럽 델리', floor: 'B1', poly: F.p, y0: y, y1: 0 }, () => {
     for (let u = -L / 2 + 5; u < L / 2 - 4; u += 5.8) for (const [row, v] of rackRows) {
       // Retain the old collision footprint, but expose stock between shelves.
@@ -968,7 +1043,7 @@ function basementLink(one, two) {
   const a0 = two.P(two.L / 2 - 0.6, 18 - half), a1 = two.P(two.L / 2 - 0.6, 18 + half);
   const b0 = one.P(-one.L / 2 + 0.6, 14.7 - half), b1 = one.P(-one.L / 2 + 0.6, 14.7 + half);
   const poly = [a0, b0, b1, a1];
-  K.slab(poly, y, { mat: 'newcore-pavers', thick: 0.28 });
+  K.slab(poly, y, { mat: 'newcore-pavers', thick: floorSamples['newcore-pavers'].thickness });
   K.slab(poly, y + 3.35, { mat: 'concrete', under: C.black, thick: 0.2, walk: false });
   for (const [a, b] of [[a0, b0], [a1, b1]]) K.wall(...a, ...b, y, y + 3.35, { mat: 0xe1d8c7, thick: 0.18 });
   K.zone({ name: '뉴코아아울렛', floor: 'B1', sub: '1관 푸드스트리트 · 2관 킴스클럽 연결통로', poly, y0: y, y1: y + 3.35 });
@@ -1085,6 +1160,180 @@ function kimsHall(F, ci) {
     for (const [u, v, shirt] of [[-7, 14.1, 0x424b58], [-4, 12.9, 0xb9ad93], [2, 14.7, 0x787056], [9, 13.6, 0x564b4b]]) person(u, 0, v, { shirt });
   });
 }
+// The operator publishes the upper-floor diagrams without north arrows.
+// The two rows preserve selected left-to-right tenant groupings. The existing
+// stairs and lift set the usable width of the return aisle on the rear side.
+const upperBays = {
+  1: {
+    '2F': [['우리은행|lounge', '이헌영', '모라도', '애니바디'], ['파올라', '이상봉', '마담포라']],
+    '3F': [['캘리클럽|kids', '뉴발란스 키즈', '베네통 키즈', '해피랜드 하우스|kids'], ['신디키즈', '탑텐키즈', '스파오 키즈']],
+    '4F': [['침구류|lounge', '키즈|kids', '홈데코|homeware', '주방용품|homeware'], ['수납|homeware', '가전|homeware', '갤러리 가구|lounge']],
+    '5F': [['문화센터|lounge', '애슐리퀸즈|dining', '옥소반|dining'], ['LOUNGE·E|lounge', '유천냉면|dining']],
+  },
+  2: {
+    '2F': [['잇미샤', 'JJ지고트', '베네통'], ['보브', '시슬리', '톰보이']],
+    '3F': [['요하넥스', '모조에스핀', '미샤'], ['보티첼리', '오브제', '앤클라인']],
+    '4F': [['뉴발란스', '스케쳐스', '게스진'], ['아디다스', 'NBA', '지오다노']],
+    '5F': [['볼빅|golf', '루이까스텔|golf', '파크랜드'], ['AK 골프|golf', '로가디스', '닥스/마에스트로']],
+  },
+};
+
+function fixture(F, kind, u, y, v, reversed) {
+  const model = upperFixtures[kind], dir = reversed ? -1 : 1;
+  const points = model.mm.map(([dx, dy, dz]) => {
+    const [x, z] = F.P(u + dir * dx / 1000, v + dir * dz / 1000);
+    return [x, y + dy / 1000, z];
+  });
+  const a = new F.K.THREE.Vector3(), b = a.clone(), c = a.clone();
+  for (const [material, first, second, third, fourth = third] of model.faces) {
+    const p = [points[first], points[second], points[third], points[fourth]];
+    a.fromArray(p[0]); b.fromArray(p[1]).sub(a); c.fromArray(p[2]).sub(a);
+    F.K.quad(model.colors[material], p, b.cross(c).normalize().toArray());
+  }
+  // The open frame and thin furniture meshes share one collision footprint.
+  const size = { buffet:[3.67,1], dining: [1.83, 1.8], lounge: [1.93, 1.25], golf: [2.25, 1.05],
+    rail: [2.34, .72], homeware: [2.25, .78], kids: [2.1, 1], folds: [2.44, 1.13],
+    forms: [1.90, .86], junior: [2.10, .81], trainers: [2.12, .88], stockrail: [2.81, 1.08] }[kind];
+  F.B(u, y, v, size[0], kind === 'kids' ? .53 : .74, size[1], C.wood,
+    { skip: ['top', 'bottom', 'n', 's', 'e', 'w'] });
+}
+
+function backWallDisplay(F, kind, u, y, v, width, inward) {
+  const { B } = F, solid = { solid: false };
+  const finish = kind === 'golf' ? 0x415044 : 0x896e53;
+  B(u, y, v + inward * .46, width, .42, .8, finish);
+  if (kind === 'dining' || kind === 'lounge') {
+    // Timber banquette, horizontal welt, brass sconces and pendant shades.
+    B(u, y + .43, v + inward * .48, width - .12, .15, .70, 0x8e7165, solid);
+    B(u, y + .52, v + inward * .17, width - .12, .65, .18, 0x91766a, solid);
+    for (let x = -.44 * width; x <= .44 * width; x += .44) {
+      B(u + x, y + 1.18, v + inward * .08, .065, 1.30, .13, 0xb99973, solid);
+    }
+    for (const x of [-.26 * width, .26 * width]) {
+      F.cyl(u + x, y + 2.98, v + inward * 1.1, .018, .71, 0x4a433d, 6);
+      F.cyl(u + x, y + 2.79, v + inward * 1.1, .27, .21, 0xa98855, 12);
+      F.cyl(u + x, y + 2.78, v + inward * 1.1, .23, .025, {tex:'emit', color:0xffe2a4}, 12);
+    }
+    return;
+  }
+  const palette = kind === 'kids' ? [0xcea392,0x9db3a5,0xc2b177] :
+    kind === 'golf' ? [0x404f47,0xe2ded0,0x9c856c] : [0x625b57,0xeee3ca,0x819393];
+  // Shallow wall cases keep the floor displays visible from the public aisle.
+  const columns = Math.max(3, Math.floor(width / 1.45));
+  for (let col = 0; col < columns; col++) {
+    const x = u + ((col + .5) / columns - .5) * width;
+    for (let row = 0; row < 3; row++) {
+      const h = y + .78 + row * .55;
+      B(x, h, v + inward * .34, width / columns - .09, .055, .53, 0xb19776, solid);
+      if (kind === 'homeware') {
+        F.cyl(x, h + .055, v + inward * .38, .17, .23, palette[(col + row) % 3], 8);
+      } else {
+        for (let stack=0; stack<3; stack++) B(x, h + .055 + stack * .064, v + inward * .39,
+          .52 - stack * .022, .058, .32, palette[(col + row + (stack === 2 ? 1 : 0)) % 3], solid);
+      }
+    }
+  }
+}
+
+function upperSalesFloor(F, num, floor) {
+  const { B, S, L, W } = F, y = floor.y, rows = upperBays[num][floor.label];
+  const finishes = {
+    dining: [0x76604b, 0xd9c7a8], lounge: [0x58635b, 0xcac3aa], homeware: [0x86765c, 0xe3dbcb],
+    kids: [0x668e89, 0xefdbbd], golf: [0x506650, 0xb7c4ae], rail: [0x6c6060, 0xe0d0c6],
+  };
+  const bays = [];
+  rows.forEach((row, side) => {
+    // Preserve the complete approach to both rear core landings and the elevator.
+    const start = side ? -L / 2 + 21 : -L / 2 + 1.4, end = L / 2 - 1.4;
+    const width = (end - start) / row.length;
+    const inset = side ? -1 : 1, front = W * .5 - inset * 3.25, depth = W * .26;
+    for (let i = 0; i < row.length; i++) {
+      const u = start + width * (i + .5), [label, kind = 'rail'] = row[i].split('|');
+      const clothingFinishes = [[0x665758, 0xe4d8cd], [0x48575c, 0xd9e1dc], [0x836347, 0xe7d8b8]];
+      const [accent, wall] = kind === 'rail' ? clothingFinishes[(i + side + num) % 3] : finishes[kind];
+      const back = front - inset * depth;
+      const bayWidth = width - 1.35;
+      B(u, y + .015, front - inset * depth / 2, bayWidth, .018, depth, side ? 0xd8d1c3 : 0xe9dece, { solid:false });
+      B(u, y, back, bayWidth, 3.58, .16, wall);
+      B(u - bayWidth / 2, y, front - inset * depth / 2, .15, 3.58, depth, wall);
+      for (const sign of [-1, 1]) B(u + sign * (bayWidth / 2 - .25), y, front, .31, 3.12, .32, accent);
+      B(u, y + 2.99, front, bayWidth, .58, .41, accent);
+      bays.push({u, front, back, depth, inset, bayWidth, kind, label, side, i});
+    }
+  });
+  for (const off of [-1,1]) B(0, y + .017, W / 2 + off * 2.76, L - 3, .012, .085, 0xac987a, {solid:false});
+  return () => {
+    for (const {u, front, back, depth, inset, bayWidth, kind, label, side, i} of bays) {
+      B(u, y + 2.96, front + inset * .18, bayWidth - .45, .035, .10, { tex:'emit', color:0xffefd1 }, {solid:false});
+      S(label, u, y + 3.28, front + inset * .22, Math.min(7, bayWidth - .8), .43, null,
+        {rotY: F.angle + (side ? Math.PI : 0), fg:'#fff9ef'});
+      // Light-washed backboards and a suspended rail give long stores readable depth.
+      for (const t of [-.32, 0, .32]) {
+        B(u + t * bayWidth, y + .45, back + inset * .11, bayWidth * .28, 2.48, .085, i % 2 ? 0xefe9da : 0xd9ccbb, {solid:false});
+        B(u + t * bayWidth, y + 3.42, front - inset * depth * .49, 1.25, .055, .21, {tex:'emit', color:0xffedcf}, {solid:false});
+      }
+      const apparel = kind === 'rail' || kind === 'golf';
+      const childrenswear = num === 1 && floor.label === '3F';
+      const sportswear = num === 2 && floor.label === '4F';
+      const frontDisplay = childrenswear ? 'junior' : sportswear ? 'trainers' : 'forms';
+      for (const dx of [-.27, .27]) {
+        const center = u + dx * bayWidth;
+        if (apparel && (i % 2 ? dx > 0 : dx < 0)) {
+          // One wall mixes hanging stock with a framed fitting mirror.
+          fixture(F, 'rail', center - 1.02, y + .034, back + inset * .7, side);
+          B(center + 1.16, y + .25, back + inset * .24, 1.35, 2.38, .13, 0x695a46, {solid:false});
+          B(center + 1.16, y + .34, back + inset * .32, 1.18, 2.19, .035, 0xb5c3be, {solid:false});
+        } else {
+          backWallDisplay(F, kind, center, y + .034, back + inset * .16, bayWidth * .40, inset);
+        }
+      }
+      if (apparel) {
+        // Stock islands flank a clear line from the threshold to the back wall.
+        // The operator's guides identify the sales category. This furniture layout is approximate.
+        const handed = i % 2 ? -1 : 1;
+        const stock = kind === 'golf' ? 'golf' : 'rail';
+        const sideWall = u - bayWidth / 2, wallCenter = front - inset * depth * .52;
+        const wallFinish = childrenswear ? 0xafbfaf : sportswear ? 0x495b63 : i % 2 ? 0x896f59 : 0x667472;
+        const trim = {solid:false};
+        // A display wall follows the side partition and leaves the centre aisle open.
+        B(sideWall + .13, y + .2, wallCenter, .11, 2.55, depth * .66, wallFinish, trim);
+        for (let k = -3; k <= 3; k++) {
+          B(sideWall + .21, y + .23, wallCenter + k * depth * .092, .08, 2.48, .045, 0xb5a88c, trim);
+        }
+        for (const h of [.77, 1.43]) {
+          B(sideWall + .28, y + h, wallCenter, .42, .055, depth * .58, 0xc5ae8e, trim);
+          for (let k = -2; k <= 2; k++) {
+            const v = wallCenter + k * depth * .112;
+            for (let layer = 0; layer < 3; layer++) B(sideWall + .30, y + h + .055 + layer * .062, v,
+              .32, .057, .45 - layer * .018, [0xe6d9bf, 0x606e75, 0x9c7860][(k + i + 2) % 3], trim);
+          }
+        }
+        S(label, u, y + 2.48, back + inset * .22, Math.min(4.2, bayWidth * .37), .46, null,
+          {rotY:F.angle + (side ? Math.PI : 0), fg:'#3c4544'});
+        fixture(F, frontDisplay, u - handed * bayWidth * .28, y + .034, front - inset * depth * .24, side);
+        fixture(F, stock, u + handed * bayWidth * .24, y + .034, front - inset * depth * .32, !side);
+        fixture(F, 'folds', u - handed * bayWidth * .22, y + .034, front - inset * depth * .64, side);
+        fixture(F, 'stockrail', u + handed * bayWidth * .27, y + .034, front - inset * depth * .72, !side);
+        fixture(F, 'stockrail', u - handed * bayWidth * .39, y + .034, front - inset * depth * .48, side);
+        continue;
+      }
+      if (kind === 'kids') fixture(F, 'junior', u - bayWidth * .25, y + .034, front - inset * depth * .68, side);
+      if (kind === 'dining') {
+        fixture(F, kind, u - bayWidth * .28, y + .034, front - inset * depth * .46, side);
+        F.person(u - bayWidth * .28 - 1.65, y + .034, front - inset * depth * .46, {shirt:0xd9c4a6});
+      }
+      if(num===1 && floor.label==='5F' && label==='애슐리퀸즈'){
+        const counterV=front-inset*depth*.36;
+        fixture(F,'buffet',u,y+.034,counterV,false);
+        S('ASHLEY QUEENS',u,y+2.27,back+inset*.81,3.7,.38,null,{rotY:F.angle,fg:'#ede3cc'});
+      }else fixture(F, kind, u, y + .034, front - inset * depth * .36, !side);
+      if (kind === 'dining' || kind === 'homeware') {
+        fixture(F, kind, u + bayWidth * .27, y + .034, front - inset * depth * .70, side);
+      }
+    }
+  };
+}
+
 function parkingBlock(F) {
   const { K, L, W, B, S, P } = F;
   // OSM tags confirm parking, but deck count/height is an aerial estimate.
@@ -1169,7 +1418,7 @@ export function build(K) {
   const ys = [K.LEVELS.B1, 0, 5, 9.8, 14.2, 18.6], roof = 23;
   for (const [F, num, labels] of [[one, 1, labels1], [two, 2, labels2]]) {
     const floors = ys.map((y, i) => ({ label: i ? i + 'F' : 'B1', y, name: labels[i] }));
-    const ci = core(F, floors, '뉴코아아울렛 ' + num + '관', roof);
+    const ci = core(F, floors, '뉴코아아울렛 ' + num + '관', roof, num);
     streetFront(F, num, roof);
     const [bx, bz] = F.P(num === 1 ? -F.L / 2 : F.L / 2, num === 1 ? 14.7 : 18);
     K.polyWalls(F.p, K.LEVELS.B1, 0, { mat: 0xc8c3b9, inner: 0xe1d8c7, thick: 0.25,
@@ -1182,18 +1431,24 @@ export function build(K) {
       for (const u of [-20, 8, 33]) F.S(['←  계단 · 엘리베이터', 'B1  킴스 푸드 스트리트'], u, 3.1, 15.3, 4.5, 0.7, '#353b37', { rotY: F.angle });
       F.S(['B1  킴스 푸드 스트리트', '계단 · 엘리베이터'], ci.b + 4, 2.8, F.W - 5.8, 4.1, 0.8, '#353b37');
     } else market(F, ci);
-    // User requested upper floors as simple slabs/facade. Circulation remains
-    // reachable on foot and by elevator; only verified category signs added.
-    for (let i = 2; i < floors.length; i++) K.detail({ name: num + '관 ' + floors[i].label, floor: floors[i].label, poly: F.p, y0: floors[i].y, y1: floors[i].y + 4.5 }, () => {
-      for (let u = -F.L / 2 + 5; u < F.L / 2 - 3; u += 8) for (const v of [7, F.W / 2]) F.B(u, floors[i].y + 3.8, v, 2.4, 0.07, 0.45, { tex: 'emit', color: 0xffedc5 }, { solid: false });
-      F.S(labels[i], 8, floors[i].y + 2.7, F.W - 1, 11, 0.8, '#66685c');
-      // Photo08's 5F guide confirms Ashley; PizzaMall is B1 (also official).
-      if (num === 1 && floors[i].label === '5F') F.S(['5F 전문식당가', '애슐리 퀸즈'], ci.b + 10, floors[i].y + 2.3, F.W - 6, 4.1, 0.9, '#353b37');
-    });
+    // Public upper sales floors are furnished when the player approaches.
+    for (let i = 2; i < floors.length; i++) {
+      const floor = floors[i];
+      const [x, z] = F.P(0, F.W / 2 - 1.7);
+      K.spawn({name: num + '관 ' + floor.label + ' · ' + floor.name, x, z, y: floor.y, yaw: F.angle + Math.PI / 2});
+      const furnish = upperSalesFloor(F, num, floor);
+      K.detail({ name: num + '관 ' + floors[i].label, floor: floors[i].label, poly: F.p, y0: floors[i].y, y1: floors[i].y + 4.5 }, () => {
+        furnish();
+        for (let u = -F.L / 2 + 5; u < F.L / 2 - 3; u += 8) for (const v of [7, F.W / 2]) F.B(u, floors[i].y + 3.8, v, 2.4, 0.07, 0.45, { tex: 'emit', color: 0xffedc5 }, { solid: false });
+        F.S(labels[i], 8, floors[i].y + 2.7, F.W - 1, 11, 0.8, '#66685c');
+        // Photo08's 5F guide confirms Ashley; PizzaMall is B1 (also official).
+        if (num === 1 && floors[i].label === '5F') F.S(['5F 전문식당가', '애슐리 퀸즈'], ci.b + 10, floors[i].y + 2.3, F.W - 6, 4.1, 0.9, '#353b37');
+      });
+    }
   }
   basementLink(one, two);
   parkingBlock(park);
-  const tc = core(three, [{ label: '1F', y: 0, name: '식당가 · 카페' }, { label: '옥상', y: 10.8, name: '옥상 주차장' }], '뉴코아 3관', 10.8);
+  const tc = core(three, [{ label: '1F', y: 0, name: '식당가 · 카페' }, { label: '옥상', y: 10.8, name: '옥상 주차장' }], '뉴코아 3관', 10.8, 3);
   streetFront(three, 3, 10.8); kimsHall(three, tc);
   K.polyWalls(three.p, 10.8, 11.65, { mat: C.cream, thick: 0.2 });
   for (let u = -3; u < three.L / 2 - 3; u += 2.6) three.B(u, 10.82, 20, 0.1, 0.015, 5, 0xf4f1db, { solid: false });

@@ -545,15 +545,30 @@ export function build(K) {
       break;
     }
   }
+  const crossingControls = K.osm.nodes.filter(n => n.k === 'crossing' &&
+    ['uncontrolled', 'traffic_signals'].includes(n.crossing));
+  function hasPedestrianSignal(a, b) {
+    // Match the nearest explicit control tag on this crossing strip. A node
+    // on a neighbouring carriageway must not disable this crossing's heads.
+    const dx = b[0] - a[0], dz = b[1] - a[1], lengthSquared = dx*dx + dz*dz;
+    let best = 2, control;
+    for (const n of crossingControls) {
+      const t = Math.max(0, Math.min(1, ((n.x-a[0])*dx + (n.z-a[1])*dz) / (lengthSquared || 1)));
+      const distance = Math.hypot(n.x-a[0]-t*dx, n.z-a[1]-t*dz);
+      if (distance < best) { best = distance; control = n.crossing; }
+    }
+    return control !== 'uncontrolled';
+  }
   function zebra(a,b,w=5){
     const p=path([a,b]);
     for(let s=.24;s<p.L-.2;s+=.96){const q=at(p,s),r=at(p,Math.min(p.L-.15,s+.48));flat([q.x,q.z],[r.x,r.z],w,ROAD+.034,C.white);}
+    const signalised = hasPedestrianSignal(a, b);
     for(const [end,sgn] of [[0,-1],[p.L,1]]){
       const q=at(p,end),x=q.x+q.u*sgn*.6,z=q.z+q.v*sgn*.6;
       // Warning tiles follow the walking axis; the 0.15m curb is stepable.
       if(pavement(x,z))K.box({x,z,y:WALK+.003,w:w,h:.012,d:.6,rotY:q.rot,mat:'streets-tactile',solid:false});
       const px=x-q.v*(w/2+.4),pz=z+q.u*(w/2+.4);
-      pedestrianSignal(px,pz,-q.u*sgn,-q.v*sgn);
+      if (signalised) pedestrianSignal(px,pz,-q.u*sgn,-q.v*sgn);
       const bx=x+q.v*(w/2-.2),bz=z-q.u*(w/2-.2);if(pavement(bx,bz))bollard(bx,bz);
     }
   }
@@ -1288,62 +1303,6 @@ function buildRoadviewBuildings(K) {
       surface(poly,i,L/2,y,L,h,mat);
     }
   };
-
-  // Warm, fine-jointed masonry, not a curtain wall. cc_02's windows are small
-  // dark openings separated by broad tan wall piers and pale lintels.
-  K.texture('streets-lebon-stone',256,256,(g,w,h)=>{
-    g.fillStyle='#c8a77a';g.fillRect(0,0,w,h);
-    g.strokeStyle='#bd9e76';g.lineWidth=1;
-    for(let y=0;y<=h;y+=64){g.beginPath();g.moveTo(0,y);g.lineTo(w,y);g.stroke();}
-    for(let row=0;row<4;row++)for(let x=(row%2)*64;x<w;x+=128){g.beginPath();g.moveTo(x,row*64);g.lineTo(x,(row+1)*64);g.stroke();}
-  },[2.4,2.4]);
-  for(const b of [] /* 르본시티 413280002 is built by js/places/lebon.js */){
-    const p=b.poly;
-    K.prism(p,0,38,{mat:'streets-lebon-stone',top:0xd7c7ac});
-    // Eight rows, with the first integrated into the street-level shop band.
-    for(let e=0;e<p.length;e++){
-      const a=p[e],c=p[(e+1)%p.length],L=Math.hypot(c[0]-a[0],c[1]-a[1]);
-      const n=Math.max(1,Math.floor((L-8)/3.5)),pitch=(L-8)/n;
-      for(let f=0;f<8;f++)for(let j=0;j<n;j++){
-        const t=4+(j+.5)*pitch,y=1.7+f*4.6;
-        surface(p,e,t,y-.13,1.9,1.66,0xd6bd96);
-        surface(p,e,t,y,1.6,1.4,0x343b3a,.05);
-        surface(p,e,t,y,.055,1.4,0xaaa895,.065);
-      }
-      for(let t=3;t<L-2;t+=5.2){
-        surface(p,e,t,.35,3.9,3.1,0x344646,.045);
-        surface(p,e,t,.35,.09,3.1,0xada999,.07);
-      }
-    }
-    band(p,3.65,.45,0xb89a74);band(p,36.65,.32,0x947e60);band(p,37.65,.35,0xb29b78);
-    // Large east / ENE-facing roof LED, set back from the NE roof corner.
-    // Only the source's colour masses are legible; no invented advert wording.
-    K.texture('streets-lebon-led-art',512,288,(g,w,h)=>{
-      g.fillStyle='#111b20';g.fillRect(0,0,w,h);
-      g.fillStyle='#dadf34';g.fillRect(14,100,178,148);
-      g.fillStyle='#56873b';g.fillRect(205,175,290,100);
-      g.fillStyle='#20bd7b';g.fillRect(335,140,145,110);
-      g.fillStyle='#d9d7b4';g.fillRect(285,35,105,135);
-      g.fillStyle='#3b403b';g.beginPath();g.arc(341,78,31,0,PI*2);g.fill();
-      g.fillStyle='#e8bdad';g.beginPath();g.arc(342,85,22,0,PI*2);g.fill();
-      g.fillStyle='#ddd9c1';g.beginPath();g.moveTo(310,112);g.lineTo(370,110);g.lineTo(402,210);g.lineTo(279,211);g.closePath();g.fill();
-      g.fillStyle='#c74d76';g.fillRect(245,115,38,103);
-      g.fillStyle='#f5dd54';for(let i=0;i<4;i++)g.fillRect(30+i*38,55+(i%2)*12,24,31);
-      g.fillStyle='rgba(0,0,0,.17)';for(let y=0;y<h;y+=4)g.fillRect(0,y,w,1);
-    },[1,1]);
-    K.material('streets-lebon-led',new K.THREE.MeshBasicMaterial({map:K.T.surface('streets-lebon-led-art').tex,vertexColors:true}));
-    const x=-224,z=6,rot=105*PI/180,u=[Math.cos(rot),-Math.sin(rot)],n=[Math.sin(rot),Math.cos(rot)];
-    K.box({x,z,y:39,w:11.6,h:7,d:.45,rotY:rot,mat:0x282b2a,solid:false});
-    const P=(s,y)=>[x+u[0]*s+n[0]*.24,y,z+u[1]*s+n[1]*.24];
-    K.quad('streets-lebon-led',[P(-5.5,39.25),P(5.5,39.25),P(5.5,45.75),P(-5.5,45.75)],[n[0],0,n[1]]);
-    for(const s of [-3.7,3.7])K.box({x:x+u[0]*s,z:z+u[1]*s,y:38,w:.26,h:1.1,d:.4,rotY:rot,mat:0x55534b,solid:false});
-    // The sign is legible as a vertical board; use only the verified building
-    // name instead of guessing the smaller tenant lettering in the roadview.
-    const a=p[1],c=p[2],L=Math.hypot(c[0]-a[0],c[1]-a[1]),normal=K.orient(p)[1];
-    const sx=c[0]+(a[0]-c[0])*4.7/L+normal[0]*.12,sz=c[1]+(a[1]-c[1])*4.7/L+normal[1]*.12;
-    K.sign(['르','본','시','티'],{x:sx,z:sz,y:24,w:1.8,h:12,rotY:Math.atan2(normal[0],normal[1]),bg:'#c8b18b',fg:'#715148',box:.14});
-    K.zone({name:'르본시티',floor:'지상',sub:'신반포로',poly:p,y0:0,y1:38,priority:2});
-  }
 
   // sr-05: the two photographed junction corners replace city-generic blocks
   // on their exact OSM footprints. No invented window bays on 해돋는집.

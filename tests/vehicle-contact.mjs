@@ -5,6 +5,7 @@ import { createKit } from '../js/kit.js';
 import { createPhysics } from '../js/physics.js';
 import { relief } from '../js/banpo_relief.js';
 import { createTraffic } from '../js/city.js';
+import { vehicleContacts } from '../js/fleet.js';
 
 function near(actual, expected, label, tolerance = 1e-4) {
   assert.ok(Math.abs(actual-expected) < tolerance, label + ': ' + actual + ' / ' + expected);
@@ -15,8 +16,9 @@ function near(actual, expected, label, tolerance = 1e-4) {
 const phys = createPhysics(), scene = new THREE.Scene();
 const K = createKit(THREE, scene, { osm: {}, phys });
 const cx=150, cz=30, y=9, tires=[];
+const [track,axle]=vehicleContacts('car');
 K.withTerrainSurface(0, () => {
-  for (const along of [-1.45,1.45]) for (const across of [-.875,.875]) {
+  for (const along of [-axle,axle]) for (const across of [-track,track]) {
     const x=cx+across, z=cz+along, height=y+.08*along+.1*across+.04*across*along;
     const pad=[[x-.6,z-.6],[x+.6,z-.6],[x+.6,z+.6],[x-.6,z+.6]];
     for (const h of [height-4,height,height+3]) phys.addSurface(pad,h);
@@ -24,23 +26,26 @@ K.withTerrainSurface(0, () => {
   }
   K.vehicle({x:cx,y,z:cz,solid:true});
 });
-const tireColor = new THREE.Color(0x151515).r;
-for (const tire of tires) {
-  tire.bottom=new Map();
-}
-for (const mesh of K._.finalize()) {
-  const {position,color}=mesh.geometry.attributes;
-  for (let i=0; i<position.count; i++) {
-    if (Math.abs(color.getX(i)-tireColor)>1e-6 || Math.abs(color.getZ(i)-tireColor)>1e-6) continue;
-    const x=position.getX(i), h=position.getY(i), z=position.getZ(i);
-    const tire=tires.find(t => Math.abs(t.x-x)<.5 && Math.abs(t.z-z)<.6 && h<t.height+.2);
-    if (tire) tire.bottom.set([x,h,z].join(','),h);
+K._.finalize();
+const parked=scene.children.find(o=>o.name==='car wheels' && o.userData.parkedFleet);
+assert.equal(parked?.count,4,'four separately placed Blender tyres');
+const matrix=new THREE.Matrix4(), contact=new THREE.Vector3(), rendered=new THREE.Vector3();
+const vertices=parked.geometry.getAttribute('position');
+assert.ok(vertices.count>12,'render the curved tyre and hub');
+for (let i=0;i<tires.length;i++) {
+  const tire=tires[i];
+  parked.getMatrixAt(i,matrix);
+  contact.setFromMatrixPosition(matrix);
+  near(contact.x,tire.x,'Blender axle X'); near(contact.z,tire.z,'Blender axle Z');
+  near(contact.y,tire.height,'parked tyre datum');
+  let lowest=Infinity;
+  for(let j=0;j<vertices.count;j++) {
+    rendered.fromBufferAttribute(vertices,j).applyMatrix4(matrix);
+    lowest=Math.min(lowest,rendered.y);
   }
-}
-for (const tire of tires) {
-  const values=[...tire.bottom.values()];
-  assert.equal(values.length,4,'rendered wheel bottom corners');
-  near(values.reduce((a,b)=>a+b,0)/4,tire.height,'parked tyre contact');
+  // The upright tyre touches at its authoring origin. Its tread rolls
+  // fractionally lower when tilted to the local chassis grade.
+  near(lowest,tire.height,'parked rendered tread at grade',.035);
 }
 near(phys.support(cx,cz,y+2-relief(cx,cz)).y+relief(cx,cz), y+1.45,'chassis collision height');
 
@@ -72,6 +77,7 @@ console.log('Rendered parked tyres, chassis collision and 160 moving wheel conta
 const detailScene = new THREE.Scene();
 const detailKit = createKit(THREE,detailScene,{osm:{},phys:roads});
 createTraffic(detailKit,{roads:[{pts:[[x0,z0],[x0,z1]],hw:'primary',width:4,lanes:1,oneway:true}]},90);
-const movingMeshes = detailScene.children.filter(o => o.name.startsWith('traffic-'));
+const movingMeshes = detailScene.children.filter(o => o.userData.dynamic);
+assert.ok(movingMeshes.length>=3,'live paint, trim and independent wheels');
 detailKit._.finalize();
 for (const mesh of movingMeshes) assert.equal(mesh.parent,detailScene,'live fleet during detail load');
