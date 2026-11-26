@@ -1,3 +1,4 @@
+import {placeStageCoffers} from '../../assets/models/open-stage-coffer/model.js';
 import {placeOpenStageLounge} from '../../assets/models/open-stage-lounge/model.js';
 import {galleryLights} from '../../assets/models/famille-atrium/model.js';
 import {placeLejardin} from '../../assets/models/lejardin-shop/model.js';
@@ -4421,6 +4422,8 @@ function hallR20(K) {
   function buildCofferRow(s){
     // Cut only the moulding intersecting the upper escalator opening. The
     // remaining coffers retain their original pattern and materials.
+    const [stageX,stageZ]=P(s,-22.6);
+    placeStageCoffers(K,stageX,stageZ,R);
     const opening=[23.3,-1.4,32.1,2.4];
     const cofferBox=(s,t,ds,dt,y,h,mat)=>{
       const a=s-ds/2,b=t-dt/2,c=s+ds/2,d=t+dt/2,[x,z,X,Z]=opening;
@@ -4451,7 +4454,7 @@ function hallR20(K) {
       cofferBox(s,t,4.75,4.75,6.30,.06,0xe4e1da);
       for(const d of[-2.68,2.68]){cofferBox(s+d,t,.32,5.4,5.65,.75,0xf4f1ea);cofferBox(s,t+d,5.4,.32,5.65,.75,0xf4f1ea);cofferBox(s+d*.85,t,.09,4.65,6.05,.22,0xece9e2);cofferBox(s,t+d*.85,4.65,.09,6.05,.22,0xece9e2);}
       for(let u=-2.1;u<2.2;u+=.24)for(const d of[-2.25,2.25]){cofferBox(s+u,t+d,.09,.12,6.13,.12,0xf6f3ec);cofferBox(s+d,t+u,.12,.09,6.13,.12,0xf6f3ec);}
-      for(const r of[.65,.45,.24])cofferDisc(s,t,r,6.20,.045,0xe9e6de,{solid:false,seg:32});
+      if(t>-15)for(const r of[.65,.45,.24])cofferDisc(s,t,r,6.20,.045,0xe9e6de,{solid:false,seg:32});
       for(const ds of[-1.9,1.9])for(const dt of[-1.9,1.9])cofferDisc(s+ds,t+dt,.065,6.13,.035,{tex:'emit',color:0xf5f6f2},{solid:false});
     }
   }
