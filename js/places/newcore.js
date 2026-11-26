@@ -1,3 +1,4 @@
+import { dishes as deliDishes, registerDeli } from '../../assets/models/kims-deli/model.js';
 import { registerFloorFinishes, floorSamples } from '../../assets/models/newcore-floor/surfaces.js';
 import { loadArchitecture, fitArchitecture } from '../../assets/models/architectural-retail/place.js';
 import { upperFixtures } from '../../assets/models/newcore/upper-fixtures.js';
@@ -910,6 +911,15 @@ function market(F, ci) {
   // _800: grey polished floor, white square columns, dark exposed services.
   // Preserve the real-kit stair void in the lower visual ceiling as well.
   K.hpoly(0xb8b8b3, F.p, y + 3.65, false, [ci.hole,ci.transfers[0].hole]);
+  registerDeli(F,y,deliV,ci.transfers[0]);
+  const unseen=['top','bottom','n','s','e','w'];
+  for(let i=0;i<deliDishes.length;i++){
+    B(i*5,y,deliV,2.90,.86,1.265,C.wood,{skip:unseen});
+    B(i*5,y+.86,deliV+.38,2.86,.234,.45,C.wood,{skip:unseen});
+  }
+  B(-6,y,W-.60,8.41,1.73,.91,C.wood,{skip:unseen});
+  const [deliX,deliZ]=F.P(3.6,deliV-2.84);
+  K.spawn({name:'킴스클럽 지하 델리 · 포장 매대',x:deliX,y,z:deliZ,yaw:F.angle+Math.PI});
   K.detail({ name: '2관 킴스클럽 델리', floor: 'B1', poly: F.p, y0: y, y1: 0 }, () => {
     for (let u = -L / 2 + 5; u < L / 2 - 4; u += 5.8) for (const [row, v] of rackRows) {
       // Retain the old collision footprint, but expose stock between shelves.
@@ -957,17 +967,7 @@ function market(F, ci) {
       end.B(u, y + 2.5, .12, 2.5, .8, .025, { tex: 'emit', color: [0xffe8b9, 0xffefd0, 0xffdfac][i] }, { solid: false });
       end.S(['즉석조리', ['신선식품', '킴스클럽'], '델리'][i], u, y + 2.9, .15, 2.2, i === 1 ? .62 : .46, null, { fg: '#543b29', rotY: end.angle });
     }
-    S(["KIM'S CLUB", '킴스클럽 · 신선식품 · 델리'], 0, y + 2.65, W - 1, 12, 0.8, '#7c322d');
-    for (let u = 0; u < L / 2 - 5; u += 5) {
-      B(u, y, deliV, 2.8, 0.9, 1.25, 0x9caaa1);
-      B(u, y + 0.9, deliV, 2.9, 0.055, 1.3, 0xd4d6ca, { solid: false });
-      B(u, y + 0.96, deliV - 0.59, 2.8, 0.32, 0.035, 'glass', { solid: false });
-      for (let j = 0; j < 6; j++) {
-        const uu = u - 1.1 + j * 0.44;
-        B(uu, y + 0.965, deliV, 0.37, 0.035, 0.72, 0x373e39, { solid: false });
-        for (const dv of [-0.2, 0, 0.2]) B(uu, y + 1, deliV + dv, 0.27, 0.07, 0.15, [0xb4864b, 0x799054, 0xcfb989][j % 3], { solid: false });
-      }
-    }
+
     shoppingCart(F, L / 2 - 3, y, deliV + 1.6);
     // A few occupied carts, inferred activity rather than an invented cart bay.
     for (const [u, v] of [[-15.5, 19.5], [11.8, 19.5], [15, 31.1]]) shoppingCart(F, u, y, v);

@@ -10,6 +10,19 @@ import {relief} from '../../../js/banpo_relief.js';
 // Scene object (or a uniquely identifying child) -> editable native source.
 // Geometry decoder matrices and decorative LOD offsets live *below* the placement.
 const sources = [
+  ...['두 줄 석재의 곡선 벤치','기둥 금속틀과 식재','기둥의 곡면 유리','바닥의 밝은 석재 상감'].map(label=>{
+    const name='고투몰 서편 · '+label;
+    return ['gotomall','B1','gotomall-west-seats/west-lounge.blend',name,name];
+  }),
+  ['gyeongbu','1F','gyeongbu-concourse-finish/concourse-finish.blend','경부선 대합실 · 석재 바닥과 곡면 간접 천장','Editable public concourse finishes'],
+  ...['흰 곡면 화단 벤치','수경 화단의 바위와 늘어진 잎','휴게광장 접이식 유아차'].map(label=>{
+    const name='고투몰 · '+label;
+    return ['gotomall','B1','gotomall-rest-garden/plaza.blend',name,name];
+  }),
+  ...['나무 포장식품 매대','후레시 스시 벽장과 간판','한입새우튀김 포장','새우롤 포장','김가루 롤 포장','팔각 양장피 포장'].map(label=>{
+    const name='킴스클럽 델리 · '+label;
+    return ['newcore','B1','kims-deli/deli.blend',name,name];
+  }),
   ['gyeongbu','1F','gyeongbu-luggage/zimcarry-counter.blend','짐캐리 · 수하물보관과 운송 창구','LuggageCounter','Glass','Lit'],
   ...['대기 접수대와 유아의자','유리블록과 대나무 조명','목제 식탁과 곡목 의자','찜기 세 가지와 차','피기 커스터드 번'].map(label=>{
     const name='딤딤섬 · '+label;
