@@ -2,9 +2,14 @@
 from pathlib import Path
 from math import pi, sin, cos, sqrt, radians
 import bpy
+import sys
 from mathutils import Vector, Matrix
 
 OUT = Path(__file__).resolve().parent
+sys.dont_write_bytecode=True
+sys.path.insert(0,str(OUT))
+from listening import Counter
+from finishes import textures, material, map_obj
 bpy.ops.wm.read_factory_settings(use_empty=True)
 gallery = bpy.data.collections.new('SSG_9F_Scheherazade')
 bpy.context.scene.collection.children.link(gallery)
@@ -12,6 +17,9 @@ palette = dict(walnut='644126', edge='986742', brass='B3915E', ivory='EADDC9',
                pearl='DBCDB7', black='282827', pad='393635', graphite='545655',
                silver='BFC1BE', cream='E4DBCF', copper='996045', screen='151B1C',
                red='E78770', cyan='8DE0DA', violet='A4A0EF', amber='E9BA6D')
+palette.update(sampleWhite='FFFFFF',sage='BEC3A2',charcoal='27282B',smoke='42404B',berry='7F3638',
+               paleMetal='D2D2CB',champagne='C7A56B',silicone='DEDCCF',cardPaper='D8D4C8',cardInk='575149',
+               roseWire='C69884',lavenderWire='A89AB9',bandInk='555251',steel='787B7C',grille='45484A',redLiner='EF3445')
 batch='SchezadeDisplay'
 parts={}
 pose=Matrix.Identity(4)
@@ -29,6 +37,7 @@ def mesh(name, verts, faces, color, smooth=False):
     obj=bpy.data.objects.new(name,data)
     gallery.objects.link(obj)
     obj.matrix_world=pose.copy()
+    obj['audioBatch']=batch
     mat=bpy.data.materials.get(color) or bpy.data.materials.new(color)
     mat.diffuse_color=rgb(palette[color])
     data.materials.append(mat)
@@ -145,30 +154,37 @@ def headphone(x,y,z,angle,style):
         pipe('회전 힌지',[(s*.09,0,.119),(s*.09,0,.15)],.0042,'silver')
     pose=Matrix.Identity(4)
 
+def apply_pose(transform):
+    global pose
+    pose=transform
+
+counter=Counter(mesh,skin,slab,pipe,label,apply_pose)
 for j,x in enumerate([-.86,-.58,-.144,.144,.58,.86]):
     for k,h in enumerate([1.235,1.77]):
+        if j>=4 and k==0:continue
         style=['lcd','wood','cream','black'][(j+2*k)%4]
         pipe('황동 걸이',[(x,.247,h+.194),(x,.102,h+.194)],.008,'brass')
         headphone(x,.116,h,-24 if j%2==0 else 27,style)
         slab('제품 카드',x,.22,h+.226,.138,.012,.049,'ivory',.002)
         label('LCD-2' if style=='lcd' else 'LCD' if style=='wood' else 'BOSE',x,.213,h+.239,.025,'black')
 
-for x,style,angle in [(-.55,'wood',-41),(.52,'lcd',42)]:
-    slab('청음 스탠드 받침',x,-.15,.962,.23,.20,.016,'walnut')
-    pipe('황동 스탠드',[(x,-.11,.978),(x,-.11,1.29)],.009,'brass')
-    slab('밴드 안장',x,-.15,1.276,.059,.095,.015,'edge')
-    headphone(x,-.156,1.095,angle,style)
-    # Leads from both mini-XLR sockets converge and coil on the mat.
-    rot=Matrix.Rotation(radians(angle),3,'Z')
-    for s in [-1,1]:
-        p=rot @ Vector((s*.087,-.012,.018))+Vector((x,-.156,1.095))
-        pipe('이어컵 리드',[p,(p.x,p.y-.012,1.052),(x+s*.04,-.197,.989),(x,-.22,.972)],.0025,'black')
-    end=-.084 if x>0 else -.072
-    pts=[(x,-.22,.972)]
-    for j in range(25):
-        t=j/24
-        pts.append((x*(1-t)+end*t+.048*sin(t*4*pi),-.249+(.022 if x>0 else -.008)*t-.095*sin(t*pi)**2,.968))
-    pipe('청음 케이블',pts,.003,'black')
+x,angle=-.55,-47
+slab('청음 스탠드 받침',x,-.15,.962,.23,.20,.016,'walnut')
+pipe('황동 스탠드',[(x,-.11,.978),(x,-.11,1.267),(x,-.156,1.269)],.008,'brass')
+apply_pose(Matrix.Translation((x,-.156,0))@Matrix.Rotation(radians(angle),4,'Z'))
+slab('밴드 안장',0,0,1.268,.044,.032,.012,'edge',.007)
+apply_pose(Matrix.Identity(4))
+counter.solitaire(x,-.156,1.068,angle)
+rotation=Matrix.Rotation(radians(angle),3,'Z')
+join=(x,-.234,.9815)
+for side in (-1,1):
+    p=rotation@Vector((side*.087,-.013,.003))+Vector((x,-.156,1.068))
+    pipe('이어컵 리드',[p,(p.x,p.y-.012,1.044),(x+side*.041,-.202,.988),join],.0025,'black')
+points=[join,(x+.011,-.249,.9815),(x+.026,-.260,.968)]
+for i in range(25):
+    t=i/24
+    points.append(((x+.026)*(1-t)-.084*t+.048*sin(t*4*pi),-.260+.033*t-.095*sin(t*pi)**2,.968))
+pipe('청음 케이블',points,.003,'black')
 
 slab('DAC 받침',0,-.24,.962,.256,.169,.025,'walnut')
 slab('휴대용 DAC',0,-.245,.987,.104,.071,.023,'graphite',.011)
@@ -180,23 +196,21 @@ for y,end in [(-.227,-.084),(-.257,-.072)]:
     pipe('오디오 플러그',[(-.048,y,.998),(-.063,y,.998)],.0048,'silver')
     pipe('케이블 부싱',[(-.063,y,.998),(end,y,.968)],.0039,'black')
 
-bpy.context.preferences.filepaths.save_version=0
-bpy.context.scene.unit_settings.system='METRIC'
-bpy.ops.wm.save_as_mainfile(filepath=str(OUT/'gallery.blend'),compress=True)
-print('EDITABLE PARTS',sum(map(len,parts.values())))
-for name,objects in parts.items():
-    mat=bpy.data.materials.new(name);mat.use_nodes=True
-    shader=mat.node_tree.nodes.get('Principled BSDF')
-    shader.inputs['Roughness'].default_value=.49
-    color=mat.node_tree.nodes.new('ShaderNodeVertexColor');color.layer_name='Finish'
-    mat.node_tree.links.new(color.outputs['Color'],shader.inputs['Base Color'])
-    bpy.ops.object.select_all(action='DESELECT')
+counter.cabinet()
+product_mat=material(textures())
+fixture_mat=bpy.data.materials.new('SchezadeDisplay');fixture_mat.use_nodes=True;fixture_mat.use_fake_user=True
+shader=fixture_mat.node_tree.nodes.get('Principled BSDF');shader.inputs['Roughness'].default_value=.49
+color=fixture_mat.node_tree.nodes.new('ShaderNodeVertexColor');color.layer_name='Finish'
+fixture_mat.node_tree.links.new(color.outputs['Color'],shader.inputs['Base Color'])
+for batch_name,objects in parts.items():
     for obj in objects:
         data=obj.data
         if not data.color_attributes.get('Finish'):
             attr=data.color_attributes.new(name='Finish',type='BYTE_COLOR',domain='POINT')
-            for item in attr.data:item.color=data.materials[0].diffuse_color
-        data.materials.clear();data.materials.append(mat);obj.select_set(True)
-    bpy.context.view_layer.objects.active=objects[0]
-    bpy.ops.object.join();bpy.context.object.name=name
-bpy.ops.export_scene.gltf(filepath=str(OUT/'gallery.glb'),export_format='GLB',export_animations=False)
+            for vertex in attr.data:vertex.color=data.materials[0].diffuse_color
+        if batch_name=='SchezadeHeadphones':map_obj(obj,obj.get('audioTexture','plain'),product_mat)
+bpy.context.preferences.filepaths.save_version=0
+bpy.context.scene.unit_settings.system='METRIC'
+bpy.ops.wm.save_as_mainfile(filepath=str(OUT/'gallery.blend'),compress=True)
+print('EDITABLE PARTS',sum(map(len,parts.values())))
+exec(compile((OUT/'export.py').read_text(),str(OUT/'export.py'),'exec'))

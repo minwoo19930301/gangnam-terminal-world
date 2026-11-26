@@ -1,0 +1,11 @@
+{
+  "floor": "6F",
+  "x": -83.14829759183729,
+  "z": 10.705033043508303,
+  "yaw": 100.0346730179979,
+  "pitch": -15,
+  "meshName": "BerlutiVeneziaPatina",
+  "sourceBlend": "gallery.blend",
+  "sourceCollection": "SSG_6F_Berluti",
+  "nativeLabel": "벨루티"
+}

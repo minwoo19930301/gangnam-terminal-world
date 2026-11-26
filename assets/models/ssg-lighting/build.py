@@ -3,9 +3,14 @@ from math import sin, cos, pi, sqrt
 from pathlib import Path
 from random import Random
 import bpy
+import sys
 from mathutils import Vector
 
 OUT = Path(__file__).resolve().parent
+sys.dont_write_bytecode = True
+sys.path.insert(0,str(OUT))
+import optics
+import surfaces
 bpy.ops.wm.read_factory_settings(use_empty=True)
 bpy.context.preferences.filepaths.save_version = 0
 collection = bpy.data.collections.new('SSG_9F_Lightnow')
@@ -144,35 +149,44 @@ for x in [-.07,1.1]:
 panthella(-.46,.02,.925,1.10,cream,grain[0])
 panthella(.22,.07,.925,.76,opal,wall)
 panthella(.75,.025,.925,.82,amber,amber)
-# A fluted silver pedestal and tilted open reflector as seen at the end of the table.
-lathe('Fluted reflector base',1.46,.08,.925,[(.116,0),(.121,.013),(.113,.224),(.081,.242)],alloy,72,.065)
-dish=lathe('Tilted reflector bowl',1.46,.08,1.19,[(.052,0),(.113,.022),(.177,.067),(.216,.120),(.23,.169),(.224,.172),(.202,.127),(.159,.083),(.091,.051),(.026,.044)],alloy)
-dish.rotation_euler[0]=.65
-for x in [-.47,.22,.75,1.46]:
-    box('Sample card',x,-.303,.925,.139,.079,.008,wall)
-    box('Printed rule',x,-.312,.934,.073,.005,.001,ink)
+# The silver, inclined bowl and the four transparent bodies are both visible
+# in the shop's own photographs. Keep their glass physically separate in Blender.
+optical = optics.optical_finishes(finish)
+optics.taccia(collection,optical,1.46,.08,.925)
+for x,brand,model in [(-.46,"LOUIS POULSEN","Panthella"),(.22,"LOUIS POULSEN","Panthella"),
+                      (.75,"LOUIS POULSEN","Panthella"),(1.46,"FLOS","Taccia")]:
+    box('Oak card groove',x,-.280,.925,.146,.033,.012,wood)
+    box('Upright printed sample card',x,-.279,.937,.134,.003,.071,wall)
+    lettering(brand,x,-.281,.984,.011,ink)
+    lettering(model,x,-.281,.963,.012,ink)
+    box('Typeset card underline',x,-.2814,.952,.060,.0004,.0014,ink)
 
 # Raised secondary display and pleated pendant against the pale photograph wall.
-box('Gallery backdrop',0,2.66,0,5.15,.105,3.14,wall)
-box('Brand panel',-.60,1.78,1.88,1.04,.055,.65,grain[1])
-lettering('LIGHT',-.60,1.742,2.21,.235,ink)
-lettering('NOW',-.60,1.742,1.99,.235,ink)
-rod('Panel hanger',(-.60,1.80,2.52),(-.60,1.80,3.13),.012,alloy)
+box('Gallery backdrop',-.95,2.335,0,3.25,.70,3.14,wall)
+box('Return behind cabinet',1.625,2.66,0,1.90,.105,3.14,wall)
+# The black logo is fitted directly to the off-white display wall.
+lettering('LIGHT',-.76,1.979,2.36,.219,ink)
+lettering('N',-1.018,1.979,2.15,.205,ink)
+lettering('W',-.52,1.979,2.15,.205,ink)
+for index in range(4):
+    angle=pi*index/4
+    sx=.097*cos(angle);sz=.097*sin(angle)
+    rod('LIGHTNOW star spoke',(-.755-sx,1.974,2.229-sz),(-.755+sx,1.974,2.229+sz),.008,ink)
 box('Gallery plinth',.38,2.04,.015,1.72,.69,.81,wall)
 for x,s,m in [(-.18,.89,opal),(.37,.70,slate),(.91,.98,rose)]:
-    ph(x,2.04,.825,s,m)
-# Tall floor light beside the sample plinth. Open rims suggest the clear
-# cylinders without alpha sorting or opaque glass across the central pole.
-fx,fy=1.68,1.88
-lathe('Tower foot',fx,fy,.01,[(.255,0),(.261,.022),(.220,.041),(.100,.058)],ink)
-rod('Tower central spine',(fx,fy,.07),(fx,fy,2.58),.018,ink)
-for i in range(4):
-    base=.12+i*.61
-    for h in [base,base+.55]:
-        lathe('Tower luminous end plate',fx,fy,h,[(.11,0),(.124,.011),(.123,.021),(.103,.027)],opal)
-    for angle in [0,pi*.53,pi*1.19]:
-        tx,ty=fx+.128*cos(angle),fy+.128*sin(angle)
-        rod('Clear sleeve edge highlight',(tx,ty,base+.025),(tx,ty,base+.55),.0038,alloy)
+    ph(x,1.839,.825,s,m)
+# The dark framed cabinet behind the four clear sleeves provides the same
+# change of background behind each ring seen in the shop's front photograph.
+case=finish('Display cabinet gunmetal','727576','Metal')
+insert=finish('Tinted display door inset','59605e')
+box('Showroom cabinet carcass',1.68,2.49,.10,1.13,.19,1.92,case)
+for sx in (1.407,1.951):
+    for ix in range(4):
+        h=.18+ix*.445
+        box('Display cabinet panel',sx,2.383,h,.505,.022,.402,insert)
+        box('Interior shelf reflection',sx,2.369,h+.085,.46,.003,.012,case)
+        box('Recessed cabinet pull',sx+.213,2.363,h+.139,.011,.010,.093,case)
+optics.noctambule(collection,optical,1.68,1.88,.001)
 # Low salvaged timber block with patchwork faces and a floor lantern.
 box('Patchwork block',-1.75,.60,.04,1.14,.75,.30,ink)
 for row in range(2):
@@ -222,6 +236,7 @@ for col in range(3):
 mesh=bpy.data.meshes.new('Perforated partition');mesh.from_pydata(verts,[],faces);mesh.update()
 screen=bpy.data.objects.new(mesh.name,mesh);collection.objects.link(screen);mesh.materials.append(wall)
 
+surfaces.author_surfaces(collection)
 print('EDITABLE OBJECTS',len(collection.objects))
 bpy.ops.wm.save_as_mainfile(filepath=str(OUT/'lightnow.blend'),compress=True)
 exec(compile((OUT/'export.py').read_text(),str(OUT/'export.py'),'exec'))

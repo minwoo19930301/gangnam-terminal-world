@@ -1,0 +1,11 @@
+{
+  "floor": "10F",
+  "x": -56.513876250201434,
+  "z": 42.57280231407572,
+  "yaw": 115.10926603897623,
+  "pitch": -25.0,
+  "meshName": "IQBoxGangnamBrioWorkshop",
+  "sourceBlend": "workshop.blend",
+  "sourceCollection": "SSG_10F_IQBOX",
+  "nativeLabel": "완구"
+}

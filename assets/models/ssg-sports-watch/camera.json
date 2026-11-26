@@ -1,0 +1,11 @@
+{
+  "floor": "8F",
+  "x": -55.35544,
+  "z": 60.25677,
+  "yaw": 11.78183,
+  "pitch": -13.0,
+  "meshName": "GarminGangnamWatches",
+  "sourceBlend": "gallery.blend",
+  "sourceCollection": "SSG_8F_Garmin",
+  "nativeLabel": "가민"
+}
