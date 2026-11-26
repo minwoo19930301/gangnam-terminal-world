@@ -10,12 +10,15 @@ if(output)await fs.mkdir(output,{recursive:true});
 const server=await serve(0);
 const browser=await chromium.launch({channel:'chromium',args:['--use-angle=metal','--enable-gpu','--ignore-gpu-blocklist']});
 const page=await browser.newPage({viewport:{width:1110,height:735},deviceScaleFactor:1});
-const root='경부선 7층 · 이단 신사복 행거와 소매 상품표', requests=[],errors=[];
+const root='경부선 7층 · 이단 신사복 행거와 소매 상품표', requests=[],proxies=[],errors=[];
 const base='http://127.0.0.1:'+server.address().port+'/index.html?fixedres=1#/gyeongbu/';
 const coords=(u,v)=>[2.3+u*.9348+v*.3552,-59.24-u*.3552+v*.9348];
 const forward=-159.194;
 page.on('pageerror',e=>errors.push(e.message));
-page.on('response',r=>{if(r.url().endsWith('/gyeongbu-suiting-aisle/suiting-aisle.glb'))requests.push(r.status());});
+page.on('response',r=>{
+  if(r.url().endsWith('/gyeongbu-suiting-aisle/suiting-aisle.glb'))requests.push(r.status());
+  if(r.url().endsWith('/gyeongbu-suiting-aisle/proxy.js'))proxies.push(r.status());
+});
 async function route(floor,h,u,v,angle){
   const [x,z]=coords(u,v);
   await page.goto('about:blank');await page.goto(base+floor+'?p='+[x,h,z,angle].join(','));
@@ -30,7 +33,7 @@ async function pose(u,v,angle=forward,pitch=0){
 }
 async function surface(wanted){
   await page.waitForFunction(([name,wanted])=>{
-    const item=window.__world.scene.getObjectByName(name)?.children[0];return item&&!!item.material.normalMap===wanted;
+    const item=window.__world.scene.getObjectByName(name)?.children[0];return item&&!!item.material.normalMap===wanted&&(wanted||item.geometry.index.count>100);
   },[root,wanted],{timeout:15000});
   return page.evaluate(name=>{
     const r=window.__world.scene.getObjectByName(name),body=r.children[0],m=body.material;
@@ -39,8 +42,8 @@ async function surface(wanted){
   },root);
 }
 try {
-  await route('8F',34,38,109.55,forward);assert.deepEqual(requests,[]);
-  await route('7F',29.5,38,101.23,forward+180);assert.deepEqual(requests,[]);
+  await route('8F',34,38,109.55,forward);assert.deepEqual(requests,[]);assert.deepEqual(proxies,[]);
+  await route('7F',29.5,38,101.23,forward+180);assert.deepEqual(requests,[]);assert.deepEqual(proxies,[]);
   await pose(38,83.5);const distant=await surface(false);
   assert.equal(distant.draws,1);assert.ok(distant.triangles>500&&distant.triangles<4500);assert.deepEqual(requests,[]);
   await pose(38,104.70);const close=await surface(true);
@@ -81,6 +84,6 @@ try {
   }
   assert.deepEqual(modes,['day','sunset','night','sunrise','live']);
   await pose(38,84);await surface(false);await pose(38.06,111.4,forward+180);await surface(true);
-  assert.deepEqual(requests,[200]);assert.deepEqual(errors,[]);
-  console.log(JSON.stringify({distant,close,walk,modes,requests,errors},null,2));
+  assert.deepEqual(requests,[200]);assert.deepEqual(proxies,[200]);assert.deepEqual(errors,[]);
+  console.log(JSON.stringify({distant,close,walk,modes,requests,proxies,errors},null,2));
 }finally{await browser.close();await new Promise(done=>server.close(done));}

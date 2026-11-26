@@ -12,9 +12,10 @@ const browser = await chromium.launch({channel: 'chromium', args: ['--use-angle=
 const page = await browser.newPage({viewport: {width: 1110, height: 735}, deviceScaleFactor: 1});
 const base = 'http://127.0.0.1:' + server.address().port + '/index.html?fixedres=1#/gyeongbu/';
 const key = '경부선 6층 · 아동복 철망 진열과 접은 상품';
-const requests = [], errors = [];
+const requests = [], proxies = [], errors = [];
 page.on('response', response => {
   if (response.url().endsWith('/gyeongbu-childrens-aisle/childrens-aisle.glb')) requests.push(response.status());
+  if (response.url().endsWith('/gyeongbu-childrens-aisle/proxy.js')) proxies.push(response.status());
 });
 page.on('pageerror', error => errors.push(error.message));
 
@@ -42,7 +43,7 @@ async function pose(u,v,angle=forward,pitch=0) {
 async function mesh(detailed) {
   await page.waitForFunction(([key, wanted]) => {
     const body = window.__world.scene.getObjectByName(key)?.children[0];
-    return body && Boolean(body.material.map) === wanted;
+    return body && Boolean(body.material.map) === wanted && (wanted || body.geometry.index.count > 100);
   },[key,detailed],{timeout:15000});
   return page.evaluate(key => {
     const root=window.__world.scene.getObjectByName(key), body=root.children[0], m=body.material;
@@ -53,8 +54,8 @@ async function mesh(detailed) {
 }
 
 try {
-  await visit('7F',38,109.5,29.5,forward);assert.deepEqual(requests,[],'7F requested the 6F asset');
-  await visit('6F',38,101.3,25,forward+180);assert.deepEqual(requests,[],'stock was behind the player');
+  await visit('7F',38,109.5,29.5,forward);assert.deepEqual(requests,[],'7F requested the 6F asset');assert.deepEqual(proxies,[]);
+  await visit('6F',38,101.3,25,forward+180);assert.deepEqual(requests,[],'stock was behind the player');assert.deepEqual(proxies,[]);
   await pose(38,83);const distant=await mesh(false);
   assert.deepEqual(requests,[]);assert.equal(distant.draws,1);assert.ok(distant.triangles>100&&distant.triangles<3500);
   await pose(38.05,104.72);const close=await mesh(true);
@@ -97,8 +98,8 @@ try {
   assert.deepEqual(modes,['sunrise','day','sunset','night','live']);
   await pose(38,84);await mesh(false);
   await pose(38.03,108.07,149.949,-5);await mesh(true);
-  assert.deepEqual(requests,[200]);assert.deepEqual(errors,[]);
-  console.log(JSON.stringify({distant,close,walk,modes,requests,errors},null,2));
+  assert.deepEqual(requests,[200]);assert.deepEqual(proxies,[200]);assert.deepEqual(errors,[]);
+  console.log(JSON.stringify({distant,close,walk,modes,requests,proxies,errors},null,2));
 } finally {
   await browser.close();await new Promise(done=>server.close(done));
 }
