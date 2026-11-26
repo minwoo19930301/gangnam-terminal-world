@@ -11,12 +11,12 @@ try:
     for key,(label,*_) in parts.items():
         if key in ('room','mirrors'):continue
         col=bpy.data.collections[label]
-        if key=='granite':
+        if key in ('granite','menu'):
             ob=next(o for o in col.all_objects if o.type=='MESH');old=ob.location.copy()
             try:
                 bpy.ops.object.select_all(action='DESELECT');ob.select_set(True);bpy.context.view_layer.objects.active=ob
                 ob.location=old-Vector(col['preview_origin']);bpy.context.view_layer.update()
-                bpy.ops.export_scene.gltf(filepath=str(here/'granite.glb'),export_format='GLB',use_selection=True,export_image_format='WEBP',export_image_quality=84,export_image_webp_fallback=False,export_yup=True)
+                bpy.ops.export_scene.gltf(filepath=str(here/(key+'.glb')),export_format='GLB',use_selection=True,export_image_format='WEBP',export_image_quality=84,export_image_webp_fallback=False,export_yup=True)
             finally:ob.location=old;bpy.context.view_layer.update()
             continue
         for ob in col.all_objects:

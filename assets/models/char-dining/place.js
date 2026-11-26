@@ -5,6 +5,7 @@ import {loadBakedSurface} from '../interior-architecture/baked-surface.js';
 import {bay,parts,tables,lamps} from './layout.js';
 const wood=0x694335,warm=0xece0c8,metal=0xa6a49a,oak=0x865237;
 const proxy={
+ menu:[[0,.986,.009,.842,.558,.008,0xe9ddc8],[-.21,1.005,.004,.398,.517,.006,0x8f7056]],
  art:[[0,1.30,0,.057,1.38,.82,0x8c7858],[.045,1.35,0,.024,1.24,.714,0x60523d],[.069,1.67,.03,.021,.74,.29,0xcfbe95],[0,1.17,-.88,.062,1.19,.337,wood],[0,1.17,.88,.062,1.19,.337,wood]],
  room:[[0,.012,2.97,12.28,.028,5.94,0x969183],[0,3.414,2.97,12.28,.06,5.94,0xe4cfaa],[0,.04,5.9,12.28,3.42,.09,0xd6ac5d],[-6.10,.04,2.97,.08,3.40,5.94,0x63766b]],
  sign:[[0,2.71,-.035,1.60,.58,.067,0x252725],[-1.27,.045,.04,.08,3.20,.09,0x292925],[1.27,.045,.04,.08,3.2,.09,0x292925],[0,3.216,.04,2.62,.065,.066,0x282726],[0,2.85,-.08,.93,.17,.011,0xf0ead9]],
@@ -19,6 +20,8 @@ const proxy={
 };
 for(const x of [-4.06,-.16,3.75])proxy.room.push([x,1.10,5.833,2.63,1.79,.108,warm],[x,1.24,5.765,2.38,1.39,.035,0x63766b]);
 for(const x of [-.39,.39])proxy.seat.push([x,.437,-.64,.39,.056,.35,oak],[x,.648,-.83,.40,.15,.028,wood],[x,.047,0,.047,.663,.047,0x31312e]);
+proxy.host.push([1.48,.045,-.138,.436,.029,.297,0x303331],[1.48,.986,-.149,.861,.558,.036,0x393a35]);
+for(const dx of [1.275,1.685])proxy.host.push([dx,.07,-.129,.028,.94,.028,0x343632]);
 const cache=new Map();let paint,glow;
 export function placeCharDining(K,P,orientation){
   const T=K.THREE,angle=orientation+Math.PI,base=5,W=(x,d)=>P(bay.mid+x,bay.front-d);
@@ -41,6 +44,8 @@ export function placeCharDining(K,P,orientation){
       K.phys.addWall(...W(x+dx-.192,d-.835),...W(x+dx+.192,d-.835),base+.485,base+.836,.018,'famille');
     }
   }
+  block(.59,.43,.436,.297,1.04);
+  K.phys.addPolyWalls(rect(.165,.36,1.014,.465),base+.98,base+1.55,.012,'famille');
   block(-.89,.57,1.32,.48,1.04);block(-.06,.94,.38,.30,2.79);
   K.zone({name:'차알 파미에스테이션점',floor:'2F',sub:'FP218 · Chinese-American Dining',poly:rect(-6.12,.01,6.12,5.92),y0:base,y1:base+3.45,priority:22});
   K.detail({name:parts.mirrors[0],floor:'2F',poly:rect(-5.23,5.725,4.93,5.758),y0:base,y1:base+3.45,visibleFrom:(x,y,z)=>y>base-.1&&y<base+3.49&&sees(x,z)},()=>{
@@ -49,16 +54,17 @@ export function placeCharDining(K,P,orientation){
   paint??=new T.MeshLambertMaterial({side:T.DoubleSide,vertexColors:true});glow??=new T.MeshBasicMaterial({side:T.DoubleSide,vertexColors:true});
   function put(key,pos,bounds,range,exit,eyeHeight,offsets){
     const label=parts[key][0],shell=key==='room';
-    K.detail({name:label,floor:'2F',poly:rect(...bounds),y0:base,y1:base+3.48,visibleFrom:(x,y,z)=>y>base-.12&&y<base+3.60&&(shell||sees(x,z))},()=>{
+    const visible=(x,z)=>sees(x,z)&&(key!=='menu'||local(x,z)[1]<.448);
+    K.detail({name:label,floor:'2F',poly:rect(...bounds),y0:base,y1:base+3.48,visibleFrom:(x,y,z)=>y>base-.12&&y<base+3.60&&(shell||visible(x,z))},()=>{
       if(!cache.has(key))cache.set(key,boxSilhouette(T,proxy[key]));
       const mat=key==='sign'?glow:paint;
       placeSingleDetail(K,{name:label,file:'../char-dining/'+key+'.glb',at:at(...pos),angle,fallback:cache.get(key),fallbackMaterial:mat,
-        material:shell||key==='granite'?null:mat,loadSurface:shell?file=>loadBakedSurface(T,file):undefined,
-        range,exitRange:exit,floorTolerance:2.55,eyeHeight,translations:offsets,closeVisibleFrom:p=>sees(p.x,p.z)});
+        material:shell||key==='granite'||key==='menu'?null:mat,loadSurface:shell?file=>loadBakedSurface(T,file):undefined,
+        range,exitRange:exit,floorTolerance:2.55,eyeHeight,translations:offsets,closeVisibleFrom:p=>visible(p.x,p.z)});
     });
   }
   for(const [key,b,r,e,h] of [
-    ['room',[-6.14,0,6.14,5.94],16,19,1.55],['sign',[-3.97,.03,-1.31,.83],17,21,2.81],['host',[-1.65,.26,.15,1.12],8.6,11,1.33],
+    ['room',[-6.14,0,6.14,5.94],16,19,1.55],['sign',[-3.97,.03,-1.31,.83],17,21,2.81],['host',[-1.65,.26,1.05,1.12],8.6,11,1.33],['menu',[.157,.35,1.017,.47],4.8,6,1.29],
     ['art',[-6.07,2.11,-5.94,4.26],8.2,10.0,1.77],
     ['mala',[1.01,2.19,1.33,2.51],3.75,4.65,.10],['rice',[1.56,2.36,1.92,2.70],3.75,4.65,.06],['eggplant',[-4.59,2.30,-4.23,2.60],3.75,4.65,.08],
   ])put(key,parts[key].slice(1),b,r,e,h);

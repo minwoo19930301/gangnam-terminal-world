@@ -45,6 +45,12 @@ try{
   assert.deepEqual(files,[],'no downloads from the opaque walls or facing away');
   await pose(-3.28,-2.46,-2.66,.13,.28);await high('sign',750);
   assert.ok(!files.some(v=>/mala|rice|eggplant|reflections/.test(v)),'meals and mirror at the public approach');
+  // A visitor inside the room sees the metal frame on the rear of the menu.
+  await pose(.78,1.31,.59,.38,-.27);
+  assert.ok(!files.includes('menu.glb'),'no paper download from its back');
+  await pose(.54,-.41,.59,.40,-.43);await high('menu',2);
+  const menu=await page.evaluate(n=>{let map;__world.scene.traverse(o=>{if(o.name===n){const t=o.children[0]?.material?.map;if(t)map=[t.image.width,t.image.height];}});return map;},parts.menu[0]);
+  assert.deepEqual(menu,[1024,680]);
   await pose(-2.66,-1.28,-2.66,1.67);await walk(-2.65,.47);const entrance=await here();assert.equal(entrance[3],'차알 파미에스테이션점');
   await look(-.86,.57,-.05);await high('host',1400);await walk(-2.64,2.23);
   await look(-4.41,2.45,-.55);await high('eggplant',5700);await look(-6.02,3.18,.10);await high('art',2000);await high('seat',4200);await high('granite',12);
@@ -78,5 +84,5 @@ try{
   assert.ok(walls.find(([name])=>name==='mirror')[1][1]>walls.find(([name])=>name==='mirror')[2][1]);
   assert.deepEqual(errors,[]);assert.equal(new Set(files).size,files.length);
   for(const key of Object.keys(parts))assert.ok(files.includes(key==='mirrors'?'reflections.webp':key+'.glb'),key);
-  assert.ok(files.includes('room-light.webp'));console.log(JSON.stringify({entrance,aisle,hall,stone,mirrorChange,files,pairs,walls}));
+  assert.ok(files.includes('room-light.webp'));console.log(JSON.stringify({entrance,aisle,hall,stone,menu,mirrorChange,files,pairs,walls}));
 }finally{await browser.close();await new Promise(r=>server.close(r));}
