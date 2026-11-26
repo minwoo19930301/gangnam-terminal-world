@@ -1,4 +1,68 @@
 import { placeHypnos } from '../../assets/models/hypnos-showroom/model.js';
+import { registerPaulSmith } from './shinsegae-paul-smith.js';
+import { registerHerno } from './shinsegae-herno.js';
+import { registerSnowPeak } from './shinsegae-snowpeak.js';
+import { registerCdg } from './shinsegae-cdg.js';
+import { registerCollect } from './shinsegae-collect.js';
+import { registerFrisbee } from './shinsegae-frisbee.js';
+import { registerCrocs } from './shinsegae-crocs.js';
+import { registerGarmin } from './shinsegae-garmin.js';
+import { registerNewBalance } from './shinsegae-new-balance.js';
+import { registerBarrel } from './shinsegae-barrel.js';
+import { registerBrompton } from './shinsegae-brompton.js';
+import { registerHasselblad } from './shinsegae-hasselblad.js';
+import { registerLeica } from './shinsegae-leica.js';
+import { registerBossGolf } from './shinsegae-boss-golf.js';
+import { registerBerluti } from './shinsegae-berluti.js';
+import { registerRimowaGallery } from './shinsegae-rimowa-gallery.js';
+import { registerTumi } from './shinsegae-tumi.js';
+import { registerBarbour } from './shinsegae-field-jackets.js';
+import { registerOurselves } from './shinsegae-ourselves.js';
+import { registerRoughSide } from './shinsegae-roughside.js';
+import { registerFr8ight } from './shinsegae-fr8ight.js';
+import { registerAtelierChoux } from './shinsegae-atelier-choux.js';
+import { registerSalomon } from './shinsegae-trail-sports.js';
+import { registerArcteryx } from './shinsegae-outdoors.js';
+import { registerBerwick } from './shinsegae-berwick.js';
+import { registerCucinelli } from './shinsegae-cucinelli.js';
+import { registerSnoopyPlace } from './shinsegae-snoopy-place.js';
+import { registerBabyDior } from './shinsegae-baby-dior.js';
+import { registerPatagoniaKids } from './shinsegae-patagonia-kids.js';
+import { registerToebox } from './shinsegae-toebox.js';
+import { registerLightnow } from './shinsegae-lighting.js';
+import { registerTimeStyle } from './shinsegae-time-style.js';
+import { registerMolteni } from './shinsegae-molteni.js';
+import { registerUSM } from './shinsegae-usm.js';
+import { registerHermanMiller } from './shinsegae-herman-miller.js';
+import { registerKwangjuyo } from './shinsegae-ceramics.js';
+import { registerRoyalCopenhagen } from './shinsegae-royal-copenhagen.js';
+import { registerTwl } from './shinsegae-twl.js';
+import { registerLegoStore } from './shinsegae-lego-store.js';
+import { registerIQBox, toyShop } from './shinsegae-junior-workshop.js';
+import { registerMicroScooter } from './shinsegae-microscooter.js';
+import { registerComfPro } from './shinsegae-comfpro.js';
+import { registerStokke } from './shinsegae-stokke.js';
+import { registerHokyung } from './shinsegae-hokyung.js';
+import { registerKisara } from './shinsegae-kisara.js';
+import { registerMilhwa } from './shinsegae-milhwa.js';
+import { registerHibarin } from './shinsegae-hibarin.js';
+import { registerMyeonok } from './shinsegae-myeonok.js';
+import { registerCategorique } from './shinsegae-categorique.js';
+import { registerCollage } from './shinsegae-collage.js';
+import { registerHaoSum } from './shinsegae-haosum.js';
+import { registerMauviel } from './shinsegae-mauviel.js';
+import { registerMiele } from './shinsegae-miele.js';
+import { registerRocheBobois } from './shinsegae-roche-bobois.js';
+import { registerBaccarat } from './shinsegae-baccarat.js';
+import { registerAudio } from './shinsegae-audio.js';
+import { registerRoborock } from './shinsegae-roborock.js';
+import { registerJura } from './shinsegae-jura.js';
+import { registerPishon } from './shinsegae-pishon.js';
+import { registerKitchenTool } from './shinsegae-kitchentool.js';
+import { registerChristofle } from './shinsegae-silver-table.js';
+import { registerJajuTable } from './shinsegae-jaju-table.js';
+import { registerGatevision } from './shinsegae-gatevision.js';
+import { registerMarzocco } from './shinsegae-marzocco.js';
 import { mounts as facadeMounts } from '../../assets/models/shinsegae-facade/mounts.js';
 import { loadArchitecture, fitArchitecture, fitTerminalSeat as drawFacadeSign } from '../../assets/models/architectural-retail/place.js';
 import { displays as upperFloorDisplays } from '../../assets/models/shinsegae/displays.js';
@@ -258,7 +322,17 @@ export function build(K) {
     K.zone({...details, poly:approach});
   }
 
-  // One deferred furnishing batch per retail floor; structure/zones are registered immediately.
+  // Both streaming areas can see 2F across the plaza. Build each shared
+  // group once even when the two areas are loaded together.
+  function retailDetail(opt, build) {
+    if (opt.floor !== '2F') { K.detail(opt, build); return; }
+    let built = false;
+    const once = () => { if (!built) { built = true; build(); } };
+    K.detail(opt, once);
+    K._.setCurrent('centralcity');
+    K.detail(opt, once);
+    K._.setCurrent('shinsegae');
+  }
   // K.detail invokes the same construction kit, so the local survey helpers retain their frame.
   const furnishings = new Map();
   function furnish(floor, fn) {
@@ -268,11 +342,7 @@ export function build(K) {
       const shared=['2F','3F','4F','5F','6F'].includes(floor), opt={ floor, y0: y, y1: floor === '1M' ? LV['2F'] : LV[nextOf(floor)],
         poly: shared ? rect(0, 0, UW, 150) : floor === '1M' ? rect(...MEZZ) : UPPER.has(floor) ? rect(0, VS, UW, VD) : FULL,
         name: `${floor} 매장 집기` };
-      let built=false; const buildOnce=()=>{if(built)return;built=true;for(const build of queue)build();};
-      K.detail(opt,buildOnce);
-      // Area streaming retains details only for the active building. The
-      // adjoining plaza must also load the shared upper retail sightline.
-      if(floor==='2F'){K._.setCurrent('centralcity');K.detail(opt,buildOnce);K._.setCurrent('shinsegae');}
+      retailDetail(opt, () => { for (const build of queue) build(); });
     }
     furnishings.get(floor).push(fn);
   }
@@ -7796,6 +7866,632 @@ export function build(K) {
   for(const [id,guide]of Object.entries(upperGuidePlans)){
     const y=LV[id];zone('신세계백화점 강남점',id,upperCats[id],[0,0,UW,145.3],y,LV[nextOf(id)],1);
     for(const c of guide.cells)buildUpperCell(id,c);
+    if(id==='6F'){
+      const room=upperBuildRect(id,guide.cells.find(c=>c.name==='폴스미스'));
+      const u=(room[0]+room[2])/2,v=room[3]-.50;
+      const [x,z]=P(u,v),[rx,rz]=P(u-1,v);
+      registerPaulSmith(K,{poly:rect(...room),x,y,z,yaw:Math.atan2(z-rz,rx-x)});
+    }
+    if(id==='6F'){
+      const room=upperBuildRect(id,guide.cells.find(c=>c.name==='에르노'));
+      const u=room[2]-.52,v=(room[1]+room[3])/2;
+      const [x,z]=P(u,v),[rx,rz]=P(u,v+1),yaw=Math.atan2(z-rz,rx-x);
+      registerHerno(K,{poly:rect(...room),x,y,z,yaw});
+      for(const [side,front,w,d,h] of [[0,0,5.64,.67,3.04],[-2.91,1.63,.51,2.49,2.71],[-1.52,1.59,.83,.66,1.98],[.60,1.77,1.77,.73,1.05]]){
+        K.box({x:x+side*Math.cos(yaw)+front*Math.sin(yaw),y,z:z-side*Math.sin(yaw)+front*Math.cos(yaw),
+          w,d,h,rotY:yaw,mat:0x494541,skip:['top','bottom','n','s','e','w']});
+      }
+    }
+    if(id==='6F'){
+      const room=upperBuildRect(id,guide.cells.find(c=>c.name==='핫셀블라드'));
+      const u=(room[0]+room[2])/2,v=room[1]+3.65;
+      const [x,z]=P(u,v),[rx,rz]=P(u+1,v);
+      registerHasselblad(K,{poly:rect(...room),x,y,z,yaw:Math.atan2(z-rz,rx-x)});
+    }
+    if(id==='6F'){
+      const room=upperBuildRect(id,guide.cells.find(c=>c.name==='라이카'));
+      const u=(room[0]+room[2])/2,v=room[3]-5.20939;
+      const [x,z]=P(u,v),[rx,rz]=P(u+1,v);
+      registerLeica(K,{poly:rect(...room),x,y,z,yaw:Math.atan2(z-rz,rx-x)});
+    }
+    if(id==='6F'){
+      const room=upperBuildRect(id,guide.cells.find(c=>c.name==='벨루티'));
+      const u=room[0]+.46,v=(room[1]+room[3])/2;
+      const [x,z]=P(u,v),[rx,rz]=P(u,v-1),yaw=Math.atan2(z-rz,rx-x);
+      registerBerluti(K,{poly:rect(...room),x,y,z,yaw});
+      for(const [front,w,d,h] of [[0,5.21,.54,2.83],[1.50,1.88,.65,.942]]){
+        K.box({x:x+front*Math.sin(yaw),y,z:z+front*Math.cos(yaw),w,d,h,rotY:yaw,
+          mat:0x85553e,skip:['top','bottom','n','s','e','w']});
+      }
+    }
+    if(id==='6F'){
+      const room=upperBuildRect(id,guide.cells.find(c=>c.name==='버윅'));
+      const u=(room[0]+room[2])/2,v=room[3]-.403;
+      const [x,z]=P(u,v),[rx,rz]=P(u-1,v),yaw=Math.atan2(z-rz,rx-x);
+      registerBerwick(K,{poly:rect(...room),x,y,z,yaw});
+      for(const [side,front,w,d,h] of [[0,.025,4.68,.51,2.02],[-.33,1.58,1.42,.73,.84],[.46,1.12,1.04,.63,1.05],[-2.27,1.27,.42,1.95,1.97],[2.27,1.27,.42,1.95,1.97]]){
+        K.box({x:x+side*Math.cos(yaw)+front*Math.sin(yaw),y,
+          z:z-side*Math.sin(yaw)+front*Math.cos(yaw),w,d,h,rotY:yaw,
+          mat:0xb48b6f,skip:['top','bottom','n','s','e','w']});
+      }
+    }
+    if(id==='6F'){
+      const room=upperBuildRect(id,guide.cells.find(c=>c.name==='CDG CDG CDG'));
+      const u=room[2]-3.5,v=(room[1]+room[3])/2;
+      const [x,z]=P(u,v),[rx,rz]=P(u,v+1);
+      registerCdg(K,{poly:rect(...room),x,y,z,yaw:Math.atan2(z-rz,rx-x)});
+    }
+    if(id==='6F'){
+      const shop=guide.cells.find(c=>c.name==='콜렉트');
+      const room=upperBuildRect(id,shop),u=room[2]-.38,v=(room[1]+room[3])/2;
+      const [x,z]=P(u,v),[rx,rz]=P(u,v+1);
+      registerCollect(K,{poly:rect(...room),x,y,z,yaw:Math.atan2(z-rz,rx-x)});
+    }
+    if(id==='6F'){
+      const shop=guide.cells.find(c=>c.name==='브루넬로 쿠치넬리');
+      const room=upperBuildRect(id,shop), u=room[0]+.797, v=(room[1]+room[3])/2;
+      const [x,z]=P(u,v),[rx,rz]=P(u,v-1),yaw=Math.atan2(z-rz,rx-x);
+      registerCucinelli(K,{poly:rect(...room),x,y,z,yaw});
+      for(const [side,back,w,d,h] of [[0,.21,3.12,.64,2.76],[3.03,.21,2.52,.64,2.76],[-2.22,-.41,.82,.76,.74]]){
+        K.box({x:x+side*Math.cos(yaw)-back*Math.sin(yaw),y,
+          z:z-side*Math.sin(yaw)-back*Math.cos(yaw),w,d,h,rotY:yaw,
+          mat:0xd9d3c7,skip:['top','bottom','n','s','e','w']});
+      }
+    }
+    if(id==='6F'){
+      const room=upperBuildRect(id,guide.cells.find(c=>c.name==='리모와'));
+      const u=(room[0]+room[2])/2,v=room[3]-.33211;
+      const [x,z]=P(u,v),[rx,rz]=P(u-1,v),yaw=Math.atan2(z-rz,rx-x);
+      registerRimowaGallery(K,{poly:rect(...room),x,y,z,yaw});
+      // Public display footprint: backing and projecting shelves, with the front aisle clear.
+      for(const [side,front,w,d,h] of [[0,-.055,4.02,.12,2.86],[-.515,.19,1.50,.42,1.51],[1.18,.245,.96,.51,1.59]]){
+        K.box({x:x+side*Math.cos(yaw)+front*Math.sin(yaw),y,
+          z:z-side*Math.sin(yaw)+front*Math.cos(yaw),w,d,h,rotY:yaw,
+          mat:0xaa8358,skip:['top','bottom','n','s','e','w']});
+      }
+    }
+    if(id==='6F'){
+      const room=upperBuildRect(id,guide.cells.find(c=>c.name==='투미'));
+      const u=(room[0]+room[2])/2-.26,v=room[3]-1.264;
+      const [x,z]=P(u,v),[rx,rz]=P(u-1,v),yaw=Math.atan2(z-rz,rx-x);
+      registerTumi(K,{poly:rect(...room),x,y,z,yaw});
+      for(const [side,back,w,d,h] of [[0,0,1.73,.70,1],[-1.31,.30,.78,.65,.55]]) {
+        K.box({x:x+side*Math.cos(yaw)-back*Math.sin(yaw),y,
+          z:z-side*Math.sin(yaw)-back*Math.cos(yaw),w,d,h,rotY:yaw,
+          mat:0xf2eada,skip:['top','bottom','n','s','e','w']});
+      }
+    }
+    if(id==='7F'){
+      const room=upperBuildRect(id,guide.cells.find(c=>c.name==='보스골프'));
+      const u=room[2]-.58,v=(room[1]+room[3])/2;
+      const [x,z]=P(u,v),[rx,rz]=P(u,v+1),yaw=Math.atan2(z-rz,rx-x);
+      registerBossGolf(K,{poly:rect(...room),x,y,z,yaw});
+      for(const [side,front,w,d,h] of [[0,-.205,5.35,.12,2.79],[-.71,1.06,1.91,.49,1.59],
+          [-1.99,.22,.96,.49,1.59],[1.12,1.18,.66,.61,1.84]]) {
+        K.box({x:x+side*Math.cos(yaw)+front*Math.sin(yaw),y,
+          z:z-side*Math.sin(yaw)+front*Math.cos(yaw),w,d,h,rotY:yaw,
+          mat:0xbeb59c,skip:['top','bottom','n','s','e','w']});
+      }
+    }
+    if(id==='7F'){
+      const room=upperBuildRect(id,guide.cells.find(c=>c.name==='바버'));
+      const u=(room[0]+room[2])/2,v=room[3]-1.7;
+      const [x,z]=P(u,v),[rx,rz]=P(u-1,v),yaw=Math.atan2(z-rz,rx-x);
+      registerBarbour(K,{poly:rect(...room),x,y,z,yaw});
+      for(const [side,front,w,d,h] of [[0,-1.34,5.72,.13,2.48],[-1.88,-.71,1.7,.57,1.9],
+          [-.81,.15,.61,.45,1.89],[.19,.26,.96,.96,.90],[1.08,.48,.71,.71,.62],[.91,-.69,.48,.38,2.06]]){
+        K.box({x:x+side*Math.cos(yaw)+front*Math.sin(yaw),y,
+          z:z-side*Math.sin(yaw)+front*Math.cos(yaw),w,d,h,rotY:yaw,
+          mat:0x939986,skip:['top','bottom','n','s','e','w']});
+      }
+    }
+    if(id==='7F'){
+      const room=upperBuildRect(id,guide.cells.find(c=>c.name==='아워셀브스'));
+      const u=(room[0]+room[2])/2,v=room[3]-2.22;
+      const [x,z]=P(u,v),[rx,rz]=P(u-1,v),yaw=Math.atan2(z-rz,rx-x);
+      registerOurselves(K,{poly:rect(...room),x,y,z,yaw});
+      for(const [side,front,w,d,h] of [[-.76,-.24,1.83,.56,1.99],[-.76,-.70,2.30,.09,2.55],
+          [1.04,.33,1.38,.78,.84],[1.06,-.88,1.31,.52,1.67]]){
+        K.box({x:x+side*Math.cos(yaw)+front*Math.sin(yaw),y,
+          z:z-side*Math.sin(yaw)+front*Math.cos(yaw),w,d,h,rotY:yaw,
+          mat:0x795640,skip:['top','bottom','n','s','e','w']});
+      }
+    }
+    if(id==='7F'){
+      const room=upperBuildRect(id,guide.cells.find(c=>c.name==='러프사이드'));
+      const u=(room[0]+room[2])/2-.89, v=(room[1]+room[3])/2-.03;
+      const [x,z]=P(u,v),[rx,rz]=P(u,v-1),yaw=Math.atan2(z-rz,rx-x);
+      registerRoughSide(K,{poly:rect(...room),x,y,z,yaw});
+      for(const [side,front,w,d,h] of [[.6,.31,1.72,.62,1.95],[-.91,-.32,1.35,.93,1.93],
+          [-.1,-1.68,3.10,.36,2.57],[1.47,-.61,.53,.63,2.79],[-.19,-1.275,1.70,.35,.96]]){
+        K.box({x:x+side*Math.cos(yaw)+front*Math.sin(yaw),y,
+          z:z-side*Math.sin(yaw)+front*Math.cos(yaw),w,d,h,rotY:yaw,
+          mat:0x997f68,skip:['top','bottom','n','s','e','w']});
+      }
+    }
+    if(id==='7F'){
+      const room=upperBuildRect(id,guide.cells.find(c=>c.name==='프레이트'));
+      const u=room[0]+1.37,v=(room[1]+room[3])/2;
+      const [x,z]=P(u,v),[rx,rz]=P(u,v-1),yaw=Math.atan2(z-rz,rx-x);
+      registerFr8ight(K,{poly:rect(...room),x,y,z,yaw});
+      for(const [side,front,w,d,h] of [[0,0,2.43,.62,1.99],[-2.65,-.21,2.28,.62,1.99],
+          [2.65,-.21,2.28,.62,1.99],[1.39,.98,1.48,.72,.63],[0,-.88,2.36,.14,2.52]]){
+        K.box({x:x+side*Math.cos(yaw)+front*Math.sin(yaw),y,
+          z:z-side*Math.sin(yaw)+front*Math.cos(yaw),w,d,h,rotY:yaw,
+          mat:0xaaa69a,skip:['top','bottom','n','s','e','w']});
+      }
+    }
+    if(id==='8F'){
+      const nb=upperBuildRect(id,guide.cells.find(c=>c.name==='뉴발란스 메가숍'));
+      const nbU=(nb[0]+nb[2])/2,nbV=nb[1]+3.73875;
+      const [nx,nz]=P(nbU,nbV),[nex,nez]=P(nbU+1,nbV);
+      const nbYaw=Math.atan2(nz-nez,nex-nx);
+      registerNewBalance(K,{poly:rect(...nb),x:nx,y,z:nz,yaw:nbYaw});
+      for(const [side,front,w,d,h] of [[0,-2.45,5.26,.37,2.95],[1.21,.12,2.18,1.23,.16],
+          [-.48,.93,.73,.56,.90],[-1.66,-.05,1.32,.65,1.55]]){
+        K.box({x:nx+side*Math.cos(nbYaw)+front*Math.sin(nbYaw),y,
+          z:nz-side*Math.sin(nbYaw)+front*Math.cos(nbYaw),w,d,h,rotY:nbYaw,
+          mat:0xbda078,skip:['top','bottom','n','s','e','w']});
+      }
+      const snow=upperBuildRect(id,guide.cells.find(c=>c.name==='스노우피크'));
+      const snowU=(snow[0]+snow[2])/2,snowV=snow[1]+3.6215;
+      const [snowX,snowZ]=P(snowU,snowV),[eastX,eastZ]=P(snowU+1,snowV);
+      const snowYaw=Math.atan2(snowZ-eastZ,eastX-snowX);
+      registerSnowPeak(K,{poly:rect(...snow),x:snowX,y,z:snowZ,yaw:snowYaw});
+      for(const [side,front,w,d,h] of [[0,-1.11,2.70,2.22,1.95],[-.86,.39,.66,.67,.96],
+          [.83,.36,.66,.67,.96],[0,1.09,1.35,.56,.48],[1.21,1.34,.49,.49,.37],
+          [1.65,-.42,.72,.50,.94],[-1.53,.92,.53,.40,.50],[-1.73,-.14,.67,.24,1.95],[1.47,-1.47,1.27,.09,2.06]]){
+        K.box({x:snowX+side*Math.cos(snowYaw)+front*Math.sin(snowYaw),y,
+          z:snowZ-side*Math.sin(snowYaw)+front*Math.cos(snowYaw),w,d,h,rotY:snowYaw,
+          mat:0xc09c70,skip:['top','bottom','n','s','e','w']});
+      }
+      const swim=upperBuildRect(id,guide.cells.find(c=>c.name==='배럴'));
+      const swimU=swim[2]-1.18165, swimV=(swim[1]+swim[3])/2;
+      const [sx,sz]=P(swimU,swimV),[rxSwim,rzSwim]=P(swimU,swimV+1);
+      const swimYaw=Math.atan2(sz-rzSwim,rxSwim-sx);
+      registerBarrel(K,{poly:rect(...swim),x:sx,y,z:sz,yaw:swimYaw});
+      for(const [side,front,w,d,h] of [[0,.27,2.14,.96,2.53],[-2.45,.12,.87,.72,2.1],
+          [2.37,.12,.87,.72,1.61],[-2.50,-.55,1.39,.09,2.34],[2.49,-.55,1.39,.09,2.34],
+          [-1.28,-.76,1.28,.49,1.76],[1.24,-.76,1.28,.49,1.76],[0,-1.10,6.27,.065,2.705]]){
+        K.box({x:sx+side*Math.cos(swimYaw)+front*Math.sin(swimYaw),y,
+          z:sz-side*Math.sin(swimYaw)+front*Math.cos(swimYaw),w,d,h,rotY:swimYaw,
+          mat:0x183d70,skip:['top','bottom','n','s','e','w']});
+      }
+      const frisbee=upperBuildRect(id,guide.cells.find(c=>c.name==='프리스비 (애플)'));
+      const fu=(frisbee[0]+frisbee[2])/2,fv=13.55;
+      const [fx,fz]=P(fu,fv),[frx,frz]=P(fu+1,fv),fyaw=Math.atan2(fz-frz,frx-fx);
+      registerFrisbee(K,{poly:rect(...frisbee),x:fx,y,z:fz,yaw:fyaw});
+      for(const [side,front,w,d,h] of [[0,0,2.16,1.13,.9],[-2.84,-1.45,2.14,1.14,.9],
+          [-2.8,-4.28,2.5,.48,2.68],[2.8,-4.28,2.5,.48,2.68],[0,-4.27,2.88,.12,2.52],[0,-4.08,2.86,.55,.76]]){
+        K.box({x:fx+side*Math.cos(fyaw)+front*Math.sin(fyaw),y,
+          z:fz-side*Math.sin(fyaw)+front*Math.cos(fyaw),w,d,h,rotY:fyaw,
+          mat:0xeeeae5,skip:['top','bottom','n','s','e','w']});
+      }
+      const crocs=upperBuildRect(id,guide.cells.find(c=>c.name==='크록스'));
+      const cu=(crocs[0]+crocs[2])/2,cv=crocs[1]+.94;
+      const [cx,cz]=P(cu,cv),[east,ez]=P(cu+1,cv),cyaw=Math.atan2(cz-ez,east-cx);
+      registerCrocs(K,{poly:rect(...crocs),x:cx,y,z:cz,yaw:cyaw});
+      for(const [side,front,w,d,h] of [[0,-.47,3.90,.76,2.52],[1.20,-.09,1.19,.80,.855],
+          [-.81,.28,.48,.53,.34],[-.26,.28,.48,.53,.50]]){
+        K.box({x:cx+side*Math.cos(cyaw)+front*Math.sin(cyaw),y,z:cz-side*Math.sin(cyaw)+front*Math.cos(cyaw),
+          w,d,h,rotY:cyaw,mat:0xe8e6da,skip:['top','bottom','n','s','e','w']});
+      }
+      const garmin=upperBuildRect(id,guide.cells.find(c=>c.name==='가민'));
+      const gu=(garmin[0]+garmin[2])/2,gv=garmin[1]+1.645;
+      const [gx,gz]=P(gu,gv),[right,rz0]=P(gu+1,gv),turn=Math.atan2(gz-rz0,right-gx);
+      registerGarmin(K,{poly:rect(...garmin),x:gx,y,z:gz,yaw:turn});
+      for(const [side,front,w,d,h] of [[.38,1.89,2.88,.75,1.071],[-1.65,2.23,1.39,1.02,.29],
+          [-1.65,2.23,.72,.16,1.83],[.05,-1.23,4.74,.46,2.135]]){
+        K.box({x:gx+side*Math.cos(turn)+front*Math.sin(turn),y,z:gz-side*Math.sin(turn)+front*Math.cos(turn),
+          w,d,h,rotY:turn,mat:0xaba9a3,skip:['top','bottom','n','s','e','w']});
+      }
+      const bay=upperBuildRect(id,guide.cells.find(c=>c.name==='브롬톤'));
+      const bu=(bay[0]+bay[2])/2,bv=bay[1]+1;
+      const [bx,bz]=P(bu,bv),[rightX,rightZ]=P(bu+1,bv),br=Math.atan2(bz-rightZ,rightX-bx);
+      registerBrompton(K,{poly:rect(...bay),x:bx,y,z:bz,yaw:br});
+      for(const [side,front,w,d,h,angle] of [[0,-.45,3.30,.58,2.48,0],[.12,1.13,1.67,.61,1.08,-14],[2.96,-.41,2.10,.54,1.81,0]]){
+        K.box({x:bx+side*Math.cos(br)+front*Math.sin(br),y,z:bz-side*Math.sin(br)+front*Math.cos(br),
+          w,d,h,rotY:br+angle*Math.PI/180,mat:0xe7dbc8,skip:['top','bottom','n','s','e','w']});
+      }
+      const salomon=upperBuildRect(id,guide.cells.find(c=>c.name==='살로몬'));
+      const su=salomon[0]+.956,sv=(salomon[1]+salomon[3])/2;
+      const [tx,tz]=P(su,sv),[trailRightX,trailRightZ]=P(su,sv-1),tyaw=Math.atan2(tz-trailRightZ,trailRightX-tx);
+      registerSalomon(K,{poly:rect(...salomon),x:tx,y,z:tz,yaw:tyaw});
+      for(const [side,front,w,d,h] of [[0,-.32,5.84,.52,2.7],[1.65,.32,1.66,.79,.78],[-.798,1.25,.69,1.36,.45]]){
+        K.box({x:tx+side*Math.cos(tyaw)+front*Math.sin(tyaw),y,
+          z:tz-side*Math.sin(tyaw)+front*Math.cos(tyaw),w,d,h,rotY:tyaw,mat:0xf7f1e5,
+          skip:['top','bottom','n','s','e','w']});
+      }
+      const shop=guide.cells.find(c=>c.name==='아크테릭스');
+      const room=upperBuildRect(id,shop),u=room[0]+3.12,v=(room[1]+room[3])/2;
+      const [x,z]=P(u,v),[rx,rz]=P(u,v-1),yaw=Math.atan2(z-rz,rx-x);
+      registerArcteryx(K,{poly:rect(...room),x,y,z,yaw});
+      for(const [side,back,w,d,h] of [[0,2.35,4.68,.43,2.69],[-.89,-.67,1.13,1.39,.84],
+          [1.466,-.61,1.16,.48,.46],[1.47,-1.12,.43,.25,.11],[-2.22,.4,.49,2.69,2.28]]){
+        K.box({x:x+side*Math.cos(yaw)-back*Math.sin(yaw),y,
+          z:z-side*Math.sin(yaw)-back*Math.cos(yaw),w,d,h,rotY:yaw,
+          mat:0x928a82,skip:['top','bottom','n','s','e','w']});
+      }
+    }
+    if(id==='10F'){
+      const patagonia=upperBuildRect(id,guide.cells.find(c=>c.name==='파타고니아 키즈'));
+      const pu=patagonia[0]+2.64,pv=(patagonia[1]+patagonia[3])/2;
+      const [px,pz]=P(pu,pv),[prx,prz]=P(pu,pv-1),patYaw=Math.atan2(pz-prz,prx-px);
+      registerPatagoniaKids(K,{poly:rect(...patagonia),x:px,y,z:pz,yaw:patYaw});
+      for(const [side,front,w,d,h] of [[0,-1.91,3.8,.11,2.52],[0,-1.56,3.04,.52,.96],
+          [-.10,.12,1.78,.75,.57],[-.70,.09,.42,.38,2.12],[.95,.38,.39,.32,1.34],[1.26,-.94,.82,.60,1.50],[-1.29,-1,.84,.50,1.41]]){
+        K.box({x:px+side*Math.cos(patYaw)+front*Math.sin(patYaw),y,
+          z:pz-side*Math.sin(patYaw)+front*Math.cos(patYaw),w,d,h,rotY:patYaw,
+          mat:0x935e3d,skip:['top','bottom','n','s','e','w']});
+      }
+      const microRoom=upperBuildRect(id,guide.cells.find(c=>c.name==='마이크로 킥보드'));
+      const microU=microRoom[2]-3.4,microV=(microRoom[1]+microRoom[3])/2;
+      const [microX,microZ]=P(microU,microV),[rightXMicro,rightZMicro]=P(microU,microV-1);
+      const microYaw=Math.atan2(microZ-rightZMicro,rightXMicro-microX);
+      registerMicroScooter(K,{poly:rect(...microRoom),x:microX,y,z:microZ,yaw:microYaw});
+      K.box({x:microX,y,z:microZ,w:1.16,d:1.16,h:.55,rotY:microYaw,
+        mat:0xf4eee3,skip:['top','bottom','n','s','e','w']});
+      K.box({x:microX-1.74*Math.sin(microYaw),y,z:microZ-1.74*Math.cos(microYaw),
+        w:4.04,d:.56,h:2.53,rotY:microYaw,mat:0xe9e4db,skip:['top','bottom','n','s','e','w']});
+      const snoopy=upperBuildRect(id,guide.cells.find(c=>c.name==='스누피 플레이스'));
+      const [gx,gz]=P(47,78.3),[leftX,leftZ]=P(46,78.3);
+      const giftYaw=Math.atan2(gz-leftZ,leftX-gx);
+      registerSnoopyPlace(K,{poly:rect(...snoopy),x:gx,y,z:gz,yaw:giftYaw});
+      // Keep the photo sculpture, goods case and wall shelves independently walkable around.
+      for(const [side,back,w,d,h,turn] of [[-1.49,0,2.14,1.39,2.5,-.34],[1.57,-.045,2.26,1.22,1.15,0],[0,2.32,7.88,.57,2.86,0]]){
+        K.box({x:gx+side*Math.cos(giftYaw)-back*Math.sin(giftYaw),y,
+          z:gz-side*Math.sin(giftYaw)-back*Math.cos(giftYaw),w,d,h,rotY:giftYaw+turn,
+          mat:0xe8d7ba,skip:['top','bottom','n','s','e','w']});
+      }
+      const legoRoom=upperBuildRect(id,guide.cells.find(c=>c.name==='레고스토어'));
+      const [legoX,legoZ]=P(15,74.65),[legoRX,legoRZ]=P(15,73.65);
+      const legoYaw=Math.atan2(legoZ-legoRZ,legoRX-legoX);
+      registerLegoStore(K,{poly:rect(...legoRoom),x:legoX,y,z:legoZ,yaw:legoYaw});
+      for(const [side,back,w,d,h] of [[-.27,-.07,1.02,.80,1.15],[.77,-.065,.70,.60,.85],[-.20,1.25,2.55,.47,2.52]]) {
+        K.box({x:legoX+side*Math.cos(legoYaw)-back*Math.sin(legoYaw),y,
+          z:legoZ-side*Math.sin(legoYaw)-back*Math.cos(legoYaw),rotY:legoYaw,w,d,h,
+          mat:0xf2ecde,skip:['top','bottom','n','s','e','w']});
+      }
+      const toyRoom=upperBuildRect(id,guide.cells.find(c=>c.name===toyShop));
+      const tu=(toyRoom[0]+toyRoom[2])/2,tv=(toyRoom[1]+toyRoom[3])/2;
+      const [tx,tz]=P(tu,tv),[trx,trz]=P(tu,tv-1);
+      const toyYaw=Math.atan2(tz-trz,trx-tx);
+      registerIQBox(K,{poly:rect(...toyRoom),x:tx,y,z:tz,yaw:toyYaw});
+      for(const [side,back,w,d,h] of [[0,0,1.50,.93,.66],[0,.86,1.66,.60,.59],[-1.39,.65,.89,.40,1.12],[1.22,.48,.72,.59,.82]]){
+        K.box({x:tx+side*Math.cos(toyYaw)-back*Math.sin(toyYaw),y,
+          z:tz-side*Math.sin(toyYaw)-back*Math.cos(toyYaw),w,d,h,rotY:toyYaw,
+          mat:0xe1b983,skip:['top','bottom','n','s','e','w']});
+      }
+      const chouxRoom=upperBuildRect(id,guide.cells.find(c=>c.name==='아뜰리에 슈'));
+      const cu=chouxRoom[2]-3.6,cv=(chouxRoom[1]+chouxRoom[3])/2;
+      const [cx,cz]=P(cu,cv),[rightX,rightZ]=P(cu,cv+1);
+      const chouxYaw=Math.atan2(cz-rightZ,rightX-cx);
+      registerAtelierChoux(K,{poly:rect(...chouxRoom),x:cx,y,z:cz,yaw:chouxYaw});
+      // Solid cores track the cot, chest, open shelf and mural, leaving the entry clear.
+      for(const [side,back,w,d,h] of [[-.44,-1.20,1.53,.86,1.0],[.47,.54,1.60,.74,.95],
+          [0,2.19,2.68,.46,1.44],[0,2.63,3.14,.17,2.76]]){
+        K.box({x:cx+side*Math.cos(chouxYaw)-back*Math.sin(chouxYaw),y,
+          z:cz-side*Math.sin(chouxYaw)-back*Math.cos(chouxYaw),w,d,h,rotY:chouxYaw,
+          mat:0xf1e9da,skip:['top','bottom','n','s','e','w']});
+      }
+      // The atrium cuts into the west half of this bay. Keep the entire
+      // display on the supported east strip and the walkway along it open.
+      const diorRoom=upperBuildRect(id,guide.cells.find(c=>c.name==='베이비 디올'));
+      const du=diorRoom[2]-2.11,dv=diorRoom[3]-3.18;
+      const [dx,dz]=P(du,dv),[dRightX,dRightZ]=P(du-1,dv);
+      const diorYaw=Math.atan2(dz-dRightZ,dRightX-dx);
+      registerBabyDior(K,{poly:rect(...diorRoom),x:dx,y,z:dz,yaw:diorYaw});
+      for(const [side,back,w,d,h] of [[0,1.13,3.38,.66,2.52],[-.94,-.51,.55,.44,1.28],
+          [-.39,-.77,.55,.44,1.28],[.91,-.43,.82,.82,.72]]) {
+        K.box({x:dx+side*Math.cos(diorYaw)-back*Math.sin(diorYaw),y,
+          z:dz-side*Math.sin(diorYaw)-back*Math.cos(diorYaw),w,d,h,rotY:diorYaw,
+          mat:0xe8d7bd,skip:['top','bottom','n','s','e','w']});
+      }
+      const studyRoom=upperBuildRect(id,guide.cells.find(c=>c.name==='컴프프로'));
+      const studyU=studyRoom[2]-1.8428, studyV=(studyRoom[1]+studyRoom[3])/2;
+      const [studyX,studyZ]=P(studyU,studyV),[studyRightX,studyRightZ]=P(studyU,studyV+1);
+      const studyYaw=Math.atan2(studyZ-studyRightZ,studyRightX-studyX);
+      registerComfPro(K,{poly:rect(...studyRoom),x:studyX,y,z:studyZ,yaw:studyYaw});
+      // Inset furniture cores keep the aisle and the space between the desks open.
+      for(const [side,back,w,d,h] of [[-1.22,.13,1.36,.62,.71],[.78,-.04,1.36,.62,.71],
+          [-.445,.13,.32,.38,.54],[1.555,-.04,.32,.38,.54],[-1.49,-.53,.40,.36,.48],
+          [.53,-.69,.40,.36,.48],[-1.06,1.25,1.82,.71,1.69],[.98,1.30,1.85,.47,1.70]]) {
+        K.box({x:studyX+side*Math.cos(studyYaw)-back*Math.sin(studyYaw),y,
+          z:studyZ-side*Math.sin(studyYaw)-back*Math.cos(studyYaw),w,d,h,rotY:studyYaw,
+          mat:0xe4e1d6,skip:['top','bottom','n','s','e','w']});
+      }
+      const footwear=guide.cells.find(c=>c.name==='토박스');
+      const room=upperBuildRect(id,footwear);
+      const centerU=room[2]-2.05, centerV=(room[1]+room[3])/2;
+      const [fx,fz]=P(centerU,centerV), [sx,sz]=P(centerU,centerV+1);
+      const angle=Math.atan2(fz-sz,sx-fx);
+      registerToebox(K,{poly:rect(...room),x:fx,y,z:fz,yaw:angle});
+      // Inset cores leave the rounded plinth ends and the aisle free.
+      for(const [side,back,w,d,h] of [[0,1.42,5.13,.48,2.41],[-.58,-.45,1.47,.68,.57],
+          [.57,-.36,1.09,.62,.77],[1.97,-.59,.55,.44,.77]]){
+        K.box({x:fx+side*Math.cos(angle)-back*Math.sin(angle),y,
+          z:fz-side*Math.sin(angle)-back*Math.cos(angle),w,d,h,rotY:angle,
+          mat:0xb28769,skip:['top','bottom','n','s','e','w']});
+      }
+      const shop=guide.cells.find(c=>c.name==='스토케');
+      const [west,north,east,south]=upperBuildRect(id,shop);
+      const u=(west+east)/2,v=south-2.50,[x,z]=P(u,v);
+      const [rx,rz]=P(u+1,v),yaw=Math.atan2(z-rz,rx-x);
+      registerStokke(K,{poly:rect(west,north,east,south),x,y,z,yaw});
+      K.box({x,y,z,w:2.93,d:.97,h:.464,rotY:yaw,mat:0xe6d6bd,skip:['top','bottom','n','s','e','w']});
+    }
+    if (id==='9F') {
+      const diningRoom=upperBuildRect(id,guide.cells.find(c=>c.name==='타임&스타일'));
+      const diningU=(diningRoom[0]+diningRoom[2])/2,diningV=(diningRoom[1]+diningRoom[3])/2;
+      const [dx,dz]=P(diningU,diningV),[diningRightX,diningRightZ]=P(diningU+1,diningV);
+      const diningYaw=Math.atan2(dz-diningRightZ,diningRightX-dx);
+      registerTimeStyle(K,{poly:rect(...diningRoom),x:dx,y,z:dz,yaw:diningYaw});
+      for(const [side,back,w,d,h] of [[0,0,2.26,.87,.75],[0,2.85,3.15,.31,2.16],
+          [-.40,1.55,1.82,.12,1.47],[1.35,1.30,.25,.25,.44],[1.78,1.63,.25,.25,.44],
+          ...[-.62,.62].flatMap(s=>[-.69,.69].map(b=>[s,b,.40,.40,.81]))]){
+        K.box({x:dx+side*Math.cos(diningYaw)-back*Math.sin(diningYaw),y,
+          z:dz-side*Math.sin(diningYaw)-back*Math.cos(diningYaw),w,d,h,rotY:diningYaw,
+          mat:0xc19868,skip:['top','bottom','n','s','e','w']});
+      }
+      const molteniRoom=upperBuildRect(id,guide.cells.find(c=>c.name==='몰테니&C'));
+      const loungeU=molteniRoom[0]+2.44,loungeV=(molteniRoom[1]+molteniRoom[3])/2;
+      const [ax,az]=P(loungeU,loungeV),[rx,rz]=P(loungeU,loungeV-1);
+      const loungeYaw=Math.atan2(az-rz,rx-ax);
+      registerMolteni(K,{poly:rect(...molteniRoom),x:ax,y,z:az,yaw:loungeYaw});
+      // Separate inset cores leave the inspection route around the rug open.
+      for(const [side,back,w,d,h,angle] of [[-1.37,.31,1.38,.92,.78,.31],[.48,.55,2.22,.92,.78,0],
+          [.04,-.52,1.12,.73,.386,.11],[-.78,-.92,.52,.42,.432,-.27],
+          [1.97,-.82,.45,.45,.76,0],[1.97,.06,.45,.45,.76,0],[0,1.74,5.49,.31,2.78,0]]){
+        K.box({x:ax+side*Math.cos(loungeYaw)-back*Math.sin(loungeYaw),y,
+          z:az-side*Math.sin(loungeYaw)-back*Math.cos(loungeYaw),w,d,h,rotY:loungeYaw+angle,
+          mat:0xded9cf,skip:['top','bottom','n','s','e','w']});
+      }
+      const lightRoom=upperBuildRect(id,guide.cells.find(c=>c.name==='라잇나우'));
+      const lightU=lightRoom[0]+4.08,lightV=(lightRoom[1]+lightRoom[3])/2;
+      const [lx,lz]=P(lightU,lightV),[lrx,lrz]=P(lightU,lightV-1);
+      registerLightnow(K,{poly:rect(...lightRoom),x:lx,y,z:lz,yaw:Math.atan2(lz-lrz,lrx-lx)});
+      const miele=guide.cells.find(c=>c.name==='밀레');
+      const mieleRoom=upperBuildRect(id,miele);
+      const mu=(mieleRoom[0]+mieleRoom[2])/2,mv=(mieleRoom[1]+mieleRoom[3])/2;
+      const [mx,mz]=P(mu,mv),[mrx,mrz]=P(mu-1,mv);
+      const mieleYaw=Math.atan2(mz-mrz,mrx-mx);
+      registerMiele(K,{poly:rect(...mieleRoom),x:mx,y,z:mz,yaw:mieleYaw});
+      for(const [side,back,w,d,h] of [[0,-.17,2.85,.85,.92],[1.045,-.94,.58,.65,.52],[0,1.77,4.50,.82,2.66]]){
+        K.box({x:mx+side*Math.cos(mieleYaw)-back*Math.sin(mieleYaw),y,
+          z:mz-side*Math.sin(mieleYaw)-back*Math.cos(mieleYaw),
+          w,d,h,rotY:mieleYaw,mat:0x353638,skip:['top','bottom','n','s','e','w']});
+      }
+      const kitchenRoom=upperBuildRect(id,guide.cells.find(c=>c.name==='키친툴'));
+      const ku=(kitchenRoom[0]+kitchenRoom[2])/2, kv=kitchenRoom[3]-1.35;
+      const [kx,kz]=P(ku,kv), [krx,krz]=P(ku-1,kv);
+      const kitchenYaw=Math.atan2(kz-krz,krx-kx);
+      registerKitchenTool(K,{poly:rect(...kitchenRoom),x:kx,y,z:kz,yaw:kitchenYaw});
+      for(const [back,w,d,h] of [[0,2.05,.91,.922],[1.03,1.27,.46,.864]]) {
+        K.box({x:kx-back*Math.sin(kitchenYaw),y,z:kz-back*Math.cos(kitchenYaw),
+          w,d,h,rotY:kitchenYaw,mat:0xe4d4bc,skip:['top','bottom','n','s','e','w']});
+      }
+      const mauvielRoom=upperBuildRect(id,guide.cells.find(c=>c.name==='모비엘'));
+      const mauvielU=(mauvielRoom[0]+mauvielRoom[2])/2, mauvielV=mauvielRoom[1]+3.24216;
+      const [panX,panZ]=P(mauvielU,mauvielV), [panRightX,panRightZ]=P(mauvielU-1,mauvielV);
+      const panYaw=Math.atan2(panZ-panRightZ,panRightX-panX);
+      registerMauviel(K,{poly:rect(...mauvielRoom),x:panX,y,z:panZ,yaw:panYaw});
+      K.box({x:panX,y,z:panZ,w:1.89,d:.51,h:1.39,rotY:panYaw,
+        mat:0xc5a782,skip:['top','bottom','n','s','e','w']});
+      const ceramicRoom=upperBuildRect(id,guide.cells.find(c=>c.name==='광주요'));
+      const cu=ceramicRoom[2]-.47, cv=(ceramicRoom[1]+ceramicRoom[3])/2;
+      const [cx,cz]=P(cu,cv), [crx,crz]=P(cu,cv+1);
+      const ceramicYaw=Math.atan2(cz-crz,crx-cx);
+      registerKwangjuyo(K,{poly:rect(...ceramicRoom),x:cx,y,z:cz,yaw:ceramicYaw});
+      for(const [side,front,w,d,h] of [[-.82,-.04,1.37,.48,3],[-.60,.50,1.78,.68,.99],[1.17,.04,1.66,.70,1.77]]) {
+        K.box({x:cx+side*Math.cos(ceramicYaw)+front*Math.sin(ceramicYaw),y,
+          z:cz-side*Math.sin(ceramicYaw)+front*Math.cos(ceramicYaw),w,d,h,rotY:ceramicYaw,
+          mat:0xe7d7c3,skip:['top','bottom','n','s','e','w']});
+      }
+      const pishonRoom=upperBuildRect(id,guide.cells.find(c=>c.name==='피숀'));
+      const pu=pishonRoom[2]-2.76757,pv=(pishonRoom[1]+pishonRoom[3])/2;
+      const [px,pz]=P(pu,pv),[prx,prz]=P(pu,pv+1);
+      registerPishon(K,{poly:rect(...pishonRoom),x:px,y,z:pz,yaw:Math.atan2(pz-prz,prx-px)});
+      const rocheRoom=upperBuildRect(id,guide.cells.find(c=>c.name==='로쉐보보아'));
+      const rocheU=rocheRoom[2]-1.65,rocheV=(rocheRoom[1]+rocheRoom[3])/2;
+      const [rocheX,rocheZ]=P(rocheU,rocheV),[rocheRightX,rocheRightZ]=P(rocheU,rocheV+1);
+      registerRocheBobois(K,{poly:rect(...rocheRoom),x:rocheX,y,z:rocheZ,yaw:Math.atan2(rocheZ-rocheRightZ,rocheRightX-rocheX)});
+      const silverRoom=upperBuildRect(id,guide.cells.find(c=>c.name==='크리스토플'));
+      const silverU=silverRoom[0]+.72658,silverV=(silverRoom[1]+silverRoom[3])/2;
+      const [sx,sz]=P(silverU,silverV),[srx,srz]=P(silverU,silverV-1);
+      const silverYaw=Math.atan2(sz-srz,srx-sx);
+      registerChristofle(K,{poly:rect(...silverRoom),x:sx,y,z:sz,yaw:silverYaw});
+      K.box({x:sx+.09*Math.sin(silverYaw),y,z:sz+.09*Math.cos(silverYaw),w:2.8,d:.72,h:1.05,
+        rotY:silverYaw,mat:0x987350,skip:['top','bottom','n','s','e','w']});
+      const baccaratRoom=upperBuildRect(id,guide.cells.find(c=>c.name==='바카라'));
+      const bu=baccaratRoom[2]-.62,bv=(baccaratRoom[1]+baccaratRoom[3])/2;
+      const [bx,bz]=P(bu,bv),[brx,brz]=P(bu,bv+1);
+      const baccaratYaw=Math.atan2(bz-brz,brx-bx);
+      registerBaccarat(K,{poly:rect(...baccaratRoom),x:bx,y,z:bz,yaw:baccaratYaw});
+      for(const [front,width,depth,height] of [[-.12,3.18,.52,2.55],[1.78,1.88,.88,.88]]) {
+        K.box({x:bx+front*Math.sin(baccaratYaw),y,z:bz+front*Math.cos(baccaratYaw),
+          w:width,d:depth,h:height,rotY:baccaratYaw,mat:0x332b2a,skip:['top','bottom','n','s','e','w']});
+      }
+      const usmRoom=upperBuildRect(id,guide.cells.find(c=>c.name==='USM'));
+      const usmU=(usmRoom[0]+usmRoom[2])/2,usmV=usmRoom[1]+1.62;
+      const [ux,uz]=P(usmU,usmV),[urx,urz]=P(usmU+1,usmV);
+      const usmYaw=Math.atan2(uz-urz,urx-ux);
+      registerUSM(K,{poly:rect(...usmRoom),x:ux,y,z:uz,yaw:usmYaw});
+      for(const [side,front,w,d,h] of [[-.315,-.07,1.27,.70,1.64],[-2.20,-.24,1.50,.35,.76],[-1.29,.16,.24,.24,1.49],[.84,.13,.50,.35,1.22]]) {
+        K.box({x:ux+side*Math.cos(usmYaw)+front*Math.sin(usmYaw),y,
+          z:uz-side*Math.sin(usmYaw)+front*Math.cos(usmYaw),rotY:usmYaw,w,d,h,
+          mat:0xc2c4c2,skip:['top','bottom','n','s','e','w']});
+      }
+      const herman=guide.cells.find(c=>c.name==='허먼 밀러');
+      const hmRoom=upperBuildRect(id,herman);
+      const hu=(hmRoom[0]+hmRoom[2])/2,hv=hmRoom[3]-1.75;
+      const [hx,hz]=P(hu,hv),[hrx,hrz]=P(hu-1,hv);
+      const hmYaw=Math.atan2(hz-hrz,hrx-hx);
+      registerHermanMiller(K,{poly:rect(...hmRoom),x:hx,y,z:hz,yaw:hmYaw});
+      for(const [side,back,width,depth,height] of [[.68,.12,4.22,1.24,.195],[.68,1.32,4.28,.32,2.18]]) {
+        K.box({x:hx+side*Math.cos(hmYaw)-back*Math.sin(hmYaw),y,
+          z:hz-side*Math.sin(hmYaw)-back*Math.cos(hmYaw),w:width,d:depth,h:height,rotY:hmYaw,
+          mat:0xe5e1d6,skip:['top','bottom','n','s','e','w']});
+      }
+      // Keep collisions inside the chair footprints so visitors can inspect the backs.
+      for(const [side,back] of [[-.70,-.04],[.67,.075],[2.12,.33]]) {
+        K.box({x:hx+side*Math.cos(hmYaw)-back*Math.sin(hmYaw),y:y+.195,
+          z:hz-side*Math.sin(hmYaw)-back*Math.cos(hmYaw),w:.44,d:.42,h:.76,rotY:hmYaw,
+          mat:0x3a4041,skip:['top','bottom','n','s','e','w']});
+      }
+      const royalRoom=upperBuildRect(id,guide.cells.find(c=>c.name==='로얄코펜하겐'));
+      const royalU=(royalRoom[0]+royalRoom[2])/2,royalV=(royalRoom[1]+royalRoom[3])/2;
+      const [royalX,royalZ]=P(royalU,royalV),[royalRightX,royalRightZ]=P(royalU,royalV-1);
+      const royalYaw=Math.atan2(royalZ-royalRightZ,royalRightX-royalX);
+      registerRoyalCopenhagen(K,{poly:rect(...royalRoom),x:royalX,y,z:royalZ,yaw:royalYaw});
+      for(const [side,back,w,d,h] of [[0,0,2.46,.92,.88],[0,2.02,4.56,.48,2.68],[-2.33,.66,.77,.58,2.82]]){
+        K.box({x:royalX+side*Math.cos(royalYaw)-back*Math.sin(royalYaw),y,
+          z:royalZ-side*Math.sin(royalYaw)-back*Math.cos(royalYaw),w,d,h,
+          rotY:royalYaw,mat:0xb78a65,skip:['top','bottom','n','s','e','w']});
+      }
+      const twl=guide.cells.find(c=>c.name==='TWL');
+      const [u0,v0,u1,v1]=upperBuildRect(id,twl);
+      const tu=(u0+u1)/2,tv=(v0+v1)/2,[tx,tz]=P(tu,tv);
+      const [twlRightX,twlRightZ]=P(tu-1,tv);
+      const angle=Math.atan2(tz-twlRightZ,twlRightX-tx);
+      registerTwl(K,{poly:rect(u0,v0,u1,v1),x:tx,y,z:tz,yaw:angle});
+      for(const [back,width,depth,height] of [[0,3.07,1.02,.951],[2.58,4.96,.63,2.44]]) {
+        K.box({x:tx-back*Math.sin(angle),y,z:tz-back*Math.cos(angle),w:width,d:depth,h:height,
+          rotY:angle,mat:0xb57a4b,skip:['top','bottom','n','s','e','w']});
+      }
+      const audio=guide.cells.find(c=>c.name.startsWith('드비알레/'));
+      const audioRoom=upperBuildRect(id,audio);
+      const audioU=audioRoom[0]+1.991, audioV=(audioRoom[1]+audioRoom[3])/2;
+      const [audioX,audioZ]=P(audioU,audioV), [audioRX,audioRZ]=P(audioU,audioV-1);
+      const audioYaw=Math.atan2(audioZ-audioRZ,audioRX-audioX);
+      registerAudio(K,{poly:rect(...audioRoom),x:audioX,y,z:audioZ,yaw:audioYaw});
+      K.box({x:audioX,y,z:audioZ,w:2.34,h:.95,d:.83,rotY:audioYaw,mat:0x795235,
+        skip:['top','bottom','n','s','e','w']});
+      const gateRoom=upperBuildRect(id,guide.cells.find(c=>c.name==='로라스타/리터로봇'));
+      const gu=gateRoom[0]+1.41261, gv=(gateRoom[1]+gateRoom[3])/2;
+      const [gx,gz]=P(gu,gv), [grx,grz]=P(gu,gv-1);
+      const gateYaw=Math.atan2(gz-grz,grx-gx);
+      registerGatevision(K,{poly:rect(...gateRoom),x:gx,y,z:gz,yaw:gateYaw});
+      for(const [back,w,d,h] of [[0,1.94,.87,.51],[.81,2.17,.075,1.48]]) {
+        K.box({x:gx-back*Math.sin(gateYaw),y,z:gz-back*Math.cos(gateYaw),w,d,h,
+          rotY:gateYaw,mat:0xe4e0d8,skip:['top','bottom','n','s','e','w']});
+      }
+      const robotRoom=upperBuildRect(id,guide.cells.find(c=>c.name==='로보락'));
+      const robotRU=robotRoom[0]+1.66261, robotRV=(robotRoom[1]+robotRoom[3])/2;
+      const [robotRX,robotRZ]=P(robotRU,robotRV), [robotRRX,robotRRZ]=P(robotRU,robotRV-1);
+      const robotYaw=Math.atan2(robotRZ-robotRRZ,robotRRX-robotRX);
+      registerRoborock(K,{poly:rect(...robotRoom),x:robotRX,y,z:robotRZ,yaw:robotYaw});
+      K.box({x:robotRX,y,z:robotRZ,w:2.43,h:.77,d:.95,rotY:robotYaw,mat:0xe9e8e0,
+        skip:['top','bottom','n','s','e','w']});
+      const juraRoom=upperBuildRect(id,guide.cells.find(c=>c.name==='유라'));
+      const ju=juraRoom[0]+.76,jv=(juraRoom[1]+juraRoom[3])/2;
+      const [jx,jz]=P(ju,jv),[jrx,jrz]=P(ju,jv-1);
+      const juraYaw=Math.atan2(jz-jrz,jrx-jx);
+      registerJura(K,{poly:rect(...juraRoom),x:jx,y,z:jz,yaw:juraYaw});
+      for(const [side,back,w,d,h] of [[0,.11,4.49,1.02,1.01],[-2.65,-.01,.37,.37,.91]]) {
+        K.box({x:jx+side*Math.cos(juraYaw)-back*Math.sin(juraYaw),y,
+          z:jz-side*Math.sin(juraYaw)-back*Math.cos(juraYaw),w,d,h,rotY:juraYaw,
+          mat:0xac8868,skip:['top','bottom','n','s','e','w']});
+      }
+      const jajuRoom=upperBuildRect(id,guide.cells.find(c=>c.name==='자주 테이블'));
+      const jajuU=jajuRoom[0]+3.60,jajuV=jajuRoom[1]+6;
+      const [tableX,tableZ]=P(jajuU,jajuV),[rightTableX,rightTableZ]=P(jajuU,jajuV+1);
+      const tableYaw=Math.atan2(tableZ-rightTableZ,rightTableX-tableX);
+      registerJajuTable(K,{poly:rect(jajuU-.55,jajuV-1.85,jajuU+3.35,jajuV+2.1),
+        x:tableX,y,z:tableZ,yaw:tableYaw});
+      for(const [side,back,w,d,h] of [[0,0,1.76,.91,.83],[0,2.02,3.49,.77,1.13],[.44,3.27,3.2,.09,2.84]]){
+        K.box({x:tableX+side*Math.cos(tableYaw)-back*Math.sin(tableYaw),y,
+          z:tableZ-side*Math.sin(tableYaw)-back*Math.cos(tableYaw),w,d,h,rotY:tableYaw,
+          mat:0x76543f,skip:['top','bottom','n','s','e','w']});
+      }
+      const shop=guide.cells.find(c=>c.name==='라마르조코');
+      const [west,north,east,south]=upperBuildRect(id,shop);
+      const u=west+.80, v=(north+south)/2, [x,z]=P(u,v);
+      const [rightX,rightZ]=P(u,v-1);
+      const yaw=Math.atan2(z-rightZ,rightX-x);
+      registerMarzocco(K,{poly:rect(west,north,east,south),x,y,z,yaw});
+      // A collision core beneath the two stepped plinths leaves the sales aisle open.
+      K.box({x,y,z,w:3.74,h:.875,d:.61,rotY:yaw,mat:0x454747,skip:['top','bottom','n','s','e','w']});
+    }
+    if (id==='11F') {
+      const cafe=guide.cells.find(c=>c.name.startsWith('카테고릭'));
+      const cr=upperBuildRect(id,cafe);
+      const uBar=cr[0]+1.256,vBar=(cr[1]+cr[3])/2;
+      const [bx,bz]=P(uBar,vBar),[fx,fz]=P(uBar+1,vBar);
+      const barYaw=Math.atan2(fx-bx,fz-bz);
+      registerCategorique(K,{poly:rect(...cr),x:bx,y,z:bz,yaw:barYaw});
+      for(const [a,b,w,d,h] of [[0,0,4.1,1.22,1.057],[0,-.9,4.43,.065,2.93],
+        [-1.8,.89,.47,.43,.97],[1.8,.89,.47,.43,.97]]){
+        K.box({x:bx+a*Math.cos(barYaw)+b*Math.sin(barYaw),y,z:bz-a*Math.sin(barYaw)+b*Math.cos(barYaw),
+          rotY:barYaw,w,d,h,mat:0x272923,skip:['top','bottom','n','s','e','w']});
+      }
+      const collage=guide.cells.find(c=>c.name.startsWith('꼴라주'));
+      const room=upperBuildRect(id,collage);
+      const cu=room[2]-3.6, cv=room[3]-(room[3]-room[1])*.23;
+      const [cx,cz]=P(cu,cv), [ex,ez]=P(cu+1,cv);
+      const angle=Math.atan2(cz-ez,ex-cx)+Math.PI;
+      registerCollage(K,{poly:rect(...room),x:cx,y,z:cz,yaw:angle});
+      for(const [a,b,w,d,h] of [[0,0,1.19,.84,.79],[0,.75,1.62,.59,1.2],[-.28,-.68,.41,.43,.5],[0,1.91,2.94,.05,2.8]]){
+        K.box({x:cx+a*Math.cos(angle)-b*Math.sin(angle),y,z:cz-a*Math.sin(angle)-b*Math.cos(angle),
+          rotY:angle,w,d,h,mat:0x513426,skip:['top','bottom','n','s','e','w']});
+      }
+      const hokyungBay=upperBuildRect(id,guide.cells.find(c=>c.name.startsWith('호경전')));
+      const diningU=hokyungBay[2]-1.5, diningV=hokyungBay[3]-(hokyungBay[3]-hokyungBay[1])*.23;
+      const [diningX,diningZ]=P(diningU,diningV),[axisX,axisZ]=P(diningU+1,diningV);
+      registerHokyung(K,{poly:rect(...hokyungBay),x:diningX,y,z:diningZ,yaw:Math.atan2(diningZ-axisZ,axisX-diningX)});
+      const kisara=guide.cells.find(c=>c.name.startsWith('키사라'));
+      const kr=upperBuildRect(id,kisara);
+      const ku=kr[2]-1.5, kv=kr[3]-(kr[3]-kr[1])*.23;
+      const [kx,kz]=P(ku,kv), [krx,krz]=P(ku+1,kv);
+      const kyaw=Math.atan2(kz-krz,krx-kx);
+      registerKisara(K,{poly:rect(...kr),x:kx,y,z:kz,yaw:kyaw});
+      for (const [offset,w,d,h] of [[0,1.02,1.28,.758],[-.715,.43,.45,.48],[.715,.43,.45,.48]]) {
+        K.box({x:kx+offset*Math.cos(kyaw),y,z:kz-offset*Math.sin(kyaw),w,d,h,
+          rotY:kyaw,mat:0x613721,skip:['top','bottom','n','s','e','w']});
+      }
+      const hibarin=guide.cells.find(c=>c.name.startsWith('히바린'));
+      const hibarinBay=upperBuildRect(id,hibarin);
+      // First dining table in the east-facing bay. Keep the centre aisle clear.
+      const hu=hibarinBay[2]-1.5, hv=hibarinBay[3]-(hibarinBay[3]-hibarinBay[1])*.23;
+      const [hx,hz]=P(hu,hv),[hrx,hrz]=P(hu+1,hv);
+      const hyaw=Math.atan2(hz-hrz,hrx-hx);
+      registerHibarin(K,{poly:rect(...hibarinBay),x:hx,y,z:hz,yaw:hyaw});
+      for(const [dx,w,d,h] of [[0,.95,1.16,.77],[-.69,.43,.44,.467],[.69,.43,.44,.467]]){
+        K.box({x:hx+dx*Math.cos(hyaw),y,z:hz-dx*Math.sin(hyaw),w,d,h,
+          rotY:hyaw,mat:0xab794d,skip:['top','bottom','n','s','e','w']});
+      }
+      const milhwa=guide.cells.find(c=>c.name.startsWith('밀화'));
+      const mr=upperBuildRect(id,milhwa);
+      const mu=mr[0]+1.5, mv=mr[1]+(mr[3]-mr[1])*.23;
+      const [mx,mz]=P(mu,mv), [max,maz]=P(mu+1,mv);
+      const myaw=Math.atan2(mz-maz,max-mx);
+      registerMilhwa(K,{poly:rect(...mr),x:mx,y,z:mz,yaw:myaw});
+      for(const [offset,w,d,h] of [[0,1.08,1.35,.772],[-.78,.45,.46,.47],[.78,.45,.46,.47]]){
+        K.box({x:mx+offset*Math.cos(myaw),y,z:mz-offset*Math.sin(myaw),w,d,h,
+          rotY:myaw,mat:0x614231,skip:['top','bottom','n','s','e','w']});
+      }
+      const myeonok=guide.cells.find(c=>c.name.startsWith('평양면옥'));
+      const bay=upperBuildRect(id,myeonok);
+      // Replace the first two-seat table on the west-facing shop's left row.
+      const tableU=bay[0]+1.5, tableV=bay[1]+(bay[3]-bay[1])*.23;
+      const [tx,tz]=P(tableU,tableV), [rx,rz]=P(tableU+1,tableV);
+      const rotation=Math.atan2(tz-rz,rx-tx);
+      registerMyeonok(K,{poly:rect(...bay),x:tx,y,z:tz,yaw:rotation});
+      for(const [dx,w,d,h] of [[0,.93,1.24,.776],[-.67,.42,.43,.45],[.67,.42,.43,.45]]){
+        K.box({x:tx+dx*Math.cos(rotation),y,z:tz-dx*Math.sin(rotation),w,d,h,
+          rotY:rotation,mat:0xbf905c,skip:['top','bottom','n','s','e','w']});
+      }
+      const shop=guide.cells.find(c=>c.name.startsWith('살롱드호우섬'));
+      const bounds=upperBuildRect(id,shop);
+      const u=(bounds[0]+bounds[2])/2, v=bounds[3]-8.15;
+      const [x,z]=P(u,v), [rightX,rightZ]=P(u+1,v);
+      const yaw=Math.atan2(z-rightZ,rightX-x);
+      registerHaoSum(K,{poly:rect(...bounds),x,y,z,yaw});
+      for(const [side,back,w,d,h] of [[0,0,1.29,.90,.80],[-1.19,.18,.63,.40,.82]]){
+        K.box({x:x+side*Math.cos(yaw)-back*Math.sin(yaw),y,
+          z:z-side*Math.sin(yaw)-back*Math.cos(yaw),rotY:yaw,w,d,h,mat:0x573c31,
+          skip:['top','bottom','n','s','e','w']});
+      }
+    }
     buildShopPartitions(id,y);
     if (id==='2F') {
       for (const [name,parts] of joined2FBays) {
@@ -9072,6 +9768,19 @@ export function build(K) {
     // https://www.timeout.com/seoul/shopping/shinsegae-gangnam
     if(id==='4F'&&/캐주얼 슈즈|컨템포러리 슈즈|국내 슈즈|컴포트 슈즈/.test(n))Object.assign(p,{wall:0x202932,trim:0x556773,accent:0x25394d,dark:true,floor:{tex:'ssg_upper_tile',color:0xc8c9c6,gloss:.3}});
     if(/나이키|아디다스|데상트|다이나핏/.test(n))Object.assign(p,{wall:0xe6e6e0,trim:0x292e2e,accent:0x252b2e});
+    if(id==='6F'&&n==='리모와')p.floor={tex:'ssg_acne_terrazzo',color:0x929aa1,gloss:.2};
+    if(id==='8F'&&n==='살로몬'){
+      // The shop's existing floor polygon clips this quiet ceramic finish to its guide cell.
+      K.texture('ssg_salomon_porcelain',256,256,(g,w,h)=>{
+        g.fillStyle='#f3f2ed';
+        g.fillRect(0,0,w,h);
+        g.fillStyle='#ebeae5';
+        g.fillRect(0,0,w,1);
+        g.fillRect(0,0,1,h);
+      },[1.20,1.20]);
+      p.floor={tex:'ssg_salomon_porcelain',gloss:.12};
+    }
+    if(id==='7F'&&n==='보스골프')Object.assign(p,{floor:{tex:'tile',color:0xe1d9c8,gloss:.3}});
     if(/파타고니아|스노우피크|노르디스크|헬리녹스|말본/.test(n))Object.assign(p,{wall:0xdedfcf,trim:0x8b744e,accent:0x50614c,floor:{tex:'wood',color:0xb5a17b}});
     // Gangnam Chanel shoe boutique opening photographs (2017): a pale
     // storefront, black frames and shelving, and subdued grey seating.
@@ -9083,7 +9792,7 @@ export function build(K) {
     // The photo predates 2025 and does not establish the current fit-out.
     // https://m.blog.naver.com/redzone72/223768195242
     if(id==='2F'&&n==='생 로랑')Object.assign(p,{wall:0xf1f2ef,portal:0x171919,trim:0x242727,accent:0x222525,dark:true,floor:{color:0xd7d9d6,gloss:.25}});
-    if(n==='프리스비 (애플)')Object.assign(p,{wall:0xf8f7f2,trim:0xbfbeb6,accent:0x3c4244,floor:{tex:'tile',color:0xeeeae1,gloss:.3},apple:true});
+    if(n==='프리스비 (애플)')Object.assign(p,{wall:0xf8f7f2,trim:0xbfbeb6,accent:0x3c4244,floor:{tex:'tile',color:0x555451,gloss:.12},apple:true});
     if(/레고/.test(n))Object.assign(p,{wall:0xfff3cf,trim:0xe7bd27,accent:0xc92d28});
     if(/아이큐박스|키움하우스|스누피/.test(n))Object.assign(p,{wall:0xf5eee0,trim:0xd5bc85,accent:0x81aaa1});
     if(/호경전|살롱드호우섬/.test(n))Object.assign(p,{wall:0xe3d7c3,trim:0x3c4c41,accent:0x82483c});
@@ -9113,6 +9822,38 @@ export function build(K) {
 
   function furnishUpperMerch(ctx) {
     const {id,name,kind,Wf:W,Dp:D,y,face,fb,fdisk,fball,fsign,person,seed,palette:p,ST}=ctx;
+    if(id==='6F' && name==='리모와'){
+      // The three-bay architectural display runs down the side wall. The
+      // photographed oak gallery has its own wall across the back of the shop.
+      const centre=D*.52, span=Math.min(6,D-.92);
+      const rack=(along,depth)=>ST(.25-depth,centre+along);
+      fitArchitecture(K,wallArchitecture,'CaseGallery',(along,height,depth)=>{
+        const [x,z]=P(...rack(along*span/7,depth));
+        return [x,y+height,z];
+      });
+      const [signX,signZ]=P(...rack(0,-.18)),[frontX,frontZ]=P(...rack(0,-1.18));
+      K.sign('RIMOWA',{x:signX,y:y+2.47,z:signZ,w:2.15,h:.41,
+        rotY:Math.atan2(frontX-signX,frontZ-signZ),bg:null,fg:'#fff5e5'});
+      const outline=[[-span/2,.055],[span/2,.055],[span/2,-.88],[-span/2,-.88]];
+      K.phys.addPolyWalls(outline.map(([a,b])=>P(...rack(a,b))),y,y+2.1,.012,'shinsegae');
+      for(let bay=-1;bay<=1;bay++){
+        for(const [offset,scale] of [[-.38,.85],[.38,1.03]]){
+          shopDisplay('case',bay*span/3+offset,-.55,y+.29,rack,scale);
+        }
+      }
+      // Keep the independent crossbody rail by the entrance.
+      const side=W*.25;
+      shopDisplay('pipeShelf',side,1.06,y+.035,ST);
+      for(const h of [.68,1.27])for(const offset of [-.39,.39]){
+        shopDisplay('crossbody',side+offset,1.06,y+h+.100,ST,1.08);
+      }
+      return;
+    }
+    if(id==='7F' && (name==='아워셀브스'||name==='러프사이드'||name==='바버'||name==='프레이트'||name==='보스골프'))return;
+    if(id==='6F' && (name==='브루넬로 쿠치넬리'||name==='라이카'||name==='핫셀블라드'||name==='콜렉트'||name==='버윅'||name==='CDG CDG CDG'||name==='투미'||name==='에르노'||name==='벨루티'||name==='폴스미스'))return;
+    if(id==='8F' && (name==='크록스'||name==='살로몬'||name==='아크테릭스'||name==='브롬톤'||name==='스노우피크'||name==='가민'||name==='배럴'||name==='뉴발란스 메가숍'))return;
+    if(id==='10F' && (name==='스누피 플레이스'||name==='스토케'||name==='마이크로 킥보드'||name==='컴프프로'||name==='토박스'||name==='아뜰리에 슈'||name==='베이비 디올'||name==='파타고니아 키즈'||name==='레고스토어'||name===toyShop))return;
+    if(id==='9F' && (name.startsWith('드비알레/')||name==='타임&스타일'||name==='몰테니&C'||name==='라잇나우'||name==='유라'||name==='라마르조코'||name==='로보락'||name==='로라스타/리터로봇'||name==='TWL'||name==='허먼 밀러'||name==='USM'||name==='광주요'||name==='피숀'||name==='크리스토플'||name==='바카라'||name==='로쉐보보아'||name==='모비엘'||name==='키친툴'||name==='밀레'||name==='로얄코펜하겐'))return; // Dedicated room detail owns the presentation island.
     if(W<1.05||(D<1.05&&!(id==='4F'&&name==='금강'&&D>=.45)))return;
     // The other 5F DAKS guide cell is a handbag concession, not womenswear.
     const daksWoman=id==='5F'&&name==='닥스 숙녀'&&kind==='fashion';
@@ -11204,32 +11945,8 @@ export function build(K) {
         for(let i=0;i<3;i++)glasses(a+(i-1)*Math.min(.42,w*.25),b,.91);
       }
     }else if(apple){
-      const aw=Math.min(W-.6,6.4);
-      shelf(W/2,D-.55,aw,3,ivory);
-      for(let r=0;r<3;r++)for(let i=0;i<Math.min(10,Math.floor(aw/.42));i++){
-        const a=W/2-aw/2+.27+i*.42;
-        B(a,D-.68,.25,.12,.59+r*.61,.35,0xf4f3ed);
-        B(a,D-.747,.16,.015,.65+r*.61,.18,[0x8fa5b7,0xc3a3b7,0x7e9687][(i+r)%3]);
-      }
-      const centers=W>10?[W*.16,W*.36,W*.65,W*.85]:W>5.5?[W*.24,W*.76]:[W*.27];
-      for(const [ci,a]of centers.entries())for(let r=0;r<Math.min(3,Math.max(1,Math.floor((D-1.8)/2.3)));r++){
-        const b=1.45+r*2.3,w=Math.min(2.3,W>10?W*.15:sideWidth-.15);if(w<.8)continue;
-        table(a,b,w,1.1,.84,oak);
-        for(let i=0;i<3;i++){
-          const aa=a+(i-1)*Math.min(.65,w*.27);
-          if((ci+r)%3===0){
-            B(aa,b,.37,.26,.925,.025,metal);B(aa,b+.10,.37,.025,.95,.24,dark);
-            B(aa,b+.083,.34,.012,.97,.19,{tex:'emit',color:0x99b8c8});
-          }else if((ci+r)%3===1){
-            B(aa,b,.15,.29,.925,.018,dark);B(aa,b-.005,.13,.25,.944,.008,{tex:'emit',color:0xc8a8cf});
-          }else{
-            B(aa,b,.16,.13,.925,.035,metal);B(aa,b+.025,.04,.06,.96,.16,metal);B(aa,b+.06,.46,.04,1.1,.32,metal);
-            B(aa,b+.035,.42,.012,1.12,.27,{tex:'emit',color:0x91c6c0});
-          }
-          B(aa+.15,b-.34,.11,.10,.925,.012,ivory);
-        }
-      }
-      fsign('액세서리',W/2,D-.78,y+2.58,Math.min(W-.5,3),.22,{bg:null,fg:'#565650',bold:false});
+      // The Gangnam reseller's photographed Mac tables occupy this bay.
+      return;
     }else if(id==='2F'&&name==='그라프'){
       // A 2026 Gangnam display photograph shows a softly lit grey niche,
       // slim warm-metal frame and dark jewellery busts. The rest of the
@@ -13181,30 +13898,6 @@ export function build(K) {
         const side=W-.40,z=Math.min(D-.85,D*.62);
         for(let i=0;i<7;i++)B(side,z+(i-3)*.14,.045,.045,.08,2.38,timber);
       }
-    }else if(id==='6F' && name==='리모와'){
-      // The 2024 Gangnam opening photographs show wood panels, an illuminated
-      // wordmark, aluminum cases of different sizes and a two-tier accessory wall.
-      const span = W - .55, back = D - .40;
-      fitArchitecture(K,wallArchitecture,'CaseGallery',(x,h,z)=>{
-        const [px,pz]=P(...ST(W/2+x*span/7,back+z));
-        return [px,y+h,pz];
-      });
-      fsign('RIMOWA',W/2,back-.18,y+2.47,Math.min(3.1,span*.7),.44,{bg:null,fg:'#fff5e5',twoSided:true});
-      const sizes = [.85, 1.03, 1.20], step = (span-.45)/3;
-      for(let i=0;i<sizes.length;i++) {
-        const a = .5+(i+.5)*step;
-        for(const [offset,scale] of [[-.54,sizes[i]],[.54,sizes[(i+1)%3]]]) {
-          shopDisplay('case',a+offset,back-.60,y+.29,ST,scale);
-        }
-      }
-      const side = W*.25;
-      shopDisplay('pipeShelf',side,1.06,y+.035,ST);
-      for (const h of [.68,1.27]) {
-        for (const offset of [-.39,.39]) shopDisplay('crossbody',side+offset,1.06,y+h+.100,ST,1.08);
-      }
-      person(W*.78,D*.87,{shirt:staffColor,pants:0x222828});
-      return;
-
     }else if(kind==='lux'||kind==='bag'){
       eachStock((a,b,h,i,r)=>bag(a,b,h,stock[(seed+i+r)%6]));
       for(const [i,a]of islands.entries()){
@@ -13746,9 +14439,13 @@ export function build(K) {
       fsign('SHINSEGAE',a,D-.43,y+2.79,Math.min(1.45,w-.4),.13,{bg:null,fg:'#30251f',pxPerM:180});
       fsign('MEMBERS BAR',a,D-.43,y+2.60,Math.min(1.65,w-.4),.20,{bg:null,fg:'#30251f',pxPerM:180});
     }else if(kind==='rest'||kind==='cafe'||kind==='lounge'){
-      const cafe=kind==='cafe',jaju=/JAJU/.test(name);
+      const cafe=kind==='cafe',jaju=name==='자주 테이블';
       const rows=Math.min(4,Math.max(1,Math.floor((D-2)/2.15))),cols=W>7?islands:W>3.8?[W*.24]:[];
       for(const [i,a]of cols.entries())for(let r=0;r<rows;r++){
+        if(id==='9F'&&jaju&&i===0&&r<4)continue;
+        if(id==='11F'&&name.startsWith('호경전')&&i===0&&r<2)continue;
+        if(id==='11F'&&name.startsWith('꼴라주')&&i===0&&r===1)continue;
+        if(id==='11F'&&(name.startsWith('밀화')||name.startsWith('평양면옥')||name.startsWith('히바린')||name.startsWith('키사라'))&&i===0&&r===0)continue;
         const b=1.5+r*2.1,w=Math.min(1.25,sideWidth-.1);table(a,b,w,.8,.72,jaju?oak:cafe?ivory:walnut);
         for(const db of[-.65,.65]){
           B(a,b+db,.43,.43,.08,.35,p.trim);B(a,b+db+(db<0?-.2:.2),.43,.07,.43,.42,p.trim);
@@ -13758,6 +14455,8 @@ export function build(K) {
         }
         B(a,b,.10,.10,.8,.23,0x76684a);
       }
+      // The photographed brewing bar replaces the default rear cafe counter.
+      if(id==='11F'&&name.startsWith('카테고릭'))return;
       // Back counter, open kitchen silhouettes and warm suspended lamps.
       const w=Math.min(4.5,W-.8),b=D-.62;
       B(W/2,b,w,.6,.07,.95,p.dark?walnut:oak);B(W/2,b,w+.05,.65,1.02,.055,ivory);
@@ -13853,8 +14552,7 @@ export function build(K) {
     }
     return true;
   }
-  function fitUpperCell(id,c) {
-    const seed=upperSeed++;
+  function fitUpperCell(id,c,seed) {
     if (c.kind==='closed' && (id==='2F'||id==='5F')) return;
     if (id==='3F' && c.name==='신세계 갤러리') {
       // The Gangnam Art Wall exhibition photos show shallow recesses opening
@@ -14232,6 +14930,10 @@ export function build(K) {
       }
       if(id==='3F'&&c.name==='까르띠에'){
         for(const r of cutRect([u0+.13,v0+.13,u1-.13,v1-.13],[1.65,112.5,5.15,119.2]))hq(...r,y+.018,palette.floor);
+      }else if(id==='9F'&&c.name==='광주요'){
+        hq(u0+.13,v0+.13,u1-.13,v1-.13,y+.018,0xede4d5);
+        for(let u=u0+.47;u<u1-.4;u+=.68)for(let v=v0+.49;v<v1-.4;v+=.68)
+          hq(u-.13,v-.13,u+.13,v+.13,y+.021,0xd4b9a2);
       }else if (c.model.rearNotch) {
         for(const r of planParts)hq(...r,y+.018,palette.floor);
       }else if (c.model.aisleOutline) K.hpoly(palette.floor, c.model.aisleOutline, y+.018, true);
@@ -16171,7 +16873,7 @@ export function build(K) {
         fsign(shoeGroup?fasciaName:id==='5F'&&c.name==='미샤'?'MICHAA':id==='4F'&&c.name==='샤넬 슈 부틱'?'CHANEL':id==='5F'&&c.name==='킨더살몬'?'KINDERSALMON':id==='5F'&&c.name==='에스실'?'SSIL':id==='5F'&&c.name==='넘버링'?'NUMBERING':id==='4F'&&c.name==='폴로 랄프 로렌'?'POLO RALPH LAUREN':id==='4F'&&c.name==='레페토'?'repetto':id==='4F'&&c.name==='쏘솔트'?'SOSALT':id==='4F'&&c.name==='린드버그'?'LINDBERG':id==='4F'&&c.name==='코치'?'COACH':id==='4F'&&c.name==='버켄스탁'?'BIRKENSTOCK':id==='2F'&&brand2[c.name]?brand2[c.name]:id==='4F'&&c.name==='오트리'?'AUTRY':id==='4F'&&c.name==='헌터'?'HUNTER':id==='3F'&&c.name==='다미아니'?'DAMIANI':id==='3F'&&brand3[c.name]?brand3[c.name]:id==='4F'&&c.name==='이브살로몬'?'YVES SALOMON':id==='4F'&&brand4[c.name]?brand4[c.name]:id==='5F'&&brand5[c.name]?brand5[c.name]:c.name==='몽클레르'?'MONCLER':c.name==='펜디'?'FENDI':id==='5F'&&c.name==='룰루레몬'?'lululemon':c.name==='불가리'&&id==='2F'?'BVLGARI':c.name==='티파니앤코'&&id==='2F'?'TIFFANY & CO.':c.name==='로에베'&&id==='3F'?'LOEWE':c.name==='막스마라'&&id==='3F'?'MAX MARA':c.name,(id==='2F'&&c.name==='불가리'?Wf-1.8:frontAt),.075,y+(sharedEntry?2.91:id==='8F'?2.75:id==='2F'&&c.name==='고야드'?3.34:id==='2F'&&c.name==='티파니앤코'?2.94:3.25),Math.min(publicWidth-.55,id==='2F'&&c.name==='불가리'?2.8:8.5),id==='2F'&&c.name==='고야드'?.26:Math.min(id==='8F'?.35:.45,.19+Wf*.035),{bg:id==='2F'&&c.name==='고야드'?null:bg,fg:id==='2F'&&c.name==='고야드'?'#dfc77d':palette.dark&&!chanel2&&id!=='8F'?'#f4eee0':fg,twoSided:true});
       }
       // A clear counter at the rear side, payment terminal and framed mirror.
-      if(!popupStage&&!jewelryIsland&&!(id==='5F'&&['베네통','캐나다 구스'].includes(c.name))&&Wf>2.3&&Dp>2.8&&!(id==='2F'&&['생 로랑','불가리','보테가 베네타','헬렌카민스키','디올'].includes(c.name))&&!(id==='3F'&&['아디르','더로우','호라이즌','알라이아','분더샵 여성','바쉐론 콘스탄틴','릭오웬스','오데마피게','로에베','몽블랑','발렌티노','브레게','프레드','부쉐론','끌로에','아크리스','블랑팡'].includes(c.name))&&!(id==='4F'&&['토리버치','A.P.C.','포르테 포르테','N°21','메종 키츠네','레페토','폴로 랄프 로렌','샤넬 슈 부틱','루이비통','지안비토로시','린드버그'].includes(c.name))&&!(id==='5F'&&['델라라나','위뜨','헤지스','더일마','룩캐스트','루에브르','타낫','뷰오리','포유어아이즈온리','랙앤본','킨더살몬','던스트','에스실','넘버링','미샤','쁘렝땅','조셉앤 스테이시','렉토','럭키슈에뜨','르917 (르셉템버)','멤버스바','SHOP 아모멘토'].includes(c.name))){
+      if(!(id==='7F'&&(c.name==='아워셀브스'||c.name==='러프사이드'||c.name==='바버'||c.name==='프레이트'||c.name==='보스골프'))&&!(id==='6F'&&(c.name==='브루넬로 쿠치넬리'||c.name==='라이카'||c.name==='핫셀블라드'||c.name==='콜렉트'||c.name==='버윅'||c.name==='CDG CDG CDG'||c.name==='리모와'||c.name==='투미'||c.name==='에르노'||c.name==='벨루티'||c.name==='폴스미스'))&&!(id==='8F'&&(c.name==='크록스'||c.name==='살로몬'||c.name==='아크테릭스'||c.name==='브롬톤'||c.name==='스노우피크'||c.name==='가민'||c.name==='배럴'||c.name==='뉴발란스 메가숍'))&&!(id==='10F'&&(c.name==='스누피 플레이스'||c.name==='스토케'||c.name==='마이크로 킥보드'||c.name==='컴프프로'||c.name==='토박스'||c.name==='아뜰리에 슈'||c.name==='베이비 디올'||c.name==='파타고니아 키즈'||c.name==='레고스토어'||c.name===toyShop))&&!(id==='9F'&&(c.name==='타임&스타일'||c.name==='몰테니&C'||c.name==='라잇나우'||c.name==='유라'||c.name==='라마르조코'||c.name==='로보락'||c.name==='로라스타/리터로봇'||c.name==='TWL'||c.name==='허먼 밀러'||c.name==='USM'||c.name==='광주요'||c.name==='피숀'||c.name==='크리스토플'||c.name==='바카라'||c.name==='로쉐보보아'||c.name==='모비엘'||c.name==='키친툴'||c.name==='밀레'||c.name==='로얄코펜하겐'))&&!popupStage&&!jewelryIsland&&!(id==='5F'&&['베네통','캐나다 구스'].includes(c.name))&&Wf>2.3&&Dp>2.8&&!(id==='2F'&&['생 로랑','불가리','보테가 베네타','헬렌카민스키','디올'].includes(c.name))&&!(id==='3F'&&['아디르','더로우','호라이즌','알라이아','분더샵 여성','바쉐론 콘스탄틴','릭오웬스','오데마피게','로에베','몽블랑','발렌티노','브레게','프레드','부쉐론','끌로에','아크리스','블랑팡'].includes(c.name))&&!(id==='4F'&&['토리버치','A.P.C.','포르테 포르테','N°21','메종 키츠네','레페토','폴로 랄프 로렌','샤넬 슈 부틱','루이비통','지안비토로시','린드버그'].includes(c.name))&&!(id==='5F'&&['델라라나','위뜨','헤지스','더일마','룩캐스트','루에브르','타낫','뷰오리','포유어아이즈온리','랙앤본','킨더살몬','던스트','에스실','넘버링','미샤','쁘렝땅','조셉앤 스테이시','렉토','럭키슈에뜨','르917 (르셉템버)','멤버스바','SHOP 아모멘토'].includes(c.name))){
         const cw=Math.min(1.4,Wf*.23),a=Wf*.76,b=Dp*.78;
         fb(a,b,cw,.55,y,.93,palette.wall,{solid:true});
         fb(a,b,cw+.04,.59,y+.93,.045,{color:palette.trim,gloss:.5});
@@ -16218,8 +16920,8 @@ export function build(K) {
         ...(southJoin&&c.name==='폴로 랄프 로렌'?{rearOpenFrom:Math.min(Wf,Math.max(0,v1-southJoin[3]))}:{}),
         ...(id==='4F'&&c.name.startsWith('캐주얼 슈즈')?{shoeChunkCount:parts.length,shoeChunkIndex:parts.indexOf(q)}:{})});
       else{fb(Wf/2,.3,Wf-.3,.12,y,2.94,palette.wall);fsign('입점 준비 중',Wf/2,.21,y+1.6,Wf*.75,.3,{bg:null,fg:'#5f5b51'});}
-      if(id==='11F'||c.name==='JAJU 테이블'){
-        const menu=c.name.includes('(')?c.name.split('(')[1].replace(')','').replaceAll('/',' · '):c.name==='JAJU 테이블'?'식사 · 차 · 디저트':'음식 · 음료';
+      if(id==='11F'||c.name==='자주 테이블'){
+        const menu=c.name.includes('(')?c.name.split('(')[1].replace(')','').replaceAll('/',' · '):c.name==='자주 테이블'?'식사 · 차 · 디저트':'음식 · 음료';
         fsign(menu,Wf*.25,.24,y+1.6,Math.min(1.5,Wf*.38),.5,{bg:'#504b3e',fg:'#fff2da'});
       }
       if(id==='8F'&&c.name==='K2'){
@@ -16317,6 +17019,27 @@ export function build(K) {
       if(i%3===0){box(u+.24,v,.23,.12,y+.60,.32,0xbea27a,{solid:false});}
     }
   }
+  // Shop partitions are already in the structural pass. Schedule their stock
+  // from the actual guide footprints so a view of one wing can load it alone.
+  const secondFloorGuide = upperGuidePlans['2F'];
+  // Reserve the original consecutive seeds at first use, regardless of which
+  // storefront is approached first. Other floors keep their visit order.
+  let secondFloorSeed;
+  function secondFloorSeedAt(index) {
+    if (secondFloorSeed === undefined) {
+      secondFloorSeed = upperSeed;
+      upperSeed += secondFloorGuide.cells.length;
+    }
+    return secondFloorSeed + index;
+  }
+  secondFloorGuide.cells.forEach((cell, index) => {
+    const parts = cell.model.parts;
+    if (!parts.length || cell.kind === 'closed') return;
+    const bounds = [Math.min(...parts.map(p=>p[0])), Math.min(...parts.map(p=>p[1])),
+      Math.max(...parts.map(p=>p[2])), Math.max(...parts.map(p=>p[3]))];
+    retailDetail({floor:'2F', y0:LV['2F'], y1:LV['3F'], poly:rect(...bounds),
+      name:`2F ${cell.name} 집기`}, () => fitUpperCell('2F', cell, secondFloorSeedAt(index)));
+  });
   for(const [id,guide]of Object.entries(upperGuidePlans))furnish(id,()=>{
     const y=LV[id],H=clearH(id);
     if(['3F','4F','5F'].includes(id)){
@@ -16354,7 +17077,8 @@ export function build(K) {
       for(const [a,b,c,d] of [[28.8,145.3,28.8,147],[35.2,145.3,35.2,147],[28.8,147,35.2,147]])wall(a,b,c,d,y,y+4.1,{mat:0xe9e5dc,thick:.08,solid:false});
       K.hpoly(CEIL,rect(28.8,145.3,35.2,147),y+4.1,false);
     }
-    for(const c of guide.cells)fitUpperCell(id,c);
+    if(id==='2F')secondFloorSeedAt(0);
+    else for(const c of guide.cells)fitUpperCell(id,c,upperSeed++);
     // R19 N4: remove obsolete advertising panels; locate slots from this well.
     // D8 supplies the matching corner piers in the structural pass.
     if(id==='2F'||id==='3F'){
@@ -16853,14 +17577,14 @@ export const upperGuidePlans = {};
   c('에르뽀 · 보쎄',167,885,234,952,'W');c('칼한센',235,885,314,921,'E');c('보컨셉',235,922,314,952,'E');r([341,474,595],897,952,'타임&스타일|몰테니&C','N');
   c('로쉐보보아',624,812,772,883,'E');c('보에',624,884,772,952,'E');r([800,860,913,962],823,916,'에르메스 메종|크리스토플|라리끄','N');c('생루이',800,917,860,1015,'W');
   r([143,235,327,603,699,783],976,1078,'까시나|에드라|놀/폴트로나프라우/체코티콜레지오니|비앤비 이탈리아|라잇나우','N');
-  c('고객상담실 · 퇴점브랜드 수선 접수 센터',1056,447,1231,518,'S','service');c('JAJU 테이블',1231,447,1603,544,'S','rest');c('쿠킹스튜디오 (쿠쿠/에피큐리언)',1426,510,1603,546,'S','kitchen');
+  c('고객상담실 · 퇴점브랜드 수선 접수 센터',1056,447,1231,518,'S','service');c('자주 테이블',1231,447,1603,544,'S','rest');c('쿠킹스튜디오 (쿠쿠/에피큐리언)',1426,510,1603,546,'S','kitchen');
   c('빌레로이 앤 보흐',1088,518,1182,580,'E','kitchen');c('베르나르도',1088,581,1182,635,'E','kitchen');c('하빌랜드/제이엘 꼬께/헤렌드',1088,636,1182,700,'E','kitchen');c('웨지우드',1088,701,1182,761,'E','kitchen');c('로얄코펜하겐',986,690,1087,761,'E','kitchen');
   r([1208,1303,1397],582,626,'VBC까사|필리빗','S','kitchen');r([1208,1274,1335,1397],627,668,'솔솔 푸른솔|광주요|놋담','S','kitchen');
   c('TWL',1208,683,1307,761,'W','kitchen');c('Tea Note',1308,683,1397,722,'E','kitchen');c('팝업',1308,723,1397,761,'E','popup');
   c('리델',1426,582,1489,670,'W','kitchen');c('키친툴',1426,671,1489,738,'W','kitchen');c('WMF',1490,582,1554,687,'E','kitchen');c('팝업',1490,688,1554,738,'E','popup');c('알레시',1426,749,1532,775,'N','kitchen');
   c('마이도',1603,543,1729,594,'W','kitchen');c('휘슬러',1603,595,1729,638,'W','kitchen');c('즈윌링',1603,639,1729,682,'W','kitchen');c('모비엘',1603,683,1729,725,'W','kitchen');c('캐논/소니',1548,777,1607,822,'N','elec');
-  c('드비알레/보스/세라자데/제네바',1056,823,1180,900,'E','elec');c('포칼',1056,901,1180,933,'E','elec');c('다이슨',1056,934,1180,998,'E','elec');
-  r([1208,1308,1406],823,858,'유라|라마르조코','N','elec');r([1208,1308,1406],859,898,'드롱기|브레빌','N','elec');r([1208,1272,1338,1406],910,975,'로라스타|샤크 닌자|로보락','N','elec');
+  c('드비알레/보스/셰에라자드/제네바',1056,823,1180,900,'E','elec');c('포칼',1056,901,1180,933,'E','elec');c('다이슨',1056,934,1180,998,'E','elec');
+  r([1208,1308,1406],823,858,'유라|라마르조코','N','elec');r([1208,1308,1406],859,898,'드롱기|브레빌','N','elec');r([1208,1272,1338,1406],910,975,'로라스타/리터로봇|샤크 닌자|로보락','N','elec');
   c('가게나우/스메그',1425,823,1532,850,'N','elec');r([1436,1491,1548],882,927,'미닉스|루메나','N','elec');r([1436,1491,1548],928,975,'발뮤다|린나이','N','elec');
   c('크렌즈 갤러리',1651,803,1729,863,'W','home');c('디트리쉬/리페르',1578,863,1649,941,'W','elec');c('밀레',1578,942,1649,998,'W','elec');r([1056,1353,1649],999,1112,'LG|삼성','N','elec');
   start('10F',[385,808,631,917],514,1135,'kid');

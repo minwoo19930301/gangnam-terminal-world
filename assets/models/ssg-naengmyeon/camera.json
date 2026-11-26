@@ -1,0 +1,11 @@
+{
+  "floor": "11F",
+  "x": -45.95628,
+  "z": 81.854602,
+  "yaw": 29.4168,
+  "pitch": -52.0,
+  "meshName": "HibarinGangnamSampler",
+  "sourceBlend": "hibarin.blend",
+  "sourceCollection": "SSG_11F_Hibarin",
+  "nativeLabel": "히바린"
+}

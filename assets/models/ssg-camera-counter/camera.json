@@ -1,0 +1,11 @@
+{
+  "floor": "6F",
+  "x": -54.1772,
+  "z": -29.57774,
+  "yaw": 28.7883,
+  "pitch": -27,
+  "meshName": "GangnamLeicaCameras",
+  "sourceBlend": "gallery.blend",
+  "sourceCollection": "SSG_6F_Leica",
+  "nativeLabel": "라이카"
+}

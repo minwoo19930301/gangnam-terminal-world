@@ -46,6 +46,17 @@ npm run serve -- 8765
 blender --factory-startup -b assets/models/world/gangnam-terminal.blend --python-exit-code 1 -P assets/models/world/libraries.py
 ```
 
+## 게임에 배치된 실내 집기
+
+통합 원본의 **시설 · 실내 배치** 장면에서 아웃라이너를 시설과 층별로 열 수 있습니다. 집기를 선택하고 숫자패드 마침표를 누르면 해당 위치로 확대됩니다. 의자 한 줄, 꽃통 하나도 게임에서 사용하는 위치·회전·크기와 표고를 따릅니다. 이 장면의 집기는 각 시설의 Blender 원본을 상대경로로 연결합니다.
+
+게임 배치가 바뀌면 아래 명령으로 이 장면을 갱신할 수 있습니다. Blender에서 직접 움직였거나 제거한 배치는 다음 갱신에도 유지합니다.
+
+```sh
+blender --factory-startup -b assets/models/world/gangnam-terminal.blend --python-exit-code 1 -P assets/models/world/indoor-layout.py -- --save
+blender --factory-startup -b assets/models/world/gangnam-terminal.blend --python-exit-code 1 -P assets/models/world/indoor-layout-check.py
+```
+
 ## 서울 시각
 
 타임라인 한 프레임은 서울 시각 1분입니다. 750프레임이 낮 12시 30분이며, 마커에는 해당 날짜의 아침과 노을 시간이 표시됩니다. 태양 방향·광량과 하늘색은 웹의 서울 태양 계산을 사용합니다. 해가 지면 창 면적의 일부에 실내 조명이 켜집니다. Blender에서 현재 서울 시각을 따라가려면 저장소 루트에서 다음과 같이 엽니다.

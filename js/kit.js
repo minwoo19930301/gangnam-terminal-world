@@ -1,4 +1,8 @@
+import { apartmentNight, lightApartmentWindows } from './apartment-windows.js';
+import { streetBatchView } from './static-view.js';
+import { createDeckVisibility } from './deck-visibility.js';
 import { visitorInstances } from './visitors.js';
+import {visitorView} from './visitor-view.js';
 import { drawHardware } from '../assets/models/street-and-lift/draw.js';
 import { makeStep, drawStepRails } from '../assets/models/staircase/render.js';
 import { createEscalatorRenderer } from '../assets/models/escalator/render.js';
@@ -10,14 +14,18 @@ import { wheelContacts } from './vehicle_ground.js';
 // K = construction kit handed to every place module.  See docs/PLACE_API.md for the contract.
 // Coordinates: x=east, z=south, y=up, meters. Origin = 고속터미널역. Street level y=0.
 import { createTextures, createSignAtlas, makeCanvas } from './textures.js';
-import { pointInPoly, polyBBox, polyArea } from './physics.js';
+import { pointInPoly, polyBBox, polyArea, distanceToPolygonSq } from './physics.js';
 
 export const LEVELS = { B1: -6, B2: -11, B3: -16, B4: -21, B5: -26, B6: -31 };
 const TILE = 320;
 
-export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096, low = false, keep = null, keepDetail = null } = {}) {
+export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096, low = false, keep = null, keepDetail = null, streetView = false, interiorView = false } = {}) {
   // Area loading (js/areas.js): keep(owner, x, y, z, ny) drops primitives/meshes/trees/people outside the loaded area,
   // keepDetail(group) skips lazy detail groups the area does not show. Both null = build everything.
+  const deckVisibility = interiorView ? createDeckVisibility() : null;
+  const staticVisibility = streetBatchView(THREE,scene,deckVisibility);
+  const streetVisibility = streetView ? staticVisibility : null;
+  const clipVisitors=visitorView(THREE,scene,relief);
   const T = createTextures(THREE, { maxAniso });
   // big atlas pages mean fewer materials → fewer draw calls (the bottleneck on slow CPUs); low tier draws signs
   // at a lower pixel density (resolution only — every sign is still there)
@@ -43,7 +51,14 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     else if (key === 'hanRiver') m = createRiverWater(THREE,scene,onFrame);
     else if (key === 'water') { const s = T.surface('water'); m = new THREE.MeshLambertMaterial({ map: s.tex, vertexColors: true, transparent: true, opacity: 0.92 }); }
     else if (key.startsWith('sign:')) { const p = atlas.pages[+key.slice(5)]; m = new THREE.MeshBasicMaterial({ map: p.t, side: THREE.FrontSide, alphaTest: 0.35 }); }
-    else if (key.startsWith('arr:')) { m = new THREE.MeshLambertMaterial({ map: dummyMap, vertexColors: true }); m.userData.arr = texArrays[+key.slice(4)]; addBounce(m, '', true); materials.set(key, m); return m; }
+    else if (key.startsWith('arr:')) {
+      m = new THREE.MeshLambertMaterial({ map: dummyMap, vertexColors: true });
+      m.userData.arr = texArrays[+key.slice(4)];
+      addBounce(m, '', true);
+      const layer=m.userData.arr.userData.apartmentLayer;
+      if(layer!==undefined) lightApartmentWindows(m,apartmentNight(K),'paint',layer);
+      materials.set(key, m); return m;
+    }
     else if (key.startsWith('tex:')) { const s = T.surface(key.slice(4)); m = new THREE.MeshLambertMaterial({ map: s.tex, vertexColors: true }); }
     else if (key.startsWith('ctex:')) { const s = customTex.get(key.slice(5)); m = new THREE.MeshLambertMaterial({ map: s.tex, vertexColors: true, transparent: !!s.transparent, alphaTest: s.transparent ? 0.3 : 0, side: s.doubleSide ? THREE.DoubleSide : THREE.FrontSide }); }
     else if (/^gl\d+:/.test(key)) { // polished surface: the base material plus a blurred warm-interior reflection
@@ -56,6 +71,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     }
     else throw new Error('unknown material key ' + key);
     if (m.isMeshLambertMaterial) addBounce(m);
+    if (key==='tex:apt') lightApartmentWindows(m,apartmentNight(K),'paint');
     materials.set(key, m); return m;
   }
   // Shared reflection map for polished floors/stone ({ gloss }): a soft interior — bright ceiling with downlight pools,
@@ -177,15 +193,21 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     try { return withTerrainSurface(plane, () => build(atWheel, wheels, tilt)); }
     finally { parkedPose = previous; }
   }
-  function recordAnchor(b) {
-    if (anchorHeight !== null) (b.anchors ||= new Map()).set(b.prim.length, anchorHeight);
+  // Input faces have one normal, one colour and one winding. Expand those
+  // directly into the final GPU buffers after their output tiles are known.
+  function recordFace(bucket, surface, normal, signedCount) {
+    if (anchorHeight !== null) (bucket.anchors ||= new Map()).set(bucket.prim.length, anchorHeight);
+    bucket.nor.push(normal[0], normal[1], normal[2]);
+    bucket.col.push(surface.c[0], surface.c[1], surface.c[2]);
+    bucket.prim.push(signedCount);
+    bucket.own.push(current);
   }
 
   // ---------- buckets ----------
   function bucket(key, x, z) {
     const tk = key + '|' + Math.floor(x / TILE) + ',' + Math.floor(z / TILE);
     let b = buckets.get(tk);
-    if (!b) { b = { key, pos: [], nor: [], uv: [], col: [], idx: [], prim: [], own: [] }; buckets.set(tk, b); }
+    if (!b) { b = { key, pos: [], nor: [], uv: [], col: [], prim: [], own: [] }; buckets.set(tk, b); }
     return b;
   }
   function splitTerrainFace(sp, p, n, uvs) {
@@ -219,14 +241,11 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     const bx = p[2][0] - p[0][0], by = p[2][1] - p[0][1], bz = p[2][2] - p[0][2];
     const cx = ay * bz - az * by, cy = az * bx - ax * bz, cz = ax * by - ay * bx;
     const flip = cx * n[0] + cy * n[1] + cz * n[2] < 0;
-    const base = b.pos.length / 3;
     for (let i = 0; i < 4; i++) {
-      b.pos.push(p[i][0], p[i][1], p[i][2]); b.nor.push(n[0], n[1], n[2]);
-      b.uv.push(uvs[i][0], uvs[i][1]); b.col.push(sp.c[0], sp.c[1], sp.c[2]);
+      b.pos.push(p[i][0], p[i][1], p[i][2]);
+      b.uv.push(uvs[i][0], uvs[i][1]);
     }
-    if (flip) b.idx.push(base, base + 2, base + 1, base, base + 3, base + 2);
-    else b.idx.push(base, base + 1, base + 2, base, base + 2, base + 3);
-    recordAnchor(b); b.prim.push(4); b.own.push(current);
+    recordFace(b, sp, n, flip ? -4 : 4);
     stats.quads++;
   }
   function tri(sp, p, n, uvs, split = true) {
@@ -238,9 +257,11 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     const bx = p[2][0] - p[0][0], by = p[2][1] - p[0][1], bz = p[2][2] - p[0][2];
     const cx = ay * bz - az * by, cy = az * bx - ax * bz, cz = ax * by - ay * bx;
     const flip = cx * n[0] + cy * n[1] + cz * n[2] < 0;
-    const base = b.pos.length / 3;
-    for (let i = 0; i < 3; i++) { b.pos.push(p[i][0], p[i][1], p[i][2]); b.nor.push(n[0], n[1], n[2]); b.uv.push(uvs[i][0], uvs[i][1]); b.col.push(sp.c[0], sp.c[1], sp.c[2]); }
-    if (flip) b.idx.push(base, base + 2, base + 1); else b.idx.push(base, base + 1, base + 2); recordAnchor(b); b.prim.push(3); b.own.push(current);
+    for (let i = 0; i < 3; i++) {
+      b.pos.push(p[i][0], p[i][1], p[i][2]);
+      b.uv.push(uvs[i][0], uvs[i][1]);
+    }
+    recordFace(b, sp, n, flip ? -3 : 3);
   }
   // vertical face from (ax,az)->(bx,bz), y0..y1, normal given. u along length from uOff.
   function vface(sp, ax, az, bx, bz, y0, y1, nx, nz, uOff = 0, floorH = 0, vBase = 0) {
@@ -470,7 +491,16 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     const mv = o.move ? [ux * o.move, uz * o.move] : null;
     phys.addRamp(ax, az, bx, bz, w / 2, ya, yb, { move: mv, tag: current });
   }
-  const drawEscalator = createEscalatorRenderer(THREE, addMesh, onFrame);
+  const fixedEscalators = [], indoorEscalators = [], indoorStock = [];
+  const drawEscalator = createEscalatorRenderer(THREE, (mesh,moving) => {
+    addMesh(mesh);
+    if (streetVisibility) {
+      if (moving) streetVisibility.flight(mesh,true,relief);
+      else fixedEscalators.push(mesh);
+    } else if (deckVisibility) {
+      indoorEscalators.push({mesh,moving,bounds:null});
+    }
+  }, onFrame);
   function escalator(ax, az, bx, bz, o = {}) {
     const w = o.w ?? 1.1, ya = o.ya ?? 0, yb = o.yb ?? 5;
     const L = Math.hypot(bx - ax, bz - az), ux = (bx - ax) / L, uz = (bz - az) / L;
@@ -636,8 +666,9 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
   function onFrame(fn) { frameFns.push(fn); }
   // Detail batches keep their normal scene parents so place animations retain control of visibility.
   let detailObjects = null;
-  function addMesh(mesh) {
+  function addMesh(mesh, {stationaryInstances = false} = {}) {
     detailObjects?.add(mesh);
+    if (deckVisibility && stationaryInstances) mesh.userData.stationaryInstances = true;
     mesh.userData.owner ??= current;
     if (mesh.isPointLight) mesh.position.y += terrainAt(anchorHeight,mesh.position.x,mesh.position.z);
     scene.add(mesh);
@@ -693,26 +724,90 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
   // x, y, z = camera (eye) position. "Underground" means: eye below -1 m, a ceiling over the head and standing in a
   // zone of an indoor place — so stairs, open ramps and road underpasses never count.
   const lodList = [], wheelBatches = [];
-  function lodUpdate(x, z) {
-    // A car beside the player must not select full-detail wheels for an
-    // entire car park. Repack the two draws only when a car crosses its LOD.
+  // Keep the original garage batch intact until a covered interior first needs
+  // per-car visibility. Include all four separately levelled wheel transforms.
+  function prepareParkedBounds(group) {
+    const {paint, trim, near, far, source, vehicles} = group;
+    group.bodyMatrices = paint.instanceMatrix.array.slice();
+    group.bodyColors = paint.instanceColor.array.slice();
+    group.shown = new Uint8Array(vehicles.length).fill(1);
+    const body = new THREE.Box3(), wheel = new THREE.Box3();
+    for (const [mesh, shape] of [[paint,body], [trim,body], [near,wheel], [far,wheel]]) {
+      if (!mesh.geometry.boundingBox) mesh.geometry.computeBoundingBox();
+      shape.union(mesh.geometry.boundingBox);
+    }
+    const matrix = new THREE.Matrix4(), transformed = new THREE.Box3();
+    group.bounds = vehicles.map((_, index) => {
+      const box = body.clone().applyMatrix4(matrix.fromArray(group.bodyMatrices, 16*index));
+      for (let j = 0; j < 4; j++) {
+        matrix.fromArray(source, 16*(4*index+j));
+        box.union(transformed.copy(wheel).applyMatrix4(matrix));
+      }
+      return box.expandByScalar(.015);
+    });
+  }
+
+  function updateParkedFleet(x, z, frustum) {
+    // Share visibility across each car's parts. Track its tire LOD even while
+    // hidden so a camera turn preserves the original distance hysteresis.
     for (const group of wheelBatches) {
-      const {near,far,source,vehicles,close} = group;
-      let changed = false;
+      const {paint,trim,near,far,source,vehicles,close} = group;
+      if (frustum && !group.bounds) prepareParkedBounds(group);
+      let changed = false, bodyChanged = false;
       for (let i=0;i<vehicles.length;i++) {
         const car = vehicles[i], dx = car.x-x, dz = car.z-z;
-        const value = dx*dx+dz*dz < (close[i] === 1 ? 68 : 62)**2 ? 1 : 0;
-        if (close[i] !== value) { close[i] = value; changed = true; }
+        const nearWheel = Number(dx*dx+dz*dz < (close[i] === 1 ? 68 : 62)**2);
+        if (close[i] !== nearWheel) { close[i] = nearWheel; changed = true; }
+        if (group.shown) {
+          const bounds = group.bounds[i];
+          const shown = Number(!frustum || (frustum.intersectsBox(bounds) && !(deckVisibility?.active && deckVisibility.hides(bounds))));
+          if (group.shown[i] !== shown) { group.shown[i] = shown; bodyChanged = changed = true; }
+        }
       }
       if (!changed) continue;
       near.count = far.count = 0;
+      if (bodyChanged) paint.count = trim.count = 0;
       for (let i=0;i<vehicles.length;i++) {
+        if (group.shown && !group.shown[i]) continue;
+        if (bodyChanged) {
+          const matrix = group.bodyMatrices.subarray(16*i, 16*(i+1));
+          paint.instanceMatrix.array.set(matrix, 16*paint.count);
+          trim.instanceMatrix.array.set(matrix, 16*trim.count);
+          paint.instanceColor.array.set(group.bodyColors.subarray(3*i, 3*(i+1)), 3*paint.count);
+          paint.count++;
+          trim.count++;
+        }
         const batch = close[i] ? near : far;
         batch.instanceMatrix.array.set(source.subarray(64*i,64*(i+1)),16*batch.count);
         batch.count += 4;
       }
       near.instanceMatrix.needsUpdate = far.instanceMatrix.needsUpdate = true;
+      if (bodyChanged) {
+        paint.instanceMatrix.needsUpdate = trim.instanceMatrix.needsUpdate = true;
+        paint.instanceColor.needsUpdate = true;
+      }
     }
+  }
+
+  const parkedFrustum = new THREE.Frustum(), projection = new THREE.Matrix4(), lastProjection = new THREE.Matrix4();
+  let clippedParkedFleet = false;
+  let roofX, roofY, roofZ;
+  function updateParkedView(x, z, camera, refresh) {
+    if (camera && (under || streetView || deckVisibility?.active)) {
+      camera.updateWorldMatrix(true, false);
+      projection.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
+      if (!refresh && clippedParkedFleet && projection.equals(lastProjection)) return;
+      lastProjection.copy(projection);
+      parkedFrustum.setFromProjectionMatrix(projection);
+      updateParkedFleet(x, z, parkedFrustum);
+      clippedParkedFleet = true;
+    } else if (refresh || clippedParkedFleet) {
+      updateParkedFleet(x, z, null);
+      clippedParkedFleet = false;
+    }
+  }
+
+  function lodUpdate(x, z) {
     for (const m of lodList) {
       const bb = m.userData.bb || m.userData.lodBB || (m.userData.lodBB = (() => { const b = new THREE.Box3(), M = new THREE.Matrix4(), V = new THREE.Vector3(); for (let i = 0; i < m.count; i++) { m.getMatrixAt(i, M); b.expandByPoint(V.setFromMatrixPosition(M)); } return [b.min.x, b.min.z, b.max.x, b.max.z]; })());
       const dx = x < bb[0] ? bb[0] - x : x > bb[2] ? x - bb[2] : 0, dz = z < bb[1] ? bb[1] - z : z > bb[3] ? z - bb[3] : 0;
@@ -720,19 +815,40 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
       if (m.geometry !== g) m.geometry = g;
     }
   }
-  function cull(x, y, z, force = false) {
-    if (!force && Math.abs(x - last.x) + Math.abs(y - last.y) + Math.abs(z - last.z) < 1.5 && ++last.n < 30) return;
-    last = { x, y, z, n: 0 };
-    lodUpdate(x, z);
-    updateDetailLayers(x, y, z);
-    let u = false;
-    if (y < -1) { const zn = phys.zoneAt(x, y - 1.5, z); u = !!zn && INDOOR.has(zn.place) && phys.ceilingAbove(x, z, y, y + 8) < Infinity; }
-    under = u;
+  let lastDeckRevision = -1;
+  function cull(x, y, z, force = false, camera = null) {
+    deckVisibility?.update(camera);
+    const deckChanged = !!deckVisibility && lastDeckRevision !== deckVisibility.revision;
+    lastDeckRevision = deckVisibility?.revision ?? 0;
+    const refresh = force || Math.abs(x-last.x) + Math.abs(y-last.y) + Math.abs(z-last.z) >= 1.5 || ++last.n >= 30;
+    // A step that leaves a narrow stair opening can be smaller than the tile
+    // update interval. Check the actual eye position as it crosses that edge.
+    if (refresh || ((under || (camera && y < -1)) && (x !== roofX || y !== roofY || z !== roofZ))) {
+      const zone = y < -1 && phys.zoneAt(x, y-1.5, z);
+      under = !!zone && INDOOR.has(zone.place) && phys.ceilingAbove(x, z, y, y+8) < Infinity;
+      roofX = x; roofY = y; roofZ = z;
+    }
+    updateParkedView(x, z, camera, refresh || deckChanged);
+    if (!refresh && !deckChanged) return;
+    if (refresh) {
+      last = { x, y, z, n: 0 };
+      lodUpdate(x, z);
+      updateDetailLayers(x, y, z);
+    }
+    const deck = deckVisibility?.active ? deckVisibility : null;
+    if (deck || deckChanged) {
+      for (const mesh of indoorStock) mesh.visible = !deck || !deck.hides(mesh.userData.deckBounds);
+      for (const flight of indoorEscalators) {
+        if (deck) flight.bounds ??= staticVisibility.flightBounds(flight.mesh,flight.moving,relief);
+        flight.mesh.visible = !deck || !deck.hides(flight.bounds);
+      }
+    }
     for (const m of cullList) {
       const d = m.userData, bb = d.bb;
-      if (d.cell === 'o' && !u) { m.visible = true; continue; }
+      if (deck && d.deckBounds && deck.hides(d.deckBounds)) { m.visible = false; continue; }
+      if (d.cell === 'o' && !under) { m.visible = true; continue; }
       const dx = x < bb[0] ? bb[0] - x : x > bb[2] ? x - bb[2] : 0, dz = z < bb[1] ? bb[1] - z : z > bb[3] ? z - bb[3] : 0, dist = Math.hypot(dx, dz);
-      m.visible = d.cell === 'o' ? dist < 120 : (u ? dist < 320 : dist < 100);
+      m.visible = d.cell === 'o' ? dist < 120 : (under ? dist < 320 : dist < 100);
     }
   }
   // ---------- texture arrays for opaque textures ----------
@@ -759,9 +875,31 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
       const t = new THREE.DataArrayTexture(data, w, h, list.length);
       t.wrapS = t.wrapT = THREE.RepeatWrapping; t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = maxAniso;
       t.generateMipmaps = true; t.minFilter = THREE.LinearMipmapLinearFilter; t.magFilter = THREE.LinearFilter; t.needsUpdate = true;
+      const apartmentLayer=list.findIndex(entry=>entry.k==='tex:apt');
+      if(apartmentLayer>=0)t.userData.apartmentLayer=apartmentLayer;
       texArrays.push(t);
     }
     return layers;
+  }
+  // These batches have plain, world-space Float32 positions and no morph targets.
+  // Use the same box centre and furthest vertex as Three, sharing the box pass.
+  function setStaticBounds(geometry, positions) {
+    let minX = Infinity, minY = Infinity, minZ = Infinity;
+    let maxX = -Infinity, maxY = -Infinity, maxZ = -Infinity;
+    for (let i = 0; i < positions.length; i += 3) {
+      const x = positions[i], y = positions[i+1], z = positions[i+2];
+      minX = Math.min(minX, x); minY = Math.min(minY, y); minZ = Math.min(minZ, z);
+      maxX = Math.max(maxX, x); maxY = Math.max(maxY, y); maxZ = Math.max(maxZ, z);
+    }
+    const box = new THREE.Box3(new THREE.Vector3(minX, minY, minZ), new THREE.Vector3(maxX, maxY, maxZ));
+    const center = box.getCenter(new THREE.Vector3());
+    let maxRadiusSq = 0;
+    for (let i = 0; i < positions.length; i += 3) {
+      const dx = positions[i]-center.x, dy = positions[i+1]-center.y, dz = positions[i+2]-center.z;
+      maxRadiusSq = Math.max(maxRadiusSq, dx*dx + dy*dy + dz*dz);
+    }
+    geometry.boundingBox = box;
+    geometry.boundingSphere = new THREE.Sphere(center, Math.sqrt(maxRadiusSq));
   }
   const aLayers = new Map();
   function finalize() { for (const p of atlas.pages) p.t.needsUpdate = true; return flush(); }
@@ -772,17 +910,31 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     // two passes: classify every primitive and count, then fill typed arrays directly (no big JS arrays)
     const subs = new Map(), plan = [];
     for (const [, b] of buckets) {
-      if (!b.idx.length) continue;
+      if (!b.prim.length) continue;
       const P = b.pos, ar = aLayers.get(b.key) || null, which = new Array(b.prim.length);
+      const materialKey = ar ? 'arr:' + ar.arr : b.key;
+      let previousCell, previousX, previousZ, sub;
       let vo = 0, pi = 0;
-      for (const nv of b.prim) {
+      for (const signedCount of b.prim) {
+        const nv = Math.abs(signedCount);
         let cx = 0, cy = 0, cz = 0; for (let k = 0; k < nv; k++) { cx += P[(vo + k) * 3]; cy += P[(vo + k) * 3 + 1]; cz += P[(vo + k) * 3 + 2]; }
         cx /= nv; cy /= nv; cz /= nv;
         const cell = classify(cx, cy, cz, b.own[pi]);
         if (stats.byOwner) stats.byOwner[b.own[pi]] = (stats.byOwner[b.own[pi]] || 0) + (nv === 4 ? 2 : 1);
-        const T2 = cell === 'o' ? TILE : CELL_TILE, mk = ar ? 'arr:' + ar.arr : b.key, sk = mk + '|' + cell + '|' + Math.floor(cx / T2) + ',' + Math.floor(cz / T2);
-        let s = subs.get(sk); if (!s) { s = { key: mk, cell, nv: 0, ni: 0, rect: !!ar }; subs.set(sk, s); }
-        s.nv += nv; s.ni += nv === 4 ? 6 : 3; which[pi++] = s; vo += nv;
+        // Buckets already group by the first vertex's tile. Most successive
+        // face centres land in the same output cell, including faces on a wall.
+        const tileSize = cell === 'o' ? TILE : CELL_TILE;
+        const tileX = Math.floor(cx/tileSize), tileZ = Math.floor(cz/tileSize);
+        if (cell !== previousCell || tileX !== previousX || tileZ !== previousZ) {
+          const key = materialKey + '|' + cell + '|' + tileX + ',' + tileZ;
+          sub = subs.get(key);
+          if (!sub) {
+            sub = { key: materialKey, cell, nv: 0, ni: 0, rect: !!ar };
+            subs.set(key, sub);
+          }
+          previousCell = cell; previousX = tileX; previousZ = tileZ;
+        }
+        sub.nv += nv; sub.ni += nv === 4 ? 6 : 3; which[pi++] = sub; vo += nv;
       }
       plan.push({ b, ar, which });
     }
@@ -792,22 +944,23 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
       s.v = 0; s.i = 0;
     }
     for (const { b, ar, which } of plan) {
-      const P = b.pos, N = b.nor, U = b.uv, C = b.col, I = b.idx;
-      let vo = 0, io = 0, pi = 0;
-      for (const nv of b.prim) {
-        const s = which[pi++], ni = nv === 4 ? 6 : 3;
+      const P = b.pos, N = b.nor, U = b.uv, C = b.col;
+      let vo = 0, pi = 0;
+      for (const signedCount of b.prim) {
+        const nv = Math.abs(signedCount);
+        const faceOffset = pi*3, s = which[pi++];
         const base = s.v, datum = b.anchors?.get(pi-1);
         for (let k = 0; k < nv; k++) {
           const v = vo + k, d = s.v++;
           s.pos[d * 3] = P[v * 3]; s.pos[d * 3 + 1] = P[v * 3 + 1] + terrainAt(datum,P[v*3],P[v*3+2]); s.pos[d * 3 + 2] = P[v * 3 + 2];
-          s.nor[d * 3] = N[v * 3]; s.nor[d * 3 + 1] = N[v * 3 + 1]; s.nor[d * 3 + 2] = N[v * 3 + 2];
+          s.nor[d * 3] = N[faceOffset]; s.nor[d * 3 + 1] = N[faceOffset+1]; s.nor[d * 3 + 2] = N[faceOffset+2];
           s.uv[d * 2] = U[v * 2]; s.uv[d * 2 + 1] = U[v * 2 + 1];
-          s.col[d * 3] = C[v * 3]; s.col[d * 3 + 1] = C[v * 3 + 1]; s.col[d * 3 + 2] = C[v * 3 + 2];
+          s.col[d * 3] = C[faceOffset]; s.col[d * 3 + 1] = C[faceOffset+1]; s.col[d * 3 + 2] = C[faceOffset+2];
           if (ar) s.rect[d] = ar.layer;
         }
         // Grade the lighting of level road, paving, roofs and park faces as
         // well as their silhouette. Survey clipping made each such face planar.
-        if (datum === undefined && Math.abs(N[vo*3+1]) > .999 && P[vo*3+1] === P[vo*3+4] && P[vo*3+1] === P[vo*3+7]) {
+        if (datum === undefined && Math.abs(N[faceOffset+1]) > .999 && P[vo*3+1] === P[vo*3+4] && P[vo*3+1] === P[vo*3+7]) {
           const v = 3*base, p = s.pos;
           const ax = p[v+3]-p[v], ay = p[v+4]-p[v+1], az = p[v+5]-p[v+2];
           const bx = p[v+6]-p[v], by = p[v+7]-p[v+1], bz = p[v+8]-p[v+2];
@@ -815,15 +968,23 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
             const nx = ay*bz-az*by, ny = az*bx-ax*bz, nz = ax*by-ay*bx;
             const length = Math.hypot(nx,ny,nz);
             if (Math.abs(ny) > 1e-8 && length) {
-              const scale = Math.sign(ny * N[vo*3+1]) / length;
+              const scale = Math.sign(ny * N[faceOffset+1]) / length;
               for (let d=v; d<v+3*nv; d+=3) {
                 s.nor[d] = nx*scale; s.nor[d+1] = ny*scale; s.nor[d+2] = nz*scale;
               }
             }
           }
         }
-        for (let k = 0; k < ni; k++) s.idx[s.i++] = I[io + k] - vo + base;
-        vo += nv; io += ni;
+        const flip = signedCount < 0;
+        s.idx[s.i++] = base;
+        s.idx[s.i++] = base + (flip ? 2 : 1);
+        s.idx[s.i++] = base + (flip ? 1 : 2);
+        if (nv === 4) {
+          s.idx[s.i++] = base;
+          s.idx[s.i++] = base + (flip ? 3 : 2);
+          s.idx[s.i++] = base + (flip ? 2 : 3);
+        }
+        vo += nv;
       }
     }
     buckets.clear();
@@ -836,7 +997,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
       g.setAttribute('color', new THREE.BufferAttribute(s.col, 3));
       if (s.rect) g.setAttribute('layer', new THREE.BufferAttribute(s.rect, 1));
       g.setIndex(new THREE.BufferAttribute(s.idx, 1));
-      g.computeBoundingSphere(); g.computeBoundingBox();
+      setStaticBounds(g, s.pos);
       // Static coordinates now include their surveyed elevation. Culling,
       // bounding volumes and rendering all use the same world-space mesh.
       const material = matFor(s.key);
@@ -845,9 +1006,17 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
       const m = new THREE.Mesh(g, material);
       if (s.key === 'glass' || s.key === 'water') m.renderOrder = 2;
       m.matrixAutoUpdate = false; m.updateMatrix();
+      // Custom shader materials may move their vertices beyond the kit bounds.
+      if (!s.key.startsWith('cm:') && s.key !== 'hanRiver') {
+        // A whole sales floor can share one material batch. Keep Three's ordinary
+        // culling for small interior meshes, then clip long runs in the large ones.
+        staticVisibility.attach(m,!streetView || s.cell !== 'o');
+        if (deckVisibility) m.userData.deckBounds = g.boundingBox;
+      }
       scene.add(m); out.push(m); track(m, s.cell);
     }
     pruneMeshes();
+    streetVisibility?.batchLandings(fixedEscalators,detailObjects,relief);
     splitModuleInstances();
     buildInstanced();
     return out;
@@ -885,13 +1054,29 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
   function splitModuleInstances() {
     const M = new THREE.Matrix4(), C = new THREE.Color();
     for (const im of detailObjects || scene.children.slice()) {
-      if (im.parent !== scene || !im.isInstancedMesh || im.count < 64 || im.userData.dynamic || im.userData.split) continue;
+      if (im.parent !== scene || !im.isInstancedMesh || im.userData.dynamic || im.userData.split) continue;
+      if (im.count < 64) {
+        if (im.userData.stationaryInstances && !im.userData.deckBounds) {
+          // Area pruning has compacted the final instance set. Small displays
+          // keep their original parent and distance behaviour.
+          im.computeBoundingBox();
+          im.updateWorldMatrix(true,false);
+          im.userData.deckBounds = im.boundingBox.clone().applyMatrix4(im.matrixWorld);
+          indoorStock.push(im);
+        }
+        continue;
+      }
       const e = im.instanceMatrix.array;
       for (const g of groupBy(im.count, i => [e[i * 16 + 12], e[i * 16 + 13], e[i * 16 + 14], im.userData.owner])) {
         const nm = new THREE.InstancedMesh(im.geometry, im.material, g.idx.length);
         g.idx.forEach((src, j) => { im.getMatrixAt(src, M); nm.setMatrixAt(j, M); if (im.instanceColor) { im.getColorAt(src, C); nm.setColorAt(j, C); } });
         nm.instanceMatrix.needsUpdate = true; if (nm.instanceColor) nm.instanceColor.needsUpdate = true;
         nm.frustumCulled = im.frustumCulled; nm.renderOrder = im.renderOrder; nm.userData.split = true; scene.add(nm); track(nm, g.cell);
+        if (im.userData.stationaryInstances) {
+          // Each spatial cell already has an exact bound including all its instances.
+          nm.name = im.name;
+          nm.userData.deckBounds = nm.boundingBox;
+        }
       }
       scene.remove(im);
     }
@@ -947,7 +1132,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
               scene.add(far);
               track(far,group.cell);
               far.count = 0;
-              wheelBatches.push({near:mesh,far,source:mesh.instanceMatrix.array.slice(),vehicles:list,close:new Uint8Array(list.length).fill(255)});
+              wheelBatches.push({paint,trim,near:mesh,far,source:mesh.instanceMatrix.array.slice(),vehicles:list,close:new Uint8Array(list.length).fill(255)});
             }
           }
         }
@@ -975,6 +1160,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
         for (const mesh of visitorInstances(THREE,people,group.idx.map(i => start+i))) {
           scene.add(mesh);
           track(mesh,group.cell);
+          clipVisitors(mesh);
           lodList.push(mesh);
         }
       }
@@ -985,7 +1171,8 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
   // K.detail({floor, y0, y1, poly|rect}, fn): fn builds furnishing detail (stock, furniture, fixtures, signage,
   // people) for one floor area and runs only when the camera comes near — floors stay light until visited.
   // Structure that must exist before you arrive (slabs, walls, stairs, escalators, elevators, zones, spawns,
-  // junctions) belongs in the normal build, not in a detail group.
+  // junctions) belongs in the normal build, not in a detail group. An optional
+  // visibleFrom(x,y,z) tests a solid room partition in the same terrain-relative frame as y0/y1.
   const details = []; const detailErrors = [];
   function detail(o, fn) {
     let poly = o.poly; if (!poly && o.rect) { const [x0, z0, x1, z1] = o.rect; poly = [[x0, z0], [x1, z0], [x1, z1], [x0, z1]]; }
@@ -995,7 +1182,8 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
       const draw = fn;
       fn = kit => withTerrainSurface(datum,() => draw(kit));
     }
-    details.push({ poly, owner: current, meta: perPlace[current], floor: o.floor || '', y0: o.y0 ?? -1e9, y1: o.y1 ?? 1e9, bb, fn, built: false, name: o.name || '' });
+    const rectangular=poly?.length===4 && poly.every(([x,z])=>(x===bb[0]||x===bb[2]) && (z===bb[1]||z===bb[3]));
+    details.push({ poly, exactDistance:!!poly&&!rectangular, owner: current, meta: perPlace[current], floor: o.floor || '', y0: o.y0 ?? -1e9, y1: o.y1 ?? 1e9, bb, fn, built: false, name: o.name || '', visibleFrom: o.visibleFrom });
   }
   function buildDetail(d) {
     if (d.built) return []; d.built = true;
@@ -1024,8 +1212,8 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
       // Floors on either side of a hotel atrium remain visible through its void. A solid
       // intervening slab can occlude furniture several storeys below or above the eye.
       const dx = Math.max(0, d.bb[0] - x, x - d.bb[2]), dz = Math.max(0, d.bb[1] - z, z - d.bb[3]);
-      let hidden = false;
-      if (dx === 0 && dz === 0) {
+      let hidden = !!d.visibleFrom && !d.visibleFrom(x,y,z);
+      if (!hidden && dx === 0 && dz === 0) {
         if (y > d.y1 + 10) hidden = phys.ceilingAbove(x, z, d.y1 + .1, y) < Infinity;
         else if (y < d.y0 - 10) hidden = phys.ceilingAbove(x, z, y, d.y0 - .1) < Infinity;
       }
@@ -1076,9 +1264,14 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
       for (const d of details) {
         if (d.built || (keepDetail && !keepDetail(d))) continue;
         const dx = Math.max(0, d.bb[0]-x, x-d.bb[2]), dz = Math.max(0, d.bb[1]-z, z-d.bb[3]);
-        const vertical = Math.max(0, d.y0-y, y-d.y1), distance = dx*dx + dz*dz;
+        const vertical = Math.max(0, d.y0-y, y-d.y1);
+        let distance = dx*dx+dz*dz;
         if (distance > reach*reach || vertical > 8) continue;
-        if (camera && !visibleDetail(d,x,y,z,camera,distance,vertical)) continue;
+        if (camera && d.exactDistance) {
+          distance=distanceToPolygonSq(x,z,d.poly);
+          if(distance>reach*reach)continue;
+        }
+        if (camera && ((d.visibleFrom && !d.visibleFrom(x,y,z)) || !visibleDetail(d,x,y,z,camera,distance,vertical))) continue;
         waiting.push({d,vertical,distance});
       }
       // Pop from the end while preserving registration order for equal priorities.
@@ -1103,8 +1296,10 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     osmBuilding, osmFind, claim, rand, quad: (mat, p, n, uvs) => quad(spec(mat), p, n, uvs || [[0, 0], [1, 0], [1, 1], [0, 1]]), hpoly: (mat, poly, y, up = true, holes) => hpoly(spec(mat), poly, y, up, holes),
     triangle: (mat, points, normal, uv) => tri(spec(mat), points, normal, uv),
     pointInPoly, polyBBox, polyArea, orient,
+    occludingSlab: options => deckVisibility?.register(options),
+    occludingWall: options => deckVisibility?.registerWall(options),
     // internals for engine
-    _: { bounce, cull, cullList, finalize, details, detailErrors, ensureDetail, buildAllDetail, frameFns, interactables, spawns, zonesList, elevators, claims, mapMarks, groundHoles, stats, atlas, trees, people, setCurrent: (id, meta) => { current = id; if (meta) perPlace[id] = meta; } },
+    _: { bounce, cull, cullList, deckVisibility, finalize, details, detailErrors, ensureDetail, buildAllDetail, frameFns, interactables, spawns, zonesList, elevators, claims, mapMarks, groundHoles, stats, atlas, trees, people, setCurrent: (id, meta) => { current = id; if (meta) perPlace[id] = meta; } },
   };
   return K;
 }

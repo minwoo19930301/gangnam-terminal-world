@@ -56,3 +56,40 @@ assert.equal(wheel.geometry,nearWheel);
 assert.equal(wheel.count,4);
 assert.equal(distant.count,0);
 console.log('OK — 7 Blender models, 120 moving vehicles, colour, parked collision and anchored height');
+
+// One garage batch spans both sides of a covered underground viewer. A camera
+// turn without a step must restore its other car, colour and all four wheels.
+const basementScene = new THREE.Scene(), basementPhysics = createPhysics();
+const basement = createKit(THREE, basementScene, {osm:{}, phys:basementPhysics});
+basement._.setCurrent('gyeongbu');
+basement.zone({name:'basement', floor:'B1', rect:[35,25,70,75], y0:-4, y1:0});
+const opening = [[57,47],[63,47],[63,53],[57,53]];
+basement.slab([[35,25],[70,25],[70,75],[35,75]], 0, {holes:[opening]});
+for (const [z,color] of [[35,0xe04937],[65,0x52a978]]) basement.vehicle({x:50,y:0,z,color});
+basement._.finalize();
+const parkedPart = name => basementScene.children.find(m => m.userData.parkedFleet && m.name === name);
+const paint = parkedPart('car paint'), trim = parkedPart('car trim'), tires = parkedPart('car wheels');
+const originalPaint = paint.instanceMatrix.array.slice(), originalColors = paint.instanceColor.array.slice();
+const view = new THREE.PerspectiveCamera(60,1,.05,500);
+view.position.set(50,-2.38,50);
+function face(direction,expectedIndex) {
+  view.lookAt(50,0,50+direction);
+  basement._.cull(...view.position.toArray(),false,view);
+  assert.equal(paint.count,1);
+  assert.equal(trim.count,1);
+  assert.equal(tires.count,4);
+  const matrix = originalPaint.slice(16*expectedIndex,16*(expectedIndex+1));
+  assert.deepEqual(paint.instanceMatrix.array.slice(0,16),matrix);
+  assert.deepEqual(trim.instanceMatrix.array.slice(0,16),matrix);
+  assert.deepEqual(paint.instanceColor.array.slice(0,3),originalColors.slice(3*expectedIndex,3*(expectedIndex+1)));
+}
+face(-15,0);
+face(15,1);
+face(-15,0);
+view.position.x = 60;
+basement._.cull(...view.position.toArray(),true,view);
+assert.equal(paint.count,2,'an open atrium keeps the original batch');
+assert.equal(tires.count,8);
+assert.deepEqual(paint.instanceMatrix.array,originalPaint);
+assert.deepEqual(paint.instanceColor.array,originalColors);
+console.log('OK — covered garage view, camera turn, wheel and color restoration, open atrium');

@@ -1,3 +1,7 @@
+import {diningWallOpening} from './_familleUpperPlan.js';
+import {placeGoterCrossing} from '../../assets/models/goter-crossing/model.js';
+import {placeSeoulCityBus} from '../../assets/models/seoul-city-bus/model.js';
+import {placeMedianShelters} from '../../assets/models/sinbanpo-bus-shelters/model.js';
 import { gardenPoint, gardenStation, gardenSurface, gardenKerb, gardenTerrainEdge, gardenSurveyY, hotelCourtDatum } from './_gardenGrade.js';
 import { relief, exteriorReliefEnabled } from '../banpo_relief.js';
 import { buildGardenPublicFork, publicForkRoads } from './_gardenPublicFork.js';
@@ -67,6 +71,7 @@ export const meta = {
 
 export function build(K) {
   const PI = Math.PI, ROAD = 0.04, WALK = 0.15;
+  placeGoterCrossing(K);
   const C = { steel: 0x48545d, silver: 0x9daab0, yellow: 0xf2c329, white: 0xf4f1e6, blue: 0x238bd2, green: 0x075847 };
   const byId = new Map(K.osm.roads.map(r => [r.id, r]));
   const roads = meta.claimRoads.filter(id => !gardenWays.includes(id)).map(id => byId.get(id)).filter(Boolean);
@@ -516,6 +521,8 @@ export function build(K) {
   }
   function pedestrianSignal(x,z,ux,uz){
     const site=curbSite(x,z,-ux,-uz);if(!site)return;[x,z]=site;
+    // These two old standalone heads share the roadview-aligned southeast mast.
+    if([[383.53,-248.49],[374.03,-243.41]].some(([px,pz])=>Math.hypot(x-px,z-pz)<.65))return;
     if(pedestrianSites.some(p=>Math.hypot(p[0]-x,p[1]-z)<1.4))return;pedestrianSites.push(site);
     const rot=Math.atan2(ux,uz),side=[uz,-ux],P=(a,y,b=.135)=>[x+side[0]*a+ux*b,y,z+side[1]*a+uz*b];
     K.cyl({x,z,y:WALK,r:.055,h:2.95,seg:8,mat:C.steel});
@@ -585,6 +592,7 @@ export function build(K) {
     let site=curbSite(x,z,nx,nz);
     if(!site)for(const t of [4,8,12]){site=curbSite(x-a.u*t,z-a.v*t,nx,nz);if(site)break;}
     if(!site)return;[x,z]=site;
+    if(Math.hypot(x-384.49,z+254.80)<.75)return;
     K.withTerrainAnchor(x, z, () => {
       K.cyl({x,z,y:WALK,r:.14,h:6.8,seg:10,mat:C.silver});
       K.box({x,z,y:WALK,w:.42,h:.22,d:.42,mat:0x8d9290});
@@ -733,30 +741,36 @@ export function build(K) {
     const near=nearest(x,z,roadId?[byId.get(roadId)]:surfaceRoads),rot=near.rot-PI/2+(island?PI:0),c=Math.cos(rot),s=Math.sin(rot),P=(u,v)=>({x:x+u*c+v*s,z:z-u*s+v*c});
     K.box({x,z,y:base,w:island?26:8,h:WALK,d:island?3.2:3.1,rotY:rot,mat:'streets-pavers'});
     const tactile=P(0,1.35);K.box({...tactile,y:base+WALK+.006,w:island?25:7.7,h:.014,d:.35,rotY:rot,mat:'streets-tactile',solid:false});
-    K.withTerrainAnchor(x,z,()=>{
-      K.box({x,z,y:base+2.9,w:6.6,h:.16,d:2.7,rotY:rot,mat:C.steel,solid:false});K.box({x,z,y:base+2.86,w:6.2,h:.025,d:1.9,rotY:rot,mat:emit(0xfff0d2),solid:false});
-      for(const u of [-3,0,3]) {const p=P(u,-.95), drop=relief(p.x,p.z)-relief(x,z);K.box({...p,y:base+WALK+drop,w:.1,h:2.77-drop,d:.1,mat:C.steel});}
-      for(const u of [-1.5,1.5]) {const p=P(u,-.98);K.box({...p,y:base+.65,w:2.85,h:2.02,d:.045,rotY:rot,mat:'glass',solid:true});}
-      for(const v of [-1.2,1.2]) {const p=P(0,v);K.sign([name,id?'정류소 '+id:'서울 시내버스'],{...p,y:base+2.61,w:5.5,h:.46,rotY:rot+(v<0?PI:0),bg:'#133b52',fg:'#fff'});}
-      const led=P(1.8,-.86);K.sign(['버스 도착 안내','노선 정보 확인'],{...led,y:base+2.03,w:1.7,h:.56,rotY:rot,bg:'#091718',fg:'#f2bd43',box:.05});
-      const map=P(-2.6,-.89);K.sign(['주변 안내','고속터미널역','반포한강공원'],{...map,y:base+1.52,w:.58,h:1.25,rotY:rot,bg:'#e8e7db',fg:'#254859'});
-    });
-    const bench=P(-.4,-.6);K.box({...bench,y:base+.57,w:2.9,h:.09,d:.48,rotY:rot,mat:'wood'});for(const u of [-1.5,.8]){const p=P(u,-.6);K.box({...p,y:base+WALK,w:.12,h:.42,d:.4,mat:C.steel});}
+    const photoMedian=id==='22019'||id==='22020';
+    if(photoMedian)placeMedianShelters(K,P,rot,id,base+WALK);
+    else {
+      K.withTerrainAnchor(x,z,()=>{
+        K.box({x,z,y:base+2.9,w:6.6,h:.16,d:2.7,rotY:rot,mat:C.steel,solid:false});K.box({x,z,y:base+2.86,w:6.2,h:.025,d:1.9,rotY:rot,mat:emit(0xfff0d2),solid:false});
+        for(const u of [-3,0,3]) {const p=P(u,-.95), drop=relief(p.x,p.z)-relief(x,z);K.box({...p,y:base+WALK+drop,w:.1,h:2.77-drop,d:.1,mat:C.steel});}
+        for(const u of [-1.5,1.5]) {const p=P(u,-.98);K.box({...p,y:base+.65,w:2.85,h:2.02,d:.045,rotY:rot,mat:'glass',solid:true});}
+        for(const v of [-1.2,1.2]) {const p=P(0,v);K.sign([name,id?'정류소 '+id:'서울 시내버스'],{...p,y:base+2.61,w:5.5,h:.46,rotY:rot+(v<0?PI:0),bg:'#133b52',fg:'#fff'});}
+        const led=P(1.8,-.86);K.sign(['버스 도착 안내','노선 정보 확인'],{...led,y:base+2.03,w:1.7,h:.56,rotY:rot,bg:'#091718',fg:'#f2bd43',box:.05});
+        const map=P(-2.6,-.89);K.sign(['주변 안내','고속터미널역','반포한강공원'],{...map,y:base+1.52,w:.58,h:1.25,rotY:rot,bg:'#e8e7db',fg:'#254859'});
+      });
+      const bench=P(-.4,-.6);K.box({...bench,y:base+.57,w:2.9,h:.09,d:.48,rotY:rot,mat:'wood'});for(const u of [-1.5,.8]){const p=P(u,-.6);K.box({...p,y:base+WALK,w:.12,h:.42,d:.4,mat:C.steel});}
+    }
     for(let i=0;i<4;i++){const p=P(-1.8+i*1.15,.4+(i%2)*.2);K.person(p.x,base+WALK,p.z,{shirt:[0xf1e3cc,0x283e55,0x914d3d,0x5e7967][i]});}
     const pole=P(4,0);K.cyl({...pole,y:base+WALK,r:.075,h:3.6,mat:C.steel});K.sign(['버스',id||name],{...pole,y:base+3.05,w:.9,h:.9,rotY:rot,bg:'#1768a5',fg:'#fff',twoSided:true});
     if(island){
       // street_01: paired narrow dark-steel shelters, upright information
       // screens, granite platform edge and black post-and-rail fencing.
-      const second=P(-8.3,0);
-      K.withTerrainAnchor(second.x,second.z,()=>{
-        K.box({...second,y:2.9,w:6.6,h:.16,d:2.7,rotY:rot,mat:0x2e383b,solid:false});
-        for(const u of [-11.3,-8.3,-5.3]){const a=P(u,-.95), drop=relief(a.x,a.z)-relief(second.x,second.z);K.box({...a,y:WALK+drop,w:.09,h:2.77-drop,d:.09,mat:C.steel});}
-        for(const u of [-9.8,-6.8]){const a=P(u,-.98);K.box({...a,y:.55,w:2.85,h:2.12,d:.035,rotY:rot,mat:'glass',solid:false});}
-      });
-      const seat=P(-8.3,-.55);K.box({...seat,y:.57,w:3.1,h:.09,d:.48,rotY:rot,mat:'wood'});
-      for(const u of [-11.4,2.9]){
-        const a=P(u,-.55);K.box({...a,y:.2,w:.8,h:2.45,d:.16,rotY:rot,mat:0x202c31,solid:false});
-        const screen=P(u,-.43);K.sign(['서울','버스 안내','고속터미널'],{...screen,y:1.55,w:.65,h:1.9,rotY:rot,bg:'#acd4dd',fg:'#183a50'});
+      if(!photoMedian){
+        const second=P(-8.3,0);
+        K.withTerrainAnchor(second.x,second.z,()=>{
+          K.box({...second,y:2.9,w:6.6,h:.16,d:2.7,rotY:rot,mat:0x2e383b,solid:false});
+          for(const u of [-11.3,-8.3,-5.3]){const a=P(u,-.95), drop=relief(a.x,a.z)-relief(second.x,second.z);K.box({...a,y:WALK+drop,w:.09,h:2.77-drop,d:.09,mat:C.steel});}
+          for(const u of [-9.8,-6.8]){const a=P(u,-.98);K.box({...a,y:.55,w:2.85,h:2.12,d:.035,rotY:rot,mat:'glass',solid:false});}
+        });
+        const seat=P(-8.3,-.55);K.box({...seat,y:.57,w:3.1,h:.09,d:.48,rotY:rot,mat:'wood'});
+        for(const u of [-11.4,2.9]){
+          const a=P(u,-.55);K.box({...a,y:.2,w:.8,h:2.45,d:.16,rotY:rot,mat:0x202c31,solid:false});
+          const screen=P(u,-.43);K.sign(['서울','버스 안내','고속터미널'],{...screen,y:1.55,w:.65,h:1.9,rotY:rot,bg:'#acd4dd',fg:'#183a50'});
+        }
       }
       function fence(start,end,v){const a=P(start,v),b=P(end,v);
         for(const y of [.48,.85,1.12])beam([a.x,y,a.z],[b.x,y,b.z],.028,0x293b3a);
@@ -769,7 +783,7 @@ export function build(K) {
     K.zone({name,floor:'지상',sub:id?'버스정류장 · '+id:'버스정류장',poly:rect(x,z,30,10),y0:base,y1:base+4,priority:4});
     return {rot,P};
   }
-  const stopSpecs=[[-70.27,-95.53,'고속터미널(중)','22020',true,1420100043],[6.55,-132.2,'고속터미널','',true,1420100042],[-89.24,-115.7,'고속터미널','',false],[-145.79,-94.99,'호남고속·신세계','',false],[-171.44,-45.71,'고속터미널호남선','22220',false],[137.14,155.74,'고속터미널역 3번출구','',false,593858541],[407.01,-117.03,'고속터미널','',false],[559.18,-333.88,'반포역','22018',true],[-400.22,-210.78,'반포대교남단·한강공원입구','',false],[-70.52,518.16,'서울성모병원·서울지방조달청','',false]];
+  const stopSpecs=[[-70.27,-95.53,'고속터미널(중)','22020',true,1420100043],[6.55,-132.2,'고속터미널','22019',true,1420100042],[-89.24,-115.7,'고속터미널','',false],[-145.79,-94.99,'호남고속·신세계','',false],[-171.44,-45.71,'고속터미널호남선','22220',false],[137.14,155.74,'고속터미널역 3번출구','',false,593858541],[407.01,-117.03,'고속터미널','',false],[559.18,-333.88,'반포역','22018',true],[-400.22,-210.78,'반포대교남단·한강공원입구','',false],[-70.52,518.16,'서울성모병원·서울지방조달청','',false]];
   for(const [x,z,n,id,isl,roadId] of stopSpecs)if(id!=='22220') {
     const base=roadId===593858541?gardenSurface(gardenStation(x,z),.4448*(x-71.26)+.89563*(z-143.25)):0;
     shelter(x,z,n,id,isl===true,roadId,base);
@@ -809,8 +823,9 @@ export function build(K) {
     K.zone({name:'고속터미널호남선',floor:'지상',sub:'버스정류장 · 22220',poly:stripPoly([P(-18,0).x,P(-18,0).z],[P(18,0).x,P(18,0).z],4),y0:0,y1:4,priority:4});
   }
   const busRoad=byId.get(1420100043),bq=nearest(-69,-96,[busRoad]);
-  K.vehicle({x:bq.x,z:bq.z,y:ROAD,rotY:bq.rot,kind:'cityBus',color:0x2367ac,label:'142 고속터미널'});
-  const westBus=nearest(8,-132,[byId.get(1420100042)]);K.vehicle({x:westBus.x,z:westBus.z,y:ROAD,rotY:westBus.rot,kind:'cityBus',color:0x2367ac,label:'360 고속터미널'});
+  placeSeoulCityBus(K,bq,ROAD,'142');
+  const westBus=nearest(8,-132,[byId.get(1420100042)]);
+  placeSeoulCityBus(K,westBus,ROAD,'360');
   const bus2=at(path(byId.get(523344143).pts),190,-5.3);K.vehicle({x:bus2.x,z:bus2.z,y:ROAD,rotY:bus2.rot,kind:'cityBus',color:0x4d9c50,label:'반포역'});
   buildG13Street(K, {beam, flat, clipped, rect, terminalStrip, streetSlab:real.slab});
   buildGsCaltex(K);
@@ -2084,7 +2099,7 @@ function buildHotelDrive(K,clipPavement) {
       const a=retainingEdge[i-1],b=retainingEdge[i],length=Math.hypot(b[0]-a[0],b[1]-a[1]);
       const openings=i===retainingEdge.length-1
         ? [{at:(25-22.2)*length/5,w:3.04*length/5,y0:5,y1:8.23}] : [];
-      openings.push(...garageWallOpening(a,b,-.09,height-.32));
+      openings.push(...garageWallOpening(a,b,-.09,height-.32),...diningWallOpening(a,b));
       K.wall(...a,...b,-.09,height-.32,{mat:side,thick:.08,solid,openings});
     }
   }
