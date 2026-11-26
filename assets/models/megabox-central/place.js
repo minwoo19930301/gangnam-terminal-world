@@ -74,8 +74,8 @@ export function boutiqueLobby(K,y){
     K.quad(key,[[a[0],y+base,a[1]],[b[0],y+base,b[1]],[b[0],y+base+height,b[1]],[a[0],y+base+height,a[1]]],[normal[0],0,normal[1]],[[left,0],[right,0],[right,1],[left,1]]);
   }
   for(const [i,x] of [-3.13,-1.8,-.47,.86,2.19].entries()){
-    box(x,-4.86,1.20,.08,1.45,.73,0x23292c);
-    panel(boards,x,-4.796,1.12,1.49,.65,i/5,(i+1)/5);
+    box(x,-4.86,1.20,.08,1.835,.46,0x23292c);
+    panel(boards,x,-4.796,1.12,1.855,.42,i/5,(i+1)/5);
   }
   for(const x of [-1.05,1.08]){
     box(x,-4.07,.43,.23,1.1,.13,0x222623);

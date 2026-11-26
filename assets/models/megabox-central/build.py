@@ -123,6 +123,66 @@ for cx in [-5.20,-3.76,-2.32,-.88,.56,2.00,3.44,4.88]:
 for level,depth,high,tone in [(2.32,.20,.07,'474540'),(2.38,.23,.27,'49443e'),(2.65,.28,.07,'685f54')]:
     block(0,4.77,level,12.02,depth,high,tone)
 finish('매표 로비 목재 몰딩과 처마')
+# The branch photo shows lit popcorn bays beneath the screens and a cool
+# illuminated two-shelf drinks case beside them. Open faces reveal the stock.
+import random
+rng = random.Random(1371)
+for cx in [-2.75, -.05]:
+    cy = 4.00
+    block(cx,cy,1.10,1.18,.55,.075,'79756b')
+    block(cx,cy+.24,1.175,1.12,.045,.54,'8b7356')
+    for side in [-1,1]:
+        block(cx+side*.558,cy,1.17,.035,.51,.57,'a29c89')
+        block(cx+side*.558,cy-.25,1.17,.030,.03,.57,'ddd4b6')
+    block(cx,cy,1.71,1.20,.56,.09,'595852')
+    block(cx,cy-.24,1.697,1.08,.035,.020,'fff0b3')
+    # A continuous irregular bed keeps the popcorn readable at middle distance;
+    # individual folded kernels interrupt the edge at close range.
+    tones=['f8d58d','edbe6a','e4b361','ffe2a3','d9a556']
+    rows=[]
+    for j in range(5):
+        row=[]
+        for i in range(13):
+            px=(i-6)/12; py=(j-2)/4
+            z=1.21+.18*max(0,1-2.6*px*px-2.8*py*py)+rng.uniform(-.028,.028)
+            row.append((cx+px*1.06,cy+py*.45,z))
+        rows.append(row)
+    for j in range(4):
+        for i in range(12):
+            face([rows[j][i],rows[j][i+1],rows[j+1][i+1],rows[j+1][i]],rng.choice(tones))
+    for row in rows:
+        for x,y,z in row:
+            r=rng.uniform(.024,.042)
+            crown=(x+.01,y,z+r*.85)
+            rim=[(x+r*math.cos(i*math.tau/5),y+r*math.sin(i*math.tau/5),z+rng.uniform(-.012,.008)) for i in range(5)]
+            for i in range(5):
+                face([rim[i],rim[(i+1)%5],crown],rng.choice(tones))
+    # Brushed steel lip, narrow viewing rail and a hanging popper kettle.
+    block(cx,cy-.267,1.175,1.12,.023,.068,'c5b69a')
+    block(cx-.18,cy+.06,1.57,.024,.025,.14,'b9b3a1')
+    block(cx-.18,cy+.06,1.49,.235,.15,.09,'938d81')
+    finish('매점 · 조명 팝콘 진열함 '+str(cx))
+cx,cy=2.02,4.06
+block(cx,cy+.17,1.10,1.26,.10,.75,'647773')
+for side in [-1,1]:
+    block(cx+side*.625,cy,1.10,.045,.46,.75,'9aa9a1')
+for shelf in range(2):
+    base=1.14+shelf*.31
+    block(cx,cy,base,1.22,.46,.045,'a1b0a7')
+    block(cx,cy-.226,base+.025,1.18,.012,.025,'def2da')
+    for i in range(13):
+        x=cx+(i-6)*.088
+        shade=['c49a53','c7814b','679b74','aecaba','729ba2'][i//3]
+        def bottle_ring(z,r):
+            return [(x+r*math.cos(k*math.tau/7),cy+r*math.sin(k*math.tau/7),z+base) for k in range(7)]
+        profile=[(.045,.034),(.08,.035),(.15,.035),(.20,.033),(.22,.019),(.24,.019)]
+        for (za,ra),(zb,rb),tone in zip(profile,profile[1:],[shade,'d1d4ae',shade,'adbfa8','d6dbc7']):
+            lo,hi=bottle_ring(za,ra),bottle_ring(zb,rb)
+            for k in range(7):face([lo[k],lo[(k+1)%7],hi[(k+1)%7],hi[k]],tone)
+block(cx,cy,1.805,1.30,.48,.063,'495759')
+block(cx,cy-.23,1.785,1.19,.025,.022,'e4ffe6')
+finish('매점 · 냉장 음료 진열장')
+
 # Preserve the channel lettering as its own editable mesh.
 font_path=Path('/System/Library/Fonts/Supplemental/Arial Bold.ttf')
 if not font_path.exists():
