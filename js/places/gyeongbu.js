@@ -14,6 +14,7 @@ import {placeChildrensAisle} from '../../assets/models/gyeongbu-childrens-aisle/
 import {placeSuitingAisle} from '../../assets/models/gyeongbu-suiting-aisle/model.js';
 import {placeWomensAisle} from '../../assets/models/gyeongbu-womens-aisle/model.js';
 import {placeHanbokShowroom} from '../../assets/models/gyeongbu-hanbok/model.js';
+import {placeBakingShop} from '../../assets/models/gyeongbu-baking/model.js';
 import { coachGlazing } from '../../assets/models/coach-cabin/windows.js';
 import { placeCutFlowers } from '../../assets/models/gyeongbu-cutflowers/model.js';
 import { placeWaitingBenches } from '../../assets/models/gyeongbu-seating/model.js';
@@ -1767,8 +1768,19 @@ export function build(K) {
     for(const [i,name] of ['금호(속리산)','오피스','천일사무실','천일영업소','동양영업소','브레드가든'].entries()){
       const a=282+i*5.3,b=a+5.3;
       for(const u of [a,b])lwall(u,2,u,13,NORTH_2F,7.9,{mat:0xe6e2da,thick:.12});
-      lwall(a,13,b,13,NORTH_2F,7.9,{mat:0xe6e2da,thick:.12,openings:[{at:2.65,w:1.6,y0:NORTH_2F,y1:6.8}]});
-      lzone(name,'2F','부속상가',a,2,b,13,NORTH_2F,NORTH_ROOF,4);
+      const baking=name==='브레드가든';
+      lwall(a,13,b,13,NORTH_2F,7.9,{mat:baking?doorGlass:0xe6e2da,thick:.12,openings:[{at:2.65,w:1.6,y0:NORTH_2F,y1:6.8}]});
+      lzone(name,'2F',baking?'비앤씨마켓 · 제과제빵 재료와 도구':'부속상가',a,2,b,13,NORTH_2F,NORTH_ROOF,4);
+      if(baking){
+        const u=(a+b)/2,hidden={skip:['top','bottom','n','s','e','w']};
+        for(const [x,d,w,deep,h] of [[-1.78,1.36,1.22,3.35,.92],[2.14,.19,.58,6.35,2.32],
+              [0,-5.64,4.36,.59,2.59],[-2.25,-3.03,.52,3.99,2.21]]){
+          lbox(u+x,8+d,NORTH_2F,w,deep,h,0,hidden);
+        }
+        ldetail({floor:'2F',y0:NORTH_2F,y1:7.72,poly:rect(a,2,b,13.16),name:'비앤씨마켓 · 제과제빵 도구 매장'},()=>{
+          const [x,z]=W(u,8);placeBakingShop(K,x,NORTH_2F,z,ROT);
+        });
+      }
     }
     ldetail({floor:'2F',y0:NORTH_2F,y1:NORTH_ROOF,poly:rect(130,2,314,22),name:'공식 부속상가 2층 식당가'},()=>{
       for(const [i,[name,no]] of foodUnits.entries()){
@@ -1783,6 +1795,7 @@ export function build(K) {
         lbox(u,8,y+3.67,4,.25,.04,'emit',{solid:false});
       }
       for(const [i,name] of ['금호(속리산)','오피스','천일사무실','천일영업소','동양영업소','브레드가든'].entries()){
+        if(name==='브레드가든')continue;
         const u=284.65+i*5.3;lsign(name,u,13.13,NORTH_2F+2.8,4.8,.38,'+v',{bg:'#5e695f',fg:'#fff'});
         // The west label is above the stair well. Keep the floor furniture in
         // the five solid bays; the first desk and shelf formerly hung in air.

@@ -37,7 +37,7 @@ function swapGeometry(target,source){
   target.boundingSphere=source.boundingSphere;
 }
 
-export function placeMarketDisplay(K,{name,file,at,angle,focus,silhouette,initialGeometry=starter}){
+export function placeMarketDisplay(K,{name,file,at,angle,focus,silhouette,initialGeometry=starter,frontage}){
   const T=K.THREE;
   let state=displays.get(file);
   if(!state){
@@ -45,14 +45,23 @@ export function placeMarketDisplay(K,{name,file,at,angle,focus,silhouette,initia
     displays.set(file,state);
   }
   const viewBounds=focus.map(b=>new T.Box3(new T.Vector3(...b.slice(0,3)),new T.Vector3(...b.slice(3))));
+  // From inside a neighbouring unit the shop can lie in the camera frustum
+  // behind an opaque party wall. Only its open/glazed front admits this sightline.
+  const sin=Math.sin(angle),cos=Math.cos(angle);
+  const visibleFrom=frontage&&((eye)=>{
+    const dx=eye.x-at[0],dz=eye.z-at[2];
+    const depth=dx*sin+dz*cos,width=dx*cos-dz*sin;
+    return depth>=frontage.front-.08||(Math.abs(width)<=frontage.halfWidth+.08&&depth>=frontage.back-.08);
+  });
   const root=placeSingleDetail(K,{name,file,at,angle,viewBounds,fallback:state.geometry,
-    fallbackMaterial:new T.MeshLambertMaterial({vertexColors:true}),range:16,exitRange:22,eyeHeight:1.6,floorTolerance:2.0});
+    fallbackMaterial:new T.MeshLambertMaterial({vertexColors:true}),range:16,exitRange:22,eyeHeight:1.6,
+    floorTolerance:2.0,closeVisibleFrom:visibleFrom});
   const [x,y,z]=at,ground=relief(x,z),eye=y+ground+1.6;
   const item=root.children[0],near=item.onBeforeRender;
   const frustum=new T.Frustum(),projection=new T.Matrix4(),world=new T.Matrix4();
   item.onBeforeRender=(renderer,scene,camera,...rest)=>{
     if(!state.ready&&!state.pending&&performance.now()>=state.retry&&Math.abs(camera.position.y-eye)<2&&
-       Math.hypot(camera.position.x-x,camera.position.z-z)<54){
+       Math.hypot(camera.position.x-x,camera.position.z-z)<54&&(!visibleFrom||visibleFrom(camera.position))){
       world.copy(root.matrixWorld);world.elements[13]+=ground;
       projection.multiplyMatrices(camera.projectionMatrix,camera.matrixWorldInverse).multiply(world);
       frustum.setFromProjectionMatrix(projection,camera.coordinateSystem);
