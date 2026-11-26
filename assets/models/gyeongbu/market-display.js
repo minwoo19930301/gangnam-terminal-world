@@ -37,11 +37,11 @@ function swapGeometry(target,source){
   target.boundingSphere=source.boundingSphere;
 }
 
-export function placeMarketDisplay(K,{name,file,at,angle,focus,silhouette}){
+export function placeMarketDisplay(K,{name,file,at,angle,focus,silhouette,initialGeometry=starter}){
   const T=K.THREE;
   let state=displays.get(file);
   if(!state){
-    state={geometry:starter(T),ready:false,pending:null,retry:0,failed:0};
+    state={geometry:initialGeometry(T),ready:false,pending:null,retry:0,failed:0};
     displays.set(file,state);
   }
   const viewBounds=focus.map(b=>new T.Box3(new T.Vector3(...b.slice(0,3)),new T.Vector3(...b.slice(3))));

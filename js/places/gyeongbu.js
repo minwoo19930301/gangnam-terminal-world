@@ -13,6 +13,7 @@ import {placeFixtureDisplay} from '../../assets/models/gyeongbu-fixtures/model.j
 import {placeChildrensAisle} from '../../assets/models/gyeongbu-childrens-aisle/model.js';
 import {placeSuitingAisle} from '../../assets/models/gyeongbu-suiting-aisle/model.js';
 import {placeWomensAisle} from '../../assets/models/gyeongbu-womens-aisle/model.js';
+import {placeHanbokShowroom} from '../../assets/models/gyeongbu-hanbok/model.js';
 import { coachGlazing } from '../../assets/models/coach-cabin/windows.js';
 import { placeCutFlowers } from '../../assets/models/gyeongbu-cutflowers/model.js';
 import { placeWaitingBenches } from '../../assets/models/gyeongbu-seating/model.js';
@@ -272,7 +273,7 @@ export function build(K) {
     const lo=westInset[i],hi=75.7-inset[i],c=Math.max(2.5,18-(inset[i]-4)*.72);
     return [[lo,0],[hi,0],[hi,154],[hi-c,159],[lo+c,159],[lo,154]].map(q=>W(...q));
   };
-  const uses=['대합실 · 매표소 · 승차홈','한복 · 혼수 · 커튼 · 홈패션','꽃도매상가 · 생화 · 조화 · 부자재','혼수 · 커튼 · 홈패션','입점 준비 중','의류 도매','의류 도매','의류 도매','고속사 사무실','포석정 · 육즙이흐르는각고기 · 고속터미널성당'];
+  const uses=['대합실 · 매표소 · 승차홈','한복 · 혼수 · 커튼 · 홈패션','꽃도매상가 · 생화 · 조화 · 부자재','한복 · 혼수 · 커튼 · 홈패션','입점 준비 중','의류 도매','의류 도매','의류 도매','고속사 사무실','포석정 · 육즙이흐르는각고기 · 고속터미널성당'];
   const pent=rect(27,42,50,82);
   const elevs=[
     // Walk Zq_230/1780: real opposing doors, with a continuous corridor between
@@ -2416,6 +2417,7 @@ export function build(K) {
     const wings = [[34.2, 1], [41.8, -1]];
     const centers = [100.5, 109.5, 118.5, 127.5];
     const localAisle=wholesaleAisles[key];
+    const hanbokAt=(u,v)=>key==='Curtains'&&u===wings[0][0]&&v===centers[2];
     if(localAisle){
       const hidden={skip:['top','bottom','n','s','e','w']};
       for(const [u,v,w,d,h] of localAisle.fixtures)lbox(u,v,floorY,w,d,h,0,hidden);
@@ -2435,6 +2437,19 @@ export function build(K) {
         floorY, d, w, h, 0, {skip:['top','bottom','n','s','e','w']});
       fixture(0,-1.3,5.2,.12,2.96);
       for (const a of [-2.54,2.54]) fixture(a,-.05,.12,2.6,2.96);
+      if(hanbokAt(u,v)){
+        // The public fitting display has two individual forms and a counter at
+        // its threshold. Its open middle still leads into the sample bay.
+        fixture(-1.86,.91,.84,.63,1.60);fixture(-.91,.89,.84,.63,1.60);
+        fixture(1.61,.83,1.36,.66,.88);
+        fixture(-.43,-.45,3.77,.71,1.48);fixture(2.31,-.17,.32,1.64,1.76);
+        lzone('고명재한복',floor,'한복 · 맞춤과 대여',u-1.24,v-2.50,u+1.28,v+2.50,floorY,floorY+2.84,4);
+        ldetail({floor,y0:floorY,y1:floorY+3,poly:rect(u-1.40,v-2.64,u+1.42,v+2.64),
+          name:'고명재한복 · 혼주 한복 매장'},()=>{
+          const [x,z]=W(u,v);placeHanbokShowroom(K,x,floorY,z,ROT+PI/2);
+        });
+        continue;
+      }
       if (key === 'Bedding') {
         fixture(0,-1.02,4.65,.48,2.33);
         fixture(-.85,.44,2.75,1.2,.70);
@@ -2461,7 +2476,7 @@ export function build(K) {
     ldetail({floor, y0:floorY, y1:floorY+3.2, poly:rect(32,97,44,131), name:label}, () => {
       const placements=[];
       for (const [u,side] of wings) for (const v of centers) {
-        if(localAisle&&v===centers[1])continue;
+        if((localAisle&&v===centers[1])||hanbokAt(u,v))continue;
         if(u!==sampleU || v!==sampleV)placements.push([u,v,floorY,side*PI/2]);
         const curtainSign=key==='Curtains' && u===sampleU && v===sampleV;
         lsign(curtainSign?'R A I N B O W  무지개장식':label,u+side*1.353,v,floorY+2.83,3.7,.26,side>0?'+u':'-u',
