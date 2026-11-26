@@ -343,7 +343,9 @@ export function build(K) {
   const lobbyGalleryVoid=rect(66,17,75.6,28);
   const hallVoids=[rect(54,33,62,48)];
   for(let i=1;i<ys.length;i++){
-    const p=floorPoly(i);K.slab(p,ys[i],{mat:i===2?'concrete':'tile',under:'gb_acoustic',holes:[...holes(p,ys[i]),...(i===1?[...hallVoids,lobbyGalleryVoid]:[])]});
+    const p=floorPoly(i),openings=[...holes(p,ys[i]),...(i===1?[...hallVoids,lobbyGalleryVoid]:[])];
+    K.slab(p,ys[i],{mat:i===2?'concrete':'tile',under:'gb_acoustic',holes:openings});
+    if(i===2||i===3)K.occludingSlab({poly:p,y:ys[i],holes:openings,eyeMin:ys[2]+.04,eyeMax:ys[3]-.04});
   }
   const northVoids=[rect(168,16.7,258,30),rect(118,16.7,140,30)];
   K.slab(NORTH,NORTH_2F,{mat:'tile',under:'gb_acoustic',holes:[...holes(NORTH,NORTH_2F),...northVoids]});

@@ -70,6 +70,14 @@ on the rendering thread, so split long galleries and rows of shops into separate
 partitions, stairs, escalators, elevators and junction corridors in the normal build, along with zones, spawns and
 interactions. These must be available as soon as the player enters an area.
 
+### Opaque floors and ceilings
+
+`K.occludingSlab({poly, holes, y, eyeMin, eyeMax})` registers a level, opaque surface for indoor play.
+Use the same world-space outline and openings as the rendered slab. Set the eye-height range to the room
+where the surface can occlude the view. Separate canopies and shop ceilings may use their own narrower
+ranges. The renderer keeps partially visible geometry around stairwells, windows and the edge of the slab.
+Registration only controls drawing. The corresponding `K.slab` supplies the floor and collision.
+
 ## Addresses
 
 Every place/floor has an address `#/<place>/<floor>?p=x,y,z,yaw` (the floor label of the zone you stand in). Walking into

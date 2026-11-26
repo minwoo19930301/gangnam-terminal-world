@@ -78,7 +78,7 @@ async function boot() {
   addEventListener('resize', () => { camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); });
 
   const phys = createPhysics();
-  const K = createKit(THREE, scene, { osm, phys, maxAniso: renderer.capabilities.getMaxAnisotropy(), maxTex: renderer.capabilities.maxTextureSize, low: LOW, keep: AREA.keep, keepDetail: AREA.keepDetail, streetView: AREA.id.startsWith('out:') });
+  const K = createKit(THREE, scene, { osm, phys, maxAniso: renderer.capabilities.getMaxAnisotropy(), maxTex: renderer.capabilities.maxTextureSize, low: LOW, keep: AREA.keep, keepDetail: AREA.keepDetail, streetView: AREA.id.startsWith('out:'), interiorView: AREA.id.startsWith('in:') });
   K._.atlas.start(); // sign rects are reserved during the build; text is painted once the fonts are in
   const timeControl = $('sky-mode'), timeLabel = $('sky-clock');
   let storedMode;

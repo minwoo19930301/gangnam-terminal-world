@@ -998,7 +998,7 @@ export function createTraffic(K, roadsInfo, n = 160) {
   }
   if (!cars.length) return null;
 
-  const fleets = [];
+  const fleets = [], deck = K._?.deckVisibility;
   for (const kind of ['car', 'taxi', 'bus', 'minibus']) {
     const list = cars.filter(c => c.kind === kind); if (!list.length) continue;
     const model = kind === 'bus' ? 'cityBus' : kind;
@@ -1006,12 +1006,24 @@ export function createTraffic(K, roadsInfo, n = 160) {
     const meshes = fleetInstances(THREE, model, list.length, {separateWheels:true});
     const [width,height,length] = vehicleSize(model);
     const radius = Math.hypot(width/2,height,length/2) + .75;
+    // Body/trim tilt with the suspension. Each wheel rotates around its own
+    // road contact; a sphere about that contact includes both wheel LODs.
+    let body, wheelRadius;
+    if (deck) {
+      for (const mesh of meshes.slice(0,2)) if (!mesh.geometry.boundingBox) mesh.geometry.computeBoundingBox();
+      body = meshes[0].geometry.boundingBox.clone().union(meshes[1].geometry.boundingBox);
+      wheelRadius = Math.max(...meshes[2].userData.lod.map(geometry => {
+        if (!geometry.boundingSphere) geometry.computeBoundingSphere();
+        return geometry.boundingSphere.center.length() + geometry.boundingSphere.radius;
+      }));
+    }
     const farWheels = new THREE.InstancedMesh(meshes[2].userData.lod[1],meshes[2].material,list.length*4);
     farWheels.name = 'traffic-' + kind + '-distant-wheels';
     meshes.push(farWheels);
     for (const c of list) {
       c.fleet = meshes; c.halfWheelbase = halfWheelbase; c.halfTrack = halfTrack;
       c.radius = radius; c.paint = new THREE.Color(c.color);
+      c.bodyBounds = body; c.wheelRadius = wheelRadius;
     }
     meshes.forEach((mesh, i) => {
       if (i === 2) mesh.name = 'traffic-' + kind + '-wheels';
@@ -1028,10 +1040,12 @@ export function createTraffic(K, roadsInfo, n = 160) {
   const asphalt = (x,z) => relief(x,z) + .03;
   const road = s => s.kind === 'ramp' && (s.tag === 'road' || s.tag === 'streets') && !s.move;
   const contacts = [], frustum = new THREE.Frustum(), projection = new THREE.Matrix4(), box = new THREE.Box3();
+  const bodyInWorld = new THREE.Box3();
   // All four road contacts stay within .45 m of the surveyed asphalt. Full
   // survey bounds allow the early test to cover both a slope and a level deck.
   const gradeLimit = maxReliefInBounds(-Infinity,-Infinity,Infinity,Infinity) + .5;
   function update(dt, camera) {
+    deck?.update(camera);
     if (camera) {
       camera.updateWorldMatrix(true,false);
       frustum.setFromProjectionMatrix(projection.multiplyMatrices(camera.projectionMatrix,camera.matrixWorldInverse));
@@ -1045,7 +1059,7 @@ export function createTraffic(K, roadsInfo, n = 160) {
       if (camera) {
         box.min.set(x-c.radius,-gradeLimit-c.radius,z-c.radius);
         box.max.set(x+c.radius,gradeLimit+c.radius,z+c.radius);
-        if (!frustum.intersectsBox(box)) continue;
+        if (!frustum.intersectsBox(box) || (deck?.active && deck.hides(box))) continue;
       }
       const dx = (b[0] - a[0]) / length, dz = (b[1] - a[1]) / length;
       const fx = dx * c.halfWheelbase, fz = dz * c.halfWheelbase;
@@ -1055,6 +1069,12 @@ export function createTraffic(K, roadsInfo, n = 160) {
       Q.setFromUnitVectors(up,V.set(-forward*dx-right*dz,1,-forward*dz+right*dx).normalize());
       Q.multiply(yaw.setFromAxisAngle(up,Math.atan2(dx,dz)));
       M.compose(V.set(x,height,z),Q,S);
+      if (deck?.active) {
+        bodyInWorld.copy(c.bodyBounds).applyMatrix4(M);
+        box.min.y = Math.min(bodyInWorld.min.y,Math.min(...contacts)-c.wheelRadius);
+        box.max.y = Math.max(bodyInWorld.max.y,Math.max(...contacts)+c.wheelRadius);
+        if (deck.hides(box)) continue;
+      }
       const [paint,trim,nearWheels,farWheels] = c.fleet;
       paint.setColorAt(paint.count,c.paint);
       paint.setMatrixAt(paint.count++,M); trim.setMatrixAt(trim.count++,M);

@@ -1,4 +1,5 @@
 import { streetBatchView } from './static-view.js';
+import { createDeckVisibility } from './deck-visibility.js';
 import { visitorInstances } from './visitors.js';
 import {visitorView} from './visitor-view.js';
 import { drawHardware } from '../assets/models/street-and-lift/draw.js';
@@ -17,10 +18,11 @@ import { pointInPoly, polyBBox, polyArea, distanceToPolygonSq } from './physics.
 export const LEVELS = { B1: -6, B2: -11, B3: -16, B4: -21, B5: -26, B6: -31 };
 const TILE = 320;
 
-export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096, low = false, keep = null, keepDetail = null, streetView = false } = {}) {
+export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096, low = false, keep = null, keepDetail = null, streetView = false, interiorView = false } = {}) {
   // Area loading (js/areas.js): keep(owner, x, y, z, ny) drops primitives/meshes/trees/people outside the loaded area,
   // keepDetail(group) skips lazy detail groups the area does not show. Both null = build everything.
-  const staticVisibility = streetBatchView(THREE,scene);
+  const deckVisibility = interiorView ? createDeckVisibility() : null;
+  const staticVisibility = streetBatchView(THREE,scene,deckVisibility);
   const streetVisibility = streetView ? staticVisibility : null;
   const clipVisitors=visitorView(THREE,scene,relief);
   const T = createTextures(THREE, { maxAniso });
@@ -480,12 +482,14 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     const mv = o.move ? [ux * o.move, uz * o.move] : null;
     phys.addRamp(ax, az, bx, bz, w / 2, ya, yb, { move: mv, tag: current });
   }
-  const fixedEscalators = [];
+  const fixedEscalators = [], indoorEscalators = [];
   const drawEscalator = createEscalatorRenderer(THREE, (mesh,moving) => {
     addMesh(mesh);
     if (streetVisibility) {
       if (moving) streetVisibility.flight(mesh,true,relief);
       else fixedEscalators.push(mesh);
+    } else if (deckVisibility) {
+      indoorEscalators.push({mesh,moving,bounds:null});
     }
   }, onFrame);
   function escalator(ax, az, bx, bz, o = {}) {
@@ -745,7 +749,8 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
         const nearWheel = Number(dx*dx+dz*dz < (close[i] === 1 ? 68 : 62)**2);
         if (close[i] !== nearWheel) { close[i] = nearWheel; changed = true; }
         if (group.shown) {
-          const shown = Number(!frustum || frustum.intersectsBox(group.bounds[i]));
+          const bounds = group.bounds[i];
+          const shown = Number(!frustum || (frustum.intersectsBox(bounds) && !(deckVisibility?.active && deckVisibility.hides(bounds))));
           if (group.shown[i] !== shown) { group.shown[i] = shown; bodyChanged = changed = true; }
         }
       }
@@ -778,7 +783,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
   let clippedParkedFleet = false;
   let roofX, roofY, roofZ;
   function updateParkedView(x, z, camera, refresh) {
-    if (camera && (under || streetView)) {
+    if (camera && (under || streetView || deckVisibility?.active)) {
       camera.updateWorldMatrix(true, false);
       projection.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
       if (!refresh && clippedParkedFleet && projection.equals(lastProjection)) return;
@@ -800,7 +805,11 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
       if (m.geometry !== g) m.geometry = g;
     }
   }
+  let lastDeckRevision = -1;
   function cull(x, y, z, force = false, camera = null) {
+    deckVisibility?.update(camera);
+    const deckChanged = !!deckVisibility && lastDeckRevision !== deckVisibility.revision;
+    lastDeckRevision = deckVisibility?.revision ?? 0;
     const refresh = force || Math.abs(x-last.x) + Math.abs(y-last.y) + Math.abs(z-last.z) >= 1.5 || ++last.n >= 30;
     // A step that leaves a narrow stair opening can be smaller than the tile
     // update interval. Check the actual eye position as it crosses that edge.
@@ -809,13 +818,23 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
       under = !!zone && INDOOR.has(zone.place) && phys.ceilingAbove(x, z, y, y+8) < Infinity;
       roofX = x; roofY = y; roofZ = z;
     }
-    updateParkedView(x, z, camera, refresh);
-    if (!refresh) return;
-    last = { x, y, z, n: 0 };
-    lodUpdate(x, z);
-    updateDetailLayers(x, y, z);
+    updateParkedView(x, z, camera, refresh || deckChanged);
+    if (!refresh && !deckChanged) return;
+    if (refresh) {
+      last = { x, y, z, n: 0 };
+      lodUpdate(x, z);
+      updateDetailLayers(x, y, z);
+    }
+    const deck = deckVisibility?.active ? deckVisibility : null;
+    if (deck || deckChanged) {
+      for (const flight of indoorEscalators) {
+        if (deck) flight.bounds ??= staticVisibility.flightBounds(flight.mesh,flight.moving,relief);
+        flight.mesh.visible = !deck || !deck.hides(flight.bounds);
+      }
+    }
     for (const m of cullList) {
       const d = m.userData, bb = d.bb;
+      if (deck && d.deckBounds && deck.hides(d.deckBounds)) { m.visible = false; continue; }
       if (d.cell === 'o' && !under) { m.visible = true; continue; }
       const dx = x < bb[0] ? bb[0] - x : x > bb[2] ? x - bb[2] : 0, dz = z < bb[1] ? bb[1] - z : z > bb[3] ? z - bb[3] : 0, dist = Math.hypot(dx, dz);
       m.visible = d.cell === 'o' ? dist < 120 : (under ? dist < 320 : dist < 100);
@@ -979,6 +998,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
         // A whole sales floor can share one material batch. Keep Three's ordinary
         // culling for small interior meshes, then clip long runs in the large ones.
         staticVisibility.attach(m,!streetView || s.cell !== 'o');
+        if (deckVisibility) m.userData.deckBounds = g.boundingBox;
       }
       scene.add(m); out.push(m); track(m, s.cell);
     }
@@ -1247,8 +1267,9 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     osmBuilding, osmFind, claim, rand, quad: (mat, p, n, uvs) => quad(spec(mat), p, n, uvs || [[0, 0], [1, 0], [1, 1], [0, 1]]), hpoly: (mat, poly, y, up = true, holes) => hpoly(spec(mat), poly, y, up, holes),
     triangle: (mat, points, normal, uv) => tri(spec(mat), points, normal, uv),
     pointInPoly, polyBBox, polyArea, orient,
+    occludingSlab: options => deckVisibility?.register(options),
     // internals for engine
-    _: { bounce, cull, cullList, finalize, details, detailErrors, ensureDetail, buildAllDetail, frameFns, interactables, spawns, zonesList, elevators, claims, mapMarks, groundHoles, stats, atlas, trees, people, setCurrent: (id, meta) => { current = id; if (meta) perPlace[id] = meta; } },
+    _: { bounce, cull, cullList, deckVisibility, finalize, details, detailErrors, ensureDetail, buildAllDetail, frameFns, interactables, spawns, zonesList, elevators, claims, mapMarks, groundHoles, stats, atlas, trees, people, setCurrent: (id, meta) => { current = id; if (meta) perPlace[id] = meta; } },
   };
   return K;
 }
