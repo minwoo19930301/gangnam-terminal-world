@@ -102,6 +102,14 @@ vec3 electricDiffuse(vec3 worldPos, vec3 surfaceNormal, float room) {
     float beam=smoothstep(.12,.58,toLight.y*inversesqrt(dist2));
     float fade=1.0-smoothstep(185.0,529.0,dist2);
     light+=vec3(1.0,.81,.60)*(lamp.w*50.0*beam*fade*incidence/dist2)*(1.0-room);
+    #ifdef STREET_TREE
+      // The coarse canopy represents many leaves facing different directions.
+      // Spread the lamp across its near side and let a little reach the bark.
+      vec3 direction=toLight*inversesqrt(dist2);
+      float wrap=.26+.74*smoothstep(-.72,.85,dot(surfaceNormal,direction));
+      float spill=smoothstep(-.32,.30,direction.y)*(1.0-smoothstep(100.0,256.0,dist2));
+      light+=vec3(1.0,.69,.38)*(lamp.w*36.0*spill*wrap/(dist2+9.0))*(1.0-room);
+    #endif
   }
   return light;
 }`;
