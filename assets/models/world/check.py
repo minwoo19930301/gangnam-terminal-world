@@ -19,7 +19,7 @@ assert all(
     for lib in libs
 )
 assert set(
-    p.resolve() for p in here.parent.glob("*/*.blend") if p.parent != here
+    p.resolve() for p in here.parent.rglob("*.blend") if here not in p.parents
 ) == set(Path(bpy.path.abspath(lib.filepath)).resolve() for lib in libs)
 for image in bpy.data.images:
     if not image.library and image.source == "FILE":

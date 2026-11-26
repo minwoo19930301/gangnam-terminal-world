@@ -1,0 +1,11 @@
+{
+  "floor": "8F",
+  "x": -31.23938,
+  "z": 59.50763,
+  "yaw": 34.78107,
+  "pitch": -18.0,
+  "meshName": "BromptonGangnamCycles",
+  "sourceBlend": "gallery.blend",
+  "sourceCollection": "SSG_8F_Brompton",
+  "nativeLabel": "브롬톤"
+}

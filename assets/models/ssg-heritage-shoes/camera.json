@@ -1,0 +1,11 @@
+{
+  "floor": "6F",
+  "x": -47.412675,
+  "z": 100.969561,
+  "yaw": -165.820321,
+  "pitch": -10.0,
+  "meshName": "BerwickGoodyearCalf",
+  "sourceBlend": "gallery.blend",
+  "sourceCollection": "SSG_6F_Berwick",
+  "nativeLabel": "버윅"
+}

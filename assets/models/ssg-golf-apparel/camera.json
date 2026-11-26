@@ -1,0 +1,11 @@
+{
+  "floor": "7F",
+  "x": -47.5136,
+  "z": -18.76366,
+  "yaw": -67.61589,
+  "pitch": -10.0,
+  "meshName": "BossGolfGangnamTextiles",
+  "sourceBlend": "gallery.blend",
+  "sourceCollection": "SSG_7F_BOSS_GOLF",
+  "nativeLabel": "보스골프"
+}

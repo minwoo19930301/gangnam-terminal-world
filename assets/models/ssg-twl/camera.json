@@ -4,5 +4,8 @@
   "z": 59.22507672178185,
   "yaw": -131.55067367093923,
   "pitch": -20,
-  "meshName": "TWLGlaze"
+  "meshName": "TWLGlaze",
+  "sourceBlend": "gallery.blend",
+  "sourceCollection": "SSG_9F_TWL",
+  "nativeLabel": "TWL"
 }

@@ -62,7 +62,7 @@ export function createEscalatorRenderer(T, addMesh, onFrame) {
     // A batch is already one short flight. Preserve the shader's single run
     // coordinate system even for a very long flight; area pruning still applies.
     mesh.userData.split = true;
-    addMesh(mesh);
+    addMesh(mesh,name==='Tread');
   }
 
   return function flight(low, high, width, steps, speed, color, map) {

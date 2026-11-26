@@ -43,11 +43,22 @@ for (const [id, { meta, builtZones }] of modules) {
       if (hit) cells.add(i + ',' + j); } };
   for (const zn of zones) rasterize(zn.poly);
   for (const bid of meta?.claims || []) for (const b of osm.buildings.filter(b => b.id === bid)) rasterize(b.poly);
+  const floors = [...new Set(zones.filter(z => z.place === id).map(z => z.floor || '1F'))];
+  // Earlier links advertised neighbouring floors built by this module. A
+  // unique owner can still honour those bookmarks after the directory is fixed.
+  const floorAliases = {};
+  for (const z of builtZones) {
+    const floor = z.floor || '1F';
+    if (z.place !== id && !floors.includes(floor)) {
+      const owners = new Set(builtZones.filter(v => (v.floor || '1F') === floor).map(v => v.place));
+      if (owners.size === 1) floorAliases[floor] = z.place;
+    }
+  }
   out[id] = {
     name: meta?.name || id,
     claims: meta?.claims || [], claimRoads: meta?.claimRoads || [], claimAreas: meta?.claimAreas || [],
     box: isFinite(x0) ? [r(x0), r(z0), r(x1), r(z1)] : null, y: isFinite(y0) ? [r(y0), r(y1)] : [0, 0],
-    floors: [...new Set(zones.map(z => z.floor || '1F'))], cells: [...cells],
+    floors, ...(Object.keys(floorAliases).length ? {floorAliases} : {}), cells: [...cells],
     junctions: JUNCTIONS.filter(j => j.a === id || j.b === id).map(j => ({ id: j.id, other: j.a === id ? j.b : j.a, x: r((j.pa[0] + j.pb[0]) / 2), z: r((j.pa[1] + j.pb[1]) / 2), y: j.y, also: j.alsoY || [] })),
   };
 }

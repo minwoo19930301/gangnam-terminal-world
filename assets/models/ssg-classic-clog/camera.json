@@ -1,0 +1,15 @@
+{
+  "floor": "8F",
+  "x": -62.2957,
+  "y": 35.82,
+  "z": 60.2865,
+  "yaw": 20.7819,
+  "pitch": -9,
+  "area": "in:shinsegae",
+  "gameView": "?area=in:shinsegae&pos=-62.2957,35.82,60.2865&yaw=20.7819&pitch=-9",
+  "meshName": "CrocsClassicClogs",
+  "sourceBlend": "gallery.blend",
+  "sourceCollection": "SSG_8F_Crocs",
+  "nativeLabel": "크록스",
+  "footwearView": "?area=in:shinsegae&pos=-63.4669,35.82,58.8913&yaw=20.7819&pitch=-31"
+}

@@ -4,5 +4,8 @@
   "z": 72.01883,
   "yaw": 89.219,
   "pitch": -11,
-  "meshName": "MarzoccoEnamel"
+  "meshName": "MarzoccoEnamel",
+  "sourceBlend": "gallery.blend",
+  "sourceCollection": "SSG_9F_LaMarzocco",
+  "nativeLabel": "라마르조코"
 }
