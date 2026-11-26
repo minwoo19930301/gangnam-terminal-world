@@ -1,3 +1,4 @@
+import { beanBrothers } from '../../assets/models/bean-brothers/room.js';
 import { OPEN_STAGE_FRONT } from './_junctions.js';
 import { loadArchitecture, placeArchitecture } from '../../assets/models/interior-architecture/model.js';
 import { buildFamilleAtrium } from './famille_atrium.js';
@@ -2851,7 +2852,10 @@ export function build(K) {
     // enlarged 1F viewing bay. The two dining rows retain all ten tables.
     const s0=id===10?177.2:id===5?181.3:Math.min(a[0],b[0]),s1=id===10?183.6:id===5?187.4:Math.max(a[0],b[0]),t0=a[1]+.12,t1=b[1]-.12;
     fam2Projected.push({id,name,s0,s1,t0,t1,front});
-    if([5,8,10].includes(id)){
+    if(id===4){
+      KNOWN.add(name);
+      beanBrothers(K,{P,RECT,lbox,lwall,lsign,R},s0,t0,s1,t1,Y2);
+    }else if([5,8,10].includes(id)){
       famOpenShell(s0,t0,s1,t1,Y2,id===5?0xe9ddc6:'ccFamBuffBrick');
       if(id===5){
         // Two glazed display windows flank the open entry, not a glass tunnel.
