@@ -185,7 +185,7 @@ export function createMap(opts) {
   const kindNames = { restaurant: '음식점', cafe: '카페', fast_food: '음식점', bakery: '베이커리', convenience: '편의점', pharmacy: '약국', bank: '은행', toilets: '화장실', cinema: '영화관', supermarket: '마트', clothes: '의류', hotel: '호텔' };
   const poiRecords = (osm.pois || []).filter(p => p.name && p.kind !== 'platform' && p.kind !== 'stop_position' && p.kind !== 'subway_entrance').map(p => ({ ...p, color: /cafe|bakery/.test(p.kind) ? '#9b6c43' : /restaurant|food/.test(p.kind) ? '#e38354' : /pharmacy|hospital/.test(p.kind) ? '#418e7a' : '#8b79ac', label: label(p.name, p.x, p.z, 11), type: kindNames[p.kind] || '장소', indoorPlace: placeAt(p.x, p.z)?.id }));
   const elevatorRecords = elevators.map(e => ({ ...e, label: label(e.name, e.x, e.z, 10) }));
-  const searchItems = [], searchKeys = new Set();
+  const searchItems = [], searchKeys = new Set(), destinationMarks = [];
   function addSearch(item) {
     const key = `${item.name}/${item.x}/${item.z}/${item.y}`; if (searchKeys.has(key)) return; searchKeys.add(key);
     item.match = `${item.name} ${item.group || ''} ${item.floor || ''} ${item.sub || ''}`.normalize('NFKC').toLocaleLowerCase().replace(/\s/g, ''); searchItems.push(item);
@@ -195,6 +195,9 @@ export function createMap(opts) {
   for (const [place, entry] of Object.entries(opts.directory || {})) {
     for (const arrival of entry.mapDestinations || []) {
       addSearch({...arrival, place, group:entry.name, type:'매장 입구', mapDestination:true, exact:true});
+      destinationMarks.push({...arrival, place,
+        label: label(arrival.name, arrival.x, arrival.z, 12, true),
+        compactLabel: label(arrival.name, arrival.x, arrival.z, 10, true)});
     }
   }
   for (const L of LANDMARKS) addSearch({ name: L.name, sub: L.sub, x: L.x, z: L.z, y: L.floorY ?? 0, type: '핵심 지점', exact: true });
@@ -299,6 +302,23 @@ export function createMap(opts) {
     pixelTransform(ctx, v); rectCount = 0; labelFrame++;
     // Reserve the live position marker before placing text.
     reserve(sx(v, player.x, player.z), sy(v, player.x, player.z), 24, 28, v);
+    // The named arrival and the room centroid can be far apart. Label the
+    // arrival before general rooms and leave the player arrow readable beside it.
+    if (indoor) for (const entry of destinationMarks) {
+      const onFloor = isMini ? Math.abs(entry.y - player.y) < 1 :
+        layer === 'floor' ? entry.place === floorPlace?.id && entry.floor === floorLabel : entry.floor === 'B1';
+      if (!onFloor) continue;
+      const x = sx(v, entry.x, entry.z), y = sy(v, entry.x, entry.z);
+      if (x < 0 || x > v.w || y < 0 || y > v.h) continue;
+      if (reserve(x,y,9,9,v)) {
+        ctx.beginPath(); ctx.arc(x,y,4.5,0,TAU); ctx.fillStyle='#b65a23'; ctx.fill();
+        ctx.strokeStyle='#fff'; ctx.lineWidth=1.5; ctx.stroke();
+      }
+      const compact = isMini && v.w < 150;
+      const caption = compact ? entry.compactLabel : entry.label;
+      const offset = compact ? 26 : -32;
+      if (!textLabel(ctx, v, caption, '#90451c', offset)) textLabel(ctx, v, caption, '#90451c', -offset);
+    }
     if (indoor) for (const r of records.zoneRecords) if (activeZone(r, isMini) && visible(r, v) && zoneFits(r, v)) textLabel(ctx, v, r.label, '#176d60');
     for (const p of placeMarks) if (!indoor || v.scale > 1) textLabel(ctx, v, p.label, indoor ? '#637873' : '#98663e');
     for (const e of exitRecords) {
@@ -380,7 +400,7 @@ export function createMap(opts) {
   }
   const resizeObserver = new ResizeObserver(resize); resizeObserver.observe(work); addEventListener('resize', resize); link.addEventListener('load', resize);
   document.fonts?.ready.then(() => { for (const l of allLabels) { metric.font = l.font; l.width = metric.measureText(l.text).width; } dirty = true; miniClock = 1; });
-  const allLabels = [...areaRecords, ...buildingRecords, ...roadRecords, ...zoneRecords, ...placeMarks, ...poiRecords, ...busRecords, ...elevatorRecords].map(r => r.label).filter(Boolean);
+  const allLabels = [...areaRecords, ...buildingRecords, ...roadRecords, ...zoneRecords, ...placeMarks, ...poiRecords, ...busRecords, ...elevatorRecords, ...destinationMarks].map(r => r.label).filter(Boolean).concat(destinationMarks.map(r => r.compactLabel));
   function announce(message) { status.textContent = message; status.classList.add('show'); clearTimeout(statusTimer); statusTimer = setTimeout(() => status.classList.remove('show'), 2600); }
   function changeMini(delta) { miniZoomIndex = clamp(miniZoomIndex + delta, 0, miniScales.length - 1); miniClock = 1; }
   function constrainView() { view.x = clamp(view.x, bounds[0] - 200, bounds[2] + 200); view.z = clamp(view.z, bounds[1] - 200, bounds[3] + 200); }
