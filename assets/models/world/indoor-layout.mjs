@@ -29,6 +29,7 @@ import {relief} from '../../../js/banpo_relief.js';
 // Scene object (or a uniquely identifying child) -> editable native source.
 // Geometry decoder matrices and decorative LOD offsets live *below* the placement.
 const sources = [
+  ['centralcity','지상','central-plaza-seatwall/seatwall.blend','센트럴시티 정문 · 동측 석재 앉음벽과 생울타리','CentralCityEastSeatWall'],
   ...[['서쪽 녹청 구체','CentralCityPatinatedSphere'],['가운데 갈색 구체','CentralCityBronzeSphere'],['동쪽 잔물결 구체','CentralCityRippledSphere']]
     .map(([label,collection])=>['centralcity','지상','central-plaza-spheres/spheres.blend','센트럴시티 광장 · '+label,collection]),
   ['centralcity','지상','central-plaza-lantern/lantern.blend','센트럴시티 조각 광장 · 두 갈래 보행등','CentralCityTwinLantern'],

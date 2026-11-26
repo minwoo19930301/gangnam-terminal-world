@@ -2343,8 +2343,38 @@ export function build(K) {
     },swatch.mm.map(mm=>mm/1000),{lazy:true});
     K.hpoly('ccPlazaGranite',RECT(-50,0,-26.6,38.5),.018,true,null,R);
     for(const [t0,t1] of [[0,14],[25,38]]){
-      lbox(-27.5,(t0+t1)/2,1.8,t1-t0,0,.42,gateStone);
-      lbox(-27.5,(t0+t1)/2,1.4,t1-t0-.4,.43,.22,0x40533b,{solid:false});
+      if(t0===0){
+        lbox(-27.5,(t0+t1)/2,1.8,t1-t0,0,.42,gateStone);
+        lbox(-27.5,(t0+t1)/2,1.4,t1-t0-.4,.43,.22,0x40533b,{solid:false});
+      }else{
+        // The existing eastern bed has granite seating courses and a rail of clipped hedge behind them.
+        const mid=(t0+t1)/2,[cx,cz]=P(-27.5,mid),poly=RECT(-28.4,t0,-26.6,t1);
+        const name='센트럴시티 정문 · 동측 석재 앉음벽과 생울타리';
+        K.phys.addSurface(poly,.42,{tag:'centralcity'});
+        K.phys.addSurface(RECT(-27.94,t0+.19,-26.7,t1-.19),.655,{tag:'centralcity'});
+        K.detail({name,floor:'지상',poly,y0:0,y1:1.12,visualOnly:true,silhouetteDistance:155,
+          visibleFrom:(x,y,z)=>y>-1 && y<11 && (x-cx)*AX+(z-cz)*AZ<4},kit=>{
+          const T=kit.THREE,ground=relief(cx,cz);
+          const parts=[];
+          function course(length,depth,across,bottom,height,color){
+            const q=new T.BoxGeometry(length,height,depth).translate(0,bottom+height/2,across);
+            const points=q.attributes.position,colors=[],tone=new T.Color(color);
+            for(let i=0;i<points.count;i++){
+              const [x,z]=P(-27.5+points.getZ(i),mid+points.getX(i));
+              points.setY(i,points.getY(i)+relief(x,z)-ground);colors.push(tone.r,tone.g,tone.b);
+            }
+            q.setAttribute('color',new T.Float32BufferAttribute(colors,3));q.computeVertexNormals();parts.push(q);
+          }
+          course(13,1.8,0,0,.15,0x9f806f);course(13,1.8,0,.15,.27,0xb3947e);
+          course(12.57,1.2,.19,.42,.068,0x50483f);course(12.62,1.24,.18,.488,.167,0xb99b85);
+          course(12.3,.98,.20,.655,.325,0x4a6038);
+          const silhouette=mergeGeometries(parts);for(const part of parts)part.dispose();
+          const painted=map=>{const mat=new T.MeshLambertMaterial({vertexColors:true,map});mat.defines={BANPO_RIGID:1};return mat;};
+          placeSingleDetail(kit,{name,file:'../central-plaza-seatwall/seatwall.glb',at:[cx,0,cz],angle:R,rigidGround:ground,
+            fallback:silhouette,fallbackMaterial:painted(null),range:26,exitRange:31,floorTolerance:5,eyeHeight:.6,
+            loadSurface:async file=>{const [surface]=await loadArchitecture(file);surface.material=painted(surface.material.map);return [surface];}});
+        });
+      }
       for(const [f,h] of [[.2,5.8],[.7,6.4]]){
         const q=P(-27.5,t0+(t1-t0)*f);K.tree(...q,{y:.45,h,kind:'zelkova'});
       }
