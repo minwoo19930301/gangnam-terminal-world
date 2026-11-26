@@ -3163,7 +3163,10 @@ export function build(K) {
     // Its soffit is high enough to retain the broad uninterrupted 1F opening.
     const stageS = (OPEN_STAGE_FRONT.x - OX) * AX + (OPEN_STAGE_FRONT.z - OZ) * AZ;
     lbox(stageS,39.72,OPEN_STAGE_FRONT.w+.2,.62,7.8,.55,0xe9e5dc,{solid:false});
-    lzone(83.8,6.2,138,40.2,{name:'호남선 대합실',floor:'1F',sub:'표사는 곳 · 승차홈 · 스위트 파크 연결',y0:0,y1:8.5,priority:10});
+    // Use the existing public ticket-hall approach; the zone centroid sits behind a shop island.
+    const [arrivalX,arrivalZ]=P(124.5,28.5);
+    lzone(83.8,6.2,138,40.2,{name:'호남선 대합실',floor:'1F',sub:'표사는 곳 · 승차홈 · 스위트 파크 연결',y0:0,y1:8.5,priority:10,
+      mapArrival:{x:arrivalX,z:arrivalZ,yaw:R}});
 
     // Back-fill the former Open Stage/Shake Shack strip. These structures are
     // terminal circulation, not another copy of the central hall under JW.
@@ -4399,16 +4402,25 @@ function hallR20(K) {
   // plaza store and right into a light-wood passage. Its grade is fitted here
   // to meet the separately registered restaurant floor and lift apron.
   const hosEntryFloor={tex:'wood',color:0xc7a67d,gloss:.25};
-  const flatPassage=[[37.8,8.8,40.7,12],[38.05,11.95,40.7,25.6],
-    [33.3,23.2,38.05,25.6],[33.3,25.6,35.7,28.95]];
-  const entryZone=(poly,name)=>K.zone({
+  const flatPassage=[
+    [[37.8,8.8,40.7,12]],[[38.05,11.95,40.7,25.6]],
+    [[33.3,23.2,38.05,25.6],[34.5,24.4,R-PI/2]],
+    [[33.3,25.6,35.7,28.95],[34.5,27.6,R+PI]],
+  ];
+  const entryZone=(poly,name,mapArrival)=>K.zone({
     name,floor:'1F',sub:'센트럴시티 중앙홀 · 윤해운대갈비',
-    poly,y0:0,y1:3.35,priority:13
+    poly,y0:0,y1:3.35,priority:13,mapArrival
   });
-  for(const r of flatPassage){
-    const poly=RECT(...r);
+  for(const [bounds,view] of flatPassage){
+    const poly=RECT(...bounds);
     K.slab(poly,.008,{mat:hosEntryFloor,under:false,ceil:false,thick:.12});
-    entryZone(poly,'하우스 오브 신세계 입구');
+    // The last two sections turn twice. A map visitor looks along the next open leg.
+    let mapArrival;
+    if(view){
+      const [s,t,yaw]=view,[x,z]=P(s,t);
+      mapArrival={x,z,yaw};
+    }
+    entryZone(poly,'하우스 오브 신세계 입구',mapArrival);
   }
   const passageLo=35.7,passageHi=69.08,mid=27.6,sideA=26.25,sideB=28.95;
   K.ramp(...P(passageLo,mid),...P(passageHi,mid),{w:sideB-sideA,ya:.008,yb:2.1,mat:hosEntryFloor,rails:false});
@@ -5078,12 +5090,16 @@ function hosUpperR20(K) {
     tube([a,b,YM+1.055],[c,d,YM+1.055],.055,0x9a7f52);
   }
   const liftFloor={mat:{tex:'marble',color:0xe5d9c1,gloss:.5},under:0xe8dec9,thick:.2};
+  // Stand in front of the elevator and look along the public shopping aisle on each floor.
+  const [apronX,apronZ]=Q(-13,9.8);
+  const apronView={x:apronX,z:apronZ,yaw:R+PI};
   for(const [y,floor,sub] of [[Y1,'1F','와인셀러 · 레스토랑'],[YM,'1M','아트 앤 라이프 · 카페']]){
     // Meet the mezzanine edge so the lift aisle has no slot along its floor.
     const approach=QR(-25,y===Y1?9.05:outerEast,6.1,12.5);
     for(const poly of [approach,pad]){
       K.slab(poly,y,liftFloor);
-      K.zone({name:'하우스 오브 신세계',floor,sub,poly,y0:y,y1:y+3.4,priority:10});
+      const mapArrival=poly===pad ? apronView : undefined;
+      K.zone({name:'하우스 오브 신세계',floor,sub,poly,y0:y,y1:y+3.4,priority:10,mapArrival});
     }
   }
   for (const y of [Y1,YM]) {
