@@ -204,7 +204,7 @@ export function createMap(opts) {
         compactLabel: label(arrival.name, arrival.x, arrival.z, 10, true)});
     }
   }
-  for (const L of LANDMARKS) addSearch({ name: L.name, sub: L.sub, aliases: L.aliases, exteriorView: L.exteriorView, x: L.x, z: L.z, y: L.floorY ?? 0, type: '핵심 지점', exact: true });
+  for (const L of LANDMARKS) addSearch({ name: L.name, sub: L.sub, aliases: L.aliases, exteriorView: L.exteriorView, arrival: L.arrivalFloor ? L : undefined, floor:L.arrivalFloor, x: L.x, z: L.z, y: L.floorY ?? 0, type: '핵심 지점', exact: true });
   for (const s of spawns) addSearch({ ...s, type: '출발 지점', exact: true });
   for (const p of placeMarks) addSearch({ name: p.name, x: p.x, z: p.z, y: p.y, place: p.id, type: '탐색 장소' });
   for (const r of zoneRecords) addSearch({ name: r.source.name, sub: r.source.sub, floor: r.floor, x: r.x, z: r.z, y: r.y0, place: r.place, zone: r.source, type: '층별 공간', group: placeIndex.get(r.place)?.name });
@@ -468,6 +468,10 @@ export function createMap(opts) {
   // Explicit destinations use that floor's ceiling, never the roof above it.
   // Raw double clicks follow the world's highest walkable support at maxY=200.
   function teleportTo(target, ground) {
+    if (!ground && target.arrival && opts.openLandmark?.(target.arrival)) {
+      if (open) toggle();
+      return;
+    }
     const view = !ground && target.exteriorView;
     const x = clamp(view?.x ?? target.x, bounds[0], bounds[2]), z = clamp(view?.z ?? target.z, bounds[1], bounds[3]);
     const yaw = view ? view.yaw * Math.PI / 180 : target.yaw;
