@@ -1,0 +1,14 @@
+{
+  "floor": "8F",
+  "x": -68.13048,
+  "y": 35.8,
+  "z": 22.50607,
+  "yaw": 110.85018,
+  "pitch": 0,
+  "meshName": "BrownyardOak",
+  "sourceBlend": "gallery.blend",
+  "sourceCollection": "SSG_8F_Brownyard",
+  "nativeLabel": "브라운야드",
+  "area": "in:shinsegae",
+  "gameView": "?area=in:shinsegae&pos=-68.13048,35.8,22.50607&yaw=110.85018&pitch=0"
+}

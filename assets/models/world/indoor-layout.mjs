@@ -216,6 +216,8 @@ const sources = [
       ['포석정 · 불판과 상차림','포석정 · 불판과 상차림'],['경부선 옥상 · 대형 청색 채널 글자','청색 옥상 대형 간판']]
     .map(([mesh,native])=>['gyeongbu','10F','gyeongbu-rooftop/poseokjeong-rooftop.blend',mesh,native]),
   ['jwmarriott','7F','margaux-chair/chair.blend','더 마고 그릴 · 다이닝 가죽 의자','MargauxDiningChair'],
+  ...[['GardenSteel','프레임과 천장'],['GardenGlass','홈유리'],['GardenLight','펜던트 발광면'],['GardenFloor','카펫과 석재']].map(([collection,label])=>
+    ['jwmarriott','7F','margaux-garden-window/window.blend','더 마고 그릴 · 정원창 '+label,collection]),
   ...['병 선반','와인 진열 카트','나무 와인 상자','벽돌 궁륭과 석재 바닥'].map(label=>{
     const name='더 마고 그릴 · '+label;
     return ['jwmarriott','7F','margaux-cellar/cellar.blend',name,name];
