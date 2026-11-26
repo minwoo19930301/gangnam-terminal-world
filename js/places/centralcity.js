@@ -4275,6 +4275,13 @@ function hallR20(K) {
   lwall(38,-12,38,-5,0,3.24,{mat:0xe1dbd1,thick:.08});
   zone('르자당 센트럴시티점','1F',33,-12,38,-5,0,3.28,'LEJARDIN · 122-1호',14);
   placeLejardin(K,P,R);
+  // The public aisle faces the florist's lettered entrance and flower display.
+  {
+    const [x,z]=P(27.32,-7.55),[doorX,doorZ]=P(33.2,-8.45);
+    K.spawn({name:'르자당 센트럴시티점 입구',destinationId:'lejardin',
+      aliases:['르자당 꽃집','Le Jardin','센트럴시티 꽃집','122-1호'],
+      place:'centralcity',floor:'1F',mapDestination:true,x,y:0,z,yaw:Math.atan2(x-doorX,z-doorZ)});
+  }
   // Units 20/21 are distinct from STARBUCKS central F1. Retain their fitout by the east passage.
   storefront('스타벅스',-11,18,-1,26,'E',0,'cafe');
   storefront('SK텔레콤',5,23,12,29,'E',0,'store');
