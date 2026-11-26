@@ -92,7 +92,21 @@ def head(label,x,z,sz):
             face_disc('힌지 나사',x+u*sz*.414,-.111,z+v*sz*.387,.007,.009,'edge',6)
 group('walker')
 for i,z in enumerate([.189,.530,.871]):
-    head('보행등 '+str(i+1)+'단',0,z,.342)
+    if i:
+        head('보행등 '+str(i+1)+'단',0,z,.342)
+    else:
+        # The time display in the January view is a rectangular face with a folded hood.
+        B('잔여시간 표시기 외함',0,.016,z-.171,.342,.196,.342,'shade',.025)
+        B('사각 표시창 테두리',0,-.085,z-.135,.305,.053,.270,'rim',.012)
+        B('차광판 윗면',0,-.165,z+.118,.309,.144,.012,'shade',.003)
+        for side in (-1,1):
+            x=side*.15
+            prism('차광판 접힌 옆면',[(x,-.105),(x+side*.008,-.105),
+                  (x+side*.008,-.232),(x,-.232)],z+.085,z+.122,'shade')
+        R('하부 고정대', [(-.115,.04,.033),(-.115,.04,-.055),(-.095,.04,-.076),
+                       (.097,.04,-.076),(.115,.04,-.055),(.115,.04,.033)],.019,'shade',8)
+        R('아래로 휘어지는 검은 인입선',[(.103,.06,.012),(.111,.067,-.084),(.092,.081,-.171),
+                       (.052,.105,-.207),(.005,.146,-.190),(-.030,.19,-.118)],.009,'rubber',8)
 B('후면 행거',0,.135,.15,.109,.121,.74,'edge',.015)
 for h in [.27,.80]:R('주물 받침',[(0,.087,h),(0,.192,h),(0,.201,h+.058)],.034,'shade')
 group('four')
@@ -117,8 +131,11 @@ def numbers(x,y):
         if any(stroke(x,y,*p,.042) for p in [(c-.15,.56,c+.15,.56),(c-.15,0,c+.15,0),(c-.15,-.56,c+.15,-.56),
             (c-.19,.50,c-.19,.07),(c+.19,.50,c+.19,.07),(c-.19,-.07,c-.19,-.50),(c+.19,-.07,c+.19,-.50)]):return True
     return False
-def matrix_face(label,x,z,r,predicate,ink):
-    face_disc(label+' · 검은 다공 렌즈',x,-.002,z,r,.010,'optic',40)
+def matrix_face(label,x,z,r,predicate,ink,rectangular=False):
+    if rectangular:
+        B(label+' · 사각 표시 유리',x,.003,z-.108,.279,.010,.216,'optic',.006)
+    else:
+        face_disc(label+' · 검은 다공 렌즈',x,-.002,z,r,.010,'optic',40)
     verts=[];faces=[];glow=[]
     for i in range(-14,15):
         for j in range(-14,15):
@@ -134,7 +151,7 @@ def matrix_face(label,x,z,r,predicate,ink):
 group('pixels')
 matrix_face('서 있는 사람',0,.816,.135,lambda x,y:person(x,y,False),'red')
 matrix_face('걷는 사람',0,.475,.135,lambda x,y:person(x,y,True),'greenoff')
-matrix_face('잔여 시간',0,.134,.135,numbers,'greenoff')
+matrix_face('잔여 시간',0,.134,.135,numbers,'greenoff',rectangular=True)
 group('lens')
 for i in range(4):
     x=(i-1.5)*.368
