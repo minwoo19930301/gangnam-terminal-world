@@ -4,5 +4,8 @@
   "z": 56.51224045974328,
   "yaw": 29.783130756195895,
   "pitch": -19,
-  "meshName": "StokkeChairs"
+  "meshName": "StokkeChairs",
+  "sourceBlend": "gallery.blend",
+  "sourceCollection": "SSG_10F_Stokke",
+  "nativeLabel": "스토케"
 }

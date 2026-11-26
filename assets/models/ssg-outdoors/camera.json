@@ -4,5 +4,8 @@
   "z": 69.27893529401399,
   "yaw": 112.37882518492478,
   "pitch": -9,
-  "meshName": "ArcOutdoorEquipment"
+  "meshName": "ArcOutdoorEquipment",
+  "sourceBlend": "gallery.blend",
+  "sourceCollection": "SSG_8F_Arcteryx",
+  "nativeLabel": "아크테릭스"
 }

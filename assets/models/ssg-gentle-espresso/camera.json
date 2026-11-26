@@ -4,5 +4,8 @@
   "z": 82.87884860283602,
   "yaw": 37.47801839709586,
   "pitch": -42,
-  "meshName": "HaoMeal"
+  "meshName": "HaoMeal",
+  "sourceBlend": "meal.blend",
+  "sourceCollection": "SSG_11F_SalonDeHaoSum",
+  "nativeLabel": "살롱드호우섬"
 }
