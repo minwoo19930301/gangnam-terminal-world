@@ -1,3 +1,4 @@
+import {sweetParkCoffeeThreshold} from '../sweetpark-threshold/model.js';
 import {gangnamMatchaStation} from '../osulloc-matcha/model.js';
 import {saltHouseGangnam} from '../salt-house-gangnam/model.js';
 import {nespressoDisplay} from '../nespresso-gangnam/model.js';
@@ -52,6 +53,7 @@ export function eastShoppingArcade(K,y){
   saltHouseGangnam(K,y);
   gangnamCoffeebar(K,y);
   gangnamMatchaStation(K,y);
+  sweetParkCoffeeThreshold(K,y);
   // Retain the black south boundary of the unlabelled bay east of Osulloc.
   wall([1019,northFront],[1032,northFront]);
   // The NW edge follows the clipped display corners of Koryodang and Lush.
