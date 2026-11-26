@@ -5,11 +5,15 @@ B('게임 바닥 위 타일 줄눈',0,D/2,.010,W,D,.020,'grout')
 for row in range(10):
     for i in range(7):B('큰 회색 바닥 타일',(i-3)*.63,(row+.5)*.616,.031,.628,.614,.010,('floor','tileAlt','floor','floor')[(i+row)%4])
 # Zone 1 shows G-012 extending north behind G-011. Only the photographed dining room is fitted.
-B('공단 도면의 ㄴ자 후면 바닥',-3.838,5.193,.018,3.235,2.014,.022,'floor')
-B('옆 점포 뒤쪽으로 꺾인 천장',-3.838,5.193,2.809,3.236,2.014,.076,'cream')
-B('도면의 반환부 후벽',-3.838,D-.035,.04,3.236,.07,2.77,'wall')
-B('옆 점포와 맞대는 측면',-3.838,4.217,.040,3.236,.065,2.77,'wall')
-B('반환부의 북측 경계',-5.42,5.193,.04,.073,2.014,2.77,'wall')
+# The permit gives total area. The unphotographed rear contains only the envelope.
+rear=layout['rear'];depth=rear['depth'];north=rear['north'];turn=rear['turn'];left=-W/2
+for label,x0,x1,d0,d1 in [('점포 뒤 ㄴ자 반환부',north,left,turn,depth),('카운터 뒤 등록 구획',left,-left,D,depth)]:
+    B(label+' 바닥',(x0+x1)/2,(d0+d1)/2,.018,x1-x0,d1-d0,.022,'floor')
+    B(label+' 천장',(x0+x1)/2,(d0+d1)/2,2.809,x1-x0,d1-d0,.076,'cream')
+B('등록 면적에 맞춘 일자 후면',(north-left)/2,depth-.035,.04,-left-north,.07,2.77,'wall')
+B('옆 점포와 맞대는 측면',(left+north)/2,turn+.032,.04,left-north,.064,2.77,'wall')
+B('반환부의 북측 경계',north+.032,(turn+depth)/2,.04,.064,depth-turn,2.77,'wall')
+B('창 끝에서 이어지는 외벽',-left-.032,(D+depth)/2,.04,.064,depth-D,2.77,'wall')
 B('뒷벽',0,D-.035,.04,W,.07,2.77,'wall')
 B('창 반대쪽 벽',-2.186,D/2,.038,.072,D,2.78,'white')
 B('따뜻한 벽면 하부 오크',-2.137,2.59,.05,.041,5.07,.941,'wood')

@@ -1,5 +1,4 @@
-import {TextureLoader,SRGBColorSpace} from 'three';
-import {loadArchitecture} from '../interior-architecture/model.js';
+import {marketSurfaceLoader} from '../gyeongbu/shared-finishes.js';
 import {placeMarketDisplay} from '../gyeongbu/market-display.js';
 import {boxSilhouette} from '../interior-architecture/box-silhouette.js';
 
@@ -21,26 +20,7 @@ function starter(T,key){
   return boxSilhouette(T,stock.map(([x,h,d])=>[x,h,d,.43,.36,.45,0x557245]));
 }
 
-let sharedMaps;
-function maps(){
-  if(!sharedMaps){
-    const loader=new TextureLoader();
-    sharedMaps=Promise.all(['surface','weave-normal','metal-rough','lamp'].map(async key=>{
-      const texture=await loader.loadAsync(new URL(`./${key}.webp`,import.meta.url).href);
-      texture.flipY=false;
-      if(key==='surface'||key==='lamp')texture.colorSpace=SRGBColorSpace;
-      return texture;
-    })).catch(error=>{sharedMaps=undefined;throw error;});
-  }
-  return sharedMaps;
-}
-async function loadSurface(file){
-  const [[mesh],[surface,normal,orm,emission]]=await Promise.all([loadArchitecture(file),maps()]);
-  const material=mesh.material;
-  material.map=surface;material.normalMap=normal;material.normalScale.set(.55,.55);
-  material.roughnessMap=orm;material.metalnessMap=orm;material.emissiveMap=emission;
-  return [mesh];
-}
+const loadSurface=marketSurfaceLoader(import.meta.url);
 
 export function placeTerrarium(K,x,y,z,angle,key){
   const p=parts[key],T=K.THREE;

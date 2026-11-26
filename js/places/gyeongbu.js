@@ -11,6 +11,7 @@ import { placeWarmer } from '../../assets/models/gyeongbu-pretzels/model.js';
 import { placeUpperShowroom } from '../../assets/models/gyeongbu-apparel/model.js';
 import {placeFixtureDisplay} from '../../assets/models/gyeongbu-fixtures/model.js';
 import {placeChildrensAisle} from '../../assets/models/gyeongbu-childrens-aisle/model.js';
+import {placeYarnAndDresses} from '../../assets/models/gyeongbu-yarn-and-dresses/model.js';
 import {placeSuitingAisle} from '../../assets/models/gyeongbu-suiting-aisle/model.js';
 import {placeWomensAisle} from '../../assets/models/gyeongbu-womens-aisle/model.js';
 import {placeHanbokShowroom} from '../../assets/models/gyeongbu-hanbok/model.js';
@@ -23,8 +24,10 @@ import {distanceToPolygonSq} from '../physics.js';
 import { placeCutFlowers } from '../../assets/models/gyeongbu-cutflowers/model.js';
 import {placeFloristStock} from '../../assets/models/gyeongbu-florist-stock/model.js';
 import {placeTerrarium} from '../../assets/models/gyeongbu-terrarium/model.js';
+import {placePlantedColumn} from '../../assets/models/gyeongbu-planted-columns/model.js';
 import { placeWaitingBenches } from '../../assets/models/gyeongbu-seating/model.js';
 import {placeCushionBay} from '../../assets/models/concourse-fixtures/cushions.js';
+import {registerCeramics} from '../../assets/models/daiso-ceramics/model.js';
 import {homeShelf} from '../../assets/models/daiso-home/shelf.js';
 import {accessoryShelf} from '../../assets/models/daiso-accessories/shelf.js';
 import {drawAisleFaces} from '../../assets/models/daiso/aisle-stock.js';
@@ -343,7 +346,13 @@ export function build(K) {
   const lobbyGalleryVoid=rect(66,17,75.6,28);
   const hallVoids=[rect(54,33,62,48)];
   for(let i=1;i<ys.length;i++){
-    const p=floorPoly(i);K.slab(p,ys[i],{mat:i===2?'concrete':'tile',under:'gb_acoustic',holes:[...holes(p,ys[i]),...(i===1?[...hallVoids,lobbyGalleryVoid]:[])]});
+    const p=floorPoly(i),openings=[...holes(p,ys[i]),...(i===1?[...hallVoids,lobbyGalleryVoid]:[])];
+    K.slab(p,ys[i],{mat:i===2?'concrete':'tile',under:'gb_acoustic',holes:openings});
+    if(i===2||i===3)K.occludingSlab({poly:p,y:ys[i],holes:openings,eyeMin:ys[2]+.04,eyeMax:ys[3]-.04});
+    // Adjacent clothing floors share their slab. Apertures and each tapered
+    // perimeter use the same coordinates as the rendered floor above.
+    if(i>=5&&i<=8)K.occludingSlab({poly:p,y:ys[i],holes:openings,
+      eyeMin:ys[Math.max(5,i-1)]+.04,eyeMax:ys[Math.min(8,i+1)]-.04});
   }
   const northVoids=[rect(168,16.7,258,30),rect(118,16.7,140,30)];
   K.slab(NORTH,NORTH_2F,{mat:'tile',under:'gb_acoustic',holes:[...holes(NORTH,NORTH_2F),...northVoids]});
@@ -1290,7 +1299,7 @@ export function build(K) {
     placeAssembly({from:[8,108],to:[63,30],sx:12.7/26,sz:18/22},()=>{
     // 15: light oak slats against a white backing, planted columns and upholstered benches.
     K.hpoly('gb5_ticket_tile',rect(8,108,34,130),.014);K.hpoly(0xeeebe4,rect(8,108,34,130),4,false);
-    for(const [u,v] of [[18,113],[30,124]]){lbox(u,v,0,1,1,3.8,0x3f6a3a);for(let y=.2;y<3.8;y+=.4)for(const s of [-1,1]){lbox(u+s*.52,v,y,.08,.95,.32,0x527c45,{solid:false});lbox(u,v+s*.52,y,.95,.08,.32,0x527c45,{solid:false});}}
+    for(const [u,v] of [[18,113],[30,124]])lbox(u,v,0,1,1,3.8,0,{skip:['top','bottom','n','s','e','w']});
     furnish(() => {
     for(let u=8.1;u<34;u+=.25)lbox(u,119,3.8,.06,22,.15,0xc9a77c,{solid:false});for(let u=10;u<33;u+=1.6)lbox(u,119,3.77,.06,18,.03,'emit',{solid:false});
     for(const [u,v,model] of [[13,113,'HallSeatOrange'],[26,113,'HallSeatOrange'],[13,124,'HallSeatOrange'],[26,124,'HallSeatCharcoal']]){
@@ -1302,10 +1311,9 @@ export function build(K) {
       });
     }
     for(const [u,v] of [[18,113],[30,124]]){
-      for(const s of [-1,1]){
-        lbox(u+s*.56,v,.2,.06,1.04,3.5,'gb8_foliage',{solid:false});
-        lbox(u,v+s*.56,.2,1.04,.06,3.5,'gb8_foliage',{solid:false});
-      }
+      // Custom meshes use world coordinates. Match the seating assembly's plan transform.
+      const [x,z]=W(63+(u-8)*12.7/26,30+(v-108)*18/22);
+      placePlantedColumn(K,x,z,ROT);
       lbox(u+.6,v+.58,.18,.045,.045,3.5,'emit',{solid:false});
     }
     for(const [u,v] of [[11.4,113],[14.5,113],[24.5,113],[12,124],[27,124]])lperson(u,v-.12,0,{sit:true,shirt:[0x353b49,0x73776b,0xcdb99a][Math.floor(u)%3]});
@@ -2121,6 +2129,7 @@ export function build(K) {
     lspawn('다이소 생활용품 긴 매장',218,6.5,y,1,0);
     lspawn('다이소 GATE 4 고투몰 연결',261.5,-15,y,1,0);
     buildRound20DaisoHall(y);
+    registerCeramics(K,W,toL,rect,ROT);
     const stock=[0xf5f5f0,0xf06aa0,0xd8272d,0x2a7fd4,0x48ac9d,0xf2c200,0xb9dfed];
     // Stock occupies one crosswise aisle. All shelf and product dimensions match the previous rows.
     function furnishRack(u,v,len,idx,displayEnd){
@@ -2164,7 +2173,7 @@ export function build(K) {
       rack(u,27,3.8,i+30);
     }
     for(let i=0,u=253;u<282;u+=4.4,i++){
-      rack(u,14,6,i+40,i===2||i===4?-1:0);
+      rack(u,14,6,i+40,i<=2||i===4?-1:0);
       rack(u,24,7,i+50);
     }
     for(let i=0,u=252;u<282;u+=4.4,i++)rack(u,-.9,3.1,i+60,i===2?1:0);
@@ -2459,6 +2468,7 @@ export function build(K) {
     const centers = [100.5, 109.5, 118.5, 127.5];
     const localAisle=wholesaleAisles[key];
     const hanbokAt=(u,v)=>key==='Curtains'&&u===wings[0][0]&&v===centers[2];
+    const yarnAt=(u,v)=>key==='Children'&&u===wings[0][0]&&v===centers[2];
     if(localAisle){
       const hidden={skip:['top','bottom','n','s','e','w']};
       for(const [u,v,w,d,h] of localAisle.fixtures)lbox(u,v,floorY,w,d,h,0,hidden);
@@ -2478,6 +2488,27 @@ export function build(K) {
         floorY, d, w, h, 0, {skip:['top','bottom','n','s','e','w']});
       fixture(0,-1.3,5.2,.12,2.96);
       for (const a of [-2.54,2.54]) fixture(a,-.05,.12,2.6,2.96);
+      if(yarnAt(u,v)){
+        fixture(1.26,-.74,2.18,.54,2.28);
+        fixture(1.24,.62,2.03,.65,1.56);
+        fixture(-1.29,-.51,2.22,.53,2.43);
+        fixture(-1.43,.65,1.94,.33,.87);
+        fixture(-.02,-.09,.36,.98,2.17);
+        const [x,z]=W(u,v);
+        const sections=[
+          ['booth',u-1.36,v-2.58,u+1.27,v+2.58],
+          ['yarn',u-1.06,v-2.39,u+1.08,v-.12],
+          ['wrap',u+.33,v-2.24,u+.89,v-.21],
+          ['dresses',u-.89,v-.22,u+.88,v+2.45]
+        ];
+        for(const [part,a,b,c,d] of sections){
+          ldetail({floor,y0:floorY,y1:floorY+2.94,poly:rect(a,b,c,d),name:'6층 면사·울사와 드레스 · '+part},()=>{
+            placeYarnAndDresses(K,x,floorY,z,ROT+PI/2,part);
+          });
+        }
+        lzone('면사 · 울사와 아동 드레스',floor,'의류 도매상가',u-1.3,v-2.55,u+1.25,v+2.55,floorY,floorY+2.88,4);
+        continue;
+      }
       if(hanbokAt(u,v)){
         // The public fitting display has two individual forms and a counter at
         // its threshold. Its open middle still leads into the sample bay.
@@ -2517,7 +2548,7 @@ export function build(K) {
     ldetail({floor, y0:floorY, y1:floorY+3.2, poly:rect(32,97,44,131), name:label}, () => {
       const placements=[];
       for (const [u,side] of wings) for (const v of centers) {
-        if((localAisle&&v===centers[1])||hanbokAt(u,v))continue;
+        if((localAisle&&v===centers[1])||hanbokAt(u,v)||yarnAt(u,v))continue;
         if(u!==sampleU || v!==sampleV)placements.push([u,v,floorY,side*PI/2]);
         const curtainSign=key==='Curtains' && u===sampleU && v===sampleV;
         lsign(curtainSign?'R A I N B O W  무지개장식':label,u+side*1.353,v,floorY+2.83,3.7,.26,side>0?'+u':'-u',
@@ -2690,7 +2721,7 @@ export function build(K) {
       mesh.name=`gyeongbu-flower-${name}-${key}`;
       list.forEach(([u,v,y,w,d,h,col],i)=>{const [x,z]=W(u,v);matrix.compose(pos.set(x,y,z),quat,scale.set(w,h,d));mesh.setMatrixAt(i,matrix);mesh.setColorAt(i,colour.setHex(col));});
       mesh.instanceMatrix.needsUpdate=true;if(mesh.instanceColor)mesh.instanceColor.needsUpdate=true;
-      mesh.computeBoundingSphere();K.addMesh(mesh);
+      mesh.computeBoundingSphere();K.addMesh(mesh,{stationaryInstances:true});
     }
       });
     }
@@ -3701,7 +3732,6 @@ export function build(K) {
       ['GiftWrap','선물 · 포장',188.7,4.46,0],
       ['Snacks','스낵 · 간식',201.9,4.46,0],
       ['CosmeticPads','뷰티 · 스킨케어',238.5,4.46,0],
-      ['Tableware','도자기 · 식기',257.4,10.88,PI],
       ['Organizers','수납 · 정리',280.85,.94,0]
     ];
     for(const [key,label,u,v,angle] of shelves){

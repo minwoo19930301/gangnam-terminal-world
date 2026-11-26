@@ -39,7 +39,7 @@ try{
   const {page,seen,errors}=await open('5F',pose(-2.83,-1.15,-2.83,5.85));await page.mouse.click(510,320);const start=await page.evaluate(()=>performance.timeOrigin);
   const frames=timing(page);await walk(page,-2.83,5.75);await walk(page,-.94,6.66);
   await aim(page,pose(-.94,6.66,-.94,7.83,-4));await loaded(page,'chocolate');await loaded(page,'fountain');
-  for(const [x,d,tx,td,p,k] of [[.83,7.02,.82,7.86,-42,'berries'],[3.67,6.82,3.66,7.82,-25,'iron'],[-5.59,1.76,-5.66,2.72,-42,'steak'],[-9.23,5.57,-9.44,8.30,5,'crest'],[.04,1.44,0,3.10,-17,'dishes']]){
+  for(const [x,d,tx,td,p,k] of [[.83,7.02,.82,7.86,-42,'berries'],[3.67,6.82,3.66,7.82,-25,'iron'],[-5.59,1.76,-5.66,2.72,-42,'steak'],[-9.23,5.57,-9.44,8.30,5,'crest'],[.04,1.44,0,3.10,-17,'dishes'],[6.43,2.20,6.4,2.98,-37,'coldSalad']]){
     await aim(page,pose(x,d,tx,td,p));await loaded(page,k);
   }
   const heights=[];for(const mode of ['night','sunrise','day']){

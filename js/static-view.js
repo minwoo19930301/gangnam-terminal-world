@@ -23,18 +23,19 @@ function chunkBounds(positions, indices) {
   return bounds;
 }
 
-export function streetBatchView(THREE, scene) {
+export function streetBatchView(THREE, scene, deck = null) {
   const projection = new THREE.Matrix4(), previous = new THREE.Matrix4();
   const view = new THREE.Frustum(), identity = new THREE.Matrix4();
   const extensions = new WeakMap();
-  let generation = 0, sceneCamera;
+  let generation = 0, sceneCamera, deckRevision = -1;
   const beforeScene = scene.onBeforeRender;
   scene.onBeforeRender = function(renderer, world, camera, ...args) {
     beforeScene.call(this,renderer,world,camera,...args);
     sceneCamera = camera;
     if (!camera.isPerspectiveCamera) return;
     projection.multiplyMatrices(camera.projectionMatrix,camera.matrixWorldInverse);
-    if (previous.equals(projection)) return;
+    if (previous.equals(projection) && deckRevision === (deck?.revision ?? 0)) return;
+    deckRevision = deck?.revision ?? 0;
     previous.copy(projection);
     view.setFromProjectionMatrix(projection);
     generation++;
@@ -48,7 +49,7 @@ export function streetBatchView(THREE, scene) {
     return extensions.get(renderer);
   }
 
-  function flight(mesh, moving, relief) {
+  function flightBounds(mesh, moving, relief) {
     const geometry = mesh.geometry;
     if (!geometry.boundingBox) geometry.computeBoundingBox();
     const part = geometry.boundingBox.clone(), bounds = new THREE.Box3();
@@ -62,6 +63,10 @@ export function streetBatchView(THREE, scene) {
       box.min.y += grade; box.max.y += grade;
       bounds.union(box);
     }
+    return bounds;
+  }
+  function flight(mesh, moving, relief) {
+    const bounds = flightBounds(mesh,moving,relief);
     let total;
     mesh.onBeforeRender = (renderer, world, camera) => {
       total = mesh.count;
@@ -128,7 +133,7 @@ export function streetBatchView(THREE, scene) {
       let start = -1, end = 0;
       for (let i = 0; i < chunks; i++) {
         box.min.fromArray(bounds,6*i); box.max.fromArray(bounds,6*i+3);
-        if (!view.intersectsBox(box)) continue;
+        if (!view.intersectsBox(box) || (deck?.active && deck.hides(box))) continue;
         const offset = i * CHUNK;
         if (start < 0) start = offset;
         else if (offset-end >= CHUNK * (ext ? 2 : 8)) gaps.push([end,offset]);
@@ -175,5 +180,5 @@ export function streetBatchView(THREE, scene) {
       g.setDrawRange(0,Infinity);
     };
   }
-  return {attach,flight,batchLandings};
+  return {attach,flight,flightBounds,batchLandings};
 }
