@@ -100,6 +100,12 @@ export function boutiqueLobby(K,y){
     const a=point(x-.28,-2.9),b=point(x+.28,-2.9);
     K.phys.addWall(...a,...b,y,y+1.8,.18);
   }
+  // Lettering on the photographed return above the concession. Both the
+  // board and its two arrows face the shopping lobby from the mezzanine rim.
+  K.phys.addWall(...point(4.85,-.95),...point(6.05,-.95),y,y+4.36,.085);
+  const [labelX,labelZ]=point(4.952,-2.83);
+  K.sign('↓  101 / 102 / 103 / 104 / 105  상영관  ↓',{x:labelX,z:labelZ,y:y+2.61,
+    w:3.15,h:.23,bg:null,fg:'#e3bd82',rotY:angle-Math.PI/2,pxPerM:200});
   cinemaEntrance(K,origin[0],y,origin[1],angle);
   eastShoppingArcade(K,y);
   publicRotary(K,y);

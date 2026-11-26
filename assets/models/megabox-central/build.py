@@ -183,6 +183,60 @@ block(cx,cy,1.805,1.30,.48,.063,'495759')
 block(cx,cy-.23,1.785,1.19,.025,.022,'e4ffe6')
 finish('매점 · 냉장 음료 진열장')
 
+# In the branch photo a right-angle return above the order kiosks exposes
+# timber armchairs behind a thin horizontal railing. Fit only the visible
+# edge inside the existing room, keeping the public floor below unobstructed.
+from mathutils import Vector
+def strut(a,b,r,color):
+    start,end=Vector(a),Vector(b)
+    axis=(end-start).normalized()
+    seed=Vector((0,0,1)) if abs(axis.z)<.85 else Vector((0,1,0))
+    side=axis.cross(seed).normalized()*r
+    up=axis.cross(side).normalized()*r
+    ends=[[tuple(c+side*i+up*j) for i,j in [(-1,-1),(1,-1),(1,1),(-1,1)]] for c in [start,end]]
+    for i in range(4):face([ends[0][i],ends[0][(i+1)%4],ends[1][(i+1)%4],ends[1][i]],color)
+    face(ends[0][::-1],color)
+    face(ends[1],color)
+
+front=4.97
+block(5.52,2.83,2.40,1.1,3.65,.43,'49443f')
+block(5.52,2.83,2.825,1.1,3.67,.060,'6d5e4d')
+block(5.52,2.83,2.37,1.13,3.67,.038,'3a3936')
+for cy in [1.02,2.83,4.62]:
+    block(front+.075,cy,2.88,.025,.025,.78,'67635a')
+for high in [3.02,3.19,3.36,3.64]:
+    block(front+.076,2.82,high,.018,3.63,.014 if high<3.6 else .030,'706d61')
+for edge in [1.03,4.58]:
+    strut((front+.085,edge,2.89),(front+.085,edge+(.63 if edge<2 else -.63),3.64),.008,'777368')
+# The photo's dark full-height pilaster and recessed wall frame the kiosks.
+block(5.45,.95,0,1.20,.16,4.36,'4e4740')
+block(4.84,.95,.10,.055,.205,4.13,'61574b')
+block(5.99,2.85,0,.075,3.67,2.41,'383936')
+block(5.48,4.68,0,.92,.12,2.41,'45423e')
+block(5.42,4.7,2.83,1.24,.14,1.54,'514941')
+finish('중층 · 라운지 난간과 매표 로비 처마')
+
+def chair(cx,cy,turn):
+    def world(u,v,h):
+        return (cx+u*math.cos(turn)-v*math.sin(turn),cy+u*math.sin(turn)+v*math.cos(turn),2.89+h)
+    def frame(a,b,r,tone):strut(world(*a),world(*b),r,tone)
+    for u in [-.23,.23]:
+        for v in [-.22,.22]:
+            frame((u*1.10,v*1.12,.01),(u,v,.44 if v<0 else .77),.025,'ad7642')
+        frame((u,-.20,.62),(u,.22,.66),.029,'c18b4d')
+        frame((u,-.18,.40),(u,-.18,.61),.018,'a57647')
+        frame((u,-.24,.38),(u,.24,.38),.032,'a77545')
+    for h in [.52,.66,.79]:
+        frame((-.23,.21,h),(.23,.21,h),.027,'b48653')
+    frame((-.23,.18,.40),(.23,.18,.40),.033,'ad7b4a')
+    face([world(u,v,.415) for u,v in [(-.24,-.24),(.24,-.24),(.24,.24),(-.24,.24)]],'6e4931')
+    finish('중층 · 목재 팔걸이 의자 '+str(cy))
+chair(5.61,1.66,-1.06)
+chair(5.56,3.72,-1.71)
+block(5.61,2.71,3.57,.52,.72,.045,'896342')
+block(5.61,2.71,2.89,.08,.12,.69,'615447')
+finish('중층 · 카페 테이블')
+
 # Preserve the channel lettering as its own editable mesh.
 font_path=Path('/System/Library/Fonts/Supplemental/Arial Bold.ttf')
 if not font_path.exists():

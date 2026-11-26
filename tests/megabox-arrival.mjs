@@ -29,11 +29,11 @@ try{
   release();
   const full=await response;
   assert.equal(full.status(),200);
-  assert.equal((await full.body()).length,141084);
-  await page.waitForFunction(name=>__world.scene.getObjectByName(name)?.geometry.index.count===41718,subject);
+  assert.equal((await full.body()).length,148244);
+  await page.waitForFunction(name=>__world.scene.getObjectByName(name)?.geometry.index.count===43422,subject);
   assert.equal(requests,1);
   assert.deepEqual(errors,[]);
-  console.log('Megabox arrival retained 1,257 front triangles throughout the delayed request, then displayed all 13,906 triangles.');
+  console.log('Megabox arrival retained 1,257 front triangles throughout the delayed request, then displayed all 14,474 triangles.');
 }finally{
   release();await browser.close();await new Promise(resolve=>server.close(resolve));
 }
