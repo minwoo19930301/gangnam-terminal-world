@@ -1,3 +1,4 @@
+import {wineParts} from '../house-wine-cellar/model.js';
 import {types as executiveSeatTypes,prefix as seatPrefix} from '../executive-seating/layout.js';
 import {parts as ceramicParts,prefix as ceramicPrefix} from '../daiso-ceramics/layout.js';
 import {parts as execParts,prefix as execPrefix} from '../executive-service/layout.js';
@@ -28,6 +29,8 @@ import {relief} from '../../../js/banpo_relief.js';
 // Scene object (or a uniquely identifying child) -> editable native source.
 // Geometry decoder matrices and decorative LOD offsets live *below* the placement.
 const sources = [
+  ...Object.values(wineParts).map(p=>
+    ['centralcity','1F','house-wine-cellar/wine-cellar.blend','와인셀라 · '+p.title,p.collection]),
   ['centralcity','B1','sweet-marcolini/chocolatier.blend','피에르 마르콜리니 · 구리 쇼케이스와 봉봉','GangnamChocolatier','Glass','Lit'],
   ['shinsegae','B1','cinema-rotary/front.blend','원형 광장 · 카멜커피 입면','CamelCoffeeRotaryFront'],
   ['famille','1F','interior-architecture/interiors.blend','파미에 갤러리 아치와 벽등','gallery-rib'],

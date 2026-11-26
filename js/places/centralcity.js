@@ -2,6 +2,7 @@ import {terminalOrigin,terminalRotation as R,terminalPoint as P,sweetParkLocal a
 import {transverseFloor} from '../../assets/models/megabox-central/layout.js';
 import {publicFloorOpening,court,westApron} from '../../assets/models/cinema-rotary/layout.js';
 import {arcadePiers} from '../../assets/models/sweet-arcade/model.js';
+import {houseWineDisplays} from '../../assets/models/house-wine-cellar/model.js';
 import {marcoliniShop} from '../../assets/models/sweet-marcolini/model.js';
 import {arabicaFront} from '../../assets/models/sweet-arabica/model.js';
 import {chefStageSigns} from '../../assets/models/sweet-chefs-stage/model.js';
@@ -4834,6 +4835,11 @@ function hosUpperR20(K) {
         ? 'BEYOND LANDSCAPE · 하우스오브신세계' : '하우스오브신세계 · 전시실';
     }
     K.zone(zone);
+    if (kind==='wine') {
+      K.hpoly({tex:'wood',color:0xb98a53,gloss:.3},poly,y+.018,true);
+      houseWineDisplays(K,Q,R,y,poly,openings[0]);
+      return;
+    }
     if (gallery) {
       // The official gallery photographs show a clear view through two rounded
       // jambs and a freestanding wall with a passage on either side.
@@ -4900,10 +4906,7 @@ function hosUpperR20(K) {
         const q=P(s,t);if(!K.pointInPoly(...q,poly)||Math.hypot(s-ss,t-tt)<2.1)continue;
         if(y===YM && furnishedAt.some(p=>Math.hypot(q[0]-p[0],q[1]-p[1])<1.8))continue;
         furnishedAt.push(q);
-        if(kind==='wine'){
-          lbox(s,t,1.5,.52,y,1.85,{tex:'wood',color:0x67492b});
-          for(const h of [.45,.95,1.45]){lbox(s,t,1.5,.56,y+h,.04,0xa7804d,{solid:false});for(const d of[-.5,-.25,0,.25,.5])lcyl(s+d,t,y+h+.04,.045,.27,0x36412b,{solid:false});}
-        }else if(kind==='fashion'){
+        if(kind==='fashion'){
           // The Mezzanine is a residential-style fashion/lifestyle edit:
           // warm timber shelves, garments, low display tables and art objects.
           // Placement is a plan-based approximation, not a surveyed shop photo.
