@@ -1,5 +1,6 @@
 import {transverseFloor} from '../../assets/models/megabox-central/layout.js';
 import {publicFloorOpening,court,westApron} from '../../assets/models/cinema-rotary/layout.js';
+import {arcadePiers} from '../../assets/models/sweet-arcade/model.js';
 import {arabicaFront} from '../../assets/models/sweet-arabica/model.js';
 import {chefStageSigns} from '../../assets/models/sweet-chefs-stage/model.js';
 import {marketWestReturn, cinemaAisleMouth} from './shinsegae-b1-plan.js';
@@ -1747,6 +1748,17 @@ export function build(K) {
     if(key==='sweet') {
       const [s0,t0,s1,t1]=spBounds(area), ns=Math.ceil((s1-s0)/7.6), nt=Math.ceil((t1-t0)/7.6);
       const ds=(s1-s0)/ns, dt=(t1-t0)/nt;
+      // The three spring points along the rear of the first dessert islands
+      // carry the cream tiled piers visible behind the cases in the operator photo.
+      const pierS=s0+3*ds, pierT=t1-2*dt;
+      for(const offset of [-ds,0,ds]){
+        const s=pierS+offset;
+        K.phys.addPolyWalls(RECT(s-.42,pierT-.42,s+.42,pierT+.42),YB1,YB1+3.5,.025,'centralcity');
+      }
+      K.detail({floor:'B1',y0:YB1,y1:0,poly:RECT(pierS-ds-.55,pierT-.55,pierS+ds+.55,pierT+.55),name:'디저트 홀 기둥'},()=>{
+        const [x,z]=P(pierS,pierT);
+        arcadePiers(K,x,YB1,z,R+PI,ds);
+      });
       for(let i=0;i<ns;i++)for(let j=0;j<nt;j++){
         const a=s0+i*ds,b=t0+j*dt;
         if([P(a+ds/2,b+dt/2),P(a+.3,b+.3),P(a+ds-.3,b+dt-.3)].some(q=>b1Reserved(...q,.65)))continue;
