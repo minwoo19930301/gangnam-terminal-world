@@ -1,3 +1,5 @@
+import {nativeRoadsideLamp} from './roadside-lamp.mjs';
+import {crossingWay as gyeseongCrossing,northLanding} from '../gyeseong-crossing/layout.js';
 import {crossingWay,markingFaces} from '../banpo-stop-crossing/layout.js';
 import {crossingWay as flyoverWay,markingFaces as flyoverFaces,landings as flyoverLandings} from '../sinbanpo-crossing/layout.js';
 import {bridgeLayout,surfaceColors} from '../banpo-stream-bridge/layout.js';
@@ -75,6 +77,8 @@ const paintedCrossings=[
   return {way,name,faces:shape(...ends),yellow:way===crossingWay,
     landings:way===flyoverWay?flyoverLandings(...ends):[]};
 });
+const gyeseongLanding=northLanding(surfaceRoads.find(r=>r.id===gyeseongCrossing));
+if(gyeseongLanding)gyeseongLanding.parts=nativeRoadsideLamp(gyeseongLanding);
 const groundGrids=editableGroundGrids(), ground=groundGrids.city;
 const server=await serve(0); let browser;
 try {
@@ -103,7 +107,7 @@ try {
   });
   const scales={};
   for(const [k,v] of Object.entries(images)){await fs.writeFile(path.join(temp,k+'.png'),Buffer.from(v.png,'base64'));if(v.lit)await fs.writeFile(path.join(temp,k+'-windows.png'),Buffer.from(v.lit,'base64'));scales[k]=v.scale;}
-  await fs.writeFile(path.join(temp,'seed.json'),JSON.stringify({buildings,roads,paintedCrossings,land,ground,groundGrids,streamBridge,scales,lighting:dayCurve(Date.now(),osm.origin),sites:Object.fromEntries(Object.entries(meta).map(([k,v])=>[k,v.name]))}));
+  await fs.writeFile(path.join(temp,'seed.json'),JSON.stringify({buildings,roads,paintedCrossings,gyeseongLanding,land,ground,groundGrids,streamBridge,scales,lighting:dayCurve(Date.now(),osm.origin),sites:Object.fromEntries(Object.entries(meta).map(([k,v])=>[k,v.name]))}));
   await writeStreetLayout(temp);
   execFileSync('uv',['run','--with','shapely>=2.1,<3','python',path.join(here,'terrain.py'),temp],{stdio:'inherit'});
   const blender=process.argv[2]||'blender';
