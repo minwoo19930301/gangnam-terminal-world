@@ -1,3 +1,4 @@
+import { OPEN_STAGE_FRONT } from './_junctions.js';
 import { loadArchitecture, placeArchitecture } from '../../assets/models/interior-architecture/model.js';
 import { fixtures } from '../../assets/models/jwmarriott/fixtures.js';
 
@@ -517,7 +518,10 @@ export function build(K) {
     { s: -0.04, w: 6.8, y0: 0, y1: H1 },
     { s: 3.7, w: 6.4, y0: 3.6, y1: H1 },
   ] });
-  EW('W', -60.88, 60.58, 0, H1, { mat: { tex: 'jwStone' }, inner: WARM, openings: [{ s: -32.2, w: 17, y0: 0, y1: 6 }, { s: -0.12, w: 6.6, y0: 0, y1: 3.3 }] });         // J6 → 센트럴시티
+  const plazaV = (OPEN_STAGE_FRONT.x - C0[0]) * SV[0] + (OPEN_STAGE_FRONT.z - C0[1]) * SV[1];
+  EW('W', -60.88, 60.58, 0, H1, { mat: { tex: 'jwStone' }, inner: WARM, openings: [
+    { ...OPEN_STAGE_FRONT, s: plazaV }, { s: -0.12, w: 6.6, y0: 0, y1: 3.3 }
+  ] });
   EW('E', -60.58, -30, 0, H1, { mat: { tex: 'jwStone' }, inner: WARM });
   EW('E', -30, 60.89, 0, 4.2, { mat: GL, thick: 0.06, openings: [{ s: 0, w: 5, y0: 0, y1: 3.4 }, { s: 44.5, w: 3.2, y0: 0, y1: 3.4 }, { s: 52.5, w: 3.2, y0: 0, y1: 3.4 }] });
   EW('E', -30, 60.89, 4.2, H1, { mat: { tex: 'jwStone' }, inner: WARM });
@@ -533,7 +537,7 @@ export function build(K) {
   const storeLevel={'2F':7,'3F':11.8,'4F':16.6,'5F':21.4,'6F':26.2};
   for (const k of ['2F', '3F', '4F', '5F', '6F']) {
     const interior=(seamRanges[k]||[]).map(([a,b])=>{const u=-33.31+(a+b)/2*66.62/67,[x,z]=P(u,vN(u));return{x,z,w:(b-a)*66.62/67,y0:storeLevel[k],y1:storeLevel[k]+3.4};});
-    const original=k==='2F'?[{x:-46,z:43.1,w:6.8,y0:6,y1:7.3},{x:-65.9,z:81.4,w:17,y0:6,y1:9.1},{x:15,z:149.9,w:30,y0:6,y1:9.5}]:[];
+    const original=k==='2F'?[{x:-46,z:43.1,w:6.8,y0:6,y1:7.3},OPEN_STAGE_FRONT,{x:15,z:149.9,w:30,y0:6,y1:9.5}]:[];
     if (k==='3F') {
       const [x,z]=P(1.4,vS(1.4));
       interior.push({x,z,w:4.4,y0:Y[k],y1:Y[k]+3.4});

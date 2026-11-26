@@ -4,6 +4,10 @@
 // leaves a >= width-wide, >= 2.6m-tall opening in its own wall and keeps floor at y up to its boundary).
 // Smoke test (tests/smoke.mjs) checks there is a walkable floor at y on both pa and pb when both modules load.
 import { LEVELS } from '../kit.js';
+// The existing public square occupies the hotel footprint but belongs to the
+// terminal. All representations of their shared wall must leave its frontage open.
+// Size follows the modeled plaza up to the florist-side pier.
+export const OPEN_STAGE_FRONT = {x: -63.47, z: 88.89, w: 32, y0: 0, y1: 8.25};
 export const JUNCTIONS = [
   // ---- B1 (y = -6) underground network ----
   { id: 'J1', a: 'gotomall', b: 'shinsegae', y: LEVELS.B1, pa: [-70, -89], pb: [-70, -35], width: 8, owner: 'shinsegae',

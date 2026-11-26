@@ -198,10 +198,21 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     }
     return true;
   }
+  // The area predicate is immutable for this page. Drop hidden faces before
+  // allocating positions, colours and UVs, using the same post-split centroid
+  // as the tile builder. Collision and zone registration are independent.
+  function outsideArea(p, ny) {
+    let x = 0, y = 0, z = 0;
+    for (const v of p) { x += v[0]; y += v[1]; z += v[2]; }
+    if (keep(current, x/p.length, y/p.length, z/p.length, ny)) return false;
+    stats.areaDropped = (stats.areaDropped || 0) + 1;
+    return true;
+  }
   // emit a quad. p: 4 points [x,y,z], n: intended normal, uvs: 4 [u,v]
   function quad(sp, p, n, uvs, split = true) {
     if (parkedPose) [p,n] = parkedPose(p,n);
     else if (split && splitTerrainFace(sp, p, n, uvs)) return;
+    if (keep && outsideArea(p, n[1])) return;
     const b = bucket(sp.key, p[0][0], p[0][2]);
     // winding check
     const ax = p[1][0] - p[0][0], ay = p[1][1] - p[0][1], az = p[1][2] - p[0][2];
@@ -221,6 +232,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
   function tri(sp, p, n, uvs, split = true) {
     if (parkedPose) [p,n] = parkedPose(p,n);
     else if (split && splitTerrainFace(sp, p, n, uvs)) return;
+    if (keep && outsideArea(p, n[1])) return;
     const b = bucket(sp.key, p[0][0], p[0][2]);
     const ax = p[1][0] - p[0][0], ay = p[1][1] - p[0][1], az = p[1][2] - p[0][2];
     const bx = p[2][0] - p[0][0], by = p[2][1] - p[0][1], bz = p[2][2] - p[0][2];
@@ -576,6 +588,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
   function zone(o) {
     let poly = o.poly; if (!poly && o.rect) { const [x0, z0, x1, z1] = o.rect; poly = [[x0, z0], [x1, z0], [x1, z1], [x0, z1]]; }
     const z = { name: o.name, sub: o.sub || '', floor: o.floor || '', poly, y0: o.y0 ?? -1, y1: o.y1 ?? 4, priority: o.priority || 0, place: o.place || current, color: o.color };
+    if (o.streetAccess === false) z.streetAccess = false;
     phys.addZone(z); zonesList.push(z); return z;
   }
   function spawn(o) { spawns.push({ group: o.group || perPlace[current]?.name || current, place: current, ...o }); }
@@ -621,7 +634,10 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
   }
   function groundHole(poly, inner) { phys.addGroundHole(poly, inner); groundHoles.push({ poly, inner }); }
   function onFrame(fn) { frameFns.push(fn); }
+  // Detail batches keep their normal scene parents so place animations retain control of visibility.
+  let detailObjects = null;
   function addMesh(mesh) {
+    detailObjects?.add(mesh);
     mesh.userData.owner ??= current;
     if (mesh.isPointLight) mesh.position.y += terrainAt(anchorHeight,mesh.position.x,mesh.position.z);
     scene.add(mesh);
@@ -651,6 +667,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
   }
   const cullList = [];
   function track(m, cell) {
+    detailObjects?.add(m);
     if (!m.geometry.boundingBox) m.geometry.computeBoundingBox();
     let bb = m.geometry.boundingBox;
     if (m.isInstancedMesh) {
@@ -688,6 +705,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     if (!force && Math.abs(x - last.x) + Math.abs(y - last.y) + Math.abs(z - last.z) < 1.5 && ++last.n < 30) return;
     last = { x, y, z, n: 0 };
     lodUpdate(x, z);
+    updateDetailLayers(x, y, z);
     let u = false;
     if (y < -1) { const zn = phys.zoneAt(x, y - 1.5, z); u = !!zn && INDOOR.has(zn.place) && phys.ceilingAbove(x, z, y, y + 8) < Infinity; }
     under = u;
@@ -733,15 +751,14 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     const usedKeys = new Set(); for (const [, b] of buckets) if (!aLayers.has(b.key)) usedKeys.add(b.key);
     for (const [k, v] of buildTexArrays(usedKeys)) aLayers.set(k, v);
     // two passes: classify every primitive and count, then fill typed arrays directly (no big JS arrays)
-    const subs = new Map(), plan = []; let dropped = 0;
+    const subs = new Map(), plan = [];
     for (const [, b] of buckets) {
       if (!b.idx.length) continue;
-      const P = b.pos, N = b.nor, ar = aLayers.get(b.key) || null, which = new Array(b.prim.length);
+      const P = b.pos, ar = aLayers.get(b.key) || null, which = new Array(b.prim.length);
       let vo = 0, pi = 0;
       for (const nv of b.prim) {
         let cx = 0, cy = 0, cz = 0; for (let k = 0; k < nv; k++) { cx += P[(vo + k) * 3]; cy += P[(vo + k) * 3 + 1]; cz += P[(vo + k) * 3 + 2]; }
         cx /= nv; cy /= nv; cz /= nv;
-        if (keep && !keep(b.own[pi], cx, cy, cz, N[vo * 3 + 1])) { which[pi++] = null; vo += nv; dropped++; continue; }
         const cell = classify(cx, cy, cz, b.own[pi]);
         if (stats.byOwner) stats.byOwner[b.own[pi]] = (stats.byOwner[b.own[pi]] || 0) + (nv === 4 ? 2 : 1);
         const T2 = cell === 'o' ? TILE : CELL_TILE, mk = ar ? 'arr:' + ar.arr : b.key, sk = mk + '|' + cell + '|' + Math.floor(cx / T2) + ',' + Math.floor(cz / T2);
@@ -760,7 +777,6 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
       let vo = 0, io = 0, pi = 0;
       for (const nv of b.prim) {
         const s = which[pi++], ni = nv === 4 ? 6 : 3;
-        if (!s) { vo += nv; io += ni; continue; }
         const base = s.v, datum = b.anchors?.get(pi-1);
         for (let k = 0; k < nv; k++) {
           const v = vo + k, d = s.v++;
@@ -791,7 +807,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
         vo += nv; io += ni;
       }
     }
-    buckets.clear(); stats.areaDropped = (stats.areaDropped || 0) + dropped;
+    buckets.clear();
     const out = [];
     for (const [, s] of subs) {
       const g = new THREE.BufferGeometry();
@@ -819,10 +835,10 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
   }
   let treesDone = 0, peopleDone = 0, parkedDone = 0;
   // group instances by cell + tile so each group can be frustum-culled and cell-culled on its own
-  function groupBy(n, at) {
+  function groupBy(n, at, tile = TILE) {
     const groups = new Map();
     for (let i = 0; i < n; i++) {
-      const [x, y, z, owner] = at(i); const cell = classify(x, y + 0.9, z, owner), T2 = cell === 'o' ? TILE : CELL_TILE;
+      const [x, y, z, owner] = at(i); const cell = classify(x, y + 0.9, z, owner), T2 = cell === 'o' ? tile : Math.min(CELL_TILE, tile);
       const k = cell + '|' + Math.floor(x / T2) + ',' + Math.floor(z / T2); if (!groups.has(k)) groups.set(k, { cell, idx: [] }); groups.get(k).idx.push(i);
     }
     return [...groups.values()];
@@ -868,7 +884,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
       const axis = new THREE.Vector3(0, 1, 0);
       const groups = groupBy(parked.length - start, i => {
         const v = parked[start + i]; return [v.x, v.y, v.z, v.place];
-      });
+      }, 192);
       for (const group of groups) {
         const kinds = new Map();
         for (const i of group.idx) {
@@ -903,6 +919,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
             mesh.computeBoundingSphere();
             scene.add(mesh);
             track(mesh, group.cell);
+            if (mesh.userData.lod) lodList.push(mesh);
           }
         }
       }
@@ -935,7 +952,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
       const hairs = [0x15110e, 0x231a14, 0x3a2a1e, 0x1c1c1c, 0x5a4636, 0x8a8a86, 0x2a2420];
       const bags = [0xf4efe6, 0xc8a15a, 0x1b1b1b, 0xd94c3d, 0x9fb7c9, 0xffffff];
       const p0 = peopleDone; peopleDone = people.length;
-      for (const g of groupBy(people.length - p0, i => [people[p0 + i].x, people[p0 + i].y, people[p0 + i].z, people[p0 + i].place])) {
+      for (const g of groupBy(people.length - p0, i => [people[p0 + i].x, people[p0 + i].y, people[p0 + i].z, people[p0 + i].place], 128)) {
         for (const sit of [false, true]) {
           const idx = g.idx.filter(i => !!people[p0 + i].sit === sit); if (!idx.length) continue;
           const n = idx.length, withBag = sit ? [] : idx.filter(i => ((p0 + i) * 2654435761 >>> 0) % 5 < 2);
@@ -959,6 +976,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
             if (mesh.instanceColor) mesh.instanceColor.needsUpdate=true;
             mesh.userData.lod=[mesh.geometry,P[mesh.geometry.name+'Far']];
             mesh.userData.lodDistance=40;
+            mesh.userData.split=true;
             scene.add(mesh);
             track(mesh,g.cell);
             lodList.push(mesh);
@@ -989,19 +1007,58 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
   function buildDetail(d) {
     if (d.built) return []; d.built = true;
     const prev = current; current = d.owner;
+    detailObjects = new Set();
     try { d.fn(K); } catch (e) { detailErrors.push(`${d.owner} ${d.floor}: ${e.message}`); console.error('detail', d.owner, d.floor, e); }
     current = prev;
-    return flush();
+    try {
+      const meshes = flush();
+      d.renderables = [];
+      for (const root of detailObjects) {
+        if (!root.parent) continue; // discarded by area pruning or replaced by a tiled instance batch
+        root.traverse(o => {
+          if ((o.isMesh || o.isSprite || o.isLine || o.isLight || o.isPoints) && o.layers.isEnabled(0)) d.renderables.push(o);
+        });
+      }
+      return meshes;
+    } finally {
+      detailObjects = null;
+    }
+  }
+  function updateDetailLayers(x, y, z) {
+    for (const d of details) {
+      if (!d.renderables?.length) continue;
+      // Floors on either side of a hotel atrium remain visible through its void. A solid
+      // intervening slab can occlude furniture several storeys below or above the eye.
+      const dx = Math.max(0, d.bb[0] - x, x - d.bb[2]), dz = Math.max(0, d.bb[1] - z, z - d.bb[3]);
+      let hidden = false;
+      if (dx === 0 && dz === 0) {
+        if (y > d.y1 + 10) hidden = phys.ceilingAbove(x, z, d.y1 + .1, y) < Infinity;
+        else if (y < d.y0 - 10) hidden = phys.ceilingAbove(x, z, y, d.y0 - .1) < Infinity;
+      }
+      if (!!d.hidden === hidden) continue;
+      d.hidden = hidden;
+      for (const o of d.renderables) {
+        if (hidden) o.layers.disable(0);
+        else o.layers.enable(0);
+      }
+    }
   }
   // build the groups the camera is close to (within reach metres horizontally, ±8 m vertically)
   function ensureDetail(x, y, z, reach = 45, budgetMs = Infinity) {
-    const t0 = performance.now(); let n = 0;
+    const t0 = performance.now(), nearby = [];
     for (const d of details) {
       if (d.built || (keepDetail && !keepDetail(d))) continue;
-      const dx = x < d.bb[0] ? d.bb[0] - x : x > d.bb[2] ? x - d.bb[2] : 0, dz = z < d.bb[1] ? d.bb[1] - z : z > d.bb[3] ? z - d.bb[3] : 0;
-      if (Math.hypot(dx, dz) > reach || y < d.y0 - 8 || y > d.y1 + 8) continue;
+      const dx = Math.max(0, d.bb[0] - x, x - d.bb[2]), dz = Math.max(0, d.bb[1] - z, z - d.bb[3]);
+      const vertical = Math.max(0, d.y0 - y, y - d.y1);
+      const distance = dx * dx + dz * dz;
+      if (distance <= reach * reach && vertical <= 8) nearby.push({d, vertical, distance});
+    }
+    // Paint the player's own floor before spending an interactive frame on another storey.
+    nearby.sort((a, b) => a.vertical - b.vertical || a.distance - b.distance);
+    let n = 0;
+    for (const {d} of nearby) {
       buildDetail(d); n++;
-      if (performance.now() - t0 > budgetMs) break;
+      if (performance.now() - t0 >= budgetMs) break;
     }
     if (n) cull(last.x, last.y, last.z, true);
     return n;

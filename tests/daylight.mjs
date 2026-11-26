@@ -22,6 +22,61 @@ const server=await serve(0);
 const browser=await chromium.launch(process.argv.includes('--gpu')
   ? {channel:'chromium',args:['--use-angle=metal','--ignore-gpu-blocklist','--enable-gpu']}
   : {args:['--use-angle=swiftshader','--enable-unsafe-swiftshader']});
+
+// Read the displayed sRGB framebuffer before the browser composites the HUD.
+// Decode each channel to linear light before taking its relative luminance.
+async function meanLuminance(page, mode) {
+  return page.evaluate(async mode => {
+    const {renderer, scene, camera, setTimeMode} = window.__world;
+    setTimeMode(mode);
+    await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    renderer.render(scene, camera);
+    const gl = renderer.getContext();
+    const width = gl.drawingBufferWidth, height = gl.drawingBufferHeight;
+    const pixels = new Uint8Array(width * height * 4);
+    gl.readPixels(0, 0, width, height, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+    const linear = Array.from({length: 256}, (_, byte) => {
+      const s = byte / 255;
+      return s <= .04045 ? s / 12.92 : ((s + .055) / 1.055) ** 2.4;
+    });
+    let total = 0;
+    for (let i = 0; i < pixels.length; i += 4) {
+      total += .2126 * linear[pixels[i]] + .7152 * linear[pixels[i+1]] + .0722 * linear[pixels[i+2]];
+    }
+    return total / (width * height);
+  }, mode);
+}
+
+async function checkRenderedNight(page, base) {
+  await page.setViewportSize({width: 900, height: 540});
+  const views = [
+    {name: 'Han riverbank', params: 'places=hangang&pos=-567,18,-805&yaw=67&pitch=1'},
+    {name: 'NewCore building 1, floor 4', params: 'places=newcore&city=0', spawn: '1관 4F'},
+  ];
+  for (const view of views) {
+    await page.goto(`${base}?shot=1&traffic=0&fly=1&${view.params}`);
+    await page.waitForFunction(() => window.__world?.ready, null, {timeout: 180000});
+    if (view.spawn) {
+      await page.evaluate(name => {
+        const {player, K} = window.__world;
+        const start = K._.spawns.find(spawn => spawn.name.includes(name));
+        if (!start) throw new Error(`Missing retail camera: ${name}`);
+        player.teleport(start.x, start.y, start.z, start.yaw);
+        player.pitch = -.04;
+      }, view.spawn);
+    }
+    const day = await meanLuminance(page, 'day');
+    const night = await meanLuminance(page, 'night');
+    const ratio = night / day;
+    assert.ok(day > .15, `${view.name}: daytime scene must render`);
+    // Allow headroom across GPU backends. The old outdoor ratio was 10% and the old shop ratio was 37%.
+    const withinRange = view.spawn ? ratio > .65 && ratio < 1.2 : ratio > .002 && ratio < .035;
+    assert.ok(withinRange, `${view.name}: unexpected night/day luminance ratio ${ratio}`);
+    console.log(`${view.name}: day ${day.toFixed(4)}, night ${night.toFixed(4)}, night/day ${(100*ratio).toFixed(1)}%`);
+    assert.deepEqual(await page.evaluate(() => window.__world.errors), []);
+  }
+}
+
 try {
   const shotIndex=process.argv.indexOf('--shots'), shots=shotIndex<0 ? null : process.argv[shotIndex+1];
   if (shots) await mkdir(shots,{recursive:true});
@@ -71,6 +126,7 @@ try {
   await page.goto(base+'&night=1'); await ready(); assert.equal((await state()).mode,'night');
   await page.evaluate(()=>window.__world.setTimeMode('live'));
   assert.ok(!new URL(page.url()).searchParams.has('night'));
+  await checkRenderedNight(page, new URL(base).origin + '/index.html');
   assert.deepEqual(errors,[]);
   assert.deepEqual(await page.evaluate(()=>window.__world.errors),[]);
   console.log('Passed KMA rise/set, both solstices, four browser skies, Seoul midnight, night lights, area reload and keyboard controls.');

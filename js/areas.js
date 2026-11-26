@@ -98,7 +98,14 @@ export function planArea(id, META, JUNCTIONS = []) {
   const neigh = new Set(); for (const m of own) for (const j of META[m]?.junctions || []) if (!ownSet.has(j.other)) neigh.add(j.other);
   const modules = all.filter(m => ownSet.has(m) || neigh.has(m) || (m === 'streets' && touches(META[m], B, 40)));
   const mouths = []; for (const m of own) for (const j of META[m]?.junctions || []) if (!ownSet.has(j.other)) mouths.push([j.x, j.z, j.y, j.also || []]);
-  const nearMouth = (x, y, z) => mouths.some(([mx, mz, my, also]) => Math.hypot(mx - x, mz - z) < 28 && [my, ...also].some(yy => Math.abs(yy - y) < 7));
+  const nearMouth = (x, y, z) => {
+    for (const [mx, mz, my, also] of mouths) {
+      const dx = mx-x, dz = mz-z;
+      if (dx*dx + dz*dz >= 28*28) continue;
+      if (Math.abs(my-y) < 7 || also.some(floor => Math.abs(floor-y) < 7)) return true;
+    }
+    return false;
+  };
   return {
     id, name: own.map(m => META[m]?.name || m).join(' · '), modules, box: B, lodSolid: false,
     keep(owner, x, y, z, ny) {

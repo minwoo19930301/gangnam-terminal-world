@@ -1,3 +1,4 @@
+import { OPEN_STAGE_FRONT } from './_junctions.js';
 import { loadArchitecture, placeArchitecture } from '../../assets/models/interior-architecture/model.js';
 import { buildFamilleAtrium } from './famille_atrium.js';
 import { buildGardenGallery } from './famille_garden_gallery.js';
@@ -1920,7 +1921,8 @@ export function build(K) {
       K.wall(a[0],a[1],b[0],b[1],C1,YR,{mat:'ccBand',mat2:0x4a4d52,thick:.18});
       for(let k=0;k<=1;k+=.25)K.box({x:a[0]+(b[0]-a[0])*k,z:a[1]+(b[1]-a[1])*k,y:Y1,w:.12,d:.12,h:C1-Y1,mat:0x3a3f45,solid:false});
     }
-    edge(11, Y1, C1, 0xd7d2c8, M.wallIn, [[J4[0], J4[1], 8.4, Y1, Y1 + 3.4], [-82.640,39.138,8.4,Y1,Y1+3.4], [-55, 111.5, 6.6, Y1, Y1 + 3.4], [-65,81,16,Y1,8.25]]);
+    const { x: plazaX, z: plazaZ, w: plazaWidth, y1: plazaHead } = OPEN_STAGE_FRONT;
+    edge(11, Y1, C1, 0xd7d2c8, M.wallIn, [[J4[0], J4[1], 8.4, Y1, Y1 + 3.4], [-82.640,39.138,8.4,Y1,Y1+3.4], [-55, 111.5, 6.6, Y1, Y1 + 3.4], [plazaX,plazaZ,plazaWidth,Y1,plazaHead]]);
     // south block 1F: e6 (connector), e7 (하차장 doors), e8 (west end), e9 (사평대로), e10 (JW ramp end)
     const D7 = [-80, -62, -44, -30, -28].map(t => { const p = P1(168.2, t); return [p[0], p[1], 4.2, Y1, 3.0]; });
     edge(6,Y1,C1,'ccBand',M.wallIn);
@@ -1986,7 +1988,7 @@ export function build(K) {
         if(i===8||i===9) for(let d=2.8;d<L-1.5;d+=4.5) windows.push([a[0]+(b[0]-a[0])*d/L,a[1]+(b[1]-a[1])*d/L,2.2,5.6,7.2]);
         else for(let d=2.4;d<L-1.5;d+=3.6) windows.push([a[0]+(b[0]-a[0])*d/L,a[1]+(b[1]-a[1])*d/L,1.2,5.25,6.45]);
       }
-      if(i===11)windows.push([...P(53.3,38.5),2.8,7,9],[-65,81,16,C1,8.25]);
+      if(i===11)windows.push([...P(53.3,38.5),2.8,7,9]);
       // Upper dining gallery lands on edge 10 as the arcade turns into the larger floor plate.
       const diningThreshold = P(198.1,37.25);
       if(i===10) for(let j=windows.length-1;j>=0;j--)
@@ -1996,11 +1998,12 @@ export function build(K) {
       if(i===9) for(let j=windows.length-1;j>=0;j--)
         if(Math.hypot(windows[j][0]-gardenThreshold[0],windows[j][1]-gardenThreshold[1])<9.75) windows.splice(j,1);
       const openings=[...windows];
+      if(i===11) openings.push([plazaX,plazaZ,plazaWidth,C1,plazaHead]);
       if(i===10) openings.push([...diningThreshold,3.3,Y2,Y2+3.15]);
       if(i===9) openings.push([...gardenThreshold,17.6,Y2,8.5]);
       edge(i,C1,YR,(i===8||i===9)?SOUTH_STONE:i===10?0x9a968f:BAND,M.wallIn,openings,(i===8||i===9)?{vBase:0}:{});
       const face=Math.atan2(ns[i][0],ns[i][1]),ux=Math.cos(face),uz=-Math.sin(face);
-      for(const [x,z,w,y0,y1] of windows) if(!(i===11&&(y0===7||x===-65))) K.wall(x-ux*w/2,z-uz*w/2,x+ux*w/2,z+uz*w/2,y0,y1,
+      for(const [x,z,w,y0,y1] of windows) if(!(i===11&&y0===7)) K.wall(x-ux*w/2,z-uz*w/2,x+ux*w/2,z+uz*w/2,y0,y1,
         {mat:(i===8||i===9)?0x303b38:{tex:'glass',color:0x3d4a52},thick:0.04});
     }
     for (let i=0;i<TERM.length;i++) {
@@ -2640,13 +2643,25 @@ export function build(K) {
     lbox(179.7,tt,17.8,.16,.033,.006,0x9b8257,{solid:false});
     lfloorText('파미에스테이션 ↑',174,tt,.042,3.3,1.0,'S',{fg:'#4c5c47'});
   }
-  // HgbY_flKpMI_29: a few steps down into the brick arcade, not a drop to B1.
-  // Its surveyed location is unknown; fit the filmed threshold to Gate2 while
-  // retaining a level passage on either side of the small central landing.
-  K.slab(RECT(164.4,20.35,169.4,23.65),.72,{mat:{tex:'tile',color:0xd6c4a7,gloss:.3},thick:.18});
-  {const a=P(162.3,22),b=P(164.4,22);K.stairs(...a,...b,{w:3,ya:0,yb:.72,mat:0xd8c6a8,steps:4,rails:false});}
-  {const a=P(169.4,22),b=P(172.4,22);K.stairs(...a,...b,{w:3,ya:.72,yb:0,mat:0xd8c6a8,steps:4,rails:false});}
-  // The gallery-side lane stays at hall level alongside the short filmed steps.
+  // The arcade is level. A short stone flight meets the slightly raised
+  // Honam landing; the terminal-side approach grades into the hall floor.
+  // Use the existing gameplay threshold as the vertical reference.
+  const honamLanding = .68;
+  const landingFinish = {tex:'tile',color:0xd6c9b4,gloss:.3};
+  const landingWidth = 3.3;
+  K.slab(RECT(164.4,20.35,169.4,23.65),honamLanding,{mat:landingFinish,thick:honamLanding});
+  K.ramp(...P(149.4,22),...P(164.4,22),{
+    w:landingWidth,ya:.015,yb:honamLanding,mat:landingFinish,rails:false,
+  });
+  for (const side of [-1,1]) {
+    const t=22+side*landingWidth/2;
+    const [ax,az]=P(149.4,t), [bx,bz]=P(164.4,t);
+    K.quad(landingFinish,[[ax,0,az],[bx,0,bz],[bx,honamLanding,bz],[ax,.015,az]],
+      [side*EX,0,side*EZ]);
+  }
+  K.stairs(...P(169.4,22),...P(171.0,22),{
+    w:landingWidth,ya:honamLanding,yb:0,mat:0xd8c9b5,nosing:0xae9d80,rails:false,
+  });
   lsign(['파미에스테이션 ↑','2게이트 · 식당가'],155,21.95,3.15,3.8,.65,'N',{bg:'#324639',fg:'#fff1cd'});
   lsign(['호남선 터미널 ↑','승차홈 · 매표소'],171.48,22,3.22,4.6,.55,'S',{bg:'#324639',fg:'#fff1cd'});
   K.detail({name:'파미에 Gate2 · 영상의 짧은 계단과 구형 가로등',floor:'1F',y0:0,y1:4.8,poly:RECT(162.3,18.5,176,27.8)},()=>{
@@ -2665,16 +2680,16 @@ export function build(K) {
       for(const a of [PI/4,PI/2,3*PI/4])entryTube([175.02,t,3.42],[175.02,t+1.42*Math.cos(a),3.42+.88*Math.sin(a)],.025,0x685f50);
     }
     for(const t of [20.35,23.65]){
-      for(let i=0;i<7;i++){
-        const s=169.4+i*.5,yy=.72*(1-i/6);
+      for(const s of [169.4,170.2,171]){
+        const yy=honamLanding*(171-s)/1.6;
         lbox(s,t,.055,.055,yy,1.05,0x3f352d,{solid:false});
       }
-      for(const h of [.45,1.05])entryTube([169.4,t,.72+h],[172.4,t,h],.06,0x3f352d);
+      for(const h of [.45,1.05])entryTube([169.4,t,honamLanding+h],[171,t,h],.06,0x3f352d);
     }
     // The filmed lamp is on the viewer's right when descending (+s).
     const s=168.75,t=19.85;
-    lcyl(s,t,.72,.13,2.8,0x37352c,{seg:10,solid:false});
-    lcyl(s,t,.72,.27,.13,0x37352c,{seg:10,solid:false});
+    lcyl(s,t,honamLanding,.13,2.8,0x37352c,{seg:10,solid:false});
+    lcyl(s,t,honamLanding,.27,.13,0x37352c,{seg:10,solid:false});
     const q=P(s,t);K.dome({x:q[0],z:q[1],y:3.52,rx:.3,ry:.3,rz:.3,hemi:false,mat:{tex:'emit',color:0xf0e4c4},seg:12,rings:8});
     for(const dt of [-.31,.31])entryTube([s,t+dt,3.2],[s,t+dt,3.7],.035,0x39352b);
     lcyl(s,t,3.78,.35,.06,0x37352c,{seg:12,solid:false});
@@ -2926,7 +2941,9 @@ export function build(K) {
   // Frame HgbY_flKpMI_29 shows a short local step down, not an entire B1 drop.
   // The authoritative 1F guide places both terminal gates on the same floor;
   // keep the two existing level connections and lead onward to the real exit.
-  lsign('파미에스테이션 →',167,21.8,2.8,4.7,.5,'N',{bg:'#302d26',fg:'#f7d66a',twoSided:true});
+  for (const [side,face,label] of [[-1,'N','파미에스테이션 ↑'],[1,'S','호남선 터미널 ↑']]) {
+    lsign(label,167+side*.015,21.8,3.12,4.7,.5,face,{bg:'#302d26',fg:'#f7d66a'});
+  }
   buildGardenGallery(K,{P,RECT,lbox,lwall,lcyl,lsign,lzone,beam,y:Y2});
 
   // Official Famille M1F drawing: Outback long west bar and DimDimSum east corner, not1F shops.
@@ -2964,7 +2981,8 @@ export function build(K) {
     K.hpoly(marble,hallPoly,.045,true,[honamWellR20]);
     // The dropped beam is the hand-off to the coffered passage under JW.
     // Its soffit is high enough to retain the broad uninterrupted 1F opening.
-    lbox(91.95,39.72,16.2,.62,7.8,.55,0xe9e5dc,{solid:false});
+    const stageS = (OPEN_STAGE_FRONT.x - OX) * AX + (OPEN_STAGE_FRONT.z - OZ) * AZ;
+    lbox(stageS,39.72,OPEN_STAGE_FRONT.w+.2,.62,7.8,.55,0xe9e5dc,{solid:false});
     lzone(83.8,6.2,138,40.2,{name:'호남선 대합실',floor:'1F',sub:'표사는 곳 · 승차홈 · 스위트 파크 연결',y0:0,y1:8.5,priority:10});
 
     // Back-fill the former Open Stage/Shake Shack strip. These structures are
@@ -3793,8 +3811,9 @@ function hallR20(K) {
   const well=RECT(21,2.25,32,8.75);
   K.groundHole(well);
   slab(-15.2,-30,38,27.2,0,{holes:[well],under:false,ceil:false});
-  // A wide, open connection stops at the Honam beam, about (-65,81).
-  slab(3,-33,20,-11,0,{under:false,ceil:false});
+  // Finish the plaza up to the shared beam along its whole open front.
+  // The main slab above already covers t >= -30.
+  slab(3,-33,33,-30,0,{under:false,ceil:false});
   slab(-19.5,-3.2,0,3.2,0,{under:false,ceil:false});
   // The south-west approach is inside the terminal, not an outdoor road.
   // Continue the photographed hall flooring to the public link toward Honam;
@@ -4229,7 +4248,8 @@ function hallR20(K) {
   for(const q of [[0,-31,23.3,12],[23.3,-31,32,-1.4],[23.3,2.4,32,12]]){
     K.hpoly(0xf4f1ea,RECT(...q),6.42,false);K.phys.addCeiling(RECT(...q),6.42,{});
   }
-  K.hpoly(0xf4f1ea,RECT(3,-33,20,-12),6.42,false);K.phys.addCeiling(RECT(3,-33,20,-12),6.42,{});
+  const plazaSoffit=RECT(3,-33,33,-31);
+  K.hpoly(0xf4f1ea,plazaSoffit,6.42,false);K.phys.addCeiling(plazaSoffit,6.42,{});
   for(const rect of[[-11,-29,0,26],[0,12,34,26],[34,18,38,26]]){K.hpoly(0x1b1b1d,RECT(...rect),6.42,false);K.phys.addCeiling(RECT(...rect),6.42,{});}
   // Classical arcade: real open semicircles, not glass or a flat wall across the view.
   const arch=(s,t,axis)=>{
@@ -4764,6 +4784,10 @@ function hosUpperR20(K) {
   // Stair: twelve black stone risers, middle tactile landing, gold handrails.
   for(const[a,b,ya,yb]of[[12.975,10.125,0,1.05],[9.325,6.325,1.05,Y1]])K.stairs(...Q(a,9.81),...Q(b,9.81),{w:3.7,ya,yb,steps:6,mat:{tex:'darkstone',color:0x222224,gloss:.5},rails:false});
   K.slab(QR(9.275,7.96,10.175,11.66),1.05,{mat:{tex:'darkstone',color:0x222224,gloss:.5},thick:.16});
+  // Both stair flights and their landings are inside the House. At the upper
+  // flight the lobby's ground-floor zone ends below the player's feet.
+  K.zone({name:'하우스 오브 신세계',floor:'1F',sub:'파미에스테이션 · 와인셀러 연결 계단',
+    poly:QR(4,7.96,13.2,11.66),y0:0,y1:Y1+2.4,priority:13,streetAccess:false});
   for(const t of[7.93,11.69]){
     tube([12.975,t,.94],[10.125,t,1.99],.055,0xb49866);tube([10.125,t,1.99],[9.325,t,1.99],.055,0xb49866);tube([9.325,t,1.99],[6.325,t,3.04],.055,0xb49866);
     for(const[s,y]of[[12.925,0],[10.125,1.05],[9.325,1.05],[6.325,Y1]])tube([s,t,y],[s,t,y+.94],.04,0xb49866);
@@ -4847,7 +4871,7 @@ function hosUpperR20(K) {
   for (const y of [Y1,YM]) {
     sig(['전용 승강기','L · JW 메리어트 로비'], -13,11.22,y+2.38,1.5,.35,'W',{bg:'#463a32',fg:'#eee0c3',twoSided:true});
   }
-  const houseLift=K.elevator({name:'하우스 오브 신세계 엘리베이터',x:lift[0],z:lift[1],rotY:R+PI/2,w:1.4,d:1.8,topH:2.85,floors:[{label:'1F',y:Y1,name:'와인셀러 · 레스토랑'},{label:'1M',y:YM,name:'아트 앤 라이프'}]});
+  const houseLift=K.elevator({name:'하우스 오브 신세계 엘리베이터',x:lift[0],z:lift[1],rotY:R+PI/2,w:1.4,d:1.8,topH:2.85,floors:[{label:'1F',y:Y1,name:'와인셀러 · 레스토랑 · 파미에스테이션 방향'},{label:'1M',y:YM,name:'아트 앤 라이프'}]});
   {
     // The kit gives its standard stops one door direction. Register L on the same car
     // after drawing those stops so only its opposite door opens into the hotel.

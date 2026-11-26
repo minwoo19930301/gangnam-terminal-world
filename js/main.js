@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { installElectricLighting } from './night-lighting.js';
 import { createDaylight, timeModes } from './daylight.js';
 import { createPhysics, createPlayer } from './physics.js';
 import { createKit } from './kit.js';
@@ -9,7 +10,7 @@ import { PLACES } from './places/index.js';
 import { createMap } from './map.js';
 import { FONT } from './textures.js';
 import { planArea, areaIdAt, areaIdForKey, areaName, districtAt, OUTDOOR } from './areas.js';
-import { JUNCTIONS } from './places/_junctions.js';
+import { JUNCTIONS, OPEN_STAGE_FRONT } from './places/_junctions.js';
 import { LANDMARKS } from './landmarks.js';
 import { pickReModels, reModelStandIns, loadReModels } from './remodels.js';
 
@@ -29,7 +30,15 @@ async function boot() {
   // Fonts are only needed when sign text is painted (after the world is up), so they load in parallel with the
   // map data and the place modules instead of blocking them.
   status('지도 데이터 불러오는 중…');
-  const fontsReady = Promise.race([Promise.all(['400', '700'].map(w => document.fonts.load(`${w} 32px "Noto Sans KR"`, '가나다'))), new Promise(r => setTimeout(r, 4000))]).catch(() => { }).then(() => mark('fonts'));
+  const fontSheet = $('sign-fonts');
+  const sheetReady = fontSheet.media === 'all' ? Promise.resolve() : new Promise(resolve => {
+    fontSheet.addEventListener('load', resolve, {once:true});
+    fontSheet.addEventListener('error', resolve, {once:true});
+  });
+  const fontsReady = Promise.race([
+    sheetReady.then(() => Promise.all(['400', '700'].map(w => document.fonts.load(`${w} 32px "Noto Sans KR"`, '가나다')))),
+    new Promise(resolve => setTimeout(resolve, 4000)),
+  ]).catch(() => {}).then(() => mark('fonts'));
   const osmP = fetch('data/osm.json').then(r => r.json());
   const reP = fetch('js/places/_re_models.json').then(r => r.ok ? r.json() : null).catch(() => null);
   // ---- area loading: an address builds only its area (js/areas.js); ?area=all, ?places=… and screenshots build everything
@@ -47,7 +56,7 @@ async function boot() {
   const osm = applyRoadEdits(await osmP); mark('osm');
 
   // Quality: ?q=low forces the light path (no MSAA, lower pixel-ratio ceiling); phones and small-memory devices
-  // pick it automatically. Geometry is never reduced — only the render resolution adapts (see adaptResolution).
+  // pick it automatically. The render resolution adapts further to the measured frame rate (see adaptResolution).
   const LOW = Q.get('q') === 'low' || (!Q.get('q') && ((navigator.deviceMemory && navigator.deviceMemory <= 4) || /Android|iPhone|iPad|Mobile/i.test(navigator.userAgent)));
   const renderer = new THREE.WebGLRenderer({ antialias: !SHOT && !LOW, logarithmicDepthBuffer: true, preserveDrawingBuffer: SHOT, powerPreference: 'high-performance' });
   const MAX_PR = SHOT ? 1 : Math.min(devicePixelRatio, LOW ? 1.25 : 2);
@@ -73,6 +82,8 @@ async function boot() {
     document.body.classList.toggle('night', state.night);
   });
   K.onNight = daylight.onNight;
+  const streetLuminaires = [];
+  K.streetLight = (x,y,z) => streetLuminaires.push([x,y+relief(x,z),z]);
   function setTimeMode(mode) {
     if (!timeModes.includes(mode)) return;
     if (!SHOT) {
@@ -126,6 +137,7 @@ async function boot() {
         // The gallery supplies the visible interior faces at these openings.
         if (AREA.id === 'in:famille+centralcity' && mid === 'jwmarriott' && bid === 136986976) {
           const openings = [
+            OPEN_STAGE_FRONT,
             { x: 16.88, z: 148.69, w: 18.1, y1: 9.8 }, // east hall, local u=4..22
             { x: -12.27, z: 159.97, w: 44.6, y1: 8 }, // vaulted gallery, u=22..66.5
           ];
@@ -192,6 +204,8 @@ async function boot() {
   }
   mark('city'); status('메시 합치는 중…'); await new Promise(r => setTimeout(r, 0));
   K._.finalize(); mark('finalize');
+  const gl = renderer.getContext();
+  installElectricLighting(THREE,K,phys,streetLuminaires,gl.getParameter(gl.MAX_3D_TEXTURE_SIZE));
   K._.cull(6, 1.6, -125, true);
   const reStand = reModels.length ? reModelStandIns({ THREE, K, osm, scene, models: reModels, terrain: exteriorTerrain }) : new Map();
   const traffic = roadsInfo && Q.get('traffic') !== '0' ? createTraffic(K, roadsInfo, 180) : null;
@@ -484,10 +498,10 @@ async function boot() {
     };
   })();
   route.start();
-  K._.ensureDetail(player.x, player.y + player.eye, player.z); // detail of the floor you start on, before the first frame
+  K._.ensureDetail(player.x, player.y + player.eye, player.z, 45, SHOT ? Infinity : 6);
   const clock = new THREE.Clock(); let t = 0, frames = 0, fpsT0 = performance.now(), fps = 0;
   let signsGo = false;
-  const gl = renderer.getContext(), scratch = document.createElement('canvas'), sctx = scratch.getContext('2d');
+  const scratch = document.createElement('canvas'), sctx = scratch.getContext('2d');
   function uploadSignRects(jobs) {
     const byPage = new Map();
     for (const j of jobs) { if (!byPage.has(j.r.page)) byPage.set(j.r.page, []); byPage.get(j.r.page).push(j); }
@@ -580,7 +594,7 @@ async function boot() {
     hudCoord.textContent = `x ${player.x.toFixed(0)}  z ${player.z.toFixed(0)}  높이 ${(player.y + relief(player.x, player.z)).toFixed(1)}m  ${player.fly ? '✈ ' : ''}${fps.toFixed(0)}fps${pixelRatio < Math.min(devicePixelRatio, 2) - 0.01 ? ` · 해상도 ${Math.round(pixelRatio / Math.min(devicePixelRatio, 2) * 100)}%` : ''}`;
     map.update(dt);
     // lazy floor detail near the camera (bounded per frame); screenshots paint new sign text immediately
-    if (K._.ensureDetail(player.x, player.y + player.eye, player.z, 60, 40) && SHOT && K._.atlas.pending()) { K._.atlas.flushAll(); for (const p of K._.atlas.pages) p.t.needsUpdate = true; }
+    if (K._.ensureDetail(player.x, player.y + player.eye, player.z, 60, SHOT ? Infinity : 6) && SHOT && K._.atlas.pending()) { K._.atlas.flushAll(); for (const p of K._.atlas.pages) p.t.needsUpdate = true; }
     K._.cull(player.x, player.y + player.eye, player.z);
     // progressive sign painting (≈5 ms per frame); only the painted rectangles are uploaded (texSubImage2D)
     if (signsGo && K._.atlas.pending()) uploadSignRects(K._.atlas.flush(5, player.x, player.z));

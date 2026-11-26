@@ -48,8 +48,8 @@ function previewTime(mode, ms, site) {
 // Elevation stops: zenith, horizon, ground, skylight, ground bounce, direct
 // sunlight, skylight intensity, sunlight intensity and interior fill.
 const palette = [
-  [-12, 0x0c1633, 0x253450, 0x111926, 0xabbddd, 0x575f70, 0xddc6b3, .42, 0, .38],
-  [-6, 0x24395d, 0x68667e, 0x414657, 0xc3c9e3, 0x8e8594, 0xffab72, .63, 0, .42],
+  [-12, 0x020408, 0x080d16, 0x030509, 0x9aa9c0, 0x505a64, 0xddc6b3, .055, 0, .005],
+  [-6, 0x172948, 0x454757, 0x202631, 0xa4aec4, 0x626478, 0xffab72, .32, 0, .22],
   [-1, 0x52749c, 0xc3a8b1, 0x8a8290, 0xf2e1db, 0xb29b97, 0xff9855, .98, .09, .47],
   [6, 0x6694bb, 0xe1c5af, 0xab9f91, 0xf6e5d2, 0xc1aa97, 0xffbe80, 1.3, .82, .52],
   [18, 0x588dc3, 0xd6e0e7, 0xa6adb0, 0xf4f7ff, 0xb7afa4, 0xffe7c5, 1.5, 1.38, .55],
@@ -110,10 +110,11 @@ export function createDaylight(THREE, scene, site, bounce, initialMode, onChange
     uniforms.disc.value=clamp((altitude+1.5)/1.75)*(1-cloud);
     // City fog and the river share the same horizon tint through the transition.
     scene.fog.color.copy(uniforms.horizon.value).lerp(uniforms.glowColor.value,warmth*.18);
-    overcast.setHex(altitude < -6 ? 0x293244 : 0x89959d);
+    overcast.setHex(0x0c1018).lerp(scratch.setHex(0x89959d),clamp((altitude+9)/12));
     uniforms.zenith.value.lerp(overcast,cloud*.72);
     uniforms.horizon.value.lerp(overcast,cloud*.8);
     scene.fog.color.lerp(overcast,cloud*.8); scene.fog.near=350-160*cloud; scene.fog.far=2600-1350*cloud;
+    ambient.intensity=.012+.238*clamp((altitude+10)/10);
     hemi.intensity=mix(7)*(1-.16*cloud);
     sun.position.fromArray(direction).multiplyScalar(700);
     sun.intensity=mix(8)*(1-.8*cloud); bounce.value=mix(9);

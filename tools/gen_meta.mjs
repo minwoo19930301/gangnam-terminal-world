@@ -72,7 +72,7 @@ for (const [id, { meta, builtZones }] of modules) {
   for (const [id,m] of mods) {
     if (OUTDOOR.has(id) || !out[id]) continue;
     const spots = [];
-    for (const zn of K._.zonesList.filter(z => z.place === id && z.y0 > -1.6 && z.y0 < 1.6)) {
+    for (const zn of K._.zonesList.filter(z => z.place === id && z.streetAccess !== false && z.y0 > -1.6 && z.y0 < 1.6)) {
       const P = zn.poly, n = P.length; let area2 = 0; for (let i = 0; i < n; i++) { const a = P[i], b = P[(i + 1) % n]; area2 += a[0] * b[1] - b[0] * a[1]; }
       const sg = area2 > 0 ? 1 : -1;
       for (let i = 0; i < n; i++) {

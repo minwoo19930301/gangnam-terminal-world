@@ -7,9 +7,13 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 rx=%227%22 fill=%22%23f07a3a%22/%3E%3Cpath d=%22M8 22h16M10 22V12h12v10M13 15h2M17 15h2%22 stroke=%22white%22 stroke-width=%222.4%22 fill=%22none%22/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+<link id="sign-fonts" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <link rel="stylesheet" href="css/style.css">
-<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+<link rel="preload" as="fetch" href="data/osm.json" crossorigin>
+<link rel="preload" as="fetch" href="js/places/_meta.json" crossorigin>
+<link rel="preload" as="fetch" href="assets/models/world/buildings.json.gz" crossorigin>
+<script type="importmap">{"imports":{"three":"./assets/vendor/three-r160/three.module.min.js","three/addons/":"./assets/vendor/three-r160/"}}</script>
+<link rel="modulepreload" href="assets/vendor/three-r160/three.module.min.js">
 </head>
 <body>
 <div id="app">
