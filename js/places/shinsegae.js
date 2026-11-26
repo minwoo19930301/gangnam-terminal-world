@@ -2524,11 +2524,16 @@ export function build(K) {
       const sg=(text,s,t,yy,w,h,style={})=>sign(text,...at(s,t),yy,face,w,h,style);
       return{W,D,at,bb,sg,face};
     }
-    function bottle(u,v,yy,col=0x44472c,scale=1){
-      cyl(u,v,yy,.055*scale,.22*scale,col,false,8);
-      cyl(u,v,yy+.22*scale,.024*scale,.10*scale,col,false,8);
-      cyl(u,v,yy+.315*scale,.027*scale,.028*scale,0x3b3226,false,8);
-      cyl(u,v,yy+.065*scale,.056*scale,.085*scale,0xe9debd,false,8);
+    function bottle(u,v,yy,col=0x44472c,scale=1,stock=null){
+      const [x,z]=P(u,v);
+      function part(base,r,h,paint) {
+        if(stock)stock.push([x,base,z,r,h,paint]);
+        else K.cyl({x,y:base,z,r,h,mat:paint,solid:false,seg:8});
+      }
+      part(yy,.055*scale,.22*scale,col);
+      part(yy+.22*scale,.024*scale,.10*scale,col);
+      part(yy+.315*scale,.027*scale,.028*scale,0x3b3226);
+      part(yy+.065*scale,.056*scale,.085*scale,0xe9debd);
     }
     function deliCoffer(u,v,w,d){
       if (beautySlots.some(slot => intersects(slot,[u-w/2-.1,v-d/2-.1,u+w/2+.1,v+d/2+.1]))) return;
@@ -2814,6 +2819,7 @@ export function build(K) {
         const c=cells.find(c=>c.kind==='supermarket'),core=[541,598,614,656].map(Number),[cu0,cv0,cu1,cv1]=BOUNDS(core);
         const clear=(u,v,w,d)=>fits(c,u,v,w,d)&&!inR(u,v,[cu0-1.2,cv0-1.2,cu1+1.2,cv1+2.5]);
         const[mU0,mV0,mU1,mV1]=uvRect(c);
+        const bottleRows = new Map();
         for(let u=mU0+1.8;u<mU1-1;u+=3.1)for(let v=mV0+3;v<mV1-2.2;v+=6.1){
           if(!clear(u,v,1.1,4.4))continue;
           if(u<mU0+2&&v>55&&v<60)continue; // this same fixture footprint is the dry-aging cabinet below
@@ -2883,12 +2889,17 @@ export function build(K) {
             // p5QE_20: black steel grocery gondolas stocked with bottles.
             box(u,v,.10,4.4,y,1.55,0x222522);
             for(const vv of [v-2.16,v+2.16])box(u,vv,1.1,.05,y,1.65,0x252925);
+            // Group nearby shelves so a turn down an aisle can cull the rows behind it.
+            const cluster = Math.floor((u-mU0)/15)+','+Math.floor((v-mV0)/18);
+            if(!bottleRows.has(cluster))bottleRows.set(cluster,[]);
+            const stock=bottleRows.get(cluster);
             for(let level=0;level<3;level++){
               const yy=y+.20+level*.47;box(u,v,1.12,4.4,yy,.045,0x272b27,{solid:false});
-              for(const side of [-1,1])for(let k=0;k<8;k++)bottle(u+side*.33,v-1.84+k*.52,yy+.05,[0x443a25,0x3c4634,0x6d4731][k%3],1.1);
+              for(const side of [-1,1])for(let k=0;k<8;k++)bottle(u+side*.33,v-1.84+k*.52,yy+.05,[0x443a25,0x3c4634,0x6d4731][k%3],1.1,stock);
             }
           }
         }
+        for(const stock of bottleRows.values())K.stockCylinders('신세계 마켓 · 그로서리 진열병',stock);
         // p5QE9cVtWDM_300: dark dry-aging glass cabinet, hanging meat, stainless worktop.
         const du=mU0+1.8,dv=mV0+9.1;
         if(clear(du,dv,1.1,4.4)){
