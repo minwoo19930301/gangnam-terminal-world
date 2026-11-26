@@ -11,7 +11,7 @@ import { wheelContacts } from './vehicle_ground.js';
 // K = construction kit handed to every place module.  See docs/PLACE_API.md for the contract.
 // Coordinates: x=east, z=south, y=up, meters. Origin = 고속터미널역. Street level y=0.
 import { createTextures, createSignAtlas, makeCanvas } from './textures.js';
-import { pointInPoly, polyBBox, polyArea } from './physics.js';
+import { pointInPoly, polyBBox, polyArea, distanceToPolygonSq } from './physics.js';
 
 export const LEVELS = { B1: -6, B2: -11, B3: -16, B4: -21, B5: -26, B6: -31 };
 const TILE = 320;
@@ -1125,7 +1125,8 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
       const draw = fn;
       fn = kit => withTerrainSurface(datum,() => draw(kit));
     }
-    details.push({ poly, owner: current, meta: perPlace[current], floor: o.floor || '', y0: o.y0 ?? -1e9, y1: o.y1 ?? 1e9, bb, fn, built: false, name: o.name || '', visibleFrom: o.visibleFrom });
+    const rectangular=poly?.length===4 && poly.every(([x,z])=>(x===bb[0]||x===bb[2]) && (z===bb[1]||z===bb[3]));
+    details.push({ poly, exactDistance:!!poly&&!rectangular, owner: current, meta: perPlace[current], floor: o.floor || '', y0: o.y0 ?? -1e9, y1: o.y1 ?? 1e9, bb, fn, built: false, name: o.name || '', visibleFrom: o.visibleFrom });
   }
   function buildDetail(d) {
     if (d.built) return []; d.built = true;
@@ -1206,8 +1207,13 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
       for (const d of details) {
         if (d.built || (keepDetail && !keepDetail(d))) continue;
         const dx = Math.max(0, d.bb[0]-x, x-d.bb[2]), dz = Math.max(0, d.bb[1]-z, z-d.bb[3]);
-        const vertical = Math.max(0, d.y0-y, y-d.y1), distance = dx*dx + dz*dz;
+        const vertical = Math.max(0, d.y0-y, y-d.y1);
+        let distance = dx*dx+dz*dz;
         if (distance > reach*reach || vertical > 8) continue;
+        if (camera && d.exactDistance) {
+          distance=distanceToPolygonSq(x,z,d.poly);
+          if(distance>reach*reach)continue;
+        }
         if (camera && ((d.visibleFrom && !d.visibleFrom(x,y,z)) || !visibleDetail(d,x,y,z,camera,distance,vertical))) continue;
         waiting.push({d,vertical,distance});
       }
