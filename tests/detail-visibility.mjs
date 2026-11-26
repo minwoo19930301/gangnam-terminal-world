@@ -68,3 +68,18 @@ assert.ok(!loaded.includes('covered level'),'opaque floor separates the cellar')
 streamed._.buildAllDetail();
 assert.equal(loaded.at(-1),'covered level','all-detail exports still build concealed floors');
 console.log('OK — camera direction, nearby collision, opaque floor, open atrium and all-detail mode');
+
+// A central bus stop comes within 48 m of the department store's bounding box
+// while still more than 50 m from its nearest rotated facade.
+const streetKit=createKit(THREE,new THREE.Scene(),{osm:{},phys:createPhysics()});
+const wing=[[-107.07,-24.31],[-44.46,-48.08],[-14.35,31.08],[-76.64,54.72]];
+let wingBuilt=0;
+streetKit.detail({poly:wing,floor:'1F',y0:0,y1:7},()=>wingBuilt++);
+function approach(x,z){
+  camera.position.set(x,1.65,z);camera.lookAt(-65,1.65,-35);camera.updateMatrixWorld(true);
+  streetKit._.ensureDetail(x,1.65,z,48,Infinity,camera);
+}
+approach(-70.86,-96);assert.equal(wingBuilt,0,'disjoint physical footprint');
+approach(-70.86,-72);assert.equal(wingBuilt,1,'store enters reach');
+approach(-70,-69);assert.equal(wingBuilt,1,'reuse the visited shop');
+console.log('OK — crossing the actual rotated retail footprint range');

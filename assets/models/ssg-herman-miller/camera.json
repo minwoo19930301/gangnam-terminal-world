@@ -1,0 +1,11 @@
+{
+  "floor": "9F",
+  "x": -69.6441051296058,
+  "z": -17.12874492942607,
+  "yaw": 203.0,
+  "pitch": -15.0,
+  "meshName": "HMFabric",
+  "sourceBlend": "seating.blend",
+  "sourceCollection": "SSG_9F_HermanMiller",
+  "nativeLabel": "허먼 밀러"
+}

@@ -2,6 +2,68 @@
  "id": "gotomall",
  "name": "강남터미널 지하도상가 (GOTO MALL 고투몰)",
  "updated": "2026-11-26",
+ "west_g010_20261126": {
+  "운영사_현장사진": "https://gotomall.kr/stores/7cfea3b4-a229-469b-aa7d-222755fd5b3b",
+  "공단_점포_구획": "https://www.sisul.or.kr/open_content/com/common/upfiles.do?program=undershop!0923_gosokteomineol_1chabaechido_%281guyeok%29.jpg",
+  "서초구_일반음식점_인허가": "https://data.seoul.go.kr/dataList/OA-18673/S/1/datasetView.do",
+  "관리번호": "3210000-101-2012-00324",
+  "등록": "2012-07-19 인허가. 신반포로 지하 200, G-10호 마당. 2026-05-11 갱신 자료의 시설총규모/소재지면적 모두 53.53㎡.",
+  "도면_적용": "기존 34.01㎡에서 등록면적 53.53㎡에 맞췄다. G011 후면으로 꺾이는 배치는 공단 도면으로 확인했다. 각 변과 대각선·집기의 개별 치수는 실측되지 않았다.",
+  "사진_판독": "붉은 벽에 단 흰 하트와 작은 황동 종, 아래 흰 벽돌, 음식 메뉴판, 나무 식탁과 빨간 방석, 식탁 번호와 수저통, 스테인리스 후드와 배식 수레·밥솥. 벽 메뉴와 수레에 보이는 음식을 참고해 달걀 비빔밥과 전을 구성했다.",
+  "네이버지도": "2026-11-26 신반포로 마당 고투몰 지점명 검색에서 별도 핀을 확인하지 못했다.",
+  "모델": "assets/models/gotomall-madang/madang.blend",
+  "게임화면": "assets/models/gotomall-madang/play.jpg"
+ },
+ "west_g011_g013_20261126": {
+  "공단_1구역": "https://www.sisul.or.kr/open_content/com/common/upfiles.do?program=undershop!0923_gosokteomineol_1chabaechido_%281guyeok%29.jpg",
+  "반에반_입점정보와_사진": "https://gotomall.kr/stores/73bd8e2d-9358-409a-9d6e-633d1b2cc644",
+  "반에반_네이버지도": "https://map.naver.com/p/entry/place/31315348",
+  "반에반_방문사진": "https://m.blog.naver.com/ssapt406/223816380383",
+  "G013_업종과_정면사진": "https://gotomall.kr/stores/5f6efe1c-8284-4252-a8a8-3677dcb55d3a",
+  "G013_매장_방문사진": "https://m.blog.naver.com/leeke1214/223734561042",
+  "G013_네이버지도_기존주소": "https://map.naver.com/p/entry/place/1677765568",
+  "확인": "G-011은 요거트월드 옆. G-013은 측창 남쪽 통로 건너. 현재 운영사 안내는 셀프사진이며 현장 사진에 HAMA FILM 상호, 하마 그림과 물결 거울이 보인다. 연결된 네이버 플레이스 주소와 지점명 검색에서는 2026-11-26 해당 페이지를 확인할 수 없었다.",
+  "추정": "매장 깊이·가구 크기와 수량을 도면/사진에서 추정했다. 사진 스트립 도안은 직접 구성했으며 동시 촬영되는 인물이나 실상품 목록을 재현하지 않는다.",
+  "모델": "assets/models/gotomall-west-corner/west-corner.blend",
+  "게임화면": "assets/models/gotomall-west-corner/play.jpg"
+ },
+ "west_g012_20261126": {
+  "서초구_휴게음식점_등록면적": "https://data.seoul.go.kr/dataList/OA-18698/S/1/datasetView.do",
+  "관리번호": "3210000-104-2024-00386",
+  "면적_반영": "2024-10-29 인허가된 G-012 요거트월드(고투몰점)의 소재지면적과 시설총규모는 54.65㎡. 2026-05-07 갱신 자료. 게임의 약 34㎡ 구획을 공단 도면상 ㄴ자 모양으로 54.65㎡에 맞췄다. 주문대 뒤 후방의 정확한 치수와 배치는 미실측.",
+  "공단_1구역_배치도": "https://www.sisul.or.kr/open_content/com/common/upfiles.do?program=undershop!0923_gosokteomineol_1chabaechido_%281guyeok%29.jpg",
+  "공단_상가_안내": "https://www.sisul.or.kr/open_content/undershop/undershop/undershopDetail.do?menu_div=euljiro&page_div=02&shop_seq=32",
+  "운영사_매장사진": "https://gotomall.kr/stores/aae2c578-f923-4abd-98bf-3475da5694f4",
+  "브랜드_지점": "https://www.yogurtworld.co.kr/bbs/content.php?co_id=store",
+  "네이버_플레이스": "https://map.naver.com/p/entry/place/1670376995",
+  "그릭요거트_방문사진": "https://m.blog.naver.com/hyobin_table/223675076224",
+  "벌집꿀_방문사진": "https://m.blog.naver.com/cowberry96/223711055605",
+  "G010_마당": "https://gotomall.kr/stores/7cfea3b4-a229-469b-aa7d-222755fd5b3b",
+  "판독": "G-012는 서편 G-011에 접하는 ㄴ자 점포다. 남쪽 측창이 난 보행통로 건너에 G-013과 화장실이 있다. G-010 마당이 북쪽에 있다. 방문사진의 파란 영문 간판, 흰 주문기, 흰 식탁과 목재 의자, 셀프 정리대, 메뉴 모니터 두 개와 두 종류 요거트 볼을 재현했다. 동편의 예전 G012 상호와 전화번호 표기를 정정했다.",
+  "위치_해석": "방문기에 삽입된 네이버 플레이스 핀 37.5052266, 127.0012725는 서편 식당가를 가리킨다. 공단 도면에 따라 잡은 모델 점포 중심과 약 45m 떨어져 있어 점포 사이 상대위치는 공단 안내를 사용했다. 폭·높이·가구 세부 위치는 현장 미실측.",
+  "모델": "assets/models/gotomall-yogurtworld/g012.blend",
+  "게임대조": "assets/models/gotomall-yogurtworld/play.jpg"
+ },
+ "west_rest_seats_20261126": {
+  "naver": "https://map.naver.com/p/entry/place/21714783",
+  "visit": "https://rurubu.jp/andmore/article/25097",
+  "photo": "https://img.rurubu.jp/img_srw/andmore/images/0000743968/Ft3inl0CXSwiZMRAGv8gksdvbw6jKsoDQcN5alsk.jpg",
+  "observed": "2026년 8월 취재는 식재 휴게석과 서쪽 광장의 넓은 좌석을 구분한다. 오른쪽 사진에서 짙은 곡면 벤치와 낮은 밝은 석재 띠, 유리 기둥 위 화분, 짙은 바닥의 밝은 원호·직선 상감을 확인했다.",
+  "fit": "기존 게임의 서편 광장 안에 두 기둥과 여덟 석재 좌석을 구성했다. 실제 수량·치수·방향·바닥 선형의 교차점은 미실측. 중앙 화단 앞으로 추정 배치됐던 짙은 벤치와 기둥을 정리하고 흰 화단과 유아차를 유지했다.",
+  "model": "assets/models/gotomall-west-seats/west-lounge.blend",
+  "comparison": "assets/models/gotomall-west-seats/play.jpg"
+ },
+ "rest_garden_20261126": {
+  "naver": "https://map.naver.com/p/entry/place/21714783",
+  "onsite_photo": "https://rurubu.jp/andmore/article/25097",
+  "furniture_photo": "https://img.rurubu.jp/img_srw/andmore/images/0000743968/Ft3inl0CXSwiZMRAGv8gksdvbw6jKsoDQcN5alsk.jpg",
+  "research_table_7": "https://www.kieae.kr/xml/30143/30143.pdf",
+  "walk_reference": "https://www.youtube.com/watch?v=rLMagJuViqo&t=860s",
+  "observed": "2026년 8월 현장 사진의 식재 휴게석은 밝은 인조석을 덧댄 두 단 곡면과 하부 황색 조명, 물과 회색 돌 및 여러 폭의 녹색 잎으로 이루어져 있다. 같은 취재의 서쪽 석재 벤치와는 외형이 다르다. 2021년 연구 표 7의 현장 사진도 식재 둘레 흰 좌석을 보여 준다.",
+  "fit": "기존 9호선 인근의 게임 화단 좌표와 휴게석 배치를 사용. 안내도의 이름, 촬영 당시의 점포명, 정확한 곡률과 식물종, 유아차의 실제 기종과 세부 치수는 미확인. 유아차는 기존 보행 영상 판독을 참조한 근사 모델.",
+  "model": "assets/models/gotomall-rest-garden/plaza.blend",
+  "review": "assets/models/gotomall-rest-garden/play.jpg"
+ },
  "retail_and_g2_20261126": {
   "checked": "2026-11-26",
   "sources": {
@@ -341,7 +403,7 @@
   "store_evidence": "공개 대표사진의 업종과 대표적인 집기·재질·상품 구성을 참고했다. 틸다블루 세로 줄무늬 차양, 고려주방 청색 헤더, 레몬상자의 목재 마감과 세로 안내판, 헤쎄드의 벽면 가방, 꽃집의 꽃단/화분 등이 보인다. 나머지 간판은 확인한 상호의 레터링 재구성으로 실제 글꼴·인증 로고 복제가 아니다. 내부 치수·당일 재고·가격은 실측하지 않았다. 블루제이 등 업종과 대표사진이 불일치하는 점포는 이번 모델 대상에서 제외했다.",
   "shop_addresses": "공식 호수와 점포 열은 실제 정보이며, 칸 경계는 기존 모델을 사용했다. 이전 실사기록이 우선하는 숲으로는 기존 위치를 보존, 운영사 표기 B-122를 기록. 다중 호수인 스토리지21의 실제 점포 폭과 모델 단일 칸 폭은 다르다.",
   "wayfinding": "G4 옆 메가MGC커피와 기존 청년떡볶이는 네이버 매장 카드 및 운영사 G-002/G-022를 대조해 G4 안내판에 표기했다. 라떼야커피·청년손튀김은 자료 간 상호 일치가 확정되지 않아 매장을 추가하지 않았다.",
-  "asset": "assets/models/gotomall/shop-interiors.blend 안의 7개 편집 가능한 점포 컬렉션과 export_mesh.py로 같은 면·색상·센티미터 정점의 웹 모듈을 생성했다. 17곳에 실제 적용.",
+  "asset": "assets/models/gotomall/shop-interiors.blend에 편집 가능한 7개 점포 컬렉션이 있다. 의류·아동복·주방·침구·꽃·타로 6종은 export.py로 업종별 압축 GLB를 만들어 16곳에 적용한다. D-086 헤쎄드는 별도 Blender 원본을 사용한다.",
   "verification": "실제 프로젝트 바닥/충돌 엔진(반경 0.32m, 키 1.75m, 0.25m 간격)으로 대표 매장 17곳의 문 앞에서 깊이 65% 지점까지 모두 도달. 일반 지상계단 15곳 전부 B1 공용 보행공간에서 지상 착지까지 도달. G11 다이소 내부 연결과 G13 별도 계단은 전용 경로로 별도 확인. 사진은 모델 화면이며 실제 운영상태는 미확인."
  },
  "sources": [
@@ -657,7 +719,7 @@
     "더페이스샵",
     "오렌즈(컬러렌즈)",
     "빽다방 반포 GOTO MALL점(T102, G018)",
-    "Cafe 헤이와(G012, 동편 가장 안쪽)",
+    "요거트월드 반포고투몰점(G-012, 서편)",
     "인사동칼국수만두",
     "얌샘김밥 플러스 반포고투몰점",
     "압구정칼국수",
@@ -686,17 +748,20 @@
   {
    "floor": "B1 동편(EAST ZONE)",
    "use": "의류·잡화 + 음식점",
-   "tenants": [
-    "Cafe 헤이와"
-   ],
-   "layout": "동편 가장 안쪽에 카페 헤이와. 푸드코트(김밥·칼국수 등)와 화장실",
+   "tenants": [],
+   "layout": "동편 푸드코트와 화장실. 동편 커피 구역의 현 입점 상호는 미확인. 공단 1구역 도면과 브랜드 현 지점 안내에 따라 G-012는 서편에 반영했다.",
    "source": "https://kr.trip.com/moments/theme/poi-goto-mall-30805335-restaurant-993134/",
    "guess": false
   },
   {
    "floor": "B1 서편(WEST)",
    "use": "서편 통로·상점·푸드코트·휴게",
-   "tenants": [],
+   "tenants": [
+    "마당(G-010)",
+    "반에반 고투몰점(G-011)",
+    "요거트월드 반포고투몰점(G-012)",
+    "셀프사진(G-013)"
+   ],
    "layout": "기존 꽃·침구 등 점포와 집기는 유지. 서편 전체를 특정 업종 밀집 구역으로 단정할 근거가 없어 구역 표시는 중립화. 점포별 사진 근거와 실제 좌표 추정은 별도.",
    "source": "https://rurubu.jp/andmore/article/25097",
    "guess": true

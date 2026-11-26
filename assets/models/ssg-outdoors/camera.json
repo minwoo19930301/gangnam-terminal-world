@@ -1,0 +1,11 @@
+{
+  "floor": "8F",
+  "x": -60.47634921848843,
+  "z": 69.27893529401399,
+  "yaw": 112.37882518492478,
+  "pitch": -9,
+  "meshName": "ArcOutdoorEquipment",
+  "sourceBlend": "gallery.blend",
+  "sourceCollection": "SSG_8F_Arcteryx",
+  "nativeLabel": "아크테릭스"
+}

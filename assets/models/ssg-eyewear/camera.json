@@ -1,0 +1,11 @@
+{
+  "floor": "6F",
+  "x": -8.849970956913772,
+  "z": 82.93509389744966,
+  "yaw": -79.13790131441179,
+  "pitch": -10,
+  "meshName": "CollectGangnamFrames",
+  "sourceBlend": "gallery.blend",
+  "sourceCollection": "SSG_6F_Collect",
+  "nativeLabel": "콜렉트"
+}

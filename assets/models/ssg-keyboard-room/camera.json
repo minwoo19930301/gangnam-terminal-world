@@ -1,0 +1,11 @@
+{
+  "floor": "10F",
+  "x": -36.414842,
+  "z": 28.491354,
+  "yaw": -159.21697,
+  "pitch": -6.0,
+  "meshName": "GangnamSnoopyPlaceDoghouseAndGoods",
+  "sourceBlend": "snoopy-place.blend",
+  "sourceCollection": "SSG_10F_SnoopyPlace",
+  "nativeLabel": "스누피 플레이스"
+}

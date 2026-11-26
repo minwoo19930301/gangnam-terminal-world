@@ -1,3 +1,5 @@
+import { galleryLights, portraitDisplay } from '../../assets/models/famille-atrium/model.js';
+
 // The roof and upper café follow the OSM drum. The clock and suspended birds
 // follow the indoor concourse where the escalators meet.
 const TAU = 2 * Math.PI;
@@ -258,11 +260,17 @@ function memorialGallery(K, {memorial, y2, y3, entryTubeWorld: beam}) {
       for(const edge of [-1,1])box(x+edge*aperture*.55,y2+.05,depth+face*.20,.075,2.45,.10,steel);
     }
     for(let i=0;i<8;i++)box(x+bayWidth*((i+.5)/8-.5),y3-.49,depth-1,.08,.17,2.0,walnut);
-    post(x,y2,depth-.66,.045,2.43,steel);
-    post(x,y2+2.43,depth-.66,.17,.24,{tex:'emit',color:0xffebc5});
     box(x,y2+.18,depth-.32,bayWidth*.66,.36,.38,0x534c3d);
     for(let i=0;i<5;i++)post(x+bayWidth*.13*(i-2),y2+.52,depth-.32,.16,.15+(i%3)*.06,[0x607453,0x4f6949,0x73815b][i%3]);
   }
+  // The photographed portrait face overlooks the open court; keep the clock on its reverse.
+  portraitDisplay(K,cx,.88,wallZ-.41);
+  const lights=[];
+  for(const side of [-1,1]) {
+    lights.push([cx+side*2.65,y2,wallZ+2.25,0], [cx+side*3.5,y2,wallZ+2.20,.26*side]);
+    lights.push([cx+side*3.45,0,wallZ-3.2,-.2*side]);
+  }
+  galleryLights(K,lights);
   const panels=6;
   for(let i=0;i<panels;i++){
     const w=galleryWidth/panels, x=-galleryWidth/2+(i+.5)*w;
@@ -350,9 +358,11 @@ export function buildAtriumArt(K, layout) {
   glazedRoof(K, layout);
   const {x,wallZ} = layout.memorial;
   K.phys.addWall(x-1.58,wallZ,x+1.58,wallZ,0,layout.y2-.12,.18,'centralcity');
-  K.detail({ name: '메모리얼 광장 시계와 스타벅스 파미에파크R', floor: '3F', poly: layout.cafeDeck, y0: 0, y1: layout.roofY }, () => {
-    memorialGallery(K, layout);
-    furnishStarbucks(K, layout);
-    hangingBirds(K, layout);
-  });
+  K.detail({name:'메모리얼 광장 시계와 전광판',floor:'1F',
+    rect:[x-4.1,wallZ-3.7,x+4.1,wallZ+3.5],y0:0,y1:layout.y3},()=>memorialGallery(K,layout));
+  K.detail({name:'메모리얼 광장 새 조형물',floor:'2F',
+    rect:[x-4.3,layout.memorial.birdsZ-3,x+4.3,layout.memorial.birdsZ+3],
+    y0:4.2,y1:layout.roofY},()=>hangingBirds(K,layout));
+  K.detail({name:'스타벅스 파미에파크R',floor:'3F',poly:layout.cafeDeck,
+    y0:layout.y3,y1:layout.roofY},()=>furnishStarbucks(K,layout));
 }

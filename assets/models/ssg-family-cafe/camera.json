@@ -1,0 +1,11 @@
+{
+  "floor": "11F",
+  "x": -36.57004935348692,
+  "z": 82.42240413958811,
+  "yaw": 103.67866211014467,
+  "pitch": 1.0,
+  "meshName": "CategoriqueBrewingBar",
+  "sourceBlend": "categorique.blend",
+  "sourceCollection": "SSG_11F_Categorique",
+  "nativeLabel": "카테고릭"
+}

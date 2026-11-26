@@ -1,7 +1,49 @@
 {
+  "sebit_gallery_media_20261126": {
+    "primary": "https://www.seocho.go.kr/site/seocho/ex/bbs/View.do?bcIdx=406540&cbIdx=61",
+    "gallery_photo_january": "https://mediahub.seoul.go.kr/archives/2016771",
+    "district_photo_october": "https://cdnimage.dailian.co.kr/news/202610/news_1793174694495_1707525_m_2.png",
+    "district_walking_tour": "https://www.seocho.go.kr/site/seocho/04/10404081200002017101702.jsp",
+    "nearby_naver_place": "https://map.naver.com/p/entry/place/1229683443",
+    "observed": "서울시는 2026년 1월 원형 파란 기둥과 벤치, 벽화 레일 조명, 맞은편 LED 영상과 여러 색으로 밝아지는 벽면 선형등을 사진으로 공개했다. 10월 서초구 제공 사진에는 파란색과 흰색의 등받이 없는 절곡 벤치, 개방된 하부와 작은 상판 금속 표지가 보인다.",
+    "fit": "벤치 크기와 세부 인쇄 선, 등기구 각도, 모듈 간격과 화면 크기는 사진에서 추정했다. 시설 위치는 게임 벽화길의 기둥과 기존 전시를 기준으로 맞췄다. 고투몰에 관한 세 가지 홍보 화면은 이 프로젝트의 자체 그림이다. 네이버 지점 링크는 같은 공공보행통로의 관광안내센터 기준점이다.",
+    "model": "assets/models/sebit-gallery/gallery.blend",
+    "comparison": "assets/models/sebit-gallery/play.jpg"
+  },
   "id": "onebailey",
   "name": "원베일리 공공보행통로",
   "updated": "2026-11-26",
+  "sebit_information_20261126": {
+    "naver": "https://map.naver.com/p/entry/place/1229683443",
+    "official": "https://korean.visitseoul.net/attractions/2024-Goto%C2%B7SebitTouristInformationCenter/KOPgrw5c5",
+    "visitor_views": "https://mediahub.seoul.go.kr/archives/2011692",
+    "reception": "https://korean.visitseoul.net/comm/getImage?srvcId=MEDIA&parentSn=66715&fileTy=MEDIA&fileNo=1",
+    "front": "https://korean.visitseoul.net/comm/getImage?srvcId=MEDIA&parentSn=66714&fileTy=MEDIA&fileNo=1",
+    "observed": "공식 전경은 복도 정면에서 오른쪽 뒤에 작은 다국어 서가와 세로형 디지털 열람기를 함께 보여준다. 실내에 들어섰을 때 왼쪽에는 더 긴 다섯 단 책장이 있으며 흰 곡면 안내대, 삼색 상호, 원형 천장 냉방기가 보인다. 사진에서 한국어·영어·일본어·중국어 책자를 확인했다. 서울시 현장 기사에는 미술관·체험 등 관광 항목과 서울 관광지도 표지가 나타난 디지털 열람 화면이 있다.",
+    "fit": "고투몰 G2와 반포한강공원 사이 공공보행로, 반포대로 333. 게임의 기존 출입구에서 12cm 문턱과 중앙 진입로를 유지하고 공개 사진에 맞춰 책장·안내대·열람판을 배치. 열람기 예시 화면과 각 책자 표지는 창작. 실제 치수와 책자 수량, 상호판 구멍 수, 차양 개방 정도는 실측하지 못했다.",
+    "native": "assets/models/sebit-information/visitor-desk.blend",
+    "comparison": "assets/models/sebit-information/play.jpg"
+  },
+  "sebit_lounge_20261126": {
+    "sources": [
+      {
+        "url": "https://mediahub.seoul.go.kr/archives/2016771",
+        "date": "2026-01-14",
+        "observed": "석재 단, 흰 일체형 좌석과 둥글게 꺾인 앞면, 붉은 낮은 좌석, 기둥형 둥근 탁자, 분홍·미색 꽃이삭의 장방형 흰 화분, 맞은편 영문 벽 글씨, 세로 투사면과 레일 조명."
+      },
+      {
+        "url": "https://www.seocho.go.kr/site/seocho/ex/bbs/View.do?bcIdx=406540&cbIdx=61",
+        "observed": "관광특구 라운지, 스트리트 퍼니처, 무선충전 및 미디어아트의 조성. 개별 충전 장치 위치는 미확인."
+      },
+      {
+        "url": "https://korean.visitkorea.or.kr/detail/rem_detail.do?cotid=26d278ea-4101-44ec-bcfb-46c68a2c146e",
+        "observed": "고투몰 G2에서 서울의 24시간, 피카소 벽화 거리, 관광특구 라운지 순으로 진행하는 공공보행로."
+      }
+    ],
+    "estimated": "집기 좌표와 치수, 관상풀 종, 단 폭·높이·개수 및 공원 통로 굴절은 게임 공간 추정. 세로 투사면의 한강 풍경은 창작. 지하에서 지상이 보이던 라운지·나들목 사이 세 접합부를 기존 경로를 따라 연결.",
+    "native": "assets/models/sebit-lounge/lounge.blend",
+    "checks": "assets/models/sebit-lounge/check.mjs"
+  },
   "retail_and_g2_20261126": {
     "checked": "2026-11-26",
     "plans": {
@@ -9,8 +51,8 @@
       "B1": "https://rmaonebailey.cafe24.com/img/floor_img01_big.jpg",
       "1F": "https://rmaonebailey.cafe24.com/img/floor_img02_big.jpg",
       "year": 2023,
-      "observed": "분양 당시 B1 배치도 동측 공개공지에 선큰광장, 북쪽 끝에 한강공원으로 가는 공공보행통로, 서쪽 방풍실에 세 날개 회전문과 그 양쪽의 여닫이 출입구가 그려져 있다. 흰 공용복도에 B101, B110, B150 호수가 면한다. 1층 도면은 고투몰 2번 출입구와 광장 경계의 공중보행로를 표시한다.",
-      "limits": "분양본은 준공 후 실측도와 다를 수 있다. 상가 남쪽 경계를 OSM 1177226165에 맞춰 축척과 방향을 추정했다. G2 계단과 선큰광장 사이의 굴절·폭·천장고, 개별 출입문 폭, 정확한 집기 치수는 모델 추정."
+      "observed": "분양 당시 B1 배치도 동측 공개공지에 선큰광장, 북쪽 끝에 한강공원으로 가는 공공보행통로, 서쪽 방풍실에 세 날개 회전문과 그 양쪽의 여닫이 출입구가 그려져 있다. 흰 공용복도에 B101, B110, B150 호수가 면한다. 1층 도면에는 고투몰 2번 출입구와 개방된 두 공간 사이 상가 앞 포장면이 그려져 있다. 대각선 차량 진입로의 보행 가능 여부는 확인되지 않았다.",
+      "limits": "분양본은 준공 후 실측도와 다를 수 있다. 상가 남쪽 경계를 OSM 1177226165에 맞춰 축척과 방향을 추정했다. G2 계단과 선큰광장 사이의 굴절·폭·천장고, 개별 출입문 폭, 정확한 집기 치수는 모델 추정. 1층 포장면은 두 도면에서 위치가 겹치는 일부만 복원했다. 상판 윤곽과 난간은 게임에서 아래층과의 경계를 표현하는 추정 형상이다."
     },
     "shops": [
       {

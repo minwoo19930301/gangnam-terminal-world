@@ -1,0 +1,11 @@
+{
+  "floor": "7F",
+  "x": -50.12264750975634,
+  "z": 75.04551242693987,
+  "yaw": -174.21997097136867,
+  "pitch": -12,
+  "meshName": "BarbourGangnamBedale",
+  "sourceBlend": "gallery.blend",
+  "sourceCollection": "SSG_7F_Barbour",
+  "nativeLabel": "바버"
+}

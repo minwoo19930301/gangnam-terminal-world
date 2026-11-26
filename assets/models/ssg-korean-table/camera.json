@@ -1,0 +1,11 @@
+{
+  "floor": "11F",
+  "x": -14.340953331053893,
+  "z": 71.23044034758838,
+  "yaw": 17.0,
+  "pitch": -42.0,
+  "meshName": "MilhwaGangnamGuksuJeongol",
+  "sourceBlend": "milhwa.blend",
+  "sourceCollection": "SSG_11F_Milhwa",
+  "nativeLabel": "밀화"
+}
