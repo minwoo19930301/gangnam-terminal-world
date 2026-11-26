@@ -98,13 +98,38 @@ export function build(K) {
     const a=p.pts[i-1],b=p.pts[i],L=p.cum[i]-p.cum[i-1]||1,u=(b[0]-a[0])/L,v=(b[1]-a[1])/L,t=(s-p.cum[i-1])/L;
     return {x:mix(a[0],b[0],t)-v*off,z:mix(a[1],b[1],t)+u*off,u,v,rot:Math.atan2(u,v)};
   }
+  const roadBounds = new WeakMap();
   function nearest(x,z,list=surfaceRoads) {
-    let best={d:Infinity};
-    for(const r of list) for(let i=1;i<r.pts.length;i++) {
-      const a=r.pts[i-1],b=r.pts[i],dx=b[0]-a[0],dz=b[1]-a[1],ll=dx*dx+dz*dz;
-      if(!ll)continue; const t=Math.max(0,Math.min(1,((x-a[0])*dx+(z-a[1])*dz)/ll)),xx=a[0]+dx*t,zz=a[1]+dz*t,d=Math.hypot(x-xx,z-zz);
-      if(d<best.d) {const L=Math.sqrt(ll);best={r,d,x:xx,z:zz,u:dx/L,v:dz/L,rot:Math.atan2(dx,dz)};}
-    } return best;
+    let bestRoad, bestSegment, bestX, bestZ, bestDistance=Infinity, cutoffSq=Infinity;
+    for (const r of list) {
+      let box=roadBounds.get(r);
+      if (!box) {
+        box=K.polyBBox(r.pts);
+        roadBounds.set(r,box);
+      }
+      // A whole road whose enclosing box is farther than the best projected
+      // point cannot change either the road or the orientation at the kerb.
+      const gapX=Math.max(box[0]-x,0,x-box[2]), gapZ=Math.max(box[1]-z,0,z-box[3]);
+      if (gapX*gapX+gapZ*gapZ>cutoffSq) continue;
+      for (let i=1;i<r.pts.length;i++) {
+        const a=r.pts[i-1],b=r.pts[i],dx=b[0]-a[0],dz=b[1]-a[1],ll=dx*dx+dz*dz;
+        if (!ll) continue;
+        const t=Math.max(0,Math.min(1,((x-a[0])*dx+(z-a[1])*dz)/ll));
+        const xx=a[0]+dx*t,zz=a[1]+dz*t,ex=x-xx,ez=z-zz,sq=ex*ex+ez*ez;
+        if (sq>cutoffSq) continue;
+        const distance=Math.hypot(ex,ez);
+        if (distance<bestDistance) {
+          bestDistance=distance;
+          // Keep rounded, nearly tied projections eligible for the original distance comparison.
+          cutoffSq=sq*(1+8*Number.EPSILON);
+          bestRoad=r; bestSegment=i; bestX=xx; bestZ=zz;
+        }
+      }
+    }
+    if (!bestRoad) return {d:Infinity};
+    const a=bestRoad.pts[bestSegment-1],b=bestRoad.pts[bestSegment];
+    const dx=b[0]-a[0],dz=b[1]-a[1],length=Math.sqrt(dx*dx+dz*dz);
+    return {r:bestRoad,d:bestDistance,x:bestX,z:bestZ,u:dx/length,v:dz/length,rot:Math.atan2(dx,dz)};
   }
   function stripPoly(a,b,w) { const dx=b[0]-a[0],dz=b[1]-a[1],L=Math.hypot(dx,dz)||1,nx=-dz/L*w/2,nz=dx/L*w/2;return [[a[0]+nx,a[1]+nz],[b[0]+nx,b[1]+nz],[b[0]-nx,b[1]-nz],[a[0]-nx,a[1]-nz]]; }
   function flat(a,b,w,y,mat,walk=false) { const q=stripPoly(a,b,w); if(walk)K.slab(q,y,{mat,thick:0.15,ceil:false});else K.hpoly(mat,q,y);return q; }
