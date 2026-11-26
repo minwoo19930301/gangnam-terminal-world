@@ -20,7 +20,8 @@ const TILE = 320;
 export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096, low = false, keep = null, keepDetail = null, streetView = false } = {}) {
   // Area loading (js/areas.js): keep(owner, x, y, z, ny) drops primitives/meshes/trees/people outside the loaded area,
   // keepDetail(group) skips lazy detail groups the area does not show. Both null = build everything.
-  const streetVisibility = streetView ? streetBatchView(THREE,scene) : null;
+  const staticVisibility = streetBatchView(THREE,scene);
+  const streetVisibility = streetView ? staticVisibility : null;
   const clipVisitors=visitorView(THREE,scene,relief);
   const T = createTextures(THREE, { maxAniso });
   // big atlas pages mean fewer materials → fewer draw calls (the bottleneck on slow CPUs); low tier draws signs
@@ -974,7 +975,11 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
       if (s.key === 'glass' || s.key === 'water') m.renderOrder = 2;
       m.matrixAutoUpdate = false; m.updateMatrix();
       // Custom shader materials may move their vertices beyond the kit bounds.
-      if (s.cell === 'o' && !s.key.startsWith('cm:') && s.key !== 'hanRiver') streetVisibility?.attach(m);
+      if (!s.key.startsWith('cm:') && s.key !== 'hanRiver') {
+        // A whole sales floor can share one material batch. Keep Three's ordinary
+        // culling for small interior meshes, then clip long runs in the large ones.
+        staticVisibility.attach(m,!streetView || s.cell !== 'o');
+      }
       scene.add(m); out.push(m); track(m, s.cell);
     }
     pruneMeshes();

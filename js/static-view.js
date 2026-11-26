@@ -1,5 +1,5 @@
 // Kit triangles and quads own consecutive vertices in emission order. Small
-// runs of consecutive pavement, facade or furniture faces have much tighter
+// runs of consecutive pavement, facade, shop wall or furniture faces have much tighter
 // bounds than an entire 320 m material tile.
 const CHUNK = 384 * 3;
 const MIN_INDICES = CHUNK * 12;
@@ -101,9 +101,9 @@ export function streetBatchView(THREE, scene) {
     meshes.length = 0;
   }
 
-  function attach(mesh) {
+  function attach(mesh, largeOnly=false) {
     const g = mesh.geometry, source = g.index;
-    if (!source || mesh.material.transparent) return;
+    if (!source || mesh.material.transparent || (largeOnly && source.count < MIN_INDICES)) return;
     function ordinary(camera, material, group) {
       return camera === sceneCamera && camera.isPerspectiveCamera && !group && !material.wireframe &&
         mesh.matrixWorld.equals(identity) && g.drawRange.start === 0 && g.drawRange.count === Infinity;
