@@ -1,4 +1,14 @@
 {
+  "kervan_fp216_20261126": {
+    "floor": "파미에스테이션 동관 2층 216호",
+    "location": "https://korean.visitseoul.net/restaurants/케르반-파미에스테이션점/KOP029995",
+    "menu": "https://english.visitseoul.net/gangnamarea/KERVANFamilleStation/ENPvds803",
+    "photos": "https://share2learn.tistory.com/224",
+    "observed": "동관 위치는 기존 D5 보행 사진 #252–260. 2024년 방문 사진에서 목재 진열대·황동색 틀, 개별 포장 과자 컵과 상자, 바클라바, 라바시, 청록색 주방창·둥근 화덕, 색유리 조명을 확인. 서울관광재단 피데 안내.",
+    "fit": "모델 진열대 3.50 × 1.05m와 기존 테이블 위치 기준. 진열 조합·수량·세부 문양·치수·화덕 깊이 추정. 소이연남 사물함과 겹치던 위치 보정.",
+    "model": "assets/models/kervan/fp216.blend",
+    "review": "assets/models/kervan/play.jpg"
+  },
   "bean_brothers_fp203_20261126": {
     "floor": "2F FP203",
     "operator": "https://www.beanbrothers.co.kr/info/location_detail?goodsNo=1000000527",

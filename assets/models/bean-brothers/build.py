@@ -12,8 +12,8 @@ scene = bpy.context.scene
 scene.name = '파미에 2F · 빈브라더스 FP203'
 scene.unit_settings.system = 'METRIC'
 sys.dont_write_bytecode=True
-sys.path.insert(0,str(here))
-import modeling as model
+sys.path.insert(0,str(here.parents[2]/'tools'))
+import blender_shop_mesh as model
 root = bpy.data.collections.new('빈브라더스 · FP203 커피바와 좌석')
 scene.collection.children.link(root)
 # Each furnishing remains individually selectable inside its native subgroup.

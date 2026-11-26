@@ -1,6 +1,7 @@
 import { loadArchitecture, placeArchitecture } from '../../assets/models/interior-architecture/model.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
+import { placeKervanCase, placeKervanLamp, placeKervanMeal, placeKervanWindow } from '../../assets/models/kervan/model.js';
 import { gardenSurface, gardenStation } from './_gardenGrade.js';
 import { relief } from '../banpo_relief.js';
 
@@ -172,7 +173,11 @@ function upperDetails(K,{B,W,S,slab}){
     B(u,v,y+.44,.45,.46,.06,col,{solid:false});B(u,v+.2,y+.5,.44,.055,.45,col,{solid:false});
     for(const a of [-.17,.17])for(const b of [-.17,.17])B(u+a,v+b,y,.035,.035,.44,0x85827a,{solid:false});
   };
-  const table=(u,v,y)=>{C(u,v,y,.055,.73,0x292b29);C(u,v,y+.73,.45,.05,0xd7b17c);C(u,v,y+.8,.09,.02,0xf4eee0);C(u+.2,v,y+.79,.04,.14,0xe5e2d8);chair(u,v-.75,y);chair(u,v+.75,y);};
+  const table=(u,v,y,service=true)=>{
+    C(u,v,y,.055,.73,0x292b29);C(u,v,y+.73,.45,.05,0xd7b17c);
+    if(service){C(u,v,y+.8,.09,.02,0xf4eee0);C(u+.2,v,y+.79,.04,.14,0xe5e2d8);}
+    chair(u,v-.75,y);chair(u,v+.75,y);
+  };
   const bench=(u,v,y,l=2.8)=>{B(u,v,y+.44,l,.52,.08,{tex:'wood',color:0xc89952});for(const du of [-l*.42,l*.42]){B(u+du,v,y,.06,.5,.44,0x202321,{solid:false});B(u+du,v,y,.42,.06,.05,0x202321,{solid:false});}};
   const railing=(a,b,v,y)=>{
     for(const h of [.15,1.02])rod(a,v,y+h,b,v,y+h,.06);
@@ -224,13 +229,15 @@ function upperDetails(K,{B,W,S,slab}){
       for(let u=-14;u<4;u+=1.5){rod(u,v,8.55,u+1.5,v,9.23,.09,0x292725);rod(u+1.5,v,9.23,u+1.5,v,8.55,.065,0x292725);}
     }
     for(const u of [-12,-7]){
-      B(u,15.6,5,5.3,.65,1,0x514337);B(u,15.6,6,5.3,.72,.08,0x332e27,{solid:false});
+      // The end of the second Soi bar meets the lockers beside Kervan.
+      const barU=u===-7 ? -7.72 : u, width=u===-7 ? 3.32 : 5.3;
+      B(barU,15.6,5,width,.65,1,0x514337);B(barU,15.6,6,width,.72,.08,0x332e27,{solid:false});
       for(let j=0;j<6;j++){
         S(['소이연남',j%2?'쌀국수':'태국 요리'],u-2.2+j*.87,12.05,7.48,.78,1.02,'v',{bg:['#9b5e43','#8b8b4f','#c18c69'][j%3],fg:'#f2e5cf'});
         for(let k=0;k<3;k++)C(u-2.1+j*.85,12.45+k*.22,6.37,.045,.26,[0x4b714a,0x769264,0x324c35][k]);
       }
       B(u,12.45,6.3,5.5,.8,.08,0x302b24,{solid:false});
-      for(const du of [-1.6,0,1.6])chair(u+du,16.65,5);
+      for(const t of [-.30,0,.30])chair(barU+t*width,16.65,5);
     }
     // Preserve the snapshot's ten-table Soi fitout in the corrected north bay.
     for(let row=0;row<2;row++)for(let col=0;col<5;col++){
@@ -240,27 +247,31 @@ function upperDetails(K,{B,W,S,slab}){
     }
     S('소이연남',-11,17.49,8.58,2.7,.5,'v',{fg:'#ff59ba'});
     for(let j=0;j<5;j++){const u=-12.2+j*.48;S('소이',u,17.45,7.97,.43,.55,'v',{bg:['#d2aa51','#e1d8bd','#528e87','#b6708c','#b6bb63'][j],fg:'#222b27'});}
-    for(let i=0;i<8;i++)B(-5.5+(i%4)*.48,16.5,5+Math.floor(i/4)*.55,.46,.55,.53,i%2?0xd9d8d0:0x242927,{solid:false});
-    B(-.9,12.3,5,4.2,.5,2.55,0x2a9d9a,{solid:false});
-    for(let j=0;j<10;j++)C(-2.7+j*.38,12.69,6.65,.04,.27,0x416e45);
+    // Keep the four locker columns inside Soi's edge; the previous row crossed the pastry case.
+    for(let i=0;i<8;i++)B(-5.77,14.95+(i%4)*.48,5+Math.floor(i/4)*.55,.36,.46,.53,i%2?0xd9d8d0:0x242927,{solid:false});
+    placeKervanWindow(K,Q(-.9,12.3,5),FROT+Math.PI);
     for(const u of [-12,-8,-4]){bench(u,23.8,5,2.5);plant(u+1.6,23.9,5);}
     for(let u=-13;u<4;u+=2.8){rod(u,17.4,8.55,u,17.4,8.13,.018,0x4b4437);bulb(u,17.4,8.1);const[x,z]=FP(u,17.1);K.dome({x,z,y:8.8,rx:.46,ry:.3,rz:.4,seg:8,rings:5,mat:0x4c6d40});}
     // D5: KERVAN is north, ebt's striped court is south, as photographed.
     S('KERVAN',-3.6,16.8,8.15,1.05,.7,'-u',{bg:'#422e21',fg:'#ede6d6'});
-    B(-3.7,16.25,5,3.5,1.05,.95,0x2a9d9a);B(-3.7,16.25,5.95,3.5,1.05,.76,'glass',{solid:false});
-    for(const y of [6.08,6.42]){
-      B(-3.7,16.25,y-.03,3.4,1,.035,0xb79a64,{solid:false});
-      for(let j=0;j<12;j++){const u=-5.2+(j%6)*.58,v=16+(j>5?.42:0);C(u,v,y,.18,.1,[0xc18d4d,0xd6ac62,0xa36b35][j%3]);}
+    // The photographed east-gallery case keeps its original contact footprint.
+    B(-3.7,16.25,5,3.5,1.05,.95,0,{skip:['top','bottom','n','s','e','w']});
+    placeKervanCase(K,Q(-3.7,16.25,5),FROT+Math.PI);
+    S('PİŞMANİYE',-5.03,16.617,5.936,.53,.066,'v',{fg:'#ebce8c',pxPerM:450});
+    for(const [x,v,title] of [[-1.49,.37,'PİŞMANİYE'],[-.98,.37,'LOKUM'],[-.45,.40,'BAKLAVA']]){
+      S(title,-3.7+x,16.25-v+.01,5.966,.27,.051,'v',{fg:'#2e5847',pxPerM:800});
     }
     // KERVAN's eight furnished dining tables and mosaic canopy survive the move.
     for(let row=0;row<2;row++)for(let col=0;col<4;col++){
-      const u=-4.7+col*2.3,v=12.9+row*1.8;table(u,v,5);
+      const u=-4.7+col*2.3,v=12.9+row*1.8,meal=row===1 && col===2;
+      table(u,v,5,!meal);
+      if(meal)placeKervanMeal(K,Q(u,v,5.781),FROT+Math.PI);
       C(u,v,8.4,.012,.8,0x655344);const[x,z]=FP(u,v);
       K.dome({x,z,y:8.25,rx:.13,ry:.18,rz:.13,hemi:false,mat:[0x65a4ad,0xdbaa5b,0xa66d6e][(row+col)%3],seg:10,rings:6});
       const occupied=row===0||col%2===0?2:1;for(let seat=0;seat<occupied;seat++){const q=FP(u,v+(seat?.75:-.75));K.person(q[0],5,q[1],{sit:true,rotY:seat?FROT+Math.PI:FROT,shirt:seat?0x514f42:0xb5a28d,pants:0x413b36});}
     }
 
-    for(const u of [-4.8,-3.7,-2.6]){C(u,15.4,8.5,.05,.45,0x403326);const[x,z]=FP(u,15.4);K.dome({x,z,y:8.3,rx:.19,ry:.25,rz:.19,hemi:false,seg:12,rings:7,mat:{tex:'emit',color:u<-3.7?0xe4a448:0x54a6b3}});}
+    for(const [i,u] of [-4.8,-3.7,-2.6].entries())placeKervanLamp(K,Q(u,15.4,8.03),FROT+Math.PI+i*.28);
     S(['좌석 안내','대기선'],-2.1,17.25,6.1,.65,.6,'u',{bg:'#42382d',fg:'#eee0c8'});
     for(const u of [3.6,6.7]){table(u,23.5,5);plant(u-1,24,5,.45,2.1);}
     S('ebt PIZZA',3.3,25.03,7.65,2.9,.38,'-v',{fg:'#f8eee2'});
