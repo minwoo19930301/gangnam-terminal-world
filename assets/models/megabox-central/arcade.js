@@ -1,14 +1,15 @@
 import {gangnamCoffeebar} from '../intelligentsia-gangnam/model.js';
 import {plan} from '../cinema-rotary/layout.js';
-import {point,transverseGuide} from './layout.js';
+import {point,transverseGuide,transverseNorth} from './layout.js';
 
 // Public transverse aisle and customer-facing shop thresholds, traced on the
 // November 25 B1 guide in its 1823 × 1367 display coordinates.
 const aisles=[[[724,777],[820,777],[820,798],[735,798],[735,808],[724,808]],
   transverseGuide];
+const northFront=transverseNorth-1;
 const storefronts=[
-  ['와인하우스',[906,776],[968,776],-1,0x6b5544],
-  ['오설록',[968,776],[1019,776],-1,0x7d8067],
+  ['와인하우스',[906,northFront],[968,northFront],-1,0x6b5544],
+  ['오설록',[968,northFront],[1019,northFront],-1,0x7d8067],
   ['소금집',[905,798],[967,798],1,0x917359],
   ['네스프레소',[968,798],[1032,798],1,0x514940],
 ];
@@ -30,14 +31,14 @@ export function eastShoppingArcade(K,y){
   }
   // BO&MIE and the market continue from their existing enclosed frontages to
   // the cross-aisle. Maintain the guide's open west and east turns at 777–798.
-  wall([819,727],[819,776]);wall([841,727],[841,776]);
+  wall([819,727],[819,776]);wall([841,727],[841,northFront]);
   wall([724,777],[777,777]);wall([777,777],[819,777]);
-  wall([841,776],[906,776]);wall([724,777],[724,808]);
+  wall([841,northFront],[906,northFront]);wall([724,777],[724,808]);
   wall([724,808],[735,808]);wall([735,808],[735,798]);
   // Each facing bay has a real opening and a shallow return into its tenant
   // area. Only the public threshold depth is represented on this cross-aisle.
   for(const [name,a,b,side,finish] of storefronts){
-    const back=a[1]+side*12,left=[a[0],back],right=[b[0],back];
+    const back=side<0 ? 764 : 810,left=[a[0],back],right=[b[0],back];
     const poly=cover([a,b,right,left],0xc9c2b5);
     wall(a,left);wall(left,right,0,height,finish);wall(right,b);
     wall(a,b,3.22,height);const x=(a[0]+b[0])/2;
@@ -48,7 +49,7 @@ export function eastShoppingArcade(K,y){
   }
   gangnamCoffeebar(K,y);
   // Retain the black south boundary of the unlabelled bay east of Osulloc.
-  wall([1019,776],[1032,776]);
+  wall([1019,northFront],[1032,northFront]);
   // The NW edge follows the clipped display corners of Koryodang and Lush.
   // End the opposite return at the existing cinema arches, never across them.
   for(const [a,b] of [[[735,798],[820,798]],[[820,798],[820,816]],
@@ -62,7 +63,7 @@ export function eastShoppingArcade(K,y){
     [[816,813],[845,834],[697,973],[676,949]]])K.hpoly('ssg_ceil',outline.map(v=>plan(...v)),top+.018,false);
   // Recessed linear fixtures in the visiting path; surrounding casework uses
   // the same plaster and pale stone as the department's adjoining public area.
-  for(const [a,b] of [[[825,730],[825,770]],[[845,783],[1026,783]],
+  for(const [a,b] of [[[825,730],[825,770]],[[845,transverseNorth+6],[1026,transverseNorth+6]],
     [[825,800],[825,814]],[[823,825],[681,958]]]){
     wall(a,b,height-.07,height-.035,{tex:'emit',color:0xfff1da},false);
   }

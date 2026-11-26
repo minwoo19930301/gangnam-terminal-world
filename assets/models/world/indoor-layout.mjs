@@ -329,6 +329,11 @@ export async function captureIndoorLayout() {
         result.push({id:'shinsegae/MarketSalesFloor/1',place,placeName:meta.name,floor:'B1',
           library:'shinsegae-market-floor/market-floor.blend',collections:['Shinsegae_B1_Market_Floor'],
           subject:'신세계 마켓 판매장 바닥',ground,terrain:ground,matrix:new THREE.Matrix4().toArray()});
+        // This shell spans multiple terrain datums. Its native vertices already
+        // carry the same local relief as the rendered floors and partitions.
+        result.push({id:'shinsegae/CinemaPublicShell/1',place,placeName:meta.name,floor:'B1',
+          library:'cinema-public-shell/public-shell.blend',collections:['Shinsegae_B1_Cinema_Public_Shell'],
+          subject:'원형 광장과 식품관 카페 통로',ground:0,terrain:0,matrix:new THREE.Matrix4().toArray()});
       }
       kit._.buildAllDetail();
       if(kit._.detailErrors.length)throw Error(kit._.detailErrors.join('\n'));
