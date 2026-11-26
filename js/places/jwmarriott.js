@@ -6,6 +6,7 @@ import { placeCornerSofa } from '../../assets/models/lounge-upholstery/model.js'
 import { placeDrapery } from '../../assets/models/lounge-drapery/model.js';
 import { placePiano } from '../../assets/models/lounge-piano/model.js';
 import { OPEN_STAGE_FRONT } from './_junctions.js';
+import {registerExecutiveService} from '../../assets/models/executive-service/model.js';
 import {registerFlavorsBreakfast} from '../../assets/models/flavors-breakfast/model.js';
 import {registerArrival,upperWell} from '../../assets/models/jw-arrival/model.js';
 import {registerCoffers,registerPendant,ceilingZones} from '../../assets/models/jw-arrival/ceiling.js';
@@ -889,6 +890,7 @@ export function build(K) {
 
   registerArrival(baseKit,P,RECT,R);
   registerFlavorsBreakfast(baseKit,P,RECT,R);
+  registerExecutiveService(baseKit,P,RECT,R);
   registerCoffers(baseKit,P,RECT,R);
   DETAIL('1F', [-33.2, 4, 2, 60.4], '호텔 현관 홀 · 승강기 로비', floor1, 15.77);
   DETAIL('2F', [UW, -6, 2, 60.9], '플레이버즈 · 파티세리 · 타마유라', floor2);
@@ -2066,16 +2068,6 @@ export function build(K) {
             B({ u: u + du, v: 23.17, y: y + .53, w: .42, d: .14, h: .36, r: du < 0 ? -.08 : .08, mat: du < 0 ? 0xd8c7a8 : 0x554439, solid: false });
           }
         }
-        // Small service credenza continues the photographed timber and pale-stone palette; position inferred.
-        B({ u: 11.4, v: 6.85, y, w: 6.5, d: .75, h: .88, mat: 'jwWalnut', top: 'jwHoney' });
-        for (let u = 8.4; u < 14.5; u += .75) B({ u, v: 7.24, y: y + .12, w: .018, d: .02, h: .63, mat: 0x362c24, solid: false });
-        B({ u: 12.9, v: 6.87, y: y + .88, w: .65, d: .45, h: .57, mat: 0x292b29, top: 0xa5a69d, solid: false });
-        for (const u of [12.73, 13.07]) {
-          B({ u, v: 7.12, y: y + 1.15, w: .08, d: .1, h: .08, mat: 0xb5b3a7, solid: false });
-          CY(u, 7.12, y + .91, .05, .08, 0xe8e4d9, { seg: 10, solid: false });
-        }
-        for (let i = 0; i < 12; i++) CY(8.8 + (i % 6) * .19, 6.8 + Math.floor(i / 6) * .23, y + .89, .055, .11, { tex: 'glass', color: 0xdbded4 }, { seg: 10, solid: false, caps: false });
-        FLOWER(11.4, 6.8, y + .89, .37, [0x71815b, 0xd6cab7, 0x9c7354]);
         SG('이그제큐티브 라운지', { u: 7.5, v: 24.32, y: y + 1.5, w: 0.9, h: 0.28, f: 'S', bg: '#46382e', fg: '#dfd3bd' });
         // Photo 16: a blue-shirted guest working at the nearer window table.
         MAN(-.87, 10.7, y, { sit: true, rotY: FACE.E, shirt: 0x59758e, pants: 0x403c35 });

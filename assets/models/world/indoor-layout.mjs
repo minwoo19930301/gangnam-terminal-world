@@ -1,3 +1,5 @@
+import {parts as execParts,prefix as execPrefix} from '../executive-service/layout.js';
+import {parts as charDiningParts} from '../char-dining/layout.js';
 import {parts as breakfastParts,prefix as breakfastPrefix} from '../flavors-breakfast/layout.js';
 import {parts as madangParts} from '../gotomall-madang/layout.js';
 import {parts as arrivalParts,prefix as arrivalPrefix} from '../jw-arrival/layout.js';
@@ -24,6 +26,8 @@ import {relief} from '../../../js/banpo_relief.js';
 // Scene object (or a uniquely identifying child) -> editable native source.
 // Geometry decoder matrices and decorative LOD offsets live *below* the placement.
 const sources = [
+  ...Object.values(execParts).map(([label])=>{const name=execPrefix+label;return ['jwmarriott','9F','executive-service/lounge.blend',name,name];}),
+  ...Object.values(charDiningParts).map(([name])=>['famille','2F','char-dining/restaurant.blend',name,name]),
   ...Object.values(breakfastParts).map(([label])=>{const name=breakfastPrefix+label;return ['jwmarriott','2F','flavors-breakfast/breakfast.blend',name,name];}),
   ...[['booth','상점 마감과 면사 울사 전문도매 표지','진열장과 표지'],['yarn','종이띠를 두른 면사와 울사 실타래','실타래와 종이띠'],
       ['wrap','도매 묶음의 투명 봉투와 접힌 이음매','도매용 투명 묶음'],['dresses','새틴 허리띠와 자수 주름 아동 드레스','아동 드레스와 저지']].map(([key,title,collection])=>
