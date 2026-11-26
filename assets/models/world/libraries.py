@@ -7,6 +7,10 @@ from mathutils import Vector
 
 
 SHELVES = {
+    "oksoban-table": "뉴코아 1관 5층 · 옥소반 식탁",
+    "patisserie": "JW 2층 파티세리 · 플랑과 마카롱",
+    "daiso-merchandise": "다이소 주방·문구 매대",
+    "gyeongbu-seating": "경부선 · 대합실 연석",
     "lounge-chair": "JW 8층 라운지 · 라탄 암체어",
     "shinsegae-facade": "신세계 북측 외벽 간판",
     "shared-ceiling": "공용 실내 · 흡음 천장패널",
@@ -107,7 +111,7 @@ def link_asset_gallery(world_dir):
         if path.parent == world_dir or path.resolve() in represented:
             continue
         shelf = bpy.data.collections.new(
-            SHELVES.get(path.parent.name, path.stem) + " · 모델"
+            SHELVES.get(path.stem, SHELVES.get(path.parent.name, path.stem)) + " · 모델"
         )
         gallery.collection.children.link(shelf)
         added_shelves.append(shelf)
