@@ -2,10 +2,13 @@
 from pathlib import Path
 import subprocess
 import tempfile
+import runpy
 import bpy
 out=Path(bpy.data.filepath).parent
 bpy.ops.object.select_all(action='DESELECT')
 objs=list(bpy.data.collections['MarketEastPortal'].objects)
+# The proxy letters are baked from these same editable glyphs before the native join.
+runpy.run_path(str(out/'export_lettering.py'))['write_label_module'](objs)
 for obj in objs:
     obj.select_set(True)
 bpy.context.view_layer.objects.active=next(o for o in objs if o.name.startswith('암석'))
