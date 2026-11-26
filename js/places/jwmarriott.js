@@ -1,3 +1,4 @@
+import { registerMobo, seatX as moboChairs } from '../../assets/models/mobo-bar/model.js';
 import { registerCellar } from '../../assets/models/margaux-cellar/model.js';
 import { placeCornerSofa } from '../../assets/models/lounge-upholstery/model.js';
 import { placeDrapery } from '../../assets/models/lounge-drapery/model.js';
@@ -775,6 +776,7 @@ export function build(K) {
   SPAWN('플레이버즈 2F · 다이닝', -20.6757, 29, Y['2F'], -1, .4);
   SPAWN('그랜드 볼룸 5F · 포이어', 7, 35, Y['5F'], 1, 0);
   SPAWN('이그제큐티브 라운지 9F', 5.5, 22, Y['9F'], .5, -1);
+  SPAWN('모보 바 7F · 정원 쪽 카운터', 7.16, 9.42, Y['7F'], 1, .62);
   SPAWN('JW 가든 (7F)', 4, 3.5, Y['7F'], 0, 1);
   SPAWN('마르퀴스 수영장 (B3)', -6, -10, Y.B3, -.4, -1);
   SPAWN('객실 2006 (20F)', -1.3, 34.5, Y['20F'], -1, -.55);
@@ -909,11 +911,12 @@ export function build(K) {
   floor3(); floor4();
   // The ballroom's double-height event space is visible from the sixth floor.
   // Its broad bounds also cover the 7F pavilion, where the opaque roof slab
-  // under the wine cellar and restaurant foyer prevents any view into it.
+  // under the bar, its garden entrance, the cellar and the foyer blocks it.
   const ballroomVisible=(x,height,z)=>{
     if(height<Y['7F'])return true;
     const dx=x-C0[0],dz=z-C0[1];
-    return !inR(dx*EV[0]+dz*EV[1],dx*SV[0]+dz*SV[1],[-7.92,22,8.95,40]);
+    const u=dx*EV[0]+dz*EV[1],v=dx*SV[0]+dz*SV[1];
+    return !inR(u,v,[-7.92,1,15.90,22]) && !inR(u,v,[-7.92,22,8.95,40]);
   };
   DETAIL('5F', [UW, -60.7, UE, 60.9], '그랜드 볼룸 · 포이어', floor5, 28.4,ballroomVisible);
   floor6(); floor7();
@@ -1722,17 +1725,20 @@ export function build(K) {
     WL(-7.85, 22, 15.85, 22, y, yc, { mat: WALNUT, mat2: WALNUT, openings: [{ at: 8, w: 3, y0: y, y1: y + 2.8 }] });
     WL(-7.85, 40, 15.85, 40, y, yc, { mat: WALNUT, mat2: WALNUT, openings: [{ at: 10, w: 3, y0: y, y1: y + 2.8 }] });
     // MOBO bar (north)
-    HP({ tex: 'wood', color: 0x5e4330 }, [-7.85, 6.1, 15.85, 22], y + 0.01);
-    B({ u: 4, v: 12.6, y, w: 9, d: 0.9, h: 1.1, mat: 0x1f1a16, top: 0x2b2b2b }); B({ u: 4, v: 17.4, y, w: 9, d: 0.9, h: 1.1, mat: 0x1f1a16, top: 0x2b2b2b });
-    B({ u: -0.05, v: 15, y, w: 0.9, d: 5.7, h: 1.1, mat: 0x1f1a16, top: 0x2b2b2b });
-    B({ u: 6, v: 15, y, w: 4.5, d: 0.7, h: 2.6, mat: 0x2a1e16 });
-    for (let k = 0; k < 4; k++) for (const s of [-1, 1]) B({ u: 6, v: 15 + s * 0.38, y: y + 1.2 + k * 0.38, w: 4.2, d: 0.05, h: 0.26, mat: { tex: 'emit', color: [0xe0a050, 0x9fd0e0, 0xd07040, 0xf0e0b0][k] }, solid: false });
-    for (let u = 0.5; u <= 8; u += 0.9) { CY(u, 11.6, y, 0.2, 0.8, 0x8a6e55, { seg: 6 }); CY(u, 18.4, y, 0.2, 0.8, 0x8a6e55, { seg: 6 }); }
-    for (const [u, v, f] of [[-6.6, 9, 'E'], [-6.6, 14, 'E'], [-6.6, 19, 'E'], [13.5, 9, 'W']]) SOFA(u, v, y, 3.2, f, 0x3a3a44);
-    for (const [u, v] of [[-4.6, 9], [-4.6, 14], [-4.6, 19], [11.5, 9]]) TABLE(u, v, y, { r: 0.45, chairs: 0, h: 0.5, top: 0x2b2b2b });
+    HP({ tex: 'jwLoungeStone', color: 0xb6ac98, gloss:.27 },[-7.85,6.1,15.85,22],y+.013);
+    registerMobo(baseKit,{P,rect:RECT,angle:R,y});
+    const invisibleBar=['top','bottom','n','s','e','w'];
+    B({u:12,v:14.25,y,w:1.07,d:10.13,h:1.074,mat:WALNUT,skip:invisibleBar});
+    B({u:14.54,v:14.25,y,w:.86,d:10.14,h:1.03,mat:WALNUT,skip:invisibleBar});
+    for(const x of moboChairs)B({u:11.01,v:14.25-x,y,w:.48,d:.48,h:.766,mat:WALNUT,skip:invisibleBar});
+    for(const u of [8.22,10.53,12.84])B({u,v:20.70,y,w:2.26,d:.47,h:2.57,mat:WALNUT,skip:invisibleBar});
+    for (const v of [9,14,19]){
+      SOFA(-6.6,v,y,3.2,'E',0x635347);
+      TABLE(-4.6,v,y,{r:.45,chairs:0,h:.50,top:0x947f69});
+    }
     SG(['MOBO BAR'], { u: 4, v: 21.75, y: y + 3.6, w: 4.5, h: 0.7, f: 'N', bg: '#6b4a32', fg: '#e0b870', sub: '모보 바' });
     LIGHTS([-7.85, 6.1, 15.85, 22], yc, 3.2, 0.3, 0xffc880);
-    CROWD([-7, 7, 14, 21], y, 10, 701);
+    CROWD([-3.8, 8, 8.2, 20], y, 6, 701);
     SUBZ('모보 바', '7F', '바 · 칵테일 · 야외 테라스', [-8, -6, 16, 22]);
     // foyer and wine cellar
     HP({ tex: 'darkstone', color: 0x7c7064 }, [-7.85, 22, 8.85, 40], y + 0.01);
