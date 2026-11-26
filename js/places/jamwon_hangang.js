@@ -1,3 +1,4 @@
+import { drawFurniture } from '../../assets/models/riverside-furniture/draw.js';
 // Local OSM is preserved at its real coordinates; unrecorded facilities are
 // separately anchored by source pins. Dimensions/heights are reconstructions.
 import { jamwonRiverExtension } from '../banpo_dem.js';
@@ -20,7 +21,7 @@ export function build(K){
   function paint(a,b,w=.1,y=.085,mat=0xf2eee0){K.hpoly(mat,band(a,b,w),y);}
   function beam(a,b,r=.065,mat=C.steel){const dx=b[0]-a[0],dy=b[1]-a[1],dz=b[2]-a[2],L=Math.hypot(dx,dy,dz)||1;let nx=-dz,nz=dx,nl=Math.hypot(nx,nz);if(nl<.001){nx=1;nz=0;nl=1;}nx=nx/nl*r;nz=nz/nl*r;const v=[-dy*nz/L,(dz*nx-dx*nz)/L,dy*nx/L],p=(q,s,t)=>[q[0]+s*nx+t*v[0],q[1]+t*v[1],q[2]+s*nz+t*v[2]];for(const s of[-1,1]){K.quad(mat,[p(a,s,-1),p(b,s,-1),p(b,s,1),p(a,s,1)],[s*nx,0,s*nz]);K.quad(mat,[p(a,-1,s),p(a,1,s),p(b,1,s),p(b,-1,s)],v.map(n=>n*s));}}
   function rail(a,b,y=0,truss=false){const L=Math.hypot(b[0]-a[0],b[1]-a[1]),n=Math.ceil(L/2.4);K.wall(...a,...b,y,y+1.15,{thick:.06,mat:C.steel,openings:[{at:L/2,w:L,y0:y+.12,y1:y+1.04}]});for(let i=0;i<=n;i++){const p=mix(a,b,i/n);box(p[0],y,p[1],.07,1.2,.07,C.steel);}beam([a[0],y+.5,a[1]],[b[0],y+.5,b[1]],.025);if(truss)for(let i=0;i<n;i++){const p=mix(a,b,i/n),q=mix(a,b,(i+1)/n);beam([p[0],y+.17,p[1]],[q[0],y+1.02,q[1]],.03);beam([p[0],y+1.02,p[1]],[q[0],y+.17,q[1]],.03);}}
-  function bench(x,z,a=0,y=0){const P=frame(x,z,a);for(let i=0;i<4;i++){const p=P(0,(i-1.5)*.13);box(p[0],y+.42,p[1],1.9,.07,.10,'wood',false,a);}const p=P(0,.27);box(p[0],y+.55,p[1],1.9,.43,.08,'wood',false,a);for(const u of[-.7,.7]){const q=P(u,0);box(q[0],y,q[1],.09,.44,.55,C.dark,false,a);}}
+  function bench(x,z,a=0,y=0){drawFurniture(K,'bench',x,y,z,a);}
   function lamp(x,z,banner=false,y=0){K.cyl({x,y,z,r:.075,h:4.8,mat:C.dark,seg:6});box(x,y+4.75,z,.85,.12,.4,C.white);box(x,y+4.7,z,.7,.03,.3,'emit');if(banner)sign(['잠원한강공원','함께 걷는 한강'],x+.43,y+3.35,z,.8,1.4,0,'#305b87','#f4e8bc');}
   function chair(x,y,z,a=0,col=C.yellow){const P=frame(x,z,a);box(x,y+.43,z,.46,.07,.46,col,false,a);const q=P(0,.22);box(q[0],y+.5,q[1],.46,.42,.05,col,false,a);for(const u of[-.18,.18])for(const v of[-.18,.18]){const p=P(u,v);box(p[0],y,p[1],.035,.43,.035,col);}}
   function table(x,y,z){box(x,y+.71,z,1.1,.07,.8,'wood',true);for(const dx of[-.43,.43])for(const dz of[-.28,.28])box(x+dx,y,z+dz,.045,.71,.045,C.dark);}

@@ -1,3 +1,10 @@
+import { loadArchitecture, placeArchitecture } from '../../assets/models/interior-architecture/model.js';
+
+const [chickenService,selfBar] = await Promise.all([
+  loadArchitecture('../neighborhood-shops/hanshin-table.glb'),
+  loadArchitecture('../neighborhood-shops/hanshin-selfbar.glb'),
+]);
+
 // OSM 413354848; local u=ENE, v=SSE. Road on west, park on north/east.
 // Round19: frame-aligned road centreline, hedge opening, shaded entry and open tree crowns.
 // Floor heights/core/room plan remain inferred; the OSM footprint is unchanged.
@@ -472,7 +479,7 @@ export function build(K) {
     B(u+.19*si,y+.5,v+.19*co,.44,.38,.065,col,{rotY:angle,solid:false});
     for(const dx of [-.21,.21])B(u+dx*co,y+.62,v-dx*si,.045,.06,.37,col,{rotY:angle,solid:false});
   }
-  function table(u,y,v,round=true,grill=false,hoodTop=3.36){
+  function table(u,y,v,round=true,grill=false,hoodTop=3.36,orders=null){
     if(round){cyl(u,y+.72,v,.56,.055,0x595b57);cyl(u,y,v,.055,.72,0x4a514e,{solid:false});B(u,y+.06,v,.8,.06,.08,steel,{solid:false});B(u,y+.06,v,.08,.06,.8,steel,{solid:false});}
     else{B(u,y+.72,v,1.25,.075,.76,{tex:'wood',color:0xb58955});for(const dx of [-.49,.49])for(const dz of [-.25,.25])B(u+dx,y,v+dz,.045,.72,.045,0x343c3a,{solid:false});}
     if(grill){
@@ -486,11 +493,13 @@ export function build(K) {
         B(u+t,y+.853,v,.007,.008,len,steel,{solid:false});B(u,y+.857,v+t,len,.008,.007,steel,{solid:false});
       }
       cyl(u,y+1.65,v,.22,.18,steel,{solid:false});cyl(u,y+1.83,v,.095,hoodTop-1.83,steel,{solid:false});
+    }else if(orders){
+      const [x,z]=P(u,v); orders.push([x,y+.79,z,R]);
     }else{
       cyl(u,y+.79,v,.18,.025,0xf2ead6,{solid:false});
       for(let i=0;i<5;i++)cyl(u-.1+(i%3)*.09,y+.815,v-.06+Math.floor(i/3)*.1,.044,.06,0xa46a2e,{seg:6,solid:false});
     }
-    for(const dx of grill?[-.43,.43]:[-.34,.34]){cyl(u+dx,y+.79,v+.15,.055,.18,{tex:'glass',color:0xdda64c},{solid:false});cyl(u+dx,y+.79,v-.16,.09,.04,0xe9e8db,{solid:false});}
+    for(const dx of grill||orders?[-.43,.43]:[-.34,.34]){cyl(u+dx,y+.79,v+.15,.055,.18,{tex:'glass',color:0xdda64c},{solid:false});if(!orders)cyl(u+dx,y+.79,v-.16,.09,.04,0xe9e8db,{solid:false});}
     cyl(u+.24,y+.79,v-.25,.04,.21,0x3b7759,{solid:false});cyl(u+.24,y+1,v-.25,.018,.075,0x3b7759,{solid:false});
   }
   function fridge(u,y,v){
@@ -527,14 +536,14 @@ export function build(K) {
     B(14.6,G+1.35,14.73,.65,.8,.03,{tex:'glass',color:0xbfcac6},{solid:false});
     // Photograph 12: cream interior, tables/black chairs and the back service wall.
     // The two seating bays share the long v4.0 cross-aisle and the u38.5 aisle.
-    for(const u of [35.8,41.6])for(const v of [2.2,5.6,8.8]){table(u,G,v,false);chair(u,G,v-.83,0x383a34,north);chair(u,G,v+.83,0x383a34);orderTablet(u+.35,G,v-.18,'한신치킨');}
+    const diningOrders=[];
+    for(const u of [35.8,41.6])for(const v of [2.2,5.6,8.8]){table(u,G,v,false,false,3.36,diningOrders);chair(u,G,v-.83,0x383a34,north);chair(u,G,v+.83,0x383a34);orderTablet(u+.35,G,v-.18,'한신치킨');}
     for(const u of [26,31.5])for(const v of [2.3,7.2]){table(u,G,v,false);chair(u,G,v-.83,0x383a34,north);chair(u,G,v+.83,0x383a34);orderTablet(u+.35,G,v-.18,'반원&한식당');}
+    placeArchitecture(K,chickenService,'한신치킨 후라이드 상차림',diningOrders);
     // Entrance-side self bar; ingredients are documented, location/dimensions inferred.
     B(33.1,G,.75,2,.88,.75,0x9d8564);B(33.1,G+.88,.75,2.06,.055,.79,steel,{solid:false});
-    for(const[i,col]of [0xe6d3a0,0x7f994c,0xeee6cc,0xb94927].entries()){
-      B(32.35+i*.43,G+.94,.75,.36,.055,.43,steel,{solid:false});
-      for(let j=0;j<6;j++)cyl(32.25+i*.43+(j%3)*.09,G+1,.65+Math.floor(j/3)*.15,.045,.03,col,{seg:6,solid:false});
-    }
+    const [barX,barZ]=P(33.0,.75);
+    placeArchitecture(K,selfBar,'한신치킨 셀프바 반찬통',[[barX,G+.935,barZ,R]]);
     cyl(34.05,G+.94,.75,.13,.33,steel,{solid:false});
     sign(['셀프바','팝콘 · 샐러드 · 치킨무 · 김치 · 물'],33.1,G+1.45,.35,2.8,.38,R,'#eee5ce','#4e463a');
     B(28.3,G+1.04,9.24,3.5,1.6,.12,0x181f24,{solid:false});
@@ -557,9 +566,11 @@ export function build(K) {
     person(17,G,20,{shirt:0xa9b7b0});person(21,G,24.5,{shirt:0x717d9a});
   });
   K.detail({name:'한신치킨 야장과 공원 접면',floor:'1F',y0:0,y1:G+3.4,poly:rect(0,-12,W+10,35)},()=>{
+    const terraceOrders=[];
     for(const u of [25.8,29.1,32.3,35.7,39,42.3]){
-      table(u,G,-1.65);chair(u-.85,G,-1.65,0x255db4,west);chair(u+.85,G,-1.65,0x255db4,east);B(u,G+2.38,-1.55,1.8,.05,.12,'emit',{solid:false});
+      table(u,G,-1.65,true,false,3.36,terraceOrders);chair(u-.85,G,-1.65,0x255db4,west);chair(u+.85,G,-1.65,0x255db4,east);B(u,G+2.38,-1.55,1.8,.05,.12,'emit',{solid:false});
     }
+    placeArchitecture(K,chickenService,'한신치킨 야장 후라이드 상차림',terraceOrders);
     // Unverified Hanshin terrace layout stays as before. Gammiok has five tables.
     for(const v of [1.7,5,8.2,12,15]){
       table(W+1.65,G,v);chair(W+1.65,G,v-.85,0xbf3531,north);chair(W+1.65,G,v+.85,0xbf3531);B(W+1.8,G+2.38,v,.13,.05,1.8,'emit',{solid:false});
