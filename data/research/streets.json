@@ -1,4 +1,10 @@
 {
+  "sinbanporo_exit8_sidewalk_lamp": {
+    "source": "https://map.naver.com/p?c=18.00,0,0,0,adh&p=lHsXW6lxT97x-yAj0PFdXA,101,8,32,Float",
+    "capture": "네이버 거리뷰 2026년 1월, 신반포로 고속터미널 앞",
+    "observation": "8번 출구 옆 지주의 높은 등기구는 차도로 뻗고 낮은 등기구는 보도 쪽으로 돌아선다. 낮은 등기구의 짧은 가로 지지대와 사선 받침을 확인했다.",
+    "model": "기존 지주에 하부 등기구 한 개를 추가했다. 게임 내 높이 4.1m와 짧은 팔 길이, 상대 광량은 사진 비례에 따른 근삿값이다. 거리뷰는 낮 촬영이어서 야간 조도는 실측하지 않았다."
+  },
   "sinbanpo_public_oaks": {
     "source": "https://data.seoul.go.kr/dataList/OA-23040/S/1/datasetView.do",
     "workbook": "2026 서울시 가로수 위치정보.xlsx · 2026-08-26 · 서초구 시트",

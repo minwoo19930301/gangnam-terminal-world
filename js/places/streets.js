@@ -337,6 +337,7 @@ export function build(K) {
   }
   const stops=K.osm.nodes.filter(n=>n.k==='bus_stop'&&n.x>-460&&n.x<620&&n.z>-600&&n.z<560);
   const exits=K.osm.exits||[];
+  const exit8=exits.find(exit=>exit.ref==='8');
   const bboxes=K.osm.buildings.map(b=>({b,bb:K.polyBBox(b.poly)}));
   const ccStop={x:-171.44,z:-45.71};
   const ccRoad=nearest(ccStop.x,ccStop.z,surfaceRoads.filter(r=>r.name==='신반포로'));
@@ -355,6 +356,18 @@ export function build(K) {
     beam([x,y+7.3,z],[x+dx*1.7,y+7.5,z+dz*1.7],.07);
     K.box({x:x+dx*1.8,z:z+dz*1.8,y:y+7.42,w:.5,h:.15,d:1.1,rotY:rot,mat:C.steel,solid:false});
     K.box({x:x+dx*1.8,z:z+dz*1.8,y:y+7.4,w:.4,h:.025,d:.9,rotY:rot,mat:emit(0xffedc2),solid:false});
+    // The photographed pole beside exit 8 also has a short, lower sidewalk arm.
+    if(y===WALK && exit8 && Math.hypot(x-exit8.x,z-exit8.z)<5){
+      const headX=x-dx*1.05,headZ=z-dz*1.05,headY=y+4.1;
+      beam([x,headY,z],[headX,headY,headZ],.035);
+      beam([x,headY+.21,z],[x-dx*.55,headY,z-dz*.55],.025);
+      const rim=Array.from({length:12},(_,i)=>{
+        const a=i*PI/6,along=.26*Math.cos(a),across=.15*Math.sin(a);
+        return [headX+dx*along+dz*across,headZ+dz*along-dx*across];
+      });
+      K.prism(rim,headY-.075,headY+.045,{mat:C.steel,bottom:emit(0xffedc2),solid:false});
+      K.streetLight?.(headX,headY-.08,headZ,.23);
+    }
   }
   function treePit(x,z,y=WALK) {
     if(inG13(x,z)||onTerminalMedian(x,z)||inWestCanopy(x,z)||inTaxiStand(x,z))return;
