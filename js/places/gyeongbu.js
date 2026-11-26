@@ -1,4 +1,5 @@
 import {placePharmacy} from '../../assets/models/gyeongbu-pharmacy/model.js';
+import {placeLuggageCounter} from '../../assets/models/gyeongbu-luggage/model.js';
 import {placeFramingShop} from '../../assets/models/gyeongbu-hangaram/model.js';
 import { placeRooftopDining, patioTables } from '../../assets/models/gyeongbu-rooftop/model.js';
 import { placeTicketOffice } from '../../assets/models/gyeongbu-ticket-office/model.js';
@@ -1170,7 +1171,9 @@ export function build(K) {
     lsign('지하철 · 제로데이 택배 >',70.8,23.2,2.9,4.5,.4,'-v',{bg:'#cdb48c',fg:'#f8f8ed',twoSided:true,offset:.08});
     });
     placeAssembly({from:[24,137],to:[51.5,44],angle:-PI/2,sx:.4,sz:.4},()=>{
-    lwall(25,140,64,140,0,5.6,{mat:0xe9e3d6,thick:.18});
+    // End the older ticket-office partition at the back of the public baggage counter.
+    // Extending it through this open window split the sign and the passenger sill.
+    lwall(25,140,58.0,140,0,5.6,{mat:0xe9e3d6,thick:.18});
     lwall(59,144.4,64.5,144.4,0,3.3,{mat:0xc4c2b6,thick:.15});
     furnish(() => {
     // The photographed full-width counter sits in front of the atrium pillars.
@@ -1496,7 +1499,6 @@ export function build(K) {
       lsign('신세계백화점 · 지하철 >',48.3,64.6,2.1,3.8,.45,'+u',{bg:null,fg:'#5d605e'});
       lbox(47,62,.25,.24,4,4.5,'gb20_art',{solid:false});lbox(47.4,62,.42,.06,4.2,.06,0xb5bebf,{solid:false});
       lcyl(52,56,0,1.5,1.05,0xeee9df,{seg:24});for(let k=0;k<32;k++){const a=k*PI/16;lbox(52+1.48*Math.cos(a),56+1.48*Math.sin(a),1.05,.06,.06,1.6,0x1e1e1e,{solid:false});}lsign('Lotto',53.55,56,2.5,1.8,.4,'+u',{bg:'#1e1e1e',fg:'#fff'});
-      lbox(52.5,28.8,0,1.2,2.8,1,0xeeeade);lsign('짐캐리',53.13,28.8,1.5,2.3,.45,'+u',{bg:'#f5ce33',fg:'#292d30'});
       lbox(61.5,29.5,0,.6,1.2,2.1,0x24364d);lsign('종합관광안내',61.17,29.5,1.5,1,.55,'-u',{bg:'#24364d',fg:'#fff'});
       lbox(70,29.3,0,3.4,1.5,1.1,{tex:'wood',color:0xcba577});lsign('i  종합안내',70,30.1,.7,2.7,.4,'+v',{bg:null,fg:'#fff'});
       for(let k=0;k<6;k++){const u=34+k*2;for(const v of [73,78])lperson(u,v,-6+(u-32)/15*6+.05,{sit:true,shirt:[0x313841,0xc3b796,0x5e6c4f][k%3]});}
@@ -1567,7 +1569,7 @@ export function build(K) {
     const utilityPlacements={12:[24.5,10.5],13:[29.5,16.5],14:[43,27],15:[43,36],19:[47,60],20:[37,92],22:[37,104],23:[47,104],24:[37,134]};
     const utilityPlacement=(no,v)=>({from:[10.5,v],to:utilityPlacements[no],sx:[14,15].includes(no)?1:[22,23].includes(no)?8/13:4.5/13,sz:[14,15].includes(no)?1:[22,23].includes(no)?6/7:4.6/7});
     for(const [i,[name,no]] of utilityUnits.entries()){
-      if(no===24)continue;
+      if(no===13||no===24)continue;
       const a=37+i*7,b=a+7,v=(a+b)/2;
       placeAssembly(utilityPlacement(no,v),()=>{
         lwall(4,a,17,a,0,3.3,{mat:0xe5dfd2,thick:.12});
@@ -1576,6 +1578,23 @@ export function build(K) {
         lzone(name,'1F',`본관 ${no}호`,4,a,17,b,0,3.4,4);
       });
     }
+    // Operator #13: the staffed public window beside ticketing, consistent with the review of photos #43–51.
+    // Present the window along the open approach, clear of the retained row of refund machines.
+    const luggageU=52.10,luggageV=28.52;
+    const [luggageX,luggageZ]=W(luggageU,luggageV);
+    placeLuggageCounter(K,luggageX,luggageZ,ROT+PI);
+    const luggageFoot=(x,d,w,depth,h)=>lbox(luggageU-x,luggageV-d,0,w,depth,h,0,{skip:['top','bottom','n','s','e','w']});
+    luggageFoot(-.625,-.13,2.95,1.14,.945);
+    luggageFoot(1.47,-.07,1.23,.23,2.98);
+    luggageFoot(-2.065,-.64,.11,1.21,2.93);
+    luggageFoot(-.02,-1.80,4.15,.11,2.93);
+    luggageFoot(-1.60,.86,.42,.28,.70);
+    // White shell silhouettes are visible down the hall while the close mesh is deferred.
+    lbox(luggageU+.625,luggageV+.18,0,2.86,1.0,.89,0xebe7dc,{solid:false});
+    lbox(luggageU-1.47,luggageV+.12,0,1.18,.10,2.91,0xebe7dc,{solid:false});
+    lsign('짐 보관 안내',luggageU+.025,luggageV+1.699,1.944,.69,.078,'-v',{bg:null,fg:'#514d3e',padding:.002,pxPerM:250});
+    lzone('물품보관소 · 짐캐리','1F','매표소 옆 수하물보관·운송',49.96,26.61,54.25,30.37,0,3.30,7);
+    lspawn('1층 수하물보관 · 짐캐리',luggageU+.35,luggageV-2.52,0,0,1);
     // #24 is the operator's floor-guide index. The Naver pin is ~20 m from this diagram registration.
     // Retain its relationship to the hall's modelled Starbucks and keep both ends of the passage open.
     const pharmacyU=39.25,pharmacyV=134;
@@ -1631,7 +1650,7 @@ export function build(K) {
     }
     ldetail({floor:'1F',y0:0,y1:6,poly:WEST,name:'공식 본관 매장 · 편의시설'},()=>{
       for(const [i,[name,no]] of utilityUnits.entries()){
-        if(no===24)continue;
+        if(no===13||no===24)continue;
         const a=37+i*7,v=a+3.5;
         placeAssembly(utilityPlacement(no,v),()=>{
         lbox(17.06,v,2.6,.18,6.9,.65,0x48423a,{solid:false});
@@ -1644,12 +1663,6 @@ export function build(K) {
           lbox(u,v,0,.65,5.8,2.15,0xe9e4d7,{side:'gb_shelf'});
           for(let h=.4;h<2;h+=.4)lbox(u+.35,v,h,.025,5.7,.04,0xf1ece2,{solid:false});
         }
-        if(name==='물품보관소'){
-          for(let j=0;j<5;j++)for(let k=0;k<3;k++){
-            lbox(5.2,a+.7+j*1.1,.15+k*.65,.7,1.04,.6,0xc5c5ba);
-            lbox(5.56,a+.85+j*1.1,.37+k*.65,.025,.12,.065,0x3e4645,{solid:false});
-          }
-        }
         lbox(10,v,3.19,.6,4,.04,'emit',{solid:false});
         });
       }
@@ -1658,10 +1671,6 @@ export function build(K) {
         lbox(u-2.2,v,0,1,.65,.82,0xe9e9e4);lbox(u-2.2,v,.82,1.1,.73,.06,0xd9e2dc,{solid:false});
         lbox(u-2.4,v,1.12,.04,.72,.75,doorGlass,{solid:false});
       }
-      // Luggage service is photographed at the UNIQLO door, not inside the B1 store.
-      lbox(67.4,8.2,0,1.45,2.6,1.02,0xddd8cd);lbox(67.4,8.2,1.02,1.5,2.7,.06,0x535f64,{solid:false});
-      lsign('짐캐리',68.18,8.2,.63,2.2,.4,'+u',{bg:'#294e74',fg:'#fff'});
-      for(let k=0;k<4;k++){lbox(67,6.5+k*.43,0,.5,.32,.75,[0x413d48,0x385e73,0xa18663,0x585b55][k]);lbox(67,6.5+k*.43,.75,.08,.12,.15,0x777d7d,{solid:false});}
       for(const [i,name] of ['KB국민은행','신한은행','하나은행','NH농협은행'].entries()){
         const v=139.2+i*1.4;lbox(7.5,v,0,.8,1.1,1.85,0xe5e3d9);lsign(name,7.94,v,1.61,.96,.2,'+u',{bg:'#355e76',fg:'#fff'});lsign('현금자동입출금',7.95,v,1.14,.7,.4,'+u',{bg:'#9ac2cd',fg:'#253b44'});
       }
