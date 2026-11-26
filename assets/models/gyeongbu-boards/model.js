@@ -11,6 +11,12 @@ function requestPortal(){
   }).catch(()=>{retryAt=performance.now()+10000;}).finally(()=>{loading=null;});
 }
 
+// The public-side sign atlas and the editable native prints share their typography.
+export const posterCaptions=[
+  {text:['금요일 만나다','첫눈에 반하다'],x:-3.50,y:1.83,w:.94,h:.39,fg:'#496265'},
+  {text:['금오공과대학교','지금오라'],x:3.52,y:1.43,w:.99,h:.45,fg:'#414c7f'},
+];
+
 // The historical display photo supplies the eight sample times and bay numbers.
 // The public operator guide supplies the representative destination for each bay.
 const departures=[
@@ -66,6 +72,28 @@ function departureFace(T,clock){
   return mesh;
 }
 
+
+function printedSilhouette(T){
+  // Millimetres and sRGB colours from the editable lightbox fronts.
+  // BEGIN NATIVE PRINT
+  const ink=[[842,"eee7d8",[-2973,313,-4028,313,-4028,2483,-2973,2483]],[842,"c9cbe8",[4085,313,2955,313,2955,2483,4085,2483]],[845,"e4e4f1",[3011,583,3161,513,3082,783,2971,773]],[845,"e4e4f1",[3292,512,3441,549,3362,847,3251,702]],[845,"e4e4f1",[3572,500,3721,483,3641,730,3532,690]],[845,"e4e4f1",[3852,581,4002,502,3921,763,3812,771]],[845,"d3b57a",[-3985,313,-3859,313,-3859,593,-3883,611,-3985,593]],[845,"d3b57a",[-3707,313,-3581,313,-3581,683,-3605,701,-3707,683]],[845,"d3b57a",[-3429,313,-3303,313,-3303,623,-3327,641,-3429,623]],[845,"d3b57a",[-3151,313,-3025,313,-3025,583,-3049,601,-3151,583]],[846,"a7b0d5",[3185,1473,3250,1509,3322,1483,3259,1426]],[846,"a7b0d5",[3410,1143,3490,1188,3578,1153,3501,1085]],[846,"a7b0d5",[3150,933,3200,961,3255,943,3207,897]],[846,"ecd997",[-4028,643,-2973,583,-2973,613,-4028,683]]];
+  // END NATIVE PRINT
+  const positions=[],colors=[];
+  for(const [depth,tint,outline] of ink){
+    const color=new T.Color('#'+tint);
+    for(let i=2;i<outline.length/2;i++){
+      for(const j of [0,i-1,i]){
+        positions.push(outline[2*j]/1000,outline[2*j+1]/1000,depth/1000);
+        colors.push(color.r,color.g,color.b);
+      }
+    }
+  }
+  const geo=new T.BufferGeometry();
+  geo.setAttribute('position',new T.Float32BufferAttribute(positions,3));
+  geo.setAttribute('color',new T.Float32BufferAttribute(colors,3));
+  return new T.Mesh(geo,new T.MeshBasicMaterial({vertexColors:true,side:T.DoubleSide,toneMapped:false}));
+}
+
 export function placeDeparturePortal(K,x,z,angle){
   const T=K.THREE,group=new T.Group();
   group.name='경부선 · 5~10번 승차홈 전광판';
@@ -74,19 +102,35 @@ export function placeDeparturePortal(K,x,z,angle){
   // All three blocks remain legible in a long aisle view, even while the near housing downloads.
   const proxyMaterial=new T.MeshLambertMaterial({color:0x26292b});
   const proxy=new T.Group();
-  for(const [cx,width] of [[0,.92],[-3.50,1.21],[3.52,1.29]]){
-    const mesh=new T.Mesh(new T.BoxGeometry(width,2.97,.25),proxyMaterial);
-    mesh.position.set(cx,1.485,cx===0?0:.70);proxy.add(mesh);
+  const casings=[[0,.92,0],[-3.50,1.21,.70],[3.52,1.29,.70]];
+  const cases=new T.InstancedMesh(new T.BoxGeometry(1,1,1),proxyMaterial,casings.length);
+  for(const [i,[cx,width,depth]] of casings.entries()){
+    const mat=new T.Matrix4().makeScale(width,2.97,.25);
+    mat.setPosition(cx,1.485,depth);cases.setMatrixAt(i,mat);
   }
+  const print=printedSilhouette(T);
+  print.name='라이트박스 · 원거리 인쇄';
+  proxy.add(cases,print);
   const face=departureFace(T,K.displayClock??(()=>seoulClock(Date.now())));
   const full=new T.Group();
   full.visible=false;
   group.add(proxy,full,face);
+  // The combined three-case bounding sphere may overlap the camera even when
+  // every display is behind it. Test each front separately before fetching.
+  const frustum=new T.Frustum(),view=new T.Matrix4();
+  const panels=casings.map(([cx,w,d])=>
+    new T.Box3(new T.Vector3(cx-w/2,0,d-.13),new T.Vector3(cx+w/2,2.98,d+.15)));
+  function seesPanel(camera){
+    view.multiplyMatrices(camera.projectionMatrix,camera.matrixWorldInverse).multiply(group.matrixWorld);
+    frustum.setFromProjectionMatrix(view);
+    return panels.some(panel=>frustum.intersectsBox(panel));
+  }
   function select(_renderer,_scene,camera){
     const p=camera.position;
     const limit=full.visible?19:15;
-    const near=p.y>floor-.35&&p.y<floor+3.8&&(p.x-x)**2+(p.z-z)**2<limit*limit;
-    if(near&&!library)requestPortal();
+    const inFront=(p.x-x)*Math.sin(angle)+(p.z-z)*Math.cos(angle)>0;
+    const near=inFront&&p.y>floor-.35&&p.y<floor+3.8&&(p.x-x)**2+(p.z-z)**2<limit*limit;
+    if(near&&!library&&!loading&&seesPanel(camera))requestPortal();
     if(near&&library&&!full.children.length){
       const parts=[[library.casework,new T.MeshLambertMaterial({vertexColors:true,side:T.DoubleSide})],
         [library.posters,new T.MeshBasicMaterial({vertexColors:true,side:T.DoubleSide,toneMapped:false})]];

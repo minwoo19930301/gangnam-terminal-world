@@ -212,7 +212,7 @@ const sources = [
   ['gyeongbu','1F','gyeongbu-pharmacy/gyeongbu-pharmacy.blend','고속터미널약국 · 곡면 입구와 쇼윈도','Pharmacy','Glass','Lit'],
   ...['다이소 · 달항아리와 압화 액자 진열','다이소 · 나무 소반과 컵받침·카드꽂이'].map(name=>['gyeongbu','B1','daiso-home/homeware.blend',name,name]),
   ...['다이소 · 홈가드닝 화분 진열','다이소 · 화분 옆 조화 진열'].map(name=>['gyeongbu','B1','daiso-garden/garden.blend',name,name]),
-  ['gyeongbu','1F','gyeongbu-boards/gates-5-to-10.blend','경부선 · 5~10번 승차홈 전광판','Housing','Lightboxes'],
+  ['gyeongbu','1F','gyeongbu-boards/gates-5-to-10.blend','경부선 · 5~10번 승차홈 전광판','Housing','Lightboxes','DepartureLCD'],
   ['centralcity','2F','bean-brothers/fp203.blend','빈브라더스 · FP203 커피바와 좌석','빈브라더스 · FP203 커피바와 좌석'],
   ['jwmarriott','8F','lounge-drapery/drapes.blend','더 라운지 · 묶은 주름 커튼','더 라운지 · 묶은 주름 커튼'],
   ['jwmarriott','8F','lounge-upholstery/sofa.blend','더 라운지 · 크림색 코너 소파','더 라운지 · 크림색 코너 소파'],

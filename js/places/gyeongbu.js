@@ -11,7 +11,7 @@ import {placeLuggageCounter} from '../../assets/models/gyeongbu-luggage/model.js
 import {placeFramingShop} from '../../assets/models/gyeongbu-hangaram/model.js';
 import { placeRooftopDining, patioTables } from '../../assets/models/gyeongbu-rooftop/model.js';
 import { placeTicketOffice } from '../../assets/models/gyeongbu-ticket-office/model.js';
-import { placeDeparturePortal } from '../../assets/models/gyeongbu-boards/model.js';
+import { placeDeparturePortal, posterCaptions } from '../../assets/models/gyeongbu-boards/model.js';
 import { placeIceCreamShop } from '../../assets/models/gyeongbu-icecream/model.js';
 import { placeWarmer } from '../../assets/models/gyeongbu-pretzels/model.js';
 import { placeUpperShowroom } from '../../assets/models/gyeongbu-apparel/model.js';
@@ -432,10 +432,9 @@ export function build(K) {
       const [x,z]=W(u-.13,v);
       placeDeparturePortal(K,x,z,FACE['-u']);
       const front=u-.13-.70-.155;
-      lsign(['금요일 만나다','첫눈에 반하다'],front,v-3.5,1.83,.94,.39,'-u',
-        {bg:null,fg:'#496265',padding:.025,pxPerM:220});
-      lsign(['금오공과대학교','지금오라'],front,v+3.52,1.43,.99,.45,'-u',
-        {bg:null,fg:'#414c7f',padding:.025,pxPerM:220});
+      for(const {text,x,y,w,h,fg} of posterCaptions){
+        lsign(text,front,v+x,y,w,h,'-u',{bg:null,fg,padding:.025,pxPerM:220});
+      }
     });
   }
   // Continuous boarding-side window wall; the 0.8m cream piers separate screens.
