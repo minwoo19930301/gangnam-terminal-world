@@ -1,4 +1,25 @@
 {
+  "char_fp218_20261126": {
+    "floor": "파미에스테이션 2층 FP218, 운영사 도면 12번",
+    "naver": "https://map.naver.com/p/entry/place/1433741819",
+    "operator": "https://www.shinsegaecentral.com/famille/Cha%E2%80%99R",
+    "floor_map": "https://www.shinsegaecentral.com/public/img/famille_floor_2_ko_map.png",
+    "operator_interior": "https://www.shinsegaecentral.com/upload_img/1517284949c87w1xdt598oc8n03mz68gr0upmaw0bsbpzeyyyvnlxyf7xh41_concept.jpg",
+    "permit": "https://data.seoul.go.kr/dataList/OA-18673/S/1/datasetView.do",
+    "permit_row": "3210000-101-2018-00022, 2018-01-12, 120.00㎡",
+    "hall_and_mala": "https://babeseoul.tistory.com/133",
+    "food_and_seating": "https://yellow-oi.tistory.com/174",
+    "fixtures": "https://too-laky.tistory.com/196",
+    "observed": "흰 필기체 상호와 검은 철제 간판틀, 체크 바닥, 붉은 골 등받이와 곡목 의자, 얼룩무늬 석재 식탁, 황동 가지등, 황색 벽의 거울과 주변 액자, 세이지색 벽의 금빛 꽃과 세로 화병 패널, 마라탕면·볶음밥·가지 요리를 사진에서 확인했다.",
+    "fit": "인허가 영업장 전체는 120.00㎡다. 게임에는 기존 회랑에서 보이는 12.28 × 5.94m(72.94㎡) 좌석 구간을 재현했다. 정확한 좌석과 조명의 위치, 식탁·통로 치수, 음식의 구성과 조도는 관찰 사진을 토대로 추정했다.",
+    "model": "assets/models/char-dining/restaurant.blend",
+    "pickles": "assets/models/char-dining/pickles.jpg",
+    "table_service": "지점 사진에서 열린 유리병, 채를 덜어 놓은 회색 접시, 넓적한 금속 집게, 황동색 나사 뚜껑과 검은 직조 매트를 확인했다. 식탁별 배치와 채의 수량은 구성값이다.",
+    "menu": "assets/models/char-dining/menu.jpg",
+    "menu_reference": "방문 사진에서 확인한 두 쪽 메뉴의 한영 이름을 옮기고 실제 가격은 표기하지 않았다. 게임 메뉴의 요리 사진 세 장은 같은 방의 Blender 원본으로 직접 렌더했다.",
+    "comparison": "assets/models/char-dining/play.jpg",
+    "table": "assets/models/char-dining/table.jpg"
+  },
   "tianjin_116_20261126": {
     "floor": "파미에스테이션 1층 116호, 운영사 1층 안내도 8번",
     "naver": "https://map.naver.com/p/entry/place/36311153",

@@ -18,6 +18,14 @@ for piece in collection.objects:
     hidden=[face for face in bm.faces if all(inside(v) for v in face.verts)]
     bmesh.ops.delete(bm,geom=hidden,context='FACES')
     bm.to_mesh(piece.data);bm.free()
+import sys
+sys.dont_write_bytecode=True
+sys.path.insert(0,str(folder))
+import meal_model,meal_export
+meal_export.write(collection,meal_model.FRAME)
+for ob in list(collection.objects):
+    if ob.get('retailPackage')=='HokyungMeal':
+        bpy.data.objects.remove(ob,do_unlink=True)
 for mat in sorted({o.data.materials[0] for o in collection.objects},key=lambda m:m.name):
     parts=[o for o in collection.objects if o.data.materials[0]==mat]
     bpy.ops.object.select_all(action='DESELECT')

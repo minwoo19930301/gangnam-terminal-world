@@ -45,6 +45,11 @@ export function placeMadang(K,P,rotation,y){
   const [ox,oz]=W(0,0),co=Math.cos(angle),si=Math.sin(angle);
   const local=(x,z)=>[(x-ox)*co-(z-oz)*si,(x-ox)*si+(z-oz)*co];
   const wall=(a,b,c,d,bottom,top)=>K.phys.addWall(...W(a,b),...W(c,d),y+bottom,y+top,.022,'gotomall');
+  const eyePoly=rect(-2.69,.04,2.69,5.99);
+  const register=(a,b)=>K.occludingWall({a,b,y0:y+.065,y1:y+2.74,eyePoly,eyeMin:y+.075,eyeMax:y+2.72});
+  register(W(-2.752,.04),W(-2.752,6.10));
+  register(W(2.752,.04),W(2.752,4.15));
+  register(W(...outline[4]),W(...outline[5]));
   const block=(a,b,c,d,h)=>K.phys.addPolyWalls(rect(a,b,c,d),y,y+h,.017,'gotomall');
   for(let i=1;i<outline.length;i++){const [a,b]=outline[i],[c,d]=outline[(i+1)%outline.length];wall(a,b,c,d,0,2.77);}
   block(-2.20,4.998,2.28,5.56,.818);block(-1.82,3.89,-1.11,4.41,1.13);block(-.301,3.529,.661,4.151,.827);

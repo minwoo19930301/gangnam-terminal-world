@@ -22,3 +22,5 @@ for(const node of doc.getRoot().listNodes()) {
 await doc.transform(weld(),meshopt({encoder:MeshoptEncoder,level:'medium',quantizePosition:16}));
 await io.write(file,doc);
 for(const mesh of doc.getRoot().listMeshes()) console.log(mesh.getName(),mesh.listPrimitives().map(p=>p.getIndices().getCount()/3));
+
+await import('./mosaic_pack.mjs');

@@ -105,6 +105,12 @@ export function tianjinShop(K,{P,R,lzone},s0,t0,s1,t1){
   const [ox,oz]=W(0,0),c=Math.cos(angle),s=Math.sin(angle);
   const local=p=>[(p.x-ox)*c-(p.z-oz)*s,(p.x-ox)*s+(p.z-oz)*c];
   const wall=(x,d,xx,dd,top,r=.035)=>K.phys.addWall(...W(x,d),...W(xx,dd),0,top,r,'centralcity');
+  const eyePoly=rect(-5.90,.04,5.68,9.48), eyeMin=.08,eyeMax=3.48;
+  K.occludingSlab({poly:eyePoly,y:.035,eyeMin,eyeMax});
+  K.occludingSlab({poly:eyePoly,y:3.54,eyeMin,eyeMax});
+  // All glazing is on the gallery side. The three remaining walls are solid on the mesh and its proxy.
+  for(const [a,b] of [[W(-5.985,.04),W(-5.985,9.54)],[W(5.755,.04),W(5.755,9.54)],
+    [W(-5.95,9.56),W(5.73,9.56)]])K.occludingWall({a,b,y0:.07,y1:3.50,eyePoly,eyeMin,eyeMax});
   const solid=(x,d,xx,dd,top)=>K.phys.addPolyWalls(rect(x,d,xx,dd),0,top,.021,'centralcity');
   const seat=(x,d,xx,dd,h)=>{const p=rect(x,d,xx,dd);K.phys.addSurface(p,h,{tag:'centralcity'});K.phys.addPolyWalls(p,0,h,.016,'centralcity');};
   wall(-6,.028,-.99,.028,2.68);wall(.99,.028,6,.028,2.68);

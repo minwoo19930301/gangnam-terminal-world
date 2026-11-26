@@ -14,3 +14,5 @@ for(const tex of doc.getRoot().listTextures()){
 await doc.transform(weld(),meshopt({encoder:MeshoptEncoder,level:'medium',quantizePosition:16,quantizeTexcoord:13}));
 await io.write(file,doc);
 console.log(doc.getRoot().listMeshes().map(m=>[m.getName(),m.listPrimitives().reduce((n,p)=>n+p.getIndices().getCount()/3,0)]));
+
+await import('./meal_pack.mjs');

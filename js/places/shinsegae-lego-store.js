@@ -4,7 +4,32 @@ import {relief} from '../banpo_relief.js';
 const source=new URL('../../assets/models/ssg-focal-gallery/gallery.glb',import.meta.url);
 const batches=['GangnamLegoPuuvilla','GangnamLegoEditions','GangnamLegoCabinet','GangnamLegoCartons'];
 
+const mosaicSource=new URL('../../assets/models/ssg-focal-gallery/mosaic.glb',import.meta.url);
+
+function registerRiverMosaic(K,{poly,x,y,z,yaw}) {
+  const side=-1.43,front=4.52,angle=yaw+Math.PI/2;
+  const ox=x+side*Math.cos(yaw)+front*Math.sin(yaw),oz=z-side*Math.sin(yaw)+front*Math.cos(yaw);
+  K.detail({floor:'10F',y0:y,y1:y+4.8,poly,name:'레고스토어 · 반포대교 달빛무지개분수 브릭 벽'},()=>{
+    const T=K.THREE,root=new T.Group(),fallback=new T.Group(),cube=new T.BoxGeometry();
+    root.position.set(ox,y+relief(x,z),oz);root.rotation.y=angle;root.add(fallback);
+    function panel(x,y,z,w,h,d,color){
+      const m=new T.Mesh(cube,new T.MeshStandardMaterial({color}));
+      m.position.set(x,y,z);m.scale.set(w,h,d);fallback.add(m);
+    }
+    panel(0,1.32,-.06,2.24,2.64,.14,0xdfd8c9);
+    panel(0,1.241,.030,1.36,2.12,.031,0x26282a);
+    panel(0,1.241,.054,1.28,2.048,.007,0x26384a);
+    for(const [x,y,w,c]of [[-.38,1.06,.40,0x786a76],[0,1.14,.40,0x8c8975],[.38,1.21,.40,0x5b928d]]){
+      panel(x,y,.058,w,.041,.006,c);
+    }
+    mountRetailDisplay(K,{root,fallback,source:mosaicSource,batches:['GangnamLegoRiverWall'],x:ox,y,z:oz,nearDistance:8,displayDistance:18});
+  });
+  const outline=[[-1.12,-.135],[1.12,-.135],[1.12,.060],[-1.12,.060]];
+  K.phys.addPolyWalls(outline.map(([u,v])=>[ox+u*Math.cos(angle)+v*Math.sin(angle),oz-u*Math.sin(angle)+v*Math.cos(angle)]),y,y+2.64,.012,'shinsegae');
+}
+
 export function registerLegoStore(K,{poly,x,y,z,yaw}) {
+  registerRiverMosaic(K,{poly,x,y,z,yaw});
   K.detail({floor:'10F',y0:y,y1:y+4.8,poly,name:'레고스토어 푸빌라 전시'},()=>{
     const T=K.THREE, root=new T.Group(), fallback=new T.Group();
     root.position.set(x,y+relief(x,z),z);

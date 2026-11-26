@@ -248,11 +248,17 @@ for i in range(23):
         piece('흰 꽃잎',verts,[(0,1,2),(0,2,3),(0,3,4),(2,1,0),(3,2,0),(4,3,0)],timber,lambda i,p:swatch(5))
     dx=.048*cos(a);dy=.048*sin(a)
     piece('잎맥이 접힌 잎',[(x,y,z-.065),(x+dx*.5-dy*.34,y+dy*.5+dx*.34,z-.05),(x+dx,y+dy,z-.033),(x+dx*.5+dy*.34,y+dy*.5-dx*.34,z-.053),(x+dx*.5,y+dy*.5,z-.044)],[(0,1,4),(1,2,4),(2,3,4),(3,0,4)],timber,lambda i,p:swatch(4))
+import sys
+sys.dont_write_bytecode=True
+sys.path.insert(0,str(out))
+import figurine_model,figurine_export
+figurine_model.make(gallery)
 # Save the independent native pieces before runtime batching.
 bpy.context.preferences.filepaths.save_version=0
 bpy.ops.object.select_all(action='DESELECT')
 print('Editable meshes:',len(gallery.objects))
 bpy.ops.wm.save_as_mainfile(filepath=str(out/'display.blend'),compress=True)
+figurine_export.write(gallery)
 for mat,objects in batches.items():
     bpy.ops.object.select_all(action='DESELECT')
     for o in objects:o.select_set(True)
