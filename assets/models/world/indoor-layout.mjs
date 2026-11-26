@@ -45,6 +45,7 @@ const sources = [
   ['shinsegae','B1','cinema-rotary/front.blend','원형 광장 · 카멜커피 입면','CamelCoffeeRotaryFront'],
   ...['Wafille','GalleryClock'].map(name=>['famille','1F','famille/gallery.blend',name,name]),
   ['famille','1F','interior-architecture/interiors.blend','파미에 갤러리 아치와 벽등','gallery-rib'],
+  ['centralcity','3F','famille-dome/pavilion.blend','파미에파크 · 돔 안쪽 삼각 천장','파미에 돔 · 삼각 천장'],
   ['centralcity','B1','sweet-arcade/pier.blend','스위트 파크 · 디저트 홀 타일 기둥','SweetParkArcadePier'],
   ['shinsegae','B1','sports-shoe-rotary/entry.blend','스포츠 슈 전문관 · 브랜드 간판과 계단','GangnamSportsShoeEntry'],
   ['shinsegae','B1','sweetpark-threshold/threshold.blend','스위트 파크 · 카페 통로 목재 입구','SweetParkCoffeeThreshold'],

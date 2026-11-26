@@ -108,6 +108,7 @@ SHELVES = {
     "gyeongbu-cutflowers": "경부선 3층 · 절화와 도매 꽃통",
     "coach-cabin": "경부선 승차홈 · 고속버스 승객석과 차창",
     "oksoban-table": "뉴코아 1관 5층 · 옥소반 식탁",
+    "famille-dome": "파미에파크 · 돔 안쪽 삼각 천장",
     "famille-atrium": "파미에 광장 · 전광판·테라스와 포장",
     "gotomall-hessed": "고투몰 D-086 · 헤쎄드",
     "hypnos-showroom": "신세계 9층 · 히프노스 쇼룸",

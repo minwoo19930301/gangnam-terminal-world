@@ -1,3 +1,4 @@
+import {placeDomeLining} from '../../assets/models/famille-dome/model.js';
 import { galleryLights, portraitDisplay } from '../../assets/models/famille-atrium/model.js';
 
 // The roof and upper café follow the OSM drum. The clock and suspended birds
@@ -356,6 +357,7 @@ function furnishStarbucks(K, { cx, cz, y3, entryTubeWorld: beam }) {
 
 export function buildAtriumArt(K, layout) {
   glazedRoof(K, layout);
+  placeDomeLining(K,layout.cx,layout.cz);
   const {x,wallZ} = layout.memorial;
   K.phys.addWall(x-1.58,wallZ,x+1.58,wallZ,0,layout.y2-.12,.18,'centralcity');
   K.detail({name:'메모리얼 광장 시계와 전광판',floor:'1F',
