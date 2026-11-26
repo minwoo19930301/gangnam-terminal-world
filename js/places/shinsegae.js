@@ -472,7 +472,27 @@ export function build(K) {
   K.polyWalls(FULL, LV.B2, LV.B1, { mat: 'concrete', inner: 0xb3b1a7, thick: 0.3, openings: [
     { x: P(UW, 54.5)[0], z: P(UW, 54.5)[1], w: 6.5, y0: LV.B2, y1: -8.2 },
   ] });
-  K.polyWalls(basementOutline, LV.B1, 0, { mat: 'concrete', inner: IN, thick: 0.3, openings: [
+  // The deli counter zones end short of the basement shell. Its customer-facing
+  // cream wall still reflects the interior lighting beyond the last sales counter.
+  const deliBacking = new K.THREE.MeshLambertMaterial({vertexColors:true,side:K.THREE.DoubleSide,emissive:IN,emissiveIntensity:0});
+  const [wallX,wallZ]=P(UW,0),[endX,endZ]=P(UW,VD);
+  const wallAxis=new K.THREE.Vector2(endX-wallX,endZ-wallZ).normalize();
+  const wallStart=new K.THREE.Vector2(wallX,wallZ);
+  deliBacking.onBeforeCompile=shader=>{
+    shader.uniforms.deliWallStart={value:wallStart};
+    shader.uniforms.deliWallAxis={value:wallAxis};
+    shader.fragmentShader=shader.fragmentShader
+      .replace('#include <common>','#include <common>\nuniform vec2 deliWallStart, deliWallAxis;')
+      .replace('#include <emissivemap_fragment>',`#include <emissivemap_fragment>
+        vec2 local=(cameraPosition-vViewPosition*mat3(viewMatrix)).xz-deliWallStart;
+        float along=dot(local,deliWallAxis);
+        float across=abs(dot(local,vec2(-deliWallAxis.y,deliWallAxis.x)));
+        float width=smoothstep(3.,14.,along)*(1.-smoothstep(53.,64.,along));
+        totalEmissiveRadiance*=width*(1.-smoothstep(.5,1.5,across));`);
+  };
+  K.onSolarAltitude?.(alt=>{deliBacking.emissiveIntensity=.31*(1-K.THREE.MathUtils.smoothstep(alt,-7,4));});
+  K.material('ssg_b1_deli_wall',deliBacking);
+  K.polyWalls(basementOutline, LV.B1, 0, { mat: 'concrete', inner: {tex:'ssg_b1_deli_wall',color:IN}, thick: 0.3, openings: [
     { x: cinemaAisleMouth.x, z: cinemaAisleMouth.z, w: cinemaAisleMouth.width, y0: LV.B1, y1: LV.B1+4.45 },
     { x: P(39.65, 0)[0], z: P(39.65, 0)[1], w: 9, y0: LV.B1, y1: -2.7 },
     {x:-42.72,z:41.85,w:6.5,y0:LV.B1,y1:-2.4},
