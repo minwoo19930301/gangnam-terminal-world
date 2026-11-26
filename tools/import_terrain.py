@@ -37,19 +37,24 @@ XMIN, ZMIN, XMAX, ZMAX = -2000, -2900, 1550, 800
 RIVER_DROP = 1.4
 
 
+def tile_path(name):
+    """Return a cached tile from the pinned source, fetching it on first use."""
+    path = CACHE / name
+    if not path.exists():
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with urlopen(f"{BASE}/{name}", timeout=25) as response:
+            content = response.read()
+        with NamedTemporaryFile(dir=path.parent, delete=False) as tmp:
+            tmp.write(content)
+        Path(tmp.name).replace(path)
+    return path
+
+
 def read_tile(key):
     tx, ty = key
     arrays = []
     for folder in ["", "mask/"]:
-        name = f"{folder}{ZOOM}/{tx}/{ty}.png"
-        path = CACHE / name
-        if not path.exists():
-            path.parent.mkdir(parents=True, exist_ok=True)
-            with urlopen(f"{BASE}/{name}", timeout=25) as response:
-                content = response.read()
-            with NamedTemporaryFile(dir=path.parent, delete=False) as tmp:
-                tmp.write(content)
-            Path(tmp.name).replace(path)
+        path = tile_path(f"{folder}{ZOOM}/{tx}/{ty}.png")
         with Image.open(path) as image:
             if image.size != (SIZE, SIZE):
                 raise ValueError(f"Unexpected tile size: {path}")
