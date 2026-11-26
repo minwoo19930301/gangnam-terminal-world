@@ -1,3 +1,4 @@
+import { streetBatchView } from './static-view.js';
 import { visitorInstances } from './visitors.js';
 import { drawHardware } from '../assets/models/street-and-lift/draw.js';
 import { makeStep, drawStepRails } from '../assets/models/staircase/render.js';
@@ -15,9 +16,10 @@ import { pointInPoly, polyBBox, polyArea } from './physics.js';
 export const LEVELS = { B1: -6, B2: -11, B3: -16, B4: -21, B5: -26, B6: -31 };
 const TILE = 320;
 
-export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096, low = false, keep = null, keepDetail = null } = {}) {
+export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096, low = false, keep = null, keepDetail = null, streetView = false } = {}) {
   // Area loading (js/areas.js): keep(owner, x, y, z, ny) drops primitives/meshes/trees/people outside the loaded area,
   // keepDetail(group) skips lazy detail groups the area does not show. Both null = build everything.
+  const streetVisibility = streetView ? streetBatchView(THREE,scene) : null;
   const T = createTextures(THREE, { maxAniso });
   // big atlas pages mean fewer materials → fewer draw calls (the bottleneck on slow CPUs); low tier draws signs
   // at a lower pixel density (resolution only — every sign is still there)
@@ -475,7 +477,14 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     const mv = o.move ? [ux * o.move, uz * o.move] : null;
     phys.addRamp(ax, az, bx, bz, w / 2, ya, yb, { move: mv, tag: current });
   }
-  const drawEscalator = createEscalatorRenderer(THREE, addMesh, onFrame);
+  const fixedEscalators = [];
+  const drawEscalator = createEscalatorRenderer(THREE, (mesh,moving) => {
+    addMesh(mesh);
+    if (streetVisibility) {
+      if (moving) streetVisibility.flight(mesh,true,relief);
+      else fixedEscalators.push(mesh);
+    }
+  }, onFrame);
   function escalator(ax, az, bx, bz, o = {}) {
     const w = o.w ?? 1.1, ya = o.ya ?? 0, yb = o.yb ?? 5;
     const L = Math.hypot(bx - ax, bz - az), ux = (bx - ax) / L, uz = (bz - az) / L;
@@ -766,7 +775,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
   let clippedParkedFleet = false;
   let roofX, roofY, roofZ;
   function updateParkedView(x, z, camera, refresh) {
-    if (camera && under) {
+    if (camera && (under || streetView)) {
       camera.updateWorldMatrix(true, false);
       projection.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
       if (!refresh && clippedParkedFleet && projection.equals(lastProjection)) return;
@@ -962,9 +971,12 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
       const m = new THREE.Mesh(g, material);
       if (s.key === 'glass' || s.key === 'water') m.renderOrder = 2;
       m.matrixAutoUpdate = false; m.updateMatrix();
+      // Custom shader materials may move their vertices beyond the kit bounds.
+      if (s.cell === 'o' && !s.key.startsWith('cm:') && s.key !== 'hanRiver') streetVisibility?.attach(m);
       scene.add(m); out.push(m); track(m, s.cell);
     }
     pruneMeshes();
+    streetVisibility?.batchLandings(fixedEscalators,detailObjects,relief);
     splitModuleInstances();
     buildInstanced();
     return out;

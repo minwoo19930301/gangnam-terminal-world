@@ -78,7 +78,7 @@ async function boot() {
   addEventListener('resize', () => { camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); });
 
   const phys = createPhysics();
-  const K = createKit(THREE, scene, { osm, phys, maxAniso: renderer.capabilities.getMaxAnisotropy(), maxTex: renderer.capabilities.maxTextureSize, low: LOW, keep: AREA.keep, keepDetail: AREA.keepDetail });
+  const K = createKit(THREE, scene, { osm, phys, maxAniso: renderer.capabilities.getMaxAnisotropy(), maxTex: renderer.capabilities.maxTextureSize, low: LOW, keep: AREA.keep, keepDetail: AREA.keepDetail, streetView: AREA.id.startsWith('out:') });
   K._.atlas.start(); // sign rects are reserved during the build; text is painted once the fonts are in
   const timeControl = $('sky-mode'), timeLabel = $('sky-clock');
   let storedMode;
@@ -256,7 +256,8 @@ async function boot() {
     }
     // the visible door: thin glowing frame, a light curtain and a sign above (one sign per 18 m cluster of doors to the same place)
     const frameMat = new THREE.MeshBasicMaterial({ color: 0x9fd8ff, transparent: true, opacity: 0.85, fog: false });
-    const curtainMat = new THREE.MeshBasicMaterial({ color: 0x6fc3ff, transparent: true, opacity: 0.16, depthWrite: false, side: THREE.DoubleSide });
+    // Thin portal planes have one visible face at each pixel.
+    const curtainMat = new THREE.MeshBasicMaterial({ color: 0x6fc3ff, transparent: true, opacity: 0.16, depthWrite: false, side: THREE.DoubleSide, forceSinglePass: true });
     const signed = [];
     for (const p of portals) {
       const g = new THREE.Group(); g.position.set(p.x, p.y, p.z); g.rotation.y = Math.atan2(p.tx, p.tz) - Math.PI / 2;
@@ -270,7 +271,7 @@ async function boot() {
         cx.fillStyle = 'rgba(16,40,70,0.88)'; cx.beginPath(); cx.roundRect ? cx.roundRect(4, 4, 504, 104, 22) : cx.rect(4, 4, 504, 104); cx.fill();
         cx.fillStyle = '#fff'; cx.font = `700 44px ${FONT}`; cx.textAlign = 'center'; cx.textBaseline = 'middle'; cx.fillText(p.label + ' ▸', 256, 58, 480);
         const tex = new THREE.CanvasTexture(cv); tex.colorSpace = THREE.SRGBColorSpace;
-        const sm = new THREE.Mesh(new THREE.PlaneGeometry(3.2, 0.7), new THREE.MeshBasicMaterial({ map: tex, transparent: true, side: THREE.DoubleSide, fog: false }));
+        const sm = new THREE.Mesh(new THREE.PlaneGeometry(3.2, 0.7), new THREE.MeshBasicMaterial({ map: tex, transparent: true, side: THREE.DoubleSide, fog: false, forceSinglePass: true }));
         sm.position.set(0, h - 0.5, 0.45); g.add(sm); // inside the top of the frame, a little toward the side you approach from
       }
       g.renderOrder = 3; scene.add(g); p.mesh = g;
