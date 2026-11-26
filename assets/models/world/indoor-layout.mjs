@@ -29,6 +29,8 @@ import {relief} from '../../../js/banpo_relief.js';
 // Scene object (or a uniquely identifying child) -> editable native source.
 // Geometry decoder matrices and decorative LOD offsets live *below* the placement.
 const sources = [
+  ['centralcity','지상','central-plaza-canopy/canopy.blend','센트럴시티 조각 광장 · 열린 캐노피와 의자','CentralCityCourtCanopy'],
+  ['centralcity','지상','central-plaza-seatwall/seatwall.blend','센트럴시티 정문 · 동측 석재 앉음벽과 생울타리','CentralCityEastSeatWall'],
   ...[['서쪽 녹청 구체','CentralCityPatinatedSphere'],['가운데 갈색 구체','CentralCityBronzeSphere'],['동쪽 잔물결 구체','CentralCityRippledSphere']]
     .map(([label,collection])=>['centralcity','지상','central-plaza-spheres/spheres.blend','센트럴시티 광장 · '+label,collection]),
   ['centralcity','지상','central-plaza-lantern/lantern.blend','센트럴시티 조각 광장 · 두 갈래 보행등','CentralCityTwinLantern'],
@@ -49,6 +51,7 @@ const sources = [
   ['shinsegae','B1','kyoto-onimaru/counter.blend','교토 오니마루 · 곡면 진열대와 야끼무스비','KyotoOnimaru'],
   ['shinsegae','B1','nespresso-gangnam/display.blend','네스프레소 · 버츄오 시음 진열대','GangnamNespressoDisplay'],
   ['shinsegae','B1','intelligentsia-gangnam/coffeebar.blend','인텔리젠시아 강남 · 오렌지 진열장과 커피 바','GangnamCoffeebar'],
+  ['newcore','1F','newcore-mamas/front.blend','뉴코아 3관 · 카페 마마스 외관','NC_MamasStreetFront'],
   ['newcore','5F','newcore-oksoban-entry/front.blend','뉴코아 1관 5층 · 옥소반 안내 데스크','NC_OksobanEntrance'],
   ['newcore','5F','newcore-yucheon/front.blend','뉴코아 1관 5층 · 유천냉면 입구와 식당 홀','NC_YucheonDiningHall'],
   ['gyeongbu','7F','gyeongbu-clothing-fronts/seven/tailored-front.blend','경부선 7층 · 두 단의 모직과 코트 전면','7층 신사복 · 이단 모직 진열과 코트 전면'],
