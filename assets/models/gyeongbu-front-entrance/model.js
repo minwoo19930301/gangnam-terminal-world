@@ -1,3 +1,4 @@
+import {distantGeometry} from '../gyeongbu/mesh-proxy.js';
 import * as lowPortal from './portal-proxy.js';
 import * as lowTower from './tower-proxy.js';
 import * as lowCafes from '../gyeongbu-front-cafes/cafes-proxy.js';
@@ -9,22 +10,6 @@ const sources={
   tower:{proxy:lowTower,range:71,leave:83,behind:-7,height:51,focus:[-5.6,5.4,-.52,3.3,46,.72],name:'경부선 명판탑 · 한글 채널 문자와 적갈색 외벽'},
   cafes:{proxy:lowCafes,file:'../gyeongbu-front-cafes/cafes.glb',range:46,leave:56,behind:-3,height:19,focus:[-11.60,.10,-.27,10.75,7.67,.48],upper:[-4.8,7.67,-4.91,3.63,16.18,-1.41],name:'경부선 부속상가 · 이디야와 달리나인 거리 정면'},
 };
-
-function distantGeometry(T,source){
-  const decode=text=>Uint8Array.from(atob(text),s=>s.charCodeAt(0));
-  const data=decode(source.vertices),r=new DataView(data.buffer);
-  const n=data.length/9,pos=new Float32Array(n*3),color=new Uint8Array(n*3);
-  for(let i=0;i<n;i++){
-    for(let k=0;k<3;k++)pos[3*i+k]=r.getInt16(9*i+2*k,true)/100;
-    color.set(data.subarray(9*i+6,9*i+9),3*i);
-  }
-  const inds=new DataView(decode(source.triangles).buffer),ix=new Uint16Array(inds.byteLength/2);
-  for(let i=0;i<ix.length;i++)ix[i]=inds.getUint16(2*i,true);
-  const g=new T.BufferGeometry();
-  g.setAttribute('position',new T.BufferAttribute(pos,3));g.setAttribute('color',new T.BufferAttribute(color,3,true));
-  g.setIndex(new T.BufferAttribute(ix,1));g.computeVertexNormals();g.computeBoundingBox();g.computeBoundingSphere();
-  return g;
-}
 
 export function placeGyeongbuEntrance(K,key,x,z,angle){
   const T=K.THREE,s=sources[key],base=s.low??=distantGeometry(T,s.proxy);

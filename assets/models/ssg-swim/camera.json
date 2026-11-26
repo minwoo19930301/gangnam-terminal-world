@@ -1,11 +1,15 @@
 {
   "floor": "8F",
-  "x": -41.52,
-  "z": 82.88,
-  "yaw": 284,
-  "pitch": -5,
+  "x": -40.805,
+  "z": 79.488,
+  "yaw": -122,
+  "pitch": -9,
   "meshName": "BarrelGangnamDisplay",
   "sourceBlend": "gallery.blend",
   "sourceCollection": "SSG_8F_Barrel",
-  "nativeLabel": "신세계백화점 강남점"
+  "nativeLabel": "배럴",
+  "y": 35.82,
+  "area": "in:shinsegae",
+  "gameView": "?area=in:shinsegae&pos=-40.805,35.82,79.488&yaw=-122&pitch=-9",
+  "aisleView": "?area=in:shinsegae&pos=-41.52,35.82,82.88&yaw=284&pitch=-5"
 }

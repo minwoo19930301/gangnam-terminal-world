@@ -1,0 +1,11 @@
+{
+  "floor": "10F",
+  "x": -70.60905,
+  "z": 18.92683,
+  "yaw": -61.5169,
+  "pitch": -13,
+  "meshName": "ComfProStudyGallery",
+  "sourceBlend": "gallery.blend",
+  "sourceCollection": "SSG_10F_ComfPro",
+  "nativeLabel": "컴프프로"
+}

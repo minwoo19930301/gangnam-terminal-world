@@ -1,3 +1,21 @@
+import {types as executiveSeatTypes,prefix as seatPrefix} from '../executive-seating/layout.js';
+import {parts as ceramicParts,prefix as ceramicPrefix} from '../daiso-ceramics/layout.js';
+import {parts as execParts,prefix as execPrefix} from '../executive-service/layout.js';
+import {parts as charDiningParts} from '../char-dining/layout.js';
+import {parts as breakfastParts,prefix as breakfastPrefix} from '../flavors-breakfast/layout.js';
+import {parts as madangParts} from '../gotomall-madang/layout.js';
+import {parts as arrivalParts,prefix as arrivalPrefix} from '../jw-arrival/layout.js';
+import {parts as westCornerParts} from '../gotomall-west-corner/layout.js';
+import {parts as ashleyParts,prefix as ashleyPrefix} from '../newcore-dessert/layout.js';
+import {names as yogurtNames} from '../gotomall-yogurtworld/layout.js';
+import {parts as crossingParts,prefix as crossingPrefix} from '../goter-crossing/layout.js';
+import {parts as floristParts,prefix as floristPrefix} from '../lejardin-shop/layout.js';
+import {parts as loungeTableParts,prefix as loungeTablePrefix} from '../lounge-table-service/layout.js';
+import {names as tianjinNames} from '../tianjin-baozi/layout.js';
+import {names as warakuNames} from '../waraku/layout.js';
+import {catalog as golfCatalog,prefix as golfPrefix} from '../newcore-golf/layout.js';
+import {labels as sebitGalleryLabels} from '../sebit-gallery/gallery.js';
+import {parts as tamayuraParts} from '../tamayura/layout.js';
 // Read actual production Object3D and instance transforms without a renderer or near-detail downloads.
 import fs from 'node:fs/promises';
 import {pathToFileURL} from 'node:url';
@@ -10,11 +28,74 @@ import {relief} from '../../../js/banpo_relief.js';
 // Scene object (or a uniquely identifying child) -> editable native source.
 // Geometry decoder matrices and decorative LOD offsets live *below* the placement.
 const sources = [
+  ['jwmarriott','9F','executive-seating/seating.blend','JW 9층 좌석 · 아이보리 원탁과 검은 에이프런','JW 9층 좌석 · 아이보리 원탁과 검은 에이프런'],
+  ...Object.values(executiveSeatTypes).map(label=>{const name=seatPrefix+label;return ['jwmarriott','9F','executive-seating/seating.blend',name,name];}),
+  ...Object.values(ceramicParts).map(([label])=>{const name=ceramicPrefix+label;return ['gyeongbu','B1','daiso-ceramics/ceramics.blend',name,name];}),
+  ...Object.values(execParts).map(([label])=>{const name=execPrefix+label;return ['jwmarriott','9F','executive-service/lounge.blend',name,name];}),
+  ...Object.values(charDiningParts).map(([name])=>['famille','2F','char-dining/restaurant.blend',name,name]),
+  ...Object.values(breakfastParts).map(([label])=>{const name=breakfastPrefix+label;return ['jwmarriott','2F','flavors-breakfast/breakfast.blend',name,name];}),
+  ...[['booth','상점 마감과 면사 울사 전문도매 표지','진열장과 표지'],['yarn','종이띠를 두른 면사와 울사 실타래','실타래와 종이띠'],
+      ['wrap','도매 묶음의 투명 봉투와 접힌 이음매','도매용 투명 묶음'],['dresses','새틴 허리띠와 자수 주름 아동 드레스','아동 드레스와 저지']].map(([key,title,collection])=>
+    ['gyeongbu','6F','gyeongbu-yarn-and-dresses/'+key+'/'+key+'.blend','경부선 6층 · '+title,'6층 면사·울사 · '+collection]),
+  ...Object.values(madangParts).map(([name])=>['gotomall','B1','gotomall-madang/madang.blend',name,name]),
+  ...Object.values(arrivalParts).map(([label])=>{const name=arrivalPrefix+label;return ['jwmarriott','1F','jw-arrival/arrival.blend',name,name];}),
+  ['jwmarriott','1F','interior-architecture/interiors.blend','현관 홀 월넛 격자 천장','hotel-lattice'],
+  ...[['arch','자연목 아치와 걸이 공중식물'],['stand','백색 철제 선반과 입구 마루'],['left','왼편 산세베리아와 화분'],
+      ['right','오른편 잎식물과 다육 트레이'],['timber','자작 통나무와 고목 진열']].map(([key,label])=>
+    ['gyeongbu','3F','gyeongbu-terrarium/'+key+'/'+key+'.blend','경부선 박테라리움 · '+label,'박테라리움 · '+label]),
+  ...Object.values(westCornerParts).map(([name])=>['gotomall','B1','gotomall-west-corner/west-corner.blend',name,name]),
+  ...Object.values(ashleyParts).map(([label])=>{
+    const name=ashleyPrefix+label;return ['newcore','5F','newcore-dessert/dessert-room.blend',name,name];
+  }),
+  ...[['ribbon','색상별 리본과 꽃 포장','색상별 리본과 꽃 포장 진열'],
+      ['case','원목 진열장과 황동 촛대','원목 진열장과 황동 촛대'],
+      ['crystal','절삭 유리 화기와 고블릿','절삭 유리 화기와 고블릿']].map(([key,label,original])=>
+    ['gyeongbu','3F','gyeongbu-florist-stock/'+key+'/'+key+'.blend','경부선 현대데코 · '+label,'현대데코 · '+original]),
+  ...Object.values(yogurtNames).map(label=>{
+    const name='요거트월드 · '+label;return ['gotomall','B1','gotomall-yogurtworld/g012.blend',name,name];
+  }),
+  ...Object.values(crossingParts).map(([label])=>{
+    const name=crossingPrefix+label;return ['streets','지상','goter-crossing/signals.blend',name,name];
+  }),
+  ...Object.values(tianjinNames).map(label=>{
+    const name='천진포자 · '+label;
+    return ['centralcity','1F','tianjin-baozi/restaurant.blend',name,name];
+  }),
+  ...Object.values(floristParts).map(([label])=>{
+    const name=floristPrefix+label;return ['centralcity','1F','lejardin-shop/flowershop.blend',name,name];
+  }),
+  ...Object.values(loungeTableParts).map(([label])=>{
+    const name=loungeTablePrefix+label;
+    return ['jwmarriott','8F','lounge-table-service/lounge-tables.blend',name,name];
+  }),
+  ...Object.values(warakuNames).map(label=>{
+    const name='와라쿠 · '+label;return ['centralcity','1F','waraku/dining.blend',name,name];
+  }),
+  ...Object.values(golfCatalog).map(([label])=>{
+    const name=golfPrefix+label;
+    return ['newcore','5F','newcore-golf/golf-shop.blend',name,name];
+  }),
+  ...Object.values(tamayuraParts).map(([label])=>{
+    const name='타마유라 · '+label;
+    return ['jwmarriott','2F','tamayura/tamayura.blend',name,name];
+  }),
   ...['142','360'].map(route=>[
     'streets','지상','seoul-city-bus/city-bus.blend','신반포로 간선버스 · '+route+'번',
     '간선버스 · 도장 차체와 경량 휠','간선버스 · 저상 승객석과 입석 손잡이','간선버스 · 곡면 유리와 출입문',
     '간선버스 · 전조등과 차폭등','간선버스 · '+route+'번 노선 표시',
   ]),
+  ...['1F','2F'].flatMap(floor=>[
+    ['gyeongbu',floor,'gyeongbu-uniqlo-rails/parka/parka-rail.blend','경부선 유니클로 '+floor+' · 경량 후드 파카 행거','유니클로 · 경량 후드 파카 양면 행거'],
+    ['gyeongbu',floor,'gyeongbu-uniqlo-rails/blouse/blouse-rail.blend','경부선 유니클로 '+floor+' · 시어서커 블라우스 행거','유니클로 · 시어서커 블라우스 양면 행거'],
+  ]),
+  ['gyeongbu','2F','gyeongbu-uniqlo-finish/upstairs/oak-and-lighting.blend','경부선 유니클로 · 2층 참나무 판매층과 열린 계단','유니클로 2층 · 참나무 바닥과 계단 개구부'],
+  ['gyeongbu','1F','gyeongbu-uniqlo/entrance-fashion.blend','경부선 유니클로 · 에어리즘과 입구 코디','본관 1층 유니클로 · 에어리즘 진열과 토르소'],
+  ['gyeongbu','1F','gyeongbu-uniqlo-finish/oak-and-lighting.blend','경부선 유니클로 · 참나무 판매층과 흰 노출 천장','본관 1층 유니클로 · 참나무 바닥과 노출 천장'],
+  ['gyeongbu','2F','gyeongbu-baking/baking-shop.blend','경부선 부속상가 · 비앤씨마켓 반죽기와 제과 도구','부속상가 2층 비앤씨마켓 · 반죽기와 제과 도구'],
+  ['gyeongbu','4F','gyeongbu-hanbok/hanbok-showroom.blend','경부선 4층 · 고명재한복 치마와 저고리','4층 고명재한복 · 금직 치마와 저고리 진열'],
+  ['gyeongbu','6F','gyeongbu-childrens-aisle/childrens-aisle.blend','경부선 6층 · 아동복 철망 진열과 접은 상품','6층 아동복 · 철망 행거와 접은 상품'],
+  ['gyeongbu','8F','gyeongbu-womens-aisle/womens-aisle.blend','경부선 8층 · 식물무늬 니트와 집게 바지 및 외투 마네킹','8층 여성복 · 식물무늬 니트와 외투 마네킹'],
+  ['gyeongbu','7F','gyeongbu-suiting-aisle/suiting-aisle.blend','경부선 7층 · 이단 신사복 행거와 소매 상품표','7층 신사복 · 모직 재킷과 이단 봉'],
   ['gyeongbu','1F','gyeongbu-front-cafes/cafes.blend','경부선 부속상가 · 이디야와 달리나인 거리 정면','경부선 정문 옆 · 이디야와 달리나인'],
   ...['CushionRack','CushionLinen','CushionSage','CushionRose','CushionIvory'].map(name=>
     ['gyeongbu','B1','concourse-fixtures/concourse-fixtures.blend','다이소 패브릭 · '+name,name]),
@@ -23,11 +104,17 @@ const sources = [
     const native=label==='승객용 전광판과 안내 케이스'?'중앙차로 승차대 · 승객 전광판과 안내함':name;
     return ['streets','지상','sinbanpo-bus-shelters/shelters.blend',name,native];
   }),
+  ['gyeongbu','1F','gyeongbu-planted-columns/planted-column.blend','경부선 대합실 · 식물 기둥','대합실 · 네 면을 감싼 식물 기둥'],
   ['gyeongbu','1F','gyeongbu-front-entrance/portal.blend','경부선 정문 · 석재 차양과 영문 명판','정문 · 경사 기둥과 영문 채널 문자'],
   ['gyeongbu','1F','gyeongbu-front-entrance/tower.blend','경부선 명판탑 · 한글 채널 문자와 적갈색 외벽','정면 명판탑 · 입체 글자와 적갈색 외벽'],
   ...['머리띠와 집게핀·헤어롤 진열','손잡이 청소솔과 틈새 브러시 진열'].map(label=>{
     const name='다이소 · '+label;
     return ['gyeongbu','B1','daiso-accessories/accessories.blend',name,name];
+  }),
+  ...['검은 액자와 원형 펜던트','목제 유리장 속 겹친 와플콘','돌상판과 황동 난간 주문대','스테인리스 뚜껑과 맛 이름표','황동 고정 메뉴와 스무 맛',
+      '청록 상호와 두 색 콘 심벌','에스프레소 머신과 뒤 작업대','유백 구형 펜던트의 빛','포장 컵·보냉 상자와 계산대','두 맛 컵과 와플콘·젤라또라떼','주문대 보호유리'].map(label=>{
+    const name='젤라띠 · '+label;
+    return ['centralcity','1F','gelati/gelateria.blend',name,name];
   }),
   ...['체크 바닥과 검은 상호 외벽','물결 선반과 선물 상자','둥근 주문대와 사선 견본장','통초콜릿과 잘라 보인 단면',
       '개별 포장 롤리팝과 사탕','둥근 전시대의 포장 선물','둥근 정면 쇼윈도 유리','견본장의 사선 보호유리'].map(label=>{
@@ -56,6 +143,10 @@ const sources = [
     const name='딤딤섬 · '+label;
     return ['centralcity','1M','dimdimsum/restaurant.blend',name,name];
   }),
+  ...['흰 다섯 단 서가와 여행 책자','다국어 책장과 세로 열람 화면','곡면 방문 안내대와 상담 집기','삼색 상호와 은색 안내 벽','천장 매입등과 입구 문턱'].map(label=>{
+    const name='세빛 안내 · '+label;
+    return ['onebailey','B1','sebit-information/visitor-desk.blend',name,name];
+  }),
   ...['목재 카운터와 창 블라인드','새들 가죽 하이체어','증류주 병과 유리잔','칵테일과 바 도구','철제 선반의 허브 화분','석재 바닥과 접촉 그림자','호박빛 전구 갓'].map(label=>{
     const name='모보 바 · '+label;
     return ['jwmarriott','7F','mobo-bar/mobo.blend',name,name];
@@ -63,17 +154,23 @@ const sources = [
   ['gyeongbu','B1','gyeongbu-hangaram/hangaram-framing.blend','한가람문구 · 맞춤액자 코너','한가람 반포 · 액자 코너'],
   ['gyeongbu','B1','gyeongbu-hangaram/hangaram-framing.blend','한가람문구 · 액자 금박과 견본화','근접 · 몰딩 새김과 그림'],
   ['gyeongbu','1F','gyeongbu-pharmacy/gyeongbu-pharmacy.blend','고속터미널약국 · 곡면 입구와 쇼윈도','Pharmacy','Glass','Lit'],
+  ...['다이소 · 달항아리와 압화 액자 진열','다이소 · 나무 소반과 컵받침·카드꽂이'].map(name=>['gyeongbu','B1','daiso-home/homeware.blend',name,name]),
   ...['다이소 · 홈가드닝 화분 진열','다이소 · 화분 옆 조화 진열'].map(name=>['gyeongbu','B1','daiso-garden/garden.blend',name,name]),
   ['gyeongbu','1F','gyeongbu-boards/gates-5-to-10.blend','경부선 · 5~10번 승차홈 전광판','Housing','Lightboxes'],
   ['centralcity','2F','bean-brothers/fp203.blend','빈브라더스 · FP203 커피바와 좌석','빈브라더스 · FP203 커피바와 좌석'],
   ['jwmarriott','8F','lounge-drapery/drapes.blend','더 라운지 · 묶은 주름 커튼','더 라운지 · 묶은 주름 커튼'],
   ['jwmarriott','8F','lounge-upholstery/sofa.blend','더 라운지 · 크림색 코너 소파','더 라운지 · 크림색 코너 소파'],
+  ['newcore','4F','modernhouse-picnic/picnic.blend','모던하우스 · 딸기와 데이지 러그','모던하우스 · 딸기와 데이지 러그'],
   ['newcore','4F','modernhouse-provence/market.blend','모던하우스 · 마르셰 프로방스','모던하우스 · 마르셰 프로방스'],
   ['gyeongbu','1F','gyeongbu-icecream/gyeongbu-scoop-parlor.blend','배스킨라빈스 · 스쿱·케이크 매장','Parlor','Glass','Lit'],
   ...['케르반 · 제과와 포장 진열','케르반 · 청록색 주방창','케르반 · 모자이크 등','케르반 · 라바시와 차 한 상']
     .map(name=>['famille','2F','kervan/fp216.blend',name,name]),
   ...['담꽃 · 다기와 보자기 진열장','담꽃 · 백색 주문대와 검은 의자','담꽃 · 밤대추팥빙수 한 상']
     .map(name=>['centralcity','2F','damccot/fp204.blend',name,name]),
+  ...Object.values(sebitGalleryLabels).map(label=>{
+    const name='피카소 벽화길 · '+label;
+    return ['onebailey','B1','sebit-gallery/gallery.blend',name,name];
+  }),
   ...['계단식 휴게 좌석','꽃이삭 화분','벽면 투사와 조명 레일'].map(label=>{
     const name='고터·세빛 라운지 · '+label;
     return ['onebailey','B1','sebit-lounge/lounge.blend',name,name];
@@ -108,6 +205,7 @@ const sources = [
     ['gotomall','B1','gotomall/shop-interiors.blend','고투몰 진열 · '+name,name]),
   ['gotomall','B1','gotomall-hessed/hessed.blend','헤쎄드 가방 진열','HessedShop'],
   ['jwmarriott','2F','patisserie/patisserie.blend','파티세리 · 플랑과 마카롱','파티세리 · 플랑과 마카롱 선물 상자'],
+  ['jwmarriott','2F','patisserie/gateaux.blend','파티세리 · 홀케이크와 쁘띠 가토','파티세리 · 홀케이크와 쁘띠 가토'],
   ['jwmarriott','8F','lounge-chair/lounge-chair.blend','더 라운지 · 피콕 라탄체어','피콕 암체어 · JW 8층 더 라운지'],
   ['newcore','5F','newcore/oksoban-table.blend','옥소반 · 인덕션','옥소반 · 1관 5F 식탁'],
   ['newcore','외관','architectural-retail/retail-architecture.blend','NewcoreArch','NewcoreArch'],
@@ -115,6 +213,7 @@ const sources = [
   ['shinsegae','9F','hypnos-showroom/hypnos.blend','히프노스 침대 · 원거리','히프노스 · 신세계 강남 9층'],
   ['shinsegae','6F','architectural-retail/retail-architecture.blend','CaseGallery','CaseGallery'],
   ['shinsegae','5F','architectural-retail/retail-architecture.blend','RectoWall','RectoWall'],
+  ['centralcity','1F','open-stage-lounge/lounge.blend','오픈 스테이지 · 흰 소파와 낮은 테이블','오픈 스테이지 · 흰 소파와 낮은 테이블'],
   ['centralcity','1F','famille-atrium/atrium-fittings.blend','광장 · 고리형 청동 조명','광장 벽등 · 고리와 유백 갓'],
   ['centralcity','1F','famille-atrium/atrium-fittings.blend','메모리얼 광장 · 미디어 캐비닛','세로형 전광판 · 캐비닛과 매체','전광판 · 교체 가능한 화면 원화'],
   ['centralcity','1F','famille-atrium/atrium-fittings.blend','포비 앞 · 빨간 철제 테이블과 의자','광장 포비 앞 · 빨간 비스트로 테이블'],

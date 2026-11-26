@@ -2,9 +2,15 @@
 from pathlib import Path
 from math import pi, sin, cos, radians, exp
 import bpy
+import sys
 from mathutils import Matrix, Vector
 
 OUT = Path(__file__).resolve().parent
+sys.dont_write_bytecode=True
+sys.path.insert(0,str(OUT))
+import boots
+import belts
+import leathers
 bpy.ops.wm.read_factory_settings(use_empty=True)
 gallery = bpy.data.collections.new('SSG_6F_Berwick')
 bpy.context.scene.collection.children.link(gallery)
@@ -38,6 +44,7 @@ def part(name, vertices, faces, color, smooth=False):
         materials[batch,color]=mat
     mesh.materials.append(materials[batch,color])
     for face in mesh.polygons: face.use_smooth=smooth
+    obj["retailDrawGroup"]=batch
     groups.setdefault(batch,[]).append(obj)
     return obj
 
@@ -91,6 +98,7 @@ def lettering(value,x,y,z,size,color):
     ob=part(value,[v.co[:] for v in mesh.vertices],[p.vertices[:] for p in mesh.polygons],color)
     ob.matrix_world=obj.matrix_world.copy()
     bpy.data.objects.remove(obj,do_unlink=True);bpy.data.meshes.remove(mesh)
+    return ob
 
 # Each station describes distance along the last, half girth, crown height,
 # and collar opening angle. The waist narrows before the heel flares.
@@ -223,6 +231,7 @@ def cabinets():
     lettering('1707',0,-.229,2.45,.079,'FFF1D4')
 
 cabinets()
+work={"part":part,"tube":tube,"loft":loft,"slab":slab,"lettering":lettering,"basis":lambda:basis}
 # Two short returns retain the U-shaped display without blocking the side aisles.
 for side in (-1,1):
     basis=place(side*2.32,-1.27,0,side*-90)
@@ -234,11 +243,23 @@ for side in (-1,1):
 for row,h in enumerate([.672,1.112,1.562,2.012]):
     for i in range(6):
         tone=['432D29','252528','70432E','49312F'][(i//2+row)%4]
+        if row==0 and i in (0,1):
+            batch='BerwickGoodyearCalf'
+            basis=place(-1.79+i*.32,-.086,h,-54+i*9)
+            boots.boot('chelsea',('D0C3AB','41483F')[i],'413933',('D6CBA7','595949')[i],work)
+            basis=Matrix.Identity(4)
+            continue
         footwear(-1.79+(i//2)*1.64+(i%2)*.32,-.086,h,(-33,-32,-49,-46)[(i+2*row)%4],tone)
 
 for side in (-1,1):
     for h in (.767,1.367,1.967):
         for depth in (.74,1.74):
+            if side==1 and h==1.367 and depth>1:
+                batch='BerwickGoodyearCalf'
+                basis=place(2.16,-depth,h,-68)
+                belts.gift(work)
+                basis=Matrix.Identity(4)
+                continue
             footwear(side*2.17,-depth,h,side*96+20,'49312F' if depth<1 else '252528')
 
 # Rounded upholstered exhibition blocks, raised shoe saddles, polishing tools.
@@ -256,7 +277,10 @@ batch='BerwickFittings'
 oval('받침 발',.66,-1.14,1.042,.091,.072,.012,'836447')
 tube('받침 기둥',[(.66,-1.14,1.05),(.66,-1.14,1.19)],.009,'B59B69')
 slab('구두 받침',.66,-1.14,1.18,.13,.18,.018,.026,'8C725B')
-footwear(.66,-1.14,1.205,-42,'673D2B',True,12)
+batch='BerwickGoodyearCalf'
+basis=place(.66,-1.14,1.205,-57,12)
+boots.boot('chukka','BD9369','58504A','B79466',work)
+basis=Matrix.Identity(4)
 batch='BerwickFittings'
 # Natural beechwood split tree shown loose, so the joint is visible.
 basis=place(-.23,-1.59,.841,-72)
@@ -315,26 +339,9 @@ def carpet_texture(mat):
     mat.node_tree.links.new(tex.outputs['Color'],mat.node_tree.nodes.get('Principled BSDF').inputs['Base Color'])
 carpet_texture(rug.data.materials[0])
 
+leathers.author(groups['BerwickGoodyearCalf'])
 bpy.context.scene.unit_settings.system='METRIC'
 bpy.context.preferences.filepaths.save_version=0
 print('Editable pieces',sum(map(len,groups.values())))
 bpy.ops.wm.save_as_mainfile(filepath=str(OUT/'gallery.blend'),compress=True)
-# Mesh normals and per-part finishes survive joining. A single PBR material
-# per batch keeps polished uppers distinct from cabinetry at runtime.
-for batch,objects in groups.items():
-    mat=bpy.data.materials.new(batch);mat.use_nodes=True
-    bs=mat.node_tree.nodes.get('Principled BSDF')
-    bs.inputs['Roughness'].default_value=roughness()
-    vc=mat.node_tree.nodes.new('ShaderNodeVertexColor');vc.layer_name='Finish'
-    mat.node_tree.links.new(vc.outputs['Color'],bs.inputs['Base Color'])
-    if batch=='BerwickWool':carpet_texture(mat)
-    bpy.ops.object.select_all(action='DESELECT')
-    for ob in objects:
-        mesh=ob.data
-        if not mesh.color_attributes.get('Finish'):
-            attr=mesh.color_attributes.new(name='Finish',type='BYTE_COLOR',domain='POINT')
-            for item in attr.data:item.color=mesh.materials[0].diffuse_color
-        mesh.materials.clear();mesh.materials.append(mat);ob.select_set(True)
-    bpy.context.view_layer.objects.active=objects[0]
-    bpy.ops.object.join();bpy.context.object.name=batch
-bpy.ops.export_scene.gltf(filepath=str(OUT/'gallery.glb'),export_format='GLB',export_animations=False)
+exec(compile((OUT/'export.py').read_text(),str(OUT/'export.py'),'exec'))

@@ -1,4 +1,15 @@
 {
+ "lejardin_public_20261126": {
+  "naver": "https://map.naver.com/p/entry/place/1654024884",
+  "photo_gallery": "https://pcmap.place.naver.com/place/1654024884/photo",
+  "visit": "https://m.blog.naver.com/mattias7/224466753309",
+  "place": "신반포로 176 센트럴시티 1층 122-1호. 네이버 지점의 에스컬레이터·쉐이크쉑 안내와 11월 현장 사진의 호남선 이벤트홀 앞 위치를 대조했다. 파미에 1층 엠플라워샵은 별도 매장이다.",
+  "naver_lon_lat": [
+   127.0044881,
+   37.5042243
+  ],
+  "game_fit": "기존 오픈 스테이지 앞 석재 매장에 배치. 게임 원점 기준 네이버 지점 핀 x -38.34, z 89.85. 점포 앞 중앙에서 5.71m 거리. 사진에 맞춘 집기·꽃·트리이며 현장 실측이 아니다."
+ },
   "b1_walk_20261125": {
     "floorGuide": "https://www.shinsegae.com/store/floor.do?storeCd=SC00002",
     "floorGuideImage": "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/11/25/GnV7UuBEdq7K.png",

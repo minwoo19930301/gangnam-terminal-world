@@ -1,0 +1,11 @@
+{
+  "floor": "9F",
+  "x": -61.669557151676045,
+  "z": 24.114169715524515,
+  "yaw": -69,
+  "pitch": -22,
+  "meshName": "RocheBubbleUpholstery",
+  "sourceBlend": "bubble.blend",
+  "sourceCollection": "SSG_9F_RocheBobois",
+  "nativeLabel": "로쉐보보아"
+}

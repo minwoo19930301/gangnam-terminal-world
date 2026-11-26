@@ -1,11 +1,16 @@
 """평양면옥 강남점 식탁. 미터 단위, +Y는 식탁 안쪽이다."""
 from pathlib import Path
-from math import cos, sin, pi, sqrt
+from math import cos, sin, pi
 from random import Random
+import sys
 import bpy
-from mathutils import Vector
 
 OUT = Path(__file__).resolve().parent
+sys.dont_write_bytecode=True
+sys.path.insert(0,str(OUT))
+import noodle_bake
+import garnishes
+import geometry
 bpy.ops.wm.read_factory_settings(use_empty=True)
 col = bpy.data.collections.new('SSG_11F_PyongyangMyeonok')
 bpy.context.scene.collection.children.link(col)
@@ -26,20 +31,7 @@ def finish(name, value, batch='MyeonokTable'):
     m['batch']=batch
     return m
 
-def mesh(name,vs,fs,mat,smooth=False):
-    me=bpy.data.meshes.new(name)
-    me.from_pydata(vs,[],fs)
-    me.materials.append(mat)
-    for p in me.polygons:p.use_smooth=smooth
-    obj=bpy.data.objects.new(name,me)
-    col.objects.link(obj)
-    return obj
-
-def rings(name,loops,mat,smooth=True,cap=True):
-    n=len(loops[0])
-    faces=[(i*n+j,i*n+(j+1)%n,(i+1)*n+(j+1)%n,(i+1)*n+j) for i in range(len(loops)-1) for j in range(n)]
-    if cap:faces.extend([tuple(reversed(range(n))),tuple(range(n*(len(loops)-1),n*len(loops)))])
-    return mesh(name,[p for row in loops for p in row],faces,mat,smooth)
+mesh,rings,tube=geometry.constructors(col)
 
 def turn(name,x,y,z,profile,mat,n=48,band=False):
     if band:profile=[*profile,profile[0]]
@@ -56,15 +48,6 @@ def panel(name,x,y,z,w,d,h,mat,rad=.012):
         return v
     b=min(r/3,h/4,.005)
     return rings(name,[outline(b,0),outline(0,b),outline(0,h-b),outline(b,h)],mat,False)
-
-def tube(name,points,r,mat,n=8):
-    loops=[]
-    for i,p in enumerate(points):
-        tangent=(Vector(points[min(i+1,len(points)-1)])-Vector(points[max(i-1,0)])).normalized()
-        v=tangent.cross(Vector((1,0,0)) if abs(tangent.x)<.85 else Vector((0,1,0))).normalized()
-        w=tangent.cross(v)
-        loops.append([Vector(p)+r*(v*cos(tau*j/n)+w*sin(tau*j/n)) for j in range(n)])
-    return rings(name,loops,mat)
 
 oak=finish('꿀빛 참나무','bf905c')
 grain=finish('나뭇결','ac7d4e')
@@ -126,55 +109,22 @@ def oval(name,x,y,z,rx,ry,rz,mat,tilt=0):
                        z+rz*sin(a)*cos(tilt)+ry*cos(a)*sin(t)*sin(tilt)) for t in [tau*i/32 for i in range(32)]])
     return rings(name,loops,mat)
 bx,by=-.066,-.323
+neutral=finish('음식 표면','ffffff')
+scallion=finish('파 조각','72913c')
 turn('냉면기 굽과 말린 테',bx,by,top,[(.068,0),(.072,.004),(.07,.014),(.082,.017),(.114,.037),(.141,.067),(.153,.096),(.155,.102),(.152,.105),(.149,.102),(.140,.077),(.12,.048),(.08,.025)],steel,72)
-turn('맑은 육수',bx,by,top+.076,[(.142,0),(.142,.002),(.138,.003)],broth,64)
-# Overlapping elongated folded strands run down the sides of two noodle bundles.
-for half in [-1,1]:
-    for i in range(27):
-        f=(i-13)/13
-        points=[]
-        phase=rng.uniform(0,tau)
-        for j in range(47):
-            t=tau*j/46
-            x=half*.049+.031*cos(t)+.023*f+.006*sin(3*t+phase)+.006*sin(t+phase)
-            y=.085*sin(t)+.008*f+.006*sin(4*t+phase)
-            z=.084+.035*(1-.60*f*f)*(1-.86*sin(t)**2)+.0027*sin(3*t+phase)
-            points.append((bx+x,by+y,top+z))
-        tube('접은 메밀 면발',points,.00165,noodles[i%4],5)
-# Irregular lean slices with a thin pale edge beneath the cut egg.
-for k in range(2):
-    xx=bx-.006+k*.01;yy=by+.006+k*.008;hh=top+.120+k*.006
-    pts=[(-.043,-.023),(.026,-.031),(.046,-.014),(.044,.016),(.023,.027),(-.038,.021)]
-    rings('편육', [[(xx+x,yy+y,hh+h+.003*sin(x*60)) for x,y in pts] for h in [0,.004]],meat,False)
-    tube('편육 지방층',[(xx+x,yy+y,hh+.004) for x,y in pts[:3]],.0023,fat,6)
-# Half an egg: domed underside, broad oval cut face and yolk disc, tilted to diner.
-def egg():
-    xx=bx-.008;yy=by+.003;zz=top+.152;angle=.34
-    def transform(a,b,h):return(xx+a,yy+b*cos(angle)-h*sin(angle),zz+b*sin(angle)+h*cos(angle))
-    loops=[]
-    for i in range(11):
-        t=.015+(pi/2-.015)*i/10
-        loops.append([transform(.031*sin(t)*cos(q),.042*sin(t)*sin(q),-.026*cos(t)) for q in [j*tau/48 for j in range(48)]])
-    rings('반숙 아닌 삶은 달걀 반쪽',loops,white)
-    rings('달걀 노른자 단면',[[transform(.019*s*cos(q),-.002+.021*s*sin(q),h) for q in [j*tau/40 for j in range(40)]] for s,h in [(1,.0005),(.92,.0018)]],yellow)
-egg()
+controls=noodle_bake.source_curves(col,noodle_bake.strands(),(bx,by),top,neutral,noodles)
+source=noodle_bake.read_curves(controls)
+images,heights=noodle_bake.bake(source)
+noodle_bake.runtime_bowl(mesh,tube,source,heights,neutral,noodles,(bx,by),top)
+garnishes.meat_slices(mesh,(bx,by),top,neutral,fat)
+garnishes.egg(mesh,rings,(bx,by),top,neutral)
 # Twin rectangular wells share a porcelain rim and a raised centre divider.
 xx,yy=-.045,-.056
 panel('두 칸 찬기 바닥',xx,yy,top+.018,.235,.108,.009,light)
 for sy in [-1,1]:panel('찬기 긴 테',xx,yy+sy*.051,top+.022,.237,.009,.018,light,.004)
 for sx in [-1,0,1]:panel('찬기 칸막이',xx+sx*.114,yy,top+.022,.009,.108,.018,light,.004)
-for side in [-1,1]:
-    cx=xx+side*.057
-    panel('김칫국물',cx,yy,top+.027,.101,.087,.002,red)
-    for j in range(5):
-        a=j*.055-.11
-        pts=[(-.044,-.015),(.023,-.021),(.044,-.004),(.035,.015),(-.032,.019)]
-        loops=[[(cx+u*cos(a)-v*sin(a),yy+(j-2)*.011+u*sin(a)+v*cos(a),top+.031+j*.002+h+.003*cos(u*65+j)) for u,v in pts] for h in [0,.0025]]
-        rings('무김치' if side>0 else '배추김치',loops,radish if side>0 else leaf,False)
-        if side<0:
-            tube('배추 줄기',loops[1][:3],.0024,stalk,5)
-            for k in range(3):
-                x,y,z=loops[1][k];turn('고춧가루',x,y,z,[(.0017,0),(.001,.001)],pepper,5)
+garnishes.pickle_juice(mesh,(xx,yy),top,red)
+garnishes.sides(mesh,rings,(xx,yy),top,neutral,scallion)
 def cup(x,y):
     turn('면수 잔',x,y,top,[(.032,0),(.037,.009),(.046,.080),(.046,.085),(.043,.087),(.041,.081),(.032,.013)],steel)
     turn('면수',x,y,top+.067,[(.040,0),(.040,.001)],broth)
@@ -212,25 +162,39 @@ for j,(x,y,fill) in enumerate([(-.374,.343,pepper),(-.30,.342,dark)]):
 turn('겨자병',-.328,.216,top,[(.032,0),(.039,.01),(.038,.078),(.029,.094),(.021,.098)],radish,32)
 turn('겨자병 마개',-.328,.216,top+.095,[(.025,0),(.026,.02),(.012,.023),(.005,.04)],cover,24)
 
+food_shader=noodle_bake.shader(images)
+steel_shader=steel.copy();steel_shader.name='MyeonokSteel finish';steel_shader.use_fake_user=True
+v=steel_shader.node_tree.nodes.new('ShaderNodeVertexColor');v.layer_name='Tint'
+steel_shader.node_tree.links.new(v.outputs['Color'],steel_shader.node_tree.nodes.get('Principled BSDF').inputs['Base Color'])
+for obj in col.objects:
+    data=obj.data;original=data.materials[0];batch=original['batch'];obj['displayBatch']=batch
+    key=obj.get('음식 UV','oak' if original in (oak,edge) else 'plain')
+    if batch=='MyeonokTable':
+        noodle_bake.prepare_food(obj, key, food_shader, (bx,by))
+        continue
+    tint=data.color_attributes.new(name='Tint',type='BYTE_COLOR',domain='POINT')
+    for item in tint.data:item.color=original.diffuse_color
+    if obj.name.startswith(('냉면기','원형 덮개','면수 잔')):
+        # Fine satin-steel glints around the metal rim and the warm, hazy scene
+        # reflected in its sides. The same tint travels with the native bowl.
+        cx,cy=(bx,by) if obj.name.startswith('냉면기') else (.208,-.176) if obj.name.startswith('면수 잔') else (0,.086)
+        from math import atan2,exp
+        for vert in data.vertices:
+            p=vert.co;angle=atan2(p.y-cy,p.x-cx);height=p.z-top
+            sky=.62+.14*cos(angle*2-.5)+.13*cos(angle*3+.82)
+            strip=exp(-((cos(angle-.35)-.93)/.055)**2)*.43+.27*exp(-((sin(angle+.60)-.74)/.073)**2)
+            val=max(.19,min(1.0,sky+strip+.10*cos(height*100)))
+            radius=((p.x-cx)**2+(p.y-cy)**2)**.5
+            if obj.name.startswith('원형 덮개'):
+                rim=max(0,min(1,(radius-.09)/.07))
+                val=.56+(.62*rim+.08)*(val-.56)
+            elif obj.name.startswith('냉면기') and abs(height-.077)<.003:
+                val*=.55
+            tint.data[vert.index].color=(val*.97,val*.95,val*.91,1)
+        data.materials.clear();data.materials.append(steel_shader)
 bpy.context.scene.unit_settings.system='METRIC'
 bpy.context.preferences.filepaths.save_version=0
 bpy.ops.outliner.orphans_purge(do_recursive=True)
 print('EDITABLE MESHES',len(col.objects))
 bpy.ops.wm.save_as_mainfile(filepath=str(OUT/'table.blend'),compress=True)
-# Bake per-part surface colours and preserve separate glossy and matte finishes.
-for batch in ['MyeonokTable','MyeonokSteel']:
-    parts=[o for o in col.objects if o.data.materials[0].get('batch')==batch]
-    mat=parts[0].data.materials[0].copy()
-    mat.name=batch+' finish'
-    v=mat.node_tree.nodes.new('ShaderNodeVertexColor');v.layer_name='Tint'
-    mat.node_tree.links.new(v.outputs['Color'],mat.node_tree.nodes.get('Principled BSDF').inputs['Base Color'])
-    bpy.ops.object.select_all(action='DESELECT')
-    for obj in parts:
-        rgba=obj.data.materials[0].diffuse_color[:]
-        tint=obj.data.color_attributes.new(name='Tint',type='BYTE_COLOR',domain='POINT')
-        for item in tint.data:item.color=rgba
-        obj.data.materials.clear();obj.data.materials.append(mat)
-        obj.select_set(True)
-    bpy.context.view_layer.objects.active=parts[0]
-    bpy.ops.object.join();bpy.context.object.name=batch
-bpy.ops.export_scene.gltf(filepath=str(OUT/'gallery.glb'),export_format='GLB',export_animations=False)
+exec(compile((OUT/'export.py').read_text(),str(OUT/'export.py'),'exec'))

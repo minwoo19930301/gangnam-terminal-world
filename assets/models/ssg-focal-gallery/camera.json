@@ -1,0 +1,11 @@
+{
+  "floor": "10F",
+  "x": -64.12916,
+  "z": 38.82886,
+  "yaw": 119.3322,
+  "pitch": -13.0,
+  "meshName": "GangnamLegoPuuvilla",
+  "sourceBlend": "gallery.blend",
+  "sourceCollection": "SSG_10F_LEGO_Gangnam",
+  "nativeLabel": "레고스토어"
+}

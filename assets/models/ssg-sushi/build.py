@@ -14,35 +14,12 @@ rng = Random(422)
 tau = 2*pi
 top = .758
 
-# An original UV atlas. Each horizontal strip follows the long grain of
-# a different physical surface. The source and GLB both embed this image.
-N, H = 512, 64
-u,v = np.meshgrid(np.linspace(0,1,N), np.linspace(0,1,H))
-noise=np.random.default_rng(422)
-def pigment(base, detail):
-    return np.clip(np.array(base)+detail[:,:,None],0,255)
-def mix(a,b,mask):
-    return a*(1-mask[:,:,None])+np.array(b)*mask[:,:,None]
-grain=v*145+1.6*np.sin(7*u+v*3)+.6*np.sin(18*u+v*12)
-wood=pigment([139,58,33],6*np.sin(grain)+3*np.sin(6*grain)+6*np.sin(14*v+u*4)+noise.normal(0,1.1,u.shape))
-salmon=pigment([245,133,54],7*np.sin(15*u+v*2))
-phase=5.3*u+.32*np.abs(2*v-1)**1.6+.08*np.sin(13*u)
-salmon=mix(salmon,[255,216,160],np.exp(-(np.sin(pi*phase)/.22)**2)*.88)
-tuna=pigment([180,40,61],8*np.sin(29*u+v*2)+noise.normal(0,1.8,u.shape))
-tuna=mix(tuna,[226,108,114],np.exp(-(np.sin(pi*(5*u+.21*v))/.11)**2)*.54)
-white=pigment([247,225,209],4*np.sin(u*43+v*2))
-white=mix(white,[145,52,69],np.exp(-((v-.93-.035*np.sin(u*9))/.085)**2)*.90)
-eel=pigment([177,99,41],19*np.sin(u*34+v*3)+8*np.sin(v*35)+noise.normal(0,6,u.shape))
-eel=mix(eel,[77,41,26],np.clip((np.sin(16*pi*u+.8*np.sin(v*8))-.75)*3,0,1)*.75)
-clay=pigment([226,214,192],noise.normal(0,2,u.shape))
-clay[noise.uniform(size=u.shape)>.986]=[145,120,96]
-prawn=pigment([250,214,178],3*np.sin(u*15))
-prawn=mix(prawn,[234,139,72],np.exp(-(np.sin(pi*(6*u+.3*abs(v-.5)))/.34)**2)*.85)
-rose=mix(tuna,[239,178,172],.47+.10*np.sin(u*17+v*2))
-atlas=np.concatenate([wood,salmon,tuna,white,eel,clay,prawn,rose])
-rgba=np.ones((8*H,N,4),np.float32);rgba[:,:,:3]=atlas/255
-im=bpy.data.images.new('키사라 표면 견본',width=N,height=8*H)
-im.pixels.foreach_set(rgba.ravel()); im.pack()
+import sys
+sys.dont_write_bytecode=True
+sys.path.insert(0,str(out))
+import food_surfaces
+import plating
+images=food_surfaces.generate()
 
 def finish(name,hexcolor,batch='KisaraDining',rough=.42,metal=0):
     rgb=[int(hexcolor[i:i+2],16)/255 for i in (0,2,4)]
@@ -53,8 +30,7 @@ def finish(name,hexcolor,batch='KisaraDining',rough=.42,metal=0):
     p.inputs['Metallic'].default_value=metal;m['batch']=batch
     return m
 skin=finish('옻칠 · 유약 · 생선살','ffffff','KisaraGlazedServing',.27)
-tex=skin.node_tree.nodes.new('ShaderNodeTexImage');tex.image=im
-skin.node_tree.links.new(tex.outputs['Color'],skin.node_tree.nodes.get('Principled BSDF').inputs['Base Color'])
+food_surfaces.set_shader(skin,images)
 dark=finish('주전자 손잡이 · 칠기','292523')
 leg=finish('가구 다리','613721')
 leather=finish('먹빛 가죽','383330')
@@ -63,11 +39,13 @@ iron=finish('보온병 무광 은빛','e0d8ca','KisaraBrushedSteel',.29,.32)
 pottery=finish('사기 테','997758')
 black=finish('검은 사각 접시','302c2a')
 ivory=finish('찻잔 유백색','f1eadd')
-rice=[finish('초밥 쌀알 '+str(j),c) for j,c in enumerate(['f4e5ce','fff1d9','ead4b4','f8e8cb'])]
+rice=[finish('초밥 쌀알 '+str(j),c) for j,c in enumerate(['e6d4b3','f0dfbd','e9d4ac','f1e1bf'])]
 nori=finish('김 띠','34342a'); leaf=finish('들깻잎','67983b'); vein=finish('잎맥','a5bf65')
 radish=finish('무채','f4ebd4');ginger=finish('초생강','f4d38e')
 wasabi=finish('고추냉이','a2ad54');tea=finish('녹차','c8ac52')
-broth=finish('미소장국','c78d41');soy=finish('간장','613019')
+broth=finish('미소장국','8f5f2d');soy=finish('간장','381e16',rough=.22)
+service=finish('검정 옻칠 쟁반','211e1c',rough=.27);liner=finish('쟁반 속지','e6e1d8')
+tail_rib=finish('새우 꼬리 껍질','de8b36')
 lemon=finish('레몬 껍질','e7c53a');pulp=finish('레몬 과육','f7e38a')
 cil=finish('송송 썬 파','75954a')
 
@@ -76,7 +54,7 @@ def mesh(name,vs,faces,mat,smooth=False,strip=None,uv=None):
     if strip is not None:
         layer=me.uv_layers.new(name='표면')
         for loop in me.loops:
-            a,b=uv[loop.vertex_index];layer.data[loop.index].uv=(.004+.992*a,(strip+.04+.92*b)/8)
+            a,b=uv[loop.vertex_index];layer.data[loop.index].uv=food_surfaces.uv(strip,a,b)
     for f in me.polygons:f.use_smooth=smooth
     ob=bpy.data.objects.new(name,me);col.objects.link(ob);return ob
 
@@ -99,8 +77,13 @@ def tray(name,x,y,z,w,d,profile,mat,strip=None,r=.018):
 def block(name,x,y,z,w,d,h,mat,r=.006,strip=None):
     b=min(h*.18,.003,r*.45)
     return tray(name,x,y,z,w,d,[(b,0),(0,b),(0,h-b),(b,h)],mat,strip,r)
-def lathe(name,x,y,z,profile,mat,n=32):
-    return rings(name,[[(x+r*cos(j*tau/n),y+r*sin(j*tau/n),z+h) for j in range(n)] for r,h in profile],mat)
+def lathe(name,x,y,z,profile,mat,n=32,open_ends=False):
+    rows=[[(x+r*cos(j*tau/n),y+r*sin(j*tau/n),z+h) for j in range(n)] for r,h in profile]
+    if open_ends:
+        faces=[(i*n+j,i*n+(j+1)%n,(i+1)*n+(j+1)%n,(i+1)*n+j)
+               for i in range(len(rows)-1) for j in range(n)]
+        return mesh(name,sum(rows,[]),faces,mat,True)
+    return rings(name,rows,mat)
 def rod(name,pts,r,mat,n=7):
     rows=[]
     for i,p in enumerate(pts):
@@ -139,10 +122,26 @@ for side in [-1,1]:
     rod('등판 뒤 목재 가로대',[(cx+side*(.211+.047*(1-(j/4)**2)),j*.052,.629) for j in range(-4,5)],.023,leg,6)
 
 # Raised rectangular stoneware with a shallow well and a dark fired edge.
+tray('검은 서빙 쟁반',.015,-.298,top,.732,.566,
+     [(.018,0),(.008,.006),(0,.016),(.001,.020),(.007,.021),(.012,.016),(.018,.008)],service,r=.014)
+block('쟁반의 밝은 속지',.015,-.298,top+.008,.698,.533,.0014,liner,.006)
+top+=.0095
 sx,sy=-.07,-.304
 tray('모둠초밥 사각 도기',sx,sy,top,.413,.378,[(.026,0),(.009,.010),(0,.033),(.002,.036),(.009,.035),(.024,.013),(.031,.010)],skin,5)
-pts=outline(.408,.373,.016,7)
-rod('도기 가장자리 철유',[(sx+a,sy+b,top+.0352) for a,b in pts+[pts[0]]],.0013,pottery,6)
+# The fired iron oxide is pooled on the outer corners and on the return of
+# the square lip, not an added round wire. Keep the colour inside the glaze.
+points=outline(.411,.376,.016,8)
+edge=[];edge_uv=[]
+for j,(a,b) in enumerate(points+[points[0]]):
+    for k,(scale,h) in enumerate([(1.003,.0338),(.997,.0366),(.985,.0361)]):
+        edge.append((sx+a*scale,sy+b*scale,top+h))
+        edge_uv.append(((j%9)/9,k/2))
+mesh('사각 도기의 철유 테',edge,plating.grid(len(points)+1,3),skin,True,13,edge_uv)
+points=outline(.393,.358,.016,8);edge=[];edge_uv=[]
+for j,(a,b) in enumerate(points+[points[0]]):
+    for k,(scale,h) in enumerate([(1.003,.0352),(1.000,.0345),(.997,.0337)]):
+        edge.append((sx+a*scale,sy+b*scale,top+h));edge_uv.append(((j%9)/9,k/2))
+mesh('안쪽 입술의 흐른 철유',edge,plating.grid(len(points)+1,3),skin,True,13,edge_uv)
 
 # A cut of fish is a bent surface with tapered free ends. Its sides hang over
 # the rice. Texture coordinates follow the cut, including the red skin edge.
@@ -168,52 +167,21 @@ def cut(name,x,y,z,length,width,height,angle,strip,bend=.004):
     for a,b in zip(edge,edge[1:]+edge[:1]):fs.append((a,b,b+count,a+count))
     return mesh(name,vs,fs,skin,True,strip,uv)
 
-def nigiri(x,y,angle,strip,kind):
-    z=top+.011
-    def at(a,b):return x+a*cos(angle)-b*sin(angle),y+a*sin(angle)+b*cos(angle)
-    o=oval('한입 쥔 밥',0,0,0,.037,.0185,.014,rice[0])
-    o.location=(x,y,z+.013);o.rotation_euler.z=angle
-    # Each grain is a separate small lobe, grouped into one editable mesh
-    # per piece. Generate only the exposed outer rows.
-    vs=[];fs=[]
-    for j in range(36):
-        th=j*tau/18+rng.uniform(-.08,.08);upper=j//18
-        a=(.0335-.003*upper)*cos(th);b=(.0148+.001*upper)*sin(th)
-        cx,cy=at(a,b); cz=z+.009+.010*upper+rng.uniform(-.002,.002)
-        spin=angle+rng.uniform(-.8,.8);base=len(vs);n=6
-        for h,rad in [(-.0031,.34),(0,1),(.0033,.36)]:
-            for k in range(n):
-                ha=.0054*rad*cos(tau*k/n);hb=.0030*rad*sin(tau*k/n)
-                vs.append((cx+ha*cos(spin)-hb*sin(spin),cy+ha*sin(spin)+hb*cos(spin),cz+h))
-        for l in range(2):
-            for k in range(n):fs.append((base+l*n+k,base+l*n+(k+1)%n,base+(l+1)*n+(k+1)%n,base+(l+1)*n+k))
-        fs.append(tuple(base+2*n+k for k in range(n)))
-    mesh('드러난 쌀알',vs,fs,rice[rng.randrange(4)],True)
-    cut(kind,x,y,z+.021,.097,.042,.015,angle,strip,.009)
-    if kind=='장어':
-        for i in range(1):
-            path=[(*at(0,b),z+h) for b,h in [(-.023,.010),(-.021,.024),(-.016,.033),(0,.037),(.016,.033),(.021,.024),(.023,.010)]]
-            v=[(px+off*cos(angle),py+off*sin(angle),pz) for px,py,pz in path for off in [-.006,.006]]
-            mesh('장어 김 띠',v,[(k+1,k,k+2,k+3) for k in range(0,len(v)-2,2)],nori)
-    if kind=='새우':
-        tx,ty=at(.047,0)
-        for side in [-1,1]:
-            pts=[(tx,ty,z+.023),(*at(.064,side*.012),z+.014),(*at(.069,side*.003),z+.013)]
-            mesh('새우 꼬리 부채',pts,[(0,1,2),(2,1,0)],ginger)
-for j,row in enumerate([[(3,'흰살'),(3,'껍질 흰살'),(7,'분홍살'),(3,'흰살')],[(1,'연어'),(2,'참치'),(3,'문어')],[(6,'새우'),(4,'구운 생선'),(4,'장어')]]):
-    for i,(strip,kind) in enumerate(row):
-        nigiri(sx+(i-(len(row)-1)/2)*(.091 if j==0 else .112),sy+(j-1)*.109,-1.18+.07*sin(i*3+j),strip,kind)
+for j,row in enumerate([['흰살','껍질 흰살','분홍살','끝 흰살'],['연어','참치','문어'],['새우','그을린 흰살','김으로 감싼 와규']]):
+    for i,kind in enumerate(row):
+        x=sx+(i-(len(row)-1)/2)*(.086 if j==0 else .108)-(.018 if j==2 else .004)
+        y=sy+(j-1)*.103+ .003*sin(i*3+j)
+        angle=-1.14+.08*sin(i*3+j)
+        def at(a,b,h):
+            return x+a*cos(angle)-b*sin(angle),y+a*sin(angle)+b*cos(angle),top+.011+h
+        def rib(name,points,radius):
+            return rod(name,points,radius,tail_rib,5)
+        plating.nigiri(mesh,skin,rice,rib,at,kind,422+j*10+i)
 
 def garnish(x,y,z):
-    for i in range(6):
-        cx=x+.009*sin(i*2);cy=y+.007*cos(i*2)
-        o=oval('얇게 접은 초생강',0,0,0,.017,.012,.0028,ginger)
-        o.location=(cx,cy,z+.003*i)
-        o.rotation_euler.z=i*.9;o.rotation_euler.x=.27*sin(i)
-    for i in range(14):
-        a=i*2.4;r=.011*sqrt(i/14)
-        oval('고추냉이 입자',x+.013+r*cos(a),y-.037+r*sin(a),z+.007+.007*(1-i/14),.006,.005,.0045,wasabi,7)
-garnish(sx+.157,sy+.136,top+.014)
+    plating.garnish(mesh,skin,wasabi,x,y,z,422)
+garnish(sx+.154,sy+.131,top+.014)
+top-=.0095
 
 # Dark sashimi plate, shiso, shredded daikon and a thin lemon wedge, from
 # the branch's eel set. Leave room on the guest-facing edge for dipping ware.
@@ -244,15 +212,29 @@ garnish(cx-.104,cy+.071,top+.014)
 
 def bowl(name,x,y,r,h,mat):
     return lathe(name,x,y,top,[(r*.50,0),(r*.52,.006),(r*.74,h*.25),(r*.96,h*.78),(r,h*.96),(r*.99,h),(r*.94,h),(r*.92,h*.82),(r*.66,h*.22),(r*.42,h*.16)],mat)
-bowl('검은 미소 장국 그릇',.286,-.175,.073,.082,dark)
-lathe('장국 국물',.286,-.175,top+.066,[(.067,0),(.068,.0015)],broth)
-for j in range(3):
-    rod('유부 채',[(.265+.011*j+.004*sin(i),-.195+i*.010,top+.068+.0005*j) for i in range(5)],.003,ginger)
-for j in range(9):
-    x=.286+rng.uniform(-.037,.037);y=-.175+rng.uniform(-.028,.032)
-    oval('파 고명',x,y,top+.068,.0035,.0024,.0013,cil,8)
-tray('간장 종지',.277,-.370,top,.098,.085,[(.013,0),(.003,.021),(0,.026),(.004,.026),(.014,.009)],skin,5,.016)
-block('종지 속 간장',.277,-.370,top+.010,.073,.061,.001,soy,.014)
+top+=.0095
+bowl('검은 미소 장국 그릇',.270,-.116,.070,.077,dark)
+lathe('미소 장국 국물',.270,-.116,top+.063,[(.0651,0),(.0655,.0012)],broth)
+for j in range(5):
+    px=.270+rng.uniform(-.028,.018);py=-.115+rng.uniform(-.026,.005)
+    ribbon=[];uv=[]
+    for i in range(11):
+        u=i/10
+        for side in [-1,1]:
+            ribbon.append((px+.023*u+.0034*sin(8*u+j*.81),py+.014*u+side*(.003+.001*sin(6*u)),top+.065+.0015*sin(6*u+j)))
+            uv.append((u,(side+1)/2))
+    mesh('국물에 뜬 유부 채',ribbon,plating.grid(11,2),skin,True,12,uv)
+for j in range(13):
+    px=.270+rng.uniform(-.037,.033);py=-.116+rng.uniform(-.030,.029)
+    lathe('속이 빈 송송 썬 파',px,py,top+.0643,[(.0034,0),(.0035,.0018),(.002,.0023),(.0019,.0002)],cil,9,True)
+bowl('절임 곁들임 종지',.270,-.295,.061,.031,ivory)
+lathe('절임 종지 철유 테',.270,-.295,top+.029,[(.0600,0),(.061,.001),(.0608,.0025),(.0583,.003),(.0575,.001)],pottery,44,True)
+def small_oval(name,x,y,z,rx,ry,rz,index):
+    return oval(name,x,y,z,rx,ry,rz,ivory,9)
+plating.accompaniments(mesh,skin,small_oval,422,.270,-.295,top+.015)
+tray('간장 종지',.270,-.453,top,.098,.085,[(.013,0),(.003,.021),(0,.026),(.004,.026),(.014,.009)],skin,5,.016)
+block('종지 속 간장',.270,-.453,top+.010,.073,.061,.001,soy,.014)
+top-=.0095
 
 # The silver insulated jug has a thumb-operated black lid, hooked spout,
 # tapered belly and a handle with actual open clearance.
@@ -286,19 +268,5 @@ bpy.context.scene.unit_settings.system='METRIC'
 bpy.context.preferences.filepaths.save_version=0
 print('EDITABLE',len(col.objects))
 bpy.ops.wm.save_as_mainfile(filepath=str(out/'kisara.blend'),compress=True)
-for batch in ['KisaraDining','KisaraBrushedSteel','KisaraGlazedServing']:
-    parts=[ob for ob in col.objects if ob.data.materials[0]['batch']==batch]
-    bpy.ops.object.select_all(action='DESELECT')
-    if batch!='KisaraGlazedServing':
-        mat=(iron if batch=='KisaraBrushedSteel' else dark).copy()
-        tint=mat.node_tree.nodes.new('ShaderNodeVertexColor');tint.layer_name='Tint'
-        mat.node_tree.links.new(tint.outputs['Color'],mat.node_tree.nodes.get('Principled BSDF').inputs['Base Color'])
-        for ob in parts:
-            color=ob.data.materials[0].diffuse_color[:]
-            if not ob.data.color_attributes.get('Tint'):
-                attr=ob.data.color_attributes.new(name='Tint',type='BYTE_COLOR',domain='POINT')
-                for c in attr.data:c.color=color
-            ob.data.materials.clear();ob.data.materials.append(mat)
-    for ob in parts:ob.select_set(True)
-    bpy.context.view_layer.objects.active=parts[0];bpy.ops.object.join();bpy.context.object.name=batch
-bpy.ops.export_scene.gltf(filepath=str(out/'gallery.glb'),export_format='GLB',export_animations=False,export_image_format='JPEG',export_jpeg_quality=88)
+file=out/'export.py'
+exec(compile(file.read_text(),str(file),'exec'),{'__file__':str(file)})
