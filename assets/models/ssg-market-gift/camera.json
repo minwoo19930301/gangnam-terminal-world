@@ -1,0 +1,14 @@
+{
+  "floor": "B1",
+  "x": -60.2508,
+  "y": -6,
+  "z": 17.86034,
+  "yaw": 125.2,
+  "pitch": -9,
+  "meshName": "신세계 마켓 · 기프트 컨시어지 포장 진열대",
+  "sourceBlend": "counter.blend",
+  "sourceCollection": "MarketGiftConcierge",
+  "nativeLabel": "기프트 컨시어지 포장 진열대",
+  "area": "in:shinsegae",
+  "gameView": "?pitch=-9#/shinsegae/B1?p=-60.25080,-6,17.86034,125.2"
+}

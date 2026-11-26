@@ -1,0 +1,14 @@
+{
+  "floor": "B1",
+  "x": -67.155828,
+  "y": -6,
+  "z": 31.699738,
+  "yaw": -142.59611,
+  "pitch": -26,
+  "area": "in:shinsegae",
+  "meshName": "발효:곳간 · 육수 재료 진열대",
+  "nativeLabel": "발효:곳간 육수 재료",
+  "sourceBlend": "broth-wells.blend",
+  "sourceCollection": "PantryBrothWells",
+  "gameView": "?pitch=-26#/shinsegae/B1?p=-67.15582818375653,-6,31.699737975999582,-142.59611449841057"
+}

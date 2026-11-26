@@ -1,7 +1,9 @@
 import {marketProduceCeiling} from '../../assets/models/ssg-market-ceiling/model.js';
+import {giftConcierge} from '../../assets/models/ssg-market-gift/model.js';
 import {marketEntrance} from '../../assets/models/ssg-market-entrance/model.js';
 import {b1Plan as B1_PLAN, departmentPoint as P, departmentWidth as UW, departmentDepth as VD, marketOutline, marketWestReturn} from './shinsegae-b1-plan.js';
 import {marketFruitIslands} from '../../assets/models/ssg-market-produce/model.js';
+import {brothWells} from '../../assets/models/ssg-pantry-broth/model.js';
 import {pastryCounter} from '../../assets/models/ssg-bonmie/model.js';
 import { placeHypnos } from '../../assets/models/hypnos-showroom/model.js';
 import { registerPaulSmith } from './shinsegae-paul-smith.js';
@@ -2638,6 +2640,13 @@ export function build(K) {
       }
       const[u,v]=at,wood=c.name==='카멜커피'?0xd9b98a:c.name==='보앤미'?0xc8a77b:c.name==='블루버터플라이'?0x63422a:c.kind==='wine'?0x493529:c.kind==='deli'?0xb8925d:0x7e6044;
       const darkDeli=c.zone==='north_deli'&&c.kind==='deli', boAndMie=c.name==='보앤미';
+      if(c.name==='기프트 컨시어지'){
+        // Keep the guide-fitted counter and its walking clearance; this cell holds the wrapping service.
+        const [x,z]=P(u,v);
+        giftConcierge(K,x,y,z,RA,w,d);
+        box(u,v,w,d,y,.83,0xcfcbc0,{skip:['top','bottom','n','s','e','w']});
+        return;
+      }
       const base=darkDeli&&c.name!=='블루버터플라이'?'ssg_deli_black_glaze':c.name==='카멜커피'?wood:{tex:'wood',color:wood};
       box(u,v,w,d,y,.83,boAndMie?{tex:'marble',color:0xe9d9c4}:base);
       box(u,v,w+.025,d+.025,y+.83,.06,{tex:'marble',color:darkDeli||c.name==='카멜커피'?0x292824:0xe9debf,gloss:.7},{solid:false});
@@ -2662,14 +2671,12 @@ export function build(K) {
         }else box(u,v,w,d,y+1.31,.025,BRASS,{solid:false});
       }
       const nx=Math.max(2,Math.floor(w/.28)),nz=Math.max(2,Math.floor(d/.28));
-      if(!boAndMie)for(let a=0;a<nx;a++)for(let b=0;b<nz;b++){
+      if(c.name==='발효곳간'){
+        const [x,z]=P(u-w*.245,v); // clear the existing column on the till side
+        brothWells(K,x,y,z,RA,w*.45,d*.92);
+      }else if(!boAndMie)for(let a=0;a<nx;a++)for(let b=0;b<nz;b++){
         const uu=u-w*.4+(a+.5)*w*.8/nx,vv=v-d*.4+(b+.5)*d*.8/nz;
         if(c.kind==='cafe'&&Math.abs(uu-u)<.36&&Math.abs(vv-v)<.3)continue;
-        if(c.name==='발효곳간'){
-          // Sample bottles on the counter; the stock belongs on the lit wall.
-          if(b===0&&a%Math.max(1,Math.ceil(nx/8))===0)bottle(uu,vv,y+.90,[0x4b4930,0x735039,0x535c3e][a%3],.8);
-          continue;
-        }
         box(uu,vv,Math.min(.21,w/nx*.8),Math.min(.20,d/nz*.8),y+.90,.08+(a%3)*.035,[0xdbad6a,0xf2d299,0x975c3e,0x93a16b][(a+b+index)%4],{solid:false});
       }
       box(u+w*.28,v+d*.24,.22,.16,y+1.0,.28,0x252b28,{solid:false});
