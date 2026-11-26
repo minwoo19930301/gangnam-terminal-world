@@ -3,9 +3,15 @@ from pathlib import Path
 from math import sin, cos, pi, radians
 import bpy
 import bmesh
+import sys
 from mathutils import Matrix, Vector
 
 OUT = Path(__file__).resolve().parent
+sys.dont_write_bytecode=True
+sys.path.insert(0,str(OUT))
+import drivetrain as drive
+import bag_counter
+import surfaces
 bpy.ops.wm.read_factory_settings(use_empty=True)
 gallery = bpy.data.collections.new('SSG_8F_Brompton')
 bpy.context.scene.collection.children.link(gallery)
@@ -17,6 +23,10 @@ palette = dict(steel='9DA5A6', chrome='DCE0DC', ink='212526', rubber='252726', c
     silver='A9AFAD', ivory='E7DBC8', white='F7F2E4', oak='BE9B70', shadow='877962', brass='BD9954',
     tan='C29D74', leaf='92AE66', orange='E26E3F', red='AB3438', green='38624E', blue='687A86',
     cream='DFD4B6', navy='333943', olive='6E7461', brown='4D423B')
+palette.update(strapBlack='252726',strapEdge='5A5449',nickel='DFE1D9',alloy='C6C8C2',
+    chainSteel='89908F',darkChain='555B5C',pedalGrey='6C7270',reflectAmber='E69A32',
+    treadBlack='141715',bagTan='B99A71',flapTan='CEAF85',stitchTan='B29B78',wovenGreen='2A372E',
+    oakLight='DBBC98',oakHoney='DEAB78',ceramic='EAE7DE',twig='CEBFA8')
 materials = {}
 def linear(c):
     s = int(c,16)/255
@@ -166,6 +176,8 @@ def clamp(x,y,z):
                            (x+.014,y-.061,z+.005),(x+.026,y-.066,z+.011)],.007,'ink',6)
 
 def drivetrain(cx,cy,cz,rear,folded):
+    if not folded:
+        return drive.model(part,skins,tubing,rod,plate,smooth,cx,cy,cz,rear)
     rx,ry,rz=rear
     y=cy-.056
     hoop('체인링 외륜',cx,y,cz,.092,.007,'ink',40)
@@ -194,11 +206,14 @@ def bicycle(folded,col,low=False):
     # X points forwards, -Y is the drive side. Folded wheels nest side by side.
     rear=(-.055,.055,.222) if folded else (-.506,0,.216)
     front=(.05,-.089,.216) if folded else (.527,0,.216)
-    bb=(-.155,.049,.185) if folded else (-.079,0,.266)
+    bb=(-.155,.049,.185) if folded else (-.099,0,.283)
     seat=(-.127,.049,.443) if folded else (-.123,0,.492)
     head=(.139,-.066,.473) if folded else (.413,0,.582)
     rx,ry,rz=rear; fx,fy,fz=front; bx,by,bz=bb;sx,sy,sz=seat; hx,hy,hz=head
     wheel(*rear,folded);wheel(*front,folded)
+    if not folded:
+        for center in (rear,front):
+            drive.tyre_marks(part,*center)
     # Compact rear swingarm and suspension block under the seat cluster.
     for sign in [-1,1]:
         tubing('뒷삼각 체인스테이',[(bx+.023,by+sign*.032,bz+.02),(rx+.12,ry+sign*.065,rz-.014),
@@ -212,6 +227,9 @@ def bicycle(folded,col,low=False):
     path=[(bx+.009,by,bz+.036),(bx+.028,by,bz+.091),
           (sx+.09,sy,sz-.085),hinge,((hinge[0]+hx)/2,(hinge[1]+hy)/2,(hinge[2]+hz)/2+.008),(hx,hy,hz)]
     tubing('곡선 메인 프레임',path,.027,col,12)
+    if not folded:
+        a=Vector(path[2]);b=Vector(path[3]);axis=(b-a).normalized()
+        drive.frame_decal(part, a+.022*axis, b, .027)
     tubing('헤드 튜브',[(hx+.014,hy,hz-.078),(hx-.010,hy,hz+.046)],.023,col,10)
     clamp(*hinge)
     post_z=.527 if folded else .917
@@ -302,7 +320,7 @@ for x in [1.91,4.01]:
     rod('행거 기둥',(x,.41,.05),(x,.41,1.80),.014,'ink')
 rod('행거 봉',(1.91,.41,1.79),(4.01,.41,1.79),.016,'ink')
 for i,col in enumerate(['navy','cream','tan','olive','ivory','brown','navy','cream']):
-    place(2.14+i*.23,.41,0,60+(i%3)*6)
+    place(2.72+i*.171,.41,0,63+(i%3)*5)
     tubing('옷걸이 후크',[(0,0,1.72),(0,0,1.793),(.018,0,1.812),(.032,0,1.798)],.004,'steel')
     tubing('옷걸이 어깨',[(0,0,1.72),(-.19,0,1.583),(.19,0,1.583),(0,0,1.72)],.008,'oak',6)
     rings=[]
@@ -319,21 +337,17 @@ for i,col in enumerate(['navy','cream','tan','olive','ivory','brown','navy','cre
                          (sign*.048,-.074,1.559)],[(0,1,2,3)],col)
     tubing('앞 단작',[(0,-.072,.91),(0,-.067,1.18),(0,-.082,1.44),(0,-.061,1.60)],.003,col,5)
 
+# The photographed bag counter occupies the left end of the garment furniture.
+bag_counter.add_counter(part,skins,tubing,plate,place,smooth)
+images=surfaces.make_images()
+for name,objects in pieces.items():
+    shared=surfaces.material(name,images)
+    for ob in objects:
+        ob['cycleBatch']=name
+        surfaces.unwrap(ob,shared)
 bpy.context.scene.unit_settings.system='METRIC'
 bpy.context.preferences.filepaths.save_version=0
+bpy.ops.outliner.orphans_purge(do_recursive=True)
+print('EDITABLE', len(gallery.objects), 'CHAINS', [(o.name,o['chainJoints']) for o in gallery.objects if o.get('chainJoints')])
 bpy.ops.wm.save_as_mainfile(filepath=str(OUT/'gallery.blend'),compress=True)
-for group,objects in pieces.items():
-    bpy.ops.object.select_all(action='DESELECT')
-    material=bpy.data.materials.new(group);material.use_nodes=True
-    shader=material.node_tree.nodes.get('Principled BSDF')
-    colors=material.node_tree.nodes.new('ShaderNodeVertexColor');colors.layer_name='Finish'
-    material.node_tree.links.new(colors.outputs['Color'],shader.inputs['Base Color'])
-    shader.inputs['Roughness'].default_value=.38 if group.endswith('Cycles') else .70
-    for ob in objects:
-        mesh=ob.data;rgba=mesh.materials[0].diffuse_color[:]
-        attr=mesh.color_attributes.new(name='Finish',type='BYTE_COLOR',domain='POINT')
-        for item in attr.data:item.color=rgba
-        mesh.materials.clear();mesh.materials.append(material);ob.select_set(True)
-    bpy.context.view_layer.objects.active=objects[0]
-    bpy.ops.object.join();bpy.context.object.name=group
-bpy.ops.export_scene.gltf(filepath=str(OUT/'gallery.glb'),export_format='GLB',export_animations=False,export_texcoords=False)
+exec(compile((OUT/'export.py').read_text(),str(OUT/'export.py'),'exec'))

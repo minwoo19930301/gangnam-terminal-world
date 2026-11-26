@@ -1,10 +1,16 @@
 """Build the editable Snoopy Place gift display and its single vertex-colour draw."""
+import sys,zlib
 import bpy
 from math import cos, sin, pi, sqrt
 from pathlib import Path
 from mathutils import Vector, Matrix
 
 OUT = Path(__file__).resolve().parent
+sys.dont_write_bytecode=True
+sys.path.insert(0,str(OUT))
+import mosaic
+import niches
+import finishes
 bpy.ops.wm.read_factory_settings(use_empty=True)
 scene = bpy.context.scene
 scene.unit_settings.system = 'METRIC'
@@ -15,6 +21,9 @@ colors = dict(white='fff9e9', ink='242128', grout='aea99d', tile='f5efde',
               blue='50b6df', lip='86d0eb', deep='288cb5', aqua='63c8c6',
               pink='f1a8bc', lilac='af9ed6', beige='dcc6a6', steel='b5ae9e',
               wood='e8d7ba', gold='f1ac36', jacket='57929e', scarf='c93642')
+colors.update(peach='edb795',terracotta='b96f4d',porcelain='f4f0e6',mint='77a7a1',
+              tileIvory='f8f4eb',tileInk='332f30',furIvory='f2ece0',velourInk='242124',
+              woolRed='9d292e',jacketTeal='4696a0',jacketEdge='256c75',hatInk='29302e')
 materials = {}
 for key, value in colors.items():
     srgb = [int(value[i:i+2],16)/255 for i in (0,2,4)]
@@ -77,7 +86,6 @@ def label(body,x,y,z,size,color):
 
 # Sculpt cross-sections in the vertical plane so the sleeper's brow, projecting
 # muzzle, round belly and drooping ear keep their profile from the gable ends.
-oval_sources=[]
 def oval(name,x,y,z,rx,ry,rz,color,tilt=0,quality=None):
     rows=[]
     segs, parallels = (24,12) if max(rx,ry,rz) >= .19 else (16,8) if max(rx,ry,rz) >= .07 else (10,6)
@@ -94,7 +102,10 @@ def oval(name,x,y,z,rx,ry,rz,color,tilt=0,quality=None):
     obj=rings(name,rows,color)
     for face in obj.data.polygons:face.use_smooth=True
     if quality is None:
-        oval_sources.append((obj,(name,x,y,z,rx,ry,rz,color,tilt)))
+        radius=max(rx,ry,rz)
+        if radius<.19:
+            low=(12,7) if radius>=.09 else (10,5) if radius>=.035 else (8,4)
+            obj['ovalResolution']=[segs,parallels,*low]
     return obj
 
 def prism_x(name,x0,x1,section,color):
@@ -289,18 +300,9 @@ for r,(y,z) in enumerate([(-.47,.507),(-.045,.811),(.385,1.117)]):
             else:
                 plush(x,y,z+.035,.28,'scarf')
 
-# Representative house-shaped niche with an arched opening and dressed plush.
-nx=-2.94;ny=wallY-.2
-prism_x('Niche shelf',nx-.48,nx+.48,[(ny-.22,.575),(ny+.2,.575),(ny+.2,.616),(ny-.22,.616)],'wood')
-for side in [-1,1]:
-    xa,xb=sorted([nx+side*.25,nx+side*.46])
-    front_panel('Niche side',ny-.18,ny+.17,[(xa,.616),(xb,.616),(xb,1.584-abs(xb-nx)),(xa,1.584-abs(xa-nx))],'beige')
-for k in range(16):
-    xa=-.25*cos(k*pi/16);xb=-.25*cos((k+1)*pi/16)
-    front_panel('Arched niche lintel',ny-.18,ny+.17,[(nx+xa,.92+.25*sin(k*pi/16)),(nx+xb,.92+.25*sin((k+1)*pi/16)),(nx+xb,1.584-abs(xb)),(nx+xa,1.584-abs(xa))],'beige')
-for side in [-1,1]:
-    tube('Niche roof edging',[(nx,ny-.19,1.586),(nx+side*.473,ny-.19,1.114)],.016,'ink')
-plush(nx,ny-.13,.616,.68)
+# Two neighbouring winter plush niches occupy the existing open shelf bay.
+niches.houses(part,rings,tube,box,front_panel,wallY)
+plaque=mosaic.native(part,materials)
 
 # Keep the inlay on top of the existing timber retail finish.
 for obj in list(collection.objects):
@@ -338,40 +340,14 @@ texture.image=image
 tilemat.node_tree.links.new(texture.outputs['Color'],tilemat.node_tree.nodes['Principled BSDF'].inputs['Base Color'])
 for obj in tiles:obj.data.materials[0]=tilemat
 
+shared=finishes.shared(finishes.images(plaque))
+plaque['bakedTileColors']=hex(zlib.crc32(mosaic.native_colors(plaque).astype('<f4').tobytes()))
+for obj in collection.objects:
+    obj['snoopyBatch']='GangnamSnoopyPlaceMosaic' if obj in tiles else 'GangnamSnoopyPlaceDoghouseAndGoods'
+    if obj not in tiles and obj!=plaque:
+        finishes.author(obj,shared)
 bpy.context.preferences.filepaths.save_version=0
+bpy.ops.outliner.orphans_purge(do_recursive=True)
+print('EDITABLE',len(collection.objects),'TILES',mosaic.COLS*mosaic.ROWS)
 bpy.ops.wm.save_as_mainfile(filepath=str(OUT/'snoopy-place.blend'),compress=True)
-print('Editable mesh pieces:',len(collection.objects))
-# Re-tessellate only the small stuffed and printed ellipsoids for the game.
-# Preserve the large kennel sculpture, type, arched lintels and trim profiles.
-for obj,args in oval_sources:
-    radius=max(args[4:7])
-    if radius>=.19:continue
-    resolution=(12,7) if radius>=.09 else (10,5) if radius>=.035 else (8,4)
-    reduced=oval(*args,quality=resolution)
-    obj.data=reduced.data
-    bpy.data.objects.remove(reduced,do_unlink=True)
-objects=list(collection.objects)
-runtime=bpy.data.materials.new('Paint, cloth and printed goods')
-runtime.use_nodes=True
-shader=runtime.node_tree.nodes['Principled BSDF']
-shader.inputs['Roughness'].default_value=.65
-node=runtime.node_tree.nodes.new('ShaderNodeVertexColor')
-node.layer_name='Paint'
-runtime.node_tree.links.new(node.outputs['Color'],shader.inputs['Base Color'])
-def batch(parts,name):
-    bpy.ops.object.select_all(action='DESELECT')
-    for obj in parts:obj.select_set(True)
-    bpy.context.view_layer.objects.active=parts[0]
-    bpy.ops.object.join()
-    bpy.context.object.name=name
-painted=[o for o in objects if o not in tiles]
-for obj in painted:
-    mesh=obj.data
-    attr=mesh.color_attributes.new(name='Paint',type='BYTE_COLOR',domain='CORNER')
-    rgba=mesh.materials[0].diffuse_color
-    for elt in attr.data:elt.color=rgba
-    mesh.materials.clear()
-    mesh.materials.append(runtime)
-batch(painted,'GangnamSnoopyPlaceDoghouseAndGoods')
-batch(tiles,'GangnamSnoopyPlaceMosaic')
-bpy.ops.export_scene.gltf(filepath=str(OUT/'snoopy-place.glb'),export_format='GLB',export_animations=False)
+exec(compile((OUT/'export.py').read_text(),str(OUT/'export.py'),'exec'))
