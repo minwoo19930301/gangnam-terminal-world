@@ -27,7 +27,7 @@
   "assets": {
     "editable": "assets/models/famille/gallery.blend",
     "browser": "assets/models/famille/gallery.glb",
-    "export_edited": "blender -b assets/models/famille/gallery.blend -P assets/models/famille/export.py",
+    "export_edited": "blender -b assets/models/famille/gallery.blend -P assets/models/famille/export.py && npm run optimize:model -- assets/models/famille/gallery.glb assets/models/famille/gallery.glb",
     "rebuild": "blender -b -P assets/models/famille/build.py",
     "details": "두 개의 편집 컬렉션을 색상 정보를 가진 2개 메시로 내보낸다. 와필레와 시계는 게임의 1층 세부 모델로 로드된다."
   },

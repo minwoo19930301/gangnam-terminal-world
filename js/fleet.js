@@ -5,6 +5,10 @@ export function vehicleSize(kind) {
   return (vehicles[kind] || vehicles.car).size;
 }
 
+export function vehicleContacts(kind) {
+  return (vehicles[kind] || vehicles.car).contacts;
+}
+
 const caches = new WeakMap();
 export function fleetInstances(THREE, kind, count) {
   let library = caches.get(THREE);

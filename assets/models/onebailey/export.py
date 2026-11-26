@@ -1,5 +1,7 @@
 """Re-export an edited retail.blend with blender -b retail.blend -P export.py."""
 import bpy
+import subprocess
+from tempfile import TemporaryDirectory
 from mathutils import Vector
 from pathlib import Path
 
@@ -32,8 +34,12 @@ for coll in list(bpy.data.collections):
     obj=bpy.data.objects.new(coll.name,baked)
     bpy.context.scene.collection.objects.link(obj)
     bundles.setdefault(coll.get('bundle','retail'),[]).append(obj)
-for name,meshes in bundles.items():
-    bpy.ops.object.select_all(action='DESELECT')
-    for obj in meshes: obj.select_set(True)
-    bpy.ops.export_scene.gltf(filepath=str(directory/(name+'.glb')),export_format='GLB',use_selection=True,
-        export_normals=False, export_materials='NONE',export_vertex_color='ACTIVE',export_yup=True)
+with TemporaryDirectory() as temp:
+    for name,meshes in bundles.items():
+        source = Path(temp) / (name + '.glb')
+        bpy.ops.object.select_all(action='DESELECT')
+        for obj in meshes: obj.select_set(True)
+        bpy.ops.export_scene.gltf(filepath=str(source),export_format='GLB',use_selection=True,
+            export_normals=False, export_materials='NONE',export_vertex_color='ACTIVE',export_yup=True)
+        subprocess.run(['node', str(directory.parents[2]/'tools'/'optimize_model.mjs'),
+                        str(source), str(directory/source.name)], check=True)
