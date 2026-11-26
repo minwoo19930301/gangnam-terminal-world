@@ -26,6 +26,7 @@ import {placeFloristStock} from '../../assets/models/gyeongbu-florist-stock/mode
 import {placeTerrarium} from '../../assets/models/gyeongbu-terrarium/model.js';
 import { placeWaitingBenches } from '../../assets/models/gyeongbu-seating/model.js';
 import {placeCushionBay} from '../../assets/models/concourse-fixtures/cushions.js';
+import {registerCeramics} from '../../assets/models/daiso-ceramics/model.js';
 import {homeShelf} from '../../assets/models/daiso-home/shelf.js';
 import {accessoryShelf} from '../../assets/models/daiso-accessories/shelf.js';
 import {drawAisleFaces} from '../../assets/models/daiso/aisle-stock.js';
@@ -2128,6 +2129,7 @@ export function build(K) {
     lspawn('다이소 생활용품 긴 매장',218,6.5,y,1,0);
     lspawn('다이소 GATE 4 고투몰 연결',261.5,-15,y,1,0);
     buildRound20DaisoHall(y);
+    registerCeramics(K,W,toL,rect,ROT);
     const stock=[0xf5f5f0,0xf06aa0,0xd8272d,0x2a7fd4,0x48ac9d,0xf2c200,0xb9dfed];
     // Stock occupies one crosswise aisle. All shelf and product dimensions match the previous rows.
     function furnishRack(u,v,len,idx,displayEnd){
@@ -2171,7 +2173,7 @@ export function build(K) {
       rack(u,27,3.8,i+30);
     }
     for(let i=0,u=253;u<282;u+=4.4,i++){
-      rack(u,14,6,i+40,i===2||i===4?-1:0);
+      rack(u,14,6,i+40,i<=2||i===4?-1:0);
       rack(u,24,7,i+50);
     }
     for(let i=0,u=252;u<282;u+=4.4,i++)rack(u,-.9,3.1,i+60,i===2?1:0);
@@ -3730,7 +3732,6 @@ export function build(K) {
       ['GiftWrap','선물 · 포장',188.7,4.46,0],
       ['Snacks','스낵 · 간식',201.9,4.46,0],
       ['CosmeticPads','뷰티 · 스킨케어',238.5,4.46,0],
-      ['Tableware','도자기 · 식기',257.4,10.88,PI],
       ['Organizers','수납 · 정리',280.85,.94,0]
     ];
     for(const [key,label,u,v,angle] of shelves){
