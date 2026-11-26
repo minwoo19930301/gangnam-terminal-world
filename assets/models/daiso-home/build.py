@@ -349,6 +349,54 @@ def packet(x,d,z):
     text('제품 표찰','컵받침',x,d-.016,z+.19,.105,.023)
     sphere('천공 주위 그림자',x,d-.018,z+.240,.008,.003,.01,'shadow')
 
+def paddle_board(x, d, z, color, reveal_grain):
+    # The upper and lower halves each curve around half of the drilled hole.
+    # Their outer rim and bore are joined across the full board thickness.
+    upper = [(0,0),(.002,.083),(.012,.108),(.031,.119),(.29,.119),
+             (.311,.113),(.334,.09),(.354,.064),(.377,.044),(.404,.036),
+             (.462,.036),(.482,.032),(.493,.020),(.497,0)]
+    hole_x, hole_r = .458, .017
+    half_bore = [(hole_x + hole_r*cos(pi*i/12), hole_r*sin(pi*i/12)) for i in range(13)]
+    points, faces, indices = [], [], {}
+    def vertex(u, depth, height):
+        key = (round(u,8),depth,round(height,8))
+        if key not in indices:
+            indices[key] = len(points)
+            points.append((x+u,d+depth,z+height))
+        return indices[key]
+    for sign in (1,-1):
+        loop = upper + half_bore
+        half = [vertex(u,depth,sign*v) for depth in (-.009,.009) for u,v in loop]
+        n = len(loop)
+        sides = [tuple(range(n)), tuple(reversed(range(n,2*n)))]
+        # The two short seams along the centreline are internal.
+        for j in list(range(len(upper)-1)) + list(range(len(upper),n-1)):
+            sides.append((j,j+n,j+n+1,j+1))
+        for face in sides:
+            faces.append(tuple(half[k] for k in (reversed(face) if sign < 0 else face)))
+    colour_wood(mesh.piece('손잡이와 관통 구멍이 있는 도마',points,faces,color),color)
+    if reveal_grain:
+        # Separate finger-jointed strips and tapered end-grain lines on the face.
+        for offset,length,tone in [(-.073,.292,'maple'),(-.009,.397,'birch'),(.055,.301,'honey')]:
+            front('도마의 좁은 집성목 띠',[(x+.014,z+offset),(x+length,z+offset),
+                  (x+length-.005,z+offset+.014),(x+.014,z+offset+.014)],d-.0095,tone)
+        for j in range(6):
+            start=.030+.009*(j%3)
+            points=[]
+            for k in range(13):
+                u=start+k*.021
+                v=z-.094+j*.033+.005*sin(k*.65+j)
+                points.extend([(x+u,d-.010,v),(x+u,d-.010,v+.0018*sin(pi*k/12))])
+            mesh.piece('가늘게 끝나는 도마 나뭇결',points,[(i,i+1,i+3,i+2) for i in range(0,24,2)],'grain')
+
+def board_rack(x,z):
+    for i,color in enumerate(['birch','honey','beech','maple','birch']):
+        paddle_board(x+.007*i,-.181+.044*i,z+.12,color,i==0)
+    for u in (.10,.28):
+        block('도마꽂이 바닥 나무살',x+u,-.046,z-.008,.024,.36,.012,'beech')
+        for i in range(6):
+            rod('도마를 가르는 둥근 나무 촉',[(x+u,-.204+i*.044,z),(x+u,-.207+i*.044,z+.056)],.006,'honey',8)
+
 wood = root('나무 소반과 컵받침·카드꽂이',3)
 group('목제 생활용품 진열대',wood)
 cabinet(1.82,[.22,.74,1.135],2.12)
@@ -384,15 +432,14 @@ group('손가락 홈과 제품 카드가 있는 나무꽂이',wood)
 for x in [-.23,-.438,-.65]:
     for i in range(3):
         card_holder(x,-.194+i*.151,1.163,.176,['birch','honey','beech'][i])
-for i in range(3):
-    card_holder(-.44+i*.21,-.12,.77,.185,['beech','birch','maple'][i])
+group('고무나무 손잡이 도마와 나무 촉 진열대',wood)
+board_rack(-.81,.773)
 group('겹쳐 놓은 물결 소반',wood)
 for x,d,r,count,color in [(.58,-.021,.196,3,'walnut'),(.132,-.001,.183,2,'maple'),(-.52,-.020,.201,3,'bark'),(-.024,-.031,.182,2,'beech')]:
     z=.768 if x>.10 else .251
     for j in range(count):
         tray(x,d,z+j*.084,r,color,4)
-for x in [-.685,-.434,-.19]:
-    block('원목 도구의 네모 받침',x,.137,.77,.211,.14,.09,'birch')
+
 for x in [.38,.66]:
     for j in range(4):
         coaster(x,-.13+j*.076,.384,.119,.039,['walnut','beech','honey'][j%3],'round')
