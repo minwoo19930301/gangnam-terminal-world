@@ -1,0 +1,79 @@
+{
+  "palette": {
+    "white": "fffdf6",
+    "paper": "eee8db",
+    "crease": "d7cebd",
+    "walnut": "493327",
+    "edge": "33261f",
+    "oak": "755943",
+    "brassDark": "785125",
+    "brass": "bb8b3f",
+    "gold": "dbad56",
+    "highlight": "f3d598",
+    "shine": "faf0cb",
+    "black": "302821",
+    "coffee": "543827",
+    "glass": "b5a38a",
+    "lamp": "ffeac3",
+    "kraft": "b99870",
+    "maroon": "693b3c",
+    "stoneTone": "693f3d",
+    "silver": "bab0a0"
+  },
+  "regions": {
+    "beans": [
+      3,
+      3,
+      201,
+      255
+    ],
+    "stone": [
+      262,
+      3,
+      506,
+      136
+    ],
+    "wood": [
+      519,
+      3,
+      764,
+      136
+    ],
+    "heading": [
+      4,
+      271,
+      554,
+      332
+    ],
+    "hopperTag": [
+      565,
+      271,
+      763,
+      332
+    ],
+    "drip": [
+      3,
+      350,
+      161,
+      458
+    ],
+    "price": [
+      175,
+      349,
+      301,
+      458
+    ],
+    "bronze": [
+      513,
+      349,
+      763,
+      459
+    ],
+    "dial": [
+      315,
+      339,
+      493,
+      463
+    ]
+  }
+}

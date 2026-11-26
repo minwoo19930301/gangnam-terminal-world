@@ -17,7 +17,7 @@ export const LANDMARKS = [
   { name: '르본시티', arrivalFloor: '1F', sub: '귀금속', x: -232, z: 20, y: 40, place: 'lebon', color: '#b08d3c' },
   { name: '데블스도어', arrivalFloor: '4F', x: 380, z: 8, y: eastGardenLevel, place: 'gyeongbu_east', color: '#7a3b1e' },
   { name: '뉴코아아울렛', arrivalFloor: '1F', x: 270, z: -365, y: 24, place: 'newcore', color: '#4b4b4b' },
-  { name: '반포르엘', exteriorView: { x: -65.8, z: -124.2, yaw: 42, pitch: 23 }, sub: '신반포로23길 23', x: -185.24, z: -283.29, roofPin: [-116, 98.6, -193], place: 'streets', color: '#4e6c70' },
+  { name: '반포르엘', exteriorView: { x: -65.8, z: -124.2, yaw: 42, pitch: 23 }, sub: '신반포로23길 23', x: -185.24, z: -283.29, roofPin: [-127, 98.6, -189.5], place: 'streets', color: '#4e6c70' },
   { name: '반포센트럴자이', aliases: ['반센자이'], exteriorView: { x: -168.7, z: -86.6, yaw: 34, pitch: 25 }, sub: '반포대로 310-6', x: -291.98, z: -244.95, roofPin: [-240, 95.6, -145], place: 'streets', color: '#466f76' },
   { name: '신반포4차', exteriorView: { x: 83.2, z: -179.1, yaw: 340, pitch: 15 }, sub: '잠원로 37-48', x: 118.27, z: -401.37, roofPin: [106, 36.6, -247], place: 'streets', color: '#806c57' },
   { name: '반원상가', arrivalFloor: '1F', sub: '한신치킨', x: -125, z: -408, y: 17, place: 'banwon', color: '#e07a1f' },

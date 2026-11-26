@@ -94,6 +94,7 @@ import { loadArchitecture, fitArchitecture, fitTerminalSeat as drawFacadeSign } 
 import {detailModule, detailResource} from '../detail-module.js';
 const displayURL = new URL('../../assets/models/shinsegae/displays.js', import.meta.url);
 const mainLiftDirectory=detailModule(new URL('../../assets/models/ssg-lift-directory/model.js',import.meta.url),module=>module.placeDirectory);
+const marketCoffee=detailModule(new URL('../../assets/models/ssg-market-coffee/model.js',import.meta.url),module=>module.placeCoffee);
 const displayResource=detailModule(displayURL,module=>module.displays);
 import {loadArchitecture as loadFinish, placeArchitecture as placeFinish} from '../../assets/models/interior-architecture/model.js';
 
@@ -105,7 +106,7 @@ const warmPinspot = finishResource('warm-pinspot');
 const cellBlade = finishResource('cell-blade');
 const coolBatten = finishResource('cool-batten');
 const facadeSigns = await loadArchitecture('../shinsegae-facade/signs.glb');
-const retailResources = [mainLiftDirectory, displayResource, wallArchitecture, warmSlot, warmPinspot, cellBlade, coolBatten];
+const retailResources = [mainLiftDirectory, marketCoffee, displayResource, wallArchitecture, warmSlot, warmPinspot, cellBlade, coolBatten];
 export const prepareFullDetail = () => Promise.all(retailResources.map(resource => resource.load()));
 // Blender extraction and the full-city inspector build their complete kits synchronously.
 if (displayURL.protocol === 'file:') await prepareFullDetail();
@@ -3109,6 +3110,19 @@ export function build(K) {
           // The market polygon starts just inside its guide bounding box.
           // Keep the timber stock 10 cm farther in so the eligible bays pass the same perimeter test.
           const u=mU1-.45;if(!clear(u,v,.5,2.6))continue;
+          if(Math.abs(v-(mV0+24))<.01&&clear(mU1-.54,v,.68,2.55)){
+            // A previously empty timber surround opposite a customer cross aisle.
+            // Only the market boundary, not this individual cabinet, is on the guide.
+            const mount=mU1-.54,[x,z]=P(mount,v),name='신세계 마켓 · 홀빈 디스펜서와 마켓레인 커피',angle=RA-PI/2;
+            box(mount+.268,v,.025,2.47,y+.10,2.71,{tex:'wood',color:0x65482f},{solid:false});
+            box(mount,v,.53,2.46,y,2.81,0x65482f,{ceil:false,skip:['top','bottom','n','s','e','w']});
+            K.detail({name,floor:'B1',poly:rect(mount-.32,v-1.27,mount+.27,v+1.27),
+              y0:y,y1:y+2.88,visualOnly:true,resource:marketCoffee,
+              visibleFrom:(px,py,pz)=>Math.abs(py-(y+1.3))<2.45 &&
+                (px-x)*Math.sin(angle)+(pz-z)*Math.cos(angle)>-.07 && (px-x)**2+(pz-z)**2<22**2},
+              ()=>marketCoffee.value(K,name,x,y,z,angle));
+            continue;
+          }
           if(Math.abs(v-(mV0+21))<.01&&clear(mU1-.54,v,.68,2.55)){
             const [x,z]=P(mU1-.54,v);
             truffleCase(K,x,y,z,RA-PI/2);

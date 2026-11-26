@@ -1,0 +1,14 @@
+{
+  "floor": "B1",
+  "x": -62.56782,
+  "y": -6,
+  "z": 3.16069,
+  "yaw": -69.21399,
+  "pitch": 0,
+  "meshName": "신세계 마켓 · 홀빈 디스펜서와 마켓레인 커피",
+  "sourceBlend": "coffee.blend",
+  "sourceCollection": "MarketLaneBeanCase",
+  "nativeLabel": "홀빈 디스펜서와 마켓레인 커피",
+  "area": "in:shinsegae",
+  "gameView": "#/shinsegae/B1?p=-62.56782,-6,3.16069,-69.21399,0"
+}

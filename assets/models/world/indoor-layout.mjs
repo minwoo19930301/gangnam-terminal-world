@@ -287,6 +287,7 @@ const sources = [
   ['centralcity','1F','open-stage-media/cabinet.blend','오픈 스테이지 · 미디어 기둥 외장','오픈 스테이지 · 미디어 기둥 외장'],
   ['centralcity','1F','open-stage-coffer/coffer.blend','오픈 스테이지 · 코퍼 몰딩','오픈 스테이지 · 코퍼 몰딩'],
   ['centralcity','1F','open-stage-lounge/lounge.blend','오픈 스테이지 · 흰 소파와 낮은 테이블','오픈 스테이지 · 흰 소파와 낮은 테이블'],
+  ['centralcity','3F','famille-reserve-timber/coffee-trees.blend','파미에파크R · 목재 기둥과 구형 조명','파미에파크R · 목재 기둥과 구형 조명'],
   ['centralcity','1F','famille-atrium/atrium-fittings.blend','광장 · 고리형 청동 조명','광장 벽등 · 고리와 유백 갓'],
   ['centralcity','1F','famille-atrium/atrium-fittings.blend','메모리얼 광장 · 미디어 캐비닛','세로형 전광판 · 캐비닛과 매체','전광판 · 교체 가능한 화면 원화'],
   ['centralcity','1F','famille-atrium/atrium-fittings.blend','포비 앞 · 빨간 철제 테이블과 의자','광장 포비 앞 · 빨간 비스트로 테이블'],

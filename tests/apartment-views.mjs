@@ -1,10 +1,11 @@
 import assert from 'node:assert/strict';
 import {readFile,writeFile} from 'node:fs/promises';
-import {chromium} from 'playwright';
+import {chromium,devices} from 'playwright';
 import {serve} from './serve.mjs';
 
 const data = JSON.parse(await readFile(new URL('../data/osm.json',import.meta.url)));
 const models = JSON.parse(await readFile(new URL('../js/places/_re_models.json',import.meta.url))).models;
+const portrait = process.argv.includes('--portrait');
 const server = await serve();
 const browser = await chromium.launch({channel:'chromium',args:['--use-angle=metal','--enable-gpu','--ignore-gpu-blocklist']});
 try {
@@ -12,7 +13,9 @@ try {
     ['신반포4차','apt-a13790828'], ['반포르엘','apt-a10023673'], ['반포센트럴자이','apt-a10024913','반센자이']
   ];
   for (const [name,id,alias] of cases) {
-    const page = await browser.newPage({viewport:{width:800,height:480}});
+    const page = await browser.newPage(portrait
+      ? {...devices['Pixel 7'],viewport:{width:390,height:844},deviceScaleFactor:1.5}
+      : {viewport:{width:800,height:480}});
     const errors = [], fetched = [];
     page.on('pageerror',e=>errors.push(e.message));
     page.on('response',r=>{ if (r.url().endsWith('/'+id+'.glb')) fetched.push(r.status()); });
@@ -20,8 +23,14 @@ try {
     await page.waitForFunction(()=>window.__world?.ready,null,{timeout:120000});
     assert.equal(await page.evaluate(()=>__world.area),'in:newcore');
     assert.equal(fetched.length,0);
-    await page.locator('#start').click();
-    await page.keyboard.press('m');
+    if (portrait) {
+      await page.locator('#start button').tap();
+      await page.locator('#btn-map').tap();
+      await page.locator('.gt-panel-toggle').tap();
+    } else {
+      await page.locator('#start').click();
+      await page.keyboard.press('m');
+    }
     for (const query of [name,alias || name]) {
       await page.locator('#map-search').fill(query);
       assert.equal(await page.locator('.gt-result b').first().innerText(),name);
@@ -31,7 +40,7 @@ try {
     await page.waitForFunction(id=>window.__world?.ready && __world.scene.children.some(o=>o.visible && o.userData.re?.id===id),id,{timeout:120000});
     const model=models.find(m=>m.id===id);
     const vertex=data.buildings.find(b=>model.claims.includes(b.id)).poly[0];
-    const metrics = await page.evaluate(async ({id,name,vertex,proof})=>{
+    const metrics = await page.evaluate(async ({id,name,vertex,proof,portrait})=>{
       const {LANDMARKS} = await import('/js/landmarks.js');
       const landmark = LANDMARKS.find(row=>row.name===name);
       const {renderer,scene,camera,player:p,phys}=__world;
@@ -61,24 +70,32 @@ try {
       const [pinX,,pinZ]=landmark.roofPin;
       const pin=scene.children.find(o=>o.isSprite && Math.hypot(o.position.x-pinX,o.position.z-pinZ)<.01);
       if (!pin?.visible) throw Error('Missing rooftop name at the public sidewalk');
-      const nameMask=[];
+      const nameMask=[],underMinimap=[];
+      const mini=document.querySelector('.gt-mini').getBoundingClientRect();
+      const canvas=renderer.domElement.getBoundingClientRect();
       for (const mode of ['day','night']) {
         __world.setTimeMode(mode);
         const labelled=sample();
         pin.visible=false;
         const unlabelled=sample();
         pin.visible=true;
-        let readable=0;
+        let readable=0,covered=0;
         for(let i=0;i<labelled.length;i+=4) {
-          if(Math.max(...[0,1,2].map(c=>Math.abs(labelled[i+c]-unlabelled[i+c])))>32) readable++;
+          if(Math.max(...[0,1,2].map(c=>Math.abs(labelled[i+c]-unlabelled[i+c])))<=32)continue;
+          readable++;
+          if(portrait){
+            const x=canvas.left+(i/4%width+.5)*canvas.width/width;
+            const y=canvas.top+(height-.5-Math.floor(i/4/width))*canvas.height/height;
+            if(x>=mini.left && x<mini.right && y>=mini.top && y<mini.bottom)covered++;
+          }
         }
-        nameMask.push(readable);
+        nameMask.push(readable); underMinimap.push(covered);
       }
       const point={x:p.x,z:p.z};
       phys.resolve(point,p.r,p.y,p.y+p.height,p.step);
-      return {finished,baseline,pixels,nameMask,marker:[landmark.x,landmark.z],percent:100*pixels/(width*height),pitch:p.pitch*180/Math.PI,
+      return {finished,baseline,pixels,nameMask,underMinimap,marker:[landmark.x,landmark.z],percent:100*pixels/(width*height),pitch:p.pitch*180/Math.PI,
         x:p.x,y:p.y,z:p.z,push:Math.hypot(point.x-p.x,point.z-p.z),errors:__world.errors};
-    },{id,name,vertex,proof:!!process.env.PROOF_DIR});
+    },{id,name,vertex,portrait,proof:!!process.env.PROOF_DIR});
     if (process.env.PROOF_DIR) {
       for (const type of ['finished','baseline']) {
         await writeFile(process.env.PROOF_DIR+'/'+id+'-'+type+'.png',Buffer.from(metrics[type].split(',')[1],'base64'));
@@ -90,6 +107,7 @@ try {
     const [px,pz]=metrics.marker, [[west,north],,[east,south]]=model.rect;
     assert.ok(px>=west && px<=east && pz>=north && pz<=south, name+' map marker outside its complex');
     assert.ok(metrics.nameMask.every(value=>value>60), name+' rooftop label hidden from the arrival view');
+    if(portrait)assert.deepEqual(metrics.underMinimap,[0,0],name+' rooftop label overlaps the minimap');
     assert.ok(metrics.percent>2 && metrics.pitch>5 && metrics.push<.05);
     assert.deepEqual([...metrics.errors,...errors],[]);
     assert.deepEqual(fetched,[200]);
