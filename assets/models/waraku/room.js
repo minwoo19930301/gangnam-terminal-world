@@ -2,7 +2,7 @@ import {boxSilhouette} from '../interior-architecture/box-silhouette.js';
 import {placeSingleDetail} from '../interior-architecture/single-detail.js';
 import {names,anchors} from './layout.js';
 import {glass} from './glass.js';
-import {loadArchitecture} from '../interior-architecture/model.js';
+import {loadBakedSurface} from '../interior-architecture/baked-surface.js';
 
 let paint,glow,windowMesh;
 const proxies=new Map();
@@ -72,15 +72,6 @@ function silhouette(T,key){
   const result=boxSilhouette(T,parts);proxies.set(key,result);return result;
 }
 
-async function bakedSurface(T,file){
-  const textureUrl=new URL('./'+file.split('/').at(-1).replace('.glb','-light.webp'),import.meta.url);
-  const [[surface],map]=await Promise.all([loadArchitecture(file),new T.TextureLoader().loadAsync(textureUrl.href)]);
-  map.colorSpace=T.NoColorSpace;map.flipY=false;map.anisotropy=4;
-  // The light atlas stores 0.5 at neutral exposure. The game room lighting still sets the time of day.
-  surface.material=new T.MeshLambertMaterial({color:new T.Color(2,2,2),map,vertexColors:true,side:T.DoubleSide});
-  return [surface];
-}
-
 function addGlass(K,origin,angle){
   const T=K.THREE;
   if(!windowMesh){
@@ -148,7 +139,7 @@ export function warakuShop(K,{P,R,lzone},s0,t0,s1,t1){
       const baked=key==='room'||key==='table';
       placeSingleDetail(K,{name:'와라쿠 · '+names[key],file:'../waraku/'+key+'.glb',at:at(x,d,h),angle,
         fallback:silhouette(T,key),fallbackMaterial:material,material:baked?null:material,range,exitRange,eyeHeight,
-        loadSurface:baked?file=>bakedSurface(T,file):loadArchitecture,
+        loadSurface:baked?file=>loadBakedSurface(T,file):undefined,
         floorTolerance:key==='brand'||key==='entry'?3.25:2.25,closeVisibleFrom:visible});
       if(key==='entry')addGlass(K,at(...anchors.glass),angle);
     });
