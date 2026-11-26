@@ -10,6 +10,10 @@ import {relief} from '../../../js/banpo_relief.js';
 // Scene object (or a uniquely identifying child) -> editable native source.
 // Geometry decoder matrices and decorative LOD offsets live *below* the placement.
 const sources = [
+  ['gyeongbu','1F','gyeongbu-boards/gates-5-to-10.blend','경부선 · 5~10번 승차홈 전광판','Housing','Lightboxes'],
+  ['centralcity','2F','bean-brothers/fp203.blend','빈브라더스 · FP203 커피바와 좌석','빈브라더스 · FP203 커피바와 좌석'],
+  ['jwmarriott','8F','lounge-drapery/drapes.blend','더 라운지 · 묶은 주름 커튼','더 라운지 · 묶은 주름 커튼'],
+  ['jwmarriott','8F','lounge-upholstery/sofa.blend','더 라운지 · 크림색 코너 소파','더 라운지 · 크림색 코너 소파'],
   ...[['9F','ssg-marzocco/gallery.blend','MarzoccoEnamel','SSG_9F_LaMarzocco'],
       ['9F','ssg-twl/gallery.blend','TWLOak','SSG_9F_TWL'],
       ['9F','ssg-herman-miller/seating.blend','HMFrame','SSG_9F_HermanMiller'],
@@ -77,9 +81,10 @@ export async function captureIndoorLayout() {
           const ordinal=counts.get(subject)||0;
           counts.set(subject,ordinal+1);
           const [x,y,z]=world.elements.slice(12,15);
+          const ground=rounded(relief(x,z));
           const level=subject==='광장 · 고리형 청동 조명' && y>=4 ? '2F' : floor;
           result.push({id:[place,subject,ordinal+1].join('/'),place,placeName:meta.name,floor:level,library,
-            collections,subject,terrain:root.userData.terrainApplied?0:rounded(relief(x,z)),matrix:world.toArray().map(rounded)});
+            collections,subject,ground,terrain:root.userData.terrainApplied?0:ground,matrix:world.toArray().map(rounded)});
         }
         return placed;
       };
