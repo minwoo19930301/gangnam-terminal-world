@@ -1,3 +1,4 @@
+import { placeDeparturePortal } from '../../assets/models/gyeongbu-boards/model.js';
 import { placeWarmer } from '../../assets/models/gyeongbu-pretzels/model.js';
 import { placeUpperShowroom } from '../../assets/models/gyeongbu-apparel/model.js';
 import { coachGlazing } from '../../assets/models/coach-cabin/windows.js';
@@ -318,6 +319,23 @@ export function build(K) {
   ];
   for(const b of bays)b.dest=b.n>=40?'도착':bayDestinations[b.n]||'';
   for(const b of bays)door(b.u,b.v,b.west?5.6:b.n===null?4:2.5);
+  const signedPortal=bays.find(b=>b.west&&b.n===7);
+  if(signedPortal){
+    const {u,v}=signedPortal;
+    // The photographed central display is a solid pier between two usable doors.
+    const invisible={skip:['top','bottom','n','s','e','w']};
+    lbox(u-.12,v,0,.26,.92,2.97,0,invisible);
+    for(const [offset,width] of [[-3.50,1.21],[3.52,1.29]])lbox(u-.83,v+offset,0,.26,width,2.97,0,invisible);
+    ldetail({floor:'1F',y0:0,y1:3.05,poly:rect(u-.40,v-4.2,u+.12,v+4.2),name:'5~10번 승차홈 전광판'},()=>{
+      const [x,z]=W(u-.13,v);
+      placeDeparturePortal(K,x,z,FACE['-u']);
+      const front=u-.13-.70-.155;
+      lsign(['금요일 만나다','첫눈에 반하다'],front,v-3.5,1.83,.94,.39,'-u',
+        {bg:null,fg:'#496265',padding:.025,pxPerM:220});
+      lsign(['금오공과대학교','지금오라'],front,v+3.52,1.43,.99,.45,'-u',
+        {bg:null,fg:'#414c7f',padding:.025,pxPerM:220});
+    });
+  }
   // Continuous boarding-side window wall; the 0.8m cream piers separate screens.
   const windowSpans=[];
   const westScreens=bays.filter(b=>b.west).sort((a,b)=>a.v-b.v);
@@ -1085,7 +1103,7 @@ export function build(K) {
         for(const s of [-1,1]){const c=s*1.56;part(c,.06,2.43,2.94,.025,doorGlass);for(const t of [-1.21,-.4,.4,1.21])part(c+t,.02,.06,2.58,.08,0x53483b);for(const y of [.06,1.02,1.72,2.55])part(c,y,2.43,.055,.08,0x53483b);part(c+s*.14,.96,.035,.42,.1,0xb2a99c,-.24);}
         part(0,2.58,dw,.055,.08,0x53483b);part(0,2.98,dw,.055,.08,0x53483b);
       }else{for(const t of [-dw/2,0,dw/2])part(t,.02,.08,2.62,.08,0x53483b);for(const y of [.06,1.02,1.72,2.55])part(0,y,dw,.055,.08,0x53483b);}
-      if(!west)continue;
+      if(!west||b===signedPortal)continue;
       const t=west?0:dw/2+.48,u=b.u+(west?-.13:t),v=b.v+(west?t:-.38);
       lbox(u,v,.04,west?.22:.66,west?.66:.22,2.9,0x1d1f1f,{solid:false});const su=u-(west?.13:0),sv=v-(west?0:.13);
       lsign(['승차홈',`${b.n}  ${b.dest||'출발 안내'}`],su,sv,2.68,.55,.3,face,{bg:'#3e504f',fg:'#dceeea',padding:.02});lsign('09:12',su,sv,2.38,.55,.24,face,{bg:'#102431',fg:'#85dfed',padding:.02});
@@ -3594,7 +3612,11 @@ export function build(K) {
       lbox(73.23,49,1.25,.025,1.9,1.1,0xf0ede4,{solid:false});
       for(let k=0;k<9;k++)lbox(73.21,48.25+k*.19,1.46+(k%4)*.09,.012,.2,.4,[0x7d9b96,0xcbb995,0xa8b1ad][k%3],{solid:false});
       lbox(72.96,51.2,0,.5,.7,.55,0xf0f0e8);
-      for(let v=84;v<137;v+=6)lbox(75.2,v,0,.8,.8,4.4,0x8e9191,{solid:false});
+      // Anchor the decorative piers to the gaps between door pairs. A fixed six-metre grid crossed several openings.
+      for(const [v0,v1] of windowSpans){
+        const v=(v0+v1)/2;
+        if(v>=84 && v<137)lbox(75.2,v,0,.8,Math.min(.8,v1-v0),4.4,0x8e9191,{solid:false});
+      }
       // L07: portrait blue displays on the west side (camera07's right).
       // Four screens form the photographed row; preserve the fifth behind
       // camera05 so it cannot become another foreground blocker there.

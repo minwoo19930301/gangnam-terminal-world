@@ -85,6 +85,7 @@ async function boot() {
     document.body.classList.toggle('night', state.night);
   });
   K.onNight = daylight.onNight;
+  K.displayClock = () => daylight.state.clock;
   const streetLuminaires = [];
   K.streetLight = (x,y,z) => streetLuminaires.push([x,y+relief(x,z),z]);
   function setTimeMode(mode) {
