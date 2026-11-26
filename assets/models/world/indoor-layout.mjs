@@ -47,6 +47,8 @@ const sources = [
   ['centralcity','B1','fortnum-tea-shop/tea-shop.blend','포트넘앤메이슨 · 목재 입구와 홍차 진열대','FortnumSweetPark'],
   ['centralcity','B1','haz-bakery/display.blend','하츠베이커리 · 샌드베이글과 포장','HazBakeryCounter'],
   ['centralcity','B1','sweet-arabica/entrance.blend','스위트 파크 · %아라비카 입면','ArabicaGangnamFront'],
+  ['centralcity','B1','sweet-cake-counters/cakes.blend','스위트 파크 · 키친205 케이크 진열','SweetKitchen205'],
+  ['centralcity','B1','sweet-cake-counters/cakes.blend','스위트 파크 · 쇼토 케이크 진열','SweetShoto'],
   ['centralcity','B1','sweet-chefs-stage/counter.blend','스위트 파크 · 셰프스 스테이지와 르솔레이','SweetPark_ChefsStage'],
   ['shinsegae','B1','megabox-central/entrance.blend','메가박스 센트럴 · 부티크 아치 입면','MegaboxBoutiquePublicFront'],
   ['gyeongbu','3F','gyeongbu-flower-bank/flower-bank.blend','경부선 생화상가 · 절지와 열매 진열대','FreshFlowerWholesaleBank'],

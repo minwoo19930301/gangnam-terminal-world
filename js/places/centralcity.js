@@ -1,3 +1,4 @@
+import {cakeCounter} from '../../assets/models/sweet-cake-counters/model.js';
 import {terminalOrigin,terminalRotation as R,terminalPoint as P,sweetParkLocal as BPst} from './sweet-park-plan.js';
 import {transverseFloor} from '../../assets/models/megabox-central/layout.js';
 import {publicFloorOpening,court,westApron} from '../../assets/models/cinema-rotary/layout.js';
@@ -1549,7 +1550,7 @@ export function build(K) {
     const ds=face==='N'?-.14:face==='S'?.14:0,dt=face==='E'?.14:face==='W'?-.14:0;
     lbox(s+ds,t+dt,face==='N'||face==='S'?.045:.32,face==='N'||face==='S'?.32:.045,YB1+.49,.58,0x3f6b45,{solid:false});
   };
-  const spVitrine=(r,seed=0,stock=true)=>{
+  const spVitrine=(r,seed=0,stock=true,middleShelf=true)=>{
     if(!b1Safe(r))return false;
     const[s0,t0,s1,t1]=spBounds(r),s=(s0+s1)/2,t=(t0+t1)/2,ds=s1-s0,dt=t1-t0,cut=Math.min(.25,ds*.22,dt*.16);
     const shape=(pad=0)=>[[s0+cut-pad,t0-pad],[s1-cut+pad,t0-pad],[s1+pad,t0+cut-pad],[s1+pad,t1-cut+pad],[s1-cut+pad,t1+pad],[s0+cut-pad,t1+pad],[s0-pad,t1-cut+pad],[s0-pad,t0+cut-pad]].map(p=>P(...p));
@@ -1561,7 +1562,7 @@ export function build(K) {
     K.prism(shape(-.025),YB1+.81,YB1+1.13,{mat:'glass',solid:false});
     for(const yy of [.08,.66,1.13])K.prism(shape(.015),YB1+yy,YB1+yy+.025,{mat:b1Brass,solid:false,top:false,bottom:false});
     const pp=shape(-.025);for(const[x,z]of pp)entryTubeWorld([x,YB1+.80,z],[x,YB1+1.14,z],.022,b1Brass);
-    lbox(s,t,ds-.14,dt-.14,YB1+.96,.012,'glass',{solid:false});
+    if(middleShelf)lbox(s,t,ds-.14,dt-.14,YB1+.96,.012,'glass',{solid:false});
     const rows=Math.max(1,Math.floor((ds-.22)/.27)),cols=Math.max(1,Math.floor((dt-.22)/.27));
     for(let i=0;stock&&i<rows;i++)for(let j=0;j<cols;j++){
       const ss=s0+.14+(i+.5)*(ds-.28)/rows,tt=t0+.14+(j+.5)*(dt-.28)/cols;
@@ -1725,9 +1726,10 @@ export function build(K) {
       return;
     }
     const chefStage=cell.name==='깰끄쇼즈 / 르솔레이 / 아우치+터치';
+    const cake=cell.name==='키친205'||cell.name==='쇼토';
     if(retail){
       if(caseRect){BPrism(caseRect,YB1,.9,{tex:'wood',color:0xd3c6af});for(let j=0;j<4;j++)BPrism(caseRect,YB1+.9+j*.4,.04,0xe6dcc9,false);}
-    }else if(caseRect)spVitrine(caseRect,index,!chefStage);
+    }else if(caseRect)spVitrine(caseRect,index,!chefStage&&!cake,!cake);
     if(cell.name==='어나더팜'&&caseRect){
       const [a,b,c,d]=spBounds(caseRect),[x,z]=P((a+c)/2,(b+d)/2);
       anotherPalmEdition(K,x,YB1+1.155,z,F[face]+PI);
@@ -1736,6 +1738,9 @@ export function build(K) {
       if(chefStage){
         const [a,b,c,d]=spBounds(caseRect),[x,z]=P((a+c)/2,(b+d)/2);
         chefStageSigns(K,x,YB1,z,F[face],c-a,d-b);
+      }else if(cake){
+        const [a,b,c,d]=spBounds(caseRect),[x,z]=P((a+c)/2,(b+d)/2);
+        cakeCounter(K,cell.name,x,YB1+.80,z,F[face]);
       }else spCounterStand(cell,caseRect,face);
     }
     const cs=(s0+s1)/2,ct=(t0+t1)/2;
