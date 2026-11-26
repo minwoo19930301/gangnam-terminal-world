@@ -86,23 +86,23 @@ import { registerMarzocco } from './shinsegae-marzocco.js';
 import { mounts as facadeMounts } from '../../assets/models/shinsegae-facade/mounts.js';
 import { loadArchitecture, fitArchitecture, fitTerminalSeat as drawFacadeSign } from '../../assets/models/architectural-retail/place.js';
 // Only a handful of upper-floor shops use the Blender polygon packet.
-import {detailModule} from '../detail-module.js';
+import {detailModule, detailResource} from '../detail-module.js';
 const displayURL = new URL('../../assets/models/shinsegae/displays.js', import.meta.url);
 const displayResource=detailModule(displayURL,module=>module.displays);
-export const prepareFullDetail = () => displayResource.load();
-// Local Blender extraction and Node scene tools build the complete kit synchronously.
-if (displayURL.protocol === 'file:') await prepareFullDetail();
-import { loadArchitecture as loadFinish, placeArchitecture as placeFinish } from '../../assets/models/interior-architecture/model.js';
+import {loadArchitecture as loadFinish, placeArchitecture as placeFinish} from '../../assets/models/interior-architecture/model.js';
 
-const finishURL = name => new URL(`../../assets/models/upper-retail-finish/${name}.glb`, import.meta.url);
-const [wallArchitecture, warmSlot, warmPinspot, cellBlade, coolBatten, facadeSigns] = await Promise.all([
-  loadArchitecture('shinsegae-walls.glb'),
-  loadFinish(finishURL('warm-slot')),
-  loadFinish(finishURL('warm-pinspot')),
-  loadFinish(finishURL('cell-blade')),
-  loadFinish(finishURL('cool-batten')),
-  loadArchitecture('../shinsegae-facade/signs.glb'),
-]);
+const finishResource = name => detailResource(() => loadFinish(new URL(
+  `../../assets/models/upper-retail-finish/${name}.glb`, import.meta.url)));
+const wallArchitecture = detailResource(() => loadArchitecture('shinsegae-walls.glb'));
+const warmSlot = finishResource('warm-slot');
+const warmPinspot = finishResource('warm-pinspot');
+const cellBlade = finishResource('cell-blade');
+const coolBatten = finishResource('cool-batten');
+const facadeSigns = await loadArchitecture('../shinsegae-facade/signs.glb');
+const retailResources = [displayResource, wallArchitecture, warmSlot, warmPinspot, cellBlade, coolBatten];
+export const prepareFullDetail = () => Promise.all(retailResources.map(resource => resource.load()));
+// Blender extraction and the full-city inspector build their complete kits synchronously.
+if (displayURL.protocol === 'file:') await prepareFullDetail();
 
 // 신세계백화점 강남점 — detailed place module (B2 주차장 ~ 11F 식당가 + 1M 메자닌 + J1 지하 연결통로)
 // Exterior: 2026 north/corner roadview towers and glazing; 2025 entrance and east parking.
@@ -369,6 +369,18 @@ export function build(K) {
       retailDetail(opt, () => { for (const build of queue) build(); });
     }
     furnishings.get(floor).push(fn);
+  }
+
+  function placeRetailFinish(resource, id, name, poly, draw) {
+    if (resource.ready) {
+      draw(resource.value);
+      return;
+    }
+    K.detail({floor:id, y0:LV[id], y1:LV[nextOf(id)], name, poly, resource, visualOnly:true},
+      () => draw(resource.value));
+  }
+  function ceilingFinish(resource, id, name, poses) {
+    if (poses.length) placeRetailFinish(resource, id, name, FULL, parts => placeFinish(K,parts,name,poses));
   }
 
   // ------------------------------------------------------------ surveyed exterior palette
@@ -6562,8 +6574,8 @@ export function build(K) {
     for (let u = 2; u < UW - 1; u += 3) for (let v = v0 + 1.8; v < VD - 1; v += 3.6) {
       if (!omissions.some(r => inR(u, v, r, .8))) battens.push(finishPose(u, v, yy));
     }
-    placeFinish(K, cellBlade, '신세계 8층 절곡 블레이드', blades);
-    placeFinish(K, coolBatten, '신세계 8층 선형 조명', battens);
+    ceilingFinish(cellBlade, id, '신세계 8층 절곡 블레이드', blades);
+    ceilingFinish(coolBatten, id, '신세계 8층 선형 조명', battens);
   }
   function winterCoat(u,v,y,color=0xc4c4bf,front='N',scale=1) {
     const sw=front==='E'||front==='W',b=(a,c,w,d,h,hh,m)=>box(u+(sw?c:a),v+(sw?a:c),sw?d:w,sw?w:d,y+h,hh,m,{solid:false});
@@ -10039,15 +10051,18 @@ export function build(K) {
       // photographed oak gallery has its own wall across the back of the shop.
       const centre=D*.52, span=Math.min(6,D-.92);
       const rack=(along,depth)=>ST(.25-depth,centre+along);
-      fitArchitecture(K,wallArchitecture,'CaseGallery',(along,height,depth)=>{
-        const [x,z]=P(...rack(along*span/7,depth));
-        return [x,y+height,z];
+      const caseOutline = [[-span/2,.055],[span/2,.055],[span/2,-.88],[-span/2,-.88]]
+        .map(([a,b]) => P(...rack(a,b)));
+      placeRetailFinish(wallArchitecture,id,'리모와 진열벽',caseOutline,library => {
+        fitArchitecture(K,library,'CaseGallery',(along,height,depth)=>{
+          const [x,z]=P(...rack(along*span/7,depth));
+          return [x,y+height,z];
+        });
       });
       const [signX,signZ]=P(...rack(0,-.18)),[frontX,frontZ]=P(...rack(0,-1.18));
       K.sign('RIMOWA',{x:signX,y:y+2.47,z:signZ,w:2.15,h:.41,
         rotY:Math.atan2(frontX-signX,frontZ-signZ),bg:null,fg:'#fff5e5'});
-      const outline=[[-span/2,.055],[span/2,.055],[span/2,-.88],[-span/2,-.88]];
-      K.phys.addPolyWalls(outline.map(([a,b])=>P(...rack(a,b))),y,y+2.1,.012,'shinsegae');
+      K.phys.addPolyWalls(caseOutline,y,y+2.1,.012,'shinsegae');
       for(let bay=-1;bay<=1;bay++){
         for(const [offset,scale] of [[-.38,.85],[.38,1.03]]){
           shopDisplay('case',bay*span/3+offset,-.55,y+.29,rack,scale);
@@ -16940,9 +16955,12 @@ export function build(K) {
         if(id==='5F'&&c.name==='렉토'){
           // The 2022 branch photograph shows continuous convex timber veneers.
           // The authored broad waves and shadow joints stay inside the established shop.
-          fitArchitecture(K,wallArchitecture,'RectoWall',(x,h,z)=>{
-            const [px,pz]=P(...ST(Wf/2+x*(Wf-.44)/8,Dp-.24+z));
-            return [px,y+.012+h,pz];
+          const wallFootprint=[[.2,Dp-.40],[Wf-.2,Dp-.40],[Wf-.2,Dp],[.2,Dp]].map(([a,b])=>P(...ST(a,b)));
+          placeRetailFinish(wallArchitecture,id,'렉토 원목 진열벽',wallFootprint,library=>{
+            fitArchitecture(K,library,'RectoWall',(x,h,z)=>{
+              const [px,pz]=P(...ST(Wf/2+x*(Wf-.44)/8,Dp-.24+z));
+              return [px,y+.012+h,pz];
+            });
           });
           // The Gangnam opening view shows a small white name on the timber
           // wall. Generate it immediately: the shared sign atlas can still be
@@ -17225,8 +17243,8 @@ export function build(K) {
       if (aisle(u, v - .85, .1) && aisle(u, v + .85, .1)) slots.push(finishPose(u, v, ceiling));
       pinspots.push(finishPose(u + .45, v, ceiling - .04));
     }
-    if (slots.length) placeFinish(K, warmSlot, `신세계 ${id} 매입 슬롯`, slots);
-    if (pinspots.length) placeFinish(K, warmPinspot, `신세계 ${id} 다운라이트`, pinspots);
+    ceilingFinish(warmSlot, id, `신세계 ${id} 매입 슬롯`, slots);
+    ceilingFinish(warmPinspot, id, `신세계 ${id} 다운라이트`, pinspots);
     // Estimate corridor area from the guide's unoccupied 1m cells. Density is
     // one person/25m², with entrances, lift lobbies and escalator landings clear.
     const candidates=[];

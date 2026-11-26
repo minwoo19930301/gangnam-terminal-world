@@ -10,12 +10,18 @@ const browser = await chromium.launch(process.argv.includes('--gpu')
   ? {channel:'chromium',args:['--use-angle=metal','--enable-gpu','--ignore-gpu-blocklist']}
   : {args:['--use-angle=swiftshader','--enable-unsafe-swiftshader']});
 const page = await browser.newPage({viewport:{width:900,height:600}});
-const requests = [], errors = [];
+const requests = [], finishes = [], errors = [];
 const packet = '**/assets/models/shinsegae/displays.js*';
 page.on('pageerror', error => errors.push(error.message));
 await page.route(packet, route => {
   requests.push(route.request().url());
   return requests.length === 1 ? route.abort() : route.continue();
+});
+await page.route(/\/(?:upper-retail-finish\/[^/]+|architectural-retail\/shinsegae-walls)\.glb$/, route => {
+  const file = new URL(route.request().url()).pathname.split('/').pop();
+  const firstWall = file === 'shinsegae-walls.glb' && !finishes.includes(file);
+  finishes.push(file);
+  return firstWall ? route.fulfill({status:503,body:'Try again'}) : route.continue();
 });
 async function enter(address) {
   await page.goto(base+'/?q=low&traffic=0#/'+address);
@@ -37,6 +43,7 @@ try {
   });
   await enter('shinsegae/B1?p='+lobby);
   assert.equal(requests.length,0,'B1 needs no upper-floor mesh data');
+  assert.deepEqual(finishes,[],'B1 needs no upper-store wall or ceiling GLBs');
   await ride('6F');
   await ride('B1');
   assert.match(await page.locator('#zone').innerText(),/B1/);
@@ -45,7 +52,19 @@ try {
   await page.waitForFunction(() => __world.K._.details.some(d =>
     d.name === '리모와' && d.resource?.ready && d.built && d.renderables?.length),null,{timeout:30000});
   assert.equal(requests.length,2,'one failed load and one successful retry');
-  await page.waitForTimeout(300);
+  // The display wall is on the side of this approach. Turn towards the fit-out.
+  await page.evaluate(() => {
+    const d=__world.K._.details.find(detail=>detail.name==='리모와 진열벽');
+    if(!d)return;
+    const [x0,z0,x1,z1]=d.bb, p=__world.player;
+    p.yaw=Math.atan2(p.x-(x0+x1)/2,p.z-(z0+z1)/2);
+  });
+  await page.waitForFunction(() => __world.scene.getObjectByName('CaseGallery'),null,{timeout:30000});
+  assert.equal(finishes.filter(file=>file==='shinsegae-walls.glb').length,2,'RIMOWA wall recovered after a 503');
+  await enter('shinsegae/8F?p=-71.44507,35.8,23.65471,243,12');
+  await page.waitForFunction(() => ['신세계 8층 절곡 블레이드','신세계 8층 선형 조명'].every(name =>
+    __world.K._.details.some(d=>d.name===name && d.built && d.renderables?.length)),null,{timeout:30000});
+  for(const file of ['cell-blade.glb','cool-batten.glb'])assert.ok(finishes.includes(file));
   assert.deepEqual(errors,[]);
   assert.deepEqual(await page.evaluate(()=>__world.K._.detailErrors),[]);
   console.log('B1 → 6F → B1 by elevator; visible RIMOWA fixtures recovered after one failed download.');
