@@ -37,6 +37,20 @@ def build_roads(context, seed, mesh_object, material, surfaces):
     for road in seed["roads"]:
         if road["id"] in RIVER_DECKS:
             continue
+        crossing = seed.get("banpoCrossing")
+        if crossing and road["id"] == crossing["way"]:
+            vertices, faces = [], []
+            for polygon in crossing["faces"]:
+                k = len(vertices)
+                vertices.extend((x, -z, elevation(x, z, road["pts"][0][2] - .14) + .19) for x, z in polygon)
+                faces.append(tuple(range(k, len(vertices))))
+            yellow = material("반포역 횡단보도 황색 도료", (.855, .451, .017))
+            paint = mesh_object(context, "반포역 · 중앙정류소 앞 황색 횡단보도", vertices, faces, [yellow])
+            for face in paint.data.polygons:
+                if face.normal.z < 0:
+                    face.flip()
+            paint["osm_way"] = road["id"]
+            continue
         kind = road["hw"]
         road_name = road["name"] or kind
         walk = kind in ("pedestrian", "cycleway", "footway", "steps", "path", "track")
