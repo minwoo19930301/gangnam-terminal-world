@@ -1,4 +1,8 @@
+import { apartmentNight, lightApartmentWindows } from './apartment-windows.js';
+import { streetBatchView } from './static-view.js';
+import { createDeckVisibility } from './deck-visibility.js';
 import { visitorInstances } from './visitors.js';
+import {visitorView} from './visitor-view.js';
 import { drawHardware } from '../assets/models/street-and-lift/draw.js';
 import { makeStep, drawStepRails } from '../assets/models/staircase/render.js';
 import { createEscalatorRenderer } from '../assets/models/escalator/render.js';
@@ -10,14 +14,18 @@ import { wheelContacts } from './vehicle_ground.js';
 // K = construction kit handed to every place module.  See docs/PLACE_API.md for the contract.
 // Coordinates: x=east, z=south, y=up, meters. Origin = 고속터미널역. Street level y=0.
 import { createTextures, createSignAtlas, makeCanvas } from './textures.js';
-import { pointInPoly, polyBBox, polyArea } from './physics.js';
+import { pointInPoly, polyBBox, polyArea, distanceToPolygonSq } from './physics.js';
 
 export const LEVELS = { B1: -6, B2: -11, B3: -16, B4: -21, B5: -26, B6: -31 };
 const TILE = 320;
 
-export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096, low = false, keep = null, keepDetail = null } = {}) {
+export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096, low = false, keep = null, keepDetail = null, streetView = false, interiorView = false } = {}) {
   // Area loading (js/areas.js): keep(owner, x, y, z, ny) drops primitives/meshes/trees/people outside the loaded area,
   // keepDetail(group) skips lazy detail groups the area does not show. Both null = build everything.
+  const deckVisibility = interiorView ? createDeckVisibility() : null;
+  const staticVisibility = streetBatchView(THREE,scene,deckVisibility);
+  const streetVisibility = streetView ? staticVisibility : null;
+  const clipVisitors=visitorView(THREE,scene,relief);
   const T = createTextures(THREE, { maxAniso });
   // big atlas pages mean fewer materials → fewer draw calls (the bottleneck on slow CPUs); low tier draws signs
   // at a lower pixel density (resolution only — every sign is still there)
@@ -43,7 +51,14 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     else if (key === 'hanRiver') m = createRiverWater(THREE,scene,onFrame);
     else if (key === 'water') { const s = T.surface('water'); m = new THREE.MeshLambertMaterial({ map: s.tex, vertexColors: true, transparent: true, opacity: 0.92 }); }
     else if (key.startsWith('sign:')) { const p = atlas.pages[+key.slice(5)]; m = new THREE.MeshBasicMaterial({ map: p.t, side: THREE.FrontSide, alphaTest: 0.35 }); }
-    else if (key.startsWith('arr:')) { m = new THREE.MeshLambertMaterial({ map: dummyMap, vertexColors: true }); m.userData.arr = texArrays[+key.slice(4)]; addBounce(m, '', true); materials.set(key, m); return m; }
+    else if (key.startsWith('arr:')) {
+      m = new THREE.MeshLambertMaterial({ map: dummyMap, vertexColors: true });
+      m.userData.arr = texArrays[+key.slice(4)];
+      addBounce(m, '', true);
+      const layer=m.userData.arr.userData.apartmentLayer;
+      if(layer!==undefined) lightApartmentWindows(m,apartmentNight(K),'paint',layer);
+      materials.set(key, m); return m;
+    }
     else if (key.startsWith('tex:')) { const s = T.surface(key.slice(4)); m = new THREE.MeshLambertMaterial({ map: s.tex, vertexColors: true }); }
     else if (key.startsWith('ctex:')) { const s = customTex.get(key.slice(5)); m = new THREE.MeshLambertMaterial({ map: s.tex, vertexColors: true, transparent: !!s.transparent, alphaTest: s.transparent ? 0.3 : 0, side: s.doubleSide ? THREE.DoubleSide : THREE.FrontSide }); }
     else if (/^gl\d+:/.test(key)) { // polished surface: the base material plus a blurred warm-interior reflection
@@ -56,6 +71,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     }
     else throw new Error('unknown material key ' + key);
     if (m.isMeshLambertMaterial) addBounce(m);
+    if (key==='tex:apt') lightApartmentWindows(m,apartmentNight(K),'paint');
     materials.set(key, m); return m;
   }
   // Shared reflection map for polished floors/stone ({ gloss }): a soft interior — bright ceiling with downlight pools,
@@ -475,7 +491,16 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     const mv = o.move ? [ux * o.move, uz * o.move] : null;
     phys.addRamp(ax, az, bx, bz, w / 2, ya, yb, { move: mv, tag: current });
   }
-  const drawEscalator = createEscalatorRenderer(THREE, addMesh, onFrame);
+  const fixedEscalators = [], indoorEscalators = [], indoorStock = [];
+  const drawEscalator = createEscalatorRenderer(THREE, (mesh,moving) => {
+    addMesh(mesh);
+    if (streetVisibility) {
+      if (moving) streetVisibility.flight(mesh,true,relief);
+      else fixedEscalators.push(mesh);
+    } else if (deckVisibility) {
+      indoorEscalators.push({mesh,moving,bounds:null});
+    }
+  }, onFrame);
   function escalator(ax, az, bx, bz, o = {}) {
     const w = o.w ?? 1.1, ya = o.ya ?? 0, yb = o.yb ?? 5;
     const L = Math.hypot(bx - ax, bz - az), ux = (bx - ax) / L, uz = (bz - az) / L;
@@ -641,8 +666,9 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
   function onFrame(fn) { frameFns.push(fn); }
   // Detail batches keep their normal scene parents so place animations retain control of visibility.
   let detailObjects = null;
-  function addMesh(mesh) {
+  function addMesh(mesh, {stationaryInstances = false} = {}) {
     detailObjects?.add(mesh);
+    if (deckVisibility && stationaryInstances) mesh.userData.stationaryInstances = true;
     mesh.userData.owner ??= current;
     if (mesh.isPointLight) mesh.position.y += terrainAt(anchorHeight,mesh.position.x,mesh.position.z);
     scene.add(mesh);
@@ -733,7 +759,8 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
         const nearWheel = Number(dx*dx+dz*dz < (close[i] === 1 ? 68 : 62)**2);
         if (close[i] !== nearWheel) { close[i] = nearWheel; changed = true; }
         if (group.shown) {
-          const shown = Number(!frustum || frustum.intersectsBox(group.bounds[i]));
+          const bounds = group.bounds[i];
+          const shown = Number(!frustum || (frustum.intersectsBox(bounds) && !(deckVisibility?.active && deckVisibility.hides(bounds))));
           if (group.shown[i] !== shown) { group.shown[i] = shown; bodyChanged = changed = true; }
         }
       }
@@ -766,7 +793,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
   let clippedParkedFleet = false;
   let roofX, roofY, roofZ;
   function updateParkedView(x, z, camera, refresh) {
-    if (camera && under) {
+    if (camera && (under || streetView || deckVisibility?.active)) {
       camera.updateWorldMatrix(true, false);
       projection.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
       if (!refresh && clippedParkedFleet && projection.equals(lastProjection)) return;
@@ -788,7 +815,11 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
       if (m.geometry !== g) m.geometry = g;
     }
   }
+  let lastDeckRevision = -1;
   function cull(x, y, z, force = false, camera = null) {
+    deckVisibility?.update(camera);
+    const deckChanged = !!deckVisibility && lastDeckRevision !== deckVisibility.revision;
+    lastDeckRevision = deckVisibility?.revision ?? 0;
     const refresh = force || Math.abs(x-last.x) + Math.abs(y-last.y) + Math.abs(z-last.z) >= 1.5 || ++last.n >= 30;
     // A step that leaves a narrow stair opening can be smaller than the tile
     // update interval. Check the actual eye position as it crosses that edge.
@@ -797,13 +828,24 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
       under = !!zone && INDOOR.has(zone.place) && phys.ceilingAbove(x, z, y, y+8) < Infinity;
       roofX = x; roofY = y; roofZ = z;
     }
-    updateParkedView(x, z, camera, refresh);
-    if (!refresh) return;
-    last = { x, y, z, n: 0 };
-    lodUpdate(x, z);
-    updateDetailLayers(x, y, z);
+    updateParkedView(x, z, camera, refresh || deckChanged);
+    if (!refresh && !deckChanged) return;
+    if (refresh) {
+      last = { x, y, z, n: 0 };
+      lodUpdate(x, z);
+      updateDetailLayers(x, y, z);
+    }
+    const deck = deckVisibility?.active ? deckVisibility : null;
+    if (deck || deckChanged) {
+      for (const mesh of indoorStock) mesh.visible = !deck || !deck.hides(mesh.userData.deckBounds);
+      for (const flight of indoorEscalators) {
+        if (deck) flight.bounds ??= staticVisibility.flightBounds(flight.mesh,flight.moving,relief);
+        flight.mesh.visible = !deck || !deck.hides(flight.bounds);
+      }
+    }
     for (const m of cullList) {
       const d = m.userData, bb = d.bb;
+      if (deck && d.deckBounds && deck.hides(d.deckBounds)) { m.visible = false; continue; }
       if (d.cell === 'o' && !under) { m.visible = true; continue; }
       const dx = x < bb[0] ? bb[0] - x : x > bb[2] ? x - bb[2] : 0, dz = z < bb[1] ? bb[1] - z : z > bb[3] ? z - bb[3] : 0, dist = Math.hypot(dx, dz);
       m.visible = d.cell === 'o' ? dist < 120 : (under ? dist < 320 : dist < 100);
@@ -833,6 +875,8 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
       const t = new THREE.DataArrayTexture(data, w, h, list.length);
       t.wrapS = t.wrapT = THREE.RepeatWrapping; t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = maxAniso;
       t.generateMipmaps = true; t.minFilter = THREE.LinearMipmapLinearFilter; t.magFilter = THREE.LinearFilter; t.needsUpdate = true;
+      const apartmentLayer=list.findIndex(entry=>entry.k==='tex:apt');
+      if(apartmentLayer>=0)t.userData.apartmentLayer=apartmentLayer;
       texArrays.push(t);
     }
     return layers;
@@ -962,9 +1006,17 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
       const m = new THREE.Mesh(g, material);
       if (s.key === 'glass' || s.key === 'water') m.renderOrder = 2;
       m.matrixAutoUpdate = false; m.updateMatrix();
+      // Custom shader materials may move their vertices beyond the kit bounds.
+      if (!s.key.startsWith('cm:') && s.key !== 'hanRiver') {
+        // A whole sales floor can share one material batch. Keep Three's ordinary
+        // culling for small interior meshes, then clip long runs in the large ones.
+        staticVisibility.attach(m,!streetView || s.cell !== 'o');
+        if (deckVisibility) m.userData.deckBounds = g.boundingBox;
+      }
       scene.add(m); out.push(m); track(m, s.cell);
     }
     pruneMeshes();
+    streetVisibility?.batchLandings(fixedEscalators,detailObjects,relief);
     splitModuleInstances();
     buildInstanced();
     return out;
@@ -1002,13 +1054,29 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
   function splitModuleInstances() {
     const M = new THREE.Matrix4(), C = new THREE.Color();
     for (const im of detailObjects || scene.children.slice()) {
-      if (im.parent !== scene || !im.isInstancedMesh || im.count < 64 || im.userData.dynamic || im.userData.split) continue;
+      if (im.parent !== scene || !im.isInstancedMesh || im.userData.dynamic || im.userData.split) continue;
+      if (im.count < 64) {
+        if (im.userData.stationaryInstances && !im.userData.deckBounds) {
+          // Area pruning has compacted the final instance set. Small displays
+          // keep their original parent and distance behaviour.
+          im.computeBoundingBox();
+          im.updateWorldMatrix(true,false);
+          im.userData.deckBounds = im.boundingBox.clone().applyMatrix4(im.matrixWorld);
+          indoorStock.push(im);
+        }
+        continue;
+      }
       const e = im.instanceMatrix.array;
       for (const g of groupBy(im.count, i => [e[i * 16 + 12], e[i * 16 + 13], e[i * 16 + 14], im.userData.owner])) {
         const nm = new THREE.InstancedMesh(im.geometry, im.material, g.idx.length);
         g.idx.forEach((src, j) => { im.getMatrixAt(src, M); nm.setMatrixAt(j, M); if (im.instanceColor) { im.getColorAt(src, C); nm.setColorAt(j, C); } });
         nm.instanceMatrix.needsUpdate = true; if (nm.instanceColor) nm.instanceColor.needsUpdate = true;
         nm.frustumCulled = im.frustumCulled; nm.renderOrder = im.renderOrder; nm.userData.split = true; scene.add(nm); track(nm, g.cell);
+        if (im.userData.stationaryInstances) {
+          // Each spatial cell already has an exact bound including all its instances.
+          nm.name = im.name;
+          nm.userData.deckBounds = nm.boundingBox;
+        }
       }
       scene.remove(im);
     }
@@ -1092,6 +1160,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
         for (const mesh of visitorInstances(THREE,people,group.idx.map(i => start+i))) {
           scene.add(mesh);
           track(mesh,group.cell);
+          clipVisitors(mesh);
           lodList.push(mesh);
         }
       }
@@ -1113,7 +1182,8 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
       const draw = fn;
       fn = kit => withTerrainSurface(datum,() => draw(kit));
     }
-    details.push({ poly, owner: current, meta: perPlace[current], floor: o.floor || '', y0: o.y0 ?? -1e9, y1: o.y1 ?? 1e9, bb, fn, built: false, name: o.name || '', visibleFrom: o.visibleFrom });
+    const rectangular=poly?.length===4 && poly.every(([x,z])=>(x===bb[0]||x===bb[2]) && (z===bb[1]||z===bb[3]));
+    details.push({ poly, exactDistance:!!poly&&!rectangular, owner: current, meta: perPlace[current], floor: o.floor || '', y0: o.y0 ?? -1e9, y1: o.y1 ?? 1e9, bb, fn, built: false, name: o.name || '', visibleFrom: o.visibleFrom });
   }
   function buildDetail(d) {
     if (d.built) return []; d.built = true;
@@ -1194,8 +1264,13 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
       for (const d of details) {
         if (d.built || (keepDetail && !keepDetail(d))) continue;
         const dx = Math.max(0, d.bb[0]-x, x-d.bb[2]), dz = Math.max(0, d.bb[1]-z, z-d.bb[3]);
-        const vertical = Math.max(0, d.y0-y, y-d.y1), distance = dx*dx + dz*dz;
+        const vertical = Math.max(0, d.y0-y, y-d.y1);
+        let distance = dx*dx+dz*dz;
         if (distance > reach*reach || vertical > 8) continue;
+        if (camera && d.exactDistance) {
+          distance=distanceToPolygonSq(x,z,d.poly);
+          if(distance>reach*reach)continue;
+        }
         if (camera && ((d.visibleFrom && !d.visibleFrom(x,y,z)) || !visibleDetail(d,x,y,z,camera,distance,vertical))) continue;
         waiting.push({d,vertical,distance});
       }
@@ -1221,8 +1296,10 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     osmBuilding, osmFind, claim, rand, quad: (mat, p, n, uvs) => quad(spec(mat), p, n, uvs || [[0, 0], [1, 0], [1, 1], [0, 1]]), hpoly: (mat, poly, y, up = true, holes) => hpoly(spec(mat), poly, y, up, holes),
     triangle: (mat, points, normal, uv) => tri(spec(mat), points, normal, uv),
     pointInPoly, polyBBox, polyArea, orient,
+    occludingSlab: options => deckVisibility?.register(options),
+    occludingWall: options => deckVisibility?.registerWall(options),
     // internals for engine
-    _: { bounce, cull, cullList, finalize, details, detailErrors, ensureDetail, buildAllDetail, frameFns, interactables, spawns, zonesList, elevators, claims, mapMarks, groundHoles, stats, atlas, trees, people, setCurrent: (id, meta) => { current = id; if (meta) perPlace[id] = meta; } },
+    _: { bounce, cull, cullList, deckVisibility, finalize, details, detailErrors, ensureDetail, buildAllDetail, frameFns, interactables, spawns, zonesList, elevators, claims, mapMarks, groundHoles, stats, atlas, trees, people, setCurrent: (id, meta) => { current = id; if (meta) perPlace[id] = meta; } },
   };
   return K;
 }

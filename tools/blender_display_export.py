@@ -6,11 +6,12 @@ import bpy
 from mathutils import Vector
 
 
-def bake_collection(src, name, target, simplification=None, preserve_smoothing=False):
+def bake_collection(src, name, target, simplification=None, preserve_smoothing=False, color_attribute=None):
     origin=Vector(src.get('preview_origin',(0,0,0)))
     graph = bpy.context.evaluated_depsgraph_get()
     v, f, colors = [], [], []
     smooth_faces = []
+    corner_colors = {}
     for source in sorted(src.all_objects,key=lambda o:o.name):
         if source.type != 'MESH':
             continue
@@ -19,9 +20,13 @@ def bake_collection(src, name, target, simplification=None, preserve_smoothing=F
         try:
             n = len(v)
             v.extend(o.matrix_world @ pt.co - origin for pt in mesh.vertices)
+            source_color = mesh.color_attributes.get(color_attribute) if color_attribute else None
             for poly in mesh.polygons:
                 f.append(tuple(n+j for j in poly.vertices))
                 colors.append(mesh.materials[poly.material_index].diffuse_color[:])
+                if source_color is not None:
+                    indices = poly.vertices if source_color.domain == 'POINT' else poly.loop_indices
+                    corner_colors[len(f)-1] = [source_color.data[index].color[:] for index in indices]
                 if preserve_smoothing:
                     smooth_faces.append(poly.use_smooth)
         finally:
@@ -33,8 +38,13 @@ def bake_collection(src, name, target, simplification=None, preserve_smoothing=F
     mesh.update()
     tint=mesh.color_attributes.new(name='COLOR_0',type='BYTE_COLOR',domain='CORNER')
     for poly, col in zip(mesh.polygons,colors):
-        for loop in poly.loop_indices:
-            tint.data[loop].color=col
+        custom = corner_colors.get(poly.index)
+        if custom is not None:
+            for loop, value in zip(poly.loop_indices,custom):
+                tint.data[loop].color=value
+        else:
+            for loop in poly.loop_indices:
+                tint.data[loop].color=col
     item=bpy.data.objects.new(name,mesh)
     bpy.context.scene.collection.objects.link(item)
     bpy.ops.object.select_all(action='DESELECT')

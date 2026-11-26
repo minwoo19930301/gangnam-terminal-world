@@ -14,6 +14,20 @@ export function polyBBox(poly) {
   for (const [x, z] of poly) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (z < z0) z0 = z; if (z > z1) z1 = z; }
   return [x0, z0, x1, z1];
 }
+// A rotated shop can be well outside the viewing radius while one corner
+// of its axis-aligned bounding box lies under the pedestrian.
+export function distanceToPolygonSq(x, z, polygon) {
+  if (pointInPoly(x,z,polygon)) return 0;
+  let closest=Infinity;
+  for (let i=0,j=polygon.length-1;i<polygon.length;j=i++) {
+    const [ax,az]=polygon[j], [bx,bz]=polygon[i], dx=bx-ax, dz=bz-az;
+    const lengthSq=dx*dx+dz*dz;
+    const t=lengthSq===0?0:Math.max(0,Math.min(1,((x-ax)*dx+(z-az)*dz)/lengthSq));
+    const ex=x-ax-t*dx, ez=z-az-t*dz;
+    closest=Math.min(closest,ex*ex+ez*ez);
+  }
+  return closest;
+}
 export function polyArea(poly) {
   let a = 0; for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) a += (poly[j][0] + poly[i][0]) * (poly[j][1] - poly[i][1]);
   return Math.abs(a / 2);

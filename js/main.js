@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { installElectricLighting } from './night-lighting.js';
 import { createDaylight, timeModes } from './daylight.js';
 import { createPhysics, createPlayer } from './physics.js';
+import { floorArrival } from './floor-arrival.js';
 import { createKit } from './kit.js';
 import { applyRoadEdits } from './blender-roads.js';
 import { drawBlenderBuilding, loadBuildingArea } from './blender-buildings.js';
@@ -46,7 +47,12 @@ async function boot() {
   const hashR = /^#\/([^?]*)(?:\?(.*))?$/.exec(location.hash || '');
   const hashKey = hashR ? hashR[1].split('/').map(decodeURIComponent).join('/') : '';
   const hashPos = hashR && new URLSearchParams(hashR[2] || '').get('p') ? new URLSearchParams(hashR[2] || '').get('p').split(',').map(Number) : null;
-  const AREA_ID = (!META || SHOT || Q.get('places') || Q.get('area') === 'all') ? 'all' : (Q.get('area') || areaIdForKey(hashKey, hashPos, META));
+  // Explicit camera links use the same starting position to select the outdoor
+  // district and place the player. Otherwise a multi-district module can boot
+  // at its bounding-box centre and force a second load after the first step.
+  const requestedPos=Q.get('pos')?.split(',').map(Number);
+  const start=requestedPos?.length>=3&&requestedPos.slice(0,3).every(Number.isFinite)?requestedPos:null;
+  const AREA_ID = (!META || SHOT || Q.get('places') || Q.get('area') === 'all') ? 'all' : (Q.get('area') || areaIdForKey(hashKey, start??hashPos, META));
   const AREA = META ? planArea(AREA_ID, META, JUNCTIONS) : { id: 'all', modules: PLACES, keep: null, keepDetail: null };
   const exteriorTerrain = !AREA.id.startsWith('in:');
   const shellMargin = exteriorTerrain ? 180 : 110;
@@ -73,7 +79,7 @@ async function boot() {
   addEventListener('resize', () => { camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); });
 
   const phys = createPhysics();
-  const K = createKit(THREE, scene, { osm, phys, maxAniso: renderer.capabilities.getMaxAnisotropy(), maxTex: renderer.capabilities.maxTextureSize, low: LOW, keep: AREA.keep, keepDetail: AREA.keepDetail });
+  const K = createKit(THREE, scene, { osm, phys, maxAniso: renderer.capabilities.getMaxAnisotropy(), maxTex: renderer.capabilities.maxTextureSize, low: LOW, keep: AREA.keep, keepDetail: AREA.keepDetail, streetView: AREA.id.startsWith('out:'), interiorView: AREA.id.startsWith('in:') });
   K._.atlas.start(); // sign rects are reserved during the build; text is painted once the fonts are in
   const timeControl = $('sky-mode'), timeLabel = $('sky-clock');
   let storedMode;
@@ -85,9 +91,10 @@ async function boot() {
     document.body.classList.toggle('night', state.night);
   });
   K.onNight = daylight.onNight;
+  K.onSolarAltitude = daylight.onSolarAltitude;
   K.displayClock = () => daylight.state.clock;
   const streetLuminaires = [];
-  K.streetLight = (x,y,z) => streetLuminaires.push([x,y+relief(x,z),z]);
+  K.streetLight = (x,y,z,strength=1) => streetLuminaires.push([x,y+relief(x,z),z,strength]);
   function setTimeMode(mode) {
     if (!timeModes.includes(mode)) return;
     if (!SHOT) {
@@ -250,7 +257,8 @@ async function boot() {
     }
     // the visible door: thin glowing frame, a light curtain and a sign above (one sign per 18 m cluster of doors to the same place)
     const frameMat = new THREE.MeshBasicMaterial({ color: 0x9fd8ff, transparent: true, opacity: 0.85, fog: false });
-    const curtainMat = new THREE.MeshBasicMaterial({ color: 0x6fc3ff, transparent: true, opacity: 0.16, depthWrite: false, side: THREE.DoubleSide });
+    // Thin portal planes have one visible face at each pixel.
+    const curtainMat = new THREE.MeshBasicMaterial({ color: 0x6fc3ff, transparent: true, opacity: 0.16, depthWrite: false, side: THREE.DoubleSide, forceSinglePass: true });
     const signed = [];
     for (const p of portals) {
       const g = new THREE.Group(); g.position.set(p.x, p.y, p.z); g.rotation.y = Math.atan2(p.tx, p.tz) - Math.PI / 2;
@@ -264,7 +272,7 @@ async function boot() {
         cx.fillStyle = 'rgba(16,40,70,0.88)'; cx.beginPath(); cx.roundRect ? cx.roundRect(4, 4, 504, 104, 22) : cx.rect(4, 4, 504, 104); cx.fill();
         cx.fillStyle = '#fff'; cx.font = `700 44px ${FONT}`; cx.textAlign = 'center'; cx.textBaseline = 'middle'; cx.fillText(p.label + ' ▸', 256, 58, 480);
         const tex = new THREE.CanvasTexture(cv); tex.colorSpace = THREE.SRGBColorSpace;
-        const sm = new THREE.Mesh(new THREE.PlaneGeometry(3.2, 0.7), new THREE.MeshBasicMaterial({ map: tex, transparent: true, side: THREE.DoubleSide, fog: false }));
+        const sm = new THREE.Mesh(new THREE.PlaneGeometry(3.2, 0.7), new THREE.MeshBasicMaterial({ map: tex, transparent: true, side: THREE.DoubleSide, fog: false, forceSinglePass: true }));
         sm.position.set(0, h - 0.5, 0.45); g.add(sm); // inside the top of the frame, a little toward the side you approach from
       }
       g.renderOrder = 3; scene.add(g); p.mesh = g;
@@ -315,7 +323,6 @@ async function boot() {
   // ---- player ----
   const player = createPlayer(phys, { respawn: { x: 6, y: 0, z: -125, yaw: 0 } });
   const spawns = K._.spawns;
-  const start = Q.get('pos') ? Q.get('pos').split(',').map(Number) : null;
   if (start) { player.x = start[0]; player.y = start[1]; player.z = start[2]; }
   else { const s0 = spawns.find(s => s.default) || { x: 6, y: 0, z: -125, yaw: Math.PI * 0.6 }; player.teleport(s0.x, s0.y, s0.z, s0.yaw); }
   if (Q.get('yaw')) player.yaw = +Q.get('yaw') * Math.PI / 180;
@@ -480,9 +487,9 @@ async function boot() {
       if (!r) return false;
       applying = true; setTimeout(() => { applying = false; }, 800);
       if (r.pos && r.pos.length >= 3 && r.pos.every(Number.isFinite)) { player.teleport(r.pos[0], r.pos[1], r.pos[2], r.pos[3] != null ? r.pos[3] * Math.PI / 180 : player.yaw); return true; }
-      const [place, floor] = r.key.split('/');
-      const zoneOfSpawn = s => phys.zoneAt(s.x, (s.y ?? 0) + 0.1, s.z);
-      const sp = spawns.find(s => { const z = zoneOfSpawn(s); return z && z.place === place && (z.floor || '1F') === floor; }) || spawns.find(s => s.place === place);
+      const [addressPlace, floor] = r.key.split('/');
+      const place = META?.[addressPlace]?.floorAliases?.[floor] ?? addressPlace;
+      const sp = (floor && floorArrival(phys, K._, player, place, floor)) || spawns.find(s => s.place === place);
       if (sp) { player.teleport(sp.x, sp.y ?? 0, sp.z, sp.yaw); return true; }
       return false;
     }
@@ -499,7 +506,7 @@ async function boot() {
       go(r);
     });
     return {
-      start() { const r = parse(location.hash); if (r && !Q.get('pos')) go(r); },
+      start() { const r = parse(location.hash); if (r && !start) go(r); },
       update(zn) {
         const now = performance.now(), k = keyOf(zn);
         if (k !== (pending ?? cur)) { pending = k; since = now; }
@@ -589,14 +596,19 @@ async function boot() {
     reloadAt(key, player.x, player.y, player.z, player.yaw * 180 / Math.PI, areaName(id, META));
   }
   function frame() {
-    const dt = Math.min(clock.getDelta(), 0.05); t += dt;
+    const elapsed = clock.getDelta();
+    const dt = Math.min(elapsed, 0.05); t += dt;
     const input = {
       f: (keys.KeyW || keys.ArrowUp ? 1 : 0) - (keys.KeyS || keys.ArrowDown ? 1 : 0) - touch.mz,
       s: (keys.KeyD || keys.ArrowRight ? 1 : 0) - (keys.KeyA || keys.ArrowLeft ? 1 : 0) + touch.mx,
       run: keys.ShiftLeft || keys.ShiftRight || touch.run, jump: keys.Space, up: keys.Space, down: keys.KeyC || keys.ControlLeft,
     };
     if (menuOpen || map.isOpen()) { resetTouch(); input.f = input.s = 0; }
-    player.update(dt, input);
+    // Low frame rates should not shorten every step. Keep collision and gravity
+    // substeps small, and discard elapsed time after tab suspension or a long pause.
+    const movementTime = elapsed > 0.5 ? dt : Math.min(elapsed, 0.15);
+    const movementSteps = Math.max(1, Math.ceil(movementTime / 0.05));
+    for (let i = 0; i < movementSteps; i++) player.update(movementTime / movementSteps, input);
     camera.position.set(player.x, player.y + player.eye + relief(player.x, player.z), player.z);
     camera.rotation.set(player.pitch, player.yaw, 0, 'YXZ');
     daylight.sky.position.copy(camera.position);

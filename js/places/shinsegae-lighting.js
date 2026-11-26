@@ -4,6 +4,42 @@ import { mountRetailDisplay } from './shinsegae-retail-display.js';
 const source = new URL('../../assets/models/ssg-lighting/lightnow.glb',import.meta.url);
 const batches = ['LightnowFinish','LightnowMetal','LightnowDiffuser'];
 
+// Thin glass needs a grazing-angle reflection to read in front of the same
+// wall and furniture seen through it. These two lamps share one transparent
+// batch. The showroom's long ceiling strips stay fixed when the viewer turns.
+function finishBlownGlass(mesh) {
+  const before = mesh.onBeforeRender;
+  mesh.onBeforeRender = function (...args) {
+    before.apply(this,args);
+    const material = this.material;
+    if (!material.userData.lightnowBlownGlass || material.userData.angleReflection) return;
+    this.onBeforeRender = before;
+    material.userData.angleReflection = true;
+    const compile = material.onBeforeCompile;
+    const priorKey = material.customProgramCacheKey();
+    material.onBeforeCompile = function (shader, renderer) {
+      compile.call(this,shader,renderer);
+      shader.fragmentShader = shader.fragmentShader.replace('#include <opaque_fragment>', `
+        vec3 eyeDirection = normalize(vViewPosition);
+        float grazing = 1.0 - clamp(dot(normal, eyeDirection), 0.0, 1.0);
+        float rim = grazing * grazing * grazing;
+        vec3 reflected = reflect(-eyeDirection, normal) * mat3(viewMatrix);
+        float along = dot(reflected.xz, vec2(-0.359, -0.933));
+        float ceiling = smoothstep(0.21, 0.67, reflected.y);
+        float stripe = 1.0 - smoothstep(0.017, 0.091, abs(along - 0.29));
+        float softbox = 1.0 - smoothstep(0.060, 0.24, abs(along + 0.47));
+        float horizon = 1.0 - smoothstep(0.018, 0.073, abs(reflected.y - 0.16));
+        float sheen = ceiling * (0.76 * stripe + 0.36 * softbox) + 0.27 * horizon;
+        outgoingLight = mix(outgoingLight, vec3(0.76, 0.86, 0.88), 0.24 + 0.52 * rim);
+        outgoingLight += vec3(0.68, 0.71, 0.68) * sheen;
+        diffuseColor.a = min(0.91, diffuseColor.a + 0.58 * rim + 0.44 * sheen);
+        #include <opaque_fragment>`);
+    };
+    material.customProgramCacheKey = () => priorKey + '|lightnow-thin-glass';
+    material.needsUpdate = true;
+  };
+}
+
 export function registerLightnow(K,{poly,x,y,z,yaw}) {
   K.detail({floor:'9F',y0:y,y1:y+4.8,poly,name:'라잇나우 조명 전시'},()=>{
     const T=K.THREE, root=new T.Group(), fallback=new T.Group();
@@ -33,6 +69,7 @@ export function registerLightnow(K,{poly,x,y,z,yaw}) {
     piece(globe,-1.62,2.14,1.51,.49,.30,.49,0xffedbf);
     piece(globe,.68,2.24,.08,.62,.08,.62,0xc1d2d3);
     mountRetailDisplay(K,{root,fallback,source,batches,x,y,z});
+    finishBlownGlass(root.getObjectByName('LightnowMetal'));
   });
   for(const [side,back,w,d,h] of [[.49,0,2.71,.94,.925],[.38,2.04,1.72,.69,.825],
     [-1.75,.60,1.14,.75,.78],[0,2.66,5.15,.105,3.14],[2.40,1.23,.04,.9,3],
