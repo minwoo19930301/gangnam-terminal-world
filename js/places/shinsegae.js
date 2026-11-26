@@ -2429,7 +2429,8 @@ export function build(K) {
     }
     // Five public zones: structural registration is immediate, stock/people lazy.
     const zoneSpecs=[
-      ['west_strip','서측 델리 · 이벤트홀',[399,345,478,733]],
+      // Include the white public aisle between the west counters and the deli.
+      ['west_strip','서측 델리 · 이벤트홀',[399,345,498,733]],
       ['north_deli','델리 · 7게이트 · 8게이트',[498,345,1032,557]],
       ['market','신세계 마켓',[498,491,819,776]],
       ['centre','발효곳간 · 와인하우스 · 카페',[820,489,1032,845]],
