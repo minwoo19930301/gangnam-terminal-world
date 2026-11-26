@@ -1,5 +1,6 @@
 import { streetBatchView } from './static-view.js';
 import { visitorInstances } from './visitors.js';
+import {visitorView} from './visitor-view.js';
 import { drawHardware } from '../assets/models/street-and-lift/draw.js';
 import { makeStep, drawStepRails } from '../assets/models/staircase/render.js';
 import { createEscalatorRenderer } from '../assets/models/escalator/render.js';
@@ -20,6 +21,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
   // Area loading (js/areas.js): keep(owner, x, y, z, ny) drops primitives/meshes/trees/people outside the loaded area,
   // keepDetail(group) skips lazy detail groups the area does not show. Both null = build everything.
   const streetVisibility = streetView ? streetBatchView(THREE,scene) : null;
+  const clipVisitors=visitorView(THREE,scene,relief);
   const T = createTextures(THREE, { maxAniso });
   // big atlas pages mean fewer materials → fewer draw calls (the bottleneck on slow CPUs); low tier draws signs
   // at a lower pixel density (resolution only — every sign is still there)
@@ -1104,6 +1106,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
         for (const mesh of visitorInstances(THREE,people,group.idx.map(i => start+i))) {
           scene.add(mesh);
           track(mesh,group.cell);
+          clipVisitors(mesh);
           lodList.push(mesh);
         }
       }
