@@ -1,4 +1,5 @@
 import {restaurantFront} from '../../assets/models/sweet-arcade/restaurant-fronts.js';
+import {sweetGardenSoffit} from '../../assets/models/sweet-garden-soffit/model.js';
 import {cakeCounter} from '../../assets/models/sweet-cake-counters/model.js';
 import {gate9MarketApproach,gate9Plan,terminalOrigin,terminalRotation as R,terminalPoint as P,sweetParkLocal as BPst} from './sweet-park-plan.js';
 import {transverseFloor} from '../../assets/models/megabox-central/layout.js';
@@ -4092,12 +4093,13 @@ function hallR20(K) {
   const floorFace=(poly,mat,y=.028)=>{
     // Clip ornamental faces too: a non-colliding marble face can still hide a well.
     const clip=(poly,f)=>{const out=[];for(let i=0;i<poly.length;i++){const a=poly[i],b=poly[(i+1)%poly.length],fa=f(a),fb=f(b);if(fa<=0)out.push(a);if((fa<=0)!==(fb<=0)){const k=fa/(fa-fb);out.push([a[0]+k*(b[0]-a[0]),a[1]+k*(b[1]-a[1])]);}}return out;};
-    let rest=poly;for(const f of[q=>q[0]-21,q=>32-q[0],q=>q[1]-2.25,q=>8.75-q[1]]){const part=clip(rest,f);if(part.length>=3)K.hpoly(mat,part.map(q=>P(...q)),y,true);rest=clip(rest,q=>-f(q));if(rest.length<3)break;}
+    let rest=poly;for(const f of[q=>q[0]-21,q=>33-q[0],q=>q[1]-2.25,q=>8.75-q[1]]){const part=clip(rest,f);if(part.length>=3)K.hpoly(mat,part.map(q=>P(...q)),y,true);rest=clip(rest,q=>-f(q));if(rest.length<3)break;}
   };
   // Keep the dark green circle legible: the strong shared reflection washes
   // its photographed colour to grey. Its actual gloss varies with lighting.
   const marble={tex:'marble',color:0xe9e8e4,gloss:.7},green={tex:'marble',color:0x203d35,gloss:.15},rose={tex:'marble',color:0xd48a6c,gloss:.7};
-  const well=RECT(21,2.25,32,8.75);
+  // End the cut at the conveyor landing so the deck cannot cover its first downhill step.
+  const well=RECT(21,2.25,33,8.75);
   K.groundHole(well);
   slab(-15.2,-30,38,27.2,0,{holes:[well],under:false,ceil:false});
   // Finish the plaza up to the shared beam along its whole open front.
@@ -4202,8 +4204,17 @@ function hallR20(K) {
   // Opposite the short ascent, the mezzanine descends on the hall's left.
   K.escalator(...P(16.5,2.89),...P(33.6,2.89),{ya:0,yb:3.6,w:1.1,dir:'down'});
   // Four-lane Sweet Garden bank: the B1 owner leaves its approach empty.
-  for(const [i,t]of [3.05,4.65,6.25,7.85].entries())K.escalator(...P(21,t),...P(33,t),{ya:K.LEVELS.B1,yb:0,w:1.13,dir:i<2?'up':'down'});
-  glassRail(21,2.25,32,2.25,0);glassRail(21,8.75,32,8.75,0);glassRail(21,2.25,21,8.75,0);
+  for(const [i,t]of [3.05,4.65,6.25,7.85].entries())K.escalator(...P(21,t),...P(33,t),
+    {ya:K.LEVELS.B1,yb:0,w:1.13,dir:i<2?'up':'down',openTruss:true});
+  {
+    const [x,z]=P(21,5.45);
+    sweetGardenSoffit(K,x,K.LEVELS.B1,z,R+PI);
+    // Keep the bed under the four flights; riders and the B1 through aisle remain clear.
+    const gardenBed=RECT(24.75,2.86,31.67,7.74);
+    K.phys.addSurface(gardenBed,K.LEVELS.B1+.265,{tag:'centralcity'});
+    K.phys.addPolyWalls(gardenBed,K.LEVELS.B1,K.LEVELS.B1+.55,.02,'centralcity');
+  }
+  glassRail(21,2.25,33,2.25,0);glassRail(21,8.75,33,8.75,0);glassRail(21,2.25,21,8.75,0);
   // The lower approach is only the landing, not a second basement interior.
   slab(17,2.1,21,8.9,K.LEVELS.B1,{under:false,ceil:false});
   zone('센트럴시티 중앙홀','1F',0,-33,38,26,0,3.5,'신세계 3게이트 · 스위트 가든');

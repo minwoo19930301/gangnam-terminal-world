@@ -14,6 +14,7 @@ SHELVES = {
     "sweet-cake-counters": "스위트 파크 · 키친205와 쇼토",
     "chipotle-gangnam": "치폴레 강남신세계점 · 주문대",
     "five-guys-gangnam": "파이브가이즈 고속터미널 · 음료대",
+    "sweet-garden-soffit": "스위트 가든 · 에스컬레이터 하부",
     "sweet-arcade": "스위트 파크 · 디저트 홀 타일 기둥",
     "intelligentsia-gangnam": "인텔리젠시아 강남 · 커피 바와 오렌지 선반",
     "another-palm-astro": "어나더팜 · 아톰 에디션",
