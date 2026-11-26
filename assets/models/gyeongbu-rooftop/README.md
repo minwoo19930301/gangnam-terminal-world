@@ -17,3 +17,9 @@ blender -b --threads 2 -P assets/models/gyeongbu-rooftop/build.py
 blender -b assets/models/gyeongbu-rooftop/poseokjeong-rooftop.blend --threads 2 -P assets/models/gyeongbu-rooftop/export.py
 node assets/models/gyeongbu-rooftop/check.mjs /tmp/gyeongbu-rooftop-check
 ```
+
+## 밤의 식탁 조명
+
+둥근 보행등 두 개와 차양 앞 네 등에서 식탁과 상호판으로 빛이 번진다. Blender 원본의 조명 여섯 개는 통합 도시의 서울 야간 값으로 밝기가 바뀐다. 게임에서는 테이블과 잔, 채널 글자의 표면 방향에 따라 빛을 받고, 회색 바닥에 비친 빛은 108 × 32 조명 맵 한 장에 담았다. 사진으로 확인한 등기구에 맞춰 게임에서 식기와 식재료를 알아볼 수 있도록 광량을 정했다. [운영사 옥상 사진](https://exterminal.co.kr/images/floor10.jpg) · [저녁 방문 기록](https://tjsuddl27.tistory.com/24)
+
+같은 야간 화면 중앙에서 상차림 밝기는 8.6에서 44.3, 상호 쪽은 8.3에서 69.3으로 올랐다(회색조 0~255). 하늘 방향은 10.1이었으며 네 시점 모두 드로 호출 수가 같았다. [게임 전후와 Blender 야간 렌더](night.jpg)

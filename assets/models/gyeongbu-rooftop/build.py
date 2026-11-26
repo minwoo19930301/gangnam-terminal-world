@@ -30,7 +30,7 @@ meal['preview_origin']=[food_x,-food_d,0]
 prototype['preview_origin']=[food_x,-food_d,0]
 m.group=patio
 for name,color,metallic in [
-    ('회벽','e4e0cc',0),('목탄색','363d3b',.12),('그늘','242e30',0),('밤색','63452f',0),
+    ('바닥','777b75',0),('회벽','e4e0cc',0),('목탄색','363d3b',.12),('그늘','242e30',0),('밤색','63452f',0),
     ('조리대','8f938c',.32),('석재','7c8074',0),('줄눈','b0b1a6',0),('벽돌','746f62',0),
     ('담갈색','b57d51',0),('의자오크','aa7145',0),('가로대','855f42',0),('방석','353533',0),
     ('회양목','506e43',0),('새잎','839156',0),('이파리','638344',0),('가지','715744',0),
@@ -71,6 +71,22 @@ def box_at(name,x,d,z,w,depth,h,tint,ang=0):
     return piece(name,[(x+a*cos(ang)-b*sin(ang),d+a*sin(ang)+b*cos(ang),z+c) for a,b,c in local],
                  [(0,3,2,1),(4,5,6,7),(0,1,5,4),(1,2,6,5),(2,3,7,6),(3,0,4,7)],tint)
 
+# The same grey roof finish receives the six small pools of light.
+face('회색 옥상 바닥 · 구등 아래',
+     [(-12.58,-.54,.009),(14.28,-.54,.009),(14.28,7.24,.009),(-12.58,7.24,.009)], '바닥')
+
+# Match the linked city's Seoul night timeline. The standalone asset opens at night.
+scene['Seoul apartment night']=1.0
+def fixture(name,x,d,h,watts,radius):
+    data=bpy.data.lights.new(name,'POINT')
+    data.energy=watts;data.color=(1.0,.768,.523);data.shadow_soft_size=radius
+    curve=data.driver_add('energy')
+    v=curve.driver.variables.new();v.name='night';v.type='CONTEXT_PROP'
+    target=v.targets[0];target.context_property='ACTIVE_SCENE';target.data_path='["Seoul apartment night"]'
+    target.use_fallback_value=True;target.fallback_value=1.0
+    curve.driver.expression=f'{watts}*night'
+    obj=bpy.data.objects.new(name,data);patio.objects.link(obj);obj.location=(x,-d,h)
+
 # Shallow brick frontage and the opening under the large painted terminal sign.
 block('점포 뒷벽 · 처마 아래',0,-.67,.03,12.6,.14,2.65,'벽돌')
 for row in range(8):
@@ -98,6 +114,7 @@ for x in [-4.95,-1.22,2.44,5.40]:
     rod('픽처 램프 · ㄱ자 목',[(x,.413,2.705),(x,.58,2.822),(x,.624,2.792)],.015,'프레임',7)
     profile('차양 · 발광부 덮개',x,.622,[(.043,2.741),(.055,2.750),(.026,2.79)],'석재',12)
     profile('차양 · 작은 온백색 램프',x,.622,[(.039,2.739),(.042,2.745)],'전구',12)
+    fixture('차양에서 식탁을 비추는 조명',x,.64,2.731,42,.045)
 block('점포 안내 · 밝은 상호판',-.18,-.407,2.08,1.84,.07,.37,'간판바탕')
 # Reference shows dark wooden tables with a round insert, four wooden ladder backs, and a black seat pad.
 def chair(x,d,yaw):
@@ -198,7 +215,9 @@ for x0,d0,x1,d1 in [(14.3,-.57,14.3,7.25),(14.3,7.25,-12.6,7.25),(-12.6,7.25,-12
 # Globe lights seen along the public rooftop promenade.
 for x in [-5.7,5.48]:
     profile('산책로 조명 · 앵커와 등주',x,5.67,[(.10,.02),(.105,.047),(.05,.08),(.037,1.94),(.086,1.98),(.099,2.04)],'프레임',18)
-    profile('산책로 조명 · 유백색 구',x,5.67,[(.051,2.025),(.124,2.062),(.160,2.146),(.160,2.232),(.107,2.303),(.025,2.334)],'유약',20)
+    glass=profile('산책로 조명 · 유백색 구',x,5.67,[(.051,2.025),(.124,2.062),(.160,2.146),(.160,2.232),(.107,2.303),(.025,2.334)],'유약',20)
+    glass.visible_shadow=False
+    fixture('유백 구등의 산책로 조명',x,5.67,2.185,63,.15)
 
 m.group=meal
 # A true slotted circular Korean grill. Dark gaps reveal the charcoal below.
