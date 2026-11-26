@@ -8370,7 +8370,7 @@ export function build(K) {
       const [mx,mz]=P(mu,mv),[mrx,mrz]=P(mu-1,mv);
       const mieleYaw=Math.atan2(mz-mrz,mrx-mx);
       registerMiele(K,{poly:rect(...mieleRoom),x:mx,y,z:mz,yaw:mieleYaw});
-      for(const [side,back,w,d,h] of [[0,-.17,2.85,.85,.92],[1.045,-.94,.58,.65,.52],[0,1.77,4.50,.82,2.66]]){
+      for(const [side,back,w,d,h] of [[0,-.17,2.85,.85,.92],[1.045,-.94,.58,.65,.52],[0,1.77,4.50,.82,2.66],[2.16,.59,.20,1.47,2.48]]){
         K.box({x:mx+side*Math.cos(mieleYaw)-back*Math.sin(mieleYaw),y,
           z:mz-side*Math.sin(mieleYaw)-back*Math.cos(mieleYaw),
           w,d,h,rotY:mieleYaw,mat:0x353638,skip:['top','bottom','n','s','e','w']});
