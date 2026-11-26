@@ -16,4 +16,13 @@ for i in range(0, len(verts)//10, 4):
         row.append([round(p.x,3),round(p.z,3),round(-p.y,3)])
     rows.append(row)
 (here/'profile.js').write_text('// Generated from the editable front shell.\nexport const rings = '+json.dumps(rows,separators=(',',':'))+';\n')
-runpy.run_path(str(here.parent/'interior-architecture/export.py'),run_name='__main__')
+# Mark the illuminated lettering in the existing vertex colour attribute.
+# Alpha is only an export channel here; the architectural surface stays opaque.
+marked = [(m, m.diffuse_color[3]) for m in bpy.data.materials if 'portal_light_id' in m]
+try:
+    for mat, _ in marked:
+        mat.diffuse_color[3] = mat['portal_light_id']
+    runpy.run_path(str(here.parent/'interior-architecture/export.py'),run_name='__main__')
+finally:
+    for mat, alpha in marked:
+        mat.diffuse_color[3] = alpha

@@ -35,6 +35,59 @@ teal = finish('Legacy turquoise Xi emblem', '007d81')
 stone = finish('Pale street paving', 'bbb9b2')
 base = finish('Paving joints', '85847e')
 
+# The March 2025 street photograph shows the name and Xi symbol individually lit.
+# Keep their unlit daylight pigments and the brushed arch's existing finish.
+scene = bpy.context.scene
+scene['Seoul apartment night'] = 0.0
+for minute, factor in [(0,1),(375,1),(445,0),(1000,0),(1065,1),(1439,1)]:
+    scene['Seoul apartment night'] = factor
+    scene.keyframe_insert(data_path='["Seoul apartment night"]', frame=minute)
+scene.frame_start, scene.frame_end = 0, 1439
+scene.frame_set(750)
+def night_source(socket):
+    driver = socket.driver_add('default_value').driver
+    variable = driver.variables.new()
+    variable.name, variable.type = 'night', 'CONTEXT_PROP'
+    target = variable.targets[0]
+    target.context_property, target.data_path = 'ACTIVE_SCENE', '["Seoul apartment night"]'
+    driver.expression = 'night'
+
+
+for mat, mask, glow in [(slate,0.0,(1,.95,.86)), (teal,.5,(.28,.74,1))]:
+    mat['portal_light_id'] = mask
+    bsdf = mat.node_tree.nodes.get('Principled BSDF')
+    bsdf.inputs['Emission Color'].default_value = (*glow, 1)
+    night_source(bsdf.inputs['Emission Strength'])
+
+
+def soffit_wash(base):
+    # The inner fascia picks up separate warm pools. Object coordinates keep the
+    # light pattern on the metal when a city instance moves or rotates.
+    mat = base.copy()
+    mat.name = base.name + ' · reflected soffit light'
+    mat['portal_light_id'] = .75
+    tree = mat.node_tree
+    bsdf = tree.nodes.get('Principled BSDF')
+    bsdf.inputs['Emission Color'].default_value = (1,.67,.30,1)
+    coords = tree.nodes.new('ShaderNodeTexCoord')
+    separate = tree.nodes.new('ShaderNodeSeparateXYZ')
+    tree.links.new(coords.outputs['Object'], separate.inputs[0])
+    output = separate.outputs['X']
+    for op, constants in [('MULTIPLY',[3.65]),('COSINE',[]),('MULTIPLY_ADD',[.5,.5]),
+                          ('POWER',[3]),('MULTIPLY_ADD',[.48,.08])]:
+        node = tree.nodes.new('ShaderNodeMath')
+        node.operation = op
+        tree.links.new(output, node.inputs[0])
+        for i,value in enumerate(constants,1):
+            node.inputs[i].default_value = value
+        output = node.outputs[0]
+    gated = tree.nodes.new('ShaderNodeMath')
+    gated.operation = 'MULTIPLY'
+    tree.links.new(output, gated.inputs[0])
+    night_source(gated.inputs[1])
+    tree.links.new(gated.outputs[0], bsdf.inputs['Emission Strength'])
+    return mat
+
 
 def mesh(name, verts, faces, materials, slots=None):
     data = bpy.data.meshes.new(name)
@@ -102,7 +155,17 @@ def sweep(name, times, offset=0, scale=1, seam=False):
 
 times = [i/16 for i in range(49)]
 sweep('01 · Bent front silver shell', times)
-sweep('02 · Receding silver header', [i/16 for i in range(8,41)], -2.85, .59)
+rear = sweep('02 · Receding silver header', [i/16 for i in range(8,41)], -2.85, .59)
+wash_slots = {}
+for face in list(rear.data.polygons)[:-2]:
+    # Only the central viewer-facing strip below the open blades catches the light.
+    if face.index % len(profile) not in (8,9,0) or abs(face.center.x) > 7.0:
+        continue
+    base_slot = face.material_index
+    if base_slot not in wash_slots:
+        wash_slots[base_slot] = len(rear.data.materials)
+        rear.data.materials.append(soffit_wash(silver[base_slot]))
+    face.material_index = wash_slots[base_slot]
 for i,t in enumerate([.2,.4,.62,.85]+[1+i/12 for i in range(13)]+[2.19,2.42,2.65,2.84]):
     # Cap joints follow the folded cross section. The dark line is 18–28 mm wide.
     sweep('Front panel joint %02d'%i,[t-.0009,t+.0009],scale=1.007,seam=True)

@@ -1,0 +1,14 @@
+{
+  "floor": "B1",
+  "x": -45.05646,
+  "y": -6,
+  "z": 28.12102,
+  "yaw": -69.1959,
+  "pitch": -1,
+  "area": "in:shinsegae",
+  "meshName": "베이크 강남 · 치즈 타르트 매대",
+  "nativeLabel": "베이크 · 타르트 진열과 금색 코브",
+  "sourceBlend": "counter.blend",
+  "sourceCollection": "BakeGangnam",
+  "gameView": "#/shinsegae/B1?p=-45.05646,-6,28.12102,-69.19590,-1"
+}

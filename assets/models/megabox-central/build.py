@@ -368,6 +368,88 @@ finish('매점 · 픽업창구 안내판')
 block(1.08,4.06,1.535,.46,.035,.109,'2d302e')
 counter_label('매점 · 현금창구','현금창구',1.08,4.035,1.589,.305,.069,(.92,.85,.73),ko)
 finish('매점 · 현금창구 표지')
+# Gangnam B1 side entrance photograph of 6 July 2023: two floor signs flank the
+# flat arch opening. Keep the dated programme, times and promotional price out of the print.
+from mathutils import Matrix
+
+def entrance_board(timetable):
+    label = '상영시간표' if timetable else '팝콘 안내'
+    parts_before = set(collection.objects)
+    width = .51 if timetable else .39
+    top, paper_bottom = (1.68, .69) if timetable else (1.61, .34)
+    black, edge = '2d302e', '585650'
+    for side in (-1, 1):
+        for y_pos in (-.115, .115):
+            block(side*(width/2-.027), y_pos, .012, .044, .040, .025, black)
+        block(side*(width/2-.019), 0, .032, .033, .276, .035, edge)
+        block(side*(width/2-.014), 0, .053, .025, .030, top-.053, black)
+    for y_pos in (-.123, .123):
+        block(0, y_pos, .033, width, .024, .029, black)
+    block(0, .006, paper_bottom-.025, width-.012, .024, top-paper_bottom+.025, black)
+    paper_width=width-.060
+    block(0, -.014, paper_bottom, paper_width, .011, top-paper_bottom-.025,
+          'efece3' if timetable else 'd6a062')
+    for side in (-1,1):
+        block(side*(width/2-.026), -.019, paper_bottom-.009, .010, .009, top-paper_bottom-.009, edge)
+    finish('입구 · '+label+' 독립 철제 프레임')
+    if timetable:
+        counter_label('입구 · TIME TABLE','TIME TABLE',0,-.023,top-.13,.277,.058,(.15,.15,.15))
+        counter_label('입구 · 상영시간표','상영시간표',0,-.024,top-.188,.132,.022,(.26,.23,.23),ko)
+        left, right=-.201,.201
+        block(0,-.022,top-.236,right-left,.006,.030,'655d66')
+        for y_line in range(10):
+            block(0,-.022,top-.26-y_line*.060,right-left,.005,.003,'a6a19b')
+        for x_line in [-.153,-.055,.064,.141]:
+            block(x_line,-.022,top-.80,.003,.005,.54,'a6a19b')
+        # Small bars retain the density of print at walking distance.
+        for row in range(8):
+            for col,x in enumerate((-.109,-.009,.104,.165)):
+                if (row+col)%5:
+                    block(x,-.026,top-.298-row*.06,.023+.007*((row*3+col)%4),.003,.005,'706b6a')
+        finish('입구 · 상영시간표 인쇄 그리드')
+    else:
+        # Interpret the printed photo with three sections and the branch's lidded tub.
+        # The dated sale notice and price are deliberately absent.
+        def polygon(coords,colour,depth=-.027):
+            face([(x,depth,z) for x,z in coords],colour)
+        half=paper_width/2-.004
+        def band(lo,hi,color,depth=-.025):
+            polygon([(-half,lo),(half,lo),(half,hi),(-half,hi)],color,depth)
+        band(1.081,1.570,'edc78d')
+        band(.575,1.077,'b99060')
+        band(.366,.568,'e9c381')
+        # The golden rays are clipped to the printed bottom strip.
+        for j in range(7):
+            polygon([(-half+j*.045,.367),(-half+(j+.55)*.045,.367),
+                     (.022+(j-3)*.019,.56)],'f3d49a',-.028)
+        for lo in (.567,1.073):band(lo,lo+.015,'907046',-.028)
+        counter_label('입구 · 팝콘','팝콘',0,-.034,1.435,.192,.096,(.31,.19,.12),ko)
+        counter_label('입구 · 팝콘 영문','POPCORN',0,-.034,.458,.231,.048,(.27,.17,.11))
+        for x,z,r in [(-.099,1.32,.013),(.082,1.34,.011),(.114,1.279,.009)]:
+            polygon([(x+r*math.cos(a*math.pi/4),z+r*math.sin(a*math.pi/4)) for a in range(8)],'af673a',-.029)
+        polygon([(-.133,1.125),(.127,1.125),(.101,.605),(-.094,.605)],'70513d',-.030)
+        for row in range(8):
+            n=4 if row%2 else 5
+            for j in range(n):
+                x=(j-(n-1)*.5)*.040;z=.637+row*.056
+                polygon([(x-.014,z),(x,z+.014),(x+.014,z),(x,z-.014)],'b08b62',-.034)
+        for row in range(3):
+            for i in range(8-row):
+                x=(i-(7-row)*.5)*.032;z=1.122+row*.018+.008*math.sin(i*2.1+row)
+                polygon([(x+.024*math.cos(a*math.pi/4),z+.019*math.sin(a*math.pi/4))
+                         for a in range(8)],['e9ba74','f6d496','c49357'][(i+row)%3],-.036-.0003*i)
+        for z in [1.119,1.177]:block(0,-.039,z,.269,.004,.007,'f9e4bf')
+        finish('입구 · 팝콘 용기 포스터')
+    side=1 if timetable else -1
+    rotation=Matrix.Rotation(side*.23,4,'Z')
+    transform=Matrix.Translation((side*(2.30 if timetable else 2.43),-.25,0))@rotation
+    bpy.context.view_layer.update()
+    for ob in set(collection.objects)-parts_before:
+        ob.matrix_world=transform@ob.matrix_world
+
+entrance_board(True)
+entrance_board(False)
+
 curve=bpy.data.curves.new('MEGABOX channel lettering','FONT')
 curve.body='MEGABOX';curve.font=font;curve.align_x='CENTER';curve.size=.35;curve.resolution_u=5;curve.bevel_resolution=1;curve.extrude=.022;curve.bevel_depth=.003
 obj=bpy.data.objects.new('입체 문자 · MEGABOX',curve);collection.objects.link(obj)

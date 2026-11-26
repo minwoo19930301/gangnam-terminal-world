@@ -66,6 +66,12 @@ export function boutiqueLobby(K,y){
   for(const sign of [-1,1]){
     K.phys.addWall(...point(sign*1.86,0),...point(sign*6.08,0),y,ceiling,.12);
   }
+  // Match the floor-standing notice faces in entrance.blend. Both stand outside
+  // the opening; their narrow metal feet do not create a step across the threshold.
+  for(const [x,width,turn,height] of [[2.30,.51,.23,1.68],[-2.43,.39,-.23,1.61]]){
+    const dx=width*.5*Math.cos(turn),dz=width*.5*Math.sin(turn);
+    K.phys.addWall(...point(x-dx,.25+dz),...point(x+dx,.25-dz),y,y+height,.035);
+  }
   const box=(x,z,width,depth,base,height,mat,solid=false)=>{
     const [wx,wz]=point(x,z);K.box({x:wx,z:wz,y:y+base,w:width,d:depth,h:height,rotY:angle,mat,solid});
   };

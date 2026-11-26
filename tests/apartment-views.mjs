@@ -6,6 +6,13 @@ import {serve} from './serve.mjs';
 const data = JSON.parse(await readFile(new URL('../data/osm.json',import.meta.url)));
 const models = JSON.parse(await readFile(new URL('../js/places/_re_models.json',import.meta.url))).models;
 const portrait = process.argv.includes('--portrait');
+async function openMap(page) {
+  if (portrait) {
+    await page.locator('#btn-map').tap();
+    if (!await page.locator('#map-search').isVisible()) await page.locator('.gt-panel-toggle').tap();
+  } else await page.keyboard.press('m');
+}
+
 const server = await serve();
 const browser = await chromium.launch({channel:'chromium',args:['--use-angle=metal','--enable-gpu','--ignore-gpu-blocklist']});
 try {
@@ -16,21 +23,19 @@ try {
     const page = await browser.newPage(portrait
       ? {...devices['Pixel 7'],viewport:{width:390,height:844},deviceScaleFactor:1.5}
       : {viewport:{width:800,height:480}});
-    const errors = [], fetched = [];
+    const errors = [], fetched = [], gateResponses = [];
     page.on('pageerror',e=>errors.push(e.message));
-    page.on('response',r=>{ if (r.url().endsWith('/'+id+'.glb')) fetched.push(r.status()); });
+    page.on('response',r=>{
+      if (r.url().endsWith('/'+id+'.glb')) fetched.push(r.status());
+      if (r.url().endsWith('/xi-portal.glb')) gateResponses.push(r.status());
+    });
     await page.goto('http://127.0.0.1:'+server.address().port+'/?q=low&traffic=0&fixedres=1#/newcore/3F');
     await page.waitForFunction(()=>window.__world?.ready,null,{timeout:120000});
     assert.equal(await page.evaluate(()=>__world.area),'in:newcore');
     assert.equal(fetched.length,0);
-    if (portrait) {
-      await page.locator('#start button').tap();
-      await page.locator('#btn-map').tap();
-      await page.locator('.gt-panel-toggle').tap();
-    } else {
-      await page.locator('#start').click();
-      await page.keyboard.press('m');
-    }
+    if (portrait) await page.locator('#start button').tap();
+    else await page.locator('#start').click();
+    await openMap(page);
     for (const query of [name,alias || name]) {
       await page.locator('#map-search').fill(query);
       assert.equal(await page.locator('.gt-result b').first().innerText(),name);
@@ -111,6 +116,34 @@ try {
     assert.ok(metrics.percent>2 && metrics.pitch>5 && metrics.push<.05);
     assert.deepEqual([...metrics.errors,...errors],[]);
     assert.deepEqual(fetched,[200]);
+    if(id==='apt-a10024913'){
+      assert.deepEqual(gateResponses,[],'the apartment skyline does not request the gate finish');
+      await openMap(page);
+      const search=page.locator('#map-search');
+      for(const query of ['반포센트럴자이 문주','은빛 문주']){
+        await search.fill(query);
+        assert.deepEqual(await page.locator('.gt-result b').allInnerTexts(),['반포센트럴자이 문주']);
+      }
+      await page.locator('.gt-result').click();
+      await page.locator('.gt-teleport').click();
+      const gateView=portrait?[-179.37,-86.65,13.82]:[-186.61,-103.16,4.57];
+      await page.waitForFunction(([x,z,yaw])=>{
+        const w=__world,p=w.player,gate=w.scene.getObjectByName('반포센트럴자이 · 은빛 문주');
+        return Math.hypot(p.x-x,p.z-z)<.08 && Math.abs(p.yaw*180/Math.PI-yaw)<.6 &&
+          gate?.children[0].geometry.index.count>288;
+      },gateView,{timeout:45000});
+      const feetInFrame=await page.evaluate(async()=>{
+        const {rings}=await import('/assets/models/banpo-xi-portal/profile.js');
+        const T=await import('three'),w=__world,gate=w.scene.getObjectByName('반포센트럴자이 · 은빛 문주');
+        return [rings[0],rings.at(-1)].flat().every(v=>{
+          const p=new T.Vector3(...v).applyMatrix4(gate.matrixWorld).project(w.camera);
+          return Math.abs(p.x)<1&&Math.abs(p.y)<1;
+        });
+      });
+      assert.ok(feetInFrame,'both feet of the silver gate fit the search arrival view');
+      assert.deepEqual(gateResponses,[200]);
+      assert.deepEqual(errors,[]);
+    }
     await page.close();
   }
 } finally { await browser.close(); await new Promise(resolve=>server.close(resolve)); }
