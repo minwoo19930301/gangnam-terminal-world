@@ -3,8 +3,13 @@ import bpy
 from math import cos, sin, pi, sqrt
 from pathlib import Path
 from mathutils import Vector
+import sys
 
 OUT = Path(__file__).resolve().parent
+sys.dont_write_bytecode=True;sys.path.insert(0,str(OUT))
+import print_surfaces as surface
+import velocita
+import kitchen_details
 bpy.ops.wm.read_factory_settings(use_empty=True)
 scene = bpy.context.scene
 scene.unit_settings.system = 'METRIC'
@@ -14,14 +19,27 @@ colors = dict(cream='fff6e3', ivory='f7f6ef', ply='e1b983', honey='bc8854',
               groove='ad774b', forest='146448', grass='8dc759', leaf='4aab5d',
               pond='53b9ce', red='de332d', wine='94362b', amber='ffb825',
               black='293236', steel='8e9695', glass='385866', gold='b79956',
-              blue='33759e', sky='b9d9df', orange='f59042', skin='f4c797')
+              blue='33759e', sky='b9d9df', orange='f59042', skin='f4c797',
+              lorenzoBlue='075F9F',paintWhite='F3F1E9',rubber='26272B',hub='D9DEDC',chrome='B9C2CC',
+              visor='202329',air='111B28', turquoise='37999F', enamel='E6E9E2',softRed='D4353F', kitchenGlass='A4BDC1', print='FFFFFF')
 materials = {}
 for key, value in colors.items():
     srgb = [int(value[i:i+2],16)/255 for i in (0,2,4)]
     rgba = tuple(c/12.92 if c<=.04045 else ((c+.055)/1.055)**2.4 for c in srgb)+(1,)
     mat = bpy.data.materials.new(key)
     mat.diffuse_color = rgba
+    mat.use_nodes=True
+    bs=mat.node_tree.nodes.get('Principled BSDF');bs.inputs['Base Color'].default_value=rgba
+    kind='plated' if key in ('hub','chrome','steel') else ('paint' if key in ('lorenzoBlue','paintWhite','visor','turquoise','enamel','softRed') else ('rubber' if key in ('rubber','black') else 'matte'))
+    mat['surfaceKind']=kind
+    bs.inputs['Metallic'].default_value=.67 if kind=='plated' else 0
+    bs.inputs['Roughness'].default_value={'plated':.20,'paint':.23,'rubber':.69,'matte':.50}[kind]
+    if key=='chrome':
+        bs.inputs['Metallic'].default_value=.94;bs.inputs['Roughness'].default_value=.11
+    if kind=='paint':bs.inputs['Clearcoat'].default_value=.23
     materials[key] = mat
+images=surface.construct(OUT)
+surface.mapped(materials['print'],images)
 
 def part(name, vertices, faces, color):
     mesh = bpy.data.meshes.new(name)
@@ -80,9 +98,7 @@ for x in [-.64,.64]:
                         (x,.40,.035),(x,.42,.07),(x,.36,.635)],.020,'forest')
 box('Play table apron',0,0,.56,1.52,.96,.085,'ivory',.025)
 box('Landscape mat',0,0,.645,1.485,.928,.009,'grass')
-for x,y,rx,ry,c in [(-.22,.01,.20,.105,'pond'),(.34,-.09,.18,.12,'leaf'),(-.48,.27,.11,.08,'leaf')]:
-    outline=[(x+rx*cos(i*pi/12),y+ry*sin(i*pi/12),.655) for i in range(24)]
-    part('Landscape print',outline,[tuple(range(24))],c)
+surface.board('Branch railway landscape print',(0,0,.6547),(1,0,0),(0,1,0),1.481,.927,'ground',part)
 for y in [-.473,.473]:
     box('Raised white rim',0,y,.645,1.51,.015,.018,'ivory')
 for x in [-.747,.747]:
@@ -179,18 +195,8 @@ box('Gold island toe',0,.86,0,1.49,.53,.10,'honey')
 box('Gold display island',0,.86,.10,1.69,.62,.49,'gold',.04)
 def carton(x,y,z,w,d,h):
     box('Printed set carton',x,y,z,w,d,h,'forest')
-    front=y-d/2-.001
-    box('Carton sky',x,front,z+h*.46,w*.93,.002,h*.59,'sky')
-    box('Carton meadow',x,front-.0016,z+h*.19,w*.93,.002,h*.14,'grass')
-    label('BRIO',x-w*.28,front-.002,z+h*.80,h*.18,'ivory')
-    label('WORLD',x+w*.13,front-.002,z+h*.82,h*.09,'cream')
-    for j in range(3):
-        xx=x+w*(-.27+j*.25)
-        box('Printed train car',xx,front-.003,z+h*.27,w*.23,.002,h*.17,'amber' if j<2 else 'red')
-        for shift in [-.061,.061]:
-            box('Printed glazing',xx+w*shift,front-.005,z+h*.35,w*.045,.002,h*.057,'glass')
-            tube('Printed wheel',[(xx+w*shift,front-.003,z+h*.25),(xx+w*shift,front-.006,z+h*.25)],w*.034,'black')
-    label('3+',x+w*.38,front-.002,z+.014,h*.092,'ivory')
+    surface.board('Central Station Set front panel',(x,y-d/2-.0007,z+h*.50),(1,0,0),(0,0,1),w*.994,h*.992,'brio',part)
+    surface.board('Central Station Set side panel',(x+w/2+.0007,y,z+h*.50),(0,1,0),(0,0,1),d*.989,h*.992,'brio',part)
 for x in [-.48,0,.48]:
     carton(x,.77,.59,.45,.21,.39)
 for x in [-.46,.02]:carton(x,.79,.98,.29,.16,.22)
@@ -239,57 +245,19 @@ tube('Cable',[(.210,.175,tower+.131),(.210,.175,tower+.075)],.003,'black',8)
 box('Magnetic cargo block',.21,.175,tower+.045,.045,.042,.032,'red')
 box('Buffer stop',.293,.099,base+.017,.013,.068,.037,'wine')
 
-# The branch photograph shows a blue open-wheel racer perched on its box.
-# Keep the accent, driver and separate rear wing legible from either side.
-def racer(x,y,z,paint,number):
-    rows=[]
-    for dx,w,h in [(-.075,.020,.016),(-.064,.031,.021),(-.027,.040,.044),
-                   (.007,.038,.047),(.048,.028,.031),(.065,.020,.023)]:
-        rows.append([(x+dx,y+cos(t*pi/6)*w,z+.027+sin(t*pi/6)*h*.53)
-                     for t in range(12)])
-    rings('Tapered racer body',rows,paint)
-    for dx,r in [(-.049,.019),(.047,.025)]:
-        for side in [-1,1]:
-            a=y+side*.031;b=y+side*.049
-            tube('Rubber racing slick',[(x+dx,a,z+r),(x+dx,b,z+r)],r,'black',20)
-            tube('Inset wheel hub',[(x+dx,b,z+r),(x+dx,b+side*.002,z+r)],r*.53,'steel',14)
-    helm=[]
-    for lat in [-1.35,-.9,-.45,0,.45,.9,1.45]:
-        helm.append([(x+.015*cos(lat)*cos(k*pi/8),y+.015*cos(lat)*sin(k*pi/8),
-                      z+.052+.016*sin(lat)) for k in range(16)])
-    rings('Polished helmet',helm,'steel')
-    box('Tail fin',x+.038,y,z+.042,.043,.013,.039,paint)
-    box('Rear spoiler',x+.053,y,z+.072,.036,.082,.006,'ivory')
-    label(number,x+.037,y-.008,z+.053,.023,'ivory')
-
+# The Gangnam worktop photo shows the blue number-three car, with closed boxes
+# either side. The shell and printing are built at the published 150 mm length.
 box('Racing toy display base',1.22,.48,0,.62,.53,.11,'honey')
 box('Satin gold counter',1.22,.48,.11,.72,.59,.68,'gold')
 box('Counter cap',1.22,.48,.79,.74,.60,.035,'cream')
-for x,y,z,paint,n in [(1.11,.42,.825,'blue','3'),(1.40,.56,.825,'red','1')]:
-    box('Racing toy gift box',x,y,z,.23,.15,.097,'ivory')
-    label('Playforever',x,y-.076,z+.040,.030,'black')
-    racer(x,y,z+.097,paint,n)
-
+for px,py,pz in [(1.16,.43,.825),(1.42,.65,.825),(.99,.64,.825)]:
+    box('Playforever presentation carton',px,py,pz,.222,.152,.097,'ivory')
+    surface.board('Velocita carton illustration',(px,py-.0765,pz+.0485),(1,0,0),(0,0,1),.220,.094,'carton',part)
+    surface.board('Playforever carton lid',(px,py,pz+.0975),(1,0,0),(0,1,0),.220,.149,'cartonTop',part)
+velocita.make((1.16,.43,.9234),part,materials)
+kitchen_details.make(kx,ky,part,box,rings,tube,surface.board)
 bpy.context.preferences.filepaths.save_version=0
 bpy.ops.wm.save_as_mainfile(filepath=str(OUT/'workshop.blend'),compress=True)
-objects=list(collection.objects)
-print('Editable mesh objects:',len(objects))
-runtime=bpy.data.materials.new('Toy finishes')
-runtime.use_nodes=True
-node=runtime.node_tree.nodes.new('ShaderNodeVertexColor')
-node.layer_name='Paint'
-runtime.node_tree.links.new(node.outputs['Color'],runtime.node_tree.nodes['Principled BSDF'].inputs['Base Color'])
-bpy.ops.object.select_all(action='DESELECT')
-for obj in objects:
-    mesh=obj.data
-    attr=mesh.color_attributes.new(name='Paint',type='BYTE_COLOR',domain='CORNER')
-    for face in mesh.polygons:
-        rgba=mesh.materials[face.material_index].diffuse_color
-        for loop in face.loop_indices:attr.data[loop].color=rgba
-    mesh.materials.clear()
-    mesh.materials.append(runtime)
-    obj.select_set(True)
-bpy.context.view_layer.objects.active=objects[0]
-bpy.ops.object.join()
-bpy.context.object.name='IQBoxGangnamBrioWorkshop'
-bpy.ops.export_scene.gltf(filepath=str(OUT/'workshop.glb'),export_format='GLB',export_animations=False)
+print('Editable mesh objects:',len(collection.objects))
+exporter=OUT/'export.py'
+exec(compile(exporter.read_text(),str(exporter),'exec'),{'__file__':str(exporter)})
