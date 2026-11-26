@@ -2,7 +2,7 @@
 
 ![파미에스테이션 1층 에스컬레이터 수정 전후. 위는 디딤판과 빗살판, 아래는 손잡이 반환부를 같은 위치에서 촬영했다.](preview.jpg)
 
-`escalator.blend`에는 디딤판(Tread), 빗살판과 바닥판(Comb), 측판과 손잡이(Skirt), 손잡이 반환부(Return) 컬렉션이 있다. 디딤판의 솟은 돌기와 수직 챌판의 홈은 옆면에 빛이 닿도록 모델링했다. 승강장에는 분할 빗살판과 고정 나사를 두었다. 고무 손잡이가 되감기는 양 끝에는 곡선형 금속 가이드와 고무 반환구가 있다. 일반 승객용 에스컬레이터의 부품 구분과 실루엣을 참고해 제작했으며 현장 기종과 치수는 확인되지 않았다. [Schindler 9300 제품 안내](https://www.schindler.com/content/dam/website/us/docs/escalators/schindler-9300/schindler-9300-escalator-brochure.pdf/_jcr_content/renditions/original./schindler-9300-escalator-brochure.pdf) · [Schindler 소유자 안내](https://www.schindler.com/content/dam/website/us/docs/safety/schindler-owners-guide.pdf/_jcr_content/renditions/original./schindler-owners-guide.pdf)
+`escalator.blend`에는 디딤판(Tread), 빗살판과 바닥판(Comb), 측판과 손잡이(Skirt), 손잡이 반환부(Return) 컬렉션이 있다. 디딤판의 솟은 돌기와 수직 챌판의 홈은 옆면에 빛이 닿도록 모델링했다. 승강장에는 분할 빗살판과 고정 나사를 두었다. 고무 손잡이가 되감기는 양 끝에는 곡선형 금속 가이드가 있다. 바닥 측판의 접힌 금속 어깨가 위로 올라오면서 검은 손잡이 인입구를 감싼다. 이 부분은 Schindler 9300 제품 안내의 스테인리스 마감 인입구 사진을 참고했다. 일반 승객용 에스컬레이터의 부품 구분과 실루엣을 참고해 제작했으며 현장 기종과 치수는 확인되지 않았다. [Schindler 9300 제품 안내](https://www.schindler.com/content/dam/website/us/docs/escalators/schindler-9300/schindler-9300-escalator-brochure.pdf/_jcr_content/renditions/original./schindler-9300-escalator-brochure.pdf) · [Schindler 소유자 안내](https://www.schindler.com/content/dam/website/us/docs/safety/schindler-owners-guide.pdf/_jcr_content/renditions/original./schindler-owners-guide.pdf)
 
 ## 게임 연결
 

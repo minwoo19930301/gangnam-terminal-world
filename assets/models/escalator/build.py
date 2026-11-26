@@ -117,8 +117,33 @@ for i in range(14):
         guide_faces.append((4*i+j,4*i+(j+1)%4,4*(i+1)+(j+1)%4,4*(i+1)+j))
 part('곡선형 스테인리스 뉴얼 가이드',guide,guide_faces,'bdc6c8')
 profile('손잡이 인입구 고무 칼라',[(-.072,.290),(.072,.290),(.072,.375),(.050,.401),(-.050,.401),(-.072,.375)],-.093,-.079,'343c40')
-profile('손잡이 반환구',[(-.063,.284),(.063,.284),(.064,.360),(.049,.396),(-.049,.396),(-.064,.36)],-.08,.058,'586367')
-profile('고정 스커트 캡',[(-.050,.018),(.050,.018),(.050,.259),(.023,.286),(-.023,.286),(-.050,.259)],-.11,.08,'a4adae')
+# Bent sheet sides taper from the landing toe into the floor skirt. The
+# tread starts 80 mm from this axis; the cheeks stop 5 mm short of it.
+# z, overall half-width, inner shoulder half-width, top, dark throat floor
+deck=[(-.30,.056,.037,.078,.078),(-.24,.069,.044,.153,.153),
+      (-.145,.075,.051,.300,.291),(-.082,.075,.056,.385,.310),
+      (.010,.075,.056,.419,.315),(.093,.072,.053,.392,.330),
+      (.185,.066,.042,.328,.328),(.300,.049,.029,.268,.268)]
+def folded(section,side):
+    z,w,inner,top,throat=section
+    return [(side*w,.016,z),(side*w,top-.034,z),
+            (side*(w-.008),top-.012,z),(side*inner,top,z),
+            (side*inner,throat,z)]
+
+for side in (-1,1):
+    for a,b in zip(deck,deck[1:]):
+        r,t=folded(a,side),folded(b,side)
+        for i,(name,color) in enumerate([('절곡 측판','a6afb2'),('외측 접힘','bfcbce'),
+                                          ('스테인리스 어깨','d3dcde'),('인입구 안쪽 벽','505c61')]):
+            if i==3 and a[3]==a[4] and b[3]==b[4]:continue
+            flat(name,[r[i],t[i],t[i+1],r[i+1]],color)
+for a,b in zip(deck,deck[1:]):
+    lo,ro=folded(a,-1)[-1],folded(a,1)[-1]
+    li,ri=folded(b,-1)[-1],folded(b,1)[-1]
+    dark=a[3]-a[4]>.02 or b[3]-b[4]>.02
+    flat('고무 벨트 인입부' if dark else '스커트 상판',[lo,li,ri,ro],'303a3f' if dark else 'bfc9cc')
+toe=folded(deck[0],-1)[:4]+folded(deck[0],1)[:4][::-1]
+part('스커트 끝판',toe,[tuple(range(len(toe)))],'959fa2')
 
 bpy.context.view_layer.update()
 bpy.context.preferences.filepaths.save_version=0
