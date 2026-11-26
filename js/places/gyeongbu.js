@@ -1,3 +1,4 @@
+import {flowerBank} from '../../assets/models/gyeongbu-flower-bank/model.js';
 import {placeWaitingCeiling} from '../../assets/models/gyeongbu-waiting-ceiling/model.js';
 import {placeGyeongbuEntrance} from '../../assets/models/gyeongbu-front-entrance/model.js';
 import {placePassengerFinish} from '../../assets/models/gyeongbu-concourse-finish/model.js';
@@ -2866,9 +2867,20 @@ export function build(K) {
       }
       placeCutFlowers(K,lots);
     });
+    // The operator's 3F photo shows a bank of horizontal cut foliage beside
+    // the green sales aisle. It does not identify a tenant.
+    const bankU=61.6,bankV=77.8;
+    lbox(bankU-1.10,bankV,fy,1.45,3.78,.35,0,{skip:['top','bottom','n','s','e','w']});
+    ldetail({floor:'3F',y0:fy,y1:fy+1.82,name:'생화상가 · 절지와 열매 진열대',
+      poly:rect(bankU-2.24,bankV-1.94,bankU-.28,bankV+1.94),
+      visibleFrom:(x,eye,z)=>toL(x,z)[0]<bankU-.3},()=>{
+      const [x,z]=W(bankU-1.1,bankV);
+      flowerBank(K,x,fy,z,ROT-PI/2);
+    });
     function fresh(u,v,n){
       stockbox(u,v,fy,.38,3.8,1.5,0x7d6a52,{skip:['n','s']});
       for(const s of [-1,1]){
+        if(s===-1 && u===bankU && v===bankV)continue;
         for(let tier=0;tier<3;tier++){
           const bu=u+s*[1.66,1.25,.85][tier],by=fy+tier*.35;
           if(tier)db(bu,v,fy,.4,3.8,tier*.35,s===-1&&u===cutU&&v===cutV?0x969c99:0x6b5a46);

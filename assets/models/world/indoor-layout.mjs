@@ -30,6 +30,7 @@ import {relief} from '../../../js/banpo_relief.js';
 const sources = [
   ['centralcity','B1','sweet-chefs-stage/counter.blend','스위트 파크 · 셰프스 스테이지와 르솔레이','SweetPark_ChefsStage'],
   ['shinsegae','B1','megabox-central/entrance.blend','메가박스 센트럴 · 부티크 아치 입면','MegaboxBoutiquePublicFront'],
+  ['gyeongbu','3F','gyeongbu-flower-bank/flower-bank.blend','경부선 생화상가 · 절지와 열매 진열대','FreshFlowerWholesaleBank'],
   ['jwmarriott','9F','executive-seating/seating.blend','JW 9층 좌석 · 아이보리 원탁과 검은 에이프런','JW 9층 좌석 · 아이보리 원탁과 검은 에이프런'],
   ...Object.values(executiveSeatTypes).map(label=>{const name=seatPrefix+label;return ['jwmarriott','9F','executive-seating/seating.blend',name,name];}),
   ...Object.values(ceramicParts).map(([label])=>{const name=ceramicPrefix+label;return ['gyeongbu','B1','daiso-ceramics/ceramics.blend',name,name];}),
