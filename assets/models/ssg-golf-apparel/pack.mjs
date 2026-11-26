@@ -10,5 +10,12 @@ const io = new NodeIO().registerExtensions(ALL_EXTENSIONS).registerDependencies(
 });
 const path = fileURLToPath(new URL('gallery.glb',import.meta.url));
 const doc = await io.read(path);
+// Blender 4.5 exports the knit atlas multiplier as a white COLOR_0 and
+// the garment tint as COLOR_1. glTF base colour uses the first channel.
+const cloth=doc.getRoot().listNodes().find(node=>node.getName()==='BossGolfGangnamTextiles').getMesh().listPrimitives()[0];
+if(cloth.getAttribute('COLOR_1')) {
+  cloth.setAttribute('COLOR_0',cloth.getAttribute('COLOR_1'));
+  cloth.setAttribute('COLOR_1',null);
+}
 await doc.transform(weld(),meshopt({encoder:MeshoptEncoder,level:'medium',quantizePosition:16}));
 await io.write(path,doc);
