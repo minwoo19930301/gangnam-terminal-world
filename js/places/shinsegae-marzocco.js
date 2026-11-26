@@ -1,3 +1,4 @@
+import { mountRetailDisplay } from './shinsegae-retail-display.js';
 import { relief } from '../banpo_relief.js';
 
 const source = new URL('../../assets/models/ssg-marzocco/gallery.glb', import.meta.url);
@@ -34,54 +35,6 @@ export function registerMarzocco(K, {poly, x, y, z, yaw}) {
       box(a,1.13,0,.12,.11,.12,0x79786e);
     }
 
-    // Layer ownership is captured synchronously when this detail callback returns.
-    // Replace the contents of these same meshes when the GLB finishes loading.
-    const empty = new T.BufferGeometry(), pendingMaterial = new T.MeshBasicMaterial();
-    const slots = batches.map(name => {
-      const mesh = new T.Mesh(empty,pendingMaterial);
-      mesh.name = name;
-      mesh.visible = false;
-      root.add(mesh);
-      return mesh;
-    });
-    K.addMesh(root);
-    let ready = false, loading = false, retryAt = 0;
-    async function load() {
-      loading = true;
-      try {
-        const [{GLTFLoader},{MeshoptDecoder}] = await Promise.all([
-          import('three/addons/loaders/GLTFLoader.js'), import('three/addons/libs/meshopt_decoder.module.js')
-        ]);
-        const gltf = await new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).loadAsync(source.href);
-        gltf.scene.updateMatrixWorld(true);
-        const parts = batches.map(name => gltf.scene.getObjectByName(name));
-        if (!parts.every(part => part?.isMesh && part.geometry.attributes.position)) throw Error('Missing gallery batch');
-        parts.forEach((part,i) => {
-          const mesh = slots[i];
-          mesh.geometry = part.geometry;
-          mesh.material = part.material;
-          mesh.matrix.copy(part.matrixWorld);
-          mesh.matrixAutoUpdate = false;
-          mesh.visible = true;
-        });
-        empty.dispose();
-        pendingMaterial.dispose();
-        ready = true;
-      } catch {
-        retryAt = performance.now() + 5000;
-      } finally {
-        loading = false;
-      }
-    }
-    K.onFrame((_dt,_time,player) => {
-      const dx=x-player.x, dz=z-player.z, dist=dx*dx+dz*dz;
-      const ahead=-dx*Math.sin(player.yaw)-dz*Math.cos(player.yaw);
-      const sameFloor=player.y>=y-.20 && player.y<y+4.6;
-      root.visible = sameFloor && dist<22*22 && ahead>-.25*Math.sqrt(dist)-2;
-      const near=root.visible && dist<11*11;
-      if (near && !ready && !loading && performance.now()>=retryAt) void load();
-      fallback.visible = !(ready && near);
-      if (ready) for (const mesh of slots) mesh.visible=near;
-    });
+    mountRetailDisplay(K, {root, fallback, source, batches, x, y, z});
   });
 }
