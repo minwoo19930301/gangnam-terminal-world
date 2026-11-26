@@ -2841,11 +2841,22 @@ export function build(K) {
     for(const t of [18.1,27.0]){
       lbox(175.1,t,.04,3,2.72,.88,'glass',{solid:false});
       lbox(175.08,t,.12,3.35,2.55,.18,0xe6dcc8,{solid:false});
+      // The hospital's public film at 29.9s shows a bronze-tinted fanlight,
+      // with a smaller semicircle where the radial glazing bars terminate.
+      const fanPoint=(a,r)=>[175.085,t+1.49*r*Math.cos(a),3.42+.94*r*Math.sin(a)];
+      const worldPoint=([s,t,y])=>{const [x,z]=P(s,t);return [x,y,z];};
       for(let i=0;i<18;i++){
         const a=i*PI/18,b=(i+1)*PI/18;
+        const aTop=fanPoint(a,1),bTop=fanPoint(b,1);
+        K.quad(0x77655c,[aTop,bTop,[bTop[0],bTop[1],3.42],[aTop[0],aTop[1],3.42]].map(worldPoint),[-AX,0,-AZ]);
         beam([175.04,t+1.5*Math.cos(a),3.42+.95*Math.sin(a)],[175.04,t+1.5*Math.cos(b),3.42+.95*Math.sin(b)],.16,0xe6dcc8);
+        const near=p=>[175.035,p[1],p[2]];
+        entryTube(near(fanPoint(a,.25)),near(fanPoint(b,.25)),.022,0x53453e);
       }
-      for(const a of [PI/4,PI/2,3*PI/4])entryTube([175.02,t,3.42],[175.02,t+1.42*Math.cos(a),3.42+.88*Math.sin(a)],.025,0x685f50);
+      for(const a of [PI/4,PI/2,3*PI/4]){
+        const ends=[.25,.96].map(r=>{const p=fanPoint(a,r);return [175.035,p[1],p[2]];});
+        entryTube(...ends,.025,0x53453e);
+      }
     }
     // Seoul St Mary's Hospital's public walk, 29–32s: dark stone edges,
     // arched iron pickets, amber warning tiles, and ringed white globe lamps.

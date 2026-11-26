@@ -1,3 +1,4 @@
+import { passageSections } from '../../assets/models/onebailey/passage.js';
 import {buildSebitInformation} from '../../assets/models/sebit-information/room.js';
 import {buildSebitGallery} from '../../assets/models/sebit-gallery/gallery.js';
 import {buildSebitLounge} from '../../assets/models/sebit-lounge/lounge.js';
@@ -112,8 +113,8 @@ export function build(K){
   K.zone({name:'원베일리 야외무대 상부',floor:'1F',sub:'공공개방시설 · 지하보행로 계단',poly:R(48,38,80,42),y0:0,y1:3,priority:5});
 
   // Open-ended connectors. Cut their sidewalls back at turns so elbow landings stay traversable.
-  const corridor=(a,b,w,name,trim=true)=>{
-    const poly=strip(a,b,w),l=Math.hypot(b[0]-a[0],b[1]-a[1]),d=[(b[0]-a[0])/l,(b[1]-a[1])/l],cut=Math.min(w*.65,l*.24);
+  const corridor=(a,b,w,name,trim=true,outline=null)=>{
+    const poly=outline??strip(a,b,w),l=Math.hypot(b[0]-a[0],b[1]-a[1]),d=[(b[0]-a[0])/l,(b[1]-a[1])/l],cut=Math.min(w*.65,l*.24);
     K.slab(poly,F,{mat:floor});K.slab(poly,C+.25,{mat:'concrete',under:'ob-ceiling',thick:.25,walk:false});
     const sides=trim?strip([a[0]+d[0]*cut,a[1]+d[1]*cut],[b[0]-d[0]*cut,b[1]-d[1]*cut],w):poly;
     for(const [i,j] of [[0,1],[3,2]])K.wall(...sides[i],...sides[j],F,C,{mat:{tex:'tile',color:0xc6cbc3},thick:.18});
@@ -174,7 +175,9 @@ export function build(K){
   K.spawn({name:'원베일리 공공보행통로 광장',x:-332,z:-66,y:F,yaw:PI/2});
   K.sign(['원베일리 공공보행통로','고터·세빛 관광안내센터 · 한강공원'],{x:-316,y:2.6,z:-32.2,w:8,h:.8,bg:'#eef0e4',fg:'#263d4d'});
   // Exact B1 landing of J_ONEBAILEY_G2, already opened by gotomall.
-  corridor([-289.8764,-36.3812],[-294,-47],2.8,'고투몰 · 공공보행통로 연결부');corridor([-294,-47],[-310,-58],4.5,'고투몰 · 공공보행통로 연결부');
+  const passage=[[-289.8764,-36.3812],[-294,-47],[-310,-58]];
+  passageSections(passage,[2.8,2.8,4.5]).forEach((outline,i)=>
+    corridor(passage[i],passage[i+1],i?4.5:2.8,'고투몰 · 공공보행통로 연결부',false,outline));
   K.slab(strip([-310,-58],[-326,-61],5),F,{mat:floor});
   K.detail({name:'G2 공개공지',floor:'B1',poly:plaza,y0:F,y1:C},()=>{
     K.sign(['고터·세빛 관광안내센터 및 피카소 벽화 가는 길','반포한강공원 →'],{x:-344,y:F+2.8,z:-58,w:8.3,h:.8,rotY:PI/2,bg:'#ead9d5',fg:'#1e2d39'});

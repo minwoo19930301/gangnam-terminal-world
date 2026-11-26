@@ -2643,7 +2643,11 @@ export function build(K) {
     K.slab(R(pu0, pv0, pu1, pv1), FL, { mat: M.floor, under: false, edge: false });
     if (X.id === 'G2') {
       // Extend across the diagonal OSM edge so the corner of the threshold has support.
-      K.slab(R(pu0,pv1-.15,pu1,pv1+2),FL,{mat:M.floor,under:false,edge:false});
+      const westEnd=vN(pu0);
+      const patch=[P(pu0,pv1),P(pu0,westEnd),P(X.uc,pv1)];
+      K.slab(patch,FL,{mat:M.floor,under:false,edge:false});
+      K.slab(patch,CY+.3,{mat:'concrete',under:M.ceil,thick:.3,walk:false,edge:false});
+      wallV(pu0,pv1,westEnd,FL,CY,{mat:M.wall,thick:.2});
     }
     K.slab(R(pu0 - 0.1, pv0, pu1 + 0.1, pv1), CY + 0.3, { mat: 'concrete', under: M.ceil, thick: 0.3, walk: false, edge: false });
     if (pv1 - pv0 > 0.7) {
