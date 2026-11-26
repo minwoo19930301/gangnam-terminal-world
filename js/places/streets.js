@@ -1,4 +1,5 @@
 import {diningWallOpening} from './_familleUpperPlan.js';
+import {placeExit8Lamp} from '../../assets/models/exit8-sidewalk-lamp/model.js';
 import {placeGoterCrossing} from '../../assets/models/goter-crossing/model.js';
 import {placeSeoulCityBus} from '../../assets/models/seoul-city-bus/model.js';
 import {placeMedianShelters} from '../../assets/models/sinbanpo-bus-shelters/model.js';
@@ -351,23 +352,17 @@ export function build(K) {
   const furniture=[];
   function lamp(x,z,rot,y=WALK) {
     if(y===WALK&&(inG13(x,z)||onTerminalMedian(x,z)||inWestCanopy(x,z)||inTaxiStand(x,z)))return;
-    K.cyl({x,z,y,r:.11,h:7.5,seg:8,mat:C.steel});const dx=Math.sin(rot),dz=Math.cos(rot);
+    const dx=Math.sin(rot),dz=Math.cos(rot);
     K.streetLight?.(x+dx*1.8,y+7.4,z+dz*1.8);
+    if(y===WALK && exit8 && Math.hypot(x-exit8.x,z-exit8.z)<5){
+      placeExit8Lamp(K,x,y,z,rot);
+      K.streetLight?.(x-dx*1.05,y+4.1-.08,z-dz*1.05,.23);
+      return;
+    }
+    K.cyl({x,z,y,r:.11,h:7.5,seg:8,mat:C.steel});
     beam([x,y+7.3,z],[x+dx*1.7,y+7.5,z+dz*1.7],.07);
     K.box({x:x+dx*1.8,z:z+dz*1.8,y:y+7.42,w:.5,h:.15,d:1.1,rotY:rot,mat:C.steel,solid:false});
     K.box({x:x+dx*1.8,z:z+dz*1.8,y:y+7.4,w:.4,h:.025,d:.9,rotY:rot,mat:emit(0xffedc2),solid:false});
-    // The photographed pole beside exit 8 also has a short, lower sidewalk arm.
-    if(y===WALK && exit8 && Math.hypot(x-exit8.x,z-exit8.z)<5){
-      const headX=x-dx*1.05,headZ=z-dz*1.05,headY=y+4.1;
-      beam([x,headY,z],[headX,headY,headZ],.035);
-      beam([x,headY+.21,z],[x-dx*.55,headY,z-dz*.55],.025);
-      const rim=Array.from({length:12},(_,i)=>{
-        const a=i*PI/6,along=.26*Math.cos(a),across=.15*Math.sin(a);
-        return [headX+dx*along+dz*across,headZ+dz*along-dx*across];
-      });
-      K.prism(rim,headY-.075,headY+.045,{mat:C.steel,bottom:emit(0xffedc2),solid:false});
-      K.streetLight?.(headX,headY-.08,headZ,.23);
-    }
   }
   function treePit(x,z,y=WALK) {
     if(inG13(x,z)||onTerminalMedian(x,z)||inWestCanopy(x,z)||inTaxiStand(x,z))return;
