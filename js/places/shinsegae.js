@@ -2,6 +2,7 @@ import {hastensBed} from '../../assets/models/ssg-hastens/model.js';
 import {rawrowDisplay} from '../../assets/models/ssg-rawrow/model.js';
 import {boutiqueLobby} from '../../assets/models/megabox-central/place.js';
 import {angle as cinemaYaw,point as cinemaPoint} from '../../assets/models/megabox-central/layout.js';
+import {placeAtriumCeiling} from '../../assets/models/ssg-atrium-soffit/model.js';
 import {marketProduceCeiling} from '../../assets/models/ssg-market-ceiling/model.js';
 import {giftConcierge} from '../../assets/models/ssg-market-gift/model.js';
 import {marketEntrance} from '../../assets/models/ssg-market-entrance/model.js';
@@ -1064,8 +1065,8 @@ export function build(K) {
     if (id === 'B1') { /* no fabricated in-store subway pit */ }
     else if (s >= 3 && id !== '11F') holes.push(rect(...upperPhysicalWell(id)));
 
-    // L09: retain all upper tenant registrations, opening only the photographed vertical atrium.
-    if (id==='11F') holes.push(rect(...photoAtrium(id)));
+    // The public garden's continuous 11F paving crosses the former atrium outline.
+    // Its structural soffit closes the 10F hall above the highest main escalators.
     if (s >= 1) for (const c of (s===1||s>MAIN.indexOf('8F')?BASE_CORES:CORES)) if (s <= coreTop(c) && !(id==='1F'||id==='2F') && !(id==='B1'&&c.door==='W')) holes.push(...stairHoles(c, s));
     const floorOutline = id === 'B1' ? basementOutline : UPPER.has(id) ? rect(0, VS, UW, VD) : LV[id] >= LV['2F'] ? northOutline(VD, LV[id]) : FULL;
     K.slab(floorOutline, LV[id], { mat: floorMat[id] ?? 'ssg_marble', thick: thick(id), holes:mergedHoles(holes), edge: false, walk:id!=='11F', under: id === 'B2' ? false : id === 'B1' ? { tex: 'concrete', color: 0xb4b2a9 } : CEIL });
@@ -1110,13 +1111,15 @@ export function build(K) {
   // Aerial: dark membrane, mechanical penthouse, pale cooling boxes and an AC grid.
   // Roof pixels lean NW in the photograph; these ground-frame placements remain approximate.
   // The north glass enclosure now contains the central roof block; exposed services stay behind the square towers.
-  // The user's interior photo shows a covered, framed ceiling above the
-  // multi-level atrium, rather than exposed blue sky. Exact roof depth and
-  // panel dimensions are not surveyed; this sits above all occupied floors.
-  K.hpoly(0xc8cecc,rect(...PHOTO_ATRIUM),LV.RF+.02,false);
-  for(let u=30.2;u<38;u+=1.55)box(u,41,.055,22,LV.RF-.17,.12,0x69716f,{solid:false});
-  for(let v=30.2;v<52;v+=1.55)box(34,v,8,.055,LV.RF-.17,.12,0x69716f,{solid:false});
-  for(let u=30.8;u<38;u+=3.1)for(let v=31;v<52;v+=3.1)lightPanel(u,v,LV.RF-.19,.13,.13,0xfff8e6);
+  // The photographed atrium frame belongs over the last main-wing escalator.
+  // Its mounting plane is the underside of the roof garden, one level below RF.
+  const [ax0, av0, ax1, av1] = MAIN_WELL;
+  const uMid = (ax0 + ax1) / 2, vMid = (av0 + av1) / 2;
+  const [cx, cz] = P(uMid, vMid), [rightX, rightZ] = P(uMid + 1, vMid);
+  const ceilingAngle = Math.atan2(cz - rightZ, rightX - cx);
+  K.detail({floor:'10F', name:'본관 에스컬레이터 천장', poly:rect(...MAIN_WELL),
+    y0:LV['10F'], y1:LV['11F']}, () =>
+    placeAtriumCeiling(K, cx, LV['11F'] - thick('11F'), cz, ceilingAngle));
   boxR(20, 60, 40, 72, (LV.RF+.7), 3.5, 0x85827c, { solid: false, top: 0x99968f });
   for (const [u, v] of [[5.5, 78], [10, 78], [14.5, 78], [50, 78], [54.5, 78], [59, 78], [63, 78]]) {
     box(u, v, 3, 3, (LV.RF+.7) + 0.2, 3, 0xd8d8d4, { solid: false, top: 0xbfc1bd });
