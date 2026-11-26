@@ -6,7 +6,7 @@ const models = new Map();
 // One draw at either distance. Quantized glTFs store their decode transform on
 // the node. Keep that separate from the architectural placement transform.
 export function placeSingleDetail(K, {name, file, at, angle, fallback, fallbackMaterial,
-                                      material, loadSurface=loadArchitecture, range, exitRange, floorTolerance, eyeHeight=0, viewBounds, closeVisibleFrom}) {
+                                      material, loadSurface=loadArchitecture, range, exitRange, floorTolerance, eyeHeight=0, viewBounds, closeVisibleFrom, translations}) {
   const T = K.THREE;
   let state = models.get(file);
   if (!state) {
@@ -14,7 +14,24 @@ export function placeSingleDetail(K, {name, file, at, angle, fallback, fallbackM
     models.set(file,state);
   }
   const [x,y,z] = at;
-  const root = new T.Group(), item = new T.Mesh(fallback,fallbackMaterial);
+  const root = new T.Group();
+  const item = translations ? new T.InstancedMesh(fallback,fallbackMaterial,translations.length) : new T.Mesh(fallback,fallbackMaterial);
+  const placements = translations?.map(p=>new T.Matrix4().makeTranslation(...p));
+  function placeInstances(surface) {
+    const matrix=new T.Matrix4();
+    placements.forEach((base,i)=>{
+      matrix.copy(base);
+      if(surface)matrix.multiply(surface.matrixWorld);
+      item.setMatrixAt(i,matrix);
+    });
+    item.instanceMatrix.needsUpdate=true;
+    item.computeBoundingSphere();
+  }
+  if(placements){
+    // The authoring scene can reuse the same furniture collection at each game position.
+    root.userData.nativeComponents=translations.map(translation=>({subject:name,translation}));
+    placeInstances(null);
+  }
   root.name = name;
   root.position.set(x,y,z);
   root.rotation.y = angle;
@@ -23,7 +40,7 @@ export function placeSingleDetail(K, {name, file, at, angle, fallback, fallbackM
   const center = new T.Vector3(x,y+ground+eyeHeight,z);
   const frustum=new T.Frustum(), matrix=new T.Matrix4(), globalPlacement=new T.Matrix4();
   fallback.computeBoundingBox();
-  const bounds=viewBounds??[fallback.boundingBox];
+  const bounds=viewBounds??(placements?placements.map(m=>fallback.boundingBox.clone().applyMatrix4(m)):[fallback.boundingBox]);
   function inView(camera) {
     globalPlacement.copy(root.matrixWorld);
     globalPlacement.elements[13]+=ground;
@@ -48,7 +65,8 @@ export function placeSingleDetail(K, {name, file, at, angle, fallback, fallbackM
     // A baked interior can keep its native glTF map/material as well as its mesh.
     item.material=surface?(material??surface.material):fallbackMaterial;
     item.matrixAutoUpdate=false;
-    if(surface)item.matrix.copy(surface.matrixWorld);
+    if(placements)placeInstances(surface);
+    else if(surface)item.matrix.copy(surface.matrixWorld);
     else item.matrix.identity();
     item.updateWorldMatrix(true,false);
   };

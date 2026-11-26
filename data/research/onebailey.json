@@ -1,4 +1,15 @@
 {
+  "sebit_gallery_media_20261126": {
+    "primary": "https://www.seocho.go.kr/site/seocho/ex/bbs/View.do?bcIdx=406540&cbIdx=61",
+    "gallery_photo_january": "https://mediahub.seoul.go.kr/archives/2016771",
+    "district_photo_october": "https://cdnimage.dailian.co.kr/news/202610/news_1793174694495_1707525_m_2.png",
+    "district_walking_tour": "https://www.seocho.go.kr/site/seocho/04/10404081200002017101702.jsp",
+    "nearby_naver_place": "https://map.naver.com/p/entry/place/1229683443",
+    "observed": "서울시는 2026년 1월 원형 파란 기둥과 벤치, 벽화 레일 조명, 맞은편 LED 영상과 여러 색으로 밝아지는 벽면 선형등을 사진으로 공개했다. 10월 서초구 제공 사진에는 파란색과 흰색의 등받이 없는 절곡 벤치, 개방된 하부와 작은 상판 금속 표지가 보인다.",
+    "fit": "벤치 크기와 세부 인쇄 선, 등기구 각도, 모듈 간격과 화면 크기는 사진에서 추정했다. 시설 위치는 게임 벽화길의 기둥과 기존 전시를 기준으로 맞췄다. 고투몰에 관한 세 가지 홍보 화면은 이 프로젝트의 자체 그림이다. 네이버 지점 링크는 같은 공공보행통로의 관광안내센터 기준점이다.",
+    "model": "assets/models/sebit-gallery/gallery.blend",
+    "comparison": "assets/models/sebit-gallery/play.jpg"
+  },
   "id": "onebailey",
   "name": "원베일리 공공보행통로",
   "updated": "2026-11-26",
