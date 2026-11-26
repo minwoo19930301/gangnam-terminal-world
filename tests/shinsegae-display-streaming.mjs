@@ -23,6 +23,7 @@ async function enter(address) {
   if (await page.locator('#start').isVisible()) await page.locator('#start').click();
 }
 async function ride(floor) {
+  await page.locator('#prompt.show').filter({hasText:'엘리베이터'}).waitFor();
   await page.keyboard.press('e');
   await page.locator('#elev button').filter({has:page.locator('b',{hasText:new RegExp('^'+floor+'$')})}).click();
   await page.waitForFunction(target => location.hash.startsWith('#/shinsegae/'+target+'?'),floor);
