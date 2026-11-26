@@ -1,3 +1,4 @@
+import {courtBounds,pavingLevel} from '../../assets/models/central-plaza-granite/layout.js';
 import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
 import {placeSingleDetail} from '../../assets/models/interior-architecture/single-detail.js';
 import {relief} from '../banpo_relief.js';
@@ -2341,7 +2342,7 @@ export function build(K) {
         for(let i=0;i<950;i++)g.fillRect(noise()*w,noise()*h,1+noise(),1);
       }
     },swatch.mm.map(mm=>mm/1000),{lazy:true});
-    K.hpoly('ccPlazaGranite',RECT(-50,0,-26.6,38.5),.018,true,null,R);
+    K.hpoly('ccPlazaGranite',RECT(...courtBounds),pavingLevel,true,null,R);
     for(const [t0,t1] of [[0,14],[25,38]]){
       if(t0===0){
         lbox(-27.5,(t0+t1)/2,1.8,t1-t0,0,.42,gateStone);

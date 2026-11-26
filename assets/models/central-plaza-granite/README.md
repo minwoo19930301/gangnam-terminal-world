@@ -9,3 +9,9 @@ blender -b assets/models/central-plaza-granite/plaza.blend --python-exit-code 1 
 ```
 
 게임은 판석 배치를 256×256 재질 하나로 그린다. 광장 기하와 충돌면은 기존 것을 사용한다. [낮·밤 전후 비교](comparison.jpg) · [보행 카메라 네 곳](camera.json)
+
+통합 Blender 파일에서는 **반포 · 도시 전경 → 센트럴시티 광장 · 구체 조형물 → 센트럴시티 정문 · 장밋빛 띠와 회색 판석**에서 광장 전체 포장을 편집할 수 있다. 원본 견본의 재질을 링크하며, 줄눈과 판석이 맞물리는 모서리는 같은 지형 정점을 쓴다. 돌의 색은 원본 재질을 수정하면 반영된다. 견본에서 판재 폭이나 배치를 바꾼 뒤에는 다음 명령으로 도시의 판석을 다시 맞춘다. [통합 Blender에서 본 포장 전후](city.jpg)
+
+```sh
+blender -b assets/models/world/gangnam-terminal.blend --python-exit-code 1 -P assets/models/central-plaza-granite/mount.py -- --update-court
+```
