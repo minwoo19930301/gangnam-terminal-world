@@ -10,6 +10,7 @@ from mathutils import Vector
 SHELVES = {
     "jw-retail-gallery": "JW 3층 · 백화점 연결 전시 갤러리",
     "g12-window-print": "고투몰 G12 · 지상 유리 점인쇄",
+    "sinbanpo-public-oaks": "신반포로 · 공도 대왕참나무",
     "sinbanpo-plaza-planters": "신반포로 정문 앞 석재 화분과 전정 수목",
     "central-plaza-canopy": "센트럴시티 조각광장 개방형 캐노피",
     "central-plaza-seatwall": "센트럴시티 동측 석재 앉음벽과 생울타리",
