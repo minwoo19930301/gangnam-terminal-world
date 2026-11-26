@@ -344,6 +344,7 @@ bpy.ops.wm.save_as_mainfile(filepath=target, compress=True)
 runpy.run_path(str(here / "libraries.py"))["link_asset_gallery"](here)
 runpy.run_path(str(here / "indoor-layout.py"))["sync_layout"](here)
 runpy.run_path(str(here.parent / "shinsegae-facade/mount.py"))["mount_signs"](scene)
+runpy.run_path(str(here.parent / "banpo-apartments/mount.py"))["mount_apartments"](scene)
 runpy.run_path(str(here / "river-landmarks.py"))["build_river_landmarks"](
     scene, seed, here
 )

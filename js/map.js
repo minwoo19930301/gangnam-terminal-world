@@ -203,7 +203,7 @@ export function createMap(opts) {
         compactLabel: label(arrival.name, arrival.x, arrival.z, 10, true)});
     }
   }
-  for (const L of LANDMARKS) addSearch({ name: L.name, sub: L.sub, x: L.x, z: L.z, y: L.floorY ?? 0, type: '핵심 지점', exact: true });
+  for (const L of LANDMARKS) addSearch({ name: L.name, sub: L.sub, aliases: L.aliases, exteriorView: L.exteriorView, x: L.x, z: L.z, y: L.floorY ?? 0, type: '핵심 지점', exact: true });
   for (const s of spawns) addSearch({ ...s, type: '출발 지점', exact: true });
   for (const p of placeMarks) addSearch({ name: p.name, x: p.x, z: p.z, y: p.y, place: p.id, type: '탐색 장소' });
   for (const r of zoneRecords) addSearch({ name: r.source.name, sub: r.source.sub, floor: r.floor, x: r.x, z: r.z, y: r.y0, place: r.place, type: '층별 공간', group: placeIndex.get(r.place)?.name });
@@ -467,10 +467,11 @@ export function createMap(opts) {
   // Explicit destinations use that floor's ceiling, never the roof above it.
   // Raw double clicks follow the world's highest walkable support at maxY=200.
   function teleportTo(target, ground) {
-    const x = clamp(target.x, bounds[0], bounds[2]), z = clamp(target.z, bounds[1], bounds[3]);
-    // a spot in another area: the page reloads there (area loading, js/areas.js)
+    const view = !ground && target.exteriorView;
+    const x = clamp(view?.x ?? target.x, bounds[0], bounds[2]), z = clamp(view?.z ?? target.z, bounds[1], bounds[3]);
+    const yaw = view ? view.yaw * Math.PI / 180 : target.yaw;
     const address = target.mapDestination && !ground ? target : undefined;
-    if (opts.leaveArea && opts.leaveArea(x, Number.isFinite(target.y) && !ground ? target.y : null, z, target.yaw, address)) { if (open) toggle(); return; }
+    if (opts.leaveArea && opts.leaveArea(x, Number.isFinite(target.y) && !ground ? target.y : null, z, yaw, address, view?.pitch)) { if (open) toggle(); return; }
     // try the requested floor, then street level, then whatever walkable surface is highest there
     const tries = [];
     if (!ground && Number.isFinite(target.y)) tries.push(target.y);
@@ -482,7 +483,9 @@ export function createMap(opts) {
     for (const ty of tries) { destination = findSpot(x, z, ty); if (destination) break; }
     if (!destination) { announce('이 위치에는 걸을 수 있는 바닥이 없어요. 가까운 출발 지점을 선택하세요.'); return; }
     // The engine's teleport snaps again within +1m; compensate to retain the checked floor.
-    player.teleport(destination.x, destination.y, destination.z, target.yaw ?? player.yaw); player.y = destination.y; player.vy = 0;
+    player.teleport(destination.x, destination.y, destination.z, yaw ?? player.yaw);
+    if (view) player.pitch = view.pitch * Math.PI / 180;
+    player.y = destination.y; player.vy = 0;
     toggle(); miniClock = 1;
   }
   function findSpot(x, z, ty) {

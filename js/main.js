@@ -342,7 +342,7 @@ async function boot() {
   let menuOpen = false, nearIt = null;
   // ---- leaving the area: reload at the new address with a loading screen ----
   let leaving = false, reloadTimer;
-  function reloadAt(key, x, y, z, yawDeg, why) {
+  function reloadAt(key, x, y, z, yawDeg, why, pitchDeg) {
     if (leaving || SHOT || AREA.id === 'all') return false;
     // loop guard: never bounce between areas more than 4 times in 20 s
     let hist = []; try { hist = JSON.parse(sessionStorage.getItem('areaHops') || '[]').filter(t => Date.now() - t < 20000); } catch (e) { }
@@ -350,14 +350,14 @@ async function boot() {
     hist.push(Date.now()); try { sessionStorage.setItem('areaHops', JSON.stringify(hist)); } catch (e) { }
     leaving = true;
     const enc = '#/' + key.split('/').map(encodeURIComponent).join('/');
-    const href = `${enc}?p=${x.toFixed(1)},${y.toFixed(1)},${z.toFixed(1)},${Math.round(((yawDeg % 360) + 360) % 360)}`;
+    const href = `${enc}?p=${x.toFixed(1)},${y.toFixed(1)},${z.toFixed(1)},${Math.round(((yawDeg % 360) + 360) % 360)}${Number.isFinite(pitchDeg) ? ',' + pitchDeg : ''}`;
     const lt = $('loading-text'); if (lt) lt.textContent = `${why} 불러오는 중…`;
     $('loading').classList.remove('hidden'); document.exitPointerLock?.();
     history.pushState(null, '', location.pathname + location.search + href);
     reloadTimer = setTimeout(() => location.reload(), 60);
     return true;
   }
-  function leaveArea(x, y, z, yaw, destination) {
+  function leaveArea(x, y, z, yaw, destination, pitchDeg) {
     if (leaving) return true;
     if (AREA.id === 'all') return false;
     // A directory result can name a shop in a district whose floors are unloaded.
@@ -365,7 +365,7 @@ async function boot() {
     const id = areaIdAt(zn, x, y ?? 0, z);
     if (id === AREA.id) return false;
     const key = zn && zn.place ? `${zn.place}/${zn.floor || '1F'}` : 'street';
-    reloadAt(key, x, y ?? 0, z, yaw != null ? yaw * 180 / Math.PI : player.yaw * 180 / Math.PI, areaName(id, META));
+    reloadAt(key, x, y ?? 0, z, yaw != null ? yaw * 180 / Math.PI : player.yaw * 180 / Math.PI, areaName(id, META), pitchDeg);
     return true; // A remote destination cannot be placed on this scene's local floor.
   }
   const map = createMap({ THREE, K, osm, player, phys, spawns, places: placeInfo, directory: META, container: $('app'), zoneAt: () => currentZone, leaveArea });
@@ -483,7 +483,7 @@ async function boot() {
     const keyOf = zn => zn && zn.place && zn.place !== 'streets' ? `${zn.place}/${zn.floor || '1F'}` : (player.y < -2 ? 'underground' : 'street');
     let cur = null, pending = null, since = 0, lastWrite = 0, applying = false;
     const enc = k => '#/' + k.split('/').map(encodeURIComponent).join('/');
-    const href = k => `${enc(k)}?p=${player.x.toFixed(1)},${player.y.toFixed(1)},${player.z.toFixed(1)},${Math.round(((player.yaw * 180 / Math.PI) % 360 + 360) % 360)}`;
+    const href = k => `${enc(k)}?p=${player.x.toFixed(1)},${player.y.toFixed(1)},${player.z.toFixed(1)},${Math.round(((player.yaw * 180 / Math.PI) % 360 + 360) % 360)}${Math.abs(player.pitch) >= Math.PI / 360 ? ',' + Math.round(player.pitch * 180 / Math.PI) : ''}`;
     function parse(h) {
       const m = /^#\/([^?]*)(?:\?(.*))?$/.exec(h || ''); if (!m) return null;
       const key = m[1].split('/').map(decodeURIComponent).join('/'), q = new URLSearchParams(m[2] || ''), p = q.get('p');
@@ -492,7 +492,11 @@ async function boot() {
     function go(r) {
       if (!r) return false;
       applying = true; setTimeout(() => { applying = false; }, 800);
-      if (r.pos && r.pos.length >= 3 && r.pos.every(Number.isFinite)) { player.teleport(r.pos[0], r.pos[1], r.pos[2], r.pos[3] != null ? r.pos[3] * Math.PI / 180 : player.yaw); return true; }
+      if (r.pos && r.pos.length >= 3 && r.pos.every(Number.isFinite)) {
+        player.teleport(r.pos[0], r.pos[1], r.pos[2], r.pos[3] != null ? r.pos[3] * Math.PI / 180 : player.yaw);
+        if (r.pos.length === 5) player.pitch = Math.max(-1.5, Math.min(1.5, r.pos[4] * Math.PI / 180));
+        return true;
+      }
       const [addressPlace, floor] = r.key.split('/');
       const place = META?.[addressPlace]?.floorAliases?.[floor] ?? addressPlace;
       const entrance = r.destination && spawns.find(s => s.mapDestination && s.place === place &&
