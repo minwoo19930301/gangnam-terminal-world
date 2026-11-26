@@ -1,3 +1,4 @@
+import {placeXiPortal} from '../../assets/models/banpo-xi-portal/model.js';
 import {placePedestrianHead} from '../../assets/models/sinbanpo-crossing/model.js';
 import {crossingWay as flyoverCrossingWay,carriageways as flyoverRoads,markingWidth as flyoverWidth,markingFaces as flyoverMarkings,landings as flyoverLandings} from '../../assets/models/sinbanpo-crossing/layout.js';
 import {placeSingleDetail} from '../../assets/models/interior-architecture/single-detail.js';
@@ -505,6 +506,7 @@ export function build(K) {
       }
     }
   }
+  placeXiPortal(K);
   plantSurveyedPinOaks(K);
   // sr-07 / street_01: continuous mature light-green crowns on the north
   // sidewalk. OSM chainage preserves the oblique kerb at both ends of the row.
