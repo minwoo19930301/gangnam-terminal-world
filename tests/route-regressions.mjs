@@ -10,7 +10,7 @@ import * as shinsegae from '../js/places/shinsegae.js';
 import * as centralcity from '../js/places/centralcity.js';
 import * as jwmarriott from '../js/places/jwmarriott.js';
 import {plan as foodHallPoint} from '../assets/models/cinema-rotary/layout.js';
-import {sweetParkPoint} from '../js/places/sweet-park-plan.js';
+import {gate9Plan,sweetParkPoint} from '../js/places/sweet-park-plan.js';
 import {point as cinemaPoint} from '../assets/models/megabox-central/layout.js';
 import { JUNCTIONS } from '../js/places/_junctions.js';
 
@@ -102,6 +102,14 @@ for(const [label,path] of [
 }
 
 
+const gate = JUNCTIONS.find(j => j.id === 'J_CC_9GATE');
+// The presented route should lead a shopper between both jambs. At the previous
+// guide ordinate of 477 the character had only about a centimetre on one side.
+for (const dy of [-6,0,6]){
+  const [x,z]=sweetParkPoint(gate9Plan[0],gate9Plan[1]+dy);
+  const p={x,z};phys.resolve(p,radius,-6,-6+height,step);
+  if(Math.hypot(p.x-x,p.z-z)>.02)throw Error('9GATE marked aisle meets a jamb');
+}
 for (const [name,from,to] of [
   ['user link to Central City atrium', [-52.1,109.8,0], [-36,72,0]],
   ['Shinsegae 3GATE to Central City atrium', [-44,47,0], [-36,72,0]],
@@ -109,8 +117,8 @@ for (const [name,from,to] of [
   ['G11 door to Daiso hall', [244.8,-181.5,-6], [246.5,-170,-4]],
   ['Daiso hall to store', [246.5,-170,-4], [238,-167,-4]],
   ['Daiso hall to street', [246.5,-170,-4], [254.5,-171,0]],
-  ['market to 9GATE', [-43.82,37.99,-6], [-38.67,51.495,-6]],
-  ['9GATE to Sweet Park aisle', [-38.67,51.495,-6], [-37,90,-6]],
+  ['market to 9GATE', [...gate.pa,-6], [...gate.pb,-6]],
+  ['9GATE to Sweet Park aisle', [...gate.pb,-6], [-37,90,-6]],
 ]) {
   if (!canWalk(from,to)) throw new Error(`${name}: no walkable route`);
   console.log(`OK ${name}`);
@@ -130,7 +138,6 @@ for (const el of suspect) for (const floor of el.floors) {
 // Multiple connections join Shinsegae and Central City. Verify the published
 // area-switch direction belongs to this 9GATE, not another connection's pair.
 const meta = JSON.parse(fs.readFileSync(new URL('../js/places/_meta.json', import.meta.url), 'utf8'));
-const gate = JUNCTIONS.find(j => j.id === 'J_CC_9GATE');
 const dx=gate.pb[0]-gate.pa[0], dz=gate.pb[1]-gate.pa[1], length=Math.hypot(dx,dz);
 for (const [place,sign] of [[gate.a,1],[gate.b,-1]]) {
   const j=meta[place].junctions.find(j => j.id === gate.id);

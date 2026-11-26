@@ -1,5 +1,5 @@
 import {cakeCounter} from '../../assets/models/sweet-cake-counters/model.js';
-import {terminalOrigin,terminalRotation as R,terminalPoint as P,sweetParkLocal as BPst} from './sweet-park-plan.js';
+import {gate9MarketApproach,gate9Plan,terminalOrigin,terminalRotation as R,terminalPoint as P,sweetParkLocal as BPst} from './sweet-park-plan.js';
 import {transverseFloor} from '../../assets/models/megabox-central/layout.js';
 import {publicFloorOpening,court,westApron} from '../../assets/models/cinema-rotary/layout.js';
 import {arcadePiers} from '../../assets/models/sweet-arcade/model.js';
@@ -1347,7 +1347,8 @@ export function build(K) {
   // The exact fit is approximate; its direction and extent follow the supplied
   // photo walk, rather than the old J4 entrance on the opposite side.
   {
-    const a=[-43.82,37.99], b=P(77.0,75.24268), d=[b[0]-a[0],b[1]-a[1]], len=Math.hypot(...d), n=[-d[1]/len*3.25,d[0]/len*3.25];
+    const [mouthS,mouthT]=BPst(...gate9Plan);
+    const a=gate9MarketApproach, b=P(mouthS+2.95,mouthT), d=[b[0]-a[0],b[1]-a[1]], len=Math.hypot(...d), n=[-d[1]/len*3.25,d[0]/len*3.25];
     const poly=[[a[0]+n[0],a[1]+n[1]],[b[0]+n[0],b[1]+n[1]],[b[0]-n[0],b[1]-n[1]],[a[0]-n[0],a[1]-n[1]]];
     K.slab(poly,YB1,{mat:{tex:'marble',color:0xe5dacc,gloss:.5},under:false,ceil:false,edge:false});
     K.hpoly(0xf0e5d3,poly,-1.45,false);
@@ -1915,7 +1916,7 @@ export function build(K) {
   {const q=HPst(1739.5,398);lsign('신세계 아카데미 · 파미에스테이션 2층 →',...q,YB1+3.05,3,.3,'S',{bg:'#493723',fg:'#fff0d4'});}
   // The B1 guide sends Sweet Park visitors through 9GATE to the food floor.
   // The reverse face addresses visitors arriving from the market.
-  const [gateS,gateT]=BPst(1032,469);
+  const [gateS,gateT]=BPst(...gate9Plan);
   for(const [face,label] of [['S','↑ 백화점 식품관 · 9GATE'],['N','↑ 스위트 파크']]){
     lsign(label,gateS-.12,gateT,YB1+3.2,3.7,.42,face,
       {bg:'#43382f',fg:'#fff5dd',bold:true,pxPerM:120});
