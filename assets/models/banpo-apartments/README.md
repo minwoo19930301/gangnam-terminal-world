@@ -62,7 +62,7 @@ blender assets/models/banpo-apartments/banpo-apartments.blend -P assets/models/w
 
 지도에서 반포르엘을 찾아 이동한 보도에서 찍었다. 사진은 지붕 주변을 잘랐다. 왼쪽은 변경 전, 오른쪽은 변경 후이며 위가 낮, 아래가 밤이다. [게임 화면 비교](leel-101-crown.jpg)
 
-휴대폰 세로 화면에서는 반포르엘 지도 도착 시 101동 옥상의 3D 이름표 오른쪽을 미니맵이 가렸다. 같은 101동 지붕면에서 이름표만 옆으로 옮겼다. 전후 지점의 Blender 지붕 높이는 모두 98.60m다. 390px 세로 화면에서 세 단지를 검색해 이동하는 검사는 저장소 루트에서 `node tests/apartment-views.mjs --portrait`로 재현할 수 있다.
+휴대폰 세로 화면에서는 반포르엘 지도 도착 시 101동 옥상의 3D 이름표 오른쪽을 미니맵이 가렸다. 같은 101동 지붕면에서 이름표만 옆으로 옮겼다. 전후 지점의 Blender 지붕 높이는 모두 98.60m다. 390px 세로 화면에서 세 단지를 검색해 이동하는 검사는 저장소 루트에서 `node tests/apartment-views.mjs --portrait`로 재현할 수 있다. [세로 화면 전후](leel-mobile.jpg)
 
 ### 보도에서 보이는 야간 창문
 
