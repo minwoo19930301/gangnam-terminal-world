@@ -1378,13 +1378,13 @@ export function build(K) {
     for(let i=-2;i<=3;i++){g.beginPath();g.moveTo(i*128,0);g.lineTo(i*128+256,256);g.stroke();g.beginPath();g.moveTo(i*128,0);g.lineTo(i*128-256,256);g.stroke();}
     g.fillStyle='#202321';for(let r=0;r<=2;r++)for(let c=0;c<=2;c++){const x=c*128,y=r*128;g.beginPath();g.moveTo(x-32,y);g.lineTo(x,y-32);g.lineTo(x+32,y);g.lineTo(x,y+32);g.closePath();g.fill();}
   },[2.4,2.4]);
-  K.texture('ccBodyPlaid',128,128,(g,w,h)=>{g.fillStyle='#f1eee6';g.fillRect(0,0,w,h);for(let a=0;a<4;a++)for(let b=0;b<4;b++)if((a+b)%2){g.fillStyle=(a%2)?'#526a7f':'#899ba5';g.fillRect(a*32,b*32,32,32);}},[.8,.8]);
+  K.texture('ccBodyPlaid',128,128,(g,w,h)=>{g.fillStyle='#f1eee6';g.fillRect(0,0,w,h);for(let a=0;a<4;a++)for(let b=0;b<4;b++)if((a+b)%2){g.fillStyle=(a%2)?'#526a7f':'#899ba5';g.fillRect(a*32,b*32,32,32);}},[.8,.8],{lazy:true});
   K.texture('ccBodyScreen',256,160,(g,w,h)=>{
     const wash=g.createLinearGradient(0,0,w,h);wash.addColorStop(0,'#60385e');wash.addColorStop(.55,'#d56fa0');wash.addColorStop(1,'#a67bba');g.fillStyle=wash;g.fillRect(0,0,w,h);
     for(const[x,y,r]of[[213,39,35],[197,112,41],[238,83,29]]){g.strokeStyle='#eeb4ce';g.lineWidth=7;g.beginPath();g.arc(x,y,r,0,PI*2);g.stroke();}
     g.fillStyle='#f1d9e6';g.fillRect(51,46,37,81);g.fillStyle='#c58da9';g.fillRect(55,58,29,54);g.fillStyle='#33203c';g.fillRect(59,36,21,13);
     g.fillStyle='#fff4f7';g.font='bold 17px sans-serif';g.textAlign='center';g.fillText('배스 앤 바디 웍스',123,149);
-  },[2.1,1.25]);
+  },[2.1,1.25],{lazy:true});
   const b1White=0xf0e5d3,b1Brass=0xa78b55,b1Wood={tex:'wood',color:0x806143};
   // FeFx7kfWgdo_181: the little oak house is the near end of the long
   // Bath & Body Works plan cell, not a distant counter across the passage.

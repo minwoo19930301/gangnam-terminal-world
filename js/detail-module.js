@@ -1,6 +1,5 @@
-// Share a mesh packet across placements. Browsers remember failed module fetches,
-// so each retry needs a fresh URL while successful imports keep their original URL.
-export function detailModule(url, select) {
+// Load a detail once, share it across placements, and leave failed loads retryable.
+export function detailResource(fetchValue) {
   let value;
   let request;
   let attempts = 0;
@@ -9,11 +8,8 @@ export function detailModule(url, select) {
     get value() { return value; },
     load() {
       if (request) return request;
-      const source = new URL(url);
-      attempts += 1;
-      if (attempts > 1) source.searchParams.set('retry', attempts);
-      request = import(source.href)
-        .then(module => { value = select(module); })
+      request = fetchValue(++attempts)
+        .then(result => { value = result; })
         .catch(error => {
           request = undefined;
           throw error;
@@ -21,4 +17,13 @@ export function detailModule(url, select) {
       return request;
     }
   };
+}
+
+// Browsers cache failed module imports. A retry needs a new module URL.
+export function detailModule(url, select) {
+  return detailResource(attempt => {
+    const source = new URL(url);
+    if (attempt > 1) source.searchParams.set('retry', attempt);
+    return import(source.href).then(select);
+  });
 }
