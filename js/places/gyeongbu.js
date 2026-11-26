@@ -325,7 +325,7 @@ export function build(K) {
     for(const c of cores)if(y>c.levels[0]&&y<=c.levels.at(-1))out.push(rect(c.u,c.v,c.u+4.4,c.v+8.4));
     for(const e of escs)if(y===e.yb)out.push(rect(e.u-1.8,e.v,e.u+1.8,e.v+e.len));
     if(y===0)out.push(rect(30,67,48,83.8),rect(265.5,.8,278,3),rect(206.5,10.5,214.5,23),rect(164,11,168,21),rect(102.8,12.2,116,17.25));
-    if(y===NORTH_2F)out.push(rect(122,16.3,137,18.2),rect(169,20,177,21.8),rect(253,12,258.4,20),rect(265.5,3.2,273,5.2));
+    if(y===NORTH_2F)out.push(rect(265.5,3.2,273,5.2));
     if(y===6)out.push(rect(35.5,8,40.5,20));
     if(y===11)out.push(rect(23,78,25,88)); // beige stair beside the flower-market escalator
     // Elevator car supplies its own floor; keep the shaft clear of intervening slabs.
@@ -371,8 +371,15 @@ export function build(K) {
     if(i>=5&&i<=8)K.occludingSlab({poly:p,y:ys[i],holes:openings,
       eyeMin:ys[Math.max(5,i-1)]+.04,eyeMax:ys[Math.min(8,i+1)]-.04});
   }
-  const northVoids=[rect(168,16.7,258,30),rect(118,16.7,140,30)];
-  K.slab(NORTH,NORTH_2F,{mat:'tile',under:'gb_acoustic',holes:[...holes(NORTH,NORTH_2F),...northVoids]});
+  const foodHallOpening=[168,16.7,258,30],trussOpening=[118,16.7,140,30];
+  const northVoids=[foodHallOpening,trussOpening].map(bounds=>rect(...bounds));
+  // Each stair opening joins the adjacent gallery void. A single outline per
+  // opening keeps the floor tessellator from spanning an overlapping pair of holes.
+  const northDeckVoids=[
+    [[118,16.7],[122,16.7],[122,16.3],[137,16.3],[137,16.7],[140,16.7],[140,30],[118,30]],
+    [[168,16.7],[253,16.7],[253,12],[258.4,12],[258.4,20],[258,20],[258,30],[168,30]],
+  ].map(outline=>outline.map(point=>W(...point)));
+  K.slab(NORTH,NORTH_2F,{mat:'tile',under:'gb_acoustic',holes:[...holes(NORTH,NORTH_2F),...northDeckVoids]});
   K.slab(northRoof,NORTH_ROOF,{mat:asphalt,under:'gb_acoustic',holes:[...holes(northRoof,NORTH_ROOF),rect(118,16.7,140,30)]});
   K.slab(rect(75.7,0,cafeEnd,cafeRear),7.67,{mat:'roofgravel',under:false,edge:false});
   K.slab(pent,48,{mat:'roofgravel',under:'gb_acoustic'});
@@ -928,8 +935,8 @@ export function build(K) {
       }
     }
     const ceilHoles=holes(hallWest,6).map(p=>{const q=p.map(p=>toL(...p));return[Math.min(...q.map(p=>p[0])),Math.min(...q.map(p=>p[1])),Math.max(...q.map(p=>p[0])),Math.max(...q.map(p=>p[1]))];});
-    cover(hallWest,[...pockets,...ceilHoles,[-1,0,10,146],[66.2,6.2,75.25,23],[30,67,54,84]],3.3);cover(NORTH,[...northVoids,[258,0,280,30],[77,17.5,118,22.6]],3.6);
-    K.hpoly('gb_acoustic',rect(168,16.7,258,30),7.3,false);K.hpoly('gb_acoustic',rect(258,7,280,30),3.8,false);
+    cover(hallWest,[...pockets,...ceilHoles,[-1,0,10,146],[66.2,6.2,75.25,23],[30,67,54,84]],3.3);cover(NORTH,[foodHallOpening,trussOpening,[258,0,280,30],[77,17.5,118,22.6]],3.6);
+    K.hpoly('gb_acoustic',rect(...foodHallOpening),7.3,false);K.phys.addCeiling(rect(...foodHallOpening),7.3);K.hpoly('gb_acoustic',rect(258,7,280,30),3.8,false);
     K.hpoly(0xf2f0eb,rect(77,17.5,118,22.6),3.5,false);
     cover(rect(...corridorRect),[[54,33,62,48],[54,67,62,84]],4.8,0xefeeea);
     K.hpoly(0xf1efe8,rect(...doorRect),10.8,false);
@@ -1563,8 +1570,14 @@ export function build(K) {
     lsign('FOOD STATION  2F',168.23,23.35,4.02,9.4,.6,'+u',{bg:null,fg:'#e5332a'});
     for(const [i,t]of ['HOLLYS COFFEE','LEMON','시래마을','군산오징어','샤브촌','dolly 9'].entries())lsign(t,168.26,18+i*2.05,3.35,1.9,.35,'+u',{bg:'#fff',fg:'#46484a'});
     lstairs(177,20.9,169,20.9,{ya:0,yb:4.2,w:1.6,steps:25,mat:0xc6c4bc,rails:true});
+    // The ridge spans the public double-height hall and leaves its escalator open.
     // Roof of the steel hall is pitched; transverse trusses/ducts remain from the moved assembly.
     for(const [va,vb,ya,yb]of [[16.7,23.35,8,9],[23.35,30,9,8]]){
+      // The walking engine uses horizontal overhead surfaces. Four bands follow each roof pitch.
+      for(let band=0;band<4;band++){
+        const start=va+(vb-va)*band/4,end=va+(vb-va)*(band+1)/4;
+        K.phys.addCeiling(rect(118,start,140,end),ya+(yb-ya)*(band+.5)/4);
+      }
       const q=(u,v,y)=>{const[x,z]=W(u,v);return[x,y,z];};K.quad(0xcbd0cf,[q(118,va,ya),q(140,va,ya),q(140,vb,yb),q(118,vb,yb)],[0,-1,0]);
       for(let u=118;u<140;u+=.4){const a=W(u,va),b=W(u,vb);K.quad(0x939b9a,[[a[0],ya-.03,a[1]],[a[0]+.025,ya-.03,a[1]],[b[0]+.025,yb-.03,b[1]],[b[0],yb-.03,b[1]]],[0,-1,0]);}
     }
