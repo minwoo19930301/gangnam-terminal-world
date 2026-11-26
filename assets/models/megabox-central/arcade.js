@@ -54,6 +54,15 @@ export function eastShoppingArcade(K,y){
   gangnamCoffeebar(K,y);
   gangnamMatchaStation(K,y);
   sweetParkCoffeeThreshold(K,y);
+  // The signed public entrance is between O’Sulloc and Nespresso. The island
+  // counter inside Sweet Park is a different stop on the same visitor map.
+  const [entryX,entryZ]=plan(973,787.5),[lookX,lookZ]=plan(1025,787.5);
+  const arrival={x:entryX,z:entryZ,y,yaw:Math.atan2(entryX-lookX,entryZ-lookZ)};
+  K.spawn({name:'스위트 파크 입구',place:'shinsegae',floor:'B1',destinationId:'sweet-park',
+    aliases:['신세계 스위트파크','Sweet Park','오설록 네스프레소 사이'],mapDestination:true,...arrival});
+  K.zone({name:'스위트 파크 카페 통로',place:'shinsegae',floor:'B1',sub:'오설록 · 네스프레소',
+    poly:[[969,transverseNorth],[1032,transverseNorth],[1032,798],[969,798]].map(p=>plan(...p)),
+    y0:y-.1,y1:top,priority:5,mapArrival:arrival});
   // Retain the black south boundary of the unlabelled bay east of Osulloc.
   wall([1019,northFront],[1032,northFront]);
   // The NW edge follows the clipped display corners of Koryodang and Lush.

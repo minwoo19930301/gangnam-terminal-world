@@ -4292,7 +4292,7 @@ export function build(K) {
   // Public aisle in front of the first row of dessert islands, facing the display.
   {
     const [x,z]=BP(1215,543),[lookX,lookZ]=BP(1243.5,559.5);
-    K.spawn({name:'스위트 파크 입구',destinationId:'sweet-park',aliases:['신세계 스위트파크','Sweet Park'],
+    K.spawn({name:'디저트 아일랜드 앞',destinationId:'sweet-park',aliases:['디저트 매대'],
       place:'centralcity',floor:'B1',mapDestination:true,x,y:YB1,z,yaw:Math.atan2(x-lookX,z-lookZ)});
   }
   // Customer positions are in the same 1823 × 1367 operator guide as the cells.

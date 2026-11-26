@@ -7,7 +7,8 @@ import {serve} from './serve.mjs';
 const directory = JSON.parse(await readFile(new URL('../js/places/_meta.json',import.meta.url)));
 const cases = [
   ['shinsegae','megabox','메가박스 센트럴 입구','메가박스','Megabox',/메가박스/],
-  ['centralcity','sweet-park','스위트 파크 입구','스위트파크','Sweet Park',/스위트 파크/],
+  ['shinsegae','sweet-park','스위트 파크 입구','스위트파크','Sweet Park',/스위트 파크/],
+  ['centralcity','sweet-park','디저트 아일랜드 앞','디저트 아일랜드 앞','디저트 매대',/스위트 파크/],
 ];
 const server = await serve();
 const browser = await chromium.launch({channel:'chromium',args:['--use-angle=metal','--enable-gpu','--ignore-gpu-blocklist']});
@@ -63,6 +64,25 @@ try {
     }
     assert.deepEqual(errors,[]);
     console.log(korean,await page.locator('#zone').innerText());
+    if(place==='shinsegae' && id==='sweet-park'){
+      // Walk under the signed lintel from the café aisle without changing floor.
+      const start=page.locator('#start');
+      if(await start.isVisible())await start.click();
+      await page.keyboard.down('w');
+      try{
+        await page.waitForFunction(({x,z})=>{
+          const w=window.__world,p=w?.player;
+          return w?.ready&&Math.abs(p.y+6)<.1&&Math.hypot(p.x-x,p.z-z)>9.2;
+        },arrival,{timeout:12000});
+      }finally{await page.keyboard.up('w');}
+      await page.keyboard.down('s');
+      try{
+        await page.waitForFunction(({x,z})=>{
+          const w=window.__world,p=w?.player;
+          return w?.ready&&Math.abs(p.y+6)<.1&&Math.hypot(p.x-x,p.z-z)<.38;
+        },arrival,{timeout:12000});
+      }finally{await page.keyboard.up('s');}
+    }
     const deepLink = 'http://127.0.0.1:'+server.address().port+'/?q=low&traffic=0#/'+place+'/B1?destination='+id;
     await page.goto(deepLink);
     await page.reload();
