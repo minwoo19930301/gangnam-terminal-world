@@ -16,6 +16,7 @@ import { coachGlazing } from '../../assets/models/coach-cabin/windows.js';
 import { placeCutFlowers } from '../../assets/models/gyeongbu-cutflowers/model.js';
 import { placeWaitingBenches } from '../../assets/models/gyeongbu-seating/model.js';
 import {placeCushionBay} from '../../assets/models/concourse-fixtures/cushions.js';
+import {homeShelf} from '../../assets/models/daiso-home/shelf.js';
 import {accessoryShelf} from '../../assets/models/daiso-accessories/shelf.js';
 import {drawAisleFaces} from '../../assets/models/daiso/aisle-stock.js';
 import {gardenShelf,gardenFlowers} from '../../assets/models/daiso-garden/shelf.js';
@@ -2116,13 +2117,13 @@ export function build(K) {
       banks.get(key).push([u,v,len,idx,displayEnd]);
     }
     for(let i=0,u=175;u<242;u+=4.4,i++){
-      rack(u,2.4,3.9,i,i===1?1:0);
+      rack(u,2.4,3.9,i,i===1||i===9?1:0);
       if(u<205||u>215)rack(u,11.2,5.2,i+10,i===15?-1:0);
       if(u<204||u>216)rack(u,19.8,5.2,i+20);
       rack(u,27,3.8,i+30);
     }
     for(let i=0,u=253;u<282;u+=4.4,i++){
-      rack(u,14,6,i+40,i===4?-1:0);
+      rack(u,14,6,i+40,i===2||i===4?-1:0);
       rack(u,24,7,i+50);
     }
     for(let i=0,u=252;u<282;u+=4.4,i++)rack(u,-.9,3.1,i+60,i===2?1:0);
@@ -2314,7 +2315,8 @@ export function build(K) {
       const coats=[0x364e6e,0xc84842,0xebe6dc,0x5a6a57,0xc69da6,0x343439];
       for(let i=0;i<30;i++){
         const u=174+(i%15)*4.45,v=i<15?5.1:7.9;
-        if(i===11)lperson(221.55,5.90,y,{shirt:coats[i%6],pants:0x343a40,rotY:yawL(1.43,-1.15)});
+        if(i===9)lperson(213.05,5.50,y,{shirt:coats[i%6],pants:0x343a40,rotY:yawL(1.55,-.81)});
+        else if(i===11)lperson(221.55,5.90,y,{shirt:coats[i%6],pants:0x343a40,rotY:yawL(1.43,-1.15)});
         else lperson(u,v,y,{shirt:coats[i%6],pants:0x343a40,rotY:FACE[i%2?'+u':'-u']});
       }
     });
@@ -3650,6 +3652,14 @@ export function build(K) {
         const lines=kind==='hair'?[label,'HAIR ACCESSORIES']:[label];
         lsign(lines,u,v-side*.046,y+1.901,1.30,.179,face,{fg:'#424741',bg:null,pxPerM:320,padding:0});
       });
+    }
+    for(const [kind,label,u,v,front] of [
+      ['jars','달항아리',214.6,4.69,1],['wood','목제 생활용품',261.8,10.70,-1]
+    ]){
+      const [x,z]=W(u,v);
+      lbox(u,v,y,1.83,.58,2.12,0,{skip:['top','bottom','n','s','e','w']});
+      ldetail({name:'다이소 '+label+' 매대',floor:'B1',poly:rect(u-.92,v-.31,u+.92,v+.31),y0:y,y1:y+2.16},
+        ()=>homeShelf(K,kind,[x,y,z],front===1?ROT+PI:ROT));
     }
     const gardenU=225.3,gardenV=4.18,[gardenX,gardenZ]=W(gardenU,gardenV);
     lbox(gardenU,gardenV,y,3.04,.61,1.96,0,{skip:['top','bottom','n','s','e','w']});
