@@ -1609,13 +1609,6 @@ export function build(K) {
       lbox(s,t+offset,.10,.045,YB1+3.04,height,oak,{solid:false});
     }
     for(const h of [.32,.66])lbox(s,t,.09,w*Math.sqrt(1-(h/1.05)**2),YB1+3.02+h,.045,oak,{solid:false});
-    if(cell.name==='폼폼푸린 베이커리 카페'){
-      const [s,t]=BPst(1060.5,851),[x,z]=P(s,t);
-      bakeryCafe(K,x,YB1,z,F.E);
-      K.phys.addWall(...P(s-3.10,t-1.17),...P(s+3.10,t-1.17),YB1,YB1+3.1,.075,'centralcity');
-      K.phys.addPolyWalls(RECT(s-2.16,t-.69,s+2.16,t+.39),YB1,YB1+.99,.02,'centralcity');
-      return;
-    }
     if(cell.kind==='upcoming')lbox(s-.40,t,.12,w,YB1,2.20,0xc8c0b5);
   };
   const spCounterStand=(cell,r,face)=>{
