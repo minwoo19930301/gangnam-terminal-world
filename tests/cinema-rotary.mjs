@@ -23,6 +23,13 @@ try{
     await loaded;
     assert.deepEqual(requests,[200]);
     assert.equal(await page.evaluate(()=>{const w=__world,p=w.player;return w.phys.zoneAt(p.x,p.y+.1,p.z)?.name;}),'메가박스 앞 원형 광장');
+    // The guide's straight event-side wall meets both horizontal finishes here.
+    const seam=await page.evaluate(([x,z])=>{
+      const f=__world.phys;
+      return [f.support(x,z,-5.5).y,f.ceilingAbove(x,z,-5.7,0)];
+    },plan(550,1056.25));
+    assert.equal(seam[0],-6);
+    assert.ok(Math.abs(seam[1]+1.545)<.001);
     const areas=new Set();
     for(const dest of [doorway,centre]){
       const end=Date.now()+35000;
