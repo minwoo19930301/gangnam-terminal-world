@@ -273,7 +273,7 @@ export function build(K) {
   K.texture('jwTerrazzo', 256, 256, (g, w, h) => {
     g.fillStyle = '#a7a198'; g.fillRect(0, 0, w, h); const r = K.rand(2020);
     for (let i = 0; i < 5000; i++) { g.fillStyle = ['#c3bdb3', '#807c74', '#d9d4c8', '#989389'][i % 4]; const s = .4 + r() * 1.3; g.fillRect(r() * w, r() * h, s, s); }
-  }, [1.4, 1.4]);
+  }, [1.4, 1.4], {lazy:true});
   for (const [key, base, colors] of [
     ['jwFoyerCarpet', '#394d66', ['#d0bd98', '#26394f', '#65778a', '#a69f8e']],
     ['jwLoungeRug', '#b9aa94', ['#c9bda8', '#a2998b', '#b4a58e', '#d0c3ae']],
@@ -288,7 +288,7 @@ export function build(K) {
       g.beginPath(); g.moveTo(x, yy);
       for (let n = 0; n < 3; n++) { x += (r() - .5) * 5; yy += 1 + r() * 4; g.lineTo(x, yy); } g.stroke();
     } g.globalAlpha = 1;
-  }, [2.4, 2.4]);
+  }, [2.4, 2.4], {lazy:true});
   K.texture('jwChevron', 256, 256, (g, w, h) => {
     g.fillStyle = '#594438'; g.fillRect(0, 0, w, h);
     for (let j = -4; j < 8; j++) for (let i = 0; i < 4; i++) {
