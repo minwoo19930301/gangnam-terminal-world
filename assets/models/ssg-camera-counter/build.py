@@ -3,9 +3,13 @@ from pathlib import Path
 from math import sin, cos, pi, radians
 import bpy
 import bmesh
+import sys
 from mathutils import Matrix, Vector
 
 OUT = Path(__file__).resolve().parent
+sys.dont_write_bytecode = True
+sys.path.insert(0,str(OUT))
+import camera_finishes
 bpy.ops.wm.read_factory_settings(use_empty=True)
 gallery = bpy.data.collections.new('SSG_6F_Leica')
 bpy.context.scene.collection.children.link(gallery)
@@ -18,6 +22,11 @@ palette = dict(white='F5F4F1', grey='B6B9B9', black='17181B', trim='36383B',
     rubber='292B2B', teal='1D3C42', blue='547675', violet='35394B', gold='D6AB63',
     leather='765341', seam='AB8362', paper='FAF9F4', shadow='555250')
 materials = {}
+palette.update(optic='FFFFFF',grip='55575A',satin='D5D6D5',smoke='5D6869')
+optical_uv = {}
+images = camera_finishes.atlas()
+# Keep the data channels intact on exporters that repack generated images as white.
+(OUT/'surface.png').write_bytes(images[1].packed_file.data)
 def linear(c):
     s = int(c,16)/255
     return s/12.92 if s < .04045 else ((s+.055)/1.055)**2.4
@@ -30,7 +39,7 @@ def finish(name):
         m.use_nodes = True
         node=m.node_tree.nodes.get('Principled BSDF')
         node.inputs['Base Color'].default_value=m.diffuse_color
-        node.inputs['Roughness'].default_value={'sand':.76,'lapel':.76,'suede':.89,'hood':.94,'navy':.98,'rib':.98,'metal':.30}.get(name,.57)
+        node.inputs['Roughness'].default_value={'silver':.34,'gun':.40,'rubber':.74,'leather':.58,'paper':.85}.get(name,.57)
         materials[name]=m
     return materials[name]
 
@@ -67,7 +76,7 @@ def skins(name, rings, color, bevel=0, cap=True):
 def outline(w,d,r):
     pts=[]
     for x,y,a in [(1,1,0),(-1,1,90),(-1,-1,180),(1,-1,270)]:
-        steps=2
+        steps=4 if batch=='GangnamLeicaCameras' and w>.08 and d>.035 else 2
         for j in range(steps+1):
             t=radians(a+90*j/steps)
             pts.append((x*(w/2-r)+r*cos(t),y*(d/2-r)+r*sin(t)))
@@ -115,7 +124,7 @@ def profile(name,x,z,stations,col,n=32,ribs=0,cap=True):
                        z+(r+(ribs if i%2 else 0))*sin(i*2*pi/n)) for i in range(n)])
     return skins(name,rings,col,cap=cap)
 
-def lettering(text,x,y,z,size,color,front=True):
+def lettering(text,x,y,z,size,color,front=True,tangent=0):
     data=bpy.data.curves.new(text,'FONT')
     data.body=text
     data.size=size
@@ -124,7 +133,7 @@ def lettering(text,x,y,z,size,color,front=True):
     ob=bpy.data.objects.new(text,data)
     gallery.objects.link(ob)
     local=Matrix.Translation((x,y,z))
-    if front:local=local @ Matrix.Rotation(pi/2,4,'X')
+    if front:local=local @ Matrix.Rotation(tangent,4,'Y') @ Matrix.Rotation(pi/2,4,'X')
     ob.matrix_world=transform @ local
     bpy.context.view_layer.update()
     mesh=bpy.data.meshes.new_from_object(ob.evaluated_get(bpy.context.evaluated_depsgraph_get()))
@@ -135,13 +144,42 @@ def lettering(text,x,y,z,size,color,front=True):
     pieces[batch].append(label)
     bpy.data.objects.remove(ob,do_unlink=True)
 
-def optics(x,z,front,r):
-    # Dark retaining lip, concave coated elements, aperture and a small off-axis glint.
-    front-=.005
-    profile('렌즈 안쪽 단차',x,z,[(front,r),(front-.002,r),(front-.002,r*.89),(front+.004,r*.85)],'gun',cap=False)
-    for i,(ratio,col) in enumerate([(.86,'violet'),(.73,'blue'),(.52,'teal'),(.32,'black')]):
-        profile('광학 코팅과 개구',x,z,[(front+.003-i*.0005,r*ratio),(front+.0027-i*.0005,r*ratio)],col,8 if i==3 else 32)
-    profile('반사 하이라이트',x-r*.30,z+r*.38,[(front+.0006,r*.13),(front+.0003,r*.13)],'grey',12)
+def optics(x,z,front,r,kind):
+    front -= .005
+    profile('광학 소자 안쪽 테두리',x,z,[(front,r),(front-.002,r),(front-.002,r*.85),(front+.002,r*.82)],'trim',48,cap=False)
+    # Curved elements use one smooth normal field and an original coating texture.
+    n=56
+    radius=.84*r
+    verts=[(x,front-.003,z)]
+    faces=[]
+    for level in range(1,7):
+        unit=level/6
+        for j in range(n):
+            a=2*pi*j/n
+            verts.append((x+radius*unit*cos(a),front-.003+.006*unit**2,z+radius*unit*sin(a)))
+            i=1+(level-1)*n+j
+            nxt=1+(level-1)*n+(j+1)%n
+            faces.append((0,i,nxt) if level==1 else (i-n,i,nxt,nxt-n))
+    glass=part('볼록 전면 렌즈',verts,faces,'optic')
+    for face in glass.data.polygons:face.use_smooth=True
+    optical_uv[glass]=(kind,(x,z,radius))
+    for text,mid in [('LEICA',0),({'M':'SUMMILUX-M','Q':'1:1.7/28 ASPH.','SL':'VARIO'}[kind],pi)]:
+        for j,char in enumerate(text):
+            if char.isspace():continue
+            theta=mid+(j-(len(text)-1)/2)*.12*(1 if mid==0 else -1)
+            xx=x+r*.924*sin(theta); zz=z+r*.924*cos(theta)
+            lettering(char,xx,front-.00225,zz,r*.096,'paper',tangent=theta-mid)
+
+
+def shutter_dial(x,z,r,finish_color):
+    dial('셔터속도 다이얼',x,0,z,r,.0045,finish_color,40)
+    for j in range(12):
+        a=2*pi*j/12
+        rod('회전 눈금',(x+.70*r*cos(a),.70*r*sin(a),z+.0046),
+            (x+.90*r*cos(a),.90*r*sin(a),z+.0046),.00023,'trim' if finish_color=='silver' else 'grey')
+    for text,angle in [('A',.2),('60',2.2),('250',4.35)]:
+        lettering(text,x+r*.48*cos(angle),r*.48*sin(angle),z+.0048,.0021,
+                  'accent' if text=='A' else ('trim' if finish_color=='silver' else 'paper'),False)
 
 def lens(x,z,kind):
     r={'M':.029,'Q':.031,'SL':.039}[kind]
@@ -159,7 +197,7 @@ def lens(x,z,kind):
                 rod('피사계 심도 눈금',(x+rad*cos(a),y-.004,z+rad*sin(a)),
                     (x+rad*cos(a),y-.009,z+rad*sin(a)),.00065,'gold' if j%3==0 else 'black')
         y-=length
-    optics(x,z,y,r*.97)
+    optics(x,z,y,r*.97,kind)
     if kind=='Q':
         # Q's angular hood flares from the filter thread; open centre reveals the element.
         def ring(h,d,depth):
@@ -179,12 +217,36 @@ def strap(width,col):
     loop=[(x,0,.051),(x-.016,.004,.044),(x-.027,-.016,.012),
           (x-.061,-.046,.004),(x-.096,-.041,.003),(x-.112,-.018,.003),
           (x-.102,.009,.003),(x-.070,.018,.003),(x-.038,-.001,.006),(x-.017,-.009,.030),(x,0,.049)]
-    rings=[]
-    for i,(a,b,c) in enumerate(loop):
-        p=Vector(loop[max(0,i-1)]);q=Vector(loop[min(len(loop)-1,i+1)])
-        side=Vector((q.y-p.y,p.x-q.x,0)).normalized()*.0045
-        rings.append([Vector((a,b,c))+side*s+Vector((0,0,d)) for s,d in [(-1,0),(1,0),(1,.002),(-1,.002)]])
-    skins('가죽 손목 스트랩',rings,col)
+    controls=list(map(Vector,loop))
+    samples=[]
+    for i in range(len(controls)-1):
+        a,b,c,d=[controls[min(len(controls)-1,max(0,j))] for j in [i-1,i,i+1,i+2]]
+        for k in range(8):
+            t=k/8
+            p=.5*(2*b+(-a+c)*t+(2*a-5*b+4*c-d)*t*t+(-a+3*b-3*c+d)*t**3)
+            p.z=max(.0027,p.z)
+            samples.append(p)
+    samples.append(controls[-1])
+    rings=[]; edges=[[],[]]
+    for i,p in enumerate(samples):
+        tangent=(samples[min(len(samples)-1,i+1)]-samples[max(0,i-1)]).normalized()
+        side=Vector((tangent.y,-tangent.x,0)).normalized()
+        up=side.cross(tangent).normalized()
+        # The strip stands on its edge at the ring and lays flat on the pad.
+        roll=.85*max(0.,min(1.,(p.z-.007)/.043))
+        width=(side*cos(roll)+up*sin(roll))*.0052
+        top=(-side*sin(roll)+up*cos(roll))*.0012
+        rings.append([p+width+top,p-width+top,p-width-top,p+width-top])
+        for k,sign in enumerate((-1,1)):edges[k].append(p+sign*width*.76+top*1.01)
+    skins('곡면 가죽 손목 스트랩',rings,col)
+    if col=='leather':
+        verts=[]; faces=[]
+        for edge in edges:
+            for i in range(1,len(edge)-1,3):
+                a,b=edge[i:i+2]
+                side=Vector((b.y-a.y,a.x-b.x,0)).normalized()*.00028
+                j=len(verts);verts.extend((a+side,a-side,b-side,b+side));faces.append((j,j+1,j+2,j+3))
+        part('손목 스트랩 밝은 스티치',verts,faces,'seam')
     box('스트랩 고리',x-.037,-.004,.007,.011,.014,.005,'gun')
 
 def camera(kind,x,y,z,angle,with_strap=True):
@@ -194,21 +256,33 @@ def camera(kind,x,y,z,angle,with_strap=True):
     w={'M':.139,'Q':.130,'SL':.151}[kind]; h=.074 if kind!='SL' else .083
     shell='silver' if kind=='M' else 'black'
     plate('하판',0,0,0,w,.043,.005,.013,shell)
-    plate('가죽 바디',0,0,.004,w,.044,h-.021,.014,'rubber')
+    plate('가죽 바디',0,0,.004,w,.044,h-.021,.014,'grip')
     plate('상판',0,0,h-.017,w,.043,.017,.013,shell)
     if kind=='SL':
         skins('전자 뷰파인더 하우징', [[(a,b,c) for a,b in outline(ww,dd,.003)]
               for c,ww,dd in [(h,.064,.05),(h+.020,.034,.043)]],'black')
-        plate('전면 그립',-.057,-.018,.004,.039,.050,.078,.014,'trim')
-        lettering('LEICA',.002,-.0257,h+.002,.009,'white')
+        plate('전면 그립',-.057,-.018,.004,.039,.050,.078,.014,'grip')
+        lettering('LEICA',.002,-.0257,h+.002,.009,'gun')
+        profile('전면 붉은 상표',-.022,h-.005,[(-.024,.0045),(-.025,.0045)],'accent',24)
+    elif kind=='M':
+        for a,ww in [(.046,.030),(-.026,.012)]:
+            box('거리계 창 프레임',a,-.0216,h-.017,ww,.0025,.014,'gun')
+            box('광학 파인더 창',a,-.0231,h-.015,ww-.003,.001,.010,'smoke')
+        rod('프레임 셀렉터',(.047,-.025,.037),(.049,-.027,.052),.0022,'silver')
+        profile('셀렉터 축',.047,.037,[(-.027,.0041),(-.029,.0041)],'bright',20)
+        profile('붉은 상표',.007,h-.010,[(-.022,.0052),(-.0238,.0052)],'accent',24)
     else:
-        for a,ww in ([(.046,.030),(-.026,.012)] if kind=='M' else [(.047,.020)]):
-            box('창 테두리',a,-.0216,h-.017,ww,.0025,.014,'gun')
-            box('뷰파인더 유리',a,-.0231,h-.015,ww-.003,.001,.010,'teal')
-        profile('붉은 상표',.007,h-.010,[(-.022,.0052),(-.0238,.0052)],'accent',20)
-    for a,r in [(-w*.33,.009),(.035,.0095)]:
-        dial('상판 조작 다이얼',a,.002,h,r,.004,'gun' if kind!='M' else 'silver')
-        box('조작 눈금',a,.007,h+.004,.001,.004,.0005,'white')
+        # On the Q3 the electronic viewfinder eyepiece faces the photographer.
+        profile('붉은 상표',.048,h-.011,[(-.022,.0052),(-.0238,.0052)],'accent',24)
+        box('보조광 창',-.020,-.0229,h-.012,.0045,.0017,.0035,'smoke')
+        box('후면 전자 파인더',-.042,.021,h-.017,.028,.009,.015,'rubber')
+    badge_x, badge_y, badge_z = {'M':(.007,-.0239,h-.011),'Q':(.048,-.0239,h-.012),'SL':(-.022,-.0252,h-.006)}[kind]
+    lettering('Leica',badge_x,badge_y,badge_z,.0029,'paper')
+    for side in (-1,1):
+        profile('스트랩 마운트',side*(w*.5),h*.73,[(-.002,.0038),(-.006,.0038)],'silver',18)
+    shutter_dial(-.021,h,.011,'silver' if kind=='M' else 'trim')
+    dial('셔터 버튼 받침',-w*.33,.002,h,.008,.004,'silver' if kind=='M' else 'trim')
+    if kind!='Q':dial('우측 제어 다이얼',w*.40,.003,h,.008,.004,'silver' if kind=='M' else 'trim')
     dial('셔터 릴리스',-w*.33,.002,h+.004,.0038,.002,'bright')
     box('핫슈 접점',0,.004,h+(.021 if kind=='SL' else 0),.017,.013,.002,'gun')
     box('후면 모니터 테두리',.007,.022,.010,.084,.004,.050,'black')
@@ -310,13 +384,28 @@ for ci,cx in enumerate([-2.10,-.97]):
             dial('전면 필터 림',0,0,.067+.043*k,r,.004,'grey')
             dial('상향 렌즈 유리',0,0,.071+.043*k,r*.83,.001,'teal')
 
+# Keep the UVs, editable part names and original authored finishes also in Blender.
+camera_mat=camera_finishes.material('라이카 시연 제품 · 표면 아틀라스',images)
+for ob in pieces['GangnamLeicaCameras']:
+    original=ob.data.materials[0]
+    ob['마감']=original.name
+    rgba=original.diffuse_color[:]
+    tint=ob.data.color_attributes.new(name='Finish',type='BYTE_COLOR',domain='POINT')
+    for value in tint.data:value.color=rgba
+    tile='satin' if original.name in ['silver','bright','gun','satin'] else 'matte'
+    if original.name=='grip':tile='diamond' if ob.name.startswith('Q ·') else 'pebble'
+    tile,optic=optical_uv.get(ob,(tile,None))
+    camera_finishes.assign_uv(ob,tile,optic)
+    ob.data.materials.clear()
+    ob.data.materials.append(camera_mat)
+
 bpy.context.scene.unit_settings.system='METRIC'
 bpy.context.preferences.filepaths.save_version=0
 bpy.ops.wm.save_as_mainfile(filepath=str(OUT/'gallery.blend'),compress=True)
 # Bake per-object finish into vertex colour after preserving the editable library.
 for name,objects in pieces.items():
     bpy.ops.object.select_all(action='DESELECT')
-    if name!='GangnamLeicaPhotographs':
+    if name=='GangnamLeicaFixtures':
         m=bpy.data.materials.new(name)
         m.use_nodes=True
         nodes=m.node_tree.nodes
