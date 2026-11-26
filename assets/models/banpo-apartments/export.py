@@ -59,12 +59,12 @@ with tempfile.TemporaryDirectory(dir=target) as temp:
                 export_all_vertex_colors=True, export_cameras=False, export_lights=False,
                 export_extras=False,
             )
-            if any(mat and mat.use_nodes and mat.node_tree.nodes.get("Storey glazing")
-                   for obj in parts for mat in (slot.material for slot in obj.material_slots)):
-                subprocess.run(["node", str(folder/"pack.mjs"), str(path)], check=True)
-                compact = stage / (model_id + "-packed.glb")
-                subprocess.run(["node", str(repo/"tools/optimize_model.mjs"), str(path), str(compact)], check=True)
-                os.replace(compact,path)
+            finished = any(mat and mat.use_nodes and mat.node_tree.nodes.get("Storey glazing")
+                   for obj in parts for mat in (slot.material for slot in obj.material_slots))
+            subprocess.run(["node", str(folder/"pack.mjs"), str(path)], check=True)
+            compact = stage / (model_id + "-packed.glb")
+            subprocess.run(["node", str(repo/"tools/optimize_model.mjs"), str(path), str(compact)], check=True)
+            os.replace(compact,path)
             if publish:
                 graph = bpy.context.evaluated_depsgraph_get()
                 corners = []
@@ -78,7 +78,9 @@ with tempfile.TemporaryDirectory(dir=target) as temp:
                 north, south = [round(row["z"] + f(-p.y for p in corners), 1) for f in (min, max)]
                 row.update(rect=[[west,north],[east,north],[east,south],[west,south]],
                            height=round(max(p.z for p in corners), 1), bytes=path.stat().st_size,
-                           sourceMaterial=True, nativeEdit=True)
+                           nativeEdit=True)
+                if finished:
+                    row["sourceMaterial"] = True
             rows.append(path)
         finally:
             for tree, overlay, output in native_overlays:
