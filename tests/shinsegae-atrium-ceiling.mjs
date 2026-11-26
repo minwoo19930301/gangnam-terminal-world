@@ -80,6 +80,9 @@ try {
   const lift=await view('11F',[lx,50.2,lz,20.8041,0],false);
   assert.ok(Math.abs(lift.nearRoof-52.9)<.02,'the covered lift hall needs its visible soffit');
   assert.ok(lift.centerLuma>110,'the enclosed lift hall end wall should receive indoor light at night');
+  const link=await view('11F',[-44.506688,50.2,44.411873,-27.502,0],false);
+  assert.ok(Math.abs(link.nearRoof-53.4)<.02,'the dining-to-garden passage needs its existing roof');
+  assert.ok(link.centerLuma>100,'the inside face of the garden passage wall should receive indoor light');
   await view('10F',[-69.26,45.4,1.55,95,-8],false);
   console.log('The ceiling closes the 10F main escalator hall. The 11F garden remains walkable and open to the sky.');
 } finally {

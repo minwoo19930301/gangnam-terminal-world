@@ -9142,6 +9142,7 @@ export function build(K) {
   for(const u of[gardenLink[0],gardenLink[2]])wall(u,gardenLink[1],u,gardenLink[3],LV['11F'],LV['11F']+3.2,{mat:0xe7e1d6,thick:.15,
     openings:u===gardenLink[0]?[{at:86.9-gardenLink[1],w:7.6,y0:LV['11F'],y1:LV['11F']+2.7}]:[]});
   hq(...gardenLink,LV['11F']+3.2,CEIL,false);
+  K.phys.addCeiling(rect(...gardenLink),LV['11F']+3.2,{});
   for(const p of[[13.1,11.1,13.1,15.85],[6.8,11.1,13.1,11.1],[13.1,15.85,gardenBar[0],15.85],[6.8,17.85,gardenBar[0],17.85],[6.8,11.1,6.8,17.85],
     [19.6,82.45,30.9,82.45],[19.6,90.15,30.9,90.15],[19.6,82.45,19.6,86.9],
     [5.4,86.9,6.9,86.9],[9.6,86.9,19.6,86.9],[5.4,90.15,19.6,90.15],[5.4,86.9,5.4,90.15],
