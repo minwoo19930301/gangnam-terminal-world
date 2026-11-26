@@ -131,8 +131,14 @@ export function build(K) {
   // Re-register a complete detailed assembly in the photo-walk coordinate frame.
   // This keeps its counters, stock, glazing and visitors together when it moves.
   let activePlacement = null;
+  const fixtureKit=K;
+  let fixturePoint=null;
+  function placeFittedFixture(library,name,point){
+    const worldPoint=fixturePoint ? (x,y,z)=>fixturePoint(...point(x,y,z)) : point;
+    fitHallDetail(fixtureKit,library,name,worldPoint);
+  }
   function placeAssembly(t, draw) {
-    const owner=K, previous=activePlacement;
+    const owner=K, previous=activePlacement, previousPoint=fixturePoint;
     const {from=[0,0],to=[0,0],angle=0,sx=1,sz=1,sy=1,dy=0}=t;
     const c=Math.cos(angle),sn=Math.sin(angle);
     const pt=(x,z)=>{const [u,v]=toL(x,z),du=(u-from[0])*sx,dv=(v-from[1])*sz;return W(to[0]+c*du-sn*dv,to[1]+sn*du+c*dv);};
@@ -143,6 +149,12 @@ export function build(K) {
       if(o.w!==undefined)n.w=o.w*sw;if(o.d!==undefined)n.d=o.d*sd;if(o.h!==undefined)n.h=o.h*sy;
       if(o.r!==undefined)n.r=o.r*Math.sqrt(sx*sz);if(o.rotY!==undefined)n.rotY=o.rotY-angle;
       if(o.rx!==undefined){n.rx=o.rx*sw;n.rz=o.rz*sd;n.ry=o.ry*sy;}return n;};
+    // Indexed native fixtures transform each shared vertex once. Assemble their
+    // flat normals from those final coordinates, including non-uniform scales.
+    fixturePoint=(x,y,z)=>{
+      const [wx,wz]=pt(x,z),wy=yy(y);
+      return previousPoint ? previousPoint(wx,wy,wz) : [wx,wy,wz];
+    };
     K=new Proxy(owner,{get(target,key){
       if(['box','cyl','dome','vehicle','spawn'].includes(key))return o=>target[key](object(o));
       if(key==='sign'||key==='floorText')return (text,o)=>target[key](text,object(o));
@@ -157,7 +169,7 @@ export function build(K) {
       return target[key];
     }});
     activePlacement=t;
-    try {draw();} finally {K=owner;activePlacement=previous;}
+    try {draw();} finally {K=owner;activePlacement=previous;fixturePoint=previousPoint;}
   }
   K.texture('gb_shelf', 128, 128, (g, w, h) => {
     g.fillStyle = '#f2f0ea'; g.fillRect(0, 0, w, h);
@@ -860,7 +872,7 @@ export function build(K) {
   function drawTicketCabinet(u,v,face){
     const [du,dv] = FDIR[face];
     // Use the same room transform as the signs and the cabinet's collision boxes.
-    fitHallDetail(K,concourseFixtures,'TicketKiosk',(x,height,z)=>{
+    placeFittedFixture(concourseFixtures,'TicketKiosk',(x,height,z)=>{
       const [wx,wz] = W(u+x*dv+z*du,v-x*du+z*dv);
       return [wx,height,wz];
     });
@@ -1309,7 +1321,7 @@ export function build(K) {
     for(const [u,v,model] of [[13,113,'HallSeatOrange'],[26,113,'HallSeatOrange'],[13,124,'HallSeatOrange'],[26,124,'HallSeatCharcoal']]){
       // The authored cushions follow the previous seat envelope and player collision.
       lbox(u,v,.12,5.4,1,.35,0x485052,{skip:['top','bottom','n','s','e','w']});
-      fitHallDetail(K,seatArchitecture,model,(x,height,z)=>{
+      placeFittedFixture(seatArchitecture,model,(x,height,z)=>{
         const [wx,wz]=W(u+x,v+z);
         return [wx,height,wz];
       });
