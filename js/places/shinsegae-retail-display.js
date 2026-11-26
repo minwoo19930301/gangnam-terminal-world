@@ -3,19 +3,18 @@ import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 let loaderPromise;
 const cameraViews = new WeakMap();
 
-function displayInView(T, camera, frameTime, bounds) {
+function cameraProjection(T, camera, frameTime) {
   let view = cameraViews.get(camera);
   if (!view) {
-    view = {time:undefined, matrix:new T.Matrix4(), frustum:new T.Frustum()};
+    view = {time:undefined, matrix:new T.Matrix4()};
     cameraViews.set(camera,view);
   }
   if (frameTime !== view.time) {
     camera.updateWorldMatrix(true,false);
     view.matrix.multiplyMatrices(camera.projectionMatrix,camera.matrixWorldInverse);
-    view.frustum.setFromProjectionMatrix(view.matrix);
     view.time = frameTime;
   }
-  return view.frustum.intersectsBox(bounds);
+  return view.matrix;
 }
 
 function getLoader() {
@@ -63,9 +62,17 @@ function batchFallback(T, group) {
 
 export function mountRetailDisplay(K, {root, fallback, source, batches, x, y, z}) {
   const T = K.THREE;
-  batchFallback(T, fallback);
   root.updateWorldMatrix(true,true);
-  const bounds = new T.Box3().setFromObject(fallback).expandByScalar(.65);
+  const worldToLocal = fallback.matrixWorld.clone().invert();
+  const localBounds = [];
+  const viewMatrix = new T.Matrix4(), viewFrustum = new T.Frustum();
+  fallback.traverse(part => {
+    if (!part.isMesh) return;
+    if (!part.geometry.boundingBox) part.geometry.computeBoundingBox();
+    viewMatrix.multiplyMatrices(worldToLocal,part.matrixWorld);
+    localBounds.push(part.geometry.boundingBox.clone().applyMatrix4(viewMatrix).expandByScalar(.025));
+  });
+  batchFallback(T, fallback);
   const empty = new T.BufferGeometry();
   const temporaryMaterial = new T.MeshBasicMaterial();
   const slots = batches.map(name => {
@@ -113,8 +120,10 @@ export function mountRetailDisplay(K, {root, fallback, source, batches, x, y, z}
     const previous = part.onBeforeRender;
     part.onBeforeRender = function(renderer,scene,camera,...rest) {
       previous.call(this,renderer,scene,camera,...rest);
-      if (near && !ready && !loading && performance.now() >= retryAt &&
-          displayInView(T,camera,renderer.info.render.frame,bounds)) void load();
+      if (!near || ready || loading || performance.now() < retryAt) return;
+      viewMatrix.multiplyMatrices(cameraProjection(T,camera,renderer.info.render.frame),fallback.matrixWorld);
+      viewFrustum.setFromProjectionMatrix(viewMatrix);
+      if (localBounds.some(box => viewFrustum.intersectsBox(box))) void load();
     };
   });
 
