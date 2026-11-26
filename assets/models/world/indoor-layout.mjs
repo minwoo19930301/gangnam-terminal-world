@@ -204,6 +204,7 @@ const sources = [
     ['gotomall','B1','gotomall/shop-interiors.blend','고투몰 진열 · '+name,name]),
   ['gotomall','B1','gotomall-hessed/hessed.blend','헤쎄드 가방 진열','HessedShop'],
   ['jwmarriott','2F','patisserie/patisserie.blend','파티세리 · 플랑과 마카롱','파티세리 · 플랑과 마카롱 선물 상자'],
+  ['jwmarriott','2F','patisserie/gateaux.blend','파티세리 · 홀케이크와 쁘띠 가토','파티세리 · 홀케이크와 쁘띠 가토'],
   ['jwmarriott','8F','lounge-chair/lounge-chair.blend','더 라운지 · 피콕 라탄체어','피콕 암체어 · JW 8층 더 라운지'],
   ['newcore','5F','newcore/oksoban-table.blend','옥소반 · 인덕션','옥소반 · 1관 5F 식탁'],
   ['newcore','외관','architectural-retail/retail-architecture.blend','NewcoreArch','NewcoreArch'],

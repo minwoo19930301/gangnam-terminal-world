@@ -12,7 +12,7 @@ import {registerExecutiveService} from '../../assets/models/executive-service/mo
 import {registerFlavorsBreakfast} from '../../assets/models/flavors-breakfast/model.js';
 import {registerArrival,upperWell} from '../../assets/models/jw-arrival/model.js';
 import {registerCoffers,registerPendant,ceilingZones} from '../../assets/models/jw-arrival/ceiling.js';
-import { placeDesserts } from '../../assets/models/patisserie/model.js';
+import { placeDesserts, placeGateaux } from '../../assets/models/patisserie/model.js';
 import { placeLoungeChairs } from '../../assets/models/lounge-chair/model.js';
 import { fixtures } from '../../assets/models/jwmarriott/fixtures.js';
 
@@ -1262,6 +1262,10 @@ export function build(K) {
           const [x,z]=mapPoint(...P(21,v));
           DEC(()=>placeDesserts(baseKit,x,y+.955,z,R+Math.PI/2));
           SG('바닐라 플랑  ·  마카롱',{u:20.487,v,y:y+.83,w:1.2,h:.15,f:'W',bg:'#463a35',fg:'#f2e3c7',pxPerM:420,padding:.025});
+        }else if(v===20){
+          const [x,z]=mapPoint(...P(21,v));
+          DEC(()=>placeGateaux(baseKit,x,y+.955,z,R+Math.PI/2));
+          SG('홀케이크  ·  쁘띠 가토',{u:20.487,v,y:y+.83,w:1.2,h:.15,f:'W',bg:'#463a35',fg:'#f2e3c7',pxPerM:420,padding:.025});
         }else{
           for(const dv of [-1.4,-.47,.47,1.4])fixture('cakes',21,v+dv,y+.955,Math.PI/2);
         }
