@@ -1,0 +1,11 @@
+{
+  "floor": "9F",
+  "x": -83.65597,
+  "z": -14.77184,
+  "yaw": 38.7,
+  "pitch": -17,
+  "meshName": "해스텐스 · 블루 체크 침대",
+  "sourceBlend": "gallery.blend",
+  "sourceCollection": "SSG_9F_Hastens",
+  "nativeLabel": "해스텐스"
+}

@@ -1,3 +1,4 @@
+import {hastensBed} from '../../assets/models/ssg-hastens/model.js';
 import {rawrowDisplay} from '../../assets/models/ssg-rawrow/model.js';
 import {boutiqueLobby} from '../../assets/models/megabox-central/place.js';
 import {angle as cinemaYaw,point as cinemaPoint} from '../../assets/models/megabox-central/layout.js';
@@ -14382,6 +14383,14 @@ export function build(K) {
         const n=W>7?2:1,ww=Math.min(1.75,sideWidth>.9?sideWidth-.1:W-.8);
         for(let i=0;i<n;i++){
           const a=n===2?islands[i]:Math.min(W*.27,ww/2+.3),b=Math.min(D-1.35,2.15);if(b<1.2)continue;
+          if(id==='9F'&&name==='해스텐스'){
+            const [x,z]=P(...ST(a,b)),[rx,rz]=P(...ST(a+1,b));
+            // Native +Z is the headboard. The shop depth increases away from the aisle.
+            hastensBed(K,x,y,z,Math.atan2(z-rz,rx-x)+Math.PI);
+            const edge=[[-.85,-.99],[.85,-.99],[.85,1.07],[-.85,1.07]];
+            K.phys.addPolyWalls(edge.map(([da,db])=>P(...ST(a+da,b+db))),y+.13,y+.75,.012,'shinsegae');
+            continue;
+          }
           B(a,b,ww,2,.12,.29,walnut);B(a,b,ww-.04,1.94,.41,.2,0xf1ede1);
           B(a,b-.3,ww-.07,1.23,.62,.06,stock[(seed+i)%6]);B(a,b+.96,ww+.06,.10,.20,1.06,p.trim);
           for(const da of[-ww*.23,ww*.23])B(a+da,b+.58,ww*.38,.39,.64,.13,ivory);
