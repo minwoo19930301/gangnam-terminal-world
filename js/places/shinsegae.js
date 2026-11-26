@@ -1,3 +1,4 @@
+import {marketProduceCeiling} from '../../assets/models/ssg-market-ceiling/model.js';
 import {marketEntrance} from '../../assets/models/ssg-market-entrance/model.js';
 import {b1Plan as B1_PLAN, departmentPoint as P, departmentWidth as UW, departmentDepth as VD, marketOutline, marketWestReturn} from './shinsegae-b1-plan.js';
 import {marketFruitIslands} from '../../assets/models/ssg-market-produce/model.js';
@@ -3107,6 +3108,9 @@ export function build(K) {
       const hiddenFaces=['top','bottom','n','s','e','w'];
       for(const dv of [-2.9,2.9])box(pu,pv+dv,.7,.7,y,3.8,0x191b1b,{skip:hiddenFaces});
       box(pu,pv,.74,6.5,y+3.45,.46,0x1e1c1c,{skip:hiddenFaces});
+      // The operator photograph shows a single ornamental bay over the entrance produce stands.
+      const [produceX,produceZ]=P(17.7,pv);
+      marketProduceCeiling(K,produceX,y,produceZ,RA);
       const fruitTables=[61.8,64.9];
       marketFruitIslands(K,fruitTables.map(v=>{
         const [x,z]=P(19.4,v);
