@@ -89,8 +89,15 @@ def plate(name,x,y,z,w,d,h,r,col):
 def rod(name,a,b,r,col):
     a,b=Vector(a),Vector(b)
     q=(b-a).to_track_quat('Z','Y')
-    ring=[q@Vector((r*cos(t*pi/4),r*sin(t*pi/4),0)) for t in range(8)]
-    return skins(name,[[p+v for v in ring] for p in [a,b]],col)
+    # The laces and sole lugs project to only a few pixels even at the shoe wall.
+    segments = 5 if prefix and r < .007 else 8
+    ring = [q @ Vector((r*cos(2*pi*t/segments), r*sin(2*pi*t/segments), 0))
+            for t in range(segments)]
+    tube = skins(name, [[p+v for v in ring] for p in (a, b)], col)
+    for face in tube.data.polygons:
+        if len(face.vertices) == 4:
+            face.use_smooth = True
+    return tube
 
 def lettering(body,x,y,z,size,col,bold=False):
     font=bpy.data.curves.new(body,'FONT')
