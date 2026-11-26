@@ -29,6 +29,7 @@ import {relief} from '../../../js/banpo_relief.js';
 // Scene object (or a uniquely identifying child) -> editable native source.
 // Geometry decoder matrices and decorative LOD offsets live *below* the placement.
 const sources = [
+  ['centralcity','지상','central-plaza-lantern/lantern.blend','센트럴시티 조각 광장 · 두 갈래 보행등','CentralCityTwinLantern'],
   ['gotomall','지상','g12-window-print/print.blend','고투몰 G12 · 지상 유리 점인쇄','G12 유리창 점인쇄'],
   ['streets','지상','sinbanpo-plaza-planters/planter.blend','신반포로 · 석재 화분의 전정 수목','SinbanpoPlazaPlanter'],
   ['streets','지상','exit8-sidewalk-lamp/lamp.blend','터미널 8번 출구 · 보도와 차도 등기구','Exit8_Sidewalk_Lamp'],

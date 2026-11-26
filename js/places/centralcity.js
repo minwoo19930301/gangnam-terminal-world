@@ -1,3 +1,6 @@
+import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
+import {placeSingleDetail} from '../../assets/models/interior-architecture/single-detail.js';
+import {relief} from '../banpo_relief.js';
 import {houseEntryGallery,houseEntryRamp} from '../../assets/models/house-entry-gallery/model.js';
 import {restaurantFront} from '../../assets/models/sweet-arcade/restaurant-fronts.js';
 import {sweetGardenSoffit} from '../../assets/models/sweet-garden-soffit/model.js';
@@ -2459,6 +2462,47 @@ export function build(K) {
       const circle=Array.from({length:20},(_,i)=>[x+Math.cos(i*PI/10)*r,z+Math.sin(i*PI/10)*r]);
       K.phys.addPolyWalls(circle,base,base+foot+2*r,.02,'centralcity');
     }
+    // The roadview shows the black twin lantern on the curb side of the bronze sphere.
+    // BEGIN CENTRAL LANTERN GLASS
+    const plazaLenses=[[0.67,-0.0,4.225,4.265,0.145,0.166],[-0.67,-0.0,4.225,4.265,0.145,0.166]];
+    // END CENTRAL LANTERN GLASS
+    const lanternName='센트럴시티 조각 광장 · 두 갈래 보행등';
+    const [lampX,lampZ]=P(-47.8,19),lampBase=.018;
+    const footRing=Array.from({length:10},(_,i)=>[lampX+.19*Math.cos(i*PI/5),lampZ+.19*Math.sin(i*PI/5)]);
+    K.phys.addPolyWalls(footRing,lampBase,lampBase+3.65,.012,'centralcity');
+    // The two heads are 1.34m apart; one local entry leaves room for other street lights in the same tile.
+    K.streetLight?.(lampX,lampBase+4.05,lampZ,.20);
+    K.detail({name:lanternName,floor:'지상',rect:[lampX-1,lampZ-1,lampX+1,lampZ+1],
+      y0:lampBase,y1:4.5,visualOnly:true,silhouetteDistance:120,
+      visibleFrom:(x,y,z)=>y>-1 && y<9 && (x-lampX)*AX+(z-lampZ)*AZ<28},kit=>{
+      const T=kit.THREE,ground=relief(lampX,lampZ);
+      const cylinder=(top,bottom,height,x,y)=>new T.CylinderGeometry(top,bottom,height,8).translate(x,y,0);
+      const simple=[cylinder(.072,.18,.19,0,.095),cylinder(.054,.082,3.55,0,1.965),
+        new T.BoxGeometry(1.38,.075,.064).translate(0,3.675,0)];
+      for(const [x] of plazaLenses){
+        simple.push(cylinder(.108,.042,.28,x,3.78),cylinder(.038,.26,.18,x,4.36));
+        for(const side of [-1,1]){
+          const support=new T.CylinderGeometry(.015,.012,.38,4);
+          support.rotateZ(-side*.29);support.translate(x+side*.16,4.09,0);simple.push(support);
+        }
+      }
+      const rigid=mat=>{mat.defines={BANPO_RIGID:1};return mat;};
+      const silhouette=mergeGeometries(simple);
+      for(const part of simple)part.dispose();
+      const at=[lampX,lampBase,lampZ];
+      placeSingleDetail(kit,{name:lanternName,file:'../central-plaza-lantern/lantern.glb',at,angle:R,rigidGround:ground,
+        fallback:silhouette,fallbackMaterial:rigid(new T.MeshLambertMaterial({color:0x303638})),
+        material:rigid(new T.MeshLambertMaterial({vertexColors:true})),eyeHeight:2.3,range:27,exitRange:32,floorTolerance:8});
+      // The cage is open. Its small downward-facing diffuser stays in place at both levels of detail.
+      const panes=plazaLenses.map(([x,z,low,high,rb,rt])=>
+        new T.CylinderGeometry(rt,rb,high-low,8).translate(x,(low+high)/2,z));
+      const lens=rigid(new T.MeshLambertMaterial({color:0xa5aca6,emissive:0xffdfad,emissiveIntensity:0}));
+      kit.onSolarAltitude?.(angle=>{lens.emissiveIntensity=1.05*(1-T.MathUtils.smoothstep(angle,-6,2));});
+      const glass=new T.Mesh(mergeGeometries(panes),lens);
+      for(const part of panes)part.dispose();
+      glass.name='광장 보행등 · 처마 밑 확산판';
+      glass.position.set(lampX,lampBase+ground,lampZ);glass.rotation.y=R;kit.addMesh(glass);
+    });
     const benchAt=(u,y)=>{const q=P(-31,5+u);return[q[0],y,q[1]];};
     const benchCurve=[[-3,.55],[-1.2,.55],[-.7,.75],[-.25,1.15],[.2,1.22],[.65,.85],[1.1,.55],[3,.55]];
     for(let i=0;i<benchCurve.length-1;i++)entryTubeWorld(benchAt(...benchCurve[i]),benchAt(...benchCurve[i+1]),.24,0xb62436);
