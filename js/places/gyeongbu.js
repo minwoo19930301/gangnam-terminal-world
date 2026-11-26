@@ -9,6 +9,7 @@ import { placeDeparturePortal } from '../../assets/models/gyeongbu-boards/model.
 import { placeIceCreamShop } from '../../assets/models/gyeongbu-icecream/model.js';
 import { placeWarmer } from '../../assets/models/gyeongbu-pretzels/model.js';
 import { placeUpperShowroom } from '../../assets/models/gyeongbu-apparel/model.js';
+import {placeFixtureDisplay} from '../../assets/models/gyeongbu-fixtures/model.js';
 import {placeChildrensAisle} from '../../assets/models/gyeongbu-childrens-aisle/model.js';
 import {placeSuitingAisle} from '../../assets/models/gyeongbu-suiting-aisle/model.js';
 import {placeWomensAisle} from '../../assets/models/gyeongbu-womens-aisle/model.js';
@@ -27,9 +28,7 @@ import { loadArchitecture, fitTerminalSeat as fitHallDetail } from '../../assets
 import { loadFixtureScene } from '../../assets/models/onebailey/load.js';
 
 const loadFixtures = relativePath => loadFixtureScene(new URL(relativePath, import.meta.url));
-const [marketModel, daisoModel, seatArchitecture, concourseFixtures] = await Promise.all([
-  loadFixtures('../../assets/models/gyeongbu/market.glb'),
-  loadFixtures('../../assets/models/daiso/shop.glb'),
+const [seatArchitecture, concourseFixtures] = await Promise.all([
   loadArchitecture('terminal-seating.glb'),
   loadFixtures('../../assets/models/concourse-fixtures/ticket-kiosk.glb')
 ]);
@@ -2223,7 +2222,7 @@ export function build(K) {
         lwall(245,-17.7,263.6,-17.7,y,y+2.8,{mat:'gb7_daiso_circles',thick:.04,solid:false});
         lsign('계산하는 곳',251.7,-10,y+2.65,5,.4,'+v',{bg:'#292d30',fg:'#f5d23f'});
       }
-      addMarketFixtures('SelfCheckout','다이소 셀프 계산대',selfCheckouts,daisoModel);
+      addMarketFixtures('SelfCheckout','다이소 셀프 계산대',selfCheckouts);
     }
     fixtureArea('서측 계산대',172,13.3,178.5,16.6,()=>checkoutBank(true));
     fixtureArea('고투몰 방면 계산대',244.5,-18,264,-4,()=>checkoutBank(false));
@@ -2240,7 +2239,7 @@ export function build(K) {
       for(const v of [6,16]){
         for(const q of [v-2,v+2])lbox(170,q,y,.22,.15,2.95,0xc8102e,{solid:false});
         lbox(170,v,y+2.5,.25,4.15,.45,0xc8102e,{solid:false});
-        addMarketFixtures('DaisoSign','다이소 1번 출입구 간판',[[169.84,v,y+2.49,-PI/2]],daisoModel);
+        addMarketFixtures('DaisoSign','다이소 1번 출입구 간판',[[169.84,v,y+2.49,-PI/2]]);
         for(const q of [v-1.45,v+1.45])lbox(170,q,y+.03,.04,.9,2.36,doorGlass,{solid:false});
         for(const q of [v-.85,v+.85]){lsign('자동문 주의',169.81,q,y+1.15,.6,.17,'-u',{bg:'#f4d927',fg:'#292824'});lbox(171,q,y,.12,.4,1.4,0xc5cbca,{solid:false});}
         lfloorText('매장입구 ↑',169,v,y+.02,3.3,.5,'+u',{bg:'#c8102e',fg:'#fff'});
@@ -2393,25 +2392,11 @@ export function build(K) {
     try{draw();}finally{K=owner;}
   }
 
-  function addMarketFixtures(key,name,placements,model=marketModel) {
-    const TH=K.THREE;
-    const bay=model.getObjectByName(key);
-    const material=new TH.MeshLambertMaterial({vertexColors:true,side:TH.DoubleSide});
-    bay.traverse(source => {
-      if (!source.isMesh) return;
-      const copies=new TH.InstancedMesh(source.geometry,material,placements.length);
-      copies.name=name;
-      const pose=new TH.Object3D();
-      placements.forEach(([u,v,y,angle],n) => {
-        const [x,z]=W(u,v);
-        pose.position.set(x,y,z);
-        pose.rotation.y=ROT+angle;
-        pose.updateMatrix();
-        copies.setMatrixAt(n,pose.matrix.multiply(source.matrixWorld));
-      });
-      copies.computeBoundingSphere();
-      K.addMesh(copies);
+  function addMarketFixtures(key,name,placements) {
+    const world=placements.map(([u,v,y,angle])=>{
+      const [x,z]=W(u,v);return [x,y,z,ROT+angle];
     });
+    placeFixtureDisplay(K,key,name,world);
   }
 
   // The operator's F2/F4/F6/F7/F8 photographs show distinct merchandise and
@@ -2469,7 +2454,7 @@ export function build(K) {
     const sampleU=wings[0][0],sampleV=centers[0];
     ldetail({floor,y0:floorY,y1:floorY+3.1,poly:rect(sampleU-1.40,sampleV-2.65,sampleU+1.40,sampleV+2.65),name:label+' · 전면 상품'},()=>{
       const [x,z]=W(sampleU,sampleV);
-      placeUpperShowroom(K,marketModel,key,feature,x,floorY,z,ROT+PI/2);
+      placeUpperShowroom(K,key,feature,x,floorY,z,ROT+PI/2);
       if(key==='Bedding')lsign('연희침구',sampleU-.75,sampleV+.55,floorY+2.44,1.14,.25,'+u',
         {bg:'#d64f2c',fg:'#fff5db',pxPerM:135,padding:.03});
     });
@@ -3639,7 +3624,7 @@ export function build(K) {
     for(const [key,label,u,v,angle] of shelves){
       lbox(u,v,y,3,.55,1.96,0,{skip:['top','bottom','n','s','e','w']});
       ldetail({floor:'B1',y0:y,y1:y+3,poly:rect(u-2,v-1,u+2,v+1),name:'다이소 '+label},()=>{
-        addMarketFixtures(key,'다이소 '+label,[[u,v,y,angle]],daisoModel);
+        addMarketFixtures(key,'다이소 '+label,[[u,v,y,angle]]);
       });
     }
     for(const [kind,label,u,v,side] of [
