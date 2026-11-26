@@ -53,7 +53,7 @@ for row in range(10):
         box('회색 벽돌 가로줄',x,.05-.20*(x/2.55)**2,3.04+.139*row,b-a,.10,.122,
             ['959998','a4a6a1','929593','a6aaa7'][(i+2*row)%4])
 sign(0,-.22,3.37,3.70)
-box('안쪽 간판 벽',.11,1.61,0,3.06,.06,3.03,'8f7961')
+box('안쪽 간판 벽',.11,1.61,2.18,3.06,.06,.85,'8f7961')
 sign(.06,1.52,2.36,2.18)
 for x in [-2.46,2.46]:
     box('문설주',x,.34,0,.16,.75,3.02,'88857e')
@@ -70,18 +70,19 @@ for col in range(3):
         y=.43+.16*tier;z=.45+.15*tier
         box('단차 선반',x,y+.03,z-.03,.454,.21,.05,'ba905e')
         for j in range(3):cover(x+(j-1)*.135,y,z,.115,.18+(j%2)*.04,3*col+j+2*tier)
-for tier in range(5):
-    x=-1.95;y=.64+.11*tier;z=.14+.32*tier
-    box('좌측 신간 거치대',x,y+.04,z, .78,.29,.06,'bb9565')
-    for j in range(4):cover(x+(j-1.5)*.185,y-.065,z+.06,.16,.235,j+tier*2)
-box('좌측 서가 뒤판',-1.95,1.36,0,1.04,.07,2.60,'82664e')
-for tier in range(6):
-    z=.27+tier*.37
-    box('뒤쪽 서가',-1.95,1.27,z,1.04,.18,.043,'cdad83')
-    for j in range(12):box('책등',-2.42+.082*j,1.28,z+.043,.062,.11,.19+.032*(j%3),colors[(j+tier)%8])
+# A freestanding cream face-out rack at the left edge sits below eye level.
+# The shelves visible higher up in the photo belong to the raised reading bay.
+for tier in range(4):
+    x=-2.09;y=.43+.14*tier;z=.18+.27*tier
+    box('좌측 신간 거치대',x,y+.04,z,.75,.25,.052,'d5c8ad')
+    box('거치대 낮은 전면 턱',x,y-.085,z,.76,.018,.055,'ddd4bf')
+    for j in range(4):cover(x+(j-1.5)*.173,y-.035,z+.054,.147,.23,j+tier*2)
+box('좌측 이동식 서가 받침',-2.09,.67,.04,.76,.72,.12,'cec6b0')
+for edge in [-2.43,-1.75]:
+    box('이동식 서가 측면 받침',edge,.77,.14,.035,.17,.82,'c0ad8d')
 # The photograph shows a bronze-lined soffit behind the second sign and a
 # blue retail bay through the right side of the opening.
-for i in range(9):
+for i in range(3,9):
     box('안쪽 청동색 벽 판재',(i-4)*.305+.05,1.565,.12,.298,.032,2.10,
         ['a89073','ad9478','a69075'][i%3])
 box('안쪽 캐노피 하부',.08,1.15,2.20,2.80,.75,.095,'988471')
