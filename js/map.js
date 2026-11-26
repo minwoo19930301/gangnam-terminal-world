@@ -206,7 +206,7 @@ export function createMap(opts) {
   for (const L of LANDMARKS) addSearch({ name: L.name, sub: L.sub, aliases: L.aliases, exteriorView: L.exteriorView, x: L.x, z: L.z, y: L.floorY ?? 0, type: '핵심 지점', exact: true });
   for (const s of spawns) addSearch({ ...s, type: '출발 지점', exact: true });
   for (const p of placeMarks) addSearch({ name: p.name, x: p.x, z: p.z, y: p.y, place: p.id, type: '탐색 장소' });
-  for (const r of zoneRecords) addSearch({ name: r.source.name, sub: r.source.sub, floor: r.floor, x: r.x, z: r.z, y: r.y0, place: r.place, type: '층별 공간', group: placeIndex.get(r.place)?.name });
+  for (const r of zoneRecords) addSearch({ name: r.source.name, sub: r.source.sub, floor: r.floor, x: r.x, z: r.z, y: r.y0, place: r.place, zone: r.source, type: '층별 공간', group: placeIndex.get(r.place)?.name });
   for (const p of poiRecords) addSearch({ name: p.name, x: p.x, z: p.z, y: p.level == null ? undefined : Number(p.level) < 0 ? (K?.LEVELS?.[`B${Math.abs(Number(p.level))}`] ?? Number(p.level) * 5) : undefined, type: p.type });
   for (const b of buildingRecords) if (b.name) addSearch({ name: b.name, x: b.x, z: b.z, type: '건물', place: b.place });
 
@@ -471,36 +471,66 @@ export function createMap(opts) {
     const x = clamp(view?.x ?? target.x, bounds[0], bounds[2]), z = clamp(view?.z ?? target.z, bounds[1], bounds[3]);
     const yaw = view ? view.yaw * Math.PI / 180 : target.yaw;
     const address = target.mapDestination && !ground ? target : undefined;
-    if (opts.leaveArea && opts.leaveArea(x, Number.isFinite(target.y) && !ground ? target.y : null, z, yaw, address, view?.pitch)) { if (open) toggle(); return; }
-    // try the requested floor, then street level, then whatever walkable surface is highest there
+    const selectedZone = ground ? null : target.zone;
+    if (!selectedZone && opts.leaveArea && opts.leaveArea(x, Number.isFinite(target.y) && !ground ? target.y : null, z, yaw, address, view?.pitch)) { if (open) toggle(); return; }
+    // Unaddressed picks can fall back to street level or the highest walkable surface.
     const tries = [];
     if (!ground && Number.isFinite(target.y)) tries.push(target.y);
-    if (!address) {
+    if (!address && !selectedZone) {
       if (!tries.includes(0)) tries.push(0);
       tries.push(null);
     }
     let destination = null;
-    for (const ty of tries) { destination = findSpot(x, z, ty); if (destination) break; }
+    for (const ty of tries) { destination = findSpot(x, z, ty, selectedZone); if (destination) break; }
     if (!destination) { announce('이 위치에는 걸을 수 있는 바닥이 없어요. 가까운 출발 지점을 선택하세요.'); return; }
+    if (selectedZone && opts.leaveArea?.(destination.x, destination.y, destination.z, yaw, target)) { if (open) toggle(); return; }
     // The engine's teleport snaps again within +1m; compensate to retain the checked floor.
     player.teleport(destination.x, destination.y, destination.z, yaw ?? player.yaw);
     if (view) player.pitch = view.pitch * Math.PI / 180;
     player.y = destination.y; player.vy = 0;
     toggle(); miniClock = 1;
   }
-  function findSpot(x, z, ty) {
-    const exactFloor = ty != null, maxY = exactFloor ? ty + 0.65 : 200, target = { y: ty };
+  function findSpot(x, z, ty, selectedZone) {
+    const exactFloor = ty != null;
     function probe(px, pz) {
+      if (selectedZone && !pointIn(px, pz, selectedZone.poly)) return null;
+      const grade = exactFloor ? ty + (selectedZone?.heightOffset?.(px, pz) || 0) : 0;
+      const maxY = exactFloor ? grade + (selectedZone ? 1 : .65) : 200;
       const s = phys?.support ? phys.support(px, pz, maxY) : { y: 0, s: true };
-      if (!s || !Number.isFinite(s.y) || (Object.hasOwn(s, 's') && !s.s) || (exactFloor && Math.abs(s.y - target.y) > 1)) return null;
+      if (!s || !Number.isFinite(s.y) || (Object.hasOwn(s, 's') && !s.s) || (exactFloor && Math.abs(s.y - grade) > 1)) return null;
       const pos = { x: px, z: pz }; phys?.resolve?.(pos, 0.34, s.y, s.y + 1.75, 0.5);
       const final = phys?.support ? phys.support(pos.x, pos.z, maxY) : s;
-      if (!final || !Number.isFinite(final.y) || (Object.hasOwn(final, 's') && !final.s) || (exactFloor && Math.abs(final.y - target.y) > 1)) return null;
+      if (!final || !Number.isFinite(final.y) || (Object.hasOwn(final, 's') && !final.s) || (exactFloor && Math.abs(final.y - grade) > 1)) return null;
+      if (selectedZone) {
+        const landed = phys?.zoneAt?.(pos.x, final.y + .1, pos.z);
+        if (final.s?.move || !pointIn(pos.x, pos.z, selectedZone.poly)) return null;
+        if (phys?.zoneAt && (!landed || landed.place !== selectedZone.place || landed.floor !== selectedZone.floor)) return null;
+      }
       if (phys?.ceilingAbove && phys.ceilingAbove(pos.x, pos.z, final.y + 0.05, final.y + 1.8) < final.y + 1.75) return null;
       return { x: pos.x, z: pos.z, y: final.y };
     }
     let destination = probe(x, z);
-    for (let r = 1; !destination && r <= 8; r++) for (let i = 0; !destination && i < 12; i++) destination = probe(x + Math.cos(i * TAU / 12) * r, z + Math.sin(i * TAU / 12) * r);
+    const radii = selectedZone ? [.3, .65, 1, 2, 3, 4, 5, 6, 7, 8] : [1, 2, 3, 4, 5, 6, 7, 8];
+    for (const radius of radii) {
+      if (destination) break;
+      for (let i = 0; i < 12 && !destination; i++) {
+        const angle = i * TAU / 12;
+        destination = probe(x + Math.cos(angle) * radius, z + Math.sin(angle) * radius);
+      }
+    }
+    // A large gallery can wrap an atrium. Check the floor toward its edges.
+    if (!destination && selectedZone) {
+      for (const [i, a] of selectedZone.poly.entries()) {
+        const b = selectedZone.poly[(i + 1) % selectedZone.poly.length];
+        for (const t of [.5, .25, .75]) {
+          const edgeX = a[0] + (b[0] - a[0]) * t, edgeZ = a[1] + (b[1] - a[1]) * t;
+          for (const fraction of [.75, .9, .98]) {
+            destination = probe(x + (edgeX - x) * fraction, z + (edgeZ - z) * fraction);
+            if (destination) return destination;
+          }
+        }
+      }
+    }
     return destination;
   }
   function toggle() {
