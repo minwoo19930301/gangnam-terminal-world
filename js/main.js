@@ -61,7 +61,10 @@ async function boot() {
   installRelief(THREE, exteriorTerrain);
   if (AREA.id !== 'all') status(`${areaName(AREA.id, META)} 불러오는 중…`);
   const wantIds = Q.get('places') ? Q.get('places').split(',') : PLACES.filter(id => AREA.modules.includes(id));
-  const modP = wantIds.map(id => import(`./places/${id}.js`).then(m => ({ id, m }), e => ({ id, e })));
+  const modP = wantIds.map(id => import(`./places/${id}.js`).then(async m => {
+    if (AREA.id === 'all') await m.prepareFullDetail?.();
+    return {id, m};
+  }).catch(e => ({id, e})));
   const osm = applyRoadEdits(await osmP); mark('osm');
 
   // Quality: ?q=low forces the light path (no MSAA, lower pixel-ratio ceiling); phones and small-memory devices

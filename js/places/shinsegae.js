@@ -72,7 +72,25 @@ import { registerGatevision } from './shinsegae-gatevision.js';
 import { registerMarzocco } from './shinsegae-marzocco.js';
 import { mounts as facadeMounts } from '../../assets/models/shinsegae-facade/mounts.js';
 import { loadArchitecture, fitArchitecture, fitTerminalSeat as drawFacadeSign } from '../../assets/models/architectural-retail/place.js';
-import { displays as upperFloorDisplays } from '../../assets/models/shinsegae/displays.js';
+// Only a handful of upper-floor shops use the Blender polygon packet.
+const displayURL = new URL('../../assets/models/shinsegae/displays.js', import.meta.url);
+let upperFloorDisplays, displayRequest, displayAttempts = 0;
+const displayResource = {
+  get ready() { return !!upperFloorDisplays; },
+  load() {
+    if (!displayRequest) {
+      const url = new URL(displayURL);
+      // A failed dynamic import is cached by the browser's module map.
+      if (displayAttempts++) url.searchParams.set('retry', displayAttempts);
+      displayRequest = import(url.href).then(module => { upperFloorDisplays = module.displays; })
+        .catch(error => { displayRequest = null; throw error; });
+    }
+    return displayRequest;
+  }
+};
+export const prepareFullDetail = () => displayResource.load();
+// Local Blender extraction and Node scene tools build the complete kit synchronously.
+if (displayURL.protocol === 'file:') await prepareFullDetail();
 import { loadArchitecture as loadFinish, placeArchitecture as placeFinish } from '../../assets/models/interior-architecture/model.js';
 
 const finishURL = name => new URL(`../../assets/models/upper-retail-finish/${name}.glb`, import.meta.url);
@@ -9837,7 +9855,7 @@ export function build(K) {
   // a runs along the storefront; b points into the shop. Keep the centre aisle open.
   // Bake the Blender display into the floor's existing material batches. The
   // same local-to-world and terrain transform is used for its shelf and stock.
-  function shopDisplay(key, a, b, height, ST, scale = 1) {
+  function drawShopDisplay(key, a, b, height, ST, scale = 1) {
     const { mm, faces } = upperFloorDisplays[key];
     const points = mm.map(([dx,dy,dz]) => {
       const [x,z] = P(...ST(a + dx * scale / 1000, b + dy * scale / 1000));
@@ -9854,6 +9872,17 @@ export function build(K) {
   }
 
   function furnishUpperMerch(ctx) {
+    if (upperFloorDisplays) return furnishUpperStock(ctx, drawShopDisplay);
+    let stock;
+    furnishUpperStock(ctx, (...args) => (stock ??= []).push(args));
+    if (!stock) return;
+    const {id, y, Wf, Dp, ST} = ctx;
+    const poly = [[0,0],[Wf,0],[Wf,Dp],[0,Dp]].map(([a,b]) => P(...ST(a,b)));
+    K.detail({floor:id, y0:y, y1:LV[nextOf(id)], poly, name:ctx.name, resource:displayResource},
+      () => { for (const args of stock) drawShopDisplay(...args); });
+  }
+
+  function furnishUpperStock(ctx, shopDisplay) {
     const {id,name,kind,Wf:W,Dp:D,y,face,fb,fdisk,fball,fsign,person,seed,palette:p,ST}=ctx;
     if(id==='6F' && name==='리모와'){
       // The three-bay architectural display runs down the side wall. The
