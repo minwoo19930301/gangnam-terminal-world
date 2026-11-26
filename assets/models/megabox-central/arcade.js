@@ -25,6 +25,8 @@ export function eastShoppingArcade(K,y){
     const poly=outline.map(v=>plan(...v));
     K.hpoly(floor,poly,y+.009,true);K.phys.addSurface(poly,y);
     K.hpoly('ssg_ceil',poly,top+.005,false);K.phys.addCeiling(poly,top+.005,{});
+    K.occludingSlab({poly,y:top+.005,eyeMin:y+.08,eyeMax:top-.08,eyeMargin:28,wholePlaceOnly:true});
+    K.occludingSlab({poly,y:y+.008,eyeMin:y+.08,eyeMax:top-.08,eyeMargin:28,wholePlaceOnly:true});
     return poly;
   }
   for(const outline of aisles){

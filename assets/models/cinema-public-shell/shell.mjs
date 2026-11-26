@@ -14,7 +14,7 @@ export function captureShell() {
   const ignore=()=>{};
   // The structural mesh uses the rendered face elevation; walkable support sits
   // millimetres lower. Furniture, text and the separate shopfront libraries stay separate.
-  const K={THREE,texture:ignore,box:ignore,quad:ignore,sign:ignore,spawn:ignore,addMesh:ignore,
+  const K={THREE,texture:ignore,box:ignore,quad:ignore,sign:ignore,spawn:ignore,addMesh:ignore,occludingSlab:ignore,occludingWall:ignore,
     zone:zone=>zones.push(zone),
     hpoly:(mat,poly,y,up)=>planes.push({mat,poly,y,up}),
     wall:(ax,az,bx,bz,bottom,top,options)=>{

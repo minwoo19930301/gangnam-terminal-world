@@ -50,8 +50,17 @@ export function boutiqueLobby(K,y){
   K.hpoly('megabox_lobby_mosaic',interior,y+.021,true);
   K.hpoly(0x504a40,interior,ceiling-.015,false);
   K.hpoly('ssg_ceil',bounds,ceiling,false);K.phys.addCeiling(bounds,ceiling,{});
+  for(const [poly,h] of [[publicAisle,ceiling+.005],[bounds,ceiling]]){
+    K.occludingSlab({poly,y:h,eyeMin:y+.08,eyeMax:h-.08,eyeMargin:28,wholePlaceOnly:true});
+    K.occludingSlab({poly,y:y+.008,eyeMin:y+.08,eyeMax:h-.08,eyeMargin:28,wholePlaceOnly:true});
+  }
   K.zone({name:'메가박스 센트럴',sub:'더 부티크 · 매표 로비',floor:'B1',y0:y-.25,y1:ceiling,poly:bounds,priority:9});
-  const wall=(a,b,mat,top=ceiling)=>K.wall(...point(...a),...point(...b),y,top,{thick:.12,mat});
+  const wall=(a,b,mat,top=ceiling)=>{
+    const start=point(...a),end=point(...b);
+    K.wall(...start,...end,y,top,{thick:.12,mat});
+    K.occludingWall({a:start,b:end,y0:y+.06,y1:top-.06,eyePoly:bounds,
+      eyeMin:y+.08,eyeMax:ceiling-.08,wholePlaceOnly:true});
+  };
   wall([-6.08,-5],[6.08,-5],0x55504b);
   for(const x of [-6.08,6.08])wall([x,-5],[x,0],0x635f58);
   for(const sign of [-1,1]){
