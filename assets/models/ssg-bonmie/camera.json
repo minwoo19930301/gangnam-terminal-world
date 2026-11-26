@@ -1,0 +1,15 @@
+{
+  "floor": "B1",
+  "x": -74.058258,
+  "y": -6,
+  "z": 38.019741,
+  "yaw": 116.3835,
+  "pitch": -17.1887,
+  "area": "in:shinsegae",
+  "meshName": "보앤미 · 비엔누아즈와 쿠키 샷 진열대",
+  "nativeLabel": "보앤미 베이커리 진열대",
+  "sourceBlend": "pastries.blend",
+  "sourceCollection": "BOandMIE_B1",
+  "gameView": "?pitch=-17.1887#/shinsegae/B1?p=-74.058258,-6,38.019741,116.3835",
+  "placement": [-77.056701,-5.1,39.389877,0.3631]
+}

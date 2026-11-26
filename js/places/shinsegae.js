@@ -1,4 +1,6 @@
+import {marketEntrance} from '../../assets/models/ssg-market-entrance/model.js';
 import {marketFruitIslands} from '../../assets/models/ssg-market-produce/model.js';
+import {pastryCounter} from '../../assets/models/ssg-bonmie/model.js';
 import { placeHypnos } from '../../assets/models/hypnos-showroom/model.js';
 import { registerPaulSmith } from './shinsegae-paul-smith.js';
 import { registerHerno } from './shinsegae-herno.js';
@@ -1494,7 +1496,8 @@ export function build(K) {
   // Arrive on the level landing just north of each car, with the full floor list retained.
   const ARR = { dx: -2.2 * SA, dz: -2.2 * CA };
   const marketLiftUV=B1_PLAN(578,617);
-  const MARKET_B1_DEST=P(marketLiftUV[0]-1.8,marketLiftUV[1]);
+  // The operator plan opens the market lift lobby on its page-left (local -v) side.
+  const MARKET_B1_DEST=P(marketLiftUV[0],marketLiftUV[1]-1.8);
   const mezzBankCalls=[];
   ELV.forEach((e, i) => {
     const [x, z] = P(e.u, e.v);
@@ -2650,20 +2653,32 @@ export function build(K) {
         return;
       }
       const[u,v]=at,wood=c.name==='카멜커피'?0xd9b98a:c.name==='보앤미'?0xc8a77b:c.name==='블루버터플라이'?0x63422a:c.kind==='wine'?0x493529:c.kind==='deli'?0xb8925d:0x7e6044;
-      const darkDeli=c.zone==='north_deli'&&c.kind==='deli';
-      box(u,v,w,d,y,.83,darkDeli&&c.name!=='블루버터플라이'?'ssg_deli_black_glaze':c.name==='카멜커피'?wood:{tex:'wood',color:wood});
+      const darkDeli=c.zone==='north_deli'&&c.kind==='deli', boAndMie=c.name==='보앤미';
+      const base=darkDeli&&c.name!=='블루버터플라이'?'ssg_deli_black_glaze':c.name==='카멜커피'?wood:{tex:'wood',color:wood};
+      box(u,v,w,d,y,.83,boAndMie?{tex:'marble',color:0xe9d9c4}:base);
       box(u,v,w+.025,d+.025,y+.83,.06,{tex:'marble',color:darkDeli||c.name==='카멜커피'?0x292824:0xe9debf,gloss:.7},{solid:false});
       if(c.name==='블루버터플라이'){
         for(const du of [-w/2+.03,w/2-.03])box(u+du,v,.025,d+.015,y+.10,.65,BRASS,{solid:false});
         for(const yy of [.10,.74])box(u,v,w+.02,d+.02,y+yy,.025,BRASS,{solid:false});
       }
       if(['deli','bakery'].includes(c.kind)){
-        box(u,v,w-.04,d-.04,y+.9,.42,'glass',{solid:false});
+        const glass=boAndMie?K.material('ssg_bonmie_case_glass',new K.THREE.MeshLambertMaterial({
+          color:0xe2e8e0,transparent:true,opacity:.12,depthWrite:false,side:K.THREE.DoubleSide
+        })):'glass';
+        box(u,v,w-.04,d-.04,y+.9,.42,glass,{solid:false});
         for(const du of [-w/2+.05,w/2-.05])for(const dv of [-d/2+.05,d/2-.05])box(u+du,v+dv,.025,.025,y+.9,.43,BRASS,{solid:false});
-        box(u,v,w,d,y+1.31,.025,BRASS,{solid:false});
+        if(boAndMie){
+          // Gangnam's opening photo shows the black wordmark on the pale counter front.
+          sign('BO&MIE',u-w*.33,v-d/2-.014,y+.39,'N',.74,.22,{bg:null,fg:'#332a24',bold:true});
+          for(const side of [-1,1]){
+            box(u,v+side*(d/2-.025),w,.05,y+1.31,.025,BRASS,{solid:false});
+            box(u+side*(w/2-.025),v,.05,d-.10,y+1.31,.025,BRASS,{solid:false});
+          }
+          const [x,z]=P(u,v);pastryCounter(K,x,y+.90,z,RA,w,d);
+        }else box(u,v,w,d,y+1.31,.025,BRASS,{solid:false});
       }
       const nx=Math.max(2,Math.floor(w/.28)),nz=Math.max(2,Math.floor(d/.28));
-      for(let a=0;a<nx;a++)for(let b=0;b<nz;b++){
+      if(!boAndMie)for(let a=0;a<nx;a++)for(let b=0;b<nz;b++){
         const uu=u-w*.4+(a+.5)*w*.8/nx,vv=v-d*.4+(b+.5)*d*.8/nz;
         if(c.kind==='cafe'&&Math.abs(uu-u)<.36&&Math.abs(vv-v)<.3)continue;
         if(c.name==='발효곳간'){
@@ -2749,24 +2764,28 @@ export function build(K) {
     // Official elevator symbols become functioning B1 banks. All existing upper
     // stops remain available via destination tables; no extra1F shaft is cut.
     for(const c of cells.filter(c=>c.name.endsWith('엘리베이터')&&worldPoly(c).length>=3)){
-      const r=uvRect(c),[u,v]=BPLAN(...(c.name==='마켓 엘리베이터'?[578,617]:[936,335])),[x,z]=P(u,v);
+      const market=c.name==='마켓 엘리베이터';
+      const [u,v]=market?marketLiftUV:BPLAN(936,335),[x,z]=P(u,v);
+      const landing=market?MARKET_B1_DEST:[x-1.8*CA,z+1.8*SA];
+      const b1Stop={label:'B1',y,dx:landing[0]-x,dz:landing[1]-z};
       const corner=UPPER_BANKS.find(b=>b.key==='본관 코너'),main=UPPER_BANKS.find(b=>b.key==='본관 화장실 옆'),annex=UPPER_BANKS.find(b=>b.key==='신관 화장실 옆');
       const remote=f=>{
-        if(c.name==='마켓 엘리베이터')return cornerLiftLanding(f.label,corner,1);
+        if(market)return cornerLiftLanding(f.label,corner,1);
         if(f.label==='11F'){const [u,v]=annexLiftCentre(f.label,1);return P(u,v-2.25);}
         return mainLiftLanding(f.label, main, 1);
       };
       const parking=P(ELV[1].u,ELV[1].v-2.2),nw=beautyLiftLanding(NWLIFTS[0]),mezz=P(36,81);
       // B2 has its own basement shaft; the upper-floor landing is not a
       // valid parking-level arrival and can trap the player inside a wall.
-      const floorList=ELV_FLOORS.map(f=>({...f,...(f.label==='B1'?{dx:-1.8*CA,dz:1.8*SA}:f.label==='B2'?{dx:parking[0]-x,dz:parking[1]-z}:f.label==='1M'?{dx:mezz[0]-x,dz:mezz[1]-z}:f.label==='1F'?{dx:nw[0]-x,dz:nw[1]-z}:(()=>{const dest=remote(f);return{dx:dest[0]-x,dz:dest[1]-z};})())}));
-      const lift=K.elevator({name:c.name,x,z,rotY:FACE.W,w:2,d:1.8,topH:3.2,floors:[{label:'B1',y,dx:-1.8*CA,dz:1.8*SA}]});
+      const floorList=ELV_FLOORS.map(f=>({...f,...(f.label==='B1'?b1Stop:f.label==='B2'?{dx:parking[0]-x,dz:parking[1]-z}:f.label==='1M'?{dx:mezz[0]-x,dz:mezz[1]-z}:f.label==='1F'?{dx:nw[0]-x,dz:nw[1]-z}:(()=>{const dest=remote(f);return{dx:dest[0]-x,dz:dest[1]-z};})())}));
+      const lift=K.elevator({name:c.name,x,z,rotY:market?FACE.N:FACE.W,w:2,d:1.8,topH:3.2,floors:[b1Stop]});
       lift.floors=floorList;
       // The menu may teleport to a visible remote bank, but this B1 car has no
       // shaft on upper floors. Bound its call prompt to its actual B1 landing.
       const call=K._.interactables.find(it=>it.elevator===lift);if(call)call.y=y;
-      K.slab(rect(u-2.4,v-1.3,u+1.2,v+1.3),y,{mat:'metal',thick:.05,ceil:false,edge:false});
-      sign('엘리베이터 · 전층 안내',u-.95,v,y+2.7,'W',3.8,.4,{bg:'#373c33',fg:'#f5deb0'});
+      const apron=market?rect(u-1.3,v-2.4,u+1.3,v+1.2):rect(u-2.4,v-1.3,u+1.2,v+1.3);
+      K.slab(apron,y,{mat:'metal',thick:.05,ceil:false,edge:false});
+      sign('엘리베이터 · 전층 안내',market?u:u-.95,market?v-1.03:v,y+2.7,market?'N':'W',3.8,.4,{bg:'#373c33',fg:'#f5deb0'});
     }
 
     // Round14 video finishes preserve every round12 cell and every 1F slab.
@@ -3104,15 +3123,12 @@ export function build(K) {
       // no second counter is placed across their shared lobby approach.
       // Corner portal faces ENE, as in #552. Its aisle remains clear into produce.
       const pu=22.5,pv=63.4;
-      for(const dv of[-2.9,2.9]){
-        box(pu,pv+dv,.7,.7,y,3.8,{tex:'marble',color:0x191b1b,gloss:.7});
-        for(const yy of[.1,3.45])box(pu,pv+dv,.84,.84,y+yy,.14,0xc9a55e,{solid:false});
-        for(let h=.45;h<3.5;h+=.21)festive(pu+.4,pv+dv,y+h,true,.22);
-      }
-      box(pu,pv,.74,6.5,y+3.45,.46,{tex:'marble',color:0x1e1c1c,gloss:.7});
-      sign('新世界食品館',pu+.4,pv,y+3.68,'E',4.1,.29,{bg:null,fg:'#c9a55e',bold:false});
-      sign('SHINSEGAE MARKET',pu+.41,pv+2.15,y+3.67,'E',1.3,.12,{bg:null,fg:'#c9a55e',bold:false});
-      festive(pu+.42,pv,y+3.35,true,6.2);
+      const [portalX,portalZ]=P(pu,pv);
+      marketEntrance(K,portalX,y,portalZ,RA);
+      // Keep the collision envelopes of the original jambs and overhead lintel.
+      const hiddenFaces=['top','bottom','n','s','e','w'];
+      for(const dv of [-2.9,2.9])box(pu,pv+dv,.7,.7,y,3.8,0x191b1b,{skip:hiddenFaces});
+      box(pu,pv,.74,6.5,y+3.45,.46,0x1e1c1c,{skip:hiddenFaces});
       const fruitTables=[61.8,64.9];
       marketFruitIslands(K,fruitTables.map(v=>{
         const [x,z]=P(19.4,v);
@@ -17390,7 +17406,8 @@ export function build(K) {
       K.box({ x, y: top - 0.2, z: -61.5, w: 0.24, h: 0.18, d: 43, mat: CEIL, solid: false });
       K.hpoly(0x8b7862, [[x - 0.07, -84], [x + 0.07, -84], [x + 0.07, -39], [x - 0.07, -39]], y + 0.015);
     }
-    K.sign(['신세계 식품관 →', '스위트파크 · 신세계 마켓'], { x: -74.5, y: y + 1.6, z: -84, w: 3.6, h: 0.55, rotY: PI / 2, bg: '#e4d7c2', fg: '#544536' });
+    // From the west wall, the food floor to the south is on the reader's left.
+    K.sign(['← 신세계 식품관', '스위트 파크 · 신세계 마켓'], { x: -78.85, y: y + 1.6, z: -80.2, w: 3.6, h: 0.55, rotY: PI / 2, bg: '#e4d7c2', fg: '#544536' });
     K.sign('← 고투몰 · 고속터미널역', { x: -65.5, y: y + 1.6, z: -42, w: 3.6, h: 0.4, rotY: -PI / 2, bg: '#e4d7c2', fg: '#544536' });
     for (let z = -84; z < -39; z += 4.5) for (const x of [-72, -68]) {
       K.cyl({ x, y: top - 0.04, z, r: 0.18, h: 0.03, seg: 10, mat: 0x9c8b70, solid: false });
