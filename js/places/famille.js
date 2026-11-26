@@ -506,7 +506,7 @@ function buildHall(K) {
   const H=Math.hypot(62,24), C=62/H,S=24/H, R=Math.atan2(S,C), PI=Math.PI;
   const P=(u,v)=>[29-C*u+S*v,144+S*u+C*v];
   const rect=(u0,v0,u1,v1)=>[P(u0,v0),P(u1,v0),P(u1,v1),P(u0,v1)];
-  const B=(u,v,y,w,d,h,mat,solid=false)=>{const[x,z]=P(u,v);K.box({x,z,y,w,d,h,rotY:R,mat,solid});};
+  const B=(u,v,y,w,d,h,mat,solid=false)=>{const[x,z]=P(u,v);return K.box({x,z,y,w,d,h,rotY:R,mat,solid});};
   const wall=(a,b,c,d,y0,y1,opts={})=>K.wall(...P(a,b),...P(c,d),y0,y1,{mat:'famille-buff',thick:.24,...opts});
   const sign=(text,u,v,y,w,h,face='v',opts={})=>{const[x,z]=P(u,v);K.sign(text,{x,z,y,w,h,rotY:face==='u'?R-PI/2:face==='-v'?R+PI:R,bg:null,fg:'#f6f1e5',...opts});};
   const cyl=(u,v,y,r,h,mat)=>{const[x,z]=P(u,v);K.cyl({x,z,y,r,h,mat,seg:12});};
@@ -594,10 +594,15 @@ function buildHall(K) {
     placeArchitecture(K,galleryRib,'파미에 갤러리 아치와 벽등',spans,{skylight:true});
   };roof(22,70.56);
   // Hall north shares the white vault; the escalator bay has the photographed luminous black-grid ceiling.
-  for(let v=0;v<8;v+=.5){const y=9.8+.55*Math.sin(v*PI/8);B(13,v+.25,y,18,.53,.12,0xeeeae0);}
-  for(let u=4;u<22;u+=3)for(let v=8;v<20;v+=2){B(u+1.5,v+1,9.85,2.92,1.92,.1,{tex:'emit',color:0xf2eddf});}
-  for(let u=4;u<=22;u+=3)B(u,14,9.7,.13,12,.25,iron);
-  for(let v=8;v<=20;v+=2)B(13,v,9.7,18,.13,.25,iron);
+  // The electric-light volume follows these undersides through the double-height hall.
+  const ceilingPanel=(u,v,y,w,d,h,mat)=>{
+    const outline=B(u,v,y,w,d,h,mat);
+    K.phys.addCeiling(outline,y);
+  };
+  for(let v=0;v<8;v+=.5){const y=9.8+.55*Math.sin(v*PI/8);ceilingPanel(13,v+.25,y,18,.53,.12,0xeeeae0);}
+  for(let u=4;u<22;u+=3)for(let v=8;v<20;v+=2){ceilingPanel(u+1.5,v+1,9.85,2.92,1.92,.1,{tex:'emit',color:0xf2eddf});}
+  for(let u=4;u<=22;u+=3)ceilingPanel(u,14,9.7,.13,12,.25,iron);
+  for(let v=8;v<=20;v+=2)ceilingPanel(13,v,9.7,18,.13,.25,iron);
   // Architectural columns are solid in the permanent build and clear of every passage.
   for(const[u,v]of [[4,0],[4,3.7],[4,10.7],[4,17.7],[22,0],[22,11.5],[22,20],[4,20]]){
     const corner=u===4&&v===20;
