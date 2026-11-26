@@ -153,7 +153,7 @@
     "blend": "assets/models/jwmarriott/hotel-details.blend",
     "regenerate_from_edited_blend": "blender -b assets/models/jwmarriott/hotel-details.blend -P assets/models/jwmarriott/export.py",
     "from_procedural_source": "blender -b -P assets/models/jwmarriott/build.py",
-    "runtime": "fixtures.js는 8개 편집 컬렉션의 정점과 면을 mm 단위로 저장한다. JS는 같은 모델의 면·재질을 키트의 렌더 배치에 보낸다. 수동 편집 뒤 export.py만 실행하면 편집본을 재사용할 수 있다."
+    "runtime": "export.py는 편집한 Blender 컬렉션 8개의 정점·면·재질을 mm 단위로 내보낸다. entrance.js에는 외관 3종과 실내 가구의 경계가 들어 있다. 2층 파티세리, 7층 그릴과 정원, 8층 라운지에서는 보이는 가구 종류만 한 번씩 내려받는다. 전체 모델을 읽는 도구는 fixtures.js로 8종 모두를 불러올 수 있다."
   }
 },
   "shared_podium_escalator_opening_20261118": "The shared podium roof has a local opening for the department store annex escalators between retail 6F and 7F.",

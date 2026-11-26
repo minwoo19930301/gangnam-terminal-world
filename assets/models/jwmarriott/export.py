@@ -47,8 +47,26 @@ for group in bpy.data.collections:
         finally:
             obj.to_mesh_clear()
     result[key] = {"points": points, "materials": materials, "faces": faces}
-with (directory / "fixtures.js").open("w") as f:
-    f.write("// Generated from hotel-details.blend with export.py; positions in millimetres.\nexport const fixtures = {\n")
-    for k, v in result.items():
-        f.write(json.dumps(k) + ":" + json.dumps(v, separators=(",", ":")) + ",\n")
-    f.write("};\n")
+# Keep the three exterior motifs available in the street's original facade batch.
+# Small public-room fittings can be requested independently when their room is visible.
+indoor_keys = ("cakes", "booth", "display", "herbs", "tea")
+def compact(value):
+    return json.dumps(value, separators=(",", ":"))
+
+header = "// Generated from hotel-details.blend with export.py; positions in millimetres.\n"
+bounds = {}
+for key in indoor_keys:
+    model = result[key]
+    coordinates = list(zip(*model["points"]))
+    bounds[key] = [min(axis) for axis in coordinates] + [max(axis) for axis in coordinates]
+    (directory / (key + ".js")).write_text(header + "export default " + compact(model) + ";\n")
+entrance = {key: model for key, model in result.items() if key not in indoor_keys}
+(directory / "entrance.js").write_text(header
+    + "export const exteriorFixtures = " + compact(entrance) + ";\n"
+    + "export const interiorBounds = " + compact(bounds) + ";\n")
+# Older tools can still import the full synchronous native collection by its original name.
+with (directory / "fixtures.js").open("w") as file:
+    file.write(header + "import {exteriorFixtures} from './entrance.js';\n")
+    for key in indoor_keys:
+        file.write(f"import {key} from './{key}.js';\n")
+    file.write("export const fixtures = {...exteriorFixtures," + ",".join(indoor_keys) + "};\n")

@@ -77,21 +77,9 @@ import { registerMarzocco } from './shinsegae-marzocco.js';
 import { mounts as facadeMounts } from '../../assets/models/shinsegae-facade/mounts.js';
 import { loadArchitecture, fitArchitecture, fitTerminalSeat as drawFacadeSign } from '../../assets/models/architectural-retail/place.js';
 // Only a handful of upper-floor shops use the Blender polygon packet.
+import {detailModule} from '../detail-module.js';
 const displayURL = new URL('../../assets/models/shinsegae/displays.js', import.meta.url);
-let upperFloorDisplays, displayRequest, displayAttempts = 0;
-const displayResource = {
-  get ready() { return !!upperFloorDisplays; },
-  load() {
-    if (!displayRequest) {
-      const url = new URL(displayURL);
-      // A failed dynamic import is cached by the browser's module map.
-      if (displayAttempts++) url.searchParams.set('retry', displayAttempts);
-      displayRequest = import(url.href).then(module => { upperFloorDisplays = module.displays; })
-        .catch(error => { displayRequest = null; throw error; });
-    }
-    return displayRequest;
-  }
-};
+const displayResource=detailModule(displayURL,module=>module.displays);
 export const prepareFullDetail = () => displayResource.load();
 // Local Blender extraction and Node scene tools build the complete kit synchronously.
 if (displayURL.protocol === 'file:') await prepareFullDetail();
@@ -9920,7 +9908,7 @@ export function build(K) {
   // Bake the Blender display into the floor's existing material batches. The
   // same local-to-world and terrain transform is used for its shelf and stock.
   function drawShopDisplay(key, a, b, height, ST, scale = 1) {
-    const { mm, faces } = upperFloorDisplays[key];
+    const { mm, faces } = displayResource.value[key];
     const points = mm.map(([dx,dy,dz]) => {
       const [x,z] = P(...ST(a + dx * scale / 1000, b + dy * scale / 1000));
       return [x, height + dz * scale / 1000, z];
@@ -9936,7 +9924,7 @@ export function build(K) {
   }
 
   function furnishUpperMerch(ctx) {
-    if (upperFloorDisplays) return furnishUpperStock(ctx, drawShopDisplay);
+    if (displayResource.ready) return furnishUpperStock(ctx, drawShopDisplay);
     let stock;
     furnishUpperStock(ctx, (...args) => (stock ??= []).push(args));
     if (!stock) return;
