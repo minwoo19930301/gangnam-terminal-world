@@ -1,3 +1,4 @@
+import {placePassengerFinish} from '../../assets/models/gyeongbu-concourse-finish/model.js';
 import {placePharmacy} from '../../assets/models/gyeongbu-pharmacy/model.js';
 import {placeLuggageCounter} from '../../assets/models/gyeongbu-luggage/model.js';
 import {placeFramingShop} from '../../assets/models/gyeongbu-hangaram/model.js';
@@ -1173,7 +1174,9 @@ export function build(K) {
     placeAssembly({from:[24,137],to:[51.5,44],angle:-PI/2,sx:.4,sz:.4},()=>{
     // End the older ticket-office partition at the back of the public baggage counter.
     // Extending it through this open window split the sign and the passenger sill.
-    lwall(25,140,58.0,140,0,5.6,{mat:0xe9e3d6,thick:.18});
+    lwall(25,140,51.5,140,0,5.6,{mat:0xe9e3d6,thick:.18});
+    // The tall ticket partition steps down under the baggage / kiosk soffit at station v33.
+    lwall(51.5,140,58,140,0,3.31,{mat:0xe9e3d6,thick:.18});
     lwall(59,144.4,64.5,144.4,0,3.3,{mat:0xc4c2b6,thick:.15});
     furnish(() => {
     // The photographed full-width counter sits in front of the atrium pillars.
@@ -1431,7 +1434,11 @@ export function build(K) {
     lsign('UNIQLO',66.35,24.9,7.75,2.4,2.4,'+u',{bg:'#e60012',fg:'#fff'});
     lbox(66.35,19.1,1,.12,4.5,9,{tex:'gb20_art',gloss:.3},{solid:false});
     lwall(66,17,75.7,17,0,10.7,{mat:doorGlass,thick:.04});
-    lwall(55,26.5,66,26.5,0,3.4,{mat:doorGlass,thick:.04,openings:[{at:6,w:3,y0:0,y1:3.1}]});
+    // The photographed UNIQLO front is transparent across the public sightline.
+    // Use its two outward faces once each and keep the existing framed opening and collision.
+    K.material('gb_atrium_clear',new K.THREE.MeshPhongMaterial({color:0xe4edeb,transparent:true,opacity:.065,
+      depthWrite:false,specular:0xdde3dc,shininess:75,side:K.THREE.FrontSide}));
+    lwall(55,26.5,66,26.5,0,3.4,{mat:'gb_atrium_clear',thick:.04,openings:[{at:6,w:3,y0:0,y1:3.1}]});
     const circle=Array.from({length:32},(_,k)=>W(71.5+2.8*Math.cos(k*PI/16),23+2.8*Math.sin(k*PI/16)));K.hpoly(0x969895,circle,.04);
     lzone('본관 아트리움','1F','유니클로 · 종합안내',66,17,75.7,30,0,11,6);
     for(let u=31;u<54;u+=.12)lbox(u,55,0,.055,.1,3.2,0x55585a,{solid:false});
@@ -1521,13 +1528,11 @@ export function build(K) {
       for(const v of [68.8,71,80.8,82.5])for(let k=0;k<15;k++)lbox(32.5+k,v,-6+k*.4-.2,1,1.2,.16,0xb9bcbe,{solid:false});
       for(let v=67.5;v<83.6;v+=.3)lbox(47.05,v,.035,.15,.15,.035,Math.round(v*10)%2?0xf0c832:0x242625,{solid:false});
       lbox(48.3,82,.2,.25,3,5,0x1c3b7a,{solid:false});lsign('서울고속버스터미널',48.13,82,3.2,2.8,3.7,'-u',{bg:'#146ec2',fg:'#e4efff'});
-      // S-shaped cove and the wide backlit oval now follow the actual main walkway.
+      // The wide north oval is a separate feature from the southern sculpted ceiling.
       const oval=(rx,rz,y)=>Array.from({length:64},(_,k)=>{const a=k*PI/32,[x,z]=W(58+rx*Math.cos(a),58+rz*Math.sin(a));return[x,y,z];});
       const outer=oval(3.8,8.8,4.6),inner=oval(3.2,8.2,4.6),lit=oval(3.08,8.08,4.61);
       K.hpoly('emit',lit.map(([x,y,z])=>[x,z]),4.72,false);
       for(let k=0;k<64;k++){const j=(k+1)%64;K.quad(0xf5f3eb,[outer[k],outer[j],inner[j],inner[k]],[0,-1,0]);K.quad('emit',[inner[k],inner[j],lit[j],lit[k]],[0,-1,0]);}
-      const ribbon=(t,side,y)=>{const[x,z]=W(58+1.8*Math.sin(t*PI*2)+side,27+t*6);return[x,y,z];};
-      for(let k=0;k<40;k++)for(const [a,b,y,mat]of [[-.3,.3,4.6,0xf4f2e9],[-.19,.19,4.585,'emit']])K.quad(mat,[ribbon(k/40,a,y),ribbon((k+1)/40,a,y),ribbon((k+1)/40,b,y),ribbon(k/40,b,y)],[0,-1,0]);
       lbox(56,29,0,2.6,1,1.05,0xf1efe8);for(const u of [54.7,57.3])lcyl(u,29,0,.5,1.05,0xf1efe8,{seg:24});lsign('안내',56,29.53,.7,1.6,.35,'+v',{bg:null,fg:'#555b59'});
       // Photo-specific food pavilion skins retain all the existing counter/stock internals.
       for(let y=2.75;y<3.5;y+=.12)lbox(138,22.1,y,10,.06,.075,0x9a6a45,{solid:false});
@@ -1580,6 +1585,8 @@ export function build(K) {
     }
     // Operator #13: the staffed public window beside ticketing, consistent with the review of photos #43–51.
     // Present the window along the open approach, clear of the retained row of refund machines.
+    const [finishX,finishZ]=W(57,29);
+    placePassengerFinish(K,finishX,finishZ,ROT);
     const luggageU=52.10,luggageV=28.52;
     const [luggageX,luggageZ]=W(luggageU,luggageV);
     placeLuggageCounter(K,luggageX,luggageZ,ROT+PI);
