@@ -7623,6 +7623,15 @@ export function build(K) {
     }
     const niche=upperNiches[`${id}:${c.name}`];
     if(niche){parts=[niche];K.slab(rect(...niche),y,{mat:{tex:'marble',color:0xe8e2d5,gloss:.3},thick:.12,under:false,ceil:false,edge:false});}
+    if(id==='10F'&&c.name==='루셀'&&!parts.length){
+      // The guide cell falls entirely over two moving flights in this model.
+      // Keep a floor-guide result at the adjacent level aisle, clear of both shops.
+      const [x,z]=P(37.11,130.30),[shopX,shopZ]=P((r[0]+r[2])/2,(r[1]+r[3])/2);
+      K.spawn({name:'루셀 · 10층 층별 안내',floor:id,sub:'매장 앞 공용 통로로 이동 · 게임에는 진열 공간이 없습니다.',
+        x,y,z,yaw:Math.atan2(x-shopX,z-shopZ)});
+      c.model={raw,local:r,parts:[],fixtureParts:[],face,sourceFace,aisleEdges:[],renderMode:'guide-notice'};
+      return;
+    }
     if(id==='10F'&&c.kind==='popup'&&px===999){
       // This small guide cell meets the closed section of the 10F end guard.
       // Mark it on that rail; its map destination stays in the original cell,
