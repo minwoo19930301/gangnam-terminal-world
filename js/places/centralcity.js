@@ -1,4 +1,5 @@
 import {podiumOpening} from '../../assets/models/cinema-rotary/layout.js';
+import {arabicaFront} from '../../assets/models/sweet-arabica/model.js';
 import {chefStageSigns} from '../../assets/models/sweet-chefs-stage/model.js';
 import {marketWestReturn, cinemaAisleMouth} from './shinsegae-b1-plan.js';
 import {placeStageCoffers} from '../../assets/models/open-stage-coffer/model.js';
@@ -1125,7 +1126,19 @@ export function build(K) {
     const nx=(m[0]-c[0])/Math.hypot(m[0]-c[0],m[1]-c[1]),nz=(m[1]-c[1])/Math.hypot(m[0]-c[0],m[1]-c[1]),rot=Math.atan2(nx,nz);
     const box=(u0,v0,u1,v1,y,h,mat,solid=false)=>{const rr=wr(u0,v0,u1,v1);if(!solid||b1Safe(rr))BPrism(rr,YB1+y,h,mat,solid);};
     const cyl=(u,v,y,rad,h,mat)=>{const q=wp(u,v);if(K.pointInPoly(...q,rampClearPoly))return;K.cyl({x:q[0],z:q[1],y:YB1+y,r:rad,h,mat,seg:12,solid:false});};
-    const plinth=superstar?0xc2452d:arabica?0xece6da:{tex:'wood',color:0x6b4226};
+    if(arabica){
+      // The published bay has a single opening between plan y=373 and 411.
+      // Keep the two original solid worktops and their footprint.
+      const barV=Math.min(.4,1.25/dep),barBack=barV+Math.min(.16,.58/dep);
+      K.hpoly({tex:'wood',color:0xd8c6a7},BRect(...r),YB1+.031,true);
+      box(.07,barV,.93,barBack,0,.99,0xe4e5df,true);
+      box(.17,.79,.83,.92,0,.87,0xd2d0c6,true);
+      box(.025,.97,.975,.995,0,3.3,0xe0dfd6);
+      const [entryX,entryZ]=BP(x0,392);
+      arabicaFront(K,entryX+.22*nx,YB1,entryZ+.22*nz,rot);
+      return;
+    }
+    const plinth=superstar?0xc2452d:{tex:'wood',color:0x6b4226};
     K.hpoly(superstar?{tex:'ccHosParquet',gloss:.5}:{tex:'wood',color:0xd4b17b,gloss:.3},BRect(...r),YB1+.031,true);
     // Honey/charcoal rear wall with an amber wash; every fixture remains within its tenant cell.
     box(.025,.97,.975,.995,0,3.3,superstar?0x2b2b2b:'ccHosHoney');
@@ -1149,7 +1162,7 @@ export function build(K) {
       if(b1Safe(wr(.08,barV,.92,barBack))){K.prism(pts,YB1,YB1+.99,{mat:plinth});K.prism(pts,YB1+.99,YB1+1.05,{mat:{tex:'metal',color:0xb1b4b0,gloss:.5},solid:false});}
     }else{
       box(.07,barV,.93,barBack,0,.99,plinth,true);
-      box(.065,barV-.012,.935,barBack+.012,.99,.06,arabica?{tex:'marble',color:0xf5f0e5,gloss:.7}:{tex:'wood',color:0x8f5b31,gloss:.5});
+      box(.065,barV-.012,.935,barBack+.012,.99,.06,{tex:'wood',color:0x8f5b31,gloss:.5});
     }
     if(sushi){
       // U counter flanks the chefs; its open kitchen faces the B1 lounge on the north edge.
@@ -1186,7 +1199,7 @@ export function build(K) {
     // Open cooking worktop, dishes, taps and supported staff behind the bar.
     box(.17,.79,.83,.92,0,.87,{tex:'metal',color:0xaeb0a8},true);
     for(let i=0;i<Math.max(3,Math.floor(len));i++){const u=.2+.6*i/Math.max(3,Math.floor(len));for(let j=0;j<4;j++)cyl(u,.84,.89+j*.018,.08,.014,0xeee9df);}
-    for(const u of [.30,.67]){const q=wp(u,Math.max(barBack+.85/dep,.62));if(!b1Reserved(...q,.32)){K.person(q[0],YB1,q[1],{rotY:rot,shirt:arabica?0xe8e5d8:0xf0ece1});if(!arabica){K.cyl({x:q[0],z:q[1],y:YB1+1.63,r:.12,h:.16,mat:0xf2f0e8,seg:10,solid:false});}}}
+    for(const u of [.30,.67]){const q=wp(u,Math.max(barBack+.85/dep,.62));if(!b1Reserved(...q,.32)){K.person(q[0],YB1,q[1],{rotY:rot,shirt:0xf0ece1});K.cyl({x:q[0],z:q[1],y:YB1+1.63,r:.12,h:.16,mat:0xf2f0e8,seg:10,solid:false});}}
     if(superstar){
       // Three densely stocked orange-backlit bottle shelves, as in photo 07.
       box(.07,.925,.93,.95,1.12,1.65,{tex:'emit',color:0xc46e36});
@@ -1199,13 +1212,10 @@ export function build(K) {
       box(.03,.13,.97,.19,2.68,.62,0x2d2822);
       box(.045,.124,.955,.135,2.72,.54,0xece1c6);
       for(let yy=2.74;yy<3.26;yy+=.055)box(.045,.116,.955,.124,yy,.018,0x393027);
-    }else if(arabica){
-      box(.17,.69,.42,.83,.9,.43,0xe9e9e1);box(.21,.67,.38,.70,1.05,.15,0x303632);
-      for(const u of [.55,.67]){cyl(u,.8,.9,.12,.43,0x414b43);cyl(u,.8,1.33,.085,.17,'glass');}
     }
-    const label=superstar?'Superstar':kibo?'KATSU & TAPAS':arabica?'% Arabica':cell.name;
+    const label=superstar?'Superstar':kibo?'KATSU & TAPAS':cell.name;
     const q=wp(.5,superstar?.03:kibo?.11:.055);
-    sign(label,{x:q[0],z:q[1],y:YB1+(superstar?3.04:kibo?2.99:2.83),w:Math.min(len-.3,superstar?4.6:6),h:superstar?.48:.38,rotY:rot,bg:superstar||arabica?null:kibo?'#e7dcc2':'#443122',fg:kibo?'#2d2822':arabica?'#33372f':'#fff3de',font:superstar?'Georgia,serif':SERIF,italic:superstar,pxPerM:120});
+    sign(label,{x:q[0],z:q[1],y:YB1+(superstar?3.04:kibo?2.99:2.83),w:Math.min(len-.3,superstar?4.6:6),h:superstar?.48:.38,rotY:rot,bg:superstar?null:kibo?'#e7dcc2':'#443122',fg:kibo?'#2d2822':'#fff3de',font:superstar?'Georgia,serif':SERIF,italic:superstar,pxPerM:120});
   };
   const hosB1Finish=()=>{
     const BP=HP,BPst=HPst,BRect=HRect,BPrism=housePrism;
