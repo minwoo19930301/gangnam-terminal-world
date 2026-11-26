@@ -15,7 +15,15 @@ import {registerArrival,upperWell} from '../../assets/models/jw-arrival/model.js
 import {registerCoffers,registerPendant,ceilingZones} from '../../assets/models/jw-arrival/ceiling.js';
 import { placeDesserts, placeGateaux } from '../../assets/models/patisserie/model.js';
 import { placeLoungeChairs } from '../../assets/models/lounge-chair/model.js';
-import { fixtures } from '../../assets/models/jwmarriott/fixtures.js';
+import { exteriorFixtures, interiorBounds } from '../../assets/models/jwmarriott/entrance.js';
+import { detailModule } from '../detail-module.js';
+
+const fixtureFloors = { cakes: '2F', booth: '7F', display: '7F', herbs: '7F', tea: '8F' };
+const fixtureResources = Object.fromEntries(Object.keys(interiorBounds).map(key => [
+  key, detailModule(new URL(`../../assets/models/jwmarriott/${key}.js`, import.meta.url), module => module.default),
+]));
+export const prepareFullDetail = () => Promise.all(Object.values(fixtureResources).map(resource => resource.load()));
+if (new URL(import.meta.url).protocol === 'file:') await prepareFullDetail();
 
 // JW 메리어트 호텔 서울 — 센트럴시티 동측 블록 (OSM 136986976), 지상 33층 · 지하 4층.
 // Local frame: u = across the block (east, toward the 경부선 service road), v = along the block (south, toward 사평대로).
@@ -281,9 +289,14 @@ export function build(K) {
   // Slabs, opaque partitions, columns, rails and circulation execute immediately. The explicit
   // structural flag is for a stage/column/door built with a furniture primitive, not a size heuristic.
   let detailQueue = null;
+  function inFit(placement,fn) {
+    const before = fit;
+    fit = placement;
+    try { return fn(); } finally { fit = before; }
+  }
   const DEC = fn => {
     const captured=fit;
-    const draw=()=>{const before=fit;fit=captured;try{return fn();}finally{fit=before;}};
+    const draw=()=>inFit(captured,fn);
     return detailQueue?detailQueue.push(draw):draw();
   };
   const STRUCT = fn => { const prev = detailQueue; detailQueue = null; try { return fn(); } finally { detailQueue = prev; } };
@@ -299,21 +312,39 @@ export function build(K) {
   const DK = Object.fromEntries(['quad', 'dome', 'hpoly', 'prism'].map(method => [method, (...args) => DEC(() => K[method](...args))]));
   // Blender X follows local u, Blender Y points north, and Z is height.
   // Submit to the same material batches and fitted floor frame as the room.
-  const fixture=(key,u,v,y,angle=0,scale=1)=>DEC(()=>{
-    const model=fixtures[key],cs=Math.cos(angle),sn=Math.sin(angle);
-    const materials=model.materials.map(m=>m.tex||m.gloss?m:m.color);
-    const points=model.points.map(([bx,by,bz])=>{
-      const [x,z]=P(u+(bx*cs+by*sn)*scale/1000,v+(bx*sn-by*cs)*scale/1000);
-      return [x,y+bz*scale/1000,z];
-    });
-    for(const [m,i,j,k,l=k] of model.faces){
-      const a=points[i],b=points[j],c=points[k],d=points[l];
-      const ab=b.map((x,h)=>x-a[h]),ac=c.map((x,h)=>x-a[h]);
-      const n=[ab[1]*ac[2]-ab[2]*ac[1],ab[2]*ac[0]-ab[0]*ac[2],ab[0]*ac[1]-ab[1]*ac[0]];
-      const length=Math.hypot(...n);
-      if(length>1e-8)K.quad(materials[m],[a,b,c,d],n.map(value=>value/length));
+  const fixture=(key,u,v,y,angle=0,scale=1)=>{
+    const cs=Math.cos(angle),sn=Math.sin(angle),placement=fit;
+    const position=(bx,by)=>P(u+(bx*cs+by*sn)*scale/1000,v+(bx*sn-by*cs)*scale/1000);
+    function draw(model){
+      const materials=model.materials.map(m=>m.tex||m.gloss?m:m.color);
+      const points=model.points.map(([bx,by,bz])=>{
+        const [x,z]=position(bx,by);
+        return [x,y+bz*scale/1000,z];
+      });
+      for(const [m,i,j,k,l=k] of model.faces){
+        const a=points[i],b=points[j],c=points[k],d=points[l];
+        const ab=b.map((x,h)=>x-a[h]),ac=c.map((x,h)=>x-a[h]);
+        const n=[ab[1]*ac[2]-ab[2]*ac[1],ab[2]*ac[0]-ab[0]*ac[2],ab[0]*ac[1]-ab[1]*ac[0]];
+        const length=Math.hypot(...n);
+        if(length>1e-8)K.quad(materials[m],[a,b,c,d],n.map(value=>value/length));
+      }
     }
-  });
+    const resource = fixtureResources[key];
+    if (!resource) return DEC(() => draw(exteriorFixtures[key]));
+    const [x0, z0, low, x1, z1, high] = interiorBounds[key];
+    const poly = [[x0,z0],[x1,z0],[x1,z1],[x0,z1]]
+      .map(([bx, by]) => mapPoint(...position(bx, by), placement));
+    // Register when the room becomes visible, using the original fitted room coordinates.
+    DEC(() => baseKit.detail({
+      name: 'JW 메리어트 · ' + key,
+      floor: fixtureFloors[key],
+      resource,
+      visualOnly: true,
+      poly,
+      y0: y + low * scale / 1000,
+      y1: y + high * scale / 1000,
+    }, () => inFit(placement, () => draw(resource.value))));
+  };
   const B = (o) => { const [x, z] = P(o.u ?? 0, o.v ?? 0); const { u, v, r, structural, ...rest } = o; const draw = () => K.box({ ...rest, x, z, rotY: R + (r || 0) }); return structural ? draw() : DEC(draw); };
   const SG = (text, o) => { const [x, z] = P(o.u, o.v); const { u, v, f, ...rest } = o; DEC(() => K.sign(text, { ...rest, x, z, rotY: FACE[f || 'S'] })); };
   const WL = (u0, v0, u1, v1, y0, y1, o = {}) => { const a = P(u0, v0), b = P(u1, v1); const draw = () => K.wall(a[0], a[1], b[0], b[1], y0, y1, o); return o.solid === false ? DEC(draw) : draw(); };

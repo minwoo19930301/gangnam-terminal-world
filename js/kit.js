@@ -1271,7 +1271,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
       fn = kit => withTerrainSurface(datum,() => draw(kit));
     }
     const rectangular=poly?.length===4 && poly.every(([x,z])=>(x===bb[0]||x===bb[2]) && (z===bb[1]||z===bb[3]));
-    details.push({ poly, exactDistance:!!poly&&!rectangular, owner: current, meta: perPlace[current], floor: o.floor || '', y0: o.y0 ?? -1e9, y1: o.y1 ?? 1e9, bb, fn, resource:o.resource, built: false, name: o.name || '', visibleFrom: o.visibleFrom });
+    details.push({ poly, exactDistance:!!poly&&!rectangular, owner: current, meta: perPlace[current], floor: o.floor || '', y0: o.y0 ?? -1e9, y1: o.y1 ?? 1e9, bb, fn, resource:o.resource, visualOnly:o.visualOnly, built: false, name: o.name || '', visibleFrom: o.visibleFrom });
   }
   // Pure visual batches can share a download. Complete it before entering the
   // synchronous kit build so the original place, terrain and material batches apply.
@@ -1329,7 +1329,11 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     const shift = camera.position.y - y;
     // A little space around the view preloads a storefront as it turns into
     // frame. Always prepare furniture directly beside the player for collision.
-    if (distance > 8*8 || vertical > 0) {
+    if (d.visualOnly) {
+      // Purely decorative meshes can wait for their exact native bounds to enter view.
+      viewBox.min.set(x0,d.y0+shift,z0);viewBox.max.set(x1,d.y1+shift,z1);
+      if (!viewFrustum.intersectsBox(viewBox)) return false;
+    } else if (distance > 8*8 || vertical > 0) {
       viewBox.min.set(x0-3, d.y0+shift-2, z0-3);
       viewBox.max.set(x1+3, d.y1+shift+2, z1+3);
       if (!viewFrustum.intersectsBox(viewBox)) return false;
