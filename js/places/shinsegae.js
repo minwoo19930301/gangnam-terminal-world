@@ -36,6 +36,7 @@ import { registerKisara } from './shinsegae-kisara.js';
 import { registerMilhwa } from './shinsegae-milhwa.js';
 import { registerHibarin } from './shinsegae-hibarin.js';
 import { registerMyeonok } from './shinsegae-myeonok.js';
+import { registerCategorique } from './shinsegae-categorique.js';
 import { registerCollage } from './shinsegae-collage.js';
 import { registerHaoSum } from './shinsegae-haosum.js';
 import { registerMauviel } from './shinsegae-mauviel.js';
@@ -8254,6 +8255,17 @@ export function build(K) {
       K.box({x,y,z,w:3.74,h:.875,d:.61,rotY:yaw,mat:0x454747,skip:['top','bottom','n','s','e','w']});
     }
     if (id==='11F') {
+      const cafe=guide.cells.find(c=>c.name.startsWith('카테고릭'));
+      const cr=upperBuildRect(id,cafe);
+      const uBar=cr[0]+1.256,vBar=(cr[1]+cr[3])/2;
+      const [bx,bz]=P(uBar,vBar),[fx,fz]=P(uBar+1,vBar);
+      const barYaw=Math.atan2(fx-bx,fz-bz);
+      registerCategorique(K,{poly:rect(...cr),x:bx,y,z:bz,yaw:barYaw});
+      for(const [a,b,w,d,h] of [[0,0,4.1,1.22,1.057],[0,-.9,4.43,.065,2.93],
+        [-1.8,.89,.47,.43,.97],[1.8,.89,.47,.43,.97]]){
+        K.box({x:bx+a*Math.cos(barYaw)+b*Math.sin(barYaw),y,z:bz-a*Math.sin(barYaw)+b*Math.cos(barYaw),
+          rotY:barYaw,w,d,h,mat:0x272923,skip:['top','bottom','n','s','e','w']});
+      }
       const collage=guide.cells.find(c=>c.name.startsWith('꼴라주'));
       const room=upperBuildRect(id,collage);
       const cu=room[2]-3.6, cv=room[3]-(room[3]-room[1])*.23;
@@ -14264,6 +14276,8 @@ export function build(K) {
         }
         B(a,b,.10,.10,.8,.23,0x76684a);
       }
+      // The photographed brewing bar replaces the default rear cafe counter.
+      if(id==='11F'&&name.startsWith('카테고릭'))return;
       // Back counter, open kitchen silhouettes and warm suspended lamps.
       const w=Math.min(4.5,W-.8),b=D-.62;
       B(W/2,b,w,.6,.07,.95,p.dark?walnut:oak);B(W/2,b,w+.05,.65,1.02,.055,ivory);
