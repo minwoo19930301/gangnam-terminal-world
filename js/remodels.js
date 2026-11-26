@@ -47,7 +47,7 @@ function fitTerrainBounds(THREE, root, levels) {
   });
 }
 
-function footprintLevel(poly) {
+export function footprintLevel(poly) {
   const [x0,z0,x1,z1] = polyBBox(poly);
   return relief((x0+x1)/2, (z0+z1)/2);
 }
@@ -55,7 +55,7 @@ function footprintLevel(poly) {
 // Some apartment GLBs merge several freestanding towers into one mesh.
 // Attach facade vertices to the nearest mapped footprint, including balconies
 // just outside the outline. Nearby vertices normally share the same metre cell.
-function estateLevels(sites) {
+export function estateLevels(sites) {
   const cache = new Map();
   return (x,z) => {
     x = Math.floor(x) + .5;
