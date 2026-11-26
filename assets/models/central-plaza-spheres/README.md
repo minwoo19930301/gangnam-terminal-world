@@ -8,4 +8,4 @@ spheres.blend에는 세 구체와 각각의 낮은 받침이 있다. 서쪽 구�
 blender -b assets/models/central-plaza-spheres/spheres.blend --python-exit-code 1 -P assets/models/central-plaza-spheres/build.py -- --export-current
 ```
 
-게임은 구체 표면을 재질에 그린다. 별도 GLB 다운로드는 없다. 실내 배치 동기화는 기존 게임 구체에서 위치와 크기를 읽어 원본 세 컬렉션을 도시 장면에도 연결한다. [전후 비교](comparison.jpg) · [일반 보행 시점](camera.json)
+게임은 둥근 메시 하나를 세 구체가 공유하고, 실제 보행 시야에 들어온 구체의 재질만 그린다. 별도 GLB 다운로드는 없다. 실내 배치 동기화는 기존 게임 구체에서 위치와 크기를 읽어 원본 세 컬렉션을 도시 장면에도 연결한다. [전후 비교](comparison.jpg) · [일반 보행 시점](camera.json)

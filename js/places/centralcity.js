@@ -2453,14 +2453,30 @@ export function build(K) {
     },[1,1],{lazy:true});
     // The frontal 2022 and 2026 street views show neighbouring centres about 1.8 diameters apart.
     const r=1.02,base=.018,foot=.065;
-    for(const [t,mat] of [[15.35,'ccPlazaStone'],[19,'ccPlazaBronze'],[22.65,'ccPlazaRipple']]){
-      const [x,z]=P(-45,t);
-      lcyl(-45,t,base,.31,.1,0x353833,{seg:20,solid:false});
-      K.dome({x,z,y:base+foot+r,rx:r,ry:r,rz:r,hemi:false,seg:36,rings:20,mat});
-      // K.dome's collision starts at its equator; register the complete ground-level
-      // footprint locally so the lower half also blocks the player.
+    let roundSurface;
+    for(const [t,mat,name] of [[15.35,'ccPlazaStone','서쪽 녹청 구체'],[19,'ccPlazaBronze','가운데 갈색 구체'],
+                               [22.65,'ccPlazaRipple','동쪽 잔물결 구체']]){
+      const [x,z]=P(-45,t),subject='센트럴시티 광장 · '+name;
+      K.withTerrainAnchor(x,z,()=>lcyl(-45,t,base,.31,.1,0x353833,{seg:20,solid:false}));
       const circle=Array.from({length:20},(_,i)=>[x+Math.cos(i*PI/10)*r,z+Math.sin(i*PI/10)*r]);
       K.phys.addPolyWalls(circle,base,base+foot+2*r,.02,'centralcity');
+      K.detail({name:subject,floor:'지상',rect:[x-r,z-r,x+r,z+r],y0:base,y1:base+foot+2*r,
+        visualOnly:true,silhouetteDistance:180,visibleFrom:(eyeX,y,eyeZ)=>y>-1 && y<12 && (eyeX-x)*AX+(eyeZ-z)*AZ<28},kit=>{
+        const T=kit.THREE;
+        if(!roundSurface){
+          // Smooth normals keep the short-range lantern falloff continuous around the three rounded forms.
+          // Match the original dome UVs and leave the native origin at the base of the sphere.
+          roundSurface=new T.SphereGeometry(r,36,20).rotateY(PI).translate(0,r,0);
+          const uv=roundSurface.attributes.uv;
+          for(let i=0;i<uv.count;i++)uv.setX(i,1-uv.getX(i));
+        }
+        const paint=new T.MeshLambertMaterial({map:kit.T.surface(mat).tex});
+        paint.defines={BANPO_RIGID:1};
+        const sculpture=new T.Mesh(roundSurface,paint);
+        sculpture.name=subject;
+        sculpture.position.set(x,base+foot+relief(x,z),z);sculpture.userData.terrainApplied=true;
+        kit.addMesh(sculpture);
+      });
     }
     // The roadview shows the black twin lantern on the curb side of the bronze sphere.
     // BEGIN CENTRAL LANTERN GLASS
