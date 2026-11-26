@@ -13,8 +13,21 @@ try {
     await page.waitForFunction(()=>window.__world?.ready,null,{timeout:120000});
     await page.evaluate(()=>document.querySelector('#start').click());
     const count=await page.evaluate(()=>__world.scene.children.filter(o=>o.name==='신세계 마켓 · 그로서리 진열병').length);
-    if(floor==='8F') assert.equal(count,0,'a cold upper-floor entry built B1 stock');
+    const fruit=await page.evaluate(()=>__world.scene.children
+      .filter(o=>['신세계 마켓 · 제철 과일','신세계 마켓 · 과일 상자'].includes(o.name))
+      .map(o=>({name:o.name,count:o.count,geometry:o.geometry.uuid,colors:o.instanceColor?.count,
+        faces:o.geometry.index.count/3,frustumCulled:o.frustumCulled})));
+    if(floor==='8F'){
+      assert.equal(count,0,'a cold upper-floor entry built B1 stock');
+      assert.deepEqual(fruit,[]);
+    }
     else {
+      const crates=fruit.filter(o=>o.name.endsWith('상자'));
+      assert.ok(crates.length>1 && new Set(crates.map(o=>o.geometry)).size===1);
+      assert.ok(crates.every(o=>o.count%72===0 && o.faces===48));
+      assert.equal(crates.reduce((n,o)=>n+o.count,0),792);
+      assert.ok(fruit.every(o=>o.colors===o.count && o.frustumCulled));
+      console.log('Faceted produce:',fruit.length,'racks,',fruit.reduce((n,o)=>n+o.count,0),'fruit');
       assert.ok(count>1,'expected spatially divided stock');
       const checks=await page.evaluate(async()=>{
         const w=__world,stock=w.scene.children.filter(o=>o.name==='신세계 마켓 · 그로서리 진열병');
