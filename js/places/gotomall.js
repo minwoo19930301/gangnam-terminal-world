@@ -1,3 +1,4 @@
+import {placeWestCorner} from '../../assets/models/gotomall-west-corner/place.js';
 import {placeYogurtWorld} from '../../assets/models/gotomall-yogurtworld/room.js';
 import {westSeatCollisions,westSeatFixtures} from '../../assets/models/gotomall-west-seats/place.js';
 import {placeGardenFixture} from '../../assets/models/gotomall-rest-garden/place.js';
@@ -2190,6 +2191,7 @@ export function build(K) {
   }
 
   placeYogurtWorld(K,P,ROT,FL);
+  placeWestCorner(K,P,ROT,FL);
   { // ---- 서편 푸드코트 (west bulge, under the 강남터미널 고가) ----
     const north = [
       { name: '얌샘김밥', sub: '얌샘김밥 플러스 · 반포고투몰점', bg: '#1f6b3a', fg: '#fff', menu: ['김밥 · 라면 · 떡볶이', '돈가스 · 덮밥'] },

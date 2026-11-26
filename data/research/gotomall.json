@@ -2,6 +2,19 @@
  "id": "gotomall",
  "name": "강남터미널 지하도상가 (GOTO MALL 고투몰)",
  "updated": "2026-11-26",
+ "west_g011_g013_20261126": {
+  "공단_1구역": "https://www.sisul.or.kr/open_content/com/common/upfiles.do?program=undershop!0923_gosokteomineol_1chabaechido_%281guyeok%29.jpg",
+  "반에반_입점정보와_사진": "https://gotomall.kr/stores/73bd8e2d-9358-409a-9d6e-633d1b2cc644",
+  "반에반_네이버지도": "https://map.naver.com/p/entry/place/31315348",
+  "반에반_방문사진": "https://m.blog.naver.com/ssapt406/223816380383",
+  "G013_업종과_정면사진": "https://gotomall.kr/stores/5f6efe1c-8284-4252-a8a8-3677dcb55d3a",
+  "G013_매장_방문사진": "https://m.blog.naver.com/leeke1214/223734561042",
+  "G013_네이버지도_기존주소": "https://map.naver.com/p/entry/place/1677765568",
+  "확인": "G-011은 요거트월드 옆. G-013은 측창 남쪽 통로 건너. 현재 운영사 안내는 셀프사진이며 현장 사진에 HAMA FILM 상호, 하마 그림과 물결 거울이 보인다. 연결된 네이버 플레이스 주소와 지점명 검색에서는 2026-11-26 해당 페이지를 확인할 수 없었다.",
+  "추정": "매장 깊이·가구 크기와 수량을 도면/사진에서 추정했다. 사진 스트립 도안은 직접 구성했으며 동시 촬영되는 인물이나 실상품 목록을 재현하지 않는다.",
+  "모델": "assets/models/gotomall-west-corner/west-corner.blend",
+  "게임화면": "assets/models/gotomall-west-corner/play.jpg"
+ },
  "west_g012_20261126": {
   "공단_1구역_배치도": "https://www.sisul.or.kr/open_content/com/common/upfiles.do?program=undershop!0923_gosokteomineol_1chabaechido_%281guyeok%29.jpg",
   "공단_상가_안내": "https://www.sisul.or.kr/open_content/undershop/undershop/undershopDetail.do?menu_div=euljiro&page_div=02&shop_seq=32",
@@ -730,7 +743,9 @@
    "use": "서편 통로·상점·푸드코트·휴게",
    "tenants": [
     "마당(G-010)",
-    "요거트월드 반포고투몰점(G-012)"
+    "반에반 고투몰점(G-011)",
+    "요거트월드 반포고투몰점(G-012)",
+    "셀프사진(G-013)"
    ],
    "layout": "기존 꽃·침구 등 점포와 집기는 유지. 서편 전체를 특정 업종 밀집 구역으로 단정할 근거가 없어 구역 표시는 중립화. 점포별 사진 근거와 실제 좌표 추정은 별도.",
    "source": "https://rurubu.jp/andmore/article/25097",
