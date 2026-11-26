@@ -1,3 +1,4 @@
+import { height as perstigeHeight, panels as perstigePanels } from '../assets/models/perstige/panels.js';
 import { fleetInstances, vehicleSize } from './fleet.js';
 // Generic city layer from OpenStreetMap: everything not claimed by a detailed place module.
 import { pointInPoly, polyBBox, polyArea } from './physics.js';
@@ -695,6 +696,23 @@ export function buildCity(K, osm, { claimedBuildings = new Set(), claimedRoads =
         K.prism(b.poly, base, 0, { mat: 'concrete', top: false, bottom: false, holes: b.holes, solid: false });
         for (const ring of [b.poly, ...(b.holes || [])]) K.phys.addPolyWalls(ring, base, 0, .02, 'city');
       }
+    }
+    if (b.id === 412970176) {
+      K.prism(b.poly, 0, perstigeHeight, { mat: 0x797681, top: 'roofgravel', bottom: false });
+      for (const [x,z,y,w,h,d,rotY,mat] of perstigePanels)
+        K.box({ x,z,y,w,h,d,rotY,mat,solid:false });
+      // Lettering is legible in Naver's January 2026 view of the public north corner.
+      const [a, edgeEnd] = [b.poly[6], b.poly[7]];
+      const length = Math.hypot(edgeEnd[0]-a[0], edgeEnd[1]-a[1]);
+      const ux = (edgeEnd[0]-a[0])/length, uz = (edgeEnd[1]-a[1])/length;
+      const nx = -uz, nz = ux, rotY = Math.atan2(nx,nz);
+      const fascia = (text, along, y, w, h, bg, fg) => K.sign(text, {
+        x:a[0]+ux*along+nx*.28, z:a[1]+uz*along+nz*.28, y, w, h, rotY, bg, fg, bold:true,
+      });
+      fascia('래미안 퍼스티지 중심상가',4.3,18.75,7.7,.53,null,'#ede6cc');
+      fascia('비앤씨 3F 치과',13.9,9.23,5.4,.72,'#41768c','#f4f6ef');
+      fascia('하나은행',13.9,7.19,5.5,.46,'#23766b','#f3f6ee');
+      return;
     }
     const facade = facadeFor(b);
     const lv = b.levels || Math.max(1, Math.round(b.height / 3.3));
