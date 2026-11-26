@@ -418,6 +418,13 @@ export function build(K) {
       }
     }
   }
+  // Seoul's August 2026 street-tree inventory records pin oaks along this
+  // public sidewalk. The game uses its existing broadleaf crown at an
+  // approximate height; the inventory gives the trunk positions and species.
+  for(const [x,z] of [
+    [-249.64,-51.87],[-243.79,-54.39],[-238.18,-56.66],[-232.33,-59.06],[-225.84,-61.08],
+    [-216.48,-60.76],[-188.67,-70.99],[-123.25,-97.99],[-119.37,-96.52],[-114.38,-98.41],
+  ])K.tree(x,z,{y:0,h:8,kind:'zelkova'});
   // sr-07 / street_01: continuous mature light-green crowns on the north
   // sidewalk. OSM chainage preserves the oblique kerb at both ends of the row.
   K.detail({name:'신반포로 북측 가로수',floor:'지상',rect:[-45,-168,65,-113],y0:0,y1:12},K=>{

@@ -373,7 +373,7 @@ async function boot() {
     reloadAt(key, x, y ?? 0, z, yaw != null ? yaw * 180 / Math.PI : player.yaw * 180 / Math.PI, areaName(id, META), pitchDeg);
     return true; // A remote destination cannot be placed on this scene's local floor.
   }
-  const map = createMap({ THREE, K, osm, player, phys, spawns, places: placeInfo, directory: META, container: $('app'), zoneAt: () => currentZone, leaveArea });
+  const map = createMap({ THREE, K, osm, player, phys, spawns, places: placeInfo, directory: META, container: $('app'), zoneAt: () => currentZone, leaveArea, openLandmark: landmark => route.openLandmark(landmark) });
   let currentZone = null;
   if (SHOT) document.body.classList.add('shot');
   const canvas = renderer.domElement;
@@ -504,9 +504,14 @@ async function boot() {
       }
       const [addressPlace, floor] = r.key.split('/');
       const place = META?.[addressPlace]?.floorAliases?.[floor] ?? addressPlace;
-      const entrance = r.destination && spawns.find(s => s.mapDestination && s.place === place &&
+      const entrance = r.destination && spawns.find(s => s.place === place &&
         s.floor === floor && s.destinationId === r.destination);
-      const sp = entrance || (floor && floorArrival(phys, K._, player, place, floor)) || spawns.find(s => s.place === place);
+      const firstSpawn = spawns.find(s => s.place === place);
+      let landingFloor = floor;
+      if (!floor && firstSpawn && phys.zoneAt(firstSpawn.x, (firstSpawn.y ?? 0) + .1, firstSpawn.z)?.place !== place) {
+        landingFloor = LANDMARKS.find(l => l.place === place && l.arrivalFloor)?.arrivalFloor;
+      }
+      const sp = entrance || (landingFloor && floorArrival(phys, K._, player, place, landingFloor)) || firstSpawn;
       if (sp) { player.teleport(sp.x, sp.y ?? 0, sp.z, sp.yaw); return true; }
       return false;
     }
@@ -523,6 +528,20 @@ async function boot() {
       go(r);
     });
     return {
+      openLandmark(landmark) {
+        if (!META?.[landmark.place]) return false;
+        const key = landmark.place + '/' + landmark.arrivalFloor;
+        const hash = enc(key) + (landmark.destinationId ? '?destination=' + encodeURIComponent(landmark.destinationId) : '');
+        if (AREA.id !== 'all' && areaIdForKey(key, null, META) !== AREA.id) {
+          leaving = true;
+          history.pushState(null, '', hash);
+          location.reload();
+          return true;
+        }
+        if (!go({key, destination:landmark.destinationId})) return false;
+        history.pushState(null, '', hash);
+        return true;
+      },
       start() { const r = parse(location.hash); if (r && !start) go(r); },
       update(zn) {
         const now = performance.now(), k = keyOf(zn);

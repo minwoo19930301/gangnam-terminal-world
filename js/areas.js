@@ -99,6 +99,9 @@ export function planArea(id, META, JUNCTIONS = []) {
   // The street right outside the doors (40 m) is kept so the entrances look right; every other building is a plain block.
   const neigh = new Set(); for (const m of own) for (const j of META[m]?.junctions || []) if (!ownSet.has(j.other)) neigh.add(j.other);
   const modules = all.filter(m => ownSet.has(m) || neigh.has(m) || (m === 'streets' && touches(META[m], B, 40)));
+  // From the department's café passage, the neighbouring dessert cases and
+  // vaults are visible before the shopper crosses the normal loading boundary.
+  const cafeJunction=ownSet.has('shinsegae') && META.shinsegae?.junctions.find(j=>j.id==='J_SWEET_CAFE_AISLE');
   const mouths = []; for (const m of own) for (const j of META[m]?.junctions || []) if (!ownSet.has(j.other)) mouths.push([j.x, j.z, j.y, j.also || []]);
   const nearMouth = (x, y, z) => {
     for (const [mx, mz, my, also] of mouths) {
@@ -110,13 +113,21 @@ export function planArea(id, META, JUNCTIONS = []) {
   };
   return {
     id, name: own.map(m => META[m]?.name || m).join(' · '), modules, box: B, lodSolid: false,
-    keep(owner, x, y, z, ny) {
-      if (ownSet.has(owner) || owner === 'ground' || owner === 'lod') return true;
+    keep(owner, x, y, z, ny, sharedShell) {
+      if (ownSet.has(owner) || owner === 'ground' || owner === 'lod' || (sharedShell && ownSet.has(sharedShell))) return true;
       if (owner === 'city' || owner === 'main') return inBox(B, x, z, 40) || ((Math.abs(ny) < 0.5 || y > 2.5) && inBox(B, x, z, 900)); // walls/roofs: what you see out of the windows
       if (owner === 'shinsegae' && ownSet.has('centralcity') && cinemaPreview(x,y,z)) return true;
       if (owner === 'streets') return inBox(B, x, z, 40) && (y > -3.2 || nearMouth(x, y, z));
       return nearMouth(x, y, z);
     },
-    keepDetail(g) { return ownSet.has(g.owner); },
+    keepDetail(g) {
+      if(ownSet.has(g.owner))return true;
+      if(!cafeJunction || g.owner!=='centralcity' || g.floor!=='B1')return false;
+      const [x0,z0,x1,z1]=g.bb;
+      // Large whole-building groups remain on their own page. Local cells
+      // still use the usual distance and camera checks in the detail loader.
+      return x1-x0<20 && z1-z0<20 &&
+        Math.hypot((x0+x1)/2-cafeJunction.x,(z0+z1)/2-cafeJunction.z)<27;
+    },
   };
 }

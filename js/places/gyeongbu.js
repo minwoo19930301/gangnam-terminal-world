@@ -119,7 +119,7 @@ export function build(K) {
   function lcar(u, v, y, rot, kind = 'car', o = {}) { const [x, z] = W(u, v); K.vehicle({ x, y, z, rotY: rot, kind, ...o }); }
   function lcyl(u, v, y, r, h, mat, o = {}) { const [x, z] = W(u, v); K.cyl({ x, y, z, r, h, mat, ...o }); }
   function lelev(name, u, v, face, floors, o = {}) { const [x, z] = W(u, v); K.elevator({ name, x, z, rotY: FACE[face], w: 2.2, d: 2.2, floors, ...o }); }
-  function lspawn(name, u, v, y, du, dv) { const [x, z] = W(u, v); K.spawn({ name, x, y, z, yaw: yawL(du, dv) }); }
+  function lspawn(name, u, v, y, du, dv, options) { const [x, z] = W(u, v); K.spawn({ name, x, y, z, yaw: yawL(du, dv), ...options }); }
   // Local-coordinate helpers share the active kit, including during lazy callbacks.
   function ldetail(options, furnish) {
     const owner = K;
@@ -2131,7 +2131,7 @@ export function build(K) {
     lzone('다이소 디즈니 · 계산하는 곳','B1','GATE 4 · 고투몰 방면',238,-18,264,4,y,y+3.1,6);
     lzone('다이소 1번 출입구','1F','지하 매장 · 승차홈 22~24',164,9,168,12,0,3.3,7);
     lzone('다이소 2번 출입구','1F','지하 매장 입구전용',206.5,22,214.5,25,0,3.3,7);
-    lspawn('다이소 GATE 1 매장입구',172,6.5,y,1,0);
+    lspawn('다이소 GATE 1 매장입구',172,6.5,y,1,0,{floor:'B1',destinationId:'daiso-gate-1'});
     lspawn('다이소 생활용품 긴 매장',218,6.5,y,1,0);
     lspawn('다이소 GATE 4 고투몰 연결',261.5,-15,y,1,0);
     buildRound20DaisoHall(y);

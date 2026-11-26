@@ -1,7 +1,7 @@
-import {b1Plan,departmentPoint} from '../../../js/places/shinsegae-b1-plan.js';
+import {cafeAislePoint as plan} from '../../../js/places/sweet-park-plan.js';
 import {pointInPoly,polyBBox} from '../../../js/physics.js';
 
-export const plan=(x,y)=>departmentPoint(...b1Plan(x,y));
+export {plan};
 const radial=(degrees)=>[649+64*Math.cos(degrees*Math.PI/180),1009+65*Math.sin(degrees*Math.PI/180)];
 export const arc=(a,b,n)=>Array.from({length:n+1},(_,i)=>radial(a+(b-a)*i/n));
 // The official white court meets the diagonal on this chord. Keep the two
@@ -19,7 +19,9 @@ export function outward(pt,depth){
 // The shoe hall adjoins the bookshop at the south edge of the rotary. The
 // black shopfront line stops at the start of the rounded, open showroom edge.
 export const shoeFront=[plan(593,1057),...arc(135,130,2).map(p=>plan(...p)),...arc(61,130,11).slice(10,11).map(p=>plan(...p))];
-export const shoeRear=[plan(593,1082),plan(614,1082)];
+// Widen only behind the published sales-hall boundary. Keep the public
+// rotary arc and the adjacent bookstore threshold on their original vertices.
+export const shoeRear=[[581,1069],[581,1095],[620,1095],[620,1065]].map(p=>plan(...p));
 export const shoeThreshold=[...shoeFront,...[...shoeRear].reverse()];
 export const bookFloor=[...bookEdge,...bookEdge.map(p=>outward(p,1.65)).reverse()];
 const ends=[[710,1028],[686,1063]].map(p=>plan(...p));
@@ -38,9 +40,13 @@ export const cafeFloor=[...cafeArc,...(Math.hypot(right[0]-first[0],right[1]-fir
 // The north return ends on the existing department B1 slab; the west end is
 // the guide margin. The eastern market-to-cinema diagonal is a separate polygon.
 const inner=[...arc(135,218,15)].reverse();
-export const westApron=[...inner,[434,1057],[406,1030],[372,1030],[372,998],[570,998],
-  [548,984],[519,963],[496,943],[480,922],[470,896],[467,872],[467,726.6543779747],
-  [498,726.6543779747],[498,872],[502,894],[513,915],[530,932],[552,947],[575,958],[594,961]].map(p=>plan(...p));
+const southSide=[[593,1057],[434,1057],[406,1030],[372,1030]];
+const northSide=[[372,998],[570,998],[548,984],[519,963],[496,943],[480,922],
+  [470,896],[467,872],[467,726.6543779747]];
+const returnSide=[[498,726.6543779747],[498,872],[502,894],[513,915],[530,932],
+  [552,947],[575,958],[594,961]];
+export const westSides=[southSide,northSide,returnSide].map(side=>side.map(p=>plan(...p)));
+export const westApron=[...inner.map(p=>plan(...p)),...westSides[0].slice(1),...westSides[1],...westSides[2]];
 const regions=[court,cafeFloor,bookFloor,shoeThreshold,westApron].map(poly=>({poly,box:polyBBox(poly)}));
 export function rotaryPreview(x,y,z){
   if(y< -6.25 || y> -1.42)return false;
