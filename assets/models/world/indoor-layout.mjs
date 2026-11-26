@@ -305,6 +305,16 @@ export async function captureIndoorLayout() {
       };
       kit._.setCurrent(place,meta);
       build(kit);
+      // The sales floor is batched into the structural slab. Its editable face
+      // already uses city X/Z coordinates, so only the exterior height datum is added.
+      if (place==='shinsegae') {
+        const market=kit._.zonesList.find(z=>z.name==='신세계 마켓' && z.floor==='B1');
+        if (!market) throw Error('Missing Shinsegae B1 sales-floor polygon');
+        const [x,z]=market.poly[0], ground=rounded(relief(x,z));
+        result.push({id:'shinsegae/MarketSalesFloor/1',place,placeName:meta.name,floor:'B1',
+          library:'shinsegae-market-floor/market-floor.blend',collections:['Shinsegae_B1_Market_Floor'],
+          subject:'신세계 마켓 판매장 바닥',ground,terrain:ground,matrix:new THREE.Matrix4().toArray()});
+      }
       kit._.buildAllDetail();
       if(kit._.detailErrors.length)throw Error(kit._.detailErrors.join('\n'));
       for(const [, , , name] of rules)if(!counts.has(name))throw Error('No production placement for '+place+'/'+name);
