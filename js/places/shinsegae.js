@@ -17464,7 +17464,7 @@ export function build(K) {
   }
 
   // ================================================================= spawns
-  const sp = (name, u, v, y, du, dv) => { const [x, z] = P(u, v); K.spawn({ name, x, y, z, yaw: yawTo(du, dv) }); };
+  const sp = (name, u, v, y, du, dv, arrivalFloor) => { const [x, z] = P(u, v); K.spawn({ name, x, y, z, yaw: yawTo(du, dv), arrivalFloor }); };
   sp('신세계 강남점 정문 (신반포로)', ENTRY, -9, 0, 0, 1);
   sp('신세계 강남점 동문 (경부선 터미널 방면)', UW + 1.2, EAST_GATE - .55, 0, -1, 0);
   sp('1F 화장품 · 주얼리', 33.3, 65.5, 0, 0, -1);
@@ -17475,7 +17475,8 @@ export function build(K) {
   function aisleStart(name, id, px, py, lookX, lookY) {
     const [u,v]=upperPlanPoint(id,px,py);
     const [toU,toV]=upperPlanPoint(id,lookX,lookY);
-    sp(name,u,v,LV[id],toU-u,toV-v);
+    // Keep the named winter shortcut while opening the bare 8F link in the aisle.
+    sp(name,u,v,LV[id],toU-u,toV-v,id==='8F'?id:undefined);
   }
   sp('8F 겨울 매장 · 에스컬레이터', MAIN_WELL[2]+1.1, 49.2, LV['8F'], 1, 0);
   aisleStart('4F 슈즈','4F',1476,946,1275,833); // Gianvito Rossi and Louis Vuitton shoes
@@ -17484,10 +17485,10 @@ export function build(K) {
     '2F':[1628,666,1650,730],  // upper landing between Bulgari and Tiffany
     '3F':[1160,867,1155,920], // Omega and Breguet
     '4F':[994,790,1238,790],  // from the cross-wing passage towards the shoe hall
-    '5F':[1520,860,1634,854], // supported landing near the bag aisle
-    '6F':[1635,690,1690,690], // Rimowa
+    '5F':[1638,880,1682,882], // DAKS handbags
+    '6F':[1516,950,1516,1000], // Tumi
     '7F':[448,623,448,563], // PXG
-    '8F':[1190,866,1135,866], // Onitsuka Tiger
+    '8F':[1204,868,1132,862], // Onitsuka Tiger
     '9F':[1193,916,1140,916], // Focal
     '10F':[1219,735,1150,735], // Bugaboo
     '11F':[1270,793,1270,750], // dining aisle beside Il Forno
