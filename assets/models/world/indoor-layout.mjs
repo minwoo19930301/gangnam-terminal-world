@@ -10,6 +10,12 @@ import {relief} from '../../../js/banpo_relief.js';
 // Scene object (or a uniquely identifying child) -> editable native source.
 // Geometry decoder matrices and decorative LOD offsets live *below* the placement.
 const sources = [
+  ...['142','360'].map(route=>[
+    'streets','지상','seoul-city-bus/city-bus.blend','신반포로 간선버스 · '+route+'번',
+    '간선버스 · 도장 차체와 경량 휠','간선버스 · 저상 승객석과 입석 손잡이','간선버스 · 곡면 유리와 출입문',
+    '간선버스 · 전조등과 차폭등','간선버스 · '+route+'번 노선 표시',
+  ]),
+  ['gyeongbu','1F','gyeongbu-front-cafes/cafes.blend','경부선 부속상가 · 이디야와 달리나인 거리 정면','경부선 정문 옆 · 이디야와 달리나인'],
   ...['CushionRack','CushionLinen','CushionSage','CushionRose','CushionIvory'].map(name=>
     ['gyeongbu','B1','concourse-fixtures/concourse-fixtures.blend','다이소 패브릭 · '+name,name]),
   ...['검은 강재 차양과 승객 벤치','강화유리와 반투명 수평 띠','한강과 서래섬 포스터','승객용 전광판과 안내 케이스','차양등과 보도 빛'].map(label=>{
