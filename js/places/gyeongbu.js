@@ -9,6 +9,7 @@ import { placeDeparturePortal } from '../../assets/models/gyeongbu-boards/model.
 import { placeIceCreamShop } from '../../assets/models/gyeongbu-icecream/model.js';
 import { placeWarmer } from '../../assets/models/gyeongbu-pretzels/model.js';
 import { placeUpperShowroom } from '../../assets/models/gyeongbu-apparel/model.js';
+import {placeChildrensAisle} from '../../assets/models/gyeongbu-childrens-aisle/model.js';
 import { coachGlazing } from '../../assets/models/coach-cabin/windows.js';
 import { placeCutFlowers } from '../../assets/models/gyeongbu-cutflowers/model.js';
 import { placeWaitingBenches } from '../../assets/models/gyeongbu-seating/model.js';
@@ -2403,10 +2404,29 @@ export function build(K) {
     const floor = (i + 1) + 'F';
     const wings = [[34.2, 1], [41.8, -1]];
     const centers = [100.5, 109.5, 118.5, 127.5];
+    const childrens=key==='Children';
+    if(childrens){
+      const hidden={skip:['top','bottom','n','s','e','w']};
+      // Two facing stalls share the recorded narrow centre aisle. The grid,
+      // shop backing and tables keep their collision when the close art is unloaded.
+      for(const [u,v,w,d,h] of [[36.19,109.5,.12,5.40,2.64],[33.06,109.5,.09,5.65,2.71],
+        [34.62,106.69,3.18,.085,2.69],[34.62,112.31,3.18,.085,2.69],[42.88,109.5,.09,5.65,2.72],
+        [41.44,106.67,2.89,.085,2.69],[41.44,112.33,2.89,.085,2.69],
+        [39.87,108.12,1.14,2.50,.84],[39.87,111.03,1.14,2.18,.84]]){
+        lbox(u,v,floorY,w,d,h,0,hidden);
+      }
+      const footprint=rect(33.0,105.35,43.04,113.65);
+      K.phys.addCeiling(footprint,floorY+2.923);
+      for(const [a,b] of [[96.70,105.35],[113.65,130.30]])K.phys.addCeiling(rect(35.55,a,40.45,b),floorY+2.925);
+      ldetail({floor,y0:floorY,y1:floorY+3.05,poly:footprint,name:'6층 아동복 철망 진열 통로'},()=>{
+        const [x,z]=W(38,109.5);placeChildrensAisle(K,x,floorY,z,ROT);
+      });
+    }
     // A fixture's front (+z in the exported GLB) faces the centre aisle.
     // Do not box in the stalls. Reserve collision only for the floor-standing
     // fixtures, rear panels and side walls, leaving each doorless front open.
     for (const [u, side] of wings) for (const v of centers) {
+      if(childrens&&v===centers[1])continue;
       const fixture = (a, b, w, d, h) => lbox(u + side * b, v - side * a,
         floorY, d, w, h, 0, {skip:['top','bottom','n','s','e','w']});
       fixture(0,-1.3,5.2,.12,2.96);
@@ -2437,6 +2457,7 @@ export function build(K) {
     ldetail({floor, y0:floorY, y1:floorY+3.2, poly:rect(32,97,44,131), name:label}, () => {
       const placements=[];
       for (const [u,side] of wings) for (const v of centers) {
+        if(childrens&&v===centers[1])continue;
         if(u!==sampleU || v!==sampleV)placements.push([u,v,floorY,side*PI/2]);
         const curtainSign=key==='Curtains' && u===sampleU && v===sampleV;
         lsign(curtainSign?'R A I N B O W  무지개장식':label,u+side*1.353,v,floorY+2.83,3.7,.26,side>0?'+u':'-u',

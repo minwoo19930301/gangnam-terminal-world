@@ -11,6 +11,8 @@ def lin(c):
     return c/12.92 if c<=.04045 else ((c+.055)/1.055)**2.4
 
 class Part:
+    columns=4
+    rows=2
     def __init__(self,name,finish='Stone'):
         self.name,self.finish=name,finish
         self.verts,self.faces,self.loops=[],[],[]
@@ -35,7 +37,7 @@ class Part:
             light=tint(*points[i]) if callable(tint) else tint
             if isinstance(light,(int,float)):light=(light,light,light)
             tex=uv[i]
-            self.loops.append((swatch,((swatch%4+.019+.962*tex[0])/4,(swatch//4+.019+.962*tex[1])/2),tuple(lin(min(1,max(0,a))) for a in light)+(1,)))
+            self.loops.append((swatch,((swatch%self.columns+.019+.962*tex[0])/self.columns,(swatch//self.columns+.019+.962*tex[1])/self.rows),tuple(lin(min(1,max(0,a))) for a in light)+(1,)))
 
     def front(self,a,z0,b,z1,d,swatch,tint=1.):
         self.face([(a,d,z0),(b,d,z0),(b,d,z1),(a,d,z1)],swatch,(0,1,0),tint)
