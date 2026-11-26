@@ -27,12 +27,10 @@ export function placeSingleDetail(K, {name, file, at, angle, fallback, fallbackM
     item.instanceMatrix.needsUpdate=true;
     item.computeBoundingSphere();
   }
+  // The native placement capture reads the name when this group is registered.
+  if(nativeInstanceName)item.name=nativeInstanceName;
   if(placements){
-    // The authoring scene can reuse the same furniture collection at each game position.
-    if(nativeInstanceName){
-      item.name=nativeInstanceName;
-      item.userData.nativePlacementInstances=true;
-    }
+    if(nativeInstanceName)item.userData.nativePlacementInstances=true;
     if(translations)root.userData.nativeComponents=translations.map(translation=>({subject:name,translation}));
     if(instances)instances.forEach(({color},i)=>{if(color)item.setColorAt(i,color);});
     placeInstances(null);

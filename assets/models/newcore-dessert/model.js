@@ -75,7 +75,10 @@ export function registerAshleyDessert(F,u,y,front,depth,width,bayView){
   }
   box(1.68,7.85,6.20,.97,.97);box(0,3.1,3.90,1.43,.96);box(6.4,3.1,3.90,1.43,.96);
   box(-5.65,2.68,.97,.76,.745);for(const d of [-.716,.716])box(-5.65,2.68+d,.448,.435,.86);
-  const entry=world(.08,-2.75);K.spawn({name:'1관 5F · 애슐리퀸즈 디저트',x:entry[0],z:entry[1],y:y-.034,yaw:rot+Math.PI});
+  const entry=world(0,-4.3);
+  K.spawn({name:'애슐리퀸즈 뉴코아 강남점 입구',place:'newcore',floor:'5F',mapDestination:true,
+    aliases:['애슐리퀸즈','Ashley Queens','1관 5F · 애슐리퀸즈 디저트'],poiIds:[13417561803],
+    x:entry[0],z:entry[1],y:y-.034,yaw:F.angle,pitchDeg:8});
   for(const {key,x,d,h} of rows){
     const [label,w,l,height,range]=parts[key],name=prefix+label,[wx,wz]=world(x,d);
     const backed=bayView(front-d,w*.53,-x);

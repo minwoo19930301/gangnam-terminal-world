@@ -55,6 +55,7 @@ const sources = [
   ['shinsegae','B1','kyoto-onimaru/counter.blend','교토 오니마루 · 곡면 진열대와 야끼무스비','KyotoOnimaru'],
   ['shinsegae','B1','nespresso-gangnam/display.blend','네스프레소 · 버츄오 시음 진열대','GangnamNespressoDisplay'],
   ['shinsegae','B1','intelligentsia-gangnam/coffeebar.blend','인텔리젠시아 강남 · 오렌지 진열장과 커피 바','GangnamCoffeebar'],
+  ['newcore','5F','newcore-ashley-entry/entrance.blend','뉴코아 1관 5층 · 애슐리퀸즈 몰딩 입구','NC_AshleyQueensEntrance'],
   ['newcore','1F','newcore-mamas/front.blend','뉴코아 3관 · 카페 마마스 외관','NC_MamasStreetFront'],
   ['newcore','5F','newcore-oksoban-entry/front.blend','뉴코아 1관 5층 · 옥소반 안내 데스크','NC_OksobanEntrance'],
   ['newcore','5F','newcore-yucheon/front.blend','뉴코아 1관 5층 · 유천냉면 입구와 식당 홀','NC_YucheonDiningHall'],
@@ -220,6 +221,7 @@ const sources = [
   ['jwmarriott','8F','lounge-drapery/drapes.blend','더 라운지 · 묶은 주름 커튼','더 라운지 · 묶은 주름 커튼'],
   ['jwmarriott','8F','lounge-upholstery/sofa.blend','더 라운지 · 크림색 코너 소파','더 라운지 · 크림색 코너 소파'],
   ['newcore','4F','modernhouse-picnic/picnic.blend','모던하우스 · 딸기와 데이지 러그','모던하우스 · 딸기와 데이지 러그'],
+  ['newcore','4F','modernhouse-catware/catware.blend','모던하우스 · 고양이 식기 진열대','ModernHouseCatTableware'],
   ['newcore','4F','modernhouse-provence/market.blend','모던하우스 · 마르셰 프로방스','모던하우스 · 마르셰 프로방스'],
   ['gyeongbu','1F','gyeongbu-icecream/gyeongbu-scoop-parlor.blend','배스킨라빈스 · 스쿱·케이크 매장','Parlor','Glass','Lit'],
   ...['케르반 · 제과와 포장 진열','케르반 · 청록색 주방창','케르반 · 모자이크 등','케르반 · 라바시와 차 한 상']

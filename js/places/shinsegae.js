@@ -1,3 +1,4 @@
+import {registerGlxyStudio} from '../../assets/models/ssg-glxy-studio/model.js';
 import {registerBrownyard} from '../../assets/models/ssg-brownyard/model.js';
 import {haenyeoSeafood} from '../../assets/models/ssg-market-haenyeo/model.js';
 import {hastensBed} from '../../assets/models/ssg-hastens/model.js';
@@ -7830,6 +7831,11 @@ export function build(K) {
         wall(lo,leftV,hi,rightV,y,y+3.05,{mat:'glass',thick:.035,openings:[{at:L/2,w:1.8,y0:y,y1:y+2.75}]});
         wall(lo,leftV,hi,rightV,y+3.05,y+3.4,{mat:0x373c3b,thick:.09});
       }
+    }else if(id==='7F'&&c.name==='GLXY studio'){
+      // Enter between the stone island, the chino display and the side rail.
+      const u=r[2]-.39,v=(r[1]+r[3])/2-1.36,[x,z]=P(u,v);
+      K.zone({name:shopName,floor:id,sub:shopDescription,poly:rect(...r),y0:y,y1:y+H,
+        priority:3,mapArrival:{x,z,yaw:yawTo(-1,.10)}});
     }else if(id==='8F'&&c.name==='배럴'){
       // The centroid falls inside the mannequin on the blue wave plinth.
       // Stand on the open front corner within the original sales floor.
@@ -8229,6 +8235,12 @@ export function build(K) {
           z:z-side*Math.sin(yaw)+front*Math.cos(yaw),w,d,h,rotY:yaw,
           mat:0x939986,skip:['top','bottom','n','s','e','w']});
       }
+    }
+    if(id==='7F'){
+      const room=upperBuildRect(id,guide.cells.find(c=>c.name==='GLXY studio'));
+      const u=(room[0]+room[2])/2,v=(room[1]+room[3])/2;
+      const [x,z]=P(u,v),[rx,rz]=P(u,v-1);
+      registerGlxyStudio(K,{poly:rect(...room),x,y,z,angle:Math.atan2(z-rz,rx-x)});
     }
     if(id==='7F'){
       const room=upperBuildRect(id,guide.cells.find(c=>c.name==='아워셀브스'));
@@ -14830,6 +14842,7 @@ export function build(K) {
     return true;
   }
   function fitUpperCell(id,c,seed) {
+    if(id==='7F'&&c.name==='GLXY studio')return; // The native studio includes its own floor, rails, name and display table.
     if (c.kind==='closed' && (id==='2F'||id==='5F')) return;
     if (id==='3F' && c.name==='신세계 갤러리') {
       // The Gangnam Art Wall exhibition photos show shallow recesses opening
