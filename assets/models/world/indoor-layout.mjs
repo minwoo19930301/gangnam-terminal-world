@@ -29,6 +29,8 @@ import {relief} from '../../../js/banpo_relief.js';
 // Scene object (or a uniquely identifying child) -> editable native source.
 // Geometry decoder matrices and decorative LOD offsets live *below* the placement.
 const sources = [
+  ['station','1F','exit4-pavilion/pavilion.blend','4번 출구 · 유리 승강장과 돌출 차양','Exit4LiftPavilion','Exit4LiftGlazing'],
+  ['station','1F','exit4-pavilion/pavilion.blend','4번 출구 · 관찰창이 있는 승강기 문짝','Exit4LiftLeaf'],
   ['centralcity','지상','central-plaza-canopy/canopy.blend','센트럴시티 조각 광장 · 열린 캐노피와 의자','CentralCityCourtCanopy'],
   ['centralcity','지상','central-plaza-seatwall/seatwall.blend','센트럴시티 정문 · 동측 석재 앉음벽과 생울타리','CentralCityEastSeatWall'],
   ['streets','지상','sinbanpo-crossing/signal.blend','신반포로 · 황색 뒷덮개 보행등','SinbanpoPedestrianHead'],
@@ -36,6 +38,7 @@ const sources = [
   ...[['서쪽 녹청 구체','CentralCityPatinatedSphere'],['가운데 갈색 구체','CentralCityBronzeSphere'],['동쪽 잔물결 구체','CentralCityRippledSphere']]
     .map(([label,collection])=>['centralcity','지상','central-plaza-spheres/spheres.blend','센트럴시티 광장 · '+label,collection]),
   ['centralcity','지상','central-plaza-lantern/lantern.blend','센트럴시티 조각 광장 · 두 갈래 보행등','CentralCityTwinLantern'],
+  ['gotomall','1F','goto-exit81-lift/lift.blend','고투몰 8-1 · 보도 승강기','GotoExit81Lift'],
   ['gotomall','지상','g12-window-print/print.blend','고투몰 G12 · 지상 유리 점인쇄','G12 유리창 점인쇄'],
   ['streets','지상','sinbanpo-plaza-planters/planter.blend','신반포로 · 석재 화분의 전정 수목','SinbanpoPlazaPlanter'],
   ['streets','지상','exit8-sidewalk-lamp/lamp.blend','터미널 8번 출구 · 보도와 차도 등기구','Exit8_Sidewalk_Lamp'],
@@ -81,6 +84,7 @@ const sources = [
   ['centralcity','B1','five-guys-gangnam/front.blend','파이브가이즈 고속터미널 · 창과 음료대','FiveGuysGangnamFront'],
   ...[['보석 진열창','JewelryShadowbox'],['세로형 광고 화면','RetailPortrait'],['사각 매입등','SquareDownlightPair']].map(([label,source])=>
     ['jwmarriott','3F','jw-retail-gallery/finishes.blend','신세계 연결 갤러리 · '+label,source]),
+  ['centralcity','L','house-lift-passage/wayfinding.blend','하우스 전용 승강기 · 양면 길안내','HouseLiftWayfinding','HouseLiftWalnutLining'],
   ['centralcity','1F','house-entry-gallery/vestibule.blend','하우스 오브 신세계 · 경사 통로 천장과 벽','HouseEntryRampBay'],
   ['centralcity','1F','house-entry-gallery/vestibule.blend','하우스 오브 신세계 · 청동 벽과 식재 입구','HouseEntryGallery'],
   ['centralcity','B1','sweet-garden-soffit/soffit.blend','스위트 가든 · 에스컬레이터 공통 하부','SweetGardenBankSoffit'],

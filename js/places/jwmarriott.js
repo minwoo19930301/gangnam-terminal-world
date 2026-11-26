@@ -1,3 +1,4 @@
+import {registerHotelWalnut} from '../../assets/models/jw-arrival/walnut.js';
 import {registerMargauxHearth} from '../../assets/models/margaux-woodfire/model.js';
 import {registerRetailGallery} from '../../assets/models/jw-retail-gallery/model.js';
 import {registerGardenWindow} from '../../assets/models/margaux-garden-window/model.js';
@@ -241,13 +242,7 @@ export function build(K) {
     // Wall cladding has explicit staggered 1.2 x .6 m joints in the lift vestibule.
     g.fillStyle = 'rgba(120,90,60,.10)'; g.fillRect(0, 0, w, 1);
   }, [1.2, .6]);
-  for (const [key, base] of [['jwWalnut', '#6a4630'], ['jwWalnutLight', '#7a4b30']]) K.texture(key, 256, 512, (g, w, h) => {
-    g.fillStyle = base; g.fillRect(0, 0, w, h); const r = K.rand(1313);
-    for (let i = 0; i < 250; i++) {
-      const x = r() * w; g.strokeStyle = i % 3 ? 'rgba(16,10,7,.08)' : 'rgba(160,110,70,.2)';
-      g.lineWidth = .5 + r(); g.beginPath(); g.moveTo(x, 0); g.bezierCurveTo(x + 4, h / 3, x - 3, 2 * h / 3, x + 2, h); g.stroke();
-    }
-  }, [.65, 3.2]);
+  registerHotelWalnut(K);
   K.texture('jwDarkMarble', 512, 256, (g, w, h) => {
     g.fillStyle = '#282926'; g.fillRect(0, 0, w, h); const r = K.rand(1919);
     for (let i = 0; i < 55; i++) {
@@ -804,8 +799,14 @@ export function build(K) {
       [26.72,0,26.72,1.77], [22.50,1.77,22.50,3.45], [2,3.45,18.15,3.45], [21.05,3.45,22.50,3.45],
       [2,.85,17.97,.85], [17.97,0,17.97,.85], [17.97,0,24.58,0],
     ]) WL(a,b,c,d,5.98,10.38, { mat: WARM, thick: .10 });
-    ZN('하우스 전용 승강기 연결통로', '1F', '호텔 로비 · 하우스 오브 신세계', [21.04,4.54,23.87,6.70], 6.94,10.97,17);
-    ZN('하우스 전용 승강기 연결통로', '1F', '호텔 로비 · 하우스 오브 신세계', [21.80,6.60,23.87,14.79], 6.94,10.97,17);
+    // The shorter zone covers the corner, where its centre faces a flat panel.
+    // Both indexed arrivals look down the open customer aisle toward the lift.
+    for(const [bounds,u,v,y] of [[[21.04,4.54,23.87,6.70],22.84,5.75,7],
+                                   [[21.80,6.60,23.87,14.79],22.84,10.7,7.26]]){
+      const [x,z]=P(u,v);
+      K.zone({name:'하우스 전용 승강기 연결통로',floor:'1F',sub:'호텔 로비 · 하우스 오브 신세계',
+        poly:RECT(...bounds),y0:6.94,y1:10.97,priority:17,mapArrival:{x,z,y,yaw:R+Math.PI}});
+    }
     // Hotel and store use different floor datums. Land directly in the
     // existing Bulgari gallery at its open side, below the entrance hall.
     K.ramp(...P(25.65,1.7),...P(25.65,29.15),{ya:7,yb:Y['3F'],w:2.6,mat:stone,rails:false});

@@ -1,3 +1,6 @@
+import {liftPassage,walnutWalls} from '../../assets/models/house-lift-passage/layout.js';
+import {detailModule} from '../detail-module.js';
+import {registerHotelWalnut} from '../../assets/models/jw-arrival/walnut.js';
 import {hanjungsunIsland} from '../../assets/models/hanjungsun/model.js';
 import {courtBounds,pavingLevel} from '../../assets/models/central-plaza-granite/layout.js';
 import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
@@ -52,6 +55,10 @@ import { buildGardenGallery } from './famille_garden_gallery.js';
 //   strip:        s -22..151, t 0..38.5   (1F vaulted hall t6..23; 2F dining east of t23)
 // Photo 11 / review supersede the round roof's unreliable OSM H8.4: two tiers and lantern to 22.6m, wall footprint unchanged.
 //   south block:  s 151..204, t -98..38   (파미에스테이션 1F/2F, 하차장, 지하철 연결 B1)
+const houseLiftSign=detailModule(new URL('../../assets/models/house-lift-passage/wayfinding.js',import.meta.url),m=>m.placeHouseLiftSign);
+export const prepareFullDetail=()=>houseLiftSign.load();
+if(new URL(import.meta.url).protocol==='file:')await prepareFullDetail();
+
 const concourseDisplay = await loadArchitecture('terminal-led.glb');
 
 export const meta = {
@@ -4833,7 +4840,7 @@ function hallR20(K) {
   const passageLo=35.7,passageHi=69.08,mid=27.6,sideA=26.25,sideB=28.95;
   K.ramp(...P(passageLo,mid),...P(passageHi,mid),{w:sideB-sideA,ya:.008,yb:2.1,mat:hosEntryFloor,rails:false});
   const passage=RECT(passageLo,sideA,passageHi,sideB);
-  entryZone(passage,'센트럴시티 · 하우스 오브 신세계 연결통로');
+
   // The public restaurant film shows smooth, brown metal panels and pale stone flooring.
   const lining={mat:0x866c5d,thick:.13};
   for(const [a,b,c,d] of [[40.7,23,40.7,25.6],[40.7,25.6,35.7,25.6],
@@ -4858,6 +4865,11 @@ function hallR20(K) {
   const [footX,footZ]=P(passageLo,mid),risePerMetre=(2.1-.008)/(passageHi-passageLo);
   const ceilingRise=(x,z)=>((x-footX)*AX+(z-footZ)*AZ)*risePerMetre;
   K.phys.withHeightOffset(ceilingRise,()=>{
+    // The ground slab continues underneath. The shopper zone and map probe
+    // follow the ramp at every point, including its higher restaurant end.
+    const [x,z]=P((passageLo+passageHi)/2,mid);
+    K.zone({name:'센트럴시티 · 하우스 오브 신세계 연결통로',floor:'1F',sub:'센트럴시티 중앙홀 · 윤해운대갈비',
+      poly:passage,y0:.008,y1:3.008,priority:13,mapArrival:{x,z,yaw:R+PI}});
     K.phys.addCeiling(RECT(38.1,sideA,passageHi,sideB),3.008);
   });
   for(const section of [[33.40,23.32,40.58,25.47],[33.40,25.47,35.60,28.80],[35.60,26.38,38.03,28.80]]){
@@ -5551,7 +5563,8 @@ function hosUpperR20(K) {
   {
     // The kit gives its standard stops one door direction. Register L on the same car
     // after drawing those stops so only its opposite door opens into the hotel.
-    const lobbyY=8.55,roofY=10.97,finish={tex:'marble',color:0xe5d9c1,gloss:.4};
+    const {lobbyY,roofY,low,high,west,east,join}=liftPassage;
+    const finish={tex:'marble',color:0xe5d9c1,gloss:.4};
     houseLift.floors.push({label:'L',y:lobbyY,name:'JW 메리어트 호텔 로비'});
     K.slab(QR(-13.7,11.3,-12.3,13.1),lobbyY,{mat:'metal',thick:.05});
     for(const s of [-13.7,-12.3])wall(s,11.3,s,13.1,lobbyY,roofY,{mat:0x655342,thick:.15});
@@ -5559,8 +5572,14 @@ function hosUpperR20(K) {
     wall(-13.7,11.3,-12.3,11.3,lobbyY,roofY,{mat:0x655342,thick:.15,openings:[{at:.7,w:1.1,y0:lobbyY,y1:lobbyY+2.23}]});
     sig('L · JW MARRIOTT HOTEL',-13,11.195,lobbyY+2.27,1.25,.21,'W',{bg:'#463a32',fg:'#eee0c3'});
     // The schematic grade stays east of the occupied mezzanine deck and lands on the public boutique aisle.
-    const low=-38.25,high=-14,west=9.40,east=11.40,middle=(west+east)/2;
-    const join=-30.18;
+    const middle=(west+east)/2;
+    const [wayX,wayZ]=Q(join,middle);
+    const wayY=7+(join-low)*(lobbyY-7)/(high-low);
+    K.detail({name:'하우스 전용 승강기 · 양면 길안내',floor:'L',visualOnly:true,sharedWith:'jwmarriott',
+      poly:QR(join-.4,middle-1,join+.4,middle+1),y0:wayY+2.4,y1:roofY,resource:houseLiftSign,
+      visibleFrom:(x,y,z)=>Math.abs(y-(wayY+1.65))<2.4 &&
+        Math.abs((x-wayX)*EX+(z-wayZ)*EZ)<1.35 && (x-wayX)**2+(z-wayZ)**2<23**2},
+      ()=>houseLiftSign.value(K,wayX,wayY,wayZ,R));
     K.slab(QR(-14.04,west,-11.9,11.42),lobbyY,{mat:finish,thick:.14});
     K.slab(QR(-40.35,8.57,low+.02,east),7,{mat:finish,thick:.14});
     K.ramp(...Q(low,middle),...Q(high,middle),{ya:7,yb:lobbyY,w:east-west,mat:finish,under:0xd7cbba,rails:false});
@@ -5570,14 +5589,11 @@ function hosUpperR20(K) {
       const underside=7+(s-low)*(lobbyY-7)/(high-low)-.25;
       K.phys.addCeiling(QR(s,west,end,east),underside,{});
     }
-    const shell={mat:{tex:'wood',color:0x66503c},thick:.09};
-    for(const t of [west,east]){
-      for(const [a,b,y] of [[low,-25.6,7],[-25.6,high,7.76]])wall(a,t,b,t,y,roofY,shell);
-    }
-    for(const [a,b,c,d] of [[high,west,-11.9,west],[-11.9,west,-11.9,11.42],[-11.9,11.42,-12.31,11.42],[high,east,-13.69,east]])
-      wall(a,b,c,d,lobbyY,roofY,shell);
-    for(const [a,b,c,d] of [[-40.35,8.57,-40.35,east],[-40.35,east,low,east],[low,8.57,low,west]])
-      wall(a,b,c,d,7,roofY,shell);
+    // The hotel's walnut finish already carries its own brown grain. A second
+    // dark-brown tint made these panels nearly black even in daytime.
+    registerHotelWalnut(K);
+    const shell={mat:'jwWalnut',thick:.09};
+    for(const [a,b,c,d,bottom,top] of walnutWalls())wall(a,b,c,d,bottom,top,shell);
     for(const [a,b,c,d] of [[-40.35,8.57,low,east],[low,west,-11.9,east],[-13.7,11.3,-12.3,13.1]]){
       K.slab(QR(a,b,c,d),roofY+.12,{mat:0xc5b8a9,under:0xe8dfd2,walk:false,thick:.12});
     }
