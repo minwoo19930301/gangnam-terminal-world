@@ -40,6 +40,7 @@ const sources = [
   ['centralcity','B1','sweet-arcade/pier.blend','스위트 파크 · 디저트 홀 타일 기둥','SweetParkArcadePier'],
   ['shinsegae','B1','sports-shoe-rotary/entry.blend','스포츠 슈 전문관 · 브랜드 간판과 계단','GangnamSportsShoeEntry'],
   ['shinsegae','B1','osulloc-matcha/station.blend','오설록 강남 · 말차 스테이션','OsullocGangnamMatchaStation'],
+  ['shinsegae','B1','salt-house-gangnam/shop.blend','소금집 강남 · 샌드위치 주문대와 숙성 진열장','SaltHouseGangnam'],
   ['shinsegae','B1','nespresso-gangnam/display.blend','네스프레소 · 버츄오 시음 진열대','GangnamNespressoDisplay'],
   ['shinsegae','B1','intelligentsia-gangnam/coffeebar.blend','인텔리젠시아 강남 · 오렌지 진열장과 커피 바','GangnamCoffeebar'],
   ['newcore','5F','newcore-oksoban-entry/front.blend','뉴코아 1관 5층 · 옥소반 안내 데스크','NC_OksobanEntrance'],

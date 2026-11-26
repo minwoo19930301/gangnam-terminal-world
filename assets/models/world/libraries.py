@@ -20,6 +20,7 @@ SHELVES = {
     "house-entry-gallery": "하우스 오브 신세계 · 1층 청동 벽과 식재",
     "sweet-garden-soffit": "스위트 가든 · 에스컬레이터 하부",
     "sweet-arcade": "스위트 파크 · 디저트 홀 타일 기둥",
+    "salt-house-gangnam": "소금집 샌드위치 강남점",
     "intelligentsia-gangnam": "인텔리젠시아 강남 · 커피 바와 오렌지 선반",
     "another-palm-astro": "어나더팜 · 아톰 에디션",
     "biscuiterie-mo": "스위트 파크 · 비스퀴테리 M.O 마들렌과 틴 진열장",

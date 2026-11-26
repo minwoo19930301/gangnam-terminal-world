@@ -1,4 +1,5 @@
 import {gangnamMatchaStation} from '../osulloc-matcha/model.js';
+import {saltHouseGangnam} from '../salt-house-gangnam/model.js';
 import {nespressoDisplay} from '../nespresso-gangnam/model.js';
 import {gangnamCoffeebar} from '../intelligentsia-gangnam/model.js';
 import {plan} from '../cinema-rotary/layout.js';
@@ -11,7 +12,6 @@ const aisles=[[[724,777],[820,777],[820,798],[735,798],[735,808],[724,808]],
 const northFront=transverseNorth-1;
 const storefronts=[
   ['와인하우스',[906,northFront],[968,northFront],-1,0x6b5544],
-  ['소금집',[905,798],[967,798],1,0x917359],
   ['네스프레소',[968,798],[1032,798],1,0x514940],
 ];
 export function eastShoppingArcade(K,y){
@@ -49,6 +49,7 @@ export function eastShoppingArcade(K,y){
       rotY:Math.atan2(front[0]-centre[0],front[1]-centre[1])});
     K.zone({name,sub:'신세계 강남점 · 지하1층',floor:'B1',poly,y0:y-.2,y1:top,priority:5});
   }
+  saltHouseGangnam(K,y);
   gangnamCoffeebar(K,y);
   gangnamMatchaStation(K,y);
   // Retain the black south boundary of the unlabelled bay east of Osulloc.
