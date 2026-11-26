@@ -2835,8 +2835,11 @@ export function build(K) {
         return;
       }
       if(c===oakCell){
-        const [x,z]=P(u,v);
-        box(u,v,w,d,y,.96,0x855b3b,{skip:['top','bottom','n','s','e','w']});
+        // Set the counter back from the existing escalator rail while keeping
+        // a passable gap to the next deli case behind it.
+        const counterU=fits(c,u+.45,v,w,d)?u+.45:u;
+        const [x,z]=P(counterU,v);
+        box(counterU,v,w,d,y,.96,0x855b3b,{skip:['top','bottom','n','s','e','w']});
         placeOakberry(K,x,y,z,RA-PI/2);
         return;
       }

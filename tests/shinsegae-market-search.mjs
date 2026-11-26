@@ -77,6 +77,42 @@ try {
     console.log(from,'→',entry.name,pose.floor);
     await page.close();
   }
+
+  // A correct floor label once hid an arrival on a moving escalator at Oakberry.
+  const oak=directory.shinsegae.mapDestinations.find(s=>s.name==='오크베리 아사이');
+  assert.equal(oak.floor,'B1');
+  const page=await browser.newPage({viewport:{width:880,height:576}});
+  await page.goto(base+'/?q=low&fixedres=1&traffic=0#/newcore/5F');
+  await page.waitForFunction(()=>window.__world?.ready,null,{timeout:120000});
+  await page.locator('#start').click();
+  await page.keyboard.press('m');
+  await page.locator('#map-search').fill('OAKBERRY');
+  const result=page.locator('.gt-result').filter({hasText:oak.name});
+  await result.first().waitFor();
+  assert.equal(await result.count(),1);
+  await result.click();
+  await page.locator('.gt-teleport').click();
+  await page.waitForFunction(({x,z,y})=>{
+    const world=window.__world,p=world?.player;
+    return world?.ready&&p&&Math.hypot(p.x-x,p.z-z)<.12&&Math.abs(p.y-y)<.05;
+  },oak,{timeout:25000});
+  // Observe several seconds of controller updates with no input after arrival.
+  const movement=await page.evaluate(async()=>{
+    const w=__world,p=w.player,x=p.x,z=p.z,y=p.y;
+    let maxHorizontal=0,maxVertical=0;
+    const end=performance.now()+4000;
+    while(performance.now()<end){
+      await new Promise(requestAnimationFrame);
+      maxHorizontal=Math.max(maxHorizontal,Math.hypot(p.x-x,p.z-z));
+      maxVertical=Math.max(maxVertical,Math.abs(p.y-y));
+    }
+    return {maxHorizontal,maxVertical,zone:w.phys.zoneAt(p.x,p.y+.1,p.z)?.name};
+  });
+  assert.equal(movement.zone,oak.name);
+  assert.ok(movement.maxHorizontal<.025&&movement.maxVertical<.025,
+    'the food counter arrival stays on the public aisle without movement input');
+  console.log('뉴코아 5F →',oak.name,JSON.stringify(movement));
+  await page.close();
 } finally {
   await browser.close();
   await new Promise(resolve => server.close(resolve));

@@ -830,7 +830,11 @@ export function build(K) {
   zf('2F', '플레이버즈(뷔페) · 타마유라(일식) · 파티세리 · 카페 원',[-33.2,-6,2,60.4]);
   zf('3F', '연회장 살롱 1–6 · 프리펑션');
   zf('4F', '웨딩 상담 · 연회 사무실');
-  zf('5F', '그랜드 볼룸 (천고 7m · 버진로드 21m) · 신부 대기실');
+  const [foyerX,foyerZ]=P(18,30.2);
+  const ballroomFoyerArrival={x:foyerX,z:foyerZ,y:Y['5F'],yaw:yawTo(1,-3.4)};
+  // The footprint centre falls on a raised ballroom fixture. Guests enter on the foyer floor.
+  K.zone({name:NM,floor:'5F',sub:'그랜드 볼룸 (천고 7m · 버진로드 21m) · 신부 대기실',
+    poly:FPL,y0:Y['5F'],y1:NEXT['5F'],priority:0,mapArrival:ballroomFoyerArrival});
   zf('6F', '연회 지원 · 볼룸 상부 (직원 구역)', [UW,0,UE,60.5]);
   zf('7F', 'JW 가든 · 더 마고 그릴 · 모보 바', [UW,0,UE,60.5]);
   zf('8F', '로비 · 프런트 데스크(체크인) · 더 라운지');
