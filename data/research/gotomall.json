@@ -2,6 +2,15 @@
  "id": "gotomall",
  "name": "강남터미널 지하도상가 (GOTO MALL 고투몰)",
  "updated": "2026-11-26",
+ "west_rest_seats_20261126": {
+  "naver": "https://map.naver.com/p/entry/place/21714783",
+  "visit": "https://rurubu.jp/andmore/article/25097",
+  "photo": "https://img.rurubu.jp/img_srw/andmore/images/0000743968/Ft3inl0CXSwiZMRAGv8gksdvbw6jKsoDQcN5alsk.jpg",
+  "observed": "2026년 8월 취재는 식재 휴게석과 서쪽 광장의 넓은 좌석을 구분한다. 오른쪽 사진에서 짙은 곡면 벤치와 낮은 밝은 석재 띠, 유리 기둥 위 화분, 짙은 바닥의 밝은 원호·직선 상감을 확인했다.",
+  "fit": "기존 게임의 서편 광장 안에 두 기둥과 여덟 석재 좌석을 구성했다. 실제 수량·치수·방향·바닥 선형의 교차점은 미실측. 중앙 화단 앞으로 추정 배치됐던 짙은 벤치와 기둥을 정리하고 흰 화단과 유아차를 유지했다.",
+  "model": "assets/models/gotomall-west-seats/west-lounge.blend",
+  "comparison": "assets/models/gotomall-west-seats/play.jpg"
+ },
  "rest_garden_20261126": {
   "naver": "https://map.naver.com/p/entry/place/21714783",
   "onsite_photo": "https://rurubu.jp/andmore/article/25097",

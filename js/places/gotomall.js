@@ -1,3 +1,4 @@
+import {westSeatCollisions,westSeatFixtures} from '../../assets/models/gotomall-west-seats/place.js';
 import {placeGardenFixture} from '../../assets/models/gotomall-rest-garden/place.js';
 import { placeHessed } from '../../assets/models/gotomall-hessed/place.js';
 import { placeShopStock, fixtureSilhouette, streamAislePart } from '../../assets/models/gotomall/stock.js';
@@ -1845,7 +1846,7 @@ export function build(K) {
       }
     }
   }
-  { const Lp0 = lay(-308); K.zone({ name: '서편 휴게광장', floor: 'B1', sub: '벤치 · 화단 · G2 출구', poly: R(-320.8, Lp0.fB - 1.2, -296, Lp0.fC + 1.2), y0: FL - 0.5, y1: CY, priority: 2 }); }
+  { const Lp0 = lay(-308); K.zone({ name: '서편 휴게광장', floor: 'B1', sub: '화강석 벤치 · 유리 기둥 · G2 출구', poly: R(-320.8, Lp0.fB - 1.2, -296, Lp0.fC + 1.2), y0: FL - 0.5, y1: CY, priority: 2 }); }
   K.zone({ name: '강남터미널 지하도상가 (고투몰)', floor: 'B1', sub: '점포 약 620개 · 10:00~22:00 · 통로 24시간', poly: band, y0: FL - 0.5, y1: CY + 0.2, priority: 0 });
 
   // ---------- halls: 3호선 / 9호선 ----------
@@ -1910,8 +1911,7 @@ export function build(K) {
       const back = Math.min(vS(a), vS(b)) - 0.16;
       K.zone({ name, floor: 'B1', sub: '중앙광장 상점', poly: R(a, back - depth, b, back), y0: FL - 0.5, y1: CY, priority: 4 });
     }
-    // 2026-11 photos 03–05: a planted water feature and segmented granite bench rings.
-    // All furniture stays south of W9; its west approach and the mall's through path stay open.
+    // The documented pale planted seating is near the line 9 gallery. The dark granite seats belong to the west lounge.
     const arcPoly = (u, v, rx, rz, a0, a1, n = 20) => Array.from({ length: n + 1 }, (_, i) => {
       const a = a0 + (a1 - a0) * i / n; return P(u + Math.cos(a) * rx, v + Math.sin(a) * rz);
     });
@@ -1927,39 +1927,6 @@ export function build(K) {
     furnish(12, () => {
     const u0 = 31.5, v = vN(u0 + 2) + 0.14; bx(u0, u0 + 4.8, v, v + 0.6, FL, 2.1, { tex: 'gt_locker' }, { top: 0x7d858e });
     sg('물품보관함', u0 + 2.4, v + 0.62, -3.6, 2.4, 0.4, '+v', { bg: '#24282e', fg: '#fff' });
-    const blackGranite = { tex: 'gt_island_polished' };
-    // Polished black island with pale diagonal and circular stone inlays (photo 05).
-    fq(blackGranite, 1.35, 3.55, 9.05, 11.3, FL + 0.008);
-    for (const shift of [-4, -1, 2, 5, 8]) {
-      const a = Math.max(1.35, 3.55 - shift), b = Math.min(9.05, 11.3 - shift);
-      if (b > a) K.hpoly(0xa8a59e, ptsXZ([[a, a + shift], [b, b + shift], [b, b + shift + 0.25], [a, a + shift + 0.25]]), FL + 0.012);
-    }
-    K.hpoly(0xa8a59e, arcPoly(5.2, 7.2, 3.28, 3.28, 0, Math.PI * 2, 48), FL + 0.014, true,
-      [arcPoly(5.2, 7.2, 3.03, 3.03, 0, Math.PI * 2, 48)]);
-    for (let k = 0; k < 3; k++) {
-      const a0 = k * Math.PI * 2 / 3 + 0.12, a1 = a0 + 1.76;
-      const foot = ringPoly(5.2, 7.2, 1.38, 1.38, 2.0, 2.0, a0, a1);
-      K.prism(foot, FL + 0.08, FL + 0.2, { mat: 0x66686a });
-      K.prism(foot, FL + 0.2, FL + 0.45, { mat: { color: 0x4a4c50, gloss: 0.3 } });
-      // rL_860: the low stone seats are occupied, with every seated figure on a segment.
-      for (let j = 0; j < 3; j++) {
-        const a = a0 + 0.28 + j * 0.59, [x, z] = P(5.2 + Math.cos(a) * 1.73, 7.2 + Math.sin(a) * 1.73);
-        K.person(x, FL, z, { sit: true, rotY: FACE['+v'] + Math.atan2(Math.cos(a), Math.sin(a)), shirt: [0x314c49, 0x6d4551, 0xbcb59c, 0x465b71][(k + j) % 4] });
-      }
-    }
-    // Glass-and-metal centre column; plants are small foliage, not full-size street trees.
-    const [cx, cz] = P(5.2, 7.2);
-    K.cyl({ x: cx, y: FL + 0.08, z: cz, r: 0.56, h: 0.13, mat: blackGranite, seg: 12 });
-    K.cyl({ x: cx, y: FL + 0.21, z: cz, r: 0.43, h: 2.05, mat: { tex: 'glass', color: 0xb4c3ae }, seg: 12, solid: false });
-    for (let i = 0; i < 6; i++) {
-      const a = i * Math.PI / 3, [x, z] = P(5.2 + Math.cos(a) * 0.43, 7.2 + Math.sin(a) * 0.43);
-      K.box({ x, z, y: FL + 0.18, w: 0.045, d: 0.045, h: 2.12, mat: 0xa3a8a4, solid: false });
-    }
-    K.cyl({ x: cx, y: FL + 2.24, z: cz, r: 0.51, h: 0.15, mat: 0x363b37, seg: 12, solid: false });
-    for (let i = 0; i < 18; i++) {
-      const a = i * 2.4, rr = 0.15 + (i % 4) * 0.07, [x, z] = P(5.2 + Math.cos(a) * rr, 7.2 + Math.sin(a) * rr);
-      K.box({ x, z, y: FL + 2.37 + (i % 3) * 0.05, w: 0.19, d: 0.17, h: 0.16, rotY: a, mat: [0x425a34, 0x5b723b, 0x708048][i % 3], solid: false });
-    }
     // White curved planter rim, dark water and irregular pale rocks, thick trailing ivy (03).
     K.hpoly({tex:'water',color:0x35443c},pondInner,FL+.67);
     K.prism(ringPoly(16.1,10.15,3.98,1.66,4.01,1.69,Math.PI,Math.PI*2,24),FL+.068,FL+.083,
@@ -2057,15 +2024,15 @@ export function build(K) {
       vq({ tex: 'emit', color: colour }, u - 0.8, 11.31, u + 0.8, 11.31, FL + 1.45, FL + 2.35, '-v');
       sg(['고투몰', '9호선 휴게광장 · 매장 안내'], u, 11.28, FL + 1.92, 1.45, 0.53, '-v', { bg: null, fg: '#ffffff', bold: false });
     }
-    // _860: a stroller and additional seated shoppers at the existing plaza edge.
+    // _860: a stroller and shoppers at the existing plaza edge.
     // This does not identify the unlabelled video plaza's absolute location.
     placeGardenFixture(K,'stroller',P,ROT,FL);
-    // _860: groups stand between the occupied benches and beside the stroller.
+    // _860: groups stand beside the stroller and the planted seat.
     for (const [i, [u, v]] of [[-0.6, 5.95], [0.7, 7.5], [1.4, 8.2], [2.1, 5.2], [9.4, 6.2], [10.1, 6.7], [11.2, 7.0], [12, 6.4]].entries())
       shopper(u, v, 180 + i, FACE[i % 3 === 0 ? '+v' : i % 2 ? '+u' : '-u']);
     });
-    K.zone({ name: '중앙 식물 휴게공간', floor: 'B1', sub: '곡선 화단 · 수경시설 · 벤치', poly: R(1, 1.5, 24, vS(12) - 0.5), y0: FL - 0.5, y1: CY, priority: 2 });
-    K.zone({ name: '9호선 휴게광장', floor: 'B1', sub: '원형 화강석 벤치 · 안내', poly: R(-2.2, 3.4, 11.5, 12.0), y0: FL - 0.5, y1: CY, priority: 3 });
+    K.zone({ name: '중앙 식물 휴게공간', floor: 'B1', sub: '곡선 화단 · 수경시설 · 벤치', poly: R(11.65, 6.05, 20.55, 11.50), y0: FL - 0.5, y1: CY, priority: 6 });
+    K.zone({ name: '9호선 휴게광장', floor: 'B1', sub: '흰 화단 벤치 · 안내', poly: R(-2.2, 3.4, 11.5, 12.0), y0: FL - 0.5, y1: CY, priority: 3 });
     K.zone({ name: '9호선 개찰구 (승차)', floor: 'B1', sub: '9호선 타는 곳 · 급행/일반', poly: [[-2.5, -136.6], [0, -136.6], [0, -126.3], [-2.5, -126.3]], y0: FL - 0.5, y1: CY, priority: 4 });
     K.zone({ name: '3호선 개찰구 (승차)', floor: 'B1', sub: '3호선 타는 곳 · 7호선 환승', poly: [[-84.6, -106.4], [-73.4, -106.4], [-73.4, -104], [-84.6, -104]], y0: FL - 0.5, y1: CY, priority: 4 });
     // facility zones (map layer)
@@ -2321,6 +2288,14 @@ export function build(K) {
     bx(u - 0.6, u + 0.6, 2.9, 4.1, FL, CY - FL, 0x7f6a58);
     bx(u - 0.45, u + 0.45, 8.05, 8.95, FL, CY - FL, 0xd8d0c0);
   }
+  westSeatCollisions(K,P,FL);
+  K.detail({name:'고투몰 서편 화강석 휴게석',floor:'B1',poly:R(-319.8,-3.5,-298,4.25),y0:FL,y1:CY,
+    visibleFrom:(x,y,z)=>{
+      if(y<FL-.55 || y>CY+.25)return false;
+      const [u,v]=UV(x,z);
+      const du=Math.max(-319.8-u,0,u+298),dv=Math.max(-3.5-v,0,v-4.25);
+      return du*du+dv*dv<75*75;
+    }},()=>westSeatFixtures(K,P,ROT,FL));
   furnish(-308, () => { // ---- 서편 휴게광장: rLMagJuViqo_445 ----
     tx('gt_rest_marble', 128, 256, [1.2, 2.4], (g, W, H, r) => {
       g.fillStyle = '#7f6a58'; g.fillRect(0, 0, W, H);
@@ -2329,13 +2304,7 @@ export function build(K) {
         g.beginPath(); g.moveTo(0, yy); for (let x = 0; x <= W; x += 12) g.lineTo(x, yy + Math.sin(x / 23 + i) * 11 + x * 0.25); g.stroke();
       }
     });
-    fq({ color: 0x6e7073, gloss: 0.7 }, -319.8, -3.5, -298, 4.25, FL + 0.023);
-    for (const [u, v, ru, rv] of [[-315, -0.5, 3.7, 2.6], [-307, 0.1, 4.9, 3.4], [-301, -1.2, 3.6, 2.4]]) {
-      for (const [dr, colour] of [[0, 0xe8e8e8], [0.23, 0x1e1e20]]) {
-        const outer = ellipse(u, v, ru - dr, rv - dr, 64), inner = ellipse(u, v, ru - dr - 0.08, rv - dr - 0.08, 64);
-        K.hpoly({ color: colour, gloss: 0.7 }, outer, FL + 0.027, true, [inner]);
-      }
-    }
+    fq({tex:'gt_island_polished'},-319.8,-3.5,-298,4.25,FL+.023);
     for (const u of [-309, -316]) bx(u - 0.605, u + 0.605, 2.895, 4.105, FL, CY - FL, { tex: 'gt_rest_marble', gloss: 0.5 }, { solid: false });
     for (const v of [-1.8, 1.8]) {
       const outer = ellipse(-309.5, v, 8.3, 2.15, 48), inner = ellipse(-309.5, v, 8.18, 2.03, 48);
@@ -2348,9 +2317,6 @@ export function build(K) {
     bx(-308.95, -308.25, 7.35, 8.1, FL + 1.99, 0.62, 0x202b48, { solid: false });
     sg(['화장실', '←'], -308.22, 7.72, FL + 2.3, 0.74, 0.6, '+u', { bg: '#202b48', fg: '#ffffff', pxPerM: 150 });
     sg(['화장실', '←'], -308.6, 7.32, FL + 2.3, 0.7, 0.6, '-v', { bg: '#202b48', fg: '#ffffff', pxPerM: 150 });
-    for (const u of [-316, -310, -304]) for (const v of [-2.5, 2.2]) bx(u - 1.8, u + 1.8, v - 0.4, v + 0.4, FL, 0.45, { color: 0x4a4c50, gloss: 0.3 });
-    for (const u of [-313, -307]) bx(u - 1.3, u + 1.3, 0.3, 1.1, FL, 0.45, { color: 0x4a4c50, gloss: 0.3 });
-    for (let i = 0; i < 10; i++) { const [x, z] = P([-317, -314.6, -311.3, -308.7, -304.8][i % 5], i < 5 ? -2.5 : 2.2); K.person(x, FL, z, { sit: true, rotY: FACE[i < 5 ? '+v' : '-v'], shirt: [0x303944, 0x9d8b80, 0x4c555c][i % 3] }); }
     for (const u of [-313, -303, -293]) {
       sg(['고투몰', '쇼핑'], u, 6.3, FL + 2.87, 0.36, 0.7, '+u', { bg: '#963749', fg: '#ffffff', pxPerM: 120 });
       sg(['고투몰', '쇼핑'], u - 0.02, 6.3, FL + 2.87, 0.36, 0.7, '-u', { bg: '#963749', fg: '#ffffff', pxPerM: 120 });
