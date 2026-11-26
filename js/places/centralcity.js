@@ -4455,7 +4455,13 @@ function hallR20(K) {
       for(const d of[-2.68,2.68]){cofferBox(s+d,t,.32,5.4,5.65,.75,0xf4f1ea);cofferBox(s,t+d,5.4,.32,5.65,.75,0xf4f1ea);cofferBox(s+d*.85,t,.09,4.65,6.05,.22,0xece9e2);cofferBox(s,t+d*.85,4.65,.09,6.05,.22,0xece9e2);}
       for(let u=-2.1;u<2.2;u+=.24)for(const d of[-2.25,2.25]){cofferBox(s+u,t+d,.09,.12,6.13,.12,0xf6f3ec);cofferBox(s+d,t+u,.12,.09,6.13,.12,0xf6f3ec);}
       if(t>-15)for(const r of[.65,.45,.24])cofferDisc(s,t,r,6.20,.045,0xe9e6de,{solid:false,seg:32});
-      for(const ds of[-1.9,1.9])for(const dt of[-1.9,1.9])cofferDisc(s+ds,t+dt,.065,6.13,.035,{tex:'emit',color:0xf5f6f2},{solid:false});
+      if(t < -15){
+        // Small downlights run along the shared beams around the recessed panels.
+        for(const offset of [-1.75,0,1.75]){
+          cofferDisc(s+offset,t+2.68,.062,5.645,.008,{tex:'emit',color:0xf5f6f2},{solid:false});
+          cofferDisc(s+2.68,t+offset,.062,5.645,.008,{tex:'emit',color:0xf5f6f2},{solid:false});
+        }
+      }else for(const ds of[-1.9,1.9])for(const dt of[-1.9,1.9])cofferDisc(s+ds,t+dt,.065,6.13,.035,{tex:'emit',color:0xf5f6f2},{solid:false});
     }
   }
   const visit = Date.now();

@@ -20,19 +20,17 @@ def plaster(name, rgb):
 chalk = plaster('백색 석고', (248, 244, 233))
 cream = plaster('상아색 면', (232, 226, 213))
 reveal = plaster('몰딩 안쪽 홈', (194, 185, 169))
-bronze = plaster('매입등 테두리', (148, 139, 120))
 
-def moulding(name, profile, surface, sides=64, square=False, center=(0,0), flutes=0):
+def moulding(name, profile, surface, sides=64, square=False):
     vertices, faces = [], []
-    for radius, depth, relief in profile:
+    for radius, depth in profile:
         for k in range(sides):
             a = tau*k/sides
             if square:
                 x, y = [(1,1),(-1,1),(-1,-1),(1,-1)][k]
             else:
                 x, y = cos(a), sin(a)
-            vertices.append((center[0]+radius*x, center[1]+radius*y,
-                             -depth-relief*(1+cos(flutes*a))/2))
+            vertices.append((radius*x, radius*y, -depth))
     # Profile runs from the outside to the inside. Wind toward the visitor below.
     for row in range(len(profile)-1):
         for k in range(sides):
@@ -47,16 +45,14 @@ def moulding(name, profile, surface, sides=64, square=False, center=(0,0), flute
     return obj
 
 # Cyma, stepped fascia and a narrow shadow line sit inside the coarse beam.
-moulding('사각 안쪽 회반죽 돌림띠',[(2.26,.17,0),(2.22,.18,0),(2.18,.14,0),(2.15,.11,0),(2.10,.095,0),(2.06,.044,0)],chalk,4,True)
-moulding('사각 턱 그림자 홈',[(2.06,.044,0),(2.035,.04,0),(2.01,.055,0)],reveal,4,True)
-moulding('사각 속 테두리',[(2.01,.055,0),(1.985,.067,0),(1.955,.053,0),(1.935,.020,0)],cream,4,True)
-moulding('중앙 원형 몰딩',[(.72,.012,0),(.70,.043,0),(.675,.062,0),(.65,.065,0),(.628,.034,0)],chalk)
-moulding('원형 음각 홈',[(.628,.034,0),(.61,.03,0),(.595,.047,0)],reveal)
-moulding('부채꼴 얕은 석고 주름',[(.595,.047,0),(.55,.060,.018),(.45,.07,.040),(.33,.077,.025),(.25,.095,0)],cream,96,flutes=24)
-moulding('중앙 원형 보스',[(.25,.095,0),(.235,.12,0),(.21,.127,0),(.193,.098,0),(.165,.109,0),(.12,.15,0),(.015,.17,0),(.001,.17,0)],chalk)
-for x in (-1.9,1.9):
-    for y in (-1.9,1.9):
-        moulding('매입등 원형 베젤',[(.12,.13,0),(.115,.158,0),(.097,.165,0),(.078,.157,0),(.068,.15,0)],bronze,32,center=(x,y))
+moulding('사각 안쪽 회반죽 돌림띠',[(2.26,.17),(2.22,.18),(2.18,.14),(2.15,.11),(2.10,.095),(2.06,.044)],chalk,4,True)
+moulding('사각 턱 그림자 홈',[(2.06,.044),(2.035,.04),(2.01,.055)],reveal,4,True)
+moulding('사각 속 테두리',[(2.01,.055),(1.985,.067),(1.955,.053),(1.935,.020)],cream,4,True)
+# The event photograph resolves concentric rings, but not a fluted pattern.
+for radius, width, depth in [(1.25,.037,.025),(1.12,.029,.022),(.75,.025,.023),(.39,.04,.035),(.25,.03,.04)]:
+    moulding('중앙 동심원 석고 띠',[(radius,.003),(radius-width*.3,depth),
+             (radius-width*.7,depth),(radius-width,.003)],chalk)
+moulding('중앙 원형 석고 마감',[(.2,.008),(.15,.035),(.06,.049),(.001,.052)],cream)
 
 bpy.context.preferences.filepaths.save_version=0
 bpy.ops.wm.save_as_mainfile(filepath=str(here/'coffer.blend'),compress=True)

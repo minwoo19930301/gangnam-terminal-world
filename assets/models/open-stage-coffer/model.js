@@ -2,8 +2,8 @@ import {placeSingleDetail} from '../interior-architecture/single-detail.js';
 
 export function placeStageCoffers(K,x,z,angle){
   const T=K.THREE;
-  const proxy=new T.CylinderGeometry(.65,.65,.045,24);
-  proxy.translate(0,-.0775,0);
+  const proxy=new T.CylinderGeometry(1.25,1.25,.014,32);
+  proxy.translate(0,-.009,0);
   const material=new T.MeshLambertMaterial({vertexColors:true});
   return placeSingleDetail(K,{
     name:'오픈 스테이지 · 코퍼 몰딩',file:'../open-stage-coffer/coffer.glb',
