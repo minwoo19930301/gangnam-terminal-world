@@ -1,3 +1,4 @@
+import {placeGyeongbuEntrance} from '../../assets/models/gyeongbu-front-entrance/model.js';
 import {placePassengerFinish} from '../../assets/models/gyeongbu-concourse-finish/model.js';
 import {placePharmacy} from '../../assets/models/gyeongbu-pharmacy/model.js';
 import {placeLuggageCounter} from '../../assets/models/gyeongbu-luggage/model.js';
@@ -303,7 +304,7 @@ export function build(K) {
   for(const u of [26,122,218,259])door(u,0,5);
   door(163,0,6); // gb_03: bright entrance behind the relocated pair of white arches.
   // Photo01: open north-end arcade under the first cantilever; glazing sits 6 m back.
-  {const[x,z]=W(36.5,0);doors.push({x,z,w:73,y0:0,y1:6});}
+  {const[x,z]=W(37.90,0);doors.push({x,z,w:75.80,y0:0,y1:6});}
   // Open the entire street arcade; the shop glazing is recessed behind its columns.
   {const[x,z]=W(196.2,0);doors.push({x,z,w:240.8,y0:0,y1:3.35});}
   door(38.5,161,6);door(316.7,18,4);
@@ -619,39 +620,21 @@ export function build(K) {
   function buildNorthEnd(){
     // gb_04 is taken north of the complex: the south-only treatment in round 2
     // could never be seen here. This skin faces the actual Sinbanpo-ro forecourt.
-    const p=(u,y,v=-.65)=>{const[x,z]=W(u,v);return[x,y,z];};
-    K.texture('gb_salmon_brick',256,128,(g,w,h)=>{
-      g.fillStyle='#bc8775';g.fillRect(0,0,w,h);
-      for(let j=0;j<16;j++){
-        g.fillStyle=j%3?'#b27d6c':'#c18f7c';g.fillRect(0,j*8,w,7);
-        g.fillStyle='#d0a18b';g.fillRect(0,j*8,w,1);
-        for(let x=(j%2)*16;x<w;x+=32)g.fillRect(x,j*8,1,8);
-      }
-    },[3.2,1.6]);
-    // Asymmetric sloping salmon end, with its vertical edge beside the sign tower.
-    K.quad('gb_salmon_brick',[p(28.1,0),p(68,0),p(28.1,45),p(28.1,45)],[-B[0],0,-B[1]],[[0,28],[13,28],[0,0],[0,0]]);
-    K.quad(0xa97765,[p(28.1,0,-.65),p(28.1,0,1),p(28.1,45,1),p(28.1,45,-.65)],[-A[0],0,-A[1]]);
-    lbox(23.6,-1.7,0,5.8,3,44.6,0xe8e4da,{solid:false});
-    // Thin dark stair glazing flanks the white tower, as visible beside the brick slope.
-    lbox(27.3,-1.72,0,1.5,3.02,42.4,0x3b4b4a,{solid:false});
-    for(let y=1;y<44;y+=2.1){
-      lbox(23.6,-3.22,y,5.8,.035,.045,0xcac8bd,{solid:false});
-      if(y<42.4)lbox(27.3,-3.25,y,1.5,.04,.07,0xb8beb6,{solid:false});
-    }
-    const fan=(a,r)=>p(27.3+Math.cos(a)*r,42.4+Math.sin(a)*r,-3.31);
-    for(let i=0;i<10;i++){
-      const a=i*PI/10,b=(i+1)*PI/10;
-      K.quad(0x244d78,[p(27.3,42.4,-3.31),fan(a,2.4),fan(b,2.4),fan(b,2.4)],[-B[0],0,-B[1]]);
-      K.quad(0xd5d6cc,[fan(a,0),fan(a,2.4),fan(a+.018,2.4),fan(a+.018,0)],[-B[0],0,-B[1]]);
-    }
-    [...'서울고속버스터미널'].forEach((c,i)=>lsign(c,23.6,-3.27,39.6-i*3.15,2.6,2.9,'-v',{bg:null,fg:'#3d6e72',padding:0}));
+    // The street photograph shows the low entrance portal and the vertical
+    // white sign as two separate landmarks, with two ceramic flanks on the latter.
+    // The two Naver/Film Korea fronts put the sign roughly two portal widths
+    // beyond the door. Keep the walked door fixed and register its cladding here.
+    const [towerX,towerZ]=W(43.6,-3.25);
+    placeGyeongbuEntrance(K,'tower',towerX,towerZ,ROT+PI);
+    lbox(43.6,-1.7,0,5.8,3,44.6,0xe8e4da,{solid:false});
+    lbox(47.3,-1.72,0,1.5,3.02,42.4,0x3b4b4a,{solid:false});
     for(let i=1;i<9;i++){
       const lo=westInset[i+1],hi=75.7-inset[i+1],y=ys[i+1];
       lbox((lo+hi)/2,.1,y-1.25,hi-lo+.8,1.2,1.25,CREAM,{solid:false});
     }
     lbox(25.9,-.85,40.4,54.8,1.6,1.9,0x6b2f2a,{solid:false});
     for(let u=1;u<52;u+=1.6){
-      if(u>20&&u<30)continue; // do not plant through the stair/sign tower
+      if(u>40&&u<50)continue; // do not plant through the stair/sign tower
       lbox(u,-.55,42.3,.9,.9,.8,0x3f5a35,{solid:false});
     }
     // gb_04's near-square display faces NE; its changing creative remains an unlettered light field.
@@ -693,7 +676,9 @@ export function build(K) {
     const entries=[16,38,60,70];
     lwall(10,6,73,6,0,3.5,{mat:'glass',thick:.045,openings:entries.map(at=>({at:at-10,w:4,y0:0,y1:3.5}))});
     lwall(10,6.08,64,6.08,3.5,5.7,{mat:'gb_salmon_tile',thick:.16});
-    lwall(64,6.08,73,6.08,3.5,5.7,{mat:'glass',thick:.045});
+    lwall(64,6.08,66.4,6.08,3.5,5.7,{mat:'glass',thick:.045});
+    // The native clerestory supplies the glazing over the central public doors.
+    lbox(69.7,6.08,3.5,6.6,.045,2.2,0,{skip:['top','bottom','n','s','e','w']});
     for(let u=12;u<73;u+=2){if(entries.some(e=>Math.abs(u-e)<1.9))continue;lbox(u,5.98,0,.065,.1,3.5,0xaab4b8,{solid:false});}
     for(let u=13;u<72;u+=6){
       if(u>=64)continue;
@@ -721,9 +706,15 @@ export function build(K) {
       lbox(u===63?65.55:u,u===63?5.55:0,0,1,.9,.15,0xd3d0c4,{solid:false});
     }
     K.hpoly(0xe8e4da,rect(10,0,64,6),5.7,false);
-    K.hpoly(0x45494c,rect(64,0,73,6),5.62,false);
-    lbox(68.5,-.025,5.05,9,.12,.65,0x45494c,{solid:false});
-    lbox(68.5,-.53,5.72,9,.08,.55,0x45494c,{solid:false});
+    const [portalX,portalZ]=W(70.2,1.50);
+    placeGyeongbuEntrance(K,'portal',portalX,portalZ,ROT+PI);
+    // The two stone legs lean together. Their collision stays permanent when
+    // the detail atlas is unloaded and follows the actual mesh at body height.
+    const invisible={skip:['top','bottom','n','s','e','w']};
+    for(const [a,b] of [[-7.05,-5.05],[4.92,6.83]])for(const [lo,hi] of [[0,1],[1,2.1],[2.1,3.6],[3.6,5.52],[5.52,7.22]]){
+      const lean=1.01*(lo+hi)/2/7.22;
+      lbox(70.2-(a+b)/2-lean,2.205,lo,b-a,6.53,hi-lo,0,invisible);
+    }
     lbox(66.85,5.8,0,1.25,.3,5.7,0x45494c,{solid:false});
     // Zq_60/80 has an unobstructed portal; retain the fourth tree at the plaza edge.
     for(const u of [8,16,48,59]){const[x,z]=W(u,-4);K.tree(x,z,{h:5.4,kind:'pine'});}
