@@ -1,3 +1,4 @@
+import {placeLejardin} from '../../assets/models/lejardin-shop/model.js';
 import {warakuShop} from '../../assets/models/waraku/room.js';
 import {gelatiShop} from '../../assets/models/gelati/room.js';
 import {seesShop} from '../../assets/models/sees/room.js';
@@ -4170,7 +4171,12 @@ function hallR20(K) {
     lbox(s,14.74,.04,4.8,3.126,.012,0x514f49,{solid:false});
     for(const t of [13.1,16.35])lcyl(s,t,3.11,.074,.02,'emit',{solid:false});
   }
-  storefront('LEJARDIN',33,-12,38,-5,'N',0,'flower');
+  // The Naver-listed 122-1 flower shop faces the Sweet Park escalators and Open Stage.
+  lwall(33,-12,38,-12,0,3.24,{mat:0xe1dbd1,thick:.08});
+  lwall(33,-5,38,-5,0,3.24,{mat:0xe1dbd1,thick:.08});
+  lwall(38,-12,38,-5,0,3.24,{mat:0xe1dbd1,thick:.08});
+  zone('르자당 센트럴시티점','1F',33,-12,38,-5,0,3.28,'LEJARDIN · 122-1호',14);
+  placeLejardin(K,P,R);
   // Units 20/21 are distinct from STARBUCKS central F1. Retain their fitout by the east passage.
   storefront('스타벅스',-11,18,-1,26,'E',0,'cafe');
   storefront('SK텔레콤',5,23,12,29,'E',0,'store');
@@ -4277,7 +4283,9 @@ function hallR20(K) {
   K.hpoly(0xf0efeb,RECT(-7,-4.2,0,4.2),3.32,false);K.phys.addCeiling(RECT(-7,-4.2,0,4.2),3.32,{});
   // The low side passage skirts the south-west edge of the Sweet Garden well.
   slab(27,-12,38,2.2,0,{under:false,ceil:false});
-  K.hpoly(0xe9e7e1,RECT(32,-12,38,2.2),3.18,false);K.phys.addCeiling(RECT(32,-12,38,2.2),3.18,{});
+  K.hpoly(0xe9e7e1,RECT(32,-5,38,2.2),3.18,false);K.phys.addCeiling(RECT(32,-5,38,2.2),3.18,{});
+  K.hpoly(0xe9e7e1,RECT(32,-12,33,-5),3.46,false);K.phys.addCeiling(RECT(32,-12,33,-5),3.46,{});
+  K.phys.addCeiling(RECT(33,-12,38,-5),3.225,{});
   // The 3 GATE leads to 1F; the separate central escalator reaches 2F.
   lsign(['백화점 1층 · 3 GATE','백화점 2층 · 중앙홀 에스컬레이터'],35,-1.7,1.8,3.6,.7,'N',{bg:null,fg:'#403f38'});
   lbox(35,-1.8,.65,2.7,0,3.15,{tex:'marble',color:0xd0c8b8});

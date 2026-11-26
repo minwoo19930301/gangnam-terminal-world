@@ -1,6 +1,8 @@
+import {parts as floristParts,prefix as floristPrefix} from '../lejardin-shop/layout.js';
 import {parts as loungeTableParts,prefix as loungeTablePrefix} from '../lounge-table-service/layout.js';
 import {names as warakuNames} from '../waraku/layout.js';
 import {catalog as golfCatalog,prefix as golfPrefix} from '../newcore-golf/layout.js';
+import {labels as sebitGalleryLabels} from '../sebit-gallery/gallery.js';
 import {parts as tamayuraParts} from '../tamayura/layout.js';
 // Read actual production Object3D and instance transforms without a renderer or near-detail downloads.
 import fs from 'node:fs/promises';
@@ -14,6 +16,9 @@ import {relief} from '../../../js/banpo_relief.js';
 // Scene object (or a uniquely identifying child) -> editable native source.
 // Geometry decoder matrices and decorative LOD offsets live *below* the placement.
 const sources = [
+  ...Object.values(floristParts).map(([label])=>{
+    const name=floristPrefix+label;return ['centralcity','1F','lejardin-shop/flowershop.blend',name,name];
+  }),
   ...Object.values(loungeTableParts).map(([label])=>{
     const name=loungeTablePrefix+label;
     return ['jwmarriott','8F','lounge-table-service/lounge-tables.blend',name,name];
@@ -34,6 +39,8 @@ const sources = [
     '간선버스 · 도장 차체와 경량 휠','간선버스 · 저상 승객석과 입석 손잡이','간선버스 · 곡면 유리와 출입문',
     '간선버스 · 전조등과 차폭등','간선버스 · '+route+'번 노선 표시',
   ]),
+  ['gyeongbu','1F','gyeongbu-uniqlo/entrance-fashion.blend','경부선 유니클로 · 에어리즘과 입구 코디','본관 1층 유니클로 · 에어리즘 진열과 토르소'],
+  ['gyeongbu','1F','gyeongbu-uniqlo-finish/oak-and-lighting.blend','경부선 유니클로 · 참나무 판매층과 흰 노출 천장','본관 1층 유니클로 · 참나무 바닥과 노출 천장'],
   ['gyeongbu','2F','gyeongbu-baking/baking-shop.blend','경부선 부속상가 · 비앤씨마켓 반죽기와 제과 도구','부속상가 2층 비앤씨마켓 · 반죽기와 제과 도구'],
   ['gyeongbu','4F','gyeongbu-hanbok/hanbok-showroom.blend','경부선 4층 · 고명재한복 치마와 저고리','4층 고명재한복 · 금직 치마와 저고리 진열'],
   ['gyeongbu','6F','gyeongbu-childrens-aisle/childrens-aisle.blend','경부선 6층 · 아동복 철망 진열과 접은 상품','6층 아동복 · 철망 행거와 접은 상품'],
@@ -108,6 +115,10 @@ const sources = [
     .map(name=>['famille','2F','kervan/fp216.blend',name,name]),
   ...['담꽃 · 다기와 보자기 진열장','담꽃 · 백색 주문대와 검은 의자','담꽃 · 밤대추팥빙수 한 상']
     .map(name=>['centralcity','2F','damccot/fp204.blend',name,name]),
+  ...Object.values(sebitGalleryLabels).map(label=>{
+    const name='피카소 벽화길 · '+label;
+    return ['onebailey','B1','sebit-gallery/gallery.blend',name,name];
+  }),
   ...['계단식 휴게 좌석','꽃이삭 화분','벽면 투사와 조명 레일'].map(label=>{
     const name='고터·세빛 라운지 · '+label;
     return ['onebailey','B1','sebit-lounge/lounge.blend',name,name];
