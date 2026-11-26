@@ -45,8 +45,11 @@ const northSide=[[372,998],[570,998],[548,984],[519,963],[496,943],[480,922],
   [470,896],[467,872],[467,726.6543779747]];
 const returnSide=[[498,726.6543779747],[498,872],[502,894],[513,915],[530,932],
   [552,947],[575,958],[594,961]];
+// Horizontal edit of the shared event-wall corner, in game metres from the traced guide.
+export const eventWallOffset = [0,0];
 export const westSides=[southSide,northSide,returnSide].map(side=>side.map(p=>plan(...p)));
-export const westApron=[...inner.map(p=>plan(...p)),...westSides[0].slice(1),...westSides[1],...westSides[2]];
+westSides[0][0]=westSides[0][0].map((value,axis)=>value+eventWallOffset[axis]);
+export const westApron=[...inner.map(p=>plan(...p)),...westSides[0],...westSides[1],...westSides[2]];
 const regions=[court,cafeFloor,bookFloor,shoeThreshold,westApron].map(poly=>({poly,box:polyBBox(poly)}));
 export function rotaryPreview(x,y,z){
   if(y< -6.25 || y> -1.42)return false;

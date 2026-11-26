@@ -20,4 +20,17 @@ node tests/cinema-native-shell.mjs
 
 An optional path after `export` writes a scratch copy of the game layout. An optional path after `import` saves the capture as a separate Blender file. Set `BLENDER` to the executable path for the test if Blender is outside `PATH`.
 
-The east aisle’s floor, ceiling, room label, north partition, shop lintels, signs and central connection follow this edit. The south coffee bar and the backs of Wine House and Osulloc retain their positions. Other items in the library are reference meshes recaptured from their production builders. The adjacent shopfront models keep their own editable collections.
+The east aisle’s floor, ceiling, room label, north partition, shop lintels, signs and central connection follow this edit. The south coffee bar and the backs of Wine House and Osulloc retain their positions. Other items outside the editable boundaries are reference meshes recaptured from their production builders. The adjacent shopfront models keep their own editable collections.
+
+
+## 행사장 옆 원형 광장 통로
+
+**원형 광장 옆 통로 · floor**의 **Event wall corner** 버텍스 그룹에는 행사장 쪽 직선 벽과 광장이 만나는 꼭짓점이 있다. 이 점을 수평으로 옮기고 파일을 저장하면 바닥과 천장, 같은 선을 따르는 보행 충돌벽을 함께 조정할 수 있다. 편집값은 층도에서 읽은 원래 모서리 기준의 미터 단위 이동량으로 기록한다.
+
+```sh
+asset=assets/models/cinema-public-shell
+blender -b "$asset/public-shell.blend" --python-exit-code 1 -P "$asset/edit.py" -- export-west
+blender -b --python-exit-code 1 -P "$asset/edit.py" -- import
+```
+
+모델은 공식 도면의 서쪽 지하철 방향 개구부를 보존한다. 게임에서 그 경계 너머로 연결되는 바닥은 현재 확인되지 않았다. [강남점 지하 1층 고객용 안내도](https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/11/25/GnV7UuBEdq7K.png)
