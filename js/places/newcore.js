@@ -3,6 +3,7 @@ import {oksobanReception} from '../../assets/models/newcore-oksoban-entry/model.
 import {placeCafeFront} from '../../assets/models/newcore-mamas/model.js';
 import {yucheonDining} from '../../assets/models/newcore-yucheon/model.js';
 import {registerAshleyDessert} from '../../assets/models/newcore-dessert/model.js';
+import {akGolfSalesFloor} from '../../assets/models/newcore-akgolf/model.js';
 import { registerGolf } from '../../assets/models/newcore-golf/model.js';
 import { dishes as deliDishes, registerDeli } from '../../assets/models/kims-deli/model.js';
 import { registerFloorFinishes, floorSamples } from '../../assets/models/newcore-floor/surfaces.js';
@@ -1283,7 +1284,7 @@ function upperSalesFloor(F, num, floor) {
     });
     for (const {i,raw,span,u} of slots) {
       const [label,kind='rail']=raw.split('|');
-      const adidasGolf=label==='아디다스골프';
+      const adidasGolf=label==='아디다스골프',akGolf=label==='AK 골프';
       const clothingFinishes = [[0x665758, 0xe4d8cd], [0x48575c, 0xd9e1dc], [0x836347, 0xe7d8b8]];
       const kidsRoom = num === 1 && floor.label === '4F' && label === '키즈';
       const provence = num === 1 && floor.label === '4F' && label === '주방용품';
@@ -1291,7 +1292,7 @@ function upperSalesFloor(F, num, floor) {
       const yucheon = num === 1 && floor.label === '5F' && label === '유천냉면';
       const ashley = num === 1 && floor.label === '5F' && label === '애슐리퀸즈';
       const hotpot = num === 1 && floor.label === '5F' && label === '옥소반';
-      const [accent, wall] = adidasGolf ? [0x252626,0xd5d3cc] : hotpot ? [0x9e4831, 0xc3b5a2] :
+      const [accent, wall] = (adidasGolf||akGolf) ? [0x252626,0xd5d3cc] : hotpot ? [0x9e4831, 0xc3b5a2] :
         kind === 'rail' ? clothingFinishes[(i + side + num) % 3] : finishes[kind];
       const back = front - inset * depth;
       const bayWidth = span - 1.35;
@@ -1334,15 +1335,21 @@ function upperSalesFloor(F, num, floor) {
       if(num===1&&floor.label==='5F'&&label==='애슐리퀸즈')registerAshleyDessert(F,u,y+.034,front,depth,bayWidth,
         (v,half,offset)=>upperBayView(F,u,front,depth,bayWidth,inset,v,half,offset));
       if (hotpot) registerOksobanTable(F, u, y + .034, front - inset * depth * .36);
+      if(akGolf)akGolfSalesFloor(F,u,y+.034,front,depth,bayWidth,
+        upperBayView(F,u,front,depth,bayWidth,inset,front+4.6,2.72));
       if(adidasGolf) registerGolf(F,u,y+.034,front,depth,bayWidth,
         (position,half,offset)=>upperBayView(F,u,front,depth,bayWidth,inset,position,half,offset));
-      bays.push({u, front, back, depth, inset, bayWidth, kind, label, side, i, hotpot, ashley, provence, picnic, kidsRoom, adidasGolf});
+      bays.push({u, front, back, depth, inset, bayWidth, kind, label, side, i, hotpot, ashley, provence, picnic, kidsRoom, adidasGolf, akGolf});
     }
   });
   for (const off of [-1,1]) B(0, y + .017, W / 2 + off * 2.76, L - 3, .012, .085, 0xac987a, {solid:false});
   return () => {
-    for (const {u, front, back, depth, inset, bayWidth, kind, label, side, i, hotpot, ashley, provence, picnic, kidsRoom, adidasGolf} of bays) {
+    for (const {u, front, back, depth, inset, bayWidth, kind, label, side, i, hotpot, ashley, provence, picnic, kidsRoom, adidasGolf, akGolf} of bays) {
       if(num===1&&floor.label==='5F'&&label==='유천냉면')continue;
+      if(akGolf){
+        S(label,u,y+3.28,front+inset*.22,Math.min(7,bayWidth-.8),.43,null,{rotY:F.angle+Math.PI,fg:'#fff9ef'});
+        continue;
+      }
       if(!hotpot&&!ashley)B(u, y + 2.96, front + inset * .18, bayWidth - .45, .035, .10, { tex:'emit', color:0xffefd1 }, {solid:false});
       if(adidasGolf){
         for(const d of [2.10,5.74,8.73]) B(u,y+3.48,front+d,2.65,.052,.095,{tex:'emit',color:0xfff4df},{solid:false});

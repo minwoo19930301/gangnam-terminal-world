@@ -139,6 +139,7 @@ const sources = [
   ...Object.values(warakuNames).map(label=>{
     const name='와라쿠 · '+label;return ['centralcity','1F','waraku/dining.blend',name,name];
   }),
+  ['newcore','5F','newcore-akgolf/showroom.blend','뉴코아 2관 5층 · AK골프 클럽 매장','AKGolfGangnam'],
   ...Object.values(golfCatalog).map(([label])=>{
     const name=golfPrefix+label;
     return ['newcore','5F','newcore-golf/golf-shop.blend',name,name];
