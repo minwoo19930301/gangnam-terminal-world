@@ -201,6 +201,8 @@ def sync_layout(here, rows=None):
             exterior_group=branch(city,city.collection,'streets/plaza-planters','신반포로 · 석재 화분의 전정 수목')
         elif city and row['library'] in ('central-plaza-spheres/spheres.blend','central-plaza-lantern/lantern.blend','central-plaza-seatwall/seatwall.blend','central-plaza-canopy/canopy.blend'):
             exterior_group=branch(city,city.collection,'centralcity/plaza-sculptures','센트럴시티 광장 · 구체 조형물')
+        elif city and row['library']=='goto-exit81-lift/lift.blend':
+            exterior_group=branch(city,city.collection,'gotomall/exit81-lift','고투몰 · 8-1 보도 승강기')
         if exterior_group:
             for obj in [anchor,*[o for o in anchor.children if COMPONENT in o]]:
                 if obj.name not in exterior_group.objects:

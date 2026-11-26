@@ -1,3 +1,4 @@
+import {placeExit81Lift} from '../../assets/models/goto-exit81-lift/model.js';
 import {detailModule} from '../detail-module.js';
 const windowPrint=detailModule(new URL('../../assets/models/g12-window-print/model.js',import.meta.url),
   model=>model.drawG12Print);
@@ -2876,39 +2877,15 @@ export function build(K) {
       // bp_01 + corrected manifest: the freestanding glass lift is beside 8-1, not 8-2.
       // Keep the B1 cabin at the existing passage end; the small horizontal offset is recorded as a guess.
       const e0 = L1 + 0.25, e1 = e0 + 2.0, ew = 1.0, dw = 0.6;
-      const steel = 0xc3c8cd, frame = 0x6b7075;
+      const steel = 0xc3c8cd;
       K.slab(polyOf(rect(e0, e1, -ew, ew)), FL, { mat: { tex: 'metal', color: 0xb0b5ba }, ceil: false, edge: false });
       wallAcross(e1, -ew, ew, FL, CY, { mat: steel, thick: 0.12 });
       for (const side of [-1, 1]) wallAlong(e0, e1, side * ew, FL, CY, { mat: steel, thick: 0.12 });
       for (const [p0, p1] of [[-ew, -dw], [dw, ew]]) wallAcross(e0, p0, p1, FL, CY, { mat: steel, thick: 0.12 });
       wallAcross(e0, -dw, dw, FL + 2.2, CY, { mat: steel, thick: 0.12 });
       sg('엘리베이터', ...E(e0 - 0.08, 0), FL + 2.5, 1.1, 0.22, faceNA, { bg: '#e1e5e5', fg: '#303a36' });
-      // 2.6 × 2.6 m, 4 m high; north/east/west glazing and south-facing doors.
-      const ex = -84, ez = -113, HALF = 1.25, TOPY = 4.0, ROOF = TOPY - 0.06;
-      const x0 = ex - HALF, x1 = ex + HALF, z0 = ez - HALF, z1 = ez + HALF;
-      const footprint = [[x0, z0], [x1, z0], [x1, z1], [x0, z1]];
-      const sides = [[x0, z0, x1, z0], [x0, z0, x0, z1], [x1, z0, x1, z1]];
-      K.slab(footprint, 0, { mat: 0x8e8f8c, thick: 0.06, ceil: false, edge: false });
-      for (const edge of sides) {
-        K.wall(...edge, 0, 0.4, { mat: 0x8e8f8c, thick: 0.1 });
-        K.wall(...edge, 0.4, ROOF, { mat: 'gt_lift_glass', thick: 0.025 });
-      }
-      for (const [a0, a1] of [[x0, ex - 0.65], [ex + 0.65, x1]]) {
-        K.wall(a0, z1, a1, z1, 0, 0.4, { mat: 0x8e8f8c, thick: 0.1 });
-        K.wall(a0, z1, a1, z1, 0.4, ROOF, { mat: 'gt_lift_glass', thick: 0.025 });
-      }
-      K.wall(ex - 0.65, z1, ex + 0.65, z1, 2.25, ROOF, { mat: 'gt_lift_glass', thick: 0.025 });
-      for (const x of [x0, x1]) for (const z of [z0, z1]) K.box({ x, z, y: 0.4, w: 0.1, d: 0.1, h: ROOF - 0.4, mat: frame, solid: false });
-      for (const y of [0.4, 2.25]) {
-        for (const z of [z0, z1]) K.box({ x: ex, z, y, w: 2.5, d: 0.06, h: 0.06, mat: frame, solid: false });
-        for (const x of [x0, x1]) K.box({ x, z: ez, y, w: 0.06, d: 2.5, h: 0.06, mat: frame, solid: false });
-      }
-      // Open, flush threshold; thin glass door leaves are visual only, as with the other elevator cars.
-      for (const side of [-1, 1]) {
-        K.box({ x: ex + side * 0.65, z: z1, y: 0, w: 0.06, d: 0.08, h: 2.25, mat: frame, solid: false });
-        K.box({ x: ex + side * 0.325, z: z1, y: 0.02, w: 0.63, d: 0.018, h: 2.17, mat: 'gt_lift_glass', solid: false });
-      }
-      K.box({ x: ex, z: ez, y: ROOF, w: 2.6, d: 2.6, h: 0.06, mat: frame, solid: false });
+      const ex = -84, ez = -113, TOPY = 4.0;
+      const footprint = placeExit81Lift(K, ex, ez);
       const [bx1, bz1] = Q((e0 + e1) / 2, 0);
       const elevator = K.elevator({ name: `${title} 엘리베이터`, x: ex, z: ez, rotY: 0, w: 2.6, d: 2.6, shaft: false,
         floors: [{ label: '1F', y: 0, name: '신반포로 보도 · 8-1번 출구' }, { label: 'B1', y: FL, name: '고투몰 · 고속터미널역', dx: bx1 - ex, dz: bz1 - ez }] });

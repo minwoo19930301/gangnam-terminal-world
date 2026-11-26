@@ -38,6 +38,7 @@ const sources = [
   ...[['서쪽 녹청 구체','CentralCityPatinatedSphere'],['가운데 갈색 구체','CentralCityBronzeSphere'],['동쪽 잔물결 구체','CentralCityRippledSphere']]
     .map(([label,collection])=>['centralcity','지상','central-plaza-spheres/spheres.blend','센트럴시티 광장 · '+label,collection]),
   ['centralcity','지상','central-plaza-lantern/lantern.blend','센트럴시티 조각 광장 · 두 갈래 보행등','CentralCityTwinLantern'],
+  ['gotomall','1F','goto-exit81-lift/lift.blend','고투몰 8-1 · 보도 승강기','GotoExit81Lift'],
   ['gotomall','지상','g12-window-print/print.blend','고투몰 G12 · 지상 유리 점인쇄','G12 유리창 점인쇄'],
   ['streets','지상','sinbanpo-plaza-planters/planter.blend','신반포로 · 석재 화분의 전정 수목','SinbanpoPlazaPlanter'],
   ['streets','지상','exit8-sidewalk-lamp/lamp.blend','터미널 8번 출구 · 보도와 차도 등기구','Exit8_Sidewalk_Lamp'],
