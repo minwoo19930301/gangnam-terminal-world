@@ -21,6 +21,7 @@ const sources = [
     '간선버스 · 전조등과 차폭등','간선버스 · '+route+'번 노선 표시',
   ]),
   ['gyeongbu','6F','gyeongbu-childrens-aisle/childrens-aisle.blend','경부선 6층 · 아동복 철망 진열과 접은 상품','6층 아동복 · 철망 행거와 접은 상품'],
+  ['gyeongbu','8F','gyeongbu-womens-aisle/womens-aisle.blend','경부선 8층 · 식물무늬 니트와 집게 바지 및 외투 마네킹','8층 여성복 · 식물무늬 니트와 외투 마네킹'],
   ['gyeongbu','7F','gyeongbu-suiting-aisle/suiting-aisle.blend','경부선 7층 · 이단 신사복 행거와 소매 상품표','7층 신사복 · 모직 재킷과 이단 봉'],
   ['gyeongbu','1F','gyeongbu-front-cafes/cafes.blend','경부선 부속상가 · 이디야와 달리나인 거리 정면','경부선 정문 옆 · 이디야와 달리나인'],
   ...['CushionRack','CushionLinen','CushionSage','CushionRose','CushionIvory'].map(name=>
@@ -79,6 +80,7 @@ const sources = [
   ['gyeongbu','B1','gyeongbu-hangaram/hangaram-framing.blend','한가람문구 · 맞춤액자 코너','한가람 반포 · 액자 코너'],
   ['gyeongbu','B1','gyeongbu-hangaram/hangaram-framing.blend','한가람문구 · 액자 금박과 견본화','근접 · 몰딩 새김과 그림'],
   ['gyeongbu','1F','gyeongbu-pharmacy/gyeongbu-pharmacy.blend','고속터미널약국 · 곡면 입구와 쇼윈도','Pharmacy','Glass','Lit'],
+  ...['다이소 · 달항아리와 압화 액자 진열','다이소 · 나무 소반과 컵받침·카드꽂이'].map(name=>['gyeongbu','B1','daiso-home/homeware.blend',name,name]),
   ...['다이소 · 홈가드닝 화분 진열','다이소 · 화분 옆 조화 진열'].map(name=>['gyeongbu','B1','daiso-garden/garden.blend',name,name]),
   ['gyeongbu','1F','gyeongbu-boards/gates-5-to-10.blend','경부선 · 5~10번 승차홈 전광판','Housing','Lightboxes'],
   ['centralcity','2F','bean-brothers/fp203.blend','빈브라더스 · FP203 커피바와 좌석','빈브라더스 · FP203 커피바와 좌석'],

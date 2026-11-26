@@ -21,6 +21,7 @@ SHELVES = {
     "gyeongbu-luggage": "경부선 1층 · 짐캐리",
     "dimdimsum": "호남선 중층 · 딤딤섬",
     "gyeongbu-childrens-aisle": "경부선 6층 · 아동복 상가",
+    "gyeongbu-womens-aisle": "경부선 8층 · 여성복 상가",
     "gyeongbu-suiting-aisle": "경부선 7층 · 신사복 상가",
     "tamayura": "JW 2층 · 타마유라",
     "mobo-bar": "JW 7층 · 모보 바",
