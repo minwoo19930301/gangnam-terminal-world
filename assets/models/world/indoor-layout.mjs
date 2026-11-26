@@ -28,6 +28,8 @@ import {relief} from '../../../js/banpo_relief.js';
 // Scene object (or a uniquely identifying child) -> editable native source.
 // Geometry decoder matrices and decorative LOD offsets live *below* the placement.
 const sources = [
+  ['gyeongbu','7F','gyeongbu-clothing-fronts/seven/tailored-front.blend','경부선 7층 · 두 단의 모직과 코트 전면','7층 신사복 · 이단 모직 진열과 코트 전면'],
+  ['gyeongbu','8F','gyeongbu-clothing-fronts/eight/knit-front.blend','경부선 8층 · 긴 니트와 스카프 전면','8층 여성복 · 긴 니트와 스카프 전면'],
   ['centralcity','B1','sweet-chefs-stage/counter.blend','스위트 파크 · 셰프스 스테이지와 르솔레이','SweetPark_ChefsStage'],
   ['shinsegae','B1','megabox-central/entrance.blend','메가박스 센트럴 · 부티크 아치 입면','MegaboxBoutiquePublicFront'],
   ['gyeongbu','3F','gyeongbu-flower-bank/flower-bank.blend','경부선 생화상가 · 절지와 열매 진열대','FreshFlowerWholesaleBank'],

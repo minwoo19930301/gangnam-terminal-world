@@ -1,0 +1,34 @@
+[
+  {
+    "view": "7-entrance",
+    "path": "/?pitch=0#/gyeongbu/7F?p=72.20576,29.5,17.75104,-159.19449"
+  },
+  {
+    "view": "7-store",
+    "path": "/?pitch=3#/gyeongbu/7F?p=73.49626,29.5,20.86580,-76.61848"
+  },
+  {
+    "view": "7-approach",
+    "path": "/?pitch=4#/gyeongbu/7F?p=75.23246,29.5,24.73120,-14.08520"
+  },
+  {
+    "view": "7-central",
+    "path": "/?pitch=2#/gyeongbu/7F?p=76.18400,29.5,28.22080,20.80551"
+  },
+  {
+    "view": "8-entrance",
+    "path": "/?pitch=0#/gyeongbu/8F?p=72.20576,34,17.75104,-159.19449"
+  },
+  {
+    "view": "8-store",
+    "path": "/?pitch=3#/gyeongbu/8F?p=73.49626,34,20.86580,-76.61848"
+  },
+  {
+    "view": "8-approach",
+    "path": "/?pitch=4#/gyeongbu/8F?p=75.23246,34,24.73120,-14.08520"
+  },
+  {
+    "view": "8-central",
+    "path": "/?pitch=2#/gyeongbu/8F?p=76.18400,34,28.22080,20.80551"
+  }
+]
