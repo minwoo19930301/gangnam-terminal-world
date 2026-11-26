@@ -8,6 +8,7 @@ import {angle as cinemaYaw,point as cinemaPoint} from '../../assets/models/megab
 import {placeAtriumCeiling} from '../../assets/models/ssg-atrium-soffit/model.js';
 import {marketProduceCeiling} from '../../assets/models/ssg-market-ceiling/model.js';
 import {shopArrival as onimaruArrival} from '../../assets/models/kyoto-onimaru/layout.js';
+import {placeCrepeAndWaffle} from '../../assets/models/godiva-emack/model.js';
 import {placeAgingCabinet} from '../../assets/models/ssg-market-butcher/model.js';
 import {placeGuo} from '../../assets/models/guo-dumpling/model.js';
 import {placeSpringRolls} from '../../assets/models/blue-butterfly/model.js';
@@ -2659,15 +2660,17 @@ export function build(K) {
         K.wall(...a,...b,y+4.73,y+4.77,{mat:{tex:'emit',color:0xc9a35a},thick:.04,solid:false});
       }
     }
-    function deliPavilion(c){
+    function deliPavilion(c,customFrame=false){
       const{W,D,at,bb,sg}=cellFrame(c),w=Math.min(W-.12,5.4),d=Math.min(D-.12,3.0),t=d/2+.06;
       if(w<.55||d<.7)return;
-      for(const s of [W/2-w/2+.04,W/2+w/2-.04])for(const tt of [.10,d-.02])bb(s,tt,.065,.065,y+1.3,1.36,0x1e1c1a);
-      bb(W/2,t,w,d,y+2.6,.37,{tex:'ssg_deli_quatrefoil',gloss:.5});
-      bb(W/2,t,w+.03,d+.03,y+2.98,.10,{color:0x1e1c1a,gloss:.7});
-      bb(W/2,t,w,d,y+2.56,.045,0x292620);
-      const name=c.name==='블루버터플라이'?'Blue Butterfly':c.name;
-      sg(name,W/2,.025,y+2.79,Math.max(.45,w-.10),.24,{bg:'#1e1c1a',fg:'#fff6df',bold:false,font:c.name==='블루버터플라이'?'cursive':'Georgia, serif',twoSided:false});
+      if(!customFrame){
+        for(const s of [W/2-w/2+.04,W/2+w/2-.04])for(const tt of [.10,d-.02])bb(s,tt,.065,.065,y+1.3,1.36,0x1e1c1a);
+        bb(W/2,t,w,d,y+2.6,.37,{tex:'ssg_deli_quatrefoil',gloss:.5});
+        bb(W/2,t,w+.03,d+.03,y+2.98,.10,{color:0x1e1c1a,gloss:.7});
+        bb(W/2,t,w,d,y+2.56,.045,0x292620);
+        const name=c.name==='블루버터플라이'?'Blue Butterfly':c.name;
+        sg(name,W/2,.025,y+2.79,Math.max(.45,w-.10),.24,{bg:'#1e1c1a',fg:'#fff6df',bold:false,font:c.name==='블루버터플라이'?'cursive':'Georgia, serif',twoSided:false});
+      }
       deliCoffer(...at(W/2,t),Math.min(3,Math.max(.7,w)),Math.min(3,d));
       if(c.name==='블루버터플라이'){
         // Photo 19 has a red/white/black checker directly under the counter.
@@ -2751,6 +2754,14 @@ export function build(K) {
       }
       const[u,v]=at,wood=c.name==='카멜커피'?0xd9b98a:c.name==='보앤미'?0xc8a77b:c.kind==='wine'?0x493529:c.kind==='deli'?0xb8925d:0x7e6044;
       const darkDeli=c.zone==='north_deli'&&c.kind==='deli', boAndMie=c.name==='보앤미';
+      if(c.name==='에맥앤볼리오스 / 고디바크레페'){
+        const [x,z]=P(u,v);
+        box(u,v,w,d,y,.83,0x33312c,{skip:['top','bottom','n','s','e','w']});
+        placeCrepeAndWaffle(K,x,z,RA+PI/2,y);
+        if(fits(c,u-.8,v,.35,.35))customer(u-.8,v,true);
+        deliPavilion(c,true);
+        return;
+      }
       if(c.name==='블루버터플라이'){
         const [x,z]=P(u,v);
         box(u,v,w,d,y,.83,0x694733,{skip:['top','bottom','n','s','e','w']});

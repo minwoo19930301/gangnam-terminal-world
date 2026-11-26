@@ -107,6 +107,7 @@ SHELVES = {
     "gyeongbu-seating": "경부선 · 대합실 연석",
     "lounge-chair": "JW 8층 라운지 · 라탄 암체어",
     "ssg-market-butcher": "신세계 마켓 · 숙성 정육 진열장",
+    "godiva-emack": "식품관 · 고디바 크레페와 에맥앤볼리오스",
     "guo-dumpling": "신세계 델리 · 구오 만두",
     "blue-butterfly": "신세계 델리 · 블루버터플라이",
     "kyoto-onimaru": "신세계 식품관 · 교토 오니마루",
