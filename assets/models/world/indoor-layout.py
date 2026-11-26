@@ -96,6 +96,10 @@ def sync_layout(here, rows=None):
         origin.empty_display_size=.01
         origin.hide_select=True
         scene.collection.objects.link(origin)
+    city=bpy.data.scenes.get("반포 · 도시 전경")
+    roof_group=None
+    if city:
+        roof_group=branch(city,city.collection,"jwmarriott/public-roof","JW 메리어트 · 7층 공개 옥상")
     current={}
     for ob in sorted(scene.objects,key=lambda o:o.name):
         if KEY in ob:
@@ -164,6 +168,11 @@ def sync_layout(here, rows=None):
                 child.location=offset
             child['indoor_source_offset']=list(offset)
         anchor['indoor_seen_components']=json.dumps(row['collections'],ensure_ascii=False)
+        # Share the same editable roof objects with the city exterior scene.
+        if roof_group and (row['library']=='jwmarriott/public-roof.blend' or key.startswith('jwmarriott/herbs/')):
+            for obj in [anchor,*[o for o in anchor.children if COMPONENT in o]]:
+                if obj.name not in roof_group.objects:
+                    roof_group.objects.link(obj)
     # A source removed in a future game revision remains recoverable in the artist's scene.
     for key in current.keys()-seen:
         current[key]['game_source_present']=False

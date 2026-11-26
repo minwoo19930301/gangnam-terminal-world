@@ -315,6 +315,10 @@ export function build(K) {
   const fixture=(key,u,v,y,angle=0,scale=1)=>{
     const cs=Math.cos(angle),sn=Math.sin(angle),placement=fit;
     const position=(bx,by)=>P(u+(bx*cs+by*sn)*scale/1000,v+(bx*sn-by*cs)*scale/1000);
+    if (fixtureFloors[key] && baseKit.recordHotelFixture) {
+      const frame = (bx,by) => mapPoint(...position(bx,by),placement);
+      baseKit.recordHotelFixture(key,fixtureFloors[key],frame(0,0),frame(1000,0),frame(0,-1000),y,scale);
+    }
     function draw(model){
       const materials=model.materials.map(m=>m.tex||m.gloss?m:m.color);
       const points=model.points.map(([bx,by,bz])=>{
@@ -1797,13 +1801,17 @@ export function build(K) {
     // supported strip beside the pavilion and keep the north bar door clear.
     // The operator documents the garden and dining on 7F, not surveyed dimensions.
     const gy = y + 0.03;
-    HP({ tex: 'wood', color: 0x9a7452 }, [-8, .45, 16, 5.9], gy);
+    const roofSurface=(name,mat,rect,height)=>{
+      baseKit.recordHotelRoof?.(name,mapPoly(RECT(...rect)),height,mat);
+      HP(mat,rect,height);
+    };
+    roofSurface('모보 바 테라스',{ tex: 'wood', color: 0x9a7452 }, [-8, .45, 16, 5.9], gy);
     for (const [u, v] of [[-5, 2.8], [0, 2.5], [9, 2.5], [14, 2.8]]) { TABLE(u, v, y, { r: 0.5, chairs: 4, top: 0xeeeeee, chair: 0x2b2b2b }); CY(u, v, y + 0.74, 0.04, 1.6, 0xdddddd, { seg: 4, solid: false, caps: false }); CY(u, v, y + 2.3, 1.4, 0.06, 0xf2ede4, { seg: 10, solid: false }); }
     const lawns = [[-31, 8, -24, 56], [-17, 8, -12, 56], [19, 8, 31, 56]];
-    for (const r of lawns) { HP({ tex: 'grass', color: 0x8db86a }, r, gy); const [a, b, c, d] = r; for (const [p, q, s, t] of [[a, b, c, b], [a, d, c, d], [a, b, a, d], [c, b, c, d]]) { const horiz = q === t; B({ u: (p + s) / 2, v: (q + t) / 2, y, w: horiz ? Math.abs(s - p) : 0.5, d: horiz ? 0.5 : Math.abs(t - q), h: 0.55, mat: 0x4e7a3c, top: 0x5a8a44 }); } }
-    HP({ tex: 'darkstone', color: 0xc9bfae }, [-23.6, 5.5, -17.4, 57], gy + 0.005);
+    for (const r of lawns) { roofSurface('정원 잔디',{ tex: 'grass', color: 0x8db86a }, r, gy); const [a, b, c, d] = r; for (const [p, q, s, t] of [[a, b, c, b], [a, d, c, d], [a, b, a, d], [c, b, c, d]]) { const horiz = q === t; B({ u: (p + s) / 2, v: (q + t) / 2, y, w: horiz ? Math.abs(s - p) : 0.5, d: horiz ? 0.5 : Math.abs(t - q), h: 0.55, mat: 0x4e7a3c, top: 0x5a8a44 }); } }
+    roofSurface('정원 산책로',{ tex: 'darkstone', color: 0xc9bfae }, [-23.6, 5.5, -17.4, 57], gy + 0.005);
     B({ u: -20.5, v: 31, y, w: 3.1, d: 17, h: 0.5, mat: STONE, top: STONE, solid: true, skip: [] });
-    HP('water', [-21.85, 23, -19.15, 39], y + 0.52);
+    roofSurface('리플렉팅 풀','water', [-21.85, 23, -19.15, 39], y + 0.52);
     for (let i = 0; i < 6; i++) CY(-21.3 + (i % 3) * .8, 27 + Math.floor(i / 3) * 8, y + 0.5, 0.08, 0.9, { tex: 'emit', color: 0xdff2ff }, { seg: 6, solid: false });
     const trees = [];
     for (let v = 12; v <= 52; v += 8) {
