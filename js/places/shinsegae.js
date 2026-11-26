@@ -363,7 +363,7 @@ export function build(K) {
     if (!furnishings.has(floor)) {
       const queue = []; furnishings.set(floor, queue);
       const y = LV[floor] ?? LV.B1;
-      const shared=['2F','3F','4F','5F','6F'].includes(floor), opt={ floor, y0: y, y1: floor === '1M' ? LV['2F'] : LV[nextOf(floor)],
+      const shared=['2F','3F','4F','5F','6F','7F','8F','9F','10F'].includes(floor), opt={ floor, y0: y, y1: floor === '1M' ? LV['2F'] : LV[nextOf(floor)],
         poly: shared ? rect(0, 0, UW, 150) : floor === '1M' ? rect(...MEZZ) : UPPER.has(floor) ? rect(0, VS, UW, VD) : FULL,
         name: `${floor} 매장 집기` };
       retailDetail(opt, () => { for (const build of queue) build(); });
@@ -17267,25 +17267,40 @@ export function build(K) {
   }
   // Shop partitions are already in the structural pass. Schedule their stock
   // from the actual guide footprints so a view of one wing can load it alone.
-  const secondFloorGuide = upperGuidePlans['2F'];
-  // Reserve the original consecutive seeds at first use, regardless of which
-  // storefront is approached first. Other floors keep their visit order.
-  let secondFloorSeed;
-  function secondFloorSeedAt(index) {
-    if (secondFloorSeed === undefined) {
-      secondFloorSeed = upperSeed;
-      upperSeed += secondFloorGuide.cells.length;
+  const stockSeeds = new Map();
+  function shopSeed(id, index) {
+    if (!stockSeeds.has(id)) {
+      stockSeeds.set(id, upperSeed);
+      upperSeed += upperGuidePlans[id].cells.length;
     }
-    return secondFloorSeed + index;
+    return stockSeeds.get(id) + index;
   }
-  secondFloorGuide.cells.forEach((cell, index) => {
-    const parts = cell.model.parts;
-    if (!parts.length || cell.kind === 'closed') return;
-    const bounds = [Math.min(...parts.map(p=>p[0])), Math.min(...parts.map(p=>p[1])),
-      Math.max(...parts.map(p=>p[2])), Math.max(...parts.map(p=>p[3]))];
-    retailDetail({floor:'2F', y0:LV['2F'], y1:LV['3F'], poly:rect(...bounds),
-      name:`2F ${cell.name} 집기`}, () => fitUpperCell('2F', cell, secondFloorSeedAt(index)));
+  function shopSection(id, stores, name) {
+    const boxes = stores.flatMap(({cell}) => cell.model.parts);
+    if (!boxes.length) return;
+    const bounds = [Math.min(...boxes.map(r=>r[0])), Math.min(...boxes.map(r=>r[1])),
+      Math.max(...boxes.map(r=>r[2])), Math.max(...boxes.map(r=>r[3]))];
+    retailDetail({floor:id, y0:LV[id], y1:LV[nextOf(id)], poly:rect(...bounds), name}, () => {
+      for (const {cell,index} of stores) fitUpperCell(id,cell,shopSeed(id,index));
+    });
+  }
+  upperGuidePlans['2F'].cells.forEach((cell, index) => {
+    if (cell.kind !== 'closed') shopSection('2F', [{cell,index}], `2F ${cell.name} 집기`);
   });
+  // Three continuous stretches of the sales floor keep neighbouring signs and
+  // displays in the same material batch. The annex extends beyond the main roof.
+  const sectionFloors = ['6F','7F','8F','9F','10F'];
+  for (const id of sectionFloors) {
+    const sections = [[],[],[]];
+    upperGuidePlans[id].cells.forEach((cell,index) => {
+      const parts = cell.model.fixtureParts || cell.model.parts;
+      if (!parts.length) return;
+      const centre = (Math.min(...parts.map(r=>r[1])) + Math.max(...parts.map(r=>r[3]))) / 2;
+      const section = centre < VD / 2 ? 0 : centre < VD ? 1 : 2;
+      sections[section].push({cell,index});
+    });
+    sections.forEach((stores,i) => shopSection(id,stores,`${id} 매장 진열 · ${['본관 북측','본관 남측','신관'][i]}`));
+  }
   for(const [id,guide]of Object.entries(upperGuidePlans))furnish(id,()=>{
     const y=LV[id],H=clearH(id);
     if(['3F','4F','5F'].includes(id)){
@@ -17323,7 +17338,7 @@ export function build(K) {
       for(const [a,b,c,d] of [[28.8,145.3,28.8,147],[35.2,145.3,35.2,147],[28.8,147,35.2,147]])wall(a,b,c,d,y,y+4.1,{mat:0xe9e5dc,thick:.08,solid:false});
       K.hpoly(CEIL,rect(28.8,145.3,35.2,147),y+4.1,false);
     }
-    if(id==='2F')secondFloorSeedAt(0);
+    if(id==='2F' || sectionFloors.includes(id))shopSeed(id,0);
     else for(const c of guide.cells)fitUpperCell(id,c,upperSeed++);
     // R19 N4: remove obsolete advertising panels; locate slots from this well.
     // D8 supplies the matching corner piers in the structural pass.
