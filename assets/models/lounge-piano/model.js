@@ -1,6 +1,8 @@
 import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
 import {placeSingleDetail} from '../interior-architecture/single-detail.js';
 
+const rimOutline=[[-.79,.90],[.79,.90],[.79,.40],[.44,-.23],[.23,-.62],[.14,-1.08],[-.07,-1.30],[-.39,-1.38],[-.72,-1.26],[-.79,-1.09]];
+
 function silhouette(T) {
   const parts=[];
   function add(g,color) {
@@ -14,7 +16,7 @@ function silhouette(T) {
   function box(x,y,z,w,h,d,color) {
     add(new T.BoxGeometry(w,h,d).translate(x,y+h/2,z),color);
   }
-  const points=[[-.79,.90],[.79,.90],[.79,.40],[.44,-.23],[.23,-.62],[.14,-1.08],[-.07,-1.30],[-.39,-1.38],[-.72,-1.26],[-.79,-1.09]];
+  const points=rimOutline;
   function leaf(lid) {
     const data=[],indices=[];
     for(const t of [0,1])for(const [x,z] of points) {
@@ -42,6 +44,10 @@ function silhouette(T) {
 
 export function placePiano(K,x,y,z,angle) {
   const T=K.THREE;
+  // Follow the bentside of the visible body. The open rug at the narrow
+  // tail stays walkable, as does the space behind the separate piano bench.
+  const c=Math.cos(angle),s=Math.sin(angle);
+  K.phys.addPolyWalls(rimOutline.map(([a,b])=>[x+a*c+b*s,z-a*s+b*c]),y+.674,y+.998,.014,'jwmarriott');
   const polished=new T.MeshPhongMaterial({vertexColors:true,specular:0x393635,shininess:48,side:T.DoubleSide});
   return placeSingleDetail(K,{name:'더 라운지 · 그랜드 피아노와 의자',file:'../lounge-piano/grand.glb',
     at:[x,y,z],angle,fallback:silhouette(T),fallbackMaterial:polished,material:polished,

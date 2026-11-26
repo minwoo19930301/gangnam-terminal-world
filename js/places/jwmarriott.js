@@ -1960,7 +1960,7 @@ export function build(K) {
     }
     MAN(-.4, 8.0, y, { shirt: 0x2c2925, rotY: FACE.S });
     SG('THE LOUNGE', { u: 4.65, v: 12.6, y: y + 1.6, w: .95, h: .22, f: 'S', bg: null, fg: '#c7a573', bold: false });
-    // The piano and bench share the original seat collision and rug.
+    // The bench remains separate from the curved piano rim on the same rug.
     const [pianoX,pianoZ]=P(-4.8,41.0);
     B({u:-4.8,v:42.8,y:y+.42,w:.85,d:.38,h:.1,mat:0,skip:['top','bottom','n','s','e','w']});
     placePiano(K,pianoX,y,pianoZ,R);
@@ -2056,7 +2056,12 @@ export function build(K) {
     COVE([5.2, 24.2, 8.7, 39.5], y + 3.5);
     HP(0xe4dccd, [6, 48.5, 15.8, 53.5], yc, false);
     SUBZ('프런트 데스크', '8F', '체크인 · 체크아웃', [5.2, 44, 16, 53.5]);
-    SUBZ('그랜드 피아노', '8F', '더 라운지', [-6, 39.3, -3.6, 43.3]);
+    // The old map centre lay under the open lid. Aim across the keys from
+    // the front corner of the same listening area, beside the bench.
+    const [listenerX,listenerZ]=P(-3.74,43.14);
+    K.zone({name:'그랜드 피아노',floor:'8F',sub:meta.name+' · 더 라운지',
+      poly:RECT(-6,39.3,-3.6,43.3),y0:y,y1:NEXT['8F'],priority:1,
+      mapArrival:{x:listenerX,z:listenerZ,yaw:yawTo(-1.06,-2.14)}});
     SUBZ('더 라운지 바', '8F', '대리석 바 · 월넛 패널', [-7.85, 6.1, 4.8, 13.4]);
     SUBZ('더 라운지', '8F', '구리빛 커튼 · 크림 소파 · 피아노', [-8, 14, 5.2, 48]);
     SUBZ('엘리베이터 홀', '8F', '객실 · 레스토랑 층 연결', [5.2, 24.2, 8.8, 39.5]);
