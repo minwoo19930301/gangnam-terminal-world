@@ -49,7 +49,7 @@ def sections(low=False):
 
 destination=directory/'upstairs' if upper else directory
 destination.mkdir(exist_ok=True)
-native='본관 2층 유니클로 · 열린 계단 주위의 참나무 바닥과 노출 천장' if upper else '본관 1층 유니클로 · 참나무 바닥과 노출 천장'
+native='유니클로 2층 · 참나무 바닥과 계단 개구부' if upper else '본관 1층 유니클로 · 참나무 바닥과 노출 천장'
 save_display(destination,'oak-and-lighting',native,'UniqloUpperSalesFloor' if upper else 'UniqloSalesFloor',{
     'subject':'Wood floor and visible white ceiling above the upper sales area' if upper else 'Wood floor and visible white ceiling over the public ground-floor sales area',
     'references':'Customer branch photographs, May–June 2025. Interpreted materials, plank lengths and heights.'
