@@ -1,0 +1,11 @@
+{
+  "floor": "9F",
+  "x": -12.630526,
+  "z": 56.569529,
+  "yaw": -80.0,
+  "pitch": -37.0,
+  "meshName": "JajuGangnamNewMoonPorcelain",
+  "sourceBlend": "jaju-table.blend",
+  "sourceCollection": "SSG_9F_JajuTable",
+  "nativeLabel": "자주 테이블"
+}
