@@ -1,5 +1,6 @@
 import { registerCollect } from './shinsegae-collect.js';
 import { registerGarmin } from './shinsegae-garmin.js';
+import { registerBarrel } from './shinsegae-barrel.js';
 import { registerBrompton } from './shinsegae-brompton.js';
 import { registerLeica } from './shinsegae-leica.js';
 import { registerBossGolf } from './shinsegae-boss-golf.js';
@@ -7881,6 +7882,18 @@ export function build(K) {
       }
     }
     if(id==='8F'){
+      const swim=upperBuildRect(id,guide.cells.find(c=>c.name==='배럴'));
+      const swimU=swim[2]-1.18165, swimV=(swim[1]+swim[3])/2;
+      const [sx,sz]=P(swimU,swimV),[rxSwim,rzSwim]=P(swimU,swimV+1);
+      const swimYaw=Math.atan2(sz-rzSwim,rxSwim-sx);
+      registerBarrel(K,{poly:rect(...swim),x:sx,y,z:sz,yaw:swimYaw});
+      for(const [side,front,w,d,h] of [[0,.27,2.14,.96,2.53],[-2.45,.12,.87,.72,2.1],
+          [2.37,.12,.87,.72,1.61],[-2.50,-.55,1.39,.09,2.34],[2.49,-.55,1.39,.09,2.34],
+          [-1.28,-.76,1.28,.49,1.76],[1.24,-.76,1.28,.49,1.76],[0,-1.10,6.27,.065,2.705]]){
+        K.box({x:sx+side*Math.cos(swimYaw)+front*Math.sin(swimYaw),y,
+          z:sz-side*Math.sin(swimYaw)+front*Math.cos(swimYaw),w,d,h,rotY:swimYaw,
+          mat:0x183d70,skip:['top','bottom','n','s','e','w']});
+      }
       const garmin=upperBuildRect(id,guide.cells.find(c=>c.name==='가민'));
       const gu=(garmin[0]+garmin[2])/2,gv=garmin[1]+1.645;
       const [gx,gz]=P(gu,gv),[right,rz0]=P(gu+1,gv),turn=Math.atan2(gz-rz0,right-gx);
@@ -9415,7 +9428,7 @@ export function build(K) {
     const {id,name,kind,Wf:W,Dp:D,y,face,fb,fdisk,fball,fsign,person,seed,palette:p,ST}=ctx;
     if(id==='7F' && (name==='프레이트'||name==='보스골프'))return;
     if(id==='6F' && (name==='브루넬로 쿠치넬리'||name==='라이카'||name==='콜렉트'||name==='버윅'))return;
-    if(id==='8F' && (name==='아크테릭스'||name==='브롬톤'||name==='가민'))return;
+    if(id==='8F' && (name==='아크테릭스'||name==='브롬톤'||name==='가민'||name==='배럴'))return;
     if(id==='10F' && (name==='스누피 플레이스'||name==='스토케'||name==='마이크로 킥보드'||name==='토박스'||name==='아뜰리에 슈'||name===toyShop))return;
     if(id==='9F' && (name.startsWith('드비알레/')||name==='몰테니&C'||name==='라잇나우'||name==='라마르조코'||name==='TWL'||name==='허먼 밀러'||name==='바카라'||name==='모비엘'||name==='밀레'))return; // Dedicated room detail owns the presentation island.
     if(W<1.05||(D<1.05&&!(id==='4F'&&name==='금강'&&D>=.45)))return;
@@ -16465,7 +16478,7 @@ export function build(K) {
         fsign(shoeGroup?fasciaName:id==='5F'&&c.name==='미샤'?'MICHAA':id==='4F'&&c.name==='샤넬 슈 부틱'?'CHANEL':id==='5F'&&c.name==='킨더살몬'?'KINDERSALMON':id==='5F'&&c.name==='에스실'?'SSIL':id==='5F'&&c.name==='넘버링'?'NUMBERING':id==='4F'&&c.name==='폴로 랄프 로렌'?'POLO RALPH LAUREN':id==='4F'&&c.name==='레페토'?'repetto':id==='4F'&&c.name==='쏘솔트'?'SOSALT':id==='4F'&&c.name==='린드버그'?'LINDBERG':id==='4F'&&c.name==='코치'?'COACH':id==='4F'&&c.name==='버켄스탁'?'BIRKENSTOCK':id==='2F'&&brand2[c.name]?brand2[c.name]:id==='4F'&&c.name==='오트리'?'AUTRY':id==='4F'&&c.name==='헌터'?'HUNTER':id==='3F'&&c.name==='다미아니'?'DAMIANI':id==='3F'&&brand3[c.name]?brand3[c.name]:id==='4F'&&c.name==='이브살로몬'?'YVES SALOMON':id==='4F'&&brand4[c.name]?brand4[c.name]:id==='5F'&&brand5[c.name]?brand5[c.name]:c.name==='몽클레르'?'MONCLER':c.name==='펜디'?'FENDI':id==='5F'&&c.name==='룰루레몬'?'lululemon':c.name==='불가리'&&id==='2F'?'BVLGARI':c.name==='티파니앤코'&&id==='2F'?'TIFFANY & CO.':c.name==='로에베'&&id==='3F'?'LOEWE':c.name==='막스마라'&&id==='3F'?'MAX MARA':c.name,(id==='2F'&&c.name==='불가리'?Wf-1.8:frontAt),.075,y+(sharedEntry?2.91:id==='8F'?2.75:id==='2F'&&c.name==='고야드'?3.34:id==='2F'&&c.name==='티파니앤코'?2.94:3.25),Math.min(publicWidth-.55,id==='2F'&&c.name==='불가리'?2.8:8.5),id==='2F'&&c.name==='고야드'?.26:Math.min(id==='8F'?.35:.45,.19+Wf*.035),{bg:id==='2F'&&c.name==='고야드'?null:bg,fg:id==='2F'&&c.name==='고야드'?'#dfc77d':palette.dark&&!chanel2&&id!=='8F'?'#f4eee0':fg,twoSided:true});
       }
       // A clear counter at the rear side, payment terminal and framed mirror.
-      if(!(id==='7F'&&(c.name==='프레이트'||c.name==='보스골프'))&&!(id==='6F'&&(c.name==='브루넬로 쿠치넬리'||c.name==='라이카'||c.name==='콜렉트'||c.name==='버윅'))&&!(id==='8F'&&(c.name==='아크테릭스'||c.name==='브롬톤'||c.name==='가민'))&&!(id==='10F'&&(c.name==='스누피 플레이스'||c.name==='스토케'||c.name==='마이크로 킥보드'||c.name==='토박스'||c.name==='아뜰리에 슈'||c.name===toyShop))&&!(id==='9F'&&(c.name==='몰테니&C'||c.name==='라잇나우'||c.name==='라마르조코'||c.name==='TWL'||c.name==='허먼 밀러'||c.name==='바카라'||c.name==='모비엘'||c.name==='밀레'))&&!popupStage&&!jewelryIsland&&!(id==='5F'&&['베네통','캐나다 구스'].includes(c.name))&&Wf>2.3&&Dp>2.8&&!(id==='2F'&&['생 로랑','불가리','보테가 베네타','헬렌카민스키','디올'].includes(c.name))&&!(id==='3F'&&['아디르','더로우','호라이즌','알라이아','분더샵 여성','바쉐론 콘스탄틴','릭오웬스','오데마피게','로에베','몽블랑','발렌티노','브레게','프레드','부쉐론','끌로에','아크리스','블랑팡'].includes(c.name))&&!(id==='4F'&&['토리버치','A.P.C.','포르테 포르테','N°21','메종 키츠네','레페토','폴로 랄프 로렌','샤넬 슈 부틱','루이비통','지안비토로시','린드버그'].includes(c.name))&&!(id==='5F'&&['델라라나','위뜨','헤지스','더일마','룩캐스트','루에브르','타낫','뷰오리','포유어아이즈온리','랙앤본','킨더살몬','던스트','에스실','넘버링','미샤','쁘렝땅','조셉앤 스테이시','렉토','럭키슈에뜨','르917 (르셉템버)','멤버스바','SHOP 아모멘토'].includes(c.name))){
+      if(!(id==='7F'&&(c.name==='프레이트'||c.name==='보스골프'))&&!(id==='6F'&&(c.name==='브루넬로 쿠치넬리'||c.name==='라이카'||c.name==='콜렉트'||c.name==='버윅'))&&!(id==='8F'&&(c.name==='아크테릭스'||c.name==='브롬톤'||c.name==='가민'||c.name==='배럴'))&&!(id==='10F'&&(c.name==='스누피 플레이스'||c.name==='스토케'||c.name==='마이크로 킥보드'||c.name==='토박스'||c.name==='아뜰리에 슈'||c.name===toyShop))&&!(id==='9F'&&(c.name==='몰테니&C'||c.name==='라잇나우'||c.name==='라마르조코'||c.name==='TWL'||c.name==='허먼 밀러'||c.name==='바카라'||c.name==='모비엘'||c.name==='밀레'))&&!popupStage&&!jewelryIsland&&!(id==='5F'&&['베네통','캐나다 구스'].includes(c.name))&&Wf>2.3&&Dp>2.8&&!(id==='2F'&&['생 로랑','불가리','보테가 베네타','헬렌카민스키','디올'].includes(c.name))&&!(id==='3F'&&['아디르','더로우','호라이즌','알라이아','분더샵 여성','바쉐론 콘스탄틴','릭오웬스','오데마피게','로에베','몽블랑','발렌티노','브레게','프레드','부쉐론','끌로에','아크리스','블랑팡'].includes(c.name))&&!(id==='4F'&&['토리버치','A.P.C.','포르테 포르테','N°21','메종 키츠네','레페토','폴로 랄프 로렌','샤넬 슈 부틱','루이비통','지안비토로시','린드버그'].includes(c.name))&&!(id==='5F'&&['델라라나','위뜨','헤지스','더일마','룩캐스트','루에브르','타낫','뷰오리','포유어아이즈온리','랙앤본','킨더살몬','던스트','에스실','넘버링','미샤','쁘렝땅','조셉앤 스테이시','렉토','럭키슈에뜨','르917 (르셉템버)','멤버스바','SHOP 아모멘토'].includes(c.name))){
         const cw=Math.min(1.4,Wf*.23),a=Wf*.76,b=Dp*.78;
         fb(a,b,cw,.55,y,.93,palette.wall,{solid:true});
         fb(a,b,cw+.04,.59,y+.93,.045,{color:palette.trim,gloss:.5});
