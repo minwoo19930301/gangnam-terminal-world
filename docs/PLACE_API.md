@@ -37,6 +37,7 @@ Geometry (all static geometry is merged per material; thousands of calls are fin
 - `K.wall(ax,az,bx,bz,y0,y1,{thick=0.2, mat, mat2, openings:[{at,w,y0,y1}], solid})` — straight wall, `at` = distance from A to opening center.
 - `K.polyWalls(poly, y0, y1, {mat (outside), inner (inside), thick, openings:[{x,z,w,y0,y1}], floorH})` — walls along a polygon outline; openings snap to the nearest edge. Use for building envelopes (`mat` = facade, `inner` = interior finish). Glass curtain wall: `mat:'glass'`.
 - `K.ramp(ax,az,bx,bz,{w,ya,yb,mat,steps,rails})`, `K.stairs(…)` (= ramp with steps), `K.escalator(ax,az,bx,bz,{ya,yb,w,dir:'up'|'down',speed})` — walkable. Escalators carry the player.
+- `K.escalatorTreads(ax,az,bx,bz,{w,ya,yb,speed,mat})` draws the moving treads and both stationary comb plates. Use it for a flight with place-authored rails and collision. Positive speed moves uphill, measured in horizontal metres per second.
 - `K.cyl({x,y,z,r,h,mat,seg})` columns, `K.dome({x,y,z,rx,ry,rz,mat})`.
 - `K.sign(text|[lines], {x,y,z,w,h,rotY,bg,fg,bold,twoSided,box,offset,sub})` — text panel (Korean OK). `bg:null` → transparent background (letters only). Use real shop/brand names (text only, no logos).
 - `K.floorText(text, {x,y,z,w,h,rotY,fg})` — painted floor text (bus bay numbers, 승차홈 numbers…).
@@ -69,6 +70,25 @@ Group shelves, counters, chairs, fixtures, signs, people and plants by where the
 on the rendering thread, so split long galleries and rows of shops into separate groups. Keep slabs, outer walls, room
 partitions, stairs, escalators, elevators and junction corridors in the normal build, along with zones, spawns and
 interactions. These must be available as soon as the player enters an area.
+
+### Opaque floors, ceilings and walls
+
+`K.occludingSlab({poly, holes, y, eyeMin, eyeMax})` registers a level, opaque surface for indoor play.
+Use the same world-space outline and openings as the rendered slab. Set the eye-height range to the room
+where the surface can occlude the view. Separate canopies and shop ceilings may use their own narrower
+ranges. The renderer keeps partially visible geometry around stairwells, windows and the edge of the slab.
+Registration only controls drawing. The corresponding `K.slab` supplies the floor and collision.
+
+For a vertical opaque rectangle, use `K.occludingWall({a, b, y0, y1, eyePoly, eyeMin, eyeMax})`.
+The endpoints are world-space X/Z coordinates. The `eyePoly` footprint and the eye-height interval
+limit which observer positions can use that wall. Register a rectangle only where both the
+near mesh and its distant representation have continuous, opaque surfaces. Split walls at openings
+and stop the rectangles at the sill or head of a window. The renderer tests a box against all four
+edges as seen from the current eye before omitting it.
+
+For a rigid, stationary `THREE.InstancedMesh`, `K.addMesh(mesh,{stationaryInstances:true})` opts the finished
+instance set into the same drawing test. Its transforms and geometry must remain fixed. This includes
+stock already visited on another floor. Transparent shop merchandise can use it with its true bounds.
 
 ## Addresses
 

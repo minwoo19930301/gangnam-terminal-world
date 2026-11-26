@@ -1,0 +1,11 @@
+{
+  "floor": "9F",
+  "x": -44.26014,
+  "z": 27.72821,
+  "yaw": -83,
+  "pitch": -13,
+  "meshName": "BaccaratCrystal",
+  "sourceBlend": "gallery.blend",
+  "sourceCollection": "SSG_9F_Baccarat",
+  "nativeLabel": "바카라"
+}

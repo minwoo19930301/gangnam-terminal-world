@@ -1,0 +1,11 @@
+{
+  "floor": "10F",
+  "x": -72.96725867828303,
+  "z": 35.067675783208614,
+  "yaw": 107.02896962476049,
+  "pitch": -17,
+  "meshName": "MicroGangnamScooters",
+  "sourceBlend": "gallery.blend",
+  "sourceCollection": "SSG_10F_MicroKickboard",
+  "nativeLabel": "마이크로 킥보드"
+}

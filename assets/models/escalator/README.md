@@ -1,12 +1,12 @@
 # 공통 에스컬레이터
 
-![파미에스테이션 1층 게임 화면](preview.jpg)
+![파미에스테이션 1층 에스컬레이터 수정 전후. 위는 디딤판과 빗살판, 아래는 손잡이 반환부를 같은 위치에서 촬영했다.](preview.jpg)
 
-`escalator.blend`에는 디딤판(Tread), 빗살판과 바닥판(Comb), 측판과 손잡이(Skirt), 손잡이 반환부(Return) 컬렉션이 있다. 디딤판의 앞코 곡면, 홈, 가장자리 선과 빗살판의 이는 각각 선택해 편집할 수 있다. 일반 승객용 에스컬레이터의 부품 구분과 실루엣을 참고해 제작했으며 현장 기종과 치수는 확인되지 않았다. [Schindler 9300 제품 안내](https://www.schindler.com/content/dam/website/us/docs/escalators/schindler-9300/schindler-9300-escalator-brochure.pdf/_jcr_content/renditions/original./schindler-9300-escalator-brochure.pdf) · [Schindler 소유자 안내](https://www.schindler.com/content/dam/website/us/docs/safety/schindler-owners-guide.pdf/_jcr_content/renditions/original./schindler-owners-guide.pdf)
+`escalator.blend`에는 디딤판(Tread), 빗살판과 바닥판(Comb), 측판과 손잡이(Skirt), 손잡이 반환부(Return) 컬렉션이 있다. 디딤판의 솟은 돌기와 수직 챌판의 홈은 옆면에 빛이 닿도록 모델링했다. 승강장에는 분할 빗살판과 고정 나사를 두었다. 고무 손잡이가 되감기는 양 끝에는 곡선형 금속 가이드가 있다. 바닥 측판의 접힌 금속 어깨가 위로 올라오면서 검은 손잡이 인입구를 감싼다. 이 부분은 Schindler 9300 제품 안내의 스테인리스 마감 인입구 사진을 참고했다. 일반 승객용 에스컬레이터의 부품 구분과 실루엣을 참고해 제작했으며 현장 기종과 치수는 확인되지 않았다. [Schindler 9300 제품 안내](https://www.schindler.com/content/dam/website/us/docs/escalators/schindler-9300/schindler-9300-escalator-brochure.pdf/_jcr_content/renditions/original./schindler-9300-escalator-brochure.pdf) · [Schindler 소유자 안내](https://www.schindler.com/content/dam/website/us/docs/safety/schindler-owners-guide.pdf/_jcr_content/renditions/original./schindler-owners-guide.pdf)
 
 ## 게임 연결
 
-`K.escalator`가 받는 두 끝점, 층고, 폭, 방향과 속도로 네 부품을 배치한다. 디딤판은 한 구간에 한 번씩 인스턴싱하며, 빗살판에 닿을 때 양 끝의 디딤면이 수평이 된다. 게임 시계와 모터의 수평 속도로 디딤판을 이동시키고 승하차 경계에서 메시를 자른다. 측판과 손잡이 단면은 연장 방향으로만 기울여 곡률과 높이를 유지한다. 기존 유리, 장소별 외장재, 하부 트러스와 승객 물리는 키트가 처리한다. 개별 장소에서 별도로 제작한 경사로·무빙워크는 각각의 모듈이 그린다.
+`K.escalator`가 받는 두 끝점, 층고, 폭, 방향과 속도로 네 부품을 배치한다. 디딤판은 한 구간에 한 번씩 인스턴싱하며, 빗살판에 닿을 때 양 끝의 디딤면이 수평이 된다. 게임 시계와 모터의 수평 속도로 디딤판을 이동시키고 승하차 경계에서 메시를 자른다. 측판과 손잡이 단면은 연장 방향으로만 기울여 곡률과 높이를 유지한다. 키트가 그리는 유리 측판은 양 끝의 금속 가이드 안쪽까지 둥글게 이어진다. 장소별 외장재, 하부 트러스와 승객 물리도 키트가 처리한다. 개별 장소에서 별도로 제작한 경사로·무빙워크는 각각의 모듈이 그린다.
 
 ## Blender에서 다시 내보내기
 
@@ -20,7 +20,14 @@ blender -b assets/models/escalator/escalator.blend -P assets/models/escalator/ex
 
 ## 확인
 
-- 모든 장소와 지연 로딩 층을 생성하면 공통 부품을 쓰는 에스컬레이터가 8개 모듈에서 123개 생성된다. 모델 폭은 0.82~1.65m, 평면 길이는 5~30m다.
+- 모든 장소와 지연 로딩 층을 생성하면 공통 디딤판과 빗살판을 쓰는 에스컬레이터가 8개 모듈에서 157개 생성된다. 이 중 신세계의 얕은 트러스 30곳과 파미에 광장 카페 위 현수형 4곳은 시설 고유의 난간과 하부 마감을 사용한다. 모델 폭은 0.82~1.65m, 평면 길이는 5~30m다.
 - `node --max-old-space-size=8192 tools/audit_vertical.mjs`로 승객 이동과 계단을 점검한다. `node tests/newcore-transfers.mjs`는 뉴코아의 서서 타기와 양끝 승하차까지 검사한다.
 - 파미에 1층(폭 1.10m)과 뉴코아 1층(폭 1.26m)에 일반 게임 URL로 입장해 상행·하행을 촬영했다. 두 페이지에서 GLB HTTP 200과 Chrome 콘솔 오류 0건을 확인했다.
-- 위 사진은 파미에 1층 게임 화면이다. 같은 카메라·조명에서 디딤판 시각만 0.247초 바꿔 900×610 픽셀 중 39,875픽셀의 RGB 채널 하나 이상이 8단계 넘게 바뀌는 것을 확인했다.
+- 파미에의 나란한 두 11.01m 구간에서 이동 키를 놓고 탔다. 초속 0.6m로 상행·하행 모두 반대편 승강장에 도착했고, 탑승 중 디딤판이 사라지거나 뒤로 튀는 현상은 관찰되지 않았다. 뉴코아 자동 검사에서는 20개 구간의 진입·탑승·하차와 2,020개 지점의 통과 여유를 확인했다.
+- 파미에와 뉴코아의 같은 시점에서 디딤판 시각만 0.247초 바꾸면 각각 42,268픽셀과 49,415픽셀의 RGB 채널 하나 이상이 8단계 넘게 달라졌다(900×610). 파미에 손잡이 측면 시점의 드로 호출은 수정 전후 모두 140회였다.
+
+신세계 신관 7층에서 8층으로 올라가는 10.31m 구간과 나란한 하행 구간에 일반 플레이로 진입했다. 이동 키를 놓은 상태로 상행은 높이 35.8m, 하행은 31m 승강장에 도착했다. 같은 위치에서 시계만 0.247초 바꿔 촬영한 900×560 두 프레임을 비교하면, 기존 디딤판에서는 0픽셀, 변경 후에는 119,564픽셀에서 RGB 한 채널 이상이 8단계 넘게 달라졌다. [신관 7층 변경 전후](shinsegae-annex.jpg) · [일반 게임에서 같은 위치 보기](https://minwoo19930301.github.io/gangnam-terminal-world/?pitch=-14#/shinsegae/7F?p=-31.4176,31,76.5749,-159.0618)
+
+파미에 광장 카페 위 두 쌍의 에스컬레이터는 하부의 좁은 트러스와 유리 난간을 두고 움직이는 디딤판과 승강장 빗살판을 연결했다. 네 구간에서 각각 탑승과 하차를 확인했다. 실제 게임에서 모터 시각만 0.247초 바꾸면 같은 카메라의 화면에서 39,034픽셀이 달라진다. 역사 수평 무빙워크 4곳과 뉴코아 카트 무빙워크 2곳에는 연속된 벨트가 보인다. [광장에서 본 수정 전후](famille-atrium.jpg) · [카페 앞 승강장](https://minwoo19930301.github.io/gangnam-terminal-world/?pitch=-12#/centralcity/1F?p=-37.4,0,195.4,180)
+
+비교 사진은 파미에스테이션 1층의 같은 카메라 위치·방향과 같은 디딤판 위치에서 찍었다. 게임에서 주간을 선택하면 두 시점을 다시 볼 수 있다. [디딤판과 빗살판](https://minwoo19930301.github.io/gangnam-terminal-world/?pitch=-29.79#/famille/1F?p=20.55,0,155.0,199) · [손잡이 반환부 측면](https://minwoo19930301.github.io/gangnam-terminal-world/?pitch=-26.36#/famille/1F?p=18.45,0,155.05,237)

@@ -104,6 +104,19 @@ try {
     assert.equal(s.phase,phase);
     assert.equal(s.mode,mode);
     if(east) assert.equal(Math.sign(s.direction[0]),east);
+    if(mode==='sunrise' || mode==='sunset'){
+      const {horizon, glow}=await page.evaluate(()=>{
+        const u=window.__world.daylight.sky.material.uniforms;
+        return {horizon:u.horizon.value.toArray(),glow:u.warmth.value};
+      });
+      // Compare the horizon away from the solar disc, where a change of sun
+      // direction alone would leave both times of day with the same tint.
+      if(mode==='sunrise'){
+        assert.ok(horizon[2]>horizon[0]*1.15 && glow<.6,'cool morning horizon and restrained solar glow');
+      }else{
+        assert.ok(horizon[0]>horizon[2]*1.1 && glow>.8,'warm evening horizon and broad afterglow');
+      }
+    }
     if(shots){
       await page.evaluate(()=>{document.body.classList.add('shot');});
       await page.evaluate(()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))));

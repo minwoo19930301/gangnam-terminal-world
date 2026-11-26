@@ -31,6 +31,10 @@ npm run serve -- 8765
 
 | 선반 | 게임에 반영되는 부분 |
 | --- | --- |
+| [공통 에스컬레이터](../escalator/README.md) | 디딤판의 리브, 승하차 빗살판, 손잡이와 곡선 반환부 |
+| [경부선 1층 대합실 천장](../gyeongbu-waiting-ceiling/README.md) | 좌석 위 목재 루버, 기둥을 감싸는 곡면, 선형 매입등과 환기구 |
+| [센트럴시티 1층 오픈 스테이지 천장](../open-stage-coffer/README.md) | 격자 한 칸의 동심원·치형 몰딩과 보를 따라가는 매입등 |
+| [신세계 7층 보스골프](../ssg-golf-apparel/README.md) | 공용 통로에서 보이는 매장 천장의 면조명과 금속 테두리 |
 | [JW 8층 라운지 · 라탄 암체어](../lounge-chair/lounge-chair.blend) | 근접 시에 보이는 등받이 짜임, 팔걸이와 방석 마감 |
 | [신세계 7층 골프 진열](../shinsegae/upper-floor-displays.blend) | 퍼터 비교 진열대의 몸체와 네 가지 클럽 헤드 |
 | [신세계 북측 외벽 간판](../shinsegae-facade/README.md) | 백화점 북측 입구의 채널 문자, 간판 바탕과 테두리 |
@@ -44,6 +48,17 @@ npm run serve -- 8765
 
 ```sh
 blender --factory-startup -b assets/models/world/gangnam-terminal.blend --python-exit-code 1 -P assets/models/world/libraries.py
+```
+
+## 게임에 배치된 실내 집기
+
+통합 원본의 **시설 · 실내 배치** 장면에서 아웃라이너를 시설과 층별로 열 수 있습니다. 집기를 선택하고 숫자패드 마침표를 누르면 해당 위치로 확대됩니다. 의자 한 줄, 꽃통 하나도 게임에서 사용하는 위치·회전·크기와 표고를 따릅니다. 이 장면의 집기는 각 시설의 Blender 원본을 상대경로로 연결합니다.
+
+게임 배치가 바뀌면 아래 명령으로 이 장면을 갱신할 수 있습니다. Blender에서 직접 움직였거나 제거한 배치는 다음 갱신에도 유지합니다.
+
+```sh
+blender --factory-startup -b assets/models/world/gangnam-terminal.blend --python-exit-code 1 -P assets/models/world/indoor-layout.py -- --save
+blender --factory-startup -b assets/models/world/gangnam-terminal.blend --python-exit-code 1 -P assets/models/world/indoor-layout-check.py
 ```
 
 ## 서울 시각
