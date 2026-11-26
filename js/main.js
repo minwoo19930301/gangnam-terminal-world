@@ -6,7 +6,8 @@ import { floorArrival } from './floor-arrival.js';
 import { createKit } from './kit.js';
 import { applyRoadEdits } from './blender-roads.js';
 import { drawBlenderBuilding, loadBuildingArea } from './blender-buildings.js';
-import { buildCity, createTraffic } from './city.js';
+import { buildCityWithCover, createTraffic } from './city-scene.js';
+import { loadParcelCover } from './parcel-cover-area.js';
 import { PLACES } from './places/index.js';
 import { createMap } from './map.js';
 import { FONT } from './textures.js';
@@ -57,6 +58,9 @@ async function boot() {
   const exteriorTerrain = !AREA.id.startsWith('in:');
   const shellMargin = exteriorTerrain ? 180 : 110;
   const shellBounds = AREA.box?.map((v,i) => v + (i < 2 ? -shellMargin : shellMargin));
+  const streetBounds = exteriorTerrain ? null : shellBounds;
+  const coverReady = Q.get('city') === '0' ? null : loadParcelCover(streetBounds)
+    .then(cover => ({cover}), error => ({error}));
   const shellsReady = loadBuildingArea(shellBounds).then(() => null, error => error);
   installRelief(THREE, exteriorTerrain);
   if (AREA.id !== 'all') status(`${areaName(AREA.id, META)} 불러오는 중…`);
@@ -144,7 +148,11 @@ async function boot() {
   let roadsInfo = null;
   if (Q.get('city') !== '0') {
     mark('places'); status('도시(OSM) 짓는 중…'); await new Promise(r => setTimeout(r, 0));
-    try { roadsInfo = buildCity(K, osm, { claimedBuildings, claimedRoads, claimedAreas, shellBounds, streetBounds: exteriorTerrain ? null : shellBounds, log: s => console.log(s) }); } catch (e) { fail('city', e); }
+    try {
+      const result = await coverReady;
+      if (result.error) throw result.error;
+      roadsInfo = buildCityWithCover(K, osm, result.cover, { claimedBuildings, claimedRoads, claimedAreas, shellBounds, streetBounds, log: s => console.log(s) });
+    } catch (e) { fail('city', e); }
   }
   // far massing: buildings of place modules this area does not load stand as plain OSM blocks (skyline, walls)
   if (META && AREA.id !== 'all') {

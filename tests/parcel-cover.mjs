@@ -3,9 +3,22 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import { buildCity } from '../js/city.js';
 import { parcelCover } from '../js/parcel_cover.js';
+import { loadParcelCover } from '../js/parcel-cover-area.js';
+import { bounds } from '../js/parcel-cover-bounds.js';
 import { pointInPoly, polyArea, polyBBox } from '../js/physics.js';
 
 const osm = JSON.parse(fs.readFileSync(new URL('../data/osm.json',import.meta.url)));
+// The bounded game scene still gets every parcel the city geometry filter retains.
+const precinct = await loadParcelCover(bounds);
+assert.ok(Object.keys(precinct).length < Object.keys(parcelCover).length);
+for (const a of osm.areas) {
+  const [west,north,east,south] = polyBBox(a.poly);
+  if (east >= bounds[0] && west <= bounds[2] && south >= bounds[1] && north <= bounds[3]) {
+    assert.equal(precinct[a.id], parcelCover[a.id]);
+  }
+}
+assert.deepEqual(await loadParcelCover(null), parcelCover);
+assert.deepEqual(await loadParcelCover([bounds[0]-1, ...bounds.slice(1)]), parcelCover);
 const rect = (x,z,w,d) => [[x,z],[x+w,z],[x+w,z+d],[x,z+d]];
 function trace(data, openings=[]) {
   const polys=[], trees=[], cars=[], stripes=[];
