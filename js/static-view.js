@@ -126,14 +126,25 @@ export function streetBatchView(THREE, scene, deck = null) {
     const bounds = chunkBounds(g.attributes.position.array,source.array);
     const chunks = bounds.length / 6, box = new THREE.Box3();
     const starts = new Int32Array(chunks), counts = new Int32Array(chunks);
+    // A turn changes the frustum but leaves projections onto fixed floors and walls unchanged.
+    const coverage = deck ? new Int32Array(chunks) : null;
     const bytes = source.array.BYTES_PER_ELEMENT;
     let cached = -1, ext, spans = 0, extraIndices = 0, active = false;
     function select() {
       const gaps = [];
       let start = -1, end = 0;
+      const stamp = deck?.active ? deck.revision+1 : 0;
       for (let i = 0; i < chunks; i++) {
         box.min.fromArray(bounds,6*i); box.max.fromArray(bounds,6*i+3);
-        if (!view.intersectsBox(box) || (deck?.active && deck.hides(box))) continue;
+        if (!view.intersectsBox(box)) continue;
+        if (stamp) {
+          if (coverage[i] === -stamp) continue;
+          if (coverage[i] !== stamp) {
+            const hidden = deck.hides(box);
+            coverage[i] = hidden ? -stamp : stamp;
+            if (hidden) continue;
+          }
+        }
         const offset = i * CHUNK;
         if (start < 0) start = offset;
         else if (offset-end >= CHUNK * (ext ? 2 : 8)) gaps.push([end,offset]);
