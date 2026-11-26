@@ -159,6 +159,14 @@ const sources = [
   ['gyeongbu','1F','gyeongbu-front-cafes/cafes.blend','경부선 부속상가 · 이디야와 달리나인 거리 정면','경부선 정문 옆 · 이디야와 달리나인'],
   ...['CushionRack','CushionLinen','CushionSage','CushionRose','CushionIvory'].map(name=>
     ['gyeongbu','B1','concourse-fixtures/concourse-fixtures.blend','다이소 패브릭 · '+name,name]),
+  ...['한강과 서래섬 포스터','차양등과 보도 빛'].map(label=>{
+    const name='중앙차로 승차대 · '+label+' 22-020';
+    return ['streets','지상','sinbanpo-bus-shelters/shelters.blend',name,name];
+  }),
+  ...['22019','22020'].map(id=>{
+    const name='중앙차로 승차대 · 전광판 '+id;
+    return ['streets','지상','sinbanpo-bus-shelters/shelters.blend',name,name];
+  }),
   ...['검은 강재 차양과 승객 벤치','강화유리와 반투명 수평 띠','한강과 서래섬 포스터','승객용 전광판과 안내 케이스','차양등과 보도 빛'].map(label=>{
     const name='중앙차로 승차대 · '+label;
     const native=label==='승객용 전광판과 안내 케이스'?'중앙차로 승차대 · 승객 전광판과 안내함':name;
@@ -355,9 +363,23 @@ export async function captureIndoorLayout() {
   try {
     globalThis.__makeCanvas=(width,height)=>({width,height,style:{},getContext:()=>context});
     for(const place of new Set(sources.map(row=>row[0]))){
-      const rules=sources.filter(row=>row[0]===place), counts=new Map();
+      const rules=sources.filter(row=>row[0]===place), counts=new Map(), shelterBays=new Map();
       const {build,meta}=await import('../../../js/places/'+place+'.js');
-      const kit=createKit(THREE,new THREE.Scene(),{osm,phys:createPhysics(),keep:()=>false});
+      let captureVehicle=false;
+      const kit=createKit(THREE,new THREE.Scene(),{osm,phys:createPhysics(),keep:()=>captureVehicle});
+      if(place==='shinsegae'){
+        const placeVehicle=kit.vehicle;
+        kit.vehicle=options=>{
+          captureVehicle=true;
+          try{return placeVehicle(options);}finally{captureVehicle=false;}
+        };
+        kit.recordCurbsideSedans=poses=>poses.forEach((pose,i)=>{
+          const subject='신세계 동문 · 주차 승용차';
+          result.push({id:'shinsegae/curbside-sedan/'+(i+1),place,placeName:meta.name,floor:'지상',
+            library:'sedan-curb/curb-trim.blend',collections:['동문 승용차 · 완성차'],subject,
+            ground:rounded(pose.elements[13]),terrain:0,matrix:pose.toArray().map(rounded)});
+        });
+      }
       if(place==='centralcity'){
         kit.recordHonamFrame=([x,z],angle)=>{
           const matrix=new THREE.Matrix4().makeRotationY(angle).setPosition(x,0,z);
@@ -407,9 +429,17 @@ export async function captureIndoorLayout() {
           const [x,y,z]=world.elements.slice(12,15);
           const ground=hotelDatum??rounded(relief(x,z));
           const level=subject==='광장 · 고리형 청동 조명' && y>=4 ? '2F' : floor;
-          const anchor=library==='central-plaza-spheres/spheres.blend'?collections[0]:
+          let anchor=library==='central-plaza-spheres/spheres.blend'?collections[0]:
             library.startsWith('ssg-')?(legacyRetailId[collections[0]]??collections[0]):subject;
-          result.push({id:[place,anchor,ordinal+1].join('/'),place,placeName:meta.name,floor:level,library,
+          let serial=ordinal+1;
+          if(library==='sinbanpo-bus-shelters/shelters.blend' && /한강과 서래섬 포스터|차양등과 보도 빛/.test(subject)){
+            // Keep the six standing bays and any edits to them when the roadside
+            // print and backlight receive distinct native finishes on 22-020.
+            anchor=subject.replace(/ 22-020$/,'');
+            serial=(shelterBays.get(anchor)??0)+1;
+            shelterBays.set(anchor,serial);
+          }
+          result.push({id:[place,anchor,serial].join('/'),place,placeName:meta.name,floor:level,library,
             collections,subject,ground,terrain:root.userData.terrainApplied?0:ground,matrix:world.toArray().map(rounded)});
         }
         return placed;

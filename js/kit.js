@@ -722,9 +722,11 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     const [w, h, d] = vehicleSize(kind), [halfTrack, halfAxle] = vehicleContacts(kind);
     const c = Math.cos(rotY), s = Math.sin(rotY);
     const color = o.color ?? ({ taxi: 0xf2a33a, bus: 0x2a5aa8, cityBus: 0x3a9d4a, truck: 0xe8e8e8 }[kind] ?? [0xf2f2f2, 0x1c1c1c, 0x8a9096, 0x24324a, 0x9b1b1b, 0xd9d9d9][Math.abs(Math.round(x * 3 + z * 7)) % 6]);
-    withParkedVehicle(x, y, z, rotY, halfTrack, halfAxle, 0, (_atWheel, wheels, tilt) => {
+    return withParkedVehicle(x, y, z, rotY, halfTrack, halfAxle, 0, (_atWheel, wheels, tilt) => {
+      let pose;
       if (!keep || keep(current, x, y + h / 2, z, 0)) {
-        parked.push({ x, y, z, rotY, kind, color, wheels, tilt, place: current });
+        pose = { x, y, z, rotY, kind, color, wheels, tilt, place: current };
+        parked.push(pose);
       }
       if (o.label && (kind === 'bus' || kind === 'cityBus')) {
         sign(o.label, { x: x + (d / 2 + .09) * s, y: y + h - .30, z: z + (d / 2 + .09) * c, w: 1.9, h: .27, rotY, bg: '#111', fg: '#ffb000' });
@@ -735,6 +737,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
         phys.addPolyWalls(poly, y, y+h, .02, current);
         phys.addSurface(poly, y+h, {});
       }
+      return pose;
     });
   }
   // ---------- gameplay registrations ----------

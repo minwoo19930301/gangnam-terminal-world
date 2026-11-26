@@ -89,6 +89,20 @@ try{
   await page.waitForTimeout(450);
   await aim(page,pose('22020',0,2.65,0,-1),4);await page.waitForTimeout(250);
   assert.equal(await page.evaluate(()=>performance.timeOrigin),originalLoad);
+  assert.equal(seen.includes('paving-roadside-off.webp'),false);
+  await aim(page,pose('22020',4.5,-1.28,2.66,-.981),-3);
+  for(const [time,off] of [['02:59',false],['03:00',true],['03:59',true],['04:00',false]]){
+    await page.clock.setFixedTime(new Date('2026-11-27T'+time+':00+09:00'));
+    await page.evaluate(()=>__world.setTimeMode('live'));
+    await page.waitForFunction(([time,off])=>{
+      const w=__world,active=w.scene.children.filter(r=>r.name.endsWith('포스터 22-020'))
+        .some(r=>r.children[0].material.customProgramCacheKey()==='scheduled-print-near');
+      return w.daylight.state.clock===time&&active===off;
+    },[time,off]);
+    if(off)await page.waitForFunction(()=>__world.scene.children
+      .filter(r=>r.name.endsWith('보도 빛 22-020')).some(r=>r.children[0].material.map.image?.src?.endsWith('paving-roadside-off.webp')));
+  }
+  assert.equal(seen.filter(f=>f==='paving-roadside-off.webp').length,1);
   const repeats=seen.filter((f,i)=>seen.indexOf(f)!==i);
   assert.deepEqual(repeats,[]);assert.deepEqual([...errors,...await page.evaluate(()=>[...__world.errors,...__world.K._.detailErrors])],[]);
   console.log(JSON.stringify({furniture,light,walked,frames:await timing,requests:seen}));
