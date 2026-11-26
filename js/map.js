@@ -207,7 +207,7 @@ export function createMap(opts) {
   for (const L of LANDMARKS) addSearch({ name: L.name, sub: L.sub, aliases: L.aliases, exteriorView: L.exteriorView, arrival: L.arrivalFloor ? L : undefined, floor:L.arrivalFloor, x: L.x, z: L.z, y: L.floorY ?? 0, type: '핵심 지점', exact: true });
   for (const s of spawns) addSearch({ ...s, type: '출발 지점', exact: true });
   for (const p of placeMarks) addSearch({ name: p.name, x: p.x, z: p.z, y: p.y, place: p.id, type: '탐색 장소' });
-  for (const r of zoneRecords) addSearch({ name: r.source.name, sub: r.source.sub, floor: r.floor, x: r.x, z: r.z, y: r.y0, place: r.place, zone: r.source, type: '층별 공간', group: placeIndex.get(r.place)?.name });
+  for (const r of zoneRecords) addSearch({ name: r.source.name, sub: r.source.sub, floor: r.floor, x: r.x, z: r.z, y: r.y0, ...r.source.mapArrival, place: r.place, zone: r.source, type: '층별 공간', group: placeIndex.get(r.place)?.name });
   for (const p of poiRecords) addSearch({ name: p.name, x: p.x, z: p.z, y: p.level == null ? undefined : Number(p.level) < 0 ? (K?.LEVELS?.[`B${Math.abs(Number(p.level))}`] ?? Number(p.level) * 5) : undefined, type: p.type });
   for (const b of buildingRecords) if (b.name) addSearch({ name: b.name, x: b.x, z: b.z, type: '건물', place: b.place });
 

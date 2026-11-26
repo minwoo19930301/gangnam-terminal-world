@@ -1,6 +1,6 @@
 import {boxSilhouette} from '../interior-architecture/box-silhouette.js';
 import {placeSingleDetail} from '../interior-architecture/single-detail.js';
-import {arc,bookEdge,bookFloor,outward,cafeFloor,cafeFront,cafePoint,centre,court,plan,rotation,shoeFront,shoeRear,shoeThreshold,westApron} from './layout.js';
+import {arc,bookEdge,bookFloor,outward,cafeFloor,cafeFront,cafePoint,centre,court,plan,rotation,shoeFront,shoeRear,shoeThreshold,westApron,westSides} from './layout.js';
 
 import {sportsShoeEntry} from '../sports-shoe-rotary/model.js';
 
@@ -14,7 +14,11 @@ export function publicRotary(K,y){
     K.phys.addCeiling(poly,top+.005,{});
   }
   K.zone({name:'메가박스 앞 원형 광장',sub:'카멜커피 · 영풍문고 앞',floor:'B1',poly:court,y0:y-.25,y1:top,priority:7});
-  K.zone({name:'원형 광장 옆 통로',sub:'신세계백화점 강남점 · 행사장 앞',floor:'B1',poly:westApron,y0:y-.25,y1:top,priority:4});
+  // The concave arcade's automatic map point lies by the far outlet.
+  // Arrive within the arcade looking towards the already modelled rotary shops.
+  const [arrivalX,arrivalZ]=plan(570,1028);
+  const mapArrival={x:arrivalX,z:arrivalZ,y,yaw:Math.atan2(arrivalX-cafeFront[0],arrivalZ-cafeFront[1])};
+  K.zone({mapArrival,name:'원형 광장 옆 통로',sub:'신세계백화점 강남점 · 행사장 앞',floor:'B1',poly:westApron,y0:y-.25,y1:top,priority:4});
   K.zone({name:'카멜커피',sub:'신세계백화점 강남점',floor:'B1',poly:cafeFloor,y0:y-.25,y1:top,priority:8});
   const wall=(a,b,lo,hi,mat,solid=true)=>K.wall(...a,...b,y+lo,y+hi,{mat,thick:.1,solid});
   function edge(points,mat){
@@ -57,11 +61,7 @@ export function publicRotary(K,y){
     viewBounds:[new K.THREE.Box3(new K.THREE.Vector3(-2.57,0,-1.66),new K.THREE.Vector3(2.57,4.45,.34))]});
 
   edge([...arc(223,227,2),[623,950],[634,946],[646,944],[659,945],[669,948],[678,950]].map(p=>plan(...p)),0xcac4b7);
-  for(const side of [
-    [[372,1030],[406,1030],[434,1057],[593,1057]],
-    [[372,998],[570,998],[548,984],[519,963],[496,943],[480,922],[470,896],[467,872],[467,727]],
-    [[498,727],[498,872],[502,894],[513,915],[530,932],[552,947],[575,958],[594,961]]
-  ])edge(side.map(p=>plan(...p)),0xd8d0c1);
+  for(const side of westSides)edge(side,0xd8d0c1);
   for(const side of [-1,1])wall(cafePoint(3.12*side,-.08),cafePoint(3.12*side,-2.23),0,4.45,0xbcb1a0);
   wall(cafePoint(-3.16,-2.23),cafePoint(3.16,-2.23),0,4.45,0xb49b7b);
   // Low counters and seats are contained on the cafe side of the court.
