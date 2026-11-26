@@ -1,7 +1,6 @@
 import {rotaryPreview} from '../cinema-rotary/layout.js';
 import {pointInPoly,polyBBox} from '../../../js/physics.js';
-import {b1Plan, departmentPoint} from '../../../js/places/shinsegae-b1-plan.js';
-const plan=(px,py)=>departmentPoint(...b1Plan(px,py));
+import {cafeAislePoint as plan} from '../../../js/places/sweet-park-plan.js';
 export const origin=plan(730,939);
 const start=plan(697,969),end=plan(760,911);
 const length=Math.hypot(end[0]-start[0],end[1]-start[1]);

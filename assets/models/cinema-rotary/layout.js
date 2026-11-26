@@ -1,7 +1,7 @@
-import {b1Plan,departmentPoint} from '../../../js/places/shinsegae-b1-plan.js';
+import {cafeAislePoint as plan} from '../../../js/places/sweet-park-plan.js';
 import {pointInPoly,polyBBox} from '../../../js/physics.js';
 
-export const plan=(x,y)=>departmentPoint(...b1Plan(x,y));
+export {plan};
 const radial=(degrees)=>[649+64*Math.cos(degrees*Math.PI/180),1009+65*Math.sin(degrees*Math.PI/180)];
 export const arc=(a,b,n)=>Array.from({length:n+1},(_,i)=>radial(a+(b-a)*i/n));
 // The official white court meets the diagonal on this chord. Keep the two

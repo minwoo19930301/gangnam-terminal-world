@@ -1,3 +1,4 @@
+import {terminalOrigin,terminalRotation as R,terminalPoint as P,sweetParkLocal as BPst} from './sweet-park-plan.js';
 import {transverseFloor} from '../../assets/models/megabox-central/layout.js';
 import {publicFloorOpening,court,westApron} from '../../assets/models/cinema-rotary/layout.js';
 import {arcadePiers} from '../../assets/models/sweet-arcade/model.js';
@@ -101,10 +102,8 @@ export function build(K) {
   const sign = (text, o) => K.sign(text, { pxPerM: 64, ...o });
 
   // ---------------------------------------------------------------- frame
-  const R = Math.atan2(0.3639, 0.9315);
   const AX = Math.sin(R), AZ = Math.cos(R), EX = Math.cos(R), EZ = -Math.sin(R);
-  const OX = -135.7, OZ = 9.9;
-  const P = (s, t) => [OX + AX * s + EX * t, OZ + AZ * s + EZ * t];
+  const [OX,OZ] = terminalOrigin;
   const RECT = (s0, t0, s1, t1) => [P(s0, t0), P(s1, t0), P(s1, t1), P(s0, t1)];
   const F = { S: R, N: R + PI, E: R + PI / 2, W: R - PI / 2 };
   const lbox = (s, t, ds, dt, y, h, mat, o = {}) => { const [x, z] = P(s, t); return K.box({ x, z, y, h, w: dt, d: ds, rotY: R, mat, ...o }); };
@@ -989,8 +988,7 @@ export function build(K) {
   // anchored it to the unrelated J4. Plan-right runs south along the terminal,
   // and plan-down runs west. Register the 9GATE end to the surveyed crossing.
   // The dimensions are an approximate 0.13 m/pixel photographic fit.
-  const B1_SCALE=.13;
-  const BPst=(px,py)=>[74.05068+B1_SCALE*(px-1032),75.24268-B1_SCALE*(py-477)];
+
   // The published B1 guide spans both districts. Its west seam uses the 9GATE
   // fit. At the other end pin the lounge under the upper court and the public
   // escalator symbol to the photographed landing. The intervening fit is schematic.
@@ -1455,7 +1453,15 @@ export function build(K) {
   const spBounds=r=>{const a=BPst(r[0],r[1]),b=BPst(r[2],r[3]);return[Math.min(a[0],b[0]),Math.min(a[1],b[1]),Math.max(a[0],b[0]),Math.max(a[1],b[1])];};
   const spFinish=(r,y,mat,repeat=1.3)=>{
     const[s0,t0,s1,t1]=spBounds(r);
-    K.quad(mat,RECT(s0,t0,s1,t1).map(q=>[q[0],y,q[1]]),[0,1,0],[[0,0],[(s1-s0)/repeat,0],[(s1-s0)/repeat,(t1-t0)/repeat],[0,(t1-t0)/repeat]]);
+    // A single 48 × 53 m face can have its centre outside the neighbouring
+    // page, leaving a visible hole at the doorway. Keep each patch's UVs in
+    // the same continuous grid when the area renderer clips the far patches.
+    for(let a=s0;a<s1;a+=8)for(let b=t0;b<t1;b+=8){
+      const c=Math.min(a+8,s1),d=Math.min(b+8,t1);
+      const corners=[[a,b],[c,b],[c,d],[a,d]];
+      K.quad(mat,corners.map(([s,t])=>{const [x,z]=P(s,t);return [x,y,z];}),[0,1,0],
+        corners.map(([s,t])=>[(s-s0)/repeat,(t-t0)/repeat]));
+    }
   };
   const spGlobe=(s,t,y,r=.16)=>{const[x,z]=P(s,t);K.dome({x,z,y,rx:r,ry:r,rz:r,hemi:false,seg:10,rings:6,mat:{tex:'emit',color:0xfff4dd}});};
   const spChandelier=(s,t,brass)=>{

@@ -1,3 +1,4 @@
+import {cafeAislePoint,sweetParkPoint} from './sweet-park-plan.js';
 // Shared connection points between place modules. BOTH modules must honor each entry.
 // y is the walkable floor height at the junction. pa lies inside module a's space, pb inside module b's.
 // owner = module that builds the connecting corridor / opening frame between pa and pb (the other one only
@@ -24,6 +25,11 @@ export const JUNCTIONS = [
     note: 'Real 3GATE crosses the south wall at (-45.96,43.08), into the Central City corridor under JW. The 1M bridge is level at y3.6 above this connection (photos #479–481).' },
   { id: 'J_CC_9GATE', a: 'shinsegae', b: 'centralcity', y: LEVELS.B1, pa: [-43.82,37.99], pb: [-38.67,51.495], width: 6.5, owner: 'centralcity',
     note: 'Unmirrored B1 9GATE: south-wall crossing (-42.384,41.72), actual portal (-38.67,51.495), from ssg_r20_gates.json. Central City carries the corridor south to Sweet Park.' },
+  // The B1 café aisle continues from Nespresso and Pierre Marcolini to Sweet
+  // Park. Both sides are already walkable; include its neighbouring tile set.
+  { id:'J_SWEET_CAFE_AISLE', a:'shinsegae', b:'centralcity', y:LEVELS.B1,
+    pa:cafeAislePoint(1024,787.5), pb:sweetParkPoint(1040,787.5), width:2.73, owner:'none', streamOnly:true,
+    note:'신세계 식품관 카페 통로에서 스위트 파크 남측 보행로로 이어지는 B1 공개 구간.' },
   // Former J6 at (-55,111.5) is now internal Central City public circulation.
   // It is no longer an entrance to the hotel's invented ground-floor rooms.
   // ---- 7호선 concourse ↔ 파미에스테이션 ----
