@@ -31,7 +31,9 @@ try {
     await page.waitForFunction(id=>window.__world?.ready && __world.scene.children.some(o=>o.visible && o.userData.re?.id===id),id,{timeout:120000});
     const model=models.find(m=>m.id===id);
     const vertex=data.buildings.find(b=>model.claims.includes(b.id)).poly[0];
-    const metrics = await page.evaluate(({id,vertex,proof})=>{
+    const metrics = await page.evaluate(async ({id,name,vertex,proof})=>{
+      const {LANDMARKS} = await import('/js/landmarks.js');
+      const landmark = LANDMARKS.find(row=>row.name===name);
       const {renderer,scene,camera,player:p,phys}=__world;
       __world.setTimeMode('day');
       const object=scene.children.find(o=>o.visible && o.userData.re?.id===id);
@@ -56,11 +58,27 @@ try {
       let pixels=0;
       for(let i=0;i<normal.length;i+=4)
         if(Math.max(...[0,1,2].map(c=>Math.abs(normal[i+c]-hidden[i+c])))>8) pixels++;
+      const [pinX,,pinZ]=landmark.roofPin;
+      const pin=scene.children.find(o=>o.isSprite && Math.hypot(o.position.x-pinX,o.position.z-pinZ)<.01);
+      if (!pin?.visible) throw Error('Missing rooftop name at the public sidewalk');
+      const nameMask=[];
+      for (const mode of ['day','night']) {
+        __world.setTimeMode(mode);
+        const labelled=sample();
+        pin.visible=false;
+        const unlabelled=sample();
+        pin.visible=true;
+        let readable=0;
+        for(let i=0;i<labelled.length;i+=4) {
+          if(Math.max(...[0,1,2].map(c=>Math.abs(labelled[i+c]-unlabelled[i+c])))>32) readable++;
+        }
+        nameMask.push(readable);
+      }
       const point={x:p.x,z:p.z};
       phys.resolve(point,p.r,p.y,p.y+p.height,p.step);
-      return {finished,baseline,pixels,percent:100*pixels/(width*height),pitch:p.pitch*180/Math.PI,
+      return {finished,baseline,pixels,nameMask,marker:[landmark.x,landmark.z],percent:100*pixels/(width*height),pitch:p.pitch*180/Math.PI,
         x:p.x,y:p.y,z:p.z,push:Math.hypot(point.x-p.x,point.z-p.z),errors:__world.errors};
-    },{id,vertex,proof:!!process.env.PROOF_DIR});
+    },{id,name,vertex,proof:!!process.env.PROOF_DIR});
     if (process.env.PROOF_DIR) {
       for (const type of ['finished','baseline']) {
         await writeFile(process.env.PROOF_DIR+'/'+id+'-'+type+'.png',Buffer.from(metrics[type].split(',')[1],'base64'));
@@ -69,6 +87,9 @@ try {
     delete metrics.finished;
     delete metrics.baseline;
     console.log(name,JSON.stringify(metrics));
+    const [px,pz]=metrics.marker, [[west,north],,[east,south]]=model.rect;
+    assert.ok(px>=west && px<=east && pz>=north && pz<=south, name+' map marker outside its complex');
+    assert.ok(metrics.nameMask.every(value=>value>60), name+' rooftop label hidden from the arrival view');
     assert.ok(metrics.percent>2 && metrics.pitch>5 && metrics.push<.05);
     assert.deepEqual([...metrics.errors,...errors],[]);
     assert.deepEqual(fetched,[200]);
