@@ -581,6 +581,11 @@ export function build(K) {
   const holeW9 = [[W9[0], W9[1]], [W9[2], W9[1]], [W9[2], W9[3]], [W9[0], W9[3]]];
   K.slab(band, FL, { mat: M.floor, under: false, thick: 0.3, holes: [holeW3, holeW9], edgeMat: 0x9a968f });
   K.slab(band, CY + 0.3, { mat: 'concrete', under: M.ceil, thick: 0.3, walk: false, edge: false });
+  // The continuous concrete soffit ends at the mall perimeter; the station wells cut the floor.
+  // Keep the existing external stair roofs and side entrances outside these two footprints.
+  const mallObserver = { poly: band, eyeMin: FL + .05, eyeMax: CY - .05 };
+  K.occludingSlab({ ...mallObserver, y: FL, holes: [holeW3, holeW9] });
+  K.occludingSlab({ ...mallObserver, y: CY });
   K.polyWalls(band, FL, CY + 0.3, { mat: 'concrete', inner: M.wall, thick: 0.25, openings: envOpen });
   // _5/_20 show several column bays before the food-street opening. The 44m
   // mall-side approach is a frame fit, not a surveyed extension of Line 7.
@@ -2163,8 +2168,10 @@ export function build(K) {
       poly = out;
     }
     foodTextures();
-    K.hpoly(M.hallFloor, ptsXZ(poly), FL + 0.008, true);
-    K.hpoly(0xeceae4, ptsXZ(poly), yCeil, false);
+    const finish = ptsXZ(poly);
+    K.hpoly(M.hallFloor, finish, FL + 0.008, true);
+    K.hpoly(0xeceae4, finish, yCeil, false);
+    K.occludingSlab({poly:finish, y:yCeil, eyeMin:FL+.05, eyeMax:yCeil-.05});
   }
   function foodAC(u, v, y) {
     bx(u - 0.45, u + 0.45, v - 0.45, v + 0.45, y - 0.045, 0.045, 0xf2f2f0, { solid: false, skip: ['top'] });

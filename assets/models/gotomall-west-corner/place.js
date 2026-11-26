@@ -87,6 +87,10 @@ export function placeWestCorner(K,P,rotation,floor){
     const seen=p=>sight(p.x,p.z),room=key==='banShell'||key==='photoRoom';
     K.detail({name,floor:'B1',poly:poly(...bounds),y0:floor,y1:floor+2.85,
       visibleFrom:(px,py,pz)=>py>floor-.58&&py<floor+3.38&&(room||sight(px,pz))},()=>{
+      if(room){
+        const z=key==='banShell'?2.747:2.74,back=key==='banShell'?4.139:3.00;
+        K.occludingSlab({poly:poly(shop.lo,key==='banShell'?.01:.021,shop.hi,back),y:floor+z,eyeMin:floor+.05,eyeMax:floor+z-.05});
+      }
       if(key==='mirrorGlass'){placeMirror(K,name,at(x,d,h),angle,seen);return;}
       if(!cached.has(key))cached.set(key,boxSilhouette(T,proxies[key]));
       const lit=key==='banSign'||key==='photoSign'||key==='mirror',mat=lit?glow:paint;

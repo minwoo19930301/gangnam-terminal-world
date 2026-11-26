@@ -100,6 +100,12 @@ export function placeYogurtWorld(K,P,rotation,y){
     const seen=(px,pz)=>{const [x,d]=local(px,pz);return targets.some(([tx,td])=>from(x,d,tx,td,ex));};
     K.detail({name:name(key),floor:'B1',poly:rect(...bounds),y0:y,y1:y+2.86,
       visibleFrom:(px,py,pz)=>py>y-.55&&py<y+3.42&&(key==='room'||seen(px,pz))},()=>{
+      if(key==='room'){
+        // The roof returns around G-011 in plan. The open side window stays below both surfaces.
+        for(const box of [[-2.22,.035,2.22,6.17],[-5.45,4.193,-2.22,6.193]]){
+          K.occludingSlab({poly:rect(...box),y:y+2.809,eyeMin:y+.05,eyeMax:y+2.76});
+        }
+      }
       const baked=key==='room'||key==='counter',mat=['front','wall','screens','display'].includes(key)?glow:paint;
       placeSingleDetail(K,{name:name(key),file:'../gotomall-yogurtworld/'+key+'.glb',at:at(...pos),angle,
         fallback:silhouette(T,key),fallbackMaterial:mat,material:baked?null:mat,loadSurface:baked?q=>loadBakedSurface(T,q):undefined,
