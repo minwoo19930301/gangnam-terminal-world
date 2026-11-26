@@ -2346,31 +2346,118 @@ export function build(K) {
         const q=P(-27.5,t0+(t1-t0)*f);K.tree(...q,{y:.45,h,kind:'zelkova'});
       }
     }
-    // A mottled stone texture without a second dark tint retains shading on all
-    // sides; the previous near-black wire texture hid the original sphere's volume.
-    K.texture('ccPlazaStone',256,128,(g,w,h)=>{
-      g.fillStyle='#4c5855';g.fillRect(0,0,w,h);
-      const noise=K.rand(918);
-      for(let i=0;i<7000;i++){
-        const v=48+Math.floor(noise()*68);g.fillStyle=`rgb(${v},${v+8},${v+5})`;
-        g.fillRect(noise()*w,noise()*h,1+noise()*2,1+noise()*2);
+    // Editable circular relief bands from central-plaza-spheres/spheres.blend.
+    // BEGIN PATINATED SPHERE BANDS
+    const rippleTones=["#30463e","#566860","#778177"];
+    const bronzeTones=["#46392f","#745347","#9a7561"];
+    const patinaTones=["#446052","#687368","#96947b"];
+    const patinaBands=[
+      [897,312,312,306,20],
+      [244,937,-250,399,16],
+      [-697,659,-281,-544,20],
+      [-993,-75,-87,141,13],
+      [963,217,160,254,10],
+      [-138,929,-343,-442,15],
+      [-405,819,-408,-136,10],
+      [-970,228,-82,-462,13],
+      [682,517,-517,405,16],
+      [169,689,705,219,14],
+      [-383,801,461,217,17],
+      [-686,256,-681,-172,20],
+      [809,126,574,513,21],
+      [202,692,694,435,14],
+      [-395,471,789,-69,18],
+      [-702,595,-391,504,23],
+      [932,301,201,71,17],
+      [-146,947,285,-359,21],
+      [-183,924,336,-417,23],
+      [-970,131,204,179,17],
+      [924,365,112,-468,15],
+      [523,798,301,361,20],
+      [-305,780,-546,-225,14],
+    ];
+    // END PATINATED SPHERE BANDS
+    K.texture('ccPlazaStone',512,256,(g,w,h)=>{
+      const base=g.createLinearGradient(0,0,0,h);
+      base.addColorStop(0,patinaTones[2]);base.addColorStop(.62,patinaTones[1]);base.addColorStop(1,patinaTones[0]);
+      g.fillStyle=base;g.fillRect(0,0,w,h);
+      const grain=K.rand(918);
+      // Feather irregular patches across the oxidised skin, including both sides of the seam.
+      for(let i=0;i<76;i++){
+        const x=grain()*w,y=grain()*h,radius=3+grain()*23,shade=patinaTones[i%3];
+        const paintPatch=gx=>{
+          const patch=g.createRadialGradient(gx,y,0,gx,y,radius);
+          patch.addColorStop(0,shade+'99');patch.addColorStop(1,shade+'00');
+          g.fillStyle=patch;g.fillRect(gx-radius,y-radius,radius*2,radius*2);
+        };
+        paintPatch(x);
+        if(x<radius)paintPatch(x+w);
+        if(x>w-radius)paintPatch(x-w);
       }
-    },[1,1]);
+      for(const tone of ['rgba(42,51,40,.22)','rgba(143,146,120,.32)','rgba(78,117,99,.38)']){
+        g.fillStyle=tone;
+        for(let i=0;i<950;i++)g.fillRect(grain()*w,grain()*h,1+grain()*4,1+grain()*3);
+      }
+      // Convert each original circle to the dome UVs. Continue over the horizontal seam.
+      const samples=128,cos=[],sin=[];
+      for(let j=0;j<=samples;j++){cos.push(Math.cos(2*PI*j/samples));sin.push(Math.sin(2*PI*j/samples));}
+      g.lineJoin='round';
+      for(const [nx,ny,nz,offset,width] of patinaBands){
+        const n=Math.hypot(nx,ny,nz),x=nx/n,y=ny/n,z=nz/n,d=offset/1000;
+        const axis=Math.hypot(x,y),ax=y/axis,ay=-x/axis,r=Math.sqrt(1-d*d);
+        const bx=-z*ay,by=z*ax,bz=x*ay-y*ax;
+        g.beginPath();
+        let prevU=0,prevV=0;
+        for(let j=0;j<=samples;j++){
+          const px=x*d+r*(ax*cos[j]+bx*sin[j]),py=y*d+r*(ay*cos[j]+by*sin[j]);
+          const u=((Math.atan2(-py,px)/(2*PI)+1)%1)*w;
+          const v=Math.acos(Math.max(-1,Math.min(1,z*d+r*bz*sin[j])))*h/PI;
+          if(j===0)g.moveTo(u,v);
+          else if(Math.abs(u-prevU)>w/2){
+            const shift=u>prevU?-w:w;
+            g.lineTo(u+shift,v);g.moveTo(prevU-shift,prevV);g.lineTo(u,v);
+          }else g.lineTo(u,v);
+          prevU=u;prevV=v;
+        }
+        const line=width*w/(1000*2*PI*1.02);
+        g.lineWidth=line+1.25;g.strokeStyle='rgba(53,62,46,.78)';g.stroke();
+        g.lineWidth=line;g.strokeStyle='rgba(153,157,129,.91)';g.stroke();
+      }
+    },[1,1],{lazy:true});
+    // The eastern sphere has many short horizontal ridges. The centre has vertical brown streaks.
+    K.texture('ccPlazaRipple',256,128,(g,w,h)=>{
+      g.fillStyle=rippleTones[1];g.fillRect(0,0,w,h);
+      const grain=K.rand(859);
+      for(let band=0;band<52;band++){
+        const y=band*h/52;
+        for(let x=-8;x<w;x+=4+grain()*7){
+          const yy=y+Math.sin(x*.15+band)*1.3+grain()*2;
+          const width=3+grain()*8;
+          g.beginPath();g.moveTo(x,yy);g.quadraticCurveTo(x+width*.55,yy-1.8,x+width,yy-.6);
+          g.strokeStyle=rippleTones[0];g.lineWidth=1.8;g.stroke();
+          g.strokeStyle=rippleTones[2];g.lineWidth=.65;g.stroke();
+        }
+      }
+    },[1,1],{lazy:true});
     K.texture('ccPlazaBronze',256,128,(g,w,h)=>{
-      g.fillStyle='#6e5040';g.fillRect(0,0,w,h);
-      const noise=K.rand(919);
-      for(let i=0;i<5200;i++){
-        g.fillStyle=['#8e6a52','#795641','#59473a','#80604c'][Math.floor(noise()*4)];
-        g.fillRect(noise()*w,noise()*h,1+noise()*3,1+noise()*3);
+      g.fillStyle=bronzeTones[1];g.fillRect(0,0,w,h);
+      const grain=K.rand(919);
+      for(let i=0;i<1500;i++){
+        const x=grain()*w,y=grain()*h,len=1+grain()*8;
+        g.fillStyle=bronzeTones[i%3]+'99';
+        g.fillRect(x,y,1+grain()*1.6,len);
       }
-    },[1,1]);
-    for(const t of [11,19,27]){
-      const [x,z]=P(-45,t),r=1.02;
-      K.dome({x,z,y:.018+r,rx:r,ry:r,rz:r,hemi:false,seg:36,rings:20,mat:t===19?'ccPlazaBronze':'ccPlazaStone'});
+    },[1,1],{lazy:true});
+    // The frontal 2022 and 2026 street views show neighbouring centres about 1.8 diameters apart.
+    const r=1.02,base=.018,foot=.065;
+    for(const [t,mat] of [[15.35,'ccPlazaStone'],[19,'ccPlazaBronze'],[22.65,'ccPlazaRipple']]){
+      const [x,z]=P(-45,t);
+      lcyl(-45,t,base,.31,.1,0x353833,{seg:20,solid:false});
+      K.dome({x,z,y:base+foot+r,rx:r,ry:r,rz:r,hemi:false,seg:36,rings:20,mat});
       // K.dome's collision starts at its equator; register the complete ground-level
       // footprint locally so the lower half also blocks the player.
       const circle=Array.from({length:20},(_,i)=>[x+Math.cos(i*PI/10)*r,z+Math.sin(i*PI/10)*r]);
-      K.phys.addPolyWalls(circle,.018,.018+2*r,.02,'centralcity');
+      K.phys.addPolyWalls(circle,base,base+foot+2*r,.02,'centralcity');
     }
     const benchAt=(u,y)=>{const q=P(-31,5+u);return[q[0],y,q[1]];};
     const benchCurve=[[-3,.55],[-1.2,.55],[-.7,.75],[-.25,1.15],[.2,1.22],[.65,.85],[1.1,.55],[3,.55]];

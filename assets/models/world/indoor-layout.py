@@ -173,6 +173,8 @@ def sync_layout(here, rows=None):
             exterior_group=roof_group
         elif city and row['library']=='sinbanpo-plaza-planters/planter.blend':
             exterior_group=branch(city,city.collection,'streets/plaza-planters','신반포로 · 석재 화분의 전정 수목')
+        elif city and row['library']=='central-plaza-spheres/spheres.blend':
+            exterior_group=branch(city,city.collection,'centralcity/plaza-sculptures','센트럴시티 광장 · 구체 조형물')
         if exterior_group:
             for obj in [anchor,*[o for o in anchor.children if COMPONENT in o]]:
                 if obj.name not in exterior_group.objects:

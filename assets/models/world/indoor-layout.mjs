@@ -363,6 +363,27 @@ export async function captureIndoorLayout() {
             collections:[subject],subject,ground:hotelDatum,terrain:hotelDatum,matrix:new THREE.Matrix4().toArray(),faces,color:mat.color??0x659fa5});
         };
       }
+      // Central City's three sculptures are batched directly into its exterior mesh.
+      // Read their native locations from those same dome calls, before the faces are merged.
+      let plazaSpheres=0;
+      if(place==='centralcity'){
+        const dome=kit.dome;
+        const sphereSources=new Map([['ccPlazaStone','CentralCityPatinatedSphere'],['ccPlazaRipple','CentralCityRippledSphere'],['ccPlazaBronze','CentralCityBronzeSphere']]);
+        kit.dome=opts=>{
+          const source=sphereSources.get(opts.mat);
+          if(source){
+            const {x,y,z,rx,ry,rz}=opts;
+            const matrix=new THREE.Matrix4().makeScale(rx/1.02,ry/1.02,rz/1.02);
+            matrix.setPosition(x,y-ry,z);
+            const ground=rounded(relief(x,z));
+            result.push({id:'centralcity/'+source+'/1',place,placeName:meta.name,floor:'지상',
+              library:'central-plaza-spheres/spheres.blend',collections:[source],
+              subject:'센트럴시티 광장 · 구체 조형물',ground,terrain:ground,matrix:matrix.toArray().map(rounded)});
+            plazaSpheres++;
+          }
+          return dome(opts);
+        };
+      }
       const addMesh=kit.addMesh;
       kit.onNight=()=>{};
       kit.addMesh=root=>{
@@ -398,6 +419,7 @@ export async function captureIndoorLayout() {
           subject:'원형 광장과 식품관 카페 통로',ground:0,terrain:0,matrix:new THREE.Matrix4().toArray()});
       }
       kit._.buildAllDetail();
+      if(place==='centralcity' && plazaSpheres!==3)throw Error('Expected the three sculptures on the public plaza');
       if(kit._.detailErrors.length)throw Error(kit._.detailErrors.join('\n'));
       for(const [, , , name] of rules)if(!counts.has(name))throw Error('No production placement for '+place+'/'+name);
     }
