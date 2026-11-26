@@ -12,10 +12,11 @@
 
 검증에 사용한 Blender는 기존 로컬 3.6.23 헤드리스 설치본이다. 저장소 루트에서 실행한다.
 
+아래 명령은 `PATH`의 Blender를 사용한다. 별도로 설치했다면 `GTW_BLENDER_BIN`에 해당 실행 파일 경로를 지정한다.
+
 ```sh
 D=assets/models/ssg-gentle-espresso
-BLENDER=/tmp/marz-blender36/Blender/Blender.app/Contents/MacOS/Blender
-"$BLENDER" -b --factory-startup --gpu-backend opengl --python-exit-code 1 -P "$D/build.py"
+"${GTW_BLENDER_BIN:-blender}" -b --factory-startup --gpu-backend opengl --python-exit-code 1 -P "$D/build.py"
 node "$D/pack.mjs"
 node tests/smoke.mjs shinsegae
 node tests/smoke.mjs shinsegae gotomall

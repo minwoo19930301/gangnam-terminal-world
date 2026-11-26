@@ -16,10 +16,11 @@
 
 저장소 루트에서 실행한다. 이 샌드박스에서는 설치된 Blender 4.5.11의 Metal 초기화가 실패해 기존 Blender 3.6.23의 헤드리스 OpenGL 백엔드로 작성과 내보내기를 검증했다.
 
+아래 명령은 `PATH`의 Blender를 사용한다. 별도로 설치했다면 `GTW_BLENDER_BIN`에 해당 실행 파일 경로를 지정한다.
+
 ```sh
 D=assets/models/ssg-herman-miller
-BLENDER=/tmp/marz-blender36/Blender/Blender.app/Contents/MacOS/Blender
-"$BLENDER" -b --factory-startup --gpu-backend opengl --python-exit-code 1 -P "$D/build.py"
+"${GTW_BLENDER_BIN:-blender}" -b --factory-startup --gpu-backend opengl --python-exit-code 1 -P "$D/build.py"
 node "$D/pack.mjs"
 node tests/smoke.mjs shinsegae
 node tests/smoke.mjs shinsegae gotomall
@@ -28,5 +29,5 @@ node tests/smoke.mjs shinsegae gotomall
 편집한 원본에서 다시 내보낼 때는 첫 Blender 명령을 다음 명령으로 바꾼 후 같은 압축 단계를 실행한다.
 
 ```sh
-"$BLENDER" -b --gpu-backend opengl "$D/seating.blend" --python-exit-code 1 -P "$D/export.py"
+"${GTW_BLENDER_BIN:-blender}" -b --gpu-backend opengl "$D/seating.blend" --python-exit-code 1 -P "$D/export.py"
 ```

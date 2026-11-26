@@ -16,9 +16,11 @@
 
 검증에 사용한 버전은 macOS용 Blender 3.6.23이다. 기본 설치본 4.5.11은 이 샌드박스에서 기동 중 종료되어 기존 3.6.23 헤드리스 실행 파일을 사용했다. 글자 생성에는 macOS의 AppleGothic과 Arial Bold가 필요하다.
 
+아래 명령은 `PATH`의 Blender를 사용한다. 별도로 설치했다면 `GTW_BLENDER_BIN`에 해당 실행 파일 경로를 지정한다.
+
 ```sh
 D=assets/models/ssg-kids-footwear
-/tmp/marz-blender36/Blender/Blender.app/Contents/MacOS/Blender -b --factory-startup --gpu-backend opengl --python-exit-code 1 -P "$D/build.py"
+"${GTW_BLENDER_BIN:-blender}" -b --factory-startup --gpu-backend opengl --python-exit-code 1 -P "$D/build.py"
 node "$D/pack.mjs"
 node tests/smoke.mjs shinsegae
 node tests/smoke.mjs gotomall shinsegae
