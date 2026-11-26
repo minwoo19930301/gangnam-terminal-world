@@ -1,3 +1,4 @@
+import {ashleyEntrance} from '../../assets/models/newcore-ashley-entry/model.js';
 import {oksobanReception} from '../../assets/models/newcore-oksoban-entry/model.js';
 import {placeCafeFront} from '../../assets/models/newcore-mamas/model.js';
 import {yucheonDining} from '../../assets/models/newcore-yucheon/model.js';
@@ -1287,6 +1288,7 @@ function upperSalesFloor(F, num, floor) {
       const provence = num === 1 && floor.label === '4F' && label === '주방용품';
       const picnic = num === 1 && floor.label === '4F' && label === '홈데코';
       const yucheon = num === 1 && floor.label === '5F' && label === '유천냉면';
+      const ashley = num === 1 && floor.label === '5F' && label === '애슐리퀸즈';
       const hotpot = num === 1 && floor.label === '5F' && label === '옥소반';
       const [accent, wall] = adidasGolf ? [0x252626,0xd5d3cc] : hotpot ? [0x9e4831, 0xc3b5a2] :
         kind === 'rail' ? clothingFinishes[(i + side + num) % 3] : finishes[kind];
@@ -1301,6 +1303,10 @@ function upperSalesFloor(F, num, floor) {
         const wing=(bayWidth-8.05)/2;
         for(const direction of [-1,1])B(u+direction*(4.025+wing/2),y+2.99,front,wing,.58,.41,accent);
         yucheonDining(F,u,y+.034,front,upperBayView(F,u,front,depth,bayWidth,inset,front+3,4.05));
+      }else if(ashley){
+        const wing=(bayWidth-6.41)/2;
+        for(const dir of [-1,1])B(u+dir*(3.205+wing/2),y+2.99,front,wing,.58,.41,accent);
+        ashleyEntrance(F,u,y+.034,front,upperBayView(F,u,front,depth,bayWidth,inset,front-.25,3.22));
       }else if(hotpot){
         const wing=(bayWidth-7.8)/2;
         for(const direction of [-1,1])B(u+direction*(3.9+wing/2),y+2.99,front,wing,.58,.41,accent);
@@ -1327,22 +1333,21 @@ function upperSalesFloor(F, num, floor) {
       if (hotpot) registerOksobanTable(F, u, y + .034, front - inset * depth * .36);
       if(adidasGolf) registerGolf(F,u,y+.034,front,depth,bayWidth,
         (position,half,offset)=>upperBayView(F,u,front,depth,bayWidth,inset,position,half,offset));
-      bays.push({u, front, back, depth, inset, bayWidth, kind, label, side, i, hotpot, provence, picnic, kidsRoom, adidasGolf});
+      bays.push({u, front, back, depth, inset, bayWidth, kind, label, side, i, hotpot, ashley, provence, picnic, kidsRoom, adidasGolf});
     }
   });
   for (const off of [-1,1]) B(0, y + .017, W / 2 + off * 2.76, L - 3, .012, .085, 0xac987a, {solid:false});
   return () => {
-    for (const {u, front, back, depth, inset, bayWidth, kind, label, side, i, hotpot, provence, picnic, kidsRoom, adidasGolf} of bays) {
+    for (const {u, front, back, depth, inset, bayWidth, kind, label, side, i, hotpot, ashley, provence, picnic, kidsRoom, adidasGolf} of bays) {
       if(num===1&&floor.label==='5F'&&label==='유천냉면')continue;
-      if(!hotpot)B(u, y + 2.96, front + inset * .18, bayWidth - .45, .035, .10, { tex:'emit', color:0xffefd1 }, {solid:false});
+      if(!hotpot&&!ashley)B(u, y + 2.96, front + inset * .18, bayWidth - .45, .035, .10, { tex:'emit', color:0xffefd1 }, {solid:false});
       if(adidasGolf){
         for(const d of [2.10,5.74,8.73]) B(u,y+3.48,front+d,2.65,.052,.095,{tex:'emit',color:0xfff4df},{solid:false});
         continue;
       }
-      if(!hotpot)S(label, u, y + 3.28, front + inset * .22, Math.min(7, bayWidth - .8), .43, null,
+      if(!hotpot&&!ashley)S(label, u, y + 3.28, front + inset * .22, Math.min(7, bayWidth - .8), .43, null,
         {rotY: F.angle + (side ? Math.PI : 0), fg:'#fff9ef'});
       // Light-washed backboards and a suspended rail give long stores readable depth.
-      const ashley=num===1&&floor.label==='5F'&&label==='애슐리퀸즈';
       for (const t of [-.32, 0, .32]) {
         if(!ashley)B(u + t * bayWidth, y + .45, back + inset * .11, bayWidth * .28, 2.48, .085, i % 2 ? 0xefe9da : 0xd9ccbb, {solid:false});
         B(u + t * bayWidth, y + 3.42, front - inset * depth * .49, 1.25, .055, .21, {tex:'emit', color:0xffedcf}, {solid:false});

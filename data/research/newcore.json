@@ -1,4 +1,12 @@
 {
+  "ashley_public_portal": {
+    "floor": "뉴코아 강남점 1관 5F 전문식당가",
+    "guide": "https://www.elandretail.com/m/store/store_04.do?bdID=0003001B&branchID=00110001&displaySeq=5&floorID=0002005F&lang=000600KO",
+    "visitor": "https://johnkth.tistory.com/14471",
+    "photo_published": "2026-11-22",
+    "observed": "검푸른 겹몰딩 기둥과 코니스, 금빛 테두리와 전구가 있는 두 줄 영문 상호, 무늬 타일, 안내 태블릿과 둥근 펜던트 세 개.",
+    "estimated": "공식 영업층과 사진의 입면을 현 게임의 기존 식당 칸에 맞췄다. 실측 치수와 전구·타일 수는 확인되지 않았다."
+  },
   "mamas_street_front": {
     "place": "뉴코아 강남점 3관 카페 마마스 보도측 입구",
     "operator": "https://www.elandretail.com/store02.do?BDID=0003003B&branchID=00110001&lang=000600KO",

@@ -56,6 +56,7 @@ const sources = [
   ['shinsegae','B1','nespresso-gangnam/display.blend','네스프레소 · 버츄오 시음 진열대','GangnamNespressoDisplay'],
   ['shinsegae','B1','intelligentsia-gangnam/coffeebar.blend','인텔리젠시아 강남 · 오렌지 진열장과 커피 바','GangnamCoffeebar'],
   ['newcore','1F','newcore-mamas/front.blend','뉴코아 3관 · 카페 마마스 외관','NC_MamasStreetFront'],
+  ['newcore','5F','newcore-ashley-entry/entrance.blend','뉴코아 1관 5층 · 애슐리퀸즈 몰딩 입구','NC_AshleyQueensEntrance'],
   ['newcore','5F','newcore-oksoban-entry/front.blend','뉴코아 1관 5층 · 옥소반 안내 데스크','NC_OksobanEntrance'],
   ['newcore','5F','newcore-yucheon/front.blend','뉴코아 1관 5층 · 유천냉면 입구와 식당 홀','NC_YucheonDiningHall'],
   ['gyeongbu','7F','gyeongbu-clothing-fronts/seven/tailored-front.blend','경부선 7층 · 두 단의 모직과 코트 전면','7층 신사복 · 이단 모직 진열과 코트 전면'],
