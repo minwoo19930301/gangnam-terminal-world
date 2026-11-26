@@ -9,3 +9,5 @@
 ```sh
 blender --factory-startup -b counter.blend --python-exit-code 1 -P export.py
 ```
+
+도면의 매장 구획 안에서 매대와 충돌체를 안쪽으로 0.45m 옮겼다. 에스컬레이터와 카운터 사이에서 제자리에 서서 로고를 볼 수 있고, 안쪽 인접 진열대와 0.91m가 남는다. 같은 지도 시점에서 로고 글자가 보이는 면적은 644픽셀에서 710픽셀로 늘었다. [같은 보도에서 본 여유 공간](aisle-clearance.jpg)
