@@ -1,3 +1,4 @@
+import { areaIdAt } from './areas.js';
 import { LANDMARKS } from './landmarks.js';
 // Vector map. Geometry, label metrics and collision storage are prepared once;
 // the full-map base is invalidated only by view/layer changes, not player motion.
@@ -504,7 +505,8 @@ export function createMap(opts) {
       if (selectedZone) {
         const landed = phys?.zoneAt?.(pos.x, final.y + .1, pos.z);
         if (final.s?.move || !pointIn(pos.x, pos.z, selectedZone.poly)) return null;
-        if (phys?.zoneAt && (!landed || landed.place !== selectedZone.place || landed.floor !== selectedZone.floor)) return null;
+        if (phys?.zoneAt && (!landed || landed.floor !== selectedZone.floor)) return null;
+        if (landed && landed.place !== selectedZone.place && areaIdAt(landed, pos.x, final.y, pos.z) !== areaIdAt(selectedZone, pos.x, final.y, pos.z)) return null;
       }
       if (phys?.ceilingAbove && phys.ceilingAbove(pos.x, pos.z, final.y + 0.05, final.y + 1.8) < final.y + 1.75) return null;
       return { x: pos.x, z: pos.z, y: final.y };
