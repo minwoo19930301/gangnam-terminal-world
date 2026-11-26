@@ -173,6 +173,8 @@ def sync_layout(here, rows=None):
             exterior_group=roof_group
         elif city and row['library']=='newcore-mamas/front.blend':
             exterior_group=branch(city,city.collection,'newcore/street','뉴코아 · 보도에서 본 외관')
+        elif city and row['library']=='sinbanpo-public-oaks/pin-oak.blend':
+            exterior_group=branch(city,city.collection,'streets/surveyed-pin-oaks','신반포로 · 공도 대왕참나무')
         elif city and row['library']=='sinbanpo-plaza-planters/planter.blend':
             exterior_group=branch(city,city.collection,'streets/plaza-planters','신반포로 · 석재 화분의 전정 수목')
         elif city and row['library'] in ('central-plaza-spheres/spheres.blend','central-plaza-lantern/lantern.blend','central-plaza-seatwall/seatwall.blend','central-plaza-canopy/canopy.blend'):

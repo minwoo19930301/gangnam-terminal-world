@@ -1,0 +1,110 @@
+{
+  "viewport": [
+    1060,
+    650
+  ],
+  "dpr": 1,
+  "dates": {
+    "nov": "2026-11-27",
+    "may": "2026-05-22"
+  },
+  "traffic": false,
+  "captures": [
+    {
+      "variant": "before",
+      "stage": "nov",
+      "spot": "near",
+      "quality": "low",
+      "mode": "day",
+      "area": "out:core",
+      "support": 0.15,
+      "draws": 1743,
+      "triangles": 4299760,
+      "route": "/street?p=-257.25,0.15,-52.54,-84.5313,15"
+    },
+    {
+      "variant": "before",
+      "stage": "nov",
+      "spot": "near",
+      "quality": "low",
+      "mode": "night",
+      "area": "out:core",
+      "support": 0.15,
+      "draws": 1756,
+      "triangles": 4301704,
+      "route": "/street?p=-257.25,0.15,-52.54,-84.5313,15"
+    },
+    {
+      "variant": "after",
+      "stage": "nov",
+      "spot": "near",
+      "quality": "low",
+      "mode": "day",
+      "area": "out:core",
+      "support": 0.15,
+      "draws": 1746,
+      "triangles": 4308016,
+      "route": "/street?p=-257.25,0.15,-52.54,-84.5313,15"
+    },
+    {
+      "variant": "after",
+      "stage": "nov",
+      "spot": "near",
+      "quality": "low",
+      "mode": "night",
+      "area": "out:core",
+      "support": 0.15,
+      "draws": 1759,
+      "triangles": 4309960,
+      "route": "/street?p=-257.25,0.15,-52.54,-84.5313,15"
+    },
+    {
+      "variant": "before",
+      "stage": "may",
+      "spot": "across",
+      "quality": "low",
+      "mode": "day",
+      "area": "out:core",
+      "support": 0.15,
+      "draws": 501,
+      "triangles": 1363526,
+      "route": "/street?p=-216.48,0.15,-22.69,30.2637,10"
+    },
+    {
+      "variant": "before",
+      "stage": "may",
+      "spot": "across",
+      "quality": "low",
+      "mode": "night",
+      "area": "out:core",
+      "support": 0.15,
+      "draws": 855,
+      "triangles": 1364234,
+      "route": "/street?p=-216.48,0.15,-22.69,30.2637,10"
+    },
+    {
+      "variant": "after",
+      "stage": "may",
+      "spot": "across",
+      "quality": "low",
+      "mode": "day",
+      "area": "out:core",
+      "support": 0.15,
+      "draws": 501,
+      "triangles": 1372094,
+      "route": "/street?p=-216.48,0.15,-22.69,30.2637,10"
+    },
+    {
+      "variant": "after",
+      "stage": "may",
+      "spot": "across",
+      "quality": "low",
+      "mode": "night",
+      "area": "out:core",
+      "support": 0.15,
+      "draws": 859,
+      "triangles": 1491582,
+      "route": "/street?p=-216.48,0.15,-22.69,30.2637,10"
+    }
+  ]
+}

@@ -49,6 +49,7 @@ def apply_sky(scene, model):
     background = world.node_tree.nodes.get("Background")
     scene.frame_start, scene.frame_end = 0, 1439
     scene["Seoul solar date"] = model["day"]
+    scene["Seoul month and day"] = int(model["day"][5:7] + model["day"][8:10])
     scene["Seoul timeline"] = "1 frame = 1 minute KST"
     for marker in list(scene.timeline_markers):
         if marker.name.startswith(("아침 ·", "낮 ·", "노을 ·", "밤 ·")):

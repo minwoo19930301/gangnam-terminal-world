@@ -497,13 +497,7 @@ export function build(K) {
       }
     }
   }
-  // Seoul's August 2026 street-tree inventory records pin oaks along this
-  // public sidewalk. The game uses its existing broadleaf crown at an
-  // approximate height; the inventory gives the trunk positions and species.
-  for(const [x,z] of [
-    [-249.64,-51.87],[-243.79,-54.39],[-238.18,-56.66],[-232.33,-59.06],[-225.84,-61.08],
-    [-216.48,-60.76],[-188.67,-70.99],[-123.25,-97.99],[-119.37,-96.52],[-114.38,-98.41],
-  ])K.tree(x,z,{y:0,h:8,kind:'zelkova'});
+  plantSurveyedPinOaks(K);
   // sr-07 / street_01: continuous mature light-green crowns on the north
   // sidewalk. OSM chainage preserves the oblique kerb at both ends of the row.
   K.detail({name:'신반포로 북측 가로수',floor:'지상',rect:[-45,-168,65,-113],y0:0,y1:12},K=>{
@@ -2551,4 +2545,96 @@ function buildParkingFlyover(K) {
       }
     }
   }
+}
+
+// Retain Seoul's surveyed trunk positions. Each short row shares a draw and the
+// three rows share the same near mesh. The photographed unplanted gaps stay open.
+function plantSurveyedPinOaks(K){
+  const strips=[
+    [[-249.64,-51.87],[-243.79,-54.39],[-238.18,-56.66],[-232.33,-59.06],[-225.84,-61.08],[-216.48,-60.76]],
+    [[-188.67,-70.99]],
+    [[-123.25,-97.99],[-119.37,-96.52],[-114.38,-98.41]],
+  ];
+  const subject='반포센트럴자이 앞 신반포로 · 대왕참나무';
+  let fallback,mat,phase;
+  strips.forEach((sites,i)=>{
+    const xs=sites.map(p=>p[0]),zs=sites.map(p=>p[1]);
+    const x0=Math.min(...xs),x1=Math.max(...xs),z0=Math.min(...zs),z1=Math.max(...zs);
+    const x=(x0+x1)/2,z=(z0+z1)/2,ground=relief(x,z),name=subject+' 열 '+(i+1);
+    K.detail({name,floor:'지상',rect:[x0-3,z0-3,x1+3,z1+3],y0:0,y1:8.1,
+      visualOnly:true,silhouetteDistance:240,visibleFrom:(_x,y)=>y>-1},kit=>{
+      const T=kit.THREE;
+      if(!fallback){
+        const {calendar,parts}=publicPinOakOutline();
+        const now=new Date(Date.now()+9*3600000);
+        const monthDay=(now.getUTCMonth()+1)*100+now.getUTCDate();
+        for(const [start,row] of calendar)if(monthDay>=start)phase=row;
+        fallback=pinOakSilhouette(T,parts,phase);
+        mat=new T.MeshLambertMaterial({vertexColors:true,side:T.DoubleSide});
+        mat.defines={BANPO_RIGID:1,STREET_TREE:1};
+      }
+      const instances=sites.map(([sx,sz])=>{
+        const matrix=new T.Matrix4().makeRotationY((sx*3+sz)%6);
+        matrix.setPosition(sx-x,relief(sx,sz)-ground,sz-z);
+        return {matrix,color:new T.Color().setScalar(.90+(Math.abs(Math.round(sx*7+sz*3))%9)*.016)};
+      });
+      placeSingleDetail(kit,{name,nativeInstanceName:subject,file:'../sinbanpo-public-oaks/pin-oak.glb',
+        at:[x,0,z],angle:0,rigidGround:ground,fallback,fallbackMaterial:mat,instances,
+        range:43,exitRange:51,eyeHeight:4.1,floorTolerance:13,
+        loadSurface:async file=>{
+          const {loadArchitecture}=await import('../../assets/models/interior-architecture/model.js');
+          const [surface]=await loadArchitecture(file),map=surface.material.map;
+          map.offset.y=-phase/8;
+          const painted=new T.MeshLambertMaterial({map,vertexColors:true,side:T.DoubleSide,alphaTest:.39});
+          painted.defines={BANPO_RIGID:1,STREET_TREE:1};surface.material=painted;
+          return [surface];
+        }});
+    });
+  });
+}
+
+function pinOakSilhouette(T,parts,phase){
+  const vertices=[],colors=[];
+  const leafTone=[0x527340,0x857447,0x926445,0x625646,0x9aa55c][phase];
+  const width=[1,.98,.80,0,.73][phase];
+  for(const [shade,cm,faces] of parts){
+    const foliage=shade>0;
+    if(foliage && !width)continue;
+    const mid=[0,0,0];
+    for(let i=0;i<cm.length;i++)mid[i%3]+=cm[i]/(cm.length/3);
+    const c=new T.Color(foliage?leafTone:0x60594c).multiplyScalar(foliage?shade:1);
+    for(let face=0;face<faces.length;face+=3){
+      if(foliage && phase===2 && (face/3)%5===1)continue;
+      for(let corner=0;corner<3;corner++){
+        const vertex=faces[face+corner]*3;
+        for(let axis=0;axis<3;axis++){
+          const v=cm[vertex+axis];
+          vertices.push((foliage?mid[axis]+(v-mid[axis])*width:v)/100);
+        }
+        colors.push(c.r,c.g,c.b);
+      }
+    }
+  }
+  const geo=new T.BufferGeometry();
+  geo.setAttribute('position',new T.Float32BufferAttribute(vertices,3));
+  geo.setAttribute('color',new T.Float32BufferAttribute(colors,3));
+  geo.computeVertexNormals();return geo;
+}
+
+// Centimetres in the game's Y-up frame, exported from the editable distant tree.
+function publicPinOakOutline(){
+  // BEGIN PUBLIC PIN OAK OUTLINE
+  const pinOakCalendar=[[0,2],[301,3],[405,4],[501,0],[1001,1],[1120,2]];
+  const pinOakDistant=[
+    [0.93,[-89,304,-58,24,442,-62,-59,451,-168,-193,427,-128,-193,457,4,-59,433,44,-81,580,-53],[0,2,1,6,1,2,0,3,2,6,2,3,0,4,3,6,3,4,0,5,4,6,4,5,0,1,5,6,5,1]],
+    [0.97,[83,329,-76,200,481,-124,80,450,-193,-28,473,-108,26,467,13,167,454,3,75,601,-71],[0,2,1,6,1,2,0,3,2,6,2,3,0,4,3,6,3,4,0,5,4,6,4,5,0,1,5,6,5,1]],
+    [0.9,[64,316,106,150,446,39,18,450,19,-44,465,130,51,437,219,170,467,163,58,590,98],[0,2,1,6,1,2,0,3,2,6,2,3,0,4,3,6,3,4,0,5,4,6,4,5,0,1,5,6,5,1]],
+    [0.99,[-80,388,94,-37,503,-7,-181,532,24,-194,503,161,-58,521,215,40,521,111,-72,644,87],[0,2,1,6,1,2,0,3,2,6,2,3,0,4,3,6,3,4,0,5,4,6,4,5,0,1,5,6,5,1]],
+    [0.98,[99,453,14,107,591,-81,8,576,-16,45,572,92,166,593,93,204,563,-14,89,705,13],[0,2,1,6,1,2,0,3,2,6,2,3,0,4,3,6,3,4,0,5,4,6,4,5,0,1,5,6,5,1]],
+    [1.02,[-45,498,-72,-85,632,-163,-147,609,-71,-72,640,12,36,613,-28,28,626,-136,-40,750,-66],[0,2,1,6,1,2,0,3,2,6,2,3,0,4,3,6,3,4,0,5,4,6,4,5,0,1,5,6,5,1]],
+    [1.07,[-6,564,20,-68,667,-37,-86,691,58,6,682,104,82,673,36,36,697,-51,-5,800,19],[0,2,1,6,1,2,0,3,2,6,2,3,0,4,3,6,3,4,0,5,4,6,4,5,0,1,5,6,5,1]],
+    [0,[0,0,-16,-16,0,0,0,0,16,16,0,0,1,320,-10,-9,320,0,1,320,10,12,320,0,4,774,-5,3,774,-4,4,774,-3,5,774,-4,0,283,-6,-5,284,4,5,288,2,-124,499,-81,-124,499,-80,-123,499,-80,0,323,-5,-5,329,2,5,325,4,115,522,-106,114,522,-106,115,522,-105,0,370,-4,-5,365,4,5,362,1,89,511,147,88,510,147,90,510,147,0,410,-5,-5,403,1,5,407,4,-111,573,130,-111,573,130,-110,573,131,0,448,-6,-4,450,3,4,444,3,137,636,19,136,636,20,137,636,20,0,485,-5,-5,488,3,5,490,2,-62,681,-100,-63,681,-99,-61,681,-99,0,529,-6,-5,527,3,5,528,3,-8,739,28,-8,739,29,-7,739,29],[0,1,5,0,5,4,1,2,6,1,6,5,2,3,7,2,7,6,3,0,4,3,4,7,4,5,9,4,9,8,5,6,10,5,10,9,6,7,11,6,11,10,7,4,8,7,8,11,12,13,16,12,16,15,13,14,17,13,17,16,14,12,15,14,15,17,18,19,22,18,22,21,19,20,23,19,23,22,20,18,21,20,21,23,24,25,28,24,28,27,25,26,29,25,29,28,26,24,27,26,27,29,30,31,34,30,34,33,31,32,35,31,35,34,32,30,33,32,33,35,36,37,40,36,40,39,37,38,41,37,41,40,38,36,39,38,39,41,42,43,46,42,46,45,43,44,47,43,47,46,44,42,45,44,45,47,48,49,52,48,52,51,49,50,53,49,53,52,50,48,51,50,51,53]],
+  ];
+  // END PUBLIC PIN OAK OUTLINE
+  return {calendar:pinOakCalendar,parts:pinOakDistant};
 }
