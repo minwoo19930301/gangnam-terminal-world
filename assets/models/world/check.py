@@ -56,6 +56,11 @@ rows.sort()
 assert all(b[0] - a[1] > 5.9 for a, b in zip(rows, rows[1:]))
 bpy.context.window.scene = city
 runpy.run_path(str(here.parent / 'shinsegae-gate-canopy' / 'check-native.py'))['check_north_entrance'](city)
+# The dedicated intersection pole and its landing must survive opening the shipped scene.
+corner = city.collection.children["지형 · 수면 · 공개 도로"].objects
+assert corner["계성초교입구 · 북쪽 보도 점자블록"].data.polygons[0].normal.z > .99
+assert corner["계성초교입구 · 렌즈"].data.materials[0].name == "서울 가로등 · 하향 발광"
+assert any(o.instance_collection and o.instance_collection.name == "BanpoCentralXiStreetPortal" for o in city.objects)
 assert len(city.timeline_markers) == 4
 sun = city.objects["서울 태양"]
 city.frame_set(750)

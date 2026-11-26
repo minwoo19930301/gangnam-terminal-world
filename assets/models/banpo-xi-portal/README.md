@@ -13,3 +13,5 @@ blender -b assets/models/banpo-xi-portal/silver-portal.blend -t 4 --python-exit-
 처음부터 다시 제작하려면 같은 폴더의 `build.py`를 Blender에서 실행한다. 생성 스크립트는 macOS AppleGothic으로 단지명을 만들며, 저장된 원본은 글자를 메시로 보관한다. 게임에서는 원거리 실루엣 96삼각형과 40m 이내 전면 상세 5,592삼각형을 한 번에 한 드로로 표시한다. 근접 GLB는 94,896바이트다. 지면 높이는 기존 도로의 지형에서 가져온다.
 
 ![같은 일반 게임 카메라에서 본 설치 전후와 야간 입면](street-comparison.jpg)
+
+통합 Blender 파일의 ‘반포 · 도시 전경’ 씬에서도 문주 양쪽 발치와 위로 열린 날개를 볼 수 있다. 아래 두 장은 같은 보도에서 찍었다. [도시 전경 안의 문주, 낮과 밤](native-city.jpg)
