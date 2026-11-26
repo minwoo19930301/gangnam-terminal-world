@@ -168,11 +168,15 @@ def sync_layout(here, rows=None):
                 child.location=offset
             child['indoor_source_offset']=list(offset)
         anchor['indoor_seen_components']=json.dumps(row['collections'],ensure_ascii=False)
-        # Share the same editable roof objects with the city exterior scene.
+        exterior_group=None
         if roof_group and (row['library']=='jwmarriott/public-roof.blend' or key.startswith('jwmarriott/herbs/')):
+            exterior_group=roof_group
+        elif city and row['library']=='sinbanpo-plaza-planters/planter.blend':
+            exterior_group=branch(city,city.collection,'streets/plaza-planters','신반포로 · 석재 화분의 전정 수목')
+        if exterior_group:
             for obj in [anchor,*[o for o in anchor.children if COMPONENT in o]]:
-                if obj.name not in roof_group.objects:
-                    roof_group.objects.link(obj)
+                if obj.name not in exterior_group.objects:
+                    exterior_group.objects.link(obj)
     # A source removed in a future game revision remains recoverable in the artist's scene.
     for key in current.keys()-seen:
         current[key]['game_source_present']=False

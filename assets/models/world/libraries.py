@@ -9,6 +9,8 @@ from mathutils import Vector
 
 SHELVES = {
     "g12-window-print": "고투몰 G12 · 지상 유리 점인쇄",
+    "sinbanpo-plaza-planters": "신반포로 정문 앞 석재 화분과 전정 수목",
+    "central-plaza-granite": "센트럴시티 광장 판석 포장 견본",
     "exit8-sidewalk-lamp": "터미널 8번 출구 보도등",
     "banpo-stream-bridge": "반포천1교 · 보도 난간",
     "cinema-rotary": "원형 광장 · 카멜커피",

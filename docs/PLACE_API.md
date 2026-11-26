@@ -63,7 +63,8 @@ Collision model: player capsule r=0.32, height 1.75, step-up 0.5 m. Walls block 
 storefront or a short stretch of corridor. Give each group a tight footprint and height range. The first view prepares
 nearby objects within 24 m. As the camera turns or moves, the runtime streams groups in view out to 48 m, prioritizing
 the player's floor and the closest groups. Furniture within 8 m on the same floor loads in every direction for collision.
-Openings in ceilings allow visible details on adjacent floors to load. Built groups are reused on return visits.
+Openings in ceilings allow visible details on adjacent floors to load. Built groups are reused on return visits. A purely visual exterior group may set
+`visualOnly: true, silhouetteDistance: metres` to draw a lightweight distant shape in view while its close model streams separately.
 Screenshot mode and tests can request groups without a view filter.
 
 Group shelves, counters, chairs, fixtures, signs, people and plants by where they stand. Each callback runs to completion

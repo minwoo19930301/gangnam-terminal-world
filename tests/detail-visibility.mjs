@@ -83,3 +83,16 @@ approach(-70.86,-96);assert.equal(wingBuilt,0,'disjoint physical footprint');
 approach(-70.86,-72);assert.equal(wingBuilt,1,'store enters reach');
 approach(-70,-69);assert.equal(wingBuilt,1,'reuse the visited shop');
 console.log('OK — crossing the actual rotated retail footprint range');
+
+const silhouetteKit=createKit(THREE,new THREE.Scene(),{osm:{},phys:createPhysics()});
+const prepared=[];
+const facade={rect:[-1,-81,1,-79],y0:0,y1:2};
+silhouetteKit.detail({...facade,visualOnly:true,silhouetteDistance:100},()=>prepared.push('distant'));
+silhouetteKit.detail({...facade,visualOnly:true},()=>prepared.push('near'));
+function lookAtStreet(z){
+  camera.position.set(0,1.65,0);camera.lookAt(0,1.65,z);camera.updateMatrixWorld(true);
+  silhouetteKit._.ensureDetail(0,1.65,0,48,Infinity,camera);
+}
+lookAtStreet(10);assert.deepEqual(prepared,[]);
+lookAtStreet(-10);assert.deepEqual(prepared,['distant']);
+console.log('OK — only the facing exterior silhouette extends the ordinary detail range');

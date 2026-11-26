@@ -25,7 +25,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
   const deckVisibility = interiorView ? createDeckVisibility() : null;
   const staticVisibility = streetBatchView(THREE,scene,deckVisibility);
   const streetVisibility = streetView ? staticVisibility : null;
-  const clipVisitors=visitorView(THREE,scene,relief);
+  const clipStaticInstances=visitorView(THREE,scene,relief);
   const T = createTextures(THREE, { maxAniso });
   // big atlas pages mean fewer materials → fewer draw calls (the bottleneck on slow CPUs); low tier draws signs
   // at a lower pixel density (resolution only — every sign is still there)
@@ -1304,6 +1304,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
         for (const mesh of treeInstances(THREE, group.idx.map(i => trees[first + i]))) {
           scene.add(mesh);
           track(mesh, group.cell);
+          clipStaticInstances(mesh);
           lodList.push(mesh);
         }
       }
@@ -1317,7 +1318,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
         for (const mesh of visitorInstances(THREE,people,group.idx.map(i => start+i))) {
           scene.add(mesh);
           track(mesh,group.cell);
-          clipVisitors(mesh);
+          clipStaticInstances(mesh);
           lodList.push(mesh);
         }
       }
@@ -1340,7 +1341,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
       fn = kit => withTerrainSurface(datum,() => draw(kit));
     }
     const rectangular=poly?.length===4 && poly.every(([x,z])=>(x===bb[0]||x===bb[2]) && (z===bb[1]||z===bb[3]));
-    details.push({ poly, exactDistance:!!poly&&!rectangular, owner: current, meta: perPlace[current], floor: o.floor || '', y0: o.y0 ?? -1e9, y1: o.y1 ?? 1e9, bb, fn, resource:o.resource, visualOnly:o.visualOnly, built: false, name: o.name || '', visibleFrom: o.visibleFrom });
+    details.push({ poly, exactDistance:!!poly&&!rectangular, owner: current, meta: perPlace[current], floor: o.floor || '', y0: o.y0 ?? -1e9, y1: o.y1 ?? 1e9, bb, fn, resource:o.resource, visualOnly:o.visualOnly, silhouetteDistance:o.silhouetteDistance, built: false, name: o.name || '', visibleFrom: o.visibleFrom });
   }
   // Pure visual batches can share a download. Complete it before entering the
   // synchronous kit build so the original place, terrain and material batches apply.
@@ -1436,10 +1437,12 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
         const dx = Math.max(0, d.bb[0]-x, x-d.bb[2]), dz = Math.max(0, d.bb[1]-z, z-d.bb[3]);
         const vertical = Math.max(0, d.y0-y, y-d.y1);
         let distance = dx*dx+dz*dz;
-        if (distance > reach*reach || vertical > 8) continue;
+        // A street silhouette can remain recognizable beyond the ordinary furnishing range.
+        const radius=camera && d.visualOnly && d.silhouetteDistance ? Math.max(reach,d.silhouetteDistance) : reach;
+        if (distance > radius*radius || vertical > 8) continue;
         if (camera && d.exactDistance) {
           distance=distanceToPolygonSq(x,z,d.poly);
-          if(distance>reach*reach)continue;
+          if(distance>radius*radius)continue;
         }
         if (camera && ((d.visibleFrom && !d.visibleFrom(x,y,z)) || !visibleDetail(d,x,y,z,camera,distance,vertical))) continue;
         waiting.push({d,vertical,distance});
@@ -1472,7 +1475,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     THREE, scene, phys, osm, LEVELS, T, withTerrainAnchor, withTerrainSurface, withParkedVehicle, withSharedShell,
     box, prism, slab, wall, polyWalls, ramp, stairs: (ax, az, bx, bz, o = {}) => ramp(ax, az, bx, bz, { ...o, steps: true }), escalator, escalatorTreads, cyl, stockCylinders, stockEllipsoids, dome, sign, floorText,
     tree, person, crowd, vehicle, zone, spawn, interact, portal, elevator, groundHole, onFrame, addMesh, texture, material, mapMark, detail,
-    osmBuilding, osmFind, claim, rand, quad: (mat, p, n, uvs) => quad(spec(mat), p, n, uvs || [[0, 0], [1, 0], [1, 1], [0, 1]]), hpoly: (mat, poly, y, up = true, holes) => hpoly(spec(mat), poly, y, up, holes),
+    osmBuilding, osmFind, claim, rand, quad: (mat, p, n, uvs) => quad(spec(mat), p, n, uvs || [[0, 0], [1, 0], [1, 1], [0, 1]]), hpoly: (mat, poly, y, up = true, holes, rotUV = 0) => hpoly(spec(mat), poly, y, up, holes, rotUV),
     triangle: (mat, points, normal, uv) => tri(spec(mat), points, normal, uv),
     pointInPoly, polyBBox, polyArea, orient,
     occludingSlab(options) {
