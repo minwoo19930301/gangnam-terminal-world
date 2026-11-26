@@ -1,9 +1,12 @@
 import { placeHypnos } from '../../assets/models/hypnos-showroom/model.js';
+import { registerPaulSmith } from './shinsegae-paul-smith.js';
+import { registerHerno } from './shinsegae-herno.js';
 import { registerSnowPeak } from './shinsegae-snowpeak.js';
 import { registerCdg } from './shinsegae-cdg.js';
 import { registerCollect } from './shinsegae-collect.js';
 import { registerFrisbee } from './shinsegae-frisbee.js';
 import { registerGarmin } from './shinsegae-garmin.js';
+import { registerNewBalance } from './shinsegae-new-balance.js';
 import { registerBarrel } from './shinsegae-barrel.js';
 import { registerBrompton } from './shinsegae-brompton.js';
 import { registerLeica } from './shinsegae-leica.js';
@@ -41,6 +44,7 @@ import { registerMiele } from './shinsegae-miele.js';
 import { registerBaccarat } from './shinsegae-baccarat.js';
 import { registerAudio } from './shinsegae-audio.js';
 import { registerRoborock } from './shinsegae-roborock.js';
+import { registerJura } from './shinsegae-jura.js';
 import { registerMarzocco } from './shinsegae-marzocco.js';
 import { mounts as facadeMounts } from '../../assets/models/shinsegae-facade/mounts.js';
 import { loadArchitecture, fitArchitecture, fitTerminalSeat as drawFacadeSign } from '../../assets/models/architectural-retail/place.js';
@@ -7840,6 +7844,22 @@ export function build(K) {
     const y=LV[id];zone('신세계백화점 강남점',id,upperCats[id],[0,0,UW,145.3],y,LV[nextOf(id)],1);
     for(const c of guide.cells)buildUpperCell(id,c);
     if(id==='6F'){
+      const room=upperBuildRect(id,guide.cells.find(c=>c.name==='폴스미스'));
+      const u=(room[0]+room[2])/2,v=room[3]-.50;
+      const [x,z]=P(u,v),[rx,rz]=P(u-1,v);
+      registerPaulSmith(K,{poly:rect(...room),x,y,z,yaw:Math.atan2(z-rz,rx-x)});
+    }
+    if(id==='6F'){
+      const room=upperBuildRect(id,guide.cells.find(c=>c.name==='에르노'));
+      const u=room[2]-.52,v=(room[1]+room[3])/2;
+      const [x,z]=P(u,v),[rx,rz]=P(u,v+1),yaw=Math.atan2(z-rz,rx-x);
+      registerHerno(K,{poly:rect(...room),x,y,z,yaw});
+      for(const [side,front,w,d,h] of [[0,0,5.64,.67,3.04],[-2.91,1.63,.51,2.49,2.71],[-1.52,1.59,.83,.66,1.98],[.60,1.77,1.77,.73,1.05]]){
+        K.box({x:x+side*Math.cos(yaw)+front*Math.sin(yaw),y,z:z-side*Math.sin(yaw)+front*Math.cos(yaw),
+          w,d,h,rotY:yaw,mat:0x494541,skip:['top','bottom','n','s','e','w']});
+      }
+    }
+    if(id==='6F'){
       const room=upperBuildRect(id,guide.cells.find(c=>c.name==='라이카'));
       const u=(room[0]+room[2])/2,v=room[3]-5.20939;
       const [x,z]=P(u,v),[rx,rz]=P(u+1,v);
@@ -7937,6 +7957,17 @@ export function build(K) {
       }
     }
     if(id==='8F'){
+      const nb=upperBuildRect(id,guide.cells.find(c=>c.name==='뉴발란스 메가숍'));
+      const nbU=(nb[0]+nb[2])/2,nbV=nb[1]+3.73875;
+      const [nx,nz]=P(nbU,nbV),[nex,nez]=P(nbU+1,nbV);
+      const nbYaw=Math.atan2(nz-nez,nex-nx);
+      registerNewBalance(K,{poly:rect(...nb),x:nx,y,z:nz,yaw:nbYaw});
+      for(const [side,front,w,d,h] of [[0,-2.45,5.26,.37,2.95],[1.21,.12,2.18,1.23,.16],
+          [-.48,.93,.73,.56,.90],[-1.66,-.05,1.32,.65,1.55]]){
+        K.box({x:nx+side*Math.cos(nbYaw)+front*Math.sin(nbYaw),y,
+          z:nz-side*Math.sin(nbYaw)+front*Math.cos(nbYaw),w,d,h,rotY:nbYaw,
+          mat:0xbda078,skip:['top','bottom','n','s','e','w']});
+      }
       const snow=upperBuildRect(id,guide.cells.find(c=>c.name==='스노우피크'));
       const snowU=(snow[0]+snow[2])/2,snowV=snow[1]+3.6215;
       const [snowX,snowZ]=P(snowU,snowV),[eastX,eastZ]=P(snowU+1,snowV);
@@ -8204,6 +8235,16 @@ export function build(K) {
       registerRoborock(K,{poly:rect(...robotRoom),x:robotRX,y,z:robotRZ,yaw:robotYaw});
       K.box({x:robotRX,y,z:robotRZ,w:2.43,h:.77,d:.95,rotY:robotYaw,mat:0xe9e8e0,
         skip:['top','bottom','n','s','e','w']});
+      const juraRoom=upperBuildRect(id,guide.cells.find(c=>c.name==='유라'));
+      const ju=juraRoom[0]+.76,jv=(juraRoom[1]+juraRoom[3])/2;
+      const [jx,jz]=P(ju,jv),[jrx,jrz]=P(ju,jv-1);
+      const juraYaw=Math.atan2(jz-jrz,jrx-jx);
+      registerJura(K,{poly:rect(...juraRoom),x:jx,y,z:jz,yaw:juraYaw});
+      for(const [side,back,w,d,h] of [[0,.11,4.49,1.02,1.01],[-2.65,-.01,.37,.37,.91]]) {
+        K.box({x:jx+side*Math.cos(juraYaw)-back*Math.sin(juraYaw),y,
+          z:jz-side*Math.sin(juraYaw)-back*Math.cos(juraYaw),w,d,h,rotY:juraYaw,
+          mat:0xac8868,skip:['top','bottom','n','s','e','w']});
+      }
       const shop=guide.cells.find(c=>c.name==='라마르조코');
       const [west,north,east,south]=upperBuildRect(id,shop);
       const u=west+.80, v=(north+south)/2, [x,z]=P(u,v);
@@ -9597,10 +9638,10 @@ export function build(K) {
   function furnishUpperMerch(ctx) {
     const {id,name,kind,Wf:W,Dp:D,y,face,fb,fdisk,fball,fsign,person,seed,palette:p,ST}=ctx;
     if(id==='7F' && (name==='바버'||name==='프레이트'||name==='보스골프'))return;
-    if(id==='6F' && (name==='브루넬로 쿠치넬리'||name==='라이카'||name==='콜렉트'||name==='버윅'||name==='CDG CDG CDG'||name==='투미'||name==='벨루티'))return;
-    if(id==='8F' && (name==='아크테릭스'||name==='브롬톤'||name==='스노우피크'||name==='가민'||name==='배럴'))return;
+    if(id==='6F' && (name==='브루넬로 쿠치넬리'||name==='라이카'||name==='콜렉트'||name==='버윅'||name==='CDG CDG CDG'||name==='투미'||name==='에르노'||name==='벨루티'||name==='폴스미스'))return;
+    if(id==='8F' && (name==='아크테릭스'||name==='브롬톤'||name==='스노우피크'||name==='가민'||name==='배럴'||name==='뉴발란스 메가숍'))return;
     if(id==='10F' && (name==='스누피 플레이스'||name==='스토케'||name==='마이크로 킥보드'||name==='컴프프로'||name==='토박스'||name==='아뜰리에 슈'||name==='베이비 디올'||name==='파타고니아 키즈'||name===toyShop))return;
-    if(id==='9F' && (name.startsWith('드비알레/')||name==='몰테니&C'||name==='라잇나우'||name==='라마르조코'||name==='로보락'||name==='TWL'||name==='허먼 밀러'||name==='USM'||name==='광주요'||name==='바카라'||name==='모비엘'||name==='밀레'))return; // Dedicated room detail owns the presentation island.
+    if(id==='9F' && (name.startsWith('드비알레/')||name==='몰테니&C'||name==='라잇나우'||name==='유라'||name==='라마르조코'||name==='로보락'||name==='TWL'||name==='허먼 밀러'||name==='USM'||name==='광주요'||name==='바카라'||name==='모비엘'||name==='밀레'))return; // Dedicated room detail owns the presentation island.
     if(W<1.05||(D<1.05&&!(id==='4F'&&name==='금강'&&D>=.45)))return;
     // The other 5F DAKS guide cell is a handbag concession, not womenswear.
     const daksWoman=id==='5F'&&name==='닥스 숙녀'&&kind==='fashion';
@@ -16641,7 +16682,7 @@ export function build(K) {
         fsign(shoeGroup?fasciaName:id==='5F'&&c.name==='미샤'?'MICHAA':id==='4F'&&c.name==='샤넬 슈 부틱'?'CHANEL':id==='5F'&&c.name==='킨더살몬'?'KINDERSALMON':id==='5F'&&c.name==='에스실'?'SSIL':id==='5F'&&c.name==='넘버링'?'NUMBERING':id==='4F'&&c.name==='폴로 랄프 로렌'?'POLO RALPH LAUREN':id==='4F'&&c.name==='레페토'?'repetto':id==='4F'&&c.name==='쏘솔트'?'SOSALT':id==='4F'&&c.name==='린드버그'?'LINDBERG':id==='4F'&&c.name==='코치'?'COACH':id==='4F'&&c.name==='버켄스탁'?'BIRKENSTOCK':id==='2F'&&brand2[c.name]?brand2[c.name]:id==='4F'&&c.name==='오트리'?'AUTRY':id==='4F'&&c.name==='헌터'?'HUNTER':id==='3F'&&c.name==='다미아니'?'DAMIANI':id==='3F'&&brand3[c.name]?brand3[c.name]:id==='4F'&&c.name==='이브살로몬'?'YVES SALOMON':id==='4F'&&brand4[c.name]?brand4[c.name]:id==='5F'&&brand5[c.name]?brand5[c.name]:c.name==='몽클레르'?'MONCLER':c.name==='펜디'?'FENDI':id==='5F'&&c.name==='룰루레몬'?'lululemon':c.name==='불가리'&&id==='2F'?'BVLGARI':c.name==='티파니앤코'&&id==='2F'?'TIFFANY & CO.':c.name==='로에베'&&id==='3F'?'LOEWE':c.name==='막스마라'&&id==='3F'?'MAX MARA':c.name,(id==='2F'&&c.name==='불가리'?Wf-1.8:frontAt),.075,y+(sharedEntry?2.91:id==='8F'?2.75:id==='2F'&&c.name==='고야드'?3.34:id==='2F'&&c.name==='티파니앤코'?2.94:3.25),Math.min(publicWidth-.55,id==='2F'&&c.name==='불가리'?2.8:8.5),id==='2F'&&c.name==='고야드'?.26:Math.min(id==='8F'?.35:.45,.19+Wf*.035),{bg:id==='2F'&&c.name==='고야드'?null:bg,fg:id==='2F'&&c.name==='고야드'?'#dfc77d':palette.dark&&!chanel2&&id!=='8F'?'#f4eee0':fg,twoSided:true});
       }
       // A clear counter at the rear side, payment terminal and framed mirror.
-      if(!(id==='7F'&&(c.name==='바버'||c.name==='프레이트'||c.name==='보스골프'))&&!(id==='6F'&&(c.name==='브루넬로 쿠치넬리'||c.name==='라이카'||c.name==='콜렉트'||c.name==='버윅'||c.name==='CDG CDG CDG'||c.name==='투미'||c.name==='벨루티'))&&!(id==='8F'&&(c.name==='아크테릭스'||c.name==='브롬톤'||c.name==='스노우피크'||c.name==='가민'||c.name==='배럴'))&&!(id==='10F'&&(c.name==='스누피 플레이스'||c.name==='스토케'||c.name==='마이크로 킥보드'||c.name==='컴프프로'||c.name==='토박스'||c.name==='아뜰리에 슈'||c.name==='베이비 디올'||c.name==='파타고니아 키즈'||c.name===toyShop))&&!(id==='9F'&&(c.name==='몰테니&C'||c.name==='라잇나우'||c.name==='라마르조코'||c.name==='로보락'||c.name==='TWL'||c.name==='허먼 밀러'||c.name==='USM'||c.name==='광주요'||c.name==='바카라'||c.name==='모비엘'||c.name==='밀레'))&&!popupStage&&!jewelryIsland&&!(id==='5F'&&['베네통','캐나다 구스'].includes(c.name))&&Wf>2.3&&Dp>2.8&&!(id==='2F'&&['생 로랑','불가리','보테가 베네타','헬렌카민스키','디올'].includes(c.name))&&!(id==='3F'&&['아디르','더로우','호라이즌','알라이아','분더샵 여성','바쉐론 콘스탄틴','릭오웬스','오데마피게','로에베','몽블랑','발렌티노','브레게','프레드','부쉐론','끌로에','아크리스','블랑팡'].includes(c.name))&&!(id==='4F'&&['토리버치','A.P.C.','포르테 포르테','N°21','메종 키츠네','레페토','폴로 랄프 로렌','샤넬 슈 부틱','루이비통','지안비토로시','린드버그'].includes(c.name))&&!(id==='5F'&&['델라라나','위뜨','헤지스','더일마','룩캐스트','루에브르','타낫','뷰오리','포유어아이즈온리','랙앤본','킨더살몬','던스트','에스실','넘버링','미샤','쁘렝땅','조셉앤 스테이시','렉토','럭키슈에뜨','르917 (르셉템버)','멤버스바','SHOP 아모멘토'].includes(c.name))){
+      if(!(id==='7F'&&(c.name==='바버'||c.name==='프레이트'||c.name==='보스골프'))&&!(id==='6F'&&(c.name==='브루넬로 쿠치넬리'||c.name==='라이카'||c.name==='콜렉트'||c.name==='버윅'||c.name==='CDG CDG CDG'||c.name==='투미'||c.name==='에르노'||c.name==='벨루티'||c.name==='폴스미스'))&&!(id==='8F'&&(c.name==='아크테릭스'||c.name==='브롬톤'||c.name==='스노우피크'||c.name==='가민'||c.name==='배럴'||c.name==='뉴발란스 메가숍'))&&!(id==='10F'&&(c.name==='스누피 플레이스'||c.name==='스토케'||c.name==='마이크로 킥보드'||c.name==='컴프프로'||c.name==='토박스'||c.name==='아뜰리에 슈'||c.name==='베이비 디올'||c.name==='파타고니아 키즈'||c.name===toyShop))&&!(id==='9F'&&(c.name==='몰테니&C'||c.name==='라잇나우'||c.name==='유라'||c.name==='라마르조코'||c.name==='로보락'||c.name==='TWL'||c.name==='허먼 밀러'||c.name==='USM'||c.name==='광주요'||c.name==='바카라'||c.name==='모비엘'||c.name==='밀레'))&&!popupStage&&!jewelryIsland&&!(id==='5F'&&['베네통','캐나다 구스'].includes(c.name))&&Wf>2.3&&Dp>2.8&&!(id==='2F'&&['생 로랑','불가리','보테가 베네타','헬렌카민스키','디올'].includes(c.name))&&!(id==='3F'&&['아디르','더로우','호라이즌','알라이아','분더샵 여성','바쉐론 콘스탄틴','릭오웬스','오데마피게','로에베','몽블랑','발렌티노','브레게','프레드','부쉐론','끌로에','아크리스','블랑팡'].includes(c.name))&&!(id==='4F'&&['토리버치','A.P.C.','포르테 포르테','N°21','메종 키츠네','레페토','폴로 랄프 로렌','샤넬 슈 부틱','루이비통','지안비토로시','린드버그'].includes(c.name))&&!(id==='5F'&&['델라라나','위뜨','헤지스','더일마','룩캐스트','루에브르','타낫','뷰오리','포유어아이즈온리','랙앤본','킨더살몬','던스트','에스실','넘버링','미샤','쁘렝땅','조셉앤 스테이시','렉토','럭키슈에뜨','르917 (르셉템버)','멤버스바','SHOP 아모멘토'].includes(c.name))){
         const cw=Math.min(1.4,Wf*.23),a=Wf*.76,b=Dp*.78;
         fb(a,b,cw,.55,y,.93,palette.wall,{solid:true});
         fb(a,b,cw+.04,.59,y+.93,.045,{color:palette.trim,gloss:.5});

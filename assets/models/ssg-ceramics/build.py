@@ -9,6 +9,12 @@ OUT = Path(__file__).resolve().parent
 bpy.ops.wm.read_factory_settings(use_empty=True)
 bpy.context.preferences.filepaths.save_version = 0
 bpy.context.scene.unit_settings.system = 'METRIC'
+import sys
+sys.dont_write_bytecode=True
+sys.path.insert(0,str(OUT))
+import finishes
+import craft
+images=finishes.generate()
 collection = bpy.data.collections.new('SSG_9F_Kwangjuyo')
 bpy.context.scene.collection.children.link(collection)
 
@@ -53,6 +59,18 @@ warm = surface('빛받은 적갈색','D9A891','Glaze',.22)
 stone = surface('진열대 받침','E3CCB7','Fixture',.48)
 light = surface('선반 하부 등','FFF1D7','Fixture',.48)
 
+craft_mat=surface('옻칠·태토·목공·금속의 표면','FFFFFF','Glaze',.33)
+finishes.shader(craft_mat,images)
+branch=surface('꽃병 가지','665646','Fixture',.56)
+mist=surface('전시 녹엽','788151','Fixture',.59)
+petal=surface('옅은 꽃잎','E1D5B4','Fixture',.62)
+glass=surface('매입장 유리볼','FFFFFF','ColoredGlass',.18)
+glass.blend_method='BLEND';glass.show_transparent_back=False;glass.use_backface_culling=True
+vc=glass.node_tree.nodes.new('ShaderNodeVertexColor');vc.layer_name='GlassColour'
+p=glass.node_tree.nodes['Principled BSDF']
+glass.node_tree.links.new(vc.outputs['Color'],p.inputs['Base Color'])
+glass.node_tree.links.new(vc.outputs['Alpha'],p.inputs['Alpha'])
+
 def block(name,x,y,z,w,d,h,m,corner=.007):
     # Rounded plan with narrow, chamfered top and bottom arrises.
     verts=[]; faces=[]
@@ -91,63 +109,8 @@ def shade(obj,colors):
         node.layer_name='Tint'
         mat.node_tree.links.new(node.outputs['Color'],mat.node_tree.nodes.get('Principled BSDF').inputs['Base Color'])
 
-def lathe(name,pos,profile,n,shape,paint,tilt=0):
-    # Explicit inside return, lip and recessed foot; point colors follow the glaze.
-    verts=[]; colors=[]; faces=[]
-    for row,(r,h) in enumerate(profile):
-        for i in range(n):
-            a=2*pi*i/n
-            radius,height=shape(r,h,a)
-            verts.append((radius*cos(a),radius*sin(a),height))
-            rgb,gain=paint(row,r,h,a)
-            # A soft light-box reflection turns with each individual pot.
-            phase=cos(a+1.95)
-            pool=.045*max(0,phase)**18 + .028*max(0,cos(a+.65))**24
-            gain*=.82+.13*cos(a+1.7)+.05*cos(2*a+.6)
-            colors.append(tuple(min(1,c*gain+pool) for c in rgb.diffuse_color[:3])+(1,))
-    for k in range(len(profile)-1):
-        for i in range(n):
-            j=(i+1)%n
-            faces.append((k*n+i,k*n+j,(k+1)*n+j,(k+1)*n+i))
-    faces.extend([tuple(reversed(range(n))),tuple(range((len(profile)-1)*n,len(profile)*n))])
-    obj=mesh(name,verts,faces,white,True)
-    obj.location=pos
-    obj.rotation_euler.x=radians(tilt)
-    shade(obj,colors)
-    return obj
-
-def dish(kind,x,y,z,tilt=0):
-    folded=kind=='접이'; melon=kind=='참외'
-    r=.085 if folded else .095 if melon else .12
-    h=.038 if folded else .026 if melon else .041
-    profile=[(.05,.08),(.34,.08),(.35,0),(.43,0),(.45,.12),(.58,.18),(.76,.44),(.93,.80),(1,.97),(.996,1),(.976,.995),(.90,.82),(.72,.53),(.49,.28),(.24,.22),(.025,.22)]
-    def shape(rad,height,a):
-        crease=max(0,cos((4 if folded else 8)*a))**12 if folded or melon else 0
-        return r*rad*(1-crease*rad**2*(.075 if folded else .045)), h*(height-.105*crease*rad**3)
-    def paint(row,rad,height,a):
-        m=(raw if row<8 else green) if folded else white
-        crease=max(0,cos((4 if folded else 8)*a))**12 if folded or melon else 0
-        return m, (.70+.25*rad+.13*height-.18*crease*rad+.08*cos(a-.9))*(.73 if row<8 else 1)
-    return lathe({'접이':'청자 네 쪽 접이 접시','참외':'미각 설빛 참외형접시','선':'선 오목 접시'}[kind],(x,y,z),profile,48 if melon else 32,shape,paint,tilt)
-
-def jar(x,y,z,h,split=False):
-    profile=[(.04,.02),(.32,.02),(.32,0),(.39,0),(.40,.04),(.47,.10),(.64,.19),(.84,.33),(.96,.45),(1,.57),(.98,.68),(.91,.78),(.78,.87),(.60,.94),(.44,.97),(.46,.989),(.46,1),(.40,1),(.39,.973),(.41,.94),(.63,.88),(.77,.76),(.82,.57),(.64,.30),(.1,.15)]
-    def paint(row,r,v,a):
-        m=moon
-        if split:
-            m=ink if v<.33 else warm if v<.58 else white
-        return m, (.89+.11*cos(a+1)*sin(pi*v)+.04*sin(2*pi*v))*(.65 if row>18 else 1)
-    return lathe('하단 이색 항아리' if split else '월백 원호',(x,y,z),profile,32,
-                 lambda r,v,a:(r*h*.49*(1+.008*sin(3*a+v)),v*h),paint)
-
-def apple(x,y,z):
-    # Two editable halves with matching gadroons and a short upright stem.
-    steps=[[(.10,.006),(.45,.008),(.63,.08),(.84,.20),(.99,.38),(1,.49),(.97,.51),(.91,.49),(.85,.40),(.66,.19),(.10,.13)],
-           [(.12,.50),(.93,.50),(.99,.515),(.99,.62),(.89,.77),(.73,.89),(.52,.97),(.30,1),(.16,.965),(.09,.96)]]
-    for name,profile in zip(['미각 사과형 합 몸체','미각 사과형 합 뚜껑'],steps):
-        lathe(name,(x,y,z),profile,64,lambda r,h,a:(.069*r*(1-.082*max(0,cos(16*a))**3),.104*h),
-              lambda row,r,h,a:(white,.96-.16*max(0,cos(16*a))**4*r+.04*cos(a)))
-    bar('사과 꼭지',(x,y,z+.099),(x+.003,y,z+.119),.0045,white)
+shop=craft.Shop(mesh,block,bar,craft_mat,stone,branch,mist,petal,glass)
+dish,apple=shop.dish,shop.apple
 
 # Recessed pillar and its three warm-edged shelves; the low bronze framed return
 # projects beyond the pillar, like the manufacturer's Gangnam opening photograph.
@@ -189,13 +152,15 @@ block('청동 바닥 몰딩',-.60,-.50,.142,1.78,.68,.026,bronze,.13)
 for a in [-1.42,.22]:
     for b in [-.77,-.24]:
         block('개방형 진열장 기둥',a,b,.166,.032,.032,.815,bronze)
-for z in [.58,.952]:
-    block('청동 선반틀',-.60,-.50,z,1.74,.62,.028,bronze,.07)
-    block('미색 진열 선반',-.60,-.50,z+.028,1.68,.57,.013,cream,.066)
-jar(-1.04,-.53,.168,.32,True)
-jar(-.59,-.51,.168,.375,True)
-block('원호 받침',-.09,-.50,.168,.32,.32,.12,stone,.018)
-jar(-.09,-.50,.288,.25)
+# The full counter bridges the low return. Below it the angled cutlery
+# boards stop short of the separate vase on its square pedestal.
+block('중단 청동 선반틀',-.804,-.50,.58,1.306,.62,.028,bronze,.055)
+block('중단 미색 선반',-.804,-.50,.608,1.261,.57,.013,cream,.049)
+shop.clear_counter(-.6,-.50,.952,1.74,.62,bronze)
+shop.jar(-1.13,-.526,.168,.30,1)
+shop.jar(-.693,-.515,.168,.40,2)
+block('화병 받침',.030,-.513,.168,.276,.286,.242,stone,.010)
+shop.plant(.030,-.513,.410)
 # Display the folded lips face-on, on discreet angled metal supports.
 def soft_contact(x,y,z,w,d,base=cream):
     verts=[(x,y,z)]
@@ -219,20 +184,19 @@ def standing(kind,x,y,z):
         bar('접시대 발',(x,y+.034,z+.003),(x+side*radius*.48,y-.028,z+.003),.003,bronze)
     dish(kind,x,y,z+radius*.97,73)
 
-for i in range(7):
-    obj=dish('참외' if i%2 else '선',-1.28+i*.075,-.49,.621+(.092 if i%2 else .117),75)
-    obj.rotation_euler.z=radians(54)
-for a in [-.49,-.22,.05]:
-    dish('접이',a,-.53,.621)
-for i,a in enumerate([-1.06,-.66,-.26]):
-    soft_contact(a,-.54,.9937,.090,.065)
-    apple(a,-.54,.993)
-dish('참외',.04,-.54,.993)
-for x,k in [(-1.15,'선'),(-.84,'접이'),(-.53,'참외')]:
-    standing(k,x,0,1.162)
-for i,x in enumerate([-1.16,-.82,-.48]):
-    soft_contact(x,-.036,1.5727,.085,.065)
-    dish('접이',x,-.036,1.572)
+shop.cutlery(-1.091,-.510,.621,0)
+shop.cutlery(-.520,-.510,.621,1)
+# The red panel rests on the counter in the branch photograph. No offer or
+# date is legible, so retain the red stock and the small dark folded base.
+block('붉은 안내지 받침',-.23,-.37,.979,.167,.061,.009,ribbon,.002)
+panel=block('탁상 적색 안내지',0,0,0,.159,.008,.162,red,.002)
+panel.rotation_euler.x=radians(-9);panel.location=(-.23,-.372,.986)
+for x in [-1.16,-.82,-.48]:
+    soft_contact(x,-.023,1.1627,.083,.058)
+    dish('참외',x,-.03,1.162)
+for i,(x,rgb) in enumerate([(-1.16,(.23,.35,.47)),(-.82,(.81,.42,.25)),(-.48,(.39,.17,.20))]):
+    soft_contact(x,-.034,1.5727,.073,.053)
+    shop.bowl(x,-.034,1.572,rgb)
 # Side credenza with rounded front corners and open bronze uprights.
 sx=1.17
 block('하부 걸레받이',sx,-.04,.015,1.62,.66,.095,bronze,.115)
@@ -248,11 +212,17 @@ for z in [1.26,1.72]:
     block('선반 깔판',sx,-.02,z+.028,1.58,.42,.013,cream,.047)
 for a in [.64,1.14,1.67]:
     standing('선',a,.016,1.761)
-    dish('참외',a,-.035,1.301)
+    dish('참외',a,.062,1.301)
 for i,k in enumerate(['접이','선','참외']):
     a=.67+i*.48
     standing(k,a,.105,.86)
     dish(k,a,-.20,.86)
+# The catalogue's lidded Mi-gak apple and four-pinched celadon share the
+# customer-facing side cabinet while the central return presents cutlery.
+for x in [.71,1.59]:
+    apple(x,-.117,1.301)
+shop.cup(1.13,-.119,1.301)
+shop.cup(.813,-.182,.86)
 # Lettering on pillar crown, sized for the play camera. Bfont is built in.
 font=bpy.data.curves.new('광주요 영문 명판','FONT')
 font.body='KWANGJUYO'; font.size=.133; font.align_x='CENTER'
