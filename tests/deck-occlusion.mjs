@@ -29,3 +29,22 @@ diagonal.register({poly:[[-5,-5],[5,-5],[5,5],[1,5],[0,4],[-5,0]],y:0,eyeMin:0.1
 eye.position.set(0,2,-2);diagonal.update(eye);
 assert.ok(diagonal.hides(box(-2.6,-.1,.1,-2.4,-.09,.3)),'inside the AABB of a slanted boundary, outside the segment');
 console.log('OK opaque floors and ceilings, holes, silhouette edges, partial overlaps, concave notch and return');
+
+const wall=createDeckVisibility(), footprint=rect(-6,-3,6,6);
+wall.registerWall({a:[-2,2],b:[2,2],y0:0,y1:3,eyePoly:footprint,eyeMin:.1,eyeMax:3});
+eye.position.set(0,1.5,0);wall.update(eye);
+assert.ok(wall.hides(box(-1,.3,4,1,2.7,5)));
+assert.equal(wall.hides(box(-1,.3,1.9,1,2.7,5)),false,'intersects wall');
+assert.equal(wall.hides(box(1,.3,3.95,4,2.7,5)),false,'exposed at right edge');
+assert.equal(wall.hides(box(-1,.3,3.8,1,4.5,5)),false,'visible above the wall');
+assert.equal(wall.hides(box(-1,-1.5,3.9,1,2,5)),false,'visible below the wall');
+eye.position.set(0,1.5,4);wall.update(eye);
+assert.ok(wall.hides(box(-1,.3,-2,1,2.7,-1)),'back face');
+eye.position.set(8,1.5,0);wall.update(eye);assert.equal(wall.active,false);
+eye.position.set(0,8,0);wall.update(eye);assert.equal(wall.active,false);
+const angled=createDeckVisibility();
+angled.registerWall({a:[2,-2],b:[-2,2],y0:0,y1:3,eyePoly:footprint,eyeMin:.1,eyeMax:3});
+eye.position.set(-2,1.5,-2);angled.update(eye);
+assert.ok(angled.hides(box(.3,.8,.6,1.1,2.45,1.6)));
+assert.equal(angled.hides(box(-.1,.8,-.1,1.1,2.45,1.6)),false,'one corner before a diagonal wall');
+console.log('OK opaque wall sides, partial coverage, edge heights, room bounds and diagonal normals');

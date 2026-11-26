@@ -66,12 +66,17 @@ try{
   assert.ok(mirrorChange>4,'parallax in the middle mirror '+mirrorChange);
   await pose(2.69,2.26,2.63,1.19);await walk(2.63,1.19);await walk(.65,1.19);await walk(.53,1.52);await walk(-.36,1.58);await walk(-2.64,1.58);await walk(-2.65,-1.24);const hall=await here();
   assert.equal(hall[3],'파미에스테이션 동관');
-  const pairs=[];
+  const pairs=[],walls=[];
   for(const [label,x,d,tx,td,pitch] of [['hall',-2.63,-1.31,-2.64,.51,.17],['dining',-.22,2.37,1.42,2.54,-.31],['dish',.85,1.47,1.17,2.35,-.89],['ceiling',-.01,1.07,-.22,2.77,.61],['mirror',-2.42,4.38,-.16,5.73,.12],['facade',-3.40,-3.65,-1.12,3.10,0]]){
-    await pose(x,d,tx,td,pitch);const row=await page.evaluate(compareDeckFrame);assert.equal(row.different,0,label+' occlusion changed RGB');pairs.push([label,row.before,row.after]);
+    await pose(x,d,tx,td,pitch);
+    const row=await page.evaluate(compareDeckFrame);assert.equal(row.different,0,label+' occlusion changed RGB');pairs.push([label,row.before,row.after]);
+    const wall=await page.evaluate(compareDeckFrame,'walls');assert.equal(wall.different,0,label+' wall occlusion changed RGB');walls.push([label,wall.before,wall.after]);
   }
   assert.ok(pairs.some(([,a,b])=>a[1]>b[1]));
+  assert.deepEqual(walls[0][1],walls[0][2],'open public gallery keeps its whole view');
+  assert.deepEqual(walls.at(-1)[1],walls.at(-1)[2],'exterior facade keeps its whole view');
+  assert.ok(walls.find(([name])=>name==='mirror')[1][1]>walls.find(([name])=>name==='mirror')[2][1]);
   assert.deepEqual(errors,[]);assert.equal(new Set(files).size,files.length);
   for(const key of Object.keys(parts))assert.ok(files.includes(key==='mirrors'?'reflections.webp':key+'.glb'),key);
-  assert.ok(files.includes('room-light.webp'));console.log(JSON.stringify({entrance,aisle,hall,stone,mirrorChange,files,pairs}));
+  assert.ok(files.includes('room-light.webp'));console.log(JSON.stringify({entrance,aisle,hall,stone,mirrorChange,files,pairs,walls}));
 }finally{await browser.close();await new Promise(r=>server.close(r));}

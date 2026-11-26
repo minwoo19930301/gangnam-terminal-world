@@ -64,6 +64,12 @@ export function placeYogurtWorld(K,P,rotation,y){
   const [ox,oz]=W(0,0),co=Math.cos(angle),si=Math.sin(angle);
   const local=(px,pz)=>[(px-ox)*co-(pz-oz)*si,(px-ox)*si+(pz-oz)*co];
   const wall=(a,b,c,d,bottom,top,r=.024)=>K.phys.addWall(...W(a,b),...W(c,d),y+bottom,y+top,r,'gotomall');
+  // The long south window faces the accessible WC path. Only its solid sill occludes the view.
+  const eyePoly=rect(-2.13,.04,2.12,6.11);
+  for(const [a,b,top] of [[W(-2.186,.04),W(-2.186,6.15),2.77],
+    [W(-2.15,6.165),W(2.16,6.165),2.77],[W(2.178,.04),W(2.178,6.14),.79]]){
+    K.occludingWall({a,b,y0:y+.07,y1:y+top,eyePoly,eyeMin:y+.08,eyeMax:y+2.75});
+  }
   const solid=(a,b,c,d,h)=>K.phys.addPolyWalls(rect(a,b,c,d),y,y+h,.018,'gotomall');
   wall(-2.186,.02,-2.186,6.16,0,2.81);wall(-2.186,6.16,2.178,6.16,0,2.81);wall(2.178,.09,2.178,6.16,0,2.81);
   for(const [p,q] of [[outline[2],outline[3]],[outline[3],outline[4]],[outline[4],outline[5]],[[2.22,6.16],outline[2]]])wall(...p,...q,0,2.81);

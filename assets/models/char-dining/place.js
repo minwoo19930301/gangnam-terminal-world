@@ -27,6 +27,11 @@ export function placeCharDining(K,P,orientation){
   const [ox,oz]=W(0,0),co=Math.cos(angle),si=Math.sin(angle);
   const local=(x,z)=>[(x-ox)*co-(z-oz)*si,(x-ox)*si+(z-oz)*co];
   const sees=(x,z)=>{const [sx,sd]=local(x,z);return sd<bay.depth+.012&&sx>-6.13&&(sd<0||sx<6.17);};
+  // Only the rear and west faces are opaque. The east side and the gallery front are open.
+  const eyePoly=rect(-6.08,.04,6.09,5.86),eyeMin=base+.08,eyeMax=base+3.36;
+  for(const [a,b] of [[W(-6.09,5.90),W(6.09,5.90)],[W(-6.11,.04),W(-6.11,5.90)]]){
+    K.occludingWall({a,b,y0:base+.06,y1:base+3.39,eyePoly,eyeMin,eyeMax});
+  }
   const block=(x,d,w,length,height)=>K.phys.addPolyWalls(rect(x-w/2,d-length/2,x+w/2,d+length/2),base,base+height,.018,'famille');
   for(const [x,d] of tables){
     block(x,d,1.56,.812,.781);block(x,d+.648,1.55,.476,1.09);

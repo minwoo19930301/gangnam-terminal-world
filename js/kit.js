@@ -1286,6 +1286,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     triangle: (mat, points, normal, uv) => tri(spec(mat), points, normal, uv),
     pointInPoly, polyBBox, polyArea, orient,
     occludingSlab: options => deckVisibility?.register(options),
+    occludingWall: options => deckVisibility?.registerWall(options),
     // internals for engine
     _: { bounce, cull, cullList, deckVisibility, finalize, details, detailErrors, ensureDetail, buildAllDetail, frameFns, interactables, spawns, zonesList, elevators, claims, mapMarks, groundHoles, stats, atlas, trees, people, setCurrent: (id, meta) => { current = id; if (meta) perPlace[id] = meta; } },
   };
