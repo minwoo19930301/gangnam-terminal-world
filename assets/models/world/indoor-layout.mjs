@@ -184,6 +184,8 @@ const sources = [
     const name='더 마고 그릴 · '+label;
     return ['jwmarriott','7F','margaux-cellar/cellar.blend',name,name];
   }),
+  ['famille','1F','famille-shopfront/shopfront.blend','파미에 식당가 · 접이식 격자창과 점포 띠','FamilleShopfrontBay'],
+  ['famille','1F','famille-shopfront/shopfront.blend','파미에 식당가 · 석재 덧기둥','FamilleLimestonePier'],
   ...await retailSources(),
   ['gyeongbu','1F','gyeongbu-ticket-office/gyeongbu-ticket-office.blend','경부선 · 통합매표소','TicketOffice','Glass','Lit'],
   ...['노란 아치와 침대','베개 진열대','물병과 도시락'].map(label=>{

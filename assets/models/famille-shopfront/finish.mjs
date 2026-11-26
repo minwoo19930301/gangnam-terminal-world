@@ -1,0 +1,10 @@
+// Original finish atlas. The broad, soft arch below the casements reflects the opposite arcade.
+import sharp from 'sharp';
+const defs='<defs><linearGradient id="lite" x2=".12" y2="1" gradientUnits="objectBoundingBox"><stop stop-color="#394440"/><stop offset=".14" stop-color="#52635f"/><stop offset=".18" stop-color="#384b4b"/><stop offset=".70" stop-color="#273739"/><stop offset="1" stop-color="#34434a"/></linearGradient><linearGradient id="bronze" x2=".04" y2="1"><stop stop-color="#6e675b"/><stop offset=".17" stop-color="#989181"/><stop offset=".52" stop-color="#7f7a70"/><stop offset="1" stop-color="#494b46"/></linearGradient><linearGradient id="sheen"><stop stop-color="#d3c4a8" stop-opacity=".06"/><stop offset=".6" stop-color="#ceb999" stop-opacity=".25"/><stop offset="1" stop-color="#e1d5ba" stop-opacity=".05"/></linearGradient></defs>';
+const lines=[];
+let seed=519;const rand=()=>((seed=(1664525*seed+1013904223)>>>0)/4294967296);
+for(let i=0;i<7800;i++){const x=rand()*256,y=rand()*256,r=.2+rand()*.65;lines.push('<circle cx="'+x+'" cy="'+y+'" r="'+r+'" opacity=".18" fill="'+(i%2?'#998c77':'#fff6db')+'"/>');}
+const svg='<svg xmlns="http://www.w3.org/2000/svg" width="768" height="256">'+defs+'<rect width="256" height="256" fill="#e5ddcd"/>'+lines.join('')+
+ '<rect x="256" width="256" height="256" fill="url(#lite)"/><path d="M258 25 L509 7 V15 L258 40Z" fill="#c1bb9f" opacity=".48"/><path d="M260 61 Q377 23 510 133 L510 144 Q375 36 260 74Z" fill="#91a49b" opacity=".27"/><path d="M325 256 L344 0 H348 L333 256Z M431 256 L438 0 H440 L436 256Z" fill="#262f31" opacity=".62"/><path d="M257 202 L509 148 V159 L257 215Z" fill="#979d87" opacity=".17"/>'+
+ '<rect x="512" width="256" height="256" fill="url(#bronze)"/><path d="M512 247 Q563 11 663 6 T768 48 V75 Q678 10 628 41 T521 251Z" fill="url(#sheen)"/><path d="M516 252 Q584 14 678 16 T768 69" fill="none" stroke="#5b564f" stroke-width="5" opacity=".30"/><rect x="6" y="233" width="38" height="18" fill="white"/></svg>';
+await sharp(Buffer.from(svg)).jpeg({quality:92,chromaSubsampling:'4:4:4'}).toFile(new URL('./finishes.jpg',import.meta.url).pathname);
