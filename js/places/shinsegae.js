@@ -1,6 +1,15 @@
 import { loadArchitecture, fitArchitecture } from '../../assets/models/architectural-retail/place.js';
 import { displays as upperFloorDisplays } from '../../assets/models/shinsegae/displays.js';
-const wallArchitecture=await loadArchitecture('shinsegae-walls.glb');
+import { loadArchitecture as loadFinish, placeArchitecture as placeFinish } from '../../assets/models/interior-architecture/model.js';
+
+const finishURL = name => new URL(`../../assets/models/upper-retail-finish/${name}.glb`, import.meta.url);
+const [wallArchitecture, warmSlot, warmPinspot, cellBlade, coolBatten] = await Promise.all([
+  loadArchitecture('shinsegae-walls.glb'),
+  loadFinish(finishURL('warm-slot')),
+  loadFinish(finishURL('warm-pinspot')),
+  loadFinish(finishURL('cell-blade')),
+  loadFinish(finishURL('cool-batten')),
+]);
 
 // 신세계백화점 강남점 — detailed place module (B2 주차장 ~ 11F 식당가 + 1M 메자닌 + J1 지하 연결통로)
 // Exterior: 2026 north/corner roadview towers and glazing; 2025 entrance and east parking.
@@ -6325,6 +6334,10 @@ export function build(K) {
   function upperCyl(u,v,yy,r,h,mat,solid=false) {
     const [x,z]=P(u,v);K.cyl({x,z,y:yy,r,h,mat,solid,seg:10});
   }
+  function finishPose(u, v, y, rotation = RA, length = 1) {
+    const [x, z] = P(u, v);
+    return [x, y, z, rotation, length];
+  }
   function upperRetailCeiling(id,y) {
     const v0=UPPER.has(id)?VS+.2:.2, yy=y+3.2;
     const omissions=[photoAtrium(id),upperPhysicalWell(id,true),bridgeLobby(id),...activeCores(id).map(c=>[c.uL,c.v0,c.uR,c.v1]),[23,0,44,9]];
@@ -6341,13 +6354,22 @@ export function build(K) {
       if(omissions.some(r=>inR(u,v,r,.65)))continue;
       hq(u-.28,v-.28,u+.88,v+.88,yy+.23,(Math.round(u*5+v*5)%3)?0x434446:0x191b1d,false);
     }
-    for(let v=v0;v<VD-.2;v+=.6)for(const[a,b]of runs(.2,UW-.2,v,true))box((a+b)/2,v,b-a,.035,yy,.22,0x2f3234,{solid:false});
-    for(let u=.2;u<UW-.2;u+=.6)for(const[a,b]of runs(v0,VD-.2,u,false))box(u,(a+b)/2,.035,b-a,yy,.22,0x2f3234,{solid:false});
-    for(let u=2;u<UW-1;u+=3)for(let v=v0+1.8;v<VD-1;v+=3.6){
-      if(omissions.some(r=>inR(u,v,r,.8)))continue;
-      box(u,v,.075,1.17,yy+.06,.05,{tex:'emit',color:0xf0f5ff},{solid:false});
-      box(u+.10,v,.045,1.18,yy+.05,.10,0xd5d9da,{solid:false});
+    const blades = [], battens = [];
+    for (let v = v0; v < VD - .2; v += .6) {
+      for (const [a, b] of runs(.2, UW - .2, v, true)) {
+        blades.push(finishPose((a + b) / 2, v, yy, RA, b - a));
+      }
     }
+    for (let u = .2; u < UW - .2; u += .6) {
+      for (const [a, b] of runs(v0, VD - .2, u, false)) {
+        blades.push(finishPose(u, (a + b) / 2, yy, RA + PI / 2, b - a));
+      }
+    }
+    for (let u = 2; u < UW - 1; u += 3) for (let v = v0 + 1.8; v < VD - 1; v += 3.6) {
+      if (!omissions.some(r => inR(u, v, r, .8))) battens.push(finishPose(u, v, yy));
+    }
+    placeFinish(K, cellBlade, '신세계 8층 절곡 블레이드', blades);
+    placeFinish(K, coolBatten, '신세계 8층 선형 조명', battens);
   }
   function winterCoat(u,v,y,color=0xc4c4bf,front='N',scale=1) {
     const sw=front==='E'||front==='W',b=(a,c,w,d,h,hh,m)=>box(u+(sw?c:a),v+(sw?a:c),sw?d:w,sw?w:d,y+h,hh,m,{solid:false});
@@ -16298,14 +16320,14 @@ export function build(K) {
     }
     // Slab underside already supplies the uninterrupted white ceiling. Long
     // recessed black slots and warm pin lights follow only the actual whitespace.
+    const slots = [], pinspots = [];
     for(let u=2;id!=='8F'&&u<66;u+=3.5)for(let v=id==='11F'?49:2;v<84;v+=4.2){
       if(!aisle(u,v,.15)||(rectoPanel&&intersects([u-.25,v-1,u+.65,v+1],rectoPanel)))continue;
-      if(aisle(u,v-.85,.1)&&aisle(u,v+.85,.1)){
-        box(u,v,.09,1.8,ceiling,.065,0x252a28,{solid:false});
-        box(u+.32,v,.025,1.68,ceiling-.025,.025,{tex:'emit',color:0xffefd6},{solid:false});
-      }
-      downlight(u+.45,v,ceiling-.02,.09);
+      if (aisle(u, v - .85, .1) && aisle(u, v + .85, .1)) slots.push(finishPose(u, v, ceiling));
+      pinspots.push(finishPose(u + .45, v, ceiling - .04));
     }
+    if (slots.length) placeFinish(K, warmSlot, `신세계 ${id} 매입 슬롯`, slots);
+    if (pinspots.length) placeFinish(K, warmPinspot, `신세계 ${id} 다운라이트`, pinspots);
     // Estimate corridor area from the guide's unoccupied 1m cells. Density is
     // one person/25m², with entrances, lift lobbies and escalator landings clear.
     const candidates=[];

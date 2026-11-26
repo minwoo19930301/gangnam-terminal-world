@@ -7,7 +7,10 @@ import { fixtures } from '../../assets/models/jwmarriott/fixtures.js';
 // The hotel retains its tower, documented southern entrance and upper hotel floors.
 // Podium 1F–6F over the whole footprint, 7F = podium roof (JW 가든 + 더 마고 그릴 / 모보 바 pavilion),
 // tower 8F (체크인 로비 · 더 라운지) – 33F (펜트하우스), crown to 144 m (= OSM height).
-const lobbyCoffer = await loadArchitecture('hotel-lattice.glb');
+const [lobbyCoffer, arrivalPendant] = await Promise.all([
+  loadArchitecture('hotel-lattice.glb'),
+  loadArchitecture('../interior-finish/hotel-pendant.glb'),
+]);
 
 export const meta = {
   id: 'jwmarriott',
@@ -2587,9 +2590,9 @@ export function build(K) {
     // Arrival lounge occupies the raised entrance gallery. Screen the salons
     // on the inner axis and leave room to pass the artwork on either side.
     const lounge=[u-7,v-.45,u+7,facade+.04], walnut=0x342823;
-    const ceiling=deck+8.6;
+    const ceiling=deck+8.6, ceilingThickness=.30;
     SLAB(lounge,deck+.025,{mat:{tex:'marble',color:0x484039},thick:.20});
-    SLAB(lounge,ceiling,{mat:walnut,under:walnut,walk:false});
+    SLAB(lounge,ceiling,{mat:walnut,under:walnut,thick:ceilingThickness,walk:false});
     for (const side of [-1,1]) {
       WL(u+side*7,v-.45,u+side*7,facade,deck,ceiling,{mat:walnut,openings:side>0?[{at:8.45,w:3.5,y0:deck,y1:deck+4}]:[]});
       SOFA(u+side*5.55,v+4.8,deck+.05,2.4,side>0?'W':'E',0x795b49);
@@ -2621,16 +2624,9 @@ export function build(K) {
     }
     B({u,v:v+2.35,y:deck+.03,w:4.3,d:.18,h:3.87,mat:walnut});
     ZN('JW 메리어트 현관 라운지','3F','조형물 · 샹들리에 · 백화점 연결',lounge,deck-.12,ceiling,22);
-    // Suspended strands leave the entrance sightline and walking headroom clear.
-    const crown=ceiling-.1;
-    B({u,v:v+4.2,y:crown-.10,w:2.85,d:2.1,h:.10,mat:'jwWalnut',solid:false});
-    for(let i=0;i<20;i++){
-      const angle=i*Math.PI/10, cu=u+1.28*Math.cos(angle), cv=v+4.2+.88*Math.sin(angle);
-      const drop=2.1+1.05*(1+Math.sin(2*angle))/2;
-      ROD([cu,crown,cv],[cu,crown-drop,cv],.014,BRONZE);
-      const [x,z]=P(cu,cv);
-      K.dome({x,z,y:crown-drop-.11,rx:.10,ry:.17,rz:.10,seg:8,rings:4,hemi:false,mat:{tex:'emit',color:i%3?0xffefd6:0xefcb88}});
-    }
+    const [pendantX, pendantZ] = P(u, v + 4.2);
+    placeArchitecture(baseKit, arrivalPendant, 'JW 현관 유리 드롭 샹들리에',
+      [[pendantX, ceiling - ceilingThickness, pendantZ, R]]);
     SG('신세계백화점 2층 연결통로 →',{u,v:v+.6,y:deck+2.28,w:2.7,h:.32,f:'S',bg:'#49392f',fg:'#fff1d8'});
 
     // The lower route turns into its own department-store passage behind

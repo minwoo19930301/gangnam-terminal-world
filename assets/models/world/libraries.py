@@ -7,6 +7,10 @@ from mathutils import Vector
 
 
 SHELVES = {
+    "upper-retail-finish": "신세계 상층 천장 마감",
+    "interior-finish": "JW 현관 조명·고투몰 모자",
+    "concourse-fixtures": "경부선 매표기·다이소 생활용품",
+    "newcore-floor": "뉴코아 층판·바닥 마감",
     "architectural-retail": "신세계·뉴코아·경부선 건축",
     "street-and-lift": "신호등과 승강기",
     "daiso": "다이소",
@@ -42,16 +46,39 @@ def grouped_visitors(groups):
     return list(assembled.values())
 
 
+def corners_of(group):
+    return [
+        obj.matrix_world @ Vector(corner) - group.instance_offset
+        for obj in group.all_objects
+        if obj.type in {"MESH", "CURVE", "FONT"}
+        for corner in obj.bound_box
+    ]
+
+
 def link_asset_gallery(world_dir):
-    gallery = bpy.data.scenes.new("시설 · 모델 라이브러리")
-    gallery.unit_settings.system = "METRIC"
-    gallery.world = bpy.context.scene.world
-    gallery["purpose"] = (
-        "시설별 원본 모델. 컬렉션 인스턴스의 연결 원본에서 메시와 재질을 편집할 수 있습니다."
-    )
+    gallery = bpy.data.scenes.get("시설 · 모델 라이브러리")
+    if gallery is None:
+        gallery = bpy.data.scenes.new("시설 · 모델 라이브러리")
+        gallery.unit_settings.system = "METRIC"
+        gallery.world = bpy.context.scene.world
+        gallery["purpose"] = (
+            "시설별 원본 모델. 컬렉션 인스턴스의 연결 원본에서 메시와 재질을 편집할 수 있습니다."
+        )
+    # Adding art to an edited master must preserve the artist's existing gallery
+    # and the rest of the city. Older shelves predate any source-path metadata.
+    represented = set()
     next_row = 0.0
+    for instance in gallery.objects:
+        group = instance.instance_collection
+        if group is None:
+            continue
+        for obj in group.all_objects:
+            if obj.library:
+                represented.add(Path(bpy.path.abspath(obj.library.filepath)).resolve())
+        for corner in corners_of(group):
+            next_row = min(next_row, (instance.matrix_world @ corner).y - 6.0)
     for path in sorted(world_dir.parent.glob("*/*.blend")):
-        if path.parent == world_dir:
+        if path.parent == world_dir or path.resolve() in represented:
             continue
         shelf = bpy.data.collections.new(
             SHELVES.get(path.parent.name, path.stem) + " · 모델"
@@ -83,12 +110,7 @@ def link_asset_gallery(world_dir):
         next_column = 0.0
         row_depth = 0.0
         for group in groups:
-            corners = [
-                obj.matrix_world @ Vector(corner) - group.instance_offset
-                for obj in group.all_objects
-                if obj.type in {"MESH", "CURVE", "FONT"}
-                for corner in obj.bound_box
-            ]
+            corners = corners_of(group)
             if not corners:
                 continue
             low = Vector([min(p[i] for p in corners) for i in range(3)])
@@ -103,3 +125,12 @@ def link_asset_gallery(world_dir):
             row_depth = max(row_depth, high.y - low.y)
         next_row -= row_depth + 6.0
     return gallery
+
+if __name__ == "__main__":
+    world_dir = Path(__file__).resolve().parent
+    master = world_dir / "gangnam-terminal.blend"
+    if Path(bpy.data.filepath).resolve() != master:
+        raise ValueError("Open gangnam-terminal.blend before refreshing the model library")
+    link_asset_gallery(world_dir)
+    bpy.context.preferences.filepaths.save_version = 0
+    bpy.ops.wm.save_as_mainfile(filepath=str(master), compress=True)

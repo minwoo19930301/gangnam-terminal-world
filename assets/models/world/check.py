@@ -23,7 +23,12 @@ assert set(
 for image in bpy.data.images:
     if not image.library and image.source == "FILE":
         assert image.packed_file and image.filepath.startswith("//textures/")
-assert len(gallery.objects) >= 80
+# Refresh must preserve existing placements and must not duplicate shelves.
+placements = {o.name: o.matrix_world.copy() for o in gallery.objects}
+refresh = runpy.run_path(str(here / "libraries.py"))["link_asset_gallery"]
+assert refresh(here) == gallery
+assert len(gallery.objects) == len(placements) >= 80
+assert all(o.matrix_world == placements[o.name] for o in gallery.objects)
 assert len(city.timeline_markers) == 4
 sun = city.objects["서울 태양"]
 city.frame_set(750)
