@@ -16,7 +16,7 @@ blender assets/models/banpo-apartments/banpo-apartments.blend -P assets/models/w
 | --- | --- | ---: | ---: |
 | 신반포4차 | [apt-a13790828.glb](../../re/apt-a13790828.glb) | 6,443 | 129,796 B |
 | 반포르엘 | [apt-a10023673.glb](../../re/apt-a10023673.glb) | 11,608 | 228,224 B |
-| 반포센트럴자이 또는 반센자이 | [apt-a10024913.glb](../../re/apt-a10024913.glb) | 9,640 | 210,612 B |
+| 반포센트럴자이 또는 반센자이 | [apt-a10024913.glb](../../re/apt-a10024913.glb) | 10,144 | 218,428 B |
 | 반포르엘2차 | [apt-a10023462.glb](../../re/apt-a10023462.glb) | 2,058 | 38,736 B |
 | 신반포한신2차 | [apt-a13790929.glb](../../re/apt-a13790929.glb) | 2,868 | 54,664 B |
 
@@ -102,3 +102,13 @@ node tests/apartment-ownership.mjs /path/to/seoul-real-estate-map/public/models
 [201동 보도 시점의 통합 도시 Blender 렌더](shinbanpo4-201-native.jpg) · [가까운 보도와 건너편 보도에서 본 게임 전후 비교](shinbanpo4-201.jpg) · [가까운 보도에서 보기](https://minwoo19930301.github.io/gangnam-terminal-world/#/street?p=-66.3,0.1,-179,-55.08,29) · [건너편에서 보기](https://minwoo19930301.github.io/gangnam-terminal-world/#/street?p=-78,0.1,-151,-37.55,24)
 
 같은 아파트 파일 안의 기존 외벽·창 재질을 쓴다. 동별 메시 범위와 원점, 보도 카메라 행렬을 전후 비교하면 201동의 높이와 정점 수만 바뀐다. 다른 네 단지는 기존 파일과 바이트 단위로 동일하게 다시 내보내졌다. 수정 후 단지 파일은 15,552바이트, 762삼각형 늘었고 단지 드로콜은 3회다. 헤드리스 Chromium 저화질에서 보도 두 시점의 낮·밤을 각각 90프레임씩 확인한 p95는 전후 모두 16.7~16.8ms였다.
+
+### 반포센트럴자이 101동의 옛 자이 입체 표식
+
+신반포로 보도에서 101동의 돌출된 두 면이 만나는 곳을 보면, 적갈색 세로벽 옆에 짙은 상판이 솟아 있고 흰 자이 심볼 아래에 ‘자이’가 따로 붙어 있다. 2026년 1월 거리뷰에서 확인되는 이 면만 수정했다. 101동은 네이버 지도의 동 표기와 남쪽으로 꺾인 건물 외곽을 대조했다. [네이버 거리뷰](https://map.naver.com/p?p=WXHxCkewnBuU1S6IasKpCg,-44,24,55,Float) · [OpenStreetMap 101동 외곽](https://www.openstreetmap.org/way/839649711)
+
+GS건설은 2024년에 자이 BI를 바꿨다. 이 현장 사진에 남은 구형 심볼은 2022년 한국표준협회 자료의 곡선·글자 외곽을 바탕으로 만들어 짙은 상판에 얕은 입체로 붙였다. 상판과 돌출부 치수, 적갈색 폭은 사진 비례에 따른 근사다. 낮 사진으로 전기조명 여부를 판단할 수 없어 흰 글자는 외벽과 같은 장면 조명을 받는다. [2022년 구형 로고 자료](https://www.ksa.or.kr/img/2022/pop_img11.pdf) · [GS건설의 2024년 BI 개편 발표](https://www.gsenc.com/Pr/StoryView.aspx?BbsCateId=0&BbsId=STORY&BbsInfoId=1477&BbsInfoNoticeYn=&GotoPage=7&SearchItem=&SearchWord=)
+
+[지도 도착 시점과 같은 자리에서 찍은 전후 비교](central-xi-101.jpg) · [게임 보도 시점](https://minwoo19930301.github.io/gangnam-terminal-world/#/street?p=-168.7,0.15,-86.6,34,25)
+
+5개 단지 최초 GLB의 옥상·난간 삼각면 모서리 4,833개는 모두 1mm 이내에서 일치하고, 35개 동의 지도 소속과 세 보도 카메라 행렬도 그대로다. 101동 외곽의 수평 범위는 같고, 새 상판을 포함한 모델 최고점은 98.00m에서 98.45m가 됐다. 게임에서 이 단지는 기존 3개 그리기 단위를 사용한다. 도형은 504삼각형, 파일 용량은 7,816바이트 늘었다. 지도 도착 위치와 인근 신반포로 보도에서 낮·밤 화면을 수정 전후 각각 90프레임씩 확인했다. 저화질 Chromium의 p95는 전후 16.7~16.8ms였다.

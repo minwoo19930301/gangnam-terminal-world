@@ -1,5 +1,7 @@
 """Interpret the published exterior palettes on the source tower wall planes."""
 from math import floor
+from pathlib import Path
+import json
 import struct
 import zlib
 from functools import lru_cache
@@ -196,6 +198,9 @@ def finish(obj,model_id):
         middle=obj.location+(start+end)*.5
         street_crown=(leel and abs(middle.x+115.69)<.8 and abs(middle.y-192.07)<.8
                       and 29<length<30 and normal.y<-.9)
+        xi_front=(not leel and abs(middle.x+248.4)<.65 and abs(middle.y-146.5)<.65)
+        xi_end=(not leel and abs(middle.x+236.9)<.55 and abs(middle.y-148.95)<.55
+                and 9.8<length<10.6)
         orientation=normal.x*normal.y<0
         for col in range(n):
             x0=col*bay;x1=(col+1)*bay;t=(col+.5)/n
@@ -204,6 +209,10 @@ def finish(obj,model_id):
             cobalt=.31<t<.70 if n>=4 else orientation
             salmon=(not leel and n>=4 and col==(n-1 if orientation else 0))
             shell='506B86' if leel and cobalt else 'C6D0D7' if leel else '9FAEB8' if cobalt else 'DFDCD6'
+            copper=xi_front and (obj.location+start+tangent*(x0+bay*.5)).x>-246.2
+            if copper:
+                shell='AF8D87'
+                salmon=False
             panel(x0,x1,.018,roof,.011,0,shell)
             if street_crown and t>=.31 and not cobalt:
                 panel(x0,x1,(courses-6)*rise,roof,.028,0,'516779')
@@ -223,7 +232,7 @@ def finish(obj,model_id):
                            ['496780','4C708C','486980','607789','526C7C','506C83','56748A'])[idx]
                     upper='456A91' if cobalt or upper_blue else '6B859B'
                 else:
-                    border=.23 if cobalt else .35
+                    border=.68 if copper else .23 if cobalt else .35
                     glass=['405967','4A616B','526975','415765','4A6676','566974','49606D'][idx]
                     upper='6D8390'
                 left=x0+border;right=x1-border
@@ -241,6 +250,34 @@ def finish(obj,model_id):
             if blue:
                 for row in range(1,courses):
                     panel(blue[0]*bay+.09,(blue[-1]+1)*bay-.09,row*rise+.02,row*rise+.18,.050,0,'A2B6C4')
+        if xi_end:
+            # The 2026 street photograph still shows the pre-2024 Xi symbol.
+            # Use the established exposed end wall of 101-dong only.
+            lo,hi=height-5.0,height+2.85
+            left,right=.08,length-.08
+            def point(s,d,z):
+                v=start+tangent*s+normal*d
+                return (v.x,v.y,z)
+            def solid(corners,tint):
+                face(corners,0,[colour(tint)]*len(corners))
+            outer,inner=.19,-1.22
+            corners=[point(s,d,z) for z in (lo,hi) for s,d in
+                     ((left,outer),(right,outer),(right,inner),(left,inner))]
+            for ids,tint in [((0,1,5,4),'42444B'),((1,2,6,5),'BFB5A9'),
+                             ((2,3,7,6),'A79F96'),((3,0,4,7),'CDC6BA'),
+                             ((4,5,6,7),'858789')]:
+                solid([corners[j] for j in ids],tint)
+            # The white symbol and word below it have shallow dark returns.
+            outlines=json.loads(Path(__file__).with_name('xi-legacy-mark.json').read_text())
+            width=length*.76
+            base=height-1.80
+            def letter(i,depth):
+                x,y=outlines['vertices'][i]
+                return point((length-width)*.5+x*width,depth,base+y*width)
+            for tri in outlines['triangles']:
+                solid([letter(i,.29) for i in tri],'F0ECE1')
+            for i,j in outlines['edges']:
+                solid([letter(j,.29),letter(i,.29),letter(i,outer),letter(j,outer)],'ADAEA6')
         if street_crown:
             # Recessed dark clerestory below a pale rim. Taper the returns into
             # the existing roof plane and retain the original height.
