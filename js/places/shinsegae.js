@@ -1,14 +1,16 @@
-import { loadArchitecture, fitArchitecture } from '../../assets/models/architectural-retail/place.js';
+import { mounts as facadeMounts } from '../../assets/models/shinsegae-facade/mounts.js';
+import { loadArchitecture, fitArchitecture, fitTerminalSeat as drawFacadeSign } from '../../assets/models/architectural-retail/place.js';
 import { displays as upperFloorDisplays } from '../../assets/models/shinsegae/displays.js';
 import { loadArchitecture as loadFinish, placeArchitecture as placeFinish } from '../../assets/models/interior-architecture/model.js';
 
 const finishURL = name => new URL(`../../assets/models/upper-retail-finish/${name}.glb`, import.meta.url);
-const [wallArchitecture, warmSlot, warmPinspot, cellBlade, coolBatten] = await Promise.all([
+const [wallArchitecture, warmSlot, warmPinspot, cellBlade, coolBatten, facadeSigns] = await Promise.all([
   loadArchitecture('shinsegae-walls.glb'),
   loadFinish(finishURL('warm-slot')),
   loadFinish(finishURL('warm-pinspot')),
   loadFinish(finishURL('cell-blade')),
   loadFinish(finishURL('cool-batten')),
+  loadArchitecture('../shinsegae-facade/signs.glb'),
 ]);
 
 // 신세계백화점 강남점 — detailed place module (B2 주차장 ~ 11F 식당가 + 1M 메자닌 + J1 지하 연결통로)
@@ -509,63 +511,18 @@ export function build(K) {
   }
   towerLogo('N', TOWER_W / 2, TOWERS[0][2] - 8.5);
 
-  // Simplified artwork follows the 2026 billboards' composition, with observed brand captions.
-  // The portrait and fashion figures are approximations, not copies of campaign photography.
-  K.texture('ssg_portrait_poster', 512, 768, (g, w, h) => {
-    const bg = g.createLinearGradient(0, 0, w, h);
-    bg.addColorStop(0, '#aa674c'); bg.addColorStop(0.65, '#b97c59'); bg.addColorStop(1, '#663c31');
-    g.fillStyle = bg; g.fillRect(0, 0, w, h);
-    const shape = (col, points) => {
-      g.fillStyle = col; g.beginPath(); g.moveTo(...points[0]);
-      for (const p of points.slice(1)) p.length === 6 ? g.bezierCurveTo(...p) : g.lineTo(...p);
-      g.closePath(); g.fill();
-    };
-    shape('#ece5d8', [[-30,655],[25,480,140,462,193,461],[324,453],[430,465,520,537,546,680],[546,708],[-30,708]]);
-    shape('#202329', [[60,708],[85,494],[170,459],[230,518],[315,471],[429,518],[479,708]]);
-    shape('#b88e70', [[206,385],[203,473],[252,518],[316,460],[303,376]]);
-    shape('#d7b394', [[160,180],[170,117,321,108,355,194],[369,272,355,355,312,399],[280,435,231,421,199,387],[158,333,141,239,160,180]]);
-    shape('#272724', [[153,278],[112,152,175,77,269,76],[374,67,410,180,357,279],[343,235],[322,187,293,191,262,157],[232,193,198,193,170,220]]);
-    shape('#b98e73', [[318,215],[343,254,343,341,309,375],[324,313],[314,275],[318,215]]);
-    g.strokeStyle = '#54443b'; g.lineWidth = 7; g.lineCap = 'round';
-    for (const x of [195, 286]) { g.beginPath(); g.moveTo(x, 256); g.quadraticCurveTo(x + 17, 245, x + 35, 255); g.stroke(); }
-    g.fillStyle = '#33332e';
-    for (const x of [216, 302]) { g.beginPath(); g.ellipse(x, 263, 5, 4, 0, 0, PI * 2); g.fill(); }
-    g.strokeStyle = '#ad7a61'; g.lineWidth = 4; g.beginPath(); g.moveTo(270, 266); g.lineTo(262, 316); g.lineTo(278, 320); g.stroke();
-    g.strokeStyle = '#8e6155'; g.lineWidth = 5; g.beginPath(); g.moveTo(237, 354); g.quadraticCurveTo(262, 363, 289, 349); g.stroke();
-    shape('#ddba9c', [[111,546],[157,478],[211,421],[294,401],[327,410],[317,425],[249,443],[225,464],[191,506],[159,567]]);
-    g.strokeStyle = '#bf987d'; g.lineWidth = 3;
-    for (let i = 0; i < 3; i++) { g.beginPath(); g.moveTo(210 + i * 8, 433 + i * 5); g.lineTo(298 + i * 4, 410 + i * 6); g.stroke(); }
-    g.fillStyle = '#f0eee7'; g.fillRect(0, 708, w, 60);
-    g.fillStyle = '#696861'; g.font = '32px Georgia,serif'; g.textAlign = 'center'; g.fillText('PIAGET', w / 2, 749);
-  }, [1, 1]);
-  K.texture('ssg_fashion_poster', 512, 768, (g, w, h) => {
-    g.fillStyle = '#c6cbca'; g.fillRect(0, 0, w, h);
-    for (const [x, ww, col] of [[0,92,'#8e9a98'],[105,75,'#d9dcda'],[322,110,'#a4afad'],[450,62,'#778984']]) {
-      g.fillStyle = col; g.fillRect(x, 0, ww, 708);
-    }
-    for (const [x, yy, coat, lean] of [[118,163,'#353b45',-12],[266,116,'#e2dfce',15],[402,185,'#606568',-8]]) {
-      g.strokeStyle = '#30363b'; g.lineWidth = 30; g.lineCap = 'round';
-      for (const side of [-1,1]) { g.beginPath(); g.moveTo(x + side * 18, yy + 300); g.lineTo(x + side * 28 + lean, yy + 482); g.stroke(); }
-      g.fillStyle = coat; g.beginPath(); g.moveTo(x - 51, yy + 75); g.lineTo(x + 50, yy + 75);
-      g.lineTo(x + 62 + lean, yy + 325); g.lineTo(x - 53 + lean, yy + 325); g.closePath(); g.fill();
-      g.strokeStyle = coat; g.lineWidth = 29;
-      for (const side of [-1,1]) { g.beginPath(); g.moveTo(x + side * 39, yy + 91); g.lineTo(x + side * 67 + lean, yy + 246); g.stroke(); }
-      g.fillStyle = '#c7a78f'; g.beginPath(); g.ellipse(x, yy + 31, 25, 35, 0.1, 0, PI * 2); g.fill();
-      g.fillStyle = '#3e3b37'; g.beginPath(); g.ellipse(x - 2, yy + 10, 28, 22, -0.12, PI, PI * 2); g.fill();
-      g.strokeStyle = '#7f8078'; g.lineWidth = 3; g.beginPath(); g.moveTo(x, yy + 90); g.lineTo(x + lean, yy + 313); g.stroke();
-    }
-    g.fillStyle = '#ecece6'; g.fillRect(0, 708, w, 60);
-    g.fillStyle = '#41484b'; g.font = '500 32px Arial,sans-serif'; g.textAlign = 'center'; g.fillText('CHANEL', w / 2, 749);
-  }, [1, 1]);
-  function billboard(f, c, y, w, h, artwork) {
-    faceBox(f, c, w + 0.42, 0.12, 0.18, y - 0.21, h + 0.42, 0x646660);
-    faceBox(f, c, w + 0.22, 0.23, 0.12, y - 0.11, h + 0.22, 0xd3d0c5);
-    faceQuad(artwork, f, c, y, w, h, 0.31);
+  // Both signed panels and their metal frames come from the same Blender source
+  // used by the distant exterior. X in the sign runs right from the street.
+  for (const [brand, u, bottom] of facadeMounts) {
+    drawFacadeSign(K, facadeSigns, brand, (right, up, outward) => {
+      const [x, z] = P(u - right, -outward);
+      return [x, bottom + up, z];
+    });
   }
-  billboard('N', TOWER_W / 2, 12.8, 9.1, 14.4, 'ssg_portrait_poster');
-  billboard('N', UW - TOWER_W / 2, 16.2, 9.1, 14.4, 'ssg_fashion_poster');
-  // cc_01: a narrow pale vertical banner on the west face, not a second portrait.
-  billboard('W', TOWER_W / 2, 15.3, 3, 14, 0xd9dde0);
+  // The west-facing narrow insert is a separate pale banner.
+  faceBox('W', TOWER_W / 2, 3.42, .12, .18, 15.09, 14.42, 0x646660);
+  faceBox('W', TOWER_W / 2, 3.22, .23, .12, 15.19, 14.22, 0xd3d0c5);
+  faceQuad(0xd9dde0, 'W', TOWER_W / 2, 15.3, 3, 14, .31);
 
   // ------------------------------------------------------------ entrance (2025 roadview 01/02)
   function gridCanopy(f, c, width, depth, y, paired = false, columns = true) {
