@@ -72,7 +72,9 @@ def tablet(x,d,z,size=1):
     def plane(label,w,h,front,color):
         points=[(x+ww*size,d+dd*.45+front,z+.124+(dd+h*.5)*size)
                 for ww,dd in [(-w/2,-h/2),(w/2,-h/2),(w/2,h/2),(-w/2,h/2)]]
-        m.piece(label,points,[(0,1,2,3),(3,2,1,0)],color)
+        thickness=.027 if color=='black' else .0015
+        body=points+[(px,pd+thickness,pz) for px,pd,pz in points]
+        m.piece(label,body,[(0,1,2,3),(7,6,5,4),(0,4,5,1),(1,5,6,2),(2,6,7,3),(3,7,4,0)],color)
     plane('비스듬한 예약 태블릿',.34,.22,0,'black')
     plane('밝은 등록 화면',.301,.177,-.004,'pale')
     for i,c in enumerate(['teal','red']):
@@ -335,9 +337,11 @@ def snout(x,d,z):
         verts=[pos(w,h,.018) for w,h in section]
         for n,scale in [(.0183,1),(.013,.66)]:
             verts.extend(pos(hole+.0048*scale*cos(tau*j/18),.0062*scale*sin(tau*j/18),n) for j in range(18))
-        patches=[(j,(j+1)%18,18+(j+1)%18,18+j) for j in range(18)]
-        m.piece('코끝과 콧구멍의 테',verts[:36],patches+[(d,c,b,a) for a,b,c,d in patches],'meal')
-        m.piece('오목한 콧구멍',verts[18:],patches+[(d,c,b,a) for a,b,c,d in patches]+[tuple(range(18,36))],'ginger')
+        # The (w,h) coordinate frame faces away from the snout. Wind the annulus
+        # outward and continue down each hole so Blender can edit it without duplicate faces.
+        patches=[(18+j,18+(j+1)%18,(j+1)%18,j) for j in range(18)]
+        m.piece('코끝과 콧구멍의 테',verts[:36],patches,'meal')
+        m.piece('오목한 콧구멍',verts[18:],patches+[tuple(reversed(range(18,36)))],'ginger')
 def pig(x,d,z,yaw):
     before=set(m.group.objects)
     dome=[(.036,0),(.054,.005),(.061,.011)]
