@@ -1,5 +1,8 @@
+import {damccotRoom} from '../../assets/models/damccot/room.js';
+
 // Local s is the building's long axis; each storefront opens toward the shared aisle.
 export function upperRestaurant(K, kit, spec) {
+  if(spec.name==='담꽃')return damccotRoom(K,kit,spec);
   const { P, RECT, lbox, lwall, lsign, lcyl, lzone } = kit;
   const { name, brand, s0, s1, t0, t1, face, wall, floor, sign, ink, y, level } = spec;
   const depth = s1 - s0, width = t1 - t0;
@@ -131,14 +134,6 @@ export function upperRestaurant(K, kit, spec) {
       B(depth-.22,width*.70,.59,.16,width*.49,.45,0x4e5245);
       tables(width*.48,width-.85,2.4,0xe1d8c5,0x44382f);
       pendants(depth*.42,width*.47,width-.8,0xc89e64);
-    } else if(name==='담꽃'){
-      B(depth-.31,width/2,.23,.50,width-.34,1.85,0x4e4434);
-      for(let h=.66;h<=1.88;h+=.42){
-        B(depth-.52,width/2,h,.44,width-.38,.045,wood);
-        for(let w=.52;w<width-.4;w+=.47) C(depth-.49,w,h+.06,.13,.10,0xad8f55);
-      }
-      table(.82,width*.26,wood,0x3f4742);
-      coffeeBar(depth-.85,width*.78,width*.35,0x5e4937);
     } else if(name==='아웃백 스테이크하우스'){
       for(let w=2;w<width-1;w+=4.1){
         B(depth-.98,w,.42,1.2,2.58,.15,0x985d3e);

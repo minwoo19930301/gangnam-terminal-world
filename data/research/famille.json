@@ -1,4 +1,15 @@
 {
+  "damccot_fp204_20261126": {
+    "floor": "파미에스테이션 2층 204호",
+    "operator": "https://damccot.com/shopinfo/store.html",
+    "naver": "https://map.naver.com/p/entry/place/36165988",
+    "display_photos": "https://greenstar94.tistory.com/39",
+    "dessert_photo": "https://dangit.tistory.com/39",
+    "observed": "운영사 사진에 왼쪽 다기 진열장, 오른쪽 백색 상판, 검은 곡목 의자. 현장 방문 사진에서 철망 배경과 다섯 칸 선반, 분홍·연두 보자기와 다기, 실제 아래층을 보는 창가, 밤·대추·팥이 올라간 빙수 확인.",
+    "fit": "게임 점포 6.75 × 3.40m에 축소 구성. 세부 치수, 수량, 식탁 구성과 소품 배치는 추정. 창 너머 게임에 남아 있는 기존 식당과 실제 아래층 통로의 위치 차이는 미해결.",
+    "model": "assets/models/damccot/fp204.blend",
+    "review": "assets/models/damccot/play.jpg"
+  },
   "kervan_fp216_20261126": {
     "floor": "파미에스테이션 동관 2층 216호",
     "location": "https://korean.visitseoul.net/restaurants/케르반-파미에스테이션점/KOP029995",
