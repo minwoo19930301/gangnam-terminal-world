@@ -38,13 +38,19 @@ def maps(folder):
     for key,sheet,stride in zip(['surface','metal-rough','lamp','weave-normal'],sheets,[1,4,4,4]):
         png(folder/(key+'.png'),sheet[::stride,::stride])
 
+upper='--upper' in sys.argv
+
+
 def sections(low=False):
     planks=Detail('엇갈린 참나무 판재와 집기 아래 음영')
     lights=Detail('노출 흰 천장 보·트랙과 스폿 조명')
-    floor(planks,low);ceiling(lights,low)
+    floor(planks,low,upper);ceiling(lights,low)
     return [planks,lights]
 
-save_display(directory,'oak-and-lighting','본관 1층 유니클로 · 참나무 바닥과 노출 천장','UniqloSalesFloor',{
-    'subject':'Wood floor and visible white ceiling over the public ground-floor sales area',
+destination=directory/'upstairs' if upper else directory
+destination.mkdir(exist_ok=True)
+native='유니클로 2층 · 참나무 바닥과 계단 개구부' if upper else '본관 1층 유니클로 · 참나무 바닥과 노출 천장'
+save_display(destination,'oak-and-lighting',native,'UniqloUpperSalesFloor' if upper else 'UniqloSalesFloor',{
+    'subject':'Wood floor and visible white ceiling above the upper sales area' if upper else 'Wood floor and visible white ceiling over the public ground-floor sales area',
     'references':'Customer branch photographs, May–June 2025. Interpreted materials, plank lengths and heights.'
 },maps,PALETTE,sections)

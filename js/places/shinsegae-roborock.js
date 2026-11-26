@@ -27,10 +27,10 @@ export function registerRoborock(K, {poly,x,y,z,yaw}) {
     part(cube,shell,0,.88,-.455,2.43,.285,.045);
     part(cube,rubber,.46,.99,-.145,.43,.4,.32);
     part(cube,shell,.46,1.12,-.145,.435,.3,.33);
-    for (const [cx,cz] of [[.46,.14],[-.035,.13]]) {
-      part(disk,shell,cx,.825,cz,.35,.09,.35);
-      part(disk,shell,cx,.88,cz-.021,.095,.025,.095);
-    }
+    part(disk,shell,.46,.825,.122,.35,.09,.35);
+    part(disk,shell,.46,.88,.101,.095,.025,.095);
+    part(cube,shell,-.59,.92,-.19,.409,.298,.285);
+    part(cube,rubber,-.59,.962,-.048,.395,.14,.025);
     part(disk,rubber,-.59,.88,.12,.345,.07,.345).rotation.x=-.49;
     mountRetailDisplay(K,{root,fallback,source,batches,x,y,z});
   });

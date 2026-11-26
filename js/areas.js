@@ -48,7 +48,8 @@ export function areaIdAt(zn, x, y, z) {
 }
 // Area for an address key "<place>/<floor>" (+ optional position) — used before anything is built.
 export function areaIdForKey(key, pos, META) {
-  const place = (key || '').split('/')[0];
+  const [addressPlace, floor] = (key || '').split('/');
+  const place = META[addressPlace]?.floorAliases?.[floor] ?? addressPlace;
   if (META[place] && !OUTDOOR.has(place)) return 'in:' + clusterOf(place).join('+');
   const p = pos && pos.length >= 3 ? pos : null;
   if (p) return 'out:' + districtAt(p[0], p[2]).id;

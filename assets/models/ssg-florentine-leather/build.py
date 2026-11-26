@@ -4,8 +4,11 @@ from math import sin, cos, pi, radians, copysign
 import bpy
 import numpy as np
 from mathutils import Vector, Matrix
+import sys
 
 out = Path(__file__).resolve().parent
+sys.dont_write_bytecode=True;sys.path.insert(0,str(out))
+import frontage
 bpy.ops.wm.read_factory_settings(use_empty=True)
 bpy.context.preferences.filepaths.save_version = 0
 collection = bpy.data.collections.new('SSG_6F_Berluti')
@@ -284,20 +287,8 @@ for x,y,a,hand,tint in [(-.55,-1.55,-45,1,'a26c47'),(-.40,-1.59,-50,-1,'a26c47')
     frame=place(x,y,.942,a)
     shoe(tint,hand,True)
 
-print('EDITABLE MESHES:',len(collection.objects))
+frontage.make(collection)
+print('EDITABLE MESHES:',len(collection.objects),'FRONTAGE:',sum(o.get('retailPackage')=='frontage' for o in collection.objects))
 bpy.ops.wm.save_as_mainfile(filepath=str(out/'gallery.blend'),compress=True)
-# Omit subpixel shelf stitching from the distant samples in the shipping copy.
-# The console samples and all close-up components remain editable in the library.
-for obj in list(collection.objects):
-    if obj.get('shelf_sample') and obj.name.startswith(('몸판 가장자리 봉제','손잡이 안쪽 솔기','손잡이 받침 박음질')):
-        bpy.data.objects.remove(obj,do_unlink=True)
-for mat in materials:
-    parts=[obj for obj in collection.objects if obj.data.materials[0]==mat]
-    bpy.ops.object.select_all(action='DESELECT')
-    for obj in parts:obj.select_set(True)
-    bpy.context.view_layer.objects.active=parts[0]
-    bpy.ops.object.join()
-    obj=bpy.context.object
-    obj.name=mat.name
-    bpy.ops.object.transform_apply(location=True,rotation=True,scale=True)
-bpy.ops.export_scene.gltf(filepath=str(out/'gallery.glb'),export_animations=False)
+exp=out/'export.py'
+exec(compile(exp.read_text(),str(exp),'exec'),{'__file__':str(exp)})

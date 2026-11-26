@@ -4,15 +4,33 @@ import random
 from garments import tube
 
 
-def floor(wood,low):
-    # The adjacent terminal tile sits at 0.031 m. The oak finish fits above it,
-    # including beneath the stair, and meets it at the existing glass threshold.
+# Bounds use x across the sales floor, d along it. Keep the actual game stair
+# opening out of every upper-floor plank, including its distant silhouette.
+STAIR=(-3.5,-20.5,8.5,-15.5)
+
+
+def pieces(x,d,r,e,upper):
+    if not upper:
+        yield x,d,r,e
+        return
+    left,back,right,front=STAIR
+    if r<=left or x>=right or e<=back or d>=front:
+        yield x,d,r,e
+        return
+    for q in [(x,d,min(left,r),e),(max(right,x),d,r,e),
+              (max(x,left),d,min(r,right),min(e,back)),
+              (max(x,left),max(d,front),min(r,right),e)]:
+        if q[2]-q[0]>.0001 and q[3]-q[1]>.0001:yield q
+
+
+def floor(wood,low,upper=False):
     shade=.96
-    wood.top(-6.48,-21.95,10.47,9.96,.039,0,shade if low else .77)
+    for rect in pieces(-6.48,-21.95,10.47,9.96,upper):
+        wood.top(*rect,.039,0,shade if low else .77)
     if low:
         for k in range(16):
             x=-6.42+k*1.08
-            wood.top(x,-21.94,x+.016,9.945,.041,0,.80)
+            for rect in pieces(x,-21.94,x+.016,9.945,upper):wood.top(*rect,.041,0,.80)
         return
     rng=random.Random(19455)
     half=.0024
@@ -28,14 +46,18 @@ def floor(wood,low):
             if end-d>half*2 and right-x>half*2:
                 shade=rng.uniform(.89,1.02)
                 colour=(shade,shade*rng.uniform(.95,1.0),shade*rng.uniform(.86,.95))
-                points=[(x+half,d+half,.041),(x+half,end-half,.041),(right-half,end-half,.041),(right-half,d+half,.041)]
                 def plank_tone(xx,dd,h):
                     def distance(cx,cd,rx,rd):return math.hypot(max(0,abs(xx-cx)-rx),max(0,abs(dd-cd)-rd))
                     dist=min(distance(0,0,.65,1.52),distance(-3.50,4,1.71,.36))
                     factor=1-.15*math.exp(-dist*3.1)
                     return tuple(c*factor for c in colour)
                 uvx=rng.uniform(.01,.17);uvy=rng.uniform(.02,.18);v=.35+rng.random()*.54
-                wood.face(points,0,(0,0,1),plank_tone,[(uvx,uvy),(.96,uvy),(.96,v),(uvx,v)])
+                for a,b,c,e in pieces(x+half,d+half,right-half,end-half,upper):
+                    points=[(a,b,.041),(a,e,.041),(c,e,.041),(c,b,.041)]
+                    uv=[(uvx+(.96-uvx)*(z-d-half)/(end-d-2*half),uvy+(v-uvy)*(w-x-half)/(right-x-2*half))
+                        for w,z,_ in points]
+                    if not upper:uv=[(uvx,uvy),(.96,uvy),(.96,v),(uvx,v)]
+                    wood.face(points,0,(0,0,1),plank_tone,uv)
             d=end
         x=right
 

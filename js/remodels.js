@@ -1,6 +1,7 @@
 // Apartment and neighbourhood models reused from the user's seoul-real-estate-map (js/places/_re_models.json, assets/re/*.glb,
 // made by tools/import_re_models.mjs). Exterior only: you do not walk into them; the OSM outlines they replace stay solid.
 // A light silhouette is present immediately. Detailed geometry streams when its footprint appears in the view.
+import { apartmentNight, lightApartmentWindows } from './apartment-windows.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
@@ -81,7 +82,7 @@ function estateLevels(sites) {
 // The imported apartment palette uses one Lambert material per paint colour.
 // Pack the small opaque pieces of each tower into one vertex-coloured draw,
 // preserving the geometry, vertex shades and per-footprint terrain data.
-function* batchFacadeParts(THREE, root, parts, terrain, level) {
+function* batchFacadeParts(THREE, root, parts, terrain, level, night) {
   const groups = new Map(), inverse = root.matrixWorld.clone().invert();
   for (const mesh of parts) {
     const {geometry,material} = mesh;
@@ -100,6 +101,7 @@ function* batchFacadeParts(THREE, root, parts, terrain, level) {
     const pos = new Float32Array(vertices*3), normals = new Float32Array(vertices*3);
     const colorSize = list.some(m => m.material.vertexColors && m.geometry.attributes.color?.itemSize === 4) ? 4 : 3;
     const colors = new Float32Array(vertices*colorSize);
+    const glass = list.some(m=>m.material.userData.apartmentGlass) ? new Uint8Array(vertices) : null;
     const foundation = list[0].geometry.attributes.foundationLevel ? new Float32Array(vertices) : null;
     const index = vertices > 65535 ? new Uint32Array(indexCount) : new Uint16Array(indexCount);
     const matrix = new THREE.Matrix4(), normal = new THREE.Matrix3(), v = new THREE.Vector3();
@@ -108,6 +110,7 @@ function* batchFacadeParts(THREE, root, parts, terrain, level) {
       const g = mesh.geometry, a = g.attributes, tint = mesh.material.color;
       matrix.multiplyMatrices(inverse,mesh.matrixWorld);
       normal.getNormalMatrix(matrix);
+      if(glass && mesh.material.userData.apartmentGlass) glass.fill(1,vertex,vertex+a.position.count);
       for (let i=0;i<a.position.count;i++) {
         if ((i & 1023) === 0) yield;
         const j=3*(vertex+i);
@@ -132,6 +135,10 @@ function* batchFacadeParts(THREE, root, parts, terrain, level) {
     geometry.setIndex(new THREE.BufferAttribute(index,1));
     const material = new THREE.MeshLambertMaterial({vertexColors:true,side:list[0].material.side});
     if (terrain) facadeMaterial(material,level);
+    if(glass){
+      geometry.setAttribute('apartmentGlass',new THREE.BufferAttribute(glass,1));
+      lightApartmentWindows(material,night,'batch');
+    }
     const batch = new THREE.Mesh(geometry,material);
     batch.name = 'Apartment facade';
     batch.matrixAutoUpdate = false;
@@ -169,6 +176,10 @@ export function reModelStandIns({ THREE, K, osm, scene, models, terrain = true }
   const byId = new Map(osm.buildings.map(b => [b.id, b]));
   const mat = new THREE.MeshLambertMaterial({ color: 0xd9d3c8 });
   if (terrain) facadeMaterial(mat);
+  const apartmentMat=mat.clone();
+  if(terrain)facadeMaterial(apartmentMat);
+  const night=apartmentNight(K);
+  lightApartmentWindows(apartmentMat,night,'silhouette');
   const stand = new Map();
   for (const m of models) {
     const geos = [];
@@ -195,9 +206,11 @@ export function reModelStandIns({ THREE, K, osm, scene, models, terrain = true }
       geos.push(g);
     }
     if (!geos.length) continue;
-    const mesh = new THREE.Mesh(geos.length === 1 ? geos[0] : mergeGeometries(geos),mat);
+    const residential=/apartment|residential/.test(m.category);
+    const mesh = new THREE.Mesh(geos.length === 1 ? geos[0] : mergeGeometries(geos),residential ? apartmentMat : mat);
     if (terrain) fitTerrainBounds(THREE,mesh,sites.length ? sites.map(site=>site.level) : [relief(m.x,m.z)]);
     mesh.userData.sites = sites;
+    if(residential)mesh.userData.apartmentNight = night;
     scene.add(mesh); stand.set(m.id, mesh);
   }
   return stand;
@@ -220,6 +233,11 @@ function* prepareModel(THREE, gltf, m, stand, terrain) {
       color:src.color,vertexColors:src.vertexColors,side:src.side,transparent:src.transparent,opacity:src.opacity
     });
     if (terrain) facadeMaterial(mat,level);
+    if(s?.userData.apartmentNight &&
+        /glazing|glass|openable[ _]window|grouped windows|window pair|recessed blue green window/i.test(src.name) && !/frame|mullion|rail|balustrade|lounge/i.test(src.name)){
+      mat.userData.apartmentGlass=true;
+      lightApartmentWindows(mat,s.userData.apartmentNight,'glass');
+    }
     materials.set(src,mat);
     return mat;
   }
@@ -243,7 +261,7 @@ function* prepareModel(THREE, gltf, m, stand, terrain) {
     o.material = Array.isArray(o.material) ? o.material.map(material) : material(o.material);
     o.matrixAutoUpdate = false;
   }
-  yield* batchFacadeParts(THREE,root,shell,terrain,level);
+  yield* batchFacadeParts(THREE,root,shell,terrain,level,s?.userData.apartmentNight);
   if (terrain) fitTerrainBounds(THREE, root, levels ? sites.map(site => site.level) : [level]);
   root.userData.re = m;
   root.userData.fittings = fittings;

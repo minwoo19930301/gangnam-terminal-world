@@ -57,7 +57,7 @@ def atlas_material(name, images, editor):
     return material
 
 
-def save_display(directory, stem, edit_name, item_name, attributes, make_maps, palette, sections):
+def save_display(directory, stem, edit_name, item_name, attributes, make_maps, palette, sections, configure_material=None, camera_view=None):
     bpy.ops.wm.read_factory_settings(use_empty=True)
     bpy.context.preferences.filepaths.save_version = 0
     scene = bpy.context.scene
@@ -77,6 +77,7 @@ def save_display(directory, stem, edit_name, item_name, attributes, make_maps, p
             images[key] = im
 
     native = atlas_material('Editable woven cloth and shop finishes', images, True)
+    if configure_material: configure_material(native)
     edit = collection(edit_name)
     objects = [part.mesh(edit, {'Stone':native}) for part in sections()]
     distant = collection('Distant silhouette')
@@ -88,9 +89,10 @@ def save_display(directory, stem, edit_name, item_name, attributes, make_maps, p
 
     camera = bpy.data.objects.new('Visitor at the aisle entrance', bpy.data.cameras.new('Visitor'))
     scene.collection.objects.link(camera)
-    camera.location = (.09, 4.90, 1.63)
-    camera.rotation_euler = (Vector((-.15,-.50,1.28))-camera.location).to_track_quat('-Z','Y').to_euler()
-    camera.data.lens = 24
+    location,target,lens=camera_view or ((.09,4.90,1.63),(-.15,-.50,1.28),24)
+    camera.location = location
+    camera.rotation_euler = (Vector(target)-camera.location).to_track_quat('-Z','Y').to_euler()
+    camera.data.lens = lens
     scene.camera = camera
     for index,depth in enumerate([-2.74,0,2.73]):
         lamp = bpy.data.objects.new('Fluorescent '+str(index+1),bpy.data.lights.new('Ceiling warm white','AREA'))
@@ -109,6 +111,7 @@ def save_display(directory, stem, edit_name, item_name, attributes, make_maps, p
 
     # COLOR_0 multiplies the glTF texture; the editor's shader exposes that mix explicitly.
     runtime = atlas_material('Runtime woven cloth and shop finishes',images,False)
+    if configure_material: configure_material(runtime)
     bpy.ops.object.select_all(action='DESELECT')
     for obj in objects:
         obj.data.materials[0] = runtime

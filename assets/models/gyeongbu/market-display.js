@@ -37,7 +37,7 @@ function swapGeometry(target,source){
   target.boundingSphere=source.boundingSphere;
 }
 
-export function placeMarketDisplay(K,{name,file,at,angle,focus,silhouette,initialGeometry=starter,frontage,localSight,range=16,exitRange=22}){
+export function placeMarketDisplay(K,{name,file,at,angle,focus,silhouette,initialGeometry=starter,loadSurface,fallbackMaterial,frontage,localSight,range=16,exitRange=22}){
   const T=K.THREE;
   let state=displays.get(file);
   if(!state){
@@ -55,7 +55,7 @@ export function placeMarketDisplay(K,{name,file,at,angle,focus,silhouette,initia
     return depth>=frontage.front-.08||(Math.abs(width)<=frontage.halfWidth+.08&&depth>=frontage.back-.08);
   });
   const root=placeSingleDetail(K,{name,file,at,angle,viewBounds,fallback:state.geometry,
-    fallbackMaterial:new T.MeshLambertMaterial({vertexColors:true}),range,exitRange,eyeHeight:1.6,
+    loadSurface,fallbackMaterial:fallbackMaterial??new T.MeshLambertMaterial({vertexColors:true}),range,exitRange,eyeHeight:1.6,
     floorTolerance:2.0,closeVisibleFrom:visibleFrom});
   const [x,y,z]=at,ground=relief(x,z),eye=y+ground+1.6;
   const item=root.children[0],near=item.onBeforeRender;
