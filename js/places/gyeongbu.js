@@ -17,6 +17,7 @@ import {placeHanbokShowroom} from '../../assets/models/gyeongbu-hanbok/model.js'
 import {placeBakingShop} from '../../assets/models/gyeongbu-baking/model.js';
 import {placeUniqloEntrance} from '../../assets/models/gyeongbu-uniqlo/model.js';
 import {placeUniqloFinish} from '../../assets/models/gyeongbu-uniqlo-finish/model.js';
+import {placeUniqloRail} from '../../assets/models/gyeongbu-uniqlo-rails/model.js';
 import { coachGlazing } from '../../assets/models/coach-cabin/windows.js';
 import { placeCutFlowers } from '../../assets/models/gyeongbu-cutflowers/model.js';
 import { placeWaitingBenches } from '../../assets/models/gyeongbu-seating/model.js';
@@ -1731,27 +1732,23 @@ export function build(K) {
                                 [60.02,20.55,.33,.50,1.98],[60.02,19.46,.34,.50,1.98]]){
       lbox(u,v,0,wu,dv,h,0,{skip:['top','bottom','n','s','e','w']});
     }
-    ldetail({floor:'1F',y0:0,y1:5.72,poly:rect(...ur),name:'유니클로 1층 · 목재 바닥과 노출 천장'},()=>{
-      const [x,z]=W(56,16.5);placeUniqloFinish(K,x,0,z,ROT+PI/2);
+    for(const y of [0,6])ldetail({floor:y===0?'1F':'2F',y0:y,y1:y+4.74,poly:rect(...ur),name:`유니클로 ${y===0?'1층':'2층'} · 목재 바닥과 노출 천장`},()=>{
+      const [x,z]=W(56,16.5);placeUniqloFinish(K,x,y,z,ROT+PI/2);
     });
     ldetail({floor:'1F',y0:0,y1:3.7,poly:rect(54.38,15.77,60.44,21.79),name:'유니클로 입구 · 티셔츠와 코디 진열'},()=>{
       const [x,z]=W(56,16.5);placeUniqloEntrance(K,x,0,z,ROT+PI/2);
     });
+    for(const y of [0,6])for(const u of [44.5,52,60])for(const v of [9,20]){
+      if(y===0&&u===60&&v===20)continue;
+      const floor=y===0?'1F':'2F',style=(v===20&&u!==44.5)||(u===44.5&&v===9)?'parka':'blouse';
+      lbox(u,v,y,.80,3.52,2.10,0,{skip:['top','bottom','n','s','e','w']});
+      ldetail({floor,y0:y,y1:y+3.1,poly:rect(u-.43,v-1.79,u+.43,v+1.79),name:`유니클로 ${floor} · 의류 행거 ${u},${v}`},()=>{
+        const [x,z]=W(u,v);placeUniqloRail(K,x,y,z,ROT+PI/2,u,v,style);
+      });
+    }
     for(const y of [0,6])ldetail({floor:y===0?'1F':'2F',y0:y,y1:y===0?6:11,poly:rect(...ur),name:`유니클로 ${y===0?'1층':'2층'} 의류 진열`},()=>{
       const cols=[0xe9e6dc,0x364961,0xc4af96,0x6e7b69,0xb67868,0x2e3236];
       // Low folded-garment tables and slim hanging rails leave a complete central aisle.
-      for(const u of [44.5,52,60])for(const v of [9,20]){
-        if(y===0&&u===60&&v===20)continue;
-        lbox(u,v,y,.85,3.6,.12,0xd5c6ab);lbox(u,v,y+.12,.045,3.45,1.7,0xb7b9b3,{solid:false});
-        for(const dv of [-1.7,1.7])lbox(u,v+dv,y+.12,.045,.045,1.75,0x89918f,{solid:false});
-        lbox(u,v,y+1.8,.055,3.5,.055,0x89918f,{solid:false});
-        for(let k=0;k<12;k++){
-          const vv=v-1.53+k*.278;
-          lbox(u,vv,y+.7,.58,.18,.95,cols[k%cols.length],{solid:false});
-          lbox(u,vv,y+1.64,.42,.018,.035,0x7b7369,{solid:false});
-          lbox(u,vv,y+1.68,.025,.025,.12,0x7b7369,{solid:false});
-        }
-      }
       for(const u of [46,56]){
         if(y===0&&u===56)continue;
         lbox(u,16.5,y,3.2,1.4,.74,0xd7c6aa);

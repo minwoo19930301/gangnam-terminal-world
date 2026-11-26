@@ -18,9 +18,10 @@ function starter(T){
 
 // The first floor also has an opening in its side wall. From outside the
 // shop, a ray to either display has to reach one of those two public fronts.
-export function storefrontVisible(width,depth){
+const entranceTargets=[[-.67,1.55],[.67,-1.55],[-5.22,4],[-1.78,4]];
+export function storefrontVisible(width,depth,targets=entranceTargets){
   if(width>=-6.50&&width<=10.50&&depth>=-22&&depth<=10)return true;
-  for(const [x,d] of [[-.67,1.55],[.67,-1.55],[-5.22,4],[-1.78,4]]){
+  for(const [x,d] of targets){
     const dx=width-x,dz=depth-d;
     const tx=dx>0?(10.50-x)/dx:dx<0?(-6.50-x)/dx:Infinity;
     const tz=dz>0?(10-d)/dz:dz<0?(-22-d)/dz:Infinity;
