@@ -22,14 +22,42 @@ const gallery = [house(-13,10.4), house(-16,10.4), house(-28,10.4), house(-34.3,
   house(-39.2,10.4), house(-39.2,8.2), hotel(18,5.55)];
 const shopsArea = 'in:famille+centralcity', hotelArea = 'in:jwmarriott';
 
-async function readPlayer(page) {
-  return page.evaluate(() => {
+// Observe the game once per rendered frame. A slow renderer can move the
+// capsule .63 m in one frame, wider than a .48 m waypoint. An intermediate
+// waypoint may be crossed between frames, but the final stop must be sampled.
+async function readPlayer(page, target, intermediate) {
+  return page.evaluate(([x, z, intermediate]) => {
     const world = window.__world;
     if (!world?.ready) return null;
     const {area, errors, player} = world;
-    return {area, errors, x: player.x, z: player.z, load: performance.timeOrigin};
-  }).catch(error => {
-    // Crossing the registered House↔hotel threshold loads the neighbour's page.
+    let watch = window.__hotelWalk;
+    if (!watch || watch.x !== x || watch.z !== z) {
+      watch = window.__hotelWalk = {x, z, reached: false};
+      let previous;
+      function observe() {
+        if (window.__hotelWalk !== watch) return;
+        const {x: px, y, z: pz} = player;
+        watch.reached = Math.hypot(px - x, pz - z) < .24;
+        if (!watch.reached && intermediate && previous && area === world.area &&
+            Math.abs(y - previous.y) < .25) {
+          const dx = px - previous.x, dz = pz - previous.z, length2 = dx * dx + dz * dz;
+          if (length2 > 0 && length2 <= .65 ** 2) {
+            const t = ((x - previous.x) * dx + (z - previous.z) * dz) / length2;
+            watch.reached = t > 0 && t < 1 &&
+              Math.hypot(previous.x + t * dx - x, previous.z + t * dz - z) < .24;
+          }
+        }
+        if (watch.reached) return;
+        previous = {x: px, y, z: pz};
+        player.yaw = Math.atan2(px - x, pz - z);
+        requestAnimationFrame(observe);
+      }
+      observe();
+    }
+    return {area, errors, x: player.x, z: player.z, reached: watch.reached, load: performance.timeOrigin};
+  }, [...target, intermediate]).catch(error => {
+    // Crossing the registered House↔hotel threshold loads the neighbour's page
+    // and starts a fresh observer with no previous position.
     if (error.message.includes('Execution context was destroyed')) return null;
     throw error;
   });
@@ -39,22 +67,14 @@ async function walk(page, points, visits) {
     let lastLoad, best = Infinity, lastProgress = Date.now();
     try {
       while (Date.now() - lastProgress < 45000) {
-        const state = await readPlayer(page);
+        const state = await readPlayer(page, target, target !== points.at(-1));
         if (state) {
           assert.ok([shopsArea, hotelArea].includes(state.area), `left the building at ${target}: ${state.area}`);
           assert.deepEqual(state.errors, []);
           if (visits.at(-1) !== state.area) visits.push(state.area);
           const distance = Math.hypot(state.x - target[0], state.z - target[1]);
-          if (distance < .24) break;
+          if (state.reached) break;
           if (distance < best - .05) { best = distance; lastProgress = Date.now(); }
-          // Set only the viewing direction. The ordinary W key and world collision
-          // system are responsible for reaching each point, also after a scene load.
-          await page.evaluate(([x,z]) => {
-            const player = window.__world?.player;
-            if (player) player.yaw = Math.atan2(player.x - x, player.z - z);
-          }, target).catch(error => {
-            if (!error.message.includes('Execution context was destroyed')) throw error;
-          });
           if (state.load !== lastLoad) {
             await page.keyboard.up('w');
             await page.keyboard.down('w');

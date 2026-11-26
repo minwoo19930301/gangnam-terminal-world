@@ -104,6 +104,7 @@ const sources = [
     const native=label==='승객용 전광판과 안내 케이스'?'중앙차로 승차대 · 승객 전광판과 안내함':name;
     return ['streets','지상','sinbanpo-bus-shelters/shelters.blend',name,native];
   }),
+  ['gyeongbu','1F','gyeongbu-waiting-ceiling/waiting-ceiling.blend','경부선 대합실 좌석 · 목재 루버와 매입등','1F waiting lounge · editable ceiling sections'],
   ['gyeongbu','1F','gyeongbu-planted-columns/planted-column.blend','경부선 대합실 · 식물 기둥','대합실 · 네 면을 감싼 식물 기둥'],
   ['gyeongbu','1F','gyeongbu-front-entrance/portal.blend','경부선 정문 · 석재 차양과 영문 명판','정문 · 경사 기둥과 영문 채널 문자'],
   ['gyeongbu','1F','gyeongbu-front-entrance/tower.blend','경부선 명판탑 · 한글 채널 문자와 적갈색 외벽','정면 명판탑 · 입체 글자와 적갈색 외벽'],
@@ -213,6 +214,7 @@ const sources = [
   ['shinsegae','9F','hypnos-showroom/hypnos.blend','히프노스 침대 · 원거리','히프노스 · 신세계 강남 9층'],
   ['shinsegae','6F','architectural-retail/retail-architecture.blend','CaseGallery','CaseGallery'],
   ['shinsegae','5F','architectural-retail/retail-architecture.blend','RectoWall','RectoWall'],
+  ['centralcity','1F','open-stage-coffer/coffer.blend','오픈 스테이지 · 코퍼 몰딩','오픈 스테이지 · 코퍼 몰딩'],
   ['centralcity','1F','open-stage-lounge/lounge.blend','오픈 스테이지 · 흰 소파와 낮은 테이블','오픈 스테이지 · 흰 소파와 낮은 테이블'],
   ['centralcity','1F','famille-atrium/atrium-fittings.blend','광장 · 고리형 청동 조명','광장 벽등 · 고리와 유백 갓'],
   ['centralcity','1F','famille-atrium/atrium-fittings.blend','메모리얼 광장 · 미디어 캐비닛','세로형 전광판 · 캐비닛과 매체','전광판 · 교체 가능한 화면 원화'],

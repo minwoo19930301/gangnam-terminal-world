@@ -62,8 +62,11 @@ for s in (-1,1):
     strip('가장자리 황색 띠',mid-.013,mid+.013,.012,.088,.974,'d1b144')
 for i in range(24):
     x=-.45+i*.039
-    strip('주행 방향 홈',x,x+.011,.011,.093,.975,'606a72')
-    flat('앞판 아래 골',[(x,-.93,-.0007),(x,-.14,-.0007),(x+.011,-.14,-.0007),(x+.011,-.93,-.0007)],'515d65')
+    # A raised crown and a bevel catch opposing light even while the chain moves.
+    flat('디딤판 리브 경사면',[(x,.009,.092),(x,.009,.974),(x+.007,.022,.974),(x+.007,.022,.092)],'717c82')
+    strip('디딤판 리브 마루',x+.007,x+.015,.022,.092,.974,'b4b9b8')
+    flat('챌판 리브',[(x,-.94,-.001),(x+.006,-.94,-.009),(x+.006,-.10,-.009),(x,-.10,-.001)],'879095')
+    flat('챌판 리브 음영',[(x+.006,-.94,-.009),(x+.014,-.94,-.001),(x+.014,-.10,-.001),(x+.006,-.10,-.009)],'45515a')
 
 coll=group('Comb',(0,0,0))
 # Z=0 is the threshold and +Z points onto the tread chain; the deck extends behind it.
@@ -75,8 +78,12 @@ strip('빗살 고정대',-.50,.50,.015,-.070,-.010,'d4b54c')
 for i in range(24):
     x=-.453+i*.039
     flat('빗살판 낱개 이',[(x,.016,-.014),(x+.003,.012,.030),(x+.024,.012,.030),(x+.028,.016,-.014)],'e0bd4e')
-for x in [-.44,0,.44]:
-    strip('빗살판 고정 볼트',x-.008,x+.008,.0165,-.045,-.032,'5c6260')
+for seam in (-.5,.167,-.167,.5):
+    strip('분할 빗살판 이음',max(-.5,seam-.003),min(.5,seam+.003),.016,-.070,-.010,'4e5658')
+for x in (-.452,-.21,-.12,.12,.21,.452):
+    strip('접시머리 고정 나사',x-.007,x+.007,.017,-.052,-.038,'b4bcc0')
+    strip('나사 머리 홈',x-.004,x+.004,.018,-.047,-.044,'404a51')
+strip('검사판 뒤쪽 줄눈',-.5,.5,.014,-.328,-.318,'414d53')
 
 coll=group('Skirt',(1.5,0,0))
 profile('스테인리스 하부 내외 측판',[(-.049,.012),(.049,.012),(.049,.235),(.029,.269),(-.027,.269),(-.049,.235)],0,1,'a6afb0')
@@ -98,8 +105,45 @@ for i in range(15):
 for i in range(14):
     for j in range(12):faces.append((i*12+j,i*12+(j+1)%12,(i+1)*12+(j+1)%12,(i+1)*12+j))
 part('둥글게 감기는 손잡이',v,faces,'2e3335')
-profile('손잡이 반환구',[(-.063,.284),(.063,.284),(.064,.360),(.049,.396),(-.049,.396),(-.064,.36)],-.08,.058,'586367')
-profile('고정 스커트 캡',[(-.050,.018),(.050,.018),(.050,.259),(.023,.286),(-.023,.286),(-.050,.259)],-.11,.08,'a4adae')
+# The polished guide follows the inside of the rubber arc. Its open centre
+# continues the glass balustrade silhouette without another transparent batch.
+guide=[];guide_faces=[]
+for i in range(15):
+    a=i*pi/14
+    for x,r in ((-.033,.262),(.033,.262),(.033,.230),(-.033,.230)):
+        guide.append((x,.683+r*cos(a),-(r-.059)*sin(a)))
+for i in range(14):
+    for j in range(4):
+        guide_faces.append((4*i+j,4*i+(j+1)%4,4*(i+1)+(j+1)%4,4*(i+1)+j))
+part('곡선형 스테인리스 뉴얼 가이드',guide,guide_faces,'bdc6c8')
+profile('손잡이 인입구 고무 칼라',[(-.072,.290),(.072,.290),(.072,.375),(.050,.401),(-.050,.401),(-.072,.375)],-.093,-.079,'343c40')
+# Bent sheet sides taper from the landing toe into the floor skirt. The
+# tread starts 80 mm from this axis; the cheeks stop 5 mm short of it.
+# z, overall half-width, inner shoulder half-width, top, dark throat floor
+deck=[(-.30,.056,.037,.078,.078),(-.24,.069,.044,.153,.153),
+      (-.145,.075,.051,.300,.291),(-.082,.075,.056,.385,.310),
+      (.010,.075,.056,.419,.315),(.093,.072,.053,.392,.330),
+      (.185,.066,.042,.328,.328),(.300,.049,.029,.268,.268)]
+def folded(section,side):
+    z,w,inner,top,throat=section
+    return [(side*w,.016,z),(side*w,top-.034,z),
+            (side*(w-.008),top-.012,z),(side*inner,top,z),
+            (side*inner,throat,z)]
+
+for side in (-1,1):
+    for a,b in zip(deck,deck[1:]):
+        r,t=folded(a,side),folded(b,side)
+        for i,(name,color) in enumerate([('절곡 측판','a6afb2'),('외측 접힘','bfcbce'),
+                                          ('스테인리스 어깨','d3dcde'),('인입구 안쪽 벽','505c61')]):
+            if i==3 and a[3]==a[4] and b[3]==b[4]:continue
+            flat(name,[r[i],t[i],t[i+1],r[i+1]],color)
+for a,b in zip(deck,deck[1:]):
+    lo,ro=folded(a,-1)[-1],folded(a,1)[-1]
+    li,ri=folded(b,-1)[-1],folded(b,1)[-1]
+    dark=a[3]-a[4]>.02 or b[3]-b[4]>.02
+    flat('고무 벨트 인입부' if dark else '스커트 상판',[lo,li,ri,ro],'303a3f' if dark else 'bfc9cc')
+toe=folded(deck[0],-1)[:4]+folded(deck[0],1)[:4][::-1]
+part('스커트 끝판',toe,[tuple(range(len(toe)))],'959fa2')
 
 bpy.context.view_layer.update()
 bpy.context.preferences.filepaths.save_version=0

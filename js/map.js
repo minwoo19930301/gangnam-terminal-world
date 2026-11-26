@@ -190,6 +190,13 @@ export function createMap(opts) {
     const key = `${item.name}/${item.x}/${item.z}/${item.y}`; if (searchKeys.has(key)) return; searchKeys.add(key);
     item.match = `${item.name} ${item.group || ''} ${item.floor || ''} ${item.sub || ''}`.normalize('NFKC').toLocaleLowerCase().replace(/\s/g, ''); searchItems.push(item);
   }
+  // These public arrivals can be found before the shop's area has been loaded.
+  // Use the very same walking position and viewing direction as its local spawn.
+  for (const [place, entry] of Object.entries(opts.directory || {})) {
+    for (const arrival of entry.mapDestinations || []) {
+      addSearch({...arrival, place, group:entry.name, type:'매장 입구', mapDestination:true, exact:true});
+    }
+  }
   for (const L of LANDMARKS) addSearch({ name: L.name, sub: L.sub, x: L.x, z: L.z, y: L.floorY ?? 0, type: '핵심 지점', exact: true });
   for (const s of spawns) addSearch({ ...s, type: '출발 지점', exact: true });
   for (const p of placeMarks) addSearch({ name: p.name, x: p.x, z: p.z, y: p.y, place: p.id, type: '탐색 장소' });
@@ -408,7 +415,8 @@ export function createMap(opts) {
   function selectItem(item) {
     selected = item; selectedType.textContent = item.type || '장소'; selectedTitle.textContent = item.name;
     selectedDetail.textContent = [item.group, item.floor, item.sub].filter(Boolean).join(' · ') || '주변을 둘러본 후 이 위치로 이동하세요.'; selection.hidden = false;
-    if (item.place && item.floor) { chooseFloorPlace(placeIndex.get(item.place)); setLayer('floor'); floorLabel = item.floor; floorSelect.value = floorLabel; updateFloorLevel(); }
+    const place = placeIndex.get(item.place);
+    if (item.floor && place?.floors.some(f => f.label === item.floor)) { chooseFloorPlace(place); setLayer('floor'); floorLabel = item.floor; floorSelect.value = floorLabel; updateFloorLevel(); }
     else if (item.y < -1) setLayer('underground'); else setLayer('surface');
     flyTo(item.x, item.z, Math.max(view.scale, item.floor ? 4 : 2.3)); full.classList.remove('panel-open'); panelToggle.setAttribute('aria-expanded', 'false'); panelToggle.setAttribute('aria-label', '장소 목록 열기'); liveDirty = true;
   }
@@ -438,12 +446,15 @@ export function createMap(opts) {
   function teleportTo(target, ground) {
     const x = clamp(target.x, bounds[0], bounds[2]), z = clamp(target.z, bounds[1], bounds[3]);
     // a spot in another area: the page reloads there (area loading, js/areas.js)
-    if (opts.leaveArea && opts.leaveArea(x, Number.isFinite(target.y) && !ground ? target.y : null, z, target.yaw)) { if (open) toggle(); return; }
+    const address = target.mapDestination && !ground ? target : undefined;
+    if (opts.leaveArea && opts.leaveArea(x, Number.isFinite(target.y) && !ground ? target.y : null, z, target.yaw, address)) { if (open) toggle(); return; }
     // try the requested floor, then street level, then whatever walkable surface is highest there
     const tries = [];
     if (!ground && Number.isFinite(target.y)) tries.push(target.y);
-    if (!tries.includes(0)) tries.push(0);
-    tries.push(null);
+    if (!address) {
+      if (!tries.includes(0)) tries.push(0);
+      tries.push(null);
+    }
     let destination = null;
     for (const ty of tries) { destination = findSpot(x, z, ty); if (destination) break; }
     if (!destination) { announce('이 위치에는 걸을 수 있는 바닥이 없어요. 가까운 출발 지점을 선택하세요.'); return; }

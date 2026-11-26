@@ -2,7 +2,7 @@ import { relief } from '../banpo_relief.js';
 import { mountRetailDisplay } from './shinsegae-retail-display.js';
 
 const source = new URL('../../assets/models/ssg-golf-apparel/gallery.glb', import.meta.url);
-const batches = ['BossGolfGangnamTextiles','BossGolfGangnamFixtures'];
+const batches = ['BossGolfGangnamTextiles','BossGolfGangnamFixtures','BossGolfGangnamDiffuser'];
 
 export function registerBossGolf(K,{poly,x,y,z,yaw}) {
   K.detail({floor:'7F',y0:y,y1:y+4.8,poly,name:'보스골프 의류와 바이저'},() => {
@@ -18,6 +18,7 @@ export function registerBossGolf(K,{poly,x,y,z,yaw}) {
       mesh.position.set(px,py,pz);
       fallback.add(mesh);
     }
+    part(0,2.846,.77,5.35,.12,1.94,0xfff9e8);
     part(0,1.415,-.205,5.35,2.75,.12,0xe8dfcb);
     part(-.91,1.34,-.08,.8,2.42,.03,0xa9b5b2);
     part(1.46,1.47,.055,1.32,.035,.39,0xfcfaf1);

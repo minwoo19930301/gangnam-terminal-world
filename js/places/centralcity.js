@@ -1,3 +1,4 @@
+import {placeStageCoffers} from '../../assets/models/open-stage-coffer/model.js';
 import {placeOpenStageLounge} from '../../assets/models/open-stage-lounge/model.js';
 import {galleryLights} from '../../assets/models/famille-atrium/model.js';
 import {placeLejardin} from '../../assets/models/lejardin-shop/model.js';
@@ -1780,7 +1781,13 @@ export function build(K) {
   BSign('호남선 터미널 →',[1238,455,1301,482],'N',3.05);
   BSign('호남선 터미널 →',[1238,773,1343,808],'N',3.05);
   {const q=HPst(1739.5,398);lsign('신세계 아카데미 · 파미에스테이션 2층 →',...q,YB1+3.05,3,.3,'S',{bg:'#493723',fg:'#fff0d4'});}
-  BSign('백화점 식품관 · 9게이트',[1032,454,1080,484],'W',3.2);
+  // The B1 guide sends Sweet Park visitors through 9GATE to the food floor.
+  // The reverse face addresses visitors arriving from the market.
+  const [gateS,gateT]=BPst(1032,469);
+  for(const [face,label] of [['S','↑ 백화점 식품관 · 9GATE'],['N','↑ 스위트 파크']]){
+    lsign(label,gateS-.12,gateT,YB1+3.2,3.7,.42,face,
+      {bg:'#43382f',fg:'#fff5dd',bold:true,pxPerM:120});
+  }
   BSign('지하철 · 신세계 팩토리 스토어 ↑',[1078,266,1116,343],'W',3.05);
   // Sweet Park cars connect B1 with the existing department-store 1F landing.
   // Upper-floor destinations are not fabricated across the retained shared wall.
@@ -4421,6 +4428,8 @@ function hallR20(K) {
   function buildCofferRow(s){
     // Cut only the moulding intersecting the upper escalator opening. The
     // remaining coffers retain their original pattern and materials.
+    const [stageX,stageZ]=P(s,-22.6);
+    placeStageCoffers(K,stageX,stageZ,R);
     const opening=[23.3,-1.4,32.1,2.4];
     const cofferBox=(s,t,ds,dt,y,h,mat)=>{
       const a=s-ds/2,b=t-dt/2,c=s+ds/2,d=t+dt/2,[x,z,X,Z]=opening;
@@ -4451,8 +4460,14 @@ function hallR20(K) {
       cofferBox(s,t,4.75,4.75,6.30,.06,0xe4e1da);
       for(const d of[-2.68,2.68]){cofferBox(s+d,t,.32,5.4,5.65,.75,0xf4f1ea);cofferBox(s,t+d,5.4,.32,5.65,.75,0xf4f1ea);cofferBox(s+d*.85,t,.09,4.65,6.05,.22,0xece9e2);cofferBox(s,t+d*.85,4.65,.09,6.05,.22,0xece9e2);}
       for(let u=-2.1;u<2.2;u+=.24)for(const d of[-2.25,2.25]){cofferBox(s+u,t+d,.09,.12,6.13,.12,0xf6f3ec);cofferBox(s+d,t+u,.12,.09,6.13,.12,0xf6f3ec);}
-      for(const r of[.65,.45,.24])cofferDisc(s,t,r,6.20,.045,0xe9e6de,{solid:false,seg:32});
-      for(const ds of[-1.9,1.9])for(const dt of[-1.9,1.9])cofferDisc(s+ds,t+dt,.065,6.13,.035,{tex:'emit',color:0xf5f6f2},{solid:false});
+      if(t>-15)for(const r of[.65,.45,.24])cofferDisc(s,t,r,6.20,.045,0xe9e6de,{solid:false,seg:32});
+      if(t < -15){
+        // Small downlights run along the shared beams around the recessed panels.
+        for(const offset of [-1.75,0,1.75]){
+          cofferDisc(s+offset,t+2.68,.062,5.645,.008,{tex:'emit',color:0xf5f6f2},{solid:false});
+          cofferDisc(s+2.68,t+offset,.062,5.645,.008,{tex:'emit',color:0xf5f6f2},{solid:false});
+        }
+      }else for(const ds of[-1.9,1.9])for(const dt of[-1.9,1.9])cofferDisc(s+ds,t+dt,.065,6.13,.035,{tex:'emit',color:0xf5f6f2},{solid:false});
     }
   }
   const visit = Date.now();

@@ -14,18 +14,10 @@ const rectangle = (x0,z0,x1,z1) => [[x0,z0],[x1,z0],[x1,z1],[x0,z1]];
 // The flights expose a sloping stainless underside above the ground-floor café.
 function suspendedFlight(K, x, z0, z1, ya, yb, dir, tube) {
   const w = flightWidth, length = Math.abs(z1-z0), travel = Math.sign(z1-z0);
-  const count = Math.round((yb-ya)/.17);
+  const speed = dir==='up' ? .6 : -.6;
   const pos = (dx,z,y) => [x+dx,y,z];
   const span = (z,y) => [pos(-w/2,z,y),pos(w/2,z,y)];
-  for (let i=0;i<count;i++) {
-    const a = z0+(z1-z0)*i/count, b = z0+(z1-z0)*(i+1)/count;
-    const bottom = ya+(yb-ya)*i/count, top = ya+(yb-ya)*(i+1)/count;
-    const [a0,a1]=span(a,top), [b0,b1]=span(b,top);
-    K.quad(0x555b5c,[a0,a1,b1,b0],[0,1,0]);
-    K.quad(0x737777,[...span(a,bottom),a1,a0],[0,0,-travel]);
-    const [lip0,lip1]=span(a+travel*.027,top+.003);
-    K.quad(0xa9a895,[pos(-w/2,a,top+.003),pos(w/2,a,top+.003),lip1,lip0],[0,1,0]);
-  }
+  K.escalatorTreads(x,z0,x,z1,{w,ya,yb,speed,mat:0x92999d});
   const skirt = .64;
   const [a0,a1] = span(z0,ya-skirt), [b0,b1] = span(z1,yb-skirt);
   K.quad(0x888f8e,[a0,a1,b1,b0],[0,-1,0]);
@@ -44,7 +36,7 @@ function suspendedFlight(K, x, z0, z1, ya, yb, dir, tube) {
         ya+(yb-ya)*a-skirt,ya+(yb-ya)*b+1,.07,'centralcity');
     }
   }
-  K.phys.addRamp(x,z0,x,z1,w/2,ya,yb,{move:[0,travel*(dir==='up'?.6:-.6)],tag:'centralcity'});
+  K.phys.addRamp(x,z0,x,z1,w/2,ya,yb,{steps:true,move:[0,travel*speed],tag:'centralcity'});
 }
 
 export function buildFamilleAtrium(K,{round,P,mouthWest,mouthEast,wallB1,ceiling,entryTubeWorld}) {

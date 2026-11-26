@@ -1,4 +1,4 @@
-"""Rebuild the editable Gangnam BOSS Golf display and its two runtime batches."""
+"""Rebuild the editable Gangnam BOSS Golf display and its close-view runtime batches."""
 import math
 import os
 import struct
@@ -16,11 +16,11 @@ bpy.ops.wm.read_factory_settings(use_empty=True)
 gallery = bpy.data.collections.new('SSG_7F_BOSS_GOLF')
 bpy.context.scene.collection.children.link(gallery)
 frame = Matrix.Identity(4)
-groups = {'BossGolfGangnamTextiles': [], 'BossGolfGangnamFixtures': []}
+groups = {'BossGolfGangnamTextiles': [], 'BossGolfGangnamFixtures': [], 'BossGolfGangnamDiffuser': []}
 palette = dict(white='f8f6f0', ivory='e8dfcb', chalk='fcfaf1', camel='b88a5c',
                sand='d5bf9d', ink='202122', black='13151a', grey='a5aaa9',
                knit='f5f1e8', wood='bf9871', brass='beb59c', edge='d6d2c4',
-               mirror='a9b5b2', glint='e6ebe3', silver='b6b9a9', reflected='929681', lime='7a9e2b', resin='d9cbb0',
+               membrane='fff9e8', mirror='a9b5b2', glint='e6ebe3', silver='b6b9a9', reflected='929681', lime='7a9e2b', resin='d9cbb0',
                leather='ebdfc5', zip='80796c', sole='c4bda8', shadow='544f49')
 
 def place(x=0,y=0,z=0,degrees=0):
@@ -67,6 +67,10 @@ def material(color,cloth):
     m.diffuse_color=rgb
     shader.inputs['Base Color'].default_value=rgb
     shader.inputs['Roughness'].default_value=.78 if cloth else .42
+    if color=='membrane':
+        emission=shader.inputs.get('Emission Color') or shader.inputs['Emission']
+        emission.default_value=(1,.94,.82,1)
+        shader.inputs['Emission Strength'].default_value=.76
     if cloth:
         tex=m.node_tree.nodes.new('ShaderNodeTexImage');tex.image=atlas
         mix=m.node_tree.nodes.new('ShaderNodeMixRGB');mix.blend_type='MULTIPLY'
@@ -89,7 +93,8 @@ def mesh(name,verts,faces,color,cloth=False,smooth=False,uv=None):
                 k=m.loops[j].vertex_index
                 x,y,z=verts[k]
                 layer.data[j].uv=uv[k] if uv else (.01+.47*((x*.9+y*.6+.5)%1),(.2+z*.9)%1)
-    groups['BossGolfGangnamTextiles' if cloth else 'BossGolfGangnamFixtures'].append(ob)
+    group='BossGolfGangnamDiffuser' if color=='membrane' else 'BossGolfGangnamTextiles' if cloth else 'BossGolfGangnamFixtures'
+    groups[group].append(ob)
     return ob
 
 def skin(name,rings,color,cloth=False,smooth=True,uv=None,cap=True):
@@ -279,6 +284,17 @@ def hanger(z):
 # Rear sales wall and its polished frame. All merchandise faces Blender -Y.
 place()
 box('아이보리 매장 배경',0,.205,.04,5.35,.12,2.75,'ivory')
+# The branch photograph shows a broad luminous soffit above the mirror and
+# wordmark. Keep the existing front aisle and the neighbouring golf cells clear.
+box('천장 · 얇은 금속 외곽틀',0,-.77,2.795,5.35,1.94,.115,'brass')
+box('천장 · 가장자리 음영 줄눈',0,-.77,2.786,5.285,1.875,.012,'shadow')
+panel('천장 · 따뜻한 백색 확산면',[(-2.614,.145,2.784),(2.614,.145,2.784),
+    (2.614,-1.685,2.784),(-2.614,-1.685,2.784)],'membrane')
+for x in [-1.53,.26]:
+    for name,r,z,col in [('테두리',.032,2.781,'brass'),('렌즈',.018,2.780,'glint')]:
+        panel('천장 · 작은 원형 매입구 '+name,
+              [(x+r*cos(-TAU*j/12),-.86+r*sin(-TAU*j/12),z) for j in range(12)],col)
+
 box('거울 금속 테두리',-.91,.125,.11,.81,.07,2.46,'brass')
 box('거울 회녹색 면',-.91,.081,.13,.77,.023,2.42,'mirror')
 # The mirror shows pale ceiling courses, light strips and a distant rail.
@@ -356,6 +372,10 @@ for group,objects in groups.items():
     runtime=bpy.data.materials.new(group);runtime.use_nodes=True
     tree=runtime.node_tree;shader=tree.nodes.get('Principled BSDF')
     shader.inputs['Roughness'].default_value=.78 if cloth else .43
+    if group.endswith('Diffuser'):
+        emission=shader.inputs.get('Emission Color') or shader.inputs['Emission']
+        emission.default_value=(1,.94,.82,1)
+        shader.inputs['Emission Strength'].default_value=.76
     colors=tree.nodes.new('ShaderNodeVertexColor');colors.layer_name='색상'
     if cloth:
         tex=tree.nodes.new('ShaderNodeTexImage');tex.image=atlas
