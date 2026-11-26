@@ -39,7 +39,10 @@ export function lightApartmentWindows(material, night, mode, atlasLayer) {
         vec2 f=fract(unit), edge=max(fwidth(unit),vec2(.003));
         vec2 cell=floor(unit)+vec2(face*3.,face);
         // Small-integer modular hashing keeps identical frames stable across GPUs.
-        float seed=mod(dot(mod(cell,vec2(71.,97.)),vec2(17.,31.)),101.);
+        vec2 grid=mod(cell,vec2(71.,97.));
+        // Mix the two axes before the final permutation: a linear seed repeats
+        // the same brightness and tint five windows across and six floors down.
+        float seed=mod(dot(grid,vec2(17.,31.))+mod(grid.x*grid.y,23.),101.);
         seed=mod(seed*seed+7.*seed,101.);
         ${mapped||shell ? `vec2 pane=smoothstep(vec2(.07,.205)-edge,vec2(.07,.205)+edge,f)
                       *(1.-smoothstep(vec2(.93,.775)-edge,vec2(.93,.775)+edge,f));
