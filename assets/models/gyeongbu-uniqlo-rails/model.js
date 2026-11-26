@@ -24,12 +24,14 @@ export function placeUniqloRail(K,x,y,z,angle,u,v,style){
   const targets=[[-1.71,.36],[1.71,.36],[-1.71,-.36],[1.71,-.36]].map(([w,d])=>[w+width,d+depth]);
   const subject=`경부선 유니클로 ${floor} · ${names[style]} 행거`;
   const root=placeMarketDisplay(K,{
-    name:`${subject} (${u},${v})`,file:`../gyeongbu-uniqlo-rails/${style}/${style}-rail.glb`,
+    name:subject,file:`../gyeongbu-uniqlo-rails/${style}/${style}-rail.glb`,
     at:[x,y,z],angle,range:9,exitRange:13.5,
     focus:[[-1.76,.08,-.405,1.76,2.385,.405]],
     localSight:(w,d)=>storefrontVisible(w+width,d+depth,targets),
     initialGeometry:T=>starter(T,style),silhouette:new URL(`./${style}/proxy.js`,import.meta.url)
   });
+  // The native placement collector observes the collection name during addMesh.
+  root.name=`${subject} (${u},${v})`;
   root.userData.nativeComponents=[{subject,translation:[0,0,0]}];
   return root;
 }
