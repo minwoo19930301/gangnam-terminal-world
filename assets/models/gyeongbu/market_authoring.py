@@ -57,7 +57,7 @@ def atlas_material(name, images, editor):
     return material
 
 
-def save_display(directory, stem, edit_name, item_name, attributes, make_maps, palette, sections):
+def save_display(directory, stem, edit_name, item_name, attributes, make_maps, palette, sections, configure_material=None):
     bpy.ops.wm.read_factory_settings(use_empty=True)
     bpy.context.preferences.filepaths.save_version = 0
     scene = bpy.context.scene
@@ -77,6 +77,7 @@ def save_display(directory, stem, edit_name, item_name, attributes, make_maps, p
             images[key] = im
 
     native = atlas_material('Editable woven cloth and shop finishes', images, True)
+    if configure_material: configure_material(native)
     edit = collection(edit_name)
     objects = [part.mesh(edit, {'Stone':native}) for part in sections()]
     distant = collection('Distant silhouette')
@@ -109,6 +110,7 @@ def save_display(directory, stem, edit_name, item_name, attributes, make_maps, p
 
     # COLOR_0 multiplies the glTF texture; the editor's shader exposes that mix explicitly.
     runtime = atlas_material('Runtime woven cloth and shop finishes',images,False)
+    if configure_material: configure_material(runtime)
     bpy.ops.object.select_all(action='DESELECT')
     for obj in objects:
         obj.data.materials[0] = runtime

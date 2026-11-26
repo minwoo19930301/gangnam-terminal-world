@@ -20,6 +20,7 @@ import {placeUniqloFinish} from '../../assets/models/gyeongbu-uniqlo-finish/mode
 import {placeUniqloRail} from '../../assets/models/gyeongbu-uniqlo-rails/model.js';
 import { coachGlazing } from '../../assets/models/coach-cabin/windows.js';
 import { placeCutFlowers } from '../../assets/models/gyeongbu-cutflowers/model.js';
+import {placeFloristStock} from '../../assets/models/gyeongbu-florist-stock/model.js';
 import { placeWaitingBenches } from '../../assets/models/gyeongbu-seating/model.js';
 import {placeCushionBay} from '../../assets/models/concourse-fixtures/cushions.js';
 import {homeShelf} from '../../assets/models/daiso-home/shelf.js';
@@ -2769,6 +2770,16 @@ export function build(K) {
       // Small white price cards clipped to the bucket edge, as in photo02.
       if(tier===0)db(u-.155,v,y+.33,.012,.09,.12,0xf7f6ed);
     }
+    // Two customer-photographed merchandise fronts flank the existing seasonal booth.
+    for(const [v,direction,label] of [[101.47,1,'포장 리본'],[98.53,-1,'화기와 촛대']]){
+      const u=50.1,width=2.82,base=fy+.17;
+      lbox(u,v,base,width,.55,2.06,0,{skip:['top','bottom','n','s','e','w']});
+      ldetail({floor:'3F',name:`현대데코 · ${label}`,y0:fy,y1:base+2.23,
+        poly:rect(u-width/2,v-.27,u+width/2,v+.27),
+        visibleFrom:(x,eye,z)=>(toL(x,z)[1]-v)*direction>.20},()=>{
+        const [x,z]=W(u,v);placeFloristStock(K,x,base,z,direction===1?ROT:ROT+PI,direction===1);
+      });
+    }
     // A photographed fresh-cut display on the existing eastern stall grid. All
     // three tiers stay inside the old footprint, behind the public aisle.
     const cutFlowerStall=[67.4,72];
@@ -2853,7 +2864,7 @@ export function build(K) {
       db(u+face*.5,v-.1,fy+.17,1.25,1.1,.66,0xeeeade);
       for(let k=0;k<12;k++)db(u+face*.5+(k%3-1)*.27,v-.55+Math.floor(k/3)*.28,fy+.83,.22,.22,.2,[0xb72033,0xd4b85c,0xe8e8e8][k%3]);
       for(const dv of [-1,1]){
-        const tu=u===67.4?66.9:u-face*.4,tv=v+dv;if(nearColumn(tu,tv,.8))continue;
+        const tu=u===67.4?66.9:u-face*.4,tv=v+(u===50&&v===100?dv*.60:dv);if(nearColumn(tu,tv,.8))continue;
         db(tu,tv,fy+.17,.1,.1,2.2,0x665645);
         for(let k=0;k<4;k++)deco('tree',tu,tv,fy+.4+k*.48,[1.1,.84,.6,.32][k],[1.1,.84,.6,.32][k],.5,k%2?0x365e3d:0x2f5a35);
         for(let k=0;k<16;k++){
