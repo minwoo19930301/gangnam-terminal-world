@@ -1088,22 +1088,31 @@ export function build(K) {
   // Single mitered cut; its top is restored over the roofed tunnel only.
   const left=[],right=[];
   for(let i=0;i<tp.pts.length;i++){const a=tp.pts[Math.max(0,i-1)],b=tp.pts[Math.min(tp.pts.length-1,i+1)],dx=b[0]-a[0],dz=b[1]-a[1],L=Math.hypot(dx,dz);left.push([tp.pts[i][0]-dz/L*9,tp.pts[i][1]+dx/L*9]);right.push([tp.pts[i][0]+dz/L*9,tp.pts[i][1]-dx/L*9]);}
-  K.groundHole([...left,...right.reverse()]);
-  for(let s=0;s<tp.L;s+=4){const e=Math.min(tp.L,s+4),a=at(tp,s),b=at(tp,e),ya=tunnelH(s),yb=tunnelH(e),covered=s>=west&&e<=east;
+  const tunnelOutline=[...left,...right.slice().reverse()];
+  K.groundHole(tunnelOutline);
+  // End wall sections at both portal planes. Inside the covered length the
+  // retaining wall meets the underside of the roof instead of the surface zebra.
+  const sections=new Set([west,east,tp.L]);
+  for(let s=0;s<tp.L;s+=4)sections.add(s);
+  const stations=[...sections].sort((a,b)=>a-b),soffit=-1.4;
+  for(let i=1;i<stations.length;i++){
+    const s=stations[i-1],e=stations[i],a=at(tp,s),b=at(tp,e),ya=tunnelH(s),yb=tunnelH(e);
+    const covered=s>=west&&e<=east,top=covered?soffit:1;
     K.ramp(a.x,a.z,b.x,b.z,{w:TW,ya,yb,mat:'asphalt',rails:false});
     for(const side of [-1,1]){
       const aa=at(tp,s,side*(TW/2)),bb=at(tp,e,side*(TW/2));
-      K.quad({tex:'concrete',color:0xc4c7bf},[[aa.x,ya,aa.z],[bb.x,yb,bb.z],[bb.x,1,bb.z],[aa.x,1,aa.z]],[side*a.v,0,side*-a.u]);
-      K.phys.addWall(aa.x,aa.z,bb.x,bb.z,Math.min(ya,yb),1,.15,'streets');
+      K.quad({tex:'concrete',color:0xc4c7bf},[[aa.x,ya,aa.z],[bb.x,yb,bb.z],[bb.x,top,bb.z],[aa.x,top,aa.z]],[side*a.v,0,side*-a.u]);
+      K.phys.addWall(aa.x,aa.z,bb.x,bb.z,Math.min(ya,yb),top,.15,'streets');
       K.quad(0x747d7b,[[aa.x,ya+.35,aa.z],[bb.x,yb+.35,bb.z],[bb.x,yb+.65,bb.z],[aa.x,ya+.65,aa.z]],[side*a.v,0,side*-a.u]);
-      beam([aa.x,1,aa.z],[bb.x,1,bb.z],.06,C.silver);
-      if(covered){const p=at(tp,s,side*7.7);K.box({x:p.x,z:p.z,y:-1.55,w:.24,h:.045,d:1.5,rotY:p.rot,mat:emit(0xffedca),solid:false});}
+      if(!covered)beam([aa.x,top,aa.z],[bb.x,top,bb.z],.06,C.silver);
+      if(covered&&s%4===0){const p=at(tp,s,side*7.7);K.box({x:p.x,z:p.z,y:-1.55,w:.24,h:.045,d:1.5,rotY:p.rot,mat:emit(0xffedca),solid:false});}
     }
     const aa=at(tp,s),bb=at(tp,e);K.quad(C.yellow,[[aa.x-.12,ya+.016,aa.z],[bb.x-.12,yb+.016,bb.z],[bb.x+.12,yb+.016,bb.z],[aa.x+.12,ya+.016,aa.z]],[0,1,0]);
     
   }
-  // Restore roof precisely up to the portal edges (the loop's 4m samples need not align).
-  const roofA=at(tp,west),roofB=at(tp,east);K.slab(stripPoly([roofA.x,roofA.z],[roofB.x,roofB.z],TW+.9),0,{mat:'concrete',under:'ceiling',thick:1.4});
+  // Reuse the hole's four vertices; a separate rectangular roof leaves a
+  // sliver of unsupported ground on both sides of the surface crossing.
+  real.slab([left[2],left[3],right[3],right[2]],0,{mat:'concrete',under:'ceiling',thick:-soffit});
   for(const [s,rot] of [[west,at(tp,west).rot+PI],[east,at(tp,east).rot]]){
     const q=at(tp,s);K.sign(['사평지하차도','높이 4.5m'],{x:q.x,z:q.z,y:-.75,w:8.5,h:1.05,rotY:rot,bg:'#405956',fg:'#fff',box:.1});
     for(let u=-8;u<8;u+=.8){const p=at(tp,s,u);K.box({x:p.x,z:p.z,y:-1.4,w:.4,h:.3,d:.15,rotY:rot,mat:Math.round(u/.8)%2?C.yellow:0x282d31,solid:false});}
@@ -1112,7 +1121,7 @@ export function build(K) {
   for(const s of [west+24,east-25]){const q=at(tp,s,6.5);K.sign('비상구  →',{x:q.x,z:q.z,y:-4.1,w:1.5,h:.35,rotY:q.rot-PI/2,bg:'#168257',fg:'#fff'});}
   // Short fans make the original west OSM endpoints reachable without a cliff.
   for(const [a,b] of [[[-447.72,471.65],[-433.45,473.1]],[[-419.18,474.56],[-433.45,473.1]]])flat(a,b,12,ROAD,'asphalt',true);
-  K.zone({name:'사평지하차도',floor:'지하차도',sub:'사평대로 · 콘크리트 지하 통과 구간',poly:[...left,...right],y0:-7,y1:-.25,priority:8});
+  K.zone({name:'사평지하차도',floor:'지하차도',sub:'사평대로 · 콘크리트 지하 통과 구간',poly:tunnelOutline,y0:-7,y1:-.25,priority:8});
   // Raised maintenance ledge; road ramps provide the continuous walking route.
   const maint=at(tp,east-9,7.65);K.box({x:maint.x,z:maint.z,y:-6,w:.8,h:.15,d:3,mat:'concrete'});
 

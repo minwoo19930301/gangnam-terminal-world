@@ -1,3 +1,8 @@
+import {detailModule} from '../detail-module.js';
+const windowPrint=detailModule(new URL('../../assets/models/g12-window-print/model.js',import.meta.url),
+  model=>model.drawG12Print);
+export const prepareFullDetail=()=>windowPrint.load();
+if(new URL(import.meta.url).protocol==='file:')await prepareFullDetail();
 import {placeMadang} from '../../assets/models/gotomall-madang/place.js';
 import {placeWestCorner} from '../../assets/models/gotomall-west-corner/place.js';
 import {placeYogurtWorld} from '../../assets/models/gotomall-yogurtworld/room.js';
@@ -2797,13 +2802,26 @@ export function build(K) {
       };
       for (const side of [-1, 1]) {
         wallAlong(CAN0, CAN1, side * 1.75, 0, BASE, { mat: 0x8e8f8c, thick: 0.2, capMat: 0x8e8f8c });
-        wallAlong(CAN0, RAKE, side * 1.75, BASE, TOP, { mat: glass, thick: 0.03 });
+        const printedSide=X.id==='G12'&&side===1;
+        // On the street side the printed film sits flush with frosted green glass.
+        if(printedSide)K.material('g12-street-glass',new K.THREE.MeshLambertMaterial({
+          color:0x75958b,transparent:true,opacity:.67,depthWrite:false,
+        }));
+        wallAlong(CAN0, RAKE, side * 1.75, BASE, TOP,
+          { mat: printedSide?'g12-street-glass':glass, thick: 0.03 });
+        if(printedSide){
+          const [x,z]=P(...E(RAKE-2.8,1.773));
+          K.detail({name:'고투몰 G12 · 지상 유리 점인쇄',floor:'지상',y0:0,y1:3.15,
+            poly:polyOf(rect(RAKE-5.4,RAKE,1.75,2)),resource:windowPrint,visualOnly:true,
+            visibleFrom:(px,py,pz)=>py>=-.25&&(px-x)*DV[0]+(pz-z)*DV[1]>0,
+          },()=>windowPrint.value(K,x,(BASE+TOP)/2,z,ROT));
+        }
         const n = [DV[0] * side, 0, DV[1] * side];
         K.quad(glass, [vertex(RAKE, side * 1.75, BASE), vertex(CAN1, side * 1.75, BASE), vertex(RAKE, side * 1.75, TOP), vertex(RAKE, side * 1.75, TOP)], n);
         for (let al = CAN0; al < RAKE - 0.04; al += 1.5) cbx(al - 0.04, al + 0.04, side * 1.75 - 0.04, side * 1.75 + 0.04, BASE, TOP - BASE, FRAME);
         cbx(RAKE - 0.04, RAKE + 0.04, side * 1.75 - 0.04, side * 1.75 + 0.04, BASE, TOP - BASE, FRAME);
         cbx(CAN0, RAKE, side * 1.75 - 0.04, side * 1.75 + 0.04, TOP - 0.08, 0.08, FRAME);
-        for (let al = CAN0 + 4.5; al < RAKE; al += 4.5) fin(al, BASE, al - 0.65, TOP, side * 1.75);
+        if(!printedSide)for (let al = CAN0 + 4.5; al < RAKE; al += 4.5) fin(al, BASE, al - 0.65, TOP, side * 1.75);
         fin(CAN1, BASE, RAKE, TOP, side * 1.75);
       }
       wallAcross(CAN1, -1.85, 1.85, 0, BASE, { mat: 0x8e8f8c, thick: 0.2, capMat: 0x8e8f8c });

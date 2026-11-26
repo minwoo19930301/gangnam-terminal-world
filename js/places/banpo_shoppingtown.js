@@ -1491,23 +1491,8 @@ export function build(K) {
     }
 
     if (n === 7) {
-      // bp_67: detached 15×7m single-storey pavilion in front of 7동.
-      // The 1.19m passage behind it is left clear; signage is unreadable.
-      const [pu, pv] = local([209.5, -228.5]);
-      // This existing enclosed room is outside 7동's footprint. Register its
-      // own zone so walking inside retains this module's indoor area ownership.
-      K.zone({ name: '반포쇼핑타운 7동 앞 단층동', floor: '1F',
-        poly: rect(pu - 7.5, pv - 3.5, pu + 7.5, pv + 3.5), y0: 0.025, y1: 3.05, priority: 2 });
-      K.slab(rect(pu - 7.5, pv - 3.5, pu + 7.5, pv + 3.5), 0.025, { mat: 0xb9b8b2, thick: 0.06, ceil: false });
-      const door = P(pu, pv + 3.5);
-      K.polyWalls(rect(pu - 7.5, pv - 3.5, pu + 7.5, pv + 3.5), 0, 3.05,
-        { mat: 0xb9bbb7, thick: 0.15, openings: [{ x: door[0], z: door[1], w: 1.8, y0: 0, y1: 2.45 }] });
-      // Same roof envelope/material; a slab also registers the ceiling used by
-      // area loading to recognize that this already enclosed space is indoors.
-      K.slab(rect(pu - 7.5, pv - 3.5, pu + 7.5, pv + 3.5), 3.2,
-        { mat: 0x4a4d4f, under: 0x4a4d4f, edgeMat: 0x4a4d4f, thick: 0.15, walk: false });
-      box(pu, 2.5, pv + 3.6, 15, 0.55, 0.15, 0xd8d8d2, { solid: false });
-      // Light sign band only; no invented shop name or canopy.
+      // The low roof in bp_67 is G12. gotomall owns its marked street
+      // canopy, stairs and passenger lift. The sidewalk beside 7동 stays open.
       const lotCenter = local([171.5, -233.5]), [lu, lv] = lotCenter;
       K.slab(rect(lu - 9.5, lv - 9, lu + 9.5, lv + 9), 0.02, { mat: 'asphalt', thick: 0.05, ceil: false });
       for (const side of [-1, 1]) {

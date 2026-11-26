@@ -1,5 +1,5 @@
 // Both parked vehicles and moving traffic share the Blender library in metres.
-import { palette, vehicles } from '../assets/models/fleet/meshes.js';
+import { emission, palette, vehicles } from '../assets/models/fleet/meshes.js';
 
 export function vehicleSize(kind) {
   return (vehicles[kind] || vehicles.car).size;
@@ -14,6 +14,7 @@ const caches = new WeakMap();
 function buildGeometries(THREE, vehicle, colors, separateWheels) {
   const { mm, faces, wheels } = vehicle;
   const parts = Array.from({length: separateWheels ? 3 : 2}, () => ({ positions:[], colors:[] }));
+  const glow = [];
   // The editable tyre has one outside hub face. Use the right rear wheel as
   // the prototype; a half turn about Y exposes the hub on a left-hand wheel.
   const prototype = separateWheels && wheels.find(([, , x, , z]) => x > 0 && z < 0);
@@ -22,6 +23,10 @@ function buildGeometries(THREE, vehicle, colors, separateWheels) {
     const wheel = separateWheels && wheels.find(([first, end]) => i >= 4*first && i < 4*end);
     if (wheel && wheel !== prototype) continue;
     const part = parts[wheel ? 2 : material === 0 ? 0 : 1];
+    const radiance = emission[material];
+    if (radiance && part === parts[1]) {
+      glow.push([part.positions.length, radiance]);
+    }
     for (let k = i; k < i+3; k++) {
       const vertex = faces[k]*3;
       for (let axis = 0; axis < 3; axis++) {
@@ -34,10 +39,17 @@ function buildGeometries(THREE, vehicle, colors, separateWheels) {
       }
     }
   }
-  return parts.map(({positions,colors}) => {
+  return parts.map(({positions,colors}, index) => {
     const geometry = new THREE.BufferGeometry();
     geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions,3));
     if (colors.length) geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors,3));
+    if (index === 1 && glow.length) {
+      const values = new Float32Array(positions.length);
+      for (const [offset, rgb] of glow) {
+        for (let vertex=0; vertex<3; vertex++) values.set(rgb, offset+3*vertex);
+      }
+      geometry.setAttribute('lampRadiance', new THREE.BufferAttribute(values,3));
+    }
     geometry.computeVertexNormals();
     geometry.computeBoundingSphere();
     return geometry;
@@ -77,6 +89,17 @@ function distantWheel(THREE, wheel) {
   return geometry;
 }
 
+function backlitTrim(trim) {
+  const material = trim.clone();
+  material.onBeforeCompile = shader => {
+    shader.vertexShader = 'attribute vec3 lampRadiance; varying vec3 vFleetLamp;\n' +
+      shader.vertexShader.replace('#include <begin_vertex>', '#include <begin_vertex>\n vFleetLamp=lampRadiance;');
+    shader.fragmentShader = 'varying vec3 vFleetLamp;\n' +
+      shader.fragmentShader.replace('#include <emissivemap_fragment>', '#include <emissivemap_fragment>\n totalEmissiveRadiance+=vFleetLamp;');
+  };
+  return material;
+}
+
 export function fleetInstances(THREE, kind, count, {separateWheels=false} = {}) {
   let library = caches.get(THREE);
   if (!library) {
@@ -91,7 +114,12 @@ export function fleetInstances(THREE, kind, count, {separateWheels=false} = {}) 
     library.geometries.set(key, buildGeometries(THREE, vehicles[kind] || vehicles.car, library.colors, separateWheels));
   }
   return library.geometries.get(key).map((geometry,i) => {
-    const mesh = new THREE.InstancedMesh(geometry, library.materials[i], i === 2 ? count*4 : count);
+    let material = library.materials[i];
+    if (geometry.hasAttribute('lampRadiance')) {
+      library.backlitTrim ??= backlitTrim(material);
+      material = library.backlitTrim;
+    }
+    const mesh = new THREE.InstancedMesh(geometry, material, i === 2 ? count*4 : count);
     mesh.name = kind + [' paint',' trim',' wheels'][i];
     if (i === 2) {
       geometry.userData.distantWheel ??= distantWheel(THREE, geometry);
