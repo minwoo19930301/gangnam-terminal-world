@@ -1,4 +1,4 @@
-import {cafeAislePoint,sweetParkPoint} from './sweet-park-plan.js';
+import {cafeAislePoint,gate9MarketApproach,gate9Plan,sweetParkPoint} from './sweet-park-plan.js';
 // Shared connection points between place modules. BOTH modules must honor each entry.
 // y is the walkable floor height at the junction. pa lies inside module a's space, pb inside module b's.
 // owner = module that builds the connecting corridor / opening frame between pa and pb (the other one only
@@ -23,8 +23,8 @@ export const JUNCTIONS = [
     note: 'Retained unnumbered west-side 1F opening at (-91.73,15.53). The rotated plan has no numbered gate here; round20 moves the former B1 link to J_CC_9GATE.' },
   { id: 'J5', a: 'shinsegae', b: 'centralcity', y: 0, pa: [-46, 39], pb: [-44, 47], width: 6, owner: 'centralcity', alsoY: [3.6],
     note: 'Real 3GATE crosses the south wall at (-45.96,43.08), into the Central City corridor under JW. The 1M bridge is level at y3.6 above this connection (photos #479–481).' },
-  { id: 'J_CC_9GATE', a: 'shinsegae', b: 'centralcity', y: LEVELS.B1, pa: [-43.82,37.99], pb: [-38.67,51.495], width: 6.5, owner: 'centralcity',
-    note: 'Unmirrored B1 9GATE: south-wall crossing (-42.384,41.72), actual portal (-38.67,51.495), from ssg_r20_gates.json. Central City carries the corridor south to Sweet Park.' },
+  { id: 'J_CC_9GATE', a: 'shinsegae', b: 'centralcity', y: LEVELS.B1, pa: gate9MarketApproach, pb: sweetParkPoint(...gate9Plan), width: 6.5, owner: 'centralcity',
+    note: 'The B1 food hall approach continues to the centre of the Sweet Park opening between the two wall ends on the November 25 customer guide.' },
   // The B1 café aisle continues from Nespresso and Pierre Marcolini to Sweet
   // Park. Both sides are already walkable; include its neighbouring tile set.
   { id:'J_SWEET_CAFE_AISLE', a:'shinsegae', b:'centralcity', y:LEVELS.B1,
