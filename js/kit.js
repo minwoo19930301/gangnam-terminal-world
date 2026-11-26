@@ -1,3 +1,4 @@
+import { createRiverWater } from './river-water.js';
 import { fleetInstances, vehicleSize } from './fleet.js';
 import { relief, terrainPieces } from './banpo_relief.js';
 // K = construction kit handed to every place module.  See docs/PLACE_API.md for the contract.
@@ -33,6 +34,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     if (key === 'vc') m = new THREE.MeshLambertMaterial({ vertexColors: true });
     else if (key === 'glass') m = new THREE.MeshLambertMaterial({ vertexColors: true, transparent: true, opacity: 0.32, depthWrite: false, side: THREE.DoubleSide });
     else if (key === 'emit') m = new THREE.MeshBasicMaterial({ vertexColors: true });
+    else if (key === 'hanRiver') m = createRiverWater(THREE,scene,onFrame);
     else if (key === 'water') { const s = T.surface('water'); m = new THREE.MeshLambertMaterial({ map: s.tex, vertexColors: true, transparent: true, opacity: 0.92 }); }
     else if (key.startsWith('sign:')) { const p = atlas.pages[+key.slice(5)]; m = new THREE.MeshBasicMaterial({ map: p.t, side: THREE.FrontSide, alphaTest: 0.35 }); }
     else if (key.startsWith('arr:')) { m = new THREE.MeshLambertMaterial({ map: dummyMap, vertexColors: true }); m.userData.arr = texArrays[+key.slice(4)]; addBounce(m, '', true); materials.set(key, m); return m; }
@@ -112,6 +114,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     const name = mat.tex;
     if (name === 'glass') { if (col === undefined) { tmpC.setHex(0x9fc4dc); c = [tmpC.r, tmpC.g, tmpC.b]; } return { key: 'glass', c, scale: [1, 1] }; }
     if (name === 'emit' || name === 'light') { if (col === undefined) c = [1, 1, 0.97]; return { key: 'emit', c, scale: [1, 1] }; }
+    if (name === 'hanRiver') return { key: 'hanRiver', c, scale:[1,1] };
     if (name === 'water') return { key: 'water', c, scale: T.surface('water').scale };
     if (customMats.has(name)) return { key: 'cm:' + name, c, scale: mat.scale || [1, 1] };
     const gl = mat.gloss ? 'gl' + Math.max(1, Math.min(10, Math.round((mat.gloss === true ? 0.45 : +mat.gloss) * 10))) + ':' : '';
