@@ -14,6 +14,7 @@ from prints import make_print,render_print
 from finishes import swatches,merged_frame
 from header import bake_header
 from night import prepare_lights,bake_lighting
+from native_clocks import add_clocks
 from blender_display_export import bake_collection
 
 bpy.ops.wm.read_factory_settings(use_empty=True)
@@ -248,6 +249,7 @@ with TemporaryDirectory(prefix='sinbanpo-shelter-') as staging:
                     mat.node_tree.links.new(tex.outputs['Fac'],b.inputs['Height'])
                     mat.node_tree.links.new(b.outputs[0],mat.node_tree.nodes['Principled BSDF'].inputs['Normal'])
     lighting=prepare_lights(scene)
+    add_clocks(here)
     scene.view_settings.view_transform='AgX'
     bpy.context.preferences.filepaths.save_version=0
     for ar in bpy.context.screen.areas:

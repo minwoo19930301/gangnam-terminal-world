@@ -1,6 +1,7 @@
 import {placeSingleDetail} from '../interior-architecture/single-detail.js';
 import {boxSilhouette} from '../interior-architecture/box-silhouette.js';
-import {makeCanvas,FONT} from '../../../js/textures.js';
+import {paintClock} from './clock-face.js';
+import {makeCanvas} from '../../../js/textures.js';
 import {relief} from '../../../js/banpo_relief.js';
 import {seoulClock} from '../../../js/daylight.js';
 
@@ -107,7 +108,7 @@ function lighting(K){
 
 function platformBoard(K,at,angle,id,res,visible){
   const T=K.THREE;
-  const root=placeSingleDetail(K,{name:display,file:'../sinbanpo-bus-shelters/display.glb',at,angle,
+  placeSingleDetail(K,{name:display,file:'../sinbanpo-bus-shelters/display.glb',at,angle,
     range:12,exitRange:15,floorTolerance:3.2,eyeHeight:2.22,fallback:res.board,
     fallbackMaterial:res.framePaint,material:res.framePaint,closeVisibleFrom:visible});
   const canvas=makeCanvas(512,128),ctx=canvas.getContext('2d');
@@ -119,15 +120,11 @@ function platformBoard(K,at,angle,id,res,visible){
   let lastMinute='';
   face.onBeforeRender=()=>{
     const now=K.displayClock?.()??seoulClock(Date.now());if(now===lastMinute)return;lastMinute=now;
-    ctx.fillStyle='#101917';ctx.fillRect(0,0,512,128);
-    ctx.fillStyle='#a7d98d';ctx.font='650 24px '+FONT;ctx.textBaseline='middle';
-    ctx.fillText('고속터미널  '+id.slice(0,2)+'-'+id.slice(2),16,27);
-    ctx.fillStyle='#596657';ctx.fillRect(15,51,481,1);
-    ctx.fillStyle='#ffbc61';ctx.font='700 42px '+FONT;ctx.fillText('서울 시각',16,89);
-    ctx.textAlign='right';ctx.fillStyle='#ffe7ae';ctx.font='600 49px monospace';ctx.fillText(now,498,90);
-    ctx.textAlign='left';tex.needsUpdate=true;
+    paintClock(ctx,id,now);tex.needsUpdate=true;
   };
-  root.add(face);
+  face.onBeforeRender();
+  const screen=new T.Group();screen.name='중앙차로 승차대 · 전광판 '+id;
+  screen.position.set(...at);screen.rotation.y=angle;screen.add(face);K.addMesh(screen);
 }
 
 export function placeMedianShelters(K,P,angle,id,platformY){
