@@ -11,6 +11,7 @@ SHELVES = {
     "cinema-rotary": "원형 광장 · 카멜커피",
     "sweet-arcade": "스위트 파크 · 디저트 홀 타일 기둥",
     "intelligentsia-gangnam": "인텔리젠시아 강남 · 커피 바와 오렌지 선반",
+    "another-palm-astro": "어나더팜 · 아톰 에디션",
     "sweet-arabica": "스위트 파크 · %아라비카 입구",
     "ssg-rawrow": "신세계 8층 · 로우로우 여행가방",
     "newcore-yucheon": "뉴코아 1관 5층 · 유천냉면",
