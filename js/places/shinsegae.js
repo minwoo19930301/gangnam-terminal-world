@@ -1,4 +1,5 @@
 import {marketProduceCeiling} from '../../assets/models/ssg-market-ceiling/model.js';
+import {giftConcierge} from '../../assets/models/ssg-market-gift/model.js';
 import {marketEntrance} from '../../assets/models/ssg-market-entrance/model.js';
 import {b1Plan as B1_PLAN, departmentPoint as P, departmentWidth as UW, departmentDepth as VD, marketOutline, marketWestReturn} from './shinsegae-b1-plan.js';
 import {marketFruitIslands} from '../../assets/models/ssg-market-produce/model.js';
@@ -2638,6 +2639,13 @@ export function build(K) {
       }
       const[u,v]=at,wood=c.name==='카멜커피'?0xd9b98a:c.name==='보앤미'?0xc8a77b:c.name==='블루버터플라이'?0x63422a:c.kind==='wine'?0x493529:c.kind==='deli'?0xb8925d:0x7e6044;
       const darkDeli=c.zone==='north_deli'&&c.kind==='deli', boAndMie=c.name==='보앤미';
+      if(c.name==='기프트 컨시어지'){
+        // Keep the guide-fitted counter and its walking clearance; this cell holds the wrapping service.
+        const [x,z]=P(u,v);
+        giftConcierge(K,x,y,z,RA,w,d);
+        box(u,v,w,d,y,.83,0xcfcbc0,{skip:['top','bottom','n','s','e','w']});
+        return;
+      }
       const base=darkDeli&&c.name!=='블루버터플라이'?'ssg_deli_black_glaze':c.name==='카멜커피'?wood:{tex:'wood',color:wood};
       box(u,v,w,d,y,.83,boAndMie?{tex:'marble',color:0xe9d9c4}:base);
       box(u,v,w+.025,d+.025,y+.83,.06,{tex:'marble',color:darkDeli||c.name==='카멜커피'?0x292824:0xe9debf,gloss:.7},{solid:false});
