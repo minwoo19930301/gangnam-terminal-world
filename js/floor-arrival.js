@@ -12,6 +12,12 @@ export function floorArrival(phys, kit, player, place, floor) {
     if (Math.hypot(foot.x - x, foot.z - z) > .04) return;
     return {x, y, z, yaw};
   }
+  // Shared complexes can register outdoor landmarks before their public concourse.
+  const preferred = kit.spawns.find(s => s.place === place && s.arrivalFloor === floor);
+  if (preferred) {
+    const spot = landing(preferred.x, preferred.y ?? 0, preferred.z, preferred.yaw);
+    if (spot) return spot;
+  }
   for (const s of kit.spawns) {
     const zone = phys.zoneAt(s.x, (s.y ?? 0) + .1, s.z);
     if (zone?.place !== place || (zone.floor || '1F') !== floor) continue;

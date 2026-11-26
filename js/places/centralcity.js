@@ -3778,13 +3778,13 @@ export function build(K) {
   // ================================================================= spawns
   // yaw: facing local +s (south-ish) = R+π, -s = R, +t (east) = R+3π/2, -t (west) = R+π/2
   const YAW = { S: R + PI, N: R, E: R + 1.5 * PI, W: R + PI / 2 };
-  const sp = (name, s, t, y, face) => { const [x, z] = P(s, t); K.spawn({ name, x, y, z, yaw: YAW[face] }); };
+  const sp = (name, s, t, y, face, arrivalFloor) => { const [x, z] = P(s, t); K.spawn({ name, x, y, z, yaw: YAW[face], arrivalFloor }); };
   sp('센트럴시티 정문 (신반포로)', -30, 19.5, 0, 'S');
   sp('호남선 대합실 · 동상 벤치', 33, 22, 0, 'W');
   sp('호남선 승차홈 (8번)', bays.find(b => b.p === 8).s, 4.6, Y1 + 0.12, 'W');
   sp('스위트 파크 · 호남선 연결통로 (B1)', 7, 25, YB1, 'S');
   {const [x,z]=courtP(5.2,-1);K.spawn({name:'하우스 오브 신세계 · B1 라운지',x,z,y:YB1,yaw:courtR+PI});}
-  sp('호남선 대합실 · 매표소와 B1 연결', 124.5, 28.5, 0, 'N');
+  sp('호남선 대합실 · 매표소와 B1 연결', 124.5, 28.5, 0, 'N', '1F');
   sp('지하철 7호선 연결통로 (B1)', 173.4, -28, YB1, 'S');
   sp('파미에스테이션 1층 · 호호식당', 189.5, -58, Y1, 'N');
   sp('호남선 하차장 · 택시 승강장', 167.5, -50, 0.15, 'N');
