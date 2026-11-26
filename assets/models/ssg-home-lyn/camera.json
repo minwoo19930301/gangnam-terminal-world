@@ -1,0 +1,11 @@
+{
+  "floor": "9F",
+  "x": -65.46,
+  "z": -9.57,
+  "yaw": 44.5,
+  "pitch": -17,
+  "meshName": "USMSoftPanels",
+  "sourceBlend": "haller.blend",
+  "sourceCollection": "SSG_9F_USM_Haller",
+  "nativeLabel": "USM"
+}

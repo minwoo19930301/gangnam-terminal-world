@@ -1,0 +1,11 @@
+{
+  "floor": "8F",
+  "x": -13.41918,
+  "z": 53.165057,
+  "yaw": 10.78105,
+  "pitch": -20.0,
+  "meshName": "SnowPeakGangnamCanvas",
+  "sourceBlend": "gallery.blend",
+  "sourceCollection": "SSG_8F_SnowPeak",
+  "nativeLabel": "스노우피크"
+}

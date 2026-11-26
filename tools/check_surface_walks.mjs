@@ -274,9 +274,14 @@ const summary=[], observations=[], detours=[], part=new Map();
 const round=(v,n=2)=>Number.isFinite(v)?v.toFixed(n):'';
 const record=(r,partNo,p,reason,more={})=>{
   const [x,z,s]=p;
+  // Keep the historical no_ground flag for an unsupported street-level sample.
+  // A lower modeled floor is a level ambiguity, not evidence that geometry is absent.
+  const groundEvidence=reason==='no_ground'
+    ? (Number.isFinite(more.floor)?'support_below_street_grade':'no_support_found')
+    : '';
   observations.push([r.id,partNo,round(s),round(x),round(z),
     round(osm.origin.lat-z/osm.origin.kz,7),round(osm.origin.lon+x/osm.origin.kx,7),reason,
-    more.feature || '',round(more.floor),round(more.shift,3),round(more.clearance,3)]);
+    more.feature || '',round(more.floor),round(more.shift,3),round(more.clearance,3),groundEvidence]);
 };
 for(const road of ways) {
   const partNo=(part.get(road.id)||0)+1;part.set(road.id,partNo);
@@ -332,6 +337,6 @@ function save(name,columns,rows) {
 }
 fs.mkdirSync(out,{recursive:true});
 save('surface-ways.csv',['osm_way','clipped_part','name','highway','access','foot','length_m','status','design_points','checked_points','skipped_points','flagged_points','no_ground','capsule_push','low_ceiling','support_jump','represented_checked_m'],summary);
-save('surface-observations.csv',['osm_way','clipped_part','chainage_m','x','z','lat','lon','observation','building_or_support','local_floor_m','capsule_push_m','headroom_m'],observations);
+save('surface-observations.csv',['osm_way','clipped_part','chainage_m','x','z','lat','lon','observation','building_or_support','local_floor_m','capsule_push_m','headroom_m','ground_evidence'],observations);
 save('surface-detours.csv',['osm_way','clipped_part','chainage_m','x','z','width_m','width_source','connected_way_ids','minimum_segment_width_m','start_chainage_m','end_chainage_m','detour_status','tested_strip_half_width_m','route_max_lateral_m','route_length_m','witness_or_limit','intersecting_engine_walls_tag_ax_az_bx_bz_y0_y1'],detours);
 console.log(PLACES.length+' place modules, '+ways.length+' clipped rows, '+part.size+' OSM ways; physics:',phys.stats);

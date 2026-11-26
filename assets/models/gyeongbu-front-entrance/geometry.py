@@ -5,13 +5,14 @@ import struct
 
 import bpy
 from mathutils import Vector
-from surfaces import COLOURS
 
 
 def lin(c):
     return c/12.92 if c<=.04045 else ((c+.055)/1.055)**2.4
 
 class Part:
+    columns=4
+    rows=2
     def __init__(self,name,finish='Stone'):
         self.name,self.finish=name,finish
         self.verts,self.faces,self.loops=[],[],[]
@@ -36,7 +37,7 @@ class Part:
             light=tint(*points[i]) if callable(tint) else tint
             if isinstance(light,(int,float)):light=(light,light,light)
             tex=uv[i]
-            self.loops.append((swatch,((swatch%4+.019+.962*tex[0])/4,(swatch//4+.019+.962*tex[1])/2),tuple(lin(min(1,max(0,a))) for a in light)+(1,)))
+            self.loops.append((swatch,((swatch%self.columns+.019+.962*tex[0])/self.columns,(swatch//self.columns+.019+.962*tex[1])/self.rows),tuple(lin(min(1,max(0,a))) for a in light)+(1,)))
 
     def front(self,a,z0,b,z1,d,swatch,tint=1.):
         self.face([(a,d,z0),(b,d,z0),(b,d,z1),(a,d,z1)],swatch,(0,1,0),tint)
@@ -94,7 +95,7 @@ class Part:
         return obj
 
 
-def write_proxy(parts,file):
+def write_proxy(parts,file,palette):
     vertices=bytearray();indices=[];unique={}
     for p in parts:
         if p.finish=='Glass':continue
@@ -104,7 +105,7 @@ def write_proxy(parts,file):
             for index in poly:
                 sw,uv,tint=p.loops[cursor];cursor+=1
                 x,negd,z=p.verts[index]
-                rgb=tuple(round(lin(c/255)*v*255) for c,v in zip(COLOURS[sw],tint[:3]))
+                rgb=tuple(round(lin(c/255)*v*255) for c,v in zip(palette[sw],tint[:3]))
                 key=(round(x*100),round(z*100),round(-negd*100),*rgb)
                 if key not in unique:
                     unique[key]=len(unique);vertices+=struct.pack('<3h3B',*key)

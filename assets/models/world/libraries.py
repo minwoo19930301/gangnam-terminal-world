@@ -8,6 +8,12 @@ from mathutils import Vector
 
 
 SHELVES = {
+    "gyeongbu-planted-columns": "경부선 1층 · 대합실 식물 기둥",
+    "goter-crossing": "신반포로 · 고터사거리 보행 신호주",
+    "parka-rail": "경부선 유니클로 · 경량 파카 행거",
+    "blouse-rail": "경부선 유니클로 · 시어서커 블라우스 행거",
+    "seoul-city-bus": "신반포로 · 서울 간선버스",
+    "gyeongbu-front-cafes": "경부선 정문 옆 · 이디야와 달리나인",
     "sinbanpo-bus-shelters": "신반포로 · 고속터미널 중앙정류소",
     "gyeongbu-front-entrance": "경부선 · 정문과 세로 명판",
     "daiso-accessories": "경부선 지하 1층 · 다이소 헤어와 청소용품",
@@ -18,6 +24,10 @@ SHELVES = {
     "kims-deli": "뉴코아 2관 지하 1층 · 킴스클럽 델리",
     "gyeongbu-luggage": "경부선 1층 · 짐캐리",
     "dimdimsum": "호남선 중층 · 딤딤섬",
+    "gyeongbu-childrens-aisle": "경부선 6층 · 아동복 상가",
+    "gyeongbu-womens-aisle": "경부선 8층 · 여성복 상가",
+    "gyeongbu-suiting-aisle": "경부선 7층 · 신사복 상가",
+    "tamayura": "JW 2층 · 타마유라",
     "mobo-bar": "JW 7층 · 모보 바",
     "gyeongbu-hangaram": "경부선 지하 1층 · 한가람 액자",
     "gyeongbu-pharmacy": "경부선 1층 · 고속터미널약국",
@@ -27,6 +37,7 @@ SHELVES = {
     "sebit-lounge": "고투몰 G2 · 고터·세빛 라운지",
     "damccot": "파미에 2층 · 담꽃",
     "gyeongbu-ticket-office": "경부선 1층 · 통합매표소",
+    "modernhouse-picnic": "뉴코아 1관 4층 · 홈데코 러그",
     "modernhouse-kids": "뉴코아 1관 4층 · 키즈 침구",
     "modernhouse-provence": "뉴코아 1관 4층 · 마르셰 프로방스",
     "gyeongbu-icecream": "경부선 1층 · 배스킨라빈스",
@@ -45,6 +56,7 @@ SHELVES = {
     "famille-atrium": "파미에 광장 · 전광판·테라스와 포장",
     "gotomall-hessed": "고투몰 D-086 · 헤쎄드",
     "hypnos-showroom": "신세계 9층 · 히프노스 쇼룸",
+    "gateaux": "JW 2층 파티세리 · 홀케이크와 쁘띠 가토",
     "patisserie": "JW 2층 파티세리 · 플랑과 마카롱",
     "daiso-merchandise": "다이소 주방·문구 매대",
     "gyeongbu-seating": "경부선 · 대합실 연석",
@@ -144,8 +156,8 @@ def link_asset_gallery(world_dir):
                         for part in instance.instance_collection.all_objects if part.library}
     represented = {Path(bpy.path.abspath(lib.filepath)).resolve() for lib in source_libraries}
     added_shelves = []
-    for path in sorted(world_dir.parent.glob("*/*.blend")):
-        if path.parent == world_dir or path.resolve() in represented:
+    for path in sorted(world_dir.parent.rglob("*.blend")):
+        if world_dir in path.parents or path.resolve() in represented:
             continue
         if path.parent.name.startswith("ssg-"):
             retail = json.loads((path.parent / "camera.json").read_text(encoding="utf-8"))

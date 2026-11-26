@@ -1,3 +1,6 @@
+import {diningWallOpening} from './_familleUpperPlan.js';
+import {placeGoterCrossing} from '../../assets/models/goter-crossing/model.js';
+import {placeSeoulCityBus} from '../../assets/models/seoul-city-bus/model.js';
 import {placeMedianShelters} from '../../assets/models/sinbanpo-bus-shelters/model.js';
 import { gardenPoint, gardenStation, gardenSurface, gardenKerb, gardenTerrainEdge, gardenSurveyY, hotelCourtDatum } from './_gardenGrade.js';
 import { relief, exteriorReliefEnabled } from '../banpo_relief.js';
@@ -68,6 +71,7 @@ export const meta = {
 
 export function build(K) {
   const PI = Math.PI, ROAD = 0.04, WALK = 0.15;
+  placeGoterCrossing(K);
   const C = { steel: 0x48545d, silver: 0x9daab0, yellow: 0xf2c329, white: 0xf4f1e6, blue: 0x238bd2, green: 0x075847 };
   const byId = new Map(K.osm.roads.map(r => [r.id, r]));
   const roads = meta.claimRoads.filter(id => !gardenWays.includes(id)).map(id => byId.get(id)).filter(Boolean);
@@ -517,6 +521,8 @@ export function build(K) {
   }
   function pedestrianSignal(x,z,ux,uz){
     const site=curbSite(x,z,-ux,-uz);if(!site)return;[x,z]=site;
+    // These two old standalone heads share the roadview-aligned southeast mast.
+    if([[383.53,-248.49],[374.03,-243.41]].some(([px,pz])=>Math.hypot(x-px,z-pz)<.65))return;
     if(pedestrianSites.some(p=>Math.hypot(p[0]-x,p[1]-z)<1.4))return;pedestrianSites.push(site);
     const rot=Math.atan2(ux,uz),side=[uz,-ux],P=(a,y,b=.135)=>[x+side[0]*a+ux*b,y,z+side[1]*a+uz*b];
     K.cyl({x,z,y:WALK,r:.055,h:2.95,seg:8,mat:C.steel});
@@ -586,6 +592,7 @@ export function build(K) {
     let site=curbSite(x,z,nx,nz);
     if(!site)for(const t of [4,8,12]){site=curbSite(x-a.u*t,z-a.v*t,nx,nz);if(site)break;}
     if(!site)return;[x,z]=site;
+    if(Math.hypot(x-384.49,z+254.80)<.75)return;
     K.withTerrainAnchor(x, z, () => {
       K.cyl({x,z,y:WALK,r:.14,h:6.8,seg:10,mat:C.silver});
       K.box({x,z,y:WALK,w:.42,h:.22,d:.42,mat:0x8d9290});
@@ -816,8 +823,9 @@ export function build(K) {
     K.zone({name:'고속터미널호남선',floor:'지상',sub:'버스정류장 · 22220',poly:stripPoly([P(-18,0).x,P(-18,0).z],[P(18,0).x,P(18,0).z],4),y0:0,y1:4,priority:4});
   }
   const busRoad=byId.get(1420100043),bq=nearest(-69,-96,[busRoad]);
-  K.vehicle({x:bq.x,z:bq.z,y:ROAD,rotY:bq.rot,kind:'cityBus',color:0x2367ac,label:'142 고속터미널'});
-  const westBus=nearest(8,-132,[byId.get(1420100042)]);K.vehicle({x:westBus.x,z:westBus.z,y:ROAD,rotY:westBus.rot,kind:'cityBus',color:0x2367ac,label:'360 고속터미널'});
+  placeSeoulCityBus(K,bq,ROAD,'142');
+  const westBus=nearest(8,-132,[byId.get(1420100042)]);
+  placeSeoulCityBus(K,westBus,ROAD,'360');
   const bus2=at(path(byId.get(523344143).pts),190,-5.3);K.vehicle({x:bus2.x,z:bus2.z,y:ROAD,rotY:bus2.rot,kind:'cityBus',color:0x4d9c50,label:'반포역'});
   buildG13Street(K, {beam, flat, clipped, rect, terminalStrip, streetSlab:real.slab});
   buildGsCaltex(K);
@@ -2091,7 +2099,7 @@ function buildHotelDrive(K,clipPavement) {
       const a=retainingEdge[i-1],b=retainingEdge[i],length=Math.hypot(b[0]-a[0],b[1]-a[1]);
       const openings=i===retainingEdge.length-1
         ? [{at:(25-22.2)*length/5,w:3.04*length/5,y0:5,y1:8.23}] : [];
-      openings.push(...garageWallOpening(a,b,-.09,height-.32));
+      openings.push(...garageWallOpening(a,b,-.09,height-.32),...diningWallOpening(a,b));
       K.wall(...a,...b,-.09,height-.32,{mat:side,thick:.08,solid,openings});
     }
   }

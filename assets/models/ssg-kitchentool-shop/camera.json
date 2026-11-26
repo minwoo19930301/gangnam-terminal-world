@@ -1,0 +1,11 @@
+{
+  "floor": "9F",
+  "x": -25.878886292055576,
+  "z": 74.0308712869597,
+  "yaw": -142.2205429129025,
+  "pitch": -24,
+  "meshName": "KitchenToolHasamiGlaze",
+  "sourceBlend": "display.blend",
+  "sourceCollection": "SSG_9F_KitchenTool",
+  "nativeLabel": "키친툴"
+}
