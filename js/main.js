@@ -630,7 +630,7 @@ async function boot() {
     map.update(dt);
     // lazy floor detail near the camera (bounded per frame); screenshots paint new sign text immediately
     if (K._.ensureDetail(player.x, player.y + player.eye, player.z, SHOT ? 60 : 48, SHOT ? Infinity : 2, SHOT ? null : camera) && SHOT && K._.atlas.pending()) { K._.atlas.flushAll(); for (const p of K._.atlas.pages) p.t.needsUpdate = true; }
-    K._.cull(player.x, player.y + player.eye, player.z);
+    K._.cull(player.x, player.y + player.eye, player.z, false, camera);
     // Bound both canvas work and GPU uploads while walking.
     if (signsGo && K._.atlas.pending()) uploadSignRects(K._.atlas.flush(1.5, player.x, player.z, 8));
     renderer.render(scene, camera);

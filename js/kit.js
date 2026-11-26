@@ -698,26 +698,89 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
   // x, y, z = camera (eye) position. "Underground" means: eye below -1 m, a ceiling over the head and standing in a
   // zone of an indoor place — so stairs, open ramps and road underpasses never count.
   const lodList = [], wheelBatches = [];
-  function lodUpdate(x, z) {
-    // A car beside the player must not select full-detail wheels for an
-    // entire car park. Repack the two draws only when a car crosses its LOD.
+  // Keep the original garage batch intact until a covered interior first needs
+  // per-car visibility. Include all four separately levelled wheel transforms.
+  function prepareParkedBounds(group) {
+    const {paint, trim, near, far, source, vehicles} = group;
+    group.bodyMatrices = paint.instanceMatrix.array.slice();
+    group.bodyColors = paint.instanceColor.array.slice();
+    group.shown = new Uint8Array(vehicles.length).fill(1);
+    const body = new THREE.Box3(), wheel = new THREE.Box3();
+    for (const [mesh, shape] of [[paint,body], [trim,body], [near,wheel], [far,wheel]]) {
+      if (!mesh.geometry.boundingBox) mesh.geometry.computeBoundingBox();
+      shape.union(mesh.geometry.boundingBox);
+    }
+    const matrix = new THREE.Matrix4(), transformed = new THREE.Box3();
+    group.bounds = vehicles.map((_, index) => {
+      const box = body.clone().applyMatrix4(matrix.fromArray(group.bodyMatrices, 16*index));
+      for (let j = 0; j < 4; j++) {
+        matrix.fromArray(source, 16*(4*index+j));
+        box.union(transformed.copy(wheel).applyMatrix4(matrix));
+      }
+      return box.expandByScalar(.015);
+    });
+  }
+
+  function updateParkedFleet(x, z, frustum) {
+    // Share visibility across each car's parts. Track its tire LOD even while
+    // hidden so a camera turn preserves the original distance hysteresis.
     for (const group of wheelBatches) {
-      const {near,far,source,vehicles,close} = group;
-      let changed = false;
+      const {paint,trim,near,far,source,vehicles,close} = group;
+      if (frustum && !group.bounds) prepareParkedBounds(group);
+      let changed = false, bodyChanged = false;
       for (let i=0;i<vehicles.length;i++) {
         const car = vehicles[i], dx = car.x-x, dz = car.z-z;
-        const value = dx*dx+dz*dz < (close[i] === 1 ? 68 : 62)**2 ? 1 : 0;
-        if (close[i] !== value) { close[i] = value; changed = true; }
+        const nearWheel = Number(dx*dx+dz*dz < (close[i] === 1 ? 68 : 62)**2);
+        if (close[i] !== nearWheel) { close[i] = nearWheel; changed = true; }
+        if (group.shown) {
+          const shown = Number(!frustum || frustum.intersectsBox(group.bounds[i]));
+          if (group.shown[i] !== shown) { group.shown[i] = shown; bodyChanged = changed = true; }
+        }
       }
       if (!changed) continue;
       near.count = far.count = 0;
+      if (bodyChanged) paint.count = trim.count = 0;
       for (let i=0;i<vehicles.length;i++) {
+        if (group.shown && !group.shown[i]) continue;
+        if (bodyChanged) {
+          const matrix = group.bodyMatrices.subarray(16*i, 16*(i+1));
+          paint.instanceMatrix.array.set(matrix, 16*paint.count);
+          trim.instanceMatrix.array.set(matrix, 16*trim.count);
+          paint.instanceColor.array.set(group.bodyColors.subarray(3*i, 3*(i+1)), 3*paint.count);
+          paint.count++;
+          trim.count++;
+        }
         const batch = close[i] ? near : far;
         batch.instanceMatrix.array.set(source.subarray(64*i,64*(i+1)),16*batch.count);
         batch.count += 4;
       }
       near.instanceMatrix.needsUpdate = far.instanceMatrix.needsUpdate = true;
+      if (bodyChanged) {
+        paint.instanceMatrix.needsUpdate = trim.instanceMatrix.needsUpdate = true;
+        paint.instanceColor.needsUpdate = true;
+      }
     }
+  }
+
+  const parkedFrustum = new THREE.Frustum(), projection = new THREE.Matrix4(), lastProjection = new THREE.Matrix4();
+  let clippedParkedFleet = false;
+  let roofX, roofY, roofZ;
+  function updateParkedView(x, z, camera, refresh) {
+    if (camera && under) {
+      camera.updateWorldMatrix(true, false);
+      projection.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
+      if (!refresh && clippedParkedFleet && projection.equals(lastProjection)) return;
+      lastProjection.copy(projection);
+      parkedFrustum.setFromProjectionMatrix(projection);
+      updateParkedFleet(x, z, parkedFrustum);
+      clippedParkedFleet = true;
+    } else if (refresh || clippedParkedFleet) {
+      updateParkedFleet(x, z, null);
+      clippedParkedFleet = false;
+    }
+  }
+
+  function lodUpdate(x, z) {
     for (const m of lodList) {
       const bb = m.userData.bb || m.userData.lodBB || (m.userData.lodBB = (() => { const b = new THREE.Box3(), M = new THREE.Matrix4(), V = new THREE.Vector3(); for (let i = 0; i < m.count; i++) { m.getMatrixAt(i, M); b.expandByPoint(V.setFromMatrixPosition(M)); } return [b.min.x, b.min.z, b.max.x, b.max.z]; })());
       const dx = x < bb[0] ? bb[0] - x : x > bb[2] ? x - bb[2] : 0, dz = z < bb[1] ? bb[1] - z : z > bb[3] ? z - bb[3] : 0;
@@ -725,19 +788,25 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
       if (m.geometry !== g) m.geometry = g;
     }
   }
-  function cull(x, y, z, force = false) {
-    if (!force && Math.abs(x - last.x) + Math.abs(y - last.y) + Math.abs(z - last.z) < 1.5 && ++last.n < 30) return;
+  function cull(x, y, z, force = false, camera = null) {
+    const refresh = force || Math.abs(x-last.x) + Math.abs(y-last.y) + Math.abs(z-last.z) >= 1.5 || ++last.n >= 30;
+    // A step that leaves a narrow stair opening can be smaller than the tile
+    // update interval. Check the actual eye position as it crosses that edge.
+    if (refresh || ((under || (camera && y < -1)) && (x !== roofX || y !== roofY || z !== roofZ))) {
+      const zone = y < -1 && phys.zoneAt(x, y-1.5, z);
+      under = !!zone && INDOOR.has(zone.place) && phys.ceilingAbove(x, z, y, y+8) < Infinity;
+      roofX = x; roofY = y; roofZ = z;
+    }
+    updateParkedView(x, z, camera, refresh);
+    if (!refresh) return;
     last = { x, y, z, n: 0 };
     lodUpdate(x, z);
     updateDetailLayers(x, y, z);
-    let u = false;
-    if (y < -1) { const zn = phys.zoneAt(x, y - 1.5, z); u = !!zn && INDOOR.has(zn.place) && phys.ceilingAbove(x, z, y, y + 8) < Infinity; }
-    under = u;
     for (const m of cullList) {
       const d = m.userData, bb = d.bb;
-      if (d.cell === 'o' && !u) { m.visible = true; continue; }
+      if (d.cell === 'o' && !under) { m.visible = true; continue; }
       const dx = x < bb[0] ? bb[0] - x : x > bb[2] ? x - bb[2] : 0, dz = z < bb[1] ? bb[1] - z : z > bb[3] ? z - bb[3] : 0, dist = Math.hypot(dx, dz);
-      m.visible = d.cell === 'o' ? dist < 120 : (u ? dist < 320 : dist < 100);
+      m.visible = d.cell === 'o' ? dist < 120 : (under ? dist < 320 : dist < 100);
     }
   }
   // ---------- texture arrays for opaque textures ----------
@@ -995,7 +1064,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
               scene.add(far);
               track(far,group.cell);
               far.count = 0;
-              wheelBatches.push({near:mesh,far,source:mesh.instanceMatrix.array.slice(),vehicles:list,close:new Uint8Array(list.length).fill(255)});
+              wheelBatches.push({paint,trim,near:mesh,far,source:mesh.instanceMatrix.array.slice(),vehicles:list,close:new Uint8Array(list.length).fill(255)});
             }
           }
         }
