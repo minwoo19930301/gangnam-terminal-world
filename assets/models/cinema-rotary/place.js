@@ -1,7 +1,8 @@
 import {boxSilhouette} from '../interior-architecture/box-silhouette.js';
 import {placeSingleDetail} from '../interior-architecture/single-detail.js';
-import {arc,bookEdge,bookFloor,outward,cafeFloor,cafeFront,cafePoint,centre,court,plan,rotation,shoeFront,shoeRear,shoeThreshold,westApron,westSides} from './layout.js';
+import {arc,bookEdge,bookFloor,bookOrigin,bookAngle,bookPoint,bookRear,cafeFloor,cafeFront,cafePoint,centre,court,plan,rotation,shoeFront,shoeRear,shoeThreshold,westApron,westSides} from './layout.js';
 
+import {bookReadingBay} from '../ypbooks-rotary/reading.js';
 import {sportsShoeEntry} from '../sports-shoe-rotary/model.js';
 
 export function publicRotary(K,y){
@@ -35,18 +36,17 @@ export function publicRotary(K,y){
   const bookArc=arc(61,130,11).map(p=>plan(...p));
   edge([plan(686,1063),...bookArc.slice(0,3)],0xc0b4a4);
   edge(bookArc.slice(7,11),0xc0b4a4);
-  // Only the court-facing threshold and shelf face are modelled. The public
-  // photograph shows an open doorway under a dark illuminated store sign.
-  const rear=bookEdge.map(p=>outward(p,1.65));
-  edge([bookEdge[0],...rear,bookEdge.at(-1)],0x9f8f74);
-  const mid=outward([(bookEdge[2][0]+bookEdge[3][0])/2,(bookEdge[2][1]+bookEdge[3][1])/2],.02);
-  const bookAngle=Math.atan2(centre[0]-mid[0],centre[1]-mid[1]);
-  const point=(x,depth)=>[mid[0]+x*Math.cos(bookAngle)-depth*Math.sin(bookAngle),
-    mid[1]-x*Math.sin(bookAngle)-depth*Math.cos(bookAngle)];
-  for(const [left,right,depth,thick,high] of [[-.69,.69,.67,.59,.80],[-2.34,-1.56,.87,.67,1.72]]){
-    K.phys.addWall(...point(left,depth),...point(right,depth),y,y+high,thick);
+  edge([bookEdge[0],...bookRear,bookEdge.at(-1)],0x9f8f74);
+  const mid=bookOrigin,point=bookPoint;
+  bookReadingBay(K,y);
+  // Match the square fixture corners. Capsule-shaped hulls on the two
+  // display ends projected into the passage between the shelves.
+  for(const [l,r,front,back,h] of [[-.69,.69,.36,.99,.8],[-2.47,-1.71,.30,1.01,1.28]]){
+    const footprint=[[l,front],[r,front],[r,back],[l,back]].map(p=>point(...p));
+    K.phys.addPolyWalls(footprint,y,y+h,.012);
   }
-  K.zone({name:'영풍문고 강남신세계점',sub:'원형 광장 쪽 매장 입구',floor:'B1',poly:bookFloor,y0:y-.25,y1:top,priority:8});
+  const [bookX,bookZ]=point(-1.06,-.50);
+  K.zone({name:'영풍문고 강남신세계점',sub:'원형 광장 쪽 매장 입구',mapArrival:{x:bookX,z:bookZ,y,yaw:bookAngle},floor:'B1',poly:bookFloor,y0:y-.25,y1:top,priority:8});
   const bookMaterial=new K.THREE.MeshLambertMaterial({vertexColors:true,side:K.THREE.DoubleSide});
   bookMaterial.onBeforeCompile=shader=>{
     shader.fragmentShader=shader.fragmentShader.replace('#include <emissivemap_fragment>',

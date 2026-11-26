@@ -74,8 +74,8 @@ export function boutiqueLobby(K,y){
     K.quad(key,[[a[0],y+base,a[1]],[b[0],y+base,b[1]],[b[0],y+base+height,b[1]],[a[0],y+base+height,a[1]]],[normal[0],0,normal[1]],[[left,0],[right,0],[right,1],[left,1]]);
   }
   for(const [i,x] of [-3.13,-1.8,-.47,.86,2.19].entries()){
-    box(x,-4.86,1.20,.08,1.45,.73,0x23292c);
-    panel(boards,x,-4.796,1.12,1.49,.65,i/5,(i+1)/5);
+    box(x,-4.86,1.20,.08,1.835,.46,0x23292c);
+    panel(boards,x,-4.796,1.12,1.855,.42,i/5,(i+1)/5);
   }
   for(const x of [-1.05,1.08]){
     box(x,-4.07,.43,.23,1.1,.13,0x222623);
@@ -100,6 +100,12 @@ export function boutiqueLobby(K,y){
     const a=point(x-.28,-2.9),b=point(x+.28,-2.9);
     K.phys.addWall(...a,...b,y,y+1.8,.18);
   }
+  // Lettering on the photographed return above the concession. Both the
+  // board and its two arrows face the shopping lobby from the mezzanine rim.
+  K.phys.addWall(...point(4.85,-.95),...point(6.05,-.95),y,y+4.36,.085);
+  const [labelX,labelZ]=point(4.952,-2.83);
+  K.sign('↓  101 / 102 / 103 / 104 / 105  상영관  ↓',{x:labelX,z:labelZ,y:y+2.61,
+    w:3.15,h:.23,bg:null,fg:'#e3bd82',rotY:angle-Math.PI/2,pxPerM:200});
   cinemaEntrance(K,origin[0],y,origin[1],angle);
   eastShoppingArcade(K,y);
   publicRotary(K,y);

@@ -23,7 +23,15 @@ export const shoeFront=[plan(593,1057),...arc(135,130,2).map(p=>plan(...p)),...a
 // rotary arc and the adjacent bookstore threshold on their original vertices.
 export const shoeRear=[[581,1069],[581,1095],[620,1095],[620,1065]].map(p=>plan(...p));
 export const shoeThreshold=[...shoeFront,...[...shoeRear].reverse()];
-export const bookFloor=[...bookEdge,...bookEdge.map(p=>outward(p,1.65)).reverse()];
+export const bookOrigin=outward(bookEdge[2].map((v,i)=>(v+bookEdge[3][i])/2),.02);
+export const bookAngle=Math.atan2(centre[0]-bookOrigin[0],centre[1]-bookOrigin[1]);
+export const bookPoint=(x,depth)=>[bookOrigin[0]+x*Math.cos(bookAngle)-depth*Math.sin(bookAngle),
+  bookOrigin[1]-x*Math.sin(bookAngle)-depth*Math.cos(bookAngle)];
+// The branch photographs show the raised reading bay behind the left side of
+// the entrance. Only this part of the shop opens beyond the original threshold.
+export const bookRear=[bookPoint(-2.54,4.95),bookPoint(.22,4.95),bookPoint(.22,1.65),
+  ...bookEdge.slice(3).map(p=>outward(p,1.65))];
+export const bookFloor=[...bookEdge,...bookRear.slice().reverse()];
 const ends=[[710,1028],[686,1063]].map(p=>plan(...p));
 export const cafeFront=[(ends[0][0]+ends[1][0])/2,(ends[0][1]+ends[1][1])/2];
 const facing=Math.atan2(centre[0]-cafeFront[0],centre[1]-cafeFront[1]);

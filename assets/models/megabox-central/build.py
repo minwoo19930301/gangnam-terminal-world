@@ -123,6 +123,120 @@ for cx in [-5.20,-3.76,-2.32,-.88,.56,2.00,3.44,4.88]:
 for level,depth,high,tone in [(2.32,.20,.07,'474540'),(2.38,.23,.27,'49443e'),(2.65,.28,.07,'685f54')]:
     block(0,4.77,level,12.02,depth,high,tone)
 finish('매표 로비 목재 몰딩과 처마')
+# The branch photo shows lit popcorn bays beneath the screens and a cool
+# illuminated two-shelf drinks case beside them. Open faces reveal the stock.
+import random
+rng = random.Random(1371)
+for cx in [-2.75, -.05]:
+    cy = 4.00
+    block(cx,cy,1.10,1.18,.55,.075,'79756b')
+    block(cx,cy+.24,1.175,1.12,.045,.54,'8b7356')
+    for side in [-1,1]:
+        block(cx+side*.558,cy,1.17,.035,.51,.57,'a29c89')
+        block(cx+side*.558,cy-.25,1.17,.030,.03,.57,'ddd4b6')
+    block(cx,cy,1.71,1.20,.56,.09,'595852')
+    block(cx,cy-.24,1.697,1.08,.035,.020,'fff0b3')
+    # A continuous irregular bed keeps the popcorn readable at middle distance;
+    # individual folded kernels interrupt the edge at close range.
+    tones=['f8d58d','edbe6a','e4b361','ffe2a3','d9a556']
+    rows=[]
+    for j in range(5):
+        row=[]
+        for i in range(13):
+            px=(i-6)/12; py=(j-2)/4
+            z=1.21+.18*max(0,1-2.6*px*px-2.8*py*py)+rng.uniform(-.028,.028)
+            row.append((cx+px*1.06,cy+py*.45,z))
+        rows.append(row)
+    for j in range(4):
+        for i in range(12):
+            face([rows[j][i],rows[j][i+1],rows[j+1][i+1],rows[j+1][i]],rng.choice(tones))
+    for row in rows:
+        for x,y,z in row:
+            r=rng.uniform(.024,.042)
+            crown=(x+.01,y,z+r*.85)
+            rim=[(x+r*math.cos(i*math.tau/5),y+r*math.sin(i*math.tau/5),z+rng.uniform(-.012,.008)) for i in range(5)]
+            for i in range(5):
+                face([rim[i],rim[(i+1)%5],crown],rng.choice(tones))
+    # Brushed steel lip, narrow viewing rail and a hanging popper kettle.
+    block(cx,cy-.267,1.175,1.12,.023,.068,'c5b69a')
+    block(cx-.18,cy+.06,1.57,.024,.025,.14,'b9b3a1')
+    block(cx-.18,cy+.06,1.49,.235,.15,.09,'938d81')
+    finish('매점 · 조명 팝콘 진열함 '+str(cx))
+cx,cy=2.02,4.06
+block(cx,cy+.17,1.10,1.26,.10,.75,'647773')
+for side in [-1,1]:
+    block(cx+side*.625,cy,1.10,.045,.46,.75,'9aa9a1')
+for shelf in range(2):
+    base=1.14+shelf*.31
+    block(cx,cy,base,1.22,.46,.045,'a1b0a7')
+    block(cx,cy-.226,base+.025,1.18,.012,.025,'def2da')
+    for i in range(13):
+        x=cx+(i-6)*.088
+        shade=['c49a53','c7814b','679b74','aecaba','729ba2'][i//3]
+        def bottle_ring(z,r):
+            return [(x+r*math.cos(k*math.tau/7),cy+r*math.sin(k*math.tau/7),z+base) for k in range(7)]
+        profile=[(.045,.034),(.08,.035),(.15,.035),(.20,.033),(.22,.019),(.24,.019)]
+        for (za,ra),(zb,rb),tone in zip(profile,profile[1:],[shade,'d1d4ae',shade,'adbfa8','d6dbc7']):
+            lo,hi=bottle_ring(za,ra),bottle_ring(zb,rb)
+            for k in range(7):face([lo[k],lo[(k+1)%7],hi[(k+1)%7],hi[k]],tone)
+block(cx,cy,1.805,1.30,.48,.063,'495759')
+block(cx,cy-.23,1.785,1.19,.025,.022,'e4ffe6')
+finish('매점 · 냉장 음료 진열장')
+
+# In the branch photo a right-angle return above the order kiosks exposes
+# timber armchairs behind a thin horizontal railing. Fit only the visible
+# edge inside the existing room, keeping the public floor below unobstructed.
+from mathutils import Vector
+def strut(a,b,r,color):
+    start,end=Vector(a),Vector(b)
+    axis=(end-start).normalized()
+    seed=Vector((0,0,1)) if abs(axis.z)<.85 else Vector((0,1,0))
+    side=axis.cross(seed).normalized()*r
+    up=axis.cross(side).normalized()*r
+    ends=[[tuple(c+side*i+up*j) for i,j in [(-1,-1),(1,-1),(1,1),(-1,1)]] for c in [start,end]]
+    for i in range(4):face([ends[0][i],ends[0][(i+1)%4],ends[1][(i+1)%4],ends[1][i]],color)
+    face(ends[0][::-1],color)
+    face(ends[1],color)
+
+front=4.97
+block(5.52,2.83,2.40,1.1,3.65,.43,'49443f')
+block(5.52,2.83,2.825,1.1,3.67,.060,'6d5e4d')
+block(5.52,2.83,2.37,1.13,3.67,.038,'3a3936')
+for cy in [1.02,2.83,4.62]:
+    block(front+.075,cy,2.88,.025,.025,.78,'67635a')
+for high in [3.02,3.19,3.36,3.64]:
+    block(front+.076,2.82,high,.018,3.63,.014 if high<3.6 else .030,'706d61')
+for edge in [1.03,4.58]:
+    strut((front+.085,edge,2.89),(front+.085,edge+(.63 if edge<2 else -.63),3.64),.008,'777368')
+# The photo's dark full-height pilaster and recessed wall frame the kiosks.
+block(5.45,.95,0,1.20,.16,4.36,'4e4740')
+block(4.84,.95,.10,.055,.205,4.13,'61574b')
+block(5.99,2.85,0,.075,3.67,2.41,'383936')
+block(5.48,4.68,0,.92,.12,2.41,'45423e')
+block(5.42,4.7,2.83,1.24,.14,1.54,'514941')
+finish('중층 · 라운지 난간과 매표 로비 처마')
+
+def chair(cx,cy,turn):
+    def world(u,v,h):
+        return (cx+u*math.cos(turn)-v*math.sin(turn),cy+u*math.sin(turn)+v*math.cos(turn),2.89+h)
+    def frame(a,b,r,tone):strut(world(*a),world(*b),r,tone)
+    for u in [-.23,.23]:
+        for v in [-.22,.22]:
+            frame((u*1.10,v*1.12,.01),(u,v,.44 if v<0 else .77),.025,'ad7642')
+        frame((u,-.20,.62),(u,.22,.66),.029,'c18b4d')
+        frame((u,-.18,.40),(u,-.18,.61),.018,'a57647')
+        frame((u,-.24,.38),(u,.24,.38),.032,'a77545')
+    for h in [.52,.66,.79]:
+        frame((-.23,.21,h),(.23,.21,h),.027,'b48653')
+    frame((-.23,.18,.40),(.23,.18,.40),.033,'ad7b4a')
+    face([world(u,v,.415) for u,v in [(-.24,-.24),(.24,-.24),(.24,.24),(-.24,.24)]],'6e4931')
+    finish('중층 · 목재 팔걸이 의자 '+str(cy))
+chair(5.61,1.66,-1.06)
+chair(5.56,3.72,-1.71)
+block(5.61,2.71,3.57,.52,.72,.045,'896342')
+block(5.61,2.71,2.89,.08,.12,.69,'615447')
+finish('중층 · 카페 테이블')
+
 # Preserve the channel lettering as its own editable mesh.
 font_path=Path('/System/Library/Fonts/Supplemental/Arial Bold.ttf')
 if not font_path.exists():
