@@ -1,3 +1,4 @@
+import { apartmentNight, lightApartmentWindows } from './apartment-windows.js';
 import { streetBatchView } from './static-view.js';
 import { createDeckVisibility } from './deck-visibility.js';
 import { visitorInstances } from './visitors.js';
@@ -50,7 +51,14 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     else if (key === 'hanRiver') m = createRiverWater(THREE,scene,onFrame);
     else if (key === 'water') { const s = T.surface('water'); m = new THREE.MeshLambertMaterial({ map: s.tex, vertexColors: true, transparent: true, opacity: 0.92 }); }
     else if (key.startsWith('sign:')) { const p = atlas.pages[+key.slice(5)]; m = new THREE.MeshBasicMaterial({ map: p.t, side: THREE.FrontSide, alphaTest: 0.35 }); }
-    else if (key.startsWith('arr:')) { m = new THREE.MeshLambertMaterial({ map: dummyMap, vertexColors: true }); m.userData.arr = texArrays[+key.slice(4)]; addBounce(m, '', true); materials.set(key, m); return m; }
+    else if (key.startsWith('arr:')) {
+      m = new THREE.MeshLambertMaterial({ map: dummyMap, vertexColors: true });
+      m.userData.arr = texArrays[+key.slice(4)];
+      addBounce(m, '', true);
+      const layer=m.userData.arr.userData.apartmentLayer;
+      if(layer!==undefined) lightApartmentWindows(m,apartmentNight(K),'paint',layer);
+      materials.set(key, m); return m;
+    }
     else if (key.startsWith('tex:')) { const s = T.surface(key.slice(4)); m = new THREE.MeshLambertMaterial({ map: s.tex, vertexColors: true }); }
     else if (key.startsWith('ctex:')) { const s = customTex.get(key.slice(5)); m = new THREE.MeshLambertMaterial({ map: s.tex, vertexColors: true, transparent: !!s.transparent, alphaTest: s.transparent ? 0.3 : 0, side: s.doubleSide ? THREE.DoubleSide : THREE.FrontSide }); }
     else if (/^gl\d+:/.test(key)) { // polished surface: the base material plus a blurred warm-interior reflection
@@ -63,6 +71,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     }
     else throw new Error('unknown material key ' + key);
     if (m.isMeshLambertMaterial) addBounce(m);
+    if (key==='tex:apt') lightApartmentWindows(m,apartmentNight(K),'paint');
     materials.set(key, m); return m;
   }
   // Shared reflection map for polished floors/stone ({ gloss }): a soft interior — bright ceiling with downlight pools,
@@ -866,6 +875,8 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
       const t = new THREE.DataArrayTexture(data, w, h, list.length);
       t.wrapS = t.wrapT = THREE.RepeatWrapping; t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = maxAniso;
       t.generateMipmaps = true; t.minFilter = THREE.LinearMipmapLinearFilter; t.magFilter = THREE.LinearFilter; t.needsUpdate = true;
+      const apartmentLayer=list.findIndex(entry=>entry.k==='tex:apt');
+      if(apartmentLayer>=0)t.userData.apartmentLayer=apartmentLayer;
       texArrays.push(t);
     }
     return layers;
