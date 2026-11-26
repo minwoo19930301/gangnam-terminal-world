@@ -1,4 +1,4 @@
-"""Create the editable exterior library from the three uncompressed elevation-map GLBs."""
+"""Create the editable exterior library from the original uncompressed elevation-map GLBs."""
 import bpy
 import hashlib
 import json
@@ -14,12 +14,14 @@ here = Path(__file__).resolve().parent
 source = Path(sys.argv[sys.argv.index("--") + 1])
 catalog = json.loads((here.parents[2] / "js/places/_re_models.json").read_text())["models"]
 files = {
+    "apt-a10023462": ("반포르엘2차", "1ec76e6baf2661abfc2bd89ab8d542ee067c09803e787e7e19a3f21b414ffa8d"),
+    "apt-a13790929": ("신반포한신2차", "a999c7d6a3223f41f5578089b18e40a9d1e8772853d093954ca94684e9e89325"),
     "apt-a13790828": ("신반포4차", "39a634e9dad79cfc9654cc52c9ab9f43d5853365c4a94d53b3b7f00278c8dd8f"),
     "apt-a10023673": ("반포르엘", "a4b287631cc5b6f1f2d5080a0f613a7d5bfbf6f8e5a3073a62c8e93939df5ec5"),
     "apt-a10024913": ("반포센트럴자이", "002c9fe4e6a19c2bd1c4787278de042b2301eb71b4351d957118b93238e6bcd4"),
 }
 def preserve_linear_colours(mesh, raw):
-    # Blender 4.5 imports vertex colours into display-encoded bytes. These three
+    # Blender 4.5 imports vertex colours into display-encoded bytes. These
     # source GLBs use *linear* UNORM8 colours, so that conversion loses palette
     # entries. Keep their exact source values in an editable float colour layer.
     json_size = struct.unpack_from("<I", raw, 12)[0]
@@ -60,6 +62,7 @@ bpy.ops.wm.read_factory_settings(use_empty=True)
 scene = bpy.context.scene
 scene.name = "신반포로 · 아파트 외관"
 scene.unit_settings.system = "METRIC"
+claims = json.loads((here/"towers.json").read_text())
 objects = {}
 points = {}
 for model_id, (name, expected) in files.items():
@@ -76,7 +79,7 @@ for model_id, (name, expected) in files.items():
     mesh_object.data.name = name + " · 외벽과 창"
     mesh_object["estate_id"] = model_id
     mesh_object["source_sha256"] = expected
-    mesh_object["claimed_footprints"] = row["claims"]
+    mesh_object["claimed_footprints"] = claims[model_id]
     mesh_object.location = (row["x"], -row["z"], row["y"])
     coll = bpy.data.collections.new(name + " · 외관")
     coll["estate_id"] = model_id
@@ -85,7 +88,24 @@ for model_id, (name, expected) in files.items():
         old.objects.unlink(mesh_object)
     coll.objects.link(mesh_object)
     objects[model_id] = mesh_object
-    runpy.run_path(str(here/"facades.py"))["finish"](mesh_object,model_id)
+
+buildings = {b["id"]:b for b in json.loads((here.parents[2]/"data/osm.json").read_text())["buildings"]}
+towers = runpy.run_path(str(here/"towers.py"))
+towers["assign_towers"](objects, buildings, claims)
+finish = runpy.run_path(str(here/"facades.py"))["finish"]
+for model_id, mesh_object in objects.items():
+    if model_id in {"apt-a13790828", "apt-a10023673", "apt-a10024913"}:
+        finish(mesh_object,model_id)
+    # Provide an editable selection for every complete tower in the native file.
+    groups = {tower:mesh_object.vertex_groups.new(name=buildings[tower]["name"]) for tower in claims[model_id]}
+    selected = {tower:[] for tower in groups}
+    for vertex in mesh_object.data.vertices:
+        x = mesh_object.location.x + vertex.co.x
+        z = -mesh_object.location.y - vertex.co.y
+        tower = min(groups, key=lambda t: towers["distance_sq"](x,z,buildings[t]["poly"]))
+        selected[tower].append(vertex.index)
+    for tower, indices in selected.items():
+        groups[tower].add(indices, 1, "REPLACE")
     points[model_id] = [list(v.co[:2]) for v in mesh_object.data.vertices]
 
 levels = json.loads(subprocess.run(

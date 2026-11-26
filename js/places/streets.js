@@ -33,7 +33,7 @@ const gardenWays = [...frontageWays, 593858541, 1232132207, 593858544, 356129692
   ...publicForkRoads];
 export const meta = {
   id: 'streets', name: '고속터미널 거리 · 신반포로와 사평대로',
-  claims: [886400346, 413367405, 413367408, 1137867801, 606009742, 431589113, 1173093430],
+  claims: [886400346, 606009742, 431589113, 1173093430],
   // 831108569 is the footway through the east parking aisle, not service301889794.
   claimRoads: [...gardenWays, ...ROAD_IDS, ...WALK_IDS, 831108565, 831108569, 1420100042, 1420100043,
     1213763244, 1232132157, 1232132198, 1232132167, 1232132156], // crossing paint replaced here, avoiding city duplicates
@@ -1313,20 +1313,6 @@ function buildG13Street(K, {beam, flat, clipped, rect, terminalStrip, streetSlab
 // This is exterior streetscape work; unobserved interiors stay unmodelled.
 function buildRoadviewBuildings(K) {
   const PI=Math.PI;
-  const surface=(poly,edge,t,y,w,h,mat,offset=.035)=>{
-    const a=poly[edge],b=poly[(edge+1)%poly.length],L=Math.hypot(b[0]-a[0],b[1]-a[1]);
-    const u=[(b[0]-a[0])/L,(b[1]-a[1])/L],n=K.orient(poly)[edge];
-    const x=a[0]+u[0]*t+n[0]*offset,z=a[1]+u[1]*t+n[1]*offset;
-    K.quad(mat,[[x-u[0]*w/2,y,z-u[1]*w/2],[x+u[0]*w/2,y,z+u[1]*w/2],
-      [x+u[0]*w/2,y+h,z+u[1]*w/2],[x-u[0]*w/2,y+h,z-u[1]*w/2]],[n[0],0,n[1]]);
-  };
-  const band=(poly,y,h,mat)=>{
-    for(let i=0;i<poly.length;i++){
-      const a=poly[i],b=poly[(i+1)%poly.length],L=Math.hypot(b[0]-a[0],b[1]-a[1]);
-      surface(poly,i,L/2,y,L,h,mat);
-    }
-  };
-
   // sr-05: the two photographed junction corners replace city-generic blocks
   // on their exact OSM footprints. No invented window bays on 해돋는집.
   K.texture('streets-sunrise-grooved-brick',192,256,(g,w,h)=>{
@@ -1690,35 +1676,7 @@ function buildRoadviewBuildings(K) {
     });
   }
 
-  // bp_01's older slabs: tan end walls, broad dark balcony openings and white
-  // balcony bands. OSM's twelve floors are retained instead of inventing 15.
-  for(const id of [413367405,413367408])for(const b of K.osmBuilding(id)){
-    const p=b.poly,H=b.height,floors=b.levels,fh=H/floors;
-    K.prism(p,0,H,{mat:0xd9a26b,top:0xc6bda9});
-    for(let e=0;e<p.length;e++){
-      const a=p[e],c=p[(e+1)%p.length],L=Math.hypot(c[0]-a[0],c[1]-a[1]);
-      if(L<20)continue;
-      for(let f=0;f<floors;f++){
-        const y=f*fh+.45;
-        surface(p,e,L/2,y,L-.7,1.95,0x40585a);
-        surface(p,e,L/2,f*fh+.08,L-.25,.38,0xe9e5d9,.08);
-        for(let t=1.9;t<L-1;t+=3.2)surface(p,e,t,y,.13,1.95,0xe5e3d7,.065);
-      }
-    }
-    band(p,H-.35,.35,0xe5e1d5);
-  }
-  // The manifest corrects bp_01 to 3동. Its modern tower is the existing
-  // 34F / 101m OSM 1137867801, not an invented slab immediately behind 4동.
-  K.texture('streets-residential-bluegrey',256,256,(g,w,h)=>{
-    g.fillStyle='#3c4a5a';g.fillRect(0,0,w,h);
-    g.fillStyle='#73888f';g.fillRect(34,24,186,178);
-    g.fillStyle='#536b79';g.fillRect(42,33,75,160);g.fillStyle='#637d89';g.fillRect(128,33,83,160);
-    g.fillStyle='#a1aaa7';g.fillRect(0,0,20,h);g.fillRect(w-12,0,12,h);g.fillRect(0,h-25,w,25);g.fillRect(119,24,6,178);
-  },[3.25,1],{facade:true});
-  for(const b of K.osmBuilding(1137867801)){
-    K.prism(b.poly,0,b.height,{mat:'streets-residential-bluegrey',floorH:b.height/b.levels,top:0x485563});
-    band(b.poly,b.height-.55,.55,0x758083);
-  }
+
 }
 
 // Round 20 / daiso ST-L3, ST-L4, ST-D1. The 2026-06 Kakao views set the

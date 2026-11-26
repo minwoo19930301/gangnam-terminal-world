@@ -7,12 +7,14 @@ import { addEstateSilhouettes } from './estate_silhouettes.mjs';
 import fs from 'node:fs'; import path from 'node:path'; import url from 'node:url'; import { createRequire } from 'node:module';
 const ROOT = path.resolve(path.dirname(url.fileURLToPath(import.meta.url)), '..');
 const SRC = process.argv[2]; if (!SRC) { console.error('usage: node tools/import_re_models.mjs <seoul-real-estate-map dir>'); process.exit(1); }
-const JOBS = +(process.argv[process.argv.indexOf('--jobs') + 1] || 6);
+const jobsIndex = process.argv.indexOf('--jobs');
+const JOBS = jobsIndex < 0 ? 6 : Number(process.argv[jobsIndex+1]);
+if (!Number.isSafeInteger(JOBS) || JOBS < 1) throw new Error('--jobs requires a positive integer');
 const req = createRequire(path.join(process.env.NODE_PATH || ROOT, 'x.js'));
 const { NodeIO } = req('@gltf-transform/core'); const { ALL_EXTENSIONS } = req('@gltf-transform/extensions');
-const F = req('@gltf-transform/functions'); const { MeshoptEncoder, MeshoptSimplifier } = req('meshoptimizer');
-await MeshoptEncoder.ready; await MeshoptSimplifier.ready;
-const io = new NodeIO().registerExtensions(ALL_EXTENSIONS).registerDependencies({ 'meshopt.encoder': MeshoptEncoder });
+const F = req('@gltf-transform/functions'); const { MeshoptDecoder, MeshoptEncoder, MeshoptSimplifier } = req('meshoptimizer');
+await Promise.all([MeshoptDecoder.ready, MeshoptEncoder.ready, MeshoptSimplifier.ready]);
+const io = new NodeIO().registerExtensions(ALL_EXTENSIONS).registerDependencies({ 'meshopt.decoder': MeshoptDecoder, 'meshopt.encoder': MeshoptEncoder });
 const osm = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/osm.json'), 'utf8'));
 const META = JSON.parse(fs.readFileSync(path.join(ROOT, 'js/places/_meta.json'), 'utf8'));
 const { lat: LAT0, lon: LON0, kx: KX, kz: KZ } = osm.origin;
@@ -42,30 +44,33 @@ const bcent = osm.buildings.map(b => ({ b, c: centroid(b.poly) }));
 
 const outDir = path.join(ROOT, 'assets/re'); fs.mkdirSync(outDir, { recursive: true });
 const catalogPath = path.join(ROOT, 'js/places/_re_models.json');
-const nativeEdits = new Map((fs.existsSync(catalogPath)
-  ? JSON.parse(fs.readFileSync(catalogPath, 'utf8')).models : [])
-  .filter(model => model.nativeEdit).map(model => [model.id, model]));
+const previous = fs.existsSync(catalogPath) ? JSON.parse(fs.readFileSync(catalogPath, 'utf8')).models : [];
+const nativeEdits = new Map(previous.filter(model => model.nativeEdit).map(model => [model.id, model]));
+// These five models were separated along the named tower footprints in Blender.
+const towers = JSON.parse(fs.readFileSync(path.join(ROOT,'assets/models/banpo-apartments/towers.json'),'utf8'));
+const reserved = new Set(Object.values(towers).flat());
 const records = [], taken = new Set();
 let done = 0;
 async function work(item) {
   const { a, x, z, kind } = item;
   const edit = nativeEdits.get(a.id);
-  const src = edit ? path.join(ROOT, edit.file) : path.join(SRC, 'public/models', a.model);
+  const native = Boolean(edit || towers[a.id]);
+  const src = native ? path.join(ROOT, edit?.file ?? `assets/re/${a.id}.glb`) : path.join(SRC, 'public/models', a.model);
+  if (native && !fs.existsSync(src)) throw new Error(`Missing edited GLB ${src}; export its Blender collection first`);
   if (!fs.existsSync(src)) { console.log('missing', a.model); return; }
   const { min, max, doc } = await boundsOf(src);
-  const yaw = a.yawDegFromEast || 0, rect = rectOf(x, z, yaw, min, max);
+  const yaw = a.yawDegFromEast || 0;
+  const placedX = Math.round(x*100)/100, placedZ = Math.round(z*100)/100;
+  const rect = rectOf(towers[a.id] ? placedX : x, towers[a.id] ? placedZ : z, yaw, min, max);
   // generic complex models that overlap a bespoke model are dropped (the bespoke one is better)
-  const claims = bcent.filter(({ b, c }) => !moduleClaims.has(b.id) && (inPoly(c[0], c[1], rect) || b.poly.filter(p => inPoly(p[0], p[1], rect)).length * 2 >= b.poly.length)).map(({ b }) => b.id);
+  const claims = towers[a.id] ?? bcent.filter(({ b, c }) => !reserved.has(b.id) && !moduleClaims.has(b.id) && (inPoly(c[0], c[1], rect) || b.poly.filter(p => inPoly(p[0], p[1], rect)).length * 2 >= b.poly.length)).map(({ b }) => b.id);
   const file = `assets/re/${a.id}.glb`;
-  const uncompressed = ['apt-a10023673', 'apt-a13790828'].includes(a.id);
-  const sourceMaterial = uncompressed || a.id === 'apt-a10024913';
-  if (uncompressed && !edit) {
-    fs.copyFileSync(src, path.join(ROOT, file));
-  } else if (!fs.existsSync(path.join(ROOT, file))) {
+  const sourceMaterial = ['apt-a10023673','apt-a13790828','apt-a10024913'].includes(a.id);
+  if (!fs.existsSync(path.join(ROOT, file))) {
     await doc.transform(F.dedup(), F.prune(), F.flatten(), F.join({ keepNamed: false }), F.weld(), F.quantize(), F.meshopt({ encoder: MeshoptEncoder, level: 'medium' }));
     await io.write(path.join(ROOT, file), doc);
   }
-  records.push({ id: a.id, name: a.nameKo || a.name || '', kind, category: a.category, x: Math.round(x * 100) / 100, z: Math.round(z * 100) / 100, y: a.groundOffsetM || 0, yaw, rect: rect.map(p => p.map(v => Math.round(v * 10) / 10)), height: Math.round(max[1] * 10) / 10, claims, file, bytes: fs.statSync(path.join(ROOT, file)).size, ...(sourceMaterial ? { sourceMaterial } : {}), ...(edit ? {nativeEdit:true} : {}) });
+  records.push({ id: a.id, name: a.nameKo || a.name || '', kind, category: a.category, x: placedX, z: placedZ, y: a.groundOffsetM || 0, yaw, rect: rect.map(p => p.map(v => Math.round(v * 10) / 10)), height: Math.round(max[1] * 10) / 10, claims, file, bytes: fs.statSync(path.join(ROOT, file)).size, ...(sourceMaterial ? { sourceMaterial } : {}), ...(native ? {nativeEdit:true} : {}) });
   if (++done % 20 === 0) console.log(done, '/', cand.length);
 }
 // bespoke first so overlapping generic complexes can be dropped afterwards
@@ -73,10 +78,24 @@ cand.sort((p, q) => (p.kind === 'bespoke' ? 0 : 1) - (q.kind === 'bespoke' ? 0 :
 for (let i = 0; i < cand.length; i += JOBS) await Promise.all(cand.slice(i, i + JOBS).map(work));
 const bes = records.filter(r => r.kind === 'bespoke');
 const overlap = (r, q) => r.rect.some(p => inPoly(p[0], p[1], q.rect)) || q.rect.some(p => inPoly(p[0], p[1], r.rect));
-const final = records.filter(r => r.kind === 'bespoke' || !bes.some(q => overlap(r, q)));
+const final = records.filter(r => r.kind === 'bespoke' || towers[r.id] || !bes.some(q => overlap(r, q)));
 for (const r of records) if (!final.includes(r)) { try { fs.unlinkSync(path.join(ROOT, r.file)); } catch (e) { } }
-// one OSM building is replaced by at most one model
-for (const r of final) r.claims = r.claims.filter(id => !taken.has(id) && taken.add(id));
+// Preserve existing valid owners when approximate rectangles overlap. Model
+// decoding completes in parallel; the winning building must not depend on I/O.
+const byId = new Map(final.map(model => [model.id, model]));
+const bespokeClaims = new Set(bes.flatMap(model=>model.claims));
+const retained = new Map();
+for (const model of previous) {
+  const next = byId.get(model.id);
+  if (!next) continue;
+  for (const id of model.claims) {
+    if (next.claims.includes(id) && (next.kind === 'bespoke' || !bespokeClaims.has(id))) retained.set(id, model.id);
+  }
+}
+const order = new Map(cand.map(({a},index)=>[a.id,index]));
+final.sort((p,q)=>order.get(p.id)-order.get(q.id));
+for (const r of final) r.claims = r.claims.filter(id =>
+  (!retained.has(id) || retained.get(id) === r.id) && !taken.has(id) && taken.add(id));
 final.sort((p, q) => p.id.localeCompare(q.id));
 await addEstateSilhouettes(final, ROOT);
 fs.writeFileSync(path.join(ROOT, 'js/places/_re_models.json'), JSON.stringify({ source: 'github.com/minwoo19930301/seoul-real-estate-map (bespoke-manifest.json, manifest.json)', note: 'sourceMaterial keeps the original glTF materials at runtime. Files may use meshopt compression. Placement from the source manifests.', models: final }));
