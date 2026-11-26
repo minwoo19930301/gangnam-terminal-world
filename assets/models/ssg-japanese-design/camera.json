@@ -1,0 +1,11 @@
+{
+  "floor": "9F",
+  "x": -73.53,
+  "z": 7.24,
+  "yaw": 40,
+  "pitch": -10,
+  "meshName": "TimeStyleSpacecraft",
+  "sourceBlend": "dining.blend",
+  "sourceCollection": "SSG_9F_TimeStyle",
+  "nativeLabel": "타임&스타일"
+}
