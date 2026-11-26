@@ -727,7 +727,15 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     scene.add(mesh);
     return mesh;
   }
-  function texture(key, w, h, draw, scale = [1, 1], opts = {}) { if (!customTex.has(key)) { const r = T.custom(key, w, h, draw, scale, opts); customTex.set(key, { ...r, transparent: !!opts.transparent, doubleSide: !!opts.doubleSide }); } return key; }
+  function texture(key, w, h, draw, scale = [1, 1], opts = {}) {
+    if (!customTex.has(key)) {
+      const record = T.custom(key, w, h, draw, scale, opts);
+      record.transparent = !!opts.transparent;
+      record.doubleSide = !!opts.doubleSide;
+      customTex.set(key, record);
+    }
+    return key;
+  }
   function material(key, m) { customMats.set(key, m); materials.set('cm:' + key, m); return key; }
   function mapMark(o) { mapMarks.push({ place: current, ...o }); }
   function osmBuilding(id) { return osm.buildings.filter(b => b.id === id); }

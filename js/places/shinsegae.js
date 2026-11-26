@@ -9051,7 +9051,7 @@ export function build(K) {
       }
       g.strokeStyle='rgba(145,117,90,.14)';g.lineWidth=.5;g.strokeRect(x,z,tile,tile);
     }
-  },[2.4,2.4]);
+  },[2.4,2.4],{lazy:true});
   K.texture('ssg_upper_veined',512,512,(g,w,h)=>{
     g.fillStyle='#e9e6df';g.fillRect(0,0,w,h);
     const random=K.rand(19140);
@@ -9064,7 +9064,7 @@ export function build(K) {
       g.closePath();g.fillStyle=(i+j)%3?'#e9e6df':'#b9b5ad';g.fill();
       g.strokeStyle='#5c5851';g.lineWidth=4+random()*5;g.stroke();
     }
-  },[1.8,1.8]);
+  },[1.8,1.8],{lazy:true});
   // Abstract light triangular panels for BAO BAO bags. This is generated
   // geometry, not a product photograph; shop fixtures remain schematic.
   K.texture('ssg_baobao_triangles',256,256,(g,w,h)=>{
@@ -9077,7 +9077,7 @@ export function build(K) {
       g.fillStyle=(row+col)%2?'#bec7c6':'#f1efea';
       g.beginPath();g.moveTo(x+cell-m,z+m);g.lineTo(x+cell-m,z+cell-m);g.lineTo(x+m,z+cell-m);g.closePath();g.fill();
     }
-  },[.31,.25]);
+  },[.31,.25],{lazy:true});
   K.texture('ssg_moncler_pylon',128,512,(g,w,h)=>{
     g.fillStyle='#ecebe7';g.fillRect(0,0,w,h);
     for(let x=0;x<w;x+=5){g.fillStyle=x%10?'rgba(255,255,255,.38)':'rgba(109,111,111,.16)';g.fillRect(x,0,2,h);}
@@ -9090,7 +9090,7 @@ export function build(K) {
     for(let i=0;i<1900;i++){
       g.fillStyle=colors[i%colors.length];g.fillRect(r()*w,r()*h,1+r()*3,1+r()*3);
     }
-  },[.65,.65]);
+  },[.65,.65],{lazy:true});
   // Simplified blue illuminated displays seen at the Gangnam Tiffany entrance;
   // this is a procedural suggestion rather than the original campaign image.
   K.texture('ssg_tiffany_display',256,192,(g,w,h)=>{
@@ -9105,7 +9105,7 @@ export function build(K) {
     g.strokeStyle='#a0ddf4';g.lineWidth=3;g.beginPath();g.ellipse(w*.5,h*.46,w*.17,h*.22,-.25,0,Math.PI*2);g.stroke();
     g.strokeStyle='#e8fcff';g.lineWidth=2;g.beginPath();g.ellipse(w*.5,h*.46,w*.11,h*.15,-.25,0,Math.PI*2);g.stroke();
     g.fillStyle='rgba(232,252,255,.85)';g.fillRect(w*.2,h*.84,w*.6,2);
-  },[.62,.44]);
+  },[.62,.44],{lazy:true});
   // Abstract blue and gold colour on the changing illuminated Hermès
   // windows, informed by a 2025 Gangnam corridor photograph. This is a
   // generated pattern, not the photographer's image or campaign artwork.
@@ -9117,7 +9117,7 @@ export function build(K) {
       g.strokeStyle=colors[i%colors.length];g.lineWidth=1+rnd()*2;
       g.beginPath();g.moveTo(x,yy);g.lineTo(x-5+rnd()*10,yy-3-rnd()*12);g.stroke();
     }
-  },[.7,1.1]);
+  },[.7,1.1],{lazy:true});
   // Suggest the warm, diagonal, light-veined metal of Bulgari's open window
   // displays, as seen in a February 2025 Gangnam visit. No photo is bundled.
   K.texture('ssg_bulgari_window',256,512,(g,w,h)=>{
@@ -9127,7 +9127,7 @@ export function build(K) {
       g.strokeStyle='rgba(255,237,185,.55)';g.lineWidth=2;
       for(let yy=-65;yy<h+65;yy+=30){g.beginPath();g.moveTo(x+3,yy);g.lineTo(x+56,yy+30);g.stroke();}
     }
-  },[1.3,2.6]);
+  },[1.3,2.6],{lazy:true});
   K.texture('ssg_bulgari_lattice',256,256,(g,w,h)=>{
     g.fillStyle='#27221d';g.fillRect(0,0,w,h);
     g.strokeStyle='#c8a65d';g.lineWidth=3;
@@ -9147,7 +9147,7 @@ export function build(K) {
       }
       g.closePath();g.fill();
     }
-  },[.9,.9]);
+  },[.9,.9],{lazy:true});
   // Procedural white veining on the black stone fascia shown in the 2025
   // Gangnam corridor photographs. Exact stone pattern is not reproduced.
   // https://armed49.tistory.com/v/251
@@ -9160,7 +9160,7 @@ export function build(K) {
       g.strokeStyle='rgba(213,209,201,.30)';g.lineWidth=.7;
       g.beginPath();g.moveTo(x+6*s,54);g.lineTo(x+41*s,78);g.lineTo(x+62*s,83);g.stroke();
     }
-  },[2.4,.8]);
+  },[2.4,.8],{lazy:true});
   const pylonMap=K.T.surface('ssg_moncler_pylon').tex;
   K.material('ssg_moncler_pylon_lit',new K.THREE.MeshLambertMaterial({map:pylonMap,color:0xffffff,emissive:0xecebe7,emissiveMap:pylonMap,emissiveIntensity:.45}));
   K.texture('ssg_upper_quilt',256,256,(g,w,h)=>{
@@ -9170,7 +9170,7 @@ export function build(K) {
       gx.addColorStop(0,'#f4efe6');gx.addColorStop(.72,'#efe9de');gx.addColorStop(1,'#d9d0c0');
       g.fillStyle=gx;g.fillRect(x+2,y+2,60,60);
     }
-  },[1.8,1.8]);
+  },[1.8,1.8],{lazy:true});
   // Small repeating surfaces reconstructed from branch photography; no source
   // images are shipped with the scene.
   K.texture('ssg_delvaux_parquet',256,256,(g,w,h)=>{
@@ -9183,7 +9183,7 @@ export function build(K) {
         g.fillStyle=light?'#d4aa88':'#bd8f70';g.fill();g.strokeStyle='#ab8267';g.lineWidth=1;g.stroke();
       }
     }
-  },[1.65,1.65]);
+  },[1.65,1.65],{lazy:true});
   // Fine taupe carpet suggested by the Cartier Gangnam interior photograph.
   // Pale plank finish from the 2016 Gangnam A.P.C. opening photo.
   K.texture('ssg_apc_oak',256,256,(g,w,h)=>{
@@ -9198,7 +9198,7 @@ export function build(K) {
       }
       g.fillStyle='rgba(120,95,65,.12)';g.fillRect((yy%64?64:192),yy,1,31);
     }
-  },[2,2]);
+  },[2,2],{lazy:true});
   K.texture('ssg_cartier_carpet',256,256,(g,w,h)=>{
     g.fillStyle='#c2b8a8';g.fillRect(0,0,w,h);
     const rnd=K.rand(41219);
@@ -9206,7 +9206,7 @@ export function build(K) {
       g.fillStyle=i%2?'rgba(255,255,255,.08)':'rgba(70,60,50,.08)';
       g.fillRect(rnd()*w,rnd()*h,1+rnd()*2,1);
     }
-  },[1.5,1.5]);
+  },[1.5,1.5],{lazy:true});
   // Neutral grey woven floor and seating, suggested by the Gangnam Chanel
   // shoe boutique opening photographs; this is generated, not a photo.
   K.texture('ssg_chanel_shoe_tweed',256,256,(g,w,h)=>{
@@ -9218,14 +9218,14 @@ export function build(K) {
       g.fillRect(x,z,1+rnd()*3,1);
       if(i%3===0)g.fillRect(x,z,1,1+rnd()*3);
     }
-  },[1.3,1.3]);
+  },[1.3,1.3],{lazy:true});
   // Inset dark squares on a light floor, suggested by the Valentino Gangnam
   // boutique photograph. This is generated geometry, not the source image.
   K.texture('ssg_valentino_checks',256,256,(g,w,h)=>{
     g.fillStyle='#f0eee9';g.fillRect(0,0,w,h);
     g.fillStyle='#232322';
     for(let x=0;x<w;x+=64)for(let z=0;z<h;z+=64)g.fillRect(x+15,z+15,34,34);
-  },[2,2]);
+  },[2,2],{lazy:true});
   K.texture('ssg_vca_diamond',256,256,(g,w,h)=>{
     g.fillStyle='#19191b';g.fillRect(0,0,w,h);
     for(let row=-1;row<10;row++)for(let col=-1;col<9;col++){
@@ -9233,7 +9233,7 @@ export function build(K) {
       g.beginPath();g.moveTo(x,y-12);g.lineTo(x+18,y);g.lineTo(x,y+12);g.lineTo(x-18,y);g.closePath();
       g.fillStyle=(row*7+col*11)%7===0?'#b7a379':'#252426';g.fill();g.strokeStyle='#0f0f10';g.lineWidth=2;g.stroke();
     }
-  },[1.4,1.4]);
+  },[1.4,1.4],{lazy:true});
   // The 2026 Gangnam renewal describes gold-and-green floral wallpaper.
   // A small procedural pattern suggests the finish without copying artwork;
   // its exact color, scale and placement are not surveyed.
@@ -9252,7 +9252,7 @@ export function build(K) {
         const a=k*Math.PI*2/5;g.beginPath();g.ellipse(x+4+Math.cos(a)*5,z-23+Math.sin(a)*5,3.5,2,a,0,Math.PI*2);g.stroke();
       }
     }
-  },[1.8,1.8]);
+  },[1.8,1.8],{lazy:true});
   K.texture('ssg_upper_graphic',256,512,(g,w,h)=>{
     g.fillStyle='#40525b';g.fillRect(0,0,w,h);
     for(let i=0;i<8;i++){
@@ -9260,7 +9260,7 @@ export function build(K) {
       g.strokeStyle=i%2?'#b7bda7':'#84968f';g.lineWidth=4;g.stroke();
     }
     g.fillStyle='#e0ddd1';g.beginPath();g.arc(65,70,27,0,PI*2);g.fill();
-  },[1,2]);
+  },[1,2],{lazy:true});
   // Simple procedural black/ivory zigzags recall the old Gangnam Boon the Shop.
   // The design photograph is not embedded; current finishes may have changed.
   K.texture('ssg_boon_zigzag',256,256,(g,w,h)=>{
@@ -9270,7 +9270,7 @@ export function build(K) {
       const x=col*128+(row%2)*64, z=row*64;
       g.beginPath();g.moveTo(x,z);g.lineTo(x+64,z+32);g.lineTo(x+128,z);g.lineTo(x+128,z+27);g.lineTo(x+64,z+59);g.lineTo(x,z+27);g.closePath();g.fill();
     }
-  },[2.4,2.4]);
+  },[2.4,2.4],{lazy:true});
   // Glossy indigo ceramic on the Gangnam rag & bone display table (2025).
   // Procedural cork inspired by the 2025 Gangnam Birkenstock shop photographs.
   // No source image is packaged with the scene.
@@ -9282,7 +9282,7 @@ export function build(K) {
       g.fillStyle=['#4a3a29','#675039','#d8bd91','#92744e'][i%4];
       g.fillRect(x,z,ww,hh);
     }
-  },[1.2,1.2]);
+  },[1.2,1.2],{lazy:true});
   // Procedural warm woven panel suggested by the 2020 Gangnam LOEWE
   // opening photo; no photographic texture or artwork is bundled.
   // https://beta.kolonfnc.com/press/656?page=25
@@ -9295,14 +9295,14 @@ export function build(K) {
       g.fillStyle='rgba(245,218,178,.14)';g.fillRect(x+shift+2,y+2,17,2);
       g.fillStyle='rgba(92,64,43,.14)';g.fillRect(x+shift,y+13,22,1);
     }
-  },[1.5,1.5]);
+  },[1.5,1.5],{lazy:true});
   K.texture('ssg_ragbone_tile',256,256,(g,w,h)=>{
     g.fillStyle='#123978';g.fillRect(0,0,w,h);
     for(let x=0;x<w;x+=32)for(let y=0;y<h;y+=64){
       g.fillStyle=((x/32+y/64)%3===0)?'#315da5':'#204b93';g.fillRect(x+2,y+2,28,60);
       g.fillStyle='rgba(230,240,255,.14)';g.fillRect(x+4,y+4,2,56);
     }
-  },[.64,1.28]);
+  },[.64,1.28],{lazy:true});
   // Procedural fine lattice suggested by the 2024 Gangnam Louis Vuitton
   // watch-and-jewellery frontage. It contains no source photo or artwork.
   K.texture('ssg_lv_jewel_lattice',128,128,(g,w,h)=>{
@@ -9311,7 +9311,7 @@ export function build(K) {
       g.fillStyle='#8d8064';g.beginPath();g.arc(xx,yy,1.45,0,Math.PI*2);g.fill();
       g.fillStyle='#fbf4dd';g.fillRect(xx-1,yy-4,2,2);
     }
-  },[.42,.42]);
+  },[.42,.42],{lazy:true});
   function upperPalette(id,c) {
     const n=c.name,k=c.kind;
     const p={wall:0xeee8dd,floor:{tex:'wood',color:0xd4bf9f,gloss:.3},trim:0xa68e65,accent:0x66574a,dark:false};
