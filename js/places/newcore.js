@@ -1,4 +1,5 @@
 import {oksobanReception} from '../../assets/models/newcore-oksoban-entry/model.js';
+import {placeCafeFront} from '../../assets/models/newcore-mamas/model.js';
 import {yucheonDining} from '../../assets/models/newcore-yucheon/model.js';
 import {registerAshleyDessert} from '../../assets/models/newcore-dessert/model.js';
 import { registerGolf } from '../../assets/models/newcore-golf/model.js';
@@ -177,9 +178,10 @@ function textures(K) {
 }
 
 function arch(F, u, span, label, awning = C.black, height = 9.65, opaque = false) {
+  const cafeFront = label === 'café MAMAS';
   const { K, P, B, S, angle } = F, r = span / 2 - 0.65, spring = height - r;
   // Roadview01/03: pale green glazing ABOVE the black boutique windows.
-  const infill = opaque ? 0x777d7d : { color: 0x91aaa3, gloss: 0.3 };
+  const infill = opaque ? (cafeFront ? 0xa5a8a6 : 0x777d7d) : { color: 0x91aaa3, gloss: 0.3 };
   B(u, 3.35, -0.12, span - 1.05, height - 3.25, 0.16, 'newcore-blue-tile', { solid: false });
   B(u, 3.35, -0.24, r * 2, spring - 3.3, 0.08, infill, { solid: false });
   const pt = (uu, y, v) => { const [x, z] = P(uu, v); return [x, y, z]; };
@@ -218,9 +220,10 @@ function arch(F, u, span, label, awning = C.black, height = 9.65, opaque = false
   }
   if (opaque) B(u, height - 0.3, -0.53, 0.8, 0.85, 0.7, C.trim, { solid: false });
   const aw = span - 1.6;
-  const awningTop = opaque ? 4.3 : 3.7;
+  const awningTop = cafeFront ? 6.03 : opaque ? 4.3 : 3.7;
   K.quad(awning, [pt(u - aw / 2, awningTop, -0.3), pt(u + aw / 2, awningTop, -0.3), pt(u + aw / 2, 2.95, -2), pt(u - aw / 2, 2.95, -2)], [0, 1, 0]);
-  B(u, 2.70, -1.98, aw, 0.25, 0.08, awning, { solid: false }); S(label, u, 2.84, -2.04, Math.min(aw - 0.5, 6), 0.29);
+  B(u, 2.70, -1.98, aw, 0.25, 0.08, awning, { solid: false });
+  S(label, u, 2.84, -2.04, cafeFront ? 2.02 : Math.min(aw - 0.5, 6), 0.29, null, cafeFront ? {font:'Georgia, serif'} : {});
 }
 function doors(F, u, w = 4.4) {
   for (const side of [-1, 1]) {
@@ -333,11 +336,12 @@ function streetFront(F, number, roof) {
   K.polyWalls(F.p, 0, roof, { mat: 'newcore-limestone', inner: 0xe9e5db, thick: 0.3, openings });
   centers.forEach((u, i) => {
     const label = number === 2 ? ['하나은행', 'NEWCORE', 'FRANGERIE', '폴바셋', 'Black&White', 'luxury gallery', 'DESIGNERS'][i % 7]
-      : number === 3 ? ["KIM'S CLUB", '버거킹', 'CAFÉ MAMAS', 'STARBUCKS', '밀도', 'CHAI797 Plus'][i % 6]
+      : number === 3 ? ["KIM'S CLUB", '버거킹', 'café MAMAS', 'STARBUCKS', '밀도', 'CHAI797 Plus'][i % 6]
       : ['NEWCORE OUTLET', 'OLIVE YOUNG', 'NEWCORE'][i % 3];
-    const awning = number === 3 && i === 2 ? 0x3d7873 : number === 3 && i === 1 ? 0xa32e42 : C.black;
+    const awning = number === 3 && i === 1 ? 0xa32e42 : C.black;
     const doorW = Math.min(4.4, bay - 2.2);
     arch(F, u, bay, label, awning, Math.min(9.65, roof - 1.15), number !== 2); doors(F, u, doorW);
+    if (label === 'café MAMAS') placeCafeFront(F,u);
     if (number === 2) {
       // Dark fixed shop windows beside the unchanged walk-through doorway.
       const wingW = (bay - 1.8 - doorW) / 2;
@@ -1105,7 +1109,7 @@ function stairLanding(F, ci) {
 
 function kimsHall(F, ci) {
   const { K, L, W, B, S, Q, wall, person, cyl } = F;
-  const names = ['CHAI797 Plus', 'CAFÉ MAMAS', 'STARBUCKS', '밀도', '백미당'], span = (L - 8) / names.length;
+  const names = ['CHAI797 Plus', 'café MAMAS', 'STARBUCKS', '밀도', '백미당'], span = (L - 8) / names.length;
   names.forEach((name, i) => {
     const u = -L / 2 + 4 + (i + 0.5) * span;
     for (const du of [-span / 2, span / 2]) wall(u + du, 1.2, u + du, 10.3, 0, 4.2, { mat: 0xc7b99f, thick: 0.14 });

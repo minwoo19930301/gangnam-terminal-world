@@ -1,4 +1,13 @@
 {
+  "mamas_street_front": {
+    "place": "뉴코아 강남점 3관 카페 마마스 보도측 입구",
+    "operator": "https://www.elandretail.com/store02.do?BDID=0003003B&branchID=00110001&lang=000600KO",
+    "photo": "https://skynarara.tistory.com/142",
+    "photo_date": "2025-04-10",
+    "observed": "작성자가 3관 입구로 설명한 사진에 café MAMAS 차양과 아치 안의 숫자 3, 뉴코아3관 입체 글자, 가로 테두리가 함께 보인다. 차양은 검은색이고 좌측 고정창 하단은 불투명하며 우측은 짙은 패널이다.",
+    "placement": "북쪽 킴스클럽 저층동 443718139의 기존 café MAMAS 칸. 2관과 그 사이의 별도 주차 건물 413372931에는 적용하지 않는다.",
+    "estimated": "차양 너비와 경사, 문자 크기·깊이·건물 위 위치는 기존 입면과 사진 비율에 맞춘 근사다. 영업층과 주차층의 수는 이 사진에서 추정하지 않았다."
+  },
   "modernhouse_picnic_rugs": {
     "place": "뉴코아 강남점 1관 4층 모던하우스 홈데코",
     "branch": "https://korean.visitseoul.net/gangnam/modernhouse-life/KOPw8jvg2",
