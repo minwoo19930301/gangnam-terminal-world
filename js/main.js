@@ -309,8 +309,9 @@ async function boot() {
       cx.fillStyle = '#fff'; cx.textAlign = 'center'; cx.textBaseline = 'middle'; cx.fillText(L.name, 256, 50, 450);
       if (L.sub) { cx.font = `500 30px ${FONT}`; cx.fillStyle = '#20303a'; cx.fillText(L.sub, 256, 140, 470); }
       const tex = new THREE.CanvasTexture(cv); tex.colorSpace = THREE.SRGBColorSpace;
-      const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, depthTest: false, fog: false, transparent: true }));
-      sp.position.set(L.x, (L.y || 10) + 6, L.z); sp.renderOrder = 10; scene.add(sp); pins.push({ L, sp });
+      const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, depthWrite: false, fog: false, transparent: true }));
+      const [x, y, z] = L.roofPin ?? [L.x, L.y ?? 10, L.z];
+      sp.position.set(x, y + 6, z); sp.renderOrder = 10; scene.add(sp); pins.push({ L, sp });
     }
   }
   function pinUpdate() {
