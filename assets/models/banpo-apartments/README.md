@@ -99,6 +99,6 @@ node tests/apartment-ownership.mjs /path/to/seoul-real-estate-map/public/models
 
 기존 201동 기단 외곽 여덟 꼭짓점은 게임에 쓰인 OSM 외곽의 대응점과 평면상 약 0.8~1.2m 차이가 난다. 건물의 위치는 그대로 유지했다. 창 모서리와 수직벽 폭, 지붕 위 약 3.2m 돌출부는 사진 비례로 추정한 모델 치수다. 현장 측량 오차는 알 수 없다.
 
-[가까운 보도와 건너편 보도에서 본 게임 전후 비교](shinbanpo4-201.jpg) · [가까운 보도에서 보기](https://minwoo19930301.github.io/gangnam-terminal-world/#/street?p=-66.3,0.1,-179,-55.08,29) · [건너편에서 보기](https://minwoo19930301.github.io/gangnam-terminal-world/#/street?p=-78,0.1,-151,-37.55,24)
+[201동 보도 시점의 통합 도시 Blender 렌더](shinbanpo4-201-native.jpg) · [가까운 보도와 건너편 보도에서 본 게임 전후 비교](shinbanpo4-201.jpg) · [가까운 보도에서 보기](https://minwoo19930301.github.io/gangnam-terminal-world/#/street?p=-66.3,0.1,-179,-55.08,29) · [건너편에서 보기](https://minwoo19930301.github.io/gangnam-terminal-world/#/street?p=-78,0.1,-151,-37.55,24)
 
 같은 아파트 파일 안의 기존 외벽·창 재질을 쓴다. 동별 메시 범위와 원점, 보도 카메라 행렬을 전후 비교하면 201동의 높이와 정점 수만 바뀐다. 다른 네 단지는 기존 파일과 바이트 단위로 동일하게 다시 내보내졌다. 수정 후 단지 파일은 15,552바이트, 762삼각형 늘었고 단지 드로콜은 3회다. 헤드리스 Chromium 저화질에서 보도 두 시점의 낮·밤을 각각 90프레임씩 확인한 p95는 전후 모두 16.7~16.8ms였다.
