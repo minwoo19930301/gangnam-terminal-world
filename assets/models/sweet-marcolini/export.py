@@ -52,7 +52,8 @@ try:
         out=Path(tmp)/'chocolatier.glb';target=here/out.name
         bpy.ops.export_scene.gltf(filepath=str(out),export_format='GLB',use_selection=True,
             export_normals=False,export_materials='NONE',export_vertex_color='ACTIVE',export_yup=True)
-        subprocess.run(['node',str(here/'pack.mjs'),str(out),str(target)],check=True)
+        subprocess.run(['node',str(here.parents[2]/'tools'/'pack_lit_display.mjs'),str(out),str(target),
+                        'GangnamChocolatier','CopperLightSamples'],check=True)
 finally:
     bpy.data.collections['Glass'].hide_render=original_glass_visibility
     for obj in selected:
