@@ -1,4 +1,16 @@
 {
+  "gelati_shop22_20261126": {
+    "floor": "파미에스테이션 1층, 운영사 도면의 22번 점포",
+    "naver": "https://map.naver.com/p/entry/place/36324317",
+    "operator": "https://www.shinsegaecentral.com/famille/GelatiGelati",
+    "floor_map": "https://www.shinsegaecentral.com/public/img/famille_floor_1_ko_map.png",
+    "branch_photos_2025": "https://mydon-mysan.tistory.com/114",
+    "cups_and_counter": "https://limefood.tistory.com/62",
+    "observed": "갤러리 쪽으로 열린 젤라또 주문대, 청록 입체 상호와 가운데 콘, 둥근 유백색 조명, 목제 뒷진열장에 겹쳐 선 와플콘, 금속 뚜껑으로 닫힌 통과 작은 맛 이름표, 매달린 격자 메뉴판, 컵·콘·라떼를 확인했다.",
+    "fit": "도면 22번의 모양과 지점 사진을 게임의 7.42 × 5.03m 칸에 맞췄다. 매장 실측 치수, 맛별 위치와 하루 판매 목록, 진열 상품·콘 개수, 컵과 콘을 건네는 정확한 자리는 추정이다.",
+    "model": "assets/models/gelati/gelateria.blend",
+    "comparison": "assets/models/gelati/play.jpg"
+  },
   "sees_fp104_20261126": {
     "floor": "파미에스테이션 1층 FP-104, 운영사 도면 점포 20번",
     "branch": "https://www.ksees.co.kr/location",
