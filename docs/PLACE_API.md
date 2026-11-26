@@ -37,6 +37,7 @@ Geometry (all static geometry is merged per material; thousands of calls are fin
 - `K.wall(ax,az,bx,bz,y0,y1,{thick=0.2, mat, mat2, openings:[{at,w,y0,y1}], solid})` — straight wall, `at` = distance from A to opening center.
 - `K.polyWalls(poly, y0, y1, {mat (outside), inner (inside), thick, openings:[{x,z,w,y0,y1}], floorH})` — walls along a polygon outline; openings snap to the nearest edge. Use for building envelopes (`mat` = facade, `inner` = interior finish). Glass curtain wall: `mat:'glass'`.
 - `K.ramp(ax,az,bx,bz,{w,ya,yb,mat,steps,rails})`, `K.stairs(…)` (= ramp with steps), `K.escalator(ax,az,bx,bz,{ya,yb,w,dir:'up'|'down',speed})` — walkable. Escalators carry the player.
+- `K.escalatorTreads(ax,az,bx,bz,{w,ya,yb,speed,mat})` draws the moving treads and both stationary comb plates. Use it for a flight with place-authored rails and collision. Positive speed moves uphill, measured in horizontal metres per second.
 - `K.cyl({x,y,z,r,h,mat,seg})` columns, `K.dome({x,y,z,rx,ry,rz,mat})`.
 - `K.sign(text|[lines], {x,y,z,w,h,rotY,bg,fg,bold,twoSided,box,offset,sub})` — text panel (Korean OK). `bg:null` → transparent background (letters only). Use real shop/brand names (text only, no logos).
 - `K.floorText(text, {x,y,z,w,h,rotY,fg})` — painted floor text (bus bay numbers, 승차홈 numbers…).

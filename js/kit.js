@@ -493,7 +493,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     if (o.steps && o.blenderTreads && o.move) {
       // Bespoke balustrades already include their own handrails and truss.
       const speed = o.move * (Math.sign(yb-ya) || 1);
-      renderEscalatorParts(ax, az, bx, bz, w, ya, yb, speed, o.mat, false);
+      escalatorTreads(ax, az, bx, bz, {w, ya, yb, speed, mat:o.mat});
     }
   }
   const fixedEscalators = [], indoorEscalators = [], indoorStock = [];
@@ -513,6 +513,10 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     const tint = typeof mat === 'number' || mat?.color != null ? tread.c : null;
     const steps = Math.max(2, Math.round(Math.abs(yb-ya)/.17));
     drawEscalator(ya <= yb ? a : b, ya <= yb ? b : a, w, steps, speed, tint, map, withBalustrade);
+  }
+  // For place-authored flights that already own their supports and rails.
+  function escalatorTreads(ax, az, bx, bz, {w=1.1, ya=0, yb=5, speed=.6, mat} = {}) {
+    renderEscalatorParts(ax, az, bx, bz, w, ya, yb, speed, mat, false);
   }
   function escalator(ax, az, bx, bz, o = {}) {
     const w = o.w ?? 1.1, ya = o.ya ?? 0, yb = o.yb ?? 5;
@@ -1312,7 +1316,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
 
   const K = {
     THREE, scene, phys, osm, LEVELS, T, withTerrainAnchor, withTerrainSurface, withParkedVehicle,
-    box, prism, slab, wall, polyWalls, ramp, stairs: (ax, az, bx, bz, o = {}) => ramp(ax, az, bx, bz, { ...o, steps: true }), escalator, cyl, dome, sign, floorText,
+    box, prism, slab, wall, polyWalls, ramp, stairs: (ax, az, bx, bz, o = {}) => ramp(ax, az, bx, bz, { ...o, steps: true }), escalator, escalatorTreads, cyl, dome, sign, floorText,
     tree, person, crowd, vehicle, zone, spawn, interact, portal, elevator, groundHole, onFrame, addMesh, texture, material, mapMark, detail,
     osmBuilding, osmFind, claim, rand, quad: (mat, p, n, uvs) => quad(spec(mat), p, n, uvs || [[0, 0], [1, 0], [1, 1], [0, 1]]), hpoly: (mat, poly, y, up = true, holes) => hpoly(spec(mat), poly, y, up, holes),
     triangle: (mat, points, normal, uv) => tri(spec(mat), points, normal, uv),
