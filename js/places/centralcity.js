@@ -2793,7 +2793,9 @@ export function build(K) {
   officialShop('이마트24 센트럴1호점',-18,22,-13,27,'E','store');
   // Round20: units 14/15/20/21 move to the JW hall/east passage.
   officialShop('오픈스테이지 스토어',-22,8,-18.5,13,'S','store');
-  officialShop('디자인스킨',-22,28,-18.5,37.8,'S','store');
+  // The outer stone wall follows the angled footprint at s=-21.63..-21.47 here.
+  // Keep the shop's rear partition and stock against its interior face.
+  officialShop('디자인스킨',-21,28,-18.5,37.8,'S','store');
   // The numbered plan's six hexagonal islands are kept separate from the perimeter stores.
   const hexUnits=[[5,'모스버거',-2],[8,'리김밥',25],[12,'스타벅스센트럴F1',47.5],[13,'델리에또',82],[26,'공탕',100],[29,"DUNKIN'",78.154]];
   K.detail({name:'공식 1층 육각 매장',floor:'1F',y0:0,y1:4,poly:RECT(-8,12,131,26)},()=>{

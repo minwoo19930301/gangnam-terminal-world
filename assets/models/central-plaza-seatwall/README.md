@@ -9,3 +9,5 @@ blender -b -t 4 seatwall.blend -P build.py -- --export-current
 ```
 
 게임은 처음 보일 때 단순한 받침을 먼저 그리고, 가까이서 한 번 전송한 GLB를 한 번의 그리기 호출로 표시한다. 낮과 밤의 같은 보행 시점은 [비교 이미지](comparison.jpg)와 [카메라](camera.json)에 기록했다.
+
+같은 광장에서 올려다보면 동쪽 앉음벽 위로 터미널의 갈색 외벽이 이어진다. 수정 전에는 1층 디자인스킨 매장의 흰 뒷벽이 건물 외피 밖으로 약 0.5m 나와 외벽을 가렸다. 매장 뒤쪽을 건물 안에 맞춘 뒤 같은 거리 시점과 1층 매장 입구에서 확인했다. [게임 외벽 전후 비교](east-facade.jpg) · [2026년 거리뷰](https://map.naver.com/p?c=18.00,0,0,0,adh&p=FmNf2XmJtk1RjDP3k0TI7A,149,-2,25,Float)
