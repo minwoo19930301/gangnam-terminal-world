@@ -4,5 +4,8 @@
   "z": 7.12284,
   "yaw": -61.2825,
   "pitch": -12,
-  "meshName": "ToeboxFootwear"
+  "meshName": "ToeboxFootwear",
+  "sourceBlend": "gallery.blend",
+  "sourceCollection": "SSG_10F_Toebox",
+  "nativeLabel": "토박스"
 }

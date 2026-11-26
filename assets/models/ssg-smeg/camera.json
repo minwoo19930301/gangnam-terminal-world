@@ -1,8 +1,11 @@
 {
-    "floor": "9F",
-    "x": -47.54173,
-    "z": 92.83098,
-    "yaw": -139.10365,
-    "pitch": -13.0,
-    "meshName": "MieleSteel"
+  "floor": "9F",
+  "x": -47.54173,
+  "z": 92.83098,
+  "yaw": -139.10365,
+  "pitch": -13.0,
+  "meshName": "MieleSteel",
+  "sourceBlend": "showroom.blend",
+  "sourceCollection": "SSG_9F_Miele",
+  "nativeLabel": "밀레"
 }
