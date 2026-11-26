@@ -17,6 +17,7 @@ import {fortnumShop} from '../../assets/models/fortnum-tea-shop/model.js';
 import {bakeryCafe} from '../../assets/models/pompompurin-bakery/model.js';
 import {hazBakery} from '../../assets/models/haz-bakery/model.js';
 import {arabicaFront} from '../../assets/models/sweet-arabica/model.js';
+import {imDonut} from '../../assets/models/im-donut/model.js';
 import {vanLeeuwen} from '../../assets/models/van-leeuwen/model.js';
 import {buchangWalnutCounter} from '../../assets/models/buchang-walnut/model.js';
 import {anotherPalmEdition} from '../../assets/models/another-palm-astro/model.js';
@@ -1755,6 +1756,13 @@ export function build(K) {
       bakeryCafe(K,x,YB1,z,F.E);
       K.phys.addWall(...P(s-3.10,t-1.17),...P(s+3.10,t-1.17),YB1,YB1+3.1,.075,'centralcity');
       K.phys.addPolyWalls(RECT(s-2.16,t-.69,s+2.16,t+.39),YB1,YB1+.99,.02,'centralcity');
+      return;
+    }
+    if(cell.name==='아임도넛'){
+      const [s,t]=BPst(1298.5,315),[x,z]=P(s,t);
+      imDonut(K,x,YB1,z,F.W);
+      K.phys.addPolyWalls(RECT(s-3.205,t-.105,s+3.205,t+.845),YB1,YB1+1.07,.015,'centralcity');
+      K.phys.addWall(...P(s-4.10,t+2.31),...P(s+4.10,t+2.31),YB1,YB1+3.13,.07,'centralcity');
       return;
     }
     if(cell.name==='밴루엔 아이스크림'){
