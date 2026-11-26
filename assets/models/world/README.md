@@ -83,3 +83,10 @@ blender assets/models/world/gangnam-terminal.blend -P assets/models/world/seoul-
 단지와 학교의 식재 경계에는 저장소의 Sentinel-2 및 수관 자료도 반영했습니다. [식생 자료와 출처](../../../data/research/parcel-cover.md)
 
 거리뷰와 시설 안내는 모양과 용도를 대조하는 자료입니다. 이번 작업에서 현장 측량한 거리는 없습니다. 매장 진열과 외관의 세부 치수에는 사진에 맞춰 정한 비례가 포함됩니다. [네이버 지도 호텔 외부 거리뷰](https://map.naver.com/p/?p=Cy3jmhWfofOZSFQ5RWAIbA,104.03,2.78,80,Float) · [OpenStreetMap 자료와 저작자](https://www.openstreetmap.org/copyright)
+
+JW 메리어트 실내는 호텔 포디움(도형 136986976)과 같은 높이 원점을 사용한다. 전용 게임 페이지에서 수평인 층과 가구가 지표 기복에 따라 기울어지는 것을 방지한다. 7층 공개 정원은 ‘시설 · 실내 배치’와 ‘반포 · 도시 전경’에 같은 객체로 연결된다. 정원 경계가 게임에서 바뀌면 먼저 일반 배치 manifest를 생성하고 아래 명령으로 편집용 표면을 다시 만든 뒤 도시 배치를 동기화한다. 직접 편집한 정원 원본을 보관하려면 재생성 전에 복사한다.
+
+```sh
+node assets/models/world/indoor-layout.mjs /tmp/terminal-indoor.json
+blender -b -P assets/models/jwmarriott/build-public-roof.py -- /tmp/terminal-indoor.json
+```

@@ -308,6 +308,35 @@ export async function captureIndoorLayout() {
       const rules=sources.filter(row=>row[0]===place), counts=new Map();
       const {build,meta}=await import('../../../js/places/'+place+'.js');
       const kit=createKit(THREE,new THREE.Scene(),{osm,phys:createPhysics(),keep:()=>false});
+      // A dedicated hotel page uses level floor plates. Register them on the
+      // same footprint midpoint as the hotel podium in the native city builder.
+      let hotelDatum;
+      if(place==='jwmarriott'){
+        const outline=osm.buildings.find(building=>building.id===136986976).poly;
+        const centre=[0,1].map(axis=>{
+          const coords=outline.map(point=>point[axis]);
+          return (Math.min(...coords)+Math.max(...coords))/2;
+        });
+        hotelDatum=rounded(relief(...centre));
+        const collections={
+          cakes:'Pâtisserie · entremets on cake boards',booth:'Margaux Grill · booth and opal lantern',
+          display:'Margaux Grill · framed tableware exhibit',herbs:'JW Garden · herb trough',tea:'The Lounge · tea service',
+        };
+        kit.recordHotelFixture=(key,floor,o,x,z,y,scale)=>{
+          const matrix=new THREE.Matrix4().set(x[0]-o[0],0,z[0]-o[0],o[0],0,scale,0,y,x[1]-o[1],0,z[1]-o[1],o[1],0,0,0,1);
+          const ordinal=(counts.get(key)||0)+1;counts.set(key,ordinal);
+          const ground=hotelDatum;
+          result.push({id:place+'/'+key+'/'+ordinal,place,placeName:meta.name,floor,library:'jwmarriott/hotel-details.blend',
+            collections:[collections[key]],subject:collections[key],ground,terrain:ground,matrix:matrix.toArray().map(rounded)});
+        };
+        kit.recordHotelRoof=(name,poly,y,mat)=>{
+          const ordinal=(counts.get(name)||0)+1;counts.set(name,ordinal);
+          const subject=name+' '+ordinal;
+          const faces=[poly.map(([x,z])=>[x,-z,y].map(rounded))];
+          result.push({id:place+'/roof/'+subject,place,placeName:meta.name,floor:'7F',library:'jwmarriott/public-roof.blend',
+            collections:[subject],subject,ground:hotelDatum,terrain:hotelDatum,matrix:new THREE.Matrix4().toArray(),faces,color:mat.color??0x659fa5});
+        };
+      }
       const addMesh=kit.addMesh;
       kit.onNight=()=>{};
       kit.addMesh=root=>{
@@ -317,7 +346,7 @@ export async function captureIndoorLayout() {
           const ordinal=counts.get(subject)||0;
           counts.set(subject,ordinal+1);
           const [x,y,z]=world.elements.slice(12,15);
-          const ground=rounded(relief(x,z));
+          const ground=hotelDatum??rounded(relief(x,z));
           const level=subject==='광장 · 고리형 청동 조명' && y>=4 ? '2F' : floor;
           const anchor=library.startsWith('ssg-')?(legacyRetailId[collections[0]]??collections[0]):subject;
           result.push({id:[place,anchor,ordinal+1].join('/'),place,placeName:meta.name,floor:level,library,

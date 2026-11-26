@@ -62,6 +62,23 @@ for row in rows:
             error=(observed-expected(row,vertex-origin)).length
             worst=max(worst,error)
             assert error<.00022,(row['id'],name,'native vertex',error)
+# The city podium and the dedicated hotel's level floor plates must share one datum.
+city=bpy.data.scenes["반포 · 도시 전경"]
+hotel=next(o for o in city.objects if o.get('shell_key')=='136986976')
+hotel_rows=[r for r in rows if r['place']=='jwmarriott']
+assert all(abs(r['terrain']-hotel['terrain_datum'])<.0001 for r in hotel_rows)
+for row in hotel_rows:
+    if not (row['library']=='jwmarriott/public-roof.blend' or row['id'].startswith('jwmarriott/herbs/')):
+        continue
+    anchor=anchors[row['id']]
+    child=next(o for o in anchor.children if component in o)
+    assert city.objects.get(child.name)==child and city.objects.get(anchor.name)==anchor
+    if 'faces' in row:
+        mesh=next(iter(child.instance_collection.objects)).data
+        actual=[child.matrix_world @ v.co for v in mesh.vertices]
+        for face in row['faces']:
+            for x,y,z in face:
+                assert min((p-Vector((x,y,z+row['terrain']))).length for p in actual)<.0001
 # Validate that updates re-use existing objects, preserve an artist pose and respect an intentional deletion.
 pointers={o.as_pointer() for o in scene.objects}
 sync=layout['sync_layout']
