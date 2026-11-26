@@ -1,3 +1,4 @@
+import {marketEntrance} from '../../assets/models/ssg-market-entrance/model.js';
 import {marketFruitIslands} from '../../assets/models/ssg-market-produce/model.js';
 import {pastryCounter} from '../../assets/models/ssg-bonmie/model.js';
 import { placeHypnos } from '../../assets/models/hypnos-showroom/model.js';
@@ -3122,15 +3123,12 @@ export function build(K) {
       // no second counter is placed across their shared lobby approach.
       // Corner portal faces ENE, as in #552. Its aisle remains clear into produce.
       const pu=22.5,pv=63.4;
-      for(const dv of[-2.9,2.9]){
-        box(pu,pv+dv,.7,.7,y,3.8,{tex:'marble',color:0x191b1b,gloss:.7});
-        for(const yy of[.1,3.45])box(pu,pv+dv,.84,.84,y+yy,.14,0xc9a55e,{solid:false});
-        for(let h=.45;h<3.5;h+=.21)festive(pu+.4,pv+dv,y+h,true,.22);
-      }
-      box(pu,pv,.74,6.5,y+3.45,.46,{tex:'marble',color:0x1e1c1c,gloss:.7});
-      sign('新世界食品館',pu+.4,pv,y+3.68,'E',4.1,.29,{bg:null,fg:'#c9a55e',bold:false});
-      sign('SHINSEGAE MARKET',pu+.41,pv+2.15,y+3.67,'E',1.3,.12,{bg:null,fg:'#c9a55e',bold:false});
-      festive(pu+.42,pv,y+3.35,true,6.2);
+      const [portalX,portalZ]=P(pu,pv);
+      marketEntrance(K,portalX,y,portalZ,RA);
+      // Keep the collision envelopes of the original jambs and overhead lintel.
+      const hiddenFaces=['top','bottom','n','s','e','w'];
+      for(const dv of [-2.9,2.9])box(pu,pv+dv,.7,.7,y,3.8,0x191b1b,{skip:hiddenFaces});
+      box(pu,pv,.74,6.5,y+3.45,.46,0x1e1c1c,{skip:hiddenFaces});
       const fruitTables=[61.8,64.9];
       marketFruitIslands(K,fruitTables.map(v=>{
         const [x,z]=P(19.4,v);
