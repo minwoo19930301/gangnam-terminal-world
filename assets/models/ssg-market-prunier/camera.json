@@ -1,0 +1,14 @@
+{
+  "floor": "B1",
+  "x": -64.43735,
+  "y": -6,
+  "z": -2.54591,
+  "yaw": -69.1959,
+  "pitch": 0,
+  "meshName": "신세계 마켓 · 프루니에 캐비아 진열장",
+  "sourceBlend": "counter.blend",
+  "sourceCollection": "PrunierMarketCase",
+  "nativeLabel": "프루니에 캐비아 진열장",
+  "area": "in:shinsegae",
+  "gameView": "#/shinsegae/B1?p=-64.43735,-6,-2.54591,-69.1959"
+}

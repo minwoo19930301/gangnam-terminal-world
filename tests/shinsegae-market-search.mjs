@@ -36,6 +36,13 @@ try {
     await page.waitForFunction(() => window.__world?.ready,null,{timeout:120000});
     await page.locator('#start').click();
     if (from === 'shinsegae/B1') {
+      const landing = await page.evaluate(() => {
+        const {x,y,z,yaw} = __world.player;
+        return {x,y,z,yaw};
+      });
+      assert.ok(Math.hypot(landing.x-entry.x,landing.z-entry.z)<.05 &&
+        Math.abs(landing.y-entry.y)<.08 && Math.cos(landing.yaw-entry.yaw)>.999,
+        'the bare B1 shortcut faces the market portal from the public lobby');
       await page.waitForFunction(name => window.mapText.minimap?.includes(name),entry.name);
       const beforeZoom = await page.evaluate(() => window.miniPaint);
       await page.keyboard.press('Equal');

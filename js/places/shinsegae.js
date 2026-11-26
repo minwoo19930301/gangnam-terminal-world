@@ -8,6 +8,9 @@ import {angle as cinemaYaw,point as cinemaPoint} from '../../assets/models/megab
 import {placeAtriumCeiling} from '../../assets/models/ssg-atrium-soffit/model.js';
 import {marketProduceCeiling} from '../../assets/models/ssg-market-ceiling/model.js';
 import {shopArrival as onimaruArrival} from '../../assets/models/kyoto-onimaru/layout.js';
+import {prunierCase} from '../../assets/models/ssg-market-prunier/model.js';
+import {angle as prunierAngle,point as prunierPoint} from '../../assets/models/ssg-market-prunier/layout.js';
+import {placeCrepeAndWaffle} from '../../assets/models/godiva-emack/model.js';
 import {placeAgingCabinet} from '../../assets/models/ssg-market-butcher/model.js';
 import {placeGuo} from '../../assets/models/guo-dumpling/model.js';
 import {placeSpringRolls} from '../../assets/models/blue-butterfly/model.js';
@@ -2498,12 +2501,19 @@ export function build(K) {
       [17.6,62.65,30.4,64.15],
       [deliEntryU-5.5,deliEntryV-.75,deliEntryU+5.1,deliEntryV+.75],
     ];
+    const [prunierX,prunierZ]=prunierPoint(0,-1.9);
+    const prunierArrival={x:prunierX,z:prunierZ,yaw:prunierAngle};
+    K.spawn({name:'프루니에',aliases:['Caviar Prunier','Prunier','프루니에 캐비아'],floor:'B1',
+      mapDestination:true,y,...prunierArrival});
+    K.zone({name:'프루니에',floor:'B1',sub:'신세계 마켓 · 캐비아',mapArrival:prunierArrival,
+      poly:[[-1.3,-2.2],[1.3,-2.2],[1.3,-.45],[-1.3,-.45]].map(([x,d])=>prunierPoint(x,d)),
+      y0:y,y1:-1,priority:12});
     const seafoodCase=BOUNDS(cells.find(c=>c.kind==='supermarket').rect);
     const seafoodU=seafoodCase[0]+17.3,seafoodV=seafoodCase[1]+39.6;
     const [seafoodX,seafoodZ]=P(seafoodU+1.54,seafoodV);
     const seafoodArrival={x:seafoodX,z:seafoodZ,yaw:RA+PI/2,pitchDeg:-13.18};
     K.spawn({name:'해녀의 신세계',aliases:['Haenyeo Seafood'],place:'shinsegae',floor:'B1',
-      arrivalFloor:'B1',mapDestination:true,y,...seafoodArrival});
+      mapDestination:true,y,...seafoodArrival});
     K.zone({name:'해녀의 신세계',floor:'B1',sub:'신세계 마켓 · 제주 해산물',
       poly:rect(seafoodU+.62,seafoodV-2.13,seafoodU+2.30,seafoodV+2.13),y0:y,y1:y+3,
       priority:15,mapArrival:seafoodArrival});
@@ -2659,15 +2669,17 @@ export function build(K) {
         K.wall(...a,...b,y+4.73,y+4.77,{mat:{tex:'emit',color:0xc9a35a},thick:.04,solid:false});
       }
     }
-    function deliPavilion(c){
+    function deliPavilion(c,customFrame=false){
       const{W,D,at,bb,sg}=cellFrame(c),w=Math.min(W-.12,5.4),d=Math.min(D-.12,3.0),t=d/2+.06;
       if(w<.55||d<.7)return;
-      for(const s of [W/2-w/2+.04,W/2+w/2-.04])for(const tt of [.10,d-.02])bb(s,tt,.065,.065,y+1.3,1.36,0x1e1c1a);
-      bb(W/2,t,w,d,y+2.6,.37,{tex:'ssg_deli_quatrefoil',gloss:.5});
-      bb(W/2,t,w+.03,d+.03,y+2.98,.10,{color:0x1e1c1a,gloss:.7});
-      bb(W/2,t,w,d,y+2.56,.045,0x292620);
-      const name=c.name==='블루버터플라이'?'Blue Butterfly':c.name;
-      sg(name,W/2,.025,y+2.79,Math.max(.45,w-.10),.24,{bg:'#1e1c1a',fg:'#fff6df',bold:false,font:c.name==='블루버터플라이'?'cursive':'Georgia, serif',twoSided:false});
+      if(!customFrame){
+        for(const s of [W/2-w/2+.04,W/2+w/2-.04])for(const tt of [.10,d-.02])bb(s,tt,.065,.065,y+1.3,1.36,0x1e1c1a);
+        bb(W/2,t,w,d,y+2.6,.37,{tex:'ssg_deli_quatrefoil',gloss:.5});
+        bb(W/2,t,w+.03,d+.03,y+2.98,.10,{color:0x1e1c1a,gloss:.7});
+        bb(W/2,t,w,d,y+2.56,.045,0x292620);
+        const name=c.name==='블루버터플라이'?'Blue Butterfly':c.name;
+        sg(name,W/2,.025,y+2.79,Math.max(.45,w-.10),.24,{bg:'#1e1c1a',fg:'#fff6df',bold:false,font:c.name==='블루버터플라이'?'cursive':'Georgia, serif',twoSided:false});
+      }
       deliCoffer(...at(W/2,t),Math.min(3,Math.max(.7,w)),Math.min(3,d));
       if(c.name==='블루버터플라이'){
         // Photo 19 has a red/white/black checker directly under the counter.
@@ -2751,6 +2763,14 @@ export function build(K) {
       }
       const[u,v]=at,wood=c.name==='카멜커피'?0xd9b98a:c.name==='보앤미'?0xc8a77b:c.kind==='wine'?0x493529:c.kind==='deli'?0xb8925d:0x7e6044;
       const darkDeli=c.zone==='north_deli'&&c.kind==='deli', boAndMie=c.name==='보앤미';
+      if(c.name==='에맥앤볼리오스 / 고디바크레페'){
+        const [x,z]=P(u,v);
+        box(u,v,w,d,y,.83,0x33312c,{skip:['top','bottom','n','s','e','w']});
+        placeCrepeAndWaffle(K,x,z,RA+PI/2,y);
+        if(fits(c,u-.8,v,.35,.35))customer(u-.8,v,true);
+        deliPavilion(c,true);
+        return;
+      }
       if(c.name==='블루버터플라이'){
         const [x,z]=P(u,v);
         box(u,v,w,d,y,.83,0x694733,{skip:['top','bottom','n','s','e','w']});
@@ -3068,7 +3088,15 @@ export function build(K) {
         // Rectangular dark timber display frames around the market perimeter;
         // M27U_200 does not establish arched transoms here.
         for(let v=mV0+3;v<mV1-2;v+=3){
-          const u=mU1-.35;if(!clear(u,v,.5,2.6))continue;
+          // The market polygon starts just inside its guide bounding box.
+          // Keep the timber stock 10 cm farther in so the eligible bays pass the same perimeter test.
+          const u=mU1-.45;if(!clear(u,v,.5,2.6))continue;
+          if(Math.abs(v-(mV0+18))<.01&&clear(mU1-.54,v,.68,2.55)){
+            // One open-front refrigerated bay within the existing timber perimeter.
+            const [x,z]=P(mU1-.54,v);
+            prunierCase(K,x,y,z,RA-PI/2);
+            continue;
+          }
           box(u,v,.16,2.55,y+.12,2.8,{tex:'wood',color:0x65482f},{solid:false});
           for(const vv of [v-1.24,v+1.24])box(u-.12,vv,.23,.10,y+.14,2.78,{tex:'wood',color:0x65482f},{solid:false});
           for(const yy of [.15,1.1,2.84])box(u-.15,v,.28,2.55,y+yy,.10,{tex:'wood',color:0x65482f},{solid:false});
