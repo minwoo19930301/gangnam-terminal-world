@@ -45,12 +45,19 @@ for row in rows:
         ob=children[name]
         c=ob.instance_collection
         assert c.name==name and c.library.filepath=='//../'+row['library'],(name,c.library.filepath)
-        sampling=next(o for o in c.all_objects if o.type=='MESH' and o.data.vertices)
-        part=sampling.evaluated_get(dg)
+        sampling=next((o for o in c.all_objects if o.type=='MESH' and o.data.vertices),None)
+        if sampling:
+            part=sampling.evaluated_get(dg)
+            vertices=part.data.vertices
+            samples=[v.co for v in (vertices[0],vertices[len(vertices)//2],vertices[-1])]
+        else:
+            # Validate the location and both local axes of an editable rectangular luminaire.
+            part=next(o for o in c.all_objects if o.type=='LIGHT' and o.data.type=='AREA').evaluated_get(dg)
+            samples=[Vector((0,0,0)),Vector((part.data.size/2,0,0)),Vector((0,part.data.size_y/2,0))]
         origin=(Vector((c['display_offset_x'],c['display_offset_y'],0)) if 'display_offset_x' in c
                 else Vector(c.get('preview_origin',c.get('origin',fallback))))
-        for i in {0,len(part.data.vertices)//2,len(part.data.vertices)-1}:
-            vertex=part.matrix_world@part.data.vertices[i].co
+        for point in samples:
+            vertex=part.matrix_world@point
             observed=ob.evaluated_get(dg).matrix_world@(vertex-c.instance_offset)
             error=(observed-expected(row,vertex-origin)).length
             worst=max(worst,error)

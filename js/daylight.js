@@ -123,11 +123,14 @@ export function createDaylight(THREE, scene, site, bounce, initialMode, onChange
     const clock=seoulClock(instant), previous=state;
     state={mode,instant,clock,phase,altitude,direction,night};
     if (!previous || previous.night!==night) for(const fn of handlers) fn(night);
+    if (!previous || previous.altitude!==altitude) for(const fn of solarHandlers) fn(altitude);
     if (!previous || previous.clock!==clock || previous.phase!==phase || previous.night!==night || previous.mode!==mode) onChange(state);
   }
+  const solarHandlers=[];
   sync();
   return {sky,sync,get state(){return state;},
     onNight(fn){handlers.push(fn);fn(state.night);},
+    onSolarAltitude(fn){solarHandlers.push(fn);fn(state.altitude);},
     setMode(next){if(!timeModes.includes(next))return; mode=next;cacheDate=undefined;sync(Date.now(),true);},
   };
 }

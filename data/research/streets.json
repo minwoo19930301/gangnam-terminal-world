@@ -2,7 +2,19 @@
   "id": "streets",
   "name": "고속터미널 거리 · 신반포로와 사평대로",
   "updated": "2026-11-26",
+  "median_stop_review_20261126": {
+    "coordinate_system": "WGS 84, longitude and latitude",
+    "city_reference_points": [
+      {"ars":"22019","id":"121000019","lon":127.0051290446,"lat":37.506290048,"model_island_center_xz_m":[6.55,-132.2],"pin_to_center_m":13.30},
+      {"ars":"22020","id":"121000020","lon":127.0039245159,"lat":37.5058463491,"model_island_center_xz_m":[-70.27,-95.53],"pin_to_center_m":18.84}
+    ],
+    "observation_ko": "서울시 11월 2일 기준 자료의 정류소 대표점과 도로 메시의 승차섬 중심을 따로 기록했다. 2026년 1월 네이버 거리뷰에서 어두운 금속 차양·투명 유리·불투명한 띠·광고 케이스·긴 벤치를 확인했다. 매체사 규격은 광고면 1.2×1.8 m, 22020 도로면 6면이다. 차양 길이와 바닥 경계는 거리뷰에 맞춘 근삿값이다. 양면에 넣은 반포·서래섬 그림은 자체 제작한 대체 원화다."
+  },
   "sources": [
+    {"url":"https://data.seoul.go.kr/dataList/OA-21288/S/1/datasetView.do","title":"서울시 버스정류소 위치정보 · 2026년 11월 2일 기준, 11월 24일 게시","evidence":"표의 ARS-ID 22019·22020, 표준 ID, 경위도."},
+    {"url":"https://map.naver.com/p?p=lHsXW6lxT97x-yAj0PFdXA,0,0,80,Float","title":"고속터미널 신반포로 중앙정류소 · 2026년 1월 네이버 거리뷰","evidence":"분리된 승차섬과 포장, 낮은 철제 차양, 안내판·광고, 시야 방향."},
+    {"url":"https://tkad.co.kr/ko/media/express-bus-terminal-central-shelter-ad-roadside-face-22-020","title":"고속터미널 중앙정류소 22-020 차도면 매체 위치와 규격"},
+    {"url":"https://www.houseofooh.com/media/36931","title":"고속터미널 반대 방면 중앙정류소 매체 사진"},
     {"url":"https://map.naver.com/p?c=18.00,0,0,0,adh&p=mU8aHacBJYgq0X7dtSPrtw,-88,10,80,Float","title":"고속터미널사거리 서향 · 2026년 1월 네이버 거리뷰","evidence":"가로 지지대, 복수 차량 신호면, 흰 횡단보도."},
     {"url":"https://map.naver.com/p?c=18.00,0,0,0,adh&p=mU8aHacBJYgq0X7dtSPrtw,-58,0,40,Float","title":"고투몰 G14·뉴코아 측 교통섬 · 같은 파노라마 확대","evidence":"서로 다른 방향 신호면과 적색 보행 신호, 볼라드·황색 점자블록. 높이와 신호 주기 미확인."},
     {
@@ -417,7 +429,7 @@
       "name": "버스정류장 고속터미널(중)",
       "what": "OSM bus_stop 노드",
       "where": "local x=-70.45 z=-96.0",
-      "details": "정류소번호: 22020 (OSM 메모). 5자리 ID는 서울 열린데이터 광장 확인 필요.",
+      "details": "서울시가 확인한 정류소번호 22020. 승차섬과 공식 대표점의 비교는 median_stop_review_20261126에 기록했다.",
       "source": "data/osm.json (local OSM extract)",
       "guess": false
     },
@@ -425,7 +437,7 @@
       "name": "버스정류장 고속터미널",
       "what": "OSM bus_stop 노드",
       "where": "local x=6.35 z=-131.03",
-      "details": "정류소번호: 번호 미확인. 5자리 ID는 서울 열린데이터 광장 확인 필요.",
+      "details": "서울시가 확인한 정류소번호 22019. 승차섬과 공식 대표점의 비교는 median_stop_review_20261126에 기록했다.",
       "source": "data/osm.json (local OSM extract)",
       "guess": true
     },
@@ -629,7 +641,7 @@
     "Round20: G13 잔디 구간은 x315에서 끝내고 승인된 계단 상단/남측 정류장 보도로 교체. 광장주차장↔GS칼텍스 실제 보행 연결 검사 통과."
   ],
   "unresolved": [
-    "정류소 5자리 ID 대부분(고속터미널(중) 22020, 반포역 22018 외)",
+    "정류소 5자리 ID 대부분(고속터미널 22019·22020, 반포역 22018 외)",
     "이번 로드뷰 확인 구간 밖 차로별 방향·중앙분리대 종류·버스전용차로 색",
     "가로수 종",
     "사평지하도로 입출구 위치와 길이",

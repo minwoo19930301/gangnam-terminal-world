@@ -10,6 +10,21 @@ import {relief} from '../../../js/banpo_relief.js';
 // Scene object (or a uniquely identifying child) -> editable native source.
 // Geometry decoder matrices and decorative LOD offsets live *below* the placement.
 const sources = [
+  ...['검은 강재 차양과 승객 벤치','강화유리와 반투명 수평 띠','한강과 서래섬 포스터','승객용 전광판과 안내 케이스','차양등과 보도 빛'].map(label=>{
+    const name='중앙차로 승차대 · '+label;
+    const native=label==='승객용 전광판과 안내 케이스'?'중앙차로 승차대 · 승객 전광판과 안내함':name;
+    return ['streets','지상','sinbanpo-bus-shelters/shelters.blend',name,native];
+  }),
+  ['gyeongbu','1F','gyeongbu-front-entrance/portal.blend','경부선 정문 · 석재 차양과 영문 명판','정문 · 경사 기둥과 영문 채널 문자'],
+  ['gyeongbu','1F','gyeongbu-front-entrance/tower.blend','경부선 명판탑 · 한글 채널 문자와 적갈색 외벽','정면 명판탑 · 입체 글자와 적갈색 외벽'],
+  ...['머리띠와 집게핀·헤어롤 진열','손잡이 청소솔과 틈새 브러시 진열'].map(label=>{
+    const name='다이소 · '+label;
+    return ['gyeongbu','B1','daiso-accessories/accessories.blend',name,name];
+  }),
+  ...['갈색 아치와 청색 커피 벽','흰 곡면 커피바와 추출 장비','각진 스툴과 창가 금속 벤치','버터바와 약과 쿠키 진열장','버터크림라떼와 바통 휘낭시에'].map(label=>{
+    const name='하프커피 · '+label;
+    return ['centralcity','2F','halff/fp212.blend',name,name];
+  }),
   ...['두 줄 석재의 곡선 벤치','기둥 금속틀과 식재','기둥의 곡면 유리','바닥의 밝은 석재 상감'].map(label=>{
     const name='고투몰 서편 · '+label;
     return ['gotomall','B1','gotomall-west-seats/west-lounge.blend',name,name];

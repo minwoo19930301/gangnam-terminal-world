@@ -46,7 +46,12 @@ async function boot() {
   const hashR = /^#\/([^?]*)(?:\?(.*))?$/.exec(location.hash || '');
   const hashKey = hashR ? hashR[1].split('/').map(decodeURIComponent).join('/') : '';
   const hashPos = hashR && new URLSearchParams(hashR[2] || '').get('p') ? new URLSearchParams(hashR[2] || '').get('p').split(',').map(Number) : null;
-  const AREA_ID = (!META || SHOT || Q.get('places') || Q.get('area') === 'all') ? 'all' : (Q.get('area') || areaIdForKey(hashKey, hashPos, META));
+  // Explicit camera links use the same starting position to select the outdoor
+  // district and place the player. Otherwise a multi-district module can boot
+  // at its bounding-box centre and force a second load after the first step.
+  const requestedPos=Q.get('pos')?.split(',').map(Number);
+  const start=requestedPos?.length>=3&&requestedPos.slice(0,3).every(Number.isFinite)?requestedPos:null;
+  const AREA_ID = (!META || SHOT || Q.get('places') || Q.get('area') === 'all') ? 'all' : (Q.get('area') || areaIdForKey(hashKey, start??hashPos, META));
   const AREA = META ? planArea(AREA_ID, META, JUNCTIONS) : { id: 'all', modules: PLACES, keep: null, keepDetail: null };
   const exteriorTerrain = !AREA.id.startsWith('in:');
   const shellMargin = exteriorTerrain ? 180 : 110;
@@ -85,9 +90,10 @@ async function boot() {
     document.body.classList.toggle('night', state.night);
   });
   K.onNight = daylight.onNight;
+  K.onSolarAltitude = daylight.onSolarAltitude;
   K.displayClock = () => daylight.state.clock;
   const streetLuminaires = [];
-  K.streetLight = (x,y,z) => streetLuminaires.push([x,y+relief(x,z),z]);
+  K.streetLight = (x,y,z,strength=1) => streetLuminaires.push([x,y+relief(x,z),z,strength]);
   function setTimeMode(mode) {
     if (!timeModes.includes(mode)) return;
     if (!SHOT) {
@@ -315,7 +321,6 @@ async function boot() {
   // ---- player ----
   const player = createPlayer(phys, { respawn: { x: 6, y: 0, z: -125, yaw: 0 } });
   const spawns = K._.spawns;
-  const start = Q.get('pos') ? Q.get('pos').split(',').map(Number) : null;
   if (start) { player.x = start[0]; player.y = start[1]; player.z = start[2]; }
   else { const s0 = spawns.find(s => s.default) || { x: 6, y: 0, z: -125, yaw: Math.PI * 0.6 }; player.teleport(s0.x, s0.y, s0.z, s0.yaw); }
   if (Q.get('yaw')) player.yaw = +Q.get('yaw') * Math.PI / 180;
@@ -499,7 +504,7 @@ async function boot() {
       go(r);
     });
     return {
-      start() { const r = parse(location.hash); if (r && !Q.get('pos')) go(r); },
+      start() { const r = parse(location.hash); if (r && !start) go(r); },
       update(zn) {
         const now = performance.now(), k = keyOf(zn);
         if (k !== (pending ?? cur)) { pending = k; since = now; }

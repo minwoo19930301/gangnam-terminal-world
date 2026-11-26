@@ -63,15 +63,15 @@ function streetLightTiles(THREE, lamps) {
   }
   const w=Math.ceil((east-west)/cell)+1,h=Math.ceil((south-north)/cell)+1;
   const values=new Float32Array(w*h*16), distances=new Float32Array(w*h*4).fill(Infinity);
-  for (const [x,y,z] of lamps) {
+  for (const [x,y,z,strength=1] of lamps) {
     const column=Math.floor((x-west)/cell), row=Math.floor((z-north)/cell);
     for(let j=Math.max(0,row-3);j<=Math.min(h-1,row+3);j++) for(let i=Math.max(0,column-3);i<=Math.min(w-1,column+3);i++) {
-      const dx=west+(i+.5)*cell-x, dz=north+(j+.5)*cell-z, distance=dx*dx+dz*dz;
+      const dx=west+(i+.5)*cell-x, dz=north+(j+.5)*cell-z, distance=(dx*dx+dz*dz)/strength;
       const first=(j*w+i)*4;
       let slot=first;
       for(let k=1;k<4;k++) if(distances[first+k]>distances[slot])slot=first+k;
       if(distance>=distances[slot])continue;
-      distances[slot]=distance; values.set([x,y,z,1],slot*4);
+      distances[slot]=distance; values.set([x,y,z,strength],slot*4);
     }
   }
   const texture=new THREE.DataTexture(values,w*4,h,THREE.RGBAFormat,THREE.FloatType);
