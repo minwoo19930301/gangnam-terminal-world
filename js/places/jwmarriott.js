@@ -1,3 +1,5 @@
+import { placeCornerSofa } from '../../assets/models/lounge-upholstery/model.js';
+import { placeDrapery } from '../../assets/models/lounge-drapery/model.js';
 import { placePiano } from '../../assets/models/lounge-piano/model.js';
 import { OPEN_STAGE_FRONT } from './_junctions.js';
 import { loadArchitecture, placeArchitecture } from '../../assets/models/interior-architecture/model.js';
@@ -1908,14 +1910,16 @@ export function build(K) {
     const [pianoX,pianoZ]=P(-4.8,41.0);
     B({u:-4.8,v:42.8,y:y+.42,w:.85,d:.38,h:.1,mat:0,skip:['top','bottom','n','s','e','w']});
     placePiano(K,pianoX,y,pianoZ,R);
+    // The hotel's public gallery shows a tied, mauve interior drape behind
+    // the oatmeal sofa. The returns sit within the seating area, clear of the aisle.
+    const [drapeX,drapeZ]=P(-4.74,30.58);
+    placeDrapery(K,drapeX,y,drapeZ,R);
     // 02: the piano and oatmeal L-sofa share one continuous rug, with copper/burgundy cushions.
-    SOFA(-6.35, 34.8, y, 7.2, 'E', 0xd8ccb6);
-    SOFA(-3.6, 31.35, y, 6.25, 'S', 0xd8ccb6);
-    for (let v = 31.8, i = 0; v < 38; v += .82, i++) {
-      B({ u: -6.49, v, y: y + .48, w: .26, d: .48, h: .38 + i % 2 * .06, r: i % 2 ? .11 : -.1, mat: [0x84462f, 0x9e6140, 0x613126, 0xb17c53][i % 4], solid: false });
-      B({ u: -6.34, v, y: y + .43, w: .74, d: .016, h: .014, mat: 0xb8a993, solid: false });
+    const [sofaX,sofaZ]=P(-3.65,34.35);
+    for(const [u,v,w,d] of [[-6.35,34.8,.9,7.2],[-3.6,31.35,6.25,.9]]){
+      B({u,v,y,w,d,h:.42,mat:0,skip:['top','bottom','n','s','e','w']});
     }
-    for (const u of [-5.7, -4.7, -2.2, -1.2]) B({ u, v: 31.2, y: y + .5, w: .48, d: .24, h: .4, mat: u < -3 ? 0x874c33 : 0x703a2d, solid: false });
+    placeCornerSofa(K,sofaX,y,sofaZ,R);
     // Photo 02 has an oval pale stone top overlapping a rectangular orange-walnut table.
     // Preserve both pieces, their flowers and the continuous rug beneath the sofa/piano.
     const oval = Array.from({ length: 48 }, (_, i) => { const t = i / 48 * Math.PI * 2; return P(-3.6 + Math.cos(t) * .78, 34.15 + Math.sin(t) * 1.12); });
