@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { createDaylight, timeModes } from './daylight.js';
 import { createPhysics, createPlayer } from './physics.js';
 import { createKit } from './kit.js';
 import { buildCity, createTraffic } from './city.js';
@@ -55,24 +56,34 @@ async function boot() {
   const camera = new THREE.PerspectiveCamera(72, innerWidth / innerHeight, 0.08, 4000);
   addEventListener('resize', () => { camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); });
 
-  // sky + light
-  const skyGeo = new THREE.SphereGeometry(3000, 32, 16); const skyCol = []; const pos = skyGeo.attributes.position;
-  const top = new THREE.Color(0x4f86c6), hor = new THREE.Color(0xcfe0ee), gnd = new THREE.Color(0x9aa3a8);
-  for (let i = 0; i < pos.count; i++) { const y = pos.getY(i) / 3000; const c = y > 0 ? hor.clone().lerp(top, Math.pow(y, 0.6)) : hor.clone().lerp(gnd, Math.min(1, -y * 4)); skyCol.push(c.r, c.g, c.b); }
-  skyGeo.setAttribute('color', new THREE.Float32BufferAttribute(skyCol, 3));
-  const sky = new THREE.Mesh(skyGeo, new THREE.MeshBasicMaterial({ vertexColors: true, side: THREE.BackSide, fog: false, depthWrite: false }));
-  sky.material.defines = { BANPO_RIGID: 1 };
-  sky.renderOrder = -1; scene.add(sky);
-  scene.fog = new THREE.Fog(0xcfe0ee, 350, 2600);
-  const hemi = new THREE.HemisphereLight(0xf4f8ff, 0xb3ad9f, 1.55); scene.add(hemi); // bright ground colour so ceilings and slab undersides do not read muddy
-  const sun = new THREE.DirectionalLight(0xfff4e0, 1.5); sun.position.set(-300, 600, 400); scene.add(sun);
-  const amb = new THREE.AmbientLight(0xffffff, 0.25); scene.add(amb);
-
   const phys = createPhysics();
   const K = createKit(THREE, scene, { osm, phys, maxAniso: renderer.capabilities.getMaxAnisotropy(), maxTex: renderer.capabilities.maxTextureSize, low: LOW, keep: AREA.keep, keepDetail: AREA.keepDetail });
   K._.atlas.start(); // sign rects are reserved during the build; text is painted once the fonts are in
-  // modules may register night handlers while they build, so this must exist before any build()
-  const nightFns = []; K.onNight = fn => nightFns.push(fn);
+  const timeControl = $('sky-mode'), timeLabel = $('sky-clock');
+  let storedMode;
+  try { storedMode = sessionStorage.getItem('sky-mode'); } catch {}
+  const initialMode = Q.has('night') ? 'night' : SHOT ? 'day' : storedMode || 'live';
+  const daylight = createDaylight(THREE, scene, osm.origin, K._.bounce, initialMode, state => {
+    timeControl.value = state.mode;
+    timeLabel.textContent = state.clock + ' · ' + state.phase;
+    document.body.classList.toggle('night', state.night);
+  });
+  K.onNight = daylight.onNight;
+  function setTimeMode(mode) {
+    if (!timeModes.includes(mode)) return;
+    if (!SHOT) {
+      try { sessionStorage.setItem('sky-mode', mode); } catch {}
+      if (Q.has('night')) {
+        Q.delete('night');
+        const url = new URL(location.href); url.searchParams.delete('night');
+        history.replaceState(history.state, '', url);
+      }
+    }
+    daylight.setMode(mode);
+  }
+  const setNight = on => setTimeMode(on ? 'night' : 'day');
+  timeControl.addEventListener('change', () => { setTimeMode(timeControl.value); timeControl.blur(); });
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) daylight.sync(Date.now(), true); });
 
   // ---- places ----
   const mods = [];
@@ -315,13 +326,15 @@ async function boot() {
   document.addEventListener('pointerlockchange', () => document.body.classList.toggle('locked', document.pointerLockElement === canvas));
   document.addEventListener('mousemove', e => { if (document.pointerLockElement === canvas) { player.yaw -= e.movementX * 0.0022; player.pitch = Math.max(-1.5, Math.min(1.5, player.pitch - e.movementY * 0.0022)); } });
   addEventListener('keydown', e => {
-    if (e.target.tagName === 'INPUT') return;
+    if (e.target.matches?.('input, select')) return;
     keys[e.code] = true;
     if (menuOpen) { if (/^Digit\d$|^Numpad\d$/.test(e.code)) pickFloorByKey(e.code); if (e.code === 'Escape' || e.code === 'KeyE') closeMenu(); return; }
     if (e.code === 'KeyF') { player.fly = !player.fly; player.vy = 0; toast(player.fly ? '비행 모드 (Space 위 / C 아래)' : '걷기 모드'); }
     if (e.code === 'KeyE' && nearIt) use(nearIt);
     if (e.code === 'KeyM') { map.toggle(); if (map.isOpen()) document.exitPointerLock?.(); }
-    if (e.code === 'KeyN') setNight(!night);
+    if (e.code === 'KeyN' && !e.repeat) {
+      if (e.shiftKey) setTimeMode('live'); else setNight(!daylight.state.night);
+    }
     if (e.code === 'KeyH') $('help').classList.toggle('hidden');
     if (e.code === 'KeyR') { const r = player.respawn; player.teleport(r.x, r.y, r.z, r.yaw); }
   });
@@ -354,7 +367,7 @@ async function boot() {
         if (touch.id === null) { touch.id = t.identifier; stick.classList.add('on'); movePad(t); }
         continue;
       }
-      if (t.target.closest?.('button,#map-full,#elev,#start,.gt-mini')) continue;
+      if (t.target.closest?.('button,select,#map-full,#elev,#start,.gt-mini')) continue;
       if (touch.lookId === null) { touch.lookId = t.identifier; touch.lx = t.clientX; touch.ly = t.clientY; }
     }
   }, { passive: true });
@@ -401,19 +414,6 @@ async function boot() {
   function goFloor(f) { player.teleport(menuEl.x + (f.dx || 0), f.y + 0.05, menuEl.z + (f.dz || 0), player.yaw); closeMenu(); toast(`${menuEl.name} · ${f.label} ${f.name || ''}`); }
   function pickFloorByKey(code) { const n = code.slice(-1); const f = menuEl.floors.find(f => f.label.replace(/[^0-9B]/g, '') === n || f.label === n + 'F' || f.label === n + '층'); if (f) goFloor(f); }
   function closeMenu() { menuOpen = false; $('elev').classList.add('hidden'); }
-
-  // night mode
-  let night = Q.has('night');
-  function setNight(v) {
-    night = v; document.body.classList.toggle('night', v);
-    hemi.intensity = v ? 0.35 : 1.55; sun.intensity = v ? 0.08 : 1.5; amb.intensity = v ? 0.25 : 0.25; K._.bounce.value = v ? 0.38 : 0.55;
-    const t = v ? 0x0b1530 : 0x4f86c6, h = v ? 0x223050 : 0xcfe0ee; const cols = sky.geometry.attributes.color;
-    const T1 = new THREE.Color(t), H1 = new THREE.Color(h), G1 = new THREE.Color(v ? 0x10141c : 0x9aa3a8);
-    for (let i = 0; i < pos.count; i++) { const y = pos.getY(i) / 3000; const c = y > 0 ? H1.clone().lerp(T1, Math.pow(y, 0.6)) : H1.clone().lerp(G1, Math.min(1, -y * 4)); cols.setXYZ(i, c.r, c.g, c.b); }
-    cols.needsUpdate = true; scene.fog.color.setHex(v ? 0x1a2238 : 0xcfe0ee);
-    for (const f of nightFns) f(v);
-  }
-  if (night) setNight(true);
 
   // ---- loop ----
   // ---- routes: every room/floor has its own address (#/place/floor?p=x,y,z,yaw) ----
@@ -540,7 +540,8 @@ async function boot() {
     player.update(dt, input);
     camera.position.set(player.x, player.y + player.eye + relief(player.x, player.z), player.z);
     camera.rotation.set(player.pitch, player.yaw, 0, 'YXZ');
-    sky.position.copy(camera.position);
+    daylight.sky.position.copy(camera.position);
+    daylight.sync();
     for (const f of K._.frameFns) { try { f(dt, t, player); } catch (e) { } }
     if (traffic) traffic.update(dt);
     // zone + interactables
@@ -581,7 +582,7 @@ async function boot() {
   // real-estate-map apartments stream in after the page is up (nearest first)
   let reLive = null;
   if (reModels.length) setTimeout(() => { reLive = loadReModels({ THREE, scene, models: reModels, stand: reStand, terrain: exteriorTerrain, from: { x: player.x, z: player.z }, onProgress: (d, n) => { if (d === n) toast(`주변 아파트 ${n}동 불러옴`); } }); }, SHOT ? 0 : 400);
-  Object.assign(window.__world, { ready: true, area: AREA.id, wantedArea: () => wantedArea(phys.zoneAt(player.x, player.y + 0.1, player.z)), K, phys, player, camera, scene, renderer, map, places: placeInfo, stats: { ...K._.stats, phys: phys.stats, draw: () => renderer.info.render }, setNight });
+  Object.assign(window.__world, { ready: true, area: AREA.id, wantedArea: () => wantedArea(phys.zoneAt(player.x, player.y + 0.1, player.z)), K, phys, player, camera, scene, renderer, map, places: placeInfo, stats: { ...K._.stats, phys: phys.stats, draw: () => renderer.info.render }, setNight, setTimeMode, daylight });
   frame();
 }
 boot().catch(e => { fail('boot', e); status('오류: ' + e.message); });
