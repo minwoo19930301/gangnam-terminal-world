@@ -1,4 +1,5 @@
 import {marketFruitIslands} from '../../assets/models/ssg-market-produce/model.js';
+import {pastryCounter} from '../../assets/models/ssg-bonmie/model.js';
 import { placeHypnos } from '../../assets/models/hypnos-showroom/model.js';
 import { registerPaulSmith } from './shinsegae-paul-smith.js';
 import { registerHerno } from './shinsegae-herno.js';
@@ -2651,20 +2652,32 @@ export function build(K) {
         return;
       }
       const[u,v]=at,wood=c.name==='카멜커피'?0xd9b98a:c.name==='보앤미'?0xc8a77b:c.name==='블루버터플라이'?0x63422a:c.kind==='wine'?0x493529:c.kind==='deli'?0xb8925d:0x7e6044;
-      const darkDeli=c.zone==='north_deli'&&c.kind==='deli';
-      box(u,v,w,d,y,.83,darkDeli&&c.name!=='블루버터플라이'?'ssg_deli_black_glaze':c.name==='카멜커피'?wood:{tex:'wood',color:wood});
+      const darkDeli=c.zone==='north_deli'&&c.kind==='deli', boAndMie=c.name==='보앤미';
+      const base=darkDeli&&c.name!=='블루버터플라이'?'ssg_deli_black_glaze':c.name==='카멜커피'?wood:{tex:'wood',color:wood};
+      box(u,v,w,d,y,.83,boAndMie?{tex:'marble',color:0xe9d9c4}:base);
       box(u,v,w+.025,d+.025,y+.83,.06,{tex:'marble',color:darkDeli||c.name==='카멜커피'?0x292824:0xe9debf,gloss:.7},{solid:false});
       if(c.name==='블루버터플라이'){
         for(const du of [-w/2+.03,w/2-.03])box(u+du,v,.025,d+.015,y+.10,.65,BRASS,{solid:false});
         for(const yy of [.10,.74])box(u,v,w+.02,d+.02,y+yy,.025,BRASS,{solid:false});
       }
       if(['deli','bakery'].includes(c.kind)){
-        box(u,v,w-.04,d-.04,y+.9,.42,'glass',{solid:false});
+        const glass=boAndMie?K.material('ssg_bonmie_case_glass',new K.THREE.MeshLambertMaterial({
+          color:0xe2e8e0,transparent:true,opacity:.12,depthWrite:false,side:K.THREE.DoubleSide
+        })):'glass';
+        box(u,v,w-.04,d-.04,y+.9,.42,glass,{solid:false});
         for(const du of [-w/2+.05,w/2-.05])for(const dv of [-d/2+.05,d/2-.05])box(u+du,v+dv,.025,.025,y+.9,.43,BRASS,{solid:false});
-        box(u,v,w,d,y+1.31,.025,BRASS,{solid:false});
+        if(boAndMie){
+          // Gangnam's opening photo shows the black wordmark on the pale counter front.
+          sign('BO&MIE',u-w*.33,v-d/2-.014,y+.39,'N',.74,.22,{bg:null,fg:'#332a24',bold:true});
+          for(const side of [-1,1]){
+            box(u,v+side*(d/2-.025),w,.05,y+1.31,.025,BRASS,{solid:false});
+            box(u+side*(w/2-.025),v,.05,d-.10,y+1.31,.025,BRASS,{solid:false});
+          }
+          const [x,z]=P(u,v);pastryCounter(K,x,y+.90,z,RA,w,d);
+        }else box(u,v,w,d,y+1.31,.025,BRASS,{solid:false});
       }
       const nx=Math.max(2,Math.floor(w/.28)),nz=Math.max(2,Math.floor(d/.28));
-      for(let a=0;a<nx;a++)for(let b=0;b<nz;b++){
+      if(!boAndMie)for(let a=0;a<nx;a++)for(let b=0;b<nz;b++){
         const uu=u-w*.4+(a+.5)*w*.8/nx,vv=v-d*.4+(b+.5)*d*.8/nz;
         if(c.kind==='cafe'&&Math.abs(uu-u)<.36&&Math.abs(vv-v)<.3)continue;
         if(c.name==='발효곳간'){
