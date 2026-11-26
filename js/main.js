@@ -353,16 +353,18 @@ async function boot() {
     reloadTimer = setTimeout(() => location.reload(), 60);
     return true;
   }
-  function leaveArea(x, y, z, yaw) {
+  function leaveArea(x, y, z, yaw, destination) {
     if (leaving) return true;
     if (AREA.id === 'all') return false;
-    const zn = phys.zoneAt(x, (y ?? 0) + 0.1, z);
+    // A directory result can name a shop in a district whose floors are unloaded.
+    const zn = destination ?? phys.zoneAt(x, (y ?? 0) + 0.1, z);
     const id = areaIdAt(zn, x, y ?? 0, z);
     if (id === AREA.id) return false;
     const key = zn && zn.place ? `${zn.place}/${zn.floor || '1F'}` : 'street';
-    return reloadAt(key, x, y ?? 0, z, yaw != null ? yaw * 180 / Math.PI : player.yaw * 180 / Math.PI, areaName(id, META));
+    reloadAt(key, x, y ?? 0, z, yaw != null ? yaw * 180 / Math.PI : player.yaw * 180 / Math.PI, areaName(id, META));
+    return true; // A remote destination cannot be placed on this scene's local floor.
   }
-  const map = createMap({ THREE, K, osm, player, phys, spawns, places: placeInfo, container: $('app'), zoneAt: () => currentZone, leaveArea });
+  const map = createMap({ THREE, K, osm, player, phys, spawns, places: placeInfo, directory: META, container: $('app'), zoneAt: () => currentZone, leaveArea });
   let currentZone = null;
   if (SHOT) document.body.classList.add('shot');
   const canvas = renderer.domElement;

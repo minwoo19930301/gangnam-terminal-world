@@ -18,7 +18,8 @@ for (const id of PLACES) {
   const m = await import(url.pathToFileURL(path.join(ROOT, 'js/places', id + '.js')).href);
   const K = createKit(THREE, new THREE.Scene(), { osm, phys: createPhysics() }); K.onNight = () => { };
   K._.setCurrent(id, m.meta); m.build(K);
-  modules.set(id, { meta: m.meta, builtZones: K._.zonesList });
+  const mapDestinations = K._.spawns.filter(s => s.mapDestination).map(({name, floor, x, y, z, yaw}) => ({name, floor, x, y, z, yaw}));
+  modules.set(id, { meta: m.meta, builtZones: K._.zonesList, mapDestinations });
   for (const zone of K._.zonesList) {
     if (zone.place === id || !zone.place) continue;
     if (!hostedZones.has(zone.place)) hostedZones.set(zone.place, []);
@@ -27,7 +28,7 @@ for (const id of PLACES) {
 }
 // A physical module can host a neighbouring tenant. Include the zone in both
 // the builder's spatial coverage and the public place used for navigation.
-for (const [id, { meta, builtZones }] of modules) {
+for (const [id, { meta, builtZones, mapDestinations }] of modules) {
   const zones = builtZones.concat(hostedZones.get(id) || []);
   let x0 = Infinity, z0 = Infinity, x1 = -Infinity, z1 = -Infinity, y0 = Infinity, y1 = -Infinity;
   const grow = (x, z) => { x0 = Math.min(x0, x); z0 = Math.min(z0, z); x1 = Math.max(x1, x); z1 = Math.max(z1, z); };
@@ -56,6 +57,7 @@ for (const [id, { meta, builtZones }] of modules) {
   }
   out[id] = {
     name: meta?.name || id,
+    ...(mapDestinations.length ? {mapDestinations} : {}),
     claims: meta?.claims || [], claimRoads: meta?.claimRoads || [], claimAreas: meta?.claimAreas || [],
     box: isFinite(x0) ? [r(x0), r(z0), r(x1), r(z1)] : null, y: isFinite(y0) ? [r(y0), r(y1)] : [0, 0],
     floors, ...(Object.keys(floorAliases).length ? {floorAliases} : {}), cells: [...cells],
