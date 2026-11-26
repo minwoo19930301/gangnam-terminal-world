@@ -6,7 +6,7 @@ import runpy
 import subprocess
 import sys
 import bpy
-from mathutils import Vector
+from mathutils import Matrix, Vector
 
 here=Path(__file__).resolve().parent
 sys.dont_write_bytecode=True
@@ -85,8 +85,6 @@ for x,d in [(2.8,.66),(1.18,.66),(-.45,.66),(-2.08,.66),(-2.86,1.44),(-2.86,2.93
 housing=round_box_outline(-1.43,3.62,1.52,5.46,.34)
 prism('Rounded copper cabinet',housing,.044,3.44,'polished')
 prism('Copper cabinet crown',housing,3.44,3.50,'glint')
-for x,w,col in [(-1.18,.06,'glint'),(-1.05,.025,'shadow'),(.65,.11,'copper'),(.81,.024,'glint')]:
-    box('Brushed copper highlight',x,3.614,1.62,w,.008,1.69,col)
 box('Service worktop',-.03,3.27,1.08,3.12,.68,.068,'stone',.025)
 for x in (-.97,-.69):
     box('Twin coffee machine body',x,3.29,1.15,.25,.31,.43,'steel',.035)
@@ -123,13 +121,40 @@ for a,b in [((-2.50,1.42),(2.64,1.42)),((-2.50,1.42),(-2.50,4.20))]:
         x=a[0]+(b[0]-a[0])*f;d=a[1]+(b[1]-a[1])*f
         for z in (2.85,2.906):
             box('Copper lamp clasp',x,d,z,.041,.090,.009,'gold')
-for x in (-.76,1.59):
-    rod('Monitor hanger',[(x,1.42,2.86),(x,1.52,2.63)],.016,'iron')
-    box('Angled digital menu frame',x,1.54,2.27,.68,.074,.39,'iron',.014)
-    box('Cool display',x,1.493,2.29,.644,.014,.342,'display')
-    for k in range(4):
-        box('Pale menu lines',x-.07,1.483,2.345+k*.049,.30-.022*k,.005,.008,'paper')
-    box('Dessert photograph on menu',x+.21,1.484,2.36,.11,.006,.16,'pink')
+# The two front menus and the side return hang at a shallow downward angle.
+# Graphics convey assortment and contrast without attributing historic prices.
+for idx,(x,d,turn) in enumerate([(-2.50,2.48,-.55),(-.76,1.42,0),(1.59,1.42,0)]):
+    rod('Monitor suspension',[(x,d,2.86),(x,d,2.74)],.014,'iron')
+    start=set(body.objects)
+    box('Menu alloy frame',x,d,2.30,.69,.055,.434,'iron',.012)
+    face=d-.035
+    box('Menu screen',x,face,2.32,.654,.008,.39,('display','cream','display')[idx])
+    if idx<2:
+        box('Dessert panel artwork',x-.134,face-.009,2.354,.335,.005,.305,('pink','paper')[idx])
+        for j in range(3):
+            box('Praline silhouette on artwork',x-.23+j*.089,face-.014,2.431+(j%2)*.039,
+                .067,.004,.071,('cocoa','berry','praline')[j],.005)
+        for row in range(4):
+            box('Menu description block',x+.161,face-.009,2.376+row*.064,
+                .182-.025*(row%2),.005,.008,('paper','iron')[idx])
+    else:
+        for row in range(2):
+            for col in range(3):
+                cx=x-.196+col*.195;z=2.355+row*.157
+                box('Menu photograph',cx,face-.009,z,.167,.005,.126,('paper','pink','steel')[(col+row)%3])
+                box('Menu chocolate',cx-.016,face-.013,z+.030,.071,.003,.048,('cocoa','berry','ivory')[col],.003)
+    pivot=Vector((x,d,2.734))
+    tilt=Matrix.Translation(pivot)@Matrix.Rotation(turn,4,'Z')@Matrix.Rotation(.36,4,'X')@Matrix.Translation(-pivot)
+    for obj in set(body.objects)-start:
+        obj.data.transform(tilt)
+# Framed confection study visible on the right hand wall in the branch photo.
+box('Right wall display frame',3.655,3.96,1.50,.060,1.42,1.05,'iron',.014)
+box('Print inside frame',3.617,3.96,1.535,.015,1.36,.98,'display')
+for row in range(4):
+    for col in range(6):
+        d=3.43+col*.211;z=1.62+row*.219
+        box('Right wall print tile',3.606,d,z,.008,.170,.162,('paper','pink','steel')[(row+col)%3])
+        box('Praline on print',3.599,d+.01,z+.034,.006,.095,.078,('cocoa','dark','praline')[(row*2+col)%3])
 for x in (-2.83,-.6,1.7,3.18):
     for d in (1.03,4.82):
         shop.group=light
@@ -164,6 +189,7 @@ for i in range(4):
 for x in (2.23,2.69):
     box('Upright copper gift carton',x,1.46,1.38,.31,.15,.22,'polished',.012)
     box('Gift carton ribbon',x,1.38,1.38,.031,.012,.22,'cream')
+runpy.run_path(str(here/'lighting.py'))['install'](scene)
 scene['native_axes']='Blender X across the counter, positive Y into the shop, Z up.'
 for screen in bpy.data.screens:
     for area in screen.areas:
