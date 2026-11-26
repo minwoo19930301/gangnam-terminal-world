@@ -1,3 +1,4 @@
+import { placeUpperShowroom } from '../../assets/models/gyeongbu-apparel/model.js';
 import { coachGlazing } from '../../assets/models/coach-cabin/windows.js';
 import { placeCutFlowers } from '../../assets/models/gyeongbu-cutflowers/model.js';
 import { placeWaitingBenches } from '../../assets/models/gyeongbu-seating/model.js';
@@ -2172,10 +2173,18 @@ export function build(K) {
       }
     }
     lspawn(floor + ' ' + label,38,96.8,floorY,0,1);
+    const feature={Children:'childrenswear',Suits:'tailoring',Womenswear:'outerwear'}[key];
+    const sampleU=wings[0][0],sampleV=centers[0];
+    if(feature){
+      ldetail({floor,y0:floorY,y1:floorY+3.1,poly:rect(sampleU-1.40,sampleV-2.65,sampleU+1.40,sampleV+2.65),name:label+' · 전면 상품'},()=>{
+        const [x,z]=W(sampleU,sampleV);
+        placeUpperShowroom(K,marketModel,key,'gyeongbu-apparel/'+feature,x,floorY,z,ROT+PI/2);
+      });
+    }
     ldetail({floor, y0:floorY, y1:floorY+3.2, poly:rect(32,97,44,131), name:label}, () => {
       const placements=[];
       for (const [u,side] of wings) for (const v of centers) {
-        placements.push([u,v,floorY,side*PI/2]);
+        if(!feature || u!==sampleU || v!==sampleV)placements.push([u,v,floorY,side*PI/2]);
         lsign(label,u+side*1.353,v,floorY+2.83,3.7,.26,side>0?'+u':'-u',
           {bg:null,fg:'#fff7e5',pxPerM:120});
       }

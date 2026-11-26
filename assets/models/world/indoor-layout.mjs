@@ -10,6 +10,8 @@ import {relief} from '../../../js/banpo_relief.js';
 // Scene object (or a uniquely identifying child) -> editable native source.
 // Geometry decoder matrices and decorative LOD offsets live *below* the placement.
 const sources = [
+  ...[['6F','Children','childrenswear'],['7F','Suits','tailoring'],['8F','Womenswear','outerwear']]
+    .map(([floor,key,collection])=>['gyeongbu',floor,'gyeongbu-apparel/apparel.blend','경부선 도매 점포 · '+key,collection]),
   ...['Sunflower','Ivory','Violet','Pink','Sleeve','Riser','BlackStack','WorkPapers'].map(name=>
     ['gyeongbu','3F','gyeongbu-cutflowers/cutflowers.blend','생화상가 · '+name,name]),
   ['gyeongbu','1F','gyeongbu-seating/waiting-benches.blend','경부선 승차홈 · TerminalTwo','TerminalTwo'],
@@ -17,6 +19,8 @@ const sources = [
   ['gyeongbu','1F','gyeongbu-seating/waiting-benches.blend','경부선 승차홈 · WindowFour','WindowFour'],
   ['gyeongbu','B1','daiso-merchandise/merchandise.blend','Daiso stationery','DaisoStationeryEndcap'],
   ['gyeongbu','B1','daiso-merchandise/merchandise.blend','Daiso kitchen','DaisoKitchenEndcap'],
+  ...['apparel','junior','kitchen','linen','flowers','tarot'].map(name=>
+    ['gotomall','B1','gotomall/shop-interiors.blend','고투몰 진열 · '+name,name]),
   ['gotomall','B1','gotomall-hessed/hessed.blend','헤쎄드 가방 진열','HessedShop'],
   ['jwmarriott','2F','patisserie/patisserie.blend','파티세리 · 플랑과 마카롱','파티세리 · 플랑과 마카롱 선물 상자'],
   ['jwmarriott','8F','lounge-chair/lounge-chair.blend','더 라운지 · 피콕 라탄체어','피콕 암체어 · JW 8층 더 라운지'],

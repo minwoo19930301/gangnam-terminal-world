@@ -7,6 +7,7 @@ from mathutils import Vector
 
 
 SHELVES = {
+    "gyeongbu-apparel": "경부선 6~8층 · 도매 의류",
     "gyeongbu-cutflowers": "경부선 3층 · 절화와 도매 꽃통",
     "coach-cabin": "경부선 승차홈 · 고속버스 승객석과 차창",
     "oksoban-table": "뉴코아 1관 5층 · 옥소반 식탁",
