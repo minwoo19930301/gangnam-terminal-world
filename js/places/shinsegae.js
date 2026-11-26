@@ -1494,7 +1494,8 @@ export function build(K) {
   // Arrive on the level landing just north of each car, with the full floor list retained.
   const ARR = { dx: -2.2 * SA, dz: -2.2 * CA };
   const marketLiftUV=B1_PLAN(578,617);
-  const MARKET_B1_DEST=P(marketLiftUV[0]-1.8,marketLiftUV[1]);
+  // The operator plan opens the market lift lobby on its page-left (local -v) side.
+  const MARKET_B1_DEST=P(marketLiftUV[0],marketLiftUV[1]-1.8);
   const mezzBankCalls=[];
   ELV.forEach((e, i) => {
     const [x, z] = P(e.u, e.v);
@@ -2749,24 +2750,28 @@ export function build(K) {
     // Official elevator symbols become functioning B1 banks. All existing upper
     // stops remain available via destination tables; no extra1F shaft is cut.
     for(const c of cells.filter(c=>c.name.endsWith('엘리베이터')&&worldPoly(c).length>=3)){
-      const r=uvRect(c),[u,v]=BPLAN(...(c.name==='마켓 엘리베이터'?[578,617]:[936,335])),[x,z]=P(u,v);
+      const market=c.name==='마켓 엘리베이터';
+      const [u,v]=market?marketLiftUV:BPLAN(936,335),[x,z]=P(u,v);
+      const landing=market?MARKET_B1_DEST:[x-1.8*CA,z+1.8*SA];
+      const b1Stop={label:'B1',y,dx:landing[0]-x,dz:landing[1]-z};
       const corner=UPPER_BANKS.find(b=>b.key==='본관 코너'),main=UPPER_BANKS.find(b=>b.key==='본관 화장실 옆'),annex=UPPER_BANKS.find(b=>b.key==='신관 화장실 옆');
       const remote=f=>{
-        if(c.name==='마켓 엘리베이터')return cornerLiftLanding(f.label,corner,1);
+        if(market)return cornerLiftLanding(f.label,corner,1);
         if(f.label==='11F'){const [u,v]=annexLiftCentre(f.label,1);return P(u,v-2.25);}
         return mainLiftLanding(f.label, main, 1);
       };
       const parking=P(ELV[1].u,ELV[1].v-2.2),nw=beautyLiftLanding(NWLIFTS[0]),mezz=P(36,81);
       // B2 has its own basement shaft; the upper-floor landing is not a
       // valid parking-level arrival and can trap the player inside a wall.
-      const floorList=ELV_FLOORS.map(f=>({...f,...(f.label==='B1'?{dx:-1.8*CA,dz:1.8*SA}:f.label==='B2'?{dx:parking[0]-x,dz:parking[1]-z}:f.label==='1M'?{dx:mezz[0]-x,dz:mezz[1]-z}:f.label==='1F'?{dx:nw[0]-x,dz:nw[1]-z}:(()=>{const dest=remote(f);return{dx:dest[0]-x,dz:dest[1]-z};})())}));
-      const lift=K.elevator({name:c.name,x,z,rotY:FACE.W,w:2,d:1.8,topH:3.2,floors:[{label:'B1',y,dx:-1.8*CA,dz:1.8*SA}]});
+      const floorList=ELV_FLOORS.map(f=>({...f,...(f.label==='B1'?b1Stop:f.label==='B2'?{dx:parking[0]-x,dz:parking[1]-z}:f.label==='1M'?{dx:mezz[0]-x,dz:mezz[1]-z}:f.label==='1F'?{dx:nw[0]-x,dz:nw[1]-z}:(()=>{const dest=remote(f);return{dx:dest[0]-x,dz:dest[1]-z};})())}));
+      const lift=K.elevator({name:c.name,x,z,rotY:market?FACE.N:FACE.W,w:2,d:1.8,topH:3.2,floors:[b1Stop]});
       lift.floors=floorList;
       // The menu may teleport to a visible remote bank, but this B1 car has no
       // shaft on upper floors. Bound its call prompt to its actual B1 landing.
       const call=K._.interactables.find(it=>it.elevator===lift);if(call)call.y=y;
-      K.slab(rect(u-2.4,v-1.3,u+1.2,v+1.3),y,{mat:'metal',thick:.05,ceil:false,edge:false});
-      sign('엘리베이터 · 전층 안내',u-.95,v,y+2.7,'W',3.8,.4,{bg:'#373c33',fg:'#f5deb0'});
+      const apron=market?rect(u-1.3,v-2.4,u+1.3,v+1.2):rect(u-2.4,v-1.3,u+1.2,v+1.3);
+      K.slab(apron,y,{mat:'metal',thick:.05,ceil:false,edge:false});
+      sign('엘리베이터 · 전층 안내',market?u:u-.95,market?v-1.03:v,y+2.7,market?'N':'W',3.8,.4,{bg:'#373c33',fg:'#f5deb0'});
     }
 
     // Round14 video finishes preserve every round12 cell and every 1F slab.
