@@ -1,3 +1,4 @@
+import {placeTerminalLanding} from '../../assets/models/central-terminal-landing/model.js';
 import {liftPassage,walnutWalls} from '../../assets/models/house-lift-passage/layout.js';
 import {detailModule} from '../detail-module.js';
 import {registerHotelWalnut} from '../../assets/models/jw-arrival/walnut.js';
@@ -10,7 +11,7 @@ import {houseEntryGallery,houseEntryRamp} from '../../assets/models/house-entry-
 import {restaurantFront} from '../../assets/models/sweet-arcade/restaurant-fronts.js';
 import {sweetGardenSoffit} from '../../assets/models/sweet-garden-soffit/model.js';
 import {cakeCounter} from '../../assets/models/sweet-cake-counters/model.js';
-import {gate9MarketApproach,gate9Plan,terminalOrigin,terminalRotation as R,terminalPoint as P,sweetParkLocal as BPst} from './sweet-park-plan.js';
+import {gate9MarketApproach,gate9Plan,terminalLiftLanding,terminalOrigin,terminalRotation as R,terminalPoint as P,sweetParkLocal as BPst} from './sweet-park-plan.js';
 import {transverseFloor} from '../../assets/models/megabox-central/layout.js';
 import {publicFloorOpening,court,westApron} from '../../assets/models/cinema-rotary/layout.js';
 import {arcadePiers} from '../../assets/models/sweet-arcade/model.js';
@@ -559,6 +560,15 @@ export function build(K) {
   rail(142, 31.3, 148.9, 31.3, YR); rail(142, 33.7, 148.9, 33.7, YR); rail(142, 31.3, 142, 33.7, YR);
   const ELEV_FLOORS = [{ label: 'B1', y: YB1, name: '메가박스 · 신세계 · 지하철 연결' }, { label: '1F', y: Y1, name: '호남선 터미널 · 매표소' }, { label: '1M', y: Y2, name: '센트럴시티 중층 식당가' }, { label: 'R', y: YR, name: '옥상 주차장' }];
   elev('센트럴시티 터미널 엘리베이터', 14.5, 36.7, 'W', ELEV_FLOORS, ['b1', 'f1', 'f2', 'rf']);
+  // The B1 shaft sits just outside the terminal's recessed market boundary.
+  // Carry the public landing to the existing west-facing car sill.
+  const terminalLiftApron=RECT(...terminalLiftLanding.rect);
+  const [liftMapX,liftMapZ]=P(14.5,36.7);
+  placeTerminalLanding(K,terminalLiftLanding.x,YB1,terminalLiftLanding.z,F.W);
+  K.slab(terminalLiftApron,YB1,{mat:'ccLinkMarble',under:false,ceil:false,edge:false});
+  lzone(13.6,34.30,15.4,37.62,{name:'센트럴시티 터미널 엘리베이터',floor:'B1',
+    sub:'호남선 1층 · 지하 연결통로',y0:YB1-.2,y1:YB1+terminalLiftLanding.clearance,priority:18,
+    mapArrival:{x:liftMapX,z:liftMapZ,yaw:R+PI/2}});
   // Round11: the previous s21,t37.3 shaft stood in the J4 doorway.
   // The complete B1/1F/1M/R bank now occupies a wall-side niche north of the passage.
   lsign('엘리베이터 · 전층 안내',14.5,35.4,3.2,3.6,.45,'W',{bg:'#403b33',fg:'#fff5df'});
@@ -2176,6 +2186,8 @@ export function build(K) {
         const at = atOn(a,b,mouthX-ix,mouthZ-iz);
         const offset = Math.abs((mouthX-a[0]-ix)*(b[1]-a[1])-(mouthZ-a[1]-iz)*(b[0]-a[0]))/L;
         if (offset<.45 && at>0 && at<L) ops.push({at,w:width,y0:YB1,y1:YB1+4.45});
+        const liftThreshold=publicFloorOpening(a[0]+ix,a[1]+iz,b[0]+ix,b[1]+iz,[terminalLiftApron]);
+        if(liftThreshold)ops.push({...liftThreshold,y0:YB1,y1:YB1+terminalLiftLanding.clearance});
         if(i===5){
           const crossing=publicFloorOpening(a[0]+ix,a[1]+iz,b[0]+ix,b[1]+iz,[court,westApron]);
           if(crossing)ops.push({...crossing,y0:YB1,y1:YB1+4.46});

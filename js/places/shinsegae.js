@@ -1,3 +1,4 @@
+import {terminalLiftLanding} from './sweet-park-plan.js';
 import {parkSedanTrim} from '../../assets/models/sedan-curb/model.js';
 import {placeNorthCanopy} from '../../assets/models/shinsegae-gate-canopy/model.js';
 import {registerGlxyStudio} from '../../assets/models/ssg-glxy-studio/model.js';
@@ -523,6 +524,7 @@ export function build(K) {
   K.material('ssg_b1_deli_wall',deliBacking);
   K.polyWalls(basementOutline, LV.B1, 0, { mat: 'concrete', inner: {tex:'ssg_b1_deli_wall',color:IN}, thick: 0.3, openings: [
     { x: cinemaAisleMouth.x, z: cinemaAisleMouth.z, w: cinemaAisleMouth.width, y0: LV.B1, y1: LV.B1+4.45 },
+    { x:terminalLiftLanding.x,z:terminalLiftLanding.z,w:terminalLiftLanding.width,y0:LV.B1,y1:LV.B1+terminalLiftLanding.clearance },
     { x: P(39.65, 0)[0], z: P(39.65, 0)[1], w: 9, y0: LV.B1, y1: -2.7 },
     {x:-42.72,z:41.85,w:6.5,y0:LV.B1,y1:-2.4},
   ] });

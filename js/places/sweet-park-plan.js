@@ -6,6 +6,14 @@ const sin=Math.sin(terminalRotation),cos=Math.cos(terminalRotation);
 export function terminalPoint(s,t){
   return [terminalOrigin[0]+sin*s+cos*t,terminalOrigin[1]+cos*s-sin*t];
 }
+// The existing terminal car is centred at (14.5, 36.7). Both B1 envelopes
+// meet before its west-facing sill, so the two owners share this landing.
+const liftCentreS=14.5, liftLandingWidth=1.56;
+const [liftX,liftZ]=terminalPoint(liftCentreS,35.20);
+export const terminalLiftLanding={
+  rect:[liftCentreS-liftLandingWidth/2,34.30,liftCentreS+liftLandingWidth/2,35.72],
+  x:liftX,z:liftZ,width:liftLandingWidth,clearance:2.48,
+};
 export const sweetParkLocal=(px,py)=>[74.05068+.13*(px-1032),75.24268-.13*(py-477)];
 export const sweetParkPoint=(px,py)=>terminalPoint(...sweetParkLocal(px,py));
 

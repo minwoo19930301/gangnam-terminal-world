@@ -89,6 +89,16 @@ export function placeWestCorner(K,P,rotation,floor){
       visibleFrom:(px,py,pz)=>py>floor-.58&&py<floor+3.38&&(room||sight(px,pz))},()=>{
       if(room){
         const z=key==='banShell'?2.747:2.74,back=key==='banShell'?4.139:3.00;
+        // Both the Blender shell and its silhouette enclose these three sides.
+        // Only eyes inside the shop use them; the mall-facing entrance stays open.
+        const halfWidth=key==='banShell'?2.027:1.967;
+        const left=x-halfWidth, right=x+halfWidth;
+        const rear=d+(key==='banShell'?4.115:2.951);
+        const eyePoly=poly(left+.055,.06,right-.055,rear-.055);
+        const rearLeft=W(left,rear), rearRight=W(right,rear);
+        for(const [a,b] of [[W(left,.06),rearLeft],[W(right,.06),rearRight],[rearLeft,rearRight]]){
+          K.occludingWall({a,b,y0:floor+.08,y1:floor+2.70,eyePoly,eyeMin:floor+.10,eyeMax:floor+2.68});
+        }
         K.occludingSlab({poly:poly(shop.lo,key==='banShell'?.01:.021,shop.hi,back),y:floor+z,eyeMin:floor+.05,eyeMax:floor+z-.05});
       }
       if(key==='mirrorGlass'){placeMirror(K,name,at(x,d,h),angle,seen);return;}

@@ -29,9 +29,11 @@ import {relief} from '../../../js/banpo_relief.js';
 // Scene object (or a uniquely identifying child) -> editable native source.
 // Geometry decoder matrices and decorative LOD offsets live *below* the placement.
 const sources = [
+  ['centralcity','B1','central-terminal-landing/landing.blend','센트럴시티 터미널 승강기 · 지하 문턱','CentralTerminalB1Landing'],
   ['station','1F','exit4-pavilion/pavilion.blend','4번 출구 · 유리 승강장과 돌출 차양','Exit4LiftPavilion','Exit4LiftGlazing'],
   ['station','1F','exit4-pavilion/pavilion.blend','4번 출구 · 관찰창이 있는 승강기 문짝','Exit4LiftLeaf'],
   ['shinsegae','지상','shinsegae-gate-canopy/north-gate.blend','신세계 강남점 정문 · 곡면 유리 캐노피','GangnamNorthGateCanopy','GangnamNorthGateSupports'],
+  ['jwmarriott','3F','jw-salon-six/salon-six.blend','JW 메리어트 · 살롱 6 U자 회의장','JWSeoulSalonSixMeeting'],
   ['centralcity','지상','central-plaza-canopy/canopy.blend','센트럴시티 조각 광장 · 열린 캐노피와 의자','CentralCityCourtCanopy'],
   ['centralcity','지상','central-plaza-seatwall/seatwall.blend','센트럴시티 정문 · 동측 석재 앉음벽과 생울타리','CentralCityEastSeatWall'],
   ['streets','지상','banpo-xi-portal/silver-portal.blend','반포센트럴자이 · 은빛 문주','BanpoCentralXiStreetPortal'],
@@ -138,6 +140,7 @@ const sources = [
   ...Object.values(warakuNames).map(label=>{
     const name='와라쿠 · '+label;return ['centralcity','1F','waraku/dining.blend',name,name];
   }),
+  ['newcore','5F','newcore-akgolf/showroom.blend','뉴코아 2관 5층 · AK골프 클럽 매장','AKGolfGangnam'],
   ...Object.values(golfCatalog).map(([label])=>{
     const name=golfPrefix+label;
     return ['newcore','5F','newcore-golf/golf-shop.blend',name,name];
