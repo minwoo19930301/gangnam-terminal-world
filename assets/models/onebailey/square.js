@@ -1,3 +1,4 @@
+import { passageSections } from './passage.js';
 import { loadFixtureScene, mountFixture } from './load.js';
 
 // The sales-floor plan is digitised in a 1450-pixel-wide reference frame. Its
@@ -172,20 +173,15 @@ export function buildRetailSquare(K) {
   // this surveyed-in-model point. The fit between the two public plans is approximate.
   const mouth=[-365.10823,-13.72263], along=[-.93648,.35072];
   const eastApproach=[mouth,[mouth[0]+12*along[0],mouth[1]+12*along[1]],p(1384,387),p(1315,371)];
-  const section=(a,b,wA,wB,covered,label)=>{
-    const length=Math.hypot(b[0]-a[0],b[1]-a[1]),nx=-(b[1]-a[1])/length,nz=(b[0]-a[0])/length;
-    const cross=(pos,offset)=>[pos[0]+nx*offset,pos[1]+nz*offset];
-    const poly=[cross(a,-wA/2),cross(b,-wB/2),cross(b,wB/2),cross(a,wA/2)];
+  const section=(poly,covered,label)=>{
     slab(poly,stone);if(covered)roof(poly);zone(label,'고투몰 G2 · 원베일리 스퀘어',poly);
-    if(covered)for(const s of [-1,1]){
-      const t=Math.min(.65,length*.08),start=[a[0]+(b[0]-a[0])*t/length,a[1]+(b[1]-a[1])*t/length];
-      const end=[b[0]-(b[0]-a[0])*t/length,b[1]-(b[1]-a[1])*t/length];
-      K.wall(...cross(start,s*wA/2),...cross(end,s*wB/2),F,H,{mat:stone,thick:.10});
-    }
+    if(covered)for(const [i,j] of [[0,1],[3,2]])
+      K.wall(...poly[i],...poly[j],F,H,{mat:stone,thick:.10});
   };
-  for(let i=0;i<eastApproach.length-1;i++) section(eastApproach[i],eastApproach[i+1],[2.66,3.2,4.4][i],[3.2,4.4,5][i],i<2,'고투몰 G2 · 상가 접근로');
+  passageSections(eastApproach,[2.66,3.2,4.4,5]).forEach((poly,i)=>
+    section(poly,i<2,'고투몰 G2 · 상가 접근로'));
   // Northern outlet meets the existing public mural hall at its open end.
-  section(p(1265,126),p(1265,72),4.2,4.2,false,'선큰광장 · 공공보행통로');
-  section(p(1265,72),p(1265,50),4.2,4.2,true,'선큰광장 · 공공보행통로');
+  passageSections([p(1265,126),p(1265,72),p(1265,50)],[4.2,4.2,4.2]).forEach((poly,i)=>
+    section(poly,i===1,'선큰광장 · 공공보행통로'));
   const [sx,sz]=p(1040,363);K.spawn({name:'원베일리 스퀘어 B1 상가',x:sx,y:F,z:sz,yaw:rot+Math.PI});
 }
