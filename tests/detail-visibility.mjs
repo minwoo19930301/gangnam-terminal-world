@@ -36,3 +36,35 @@ assert.ok(visitors.every(o => o.geometry === o.userData.lod[0]), 'original near 
 kit._.cull(200,2,3,true);
 assert.ok(visitors.every(o => o.geometry === o.userData.lod[1]), 'distant silhouette');
 console.log('OK — closed floors, open atrium, return visit and visitor batches');
+
+const streamingPhysics = createPhysics();
+const streamed = createKit(THREE,new THREE.Scene(),{osm:{},phys:streamingPhysics});
+const camera = new THREE.PerspectiveCamera(70,1.4,.1,300);
+camera.position.set(0,1.65,0);
+const loaded = [];
+for (const [name,rect,y0,y1] of [
+  ['front', [-2,-26,2,-21], 0,3],
+  ['behind', [-2,21,2,26], 0,3],
+  ['at elbow', [-2,3,2,6], 0,3],
+  ['covered level', [-2,-26,2,-21], -4,-.5],
+  ['atrium level', [15,-26,17,-21], -4,-.5],
+]) {
+  streamed.detail({name,rect,y0,y1}, () => loaded.push(name));
+}
+streamingPhysics.addCeiling([[-40,-50],[40,-50],[40,50],[-40,50]],0,{
+  holes: [[[6,-20],[12,-20],[12,-7],[6,-7]]],
+});
+assert.ok(streamingPhysics.ceilingBlocksView(0,1.65,0,0,-1.5,-24), 'covered sightline');
+assert.equal(streamingPhysics.ceilingBlocksView(0,1.65,0,16,-1.5,-24),false,'opening in the same slab');
+const updateView = () => streamed._.ensureDetail(0,1.65,0,48,Infinity,camera);
+updateView();
+assert.deepEqual([...loaded].sort(), ['at elbow','atrium level','front']);
+camera.rotation.y = Math.PI;
+updateView();
+assert.equal(loaded.at(-1),'behind','turning on the spot reveals the storefront');
+camera.rotation.y = 0;
+assert.equal(updateView(),0,'a return visit reuses previously loaded furnishing');
+assert.ok(!loaded.includes('covered level'),'opaque floor separates the cellar');
+streamed._.buildAllDetail();
+assert.equal(loaded.at(-1),'covered level','all-detail exports still build concealed floors');
+console.log('OK — camera direction, nearby collision, opaque floor, open atrium and all-detail mode');

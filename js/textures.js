@@ -236,7 +236,7 @@ export function createSignAtlas(THREE, { size = 2048, quality = 0.72 } = {}) {
   // draw text block; returns uv rect + page. The rect is reserved immediately; the pixels are painted by paint(),
   // either right away or later (start() → deferred; flush() paints nearest-first within a time budget) so the
   // world can appear before ~7000 signs are rasterised.
-  let deferred = false, sorted = false; const queue = [];
+  let deferred = false, sortedX = Infinity, sortedZ = Infinity, newJobs = false; const queue = [];
   function draw(lines, o = {}) {
     lines = [].concat(lines).map(String);
     const { w = 2, h = 0.5, bg = '#222', fg = '#fff', bold = true, align = 'center', pxPerM = 96, border = null, italic = false, font = FONT, sub = null, subFg = null, icon = null, padding = 0.08 } = o;
@@ -249,7 +249,7 @@ export function createSignAtlas(THREE, { size = 2048, quality = 0.72 } = {}) {
     pw = Math.max(16, Math.round(pw * s)); ph = Math.max(8, Math.round(ph * s));
     const r = alloc(pw, ph);
     const job = { r, pw, ph, lines, n, bg, fg, bold, align, border, italic, font, sub, subFg, padding, x: o.x ?? 0, z: o.z ?? 0 };
-    if (deferred) queue.push(job); else paint(job);
+    if (deferred) { queue.push(job); newJobs = true; } else paint(job);
     // half-texel inset so mipmaps/filtering do not pull in the neighbour's pixels
     const u0 = (r.x + 0.5) / SIZE, u1 = (r.x + pw - 0.5) / SIZE, v0 = 1 - (r.y + ph - 0.5) / SIZE, v1 = 1 - (r.y + 0.5) / SIZE;
     const out = { page: r.page, uv: [u0, v0, u1, v1] };
@@ -274,11 +274,15 @@ export function createSignAtlas(THREE, { size = 2048, quality = 0.72 } = {}) {
     g.restore();
   }
   function start() { deferred = true; }
-  function flush(ms, x = 0, z = 0) {
+  function flush(ms, x = 0, z = 0, limit = Infinity) {
     if (!queue.length) return [];
-    if (!sorted) { queue.sort((a, b) => Math.hypot(b.x - x, b.z - z) - Math.hypot(a.x - x, a.z - z)); sorted = true; }
+    if (newJobs || Math.abs(x-sortedX) + Math.abs(z-sortedZ) > 8) {
+      for (const j of queue) j.distance = (j.x - x) ** 2 + (j.z - z) ** 2;
+      queue.sort((a,b) => b.distance-a.distance);
+      sortedX = x; sortedZ = z; newJobs = false;
+    }
     const t0 = performance.now(), done = [];
-    while (queue.length && performance.now() - t0 < ms) { const j = queue.pop(); paint(j); done.push(j); }
+    while (queue.length && done.length < limit && performance.now() - t0 < ms) { const j = queue.pop(); paint(j); done.push(j); }
     return done; // painted jobs (rect + page) so the caller can upload just those rectangles
   }
   function flushAll() { while (queue.length) paint(queue.pop()); }

@@ -58,16 +58,17 @@ Collision model: player capsule r=0.32, height 1.75, step-up 0.5 m. Walls block 
 
 ## Lazy floor detail — `K.detail`
 
-`K.detail({ floor, y0, y1, rect: [x0, z0, x1, z1] | poly, name }, K => { ...furnishing... })` registers a group that is
-built only when the camera comes within ~60 m horizontally and ±8 m of `y0..y1` (screenshots and the tests build all
-groups). Use it for the heavy, per-floor furnishing: shop stock, shelves, racks, counters, tables and chairs, fixtures,
-light panels, small signage, people (`K.crowd/K.person`), plants. Because each floor only costs memory and frame time
-when someone is near it, a floor can be far more detailed than before (budget about 120k quads per detail group).
+`K.detail({ floor, y0, y1, rect: [x0, z0, x1, z1] | poly, name }, K => { ...furnishing... })` registers furnishings for one
+storefront or a short stretch of corridor. Give each group a tight footprint and height range. The first view prepares
+nearby objects within 24 m. As the camera turns or moves, the runtime streams groups in view out to 48 m, prioritizing
+the player's floor and the closest groups. Furniture within 8 m on the same floor loads in every direction for collision.
+Openings in ceilings allow visible details on adjacent floors to load. Built groups are reused on return visits.
+Screenshot mode and tests can request groups without a view filter.
 
-Keep in the normal build (outside `K.detail`): everything you must be able to stand on or bump into before the group
-exists — slabs and their holes, outer walls and room partitions, stairs, escalators, elevators, junction corridors —
-plus `K.zone`, `K.spawn`, `K.interact`/`K.elevator` and the exterior. One group per floor (or per large room of a
-floor) is the intended granularity; groups may add walls (furniture collision) and signs.
+Group shelves, counters, chairs, fixtures, signs, people and plants by where they stand. Each callback runs to completion
+on the rendering thread, so split long galleries and rows of shops into separate groups. Keep slabs, outer walls, room
+partitions, stairs, escalators, elevators and junction corridors in the normal build, along with zones, spawns and
+interactions. These must be available as soon as the player enters an area.
 
 ## Addresses
 

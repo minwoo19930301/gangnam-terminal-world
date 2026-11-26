@@ -510,10 +510,14 @@ async function boot() {
     };
   })();
   route.start();
-  K._.ensureDetail(player.x, player.y + player.eye, player.z, 45, SHOT ? Infinity : 6);
+  camera.position.set(player.x, player.y + player.eye + relief(player.x, player.z), player.z);
+  camera.rotation.set(player.pitch, player.yaw, 0, 'YXZ');
+  K._.ensureDetail(player.x, player.y + player.eye, player.z, SHOT ? 45 : 24, Infinity, SHOT ? null : camera);
   const clock = new THREE.Clock(); let t = 0, frames = 0, fpsT0 = performance.now(), fps = 0;
   let signsGo = false;
   const scratch = document.createElement('canvas'), sctx = scratch.getContext('2d');
+  const mipPages = new Set();
+  let mipTime = 0;
   function uploadSignRects(jobs) {
     const byPage = new Map();
     for (const j of jobs) { if (!byPage.has(j.r.page)) byPage.set(j.r.page, []); byPage.get(j.r.page).push(j); }
@@ -529,7 +533,16 @@ async function boot() {
         sctx.drawImage(page.c, j.r.x, j.r.y, j.pw, j.ph, 0, 0, j.pw, j.ph);
         gl.texSubImage2D(gl.TEXTURE_2D, 0, j.r.x, S - j.r.y - j.ph, gl.RGBA, gl.UNSIGNED_BYTE, scratch);
       }
-      gl.generateMipmap(gl.TEXTURE_2D);
+      mipPages.add(page);
+    }
+    const now = performance.now();
+    if (now-mipTime >= 150 || !K._.atlas.pending()) {
+      for (const page of mipPages) {
+        renderer.state.bindTexture(gl.TEXTURE_2D, renderer.properties.get(page.t).__webglTexture);
+        gl.generateMipmap(gl.TEXTURE_2D);
+      }
+      mipPages.clear();
+      mipTime = now;
     }
   }
   // Dynamic resolution: drop the pixel ratio while the frame rate is low, raise it again when there is headroom.
@@ -615,14 +628,13 @@ async function boot() {
     updateText(hudCoord, `x ${player.x.toFixed(0)}  z ${player.z.toFixed(0)}  높이 ${(player.y + relief(player.x, player.z)).toFixed(1)}m  ${player.fly ? '✈ ' : ''}${fps.toFixed(0)}fps${pixelRatio < Math.min(devicePixelRatio, 2) - 0.01 ? ` · 해상도 ${Math.round(pixelRatio / Math.min(devicePixelRatio, 2) * 100)}%` : ''}`);
     map.update(dt);
     // lazy floor detail near the camera (bounded per frame); screenshots paint new sign text immediately
-    if (K._.ensureDetail(player.x, player.y + player.eye, player.z, 60, SHOT ? Infinity : 6) && SHOT && K._.atlas.pending()) { K._.atlas.flushAll(); for (const p of K._.atlas.pages) p.t.needsUpdate = true; }
+    if (K._.ensureDetail(player.x, player.y + player.eye, player.z, SHOT ? 60 : 48, SHOT ? Infinity : 2, SHOT ? null : camera) && SHOT && K._.atlas.pending()) { K._.atlas.flushAll(); for (const p of K._.atlas.pages) p.t.needsUpdate = true; }
     K._.cull(player.x, player.y + player.eye, player.z);
-    // progressive sign painting (≈5 ms per frame); only the painted rectangles are uploaded (texSubImage2D)
-    if (signsGo && K._.atlas.pending()) uploadSignRects(K._.atlas.flush(5, player.x, player.z));
+    // Bound both canvas work and GPU uploads while walking.
+    if (signsGo && K._.atlas.pending()) uploadSignRects(K._.atlas.flush(1.5, player.x, player.z, 8));
     renderer.render(scene, camera);
     requestAnimationFrame(frame);
   }
-  $('loading').classList.add('hidden');
   if (SHOT || start) $('start').classList.add('hidden');
   // arrived by walking into this area (reload): no intro card again, just a hint to click back in
   let hopped = false; try { const h = JSON.parse(sessionStorage.getItem('areaHops') || '[]'); hopped = h.length && Date.now() - h[h.length - 1] < 30000; } catch (e) { }
@@ -632,6 +644,13 @@ async function boot() {
   const signFonts = fontsReady.then(() => { const txt = K._.atlas.chars(); return Promise.race([Promise.all(['400', '700'].map(w => document.fonts.load(`${w} 32px "Noto Sans KR"`, txt))), new Promise(r => setTimeout(r, 8000))]).catch(() => { }); }).then(() => mark('signFonts'));
   if (SHOT) { await signFonts; K._.atlas.flushAll(); for (const p of K._.atlas.pages) p.t.needsUpdate = true; }
   else signFonts.then(() => { signsGo = true; });
+  // First upload and draw the visible room under the arrival screen. The next
+  // presented frame is available for input without paying that upload cost.
+  if (!SHOT) {
+    renderer.render(scene,camera);
+    await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+  }
+  $('loading').classList.add('hidden');
   mark('ready');
   const reLive = reModels.length ? loadReModels({THREE, scene, models:reModels, stand:reStand, renderer, terrain:exteriorTerrain}) : null;
   Object.assign(window.__world, { ready: true, area: AREA.id, wantedArea: () => wantedArea(phys.zoneAt(player.x, player.y + 0.1, player.z)), K, phys, player, camera, scene, renderer, map, places: placeInfo, stats: { ...K._.stats, phys: phys.stats, draw: () => renderer.info.render }, setNight, setTimeMode, daylight });

@@ -266,7 +266,7 @@ function visibilityProbes(THREE, renderer, scene) {
     box.renderOrder = 100000;
     box.frustumCulled = false;
     scene.add(box);
-    const slot = {box, query:null, record:null, issued:false};
+    const slot = {box, query:null, record:null, issued:false, eye:new THREE.Vector3(), rotation:new THREE.Quaternion()};
     box.onBeforeRender = () => {
       gl.beginQuery(gl.ANY_SAMPLES_PASSED_CONSERVATIVE,slot.query);
       slot.issued = true;
@@ -282,26 +282,29 @@ function visibilityProbes(THREE, renderer, scene) {
     }
   });
   return {
-    poll(now) {
+    poll(now,camera) {
       for (const slot of slots) {
         if (!slot.issued) continue;
         slot.box.visible = false;
         if (!gl.getQueryParameter(slot.query,gl.QUERY_RESULT_AVAILABLE)) continue;
         const r = slot.record;
-        r.seen = !!gl.getQueryParameter(slot.query,gl.QUERY_RESULT);
-        r.checkAgain = now + (r.seen ? 3000 : 1100);
+        const sameView = slot.eye.distanceToSquared(camera.position)<100 && slot.rotation.angleTo(camera.quaternion)<.25;
+        r.seen = sameView && !!gl.getQueryParameter(slot.query,gl.QUERY_RESULT);
+        r.checkAgain = sameView ? now + (r.seen ? 3000 : 1100) : 0;
         r.testing = false;
         slot.record = null;
         slot.issued = false;
       }
     },
-    test(r) {
+    test(r,camera) {
       const slot = slots.find(s => !s.record);
       if (!slot) return false;
       slot.query ??= gl.createQuery();
       if (!slot.query) return false;
       r.testing = true;
       slot.record = r;
+      slot.eye.copy(camera.position);
+      slot.rotation.copy(camera.quaternion);
       r.box.getSize(slot.box.scale);
       r.box.getCenter(slot.box.position);
       slot.box.visible = true;
@@ -363,7 +366,7 @@ export function loadReModels({ THREE, scene, models, stand, renderer, terrain = 
   return {
     update(camera, now = performance.now()) {
       work();
-      probes?.poll(now);
+      probes?.poll(now,camera);
       if (now < nextScan) return;
       nextScan = now+100;
       camera.updateWorldMatrix(true,false);
@@ -411,8 +414,8 @@ export function loadReModels({ THREE, scene, models, stand, renderer, terrain = 
       }
       candidates.sort((a,b) => a.dist-b.dist);
       for (const {r,dist} of candidates) {
-        if (probes && dist>0 && !r.testing && r.checkAgain<=now && probes.test(r)) r.lastTest=now;
-        if (!loading && r.seen && !r.root && r.retryAt<=now) request(r);
+        if (probes && dist>0 && !r.testing && r.checkAgain<=now && probes.test(r,camera)) r.lastTest=now;
+        if (!loading && r.seen && !r.testing && !r.root && r.retryAt<=now) request(r);
       }
     }
   };

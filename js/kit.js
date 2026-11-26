@@ -866,7 +866,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
   function pruneMeshes() {
     if (!keep) return;
     const M = new THREE.Matrix4(), V = new THREE.Vector3(), C = new THREE.Color();
-    for (const o of scene.children.slice()) {
+    for (const o of detailObjects || scene.children.slice()) {
       if (!o.userData.owner || o.userData.areaChecked || !(o.isMesh || o.isInstancedMesh || o.isGroup || o.isObject3D) || o.isLight || o.isCamera) continue;
       o.userData.areaChecked = true; o.updateMatrixWorld(true);
       const own = o.userData.owner;
@@ -884,7 +884,8 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
   }
   function splitModuleInstances() {
     const M = new THREE.Matrix4(), C = new THREE.Color();
-    for (const im of scene.children.filter(o => o.isInstancedMesh && o.count >= 64 && !o.userData.dynamic && !o.userData.split)) {
+    for (const im of detailObjects || scene.children.slice()) {
+      if (im.parent !== scene || !im.isInstancedMesh || im.count < 64 || im.userData.dynamic || im.userData.split) continue;
       const e = im.instanceMatrix.array;
       for (const g of groupBy(im.count, i => [e[i * 16 + 12], e[i * 16 + 13], e[i * 16 + 14], im.userData.owner])) {
         const nm = new THREE.InstancedMesh(im.geometry, im.material, g.idx.length);
@@ -994,13 +995,14 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
       const draw = fn;
       fn = kit => withTerrainSurface(datum,() => draw(kit));
     }
-    details.push({ owner: current, meta: perPlace[current], floor: o.floor || '', y0: o.y0 ?? -1e9, y1: o.y1 ?? 1e9, bb, fn, built: false, name: o.name || '' });
+    details.push({ poly, owner: current, meta: perPlace[current], floor: o.floor || '', y0: o.y0 ?? -1e9, y1: o.y1 ?? 1e9, bb, fn, built: false, name: o.name || '' });
   }
   function buildDetail(d) {
     if (d.built) return []; d.built = true;
     const prev = current; current = d.owner;
     detailObjects = new Set();
     try { d.fn(K); } catch (e) { detailErrors.push(`${d.owner} ${d.floor}: ${e.message}`); console.error('detail', d.owner, d.floor, e); }
+    d.fn = null;
     current = prev;
     try {
       const meshes = flush();
@@ -1035,24 +1037,61 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
       }
     }
   }
-  // build the groups the camera is close to (within reach metres horizontally, ±8 m vertically)
-  function ensureDetail(x, y, z, reach = 45, budgetMs = Infinity) {
-    const t0 = performance.now(), nearby = [];
-    for (const d of details) {
-      if (d.built || (keepDetail && !keepDetail(d))) continue;
-      const dx = Math.max(0, d.bb[0] - x, x - d.bb[2]), dz = Math.max(0, d.bb[1] - z, z - d.bb[3]);
-      const vertical = Math.max(0, d.y0 - y, y - d.y1);
-      const distance = dx * dx + dz * dz;
-      if (distance <= reach * reach && vertical <= 8) nearby.push({d, vertical, distance});
+  const viewFrustum = new THREE.Frustum(), viewMatrix = new THREE.Matrix4(), viewBox = new THREE.Box3();
+  let waiting = [], lastView = null;
+  function visibleDetail(d, x, y, z, camera, distance, vertical) {
+    const [x0,z0,x1,z1] = d.bb;
+    const shift = camera.position.y - y;
+    // A little space around the view preloads a storefront as it turns into
+    // frame. Always prepare furniture directly beside the player for collision.
+    if (distance > 8*8 || vertical > 0) {
+      viewBox.min.set(x0-3, d.y0+shift-2, z0-3);
+      viewBox.max.set(x1+3, d.y1+shift+2, z1+3);
+      if (!viewFrustum.intersectsBox(viewBox)) return false;
     }
-    // Paint the player's own floor before spending an interactive frame on another storey.
-    nearby.sort((a, b) => a.vertical - b.vertical || a.distance - b.distance);
+    if (vertical <= .25 || !d.poly) return true;
+    const targetY = y < d.y0 ? d.y0+.3 : Math.max(d.y0+.2,d.y1-1);
+    const cx = (x0+x1)/2, cz = (z0+z1)/2;
+    if (!phys.ceilingBlocksView(x,y,z,cx,targetY,cz)) return true;
+    for (const [px,pz] of d.poly) {
+      if (!phys.ceilingBlocksView(x,y,z,px*.92+cx*.08,targetY,pz*.92+cz*.08)) return true;
+    }
+    return false;
+  }
+  // Unrestricted callers (fixtures, stills and all-detail checks) use the
+  // geometry range alone. Interactive callers also supply their actual camera.
+  function ensureDetail(x, y, z, reach = 45, budgetMs = Infinity, camera = null) {
+    const t0 = performance.now();
+    const viewChanged = !camera || !lastView || lastView.count !== details.length ||
+      lastView.reach !== reach || Math.hypot(x-lastView.x,z-lastView.z) > 1.25 ||
+      Math.abs(y-lastView.y) > .35 || camera.quaternion.angleTo(lastView.direction) > .065 ||
+      camera.aspect !== lastView.aspect || camera.fov !== lastView.fov;
+    if (viewChanged) {
+      if (camera) {
+        camera.updateWorldMatrix(true,false);
+        viewFrustum.setFromProjectionMatrix(viewMatrix.multiplyMatrices(camera.projectionMatrix,camera.matrixWorldInverse));
+        lastView = {x,y,z,reach,count:details.length,direction:camera.quaternion.clone(),aspect:camera.aspect,fov:camera.fov};
+      } else lastView = null;
+      waiting = [];
+      for (const d of details) {
+        if (d.built || (keepDetail && !keepDetail(d))) continue;
+        const dx = Math.max(0, d.bb[0]-x, x-d.bb[2]), dz = Math.max(0, d.bb[1]-z, z-d.bb[3]);
+        const vertical = Math.max(0, d.y0-y, y-d.y1), distance = dx*dx + dz*dz;
+        if (distance > reach*reach || vertical > 8) continue;
+        if (camera && !visibleDetail(d,x,y,z,camera,distance,vertical)) continue;
+        waiting.push({d,vertical,distance});
+      }
+      // Pop from the end while preserving registration order for equal priorities.
+      waiting.reverse().sort((a,b) => b.vertical-a.vertical || b.distance-a.distance);
+    }
     let n = 0;
-    for (const {d} of nearby) {
+    while (waiting.length) {
+      const {d} = waiting.pop();
+      if (d.built) continue;
       buildDetail(d); n++;
       if (performance.now() - t0 >= budgetMs) break;
     }
-    if (n) cull(last.x, last.y, last.z, true);
+    if (n) cull(x,y,z,true);
     return n;
   }
   function buildAllDetail() { for (const d of details) if (!keepDetail || keepDetail(d)) buildDetail(d); }
