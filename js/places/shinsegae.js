@@ -7,6 +7,8 @@ import {boutiqueLobby} from '../../assets/models/megabox-central/place.js';
 import {angle as cinemaYaw,point as cinemaPoint} from '../../assets/models/megabox-central/layout.js';
 import {placeAtriumCeiling} from '../../assets/models/ssg-atrium-soffit/model.js';
 import {marketProduceCeiling} from '../../assets/models/ssg-market-ceiling/model.js';
+import {shopArrival as onimaruArrival} from '../../assets/models/kyoto-onimaru/layout.js';
+import {placeOnimaru} from '../../assets/models/kyoto-onimaru/model.js';
 import {giftConcierge} from '../../assets/models/ssg-market-gift/model.js';
 import {marketEntrance} from '../../assets/models/ssg-market-entrance/model.js';
 import {b1Plan as B1_PLAN, departmentPoint as P, departmentWidth as UW, departmentDepth as VD, marketOutline, marketWestReturn, cinemaAisleSides, cinemaAisleMouth} from './shinsegae-b1-plan.js';
@@ -2509,7 +2511,7 @@ export function build(K) {
     for(const[id,name,r]of zoneSpecs)if(id!=='market'&&BPOLY(BRECT(...r)).length>=3)K.zone({name,floor:'B1',sub:'신세계백화점 강남점 · 지하1층',poly:BPOLY(BRECT(...r)),y0:y,y1:0,priority:3});
     for(const c of cells){
       if(worldPoly(c).length<3)continue;
-      K.zone({name:c.name,floor:'B1',sub:c.brands?c.brands.join(' · '):'신세계 강남점 지하1층',poly:c.name==='대형 캐리어 무인 물품보관함'?rect(...(()=>{const [u0,v0,u1]=uvRect(c);return[u0+.2,v0+.08,u1-.2,v0+.53];})()):worldPoly(c),y0:y,y1:-1,priority:c.kind==='service'?6:5});
+      K.zone({name:c.name,floor:'B1',...(c.name==='교토 오니마루'?{mapArrival:onimaruArrival}:{}),sub:c.brands?c.brands.join(' · '):'신세계 강남점 지하1층',poly:c.name==='대형 캐리어 무인 물품보관함'?rect(...(()=>{const [u0,v0,u1]=uvRect(c);return[u0+.2,v0+.08,u1-.2,v0+.53];})()):worldPoly(c),y0:y,y1:-1,priority:c.kind==='service'?6:5});
     }
     // Finish the area of the B1 sales floor that extends under the neighbouring building.
     const marketCeiling=LV['1F']-thick('1F');
@@ -2724,7 +2726,7 @@ export function build(K) {
       }
       const sU=Math.max(u0+.35,Math.min(u1-.35,preferred[0])),sV=Math.max(v0+.35,Math.min(v1-.35,preferred[1]));
       const signName=c.name==='건강식품 복합셀'?'정관장 · 건강식품':c.name==='기프트 컨시어지'?'GIFT CONCIERGE':c.name==='팝업'&&c.rect[0]>780?'POP-UP':c.name;
-      if(!['보앤미','발효곳간','비첸향'].includes(c.name)&&!(c.zone==='north_deli'&&c.kind==='deli'))
+      if(!['보앤미','발효곳간','비첸향','교토 오니마루'].includes(c.name)&&!(c.zone==='north_deli'&&c.kind==='deli'))
         sign(signName,sU,sV,y+2.25,face,Math.max(.8,Math.min(horizontal?W-.2:D-.2,6.4)),.40,{bg:c.kind==='popup'?'#6f2334':'#3b382d',fg:'#f4e4bd',twoSided:true,pxPerM:120});
       // A retained structural core may consume a tiny schematic cell. Keep its
       // plan sign at that cell, record the exception instead of moving its shop.
@@ -2734,6 +2736,12 @@ export function build(K) {
       }
       const[u,v]=at,wood=c.name==='카멜커피'?0xd9b98a:c.name==='보앤미'?0xc8a77b:c.name==='블루버터플라이'?0x63422a:c.kind==='wine'?0x493529:c.kind==='deli'?0xb8925d:0x7e6044;
       const darkDeli=c.zone==='north_deli'&&c.kind==='deli', boAndMie=c.name==='보앤미';
+      if(c.name==='교토 오니마루'){
+        const [x,z]=P(u,v);
+        box(u,v,w,d,y,.83,0x393735,{skip:['top','bottom','n','s','e','w']});
+        placeOnimaru(K,x,z,RA,y);
+        return;
+      }
       if(c.name==='기프트 컨시어지'){
         // Keep the guide-fitted counter and its walking clearance; this cell holds the wrapping service.
         const [x,z]=P(u,v);
