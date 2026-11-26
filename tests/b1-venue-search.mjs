@@ -6,6 +6,7 @@ import {serve} from './serve.mjs';
 
 const directory = JSON.parse(await readFile(new URL('../js/places/_meta.json',import.meta.url)));
 const cases = [
+  ['shinsegae','megabox','메가박스 센트럴 입구','메가박스','Megabox',/메가박스/],
   ['centralcity','sweet-park','스위트 파크 입구','스위트파크','Sweet Park',/스위트 파크/],
 ];
 const server = await serve();

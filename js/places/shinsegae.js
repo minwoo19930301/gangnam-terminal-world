@@ -3279,6 +3279,15 @@ export function build(K) {
     const [marketX,marketZ]=P(27.6,63.4),[doorX,doorZ]=P(22.5,63.4);
     K.spawn({name:'신세계 마켓 입구',place:'shinsegae',floor:'B1',arrivalFloor:'B1',mapDestination:true,x:marketX,z:marketZ,y,
       yaw:Math.atan2(marketX-doorX,marketZ-doorZ)});
+    // Approach the cinema from the public rotary, facing the opening in its poster frontage.
+    {
+      const [frontX,frontZ]=BP(730,939), a=BP(697,969), b=BP(760,911);
+      const yaw=Math.atan2(b[1]-a[1],a[0]-b[0]);
+      K.spawn({name:'메가박스 센트럴 입구',destinationId:'megabox',
+        aliases:['Megabox Central','더 부티크','메가박스중앙(주)센트럴시티지점'],
+        poiIds:[368634400,12079247768],place:'shinsegae',floor:'B1',mapDestination:true,
+        x:frontX+4*Math.sin(yaw),y,z:frontZ+4*Math.cos(yaw),yaw});
+    }
     for(const[name,px,py]of [['B1 델리 · 8게이트',823,388],['B1 메가박스 원형 광장',648,1008],['B1 9게이트 · 스위트 파크 연결',1024,477]]){
       const[u,v]=BPLAN(px,py);if(!owned(u,v,1))continue;const[x,z]=P(u,v);K.spawn({name,x,z,y,yaw:RA});
     }
