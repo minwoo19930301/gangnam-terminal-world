@@ -119,6 +119,7 @@
   text-align: left;
 }
 #map-full.gt-map .gt-result:hover, #map-full.gt-map .gt-result[aria-pressed="true"] { background: #f1f7f3; }
+#map-full.gt-map .gt-more-results { width: 100%; padding: 11px; color: #25674e; background: #eff5f0; border-radius: 8px; font-weight: 700; }
 .gt-result-icon { display: grid; place-items: center; flex-shrink: 0; width: 34px; height: 34px; border-radius: 10px; background: #eff5f0; color: #378b6b; font-size: 15px; }
 .gt-result-copy { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
 .gt-result-copy b { display: block; color: #334b40; font-size: 12px; font-weight: 700; overflow-wrap: anywhere; }

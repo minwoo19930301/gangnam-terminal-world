@@ -454,7 +454,23 @@ export function createMap(opts) {
     const q = search.value.normalize('NFKC').toLocaleLowerCase().replace(/\s/g, ''); results.replaceChildren();
     if (q) {
       const matches = searchItems.filter(s => s.match.includes(q)); sectionTitle.textContent = `검색 결과 ${matches.length}`;
-      for (const s of matches.slice(0, 80)) resultButton(results, s);
+      let shown = 0;
+      function appendResults() {
+        const previous = shown;
+        for (const item of matches.slice(previous, previous + 80)) {
+          resultButton(results, item);
+          shown++;
+        }
+        if (previous) results.children[previous]?.focus({preventScroll:true});
+        if (shown < matches.length) {
+          const more = button(results, '검색 결과 더 보기', 'gt-more-results', () => {
+            more.remove();
+            appendResults();
+          });
+          more.textContent = '결과 더 보기';
+        }
+      }
+      appendResults();
       if (!matches.length) el('p', 'gt-empty', '검색 결과가 없어요. 장소 이름을 짧게 입력해 보세요.', results);
     } else {
       sectionTitle.textContent = '바로 가기';
