@@ -73,7 +73,7 @@ export function placeGoterCrossing(K){
     const mat=key==='stone'?granite:isFace?lamps:paint;
     const root=placeSingleDetail(K,{name,at,rigidGround:terrain,angle:rot,file:'../goter-crossing/'+key+'.glb',range:close,exitRange:close+4,
       floorTolerance:key==='booms'||key==='four'||key==='lens'?9:7,eyeHeight:h/2,closeVisibleFrom:visible,
-      viewBounds:[new T.Box3(new T.Vector3(-w/2,-.01,-depth/2),new T.Vector3(w/2,h,depth/2))],
+      viewBounds:[new T.Box3(new T.Vector3(-w/2,key==='walker'?-.22:-.01,-depth/2),new T.Vector3(w/2,h,depth/2))],
       fallback:geometry[key],fallbackMaterial:mat,material:mat});
     if(key==='tactile')addTactileRelief(T,root,geometry[key],paint);
   }
