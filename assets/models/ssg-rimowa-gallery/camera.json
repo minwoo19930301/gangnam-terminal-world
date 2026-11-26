@@ -1,0 +1,19 @@
+{
+  "floor": "6F",
+  "x": -17.18059,
+  "z": 92.82488,
+  "yaw": -162.672,
+  "pitch": -5,
+  "meshName": "RimowaGangnamAluminium",
+  "sourceBlend": "gallery.blend",
+  "sourceCollection": "SSG_6F_RIMOWA_GALLERY",
+  "nativeLabel": "리모와",
+  "nativePlacement": {
+    "worldPosition": [
+      -16.33982774,
+      25.29200001,
+      95.52203835
+    ],
+    "yawDegrees": -159.2223402
+  }
+}
