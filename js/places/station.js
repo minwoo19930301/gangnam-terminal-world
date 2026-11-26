@@ -1,3 +1,4 @@
+import {placeExitFourPavilion} from '../../assets/models/exit4-pavilion/model.js';
 import { loadFixtureScene, mountFixture } from '../../assets/models/onebailey/load.js';
 const stationSeats = await loadFixtureScene(new URL('../../assets/models/concourse-jewelry/station-seat.glb',import.meta.url));
 import { JUNCTIONS, WELLS } from './_junctions.js';
@@ -9,6 +10,7 @@ export const meta = {
     'https://map.naver.com/p/entry/place/11567199',
     'https://map.naver.com/p/entry/place/11815569',
     'https://mediahub.seoul.go.kr/archives/2016717',
+    'https://www.data.go.kr/data/15044261/fileData.do',
     'https://mediahub.seoul.go.kr/archives/162098',
     'https://mediahub.seoul.go.kr/archives/1139258',
     'https://itwiki.kr/w/고속터미널역',
@@ -853,7 +855,10 @@ export function build(K) {
     const head=P(-.45,0);sign(`${number}  고속터미널역`,head[0],2.5,head[1],5.9,.92,rot+Math.PI,'#182a36');
     sign('3 · 7 · 9호선',head[0],1.85,head[1],3.6,.34,rot+Math.PI,'#182a36');
     for(let k=0;k<3;k++){const p=P(-.6,k*1.45-1.45);box({x:p[0],z:p[1],y:3.2,w:1.4,h:.13,d:.25,rotY:rot,mat:paint([0xef7c1c,0x747f00,0xbdb092][k])});}
-    const pole=P(-1.2,4.2);box({x:pole[0],z:pole[1],y:0,w:.2,h:3.3,d:.2,mat:0x445560});
+    // The 4th exit's lift approach runs alongside this stair. Keep the
+    // freestanding station signs on the stair's opposite pavement edge.
+    const furnitureSide=number==='4'?-1:1;
+    const pole=P(-1.2,furnitureSide*4.2);box({x:pole[0],z:pole[1],y:0,w:.2,h:3.3,d:.2,mat:0x445560});
     sign([number+'번 출구','고속터미널'],pole[0]-ux*.17,3,pole[1]-uz*.17,1.8,1.25,rot+Math.PI,'#243340','#f3dd82');
     const info=P(8,2.65);sign(dest,info[0],.4,info[1],5,.45,rot+Math.PI/2,'#33434c');
     // A modest paved forecourt and two narrow side aprons give each real OSM
@@ -880,7 +885,7 @@ export function build(K) {
       localBox(f,f.length/2,0,2.99,.08,.04,f.length-.8,paint(0xffedbb));
     }
     if(['2','3','4'].includes(number)){
-      const p=P(-3.1,4.2), face=rot+Math.PI;
+      const p=P(-3.1,furnitureSide*4.2), face=rot+Math.PI;
       box({x:p[0],z:p[1],y:.025,w:1.22,h:2.3,d:.32,rotY:rot,mat:0x344b59,solid:true});
       sign(['주변 안내',...dest.split(' · '),'3 · 7 · 9호선'],p[0]-ux*.2,1.42,p[1]-uz*.2,1.02,1.42,face,'#e9e8df');
       const seat=frame([P(6,-4.15),P(10,-4.15)]);
@@ -1214,6 +1219,7 @@ export function build(K) {
   // Line 7's actual B2 concourse sits over its tracks with two distributed cores.
   const b2Holes=lowerCoreVoids;
   const gate7=100;
+  const liftStation=(l7.length-8*19.75)/2+2*19.75+9.6+2.3;
   const concourse7=hall(l7.points,29.6,B2,{floor:'B2',name:'고속터미널역 7호선 대합실',sub:'734 · 승차권 발매 · 역무실 · 화장실 · 3·9호선 환승',label:'7호선 타는 곳  ↓     3·9호선 환승  →',mat:'station-granite',ads:true,tactile:false,gateStations:[gate7],holes:b2Holes,roofHoles:b1Voids,openings:[{x:20,z:157,w:16,full:true},{x:-122,z:245,w:16,full:true},{x:40,z:117.7,w:9,full:true},{x:41,z:150,w:16}]});
   for(const s of [0,concourse7.length]){
     const a=concourse7.at(s,-14.8),b=concourse7.at(s,14.8);
@@ -1225,7 +1231,7 @@ export function build(K) {
   gates(concourse7,gate7,B2,8);ticketBank(concourse7,119,12.8,B2);
   room(concourse7,103,12.4,B2,'역무실 · 고객안내');room(concourse7,148,12.4,B2,'화장실 · 수유실');
   for(let s=14;s<concourse7.length-12;s+=7.5)for(const v of [-11,11]){
-    if(v>0&&s>24&&s<90)continue;
+    if((v>0&&s>24&&s<90)||Math.abs(s-liftStation)<2.0)continue;
     if(!insideVoid(concourse7,s,v,[...b2Holes,...b1Voids],2)){
       if(s<30) {const p=concourse7.at(s,v);K.cyl({x:p.x,z:p.z,y:B2,r:.48,h:2.88,mat:'station-granite',seg:24});}
       else column(concourse7,s,v,B2,Math.abs(s-gate7)<13?0:7,2.88,Math.abs(s-gate7)<13);
@@ -1235,14 +1241,16 @@ export function build(K) {
     const ss=[s0,...concourse7.lengths.filter(s=>s>s0&&s<s1),s1];
     for(let i=0;i<ss.length-1;i++){
       const a=concourse7.at(ss[i],v),b=concourse7.at(ss[i+1],v);
-      const door=v>0?119:96,doorW=v>0?7:6;
-      const openings=door>ss[i]-doorW/2&&door<ss[i+1]+doorW/2?[{at:door-ss[i],w:doorW,y0:B2,y1:B2+2.9}]:[];
+      const entrances=[[v>0?119:96,v>0?7:6]];
+      if(s0===84)entrances.push([liftStation,1.85]);
+      const openings=entrances.filter(([centre,width])=>centre>ss[i]-width/2&&centre<ss[i+1]+width/2)
+        .map(([centre,width])=>({at:centre-ss[i],w:width,y0:B2,y1:B2+2.9}));
       K.wall(a.x,a.z,b.x,b.z,B2,B2+2.9,{mat:'station-ceramic',openings});
     }
     // New public-facing partitions carry the same close-set lightboxes as the
     // perimeter walls, with gaps at the dogleg, ticket bank and safety cabinets.
     for(let s=s0+2.6;s<s1-2;s+=s0===84?9.2:4.6){
-      if(Math.abs(s-(v>0?119:96))<5||(v>0&&[110,132].some(q=>Math.abs(s-q)<3)))continue;
+      if((s0===84&&Math.abs(s-liftStation)<3.5)||Math.abs(s-(v>0?119:96))<5||(v>0&&[110,132].some(q=>Math.abs(s-q)<3)))continue;
       const outsideAisle=s0===40,side=outsideAisle?1:Math.sign(v);
       if(s0===84&&v===-9&&Math.abs(s-123.4)<.01){
         // _77: the nearest left-wall bay is a white notice board, not an ad.
@@ -2140,10 +2148,9 @@ export function build(K) {
     for(const [x,z] of [[-69,-62],[-66,-69],[-70.2,-74],[-68.9,-79],[-65.5,-83]])person(x,B2,z,{shirt:0x4f5863});
   });
 
-  // Accessible routes. Each lift door has a real landing and all line levels;
-  // Line 7's Exit 4 lift explicitly includes the verified 1F/B2/B3 stops.
-  // Its existing B1 stop is an unverified connection retained in this pass.
-  function lift(x,z,rot,floors,name) {
+  // The street lift has a glazed headhouse. Its landing at B2 uses the same
+  // established lift interaction as the separate platform lifts.
+  function lift(x,z,rot,floors,name,streetPavilion=false) {
     const w=2.6,d=2.5,c=Math.cos(rot),s=Math.sin(rot);
     const P=(lx,lz)=>[x+lx*c+lz*s,z-lx*s+lz*c];
     const poly=[P(-w/2,-d/2),P(w/2,-d/2),P(w/2,d/2),P(-w/2,d/2)];
@@ -2152,13 +2159,22 @@ export function build(K) {
     // The kit's generic multi-floor front overlaps its vertically stacked
     // openings. Keep its interaction, but build one open doorway per storey.
     K.elevator({name,x,z,rotY:rot,w,d,floors,shaft:false});
-    for(const [a,b] of [[0,1],[1,2],[3,0]])K.wall(...poly[a],...poly[b],bottom,top,{mat:'station-ribbed',thick:.15});
+    for(const [a,b] of [[0,1],[1,2],[3,0]]) {
+      K.wall(...poly[a],...poly[b],bottom,streetPavilion?0:top,{mat:'station-ribbed',thick:.15});
+      if(streetPavilion)K.wall(...poly[a],...poly[b],0,3.78,{mat:{tex:'glass',color:0xbad3cf},thick:.025});
+    }
     for(let i=0;i<ordered.length;i++){
       const f=ordered[i],next=ordered[i+1]?.y??top;
       // The street landing must stay north of Exit 4's adjacent open stairwell.
       const half=f.y===0?1.35:2.6;
       K.slab([P(-half,-1.35),P(half,-1.35),P(half,3.4),P(-half,3.4)],f.y,{mat:'station-granite'});
       K.slab(poly,f.y,{mat:'metal',thick:.05,edge:false,ceil:false});
+      if(streetPavilion && f.label==='1F') {
+        K.wall(...poly[2],...poly[3],0,3.78,{mat:{tex:'glass',color:0xbad3cf},thick:.025,
+          openings:[{at:w/2,w:1.47,y0:0,y1:2.49}]});
+        part(0,2.12,.016,1.54,.018,.54,'station-tactile');
+        continue;
+      }
       K.wall(...poly[2],...poly[3],f.y,next,{mat:'station-ribbed',thick:.15,openings:[{at:w/2,w:1.4,y0:f.y,y1:f.y+2.25}]});
       for(const lx of [-.75,.75])part(lx,d/2+.09,f.y,.09,2.33,.1,0x384f5b);
       part(0,d/2+.09,f.y+2.25,1.59,.09,.1,0x384f5b);
@@ -2166,13 +2182,13 @@ export function build(K) {
       part(0,2.3,f.y+.016,1.8,.018,.6,'station-tactile');
       const indicator=P(0,d/2+.15),panel=P(1.65,d/2+.1),back=P(0,-d/2+.11);
       const label=f.label==='1F'?'지상':`지하 ${f.label.slice(1)}층`;
-      sign(label+' · 엘리베이터',indicator[0],f.y+2.66,indicator[1],2.55,.34,rot,'#193640','#f0db8d');
+      sign(f.landingSign??(label+' · 엘리베이터'),indicator[0],f.y+2.66,indicator[1],2.55,.34,rot,'#193640','#f0db8d');
       sign([label,f.name],back[0],f.y+1.65,back[1],2.15,.62,rot,'#e8e6dc');
       part(1.65,d/2+.07,f.y+.83,.26,.58,.1,0x52666f);
       sign('호출',panel[0],f.y+1.3,panel[1],.42,.18,rot,'#193640');
       part(1.65,d/2+.15,f.y+1.01,.1,.1,.04,paint(0xf0dca0));
     }
-    K.slab(poly,top,{mat:'metal',under:'ceiling',walk:false});
+    if(!streetPavilion)K.slab(poly,top,{mat:'metal',under:'ceiling',walk:false});
   }
   lift(-76,-82,0,[{label:'B1',y:B1,name:'고투몰 연결'},{label:'B2',y:B2,name:'3호선 하부 대합실'},{label:'B4',y:B4,name:'9호선 연결'}],'3·9호선 환승 엘리베이터');
   // The neighbour's J1 wall cannot be opened by this module. A local lift gives
@@ -2193,13 +2209,22 @@ export function build(K) {
     K.wall(31,-118.5,39,-118.5,B1,B1+2.9,{mat:'station-panels'});
     sign('엘리베이터 →',32,B1+2.35,-121.5,3.4,.35,0,'#303844');
   }
-  lift(-136,248,Math.PI/2,[{label:'1F',y:0,name:'4번 출구'},{label:'B1',y:B1,name:'연결 대합실'},{label:'B2',y:B2,name:'7호선 대합실'},{label:'B3',y:B3,name:'7호선 승강장'}],'4번 출구 · 7호선 엘리베이터');
+  // Seoul Metro's September 2026 inventory lists #3 from street to B2.
+  // Inside the concourse, two separate cars serve the two Line 7 platforms.
+  lift(-136,248,Math.PI/2,[{label:'1F',y:0,name:'4번 출구'},{label:'B2',y:B2,name:'7호선 대합실'}],
+    '4번 출구 · 7호선 엘리베이터',true);
+  placeExitFourPavilion(K,-136,248,Math.PI/2);
   hall([[-136,248],[-130,248]],5,B2,{label:'7호선 대합실',openings:[{x:-123,z:248,w:10}]});
-  hall([[-136,248],[-130,248]],5,B3,{label:'7호선 타는 곳',openings:[{x:-123,z:248,w:10}]});
-  // Ground lift canopy, glass side panels and legible street marker.
-  box({x:-136,y:3.3,z:248,w:3.2,h:.18,d:3.2,mat:0x4f626c});
-  sign('고속터미널역  7호선',-134.6,2.75,248,3.3,.48,Math.PI/2,'#747f00');
-  sign('엘리베이터',-134.6,2.15,248,2.3,.4,Math.PI/2);
+  // Both signed boarding positions align in the third car of the west-to-east
+  // geometry. Numbering reverses on the opposite platform (6-2 towards Naebang).
+  for(const [side,nearby,direction] of [[-1,'3-3','반포'],[1,'6-2','내방']]) {
+    const p=l7.at(liftStation,side*10.1);
+    const angle=Math.atan2(-side*p.nx,-side*p.nz);
+    lift(p.x,p.z,angle,[{label:'B2',y:B2,name:'7호선 대합실',landingSign:direction+' 방면 승강기 ↓'},
+      {label:'B3',y:B3,name:direction+' 방면 · '+nearby}],'7호선 '+direction+' 방면 엘리베이터');
+  }
+  K.zone({name:'4번 출구 엘리베이터',floor:'1F',sub:'7호선 대합실 · 지상 경사로',
+    poly:rect(-137.4,245,-126.6,249.35),y0:-.12,y1:4.4,priority:18});
   // Seoul's 2026-01-09 article confirms an exterior ramp, but gives no survey
   // dimensions. Keep the existing street/lift levels: this shallow paving
   // relief is a flat-world approximation, not a real slope claim. Its surface
@@ -2338,7 +2363,8 @@ export function build(K) {
     localSign(concourse7,126,0,B2+2.38,'4번 출구  ↑    3·9호선  ↓',7,.36,false,'#293b35','#f0df8c');
   });
   K.spawn({name:'3번 출구 · 파미에스테이션 방면',x:52.1,y:0,z:185.5,yaw:0});
-  K.spawn({name:'4번 출구 · 엘리베이터',x:-129,y:0,z:246,yaw:Math.PI/2});
+  K.spawn({name:'4번 출구 · 엘리베이터',aliases:['7호선 4번 출구 엘리베이터'],place:'station',
+    floor:'1F',arrivalFloor:'1F',mapDestination:true,x:-129,y:.06,z:246.1,yaw:111*Math.PI/180});
   const p1=b1.at(66,0);K.spawn({name:'B1 · 센트럴시티 연결 대합실',x:p1.x,y:B1,z:p1.z,yaw:1.95});
   K.spawn({name:'B1 · 고투몰 3호선 입구',x:-79.625,y:B1,z:-109.3,yaw:Math.PI});
   {const p=l3.at(98,-9);K.spawn({name:'B2 · 3호선 승강장',x:p.x,y:B2,z:p.z,yaw:Math.atan2(-l3.at(98).ux,-l3.at(98).uz)});}

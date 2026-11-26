@@ -189,6 +189,8 @@ def sync_layout(here, rows=None):
             exterior_group=branch(city,city.collection,'streets/median-shelters','신반포로 · 중앙정류소 승차대')
         elif city and row['library']=='sedan-curb/curb-trim.blend':
             exterior_group=branch(city,city.collection,'shinsegae/parked-cars','신세계 동문 · 지상 주차 승용차')
+        elif city and row['library']=='exit4-pavilion/pavilion.blend':
+            exterior_group=branch(city,city.collection,'station/exit4-pavilion','고속터미널역 · 4번 출구 승강기')
         elif city and row['library']=='newcore-mamas/front.blend':
             exterior_group=branch(city,city.collection,'newcore/street','뉴코아 · 보도에서 본 외관')
         elif city and row['library']=='sinbanpo-crossing/signal.blend':
