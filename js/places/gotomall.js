@@ -3258,7 +3258,9 @@ export function build(K) {
     K.elevator({name:'G13 엘리베이터',x:339,z:-232,rotY:Math.PI,w:2.2,d:2.2,shaft:false,floors:[{label:'B1',y:FL,name:'동편광장'},{label:'1F',y:0,name:'신반포로 보도'}]});
     K.zone({name:'G13 동편광장 출입홀',floor:'B1',sub:'고속버스터미널 · 엘리베이터',poly:[...hall.slice(0,2),[342,-230.5],[337.8,-230.5],hall[3]],y0:FL,y1:CY,priority:4});
     K.zone({name:'G13 출구 계단',floor:'B1',sub:'신반포로 · 버스정류장',poly:lowerHole,y0:FL,y1:0,priority:4});
-    K.zone({name:'G13 출구 계단',floor:'B1',poly:upperHole,y0:FL,y1:0,priority:4});
+    const [landingX,landingZ]=U.p(0,(rest0+rest1)/2);
+    K.zone({name:'G13 출구 계단',floor:'B1',sub:'신반포로 · 상부 계단참',poly:upperHole,y0:FL,y1:0,priority:4,
+      mapArrival:{x:landingX,y:restY,z:landingZ,yaw:U.rot+Math.PI}});
     K.spawn({name:'G13 동편광장 출입문',x:338.2,y:FL,z:-240.5,yaw:156*Math.PI/180});
     furnish(354,()=>{
       // Retain four glass leaves, double handles, dotted graphics and the map.
