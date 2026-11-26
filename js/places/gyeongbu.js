@@ -1,3 +1,4 @@
+import { placeCutFlowers } from '../../assets/models/gyeongbu-cutflowers/model.js';
 import { placeWaitingBenches } from '../../assets/models/gyeongbu-seating/model.js';
 import { placeDaisoEndcap } from '../../assets/models/daiso-merchandise/place.js';
 import { loadArchitecture, fitTerminalSeat as fitHallDetail } from '../../assets/models/architectural-retail/place.js';
@@ -2437,18 +2438,44 @@ export function build(K) {
       // Small white price cards clipped to the bucket edge, as in photo02.
       if(tier===0)db(u-.155,v,y+.33,.012,.09,.12,0xf7f6ed);
     }
+    // A photographed fresh-cut display on the existing eastern stall grid. All
+    // three tiers stay inside the old footprint, behind the public aisle.
+    const cutFlowerStall=[67.4,72];
+    const [cutU,cutV]=cutFlowerStall;
+    const flowerLots=[
+      ['Pink','Pink','Ivory','Ivory','Violet','Violet','Sunflower','Sunflower'],
+      ['Violet','Violet','Pink','Pink','Ivory','Ivory','Sunflower','Sunflower'],
+      ['Ivory','Ivory','Violet','Violet','Sunflower','Sunflower','Pink','Pink'],
+    ];
+    ldetail({floor:'3F',y0:fy,y1:fy+2.3,poly:rect(cutU-1.93,cutV-1.96,cutU+.08,cutV+1.96),name:'생화상가 · 절화 도매 진열'},()=>{
+      const lots=[];
+      for(let tier=0;tier<3;tier++)for(let i=0;i<8;i++){
+        const u=cutU-[1.66,1.25,.85][tier],v=cutV-1.68+i*.48;
+        if(nearColumn(u,v,.65))continue;
+        const [x,z]=W(u,v);
+        lots.push({x,z,y:fy+(tier===0?.30:tier*.35),yaw:ROT-PI/2+.12*Math.sin(i*2.4+tier),
+          type:flowerLots[tier][i],riser:tier===0,scale:.96+.06*Math.sin(i*1.8+tier)});
+      }
+      for(let i=0;i<6;i++){
+        const [x,z]=W(cutU-.17,cutV-1.48+i*.59);
+        lots.push({x,z,y:fy+1.57,yaw:ROT,type:i===1?'WorkPapers':'BlackStack',scale:1});
+      }
+      placeCutFlowers(K,lots);
+    });
     function fresh(u,v,n){
       stockbox(u,v,fy,.38,3.8,1.5,0x7d6a52,{skip:['n','s']});
       for(const s of [-1,1]){
         for(let tier=0;tier<3;tier++){
           const bu=u+s*[1.66,1.25,.85][tier],by=fy+tier*.35;
-          if(tier)db(bu,v,fy,.4,3.8,tier*.35,0x6b5a46);
+          if(tier)db(bu,v,fy,.4,3.8,tier*.35,s===-1&&u===cutU&&v===cutV?0x969c99:0x6b5a46);
+          if(s===-1 && u===cutU && v===cutV)continue;
           for(let k=0;k<8;k++)bunch(bu,v-1.68+k*.48,by,colors[(n+k+tier*2)%colors.length],(n+k)%4===0,tier,(Math.abs(u-58.7)<4&&v>=66&&v<79)||v===95.8);
         }
+        if(s===-1 && u===cutU && v===cutV)continue;
         for(let k=0;k<3;k++)db(u+s*1.82,v-1.3+k*1.2,fy+.82,.014,.13,.10,0xf1f0e5);
       }
       db(u,v,fy+1.52,.54,3.6,.05,0x9a8466);
-      for(let k=0;k<6;k++){const bv=v-1.48+k*.59;if(!nearColumn(u,bv,.7))dp(u,bv,fy+1.57,.14,.6,0x1e2222);}
+      if(u!==cutU || v!==cutV)for(let k=0;k<6;k++){const bv=v-1.48+k*.59;if(!nearColumn(u,bv,.7))dp(u,bv,fy+1.57,.14,.6,0x1e2222);}
       if(n%2===0){db(u+1.5,v+1.55,fy,.6,.4,.3,0x2f6fb4);db(u-1.5,v+1.55,fy,.6,.4,.35,0x6e5640);}
     }
     function artificial(u,v,n){
