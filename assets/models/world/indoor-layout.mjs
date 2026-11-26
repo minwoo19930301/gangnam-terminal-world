@@ -84,6 +84,7 @@ const sources = [
   ['centralcity','B1','five-guys-gangnam/front.blend','파이브가이즈 고속터미널 · 창과 음료대','FiveGuysGangnamFront'],
   ...[['보석 진열창','JewelryShadowbox'],['세로형 광고 화면','RetailPortrait'],['사각 매입등','SquareDownlightPair']].map(([label,source])=>
     ['jwmarriott','3F','jw-retail-gallery/finishes.blend','신세계 연결 갤러리 · '+label,source]),
+  ['centralcity','L','house-lift-passage/wayfinding.blend','하우스 전용 승강기 · 양면 길안내','HouseLiftWayfinding','HouseLiftWalnutLining'],
   ['centralcity','1F','house-entry-gallery/vestibule.blend','하우스 오브 신세계 · 경사 통로 천장과 벽','HouseEntryRampBay'],
   ['centralcity','1F','house-entry-gallery/vestibule.blend','하우스 오브 신세계 · 청동 벽과 식재 입구','HouseEntryGallery'],
   ['centralcity','B1','sweet-garden-soffit/soffit.blend','스위트 가든 · 에스컬레이터 공통 하부','SweetGardenBankSoffit'],

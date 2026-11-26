@@ -121,7 +121,7 @@ export function planArea(id, META, JUNCTIONS = []) {
       return nearMouth(x, y, z);
     },
     keepDetail(g) {
-      if(ownSet.has(g.owner))return true;
+      if(ownSet.has(g.owner)||ownSet.has(g.sharedWith))return true;
       if(!cafeJunction || g.owner!=='centralcity' || g.floor!=='B1')return false;
       const [x0,z0,x1,z1]=g.bb;
       // Large whole-building groups remain on their own page. Local cells

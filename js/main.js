@@ -269,7 +269,7 @@ async function boot() {
   const portals = [];
   if (META && AREA.id !== 'all') {
     const OWNP = AREA.id.startsWith('in:') ? new Set(AREA.id.slice(3).split('+')) : null;
-    const add = (x, z, y, w, nx, nz, target, label, key) => portals.push({ x, z, y, w, nx, nz, tx: -nz, tz: nx, target, label, key });
+    const add = (x, z, y, w, nx, nz, target, label, key, authoredDoor=false) => portals.push({ x, z, y, w, nx, nz, tx: -nz, tz: nx, target, label, key, authoredDoor });
     for (const [mid, v] of Object.entries(META)) {
       if (OUTDOOR.has(mid)) continue;
       const inArea = !OWNP && AREA.box && v.box && !(v.box[2] < AREA.box[0] - 150 || v.box[0] > AREA.box[2] + 150 || v.box[3] < AREA.box[1] - 150 || v.box[1] > AREA.box[3] + 150);
@@ -287,8 +287,9 @@ async function boot() {
       }
       if (OWNP && OWNP.has(mid)) for (const j of v.junctions || []) { // corridors to the next building
         if (OWNP.has(j.other) || j.nx == null) continue;
-        const width = JUNCTIONS.find(link => link.id === j.id)?.width || 7;
-        add(j.x, j.z, j.y, width, j.nx, j.nz, areaIdAt({ place: j.other }, j.x, j.y, j.z), `${META[j.other]?.name || j.other} 가기`, `${j.other}/${j.y < -1 ? 'B1' : '1F'}`);
+        const link = JUNCTIONS.find(link => link.id === j.id);
+        const width = link?.width || 7;
+        add(j.x, j.z, j.y, width, j.nx, j.nz, areaIdAt({ place: j.other }, j.x, j.y, j.z), `${META[j.other]?.name || j.other} 가기`, `${j.other}/${j.y < -1 ? 'B1' : '1F'}`,link?.authoredDoor);
       }
     }
     // the visible door: thin glowing frame, a light curtain and a sign above (one sign per 18 m cluster of doors to the same place)
@@ -297,6 +298,7 @@ async function boot() {
     const curtainMat = new THREE.MeshBasicMaterial({ color: 0x6fc3ff, transparent: true, opacity: 0.16, depthWrite: false, side: THREE.DoubleSide, forceSinglePass: true });
     const signed = [];
     for (const p of portals) {
+      if(p.authoredDoor)continue;
       const g = new THREE.Group(); g.position.set(p.x, p.y, p.z); g.rotation.y = Math.atan2(p.tx, p.tz) - Math.PI / 2;
       const h = 2.7, w = Math.min(p.w, 12);
       const bar = (bw, bh, x, y) => { const m = new THREE.Mesh(new THREE.BoxGeometry(bw, bh, 0.06), frameMat); m.position.set(x, y, 0); g.add(m); };
