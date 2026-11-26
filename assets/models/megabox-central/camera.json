@@ -1,0 +1,34 @@
+[
+  {
+    "view": "front",
+    "game": "/?pitch=4#/shinsegae/B1?p=-115.79304,-6,30.76135,153.53606",
+    "modes": [
+      "day",
+      "night"
+    ]
+  },
+  {
+    "view": "oblique",
+    "game": "/?pitch=5#/shinsegae/B1?p=-119.20,-6,29.57,-165",
+    "modes": [
+      "day",
+      "night"
+    ]
+  },
+  {
+    "view": "counter",
+    "game": "/?pitch=8#/shinsegae/B1?p=-116.73328,-6,35.20832,114.87625",
+    "modes": [
+      "day",
+      "night"
+    ]
+  },
+  {
+    "view": "far",
+    "game": "/?pitch=6#/shinsegae/B1?p=-58.5995,-6,25.09413,110.784",
+    "modes": [
+      "day",
+      "night"
+    ]
+  }
+]

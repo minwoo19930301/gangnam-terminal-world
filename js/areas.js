@@ -1,3 +1,4 @@
+import {cinemaPreview} from '../assets/models/megabox-central/layout.js';
 // Area loading. The world is split into areas, and a page load builds only one of them:
 //  - outdoor districts (streets, plazas, parks, building exteriors), and
 //  - one interior area per building (or per connected underground cluster).
@@ -112,6 +113,7 @@ export function planArea(id, META, JUNCTIONS = []) {
     keep(owner, x, y, z, ny) {
       if (ownSet.has(owner) || owner === 'ground' || owner === 'lod') return true;
       if (owner === 'city' || owner === 'main') return inBox(B, x, z, 40) || ((Math.abs(ny) < 0.5 || y > 2.5) && inBox(B, x, z, 900)); // walls/roofs: what you see out of the windows
+      if (owner === 'shinsegae' && ownSet.has('centralcity') && cinemaPreview(x,y,z)) return true;
       if (owner === 'streets') return inBox(B, x, z, 40) && (y > -3.2 || nearMouth(x, y, z));
       return nearMouth(x, y, z);
     },

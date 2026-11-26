@@ -1,3 +1,4 @@
+import {boutiqueLobby} from '../../assets/models/megabox-central/place.js';
 import {marketProduceCeiling} from '../../assets/models/ssg-market-ceiling/model.js';
 import {giftConcierge} from '../../assets/models/ssg-market-gift/model.js';
 import {marketEntrance} from '../../assets/models/ssg-market-entrance/model.js';
@@ -2362,6 +2363,7 @@ export function build(K) {
     // use the1823x1367 display grid; source is2000x1500. No blog-derived locations.
     // This is a photo-anchored registration, not a metric survey; its remaining
     // source scale uncertainty is recorded in plan_transform_B1.
+    boutiqueLobby(K,y);
     const BPLAN=B1_PLAN;
     // R20: source plan-right is SSE, plan-down is WSW. The source is 2000×1500;
     // all digitised cell coordinates below use its 1823×1367 display grid.
