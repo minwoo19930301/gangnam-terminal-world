@@ -8,6 +8,7 @@ import {angle as cinemaYaw,point as cinemaPoint} from '../../assets/models/megab
 import {placeAtriumCeiling} from '../../assets/models/ssg-atrium-soffit/model.js';
 import {marketProduceCeiling} from '../../assets/models/ssg-market-ceiling/model.js';
 import {shopArrival as onimaruArrival} from '../../assets/models/kyoto-onimaru/layout.js';
+import {placeSpringRolls} from '../../assets/models/blue-butterfly/model.js';
 import {placeOnimaru} from '../../assets/models/kyoto-onimaru/model.js';
 import {giftConcierge} from '../../assets/models/ssg-market-gift/model.js';
 import {marketEntrance} from '../../assets/models/ssg-market-entrance/model.js';
@@ -2651,7 +2652,7 @@ export function build(K) {
       bb(W/2,t,w,d,y+2.6,.37,{tex:'ssg_deli_quatrefoil',gloss:.5});
       bb(W/2,t,w+.03,d+.03,y+2.98,.10,{color:0x1e1c1a,gloss:.7});
       bb(W/2,t,w,d,y+2.56,.045,0x292620);
-      const name=c.name==='블루버터플라이'?'Blue butterfly':c.name;
+      const name=c.name==='블루버터플라이'?'Blue Butterfly':c.name;
       sg(name,W/2,.025,y+2.79,Math.max(.45,w-.10),.24,{bg:'#1e1c1a',fg:'#fff6df',bold:false,font:c.name==='블루버터플라이'?'cursive':'Georgia, serif',twoSided:false});
       deliCoffer(...at(W/2,t),Math.min(3,Math.max(.7,w)),Math.min(3,d));
       if(c.name==='블루버터플라이'){
@@ -2734,8 +2735,16 @@ export function build(K) {
         sign(signName,sU,sV,y+2.25,face,Math.max(.65,Math.min(horizontal?W-.2:D-.2,6.4)),.34,{bg:'#302c24',fg:'#f4ead9',twoSided:true});
         return;
       }
-      const[u,v]=at,wood=c.name==='카멜커피'?0xd9b98a:c.name==='보앤미'?0xc8a77b:c.name==='블루버터플라이'?0x63422a:c.kind==='wine'?0x493529:c.kind==='deli'?0xb8925d:0x7e6044;
+      const[u,v]=at,wood=c.name==='카멜커피'?0xd9b98a:c.name==='보앤미'?0xc8a77b:c.kind==='wine'?0x493529:c.kind==='deli'?0xb8925d:0x7e6044;
       const darkDeli=c.zone==='north_deli'&&c.kind==='deli', boAndMie=c.name==='보앤미';
+      if(c.name==='블루버터플라이'){
+        const [x,z]=P(u,v);
+        box(u,v,w,d,y,.83,0x694733,{skip:['top','bottom','n','s','e','w']});
+        placeSpringRolls(K,x,z,RA-Math.PI/2,y);
+        if(fits(c,u+.8,v,.35,.35))customer(u+.8,v,true);
+        deliPavilion(c);
+        return;
+      }
       if(c.name==='교토 오니마루'){
         const [x,z]=P(u,v);
         box(u,v,w,d,y,.83,0x393735,{skip:['top','bottom','n','s','e','w']});
@@ -2749,13 +2758,9 @@ export function build(K) {
         box(u,v,w,d,y,.83,0xcfcbc0,{skip:['top','bottom','n','s','e','w']});
         return;
       }
-      const base=darkDeli&&c.name!=='블루버터플라이'?'ssg_deli_black_glaze':c.name==='카멜커피'?wood:{tex:'wood',color:wood};
+      const base=darkDeli?'ssg_deli_black_glaze':c.name==='카멜커피'?wood:{tex:'wood',color:wood};
       box(u,v,w,d,y,.83,boAndMie?{tex:'marble',color:0xe9d9c4}:base);
       box(u,v,w+.025,d+.025,y+.83,.06,{tex:'marble',color:darkDeli||c.name==='카멜커피'?0x292824:0xe9debf,gloss:.7},{solid:false});
-      if(c.name==='블루버터플라이'){
-        for(const du of [-w/2+.03,w/2-.03])box(u+du,v,.025,d+.015,y+.10,.65,BRASS,{solid:false});
-        for(const yy of [.10,.74])box(u,v,w+.02,d+.02,y+yy,.025,BRASS,{solid:false});
-      }
       if(['deli','bakery'].includes(c.kind)){
         const glass=boAndMie?K.material('ssg_bonmie_case_glass',new K.THREE.MeshLambertMaterial({
           color:0xe2e8e0,transparent:true,opacity:.12,depthWrite:false,side:K.THREE.DoubleSide
