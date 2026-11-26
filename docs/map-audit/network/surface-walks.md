@@ -64,3 +64,7 @@ node --max-old-space-size=8192 tools/check_surface_walks.mjs
 ```
 
 선택적으로 출력 폴더를 마지막 인자로 전달할 수 있다. 이 시점의 모델에서 두 차례 독립 실행하고 세 CSV가 바이트 단위로 일치하는 것을 확인했다. [검사 코드](../../../tools/check_surface_walks.mjs) · [OSM 데이터 출처](https://www.openstreetmap.org/copyright)
+
+### 11월 27일 일반 플레이 재검사
+
+**반포역 중앙정류소 앞 횡단보도**. OSM 665106094의 게임 중심선을 따라 W로 10m 걸으면 두 번째 승강장 쉼터에서 4.75m 만에 멈췄다. 2026년 7월 네이버 거리뷰에는 5번 출구 쪽 황색 횡단보도가 쉼터 끝을 지나며, 중앙에 가느다란 빈 띠가 있고 보도 쪽에 방향 화살표가 있다. 게임의 쉼터·유리벽·의자는 승강장 쪽으로 옮기고 플랫폼과 난간은 횡단보도 전에 끝냈다. 같은 10m 구간에서 중심과 좌우 1.15m를 양방향으로 걸어 여섯 번 모두 통과했다. 노면에 표시한 4m 폭과 게임 DEM에서 계산한 약 4.9% 경사는 현장 실측값이 아니다. 위 CSV는 26일 수정 전의 관측 기록이다. [네이버 거리뷰](https://map.naver.com/p?c=19.00,0,0,0,adh&p=aeyPIZsMoXds9VHRQe8Heg,335,2,80,Float) · [서울시 버스정류소 위치](https://data.seoul.go.kr/dataList/OA-21288/S/1/datasetView.do)

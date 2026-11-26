@@ -11,6 +11,8 @@
 
 Blender에서는 도시 전경을 열어 건물 외관·도로 선형·표고·거리 배치를 편집할 수 있습니다. **시설 · 모델 라이브러리** 씬에는 매장·호텔·터미널 집기와 공통 부품이 모여 있습니다. [통합 Blender 원본](assets/models/world/gangnam-terminal.blend) · [편집과 게임 반영](assets/models/world/README.md) · [도시 전경](assets/models/world/preview.jpg)
 
+신반포4차·반포르엘·반포센트럴자이(반센자이)는 같은 Blender 파일에 있습니다. 게임에서 **M → 단지명 → 여기로 이동**을 누르면 해당 단지의 보도 카메라 위치에 도착합니다. [아파트 Blender 원본](assets/models/banpo-apartments/banpo-apartments.blend) · [세 단지의 아침·낮·노을·밤](assets/models/banpo-apartments/native-street-views.jpg)
+
 - 고투몰(강남터미널 지하도상가), 고속터미널역(3·7·9호선)
 - 신세계백화점 강남점, JW 메리어트 호텔 서울, 센트럴시티(호남선·파미에스테이션)
 - 서울고속버스터미널(경부·영동선)과 3층 꽃시장, 다이소
