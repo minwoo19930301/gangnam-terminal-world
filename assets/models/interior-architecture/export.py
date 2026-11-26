@@ -31,7 +31,7 @@ with tempfile.TemporaryDirectory() as tmp:
                                 verts.append((ev.matrix_world @ data.vertices[idx].co)-origin)
                             indices.append(remap[idx])
                         faces.append(indices)
-                        colors.append(tuple(m.diffuse_color))
+                        colors.append((*m.diffuse_color[:3], 0.0 if m.get("skylight") else m.diffuse_color[3]))
                         smooth.append(face.use_smooth)
                 finally: ev.to_mesh_clear()
             if not faces:continue

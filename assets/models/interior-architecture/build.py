@@ -141,6 +141,51 @@ for side in (-1,1):
     annulus('흑철 벽등 갓',[(0,.16),(.015,.165),(.04,.11),(.10,.073),(.11,.035)],'353735',origin=org)
     annulus('유백색 전등',[(-.032,.011),(-.026,.059),(.005,.095)],'fff4d9',origin=org,lit=True)
 
+# One bay runs from its arch towards the next. The last bay is shortened on site.
+# The operator's photograph shows a pitched opal rooflight with dark glazing
+# rebates, distinctly separate from the softer plaster barrel on each shoulder.
+def strip(name, a, b, profile, color, skylight=False):
+    verts = [(x, y, z) for x in (a, b) for y,z in profile]
+    n = len(profile)
+    panel = mesh(name, verts, [(i, i+1, n+i+1, n+i) for i in range(n-1)], color, skylight)
+    if skylight:
+        panel.data.materials[0]["skylight"] = True
+    return panel
+
+ridge = 2.99
+def crown(y):
+    return ridge - abs(y)*.112
+
+for side in (-1,1):
+    for i, tint in enumerate(['e7e8e2','eef0eb','e9eae4','e9ebe6']):
+        a,b = -1.625*i,-1.625*(i+1)
+        strip('유백 천창 · 경사 채광판',a,b,
+              [(0,crown(0)),(side*2.55,crown(2.55))],tint,skylight=True)
+        # Four shallow frame sections per structural bay. Their sides and caps
+        # remain readable against the bright glass from ordinary eye height.
+        y = side*2.54
+        verts = [(a+dx, yy, crown(yy)+dz) for yy in (0,y)
+                 for dx,dz in [(0,-.034),(-.056,-.034),(-.056,.018),(0,.018)]]
+        mesh('천창 가로살 · 접힌 덮개',verts,
+             [(j,(j+1)%4,4+(j+1)%4,4+j) for j in range(4)],'454841')
+    edge = 2.55
+    strip('천창 검은 창틀과 턱',0,-6.5,
+          [(side*(edge-.043),crown(edge)-.043),(side*(edge+.035),crown(edge)-.043),
+           (side*(edge+.035),crown(edge)+.036)],'3b3d39')
+    strip('창틀 옆 흰 반턱',0,-6.5,
+          [(side*(edge+.038),crown(edge)-.044),(side*(edge+.11),crown(edge)-.044),
+           (side*(edge+.15),crown(edge)-.012)],'dedfd6')
+    # Long, shallow panel joints in the side vault, with a light folded edge.
+    for y in (4.24,5.55):
+        h = 3*(1-(y/5.75)**2)**.5
+        slope = -3*y/(5.75**2*(1-(y/5.75)**2)**.5)
+        strip('회반죽 패널 줄눈',0,-6.5,
+              [(side*(y+d),h+d*slope-.037) for d in (-.018,.018)],'bbbcb4')
+        strip('회반죽 패널 단차',0,-6.5,
+              [(side*(y+d),h+d*slope-.043) for d in (.018,.050)],'f5f2e8')
+strip('천창 마룻대 하부',0,-6.5,
+      [(-.036,ridge+.01),(-.036,ridge-.049),(.036,ridge-.049),(.036,ridge+.01)],'363933')
+
 # Match the concave, 20 m wide existing screen. The abstract artwork is original.
 section=group('terminal-led')
 def skin(name,x0,x1,z0,z1,depth,color,lit=False):
