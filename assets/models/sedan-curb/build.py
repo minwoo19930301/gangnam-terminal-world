@@ -115,14 +115,19 @@ for a,b in [(-.66,-.11),(.02,.62)]:
         return (x,.842+.55*t+.009,1.504-1.034*t+.009)
     panel("Parked windscreen wiper",[wind(a,.09),wind(b,.19),wind(b,.212),wind(a,.112)],seal)
 
-# Original fleet car is a linked comparison object, outside the exported collection.
-with bpy.data.libraries.load(str(ROOT.parent / "fleet/terminal-fleet.blend"),link=True) as (src,dst):
+# The game draws the linked fleet chassis separately. Put both sources into a
+# native assembly so a parked vehicle arrives with its body in the city scene.
+assembly = bpy.data.collections.new("동문 승용차 · 완성차")
+bpy.context.scene.collection.children.unlink(coll)
+assembly.children.link(coll)
+bpy.context.scene.collection.children.link(assembly)
+with bpy.data.libraries.load(str(ROOT.parent / "fleet/terminal-fleet.blend"), link=True, relative=True) as (src, dst):
     dst.collections = ["car"]
-if dst.collections[0]:
-    preview=bpy.data.objects.new("Original car · context",None)
-    bpy.context.scene.collection.objects.link(preview)
-    preview.instance_type='COLLECTION'
-    preview.instance_collection=dst.collections[0]
-    preview.location.x=10.8
+body = dst.collections[0]
+preview = bpy.data.objects.new("차체와 바퀴 · 원본", None)
+assembly.objects.link(preview)
+preview.instance_type = "COLLECTION"
+preview.instance_collection = body
+preview.location.x = -body["origin_x"]
 bpy.context.preferences.filepaths.save_version = 0
 bpy.ops.wm.save_as_mainfile(filepath=str(ROOT/"curb-trim.blend"),compress=True,relative_remap=True)

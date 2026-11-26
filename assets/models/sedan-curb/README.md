@@ -19,3 +19,7 @@ blender -b assets/models/sedan-curb/curb-trim.blend -t 4 --python-exit-code 1 -P
 ```
 
 The companion `build.py` reconstructs the original authored collection. A ground-level comparison view is `#/street?p=-36.10482,0.035,-56.06513,126.48216,-12`.
+
+도시 Blender 원본에서 `반포 · 도시 전경` 장면의 `신세계 동문 · 지상 주차 승용차`를 열면 주차된 26대가 각각 하나의 연결 인스턴스로 들어 있습니다. 원본의 차체와 유리, 네 바퀴, 외장 부품을 같이 편집할 수 있습니다. 아래는 실제 도시 원본에서 연석 높이로 렌더한 모습입니다. 이 Blender 원본은 공통 차체 도장을 사용하고 게임에서는 개별 차량 색을 적용합니다.
+
+![통합 도시 Blender 원본에서 본 동문 승용차](city-curb.jpg)

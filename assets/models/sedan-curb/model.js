@@ -11,6 +11,7 @@ export function parkSedanTrim(K, cars, apron) {
   const poses = cars.map(car => new T.Matrix4().compose(
     new T.Vector3(car.x, car.wheels.height, car.z),
     new T.Quaternion().setFromAxisAngle(axis, car.rotY).premultiply(car.tilt), scale));
+  K.recordCurbsideSedans?.(poses);
   const visible = [], previous = [], scratch = new T.Matrix4(), paint = new T.Color();
   let mesh, local, loading = false, retry = 0;
 
