@@ -18,6 +18,7 @@ function starter(T,key){
   else if(key==='ceiling')boxes=[[0,.12,0,9.14,.073,8.47,0x43463f]];
   else if(key==='clerestory')boxes=[[0,0,0,9.15,.55,.12,0x374339],[0,.093,-.071,9.05,.341,.014,0xb1c5b8]];
   else if(key==='buffet')boxes=[[0,.03,0,4.06,.083,1.56,0x363831],[0,.11,0,3.86,.758,1.43,0x454e45],[0,.868,0,4.10,.079,1.59,0x716b65]];
+  else if(key==='coldSalad')boxes=[-.53,0,.53].flatMap((x,i)=>[[x,.015,0,.5,.096,.84,0xeae6db],[x,.109,0,.29,.021,.58,[0xf4a52d,0xdfa533,0xcac995][i]]]);
   else if(key==='dishes')boxes=[-1.25,-.51,.24,.99].map(x=>[x,.015,0,.46,.092,.44,0x413e36]);
   else if(key==='brassRail')boxes=[...[-.72,.72].map(d=>[0,.13,d,4.26,.035,.039,0xaa925f]),...[-2.13,2.13].map(x=>[x,.13,0,.036,.036,1.45,0xaa925f])];
   else if(key==='island')boxes=[[0,.02,0,6.16,.88,.88,0x3b4942],[0,.898,0,6.24,.079,1.03,0x6b655e]];
@@ -72,7 +73,7 @@ export function registerAshleyDessert(F,u,y,front,depth,width,bayView){
   function box(x,d,w,l,h){
     K.phys.addPolyWalls(Q(u-x-w/2,front-d-l/2,u-x+w/2,front-d+l/2),y,y+h,.021,'newcore');
   }
-  box(1.68,7.85,6.20,.97,.97);box(0,3.1,3.90,1.43,.96);
+  box(1.68,7.85,6.20,.97,.97);box(0,3.1,3.90,1.43,.96);box(6.4,3.1,3.90,1.43,.96);
   box(-5.65,2.68,.97,.76,.745);for(const d of [-.716,.716])box(-5.65,2.68+d,.448,.435,.86);
   const entry=world(.08,-2.75);K.spawn({name:'1관 5F · 애슐리퀸즈 디저트',x:entry[0],z:entry[1],y:y-.034,yaw:rot+Math.PI});
   for(const {key,x,d,h} of rows){
