@@ -59,7 +59,10 @@ for (const [id, { meta, builtZones }] of modules) {
     claims: meta?.claims || [], claimRoads: meta?.claimRoads || [], claimAreas: meta?.claimAreas || [],
     box: isFinite(x0) ? [r(x0), r(z0), r(x1), r(z1)] : null, y: isFinite(y0) ? [r(y0), r(y1)] : [0, 0],
     floors, ...(Object.keys(floorAliases).length ? {floorAliases} : {}), cells: [...cells],
-    junctions: JUNCTIONS.filter(j => j.a === id || j.b === id).map(j => ({ id: j.id, other: j.a === id ? j.b : j.a, x: r((j.pa[0] + j.pb[0]) / 2), z: r((j.pa[1] + j.pb[1]) / 2), y: j.y, also: j.alsoY || [] })),
+    junctions: JUNCTIONS.filter(j => j.a === id || j.b === id).map(j => {
+      const [x, z] = j.handoff ?? [(j.pa[0] + j.pb[0]) / 2, (j.pa[1] + j.pb[1]) / 2];
+      return {id: j.id, other: j.a === id ? j.b : j.a, x: r(x), z: r(z), y: j.y, also: j.alsoY || []};
+    }),
   };
 }
 // ---- entrances: where you can walk from outside into a building module's indoor zones at street level ----
