@@ -1,12 +1,10 @@
 """Render just the city's linked exteriors and Seoul sky; compare the same exposure with lamps disabled."""
 import bpy
 import json
-import math
 import runpy
 import subprocess
 import sys
 from pathlib import Path
-from mathutils import Vector
 
 here = Path(__file__).resolve().parent
 target = Path(sys.argv[sys.argv.index("--") + 1])
@@ -20,16 +18,14 @@ sun = bpy.data.objects.new("서울 태양", bpy.data.lights.new("태양", "SUN")
 scene.collection.objects.link(sun)
 with bpy.data.libraries.load(str(here / "banpo-apartments.blend"), link=True) as (source, linked):
     linked.collections = [name for name in source.collections if name.endswith(" · 외관")]
+    linked.objects = [name for name in source.objects if name.endswith(" · 보도 카메라")]
+for camera in linked.objects:
+    scene.collection.objects.link(camera)
 for coll in linked.collections:
     instance = bpy.data.objects.new(coll.name, None)
     instance.instance_type = "COLLECTION"
     instance.instance_collection = coll
     scene.collection.objects.link(instance)
-camera = bpy.data.objects.new("신반포로 보도", bpy.data.cameras.new("거리 시점"))
-scene.collection.objects.link(camera)
-scene.camera = camera
-camera.data.lens = 24
-camera.data.clip_end = 1000
 scene.render.engine = "CYCLES"
 scene.cycles.samples = 24
 scene.cycles.use_denoising = False
@@ -60,11 +56,8 @@ def render(path):
     bpy.data.images.remove(image)
     return pixels
 
-for name, x, z, yaw, pitch in [
-        ("shinbanpo",83.2,-179.1,0,14), ("leel",-65.8,-124.2,45,16), ("centralxi",-168.7,-86.6,0,19)]:
-    camera.location = (x,-z,4.0)
-    direction = Vector((-math.sin(math.radians(yaw)), math.cos(math.radians(yaw)), math.tan(math.radians(pitch))))
-    camera.rotation_euler = direction.to_track_quat("-Z","Y").to_euler()
+for name, estate in [("shinbanpo","신반포4차"), ("leel","반포르엘"), ("centralxi","반포센트럴자이")]:
+    scene.camera = scene.objects[estate+" · 보도 카메라"]
     for frame, mode in [(750,"day"), (0,"night")]:
         scene.frame_set(frame)
         normal = render(target / f"{name}-{mode}.png")

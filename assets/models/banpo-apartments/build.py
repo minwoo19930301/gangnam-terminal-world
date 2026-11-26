@@ -104,7 +104,7 @@ window_shader = windows["window_group"]()
 for material in bpy.data.materials:
     if material.name.startswith("Window glazing"):
         windows["install_windows"](material, window_shader)
-scene[windows["NIGHT"]] = 0.0
+runpy.run_path(str(here / "viewpoints.py"))["install_viewpoints"](scene)
 
 # Material preview uses the source's vertex colours on walls and glazing.
 for screen in bpy.data.screens:
