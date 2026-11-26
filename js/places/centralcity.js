@@ -1,3 +1,4 @@
+import { halffCoffee } from '../../assets/models/halff/room.js';
 import { dimDimsum } from '../../assets/models/dimdimsum/restaurant.js';
 import { beanBrothers } from '../../assets/models/bean-brothers/room.js';
 import { OPEN_STAGE_FRONT } from './_junctions.js';
@@ -2861,6 +2862,11 @@ export function build(K) {
       continue;
     }
     fam2Projected.push({id,name,s0,s1,t0,t1,front});
+    if(id===1){
+      KNOWN.add(name);
+      halffCoffee(K,{P,RECT,lbox,lwall,lsign,lzone,R},s0,t0,s1,t1,Y2);
+      continue;
+    }
     if(id===4){
       KNOWN.add(name);
       beanBrothers(K,{P,RECT,lbox,lwall,lsign,R},s0,t0,s1,t1,Y2);

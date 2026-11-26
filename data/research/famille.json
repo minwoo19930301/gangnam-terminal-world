@@ -1,4 +1,18 @@
 {
+  "halff_fp212_20261126": {
+    "floor": "파미에스테이션 2층 FP212호, 운영사 도면 1번",
+    "naver": "https://map.naver.com/p/entry/place/1868037252",
+    "floor_map": "https://www.shinsegaecentral.com/public/img/famille_floor_2_ko_map.png",
+    "operator": "https://www.shinsegaecentral.com/famille",
+    "brand": "https://www.halffcoffee.com/",
+    "bar_and_window": "https://ssdamd.tistory.com/309",
+    "pastries": "https://komdolkun.tistory.com/399",
+    "financier": "https://www.youtube.com/watch?v=g9QiAs269k8",
+    "observed": "지점 네이버 사진에 갈색 아치, 청색 상호 벽, 둥근 흰 커피바, 아치 안팎의 청록·남색 벤치와 각진 스툴. 지점 사진과 방문 사진에서 검은 격자창과 맞은편 벽돌 회랑, 버터바와 약과 쿠키 진열, 실제 유리잔의 크림라떼를 확인했다.",
+    "fit": "게임 점포 11.86 × 7.26m로 구성. 주문대와 팔각 스툴 수, 집기·상품의 치수와 간격, 창 밖 회랑의 높이·거리, 테이블마다 마시는 음료 조합은 추정. 진열은 촬영 당시의 품목을 참고했다.",
+    "model": "assets/models/halff/fp212.blend",
+    "comparison": "assets/models/halff/play.jpg"
+  },
   "dimdimsum_mezzanine_20261126": {
     "floor": "파미에스테이션 중층. 네이버 지점은 하차장 옆 2층, 파미에 에스컬레이터 2층 아웃백 옆으로 안내.",
     "naver": "https://map.naver.com/p/entry/place/1280841149",
