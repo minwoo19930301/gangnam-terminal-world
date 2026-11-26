@@ -1,5 +1,6 @@
 """Reopen the shipped master, round-trip it, then try edits in memory."""
 
+import gzip
 import json
 import runpy
 import sys
@@ -37,7 +38,8 @@ terrain = runpy.run_path(str(here / "height-controls.py"))["export_controls"]
 street = runpy.run_path(str(here / "street-layout.py"))["export_street_layout"]
 bpy.context.window.scene = gallery
 exporter(out / "original.gz")
-assert (out / "original.gz").read_bytes() == (here / "buildings.json.gz").read_bytes()
+with gzip.open(out / "original.gz", "rb") as exported, gzip.open(here / "buildings.json.gz", "rb") as shipped:
+    assert exported.read() == shipped.read(), "Blender export differs from the shipped building data"
 for fn, name in [
     (roads, "road-edits.js"),
     (terrain, "height-edits.js"),
