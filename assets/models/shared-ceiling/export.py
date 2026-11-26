@@ -55,12 +55,25 @@ def bake(out):
     camera.location = ((lo[0] + hi[0]) / 2, (lo[1] + hi[1]) / 2, lo[2] - 3)
     camera.rotation_euler = (pi, 0, 0)
     scene.camera = camera
-    # Bake base colours only. The game supplies illumination and day/night changes.
+    # Preserve the faces of the small folded sheet-metal parts in the diffuse
+    # atlas. The game still supplies the full ceiling's time-of-day lighting.
     for mat in bpy.data.materials:
         mat.use_nodes = True
         nodes = mat.node_tree.nodes
         emit = nodes.new('ShaderNodeEmission')
         emit.inputs['Color'].default_value = mat.diffuse_color
+        if mat.get('bake_fold_shading'):
+            normal = nodes.new('ShaderNodeNewGeometry')
+            dot = nodes.new('ShaderNodeVectorMath')
+            dot.operation = 'DOT_PRODUCT'
+            dot.inputs[1].default_value = (.56, -.42, -.71)
+            mat.node_tree.links.new(normal.outputs['True Normal'], dot.inputs[0])
+            fill = nodes.new('ShaderNodeMath')
+            fill.operation = 'MULTIPLY_ADD'
+            fill.inputs[1].default_value = .48
+            fill.inputs[2].default_value = .63
+            mat.node_tree.links.new(dot.outputs['Value'], fill.inputs[0])
+            mat.node_tree.links.new(fill.outputs[0], emit.inputs['Strength'])
         mat.node_tree.links.new(emit.outputs[0], nodes.get('Material Output').inputs['Surface'])
     scene.render.engine = 'CYCLES'
     scene.cycles.device = 'CPU'
