@@ -31,6 +31,7 @@ const sources = [
   ['shinsegae','B1','cinema-rotary/front.blend','원형 광장 · 카멜커피 입면','CamelCoffeeRotaryFront'],
   ['famille','1F','interior-architecture/interiors.blend','파미에 갤러리 아치와 벽등','gallery-rib'],
   ['centralcity','B1','sweet-arcade/pier.blend','스위트 파크 · 디저트 홀 타일 기둥','SweetParkArcadePier'],
+  ['shinsegae','B1','sports-shoe-rotary/entry.blend','스포츠 슈 전문관 · 브랜드 간판과 계단','GangnamSportsShoeEntry'],
   ['shinsegae','B1','intelligentsia-gangnam/coffeebar.blend','인텔리젠시아 강남 · 오렌지 진열장과 커피 바','GangnamCoffeebar'],
   ['newcore','5F','newcore-yucheon/front.blend','뉴코아 1관 5층 · 유천냉면 입구와 식당 홀','NC_YucheonDiningHall'],
   ['gyeongbu','7F','gyeongbu-clothing-fronts/seven/tailored-front.blend','경부선 7층 · 두 단의 모직과 코트 전면','7층 신사복 · 이단 모직 진열과 코트 전면'],

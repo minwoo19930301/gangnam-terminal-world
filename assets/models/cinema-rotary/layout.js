@@ -19,7 +19,9 @@ export function outward(pt,depth){
 // The shoe hall adjoins the bookshop at the south edge of the rotary. The
 // black shopfront line stops at the start of the rounded, open showroom edge.
 export const shoeFront=[plan(593,1057),...arc(135,130,2).map(p=>plan(...p)),...arc(61,130,11).slice(10,11).map(p=>plan(...p))];
-export const shoeRear=[plan(593,1082),plan(614,1082)];
+// Widen only behind the published sales-hall boundary. Keep the public
+// rotary arc and the adjacent bookstore threshold on their original vertices.
+export const shoeRear=[[581,1069],[581,1095],[620,1095],[620,1065]].map(p=>plan(...p));
 export const shoeThreshold=[...shoeFront,...[...shoeRear].reverse()];
 export const bookFloor=[...bookEdge,...bookEdge.map(p=>outward(p,1.65)).reverse()];
 const ends=[[710,1028],[686,1063]].map(p=>plan(...p));
