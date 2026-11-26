@@ -1,3 +1,4 @@
+import {placeOpenStageLounge} from '../../assets/models/open-stage-lounge/model.js';
 import {galleryLights} from '../../assets/models/famille-atrium/model.js';
 import {placeLejardin} from '../../assets/models/lejardin-shop/model.js';
 import {tianjinShop} from '../../assets/models/tianjin-baozi/room.js';
@@ -3777,13 +3778,13 @@ export function build(K) {
   // ================================================================= spawns
   // yaw: facing local +s (south-ish) = R+π, -s = R, +t (east) = R+3π/2, -t (west) = R+π/2
   const YAW = { S: R + PI, N: R, E: R + 1.5 * PI, W: R + PI / 2 };
-  const sp = (name, s, t, y, face) => { const [x, z] = P(s, t); K.spawn({ name, x, y, z, yaw: YAW[face] }); };
+  const sp = (name, s, t, y, face, arrivalFloor) => { const [x, z] = P(s, t); K.spawn({ name, x, y, z, yaw: YAW[face], arrivalFloor }); };
   sp('센트럴시티 정문 (신반포로)', -30, 19.5, 0, 'S');
   sp('호남선 대합실 · 동상 벤치', 33, 22, 0, 'W');
   sp('호남선 승차홈 (8번)', bays.find(b => b.p === 8).s, 4.6, Y1 + 0.12, 'W');
   sp('스위트 파크 · 호남선 연결통로 (B1)', 7, 25, YB1, 'S');
   {const [x,z]=courtP(5.2,-1);K.spawn({name:'하우스 오브 신세계 · B1 라운지',x,z,y:YB1,yaw:courtR+PI});}
-  sp('호남선 대합실 · 매표소와 B1 연결', 124.5, 28.5, 0, 'N');
+  sp('호남선 대합실 · 매표소와 B1 연결', 124.5, 28.5, 0, 'N', '1F');
   sp('지하철 7호선 연결통로 (B1)', 173.4, -28, YB1, 'S');
   sp('파미에스테이션 1층 · 호호식당', 189.5, -58, Y1, 'N');
   sp('호남선 하차장 · 택시 승강장', 167.5, -50, 0.15, 'N');
@@ -4360,7 +4361,7 @@ function hallR20(K) {
   hallLandmarkName('gate3','GATE 3',.19,3.48,3.32,.8,.25,'S');
   lsign(['신세계백화점 1층','3 GATE'],.30,0,2.72,5.6,.55,'S',{bg:'#34332f',fg:'#fff',twoSided:true});
   // Public approach stairs and escalators must remain visible from the entrance.
-  K.detail({name:'중앙홀 · 대리석과 코퍼 천장 · 아케이드',floor:'1F',y0:0,y1:9,poly:RECT(-11,-33,38,26)},()=>{
+  K.detail({name:'중앙홀 · 대리석과 아케이드',floor:'1F',y0:0,y1:9,poly:RECT(-11,-33,38,26)},()=>{
     // Compass/star floor, terracotta rays, dark green 13m medallion.
     for(let i=0;i<16;i++){
       const a=i*PI/8,b=a+.035,polar=(r,ang)=>[15+r*Math.cos(ang),r*Math.sin(ang)];
@@ -4379,41 +4380,6 @@ function hallR20(K) {
       for(let k=0;k<12;k++){const a=k*PI/6;lbox(s+.5*Math.cos(a),t+.5*Math.sin(a),.17,.17,4.94,.38,0xf0eee6,{solid:false,rotY:R+a});}
       for(const d of[-.48,.48])for(const tt of[-.45,.45]){const[x,z]=P(s+d,t+tt);K.dome({x,z,y:5.15,rx:.18,ry:.18,rz:.16,hemi:false,seg:12,rings:8,mat:0xeeeae1});}
       lbox(s,t,1.45,1.45,5.35,.24,0xf4f1ea,{solid:false});
-    }
-    // Cut only the moulding intersecting the upper escalator opening. The
-    // remaining coffers retain their original pattern and materials.
-    const opening=[23.3,-1.4,32.1,2.4];
-    const cofferBox=(s,t,ds,dt,y,h,mat)=>{
-      const a=s-ds/2,b=t-dt/2,c=s+ds/2,d=t+dt/2,[x,z,X,Z]=opening;
-      const parts=X<=a||x>=c||Z<=b||z>=d?[[a,b,c,d]]:[
-        [a,b,Math.min(c,x),d],[Math.max(a,X),b,c,d],
-        [Math.max(a,x),b,Math.min(c,X),Math.min(d,z)],
-        [Math.max(a,x),Math.max(b,Z),Math.min(c,X),d],
-      ];
-      // Keep the 1M central overlook opening clear of the 1F coffer beam.
-      // This cuts visual moulding only, not the ceiling or the floor.
-      const a2=-.20,b2=-5.2,c2=.20,d2=3.2;
-      for(const [u,v,U,V] of parts){
-        const clear=c2<=u||a2>=U||d2<=v||b2>=V?[[u,v,U,V]]:[
-          [u,v,Math.min(U,a2),V],[Math.max(u,c2),v,U,V],
-          [Math.max(u,a2),v,Math.min(U,c2),Math.min(V,b2)],
-          [Math.max(u,a2),Math.max(v,d2),Math.min(U,c2),V],
-        ];
-        for(const [q,r,Q,Rr] of clear)if(Q-q>.005&&Rr-r>.005)
-          lbox((q+Q)/2,(r+Rr)/2,Q-q,Rr-r,y,h,mat,{solid:false});
-      }
-    };
-    const cofferDisc=(s,t,r,y,h,mat,opts)=>{
-      const [a,b,c,d]=opening;
-      if(s+r>a&&s-r<c&&t+r>b&&t-r<d)return;
-      lcyl(s,t,y,r,h,mat,opts);
-    };
-    for(let s=2.7;s<32;s+=5.4)for(let t=-28;t<12;t+=5.4){
-      cofferBox(s,t,4.75,4.75,6.30,.06,0xe4e1da);
-      for(const d of[-2.68,2.68]){cofferBox(s+d,t,.32,5.4,5.65,.75,0xf4f1ea);cofferBox(s,t+d,5.4,.32,5.65,.75,0xf4f1ea);cofferBox(s+d*.85,t,.09,4.65,6.05,.22,0xece9e2);cofferBox(s,t+d*.85,4.65,.09,6.05,.22,0xece9e2);}
-      for(let u=-2.1;u<2.2;u+=.24)for(const d of[-2.25,2.25]){cofferBox(s+u,t+d,.09,.12,6.13,.12,0xf6f3ec);cofferBox(s+d,t+u,.12,.09,6.13,.12,0xf6f3ec);}
-      for(const r of[.65,.45,.24])cofferDisc(s,t,r,6.20,.045,0xe9e6de,{solid:false,seg:32});
-      for(const ds of[-1.9,1.9])for(const dt of[-1.9,1.9])cofferDisc(s+ds,t+dt,.065,6.13,.035,{tex:'emit',color:0xf5f6f2},{solid:false});
     }
     lsign(['SHAKE','SHACK'],11.5,11.96,1.85,2.6,1.35,'W',{bg:null,fg:'#8fd3ff'});
     lsign('CUSTARD FRIES SHAKES HOT DOGS CONCRETES FLOATS CONES BURGERS FROZEN',11.5,11.88,2.98,10.7,.24,'W',{bg:'#2a2f33',fg:'#ffffff',pxPerM:160});
@@ -4446,6 +4412,49 @@ function hallR20(K) {
     // No visual floor or people are placed over the Sweet Garden well.
     for(const[s,t]of[[3,-5],[7,5],[12,-8],[22,-7],[4,8],[26,10],[35,-7],[7,-17]])lperson(s,t,0,{rotY:R+.7,shirt:0x353d3d});
   });
+  // The ceiling spans 48 coffers. Stream one row at a time so the public
+  // approach can draw the nearest mouldings before constructing the far rows.
+  for(let s=2.7;s<32;s+=5.4){
+    K.detail({name:'중앙홀 · 격자 천장',floor:'1F',y0:5.65,y1:6.40,
+      poly:RECT(s-2.85,-30.85,s+2.85,12.65)},()=>buildCofferRow(s));
+  }
+  function buildCofferRow(s){
+    // Cut only the moulding intersecting the upper escalator opening. The
+    // remaining coffers retain their original pattern and materials.
+    const opening=[23.3,-1.4,32.1,2.4];
+    const cofferBox=(s,t,ds,dt,y,h,mat)=>{
+      const a=s-ds/2,b=t-dt/2,c=s+ds/2,d=t+dt/2,[x,z,X,Z]=opening;
+      const parts=X<=a||x>=c||Z<=b||z>=d?[[a,b,c,d]]:[
+        [a,b,Math.min(c,x),d],[Math.max(a,X),b,c,d],
+        [Math.max(a,x),b,Math.min(c,X),Math.min(d,z)],
+        [Math.max(a,x),Math.max(b,Z),Math.min(c,X),d],
+      ];
+      // Keep the 1M central overlook opening clear of the 1F coffer beam.
+      // This cuts visual moulding only, not the ceiling or the floor.
+      const a2=-.20,b2=-5.2,c2=.20,d2=3.2;
+      for(const [u,v,U,V] of parts){
+        const clear=c2<=u||a2>=U||d2<=v||b2>=V?[[u,v,U,V]]:[
+          [u,v,Math.min(U,a2),V],[Math.max(u,c2),v,U,V],
+          [Math.max(u,a2),v,Math.min(U,c2),Math.min(V,b2)],
+          [Math.max(u,a2),Math.max(v,d2),Math.min(U,c2),V],
+        ];
+        for(const [q,r,Q,Rr] of clear)if(Q-q>.005&&Rr-r>.005)
+          lbox((q+Q)/2,(r+Rr)/2,Q-q,Rr-r,y,h,mat,{solid:false});
+      }
+    };
+    const cofferDisc=(s,t,r,y,h,mat,opts)=>{
+      const [a,b,c,d]=opening;
+      if(s+r>a&&s-r<c&&t+r>b&&t-r<d)return;
+      lcyl(s,t,y,r,h,mat,opts);
+    };
+    for(let t=-28;t<12;t+=5.4){
+      cofferBox(s,t,4.75,4.75,6.30,.06,0xe4e1da);
+      for(const d of[-2.68,2.68]){cofferBox(s+d,t,.32,5.4,5.65,.75,0xf4f1ea);cofferBox(s,t+d,5.4,.32,5.65,.75,0xf4f1ea);cofferBox(s+d*.85,t,.09,4.65,6.05,.22,0xece9e2);cofferBox(s,t+d*.85,4.65,.09,6.05,.22,0xece9e2);}
+      for(let u=-2.1;u<2.2;u+=.24)for(const d of[-2.25,2.25]){cofferBox(s+u,t+d,.09,.12,6.13,.12,0xf6f3ec);cofferBox(s+d,t+u,.12,.09,6.13,.12,0xf6f3ec);}
+      for(const r of[.65,.45,.24])cofferDisc(s,t,r,6.20,.045,0xe9e6de,{solid:false,seg:32});
+      for(const ds of[-1.9,1.9])for(const dt of[-1.9,1.9])cofferDisc(s+ds,t+dt,.065,6.13,.035,{tex:'emit',color:0xf5f6f2},{solid:false});
+    }
+  }
   const visit = Date.now();
   const lexusShow = visit >= Date.parse('2026-11-05T00:00:00+09:00') &&
     visit < Date.parse('2026-11-09T00:00:00+09:00');
@@ -4478,16 +4487,15 @@ function hallR20(K) {
     K.detail({name:'오픈 스테이지 · 이전한 라운지와 테이블',floor:'1F',y0:0,y1:3,poly:RECT(50,8,78,23)},()=>{
     // CC-D2: the white lounge is right of the 236-degree camera axis.
     // Its six-by-four-metre pocket stays between the s50 and s59.5 LED piers.
+    const [loungeX,loungeZ]=P(54.8,20.45);
+    placeOpenStageLounge(K,loungeX,loungeZ,R-PI/2);
+    const collider={skip:['top','bottom','n','s','e','w']};
     for(const [ss,tt,reverse]of[[54.8,18.4,false],[54.8,22.5,true]]){
-      lbox(ss,tt,2.75,.92,.14,.29,0xefeee7);
-      lbox(ss,tt+(reverse?.39:-.39),2.75,.17,.43,.42,0xe4e3dc,{solid:false});
-      for(const d of[-1.29,1.29])lbox(ss+d,tt,.17,.92,.43,.24,0xf6f4ee,{solid:false});
-      for(const d of[-.83,0,.83])lbox(ss+d,tt,.79,.69,.43,.08,0xfcf8ef,{solid:false});
+      // Preserve the seat and tabletop support heights of the original arrangement.
+      lbox(ss,tt,2.75,.92,.14,.29,0xefeee7,collider);
       lperson(ss-.55,tt+(reverse?-.15:.15),0,{sit:true,rotY:reverse?F.W:F.E,shirt:reverse?0x596565:0xebe5da});
       const tableT=tt+(reverse?-1.1:1.1);
-      lbox(ss,tableT,1.3,.72,.48,.07,{tex:'marble',color:0xf2efe6,gloss:.5});
-      for(const d of[-.5,.5])lbox(ss+d,tableT,.05,.48,.07,.41,0xbfc0b5,{solid:false});
-      lcyl(ss+.3,tableT,.55,.07,.11,0xf5eee2,{solid:false,seg:10});
+      lbox(ss,tableT,1.3,.72,.48,.07,0xf2efe6,collider);
     }
 
     });

@@ -18,6 +18,7 @@ export const parts={
   ceiling:['짙은 천장과 원형 매입등',9.14,8.48,.20,13],
   clerestory:['상부 채광판과 녹색 몰딩',9.15,.20,.59,16],
   buffet:['통풍구 달린 뷔페 아일랜드',4.23,1.71,.95,14],
+  coldSalad:['감귤과 단호박 샐러드, 모둠 피클',1.58,1.10,.266,5.2],
   dishes:['무쇠 팬과 뜨거운 음식',3.13,1.05,.15,6.5],
   brassRail:['천장에서 내린 황동 레일',4.34,1.52,1.13,15],
   table:['올리브색 의자와 두 사람 식탁',1.03,2.12,.88,11],
@@ -26,6 +27,7 @@ export const parts={
 export const rows=[
   ...[-9.14,0,9.14].flatMap(x=>[{key:'paving',x,d:4.30,h:0},{key:'ceiling',x,d:4.30,h:3.37},{key:'clerestory',x,d:8.38,h:2.82}]),
   {key:'buffet',x:0,d:3.10,h:.014},{key:'dishes',x:0,d:3.10,h:.961},{key:'brassRail',x:0,d:3.10,h:2.28},
+  {key:'buffet',x:6.4,d:3.10,h:.014},{key:'coldSalad',x:6.4,d:2.98,h:.961},
   {key:'island',x:1.68,d:7.85,h:0},{key:'screen',x:1.68,d:8.33,h:.965},
   {key:'fountain',x:-.94,d:7.79,h:.977},{key:'chocolate',x:-.94,d:7.79,h:1.365},
   {key:'iron',x:3.23,d:7.81,h:.977},{key:'batter',x:4.16,d:7.77,h:.977},
