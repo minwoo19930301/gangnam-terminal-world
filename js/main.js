@@ -4,7 +4,7 @@ import { createDaylight, timeModes } from './daylight.js';
 import { createPhysics, createPlayer } from './physics.js';
 import { createKit } from './kit.js';
 import { applyRoadEdits } from './blender-roads.js';
-import { drawBlenderBuilding } from './blender-buildings.js';
+import { drawBlenderBuilding, loadBuildingArea } from './blender-buildings.js';
 import { buildCity, createTraffic } from './city.js';
 import { PLACES } from './places/index.js';
 import { createMap } from './map.js';
@@ -49,6 +49,9 @@ async function boot() {
   const AREA_ID = (!META || SHOT || Q.get('places') || Q.get('area') === 'all') ? 'all' : (Q.get('area') || areaIdForKey(hashKey, hashPos, META));
   const AREA = META ? planArea(AREA_ID, META, JUNCTIONS) : { id: 'all', modules: PLACES, keep: null, keepDetail: null };
   const exteriorTerrain = !AREA.id.startsWith('in:');
+  const shellMargin = exteriorTerrain ? 180 : 110;
+  const shellBounds = AREA.box?.map((v,i) => v + (i < 2 ? -shellMargin : shellMargin));
+  const shellsReady = loadBuildingArea(shellBounds).then(() => null, error => error);
   installRelief(THREE, exteriorTerrain);
   if (AREA.id !== 'all') status(`${areaName(AREA.id, META)} 불러오는 중…`);
   const wantIds = Q.get('places') ? Q.get('places').split(',') : PLACES.filter(id => AREA.modules.includes(id));
@@ -111,6 +114,12 @@ async function boot() {
   for (const m of reModels) for (const id of m.claims) claimedBuildings.add(id);
   // modules of other areas are not loaded, but what they claim is still theirs (the city must not put generic boxes there)
   if (META && AREA.id !== 'all') for (const v of Object.values(META)) { for (const id of v.claims) claimedBuildings.add(id); for (const id of v.claimRoads) claimedRoads.add(id); for (const id of v.claimAreas) claimedAreas.add(id); }
+  const shellError = await shellsReady;
+  if (shellError) {
+    // Static hosts can briefly serve an older tile index during a release.
+    try { await loadBuildingArea(); }
+    catch (fallbackError) { console.warn('Using footprint exteriors', shellError, fallbackError); }
+  }
   const placeInfo = [];
   for (const { id, m } of mods) {
     status(`짓는 중… ${m.meta?.name || id}`);
@@ -124,7 +133,7 @@ async function boot() {
   let roadsInfo = null;
   if (Q.get('city') !== '0') {
     mark('places'); status('도시(OSM) 짓는 중…'); await new Promise(r => setTimeout(r, 0));
-    try { roadsInfo = buildCity(K, osm, { claimedBuildings, claimedRoads, claimedAreas, log: s => console.log(s) }); } catch (e) { fail('city', e); }
+    try { roadsInfo = buildCity(K, osm, { claimedBuildings, claimedRoads, claimedAreas, shellBounds, streetBounds: exteriorTerrain ? null : shellBounds, log: s => console.log(s) }); } catch (e) { fail('city', e); }
   }
   // far massing: buildings of place modules this area does not load stand as plain OSM blocks (skyline, walls)
   if (META && AREA.id !== 'all') {
@@ -315,6 +324,9 @@ async function boot() {
   // ---- HUD / input ----
   const keys = {};
   const hudZone = $('zone'), hudSub = $('zone-sub'), hudPrompt = $('prompt'), hudCoord = $('coord');
+  function updateText(node, value) {
+    if (node.textContent !== value) node.textContent = value;
+  }
   let menuOpen = false, nearIt = null;
   // ---- leaving the area: reload at the new address with a loading screen ----
   let leaving = false, reloadTimer;
@@ -584,14 +596,23 @@ async function boot() {
     areaWatch(currentZone); portalCheck(); pinUpdate();
     if (reLive && (frames & 63) === 0) reLive.update(player.x, player.z);
     const zname = currentZone ? currentZone.name : (player.y < -2 ? '지하' : '거리');
-    hudZone.textContent = zname + (currentZone && currentZone.floor ? ` · ${currentZone.floor}` : '');
-    hudSub.textContent = currentZone ? currentZone.sub : '';
-    nearIt = null; let bd = Infinity;
-    for (const it of K._.interactables) { const d = Math.hypot(it.x - player.x, it.z - player.z); if (d < it.r && d < bd && (it.y == null || Math.abs(it.y - player.y) < 2.5)) { if (it.elevator && !it.elevator.floors.some(f => Math.abs(f.y - player.y) < 1.5)) continue; bd = d; nearIt = it; } }
-    hudPrompt.textContent = nearIt ? `E · ${nearIt.label}` : ''; hudPrompt.classList.toggle('show', !!nearIt);
+    updateText(hudZone, zname + (currentZone?.floor ? ` · ${currentZone.floor}` : ''));
+    updateText(hudSub, currentZone?.sub || '');
+    nearIt = null;
+    let closest = Infinity;
+    for (const it of K._.interactables) {
+      const dx = it.x - player.x, dz = it.z - player.z;
+      if (Math.abs(dx) >= it.r || Math.abs(dz) >= it.r) continue;
+      const distance = dx*dx + dz*dz;
+      if (distance >= it.r*it.r || distance >= closest || (it.y != null && Math.abs(it.y-player.y) >= 2.5)) continue;
+      if (it.elevator && !it.elevator.floors.some(f => Math.abs(f.y-player.y) < 1.5)) continue;
+      closest = distance; nearIt = it;
+    }
+    updateText(hudPrompt, nearIt ? `E · ${nearIt.label}` : '');
+    hudPrompt.classList.toggle('show', !!nearIt);
     $('btn-use').classList.toggle('show', !!nearIt);
     frames++; { const now = performance.now(); if (now - fpsT0 > 1000) { fps = frames * 1000 / (now - fpsT0); frames = 0; fpsT0 = now; adaptResolution(fps); } }
-    hudCoord.textContent = `x ${player.x.toFixed(0)}  z ${player.z.toFixed(0)}  높이 ${(player.y + relief(player.x, player.z)).toFixed(1)}m  ${player.fly ? '✈ ' : ''}${fps.toFixed(0)}fps${pixelRatio < Math.min(devicePixelRatio, 2) - 0.01 ? ` · 해상도 ${Math.round(pixelRatio / Math.min(devicePixelRatio, 2) * 100)}%` : ''}`;
+    updateText(hudCoord, `x ${player.x.toFixed(0)}  z ${player.z.toFixed(0)}  높이 ${(player.y + relief(player.x, player.z)).toFixed(1)}m  ${player.fly ? '✈ ' : ''}${fps.toFixed(0)}fps${pixelRatio < Math.min(devicePixelRatio, 2) - 0.01 ? ` · 해상도 ${Math.round(pixelRatio / Math.min(devicePixelRatio, 2) * 100)}%` : ''}`);
     map.update(dt);
     // lazy floor detail near the camera (bounded per frame); screenshots paint new sign text immediately
     if (K._.ensureDetail(player.x, player.y + player.eye, player.z, 60, SHOT ? Infinity : 6) && SHOT && K._.atlas.pending()) { K._.atlas.flushAll(); for (const p of K._.atlas.pages) p.t.needsUpdate = true; }

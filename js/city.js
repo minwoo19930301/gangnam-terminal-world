@@ -19,8 +19,27 @@ const SIGNAL_ROADS = new Set(['primary', 'secondary', 'tertiary']);
 const PAINT = { white: 0xf4f1e6, yellow: 0xf2c329, blue: 0x238bd2, pink: 0xe477a1, mint: 0x50cbb1 };
 const LAYER_H = 7.5;
 
-export function buildCity(K, osm, { claimedBuildings = new Set(), claimedRoads = new Set(), claimedAreas = new Set(), log = () => {}, inspectStreetPlacement, streetPlacementEdits } = {}) {
+function overlaps(a, b) {
+  return a[0] <= b[2] && a[2] >= b[0] && a[1] <= b[3] && a[3] >= b[1];
+}
+
+// Map search still uses the full OSM dataset. A building's scene only needs
+// road furniture and road topology around its doors and windows. Keep complete
+// ways crossing the buffer and large water surfaces visible from higher floors.
+function streetsOutsideBuilding(osm, bounds) {
+  const inside = (x,z) => x >= bounds[0] && x <= bounds[2] && z >= bounds[1] && z <= bounds[3];
+  return {...osm,
+    roads: osm.roads.filter(r => overlaps(polyBBox(r.pts),bounds)),
+    areas: osm.areas.filter(a => a.kind === 'natural:water' || overlaps(polyBBox(a.poly),bounds)),
+    trees: osm.trees.filter(p => inside(p[0],p[1])),
+    pois: osm.pois.filter(p => inside(p.x,p.z)),
+    nodes: osm.nodes.filter(p => inside(p.x,p.z)),
+  };
+}
+
+export function buildCity(K, osm, { claimedBuildings = new Set(), claimedRoads = new Set(), claimedAreas = new Set(), log = () => {}, inspectStreetPlacement, streetPlacementEdits, shellBounds, streetBounds } = {}) {
   applyRoadEdits(osm);
+  if (streetBounds) osm = streetsOutsideBuilding(osm,streetBounds);
   const { THREE } = K;
   const rnd = K.rand(42);
   const streetLamps = [];
@@ -764,7 +783,13 @@ export function buildCity(K, osm, { claimedBuildings = new Set(), claimedRoads =
     if (claimedBuildings.has(b.id) || b.layer < 0 || b.type === 'no' || b.type === 'roof') continue;
     const [x0,z0,x1,z1] = b._bb;
     const cx=(x0+x1)/2, cz=(z0+z1)/2;
-    K.withTerrainAnchor(cx,cz,() => buildBlock(b,relief(cx,cz)));
+    if (shellBounds && !overlaps(b._bb,shellBounds)) {
+      // The next district loads the native facade on approach. Keep the
+      // distant silhouette, including roof holes and the original footprint.
+      K.withTerrainAnchor(cx,cz,() => K.prism(b.poly,b.minHeight,b.height,{
+        mat:{tex:facadeFor(b),color:0xe8e4df},top:'roofgravel',bottom:false,holes:b.holes,
+      }));
+    } else K.withTerrainAnchor(cx,cz,() => buildBlock(b,relief(cx,cz)));
     nb++;
   }
   function buildBlock(b,datum) {

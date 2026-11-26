@@ -61,6 +61,40 @@ def append_part(source, graph, datum, slots, points, faces, transform=None):
         obj.to_mesh_clear()
 
 
+def write_building_tiles(library, directory):
+    """Keep complete buildings together so footprint edges never acquire seams."""
+    import hashlib
+    import math
+
+    directory.mkdir(parents=True, exist_ok=True)
+    tiles, omitted = {}, []
+    for key, row in library.items():
+        role, _, xyz, _ = row
+        if role == "omit":
+            omitted.append(key)
+            continue
+        west, east = min(xyz[::3])/100, max(xyz[::3])/100
+        north, south = min(xyz[2::3])/100, max(xyz[2::3])/100
+        tile = math.floor((west+east)/640), math.floor((north+south)/640)
+        buildings, bounds = tiles.setdefault(tile, ({}, [west, north, east, south]))
+        buildings[key] = row
+        bounds[:] = [min(bounds[0],west), min(bounds[1],north), max(bounds[2],east), max(bounds[3],south)]
+
+    manifest = {"omit": sorted(omitted), "tiles": []}
+    current = set()
+    for (i,j), (buildings,bounds) in sorted(tiles.items()):
+        data = json.dumps(buildings, sort_keys=True, separators=(",",":")).encode()
+        # A cached index always addresses the matching version of its mesh data.
+        name = f"{i}_{j}-{hashlib.sha256(data).hexdigest()[:10]}.json.gz"
+        (directory/name).write_bytes(gzip.compress(data, compresslevel=9, mtime=0))
+        current.add(name)
+        manifest["tiles"].append({"file": name, "bounds": bounds})
+    (directory/"index.json").write_text(json.dumps(manifest, separators=(",",":"))+"\n")
+    for stale in directory.glob("*.json.gz"):
+        if stale.name not in current:
+            stale.unlink()
+
+
 def export_buildings(target):
     scene = bpy.data.scenes["반포 · 도시 전경"]
     library = {}
@@ -101,6 +135,8 @@ def export_buildings(target):
     temp = target.with_suffix(".tmp")
     temp.write_bytes(compressed)
     temp.replace(target)
+    if target.name == "buildings.json.gz":
+        write_building_tiles(library, target.parent/"building-tiles")
     from collections import Counter
 
     print(

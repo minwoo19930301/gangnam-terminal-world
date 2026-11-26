@@ -250,16 +250,31 @@ export function createMap(opts) {
     if (isMini) return player.y < -1 ? r.y0 <= player.y && player.y < r.y1 : miniPlace === r.place && r.y0 <= player.y && player.y < r.y1;
     return layer === 'underground' ? r.y0 <= -6 && -6 < r.y1 : layer === 'floor' && floorPlace?.id === r.place && r.floor === floorLabel;
   }
+  const baseRecords = {areaRecords, roadRecords, buildingRecords, zoneRecords, roadLabels};
+  let miniBounds, miniRecords;
+  function surroundingRecords(v) {
+    if (!miniBounds || v.x0 < miniBounds.x0 || v.z0 < miniBounds.z0 ||
+        v.x1 > miniBounds.x1 || v.z1 > miniBounds.z1) {
+      miniBounds = {x0:v.x0-50, z0:v.z0-50, x1:v.x1+50, z1:v.z1+50};
+      miniRecords = {};
+      for (const [name, records] of Object.entries(baseRecords)) {
+        miniRecords[name] = records.filter(r => visible(r,miniBounds));
+      }
+    }
+    return miniRecords;
+  }
   function drawBase(ctx, v, isMini) {
-    prepareView(v); pixelTransform(ctx, v); ctx.clearRect(0, 0, v.w, v.h); ctx.fillStyle = '#f2f3ee'; ctx.fillRect(0, 0, v.w, v.h);
+    prepareView(v);
+    const records = isMini ? surroundingRecords(v) : baseRecords;
+    pixelTransform(ctx, v); ctx.clearRect(0, 0, v.w, v.h); ctx.fillStyle = '#f2f3ee'; ctx.fillRect(0, 0, v.w, v.h);
     worldTransform(ctx, v); ctx.lineJoin = 'round'; ctx.lineCap = 'round';
-    for (const a of areaRecords) if (visible(a, v)) { ctx.fillStyle = a.color; ctx.fill(a.path, 'evenodd'); }
-    for (let pass = 0; pass < 2; pass++) for (const r of roadRecords) {
+    for (const a of records.areaRecords) if (visible(a, v)) { ctx.fillStyle = a.color; ctx.fill(a.path, 'evenodd'); }
+    for (let pass = 0; pass < 2; pass++) for (const r of records.roadRecords) {
       if (!visible(r, v) || (r.foot && v.scale < 0.6)) continue;
       ctx.strokeStyle = pass ? r.color : r.bridge ? '#bfc9cc' : r.rank >= 2 ? '#decda1' : '#dce1da';
       ctx.lineWidth = Math.max(r.foot ? 1 : 2, r.width * v.scale) / v.scale + (pass ? 0 : 2 / v.scale); ctx.stroke(r.path);
     }
-    for (const b of buildingRecords) if (visible(b, v)) {
+    for (const b of records.buildingRecords) if (visible(b, v)) {
       ctx.fillStyle = b.detailed ? '#f4ddc5' : '#e1e5e4'; ctx.strokeStyle = b.detailed ? '#ceac87' : '#cbd3d2'; ctx.lineWidth = 0.8 / v.scale; ctx.fill(b.path, 'evenodd'); ctx.stroke(b.path);
     }
     // Detailed places without an OSM claim still get their real registered footprint.
@@ -270,28 +285,28 @@ export function createMap(opts) {
     const indoor = isMini ? player.y < -1 || !!miniPlace : layer !== 'surface';
     if (indoor) {
       pixelTransform(ctx, v); ctx.fillStyle = (isMini ? player.y < -1 : layer === 'underground') ? 'rgba(222,230,230,.76)' : 'rgba(246,247,244,.58)'; ctx.fillRect(0, 0, v.w, v.h); worldTransform(ctx, v);
-      for (const r of zoneRecords) if (activeZone(r, isMini) && visible(r, v)) {
+      for (const r of records.zoneRecords) if (activeZone(r, isMini) && visible(r, v)) {
         ctx.fillStyle = r.area > 800 ? '#d1eee4' : '#e7f6dd'; ctx.strokeStyle = '#41a493'; ctx.lineWidth = 1.5 / v.scale; ctx.fill(r.path); ctx.stroke(r.path);
       }
     }
     pixelTransform(ctx, v); rectCount = 0; labelFrame++;
     // Reserve the live position marker before placing text.
     reserve(sx(v, player.x, player.z), sy(v, player.x, player.z), 24, 28, v);
-    if (indoor) for (const r of zoneRecords) if (activeZone(r, isMini) && visible(r, v) && zoneFits(r, v)) textLabel(ctx, v, r.label, '#176d60');
+    if (indoor) for (const r of records.zoneRecords) if (activeZone(r, isMini) && visible(r, v) && zoneFits(r, v)) textLabel(ctx, v, r.label, '#176d60');
     for (const p of placeMarks) if (!indoor || v.scale > 1) textLabel(ctx, v, p.label, indoor ? '#637873' : '#98663e');
     for (const e of exitRecords) {
       const x = sx(v, e.x, e.z), y = sy(v, e.x, e.z), radius = isMini ? 8 : 10;
       if (!reserve(x, y, radius * 2, radius * 2, v)) continue;
       ctx.beginPath(); ctx.arc(x, y, radius, 0, TAU); ctx.fillStyle = '#ef9237'; ctx.fill(); ctx.lineWidth = 1.8; ctx.strokeStyle = '#fff'; ctx.stroke(); ctx.font = isMini ? miniExitFont : exitFont; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = '#fff'; ctx.fillText(e.text, x, y + 0.5);
     }
-    if (!indoor || !isMini) for (const a of areaRecords) if (a.label && visible(a, v) && a.area * v.scale * v.scale > 5000) textLabel(ctx, v, a.label, indoor ? '#8b9c90' : a.labelColor);
-    for (const r of roadLabels) if (visible(r, v) && r.length * v.scale > r.label.width + 30 && (r.rank >= 2 || v.scale > 1.6)) {
+    if (!indoor || !isMini) for (const a of records.areaRecords) if (a.label && visible(a, v) && a.area * v.scale * v.scale > 5000) textLabel(ctx, v, a.label, indoor ? '#8b9c90' : a.labelColor);
+    for (const r of records.roadLabels) if (visible(r, v) && r.length * v.scale > r.label.width + 30 && (r.rank >= 2 || v.scale > 1.6)) {
       const lx = sx(v, r.label.x, r.label.z), ly = sy(v, r.label.x, r.label.z);
       if (r.labelGroup.frame === labelFrame && Math.hypot(lx - r.labelGroup.x, ly - r.labelGroup.y) < (isMini ? 180 : 280)) continue;
       let angle = r.angle + (isMini ? player.yaw : 0); angle = Math.atan2(Math.sin(angle), Math.cos(angle)); if (angle > Math.PI / 2) angle -= Math.PI; if (angle < -Math.PI / 2) angle += Math.PI;
       if (textLabel(ctx, v, r.label, indoor ? '#96a19e' : '#8b7d5a', 0, angle)) { r.labelGroup.frame = labelFrame; r.labelGroup.x = lx; r.labelGroup.y = ly; }
     }
-    if (v.scale > (isMini ? 0.85 : 0.65) && !indoor) for (const b of buildingRecords) if (b.label && visible(b, v) && (b.area > 300 || v.scale > 2)) textLabel(ctx, v, b.label, b.detailed ? '#98663e' : '#677674');
+    if (v.scale > (isMini ? 0.85 : 0.65) && !indoor) for (const b of records.buildingRecords) if (b.label && visible(b, v) && (b.area > 300 || v.scale > 2)) textLabel(ctx, v, b.label, b.detailed ? '#98663e' : '#677674');
     if (v.scale > 0.55) for (const b of busRecords) {
       const x = sx(v, b.x, b.z), y = sy(v, b.x, b.z); if (!reserve(x, y, 11, 13, v)) continue;
       ctx.fillStyle = '#4c91c5'; ctx.fillRect(x - 5, y - 6, 10, 12); ctx.fillStyle = '#fff'; ctx.fillRect(x - 3, y - 4, 6, 4); ctx.fillRect(x - 3, y + 3, 2, 1); ctx.fillRect(x + 1, y + 3, 2, 1);
@@ -333,7 +348,13 @@ export function createMap(opts) {
     if (selected) { const x = sx(view, selected.x, selected.z), y = sy(view, selected.x, selected.z); lg.beginPath(); lg.arc(x, y, 9, 0, TAU); lg.fillStyle = '#f08749'; lg.fill(); lg.strokeStyle = '#fff'; lg.lineWidth = 3; lg.stroke(); lg.beginPath(); lg.arc(x, y, 17, 0, TAU); lg.strokeStyle = 'rgba(240,135,73,.35)'; lg.stroke(); }
     drawPlayer(lg, view, false); liveDirty = false;
   }
-  function drawMini() {
+  let miniDrawY, miniDrawYaw, miniDrawPlace, miniDrawFloor, miniDrawZoom;
+  function drawMini(force) {
+    if (!force && mv.x === player.x && mv.z === player.z && miniDrawY === player.y &&
+        miniDrawYaw === player.yaw && miniDrawPlace === miniPlace && miniDrawFloor === miniFloorText &&
+        miniDrawZoom === miniZoomIndex) return;
+    miniDrawY = player.y; miniDrawYaw = player.yaw; miniDrawPlace = miniPlace;
+    miniDrawFloor = miniFloorText; miniDrawZoom = miniZoomIndex;
     mv.x = player.x; mv.z = player.z; mv.cos = Math.cos(player.yaw); mv.sin = Math.sin(player.yaw); mv.scale = miniScales[miniZoomIndex] * (mv.w < 150 ? 0.8 : 1);
     drawBase(mg, mv, true); drawPlayer(mg, mv, true);
     const radius = mv.w / 2 - 16, nx = mv.w / 2 + Math.sin(player.yaw) * radius, ny = mv.h / 2 - Math.cos(player.yaw) * radius;
@@ -527,7 +548,7 @@ export function createMap(opts) {
       if (floor !== miniFloorText) { miniFloorText = floor; miniFloor.textContent = floor; }
       if (open && current !== lastHeaderZone) { lastHeaderZone = current; headerContext.textContent = current ? `${current.name} · ${current.floor || '지상'}` : '서울특별시 서초구 · 반포동'; }
     }
-    if (!open) { if (miniClock >= 0.05) { miniClock %= 0.05; drawMini(); } return; }
+    if (!open) { if (miniClock >= 0.05) { const force = miniClock >= 1; miniClock %= 0.05; drawMini(force); } return; }
     if (miniClock >= 0.05) miniClock %= 0.05;
     if (flight.active) {
       const t = 1 - Math.exp(-elapsed * 9); view.x += (flight.x - view.x) * t; view.z += (flight.z - view.z) * t; view.scale += (flight.scale - view.scale) * t;

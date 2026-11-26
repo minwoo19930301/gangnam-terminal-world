@@ -17,6 +17,22 @@ try {
   const report=JSON.parse(await readFile(path.join(work,'summary.json')));
   const catalog=async file=>JSON.parse(gunzipSync(await readFile(path.join(work,file))));
   const [base,changed]=await Promise.all([catalog('original.gz'),catalog('changed.gz')]);
+  const tileRoot=path.join(dir,'building-tiles'), index=JSON.parse(await readFile(path.join(tileRoot,'index.json')));
+  const tiled={};
+  for (const key of index.omit) tiled[key]=['omit',[],[],[]];
+  for (const tile of index.tiles) {
+    const chunk=JSON.parse(gunzipSync(await readFile(path.join(tileRoot,tile.file))));
+    for (const [key,row] of Object.entries(chunk)) {
+      assert.ok(!(key in tiled), 'a building may only be in one tile');
+      const [west,north,east,south]=tile.bounds;
+      for (let i=0;i<row[2].length;i+=3) {
+        const x=row[2][i]/100,z=row[2][i+2]/100;
+        assert.ok(x>=west && x<=east && z>=north && z<=south, 'tile bounds enclose its whole building');
+      }
+      tiled[key]=row;
+    }
+  }
+  assert.deepEqual(tiled,base,'streamed districts must reproduce the editable city');
   const keys=Object.keys(base).filter(k=>JSON.stringify(base[k])!==JSON.stringify(changed[k]));
   assert.deepEqual(keys,[report.gameShell]);
   const name=keys[0];
