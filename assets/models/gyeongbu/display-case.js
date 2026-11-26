@@ -8,7 +8,7 @@ function displayObject(mesh, source) {
 }
 
 // Each counter keeps its own cached mesh library. The coarse body is the visibility probe.
-export function displayCase({url,name,width,height,depth,baseColor,bodyName,lightName}){
+export function displayCase({url,name,width,height,depth,baseColor,bodyName,lightName,enter=10,leave=14,visibleBounds}){
   let library,loading,retryAt=0;
   function request(){
     if(library || loading || performance.now()<retryAt)return;
@@ -39,9 +39,20 @@ export function displayCase({url,name,width,height,depth,baseColor,bodyName,ligh
       stand.add(displayLight);
     }
     const floor=relief(x,z);
+    // A long, shallow bank can surround the eye with its bounding sphere even when it is behind the visitor.
+    let bounds,frustum,projection;
+    if(visibleBounds){
+      bounds=new T.Box3(new T.Vector3(...visibleBounds[0]),new T.Vector3(...visibleBounds[1]));
+      frustum=new T.Frustum();projection=new T.Matrix4();
+      coarse.boundingSphere=bounds.getBoundingSphere(new T.Sphere());
+    }
     body.onBeforeRender=(_renderer,_scene,camera)=>{
-      const eye=camera.position,range=pane.visible?14:10;
-      const near=eye.y>floor-.15 && eye.y<floor+3.8 && (eye.x-x)**2+(eye.z-z)**2<range*range;
+      const eye=camera.position,range=pane.visible?leave:enter;
+      let near=eye.y>floor-.15 && eye.y<floor+3.8 && (eye.x-x)**2+(eye.z-z)**2<range*range;
+      if(near && bounds && !pane.visible){
+        projection.multiplyMatrices(camera.projectionMatrix,camera.matrixWorldInverse).multiply(stand.matrixWorld);
+        near=frustum.setFromProjectionMatrix(projection,camera.coordinateSystem).intersectsBox(bounds);
+      }
       if(near && !library)request();
       if(near && library && !pane.visible){
         displayObject(body,library.body);body.material=painted;
@@ -53,6 +64,6 @@ export function displayCase({url,name,width,height,depth,baseColor,bodyName,ligh
         if(displayLight)displayLight.visible=false;
       }
     };
-    K.addMesh(stand);
+    return K.addMesh(stand);
   };
 }

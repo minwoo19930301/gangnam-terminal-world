@@ -1,3 +1,4 @@
+import { placeTicketOffice } from '../../assets/models/gyeongbu-ticket-office/model.js';
 import { placeDeparturePortal } from '../../assets/models/gyeongbu-boards/model.js';
 import { placeIceCreamShop } from '../../assets/models/gyeongbu-icecream/model.js';
 import { placeWarmer } from '../../assets/models/gyeongbu-pretzels/model.js';
@@ -750,7 +751,7 @@ export function build(K) {
   buildHall();buildPhotoWalk20Hall();buildBasement();buildUpper();buildYards();buildWalk13();buildWalk15Public();buildWalk17Interiors();
   lspawn('경부선 터미널 정문',163,-16,0,0,1);
   lspawn('1층 대합실',70.5,89,0,0,-1);
-  lspawn('1층 매표·환불',58,38,0,1,0);
+  lspawn('1층 매표·환불',58,38,0,-1,0);
   lspawn('1층 무인발권기',166,25.3,0,0,-1);
   lspawn('1층 할리스 아래 통로',173,25,0,0,-1);
   lspawn('승차홈과 버스 마당',77.2,98,0,0,-1);
@@ -1151,16 +1152,29 @@ export function build(K) {
     lwall(25,140,64,140,0,5.6,{mat:0xe9e3d6,thick:.18});
     lwall(59,144.4,64.5,144.4,0,3.3,{mat:0xc4c2b6,thick:.15});
     furnish(() => {
-    for(let u=25;u<64;u+=.3)lbox(u,140.13,3.65,.025,.025,1.95,0xd6cfc0,{solid:false});
-    lbox(36,140.2,.1,20,.3,2.75,0x181e22,{solid:false});lbox(36,141.1,0,20,1.25,1.02,0x272b2a);lbox(36,141.2,1.02,20,1.45,.07,0x444641,{solid:false});
-    lbox(36,140.9,2.95,20,1.2,.7,0xf4f2ee,{solid:false});
-    for(const side of [-1,1])for(let k=0;k<8;k++){const a=k*PI/16,b=(k+1)*PI/16;const q=(t,r)=>{const[x,z]=W(36+side*(9.4+r*Math.cos(t)),141.51);return[x,2.95-r*Math.sin(t),z];};K.quad(0xf4f2ee,[q(a,.6),q(b,.6),q(b,1.3),q(a,1.3)],[B[0],0,B[1]]);}
-    lsign('Ⓣ TICKETS 매표소',35.7,141.53,3.3,8,.5,'+v',{bg:null,fg:'#fafbf7',padding:.01});
-    lsign('',36,140.42,2.3,20,1.1,'+v',{bg:'#0d2a52'});
-    for(let col=0;col<3;col++)for(let row=0;row<6;row++)lsign(['09:15  세종  13   09:20  대전  11','09:20  천안  14   09:20  공주  16','09:21  아산  16   09:25  부산   1','09:30  강릉  23   09:30  원주  25','09:35  청주  34   09:40  창원   4','09:45  울산   6   09:50  진주   5'][row],29.5+col*6.4,140.45,2.73-row*.17,6.2,.14,'+v',{bg:null,fg:'#91c9e7',padding:.005,offset:.035});
-    lsign(['승차권 안내','매표소'],45,140.5,2.3,2.5,1.08,'+v',{bg:'#7fb6e6',fg:'#19364b',offset:.04});
-    for(let col=0;col<10;col++){const u=27.4+col*1.88;lbox(u,140.7,1.13,.55,.14,.38,0x333a3b,{solid:false});lbox(u,141.4,1.1,1.68,.02,.65,doorGlass,{solid:false});lsign(String(col+1),u,140.43,1.47,.25,.18,'+v',{bg:null,fg:'#eee9da'});if(col%2===0){lbox(u+.8,141.1,1.1,.3,.3,.22,0x6b5b48,{solid:false});lbox(u+.8,141.1,1.32,.43,.4,.34,0x3f6943,{solid:false});}}
-    for(const u of [28,32,36,40,44])for(const v of [143.2,145.7]){lcyl(u,v,.02,.14,.035,0x343638,{seg:6,solid:false});lcyl(u,v,.05,.022,.89,0x454a49,{seg:4,solid:false});if(u<44)lbox(u+2,v,.84,4,.035,.055,0x333b3b,{solid:false});}
+    // The photographed full-width counter sits in front of the atrium pillars.
+    // The native set is in metres. Its parent is the rotated, 40%-scale legacy assembly.
+    const counterU=54.13,counterV=39.60;
+    const [counterX,counterZ]=W(counterU,counterV);
+    placeTicketOffice(K,counterX,counterZ,ROT+PI/2);
+    const authored=(u,v)=>[24+(44-v)/.4,137+(u-51.5)/.4];
+    const nativeFootprint=(x,d,w,depth,height)=>{
+      const [u,v]=authored(counterU+d,counterV-x);
+      lbox(u,v,0,w/.4,depth/.4,height,0,{skip:['top','bottom','n','s','e','w']});
+    };
+    nativeFootprint(0,.43,9.65,.77,1.05);
+    nativeFootprint(0,-.038,9.62,.11,5.6);
+    for(const side of [-1,1])nativeFootprint(side*4.99,-.02,.21,.64,2.60);
+    nativeFootprint(-1,1.43,.27,.16,1.43);
+    const nsign=(txt,x,d,h,w,height,options)=>{
+      const [u,v]=authored(counterU+d,counterV-x);
+      lsign(txt,u,v,h,w/.4,height,'+v',options);
+    };
+    nsign('표 사는 곳',.36,.37,3.025,.72,.160,{bg:null,fg:'#373a3b',padding:.008,pxPerM:200});
+    nsign(['승차권 구매','카드 결제 안내'],-4.42,.578,1.192,.208,.184,
+      {bg:'#f3f2eb',fg:'#24435d',padding:.008,pxPerM:320});
+    nsign(['승차권 안내','승차권 예매 · 발권','환불 문의'], -1,1.454,1.232,.237,.29,
+      {bg:'#f4edda',fg:'#37414a',padding:.02,pxPerM:245});
     lquadH(48.8,140.1,58.7,143.5,.021,0x8d8f8c);lsign('Ⓣ TICKETS 무인발권기',53.3,141.73,3.17,7.8,.4,'+v',{bg:null,fg:'#55585a'});
     for(const u of [49.3,50.6,52.5,54.4,56.3,57.6]){kiosk(u,140.8);lcyl(u,141.3,2.84,.065,.03,'emit',{seg:6,solid:false});}
     for(const side of [-1,1]){const outer=53.3+side*5.05,center=outer-side*.8;lbox(outer,140.9,0,.28,1.6,2.35,0xf2f0e9);for(let i=0;i<8;i++){const a=i*PI/16,b=(i+1)*PI/16;const q=(t,r)=>{const[x,z]=W(center+side*r*Math.cos(t),141.7);return[x,2.35+r*Math.sin(t),z];};K.quad(0xf2f0e9,[q(a,.66),q(b,.66),q(b,.94),q(a,.94)],[B[0],0,B[1]]);}}
