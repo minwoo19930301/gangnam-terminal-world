@@ -1,4 +1,4 @@
-// Keep a visitor's pose and all five colours together when compacting a draw for the current camera.
+// Compact stationary transforms, per-tree tint and visitor pose colours together for the current camera.
 export function visitorView(T,scene,relief){
   const batches=[],projection=new T.Matrix4(),previous=new T.Matrix4(),frustum=new T.Frustum();
   const identity=new T.Matrix4(),sphere=new T.Sphere(),box=new T.Box3(),instance=new T.Matrix4();
@@ -50,7 +50,7 @@ export function visitorView(T,scene,relief){
     if(mesh.count<6)return;
     const capacity=mesh.count,parts=mesh.userData.lod;
     box.makeEmpty();
-    for(const g of parts){g.computeBoundingBox();box.union(g.boundingBox);}
+    for(const g of parts){if(!g.boundingBox)g.computeBoundingBox();box.union(g.boundingBox);}
     const local=box.getBoundingSphere(new T.Sphere()),spheres=new Float32Array(capacity*4);
     const hull=new T.Box3(),drawn=new Uint32Array(capacity);
     for(let i=0;i<capacity;i++){
@@ -59,7 +59,7 @@ export function visitorView(T,scene,relief){
       sphere.radius+=.025;sphere.center.toArray(spheres,i*4);spheres[i*4+3]=sphere.radius;
       sphere.getBoundingBox(box);hull.union(box);drawn[i]=i;
     }
-    const attrs=[mesh.instanceMatrix,...Object.values(parts[0].attributes).filter(a=>a.isInstancedBufferAttribute)];
+    const attrs=[mesh.instanceMatrix,...(mesh.instanceColor?[mesh.instanceColor]:[]),...Object.values(parts[0].attributes).filter(a=>a.isInstancedBufferAttribute)];
     const inputs=attrs.map(a=>[a,a.array.slice()]);
     batches.push({mesh,capacity,spheres,drawn,now:new Uint32Array(capacity),bounds:hull.getBoundingSphere(new T.Sphere()),inputs,seen:-1});
   };

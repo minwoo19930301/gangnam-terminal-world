@@ -25,7 +25,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
   const deckVisibility = interiorView ? createDeckVisibility() : null;
   const staticVisibility = streetBatchView(THREE,scene,deckVisibility);
   const streetVisibility = streetView ? staticVisibility : null;
-  const clipVisitors=visitorView(THREE,scene,relief);
+  const clipStaticInstances=visitorView(THREE,scene,relief);
   const T = createTextures(THREE, { maxAniso });
   // big atlas pages mean fewer materials → fewer draw calls (the bottleneck on slow CPUs); low tier draws signs
   // at a lower pixel density (resolution only — every sign is still there)
@@ -1304,6 +1304,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
         for (const mesh of treeInstances(THREE, group.idx.map(i => trees[first + i]))) {
           scene.add(mesh);
           track(mesh, group.cell);
+          clipStaticInstances(mesh);
           lodList.push(mesh);
         }
       }
@@ -1317,7 +1318,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
         for (const mesh of visitorInstances(THREE,people,group.idx.map(i => start+i))) {
           scene.add(mesh);
           track(mesh,group.cell);
-          clipVisitors(mesh);
+          clipStaticInstances(mesh);
           lodList.push(mesh);
         }
       }
