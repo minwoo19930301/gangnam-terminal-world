@@ -307,7 +307,9 @@ function visibilityProbes(THREE, renderer, scene) {
         if (!gl.getQueryParameter(slot.query,gl.QUERY_RESULT_AVAILABLE)) continue;
         const r = slot.record;
         const sameView = slot.eye.distanceToSquared(camera.position)<100 && slot.rotation.angleTo(camera.quaternion)<.25;
-        r.seen = sameView && !!gl.getQueryParameter(slot.query,gl.QUERY_RESULT);
+        // A result from an old view cannot establish occlusion in the new one.
+        // Keep an already shown facade until a fresh probe or the frustum rules it out.
+        r.seen = sameView ? !!gl.getQueryParameter(slot.query,gl.QUERY_RESULT) : !!r.root?.visible;
         r.checkAgain = sameView ? now + (r.seen ? 3000 : 1100) : 0;
         r.testing = false;
         slot.record = null;
