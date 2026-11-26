@@ -790,8 +790,8 @@ export function build(K) {
   zf('3F', '연회장 살롱 1–6 · 프리펑션');
   zf('4F', '웨딩 상담 · 연회 사무실');
   zf('5F', '그랜드 볼룸 (천고 7m · 버진로드 21m) · 신부 대기실');
-  zf('6F', '연회 지원 · 볼룸 상부 (직원 구역)');
-  zf('7F', 'JW 가든 · 더 마고 그릴 · 모보 바', FPL);
+  zf('6F', '연회 지원 · 볼룸 상부 (직원 구역)', [UW,0,UE,60.5]);
+  zf('7F', 'JW 가든 · 더 마고 그릴 · 모보 바', [UW,0,UE,60.5]);
   zf('8F', '로비 · 프런트 데스크(체크인) · 더 라운지');
   zf('9F', '이그제큐티브 라운지 · 비즈니스 센터');
   zf('10F', '사무실');
@@ -1739,7 +1739,7 @@ export function build(K) {
     SG(['MOBO BAR'], { u: 4, v: 21.75, y: y + 3.6, w: 4.5, h: 0.7, f: 'N', bg: '#6b4a32', fg: '#e0b870', sub: '모보 바' });
     LIGHTS([-7.85, 6.1, 15.85, 22], yc, 3.2, 0.3, 0xffc880);
     CROWD([-3.8, 8, 8.2, 20], y, 6, 701);
-    SUBZ('모보 바', '7F', '바 · 칵테일 · 야외 테라스', [-8, -6, 16, 22]);
+    SUBZ('모보 바', '7F', '바 · 칵테일 · 야외 테라스', [-8, 6, 16, 22]);
     // foyer and wine cellar
     HP({ tex: 'darkstone', color: 0x7c7064 }, [-7.85, 22, 8.85, 40], y + 0.01);
     WL(-1, 24, -1, 38, y, y + 3.4, { mat: GL, thick: 0.05, openings: [{ at: 7, w: 1.4, y0: y, y1: y + 2.4 }] });
@@ -1786,36 +1786,39 @@ export function build(K) {
     DEC(()=>margauxChairs(baseKit,diningRows));
     fixture('display',6.05,40.23,y+.70);
     // Herb beds sit inside the existing lawn edge along the public garden path.
-    for (const v of [-13, -15, -17]) fixture('herbs', -7.85, v, y + .03, Math.PI / 2);
+    for (const v of [13, 15, 17]) fixture('herbs', -13.5, v, y + .03, Math.PI / 2);
 
     SG(['THE MARGAUX GRILL'], { u: 3.5, v: 40.3, y: y + 3.6, w: 6.5, h: 0.65, f: 'S', bg: '#6b4a32', fg: '#e0b870', sub: '더 마고 그릴' });
     LIGHTS([-7.85, 40, 10.5, 57.9], yc, 3.0, 0.3, 0xffd8a0);
     CROWD([-7, 41, 9, 57], y, 16, 702);
     SUBZ('더 마고 그릴', '7F', '우드 파이어 그릴 · 스테이크', [-8, 40, 16, 58]);
     // ---- outdoor: JW 가든 on the podium roof ----
+    // The physical roof and parapet end at v=0. Fit the garden to the
+    // supported strip beside the pavilion and keep the north bar door clear.
+    // The operator documents the garden and dining on 7F, not surveyed dimensions.
     const gy = y + 0.03;
-    HP({ tex: 'wood', color: 0x9a7452 }, [-8, -6, 16, 5.9], gy);
-    for (const [u, v] of [[-5, -3], [0, 2.5], [5, -3], [10, 2.5], [14, -3]]) { TABLE(u, v, y, { r: 0.5, chairs: 4, top: 0xeeeeee, chair: 0x2b2b2b }); CY(u, v, y + 0.74, 0.04, 1.6, 0xdddddd, { seg: 4, solid: false, caps: false }); CY(u, v, y + 2.3, 1.4, 0.06, 0xf2ede4, { seg: 10, solid: false }); }
-    const lawns = [[-31, -58, -7, -10], [7, -58, 31, -10], [-31, 8, -11, 56], [19, 8, 31, 56], [-31, -8, -12, 5]];
+    HP({ tex: 'wood', color: 0x9a7452 }, [-8, .45, 16, 5.9], gy);
+    for (const [u, v] of [[-5, 2.8], [0, 2.5], [9, 2.5], [14, 2.8]]) { TABLE(u, v, y, { r: 0.5, chairs: 4, top: 0xeeeeee, chair: 0x2b2b2b }); CY(u, v, y + 0.74, 0.04, 1.6, 0xdddddd, { seg: 4, solid: false, caps: false }); CY(u, v, y + 2.3, 1.4, 0.06, 0xf2ede4, { seg: 10, solid: false }); }
+    const lawns = [[-31, 8, -24, 56], [-17, 8, -12, 56], [19, 8, 31, 56]];
     for (const r of lawns) { HP({ tex: 'grass', color: 0x8db86a }, r, gy); const [a, b, c, d] = r; for (const [p, q, s, t] of [[a, b, c, b], [a, d, c, d], [a, b, a, d], [c, b, c, d]]) { const horiz = q === t; B({ u: (p + s) / 2, v: (q + t) / 2, y, w: horiz ? Math.abs(s - p) : 0.5, d: horiz ? 0.5 : Math.abs(t - q), h: 0.55, mat: 0x4e7a3c, top: 0x5a8a44 }); } }
-    HP({ tex: 'darkstone', color: 0xc9bfae }, [-5, -60, 5, -6], gy + 0.005);
-    B({ u: 0, v: -34, y, w: 9, d: 17, h: 0.5, mat: STONE, top: STONE, solid: true, skip: [] });
-    HP('water', [-4, -42, 4, -26], y + 0.52);
-    for (let i = 0; i < 6; i++) CY(-2.4 + (i % 3) * 2.4, -38 + Math.floor(i / 3) * 8, y + 0.5, 0.08, 0.9, { tex: 'emit', color: 0xdff2ff }, { seg: 6, solid: false });
+    HP({ tex: 'darkstone', color: 0xc9bfae }, [-23.6, 5.5, -17.4, 57], gy + 0.005);
+    B({ u: -20.5, v: 31, y, w: 3.1, d: 17, h: 0.5, mat: STONE, top: STONE, solid: true, skip: [] });
+    HP('water', [-21.85, 23, -19.15, 39], y + 0.52);
+    for (let i = 0; i < 6; i++) CY(-21.3 + (i % 3) * .8, 27 + Math.floor(i / 3) * 8, y + 0.5, 0.08, 0.9, { tex: 'emit', color: 0xdff2ff }, { seg: 6, solid: false });
     const trees = [];
-    for (let u = -28; u <= -10; u += 6) for (let v = -54; v <= -14; v += 8) trees.push([u, v, 'zelkova']);
-    for (let u = 10; u <= 28; u += 6) for (let v = -54; v <= -14; v += 8) trees.push([u, v, 'cherry']);
-    for (let v = 12; v <= 52; v += 8) { trees.push([-21, v, 'pine']); trees.push([25, v, 'zelkova']); }
+    for (let v = 12; v <= 52; v += 8) {
+      trees.push([-27.5,v,'zelkova'],[-14.5,v,'cherry'],[25,v,'zelkova']);
+    }
     for (const [u, v, kind] of trees) TREE(u, v, y + 0.55, { h: 4.5 + rnd() * 2, kind });
-    for (const [u, v, f] of [[-6.2, -48, 'E'], [6.2, -48, 'W'], [-6.2, -20, 'E'], [6.2, -20, 'W'], [-9.3, 30, 'W'], [17.4, 30, 'E']]) { B({ u, v, y, w: f === 'E' || f === 'W' ? 0.6 : 2, d: f === 'E' || f === 'W' ? 2 : 0.6, h: 0.45, mat: { tex: 'wood', color: 0x9a7452 } }); }
+    for (const [u, v, f] of [[-23.3, 46, 'E'], [-17.7, 46, 'W'], [-23.3, 18, 'E'], [-17.7, 18, 'W'], [-9.3, 30, 'W'], [17.4, 30, 'E']]) { B({ u, v, y, w: f === 'E' || f === 'W' ? 0.6 : 2, d: f === 'E' || f === 'W' ? 2 : 0.6, h: 0.45, mat: { tex: 'wood', color: 0x9a7452 } }); }
     // pergola over the terrace edge
-    for (let u = -7; u <= 15; u += 5.5) for (const v of [-6.5, 5.5]) if (!(v > 0 && Math.abs(u - 4) < 2)) CY(u, v, y, 0.12, 3, 0x3b302a, { seg: 6 });
-    for (let u = -7.5; u <= 15.5; u += 0.9) B({ u, v: -0.5, y: y + 3, w: 0.12, d: 12.6, h: 0.18, mat: 0x3b302a, solid: false });
-    B({ u: 0, v: -59.2, y, w: 4.4, d: 0.6, h: 1.2, mat: { tex: 'jwStone' } }); SG(['JW 가든'], { u: 0, v: -58.85, y: y + 0.8, w: 3.4, h: 0.5, f: 'S', bg: '#d9ccb6', fg: '#5a4630' });
-    SG(['JW GARDEN'], { u: 0, v: -9, y: y + 2.4, w: 3.2, h: 0.45, f: 'N', bg: '#2b241d', fg: '#efe2c4', twoSided: true });
-    CROWD([-6, -55, 6, -8], y, 10, 703); CROWD([-7, -5, 15, 5], y, 8, 704);
-    SUBZ('리플렉팅 풀', '7F', 'JW 가든 수경 시설', [-4.5, -42.5, 4.5, -25.5]); SUBZ('모보 바 테라스', '7F', '파라솔 좌석 · 퍼골라', [-8, -6.5, 16, 5.9]); SUBZ('정원 산책로', '7F', 'JW 가든', [-5, -60.4, 5, -6]); SUBZ('그릴 오픈 키친', '7F', '더 마고 그릴 · 우드 파이어', [10.8, 41, 15.85, 57]);
-    SUBZ('JW 가든', '7F', '루프탑 정원 · 모보 바 테라스', [-33, -60.4, 33, 6]);
+    for (let u = -7; u <= 15; u += 5.5) for (const v of [.65, 5.5]) if (!(v > 0 && Math.abs(u - 4) < 2)) CY(u, v, y, 0.12, 3, 0x3b302a, { seg: 6 });
+    for (let u = -7.5; u <= 15.5; u += 0.9) B({ u, v: 3.1, y: y + 3, w: 0.12, d: 5.3, h: 0.18, mat: 0x3b302a, solid: false });
+    B({ u: -20.5, v: 56.8, y, w: 4.4, d: 0.6, h: 1.2, mat: { tex: 'jwStone' } }); SG(['JW 가든'], { u: -20.5, v: 56.45, y: y + 0.8, w: 3.4, h: 0.5, f: 'N', bg: '#d9ccb6', fg: '#5a4630' });
+    SG(['JW GARDEN'], { u: -20.5, v: 7, y: y + 2.4, w: 3.2, h: 0.45, f: 'N', bg: '#2b241d', fg: '#efe2c4', twoSided: true });
+    CROWD([-23.5, 9, -17.5, 22], y, 10, 703); CROWD([-7, 1, 15, 5], y, 8, 704);
+    SUBZ('리플렉팅 풀', '7F', 'JW 가든 수경 시설', [-22.05, 22.5, -18.95, 39.5]); SUBZ('모보 바 테라스', '7F', '파라솔 좌석 · 퍼골라', [-8, .45, 16, 5.9]); SUBZ('정원 산책로', '7F', 'JW 가든', [-23.6, 5.5, -17.4, 57]); SUBZ('그릴 오픈 키친', '7F', '더 마고 그릴 · 우드 파이어', [10.8, 41, 15.85, 57]);
+    SUBZ('JW 가든', '7F', '루프탑 정원 · 모보 바 테라스', [-33, .25, -8.1, 60.3]);
   }
 
   // =====================================================================
