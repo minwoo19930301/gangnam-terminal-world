@@ -1,3 +1,4 @@
+import { placeWarmer } from '../../assets/models/gyeongbu-pretzels/model.js';
 import { placeUpperShowroom } from '../../assets/models/gyeongbu-apparel/model.js';
 import { coachGlazing } from '../../assets/models/coach-cabin/windows.js';
 import { placeCutFlowers } from '../../assets/models/gyeongbu-cutflowers/model.js';
@@ -860,13 +861,16 @@ export function build(K) {
         // The two shop backs adjoin the open B1–1F escalator well. Set shelves
         // against the shop side so stock does not project above rising riders.
         const besideWell = v0 === 73 && j < 2;
-        if(name!=='죠 샌드위치') lbox(besideWell ? 63.6 : 58.5,v,.1,.65,step-.8,2.1,0xe2d9c6,{side:'gb_shelf'});
+        if(name!=='죠 샌드위치' && name!=='앤티앤스') lbox(besideWell ? 63.6 : 58.5,v,.1,.65,step-.8,2.1,0xe2d9c6,{side:'gb_shelf'});
         lbox(63,v,3.17,.6,step-.8,.025,'emit',{solid:false});
         if(food){
           lbox(66.65,v,0,.6,step-.35,1,'gb6_countertile');lbox(66.7,v,1,.8,step-.3,.055,0xc9cdcf,{solid:false});
           for(let vv=a+.6;vv<b-.4;vv+=1.05){lbox(67.55,vv,.75,.43,.43,.075,0x886848);for(const du of [-.17,.17])lbox(67.55+du,vv,0,.035,.34,.75,0x3c3a35,{solid:false});lbox(67.77,vv,.82,.045,.4,.36,0x646a67,{solid:false});}
           for(let vv=a+.65;vv<b-.3;vv+=1.1){lsign('',66.56,vv,2.17,.99,.59,'+u',{bg:'#c8102e'});lsign([name,'메뉴 안내'],66.59,vv,2.17,.9,.5,'+u',{bg:'#f8f6ee',fg:'#35312b',offset:.035});}
-          for(const end of [a,b])lsign(name,62.2,end+(end===a?-.09:.09),2.7,5.2,.5,end===a?'-v':'+v',{bg:'#3a3634',fg:'#fff'});
+          for(const end of [a,b]){
+            const inside=name==='시그니처랩' && end===b;
+            lsign(name,62.2,end+(end===a||inside?-.09:.09),2.7,5.2,.5,end===a||inside?'-v':'+v',{bg:'#3a3634',fg:'#fff'});
+          }
         }else if(name==='DUNKIN’'){
           for(let k=0;k<3;k++){const vv=a+1.05+k*1.9;lbox(65.8,vv,.05,.95,1.68,1.95,0xbbbdb5,{side:'gb_shelf'});lbox(66.31,vv,.22,.025,1.55,1.65,doorGlass,{solid:false});for(const y of [.28,.74,1.2,1.66])lbox(66.35,vv,y,.04,1.55,.028,'emit',{solid:false});}
           lbox(64.9,v,2.1,.05,step-.5,.05,{tex:'emit',color:0xff3d8b},{solid:false});
@@ -888,6 +892,23 @@ export function build(K) {
             lbox(61.25,v+dv,.42,.48,.48,.06,0x3d4140,{solid:false});
           }
           lbox(64.8,v+step*.32,.28,1.0,step*.26,.50,0x719738,{solid:false});
+        }else if(name==='앤티앤스'){
+          // The guest's branch photo shows open trays of paper-wrapped stix and hot dogs.
+          // Keep the stock behind the existing customer aisle and out of the glass doorway.
+          lbox(64.1,v,0,.76,6.05,1.02,0,{skip:['top','bottom','n','s','e','w']});
+          const warmerU=64.1+moved.to[0],warmerV=v+moved.to[1];
+          const [wx,wz]=W(warmerU,warmerV);
+          placeWarmer(K,wx,wz,ROT+PI/2);
+          for(const [offset,title] of [[-1.18,'아몬드 크림치즈'],[-.92,'소금빵 크림치즈'],[-.66,'크림치즈 스틱'],
+              [-.40,'시나몬 슈가'],[-.14,'아몬드 스틱'],[.12,'오리지널 스틱'],[.375,'할라피뇨 치즈 핫도그'],[.736,'블랙페퍼 치즈 핫도그']]){
+            const upper=offset<.30;
+            lsign(title,64.1+(upper?.319:.356),v-offset,upper?1.408:1.115,.223,.045,'+u',
+              {bg:null,fg:'#282e35',padding:0,pxPerM:350});
+          }
+          // A neutral preparation wall closes the view into the unrelated shop beyond the warmer.
+          lbox(58.58,v,0,.15,step-.16,3.24,0xeae1cc,{solid:false});
+          lbox(59,v,0,.71,step-.45,.88,0x9a9d92);
+          lbox(59,v,.88,.74,step-.42,.036,0xd3c9b5,{solid:false});
         }else{lbox(64.1,v,0,.75,step-.9,1.7,0xe3e2d8,{side:'gb_shelf'});lbox(65.7,a+.9,0,1,.8,.95,0xc9baa1);}
         });
         lzone(name==='DUNKIN’'?'던킨':name,'1F','대합실 상점',56,a,67,b,0,4.5,4);
