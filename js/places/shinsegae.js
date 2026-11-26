@@ -1,4 +1,5 @@
 import {marketEntrance} from '../../assets/models/ssg-market-entrance/model.js';
+import {b1Plan as B1_PLAN, departmentPoint as P, departmentWidth as UW, departmentDepth as VD, marketOutline, marketWestReturn} from './shinsegae-b1-plan.js';
 import {marketFruitIslands} from '../../assets/models/ssg-market-produce/model.js';
 import {pastryCounter} from '../../assets/models/ssg-bonmie/model.js';
 import { placeHypnos } from '../../assets/models/hypnos-showroom/model.js';
@@ -149,12 +150,8 @@ export const meta = {
 
 // ---------------------------------------------------------------- frame
 const RA = 0.3631, CA = Math.cos(RA), SA = Math.sin(RA);
-const OX = -107.07, OZ = -24.31, UW = 67, VD = 84.7;
+const [OX, OZ] = P(0,0);
 const PI = Math.PI;
-// R20: rotate each plan rather than reflecting it. B1 is fitted in native
-// source pixels to the user's escalator / rotunda controls (about .133 m/px).
-const B1_PLAN=(px,py)=>[33.163950553-.133*(py*1500/1367-548),58.979162098+.133*(px*2000/1823-860)];
-
 // floor levels (walkable top). 1F is a tall luxury hall with the 1M mezzanine inside it.
 const LV = { B2: -11, B1: -6, '1F': 0, '1M': 3.6, '2F': 7, '3F': 11.8, '4F': 16.6, '5F': 21.4, '6F': 26.2, '7F': 31, '8F': 35.8, '9F': 40.6, '10F': 45.4, '11F': 50.2, RF: 55 };
 // thickness of the slab whose top is at that level (its underside = ceiling of the floor below)
@@ -220,13 +217,6 @@ export function build(K) {
   const visitTime = Date.now();
   const novemberPopupsOpen = visitTime >= Date.parse('2026-11-12T00:00:00+09:00') &&
     visitTime < Date.parse('2026-11-26T00:00:00+09:00');
-  // Bilinear survey frame: all four wall corners land on the authoritative OSM footprint.
-  // Keep RA only for small rectangular fittings (the footprint has a slight skew).
-  const P = (u, v) => {
-    const a = u / UW, b = v / VD;
-    return [OX + 62.61 * a + 30.43 * b - 0.32 * a * b,
-      OZ - 23.77 * a + 79.03 * b + 0.13 * a * b];
-  };
   const rect = (u0, v0, u1, v1) => Object.assign([P(u0, v0), P(u1, v0), P(u1, v1), P(u0, v1)],{uvBounds:[Math.min(u0,u1),Math.min(v0,v1),Math.max(u0,u1),Math.max(v0,v1)]});
   // Merge touching rectangular holes before triangulation: overlapping holes
   // would let the rendered slab disagree with the physics surface.
@@ -250,6 +240,7 @@ export function build(K) {
   const yawTo = (du, dv) => { const dx = du * CA + dv * SA, dz = -du * SA + dv * CA; return Math.atan2(-dx, -dz); };
   const rnd = K.rand(20001003);
   const FULL = rect(0, 0, UW, VD);
+  const basementOutline = [...FULL, ...marketWestReturn];
   // Warm gypsum for luxury/food rooms; sports floors receive a separate open coffer grid.
   K.material('ssg_ceil', new K.THREE.MeshLambertMaterial({ color: 0xf6f1e8, emissive: 0x9a9286 }));
   K.material('ssg_cos_window',new K.THREE.MeshLambertMaterial({color:0xffffff,vertexColors:true,transparent:true,opacity:.12,depthWrite:false,side:K.THREE.DoubleSide}));
@@ -459,10 +450,9 @@ export function build(K) {
   K.polyWalls(FULL, LV.B2, LV.B1, { mat: 'concrete', inner: 0xb3b1a7, thick: 0.3, openings: [
     { x: P(UW, 54.5)[0], z: P(UW, 54.5)[1], w: 6.5, y0: LV.B2, y1: -8.2 },
   ] });
-  K.polyWalls(FULL, LV.B1, 0, { mat: 'concrete', inner: IN, thick: 0.3, openings: [
+  K.polyWalls(basementOutline, LV.B1, 0, { mat: 'concrete', inner: IN, thick: 0.3, openings: [
     { x: P(39.65, 0)[0], z: P(39.65, 0)[1], w: 9, y0: LV.B1, y1: -2.7 },
     {x:-42.72,z:41.85,w:6.5,y0:LV.B1,y1:-2.4},
-    { x: -92, z: 15.5, w: 8, y0: LV.B1, y1: -3 },
   ] });
   const dOp = (s, w = 6) => ({ s, w, y0: 0, y1: 5.86 });
   // Ground contact follows OSM; the central portal alone is set back into the slot.
@@ -1028,7 +1018,8 @@ export function build(K) {
     // L09: retain all upper tenant registrations, opening only the photographed vertical atrium.
     if (id==='11F') holes.push(rect(...photoAtrium(id)));
     if (s >= 1) for (const c of (s===1||s>MAIN.indexOf('8F')?BASE_CORES:CORES)) if (s <= coreTop(c) && !(id==='1F'||id==='2F') && !(id==='B1'&&c.door==='W')) holes.push(stairHole(c, s));
-    K.slab(UPPER.has(id) ? rect(0, VS, UW, VD) : LV[id] >= LV['2F'] ? northOutline(VD, LV[id]) : FULL, LV[id], { mat: floorMat[id] ?? 'ssg_marble', thick: thick(id), holes:mergedHoles(holes), edge: false, walk:id!=='11F', under: id === 'B2' ? false : id === 'B1' ? { tex: 'concrete', color: 0xb4b2a9 } : CEIL });
+    const floorOutline = id === 'B1' ? basementOutline : UPPER.has(id) ? rect(0, VS, UW, VD) : LV[id] >= LV['2F'] ? northOutline(VD, LV[id]) : FULL;
+    K.slab(floorOutline, LV[id], { mat: floorMat[id] ?? 'ssg_marble', thick: thick(id), holes:mergedHoles(holes), edge: false, walk:id!=='11F', under: id === 'B2' ? false : id === 'B1' ? { tex: 'concrete', color: 0xb4b2a9 } : CEIL });
     if (['2F','3F','4F','5F'].includes(id)) {
       // Narrow level strip at the back of the relocated elevator cars.
       K.slab(rect(29,145.1,35,146.3),LV[id],{mat:floorMat[id]??'ssg_marble',thick:.12,under:false,ceil:false,edge:false});
@@ -2360,14 +2351,13 @@ export function build(K) {
     const BPOLY=pp=>clipLocal(pp.map(q=>BPLAN(...q))).map(q=>P(...q));
     const cells=[{"zone":"west_strip","name":"고래사어묵","rect":[428.4,346.31,468.51,371.82],"frontage_image":"S","kind":"deli"},{"zone":"west_strip","name":"JS가든 델리","rect":[401.06,362.71,420.2,406.45],"frontage_image":"E","kind":"deli"},{"zone":"west_strip","name":"동경라멘학교","rect":[401.06,413.75,420.2,440.17],"frontage_image":"E","kind":"deli"},{"zone":"west_strip","name":"에그롤린","rect":[428.4,382.76,448.46,407.37],"frontage_image":"W","kind":"deli"},{"zone":"west_strip","name":"구오 X 여경래","rect":[450.28,382.76,469.42,432.88],"frontage_image":"E","kind":"deli"},{"zone":"west_strip","name":"시아리","rect":[428.4,409.19,448.46,432.88],"frontage_image":"W","kind":"deli"},{"zone":"west_strip","name":"원디그리노스","rect":[428.4,443.82,447.55,478.45],"frontage_image":"W","kind":"deli"},{"zone":"west_strip","name":"교토 오니마루","rect":[449.37,443.82,468.51,515.81],"frontage_image":"E","kind":"deli"},{"zone":"west_strip","name":"야키토리코우키","rect":[428.4,480.27,447.55,515.81],"frontage_image":"W","kind":"deli"},{"zone":"west_strip","name":"서연","rect":[401.06,516.73,420.2,542.24],"frontage_image":"E","kind":"deli"},{"zone":"west_strip","name":"노가","rect":[428.4,527.66,447.55,552.27],"frontage_image":"W","kind":"deli"},{"zone":"west_strip","name":"하나하나","rect":[449.37,527.66,468.51,552.27],"frontage_image":"E","kind":"deli"},{"zone":"west_strip","name":"모스꼬라델리","rect":[401.06,546.8,420.2,579.61],"frontage_image":"E","kind":"deli"},{"zone":"west_strip","name":"호일당","rect":[428.4,554.09,447.55,578.7],"frontage_image":"W","kind":"deli"},{"zone":"west_strip","name":"방촌시장떡볶이","rect":[449.37,554.09,468.51,582.34],"frontage_image":"E","kind":"deli"},{"zone":"west_strip","name":"고은","rect":[401.06,595.1,432.96,619.71],"frontage_image":"N","kind":"deli"},{"zone":"west_strip","name":"오목집","rect":[434.79,595.1,467.6,619.71],"frontage_image":"N","kind":"deli"},{"zone":"north_deli","name":"도제","rect":[497.68,358.15,534.14,382.76],"frontage_image":"S","kind":"deli","label_uncertain":false},{"zone":"north_deli","name":"마음죽","rect":[535.96,358.15,572.42,382.76],"frontage_image":"S","kind":"deli","label_uncertain":false},{"zone":"north_deli","name":"더타코부스","rect":[620.73,358.15,655.37,382.76],"frontage_image":"S","kind":"deli","label_uncertain":true},{"zone":"north_deli","name":"위알 필라델피아","rect":[657.19,358.15,691.83,382.76],"frontage_image":"S","kind":"deli","label_uncertain":false},{"zone":"north_deli","name":"키키모아나","rect":[706.41,346.31,743.78,370.91],"frontage_image":"S","kind":"deli","label_uncertain":false},{"zone":"north_deli","name":"비첸향","rect":[745.61,359.07,811.24,379.11],"frontage_image":"S","kind":"deli","label_uncertain":false},{"zone":"north_deli","name":"트웰브 원더바","rect":[812.15,346.31,828.55,379.11],"frontage_image":"S","kind":"deli","label_uncertain":false},{"zone":"north_deli","name":"베통 키츠네트","rect":[853.16,346.31,915.15,379.11],"frontage_image":"S","kind":"deli","label_uncertain":false},{"zone":"north_deli","name":"온유가","rect":[499.5,400.99,529.58,423.77],"frontage_image":"S","kind":"deli","label_uncertain":false},{"zone":"north_deli","name":"델리카스타","rect":[499.5,425.59,529.58,451.11],"frontage_image":"S","kind":"deli","label_uncertain":false},{"zone":"north_deli","name":"블루버터플라이","rect":[531.4,400.99,551.46,451.11],"frontage_image":"S","kind":"deli","label_uncertain":false},{"zone":"north_deli","name":"베지스튜디오","rect":[564.22,400.99,595.21,423.77],"frontage_image":"S","kind":"deli","label_uncertain":false},{"zone":"north_deli","name":"남스델리","rect":[597.03,400.99,628.02,423.77],"frontage_image":"S","kind":"deli","label_uncertain":false},{"zone":"north_deli","name":"베키아에누보 가스트로","rect":[564.22,425.59,628.02,451.11],"frontage_image":"S","kind":"deli","label_uncertain":false},{"zone":"north_deli","name":"몰랑이수","rect":[638.05,400.99,659.01,451.11],"frontage_image":"S","kind":"deli","label_uncertain":false},{"zone":"north_deli","name":"와사비그린","rect":[660.84,400.99,691.83,423.77],"frontage_image":"S","kind":"deli","label_uncertain":false},{"zone":"north_deli","name":"파작","rect":[660.84,425.59,691.83,451.11],"frontage_image":"S","kind":"deli","label_uncertain":false},{"zone":"north_deli","name":"타마노카","rect":[709.15,400.99,749.25,423.77],"frontage_image":"S","kind":"deli","label_uncertain":false},{"zone":"north_deli","name":"오크베리 아사이","rect":[709.15,425.59,749.25,451.11],"frontage_image":"S","kind":"deli","label_uncertain":false},{"zone":"north_deli","name":"라플","rect":[853.16,400.99,883.24,425.59],"frontage_image":"S","kind":"deli","label_uncertain":false},{"zone":"north_deli","name":"pbs","rect":[885.07,400.99,915.15,425.59],"frontage_image":"S","kind":"deli","label_uncertain":false},{"zone":"north_deli","name":"베이크","rect":[853.16,427.42,915.15,451.11],"frontage_image":"S","kind":"deli","label_uncertain":false},{"zone":"north_deli","name":"본다이워시","rect":[749.25,452.93,798.47,467.51],"frontage_image":"S","kind":"retail","label_uncertain":false},{"zone":"north_deli","name":"고메시푸드","rect":[497.68,469.34,561.48,490.3],"frontage_image":"N","kind":"deli","label_uncertain":false},{"zone":"north_deli","name":"팝업","rect":[563.31,469.34,627.11,490.3],"frontage_image":"N","kind":"popup","label_uncertain":false},{"zone":"north_deli","name":"주스바","rect":[628.93,469.34,693.65,490.3],"frontage_image":"N","kind":"deli","label_uncertain":false},{"zone":"north_deli","name":"에맥앤볼리오스 / 고디바크레페","rect":[865.92,488.47,919.7,524.93],"frontage_image":"N","kind":"deli","label_uncertain":false},{"zone":"north_deli","name":"기프트 컨시어지","rect":[753.81,529.48,784.8,555.0],"frontage_image":"N","kind":"service","label_uncertain":false},{"zone":"north_deli","name":"팝업","rect":[786.62,529.48,818.53,555.0],"frontage_image":"N","kind":"popup","label_uncertain":false},{"zone":"north_deli","name":"포장 / 전통주","rect":[949.78,367.27,988.98,391.87],"frontage_image":"S","kind":"retail","label_uncertain":false},{"zone":"north_deli","name":"정관장 · 건강식품","rect":[949.78,393.7,1030.91,452.93],"frontage_image":"S","kind":"retail","brands":["정관장","강개상인","뉴트리코어","오쏘몰","GNC","솔가","콤비타","레이델","메리루스","경옥채","프로젝트라이프","발렌"],"label_uncertain":true},{"zone":"centre","name":"발효곳간","rect":[840.4,538.6,918.79,654.34],"frontage_image":"W","kind":"retail"},{"zone":"centre","name":"자주","rect":[920.62,538.6,956.16,573.23],"frontage_image":"N","kind":"retail"},{"zone":"centre","name":"보앤미","rect":[841.31,656.16,919.7,776.46],"frontage_image":"W","kind":"retail"},{"zone":"centre","name":"와인하우스","rect":[906.94,717.22,988.98,776.46],"frontage_image":"S","kind":"wine"},{"zone":"centre","name":"오설록","rect":[968.92,729.07,1018.15,776.46],"frontage_image":"S","kind":"cafe"},{"zone":"centre","name":"커피스니퍼","rect":[950.69,489.39,1030.91,533.13],"frontage_image":"N","kind":"cafe"},{"zone":"centre","name":"격물공부","rect":[780.24,776.46,813.97,798.33],"frontage_image":"S","kind":"retail"},{"zone":"centre","name":"고려당","rect":[735.58,800.15,820.35,871.23],"frontage_image":"SE","kind":"bakery"},{"zone":"centre","name":"인텔리젠시아","rect":[842.23,798.33,903.3,839.34],"frontage_image":"N","kind":"cafe"},{"zone":"centre","name":"소금집","rect":[905.12,798.33,966.19,839.34],"frontage_image":"N","kind":"deli"},{"zone":"centre","name":"네스프레소","rect":[968.01,798.33,1029.08,839.34],"frontage_image":"N","kind":"cafe"},{"zone":"market","name":"신세계 마켓","rect":[499.5,490.3,818.53,774.63],"frontage_image":"N","kind":"supermarket"},{"zone":"west_strip","name":"이벤트홀","rect":[401.06,621.53,467.6,731.8],"frontage_image":"E","kind":"event"},{"zone":"sw_plaza","name":"특설행사장","rect":[372.8,845.72,572.42,997.0],"frontage_image":"E","kind":"event"},{"zone":"sw_plaza","name":"패션 액세서리","rect":[497.68,846.63,621.64,960.55],"frontage_image":"S","kind":"accessories"},{"zone":"sw_plaza","name":"러쉬","rect":[711.88,846.63,758.37,890.37],"frontage_image":"SE","kind":"retail"},{"zone":"sw_plaza","name":"메가박스 영화관","rect":[623.47,874.88,903.3,1153.75],"frontage_image":"NW","kind":"cinema"},{"zone":"sw_plaza","name":"카멜커피","rect":[686.36,1027.98,734.67,1119.12],"frontage_image":"NW","kind":"cafe"},{"zone":"sw_plaza","name":"영풍문고","rect":[623.47,1063.53,733.76,1122.76],"frontage_image":"N","kind":"books"},{"zone":"sw_plaza","name":"스포츠 슈 전문관","rect":[373.71,1030.72,623.47,1153.75],"frontage_image":"N","kind":"shoes"},{"zone":"service","name":"북서 화장실","rect":[399.24,324.43,418.38,344.48],"frontage_image":"S","kind":"service"},{"zone":"service","name":"북동 화장실","rect":[990.8,326.26,1030.91,391.87],"frontage_image":"S","kind":"service"},{"zone":"service","name":"마켓 엘리베이터","rect":[541.43,598.75,614.35,656.16],"frontage_image":"S","kind":"service"},{"zone":"service","name":"북측 엘리베이터","rect":[914.23,313.5,958.9,345.4],"frontage_image":"S","kind":"service"},{"zone":"service","name":"소형 무인 물품 보관함","rect":[499.5,790.13,692.74,844.81],"frontage_image":"S","kind":"service"},{"zone":"service","name":"대형 캐리어 무인 물품보관함","rect":[466.69,991.53,561.48,1036.19],"frontage_image":"S","kind":"service"},{"zone":"service","name":"광장 화장실","rect":[678.16,846.63,743.78,948.7],"frontage_image":"S","kind":"service"},{"zone":"service","name":"남자 및 장애인 화장실","rect":[752.9,873.06,810.32,938.67],"frontage_image":"S","kind":"service"},{"zone":"service","name":"고객서비스데스크","rect":[801.21,844.81,840.4,894.02],"frontage_image":"S","kind":"service"}];
     const curve=(cx,cy,rx,ry,a,b,n=24)=>Array.from({length:n+1},(_,i)=>[cx+rx*Math.cos(a+(b-a)*i/n),cy+ry*Math.sin(a+(b-a)*i/n)]);
-    const marketShape=[[498,491],[693,491],[753,530],[753,556],[819,556],[819,776],[724,776],[724,752],[498,752]];
     const accessoryShape=[[498,846],[622,846],[622,950],[611,958],[594,961],[575,958],[552,947],[530,932],[513,915],[502,894],[498,872]];
     const eventShape=[[372,845],[467,845],[467,872],[470,896],[480,922],[496,943],[519,963],[548,984],[571,998],[372,998]];
     const plazaShape=[[467,733],[498,733],[498,871],...curve(590,871,92,91,PI,PI*.52),[678,950],[832,811],[842,837],[696,970],...curve(650,1014,63,61,-.8,2.1),[605,1057],[434,1057],[406,1030],[372,1030],[372,998],[570,998],[514,958],...curve(626,872,159,126,2.4,PI)];
     const cinemaShape=[[839,894],[904,894],[904,1155],[623,1155],[623,1124],[736,1124],[736,1036],[710,1028],...curve(650,1014,63,61,.23,-.8),[697,969],[760,911]];
     const shoeShape=[[372,1030],[406,1030],[434,1067],[449,1057],[605,1057],[623,1066],[623,1155],[372,1155]];
     const overrides={
-      '신세계 마켓':marketShape,'특설행사장':eventShape,'패션 액세서리':accessoryShape,
+      '신세계 마켓':marketOutline,'특설행사장':eventShape,'패션 액세서리':accessoryShape,
       '메가박스 영화관':cinemaShape,'카멜커피':[[710,1028],[736,1036],[736,1123],[686,1063]],
       '영풍문고':[[623,1067],[686,1063],[736,1124],[623,1124]],'스포츠 슈 전문관':shoeShape,
       '러쉬':[[710,846],[738,846],[760,873],[744,889]],
@@ -2384,29 +2374,12 @@ export function build(K) {
       if(c.name==='보앤미')c.kind='bakery';
       c.planPolygon=overrides[c.name]||BRECT(...c.rect);
     }
-    // The old subway icon maps west of this footprint after unmirroring.
-    // Its former in-store parking stair is removed; Central City owns that route.
-    const [eu0,ev0,eu1,ev1]=[-1000,-1000,-999,-999];
-
-    const worldPoly=c=>BPOLY(c.planPolygon||overrides[c.name]||BRECT(...c.rect));
-    // Clip surface-only finishes as well as the structural slab around the new
-    // well. Four disjoint half-plane pieces also handle a hole crossing a cell edge.
-    function b1Surface(mat,poly,yy){
-      const local=clipLocal(poly.map(q=>BPLAN(...q)));
-      const clip=(p,axis,edge,greater)=>{
-        const out=[];for(let i=0;i<p.length;i++){
-          const a=p[i],b=p[(i+1)%p.length],A=greater?a[axis]>=edge:a[axis]<=edge,B=greater?b[axis]>=edge:b[axis]<=edge;
-          if(A)out.push(a);if(A!==B){const t=(edge-a[axis])/(b[axis]-a[axis]);out.push([a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t]);}
-        }return out;
-      };
-      const mid=clip(clip(local,1,ev0,true),1,ev1,false);
-      for(const p of[clip(local,1,ev0,false),clip(local,1,ev1,true),clip(mid,0,eu0,false),clip(mid,0,eu1,true)])
-        if(p.length>=3)K.hpoly(mat,p.map(q=>P(...q)),yy,true);
-    }
+    const marketFloor=marketOutline.map(([px,py])=>BP(px,py));
+    const worldPoly=c=>c.kind==='supermarket'?marketFloor:BPOLY(c.planPolygon);
     const uvRect=c=>BOUNDS(c.rect);
     const officialFace=f=>({N:'E',S:'W',E:'S',W:'N',SE:'S',NW:'N'}[f]||'S');
     const reserves=[
-      [0,37.5,8.5,48], // J4 fixed public opening; plain passage through the market edge.
+      [0,37.5,8.5,48], // Keep the cross-aisle between the existing grocery displays.
       [31,-.1,45,8], // J1 north connection is surveyed independently of the plan.
       ...beautyBankBounds, // B1 boarding and exit approaches
       [27,54,39,61.2], // open foot-to-skylight crossing
@@ -2429,7 +2402,8 @@ export function build(K) {
     }
     // Five public zones: structural registration is immediate, stock/people lazy.
     const zoneSpecs=[
-      ['west_strip','서측 델리 · 이벤트홀',[399,345,478,733]],
+      // Include the white public aisle between the west counters and the deli.
+      ['west_strip','서측 델리 · 이벤트홀',[399,345,498,733]],
       ['north_deli','델리 · 7게이트 · 8게이트',[498,345,1032,557]],
       ['market','신세계 마켓',[498,491,819,776]],
       ['centre','발효곳간 · 와인하우스 · 카페',[820,489,1032,845]],
@@ -2440,6 +2414,10 @@ export function build(K) {
       if(worldPoly(c).length<3)continue;
       K.zone({name:c.name,floor:'B1',sub:c.brands?c.brands.join(' · '):'신세계 강남점 지하1층',poly:c.name==='대형 캐리어 무인 물품보관함'?rect(...(()=>{const [u0,v0,u1]=uvRect(c);return[u0+.2,v0+.08,u1-.2,v0+.53];})()):worldPoly(c),y0:y,y1:-1,priority:c.kind==='service'?6:5});
     }
+    // Finish the area of the B1 sales floor that extends under the neighbouring building.
+    const marketCeiling=LV['1F']-thick('1F');
+    K.hpoly(CEIL,marketWestReturn,marketCeiling,false);
+    K.phys.addCeiling(marketWestReturn,marketCeiling,{});
     // Raster core bumps extend beyond the rectangular above-ground footprint.
     // They have a basement ceiling only; the round11 street/1F slabs are unchanged.
     for(const r of [[399,324,420,345],[914,313,959,345],[990,325,1032,345]]){
@@ -2457,7 +2435,7 @@ export function build(K) {
       wall(...BPLAN(...a),...BPLAN(...b),y,y+3.4,{mat:0xe7dfcf,thick:.13,openings:opening?[{at:L/2,w:Math.min(opening,L-.2),y0:y,y1:y+2.7}]:[]});
     }
     for(const[a,b,op]of [
-      [[498,491],[693,491],5],[[498,491],[498,752],4],[[498,752],[724,752],5],
+      [[498,491],[693,491],5],[[498,491],[498,752],4],
       [[841,540],[920,540],0],[[841,540],[841,655],4],
       [[841,655],[920,655],0],[[841,655],[841,776],4],[[920,540],[920,595],0],
       [[889,595],[975,595],0],[[975,526],[975,717],4],[[975,717],[1019,717],0],
@@ -2817,11 +2795,11 @@ export function build(K) {
       }
     });
 
-    for(const[id,name,r]of zoneSpecs)if(BPOLY(BRECT(...r)).length>=3)K.detail({floor:'B1',y0:y,y1:0,poly:BPOLY(BRECT(...r)),name:`B1 공식도면 · ${name}`},()=>{
+    for(const[id,name,r]of zoneSpecs)if(BPOLY(BRECT(...r)).length>=3)K.detail({floor:'B1',y0:y,y1:0,poly:id==='market'?marketFloor:BPOLY(BRECT(...r)),name:`B1 공식도면 · ${name}`},()=>{
       const own=cells.filter(c=>worldPoly(c).length>=3&&(c.zone===id||(c.zone==='service'&&(id==='sw_plaza'?c.rect[1]>=775:id==='north_deli'?c.rect[1]<400:id==='market'?c.name==='마켓 엘리베이터':false))));
       for(const[cindex,c]of own.entries()){
         if(c.name.includes('보관함')){lockers(c);continue;}
-        b1Surface(c.kind==='supermarket'?'ssg_diamond_gloss':{tex:c.kind==='wine'?'wood':'marble',color:c.kind==='event'?0xe2d3b4:0xf0e5cf,gloss:.5},c.planPolygon,y+.012);
+        K.hpoly(c.kind==='supermarket'?'ssg_diamond_gloss':{tex:c.kind==='wine'?'wood':'marble',color:c.kind==='event'?0xe2d3b4:0xf0e5cf,gloss:.5},worldPoly(c),y+.012,true);
         if(c.name.includes('엘리베이터'))continue;
         if(c.name.includes('화장실')){toilet(c);continue;}
         if(c.kind==='supermarket')continue;
@@ -2944,7 +2922,7 @@ export function build(K) {
         }
       }
       if(id==='sw_plaza'){
-        b1Surface({tex:'marble',color:0xf4e9d8,gloss:.7},plazaShape,y+.025);
+        K.hpoly({tex:'marble',color:0xf4e9d8,gloss:.7},BPOLY(plazaShape),y+.025,true);
         // One small popup marked in the white curved plaza, inset from the through aisle.
         const pop={name:'팝업',kind:'popup',rect:[553,969,585,992],frontage_image:'S'};counter(pop,91);
         const shoe=cells.find(c=>c.kind==='shoes');
