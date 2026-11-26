@@ -29,6 +29,7 @@ import {relief} from '../../../js/banpo_relief.js';
 // Geometry decoder matrices and decorative LOD offsets live *below* the placement.
 const sources = [
   ['shinsegae','B1','intelligentsia-gangnam/coffeebar.blend','인텔리젠시아 강남 · 오렌지 진열장과 커피 바','GangnamCoffeebar'],
+  ['newcore','5F','newcore-yucheon/front.blend','뉴코아 1관 5층 · 유천냉면 입구와 식당 홀','NC_YucheonDiningHall'],
   ['gyeongbu','7F','gyeongbu-clothing-fronts/seven/tailored-front.blend','경부선 7층 · 두 단의 모직과 코트 전면','7층 신사복 · 이단 모직 진열과 코트 전면'],
   ['gyeongbu','8F','gyeongbu-clothing-fronts/eight/knit-front.blend','경부선 8층 · 긴 니트와 스카프 전면','8층 여성복 · 긴 니트와 스카프 전면'],
   ['shinsegae','B1','ypbooks-rotary/front.blend','영풍문고 강남신세계점 · 원형 광장 입구','YPBooksRotaryFront'],
