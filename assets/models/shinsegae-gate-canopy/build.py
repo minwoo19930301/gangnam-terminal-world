@@ -143,4 +143,19 @@ for x0,x1,panes in [(-10.30,-3.84,4),(6.04,10.28,3)]:
         fixed_face("Sidelight transom",x0,x1,y-.035,y+.035,.295,door_bar)
     fixed_face("Sidelight sill",x0,x1,-.35,.24,.30,plinth)
 
+# The public forecourt slopes across the canopy. These native supports match
+# the two terrain-following cylinders which also supply the game collision.
+supports = bpy.data.collections.new("GangnamNorthGateSupports")
+bpy.context.scene.collection.children.link(supports)
+steel = colour("Brushed entrance post", (121, 131, 132))
+for side, foot in [(-1, 0.08379735), (1, -0.05106440)]:
+    top = 5.61
+    bpy.ops.mesh.primitive_cylinder_add(vertices=16, radius=.17, depth=top-foot,
+        location=(side*9.62, -.08, (top+foot)/2))
+    post = bpy.context.object
+    post.name = "정문 캐노피 · 보도 기둥"
+    post.data.materials.append(steel)
+    for link in list(post.users_collection):
+        link.objects.unlink(post)
+    supports.objects.link(post)
 bpy.ops.wm.save_as_mainfile(filepath=str(ROOT/"north-gate.blend"),compress=True)

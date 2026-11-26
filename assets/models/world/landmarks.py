@@ -2,7 +2,9 @@
 
 from math import cos, hypot, pi, sin
 
+import bmesh
 import bpy
+from mathutils import Vector
 
 
 PALETTE = {
@@ -191,6 +193,40 @@ class Elevation:
         )
 
 
+def open_shin_forecourt(parent, point):
+    """Trim the OSM base and its coping where they crossed the recessed entrance."""
+    if parent.get("north_entry_recess"):
+        return
+    def local(u, v):
+        x, z = point(u, v)
+        return Vector((x - parent.location.x, -z - parent.location.y, 0))
+
+    origin = local(0, 0)
+    u_axis = local(1, 0) - origin
+    v_axis = local(0, 1) - origin
+    u_normal = Vector((-v_axis.y, v_axis.x, 0))
+    v_normal = Vector((u_axis.y, -u_axis.x, 0))
+    u_normal /= u_normal.dot(u_axis)
+    v_normal /= v_normal.dot(v_axis)
+    mesh = bmesh.new()
+    try:
+        mesh.from_mesh(parent.data)
+        for pos, normal in [(local(23, 0), u_normal), (local(44, 0), u_normal), (local(0, 8), v_normal)]:
+            bmesh.ops.bisect_plane(mesh, geom=[*mesh.verts, *mesh.edges, *mesh.faces],
+                                   dist=.00001, plane_co=pos, plane_no=normal.normalized())
+        removed = []
+        for face in mesh.faces:
+            middle = face.calc_center_median() - origin
+            if 23 < middle.dot(u_normal) < 44 and middle.dot(v_normal) < 8:
+                removed.append(face)
+        bmesh.ops.delete(mesh, geom=removed, context="FACES")
+        mesh.to_mesh(parent.data)
+        parent.data.update()
+        parent["north_entry_recess"] = True
+    finally:
+        mesh.free()
+
+
 def shin(s, b):
     # Same bilinear trapezoid and public north facade proportions as shinsegae.js.
     def p(u, v):
@@ -201,6 +237,24 @@ def shin(s, b):
         )
 
     lower_or_raise_base(s.parent, b, 7, "granite")
+    open_shin_forecourt(s.parent, p)
+    # The two stone/glass shopfronts flank a recessed ground-floor doorway.
+    def front(u0, u1, v, low, high, finish):
+        a, c = p(u0, v), p(u1, v)
+        s.face([(*a, low), (*c, low), (*c, high), (*a, high)], finish)
+
+    for left, right in [(23, 29.7), (39.5, 44)]:
+        front(left, right, 0, 0, 7, "dark")
+    for u in (29.7, 39.5):
+        a, c = p(u, 0), p(u, 5)
+        s.face([(*a, 0), (*c, 0), (*c, 7), (*a, 7)], "granite")
+    # Recessed grey-green door glazing and its narrow metal rails.
+    front(29.7, 39.5, 5, 0, 5.7, "shopglass")
+    for u in [29.7, 32.15, 34.6, 37.05, 39.44]:
+        front(u, u+.06, 4.94, 0, 5.7, "mullion")
+    front(29.7, 39.5, 4.94, 2.9, 3.45, "steel")
+    front(29.7, 39.5, 4.94, 4.55, 4.62, "mullion")
+    front(29.7, 39.5, 5, 5.7, 7, "granite")
     s.volume(rect(p, 0, 8, 67, 84.7), 7, 50.2, "granite", "shadow")
     s.volume(rect(p, 0, 33, 67, 84.7), 50.2, 55, "granite", "shadow")
     for lo, hi in [(0, 23), (44, 67)]:
@@ -216,14 +270,22 @@ def shin(s, b):
     s.volume(rect(p, 23, 7.91, 44, 8), 7, 50.19, "glass")
     arc = [(33.5 - 6 * cos(i * pi / 12), 8 - 6 * sin(i * pi / 12)) for i in range(13)]
     ring = [p(u, v) for u, v in arc]
-    for low, high, colour in [(7, 20, "glass"), (20, 24, "dark"), (24, 50.2, "glass")]:
-        s.volume(ring, low, high, colour)
+    # The public street photograph shows flat panels under the upper drum.
+    for i in range(13):
+        u = 23 + 21 * i / 12
+        front(u-.04, u+.04, 7.87, 7, 20, "mullion")
+    for i in range(1, 7):
+        h = 7 + 13 * i / 7
+        front(23, 44, 7.86, h, h+.10, "steel")
+    front(27.5, 39.5, 7.85, 20, 24, "dark")
+    s.volume(ring, 24, 50.2, "glass")
+    s.face([(*pt, 24) for pt in reversed(clockwise(ring))], "shadow")
     for a, c in edges(clockwise(ring)):
         e = Elevation(s, a, c)
         if e.length > 6:
             continue
-        e.panel(0, 0.105, 7, 50.2, "mullion")
-        for h in [11.8, 16.6, 26.2, 31, 35.8, 40.6, 45.4]:
+        e.panel(0, 0.105, 24, 50.2, "mullion")
+        for h in [26.2, 31, 35.8, 40.6, 45.4]:
             e.panel(0, e.length, h, h + 0.12, "mullion")
 
 
