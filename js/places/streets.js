@@ -1,4 +1,5 @@
 import {diningWallOpening} from './_familleUpperPlan.js';
+import {placeExit8Lamp} from '../../assets/models/exit8-sidewalk-lamp/model.js';
 import {placeGoterCrossing} from '../../assets/models/goter-crossing/model.js';
 import {placeSeoulCityBus} from '../../assets/models/seoul-city-bus/model.js';
 import {placeMedianShelters} from '../../assets/models/sinbanpo-bus-shelters/model.js';
@@ -337,6 +338,7 @@ export function build(K) {
   }
   const stops=K.osm.nodes.filter(n=>n.k==='bus_stop'&&n.x>-460&&n.x<620&&n.z>-600&&n.z<560);
   const exits=K.osm.exits||[];
+  const exit8=exits.find(exit=>exit.ref==='8');
   const bboxes=K.osm.buildings.map(b=>({b,bb:K.polyBBox(b.poly)}));
   const ccStop={x:-171.44,z:-45.71};
   const ccRoad=nearest(ccStop.x,ccStop.z,surfaceRoads.filter(r=>r.name==='신반포로'));
@@ -350,8 +352,14 @@ export function build(K) {
   const furniture=[];
   function lamp(x,z,rot,y=WALK) {
     if(y===WALK&&(inG13(x,z)||onTerminalMedian(x,z)||inWestCanopy(x,z)||inTaxiStand(x,z)))return;
-    K.cyl({x,z,y,r:.11,h:7.5,seg:8,mat:C.steel});const dx=Math.sin(rot),dz=Math.cos(rot);
+    const dx=Math.sin(rot),dz=Math.cos(rot);
     K.streetLight?.(x+dx*1.8,y+7.4,z+dz*1.8);
+    if(y===WALK && exit8 && Math.hypot(x-exit8.x,z-exit8.z)<5){
+      placeExit8Lamp(K,x,y,z,rot);
+      K.streetLight?.(x-dx*1.05,y+4.1-.08,z-dz*1.05,.23);
+      return;
+    }
+    K.cyl({x,z,y,r:.11,h:7.5,seg:8,mat:C.steel});
     beam([x,y+7.3,z],[x+dx*1.7,y+7.5,z+dz*1.7],.07);
     K.box({x:x+dx*1.8,z:z+dz*1.8,y:y+7.42,w:.5,h:.15,d:1.1,rotY:rot,mat:C.steel,solid:false});
     K.box({x:x+dx*1.8,z:z+dz*1.8,y:y+7.4,w:.4,h:.025,d:.9,rotY:rot,mat:emit(0xffedc2),solid:false});

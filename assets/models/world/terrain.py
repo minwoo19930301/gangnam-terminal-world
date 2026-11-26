@@ -52,16 +52,17 @@ def vertex(x, z, y):
     return lookup[point]
 
 
-fine = data["groundGrids"]["garden"]
-for grid in [data["ground"], fine]:
+local = [v for k,v in data["groundGrids"].items() if k != "city"]
+for grid in [data["ground"], *local]:
     width, height, step = grid["width"], grid["height"], grid["step"]
     for j in range(height - 1):
         for i in range(width - 1):
             x, z = grid["x"] + i * step, grid["z"] + j * step
             if (
-                grid is not fine
-                and fine["x"] <= x < fine["x"] + (fine["width"] - 1) * fine["step"]
-                and fine["z"] <= z < fine["z"] + (fine["height"] - 1) * fine["step"]
+                grid is data["ground"] and any(
+                    fine["x"] <= x < fine["x"] + (fine["width"] - 1) * fine["step"]
+                    and fine["z"] <= z < fine["z"] + (fine["height"] - 1) * fine["step"]
+                    for fine in local)
             ):
                 continue
             heights = [

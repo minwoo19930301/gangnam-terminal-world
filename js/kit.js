@@ -995,13 +995,31 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
   }
   const aLayers = new Map();
   function finalize() { for (const p of atlas.pages) p.t.needsUpdate = true; return flush(); }
+  async function finalizeStreet() {
+    for (const p of atlas.pages) p.t.needsUpdate = true;
+    const batches=flushSteps(true);
+    let deadline=performance.now()+24;
+    let step;
+    while (!(step=batches.next()).done) {
+      if (performance.now()<deadline) continue;
+      // The same counts, buffers and draw order are retained across turns.
+      if (globalThis.scheduler?.yield) await globalThis.scheduler.yield();
+      else await new Promise(resolve=>setTimeout(resolve,0));
+      deadline=performance.now()+24;
+    }
+    return step.value;
+  }
   // merge everything emitted since the last flush into meshes (the initial build, then each lazy detail group)
   function flush() {
+    return flushSteps(false).next().value;
+  }
+  function* flushSteps(cooperative) {
     const usedKeys = new Set(); for (const [, b] of buckets) if (!aLayers.has(b.key)) usedKeys.add(b.key);
     for (const [k, v] of buildTexArrays(usedKeys)) aLayers.set(k, v);
     // two passes: classify every primitive and count, then fill typed arrays directly (no big JS arrays)
     const subs = new Map(), plan = [];
     for (const [, b] of buckets) {
+      if (cooperative) yield;
       if (!b.prim.length) continue;
       const P = b.pos, ar = aLayers.get(b.key) || null, which = new Array(b.prim.length);
       const materialKey = ar ? 'arr:' + ar.arr : b.key;
@@ -1031,11 +1049,13 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
       plan.push({ b, ar, which });
     }
     for (const [, s] of subs) {
+      if (cooperative) yield;
       s.pos = new Float32Array(s.nv * 3); s.nor = new Float32Array(s.nv * 3); s.uv = new Float32Array(s.nv * 2); s.col = new Float32Array(s.nv * 3);
       s.idx = s.nv > 65535 ? new Uint32Array(s.ni) : new Uint16Array(s.ni); if (s.rect) s.rect = new Float32Array(s.nv);
       s.v = 0; s.i = 0;
     }
     for (const { b, ar, which } of plan) {
+      if (cooperative) yield;
       const P = b.pos, N = b.nor, U = b.uv, C = b.col;
       let vo = 0, pi = 0;
       for (const signedCount of b.prim) {
@@ -1082,6 +1102,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     buckets.clear();
     const out = [];
     for (const [, s] of subs) {
+      if (cooperative) yield;
       const g = new THREE.BufferGeometry();
       g.setAttribute('position', new THREE.BufferAttribute(s.pos, 3));
       g.setAttribute('normal', new THREE.BufferAttribute(s.nor, 3));
@@ -1419,7 +1440,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     occludingWall: options => deckVisibility?.registerWall(options),
     coveredLightWell,
     // internals for engine
-    _: { bounce, coveredWells, cull, cullList, deckVisibility, finalize, details, detailErrors, ensureDetail, buildAllDetail, frameFns, interactables, spawns, zonesList, elevators, claims, mapMarks, groundHoles, stats, atlas, trees, people, setCurrent: (id, meta) => { current = id; if (meta) perPlace[id] = meta; } },
+    _: { bounce, coveredWells, cull, cullList, deckVisibility, finalize, finalizeStreet, details, detailErrors, ensureDetail, buildAllDetail, frameFns, interactables, spawns, zonesList, elevators, claims, mapMarks, groundHoles, stats, atlas, trees, people, setCurrent: (id, meta) => { current = id; if (meta) perPlace[id] = meta; } },
   };
   return K;
 }

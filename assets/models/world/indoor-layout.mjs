@@ -29,6 +29,7 @@ import {relief} from '../../../js/banpo_relief.js';
 // Scene object (or a uniquely identifying child) -> editable native source.
 // Geometry decoder matrices and decorative LOD offsets live *below* the placement.
 const sources = [
+  ['streets','지상','exit8-sidewalk-lamp/lamp.blend','터미널 8번 출구 · 보도와 차도 등기구','Exit8_Sidewalk_Lamp'],
   ...Object.values(wineParts).map(p=>
     ['centralcity','1F','house-wine-cellar/wine-cellar.blend','와인셀라 · '+p.title,p.collection]),
   ['centralcity','B1','sweet-marcolini/chocolatier.blend','피에르 마르콜리니 · 구리 쇼케이스와 봉봉','GangnamChocolatier','Glass','Lit'],

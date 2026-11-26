@@ -1,3 +1,5 @@
+import {drawStreamBridge} from '../assets/models/banpo-stream-bridge/model.js';
+import {streamDeckIds,streamWalk,streamWaterBase} from './banpo_stream_profile.js';
 import { applyRoadEdits } from './blender-roads.js';
 import { drawHardware } from '../assets/models/street-and-lift/draw.js';
 import { streetPlacement } from './street-layout.js';
@@ -170,18 +172,29 @@ export function buildCityWithCover(K, osm, parcelCover, { claimedBuildings = new
       const stream = a.id === 248405787; // Banpocheon's banks descend along the channel.
       const datum = relief(...outline[0]);
       const level = stream ? wy : wy + Math.min(...outline.map(p => relief(...p))) - datum;
+      const streamBase=(x,z)=>streamWaterBase(x,z,relief(x,z));
       function waterMesh() {
         K.hpoly(han ? 'hanRiver' : 'water', outline, level, true, a.holes);
         K.phys.addSurface(outline, level - 0.7, { holes: a.holes, slow: 0.7, tag: 'water' });
         const ns = K.orient(outline);
         for (let i = 0; i < outline.length; i++) {
           const p = outline[i], q = outline[(i + 1) % outline.length];
-          const py = stream ? 0.01 : relief(...p) - datum + 0.01;
-          const qy = stream ? 0.01 : relief(...q) - datum + 0.01;
-          K.quad({ tex: 'concrete', color: 0x9a9890 }, [[p[0], level - 1, p[1]], [q[0], level - 1, q[1]], [q[0], qy, q[1]], [p[0], py, p[1]]], [-ns[i][0], 0, -ns[i][1]]);
+          if(stream){
+            const near=Math.min(p[0],q[0])<-675 && Math.max(p[0],q[0])>-775 && Math.min(p[1],q[1])<625 && Math.max(p[1],q[1])>525;
+            const n=near?Math.ceil(Math.hypot(q[0]-p[0],q[1]-p[1])/3):1;
+            for(let j=0;j<n;j++){
+              const at=t=>[p[0]+(q[0]-p[0])*t,p[1]+(q[1]-p[1])*t];
+              const [x,z]=at(j/n),[xx,zz]=at((j+1)/n);
+              K.quad({tex:'concrete',color:0x9a9890},[[x,level-1,z],[xx,level-1,zz],
+                [xx,relief(xx,zz)-streamBase(xx,zz)+.01,zz],[x,relief(x,z)-streamBase(x,z)+.01,z]],[-ns[i][0],0,-ns[i][1]]);
+            }
+          }else{
+            K.quad({tex:'concrete',color:0x9a9890},[[p[0],level-1,p[1]],[q[0],level-1,q[1]],
+              [q[0],relief(...q)-datum+.01,q[1]],[p[0],relief(...p)-datum+.01,p[1]]],[-ns[i][0],0,-ns[i][1]]);
+          }
         }
       }
-      if (stream) waterMesh();
+      if (stream) K.withTerrainSurface(streamBase,waterMesh);
       else K.withTerrainAnchor(...outline[0], waterMesh);
       for (const h of a.holes || []) K.hpoly({ tex: 'grass', color: 0xd8e0b0 }, h, 0.0, true);
       continue;
@@ -276,10 +289,11 @@ export function buildCityWithCover(K, osm, parcelCover, { claimedBuildings = new
   }
 
   // ---------- roads ----------
+  const hasStreamBridge=drawStreamBridge(K,roads);
   const roadMat = { tex: 'asphalt' };
   const busMat = { tex: 'asphalt', color: 0xd88870 };
   for (const r of roads) {
-    if (r.tunnel || r.pts.length < 2) continue;
+    if (r.tunnel || r.pts.length < 2 || (hasStreamBridge && streamDeckIds.has(r.id))) continue;
     if (r.hw === 'corridor' || (r.level && r.level.startsWith('-'))) continue;
     const car = CAR.has(r.hw);
     const elevated = elevatedWay(r);
@@ -291,7 +305,7 @@ export function buildCityWithCover(K, osm, parcelCover, { claimedBuildings = new
     else { mat = 'sidewalk'; y0 = 0.05; }
     const w = r.footway === 'crossing' ? 0 : (car ? r.width : Math.max(1.5, r.width));
     function drawRoad(hs, datum) {
-      if (mat && w > 0) ribbon(r.pts, hs, w, mat, y0, elevated);
+      if (mat && w > 0) ribbon(r.pts, hs, w, mat, y0, elevated,r.id===streamWalk);
       if (elevated) elevatedExtras(r, hs, w || r.width, datum);
       if (r.footway === 'crossing') countRoadDetail(() => zebra(r.pts, hs));
     }
@@ -304,7 +318,7 @@ export function buildCityWithCover(K, osm, parcelCover, { claimedBuildings = new
       if (MAJOR.has(r.hw)) streetside(r);
     }
   }
-  function ribbon(pts, hs, w, mat, y0, elevated) {
+  function ribbon(pts, hs, w, mat, y0, elevated,streamPath=false) {
     const n = pts.length; const L = [], R = [];
     for (let i = 0; i < n; i++) {
       const p = pts[i]; const a = pts[Math.max(0, i - 1)], b = pts[Math.min(n - 1, i + 1)];
@@ -321,14 +335,18 @@ export function buildCityWithCover(K, osm, parcelCover, { claimedBuildings = new
       const seg = Math.hypot(pts[i + 1][0] - pts[i][0], pts[i + 1][1] - pts[i][1]);
       const ya = hs[i] + y0, yb = hs[i + 1] + y0;
       K.quad(mat, [[L[i][0], ya, L[i][1]], [L[i + 1][0], yb, L[i + 1][1]], [R[i + 1][0], yb, R[i + 1][1]], [R[i][0], ya, R[i][1]]], [0, 1, 0], [[u / 6, 0], [(u + seg) / 6, 0], [(u + seg) / 6, w / 6], [u / 6, w / 6]]);
+      if(streamPath && Math.min(pts[i][0],pts[i+1][0])<-675 && Math.max(pts[i][0],pts[i+1][0])>-775 &&
+          Math.min(pts[i][1],pts[i+1][1])<625 && Math.max(pts[i][1],pts[i+1][1])>525){
+        K.phys.addSurface([L[i],L[i+1],R[i+1],R[i]],y0,{tag:'stream-greenway'});
+      }
       if (elevated) {
         K.quad(0x8f8c86, [[R[i][0], ya - 1.2, R[i][1]], [R[i + 1][0], yb - 1.2, R[i + 1][1]], [L[i + 1][0], yb - 1.2, L[i + 1][1]], [L[i][0], ya - 1.2, L[i][1]]], [0, -1, 0]);
         for (const [A, B, s] of [[L, L, 1], [R, R, -1]]) {
           K.quad({ tex: 'concrete', color: 0xc8c4bc }, [[A[i][0], ya - 1.2, A[i][1]], [B[i + 1][0], yb - 1.2, B[i + 1][1]], [B[i + 1][0], yb + 0.9, B[i + 1][1]], [A[i][0], ya + 0.9, A[i][1]]], [s * -(pts[i + 1][1] - pts[i][1]), 0, s * (pts[i + 1][0] - pts[i][0])]);
         }
         K.phys.addRamp(pts[i][0], pts[i][1], pts[i + 1][0], pts[i + 1][1], w / 2, ya, yb, { tag: 'road' });
-        K.phys.addWall(L[i][0], L[i][1], L[i + 1][0], L[i + 1][1], Math.min(ya, yb) - 0.2, Math.max(ya, yb) + 0.9, 0.1, 'rail');
-        K.phys.addWall(R[i][0], R[i][1], R[i + 1][0], R[i + 1][1], Math.min(ya, yb) - 0.2, Math.max(ya, yb) + 0.9, 0.1, 'rail');
+        K.phys.addWall(L[i][0], L[i][1], L[i + 1][0], L[i + 1][1], ya - 0.2, ya + 0.9, 0.1, 'rail', yb - ya);
+        K.phys.addWall(R[i][0], R[i][1], R[i + 1][0], R[i + 1][1], ya - 0.2, ya + 0.9, 0.1, 'rail', yb - ya);
       }
       u += seg;
     }
@@ -977,6 +995,17 @@ export function createTraffic(K, roadsInfo, n = 160) {
     }
     if (seeded) counts.junctions++;
   }
+  // One ordinary car follows the local crossing and its connected street.
+  const streamWays=[230071181,604527964,1569146467,604527965].map(id=>roadsInfo.roads.find(r=>r.id===id));
+  if(streamWays.every(Boolean) && cars.length<n){
+    const axis=streamWays.flatMap((r,i)=>i?r.pts.slice(1):r.pts);
+    const lane=axis.map(([x,z],i)=>{
+      const a=axis[Math.max(0,i-1)],b=axis[Math.min(axis.length-1,i+1)],length=Math.hypot(b[0]-a[0],b[1]-a[1]);
+      return [x-2*(b[1]-a[1])/length,z+2*(b[0]-a[0])/length];
+    });
+    const route=path(lane);route.streamDeck=true;routes.push(route);
+    add(route,route.cum[1]+4,5.5,'car');
+  }
   // Background traffic uses unclaimed major ways; the dense junction routes
   // above are independent of which place module owns the road surface.
   const ways = roadsInfo.roads.filter(r => major(r) && r.pts.length >= 2)
@@ -1037,7 +1066,12 @@ export function createTraffic(K, roadsInfo, n = 160) {
   const V = new THREE.Vector3(), up = new THREE.Vector3(0,1,0), S = new THREE.Vector3(1,1,1);
   const leftWheel = new THREE.Quaternion(), flipWheel = new THREE.Quaternion().setFromAxisAngle(up, Math.PI);
   const asphalt = (x,z) => relief(x,z) + .03;
-  const road = s => s.kind === 'ramp' && (s.tag === 'road' || s.tag === 'streets') && !s.move;
+  function streamAsphalt(x,z){
+    const ground=relief(x,z);
+    const hit=K.phys.support(x,z,8-ground,s=>s.tag==='stream-road');
+    return hit.s?.tag==='stream-road'?ground+hit.y:ground+.03;
+  }
+  const road = s => s.tag==='stream-road' || s.kind === 'ramp' && (s.tag === 'road' || s.tag === 'streets') && !s.move;
   const contacts = [], frustum = new THREE.Frustum(), projection = new THREE.Matrix4(), box = new THREE.Box3();
   const bodyInWorld = new THREE.Box3();
   // All four road contacts stay within .45 m of the surveyed asphalt. Full
@@ -1063,7 +1097,7 @@ export function createTraffic(K, roadsInfo, n = 160) {
       const dx = (b[0] - a[0]) / length, dz = (b[1] - a[1]) / length;
       const fx = dx * c.halfWheelbase, fz = dz * c.halfWheelbase;
       const rx = dz * c.halfTrack, rz = -dx * c.halfTrack;
-      wheelContacts(K.phys,x,z,dx,dz,c.halfTrack,c.halfWheelbase,asphalt,contacts,road);
+      wheelContacts(K.phys,x,z,dx,dz,c.halfTrack,c.halfWheelbase,r.streamDeck?streamAsphalt:asphalt,contacts,road);
       const {forward,right,height} = contacts;
       Q.setFromUnitVectors(up,V.set(-forward*dx-right*dz,1,-forward*dz+right*dx).normalize());
       Q.multiply(yaw.setFromAxisAngle(up,Math.atan2(dx,dz)));

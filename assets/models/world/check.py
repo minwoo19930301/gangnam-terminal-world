@@ -26,6 +26,13 @@ for image in bpy.data.images:
         assert image.packed_file and image.filepath.startswith("//textures/")
 # Refresh must preserve existing placements and must not duplicate shelves.
 collections = [o.instance_collection for o in gallery.objects if o.instance_collection]
+bridge = next(c for c in city.collection.children if c.name.startswith("반포천1교 · 신반포로16길"))
+bays = [o for o in bridge.objects if o.instance_collection]
+assert len(bays) == 36 and all(o.instance_collection.name == "BanpoStreamRail" for o in bays)
+assert all(o.instance_collection in collections for o in bays)
+creek = next(o for o in city.objects if o.get("terrain_grid") == "creek")
+assert list(creek["grid_shape"])[:3] == [41, 41, 2.5]
+assert any(c.name == "Exit8_Sidewalk_Lamp" for c in collections)
 assert any(c.get("export_model") == "peacock" for c in collections)
 assert any(c.get("display_key") == "putterRail" for c in collections)
 placements = {o.name: o.matrix_basis.copy() for o in gallery.objects}

@@ -7,7 +7,7 @@ import { createKit } from '../js/kit.js';
 import { createPhysics, createPlayer, pointInPoly, polyBBox } from '../js/physics.js';
 import { buildCity } from '../js/city.js';
 import { PLACES } from '../js/places/index.js';
-import { installRelief, relief, surveyElevation } from '../js/banpo_relief.js';
+import { installRelief, relief, publicGroundReference } from '../js/banpo_relief.js';
 import { pickReModels, reModelStandIns } from '../js/remodels.js';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
@@ -98,7 +98,7 @@ function centerline(pts) {
 // Search a local strip following the actual polyline, anchored at its clear
 // centreline on both ends. A strip width is measured to the capsule edge.
 function groundAt(x,z) {
-  if (overlappingStructure(x,z) || Math.abs(relief(x,z)-surveyElevation(x,z))>1) return null;
+  if (overlappingStructure(x,z) || Math.abs(relief(x,z)-publicGroundReference(x,z))>1) return null;
   const support=phys.support(x,z,step);
   if(!Number.isFinite(support.y) || support.y < -step) return null;
   if(Number.isFinite(phys.ceilingAbove(x,z,support.y+1e-5,support.y+height))) return null;
@@ -296,7 +296,7 @@ for(const road of ways) {
     const structure=overlappingStructure(x,z);
     // The terminal deliberately lowers its foundations in multi-level areas.
     // A line with no explicit level cannot identify the slab sitting above it.
-    const gradeGap=relief(x,z)-surveyElevation(x,z);
+    const gradeGap=relief(x,z)-publicGroundReference(x,z);
     if(structure || Math.abs(gradeGap)>1) {
       record(road,partNo,p,structure?.reason || 'adjusted_grade_unknown',{feature:structure?.feature.id});
       ambiguous++;previousFloor=null;continue;
