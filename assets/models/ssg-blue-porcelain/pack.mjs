@@ -11,3 +11,4 @@ const io=new NodeIO().registerExtensions(ALL_EXTENSIONS).registerDependencies({'
 const doc=await io.read(path);
 await doc.transform(weld(),meshopt({encoder:MeshoptEncoder,level:'medium',quantizePosition:16,quantizeTexcoord:14}));
 await io.write(path,doc);
+await import('./figurine_pack.mjs');
