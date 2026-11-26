@@ -6,6 +6,12 @@ import bmesh
 from mathutils import Matrix, Vector
 
 OUT = Path(__file__).resolve().parent
+import sys
+import subprocess
+import tempfile
+sys.dont_write_bytecode=True
+sys.path.insert(0,str(OUT))
+from vessels import CampKitchen
 bpy.ops.wm.read_factory_settings(use_empty=True)
 gallery = bpy.data.collections.new('SSG_8F_SnowPeak')
 bpy.context.scene.collection.children.link(gallery)
@@ -231,31 +237,13 @@ for x in [-.53,.52]:rod('출입구 고정끈',(x,-.049,1.51),(x,-.035,1.61),.011
 place(0,-.35,-.18)
 tubing('랜턴 연결 코드',[(0,.30,2.04),(-.027,.25,1.84)],.003,'shadow')
 tubing('랜턴 걸이',[(-.027,.25,1.84),(0,.25,1.76),(.034,.25,1.71),(0,.25,1.67)],.004,'bronze')
-lathe('랜턴 갓',0,.25,1.62,[(.043,0),(.095,.004),(.079,.019),(.043,.03),(.035,.045)],'honey')
-lathe('랜턴 확산통',0,.25,1.47,[(.045,0),(.061,.021),(.063,.142),(.055,.151)],'light')
-lathe('랜턴 하단',0,.25,1.408,[(.036,0),(.040,.006),(.04,.052),(.053,.064)],'honey')
+with tempfile.TemporaryDirectory() as generated:
+    subprocess.run(['node',str(OUT/'vessels-atlas.mjs'),generated],check=True)
+    cookware=CampKitchen(part,tubing,Path(generated))
+cookware.lantern(0,.25,1.422)
 chair(-.86,-.39,16);chair(.83,-.36,-18)
-def mug(x,y,z):
-    lathe('티타늄 머그와 안쪽 벽',x,y,z,[(.036,0),(.041,.005),(.043,.088),(.044,.092),(.0415,.094),
-          (.040,.09),(.038,.009)],'tin')
-    for shift in [-.009,.009]:
-        tubing('접이식 머그 손잡이',[(x+.04,y+shift,z+.073),(x+.058,y+shift,z+.077),
-               (x+.072,y+shift,z+.070),(x+.071,y+shift,z+.043),(x+.055,y+shift,z+.023),(x+.040,y+shift,z+.024)],.0027,'silver')
-        rod('손잡이 고정쇠',(x+.041,y+shift,z+.02),(x+.041,y+shift,z+.077),.0035,'steel')
-
-def kettle(x,y,z):
-    lathe('스테인리스 주전자',x,y,z,[(.071,0),(.081,.01),(.082,.204),(.085,.211),(.079,.217),
-       (.075,.218),(.074,.224),(.027,.234)],'silver')
-    tubing('뚜껑 손잡이',[(x-.021,y,z+.233),(x-.018,y,z+.254),(x+.018,y,z+.254),(x+.021,y,z+.233)],.004,'steel')
-    for offset in [-.009,.009]:
-        tubing('주전자 접이식 손잡이',[(x+.078,y+offset,z+.173),(x+.136,y+offset,z+.174),
-            (x+.143,y+offset,z+.166),(x+.14,y+offset,z+.077),(x+.078,y+offset,z+.059)],.0038,'steel')
-    rings=[]
-    for dx,h,r in [(-.063,.090,.031),(-.085,.125,.027),(-.108,.165,.019),(-.132,.184,.019)]:
-        rings.append([(x+dx+r*.65*cos(j*pi/10),y+r*sin(j*pi/10),z+h+r*.65*cos(j*pi/10)) for j in range(20)])
-    smooth(skins('주전자 주둥이',rings,'silver',cap=False))
-    for side in [-1,1]:rod('들손 경첩',(x,y+side*.08,z+.18),(x,y+side*.086,z+.18),.009,'graphite')
-    tubing('세운 들손',[(x,y+.084*cos(j*pi/22),z+.18+.128*sin(j*pi/22)) for j in range(23)],.0033,'steel')
+mug=cookware.mug
+kettle=cookware.kettle
 
 place(0,-1.09,.025,0)
 for x in [-.60,.60]:
@@ -350,7 +338,7 @@ for h in [0,.227]:
                (x+side*.007,.041,h+.213),(x,.041,h+.16)],.003,'steel')
     plate('상자 테두리',0,0,h+.209,.51,.357,.018,.019,'silver')
 plate('수납 상자 대나무 덮개',0,0,.453,.50,.35,.019,.015,'birch')
-mug(-.115,-.058,.473);kettle(.057,.043,.473)
+mug(-.115,-.058,.473);kettle(.057,.043,.473,opened=True)
 # A tall triangular canvas sign is visible on the left in the branch photograph.
 place()
 part('삼각 패브릭 사인',[(-2.11,.12,.042),(-1.41,.12,.042),(-1.69,.12,1.99)],[(0,1,2)],'canvas')
@@ -385,37 +373,14 @@ for ob in cloth_parts:
         mix.inputs[0].default_value=1;mix.inputs[1].default_value=m.diffuse_color
         m.node_tree.links.new(tex.outputs['Color'],mix.inputs[2])
         m.node_tree.links.new(mix.outputs[0],nodes.get('Principled BSDF').inputs['Base Color'])
+from importlib import import_module
+panorama=import_module('camp-reflections').bake(gallery)
+tree=cookware.surface.node_tree
+tx=tree.nodes.new('ShaderNodeTexImage');tx.image=panorama
+bs=tree.nodes['Principled BSDF'];tree.links.new(tx.outputs['Color'],bs.inputs['Emission']);bs.inputs['Emission Strength'].default_value=.001
+for group,objects in pieces.items():
+    for ob in objects:ob['retailBatch']='SnowPeakGangnamWeave' if ob in cloth_parts else group
 bpy.context.scene.unit_settings.system='METRIC'
 bpy.context.preferences.filepaths.save_version=0
 bpy.ops.wm.save_as_mainfile(filepath=str(OUT/'gallery.blend'),compress=True)
-pieces[batch]=[ob for ob in pieces[batch] if ob not in cloth_parts]
-pieces['SnowPeakGangnamWeave']=cloth_parts
-for group,objects in pieces.items():
-    bpy.ops.object.select_all(action='DESELECT')
-    material=bpy.data.materials.new(group);material.use_nodes=True
-    tree=material.node_tree;shader=tree.nodes.get('Principled BSDF')
-    metal=group.endswith('Hardware')
-    shader.inputs['Roughness'].default_value=.29 if metal else .80
-    shader.inputs['Metallic'].default_value=.58 if metal else 0
-    if group.endswith('Weave'):texture_node(material)
-    else:
-        colors=tree.nodes.new('ShaderNodeVertexColor');colors.layer_name='Finish'
-        tree.links.new(colors.outputs['Color'],shader.inputs['Base Color'])
-    for ob in objects:
-        mesh=ob.data;rgba=mesh.materials[0].diffuse_color[:]
-        attr=mesh.color_attributes.new(name='Finish',type='BYTE_COLOR',domain='POINT')
-        # Broad reflection bands remain legible under the game's diffuse mall lights.
-        # Directional values are baked on the unchanged editable surface normals.
-        for vertex,item in zip(mesh.vertices,attr.data):
-            normal=vertex.normal
-            if metal:
-                streak=max(0,normal.x*.78-normal.y*.62)**7
-                shade=.72+.22*max(0,normal.z)+.50*streak
-            elif group.endswith('Weave'):
-                shade=.85+.12*max(0,normal.z)+.10*max(0,-normal.x)
-            else:
-                shade=.96+.04*max(0,normal.z)
-            item.color=tuple(min(1,c*shade) for c in rgba[:3])+(1,)
-        mesh.materials.clear();mesh.materials.append(material);ob.select_set(True)
-    bpy.context.view_layer.objects.active=objects[0];bpy.ops.object.join();bpy.context.object.name=group
-bpy.ops.export_scene.gltf(filepath=str(OUT/'gallery.glb'),export_format='GLB',export_animations=False)
+exec(compile((OUT/'export.py').read_text(),str(OUT/'export.py'),'exec'),{'__file__':str(OUT/'export.py')})

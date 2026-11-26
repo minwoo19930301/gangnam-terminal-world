@@ -1,0 +1,11 @@
+{
+  "floor": "9F",
+  "x": -37.46,
+  "z": 43.72,
+  "yaw": 113,
+  "pitch": -16,
+  "meshName": "RoyalPrincessPorcelain",
+  "sourceBlend": "display.blend",
+  "sourceCollection": "SSG_9F_RoyalCopenhagen",
+  "nativeLabel": "로얄코펜하겐"
+}
