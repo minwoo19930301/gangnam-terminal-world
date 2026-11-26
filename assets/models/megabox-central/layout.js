@@ -23,6 +23,7 @@ export const publicAisle=[[678,950],[821,815],[821,725],[840,725],[840,814],[842
 const northPreview=Math.min(774,transverseNorth-3);
 const arcadePreview=[[[722,northPreview],[1033,northPreview],[1033,813],[904,813],[904,841],[840,841],[840,812],[722,812]],
   [[904,760],[1033,760],[1033,northPreview],[904,northPreview]],
+  [[968,750],[1019,750],[1019,760],[968,760]],
   [[816,723],[846,723],[846,838],[696,975],[673,950],[816,812]]]
   .map(outline=>outline.map(([px,py])=>plan(px,py))).map(poly=>({poly,box:polyBBox(poly)}));
 

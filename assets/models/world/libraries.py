@@ -29,6 +29,7 @@ SHELVES = {
     "newcore-yucheon": "뉴코아 1관 5층 · 유천냉면",
     "tailored-front": "경부선 7층 · 신사복 판매 전면",
     "knit-front": "경부선 8층 · 니트 판매 전면",
+    "osulloc-matcha": "신세계 강남점 · 오설록 말차 스테이션",
     "ypbooks-rotary": "영풍문고 강남신세계점 · 원형 광장 입구",
     "banpo-apartments": "신반포로 · 아파트 세 단지",
     "megabox-central": "메가박스 센트럴 · B1 매표 로비",
