@@ -9738,6 +9738,24 @@ export function build(K) {
   function furnishUpperMerch(ctx) {
     const {id,name,kind,Wf:W,Dp:D,y,face,fb,fdisk,fball,fsign,person,seed,palette:p,ST}=ctx;
     if(id==='6F' && name==='리모와'){
+      // The three-bay architectural display runs down the side wall. The
+      // photographed oak gallery has its own wall across the back of the shop.
+      const centre=D*.52, span=Math.min(6,D-.92);
+      const rack=(along,depth)=>ST(.25-depth,centre+along);
+      fitArchitecture(K,wallArchitecture,'CaseGallery',(along,height,depth)=>{
+        const [x,z]=P(...rack(along*span/7,depth));
+        return [x,y+height,z];
+      });
+      const [signX,signZ]=P(...rack(0,-.18)),[frontX,frontZ]=P(...rack(0,-1.18));
+      K.sign('RIMOWA',{x:signX,y:y+2.47,z:signZ,w:2.15,h:.41,
+        rotY:Math.atan2(frontX-signX,frontZ-signZ),bg:null,fg:'#fff5e5'});
+      const outline=[[-span/2,.055],[span/2,.055],[span/2,-.88],[-span/2,-.88]];
+      K.phys.addPolyWalls(outline.map(([a,b])=>P(...rack(a,b))),y,y+2.1,.012,'shinsegae');
+      for(let bay=-1;bay<=1;bay++){
+        for(const [offset,scale] of [[-.38,.85],[.38,1.03]]){
+          shopDisplay('case',bay*span/3+offset,-.55,y+.29,rack,scale);
+        }
+      }
       // Keep the independent crossbody rail by the entrance.
       const side=W*.25;
       shopDisplay('pipeShelf',side,1.06,y+.035,ST);
