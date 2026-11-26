@@ -7,6 +7,7 @@ import sys
 from pathlib import Path
 
 import bpy
+from mathutils import Matrix
 
 here = Path(__file__).resolve().parent
 
@@ -22,14 +23,15 @@ def slot_value(material):
     return result
 
 
-def append_part(source, graph, datum, slots, points, faces):
+def append_part(source, graph, datum, slots, points, faces, transform=None):
     obj = source.evaluated_get(graph)
+    matrix = obj.matrix_world if transform is None else transform @ obj.matrix_world
     mesh = obj.to_mesh()
     try:
         mesh.calc_loop_triangles()
         offset = len(points) // 3
         for vertex in mesh.vertices:
-            x, y, z = obj.matrix_world @ vertex.co
+            x, y, z = matrix @ vertex.co
             points.extend(round(v * 100) for v in (x, z - datum, -y))
         local_slots = []
         for mat in mesh.materials:
@@ -43,7 +45,7 @@ def append_part(source, graph, datum, slots, points, faces):
                 slots.append(fallback)
             local_slots.append(slots.index(fallback))
         uv = mesh.uv_layers.active
-        reverse = obj.matrix_world.to_3x3().determinant() < 0
+        reverse = matrix.to_3x3().determinant() < 0
         for tri in mesh.loop_triangles:
             if tri.area < 1e-6:
                 continue
@@ -77,13 +79,18 @@ def export_buildings(target):
                     source,
                     *sorted(source.children_recursive, key=lambda o: o.name),
                 ]:
-                    if part != source and not (
-                        part.type == "MESH" and part.get("shell_part")
-                    ):
+                    if part != source and not part.get("shell_part"):
                         continue
-                    append_part(
-                        part, graph, source["terrain_datum"], slots, points, faces
-                    )
+                    if part.instance_collection:
+                        collection = part.instance_collection
+                        placement = part.evaluated_get(graph).matrix_world
+                        placement = placement @ Matrix.Translation(-collection.instance_offset)
+                        for member in sorted(collection.all_objects, key=lambda o: o.name):
+                            if member.type == "MESH":
+                                append_part(member, graph, source["terrain_datum"],
+                                            slots, points, faces, placement)
+                    elif part.type == "MESH":
+                        append_part(part, graph, source["terrain_datum"], slots, points, faces)
                 if not faces:
                     raise ValueError("Empty exterior " + key)
             library[key] = [role, slots, points, faces]

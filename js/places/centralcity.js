@@ -1835,7 +1835,8 @@ export function build(K) {
   }
 
   // ================================================================= south block — 파미에스테이션 1F/2F, 하차장, 메가박스 B1
-  // Official Famille Gate2 is level and open. Remove unsupported E4B1well/E5flight immediately behind its door.
+  // Gate 2 opens onto the 1F arcade. The short Honam-side flight and its
+  // level side passage are built at the connector below.
   // South elevator and officialeastescclusterretainupperaccess; B1remainsreachablefromhallcores.
   // OfficialGate5/6westcornercontainstoilets,notflights:removeoldB1/groundandground/upperstairs.
   // A newplan-backedupperescalatorisprovidedatFamilleGate3/unit32sidebelow.

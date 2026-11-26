@@ -39,7 +39,30 @@ export function gardenReference(x,z,ground) {
   const low=mix(10.93,10.40,blend(20,285,s));
   const northFoot=mix(-39,-14,blend(-22,25,s));
   const foundation=mix(low,garageBase,blend(northFoot,northFoot+13,v));
-  const reference=mix(ground,foundation-terminalSurveyHeight,weight);
+  let reference=mix(ground,foundation-terminalSurveyHeight,weight);
+
+  // The roof and approach road sit above Famille's covered street. The two
+  // public halls meet on the east hall datum. Keep that lower reference inside
+  // the building footprint so the separate street and cycleway retain theirs.
+  if (x>=-170 && x<=34 && z>=126 && z<=240) {
+    const norm=Math.hypot(.3639,.9315), ax=.3639/norm, az=.9315/norm;
+    const along=(x+135.7)*ax+(z-9.9)*az, across=(x+135.7)*az-(z-9.9)*ax;
+    // Taper the corners at the two exterior service lanes. The long shop
+    // fronts and their fittings share the same base as the pedestrian aisle.
+    const wide=blend(-96,-81,across)*(1-blend(18,34,across));
+    const westLimit=-102+7*(1-blend(166,176,along))+8*blend(196,204,along);
+    const wing=blend(161,165,along)*(1-blend(197+11*wide,200+15*wide,along))*
+      blend(westLimit,westLimit+5,across)*(1-blend(75,85,across));
+    const entrance=blend(133,148,along)*(1-blend(190,200,along))*
+      blend(6,16,across)*(1-blend(28,38,across));
+    // The round atrium and its short glazed link are part of the same 1F.
+    const curve=blend(214,219,along)*(1-blend(223,226,along));
+    const atrium=(1-blend(22,25,Math.hypot(x+47.05,z-214.45)))*
+      (1-blend(26+3*curve,29+1.2*curve,across));
+    const link=blend(188,196,along)*(1-blend(221,228,along))*
+      blend(0,6,across)*(1-blend(20,26,across));
+    reference=mix(reference,hotelBase-terminalSurveyHeight,Math.max(wing,entrance,atrium,link));
+  }
   if (x<394 || x>495 || z< -82 || z>65) return reference;
 
   // The same cell can contain the hotel lane and the outer slip to the

@@ -13,7 +13,7 @@ export function exteriorReliefEnabled() { return enabled; }
 const survey = {x0,z0,step,width,height,samples};
 const city = {...survey, samples:Object.keys(heightEdits.city).length ? samples.slice() : samples};
 for (const [index,metres] of Object.entries(heightEdits.city)) city.samples[index]=metres;
-const garden = {x0:-150,z0:-175,step:5,width:131,height:96};
+const garden = {x0:-175,z0:-175,step:5,width:136,height:96};
 const inGarden = (x,z) => x>=garden.x0 && x<=garden.x0+(garden.width-1)*garden.step &&
   z>=garden.z0 && z<=garden.z0+(garden.height-1)*garden.step;
 
@@ -32,7 +32,10 @@ for(let j=0;j<garden.height;j++) for(let i=0;i<garden.width;i++) {
   const x=garden.x0+i*garden.step, z=garden.z0+j*garden.step;
   const ground=sample(city,x,z), registered=gardenReference(x,z,ground);
   const index=j*garden.width+i;
-  garden.samples[index]=heightEdits.garden[index] ?? registered;
+  // The five western columns extend the garden under the terminal. Original
+  // Blender vertex keys remain valid for previously exported height edits.
+  const editKey = i>=5 ? j*131+i-5 : 131*garden.height+j*5+i;
+  garden.samples[index]=heightEdits.garden[editKey] ?? registered;
   if (Math.abs(garden.samples[index]-ground)<1e-7) continue;
   // A changed node can influence both sides of a coarse grid boundary.
   for(const dx of [-.01,.01]) for(const dz of [-.01,.01])

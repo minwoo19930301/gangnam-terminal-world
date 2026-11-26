@@ -49,12 +49,16 @@ assert len(city.timeline_markers) == 4
 sun = city.objects["서울 태양"]
 city.frame_set(750)
 midday = sun.data.energy
+street_material = bpy.data.materials["서울 가로등 · 하향 발광"]
+lens_strength = street_material.node_tree.nodes.get("Principled BSDF").inputs["Emission Strength"]
+assert lens_strength.default_value < .01
 city.frame_set(1320)
-assert sun.data.energy < 0.01 and midday > 1
+assert sun.data.energy < 0.01 and midday > 1 and lens_strength.default_value > 100
 city.frame_set(750)
 exporter = runpy.run_path(str(here / "export.py"))["export_buildings"]
 roads = runpy.run_path(str(here / "road-axes.py"))["export_axes"]
-terrain = runpy.run_path(str(here / "height-controls.py"))["export_controls"]
+height_controls = runpy.run_path(str(here / "height-controls.py"))
+terrain = height_controls["export_controls"]
 street = runpy.run_path(str(here / "street-layout.py"))["export_street_layout"]
 bpy.context.window.scene = gallery
 exporter(out / "original.gz")
@@ -93,7 +97,7 @@ summary = {
     "galleryInstances": len(gallery.objects),
     "gameShell": target["shell_key"],
     "road": road["way_id"],
-    "gardenSample": index,
+    "gardenSample": height_controls["edit_key"]("garden", grid["grid_shape"], index),
     "facades": sum(bool(o.get("landmark_facade")) for o in city.objects),
     "roadCurves": sum(bool(o.get("way_id")) for o in city.objects),
     "terrainNodes": sum(

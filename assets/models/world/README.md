@@ -2,7 +2,7 @@
 
 [통합 원본 gangnam-terminal.blend](gangnam-terminal.blend)를 열면 반포에서 잠원한강공원까지의 건물·도로·가로수·수변 외관을 미터 단위로 편집할 수 있습니다. 상단 Scene 선택기에서 **시설 · 모델 라이브러리**로 전환하면 장소별 건축과 매장 집기, 차량, 방문객, 계단·승강기 부품을 볼 수 있습니다. 시설 원본은 같은 저장소의 상대 경로로 연결됩니다. 파일을 다른 컴퓨터로 옮길 때는 저장소의 폴더 구조를 함께 유지해 주세요.
 
-[도시 전경](preview.jpg) · [아침·낮·노을·밤](daylight.jpg) · [반포대교·잠수교와 세빛섬](river-landmarks.jpg)
+[도시 전경](preview.jpg) · [아침·낮·노을·밤](daylight.jpg) · [게임의 실내외 야간 조명](night-interiors.jpg) · [반포대교·잠수교와 세빛섬](river-landmarks.jpg)
 
 ## Blender 편집을 게임에 반영하기
 
@@ -29,6 +29,7 @@ npm run serve -- 8765
 
 | 선반 | 게임에 반영되는 부분 |
 | --- | --- |
+| [신세계 북측 외벽 간판](../shinsegae-facade/README.md) | 백화점 북측 입구의 채널 문자, 간판 바탕과 테두리 |
 | [공용 실내 · 흡음 천장패널](../shared-ceiling/README.md) | 시설 모듈이 공통으로 사용하는 흡음판, 확산 렌즈, 환기 그릴의 모양과 반복 간격 |
 | [뉴코아 층판·바닥 마감](../newcore-floor/README.md) | 1·2관 B1~5F와 3관 1F의 포세린·헤링본·연마석, 반복 간격과 층판 두께 |
 | [신세계 상층 천장 마감](../upper-retail-finish/README.md) | 상층 공용부 매입 조명, 8층 격자 천장과 선형 조명 |

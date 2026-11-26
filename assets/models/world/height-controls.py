@@ -41,6 +41,17 @@ def build_controls(scene, grids):
         obj.hide_set(True)
 
 
+def edit_key(key, shape, index):
+    # The original garden grid is still addressable using its original keys.
+    w, h, step, x0, _ = shape
+    if key == "garden" and x0 == -175 and w == 136 and step == 5:
+        row, column = divmod(index, w)
+        if column < 5:
+            return 131 * h + row * 5 + column
+        return row * 131 + column - 5
+    return index
+
+
 def export_controls(world_dir, target=None):
     result = {}
     for obj in bpy.data.scenes["반포 · 도시 전경"].objects:
@@ -60,7 +71,7 @@ def export_controls(world_dir, target=None):
             ):
                 raise ValueError("Edit elevations along Z on " + obj.name)
             if abs(p.z - source.data[i].value) > 0.001:
-                changes[str(i)] = round(p.z, 3)
+                changes[str(edit_key(key, obj["grid_shape"], i))] = round(p.z, 3)
         result[key] = changes
     if set(result) != {"city", "garden"}:
         raise ValueError("Missing survey control grid")
