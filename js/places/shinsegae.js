@@ -8,6 +8,7 @@ import {angle as cinemaYaw,point as cinemaPoint} from '../../assets/models/megab
 import {placeAtriumCeiling} from '../../assets/models/ssg-atrium-soffit/model.js';
 import {marketProduceCeiling} from '../../assets/models/ssg-market-ceiling/model.js';
 import {shopArrival as onimaruArrival} from '../../assets/models/kyoto-onimaru/layout.js';
+import {placeGuo} from '../../assets/models/guo-dumpling/model.js';
 import {placeSpringRolls} from '../../assets/models/blue-butterfly/model.js';
 import {placeOnimaru} from '../../assets/models/kyoto-onimaru/model.js';
 import {giftConcierge} from '../../assets/models/ssg-market-gift/model.js';
@@ -2727,7 +2728,7 @@ export function build(K) {
       }
       const sU=Math.max(u0+.35,Math.min(u1-.35,preferred[0])),sV=Math.max(v0+.35,Math.min(v1-.35,preferred[1]));
       const signName=c.name==='건강식품 복합셀'?'정관장 · 건강식품':c.name==='기프트 컨시어지'?'GIFT CONCIERGE':c.name==='팝업'&&c.rect[0]>780?'POP-UP':c.name;
-      if(!['보앤미','발효곳간','비첸향','교토 오니마루'].includes(c.name)&&!(c.zone==='north_deli'&&c.kind==='deli'))
+      if(!['보앤미','발효곳간','비첸향','교토 오니마루','구오 X 여경래'].includes(c.name)&&!(c.zone==='north_deli'&&c.kind==='deli'))
         sign(signName,sU,sV,y+2.25,face,Math.max(.8,Math.min(horizontal?W-.2:D-.2,6.4)),.40,{bg:c.kind==='popup'?'#6f2334':'#3b382d',fg:'#f4e4bd',twoSided:true,pxPerM:120});
       // A retained structural core may consume a tiny schematic cell. Keep its
       // plan sign at that cell, record the exception instead of moving its shop.
@@ -2743,6 +2744,13 @@ export function build(K) {
         placeSpringRolls(K,x,z,RA-Math.PI/2,y);
         if(fits(c,u+.8,v,.35,.35))customer(u+.8,v,true);
         deliPavilion(c);
+        return;
+      }
+      if(c.name==='구오 X 여경래'){
+        const [x,z]=P(u,v);
+        box(u,v,w,d,y,.83,0x55463e,{skip:['top','bottom','n','s','e','w']});
+        placeGuo(K,x,z,RA,y);
+        if(fits(c,u,v-.85,.35,.35))customer(u,v-.85,true);
         return;
       }
       if(c.name==='교토 오니마루'){

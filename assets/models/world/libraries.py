@@ -103,6 +103,7 @@ SHELVES = {
     "daiso-merchandise": "다이소 주방·문구 매대",
     "gyeongbu-seating": "경부선 · 대합실 연석",
     "lounge-chair": "JW 8층 라운지 · 라탄 암체어",
+    "guo-dumpling": "신세계 델리 · 구오 만두",
     "blue-butterfly": "신세계 델리 · 블루버터플라이",
     "kyoto-onimaru": "신세계 식품관 · 교토 오니마루",
     "shinsegae-facade": "신세계 북측 외벽 간판",
