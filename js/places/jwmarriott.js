@@ -1,3 +1,4 @@
+import {registerMargauxHearth} from '../../assets/models/margaux-woodfire/model.js';
 import {registerGardenWindow} from '../../assets/models/margaux-garden-window/model.js';
 import {margauxChairs} from '../../assets/models/margaux-chair/model.js';
 import {registerExecutiveSeats} from '../../assets/models/executive-seating/model.js';
@@ -1765,8 +1766,9 @@ export function build(K) {
     HP({ tex: 'tile', color: 0xcbb9a7 }, [-7.85, 40, 15.85, 57.9], y + 0.01);
     B({ u: 11.6, v: 49, y, w: 1.2, d: 14, h: 1.0, mat: 0x2a2018, top: 0x4a4a4a });
     B({ u: 14.6, v: 49, y, w: 2.2, d: 14, h: 0.95, mat: 0x5a5a5a, top: 0x3a3a3a });
-    B({ u: 14.6, v: 49, y: y + 0.95, w: 1.6, d: 3, h: 0.7, mat: 0x2a2a2a }); B({ u: 14.4, v: 49, y: y + 1.0, w: 1.0, d: 2.6, h: 0.4, mat: { tex: 'emit', color: 0xff8a30 }, solid: false });
-    B({ u: 14.6, v: 49, y: y + 2.9, w: 2.4, d: 6, h: 1.4, mat: 0x6a6a6a, solid: false });
+    // Keep the existing collision volume. Its old solid front hid the entire fire.
+    B({u:14.6,v:49,y:y+.95,w:1.6,d:3,h:.7,mat:0x2a2a2a,skip:['top','bottom','n','s','e','w']});
+    registerMargauxHearth(baseKit,{P,rect:RECT,angle:R,y});
     for (const v of [43.5, 47, 51, 54.5]) MAN(13.6, v, y, { shirt: 0xf2f2f2, rotY: FACE.W });
     // The architect's 7F photographs show cream banquettes enclosed by oak
     // returns and individual bronze lanterns. Keep the eastern kitchen aisle clear.
@@ -1826,7 +1828,15 @@ export function build(K) {
     B({ u: -20.5, v: 56.8, y, w: 4.4, d: 0.6, h: 1.2, mat: { tex: 'jwStone' } }); SG(['JW 가든'], { u: -20.5, v: 56.45, y: y + 0.8, w: 3.4, h: 0.5, f: 'N', bg: '#d9ccb6', fg: '#5a4630' });
     SG(['JW GARDEN'], { u: -20.5, v: 7, y: y + 2.4, w: 3.2, h: 0.45, f: 'N', bg: '#2b241d', fg: '#efe2c4', twoSided: true });
     CROWD([-23.5, 9, -17.5, 22], y, 10, 703); CROWD([-7, 1, 15, 5], y, 8, 704);
-    SUBZ('리플렉팅 풀', '7F', 'JW 가든 수경 시설', [-22.05, 22.5, -18.95, 39.5]); SUBZ('모보 바 테라스', '7F', '파라솔 좌석 · 퍼골라', [-8, .45, 16, 5.9]); SUBZ('정원 산책로', '7F', 'JW 가든', [-23.6, 5.5, -17.4, 57]); SUBZ('그릴 오픈 키친', '7F', '더 마고 그릴 · 우드 파이어', [10.8, 41, 15.85, 57]);
+    SUBZ('리플렉팅 풀', '7F', 'JW 가든 수경 시설', [-22.05, 22.5, -18.95, 39.5]); SUBZ('모보 바 테라스', '7F', '파라솔 좌석 · 퍼골라', [-8, .45, 16, 5.9]); SUBZ('정원 산책로', '7F', 'JW 가든', [-23.6, 5.5, -17.4, 57]);
+    // Guests view the grill across the serving counter. Keep the existing
+    // floor area and include its spectator bay rather than dropping them behind the counter.
+    const [guestX,guestZ]=P(9.22,47.1);
+    const hearthFront=[[10.8,41],[15.85,41],[15.85,57],[10.8,57],[10.8,48.35],
+      [8.92,48.35],[8.92,46.65],[10.8,46.65]];
+    K.zone({name:'그릴 오픈 키친',floor:'7F',sub:meta.name+' · 더 마고 그릴 · 우드 파이어',
+      poly:hearthFront.map(([u,v])=>P(u,v)),y0:y,y1:NEXT['7F'],priority:1,
+      mapArrival:{x:guestX,z:guestZ,yaw:yawTo(14.6-9.22,49-47.1)}});
     SUBZ('JW 가든', '7F', '루프탑 정원 · 모보 바 테라스', [-33, .25, -8.1, 60.3]);
   }
 

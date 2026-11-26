@@ -134,10 +134,10 @@ soffit.finish()
 def facade(name, wall, fixed, bays, opening):
     p=Part(name,FRAME)
     def box(along,height,span,thick,h,color):
-        if wall=='west':p.box(fixed,height,along,thick,h,span,color)
+        if wall in ('west','east'):p.box(fixed,height,along,thick,h,span,color)
         else:p.box(along,height,fixed,span,h,thick,color)
     lo,hi=bays[0],bays[-1]
-    for i,u in enumerate(bays):
+    for u in bays:
         box(u,2.24,.095,.15,4.48,'3b3935')
         box(u,2.24,.038,.18,4.48,'68645b')
     for a,b in zip(bays,bays[1:]):
@@ -154,6 +154,9 @@ def facade(name, wall, fixed, bays, opening):
 west=[-8.85,-6.64,-4.43,-2.22,-.20,2.20,4.41,6.62,8.85]
 south=[-11.92,-9.83,-7.74,-5.65,-3.56,-1.62,1.62,3.67,5.72,7.77,9.82,11.92]
 facade('Garden window mullions with open door', 'west',-11.94,west,(-.20,2.20))
+# The game already has a glazed east wall and a matching 2.4 m door. Carry
+# the dining-room frame profile along the existing glass beside the hearth.
+facade('Hearth side glazing with clear door', 'east',11.94,west,(-.20,2.20))
 facade('Dining room end window with open door', 'south',8.935,south,(-1.62,1.62))
 
 # True transparent sloping roof bays outside the solid overhead slab;

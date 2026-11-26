@@ -218,6 +218,8 @@ const sources = [
   ...[['포석정 · 옥상 점포와 좌석','포석정 · 옥상 점포와 좌석'],['포석정 · 일곱 식탁의 배치','포석정 · 공용 4인 식탁과 의자'],
       ['포석정 · 불판과 상차림','포석정 · 불판과 상차림'],['경부선 옥상 · 대형 청색 채널 글자','청색 옥상 대형 간판']]
     .map(([mesh,native])=>['gyeongbu','10F','gyeongbu-rooftop/poseokjeong-rooftop.blend',mesh,native]),
+  ...[['HearthMasonry','벽돌과 숯받이'],['HearthIron','쇠바구니와 선반'],['HearthEmbers','숯불']].map(([collection,label])=>
+    ['jwmarriott','7F','margaux-woodfire/hearth.blend','더 마고 그릴 · 화덕 '+label,collection]),
   ['jwmarriott','7F','margaux-chair/chair.blend','더 마고 그릴 · 다이닝 가죽 의자','MargauxDiningChair'],
   ...[['GardenSteel','프레임과 천장'],['GardenGlass','홈유리'],['GardenLight','펜던트 발광면'],['GardenFloor','카펫과 석재']].map(([collection,label])=>
     ['jwmarriott','7F','margaux-garden-window/window.blend','더 마고 그릴 · 정원창 '+label,collection]),
