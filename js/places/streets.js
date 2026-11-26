@@ -1,3 +1,4 @@
+import {diningWallOpening} from './_familleUpperPlan.js';
 import {placeGoterCrossing} from '../../assets/models/goter-crossing/model.js';
 import {placeSeoulCityBus} from '../../assets/models/seoul-city-bus/model.js';
 import {placeMedianShelters} from '../../assets/models/sinbanpo-bus-shelters/model.js';
@@ -2098,7 +2099,7 @@ function buildHotelDrive(K,clipPavement) {
       const a=retainingEdge[i-1],b=retainingEdge[i],length=Math.hypot(b[0]-a[0],b[1]-a[1]);
       const openings=i===retainingEdge.length-1
         ? [{at:(25-22.2)*length/5,w:3.04*length/5,y0:5,y1:8.23}] : [];
-      openings.push(...garageWallOpening(a,b,-.09,height-.32));
+      openings.push(...garageWallOpening(a,b,-.09,height-.32),...diningWallOpening(a,b));
       K.wall(...a,...b,-.09,height-.32,{mat:side,thick:.08,solid,openings});
     }
   }
