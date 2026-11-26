@@ -20,12 +20,12 @@ async function walk(page,key,ms){
   try { await page.waitForTimeout(ms); } finally { await page.keyboard.up(key); }
   return position(page);
 }
-async function choose(page,route,name,subtitle){
+async function choose(page,route,name,subtitle,query=name){
   await page.goto(url+route);
   await page.waitForFunction(()=>window.__world?.ready,null,{timeout:120000});
   if(await page.locator('#start').isVisible())await page.locator('#start').click();
   await page.keyboard.press('m');
-  await page.locator('#map-search').fill(name);
+  await page.locator('#map-search').fill(query);
   let row=page.locator('.gt-result').filter({has:page.getByText(name,{exact:true})});
   if(subtitle)row=row.filter({hasText:subtitle});
   assert.equal(await row.count(),1,name);
@@ -55,6 +55,15 @@ try {
   const foyer=await walk(page,'w',650);
   assert.equal(foyer.floor,'5F');
   console.log('ballroom escalator',boarding.y,foyer.y);
+
+  const lobby=await choose(page,'jwmarriott/5F','JW 메리어트 호텔 서울','천고 7m','그랜드 볼룸');
+  assert.equal(lobby.name,'그랜드 볼룸 포이어');
+  await page.waitForTimeout(4000);
+  const settled=await position(page);
+  assert.ok(Math.hypot(settled.x-lobby.x,settled.y-lobby.y,settled.z-lobby.z)<.05,'ballroom arrival drift');
+  const reception=await walk(page,'w',540);
+  assert.ok(Math.hypot(reception.x-lobby.x,reception.z-lobby.z)>1.2,'foyer path toward reception');
+  assert.ok(Math.abs(reception.y-lobby.y)<.08);
 
   const upper=await choose(page,'gotomall/B1','G13 출구 계단','상부 계단참');
   assert.equal(upper.floor,'B1');
