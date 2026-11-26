@@ -18,6 +18,7 @@ SHELVES = {
     "fortnum-tea-shop": "스위트 파크 · 포트넘앤메이슨 홍차 매장",
     "haz-bakery": "스위트 파크 · 하츠베이커리",
     "sweet-arabica": "스위트 파크 · %아라비카 입구",
+    "ssg-ferragamo": "신세계 6층 · 페라가모 남성",
     "ssg-rawrow": "신세계 8층 · 로우로우 여행가방",
     "newcore-yucheon": "뉴코아 1관 5층 · 유천냉면",
     "tailored-front": "경부선 7층 · 신사복 판매 전면",

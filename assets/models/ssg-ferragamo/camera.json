@@ -1,0 +1,11 @@
+{
+  "floor": "6F",
+  "x": -73.326,
+  "z": 17.850,
+  "yaw": 110.785,
+  "pitch": 0,
+  "meshName": "6층 페라가모 · 가죽 가방과 구두 진열",
+  "sourceBlend": "display.blend",
+  "sourceCollection": "FerragamoGangnamMens",
+  "nativeLabel": "페라가모"
+}
