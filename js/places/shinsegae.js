@@ -2,11 +2,13 @@ import { placeHypnos } from '../../assets/models/hypnos-showroom/model.js';
 import { registerSnowPeak } from './shinsegae-snowpeak.js';
 import { registerCdg } from './shinsegae-cdg.js';
 import { registerCollect } from './shinsegae-collect.js';
+import { registerFrisbee } from './shinsegae-frisbee.js';
 import { registerGarmin } from './shinsegae-garmin.js';
 import { registerBarrel } from './shinsegae-barrel.js';
 import { registerBrompton } from './shinsegae-brompton.js';
 import { registerLeica } from './shinsegae-leica.js';
 import { registerBossGolf } from './shinsegae-boss-golf.js';
+import { registerTumi } from './shinsegae-tumi.js';
 import { registerBarbour } from './shinsegae-field-jackets.js';
 import { registerFr8ight } from './shinsegae-fr8ight.js';
 import { registerAtelierChoux } from './shinsegae-atelier-choux.js';
@@ -7873,6 +7875,17 @@ export function build(K) {
           mat:0xd9d3c7,skip:['top','bottom','n','s','e','w']});
       }
     }
+    if(id==='6F'){
+      const room=upperBuildRect(id,guide.cells.find(c=>c.name==='투미'));
+      const u=(room[0]+room[2])/2-.26,v=room[3]-1.264;
+      const [x,z]=P(u,v),[rx,rz]=P(u-1,v),yaw=Math.atan2(z-rz,rx-x);
+      registerTumi(K,{poly:rect(...room),x,y,z,yaw});
+      for(const [side,back,w,d,h] of [[0,0,1.73,.70,1],[-1.31,.30,.78,.65,.55]]) {
+        K.box({x:x+side*Math.cos(yaw)-back*Math.sin(yaw),y,
+          z:z-side*Math.sin(yaw)-back*Math.cos(yaw),w,d,h,rotY:yaw,
+          mat:0xf2eada,skip:['top','bottom','n','s','e','w']});
+      }
+    }
     if(id==='7F'){
       const room=upperBuildRect(id,guide.cells.find(c=>c.name==='보스골프'));
       const u=room[2]-.58,v=(room[1]+room[3])/2;
@@ -7933,6 +7946,16 @@ export function build(K) {
         K.box({x:sx+side*Math.cos(swimYaw)+front*Math.sin(swimYaw),y,
           z:sz-side*Math.sin(swimYaw)+front*Math.cos(swimYaw),w,d,h,rotY:swimYaw,
           mat:0x183d70,skip:['top','bottom','n','s','e','w']});
+      }
+      const frisbee=upperBuildRect(id,guide.cells.find(c=>c.name==='프리스비 (애플)'));
+      const fu=(frisbee[0]+frisbee[2])/2,fv=13.55;
+      const [fx,fz]=P(fu,fv),[frx,frz]=P(fu+1,fv),fyaw=Math.atan2(fz-frz,frx-fx);
+      registerFrisbee(K,{poly:rect(...frisbee),x:fx,y,z:fz,yaw:fyaw});
+      for(const [side,front,w,d,h] of [[0,0,2.16,1.13,.9],[-2.84,-1.45,2.14,1.14,.9],
+          [-2.8,-4.28,2.5,.48,2.68],[2.8,-4.28,2.5,.48,2.68],[0,-4.27,2.88,.12,2.52],[0,-4.08,2.86,.55,.76]]){
+        K.box({x:fx+side*Math.cos(fyaw)+front*Math.sin(fyaw),y,
+          z:fz-side*Math.sin(fyaw)+front*Math.cos(fyaw),w,d,h,rotY:fyaw,
+          mat:0xeeeae5,skip:['top','bottom','n','s','e','w']});
       }
       const garmin=upperBuildRect(id,guide.cells.find(c=>c.name==='가민'));
       const gu=(garmin[0]+garmin[2])/2,gv=garmin[1]+1.645;
@@ -9499,7 +9522,7 @@ export function build(K) {
     // The photo predates 2025 and does not establish the current fit-out.
     // https://m.blog.naver.com/redzone72/223768195242
     if(id==='2F'&&n==='생 로랑')Object.assign(p,{wall:0xf1f2ef,portal:0x171919,trim:0x242727,accent:0x222525,dark:true,floor:{color:0xd7d9d6,gloss:.25}});
-    if(n==='프리스비 (애플)')Object.assign(p,{wall:0xf8f7f2,trim:0xbfbeb6,accent:0x3c4244,floor:{tex:'tile',color:0xeeeae1,gloss:.3},apple:true});
+    if(n==='프리스비 (애플)')Object.assign(p,{wall:0xf8f7f2,trim:0xbfbeb6,accent:0x3c4244,floor:{tex:'tile',color:0x555451,gloss:.12},apple:true});
     if(/레고/.test(n))Object.assign(p,{wall:0xfff3cf,trim:0xe7bd27,accent:0xc92d28});
     if(/아이큐박스|키움하우스|스누피/.test(n))Object.assign(p,{wall:0xf5eee0,trim:0xd5bc85,accent:0x81aaa1});
     if(/호경전|살롱드호우섬/.test(n))Object.assign(p,{wall:0xe3d7c3,trim:0x3c4c41,accent:0x82483c});
@@ -9530,7 +9553,7 @@ export function build(K) {
   function furnishUpperMerch(ctx) {
     const {id,name,kind,Wf:W,Dp:D,y,face,fb,fdisk,fball,fsign,person,seed,palette:p,ST}=ctx;
     if(id==='7F' && (name==='바버'||name==='프레이트'||name==='보스골프'))return;
-    if(id==='6F' && (name==='브루넬로 쿠치넬리'||name==='라이카'||name==='콜렉트'||name==='버윅'||name==='CDG CDG CDG'))return;
+    if(id==='6F' && (name==='브루넬로 쿠치넬리'||name==='라이카'||name==='콜렉트'||name==='버윅'||name==='CDG CDG CDG'||name==='투미'))return;
     if(id==='8F' && (name==='아크테릭스'||name==='브롬톤'||name==='스노우피크'||name==='가민'||name==='배럴'))return;
     if(id==='10F' && (name==='스누피 플레이스'||name==='스토케'||name==='마이크로 킥보드'||name==='컴프프로'||name==='토박스'||name==='아뜰리에 슈'||name==='베이비 디올'||name===toyShop))return;
     if(id==='9F' && (name.startsWith('드비알레/')||name==='몰테니&C'||name==='라잇나우'||name==='라마르조코'||name==='로보락'||name==='TWL'||name==='허먼 밀러'||name==='광주요'||name==='바카라'||name==='모비엘'||name==='밀레'))return; // Dedicated room detail owns the presentation island.
@@ -11625,32 +11648,8 @@ export function build(K) {
         for(let i=0;i<3;i++)glasses(a+(i-1)*Math.min(.42,w*.25),b,.91);
       }
     }else if(apple){
-      const aw=Math.min(W-.6,6.4);
-      shelf(W/2,D-.55,aw,3,ivory);
-      for(let r=0;r<3;r++)for(let i=0;i<Math.min(10,Math.floor(aw/.42));i++){
-        const a=W/2-aw/2+.27+i*.42;
-        B(a,D-.68,.25,.12,.59+r*.61,.35,0xf4f3ed);
-        B(a,D-.747,.16,.015,.65+r*.61,.18,[0x8fa5b7,0xc3a3b7,0x7e9687][(i+r)%3]);
-      }
-      const centers=W>10?[W*.16,W*.36,W*.65,W*.85]:W>5.5?[W*.24,W*.76]:[W*.27];
-      for(const [ci,a]of centers.entries())for(let r=0;r<Math.min(3,Math.max(1,Math.floor((D-1.8)/2.3)));r++){
-        const b=1.45+r*2.3,w=Math.min(2.3,W>10?W*.15:sideWidth-.15);if(w<.8)continue;
-        table(a,b,w,1.1,.84,oak);
-        for(let i=0;i<3;i++){
-          const aa=a+(i-1)*Math.min(.65,w*.27);
-          if((ci+r)%3===0){
-            B(aa,b,.37,.26,.925,.025,metal);B(aa,b+.10,.37,.025,.95,.24,dark);
-            B(aa,b+.083,.34,.012,.97,.19,{tex:'emit',color:0x99b8c8});
-          }else if((ci+r)%3===1){
-            B(aa,b,.15,.29,.925,.018,dark);B(aa,b-.005,.13,.25,.944,.008,{tex:'emit',color:0xc8a8cf});
-          }else{
-            B(aa,b,.16,.13,.925,.035,metal);B(aa,b+.025,.04,.06,.96,.16,metal);B(aa,b+.06,.46,.04,1.1,.32,metal);
-            B(aa,b+.035,.42,.012,1.12,.27,{tex:'emit',color:0x91c6c0});
-          }
-          B(aa+.15,b-.34,.11,.10,.925,.012,ivory);
-        }
-      }
-      fsign('액세서리',W/2,D-.78,y+2.58,Math.min(W-.5,3),.22,{bg:null,fg:'#565650',bold:false});
+      // The Gangnam reseller's photographed Mac tables occupy this bay.
+      return;
     }else if(id==='2F'&&name==='그라프'){
       // A 2026 Gangnam display photograph shows a softly lit grey niche,
       // slim warm-metal frame and dark jewellery busts. The rest of the
@@ -16598,7 +16597,7 @@ export function build(K) {
         fsign(shoeGroup?fasciaName:id==='5F'&&c.name==='미샤'?'MICHAA':id==='4F'&&c.name==='샤넬 슈 부틱'?'CHANEL':id==='5F'&&c.name==='킨더살몬'?'KINDERSALMON':id==='5F'&&c.name==='에스실'?'SSIL':id==='5F'&&c.name==='넘버링'?'NUMBERING':id==='4F'&&c.name==='폴로 랄프 로렌'?'POLO RALPH LAUREN':id==='4F'&&c.name==='레페토'?'repetto':id==='4F'&&c.name==='쏘솔트'?'SOSALT':id==='4F'&&c.name==='린드버그'?'LINDBERG':id==='4F'&&c.name==='코치'?'COACH':id==='4F'&&c.name==='버켄스탁'?'BIRKENSTOCK':id==='2F'&&brand2[c.name]?brand2[c.name]:id==='4F'&&c.name==='오트리'?'AUTRY':id==='4F'&&c.name==='헌터'?'HUNTER':id==='3F'&&c.name==='다미아니'?'DAMIANI':id==='3F'&&brand3[c.name]?brand3[c.name]:id==='4F'&&c.name==='이브살로몬'?'YVES SALOMON':id==='4F'&&brand4[c.name]?brand4[c.name]:id==='5F'&&brand5[c.name]?brand5[c.name]:c.name==='몽클레르'?'MONCLER':c.name==='펜디'?'FENDI':id==='5F'&&c.name==='룰루레몬'?'lululemon':c.name==='불가리'&&id==='2F'?'BVLGARI':c.name==='티파니앤코'&&id==='2F'?'TIFFANY & CO.':c.name==='로에베'&&id==='3F'?'LOEWE':c.name==='막스마라'&&id==='3F'?'MAX MARA':c.name,(id==='2F'&&c.name==='불가리'?Wf-1.8:frontAt),.075,y+(sharedEntry?2.91:id==='8F'?2.75:id==='2F'&&c.name==='고야드'?3.34:id==='2F'&&c.name==='티파니앤코'?2.94:3.25),Math.min(publicWidth-.55,id==='2F'&&c.name==='불가리'?2.8:8.5),id==='2F'&&c.name==='고야드'?.26:Math.min(id==='8F'?.35:.45,.19+Wf*.035),{bg:id==='2F'&&c.name==='고야드'?null:bg,fg:id==='2F'&&c.name==='고야드'?'#dfc77d':palette.dark&&!chanel2&&id!=='8F'?'#f4eee0':fg,twoSided:true});
       }
       // A clear counter at the rear side, payment terminal and framed mirror.
-      if(!(id==='7F'&&(c.name==='바버'||c.name==='프레이트'||c.name==='보스골프'))&&!(id==='6F'&&(c.name==='브루넬로 쿠치넬리'||c.name==='라이카'||c.name==='콜렉트'||c.name==='버윅'||c.name==='CDG CDG CDG'))&&!(id==='8F'&&(c.name==='아크테릭스'||c.name==='브롬톤'||c.name==='스노우피크'||c.name==='가민'||c.name==='배럴'))&&!(id==='10F'&&(c.name==='스누피 플레이스'||c.name==='스토케'||c.name==='마이크로 킥보드'||c.name==='컴프프로'||c.name==='토박스'||c.name==='아뜰리에 슈'||c.name==='베이비 디올'||c.name===toyShop))&&!(id==='9F'&&(c.name==='몰테니&C'||c.name==='라잇나우'||c.name==='라마르조코'||c.name==='로보락'||c.name==='TWL'||c.name==='허먼 밀러'||c.name==='광주요'||c.name==='바카라'||c.name==='모비엘'||c.name==='밀레'))&&!popupStage&&!jewelryIsland&&!(id==='5F'&&['베네통','캐나다 구스'].includes(c.name))&&Wf>2.3&&Dp>2.8&&!(id==='2F'&&['생 로랑','불가리','보테가 베네타','헬렌카민스키','디올'].includes(c.name))&&!(id==='3F'&&['아디르','더로우','호라이즌','알라이아','분더샵 여성','바쉐론 콘스탄틴','릭오웬스','오데마피게','로에베','몽블랑','발렌티노','브레게','프레드','부쉐론','끌로에','아크리스','블랑팡'].includes(c.name))&&!(id==='4F'&&['토리버치','A.P.C.','포르테 포르테','N°21','메종 키츠네','레페토','폴로 랄프 로렌','샤넬 슈 부틱','루이비통','지안비토로시','린드버그'].includes(c.name))&&!(id==='5F'&&['델라라나','위뜨','헤지스','더일마','룩캐스트','루에브르','타낫','뷰오리','포유어아이즈온리','랙앤본','킨더살몬','던스트','에스실','넘버링','미샤','쁘렝땅','조셉앤 스테이시','렉토','럭키슈에뜨','르917 (르셉템버)','멤버스바','SHOP 아모멘토'].includes(c.name))){
+      if(!(id==='7F'&&(c.name==='바버'||c.name==='프레이트'||c.name==='보스골프'))&&!(id==='6F'&&(c.name==='브루넬로 쿠치넬리'||c.name==='라이카'||c.name==='콜렉트'||c.name==='버윅'||c.name==='CDG CDG CDG'||c.name==='투미'))&&!(id==='8F'&&(c.name==='아크테릭스'||c.name==='브롬톤'||c.name==='스노우피크'||c.name==='가민'||c.name==='배럴'))&&!(id==='10F'&&(c.name==='스누피 플레이스'||c.name==='스토케'||c.name==='마이크로 킥보드'||c.name==='컴프프로'||c.name==='토박스'||c.name==='아뜰리에 슈'||c.name==='베이비 디올'||c.name===toyShop))&&!(id==='9F'&&(c.name==='몰테니&C'||c.name==='라잇나우'||c.name==='라마르조코'||c.name==='로보락'||c.name==='TWL'||c.name==='허먼 밀러'||c.name==='광주요'||c.name==='바카라'||c.name==='모비엘'||c.name==='밀레'))&&!popupStage&&!jewelryIsland&&!(id==='5F'&&['베네통','캐나다 구스'].includes(c.name))&&Wf>2.3&&Dp>2.8&&!(id==='2F'&&['생 로랑','불가리','보테가 베네타','헬렌카민스키','디올'].includes(c.name))&&!(id==='3F'&&['아디르','더로우','호라이즌','알라이아','분더샵 여성','바쉐론 콘스탄틴','릭오웬스','오데마피게','로에베','몽블랑','발렌티노','브레게','프레드','부쉐론','끌로에','아크리스','블랑팡'].includes(c.name))&&!(id==='4F'&&['토리버치','A.P.C.','포르테 포르테','N°21','메종 키츠네','레페토','폴로 랄프 로렌','샤넬 슈 부틱','루이비통','지안비토로시','린드버그'].includes(c.name))&&!(id==='5F'&&['델라라나','위뜨','헤지스','더일마','룩캐스트','루에브르','타낫','뷰오리','포유어아이즈온리','랙앤본','킨더살몬','던스트','에스실','넘버링','미샤','쁘렝땅','조셉앤 스테이시','렉토','럭키슈에뜨','르917 (르셉템버)','멤버스바','SHOP 아모멘토'].includes(c.name))){
         const cw=Math.min(1.4,Wf*.23),a=Wf*.76,b=Dp*.78;
         fb(a,b,cw,.55,y,.93,palette.wall,{solid:true});
         fb(a,b,cw+.04,.59,y+.93,.045,{color:palette.trim,gloss:.5});
