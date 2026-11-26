@@ -1,3 +1,4 @@
+import {buildSebitInformation} from '../../assets/models/sebit-information/room.js';
 import {buildSebitLounge} from '../../assets/models/sebit-lounge/lounge.js';
 import { buildRetailSquare } from '../../assets/models/onebailey/square.js';
 
@@ -261,28 +262,27 @@ export function build(K){
   K.slab(R(156,7.1,181,22.8),F+.12,{mat:{tex:'marble',gloss:.5},thick:.12});
   for(const [a,b] of [[155,162],[175,182]])wall(a,7,b,7,F,C,'ob-facade-granite');
   wall(162,7,166,7,F,C,'glass',{thick:.04});wall(168,7,175,7,F,C,'glass',{thick:.04});wall(162,7,175,7,F+2.85,C,0x8c8a86);
+  // The Seoul Tourism Foundation interior and front views meet at a compact visitor room.
+  wall(162.7,7.1,162.7,16.45,F+.12,C,0xeeeade,{thick:.085});
+  wall(162.7,16.45,175.7,16.45,F+.12,C,0xeeeade,{thick:.085});
+  wall(175.7,16.45,175.7,7.1,F+.12,C,0xeeeade,{thick:.085});
+  buildSebitInformation(K,{P,R,ROT,F,C});
   detail('관광안내센터 실내',155,7,182,23,()=>{
     for(const s of [162,164,166,168,170.3,172.6,175])box(s,7,F,.075,2.85,.075,0x4b504f);
     wall(155,6.96,182,6.96,F+2.85,C,'ob-facade-granite',{solid:false,thick:.03});
     sign('고터·세빛 관광안내센터',168.7,6.82,F+3.2,4.8,.35,ROT-PI/2,{bg:null,fg:'#eeeae1',bold:false});
-    sign('고터·세빛 관광안내',168.7,6.81,F+2.98,3.4,.12,ROT-PI/2,{bg:null,fg:'#eeeae1',bold:false});
+    sign('Goteo · Sebit Tourist Information Center',168.7,6.81,F+2.98,3.52,.13,ROT-PI/2,{bg:null,fg:'#f4f3ef',bold:false});
     sign('ⓘ',165.85,6.8,F+3.2,.42,.42,ROT-PI/2,{bg:null,fg:'#f1f1e7'});
     sign('11:00 ~ 20:00',167,6.77,F+2.55,1.0,.18,ROT-PI/2,{bg:null,fg:'#f4f4ec'});
     const posterTitles=['서울 여행','한강공원','세빛섬','문화 산책','서초 관광','공연 안내','서울 지도','관광 안내'];
     const posterColors=['#f3e8d5','#c74268','#4095b5','#e7bd66','#f3e8d5','#dd718f','#6d94b2','#eeeae2'];
-    for(let i=0;i<16;i++){const s=[162.6,163.4,164.4,165.2,169.0,170.5,172.3,174.2][i%8];
-      sign(posterTitles[i%8],s,6.81,F+.93+Math.floor(i/8)*.86,.45,.63,ROT-PI/2,{bg:posterColors[i%8],fg:i%4===0?'#49545c':'#fff',bold:false});}
-    for(const [a,b] of [[162.1,165.9],[168.1,174.9]])for(let y=F+.2;y<F+2.8;y+=.085)wall(a,7.2,b,7.2,y,y+.065,0xe9e9e6,{solid:false,thick:.018});
+    for(let i=0;i<8;i++){const s=[162.6,163.4,164.4,165.2][i%4];
+      sign(posterTitles[i%8],s,6.81,F+.93+Math.floor(i/4)*.86,.45,.63,ROT-PI/2,{bg:posterColors[i%8],fg:i%4===0?'#49545c':'#fff',bold:false});}
+    for(const [a,b,base] of [[162.1,165.9,.2],[168.1,169.94,.2],[169.96,174.9,2.50]])for(let y=F+base;y<F+2.8;y+=.085)wall(a,7.2,b,7.2,y,y+.065,0xe9e9e6,{solid:false,thick:.018});
     for(const s of [166.05,167.95]){box(s,7.55,F,1.0,2.75,.035,{tex:'glass',color:0xc0d0ca});box(s,7.8,F+.9,.035,.6,.035,0xc6cac8);}
-    box(168,16,F+.12,2,.95,5.5,0xf0f1e9,true);box(168,16,F+1.07,2.15,.08,5.8,{color:0xf7f4e6,gloss:.5});
-    sign('관광 안내',168,14.98,F+.7,2.5,.3,ROT-PI/2,{bg:null,fg:'#465f64'});
-    for(const s of [163,171,175]){box(s,21.8,F+.12,.6,2.4,3.2,0xeeeeea,true);
-      for(let row=0;row<4;row++)for(let j=0;j<5;j++)box(s-1.28+j*.58,21.43,F+.55+row*.4,.10,.31,.4,[0x86a5bc,0xcacf8e,0xc99fa3,0x76a68d][(row+j)%4]);}
-    box(174,10,F+.12,.5,2.2,2.6,0x222e3c,true);sign(['서울 여행','한강 · 세빛섬','문화 · 산책'],174,9.7,F+1.4,2.3,1.55,ROT-PI/2,{bg:'#3a8cb1'});
     box(161.3,6.4,F,.65,1.85,1,0xe0662a,true);sign(['WOWPASS','환전 · 교통카드'],161.3,6.03,F+1.3,.9,.58,ROT-PI/2,{bg:'#194aa0'});
     sign('환전',161.3,6.02,F+.5,.8,.28,ROT-PI/2,{bg:'#e78b43'});
-    for(const s of [160,167,175])box(s,16,C-.16,4,.06,.22,{tex:'emit',color:0xfff3d9});
-    const [x,z]=P(168,17.6);K.person(x,F+.12,z,{shirt:0xeeeeed,pants:0x293c4a,rotY:ROT});
+    const [x,z]=P(167.5,14.73);K.person(x,F+.12,z,{shirt:0xeeeeed,pants:0x293c4a,rotY:ROT-PI/2});
   });
   detail('대나무 중정',182,7,210,23,()=>{
     const rnd=K.rand(16891111);
@@ -320,8 +320,8 @@ export function build(K){
     }
   });
   detail('라운지와 안내센터 이용객',80,7,181,29,()=>{
-    for(const [s,v,sit,shirt] of [[89,18.1,true,0xc6bbaa],[91.8,26,true,0x6b8192],[104,17.1,true,0x7c8e7a],[88.6,26,true,0xb37b7a],[101.4,26,true,0xd6d5cc],[92,10,false,0x4d5965],[97,10.5,false,0xb7aa99],[166.7,13.7,false,0x768e9b],[167.5,12.5,false,0xc9b49e]]){
-      const [x,z]=P(s,v);K.person(x,F,z,{shirt,pants:0x4b525b,rotY:ROT+(s%2?0:PI),sit});}
+    for(const [s,v,sit,shirt] of [[89,18.1,true,0xc6bbaa],[91.8,26,true,0x6b8192],[104,17.1,true,0x7c8e7a],[88.6,26,true,0xb37b7a],[101.4,26,true,0xd6d5cc],[92,10,false,0x4d5965],[97,10.5,false,0xb7aa99],[166.7,11.62,false,0x768e9b],[170.85,11.36,false,0xc9b49e]]){
+      const [x,z]=P(s,v),atDesk=s>=155;K.person(x,atDesk?F+.12:F,z,{shirt,pants:0x4b525b,rotY:atDesk?ROT+PI/2:ROT+(s%2?0:PI),sit});}
   });
   K.detail({name:'공개공지 보행자',floor:'B1',poly:plaza,y0:F,y1:C},()=>{
     for(const [x,z,a] of [[-327,-63,3.5],[-337,-62,.9],[-335.8,-61.5,1.2]])K.person(x,F,z,{rotY:a,shirt:a>3?0x363a40:0xb2a79c,pants:0x555b62});

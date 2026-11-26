@@ -2,6 +2,17 @@
   "id": "onebailey",
   "name": "원베일리 공공보행통로",
   "updated": "2026-11-26",
+  "sebit_information_20261126": {
+    "naver": "https://map.naver.com/p/entry/place/1229683443",
+    "official": "https://korean.visitseoul.net/attractions/2024-Goto%C2%B7SebitTouristInformationCenter/KOPgrw5c5",
+    "visitor_views": "https://mediahub.seoul.go.kr/archives/2011692",
+    "reception": "https://korean.visitseoul.net/comm/getImage?srvcId=MEDIA&parentSn=66715&fileTy=MEDIA&fileNo=1",
+    "front": "https://korean.visitseoul.net/comm/getImage?srvcId=MEDIA&parentSn=66714&fileTy=MEDIA&fileNo=1",
+    "observed": "공식 전경은 복도 정면에서 오른쪽 뒤에 작은 다국어 서가와 세로형 디지털 열람기를 함께 보여준다. 실내에 들어섰을 때 왼쪽에는 더 긴 다섯 단 책장이 있으며 흰 곡면 안내대, 삼색 상호, 원형 천장 냉방기가 보인다. 사진에서 한국어·영어·일본어·중국어 책자를 확인했다. 서울시 현장 기사에는 미술관·체험 등 관광 항목과 서울 관광지도 표지가 나타난 디지털 열람 화면이 있다.",
+    "fit": "고투몰 G2와 반포한강공원 사이 공공보행로, 반포대로 333. 게임의 기존 출입구에서 12cm 문턱과 중앙 진입로를 유지하고 공개 사진에 맞춰 책장·안내대·열람판을 배치. 열람기 예시 화면과 각 책자 표지는 창작. 실제 치수와 책자 수량, 상호판 구멍 수, 차양 개방 정도는 실측하지 못했다.",
+    "native": "assets/models/sebit-information/visitor-desk.blend",
+    "comparison": "assets/models/sebit-information/play.jpg"
+  },
   "sebit_lounge_20261126": {
     "sources": [
       {

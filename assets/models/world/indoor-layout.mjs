@@ -56,6 +56,10 @@ const sources = [
     const name='딤딤섬 · '+label;
     return ['centralcity','1M','dimdimsum/restaurant.blend',name,name];
   }),
+  ...['흰 다섯 단 서가와 여행 책자','다국어 책장과 세로 열람 화면','곡면 방문 안내대와 상담 집기','삼색 상호와 은색 안내 벽','천장 매입등과 입구 문턱'].map(label=>{
+    const name='세빛 안내 · '+label;
+    return ['onebailey','B1','sebit-information/visitor-desk.blend',name,name];
+  }),
   ...['목재 카운터와 창 블라인드','새들 가죽 하이체어','증류주 병과 유리잔','칵테일과 바 도구','철제 선반의 허브 화분','석재 바닥과 접촉 그림자','호박빛 전구 갓'].map(label=>{
     const name='모보 바 · '+label;
     return ['jwmarriott','7F','mobo-bar/mobo.blend',name,name];
