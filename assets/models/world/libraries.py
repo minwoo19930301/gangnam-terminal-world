@@ -7,6 +7,13 @@ from mathutils import Vector
 
 
 SHELVES = {
+    "modernhouse-provence": "뉴코아 1관 4층 · 마르셰 프로방스",
+    "gyeongbu-icecream": "경부선 1층 · 배스킨라빈스",
+    "kervan": "파미에 2층 · 케르반",
+    "ssg-kids-footwear": "신세계 10층 · 토박스",
+    "ssg-gentle-espresso": "신세계 11층 · 살롱드호우섬",
+    "ssg-smeg": "신세계 9층 · 밀레",
+    "ssg-outdoors": "신세계 8층 · 아크테릭스",
     "gyeongbu-boards": "경부선 1층 · 출발 안내 전광판",
     "bean-brothers": "파미에 2층 · 빈브라더스",
     "lounge-drapery": "JW 8층 · 더 라운지 주름 커튼",
