@@ -10,6 +10,11 @@ import {relief} from '../../../js/banpo_relief.js';
 // Scene object (or a uniquely identifying child) -> editable native source.
 // Geometry decoder matrices and decorative LOD offsets live *below* the placement.
 const sources = [
+  ['gyeongbu','1F','gyeongbu-luggage/zimcarry-counter.blend','짐캐리 · 수하물보관과 운송 창구','LuggageCounter','Glass','Lit'],
+  ...['대기 접수대와 유아의자','유리블록과 대나무 조명','목제 식탁과 곡목 의자','찜기 세 가지와 차','피기 커스터드 번'].map(label=>{
+    const name='딤딤섬 · '+label;
+    return ['centralcity','1M','dimdimsum/restaurant.blend',name,name];
+  }),
   ...['목재 카운터와 창 블라인드','새들 가죽 하이체어','증류주 병과 유리잔','칵테일과 바 도구','철제 선반의 허브 화분','석재 바닥과 접촉 그림자','호박빛 전구 갓'].map(label=>{
     const name='모보 바 · '+label;
     return ['jwmarriott','7F','mobo-bar/mobo.blend',name,name];
