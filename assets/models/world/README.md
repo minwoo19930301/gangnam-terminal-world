@@ -29,6 +29,7 @@ npm run serve -- 8765
 
 | 선반 | 게임에 반영되는 부분 |
 | --- | --- |
+| [공용 실내 · 흡음 천장패널](../shared-ceiling/README.md) | 시설 모듈이 공통으로 사용하는 흡음판, 확산 렌즈, 환기 그릴의 모양과 반복 간격 |
 | [뉴코아 층판·바닥 마감](../newcore-floor/README.md) | 1·2관 B1~5F와 3관 1F의 포세린·헤링본·연마석, 반복 간격과 층판 두께 |
 | [신세계 상층 천장 마감](../upper-retail-finish/README.md) | 상층 공용부 매입 조명, 8층 격자 천장과 선형 조명 |
 | [경부선 매표기·다이소 생활용품](../concourse-fixtures/README.md) | 매표기 외장, 쿠션과 3단 진열대 |
