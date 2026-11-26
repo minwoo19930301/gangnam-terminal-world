@@ -1,0 +1,11 @@
+{
+  "floor": "8F",
+  "x": -68.76285,
+  "z": -23.06728,
+  "yaw": 42.78827,
+  "pitch": -26,
+  "meshName": "FrisbeeGangnamAluminium",
+  "sourceBlend": "gallery.blend",
+  "sourceCollection": "SSG_8F_Frisbee",
+  "nativeLabel": "프리스비"
+}

@@ -1,0 +1,11 @@
+{
+  "floor": "11F",
+  "x": -18.81965243440413,
+  "z": 59.82356784260514,
+  "yaw": 7.5,
+  "pitch": -48.0,
+  "meshName": "MyeonokTable",
+  "sourceBlend": "table.blend",
+  "sourceCollection": "SSG_11F_PyongyangMyeonok",
+  "nativeLabel": "평양면옥"
+}

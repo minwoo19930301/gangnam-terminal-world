@@ -1,0 +1,11 @@
+{
+  "floor": "11F",
+  "x": -40.645615,
+  "z": 95.283441,
+  "yaw": 35.0,
+  "pitch": -45.0,
+  "meshName": "KisaraGlazedServing",
+  "sourceBlend": "kisara.blend",
+  "sourceCollection": "SSG_11F_Kisara",
+  "nativeLabel": "키사라"
+}

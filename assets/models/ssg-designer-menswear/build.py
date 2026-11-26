@@ -3,9 +3,13 @@ from pathlib import Path
 from math import sin, cos, pi, radians
 import bpy
 import bmesh
+import sys
 from mathutils import Matrix, Vector
 
 OUT = Path(__file__).resolve().parent
+sys.dont_write_bytecode=True
+sys.path.insert(0,str(OUT))
+import fabric
 bpy.ops.wm.read_factory_settings(use_empty=True)
 gallery = bpy.data.collections.new('SSG_6F_Brunello_Cucinelli')
 bpy.context.scene.collection.children.link(gallery)
@@ -16,9 +20,9 @@ batch = 'CucinelliInterior'
 palette = dict(plaster='D9D3C7', niche='F0E9DF', ivory='ECE5D6', oak='AEA18C',
     base='7F7567', metal='ABA597', gold='B69968', espresso='514539', linen='B6AFA1',
     paper='F7F0E3', foliage='62734E', moss='98A178', blue='89969D', sepia='9F8C75',
-    sand='B59D7F', lapel='C4AB8E', seam='927A63', ink='23262C', navy='62718A',
-    rib='52617A', trim='B6A187', suede='6E5446', hood='645F58', tape='413B36',
-    teeth='C9B59B', horn='655345', walnut='8E694E')
+    sand='E1D7C5', lapel='EAE2D1', seam='BAA991', ink='23262C', navy='384966',
+    rib='3C4961', trim='B6A187', suede='A17152', hood='B8A688', wine='773A38', tape='413B36',
+    teeth='C9B59B', horn='655345', suede_seam='825A43', jacket_lining='453C34', walnut='8E694E', upholstery='D9D2C2',piping='C1B8A7')
 materials = {}
 def linear(c):
     s = int(c,16)/255
@@ -92,6 +96,10 @@ def oval(name, levels, color, n=32, ribs=0, amplitude=0, folds=0):
     if prefix and abs(transform[0][0]) < .55 and n >= 80:
         n//=2
         ribs//=2
+    if name in ('몸판','소매'):
+        # More longitudinal rings on the three front garments capture the drape;
+        # the edge-on rail keeps fewer profiles at this distance.
+        levels=fabric.densify(levels,.060 if abs(transform[0][0])<.55 else .037)
     rings=[]
     for cx,cy,z,w,d in levels:
         ring=[]
@@ -106,7 +114,7 @@ def oval(name, levels, color, n=32, ribs=0, amplitude=0, folds=0):
         attr=obj.data.color_attributes.new(name='Finish',type='BYTE_COLOR',domain='POINT')
         rgba=finish(color).diffuse_color
         for i,item in enumerate(attr.data):
-            factor=.76+.24*cos(ribs*(i%n)*2*pi/n)
+            factor=.92+.08*cos(ribs*(i%n)*2*pi/n)
             item.color=(*[channel*factor for channel in rgba[:3]],1)
         material=finish(color+' 골지') if color+' 골지' in palette else None
         if material is None:
@@ -135,6 +143,7 @@ def garment(kind,x,y,angle=0,scale=1):
     transform=Matrix.Translation((x,y,0)) @ Matrix.Rotation(radians(angle),4,'Z') @ Matrix.Diagonal((scale,scale,scale,1))
     prefix=['재킷 · ','니트 · ','점퍼 · '][kind]
     batch=['CucinelliTailoring','CucinelliCashmere','CucinelliSuede'][kind]
+    first_part=len(pieces.get(batch,[]))
     # Relative to the same 2.02 m rail, the three hems hang at different heights.
     top=1.89
     bottom=[1.08,1.16,1.19][kind]
@@ -144,7 +153,7 @@ def garment(kind,x,y,angle=0,scale=1):
     depths=[.083,.091,.099,.120,.114,.090,.051]
     col=['sand','navy','suede'][kind]
     torso=oval('몸판',[(0,0,h,w,d) for h,w,d in zip(heights,widths,depths)],col,
-         160 if kind==1 else 40,40 if kind==1 else 0,.022 if kind==1 else 0,.026)
+         88 if kind==1 else 40,22 if kind==1 else 0,.008 if kind==1 else 0,.024)
     def surface(a,h):
         for i in range(1,len(heights)):
             if h<=heights[i]: break
@@ -166,9 +175,9 @@ def garment(kind,x,y,angle=0,scale=1):
                 (.252,.013,1.69,.074,.079),(.222,.003,1.754,.073,.078),
                 (.207,.001,1.795,.052,.064),(.190,0,1.816,.028,.037)]
         levels=[(side*a,b,h,w,d) for a,b,h,w,d in levels]
-        oval('소매',levels,sleeveCol,24 if kind==0 else 80,20,.027 if kind else 0,.035)
+        oval('소매',levels,sleeveCol,28 if kind==0 else 56,14,.010 if kind else 0,.025)
         oval('소맷단',[(side*.309,-.030,bottom+.022,.056,.054),(side*.310,-.026,bottom+.078,.061,.058)],
-             sleeveCol,40,10,.023)
+             sleeveCol,40,10,.011)
         if kind==1:
             oval('배색 끝단',[(side*.309,-.030,bottom+.034,.057,.055),(side*.309,-.030,bottom+.041,.058,.055)],'trim')
         if kind==0:
@@ -177,7 +186,11 @@ def garment(kind,x,y,angle=0,scale=1):
                 rod('소매 뿔단추',(a,-.068,bottom+.061+.015*j),(a,-.073,bottom+.061+.015*j),.006,'horn')
         if kind!=1:
             pocket=[(side*.102,bottom+.199),(side*.209,bottom+.215)] if kind==0 else [(side*.135,bottom+.115),(side*.20,bottom+.263)]
-            stitch('주머니 입술',pocket,'seam' if kind==0 else 'tape',.006)
+            if kind==2:
+                stitch('스웨이드 주머니 테두리',pocket,'suede_seam',.006)
+                stitch('비스듬한 주머니 입구',[(a,h-.0014) for a,h in pocket],'espresso',.0024)
+            else:
+                stitch('주머니 입술',pocket,'seam',.006)
             if kind==0:
                 a,h=pocket[0];b,k=pocket[1]
                 patch('포켓 덮개',[(a,h),(b,k),(b,k-.039),(a,h-.039)],'lapel',.012)
@@ -185,16 +198,50 @@ def garment(kind,x,y,angle=0,scale=1):
     path('목제 옷걸이',[(-.206,.018,1.795),(-.087,.018,1.854),(0,.018,1.879),(.087,.018,1.854),(.206,.018,1.795)],.017,'walnut')
     path('옷걸이 갈고리',[(0,.018,1.875),(0,.018,1.96),(0,-.019,1.995),(0,-.020,2.024),(0,.001,2.045),(0,.029,2.042),(0,.045,2.021)],.005,'metal')
     if kind==0:
-        patch('안쪽 목과 안감',[(-.098,1.883),(0,1.905),(.096,1.883),(.053,1.69),(0,1.49)],'espresso')
+        # A faceted polygon across the entire chest cuts through the convex
+        # torso. Lay the lining and the rolled lapels along its surface instead.
+        lining=[];faces=[]
+        for i,(h,w) in enumerate([(1.475,.004),(1.52,.015),(1.62,.037),(1.74,.064),(1.834,.080),(1.887,.085)]):
+            row=[front(w*t,h,.018) for t in [-1,-.5,0,.5,1]]
+            lining.extend(row)
+            if i:
+                for j in range(4):
+                    k=(i-1)*5+j;faces.append((k,k+1,k+6,k+5))
+        part('재킷 사이의 짙은 안감',lining,faces,'espresso')
         for side in [-1,1]:
-            coords=[(.064,1.887),(.155,1.830),(.118,1.809),(.153,1.811),(.128,1.757),(.014,1.498)]
-            patch('노치 라펠',[(side*a,h) for a,h in coords],'lapel',.023)
-            stitch('깃선',[(side*.063,1.886),(side*.095,1.83),(side*.015,1.50)],'seam',.002)
+            rows=[(1.887,.065,.102),(1.830,.053,.157),(1.810,.049,.115),
+                  (1.804,.047,.151),(1.748,.038,.133),(1.635,.020,.085),
+                  (1.521,.007,.033),(1.493,.005,.012)]
+            verts=[];faces=[]
+            for i,(h,inner,outer) in enumerate(rows):
+                ridge=min(1.,(outer-inner)/.065)
+                for dx,over in [(inner,.022),((inner+outer)/2,.025+.021*ridge),(outer,.021)]:
+                    verts.append(front(side*dx,h,over))
+                if i:
+                    for k in (3*(i-1),3*(i-1)+1):faces.append((k,k+1,k+4,k+3))
+            lapel=part('굴려 접은 노치 라펠',verts,faces,'lapel')
+            for f in lapel.data.polygons:f.use_smooth=True
+            for j in range(1,len(rows)):
+                h0,_,w0=rows[j-1];h1,_,w1=rows[j]
+                path('접힌 라펠 가장자리',[front(side*w0,h0,.020),front(side*w1,h1,.020)],.0017,'seam')
+        patch('접은 버건디 포켓 스퀘어',[(.100,1.692),(.111,1.720),(.152,1.734),(.173,1.726),(.169,1.708)],'wine',.018)
         stitch('가슴 포켓',[(.086,1.688),(.186,1.71)],'lapel',.006)
+        # The pick stitches sit just inside the lapel edge.
+        for sign in (-1,1):
+            for j in range(17):
+                t=j/17
+                a=sign*(.122-.104*t);h=1.754-.248*t
+                stitch('라펠 피크 스티치',[(a,h),(a-sign*.0021,h-.0045)],'seam',.00085)
         stitch('티켓 포켓',[(.134,1.345),(.208,1.356)],'lapel',.005)
         for h in [1.486,1.402,1.317]:
             a=.012
-            rod('뿔단추',front(a,h,.012),front(a,h,.019),.010,'horn')
+            rod('뿔단추',front(a,h,.016),front(a,h,.024),.010,'horn')
+            for dx in (-.0025,.0025):
+                for dz in (-.0025,.0025):
+                    cy=surface(a,h)-.0244
+                    rod('뿔단추 구멍',(a+dx,cy,h+dz),(a+dx,cy-.0005,h+dz),.0015,'espresso')
+            cy=surface(a,h)-.0245
+            path('단추 실',[(a-.0025,cy,h-.0025),(a+.0025,cy-.0008,h+.0025)],.00055,'lapel')
         for s in [-1,1]:
             path('뒤트임',[(s*.126,.075,bottom+.005),(s*.125,.084,bottom+.14)],.003,'seam')
     if kind==1:
@@ -211,21 +258,65 @@ def garment(kind,x,y,angle=0,scale=1):
         oval('골지 허릿단',[(0,0,bottom-.002,.212,.085),(0,0,bottom+.053,.244,.093)],'rib',120,30,.023)
     if kind==2:
         oval('니트 허릿단',[(0,0,bottom-.004,.207,.087),(0,0,bottom+.054,.247,.096)],'hood',104,26,.025)
-        # Hollow cowl, taller at the back, rolls forward on either side of the neck.
-        rings=[]
-        for w,d,h in [(.106,.094,1.82),(.145,.116,1.90),(.135,.109,1.945),(.105,.085,1.942),(.094,.077,1.86)]:
-            rings.append([(w*cos(t*pi/20),.025+d*sin(t*pi/20),h+.062*sin(t*pi/20)) for t in range(40)])
-        skins('안감 있는 후드',rings,'hood',cap=False)
-        stitch('앞 지퍼 테이프',[(0,h) for h in heights],'tape',.010)
-        stitch('지퍼 체인',[(0,h) for h in heights],'teeth',.003)
-        for j in range(52):
-            h=bottom+.016+j*.0127
-            stitch('지퍼 이빨',[(-.004,h),(.004,h+.003)],'teeth',.0016)
-        for h in [bottom+.03,1.838]:
-            a,b,c=front(0,h,.022),front(.009,h-.022,.027),front(0,h-.037,.030)
-            path('양방향 지퍼 손잡이',[a,b,c,front(-.006,h-.02,.027),a],.0028,'metal')
+        # Open both zip ends. A curved cloth panel follows the convex chest,
+        # with each tape taking its own path above and below the closed middle.
+        for ends in [[(1.637,.002),(1.691,.020),(1.76,.039),(1.825,.060),(1.886,.086)],
+                     [(bottom,.051),(bottom+.04,.035),(bottom+.1,.011),(bottom+.131,.002)]]:
+            panel=[];quads=[]
+            for i,(h,w) in enumerate(ends):
+                for factor in [-1,-.5,0,.5,1]:panel.append(front(w*factor,h,.020))
+                if i:
+                    for k in range(4):
+                        q=5*(i-1)+k;quads.append((q,q+1,q+6,q+5))
+            part('지퍼 안쪽 안감',panel,quads,'jacket_lining')
+        # A folded hood hangs behind the neck. Asymmetric shoulders and a lower,
+        # split front keep it distinct from the stand collar of a zip-up sweater.
+        rings=[];lining=[]
+        angles=[-pi/2+.38+i*(2*pi-.76)/39 for i in range(40)]
+        for w,d,h in [(.123,.106,1.825),(.161,.132,1.89),(.155,.130,1.927),
+                      (.134,.102,1.924),(.112,.096,1.855)]:
+            row=[]
+            for t in angles:
+                back=max(0,sin(t))
+                row.append((w*cos(t),.045+d*sin(t),h+.063*sin(t)-.025*back+.014*sin(2*t+.32)))
+            rings.append(row)
+        for k in range(len(rings)-1):
+            vs=rings[k]+rings[k+1]
+            shell=part('뒷목에 접혀 놓인 니트 후드',vs,[(i,i+1,41+i,40+i) for i in range(39)],'wine' if k>=3 else 'hood')
+            for f in shell.data.polygons:f.use_smooth=True
+        for sign in (-1,1):
+            cheek=[front(sign*x,h,.026) for x,h in [(.064,1.806),(.064,1.831),(.082,1.86),(.115,1.883),(.138,1.895)]]
+            path('후드의 접힌 앞단',cheek,.009,'hood')
+            xcord=sign*.119
+            ycord=surface(xcord,1.86)-.023
+            rod('조임끈 고리',(xcord,ycord,1.858),(xcord,ycord-.005,1.858),.005,'metal')
+            path('후드 조임끈',[(xcord,ycord-.006,1.858),(xcord+sign*.008,ycord-.013,1.837),
+                (xcord+sign*.019,ycord-.012,1.843),(xcord+sign*.023,ycord-.008,1.861)],.0024,'hood')
+            rod('조임끈 끝 금구',(xcord+sign*.023,ycord-.008,1.861),(xcord+sign*.023,ycord-.005,1.870),.0029,'metal')
+        def zip_x(h):
+            if h<bottom+.13:return .050*((bottom+.13-h)/.13)**1.4
+            if h>1.637:return .087*((h-1.637)/(.25))**1.15
+            return .0017
+        for sign in (-1,1):
+            samples=[bottom+i*(top-bottom)/22 for i in range(23)]
+            points=[front(sign*zip_x(h),h,.023) for h in samples]
+            path('분리되는 앞 지퍼 테이프',points,.0039,'suede_seam')
+            path('앞 지퍼 금속 체인',[front(sign*(zip_x(h)-.0018),h,.025) for h in samples],.0015,'teeth')
+        # On the tightly packed side rail the separate teeth are occluded by
+        # the adjacent sleeves. Its continuous metal chain retains the profile.
+        for j in range(55 if abs(transform[0][0])>.55 else 0):
+            h=bottom+.015+j*.0125
+            for sign in (-1,1):
+                x=sign*zip_x(h)
+                path('지퍼 이빨',[front(x,h,.026),front(x+sign*.0026,h+.0016,.025)],.00095,'teeth')
+        for h in [bottom+.13,1.641]:
+            a,b,c=front(0,h,.027),front(.009,h-.022,.031),front(0,h-.036,.034)
+            path('양방향 지퍼 손잡이',[a,b,c,front(-.006,h-.02,.031),a],.0025,'metal')
         for s in [-1,1]:
-            stitch('가슴 절개선',[(s*.023,1.69),(s*.11,1.696),(s*.216,1.70)],'hood',.0025)
+            stitch('가슴 절개선',[(s*.035,1.682),(s*.11,1.695),(s*.216,1.722)],'suede_seam',.0019)
+    for ob in pieces[batch][first_part:]:
+        fabric.drape(ob,kind,bottom)
+        ob.data.update()
     transform=Matrix.Identity(4);prefix='';batch='CucinelliInterior'
 
 # Two recessed wall displays and a framed still life echo the opening photograph.
@@ -269,12 +360,34 @@ def vase(cx,cy,z):
 vase(.12,.14,2.27)
 # Low upholstered lounge chair at the side, outside the viewing path.
 cx,cy=-2.22,-.41
-plate('라운지 의자 받침',cx,cy,.035,.72,.72,.12,.08,'base')
-plate('라운지 의자 좌판',cx,cy,.14,.85,.79,.26,.085,'linen')
-plate('좌방석',cx,cy-.035,.39,.65,.63,.114,.065,'ivory')
-plate('낮은 등받이',cx,cy+.337,.34,.84,.157,.44,.065,'linen')
-for s in [-1,1]:
-    plate('팔걸이',cx+s*.36,cy-.005,.33,.14,.72,.32,.058,'linen')
+def upholstery(name, x,y,z,w,d,h,corner, cloth, crown, back_slope=0):
+    # A sewn cover swells between the base and welt line. Successive loops form
+    # a soft crown all the way to the centre of the cushion.
+    rings=[]
+    for scale,level in [(.92,0),(.98,.09),(1,.25),(1,.64),(.98,.87),(.94,.96),
+                        (.80,1),(.59,1),(.33,1),(.08,1)]:
+        row=[]
+        for dx,dy in outline(w*scale,d*scale,corner*scale):
+            dome=crown*(1-scale**2) if level>=.96 else 0
+            row.append((x+dx,y+dy+back_slope*level,z+h*level+dome))
+        rings.append(row)
+    pad=skins(name,rings,cloth)
+    for face in pad.data.polygons:face.use_smooth=len(face.vertices)==4
+    seam=outline(w*.952,d*.952,corner*.952)
+    tube=[]
+    for i,(dx,dy) in enumerate(seam):
+        a=seam[i-1];b=seam[(i+1)%len(seam)]
+        normal=Vector((b[1]-a[1],a[0]-b[0],0)).normalized()
+        p=Vector((x+dx,y+dy+.93*back_slope,z+.93*h))
+        tube.append([p+.0034*(normal*cos(j*pi/3)+Vector((0,0,sin(j*pi/3)))) for j in range(6)])
+    skins(name+' · 파이핑',tube+[tube[0]],'piping',cap=False)
+
+plate('라운지 의자 목재 받침',cx,cy,.035,.72,.72,.12,.08,'walnut')
+upholstery('라운지 의자 좌판',cx,cy,.14,.85,.79,.26,.085,'linen',.008)
+upholstery('좌방석',cx,cy-.035,.386,.65,.63,.111,.070,'upholstery',.027)
+upholstery('낮은 등받이',cx,cy+.327,.34,.84,.157,.42,.06,'linen',.012,.025)
+for side in (-1,1):
+    upholstery('둥근 팔걸이',cx+side*.36,cy-.005,.33,.14,.72,.31,.056,'linen',.012)
 # Brand wordmark on the fascia uses Blender's bundled font.
 font=bpy.data.curves.new('상호','FONT');font.body='B R U N E L L O   C U C I N E L L I'
 font.align_x='CENTER';font.size=.082;font.extrude=.0005;font.resolution_u=3
@@ -285,27 +398,17 @@ mesh=bpy.data.meshes.new_from_object(obj.evaluated_get(bpy.context.evaluated_dep
 label=bpy.data.objects.new('상호 글자',mesh);gallery.objects.link(label);label.matrix_world=obj.matrix_world.copy()
 mesh.materials.append(finish('espresso'));pieces[batch].append(label)
 bpy.data.objects.remove(obj,do_unlink=True)
+# Store authored UVs and separate body parts in the artist library before joining.
+maps=fabric.swatches()
+for key,roughness in [('CucinelliInterior',.65),('CucinelliTailoring',.78),('CucinelliCashmere',.96),('CucinelliSuede',.88)]:
+    native_material=fabric.response(key+' 원단',maps,roughness)
+    for ob in pieces[key]:fabric.map_piece(ob,ob.data.materials[0],native_material)
 bpy.context.preferences.filepaths.save_version=0
 bpy.context.scene.unit_settings.system='METRIC'
 bpy.ops.wm.save_as_mainfile(filepath=str(OUT/'gallery.blend'),compress=True)
-# Copy per-part finishes into vertex colours before joining runtime draw batches.
 for batch,objects in pieces.items():
-    merged=bpy.data.materials.new(batch)
-    merged.use_nodes=True
-    nodes=merged.node_tree.nodes
-    shader=nodes.get('Principled BSDF')
-    shader.inputs['Roughness'].default_value={'CucinelliTailoring':.76,'CucinelliSuede':.89,'CucinelliCashmere':.98,'CucinelliInterior':.57}[batch]
-    colors=nodes.new('ShaderNodeVertexColor'); colors.layer_name='Finish'
-    merged.node_tree.links.new(colors.outputs['Color'],shader.inputs['Base Color'])
     bpy.ops.object.select_all(action='DESELECT')
-    for obj in objects:
-        mesh=obj.data
-        rgba=mesh.materials[0].diffuse_color[:]
-        if mesh.color_attributes.get('Finish') is None:
-            attr=mesh.color_attributes.new(name='Finish',type='BYTE_COLOR',domain='POINT')
-            for item in attr.data: item.color=rgba
-        mesh.materials.clear(); mesh.materials.append(merged)
-        obj.select_set(True)
+    for ob in objects:ob.select_set(True)
     bpy.context.view_layer.objects.active=objects[0]
     bpy.ops.object.join()
     bpy.context.object.name=batch

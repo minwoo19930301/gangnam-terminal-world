@@ -2,10 +2,14 @@
 import bpy
 import math
 from pathlib import Path
+import sys
 from math import cos, sin, pi
 from mathutils import Vector
 
 OUT = Path(__file__).resolve().parent
+sys.dont_write_bytecode=True
+sys.path.insert(0,str(OUT))
+from barware import Display
 bpy.ops.wm.read_factory_settings(use_empty=True)
 bpy.context.preferences.filepaths.save_version = 0
 scene = bpy.context.scene
@@ -111,6 +115,7 @@ def plate(x,y,z):
     vessel('접시 금선',x,y,z+.020,[(0,.121),(.001,.122),(.002,.121)],['c7a269'],n=36,mat=metal,caps=False)
 
 black='332b2a';white='f2ece2';gold='c6a573';red='ae1831'
+red_bar=Display(collection,crystal,metal,light)
 # Low contrasting floor inset, entirely within the customer display footprint.
 for i in range(6):
     for j in range(5):
@@ -119,14 +124,19 @@ for i in range(6):
 box('크림색 패널',0,.33,.03,3.18,.12,2.53,white)
 for sx in [-1,1]:
     x=sx*1.05
+    upper_shelf=1.53 if sx<0 else 1.66
     box('진열장 하부',x,.12,.03,.91,.51,.57,black)
     box('금속 받침',x,.12,.10,.94,.52,.014,gold,metal)
     box('진열장 배면',x,.23,.60,.91,.085,1.72,'999592',metal)
     for z in [.95,1.48,2.05]:
         box('선반 뒤의 확산 조명',x,.181,z,.83,.012,.088,'f9edd9',light)
+    if sx<0:
+        # An ivory display card breaks up the reflections behind the decanters.
+        # Use the existing opaque fixture batch and conceal the lamp housing.
+        box('디캔터용 아이보리 반사판',x,.169,upper_shelf+.035,.81,.008,2.225-upper_shelf-.035,'e8e3db')
     for offset in [-.45,.45]:
         box('은색 세로 프레임',x+offset,.10,.60,.027,.40,1.75,'c0bbbb',metal)
-    for z in [.60,1.13,1.66,2.27]:
+    for z in [.60,1.13,upper_shelf,2.27]:
         box('은빛 진열 선반',x,.09,z,.91,.46,.030,'b6b9b7',metal)
         box('간접 조명',x,-.146,z+.014,.85,.012,.009,'fff0d3',light)
     for j in range(3):
@@ -134,7 +144,9 @@ for sx in [-1,1]:
         goblet(a,.045,.63,'잔',ruby if sx<0 else clear)
         if j==1: decanter(a,.06,1.16)
         else: tumbler(a,.05,1.16)
-        goblet(a,.04,1.69,'플루트',green if sx>0 else clear)
+        if sx<0 and j==0:red_bar.harmonie(a,-.038,upper_shelf+.03)
+        elif sx<0 and j==1:red_bar.louxor(a,-.038,upper_shelf+.03)
+        else:goblet(a,.04,upper_shelf+.03,'플루트',green if sx>0 else clear)
 
 # Radial, faceted glass batons around a silver centre, as in the branch photo.
 def mirror():
@@ -183,8 +195,9 @@ for x in [-.54,.53]:
             for d in [-.006,0,.006]:box('포크 끝',a+d,ty-.10,top,.003,.055,.006,'e0ddd5',metal)
     goblet(x-.095,ty+.126,top,'잔',green)
     goblet(x+.075,ty+.106,top,'플루트')
-decanter(-.15,ty-.04,top)
-goblet(.04,ty-.18,top,'잔',ruby)
+red_bar.harmonie(-.225,ty-.085,top)
+red_bar.louxor(-.022,ty-.08,top)
+goblet(.128,ty-.232,top,'잔',ruby)
 tumbler(-.26,ty-.25,top)
 # Photo ③: red conical lamp shade and clear, stepped stem.
 vessel('스탠드 크리스털 받침',.19,ty+.16,top,[(0,.086,1),(.009,.083,1),(.018,.072,1),(.036,.04,1),(.047,.029,1),(.065,.032,1),(.084,.019,1),(.16,.016,1),(.183,.031,1),(.197,.025,1),(.217,.021,1),(.245,.028,1)])

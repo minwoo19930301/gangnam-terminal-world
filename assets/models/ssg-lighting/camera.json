@@ -1,0 +1,11 @@
+{
+  "floor": "9F",
+  "x": -73.2455402905059,
+  "z": 33.10852208710995,
+  "yaw": 92,
+  "pitch": -7,
+  "meshName": "LightnowDiffuser",
+  "sourceBlend": "lightnow.blend",
+  "sourceCollection": "SSG_9F_Lightnow",
+  "nativeLabel": "라잇나우"
+}
