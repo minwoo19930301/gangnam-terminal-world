@@ -1,0 +1,14 @@
+{
+  "floor": "7F",
+  "x": -35.99510,
+  "y": 31,
+  "z": 80.70119,
+  "yaw": 111.12044,
+  "pitch": 0,
+  "meshName": "GLXYStudio",
+  "sourceBlend": "gallery.blend",
+  "sourceCollection": "SSG_7F_GLXY_Studio",
+  "nativeLabel": "GLXY studio",
+  "area": "in:shinsegae",
+  "gameView": "?area=in:shinsegae&pos=-35.99510,31,80.70119&yaw=111.12044&pitch=0"
+}
