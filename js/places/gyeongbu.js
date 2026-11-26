@@ -19,6 +19,7 @@ import {placeUniqloEntrance} from '../../assets/models/gyeongbu-uniqlo/model.js'
 import {placeUniqloFinish} from '../../assets/models/gyeongbu-uniqlo-finish/model.js';
 import {placeUniqloRail} from '../../assets/models/gyeongbu-uniqlo-rails/model.js';
 import { coachGlazing } from '../../assets/models/coach-cabin/windows.js';
+import {distanceToPolygonSq} from '../physics.js';
 import { placeCutFlowers } from '../../assets/models/gyeongbu-cutflowers/model.js';
 import {placeFloristStock} from '../../assets/models/gyeongbu-florist-stock/model.js';
 import { placeWaitingBenches } from '../../assets/models/gyeongbu-seating/model.js';
@@ -309,6 +310,17 @@ export function build(K) {
     // Elevator car supplies its own floor; keep the shaft clear of intervening slabs.
     for(const e of elevs)if(y>=e.base&&y<=(e.levels||ys)[e.top])out.push(rect(e.u-1.1,e.v-1.1,e.u+1.1,e.v+1.1));
     return out.filter(p=>p.every(([x,z])=>K.pointInPoly(x,z,poly)));
+  }
+  const marketSlab=floorPoly(2),marketVoids=holes(marketSlab,ys[2]);
+  function lowerHallVisible(x,eye,z){
+    // The 1F waiting hall includes a double-height gallery. Its broad bounds
+    // also reach beneath the flower market. Keep all views from the gallery,
+    // floor edges and stair landings, and skip the hall inside the solid 3F deck.
+    if(eye<ys[2]+.05||eye>ys[3])return true;
+    const margin=8;
+    return !K.pointInPoly(x-margin,z-margin,marketSlab)||!K.pointInPoly(x+margin,z-margin,marketSlab)||
+      !K.pointInPoly(x-margin,z+margin,marketSlab)||!K.pointInPoly(x+margin,z+margin,marketSlab)||
+      marketVoids.some(h=>distanceToPolygonSq(x,z,h)<margin*margin);
   }
   function lights(poly,y,step=9){
     for(let u=5;u<317;u+=step)for(let v=5;v<158;v+=step){const [x,z]=W(u,v);
@@ -1397,7 +1409,7 @@ export function build(K) {
     });
     });
     buildOfficialHallRetail();
-    ldetail({floor:'1F',y0:0,y1:9.5,poly:P,name:'1F 대합실 · 매표 · 상점 · 좌석'}, () => { for(const draw of detail)draw(); });
+    ldetail({floor:'1F',y0:0,y1:9.5,poly:P,visibleFrom:lowerHallVisible,name:'1F 대합실 · 매표 · 상점 · 좌석'}, () => { for(const draw of detail)draw(); });
   }
 
   function buildPhotoWalk20Hall(){
@@ -1511,7 +1523,7 @@ export function build(K) {
     lwall(103,23,103,30,0,3.5,{mat:doorGlass,thick:.04,openings:[{at:3.5,w:1.8,y0:0,y1:2.6}]});
     for(let v=23;v<=30;v+=1.2)if(Math.abs(v-26.5)>1)lbox(103,v,0,.08,.07,3.5,0xaab4b8,{solid:false});
     lsign('휠체어 버스 탑승',103.1,26.5,2.85,2.4,.45,'+u',{bg:'#e3d6bc',fg:'#373a38'});
-    ldetail({floor:'1F',y0:-6,y1:11,poly:P,name:'20차 사진 보행 · 대합실 가구와 마감'},()=>{
+    ldetail({floor:'1F',y0:-6,y1:11,poly:P,visibleFrom:lowerHallVisible,name:'20차 사진 보행 · 대합실 가구와 마감'},()=>{
       for(let u=169;u<258;u+=1.2)for(let v=18;v<30;v+=1.2)lcyl(u,v,7.25,.075,.025,'emit',{seg:8,solid:false});
       for(const [a,b,c,d,y] of [[258,280,8,29,3.75],[77,118,18,22,3.44]])for(let u=a+1;u<b;u+=4)for(let v=c;v<d;v+=5){for(const dv of [-.07,.07])lbox(u,v+dv,y,1.2,.045,.025,'emit',{solid:false});lbox(u+.7,v,y+.01,.7,.7,.03,0xd7d8d4,{solid:false});}
       const couch=(u,v,w,color)=>{lbox(u,v,.12,w,1.2,.1,0xa9adae,{solid:false});lbox(u,v,.22,w,1.2,.25,color);lbox(u,v+.48,.47,w,.22,.48,color,{solid:false});for(const du of [-w/2,w/2]){const[x,z]=W(u+du,v);K.dome({x,z,y:.47,rx:.5,ry:.25,rz:.6,mat:color,seg:12,rings:3});}};
