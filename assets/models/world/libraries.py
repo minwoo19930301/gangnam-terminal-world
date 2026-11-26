@@ -63,6 +63,7 @@ SHELVES = {
     "gyeongbu-hangaram": "경부선 지하 1층 · 한가람 액자",
     "gyeongbu-pharmacy": "경부선 1층 · 고속터미널약국",
     "daiso-garden": "경부선 지하 1층 · 다이소 화분과 조화",
+    "margaux-garden-window": "JW 7층 · 더 마고 그릴 정원창과 유리 펜던트",
     "margaux-chair": "JW 7층 · 더 마고 그릴 다이닝 가죽 의자",
     "famille-shopfront": "파미에 1층 · 식당가 격자창과 석재 덧기둥",
     "margaux-cellar": "JW 7층 · 더 마고 그릴 와인 셀러",

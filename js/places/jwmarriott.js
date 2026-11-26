@@ -1,3 +1,4 @@
+import {registerGardenWindow} from '../../assets/models/margaux-garden-window/model.js';
 import {margauxChairs} from '../../assets/models/margaux-chair/model.js';
 import {registerExecutiveSeats} from '../../assets/models/executive-seating/model.js';
 import {tables as executiveTables} from '../../assets/models/executive-seating/layout.js';
@@ -1761,7 +1762,7 @@ export function build(K) {
     B({ u: 4.5, v: 31, y, w: 0.8, d: 1.4, h: 1.15, mat: WALNUT }); MAN(5.3, 31, y, { shirt: 0x1d2433, rotY: FACE.W });
     SG(['← THE MARGAUX GRILL', 'MOBO BAR →'], { u: 8.75, v: 31, y: y + 2.4, w: 2.4, h: 0.9, f: 'W', bg: '#1f1a16', fg: '#e0b870' });
     // The Margaux Grill (south)
-    HP({ tex: 'wood', color: 0x8a6446 }, [-7.85, 40, 15.85, 57.9], y + 0.01);
+    HP({ tex: 'tile', color: 0xcbb9a7 }, [-7.85, 40, 15.85, 57.9], y + 0.01);
     B({ u: 11.6, v: 49, y, w: 1.2, d: 14, h: 1.0, mat: 0x2a2018, top: 0x4a4a4a });
     B({ u: 14.6, v: 49, y, w: 2.2, d: 14, h: 0.95, mat: 0x5a5a5a, top: 0x3a3a3a });
     B({ u: 14.6, v: 49, y: y + 0.95, w: 1.6, d: 3, h: 0.7, mat: 0x2a2a2a }); B({ u: 14.4, v: 49, y: y + 1.0, w: 1.0, d: 2.6, h: 0.4, mat: { tex: 'emit', color: 0xff8a30 }, solid: false });
@@ -1773,13 +1774,13 @@ export function build(K) {
     for(const v of tableDepths){
       fixture('booth',-6.5,v,y,-Math.PI/2);
       B({u:-6.5,v,y,w:.85,d:2.38,h:.50,solid:true,skip:['top','bottom','n','s','e','w']});
-      TABLE(-5.5,v,y,{square:true,r:.5,chairs:0,top:0xb58e68});
+      TABLE(-5.5,v,y,{square:true,r:.5,chairs:0,top:0xcab49a});
       CHAIR(-4.64,v,y,'W',0x615244);
     }
     const diningRows=[-1.5,2.5,6.5].map(u=>{
       const row=[];
       for(const v of tableDepths){
-        TABLE(u,v,y,{square:true,r:.5,chairs:0,top:0xb58e68});
+        TABLE(u,v,y,{square:true,r:.5,chairs:0,top:0xcab49a});
         for(const [du,dv,angle] of [[0,.88,0],[-.88,0,-Math.PI/2],[0,-.88,Math.PI],[.88,0,Math.PI/2]]){
           const [x,z]=P(u+du,v+dv);
           row.push([x,y,z,R+angle]);
@@ -1793,7 +1794,7 @@ export function build(K) {
     for (const v of [13, 15, 17]) fixture('herbs', -13.5, v, y + .03, Math.PI / 2);
 
     SG(['THE MARGAUX GRILL'], { u: 3.5, v: 40.3, y: y + 3.6, w: 6.5, h: 0.65, f: 'S', bg: '#6b4a32', fg: '#e0b870', sub: '더 마고 그릴' });
-    LIGHTS([-7.85, 40, 10.5, 57.9], yc, 3.0, 0.3, 0xffd8a0);
+    registerGardenWindow(baseKit,{P,rect:RECT,angle:R,y});
     CROWD([-7, 41, 9, 57], y, 16, 702);
     SUBZ('더 마고 그릴', '7F', '우드 파이어 그릴 · 스테이크', [-8, 40, 16, 58]);
     // ---- outdoor: JW 가든 on the podium roof ----
