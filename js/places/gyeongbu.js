@@ -1,3 +1,4 @@
+import {placeYukgakRestaurant} from '../../assets/models/gyeongbu-yukgak/model.js';
 import {placeHyodoShop} from '../../assets/models/gyeongbu-hyodo/model.js';
 import {placeWicker} from '../../assets/models/gyeongbu-basket-display/model.js';
 import {flowerBank} from '../../assets/models/gyeongbu-flower-bank/model.js';
@@ -637,6 +638,9 @@ export function build(K) {
   }
   // Two level passages link the existing 10F garden to the dining terrace in front of the signed wall.
   const patioEntry=[89.5,107.7].map(v=>{const [x,z]=W(50.7,v);return {x,z,w:2.62,y0:43,y1:44};});
+  const yukgakV=86.32,yukgakU=50.70;
+  const [mealDoorX,mealDoorZ]=W(yukgakU,yukgakV);
+  patioEntry.push({x:mealDoorX,z:mealDoorZ,w:3.55,y0:43,y1:44});
   K.polyWalls(floorPoly(9),43,44,{mat:CREAM,thick:.2,openings:patioEntry});
   K.slab(rect(50.70,84.4,58.5,111.3),43,{mat:0x777b75,under:0xbcb9a9,edgeMat:0x9d998b,thick:.32});
   // The public roof photograph shows a black perimeter guard and clear promenade.
@@ -3274,6 +3278,22 @@ export function build(K) {
     for(const v of [66,70,74])for(const u of [33,44])lbox(u,v,43,5,.6,.45,0x917557);
     lbox(38,62,43,2,.8,1,0xd2c4ac);
     lzone('옥상정원','10F','성당 옆 옥외 공간',26,83,49,150,43,48,2);
+    const [mealX,mealZ]=W(yukgakU,yukgakV);
+    placeYukgakRestaurant(K,mealX,mealZ,ROT+PI/2);
+    const dining=rect(yukgakU-3.06,yukgakV-1.78,yukgakU+.13,yukgakV+1.78);
+    K.phys.addCeiling(dining,45.59);
+    const contact=(u,v,w,d,h)=>lbox(u,v,43,w,d,h,0,{skip:['top','bottom','n','s','e','w']});
+    for(const [a,b] of [[-1.78,-.98],[.23,1.78]])contact(yukgakU,yukgakV-(a+b)/2,.08,b-a,2.53);
+    for(const [tx,td] of [[1.41,.40],[.94,.46]])contact(yukgakU+td,yukgakV-tx,.34,.37,.46);
+    contact(yukgakU-3.02,yukgakV,.10,3.54,2.6);
+    for(const side of [-1,1])contact(yukgakU-1.52,yukgakV+side*1.73,3.03,.09,2.6);
+    for(const [tx,td] of [[.90,-1.08],[-.89,-2.24]])contact(yukgakU+td,yukgakV-tx,.70,.93,.783);
+    const [arrivalX,arrivalZ]=W(yukgakU+2.52,yukgakV+.40);
+    K.zone({name:'육각고기',floor:'10F',sub:'육즙이 흐르는 각고기 · 옥상 식당',
+      poly:[[yukgakU-3.06,yukgakV-1.78],[yukgakU+.13,yukgakV-1.78],[yukgakU+.13,yukgakV-.46],
+        [yukgakU+2.88,yukgakV-.46],[yukgakU+2.88,yukgakV+1.23],[yukgakU+.13,yukgakV+1.23],
+        [yukgakU+.13,yukgakV+1.78],[yukgakU-3.06,yukgakV+1.78]].map(p=>W(...p)),
+      y0:43,y1:46.1,priority:5,mapArrival:{x:arrivalX,z:arrivalZ,yaw:yawL(-1,0)}});
     const patioU=51.25,patioV=98.70;
     lzone('옥상 산책로','10F','옥상정원 · 야외 식당',49.0,84.4,58.51,111.3,43,47.8,3);
     lzone('포석정','10F','옥상 야외 식사 공간',50.68,91.75,58.50,105.45,43,48,4);
