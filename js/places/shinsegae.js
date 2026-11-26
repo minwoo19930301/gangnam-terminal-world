@@ -1,3 +1,4 @@
+import {rawrowDisplay} from '../../assets/models/ssg-rawrow/model.js';
 import {boutiqueLobby} from '../../assets/models/megabox-central/place.js';
 import {marketProduceCeiling} from '../../assets/models/ssg-market-ceiling/model.js';
 import {giftConcierge} from '../../assets/models/ssg-market-gift/model.js';
@@ -7960,6 +7961,16 @@ export function build(K) {
   for(const [id,guide]of Object.entries(upperGuidePlans)){
     const y=LV[id];zone('신세계백화점 강남점',id,upperCats[id],[0,0,UW,145.3],y,LV[nextOf(id)],1);
     for(const c of guide.cells)buildUpperCell(id,c);
+    if(id==='8F'){
+      const shop=guide.cells.find(c=>c.name==='로우로우'),[,,front,farSide]=shop.model.parts[0];
+      const midSide=(shop.model.parts[0][1]+farSide)/2, u=front-2.15;
+      const [x,z]=P(u,midSide);
+      rawrowDisplay(K,x,y,z,FACE.E);
+      for(const [offset,depth] of [[-.73,-.82],[.73,1.29]]){
+        const a=P(u-depth-.88,midSide-offset),b=P(u-depth+.88,midSide-offset);
+        K.phys.addWall(...a,...b,y,y+2.2,.37);
+      }
+    }
     if(id==='6F'){
       const room=upperBuildRect(id,guide.cells.find(c=>c.name==='폴스미스'));
       const u=(room[0]+room[2])/2,v=room[3]-.50;
@@ -14867,6 +14878,10 @@ export function build(K) {
       if (id === '3F' && c.name === '발렌티노' && q !== largest) {
         // Carry the same checked floor across the open interior seam.
         hq(u0+.13,v0+.13,u1+.14,v1-.13,y+.018,palette.floor);
+        continue;
+      }
+      if(id==='8F'&&c.name==='로우로우'){
+        hq(u0+.055,v0+.055,u1-.055,v1-.055,y+.018,{color:0xe0dfd8,gloss:.46});
         continue;
       }
       const vivienneJoin=id==='4F'&&c.name==='비비안 웨스트우드'&&face==='W'&&q===largest&&parts.find(p=>p!==q&&Math.abs(p[0]-u1)<.02&&p[1]<=v0+.02);

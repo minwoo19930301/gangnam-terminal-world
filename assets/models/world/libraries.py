@@ -10,6 +10,7 @@ from mathutils import Vector
 SHELVES = {
     "intelligentsia-gangnam": "인텔리젠시아 강남 · 커피 바와 오렌지 선반",
     "sweet-arabica": "스위트 파크 · %아라비카 입구",
+    "ssg-rawrow": "신세계 8층 · 로우로우 여행가방",
     "tailored-front": "경부선 7층 · 신사복 판매 전면",
     "knit-front": "경부선 8층 · 니트 판매 전면",
     "ypbooks-rotary": "영풍문고 강남신세계점 · 원형 광장 입구",

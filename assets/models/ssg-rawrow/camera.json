@@ -1,0 +1,11 @@
+{
+  "floor": "8F",
+  "x": -71.70795,
+  "z": 16.50352,
+  "yaw": 110.78,
+  "pitch": 0,
+  "meshName": "8층 로우로우 · 트렁크와 가방 진열",
+  "sourceBlend": "front.blend",
+  "sourceCollection": "RawrowGangnamDisplay",
+  "nativeLabel": "로우로우"
+}
