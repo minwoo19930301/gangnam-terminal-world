@@ -82,7 +82,7 @@ console.log('OK Shinsegae entrance axis');
 // Walk the published white aisles directly. A pathfinder is free to detour
 // around a blocking partition or escalator, which would miss this regression.
 for(const [label,path] of [
-  ['market to cinema lobby',[[832,670],[832,749],[830,817],[793,855]].map(p=>foodHallPoint(...p)).concat([cinemaPoint(0,2),cinemaPoint(0,-2)])],
+  ['market to cinema lobby',[[833,547],[826,574],[835,585],[835,601],[832,608],[832,670],[832,749],[830,817],[793,855]].map(p=>foodHallPoint(...p)).concat([cinemaPoint(0,2),cinemaPoint(0,-2)])],
   ['food hall transverse café aisle',[[830,787],[871,787],[933,787],[990,787],[1026,787]].map(p=>foodHallPoint(...p))],
 ]){
   for(let i=1;i<path.length;i++){
