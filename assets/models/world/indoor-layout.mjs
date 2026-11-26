@@ -192,6 +192,7 @@ const sources = [
     const name='킴스클럽 델리 · '+label;
     return ['newcore','B1','kims-deli/deli.blend',name,name];
   }),
+  ['gyeongbu','1F','gyeongbu-hyodo/shop.blend','경부선 효도치킨 · 유리 입구와 식당','GB_HyodoDiningFront'],
   ['gyeongbu','1F','gyeongbu-luggage/zimcarry-counter.blend','짐캐리 · 수하물보관과 운송 창구','LuggageCounter','Glass','Lit'],
   ...['대기 접수대와 유아의자','유리블록과 대나무 조명','목제 식탁과 곡목 의자','찜기 세 가지와 차','피기 커스터드 번'].map(label=>{
     const name='딤딤섬 · '+label;

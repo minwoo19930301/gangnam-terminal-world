@@ -1,3 +1,4 @@
+import {placeHyodoShop} from '../../assets/models/gyeongbu-hyodo/model.js';
 import {placeWicker} from '../../assets/models/gyeongbu-basket-display/model.js';
 import {flowerBank} from '../../assets/models/gyeongbu-flower-bank/model.js';
 import {clothingFront} from '../../assets/models/gyeongbu-clothing-fronts/model.js';
@@ -324,7 +325,7 @@ export function build(K) {
     for(const c of cores)if(y>c.levels[0]&&y<=c.levels.at(-1))out.push(rect(c.u,c.v,c.u+4.4,c.v+8.4));
     for(const e of escs)if(y===e.yb)out.push(rect(e.u-1.8,e.v,e.u+1.8,e.v+e.len));
     if(y===0)out.push(rect(30,67,48,83.8),rect(265.5,.8,278,3),rect(206.5,10.5,214.5,23),rect(164,11,168,21),rect(102.8,12.2,116,17.25));
-    if(y===NORTH_2F)out.push(rect(122,16.3,137,18.2),rect(169,20,177,21.8),rect(253,12,258.4,20),rect(265.5,3.2,273,5.2));
+    if(y===NORTH_2F)out.push(rect(265.5,3.2,273,5.2));
     if(y===6)out.push(rect(35.5,8,40.5,20));
     if(y===11)out.push(rect(23,78,25,88)); // beige stair beside the flower-market escalator
     // Elevator car supplies its own floor; keep the shaft clear of intervening slabs.
@@ -370,8 +371,15 @@ export function build(K) {
     if(i>=5&&i<=8)K.occludingSlab({poly:p,y:ys[i],holes:openings,
       eyeMin:ys[Math.max(5,i-1)]+.04,eyeMax:ys[Math.min(8,i+1)]-.04});
   }
-  const northVoids=[rect(168,16.7,258,30),rect(118,16.7,140,30)];
-  K.slab(NORTH,NORTH_2F,{mat:'tile',under:'gb_acoustic',holes:[...holes(NORTH,NORTH_2F),...northVoids]});
+  const foodHallOpening=[168,16.7,258,30],trussOpening=[118,16.7,140,30];
+  const northVoids=[foodHallOpening,trussOpening].map(bounds=>rect(...bounds));
+  // Each stair opening joins the adjacent gallery void. A single outline per
+  // opening keeps the floor tessellator from spanning an overlapping pair of holes.
+  const northDeckVoids=[
+    [[118,16.7],[122,16.7],[122,16.3],[137,16.3],[137,16.7],[140,16.7],[140,30],[118,30]],
+    [[168,16.7],[253,16.7],[253,12],[258.4,12],[258.4,20],[258,20],[258,30],[168,30]],
+  ].map(outline=>outline.map(point=>W(...point)));
+  K.slab(NORTH,NORTH_2F,{mat:'tile',under:'gb_acoustic',holes:[...holes(NORTH,NORTH_2F),...northDeckVoids]});
   K.slab(northRoof,NORTH_ROOF,{mat:asphalt,under:'gb_acoustic',holes:[...holes(northRoof,NORTH_ROOF),rect(118,16.7,140,30)]});
   K.slab(rect(75.7,0,cafeEnd,cafeRear),7.67,{mat:'roofgravel',under:false,edge:false});
   K.slab(pent,48,{mat:'roofgravel',under:'gb_acoustic'});
@@ -740,7 +748,8 @@ export function build(K) {
     // the existing three-metre public opening at u80 through the replacement.
     const concealed={skip:['top','bottom','n','s','e','w']};
     for(const [a,b] of [[76,78.5],[81.5,cafeEnd]])lbox((a+b)/2,.50,0,b-a,.04,3.3,0,concealed);
-    lwall(cafeEnd,.5,317,.5,0,3.3,{mat:'glass',thick:.04,openings:openings.filter(u=>u>cafeEnd).map(u=>({at:u-cafeEnd,w:u===262?7:3,y0:0,y1:3.3}))});
+    lwall(cafeEnd,.5,317,.5,0,3.3,{mat:'glass',thick:.04,openings:[...openings.filter(u=>u>cafeEnd).map(u=>({at:u-cafeEnd,w:u===262?7:3,y0:0,y1:3.3})),
+      {at:278.65-cafeEnd,w:1.54,y0:0,y1:2.40}]});
     for(let u=100;u<317;u+=6){if(openings.some(x=>Math.abs(x-u)<2.8)||u>264&&u<273)continue;lbox(u,.5,0,.8,.65,3.3,{tex:'brick',color:0xc49a6a});}
     lbox((cafeEnd+317)/2,.15,3.3,317-cafeEnd,.7,.3,0xf0efea,{solid:false});
     lbox((cafeEnd+317)/2,.2,3.6,317-cafeEnd,.3,.6,{tex:'brick',color:0x8a6250},{solid:false});
@@ -926,8 +935,8 @@ export function build(K) {
       }
     }
     const ceilHoles=holes(hallWest,6).map(p=>{const q=p.map(p=>toL(...p));return[Math.min(...q.map(p=>p[0])),Math.min(...q.map(p=>p[1])),Math.max(...q.map(p=>p[0])),Math.max(...q.map(p=>p[1]))];});
-    cover(hallWest,[...pockets,...ceilHoles,[-1,0,10,146],[66.2,6.2,75.25,23],[30,67,54,84]],3.3);cover(NORTH,[...northVoids,[258,0,280,30],[77,17.5,118,22.6]],3.6);
-    K.hpoly('gb_acoustic',rect(168,16.7,258,30),7.3,false);K.hpoly('gb_acoustic',rect(258,7,280,30),3.8,false);
+    cover(hallWest,[...pockets,...ceilHoles,[-1,0,10,146],[66.2,6.2,75.25,23],[30,67,54,84]],3.3);cover(NORTH,[foodHallOpening,trussOpening,[258,0,280,30],[77,17.5,118,22.6]],3.6);
+    K.hpoly('gb_acoustic',rect(...foodHallOpening),7.3,false);K.phys.addCeiling(rect(...foodHallOpening),7.3);K.hpoly('gb_acoustic',rect(258,7,280,30),3.8,false);
     K.hpoly(0xf2f0eb,rect(77,17.5,118,22.6),3.5,false);
     cover(rect(...corridorRect),[[54,33,62,48],[54,67,62,84]],4.8,0xefeeea);
     K.hpoly(0xf1efe8,rect(...doorRect),10.8,false);
@@ -1075,7 +1084,6 @@ export function build(K) {
       [157,162,'제주스커피',42],[189,195,'이마트24 2호점',46],[195,200,'압구정칼국수김밥',47],
       [202,207,'요쇼쿠',48],[222,229,'역전우동',49],[214,220,'던킨',51],[232,240,'북촌손만두',50],
       [230,237,'김밥천국',52],[237,244,'약천',53],[244,251,'내고향사골순대국',54],[251,258,'청룡각',55],
-      [273,280,'효도치킨',58],
     ];
     for(const [shopIndex,[a,b,name,unit]] of annexUnits.entries()){
         const step=b-a,u=(a+b)/2;
@@ -1144,6 +1152,24 @@ export function build(K) {
 
         });
         });
+    }
+    // The street-facing restaurant and the three-metre-high Gate 3 stair
+    // enclosure share a bay. Its customer entrance sits beside the stair end.
+    {
+      const [x,z]=W(278.65,-2.22);
+      const dining=rect(273,5.43,280,8.57),entrance=rect(278.04,.5,280,5.43);
+      K.zone({name:'효도치킨',sub:'부속상가 1층 · 안내도 58번',floor:'1F',
+        poly:[[273.29,-2.42],[279.71,-2.42],[279.71,.5],[280,.5],[280,8.57],[273,8.57],[273,5.43],[278.04,5.43],[278.04,.5],[273.29,.5]].map(a=>W(...a)),
+        y0:0,y1:3.4,priority:8,mapArrival:{x,z,yaw:yawL(0,1)}});
+      for(const [a,b,c,d] of [[273,5.43,273,8.57],[273,8.57,280,8.57],[280,.5,280,8.57],
+        [278.04,.81,278.04,5.36]])lwall(a,b,c,d,0,3.1,{mat:0xdfdacb,thick:.08});
+      K.phys.addCeiling(rect(273.29,-2.42,279.71,.5),3.13);
+      K.phys.addCeiling(entrance,3.12);K.phys.addCeiling(dining,3.12);
+      for(const u of [277.2,275.22,273.64]){
+        const a=W(u-.56,7.37),b=W(u+.56,7.37);
+        K.phys.addWall(...a,...b,.01,.81,.68);
+      }
+      placeHyodoShop(K,W,ROT,toL);
     }
     K.hpoly('gb_tactile',rect(58.25,27,58.55,153),.024);K.hpoly('gb_tactile',rect(98,25.85,314,26.15),.024);
     for(const b of bays){if(b.west)K.hpoly('gb_tactile',rect(58.4,b.v-.15,75.4,b.v+.15),.026);else K.hpoly('gb_tactile',rect(b.u-.15,26,b.u+.15,30),.026);}
@@ -1475,7 +1501,10 @@ export function build(K) {
     for(const v of [.8,3,5.3])lwall(265.5,v,278,v,0,3.3,{mat:v===.8?0xe6ded0:0x2f2f30,thick:.12});
     for(const v of [.85,2.95])lbox(265.45,v,0,.16,.18,2.7,0xd7262b);
     lbox(265.45,1.9,2.4,.18,2.3,.4,0xd7262b,{solid:false});lsign('GATE 3',265.33,1.9,2.6,1.7,.3,'-u',{bg:null,fg:'#fff'});
-    lzone('다이소 GATE 3','1F','B&C 현관 · 지하 매장 계단',258.5,0,278,7,-.05,4.2,7);
+    const [gate3X,gate3Z]=W(262.05,1.94);
+    K.zone({name:'다이소 GATE 3',floor:'1F',sub:'B&C 현관 · 지하 매장 계단',
+      poly:rect(258.5,0,278,7),y0:-.05,y1:4.2,priority:7,
+      mapArrival:{x:gate3X,z:gate3Z,yaw:yawL(1,0)}});
     lzone('다이소 GATE 3 계단','B1','B&C 현관에서 매장으로',265.5,1.05,278,2.75,-4,-.05,7);
     // GATE 3 vestibule: brick, mosaic, inner door screen and black linear ceiling.
     K.hpoly({tex:'gb20_mosaic',gloss:.35},rect(258.5,0,265.5,7),.042);
@@ -1541,8 +1570,14 @@ export function build(K) {
     lsign('FOOD STATION  2F',168.23,23.35,4.02,9.4,.6,'+u',{bg:null,fg:'#e5332a'});
     for(const [i,t]of ['HOLLYS COFFEE','LEMON','시래마을','군산오징어','샤브촌','dolly 9'].entries())lsign(t,168.26,18+i*2.05,3.35,1.9,.35,'+u',{bg:'#fff',fg:'#46484a'});
     lstairs(177,20.9,169,20.9,{ya:0,yb:4.2,w:1.6,steps:25,mat:0xc6c4bc,rails:true});
+    // The ridge spans the public double-height hall and leaves its escalator open.
     // Roof of the steel hall is pitched; transverse trusses/ducts remain from the moved assembly.
     for(const [va,vb,ya,yb]of [[16.7,23.35,8,9],[23.35,30,9,8]]){
+      // The walking engine uses horizontal overhead surfaces. Four bands follow each roof pitch.
+      for(let band=0;band<4;band++){
+        const start=va+(vb-va)*band/4,end=va+(vb-va)*(band+1)/4;
+        K.phys.addCeiling(rect(118,start,140,end),ya+(yb-ya)*(band+.5)/4);
+      }
       const q=(u,v,y)=>{const[x,z]=W(u,v);return[x,y,z];};K.quad(0xcbd0cf,[q(118,va,ya),q(140,va,ya),q(140,vb,yb),q(118,vb,yb)],[0,-1,0]);
       for(let u=118;u<140;u+=.4){const a=W(u,va),b=W(u,vb);K.quad(0x939b9a,[[a[0],ya-.03,a[1]],[a[0]+.025,ya-.03,a[1]],[b[0]+.025,yb-.03,b[1]],[b[0],yb-.03,b[1]]],[0,-1,0]);}
     }
@@ -4275,7 +4310,7 @@ export function build(K) {
     // gb_01/02: low steel bollards and sagging chains at the salmon-paved arcade.
     // Leave the photographed entrances unobstructed.
     for(let u=140;u<300;u+=1.6){
-      if([163,218,259].some(c=>u+1.6>c-3&&u<c+3))continue;
+      if([163,218,259].some(c=>u+1.6>c-3&&u<c+3) || (u+1.6>277.88&&u<279.42))continue;
       lcyl(u,-2,0,.055,.9,0x626b68,{seg:6});
       for(let k=0;k<4;k++){
         const a=k/4,b=(k+1)/4;
