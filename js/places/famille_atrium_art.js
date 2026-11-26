@@ -1,4 +1,5 @@
 import {placeDomeLining} from '../../assets/models/famille-dome/model.js';
+import {placeReserveTimber} from '../../assets/models/famille-reserve-timber/model.js';
 import { galleryLights, portraitDisplay } from '../../assets/models/famille-atrium/model.js';
 
 // The roof and upper café follow the OSM drum. The clock and suspended birds
@@ -285,6 +286,7 @@ function memorialGallery(K, {memorial, y2, y3, entryTubeWorld: beam}) {
 }
 
 function furnishStarbucks(K, { cx, cz, y3, entryTubeWorld: beam }) {
+  placeReserveTimber(K,cx,cz,y3);
   const box = (x, y, z, w, h, d, mat, rotY = 0) => K.box({ x: cx + x, y, z: cz + z, w, h, d, mat, rotY, solid: false });
   const tube = (x, y, z, r, h, mat) => K.cyl({ x: cx + x, z: cz + z, y, r, h, mat, solid: false });
   const steel = 0x2f3936, walnut = { tex: 'wood', color: 0xaf8260 };
@@ -332,15 +334,8 @@ function furnishStarbucks(K, { cx, cz, y3, entryTubeWorld: beam }) {
   // (world x=-35.9) and the glazed perimeter. Clear the two comb plates.
   box(14.02, y3, -.90, 1.08, .98, 4.80, walnut);
   box(14.02, y3 + .98, -.90, 1.17, .08, 4.90, 0x514d44);
-  for (const z of [-2.08, .44]) {
-    box(14.04, y3 + 1.06, z, .62, .39, 1.05, 0x464947);
-    for (const dz of [-.26, .14]) tube(13.67, y3 + 1.06, z + dz, .08, .12, 0xe1dfd0);
-  }
   box(15.58,y3,-.94,.26,2.58,4.95,walnut);
-  for(const h of [.81,1.49,2.14]){
-    box(15.33,y3+h,-.94,.51,.065,4.80,0x665244);
-    for(let j=0;j<10;j++) tube(15.24,y3+h+.065,-3.02+j*.46,.103,.24,[0xc6a981,0xe0d7c6,0x4b534a][j%3]);
-  }
+  box(15.33,y3+.81,-.94,.51,.065,4.80,0x665244);
   for(const [x,z] of [[-8.6,-6.7],[-7.1,-9.1],[4.3,8.3],[-10.85,4.95]])coffeeTree(x,y3,z,1.08);
   K.person(cx+14.85,y3,cz-.62,{rotY:-Math.PI/2,shirt:0x365d48});
   K.sign('STARBUCKS  RESERVE', { x: cx + 13.46, y: y3 + .55, z: cz - .90, rotY: -Math.PI / 2, w: 3.7, h: .41, bg: null, fg: '#f4ddb1' });
