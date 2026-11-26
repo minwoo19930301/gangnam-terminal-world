@@ -426,9 +426,26 @@ def fabric_normal():
     nt.links.new(normal.outputs['Normal'],nt.nodes.get('Principled BSDF').inputs['Normal'])
 fabric_normal()
 
-# Preserve modifiers and independently editable parts before joining by finish.
+# Archive the editable display and adjacent customisation window in one source collection.
+import sys
+sys.dont_write_bytecode=True
+sys.path.insert(0,str(out))
+import niche_export,niche_model,niche_probe
+niche_model.make(collection,niche_model.FRAME)
+bpy.context.view_layer.update()
+tree=bpy.data.materials[niche_model.SOLID].node_tree
+probe=tree.nodes.new('ShaderNodeTexImage')
+probe.image=niche_probe.bake(collection,niche_model.FRAME)
+shader=tree.nodes['Principled BSDF']
+tree.links.new(probe.outputs['Color'],shader.inputs['Emission'])
+shader.inputs['Emission Strength'].default_value=.001
 print('EDITABLE_MESHES',len(collection.objects))
 bpy.ops.wm.save_as_mainfile(filepath=str(out/'gallery.blend'),compress=True)
+# Each fixture streams independently from the wall behind the visitor.
+niche_export.write(collection,niche_model.FRAME)
+for item in list(collection.objects):
+    if item.get('retailPackage')=='RimowaNiche':
+        bpy.data.objects.remove(item,do_unlink=True)
 bpy.ops.object.select_all(action='SELECT')
 bpy.context.view_layer.objects.active=collection.objects[0]
 bpy.ops.object.convert(target='MESH')
