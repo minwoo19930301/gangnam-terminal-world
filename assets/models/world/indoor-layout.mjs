@@ -1,3 +1,4 @@
+import {types as executiveSeatTypes,prefix as seatPrefix} from '../executive-seating/layout.js';
 import {parts as ceramicParts,prefix as ceramicPrefix} from '../daiso-ceramics/layout.js';
 import {parts as execParts,prefix as execPrefix} from '../executive-service/layout.js';
 import {parts as charDiningParts} from '../char-dining/layout.js';
@@ -27,6 +28,8 @@ import {relief} from '../../../js/banpo_relief.js';
 // Scene object (or a uniquely identifying child) -> editable native source.
 // Geometry decoder matrices and decorative LOD offsets live *below* the placement.
 const sources = [
+  ['jwmarriott','9F','executive-seating/seating.blend','JW 9층 좌석 · 아이보리 원탁과 검은 에이프런','JW 9층 좌석 · 아이보리 원탁과 검은 에이프런'],
+  ...Object.values(executiveSeatTypes).map(label=>{const name=seatPrefix+label;return ['jwmarriott','9F','executive-seating/seating.blend',name,name];}),
   ...Object.values(ceramicParts).map(([label])=>{const name=ceramicPrefix+label;return ['gyeongbu','B1','daiso-ceramics/ceramics.blend',name,name];}),
   ...Object.values(execParts).map(([label])=>{const name=execPrefix+label;return ['jwmarriott','9F','executive-service/lounge.blend',name,name];}),
   ...Object.values(charDiningParts).map(([name])=>['famille','2F','char-dining/restaurant.blend',name,name]),

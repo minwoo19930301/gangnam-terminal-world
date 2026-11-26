@@ -6,7 +6,7 @@ const models = new Map();
 // One draw at either distance. Quantized glTFs store their decode transform on
 // the node. Keep that separate from the architectural placement transform.
 export function placeSingleDetail(K, {name, file, at, angle, fallback, fallbackMaterial,
-                                      material, loadSurface=loadArchitecture, range, exitRange, floorTolerance, eyeHeight=0, viewBounds, closeVisibleFrom, translations, rigidGround}) {
+                                      material, loadSurface=loadArchitecture, range, exitRange, floorTolerance, eyeHeight=0, viewBounds, closeVisibleFrom, translations, instances, rigidGround}) {
   const T = K.THREE;
   let state = models.get(file);
   if (!state) {
@@ -15,8 +15,8 @@ export function placeSingleDetail(K, {name, file, at, angle, fallback, fallbackM
   }
   const [x,y,z] = at;
   const root = new T.Group();
-  const item = translations ? new T.InstancedMesh(fallback,fallbackMaterial,translations.length) : new T.Mesh(fallback,fallbackMaterial);
-  const placements = translations?.map(p=>new T.Matrix4().makeTranslation(...p));
+  const placements = instances?.map(entry=>entry.matrix) ?? translations?.map(p=>new T.Matrix4().makeTranslation(...p));
+  const item = placements ? new T.InstancedMesh(fallback,fallbackMaterial,placements.length) : new T.Mesh(fallback,fallbackMaterial);
   function placeInstances(surface) {
     const matrix=new T.Matrix4();
     placements.forEach((base,i)=>{
@@ -29,7 +29,8 @@ export function placeSingleDetail(K, {name, file, at, angle, fallback, fallbackM
   }
   if(placements){
     // The authoring scene can reuse the same furniture collection at each game position.
-    root.userData.nativeComponents=translations.map(translation=>({subject:name,translation}));
+    if(translations)root.userData.nativeComponents=translations.map(translation=>({subject:name,translation}));
+    if(instances)instances.forEach(({color},i)=>{if(color)item.setColorAt(i,color);});
     placeInstances(null);
   }
   root.name = name;
