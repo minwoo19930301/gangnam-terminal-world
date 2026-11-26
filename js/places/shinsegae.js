@@ -1,4 +1,5 @@
 import {parkSedanTrim} from '../../assets/models/sedan-curb/model.js';
+import {placeNorthCanopy} from '../../assets/models/shinsegae-gate-canopy/model.js';
 import {registerGlxyStudio} from '../../assets/models/ssg-glxy-studio/model.js';
 import {registerBrownyard} from '../../assets/models/ssg-brownyard/model.js';
 import {haenyeoSeafood} from '../../assets/models/ssg-market-haenyeo/model.js';
@@ -528,10 +529,13 @@ export function build(K) {
   const dOp = (s, w = 6) => ({ s, w, y0: 0, y1: 5.86 });
   // Ground contact follows OSM; the central portal alone is set back into the slot.
   exWall('N', 0, 0, 18.5, 0, 7, { mat: 'ssg_tower_stone' });
-  exWall('N', 0, 18.5, 29.7, 0, 7, { mat: 'ssg_granite' });
-  exWall('N', 0, 39.5, UW - 18.5, 0, 7, { mat: 'ssg_granite' });
+  exWall('N', 0, 18.5, 23.2, 0, 7, { mat: 'ssg_granite' });
+  exWall('N', 0, 23.2, 29.7, 0, 7, { mat: 0x44433f });
+  exWall('N', 0, 39.5, 43.8, 0, 7, { mat: 0x44433f });
+  exWall('N', 0, 43.8, UW - 18.5, 0, 7, { mat: 'ssg_granite' });
   exWall('N', 0, UW - 18.5, UW, 0, 7, { mat: 'ssg_tower_stone' });
   // The recessed 1 GATE bay is between the north boutiques.
+  const groundPortalOutline=[P(0,0),P(29.7,0),P(29.7,5),P(39.5,5),P(39.5,0),P(UW,0),P(UW,VD),P(0,VD)];
   exWall('N', 5, 29.7, 39.5, 0, 7, { mat: 'ssg_granite', openings: [{ ...dOp(34.6, 9.8), y1: 5.7 }] });
   for (const u of [29.7, 39.5]) wall(u, 0, u, 5, 0, 7, { mat: 'ssg_granite', thick: 0.22 });
   exWall('E', UW, 0, 18.5, 0, 7, { mat: 'ssg_tower_stone' });
@@ -584,8 +588,29 @@ export function build(K) {
     bay.push([ENTRY - 6 * Math.cos(theta), BAY_BACK - 6 * Math.sin(theta)]);
   }
   const bayPlan = bay.map(p => P(...p));
-  exWall('N', BAY_BACK, 23, 44, 7, BAY_TOP, { mat: {tex:'ssg_north_curtain',color:0xa9c2d2}, vBase: 7 });
-  for (const [y0, y1] of [[7, 20], [24, BAY_TOP]]) {
+  K.texture('ssg_north_flat_glass', 32, 128, (g,w,h) => {
+    const sky=g.createLinearGradient(0,0,0,h);
+    sky.addColorStop(0,'#7796a8');
+    sky.addColorStop(.42,'#86a6b7');
+    sky.addColorStop(.67,'#a7bbc2');
+    sky.addColorStop(1,'#75898c');
+    g.fillStyle=sky; g.fillRect(0,0,w,h);
+  },[21,13]);
+  exWall('N', BAY_BACK, 23, 44, 7, 20, {mat:'ssg_north_flat_glass', vBase:7});
+  exWall('N', BAY_BACK, 23, 44, 20, BAY_TOP, { mat: {tex:'ssg_north_curtain',color:0xa9c2d2}, vBase: 7 });
+  // Thin standing mullions run uninterrupted across the planar lower glazing.
+  for (let i=0; i<=12; i++) {
+    const u=23+21*i/12;
+    faceQuad(0x586c74,'N',u,7,.080,13,.065,BAY_BACK);
+  }
+  for (let i=1; i<7; i++) {
+    const yy=7+13*i/7;
+    faceQuad(0x536971,'N',ENTRY,yy-.055,21,.17,.08,BAY_BACK);
+    faceQuad(0xd3dadd,'N',ENTRY,yy,21,.095,.10,BAY_BACK);
+  }
+  // The lower curtain wall is planar. Only the upper bay projects beyond it.
+  {
+    const y0 = 24, y1 = BAY_TOP;
     for (let i = 0; i < bay.length - 1; i++) {
       // Reflection changes gradually across the curved bay; reuse the same batched finish.
       const facing = Math.sin((i+.5)*PI/(bay.length-1));
@@ -595,8 +620,8 @@ export function build(K) {
     }
     const end = bay.at(-1);
     box(end[0], end[1], 0.04, 0.06, y0, y1 - y0, 0x9caeb7, { solid: false });
-    // The 2F slab and main roof already cap y7/YB. Only cap the two recess edges here.
-    for (const yy of [y0, y1].filter(yy => yy !== 7 && yy !== BAY_TOP)) K.slab(bayPlan, yy, {
+    // The main roof caps the top. This face is the visible underside of the projecting bay.
+    K.slab(bayPlan, y0, {
       mat: 0x748783, under: 0x202a28, thick: 0.16, edgeMat: 0x85948e, walk: false, ceil: false,
     });
   }
@@ -683,32 +708,26 @@ export function build(K) {
   faceQuad(0xd9dde0, 'W', TOWER_W / 2, 15.3, 3, 14, .31);
 
   // ------------------------------------------------------------ entrance (2025 roadview 01/02)
-  function gridCanopy(f, c, width, depth, y, paired = false, columns = true) {
-    const along = f === 'N', back = along ? -5 : 0.05, run = depth - back, middle = (depth + back) / 2;
-    const B = (s, t, w, d, yy, h, mat, solid = false) => along
-      ? box(c + s, -t, w, d, yy, h, mat, { solid })
-      : box(UW + t, c + s, d, w, yy, h, mat, { solid });
-    const Q = (s0, t0, s1, t1, yy, mat) => along
-      ? hq(c + s0, -t1, c + s1, -t0, yy, mat)
-      : hq(UW + t0, c + s0, UW + t1, c + s1, yy, mat);
+  function eastGridCanopy(c, width, depth, y, paired = false, columns = true) {
+    const back = 0.05, run = depth - back, middle = (depth + back) / 2;
+    const B = (s, t, w, d, yy, h, mat, solid = false) => box(UW + t, c + s, d, w, yy, h, mat, { solid });
+    const Q = (s0, t0, s1, t1, yy, mat) => hq(UW + t0, c + s0, UW + t1, c + s1, yy, mat);
     Q(-width / 2, back, width / 2, depth, y + 0.2, { tex: 'glass', color: 0x9ca7a1 });
     // Glass material is double-sided; transverse grid, deeper beams and outer columns below it.
     for (let s = -width / 2; s <= width / 2 + 0.01; s += 1.1) B(s, middle, 0.075, run, y, 0.2, STEEL);
     for (let t = back; t <= depth; t += 0.9) B(0, t, width, 0.08, y, 0.2, STEEL);
-    for (const t of [back, depth]) B(0, t, width + 0.2, 0.24, y - (along ? 0.2 : 0.12), along ? 0.4 : 0.36, STEEL);
-    for (const ss of [-width / 2, width / 2]) B(ss, middle, 0.24, run, y - (along ? 0.2 : 0.12), along ? 0.4 : 0.36, STEEL);
+    for (const t of [back, depth]) B(0, t, width + 0.2, 0.24, y - 0.12, 0.36, STEEL);
+    for (const ss of [-width / 2, width / 2]) B(ss, middle, 0.24, run, y - 0.12, 0.36, STEEL);
     for (const ss of [-width * 0.32, width * 0.32]) {
       B(ss, middle, 0.24, run, y - 0.18, 0.38, STEEL);
       if (!columns) continue;
-      if (along) {
-        const [x, z] = P(c + ss, -depth + 0.2);
-        K.cyl({ x, z, y: 0, r: 0.21, h: y, mat: STEEL, seg: 16 });
-      } else for (const offset of paired ? [-0.3, 0.3] : [0])
+      for (const offset of paired ? [-0.3, 0.3] : [0])
         B(ss + offset, depth - 0.2, 0.16, 0.16, 0, y, STEEL, true);
     }
   }
-  gridCanopy('N', ENTRY, 25.4, 6.8, 5.9);
-  gridCanopy('E', 19, 22, 3.4, 3.8, true);
+  // The rolled hood sits between the stone shoulders and meets the flat curtain wall.
+  placeNorthCanopy(K, P(ENTRY, -.45), RA);
+  eastGridCanopy(19, 22, 3.4, 3.8, true);
   // Door side lights and upper transom. Two clear open passages remain through the glass doors.
   function entrance(f, c, width, plane = PLANE[f]) {
     const east = f === 'E', doorTop = east ? 2.65 : 2.9, fasciaH = east ? 0.5 : 0.55;
@@ -747,7 +766,7 @@ export function build(K) {
   }
   entrance('E', EAST_GATE, eastGateWidth);
   // Short return at the south end of the parking-side pergola.
-  gridCanopy('E', 31.6, 3.2, 2.4, 3.8, false, false);
+  eastGridCanopy(31.6, 3.2, 2.4, 3.8, false, false);
   K.texture('ssg_watch_display', 128, 128, (g, w, h) => {
     g.clearRect(0, 0, w, h);
     g.fillStyle = '#77736d'; g.fillRect(49, 0, 30, h);
@@ -966,7 +985,7 @@ export function build(K) {
   // ------------------------------------------------------------ slabs
   // Match the upper slab contour to the recessed glazing: no shelves protrude outside it.
   const northOutline = (vSouth, y) => {
-    const front = y >= 20 && y < 24 ? [[23, BAY_BACK], [44, BAY_BACK]]
+    const front = y < 24 ? [[23, BAY_BACK], [44, BAY_BACK]]
       : [[23, BAY_BACK], ...bay, [44, BAY_BACK]];
     return [P(0, 0), P(23, 0), ...front.map(p => P(...p)), P(44, 0), P(UW, 0), P(UW, vSouth), P(0, vSouth)];
   };
@@ -1189,7 +1208,7 @@ export function build(K) {
   // mezzanine slab
   // The photographed 1M arrival and jewellery aisle have pale, square polished
   // stone slabs; keep their finish consistent through the floor and passage.
-  K.slab(FULL, LV['1M'], {mat:{tex:'marble',color:0xf3f2ee,scale:[1,1],gloss:.7},thick:TH['1M'],holes:[MEZZ_VOID,rect(...NW_ESC),rect(...SW_ESC)],edge:false,under:CEIL});
+  K.slab(groundPortalOutline, LV['1M'], {mat:{tex:'marble',color:0xf3f2ee,scale:[1,1],gloss:.7},thick:TH['1M'],holes:[MEZZ_VOID,rect(...NW_ESC),rect(...SW_ESC)],edge:false,under:CEIL});
 
   const upperStack=Object.keys(upperGuidePlans);
   const upperFlightReservations=[];
@@ -5930,7 +5949,7 @@ export function build(K) {
     const fl='1F';
     // Round20: original photo walk is primary. Plan cells retain their detailed
     // fit-outs under the unmirrored registration; new photo objects use native u/v.
-    const groundZone=[P(0,0),P(29.7,0),P(29.7,5),P(39.5,5),P(39.5,0),P(67,0),P(67,VD),P(0,VD)];
+    const groundZone=groundPortalOutline;
     // The floor overview starts in the aisle between the main entrance and the popup hall.
     const groundFloor={name:'신세계백화점 강남점',floor:fl,sub:'화장품 · 향수 · 주얼리',y0:0,y1:3.6,priority:1};
     const entryAisle=[[29.7,5],[39.5,5],[39.5,6],[35.5,7],[35.5,14],[31.5,14],[31.5,7],[29.7,6]];
