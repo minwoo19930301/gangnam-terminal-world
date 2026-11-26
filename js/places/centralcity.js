@@ -1,6 +1,6 @@
 import {podiumOpening} from '../../assets/models/cinema-rotary/layout.js';
 import {chefStageSigns} from '../../assets/models/sweet-chefs-stage/model.js';
-import {marketWestReturn} from './shinsegae-b1-plan.js';
+import {marketWestReturn, cinemaAisleMouth} from './shinsegae-b1-plan.js';
 import {placeStageCoffers} from '../../assets/models/open-stage-coffer/model.js';
 import {placeOpenStageLounge} from '../../assets/models/open-stage-lounge/model.js';
 import {galleryLights} from '../../assets/models/famille-atrium/model.js';
@@ -1974,6 +1974,12 @@ export function build(K) {
           if (d < 2.5 && at > -1 && at < L + 1) ops.push({ at, w, y0: YB1, y1: YB1 + 3.4 });
         }
         const ix = -nsB[i][0] * 0.15, iz = -nsB[i][1] * 0.15;
+        // Opposite the market, the cinema aisle crosses the same edge owned by
+        // the department store. Both sides of the B1 shell must stay open.
+        const {x:mouthX, z:mouthZ, width} = cinemaAisleMouth;
+        const at = atOn(a,b,mouthX-ix,mouthZ-iz);
+        const offset = Math.abs((mouthX-a[0]-ix)*(b[1]-a[1])-(mouthZ-a[1]-iz)*(b[0]-a[0]))/L;
+        if (offset<.45 && at>0 && at<L) ops.push({at,w:width,y0:YB1,y1:YB1+4.45});
         if(i===5){
           const crossing=podiumOpening(a[0]+ix,a[1]+iz,b[0]+ix,b[1]+iz);
           if(crossing)ops.push({...crossing,y0:YB1,y1:YB1+4.46});
