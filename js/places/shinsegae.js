@@ -1489,21 +1489,21 @@ export function build(K) {
   });
 
   // ------------------------------------------------------------ elevators
+  // Gangnam operator floor guide: https://www.shinsegae.com/store/floor.do?storCd=SC00002
+  const upperCats={
+    '2F':'해외유명브랜드','3F':'인터내셔널 디자이너 · 럭셔리 워치&주얼리 · 신세계갤러리',
+    '4F':'해외 컨템포러리 · 슈즈','5F':'여성 클래식 · 뉴 컨템포러리 · 핸드백',
+    '6F':'남성 부티크','7F':'골프 · 남성 캐주얼 · 남성 컨템포러리 · 남성 정장',
+    '8F':'뉴 스트리트 · 베이직 스포츠 · 스포츠 · 아웃도어','9F':'가구 · 홈패션 · 가전 · 키친웨어',
+    '10F':'리틀 신세계 · 아동 · 유아 · 란제리','11F':'S GARDEN · 전문식당가',
+  };
+
   const ELV_FLOORS = [
     { label: 'B2', y: LV.B2, name: '주차장' },
     { label: 'B1', y: LV.B1, name: '식품관 · 스위트파크 · 하우스 오브 신세계' },
     { label: '1F', y: LV['1F'], name: '화장품 · 해외유명브랜드 · 잡화' },
     { label: '1M', y: LV['1M'], name: '액세서리 · 여행 · 식음료' },
-    { label: '2F', y: LV['2F'], name: '해외유명브랜드' },
-    { label: '3F', y: LV['3F'], name: '인터내셔널 디자이너 · 워치&주얼리' },
-    { label: '4F', y: LV['4F'], name: '해외 컨템포러리 · 슈즈' },
-    { label: '5F', y: LV['5F'], name: '여성 클래식 · 뉴 컨템포러리 · 핸드백' },
-    { label: '6F', y: LV['6F'], name: '남성 럭셔리 · 남성 컨템포러리' },
-    { label: '7F', y: LV['7F'], name: '골프 · 남성 캐주얼 · 남성 컨템포러리 · 남성 정장' },
-    { label: '8F', y: LV['8F'], name: '뉴 스트리트 · 베이직 스포츠 · 아웃도어' },
-    { label: '9F', y: LV['9F'], name: '신세계홈 (가구 · 가전 · 키친)' },
-    { label: '10F', y: LV['10F'], name: '리틀 신세계 · 란제리' },
-    { label: '11F', y: LV['11F'], name: '전문식당가 · S GARDEN' },
+    ...Object.entries(upperCats).map(([label,name]) => ({label,y:LV[label],name})),
   ];
   // Arrive on the level landing just north of each car, with the full floor list retained.
   const ARR = { dx: -2.2 * SA, dz: -2.2 * CA };
@@ -7904,13 +7904,6 @@ export function build(K) {
     for(const v of [v0,v1])wall(u0,v,u1,v,y,y+hermesPassageHeight,{mat:0xb8a58c,thick:.08});
     K.hpoly(0xede7db,rect(...hermesPassage),y+hermesPassageHeight,false);
   }
-  const upperCats={
-    '2F':'해외유명브랜드','3F':'인터내셔널 디자이너 · 럭셔리 워치&주얼리 · 신세계갤러리',
-    '4F':'해외 컨템포러리 · 슈즈','5F':'여성 클래식 · 뉴 컨템포러리 · 핸드백',
-    '6F':'남성 부티크','7F':'골프 · 남성 캐주얼 · 남성 컨템포러리 · 남성 정장',
-    '8F':'뉴 스트리트 · 베이직 스포츠 · 스포츠 · 아웃도어','9F':'생활 · 가구 · 홈패션 · 가전 · 키친웨어',
-    '10F':'리틀 신세계 · 아동 · 유아 · 란제리','11F':'S GARDEN · 전문식당가',
-  };
   let earlyBulgariSign=false;
   const earlyGucciSigns=new Set();
   const earlyThreeSigns=new Set();
