@@ -330,7 +330,7 @@ export function build(K) {
   const SUBZ = (name, k, sub, rect, y1) => ZN(name, k, `${meta.name} · ${sub}`, rect, Y[k], y1 ?? NEXT[k], 1);
   const SUBZS = (name, k, sub, rect, y1) => ZN(name, k, sub, rect, Y[k], y1 ?? NEXT[k], 1);   // short label (dense floor plans)
   const HP = (mat, rect, y, up = true, holes) => K.hpoly(mat, Array.isArray(rect[0]) ? rect : RECT(...rect), y, up, holes ? holes.map(h => RECT(...h)) : undefined);
-  const SPAWN = (name, u, v, y, du, dv) => { const [x, z] = P(u, v); K.spawn({ name, x, y, z, yaw: yawTo(du, dv) }); };
+  const SPAWN = (name, u, v, y, du, dv, options) => { const [x, z] = P(u, v); K.spawn({ name, x, y, z, yaw: yawTo(du, dv), ...options }); };
   // ceiling light panels (emit quads facing down) on a grid inside rect
   const LIGHTS = (rect, yc, sp = 4.2, s = 1.2, col = 0xfff3dc, skip) => {
     const [u0, v0, u1, v1] = rect;
@@ -775,7 +775,10 @@ export function build(K) {
   SPAWN('JW 메리어트 1F 승강기 홀', -14.7, 40, 0, .15, -1);
   SPAWN('더 라운지 8F · 피아노와 소파', 1.4, 36.9, Y['8F'], -1, -.05);
   SPAWN('더 라운지 8F · 바', -2.1, 16.4, Y['8F'], 0, -1);
-  SPAWN('플레이버즈 2F · 입구', -12.8, 19, Y['2F'], -1, 0);
+  // The fitted east wall opens at u=-15.5, v=18.5. Stand just inside its public doorway.
+  SPAWN('플레이버즈 2F · 입구', -16.2, 18.5, Y['2F'], -1, 0, {
+    floor:'2F', mapDestination:true, aliases:['Flavors(플레이버즈)', 'JW 메리어트 플레이버즈'], poiIds:[12079262441]
+  });
   SPAWN('플레이버즈 2F · 다이닝', -20.6757, 29, Y['2F'], -1, .4);
   SPAWN('그랜드 볼룸 5F · 포이어', 7, 35, Y['5F'], 1, 0);
   SPAWN('이그제큐티브 라운지 9F', 5.5, 22, Y['9F'], .5, -1);
