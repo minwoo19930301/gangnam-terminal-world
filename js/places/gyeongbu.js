@@ -1,3 +1,4 @@
+import { placeRooftopDining, patioTables } from '../../assets/models/gyeongbu-rooftop/model.js';
 import { placeTicketOffice } from '../../assets/models/gyeongbu-ticket-office/model.js';
 import { placeDeparturePortal } from '../../assets/models/gyeongbu-boards/model.js';
 import { placeIceCreamShop } from '../../assets/models/gyeongbu-icecream/model.js';
@@ -535,7 +536,21 @@ export function build(K) {
       if(i>=6)K.wall(ax+n[0]*.4,az+n[1]*.4,bx+n[0]*.4,bz+n[1]*.4,top-.8,top,{mat:0x7a4a3c,thick:.8,solid:false});
     }
   }
-  K.polyWalls(floorPoly(9),43,44,{mat:CREAM,thick:.2});
+  // Two level passages link the existing 10F garden to the dining terrace in front of the signed wall.
+  const patioEntry=[89.5,107.7].map(v=>{const [x,z]=W(50.7,v);return {x,z,w:2.62,y0:43,y1:44};});
+  K.polyWalls(floorPoly(9),43,44,{mat:CREAM,thick:.2,openings:patioEntry});
+  K.slab(rect(50.70,84.4,58.5,111.3),43,{mat:0x777b75,under:0xbcb9a9,edgeMat:0x9d998b,thick:.32});
+  // The public roof photograph shows a black perimeter guard and clear promenade.
+  for(const [u0,v0,u1,v1] of [[50.68,84.4,58.50,84.4],[58.5,84.4,58.5,111.3],[58.5,111.3,50.68,111.3]]){
+    lwall(u0,v0,u1,v1,43,43.18,{mat:0x8c8b81,thick:.13});
+    const du=Math.abs(u1-u0),dv=Math.abs(v1-v0),posts=Math.ceil((du+dv)/1.5);
+    lbox((u0+u1)/2,(v0+v1)/2,43.18,du||.052,dv||.052,.92,0,{skip:['top','bottom','n','s','e','w']});
+    for(let k=0;k<posts;k++){
+      const t=k/posts;lbox(u0+(u1-u0)*t,v0+(v1-v0)*t,43.18,.046,.046,.92,0x43504a,{solid:false});
+    }
+    lwall(u0,v0,u1,v1,43.28,43.31,{mat:0x4e5953,thick:.05,solid:false});
+    lwall(u0,v0,u1,v1,44.10,44.15,{mat:0x68716b,thick:.087,solid:false});
+  }
   const pd=W(38,82);
   K.polyWalls(pent,43,48,{mat:CREAM,thick:.2,openings:[{x:pd[0],z:pd[1],w:3,y0:43,y1:46}]});
   // Applied south facade must be outside the OSM end at v161.28; the former v159 skin was hidden.
@@ -564,13 +579,16 @@ export function build(K) {
   // gb_04/photo02: one heavy maroon roof-garden edge, not stacked brown pinstripes.
   lbox(52.4,77,40.4,1.6,150,1.9,0x6b2f2a,{solid:false});
   lbox(westInset[9]-.35,77,40.4,1.6,154,1.9,0x7a3a2c,{solid:false});
-  for(let v=3;v<152;v+=1.6)lbox(52.15,v,42.3,.9,.9,.8,0x3f5a35,{solid:false});
+  for(let v=3;v<152;v+=1.6)if(v<84.4||v>111.3)lbox(52.15,v,42.3,.9,.9,.8,0x3f5a35,{solid:false});
   for(const v of [18,49,111,143]){const[x,z]=W(51.7,v);K.tree(x,z,{y:42.3,h:2.8,kind:'zelkova'});}
   // Letter pitch and spelling follow the yard photograph. This English line is on the real sign.
-  lbox(51.1,77,42.3,.65,150,4.9,0xe8e4da,{solid:false});
-  [...'서울고속버스터미날'].forEach((c,i)=>lsign(c,51.48,100-i*4.6,45.6,3,3,'+u',{bg:null,fg:'#2a5fa8',padding:0}));
-  lsign('SEOUL EXPRESS BUS TERMINAL',51.49,81.6,43.65,39.8,.9,'+u',{bg:null,fg:'#2a5fa8',padding:0});
-  aoLogo(51.51,105.5,45.6,3,'+u');
+  // The photographed restaurant occupies the open ground strip under the central sign.
+  for(const [a,b] of [[2,58],[110,152]])lbox(51.1,(a+b)/2,42.3,.65,b-a,4.9,0xe8e4da,{solid:false});
+  lbox(51.1,84,45.62,.65,52,4.14,0xe8e4da,{solid:false});
+  lbox(51.1,71.2,42.3,.65,26.4,3.32,0xe8e4da,{solid:false});
+  [...'서울고속버스터미날'].forEach((c,i)=>lsign(c,51.48,100-i*4.6,48.10,3,2.64,'+u',{bg:null,fg:'#2a5fa8',padding:0}));
+  lsign('SEOUL EXPRESS BUS TERMINAL',51.49,81.6,46.36,39.8,.9,'+u',{bg:null,fg:'#2a5fa8',padding:0});
+  aoLogo(51.51,105.5,48.10,2.72,'+u');
   // One continuous line below the garden band, using the photographed wording.
   lbox(52.95,77,35.4,.4,150,2.1,0xe8e4da,{solid:false});
   const floorBand=[['생화조화 3층꽃상가',132,26],['2층 4층혼수·커텐·홈패션',102,33],['6.7.8층 의류 도매상가',68,33],['아동 신사 숙녀복 기타',37.5,27],['B1한가람문고',17,13]];
@@ -2851,6 +2869,25 @@ export function build(K) {
     for(const v of [66,70,74])for(const u of [33,44])lbox(u,v,43,5,.6,.45,0x917557);
     lbox(38,62,43,2,.8,1,0xd2c4ac);
     lzone('옥상정원','10F','성당 옆 옥외 공간',26,83,49,150,43,48,2);
+    const patioU=51.25,patioV=98.70;
+    lzone('옥상 산책로','10F','옥상정원 · 야외 식당',49.0,84.4,58.51,111.3,43,47.8,3);
+    lzone('포석정','10F','옥상 야외 식사 공간',50.68,91.75,58.50,105.45,43,48,4);
+    lspawn('10층 포석정 옥상 야장',55.0,91.5,43,-.12,1);
+    const [rx,rz]=W(patioU,patioV),[mx,mz]=W(patioU+1.25,patioV-1.85);
+    const [signX,signZ]=W(51.10,84);
+    placeRooftopDining(K,[rx,43,rz],[mx,43,mz],[signX,43,signZ],ROT+PI/2);
+    const foot=(x,d,w,depth,h)=>lbox(patioU+d,patioV-x,43,depth,w,h,0,{skip:['top','bottom','n','s','e','w']});
+    foot(0,-.67,12.6,.14,2.65);
+    for(const x of [-5.80,-2.10,1.73,5.86])foot(x,-.07,.108,.16,2.58);
+    for(const [x,d] of patioTables){
+      foot(x,d,1.44,.98,.752);
+      for(const sx of [-.39,.39])for(const sd of [-.72,.72])foot(x+sx,d+sd,.37,.34,.82);
+    }
+    for(const x of [-4.25,3.45])foot(x,5.35,2.62,.68,.56);
+    lsign('포석정',patioU-.36,patioV+.18,45.258,1.52,.278,'+u',{bg:null,fg:'#343a34',padding:.01,pxPerM:175});
+    for(const [x,d,face,shirt] of [[-.60,.55,0,0x9a6e77],[4.20,1.97,PI,0x617466],[.83,4.70,PI,0x6a6c81]]){
+      lperson(patioU+d,patioV-x,43.02,{sit:true,rotY:ROT+PI/2+face,shirt});
+    }
     for(const v of [98,126]){
       lbox(28,v,43,2,4,.45,0xb2aa9a);K.hpoly('grass',rect(27.1,v-1.8,28.9,v+1.8),43.46);
       lbox(46,v,43,.6,3,.45,0x8d775d);
