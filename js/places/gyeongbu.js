@@ -1,3 +1,4 @@
+import {placeWicker} from '../../assets/models/gyeongbu-basket-display/model.js';
 import {flowerBank} from '../../assets/models/gyeongbu-flower-bank/model.js';
 import {clothingFront} from '../../assets/models/gyeongbu-clothing-fronts/model.js';
 import {placeWaitingCeiling} from '../../assets/models/gyeongbu-waiting-ceiling/model.js';
@@ -3055,12 +3056,20 @@ export function build(K) {
       for(const dv of [-.19,.19])db(u,v+dv,y+.285,w,.02,.025,0xcfac6e);
       deco('handle',u,v,y+.3,.35,.36,.3,0xc3a36d);
     }
+    const wickerU=38.4,wickerV=142.8;
+    ldetail({floor:'3F',y0:fy,y1:fy+2.8,name:'화기·바구니 · 등바구니 진열',
+      poly:rect(wickerU+.02,wickerV-1.9,wickerU+1.6,wickerV+1.9)},()=>{
+      const [x,z]=W(wickerU,wickerV);
+      placeWicker(K,x,fy,z,ROT);
+    });
     function supplies(u,v,n){
+      const wicker=u===wickerU&&v===wickerV;
       stockbox(u,v,fy,.04,3.8,2,0xeceae4,{skip:['n','s']});
       for(const s of [-1,1]){
         for(let k=0;k<5;k++){
           const y=fy+.1+k*.42;db(u+s*.25,v,y,.48,3.8,.03,0xf1f0eb);
           for(let j=0;j<8;j++){
+            if(wicker&&s===1&&k>=2)continue;
             const z=v-1.57+j*.45;if(n%2)basket(u+s*.25,z,y+.03);
             else deco(j%3?'vase':'bowl',u+s*.25,z,y+.03,.3,.3,.33,j%3?0xf0f0e5:0x292e2e);
           }
@@ -3069,6 +3078,7 @@ export function build(K) {
         // Kraft stock and oversize pots fill the lower edge without blank panels.
         for(let k=0;k<4;k++){
           const z=v-1.4+k*.92;db(u+s*1.35,z,fy,.68,.65,.36+(k%2)*.23,0xbca57b);
+          if(wicker&&s===1)continue;
           if(n%2)basket(u+s*1.35,z,fy+.61,.45);else deco(k%2?'vase':'bowl',u+s*1.35,z,fy+.61,.47,.47,.55,k%2?0xf3f0e7:0x2b302e);
         }
       }
@@ -3082,14 +3092,10 @@ export function build(K) {
           if(k===2){db(33.35,vv,fy+.64,.012,.012,.55,0x537148);cluster(33.35,vv,fy+1.2,.07,0xe4aac5);}
         }
       }
-      // Photo09: a few dark/red storage baskets break up the photographed tan rack.
-      if(u===38.4&&v===142.8)for(let k=0;k<5;k++){
-        db(u+.27,v-1.45+k*.7,fy+.96,.43,.55,.2,k%2?0x6b4734:0x8b3044);
-        db(u+.49,v-1.45+k*.7,fy+1.09,.025,.4,.035,0xd3b779);
-      }
       for(let k=0;k<8;k++){
         const bu=u+(k%2?1.2:-1.2),bv=v-1.4+Math.floor(k/2)*.94,by=fy+2.2+(k%2)*.08;
-        basket(bu,bv,by,.45);db(bu,bv,by+.45,.015,.015,Math.max(.04,fc-by-.45),0x8a8a77);
+        if(!wicker||k%2===0)basket(bu,bv,by,.45);
+        db(bu,bv,by+.45,.015,.015,Math.max(.04,fc-by-.45),0x8a8a77);
       }
     }
     function plants(u,v,n){
