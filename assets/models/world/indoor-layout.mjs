@@ -42,6 +42,7 @@ const sources = [
     ['centralcity','1F','house-wine-cellar/wine-cellar.blend','와인셀라 · '+p.title,p.collection]),
   ['centralcity','B1','sweet-marcolini/chocolatier.blend','피에르 마르콜리니 · 구리 쇼케이스와 봉봉','GangnamChocolatier','Glass','Lit'],
   ['shinsegae','B1','cinema-rotary/front.blend','원형 광장 · 카멜커피 입면','CamelCoffeeRotaryFront'],
+  ...['Wafille','GalleryClock'].map(name=>['famille','1F','famille/gallery.blend',name,name]),
   ['famille','1F','interior-architecture/interiors.blend','파미에 갤러리 아치와 벽등','gallery-rib'],
   ['centralcity','B1','sweet-arcade/pier.blend','스위트 파크 · 디저트 홀 타일 기둥','SweetParkArcadePier'],
   ['shinsegae','B1','sports-shoe-rotary/entry.blend','스포츠 슈 전문관 · 브랜드 간판과 계단','GangnamSportsShoeEntry'],
@@ -350,6 +351,15 @@ export async function captureIndoorLayout() {
       const rules=sources.filter(row=>row[0]===place), counts=new Map();
       const {build,meta}=await import('../../../js/places/'+place+'.js');
       const kit=createKit(THREE,new THREE.Scene(),{osm,phys:createPhysics(),keep:()=>false});
+      if(place==='centralcity'){
+        kit.recordHonamFrame=([x,z],angle)=>{
+          const matrix=new THREE.Matrix4().makeRotationY(angle).setPosition(x,0,z);
+          const ground=rounded(relief(x,z));
+          result.push({id:'centralcity/FamilleHonamSteps/1',place,placeName:meta.name,floor:'1F',
+            library:'famille-honam-steps/steps.blend',collections:['FamilleHonamSteps'],subject:'파미에 · 호남선 반계단과 윗참',
+            ground,terrain:ground,matrix:matrix.toArray().map(rounded)});
+        };
+      }
       // A dedicated hotel page uses level floor plates. Register them on the
       // same footprint midpoint as the hotel podium in the native city builder.
       let hotelDatum;

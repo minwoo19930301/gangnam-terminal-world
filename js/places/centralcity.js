@@ -3135,18 +3135,29 @@ export function build(K) {
   const honamLanding = 1.36;
   const landingFinish = {tex:'tile',color:0xd6c9b4,gloss:.3};
   const landingWidth = 3.3;
-  K.slab(RECT(164.4,20.35,169.4,23.65),honamLanding,{mat:landingFinish,thick:honamLanding});
-  K.ramp(...P(149.4,22),...P(164.4,22),{
-    w:landingWidth,ya:.015,yb:honamLanding,mat:landingFinish,rails:false,
+  // The editable city samples these same calls, including the stepped nosing
+  // deformation. Ordinary builds continue directly into the shared floor batches.
+  const stairTop=P(169.4,22);
+  K.recordHonamFrame?.(stairTop,R);
+  const honamPart=K.captureHonamPart ?? ((_name,draw)=>draw());
+  honamPart('윗참 · 석재 바닥',()=>{
+    K.slab(RECT(164.4,20.35,169.4,23.65),honamLanding,{mat:landingFinish,thick:honamLanding});
   });
-  for (const side of [-1,1]) {
-    const t=22+side*landingWidth/2;
-    const [ax,az]=P(149.4,t), [bx,bz]=P(164.4,t);
-    K.quad(landingFinish,[[ax,0,az],[bx,0,bz],[bx,honamLanding,bz],[ax,.015,az]],
-      [side*EX,0,side*EZ]);
-  }
-  K.stairs(...P(169.4,22),...P(172.28,22),{
-    w:landingWidth,ya:honamLanding,yb:0,mat:0xe4ded2,nosing:0x60564f,rails:false,
+  honamPart('호남선 쪽 경사 접속부',()=>{
+    K.ramp(...P(149.4,22),...P(164.4,22),{
+      w:landingWidth,ya:.015,yb:honamLanding,mat:landingFinish,rails:false,
+    });
+    for (const side of [-1,1]) {
+      const t=22+side*landingWidth/2;
+      const [ax,az]=P(149.4,t), [bx,bz]=P(164.4,t);
+      K.quad(landingFinish,[[ax,0,az],[bx,0,bz],[bx,honamLanding,bz],[ax,.015,az]],
+        [side*EX,0,side*EZ]);
+    }
+  });
+  honamPart('반계단 · 디딤판과 챌판',()=>{
+    K.stairs(...stairTop,...P(172.28,22),{
+      w:landingWidth,ya:honamLanding,yb:0,mat:0xe4ded2,nosing:0x60564f,rails:false,
+    });
   });
   lsign(['파미에스테이션 ↑','2게이트 · 식당가'],155,21.95,3.15,3.8,.65,'N',{bg:'#324639',fg:'#fff1cd'});
   lsign(['호남선 터미널 ↑','승차홈 · 매표소'],171.48,22,3.72,4.6,.55,'S',{bg:'#324639',fg:'#fff1cd'});
@@ -3178,23 +3189,27 @@ export function build(K) {
     }
     // Seoul St Mary's Hospital's public walk, 29–32s: dark stone edges,
     // arched iron pickets, amber warning tiles, and ringed white globe lamps.
-    for(const t of [20.35,23.65]){
-      const elevation=s=>honamLanding*(172.28-s)/2.88;
-      for(const s of [169.4,170.84,172.28])lbox(s,t,.055,.055,elevation(s),1.04,0x44392f,{solid:false});
-      for(const h of [.12,.91,1.04])entryTube([169.4,t,honamLanding+h],[172.28,t,h],.045,0x493b33);
-      for(let i=0;i<9;i++){
-        const start=169.4+i*.32;
-        for(const x of [start+.025,start+.295])entryTube([x,t,elevation(x)+.12],[x,t,elevation(x)+.76],.018,0x493b33);
-        for(let j=0;j<6;j++){
-          const arch=k=>{const a=k*PI/6,x=start+.16-.135*Math.cos(a);return [x,t,elevation(x)+.76+.135*Math.sin(a)];};
-          entryTube(arch(j),arch(j+1),.018,0x493b33);
+    honamPart('양쪽 난간 · 반원 철물',()=>{
+      for(const t of [20.35,23.65]){
+        const elevation=s=>honamLanding*(172.28-s)/2.88;
+        for(const s of [169.4,170.84,172.28])lbox(s,t,.055,.055,elevation(s),1.04,0x44392f,{solid:false});
+        for(const h of [.12,.91,1.04])entryTube([169.4,t,honamLanding+h],[172.28,t,h],.045,0x493b33);
+        for(let i=0;i<9;i++){
+          const start=169.4+i*.32;
+          for(const x of [start+.025,start+.295])entryTube([x,t,elevation(x)+.12],[x,t,elevation(x)+.76],.018,0x493b33);
+          for(let j=0;j<6;j++){
+            const arch=k=>{const a=k*PI/6,x=start+.16-.135*Math.cos(a);return [x,t,elevation(x)+.76+.135*Math.sin(a)];};
+            entryTube(arch(j),arch(j+1),.018,0x493b33);
+          }
         }
       }
-    }
-    for(const [s,h] of [[169.15,honamLanding],[172.55,.032]]){
-      lbox(s,22,.32,3.23,h+.005,.009,0xc79c48,{solid:false});
-      for(let i=0;i<3;i++)for(let j=0;j<33;j++)lcyl(s+(i-1)*.089,22+(j-16)*.097,h+.014,.015,.005,0xddb766,{seg:6,solid:false});
-    }
+    });
+    honamPart('위아래 점형 경고판',()=>{
+      for(const [s,h] of [[169.15,honamLanding],[172.55,.032]]){
+        lbox(s,22,.32,3.23,h+.005,.009,0xc79c48,{solid:false});
+        for(let i=0;i<3;i++)for(let j=0;j<33;j++)lcyl(s+(i-1)*.089,22+(j-16)*.097,h+.014,.015,.005,0xddb766,{seg:6,solid:false});
+      }
+    });
     const lights=[[168.75,19.85,honamLanding],[172.45,19.95,0],[172.45,24.05,0]].map(([s,t,h])=>{
       const [x,z]=P(s,t);return [x,h,z,R];
     });

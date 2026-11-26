@@ -1,3 +1,4 @@
+import {vaultPoints, vaultTriangles} from '../../assets/models/interior-architecture/vault-contact.js';
 import {galleryShopfronts} from '../../assets/models/famille-shopfront/model.js';
 import {FA,FB,upperPoint as FP,diningSpan} from './_familleUpperPlan.js';
 import {placeCharDining} from '../../assets/models/char-dining/place.js';
@@ -561,10 +562,12 @@ function buildHall(K) {
     if(u>58) B(u,11.62,0,5.25,.10,4.1,0x302c26);
   }
   for(const u of [38.2,44.7,51.2,57.7]){
-    K.slab(rect(u-2.7,11.4,u+2.7,14.6),0,{mat:tile,thick:.16});
+    const diningBay=rect(u-2.7,11.4,u+2.7,14.6);
+    K.slab(diningBay,0,{mat:tile,thick:.16});
     wall(u-2.7,14.6,u+2.7,14.6,0,4.1,{mat:0x856650});
     wall(u-2.7,11.5,u-2.7,14.6,0,4.1);
-    K.slab(rect(u-2.7,11.4,u+2.7,14.6),4.1,{mat:cream,thick:.14});
+    K.slab(diningBay,4.1,{mat:cream,thick:.14});
+    K.coveredLightWell(diningBay,0,4.1);
   }
   B(31.7,-.13,0,5.3,.12,4.1,0x302c26,true);
   // The operator photograph shows rectangular casements across from the fanlights.
@@ -581,15 +584,16 @@ function buildHall(K) {
   for(const[y,h,w]of [[4.7,.16,.48],[4.88,.13,.62],[9.2,.18,.5]])B(4,10,y,w,20,h,cream);
   // The gallery is a full-width white barrel vault, with glazing only in the central crown strip.
   const roof=(u0,u1)=>{
-    for(let i=0;i<32;i++){
-      const a=i*PI/32,b=(i+1)*PI/32,v0=5.75-5.75*Math.cos(a),v1=5.75-5.75*Math.cos(b),y0=8+3*Math.sin(a),y1=8+3*Math.sin(b);
-      if(v0>=3.2&&v1<=8.3)continue; // Central rooflight and glazing bars belong to the native bay.
-      K.quad(0xf1eee5,[xyz([u0,v0,y0]),xyz([u1,v0,y0]),xyz([u1,v1,y1]),xyz([u0,v1,y1])],[0,-1,0]);
-      K.quad(0xe3e0d6,[xyz([u0,v0,y0+.1]),xyz([u1,v0,y0+.1]),xyz([u1,v1,y1+.1]),xyz([u0,v1,y1+.1])],[0,1,0]);
-    }
     const spans=[];
     for(let u=u0;u<=u1+.01;u+=6.5) {
-      const [x,z]=P(u,5.75); spans.push([x,8,z,R,Math.min(1,(u1-u)/6.5)]);
+      const scale=Math.min(1,(u1-u)/6.5);
+      const [x,z]=P(u,5.75); spans.push([x,8,z,R,scale]);
+      const points=vaultPoints.map(([east,north,up])=>[...P(u-scale*east,5.75-north),8+up]);
+      for(const face of vaultTriangles){
+        const triangle=face.map(index=>points[index]);
+        K.phys.addCeiling(triangle.map(([x,z])=>[x,z]),triangle[0][2],{
+          heights:triangle.map(point=>point[2])});
+      }
     }
     placeArchitecture(K,galleryRib,'파미에 갤러리 아치와 벽등',spans,{skylight:true});
   };roof(22,70.56);
@@ -617,7 +621,7 @@ function buildHall(K) {
     B(u,v,4.45,1.1,.9,.42,cream);
   }
   K.zone({name:'파미에스테이션',floor:'1F',sub:'벽돌 홀 · 하우스 오브 신세계 · JAJU · 아그라',poly:hall,y0:0,y1:4.8,priority:18});
-  K.zone({name:'파미에스테이션',floor:'1F',sub:'유리 천창 갤러리 · 와필레',poly:gallery,y0:0,y1:8,priority:18});
+  K.zone({name:'파미에스테이션',floor:'1F',sub:'유리 천창 갤러리 · 와필레',poly:gallery,y0:0,y1:8,priority:18,streetAccess:false});
   {const[x,z]=P(15,4);K.spawn({name:'파미에 1층 벽돌 홀',x,z,y:0,yaw:20*PI/180,group:'파미에스테이션'});}
   // Semicircular glass fanlight with three cream moulding courses, black fan muntins and plinth.
   const fan=(u,v,width,face='v')=>{

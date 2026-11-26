@@ -2477,7 +2477,16 @@ export function build(K) {
       SG(['수영장 ↑'], { u: 7.05, v: 22, y: y + 2.8, w: 1.8, h: 0.4, f: 'S', bg: '#1d3a5a', fg: '#fff' });
       CROWD([-32, -58, -29, -26], y, 4, 1301); CROWD([-12, -48, 16, -10], y, 6, 1302);
       for (let i = 0; i < 5; i++) { const [x, z] = P(POOL[0] + 1.25 + (i % 6) * 2.5, -45 + i * 4); K.person(x, y - 1.25, z, { shirt: 0x2a5ad2 }); }
-      SUBZ('25m 6레인 수영장', 'B3', '마르퀴스', POOL); SUBZ('키즈풀', 'B3', '마르퀴스', KIDS); SUBZ('스쿠버 다이빙 풀', 'B3', '수심 3.5m', SCUBA); SUBZ('자쿠지', 'B3', '마르퀴스', [-6.6, -37.6, -1.4, -32.4]); SUBZ('사우나', 'B3', '건식 · 습식 · 냉탕 · 온탕', [18, -60.4, 33.1, -40]); SUBZ('수영장 통로', 'B3', '엘리베이터 ↔ 수영장', [4.9, -8, 9.2, 39.5]);
+      // A customer searching for a pool arrives on its dry deck, facing the water.
+      for (const [name,sub,basinRect] of [
+        ['25m 6레인 수영장','마르퀴스',POOL], ['키즈풀','마르퀴스',KIDS], ['스쿠버 다이빙 풀','수심 3.5m',SCUBA],
+      ]) {
+        const [west,north,east,south] = basinRect;
+        const [x,z] = P((west+east)/2,south+.90);
+        K.zone({name,floor:'B3',sub:meta.name+' · '+sub,poly:RECT(west,north,east,south+1.5),
+          y0:y,y1:NEXT.B3,priority:1,mapArrival:{x,z,yaw:yawTo(0,-1)}});
+      }
+      SUBZ('자쿠지', 'B3', '마르퀴스', [-6.6, -37.6, -1.4, -32.4]); SUBZ('사우나', 'B3', '건식 · 습식 · 냉탕 · 온탕', [18, -60.4, 33.1, -40]); SUBZ('수영장 통로', 'B3', '엘리베이터 ↔ 수영장', [4.9, -8, 9.2, 39.5]);
       SUBZ('마르퀴스 수영장', 'B3', '25m 6레인 · 키즈풀 · 자쿠지 · 스쿠버 다이빙 풀 · 사우나', [-33, -60.4, 33, -8]);
     }
     // ---------- B4 fitness ----------
@@ -2698,7 +2707,12 @@ export function build(K) {
     WL(27.2,v-.4,27.2,facade,8.7,deck,{mat:'jwGreyStone'});
     WL(u-7,facade,u+7,facade,deck+3.94,ceiling,{mat:walnut});
     SG('연회장 ↑',{u:u+6.87,v:v+8,y:deck+3.55,w:2.1,h:.34,f:'W',bg:'#37291f',fg:'#ebd4a1'});
-    ZN('연회장 에스컬레이터','3F','현관 라운지 ↔ 그랜드 볼룸',wing,deck-.12,upper-.2,23);
+    // The level boarding area reaches through the lounge opening to the foot of both belts.
+    const escalatorZone = [[wing[0],wing[1]],[wing[2],wing[1]],[wing[2],wing[3]],[wing[0],wing[3]],
+      [wing[0],v+9.75],[lowU-1.5,v+9.75],[lowU-1.5,v+6.25],[wing[0],v+6.25]].map(([a,b])=>P(a,b));
+    const [boardX,boardZ]=P(lowU-.9,v+7.2);
+    K.zone({name:'연회장 에스컬레이터',floor:'3F',sub:'현관 라운지 ↔ 그랜드 볼룸',poly:escalatorZone,
+      y0:deck-.12,y1:upper-.2,priority:23,mapArrival:{x:boardX,y:deck,z:boardZ,yaw:yawTo(1,0)}});
     ZN('그랜드 볼룸 입구','5F','연회장 포이어',[highU,58,27,v+10.15],upper-.15,upper+3.9,25);
     SPAWN('JW 메리어트 정문',u,facade-1,deck,0,-1);
     // sidewalk planters along the east side
