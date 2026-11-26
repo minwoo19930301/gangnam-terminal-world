@@ -595,14 +595,19 @@ async function boot() {
     reloadAt(key, player.x, player.y, player.z, player.yaw * 180 / Math.PI, areaName(id, META));
   }
   function frame() {
-    const dt = Math.min(clock.getDelta(), 0.05); t += dt;
+    const elapsed = clock.getDelta();
+    const dt = Math.min(elapsed, 0.05); t += dt;
     const input = {
       f: (keys.KeyW || keys.ArrowUp ? 1 : 0) - (keys.KeyS || keys.ArrowDown ? 1 : 0) - touch.mz,
       s: (keys.KeyD || keys.ArrowRight ? 1 : 0) - (keys.KeyA || keys.ArrowLeft ? 1 : 0) + touch.mx,
       run: keys.ShiftLeft || keys.ShiftRight || touch.run, jump: keys.Space, up: keys.Space, down: keys.KeyC || keys.ControlLeft,
     };
     if (menuOpen || map.isOpen()) { resetTouch(); input.f = input.s = 0; }
-    player.update(dt, input);
+    // Low frame rates should not shorten every step. Keep collision and gravity
+    // substeps small, and discard elapsed time after tab suspension or a long pause.
+    const movementTime = elapsed > 0.5 ? dt : Math.min(elapsed, 0.15);
+    const movementSteps = Math.max(1, Math.ceil(movementTime / 0.05));
+    for (let i = 0; i < movementSteps; i++) player.update(movementTime / movementSteps, input);
     camera.position.set(player.x, player.y + player.eye + relief(player.x, player.z), player.z);
     camera.rotation.set(player.pitch, player.yaw, 0, 'YXZ');
     daylight.sky.position.copy(camera.position);
