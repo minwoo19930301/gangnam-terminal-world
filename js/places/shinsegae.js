@@ -8,6 +8,7 @@ import { registerHermanMiller } from './shinsegae-herman-miller.js';
 import { registerTwl } from './shinsegae-twl.js';
 import { registerIQBox, toyShop } from './shinsegae-junior-workshop.js';
 import { registerStokke } from './shinsegae-stokke.js';
+import { registerMyeonok } from './shinsegae-myeonok.js';
 import { registerHaoSum } from './shinsegae-haosum.js';
 import { registerMiele } from './shinsegae-miele.js';
 import { registerBaccarat } from './shinsegae-baccarat.js';
@@ -7959,6 +7960,17 @@ export function build(K) {
       K.box({x,y,z,w:3.74,h:.875,d:.61,rotY:yaw,mat:0x454747,skip:['top','bottom','n','s','e','w']});
     }
     if (id==='11F') {
+      const myeonok=guide.cells.find(c=>c.name.startsWith('평양면옥'));
+      const bay=upperBuildRect(id,myeonok);
+      // Replace the first two-seat table on the west-facing shop's left row.
+      const tableU=bay[0]+1.5, tableV=bay[1]+(bay[3]-bay[1])*.23;
+      const [tx,tz]=P(tableU,tableV), [rx,rz]=P(tableU+1,tableV);
+      const rotation=Math.atan2(tz-rz,rx-tx);
+      registerMyeonok(K,{poly:rect(...bay),x:tx,y,z:tz,yaw:rotation});
+      for(const [dx,w,d,h] of [[0,.93,1.24,.776],[-.67,.42,.43,.45],[.67,.42,.43,.45]]){
+        K.box({x:tx+dx*Math.cos(rotation),y,z:tz-dx*Math.sin(rotation),w,d,h,
+          rotY:rotation,mat:0xbf905c,skip:['top','bottom','n','s','e','w']});
+      }
       const shop=guide.cells.find(c=>c.name.startsWith('살롱드호우섬'));
       const bounds=upperBuildRect(id,shop);
       const u=(bounds[0]+bounds[2])/2, v=bounds[3]-8.15;
@@ -13928,6 +13940,7 @@ export function build(K) {
       const cafe=kind==='cafe',jaju=/JAJU/.test(name);
       const rows=Math.min(4,Math.max(1,Math.floor((D-2)/2.15))),cols=W>7?islands:W>3.8?[W*.24]:[];
       for(const [i,a]of cols.entries())for(let r=0;r<rows;r++){
+        if(id==='11F'&&name.startsWith('평양면옥')&&i===0&&r===0)continue;
         const b=1.5+r*2.1,w=Math.min(1.25,sideWidth-.1);table(a,b,w,.8,.72,jaju?oak:cafe?ivory:walnut);
         for(const db of[-.65,.65]){
           B(a,b+db,.43,.43,.08,.35,p.trim);B(a,b+db+(db<0?-.2:.2),.43,.07,.43,.42,p.trim);
