@@ -1,0 +1,15 @@
+{
+  "floor": "지상",
+  "area": "out:core",
+  "x": -95.9,
+  "y": 0,
+  "z": -65.4,
+  "yaw": 43.958,
+  "pitch": -5,
+  "meshName": "신반포로 · 석재 화분의 전정 수목",
+  "sourceBlend": "planter.blend",
+  "sourceCollection": "SinbanpoPlazaPlanter",
+  "gameView": "?pitch=-5#/street?p=-95.9,0,-65.4,43.958",
+  "approachView": "#/street?p=-91.7,0,-68,101.848,0",
+  "farView": "#/street?p=-57,0,-134,144.51,0"
+}

@@ -1341,7 +1341,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
       fn = kit => withTerrainSurface(datum,() => draw(kit));
     }
     const rectangular=poly?.length===4 && poly.every(([x,z])=>(x===bb[0]||x===bb[2]) && (z===bb[1]||z===bb[3]));
-    details.push({ poly, exactDistance:!!poly&&!rectangular, owner: current, meta: perPlace[current], floor: o.floor || '', y0: o.y0 ?? -1e9, y1: o.y1 ?? 1e9, bb, fn, resource:o.resource, visualOnly:o.visualOnly, built: false, name: o.name || '', visibleFrom: o.visibleFrom });
+    details.push({ poly, exactDistance:!!poly&&!rectangular, owner: current, meta: perPlace[current], floor: o.floor || '', y0: o.y0 ?? -1e9, y1: o.y1 ?? 1e9, bb, fn, resource:o.resource, visualOnly:o.visualOnly, silhouetteDistance:o.silhouetteDistance, built: false, name: o.name || '', visibleFrom: o.visibleFrom });
   }
   // Pure visual batches can share a download. Complete it before entering the
   // synchronous kit build so the original place, terrain and material batches apply.
@@ -1437,10 +1437,12 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
         const dx = Math.max(0, d.bb[0]-x, x-d.bb[2]), dz = Math.max(0, d.bb[1]-z, z-d.bb[3]);
         const vertical = Math.max(0, d.y0-y, y-d.y1);
         let distance = dx*dx+dz*dz;
-        if (distance > reach*reach || vertical > 8) continue;
+        // A street silhouette can remain recognizable beyond the ordinary furnishing range.
+        const radius=camera && d.visualOnly && d.silhouetteDistance ? Math.max(reach,d.silhouetteDistance) : reach;
+        if (distance > radius*radius || vertical > 8) continue;
         if (camera && d.exactDistance) {
           distance=distanceToPolygonSq(x,z,d.poly);
-          if(distance>reach*reach)continue;
+          if(distance>radius*radius)continue;
         }
         if (camera && ((d.visibleFrom && !d.visibleFrom(x,y,z)) || !visibleDetail(d,x,y,z,camera,distance,vertical))) continue;
         waiting.push({d,vertical,distance});

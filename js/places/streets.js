@@ -1,3 +1,4 @@
+import {placeSingleDetail} from '../../assets/models/interior-architecture/single-detail.js';
 import {crossingWay as banpoStopWay, markingFaces as banpoStopMarkings, markingColor as banpoStopPaint} from '../../assets/models/banpo-stop-crossing/layout.js';
 import {diningWallOpening} from './_familleUpperPlan.js';
 import {placeExit8Lamp} from '../../assets/models/exit8-sidewalk-lamp/model.js';
@@ -390,6 +391,13 @@ export function build(K) {
     K.box({x:x+dx*1.8,z:z+dz*1.8,y:y+7.42,w:.5,h:.15,d:1.1,rotY:rot,mat:C.steel,solid:false});
     K.box({x:x+dx*1.8,z:z+dz*1.8,y:y+7.4,w:.4,h:.025,d:.9,rotY:rot,mat:emit(0xffedc2),solid:false});
   }
+  // The short row of stone planters follows the curb in front of the department store.
+  const plazaX=-105.95,plazaZ=-65.42,plazaAngle=.3631;
+  const plazaCos=Math.cos(plazaAngle),plazaSin=Math.sin(plazaAngle);
+  function replacesPlazaTree(x,z){
+    const dx=x-plazaX,dz=z-plazaZ;
+    return Math.abs(dx*plazaCos-dz*plazaSin)<8.8 && Math.abs(dx*plazaSin+dz*plazaCos)<1.25;
+  }
   function treePit(x,z,y=WALK) {
     if(inG13(x,z)||onTerminalMedian(x,z)||inWestCanopy(x,z)||inTaxiStand(x,z))return;
     // NEW-1: police_01 shows an open apron/sky, with no south-kerb trees.
@@ -401,9 +409,46 @@ export function build(K) {
     const northOff=-(x-north.x)*north.v+(z-north.z)*north.u;
     if(x>=-40&&x<=60&&northOff>7.5&&northOff<10.5)return; // replaced by the photographed 7.5 m row below
     const mature=Math.hypot(x-358,z+261)<100||(x>-95&&x<50&&z<-110);
-    K.box({x,z,y:y+.005,w:1.55,h:.08,d:1.55,mat:0x666d64,top:'streets-grate',solid:false});K.tree(x,z,{y:y+.07,h:(mature?10.5:6.5)+rnd()*2,kind:mature?'zelkova':rnd()<.55?'ginkgo':'zelkova'});
+    const h=(mature?10.5:6.5)+rnd()*2,kind=mature?'zelkova':rnd()<.55?'ginkgo':'zelkova';
+    if(replacesPlazaTree(x,z))return;
+    K.box({x,z,y:y+.005,w:1.55,h:.08,d:1.55,mat:0x666d64,top:'streets-grate',solid:false});
+    K.tree(x,z,{y:y+.07,h,kind});
     for(const dx of [-.58,.58])for(const dz of [-.58,.58])K.box({x:x+dx,z:z+dz,y:y+.1,w:.045,h:.8,d:.045,mat:C.steel,solid:false});
   }
+  const planterName='신반포로 · 석재 화분의 전정 수목';
+  const planterOffsets=[-7.8,-2.6,2.6,7.8];
+  for(const a of planterOffsets){
+    const cx=plazaX+a*plazaCos,cz=plazaZ-a*plazaSin;
+    const corners=[[-.42,-.42],[.42,-.42],[.42,.42],[-.42,.42]].map(([u,v])=>
+      [cx+u*plazaCos+v*plazaSin,cz-u*plazaSin+v*plazaCos]);
+    K.phys.addPolyWalls(corners,WALK,WALK+.68,.015,'streets');
+  }
+  K.detail({name:planterName,floor:'지상',rect:[plazaX-8.2,plazaZ-3.7,plazaX+8.2,plazaZ+3.7],
+    y0:WALK,y1:WALK+1.72,visualOnly:true,silhouetteDistance:145,
+    visibleFrom:(x,y,z)=>y>-1 && y<7 && (x-plazaX)*plazaSin+(z-plazaZ)*plazaCos<20}, kit=>{
+    const T=kit.THREE,ground=relief(plazaX,plazaZ);
+    const translations=planterOffsets.map(a=>[a,relief(plazaX+a*plazaCos,plazaZ-a*plazaSin)-ground,0]);
+    // A single painted profile is available on the first visible frame. The
+    // eight-sided crown sits above the square rim and its short stem.
+    const profile=[
+      [.40,0,0x74726f],[.42,.66,0x817e79],[.36,.68,0x545044],[.074,.68,0x4e4337],
+      [.052,1.05,0x534a3b],[.35,1.18,0x384d30],[.69,1.31,0x465d38],
+      [.61,1.46,0x536e3e],[.32,1.57,0x607746],[0,1.59,0x617747]];
+    const far=new T.LatheGeometry(profile.map(([r,h])=>new T.Vector2(r,h)),8);
+    const pos=far.attributes.position,col=new Float32Array(pos.count*3),paint=new T.Color();
+    for(let i=0;i<pos.count;i++){
+      const j=i%profile.length,[r,,tone]=profile[j],x=pos.getX(i),z=pos.getZ(i);
+      if(j<3){const scale=r/Math.max(Math.abs(x),Math.abs(z));pos.setXYZ(i,x*scale,pos.getY(i),z*scale);}
+      paint.setHex(tone).toArray(col,3*i);
+    }
+    far.setAttribute('color',new T.BufferAttribute(col,3));far.computeVertexNormals();
+    const mat=new T.MeshLambertMaterial({vertexColors:true});mat.defines={BANPO_RIGID:1,STREET_TREE:1};
+    placeSingleDetail(kit,{name:planterName,file:'../sinbanpo-plaza-planters/planter.glb',
+      at:[plazaX,WALK,plazaZ],angle:plazaAngle,rigidGround:ground,translations,
+      fallback:far,fallbackMaterial:mat,eyeHeight:1,range:29,exitRange:34,floorTolerance:4,
+      closeVisibleFrom:eye=>(eye.x-plazaX)*plazaSin+(eye.z-plazaZ)*plazaCos<20,
+      loadSurface:async file=>(await import('../../assets/models/sinbanpo-plaza-planters/model.js')).loadPlazaPlanter(T,file)});
+  });
   const terminalRoad=byId.get(828782198);
   const onTerminalMedian=(x,z)=>{
     const q=nearest(x,z,[terminalRoad]);
