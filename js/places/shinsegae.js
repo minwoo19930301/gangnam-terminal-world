@@ -8,6 +8,7 @@ import {angle as cinemaYaw,point as cinemaPoint} from '../../assets/models/megab
 import {placeAtriumCeiling} from '../../assets/models/ssg-atrium-soffit/model.js';
 import {marketProduceCeiling} from '../../assets/models/ssg-market-ceiling/model.js';
 import {shopArrival as onimaruArrival} from '../../assets/models/kyoto-onimaru/layout.js';
+import {truffleCase} from '../../assets/models/ssg-market-truffle/model.js';
 import {prunierCase} from '../../assets/models/ssg-market-prunier/model.js';
 import {angle as prunierAngle,point as prunierPoint} from '../../assets/models/ssg-market-prunier/layout.js';
 import {placeCrepeAndWaffle} from '../../assets/models/godiva-emack/model.js';
@@ -2976,7 +2977,11 @@ export function build(K) {
         const[mU0,mV0,mU1,mV1]=uvRect(c);
         const du=mU0+1.8,dv=mV0+9.1;
         const bottleRows = new Map(), fruitRows = new Map();
-        for(let u=mU0+1.8;u<mU1-1;u+=3.1)for(let v=mV0+3;v<mV1-2.2;v+=6.1){
+        for(let rowU=mU0+1.8;rowU<mU1-1;rowU+=3.1)for(let v=mV0+3;v<mV1-2.2;v+=6.1){
+          // The last gondola formerly left only 0.24 m in front of the adjoining specialty bay.
+          // Balance the two customer aisles without removing any stock or narrowing the shop footprint.
+          const besideTruffles=rowU>mU1-2 && Math.abs(v-(mV0+21.3))<.01;
+          const u=besideTruffles?rowU-1.05:rowU;
           if(!clear(u,v,1.1,4.4))continue;
           // This bay is immediately beside the existing meat/seafood department sign.
           // Its position within the market is fitted to a previous grocery fixture.
@@ -3091,6 +3096,11 @@ export function build(K) {
           // The market polygon starts just inside its guide bounding box.
           // Keep the timber stock 10 cm farther in so the eligible bays pass the same perimeter test.
           const u=mU1-.45;if(!clear(u,v,.5,2.6))continue;
+          if(Math.abs(v-(mV0+21))<.01&&clear(mU1-.54,v,.68,2.55)){
+            const [x,z]=P(mU1-.54,v);
+            truffleCase(K,x,y,z,RA-PI/2);
+            continue;
+          }
           if(Math.abs(v-(mV0+18))<.01&&clear(mU1-.54,v,.68,2.55)){
             // One open-front refrigerated bay within the existing timber perimeter.
             const [x,z]=P(mU1-.54,v);

@@ -1,0 +1,14 @@
+{
+  "floor": "B1",
+  "x": -62.97319,
+  "y": -6,
+  "z": -0.82406,
+  "yaw": -110.91823,
+  "pitch": 0,
+  "meshName": "신세계 마켓 · 타르투플랑게 생트러플 냉장장",
+  "sourceBlend": "counter.blend",
+  "sourceCollection": "TruffleMarketCase",
+  "nativeLabel": "타르투플랑게 생트러플 냉장장",
+  "area": "in:shinsegae",
+  "gameView": "#/shinsegae/B1?p=-62.97319,-6,-0.82406,-110.91823"
+}
