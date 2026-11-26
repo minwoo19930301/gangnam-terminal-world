@@ -1,3 +1,4 @@
+import {marketFruitIslands} from '../../assets/models/ssg-market-produce/model.js';
 import { placeHypnos } from '../../assets/models/hypnos-showroom/model.js';
 import { registerPaulSmith } from './shinsegae-paul-smith.js';
 import { registerHerno } from './shinsegae-herno.js';
@@ -3112,12 +3113,14 @@ export function build(K) {
       sign('新世界食品館',pu+.4,pv,y+3.68,'E',4.1,.29,{bg:null,fg:'#c9a55e',bold:false});
       sign('SHINSEGAE MARKET',pu+.41,pv+2.15,y+3.67,'E',1.3,.12,{bg:null,fg:'#c9a55e',bold:false});
       festive(pu+.42,pv,y+3.35,true,6.2);
-      // Produce pyramids, wicker baskets and red 쓱데이 gift cases inside the portal.
-      for(const v of[61.8,64.9]){
-        box(19.4,v,2,1.35,y,.78,{tex:'wood',color:0x3b2a20});
-        for(let row=0;row<4;row++)for(let j=0;j<7-row;j++){
-          const[x,z]=P(18.6+j*.23+row*.115,v);K.dome({x,z,y:y+.92+row*.14,rx:.12,ry:.12,rz:.12,hemi:false,seg:8,rings:5,mat:row%2?0xd6b138:0xc85330});
-        }
+      const fruitTables=[61.8,64.9];
+      marketFruitIslands(K,fruitTables.map(v=>{
+        const [x,z]=P(19.4,v);
+        return [x,y,z,RA];
+      }));
+      for(const v of fruitTables){
+        // Keep the original footprint and baskets beside the walk-in aisle.
+        box(19.4,v,2,1.35,y,.78,0x3b2a20,{skip:['top','bottom','n','s','e','w']});
         for(const du of[-.45,.45])cyl(19.4+du,v+.9,y,.32,.63,{tex:'wood',color:0xb18953});
       }
       for(let i=0;i<6;i++)box(20.5,65.5-i*.32,.58,.28,y,.72,0xc33d48,{solid:false});
