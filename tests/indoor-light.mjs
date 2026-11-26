@@ -10,15 +10,23 @@ const browser = await chromium.launch(gpu
   ? { channel: 'chromium', args: ['--use-angle=metal', '--enable-gpu', '--ignore-gpu-blocklist'] }
   : { args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
 const probes = [
+  // Sweet Park's shop backs close against the north arcade roof. A gap here
+  // used to show an above-ground building through the ceiling at midnight.
+  { route:'/?fixedres=1&pitch=-3#/centralcity/B1?p=-29.631,-6,77.134,-79.182',
+    zone:'스위트 파크 북측', region:[.49,.374,.59,.394], min:.48,max:1.1,
+    modes:['day','night'], viewport:{width:840,height:528} },
+  { route:'/?fixedres=1&pitch=5#/centralcity/B1?p=-53.018,-6,79.431,101.034',
+    zone:'스위트 파크 디저트 아일랜드', region:[.03,.02,.12,.09], min:.7,max:1.3,
+    modes:['day','night'], viewport:{width:840,height:528} },
   // Right-hand overhead fascia beyond the first set of black grocery shelving.
-  { route: '/#/shinsegae/B1', zone: '신세계 마켓', region: [.85,.12,.97,.21], min: .4, max: .95, modes: ['day','night'] },
+  { route: '/#/shinsegae/B1?p=-67.92977,-6,13.93769,20.8041', zone: '신세계 마켓', region: [.85,.12,.97,.21], min: .4, max: .95, modes: ['day','night'] },
   { route: '/?pitch=-29#/jwmarriott/2F?p=-26.3945,6,124.0341,-65.87',
     zone: '파티세리 · 티 바', region: [.2,.35,.8,.8], min: .75, max: 1.5, modes: ['day','sunrise','sunset','night'] },
   { route: '/#/famille/4F', zone: '파미에가든', region: [.2,.35,.8,.8], min: 0, max: .15, modes: ['day','night'] },
 ];
 try {
-  for (const { route, zone, region, modes, min, max } of probes) {
-    const page = await browser.newPage({viewport:{width:900,height:552}});
+  for (const { route, zone, region, modes, min, max, viewport } of probes) {
+    const page = await browser.newPage({viewport:viewport ?? {width:900,height:552}});
     await page.goto('http://127.0.0.1:' + server.address().port + route);
     await page.waitForFunction(() => window.__world?.ready);
     await page.locator('#start').click();
