@@ -2547,7 +2547,14 @@ export function build(K) {
             placeYarnAndDresses(K,x,floorY,z,ROT+PI/2,part);
           });
         }
-        lzone('면사 · 울사와 아동 드레스',floor,'의류 도매상가',u-1.3,v-2.55,u+1.25,v+2.55,floorY,floorY+2.88,4);
+        // The centre of the sales zone is occupied by the dress rail. The
+        // map opens on the common aisle, looking across the yarn and dresses.
+        const [arrivalX,arrivalZ]=W(u+3,v);
+        const frontage=[[u-1.3,v-2.55],[u+1.25,v-2.55],[u+1.25,v-.65],[u+3.3,v-.65],
+          [u+3.3,v+.65],[u+1.25,v+.65],[u+1.25,v+2.55],[u-1.3,v+2.55]].map(([a,b])=>W(a,b));
+        K.zone({name:'면사 · 울사와 아동 드레스',floor,sub:'의류 도매상가',
+          poly:frontage,y0:floorY,y1:floorY+2.88,priority:4,
+          mapArrival:{x:arrivalX,z:arrivalZ,yaw:yawL(-1,0)}});
         continue;
       }
       if(hanbokAt(u,v)){
