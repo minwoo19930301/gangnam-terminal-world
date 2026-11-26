@@ -1,7 +1,11 @@
 import { placeHypnos } from '../../assets/models/hypnos-showroom/model.js';
+import { registerArcteryx } from './shinsegae-outdoors.js';
+import { registerToebox } from './shinsegae-toebox.js';
 import { registerHermanMiller } from './shinsegae-herman-miller.js';
 import { registerTwl } from './shinsegae-twl.js';
 import { registerStokke } from './shinsegae-stokke.js';
+import { registerHaoSum } from './shinsegae-haosum.js';
+import { registerMiele } from './shinsegae-miele.js';
 import { registerMarzocco } from './shinsegae-marzocco.js';
 import { mounts as facadeMounts } from '../../assets/models/shinsegae-facade/mounts.js';
 import { loadArchitecture, fitArchitecture, fitTerminalSeat as drawFacadeSign } from '../../assets/models/architectural-retail/place.js';
@@ -7800,7 +7804,32 @@ export function build(K) {
   for(const [id,guide]of Object.entries(upperGuidePlans)){
     const y=LV[id];zone('신세계백화점 강남점',id,upperCats[id],[0,0,UW,145.3],y,LV[nextOf(id)],1);
     for(const c of guide.cells)buildUpperCell(id,c);
+    if(id==='8F'){
+      const shop=guide.cells.find(c=>c.name==='아크테릭스');
+      const room=upperBuildRect(id,shop),u=room[0]+3.12,v=(room[1]+room[3])/2;
+      const [x,z]=P(u,v),[rx,rz]=P(u,v-1),yaw=Math.atan2(z-rz,rx-x);
+      registerArcteryx(K,{poly:rect(...room),x,y,z,yaw});
+      for(const [side,back,w,d,h] of [[0,2.35,4.68,.43,2.69],[-.89,-.67,1.13,1.39,.84],
+          [1.466,-.61,1.16,.48,.46],[1.47,-1.12,.43,.25,.11],[-2.22,.4,.49,2.69,2.28]]){
+        K.box({x:x+side*Math.cos(yaw)-back*Math.sin(yaw),y,
+          z:z-side*Math.sin(yaw)-back*Math.cos(yaw),w,d,h,rotY:yaw,
+          mat:0x928a82,skip:['top','bottom','n','s','e','w']});
+      }
+    }
     if(id==='10F'){
+      const footwear=guide.cells.find(c=>c.name==='토박스');
+      const room=upperBuildRect(id,footwear);
+      const centerU=room[2]-2.05, centerV=(room[1]+room[3])/2;
+      const [fx,fz]=P(centerU,centerV), [sx,sz]=P(centerU,centerV+1);
+      const angle=Math.atan2(fz-sz,sx-fx);
+      registerToebox(K,{poly:rect(...room),x:fx,y,z:fz,yaw:angle});
+      // Inset cores leave the rounded plinth ends and the aisle free.
+      for(const [side,back,w,d,h] of [[0,1.42,5.13,.48,2.41],[-.58,-.45,1.47,.68,.57],
+          [.57,-.36,1.09,.62,.77],[1.97,-.59,.55,.44,.77]]){
+        K.box({x:fx+side*Math.cos(angle)-back*Math.sin(angle),y,
+          z:fz-side*Math.sin(angle)-back*Math.cos(angle),w,d,h,rotY:angle,
+          mat:0xb28769,skip:['top','bottom','n','s','e','w']});
+      }
       const shop=guide.cells.find(c=>c.name==='스토케');
       const [west,north,east,south]=upperBuildRect(id,shop);
       const u=(west+east)/2,v=south-2.50,[x,z]=P(u,v);
@@ -7809,6 +7838,17 @@ export function build(K) {
       K.box({x,y,z,w:2.93,d:.97,h:.464,rotY:yaw,mat:0xe6d6bd,skip:['top','bottom','n','s','e','w']});
     }
     if (id==='9F') {
+      const miele=guide.cells.find(c=>c.name==='밀레');
+      const mieleRoom=upperBuildRect(id,miele);
+      const mu=(mieleRoom[0]+mieleRoom[2])/2,mv=(mieleRoom[1]+mieleRoom[3])/2;
+      const [mx,mz]=P(mu,mv),[mrx,mrz]=P(mu-1,mv);
+      const mieleYaw=Math.atan2(mz-mrz,mrx-mx);
+      registerMiele(K,{poly:rect(...mieleRoom),x:mx,y,z:mz,yaw:mieleYaw});
+      for(const [side,back,w,d,h] of [[0,-.17,2.85,.85,.92],[1.045,-.94,.58,.65,.52],[0,1.77,4.50,.82,2.66]]){
+        K.box({x:mx+side*Math.cos(mieleYaw)-back*Math.sin(mieleYaw),y,
+          z:mz-side*Math.sin(mieleYaw)-back*Math.cos(mieleYaw),
+          w,d,h,rotY:mieleYaw,mat:0x353638,skip:['top','bottom','n','s','e','w']});
+      }
       const herman=guide.cells.find(c=>c.name==='허먼 밀러');
       const hmRoom=upperBuildRect(id,herman);
       const hu=(hmRoom[0]+hmRoom[2])/2,hv=hmRoom[3]-1.75;
@@ -7844,6 +7884,19 @@ export function build(K) {
       registerMarzocco(K,{poly:rect(west,north,east,south),x,y,z,yaw});
       // A collision core beneath the two stepped plinths leaves the sales aisle open.
       K.box({x,y,z,w:3.74,h:.875,d:.61,rotY:yaw,mat:0x454747,skip:['top','bottom','n','s','e','w']});
+    }
+    if (id==='11F') {
+      const shop=guide.cells.find(c=>c.name.startsWith('살롱드호우섬'));
+      const bounds=upperBuildRect(id,shop);
+      const u=(bounds[0]+bounds[2])/2, v=bounds[3]-8.15;
+      const [x,z]=P(u,v), [rightX,rightZ]=P(u+1,v);
+      const yaw=Math.atan2(z-rightZ,rightX-x);
+      registerHaoSum(K,{poly:rect(...bounds),x,y,z,yaw});
+      for(const [side,back,w,d,h] of [[0,0,1.29,.90,.80],[-1.19,.18,.63,.40,.82]]){
+        K.box({x:x+side*Math.cos(yaw)-back*Math.sin(yaw),y,
+          z:z-side*Math.sin(yaw)-back*Math.cos(yaw),rotY:yaw,w,d,h,mat:0x573c31,
+          skip:['top','bottom','n','s','e','w']});
+      }
     }
     buildShopPartitions(id,y);
     if (id==='2F') {
@@ -9162,8 +9215,9 @@ export function build(K) {
 
   function furnishUpperMerch(ctx) {
     const {id,name,kind,Wf:W,Dp:D,y,face,fb,fdisk,fball,fsign,person,seed,palette:p,ST}=ctx;
-    if(id==='10F' && name==='스토케')return;
-    if(id==='9F' && (name==='라마르조코'||name==='TWL'||name==='허먼 밀러'))return; // Dedicated room detail owns the presentation island.
+    if(id==='8F' && name==='아크테릭스')return;
+    if(id==='10F' && (name==='스토케'||name==='토박스'))return;
+    if(id==='9F' && (name==='라마르조코'||name==='TWL'||name==='허먼 밀러'||name==='밀레'))return; // Dedicated room detail owns the presentation island.
     if(W<1.05||(D<1.05&&!(id==='4F'&&name==='금강'&&D>=.45)))return;
     // The other 5F DAKS guide cell is a handbag concession, not womenswear.
     const daksWoman=id==='5F'&&name==='닥스 숙녀'&&kind==='fashion';
@@ -16222,7 +16276,7 @@ export function build(K) {
         fsign(shoeGroup?fasciaName:id==='5F'&&c.name==='미샤'?'MICHAA':id==='4F'&&c.name==='샤넬 슈 부틱'?'CHANEL':id==='5F'&&c.name==='킨더살몬'?'KINDERSALMON':id==='5F'&&c.name==='에스실'?'SSIL':id==='5F'&&c.name==='넘버링'?'NUMBERING':id==='4F'&&c.name==='폴로 랄프 로렌'?'POLO RALPH LAUREN':id==='4F'&&c.name==='레페토'?'repetto':id==='4F'&&c.name==='쏘솔트'?'SOSALT':id==='4F'&&c.name==='린드버그'?'LINDBERG':id==='4F'&&c.name==='코치'?'COACH':id==='4F'&&c.name==='버켄스탁'?'BIRKENSTOCK':id==='2F'&&brand2[c.name]?brand2[c.name]:id==='4F'&&c.name==='오트리'?'AUTRY':id==='4F'&&c.name==='헌터'?'HUNTER':id==='3F'&&c.name==='다미아니'?'DAMIANI':id==='3F'&&brand3[c.name]?brand3[c.name]:id==='4F'&&c.name==='이브살로몬'?'YVES SALOMON':id==='4F'&&brand4[c.name]?brand4[c.name]:id==='5F'&&brand5[c.name]?brand5[c.name]:c.name==='몽클레르'?'MONCLER':c.name==='펜디'?'FENDI':id==='5F'&&c.name==='룰루레몬'?'lululemon':c.name==='불가리'&&id==='2F'?'BVLGARI':c.name==='티파니앤코'&&id==='2F'?'TIFFANY & CO.':c.name==='로에베'&&id==='3F'?'LOEWE':c.name==='막스마라'&&id==='3F'?'MAX MARA':c.name,(id==='2F'&&c.name==='불가리'?Wf-1.8:frontAt),.075,y+(sharedEntry?2.91:id==='8F'?2.75:id==='2F'&&c.name==='고야드'?3.34:id==='2F'&&c.name==='티파니앤코'?2.94:3.25),Math.min(publicWidth-.55,id==='2F'&&c.name==='불가리'?2.8:8.5),id==='2F'&&c.name==='고야드'?.26:Math.min(id==='8F'?.35:.45,.19+Wf*.035),{bg:id==='2F'&&c.name==='고야드'?null:bg,fg:id==='2F'&&c.name==='고야드'?'#dfc77d':palette.dark&&!chanel2&&id!=='8F'?'#f4eee0':fg,twoSided:true});
       }
       // A clear counter at the rear side, payment terminal and framed mirror.
-      if(!(id==='10F'&&c.name==='스토케')&&!(id==='9F'&&(c.name==='라마르조코'||c.name==='TWL'||c.name==='허먼 밀러'))&&!popupStage&&!jewelryIsland&&!(id==='5F'&&['베네통','캐나다 구스'].includes(c.name))&&Wf>2.3&&Dp>2.8&&!(id==='2F'&&['생 로랑','불가리','보테가 베네타','헬렌카민스키','디올'].includes(c.name))&&!(id==='3F'&&['아디르','더로우','호라이즌','알라이아','분더샵 여성','바쉐론 콘스탄틴','릭오웬스','오데마피게','로에베','몽블랑','발렌티노','브레게','프레드','부쉐론','끌로에','아크리스','블랑팡'].includes(c.name))&&!(id==='4F'&&['토리버치','A.P.C.','포르테 포르테','N°21','메종 키츠네','레페토','폴로 랄프 로렌','샤넬 슈 부틱','루이비통','지안비토로시','린드버그'].includes(c.name))&&!(id==='5F'&&['델라라나','위뜨','헤지스','더일마','룩캐스트','루에브르','타낫','뷰오리','포유어아이즈온리','랙앤본','킨더살몬','던스트','에스실','넘버링','미샤','쁘렝땅','조셉앤 스테이시','렉토','럭키슈에뜨','르917 (르셉템버)','멤버스바','SHOP 아모멘토'].includes(c.name))){
+      if(!(id==='8F'&&c.name==='아크테릭스')&&!(id==='10F'&&(c.name==='스토케'||c.name==='토박스'))&&!(id==='9F'&&(c.name==='라마르조코'||c.name==='TWL'||c.name==='허먼 밀러'||c.name==='밀레'))&&!popupStage&&!jewelryIsland&&!(id==='5F'&&['베네통','캐나다 구스'].includes(c.name))&&Wf>2.3&&Dp>2.8&&!(id==='2F'&&['생 로랑','불가리','보테가 베네타','헬렌카민스키','디올'].includes(c.name))&&!(id==='3F'&&['아디르','더로우','호라이즌','알라이아','분더샵 여성','바쉐론 콘스탄틴','릭오웬스','오데마피게','로에베','몽블랑','발렌티노','브레게','프레드','부쉐론','끌로에','아크리스','블랑팡'].includes(c.name))&&!(id==='4F'&&['토리버치','A.P.C.','포르테 포르테','N°21','메종 키츠네','레페토','폴로 랄프 로렌','샤넬 슈 부틱','루이비통','지안비토로시','린드버그'].includes(c.name))&&!(id==='5F'&&['델라라나','위뜨','헤지스','더일마','룩캐스트','루에브르','타낫','뷰오리','포유어아이즈온리','랙앤본','킨더살몬','던스트','에스실','넘버링','미샤','쁘렝땅','조셉앤 스테이시','렉토','럭키슈에뜨','르917 (르셉템버)','멤버스바','SHOP 아모멘토'].includes(c.name))){
         const cw=Math.min(1.4,Wf*.23),a=Wf*.76,b=Dp*.78;
         fb(a,b,cw,.55,y,.93,palette.wall,{solid:true});
         fb(a,b,cw+.04,.59,y+.93,.045,{color:palette.trim,gloss:.5});
