@@ -10,6 +10,9 @@ import {relief} from '../../../js/banpo_relief.js';
 // Scene object (or a uniquely identifying child) -> editable native source.
 // Geometry decoder matrices and decorative LOD offsets live *below* the placement.
 const sources = [
+  ...[['2F','Bedding','quilt-shop'],['4F','Curtains','drapery-shop']]
+    .map(([floor,key,collection])=>['gyeongbu',floor,'gyeongbu-homewares/homewares.blend','경부선 도매 점포 · '+key,collection]),
+  ['jwmarriott','8F','lounge-piano/grand.blend','더 라운지 · 그랜드 피아노와 의자','더 라운지 · 그랜드 피아노와 의자'],
   ...[['6F','Children','childrenswear'],['7F','Suits','tailoring'],['8F','Womenswear','outerwear']]
     .map(([floor,key,collection])=>['gyeongbu',floor,'gyeongbu-apparel/apparel.blend','경부선 도매 점포 · '+key,collection]),
   ...['Sunflower','Ivory','Violet','Pink','Sleeve','Riser','BlackStack','WorkPapers'].map(name=>

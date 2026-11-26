@@ -1,3 +1,4 @@
+import { placePiano } from '../../assets/models/lounge-piano/model.js';
 import { OPEN_STAGE_FRONT } from './_junctions.js';
 import { loadArchitecture, placeArchitecture } from '../../assets/models/interior-architecture/model.js';
 import { placeDesserts } from '../../assets/models/patisserie/model.js';
@@ -1903,21 +1904,10 @@ export function build(K) {
     }
     MAN(-.4, 8.0, y, { shirt: 0x2c2925, rotY: FACE.S });
     SG('THE LOUNGE', { u: 4.65, v: 12.6, y: y + 1.6, w: .95, h: .22, f: 'S', bg: null, fg: '#c7a573', bold: false });
-    // Grand piano with curved tail, tapered legs, a raised lid and individual keys (02).
-    const pu = -4.8, pv = 41.0;
-    const shape = [[-.82, 1.05], [.82, 1.05], [.82, .15], [.66, -.78], [.33, -1.35], [-.2, -1.45], [-.63, -.92], [-.82, -.3]];
-    DK.prism(shape.map(([u, v]) => P(pu + u, pv + v)), y + .67, y + .98, { mat: { color: 0x121314, gloss: .7 }, solid: false });
-    const lid = shape.map(([u, v]) => { const p = P(pu + u, pv + v); return [p[0], y + 1.015 + (u + .82) * .2, p[1]]; });
-    for (let i = 1; i < lid.length - 1; i++) DK.quad({ color: 0x18191a, gloss: .7 }, [lid[0], lid[i], lid[i + 1], lid[0]], [0, 1, 0]);
-    for (const [du, dv] of [[-.64, .8], [.64, .8], [.1, -1.1]]) {
-      CY(pu + du, pv + dv, y + .04, .065, .67, 0x151617, { seg: 8, solid: false });
-      CY(pu + du, pv + dv, y + .015, .11, .035, 0x1d1d1c, { seg: 10, solid: false });
-    }
-    B({ u: pu, v: pv + 1.07, y: y + .78, w: 1.48, d: .29, h: .055, mat: 0xe7e2d8, solid: false });
-    for (let i = 0; i < 28; i++) B({ u: pu - .7 + i * .05, v: pv + 1.12, y: y + .835, w: .006, d: .22, h: .008, mat: 0x817d75, solid: false });
-    for (let i = 0; i < 20; i++) if (i % 7 !== 2 && i % 7 !== 6) B({ u: pu - .67 + i * .067, v: pv + 1.02, y: y + .843, w: .027, d: .15, h: .03, mat: 0x171717, solid: false });
-    B({ u: pu, v: pv + 1.8, y: y + .42, w: .85, d: .38, h: .1, mat: 0x201d1b });
-    for (const du of [-.32, .32]) B({ u: pu + du, v: pv + 1.8, y, w: .055, d: .25, h: .42, mat: 0x151515, solid: false });
+    // The piano and bench share the original seat collision and rug.
+    const [pianoX,pianoZ]=P(-4.8,41.0);
+    B({u:-4.8,v:42.8,y:y+.42,w:.85,d:.38,h:.1,mat:0,skip:['top','bottom','n','s','e','w']});
+    placePiano(K,pianoX,y,pianoZ,R);
     // 02: the piano and oatmeal L-sofa share one continuous rug, with copper/burgundy cushions.
     SOFA(-6.35, 34.8, y, 7.2, 'E', 0xd8ccb6);
     SOFA(-3.6, 31.35, y, 6.25, 'S', 0xd8ccb6);
