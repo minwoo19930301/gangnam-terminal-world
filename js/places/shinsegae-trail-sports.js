@@ -2,7 +2,7 @@ import {mountRetailDisplay} from './shinsegae-retail-display.js';
 import {relief} from '../banpo_relief.js';
 
 const source = new URL('../../assets/models/ssg-trail-sports/gallery.glb',import.meta.url);
-const batches = ['SalomonTrailEquipment','SalomonTrailFixtures'];
+const batches = ['SalomonTrailEquipment','SalomonTrailFixtures','SalomonTrailDiffusers'];
 
 export function registerSalomon(K,{poly,x,y,z,yaw}) {
   K.detail({floor:'8F',y0:y,y1:y+4.8,poly,name:'살로몬 트레일 러닝 진열'},()=>{

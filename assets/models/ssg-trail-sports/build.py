@@ -35,6 +35,9 @@ def finish(name):
         node=m.node_tree.nodes.get('Principled BSDF')
         node.inputs['Base Color'].default_value=m.diffuse_color
         node.inputs['Roughness'].default_value=.49
+        if name=='diffuser':
+            node.inputs['Emission Color'].default_value=m.diffuse_color
+            node.inputs['Emission Strength'].default_value=.8
         materials[name]=m
     return materials[name]
 
@@ -53,7 +56,9 @@ def part(name, vertices, faces, color, bevel=0):
     gallery.objects.link(ob)
     mesh.materials.append(finish(color))
     ob.matrix_world=transform.copy()
-    pieces.setdefault('SalomonTrailEquipment' if prefix else 'SalomonTrailFixtures',[]).append(ob)
+    batch = 'SalomonTrailEquipment' if prefix else 'SalomonTrailFixtures'
+    if color=='diffuser': batch='SalomonTrailDiffusers'
+    pieces.setdefault(batch,[]).append(ob)
     return ob
 
 def skins(name, rings, color, bevel=0, cap=True):
@@ -93,6 +98,7 @@ def lettering(body,x,y,z,size,col,bold=False):
     font.size=size
     font.align_x='CENTER'
     font.resolution_u=3
+    font.shear=.18
     fontfile='Arial Bold.ttf' if bold else 'AppleGothic.ttf'
     font.font=bpy.data.fonts.load('/System/Library/Fonts/Supplemental/'+fontfile,check_existing=True)
     obj=bpy.data.objects.new(body,font)
@@ -126,7 +132,7 @@ def ribbon(name,path,width,color):
     return skins(name,[[(x-width/2,y-.004,z),(x+width/2,y-.004,z),
                         (x+width/2,y+.004,z),(x-width/2,y+.004,z)] for x,y,z in path],color)
 
-palette.update(cream='F7F1E5',wood='B27E49',darkwood='805333',mint='B6C3A6',flask='82BBD3',cap='3B7292',berry='967F91',mesh='363B42')
+palette.update(diffuser='F7FAF6',cream='F7F1E5',wood='B27E49',darkwood='805333',mint='B6C3A6',flask='82BBD3',cap='3B7292',berry='967F91',mesh='363B42')
 # Mesh upper and chassis follow consecutive transverse foot sections.
 def trail(x,y,z,ang,col):
     pose('XT-6 · ',x,y,z,ang)
@@ -175,13 +181,29 @@ def vest(x,y,z,angle,col):
 plate('벽체',0,.50,0,5.84,.18,2.72,.06,'cream')
 for x in [-1.86,-.29]:
     plate('신발 벽 패널',x,.37,.17,1.5,.09,2.27,.023,'granite')
+    for j in range(1,15):
+        plate('벽면 수평 줄눈',x,.321,.20+j*.148,1.48,.003,.006,.001,'stone2')
     for j in range(5):
         z=.35+.388*j
         plate('금속 선반',x,.16,z,1.47,.43,.029,.012,'steel')
         for i in range(3):
             trail(x+(i-1)*.47,.12,z+.031,-62+i*9,['snow','ink','mint','berry','sand'][(i+j)%5])
 plate('흰 기둥',1.64,.32,0,1.88,.35,2.70,.14,'cream')
-lettering('SALOMON',1.64,.13,2.12,.26,'ink',True)
+# The renewal photographs show a modest dark wordmark on a pale backlit face.
+plate('워드마크 간접광 받침',1.64,.138,2.095,1.04,.026,.22,.012,'chalk')
+plate('워드마크 흰 면',1.64,.122,2.102,1.015,.020,.204,.008,'diffuser')
+lettering('SALOMON',1.64,.109,2.14,.195,'ink',True)
+
+# Recessed curved ceiling trim in a single static fixture batch.
+for offset,width,z,col in [(0,.14,2.925,'chalk'),(.015,.035,2.920,'diffuser')]:
+    strips=[]
+    for i in range(41):
+        t=i*pi/40
+        x=(i/40-.5)*5.52
+        y=-.14-1.18*sin(t)+offset
+        strips.append([(x,y-width/2,z),(x,y+width/2,z),(x,y+width/2,z+.012),(x,y-width/2,z+.012)])
+    skins('곡면 천장 매입띠',strips,col)
+
 for x in [1.08,2.18]:
     plate('목재 진열 기둥',x,-.05,.1,.065,.08,1.78,.012,'wood')
 rod('행거 봉',(1.05,-.06,1.73),(2.22,-.06,1.73),.015,'steel')
@@ -203,6 +225,9 @@ for batch,objects in pieces.items():
     nodes=merged.node_tree.nodes
     shader=nodes.get('Principled BSDF')
     shader.inputs['Roughness'].default_value=.34 if batch=='SalomonTrailEquipment' else .68
+    if batch=='SalomonTrailDiffusers':
+        shader.inputs['Emission Color'].default_value=finish('diffuser').diffuse_color
+        shader.inputs['Emission Strength'].default_value=.8
     colors=nodes.new('ShaderNodeVertexColor'); colors.layer_name='Finish'
     merged.node_tree.links.new(colors.outputs['Color'],shader.inputs['Base Color'])
     bpy.ops.object.select_all(action='DESELECT')

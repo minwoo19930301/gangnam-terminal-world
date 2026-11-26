@@ -9759,6 +9759,17 @@ export function build(K) {
     if(id==='4F'&&/캐주얼 슈즈|컨템포러리 슈즈|국내 슈즈|컴포트 슈즈/.test(n))Object.assign(p,{wall:0x202932,trim:0x556773,accent:0x25394d,dark:true,floor:{tex:'ssg_upper_tile',color:0xc8c9c6,gloss:.3}});
     if(/나이키|아디다스|데상트|다이나핏/.test(n))Object.assign(p,{wall:0xe6e6e0,trim:0x292e2e,accent:0x252b2e});
     if(id==='6F'&&n==='리모와')p.floor={tex:'ssg_acne_terrazzo',color:0x929aa1,gloss:.2};
+    if(id==='8F'&&n==='살로몬'){
+      // The shop's existing floor polygon clips this quiet ceramic finish to its guide cell.
+      K.texture('ssg_salomon_porcelain',256,256,(g,w,h)=>{
+        g.fillStyle='#f3f2ed';
+        g.fillRect(0,0,w,h);
+        g.fillStyle='#ebeae5';
+        g.fillRect(0,0,w,1);
+        g.fillRect(0,0,1,h);
+      },[1.20,1.20]);
+      p.floor={tex:'ssg_salomon_porcelain',gloss:.12};
+    }
     if(id==='7F'&&n==='보스골프')Object.assign(p,{floor:{tex:'tile',color:0xe1d9c8,gloss:.3}});
     if(/파타고니아|스노우피크|노르디스크|헬리녹스|말본/.test(n))Object.assign(p,{wall:0xdedfcf,trim:0x8b744e,accent:0x50614c,floor:{tex:'wood',color:0xb5a17b}});
     // Gangnam Chanel shoe boutique opening photographs (2017): a pale
