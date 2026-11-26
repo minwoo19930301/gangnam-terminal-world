@@ -39,6 +39,8 @@ SHELVES = {
     "sweet-arabica": "스위트 파크 · %아라비카 입구",
     "ssg-ferragamo": "신세계 6층 · 페라가모 남성",
     "ssg-rawrow": "신세계 8층 · 로우로우 여행가방",
+    "ssg-glxy-studio": "신세계 7층 · GLXY studio",
+    "newcore-ashley-entry": "뉴코아 1관 5층 · 애슐리퀸즈",
     "newcore-mamas": "뉴코아 3관 · 카페 마마스 외관",
     "newcore-ashley-entry": "뉴코아 1관 5층 · 애슐리퀸즈 입구",
     "newcore-oksoban-entry": "뉴코아 1관 5층 · 옥소반 입구",
