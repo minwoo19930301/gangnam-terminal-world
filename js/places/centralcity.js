@@ -521,10 +521,10 @@ export function build(K) {
 
   // ---- vertical circulation (strip)
   escPair(-1, 9.5, 17.4, YB1, Y1, 'f1', true);          // E1 north: B1 ↔ 1F (신반포로 입구 홀)
-  escPair(34, 44.5, 17.4, YB1, Y1, 'f1', true);           // E2: inferred mid-hall position, clear of the photographed ticket frontage; B1 landing stays in t13..22 link
+  // The 1F operator guide puts the hall escalator between units 5 and 8 (E1).
+  // The B1 guide shows a shopping aisle at the former inferred second pair.
   // Round20: both hall upper flights are now in hallR20 on the GATE 3 axis.
   // Door-front basement/upper flights were unsupported by either official 1F plan; removed.
-  // Existing B1 access remains at the two documented hall cores and the south block core.
   flight(142.2, 148.9, 32.5, Y2, YR, 'rf');
 
   rail(142, 31.3, 148.9, 31.3, YR); rail(142, 33.7, 148.9, 33.7, YR); rail(142, 31.3, 142, 33.7, YR);
@@ -679,7 +679,7 @@ export function build(K) {
   hallFurnish(RECT(-9,5,148,19),()=>{
     let i=0;
     for(let ss=8;ss<=140;ss+=12){
-      // Keep ticket frontage and relocated E2 well/landing clear of bed and foliage.
+      // Keep the ticket frontage and the existing open walking space clear of planting.
       if((ss>=82&&ss<=106)||(ss>=40&&ss<=78)||ss===32||ss===44)continue;
       const t=15.8;
       lbox(ss,t,8.5,2.6,0,.45,{tex:'darkstone',color:0x4c4f50},{top:0x555958});
@@ -3267,7 +3267,7 @@ export function build(K) {
         hallFace('ccHallLandscape',sc-.5,11.73,6.1,7.5,2.4);
         lbox(sc+4.05,11.6,1.4,.2,5.1,2.0,0x302b49,{solid:false});
         hallClock(sc+4.05,11.74,6.1,1.35);
-        // The relocated E2 leaves the marble diamond and queue approach unobstructed.
+        // Keep the marble diamond and queue approach unobstructed.
         for(let ss=s0+.6;ss<s1;ss+=2.3){
           lcyl(ss,13.1,0,.18,.04,0x252725,{solid:false});lcyl(ss,13.1,.04,.035,.94,0x252725,{solid:false});
           if(ss+2.3<s1)lbox(ss+1.15,13.1,2.3,.045,.82,.065,0x282b28,{solid:false});
