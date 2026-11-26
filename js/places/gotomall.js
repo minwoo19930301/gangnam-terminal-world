@@ -1,3 +1,4 @@
+import { placeHessed } from '../../assets/models/gotomall-hessed/place.js';
 import { loadArchitecture, placeArchitecture } from '../../assets/models/interior-architecture/model.js';
 import { loadFixtureScene, mountFixture } from '../../assets/models/onebailey/load.js';
 import { shopInteriors } from '../../assets/models/gotomall/shop-interiors.js';
@@ -1243,6 +1244,21 @@ export function build(K) {
     else if (fx === 'dishes' || fx === 'deco') lbox(loc, a0, a1, 0.12, 0.72, FL, 0.8, 0xb79c78, { top: { tex: 'gt_dishes' } });
   }
   function directoryInterior(loc, info, W, D) {
+    if (info.specialty === 'bags') {
+      const [x,z]=P(...Lp(loc,W/2,.045));
+      placeHessed(K,x,FL+.02,z,FACE[outFace(loc)],W-.14,D-.16);
+      // The two photographed entrance rails stand either side of the shopper's path.
+      for (const [lo,hi] of [[.03,.315],[.685,.97]]) {
+        lbox(loc,W*lo,W*hi,.12,.71,FL,.88,0,{skip:['top','bottom','n','s','e','w']});
+      }
+      const footprint={skip:['top','bottom','n','s','e','w']};
+      for (const [lo,hi] of [[.02,.13],[.87,.98]]) lbox(loc,W*lo,W*hi,.7,D-.28,FL,2.06,0,footprint);
+      lbox(loc,.06,W-.06,D-.54,D-.18,FL,1.78,0,footprint);
+      // Small dark blade on the left jamb as seen from the passage.
+      lsign(loc,info.name,W*.965,.04,FL+2.27,.52,.20,'+u',
+        {bg:'#29272b',fg:'#fcf6eb',twoSided:true,pxPerM:190,box:.028});
+      return;
+    }
     if (info.specialty === 'scarves' || info.specialty === 'quilts') {
       const key = info.specialty === 'scarves' ? 'Emet' : 'AnHouse';
       const [x,z] = P(...Lp(loc,W/2,.04));

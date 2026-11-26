@@ -1,3 +1,4 @@
+import { courtPaving, courtPlants, courtTables } from '../../assets/models/famille-atrium/model.js';
 import { buildAtriumArt } from './famille_atrium_art.js';
 import { diningRoom } from './famille_dining.js';
 import { buildFourb } from './famille_dining_a.js';
@@ -183,13 +184,16 @@ export function buildFamilleAtrium(K,{round,P,mouthWest,mouthEast,wallB1,ceiling
   const room=diningRoom(K,[-41.1,187.8],-2.45,7.4,10.5,0,12);
   K.detail({name:'포비 강남',floor:'1F',poly:room.poly,y0:0,y1:roofY},()=>{
     buildFourb(room);
-    for (const point of [[courtX-2.2,204.6],[courtX+2.2,204.6],[courtX-2.2,200.8]]) {
-      const tables=diningRoom(K,point,0,1.5,1.4);
-      tables.table(0,0,.9,.7,0xa68060);
-      tables.seat(0,-.65,1,0x786048);
-      tables.seat(0,.65,-1,0x786048);
-    }
   });
+  courtPaving(K,[[courtX-4.35,198.2],[courtX+4.35,198.2],[courtX+4.35,208.6],
+                [courtX+3.9,210],[courtX-3.9,210],[courtX-4.35,208.6]]);
+  const terrace = [[courtX-2.2,204.6,-.07], [courtX+2.2,204.6,.04], [courtX-2.2,200.8,.12]];
+  K.detail({name:'포비 앞 · 광장 야외형 좌석',floor:'1F',rect:[courtX-4.6,198.7,courtX+4.5,207.4],y0:0,y1:4.5},
+    ()=>{
+      courtTables(K,terrace);
+      courtPlants(K,[[courtX-3.7,206.6,-.4,1.06],[courtX+3.55,206.6,.3,1.04],
+                    [courtX+3.1,201.8,1.9,.86],[courtX+2.1,199.35,-.7,.88]]);
+    });
   K.zone({place:'famille',name:'포비 · 파미에 중앙광장',floor:'1F',sub:'FOURB',
     poly:room.poly,y0:-.1,y1:4.7,priority:12});
   const memorial={x:courtX,wallZ:landingZ,birdsZ:205.2,galleryWidth:7.65};

@@ -8,6 +8,9 @@ from mathutils import Vector
 
 SHELVES = {
     "oksoban-table": "뉴코아 1관 5층 · 옥소반 식탁",
+    "famille-atrium": "파미에 광장 · 전광판·테라스와 포장",
+    "gotomall-hessed": "고투몰 D-086 · 헤쎄드",
+    "hypnos-showroom": "신세계 9층 · 히프노스 쇼룸",
     "patisserie": "JW 2층 파티세리 · 플랑과 마카롱",
     "daiso-merchandise": "다이소 주방·문구 매대",
     "gyeongbu-seating": "경부선 · 대합실 연석",

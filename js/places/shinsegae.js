@@ -1,3 +1,4 @@
+import { placeHypnos } from '../../assets/models/hypnos-showroom/model.js';
 import { mounts as facadeMounts } from '../../assets/models/shinsegae-facade/mounts.js';
 import { loadArchitecture, fitArchitecture, fitTerminalSeat as drawFacadeSign } from '../../assets/models/architectural-retail/place.js';
 import { displays as upperFloorDisplays } from '../../assets/models/shinsegae/displays.js';
@@ -14217,6 +14218,18 @@ export function build(K) {
         const[u,v]=ST(a,b);if(v<8||(c.model.rearNotch&&inR(u,v,c.model.rearNotch,.22)))return;
         occupied.push([a,b]);const[x,z]=P(u,v);K.person(x,y,z,{rotY:FACE[face],...o});
       };
+      if (id === '9F' && c.name === '히프노스' && q === largest) {
+        hq(u0+.13, v0+.13, u1-.13, v1-.13, y+.018, {tex:'tile',color:0xd4cbbc,gloss:.30});
+        const point = (a,b) => { const [x,z] = P(...ST(a,b)); return [x,y+.020,z]; };
+        placeHypnos(K,point);
+        const hidden = {solid:true,skip:['top','bottom','n','s','e','w']};
+        fb(.93,1.68,1.29,1.90,y+.02,.67,0xffffff,hidden);
+        fb(1.91,4.86,1.60,2.05,y+.02,.67,0xffffff,hidden);
+        fb(3.55,1.82,.055,2.02,y+.02,2.55,0xffffff,hidden);
+        fb(.64,4.30,.62,.86,y+.02,.79,0xffffff,hidden);
+        fb(3.43,4.17,.34,1.04,y+.02,2.18,0xffffff,hidden);
+        continue;
+      }
       if(id==='3F'&&c.name==='까르띠에'){
         for(const r of cutRect([u0+.13,v0+.13,u1-.13,v1-.13],[1.65,112.5,5.15,119.2]))hq(...r,y+.018,palette.floor);
       }else if (c.model.rearNotch) {
