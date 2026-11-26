@@ -59,6 +59,7 @@ const EMPTY = [];
 export function createPhysics() {
   const walls = new Grid(8), surfs = new Grid(8), holes = new Grid(16), zones = new Grid(16), ceilings = new Grid(8);
   const stats = { walls: 0, surfaces: 0, holes: 0, zones: 0 };
+  let hasPitchedCeilings = false;
   let heightOffset = null;
   const P = {
     stats,
@@ -93,7 +94,22 @@ export function createPhysics() {
       const s = { kind: 'ramp', heightOffset, ax, az, ux: dx / L, uz: dz / L, L, hw, ya, yb, move: opts.move || null, tag: opts.tag };
       surfs.insert(s, Math.min(ax, bx) - hw, Math.min(az, bz) - hw, Math.max(ax, bx) + hw, Math.max(az, bz) + hw); stats.surfaces++; return s;
     },
-    addCeiling(poly, y, opts = {}) { const bb = polyBBox(poly); const c = { poly, holes: opts.holes || null, y, bb, heightOffset }; ceilings.insert(c, ...bb); return c; },
+    addCeiling(poly, y, opts = {}) {
+      const bb = polyBBox(poly);
+      const c = {poly, holes:opts.holes || null, y, bb, heightOffset};
+      if (opts.heights) {
+        // Three local elevations define a plane relative to the first plan vertex.
+        const [a,b,d]=poly, [start,middle,end]=opts.heights;
+        const dx=b[0]-a[0], dz=b[1]-a[1], ex=d[0]-a[0], ez=d[1]-a[1];
+        const area=dx*ez-dz*ex;
+        if (Math.abs(area)<1e-8) return;
+        c.y=start;
+        c.slope=[((middle-start)*ez-dz*(end-start))/area,(dx*(end-start)-(middle-start)*ex)/area];
+        hasPitchedCeilings = true;
+      }
+      ceilings.insert(c, ...bb);
+      return c;
+    },
     addGroundHole(poly, inner) { const bb = polyBBox(poly); const h = { poly, bb, inner: inner && inner.length ? inner : null }; holes.insert(h, ...bb); stats.holes++; return h; },
     addZone(z) { const bb = z.bb || polyBBox(z.poly); z.bb = bb; z.heightOffset = heightOffset; z.area ??= polyArea(z.poly); zones.insert(z, ...bb); stats.zones++; return z; },
     groundHole(x, z) {
@@ -130,7 +146,8 @@ export function createPhysics() {
     ceilingAbove(x, z, fromY, toY) {
       let lo = Infinity;
       for (const c of ceilings.at(x, z)) {
-        const y = c.y + (c.heightOffset ? c.heightOffset(x,z) : 0);
+        const rise = c.slope ? (x-c.poly[0][0])*c.slope[0] + (z-c.poly[0][1])*c.slope[1] : 0;
+        const y = c.y + rise + (c.heightOffset ? c.heightOffset(x,z) : 0);
         if (y <= fromY || y >= toY || y >= lo) continue;
         if (x < c.bb[0] || x > c.bb[2] || z < c.bb[1] || z > c.bb[3] || !pointInPoly(x, z, c.poly)) continue;
         if (c.holes && c.holes.some(h => pointInPoly(x, z, h))) continue;
@@ -138,16 +155,22 @@ export function createPhysics() {
       }
       return lo;
     },
-    // Check actual horizontal slabs along the sightline, including their atrium
+    // Intersect the sightline with the ceiling plane, including its atrium
     // openings. Skipping a boundary cell only makes the visibility test conservative.
     ceilingBlocksView(x, y, z, bx, by, bz) {
       const dx = bx - x, dy = by - y, dz = bz - z;
-      if (Math.abs(dy) < .1) return false;
+      if (Math.abs(dy) < .1 && !hasPitchedCeilings) return false;
       const steps = Math.max(1, Math.ceil(Math.max(Math.abs(dx), Math.abs(dz)) / ceilings.cell));
       for (let i = 0; i <= steps; i++) {
         for (const c of ceilings.at(x + dx*i/steps, z + dz*i/steps)) {
           if (c.heightOffset) continue;
-          const t = (c.y - y) / dy;
+          let plane = c.y, change = dy;
+          if (c.slope) {
+            plane += (x-c.poly[0][0])*c.slope[0] + (z-c.poly[0][1])*c.slope[1];
+            change -= dx*c.slope[0] + dz*c.slope[1];
+          }
+          if (Math.abs(change) < (c.slope ? .001 : .1)) continue;
+          const t = (plane - y) / change;
           if (t <= .001 || t >= .999) continue;
           const px = x + t*dx, pz = z + t*dz;
           if (px >= c.bb[0] && px <= c.bb[2] && pz >= c.bb[1] && pz <= c.bb[3] &&

@@ -32,3 +32,9 @@ blender -b assets/models/interior-architecture/interiors.blend -P assets/models/
 node tests/smoke.mjs jwmarriott gotomall famille centralcity
 node tests/walk.mjs jwmarriott gotomall famille centralcity
 ```
+
+## 와필레 앞 갤러리의 야간 조명
+
+1층 식당 통로의 회반죽 천장 양쪽 면과 벽등 광원을 Blender 원본에 넣었다. 천창과 회반죽 아래 면에 붙인 `gallery_soffit` 속성으로 내보낸 삼각형이 게임의 천장 높이와 실내 조명 범위를 결정한다. 마지막 짧은 경간에도 같은 비율을 적용한다. 천창은 밤에 어두워지고 기둥 벽등은 계속 켜진다. [같은 식당 통로의 낮·밤 전후](famille-gallery-light.jpg)
+
+`node assets/models/interior-architecture/check-vault.mjs`로 원본의 회반죽과 유리를 메모리에서 65cm 올린 뒤 네 지점의 게임 천장도 65cm 움직이는지 확인할 수 있다. 운영사 사진에서 확인한 것은 천장의 모양과 벽등 위치다. 벽등의 밝기와 마감 두께는 게임 축척에 맞춘 값이다.

@@ -195,7 +195,13 @@ export function buildFamilleAtrium(K,{round,P,mouthWest,mouthEast,wallB1,ceiling
     ['포비 · 파미에 중앙광장','1F','FOURB',-.1,y2-.3,11],
     ['파미에스테이션 중앙광장','2F','식당가 · 외부 테라스',y2-.3,y3-.3,11],
     ['스타벅스 파미에파크R','3F','파미에스테이션',y3-.3,roofY,12]
-  ]) K.zone({place:'famille',name,floor,sub,poly:round,y0,y1,priority});
+  ]) {
+    // Arrive on the fixed balcony facing the clock and both flights.
+    const balconyX=left-2.7,balconyZ=landingZ+.9;
+    const mapArrival=floor==='2F' ? {x:balconyX,z:balconyZ,y:y2,
+      yaw:Math.atan2(balconyX-(courtX+1.6),balconyZ-(landingZ-1.8))} : undefined;
+    K.zone({place:'famille',name,floor,sub,poly:round,y0,y1,priority,mapArrival});
+  }
   K.sign(['지하철 7호선 연결','파미에스테이션 1층 ↑'],{x:-45,z:200.2,y:basement+3,w:6,h:.9,bg:'#282923',fg:'#f0e6c8'});
   K.spawn({place:'famille',group:'파미에스테이션',name:'포비 · 중앙광장',x:courtX+.4,z:195.8,y:0,yaw:Math.PI});
   K.spawn({place:'famille',group:'파미에스테이션',name:'스타벅스 파미에파크R · 3층',x:cx,z:cz+7.7,y:y3,yaw:0});

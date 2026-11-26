@@ -1,6 +1,6 @@
 """Construct the editable public-interior architectural motifs in Blender."""
 from pathlib import Path
-from math import cos, sin, pi
+from math import acos, cos, sin, pi
 import bpy
 from mathutils import Matrix, Vector
 
@@ -139,7 +139,13 @@ for side in (-1,1):
     for a,b in zip(points,points[1:]): rod('철제 굽은 벽등 팔',a,b,.023,'343635')
     org=(0,oy-side*.44,-1.56)
     annulus('흑철 벽등 갓',[(0,.16),(.015,.165),(.04,.11),(.10,.073),(.11,.035)],'353735',origin=org)
-    annulus('유백색 전등',[(-.032,.011),(-.026,.059),(.005,.095)],'fff4d9',origin=org,lit=True)
+    bulb = annulus('유백색 전등',[(-.032,.011),(-.026,.059),(.005,.095)],'fff4d9',origin=org,lit=True)
+    material = bulb.data.materials[0]
+    material.use_nodes = True
+    surface = material.node_tree.nodes.get('Principled BSDF')
+    surface.inputs['Base Color'].default_value = material.diffuse_color
+    surface.inputs['Emission Color'].default_value = material.diffuse_color
+    surface.inputs['Emission Strength'].default_value = 3
 
 # One bay runs from its arch towards the next. The last bay is shortened on site.
 # The operator's photograph shows a pitched opal rooflight with dark glazing
@@ -149,8 +155,37 @@ def strip(name, a, b, profile, color, skylight=False):
     n = len(profile)
     panel = mesh(name, verts, [(i, i+1, n+i+1, n+i) for i in range(n-1)], color, skylight)
     if skylight:
-        panel.data.materials[0]["skylight"] = True
+        panel['gallery_soffit'] = True
+        material = panel.data.materials[0]
+        material['skylight'] = True
+        material.use_nodes = True
+        nodes = material.node_tree.nodes
+        transmission = nodes.get('Opal rooflight') or nodes.new('ShaderNodeBsdfTranslucent')
+        transmission.name = 'Opal rooflight'
+        transmission.inputs['Color'].default_value = material.diffuse_color
+        material.node_tree.links.new(transmission.outputs[0], nodes.get('Material Output').inputs['Surface'])
     return panel
+
+# Each bay includes the plaster shoulder up to the edge of the pitched glass.
+# The plaster has separate inside and weather faces so it can be seen from above.
+for side in (-1, 1):
+    spring_to_glass = acos(2.55 / 5.75)
+    profile = [(side * 5.75 * cos(spring_to_glass * i / 14),
+                3 * sin(spring_to_glass * i / 14)) for i in range(15)]
+    if side < 0:
+        profile.reverse()
+    inside = strip('아치 회반죽 · 천장 안쪽', 0, -6.5, profile, 'f1eee5')
+    inside['gallery_soffit'] = True
+    strip('아치 회반죽 · 상부 마감', 0, -6.5,
+          [(y, z + .1) for y, z in reversed(profile)], 'e3e0d6')
+    # The photographed wall lamp sits below the spring of the vault.
+    source = bpy.data.lights.new('갤러리 벽등', 'POINT')
+    source.energy = 95
+    source.color = (1, .84, .64)
+    source.shadow_soft_size = .11
+    light = bpy.data.objects.new('갤러리 벽등 · 식당 통로', source)
+    section.objects.link(light)
+    light.location = (0, side * 4.94, -1.63)
 
 ridge = 2.99
 def crown(y):
@@ -223,6 +258,9 @@ for name,offset in layout.items():
     coll=bpy.data.collections[name]
     coll['preview_origin']=offset
     for obj in coll.all_objects:
+        if obj.type == 'LIGHT':
+            obj.location += Vector(offset)
+            continue
         centre=sum((Vector(corner) for corner in obj.bound_box),Vector())/8
         obj.data.transform(Matrix.Translation(-centre))
         obj.location=centre+Vector(offset)
