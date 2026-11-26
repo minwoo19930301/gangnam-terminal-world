@@ -3020,7 +3020,12 @@ export function build(K) {
         lwall(s0,t0,s0,t1,Y2,Y2+2.65,{mat:'glass',thick:.035,openings:[{at:(t1-t0)/2,w:1.6,y0:Y2,y1:Y2+2.65}]});
       }
     }else officialShop(name,s0,t0,s1,t1,front,kind,Y2);
-    lzone(s0,t0,s1,t1,{name,floor:'2F',sub:'파미에스테이션 2층',y0:Y2,y1:8.6,priority:9});
+    if(id===10){
+      const middle=(t0+t1)/2,[x,z]=P(s0+.55,middle),[lookX,lookZ]=P(s0+3,middle);
+      K.spawn({name:'소이연남 파미에스테이션점 입구',place:'famille',floor:'2F',mapDestination:true,
+        poiIds:[12079247767],x,y:Y2,z,yaw:Math.atan2(x-lookX,z-lookZ)});
+    }
+    lzone(s0,t0,s1,t1,{name,place:id===10?'famille':'centralcity',floor:'2F',sub:'파미에스테이션 2층',y0:Y2,y1:8.6,priority:9});
   }
   lzone(168.3,-96,187.7,38,{place:'famille',name:'파미에스테이션',floor:'2F',sub:'하프커피 · 카츠8 · 이비티 피자 · 케르반 · 소이연남',y0:Y2,y1:8.6,priority:7});
   K.texture('ccEbtPicturePoster19',256,320,(g,w,h)=>{

@@ -79,6 +79,10 @@ export function halffCoffee(K,{P,RECT,lbox,lwall,lsign,lzone,R},s0,t0,s1,t1,y) {
   const [fx,fz]=position(0,0),sin=Math.sin(angle),cos=Math.cos(angle);
   const project=(x,z)=>[-(x-fx)*cos+(z-fz)*sin,(x-fx)*sin+(z-fz)*cos];
   const poly=RECT(front-depth,mid-6,front+1.66,mid+6);
+  const [entryX,entryZ]=position(-3.75,-.8),[insideX,insideZ]=position(-3.75,2);
+  K.spawn({name:'하프커피 FP212 입구',place:'famille',floor:'2F',mapDestination:true,
+    aliases:['주식회사 하프커피로스터스 강남파미에스테이션점','halff coffee'],poiIds:[12076553139],
+    x:entryX,y,z:entryZ,yaw:Math.atan2(entryX-insideX,entryZ-insideZ)});
   // Keep the original outer cell partitions and the continuous gallery around the smaller photographed room.
   lwall(s0,t0,s1,t0,y,y+3.84,{mat:'ccFamBuffBrick',thick:.13});
   const arcade=[1.42,4.94];
