@@ -70,6 +70,14 @@ async function retailSources(){
   }));
 }
 
+// Older master files used one material's mesh name as the object's permanent ID.
+// Keep those editable anchors when the fixed camera tracks a different material.
+const legacyRetailId={
+  SSG_9F_LaMarzocco:'MarzoccoEnamel',SSG_9F_TWL:'TWLOak',SSG_9F_HermanMiller:'HMFrame',
+  SSG_10F_Stokke:'StokkeChairs',SSG_10F_Toebox:'ToeboxFootwear',SSG_11F_SalonDeHaoSum:'HaoMeal',
+  SSG_9F_Miele:'MieleCabinet',SSG_8F_Arcteryx:'ArcOutdoorEquipment',
+};
+
 const rounded = value => Math.round(value*1e8)/1e8;
 
 export async function captureIndoorLayout() {
@@ -104,7 +112,8 @@ export async function captureIndoorLayout() {
           const [x,y,z]=world.elements.slice(12,15);
           const ground=rounded(relief(x,z));
           const level=subject==='광장 · 고리형 청동 조명' && y>=4 ? '2F' : floor;
-          result.push({id:[place,subject,ordinal+1].join('/'),place,placeName:meta.name,floor:level,library,
+          const anchor=library.startsWith('ssg-')?(legacyRetailId[collections[0]]??collections[0]):subject;
+          result.push({id:[place,anchor,ordinal+1].join('/'),place,placeName:meta.name,floor:level,library,
             collections,subject,ground,terrain:root.userData.terrainApplied?0:ground,matrix:world.toArray().map(rounded)});
         }
         return placed;
