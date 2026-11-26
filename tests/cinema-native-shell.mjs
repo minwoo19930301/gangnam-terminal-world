@@ -15,12 +15,12 @@ const source=new URL('../assets/models/megabox-central/layout.js',import.meta.ur
 const temporary=await mkdtemp(join(tmpdir(),'cinema-public-shell-'));
 const server=await serve(),browser=await chromium.launch({channel:'chromium',args:['--use-angle=metal','--enable-gpu','--ignore-gpu-blocklist']});
 function exportLayout(path,move) {
-  const args=['-b',join(dir,'public-shell.blend'),'--python-exit-code','1'];
+  const args=['--factory-startup','-b',join(dir,'public-shell.blend'),'--python-exit-code','1'];
   if(move)args.push('--python-expr',move);
   execFileSync(process.env.BLENDER||'blender',[...args,'-P',join(dir,'edit.py'),'--','export',path],{stdio:'pipe'});
 }
 async function check(row) {
-  const target=[plan(840,row),plan(1032,row)], output=join(temporary,row+'.js');
+  const target=[840,903,1032].map(x=>plan(x,row)), output=join(temporary,row+'.js');
   // Simulate the artist translating the selected north edge horizontally.
   exportLayout(output,`import bpy
 mesh=bpy.data.objects["East cross-aisle floor"].data
@@ -40,7 +40,7 @@ for vertex,(x,z) in zip(mesh.vertices,${JSON.stringify(target)}):
       function probe(u,v) {
         const [x,z]=plan(u,v),pos={x,z};
         phys.resolve(pos,.32,-6,-4.25,.5);
-        const floor=phys.support(x,z,-5.9,s=>s.poly?.length===4&&s.poly.every((p,i)=>
+        const floor=phys.support(x,z,-5.9,s=>s.poly?.length===transverseFloor.length&&s.poly.every((p,i)=>
           p.every((value,j)=>Math.abs(value-transverseFloor[i][j])<.000001)));
         return {zone:phys.zoneAt(x,-5.9,z)?.name,floor:floor.y,ceiling:phys.ceilingAbove(x,z,-5.8,-.01),
           push:Math.hypot(pos.x-x,pos.z-z),visibleOnNeighbour:cinemaPreview(x,-3,z)};
@@ -68,7 +68,8 @@ try{
   assert.equal(changed.wineFront.zone,'신세계 식품관 카페 통로');
   assert.ok(old.oldWall.push>.3&&changed.newWall.push>.3);
   assert.ok(changed.oldWall.push<.001&&old.newWall.push<.001);
-  assert.ok(changed.cross.w-old.cross.w>.7);
+  const [oldX,oldZ]=plan(1031,777),[newX,newZ]=plan(1031,772);
+  assert.ok(Math.abs(changed.cross.w-old.cross.w-Math.hypot(newX-oldX,newZ-oldZ))<.015);
   assert.deepEqual(changed.edge[1],old.edge[1]);
   for(const key of ['wineRear','wine','tea','coffee','salt'])assert.deepEqual(changed[key],old[key],key);
   assert.deepEqual([...old.errors,...changed.errors],[]);

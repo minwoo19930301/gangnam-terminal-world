@@ -2,7 +2,7 @@
 import * as THREE from 'three';
 import {readFileSync,writeFileSync} from 'node:fs';
 import {boutiqueLobby} from '../megabox-central/place.js';
-import {transverseFloor,transverseNorth} from '../megabox-central/layout.js';
+import {transverseFloor,transverseGuide,transverseNorth} from '../megabox-central/layout.js';
 import {plan} from '../cinema-rotary/layout.js';
 import {relief} from '../../../js/banpo_relief.js';
 import {pathToFileURL} from 'node:url';
@@ -48,18 +48,20 @@ export function captureShell() {
 }
 
 function writeEdge(vertices,output) {
-  if(vertices.length!==4 || vertices.flat().some(v=>!Number.isFinite(v)))throw Error('Expected four finite floor vertices.');
+  if(vertices.length!==transverseGuide.length || vertices.flat().some(v=>!Number.isFinite(v)))throw Error('Expected the original floor contour.');
   const row=(p,px)=>{
     const [x,z]=plan(px,transverseNorth),[u,v]=plan(px,transverseNorth+1);
     return transverseNorth+((p[0]-x)*(u-x)+(p[1]-z)*(v-z))/((u-x)**2+(v-z)**2);
   };
-  const next=Math.round((row(vertices[0],840)+row(vertices[1],1032))/2);
+  const north=transverseGuide.filter(p=>p[1]===transverseNorth);
+  const next=Math.round(north.reduce((sum,[x],i)=>sum+row(vertices[i],x),0)/north.length);
   // The operator tracing uses integer pixels. Allow half a pixel of snapping,
   // while preserving the side walls, fixed south shopfronts and north rear wall.
   if(next<770||next>783)throw Error('Keep the fixed shop backs and the joining aisle clear (north guide rows 770–783).');
-  for(const [i,[px,py]] of [[840,next],[1032,next],[1032,798],[840,798]].entries()){
-    if(Math.hypot(...plan(px,py).map((v,k)=>v-vertices[i][k]))>(i<2?.078:.001))
-      throw Error('Move the two north-edge vertices together; keep the east/west limits and south edge fixed.');
+  for(const [i,[px,py]] of transverseGuide.entries()){
+    const moving=py===transverseNorth;
+    if(Math.hypot(...plan(px,moving?next:py).map((v,k)=>v-vertices[i][k]))>(moving?.078:.001))
+      throw Error('Move the north-edge vertices together; keep the east/west limits and south edge fixed.');
   }
   const file=new URL('../megabox-central/layout.js',import.meta.url),source=readFileSync(file,'utf8');
   const field='export const transverseNorth = '+transverseNorth+';';

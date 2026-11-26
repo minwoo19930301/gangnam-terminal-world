@@ -65,8 +65,8 @@ def capture():
     bpy.context.view_layer.layer_collection.children[root.name].children[ceilings.name].hide_viewport=True
     bpy.context.scene.unit_settings.system='METRIC'
     control=bpy.data.objects[CONTROL]
-    control["editable_boundary"]="Move the two vertices in the North edge group horizontally; then export and recapture."
-    control.vertex_groups.new(name="North edge").add([0,1],1,'REPLACE')
+    control["editable_boundary"]="Move the North edge vertex group horizontally, then export and recapture."
+    control.vertex_groups.new(name="North edge").add([0,1,2],1,'REPLACE')
     bpy.context.view_layer.objects.active=control
     control.select_set(True)
     for screen in bpy.data.screens:
@@ -87,8 +87,8 @@ def export():
     source=json.loads(subprocess.check_output(command+["read"]))
     original=next(s for s in source["surfaces"] if s["name"]==CONTROL)
     topology={tuple(sorted(p.vertices)) for p in control.data.polygons}
-    if len(vertices)!=4 or topology!={tuple(sorted(f)) for f in original["faces"]}:
-        raise ValueError("Preserve the cross-aisle's original four vertices and two faces.")
+    if len(vertices)!=len(original["points"]) or topology!={tuple(sorted(f)) for f in original["faces"]}:
+        raise ValueError("Preserve the cross-aisle's original vertices and face topology.")
     if any(abs(v.z-p[2])>.001 for v,p in zip(vertices,original["points"])):
         raise ValueError("Move the north edge horizontally. Recapture will reapply terrain at its new position.")
     subprocess.run(command+["write"]+args[1:],input=json.dumps([(v.x,-v.y) for v in vertices]),text=True,check=True)

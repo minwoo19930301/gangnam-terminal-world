@@ -10,9 +10,12 @@ export const point=(x,z)=>[origin[0]+normal[1]*x+normal[0]*z,origin[1]-normal[0]
 
 // Editable north edge of the east cross-aisle on the B1 customer guide.
 export const transverseNorth = 777;
-export const transverseGuide=[[840,transverseNorth],[1032,transverseNorth],[1032,798],[840,798]];
+// The independently fitted guide frames start blending at the east corner
+// of the coffee bar. Keep that corner on both edges of the sales aisle.
+export const transverseGuide=[[840,transverseNorth],[903,transverseNorth],[1032,transverseNorth],
+  [1032,798],[903,798],[840,798]];
 export const transverseFloor=transverseGuide.map(([px,py])=>plan(px,py));
-export const transverseEastEdge=[transverseFloor[1],transverseFloor[2]];
+export const transverseEastEdge=[transverseFloor[2],transverseFloor[3]];
 export const publicAisle=[[678,950],[821,815],[821,725],[840,725],[840,814],[842,837],[696,971]].map(([px,py])=>plan(px,py));
 
 // The other mall page filters by face centroid. Include both shop returns and

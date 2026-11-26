@@ -6,7 +6,7 @@ The source collection is `Shinsegae_B1_Cinema_Public_Shell`. Link it at identity
 
 ## Edit the café cross-aisle width
 
-1. Open the standalone file and enter Edit Mode on **East cross-aisle floor**. Deselect all vertices and select the **North edge** vertex group. Move the two vertices together in the horizontal plane perpendicular to the long edge. The east and west ends stay on their respective guide axes. Each guide pixel represents approximately 0.145 m.
+1. In the standalone file, enter Edit Mode on **East cross-aisle floor**, deselect all vertices and select the **North edge** vertex group. Move its three vertices horizontally along their respective guide axes. The middle vertex follows the corner of the coffee bar where the two plan fits meet. One guide pixel spans about 0.145 m on the department side and 0.130 m on the Sweet Park side.
 2. Save the edited file. Run the export from the repository root. It snaps the edge to the nearest guide pixel. The supported range is guide rows 770–783, between the fixed backs of the north shops and the south shopfronts.
 3. Reimport the shell so the dependent ceilings, partitions and threshold meshes receive the edited contour and terrain height. Commit the refreshed standalone library and the guide coordinate together.
 
