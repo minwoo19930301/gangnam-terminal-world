@@ -1,0 +1,14 @@
+{
+  "floor": "B1",
+  "x": -93.81175,
+  "y": -6,
+  "z": -0.91487,
+  "yaw": 110.8041,
+  "pitch": 0,
+  "meshName": "신세계 마켓 · 숙성 정육 진열장",
+  "sourceBlend": "counter.blend",
+  "sourceCollection": "ShinsegaeAgingCase",
+  "nativeLabel": "숙성 정육 진열장",
+  "area": "in:shinsegae",
+  "gameView": "#/shinsegae/B1?p=-93.81175,-6,-0.91487,110.8041"
+}

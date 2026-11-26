@@ -8,6 +8,7 @@ import {angle as cinemaYaw,point as cinemaPoint} from '../../assets/models/megab
 import {placeAtriumCeiling} from '../../assets/models/ssg-atrium-soffit/model.js';
 import {marketProduceCeiling} from '../../assets/models/ssg-market-ceiling/model.js';
 import {shopArrival as onimaruArrival} from '../../assets/models/kyoto-onimaru/layout.js';
+import {placeAgingCabinet} from '../../assets/models/ssg-market-butcher/model.js';
 import {placeGuo} from '../../assets/models/guo-dumpling/model.js';
 import {placeSpringRolls} from '../../assets/models/blue-butterfly/model.js';
 import {placeOnimaru} from '../../assets/models/kyoto-onimaru/model.js';
@@ -2941,6 +2942,7 @@ export function build(K) {
         const c=cells.find(c=>c.kind==='supermarket'),core=[541,598,614,656].map(Number),[cu0,cv0,cu1,cv1]=BOUNDS(core);
         const clear=(u,v,w,d)=>fits(c,u,v,w,d)&&!inR(u,v,[cu0-1.2,cv0-1.2,cu1+1.2,cv1+2.5]);
         const[mU0,mV0,mU1,mV1]=uvRect(c);
+        const du=mU0+1.8,dv=mV0+9.1;
         const bottleRows = new Map(), fruitRows = new Map();
         for(let u=mU0+1.8;u<mU1-1;u+=3.1)for(let v=mV0+3;v<mV1-2.2;v+=6.1){
           if(!clear(u,v,1.1,4.4))continue;
@@ -2951,7 +2953,8 @@ export function build(K) {
             box(u,v,1.1,4.4,y,1.2,0,{skip:['top','bottom','n','s','e','w']});
             continue;
           }
-          if(u<mU0+2&&v>55&&v<60)continue; // this same fixture footprint is the dry-aging cabinet below
+          if(u<mU0+2&&v>55&&v<60)continue; // Retain the open bay in the outer grocery row.
+          if(Math.abs(u-du)<.01&&Math.abs(v-dv)<.01)continue; // The aging cabinet occupies this exact fixture.
           // M27U-isS4EA_200: a pink-covered produce island takes a grocery fixture's
           // own footprint; its precise position within the official market cell is inferred.
           if(u<mU0+2&&v>60){
@@ -3035,21 +3038,15 @@ export function build(K) {
         }
         for(const fruit of fruitRows.values())K.stockEllipsoids('신세계 마켓 · 과일 상자',{rx:.095,ry:.105,rz:.11,seg:8,rings:4},fruit);
         for(const stock of bottleRows.values())K.stockCylinders('신세계 마켓 · 그로서리 진열병',stock);
-        // p5QE9cVtWDM_300: dark dry-aging glass cabinet, hanging meat, stainless worktop.
-        const du=mU0+1.8,dv=mV0+9.1;
+        // Preserve the cabinet's back, two ends, plinth and closing front in the collision model.
         if(clear(du,dv,1.1,4.4)){
-          box(du-.5,dv,.1,4.4,y,2.65,0x171d1c);
-          for(const vv of [dv-2.16,dv+2.16])box(du,vv,1.1,.08,y,2.65,0x171d1c);
-          box(du,dv,1.1,4.4,y,.18,0x171d1c);box(du,dv,1.1,4.4,y+2.56,.09,0x171d1c,{solid:false});
-          box(du+.565,dv,.025,4.15,y+.2,2.24,'glass');
-          for(let k=0;k<5;k++){
-            const vv=dv-1.66+k*.83;box(du+.59,vv,.035,.04,y+.16,2.39,BRASS,{solid:false});
-            box(du+.47,vv+.15,.06,.025,y+1.94,.38,'metal',{solid:false});
-            const[xx,zz]=P(du+.42,vv+.15);K.dome({x:xx,z:zz,y:y+1.55,rx:.15,ry:.34,rz:.23,hemi:false,seg:8,rings:5,mat:0x983f43});
-            box(du+.60,vv+.32,.01,.18,y+.54,.10,0xe8e2d3,{solid:false});
-          }
-          for(const yy of [.32,1.1,2.5])box(du+.52,dv,.035,4.15,y+yy,.035,{tex:'emit',color:0xffe5bc},{solid:false});
-          sign('숙성 정육',du+.61,dv,y+2.77,'E',2.4,.28,{bg:'#222827',fg:'#e9d1a0'});
+          const hidden={skip:['top','bottom','n','s','e','w']};
+          box(du-.5,dv,.1,4.4,y,2.65,0x171d1c,hidden);
+          for(const vv of [dv-2.16,dv+2.16])box(du,vv,1.1,.08,y,2.65,0x171d1c,hidden);
+          box(du,dv,1.1,4.4,y,.18,0x171d1c,hidden);
+          box(du+.565,dv,.025,4.15,y+.2,2.24,'glass',hidden);
+          const [x,z]=P(du,dv);
+          placeAgingCabinet(K,x,z,RA+PI/2,y);
         }
         for(const [u,v]of [[mU0+6.35,mV0+6],[mU0+1.8,mV0+15.2]])if(clear(u,v,1.05,1.05)){
           cyl(u,v,y,.49,4.68,0xf0eade,false,24);
