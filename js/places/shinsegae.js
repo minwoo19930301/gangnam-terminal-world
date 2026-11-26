@@ -9,6 +9,7 @@ import {placeAtriumCeiling} from '../../assets/models/ssg-atrium-soffit/model.js
 import {marketProduceCeiling} from '../../assets/models/ssg-market-ceiling/model.js';
 import {shopArrival as onimaruArrival} from '../../assets/models/kyoto-onimaru/layout.js';
 import {prunierCase} from '../../assets/models/ssg-market-prunier/model.js';
+import {angle as prunierAngle,point as prunierPoint} from '../../assets/models/ssg-market-prunier/layout.js';
 import {placeCrepeAndWaffle} from '../../assets/models/godiva-emack/model.js';
 import {placeAgingCabinet} from '../../assets/models/ssg-market-butcher/model.js';
 import {placeGuo} from '../../assets/models/guo-dumpling/model.js';
@@ -2500,12 +2501,19 @@ export function build(K) {
       [17.6,62.65,30.4,64.15],
       [deliEntryU-5.5,deliEntryV-.75,deliEntryU+5.1,deliEntryV+.75],
     ];
+    const [prunierX,prunierZ]=prunierPoint(0,-1.9);
+    const prunierArrival={x:prunierX,z:prunierZ,yaw:prunierAngle};
+    K.spawn({name:'프루니에',aliases:['Caviar Prunier','Prunier','프루니에 캐비아'],floor:'B1',
+      mapDestination:true,y,...prunierArrival});
+    K.zone({name:'프루니에',floor:'B1',sub:'신세계 마켓 · 캐비아',mapArrival:prunierArrival,
+      poly:[[-1.3,-2.2],[1.3,-2.2],[1.3,-.45],[-1.3,-.45]].map(([x,d])=>prunierPoint(x,d)),
+      y0:y,y1:-1,priority:12});
     const seafoodCase=BOUNDS(cells.find(c=>c.kind==='supermarket').rect);
     const seafoodU=seafoodCase[0]+17.3,seafoodV=seafoodCase[1]+39.6;
     const [seafoodX,seafoodZ]=P(seafoodU+1.54,seafoodV);
     const seafoodArrival={x:seafoodX,z:seafoodZ,yaw:RA+PI/2,pitchDeg:-13.18};
     K.spawn({name:'해녀의 신세계',aliases:['Haenyeo Seafood'],place:'shinsegae',floor:'B1',
-      arrivalFloor:'B1',mapDestination:true,y,...seafoodArrival});
+      mapDestination:true,y,...seafoodArrival});
     K.zone({name:'해녀의 신세계',floor:'B1',sub:'신세계 마켓 · 제주 해산물',
       poly:rect(seafoodU+.62,seafoodV-2.13,seafoodU+2.30,seafoodV+2.13),y0:y,y1:y+3,
       priority:15,mapArrival:seafoodArrival});
