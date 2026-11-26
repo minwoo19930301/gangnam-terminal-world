@@ -84,26 +84,60 @@ function lighting(K){
   const black=new T.DataTexture(new Uint8Array([0,0,0,255]),1,1);black.needsUpdate=true;
   const mat=new T.MeshBasicMaterial({map:black,vertexColors:true,blending:T.AdditiveBlending,
     transparent:true,depthWrite:false,side:T.DoubleSide,toneMapped:false});
-  let pending=false,retry=0;
+  const quietPaint=mat.clone(),roadsideOff={value:0};
+  const textures=new Map();
   function change(altitude){
     const f=T.MathUtils.clamp((4-altitude)/9,0,1);level.value=f*f*(3-2*f);
-    mat.opacity=level.value;
+    roadsideOff.value=(K.displayClock?.()??seoulClock(Date.now())).startsWith('03:')?1:0;
+    mat.opacity=quietPaint.opacity=level.value;
     for(const mesh of group)mesh.visible=level.value>.002;
   }
-  function place(at,angle){
-    const root=new T.Group();root.name='중앙차로 승차대 · 차양등과 보도 빛';root.rotation.y=angle;root.position.set(...at);
+  function pavement(file,paint){
+    let state=textures.get(file);
+    if(!state){state={pending:false,retry:0};textures.set(file,state);}
+    if(state.texture){
+      if(paint.map!==state.texture){paint.map=state.texture;paint.needsUpdate=true;}
+      return;
+    }
+    if(state.pending||performance.now()<state.retry)return;
+    state.pending=true;
+    new T.TextureLoader().load(new URL(file,import.meta.url).href,tex=>{
+      tex.colorSpace=T.SRGBColorSpace;tex.anisotropy=4;state.texture=tex;state.pending=false;
+    },undefined,()=>{state.pending=false;state.retry=performance.now()+10000;});
+  }
+  function place(at,angle,scheduled){
+    const root=new T.Group();root.name='중앙차로 승차대 · 차양등과 보도 빛'+(scheduled?' 22-020':'');
+    root.rotation.y=angle;root.position.set(...at);
     const mesh=new T.Mesh(geom,mat);mesh.name='보도에 비친 차양등';mesh.visible=level.value>.002;
     mesh.onBeforeRender=(_renderer,_scene,camera)=>{
-      if(mat.map!==black||pending||performance.now()<retry||Math.abs(camera.position.y-at[1]-relief(at[0],at[2]))>6||
+      if(Math.abs(camera.position.y-at[1]-relief(at[0],at[2]))>6||
         (camera.position.x-at[0])**2+(camera.position.z-at[2])**2>65**2)return;
-      pending=true;new T.TextureLoader().load(new URL('./paving-light.webp',import.meta.url).href,tex=>{
-        tex.colorSpace=T.SRGBColorSpace;tex.anisotropy=4;mat.map=tex;mat.needsUpdate=true;
-      },undefined,()=>{pending=false;retry=performance.now()+10000;});
+      const off=scheduled&&roadsideOff.value;
+      mesh.material=off?quietPaint:mat;
+      pavement(off?'./paving-roadside-off.webp':'./paving-light.webp',mesh.material);
     };
     group.push(mesh);root.add(mesh);return K.addMesh(root);
   }
   K.onSolarAltitude?.(change);
-  return {level,place};
+  return {level,place,roadsideOff};
+}
+
+// These two printed faces share one geometry and draw. Only the road-side
+// face of island 22-020 loses its backlight during the operator's off hour.
+function timedPosterMaterial(source,off,coarse){
+  const paint=source.clone();
+  paint.onBeforeCompile=shader=>{
+    shader.uniforms.roadsideOff=off;
+    shader.vertexShader='varying float roadPrint;\n'+shader.vertexShader.replace(
+      '#include <begin_vertex>','#include <begin_vertex>\nroadPrint=step(.5,-normal.z);');
+    const slot=coarse?'map_fragment':'emissivemap_fragment';
+    const attenuate=coarse?'diffuseColor.rgb *= mix(1.0,.22,roadPrint*roadsideOff);':
+      'totalEmissiveRadiance *= 1.0-roadPrint*roadsideOff;';
+    shader.fragmentShader='varying float roadPrint;\nuniform float roadsideOff;\n'+
+      shader.fragmentShader.replace('#include <'+slot+'>','#include <'+slot+'>\n'+attenuate);
+  };
+  paint.customProgramCacheKey=()=>coarse?'scheduled-print-far':'scheduled-print-near';
+  return paint;
 }
 
 function platformBoard(K,at,angle,id,res,visible){
@@ -159,14 +193,24 @@ export function placeMedianShelters(K,P,angle,id,platformY){
         material.needsUpdate=true;
       }
     };
-    light.place(at,angle);
+    const scheduled=id==='22020';
+    light.place(at,angle,scheduled);
     placeSingleDetail(K,{...props,name:glazed,file:'../sinbanpo-bus-shelters/glass.glb',
       fallback:res.glass,fallbackMaterial:res.glassPaint,range:25,exitRange:30,eyeHeight:1.44,closeVisibleFrom:visible});
-    const posters=placeSingleDetail(K,{...props,name:prints,file:'../sinbanpo-bus-shelters/posters.glb',
+    const posters=placeSingleDetail(K,{...props,name:prints+(scheduled?' 22-020':''),file:'../sinbanpo-bus-shelters/posters.glb',
       fallback:res.poster,fallbackMaterial:res.signPaint,range:25,exitRange:30,eyeHeight:1.28,closeVisibleFrom:visible});
     const item=posters.children[0],select=item.onBeforeRender;
     item.onBeforeRender=(renderer,scene,camera)=>{
       select(renderer,scene,camera);
+      if(scheduled&&light.roadsideOff.value){
+        const coarse=item.geometry===res.poster;
+        const original=item.material,key=coarse?'timedFallback':'timedSurface';
+        const paint=res[key]??=timedPosterMaterial(original,light.roadsideOff,coarse);
+        if(coarse&&paint.map!==res.signPaint.map){
+          paint.map=res.signPaint.map;paint.color.copy(res.signPaint.color);paint.needsUpdate=true;
+        }
+        item.material=paint;
+      }
       if(item.material.emissiveMap)item.material.emissiveIntensity=1+light.level.value*1.35;
       if(item.geometry===res.poster&&Math.abs(camera.position.y-(platformY+1.44+relief(x,z)))<7&&
           (camera.position.x-x)**2+(camera.position.z-z)**2<75**2&&visible(camera.position))res.smallPrint();
