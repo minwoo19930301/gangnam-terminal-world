@@ -1,3 +1,5 @@
+import {parts as breakfastParts,prefix as breakfastPrefix} from '../flavors-breakfast/layout.js';
+import {parts as madangParts} from '../gotomall-madang/layout.js';
 import {parts as arrivalParts,prefix as arrivalPrefix} from '../jw-arrival/layout.js';
 import {parts as westCornerParts} from '../gotomall-west-corner/layout.js';
 import {parts as ashleyParts,prefix as ashleyPrefix} from '../newcore-dessert/layout.js';
@@ -22,6 +24,11 @@ import {relief} from '../../../js/banpo_relief.js';
 // Scene object (or a uniquely identifying child) -> editable native source.
 // Geometry decoder matrices and decorative LOD offsets live *below* the placement.
 const sources = [
+  ...Object.values(breakfastParts).map(([label])=>{const name=breakfastPrefix+label;return ['jwmarriott','2F','flavors-breakfast/breakfast.blend',name,name];}),
+  ...[['booth','상점 마감과 면사 울사 전문도매 표지','진열장과 표지'],['yarn','종이띠를 두른 면사와 울사 실타래','실타래와 종이띠'],
+      ['wrap','도매 묶음의 투명 봉투와 접힌 이음매','도매용 투명 묶음'],['dresses','새틴 허리띠와 자수 주름 아동 드레스','아동 드레스와 저지']].map(([key,title,collection])=>
+    ['gyeongbu','6F','gyeongbu-yarn-and-dresses/'+key+'/'+key+'.blend','경부선 6층 · '+title,'6층 면사·울사 · '+collection]),
+  ...Object.values(madangParts).map(([name])=>['gotomall','B1','gotomall-madang/madang.blend',name,name]),
   ...Object.values(arrivalParts).map(([label])=>{const name=arrivalPrefix+label;return ['jwmarriott','1F','jw-arrival/arrival.blend',name,name];}),
   ['jwmarriott','1F','interior-architecture/interiors.blend','현관 홀 월넛 격자 천장','hotel-lattice'],
   ...[['arch','자연목 아치와 걸이 공중식물'],['stand','백색 철제 선반과 입구 마루'],['left','왼편 산세베리아와 화분'],

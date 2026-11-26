@@ -6,6 +6,7 @@ import { placeCornerSofa } from '../../assets/models/lounge-upholstery/model.js'
 import { placeDrapery } from '../../assets/models/lounge-drapery/model.js';
 import { placePiano } from '../../assets/models/lounge-piano/model.js';
 import { OPEN_STAGE_FRONT } from './_junctions.js';
+import {registerFlavorsBreakfast} from '../../assets/models/flavors-breakfast/model.js';
 import {registerArrival,upperWell} from '../../assets/models/jw-arrival/model.js';
 import {registerCoffers,registerPendant,ceilingZones} from '../../assets/models/jw-arrival/ceiling.js';
 import { placeDesserts } from '../../assets/models/patisserie/model.js';
@@ -887,6 +888,7 @@ export function build(K) {
   }, 10.37);
 
   registerArrival(baseKit,P,RECT,R);
+  registerFlavorsBreakfast(baseKit,P,RECT,R);
   registerCoffers(baseKit,P,RECT,R);
   DETAIL('1F', [-33.2, 4, 2, 60.4], '호텔 현관 홀 · 승강기 로비', floor1, 15.77);
   DETAIL('2F', [UW, -6, 2, 60.9], '플레이버즈 · 파티세리 · 타마유라', floor2);
@@ -1153,22 +1155,6 @@ export function build(K) {
       LIGHTS([-32, 27, -21.8, 40.8], yc - .4, 2.7, .09, 0xffd6a0);
       for (const v of [28.2, 30.9, 33.6, 36.3, 39]) B({ u: -32.9, v, y: y + .18, w: .025, d: 1.2, h: 3.7, mat: { tex: 'emit', color: 0xa58b68 }, solid: false });
       SLATS('u', -32.85, 12.5, 41.5, y, yc - y, .10, { w: .035, d: .05 });
-      for (const [u, v, w, d] of [[-29.3, 29.5, 1.25, 6.4], [-29.3, 37.4, 1.25, 5.2], [-24.6, 33.3, 1.5, 6.6]]) {
-        B({ u, v, y, w, d, h: 1.05, mat: { tex: 'jwDarkMarble', color: 0xc7c4bd, gloss: .5 } });
-        B({ u, v, y: y + 1.05, w: w + .08, d: d + .08, h: .055, mat: { tex: 'jwDarkMarble', gloss: .7 }, solid: false });
-        for (let j = 0; j < 24; j++) {
-          const su = u + (j % 2 ? .23 : -.23), sv = v - d / 2 + .35 + Math.floor(j / 2) * (d - .7) / 11;
-          if (j % 4 === 0) {
-            CY(su, sv, y + 1.108, .12 + (j % 3) * .025, .14, j % 8 ? 0x6b3b2a : 0xf2e6d6, { seg: 10, solid: false });
-            B({ u: su, v: sv, y: y + 1.25, w: .08, d: .07, h: .05, mat: 0xa74831, solid: false });
-          } else if (j % 4 === 1) {
-            for (let k = 0; k < 2; k++) {
-              B({ u: su + (k - .5) * .12, v: sv, y: y + 1.11, w: .09, d: .09, h: .22, mat: k ? 0xc7a55e : 0x6e8448, solid: false });
-              B({ u: su + (k - .5) * .12, v: sv, y: y + 1.33, w: .04, d: .04, h: .08, mat: 0xb8a16c, solid: false });
-            }
-          } else B({ u: su, v: sv, y: y + 1.11, w: .23, d: .24, h: .12 + (j % 3) * .05, mat: j % 4 === 2 ? 0xad5938 : 0xd9c6a3, solid: false });
-        }
-      }
       FLOWER(-29.3, 33.65, y + 1.05, 1.25, [0xb64b24, 0xd47c38, 0xc7ad72, 0x75804a], { stems: 90, dried: true });
       B({ u: -29.3, v: 33.65, y, w: 1.5, d: 1.4, h: 1.05, mat: { tex: 'jwDarkMarble', gloss: .5 } });
       B({ u: -21.5, v: 33, y, w: 1, d: 8, h: .95, mat: { tex: 'jwDarkMarble', gloss: .5 } });
@@ -1243,7 +1229,7 @@ export function build(K) {
       }
       LIGHTS([-32, 13, 3.6, 25], yc - .06, 2.6, .08, 0xf0c98e);
       LIGHTS([-20, 27, 3.6, 41], yc - .12, 3.2, .08, 0xf0c98e);
-      MAN(-16, 40.1, y, { sit: true, shirt: 0xddd4c7 }); MAN(-28.1, 37.4, y, { shirt: 0xe5e0d5 });
+      MAN(-16, 40.1, y, { sit: true, shirt: 0xddd4c7 }); MAN(-31.18, 38.02, y, { shirt: 0xe5e0d5, rotY: FACE.E });
       // The hall void is kept out of all restaurant/landing surfaces and bounded at 2F.
       SUBZ('플레이버즈', '2F', '뷔페 · 황동 펜던트 · 대리석 카운터', [-33, 12, 4, 41.7]);
       SUBZ('플레이버즈 다이닝', '2F', '월넛 스크린 · 소파 좌석', [-20.4, 26.4, 3.7, 41.6]);
