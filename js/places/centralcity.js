@@ -1,4 +1,5 @@
 import {placeLejardin} from '../../assets/models/lejardin-shop/model.js';
+import {tianjinShop} from '../../assets/models/tianjin-baozi/room.js';
 import {warakuShop} from '../../assets/models/waraku/room.js';
 import {gelatiShop} from '../../assets/models/gelati/room.js';
 import {seesShop} from '../../assets/models/sees/room.js';
@@ -2557,6 +2558,7 @@ export function build(K) {
     const s1=plazaRoom?178.7:(annex?171.2:Math.max(base0+2.3,Math.max(a[0],b[0])))+shift;
     const t0=a[1]+.12,t1=b[1]-.12,name=raw||id+'번 매장';
     if(id===20){seesShop(K,{P,R,lbox,lwall,lzone},s0,t0,s1,t1);continue;}
+    if(id===8){tianjinShop(K,{P,R,lzone},s0,t0,s1,t1);continue;}
     if(id===27){warakuShop(K,{P,R,lzone},s0,t0,s1,t1);continue;}
     if(id===22){gelatiShop(K,{P,R,lbox,lwall,lzone},s0,t0,s1,t1);continue;}
     if(id===28)famOpenShell(s0,t0,s1,t1,0);else officialShop(name,s0,t0,s1,t1,face,kind,0,plazaRoom?{tableRows:3,seed:Math.abs(Math.round(base0*31+t0))}:{});

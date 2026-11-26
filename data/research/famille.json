@@ -1,4 +1,18 @@
 {
+  "tianjin_116_20261126": {
+    "floor": "파미에스테이션 1층 116호, 운영사 1층 안내도 8번",
+    "naver": "https://map.naver.com/p/entry/place/36311153",
+    "operator": "https://www.shinsegaecentral.com/famille/TianjinBaozi",
+    "floor_map": "https://www.shinsegaecentral.com/public/img/famille_floor_1_ko_map.png",
+    "shop_and_worktop": "https://traveldot.tistory.com/46",
+    "menu_and_food": "https://misojuni.tistory.com/89",
+    "observed": "금빛 天津包子 붓글씨와 붉은 낙관, 짙은 전면과 목제 유리틀·금속 격자, 홀을 든 문인석 두 점, 흰 음료 냉장고, 높은 목제 식탁과 찜기 선반, 원형 목제 스툴, 크림색 요철 벽과 목각, 황동 펜던트, 물통과 금속 컵, 포자·지짐만두·차오면을 확인했다.",
+    "fit": "공식 도면 8번에 인접한 가로통로를 기준으로 현관을 배치하고 기존 게임 칸 12.06 × 9.63m의 공개 홀 안에 맞췄다. 정확한 출입 방위, 집기·식탁·조명·상품의 실측 치수와 배치 수량, 냉장고 진열·현재 메뉴 조합은 추정이다.",
+    "model": "assets/models/tianjin-baozi/restaurant.blend",
+    "comparison": "assets/models/tianjin-baozi/play.jpg",
+    "dishes": "assets/models/tianjin-baozi/table.jpg",
+    "lighting": "assets/models/tianjin-baozi/lighting.jpg"
+  },
   "waraku_114_20261126": {
     "floor": "파미에스테이션 1층 114호, 신세계 센트럴 안내 27번",
     "naver": "https://map.naver.com/p/entry/place/35992316",
