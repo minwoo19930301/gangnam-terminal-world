@@ -95,6 +95,68 @@ def finish(obj,model_id):
             if length < 3:
                 panel(0,length,.02,roof,.012,0,'C6B8A3')
                 continue
+            # At the bend of 201-dong the street photograph shows a salmon
+            # panel with narrow staggered windows continuing above the roof.
+            # The adjacent long glazed and gallery faces stay on their source axes.
+            mid=obj.location+(start+end)*.5
+            if abs(mid.x+58.75)<.45 and abs(mid.y-218.1)<.45 and 42<length<44:
+                # The adjoining west-facing wing has rounded balcony openings
+                # cut into cream cladding, clearly different from the gallery.
+                panel(0,length,.02,roof,.02,0,'D9CFBA')
+                bays=10
+                bay=length/bays
+                for col in range(bays):
+                    left=col*bay+.29
+                    right=(col+1)*bay-.29
+                    for row in range(courses):
+                        lo=row*rise+.38
+                        hi=(row+1)*rise-.34
+                        # Chamfered corners approximate the curved concrete reveals.
+                        coords=[(left+.20,lo),(right-.20,lo),(right,lo+.22),
+                                (right,hi-.22),(right-.20,hi),(left+.20,hi),
+                                (left,hi-.22),(left,lo+.22)]
+                        points=[]
+                        tex=[]
+                        for s,z in coords:
+                            v=start+tangent*s+normal*.048
+                            points.append((v.x,v.y,z))
+                            tex.append((.10+.80*(s-left)/(right-left),
+                                        row+.30+.45*(z-lo)/(hi-lo)))
+                        face(points,1,[colour('64787A')]*8,tex)
+                    center=(left+right)*.5
+                    panel(center-.045,center+.045,.16,roof-.17,.057,0,'B2B0A2')
+                continue
+            if abs(mid.x+45.1)<.45 and abs(mid.y-193.8)<.45 and 11.8<length<12.4:
+                def along(s):
+                    return s if start.y>end.y else length-s
+                def frontage(s0,s1,z0,z1,depth,tone):
+                    left,right=sorted((along(s0),along(s1)))
+                    panel(left,right,z0,z1,depth,0,tone)
+                frontage(0,length,.02,height,.028,'D7C5AC')
+                strip0,strip1=1.05,7.55
+                frontage(strip0,strip1,.03,height,.105,'C3988A')
+                for level in range(courses):
+                    base=level*rise
+                    for s,offset in ((strip0+.63,.06),(strip0+3.98,.49)):
+                        sill=base+rise*offset
+                        frontage(s,s+1.23,sill,sill+.79,.119,'A78577')
+                        frontage(s+.07,s+1.16,sill+.09,sill+.72,.125,'505451')
+                        frontage(s+.60,s+.655,sill+.09,sill+.72,.13,'A28E7C')
+                # Closed roof return and projecting cream rim seen against the sky.
+                left,right=sorted((along(strip0),along(strip1)))
+                def corner(s,d,h):
+                    v=start+tangent*s+normal*d
+                    return (v.x,v.y,h)
+                lo,hi=height-.02,height+3.20
+                outer,inner=.106,-1.48
+                corners=[corner(s,d,h) for h in (lo,hi) for s,d in
+                         ((left,outer),(right,outer),(right,inner),(left,inner))]
+                for indices,tone in [((0,1,5,4),'C3988A'),((1,2,6,5),'E1D2BC'),
+                                     ((2,3,7,6),'C2AF9D'),((3,0,4,7),'CEBCA8'),
+                                     ((4,5,6,7),'A79788')]:
+                    points=[corners[i] for i in indices]
+                    face(points,0,[colour(tone)]*4)
+                continue
             count=max(1,round(length/4.0))
             bay=length/count
             gallery=length>=16 and normal.y<0
