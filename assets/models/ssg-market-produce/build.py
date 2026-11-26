@@ -9,6 +9,13 @@ OUT = Path(__file__).resolve().parent
 bpy.ops.wm.read_factory_settings(use_empty=True)
 coll=bpy.data.collections.new('MarketProduceIsland')
 bpy.context.scene.collection.children.link(coll)
+finish_material=bpy.data.materials.new('과일 진열대 · 정점색')
+finish_material.use_nodes=True
+paint=finish_material.node_tree.nodes.new('ShaderNodeVertexColor')
+paint.layer_name='COLOR_0'
+shader=finish_material.node_tree.nodes.get('Principled BSDF')
+finish_material.node_tree.links.new(paint.outputs['Color'],shader.inputs['Base Color'])
+shader.inputs['Roughness'].default_value=.62
 rng=random.Random(228)
 verts=[]; faces=[]; colors=[]
 
@@ -30,6 +37,7 @@ def finish(name,smooth=False):
         bmesh.ops.remove_doubles(bm,verts=list(bm.verts),dist=.00001)
         for polygon in bm.faces:polygon.smooth=True
         bm.to_mesh(mesh);bm.free()
+    mesh.materials.append(finish_material)
     obj=bpy.data.objects.new(name,mesh);coll.objects.link(obj)
     faces.clear();verts.clear();colors.clear()
 
@@ -115,5 +123,10 @@ for bank,(kind,palette) in enumerate(palettes):
                 if kind in ('apple','pear') and layer==3:
                     zz=rings[-1][0][2];rod((x,yy,zz),(x+.006,yy+.001,zz+.016),.0021,'564331',4)
     finish(['붉은 사과','연둣빛 배','황금빛 감귤','자두'][bank],smooth=True)
+for area in bpy.context.screen.areas:
+    if area.type=='VIEW_3D':
+        area.spaces.active.shading.color_type='VERTEX'
+        area.spaces.active.region_3d.view_location=(0,0,.48)
+        area.spaces.active.region_3d.view_distance=3.8
 bpy.context.preferences.filepaths.save_version=0
 bpy.ops.wm.save_as_mainfile(filepath=str(OUT/'fruit-island.blend'),compress=True)
