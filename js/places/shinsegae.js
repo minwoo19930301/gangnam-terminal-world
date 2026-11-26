@@ -1,4 +1,5 @@
 import {registerBrownyard} from '../../assets/models/ssg-brownyard/model.js';
+import {haenyeoSeafood} from '../../assets/models/ssg-market-haenyeo/model.js';
 import {hastensBed} from '../../assets/models/ssg-hastens/model.js';
 import {ferragamoDisplay} from '../../assets/models/ssg-ferragamo/model.js';
 import {rawrowDisplay} from '../../assets/models/ssg-rawrow/model.js';
@@ -2480,6 +2481,15 @@ export function build(K) {
       [17.6,62.65,30.4,64.15],
       [deliEntryU-5.5,deliEntryV-.75,deliEntryU+5.1,deliEntryV+.75],
     ];
+    const seafoodCase=BOUNDS(cells.find(c=>c.kind==='supermarket').rect);
+    const seafoodU=seafoodCase[0]+17.3,seafoodV=seafoodCase[1]+39.6;
+    const [seafoodX,seafoodZ]=P(seafoodU+1.54,seafoodV);
+    const seafoodArrival={x:seafoodX,z:seafoodZ,yaw:RA+PI/2,pitchDeg:-13.18};
+    K.spawn({name:'해녀의 신세계',aliases:['Haenyeo Seafood'],place:'shinsegae',floor:'B1',
+      arrivalFloor:'B1',mapDestination:true,y,...seafoodArrival});
+    K.zone({name:'해녀의 신세계',floor:'B1',sub:'신세계 마켓 · 제주 해산물',
+      poly:rect(seafoodU+.62,seafoodV-2.13,seafoodU+2.30,seafoodV+2.13),y0:y,y1:y+3,
+      priority:15,mapArrival:seafoodArrival});
     const reserved=(u,v,m=.2)=>!owned(u,v,m)||reserves.some(r=>inR(u,v,r,m));
     function fits(c,u,v,w,d){
       if(reserved(u,v)||reserved(u-w/2,v-d/2)||reserved(u+w/2,v+d/2))return false;
@@ -2913,6 +2923,13 @@ export function build(K) {
         const bottleRows = new Map(), fruitRows = new Map();
         for(let u=mU0+1.8;u<mU1-1;u+=3.1)for(let v=mV0+3;v<mV1-2.2;v+=6.1){
           if(!clear(u,v,1.1,4.4))continue;
+          // This bay is immediately beside the existing meat/seafood department sign.
+          // Its position within the market is fitted to a previous grocery fixture.
+          if(Math.abs(u-(mU0+17.3))<.01 && Math.abs(v-(mV0+39.6))<.01){
+            const [x,z]=P(u,v);haenyeoSeafood(K,x,y,z,RA+PI/2);
+            box(u,v,1.1,4.4,y,1.2,0,{skip:['top','bottom','n','s','e','w']});
+            continue;
+          }
           if(u<mU0+2&&v>55&&v<60)continue; // this same fixture footprint is the dry-aging cabinet below
           // M27U-isS4EA_200: a pink-covered produce island takes a grocery fixture's
           // own footprint; its precise position within the official market cell is inferred.
