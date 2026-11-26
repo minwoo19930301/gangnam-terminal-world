@@ -1,3 +1,4 @@
+import {parts as tamayuraParts} from '../tamayura/layout.js';
 // Read actual production Object3D and instance transforms without a renderer or near-detail downloads.
 import fs from 'node:fs/promises';
 import {pathToFileURL} from 'node:url';
@@ -10,11 +11,17 @@ import {relief} from '../../../js/banpo_relief.js';
 // Scene object (or a uniquely identifying child) -> editable native source.
 // Geometry decoder matrices and decorative LOD offsets live *below* the placement.
 const sources = [
+  ...Object.values(tamayuraParts).map(([label])=>{
+    const name='타마유라 · '+label;
+    return ['jwmarriott','2F','tamayura/tamayura.blend',name,name];
+  }),
   ...['142','360'].map(route=>[
     'streets','지상','seoul-city-bus/city-bus.blend','신반포로 간선버스 · '+route+'번',
     '간선버스 · 도장 차체와 경량 휠','간선버스 · 저상 승객석과 입석 손잡이','간선버스 · 곡면 유리와 출입문',
     '간선버스 · 전조등과 차폭등','간선버스 · '+route+'번 노선 표시',
   ]),
+  ['gyeongbu','6F','gyeongbu-childrens-aisle/childrens-aisle.blend','경부선 6층 · 아동복 철망 진열과 접은 상품','6층 아동복 · 철망 행거와 접은 상품'],
+  ['gyeongbu','7F','gyeongbu-suiting-aisle/suiting-aisle.blend','경부선 7층 · 이단 신사복 행거와 소매 상품표','7층 신사복 · 모직 재킷과 이단 봉'],
   ['gyeongbu','1F','gyeongbu-front-cafes/cafes.blend','경부선 부속상가 · 이디야와 달리나인 거리 정면','경부선 정문 옆 · 이디야와 달리나인'],
   ...['CushionRack','CushionLinen','CushionSage','CushionRose','CushionIvory'].map(name=>
     ['gyeongbu','B1','concourse-fixtures/concourse-fixtures.blend','다이소 패브릭 · '+name,name]),
@@ -28,6 +35,11 @@ const sources = [
   ...['머리띠와 집게핀·헤어롤 진열','손잡이 청소솔과 틈새 브러시 진열'].map(label=>{
     const name='다이소 · '+label;
     return ['gyeongbu','B1','daiso-accessories/accessories.blend',name,name];
+  }),
+  ...['검은 액자와 원형 펜던트','목제 유리장 속 겹친 와플콘','돌상판과 황동 난간 주문대','스테인리스 뚜껑과 맛 이름표','황동 고정 메뉴와 스무 맛',
+      '청록 상호와 두 색 콘 심벌','에스프레소 머신과 뒤 작업대','유백 구형 펜던트의 빛','포장 컵·보냉 상자와 계산대','두 맛 컵과 와플콘·젤라또라떼','주문대 보호유리'].map(label=>{
+    const name='젤라띠 · '+label;
+    return ['centralcity','1F','gelati/gelateria.blend',name,name];
   }),
   ...['체크 바닥과 검은 상호 외벽','물결 선반과 선물 상자','둥근 주문대와 사선 견본장','통초콜릿과 잘라 보인 단면',
       '개별 포장 롤리팝과 사탕','둥근 전시대의 포장 선물','둥근 정면 쇼윈도 유리','견본장의 사선 보호유리'].map(label=>{

@@ -1,3 +1,4 @@
+import {registerTamayura} from '../../assets/models/tamayura/model.js';
 import { registerMobo, seatX as moboChairs } from '../../assets/models/mobo-bar/model.js';
 import { registerCellar } from '../../assets/models/margaux-cellar/model.js';
 import { placeCornerSofa } from '../../assets/models/lounge-upholstery/model.js';
@@ -781,6 +782,10 @@ export function build(K) {
   SPAWN('마르퀴스 수영장 (B3)', -6, -10, Y.B3, -.4, -1);
   SPAWN('객실 2006 (20F)', -1.3, 34.5, Y['20F'], -1, -.55);
 
+  SPAWN('타마유라 스시 바 (2F)',-8.1,50.08,Y['2F'],-.7,1);
+  SPAWN('타마유라 데판야키 (2F)',-9.4,44.50,Y['2F'],-.7,1);
+  SPAWN('타마유라 티 바 (2F)',-8.05,44.64,Y['2F'],1,.65);
+
   // ---------- floors ----------
   // ---------- sub-zones (map search + HUD) ----------
 
@@ -1134,187 +1139,208 @@ export function build(K) {
   // =====================================================================
   function floor2() {
     const y = Y['2F'], yc = NEXT['2F'] - 0.3;
-    // The north section is the Central City double-height hall below.
-    // Its 1M bridge is at y=3.6, built by centralcity, not this former y=6 link.
-    // 카페 원: west north bay, retaining every furnishing.
-    setFit(-11.88,.64,4,2/3);
-    FRONT('u', -8, -6, 12, y, yc, 'E', 'CAFÉ ONE', { sub: '카페 원', fascia: 0x3b2c22, fg: '#efe2c4' });
-    WL(-33.1, -6, -8, -6, y, yc, { mat: WARM });
-    HP({ tex: 'wood', color: 0xc8a477 }, [-33, -6, -8, 12], y + 0.01);
-    B({ u: -30.8, v: 3, y, w: 1.2, d: 10, h: 1.05, mat: 0x3b2c22, top: 0xefe6d8 });
-    for (let v = -1; v <= 7; v += 2) B({ u: -30.6, v, y: y + 1.05, w: 0.7, d: 1.6, h: 0.45, mat: GL, solid: false });
-    for (let u = -26; u <= -11; u += 3.5) for (let v = -3.5; v <= 9.5; v += 3.2) TABLE(u, v, y, { r: 0.42, chairs: 2, chair: 0xd8cbb5 });
-    CROWD([-27, -4, -10, 10], y, 6, 201);
-    SUBZ('카페 원', '2F', '카페 · 델리', [-33, -6, -8, 12]);
-    // Keep the inferred western boundary fixed and make a narrow public aisle
-    // between Flavors and the Patisserie. Their real widths are not surveyed.
-    setFit(-17.391891892,17.5/37);
-    // 플레이버즈: photos 17–20. The unobserved southern extension is screened off.
-    WL(-33.1, 12, 4, 12, y, yc, { mat: 'jwWalnut' });
-    WL(4, 12, 4, 41.7, y, yc, { mat: 'jwWalnut', thick: .2, openings: [{ at: 6.5, w: 3.4, y0: y, y1: y + 3.45 }, {at:20,w:3.2,y0:y,y1:y+3.45}] });
-    WL(-33, 41.7, 4, 41.7, y, yc, { mat: 'jwWalnut', thick: .12 });
-    HP({ tex: 'jwTerrazzo', color: 0x77746d, gloss: .3 }, [-33, 12, 4, 60.4], y + .012, true, [[-2, 42, 4, 55]]);
-    // Photo 20 alternates flecked terrazzo aisles with smooth, darker seating bays.
-    for (const rect of [[-19.4, 27.3, -12.2, 34.4], [-11.6, 27.3, -4.2, 34.4], [-19.4, 36.3, -4.2, 41.2]]) HP({ tex: 'jwGreyStone', color: 0x77736b, gloss: .3 }, rect, y + .016);
-    // 18: medium walnut pier, concealed top wash, celadon vase and dried flowers.
-    B({ u: 4.115, v: 14.6, y, w: .025, d: 2.7, h: yc - y - .04, mat: 'jwWalnutLight', solid: false });
-    SG('F L A V O R S', { u: 4.16, v: 14.6, y: y + 2.72, w: 1.4, h: .24, f: 'E', bg: null, fg: '#d4b078', bold: false, font: 'Georgia, serif', pxPerM: 260 });
-    B({ u: 4.24, v: 14.6, y: yc - .08, w: .3, d: 2.85, h: .12, mat: 0x2a221c, solid: false });
-    B({ u: 4.15, v: 14.6, y: yc - .1, w: .06, d: 2.7, h: .025, mat: { tex: 'emit', color: 0xe3af6d }, solid: false });
-    CONE(5.25, 14.6, y, .45, .15, .745, { tex: 'jwWalnut', gloss: .5 }, { seg: 28 });
-    CY(5.25, 14.6, y + .745, .65, .055, { tex: 'jwWalnut', gloss: .5 }, { seg: 32, solid: false });
-    const [vaseX, vaseZ] = P(5.25, 14.6);
-    DK.dome({ x: vaseX, y: y + 1.05, z: vaseZ, rx: .25, ry: .28, rz: .25, hemi: false, mat: { color: 0xdcd9c6, gloss: .3 }, seg: 28, rings: 12 });
-    CY(5.25, 14.6, y + 1.23, .14, .08, { color: 0xdcd9c6, gloss: .3 }, { seg: 24, solid: false });
-    FLOWER(5.25, 14.6, y + .97, 1.1, [0x923323, 0xba4d2e, 0x64704d, 0xb78851, 0xc5b28c], { vase: false, stems: 104, dried: true });
-    // 17: cream acoustic ceiling, warm perimeter wash and staggered brass tubes.
-    // Its photographed double height remains compressed into the retained 5.2 m floor stack.
-    COVE([-32.7, 12.2, 3.8, 26.2], yc - .03, 0xe6dfce);
-    CY(-11.5, 20.7, y, .58, yc - y - .02, { tex: 'jwWalnut', color: 0x796c65, gloss: .5 }, { seg: 48, structural: true });
-    for (const h of [.1, 2.1, 4.15]) CY(-11.5, 20.7, y + h, .583, .014, 0x30261e, { seg: 36, solid: false });
-    SLATS('v', 12.16, -32.7, 3.7, y, yc - y, .10, { w: .035, d: .05 });
-    for (let i = 0; i < 48; i++) {
-      const u = -18.2 + (i % 8) * .48, v = 17 + Math.floor(i / 8) * .62;
-      const h = 1.1 + ((i * 7) % 13) * .13, bot = y + 2.25 + ((i * 3) % 9) * .105;
-      const tubeH = Math.min(h, yc - .11 - bot);
-      CY(u, v, bot + tubeH, .008, yc - .04 - bot - tubeH, 0x4c4237, { seg: 4, solid: false });
-      CY(u, v, bot, .035, tubeH, { color: i % 3 ? 0xb18b52 : 0xd0ad70, gloss: .5 }, { seg: 12, solid: false });
-      CY(u, v, bot - .012, .035, .018, { tex: 'emit', color: 0xf8ddb2 }, { seg: 8, solid: false });
+    // The restaurant doorway and its opaque front wall are at v=43. Project each entire
+    // neighbouring room onto that opening, conservatively retaining anything visible through it.
+    function diningRoom(name,rect,build){
+      const [left,front,right,back]=rect;
+      const visible=(wx,eye,wz)=>{
+        if(eye<y||eye>yc)return true;
+        const dx=wx-C0[0],dz=wz-C0[1],u=dx*EV[0]+dz*EV[1],v=dx*SV[0]+dz*SV[1];
+        if(u< -13.86||u> -3.60||v<43.15||v>55.4)return true;
+        const t0=(v-43)/(v-front),t1=(v-43)/(v-back);
+        const lo=Math.min(u+(left-u)*t0,u+(left-u)*t1);
+        const hi=Math.max(u+(right-u)*t0,u+(right-u)*t1);
+        return hi>=-11.70&&lo<=-9.30;
+      };
+      DETAIL('2F',rect,name,build,NEXT['2F'],visible);
     }
-    // 19: veined grey marble blocks and a bright, glazed dessert case.
-    HP(0x30241d, [-32.8, 26.4, -21, 41.5], yc - .18, false);
-    for (let v = 26.5; v < 41.5; v += .3) B({ u: -27, v, y: yc - .38, w: 11.5, d: .08, h: .2, mat: { tex: 'jwWalnut', color: 0xa29182, gloss: .3 }, solid: false });
-    // The counter room has horizontal baffles, circular spots, and an illuminated rear screen.
-    LIGHTS([-32, 27, -21.8, 40.8], yc - .4, 2.7, .09, 0xffd6a0);
-    for (const v of [28.2, 30.9, 33.6, 36.3, 39]) B({ u: -32.9, v, y: y + .18, w: .025, d: 1.2, h: 3.7, mat: { tex: 'emit', color: 0xa58b68 }, solid: false });
-    SLATS('u', -32.85, 12.5, 41.5, y, yc - y, .10, { w: .035, d: .05 });
-    for (const [u, v, w, d] of [[-29.3, 29.5, 1.25, 6.4], [-29.3, 37.4, 1.25, 5.2], [-24.6, 33.3, 1.5, 6.6]]) {
-      B({ u, v, y, w, d, h: 1.05, mat: { tex: 'jwDarkMarble', color: 0xc7c4bd, gloss: .5 } });
-      B({ u, v, y: y + 1.05, w: w + .08, d: d + .08, h: .055, mat: { tex: 'jwDarkMarble', gloss: .7 }, solid: false });
-      for (let j = 0; j < 24; j++) {
-        const su = u + (j % 2 ? .23 : -.23), sv = v - d / 2 + .35 + Math.floor(j / 2) * (d - .7) / 11;
-        if (j % 4 === 0) {
-          CY(su, sv, y + 1.108, .12 + (j % 3) * .025, .14, j % 8 ? 0x6b3b2a : 0xf2e6d6, { seg: 10, solid: false });
-          B({ u: su, v: sv, y: y + 1.25, w: .08, d: .07, h: .05, mat: 0xa74831, solid: false });
-        } else if (j % 4 === 1) {
-          for (let k = 0; k < 2; k++) {
-            B({ u: su + (k - .5) * .12, v: sv, y: y + 1.11, w: .09, d: .09, h: .22, mat: k ? 0xc7a55e : 0x6e8448, solid: false });
-            B({ u: su + (k - .5) * .12, v: sv, y: y + 1.33, w: .04, d: .04, h: .08, mat: 0xb8a16c, solid: false });
-          }
-        } else B({ u: su, v: sv, y: y + 1.11, w: .23, d: .24, h: .12 + (j % 3) * .05, mat: j % 4 === 2 ? 0xad5938 : 0xd9c6a3, solid: false });
+    diningRoom('카페 원 · 카운터와 좌석',[-33.2,-.2,-16.8,12.2],()=>{
+      // The north section is the Central City double-height hall below.
+      // Its 1M bridge is at y=3.6, built by centralcity, not this former y=6 link.
+      // 카페 원: west north bay, retaining every furnishing.
+      setFit(-11.88,.64,4,2/3);
+      FRONT('u', -8, -6, 12, y, yc, 'E', 'CAFÉ ONE', { sub: '카페 원', fascia: 0x3b2c22, fg: '#efe2c4' });
+      WL(-33.1, -6, -8, -6, y, yc, { mat: WARM });
+      HP({ tex: 'wood', color: 0xc8a477 }, [-33, -6, -8, 12], y + 0.01);
+      B({ u: -30.8, v: 3, y, w: 1.2, d: 10, h: 1.05, mat: 0x3b2c22, top: 0xefe6d8 });
+      for (let v = -1; v <= 7; v += 2) B({ u: -30.6, v, y: y + 1.05, w: 0.7, d: 1.6, h: 0.45, mat: GL, solid: false });
+      for (let u = -26; u <= -11; u += 3.5) for (let v = -3.5; v <= 9.5; v += 3.2) TABLE(u, v, y, { r: 0.42, chairs: 2, chair: 0xd8cbb5 });
+      CROWD([-27, -4, -10, 10], y, 6, 201);
+      SUBZ('카페 원', '2F', '카페 · 델리', [-33, -6, -8, 12]);
+    });
+    diningRoom('플레이버즈 · 뷔페와 다이닝',[-33.3,11.7,-14.25,41.95],()=>{
+      // Keep the inferred western boundary fixed and make a narrow public aisle
+      // between Flavors and the Patisserie. Their real widths are not surveyed.
+      setFit(-17.391891892,17.5/37);
+      // 플레이버즈: photos 17–20. The unobserved southern extension is screened off.
+      WL(-33.1, 12, 4, 12, y, yc, { mat: 'jwWalnut' });
+      WL(4, 12, 4, 41.7, y, yc, { mat: 'jwWalnut', thick: .2, openings: [{ at: 6.5, w: 3.4, y0: y, y1: y + 3.45 }, {at:20,w:3.2,y0:y,y1:y+3.45}] });
+      WL(-33, 41.7, 4, 41.7, y, yc, { mat: 'jwWalnut', thick: .12 });
+      HP({ tex: 'jwTerrazzo', color: 0x77746d, gloss: .3 }, [-33, 12, 4, 60.4], y + .012, true, [[-2, 42, 4, 55]]);
+      // Photo 20 alternates flecked terrazzo aisles with smooth, darker seating bays.
+      for (const rect of [[-19.4, 27.3, -12.2, 34.4], [-11.6, 27.3, -4.2, 34.4], [-19.4, 36.3, -4.2, 41.2]]) HP({ tex: 'jwGreyStone', color: 0x77736b, gloss: .3 }, rect, y + .016);
+      // 18: medium walnut pier, concealed top wash, celadon vase and dried flowers.
+      B({ u: 4.115, v: 14.6, y, w: .025, d: 2.7, h: yc - y - .04, mat: 'jwWalnutLight', solid: false });
+      SG('F L A V O R S', { u: 4.16, v: 14.6, y: y + 2.72, w: 1.4, h: .24, f: 'E', bg: null, fg: '#d4b078', bold: false, font: 'Georgia, serif', pxPerM: 260 });
+      B({ u: 4.24, v: 14.6, y: yc - .08, w: .3, d: 2.85, h: .12, mat: 0x2a221c, solid: false });
+      B({ u: 4.15, v: 14.6, y: yc - .1, w: .06, d: 2.7, h: .025, mat: { tex: 'emit', color: 0xe3af6d }, solid: false });
+      CONE(5.25, 14.6, y, .45, .15, .745, { tex: 'jwWalnut', gloss: .5 }, { seg: 28 });
+      CY(5.25, 14.6, y + .745, .65, .055, { tex: 'jwWalnut', gloss: .5 }, { seg: 32, solid: false });
+      const [vaseX, vaseZ] = P(5.25, 14.6);
+      DK.dome({ x: vaseX, y: y + 1.05, z: vaseZ, rx: .25, ry: .28, rz: .25, hemi: false, mat: { color: 0xdcd9c6, gloss: .3 }, seg: 28, rings: 12 });
+      CY(5.25, 14.6, y + 1.23, .14, .08, { color: 0xdcd9c6, gloss: .3 }, { seg: 24, solid: false });
+      FLOWER(5.25, 14.6, y + .97, 1.1, [0x923323, 0xba4d2e, 0x64704d, 0xb78851, 0xc5b28c], { vase: false, stems: 104, dried: true });
+      // 17: cream acoustic ceiling, warm perimeter wash and staggered brass tubes.
+      // Its photographed double height remains compressed into the retained 5.2 m floor stack.
+      COVE([-32.7, 12.2, 3.8, 26.2], yc - .03, 0xe6dfce);
+      CY(-11.5, 20.7, y, .58, yc - y - .02, { tex: 'jwWalnut', color: 0x796c65, gloss: .5 }, { seg: 48, structural: true });
+      for (const h of [.1, 2.1, 4.15]) CY(-11.5, 20.7, y + h, .583, .014, 0x30261e, { seg: 36, solid: false });
+      SLATS('v', 12.16, -32.7, 3.7, y, yc - y, .10, { w: .035, d: .05 });
+      for (let i = 0; i < 48; i++) {
+        const u = -18.2 + (i % 8) * .48, v = 17 + Math.floor(i / 8) * .62;
+        const h = 1.1 + ((i * 7) % 13) * .13, bot = y + 2.25 + ((i * 3) % 9) * .105;
+        const tubeH = Math.min(h, yc - .11 - bot);
+        CY(u, v, bot + tubeH, .008, yc - .04 - bot - tubeH, 0x4c4237, { seg: 4, solid: false });
+        CY(u, v, bot, .035, tubeH, { color: i % 3 ? 0xb18b52 : 0xd0ad70, gloss: .5 }, { seg: 12, solid: false });
+        CY(u, v, bot - .012, .035, .018, { tex: 'emit', color: 0xf8ddb2 }, { seg: 8, solid: false });
       }
-    }
-    FLOWER(-29.3, 33.65, y + 1.05, 1.25, [0xb64b24, 0xd47c38, 0xc7ad72, 0x75804a], { stems: 90, dried: true });
-    B({ u: -29.3, v: 33.65, y, w: 1.5, d: 1.4, h: 1.05, mat: { tex: 'jwDarkMarble', gloss: .5 } });
-    B({ u: -21.5, v: 33, y, w: 1, d: 8, h: .95, mat: { tex: 'jwDarkMarble', gloss: .5 } });
-    HP({ tex: 'emit', color: 0xf4efe6 }, [-21.94, 29.06, -21.06, 36.94], y + .96);
-    B({ u: -21.5, v: 33, y: y + .96, w: 1, d: 8, h: .35, mat: { tex: 'glass', color: 0xdde2db }, solid: false });
-    for (const v of [29, 31, 33, 35, 37]) B({ u: -21.5, v, y: y + .96, w: 1.02, d: .035, h: .35, mat: 0xb9b9ad, solid: false });
-    for (let j = 0; j < 12; j++) CY(-21.5, 29.35 + j * .66, y + .98, .16, .13, j % 3 ? 0xf2e6d6 : 0x6b3b2a, { seg: 10, solid: false });
-    // 20: full-height slender screens, three lit coffers and close-set upholstered booths.
-    HP(0xdbd5c6, [-20.4, 26.4, 3.7, 41.6], yc - .02, false);
-    for (const rect of [[-19, 27, -12, 34], [-11, 27, -4, 34], [-19, 35, -4, 41]]) COVE(rect, yc - .06, 0xe9dfc9);
-    SLATS('u', -20.5, 27.2, 33.4, y, yc - y, .10, { w: .035, d: .05 });
-    SLATS('v', 35.8, -18.8, -12, y, yc - y, .10, { w: .035, d: .05 });
-    SLATS('v', 35.8, -7.7, -.2, y, yc - y, .10, { w: .035, d: .05 });
-    // 20: curved tan backs, upholstered arms, four separate legs and a dark plinth below booths.
-    const diningChair = (u, v, du, dv) => {
-      const cu = u + du * .88, cv = v + dv * .88, su = -dv, sv = du;
-      CY(cu, cv, y + .39, .29, .12, 0xb9aa8d, { seg: 14, solid: false });
-      for (let i = 0; i < 9; i++) {
-        const a = -.2 + i * (Math.PI + .4) / 9, b = -.2 + (i + 1) * (Math.PI + .4) / 9;
-        const at = t => [cu + su * Math.cos(t) * .32 + du * Math.sin(t) * .28, cv + sv * Math.cos(t) * .32 + dv * Math.sin(t) * .28];
-        WL(...at(a), ...at(b), y + .46, y + .72 + Math.sin((a + b) / 2) * .22, { mat: 0xb4a186, capMat: 0xc7b69b, thick: .065, solid: false });
-      }
-      for (const a of [-.2, .2]) for (const b of [-.19, .19]) B({ u: cu + su * a + du * b, v: cv + sv * a + dv * b, y, w: .033, d: .033, h: .4, mat: 0x292522, solid: false });
-    };
-    const diningSet = (u, v, booth = false) => {
-      ROUND(u, v, y, .51, .74, 'jwDarkMarble');
-      if (booth) {
-        HP(0x514b42, [u - 1.16, v - .5, u + 1.16, v + 1.2], y + .019);
-        // A seven-segment curved U, open to the north, with a continuous low seat.
-        for (let i = 0; i < 7; i++) {
-          const a = -Math.PI * .08 + i * Math.PI * 1.16 / 6, cu = u + Math.cos(a) * .91, cv = v + Math.sin(a) * .91;
-          B({ u: cu, v: cv, y, w: .49, d: .25, h: 1.1, r: -a - Math.PI / 2, mat: 0xb4a186, solid: false });
-          B({ u: u + Math.cos(a) * .71, v: v + Math.sin(a) * .71, y: y + .32, w: .49, d: .5, h: .16, r: -a - Math.PI / 2, mat: 0xc4b297, solid: false });
+      // 19: veined grey marble blocks and a bright, glazed dessert case.
+      HP(0x30241d, [-32.8, 26.4, -21, 41.5], yc - .18, false);
+      for (let v = 26.5; v < 41.5; v += .3) B({ u: -27, v, y: yc - .38, w: 11.5, d: .08, h: .2, mat: { tex: 'jwWalnut', color: 0xa29182, gloss: .3 }, solid: false });
+      // The counter room has horizontal baffles, circular spots, and an illuminated rear screen.
+      LIGHTS([-32, 27, -21.8, 40.8], yc - .4, 2.7, .09, 0xffd6a0);
+      for (const v of [28.2, 30.9, 33.6, 36.3, 39]) B({ u: -32.9, v, y: y + .18, w: .025, d: 1.2, h: 3.7, mat: { tex: 'emit', color: 0xa58b68 }, solid: false });
+      SLATS('u', -32.85, 12.5, 41.5, y, yc - y, .10, { w: .035, d: .05 });
+      for (const [u, v, w, d] of [[-29.3, 29.5, 1.25, 6.4], [-29.3, 37.4, 1.25, 5.2], [-24.6, 33.3, 1.5, 6.6]]) {
+        B({ u, v, y, w, d, h: 1.05, mat: { tex: 'jwDarkMarble', color: 0xc7c4bd, gloss: .5 } });
+        B({ u, v, y: y + 1.05, w: w + .08, d: d + .08, h: .055, mat: { tex: 'jwDarkMarble', gloss: .7 }, solid: false });
+        for (let j = 0; j < 24; j++) {
+          const su = u + (j % 2 ? .23 : -.23), sv = v - d / 2 + .35 + Math.floor(j / 2) * (d - .7) / 11;
+          if (j % 4 === 0) {
+            CY(su, sv, y + 1.108, .12 + (j % 3) * .025, .14, j % 8 ? 0x6b3b2a : 0xf2e6d6, { seg: 10, solid: false });
+            B({ u: su, v: sv, y: y + 1.25, w: .08, d: .07, h: .05, mat: 0xa74831, solid: false });
+          } else if (j % 4 === 1) {
+            for (let k = 0; k < 2; k++) {
+              B({ u: su + (k - .5) * .12, v: sv, y: y + 1.11, w: .09, d: .09, h: .22, mat: k ? 0xc7a55e : 0x6e8448, solid: false });
+              B({ u: su + (k - .5) * .12, v: sv, y: y + 1.33, w: .04, d: .04, h: .08, mat: 0xb8a16c, solid: false });
+            }
+          } else B({ u: su, v: sv, y: y + 1.11, w: .23, d: .24, h: .12 + (j % 3) * .05, mat: j % 4 === 2 ? 0xad5938 : 0xd9c6a3, solid: false });
         }
-        diningChair(u, v, 0, -1);
-      } else for (const [du, dv] of [[-1, 0], [1, 0], [0, -1], [0, 1]]) diningChair(u, v, du, dv);
-      for (const [du, dv] of [[-1, 0], [1, 0], [0, -1], [0, 1]]) PLACESETTING(u, v, y + .742, du, dv);
-      B({ u, v, y: y + .76, w: .09, d: .035, h: .18, mat: 0x493429, solid: false });
-      SG('메뉴', { u, v: v + .025, y: y + .87, w: .07, h: .07, f: 'S', bg: '#e5d8bc', fg: '#544135', bold: false, pxPerM: 500 });
-      for (const du of [-.1, .1]) CY(u + du, v, y + .745, .022, .065, du < 0 ? 0x33302a : 0xe3ded1, { seg: 8, solid: false });
-    };
-    let seatIndex = 0;
-    for (let u = -18.8; u < 3; u += 2.6) for (const v of [28.4, 31, 33.6, 37.3, 39.9]) {
-      if ((u > 1 && v < 33.4) || Math.hypot(u + 18, v - 33) < 1.55 || Math.hypot(u + 1, v - 27.5) < 1.55 || Math.hypot(u + 9, v - 29) < 1.55) continue;
-      diningSet(u, v, seatIndex++ % 3 === 0);
-    }
-    for (let u = -30.8; u <= -9.1; u += 2.4) for (let v = 14; v < 25; v += 2.4) {
-      if (Math.abs(u + 21.2) < .2 || Math.hypot(u + 11.5, v - 20.7) < 1.7 || Math.hypot(u + 8, v - 24) < 1.55) continue;
-      diningSet(u, v);
-    }
-    // Tall wine cabinet against the east wall, with five backlit shelves behind glass.
-    B({ u: 3.5, v: 30, y, w: .5, d: 6, h: 2.4, mat: 'jwWalnut' });
-    B({ u: 3.23, v: 30, y: y + .1, w: .02, d: 5.8, h: 2.2, mat: 0x26221c, solid: false });
-    for (let row = 0; row < 5; row++) {
-      B({ u: 3.1, v: 30, y: y + .25 + row * .43, w: .28, d: 5.8, h: .035, mat: { tex: 'emit', color: 0xdcc49a }, solid: false });
-      for (let j = 0; j < 20; j++) {
-        B({ u: 3.1, v: 27.25 + j * .285, y: y + .29 + row * .43, w: .09, d: .1, h: .23, mat: j % 3 ? 0x33402a : 0x542e28, solid: false });
-        B({ u: 3.1, v: 27.25 + j * .285, y: y + .52 + row * .43, w: .04, d: .04, h: .07, mat: 0xb29862, solid: false });
       }
-    }
-    WL(2.94, 27, 2.94, 33, y + .1, y + 2.4, { mat: GL, thick: .025, solid: false });
-    // Stemware rack beside the buffet, seen through the slender walnut screen in photo 20.
-    B({ u: -19.8, v: 39.3, y, w: .6, d: 3.8, h: 1.02, mat: 'jwWalnut', top: 'jwDarkMarble' });
-    for (let row = 0; row < 3; row++) {
-      B({ u: -19.8, v: 39.3, y: y + 1.08 + row * .46, w: .58, d: 3.8, h: .03, mat: 0xbab8a9, solid: false });
-      for (let i = 0; i < 16; i++) {
-        const v = 37.55 + i * .23, yy = y + 1.13 + row * .46;
-        CY(-19.8, v, yy, .042, .012, 0xc7c4b7, { seg: 8, solid: false });
-        CY(-19.8, v, yy + .012, .006, .09, 0xc7c4b7, { seg: 6, solid: false });
-        CONE(-19.8, v, yy + .1, .025, .055, .09, { tex: 'glass', color: 0xe2e0d3 }, { seg: 10 });
+      FLOWER(-29.3, 33.65, y + 1.05, 1.25, [0xb64b24, 0xd47c38, 0xc7ad72, 0x75804a], { stems: 90, dried: true });
+      B({ u: -29.3, v: 33.65, y, w: 1.5, d: 1.4, h: 1.05, mat: { tex: 'jwDarkMarble', gloss: .5 } });
+      B({ u: -21.5, v: 33, y, w: 1, d: 8, h: .95, mat: { tex: 'jwDarkMarble', gloss: .5 } });
+      HP({ tex: 'emit', color: 0xf4efe6 }, [-21.94, 29.06, -21.06, 36.94], y + .96);
+      B({ u: -21.5, v: 33, y: y + .96, w: 1, d: 8, h: .35, mat: { tex: 'glass', color: 0xdde2db }, solid: false });
+      for (const v of [29, 31, 33, 35, 37]) B({ u: -21.5, v, y: y + .96, w: 1.02, d: .035, h: .35, mat: 0xb9b9ad, solid: false });
+      for (let j = 0; j < 12; j++) CY(-21.5, 29.35 + j * .66, y + .98, .16, .13, j % 3 ? 0xf2e6d6 : 0x6b3b2a, { seg: 10, solid: false });
+      // 20: full-height slender screens, three lit coffers and close-set upholstered booths.
+      HP(0xdbd5c6, [-20.4, 26.4, 3.7, 41.6], yc - .02, false);
+      for (const rect of [[-19, 27, -12, 34], [-11, 27, -4, 34], [-19, 35, -4, 41]]) COVE(rect, yc - .06, 0xe9dfc9);
+      SLATS('u', -20.5, 27.2, 33.4, y, yc - y, .10, { w: .035, d: .05 });
+      SLATS('v', 35.8, -18.8, -12, y, yc - y, .10, { w: .035, d: .05 });
+      SLATS('v', 35.8, -7.7, -.2, y, yc - y, .10, { w: .035, d: .05 });
+      // 20: curved tan backs, upholstered arms, four separate legs and a dark plinth below booths.
+      const diningChair = (u, v, du, dv) => {
+        const cu = u + du * .88, cv = v + dv * .88, su = -dv, sv = du;
+        CY(cu, cv, y + .39, .29, .12, 0xb9aa8d, { seg: 14, solid: false });
+        for (let i = 0; i < 9; i++) {
+          const a = -.2 + i * (Math.PI + .4) / 9, b = -.2 + (i + 1) * (Math.PI + .4) / 9;
+          const at = t => [cu + su * Math.cos(t) * .32 + du * Math.sin(t) * .28, cv + sv * Math.cos(t) * .32 + dv * Math.sin(t) * .28];
+          WL(...at(a), ...at(b), y + .46, y + .72 + Math.sin((a + b) / 2) * .22, { mat: 0xb4a186, capMat: 0xc7b69b, thick: .065, solid: false });
+        }
+        for (const a of [-.2, .2]) for (const b of [-.19, .19]) B({ u: cu + su * a + du * b, v: cv + sv * a + dv * b, y, w: .033, d: .033, h: .4, mat: 0x292522, solid: false });
+      };
+      const diningSet = (u, v, booth = false) => {
+        ROUND(u, v, y, .51, .74, 'jwDarkMarble');
+        if (booth) {
+          HP(0x514b42, [u - 1.16, v - .5, u + 1.16, v + 1.2], y + .019);
+          // A seven-segment curved U, open to the north, with a continuous low seat.
+          for (let i = 0; i < 7; i++) {
+            const a = -Math.PI * .08 + i * Math.PI * 1.16 / 6, cu = u + Math.cos(a) * .91, cv = v + Math.sin(a) * .91;
+            B({ u: cu, v: cv, y, w: .49, d: .25, h: 1.1, r: -a - Math.PI / 2, mat: 0xb4a186, solid: false });
+            B({ u: u + Math.cos(a) * .71, v: v + Math.sin(a) * .71, y: y + .32, w: .49, d: .5, h: .16, r: -a - Math.PI / 2, mat: 0xc4b297, solid: false });
+          }
+          diningChair(u, v, 0, -1);
+        } else for (const [du, dv] of [[-1, 0], [1, 0], [0, -1], [0, 1]]) diningChair(u, v, du, dv);
+        for (const [du, dv] of [[-1, 0], [1, 0], [0, -1], [0, 1]]) PLACESETTING(u, v, y + .742, du, dv);
+        B({ u, v, y: y + .76, w: .09, d: .035, h: .18, mat: 0x493429, solid: false });
+        SG('메뉴', { u, v: v + .025, y: y + .87, w: .07, h: .07, f: 'S', bg: '#e5d8bc', fg: '#544135', bold: false, pxPerM: 500 });
+        for (const du of [-.1, .1]) CY(u + du, v, y + .745, .022, .065, du < 0 ? 0x33302a : 0xe3ded1, { seg: 8, solid: false });
+      };
+      let seatIndex = 0;
+      for (let u = -18.8; u < 3; u += 2.6) for (const v of [28.4, 31, 33.6, 37.3, 39.9]) {
+        if ((u > 1 && v < 33.4) || Math.hypot(u + 18, v - 33) < 1.55 || Math.hypot(u + 1, v - 27.5) < 1.55 || Math.hypot(u + 9, v - 29) < 1.55) continue;
+        diningSet(u, v, seatIndex++ % 3 === 0);
       }
-    }
-    LIGHTS([-32, 13, 3.6, 25], yc - .06, 2.6, .08, 0xf0c98e);
-    LIGHTS([-20, 27, 3.6, 41], yc - .12, 3.2, .08, 0xf0c98e);
-    MAN(-16, 40.1, y, { sit: true, shirt: 0xddd4c7 }); MAN(-28.1, 37.4, y, { shirt: 0xe5e0d5 });
-    // The hall void is kept out of all restaurant/landing surfaces and bounded at 2F.
-    fit=ID;RAILBOX([-31.6,42,-14.025,55], y);setFit(-17.391891892,17.5/37);
-    SUBZ('플레이버즈', '2F', '뷔페 · 황동 펜던트 · 대리석 카운터', [-33, 12, 4, 41.7]);
-    SUBZ('플레이버즈 다이닝', '2F', '월넛 스크린 · 소파 좌석', [-20.4, 26.4, 3.7, 41.6]);
-    // 파티세리 · 티 바 — intact east fitout transferred to the west band.
-    // Leave the north edge as a continuous public aisle to the hotel lift.
-    setFit(-31,1,7.71875,.703125);
-    FRONT('u', 17, -6, 26, y, yc, 'W', 'PÂTISSERIE', { sub: '파티세리 · 티 바', door: 16.76923, dw: 4, extraOpenings: [{ at: 10, w: 4, y0: y, y1: y + 3.2 }], signAt: 12, fascia: 0x3b2c22, fg: '#efe2c4' });
-    // The northern pastry-shop frontage faces the public corridor.
-    WL(17, -6, 33.1, -6, y, yc, { mat: WARM, openings: [{ at: 9, w: 7, y0: 7, y1: 10.5 }] }); WL(17, 26, 33.1, 26, y, yc, { mat: WARM });
-    HP({ tex: 'marble', color: 0xf6efe4 }, [17, -6, 33, 26], y + 0.01);
-    K.material('jwPastryCaseGlass', new K.THREE.MeshPhongMaterial({
-      color:0xd8e8ef, transparent:true, opacity:.12, depthWrite:false, shininess:80,
-    }));
-    for(const v of [10,15,20]){
-      B({u:21,v,y,w:1,d:4.2,h:.95,mat:0x2a2420,top:0xe8e0d0});
-      B({u:21,v,y:y+.95,w:.9,d:4,h:.42,mat:'jwPastryCaseGlass',solid:false,skip:['bottom']});
-      for(const u of [20.55,21.45]){
-        B({u,v,y:y+1.37,w:.014,d:4,h:.014,mat:0xac9877,solid:false});
-        for(const dv of [-1.99,1.99])
-          B({u,v:v+dv,y:y+.95,w:.012,d:.012,h:.42,mat:0xac9877,solid:false});
+      for (let u = -30.8; u <= -9.1; u += 2.4) for (let v = 14; v < 25; v += 2.4) {
+        if (Math.abs(u + 21.2) < .2 || Math.hypot(u + 11.5, v - 20.7) < 1.7 || Math.hypot(u + 8, v - 24) < 1.55) continue;
+        diningSet(u, v);
       }
-      if(v===15){
-        const [x,z]=mapPoint(...P(21,v));
-        DEC(()=>placeDesserts(baseKit,x,y+.955,z,R+Math.PI/2));
-        SG('바닐라 플랑  ·  마카롱',{u:20.487,v,y:y+.83,w:1.2,h:.15,f:'W',bg:'#463a35',fg:'#f2e3c7',pxPerM:420,padding:.025});
-      }else{
-        for(const dv of [-1.4,-.47,.47,1.4])fixture('cakes',21,v+dv,y+.955,Math.PI/2);
+      // Tall wine cabinet against the east wall, with five backlit shelves behind glass.
+      B({ u: 3.5, v: 30, y, w: .5, d: 6, h: 2.4, mat: 'jwWalnut' });
+      B({ u: 3.23, v: 30, y: y + .1, w: .02, d: 5.8, h: 2.2, mat: 0x26221c, solid: false });
+      for (let row = 0; row < 5; row++) {
+        B({ u: 3.1, v: 30, y: y + .25 + row * .43, w: .28, d: 5.8, h: .035, mat: { tex: 'emit', color: 0xdcc49a }, solid: false });
+        for (let j = 0; j < 20; j++) {
+          B({ u: 3.1, v: 27.25 + j * .285, y: y + .29 + row * .43, w: .09, d: .1, h: .23, mat: j % 3 ? 0x33402a : 0x542e28, solid: false });
+          B({ u: 3.1, v: 27.25 + j * .285, y: y + .52 + row * .43, w: .04, d: .04, h: .07, mat: 0xb29862, solid: false });
+        }
       }
-    }
-    B({ u: 32.4, v: 10, y, w: 0.9, d: 30, h: 2.4, mat: WALNUT, solid: true });
-    for (let k = 0; k < 3; k++) B({ u: 31.9, v: 10, y: y + 0.9 + k * 0.5, w: 0.1, d: 29, h: 0.04, mat: 0xc9a85c, solid: false });
-    B({ u: 28, v: -2.5, y, w: 6, d: 1.0, h: 1.05, mat: 0x3b2c22, top: 0xefe6d8 }); SG(['티 바'], { u: 28, v: -1.9, y: y + 2.4, w: 1.8, h: 0.4, f: 'S', bg: '#2b241d', fg: '#efe2c4' });
-    for (let u = 24.5; u <= 30; u += 2.8) for (let v = 3; v <= 22; v += 3.2) TABLE(u, v, y, { r: 0.38, chairs: 2, chair: 0xe8dccb });
-    CROWD([18, -4, 31, 24], y, 8, 204);
-    SUBZ('파티세리 · 티 바', '2F', '케이크 · 베이커리 · 차', [17, -6, 33, 26]);
+      WL(2.94, 27, 2.94, 33, y + .1, y + 2.4, { mat: GL, thick: .025, solid: false });
+      // Stemware rack beside the buffet, seen through the slender walnut screen in photo 20.
+      B({ u: -19.8, v: 39.3, y, w: .6, d: 3.8, h: 1.02, mat: 'jwWalnut', top: 'jwDarkMarble' });
+      for (let row = 0; row < 3; row++) {
+        B({ u: -19.8, v: 39.3, y: y + 1.08 + row * .46, w: .58, d: 3.8, h: .03, mat: 0xbab8a9, solid: false });
+        for (let i = 0; i < 16; i++) {
+          const v = 37.55 + i * .23, yy = y + 1.13 + row * .46;
+          CY(-19.8, v, yy, .042, .012, 0xc7c4b7, { seg: 8, solid: false });
+          CY(-19.8, v, yy + .012, .006, .09, 0xc7c4b7, { seg: 6, solid: false });
+          CONE(-19.8, v, yy + .1, .025, .055, .09, { tex: 'glass', color: 0xe2e0d3 }, { seg: 10 });
+        }
+      }
+      LIGHTS([-32, 13, 3.6, 25], yc - .06, 2.6, .08, 0xf0c98e);
+      LIGHTS([-20, 27, 3.6, 41], yc - .12, 3.2, .08, 0xf0c98e);
+      MAN(-16, 40.1, y, { sit: true, shirt: 0xddd4c7 }); MAN(-28.1, 37.4, y, { shirt: 0xe5e0d5 });
+      // The hall void is kept out of all restaurant/landing surfaces and bounded at 2F.
+      SUBZ('플레이버즈', '2F', '뷔페 · 황동 펜던트 · 대리석 카운터', [-33, 12, 4, 41.7]);
+      SUBZ('플레이버즈 다이닝', '2F', '월넛 스크린 · 소파 좌석', [-20.4, 26.4, 3.7, 41.6]);
+    });
+    diningRoom('파티세리 · 진열장과 티 바',[-14.2,3.3,2.25,26.3],()=>{
+      // 파티세리 · 티 바 — intact east fitout transferred to the west band.
+      // Leave the north edge as a continuous public aisle to the hotel lift.
+      setFit(-31,1,7.71875,.703125);
+      FRONT('u', 17, -6, 26, y, yc, 'W', 'PÂTISSERIE', { sub: '파티세리 · 티 바', door: 16.76923, dw: 4, extraOpenings: [{ at: 10, w: 4, y0: y, y1: y + 3.2 }], signAt: 12, fascia: 0x3b2c22, fg: '#efe2c4' });
+      // The northern pastry-shop frontage faces the public corridor.
+      WL(17, -6, 33.1, -6, y, yc, { mat: WARM, openings: [{ at: 9, w: 7, y0: 7, y1: 10.5 }] }); WL(17, 26, 33.1, 26, y, yc, { mat: WARM });
+      HP({ tex: 'marble', color: 0xf6efe4 }, [17, -6, 33, 26], y + 0.01);
+      K.material('jwPastryCaseGlass', new K.THREE.MeshPhongMaterial({
+        color:0xd8e8ef, transparent:true, opacity:.12, depthWrite:false, shininess:80,
+      }));
+      for(const v of [10,15,20]){
+        B({u:21,v,y,w:1,d:4.2,h:.95,mat:0x2a2420,top:0xe8e0d0});
+        B({u:21,v,y:y+.95,w:.9,d:4,h:.42,mat:'jwPastryCaseGlass',solid:false,skip:['bottom']});
+        for(const u of [20.55,21.45]){
+          B({u,v,y:y+1.37,w:.014,d:4,h:.014,mat:0xac9877,solid:false});
+          for(const dv of [-1.99,1.99])
+            B({u,v:v+dv,y:y+.95,w:.012,d:.012,h:.42,mat:0xac9877,solid:false});
+        }
+        if(v===15){
+          const [x,z]=mapPoint(...P(21,v));
+          DEC(()=>placeDesserts(baseKit,x,y+.955,z,R+Math.PI/2));
+          SG('바닐라 플랑  ·  마카롱',{u:20.487,v,y:y+.83,w:1.2,h:.15,f:'W',bg:'#463a35',fg:'#f2e3c7',pxPerM:420,padding:.025});
+        }else{
+          for(const dv of [-1.4,-.47,.47,1.4])fixture('cakes',21,v+dv,y+.955,Math.PI/2);
+        }
+      }
+      B({ u: 32.4, v: 10, y, w: 0.9, d: 30, h: 2.4, mat: WALNUT, solid: true });
+      for (let k = 0; k < 3; k++) B({ u: 31.9, v: 10, y: y + 0.9 + k * 0.5, w: 0.1, d: 29, h: 0.04, mat: 0xc9a85c, solid: false });
+      B({ u: 28, v: -2.5, y, w: 6, d: 1.0, h: 1.05, mat: 0x3b2c22, top: 0xefe6d8 }); SG(['티 바'], { u: 28, v: -1.9, y: y + 2.4, w: 1.8, h: 0.4, f: 'S', bg: '#2b241d', fg: '#efe2c4' });
+      for (let u = 24.5; u <= 30; u += 2.8) for (let v = 3; v <= 22; v += 3.2) TABLE(u, v, y, { r: 0.38, chairs: 2, chair: 0xe8dccb });
+      CROWD([18, -4, 31, 24], y, 8, 204);
+      SUBZ('파티세리 · 티 바', '2F', '케이크 · 베이커리 · 차', [17, -6, 33, 26]);
+    });
+    fit=ID;RAILBOX([-31.6,42,-14.025,55],y);
     // escalator hall
     fit=ID;
     RAILBOX([-2.9,30,1,41.6],y,'n');
@@ -1324,14 +1350,10 @@ export function build(K) {
     SG('3F 연회장 · 5F 그랜드 볼룸', { u: 27.8, v: 41.3, y: y + 2.6, w: 1.6, h: .16, f: 'S', bg: null, fg: '#c5aa7b', bold: false });
     // 타마유라 (일식, 룸 7실)
     setFit(-31);
-    FRONT('v', 43, 17, 33.1, y, yc, 'N', 'TAMAYURA', { sub: '타마유라 · 일식 · 데판야키', door: 20.5, dw: 2.2, fascia: 0x1f1a16, fg: '#efe2c4' });
-    WL(17, 43, 17, 60.4, y, yc, { mat: WARM });
-    HP({ tex: 'wood', color: 0xd6b88c }, [17, 43, 33, 60.4], y + 0.01);
-    B({ u: 21.6, v: 47.6, y, w: 7, d: 1.0, h: 0.95, mat: 0x2a2018, top: 0x9aa0a6 }); B({ u: 21.6, v: 48.6, y, w: 7, d: 0.6, h: 0.72, mat: 0xc7a77c, solid: false });
-    for (let u = 18.6; u <= 24.6; u += 1.0) CY(u, 46.7, y, 0.2, 0.75, 0x3a2a20, { seg: 6 });
-    B({ u: 21.6, v: 51.6, y, w: 7, d: 0.8, h: 1.0, mat: 0xd8c3a0, top: 0xe8d6b4 }); B({ u: 21.6, v: 53.2, y, w: 7, d: 0.6, h: 1.6, mat: 0x2a2018, solid: false });
-    for (let u = 18.6; u <= 24.6; u += 1.0) CY(u, 50.7, y, 0.2, 0.75, 0x3a2a20, { seg: 6 });
-    SG(['데판야키'], { u: 21.6, v: 46.2, y: y + 3.0, w: 2.2, h: 0.4, f: 'N', bg: '#1f1a16', fg: '#efe2c4' });
+    WL(17,43,33.1,43,y,yc,{mat:WALNUT,mat2:WARM,thick:.17,openings:[{at:3.50,w:2.20,y0:y,y1:y+2.80}]});
+    WL(17,43,17,60.4,y,yc,{mat:WARM});
+    HP({tex:'wood',color:0xd6b88c},[17,43,33,60.4],y+.01);
+    registerTamayura(baseKit,{point:(u,v)=>P(u-31,v),rotation:R,y});
     ROOMROW('u', 27.5, [[43.3, 47.4, '룸 1'], [47.4, 51.5, '룸 2'], [51.5, 55.5, '룸 3']], y, yc - y, 'W', { dw: 1.4, lw: 1.0, mat: 0xe9dcc4 });
     PARTS('v', 0, [47.4, 51.5], 27.5, 33.1, y, yc - y, 0xe9dcc4);
     ROOMROW('v', 55.5, [[17.2, 21.2, '룸 4'], [21.2, 25.2, '룸 5'], [25.2, 29.2, '룸 6'], [29.2, 33.1, '룸 7']], y, yc - y, 'N', { dw: 1.4, lw: 1.0, mat: 0xe9dcc4 });
@@ -1344,7 +1366,9 @@ export function build(K) {
     }
     SUBZ('2F 로비','2F','레스토랑 · 호텔 상층 연결',[-17,0,2,43]);
     SUBZ('에스컬레이터 홀','2F','호텔 현관 연결',[-5,26,2,43]);
-    SUBZ('데판야키 카운터','2F','타마유라',[-13.5,45.5,-5.4,53.8]);
+    ZN('타마유라 스시 바','2F','편백 카운터 · 8석',[-13.9,50,-6.1,54.3],y,yc,2);
+    ZN('타마유라 데판야키','2F','철판 카운터 · 8석',[-13.93,44.8,-8.68,49.2],y,yc,2);
+    ZN('타마유라 티 바','2F','차 카운터 · 6석',[-8.23,43.8,-5.07,48.35],y,yc,2);
 
   }
 
