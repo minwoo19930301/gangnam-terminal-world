@@ -4,14 +4,14 @@ import { eastGardenLevel } from './places/_gardenGrade.js';
 // Positions: OSM footprint centroids or the modules' own coordinates (see data/research/<id>.json).
 export const LANDMARKS = [
   { name: '고속터미널역', sub: '3·7·9호선', x: -33, z: -128, y: 4, place: 'station', color: '#3b6ea8' },
-  { name: '고투몰', arrivalFloor: 'B1', sub: '강남터미널 지하도상가', x: -2, z: -121, y: 4, place: 'gotomall', color: '#9a5a2b', under: -6 },
+  { name: '고투몰', arrivalFloor: 'B1', poiIds: [5614711178], aliases: ['강남터미널지하쇼핑몰 (고투몰)'], sub: '강남터미널 지하도상가', x: -2, z: -121, y: 4, place: 'gotomall', color: '#9a5a2b', under: -6 },
   { name: '신세계백화점 강남점', arrivalFloor: '1F', x: -61, z: 3, y: 36, roofPin: [-75.8, 55, -36.1], place: 'shinsegae', color: '#b23a31' },
-  { name: 'JW 메리어트 서울', arrivalFloor: '1F', x: -24, z: 100, y: 146, place: 'jwmarriott', color: '#5a4a3a' },
+  { name: 'JW 메리어트 서울', arrivalFloor: '1F', poiIds: [933102389], buildingIds: [136986976], aliases: ['JW 메리어트 호텔 서울'], x: -24, z: 100, y: 146, place: 'jwmarriott', color: '#5a4a3a' },
   { name: '센트럴시티 · 호남선', arrivalFloor: '1F', x: -116, z: 83, y: 14, place: 'centralcity', color: '#2f7d6d' },
   { name: '파미에스테이션', arrivalFloor: '1F', x: -47, z: 215, y: 10, place: 'famille', color: '#a0522d' },
   { name: '서울고속버스터미널', arrivalFloor: '1F', sub: '경부·영동선', x: 135, z: -38, y: 52, place: 'gyeongbu', color: '#2a5d9f' },
   { name: '꽃시장', arrivalFloor: '3F', sub: '경부선 3F', x: 70, z: 20, y: 26, place: 'gyeongbu', color: '#c2417a', floorY: 11 },
-  { name: '다이소', arrivalFloor: 'B1', destinationId: 'daiso-gate-1', sub: '경부선 B1', x: 205, z: -125, y: 14, place: 'gyeongbu', color: '#d71920', floorY: -4 },
+  { name: '다이소', arrivalFloor: 'B1', poiIds: [9774626399], destinationId: 'daiso-gate-1', sub: '경부선 B1', x: 205, z: -125, y: 14, place: 'gyeongbu', color: '#d71920', floorY: -4 },
   { name: '반포쇼핑타운', arrivalFloor: '1F', x: 60, z: -190, y: 20, place: 'banpo_shoppingtown', color: '#8a5a44' },
   { name: '반포지구대', x: 25, z: -102, y: 11, place: 'streets', color: '#1f4e9a' },
   { name: '르본시티', arrivalFloor: '1F', sub: '귀금속', x: -232, z: 20, y: 40, place: 'lebon', color: '#b08d3c' },
