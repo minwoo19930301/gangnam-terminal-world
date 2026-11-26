@@ -517,6 +517,19 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     for (const s of [1, -1]) {
       const ox = nx * s, oz = nz * s;
       quad(gl, [[ax + ox, ya, az + oz], [bx + ox, yb, bz + oz], [bx + ox, yb + 0.95, bz + oz], [ax + ox, ya + 0.95, az + oz]], [ox, 0, oz], [[0, 0], [1, 0], [1, 1], [0, 1]]);
+      // Continue the glass into the stainless guide in the Blender Return part.
+      // The radial fan covers the half ellipse without overlapping the straight pane.
+      for (const [x,y,z,outward] of [[ax,ya,az,-1],[bx,yb,bz,1]]) {
+        const point = (reach, height) => [x+ox+ux*outward*reach, y+height, z+oz+uz*outward*reach];
+        const center = point(0, .683);
+        let previous = point(0, .935);
+        for (let i=1; i<=10; i++) {
+          const angle = i*Math.PI/10;
+          const next = point(.193*Math.sin(angle), .683+.252*Math.cos(angle));
+          tri(gl, [center,previous,next], [ox,0,oz], [[0,0],[1,0],[0,1]]);
+          previous = next;
+        }
+      }
       slopedWall(ax + ox, az + oz, bx + ox, bz + oz, ya, yb, 1.05);
     }
     // underside truss
