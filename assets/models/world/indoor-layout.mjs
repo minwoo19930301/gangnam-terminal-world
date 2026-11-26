@@ -1,3 +1,4 @@
+import {catalog as golfCatalog,prefix as golfPrefix} from '../newcore-golf/layout.js';
 import {parts as tamayuraParts} from '../tamayura/layout.js';
 // Read actual production Object3D and instance transforms without a renderer or near-detail downloads.
 import fs from 'node:fs/promises';
@@ -11,6 +12,10 @@ import {relief} from '../../../js/banpo_relief.js';
 // Scene object (or a uniquely identifying child) -> editable native source.
 // Geometry decoder matrices and decorative LOD offsets live *below* the placement.
 const sources = [
+  ...Object.values(golfCatalog).map(([label])=>{
+    const name=golfPrefix+label;
+    return ['newcore','5F','newcore-golf/golf-shop.blend',name,name];
+  }),
   ...Object.values(tamayuraParts).map(([label])=>{
     const name='타마유라 · '+label;
     return ['jwmarriott','2F','tamayura/tamayura.blend',name,name];
@@ -20,6 +25,7 @@ const sources = [
     '간선버스 · 도장 차체와 경량 휠','간선버스 · 저상 승객석과 입석 손잡이','간선버스 · 곡면 유리와 출입문',
     '간선버스 · 전조등과 차폭등','간선버스 · '+route+'번 노선 표시',
   ]),
+  ['gyeongbu','4F','gyeongbu-hanbok/hanbok-showroom.blend','경부선 4층 · 고명재한복 치마와 저고리','4층 고명재한복 · 금직 치마와 저고리 진열'],
   ['gyeongbu','6F','gyeongbu-childrens-aisle/childrens-aisle.blend','경부선 6층 · 아동복 철망 진열과 접은 상품','6층 아동복 · 철망 행거와 접은 상품'],
   ['gyeongbu','8F','gyeongbu-womens-aisle/womens-aisle.blend','경부선 8층 · 식물무늬 니트와 집게 바지 및 외투 마네킹','8층 여성복 · 식물무늬 니트와 외투 마네킹'],
   ['gyeongbu','7F','gyeongbu-suiting-aisle/suiting-aisle.blend','경부선 7층 · 이단 신사복 행거와 소매 상품표','7층 신사복 · 모직 재킷과 이단 봉'],

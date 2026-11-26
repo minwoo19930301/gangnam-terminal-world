@@ -1,4 +1,20 @@
 {
+  "adidas_golf": {
+    "floor": "2관 5F 남성·골프",
+    "verified": "2026-11-26",
+    "sources": [
+      "https://map.naver.com/p/entry/place/1661537645",
+      "https://pcmap.place.naver.com/place/1661537645/photo",
+      "https://www.elandretail.com/upload/20261111151159_0.jpg",
+      "https://www.adidas.co.kr/help/ss26acd_storelist"
+    ],
+    "observed": [
+      "2026년 11월 지점 상품 목록 KR5437 후드 패딩, KH4086·KR5424·KR5425 트레포일 터틀넥",
+      "2023년 1월 지점 방문 사진의 두 가지 바이저",
+      "5층 도면의 아디다스골프와 AK골프"
+    ],
+    "estimated": "가구, 조명, 옷걸이 좌표와 매장 폭은 게임용 배치다."
+  },
   "kims_deli": {
     "checked": "2026-11-26",
     "place": "뉴코아아울렛 강남점 2관 지하 1층 킴스클럽, 델리 바이 애슐리",

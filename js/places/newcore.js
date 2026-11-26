@@ -1,3 +1,4 @@
+import { registerGolf } from '../../assets/models/newcore-golf/model.js';
 import { dishes as deliDishes, registerDeli } from '../../assets/models/kims-deli/model.js';
 import { registerFloorFinishes, floorSamples } from '../../assets/models/newcore-floor/surfaces.js';
 import { loadArchitecture, fitArchitecture } from '../../assets/models/architectural-retail/place.js';
@@ -1177,7 +1178,7 @@ const upperBays = {
     '2F': [['잇미샤', 'JJ지고트', '베네통'], ['보브', '시슬리', '톰보이']],
     '3F': [['요하넥스', '모조에스핀', '미샤'], ['보티첼리', '오브제', '앤클라인']],
     '4F': [['뉴발란스', '스케쳐스', '게스진'], ['아디다스', 'NBA', '지오다노']],
-    '5F': [['볼빅|golf', '루이까스텔|golf', '파크랜드'], ['AK 골프|golf', '로가디스', '닥스/마에스트로']],
+    '5F': [['볼빅|golf', '루이까스텔|golf', '파크랜드'], [['아디다스골프|golf','AK 골프|golf'], '로가디스', '닥스/마에스트로']],
   },
 };
 
@@ -1266,16 +1267,21 @@ function upperSalesFloor(F, num, floor) {
     const start = side ? -L / 2 + 21 : -L / 2 + 1.4, end = L / 2 - 1.4;
     const width = (end - start) / row.length;
     const inset = side ? -1 : 1, front = W * .5 - inset * 3.25, depth = W * .26;
-    for (let i = 0; i < row.length; i++) {
-      const u = start + width * (i + .5), [label, kind = 'rail'] = row[i].split('|');
+    const slots=row.flatMap((entry,i)=>{
+      const names=Array.isArray(entry)?entry:[entry],span=width/names.length;
+      return names.map((raw,j)=>({i,raw,span,u:start+width*i+span*(j+.5)}));
+    });
+    for (const {i,raw,span,u} of slots) {
+      const [label,kind='rail']=raw.split('|');
+      const adidasGolf=label==='아디다스골프';
       const clothingFinishes = [[0x665758, 0xe4d8cd], [0x48575c, 0xd9e1dc], [0x836347, 0xe7d8b8]];
       const kidsRoom = num === 1 && floor.label === '4F' && label === '키즈';
       const provence = num === 1 && floor.label === '4F' && label === '주방용품';
       const hotpot = num === 1 && floor.label === '5F' && label === '옥소반';
-      const [accent, wall] = hotpot ? [0x9e4831, 0xc3b5a2] :
+      const [accent, wall] = adidasGolf ? [0x252626,0xd5d3cc] : hotpot ? [0x9e4831, 0xc3b5a2] :
         kind === 'rail' ? clothingFinishes[(i + side + num) % 3] : finishes[kind];
       const back = front - inset * depth;
-      const bayWidth = width - 1.35;
+      const bayWidth = span - 1.35;
       B(u, y + .015, front - inset * depth / 2, bayWidth, .018, depth, side ? 0xd8d1c3 : 0xe9dece, { solid:false });
       B(u, y, back, bayWidth, 3.58, .16, wall);
       B(u - bayWidth / 2, y, front - inset * depth / 2, .15, 3.58, depth, wall);
@@ -1294,13 +1300,19 @@ function upperSalesFloor(F, num, floor) {
         registerProvence(F,u,y+.034,displayV,upperBayView(F,u,front,depth,bayWidth,inset,displayV,1.83));
       }
       if (hotpot) registerOksobanTable(F, u, y + .034, front - inset * depth * .36);
-      bays.push({u, front, back, depth, inset, bayWidth, kind, label, side, i, hotpot, provence, kidsRoom});
+      if(adidasGolf) registerGolf(F,u,y+.034,front,depth,bayWidth,
+        (position,half,offset)=>upperBayView(F,u,front,depth,bayWidth,inset,position,half,offset));
+      bays.push({u, front, back, depth, inset, bayWidth, kind, label, side, i, hotpot, provence, kidsRoom, adidasGolf});
     }
   });
   for (const off of [-1,1]) B(0, y + .017, W / 2 + off * 2.76, L - 3, .012, .085, 0xac987a, {solid:false});
   return () => {
-    for (const {u, front, back, depth, inset, bayWidth, kind, label, side, i, hotpot, provence, kidsRoom} of bays) {
+    for (const {u, front, back, depth, inset, bayWidth, kind, label, side, i, hotpot, provence, kidsRoom, adidasGolf} of bays) {
       B(u, y + 2.96, front + inset * .18, bayWidth - .45, .035, .10, { tex:'emit', color:0xffefd1 }, {solid:false});
+      if(adidasGolf){
+        for(const d of [2.10,5.74,8.73]) B(u,y+3.48,front+d,2.65,.052,.095,{tex:'emit',color:0xfff4df},{solid:false});
+        continue;
+      }
       S(label, u, y + 3.28, front + inset * .22, Math.min(7, bayWidth - .8), .43, null,
         {rotY: F.angle + (side ? Math.PI : 0), fg:'#fff9ef'});
       // Light-washed backboards and a suspended rail give long stores readable depth.
