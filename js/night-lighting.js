@@ -35,11 +35,16 @@ function roomLightVolume(THREE, zones, physics, maxSize) {
         const x = x0 + i*step, z = z0 + j*step;
         if (!pointInPoly(x,z,zone.poly)) continue;
         const offset = zone.heightOffset?.(x,z) ?? 0, floor = zone.y0 + offset;
-        const roof = physics.ceilingAbove(x,z,floor+.65,zone.y1+offset+3);
-        if (!Number.isFinite(roof)) continue;
+        // Zone tops follow navigation floors. A double-height hall can have its
+        // first solid ceiling well above that boundary. Basement passages can
+        // instead sit under terrain with no collision ceiling of their own.
+        const zoneTop = zone.y1 + offset;
+        const roof = physics.ceilingAbove(x,z,floor+.65,zoneTop+8);
+        const top = Number.isFinite(roof) ? roof : Math.min(zoneTop, -.7);
+        if (top <= floor) continue;
         const ground = relief(x,z);
         const first = Math.max(0, Math.ceil((floor + ground - y0 - .45*dy)/dy));
-        const last = Math.min(h-1, Math.floor((Math.min(roof,zone.y1+offset) + ground - y0 + .45*dy)/dy));
+        const last = Math.min(h-1, Math.floor((top + ground - y0 + .45*dy)/dy));
         for (let k=first;k<=last;k++) data[(k*d+j)*w+i]=255;
       }
     }
@@ -129,11 +134,21 @@ export function installElectricLighting(THREE, kit, physics, lamps, maxSize) {
     lib.fragmentShader=lib.fragmentShader.replace('#include <common>', '#include <common>\n'+declarations)
       .replace('#include <opaque_fragment>', `
         float afterDark=1.0-smoothstep(.012,.245,ambientLightColor.r);
-        if(afterDark>0.0) {
+        // Street lamps keep their dark-sky threshold. Indoor fixtures cover
+        // the earlier loss of direct daylight at dawn and dusk.
+        float interiorFill=afterDark;
+        #if NUM_DIR_LIGHTS > 0
+          float sunHeight=dot(directionalLights[0].direction,mat3(viewMatrix)[1]);
+          interiorFill=max(afterDark,.5*(1.0-smoothstep(-.10,.32,sunHeight)));
+        #endif
+        if(interiorFill>0.0) {
           vec3 worldPos=cameraPosition-(vViewPosition*mat3(viewMatrix));
           vec3 worldN=normal*mat3(viewMatrix);
           float room=roomAt(worldPos+.48*worldN);
-          outgoingLight+=diffuseColor.rgb*electricDiffuse(worldPos,worldN,room)*afterDark;
+          if(afterDark>0.0)
+            outgoingLight+=diffuseColor.rgb*electricDiffuse(worldPos,worldN,room)*afterDark;
+          if(interiorFill>afterDark && room>0.0)
+            outgoingLight+=diffuseColor.rgb*electricDiffuse(worldPos,worldN,1.0)*room*(interiorFill-afterDark);
         }
         #include <opaque_fragment>`);
   }
