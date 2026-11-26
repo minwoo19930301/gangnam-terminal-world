@@ -1,3 +1,4 @@
+import {oksobanReception} from '../../assets/models/newcore-oksoban-entry/model.js';
 import {yucheonDining} from '../../assets/models/newcore-yucheon/model.js';
 import {registerAshleyDessert} from '../../assets/models/newcore-dessert/model.js';
 import { registerGolf } from '../../assets/models/newcore-golf/model.js';
@@ -1296,6 +1297,10 @@ function upperSalesFloor(F, num, floor) {
         const wing=(bayWidth-8.05)/2;
         for(const direction of [-1,1])B(u+direction*(4.025+wing/2),y+2.99,front,wing,.58,.41,accent);
         yucheonDining(F,u,y+.034,front,upperBayView(F,u,front,depth,bayWidth,inset,front+3,4.05));
+      }else if(hotpot){
+        const wing=(bayWidth-7.8)/2;
+        for(const direction of [-1,1])B(u+direction*(3.9+wing/2),y+2.99,front,wing,.58,.41,accent);
+        oksobanReception(F,u,y+.034,front,depth,bayWidth);
       }else B(u, y + 2.99, front, bayWidth, .58, .41, accent);
       if (kidsRoom) {
         // This photographed bedding department shares the open Modern House sales floor.
@@ -1325,12 +1330,12 @@ function upperSalesFloor(F, num, floor) {
   return () => {
     for (const {u, front, back, depth, inset, bayWidth, kind, label, side, i, hotpot, provence, picnic, kidsRoom, adidasGolf} of bays) {
       if(num===1&&floor.label==='5F'&&label==='유천냉면')continue;
-      B(u, y + 2.96, front + inset * .18, bayWidth - .45, .035, .10, { tex:'emit', color:0xffefd1 }, {solid:false});
+      if(!hotpot)B(u, y + 2.96, front + inset * .18, bayWidth - .45, .035, .10, { tex:'emit', color:0xffefd1 }, {solid:false});
       if(adidasGolf){
         for(const d of [2.10,5.74,8.73]) B(u,y+3.48,front+d,2.65,.052,.095,{tex:'emit',color:0xfff4df},{solid:false});
         continue;
       }
-      S(label, u, y + 3.28, front + inset * .22, Math.min(7, bayWidth - .8), .43, null,
+      if(!hotpot)S(label, u, y + 3.28, front + inset * .22, Math.min(7, bayWidth - .8), .43, null,
         {rotY: F.angle + (side ? Math.PI : 0), fg:'#fff9ef'});
       // Light-washed backboards and a suspended rail give long stores readable depth.
       const ashley=num===1&&floor.label==='5F'&&label==='애슐리퀸즈';

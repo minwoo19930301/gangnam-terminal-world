@@ -13,3 +13,9 @@
 blender -b --threads 2 -P assets/models/gyeongbu-homewares/build.py
 blender -b assets/models/gyeongbu-homewares/homewares.blend --threads 2 -P assets/models/gyeongbu-homewares/export.py
 ```
+
+## 2층 침구점 찾기
+
+지도에서 ‘연희침구’, ‘침구도매’ 또는 ‘혼수침구’를 검색하면 매장 앞 공용 통로에 도착한다. 서울고속버스터미널 운영사의 2층 안내는 이불과 혼수 매장을 소개하며, 같은 층 사진에는 붉은 연희침구 간판과 좌우의 밝은 면판, 검은 소켓 아래 길게 내려온 흰색 유리등이 보인다. 간판 글자와 매달린 조명 네 개는 이불이 놓인 Blender 컬렉션에서 각각 편집할 수 있다. 측면 표지의 작은 글씨는 상품 종류로 재현했다. 사진에는 호수와 촬영일이 없어 검색명에는 층과 상품 종류를 사용했다. [운영사 층 안내](https://exterminal.co.kr/main_floor/main_floor.html) · [운영사 사진](https://www.exterminal.co.kr/images/n_floor02.jpg) · [낮·밤 게임 비교](bedding-entrance.jpg)
+
+점포 뒤편과 옆벽 밖을 향한 시점에서도 기존 게임은 근접 진열 파일을 받았다. 이제 두 위치에서는 일반 점포 외벽만 유지하며, 공용 통로에서 매장을 바라보면 115,556바이트의 상세 파일을 한 번 받는다. 뉴코아에서 지도 검색으로 층을 이동한 뒤, 2층 바닥에서 진열대를 향해 걷고 같은 통로로 돌아오는 과정을 확인했다. [게임의 보행 도착점](../../../index.html#/gyeongbu/2F?p=73.707,6,21.139,110.806)
