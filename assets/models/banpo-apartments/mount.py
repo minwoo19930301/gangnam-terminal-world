@@ -16,6 +16,11 @@ def mount_apartments(city):
     if not shelf:
         shelf = bpy.data.collections.new("신반포로 · 아파트 원본")
         exterior.children.link(shelf)
+    with bpy.data.libraries.load(str(path), link=True, relative=True) as (source, target):
+        target.objects = [name for name in source.objects if name.endswith(" · 보도 카메라")]
+    for camera in target.objects:
+        if camera.name not in city.objects:
+            shelf.objects.link(camera)
     visible_ids = set()
     for coll in linked:
         model = next(obj for obj in coll.objects if "estate_id" in obj)

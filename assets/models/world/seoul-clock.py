@@ -14,7 +14,7 @@ apply_sky = runpy.run_path(str(here / "lighting.py"))["apply_sky"]
 
 def update():
     now = datetime.datetime.now(seoul)
-    scene = bpy.data.scenes["반포 · 도시 전경"]
+    scene = bpy.data.scenes.get("반포 · 도시 전경") or bpy.context.scene
     if scene.get("Seoul solar date") != now.date().isoformat() or "Seoul apartment night" not in scene:
         curve = subprocess.check_output(["node", str(here / "lighting.mjs")], text=True)
         apply_sky(scene, json.loads(curve))
