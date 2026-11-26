@@ -1,4 +1,15 @@
 {
+  "daiso_garden_20261126": {
+    "naver": "https://map.naver.com/p/entry/place/931234931",
+    "operator": "https://www.daiso.co.kr/cs/shop?name_address=%EA%B0%95%EB%82%A8",
+    "address_verified": "네이버 지도 강남고속버스터미널점은 신반포로 194 서울고속버스터미널 지하1층 44호. 아성다이소 공식 매장검색에서도 B1 확인.",
+    "branch_photo": "https://noopy0402.tistory.com/464",
+    "observed": "2026-04-06 지점 방문 사진에서 연두색 ‘홈가드닝 원예용품’ 표지, 색이 다른 둥근·골진·무늬 화분, 흰 화병, 포개진 사각·원형 받침, 앞쪽 흰 철망·직조 바구니·종이 슬리브에 꽂힌 국화와 해바라기 모양의 조화를 확인했다.",
+    "estimate": "선반 폭 3.04m, 선반 높이·열 수, 색의 순서·상품 수량·조화의 배치와 11월 재고는 실측 또는 확인하지 못했다. 사진을 바탕으로 게임의 기존 원예 표시와 통로에 맞췄다.",
+    "model": "assets/models/daiso-garden/garden.blend",
+    "visual": "assets/models/daiso-garden/play.jpg",
+    "test": "assets/models/daiso-garden/check.mjs"
+  },
   "daiso_store_20261125": {
     "지점": "아성다이소 공식 매장검색은 신반포로 194의 강남고속버스터미널점 B1과 강남고속버스터미널2호점 1F를 별도 지점으로 등록한다. 이 모델의 긴 B1 매장과 네 출입구는 전자다. 2호점 문 위치는 해당 검색 결과로 확정할 수 없다.",
     "출처": [

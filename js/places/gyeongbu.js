@@ -8,6 +8,7 @@ import { placeUpperShowroom } from '../../assets/models/gyeongbu-apparel/model.j
 import { coachGlazing } from '../../assets/models/coach-cabin/windows.js';
 import { placeCutFlowers } from '../../assets/models/gyeongbu-cutflowers/model.js';
 import { placeWaitingBenches } from '../../assets/models/gyeongbu-seating/model.js';
+import {gardenShelf,gardenFlowers} from '../../assets/models/daiso-garden/shelf.js';
 import { placeDaisoEndcap } from '../../assets/models/daiso-merchandise/place.js';
 import { loadArchitecture, fitTerminalSeat as fitHallDetail } from '../../assets/models/architectural-retail/place.js';
 // 서울고속버스터미널: OSM ground-contact outlines; aerial lots and photographed concrete tiers.
@@ -2057,8 +2058,10 @@ export function build(K) {
         lsign(label,u,v+side*.11,y+1.867,.83,.104,face,{fg:'#fffef7',bg:null,pxPerM:330});
       });
     }
-    ldetail({floor:'B1',y0:y,y1:y+3.1,poly:rect(164,-18,284,30),name:'사진 보행 다이소 · 네 출입구 · 계산대'},()=>{
-      for(const [u,t] of [[177,'문구 · 사무'],[184,'완구'],[190,'선물 · 포장'],[195,'파티'],[201,'스낵 · 간식'],[215,'인테리어'],[220,'반려동물용품'],[225,'원예'],[230,'스포츠 · 취미'],[234,'패션'],[237,'여행용품'],[241,'뷰티 · 헤어소품']])
+    const fixtureArea=(name,u0,v0,u1,v1,draw)=>ldetail({name:'다이소 '+name,floor:'B1',
+      y0:y,y1:y+3.1,poly:rect(u0,v0,u1,v1)},draw);
+    fixtureArea('주 통로 매대 안내',174,3.3,245,10.5,()=>{
+      for(const [u,t] of [[177,'문구 · 사무'],[184,'완구'],[190,'선물 · 포장'],[195,'파티'],[201,'스낵 · 간식'],[215,'인테리어'],[220,'반려동물용품'],[230,'스포츠 · 취미'],[234,'패션'],[237,'여행용품'],[241,'뷰티 · 헤어소품']])
         lsign(t,u,3.8,y+2.35,2.5,.36,'+v',{bg:'#4cb8b6',fg:'#fff',twoSided:true});
       for(const [u,t] of [[177,'문구·사무\n매대번호 2~6'],[201,'스낵·간식\n매대번호 11~15'],[219,'반려동물용품\n매대번호 16~19'],[230,'스포츠·취미']]){
         lbox(u,9.8,y,.65,.65,3,u===219?0xeda21d:0xf0eeea,{solid:false});
@@ -2067,14 +2070,19 @@ export function build(K) {
       lbox(239.3,9.2,y+2.5,8.6,.7,.36,0x7ad8bf,{solid:false});
       lsign('Beauty 뷰티용품코너',239.3,8.8,y+2.68,6.5,.35,'-v',{bg:'#7ad8bf',fg:'#fff'});
       for(const [u,t] of [[237,'미용소품'],[241,'헤어소품']])lsign(t,u,8.8,y+2.14,3,.28,'-v',{bg:'#7ad8bf',fg:'#265f56'});
+    });
+    fixtureArea('주방·생활 매대 안내',250,-3,283,11.4,()=>{
       for(const [u,t] of [[254,'와인용품'],[259,'도자기'],[264,'내추럴용품'],[269,'조리도구'],[274,'일회용품'],[279,'일회·친환']])lsign(t,u,10.7,y+2.35,3,.33,'-v',{bg:'#73a797',fg:'#fff'});
       for(const [u,t] of [[253,'홈데코'],[261,'욕실'],[269,'청소 · 세탁'],[277,'수납']])lsign(t,u,-2.6,y+2.35,4,.33,'+v',{bg:'#b9a5da',fg:'#fff'});
+    });
+    const displayV=-2.91;
+    for(let first=0;first<42;first+=14)fixtureArea('쿠션 선반 '+(first/14+1),
+      254.3+first*.65,-3.8,255.7+(first+13)*.65,-2.1,()=>{
       const cushionStyles = ['CushionLinen','CushionSage','CushionRose','CushionIvory'];
       const cushions = cushionStyles.map(()=>[]);
       const cushionStands = [];
       // The rail fits just ahead of the crosswise gondola endcaps.
-      const displayV = -2.91;
-      for(let column=0;column<42;column++){
+      for(let column=first;column<first+14;column++){
         const u = 255 + column*.65;
         if(column%3===1) cushionStands.push([u,displayV,y,PI]);
         for(let tier=0;tier<3;tier++){
@@ -2084,10 +2092,14 @@ export function build(K) {
       }
       addMarketFixtures('CushionRack','다이소 쿠션 진열대',cushionStands,concourseFixtures);
       cushionStyles.forEach((key,i)=>addMarketFixtures(key,'다이소 쿠션 '+key,cushions[i],concourseFixtures));
+    });
+    fixtureArea('디즈니 캐릭터 코너',244.5,-9.3,254.6,-.5,()=>{
       for(const v of [-8.8,-1]){lbox(249.6,v,y+2.45,8.8,.5,.55,0xb9a5da,{solid:false});lsign('디즈니',249.6,v+.26,y+2.7,3.2,.4,'+v',{bg:'#b9a5da',fg:'#fff'});}
       for(const u of [245.7,253.5])for(const v of [-8.8,-1])lbox(u,v,y,.6,.6,3,0xb9a5da,{solid:false});
       // Disney merchandise retains stocked shelves; illustrated character-name panels match the photographed branch.
       for(const [u,t,bg] of [[245.7,'Mickey & Friends','#b9a5da'],[253.5,'Winnie the Pooh','#e7c47a']])lsign(t,u,-4,y+2.2,2.6,.6,u<250?'+u':'-u',{bg,fg:'#433553'});
+    });
+    function checkoutBank(west){
       const selfCheckouts=[];
       function checkout(u,v,n,face='-v',staff=false){
         if(!staff){
@@ -2101,20 +2113,29 @@ export function build(K) {
         lsign(String(n),u,v,y+2.2,.55,.28,face,{bg:'#26333a',fg:'#e5d33b'});
         if(staff){lperson(u,v+.85,y,{rotY:FACE['-v'],shirt:0xbc233c,pants:0x31363c});lsign('₩',u,v,y+2.6,.65,.55,face,{bg:'#252725',fg:'#f5d23f'});}
       }
-      for(let i=0;i<10;i++)checkout(246.3+(i%5)*2.8,-11.2-Math.floor(i/5)*4.2,i+1);
-      checkout(259.8,-11.2,11,'-v',true);checkout(259.8,-15.4,12);
-      for(const [u,n] of [[247,1],[252,2]])checkout(u,-5,n);
-      for(let i=0;i<3;i++)checkout(173.3+i*2.1,15.2,i+1,'-v',i===2);
+      if(west){
+        for(let i=0;i<3;i++)checkout(173.3+i*2.1,15.2,i+1,'-v',i===2);
+        lsign('계산하는 곳',176,13.7,y+2.65,3.4,.4,'-v',{bg:'#292d30',fg:'#f5d23f'});
+      }else{
+        for(let i=0;i<10;i++)checkout(246.3+(i%5)*2.8,-11.2-Math.floor(i/5)*4.2,i+1);
+        checkout(259.8,-11.2,11,'-v',true);checkout(259.8,-15.4,12);
+        for(const [u,n] of [[247,1],[252,2]])checkout(u,-5,n);
+        lwall(245,-17.7,263.6,-17.7,y,y+2.8,{mat:'gb7_daiso_circles',thick:.04,solid:false});
+        lsign('계산하는 곳',251.7,-10,y+2.65,5,.4,'+v',{bg:'#292d30',fg:'#f5d23f'});
+      }
       addMarketFixtures('SelfCheckout','다이소 셀프 계산대',selfCheckouts,daisoModel);
-      lwall(245,-17.7,263.6,-17.7,y,y+2.8,{mat:'gb7_daiso_circles',thick:.04,solid:false});
-      lsign('계산하는 곳',251.7,-10,y+2.65,5,.4,'+v',{bg:'#292d30',fg:'#f5d23f'});
-      lsign('계산하는 곳',176,13.7,y+2.65,3.4,.4,'-v',{bg:'#292d30',fg:'#f5d23f'});
+    }
+    fixtureArea('서측 계산대',172,13.3,178.5,16.6,()=>checkoutBank(true));
+    fixtureArea('고투몰 방면 계산대',244.5,-18,264,-4,()=>checkoutBank(false));
+    fixtureArea('캐릭터 가방',260.6,-17,263.1,-16,()=>{
       // Pooh tote rack: two levels, folded stock and handles remain individually modelled.
       for(let row=0;row<2;row++)for(let n=0;n<5;n++){
         const u=261.2+n*.37,v=-16.6;lbox(u,v,y+.25+row*.72,.32,.09,.48,0xf0dfa1,{solid:false});
         for(const du of [-.1,.1])lbox(u+du,v,y+.73+row*.72,.018,.04,.14,0xc2ab6d,{solid:false});
         lsign('Pooh',u,v+.055,y+.48+row*.72,.27,.18,'+v',{bg:null,fg:'#826031'});
       }
+    });
+    fixtureArea('1번 출입구 유리문',168,3.7,172,18.3,()=>{
       // Flush GATE1: two glazed sets around the recessed public stair enclosure.
       for(const v of [6,16]){
         for(const q of [v-2,v+2])lbox(170,q,y,.22,.15,2.95,0xc8102e,{solid:false});
@@ -2127,6 +2148,8 @@ export function build(K) {
       }
       lsign(['국민가게','다이소'],169.8,9,y+1.55,1,1.4,'-u',{bg:'#244765',fg:'#fff'});
       lsign('카트 출입금지',169.78,7.4,y+.82,.8,.23,'-u',{bg:'#fff',fg:'#b7253a'});
+    });
+    fixtureArea('2번 출입구 회전봉과 안내',205,7.8,216,11.6,()=>{
       // GATE2 flat entry-only turnstiles; doors are 2 m south of their housings.
       for(const u of [207.6,210.45,213.25]){
         lbox(u,9,y,.65,.8,1.04,0x242727);lbox(u,9.41,y+.05,.51,.025,.94,0xc0c1b9,{solid:false});
@@ -2141,16 +2164,27 @@ export function build(K) {
       for(const [u,col,t] of [[205.6,0x2da6a3,['CHECK iN SEOUL','MONEY EXCHANGE']],[215.1,0xf6f5ef,['Anytime Anywhere','daiso']]]){
         lbox(u,10.35,y,.75,.62,2.18,col);lsign(t,u,10.02,y+1.66,.65,.75,'-v',{bg:u<210?'#242e2e':'#fff',fg:u<210?'#f2cd37':'#c8102e'});lbox(u,10.02,y+.8,.45,.04,.35,0x222d35,{solid:false});
       }
+    });
+    fixtureArea('3번 출입구',247.5,2.5,249,10.5,()=>{
       // GATE3 doors lead to the new B&C stair foot through a clear eastward passage.
       for(const v of [3,5,8,10])lbox(248.5,v,y,.07,.07,2.7,0xaab2b0,{solid:false});
       for(const v of [4,9])lbox(248.5,v,y+.02,.025,1.8,2.5,doorGlass,{solid:false});
       for(const v of [5.1,7.9]){lbox(248.1,v,y,.85,.36,1.1,0xaeb9b7);lsign('입구',247.65,v,y+.85,.28,.2,'-u',{bg:'#263132',fg:'#fff'});}
       lsign('GATE 3 · 입구전용',248.45,6.5,y+2.8,1.8,.28,'-u',{bg:'#fff',fg:'#b82e40'});
-      for(const [n,u,v] of [[1,166.9,10.75],[2,210.5,23.2]]){
-        lbox(u,v,2.35,n===1?3.3:7.8,.25,.6,0xc8102e,{solid:false});lsign(`GATE ${n}  다이소`,u,v+.14,2.65,n===1?3:7,.4,'+v',{bg:null,fg:'#fff'});
-      }
+    });
+    for(const [n,u,v] of [[1,166.9,10.75],[2,210.5,23.2]]){
+      ldetail({name:'다이소 지상 GATE '+n,floor:'1F',y0:0,y1:3,poly:rect(u-4,v-.3,u+4,v+.3)},()=>{
+        lbox(u,v,2.35,n===1?3.3:7.8,.25,.6,0xc8102e,{solid:false});
+        lsign(`GATE ${n}  다이소`,u,v+.14,2.65,n===1?3:7,.4,'+v',{bg:null,fg:'#fff'});
+      });
+    }
+    fixtureArea('1번 출입구 장바구니',171.5,9,174.8,10,()=>{
       for(const u of [172,174.3])for(let n=0;n<12;n++)lbox(u,9.5,y+.08+n*.07,.55,.42,.06,0xc72137,{solid:false});
-      for(const [u,v] of [[177,6.5],[256,-9.3]])lsign(['가을맞이','가을이 왔어요'],u,v,y+2.55,1.1,.65,'-u',{bg:'#db7938',fg:'#fff',twoSided:true});
+    });
+    for(const [u,v] of [[177,6.5],[256,-9.3]])fixtureArea('가을 안내 '+u,u-1,v-1,u+1,v+1,()=>{
+      lsign(['가을맞이','가을이 왔어요'],u,v,y+2.55,1.1,.65,'-u',{bg:'#db7938',fg:'#fff',twoSided:true});
+    });
+    fixtureArea('바닥과 천장 줄눈',170,-18,284,30,()=>{
       // 800 mm glossy porcelain and continuous twin-tube fittings, with a dense mineral-tile grid.
       for(const [a,b,c,d] of [[170,0,284,30],[238,-18,264,0],[264,-3,284,0]]){
         for(let u=a;u<c;u+=.8)lquadH(u,b,u+.008,d,y+.012,0xc8c7c1);
@@ -2158,18 +2192,35 @@ export function build(K) {
         for(let u=a;u<c;u+=.6)K.hpoly(0xcfcfca,rect(u,b,u+.012,d),y+2.985,false);
         for(let v=b;v<d;v+=.6)K.hpoly(0xcfcfca,rect(a,v,c,v+.012),y+2.985,false);
       }
-      for(let u=171;u<283;u+=2.4)for(const v of [2.1,5.9,7.1,10,14,18,22,26]){
+    });
+    for(let first=0;first<47;first+=8)fixtureArea('매장 천장등 '+first,169.8+first*2.4,1.8,
+      Math.min(284,172.2+(first+7)*2.4),26.3,()=>{
+      for(let i=first;i<Math.min(first+8,47);i++)for(const v of [2.1,5.9,7.1,10,14,18,22,26]){
+        const u=171+i*2.4;
         if((u>206&&u<215&&v>10)||(u>265&&u<279&&v<3))continue;
         lbox(u,v,y+2.91,2.28,.25,.045,0xc6cac8,{solid:false});
         for(const dv of [-.075,.075])lbox(u,v+dv,y+2.89,2.2,.035,.025,'emit',{solid:false});
       }
+    });
+    fixtureArea('계산대 천장등',241,-18,262,0,()=>{
       for(let v=-17;v<0;v+=2.4)for(const u of [242,247.7,250,256,261]){
         lbox(u,v,y+2.91,.25,2.28,.045,0xc6cac8,{solid:false});for(const du of [-.075,.075])lbox(u+du,v,y+2.89,.035,2.2,.025,'emit',{solid:false});
       }
+    });
+    fixtureArea('통로 천장과 바닥 표시',174,4,282,9.5,()=>{
       for(let u=180;u<280;u+=12){lcyl(u,6.5,y+2.97,.3,.025,0x9a9e99,{seg:16,solid:false});const[x,z]=W(u+5,6.5);K.dome({x,y:y+2.86,z,rx:.12,ry:.1,rz:.12,mat:0x20292b});}
       for(let u=175;u<242;u+=4.4)for(const v of [4.15,8.85]){lquadH(u-.7,v,u-.1,v+.035,y+.021,0xe1c53a);lquadH(u-.7,v,u-.665,v+.45,y+.021,0xe1c53a);}
+    });
+    fixtureArea('주 통로 방문객',172,4.5,241,8.5,()=>{
       const coats=[0x364e6e,0xc84842,0xebe6dc,0x5a6a57,0xc69da6,0x343439];
-      for(let i=0;i<30;i++){const u=174+(i%15)*4.45,v=i<15?5.1:7.9;lperson(u,v,y,{shirt:coats[i%6],pants:0x343a40,rotY:FACE[i%2?'+u':'-u']});}
+      for(let i=0;i<30;i++){
+        const u=174+(i%15)*4.45,v=i<15?5.1:7.9;
+        if(i===11)lperson(221.55,5.90,y,{shirt:coats[i%6],pants:0x343a40,rotY:yawL(1.43,-1.15)});
+        else lperson(u,v,y,{shirt:coats[i%6],pants:0x343a40,rotY:FACE[i%2?'+u':'-u']});
+      }
+    });
+    fixtureArea('계산대 방문객',248,-15,261,-1.5,()=>{
+      const coats=[0x364e6e,0xc84842,0xebe6dc,0x5a6a57,0xc69da6,0x343439];
       for(const [u,v] of [[249,-2],[250.8,-6.5],[256.5,-13],[260,-14]])lperson(u,v,y,{shirt:coats[Math.floor(u)%6],pants:0x303439});
     });
   }
@@ -3477,11 +3528,23 @@ export function build(K) {
         addMarketFixtures(key,'다이소 '+label,[[u,v,y,angle]],daisoModel);
       });
     }
+    const gardenU=225.3,gardenV=4.18,[gardenX,gardenZ]=W(gardenU,gardenV);
+    lbox(gardenU,gardenV,y,3.04,.61,1.96,0,{skip:['top','bottom','n','s','e','w']});
+    ldetail({floor:'B1',y0:y,y1:y+2.6,poly:rect(gardenU-1.52,gardenV-.32,gardenU+1.52,gardenV+.32),
+      name:'다이소 홈가드닝 원예용품'},()=>{
+      gardenShelf(K,[gardenX,y,gardenZ],ROT+PI);
+      lsign('홈가드닝 원예용품',gardenU-.27,gardenV-.069,y+2.343,1.84,.165,'+v',{fg:'#fffdef',bg:null,pxPerM:250});
+      lsign(['HOME','GARDENING'],gardenU+.87,gardenV-.067,y+2.338,.58,.155,'+v',{fg:'#fffdef',bg:null,pxPerM:270});
+    });
+    const flowerU=222.98,flowerV=4.75,[flowerX,flowerZ]=W(flowerU,flowerV);
+    lbox(flowerU,flowerV,y,1.16,.68,.74,0,{skip:['top','bottom','n','s','e','w']});
+    ldetail({floor:'B1',y0:y,y1:y+2,poly:rect(flowerU-.58,flowerV-.34,flowerU+.58,flowerV+.34),
+      name:'다이소 원예 코너 조화'},()=>gardenFlowers(K,[flowerX,y,flowerZ],ROT+PI));
     for(const [lo,hi] of [[174,207],[215,243]])ldetail({floor:'B1',y0:y,y1:y+3.1,poly:rect(lo,0,hi,15),name:`다이소 보존 진열 ${lo}`},()=>{
       for(let a=lo;a<hi-2;a+=4.4){
         const b=Math.min(hi,a+3);
-        // These frontages carry the six documented merchandise categories below.
-        if(![174,187.2,200.4,237].some(start=>Math.abs(a-start)<.01)) run(a,b,4.05,1);
+        // Dedicated shop models occupy these stretches of the aisle.
+        if(![174,187.2,200.4,223.8,237].some(start=>Math.abs(a-start)<.01)) run(a,b,4.05,1);
         // The retained PET/pouch, dog-clothing and paint closeups occupy these south faces.
         if(!((a<221&&b>216)||(a<182&&b>179)))run(a,b,8.95,-1);
       }
@@ -3491,7 +3554,7 @@ export function build(K) {
         for(const dv of [-.155,.155])lbox(u,10.2+dv,y+.07+n*.055,.43,.02,.13,0xd22a42,{solid:false});
       }
     });
-    ldetail({floor:'B1',y0:y,y1:y+3.1,poly:rect(170,-18,284,30),name:'다이소 실제 노선도 · 가을 행사 · 꽃 바구니'},()=>{
+    ldetail({floor:'B1',y0:y,y1:y+3.1,poly:rect(170,-18,284,30),name:'다이소 실제 노선도 · 가을 행사'},()=>{
       K.texture('gb20_daiso_route',1280,440,(g,w,h)=>{
         g.fillStyle='#fffefa';g.fillRect(0,0,w,h);g.strokeStyle='#c8102e';g.lineWidth=14;g.strokeRect(7,7,w-14,h-14);
         const labels=['GATE3','뷰티용품','여행용품','패션','스포츠','원예','반려동물용품','인테리어','GATE2','식품','파티','선물·포장','완구','문구','계산하는 곳'];
@@ -3520,16 +3583,7 @@ export function build(K) {
         lbox(u,v,y+2.66,.02,.02,.33,0xa7b0a9,{solid:false});
         for(const d of [-.7,.7]){const[x,z]=W(u,v+d);K.dome({x,z,y:y+2.5,rx:.18,ry:.045,rz:.22,mat:d<0?0xc8562c:0xe2a443,seg:5,rings:2,hemi:false});}
       }
-      for(let i=0;i<12;i++){
-        const u=222.3+i%4*.55,v=2.6+Math.floor(i/4)*.55;
-        lcyl(u,v,y,.24,.55,0xa98b5c,{seg:10,solid:false});
-        for(let n=0;n<8;n++){const q=u+.13*Math.cos(n*2.4),r=v+.13*Math.sin(n*2.4);lcyl(q,r,y+.5,.012,.6,0x4a7043,{solid:false,seg:4});const[x,z]=W(q,r);K.dome({x,z,y:y+1.1,rx:.13,ry:.08,rz:.13,mat:[0xf3ece1,0xe5c54d,0xd77b9e][i%3]});}
-      }
-      // Retained suspended ivy is confined to the floral aisle, away from route signs.
-      for(let u=222;u<227;u+=1.1)for(const v of [3.8,9.2]){
-        lbox(u,v,y+2.15,.015,.015,.8,0x5e7041,{solid:false});
-        for(let k=0;k<6;k++){const[x,z]=W(u+(k%2?-.075:.075),v);K.dome({x,z,y:y+2.24+k*.12,rx:.11,ry:.065,rz:.04,mat:k%2?0x497343:0x638348,seg:5,rings:2,hemi:false});}
-      }
+
     });
   }
 

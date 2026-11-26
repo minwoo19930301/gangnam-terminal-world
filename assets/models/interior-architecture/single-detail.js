@@ -6,7 +6,7 @@ const models = new Map();
 // One draw at either distance. Quantized glTFs store their decode transform on
 // the node. Keep that separate from the architectural placement transform.
 export function placeSingleDetail(K, {name, file, at, angle, fallback, fallbackMaterial,
-                                      material, range, exitRange, floorTolerance, eyeHeight=0, viewBounds}) {
+                                      material, range, exitRange, floorTolerance, eyeHeight=0, viewBounds, closeVisibleFrom}) {
   const T = K.THREE;
   let state = models.get(file);
   if (!state) {
@@ -34,7 +34,7 @@ export function placeSingleDetail(K, {name, file, at, angle, fallback, fallbackM
   item.onBeforeRender = (_renderer,_scene,camera) => {
     const radius=item.geometry===fallback?range:exitRange;
     const within = Math.abs(camera.position.y-center.y)<floorTolerance &&
-      camera.position.distanceToSquared(center)<radius*radius;
+      camera.position.distanceToSquared(center)<radius*radius && (!closeVisibleFrom || closeVisibleFrom(camera.position));
     if (within && !state.surface && !state.pending && performance.now()>=state.retryAfter && inView(camera)) {
       state.pending=loadArchitecture(file).then(([surface])=>{
         surface.updateWorldMatrix(true,false);
