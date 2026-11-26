@@ -6,10 +6,11 @@ import bpy
 from mathutils import Vector
 
 
-def bake_collection(src, name, target):
+def bake_collection(src, name, target, simplification=None, preserve_smoothing=False):
     origin=Vector(src.get('preview_origin',(0,0,0)))
     graph = bpy.context.evaluated_depsgraph_get()
     v, f, colors = [], [], []
+    smooth_faces = []
     for source in sorted(src.all_objects,key=lambda o:o.name):
         if source.type != 'MESH':
             continue
@@ -21,10 +22,14 @@ def bake_collection(src, name, target):
             for poly in mesh.polygons:
                 f.append(tuple(n+j for j in poly.vertices))
                 colors.append(mesh.materials[poly.material_index].diffuse_color[:])
+                if preserve_smoothing:
+                    smooth_faces.append(poly.use_smooth)
         finally:
             o.to_mesh_clear()
     mesh = bpy.data.meshes.new(name)
     mesh.from_pydata(v, [], f)
+    if preserve_smoothing:
+        mesh.polygons.foreach_set('use_smooth', smooth_faces)
     mesh.update()
     tint=mesh.color_attributes.new(name='COLOR_0',type='BYTE_COLOR',domain='CORNER')
     for poly, col in zip(mesh.polygons,colors):
@@ -40,7 +45,11 @@ def bake_collection(src, name, target):
                                   export_normals=True,export_texcoords=False,export_materials='NONE',
                                   export_vertex_color='ACTIVE',export_yup=True)
         scripts=Path(__file__).resolve().parent
-        subprocess.run(['node',str(scripts/'pack_display.mjs'),str(out)],check=True)
+        pack=['node',str(scripts/'pack_display.mjs'),str(out)]
+        if simplification is not None:
+            ratio,error=simplification
+            pack.extend([str(ratio),str(error)])
+        subprocess.run(pack,check=True)
         subprocess.run(['node',str(scripts/'optimize_model.mjs'),str(out),str(target)],check=True)
 
     bpy.data.objects.remove(item,do_unlink=True)

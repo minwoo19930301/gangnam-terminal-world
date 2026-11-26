@@ -2,6 +2,17 @@
  "id": "gotomall",
  "name": "강남터미널 지하도상가 (GOTO MALL 고투몰)",
  "updated": "2026-11-26",
+ "rest_garden_20261126": {
+  "naver": "https://map.naver.com/p/entry/place/21714783",
+  "onsite_photo": "https://rurubu.jp/andmore/article/25097",
+  "furniture_photo": "https://img.rurubu.jp/img_srw/andmore/images/0000743968/Ft3inl0CXSwiZMRAGv8gksdvbw6jKsoDQcN5alsk.jpg",
+  "research_table_7": "https://www.kieae.kr/xml/30143/30143.pdf",
+  "walk_reference": "https://www.youtube.com/watch?v=rLMagJuViqo&t=860s",
+  "observed": "2026년 8월 현장 사진의 식재 휴게석은 밝은 인조석을 덧댄 두 단 곡면과 하부 황색 조명, 물과 회색 돌 및 여러 폭의 녹색 잎으로 이루어져 있다. 같은 취재의 서쪽 석재 벤치와는 외형이 다르다. 2021년 연구 표 7의 현장 사진도 식재 둘레 흰 좌석을 보여 준다.",
+  "fit": "기존 9호선 인근의 게임 화단 좌표와 휴게석 배치를 사용. 안내도의 이름, 촬영 당시의 점포명, 정확한 곡률과 식물종, 유아차의 실제 기종과 세부 치수는 미확인. 유아차는 기존 보행 영상 판독을 참조한 근사 모델.",
+  "model": "assets/models/gotomall-rest-garden/plaza.blend",
+  "review": "assets/models/gotomall-rest-garden/play.jpg"
+ },
  "retail_and_g2_20261126": {
   "checked": "2026-11-26",
   "sources": {

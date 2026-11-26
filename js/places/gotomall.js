@@ -1,3 +1,4 @@
+import {placeGardenFixture} from '../../assets/models/gotomall-rest-garden/place.js';
 import { placeHessed } from '../../assets/models/gotomall-hessed/place.js';
 import { placeShopStock, fixtureSilhouette, streamAislePart } from '../../assets/models/gotomall/stock.js';
 
@@ -1909,9 +1910,6 @@ export function build(K) {
       const back = Math.min(vS(a), vS(b)) - 0.16;
       K.zone({ name, floor: 'B1', sub: '중앙광장 상점', poly: R(a, back - depth, b, back), y0: FL - 0.5, y1: CY, priority: 4 });
     }
-    furnish(12, () => {
-    const u0 = 31.5, v = vN(u0 + 2) + 0.14; bx(u0, u0 + 4.8, v, v + 0.6, FL, 2.1, { tex: 'gt_locker' }, { top: 0x7d858e });
-    sg('물품보관함', u0 + 2.4, v + 0.62, -3.6, 2.4, 0.4, '+v', { bg: '#24282e', fg: '#fff' });
     // 2026-11 photos 03–05: a planted water feature and segmented granite bench rings.
     // All furniture stays south of W9; its west approach and the mall's through path stay open.
     const arcPoly = (u, v, rx, rz, a0, a1, n = 20) => Array.from({ length: n + 1 }, (_, i) => {
@@ -1919,6 +1917,16 @@ export function build(K) {
     });
     const ringPoly = (u, v, rx0, rz0, rx1, rz1, a0, a1, n = 16) =>
       [...arcPoly(u, v, rx1, rz1, a0, a1, n), ...arcPoly(u, v, rx0, rz0, a1, a0, n)];
+    const pondOuter=arcPoly(16.1,10.15,3.55,1.2,0,Math.PI*2,36);
+    const pondInner=arcPoly(16.1,10.15,3.38,1.02,0,Math.PI*2,36);
+    const invisible={top:false,bottom:false,side:false};
+    // Keep the walkway, seat edge and water feature stable before the visible fixtures stream.
+    K.prism(pondOuter,FL,FL+.82,{...invisible,holes:[pondInner]});
+    K.prism(ringPoly(16.1,10.15,3.53,1.18,4.15,1.82,Math.PI,Math.PI*2,24),FL+.12,FL+.45,invisible);
+    K.prism(R(7.54,4.76,8.06,5.45),FL,FL+.91,{...invisible,walkTop:false});
+    furnish(12, () => {
+    const u0 = 31.5, v = vN(u0 + 2) + 0.14; bx(u0, u0 + 4.8, v, v + 0.6, FL, 2.1, { tex: 'gt_locker' }, { top: 0x7d858e });
+    sg('물품보관함', u0 + 2.4, v + 0.62, -3.6, 2.4, 0.4, '+v', { bg: '#24282e', fg: '#fff' });
     const blackGranite = { tex: 'gt_island_polished' };
     // Polished black island with pale diagonal and circular stone inlays (photo 05).
     fq(blackGranite, 1.35, 3.55, 9.05, 11.3, FL + 0.008);
@@ -1953,27 +1961,11 @@ export function build(K) {
       K.box({ x, z, y: FL + 2.37 + (i % 3) * 0.05, w: 0.19, d: 0.17, h: 0.16, rotY: a, mat: [0x425a34, 0x5b723b, 0x708048][i % 3], solid: false });
     }
     // White curved planter rim, dark water and irregular pale rocks, thick trailing ivy (03).
-    const pondOuter = arcPoly(16.1, 10.15, 3.55, 1.2, 0, Math.PI * 2, 36);
-    const pondInner = arcPoly(16.1, 10.15, 3.38, 1.02, 0, Math.PI * 2, 36);
-    K.prism(pondOuter, FL, FL + 0.82, { mat: 0xe1ddd0, holes: [pondInner] });
-    K.hpoly({ tex: 'water', color: 0x35443c }, pondInner, FL + 0.67);
-    K.prism(ringPoly(16.1, 10.15, 3.62, 1.27, 4.15, 1.82, Math.PI, Math.PI * 2, 24), FL + 0.12, FL + 0.45, { mat: { color: 0x4a4c50, gloss: 0.3 } });
-    K.prism(ringPoly(16.1, 10.15, 3.64, 1.29, 4.1, 1.77, Math.PI, Math.PI * 2, 24), FL + 0.06, FL + 0.1, { mat: { tex: 'emit', color: 0xffcd78 }, solid: false });
-    for (let i = 0; i < 3; i++) {
-      const u = 13.6 + i * 2.45, v0 = 10.15 + Math.sin(i * 1.9) * 0.3;
-      bx(u - 0.36, u + 0.36, v0 - 0.3, v0 + 0.3, FL + 0.63, 0.5 + i * 0.1, 0x9b9d8d, { solid: false });
-    }
-    const greens = [0x3d6336, 0x4e703b, 0x658346];
-    for (let i = 0; i < 400; i++) {
-      const centre = [13.45, 15.25, 17.0, 18.7][i % 4], a = i * 2.39996, radius = Math.sqrt(((i * 37) % 101) / 101);
-      const u = centre + Math.cos(a) * radius * 1.0, v0 = 10.15 + Math.sin(a) * radius * 0.8;
-      const y = FL + 0.82 + 1.3 * Math.exp(-2.1 * radius * radius) + (i % 3) * 0.035, [x, z] = P(u, v0);
-      K.box({ x, z, y, w: 0.25, d: 0.24, h: 0.08, rotY: a, mat: greens[i % greens.length], solid: false, skip: ['bottom'] });
-    }
-    for (let i = 0; i < 30; i++) {
-      const u = 13.0 + i * 0.21, v0 = 9.04 - Math.sin(i * 1.7) * 0.11;
-      bx(u - 0.12, u + 0.12, v0 - 0.11, v0 + 0.13, FL + 0.3 + (i % 5) * 0.1, 0.08, greens[i % 3], { solid: false });
-    }
+    K.hpoly({tex:'water',color:0x35443c},pondInner,FL+.67);
+    K.prism(ringPoly(16.1,10.15,3.98,1.66,4.01,1.69,Math.PI,Math.PI*2,24),FL+.068,FL+.083,
+      {mat:{tex:'emit',color:0xffcd78},solid:false});
+    placeGardenFixture(K,'seat',P,ROT,FL);
+    placeGardenFixture(K,'planting',P,ROT,FL);
     for (let j = 0; j < 10; j++) {
       const a = Math.PI + 0.2 + j * (Math.PI - 0.4) / 9;
       const [x, z] = P(16.1 + Math.cos(a) * 3.86, 10.15 + Math.sin(a) * 1.53);
@@ -2067,17 +2059,7 @@ export function build(K) {
     }
     // _860: a stroller and additional seated shoppers at the existing plaza edge.
     // This does not identify the unlabelled video plaza's absolute location.
-    const su = 7.8, sv = 5.1;
-    for (const du of [-0.31, 0.31]) for (const dv of [-0.35, 0.35]) {
-      const [x, z] = P(su + du, sv + dv);
-      K.cyl({ x, z, y: FL + 0.05, h: 0.15, r: 0.10, seg: 8, mat: 0x2b2d2e, solid: false });
-      bx(su + du - 0.025, su + du + 0.025, sv + dv - 0.02, sv + dv + 0.02, FL + 0.17, 0.42, 0x7a8180, { solid: false });
-    }
-    bx(su - 0.30, su + 0.30, sv - 0.35, sv + 0.35, FL + 0.4, 0.15, 0x3c4350, { solid: false });
-    bx(su - 0.31, su + 0.31, sv + 0.20, sv + 0.35, FL + 0.55, 0.39, 0x535867, { solid: false });
-    bx(su - 0.33, su + 0.33, sv + 0.06, sv + 0.39, FL + 0.94, 0.08, 0x303843, { solid: false });
-    for (const du of [-0.3, 0.3]) bx(su + du - 0.02, su + du + 0.02, sv + 0.43, sv + 0.48, FL + 0.65, 0.45, 0x7e8584, { solid: false });
-    bx(su - 0.32, su + 0.32, sv + 0.43, sv + 0.48, FL + 1.08, 0.04, 0x33383b, { solid: false });
+    placeGardenFixture(K,'stroller',P,ROT,FL);
     // _860: groups stand between the occupied benches and beside the stroller.
     for (const [i, [u, v]] of [[-0.6, 5.95], [0.7, 7.5], [1.4, 8.2], [2.1, 5.2], [9.4, 6.2], [10.1, 6.7], [11.2, 7.0], [12, 6.4]].entries())
       shopper(u, v, 180 + i, FACE[i % 3 === 0 ? '+v' : i % 2 ? '+u' : '-u']);
