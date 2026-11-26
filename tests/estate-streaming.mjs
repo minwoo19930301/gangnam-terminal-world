@@ -46,8 +46,9 @@ try {
     scene.add(wall);
     const models=[footprint('front',0,-35),footprint('back',0,35),footprint('next',1000,-35)];
     const streamer=loadReModels({THREE,scene,renderer,models,stand:new Map(),terrain:false});
-    window.testView={camera,wall,scene};
-    const frame=now=>{streamer.update(camera,now);renderer.render(scene,camera);requestAnimationFrame(frame);};
+    const step=now=>{streamer.update(camera,now);renderer.render(scene,camera);};
+    window.testView={camera,wall,scene,renderer,step,paused:false};
+    const frame=now=>{if(!testView.paused)step(now);requestAnimationFrame(frame);};
     requestAnimationFrame(frame);
   });
   await page.waitForTimeout(1700);
@@ -56,6 +57,29 @@ try {
   const shown=id=>page.waitForFunction(id=>testView.scene.children.some(m=>m.userData.re?.id===id&&m.visible),id,{timeout:15000});
   await shown('front');
   assert.deepEqual(fetched,['front']);
+  // Turn while the previous frame's real depth query is in flight. The tower
+  // stays in the frustum while the 21° turn makes that old result inapplicable.
+  const retained=await page.evaluate(async()=>{
+    const v=testView,gl=v.renderer.getContext(),now=performance.now()+5000;
+    v.paused=true;
+    try {
+      const begin=gl.beginQuery.bind(gl);
+      let pending;
+      gl.beginQuery=(target,query)=>{pending=query;begin(target,query);};
+      try{v.step(now);}finally{delete gl.beginQuery;}
+      if(!pending)throw Error('Expected a repeat visibility probe for the loaded facade');
+      const deadline=performance.now()+4500;
+      while(!gl.getQueryParameter(pending,gl.QUERY_RESULT_AVAILABLE)) {
+        if(performance.now()>deadline)throw Error('Timed out waiting for the GPU visibility probe');
+        await new Promise(requestAnimationFrame);
+      }
+      v.camera.rotation.y=.37;
+      v.camera.updateMatrixWorld(true);
+      v.step(now+120);
+      return v.scene.children.find(o=>o.userData.re?.id==='front').visible;
+    } finally {v.paused=false;}
+  });
+  assert.equal(retained,true,'a stale probe must not replace a still-visible loaded facade with its silhouette');
   await page.evaluate(()=>{testView.camera.rotation.y=Math.PI;});
   await shown('back');
   assert.deepEqual(fetched,['front','back']);

@@ -34,6 +34,25 @@ def build_roads(context, seed, mesh_object, material, surfaces):
             else c * (u + v - 1) + b * (1 - v) + d * (1 - u)
         )
 
+    landing = seed.get("gyeseongLanding")
+    if landing:
+        points = [(x, -z, elevation(x,z,0)+.156) for x,z in landing["warning"]]
+        pad = mesh_object(context, "계성초교입구 · 북쪽 보도 점자블록", points, [(0,1,2,3)],
+                          [material("경고블록 황토색", (.64,.40,.09))])
+        if pad.data.polygons[0].normal.z < 0:
+            pad.data.polygons[0].flip()
+        # This detailed streets pole is outside the generic city lamp point set.
+        # The shaft, arm and both box dimensions come from the game fixture.
+        from pathlib import Path
+        import runpy
+        lamp_finish = runpy.run_path(str(Path(__file__).with_name("lighting.py")))["lamp_material"]()
+        steel = material("계성초교입구 · 회색 강재", (.065,.089,.110))
+        ground = elevation(*landing["lamp"],0)
+        for part in landing["parts"]:
+            points = [(x,-z,y+ground) for x,y,z in part["points"]]
+            mesh_object(context,"계성초교입구 · "+part["name"],points,part["triangles"],
+                        [lamp_finish if part["name"]=="렌즈" else steel])
+
     crossings = {entry["way"]: entry for entry in seed.get("paintedCrossings", [])}
     legacy = seed.get("banpoCrossing")
     if legacy and legacy["way"] not in crossings:

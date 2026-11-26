@@ -1,3 +1,5 @@
+import {placeXiPortal} from '../../assets/models/banpo-xi-portal/model.js';
+import {crossingWay as gyeseongCrossing,northLanding as gyeseongNorthLanding} from '../../assets/models/gyeseong-crossing/layout.js';
 import {placePedestrianHead} from '../../assets/models/sinbanpo-crossing/model.js';
 import {crossingWay as flyoverCrossingWay,carriageways as flyoverRoads,markingWidth as flyoverWidth,markingFaces as flyoverMarkings,landings as flyoverLandings} from '../../assets/models/sinbanpo-crossing/layout.js';
 import {placeSingleDetail} from '../../assets/models/interior-architecture/single-detail.js';
@@ -73,6 +75,17 @@ export const meta = {
     'https://topis.seoul.go.kr/map/openPopBusRoute.do?routId=104000012',
     'https://culture.seoul.go.kr/culture/culture/cultureEvent/view.do?cultcode=136724&menuNo=200010'],
 };
+
+// Geometry of the 7.5 m roadside fixture placed by the detailed streets module.
+export function roadsideLampShape(x,y,z,yaw){
+  const dx=Math.sin(yaw),dz=Math.cos(yaw),headX=x+dx*1.8,headZ=z+dz*1.8;
+  return {
+    mast:{x,z,y,r:.11,h:7.5,seg:8},
+    arm:[[x,y+7.3,z],[x+dx*1.7,y+7.5,z+dz*1.7],.07],
+    hood:{x:headX,z:headZ,y:y+7.42,w:.5,h:.15,d:1.1,rotY:yaw},
+    lens:{x:headX,z:headZ,y:y+7.4,w:.4,h:.025,d:.9,rotY:yaw},
+  };
+}
 
 export function build(K) {
   const PI = Math.PI, ROAD = 0.04, WALK = 0.15;
@@ -385,8 +398,13 @@ export function build(K) {
   function inBuilding(x,z,ignoreUnderground=false) {return bboxes.some(({b,bb})=>(!ignoreUnderground||Number(b.layer||0)>=0)&&x>bb[0]-1&&x<bb[2]+1&&z>bb[1]-1&&z<bb[3]+1&&K.pointInPoly(x,z,b.poly));}
   function clearFurniture(x,z) {return !inG13(x,z)&&!inCut(x,z)&&!inBuilding(x,z)&&!inWestCanopy(x,z)&&!inTaxiStand(x,z)&&!indexedMasks.some(m=>K.pointInPoly(x,z,m.poly))&&!stops.some(p=>Math.hypot(p.x-x,p.z-z)<10)&&!exits.some(p=>Math.hypot(p.x-x,p.z-z)<5)&&!crossings.some(r=>nearest(x,z,[r]).d<4);}
   const furniture=[];
-  function lamp(x,z,rot,y=WALK) {
+  const gyeseongLanding=gyeseongNorthLanding(byId.get(gyeseongCrossing));
+  function lamp(x,z,rot,y=WALK,surveyed=false) {
     if(y===WALK&&(inG13(x,z)||onTerminalMedian(x,z)||inWestCanopy(x,z)||inTaxiStand(x,z)))return;
+    if(y===WALK && gyeseongLanding && !surveyed){
+      const {corner,lamp:site}=gyeseongLanding;
+      if(Math.hypot(x-corner[0],z-corner[1])<.65 || Math.hypot(x-site[0],z-site[1])<1.25)return;
+    }
     const dx=Math.sin(rot),dz=Math.cos(rot);
     K.streetLight?.(x+dx*1.8,y+7.4,z+dz*1.8);
     if(y===WALK && exit8 && Math.hypot(x-exit8.x,z-exit8.z)<5){
@@ -394,10 +412,11 @@ export function build(K) {
       K.streetLight?.(x-dx*1.05,y+4.1-.08,z-dz*1.05,.23);
       return;
     }
-    K.cyl({x,z,y,r:.11,h:7.5,seg:8,mat:C.steel});
-    beam([x,y+7.3,z],[x+dx*1.7,y+7.5,z+dz*1.7],.07);
-    K.box({x:x+dx*1.8,z:z+dz*1.8,y:y+7.42,w:.5,h:.15,d:1.1,rotY:rot,mat:C.steel,solid:false});
-    K.box({x:x+dx*1.8,z:z+dz*1.8,y:y+7.4,w:.4,h:.025,d:.9,rotY:rot,mat:emit(0xffedc2),solid:false});
+    const {mast,arm,hood,lens}=roadsideLampShape(x,y,z,rot);
+    K.cyl({...mast,mat:C.steel});
+    beam(...arm);
+    K.box({...hood,mat:C.steel,solid:false});
+    K.box({...lens,mat:emit(0xffedc2),solid:false});
   }
   // The short row of stone planters follows the curb in front of the department store.
   const plazaX=-105.95,plazaZ=-65.42,plazaAngle=.3631;
@@ -505,6 +524,7 @@ export function build(K) {
       }
     }
   }
+  placeXiPortal(K);
   plantSurveyedPinOaks(K);
   // sr-07 / street_01: continuous mature light-green crowns on the north
   // sidewalk. OSM chainage preserves the oblique kerb at both ends of the row.
@@ -599,6 +619,11 @@ export function build(K) {
   K.hpoly({tex:'grass',color:0x78944d},[[467,55],[471.8,54],[474,57],[472.5,59],[468.5,57]],.185);
   for(const [x,z] of [[469,55.5],[471.5,56],[472,58]])K.dome({x,z,y:.18,rx:.65,ry:.45,rz:.6,seg:8,rings:4,mat:0x56753e});
   flat([469.8,53],[472.5,53],.6,.19,'streets-tactile');
+  if(gyeseongLanding){
+    const {lamp:[x,z],yaw,warning}=gyeseongLanding;
+    lamp(x,z,yaw,WALK,true);
+    K.hpoly('streets-tactile',warning,WALK+.006);
+  }
   for(const {curb,warning} of flyoverLandingPads){
     K.slab(curb,WALK,{mat:'streets-pavers',thick:.15,ceil:false});
     K.hpoly('streets-tactile',warning,WALK+.006);
