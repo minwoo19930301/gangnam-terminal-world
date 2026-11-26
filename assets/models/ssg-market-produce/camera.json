@@ -1,0 +1,29 @@
+{
+  "floor": "B1",
+  "x": -64.17775,
+  "y": -6,
+  "z": 26.67663,
+  "yaw": 86.107,
+  "pitch": -16.616,
+  "meshName": "신세계 마켓 · 팔각 제철 과일 진열대",
+  "sourceBlend": "fruit-island.blend",
+  "sourceCollection": "MarketProduceIsland",
+  "nativeLabel": "신세계 마켓 과일 진열대",
+  "area": "in:shinsegae",
+  "gameView": "?pitch=-16.616#/shinsegae/B1?p=-64.17775,-6,26.67663,86.107",
+  "approachView": "?pitch=-5.73#/shinsegae/B1?p=-60.70116,-6,25.73140,111.264",
+  "placements": [
+    [
+      -66.80597712735026,
+      -6,
+      26.49778322084971,
+      0.3631
+    ],
+    [
+      -65.69563752665243,
+      -6,
+      29.39164024035667,
+      0.3631
+    ]
+  ]
+}
