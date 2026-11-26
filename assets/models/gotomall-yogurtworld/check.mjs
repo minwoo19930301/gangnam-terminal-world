@@ -2,10 +2,20 @@
 import assert from 'node:assert/strict';
 import {chromium} from 'playwright';
 import {serve} from '../../../tests/serve.mjs';
-import {footprint,names} from './layout.js';
+import {footprint,names,outline,rear} from './layout.js';
+import {readFile} from 'node:fs/promises';
+import {pointInPoly} from '../../../js/physics.js';
 const floor=-6,len=Math.hypot(1,.3745),du=[1/len,-.3745/len],dv=[-du[1],du[0]],{front,mid}=footprint;
 const point=(x,d)=>[(front-d)*du[0]+(mid+x)*dv[0],-126.3+(front-d)*du[1]+(mid+x)*dv[1]];
 const local=(x,z)=>[x*dv[0]+(z+126.3)*dv[1]-mid,front-x*du[0]-(z+126.3)*du[1]];
+const osm=JSON.parse(await readFile(new URL('../../../data/osm.json',import.meta.url)));
+const shopBand=osm.buildings.find(b=>b.id===1354860678).poly;
+const signedArea=outline.reduce((sum,[x,d],i)=>{
+  const [nx,nd]=outline[(i+1)%outline.length];
+  for(let j=0;j<=100;j++)assert.ok(pointInPoly(...point(x+(nx-x)*j/100,d+(nd-d)*j/100),shopBand),'registered envelope outside game shell');
+  return sum+x*nd-nx*d;
+},0);
+assert.ok(Math.abs(Math.abs(signedArea/2)-54.65)<1e-8,'Seocho registered area');
 const server=await serve(0),browser=await chromium.launch({channel:'chromium',headless:true,args:['--use-angle=metal','--enable-gpu','--ignore-gpu-blocklist']});
 try{
   const page=await browser.newPage({viewport:{width:1000,height:640}}),files=[],errors=[];
@@ -35,6 +45,8 @@ try{
     },['요거트월드 · '+names[key],min],{timeout:5000});}
     catch(error){throw Error('No detailed '+key+' at '+await here(),{cause:error});}
   }
+  const behind=await page.evaluate(([x,z])=>__world.phys.zoneAt(x,-5.91,z)?.name,point(-4.05,rear.depth-.31));
+  assert.equal(behind,'요거트월드 반포고투몰점');
   // Adjacent shop (north), rear wall and the shopper facing away from the entrance.
   await pose(-3.05,2.72,-1.21,2.33);await pose(-.04,6.91,0,4.34);await pose(0,-3.0,0,-8.1);
   assert.deepEqual(files,[]);
@@ -76,5 +88,5 @@ try{
   await pose(.03,-2.18,0,0,.31);await high('front',1100);
   const expected=Object.keys(names).filter(k=>k!=='glass').map(k=>k+'.glb').concat('room-light.webp','counter-light.webp').sort();
   assert.deepEqual(files.toSorted(),expected);assert.deepEqual([...errors,...await page.evaluate(()=>[...__world.errors,...__world.K._.detailErrors])],[]);
-  console.log(JSON.stringify({cold:0,windowContact,room,counter,wc1,wc2,corridor,g1,g2,opaque,downloads:files}));
+  console.log(JSON.stringify({registered:Math.abs(signedArea/2),behind,cold:0,windowContact,room,counter,wc1,wc2,corridor,g1,g2,opaque,downloads:files}));
 }finally{await browser.close();await new Promise(resolve=>server.close(resolve));}

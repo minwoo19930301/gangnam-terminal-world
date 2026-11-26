@@ -1,3 +1,4 @@
+import { apartmentNight, lightApartmentWindows } from './apartment-windows.js';
 import { streetBatchView } from './static-view.js';
 import { createDeckVisibility } from './deck-visibility.js';
 import { visitorInstances } from './visitors.js';
@@ -50,7 +51,14 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     else if (key === 'hanRiver') m = createRiverWater(THREE,scene,onFrame);
     else if (key === 'water') { const s = T.surface('water'); m = new THREE.MeshLambertMaterial({ map: s.tex, vertexColors: true, transparent: true, opacity: 0.92 }); }
     else if (key.startsWith('sign:')) { const p = atlas.pages[+key.slice(5)]; m = new THREE.MeshBasicMaterial({ map: p.t, side: THREE.FrontSide, alphaTest: 0.35 }); }
-    else if (key.startsWith('arr:')) { m = new THREE.MeshLambertMaterial({ map: dummyMap, vertexColors: true }); m.userData.arr = texArrays[+key.slice(4)]; addBounce(m, '', true); materials.set(key, m); return m; }
+    else if (key.startsWith('arr:')) {
+      m = new THREE.MeshLambertMaterial({ map: dummyMap, vertexColors: true });
+      m.userData.arr = texArrays[+key.slice(4)];
+      addBounce(m, '', true);
+      const layer=m.userData.arr.userData.apartmentLayer;
+      if(layer!==undefined) lightApartmentWindows(m,apartmentNight(K),'paint',layer);
+      materials.set(key, m); return m;
+    }
     else if (key.startsWith('tex:')) { const s = T.surface(key.slice(4)); m = new THREE.MeshLambertMaterial({ map: s.tex, vertexColors: true }); }
     else if (key.startsWith('ctex:')) { const s = customTex.get(key.slice(5)); m = new THREE.MeshLambertMaterial({ map: s.tex, vertexColors: true, transparent: !!s.transparent, alphaTest: s.transparent ? 0.3 : 0, side: s.doubleSide ? THREE.DoubleSide : THREE.FrontSide }); }
     else if (/^gl\d+:/.test(key)) { // polished surface: the base material plus a blurred warm-interior reflection
@@ -63,6 +71,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     }
     else throw new Error('unknown material key ' + key);
     if (m.isMeshLambertMaterial) addBounce(m);
+    if (key==='tex:apt') lightApartmentWindows(m,apartmentNight(K),'paint');
     materials.set(key, m); return m;
   }
   // Shared reflection map for polished floors/stone ({ gloss }): a soft interior — bright ceiling with downlight pools,
@@ -482,7 +491,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     const mv = o.move ? [ux * o.move, uz * o.move] : null;
     phys.addRamp(ax, az, bx, bz, w / 2, ya, yb, { move: mv, tag: current });
   }
-  const fixedEscalators = [], indoorEscalators = [];
+  const fixedEscalators = [], indoorEscalators = [], indoorStock = [];
   const drawEscalator = createEscalatorRenderer(THREE, (mesh,moving) => {
     addMesh(mesh);
     if (streetVisibility) {
@@ -657,8 +666,9 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
   function onFrame(fn) { frameFns.push(fn); }
   // Detail batches keep their normal scene parents so place animations retain control of visibility.
   let detailObjects = null;
-  function addMesh(mesh) {
+  function addMesh(mesh, {stationaryInstances = false} = {}) {
     detailObjects?.add(mesh);
+    if (deckVisibility && stationaryInstances) mesh.userData.stationaryInstances = true;
     mesh.userData.owner ??= current;
     if (mesh.isPointLight) mesh.position.y += terrainAt(anchorHeight,mesh.position.x,mesh.position.z);
     scene.add(mesh);
@@ -827,6 +837,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     }
     const deck = deckVisibility?.active ? deckVisibility : null;
     if (deck || deckChanged) {
+      for (const mesh of indoorStock) mesh.visible = !deck || !deck.hides(mesh.userData.deckBounds);
       for (const flight of indoorEscalators) {
         if (deck) flight.bounds ??= staticVisibility.flightBounds(flight.mesh,flight.moving,relief);
         flight.mesh.visible = !deck || !deck.hides(flight.bounds);
@@ -864,6 +875,8 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
       const t = new THREE.DataArrayTexture(data, w, h, list.length);
       t.wrapS = t.wrapT = THREE.RepeatWrapping; t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = maxAniso;
       t.generateMipmaps = true; t.minFilter = THREE.LinearMipmapLinearFilter; t.magFilter = THREE.LinearFilter; t.needsUpdate = true;
+      const apartmentLayer=list.findIndex(entry=>entry.k==='tex:apt');
+      if(apartmentLayer>=0)t.userData.apartmentLayer=apartmentLayer;
       texArrays.push(t);
     }
     return layers;
@@ -1041,13 +1054,29 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
   function splitModuleInstances() {
     const M = new THREE.Matrix4(), C = new THREE.Color();
     for (const im of detailObjects || scene.children.slice()) {
-      if (im.parent !== scene || !im.isInstancedMesh || im.count < 64 || im.userData.dynamic || im.userData.split) continue;
+      if (im.parent !== scene || !im.isInstancedMesh || im.userData.dynamic || im.userData.split) continue;
+      if (im.count < 64) {
+        if (im.userData.stationaryInstances && !im.userData.deckBounds) {
+          // Area pruning has compacted the final instance set. Small displays
+          // keep their original parent and distance behaviour.
+          im.computeBoundingBox();
+          im.updateWorldMatrix(true,false);
+          im.userData.deckBounds = im.boundingBox.clone().applyMatrix4(im.matrixWorld);
+          indoorStock.push(im);
+        }
+        continue;
+      }
       const e = im.instanceMatrix.array;
       for (const g of groupBy(im.count, i => [e[i * 16 + 12], e[i * 16 + 13], e[i * 16 + 14], im.userData.owner])) {
         const nm = new THREE.InstancedMesh(im.geometry, im.material, g.idx.length);
         g.idx.forEach((src, j) => { im.getMatrixAt(src, M); nm.setMatrixAt(j, M); if (im.instanceColor) { im.getColorAt(src, C); nm.setColorAt(j, C); } });
         nm.instanceMatrix.needsUpdate = true; if (nm.instanceColor) nm.instanceColor.needsUpdate = true;
         nm.frustumCulled = im.frustumCulled; nm.renderOrder = im.renderOrder; nm.userData.split = true; scene.add(nm); track(nm, g.cell);
+        if (im.userData.stationaryInstances) {
+          // Each spatial cell already has an exact bound including all its instances.
+          nm.name = im.name;
+          nm.userData.deckBounds = nm.boundingBox;
+        }
       }
       scene.remove(im);
     }
@@ -1268,6 +1297,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     triangle: (mat, points, normal, uv) => tri(spec(mat), points, normal, uv),
     pointInPoly, polyBBox, polyArea, orient,
     occludingSlab: options => deckVisibility?.register(options),
+    occludingWall: options => deckVisibility?.registerWall(options),
     // internals for engine
     _: { bounce, cull, cullList, deckVisibility, finalize, details, detailErrors, ensureDetail, buildAllDetail, frameFns, interactables, spawns, zonesList, elevators, claims, mapMarks, groundHoles, stats, atlas, trees, people, setCurrent: (id, meta) => { current = id; if (meta) perPlace[id] = meta; } },
   };

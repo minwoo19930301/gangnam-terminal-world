@@ -1,3 +1,4 @@
+import {placeMadang} from '../../assets/models/gotomall-madang/place.js';
 import {placeWestCorner} from '../../assets/models/gotomall-west-corner/place.js';
 import {placeYogurtWorld} from '../../assets/models/gotomall-yogurtworld/room.js';
 import {westSeatCollisions,westSeatFixtures} from '../../assets/models/gotomall-west-seats/place.js';
@@ -131,7 +132,8 @@ const NAMED = [
 // fitted from the public zone plans and Naver's surface map. Detailed confidence is recorded in the research file.
 const EXITS = [
   { id: 'G1', side: 'S', top: [-380.3,39.4], fixedTop:true, a:[0,-1], escalator:true, kind:'mall', dest:'래미안퍼스티지 중심상가 · 반포4동' },
-  { id: 'G2', side: 'N', top: [-393,-26], a: [1, 0], escalator:true, guideLift:true, kind:'mall', dest:'반포2동 · 신반포중학교 · 한강공원' },
+  // The food hall's north front is at -16.8; the generic retail aisle line crossed G010's tables.
+  { id: 'G2', side: 'N', doorV: -16.8, top: [-393,-26], a: [1, 0], escalator:true, guideLift:true, kind:'mall', dest:'반포2동 · 신반포중학교 · 한강공원' },
   { id: '원베일리 연결통로', side:'N', u:-316, a:[1,0], connectorOnly:true, kind:'mall', dest:'원베일리 · 고터세빛 관광안내센터' },
   { id: 'G3', side: 'S', top: [-333.5,32.1], fixedTop:true, a:[0,-1], guideLift:true, kind:'mall', dest:'위너스시티 · 르본시티 방면' },
   { id: 'G4', side: 'N', top:[-325,-22.3], a: [1, 0], escalator:true, kind:'mall', dest:'반포한강공원 · 반포대교' },
@@ -2117,7 +2119,6 @@ export function build(K) {
     foodTextures();
       lbox(S, 0.10, W - 0.10, 0.14, 0.22, FL + 2.05, 0.60, 0xf4f2ec, { solid: false });
       lquadV(S, 0.12, W - 0.12, 0.125, FL + 2.05, FL + 2.65, info.fx === 'cafe' ? 'gt_cafe_menu_lit' : 'gt_food_menu_lit');
-      if (info.pictureMenu) return;
       const labels = (info.menu || ['식사']).join(' · ').split(' · '), tileW = (W - 0.24) / 8;
       for (let j = 0; j < 8; j++) lsign(S, [labels[j % labels.length], ['4,000', '5,500', '6,500', '7,000'][j % 4]], 0.12 + tileW * (j + 0.5), 0.10, FL + 2.14, tileW * 0.94, 0.14, outFace(S), { bg: null, fg: '#252a2c', bold: false, pxPerM: 180 });
       for (let j = 0; j < 4; j++) lsign(S, [labels[j % labels.length], ['4,000', '5,500', '6,500', '7,000'][j]], 0.45 + j * (W - 1.6) / 3, 0.09, FL + 1.72, 0.25, 0.35, outFace(S), { bg: '#f0d22a', fg: '#292521', bold: false, pxPerM: 160 });
@@ -2213,9 +2214,7 @@ export function build(K) {
     stallRow(north.slice(0, 5), { pu: 0, pv: fv, au: 1, av: 0, du: 0, dv: -1 }, -378.5, -347.7, u => fv - vN(u) - 0.14, '서편 푸드코트');
     // The west block in zone 1 holds G010, G011 and the L-shaped G012. Across the south side window is
     // a public passage to the WC and G013. Leave the existing G1/G2 landing approaches clear around it.
-    const fu = -377.4, uW = v => edgesAtV(v)[0];
-    stallRow([{name:'마당',sub:'서편 G-010 · 한식',bg:'#8d3a2e',pictureMenu:true}],
-      {pu:fu,pv:0,au:0,av:1,du:-1,dv:0},-10.15,-4.62,v=>Math.min(6.15,fu-uW(v)-.15),'서편 푸드코트');
+    placeMadang(K,P,ROT,FL);
     toilets(-386.0,-380.48,6.80,12.18,'-v',true);
     furnish(-382,()=>tactilePath([[-376.9,5.42],[-382.1,5.42],[-382.1,6.49]]));
     const cols = [];

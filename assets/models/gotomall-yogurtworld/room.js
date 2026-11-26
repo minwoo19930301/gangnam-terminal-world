@@ -1,7 +1,7 @@
 import {boxSilhouette} from '../interior-architecture/box-silhouette.js';
 import {placeSingleDetail} from '../interior-architecture/single-detail.js';
 import {loadBakedSurface} from '../interior-architecture/baked-surface.js';
-import {footprint,names,anchors,tablePositions} from './layout.js';
+import {footprint,names,anchors,tablePositions,outline,rear} from './layout.js';
 import {glass} from './glass.js';
 
 const geometries=new Map(),name=k=>'요거트월드 · '+names[k];
@@ -15,7 +15,14 @@ function silhouette(T,key){
       q=[[0,.012,3.1,4.44,.029,6.2,0xa9aba3],[-2.186,.04,3.1,.072,2.77,6.20,white],[0,.04,6.165,4.44,2.77,.07,white],
         [2.178,.04,3.10,.085,.812,6.20,0xd5c9ac],[2.053,.85,3.04,.315,.061,5.94,0xcca56c],[2.017,.04,.13,.37,2.758,.32,0xd5c9ac],
         [-2.137,.05,2.59,.041,.941,5.07,0xb29060],[0,2.809,3.12,4.44,.076,6.17,0xeee7d3],[0,2.68,.017,4.44,.131,.29,0xeee7d3],
-        [-3.83,2.81,5.193,3.24,.076,2.014,0xeee7d3],[-5.42,.04,5.193,.073,2.77,2.014,0xeee8da],[-3.838,.04,4.217,3.236,2.77,.065,0xeee8da],[-3.838,.04,6.165,3.236,2.77,.07,0xeee8da],[2.17,2.603,3.1,.10,.15,6.2,white],[-.04,.045,.22,1.08,.008,.57,0x172f58]];
+        [2.17,2.603,3.1,.10,.15,6.2,white],[-.04,.045,.22,1.08,.008,.57,0x172f58]];
+      for(const [x0,x1,d0,d1] of [[rear.north,-2.22,rear.turn,rear.depth],[-2.22,2.22,6.20,rear.depth]]){
+        for(const [h,height,tone] of [[.018,.022,0xa9aba3],[2.809,.076,0xeee7d3]])q.push([(x0+x1)/2,h,(d0+d1)/2,x1-x0,height,d1-d0,tone]);
+      }
+      q.push([(rear.north+2.22)/2,.04,rear.depth-.035,2.22-rear.north,2.77,.07,white],
+        [(rear.north-2.22)/2,.04,rear.turn+.032,-2.22-rear.north,2.77,.064,white],
+        [rear.north+.032,.04,(rear.turn+rear.depth)/2,.064,2.77,rear.depth-rear.turn,white],
+        [2.188,.04,(6.2+rear.depth)/2,.064,2.77,rear.depth-6.20,white]);
       for(const z of [.07,1.52,3,4.49,6.1])q.push([2.174,.861,z,.078,1.745,.045,white]);
       break;
     case 'front':
@@ -57,9 +64,15 @@ export function placeYogurtWorld(K,P,rotation,y){
   const [ox,oz]=W(0,0),co=Math.cos(angle),si=Math.sin(angle);
   const local=(px,pz)=>[(px-ox)*co-(pz-oz)*si,(px-ox)*si+(pz-oz)*co];
   const wall=(a,b,c,d,bottom,top,r=.024)=>K.phys.addWall(...W(a,b),...W(c,d),y+bottom,y+top,r,'gotomall');
+  // The long south window faces the accessible WC path. Only its solid sill occludes the view.
+  const eyePoly=rect(-2.13,.04,2.12,6.11);
+  for(const [a,b,top] of [[W(-2.186,.04),W(-2.186,6.15),2.77],
+    [W(-2.15,6.165),W(2.16,6.165),2.77],[W(2.178,.04),W(2.178,6.14),.79]]){
+    K.occludingWall({a,b,y0:y+.07,y1:y+top,eyePoly,eyeMin:y+.08,eyeMax:y+2.75});
+  }
   const solid=(a,b,c,d,h)=>K.phys.addPolyWalls(rect(a,b,c,d),y,y+h,.018,'gotomall');
   wall(-2.186,.02,-2.186,6.16,0,2.81);wall(-2.186,6.16,2.178,6.16,0,2.81);wall(2.178,.09,2.178,6.16,0,2.81);
-  wall(-5.42,4.217,-2.186,4.217,0,2.81);wall(-5.42,4.217,-5.42,6.16,0,2.81);wall(-5.42,6.16,-2.18,6.16,0,2.81);
+  for(const [p,q] of [[outline[2],outline[3]],[outline[3],outline[4]],[outline[4],outline[5]],[[2.22,6.16],outline[2]]])wall(...p,...q,0,2.81);
   solid(1.835,-.031,2.201,.290,2.78);wall(1.13,.01,1.838,.01,0,2.65);wall(-1.969,-.65,-1.969,-.017,0,2.31);
   solid(1.342,-.417,1.742,-.205,1.59);solid(-1.882,-.383,-1.415,-.015,1.75);
   solid(-1.886,3.818,-1.251,4.488,1.08);solid(-2.037,5.116,2.037,5.842,.942);
@@ -73,7 +86,7 @@ export function placeYogurtWorld(K,P,rotation,y){
     }
   }
   K.phys.addSurface(rect(-2.16,-.01,2.17,6.12),y,{tag:'gotomall'});
-  K.zone({name:'요거트월드 반포고투몰점',floor:'B1',sub:'서편 G-012 · 요거트 아이스크림과 그릭요거트',poly:rect(-2.19,-.02,2.19,6.19),y0:y,y1:y+2.82,priority:12});
+  K.zone({name:'요거트월드 반포고투몰점',floor:'B1',sub:'서편 G-012 · 요거트 아이스크림과 그릭요거트',poly:outline.map(([x,d])=>W(x,d)),y0:y,y1:y+2.82,priority:12});
   function from(x,d,tx,td,exterior){
     if(x>=-2.19&&x<=2.18&&d>=0&&d<=6.16)return !exterior||d<=1.58;
     if(exterior)return d<=0||x>2.18&&d<1.54;
@@ -102,7 +115,7 @@ export function placeYogurtWorld(K,P,rotation,y){
       visibleFrom:(px,py,pz)=>py>y-.55&&py<y+3.42&&(key==='room'||seen(px,pz))},()=>{
       if(key==='room'){
         // The roof returns around G-011 in plan. The open side window stays below both surfaces.
-        for(const box of [[-2.22,.035,2.22,6.17],[-5.45,4.193,-2.22,6.193]]){
+        for(const box of [[-2.22,.035,2.22,6.17],[rear.north,rear.turn,-2.22,rear.depth],[-2.22,6.20,2.22,rear.depth]]){
           K.occludingSlab({poly:rect(...box),y:y+2.809,eyeMin:y+.05,eyeMax:y+2.76});
         }
       }
@@ -113,7 +126,7 @@ export function placeYogurtWorld(K,P,rotation,y){
     });
   }
   for(const [key,box,range,exit,eye,points] of [
-    ['room',[-5.46,-.66,2.23,6.21],12.2,15.5,1.32,[[0,.10],[0,3],[1.9,4.81]]],
+    ['room',[rear.north,-.66,2.23,rear.depth],12.2,15.5,1.32,[[0,.10],[0,3],[1.9,4.81]]],
     ['front',[-1.82,-.46,2.13,.09],19,23,2.33,[[0,.01],[1.96,-.22]]],
     ['kiosk',[-1.91,-.53,1.80,.0],9,11,.95,[[1.54,-.32],[-1.65,-.21]]],
     ['display',[-1.91,-.43,1.76,-.15],5.25,7.1,1.13,[[1.54,-.42],[-1.65,-.23]]],

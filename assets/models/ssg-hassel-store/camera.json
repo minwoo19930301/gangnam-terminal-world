@@ -1,0 +1,11 @@
+{
+  "floor": "6F",
+  "x": -90.77411,
+  "z": -25.19202,
+  "yaw": 17.78902,
+  "pitch": -21,
+  "meshName": "GangnamHasselbladOptics",
+  "sourceBlend": "gallery.blend",
+  "sourceCollection": "SSG_6F_Hasselblad",
+  "nativeLabel": "핫셀블라드"
+}

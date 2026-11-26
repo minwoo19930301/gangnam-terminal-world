@@ -1,6 +1,6 @@
 // Playwright serializes this callback into the page. Both renders share the same
 // animation tick, traffic poses, loaded assets, escalator phase and lighting.
-export function compareDeckFrame() {
+export function compareDeckFrame(scope) {
   const {K,camera,player,renderer,scene} = window.__world;
   const kit = K._, deck = kit.deckVisibility, gl = renderer.getContext();
   const {drawingBufferWidth:width,drawingBufferHeight:height} = gl;
@@ -14,7 +14,7 @@ export function compareDeckFrame() {
   const update = deck.update;
   let before;
   try {
-    deck.update = () => update(null);
+    deck.update = camera => scope === 'walls' ? update(camera,false) : update(null);
     before = capture();
   } finally {
     deck.update = update;

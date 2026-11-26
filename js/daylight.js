@@ -55,6 +55,15 @@ const palette = [
   [18, 0x588dc3, 0xd6e0e7, 0xa6adb0, 0xf4f7ff, 0xb7afa4, 0xffe7c5, 1.5, 1.38, .55],
   [50, 0x447ebb, 0xc7ddeb, 0x9aa3a8, 0xf4f8ff, 0xb3ad9f, 0xfff4e0, 1.55, 1.5, .55],
 ];
+// A cool skylight opens the morning shadows while the first direct light is
+// pale gold. Both curves meet at full night and again above the twilight band.
+const morningPalette = [
+  palette[0],
+  [-6, 0x233950, 0x727e94, 0x3e4a58, 0xb9cde1, 0x737e91, 0xffcf9e, .40, 0, .22],
+  [-1, 0x719ec2, 0xbcd4e0, 0x899ba6, 0xd9ebfa, 0xadb9c4, 0xffddb0, 1.06, .09, .47],
+  [6, 0x76a8cf, 0xd9e8e9, 0xa6b3b6, 0xe6f3ff, 0xbac1c4, 0xffe8bf, 1.39, .78, .52],
+  ...palette.slice(4),
+];
 export function createDaylight(THREE, scene, site, bounce, initialMode, onChange) {
   const uniforms = Object.fromEntries(['zenith','horizon','ground','solarColor','glowColor'].map(k => [k,{value:new THREE.Color()}]));
   Object.assign(uniforms,{solarDir:{value:new THREE.Vector3()}, warmth:{value:0}, disc:{value:0}});
@@ -95,15 +104,16 @@ export function createDaylight(THREE, scene, site, bounce, initialMode, onChange
     const instant=mode==='live' ? now : preview;
     scene.userData.solarTime=instant;
     const {altitude,direction,morning}=solarPosition(instant,site);
+    const curve=morning ? morningPalette : palette;
     let i=1;
-    while(i<palette.length-1 && altitude>palette[i][0]) i++;
-    const a=palette[i-1], b=palette[i], f=clamp((altitude-a[0])/(b[0]-a[0]));
+    while(i<curve.length-1 && altitude>curve[i][0]) i++;
+    const a=curve[i-1], b=curve[i], f=clamp((altitude-a[0])/(b[0]-a[0]));
     function color(target,j){target.setHex(a[j]).lerp(scratch.setHex(b[j]),f);}
     const mix=j=>a[j]+(b[j]-a[j])*f;
     color(uniforms.zenith.value,1); color(uniforms.horizon.value,2); color(uniforms.ground.value,3);
     color(hemi.color,4); color(hemi.groundColor,5); color(sun.color,6);
-    const warmth=clamp((17-altitude)/12)*clamp((altitude+10)/7);
-    uniforms.glowColor.value.setHex(morning?0xffb394:0xff975d);
+    const warmth=clamp((17-altitude)/12)*clamp((altitude+10)/7)*(morning ? .44 : 1);
+    uniforms.glowColor.value.setHex(morning?0xffe5ba:0xff975d);
     uniforms.solarColor.value.copy(sun.color);
     uniforms.solarDir.value.fromArray(direction);
     uniforms.warmth.value=warmth*(1-cloud*.85);

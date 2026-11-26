@@ -1,10 +1,11 @@
 import {pointInPoly, polyBBox} from './physics.js';
+import {createWall} from './wall-visibility.js';
 
 // The projection of a world-space box must fit entirely on one opaque surface.
 // Open stairwells and balcony edges can expose objects several storeys away.
 export function createDeckVisibility() {
-  const slabs = [], active = [];
-  let x = 0, y = 0, z = 0, lastCamera, lastCount = -1, version = 0;
+  const slabs = [], active = [], walls = [], activeWalls = [];
+  let x = 0, y = 0, z = 0, lastCamera, lastCount = -1, lastWalls = true, version = 0;
 
   function register({poly, holes = [], y: height, eyeMin, eyeMax}) {
     const edges = [];
@@ -24,13 +25,19 @@ export function createDeckVisibility() {
       bounds: polyBBox(poly), openings: holes.map(polyBBox)});
   }
 
-  function update(camera) {
-    if (camera === lastCamera && lastCount === slabs.length && (!camera ||
+  function registerWall(options) {
+    const wall = createWall(options,polyBBox(options.eyePoly));
+    if (wall) walls.push(wall);
+  }
+
+  function update(camera, includeWalls = true) {
+    if (camera === lastCamera && lastWalls === includeWalls && lastCount === slabs.length+walls.length && (!camera ||
         (x === camera.position.x && y === camera.position.y && z === camera.position.z))) return;
-    const wasActive = active.length > 0;
+    const wasActive = active.length > 0 || activeWalls.length > 0;
     lastCamera = camera;
-    lastCount = slabs.length;
-    active.length = 0;
+    lastWalls = includeWalls;
+    lastCount = slabs.length+walls.length;
+    active.length = activeWalls.length = 0;
     if (camera?.isPerspectiveCamera) {
       ({x,y,z} = camera.position);
       for (const slab of slabs) {
@@ -39,8 +46,13 @@ export function createDeckVisibility() {
             x < b[0] || x > b[2] || z < b[1] || z > b[3]) continue;
         if (pointInPoly(x,z,slab.poly)) active.push(slab);
       }
+      if (includeWalls) for (const wall of walls) {
+        const b = wall.bounds;
+        if (y >= wall.eyeMin && y <= wall.eyeMax && x >= b[0] && x <= b[2] &&
+            z >= b[1] && z <= b[3] && pointInPoly(x,z,wall.poly) && wall.project(x,y,z)) activeWalls.push(wall);
+      }
     }
-    if (wasActive || active.length) version++;
+    if (wasActive || active.length || activeWalls.length) version++;
   }
 
   function covers(slab, left, bottom, right, top) {
@@ -83,7 +95,8 @@ export function createDeckVisibility() {
       const t = z + Math.max((box.max.z-z)*near,(box.max.z-z)*far) + .015;
       if (covers(slab,l,b,r,t)) return true;
     }
+    for (const wall of activeWalls) if (wall.hides(box)) return true;
     return false;
   }
-  return {register, update, hides, get active() { return active.length > 0; }, get revision() { return version; }};
+  return {register, registerWall, update, hides, get active() { return active.length > 0 || activeWalls.length > 0; }, get revision() { return version; }};
 }

@@ -1,3 +1,5 @@
+import {registerExecutiveSeats} from '../../assets/models/executive-seating/model.js';
+import {tables as executiveTables} from '../../assets/models/executive-seating/layout.js';
 import {registerLoungeService} from '../../assets/models/lounge-table-service/model.js';
 import {registerTamayura} from '../../assets/models/tamayura/model.js';
 import { registerMobo, seatX as moboChairs } from '../../assets/models/mobo-bar/model.js';
@@ -6,9 +8,11 @@ import { placeCornerSofa } from '../../assets/models/lounge-upholstery/model.js'
 import { placeDrapery } from '../../assets/models/lounge-drapery/model.js';
 import { placePiano } from '../../assets/models/lounge-piano/model.js';
 import { OPEN_STAGE_FRONT } from './_junctions.js';
+import {registerExecutiveService} from '../../assets/models/executive-service/model.js';
+import {registerFlavorsBreakfast} from '../../assets/models/flavors-breakfast/model.js';
 import {registerArrival,upperWell} from '../../assets/models/jw-arrival/model.js';
 import {registerCoffers,registerPendant,ceilingZones} from '../../assets/models/jw-arrival/ceiling.js';
-import { placeDesserts } from '../../assets/models/patisserie/model.js';
+import { placeDesserts, placeGateaux } from '../../assets/models/patisserie/model.js';
 import { placeLoungeChairs } from '../../assets/models/lounge-chair/model.js';
 import { fixtures } from '../../assets/models/jwmarriott/fixtures.js';
 
@@ -887,6 +891,9 @@ export function build(K) {
   }, 10.37);
 
   registerArrival(baseKit,P,RECT,R);
+  registerFlavorsBreakfast(baseKit,P,RECT,R);
+  registerExecutiveService(baseKit,P,RECT,R);
+  registerExecutiveSeats(baseKit,P,RECT,R);
   registerCoffers(baseKit,P,RECT,R);
   DETAIL('1F', [-33.2, 4, 2, 60.4], '호텔 현관 홀 · 승강기 로비', floor1, 15.77);
   DETAIL('2F', [UW, -6, 2, 60.9], '플레이버즈 · 파티세리 · 타마유라', floor2);
@@ -1153,22 +1160,6 @@ export function build(K) {
       LIGHTS([-32, 27, -21.8, 40.8], yc - .4, 2.7, .09, 0xffd6a0);
       for (const v of [28.2, 30.9, 33.6, 36.3, 39]) B({ u: -32.9, v, y: y + .18, w: .025, d: 1.2, h: 3.7, mat: { tex: 'emit', color: 0xa58b68 }, solid: false });
       SLATS('u', -32.85, 12.5, 41.5, y, yc - y, .10, { w: .035, d: .05 });
-      for (const [u, v, w, d] of [[-29.3, 29.5, 1.25, 6.4], [-29.3, 37.4, 1.25, 5.2], [-24.6, 33.3, 1.5, 6.6]]) {
-        B({ u, v, y, w, d, h: 1.05, mat: { tex: 'jwDarkMarble', color: 0xc7c4bd, gloss: .5 } });
-        B({ u, v, y: y + 1.05, w: w + .08, d: d + .08, h: .055, mat: { tex: 'jwDarkMarble', gloss: .7 }, solid: false });
-        for (let j = 0; j < 24; j++) {
-          const su = u + (j % 2 ? .23 : -.23), sv = v - d / 2 + .35 + Math.floor(j / 2) * (d - .7) / 11;
-          if (j % 4 === 0) {
-            CY(su, sv, y + 1.108, .12 + (j % 3) * .025, .14, j % 8 ? 0x6b3b2a : 0xf2e6d6, { seg: 10, solid: false });
-            B({ u: su, v: sv, y: y + 1.25, w: .08, d: .07, h: .05, mat: 0xa74831, solid: false });
-          } else if (j % 4 === 1) {
-            for (let k = 0; k < 2; k++) {
-              B({ u: su + (k - .5) * .12, v: sv, y: y + 1.11, w: .09, d: .09, h: .22, mat: k ? 0xc7a55e : 0x6e8448, solid: false });
-              B({ u: su + (k - .5) * .12, v: sv, y: y + 1.33, w: .04, d: .04, h: .08, mat: 0xb8a16c, solid: false });
-            }
-          } else B({ u: su, v: sv, y: y + 1.11, w: .23, d: .24, h: .12 + (j % 3) * .05, mat: j % 4 === 2 ? 0xad5938 : 0xd9c6a3, solid: false });
-        }
-      }
       FLOWER(-29.3, 33.65, y + 1.05, 1.25, [0xb64b24, 0xd47c38, 0xc7ad72, 0x75804a], { stems: 90, dried: true });
       B({ u: -29.3, v: 33.65, y, w: 1.5, d: 1.4, h: 1.05, mat: { tex: 'jwDarkMarble', gloss: .5 } });
       B({ u: -21.5, v: 33, y, w: 1, d: 8, h: .95, mat: { tex: 'jwDarkMarble', gloss: .5 } });
@@ -1243,7 +1234,7 @@ export function build(K) {
       }
       LIGHTS([-32, 13, 3.6, 25], yc - .06, 2.6, .08, 0xf0c98e);
       LIGHTS([-20, 27, 3.6, 41], yc - .12, 3.2, .08, 0xf0c98e);
-      MAN(-16, 40.1, y, { sit: true, shirt: 0xddd4c7 }); MAN(-28.1, 37.4, y, { shirt: 0xe5e0d5 });
+      MAN(-16, 40.1, y, { sit: true, shirt: 0xddd4c7 }); MAN(-31.18, 38.02, y, { shirt: 0xe5e0d5, rotY: FACE.E });
       // The hall void is kept out of all restaurant/landing surfaces and bounded at 2F.
       SUBZ('플레이버즈', '2F', '뷔페 · 황동 펜던트 · 대리석 카운터', [-33, 12, 4, 41.7]);
       SUBZ('플레이버즈 다이닝', '2F', '월넛 스크린 · 소파 좌석', [-20.4, 26.4, 3.7, 41.6]);
@@ -1271,6 +1262,10 @@ export function build(K) {
           const [x,z]=mapPoint(...P(21,v));
           DEC(()=>placeDesserts(baseKit,x,y+.955,z,R+Math.PI/2));
           SG('바닐라 플랑  ·  마카롱',{u:20.487,v,y:y+.83,w:1.2,h:.15,f:'W',bg:'#463a35',fg:'#f2e3c7',pxPerM:420,padding:.025});
+        }else if(v===20){
+          const [x,z]=mapPoint(...P(21,v));
+          DEC(()=>placeGateaux(baseKit,x,y+.955,z,R+Math.PI/2));
+          SG('홀케이크  ·  쁘띠 가토',{u:20.487,v,y:y+.83,w:1.2,h:.15,f:'W',bg:'#463a35',fg:'#f2e3c7',pxPerM:420,padding:.025});
         }else{
           for(const dv of [-1.4,-.47,.47,1.4])fixture('cakes',21,v+dv,y+.955,Math.PI/2);
         }
@@ -2039,23 +2034,7 @@ export function build(K) {
         }
         for (const u of [4.43, 6.97]) B({ u, v: 24.03, y, w: .15, d: .22, h: 2.76, mat: 0x997b4b, solid: false });
         B({ u: 5.7, v: 24.03, y: y + 2.64, w: 2.69, d: .22, h: .12, mat: 0x997b4b, solid: false });
-        const executiveChair = (u, v, face, mat) => {
-          CHAIR(u, v, y, face, mat);
-          const ang = { S: 0, E: Math.PI / 2, N: Math.PI, W: -Math.PI / 2 }[face];
-          const at = (du, dv) => [u + du * Math.cos(ang) + dv * Math.sin(ang), v - du * Math.sin(ang) + dv * Math.cos(ang)];
-          // Raised inner cushion and fine vertical gathers visible on the leather backs in 16.
-          for (let i = -4; i <= 4; i++) {
-            const du = i * .064, dv = -.305 + Math.abs(i) * .018, p = at(du, dv);
-            B({ u: p[0], v: p[1], y: y + .57, w: .004, d: .008, h: .27 - Math.abs(i) * .028, r: ang, mat: 0xa69b88, solid: false });
-          }
-          const p = at(0, -.265);
-          B({ u: p[0], v: p[1], y: y + .49, w: .38, d: .065, h: .11, r: ang, mat, solid: false });
-        };
         const executiveTable = (u, v, r = .69, h = .73) => {
-          // Photo tables have a substantial black apron and four legs, not a central pedestal.
-          CY(u, v, y + h - .13, r * .96, .115, 0x252421, { seg: 28, solid: false });
-          CY(u, v, y + h - .025, r, .035, { color: 0xece6d9, gloss: .5 }, { seg: 32, solid: false });
-          for (const du of [-1, 1]) for (const dv of [-1, 1]) B({ u: u + du * r * .54, v: v + dv * r * .54, y: y + .025, w: .05, d: .05, h: h - .07, mat: 0x252421, solid: false });
           B({ u, v, y, w: r * 1.35, d: r * 1.35, h, mat: 0, solid: true, skip: ['top', 'bottom', 'n', 's', 'e', 'w'] });
           CY(u + .23, v - .08, y + h + .012, .09, .012, 0xf0ebe0, { seg: 16, solid: false });
           CY(u + .23, v - .08, y + h + .024, .045, .075, 0xe9e4da, { seg: 12, solid: false, caps: false });
@@ -2066,12 +2045,11 @@ export function build(K) {
           SG('라운지 안내', { u: u - .23, v: v + .077, y: y + h + .14, w: .17, h: .085, f: 'S', bg: '#343530', fg: '#dcd7cb', bold: false });
         };
         // Staggered islands reproduce the overlapping seating in 16; u=4.4..6.7 remains the lift aisle.
-        const seats = [[-4.8, 9.7], [.25, 10.7], [-4.8, 14.8], [.25, 15.7], [-4.8, 19.9], [.25, 20.6], [9.2, 10.4], [13.4, 10.4], [9.2, 15.1], [13.4, 15.1], [9.2, 19.9], [13.4, 19.9]];
-        for (const [i, [u, v]] of seats.entries()) {
-          executiveTable(u, v, i % 3 ? .67 : .77);
-          executiveChair(u - 1.12, v, 'E', i % 2 ? 0xd9d0bf : 0xb8ad99);
-          executiveChair(u + 1.12, v, 'W', i % 2 ? 0xbfb39d : 0xe0d8c9);
-          if (i % 3 !== 2) executiveChair(u, v - 1.1, 'S', 0xd8cfbf);
+        for (const [i,[u,v]] of executiveTables.entries()) {
+          executiveTable(u,v,i%3 ? .67 : .77);
+          const chairs=[[u-1.12,v,Math.PI/2],[u+1.12,v,-Math.PI/2]];
+          if(i%3!==2)chairs.push([u,v-1.10,0]);
+          for(const [cu,cv,angle] of chairs)B({u:cu,v:cv,y:y+.18,w:.66,d:.64,h:.62,r:angle,mat:0,solid:true,skip:['top','bottom','n','s','e','w']});
         }
         for (const [u, w, mat] of [[-4.5, 4.5, 0x78604e], [.3, 3.1, 0x8c6f61], [10.8, 4.8, 0x846957]]) {
           SOFA(u, 22.9, y, w, 'N', mat);
@@ -2080,16 +2058,6 @@ export function build(K) {
             B({ u: u + du, v: 23.17, y: y + .53, w: .42, d: .14, h: .36, r: du < 0 ? -.08 : .08, mat: du < 0 ? 0xd8c7a8 : 0x554439, solid: false });
           }
         }
-        // Small service credenza continues the photographed timber and pale-stone palette; position inferred.
-        B({ u: 11.4, v: 6.85, y, w: 6.5, d: .75, h: .88, mat: 'jwWalnut', top: 'jwHoney' });
-        for (let u = 8.4; u < 14.5; u += .75) B({ u, v: 7.24, y: y + .12, w: .018, d: .02, h: .63, mat: 0x362c24, solid: false });
-        B({ u: 12.9, v: 6.87, y: y + .88, w: .65, d: .45, h: .57, mat: 0x292b29, top: 0xa5a69d, solid: false });
-        for (const u of [12.73, 13.07]) {
-          B({ u, v: 7.12, y: y + 1.15, w: .08, d: .1, h: .08, mat: 0xb5b3a7, solid: false });
-          CY(u, 7.12, y + .91, .05, .08, 0xe8e4d9, { seg: 10, solid: false });
-        }
-        for (let i = 0; i < 12; i++) CY(8.8 + (i % 6) * .19, 6.8 + Math.floor(i / 6) * .23, y + .89, .055, .11, { tex: 'glass', color: 0xdbded4 }, { seg: 10, solid: false, caps: false });
-        FLOWER(11.4, 6.8, y + .89, .37, [0x71815b, 0xd6cab7, 0x9c7354]);
         SG('이그제큐티브 라운지', { u: 7.5, v: 24.32, y: y + 1.5, w: 0.9, h: 0.28, f: 'S', bg: '#46382e', fg: '#dfd3bd' });
         // Photo 16: a blue-shirted guest working at the nearer window table.
         MAN(-.87, 10.7, y, { sit: true, rotY: FACE.E, shirt: 0x59758e, pants: 0x403c35 });

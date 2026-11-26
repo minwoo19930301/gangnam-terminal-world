@@ -70,13 +70,24 @@ on the rendering thread, so split long galleries and rows of shops into separate
 partitions, stairs, escalators, elevators and junction corridors in the normal build, along with zones, spawns and
 interactions. These must be available as soon as the player enters an area.
 
-### Opaque floors and ceilings
+### Opaque floors, ceilings and walls
 
 `K.occludingSlab({poly, holes, y, eyeMin, eyeMax})` registers a level, opaque surface for indoor play.
 Use the same world-space outline and openings as the rendered slab. Set the eye-height range to the room
 where the surface can occlude the view. Separate canopies and shop ceilings may use their own narrower
 ranges. The renderer keeps partially visible geometry around stairwells, windows and the edge of the slab.
 Registration only controls drawing. The corresponding `K.slab` supplies the floor and collision.
+
+For a vertical opaque rectangle, use `K.occludingWall({a, b, y0, y1, eyePoly, eyeMin, eyeMax})`.
+The endpoints are world-space X/Z coordinates. The `eyePoly` footprint and the eye-height interval
+limit which observer positions can use that wall. Register a rectangle only where both the
+near mesh and its distant representation have continuous, opaque surfaces. Split walls at openings
+and stop the rectangles at the sill or head of a window. The renderer tests a box against all four
+edges as seen from the current eye before omitting it.
+
+For a rigid, stationary `THREE.InstancedMesh`, `K.addMesh(mesh,{stationaryInstances:true})` opts the finished
+instance set into the same drawing test. Its transforms and geometry must remain fixed. This includes
+stock already visited on another floor. Transparent shop merchandise can use it with its true bounds.
 
 ## Addresses
 

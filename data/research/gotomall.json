@@ -2,6 +2,18 @@
  "id": "gotomall",
  "name": "강남터미널 지하도상가 (GOTO MALL 고투몰)",
  "updated": "2026-11-26",
+ "west_g010_20261126": {
+  "운영사_현장사진": "https://gotomall.kr/stores/7cfea3b4-a229-469b-aa7d-222755fd5b3b",
+  "공단_점포_구획": "https://www.sisul.or.kr/open_content/com/common/upfiles.do?program=undershop!0923_gosokteomineol_1chabaechido_%281guyeok%29.jpg",
+  "서초구_일반음식점_인허가": "https://data.seoul.go.kr/dataList/OA-18673/S/1/datasetView.do",
+  "관리번호": "3210000-101-2012-00324",
+  "등록": "2012-07-19 인허가. 신반포로 지하 200, G-10호 마당. 2026-05-11 갱신 자료의 시설총규모/소재지면적 모두 53.53㎡.",
+  "도면_적용": "기존 34.01㎡에서 등록면적 53.53㎡에 맞췄다. G011 후면으로 꺾이는 배치는 공단 도면으로 확인했다. 각 변과 대각선·집기의 개별 치수는 실측되지 않았다.",
+  "사진_판독": "붉은 벽에 단 흰 하트와 작은 황동 종, 아래 흰 벽돌, 음식 메뉴판, 나무 식탁과 빨간 방석, 식탁 번호와 수저통, 스테인리스 후드와 배식 수레·밥솥. 벽 메뉴와 수레에 보이는 음식을 참고해 달걀 비빔밥과 전을 구성했다.",
+  "네이버지도": "2026-11-26 신반포로 마당 고투몰 지점명 검색에서 별도 핀을 확인하지 못했다.",
+  "모델": "assets/models/gotomall-madang/madang.blend",
+  "게임화면": "assets/models/gotomall-madang/play.jpg"
+ },
  "west_g011_g013_20261126": {
   "공단_1구역": "https://www.sisul.or.kr/open_content/com/common/upfiles.do?program=undershop!0923_gosokteomineol_1chabaechido_%281guyeok%29.jpg",
   "반에반_입점정보와_사진": "https://gotomall.kr/stores/73bd8e2d-9358-409a-9d6e-633d1b2cc644",
@@ -16,6 +28,9 @@
   "게임화면": "assets/models/gotomall-west-corner/play.jpg"
  },
  "west_g012_20261126": {
+  "서초구_휴게음식점_등록면적": "https://data.seoul.go.kr/dataList/OA-18698/S/1/datasetView.do",
+  "관리번호": "3210000-104-2024-00386",
+  "면적_반영": "2024-10-29 인허가된 G-012 요거트월드(고투몰점)의 소재지면적과 시설총규모는 54.65㎡. 2026-05-07 갱신 자료. 게임의 약 34㎡ 구획을 공단 도면상 ㄴ자 모양으로 54.65㎡에 맞췄다. 주문대 뒤 후방의 정확한 치수와 배치는 미실측.",
   "공단_1구역_배치도": "https://www.sisul.or.kr/open_content/com/common/upfiles.do?program=undershop!0923_gosokteomineol_1chabaechido_%281guyeok%29.jpg",
   "공단_상가_안내": "https://www.sisul.or.kr/open_content/undershop/undershop/undershopDetail.do?menu_div=euljiro&page_div=02&shop_seq=32",
   "운영사_매장사진": "https://gotomall.kr/stores/aae2c578-f923-4abd-98bf-3475da5694f4",
