@@ -124,6 +124,10 @@ vec3 electricDiffuse(vec3 worldPos, vec3 surfaceNormal, float room) {
 export function installElectricLighting(THREE, kit, physics, lamps, maxSize) {
   const rooms=roomLightVolume(THREE,kit._.zonesList,physics,maxSize);
   const streets=streetLightTiles(THREE,lamps);
+  // Three clones ShaderLib uniforms for each material. Texture.copy() marks the
+  // shared source dirty, reuploading these same lookup tables on the next draw.
+  // The tables belong to this scene and are read-only after construction.
+  for (const texture of [rooms.texture, streets.texture]) texture.clone = () => texture;
   for(const name of ['lambert','phong','standard','physical','toon']) {
     const lib=THREE.ShaderLib[name];
     if(!lib)continue;

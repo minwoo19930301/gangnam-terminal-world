@@ -27,6 +27,21 @@ const probes = [
 try {
   for (const { route, zone, region, modes, min, max, viewport } of probes) {
     const page = await browser.newPage({viewport:viewport ?? {width:900,height:552}});
+    if (route === probes[0].route) await page.addInitScript(() => {
+      const uploaded = new WeakSet();
+      window.roomLightUploads = {first:0, repeated:0};
+      const upload = WebGL2RenderingContext.prototype.texSubImage3D;
+      WebGL2RenderingContext.prototype.texSubImage3D = function (...args) {
+        const [target,level] = args;
+        const [format,type,data] = args.slice(8);
+        if (target === this.TEXTURE_3D && level === 0 && format === this.RED &&
+            type === this.UNSIGNED_BYTE && data instanceof Uint8Array) {
+          if (uploaded.has(data)) window.roomLightUploads.repeated++;
+          else { uploaded.add(data); window.roomLightUploads.first++; }
+        }
+        return upload.apply(this,args);
+      };
+    });
     await page.goto('http://127.0.0.1:' + server.address().port + route);
     await page.waitForFunction(() => window.__world?.ready);
     await page.locator('#start').click();
@@ -61,6 +76,11 @@ try {
     for (const mode of modes.slice(1)) {
       const ratio = values[mode]/values.day;
       assert.ok(ratio > min && ratio < max, zone + ' ' + mode + ' material luminance ratio ' + ratio);
+    }
+    if (route === probes[0].route) {
+      const uploads = await page.evaluate(() => window.roomLightUploads);
+      assert.ok(uploads.first > 0, 'the scene uploaded its room light volume');
+      assert.equal(uploads.repeated, 0, 'materials must reuse the uploaded room light volume');
     }
     await page.close();
   }
