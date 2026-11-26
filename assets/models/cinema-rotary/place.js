@@ -28,22 +28,26 @@ export function publicRotary(K,y){
   // photograph shows an open doorway under a dark illuminated store sign.
   const rear=bookEdge.map(p=>outward(p,1.65));
   edge([bookEdge[0],...rear,bookEdge.at(-1)],0x9f8f74);
-  for(let i=1;i<bookEdge.length;i++){
-    const a=bookEdge[i-1],b=bookEdge[i];
-    wall(a,b,3.00,4.44,0xbebbb1,false);
-    wall(outward(a,-.08),outward(b,-.08),3.18,3.55,0x303338,false);
-    for(const h of [.34,.81,1.29,1.75]){
-      wall(outward(a,1.47),outward(b,1.47),h,h+.075,0x876749,false);
-      for(let j=0;j<6;j++){
-        const along=t=>outward([a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t],1.54);
-        wall(along(j/6+.008),along((j+1)/6-.012),h+.08,h+.24+((i+j)%3)*.042,
-          [0xc5a58a,0x746652,0xaeb7ad,0xcac0ad,0x757e83][(i*7+j)%5],false);
-      }
-    }
+  const mid=outward([(bookEdge[2][0]+bookEdge[3][0])/2,(bookEdge[2][1]+bookEdge[3][1])/2],.02);
+  const bookAngle=Math.atan2(centre[0]-mid[0],centre[1]-mid[1]);
+  const point=(x,depth)=>[mid[0]+x*Math.cos(bookAngle)-depth*Math.sin(bookAngle),
+    mid[1]-x*Math.sin(bookAngle)-depth*Math.cos(bookAngle)];
+  for(const [left,right,depth,thick,high] of [[-.69,.69,.67,.59,.80],[-2.34,-1.56,.87,.67,1.72]]){
+    K.phys.addWall(...point(left,depth),...point(right,depth),y,y+high,thick);
   }
-  const bs=outward(bookEdge[3],-.15);
-  K.sign('영풍문고',{x:bs[0],z:bs[1],y:y+3.36,w:1.92,h:.36,
-    rotY:Math.atan2(centre[0]-bs[0],centre[1]-bs[1]),bg:'#282d30',fg:'#fff6de',bold:true});
+  K.zone({name:'영풍문고 강남신세계점',sub:'원형 광장 쪽 매장 입구',floor:'B1',poly:bookFloor,y0:y-.25,y1:top,priority:8});
+  const bookMaterial=new K.THREE.MeshLambertMaterial({vertexColors:true,side:K.THREE.DoubleSide});
+  bookMaterial.onBeforeCompile=shader=>{
+    shader.fragmentShader=shader.fragmentShader.replace('#include <emissivemap_fragment>',
+      `#include <emissivemap_fragment>
+       totalEmissiveRadiance += smoothstep(.81,.95,vColor.g)*vColor.rgb*.46;`);
+  };
+  const bookFallback=boxSilhouette(K.THREE,[[0,3.04,0,5.10,1.40,.15,0x969997],
+    [0,3.24,.18,3.70,.26,.09,0x282a2b],[0,0,-.67,1.36,.52,.59,0x98764e]]);
+  placeSingleDetail(K,{name:'영풍문고 강남신세계점 · 원형 광장 입구',file:'../ypbooks-rotary/front.glb',
+    at:[mid[0],y,mid[1]],angle:bookAngle,fallback:bookFallback,fallbackMaterial:bookMaterial,material:bookMaterial,
+    range:18,exitRange:22,floorTolerance:3.5,eyeHeight:1.7,
+    viewBounds:[new K.THREE.Box3(new K.THREE.Vector3(-2.57,0,-1.66),new K.THREE.Vector3(2.57,4.45,.34))]});
 
   edge([...arc(223,227,2),[623,950],[634,946],[646,944],[659,945],[669,948],[678,950]].map(p=>plan(...p)),0xcac4b7);
   for(const side of [
