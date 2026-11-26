@@ -21,6 +21,7 @@ D=assets/models/ssg-marzocco
 blender -b --factory-startup --gpu-backend opengl --python-exit-code 1 -P "$D/build.py"
 node "$D/pack.mjs"
 node tests/smoke.mjs shinsegae
+node "$D/check-streaming.mjs"
 ```
 
 편집한 원본에서 런타임 자산만 다시 만들 때는 다음 두 명령을 쓴다.
@@ -29,3 +30,5 @@ node tests/smoke.mjs shinsegae
 blender -b --gpu-backend opengl "$D/gallery.blend" --python-exit-code 1 -P "$D/export.py"
 node "$D/pack.mjs"
 ```
+
+Playwright 검사는 천장을 올려다보면서 입장해 다운로드가 없는지 확인한 뒤, 첫 GLB 요청에 HTTP 503을 돌려준다. 간이 집기가 보이는지, 고개를 돌린 동안 재요청을 미루는지, 다시 볼 때 다운로드가 성공하는지, 다른 층을 다녀와도 다운로드가 반복되지 않는지 검사한다. macOS Metal로 실행하려면 명령 끝에 `--gpu`를 붙인다.
