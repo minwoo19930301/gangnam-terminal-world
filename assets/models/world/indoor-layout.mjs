@@ -29,6 +29,9 @@ import {relief} from '../../../js/banpo_relief.js';
 // Scene object (or a uniquely identifying child) -> editable native source.
 // Geometry decoder matrices and decorative LOD offsets live *below* the placement.
 const sources = [
+  ...[['서쪽 녹청 구체','CentralCityPatinatedSphere'],['가운데 갈색 구체','CentralCityBronzeSphere'],['동쪽 잔물결 구체','CentralCityRippledSphere']]
+    .map(([label,collection])=>['centralcity','지상','central-plaza-spheres/spheres.blend','센트럴시티 광장 · '+label,collection]),
+  ['centralcity','지상','central-plaza-lantern/lantern.blend','센트럴시티 조각 광장 · 두 갈래 보행등','CentralCityTwinLantern'],
   ['gotomall','지상','g12-window-print/print.blend','고투몰 G12 · 지상 유리 점인쇄','G12 유리창 점인쇄'],
   ['streets','지상','sinbanpo-plaza-planters/planter.blend','신반포로 · 석재 화분의 전정 수목','SinbanpoPlazaPlanter'],
   ['streets','지상','exit8-sidewalk-lamp/lamp.blend','터미널 8번 출구 · 보도와 차도 등기구','Exit8_Sidewalk_Lamp'],
@@ -374,7 +377,8 @@ export async function captureIndoorLayout() {
           const [x,y,z]=world.elements.slice(12,15);
           const ground=hotelDatum??rounded(relief(x,z));
           const level=subject==='광장 · 고리형 청동 조명' && y>=4 ? '2F' : floor;
-          const anchor=library.startsWith('ssg-')?(legacyRetailId[collections[0]]??collections[0]):subject;
+          const anchor=library==='central-plaza-spheres/spheres.blend'?collections[0]:
+            library.startsWith('ssg-')?(legacyRetailId[collections[0]]??collections[0]):subject;
           result.push({id:[place,anchor,ordinal+1].join('/'),place,placeName:meta.name,floor:level,library,
             collections,subject,ground,terrain:root.userData.terrainApplied?0:ground,matrix:world.toArray().map(rounded)});
         }
