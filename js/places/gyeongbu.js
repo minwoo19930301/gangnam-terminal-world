@@ -22,6 +22,7 @@ import { coachGlazing } from '../../assets/models/coach-cabin/windows.js';
 import {distanceToPolygonSq} from '../physics.js';
 import { placeCutFlowers } from '../../assets/models/gyeongbu-cutflowers/model.js';
 import {placeFloristStock} from '../../assets/models/gyeongbu-florist-stock/model.js';
+import {placeTerrarium} from '../../assets/models/gyeongbu-terrarium/model.js';
 import { placeWaitingBenches } from '../../assets/models/gyeongbu-seating/model.js';
 import {placeCushionBay} from '../../assets/models/concourse-fixtures/cushions.js';
 import {homeShelf} from '../../assets/models/daiso-home/shelf.js';
@@ -2782,6 +2783,20 @@ export function build(K) {
       // Small white price cards clipped to the bucket edge, as in photo02.
       if(tier===0)db(u-.155,v,y+.33,.012,.09,.12,0xf7f6ed);
     }
+    // Customer views identify the open timber arch, nursery shelves and cut-wood bins at shop 185.
+    // All local parts share the marked stall origin. The central passage remains open.
+    const parkU=38.4,parkV=131.2;
+    for(const [x,d,w,depth,h] of [[-.97,1.10,.12,.16,1.78],[.97,1.10,.12,.16,1.78],
+      [-1.17,-.77,.75,1.54,1.74],[1.17,-.17,.78,2.05,.74],[-1.37,1.15,.67,.51,.45],
+      [-1.42,-1.35,.51,.49,.46],[-1.40,.34,.36,.36,1.38]]){
+      lbox(parkU-d,parkV+x,fy,depth,w,h,0,{skip:['top','bottom','n','s','e','w']});
+    }
+    for(const [key,left,back,right,front] of [['arch',-1.23,.90,1.23,1.49],['stand',-1.61,-1.61,1.60,1.14],['left',-1.72,-1.61,-.58,1.18],['right',.44,-1.65,1.81,1.18],['timber',-1.78,-1.68,-.94,1.48]]){
+      ldetail({floor:'3F',name:`박테라리움 · ${key}`,y0:fy,y1:fy+2.58,
+        poly:rect(parkU-front,parkV+left,parkU-back,parkV+right)},()=>{
+        const [x,z]=W(parkU,parkV);placeTerrarium(K,x,fy,z,ROT-PI/2,key);
+      });
+    }
     // Two customer-photographed merchandise fronts flank the existing seasonal booth.
     for(const [v,direction,label] of [[101.47,1,'포장 리본'],[98.53,-1,'화기와 촛대']]){
       const u=50.1,width=2.82,base=fy+.17;
@@ -2988,11 +3003,14 @@ export function build(K) {
       for(let k=0;k<30;k++){
         const bu=u-1.6+(k%5)*.8+(fr()-.5)*.14,bv=v-1.6+Math.floor(k/5)*.62+(fr()-.5)*.1;
         if(nearColumn(bu,bv,.7))continue;
-        const r=.12+fr()*.14,h=.2+fr()*.25;dp(bu,bv,fy,r,h,[0xe8e4d8,0x8a5a3c,0x3a3a36][k%3]);
-        const fh=.4+fr()*.6;dd(bu,bv,fy+h,r*1.7,fh,r*1.7,[0x3f754c,0x5f8f45,0x2e5e36][k%3]);
+        const r=.12+fr()*.14,h=.2+fr()*.25,fh=.4+fr()*.6;
+        if(u===parkU&&v===parkV)continue; // Preserve the neighbouring stalls' seeded assortment.
+        dp(bu,bv,fy,r,h,[0xe8e4d8,0x8a5a3c,0x3a3a36][k%3]);
+        dd(bu,bv,fy+h,r*1.7,fh,r*1.7,[0x3f754c,0x5f8f45,0x2e5e36][k%3]);
         if(k%3===0)dd(bu,bv,fy+h+fh*.5,r*1.6,.55,r*1.6,0x3f754c);
         if(k%2===0)for(const s of [-1,1])twig(bu+s*r*.65,bv,fy+h,fh+.4,[0x3f754c,0x719254,0x315e40][k%3]);
       }
+      if(u===parkU&&v===parkV)return;
       for(const dv of [-1.1,1.1]){
         if(nearColumn(u,v+dv,.7))continue;
         dp(u,v+dv,fy,.28,.4,0x8a5a3c);db(u,v+dv,fy+.4,.06,.06,2.2,0x6b5a46);
@@ -3009,7 +3027,7 @@ export function build(K) {
       ['38.4,93.4',['제221호','신세계플라워','HP.010-4499-6580']],
       ['50,100',['현대데코','T.535-1122']],
       ['61.6,123.2',['제289호','로사','T.594-0709']],
-      ['38.4,131.2',['제185호','박테라리움','T.535-3058']],
+      ['38.4,131.2',['제185호','박테라리움','T.535-3056']],
       ['31.6,77.8',['제197호','모어라브르']]
     ]);
     const rooms=[

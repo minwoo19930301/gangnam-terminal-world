@@ -477,7 +477,9 @@
       "post_url": "https://blog.naver.com/alouete/224445972609",
       "date": "2026-10-19",
       "priority": "ROUND6 interior ground truth; supplied local photograph and reviewer comparison, original post not re-fetched",
-      "reading_correction": "기존 notes의 제181호 박테라유는 오독. 원본 사진과 ROUND6 검토를 우선하며 refs 파일은 수정하지 않음."
+      "reading_correction": "기존 notes의 제181호 박테라유는 오독. 원본 사진과 ROUND6 검토를 우선하며 refs 파일은 수정하지 않음.",
+      "current_public_listing": "2026-11-26 네이버 지도 박테라리움(1019600569). 서울 서초구 신반포로 194 강남고속터미널 3층 185호, 공개 매장 연락처 02-535-3056. 현행 표지는 지도의 마지막 숫자 6을 반영.",
+      "interior_references": ["https://map.naver.com/p/entry/place/1019600569", "https://www.cosmopolitan.co.kr/article/75796", "https://deepbluecolor.tistory.com/41"]
     },
     {
       "path": "refs/interior/gb_flower/08_vase_supplies_shelves.jpg",
