@@ -1444,29 +1444,68 @@ export function build(K) {
     K.quad(mat,RECT(s0,t0,s1,t1).map(q=>[q[0],y,q[1]]),[0,1,0],[[0,0],[(s1-s0)/repeat,0],[(s1-s0)/repeat,(t1-t0)/repeat],[0,(t1-t0)/repeat]]);
   };
   const spGlobe=(s,t,y,r=.16)=>{const[x,z]=P(s,t);K.dome({x,z,y,rx:r,ry:r,rz:r,hemi:false,seg:10,rings:6,mat:{tex:'emit',color:0xfff4dd}});};
-  const spChandelier=(s,t)=>{
+  const spChandelier=(s,t,brass)=>{
     const y=YB1+3.95;
-    lcyl(s,t,y,.028,.9,b1Brass,{solid:false});
-    for(let i=0;i<20;i++){const a=i*PI/10,b=(i+1)*PI/10;entryTube([s+.54*Math.cos(a),t+.54*Math.sin(a),y],[s+.54*Math.cos(b),t+.54*Math.sin(b),y],.045,b1Brass);}
-    for(let i=0;i<6;i++){const a=i*PI/3,ss=s+.54*Math.cos(a),tt=t+.54*Math.sin(a);lcyl(ss,tt,y-.20,.018,.42,b1Brass,{solid:false});spGlobe(ss,tt,y+(i%2?.22:-.20));}
+    lcyl(s,t,y,.028,.9,brass,{solid:false});
+    for(let i=0;i<20;i++){const a=i*PI/10,b=(i+1)*PI/10;entryTube([s+.54*Math.cos(a),t+.54*Math.sin(a),y],[s+.54*Math.cos(b),t+.54*Math.sin(b),y],.045,brass);}
+    for(let i=0;i<6;i++){const a=i*PI/3,ss=s+.54*Math.cos(a),tt=t+.54*Math.sin(a);lcyl(ss,tt,y-.20,.018,.42,brass,{solid:false});spGlobe(ss,tt,y+(i%2?.22:-.20));}
     spGlobe(s,t,y-.35,.18);
   };
+  // The seven globes hang below each vault. Reuse their diffuse light footprint
+  // across the near-identical bays instead of adding a point light per globe.
+  let vaultFinish;
+  function sweetVaultFinish(s,t,width,depth){
+    if(vaultFinish)return vaultFinish;
+    const key=K.texture('ccSweetVaultIrradiance',64,64,(g,w,h)=>{
+      const gradient=g.createRadialGradient(w/2,h/2,0,w/2,h/2,w*.70);
+      gradient.addColorStop(0,'#fff1d8');
+      gradient.addColorStop(.23,'#eddbb9');
+      gradient.addColorStop(.53,'#bcae95');
+      gradient.addColorStop(1,'#968c7d');
+      g.fillStyle=gradient;g.fillRect(0,0,w,h);
+    });
+    const material=new K.THREE.MeshLambertMaterial({
+      vertexColors:true,lightMap:K.T.surface(key).tex,lightMapIntensity:1.65
+    });
+    // Project the same fixture footprint onto the arches and their brasswork.
+    // Both retain their vertex colours and stay in one opaque batch per bay.
+    const [ox,oz]=P(s,t);
+    material.onBeforeCompile=shader=>{
+      shader.vertexShader=shader.vertexShader.replace('#include <uv_vertex>',`
+        #include <uv_vertex>
+        vec2 offsetXZ=(modelMatrix*vec4(position,1.0)).xz-vec2(${ox},${oz});
+        vLightMapUv=vec2(dot(offsetXZ,vec2(${AX},${AZ}))/${width},
+                         dot(offsetXZ,vec2(${EX},${EZ}))/${depth});
+      `);
+    };
+    vaultFinish=K.material('ccSweetVaultFinish',material);
+    return vaultFinish;
+  }
   const spVault=(s0,t0,s1,t1)=>{
     const cs=(s0+s1)/2,ct=(t0+t1)/2,hs=(s1-s0)/2,ht=(t1-t0)/2,n=12;
+    const tex=sweetVaultFinish(s0,t0,s1-s0,t1-t0);
+    const plaster={tex,color:0xefe5cf},rib={tex,color:0xd1c1a3},trim={tex,color:0xf3e9d4};
     const height=(a,b)=>YB1+3.5+1.35*Math.sqrt(Math.max(0,1-Math.min(a*a,b*b)));
     const q=(a,b)=>{const[x,z]=P(cs+a*hs,ct+b*ht);return[x,height(a,b),z];};
     for(let i=0;i<n;i++)for(let j=0;j<n;j++){
-      const a=-1+i*2/n,b=-1+j*2/n;K.quad(0xefe5cf,[q(a,b),q(a+2/n,b),q(a+2/n,b+2/n),q(a,b+2/n)],[0,-1,0]);
+      const a=-1+i*2/n,b=-1+j*2/n;
+      const corners=[q(a,b),q(a+2/n,b),q(a+2/n,b+2/n),q(a,b+2/n)];
+      // The two pitched barrel surfaces receive different amounts of light.
+      // Use opposite edge midpoints to include both slopes at their intersection.
+      const ds=(corners[1][1]+corners[2][1]-corners[0][1]-corners[3][1])/(4*hs/n);
+      const dt=(corners[2][1]+corners[3][1]-corners[0][1]-corners[1][1])/(4*ht/n);
+      const length=Math.hypot(ds,1,dt);
+      K.quad(plaster,corners,[(ds*AX+dt*EX)/length,-1/length,(ds*AZ+dt*EZ)/length]);
     }
     const paths=[];
     for(const[ds,dt]of [[-1,-1],[-1,1],[1,-1],[1,1]])paths.push(Array.from({length:13},(_,i)=>{const a=i/12;return[cs+ds*a*hs,ct+dt*a*ht,height(a,a)-.08];}));
     for(const edge of ['n','s','w','e'])paths.push(Array.from({length:21},(_,i)=>{const v=-1+i/10,a=edge==='n'?-1:edge==='s'?1:v,b=edge==='w'?-1:edge==='e'?1:v;return[cs+a*hs,ct+b*ht,height(a,b)-.06];}));
     for(const path of paths)for(let i=0;i<path.length-1;i++){
-      const a=path[i],b=path[i+1];entryTube(a,b,.18,0xd1c1a3);
-      entryTube([a[0],a[1],a[2]-.10],[b[0],b[1],b[2]-.10],.07,0xf3e9d4);
+      const a=path[i],b=path[i+1];entryTube(a,b,.18,rib);
+      entryTube([a[0],a[1],a[2]-.10],[b[0],b[1],b[2]-.10],.07,trim);
       entryTube([a[0]+.10,a[1],a[2]+.015],[b[0]+.10,b[1],b[2]+.015],.035,{tex:'emit',color:0xffe5ad});
     }
-    spChandelier(cs,ct);
+    spChandelier(cs,ct,{tex,color:b1Brass});
     for(const[a,b]of [[-.5,-.2],[.4,-.6],[-.35,.55],[.5,.3]])lcyl(cs+a*hs,ct+b*ht,height(a,b)-.04,.045,.025,{tex:'emit',color:0xfff2dc},{solid:false});
   };
   const spPillar=(s,t)=>{
@@ -1742,8 +1781,10 @@ export function build(K) {
     }
   });
   // Actual black-line room boundaries in the official east plan. Open grey islands receive no walls.
+  // The northern shop backs meet the B1 slab. A partition-height top left
+  // the outdoor building visible over the shops from the indoor escalator.
+  BWall([1116,266],[1400,266],0xd8cdb9,BP,-.31);
   for(const[a,b]of [
-    [[1116,266],[1400,266]],
     [[1237,266],[1237,320]],[[1264,266],[1264,320]],[[1333,266],[1333,320]],[[1400,266],[1400,320]],
     [[1344,343],[1389,343]],[[1389,343],[1389,462]],[[1344,343],[1344,373]],[[1344,411],[1344,462]],[[1344,462],[1389,462]],
     [[1344,488],[1400,488]],[[1400,488],[1400,718]],[[1344,545],[1400,545]],[[1344,625],[1400,625]],
