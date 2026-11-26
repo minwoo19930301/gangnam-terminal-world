@@ -1,4 +1,10 @@
 {
+  "sinbanpo_public_oaks": {
+    "source": "https://data.seoul.go.kr/dataList/OA-23040/S/1/datasetView.do",
+    "workbook": "2026 서울시 가로수 위치정보.xlsx · 2026-08-26 · 서초구 시트",
+    "observed": "반포센트럴자이 앞 신반포로 공공 보도에서 대왕참나무 10그루의 좌표를 반영했다. 원자료 경위도를 게임의 OSM 원점에 투영했다.",
+    "estimated": "수고 정보가 없어 8m로 표현했고 기존 활엽수 메시를 공유한다."
+  },
   "goter_pedestrian_island": {
     "checked": "2026-11-26",
     "roadview_dates": "2026-01-23",
