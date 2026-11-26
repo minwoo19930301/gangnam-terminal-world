@@ -1,3 +1,6 @@
+import {marketEntrance} from '../../assets/models/ssg-market-entrance/model.js';
+import {marketFruitIslands} from '../../assets/models/ssg-market-produce/model.js';
+import {pastryCounter} from '../../assets/models/ssg-bonmie/model.js';
 import { placeHypnos } from '../../assets/models/hypnos-showroom/model.js';
 import { registerPaulSmith } from './shinsegae-paul-smith.js';
 import { registerHerno } from './shinsegae-herno.js';
@@ -1430,7 +1433,7 @@ export function build(K) {
     sign('2층 ↑',up+edge*.75,board+toward*.25,.84,edge>0?'W':'E',.92,.30,marker);
     sign('B1 ↓',down-edge*.75,board+toward*.25,.84,edge>0?'E':'W',.92,.30,marker);
     const apron=board-toward*.90, lo=Math.min(up,down), hi=Math.max(up,down);
-    zoneAtApproach({name:bank.side+' 에스컬레이터',floor:'1F',sub:'2층 올라감 · B1 내려감',y0:0,y1:3.6,priority:4},
+    zoneAtApproach({name:bank.side+' 에스컬레이터',floor:'1F',sub:'2층 올라감 · B1 식품관(신세계 마켓) 내려감',y0:0,y1:3.6,priority:4},
       rect(lo-.90,Math.min(board,exit)-.6,hi+.90,Math.max(board,exit)+.6),
       rect(lo-.30,apron-.28,hi+.30,apron+.28));
   }
@@ -1493,7 +1496,8 @@ export function build(K) {
   // Arrive on the level landing just north of each car, with the full floor list retained.
   const ARR = { dx: -2.2 * SA, dz: -2.2 * CA };
   const marketLiftUV=B1_PLAN(578,617);
-  const MARKET_B1_DEST=P(marketLiftUV[0]-1.8,marketLiftUV[1]);
+  // The operator plan opens the market lift lobby on its page-left (local -v) side.
+  const MARKET_B1_DEST=P(marketLiftUV[0],marketLiftUV[1]-1.8);
   const mezzBankCalls=[];
   ELV.forEach((e, i) => {
     const [x, z] = P(e.u, e.v);
@@ -2409,9 +2413,17 @@ export function build(K) {
       [35,62,42.5,84.7], // NNW–SSE checkerboard public aisle from the south wall
       [20,59.5,26,66], // garland market portal and its approach
     ];
+    // Keep the centre line of both signed entrances open. The checkout and
+    // pop-up counters still fit inside their individual floor-guide cells.
+    const [deliEntryU,deliEntryV]=BPLAN(595.5,491);
+    const marketEntries=[
+      [17.6,62.65,30.4,64.15],
+      [deliEntryU-5.5,deliEntryV-.75,deliEntryU+5.1,deliEntryV+.75],
+    ];
     const reserved=(u,v,m=.2)=>!owned(u,v,m)||reserves.some(r=>inR(u,v,r,m));
     function fits(c,u,v,w,d){
       if(reserved(u,v)||reserved(u-w/2,v-d/2)||reserved(u+w/2,v+d/2))return false;
+      if(marketEntries.some(([west,north,east,south])=>u+w/2>west && u-w/2<east && v+d/2>north && v-d/2<south))return false;
       const poly=worldPoly(c);
       return [[0,0],[-w/2,-d/2],[w/2,-d/2],[w/2,d/2],[-w/2,d/2]].every(([a,b])=>K.pointInPoly(...P(u+a,v+b),poly));
     }
@@ -2423,7 +2435,7 @@ export function build(K) {
       ['centre','발효곳간 · 와인하우스 · 카페',[820,489,1032,845]],
       ['sw_plaza','메가박스 · 영풍문고 · 원형 광장',[371,775,904,1155]],
     ];
-    for(const[id,name,r]of zoneSpecs)if(BPOLY(BRECT(...r)).length>=3)K.zone({name,floor:'B1',sub:'신세계백화점 강남점 · 지하1층',poly:BPOLY(BRECT(...r)),y0:y,y1:0,priority:3});
+    for(const[id,name,r]of zoneSpecs)if(id!=='market'&&BPOLY(BRECT(...r)).length>=3)K.zone({name,floor:'B1',sub:'신세계백화점 강남점 · 지하1층',poly:BPOLY(BRECT(...r)),y0:y,y1:0,priority:3});
     for(const c of cells){
       if(worldPoly(c).length<3)continue;
       K.zone({name:c.name,floor:'B1',sub:c.brands?c.brands.join(' · '):'신세계 강남점 지하1층',poly:c.name==='대형 캐리어 무인 물품보관함'?rect(...(()=>{const [u0,v0,u1]=uvRect(c);return[u0+.2,v0+.08,u1-.2,v0+.53];})()):worldPoly(c),y0:y,y1:-1,priority:c.kind==='service'?6:5});
@@ -2470,7 +2482,9 @@ export function build(K) {
     K.slab(northVest,y,{mat:{tex:'marble',gloss:.5},thick:.25,under:false,edge:false});
     K.hpoly(CREAM,northVest,-2.2,false);K.phys.addCeiling(northVest,-2.2,{});
     for(const ab of[[16,-3.8,29,-3.8],[47,-3.8,64,-3.8],[16,-3.8,16,0],[64,-3.8,64,0]])K.wall(...P(ab[0],ab[1]),...P(ab[2],ab[3]),y,-2.2,{mat:CREAM});
-    K.zone({name:'지하 연결 로비',floor:'B1',sub:'고투몰 · 고속터미널역',poly:northVest,y0:y,y1:-2.2,priority:4});
+    // Follow the J1 doorway across the first 3.2m of existing interior slab.
+    const lobbyAddress=[[16,-3.8],[64,-3.8],[64,0],[45,0],[45,3.2],[31,3.2],[31,0],[16,0]];
+    K.zone({name:'지하 연결 로비',floor:'B1',sub:'고투몰 · 고속터미널역',poly:lobbyAddress.map(q=>P(...q)),y0:y,y1:-2.2,priority:4});
 
     const b1People=[];
     function customer(u,v,staff=false){b1People.push({u,v,staff,shirt:staff?0xf4efe6:[0x53483d,0xb2aa99,0x737b67,0x545e72][Math.floor(rnd()*4)]});}
@@ -2639,20 +2653,32 @@ export function build(K) {
         return;
       }
       const[u,v]=at,wood=c.name==='카멜커피'?0xd9b98a:c.name==='보앤미'?0xc8a77b:c.name==='블루버터플라이'?0x63422a:c.kind==='wine'?0x493529:c.kind==='deli'?0xb8925d:0x7e6044;
-      const darkDeli=c.zone==='north_deli'&&c.kind==='deli';
-      box(u,v,w,d,y,.83,darkDeli&&c.name!=='블루버터플라이'?'ssg_deli_black_glaze':c.name==='카멜커피'?wood:{tex:'wood',color:wood});
+      const darkDeli=c.zone==='north_deli'&&c.kind==='deli', boAndMie=c.name==='보앤미';
+      const base=darkDeli&&c.name!=='블루버터플라이'?'ssg_deli_black_glaze':c.name==='카멜커피'?wood:{tex:'wood',color:wood};
+      box(u,v,w,d,y,.83,boAndMie?{tex:'marble',color:0xe9d9c4}:base);
       box(u,v,w+.025,d+.025,y+.83,.06,{tex:'marble',color:darkDeli||c.name==='카멜커피'?0x292824:0xe9debf,gloss:.7},{solid:false});
       if(c.name==='블루버터플라이'){
         for(const du of [-w/2+.03,w/2-.03])box(u+du,v,.025,d+.015,y+.10,.65,BRASS,{solid:false});
         for(const yy of [.10,.74])box(u,v,w+.02,d+.02,y+yy,.025,BRASS,{solid:false});
       }
       if(['deli','bakery'].includes(c.kind)){
-        box(u,v,w-.04,d-.04,y+.9,.42,'glass',{solid:false});
+        const glass=boAndMie?K.material('ssg_bonmie_case_glass',new K.THREE.MeshLambertMaterial({
+          color:0xe2e8e0,transparent:true,opacity:.12,depthWrite:false,side:K.THREE.DoubleSide
+        })):'glass';
+        box(u,v,w-.04,d-.04,y+.9,.42,glass,{solid:false});
         for(const du of [-w/2+.05,w/2-.05])for(const dv of [-d/2+.05,d/2-.05])box(u+du,v+dv,.025,.025,y+.9,.43,BRASS,{solid:false});
-        box(u,v,w,d,y+1.31,.025,BRASS,{solid:false});
+        if(boAndMie){
+          // Gangnam's opening photo shows the black wordmark on the pale counter front.
+          sign('BO&MIE',u-w*.33,v-d/2-.014,y+.39,'N',.74,.22,{bg:null,fg:'#332a24',bold:true});
+          for(const side of [-1,1]){
+            box(u,v+side*(d/2-.025),w,.05,y+1.31,.025,BRASS,{solid:false});
+            box(u+side*(w/2-.025),v,.05,d-.10,y+1.31,.025,BRASS,{solid:false});
+          }
+          const [x,z]=P(u,v);pastryCounter(K,x,y+.90,z,RA,w,d);
+        }else box(u,v,w,d,y+1.31,.025,BRASS,{solid:false});
       }
       const nx=Math.max(2,Math.floor(w/.28)),nz=Math.max(2,Math.floor(d/.28));
-      for(let a=0;a<nx;a++)for(let b=0;b<nz;b++){
+      if(!boAndMie)for(let a=0;a<nx;a++)for(let b=0;b<nz;b++){
         const uu=u-w*.4+(a+.5)*w*.8/nx,vv=v-d*.4+(b+.5)*d*.8/nz;
         if(c.kind==='cafe'&&Math.abs(uu-u)<.36&&Math.abs(vv-v)<.3)continue;
         if(c.name==='발효곳간'){
@@ -2738,31 +2764,35 @@ export function build(K) {
     // Official elevator symbols become functioning B1 banks. All existing upper
     // stops remain available via destination tables; no extra1F shaft is cut.
     for(const c of cells.filter(c=>c.name.endsWith('엘리베이터')&&worldPoly(c).length>=3)){
-      const r=uvRect(c),[u,v]=BPLAN(...(c.name==='마켓 엘리베이터'?[578,617]:[936,335])),[x,z]=P(u,v);
+      const market=c.name==='마켓 엘리베이터';
+      const [u,v]=market?marketLiftUV:BPLAN(936,335),[x,z]=P(u,v);
+      const landing=market?MARKET_B1_DEST:[x-1.8*CA,z+1.8*SA];
+      const b1Stop={label:'B1',y,dx:landing[0]-x,dz:landing[1]-z};
       const corner=UPPER_BANKS.find(b=>b.key==='본관 코너'),main=UPPER_BANKS.find(b=>b.key==='본관 화장실 옆'),annex=UPPER_BANKS.find(b=>b.key==='신관 화장실 옆');
       const remote=f=>{
-        if(c.name==='마켓 엘리베이터')return cornerLiftLanding(f.label,corner,1);
+        if(market)return cornerLiftLanding(f.label,corner,1);
         if(f.label==='11F'){const [u,v]=annexLiftCentre(f.label,1);return P(u,v-2.25);}
         return mainLiftLanding(f.label, main, 1);
       };
       const parking=P(ELV[1].u,ELV[1].v-2.2),nw=beautyLiftLanding(NWLIFTS[0]),mezz=P(36,81);
       // B2 has its own basement shaft; the upper-floor landing is not a
       // valid parking-level arrival and can trap the player inside a wall.
-      const floorList=ELV_FLOORS.map(f=>({...f,...(f.label==='B1'?{dx:-1.8*CA,dz:1.8*SA}:f.label==='B2'?{dx:parking[0]-x,dz:parking[1]-z}:f.label==='1M'?{dx:mezz[0]-x,dz:mezz[1]-z}:f.label==='1F'?{dx:nw[0]-x,dz:nw[1]-z}:(()=>{const dest=remote(f);return{dx:dest[0]-x,dz:dest[1]-z};})())}));
-      const lift=K.elevator({name:c.name,x,z,rotY:FACE.W,w:2,d:1.8,topH:3.2,floors:[{label:'B1',y,dx:-1.8*CA,dz:1.8*SA}]});
+      const floorList=ELV_FLOORS.map(f=>({...f,...(f.label==='B1'?b1Stop:f.label==='B2'?{dx:parking[0]-x,dz:parking[1]-z}:f.label==='1M'?{dx:mezz[0]-x,dz:mezz[1]-z}:f.label==='1F'?{dx:nw[0]-x,dz:nw[1]-z}:(()=>{const dest=remote(f);return{dx:dest[0]-x,dz:dest[1]-z};})())}));
+      const lift=K.elevator({name:c.name,x,z,rotY:market?FACE.N:FACE.W,w:2,d:1.8,topH:3.2,floors:[b1Stop]});
       lift.floors=floorList;
       // The menu may teleport to a visible remote bank, but this B1 car has no
       // shaft on upper floors. Bound its call prompt to its actual B1 landing.
       const call=K._.interactables.find(it=>it.elevator===lift);if(call)call.y=y;
-      K.slab(rect(u-2.4,v-1.3,u+1.2,v+1.3),y,{mat:'metal',thick:.05,ceil:false,edge:false});
-      sign('엘리베이터 · 전층 안내',u-.95,v,y+2.7,'W',3.8,.4,{bg:'#373c33',fg:'#f5deb0'});
+      const apron=market?rect(u-1.3,v-2.4,u+1.3,v+1.2):rect(u-2.4,v-1.3,u+1.2,v+1.3);
+      K.slab(apron,y,{mat:'metal',thick:.05,ceil:false,edge:false});
+      sign('엘리베이터 · 전층 안내',market?u:u-.95,market?v-1.03:v,y+2.7,market?'N':'W',3.8,.4,{bg:'#373c33',fg:'#f5deb0'});
     }
 
     // Round14 video finishes preserve every round12 cell and every 1F slab.
     // The market ramp is visible in p5QE9cVtWDM_90 but is unlocated: no invented level change.
     K.detail({floor:'B1',y0:y,y1:0,poly:FULL,name:'B1 보행 영상 · 대리석과 마켓 포털'},()=>{
       K.hpoly('ssg_diamond_gloss',FULL,y+.006,true,[...BASE_CORES.filter(c=>c.door!=='W').map(c=>stairHole(c,1))]);
-      const [u,v]=BPLAN(595.5,491);
+      const [u,v]=[deliEntryU,deliEntryV];
       for(const dv of [-2.58,2.58]){
         box(u,v+dv,.22,.12,y,3.12,0x191b1b,{solid:false});
         box(u+.125,v+dv*.99,.025,.025,y+.22,2.65,BRASS,{solid:false});
@@ -3026,7 +3056,7 @@ export function build(K) {
     });
     // R20 photo walk #437–#453 / #547–#553. Corrected circulation stays open
     // before the deferred display builds, using the bank feet as hard controls.
-    zone('신세계 마켓 동측 로비','B1','식품관 · 1층 올라감',[20,54,43,67],y,-1,8);
+    zone('신세계 마켓 동측 로비','B1','식품관 · 1층 올라감',[22.5,54,43,67],y,-1,8);
     zone('신세계 마켓 남측 통로','B1','9게이트 · 스위트 파크 방면',[34.5,64,43.2,84.7],y,-1,7);
     K.texture('ssg_r20_cloud_glass',512,512,(g,w,h)=>{
       g.fillStyle='#eef0ed';g.fillRect(0,0,w,h);
@@ -3093,21 +3123,20 @@ export function build(K) {
       // no second counter is placed across their shared lobby approach.
       // Corner portal faces ENE, as in #552. Its aisle remains clear into produce.
       const pu=22.5,pv=63.4;
-      for(const dv of[-2.9,2.9]){
-        box(pu,pv+dv,.7,.7,y,3.8,{tex:'marble',color:0x191b1b,gloss:.7});
-        for(const yy of[.1,3.45])box(pu,pv+dv,.84,.84,y+yy,.14,0xc9a55e,{solid:false});
-        for(let h=.45;h<3.5;h+=.21)festive(pu+.4,pv+dv,y+h,true,.22);
-      }
-      box(pu,pv,.74,6.5,y+3.45,.46,{tex:'marble',color:0x1e1c1c,gloss:.7});
-      sign('新世界食品館',pu+.4,pv,y+3.68,'E',4.1,.29,{bg:null,fg:'#c9a55e',bold:false});
-      sign('SHINSEGAE MARKET',pu+.41,pv+2.15,y+3.67,'E',1.3,.12,{bg:null,fg:'#c9a55e',bold:false});
-      festive(pu+.42,pv,y+3.35,true,6.2);
-      // Produce pyramids, wicker baskets and red 쓱데이 gift cases inside the portal.
-      for(const v of[61.8,64.9]){
-        box(19.4,v,2,1.35,y,.78,{tex:'wood',color:0x3b2a20});
-        for(let row=0;row<4;row++)for(let j=0;j<7-row;j++){
-          const[x,z]=P(18.6+j*.23+row*.115,v);K.dome({x,z,y:y+.92+row*.14,rx:.12,ry:.12,rz:.12,hemi:false,seg:8,rings:5,mat:row%2?0xd6b138:0xc85330});
-        }
+      const [portalX,portalZ]=P(pu,pv);
+      marketEntrance(K,portalX,y,portalZ,RA);
+      // Keep the collision envelopes of the original jambs and overhead lintel.
+      const hiddenFaces=['top','bottom','n','s','e','w'];
+      for(const dv of [-2.9,2.9])box(pu,pv+dv,.7,.7,y,3.8,0x191b1b,{skip:hiddenFaces});
+      box(pu,pv,.74,6.5,y+3.45,.46,0x1e1c1c,{skip:hiddenFaces});
+      const fruitTables=[61.8,64.9];
+      marketFruitIslands(K,fruitTables.map(v=>{
+        const [x,z]=P(19.4,v);
+        return [x,y,z,RA];
+      }));
+      for(const v of fruitTables){
+        // Keep the original footprint and baskets beside the walk-in aisle.
+        box(19.4,v,2,1.35,y,.78,0x3b2a20,{skip:['top','bottom','n','s','e','w']});
         for(const du of[-.45,.45])cyl(19.4+du,v+.9,y,.32,.63,{tex:'wood',color:0xb18953});
       }
       for(let i=0;i<6;i++)box(20.5,65.5-i*.32,.58,.28,y,.72,0xc33d48,{solid:false});
@@ -3203,7 +3232,11 @@ export function build(K) {
       box(west.up-.9,west.exit-1.8,.04,1.2,y+.4,3.6,{tex:'emit',color:0xf3f2e9},{solid:false});
       sign('B1',west.up,west.exit+.3,y+3.7,'S',.8,.55,{bg:'#302d29',fg:'#ffffff',twoSided:true});
     });
-    for(const[name,px,py]of [['B1 신세계 마켓',720,570],['B1 델리 · 8게이트',823,388],['B1 메가박스 원형 광장',648,1008],['B1 9게이트 · 스위트 파크 연결',1024,477]]){
+    // The map opens on the public side of the black-and-gold food hall portal.
+    const [marketX,marketZ]=P(27.6,63.4),[doorX,doorZ]=P(22.5,63.4);
+    K.spawn({name:'신세계 마켓 입구',place:'shinsegae',floor:'B1',arrivalFloor:'B1',mapDestination:true,x:marketX,z:marketZ,y,
+      yaw:Math.atan2(marketX-doorX,marketZ-doorZ)});
+    for(const[name,px,py]of [['B1 델리 · 8게이트',823,388],['B1 메가박스 원형 광장',648,1008],['B1 9게이트 · 스위트 파크 연결',1024,477]]){
       const[u,v]=BPLAN(px,py);if(!owned(u,v,1))continue;const[x,z]=P(u,v);K.spawn({name,x,z,y,yaw:RA});
     }
   }
@@ -17373,7 +17406,8 @@ export function build(K) {
       K.box({ x, y: top - 0.2, z: -61.5, w: 0.24, h: 0.18, d: 43, mat: CEIL, solid: false });
       K.hpoly(0x8b7862, [[x - 0.07, -84], [x + 0.07, -84], [x + 0.07, -39], [x - 0.07, -39]], y + 0.015);
     }
-    K.sign(['신세계 식품관 →', '스위트파크 · 신세계 마켓'], { x: -74.5, y: y + 1.6, z: -84, w: 3.6, h: 0.55, rotY: PI / 2, bg: '#e4d7c2', fg: '#544536' });
+    // From the west wall, the food floor to the south is on the reader's left.
+    K.sign(['← 신세계 식품관', '스위트 파크 · 신세계 마켓'], { x: -78.85, y: y + 1.6, z: -80.2, w: 3.6, h: 0.55, rotY: PI / 2, bg: '#e4d7c2', fg: '#544536' });
     K.sign('← 고투몰 · 고속터미널역', { x: -65.5, y: y + 1.6, z: -42, w: 3.6, h: 0.4, rotY: -PI / 2, bg: '#e4d7c2', fg: '#544536' });
     for (let z = -84; z < -39; z += 4.5) for (const x of [-72, -68]) {
       K.cyl({ x, y: top - 0.04, z, r: 0.18, h: 0.03, seg: 10, mat: 0x9c8b70, solid: false });

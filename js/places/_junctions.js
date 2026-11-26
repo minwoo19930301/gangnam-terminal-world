@@ -2,6 +2,7 @@
 // y is the walkable floor height at the junction. pa lies inside module a's space, pb inside module b's.
 // owner = module that builds the connecting corridor / opening frame between pa and pb (the other one only
 // leaves a >= width-wide, >= 2.6m-tall opening in its own wall and keeps floor at y up to its boundary).
+// handoff, when present, locates the page transition at the shared doorway of a long corridor.
 // Smoke test (tests/smoke.mjs) checks there is a walkable floor at y on both pa and pb when both modules load.
 import { LEVELS } from '../kit.js';
 // The existing public square occupies the hotel footprint but belongs to the
@@ -10,7 +11,7 @@ import { LEVELS } from '../kit.js';
 export const OPEN_STAGE_FRONT = {x: -63.47, z: 88.89, w: 32, y0: 0, y1: 8.25};
 export const JUNCTIONS = [
   // ---- B1 (y = -6) underground network ----
-  { id: 'J1', a: 'gotomall', b: 'shinsegae', y: LEVELS.B1, pa: [-70, -89], pb: [-70, -35], width: 8, owner: 'shinsegae',
+  { id: 'J1', a: 'gotomall', b: 'shinsegae', y: LEVELS.B1, pa: [-70, -89], pb: [-70, -35], handoff: [-70, -86.6], width: 8, owner: 'shinsegae',
     note: 'GOTO south wall opening near x=-70 → corridor south (under 신반포로 sidewalk) → 신세계 B1 north wall (식품관 entrance).' },
   { id: 'J2', a: 'gotomall', b: 'gyeongbu', y: LEVELS.B1, pa: [120, -159], pb: [120, -100], width: 8, owner: 'gyeongbu',
     note: 'GOTO south wall opening near x=120 → corridor south → 경부선 터미널 B1 (다이소 강남고속터미널점 B1 is here).' },

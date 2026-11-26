@@ -1,0 +1,15 @@
+{
+  "floor": "B1",
+  "x": -58.5995,
+  "y": -6,
+  "z": 25.09413,
+  "yaw": 110.784,
+  "pitch": 7,
+  "meshName": "신세계 마켓 · 동측 대리석 출입구",
+  "sourceBlend": "entrance.blend",
+  "sourceCollection": "MarketEastPortal",
+  "nativeLabel": "신세계 마켓 동측 대리석 출입구",
+  "area": "in:shinsegae",
+  "gameView": "?pitch=7#/shinsegae/B1?p=-58.5995,-6,25.09413,110.784",
+  "thresholdView": "?pitch=14#/shinsegae/B1?p=-60.8,-6,25.84,118"
+}

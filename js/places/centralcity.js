@@ -1781,7 +1781,13 @@ export function build(K) {
   BSign('호남선 터미널 →',[1238,455,1301,482],'N',3.05);
   BSign('호남선 터미널 →',[1238,773,1343,808],'N',3.05);
   {const q=HPst(1739.5,398);lsign('신세계 아카데미 · 파미에스테이션 2층 →',...q,YB1+3.05,3,.3,'S',{bg:'#493723',fg:'#fff0d4'});}
-  BSign('백화점 식품관 · 9게이트',[1032,454,1080,484],'W',3.2);
+  // The B1 guide sends Sweet Park visitors through 9GATE to the food floor.
+  // The reverse face addresses visitors arriving from the market.
+  const [gateS,gateT]=BPst(1032,469);
+  for(const [face,label] of [['S','↑ 백화점 식품관 · 9GATE'],['N','↑ 스위트 파크']]){
+    lsign(label,gateS-.12,gateT,YB1+3.2,3.7,.42,face,
+      {bg:'#43382f',fg:'#fff5dd',bold:true,pxPerM:120});
+  }
   BSign('지하철 · 신세계 팩토리 스토어 ↑',[1078,266,1116,343],'W',3.05);
   // Sweet Park cars connect B1 with the existing department-store 1F landing.
   // Upper-floor destinations are not fabricated across the retained shared wall.
