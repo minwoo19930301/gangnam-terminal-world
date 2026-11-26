@@ -1,3 +1,4 @@
+import {placeYukgakRestaurant} from '../../assets/models/gyeongbu-yukgak/model.js';
 import {placeHyodoShop} from '../../assets/models/gyeongbu-hyodo/model.js';
 import {placeWicker} from '../../assets/models/gyeongbu-basket-display/model.js';
 import {flowerBank} from '../../assets/models/gyeongbu-flower-bank/model.js';
@@ -10,7 +11,7 @@ import {placeLuggageCounter} from '../../assets/models/gyeongbu-luggage/model.js
 import {placeFramingShop} from '../../assets/models/gyeongbu-hangaram/model.js';
 import { placeRooftopDining, patioTables } from '../../assets/models/gyeongbu-rooftop/model.js';
 import { placeTicketOffice } from '../../assets/models/gyeongbu-ticket-office/model.js';
-import { placeDeparturePortal } from '../../assets/models/gyeongbu-boards/model.js';
+import { placeDeparturePortal, posterCaptions } from '../../assets/models/gyeongbu-boards/model.js';
 import { placeIceCreamShop } from '../../assets/models/gyeongbu-icecream/model.js';
 import { placeWarmer } from '../../assets/models/gyeongbu-pretzels/model.js';
 import { placeUpperShowroom } from '../../assets/models/gyeongbu-apparel/model.js';
@@ -431,10 +432,9 @@ export function build(K) {
       const [x,z]=W(u-.13,v);
       placeDeparturePortal(K,x,z,FACE['-u']);
       const front=u-.13-.70-.155;
-      lsign(['금요일 만나다','첫눈에 반하다'],front,v-3.5,1.83,.94,.39,'-u',
-        {bg:null,fg:'#496265',padding:.025,pxPerM:220});
-      lsign(['금오공과대학교','지금오라'],front,v+3.52,1.43,.99,.45,'-u',
-        {bg:null,fg:'#414c7f',padding:.025,pxPerM:220});
+      for(const {text,x,y,w,h,fg} of posterCaptions){
+        lsign(text,front,v+x,y,w,h,'-u',{bg:null,fg,padding:.025,pxPerM:220});
+      }
     });
   }
   // Continuous boarding-side window wall; the 0.8m cream piers separate screens.
@@ -637,6 +637,9 @@ export function build(K) {
   }
   // Two level passages link the existing 10F garden to the dining terrace in front of the signed wall.
   const patioEntry=[89.5,107.7].map(v=>{const [x,z]=W(50.7,v);return {x,z,w:2.62,y0:43,y1:44};});
+  const yukgakV=86.32,yukgakU=50.70;
+  const [mealDoorX,mealDoorZ]=W(yukgakU,yukgakV);
+  patioEntry.push({x:mealDoorX,z:mealDoorZ,w:3.55,y0:43,y1:44});
   K.polyWalls(floorPoly(9),43,44,{mat:CREAM,thick:.2,openings:patioEntry});
   K.slab(rect(50.70,84.4,58.5,111.3),43,{mat:0x777b75,under:0xbcb9a9,edgeMat:0x9d998b,thick:.32});
   // The public roof photograph shows a black perimeter guard and clear promenade.
@@ -2523,6 +2526,14 @@ export function build(K) {
     const localAisle=wholesaleAisles[key];
     const fittedFront=key==='Suits'||key==='Womenswear';
     const isClothingFront=(u,v)=>fittedFront&&u===wings[1][0]&&v===centers[0];
+    if(key==='Children'){
+      const [x,z]=W(38,96.8);
+      // The floor is identified as children's clothing in the operator's public photograph.
+      // Give its aisle a lower priority than the individually searchable yarn and dress stall.
+      K.zone({name:'의류도매상가 · 아동복',floor,sub:'서울고속버스터미널 본관 · 아동 의류',
+        poly:rect(32.82,96.3,43.16,130.3),y0:floorY,y1:floorY+3.1,priority:3,
+        mapArrival:{x,z,yaw:yawL(0,1)}});
+    }
     if(fittedFront){
       const u=wings[1][0],v=centers[0],[x,z]=W(u,v);
       lzone('의류도매상가 · '+(key==='Suits'?'신사복':'여성복'),floor,
@@ -3274,6 +3285,22 @@ export function build(K) {
     for(const v of [66,70,74])for(const u of [33,44])lbox(u,v,43,5,.6,.45,0x917557);
     lbox(38,62,43,2,.8,1,0xd2c4ac);
     lzone('옥상정원','10F','성당 옆 옥외 공간',26,83,49,150,43,48,2);
+    const [mealX,mealZ]=W(yukgakU,yukgakV);
+    placeYukgakRestaurant(K,mealX,mealZ,ROT+PI/2);
+    const dining=rect(yukgakU-3.06,yukgakV-1.78,yukgakU+.13,yukgakV+1.78);
+    K.phys.addCeiling(dining,45.59);
+    const contact=(u,v,w,d,h)=>lbox(u,v,43,w,d,h,0,{skip:['top','bottom','n','s','e','w']});
+    for(const [a,b] of [[-1.78,-.98],[.23,1.78]])contact(yukgakU,yukgakV-(a+b)/2,.08,b-a,2.53);
+    for(const [tx,td] of [[1.41,.40],[.94,.46]])contact(yukgakU+td,yukgakV-tx,.34,.37,.46);
+    contact(yukgakU-3.02,yukgakV,.10,3.54,2.6);
+    for(const side of [-1,1])contact(yukgakU-1.52,yukgakV+side*1.73,3.03,.09,2.6);
+    for(const [tx,td] of [[.90,-1.08],[-.89,-2.24]])contact(yukgakU+td,yukgakV-tx,.70,.93,.783);
+    const [arrivalX,arrivalZ]=W(yukgakU+2.52,yukgakV+.40);
+    K.zone({name:'육각고기',floor:'10F',sub:'육즙이 흐르는 각고기 · 옥상 식당',
+      poly:[[yukgakU-3.06,yukgakV-1.78],[yukgakU+.13,yukgakV-1.78],[yukgakU+.13,yukgakV-.46],
+        [yukgakU+2.88,yukgakV-.46],[yukgakU+2.88,yukgakV+1.23],[yukgakU+.13,yukgakV+1.23],
+        [yukgakU+.13,yukgakV+1.78],[yukgakU-3.06,yukgakV+1.78]].map(p=>W(...p)),
+      y0:43,y1:46.1,priority:5,mapArrival:{x:arrivalX,z:arrivalZ,yaw:yawL(-1,0)}});
     const patioU=51.25,patioV=98.70;
     lzone('옥상 산책로','10F','옥상정원 · 야외 식당',49.0,84.4,58.51,111.3,43,47.8,3);
     lzone('포석정','10F','옥상 야외 식사 공간',50.68,91.75,58.50,105.45,43,48,4);

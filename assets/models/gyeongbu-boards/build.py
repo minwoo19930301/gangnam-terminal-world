@@ -133,6 +133,7 @@ enclosure(0,.92,.66,.309,2.205,True)
 depth_offset=.70
 enclosure(-3.50,1.21,1.055,.313,2.17)
 enclosure(3.52,1.29,1.13,.313,2.17)
+runpy.run_path(str(HERE/'native-display.py'))
 for area in bpy.context.screen.areas:
     if area.type=='VIEW_3D':
         area.spaces.active.shading.color_type='MATERIAL'

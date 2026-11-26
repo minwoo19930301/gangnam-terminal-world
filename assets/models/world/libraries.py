@@ -81,6 +81,7 @@ SHELVES = {
     "margaux-chair": "JW 7층 · 더 마고 그릴 다이닝 가죽 의자",
     "famille-shopfront": "파미에 1층 · 식당가 격자창과 석재 덧기둥",
     "margaux-cellar": "JW 7층 · 더 마고 그릴 와인 셀러",
+    "gyeongbu-yukgak": "경부선 10층 · 육각고기",
     "gyeongbu-rooftop": "경부선 10층 · 포석정",
     "sebit-lounge": "고투몰 G2 · 고터·세빛 라운지",
     "damccot": "파미에 2층 · 담꽃",

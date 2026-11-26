@@ -100,6 +100,41 @@ try{
     const end=await page.evaluate(()=>({x:window.__world.player.x,y:window.__world.player.y,z:window.__world.player.z}));
     assert.ok(Math.abs(end.y)<.25);walks.push(Math.hypot(end.x-start.x,end.z-start.z));
   }
+  // The original lightbox samples are visible before transfer and beyond the
+  // close range. Sample the actual framebuffer at the two unobstructed prints.
+  const samplePrints=async()=>page.evaluate(async name=>{
+    const T=await import('three'),w=window.__world,r=w.renderer,gl=r.getContext();
+    const group=w.scene.getObjectByName(name).parent;
+    r.render(w.scene,w.camera);
+    return {full:group.children[1].visible,colors:[-3.5,3.52].map(x=>{
+      const p=group.localToWorld(new T.Vector3(x,2.18,.85)).project(w.camera);
+      const rgb=new Uint8Array(4);
+      gl.readPixels(Math.round((p.x+1)*.5*gl.drawingBufferWidth),Math.round((p.y+1)*.5*gl.drawingBufferHeight),
+        1,1,gl.RGBA,gl.UNSIGNED_BYTE,rgb);
+      return Array.from(rgb).slice(0,3);
+    })};
+  },board);
+  const expectedColors=[[238,231,216],[201,203,232]];
+  async function checkPrints(full){
+    const sample=await samplePrints();
+    assert.equal(sample.full,full);
+    sample.colors.forEach((rgb,i)=>rgb.forEach((v,k)=>assert.ok(Math.abs(v-expectedColors[i][k])<=2)));
+  }
+  const beforeFar=fetches;
+  await open('1F?p=100,0,20,-29');await page.waitForTimeout(400);
+  await checkPrints(false);
+  assert.equal(fetches,beforeFar);
+  let release,notify;
+  const requested=new Promise(resolve=>{notify=resolve;});
+  await page.route('**/gyeongbu-boards/departure-portal.glb',async route=>{
+    await new Promise(done=>{release=done;notify();});await route.continue();
+  });
+  await open('1F?p=103.805,0,6.739,-69.19');await requested;
+  try{
+    await checkPrints(false);
+  }finally{release();}
+  await page.waitForFunction(name=>window.__world.scene.getObjectByName(name)?.parent.children[1].visible,board);
+  await checkPrints(true);
   assert.deepEqual(errors,[]);
   console.log(JSON.stringify({modes,checks,walks,errors},null,2));
 }finally{await browser.close();await new Promise(r=>server.close(r));}
