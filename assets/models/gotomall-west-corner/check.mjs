@@ -2,6 +2,7 @@
 import assert from 'node:assert/strict';
 import {chromium} from 'playwright';
 import {serve} from '../../../tests/serve.mjs';
+import {compareDeckFrame} from '../../../tests/deck-frame-pair.mjs';
 import {footprint} from '../gotomall-yogurtworld/layout.js';
 import {parts} from './layout.js';
 import sharp from 'sharp';
@@ -80,5 +81,26 @@ try{
   assert.deepEqual(opaque,[]);assert.deepEqual(errors,[]);assert.equal(new Set(files).size,files.length);
   for(const key of Object.keys(parts))if(key!=='mirrorGlass')assert.ok(files.includes(key+'.glb'),key);
   assert.ok(files.includes('mirror-room.webp'));
+  const views=[
+    ['반에반',[
+      ['hall',-4.24,-1.35,-4.24,2.1],['rear',-4.24,2.9,-4.24,4.9],
+      ['side',-4.24,2.1,-1.35,2.1],['opening',-4.24,2.1,-4.24,-3]]],
+    ['셀프사진',[
+      ['hall',6.17,-1.35,6.17,2.1],['mirror',6.17,1.30,6.87,2.95],
+      ['side',6.17,1.30,4.88,1.30],['opening',6.17,1.30,6.17,-2.3]]],
+  ];
+  for(const light of ['day','night']){
+    await page.evaluate(light=>__world.setTimeMode(light),light);
+    for(const [shop,angles] of views){
+      for(const [label,x,d,tx,td] of angles){
+        await pose(x,d,tx,td);
+        const pair=await page.evaluate(compareDeckFrame,'walls');
+        assert.equal(pair.different,0,shop+' '+light+' '+label+' changed visible pixels');
+        if(label==='hall')assert.deepEqual(pair.before,pair.after,shop+' hall should stay open');
+        if(label==='side')assert.ok(pair.after[1]<pair.before[1],shop+' side wall should hide remote geometry');
+        console.log(JSON.stringify({shop,light,label,before:pair.before,after:pair.after,different:pair.different}));
+      }
+    }
+  }
   console.log(JSON.stringify({cold:0,ban,banBack,hama,cameraContact,hall,mirrorDelta,files}));
 }finally{await browser.close();await new Promise(r=>server.close(r));}
