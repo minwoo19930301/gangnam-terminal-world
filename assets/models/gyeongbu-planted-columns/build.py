@@ -45,7 +45,22 @@ def course(width, depth, z, h, rgb):
     patch([(a*width/2,b*depth/2,z+level*h) for level in (0,1) for a,b in corners],
           [(0,3,2,1),(4,5,6,7)]+[(i,(i+1)%4,4+(i+1)%4,4+i) for i in range(4)],rgb)
 
-course(.55,.87,0,.19,(132,120,100))
+# A folded rim catches the light above a recessed kick and pressed vertical flutes.
+course(.51,.83,0,.035,(73,72,59))
+course(.56,.88,.035,.134,(143,129,102))
+for face in range(4):
+    angle = face*pi/2
+    normal = Vector((cos(angle),sin(angle),0))
+    across = Vector((-sin(angle),cos(angle),0))
+    radius, count = (.28,24) if face%2==0 else (.44,15)
+    for i in range(count):
+        mid = normal*radius + across*((i-(count-1)/2)*.034)
+        a, b = mid-across*.004, mid+across*.004
+        c = mid+normal*.006
+        up = Vector((0,0,.127))
+        base = Vector((0,0,.039))
+        patch([base+a,base+c,base+b,base+a+up,base+c+up,base+b+up],
+              [(0,1,4,3),(1,2,5,4)],(179,158,117))
 course(.58,.90,.16,.052,(185,170,141))
 course(.49,.79,.20,3.55,(52,70,45))
 for height in (.23,1.09,1.95,2.81,3.67):
@@ -77,6 +92,52 @@ for face in range(4):
                 patch([start,ridge,mid+across*width,tip],[(0,1,2),(1,3,2)],
                       tuple(min(255,int(c*1.14)) for c in base))
     finish(f"0{face+2} · 접힌 잎 군락")
+# Feathered arching fronds and short trailing runs break up the dense folded canopy.
+for face in range(4):
+    theta = face*pi/2
+    n = Vector((cos(theta),sin(theta),0))
+    a = Vector((-sin(theta),cos(theta),0))
+    up = Vector((0,0,1))
+    radius, span = (.25,.78) if face%2==0 else (.40,.47)
+    for j in range(8):
+        side = 1 if j%2 else -1
+        anchor = n*(radius+.034)+a*(side*span*.25)+up*(.60+j*.403)
+        def spine(t):
+            return anchor+n*(.18*t+.073*sin(pi*t))+a*(side*.20*t)+up*(.15*sin(pi*t)-.32*t)
+        for k in range(9):
+            u,v = k/9,(k+1)/9
+            start,end = spine(u),spine(v)
+            patch([start-a*.004,start+a*.004,end+a*.003,end-a*.003],[(0,1,2,3)],(156,160,83))
+            width = (.025+.079*sin(pi*(u+.1)))*(1-u*.4)
+            for direction in (-1,1):
+                tip=start+a*(direction*width)+n*.026-up*(.029+.037*u)
+                mid=start.lerp(tip,.52)
+                patch([start,mid+up*.019,mid+n*.012,tip,mid-up*.011],
+                      [(0,1,2),(1,3,2),(2,3,4),(0,2,4)],
+                      rng.choice([(131,159,80),(156,171,88),(111,145,66)]))
+    finish(f"깃 모양 잎 · {face+1}면")
+    for j in range(5):
+        side=(-1)**j
+        base=n*(radius+.15)+a*(side*span*.21)+up*(1.02+j*.59)
+        last=base
+        for k in range(5):
+            end=base-up*((k+1)*.097)+a*(.045*sin(k+.8*j))+n*(.014*sin(k))
+            patch([last-a*.005,last+a*.005,end+a*.004,end-a*.004],[(0,1,2,3)],(134,132,74))
+            # A shallow crease and unequal lobes distinguish these leaves from the fronds.
+            direction=(-1)**k
+            root=end
+            flank=a*direction
+            tip=root+flank*.090+n*.041-up*.11
+            mid=root.lerp(tip,.48)
+            ridge=mid+n*.012
+            left=mid-flank*.044+up*.008
+            right=mid+flank*.037
+            patch([root,root-flank*.019+up*.019,left,ridge,tip,right,root+flank*.025+up*.010],
+                  [(0,1,2,3),(2,4,3),(3,4,5),(0,3,5,6)],(91,138,83))
+            patch([root+n*.002,ridge-flank*.008+n*.006,tip+n*.003,ridge+flank*.005+n*.006],
+                  [(0,1,2),(0,2,3)],(175,188,113))
+            last=end
+    finish(f"무늬 덩굴 · {face+1}면")
 scene.display.shading.color_type = 'VERTEX'
 bpy.context.preferences.filepaths.save_version = 0
 bpy.ops.wm.save_as_mainfile(filepath=str(out/"planted-column.blend"),compress=True)

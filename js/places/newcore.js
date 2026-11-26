@@ -5,6 +5,7 @@ import { registerFloorFinishes, floorSamples } from '../../assets/models/newcore
 import { loadArchitecture, fitArchitecture } from '../../assets/models/architectural-retail/place.js';
 import { upperFixtures } from '../../assets/models/newcore/upper-fixtures.js';
 import { registerKidsFixture } from '../../assets/models/modernhouse-kids/model.js';
+import { registerPicnicRack } from '../../assets/models/modernhouse-picnic/model.js';
 import { registerProvence } from '../../assets/models/modernhouse-provence/model.js';
 import { registerOksobanTable } from '../../assets/models/newcore/oksoban.js';
 
@@ -1278,6 +1279,7 @@ function upperSalesFloor(F, num, floor) {
       const clothingFinishes = [[0x665758, 0xe4d8cd], [0x48575c, 0xd9e1dc], [0x836347, 0xe7d8b8]];
       const kidsRoom = num === 1 && floor.label === '4F' && label === '키즈';
       const provence = num === 1 && floor.label === '4F' && label === '주방용품';
+      const picnic = num === 1 && floor.label === '4F' && label === '홈데코';
       const hotpot = num === 1 && floor.label === '5F' && label === '옥소반';
       const [accent, wall] = adidasGolf ? [0x252626,0xd5d3cc] : hotpot ? [0x9e4831, 0xc3b5a2] :
         kind === 'rail' ? clothingFinishes[(i + side + num) % 3] : finishes[kind];
@@ -1296,6 +1298,10 @@ function upperSalesFloor(F, num, floor) {
           registerKidsFixture(F,key,u+off,y+.034,position,upperBayView(F,u,front,depth,bayWidth,inset,position,half,off));
         }
       }
+      if (picnic) {
+        const displayV=front-inset*depth*.36;
+        registerPicnicRack(F,u,y+.034,displayV,upperBayView(F,u,front,depth,bayWidth,inset,displayV,1.26));
+      }
       if (provence) {
         const displayV=front-inset*depth*.36;
         registerProvence(F,u,y+.034,displayV,upperBayView(F,u,front,depth,bayWidth,inset,displayV,1.83));
@@ -1305,12 +1311,12 @@ function upperSalesFloor(F, num, floor) {
       if (hotpot) registerOksobanTable(F, u, y + .034, front - inset * depth * .36);
       if(adidasGolf) registerGolf(F,u,y+.034,front,depth,bayWidth,
         (position,half,offset)=>upperBayView(F,u,front,depth,bayWidth,inset,position,half,offset));
-      bays.push({u, front, back, depth, inset, bayWidth, kind, label, side, i, hotpot, provence, kidsRoom, adidasGolf});
+      bays.push({u, front, back, depth, inset, bayWidth, kind, label, side, i, hotpot, provence, picnic, kidsRoom, adidasGolf});
     }
   });
   for (const off of [-1,1]) B(0, y + .017, W / 2 + off * 2.76, L - 3, .012, .085, 0xac987a, {solid:false});
   return () => {
-    for (const {u, front, back, depth, inset, bayWidth, kind, label, side, i, hotpot, provence, kidsRoom, adidasGolf} of bays) {
+    for (const {u, front, back, depth, inset, bayWidth, kind, label, side, i, hotpot, provence, picnic, kidsRoom, adidasGolf} of bays) {
       B(u, y + 2.96, front + inset * .18, bayWidth - .45, .035, .10, { tex:'emit', color:0xffefd1 }, {solid:false});
       if(adidasGolf){
         for(const d of [2.10,5.74,8.73]) B(u,y+3.48,front+d,2.65,.052,.095,{tex:'emit',color:0xfff4df},{solid:false});
@@ -1375,7 +1381,7 @@ function upperSalesFloor(F, num, floor) {
         fixture(F, kind, u - bayWidth * .28, y + .034, front - inset * depth * .46, side);
         F.person(u - bayWidth * .28 - 1.65, y + .034, front - inset * depth * .46, {shirt:0xd9c4a6});
       }
-      if (!ashley && !hotpot && !provence) fixture(F, kind, u, y + .034, front - inset * depth * .36, !side);
+      if (!ashley && !hotpot && !provence && !picnic) fixture(F, kind, u, y + .034, front - inset * depth * .36, !side);
       if (kind === 'dining' || kind === 'homeware') {
         fixture(F, kind, u + bayWidth * .27, y + .034, front - inset * depth * .70, side);
       }

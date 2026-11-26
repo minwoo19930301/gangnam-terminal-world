@@ -10,5 +10,5 @@ const io=new NodeIO().registerExtensions(ALL_EXTENSIONS).registerDependencies({
 });
 const path=fileURLToPath(new URL('planted-column.glb',import.meta.url));
 const doc=await io.read(path);
-await doc.transform(weld(),meshopt({encoder:MeshoptEncoder,level:'medium',quantizePosition:16}));
+await doc.transform(weld(),meshopt({encoder:MeshoptEncoder,level:'high',quantizePosition:13,quantizeNormal:8}));
 await io.write(path,doc);

@@ -142,6 +142,18 @@ export function buildRetailSquare(K) {
   sign('원베일리 스퀘어',1081.7,258,2.97,3.80,.35,rot+Math.PI/2,'#f4f3e8');
   const courtPlan=[[1081,174],[1238,174],[1238,104],[1292,104],[1292,215],[1338,215],[1338,328],[1395,385],[1370,410],[1081,410]];
   const court=points(courtPlan);slab(court,stone);K.groundHole(court);zone('원베일리 스퀘어 선큰광장','B1 상가 · 공공보행통로',court);
+  // The B1 floor outline extends beneath the 1F public forecourt. The sales
+  // plan's transverse paved apron runs out from the shops between two openings.
+  // Keep the uncertain vehicle approach and the open portions of the lower court
+  // separate from this level surface. Coordinates use the same fitted plan frame.
+  const apron=points([[1081,300],[1210,300],[1225,298],[1250,321],
+                      [1244,328],[1210,326],[1081,326]]);
+  K.slab(apron,0,{mat:{tex:'tile',color:0xc7c6bf},under:0xd0cec7,thick:.24});
+  // The modelled apron joins existing grade along its west edge. Protect the
+  // exposed edges over the lower court, leaving that shared edge walkable.
+  for(let i=0;i<apron.length-1;i++){
+    K.wall(...apron[i],...apron[i+1],0,1.06,{mat:'glass',thick:.05});
+  }
   // Retaining walls preserve the north pedestrian route and the south-eastern
   // approach. Street level is the project's local datum, not a surveyed level.
   for(const [a,b] of [[[1081,174],[1238,174]],[[1238,174],[1238,104]],[[1292,104],[1292,215]],[[1292,215],[1338,215]],[[1338,215],[1338,328]],[[1370,410],[1081,410]]]){

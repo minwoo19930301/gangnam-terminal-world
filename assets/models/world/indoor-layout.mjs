@@ -160,6 +160,7 @@ const sources = [
   ['centralcity','2F','bean-brothers/fp203.blend','빈브라더스 · FP203 커피바와 좌석','빈브라더스 · FP203 커피바와 좌석'],
   ['jwmarriott','8F','lounge-drapery/drapes.blend','더 라운지 · 묶은 주름 커튼','더 라운지 · 묶은 주름 커튼'],
   ['jwmarriott','8F','lounge-upholstery/sofa.blend','더 라운지 · 크림색 코너 소파','더 라운지 · 크림색 코너 소파'],
+  ['newcore','4F','modernhouse-picnic/picnic.blend','모던하우스 · 딸기와 데이지 러그','모던하우스 · 딸기와 데이지 러그'],
   ['newcore','4F','modernhouse-provence/market.blend','모던하우스 · 마르셰 프로방스','모던하우스 · 마르셰 프로방스'],
   ['gyeongbu','1F','gyeongbu-icecream/gyeongbu-scoop-parlor.blend','배스킨라빈스 · 스쿱·케이크 매장','Parlor','Glass','Lit'],
   ...['케르반 · 제과와 포장 진열','케르반 · 청록색 주방창','케르반 · 모자이크 등','케르반 · 라바시와 차 한 상']
@@ -204,6 +205,7 @@ const sources = [
     ['gotomall','B1','gotomall/shop-interiors.blend','고투몰 진열 · '+name,name]),
   ['gotomall','B1','gotomall-hessed/hessed.blend','헤쎄드 가방 진열','HessedShop'],
   ['jwmarriott','2F','patisserie/patisserie.blend','파티세리 · 플랑과 마카롱','파티세리 · 플랑과 마카롱 선물 상자'],
+  ['jwmarriott','2F','patisserie/gateaux.blend','파티세리 · 홀케이크와 쁘띠 가토','파티세리 · 홀케이크와 쁘띠 가토'],
   ['jwmarriott','8F','lounge-chair/lounge-chair.blend','더 라운지 · 피콕 라탄체어','피콕 암체어 · JW 8층 더 라운지'],
   ['newcore','5F','newcore/oksoban-table.blend','옥소반 · 인덕션','옥소반 · 1관 5F 식탁'],
   ['newcore','외관','architectural-retail/retail-architecture.blend','NewcoreArch','NewcoreArch'],
@@ -211,6 +213,7 @@ const sources = [
   ['shinsegae','9F','hypnos-showroom/hypnos.blend','히프노스 침대 · 원거리','히프노스 · 신세계 강남 9층'],
   ['shinsegae','6F','architectural-retail/retail-architecture.blend','CaseGallery','CaseGallery'],
   ['shinsegae','5F','architectural-retail/retail-architecture.blend','RectoWall','RectoWall'],
+  ['centralcity','1F','open-stage-lounge/lounge.blend','오픈 스테이지 · 흰 소파와 낮은 테이블','오픈 스테이지 · 흰 소파와 낮은 테이블'],
   ['centralcity','1F','famille-atrium/atrium-fittings.blend','광장 · 고리형 청동 조명','광장 벽등 · 고리와 유백 갓'],
   ['centralcity','1F','famille-atrium/atrium-fittings.blend','메모리얼 광장 · 미디어 캐비닛','세로형 전광판 · 캐비닛과 매체','전광판 · 교체 가능한 화면 원화'],
   ['centralcity','1F','famille-atrium/atrium-fittings.blend','포비 앞 · 빨간 철제 테이블과 의자','광장 포비 앞 · 빨간 비스트로 테이블'],
