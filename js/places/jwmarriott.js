@@ -1,3 +1,4 @@
+import { loadArchitecture, placeArchitecture } from '../../assets/models/interior-architecture/model.js';
 import { fixtures } from '../../assets/models/jwmarriott/fixtures.js';
 
 // JW 메리어트 호텔 서울 — 센트럴시티 동측 블록 (OSM 136986976), 지상 33층 · 지하 4층.
@@ -6,6 +7,8 @@ import { fixtures } from '../../assets/models/jwmarriott/fixtures.js';
 // The hotel retains its tower, documented southern entrance and upper hotel floors.
 // Podium 1F–6F over the whole footprint, 7F = podium roof (JW 가든 + 더 마고 그릴 / 모보 바 pavilion),
 // tower 8F (체크인 로비 · 더 라운지) – 33F (펜트하우스), crown to 144 m (= OSM height).
+const lobbyCoffer = await loadArchitecture('hotel-lattice.glb');
+
 export const meta = {
   id: 'jwmarriott',
   name: 'JW 메리어트 호텔 서울',
@@ -910,14 +913,16 @@ export function build(K) {
     HP('jwHoney', [-3.7, 4, 33, 60.4], .009, true, [[21.4, 29.5, 29.8, 41.8], [8.8, 24.2, 15.9, 39.5]]);
     HP('jwWalnut', [-3.7, 4, 33, 60.4], 5.66, false, [HALL, [8.8, 24.2, 15.9, 39.5], [21.4, 29.5, 29.8, 41.8]]);
     PR(HALL, 8.15, 8.32, { mat: { tex: 'emit', color: 0x6b4528 }, top: false, walkTop: false });
-    // 11/15: two interlocked L/T strokes per half-cell, with .23 m clear pockets inside each .6 m module.
-    for (let u = -1.7, i = 0; u < 16.3; u += .6, i++) for (let v = 42.3, j = 0; v < 54.8; v += .6, j++) {
-      const mat = (i + j) % 3 === 0 ? 0x8c6343 : 'jwWalnut';
-      for (const offset of [0, .3]) {
-        B({ u, v: v + offset, y: 7.93, w: .6, d: .07, h: .22, mat, solid: false, skip: ['top'] });
-        B({ u: u + offset - .15, v: v + .15, y: 7.93, w: .07, d: .6, h: .22, mat, solid: false, skip: ['top'] });
+    // Interlocking walnut lattice photographed over the entrance hall. The 1.8 m
+    // Blender tile follows the existing fitted room and the same amber backing.
+    DEC(() => {
+      const sections = [];
+      for (let i=0;i<10;i++) for (let j=0;j<7;j++) {
+        const [x,z] = mapPoint(...P(-2.0+(i+.5)*1.8,42.0+(j+.5)*1.8));
+        sections.push([x,7.93,z,R,fit.su,1,fit.sv]);
       }
-    }
+      placeArchitecture(baseKit,lobbyCoffer,'현관 홀 월넛 격자 천장',sections);
+    });
     // Upper galleries: inset glazing, walnut blades, continuous warm wash under the screen.
     for (const v of [42.08, 54.92]) {
       WL(-1.9, v, 16.4, v, 6, 8.15, { mat: GL, thick: .045 });

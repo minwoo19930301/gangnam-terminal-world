@@ -1,3 +1,4 @@
+import { loadArchitecture, placeArchitecture } from '../../assets/models/interior-architecture/model.js';
 import { buildFamilleAtrium } from './famille_atrium.js';
 import { buildGardenGallery } from './famille_garden_gallery.js';
 
@@ -12,6 +13,8 @@ import { buildGardenGallery } from './famille_garden_gallery.js';
 //   strip:        s -22..151, t 0..38.5   (1F vaulted hall t6..23; 2F dining east of t23)
 // Photo 11 / review supersede the round roof's unreliable OSM H8.4: two tiers and lantern to 22.6m, wall footprint unchanged.
 //   south block:  s 151..204, t -98..38   (파미에스테이션 1F/2F, 하차장, 지하철 연결 B1)
+const concourseDisplay = await loadArchitecture('terminal-led.glb');
+
 export const meta = {
   id: 'centralcity',
   name: '센트럴시티 (호남선 터미널 · 파미에스테이션)',
@@ -3162,12 +3165,10 @@ export function build(K) {
       hallFace({tex:'emit',color:0x6689aa},s,t,2.65,2.1,4.18,face);
       lsign('UNIQLO',s+(face==='N'?-.01:face==='S'?.01:0),t+(face==='W'?-.01:face==='E'?.01:0),1.05,.92,.58,face,{bg:'#d92532',fg:'#ffffff'});
     }
-    // Curved screen under the SE truss, facing NNW into the waiting hall.
-    for(let i=0;i<20;i++){
-      const t0=9+i,t1=t0+1,sc=t=>133.5+.011*(t-19)*(t-19),a=P(sc(t0),t0),b=P(sc(t1),t1);
-      K.quad(0x10151a,[[a[0],4.85,a[1]],[b[0],4.85,b[1]],[b[0],8.00,b[1]],[a[0],8.00,a[1]]],[-AX,0,-AZ]);
-      K.quad({tex:'emit',color:i%6<3?0x77b9df:0xb8a9b8},[[a[0]-.02*AX,5.02,a[1]-.02*AZ],[b[0]-.02*AX,5.02,b[1]-.02*AZ],[b[0]-.02*AX,7.83,b[1]-.02*AZ],[a[0]-.02*AX,7.83,a[1]-.02*AZ]],[-AX,0,-AZ]);
-    }
+    // A single curved Blender cabinet follows the existing 20 m video wall footprint.
+    // Its pixel panels, protective trim and mounting frame are visual architecture.
+    const [screenX,screenZ]=P(133.5,19);
+    placeArchitecture(K,concourseDisplay,'호남선 대합실 곡면 전광판',[[screenX,4.85,screenZ,R]]);
     lsign('UNIQLO',133.4,19,6.4,4.2,.70,'N',{bg:'#d72934',fg:'#ffffff'});
 
     K.detail({name:'호남선 대합실 · 사진 기준 매장과 대기 좌석',floor:'1F',y0:0,y1:8.5,poly:hallPoly},()=>{

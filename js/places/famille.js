@@ -1,3 +1,4 @@
+import { loadArchitecture, placeArchitecture } from '../../assets/models/interior-architecture/model.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 import { gardenSurface, gardenStation } from './_gardenGrade.js';
@@ -14,6 +15,8 @@ const galleryFixtures = (await new GLTFLoader().setMeshoptDecoder(MeshoptDecoder
 
 // Round 20. The user's 2026-11-07 photographs override the older GPS/plan fit.
 // The indoor restaurant street meets parking 2F. The garden is above parking 3F.
+const galleryRib = await loadArchitecture('gallery-rib.glb');
+
 export const meta = {
   id: 'famille', name: '파미에스테이션 동관', claims: [414891732],
   claimRoads: [],
@@ -564,7 +567,11 @@ function buildHall(K) {
       K.quad(mat,[xyz([u0,v0,y0]),xyz([u1,v0,y0]),xyz([u1,v1,y1]),xyz([u0,v1,y1])],[0,-1,0]);
       if(mat!=='glass')K.quad(0xe3e0d6,[xyz([u0,v0,y0+.1]),xyz([u1,v0,y0+.1]),xyz([u1,v1,y1+.1]),xyz([u0,v1,y1+.1])],[0,1,0]);
     }
-    for(let u=u0;u<=u1+.01;u+=6.5)for(let i=0;i<24;i++){const a=i*PI/24,b=(i+1)*PI/24;beam([u,5.75-5.75*Math.cos(a),7.98+3*Math.sin(a)],[u,5.75-5.75*Math.cos(b),7.98+3*Math.sin(b)],.13,0xf4f1e8);}
+    const spans=[];
+    for(let u=u0;u<=u1+.01;u+=6.5) {
+      const [x,z]=P(u,5.75); spans.push([x,8,z,R]);
+    }
+    placeArchitecture(K,galleryRib,'파미에 갤러리 아치와 벽등',spans);
     for(const v of [3.2,5.75,8.3]){const y=8+3*Math.sqrt(1-((v-5.75)/5.75)**2);beam([u0,v,y],[u1,v,y],.075,0xc7c7be);}
     // IDBR's gallery photograph shows several narrow glazed lights between
     // the large structural arches. The framing follows the existing crown.
