@@ -1,25 +1,14 @@
-import { loadArchitecture, fitTerminalSeat } from '../../assets/models/architectural-retail/place.js';
+import { loadArchitecture, fitTerminalSeat as fitHallDetail } from '../../assets/models/architectural-retail/place.js';
 // 서울고속버스터미널: OSM ground-contact outlines; aerial lots and photographed concrete tiers.
 // Reference/inference ledger: data/research/gyeongbu.json. No runtime animation/allocation.
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
+import { loadFixtureScene } from '../../assets/models/onebailey/load.js';
 
-// The kit builds synchronously in the browser and in the local route checker.
-async function loadFixtures(relativePath) {
-  const url = new URL(relativePath, import.meta.url);
-  const bytes = url.protocol === 'file:'
-    ? await (await import('node:fs/promises')).readFile(url)
-    : new Uint8Array(await (await fetch(url)).arrayBuffer());
-  const model = await new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).parseAsync(
-    bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength), ''
-  );
-  model.scene.updateMatrixWorld(true);
-  return model.scene;
-}
-const [marketModel, daisoModel, seatArchitecture] = await Promise.all([
+const loadFixtures = relativePath => loadFixtureScene(new URL(relativePath, import.meta.url));
+const [marketModel, daisoModel, seatArchitecture, concourseFixtures] = await Promise.all([
   loadFixtures('../../assets/models/gyeongbu/market.glb'),
   loadFixtures('../../assets/models/daiso/shop.glb'),
-  loadArchitecture('terminal-seating.glb')
+  loadArchitecture('terminal-seating.glb'),
+  loadFixtures('../../assets/models/concourse-fixtures/fixtures.glb')
 ]);
 
 export const meta = {
@@ -735,13 +724,23 @@ export function build(K) {
   lspawn('10층 성당 · 옥상정원',38,85,43,0,1);
   lspawn('북측 동 옥상 주차장',148,18,NORTH_ROOF,1,0);
 
+  function drawTicketCabinet(u,v,face){
+    const [du,dv] = FDIR[face];
+    // Use the same room transform as the signs and the cabinet's collision boxes.
+    fitHallDetail(K,concourseFixtures,'TicketKiosk',(x,height,z)=>{
+      const [wx,wz] = W(u+x*dv+z*du,v-x*du+z*dv);
+      return [wx,height,wz];
+    });
+  }
+
   function buildHall(){
-    function kiosk(u,v,face='+v'){
-      const f=FDIR[face],rot=face==='+v'?0:face==='-v'?PI:face==='+u'?PI/2:-PI/2,at=(d)=>[u+f[0]*d,v+f[1]*d];
-      lbox(u,v,0,.64,.55,.09,0x393d3e,{rot});lbox(u,v,.09,.56,.48,1.69,0xeeefec,{rot});lbox(...at(.252),.91,.49,.035,.69,0xe9eaea,{rot,solid:false});
-      lsign('',...at(.28),1.25,.42,.55,face,{bg:'#cfe7f7'});lsign('버스승차권 발매기',...at(.29),1.68,.49,.06,face,{bg:null,fg:'#383e40',padding:.01,pxPerM:250});
-      for(let k=0;k<3;k++)lsign('',...at(.29),1.43-k*.16,.33,.1,face,{bg:k===1?'#85b6dc':'#e8f3f7'});
-      lbox(...at(.27),.73,.4,.035,.12,0x4a4f50,{rot,solid:false});lbox(...at(.27),.4,.3,.035,.055,0x424a4a,{rot,solid:false});lsign('Tmoney',...at(.29),.21,.3,.08,face,{bg:null,fg:'#8f5c49',pxPerM:200});
+    function kiosk(u,v){
+      const skip = ['top','bottom','n','s','e','w'];
+      lbox(u,v,0,.64,.55,.09,0,{skip});
+      lbox(u,v,.09,.56,.48,1.69,0,{skip});
+      drawTicketCabinet(u,v,'+v');
+      lsign('버스승차권 발매기',u,v+.29,1.68,.49,.06,'+v',{bg:null,fg:'#383e40',padding:.01,pxPerM:250});
+      lsign('Tmoney',u,v+.22,.21,.3,.08,'+v',{bg:null,fg:'#8f5c49',pxPerM:200});
     }
     const detail = [];
     const furnish = fn => {const t=activePlacement;detail.push(t?()=>placeAssembly(t,fn):fn);};
@@ -1083,7 +1082,7 @@ export function build(K) {
     for(const [u,v,model] of [[13,113,'HallSeatOrange'],[26,113,'HallSeatOrange'],[13,124,'HallSeatOrange'],[26,124,'HallSeatCharcoal']]){
       // The authored cushions follow the previous seat envelope and player collision.
       lbox(u,v,.12,5.4,1,.35,0x485052,{skip:['top','bottom','n','s','e','w']});
-      fitTerminalSeat(K,seatArchitecture,model,(x,height,z)=>{
+      fitHallDetail(K,seatArchitecture,model,(x,height,z)=>{
         const [wx,wz]=W(u+x,v+z);
         return [wx,height,wz];
       });
@@ -1859,8 +1858,21 @@ export function build(K) {
       for(const [u,t] of [[237,'미용소품'],[241,'헤어소품']])lsign(t,u,8.8,y+2.14,3,.28,'-v',{bg:'#7ad8bf',fg:'#265f56'});
       for(const [u,t] of [[254,'와인용품'],[259,'도자기'],[264,'내추럴용품'],[269,'조리도구'],[274,'일회용품'],[279,'일회·친환']])lsign(t,u,10.7,y+2.35,3,.33,'-v',{bg:'#73a797',fg:'#fff'});
       for(const [u,t] of [[253,'홈데코'],[261,'욕실'],[269,'청소 · 세탁'],[277,'수납']])lsign(t,u,-2.6,y+2.35,4,.33,'+v',{bg:'#b9a5da',fg:'#fff'});
-      // Long cushion aisle at the north-east junction.
-      for(let u=253;u<282;u+=.65)for(let h=0;h<3;h++)lbox(u,-2.3,y+.28+h*.55,.52,.48,.42,[0xe7d8b4,0xbac4b5,0xd3b8c6,0xd9dbd2][Math.floor(u+h)%4],{solid:false});
+      const cushionStyles = ['CushionLinen','CushionSage','CushionRose','CushionIvory'];
+      const cushions = cushionStyles.map(()=>[]);
+      const cushionStands = [];
+      // The rail fits just ahead of the crosswise gondola endcaps.
+      const displayV = -2.91;
+      for(let column=0;column<42;column++){
+        const u = 255 + column*.65;
+        if(column%3===1) cushionStands.push([u,displayV,y,PI]);
+        for(let tier=0;tier<3;tier++){
+          const style = Math.floor(u+tier)%cushionStyles.length;
+          cushions[style].push([u,displayV,y+.28+tier*.55,PI]);
+        }
+      }
+      addMarketFixtures('CushionRack','다이소 쿠션 진열대',cushionStands,concourseFixtures);
+      cushionStyles.forEach((key,i)=>addMarketFixtures(key,'다이소 쿠션 '+key,cushions[i],concourseFixtures));
       for(const v of [-8.8,-1]){lbox(249.6,v,y+2.45,8.8,.5,.55,0xb9a5da,{solid:false});lsign('디즈니',249.6,v+.26,y+2.7,3.2,.4,'+v',{bg:'#b9a5da',fg:'#fff'});}
       for(const u of [245.7,253.5])for(const v of [-8.8,-1])lbox(u,v,y,.6,.6,3,0xb9a5da,{solid:false});
       // Disney merchandise retains stocked shelves; illustrated character-name panels match the photographed branch.
@@ -2750,11 +2762,12 @@ export function build(K) {
       placeAssembly({to:[-15,-3]},()=>{
       // Zq_120: four blue-screen machines along one wall; older ticket banks remain.
       for(const v of [45,46.1,47.2,48.3]){
-        lbox(67.8,v,0,.58,.67,.1,0x454d50);
-        lbox(67.8,v,.1,.5,.59,1.67,0xeeefeb);
-        lsign('승차권 발매',68.065,v,1.63,.52,.16,'+u',{bg:'#f0efe9',fg:'#4b5556'});
-        lsign(['승차권 예매','경부선 · 영동선'],68.07,v,1.19,.48,.6,'+u',{bg:'#6398c2',fg:'#f0f6fa'});
-        lbox(68.075,v,.67,.03,.36,.07,0x39454a,{solid:false});
+        const skip = ['top','bottom','n','s','e','w'];
+        lbox(67.8,v,0,.58,.67,.1,0,{skip});
+        lbox(67.8,v,.1,.5,.59,1.67,0,{skip});
+        drawTicketCabinet(67.8,v,'+u');
+        lsign('승차권 발매',68.09,v,1.68,.47,.09,'+u',{bg:null,fg:'#4b5556',pxPerM:500});
+        lsign(['승차권 예매','경부선 · 영동선'],68.096,v,1.28,.40,.18,'+u',{bg:'#6398c2',fg:'#f0f6fa',pxPerM:500});
       }
       });
       // Zq_145: one potted tree at the side of the long cream passage.

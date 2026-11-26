@@ -9,7 +9,10 @@ const westTextileFixtures=await loadFixtureScene(new URL('../../assets/models/on
 // 서편 푸드코트 (west bulge under the 고가), 3호선 개찰구 홀 (G7, well W3), 9호선 개찰구 홀 (well W9) with the
 // planted rest area, 동편 푸드코트 at the 잠원로 end, street gates (subway exits 1·8·8-1·8-2 + GOTO MALL G-gates).
 // All layout is done in a local frame: u = along the mall (east), v = across (south). See research json for sources.
-const shoppingCeiling = await loadArchitecture('mall-ceiling.glb');
+const [shoppingCeiling, ribbonHat] = await Promise.all([
+  loadArchitecture('mall-ceiling.glb'),
+  loadArchitecture('../interior-finish/millinery-hat.glb'),
+]);
 
 export const meta = {
   id: 'gotomall',
@@ -707,6 +710,33 @@ export function build(K) {
       lsign(S, j ? '39,900' : '29,900', a, d - 0.18, FL + 1.72, 0.3, 0.2, outFace(S), { bg: '#f8f7ed', fg: '#2d4979', pxPerM: 140 });
     }
   }
+  // Colours and stack sizes belong to the shop display. Geometry and ribbon
+  // details come from the same editable Blender hat across all displays.
+  const hats = [];
+  const hatMaterial = new K.THREE.MeshLambertMaterial({vertexColors: true, side: K.THREE.DoubleSide});
+  function addHat(S, a, d, y, color, width, height, turn) {
+    const [x, z] = P(...Lp(S, a, d));
+    hats.push({x, y, z, color, width, height, rotation: FACE[outFace(S)] + turn});
+  }
+  function flushHats() {
+    if (!hats.length) return;
+    const pose = new K.THREE.Object3D(), tint = new K.THREE.Color();
+    for (const part of ribbonHat) {
+      const batch = new K.THREE.InstancedMesh(part.geometry, hatMaterial, hats.length);
+      batch.name = '고투몰 리본 모자';
+      hats.forEach((hat, i) => {
+        pose.position.set(hat.x, hat.y, hat.z);
+        pose.rotation.y = hat.rotation;
+        pose.scale.set(hat.width, hat.height, hat.width);
+        pose.updateMatrix();
+        batch.setMatrixAt(i, pose.matrix);
+        batch.setColorAt(i, tint.setHex(hat.color));
+      });
+      batch.computeBoundingSphere();
+      K.addMesh(batch);
+    }
+    hats.length = 0;
+  }
   function shelfStock(S, W, D, kind) {
     lquadV(S, 0.06, W - 0.06, D - 0.035, FL, FL + 2.6, 0xece8e1);
     for (let t = 0; t < 4; t++) {
@@ -716,9 +746,7 @@ export function build(K) {
         const col = fabric[(j + t * 2) % fabric.length];
         if (kind === 'bags') bagItem(S, a, d, y, col);
         else if (kind === 'hats') {
-          const [x, z] = P(...Lp(S, a, d));
-          K.hpoly(col, ellipse(...Lp(S, a, d), 0.15, 0.15, 8), y + 0.035, true);
-          K.cyl({ x, z, y: y + 0.035, h: 0.12, r: 0.105, seg: 6, mat: col, solid: false });
+          addHat(S, a, d, y, col, .6, .95, (j % 3 - 1) * .18);
         } else {
           lbox(S, a - 0.12, a + 0.12, d - 0.06, d + 0.06, y, 0.22, j % 3 ? 0xf0e8d9 : 0xb8aaa0, frontStockOpt(S));
           lbox(S, a - 0.06, a + 0.06, d - 0.08, d - 0.06, y + 0.06, 0.09, j % 2 ? 0xc3a35d : 0xb9bfc5, frontStockOpt(S));
@@ -899,10 +927,8 @@ export function build(K) {
       for (const a of [0.38, W - 0.4]) {
         lbox(S, a - 0.30, a + 0.30, -0.52, 0.12, FL, 0.70, 0xc7baa2, { solid: false });
         for (let j = 0; j < (S.line === 'A' && S.uc > -230 && S.uc < -205 ? 13 : 6); j++) {
-          const [u, v] = Lp(S, a, -0.18), [x, z] = P(u, v), y = FL + 0.72 + j * 0.13;
-          const col = [0xdcc9aa, 0xf0e9dc, 0x363938, 0xc2928c][j % 4];
-          K.cyl({ x, z, y, r: 0.26 - (j % 2) * 0.035, h: 0.025, seg: 10, mat: col, solid: false });
-          K.cyl({ x, z, y: y + 0.025, r: 0.14, h: 0.12, seg: 10, mat: col, solid: false });
+          const color = [0xdcc9aa, 0xf0e9dc, 0x363938, 0xc2928c][j % 4];
+          addHat(S, a, -.18, FL + .7 + j * .13, color, j % 2 ? .87 : 1, .95, (j % 3 - 1) * .24);
         }
       }
     },
@@ -3369,6 +3395,7 @@ export function build(K) {
   for (const room of detailRooms) {
     K.detail({ floor: 'B1', y0: FL, y1: CY, poly: R(room.u0, -45, room.u1, 65), name: room.name }, K => {
       for (const fn of room.jobs) fn();
+      flushHats();
       flushTallSigns();
     });
   }

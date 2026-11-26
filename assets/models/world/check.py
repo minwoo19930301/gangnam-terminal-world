@@ -24,7 +24,27 @@ assert set(
 for image in bpy.data.images:
     if not image.library and image.source == "FILE":
         assert image.packed_file and image.filepath.startswith("//textures/")
-assert len(gallery.objects) >= 80
+# Refresh must preserve existing placements and must not duplicate shelves.
+placements = {o.name: o.matrix_basis.copy() for o in gallery.objects}
+refresh = runpy.run_path(str(here / "libraries.py"))["link_asset_gallery"]
+assert refresh(here) == gallery
+assert len(gallery.objects) == len(placements) >= 80
+assert all(o.matrix_basis == placements[o.name] for o in gallery.objects)
+# In the shipped gallery each shelf gets a separate row and each item its own column.
+bpy.context.window.scene = gallery
+graph = bpy.context.evaluated_depsgraph_get()
+bounds_for = runpy.run_path(str(here / "libraries.py"))["instance_bounds"]
+rows = []
+for shelf in gallery.collection.children:
+    bounds = [bounds_for(o, graph) for o in shelf.objects if o.instance_collection]
+    if not bounds:
+        continue
+    columns = sorted((lo.x, hi.x) for lo, hi in bounds)
+    assert all(b[0] - a[1] > 2.4 for a, b in zip(columns, columns[1:])), shelf.name
+    rows.append((min(lo.y for lo, hi in bounds), max(hi.y for lo, hi in bounds)))
+rows.sort()
+assert all(b[0] - a[1] > 5.9 for a, b in zip(rows, rows[1:]))
+bpy.context.window.scene = city
 assert len(city.timeline_markers) == 4
 sun = city.objects["서울 태양"]
 city.frame_set(750)
