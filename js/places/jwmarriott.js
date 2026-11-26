@@ -1,3 +1,4 @@
+import {registerSalonSix,tableRuns as salonSixTables} from '../../assets/models/jw-salon-six/model.js';
 import {registerHotelWalnut} from '../../assets/models/jw-arrival/walnut.js';
 import {registerMargauxHearth} from '../../assets/models/margaux-woodfire/model.js';
 import {registerRetailGallery} from '../../assets/models/jw-retail-gallery/model.js';
@@ -965,6 +966,7 @@ export function build(K) {
     }
   }, 10.37);
 
+  registerSalonSix(baseKit,{P,RECT,angle:R,y:Y['3F']});
   registerArrival(baseKit,P,RECT,R);
   registerFlavorsBreakfast(baseKit,P,RECT,R);
   registerExecutiveService(baseKit,P,RECT,R);
@@ -1399,6 +1401,18 @@ export function build(K) {
     WL(3.5, -58, 3.5, -38, y, yc, { mat: WARM }); WL(3.5, -32, 3.5, -12, y, yc, { mat: WARM });
     bins.forEach(([a, b], i) => {
       for (const [v0, v1, n] of [[-58, -38, i + 1], [-32, -12, i + 4]]) {
+        if(n===6){
+          for(const [du,dv,w,d,h] of salonSixTables){
+            const u=(a+b)/2+du,v=(v0+v1)/2+dv;
+            PR([u-w/2,v-d/2,u+w/2,v+d/2],y,y+h,{side:false,top:false,bottom:false,walkTop:false});
+          }
+          // The zone polygon goes through the fitted plan; its explicit arrival
+          // is already in world space, on the open approach beside the doorway.
+          const [x,z]=P(2.05,37.9);
+          K.zone({name:'살롱 6',floor:'3F',sub:meta.name+' · U자 회의 배치',poly:RECT(a,v0,b,v1),
+            y0:y,y1:NEXT['3F'],priority:1,mapArrival:{x,z,yaw:yawTo(-6.65,9.6)}});
+          continue;
+        }
         const well=n===4?[upperWell[0],upperWell[1]-65.5,upperWell[2],upperWell[3]-65.5]:null;
         HP('jwBallCarpet', [a, v0, b, v1], y + 0.01,true,well?[well]:undefined);
         CHAND((a + b) / 2, (v0 + v1) / 2, yc, 1.0);

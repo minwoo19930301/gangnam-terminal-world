@@ -33,6 +33,7 @@ const sources = [
   ['station','1F','exit4-pavilion/pavilion.blend','4번 출구 · 유리 승강장과 돌출 차양','Exit4LiftPavilion','Exit4LiftGlazing'],
   ['station','1F','exit4-pavilion/pavilion.blend','4번 출구 · 관찰창이 있는 승강기 문짝','Exit4LiftLeaf'],
   ['shinsegae','지상','shinsegae-gate-canopy/north-gate.blend','신세계 강남점 정문 · 곡면 유리 캐노피','GangnamNorthGateCanopy','GangnamNorthGateSupports'],
+  ['jwmarriott','3F','jw-salon-six/salon-six.blend','JW 메리어트 · 살롱 6 U자 회의장','JWSeoulSalonSixMeeting'],
   ['centralcity','지상','central-plaza-canopy/canopy.blend','센트럴시티 조각 광장 · 열린 캐노피와 의자','CentralCityCourtCanopy'],
   ['centralcity','지상','central-plaza-seatwall/seatwall.blend','센트럴시티 정문 · 동측 석재 앉음벽과 생울타리','CentralCityEastSeatWall'],
   ['streets','지상','banpo-xi-portal/silver-portal.blend','반포센트럴자이 · 은빛 문주','BanpoCentralXiStreetPortal'],
