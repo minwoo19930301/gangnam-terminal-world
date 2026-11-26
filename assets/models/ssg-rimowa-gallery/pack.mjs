@@ -27,3 +27,5 @@ for (const tex of doc.getRoot().listTextures()) {
 }
 await doc.transform(meshopt({encoder:MeshoptEncoder,level:'medium',quantizePosition:16}));
 await io.write(path,doc);
+
+await import('./niche_pack.mjs');
