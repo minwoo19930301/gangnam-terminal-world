@@ -594,7 +594,7 @@ async function boot() {
     // Keep the destination hash until the scheduled area reload reads it.
     if (!leaving) route.update(currentZone);
     areaWatch(currentZone); portalCheck(); pinUpdate();
-    if (reLive && (frames & 63) === 0) reLive.update(player.x, player.z);
+    reLive?.update(camera, performance.now());
     const zname = currentZone ? currentZone.name : (player.y < -2 ? '지하' : '거리');
     updateText(hudZone, zname + (currentZone?.floor ? ` · ${currentZone.floor}` : ''));
     updateText(hudSub, currentZone?.sub || '');
@@ -633,9 +633,7 @@ async function boot() {
   if (SHOT) { await signFonts; K._.atlas.flushAll(); for (const p of K._.atlas.pages) p.t.needsUpdate = true; }
   else signFonts.then(() => { signsGo = true; });
   mark('ready');
-  // real-estate-map apartments stream in after the page is up (nearest first)
-  let reLive = null;
-  if (reModels.length) setTimeout(() => { reLive = loadReModels({ THREE, scene, models: reModels, stand: reStand, terrain: exteriorTerrain, from: { x: player.x, z: player.z }, onProgress: (d, n) => { if (d === n) toast(`주변 아파트 ${n}동 불러옴`); } }); }, SHOT ? 0 : 400);
+  const reLive = reModels.length ? loadReModels({THREE, scene, models:reModels, stand:reStand, renderer, terrain:exteriorTerrain}) : null;
   Object.assign(window.__world, { ready: true, area: AREA.id, wantedArea: () => wantedArea(phys.zoneAt(player.x, player.y + 0.1, player.z)), K, phys, player, camera, scene, renderer, map, places: placeInfo, stats: { ...K._.stats, phys: phys.stats, draw: () => renderer.info.render }, setNight, setTimeMode, daylight });
   frame();
 }
