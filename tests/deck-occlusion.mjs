@@ -28,6 +28,13 @@ const diagonal=createDeckVisibility();
 diagonal.register({poly:[[-5,-5],[5,-5],[5,5],[1,5],[0,4],[-5,0]],y:0,eyeMin:0.1,eyeMax:4});
 eye.position.set(0,2,-2);diagonal.update(eye);
 assert.ok(diagonal.hides(box(-2.6,-.1,.1,-2.4,-.09,.3)),'inside the AABB of a slanted boundary, outside the segment');
+const adjacent=createDeckVisibility();
+adjacent.register({poly:[[0,-5],[10,-5],[10,5],[0,5]],holes:[[[4,-.5],[6,-.5],[6,.5],[4,.5]]],
+  y:0,eyeMin:-5,eyeMax:-.05,eyeMargin:12});
+eye.position.set(-2,-2,0);adjacent.update(eye);
+assert.ok(adjacent.hides(box(5,1,2,5.2,1.2,2.2)),'a ray from the neighbouring room crosses an opaque ceiling');
+assert.equal(adjacent.hides(box(8,1,0,8.2,1.1,.1)),false,'the same observer can see through an opening');
+eye.position.set(-20,-2,0);adjacent.update(eye);assert.equal(adjacent.active,false);
 console.log('OK opaque floors and ceilings, holes, silhouette edges, partial overlaps, concave notch and return');
 
 const wall=createDeckVisibility(), footprint=rect(-6,-3,6,6);

@@ -1118,7 +1118,7 @@ export function build(K) {
     if (id === 'B1' || id === '1F') {
       const ceiling = LV['1F'] - thick('1F');
       K.occludingSlab({poly:floorOutline, holes:slabHoles, y:id === 'B1' ? LV.B1 : ceiling,
-        eyeMin:LV.B1 + .05, eyeMax:ceiling - .05, wholePlaceOnly:true});
+        eyeMin:LV.B1 + .05, eyeMax:ceiling - .05, eyeMargin:100, wholePlaceOnly:true});
     }
     K.slab(floorOutline, LV[id], { mat: floorMat[id] ?? 'ssg_marble', thick: thick(id), holes:slabHoles, edge: false, walk:id!=='11F', under: id === 'B2' ? false : id === 'B1' ? { tex: 'concrete', color: 0xb4b2a9 } : CEIL });
     if (['2F','3F','4F','5F'].includes(id)) {

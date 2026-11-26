@@ -1484,7 +1484,10 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
       if (options.wholePlaceOnly && keep && !interiorOwners?.has(current)) return;
       deckVisibility?.register(options);
     },
-    occludingWall: options => deckVisibility?.registerWall(options),
+    occludingWall(options) {
+      if (options.wholePlaceOnly && keep && !interiorOwners?.has(current)) return;
+      deckVisibility?.registerWall(options);
+    },
     coveredLightWell,
     // internals for engine
     _: { bounce, coveredWells, cull, cullList, deckVisibility, finalize, finalizeStreet, details, detailErrors, ensureDetail, buildAllDetail, frameFns, interactables, spawns, zonesList, elevators, claims, mapMarks, groundHoles, stats, atlas, trees, people, setCurrent: (id, meta) => { current = id; if (meta) perPlace[id] = meta; } },

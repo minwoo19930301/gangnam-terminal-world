@@ -13,6 +13,8 @@ export function publicRotary(K,y){
     K.phys.addSurface(poly,y);
     K.hpoly(ceiling,poly,top+.005,false);
     K.phys.addCeiling(poly,top+.005,{});
+    K.occludingSlab({poly,y:top+.005,eyeMin:y+.08,eyeMax:top-.08,eyeMargin:28,wholePlaceOnly:true});
+    K.occludingSlab({poly,y:y+.008,eyeMin:y+.08,eyeMax:top-.08,eyeMargin:28,wholePlaceOnly:true});
   }
   K.zone({name:'메가박스 앞 원형 광장',sub:'카멜커피 · 영풍문고 앞',floor:'B1',poly:court,y0:y-.25,y1:top,priority:7});
   // The concave arcade's automatic map point lies by the far outlet.

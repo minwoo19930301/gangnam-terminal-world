@@ -7,7 +7,7 @@ export function createDeckVisibility() {
   const slabs = [], active = [], walls = [], activeWalls = [];
   let x = 0, y = 0, z = 0, lastCamera, lastCount = -1, lastWalls = true, version = 0;
 
-  function register({poly, holes = [], y: height, eyeMin, eyeMax}) {
+  function register({poly, holes = [], y: height, eyeMin, eyeMax, eyeMargin = 0}) {
     const edges = [];
     let direction = 0, convex = true;
     for (let i = 0; i < poly.length; i++) {
@@ -21,7 +21,7 @@ export function createDeckVisibility() {
       edges.push({a, dx, dz, minX: Math.min(a[0],b[0]), minZ: Math.min(a[1],b[1]),
         maxX: Math.max(a[0],b[0]), maxZ: Math.max(a[1],b[1])});
     }
-    if (direction) slabs.push({height,eyeMin,eyeMax,poly,edges,convex,direction,
+    if (direction) slabs.push({height,eyeMin,eyeMax,eyeMargin,poly,edges,convex,direction,
       bounds: polyBBox(poly), openings: holes.map(polyBBox)});
   }
 
@@ -41,10 +41,12 @@ export function createDeckVisibility() {
     if (camera?.isPerspectiveCamera) {
       ({x,y,z} = camera.position);
       for (const slab of slabs) {
-        const b = slab.bounds;
+        const b = slab.bounds, margin = slab.eyeMargin;
         if (y < slab.eyeMin || y > slab.eyeMax || Math.abs(y-slab.height) < .04 ||
-            x < b[0] || x > b[2] || z < b[1] || z > b[3]) continue;
-        if (pointInPoly(x,z,slab.poly)) active.push(slab);
+            x < b[0]-margin || x > b[2]+margin || z < b[1]-margin || z > b[3]+margin) continue;
+        // A ray from a neighbouring aisle can cross this slab. Its actual
+        // boundary and every opening still constrain the projection in covers().
+        if (margin > 0 || pointInPoly(x,z,slab.poly)) active.push(slab);
       }
       if (includeWalls) for (const wall of walls) {
         const b = wall.bounds;
