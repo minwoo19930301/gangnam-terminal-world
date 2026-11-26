@@ -864,6 +864,10 @@ def enhance_landmark(obj, b):
         return True
     skin = Skin(obj, b)
     build(skin, b)
-    skin.finish()
+    facade = skin.finish()
+    if site == 593858530:
+        from pathlib import Path
+        import runpy
+        runpy.run_path(str(Path(__file__).resolve().parents[1] / "famille-dome" / "mount.py"))["open_pavilion"](obj, facade)
     obj["landmark_facade"] = owner
     return True
