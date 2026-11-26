@@ -1,3 +1,4 @@
+import {rotaryPreview} from '../cinema-rotary/layout.js';
 import {pointInPoly,polyBBox} from '../../../js/physics.js';
 import {b1Plan, departmentPoint} from '../../../js/places/shinsegae-b1-plan.js';
 const plan=(px,py)=>departmentPoint(...b1Plan(px,py));
@@ -15,6 +16,7 @@ const [x0,z0,x1,z1]=polyBBox(publicAisle);
 // Keep the fitted shop visible when approaching from the adjacent Central City
 // page, whose normal neighbour rendering is otherwise restricted to junctions.
 export function cinemaPreview(x,y,z){
+  if(rotaryPreview(x,y,z))return true;
   if(y < -6.25 || y > -1.45)return false;
   const dx=x-origin[0],dz=z-origin[1];
   const along=dx*normal[1]-dz*normal[0],out=dx*normal[0]+dz*normal[1];

@@ -1,3 +1,4 @@
+import {podiumOpening} from '../../assets/models/cinema-rotary/layout.js';
 import {chefStageSigns} from '../../assets/models/sweet-chefs-stage/model.js';
 import {marketWestReturn} from './shinsegae-b1-plan.js';
 import {placeStageCoffers} from '../../assets/models/open-stage-coffer/model.js';
@@ -1972,8 +1973,11 @@ export function build(K) {
           const d = Math.abs((q[0] - a[0]) * uz - (q[1] - a[1]) * ux);
           if (d < 2.5 && at > -1 && at < L + 1) ops.push({ at, w, y0: YB1, y1: YB1 + 3.4 });
         }
-        const westA=(a[0]-OX)*EX+(a[1]-OZ)*EZ,westB=(b[0]-OX)*EX+(b[1]-OZ)*EZ;
         const ix = -nsB[i][0] * 0.15, iz = -nsB[i][1] * 0.15;
+        if(i===5){
+          const crossing=podiumOpening(a[0]+ix,a[1]+iz,b[0]+ix,b[1]+iz);
+          if(crossing)ops.push({...crossing,y0:YB1,y1:YB1+4.46});
+        }
         K.wall(a[0] + ix, a[1] + iz, b[0] + ix, b[1] + iz, YB1, CB, { mat: M.wallB1, thick: 0.3, openings: ops });
       }
     }
