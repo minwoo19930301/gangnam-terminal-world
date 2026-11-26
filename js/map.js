@@ -310,12 +310,18 @@ export function createMap(opts) {
     reserve(sx(v, player.x, player.z), sy(v, player.x, player.z), 24, 28, v);
     // The named arrival and the room centroid can be far apart. Label the
     // arrival before general rooms and leave the player arrow readable beside it.
-    if (indoor) for (const entry of destinationMarks) {
+    const nearbyDestinations = indoor ? destinationMarks.filter(entry => {
       const onFloor = isMini ? Math.abs(entry.y - player.y) < 1 :
         layer === 'floor' ? entry.place === floorPlace?.id && entry.floor === floorLabel : entry.floor === 'B1';
-      if (!onFloor) continue;
+      if (!onFloor) return false;
       const x = sx(v, entry.x, entry.z), y = sy(v, entry.x, entry.z);
-      if (x < 0 || x > v.w || y < 0 || y > v.h) continue;
+      return x >= 0 && x <= v.w && y >= 0 && y <= v.h;
+    }) : [];
+    // At a crowded entrance, keep the name under the player or map centre legible as the scale changes.
+    const distanceToCentre = entry => (entry.x - v.x) ** 2 + (entry.z - v.z) ** 2;
+    nearbyDestinations.sort((a,b) => distanceToCentre(a) - distanceToCentre(b));
+    for (const entry of nearbyDestinations) {
+      const x = sx(v, entry.x, entry.z), y = sy(v, entry.x, entry.z);
       if (reserve(x,y,9,9,v)) {
         ctx.beginPath(); ctx.arc(x,y,4.5,0,TAU); ctx.fillStyle='#b65a23'; ctx.fill();
         ctx.strokeStyle='#fff'; ctx.lineWidth=1.5; ctx.stroke();
