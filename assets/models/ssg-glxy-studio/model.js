@@ -33,9 +33,8 @@ export function registerGlxyStudio(K,{x,y,z,angle,poly}){
           float strip=smoothstep(.988,.998,vColor.r)*smoothstep(.85,.89,vColor.g)*(1.0-smoothstep(.69,.78,vColor.b));
           totalEmissiveRadiance+=vColor.rgb*(.85*logo+.65*strip);`);
     };
-    const group=placeSingleDetail(K,{name:'GLXY studio · G핏 바지와 진열대',file:'../ssg-glxy-studio/gallery.glb',at:[x,y,z],angle,rigidGround:relief(x,z),
+    placeSingleDetail(K,{name:'GLXY studio · G핏 바지와 진열대',file:'../ssg-glxy-studio/gallery.glb',at:[x,y,z],angle,rigidGround:relief(x,z),
       fallback:proxy,material:mat,fallbackMaterial:mat,range:23,exitRange:30,eyeHeight:1.62,floorTolerance:2.25,
-      viewBounds:[bounds]});
-    group.children[0].name='GLXYStudio';
+      viewBounds:[bounds],nativeInstanceName:'GLXYStudio'});
   });
 }

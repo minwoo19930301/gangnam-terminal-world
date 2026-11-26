@@ -42,7 +42,6 @@ SHELVES = {
     "ssg-glxy-studio": "신세계 7층 · GLXY studio",
     "newcore-ashley-entry": "뉴코아 1관 5층 · 애슐리퀸즈",
     "newcore-mamas": "뉴코아 3관 · 카페 마마스 외관",
-    "newcore-ashley-entry": "뉴코아 1관 5층 · 애슐리퀸즈 입구",
     "newcore-oksoban-entry": "뉴코아 1관 5층 · 옥소반 입구",
     "newcore-yucheon": "뉴코아 1관 5층 · 유천냉면",
     "tailored-front": "경부선 7층 · 신사복 판매 전면",
