@@ -18,8 +18,13 @@ try{
     const pose=[centre[0],-6,centre[1],heading(centre,cafeFront)*180/Math.PI].join(',');
     const loaded=page.waitForResponse(r=>r.url().endsWith('/cinema-rotary/front.glb')&&r.status()===200,{timeout:90000});
     await page.goto('http://127.0.0.1:'+server.address().port+'/?q=low&traffic=0#/'+owner+'/B1?p='+pose);
-    await page.waitForFunction(()=>window.__world?.ready,null,{timeout:120000});
-    await page.locator('#start').click();
+    await page.waitForFunction(()=>{
+      if(!window.__world?.ready)return false;
+      // A transfer from Central City already dismisses the start card on the next page.
+      const start=document.querySelector('#start');
+      if(!start.classList.contains('hidden'))start.click();
+      return true;
+    },null,{timeout:120000});
     await loaded;
     assert.deepEqual(requests,[200]);
     assert.equal(await page.evaluate(()=>{const w=__world,p=w.player;return w.phys.zoneAt(p.x,p.y+.1,p.z)?.name;}),'메가박스 앞 원형 광장');
