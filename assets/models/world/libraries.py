@@ -8,6 +8,7 @@ from mathutils import Vector
 
 
 SHELVES = {
+    "gyeongbu-planted-columns": "경부선 1층 · 대합실 식물 기둥",
     "goter-crossing": "신반포로 · 고터사거리 보행 신호주",
     "parka-rail": "경부선 유니클로 · 경량 파카 행거",
     "blouse-rail": "경부선 유니클로 · 시어서커 블라우스 행거",
@@ -36,6 +37,7 @@ SHELVES = {
     "sebit-lounge": "고투몰 G2 · 고터·세빛 라운지",
     "damccot": "파미에 2층 · 담꽃",
     "gyeongbu-ticket-office": "경부선 1층 · 통합매표소",
+    "modernhouse-picnic": "뉴코아 1관 4층 · 홈데코 러그",
     "modernhouse-kids": "뉴코아 1관 4층 · 키즈 침구",
     "modernhouse-provence": "뉴코아 1관 4층 · 마르셰 프로방스",
     "gyeongbu-icecream": "경부선 1층 · 배스킨라빈스",
@@ -54,6 +56,7 @@ SHELVES = {
     "famille-atrium": "파미에 광장 · 전광판·테라스와 포장",
     "gotomall-hessed": "고투몰 D-086 · 헤쎄드",
     "hypnos-showroom": "신세계 9층 · 히프노스 쇼룸",
+    "gateaux": "JW 2층 파티세리 · 홀케이크와 쁘띠 가토",
     "patisserie": "JW 2층 파티세리 · 플랑과 마카롱",
     "daiso-merchandise": "다이소 주방·문구 매대",
     "gyeongbu-seating": "경부선 · 대합실 연석",

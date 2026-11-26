@@ -11,6 +11,7 @@ from blender_display_export import bake_collection
 from pastry import make_sweets
 from dining import make_dining
 from restaurant import architecture
+from cold_salad import make_cold_salad
 cfg=json.loads(subprocess.check_output(['node','--input-type=module','-e',"import {parts,rows,prefix} from './layout.js';console.log(JSON.stringify({parts,rows,prefix}))"],cwd=here))
 bpy.ops.wm.read_factory_settings(use_empty=True);scene=bpy.context.scene;scene.name='애슐리퀸즈 · 디저트와 스테이크';scene.unit_settings.system='METRIC'
 palette={'green':'394842','recess':'252e2b','rail':'62695f','brass':'9b835c','gold':'bda178','silver':'c8c7bd','steel':'9a9c95','char':'272825',
@@ -23,6 +24,7 @@ palette={'green':'394842','recess':'252e2b','rail':'62695f','brass':'9b835c','go
  'bronzedark':'645c50','meat':'72513b','sear':'4a392a','juices':'805037','fat':'b39460','broccoli':'667f40','sprout':'526b34',
  'carrot':'b47847','asparagus':'63753d','pasta':'dfbc76','chair':'576158'}
 palette.update({'grout':'8b8176','tile0':'c8b69b','tile1':'bcab90','tile2':'c1ae94','tile3':'c5b298','basalt':'34332f','ceiling':'3b3e38','mold':'35413a','frost':'c3d3c5'})
+palette.update(rind='F09313',pith='FFF0BB',citrus='FFA01D',juice='FFBC34',pumpkin='DB9D22',golden='E7AC35',currant='55222B',gherkin='899745',palePickle='DFD9A3')
 for key,tone in palette.items():
     metal=.76 if key in ['silver','steel','chrome','bronze','bronzedark','brass','gold'] else .22 if key in ['rail','steelblue'] else 0
     mat=m.material(key,tone,metal);m.palette[key]=mat
@@ -171,6 +173,7 @@ for i,x in enumerate([-.074,.060]):
     if i==0:P('계량한 반죽',x,-.185,.041,[(.034,0),(.036,.002),(.032,.005)],'butter',24)
 architecture(group,ball,loft,engraving,face_ring,rim)
 make_sweets(group,ball,rim,loft)
+make_cold_salad(group,ball,loft,engraving)
 make_dining(group,ball,loft,engraving,face_ring,rim)
 for c in groups.values():scene.collection.children.unlink(c)
 for r in cfg['rows']:

@@ -22,6 +22,8 @@ function forms(T,key) {
       parts.push([x,1.164,-.046,.213,.034,.476,0xe9e9df]);
       for(let i=0;i<6;i++) parts.push([x,1.187,-.235+i*.07,.175,.18,.024,i%2?0xb6966a:0xc7ab80]);
     }
+    // Across the aisle, keep the stepped shoulder and narrow side handle.
+    parts.push([-.645,.773,-.08,.33,.24,.20,0xc2a375],[-.408,.857,-.08,.145,.073,.20,0xba996d]);
     for(const x of [-.65,-.438,-.23]) parts.push([x,1.171,-.065,.173,.105,.385,0xb4976e]);
     for(const [x,z,count,tone] of [[.58,.768,3,0x765741],[.132,.768,2,0xb5956c],[-.52,.251,3,0x93724d],[-.024,.251,2,0xac906a]])
       for(let i=0;i<count;i++) parts.push([x,z+i*.084+.051,-.021,.35,.034,.253,tone],[x,z+i*.084,-.021,.19,.052,.132,tone]);

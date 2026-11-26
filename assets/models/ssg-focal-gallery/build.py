@@ -360,10 +360,15 @@ batch=BATCH_CASE
 for x,txt in [(.65,'콜벳'),(.95,'대형 미니피겨')]:
     box('제품명 카드',(x,-.383,.808),(.173,.007,.053),white,.002)
     lettering(txt,x,-.388,.809,.019,dark,True)
+import sys
+sys.dont_write_bytecode=True;sys.path.insert(0,str(OUT))
+import mosaic_model,mosaic_export
+mosaic_model.make(collection)
 bpy.context.preferences.filepaths.save_version=0
 bpy.ops.object.select_all(action='DESELECT')
 bpy.ops.wm.save_as_mainfile(filepath=str(OUT/'gallery.blend'),compress=True)
 print('Editable pieces:',len(collection.objects))
+mosaic_export.write(collection)
 # Keep silhouette-changing brick terraces at every height. Lower-body studs
 # are under a pixel in normal play. Retain representative courses there and
 # more on the facial features, ears and cap. The source contains them all.

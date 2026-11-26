@@ -3,8 +3,9 @@ preview=bpy.data.scenes.new('FP218 · 차알 식사 공간');preview.unit_settin
 preview.world=bpy.data.worlds.new('2층 홀의 색온도');preview.world.use_nodes=True
 bg=preview.world.node_tree.nodes.get('Background');bg.inputs[0].default_value=(.76,.71,.64,1);bg.inputs[1].default_value=.28
 for key,(name,x,d,z) in parts.items():
-    col=subjects[key];coords=tables if key in ('seat','granite','setting') else spec['lamps'] if key=='lamp' else [[x,d]]
+    col=subjects[key];coords=tables if key in ('seat','granite','setting','pickles','pickleGlass') else spec['lamps'] if key=='lamp' else [[x,d]]
     for i,(xx,dd) in enumerate(coords):
+        if key in ('pickles','pickleGlass'):xx+=.53;dd+=.253
         ob=bpy.data.objects.new(name+(' '+str(i+1) if len(coords)>1 else ''),None);ob.instance_type='COLLECTION';ob.instance_collection=col
         ob.location=Vector((xx,-dd,z))-Vector(col['preview_origin']);ob.empty_display_size=.14;ob['web_part']=key;preview.collection.objects.link(ob)
 def area(label,loc,aim,power,tint,sz):

@@ -1,3 +1,5 @@
+import {registerExecutiveSeats} from '../../assets/models/executive-seating/model.js';
+import {tables as executiveTables} from '../../assets/models/executive-seating/layout.js';
 import {registerLoungeService} from '../../assets/models/lounge-table-service/model.js';
 import {registerTamayura} from '../../assets/models/tamayura/model.js';
 import { registerMobo, seatX as moboChairs } from '../../assets/models/mobo-bar/model.js';
@@ -10,7 +12,7 @@ import {registerExecutiveService} from '../../assets/models/executive-service/mo
 import {registerFlavorsBreakfast} from '../../assets/models/flavors-breakfast/model.js';
 import {registerArrival,upperWell} from '../../assets/models/jw-arrival/model.js';
 import {registerCoffers,registerPendant,ceilingZones} from '../../assets/models/jw-arrival/ceiling.js';
-import { placeDesserts } from '../../assets/models/patisserie/model.js';
+import { placeDesserts, placeGateaux } from '../../assets/models/patisserie/model.js';
 import { placeLoungeChairs } from '../../assets/models/lounge-chair/model.js';
 import { fixtures } from '../../assets/models/jwmarriott/fixtures.js';
 
@@ -891,6 +893,7 @@ export function build(K) {
   registerArrival(baseKit,P,RECT,R);
   registerFlavorsBreakfast(baseKit,P,RECT,R);
   registerExecutiveService(baseKit,P,RECT,R);
+  registerExecutiveSeats(baseKit,P,RECT,R);
   registerCoffers(baseKit,P,RECT,R);
   DETAIL('1F', [-33.2, 4, 2, 60.4], '호텔 현관 홀 · 승강기 로비', floor1, 15.77);
   DETAIL('2F', [UW, -6, 2, 60.9], '플레이버즈 · 파티세리 · 타마유라', floor2);
@@ -1259,6 +1262,10 @@ export function build(K) {
           const [x,z]=mapPoint(...P(21,v));
           DEC(()=>placeDesserts(baseKit,x,y+.955,z,R+Math.PI/2));
           SG('바닐라 플랑  ·  마카롱',{u:20.487,v,y:y+.83,w:1.2,h:.15,f:'W',bg:'#463a35',fg:'#f2e3c7',pxPerM:420,padding:.025});
+        }else if(v===20){
+          const [x,z]=mapPoint(...P(21,v));
+          DEC(()=>placeGateaux(baseKit,x,y+.955,z,R+Math.PI/2));
+          SG('홀케이크  ·  쁘띠 가토',{u:20.487,v,y:y+.83,w:1.2,h:.15,f:'W',bg:'#463a35',fg:'#f2e3c7',pxPerM:420,padding:.025});
         }else{
           for(const dv of [-1.4,-.47,.47,1.4])fixture('cakes',21,v+dv,y+.955,Math.PI/2);
         }
@@ -2027,23 +2034,7 @@ export function build(K) {
         }
         for (const u of [4.43, 6.97]) B({ u, v: 24.03, y, w: .15, d: .22, h: 2.76, mat: 0x997b4b, solid: false });
         B({ u: 5.7, v: 24.03, y: y + 2.64, w: 2.69, d: .22, h: .12, mat: 0x997b4b, solid: false });
-        const executiveChair = (u, v, face, mat) => {
-          CHAIR(u, v, y, face, mat);
-          const ang = { S: 0, E: Math.PI / 2, N: Math.PI, W: -Math.PI / 2 }[face];
-          const at = (du, dv) => [u + du * Math.cos(ang) + dv * Math.sin(ang), v - du * Math.sin(ang) + dv * Math.cos(ang)];
-          // Raised inner cushion and fine vertical gathers visible on the leather backs in 16.
-          for (let i = -4; i <= 4; i++) {
-            const du = i * .064, dv = -.305 + Math.abs(i) * .018, p = at(du, dv);
-            B({ u: p[0], v: p[1], y: y + .57, w: .004, d: .008, h: .27 - Math.abs(i) * .028, r: ang, mat: 0xa69b88, solid: false });
-          }
-          const p = at(0, -.265);
-          B({ u: p[0], v: p[1], y: y + .49, w: .38, d: .065, h: .11, r: ang, mat, solid: false });
-        };
         const executiveTable = (u, v, r = .69, h = .73) => {
-          // Photo tables have a substantial black apron and four legs, not a central pedestal.
-          CY(u, v, y + h - .13, r * .96, .115, 0x252421, { seg: 28, solid: false });
-          CY(u, v, y + h - .025, r, .035, { color: 0xece6d9, gloss: .5 }, { seg: 32, solid: false });
-          for (const du of [-1, 1]) for (const dv of [-1, 1]) B({ u: u + du * r * .54, v: v + dv * r * .54, y: y + .025, w: .05, d: .05, h: h - .07, mat: 0x252421, solid: false });
           B({ u, v, y, w: r * 1.35, d: r * 1.35, h, mat: 0, solid: true, skip: ['top', 'bottom', 'n', 's', 'e', 'w'] });
           CY(u + .23, v - .08, y + h + .012, .09, .012, 0xf0ebe0, { seg: 16, solid: false });
           CY(u + .23, v - .08, y + h + .024, .045, .075, 0xe9e4da, { seg: 12, solid: false, caps: false });
@@ -2054,12 +2045,11 @@ export function build(K) {
           SG('라운지 안내', { u: u - .23, v: v + .077, y: y + h + .14, w: .17, h: .085, f: 'S', bg: '#343530', fg: '#dcd7cb', bold: false });
         };
         // Staggered islands reproduce the overlapping seating in 16; u=4.4..6.7 remains the lift aisle.
-        const seats = [[-4.8, 9.7], [.25, 10.7], [-4.8, 14.8], [.25, 15.7], [-4.8, 19.9], [.25, 20.6], [9.2, 10.4], [13.4, 10.4], [9.2, 15.1], [13.4, 15.1], [9.2, 19.9], [13.4, 19.9]];
-        for (const [i, [u, v]] of seats.entries()) {
-          executiveTable(u, v, i % 3 ? .67 : .77);
-          executiveChair(u - 1.12, v, 'E', i % 2 ? 0xd9d0bf : 0xb8ad99);
-          executiveChair(u + 1.12, v, 'W', i % 2 ? 0xbfb39d : 0xe0d8c9);
-          if (i % 3 !== 2) executiveChair(u, v - 1.1, 'S', 0xd8cfbf);
+        for (const [i,[u,v]] of executiveTables.entries()) {
+          executiveTable(u,v,i%3 ? .67 : .77);
+          const chairs=[[u-1.12,v,Math.PI/2],[u+1.12,v,-Math.PI/2]];
+          if(i%3!==2)chairs.push([u,v-1.10,0]);
+          for(const [cu,cv,angle] of chairs)B({u:cu,v:cv,y:y+.18,w:.66,d:.64,h:.62,r:angle,mat:0,solid:true,skip:['top','bottom','n','s','e','w']});
         }
         for (const [u, w, mat] of [[-4.5, 4.5, 0x78604e], [.3, 3.1, 0x8c6f61], [10.8, 4.8, 0x846957]]) {
           SOFA(u, 22.9, y, w, 'N', mat);

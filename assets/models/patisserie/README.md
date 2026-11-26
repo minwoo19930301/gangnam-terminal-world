@@ -16,3 +16,10 @@ blender -b --python-exit-code 1 -P assets/models/patisserie/build.py
 blender -b assets/models/patisserie/patisserie.blend --python-exit-code 1 -P assets/models/interior-architecture/export.py
 node assets/models/patisserie/pack.mjs assets/models/patisserie/desserts.glb
 ```
+
+
+홀케이크 쇼케이스에는 금빛 받침에 놓인 크림 케이크 두 개와 다크 초콜릿 장식 케이크, 각진 무늬의 포장 상자, 투명 포장에 담긴 세 색의 쁘띠 가토를 배치했다. 형태와 배색은 지점 공식 사진을 참고했다. 과일 종류와 단면의 크림·시트 구성은 게임용 해석이다. [게임 화면](gateaux-play.jpg) · [호텔 쇼케이스 사진](https://www.myclubmarriott.com/assets/uploads/property/outlet_275251856_1600246976.jpg) · [편집용 Blender 파일](gateaux.blend) · [게임 카메라](../../../index.html?pos=-26.3945,6,124.0341&yaw=-65.87&pitch=-29#/jwmarriott/2F)
+
+```sh
+blender -b --factory-startup --python-exit-code 1 -P assets/models/patisserie/gateaux.py
+```

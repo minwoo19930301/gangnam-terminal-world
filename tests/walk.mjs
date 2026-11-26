@@ -5,18 +5,21 @@
 // Path search = breadth-first search on a 0.25 m grid. A cell is free when the player capsule fits there
 // (phys.resolve does not push it); stepping to a neighbour may change height by at most the step-up.
 // usage: node tests/walk.mjs [placeId ...] [--no-city]
+// node tests/walk.mjs --controller replays physical junctions in both directions,
+// elevator exits and spawn departures with createPlayer. The default also tests long itineraries.
 import * as THREE from 'three';
 import fs from 'node:fs'; import path from 'node:path'; import url from 'node:url';
 const ROOT = path.resolve(path.dirname(url.fileURLToPath(import.meta.url)), '..');
 const ctx = new Proxy({}, { get: (t, k) => k === 'measureText' ? (s => ({ width: String(s).length * 10 })) : k === 'createLinearGradient' || k === 'createRadialGradient' || k === 'createPattern' ? (() => ({ addColorStop() { } })) : k === 'getImageData' ? (() => ({ data: new Uint8ClampedArray(4) })) : (typeof k === 'string' && /^[a-z]/.test(k) && !['canvas', 'font', 'fillStyle', 'strokeStyle', 'lineWidth', 'textAlign', 'textBaseline', 'globalAlpha', 'globalCompositeOperation', 'shadowColor', 'shadowBlur', 'lineCap', 'lineJoin', 'filter', 'imageSmoothingEnabled'].includes(k) ? () => { } : t[k]), set: (t, k, v) => { t[k] = v; return true; } });
 globalThis.__makeCanvas = (w, h) => ({ width: w, height: h, getContext: () => ctx, style: {} });
-const { createPhysics } = await import('../js/physics.js');
+const { createPhysics, createPlayer } = await import('../js/physics.js');
 const { createKit } = await import('../js/kit.js');
 const { buildCity } = await import('../js/city.js');
 const { PLACES } = await import('../js/places/index.js');
 const { JUNCTIONS } = await import('../js/places/_junctions.js');
 const osm = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/osm.json'), 'utf8'));
 const args = process.argv.slice(2);
+const controller = args.includes('--controller');
 let ids = args.filter(a => !a.startsWith('--')); if (!ids.length) ids = PLACES;
 const phys = createPhysics(); const K = createKit(THREE, new THREE.Scene(), { osm, phys }); K.onNight = () => { };
 const claimed = { b: new Set(), r: new Set(), a: new Set() }; const mods = [];
@@ -31,36 +34,66 @@ function free(x, z, y) { const p = { x, z }; phys.resolve(p, R, y, y + H, STEP);
 // the in-game player samples support at its centre but crosses hairline gaps (slab seams, shaft edges)
 // without noticeable falling, so take the best floor within ±0.12 m
 function floorAt(x, z, y) { let b = -Infinity; for (const [ox, oz] of [[0, 0], [0.12, 0], [-0.12, 0], [0, 0.12], [0, -0.12]]) { const s = phys.support(x + ox, z + oz, y + STEP); if (s.y > b) b = s.y; } return b; }
+// A grid search can cross a seam the controller cannot. Replay from the authored
+// start with ordinary forward input and gravity, retaining the game's collision response.
+function replay(candidate, origin, gridX, gridZ, goal) {
+  const steps = [];
+  for (let node = candidate; node[3]; node = node[3]) steps.push(node);
+  const player = createPlayer(phys);
+  player.teleport(origin.x, origin.y + .05, origin.z);
+  for (const [i,j] of steps.reverse()) {
+    const x = gridX + i*G, z = gridZ + j*G;
+    for (let frame = 0; frame < 32; frame++) {
+      const distance = Math.hypot(x-player.x, z-player.z);
+      if (distance < .004) break;
+      player.yaw = Math.atan2(player.x-x, player.z-z);
+      player.update(Math.min(1/60, distance/player.speed), {f:1,s:0});
+    }
+    if (Math.hypot(x-player.x,z-player.z) > .12) return false;
+  }
+  return goal(player.x, player.z, player.y);
+}
+
 // BFS from (x0,z0,y0); goal(x,z,y) → true ends the search. Limited to bbox.
 function search(x0, z0, y0, goal, bb, maxCells = 400000) {
+  const origin = {x:x0,y:y0,z:z0};
   const sy = floorAt(x0, z0, y0); if (!isFinite(sy) || Math.abs(sy - y0) > 0.7) return { ok: false, why: `no floor at start (found ${sy})` };
   const key = (i, j, y) => i + ',' + j + ',' + Math.round(y * 2);
-  const seen = new Set(); const q = [[0, 0, sy]]; seen.add(key(0, 0, sy)); let best = Infinity, n = 0;
+  const seen = new Set(); const q = [[0, 0, sy]]; seen.add(key(0, 0, sy)); let n = 0, gridGoals = 0;
   if (!free(x0, z0, sy)) { // nudge the start out of walls
     const p = { x: x0, z: z0 }; phys.resolve(p, R, sy, sy + H, STEP); x0 = p.x; z0 = p.z;
   }
   while (q.length && n++ < maxCells) {
-    const [i, j, y] = q.shift(); const x = x0 + i * G, z = z0 + j * G;
-    if (goal(x, z, y)) return { ok: true, cells: n };
+    const current = q.shift();
+    const [i, j, y] = current; const x = x0 + i * G, z = z0 + j * G;
+    if (goal(x, z, y)) {
+      gridGoals++;
+      if (!controller || replay(current, origin, x0, z0, goal)) return {ok:true, cells:n};
+    }
     for (const [di, dj] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
       const ni = i + di, nj = j + dj, nx = x0 + ni * G, nz = z0 + nj * G;
       if (nx < bb[0] || nx > bb[2] || nz < bb[1] || nz > bb[3]) continue;
       const ny = floorAt(nx, nz, y); if (!isFinite(ny) || ny < y - 0.6 || ny > y + STEP) continue;
       const k = key(ni, nj, ny); if (seen.has(k)) continue; seen.add(k);
       if (!free(nx, nz, ny)) continue;
-      q.push([ni, nj, ny]);
+      q.push(controller ? [ni,nj,ny,current] : [ni,nj,ny]);
     }
   }
+  if (gridGoals) return {ok:false, why:`controller did not reach any of ${gridGoals} grid goals`};
   return { ok: false, why: `no path (${n} cells searched)` };
 }
 const fails = [], oks = [];
 for (const j of JUNCTIONS) {
-  if (!ids.includes(j.a) || !ids.includes(j.b)) continue;
+  if (!ids.includes(j.a) || !ids.includes(j.b) || (controller && j.streamOnly)) continue;
+  const directions = [[j.a,j.pa,j.b,j.pb]];
+  if (controller) directions.push([j.b,j.pb,j.a,j.pa]);
   for (const y of [j.y, ...(j.alsoY || [])]) {
-    const [ax, az] = j.pa, [bx, bz] = j.pb; const pad = 30;
-    const bb = [Math.min(ax, bx) - pad, Math.min(az, bz) - pad, Math.max(ax, bx) + pad, Math.max(az, bz) + pad];
-    const r = search(ax, az, y, (x, z, yy) => Math.hypot(x - bx, z - bz) < 0.6 && Math.abs(yy - y) < 0.7, bb);
-    (r.ok ? oks : fails).push(`junction ${j.id} ${j.a}→${j.b} y=${y}: ${r.ok ? 'walkable' : r.why}`);
+    for (const [from,[ax,az],to,[bx,bz]] of directions) {
+      const pad = 30;
+      const bb = [Math.min(ax,bx)-pad,Math.min(az,bz)-pad,Math.max(ax,bx)+pad,Math.max(az,bz)+pad];
+      const r = search(ax, az, y, (x,z,yy) => Math.hypot(x-bx,z-bz)<.6 && Math.abs(yy-y)<.7, bb);
+      (r.ok ? oks : fails).push(`junction ${j.id} ${from}→${to} y=${y}: ${r.ok ? 'walkable' : r.why}`);
+    }
   }
 }
 for (const el of K._.elevators) for (const f of el.floors) {
@@ -113,7 +146,7 @@ const ROUTES = [
   { name: '사용자 루트 7: 세빛섬→잠수교', y: null, pts: [[-882, -723, 0], [-704.5, -793.1, 0.065], [-700, -934, 1.6]], need: ['hangang'], pad: 200 },
   { name: '고터→반포한강공원 (반포대로·반포나들목)', y: 0, pts: [[-371, -136], [-345, -450], [-330, -620], [-297.9, -791.1], [-629, -736]], need: ['streets', 'hangang'] },
 ];
-for (const rt of ROUTES) {
+for (const rt of controller ? [] : ROUTES) {
   if (!rt.need.every(n => ids.includes(n))) continue;
   for (let i = 0; i < rt.pts.length - 1; i++) {
     const [ax, az, ay = rt.y] = rt.pts[i], [bx, bz, by = rt.y] = rt.pts[i + 1]; const pad = rt.pad || 40;
@@ -121,6 +154,17 @@ for (const rt of ROUTES) {
     const r = search(ax, az, ay, (x, z, yy) => Math.hypot(x - bx, z - bz) < 1.0 && Math.abs(yy - by) < 0.7, bb, 2500000);
     (r.ok ? oks : fails).push(`route ${rt.name} [${i}→${i + 1}] (${ax},${az})→(${bx},${bz}): ${r.ok ? 'walkable' : r.why}`);
   }
+}
+if (controller) {
+  const counts = ['junction','elevator','spawn'].map(kind => {
+    const matches = message => message.startsWith(kind+' ');
+    const passed = oks.filter(matches).length;
+    return `${kind} ${passed}/${passed+fails.filter(matches).length}`;
+  });
+  console.log('controller replay — '+counts.join(', '));
+  const arrivals = new Set(K._.elevators.flatMap(el => el.floors.map(floor =>
+    JSON.stringify([el.x+(floor.dx||0), floor.y, el.z+(floor.dz||0)]))));
+  console.log(`elevator registry — ${K._.elevators.length} entries, ${arrivals.size} distinct arrival positions`);
 }
 console.log(`walk: ${oks.length} ok, ${fails.length} blocked`);
 for (const f of fails) console.log('BLOCKED', f);
