@@ -18,6 +18,18 @@ blender assets/models/banpo-apartments/banpo-apartments.blend -P assets/models/w
 | 반포르엘 | [apt-a10023673.glb](../../re/apt-a10023673.glb) | 8,984 | 176,396 B |
 | 반포센트럴자이 또는 반센자이 | [apt-a10024913.glb](../../re/apt-a10024913.glb) | 10,027 | 218,692 B |
 
+### 지도 이름표와 보도에서 보는 방향
+
+2026년 11월 27일 네이버 지도에서 각 단지의 장소 카드를 열고 도착지와 도로명주소를 대조했다. 지도에 찍는 점은 네이버의 단지 대표 위치다. 게임에서 **여기로 이동**을 누르면 입면을 볼 수 있는 공공 보도에 선다. 3D 이름표는 그 보도에서 실제로 보이는 모델의 지붕에 맞췄다.
+
+| 단지 | 도로명주소 | 네이버 도착지 위도 · 경도 | 보도에서 보는 동 |
+| --- | --- | --- | --- |
+| [신반포4차](https://map.naver.com/p/entry/place/18760860) | 잠원로 37-48 | 37.5086681 · 127.0062614 | 203동 |
+| [반포르엘](https://map.naver.com/p/entry/place/1981182918) | 신반포로23길 23 | 37.5075999 · 127.0028246 | 101동 |
+| [반포센트럴자이](https://map.naver.com/p/entry/place/791855299) | 반포대로 310-6 | 37.5072530 · 127.0016159 | 101동 |
+
+기존 게임 지도에서 단지 대표점을 북쪽에 있는 실제 단지 안으로 옮겼다. 지도상 이동 거리는 신반포4차 263.3m, 반포르엘 97.2m, 반포센트럴자이 44.9m다. [네이버 지도에서 세 단지 보기](https://map.naver.com/p?c=14137820.74,4510093.65,17.20,0,0,0,dh) · [신반포4차 서울시 단지 정보](https://openapt.seoul.go.kr/openApt/index.do?aptCode=A13790828) · [반포르엘 서울시 단지 정보](https://openapt.seoul.go.kr/openApt/index.do?aptCode=A10023673) · [반포센트럴자이 단지 홈페이지](https://bpcxi.aptner.com/v2/page/menu/872)
+
 네이버 지도 검색에서 잠원동 세 단지의 이름을 대조했다. 신반포4차는 서울시 정비사업 현황에 잠원동 70의 기존 단지로 올라 있다. 외벽의 무늬와 색은 아래에 명시한 연도의 사진을 참고했다. [네이버 지도 신반포4차](https://map.naver.com/p/search/신반포4차아파트) · [반포르엘](https://map.naver.com/p/search/반포르엘아파트) · [반포센트럴자이](https://map.naver.com/p/search/반포센트럴자이) · [서울시 정비사업 현황](https://cleanup.seoul.go.kr/cafe/mastr-cleanup-bsnsSumry/execute.do?cafeId=650900000560N91&div=sumry&stepSeCode=102)
 
 세 단지의 외곽과 옥상은 서울 부동산 지도의 게임용 모델에서 가져왔다. 세 단지는 기존 외벽의 좌표와 지면 높이를 유지하고 공개 사진을 참고해 입면을 다시 그렸다. [원본 모델 기록](https://github.com/minwoo19930301/seoul-real-estate-map/blob/ede67d9f3909395d346ab67e492d63fd10142d08/public/models/manifest.json)
