@@ -116,6 +116,24 @@ export function createPhysics() {
       }
       return lo;
     },
+    // Check actual horizontal slabs along the sightline, including their atrium
+    // openings. Skipping a boundary cell only makes the visibility test conservative.
+    ceilingBlocksView(x, y, z, bx, by, bz) {
+      const dx = bx - x, dy = by - y, dz = bz - z;
+      if (Math.abs(dy) < .1) return false;
+      const steps = Math.max(1, Math.ceil(Math.max(Math.abs(dx), Math.abs(dz)) / ceilings.cell));
+      for (let i = 0; i <= steps; i++) {
+        for (const c of ceilings.at(x + dx*i/steps, z + dz*i/steps)) {
+          if (c.heightOffset) continue;
+          const t = (c.y - y) / dy;
+          if (t <= .001 || t >= .999) continue;
+          const px = x + t*dx, pz = z + t*dz;
+          if (px >= c.bb[0] && px <= c.bb[2] && pz >= c.bb[1] && pz <= c.bb[3] &&
+              pointInPoly(px, pz, c.poly) && !c.holes?.some(h => pointInPoly(px, pz, h))) return true;
+        }
+      }
+      return false;
+    },
     zoneAt(x, y, z) {
       let best = null;
       for (const zn of zones.at(x, z)) {

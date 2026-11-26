@@ -7,6 +7,7 @@ import sys
 from pathlib import Path
 
 import bpy
+from mathutils import Matrix
 
 here = Path(__file__).resolve().parent
 
@@ -22,14 +23,15 @@ def slot_value(material):
     return result
 
 
-def append_part(source, graph, datum, slots, points, faces):
+def append_part(source, graph, datum, slots, points, faces, transform=None):
     obj = source.evaluated_get(graph)
+    matrix = obj.matrix_world if transform is None else transform @ obj.matrix_world
     mesh = obj.to_mesh()
     try:
         mesh.calc_loop_triangles()
         offset = len(points) // 3
         for vertex in mesh.vertices:
-            x, y, z = obj.matrix_world @ vertex.co
+            x, y, z = matrix @ vertex.co
             points.extend(round(v * 100) for v in (x, z - datum, -y))
         local_slots = []
         for mat in mesh.materials:
@@ -43,7 +45,7 @@ def append_part(source, graph, datum, slots, points, faces):
                 slots.append(fallback)
             local_slots.append(slots.index(fallback))
         uv = mesh.uv_layers.active
-        reverse = obj.matrix_world.to_3x3().determinant() < 0
+        reverse = matrix.to_3x3().determinant() < 0
         for tri in mesh.loop_triangles:
             if tri.area < 1e-6:
                 continue
@@ -57,6 +59,40 @@ def append_part(source, graph, datum, slots, points, faces):
                     faces.extend(round(v * 1000) for v in coord)
     finally:
         obj.to_mesh_clear()
+
+
+def write_building_tiles(library, directory):
+    """Keep complete buildings together so footprint edges never acquire seams."""
+    import hashlib
+    import math
+
+    directory.mkdir(parents=True, exist_ok=True)
+    tiles, omitted = {}, []
+    for key, row in library.items():
+        role, _, xyz, _ = row
+        if role == "omit":
+            omitted.append(key)
+            continue
+        west, east = min(xyz[::3])/100, max(xyz[::3])/100
+        north, south = min(xyz[2::3])/100, max(xyz[2::3])/100
+        tile = math.floor((west+east)/640), math.floor((north+south)/640)
+        buildings, bounds = tiles.setdefault(tile, ({}, [west, north, east, south]))
+        buildings[key] = row
+        bounds[:] = [min(bounds[0],west), min(bounds[1],north), max(bounds[2],east), max(bounds[3],south)]
+
+    manifest = {"omit": sorted(omitted), "tiles": []}
+    current = set()
+    for (i,j), (buildings,bounds) in sorted(tiles.items()):
+        data = json.dumps(buildings, sort_keys=True, separators=(",",":")).encode()
+        # A cached index always addresses the matching version of its mesh data.
+        name = f"{i}_{j}-{hashlib.sha256(data).hexdigest()[:10]}.json.gz"
+        (directory/name).write_bytes(gzip.compress(data, compresslevel=9, mtime=0))
+        current.add(name)
+        manifest["tiles"].append({"file": name, "bounds": bounds})
+    (directory/"index.json").write_text(json.dumps(manifest, separators=(",",":"))+"\n")
+    for stale in directory.glob("*.json.gz"):
+        if stale.name not in current:
+            stale.unlink()
 
 
 def export_buildings(target):
@@ -77,13 +113,18 @@ def export_buildings(target):
                     source,
                     *sorted(source.children_recursive, key=lambda o: o.name),
                 ]:
-                    if part != source and not (
-                        part.type == "MESH" and part.get("shell_part")
-                    ):
+                    if part != source and not part.get("shell_part"):
                         continue
-                    append_part(
-                        part, graph, source["terrain_datum"], slots, points, faces
-                    )
+                    if part.instance_collection:
+                        collection = part.instance_collection
+                        placement = part.evaluated_get(graph).matrix_world
+                        placement = placement @ Matrix.Translation(-collection.instance_offset)
+                        for member in sorted(collection.all_objects, key=lambda o: o.name):
+                            if member.type == "MESH":
+                                append_part(member, graph, source["terrain_datum"],
+                                            slots, points, faces, placement)
+                    elif part.type == "MESH":
+                        append_part(part, graph, source["terrain_datum"], slots, points, faces)
                 if not faces:
                     raise ValueError("Empty exterior " + key)
             library[key] = [role, slots, points, faces]
@@ -94,6 +135,8 @@ def export_buildings(target):
     temp = target.with_suffix(".tmp")
     temp.write_bytes(compressed)
     temp.replace(target)
+    if target.name == "buildings.json.gz":
+        write_building_tiles(library, target.parent/"building-tiles")
     from collections import Counter
 
     print(

@@ -103,6 +103,7 @@ export function addStreetLamps(K, sites, lensMaterial) {
   body.name = '가로등'; lens.name = '가로등 발광렌즈';
   const M = new THREE.Matrix4();
   sites.forEach(([x, z, yaw, y = 0], i) => {
+    K.streetLight?.(x+1.97*Math.sin(yaw),y+8.827,z+1.97*Math.cos(yaw));
     M.makeRotationY(yaw).setPosition(x, y, z);
     body.setMatrixAt(i, M); lens.setMatrixAt(i, M);
   });

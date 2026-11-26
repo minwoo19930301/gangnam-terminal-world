@@ -598,23 +598,29 @@ function buildHall(K) {
   K.zone({name:'파미에스테이션',floor:'1F',sub:'벽돌 홀 · 하우스 오브 신세계 · JAJU · 아그라',poly:hall,y0:0,y1:4.8,priority:18});
   K.zone({name:'파미에스테이션',floor:'1F',sub:'유리 천창 갤러리 · 와필레',poly:gallery,y0:0,y1:8,priority:18});
   {const[x,z]=P(15,4);K.spawn({name:'파미에 1층 벽돌 홀',x,z,y:0,yaw:20*PI/180,group:'파미에스테이션'});}
+  // Semicircular glass fanlight with three cream moulding courses, black fan muntins and plinth.
+  const fan=(u,v,width,face='v')=>{
+    const rad=width/2,base=5.05,ht=2.65;
+    // Thin brick spandrels above the curved opening keep the arch silhouette exact.
+    for(let i=0;i<28;i++){const a=-rad+width*i/28,b=-rad+width*(i+1)/28,ya=base+ht*Math.sqrt(Math.max(0,1-(a/rad)**2)),yb=base+ht*Math.sqrt(Math.max(0,1-(b/rad)**2));const q=(x,y)=>face==='u'?[u,v+x,y]:[u+x,v,y];K.quad(brick,[xyz(q(a,ya)),xyz(q(b,yb)),xyz(q(b,8.7)),xyz(q(a,8.7))],face==='u'?[-C,0,S]:v>5?[-S,0,-C]:[S,0,C]);}
+    const pt=(a,y)=>face==='u'?[u,v+a,y]:[u+a,v,y];
+    for(let i=0;i<24;i++){
+      const a=i*PI/24,b=(i+1)*PI/24;
+      K.quad('glass',[xyz(pt(0,base)),xyz(pt(rad*Math.cos(a),base+ht*Math.sin(a))),xyz(pt(rad*Math.cos(b),base+ht*Math.sin(b))),xyz(pt(0,base))],face==='u'?[-C,0,S]:v>5?[-S,0,-C]:[S,0,C]);
+      for(let n=0;n<3;n++)beam(pt((rad+.10+n*.13)*Math.cos(a),base+(ht+.10+n*.13)*Math.sin(a)),pt((rad+.10+n*.13)*Math.cos(b),base+(ht+.10+n*.13)*Math.sin(b)),.12,cream);
+    }
+    beam(pt(-rad-.4,base-.05),pt(rad+.4,base-.05),.20,cream);
+    for(const a of [PI/6,PI/3,PI/2,2*PI/3,5*PI/6])beam(pt(0,base),pt(rad*Math.cos(a),base+ht*Math.sin(a)),.065,iron);
+  };
+  // The long gallery's pairs of fanlights enter view progressively along the walk.
+  for (let bay=0; bay<7; bay+=2) {
+    const first=25.2+bay*6.5, last=25.2+Math.min(bay+1,6)*6.5;
+    K.detail({name:'파미에 갤러리 반원창',floor:'1F',y0:0,y1:10,poly:rect(first-3,0,last+3,11.5)},()=>{
+      for(let u=first;u<=last+.01;u+=6.5){fan(u,.18,5.25);fan(u,11.32,5.25);}
+    });
+  }
   K.detail({name:'파미에 벽돌 홀 · 유리 천창 갤러리',floor:'1F',y0:0,y1:11,poly:[P(4,0),P(70.56,0),P(70.56,11.5),P(22,11.5),P(22,20),P(4,20)]},()=>{
-    // Semicircular glass fanlight with three cream moulding courses, black fan muntins and plinth.
-    const fan=(u,v,width,face='v')=>{
-      const rad=width/2,base=5.05,ht=2.65;
-      // Thin brick spandrels above the curved opening keep the arch silhouette exact.
-      for(let i=0;i<28;i++){const a=-rad+width*i/28,b=-rad+width*(i+1)/28,ya=base+ht*Math.sqrt(Math.max(0,1-(a/rad)**2)),yb=base+ht*Math.sqrt(Math.max(0,1-(b/rad)**2));const q=(x,y)=>face==='u'?[u,v+x,y]:[u+x,v,y];K.quad(brick,[xyz(q(a,ya)),xyz(q(b,yb)),xyz(q(b,8.7)),xyz(q(a,8.7))],face==='u'?[-C,0,S]:v>5?[-S,0,-C]:[S,0,C]);}
-      const pt=(a,y)=>face==='u'?[u,v+a,y]:[u+a,v,y];
-      for(let i=0;i<24;i++){
-        const a=i*PI/24,b=(i+1)*PI/24;
-        K.quad('glass',[xyz(pt(0,base)),xyz(pt(rad*Math.cos(a),base+ht*Math.sin(a))),xyz(pt(rad*Math.cos(b),base+ht*Math.sin(b))),xyz(pt(0,base))],face==='u'?[-C,0,S]:v>5?[-S,0,-C]:[S,0,C]);
-        for(let n=0;n<3;n++)beam(pt((rad+.10+n*.13)*Math.cos(a),base+(ht+.10+n*.13)*Math.sin(a)),pt((rad+.10+n*.13)*Math.cos(b),base+(ht+.10+n*.13)*Math.sin(b)),.12,cream);
-      }
-      beam(pt(-rad-.4,base-.05),pt(rad+.4,base-.05),.20,cream);
-      for(const a of [PI/6,PI/3,PI/2,2*PI/3,5*PI/6])beam(pt(0,base),pt(rad*Math.cos(a),base+ht*Math.sin(a)),.065,iron);
-    };
     fan(4.2,7.2,5.5,'u');fan(4.2,14.2,5.5,'u');
-    for(let u=25.2;u<69;u+=6.5){fan(u,.18,5.25);fan(u,11.32,5.25);}
     // Lower fascia and transom follow the brick bays; unnamed units receive no invented brand.
     for(let u=25.2;u<69;u+=6.5)for(const v of [.12,11.38]){B(u,v,3.3,5.5,.17,.65,0x151514);B(u,v,4.02,5.5,.13,.35,'glass');}
     for(const v of [7.2,14.2]){B(4.15,v,3.35,.20,5.8,.7,0x101217);B(4.15,v,4.1,.18,5.8,.42,'glass');}

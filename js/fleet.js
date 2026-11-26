@@ -44,6 +44,39 @@ function buildGeometries(THREE, vehicle, colors, separateWheels) {
   });
 }
 
+// Beyond walking distance the tyre sidewall bevels are smaller than a pixel.
+// Keep the Blender tread/contact bounds and hub colour in a single octagonal wheel.
+function distantWheel(THREE, wheel) {
+  wheel.computeBoundingBox();
+  const {min, max} = wheel.boundingBox, radius = (max.y-min.y)/2;
+  const original = wheel.attributes.color;
+  const rubber = new THREE.Color().fromBufferAttribute(original,0);
+  const silver = new THREE.Color().fromBufferAttribute(original,original.count-1);
+  const positions = [], colors = [];
+  function ring(x, r, step) {
+    const angle = step*Math.PI/4;
+    return [x, min.y+radius+r*Math.sin(angle), r*Math.cos(angle)];
+  }
+  function triangle(a,b,c,color) {
+    positions.push(...a,...b,...c);
+    for (let i=0;i<3;i++) colors.push(color.r,color.g,color.b);
+  }
+  for (let i=0;i<8;i++) {
+    const a=ring(min.x,radius,i), b=ring(min.x,radius,i+1);
+    const c=ring(max.x,radius,i), d=ring(max.x,radius,i+1);
+    const e=ring(max.x,radius*.57,i), f=ring(max.x,radius*.57,i+1);
+    triangle(a,c,b,rubber); triangle(c,d,b,rubber);
+    triangle(c,e,d,rubber); triangle(e,f,d,rubber);
+    triangle(e,ring(max.x,0,0),f,silver);
+    triangle(a,b,ring(min.x,0,0),rubber);
+  }
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));
+  geometry.setAttribute('color',new THREE.Float32BufferAttribute(colors,3));
+  geometry.computeVertexNormals();
+  return geometry;
+}
+
 export function fleetInstances(THREE, kind, count, {separateWheels=false} = {}) {
   let library = caches.get(THREE);
   if (!library) {
@@ -60,6 +93,11 @@ export function fleetInstances(THREE, kind, count, {separateWheels=false} = {}) 
   return library.geometries.get(key).map((geometry,i) => {
     const mesh = new THREE.InstancedMesh(geometry, library.materials[i], i === 2 ? count*4 : count);
     mesh.name = kind + [' paint',' trim',' wheels'][i];
+    if (i === 2) {
+      geometry.userData.distantWheel ??= distantWheel(THREE, geometry);
+      mesh.userData.lod = [geometry, geometry.userData.distantWheel];
+      mesh.userData.lodDistance = 65;
+    }
     return mesh;
   });
 }

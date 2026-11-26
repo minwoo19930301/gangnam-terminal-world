@@ -70,6 +70,29 @@ for (let i=0;i<40;i++) {
     near(p.y,asphalt(p.x,p.z),'moving tyre contact');
   }
 }
+// Park outside the camera, let time pass, then turn back. The first frame
+// must have the same wheel contacts and paint as the continuously visible car.
+const referenceScene=new THREE.Scene(), camera=new THREE.PerspectiveCamera(60,1,.08,1000);
+const reference=createTraffic({THREE,phys:roads,scene:referenceScene,rand:()=>()=>.4}, {
+  roads:[{pts:[[x0,z0],[x0,z1]],hw:'primary',width:4,lanes:1,oneway:true}]
+},1);
+for(let i=0;i<40;i++) reference.update(.13);
+camera.position.set(x0+100,asphalt(x0,70)+3,70);
+camera.lookAt(x0+200,asphalt(x0,70)+3,70);
+reference.update(.37); traffic.update(.37,camera);
+assert.ok(trafficScene.children.every(batch=>batch.count===0),'behind the camera');
+camera.lookAt(x0,asphalt(x0,70),70);
+traffic.update(0,camera);
+const lowWheels=trafficScene.children.find(m=>m.name.endsWith('distant-wheels'));
+const referenceWheels=referenceScene.children.find(m=>m.count===4);
+assert.equal(lowWheels.count,4,'return from a distance');
+assert.deepEqual(lowWheels.instanceMatrix.array,referenceWheels.instanceMatrix.array,'first visible frame restores the current pose');
+const center=new THREE.Vector3().setFromMatrixPosition(new THREE.Matrix4().fromArray(referenceScene.children[0].instanceMatrix.array));
+camera.position.copy(center).add(new THREE.Vector3(12,3,0));camera.lookAt(center);
+traffic.update(0,camera);
+assert.equal(wheels.count,4,'return to original wheels close up');
+assert.deepEqual(wheels.instanceMatrix.array,referenceWheels.instanceMatrix.array);
+assert.deepEqual(trafficScene.children[0].instanceColor.array,referenceScene.children[0].instanceColor.array);
 console.log('Rendered parked tyres, chassis collision and 160 moving wheel contacts passed.');
 
 // Entering a new detail cell finalizes geometry again during normal play.

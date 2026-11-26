@@ -1,15 +1,16 @@
 import * as THREE from 'three';
+import { installElectricLighting } from './night-lighting.js';
 import { createDaylight, timeModes } from './daylight.js';
 import { createPhysics, createPlayer } from './physics.js';
 import { createKit } from './kit.js';
 import { applyRoadEdits } from './blender-roads.js';
-import { drawBlenderBuilding } from './blender-buildings.js';
+import { drawBlenderBuilding, loadBuildingArea } from './blender-buildings.js';
 import { buildCity, createTraffic } from './city.js';
 import { PLACES } from './places/index.js';
 import { createMap } from './map.js';
 import { FONT } from './textures.js';
 import { planArea, areaIdAt, areaIdForKey, areaName, districtAt, OUTDOOR } from './areas.js';
-import { JUNCTIONS } from './places/_junctions.js';
+import { JUNCTIONS, OPEN_STAGE_FRONT } from './places/_junctions.js';
 import { LANDMARKS } from './landmarks.js';
 import { pickReModels, reModelStandIns, loadReModels } from './remodels.js';
 
@@ -29,7 +30,15 @@ async function boot() {
   // Fonts are only needed when sign text is painted (after the world is up), so they load in parallel with the
   // map data and the place modules instead of blocking them.
   status('지도 데이터 불러오는 중…');
-  const fontsReady = Promise.race([Promise.all(['400', '700'].map(w => document.fonts.load(`${w} 32px "Noto Sans KR"`, '가나다'))), new Promise(r => setTimeout(r, 4000))]).catch(() => { }).then(() => mark('fonts'));
+  const fontSheet = $('sign-fonts');
+  const sheetReady = fontSheet.media === 'all' ? Promise.resolve() : new Promise(resolve => {
+    fontSheet.addEventListener('load', resolve, {once:true});
+    fontSheet.addEventListener('error', resolve, {once:true});
+  });
+  const fontsReady = Promise.race([
+    sheetReady.then(() => Promise.all(['400', '700'].map(w => document.fonts.load(`${w} 32px "Noto Sans KR"`, '가나다')))),
+    new Promise(resolve => setTimeout(resolve, 4000)),
+  ]).catch(() => {}).then(() => mark('fonts'));
   const osmP = fetch('data/osm.json').then(r => r.json());
   const reP = fetch('js/places/_re_models.json').then(r => r.ok ? r.json() : null).catch(() => null);
   // ---- area loading: an address builds only its area (js/areas.js); ?area=all, ?places=… and screenshots build everything
@@ -40,6 +49,9 @@ async function boot() {
   const AREA_ID = (!META || SHOT || Q.get('places') || Q.get('area') === 'all') ? 'all' : (Q.get('area') || areaIdForKey(hashKey, hashPos, META));
   const AREA = META ? planArea(AREA_ID, META, JUNCTIONS) : { id: 'all', modules: PLACES, keep: null, keepDetail: null };
   const exteriorTerrain = !AREA.id.startsWith('in:');
+  const shellMargin = exteriorTerrain ? 180 : 110;
+  const shellBounds = AREA.box?.map((v,i) => v + (i < 2 ? -shellMargin : shellMargin));
+  const shellsReady = loadBuildingArea(shellBounds).then(() => null, error => error);
   installRelief(THREE, exteriorTerrain);
   if (AREA.id !== 'all') status(`${areaName(AREA.id, META)} 불러오는 중…`);
   const wantIds = Q.get('places') ? Q.get('places').split(',') : PLACES.filter(id => AREA.modules.includes(id));
@@ -47,7 +59,7 @@ async function boot() {
   const osm = applyRoadEdits(await osmP); mark('osm');
 
   // Quality: ?q=low forces the light path (no MSAA, lower pixel-ratio ceiling); phones and small-memory devices
-  // pick it automatically. Geometry is never reduced — only the render resolution adapts (see adaptResolution).
+  // pick it automatically. The render resolution adapts further to the measured frame rate (see adaptResolution).
   const LOW = Q.get('q') === 'low' || (!Q.get('q') && ((navigator.deviceMemory && navigator.deviceMemory <= 4) || /Android|iPhone|iPad|Mobile/i.test(navigator.userAgent)));
   const renderer = new THREE.WebGLRenderer({ antialias: !SHOT && !LOW, logarithmicDepthBuffer: true, preserveDrawingBuffer: SHOT, powerPreference: 'high-performance' });
   const MAX_PR = SHOT ? 1 : Math.min(devicePixelRatio, LOW ? 1.25 : 2);
@@ -73,6 +85,8 @@ async function boot() {
     document.body.classList.toggle('night', state.night);
   });
   K.onNight = daylight.onNight;
+  const streetLuminaires = [];
+  K.streetLight = (x,y,z) => streetLuminaires.push([x,y+relief(x,z),z]);
   function setTimeMode(mode) {
     if (!timeModes.includes(mode)) return;
     if (!SHOT) {
@@ -100,6 +114,12 @@ async function boot() {
   for (const m of reModels) for (const id of m.claims) claimedBuildings.add(id);
   // modules of other areas are not loaded, but what they claim is still theirs (the city must not put generic boxes there)
   if (META && AREA.id !== 'all') for (const v of Object.values(META)) { for (const id of v.claims) claimedBuildings.add(id); for (const id of v.claimRoads) claimedRoads.add(id); for (const id of v.claimAreas) claimedAreas.add(id); }
+  const shellError = await shellsReady;
+  if (shellError) {
+    // Static hosts can briefly serve an older tile index during a release.
+    try { await loadBuildingArea(); }
+    catch (fallbackError) { console.warn('Using footprint exteriors', shellError, fallbackError); }
+  }
   const placeInfo = [];
   for (const { id, m } of mods) {
     status(`짓는 중… ${m.meta?.name || id}`);
@@ -113,7 +133,7 @@ async function boot() {
   let roadsInfo = null;
   if (Q.get('city') !== '0') {
     mark('places'); status('도시(OSM) 짓는 중…'); await new Promise(r => setTimeout(r, 0));
-    try { roadsInfo = buildCity(K, osm, { claimedBuildings, claimedRoads, claimedAreas, log: s => console.log(s) }); } catch (e) { fail('city', e); }
+    try { roadsInfo = buildCity(K, osm, { claimedBuildings, claimedRoads, claimedAreas, shellBounds, streetBounds: exteriorTerrain ? null : shellBounds, log: s => console.log(s) }); } catch (e) { fail('city', e); }
   }
   // far massing: buildings of place modules this area does not load stand as plain OSM blocks (skyline, walls)
   if (META && AREA.id !== 'all') {
@@ -126,6 +146,7 @@ async function boot() {
         // The gallery supplies the visible interior faces at these openings.
         if (AREA.id === 'in:famille+centralcity' && mid === 'jwmarriott' && bid === 136986976) {
           const openings = [
+            OPEN_STAGE_FRONT,
             { x: 16.88, z: 148.69, w: 18.1, y1: 9.8 }, // east hall, local u=4..22
             { x: -12.27, z: 159.97, w: 44.6, y1: 8 }, // vaulted gallery, u=22..66.5
           ];
@@ -192,6 +213,8 @@ async function boot() {
   }
   mark('city'); status('메시 합치는 중…'); await new Promise(r => setTimeout(r, 0));
   K._.finalize(); mark('finalize');
+  const gl = renderer.getContext();
+  installElectricLighting(THREE,K,phys,streetLuminaires,gl.getParameter(gl.MAX_3D_TEXTURE_SIZE));
   K._.cull(6, 1.6, -125, true);
   const reStand = reModels.length ? reModelStandIns({ THREE, K, osm, scene, models: reModels, terrain: exteriorTerrain }) : new Map();
   const traffic = roadsInfo && Q.get('traffic') !== '0' ? createTraffic(K, roadsInfo, 180) : null;
@@ -301,6 +324,9 @@ async function boot() {
   // ---- HUD / input ----
   const keys = {};
   const hudZone = $('zone'), hudSub = $('zone-sub'), hudPrompt = $('prompt'), hudCoord = $('coord');
+  function updateText(node, value) {
+    if (node.textContent !== value) node.textContent = value;
+  }
   let menuOpen = false, nearIt = null;
   // ---- leaving the area: reload at the new address with a loading screen ----
   let leaving = false, reloadTimer;
@@ -484,10 +510,14 @@ async function boot() {
     };
   })();
   route.start();
-  K._.ensureDetail(player.x, player.y + player.eye, player.z); // detail of the floor you start on, before the first frame
+  camera.position.set(player.x, player.y + player.eye + relief(player.x, player.z), player.z);
+  camera.rotation.set(player.pitch, player.yaw, 0, 'YXZ');
+  K._.ensureDetail(player.x, player.y + player.eye, player.z, SHOT ? 45 : 24, Infinity, SHOT ? null : camera);
   const clock = new THREE.Clock(); let t = 0, frames = 0, fpsT0 = performance.now(), fps = 0;
   let signsGo = false;
-  const gl = renderer.getContext(), scratch = document.createElement('canvas'), sctx = scratch.getContext('2d');
+  const scratch = document.createElement('canvas'), sctx = scratch.getContext('2d');
+  const mipPages = new Set();
+  let mipTime = 0;
   function uploadSignRects(jobs) {
     const byPage = new Map();
     for (const j of jobs) { if (!byPage.has(j.r.page)) byPage.set(j.r.page, []); byPage.get(j.r.page).push(j); }
@@ -503,7 +533,16 @@ async function boot() {
         sctx.drawImage(page.c, j.r.x, j.r.y, j.pw, j.ph, 0, 0, j.pw, j.ph);
         gl.texSubImage2D(gl.TEXTURE_2D, 0, j.r.x, S - j.r.y - j.ph, gl.RGBA, gl.UNSIGNED_BYTE, scratch);
       }
-      gl.generateMipmap(gl.TEXTURE_2D);
+      mipPages.add(page);
+    }
+    const now = performance.now();
+    if (now-mipTime >= 150 || !K._.atlas.pending()) {
+      for (const page of mipPages) {
+        renderer.state.bindTexture(gl.TEXTURE_2D, renderer.properties.get(page.t).__webglTexture);
+        gl.generateMipmap(gl.TEXTURE_2D);
+      }
+      mipPages.clear();
+      mipTime = now;
     }
   }
   // Dynamic resolution: drop the pixel ratio while the frame rate is low, raise it again when there is headroom.
@@ -562,32 +601,40 @@ async function boot() {
     daylight.sky.position.copy(camera.position);
     daylight.sync();
     for (const f of K._.frameFns) { try { f(dt, t, player); } catch (e) { } }
-    if (traffic) traffic.update(dt);
+    if (traffic) traffic.update(dt,camera);
     // zone + interactables
     currentZone = phys.zoneAt(player.x, player.y + 0.1, player.z);
     // Keep the destination hash until the scheduled area reload reads it.
     if (!leaving) route.update(currentZone);
     areaWatch(currentZone); portalCheck(); pinUpdate();
-    if (reLive && (frames & 63) === 0) reLive.update(player.x, player.z);
+    reLive?.update(camera, performance.now());
     const zname = currentZone ? currentZone.name : (player.y < -2 ? '지하' : '거리');
-    hudZone.textContent = zname + (currentZone && currentZone.floor ? ` · ${currentZone.floor}` : '');
-    hudSub.textContent = currentZone ? currentZone.sub : '';
-    nearIt = null; let bd = Infinity;
-    for (const it of K._.interactables) { const d = Math.hypot(it.x - player.x, it.z - player.z); if (d < it.r && d < bd && (it.y == null || Math.abs(it.y - player.y) < 2.5)) { if (it.elevator && !it.elevator.floors.some(f => Math.abs(f.y - player.y) < 1.5)) continue; bd = d; nearIt = it; } }
-    hudPrompt.textContent = nearIt ? `E · ${nearIt.label}` : ''; hudPrompt.classList.toggle('show', !!nearIt);
+    updateText(hudZone, zname + (currentZone?.floor ? ` · ${currentZone.floor}` : ''));
+    updateText(hudSub, currentZone?.sub || '');
+    nearIt = null;
+    let closest = Infinity;
+    for (const it of K._.interactables) {
+      const dx = it.x - player.x, dz = it.z - player.z;
+      if (Math.abs(dx) >= it.r || Math.abs(dz) >= it.r) continue;
+      const distance = dx*dx + dz*dz;
+      if (distance >= it.r*it.r || distance >= closest || (it.y != null && Math.abs(it.y-player.y) >= 2.5)) continue;
+      if (it.elevator && !it.elevator.floors.some(f => Math.abs(f.y-player.y) < 1.5)) continue;
+      closest = distance; nearIt = it;
+    }
+    updateText(hudPrompt, nearIt ? `E · ${nearIt.label}` : '');
+    hudPrompt.classList.toggle('show', !!nearIt);
     $('btn-use').classList.toggle('show', !!nearIt);
     frames++; { const now = performance.now(); if (now - fpsT0 > 1000) { fps = frames * 1000 / (now - fpsT0); frames = 0; fpsT0 = now; adaptResolution(fps); } }
-    hudCoord.textContent = `x ${player.x.toFixed(0)}  z ${player.z.toFixed(0)}  높이 ${(player.y + relief(player.x, player.z)).toFixed(1)}m  ${player.fly ? '✈ ' : ''}${fps.toFixed(0)}fps${pixelRatio < Math.min(devicePixelRatio, 2) - 0.01 ? ` · 해상도 ${Math.round(pixelRatio / Math.min(devicePixelRatio, 2) * 100)}%` : ''}`;
+    updateText(hudCoord, `x ${player.x.toFixed(0)}  z ${player.z.toFixed(0)}  높이 ${(player.y + relief(player.x, player.z)).toFixed(1)}m  ${player.fly ? '✈ ' : ''}${fps.toFixed(0)}fps${pixelRatio < Math.min(devicePixelRatio, 2) - 0.01 ? ` · 해상도 ${Math.round(pixelRatio / Math.min(devicePixelRatio, 2) * 100)}%` : ''}`);
     map.update(dt);
     // lazy floor detail near the camera (bounded per frame); screenshots paint new sign text immediately
-    if (K._.ensureDetail(player.x, player.y + player.eye, player.z, 60, 40) && SHOT && K._.atlas.pending()) { K._.atlas.flushAll(); for (const p of K._.atlas.pages) p.t.needsUpdate = true; }
+    if (K._.ensureDetail(player.x, player.y + player.eye, player.z, SHOT ? 60 : 48, SHOT ? Infinity : 2, SHOT ? null : camera) && SHOT && K._.atlas.pending()) { K._.atlas.flushAll(); for (const p of K._.atlas.pages) p.t.needsUpdate = true; }
     K._.cull(player.x, player.y + player.eye, player.z);
-    // progressive sign painting (≈5 ms per frame); only the painted rectangles are uploaded (texSubImage2D)
-    if (signsGo && K._.atlas.pending()) uploadSignRects(K._.atlas.flush(5, player.x, player.z));
+    // Bound both canvas work and GPU uploads while walking.
+    if (signsGo && K._.atlas.pending()) uploadSignRects(K._.atlas.flush(1.5, player.x, player.z, 8));
     renderer.render(scene, camera);
     requestAnimationFrame(frame);
   }
-  $('loading').classList.add('hidden');
   if (SHOT || start) $('start').classList.add('hidden');
   // arrived by walking into this area (reload): no intro card again, just a hint to click back in
   let hopped = false; try { const h = JSON.parse(sessionStorage.getItem('areaHops') || '[]'); hopped = h.length && Date.now() - h[h.length - 1] < 30000; } catch (e) { }
@@ -597,10 +644,15 @@ async function boot() {
   const signFonts = fontsReady.then(() => { const txt = K._.atlas.chars(); return Promise.race([Promise.all(['400', '700'].map(w => document.fonts.load(`${w} 32px "Noto Sans KR"`, txt))), new Promise(r => setTimeout(r, 8000))]).catch(() => { }); }).then(() => mark('signFonts'));
   if (SHOT) { await signFonts; K._.atlas.flushAll(); for (const p of K._.atlas.pages) p.t.needsUpdate = true; }
   else signFonts.then(() => { signsGo = true; });
+  // First upload and draw the visible room under the arrival screen. The next
+  // presented frame is available for input without paying that upload cost.
+  if (!SHOT) {
+    renderer.render(scene,camera);
+    await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+  }
+  $('loading').classList.add('hidden');
   mark('ready');
-  // real-estate-map apartments stream in after the page is up (nearest first)
-  let reLive = null;
-  if (reModels.length) setTimeout(() => { reLive = loadReModels({ THREE, scene, models: reModels, stand: reStand, terrain: exteriorTerrain, from: { x: player.x, z: player.z }, onProgress: (d, n) => { if (d === n) toast(`주변 아파트 ${n}동 불러옴`); } }); }, SHOT ? 0 : 400);
+  const reLive = reModels.length ? loadReModels({THREE, scene, models:reModels, stand:reStand, renderer, terrain:exteriorTerrain}) : null;
   Object.assign(window.__world, { ready: true, area: AREA.id, wantedArea: () => wantedArea(phys.zoneAt(player.x, player.y + 0.1, player.z)), K, phys, player, camera, scene, renderer, map, places: placeInfo, stats: { ...K._.stats, phys: phys.stats, draw: () => renderer.info.render }, setNight, setTimeMode, daylight });
   frame();
 }

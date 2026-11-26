@@ -1,20 +1,32 @@
-// Keep exterior art in the normal city material/tile batches. Survey and
-// collision primitives use the original footprint in city.js.
+// A district uses detailed Blender exteriors around its occupied footprint.
+// The complete catalog is also the editing/diagnostic path used by Node and full-scene shots.
 const catalog = new URL('../assets/models/world/buildings.json.gz',import.meta.url);
-async function loadBuildings() {
-  if (catalog.protocol === 'file:') {
+const index = new URL('./building-tiles/index.json',catalog);
+
+async function readCatalog(url) {
+  if (url.protocol === 'file:') {
     const {readFile} = await import('node:fs/promises');
     const {gunzipSync} = await import('node:zlib');
-    return JSON.parse(gunzipSync(await readFile(catalog)).toString('utf8'));
+    return JSON.parse(gunzipSync(await readFile(url)).toString('utf8'));
   }
-  const result = await fetch(catalog);
-  if (!result.ok) throw new Error('Failed to load Blender exterior meshes ('+result.status+')');
+  const result = await fetch(url);
+  if (!result.ok) throw new Error('Exterior mesh request failed (' + result.status + ')');
   const bytes = new Uint8Array(await result.arrayBuffer());
   if (bytes[0] !== 0x1f || bytes[1] !== 0x8b) return JSON.parse(new TextDecoder().decode(bytes));
   const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
   return new Response(stream).json();
 }
-const buildings = await loadBuildings();
+
+let buildings = catalog.protocol === 'file:' ? await readCatalog(catalog) : {};
+export async function loadBuildingArea(bounds) {
+  if (!bounds) { buildings = await readCatalog(catalog); return; }
+  const response = await fetch(index);
+  if (!response.ok) throw new Error('Exterior mesh index failed (' + response.status + ')');
+  const {tiles, omit} = await response.json();
+  const nearby = tiles.filter(({bounds:b}) => b[0]<=bounds[2] && b[1]<=bounds[3] && b[2]>=bounds[0] && b[3]>=bounds[1]);
+  const chunks = await Promise.all(nearby.map(t => readCatalog(new URL(t.file,index))));
+  buildings = Object.assign(Object.fromEntries(omit.map(id=>[id,['omit']])), ...chunks);
+}
 const plainUV = [[0,0],[1,0],[0,1]];
 
 export function drawBlenderBuilding(K, building, tint, role='city') {

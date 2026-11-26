@@ -1,4 +1,4 @@
-import { visitors } from '../assets/models/visitors/geometry.js';
+import { visitorInstances } from './visitors.js';
 import { drawHardware } from '../assets/models/street-and-lift/draw.js';
 import { makeStep, drawStepRails } from '../assets/models/staircase/render.js';
 import { createEscalatorRenderer } from '../assets/models/escalator/render.js';
@@ -198,10 +198,21 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     }
     return true;
   }
+  // The area predicate is immutable for this page. Drop hidden faces before
+  // allocating positions, colours and UVs, using the same post-split centroid
+  // as the tile builder. Collision and zone registration are independent.
+  function outsideArea(p, ny) {
+    let x = 0, y = 0, z = 0;
+    for (const v of p) { x += v[0]; y += v[1]; z += v[2]; }
+    if (keep(current, x/p.length, y/p.length, z/p.length, ny)) return false;
+    stats.areaDropped = (stats.areaDropped || 0) + 1;
+    return true;
+  }
   // emit a quad. p: 4 points [x,y,z], n: intended normal, uvs: 4 [u,v]
   function quad(sp, p, n, uvs, split = true) {
     if (parkedPose) [p,n] = parkedPose(p,n);
     else if (split && splitTerrainFace(sp, p, n, uvs)) return;
+    if (keep && outsideArea(p, n[1])) return;
     const b = bucket(sp.key, p[0][0], p[0][2]);
     // winding check
     const ax = p[1][0] - p[0][0], ay = p[1][1] - p[0][1], az = p[1][2] - p[0][2];
@@ -221,6 +232,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
   function tri(sp, p, n, uvs, split = true) {
     if (parkedPose) [p,n] = parkedPose(p,n);
     else if (split && splitTerrainFace(sp, p, n, uvs)) return;
+    if (keep && outsideArea(p, n[1])) return;
     const b = bucket(sp.key, p[0][0], p[0][2]);
     const ax = p[1][0] - p[0][0], ay = p[1][1] - p[0][1], az = p[1][2] - p[0][2];
     const bx = p[2][0] - p[0][0], by = p[2][1] - p[0][1], bz = p[2][2] - p[0][2];
@@ -576,6 +588,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
   function zone(o) {
     let poly = o.poly; if (!poly && o.rect) { const [x0, z0, x1, z1] = o.rect; poly = [[x0, z0], [x1, z0], [x1, z1], [x0, z1]]; }
     const z = { name: o.name, sub: o.sub || '', floor: o.floor || '', poly, y0: o.y0 ?? -1, y1: o.y1 ?? 4, priority: o.priority || 0, place: o.place || current, color: o.color };
+    if (o.streetAccess === false) z.streetAccess = false;
     phys.addZone(z); zonesList.push(z); return z;
   }
   function spawn(o) { spawns.push({ group: o.group || perPlace[current]?.name || current, place: current, ...o }); }
@@ -621,7 +634,10 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
   }
   function groundHole(poly, inner) { phys.addGroundHole(poly, inner); groundHoles.push({ poly, inner }); }
   function onFrame(fn) { frameFns.push(fn); }
+  // Detail batches keep their normal scene parents so place animations retain control of visibility.
+  let detailObjects = null;
   function addMesh(mesh) {
+    detailObjects?.add(mesh);
     mesh.userData.owner ??= current;
     if (mesh.isPointLight) mesh.position.y += terrainAt(anchorHeight,mesh.position.x,mesh.position.z);
     scene.add(mesh);
@@ -651,6 +667,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
   }
   const cullList = [];
   function track(m, cell) {
+    detailObjects?.add(m);
     if (!m.geometry.boundingBox) m.geometry.computeBoundingBox();
     let bb = m.geometry.boundingBox;
     if (m.isInstancedMesh) {
@@ -675,8 +692,27 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
   let last = { x: 1e9, y: 1e9, z: 1e9, n: 0 }, under = false;
   // x, y, z = camera (eye) position. "Underground" means: eye below -1 m, a ceiling over the head and standing in a
   // zone of an indoor place — so stairs, open ramps and road underpasses never count.
-  const lodList = [];
+  const lodList = [], wheelBatches = [];
   function lodUpdate(x, z) {
+    // A car beside the player must not select full-detail wheels for an
+    // entire car park. Repack the two draws only when a car crosses its LOD.
+    for (const group of wheelBatches) {
+      const {near,far,source,vehicles,close} = group;
+      let changed = false;
+      for (let i=0;i<vehicles.length;i++) {
+        const car = vehicles[i], dx = car.x-x, dz = car.z-z;
+        const value = dx*dx+dz*dz < (close[i] === 1 ? 68 : 62)**2 ? 1 : 0;
+        if (close[i] !== value) { close[i] = value; changed = true; }
+      }
+      if (!changed) continue;
+      near.count = far.count = 0;
+      for (let i=0;i<vehicles.length;i++) {
+        const batch = close[i] ? near : far;
+        batch.instanceMatrix.array.set(source.subarray(64*i,64*(i+1)),16*batch.count);
+        batch.count += 4;
+      }
+      near.instanceMatrix.needsUpdate = far.instanceMatrix.needsUpdate = true;
+    }
     for (const m of lodList) {
       const bb = m.userData.bb || m.userData.lodBB || (m.userData.lodBB = (() => { const b = new THREE.Box3(), M = new THREE.Matrix4(), V = new THREE.Vector3(); for (let i = 0; i < m.count; i++) { m.getMatrixAt(i, M); b.expandByPoint(V.setFromMatrixPosition(M)); } return [b.min.x, b.min.z, b.max.x, b.max.z]; })());
       const dx = x < bb[0] ? bb[0] - x : x > bb[2] ? x - bb[2] : 0, dz = z < bb[1] ? bb[1] - z : z > bb[3] ? z - bb[3] : 0;
@@ -688,6 +724,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     if (!force && Math.abs(x - last.x) + Math.abs(y - last.y) + Math.abs(z - last.z) < 1.5 && ++last.n < 30) return;
     last = { x, y, z, n: 0 };
     lodUpdate(x, z);
+    updateDetailLayers(x, y, z);
     let u = false;
     if (y < -1) { const zn = phys.zoneAt(x, y - 1.5, z); u = !!zn && INDOOR.has(zn.place) && phys.ceilingAbove(x, z, y, y + 8) < Infinity; }
     under = u;
@@ -733,15 +770,14 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     const usedKeys = new Set(); for (const [, b] of buckets) if (!aLayers.has(b.key)) usedKeys.add(b.key);
     for (const [k, v] of buildTexArrays(usedKeys)) aLayers.set(k, v);
     // two passes: classify every primitive and count, then fill typed arrays directly (no big JS arrays)
-    const subs = new Map(), plan = []; let dropped = 0;
+    const subs = new Map(), plan = [];
     for (const [, b] of buckets) {
       if (!b.idx.length) continue;
-      const P = b.pos, N = b.nor, ar = aLayers.get(b.key) || null, which = new Array(b.prim.length);
+      const P = b.pos, ar = aLayers.get(b.key) || null, which = new Array(b.prim.length);
       let vo = 0, pi = 0;
       for (const nv of b.prim) {
         let cx = 0, cy = 0, cz = 0; for (let k = 0; k < nv; k++) { cx += P[(vo + k) * 3]; cy += P[(vo + k) * 3 + 1]; cz += P[(vo + k) * 3 + 2]; }
         cx /= nv; cy /= nv; cz /= nv;
-        if (keep && !keep(b.own[pi], cx, cy, cz, N[vo * 3 + 1])) { which[pi++] = null; vo += nv; dropped++; continue; }
         const cell = classify(cx, cy, cz, b.own[pi]);
         if (stats.byOwner) stats.byOwner[b.own[pi]] = (stats.byOwner[b.own[pi]] || 0) + (nv === 4 ? 2 : 1);
         const T2 = cell === 'o' ? TILE : CELL_TILE, mk = ar ? 'arr:' + ar.arr : b.key, sk = mk + '|' + cell + '|' + Math.floor(cx / T2) + ',' + Math.floor(cz / T2);
@@ -760,7 +796,6 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
       let vo = 0, io = 0, pi = 0;
       for (const nv of b.prim) {
         const s = which[pi++], ni = nv === 4 ? 6 : 3;
-        if (!s) { vo += nv; io += ni; continue; }
         const base = s.v, datum = b.anchors?.get(pi-1);
         for (let k = 0; k < nv; k++) {
           const v = vo + k, d = s.v++;
@@ -791,7 +826,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
         vo += nv; io += ni;
       }
     }
-    buckets.clear(); stats.areaDropped = (stats.areaDropped || 0) + dropped;
+    buckets.clear();
     const out = [];
     for (const [, s] of subs) {
       const g = new THREE.BufferGeometry();
@@ -819,10 +854,10 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
   }
   let treesDone = 0, peopleDone = 0, parkedDone = 0;
   // group instances by cell + tile so each group can be frustum-culled and cell-culled on its own
-  function groupBy(n, at) {
+  function groupBy(n, at, tile = TILE) {
     const groups = new Map();
     for (let i = 0; i < n; i++) {
-      const [x, y, z, owner] = at(i); const cell = classify(x, y + 0.9, z, owner), T2 = cell === 'o' ? TILE : CELL_TILE;
+      const [x, y, z, owner] = at(i); const cell = classify(x, y + 0.9, z, owner), T2 = cell === 'o' ? tile : Math.min(CELL_TILE, tile);
       const k = cell + '|' + Math.floor(x / T2) + ',' + Math.floor(z / T2); if (!groups.has(k)) groups.set(k, { cell, idx: [] }); groups.get(k).idx.push(i);
     }
     return [...groups.values()];
@@ -831,7 +866,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
   function pruneMeshes() {
     if (!keep) return;
     const M = new THREE.Matrix4(), V = new THREE.Vector3(), C = new THREE.Color();
-    for (const o of scene.children.slice()) {
+    for (const o of detailObjects || scene.children.slice()) {
       if (!o.userData.owner || o.userData.areaChecked || !(o.isMesh || o.isInstancedMesh || o.isGroup || o.isObject3D) || o.isLight || o.isCamera) continue;
       o.userData.areaChecked = true; o.updateMatrixWorld(true);
       const own = o.userData.owner;
@@ -849,7 +884,8 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
   }
   function splitModuleInstances() {
     const M = new THREE.Matrix4(), C = new THREE.Color();
-    for (const im of scene.children.filter(o => o.isInstancedMesh && o.count >= 64 && !o.userData.dynamic && !o.userData.split)) {
+    for (const im of detailObjects || scene.children.slice()) {
+      if (im.parent !== scene || !im.isInstancedMesh || im.count < 64 || im.userData.dynamic || im.userData.split) continue;
       const e = im.instanceMatrix.array;
       for (const g of groupBy(im.count, i => [e[i * 16 + 12], e[i * 16 + 13], e[i * 16 + 14], im.userData.owner])) {
         const nm = new THREE.InstancedMesh(im.geometry, im.material, g.idx.length);
@@ -903,6 +939,16 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
             mesh.computeBoundingSphere();
             scene.add(mesh);
             track(mesh, group.cell);
+            if (mesh === tires) {
+              const far = new THREE.InstancedMesh(mesh.userData.lod[1],mesh.material,mesh.count);
+              far.name = kind + ' distant wheels';
+              far.userData.parkedFleet = far.userData.split = true;
+              far.instanceMatrix.array.set(mesh.instanceMatrix.array);
+              scene.add(far);
+              track(far,group.cell);
+              far.count = 0;
+              wheelBatches.push({near:mesh,far,source:mesh.instanceMatrix.array.slice(),vehicles:list,close:new Uint8Array(list.length).fill(255)});
+            }
           }
         }
       }
@@ -921,54 +967,19 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
       }
     }
     if (people.length > peopleDone) {
-      // People: low-poly figures (legs, shoes, torso with arms, neck/head/hands, hair, some carry a shopping bag),
-      // built for a 1.7 m person and scaled per instance; standing and seated variants; each instance faces rotY.
-      const P = visitors;
-      const mats = personMats || (personMats = {
-        cloth: new THREE.MeshLambertMaterial({vertexColors:true}),
-        skin: new THREE.MeshLambertMaterial({vertexColors:true}),
-        shoe: new THREE.MeshLambertMaterial({color:0x232323,vertexColors:true})
-      });
-      const shirts = [0x2b3a55, 0xf2f2f2, 0x9b2c2c, 0x1d1d1d, 0xc9b28a, 0x4a6b3a, 0x7a5aa0, 0xe8a0a0, 0x3b6ea8, 0x6a6a6a, 0xd9cbb3, 0x8a3b4f, 0xf0e3c8, 0x2f5e5a];
-      const pants = [0x1e2430, 0x2b2b2b, 0x4a4a55, 0x22314f, 0x7a6a55, 0xc8bba4, 0x3a3a3a, 0x5d6b7a];
-      const skins = [0xe0b896, 0xd8ab84, 0xecc8a6, 0xc99a74, 0xe6bf9b];
-      const hairs = [0x15110e, 0x231a14, 0x3a2a1e, 0x1c1c1c, 0x5a4636, 0x8a8a86, 0x2a2420];
-      const bags = [0xf4efe6, 0xc8a15a, 0x1b1b1b, 0xd94c3d, 0x9fb7c9, 0xffffff];
-      const p0 = peopleDone; peopleDone = people.length;
-      for (const g of groupBy(people.length - p0, i => [people[p0 + i].x, people[p0 + i].y, people[p0 + i].z, people[p0 + i].place])) {
-        for (const sit of [false, true]) {
-          const idx = g.idx.filter(i => !!people[p0 + i].sit === sit); if (!idx.length) continue;
-          const n = idx.length, withBag = sit ? [] : idx.filter(i => ((p0 + i) * 2654435761 >>> 0) % 5 < 2);
-          const legs = new THREE.InstancedMesh(sit ? P.sitLegs : P.legs, mats.cloth, n), shoes = new THREE.InstancedMesh(sit ? P.sitShoes : P.shoes, mats.shoe, n);
-          const top = new THREE.InstancedMesh(sit ? P.sitTop : P.top, mats.cloth, n), skin = new THREE.InstancedMesh(sit ? P.sitSkin : P.skin, mats.skin, n), hair = new THREE.InstancedMesh(sit ? P.sitHair : P.hair, mats.cloth, n);
-          const bag = withBag.length ? new THREE.InstancedMesh(P.bag, mats.cloth, withBag.length) : null;
-          let bi = 0;
-          idx.forEach((pi0, i) => {
-            const pi = p0 + pi0, p = people[pi], k = p.h / 1.7, hx = (pi * 2654435761) >>> 0;
-            M.compose(V.set(p.x, p.y, p.z), Q.setFromAxisAngle(V2.set(0, 1, 0), p.rotY || 0), S.set(k, k, k));
-            for (const m of [legs, shoes, top, skin, hair]) m.setMatrixAt(i, M);
-            legs.setColorAt(i, C.setHex(p.pants ?? pants[hx % pants.length]));
-            top.setColorAt(i, C.setHex(p.shirt ?? shirts[(hx >>> 3) % shirts.length]));
-            skin.setColorAt(i, C.setHex(skins[(hx >>> 7) % skins.length]));
-            hair.setColorAt(i, C.setHex(hairs[(hx >>> 11) % hairs.length]));
-            if (bag && withBag.includes(pi0)) { bag.setMatrixAt(bi, M); bag.setColorAt(bi, C.setHex(bags[(hx >>> 5) % bags.length])); bi++; }
-          });
-          for (const mesh of [legs,shoes,top,skin,hair,bag]) {
-            if (!mesh) continue;
-            mesh.instanceMatrix.needsUpdate=true;
-            if (mesh.instanceColor) mesh.instanceColor.needsUpdate=true;
-            mesh.userData.lod=[mesh.geometry,P[mesh.geometry.name+'Far']];
-            mesh.userData.lodDistance=40;
-            scene.add(mesh);
-            track(mesh,g.cell);
-            lodList.push(mesh);
-          }
+      const start = peopleDone;
+      peopleDone = people.length;
+      for (const group of groupBy(peopleDone-start, i => {
+        const p = people[start+i]; return [p.x,p.y,p.z,p.place];
+      }, 96)) {
+        for (const mesh of visitorInstances(THREE,people,group.idx.map(i => start+i))) {
+          scene.add(mesh);
+          track(mesh,group.cell);
+          lodList.push(mesh);
         }
       }
     }
   }
-  let personMats = null;
-  const V2 = new THREE.Vector3();
 
   // ---------- lazy detail groups ----------
   // K.detail({floor, y0, y1, poly|rect}, fn): fn builds furnishing detail (stock, furniture, fixtures, signage,
@@ -984,26 +995,103 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
       const draw = fn;
       fn = kit => withTerrainSurface(datum,() => draw(kit));
     }
-    details.push({ owner: current, meta: perPlace[current], floor: o.floor || '', y0: o.y0 ?? -1e9, y1: o.y1 ?? 1e9, bb, fn, built: false, name: o.name || '' });
+    details.push({ poly, owner: current, meta: perPlace[current], floor: o.floor || '', y0: o.y0 ?? -1e9, y1: o.y1 ?? 1e9, bb, fn, built: false, name: o.name || '' });
   }
   function buildDetail(d) {
     if (d.built) return []; d.built = true;
     const prev = current; current = d.owner;
+    detailObjects = new Set();
     try { d.fn(K); } catch (e) { detailErrors.push(`${d.owner} ${d.floor}: ${e.message}`); console.error('detail', d.owner, d.floor, e); }
+    d.fn = null;
     current = prev;
-    return flush();
-  }
-  // build the groups the camera is close to (within reach metres horizontally, ±8 m vertically)
-  function ensureDetail(x, y, z, reach = 45, budgetMs = Infinity) {
-    const t0 = performance.now(); let n = 0;
-    for (const d of details) {
-      if (d.built || (keepDetail && !keepDetail(d))) continue;
-      const dx = x < d.bb[0] ? d.bb[0] - x : x > d.bb[2] ? x - d.bb[2] : 0, dz = z < d.bb[1] ? d.bb[1] - z : z > d.bb[3] ? z - d.bb[3] : 0;
-      if (Math.hypot(dx, dz) > reach || y < d.y0 - 8 || y > d.y1 + 8) continue;
-      buildDetail(d); n++;
-      if (performance.now() - t0 > budgetMs) break;
+    try {
+      const meshes = flush();
+      d.renderables = [];
+      for (const root of detailObjects) {
+        if (!root.parent) continue; // discarded by area pruning or replaced by a tiled instance batch
+        root.traverse(o => {
+          if ((o.isMesh || o.isSprite || o.isLine || o.isLight || o.isPoints) && o.layers.isEnabled(0)) d.renderables.push(o);
+        });
+      }
+      return meshes;
+    } finally {
+      detailObjects = null;
     }
-    if (n) cull(last.x, last.y, last.z, true);
+  }
+  function updateDetailLayers(x, y, z) {
+    for (const d of details) {
+      if (!d.renderables?.length) continue;
+      // Floors on either side of a hotel atrium remain visible through its void. A solid
+      // intervening slab can occlude furniture several storeys below or above the eye.
+      const dx = Math.max(0, d.bb[0] - x, x - d.bb[2]), dz = Math.max(0, d.bb[1] - z, z - d.bb[3]);
+      let hidden = false;
+      if (dx === 0 && dz === 0) {
+        if (y > d.y1 + 10) hidden = phys.ceilingAbove(x, z, d.y1 + .1, y) < Infinity;
+        else if (y < d.y0 - 10) hidden = phys.ceilingAbove(x, z, y, d.y0 - .1) < Infinity;
+      }
+      if (!!d.hidden === hidden) continue;
+      d.hidden = hidden;
+      for (const o of d.renderables) {
+        if (hidden) o.layers.disable(0);
+        else o.layers.enable(0);
+      }
+    }
+  }
+  const viewFrustum = new THREE.Frustum(), viewMatrix = new THREE.Matrix4(), viewBox = new THREE.Box3();
+  let waiting = [], lastView = null;
+  function visibleDetail(d, x, y, z, camera, distance, vertical) {
+    const [x0,z0,x1,z1] = d.bb;
+    const shift = camera.position.y - y;
+    // A little space around the view preloads a storefront as it turns into
+    // frame. Always prepare furniture directly beside the player for collision.
+    if (distance > 8*8 || vertical > 0) {
+      viewBox.min.set(x0-3, d.y0+shift-2, z0-3);
+      viewBox.max.set(x1+3, d.y1+shift+2, z1+3);
+      if (!viewFrustum.intersectsBox(viewBox)) return false;
+    }
+    if (vertical <= .25 || !d.poly) return true;
+    const targetY = y < d.y0 ? d.y0+.3 : Math.max(d.y0+.2,d.y1-1);
+    const cx = (x0+x1)/2, cz = (z0+z1)/2;
+    if (!phys.ceilingBlocksView(x,y,z,cx,targetY,cz)) return true;
+    for (const [px,pz] of d.poly) {
+      if (!phys.ceilingBlocksView(x,y,z,px*.92+cx*.08,targetY,pz*.92+cz*.08)) return true;
+    }
+    return false;
+  }
+  // Unrestricted callers (fixtures, stills and all-detail checks) use the
+  // geometry range alone. Interactive callers also supply their actual camera.
+  function ensureDetail(x, y, z, reach = 45, budgetMs = Infinity, camera = null) {
+    const t0 = performance.now();
+    const viewChanged = !camera || !lastView || lastView.count !== details.length ||
+      lastView.reach !== reach || Math.hypot(x-lastView.x,z-lastView.z) > 1.25 ||
+      Math.abs(y-lastView.y) > .35 || camera.quaternion.angleTo(lastView.direction) > .065 ||
+      camera.aspect !== lastView.aspect || camera.fov !== lastView.fov;
+    if (viewChanged) {
+      if (camera) {
+        camera.updateWorldMatrix(true,false);
+        viewFrustum.setFromProjectionMatrix(viewMatrix.multiplyMatrices(camera.projectionMatrix,camera.matrixWorldInverse));
+        lastView = {x,y,z,reach,count:details.length,direction:camera.quaternion.clone(),aspect:camera.aspect,fov:camera.fov};
+      } else lastView = null;
+      waiting = [];
+      for (const d of details) {
+        if (d.built || (keepDetail && !keepDetail(d))) continue;
+        const dx = Math.max(0, d.bb[0]-x, x-d.bb[2]), dz = Math.max(0, d.bb[1]-z, z-d.bb[3]);
+        const vertical = Math.max(0, d.y0-y, y-d.y1), distance = dx*dx + dz*dz;
+        if (distance > reach*reach || vertical > 8) continue;
+        if (camera && !visibleDetail(d,x,y,z,camera,distance,vertical)) continue;
+        waiting.push({d,vertical,distance});
+      }
+      // Pop from the end while preserving registration order for equal priorities.
+      waiting.reverse().sort((a,b) => b.vertical-a.vertical || b.distance-a.distance);
+    }
+    let n = 0;
+    while (waiting.length) {
+      const {d} = waiting.pop();
+      if (d.built) continue;
+      buildDetail(d); n++;
+      if (performance.now() - t0 >= budgetMs) break;
+    }
+    if (n) cull(x,y,z,true);
     return n;
   }
   function buildAllDetail() { for (const d of details) if (!keepDetail || keepDetail(d)) buildDetail(d); }

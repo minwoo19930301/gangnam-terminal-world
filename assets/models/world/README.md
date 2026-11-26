@@ -2,7 +2,7 @@
 
 [통합 원본 gangnam-terminal.blend](gangnam-terminal.blend)를 열면 반포에서 잠원한강공원까지의 건물·도로·가로수·수변 외관을 미터 단위로 편집할 수 있습니다. 상단 Scene 선택기에서 **시설 · 모델 라이브러리**로 전환하면 장소별 건축과 매장 집기, 차량, 방문객, 계단·승강기 부품을 볼 수 있습니다. 시설 원본은 같은 저장소의 상대 경로로 연결됩니다. 파일을 다른 컴퓨터로 옮길 때는 저장소의 폴더 구조를 함께 유지해 주세요.
 
-[도시 전경](preview.jpg) · [아침·낮·노을·밤](daylight.jpg) · [반포대교·잠수교와 세빛섬](river-landmarks.jpg)
+[도시 전경](preview.jpg) · [아침·낮·노을·밤](daylight.jpg) · [게임의 실내외 야간 조명](night-interiors.jpg) · [반포대교·잠수교와 세빛섬](river-landmarks.jpg)
 
 ## Blender 편집을 게임에 반영하기
 
@@ -21,6 +21,8 @@ blender --factory-startup -b assets/models/world/gangnam-terminal.blend --python
 npm run serve -- 8765
 ```
 
+내보내기는 전체 외관 파일 `buildings.json.gz`와 구역별 `building-tiles/`를 함께 갱신합니다. 일반 게임 주소에서는 현재 구역 주변의 파일만 읽습니다.
+
 건물 원본의 색상 재질은 웹에 RGB로 내보냅니다. 파사드 이미지 재질은 `game_texture`에 등록한 게임 재질과 활성 UV를 사용합니다. 거리 조형물은 설치 전 모델과 배치가 분리되어 있습니다. 표고·도로의 편집 격자와 선형은 웹에서 지형과 포장을 재생성하는 입력입니다. Blender의 포장·녹지 표시 메시도 다시 계산하려면 편집한 통합 파일의 복사본을 보관한 후 아래의 전체 재생성을 사용하세요.
 
 ### 실내 마감과 집기
@@ -29,6 +31,9 @@ npm run serve -- 8765
 
 | 선반 | 게임에 반영되는 부분 |
 | --- | --- |
+| [JW 8층 라운지 · 라탄 암체어](../lounge-chair/lounge-chair.blend) | 근접 시에 보이는 등받이 짜임, 팔걸이와 방석 마감 |
+| [신세계 7층 골프 진열](../shinsegae/upper-floor-displays.blend) | 퍼터 비교 진열대의 몸체와 네 가지 클럽 헤드 |
+| [신세계 북측 외벽 간판](../shinsegae-facade/README.md) | 백화점 북측 입구의 채널 문자, 간판 바탕과 테두리 |
 | [공용 실내 · 흡음 천장패널](../shared-ceiling/README.md) | 시설 모듈이 공통으로 사용하는 흡음판, 확산 렌즈, 환기 그릴의 모양과 반복 간격 |
 | [뉴코아 층판·바닥 마감](../newcore-floor/README.md) | 1·2관 B1~5F와 3관 1F의 포세린·헤링본·연마석, 반복 간격과 층판 두께 |
 | [신세계 상층 천장 마감](../upper-retail-finish/README.md) | 상층 공용부 매입 조명, 8층 격자 천장과 선형 조명 |

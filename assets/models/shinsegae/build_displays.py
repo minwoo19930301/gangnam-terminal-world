@@ -197,6 +197,42 @@ for z in [.68,1.27]:
     for x in [-.85,.85]:
         rod('Transverse support',(x,-.23,z-.018),(x,.23,z-.018),.021,STEEL)
 
+# Stand inside the existing department-store golf shop. The arrangement and hardware
+# are representative; different blade and mallet profiles read from the aisle.
+start('putterRail', '7F · Putter comparison rack')
+block('Honed plinth', (0,0,.075), (1.48,.57,.15),0x333838)
+block('Inset oak tray', (0,-.025,.155),(1.43,.49,.034),0xbda384)
+block('Putting felt', (0,-.05,.178),(1.37,.39,.018),0x557269)
+for x in [-.664,.664]:
+    rod('Steel rack upright',(x,.174,.151),(x,.174,.975),.024,0x4e5a5d,8)
+    block('Rubber foot',(x,.174,.164),(.094,.086,.027),0x272e31)
+block('Upper rail', (0,.171,.96),(1.39,.078,.056),0xa89a83)
+for i,x in enumerate([-.498,-.17,.164,.496]):
+    # Each club has a stepped hosel, brushed shaft, dark rubber grip and coloured end plug.
+    hx=x-.04
+    rod('Grip cradle left',(hx,.137,.966),(hx,.083,.991),.01,DARK,6)
+    rod('Grip cradle right',(hx+.075,.137,.966),(hx+.075,.083,.991),.01,DARK,6)
+    rod('Offset hosel',(hx,-.105,.214),(hx-.021,-.095,.271),.01,STEEL,7)
+    rod('Bent neck',(hx-.021,-.095,.271),(x-.024,-.071,.306),.009,STEEL,7)
+    rod('Stepped steel shaft',(x-.024,-.071,.306),(x,.090,.883),.0072,STEEL,7)
+    rod('Graphite grip',(x,.090,.883),(x+.01,.145,1.088),.014,0x353b3d,9,.017)
+    rod('Grip end cap',(x+.01,.144,1.084),(x+.01,.145,1.092),.017,[0xb97951,0xaab7a3,0xc4cdd2,0xb3846e][i],9)
+    if i<2:
+        outline=[(-.075,-.033),(.073,-.033),(.08,-.02),(.071,.026),(.043,.035),(.036,.009),(-.039,.009),(-.047,.030),(-.072,.023)]
+        finish=0xb0b4b2 if i==0 else 0xad8165
+    else:
+        outline=[(-.076,-.035),(.076,-.035),(.078,.025),(.062,.084),(.034,.084),(.022,.033),(-.021,.033),(-.034,.084),(-.064,.081),(-.078,.024)]
+        finish=0x475154 if i==2 else 0x686d70
+    def head_row(z, scale):
+        return [(x+a*scale,-.117+b*scale,z) for a,b in outline]
+    shell('Heel-toe blade' if i<2 else 'Twin-wing mallet',
+          [head_row(.188,.92),head_row(.196,1),head_row(.22,1),head_row(.226,.92)],finish)
+    block('Milled face insert',(x,-.151,.207),(.123,.004,.017),0x50595b if i<2 else 0xc4c5bd)
+    block('Alignment mark',(x,-.119,.227),(.003,.027,.002),BONE)
+    if i>=2:
+        for side in [-1,1]:
+            block('Wing sightline',(x+.053*side,-.069,.227),(.003,.054,.002),BONE)
+
 # Preserve the named, selectable parts in Blender. Bake only the evaluated mesh for the game.
 bpy.context.view_layer.update()
 for obj in bpy.context.selected_objects: obj.select_set(False)

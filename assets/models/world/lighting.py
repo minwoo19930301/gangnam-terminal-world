@@ -4,6 +4,43 @@ from mathutils import Vector
 import bpy
 
 
+LAMP_MATERIAL = "서울 가로등 · 하향 발광"
+
+
+def lamp_material():
+    material = bpy.data.materials.get(LAMP_MATERIAL)
+    if material is None:
+        material = bpy.data.materials.new(LAMP_MATERIAL)
+        material.use_nodes = True
+        shader = material.node_tree.nodes.get("Principled BSDF")
+        shader.inputs["Base Color"].default_value = (.68, .74, .76, 1)
+        shader.inputs["Emission Color"].default_value = (1, .81, .60, 1)
+    return material
+
+
+def shade_street_lenses(scene):
+    # Realize only the linked lens, before instancing the complete luminaire.
+    # A moved placement point carries the emitting surface and its pool of light.
+    for obj in scene.objects:
+        if obj.get("street_layout_kind") != "roadLamp":
+            continue
+        tree = next(mod.node_group for mod in obj.modifiers if mod.type == "NODES")
+        if tree.nodes.get(LAMP_MATERIAL):
+            continue
+        lens = next(node for node in tree.nodes if node.type == "COLLECTION_INFO"
+                    and node.inputs["Collection"].default_value.get("model") == "roadLampLens")
+        outgoing, = list(lens.outputs["Instances"].links)
+        target = outgoing.to_socket
+        tree.links.remove(outgoing)
+        realize = tree.nodes.new("GeometryNodeRealizeInstances")
+        assign = tree.nodes.new("GeometryNodeSetMaterial")
+        assign.name = LAMP_MATERIAL
+        assign.inputs["Material"].default_value = lamp_material()
+        tree.links.new(lens.outputs["Instances"], realize.inputs["Geometry"])
+        tree.links.new(realize.outputs["Geometry"], assign.inputs["Geometry"])
+        tree.links.new(assign.outputs["Geometry"], target)
+
+
 def apply_sky(scene, model):
     sun = scene.objects["서울 태양"]
     world = scene.world
@@ -22,6 +59,7 @@ def apply_sky(scene, model):
         for m in bpy.data.materials
         if not m.library and m.use_nodes
     ]
+    emission = lamp_material().node_tree.nodes.get("Principled BSDF").inputs["Emission Strength"]
     prior = None
     for minute, direction, color, energy, sky, fill in model["keys"]:
         x, up, south = direction
@@ -38,6 +76,8 @@ def apply_sky(scene, model):
                     max(0, min(1, (-up + 0.07) / 0.13)) * 0.78
                 )
                 node.outputs[0].keyframe_insert("default_value", frame=minute)
+        emission.default_value = 105 * max(0, min(1, (-up + .015) / .10))
+        emission.keyframe_insert("default_value", frame=minute)
         sun.data.color = color
         sun.data.energy = energy * 2.3
         sun.data.keyframe_insert("color", frame=minute)

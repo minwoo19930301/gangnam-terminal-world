@@ -342,12 +342,14 @@ bpy.context.preferences.filepaths.save_version = 0
 target = str(here / "gangnam-terminal.blend")
 bpy.ops.wm.save_as_mainfile(filepath=target, compress=True)
 runpy.run_path(str(here / "libraries.py"))["link_asset_gallery"](here)
+runpy.run_path(str(here.parent / "shinsegae-facade/mount.py"))["mount_signs"](scene)
 runpy.run_path(str(here / "river-landmarks.py"))["build_river_landmarks"](
     scene, seed, here
 )
 runpy.run_path(str(here / "street-layout.py"))["build_street_layout"](
     scene, seed_dir, here
 )
+runpy.run_path(str(here / "lighting.py"))["shade_street_lenses"](scene)
 # Packed bytes travel with the master. A future unpack uses project-local names.
 for image in bpy.data.images:
     if image.library is None and image.packed_file:

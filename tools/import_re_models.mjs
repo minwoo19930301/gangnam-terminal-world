@@ -3,6 +3,7 @@
 // simplification) into assets/re/, and writes js/places/_re_models.json with world placement, footprint and the OSM
 // buildings each model replaces (the generic city skips those; their outlines still block walking).
 // usage: NODE_PATH=<dir with @gltf-transform/*, meshoptimizer> node tools/import_re_models.mjs <path to seoul-real-estate-map> [--jobs 6]
+import { addEstateSilhouettes } from './estate_silhouettes.mjs';
 import fs from 'node:fs'; import path from 'node:path'; import url from 'node:url'; import { createRequire } from 'node:module';
 const ROOT = path.resolve(path.dirname(url.fileURLToPath(import.meta.url)), '..');
 const SRC = process.argv[2]; if (!SRC) { console.error('usage: node tools/import_re_models.mjs <seoul-real-estate-map dir>'); process.exit(1); }
@@ -71,6 +72,7 @@ for (const r of records) if (!final.includes(r)) { try { fs.unlinkSync(path.join
 // one OSM building is replaced by at most one model
 for (const r of final) r.claims = r.claims.filter(id => !taken.has(id) && taken.add(id));
 final.sort((p, q) => p.id.localeCompare(q.id));
+await addEstateSilhouettes(final, ROOT);
 fs.writeFileSync(path.join(ROOT, 'js/places/_re_models.json'), JSON.stringify({ source: 'github.com/minwoo19930301/seoul-real-estate-map (bespoke-manifest.json, manifest.json)', note: 'Original GLBs for sourceMaterial entries; other copies compressed with meshopt. Placement from the source manifests.', models: final }));
 const MB = final.reduce((s, r) => s + r.bytes, 0) / 1e6;
 console.log(`models ${final.length} (bespoke ${final.filter(r => r.kind === 'bespoke').length}, generic ${final.filter(r => r.kind === 'generic').length}), ${MB.toFixed(1)} MB, OSM buildings replaced ${final.reduce((s, r) => s + r.claims.length, 0)}`);
