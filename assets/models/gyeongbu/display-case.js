@@ -8,7 +8,7 @@ function displayObject(mesh, source) {
 }
 
 // Each counter keeps its own cached mesh library. The coarse body is the visibility probe.
-export function displayCase({url,name,width,height,depth,baseColor,bodyName,lightName,enter=10,leave=14,visibleBounds}){
+export function displayCase({url,name,width,height,depth,baseColor,bodyName,lightName,enter=10,leave=14,visibleBounds,proxy}){
   let library,loading,retryAt=0;
   function request(){
     if(library || loading || performance.now()<retryAt)return;
@@ -20,12 +20,14 @@ export function displayCase({url,name,width,height,depth,baseColor,bodyName,ligh
       library={body,glass,light};
     }).catch(()=>{retryAt=performance.now()+10000;}).finally(()=>{loading=null;});
   }
-  return function place(K,x,z,angle){
+  return function place(K,x,z,angle,floorY){
     const T=K.THREE,stand=new T.Group();
     stand.name=name;
-    stand.position.set(x,0,z);stand.rotation.y=angle;
-    const coarse=new T.BoxGeometry(width,height,depth).translate(0,height/2,0);
-    const base=new T.MeshLambertMaterial({color:baseColor});
+    const ground=relief(x,z),floor=ground+(floorY??0);
+    stand.position.set(x,floorY===undefined?0:floor,z);stand.rotation.y=angle;
+    if(floorY!==undefined)stand.userData.terrainApplied=true;
+    const coarse=proxy?proxy(T):new T.BoxGeometry(width,height,depth).translate(0,height/2,0);
+    const base=new T.MeshLambertMaterial({color:baseColor,vertexColors:coarse.hasAttribute('color')});
     const painted=new T.MeshLambertMaterial({vertexColors:true,side:T.DoubleSide});
     const glass=new T.MeshPhongMaterial({color:0xcbdde0,transparent:true,opacity:.075,depthWrite:false,
       side:T.DoubleSide,specular:0xffffff,shininess:80});
@@ -38,7 +40,6 @@ export function displayCase({url,name,width,height,depth,baseColor,bodyName,ligh
       displayLight.matrixAutoUpdate=false;displayLight.visible=false;
       stand.add(displayLight);
     }
-    const floor=relief(x,z);
     // A long, shallow bank can surround the eye with its bounding sphere even when it is behind the visitor.
     let bounds,frustum,projection;
     if(visibleBounds){

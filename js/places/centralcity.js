@@ -2,6 +2,7 @@ import {terminalOrigin,terminalRotation as R,terminalPoint as P,sweetParkLocal a
 import {transverseFloor} from '../../assets/models/megabox-central/layout.js';
 import {publicFloorOpening,court,westApron} from '../../assets/models/cinema-rotary/layout.js';
 import {arcadePiers} from '../../assets/models/sweet-arcade/model.js';
+import {marcoliniShop} from '../../assets/models/sweet-marcolini/model.js';
 import {arabicaFront} from '../../assets/models/sweet-arabica/model.js';
 import {chefStageSigns} from '../../assets/models/sweet-chefs-stage/model.js';
 import {marketWestReturn, cinemaAisleMouth} from './shinsegae-b1-plan.js';
@@ -1679,8 +1680,15 @@ export function build(K) {
       }
     }
   };
+  const [chocolateX,chocolateZ]=BP(1078,747);
+  const drawChocolatier=marcoliniShop(K,chocolateX,YB1,chocolateZ,R);
   const spCell=(cell,index)=>{
     if(cell.name==='파이브가이즈'){fiveGuys(cell);return;}
+    if(cell.name==='피에르 마르콜리니'){
+      spArchFront(cell);
+      drawChocolatier();
+      return;
+    }
     const r=cell.rect_display,[x0,y0,x1,y1]=r,[s0,t0,s1,t1]=spBounds(r),front=cell.front,face={N:'E',S:'W',E:'S',W:'N'}[front];
     const retail=['beauty','accessory'].includes(cell.kind),west=x0===1032&&y0>=540&&y1<=777;
     const i=3,depth=Math.min(11,(y1-y0)*.45),sideDepth=Math.min(11,(x1-x0)*.45);
