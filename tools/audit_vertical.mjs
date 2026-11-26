@@ -23,9 +23,11 @@ const phys = createPhysics();
 const kit = createKit(THREE, new THREE.Scene(), { osm, phys });
 kit.onNight = () => {};
 const counts = new Map(), issues = [], inclines = [], stairs = [], rides = [];
+const steppedSupports = new WeakSet();
 const registerRamp = phys.addRamp;
 phys.addRamp = (...args) => {
   const support = registerRamp(...args);
+  if (args.at(-1)?.steps) steppedSupports.add(support);
   inclines.push(support);
   return support;
 };
@@ -95,7 +97,7 @@ for (const support of inclines) {
   const forward = support.ux * support.move[0] + support.uz * support.move[1];
   const place = support.tag ?? 'unattributed';
   rides.push({ place, support, down: forward * (support.yb - support.ya) < 0 });
-  if (counts.has(place)) counts.get(place).movingWalks++;
+  if (counts.has(place)) counts.get(place)[steppedSupports.has(support) ? 'escalators' : 'movingWalks']++;
 }
 
 function pointOn(s, fraction) {
