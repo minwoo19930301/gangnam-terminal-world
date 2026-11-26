@@ -1,5 +1,7 @@
-"""Export this saved .blend using the project's collection/vertex-colour exporter."""
+"""Export the editable native collection library and the individual floor downloads."""
 from pathlib import Path
 import runpy
-
-runpy.run_path(str(Path(__file__).resolve().parents[1] / "architectural-retail" / "export.py"))
+import subprocess
+here=Path(__file__).resolve().parent
+runpy.run_path(str(here.parent/'architectural-retail'/'export.py'))
+subprocess.run(['node',str(here/'split.mjs')],check=True)

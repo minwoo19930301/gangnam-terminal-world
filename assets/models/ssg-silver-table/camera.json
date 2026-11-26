@@ -1,0 +1,11 @@
+{
+  "floor": "9F",
+  "x": -59.556023,
+  "z": 38.990373,
+  "yaw": 121.98687,
+  "pitch": -23,
+  "meshName": "ChristofleMoodSilver",
+  "sourceBlend": "mood.blend",
+  "sourceCollection": "SSG_9F_Christofle",
+  "nativeLabel": "크리스토플"
+}

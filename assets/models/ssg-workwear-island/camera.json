@@ -1,0 +1,11 @@
+{
+  "floor": "7F",
+  "x": -45.16077,
+  "z": 61.92857,
+  "yaw": 95.3199,
+  "pitch": -12.0,
+  "meshName": "RoughSideGangnamTailoring",
+  "sourceBlend": "gallery.blend",
+  "sourceCollection": "SSG_7F_ROUGH_SIDE",
+  "nativeLabel": "러프사이드"
+}

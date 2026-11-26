@@ -5,6 +5,7 @@ import { createKit } from '../js/kit.js';
 import { createPhysics } from '../js/physics.js';
 import { relief } from '../js/banpo_relief.js';
 import { createTraffic } from '../js/city.js';
+import { createDeckVisibility } from '../js/deck-visibility.js';
 import { vehicleContacts } from '../js/fleet.js';
 
 function near(actual, expected, label, tolerance = 1e-4) {
@@ -57,7 +58,8 @@ const asphalt=(x,z) => relief(x,z)+.12+.06*(x-x0)*Math.sin((z-z0)/7);
 roads.withHeightOffset((x,z)=>asphalt(x,z)-relief(x,z),()=>{
   for (const level of [0,5]) roads.addRamp(x0,z0,x0,z1,4,level,level,{tag:'road'});
 });
-const traffic=createTraffic({THREE,phys:roads,scene:trafficScene,rand:()=>()=>.4}, {
+const deck = createDeckVisibility();
+const traffic=createTraffic({THREE,phys:roads,scene:trafficScene,rand:()=>()=>.4,_:{deckVisibility:deck}}, {
   roads:[{pts:[[x0,z0],[x0,z1]],hw:'primary',width:4,lanes:1,oneway:true}]
 },1);
 const wheels=trafficScene.children.find(m=>m.isInstancedMesh && m.count===4);
@@ -93,7 +95,19 @@ traffic.update(0,camera);
 assert.equal(wheels.count,4,'return to original wheels close up');
 assert.deepEqual(wheels.instanceMatrix.array,referenceWheels.instanceMatrix.array);
 assert.deepEqual(trafficScene.children[0].instanceColor.array,referenceScene.children[0].instanceColor.array);
-console.log('Rendered parked tyres, chassis collision and 160 moving wheel contacts passed.');
+// Stand in a basement below the traffic. A bus/car can be longer than the
+// distance to the slab, so use the actual tilted body and tyre contact heights.
+const slabY = center.y-2;
+deck.register({poly:[[x0-35,z0-30],[x0+35,z0-30],[x0+35,z1+30],[x0-35,z1+30]],
+  y:slabY, eyeMin:slabY-5, eyeMax:slabY-.2});
+camera.position.copy(center).add(new THREE.Vector3(4,-4,0));camera.lookAt(center);
+traffic.update(.2,camera);reference.update(.2);
+assert.ok(trafficScene.children.every(mesh=>mesh.count===0),'car behind the opaque ceiling');
+camera.position.copy(center).add(new THREE.Vector3(12,3,0));camera.lookAt(center);
+traffic.update(0,camera);
+assert.equal(wheels.count,4,'all four wheels return when rising above the slab');
+assert.deepEqual(wheels.instanceMatrix.array,referenceWheels.instanceMatrix.array,'occluded car kept driving');
+console.log('Rendered parked tyres, chassis collision, moving wheel contacts and traffic under an opaque slab passed.');
 
 // Entering a new detail cell finalizes geometry again during normal play.
 // Large fleets must keep the original matrices that their animator updates.

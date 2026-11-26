@@ -1,0 +1,11 @@
+{
+  "floor": "6F",
+  "x": -54.45,
+  "z": 90.32,
+  "yaw": -176,
+  "pitch": -18,
+  "meshName": "TumiGangnamWovenNylon",
+  "sourceBlend": "gallery.blend",
+  "sourceCollection": "SSG_6F_TUMI",
+  "nativeLabel": "투미"
+}
