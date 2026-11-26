@@ -10,6 +10,7 @@ import { registerStokke } from './shinsegae-stokke.js';
 import { registerHaoSum } from './shinsegae-haosum.js';
 import { registerMiele } from './shinsegae-miele.js';
 import { registerBaccarat } from './shinsegae-baccarat.js';
+import { registerAudio } from './shinsegae-audio.js';
 import { registerMarzocco } from './shinsegae-marzocco.js';
 import { mounts as facadeMounts } from '../../assets/models/shinsegae-facade/mounts.js';
 import { loadArchitecture, fitArchitecture, fitTerminalSeat as drawFacadeSign } from '../../assets/models/architectural-retail/place.js';
@@ -7929,6 +7930,14 @@ export function build(K) {
         K.box({x:tx-back*Math.sin(angle),y,z:tz-back*Math.cos(angle),w:width,d:depth,h:height,
           rotY:angle,mat:0xb57a4b,skip:['top','bottom','n','s','e','w']});
       }
+      const audio=guide.cells.find(c=>c.name.startsWith('드비알레/'));
+      const audioRoom=upperBuildRect(id,audio);
+      const audioU=audioRoom[0]+1.991, audioV=(audioRoom[1]+audioRoom[3])/2;
+      const [audioX,audioZ]=P(audioU,audioV), [audioRX,audioRZ]=P(audioU,audioV-1);
+      const audioYaw=Math.atan2(audioZ-audioRZ,audioRX-audioX);
+      registerAudio(K,{poly:rect(...audioRoom),x:audioX,y,z:audioZ,yaw:audioYaw});
+      K.box({x:audioX,y,z:audioZ,w:2.34,h:.95,d:.83,rotY:audioYaw,mat:0x795235,
+        skip:['top','bottom','n','s','e','w']});
       const shop=guide.cells.find(c=>c.name==='라마르조코');
       const [west,north,east,south]=upperBuildRect(id,shop);
       const u=west+.80, v=(north+south)/2, [x,z]=P(u,v);
@@ -9271,7 +9280,7 @@ export function build(K) {
     if(id==='6F' && name==='브루넬로 쿠치넬리')return;
     if(id==='8F' && name==='아크테릭스')return;
     if(id==='10F' && (name==='스토케'||name==='토박스'||name==='아뜰리에 슈'))return;
-    if(id==='9F' && (name==='몰테니&C'||name==='라잇나우'||name==='라마르조코'||name==='TWL'||name==='허먼 밀러'||name==='바카라'||name==='밀레'))return; // Dedicated room detail owns the presentation island.
+    if(id==='9F' && (name.startsWith('드비알레/')||name==='몰테니&C'||name==='라잇나우'||name==='라마르조코'||name==='TWL'||name==='허먼 밀러'||name==='바카라'||name==='밀레'))return; // Dedicated room detail owns the presentation island.
     if(W<1.05||(D<1.05&&!(id==='4F'&&name==='금강'&&D>=.45)))return;
     // The other 5F DAKS guide cell is a handbag concession, not womenswear.
     const daksWoman=id==='5F'&&name==='닥스 숙녀'&&kind==='fashion';
@@ -17006,7 +17015,7 @@ export const upperGuidePlans = {};
   c('TWL',1208,683,1307,761,'W','kitchen');c('Tea Note',1308,683,1397,722,'E','kitchen');c('팝업',1308,723,1397,761,'E','popup');
   c('리델',1426,582,1489,670,'W','kitchen');c('키친툴',1426,671,1489,738,'W','kitchen');c('WMF',1490,582,1554,687,'E','kitchen');c('팝업',1490,688,1554,738,'E','popup');c('알레시',1426,749,1532,775,'N','kitchen');
   c('마이도',1603,543,1729,594,'W','kitchen');c('휘슬러',1603,595,1729,638,'W','kitchen');c('즈윌링',1603,639,1729,682,'W','kitchen');c('모비엘',1603,683,1729,725,'W','kitchen');c('캐논/소니',1548,777,1607,822,'N','elec');
-  c('드비알레/보스/세라자데/제네바',1056,823,1180,900,'E','elec');c('포칼',1056,901,1180,933,'E','elec');c('다이슨',1056,934,1180,998,'E','elec');
+  c('드비알레/보스/셰에라자드/제네바',1056,823,1180,900,'E','elec');c('포칼',1056,901,1180,933,'E','elec');c('다이슨',1056,934,1180,998,'E','elec');
   r([1208,1308,1406],823,858,'유라|라마르조코','N','elec');r([1208,1308,1406],859,898,'드롱기|브레빌','N','elec');r([1208,1272,1338,1406],910,975,'로라스타|샤크 닌자|로보락','N','elec');
   c('가게나우/스메그',1425,823,1532,850,'N','elec');r([1436,1491,1548],882,927,'미닉스|루메나','N','elec');r([1436,1491,1548],928,975,'발뮤다|린나이','N','elec');
   c('크렌즈 갤러리',1651,803,1729,863,'W','home');c('디트리쉬/리페르',1578,863,1649,941,'W','elec');c('밀레',1578,942,1649,998,'W','elec');r([1056,1353,1649],999,1112,'LG|삼성','N','elec');
