@@ -53,36 +53,21 @@ function boxProxy(T,kind){
 // shared transparent material uses the viewing direction and original Blender
 // facet normals. It adds one instanced pass only for the packages at hand.
 function coldCaseLid(T){
-  return new T.ShaderMaterial({
-    transparent:true,depthWrite:false,
-    vertexShader:`
-      varying vec3 wPosition;
-      varying vec3 wNormal;
-      void main(){
-        mat4 placement=modelMatrix*instanceMatrix;
-        vec4 point=placement*vec4(position,1.);
-        wPosition=point.xyz;
-        wNormal=normalize(mat3(placement)*normal);
-        gl_Position=projectionMatrix*viewMatrix*point;
-      }`,
-    fragmentShader:`
-      varying vec3 wPosition;
-      varying vec3 wNormal;
-      void main(){
-        vec3 normal=normalize(wNormal);
-        vec3 eye=normalize(cameraPosition-wPosition);
-        vec3 reflected=reflect(-eye,normal);
-        // Parallel lights run along the longer axis of the supermarket.
-        vec2 dir=vec2(.390546,.920583);
-        float crossA=dot(reflected.xz,dir);
-        float strip=1.-smoothstep(.015,.065,abs(crossA-.24));
-        float rim=pow(1.-max(dot(eye,normal),0.),3.);
-        float overhead=smoothstep(.03,.55,reflected.y);
-        gl_FragColor=vec4(.97,.955,.88,.024+.27*strip*overhead+.14*rim);
-        #include <tonemapping_fragment>
-        #include <colorspace_fragment>
-      }`,
-  });
+  const material=new T.MeshPhongMaterial({transparent:true,opacity:.12,depthWrite:false});
+  // Keep the native Three.js vertex program. The city terrain pass offsets each
+  // instance there, so the lid follows its food at every shelf location.
+  material.onBeforeCompile=shader=>{
+    shader.fragmentShader=shader.fragmentShader.replace('#include <opaque_fragment>',`
+      vec3 reflected=inverseTransformDirection(reflect(-normalize(vViewPosition),normal),viewMatrix);
+      float crossA=dot(reflected.xz,vec2(.390546,.920583));
+      float strip=1.-smoothstep(.015,.065,abs(crossA-.24));
+      float rim=pow(1.-max(dot(normalize(vViewPosition),normal),0.),3.);
+      float overhead=smoothstep(.03,.55,reflected.y);
+      diffuseColor.a=.024+.27*strip*overhead+.14*rim;
+      outgoingLight=vec3(.97,.955,.88);
+      #include <opaque_fragment>`);
+  };
+  return material;
 }
 
 const cache=new Map();

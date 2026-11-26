@@ -60,7 +60,13 @@ try{
         if(o.name==='킴스클럽 델리 · '+label+' · 가까운 식품 표면'&&o.count>0&&o.geometry.index.count>600&&o.material.map)visible=true;
       });return visible;
     },name);
+    const matchingLids=await page.evaluate(name=>{
+      let count=0;__world.scene.traverse(o=>{
+        if(o.name==='킴스클럽 델리 · '+name+' · 투명 덮개'&&o.material.isMeshPhongMaterial&&o.parent.visible&&o.visible)count+=o.count;
+      });return count;
+    },name);
     const count=await near(page,name);
+    assert.equal(matchingLids,count.close);
     assert.ok(count.close>0&&count.close<=count.capacity,JSON.stringify(count));
     if(!inspected.length)assert.deepEqual(seen.filter(e=>/^(fried|sushi|maki|salad)\.glb$/.test(e)),['fried.glb']);
     assert.equal(seen.filter(file=>file===key+'.glb').length,1);
