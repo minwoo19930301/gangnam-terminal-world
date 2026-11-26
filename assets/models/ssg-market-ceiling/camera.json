@@ -1,0 +1,14 @@
+{
+  "floor": "B1",
+  "x": -63.58,
+  "y": -6,
+  "z": 26.96,
+  "yaw": 110.784,
+  "pitch": 33,
+  "meshName": "신세계 마켓 · 청과 매대 위 장식 천장",
+  "sourceBlend": "ceiling.blend",
+  "sourceCollection": "MarketProduceCeiling",
+  "nativeLabel": "청과 매대 장식 천장",
+  "area": "in:shinsegae",
+  "gameView": "?pitch=33#/shinsegae/B1?p=-63.58,-6,26.96,110.784"
+}

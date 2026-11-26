@@ -562,6 +562,34 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     if (o.solid !== false) { phys.addPolyWalls(pts, y, y + h, 0.02, current); if (o.walkTop) phys.addSurface(pts, y + h, {}); }
     return pts;
   }
+  // Opaque eight-sided stock cylinders repeat thousands of times on grocery shelves.
+  // Build their flat facets once; support and collision still belong to the shelf.
+  let stockCylinder;
+  // Each part carries [x, baseY, z, radius, height, hexColor].
+  function stockCylinders(name,parts) {
+    if (!parts.length) return;
+    if (!stockCylinder) {
+      stockCylinder = new THREE.CylinderGeometry(1,1,1,8).toNonIndexed();
+      stockCylinder.computeVertexNormals();
+      const white = new Float32Array(stockCylinder.attributes.position.count*3).fill(1);
+      stockCylinder.setAttribute('color',new THREE.BufferAttribute(white,3));
+      stockCylinder.clearGroups();
+    }
+    const material = matFor('vc');
+    material.defines ||= {};
+    material.defines.BANPO_RIGID = 1;
+    const mesh = new THREE.InstancedMesh(stockCylinder,material,parts.length);
+    const matrix = new THREE.Matrix4(), color = new THREE.Color();
+    parts.forEach(([x,y,z,r,h,paint],i)=>{
+      matrix.makeScale(r,h,r).setPosition(x,y+h/2+terrainAt(anchorHeight,x,z),z);
+      mesh.setMatrixAt(i,matrix);
+      mesh.setColorAt(i,color.setHex(paint));
+    });
+    mesh.name = name;
+    mesh.userData.split = true;
+    mesh.computeBoundingSphere();
+    addMesh(mesh);
+  }
   // dome / ellipsoid cap. o: x,y,z, rx, ry, rz, seg, rings, hemi(default true)
   function dome(o) {
     const { x = 0, y = 0, z = 0, rx = 5, ry = 5, rz = rx, seg = 24, rings = 10 } = o; const sp = spec(o.mat ?? 0xffffff);
@@ -1316,7 +1344,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
 
   const K = {
     THREE, scene, phys, osm, LEVELS, T, withTerrainAnchor, withTerrainSurface, withParkedVehicle,
-    box, prism, slab, wall, polyWalls, ramp, stairs: (ax, az, bx, bz, o = {}) => ramp(ax, az, bx, bz, { ...o, steps: true }), escalator, escalatorTreads, cyl, dome, sign, floorText,
+    box, prism, slab, wall, polyWalls, ramp, stairs: (ax, az, bx, bz, o = {}) => ramp(ax, az, bx, bz, { ...o, steps: true }), escalator, escalatorTreads, cyl, stockCylinders, dome, sign, floorText,
     tree, person, crowd, vehicle, zone, spawn, interact, portal, elevator, groundHole, onFrame, addMesh, texture, material, mapMark, detail,
     osmBuilding, osmFind, claim, rand, quad: (mat, p, n, uvs) => quad(spec(mat), p, n, uvs || [[0, 0], [1, 0], [1, 1], [0, 1]]), hpoly: (mat, poly, y, up = true, holes) => hpoly(spec(mat), poly, y, up, holes),
     triangle: (mat, points, normal, uv) => tri(spec(mat), points, normal, uv),
