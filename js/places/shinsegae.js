@@ -93,6 +93,7 @@ import { loadArchitecture, fitArchitecture, fitTerminalSeat as drawFacadeSign } 
 // Only a handful of upper-floor shops use the Blender polygon packet.
 import {detailModule, detailResource} from '../detail-module.js';
 const displayURL = new URL('../../assets/models/shinsegae/displays.js', import.meta.url);
+const mainLiftDirectory=detailModule(new URL('../../assets/models/ssg-lift-directory/model.js',import.meta.url),module=>module.placeDirectory);
 const displayResource=detailModule(displayURL,module=>module.displays);
 import {loadArchitecture as loadFinish, placeArchitecture as placeFinish} from '../../assets/models/interior-architecture/model.js';
 
@@ -104,7 +105,7 @@ const warmPinspot = finishResource('warm-pinspot');
 const cellBlade = finishResource('cell-blade');
 const coolBatten = finishResource('cool-batten');
 const facadeSigns = await loadArchitecture('../shinsegae-facade/signs.glb');
-const retailResources = [displayResource, wallArchitecture, warmSlot, warmPinspot, cellBlade, coolBatten];
+const retailResources = [mainLiftDirectory, displayResource, wallArchitecture, warmSlot, warmPinspot, cellBlade, coolBatten];
 export const prepareFullDetail = () => Promise.all(retailResources.map(resource => resource.load()));
 // Blender extraction and the full-city inspector build their complete kits synchronously.
 if (displayURL.protocol === 'file:') await prepareFullDetail();
@@ -1730,6 +1731,17 @@ export function build(K) {
   {const bank=UPPER_BANKS.find(b=>b.key==='본관 화장실 옆');const y=LV['6F'];
    const [u,v]=mainLiftCentre('6F',bank);
    zone('고객 엘리베이터','6F','본관 화장실 옆',[u-3.8,v-3,u+1.2,v+3],y,y+3.4,4);}
+  {
+    // The photographed main-wing bank has a rounded two-column directory.
+    // Its mount here is an approximation on the public 8F landing.
+    const [front,v]=upperLiftIcons['8F'].main,y=LV['8F'];
+    const [x,z]=P(front-.16,v),angle=FACE.W,name='본관 8층 · 백화점 층별 안내';
+    K.detail({name,floor:'8F',poly:rect(front-.23,v-2.1,front+.02,v+2.1),
+      y0:y+.014,y1:y+2.61,resource:mainLiftDirectory,visualOnly:true,
+      visibleFrom:(px,py,pz)=>Math.abs(py-(y+1.30))<2.4 &&
+        (px-x)*Math.sin(angle)+(pz-z)*Math.cos(angle)>-.03 && (px-x)**2+(pz-z)**2<22**2},
+      ()=>mainLiftDirectory.value(K,name,x,y+1.69,z,angle));
+  }
   for(const bank of UPPER_BANKS)for(let i=0;i<2;i++){
     const side=bank.face==='N'||bank.face==='S',u=bank.u+(side?(i-.5)*2.7:0),v=bank.v+(side?0:(i-.5)*2.7);
     const du=bank.face==='E'?2.5:bank.face==='W'?-2.5:0,dv=bank.face==='N'?-1.7:bank.face==='S'?2:0;
