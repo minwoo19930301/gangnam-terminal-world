@@ -2,6 +2,7 @@ import { registerToebox } from './shinsegae-toebox.js';
 import { registerHermanMiller } from './shinsegae-herman-miller.js';
 import { registerTwl } from './shinsegae-twl.js';
 import { registerStokke } from './shinsegae-stokke.js';
+import { registerHaoSum } from './shinsegae-haosum.js';
 import { registerMarzocco } from './shinsegae-marzocco.js';
 import { mounts as facadeMounts } from '../../assets/models/shinsegae-facade/mounts.js';
 import { loadArchitecture, fitArchitecture, fitTerminalSeat as drawFacadeSign } from '../../assets/models/architectural-retail/place.js';
@@ -7857,6 +7858,19 @@ export function build(K) {
       registerMarzocco(K,{poly:rect(west,north,east,south),x,y,z,yaw});
       // A collision core beneath the two stepped plinths leaves the sales aisle open.
       K.box({x,y,z,w:3.74,h:.875,d:.61,rotY:yaw,mat:0x454747,skip:['top','bottom','n','s','e','w']});
+    }
+    if (id==='11F') {
+      const shop=guide.cells.find(c=>c.name.startsWith('살롱드호우섬'));
+      const bounds=upperBuildRect(id,shop);
+      const u=(bounds[0]+bounds[2])/2, v=bounds[3]-8.15;
+      const [x,z]=P(u,v), [rightX,rightZ]=P(u+1,v);
+      const yaw=Math.atan2(z-rightZ,rightX-x);
+      registerHaoSum(K,{poly:rect(...bounds),x,y,z,yaw});
+      for(const [side,back,w,d,h] of [[0,0,1.29,.90,.80],[-1.19,.18,.63,.40,.82]]){
+        K.box({x:x+side*Math.cos(yaw)-back*Math.sin(yaw),y,
+          z:z-side*Math.sin(yaw)-back*Math.cos(yaw),rotY:yaw,w,d,h,mat:0x573c31,
+          skip:['top','bottom','n','s','e','w']});
+      }
     }
     buildShopPartitions(id,y);
     if (id==='2F') {
