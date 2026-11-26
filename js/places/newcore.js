@@ -48,6 +48,14 @@ function localFrame(K, F) {
   return { ...F, K, B, S, Q, wall, cyl, person };
 }
 function textures(K) {
+  K.texture('newcore-cart-belt', 128, 128, (g, w, h) => {
+    g.fillStyle = '#777e7d'; g.fillRect(0, 0, w, h);
+    for (let y = 0; y < h; y += 4) {
+      g.fillStyle = '#565e5c'; g.fillRect(0, y, w, 1);
+      g.fillStyle = '#9ea5a2'; g.fillRect(0, y + 1, w, 1);
+    }
+    g.fillStyle = '#575e5b'; g.fillRect(0, 0, 2, h);
+  }, [.42, .80]);
   K.texture('newcore-limestone', 512, 512, (g, w, h) => {
     g.fillStyle = '#ddd2ba'; g.fillRect(0, 0, w, h); g.strokeStyle = '#c8bda8'; g.lineWidth = 2;
     for (let row = 0; row < 4; row++) {
@@ -224,14 +232,66 @@ function doors(F, u, w = 4.4) {
   F.B(u, 2.72, 0, w, 0.2, 0.2, C.black, { solid: false });
 }
 
-function core(F, floors, name, roof) {
+// E-Land's plans show the stepped bank on B1–5F in hall 1 and 1F–5F in
+// hall 2. The separate paired B1 cart symbols in hall 2 have continuous belts.
+function retailTransfers(F, hall) {
+  if (!hall) return [];
+  const mainU = hall === 1 ? F.L * .19 + 1.35 : F.L * .075;
+  const main = {u: mainU, v: F.W / 2 + .80, run: 10.4, cart: false};
+  const cart = {u: F.L * .205, v: F.W - 3.05, run: 27.5, cart: true};
+  return Array.from({length: 5}, (_, i) => {
+    const bank = hall === 2 && i === 0 ? cart : main;
+    const hole = F.Q(bank.u-bank.run/2, bank.v-1.52, bank.u+bank.run/2, bank.v+1.52);
+    return {...bank, hole};
+  });
+}
+
+function buildTransfer(F, bank, lo, hi) {
+  const {u, v, run, cart} = bank;
+  const a = u - run/2, b = u + run/2;
+  for (const [offset, dir] of [[-.77, 'up'], [.77, 'down']]) {
+    const center = v + offset;
+    if (cart) {
+      F.K.ramp(...F.P(a,center), ...F.P(b,center), {
+        w: 1.28, ya: lo.y, yb: hi.y, move: dir === 'up' ? .55 : -.55,
+        mat: 'newcore-cart-belt', railMat: 0x343937,
+      });
+      // Glazed sides, ribbed belts and flush ends keep the cart lanes
+      // visually distinct from the pairs of stepped escalators.
+      for (const side of [-1,1]) {
+        const [ax,az] = F.P(a,center+side*.64), [bx,bz] = F.P(b,center+side*.64);
+        const pane = [[ax,lo.y+.12,az],[bx,hi.y+.12,bz],[bx,hi.y+.89,bz],[ax,lo.y+.89,az]];
+        const nx = -(bz-az)/run, nz = (bx-ax)/run;
+        F.K.quad('glass',pane,[nx,0,nz]);
+        F.K.quad('glass',[...pane].reverse(),[-nx,0,-nz]);
+      }
+      for (const [end, y, side] of [[a, lo.y, -1], [b, hi.y, 1]]) {
+        F.B(end+side*.18, y+.007, center, .36, .01, 1.28, 0xa5aaa2, {solid:false});
+        F.B(end+side*.035, y+.018, center, .045, .012, 1.23, 0xe0b954, {solid:false});
+      }
+    } else {
+      F.K.escalator(...F.P(a,center), ...F.P(b,center), {
+        w: 1.26, ya: lo.y, yb: hi.y, dir, mat: 0x7b8383, railMat: 0x454d4c,
+      });
+    }
+  }
+  for (const side of [-1,1]) {
+    F.wall(a,v+side*1.52,b,v+side*1.52,hi.y,hi.y+1.02,{mat:'glass',thick:.065});
+  }
+  const name = cart ? '카트 무빙워크' : '에스컬레이터';
+  F.S(name+'   '+lo.label+' · '+hi.label, a-.38, lo.y+.70, v+2.05, 1.6, .26,
+    '#34443f', {rotY:F.angle+Math.PI/2});
+}
+
+function core(F, floors, name, roof, retailHall=0) {
   const { K, L, W, P, Q, wall, S } = F;
   const a = -L / 2 + 4, b = a + 7.4, v0 = W - 9.4, v1 = W - 3.2;
   const hole = Q(a - 0.2, v0 - 1.4, b + 3, v1 + 1.4), [x, z] = P(b + 8, W - 3.5);
+  const transfers=retailTransfers(F,retailHall);
   K.elevator({ name: name + ' 엘리베이터', x, z, rotY: F.angle + Math.PI, w: 2.5, d: 2.5, floors });
   floors.forEach((f, i) => {
     const next = floors[i + 1];
-    K.slab(F.p, f.y, { mat: f.y < 0 ? 'newcore-pavers' : 'tile', under: f.y === 0 ? C.black : 'ceiling', holes: i ? [hole] : [], thick: 0.28 });
+    K.slab(F.p, f.y, { mat: f.y < 0 ? 'newcore-pavers' : 'tile', under: f.y === 0 ? C.black : 'ceiling', holes: i ? [hole,...(transfers[i-1]?[transfers[i-1].hole]:[])] : [], thick: 0.28 });
     K.zone({ name, floor: f.label, sub: f.name, poly: F.p, y0: f.y, y1: next?.y ?? Math.max(roof, f.y + 3.2) });
     S([f.label, f.name], b + 7.8, f.y + 2.05, W - 1.8, 3.1, 0.8, '#3c403d');
     if (i) {
@@ -241,6 +301,7 @@ function core(F, floors, name, roof) {
       K.slab(Q(a - 2.2, v0 - 1.4, a + 0.1, v1 + 1.4), f.y, { mat: 'tile', thick: 0.18 });
     }
     if (!next) return;
+    if(transfers[i]) buildTransfer(F,transfers[i],f,next);
     const mid = (f.y + next.y) / 2;
     // The roof-parking stair is steeper than the retail-storey stair runs.
     K.stairs(...P(a, v0), ...P(b, v0), { ya: f.y, yb: mid, w: 2.4, mat: 0xb5b6ae, rails: true });
@@ -251,7 +312,7 @@ function core(F, floors, name, roof) {
   if (name === '뉴코아아울렛 1관') stairLanding(F, { a, b, v0, v1, hole });
   // Do not cap a roof-parking stairwell at its top landing.
   if (roof > floors[floors.length - 1].y + 0.1) K.slab(F.p, roof, { mat: 'roofgravel', under: 'ceiling', thick: 0.3 });
-  return { hole, a, b, v0, v1, lift: [b + 8, W - 3.5] };
+  return { hole, transfers, a, b, v0, v1, lift: [b + 8, W - 3.5] };
 }
 
 function streetFront(F, number, roof) {
@@ -548,7 +609,7 @@ function foodRoom(F, ci) {
   K.zone({ name: '킴스 푸드 스트리트', floor: 'B1', sub: '솥내음 · 봉혜자 · 공용 좌석', poly: Q(-L / 2 + 1, 1, L / 2 - 1, 21), y0: y, y1: -2.7, priority: 2 });
   K.zone({ name: '킴스 푸드 스트리트', floor: 'B1', sub: '솥내음 · 안쪽 통로', poly: Q(9.5, 21, 20.5, W - 0.1), y0: y, y1: -2.7, priority: 2 });
   // Separate exposed ceiling below the 6m structural floor interval.
-  K.hpoly(C.black, F.p, y + 3.35, false, [ci.hole]);
+  K.hpoly(C.black, F.p, y + 3.35, false, [ci.hole,ci.transfers[0].hole]);
   for (let u = -32; u < L / 2 - 4; u += 16) B(u, y, 21.5, 0.65, 3.35, 0.65, 0xd5cbb5);
   K.detail({ name: '1관 킴스 푸드 스트리트', floor: 'B1', poly: F.p, y0: y, y1: 0 }, () => {
     // Large pale tiles in seating areas, contrasting herringbone aisle.
@@ -598,6 +659,8 @@ function foodRoom(F, ci) {
     });
     for (let u = -L / 2 + 5; u < L / 2 - 4; u += 3.5) {
       // Open the right turn without dropping the existing seating detail.
+      const bank=ci.transfers[0];
+      if(Math.abs(u-bank.u)<bank.run/2+1.5) continue;
       const inBranch = u > 8 && u < 14;
       table(F, inBranch ? u + 25 : u, y, inBranch ? 24 : 19, Math.round(u) % 3 === 0);
     }
@@ -833,7 +896,7 @@ function market(F, ci) {
   // _800: grey polished floor, white square columns, dark exposed services.
   // Preserve the real-kit stair void in the lower visual ceiling as well.
   K.hpoly({ tex: 'newcore-market-floor', gloss: 0.6 }, F.p, y + 0.012, true);
-  K.hpoly(0xb8b8b3, F.p, y + 3.65, false, [ci.hole]);
+  K.hpoly(0xb8b8b3, F.p, y + 3.65, false, [ci.hole,ci.transfers[0].hole]);
   K.detail({ name: '2관 킴스클럽 델리', floor: 'B1', poly: F.p, y0: y, y1: 0 }, () => {
     for (let u = -L / 2 + 5; u < L / 2 - 4; u += 5.8) for (const [row, v] of rackRows) {
       // Retain the old collision footprint, but expose stock between shelves.
@@ -1118,7 +1181,7 @@ function fixture(F, kind, u, y, v, reversed) {
     F.K.quad(model.colors[material], p, b.cross(c).normalize().toArray());
   }
   // The open frame and thin furniture meshes share one collision footprint.
-  const size = { dining: [1.83, 1.8], lounge: [1.93, 1.25], golf: [2.25, 1.05],
+  const size = { buffet:[3.67,1], dining: [1.83, 1.8], lounge: [1.93, 1.25], golf: [2.25, 1.05],
     rail: [2.34, .72], homeware: [2.25, .78], kids: [2.1, 1], folds: [2.44, 1.13],
     forms: [1.90, .86], junior: [2.10, .81], trainers: [2.12, .88], stockrail: [2.81, 1.08] }[kind];
   F.B(u, y, v, size[0], kind === 'kids' ? .53 : .74, size[1], C.wood,
@@ -1249,7 +1312,11 @@ function upperSalesFloor(F, num, floor) {
         fixture(F, kind, u - bayWidth * .28, y + .034, front - inset * depth * .46, side);
         F.person(u - bayWidth * .28 - 1.65, y + .034, front - inset * depth * .46, {shirt:0xd9c4a6});
       }
-      fixture(F, kind, u, y + .034, front - inset * depth * .36, !side);
+      if(num===1 && floor.label==='5F' && label==='애슐리퀸즈'){
+        const counterV=front-inset*depth*.36;
+        fixture(F,'buffet',u,y+.034,counterV,false);
+        S('ASHLEY QUEENS',u,y+2.27,back+inset*.81,3.7,.38,null,{rotY:F.angle,fg:'#ede3cc'});
+      }else fixture(F, kind, u, y + .034, front - inset * depth * .36, !side);
       if (kind === 'dining' || kind === 'homeware') {
         fixture(F, kind, u + bayWidth * .27, y + .034, front - inset * depth * .70, side);
       }
@@ -1341,7 +1408,7 @@ export function build(K) {
   const ys = [K.LEVELS.B1, 0, 5, 9.8, 14.2, 18.6], roof = 23;
   for (const [F, num, labels] of [[one, 1, labels1], [two, 2, labels2]]) {
     const floors = ys.map((y, i) => ({ label: i ? i + 'F' : 'B1', y, name: labels[i] }));
-    const ci = core(F, floors, '뉴코아아울렛 ' + num + '관', roof);
+    const ci = core(F, floors, '뉴코아아울렛 ' + num + '관', roof, num);
     streetFront(F, num, roof);
     const [bx, bz] = F.P(num === 1 ? -F.L / 2 : F.L / 2, num === 1 ? 14.7 : 18);
     K.polyWalls(F.p, K.LEVELS.B1, 0, { mat: 0xc8c3b9, inner: 0xe1d8c7, thick: 0.25,
@@ -1357,7 +1424,7 @@ export function build(K) {
     // Public upper sales floors are furnished when the player approaches.
     for (let i = 2; i < floors.length; i++) {
       const floor = floors[i];
-      const [x, z] = F.P(0, F.W / 2);
+      const [x, z] = F.P(0, F.W / 2 - 1.7);
       K.spawn({name: num + '관 ' + floor.label + ' · ' + floor.name, x, z, y: floor.y, yaw: F.angle + Math.PI / 2});
       const furnish = upperSalesFloor(F, num, floor);
       K.detail({ name: num + '관 ' + floors[i].label, floor: floors[i].label, poly: F.p, y0: floors[i].y, y1: floors[i].y + 4.5 }, () => {
