@@ -1,3 +1,4 @@
+import { coachGlazing } from '../../assets/models/coach-cabin/windows.js';
 import { placeCutFlowers } from '../../assets/models/gyeongbu-cutflowers/model.js';
 import { placeWaitingBenches } from '../../assets/models/gyeongbu-seating/model.js';
 import { placeDaisoEndcap } from '../../assets/models/daiso-merchandise/place.js';
@@ -3797,6 +3798,7 @@ export function build(K) {
   }
 
   function buildYards(){
+    const glazing=coachGlazing(K);
     const area=id=>K.osm.areas.find(a=>a.id===id).poly;
     K.texture('gb17_jersey',256,128,(g,w,h)=>{
       g.fillStyle='#f2c200';g.fillRect(0,0,w,h);g.fillStyle='#1a1a1a';
@@ -3839,10 +3841,11 @@ export function build(K) {
       }
       K.hpoly(body,shell.map(([a,b])=>{const q=p(a,3.4,rake(b,3.4));return[q[0],q[2]];}),y+3.4);
       part(0,3.4,-.6,1.6,2.4,.2,0xd9dad3);
+      glazing.register(x,z,y,c,s);
       for(const side of [-1,1]){
         const a=side*1.258,n=[side*c,0,-side*s];
         const face=(mat,y0,y1,z0,z1,offset=0)=>K.quad(mat,[p(a+side*offset,y0,z0),p(a+side*offset,y0,z1),p(a+side*offset,y1,z1),p(a+side*offset,y1,z0)],n);
-        face(0x1d3039,1.67,3.12,-5.55,5.15);
+        glazing.panel([p(a,1.67,-5.55),p(a,1.67,5.15),p(a,3.12,5.15),p(a,3.12,-5.55)],n,side);
         face(0x4a6269,2.9,3.04,-5.52,5.12,.002);
         for(let b=-4.1;b<5;b+=1.38)face(0x465252,1.68,3.11,b,b+.045,.004);
         // Painted lower band and a broad diagonal return, kept free of invented brand marks.
