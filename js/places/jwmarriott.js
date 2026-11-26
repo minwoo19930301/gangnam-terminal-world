@@ -1,5 +1,6 @@
 import { OPEN_STAGE_FRONT } from './_junctions.js';
 import { loadArchitecture, placeArchitecture } from '../../assets/models/interior-architecture/model.js';
+import { placeDesserts } from '../../assets/models/patisserie/model.js';
 import { placeLoungeChairs } from '../../assets/models/lounge-chair/model.js';
 import { fixtures } from '../../assets/models/jwmarriott/fixtures.js';
 
@@ -1274,10 +1275,24 @@ export function build(K) {
     // The northern pastry-shop frontage faces the public corridor.
     WL(17, -6, 33.1, -6, y, yc, { mat: WARM, openings: [{ at: 9, w: 7, y0: 7, y1: 10.5 }] }); WL(17, 26, 33.1, 26, y, yc, { mat: WARM });
     HP({ tex: 'marble', color: 0xf6efe4 }, [17, -6, 33, 26], y + 0.01);
+    K.material('jwPastryCaseGlass', new K.THREE.MeshPhongMaterial({
+      color:0xd8e8ef, transparent:true, opacity:.12, depthWrite:false, shininess:80,
+    }));
     for(const v of [10,15,20]){
       B({u:21,v,y,w:1,d:4.2,h:.95,mat:0x2a2420,top:0xe8e0d0});
-      B({u:21,v,y:y+.95,w:.9,d:4,h:.5,mat:GL,solid:false});
-      for(const dv of [-1.4,-.47,.47,1.4])fixture('cakes',21,v+dv,y+.955,Math.PI/2);
+      B({u:21,v,y:y+.95,w:.9,d:4,h:.42,mat:'jwPastryCaseGlass',solid:false,skip:['bottom']});
+      for(const u of [20.55,21.45]){
+        B({u,v,y:y+1.37,w:.014,d:4,h:.014,mat:0xac9877,solid:false});
+        for(const dv of [-1.99,1.99])
+          B({u,v:v+dv,y:y+.95,w:.012,d:.012,h:.42,mat:0xac9877,solid:false});
+      }
+      if(v===15){
+        const [x,z]=mapPoint(...P(21,v));
+        DEC(()=>placeDesserts(baseKit,x,y+.955,z,R+Math.PI/2));
+        SG('바닐라 플랑  ·  마카롱',{u:20.487,v,y:y+.83,w:1.2,h:.15,f:'W',bg:'#463a35',fg:'#f2e3c7',pxPerM:420,padding:.025});
+      }else{
+        for(const dv of [-1.4,-.47,.47,1.4])fixture('cakes',21,v+dv,y+.955,Math.PI/2);
+      }
     }
     B({ u: 32.4, v: 10, y, w: 0.9, d: 30, h: 2.4, mat: WALNUT, solid: true });
     for (let k = 0; k < 3; k++) B({ u: 31.9, v: 10, y: y + 0.9 + k * 0.5, w: 0.1, d: 29, h: 0.04, mat: 0xc9a85c, solid: false });

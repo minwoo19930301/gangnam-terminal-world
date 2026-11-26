@@ -1,6 +1,7 @@
 import { registerFloorFinishes, floorSamples } from '../../assets/models/newcore-floor/surfaces.js';
 import { loadArchitecture, fitArchitecture } from '../../assets/models/architectural-retail/place.js';
 import { upperFixtures } from '../../assets/models/newcore/upper-fixtures.js';
+import { registerOksobanTable } from '../../assets/models/newcore/oksoban.js';
 
 // Exact OSM footprints; photo-based elevations; official floor uses. Metre
 // heights, core positions and indoor bay positions are documented estimates.
@@ -1250,7 +1251,9 @@ function upperSalesFloor(F, num, floor) {
     for (let i = 0; i < row.length; i++) {
       const u = start + width * (i + .5), [label, kind = 'rail'] = row[i].split('|');
       const clothingFinishes = [[0x665758, 0xe4d8cd], [0x48575c, 0xd9e1dc], [0x836347, 0xe7d8b8]];
-      const [accent, wall] = kind === 'rail' ? clothingFinishes[(i + side + num) % 3] : finishes[kind];
+      const hotpot = num === 1 && floor.label === '5F' && label === '옥소반';
+      const [accent, wall] = hotpot ? [0x9e4831, 0xc3b5a2] :
+        kind === 'rail' ? clothingFinishes[(i + side + num) % 3] : finishes[kind];
       const back = front - inset * depth;
       const bayWidth = width - 1.35;
       B(u, y + .015, front - inset * depth / 2, bayWidth, .018, depth, side ? 0xd8d1c3 : 0xe9dece, { solid:false });
@@ -1258,12 +1261,13 @@ function upperSalesFloor(F, num, floor) {
       B(u - bayWidth / 2, y, front - inset * depth / 2, .15, 3.58, depth, wall);
       for (const sign of [-1, 1]) B(u + sign * (bayWidth / 2 - .25), y, front, .31, 3.12, .32, accent);
       B(u, y + 2.99, front, bayWidth, .58, .41, accent);
-      bays.push({u, front, back, depth, inset, bayWidth, kind, label, side, i});
+      if (hotpot) registerOksobanTable(F, u, y + .034, front - inset * depth * .36);
+      bays.push({u, front, back, depth, inset, bayWidth, kind, label, side, i, hotpot});
     }
   });
   for (const off of [-1,1]) B(0, y + .017, W / 2 + off * 2.76, L - 3, .012, .085, 0xac987a, {solid:false});
   return () => {
-    for (const {u, front, back, depth, inset, bayWidth, kind, label, side, i} of bays) {
+    for (const {u, front, back, depth, inset, bayWidth, kind, label, side, i, hotpot} of bays) {
       B(u, y + 2.96, front + inset * .18, bayWidth - .45, .035, .10, { tex:'emit', color:0xffefd1 }, {solid:false});
       S(label, u, y + 3.28, front + inset * .22, Math.min(7, bayWidth - .8), .43, null,
         {rotY: F.angle + (side ? Math.PI : 0), fg:'#fff9ef'});
@@ -1326,7 +1330,7 @@ function upperSalesFloor(F, num, floor) {
         const counterV=front-inset*depth*.36;
         fixture(F,'buffet',u,y+.034,counterV,false);
         S('ASHLEY QUEENS',u,y+2.27,back+inset*.81,3.7,.38,null,{rotY:F.angle,fg:'#ede3cc'});
-      }else fixture(F, kind, u, y + .034, front - inset * depth * .36, !side);
+      } else if (!hotpot) fixture(F, kind, u, y + .034, front - inset * depth * .36, !side);
       if (kind === 'dining' || kind === 'homeware') {
         fixture(F, kind, u + bayWidth * .27, y + .034, front - inset * depth * .70, side);
       }
