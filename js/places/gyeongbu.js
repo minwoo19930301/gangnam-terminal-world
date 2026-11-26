@@ -11,6 +11,7 @@ import { placeUpperShowroom } from '../../assets/models/gyeongbu-apparel/model.j
 import { coachGlazing } from '../../assets/models/coach-cabin/windows.js';
 import { placeCutFlowers } from '../../assets/models/gyeongbu-cutflowers/model.js';
 import { placeWaitingBenches } from '../../assets/models/gyeongbu-seating/model.js';
+import {accessoryShelf} from '../../assets/models/daiso-accessories/shelf.js';
 import {gardenShelf,gardenFlowers} from '../../assets/models/daiso-garden/shelf.js';
 import { placeDaisoEndcap } from '../../assets/models/daiso-merchandise/place.js';
 import { loadArchitecture, fitTerminalSeat as fitHallDetail } from '../../assets/models/architectural-retail/place.js';
@@ -2077,7 +2078,7 @@ export function build(K) {
     }
     for(let i=0,u=175;u<242;u+=4.4,i++){
       rack(u,2.4,3.9,i,i===1?1:0);
-      if(u<205||u>215)rack(u,11.2,5.2,i+10);
+      if(u<205||u>215)rack(u,11.2,5.2,i+10,i===15?-1:0);
       if(u<204||u>216)rack(u,19.8,5.2,i+20);
       rack(u,27,3.8,i+30);
     }
@@ -2085,7 +2086,7 @@ export function build(K) {
       rack(u,14,6,i+40,i===4?-1:0);
       rack(u,24,7,i+50);
     }
-    for(let i=0,u=252;u<282;u+=4.4,i++)rack(u,-.9,3.1,i+60);
+    for(let i=0,u=252;u<282;u+=4.4,i++)rack(u,-.9,3.1,i+60,i===2?1:0);
     for(const u of [245.6,253.8])for(const v of [-3.7,-7.7])rack(u,v,2.8,70+Math.round(u+v));
     for(const u of [238.7,242.7])rack(u,-13,6.8,80+Math.round(u));
     for(const [key,rows] of banks){
@@ -3573,6 +3574,17 @@ export function build(K) {
       lbox(u,v,y,3,.55,1.96,0,{skip:['top','bottom','n','s','e','w']});
       ldetail({floor:'B1',y0:y,y1:y+3,poly:rect(u-2,v-1,u+2,v+1),name:'다이소 '+label},()=>{
         addMarketFixtures(key,'다이소 '+label,[[u,v,y,angle]],daisoModel);
+      });
+    }
+    for(const [kind,label,u,v,side] of [
+      ['hair','헤어 액세서리',241,8.50,-1],['brushes','청소솔',260.8,.83,1]
+    ]){
+      const [x,z]=W(u,v),face=side===1?'+v':'-v';
+      lbox(u,v,y,kind==='hair'?1.56:1.52,.54,2.03,0,{skip:['top','bottom','n','s','e','w']});
+      ldetail({floor:'B1',y0:y,y1:y+2.05,poly:rect(u-.79,v-.28,u+.79,v+.28),name:'다이소 '+label+' 매대'},()=>{
+        accessoryShelf(K,kind,[x,y,z],side===1?ROT+PI:ROT);
+        const lines=kind==='hair'?[label,'HAIR ACCESSORIES']:[label];
+        lsign(lines,u,v-side*.046,y+1.901,1.30,.179,face,{fg:'#424741',bg:null,pxPerM:320,padding:0});
       });
     }
     const gardenU=225.3,gardenV=4.18,[gardenX,gardenZ]=W(gardenU,gardenV);

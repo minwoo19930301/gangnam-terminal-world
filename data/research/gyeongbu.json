@@ -1,4 +1,14 @@
 {
+  "daiso_hair_and_brush_20261126": {
+    "naver": "https://map.naver.com/p/entry/place/931234931",
+    "operator": "https://www.daiso.co.kr/cs/shop?name_address=%EA%B0%95%EB%82%A8",
+    "branch_visit": "https://noopy0402.tistory.com/464",
+    "observed": "2026-04-06 방문 사진의 긴 원봉에 걸린 머리띠, 흰 카드의 집게핀과 주름진 밴드, 구멍 난 헤어롤. 청소용품 코너의 손잡이에 구멍이 난 넓은 솔, 틈새솔과 금속모 솔.",
+    "estimate": "기존 게임의 뷰티 및 욕실·청소 구역에 맞춰 배치했다. 선반 위치·폭, 봉 높이, 제품의 수량과 색 순서는 실측되지 않았다.",
+    "model": "assets/models/daiso-accessories/accessories.blend",
+    "screen": "assets/models/daiso-accessories/play.jpg",
+    "walk": "assets/models/daiso-accessories/check.mjs"
+  },
   "daiso_garden_20261126": {
     "naver": "https://map.naver.com/p/entry/place/931234931",
     "operator": "https://www.daiso.co.kr/cs/shop?name_address=%EA%B0%95%EB%82%A8",
