@@ -1,4 +1,123 @@
 {
+ "public_guest_areas_20261125": {
+  "date": "2026-11-25",
+  "sources": {
+    "naver_place": {
+      "url": "https://map.naver.com/p/entry/place/1701110109",
+      "observed": "네이버 플레이스의 더 마고 그릴 주소는 서울 서초구 신반포로 176 JW 메리어트 호텔 서울 7층. 일반 지도에서 실내 복도나 승강기 정차층은 판독할 수 없었다."
+    },
+    "naver_streetview": {
+      "url": "https://map.naver.com/p/?p=Cy3jmhWfofOZSFQ5RWAIbA,104.03,2.78,80,Float",
+      "capture": "2026-01",
+      "observed": "파노라마를 회전해 호텔 측 분홍·회색 가로 줄눈, 짙은 곡면 유리, 차량 캐노피, 정차 구역 옆 포장 보행로와 낮은 분홍빛 식재 화단 및 횡단 표식을 확인했다. 가까이 보이는 녹색 대기소 차양은 호텔 본체 캐노피와 별개다."
+    },
+    "architect": {
+      "url": "https://www.haeahn.com/en/project/detail.do?prjctSeq=3123",
+      "observed": "준공 사진의 정면은 3개의 얕은 아치형 유리 지붕, 연속 하부 조명, 가운데 푸른 곡면창과 얇은 수평 캡, 양옆 석재 입면과 작은 사각 창 무리. 안쪽 사진에서 높은 목재 수직 루버와 그릴의 크림색 벤치, 목재 마감, 브론즈 테이블 등이 보인다. 사진의 배치·색을 시각 기준으로 썼다."
+    },
+    "hotel_guide": {
+      "url": "https://pub-mediabox-storage.rxweb-prd.com/exhibitor/document/exh-6a50f296-9d04-4600-bc91-08c5ed100e1d/a4782bfe-6d97-465c-bc5c-f65177f60e9e.pdf",
+      "page": 3,
+      "observed": "호텔 브로슈어의 입체 안내는 1F 현관·컨시어지, 2F 식당가, 3F 살롱, 5F 그랜드 볼룸, 7F 식음·정원, 8F 리셉션·더 라운지 및 9F 이그제큐티브 라운지를 표시한다. 용도도에서 승강기 배치·정차표나 정문 앞 높이를 읽을 수 없다."
+    },
+    "dining": "https://www.marriott.com/en-us/hotels/seljw-jw-marriott-hotel-seoul/dining/",
+    "grill_gallery": "https://themargauxgrill.jwmarriottseoul.com/en/photos",
+    "grill_exhibit": "https://themargauxgrill.jwmarriottseoul.com/en/groups",
+    "visitor_directions": {
+      "url": "https://themargauxgrill.jwmarriottseoul.com/en/contact-location",
+      "observed": "운영사는 고속터미널역 3·9호선 7번 출구 쪽 파미에 통로, 스위트 파크 B1 에스컬레이터, 신세계 2층행 엘리베이터와 호텔 연결을 순서대로 설명한다. 7호선 3번 출구 쪽 호텔 정문 접근도 안내한다."
+    },
+    "botanical_bar": "https://www.myclubmarriott.com/hotel/restaurantdetail/en/mobo-bar",
+    "executive_access": "https://www.marriott.com/en-us/hotels/seljw-jw-marriott-hotel-seoul/rooms/executive-lounge/"
+  },
+  "model": [
+    [
+      "정문·현관",
+      "3연속 캐노피의 리브 9조 및 접합부·조명, 중앙 돌출 곡면 벽과 양옆 석재 창, 어두운 동판 바탕의 호텔 표기. 기존 현관 홀의 목재 루버와 하부 조명 추가. 지면 및 차량 도로는 streets가 만든다.",
+      "현관 안내층은 1F. 현 모델에서 파미에 상부 도로와 만나는 발판 높이는 y=11.5이며 호텔 모듈의 3F 기준을 같이 쓴다. 화면의 층명은 현장 층표와 다를 수 있다."
+    ],
+    [
+      "2F 파티세리",
+      "진열장에 케이크 보드, 글레이즈, 토핑을 모델링했다.",
+      "제품 색·수량·배열은 예시."
+    ],
+    [
+      "7F 더 마고 그릴",
+      "운영사 입구의 테이블 커틀러리 60점 진열과 설계사 사진 속 크림색 등받이·나무 측판·개별 램프를 표현. 직원실이나 저장 공간은 추가하지 않았다.",
+      "기물별 윤곽, 부스 수, 가구 간격, 실제 진열장 벽의 좌표는 추정."
+    ],
+    [
+      "7F JW 가든",
+      "기존 주 보행로와 만나는 잔디 가장자리에 허브 식재 상자 추가.",
+      "식재 규모, 위치, 품종은 추정."
+    ],
+    [
+      "8F 더 라운지",
+      "공식 애프터눈 티를 바탕으로 세 단 접시와 찻잔을 기존 낮은 탁자에 배치했다.",
+      "현재 판매 메뉴와 기물별 크기는 재현하지 않았다."
+    ]
+  ],
+  "vertical_inventory": {
+    "scope": "호텔 모듈 안에서 고객용으로 표현한 전체 경사 이동 시설과 엘리베이터 두 뱅크. 행사시설의 단차와 이용 대상이 정해진 라운지를 별도 표시했다. 외부 모듈과 직원·객실 코어의 계단은 이 고객용 목록과 별개다.",
+    "escalator_banks": [
+      [
+        "서측 현관 → 2F 식당가",
+        "1F ↔ 2F, 상·하행 2열",
+        "모델 높이 0 ↔ 6m"
+      ],
+      [
+        "연회층",
+        "3F ↔ 4F, 상·하행 2열",
+        "11.5 ↔ 16.5m"
+      ],
+      [
+        "연회층",
+        "4F ↔ 5F, 상·하행 2열",
+        "16.5 ↔ 21m"
+      ],
+      [
+        "높은 정문 현관 → 볼룸",
+        "현관 모델 3F ↔ 5F, 상·하행 2열",
+        "11.5 ↔ 21m"
+      ]
+    ],
+    "stairs": [
+      [
+        "5F 대회장 단상",
+        "같은 층의 짧은 계단 2곳",
+        "21 ↔ 21.75m"
+      ],
+      [
+        "8F ↔ 9F",
+        "계단 1곳. 9F 이그제큐티브 라운지 이용 대상은 호텔 정책에 따름",
+        "35.5 ↔ 41m"
+      ]
+    ],
+    "elevators": [
+      [
+        "서측 저층 뱅크",
+        "모델 1F·2F·3F의 3개 정차 지점"
+      ],
+      [
+        "타워 뱅크",
+        "모델 B4·B3·B2 및 3F–33F의 34개 정차 지점. 호텔의 현장 승객용 서비스 표를 뜻하지 않음."
+      ]
+    ],
+    "transfer": "2F–3F는 모델에서 서측 승강기를 쓴다. 상층으로 가려면 모델 3F에서 타워 승강기로 갈아탄다. 기존 1F 안내에도 이 경로를 표시했다. 현장 환승 의무, 실측 좌표·단수·열 수·실제 층간 높이는 공개자료로 확정할 수 없었다.",
+    "repairs": "3~4F 하행 디딤판 중간에 닿던 백화점 연결벽을 단차 접점에서 옆으로 물렸다. 제거된 2→3층 에스컬레이터가 남긴 유휴 바닥 구멍과 난간도 제거했다. 이 난간은 백화점 통로를 가로막고 있었다."
+  },
+  "verification": {
+    "physics": "반경 0.32m 플레이어를 써서 상·하행 8열, 단상 2곳, 8~9F 계단 1곳을 실제 플레이어 이동판·충돌·머리 공간과 양단 접근점에서 검사. 4→3F 하행 중심에서 기존 19표본 중 12개 충돌, 수정 후 0개. 엘리베이터 37개 정차점에서 4m 밖으로 걸어나옴.",
+    "corridor": "물리 0.25m 격자에서 현관~백화점 연결통로 3구간. 막혔던 에스컬레이터 옆 모델 구간 (u25.68,v30.4)→(u25.8,v52.7)이 수정 후 도달한다. 차량 진입부의 지면은 streets와 함께 검사.",
+    "screens": "assets/models/jwmarriott/preview.jpg: 호텔·센트럴시티·신세계·파미에·streets, city=1 실제 앱 카메라 9시점."
+  },
+  "editable_assets": {
+    "blend": "assets/models/jwmarriott/hotel-details.blend",
+    "regenerate_from_edited_blend": "blender -b assets/models/jwmarriott/hotel-details.blend -P assets/models/jwmarriott/export.py",
+    "from_procedural_source": "blender -b -P assets/models/jwmarriott/build.py",
+    "runtime": "fixtures.js는 8개 편집 컬렉션의 정점과 면을 mm 단위로 저장한다. JS는 같은 모델의 면·재질을 키트의 렌더 배치에 보낸다. 수동 편집 뒤 export.py만 실행하면 편집본을 재사용할 수 있다."
+  }
+},
   "shared_podium_escalator_opening_20261118": "The shared podium roof has a local opening for the department store annex escalators between retail 6F and 7F.",
  "department_store_boutiques_20261117": {
   "floor_guide": "https://www.shinsegae.com/cms12/SC00002/guide/floor/__icsFiles/afieldfile/2026/10/16/1esU4Yqhl5TX.png",
