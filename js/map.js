@@ -209,7 +209,7 @@ export function createMap(opts) {
   for (const s of spawns) addSearch({ ...s, type: '출발 지점', exact: true });
   for (const p of placeMarks) addSearch({ name: p.name, x: p.x, z: p.z, y: p.y, place: p.id, type: '탐색 장소' });
   for (const r of zoneRecords) addSearch({ name: r.source.name, sub: r.source.sub, floor: r.floor, x: r.x, z: r.z, y: r.y0, ...r.source.mapArrival, place: r.place, zone: r.source, type: '층별 공간', group: placeIndex.get(r.place)?.name });
-  for (const p of poiRecords) addSearch({ name: p.name, x: p.x, z: p.z, y: p.level == null ? undefined : Number(p.level) < 0 ? (K?.LEVELS?.[`B${Math.abs(Number(p.level))}`] ?? Number(p.level) * 5) : undefined, type: p.type });
+  for (const p of poiRecords) addSearch({ basementPin: Number(p.level) < 0, name: p.name, x: p.x, z: p.z, y: p.level == null ? undefined : Number(p.level) < 0 ? (K?.LEVELS?.[`B${Math.abs(Number(p.level))}`] ?? Number(p.level) * 5) : undefined, type: p.type });
   const landmarkBuildings = new Set(LANDMARKS.flatMap(l => l.buildingIds || []));
   for (const b of buildingRecords) if (b.name && !landmarkBuildings.has(b.id)) addSearch({ name: b.name, x: b.x, z: b.z, type: '건물', place: b.place });
 
@@ -495,16 +495,24 @@ export function createMap(opts) {
     const yaw = view ? view.yaw * Math.PI / 180 : target.yaw;
     const address = target.mapDestination && !ground ? target : undefined;
     const selectedZone = ground ? null : target.zone;
-    if (!selectedZone && opts.leaveArea && opts.leaveArea(x, Number.isFinite(target.y) && !ground ? target.y : null, z, yaw, address, view?.pitch)) { if (open) toggle(); return; }
-    // Unaddressed picks can fall back to street level or the highest walkable surface.
-    const tries = [];
-    if (!ground && Number.isFinite(target.y)) tries.push(target.y);
-    if (!address && !selectedZone) {
-      if (!tries.includes(0)) tries.push(0);
-      tries.push(null);
-    }
+    const basementPin = !ground && target.basementPin;
+    if (!selectedZone && opts.leaveArea && opts.leaveArea(x, Number.isFinite(target.y) && !ground ? target.y : null, z, yaw, address, view?.pitch, basementPin)) { if (open) toggle(); return; }
     let destination = null;
-    for (const ty of tries) { destination = findSpot(x, z, ty, selectedZone); if (destination) break; }
+    if (basementPin) {
+      destination = basementLanding(x, target.y, z);
+    } else {
+      // Unaddressed picks can use street level or the highest walkable surface.
+      const tries = [];
+      if (!ground && Number.isFinite(target.y)) tries.push(target.y);
+      if (!address && !selectedZone) {
+        if (!tries.includes(0)) tries.push(0);
+        tries.push(null);
+      }
+      for (const ty of tries) {
+        destination = findSpot(x, z, ty, selectedZone);
+        if (destination) break;
+      }
+    }
     if (!destination) { announce('이 위치에는 걸을 수 있는 바닥이 없어요. 가까운 출발 지점을 선택하세요.'); return; }
     if (selectedZone && opts.leaveArea?.(destination.x, destination.y, destination.z, yaw, target)) { if (open) toggle(); return; }
     // The engine's teleport snaps again within +1m; compensate to retain the checked floor.
@@ -512,6 +520,13 @@ export function createMap(opts) {
     if (view) player.pitch = view.pitch * Math.PI / 180;
     player.y = destination.y; player.vy = 0;
     toggle(); miniClock = 1;
+  }
+  function basementLanding(x, y, z) {
+    const basement = findSpot(x, z, y);
+    if (basement) return basement;
+    const surface = findSpot(x, z, 0);
+    if (surface) opts.notice?.('이 지점의 지하층은 아직 구현되지 않아 인근 지상에 도착했어요.');
+    return surface;
   }
   function findSpot(x, z, ty, selectedZone) {
     const exactFloor = ty != null;
@@ -651,5 +666,5 @@ export function createMap(opts) {
     if (liveDirty) drawLive();
   }
   renderResults(); resize();
-  return { update, toggle, isOpen: () => open, teleportTo };
+  return { update, toggle, isOpen: () => open, teleportTo, basementLanding };
 }

@@ -347,7 +347,7 @@ async function boot() {
   let menuOpen = false, nearIt = null;
   // ---- leaving the area: reload at the new address with a loading screen ----
   let leaving = false, reloadTimer;
-  function reloadAt(key, x, y, z, yawDeg, why, pitchDeg) {
+  function reloadAt(key, x, y, z, yawDeg, why, pitchDeg, basementPin) {
     if (leaving || SHOT || AREA.id === 'all') return false;
     // loop guard: never bounce between areas more than 4 times in 20 s
     let hist = []; try { hist = JSON.parse(sessionStorage.getItem('areaHops') || '[]').filter(t => Date.now() - t < 20000); } catch (e) { }
@@ -355,14 +355,14 @@ async function boot() {
     hist.push(Date.now()); try { sessionStorage.setItem('areaHops', JSON.stringify(hist)); } catch (e) { }
     leaving = true;
     const enc = '#/' + key.split('/').map(encodeURIComponent).join('/');
-    const href = `${enc}?p=${x.toFixed(1)},${y.toFixed(1)},${z.toFixed(1)},${Math.round(((yawDeg % 360) + 360) % 360)}${Number.isFinite(pitchDeg) ? ',' + pitchDeg : ''}`;
+    const href = `${enc}?p=${x.toFixed(1)},${y.toFixed(1)},${z.toFixed(1)},${Math.round(((yawDeg % 360) + 360) % 360)}${Number.isFinite(pitchDeg) ? ',' + pitchDeg : ''}${basementPin ? '&basementPin=1' : ''}`;
     const lt = $('loading-text'); if (lt) lt.textContent = `${why} 불러오는 중…`;
     $('loading').classList.remove('hidden'); document.exitPointerLock?.();
     history.pushState(null, '', location.pathname + location.search + href);
     reloadTimer = setTimeout(() => location.reload(), 60);
     return true;
   }
-  function leaveArea(x, y, z, yaw, destination, pitchDeg) {
+  function leaveArea(x, y, z, yaw, destination, pitchDeg, basementPin) {
     if (leaving) return true;
     if (AREA.id === 'all') return false;
     // A directory result can name a shop in a district whose floors are unloaded.
@@ -370,10 +370,10 @@ async function boot() {
     const id = areaIdAt(zn, x, y ?? 0, z);
     if (id === AREA.id) return false;
     const key = zn && zn.place ? `${zn.place}/${zn.floor || '1F'}` : 'street';
-    reloadAt(key, x, y ?? 0, z, yaw != null ? yaw * 180 / Math.PI : player.yaw * 180 / Math.PI, areaName(id, META), pitchDeg);
+    reloadAt(key, x, y ?? 0, z, yaw != null ? yaw * 180 / Math.PI : player.yaw * 180 / Math.PI, areaName(id, META), pitchDeg, basementPin);
     return true; // A remote destination cannot be placed on this scene's local floor.
   }
-  const map = createMap({ THREE, K, osm, player, phys, spawns, places: placeInfo, directory: META, container: $('app'), zoneAt: () => currentZone, leaveArea, openLandmark: landmark => route.openLandmark(landmark) });
+  const map = createMap({ THREE, K, osm, player, phys, spawns, places: placeInfo, directory: META, container: $('app'), zoneAt: () => currentZone, leaveArea, notice: toast, openLandmark: landmark => route.openLandmark(landmark) });
   let currentZone = null;
   if (SHOT) document.body.classList.add('shot');
   const canvas = renderer.domElement;
@@ -492,13 +492,21 @@ async function boot() {
     function parse(h) {
       const m = /^#\/([^?]*)(?:\?(.*))?$/.exec(h || ''); if (!m) return null;
       const key = m[1].split('/').map(decodeURIComponent).join('/'), q = new URLSearchParams(m[2] || ''), p = q.get('p');
-      return { key, destination:q.get('destination'), pos: p ? p.split(',').map(Number) : null };
+      return { key, destination:q.get('destination'), basementPin:q.get('basementPin') === '1', pos: p ? p.split(',').map(Number) : null };
     }
     function go(r) {
       if (!r) return false;
       applying = true; setTimeout(() => { applying = false; }, 800);
       if (r.pos && r.pos.length >= 3 && r.pos.every(Number.isFinite)) {
-        player.teleport(r.pos[0], r.pos[1], r.pos[2], r.pos[3] != null ? r.pos[3] * Math.PI / 180 : player.yaw);
+        let [x, y, z] = r.pos;
+        // A remotely selected OSM basement pin is checked in the scene that owns its floor.
+        if (r.basementPin) {
+          const spot = map.basementLanding(x, y, z);
+          if (!spot) { toast('이 지점 주변에 걸을 수 있는 바닥이 없어요.'); return false; }
+          ({x, y, z} = spot);
+        }
+        player.teleport(x, y, z, r.pos[3] != null ? r.pos[3] * Math.PI / 180 : player.yaw);
+        if (r.basementPin) player.y = y;
         if (r.pos.length === 5) player.pitch = Math.max(-1.5, Math.min(1.5, r.pos[4] * Math.PI / 180));
         return true;
       }
@@ -689,7 +697,12 @@ async function boot() {
   if (SHOT || start) $('start').classList.add('hidden');
   // arrived by walking into this area (reload): no intro card again, just a hint to click back in
   let hopped = false; try { const h = JSON.parse(sessionStorage.getItem('areaHops') || '[]'); hopped = h.length && Date.now() - h[h.length - 1] < 30000; } catch (e) { }
-  if (hopped) { $('start').classList.add('hidden'); setTimeout(() => toast(`${areaName(AREA.id, META)} · 화면을 클릭하면 계속 걸어요`), 300); }
+  if (hopped) {
+    $('start').classList.add('hidden');
+    setTimeout(() => {
+      if (!$('toast').classList.contains('show')) toast(`${areaName(AREA.id, META)} · 화면을 클릭하면 계속 걸어요`);
+    }, 300);
+  }
   // Noto Sans KR is served in unicode-range slices; load the slices for every character the signs use, otherwise
   // canvas text silently falls back to another font for glyphs whose slice is not loaded yet.
   const signFonts = fontsReady.then(() => { const txt = K._.atlas.chars(); return Promise.race([Promise.all(['400', '700'].map(w => document.fonts.load(`${w} 32px "Noto Sans KR"`, txt))), new Promise(r => setTimeout(r, 8000))]).catch(() => { }); }).then(() => mark('signFonts'));
