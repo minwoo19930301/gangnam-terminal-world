@@ -160,19 +160,23 @@ for i in range(4):
     else:mask=lambda u,v:True
     matrix_face('등면 '+str(i+1),x,.153,.143,mask,['red','amberoff','greenoff','greenoff'][i])
 group('sound')
-B('음향 안내기 · 후면 고정 레일',0,.045,.035,.106,.059,.415,'edge',.011)
-B('진회색 금속 몸통',0,0,0,.147,.101,.478,'rim',.018)
-B('비가림 뚜껑',0,-.022,.447,.162,.137,.032,'shade',.012)
-B('앞쪽 조작면',0,-.058,.035,.128,.021,.379,'edge',.009)
+# The January sidewalk view shows separate upper and lower housings on the pole.
+B('음향 안내함 후면 받침',0,.055,.305,.110,.068,.278,'edge',.008)
+B('음향 안내함',0,.004,.304,.147,.101,.312,'rim',.012)
+B('안내함 비가림 뚜껑',0,-.003,.602,.157,.119,.021,'shade',.006)
 for j in range(6):
     for i in range(5):
-        face_disc('안내 음성 구멍',(i-2)*.017,-.071,.301+j*.014,.0043,.003,'rubber',8)
-face_disc('버튼 테두리',0,-.077,.185,.048,.011,'shade')
-face_disc('황색 누름단추',0,-.087,.185,.038,.011,'sun')
-for j,n in enumerate([3,4,3]):
-    for i in range(n):face_disc('점자 돌기',(i-(n-1)/2)*.010,-.071,.071+j*.012,.0031,.004,'ivory',6)
-for x in [-.049,.049]:
-    for h in [.055,.389]:face_disc('덮개 작은 나사',x,-.071,h,.0045,.005,'zinc',6)
+        face_disc('안내 음성 구멍',(i-2)*.016,-.049,.471+j*.013,.0043,.003,'rubber',8)
+for x in [-.052,.052]:
+    for h in [.327,.589]:face_disc('안내함 고정 나사',x,-.050,h,.0045,.005,'zinc',6)
+# A pale label is visible between the units. Its small lettering is illegible.
+B('흰 안내 표찰',0,.045,.188,.132,.012,.078,'white',.004)
+for h,w in [(.244,.096),(.226,.073),(.212,.087)]:
+    B('표찰의 인쇄 줄',0,.037,h,w,.003,.003,'edge')
+B('누름단추 독립 받침',0,.055,.004,.095,.071,.133,'base',.006)
+B('돌출된 단추함',0,.004,0,.121,.105,.162,'rim',.012)
+face_disc('단추 금속 테두리',0,-.053,.084,.040,.013,'edge')
+face_disc('황색 보행 안내 누름단추',0,-.069,.084,.031,.015,'sun')
 group('bollard')
 P('매립 원판',0,0,0,[(.071,0),(.071,.027),(.059,.032)],'rim')
 P('검은 탄성 볼라드',0,0,.014,[(.059,0),(.060,.080),(.054,.10),(.052,.759),(.050,.794),(.043,.814),(.025,.833),(0,.839)],'shade',24)
@@ -211,6 +215,10 @@ def sign(key,width,height,hangul,roman,left,right):
             letters(txt,s*(1 if rev else -1)*width*.356,height*.519,width*.163,height*.336,rev)
     B('상단 고정 리브',0,0,height-.015,width*.92,.042,.020,'zinc',.002)
 sign('sinbanpo',1.095,.306,'신반포로','Sinbanpo-ro','228','232')
+# Seen above the Sinbanpo-ro board: a projecting silver rail and two hangers.
+R('기둥 띠에서 나오는 명판 지지대',[(-.53,.110,.391),(-.53,.018,.391),(.50,.018,.391)],.019,'edge',10)
+for x in [-.35,.37]:
+    B('명판 상단 매달림쇠',x,.018,.293,.032,.028,.098,'zinc',.002)
 sign('jamwon',.932,.285,'잠원로','Jamwon-ro','34','30')
 
 # Clip each paving unit to the surveyed corner polygon in its road axes.
