@@ -175,6 +175,8 @@ def sync_layout(here, rows=None):
             exterior_group=branch(city,city.collection,'gyeongbu/public-roof','경부선 · 10층 옥상 식당가')
         elif city and row['library']=='newcore-mamas/front.blend':
             exterior_group=branch(city,city.collection,'newcore/street','뉴코아 · 보도에서 본 외관')
+        elif city and row['library']=='sinbanpo-crossing/signal.blend':
+            exterior_group=branch(city,city.collection,'streets/sinbanpo-pedestrian-heads','신반포로 · 보행 신호기')
         elif city and row['library']=='sinbanpo-public-oaks/pin-oak.blend':
             exterior_group=branch(city,city.collection,'streets/surveyed-pin-oaks','신반포로 · 공도 대왕참나무')
         elif city and row['library']=='sinbanpo-plaza-planters/planter.blend':

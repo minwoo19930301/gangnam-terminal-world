@@ -34,22 +34,36 @@ def build_roads(context, seed, mesh_object, material, surfaces):
             else c * (u + v - 1) + b * (1 - v) + d * (1 - u)
         )
 
+    crossings = {entry["way"]: entry for entry in seed.get("paintedCrossings", [])}
+    legacy = seed.get("banpoCrossing")
+    if legacy and legacy["way"] not in crossings:
+        crossings[legacy["way"]] = dict(legacy, name="반포역 · 중앙정류소 앞 황색 횡단보도", yellow=True, landings=[])
     for road in seed["roads"]:
         if road["id"] in RIVER_DECKS:
             continue
-        crossing = seed.get("banpoCrossing")
-        if crossing and road["id"] == crossing["way"]:
+        crossing = crossings.get(road["id"])
+        if crossing:
             vertices, faces = [], []
             for polygon in crossing["faces"]:
                 k = len(vertices)
                 vertices.extend((x, -z, elevation(x, z, road["pts"][0][2] - .14) + .19) for x, z in polygon)
                 faces.append(tuple(range(k, len(vertices))))
-            yellow = material("반포역 횡단보도 황색 도료", (.855, .451, .017))
-            paint = mesh_object(context, "반포역 · 중앙정류소 앞 황색 횡단보도", vertices, faces, [yellow])
+            finish = material("반포역 횡단보도 황색 도료", (.855, .451, .017)) if crossing["yellow"] else traffic_paint
+            paint = mesh_object(context, crossing["name"], vertices, faces, [finish])
             for face in paint.data.polygons:
                 if face.normal.z < 0:
                     face.flip()
             paint["osm_way"] = road["id"]
+            for i, landing in enumerate(crossing["landings"], 1):
+                for key, label, height, finish in [
+                    ("curb", "보도 접속부", .154, kerb),
+                    ("warning", "황색 점자블록", .161, material("경고블록 황토색", (.64,.40,.09))),
+                ]:
+                    ring = landing[key]
+                    points = [(x,-z,elevation(x,z,road["pts"][0][2]-.14)+height) for x,z in ring]
+                    item = mesh_object(context, f"{crossing['name']} · {label} {i}", points, [tuple(range(len(ring)))], [finish])
+                    if item.data.polygons[0].normal.z < 0:
+                        item.data.polygons[0].flip()
             continue
         kind = road["hw"]
         road_name = road["name"] or kind
