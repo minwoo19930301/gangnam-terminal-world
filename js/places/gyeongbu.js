@@ -1,3 +1,4 @@
+import {placeHyodoShop} from '../../assets/models/gyeongbu-hyodo/model.js';
 import {placeWicker} from '../../assets/models/gyeongbu-basket-display/model.js';
 import {flowerBank} from '../../assets/models/gyeongbu-flower-bank/model.js';
 import {clothingFront} from '../../assets/models/gyeongbu-clothing-fronts/model.js';
@@ -740,7 +741,8 @@ export function build(K) {
     // the existing three-metre public opening at u80 through the replacement.
     const concealed={skip:['top','bottom','n','s','e','w']};
     for(const [a,b] of [[76,78.5],[81.5,cafeEnd]])lbox((a+b)/2,.50,0,b-a,.04,3.3,0,concealed);
-    lwall(cafeEnd,.5,317,.5,0,3.3,{mat:'glass',thick:.04,openings:openings.filter(u=>u>cafeEnd).map(u=>({at:u-cafeEnd,w:u===262?7:3,y0:0,y1:3.3}))});
+    lwall(cafeEnd,.5,317,.5,0,3.3,{mat:'glass',thick:.04,openings:[...openings.filter(u=>u>cafeEnd).map(u=>({at:u-cafeEnd,w:u===262?7:3,y0:0,y1:3.3})),
+      {at:278.65-cafeEnd,w:1.54,y0:0,y1:2.40}]});
     for(let u=100;u<317;u+=6){if(openings.some(x=>Math.abs(x-u)<2.8)||u>264&&u<273)continue;lbox(u,.5,0,.8,.65,3.3,{tex:'brick',color:0xc49a6a});}
     lbox((cafeEnd+317)/2,.15,3.3,317-cafeEnd,.7,.3,0xf0efea,{solid:false});
     lbox((cafeEnd+317)/2,.2,3.6,317-cafeEnd,.3,.6,{tex:'brick',color:0x8a6250},{solid:false});
@@ -1075,7 +1077,6 @@ export function build(K) {
       [157,162,'제주스커피',42],[189,195,'이마트24 2호점',46],[195,200,'압구정칼국수김밥',47],
       [202,207,'요쇼쿠',48],[222,229,'역전우동',49],[214,220,'던킨',51],[232,240,'북촌손만두',50],
       [230,237,'김밥천국',52],[237,244,'약천',53],[244,251,'내고향사골순대국',54],[251,258,'청룡각',55],
-      [273,280,'효도치킨',58],
     ];
     for(const [shopIndex,[a,b,name,unit]] of annexUnits.entries()){
         const step=b-a,u=(a+b)/2;
@@ -1144,6 +1145,24 @@ export function build(K) {
 
         });
         });
+    }
+    // The street-facing restaurant and the three-metre-high Gate 3 stair
+    // enclosure share a bay. Its customer entrance sits beside the stair end.
+    {
+      const [x,z]=W(278.65,-2.22);
+      const dining=rect(273,5.43,280,8.57),entrance=rect(278.04,.5,280,5.43);
+      K.zone({name:'효도치킨',sub:'부속상가 1층 · 안내도 58번',floor:'1F',
+        poly:[[273.29,-2.42],[279.71,-2.42],[279.71,.5],[280,.5],[280,8.57],[273,8.57],[273,5.43],[278.04,5.43],[278.04,.5],[273.29,.5]].map(a=>W(...a)),
+        y0:0,y1:3.4,priority:8,mapArrival:{x,z,yaw:yawL(0,1)}});
+      for(const [a,b,c,d] of [[273,5.43,273,8.57],[273,8.57,280,8.57],[280,.5,280,8.57],
+        [278.04,.81,278.04,5.36]])lwall(a,b,c,d,0,3.1,{mat:0xdfdacb,thick:.08});
+      K.phys.addCeiling(rect(273.29,-2.42,279.71,.5),3.13);
+      K.phys.addCeiling(entrance,3.12);K.phys.addCeiling(dining,3.12);
+      for(const u of [277.2,275.22,273.64]){
+        const a=W(u-.56,7.37),b=W(u+.56,7.37);
+        K.phys.addWall(...a,...b,.01,.81,.68);
+      }
+      placeHyodoShop(K,W,ROT,toL);
     }
     K.hpoly('gb_tactile',rect(58.25,27,58.55,153),.024);K.hpoly('gb_tactile',rect(98,25.85,314,26.15),.024);
     for(const b of bays){if(b.west)K.hpoly('gb_tactile',rect(58.4,b.v-.15,75.4,b.v+.15),.026);else K.hpoly('gb_tactile',rect(b.u-.15,26,b.u+.15,30),.026);}
@@ -4278,7 +4297,7 @@ export function build(K) {
     // gb_01/02: low steel bollards and sagging chains at the salmon-paved arcade.
     // Leave the photographed entrances unobstructed.
     for(let u=140;u<300;u+=1.6){
-      if([163,218,259].some(c=>u+1.6>c-3&&u<c+3))continue;
+      if([163,218,259].some(c=>u+1.6>c-3&&u<c+3) || (u+1.6>277.88&&u<279.42))continue;
       lcyl(u,-2,0,.055,.9,0x626b68,{seg:6});
       for(let k=0;k<4;k++){
         const a=k/4,b=(k+1)/4;
