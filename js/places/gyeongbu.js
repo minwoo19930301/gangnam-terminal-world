@@ -2140,12 +2140,14 @@ export function build(K) {
   // registered unit coordinates. Keep the stair/lift lobby outside the display.
   function upperMarket(i, floorY) {
     const floors = {
-      1: ['Bedding', '침구 · 홈패션'], 3: ['Curtains', '커튼 · 원단'],
-      5: ['Children', '아동복 · 의류'], 6: ['Suits', '신사복 · 넥타이'],
-      7: ['Womenswear', '여성복 · 의류']
+      1: ['Bedding', '침구 · 홈패션', 'gyeongbu-homewares/quilt-shop'],
+      3: ['Curtains', '커튼 · 원단', 'gyeongbu-homewares/drapery-shop'],
+      5: ['Children', '아동복 · 의류', 'gyeongbu-apparel/childrenswear'],
+      6: ['Suits', '신사복 · 넥타이', 'gyeongbu-apparel/tailoring'],
+      7: ['Womenswear', '여성복 · 의류', 'gyeongbu-apparel/outerwear']
     };
     if (!floors[i]) return;
-    const [key, label] = floors[i];
+    const [key, label, feature] = floors[i];
     const floor = (i + 1) + 'F';
     const wings = [[34.2, 1], [41.8, -1]];
     const centers = [100.5, 109.5, 118.5, 127.5];
@@ -2173,19 +2175,19 @@ export function build(K) {
       }
     }
     lspawn(floor + ' ' + label,38,96.8,floorY,0,1);
-    const feature={Children:'childrenswear',Suits:'tailoring',Womenswear:'outerwear'}[key];
     const sampleU=wings[0][0],sampleV=centers[0];
-    if(feature){
-      ldetail({floor,y0:floorY,y1:floorY+3.1,poly:rect(sampleU-1.40,sampleV-2.65,sampleU+1.40,sampleV+2.65),name:label+' · 전면 상품'},()=>{
-        const [x,z]=W(sampleU,sampleV);
-        placeUpperShowroom(K,marketModel,key,'gyeongbu-apparel/'+feature,x,floorY,z,ROT+PI/2);
-      });
-    }
+    ldetail({floor,y0:floorY,y1:floorY+3.1,poly:rect(sampleU-1.40,sampleV-2.65,sampleU+1.40,sampleV+2.65),name:label+' · 전면 상품'},()=>{
+      const [x,z]=W(sampleU,sampleV);
+      placeUpperShowroom(K,marketModel,key,feature,x,floorY,z,ROT+PI/2);
+      if(key==='Bedding')lsign('연희침구',sampleU-.75,sampleV+.55,floorY+2.44,1.14,.25,'+u',
+        {bg:'#d64f2c',fg:'#fff5db',pxPerM:135,padding:.03});
+    });
     ldetail({floor, y0:floorY, y1:floorY+3.2, poly:rect(32,97,44,131), name:label}, () => {
       const placements=[];
       for (const [u,side] of wings) for (const v of centers) {
-        if(!feature || u!==sampleU || v!==sampleV)placements.push([u,v,floorY,side*PI/2]);
-        lsign(label,u+side*1.353,v,floorY+2.83,3.7,.26,side>0?'+u':'-u',
+        if(u!==sampleU || v!==sampleV)placements.push([u,v,floorY,side*PI/2]);
+        const curtainSign=key==='Curtains' && u===sampleU && v===sampleV;
+        lsign(curtainSign?'R A I N B O W  무지개장식':label,u+side*1.353,v,floorY+2.83,3.7,.26,side>0?'+u':'-u',
           {bg:null,fg:'#fff7e5',pxPerM:120});
       }
       addMarketFixtures(key,'경부 '+floor+' '+label,placements);
