@@ -104,6 +104,7 @@ const sources = [
     const native=label==='승객용 전광판과 안내 케이스'?'중앙차로 승차대 · 승객 전광판과 안내함':name;
     return ['streets','지상','sinbanpo-bus-shelters/shelters.blend',name,native];
   }),
+  ['gyeongbu','1F','gyeongbu-planted-columns/planted-column.blend','경부선 대합실 · 식물 기둥','대합실 · 네 면을 감싼 식물 기둥'],
   ['gyeongbu','1F','gyeongbu-front-entrance/portal.blend','경부선 정문 · 석재 차양과 영문 명판','정문 · 경사 기둥과 영문 채널 문자'],
   ['gyeongbu','1F','gyeongbu-front-entrance/tower.blend','경부선 명판탑 · 한글 채널 문자와 적갈색 외벽','정면 명판탑 · 입체 글자와 적갈색 외벽'],
   ...['머리띠와 집게핀·헤어롤 진열','손잡이 청소솔과 틈새 브러시 진열'].map(label=>{

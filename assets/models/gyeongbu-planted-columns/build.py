@@ -7,6 +7,10 @@ from mathutils import Vector
 
 out = Path(__file__).resolve().parent
 bpy.ops.wm.read_factory_settings(use_empty=True)
+scene = bpy.context.scene
+scene.unit_settings.system = 'METRIC'
+planting = bpy.data.collections.new("대합실 · 네 면을 감싼 식물 기둥")
+scene.collection.children.link(planting)
 rng = Random(513)
 material = bpy.data.materials.new("잎과 화분 · 정점색")
 material.use_nodes = True
@@ -31,7 +35,7 @@ def finish(name):
         v.color_srgb = (*(c / 255 for c in rgb), 1)
     mesh.materials.append(material)
     obj = bpy.data.objects.new(name, mesh)
-    bpy.context.collection.objects.link(obj)
+    planting.objects.link(obj)
     vertices.clear()
     faces.clear()
     colors.clear()
@@ -73,7 +77,8 @@ for face in range(4):
                 patch([start,ridge,mid+across*width,tip],[(0,1,2),(1,3,2)],
                       tuple(min(255,int(c*1.14)) for c in base))
     finish(f"0{face+2} · 접힌 잎 군락")
-bpy.context.scene.display.shading.color_type = 'VERTEX'
+scene.display.shading.color_type = 'VERTEX'
+bpy.context.preferences.filepaths.save_version = 0
 bpy.ops.wm.save_as_mainfile(filepath=str(out/"planted-column.blend"),compress=True)
 bpy.ops.object.select_all(action='SELECT')
 bpy.context.view_layer.objects.active = bpy.context.selected_objects[0]
