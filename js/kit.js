@@ -177,15 +177,21 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     try { return withTerrainSurface(plane, () => build(atWheel, wheels, tilt)); }
     finally { parkedPose = previous; }
   }
-  function recordAnchor(b) {
-    if (anchorHeight !== null) (b.anchors ||= new Map()).set(b.prim.length, anchorHeight);
+  // Input faces have one normal, one colour and one winding. Expand those
+  // directly into the final GPU buffers after their output tiles are known.
+  function recordFace(bucket, surface, normal, signedCount) {
+    if (anchorHeight !== null) (bucket.anchors ||= new Map()).set(bucket.prim.length, anchorHeight);
+    bucket.nor.push(normal[0], normal[1], normal[2]);
+    bucket.col.push(surface.c[0], surface.c[1], surface.c[2]);
+    bucket.prim.push(signedCount);
+    bucket.own.push(current);
   }
 
   // ---------- buckets ----------
   function bucket(key, x, z) {
     const tk = key + '|' + Math.floor(x / TILE) + ',' + Math.floor(z / TILE);
     let b = buckets.get(tk);
-    if (!b) { b = { key, pos: [], nor: [], uv: [], col: [], idx: [], prim: [], own: [] }; buckets.set(tk, b); }
+    if (!b) { b = { key, pos: [], nor: [], uv: [], col: [], prim: [], own: [] }; buckets.set(tk, b); }
     return b;
   }
   function splitTerrainFace(sp, p, n, uvs) {
@@ -219,14 +225,11 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     const bx = p[2][0] - p[0][0], by = p[2][1] - p[0][1], bz = p[2][2] - p[0][2];
     const cx = ay * bz - az * by, cy = az * bx - ax * bz, cz = ax * by - ay * bx;
     const flip = cx * n[0] + cy * n[1] + cz * n[2] < 0;
-    const base = b.pos.length / 3;
     for (let i = 0; i < 4; i++) {
-      b.pos.push(p[i][0], p[i][1], p[i][2]); b.nor.push(n[0], n[1], n[2]);
-      b.uv.push(uvs[i][0], uvs[i][1]); b.col.push(sp.c[0], sp.c[1], sp.c[2]);
+      b.pos.push(p[i][0], p[i][1], p[i][2]);
+      b.uv.push(uvs[i][0], uvs[i][1]);
     }
-    if (flip) b.idx.push(base, base + 2, base + 1, base, base + 3, base + 2);
-    else b.idx.push(base, base + 1, base + 2, base, base + 2, base + 3);
-    recordAnchor(b); b.prim.push(4); b.own.push(current);
+    recordFace(b, sp, n, flip ? -4 : 4);
     stats.quads++;
   }
   function tri(sp, p, n, uvs, split = true) {
@@ -238,9 +241,11 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     const bx = p[2][0] - p[0][0], by = p[2][1] - p[0][1], bz = p[2][2] - p[0][2];
     const cx = ay * bz - az * by, cy = az * bx - ax * bz, cz = ax * by - ay * bx;
     const flip = cx * n[0] + cy * n[1] + cz * n[2] < 0;
-    const base = b.pos.length / 3;
-    for (let i = 0; i < 3; i++) { b.pos.push(p[i][0], p[i][1], p[i][2]); b.nor.push(n[0], n[1], n[2]); b.uv.push(uvs[i][0], uvs[i][1]); b.col.push(sp.c[0], sp.c[1], sp.c[2]); }
-    if (flip) b.idx.push(base, base + 2, base + 1); else b.idx.push(base, base + 1, base + 2); recordAnchor(b); b.prim.push(3); b.own.push(current);
+    for (let i = 0; i < 3; i++) {
+      b.pos.push(p[i][0], p[i][1], p[i][2]);
+      b.uv.push(uvs[i][0], uvs[i][1]);
+    }
+    recordFace(b, sp, n, flip ? -3 : 3);
   }
   // vertical face from (ax,az)->(bx,bz), y0..y1, normal given. u along length from uOff.
   function vface(sp, ax, az, bx, bz, y0, y1, nx, nz, uOff = 0, floorH = 0, vBase = 0) {
@@ -763,6 +768,26 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     }
     return layers;
   }
+  // These batches have plain, world-space Float32 positions and no morph targets.
+  // Use the same box centre and furthest vertex as Three, sharing the box pass.
+  function setStaticBounds(geometry, positions) {
+    let minX = Infinity, minY = Infinity, minZ = Infinity;
+    let maxX = -Infinity, maxY = -Infinity, maxZ = -Infinity;
+    for (let i = 0; i < positions.length; i += 3) {
+      const x = positions[i], y = positions[i+1], z = positions[i+2];
+      minX = Math.min(minX, x); minY = Math.min(minY, y); minZ = Math.min(minZ, z);
+      maxX = Math.max(maxX, x); maxY = Math.max(maxY, y); maxZ = Math.max(maxZ, z);
+    }
+    const box = new THREE.Box3(new THREE.Vector3(minX, minY, minZ), new THREE.Vector3(maxX, maxY, maxZ));
+    const center = box.getCenter(new THREE.Vector3());
+    let maxRadiusSq = 0;
+    for (let i = 0; i < positions.length; i += 3) {
+      const dx = positions[i]-center.x, dy = positions[i+1]-center.y, dz = positions[i+2]-center.z;
+      maxRadiusSq = Math.max(maxRadiusSq, dx*dx + dy*dy + dz*dz);
+    }
+    geometry.boundingBox = box;
+    geometry.boundingSphere = new THREE.Sphere(center, Math.sqrt(maxRadiusSq));
+  }
   const aLayers = new Map();
   function finalize() { for (const p of atlas.pages) p.t.needsUpdate = true; return flush(); }
   // merge everything emitted since the last flush into meshes (the initial build, then each lazy detail group)
@@ -772,17 +797,31 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     // two passes: classify every primitive and count, then fill typed arrays directly (no big JS arrays)
     const subs = new Map(), plan = [];
     for (const [, b] of buckets) {
-      if (!b.idx.length) continue;
+      if (!b.prim.length) continue;
       const P = b.pos, ar = aLayers.get(b.key) || null, which = new Array(b.prim.length);
+      const materialKey = ar ? 'arr:' + ar.arr : b.key;
+      let previousCell, previousX, previousZ, sub;
       let vo = 0, pi = 0;
-      for (const nv of b.prim) {
+      for (const signedCount of b.prim) {
+        const nv = Math.abs(signedCount);
         let cx = 0, cy = 0, cz = 0; for (let k = 0; k < nv; k++) { cx += P[(vo + k) * 3]; cy += P[(vo + k) * 3 + 1]; cz += P[(vo + k) * 3 + 2]; }
         cx /= nv; cy /= nv; cz /= nv;
         const cell = classify(cx, cy, cz, b.own[pi]);
         if (stats.byOwner) stats.byOwner[b.own[pi]] = (stats.byOwner[b.own[pi]] || 0) + (nv === 4 ? 2 : 1);
-        const T2 = cell === 'o' ? TILE : CELL_TILE, mk = ar ? 'arr:' + ar.arr : b.key, sk = mk + '|' + cell + '|' + Math.floor(cx / T2) + ',' + Math.floor(cz / T2);
-        let s = subs.get(sk); if (!s) { s = { key: mk, cell, nv: 0, ni: 0, rect: !!ar }; subs.set(sk, s); }
-        s.nv += nv; s.ni += nv === 4 ? 6 : 3; which[pi++] = s; vo += nv;
+        // Buckets already group by the first vertex's tile. Most successive
+        // face centres land in the same output cell, including faces on a wall.
+        const tileSize = cell === 'o' ? TILE : CELL_TILE;
+        const tileX = Math.floor(cx/tileSize), tileZ = Math.floor(cz/tileSize);
+        if (cell !== previousCell || tileX !== previousX || tileZ !== previousZ) {
+          const key = materialKey + '|' + cell + '|' + tileX + ',' + tileZ;
+          sub = subs.get(key);
+          if (!sub) {
+            sub = { key: materialKey, cell, nv: 0, ni: 0, rect: !!ar };
+            subs.set(key, sub);
+          }
+          previousCell = cell; previousX = tileX; previousZ = tileZ;
+        }
+        sub.nv += nv; sub.ni += nv === 4 ? 6 : 3; which[pi++] = sub; vo += nv;
       }
       plan.push({ b, ar, which });
     }
@@ -792,22 +831,23 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
       s.v = 0; s.i = 0;
     }
     for (const { b, ar, which } of plan) {
-      const P = b.pos, N = b.nor, U = b.uv, C = b.col, I = b.idx;
-      let vo = 0, io = 0, pi = 0;
-      for (const nv of b.prim) {
-        const s = which[pi++], ni = nv === 4 ? 6 : 3;
+      const P = b.pos, N = b.nor, U = b.uv, C = b.col;
+      let vo = 0, pi = 0;
+      for (const signedCount of b.prim) {
+        const nv = Math.abs(signedCount);
+        const faceOffset = pi*3, s = which[pi++];
         const base = s.v, datum = b.anchors?.get(pi-1);
         for (let k = 0; k < nv; k++) {
           const v = vo + k, d = s.v++;
           s.pos[d * 3] = P[v * 3]; s.pos[d * 3 + 1] = P[v * 3 + 1] + terrainAt(datum,P[v*3],P[v*3+2]); s.pos[d * 3 + 2] = P[v * 3 + 2];
-          s.nor[d * 3] = N[v * 3]; s.nor[d * 3 + 1] = N[v * 3 + 1]; s.nor[d * 3 + 2] = N[v * 3 + 2];
+          s.nor[d * 3] = N[faceOffset]; s.nor[d * 3 + 1] = N[faceOffset+1]; s.nor[d * 3 + 2] = N[faceOffset+2];
           s.uv[d * 2] = U[v * 2]; s.uv[d * 2 + 1] = U[v * 2 + 1];
-          s.col[d * 3] = C[v * 3]; s.col[d * 3 + 1] = C[v * 3 + 1]; s.col[d * 3 + 2] = C[v * 3 + 2];
+          s.col[d * 3] = C[faceOffset]; s.col[d * 3 + 1] = C[faceOffset+1]; s.col[d * 3 + 2] = C[faceOffset+2];
           if (ar) s.rect[d] = ar.layer;
         }
         // Grade the lighting of level road, paving, roofs and park faces as
         // well as their silhouette. Survey clipping made each such face planar.
-        if (datum === undefined && Math.abs(N[vo*3+1]) > .999 && P[vo*3+1] === P[vo*3+4] && P[vo*3+1] === P[vo*3+7]) {
+        if (datum === undefined && Math.abs(N[faceOffset+1]) > .999 && P[vo*3+1] === P[vo*3+4] && P[vo*3+1] === P[vo*3+7]) {
           const v = 3*base, p = s.pos;
           const ax = p[v+3]-p[v], ay = p[v+4]-p[v+1], az = p[v+5]-p[v+2];
           const bx = p[v+6]-p[v], by = p[v+7]-p[v+1], bz = p[v+8]-p[v+2];
@@ -815,15 +855,23 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
             const nx = ay*bz-az*by, ny = az*bx-ax*bz, nz = ax*by-ay*bx;
             const length = Math.hypot(nx,ny,nz);
             if (Math.abs(ny) > 1e-8 && length) {
-              const scale = Math.sign(ny * N[vo*3+1]) / length;
+              const scale = Math.sign(ny * N[faceOffset+1]) / length;
               for (let d=v; d<v+3*nv; d+=3) {
                 s.nor[d] = nx*scale; s.nor[d+1] = ny*scale; s.nor[d+2] = nz*scale;
               }
             }
           }
         }
-        for (let k = 0; k < ni; k++) s.idx[s.i++] = I[io + k] - vo + base;
-        vo += nv; io += ni;
+        const flip = signedCount < 0;
+        s.idx[s.i++] = base;
+        s.idx[s.i++] = base + (flip ? 2 : 1);
+        s.idx[s.i++] = base + (flip ? 1 : 2);
+        if (nv === 4) {
+          s.idx[s.i++] = base;
+          s.idx[s.i++] = base + (flip ? 3 : 2);
+          s.idx[s.i++] = base + (flip ? 2 : 3);
+        }
+        vo += nv;
       }
     }
     buckets.clear();
@@ -836,7 +884,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
       g.setAttribute('color', new THREE.BufferAttribute(s.col, 3));
       if (s.rect) g.setAttribute('layer', new THREE.BufferAttribute(s.rect, 1));
       g.setIndex(new THREE.BufferAttribute(s.idx, 1));
-      g.computeBoundingSphere(); g.computeBoundingBox();
+      setStaticBounds(g, s.pos);
       // Static coordinates now include their surveyed elevation. Culling,
       // bounding volumes and rendering all use the same world-space mesh.
       const material = matFor(s.key);
