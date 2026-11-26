@@ -37,6 +37,7 @@ import { registerIQBox, toyShop } from './shinsegae-junior-workshop.js';
 import { registerMicroScooter } from './shinsegae-microscooter.js';
 import { registerComfPro } from './shinsegae-comfpro.js';
 import { registerStokke } from './shinsegae-stokke.js';
+import { registerHokyung } from './shinsegae-hokyung.js';
 import { registerKisara } from './shinsegae-kisara.js';
 import { registerMilhwa } from './shinsegae-milhwa.js';
 import { registerHibarin } from './shinsegae-hibarin.js';
@@ -8364,6 +8365,10 @@ export function build(K) {
         K.box({x:cx+a*Math.cos(angle)-b*Math.sin(angle),y,z:cz-a*Math.sin(angle)-b*Math.cos(angle),
           rotY:angle,w,d,h,mat:0x513426,skip:['top','bottom','n','s','e','w']});
       }
+      const hokyungBay=upperBuildRect(id,guide.cells.find(c=>c.name.startsWith('호경전')));
+      const diningU=hokyungBay[2]-1.5, diningV=hokyungBay[3]-(hokyungBay[3]-hokyungBay[1])*.23;
+      const [diningX,diningZ]=P(diningU,diningV),[axisX,axisZ]=P(diningU+1,diningV);
+      registerHokyung(K,{poly:rect(...hokyungBay),x:diningX,y,z:diningZ,yaw:Math.atan2(diningZ-axisZ,axisX-diningX)});
       const kisara=guide.cells.find(c=>c.name.startsWith('키사라'));
       const kr=upperBuildRect(id,kisara);
       const ku=kr[2]-1.5, kv=kr[3]-(kr[3]-kr[1])*.23;
@@ -14357,6 +14362,7 @@ export function build(K) {
       const cafe=kind==='cafe',jaju=/JAJU/.test(name);
       const rows=Math.min(4,Math.max(1,Math.floor((D-2)/2.15))),cols=W>7?islands:W>3.8?[W*.24]:[];
       for(const [i,a]of cols.entries())for(let r=0;r<rows;r++){
+        if(id==='11F'&&name.startsWith('호경전')&&i===0&&r<2)continue;
         if(id==='11F'&&name.startsWith('꼴라주')&&i===0&&r===1)continue;
         if(id==='11F'&&(name.startsWith('밀화')||name.startsWith('평양면옥')||name.startsWith('히바린')||name.startsWith('키사라'))&&i===0&&r===0)continue;
         const b=1.5+r*2.1,w=Math.min(1.25,sideWidth-.1);table(a,b,w,.8,.72,jaju?oak:cafe?ivory:walnut);
