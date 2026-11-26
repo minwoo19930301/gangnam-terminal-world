@@ -1,5 +1,6 @@
 """Set the native Blender sun and sky from the game's Seoul timeline."""
 
+from math import asin, degrees
 from mathutils import Vector
 import bpy
 
@@ -63,6 +64,9 @@ def apply_sky(scene, model):
     prior = None
     for minute, direction, color, energy, sky, fill in model["keys"]:
         x, up, south = direction
+        altitude = degrees(asin(max(-1.0, min(1.0, up))))
+        scene["Seoul apartment night"] = max(0.0, min(1.0, (-altitude - 2) / 8))
+        scene.keyframe_insert(data_path='["Seoul apartment night"]', frame=minute)
         rotation = Vector((-x, south, -up)).to_track_quat("-Z", "Y")
         if prior and rotation.dot(prior) < 0:
             rotation.negate()

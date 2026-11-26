@@ -2,6 +2,7 @@
 import bpy
 import hashlib
 import json
+import runpy
 import struct
 import subprocess
 import sys
@@ -96,6 +97,13 @@ for model_id, obj in objects.items():
     for vertex, dz in zip(city.data, levels[model_id], strict=True):
         vertex.co.z += dz
     city.value = 1.0
+
+windows = runpy.run_path(str(here / "windows.py"))
+window_shader = windows["window_group"]()
+for material in bpy.data.materials:
+    if material.name.startswith("Window glazing"):
+        windows["install_windows"](material, window_shader)
+scene[windows["NIGHT"]] = 0.0
 
 # Material preview uses the source's vertex colours on walls and glazing.
 for screen in bpy.data.screens:

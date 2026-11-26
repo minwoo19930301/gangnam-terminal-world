@@ -29,6 +29,7 @@ with tempfile.TemporaryDirectory(dir=target) as temp:
         base = Vector((row["x"], -row["z"], row["y"]))
         roots = {obj: obj.location.copy() for obj in parts if obj.parent not in parts}
         keys = {}
+        native_overlays = []
         bpy.ops.object.select_all(action="DESELECT")
         try:
             for obj in parts:
@@ -42,6 +43,15 @@ with tempfile.TemporaryDirectory(dir=target) as temp:
                 obj.location = location - base
             bpy.context.view_layer.update()
             path = stage / (model_id + ".glb")
+            # The game drives its own night shader; export the editable base finish.
+            for mat in {slot.material for obj in parts for slot in obj.material_slots}:
+                if not mat or not mat.use_nodes:
+                    continue
+                overlay = mat.node_tree.nodes.get("Native apartment night overlay")
+                if overlay:
+                    output = overlay.outputs[0].links[0].to_socket
+                    native_overlays.append((mat.node_tree, overlay, output))
+                    mat.node_tree.links.new(overlay.inputs[0].links[0].from_socket, output)
             bpy.ops.export_scene.gltf(
                 filepath=str(path), export_format="GLB", use_selection=True, export_apply=True,
                 export_morph=False, export_animations=False, export_vertex_color="MATERIAL",
@@ -64,6 +74,8 @@ with tempfile.TemporaryDirectory(dir=target) as temp:
                            sourceMaterial=True, nativeEdit=True)
             rows.append(path)
         finally:
+            for tree, overlay, output in native_overlays:
+                tree.links.new(overlay.outputs[0], output)
             for obj, location in roots.items():
                 obj.location = location
             for key, value in keys.items():
