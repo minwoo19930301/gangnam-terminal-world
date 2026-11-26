@@ -1,3 +1,4 @@
+import {marketWestReturn} from './shinsegae-b1-plan.js';
 import {placeStageCoffers} from '../../assets/models/open-stage-coffer/model.js';
 import {placeOpenStageLounge} from '../../assets/models/open-stage-lounge/model.js';
 import {galleryLights} from '../../assets/models/famille-atrium/model.js';
@@ -204,7 +205,7 @@ export function build(K) {
   };
   // station's B1 hall follows (45,150)->(-45,186)->(-68,195)->(-88,220)->(-175,262), 14 m wide: keep ≥7.6 m from it
   const sE9 = t => 204.1 - (t + 98.9) * (1.3 / 135.8);
-  const B1POLY = [T(0), T(1), T(2), T(3), T(4), T(5), T(6), T(7), T(8), T(9), P(sE9(-33), -33), P(201.2, -26.5), P(196.3, -18.5), P(191.6, -10.5), P(189.4, -4), P(189.4, 37.8), T(11), T(12)];
+  const B1POLY = [T(0), T(1), T(2), T(3), T(4), T(5), T(6), T(7), T(8), T(9), P(sE9(-33), -33), P(201.2, -26.5), P(196.3, -18.5), P(191.6, -10.5), P(189.4, -4), P(189.4, 37.8), T(11), ...marketWestReturn, T(12)];
   void clipHalf; void bandS;
   // 1F interior outline: the west facade is set back to t=6 between s=-10 and s=149 (bus noses under the 2F overhang)
   const F1POLY = [T(0), T(1), T(2), T(3), P(-10, 0.3), P(-10, 6), P(149, 6), P(149.6, 0.6), T(7), T(8), T(9), T(10), T(11), T(12)];
@@ -1918,7 +1919,7 @@ export function build(K) {
         if (L < 0.05) continue;
         const ops = [];
         // the last two are the open fronts onto the 7호선 B1 concourse (station module opens its wall at the same points)
-        for (const [q, w] of [[J4, 8.4], [J3P, 10.4], [[-42.6, 177.2], 8.4], [[-61.3, 184.4], 8.4]]) {
+        for (const [q, w] of [[J3P, 10.4], [[-42.6, 177.2], 8.4], [[-61.3, 184.4], 8.4]]) {
           const at = atOn(a, b, q[0], q[1]); const ux = (b[0] - a[0]) / L, uz = (b[1] - a[1]) / L;
           const d = Math.abs((q[0] - a[0]) * uz - (q[1] - a[1]) * ux);
           if (d < 2.5 && at > -1 && at < L + 1) ops.push({ at, w, y0: YB1, y1: YB1 + 3.4 });
