@@ -1672,26 +1672,29 @@ export function build(K) {
       K.detail({floor:'B1',y0:YB1,y1:0,poly,name},hosB1Finish);
       continue;
     }
-    K.detail({floor:'B1',y0:YB1,y1:0,poly,name},()=>{
-      for(const [index,cell]of B1_CELLS.entries()){
-        if(cell.zone!==key)continue;
-        if(cell.name==='배스 앤 바디 웍스'){
+    // Keep the original plan indices and geometry, but schedule the shops and
+    // vaults by their own bounds. One distant glimpse must not build the hall.
+    for(const [index,cell] of B1_CELLS.entries()) {
+      if(cell.zone!==key)continue;
+      K.detail({floor:'B1',y0:YB1,y1:0,poly:BRect(...cell.rect_display),name:cell.name},()=>{
+        if(cell.name==='배스 앤 바디 웍스') {
           bodyKiosk();
           placeKioskStaff(cell.rect_display);
-          continue;
-        }
-        spCell(cell,index);
+        } else spCell(cell,index);
+      });
+    }
+    if(key==='sweet') {
+      const [s0,t0,s1,t1]=spBounds(area), ns=Math.ceil((s1-s0)/7.6), nt=Math.ceil((t1-t0)/7.6);
+      const ds=(s1-s0)/ns, dt=(t1-t0)/nt;
+      for(let i=0;i<ns;i++)for(let j=0;j<nt;j++){
+        const a=s0+i*ds,b=t0+j*dt;
+        if([P(a+ds/2,b+dt/2),P(a+.3,b+.3),P(a+ds-.3,b+dt-.3)].some(q=>b1Reserved(...q,.65)))continue;
+        K.detail({floor:'B1',y0:YB1,y1:0,poly:RECT(a,b,a+ds,b+dt),name:name+' · 볼트 '+i+'-'+j},
+          ()=>spVault(a,b,a+ds,b+dt));
       }
-      // The photographed cross vaults belong to the southern Sweet Park hall.
-      // Build once over the full hall; the islands are nested in this region.
-      if(key==='sweet'){
-        const[s0,t0,s1,t1]=spBounds(area),ns=Math.ceil((s1-s0)/7.6),nt=Math.ceil((t1-t0)/7.6),ds=(s1-s0)/ns,dt=(t1-t0)/nt;
-        for(let i=0;i<ns;i++)for(let j=0;j<nt;j++){
-          const a=s0+i*ds,b=t0+j*dt;
-          if([P(a+ds/2,b+dt/2),P(a+.3,b+.3),P(a+ds-.3,b+dt-.3)].some(q=>b1Reserved(...q,.65)))continue;
-          spVault(a,b,a+ds,b+dt);
-        }
-      }
+    }
+    if(key==='sweet'||key==='sweet_islands')continue;
+    K.detail({floor:'B1',y0:YB1,y1:0,poly,name},()=>{
       // The private B1 walk shows a radial, two-tier globe chandelier in
       // the open arcade before CHICOR. Its position is photo-derived and
       // approximate; it is distinct from the southern Sweet Park vault lamps.
@@ -1708,7 +1711,6 @@ export function build(K) {
         }
       }
       // Northern shopping arcade retains its pale-diamond flooring and simple lighting.
-      if(key==='sweet'||key==='sweet_islands')return;
       for(let py=area[1]+25;py<area[3]-10;py+=70){
         const px=(area[0]+area[2])/2,q=BP(px,py);if(b1Reserved(...q))continue;
         K.cyl({x:q[0],z:q[1],y:YB1+3.7,r:.045,h:.7,mat:b1Brass,seg:8,solid:false});
