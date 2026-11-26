@@ -44,7 +44,7 @@ try{
   await pose(.02,6.85,0,3.10);await pose(-7.09,3.32,-2.65,3.15);await pose(-2.64,-2.07,-2.66,-5.94);
   assert.deepEqual(files,[],'no downloads from the opaque walls or facing away');
   await pose(-3.28,-2.46,-2.66,.13,.28);await high('sign',750);
-  assert.ok(!files.some(v=>/mala|rice|eggplant|reflections/.test(v)),'meals and mirror at the public approach');
+  assert.ok(!files.some(v=>/mala|rice|eggplant|pickles|pickleGlass|reflections/.test(v)),'meals and mirror at the public approach');
   // A visitor inside the room sees the metal frame on the rear of the menu.
   await pose(.78,1.31,.59,.38,-.27);
   assert.ok(!files.includes('menu.glb'),'no paper download from its back');
@@ -55,8 +55,9 @@ try{
   await look(-.86,.57,-.05);await high('host',1400);await walk(-2.64,2.23);
   await look(-4.41,2.45,-.55);await high('eggplant',5700);await look(-6.02,3.18,.10);await high('art',2000);await high('seat',4200);await high('granite',12);
   const stone=await page.evaluate(n=>{let map;__world.scene.traverse(o=>{if(o.name===n){const t=o.children[0]?.material?.map;if(t)map=[t.image.width,t.image.height];}});return map;},parts.granite[0]);assert.deepEqual(stone,[384,224]);
-  await look(-4.47,2.67,-.37);await high('setting',1900);await look(-3.94,2.81,.62);await high('lamp',1950);
+  await look(-4.47,2.67,-.37);await high('setting',900);await look(-3.94,2.81,.62);await high('lamp',1950);
   await walk(-.23,2.25);await look(1.17,2.35,-.55);await high('mala',9000);await high('rice',9900);
+  await look(1.94,2.693,-.4);await high('pickles',1200);await high('pickleGlass',290);
   // The former retaining face cut across this sightline. The near intersection must be the granite tabletop.
   const closest=await page.evaluate(([a,b,c,d])=>{const w=__world,T=w.K.THREE,r=new T.Raycaster(),origin=new T.Vector3(a,6.63,b),target=new T.Vector3(c,5.773,d);r.set(origin,target.sub(origin).normalize());r.far=2.3;const objects=[];w.scene.traverseVisible(o=>{if(o.isMesh)objects.push(o);});return r.intersectObjects(objects,false)[0]?.object.parent.name;},[...point(-.22,2.37),...point(1.42,2.54)]);
   assert.equal(closest,parts.granite[0],'the previously crossing court wall must leave the tabletop fully visible');
@@ -78,11 +79,26 @@ try{
     const row=await page.evaluate(compareDeckFrame);assert.equal(row.different,0,label+' occlusion changed RGB');pairs.push([label,row.before,row.after]);
     const wall=await page.evaluate(compareDeckFrame,'walls');assert.equal(wall.different,0,label+' wall occlusion changed RGB');walls.push([label,wall.before,wall.after]);
   }
+  await pose(2.66,2.61,1.94,2.693,-.838);
+  const jarPixels=await page.evaluate(name=>{
+    const {scene,renderer,camera}=__world,gl=renderer.getContext(),groups=[];
+    scene.traverse(o=>{if(o.name===name&&o.visible)groups.push(o);});
+    function frame(){
+      renderer.render(scene,camera);const p=new Uint8Array(gl.drawingBufferWidth*gl.drawingBufferHeight*4);
+      gl.readPixels(0,0,gl.drawingBufferWidth,gl.drawingBufferHeight,gl.RGBA,gl.UNSIGNED_BYTE,p);return p;
+    }
+    const intact=frame();for(const group of groups)group.visible=false;
+    let plain;try{plain=frame();}finally{for(const group of groups)group.visible=true;}
+    let changed=0;
+    for(let j=0;j<intact.length;j+=4)if(intact[j]!==plain[j]||intact[j+1]!==plain[j+1]||intact[j+2]!==plain[j+2])changed++;
+    return changed;
+  },parts.pickleGlass[0]);
+  assert.ok(jarPixels>350,'the glass lip and reflections must draw in the game depth buffer');
   assert.ok(pairs.some(([,a,b])=>a[1]>b[1]));
   assert.deepEqual(walls[0][1],walls[0][2],'open public gallery keeps its whole view');
   assert.deepEqual(walls.at(-1)[1],walls.at(-1)[2],'exterior facade keeps its whole view');
   assert.ok(walls.find(([name])=>name==='mirror')[1][1]>walls.find(([name])=>name==='mirror')[2][1]);
   assert.deepEqual(errors,[]);assert.equal(new Set(files).size,files.length);
   for(const key of Object.keys(parts))assert.ok(files.includes(key==='mirrors'?'reflections.webp':key+'.glb'),key);
-  assert.ok(files.includes('room-light.webp'));console.log(JSON.stringify({entrance,aisle,hall,stone,menu,mirrorChange,files,pairs,walls}));
+  assert.ok(files.includes('room-light.webp'));console.log(JSON.stringify({entrance,aisle,hall,stone,menu,mirrorChange,jarPixels,files,pairs,walls}));
 }finally{await browser.close();await new Promise(r=>server.close(r));}

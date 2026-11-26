@@ -23,7 +23,7 @@ try:
             ratio=.26 if ob.name.startswith(('볶은 쌀알','육수 표면 기름','튀김의 갈색','상아빛 매화 꽃잎','꽃술')) else .45 if ob.name.startswith(('속에 들어간 새우살','달걀 조각과')) else 1
             if ratio<1:
                 mod=ob.modifiers.new('게임용 작은 식재료 축약','DECIMATE');mod.ratio=ratio;mods.append((ob,mod))
-        bpy.context.view_layer.update();bake_collection(col,'FP218_'+key,here/(key+'.glb'),simplification=(.48,.0011 if key in ('mala','rice','eggplant','setting') else .0013),preserve_smoothing=True)
+        bpy.context.view_layer.update();bake_collection(col,'FP218_'+key,here/(key+'.glb'),simplification=(.48,.0011 if key in ('mala','rice','eggplant','setting','pickles','pickleGlass') else .0013),preserve_smoothing=True)
     bake_furnished(here,'FP218 · 차알 식사 공간',[('room',parts['room'][0],768)])
 finally:
     for ob,mod in mods:ob.modifiers.remove(mod)

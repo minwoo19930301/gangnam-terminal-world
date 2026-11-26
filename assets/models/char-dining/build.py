@@ -45,7 +45,7 @@ def text(label,body,x,d,z,size,c,side='front',font=None):
 fp=next((p for p in [os.getenv('GTW_KOREAN_FONT'),'/System/Library/Fonts/Supplemental/AppleGothic.ttf','/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc'] if p and Path(p).exists()),None)
 if not fp:raise RuntimeError('Set GTW_KOREAN_FONT to a Korean TTF or OTC')
 font=bpy.data.fonts.load(fp)
-for file in ['hall.py','seats.py','food.py','menu.py']:runpy.run_path(str(here/file),init_globals=dict(globals()))
+for file in ['hall.py','seats.py','food.py','pickles.py','menu.py']:runpy.run_path(str(here/file),init_globals=dict(globals()))
 bpy.data.fonts.remove(font);bpy.context.view_layer.update()
 for c in subjects.values():
     for ob in c.all_objects:ob.location+=Vector(c['preview_origin']);ob.select_set(False)
