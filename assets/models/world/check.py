@@ -25,6 +25,9 @@ for image in bpy.data.images:
     if not image.library and image.source == "FILE":
         assert image.packed_file and image.filepath.startswith("//textures/")
 # Refresh must preserve existing placements and must not duplicate shelves.
+collections = [o.instance_collection for o in gallery.objects if o.instance_collection]
+assert any(c.get("export_model") == "peacock" for c in collections)
+assert any(c.get("display_key") == "putterRail" for c in collections)
 placements = {o.name: o.matrix_basis.copy() for o in gallery.objects}
 refresh = runpy.run_path(str(here / "libraries.py"))["link_asset_gallery"]
 assert refresh(here) == gallery

@@ -1,5 +1,6 @@
 import { OPEN_STAGE_FRONT } from './_junctions.js';
 import { loadArchitecture, placeArchitecture } from '../../assets/models/interior-architecture/model.js';
+import { placeLoungeChairs } from '../../assets/models/lounge-chair/model.js';
 import { fixtures } from '../../assets/models/jwmarriott/fixtures.js';
 
 // JW 메리어트 호텔 서울 — 센트럴시티 동측 블록 (OSM 136986976), 지상 33층 · 지하 4층.
@@ -1956,61 +1957,16 @@ export function build(K) {
       tub(u - 1.1, v, 'E', v === 20 || v < 18); tub(u + 1.1, v, 'W', v === 20 || v < 18);
       FLOWER(u, v, y + .63, .18, [0x763553, 0xa14f71, 0x567442]);
     }
-    // 01/04: four window peacock chairs plus the separate screen-corner chair seen in 04.
-    // The rods have actual round sections, so the weave keeps its depth in the oblique close-up.
-    for (const [chairIndex, u, v, face] of [[0, -6.6, 15.45, 1], [1, -6.6, 18.1, 1], [2, -6.6, 20.75, 1], [3, -6.6, 23.4, 1], [4, 3.65, 20.5, -1]]) {
-      const reed = (a, b, r, mat, seg) => {
-        if (face < 0) { a[0] = 2 * u - a[0]; b[0] = 2 * u - b[0]; }
-        rod(a, b, r, mat, seg);
-      };
-      CONE(u, v, y, .35, .2, .45, 0xbd9d71, { seg: 20, solid: false });
-      CY(u + .1 * face, v, y + .45, .39, .08, 0xd0b78d, { seg: 24, solid: false });
-      const shell = (a, h, depth = 0) => [u - .29 + .29 * Math.pow(a / .63, 2) + .10 * Math.max(0, h - 1.1) + depth, y + h, v + a];
-      const outline = (t, inset = 0) => shell(Math.cos(t) * (.63 - inset), 1.24 + Math.sin(t) * (.82 - inset));
-      for (let i = 0; i < 64; i++) {
-        const t = i / 64 * Math.PI * 2, tn = (i + 1) / 64 * Math.PI * 2;
-        reed(outline(t), outline(tn), .018, 0xd0b78d, 6);
-        reed(outline(t, .04), outline(tn, .04), .009, 0xd8bd90, 5);
-      }
-      for (let i = 0; i < 27; i++) {
-        const t = i / 27 * Math.PI * 2, edge = outline(t, .07);
-        reed(shell(Math.cos(t) * .18, .53), edge, .006, 0xbfa274, 5);
-      }
-      // Two interlaced rows of six-petal flowers, with smaller loops in the neck of the chair.
-      for (const [ac, hc, rr] of [[-.3, 1.04, .19], [.06, 1.04, .2], [.36, 1.34, .18], [-.33, 1.49, .18], [.03, 1.5, .2], [0, 1.84, .13], [-.12, .73, .12]]) {
-        for (let i = 0; i < 60; i++) {
-          const t = i / 60 * Math.PI * 2, tn = (i + 1) / 60 * Math.PI * 2;
-          const petal = t => { const r = rr * (.72 + .28 * Math.cos(6 * t)); return shell(ac + Math.cos(t) * r, hc + Math.sin(t) * r, .016); };
-          reed(petal(t), petal(tn), .007, 0xd2b586, 5);
-        }
-      }
-      // Small circle-and-petal infill fills the broad back like the cream floral rattan in 04.
-      for (const [ac, hc, rr] of [[-.42, 1.2, .1], [-.14, 1.27, .12], [.23, 1.14, .1], [.39, 1.56, .1], [-.2, 1.72, .12], [.23, 1.75, .11], [-.43, 1.65, .08], [0, .88, .09], [.4, .99, .075], [-.4, .88, .075]]) {
-        for (let i = 0; i < 36; i++) {
-          const a = i / 36 * Math.PI * 2, b = (i + 1) / 36 * Math.PI * 2;
-          const at = t => shell(ac + Math.cos(t) * rr, hc + Math.sin(t) * rr, .023);
-          reed(at(a), at(b), .0065, 0xe4cfaa, 5);
-          if (i % 6 === 0) reed(shell(ac, hc, .023), at(a), .005, 0xdac39b, 5);
-        }
-      }
-      // Woven pedestal has crossing diagonal reeds and three circular binding courses.
-      for (let i = 0; i < 24; i++) {
-        const a = Math.PI * 2 * i / 24;
-        for (const twist of [-.8, .8]) reed([u + Math.cos(a) * .35, y + .035, v + Math.sin(a) * .35], [u + Math.cos(a + twist) * .205, y + .435, v + Math.sin(a + twist) * .205], .007, 0xa98b61, 5);
-      }
-      for (const h of [.035, .22, .43]) {
-        const rr = .35 - h / .45 * .15;
-        for (let j = 0; j < 28; j++) {
-          const a = j / 28 * Math.PI * 2, b = (j + 1) / 28 * Math.PI * 2;
-          reed([u + Math.cos(a) * rr, y + h, v + Math.sin(a) * rr], [u + Math.cos(b) * rr, y + h, v + Math.sin(b) * rr], .01, 0xc2a373, 5);
-        }
-      }
-      // Loose mauve pillow: round corners and a central seam instead of a tall box cushion.
-      const [px, pz] = P(u + .14 * face, v);
-      DK.dome({ x: px, y: y + .72, z: pz, rx: .18, ry: .27, rz: .32, hemi: false, mat: chairIndex % 2 ? 0xc18d94 : 0xb67e8b, seg: 28, rings: 16 });
-      reed([u + .315, y + .57, v - .02], [u + .315, y + .88, v + .025], .005, 0x8b5965, 4);
-      B({ u, v, y, w: .7, d: .8, h: .75, mat: 0, solid: true, skip: ['top', 'bottom', 'n', 's', 'e', 'w'] });
+    // Photos 01/04 show the fan-back cane chairs and dusty rose cushions.
+    // Keep circulation in the normal build; the woven set is shared by the five seats.
+    const loungeChairs = [[-6.6,15.45,1],[-6.6,18.1,1],[-6.6,20.75,1],[-6.6,23.4,1],[3.65,20.5,-1]];
+    for (const [u,v] of loungeChairs) {
+      B({u,v,y,w:.7,d:.8,h:.75,mat:0,solid:true,structural:true,skip:['top','bottom','n','s','e','w']});
     }
+    K.detail({floor:'8F',y0:y,y1:yc,poly:RECT(-7.3,14.6,4.3,24.1),name:'더 라운지 · 라탄 좌석'}, () => placeLoungeChairs(K,loungeChairs.map(([u,v,face]) => {
+      const [x,z] = P(u,v);
+      return [x,y,z,R+(face < 0 ? Math.PI : 0)];
+    })));
     for (const v of [16.77, 19.42, 22.07]) ROUND(-6.45, v, y, .3, .55, 0x1c1a18);
     // Photo 04's black lacquer screen and tub seats occupy the opposite end-wall corner.
     // This is kept clear of the frontal bar camera and of the central lift approach.

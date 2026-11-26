@@ -7,6 +7,7 @@ from mathutils import Vector
 
 
 SHELVES = {
+    "lounge-chair": "JW 8층 라운지 · 라탄 암체어",
     "shinsegae-facade": "신세계 북측 외벽 간판",
     "shared-ceiling": "공용 실내 · 흡음 천장패널",
     "upper-retail-finish": "신세계 상층 천장 마감",

@@ -13548,7 +13548,10 @@ export function build(K) {
       }
     }else if(kind==='golf'){
       apparel();
-      for(let i=0;i<Math.min(3,Math.floor(W/2));i++){
+      // The main sales bay has room for a full rail; the adjoining strip keeps its compact displays.
+      if(id==='7F'&&name==='골프숍'&&W>9&&D>5){
+        shopDisplay('putterRail',1.25,Math.min(D-.8,2.15),y+.02,ST);
+      }else for(let i=0;i<Math.min(3,Math.floor(W/2));i++){
         const a=.65+i*.58,b=Math.min(D-.7,2.15),col=[0xe5e1d7,0x2d4245,0x9a7750][i];
         if(id==='7F'&&name==='PXG'){shopDisplay('golf',a,b,y+.02,ST);continue;}
         B(a,b,.33,.36,.08,.8,col);B(a,b-.19,.27,.12,.25,.34,col);

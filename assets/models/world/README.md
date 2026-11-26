@@ -21,6 +21,8 @@ blender --factory-startup -b assets/models/world/gangnam-terminal.blend --python
 npm run serve -- 8765
 ```
 
+내보내기는 전체 외관 파일 `buildings.json.gz`와 구역별 `building-tiles/`를 함께 갱신합니다. 일반 게임 주소에서는 현재 구역 주변의 파일만 읽습니다.
+
 건물 원본의 색상 재질은 웹에 RGB로 내보냅니다. 파사드 이미지 재질은 `game_texture`에 등록한 게임 재질과 활성 UV를 사용합니다. 거리 조형물은 설치 전 모델과 배치가 분리되어 있습니다. 표고·도로의 편집 격자와 선형은 웹에서 지형과 포장을 재생성하는 입력입니다. Blender의 포장·녹지 표시 메시도 다시 계산하려면 편집한 통합 파일의 복사본을 보관한 후 아래의 전체 재생성을 사용하세요.
 
 ### 실내 마감과 집기
@@ -29,6 +31,8 @@ npm run serve -- 8765
 
 | 선반 | 게임에 반영되는 부분 |
 | --- | --- |
+| [JW 8층 라운지 · 라탄 암체어](../lounge-chair/lounge-chair.blend) | 근접 시에 보이는 등받이 짜임, 팔걸이와 방석 마감 |
+| [신세계 7층 골프 진열](../shinsegae/upper-floor-displays.blend) | 퍼터 비교 진열대의 몸체와 네 가지 클럽 헤드 |
 | [신세계 북측 외벽 간판](../shinsegae-facade/README.md) | 백화점 북측 입구의 채널 문자, 간판 바탕과 테두리 |
 | [공용 실내 · 흡음 천장패널](../shared-ceiling/README.md) | 시설 모듈이 공통으로 사용하는 흡음판, 확산 렌즈, 환기 그릴의 모양과 반복 간격 |
 | [뉴코아 층판·바닥 마감](../newcore-floor/README.md) | 1·2관 B1~5F와 3관 1F의 포세린·헤링본·연마석, 반복 간격과 층판 두께 |
