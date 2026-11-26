@@ -24,6 +24,6 @@ export function placeHanbokShowroom(K,x,y,z,angle){
   return placeMarketDisplay(K,{
     name:'경부선 4층 · 고명재한복 치마와 저고리',file:'../gyeongbu-hanbok/hanbok-showroom.glb',
     at:[x,y,z],angle,focus:[[-2.53,.11,-1.24,2.53,2.82,1.31]],
-    initialGeometry:storefront,silhouette:new URL('./proxy.js',import.meta.url)
+    frontage:{halfWidth:2.58,back:-1.28,front:1.30},initialGeometry:storefront,silhouette:new URL('./proxy.js',import.meta.url)
   });
 }

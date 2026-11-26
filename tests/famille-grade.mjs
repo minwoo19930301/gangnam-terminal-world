@@ -55,7 +55,7 @@ for(const exterior of [true,false]) {
   }
   const pavilion=osm.buildings.find(b=>b.id===593858530);
   for(const [x,z] of pavilion.poly) near(relief(x,z),datum,.06,'level floor at circular pavilion rim');
-  const profile=s=>s<149.4 || s>171 ? 0 : s<164.4 ? .015+(s-149.4)*(.68-.015)/15 : s<169.4 ? .68 : (171-s)*.68/1.6;
+  const profile=s=>s<149.4 || s>172.28 ? 0 : s<164.4 ? .015+(s-149.4)*(1.36-.015)/15 : s<169.4 ? 1.36 : (172.28-s)*1.36/2.88;
   for(const [start,end] of [[148.5,173],[173,148.5]]) {
     checkWalk(phys,[start,22],[end,22],t=>profile(start+(end-start)*t),'Honam half-flight');
     checkWalk(phys,[start,24.5],[end,24.5],()=>0,'level bypass');

@@ -1,14 +1,20 @@
+import sharp from 'sharp';
 import {NodeIO} from '@gltf-transform/core';
 import {ALL_EXTENSIONS} from '@gltf-transform/extensions';
-import {meshopt,weld} from '@gltf-transform/functions';
-import {MeshoptEncoder,MeshoptDecoder} from 'meshoptimizer';
+import {meshopt,simplify,weld} from '@gltf-transform/functions';
+import {MeshoptEncoder,MeshoptSimplifier} from 'meshoptimizer';
 import {fileURLToPath} from 'node:url';
 
-await Promise.all([MeshoptEncoder.ready,MeshoptDecoder.ready]);
-const io=new NodeIO().registerExtensions(ALL_EXTENSIONS).registerDependencies({
-  'meshopt.encoder':MeshoptEncoder,'meshopt.decoder':MeshoptDecoder
-});
-const path=fileURLToPath(new URL('gallery.glb',import.meta.url));
-const doc=await io.read(path);
-await doc.transform(weld(),meshopt({encoder:MeshoptEncoder,level:'medium',quantizePosition:16}));
-await io.write(path,doc);
+await Promise.all([MeshoptEncoder.ready,MeshoptSimplifier.ready]);
+const io=new NodeIO().registerExtensions(ALL_EXTENSIONS).registerDependencies({'meshopt.encoder':MeshoptEncoder});
+const file=fileURLToPath(new URL('gallery.glb',import.meta.url));
+const doc=await io.read(file);
+const service=doc.getRoot().listMaterials().find(m=>m.getName()==='KisaraGlazedServing');
+const colour=service.getBaseColorTexture(),normal=service.getNormalTexture(),rough=service.getMetallicRoughnessTexture();
+colour.setImage(await sharp(colour.getImage()).jpeg({quality:89,mozjpeg:true}).toBuffer()).setMimeType('image/jpeg');
+normal.setImage(await sharp(normal.getImage()).resize(512,480).png({palette:true,colours:112,dither:0}).toBuffer());
+rough.setImage(await sharp(rough.getImage()).resize(384,360).png({palette:true,colours:96,dither:0}).toBuffer());
+await doc.transform(weld(),simplify({simplifier:MeshoptSimplifier,ratio:.48,error:.00024}),
+  meshopt({encoder:MeshoptEncoder,level:'medium',quantizePosition:16,quantizeNormal:9,quantizeTexcoord:13}));
+await io.write(file,doc);
+console.log('Packed triangles',doc.getRoot().listMeshes().flatMap(m=>m.listPrimitives()).reduce((n,p)=>n+p.getIndices().getCount()/3,0));
