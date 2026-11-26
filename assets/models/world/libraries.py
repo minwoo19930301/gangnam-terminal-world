@@ -25,6 +25,7 @@ SHELVES = {
     "biscuiterie-mo": "스위트 파크 · 비스퀴테리 M.O 마들렌과 틴 진열장",
     "fortnum-tea-shop": "스위트 파크 · 포트넘앤메이슨 홍차 매장",
     "pompompurin-bakery": "스위트 파크 · 폼폼푸린 베이커리 카페",
+    "buchang-walnut": "스위트 파크 · 부창제과 호두과자",
     "haz-bakery": "스위트 파크 · 하츠베이커리",
     "sweet-arabica": "스위트 파크 · %아라비카 입구",
     "ssg-ferragamo": "신세계 6층 · 페라가모 남성",
