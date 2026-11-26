@@ -61,10 +61,11 @@ export function placeSingleDetail(K, {name, file, at, angle, fallback, fallbackM
     }
     const surface=within?state.surface:null;
     const geometry=surface?.geometry??fallback;
+    const nextMaterial=surface?(material??surface.material):fallbackMaterial;
+    // A streamed finish can become ready after the native geometry.
+    if(item.material!==nextMaterial)item.material=nextMaterial;
     if(item.geometry===geometry)return;
     item.geometry=geometry;
-    // A baked interior can keep its native glTF map/material as well as its mesh.
-    item.material=surface?(material??surface.material):fallbackMaterial;
     item.matrixAutoUpdate=false;
     if(placements)placeInstances(surface);
     else if(surface)item.matrix.copy(surface.matrixWorld);
