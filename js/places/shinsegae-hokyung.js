@@ -4,8 +4,29 @@ import {mountRetailDisplay} from './shinsegae-retail-display.js';
 const source=new URL('../../assets/models/ssg-hokyung-dining/gallery.glb',import.meta.url);
 const batches=['HokyungJoinery','HokyungSizzlingRice','HokyungTeaMetal','HokyungFanAndWood','HokyungLamplight'];
 
+const mealSource=new URL('../../assets/models/ssg-hokyung-dining/meal.glb',import.meta.url);
+
+function mountEggplantRice(K,{poly,x,y,z,yaw}) {
+  const side=-1.83,front=.23;
+  const px=x+side*Math.cos(yaw)+front*Math.sin(yaw),pz=z-side*Math.sin(yaw)+front*Math.cos(yaw);
+  K.detail({floor:'11F',poly,y0:y,y1:y+4.8,name:'호경전 가지덮밥과 소찬'},()=>{
+    const T=K.THREE,root=new T.Group(),fallback=new T.Group();
+    root.position.set(px,y+relief(x,z)+.765,pz);root.rotation.y=yaw+Math.PI/2;root.add(fallback);
+    const disc=new T.CylinderGeometry(1,.86,1,18);
+    function dish(x,y,z,r,height,color){
+      const mesh=new T.Mesh(disc,new T.MeshStandardMaterial({color}));
+      mesh.position.set(x,y,z);mesh.scale.set(r,height,r);fallback.add(mesh);
+    }
+    dish(0,.012,.018,.143,.024,0xf3eadc);dish(.024,.026,.018,.093,.011,0x91512c);
+    dish(-.056,.028,.018,.048,.009,0xefe1c0);dish(.182,.021,-.002,.048,.040,0xe7d7ac);
+    dish(-.087,.010,-.150,.044,.02,0xf3db8b);dish(.019,.011,-.153,.045,.020,0xc39861);
+    mountRetailDisplay(K,{root,fallback,source:mealSource,batches:['HokyungEggplantRice'],x:px,y,z:pz,nearDistance:3.5,displayDistance:9});
+  });
+}
+
 export function registerHokyung(K,{poly,x,y,z,yaw}){
   const floor='11F';
+  mountEggplantRice(K,{poly,x,y,z,yaw});
   // The existing first two dining positions. Blender +Y points to local -Z.
   for(const offset of [0,-2.1]){
     for(const [dx,w,d,h] of [[0,1.25,.98,.765],[-.78,.47,.46,.87],[.78,.47,.46,.87]]){

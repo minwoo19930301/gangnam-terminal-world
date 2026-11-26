@@ -56,6 +56,7 @@ import { registerJura } from './shinsegae-jura.js';
 import { registerPishon } from './shinsegae-pishon.js';
 import { registerKitchenTool } from './shinsegae-kitchentool.js';
 import { registerChristofle } from './shinsegae-silver-table.js';
+import { registerJajuTable } from './shinsegae-jaju-table.js';
 import { registerMarzocco } from './shinsegae-marzocco.js';
 import { mounts as facadeMounts } from '../../assets/models/shinsegae-facade/mounts.js';
 import { loadArchitecture, fitArchitecture, fitTerminalSeat as drawFacadeSign } from '../../assets/models/architectural-retail/place.js';
@@ -8335,6 +8336,17 @@ export function build(K) {
           z:jz-side*Math.sin(juraYaw)-back*Math.cos(juraYaw),w,d,h,rotY:juraYaw,
           mat:0xac8868,skip:['top','bottom','n','s','e','w']});
       }
+      const jajuRoom=upperBuildRect(id,guide.cells.find(c=>c.name==='자주 테이블'));
+      const jajuU=jajuRoom[0]+3.60,jajuV=jajuRoom[1]+6;
+      const [tableX,tableZ]=P(jajuU,jajuV),[rightTableX,rightTableZ]=P(jajuU,jajuV+1);
+      const tableYaw=Math.atan2(tableZ-rightTableZ,rightTableX-tableX);
+      registerJajuTable(K,{poly:rect(jajuU-.55,jajuV-1.85,jajuU+3.35,jajuV+2.1),
+        x:tableX,y,z:tableZ,yaw:tableYaw});
+      for(const [side,back,w,d,h] of [[0,0,1.76,.91,.83],[0,2.02,3.49,.77,1.13],[.44,3.27,3.2,.09,2.84]]){
+        K.box({x:tableX+side*Math.cos(tableYaw)-back*Math.sin(tableYaw),y,
+          z:tableZ-side*Math.sin(tableYaw)-back*Math.cos(tableYaw),w,d,h,rotY:tableYaw,
+          mat:0x76543f,skip:['top','bottom','n','s','e','w']});
+      }
       const shop=guide.cells.find(c=>c.name==='라마르조코');
       const [west,north,east,south]=upperBuildRect(id,shop);
       const u=west+.80, v=(north+south)/2, [x,z]=P(u,v);
@@ -14360,9 +14372,10 @@ export function build(K) {
       fsign('SHINSEGAE',a,D-.43,y+2.79,Math.min(1.45,w-.4),.13,{bg:null,fg:'#30251f',pxPerM:180});
       fsign('MEMBERS BAR',a,D-.43,y+2.60,Math.min(1.65,w-.4),.20,{bg:null,fg:'#30251f',pxPerM:180});
     }else if(kind==='rest'||kind==='cafe'||kind==='lounge'){
-      const cafe=kind==='cafe',jaju=/JAJU/.test(name);
+      const cafe=kind==='cafe',jaju=name==='자주 테이블';
       const rows=Math.min(4,Math.max(1,Math.floor((D-2)/2.15))),cols=W>7?islands:W>3.8?[W*.24]:[];
       for(const [i,a]of cols.entries())for(let r=0;r<rows;r++){
+        if(id==='9F'&&jaju&&i===0&&r<4)continue;
         if(id==='11F'&&name.startsWith('호경전')&&i===0&&r<2)continue;
         if(id==='11F'&&name.startsWith('꼴라주')&&i===0&&r===1)continue;
         if(id==='11F'&&(name.startsWith('밀화')||name.startsWith('평양면옥')||name.startsWith('히바린')||name.startsWith('키사라'))&&i===0&&r===0)continue;
@@ -16841,8 +16854,8 @@ export function build(K) {
         ...(southJoin&&c.name==='폴로 랄프 로렌'?{rearOpenFrom:Math.min(Wf,Math.max(0,v1-southJoin[3]))}:{}),
         ...(id==='4F'&&c.name.startsWith('캐주얼 슈즈')?{shoeChunkCount:parts.length,shoeChunkIndex:parts.indexOf(q)}:{})});
       else{fb(Wf/2,.3,Wf-.3,.12,y,2.94,palette.wall);fsign('입점 준비 중',Wf/2,.21,y+1.6,Wf*.75,.3,{bg:null,fg:'#5f5b51'});}
-      if(id==='11F'||c.name==='JAJU 테이블'){
-        const menu=c.name.includes('(')?c.name.split('(')[1].replace(')','').replaceAll('/',' · '):c.name==='JAJU 테이블'?'식사 · 차 · 디저트':'음식 · 음료';
+      if(id==='11F'||c.name==='자주 테이블'){
+        const menu=c.name.includes('(')?c.name.split('(')[1].replace(')','').replaceAll('/',' · '):c.name==='자주 테이블'?'식사 · 차 · 디저트':'음식 · 음료';
         fsign(menu,Wf*.25,.24,y+1.6,Math.min(1.5,Wf*.38),.5,{bg:'#504b3e',fg:'#fff2da'});
       }
       if(id==='8F'&&c.name==='K2'){
@@ -17476,7 +17489,7 @@ export const upperGuidePlans = {};
   c('에르뽀 · 보쎄',167,885,234,952,'W');c('칼한센',235,885,314,921,'E');c('보컨셉',235,922,314,952,'E');r([341,474,595],897,952,'타임&스타일|몰테니&C','N');
   c('로쉐보보아',624,812,772,883,'E');c('보에',624,884,772,952,'E');r([800,860,913,962],823,916,'에르메스 메종|크리스토플|라리끄','N');c('생루이',800,917,860,1015,'W');
   r([143,235,327,603,699,783],976,1078,'까시나|에드라|놀/폴트로나프라우/체코티콜레지오니|비앤비 이탈리아|라잇나우','N');
-  c('고객상담실 · 퇴점브랜드 수선 접수 센터',1056,447,1231,518,'S','service');c('JAJU 테이블',1231,447,1603,544,'S','rest');c('쿠킹스튜디오 (쿠쿠/에피큐리언)',1426,510,1603,546,'S','kitchen');
+  c('고객상담실 · 퇴점브랜드 수선 접수 센터',1056,447,1231,518,'S','service');c('자주 테이블',1231,447,1603,544,'S','rest');c('쿠킹스튜디오 (쿠쿠/에피큐리언)',1426,510,1603,546,'S','kitchen');
   c('빌레로이 앤 보흐',1088,518,1182,580,'E','kitchen');c('베르나르도',1088,581,1182,635,'E','kitchen');c('하빌랜드/제이엘 꼬께/헤렌드',1088,636,1182,700,'E','kitchen');c('웨지우드',1088,701,1182,761,'E','kitchen');c('로얄코펜하겐',986,690,1087,761,'E','kitchen');
   r([1208,1303,1397],582,626,'VBC까사|필리빗','S','kitchen');r([1208,1274,1335,1397],627,668,'솔솔 푸른솔|광주요|놋담','S','kitchen');
   c('TWL',1208,683,1307,761,'W','kitchen');c('Tea Note',1308,683,1397,722,'E','kitchen');c('팝업',1308,723,1397,761,'E','popup');

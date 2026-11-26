@@ -317,6 +317,9 @@ for tx in (0,-2.1):
             line('젓가락',[(tx+side*.46,.075+j*.012,TOP+.008),(tx+side*.46-.018,.315+j*.012,TOP+.011)],
                 [.003,.002],'574236',1)
         box('젓가락 받침',tx+side*.46,.23,TOP,.043,.014,.009,china,1)
+# The second customer table has its own camera-dependent meal.
+import meal_model
+meal_model.make(col,meal_model.FRAME)
 # Save separated objects in the artist's source before batching for the game.
 bpy.context.scene.unit_settings.system='METRIC'
 print('Editable mesh objects',len(col.objects))
