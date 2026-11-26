@@ -10,6 +10,7 @@ import { loadArchitecture, fitArchitecture } from '../../assets/models/architect
 import { upperFixtures } from '../../assets/models/newcore/upper-fixtures.js';
 import { registerKidsFixture } from '../../assets/models/modernhouse-kids/model.js';
 import { registerPicnicRack } from '../../assets/models/modernhouse-picnic/model.js';
+import {registerCatTable} from '../../assets/models/modernhouse-catware/model.js';
 import { registerProvence } from '../../assets/models/modernhouse-provence/model.js';
 import { registerOksobanTable } from '../../assets/models/newcore/oksoban.js';
 
@@ -1327,6 +1328,8 @@ function upperSalesFloor(F, num, floor) {
       if (provence) {
         const displayV=front-inset*depth*.36;
         registerProvence(F,u,y+.034,displayV,upperBayView(F,u,front,depth,bayWidth,inset,displayV,1.83));
+        const sideOffset=bayWidth*.27,shelfV=front-inset*depth*.70;
+        registerCatTable(F,u+sideOffset,y+.034,shelfV,upperBayView(F,u,front,depth,bayWidth,inset,shelfV,1.125,sideOffset));
       }
       if(num===1&&floor.label==='5F'&&label==='애슐리퀸즈')registerAshleyDessert(F,u,y+.034,front,depth,bayWidth,
         (v,half,offset)=>upperBayView(F,u,front,depth,bayWidth,inset,v,half,offset));
@@ -1404,7 +1407,7 @@ function upperSalesFloor(F, num, floor) {
         F.person(u - bayWidth * .28 - 1.65, y + .034, front - inset * depth * .46, {shirt:0xd9c4a6});
       }
       if (!ashley && !hotpot && !provence && !picnic) fixture(F, kind, u, y + .034, front - inset * depth * .36, !side);
-      if (kind === 'dining' || kind === 'homeware') {
+      if (kind === 'dining' || (kind === 'homeware' && !provence)) {
         fixture(F, kind, u + bayWidth * .27, y + .034, front - inset * depth * .70, side);
       }
     }

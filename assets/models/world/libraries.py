@@ -92,6 +92,7 @@ SHELVES = {
     "gyeongbu-ticket-office": "경부선 1층 · 통합매표소",
     "modernhouse-picnic": "뉴코아 1관 4층 · 홈데코 러그",
     "modernhouse-kids": "뉴코아 1관 4층 · 키즈 침구",
+    "modernhouse-catware": "모던하우스 강남점 · 고양이 식기",
     "modernhouse-provence": "뉴코아 1관 4층 · 마르셰 프로방스",
     "gyeongbu-icecream": "경부선 1층 · 배스킨라빈스",
     "kervan": "파미에 2층 · 케르반",
