@@ -5,6 +5,7 @@ import {arcadePiers} from '../../assets/models/sweet-arcade/model.js';
 import {houseWineDisplays} from '../../assets/models/house-wine-cellar/model.js';
 import {marcoliniShop} from '../../assets/models/sweet-marcolini/model.js';
 import {arabicaFront} from '../../assets/models/sweet-arabica/model.js';
+import {anotherPalmEdition} from '../../assets/models/another-palm-astro/model.js';
 import {chefStageSigns} from '../../assets/models/sweet-chefs-stage/model.js';
 import {marketWestReturn, cinemaAisleMouth} from './shinsegae-b1-plan.js';
 import {placeStageCoffers} from '../../assets/models/open-stage-coffer/model.js';
@@ -1706,6 +1707,10 @@ export function build(K) {
     if(retail){
       if(caseRect){BPrism(caseRect,YB1,.9,{tex:'wood',color:0xd3c6af});for(let j=0;j<4;j++)BPrism(caseRect,YB1+.9+j*.4,.04,0xe6dcc9,false);}
     }else if(caseRect)spVitrine(caseRect,index,!chefStage);
+    if(cell.name==='어나더팜'&&caseRect){
+      const [a,b,c,d]=spBounds(caseRect),[x,z]=P((a+c)/2,(b+d)/2);
+      anotherPalmEdition(K,x,YB1+1.155,z,F[face]+PI);
+    }
     if(cell.zone==='sweet_islands'&&caseRect){
       if(chefStage){
         const [a,b,c,d]=spBounds(caseRect),[x,z]=P((a+c)/2,(b+d)/2);

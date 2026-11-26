@@ -19,7 +19,7 @@ import { pointInPoly, polyBBox, polyArea, distanceToPolygonSq } from './physics.
 export const LEVELS = { B1: -6, B2: -11, B3: -16, B4: -21, B5: -26, B6: -31 };
 const TILE = 320;
 
-export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096, low = false, keep = null, keepDetail = null, streetView = false, interiorView = false } = {}) {
+export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096, low = false, keep = null, keepDetail = null, streetView = false, interiorView = false, interiorOwners = null } = {}) {
   // Area loading (js/areas.js): keep(owner, x, y, z, ny) drops primitives/meshes/trees/people outside the loaded area,
   // keepDetail(group) skips lazy detail groups the area does not show. Both null = build everything.
   const deckVisibility = interiorView ? createDeckVisibility() : null;
@@ -1406,7 +1406,12 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     osmBuilding, osmFind, claim, rand, quad: (mat, p, n, uvs) => quad(spec(mat), p, n, uvs || [[0, 0], [1, 0], [1, 1], [0, 1]]), hpoly: (mat, poly, y, up = true, holes) => hpoly(spec(mat), poly, y, up, holes),
     triangle: (mat, points, normal, uv) => tri(spec(mat), points, normal, uv),
     pointInPoly, polyBBox, polyArea, orient,
-    occludingSlab: options => deckVisibility?.register(options),
+    occludingSlab(options) {
+      // A neighbouring building can keep only a few triangles near a doorway.
+      // Its complete floor outline would mask geometry outside that preview.
+      if (options.wholePlaceOnly && keep && !interiorOwners?.has(current)) return;
+      deckVisibility?.register(options);
+    },
     occludingWall: options => deckVisibility?.registerWall(options),
     // internals for engine
     _: { bounce, cull, cullList, deckVisibility, finalize, details, detailErrors, ensureDetail, buildAllDetail, frameFns, interactables, spawns, zonesList, elevators, claims, mapMarks, groundHoles, stats, atlas, trees, people, setCurrent: (id, meta) => { current = id; if (meta) perPlace[id] = meta; } },

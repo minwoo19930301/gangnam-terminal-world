@@ -112,7 +112,7 @@ export function planArea(id, META, JUNCTIONS = []) {
     return false;
   };
   return {
-    id, name: own.map(m => META[m]?.name || m).join(' · '), modules, box: B, lodSolid: false,
+    id, name: own.map(m => META[m]?.name || m).join(' · '), modules, box: B, lodSolid: false, interiorOwners: ownSet,
     keep(owner, x, y, z, ny, sharedShell) {
       if (ownSet.has(owner) || owner === 'ground' || owner === 'lod' || (sharedShell && ownSet.has(sharedShell))) return true;
       if (owner === 'city' || owner === 'main') return inBox(B, x, z, 40) || ((Math.abs(ny) < 0.5 || y > 2.5) && inBox(B, x, z, 900)); // walls/roofs: what you see out of the windows

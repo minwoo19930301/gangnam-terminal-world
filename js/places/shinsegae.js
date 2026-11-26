@@ -1069,7 +1069,13 @@ export function build(K) {
     // Its structural soffit closes the 10F hall above the highest main escalators.
     if (s >= 1) for (const c of (s===1||s>MAIN.indexOf('8F')?BASE_CORES:CORES)) if (s <= coreTop(c) && !(id==='1F'||id==='2F') && !(id==='B1'&&c.door==='W')) holes.push(...stairHoles(c, s));
     const floorOutline = id === 'B1' ? basementOutline : UPPER.has(id) ? rect(0, VS, UW, VD) : LV[id] >= LV['2F'] ? northOutline(VD, LV[id]) : FULL;
-    K.slab(floorOutline, LV[id], { mat: floorMat[id] ?? 'ssg_marble', thick: thick(id), holes:mergedHoles(holes), edge: false, walk:id!=='11F', under: id === 'B2' ? false : id === 'B1' ? { tex: 'concrete', color: 0xb4b2a9 } : CEIL });
+    const slabHoles = mergedHoles(holes);
+    if (id === 'B1' || id === '1F') {
+      const ceiling = LV['1F'] - thick('1F');
+      K.occludingSlab({poly:floorOutline, holes:slabHoles, y:id === 'B1' ? LV.B1 : ceiling,
+        eyeMin:LV.B1 + .05, eyeMax:ceiling - .05, wholePlaceOnly:true});
+    }
+    K.slab(floorOutline, LV[id], { mat: floorMat[id] ?? 'ssg_marble', thick: thick(id), holes:slabHoles, edge: false, walk:id!=='11F', under: id === 'B2' ? false : id === 'B1' ? { tex: 'concrete', color: 0xb4b2a9 } : CEIL });
     if (['2F','3F','4F','5F'].includes(id)) {
       // Narrow level strip at the back of the relocated elevator cars.
       K.slab(rect(29,145.1,35,146.3),LV[id],{mat:floorMat[id]??'ssg_marble',thick:.12,under:false,ceil:false,edge:false});
