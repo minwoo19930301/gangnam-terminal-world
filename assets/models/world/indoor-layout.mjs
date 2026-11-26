@@ -18,6 +18,8 @@ const sources = [
   ['gyeongbu','1F','gyeongbu-icecream/gyeongbu-scoop-parlor.blend','배스킨라빈스 · 스쿱·케이크 매장','Parlor','Glass','Lit'],
   ...['케르반 · 제과와 포장 진열','케르반 · 청록색 주방창','케르반 · 모자이크 등','케르반 · 라바시와 차 한 상']
     .map(name=>['famille','2F','kervan/fp216.blend',name,name]),
+  ...['담꽃 · 다기와 보자기 진열장','담꽃 · 백색 주문대와 검은 의자','담꽃 · 밤대추팥빙수 한 상']
+    .map(name=>['centralcity','2F','damccot/fp204.blend',name,name]),
   ...await retailSources(),
   ['gyeongbu','1F','gyeongbu-ticket-office/gyeongbu-ticket-office.blend','경부선 · 통합매표소','TicketOffice','Glass','Lit'],
   ...['노란 아치와 침대','베개 진열대','물병과 도시락'].map(label=>{
