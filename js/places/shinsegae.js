@@ -1,8 +1,9 @@
+import {rawrowDisplay} from '../../assets/models/ssg-rawrow/model.js';
 import {boutiqueLobby} from '../../assets/models/megabox-central/place.js';
 import {marketProduceCeiling} from '../../assets/models/ssg-market-ceiling/model.js';
 import {giftConcierge} from '../../assets/models/ssg-market-gift/model.js';
 import {marketEntrance} from '../../assets/models/ssg-market-entrance/model.js';
-import {b1Plan as B1_PLAN, departmentPoint as P, departmentWidth as UW, departmentDepth as VD, marketOutline, marketWestReturn} from './shinsegae-b1-plan.js';
+import {b1Plan as B1_PLAN, departmentPoint as P, departmentWidth as UW, departmentDepth as VD, marketOutline, marketWestReturn, cinemaAisleSides, cinemaAisleMouth} from './shinsegae-b1-plan.js';
 import {marketFruitIslands} from '../../assets/models/ssg-market-produce/model.js';
 import {brothWells} from '../../assets/models/ssg-pantry-broth/model.js';
 import {pastryCounter} from '../../assets/models/ssg-bonmie/model.js';
@@ -263,6 +264,14 @@ export function build(K) {
   const rnd = K.rand(20001003);
   const FULL = rect(0, 0, UW, VD);
   const basementOutline = [...FULL, ...marketWestReturn];
+  // The B1 guide's white customer aisle passes BO&MIE and continues to the cinema.
+  // It crosses the above-ground outline and the edge of a legacy basement cutout.
+  const [aisleLeft, aisleRight] = cinemaAisleSides;
+  const aisleCentre = (aisleLeft + aisleRight) / 2;
+  function sidesOfCinemaAisle(v0, v1) {
+    return [[v0, Math.min(v1, aisleLeft)], [Math.max(v0, aisleRight), v1]]
+      .filter(([a,b]) => b-a > .001);
+  }
   // Warm gypsum for luxury/food rooms; sports floors receive a separate open coffer grid.
   K.material('ssg_ceil', new K.THREE.MeshLambertMaterial({ color: 0xf6f1e8, emissive: 0x9a9286 }));
   K.material('ssg_cos_window',new K.THREE.MeshLambertMaterial({color:0xffffff,vertexColors:true,transparent:true,opacity:.12,depthWrite:false,side:K.THREE.DoubleSide}));
@@ -473,6 +482,7 @@ export function build(K) {
     { x: P(UW, 54.5)[0], z: P(UW, 54.5)[1], w: 6.5, y0: LV.B2, y1: -8.2 },
   ] });
   K.polyWalls(basementOutline, LV.B1, 0, { mat: 'concrete', inner: IN, thick: 0.3, openings: [
+    { x: cinemaAisleMouth.x, z: cinemaAisleMouth.z, w: cinemaAisleMouth.width, y0: LV.B1, y1: LV.B1+4.45 },
     { x: P(39.65, 0)[0], z: P(39.65, 0)[1], w: 9, y0: LV.B1, y1: -2.7 },
     {x:-42.72,z:41.85,w:6.5,y0:LV.B1,y1:-2.4},
   ] });
@@ -983,7 +993,11 @@ export function build(K) {
   const atrHole = rect(...ATR); // basement machinery keeps its retained position
   // stair hole at main-floor index s (B2=0): lane of the flight that arrives from s-1
   const stairLaneU = (c, s) => c.lanes[(s - 1) % 2];
-  const stairHole = (c, s) => { const u = stairLaneU(c, s); return rect(u - 0.85, c.v0 + 2.2, u + 0.85, c.v1 - 2.2); };
+  const stairHoles = (c, s) => {
+    const u = stairLaneU(c, s), start = c.v0+2.2, end = c.v1-2.2;
+    const spans = s===1 && c===BASE_CORES[1] ? sidesOfCinemaAisle(start,end) : [[start,end]];
+    return spans.map(([a,b])=>rect(u-.85,a,u+.85,b));
+  };
   const coreTop = c => MAIN.indexOf(c.top);
   const MPLAN = (px,py) => [67*(972-py)/600,84.7*(px-185)/853];
   // R20: both sheets use their own extents; image right is SSE and image down is WSW.
@@ -1062,7 +1076,7 @@ export function build(K) {
 
     // L09: retain all upper tenant registrations, opening only the photographed vertical atrium.
     if (id==='11F') holes.push(rect(...photoAtrium(id)));
-    if (s >= 1) for (const c of (s===1||s>MAIN.indexOf('8F')?BASE_CORES:CORES)) if (s <= coreTop(c) && !(id==='1F'||id==='2F') && !(id==='B1'&&c.door==='W')) holes.push(stairHole(c, s));
+    if (s >= 1) for (const c of (s===1||s>MAIN.indexOf('8F')?BASE_CORES:CORES)) if (s <= coreTop(c) && !(id==='1F'||id==='2F') && !(id==='B1'&&c.door==='W')) holes.push(...stairHoles(c, s));
     const floorOutline = id === 'B1' ? basementOutline : UPPER.has(id) ? rect(0, VS, UW, VD) : LV[id] >= LV['2F'] ? northOutline(VD, LV[id]) : FULL;
     K.slab(floorOutline, LV[id], { mat: floorMat[id] ?? 'ssg_marble', thick: thick(id), holes:mergedHoles(holes), edge: false, walk:id!=='11F', under: id === 'B2' ? false : id === 'B1' ? { tex: 'concrete', color: 0xb4b2a9 } : CEIL });
     if (['2F','3F','4F','5F'].includes(id)) {
@@ -1861,14 +1875,17 @@ export function build(K) {
       const farV = lane === 0 ? vA : vB; // arriving flight enters from the far (deep) end
       wall(u - 0.85, farV, u + 0.85, farV, y, y + 1.1, { mat: 0x5c6166, thick: 0.05 });
       const uMid = (c.lanes[0] + c.lanes[1]) / 2;
-      wall(uMid, vA, uMid, vB, y, y + 1.1, { mat: 0x5c6166, thick: 0.05 });
+      const spans = c.belowOnly && MAIN[s]==='B1' ? sidesOfCinemaAisle(vA,vB) : [[vA,vB]];
+      for (const [a,b] of spans) wall(uMid, a, uMid, b, y, y + 1.1, { mat: 0x5c6166, thick: 0.05 });
     }
     // enclosure: door wall with openings at both landings on every floor, end walls
     // One wall segment per storey keeps the landing openings explicit.
     for (const id of FL) {
       if(id==='1F'||(id==='B1'&&c.door==='W'))continue;
       const y = LV[id], y1 = LV[nextOf(id)];
-      wall(uDoor, c.v0, uDoor, c.v1, y, y1, { mat: 0xe4dfd6, thick: 0.25, openings: [{ at: 1.1, w: 1.8, y0: y, y1: y + 2.3 }, { at: c.v1 - c.v0 - 1.1, w: 1.8, y0: y, y1: y + 2.3 }] });
+      const openings = [1.1, c.v1-c.v0-1.1].map(at=>({at,w:1.8,y0:y,y1:y+2.3}));
+      if (c.belowOnly && id==='B1') openings.push({at:aisleCentre-c.v0,w:aisleRight-aisleLeft,y0:y,y1:y+4.45});
+      wall(uDoor, c.v0, uDoor, c.v1, y, y1, { mat: 0xe4dfd6, thick: 0.25, openings });
     }
     for(const [ya,yb] of (c.belowOnly?[[LV.B2,0]]:c.start?[[LV[c.start],LV[nextOf(c.top)]]]:[[LV.B2,c.door==='W'?LV.B1:0],[7,LV[nextOf(c.top)]]]))for(const v of [c.v0,c.v1])wall(c.uL,v,c.uR,v,ya,yb,{mat:0xe4dfd6,thick:.25});
     for (const id of FL) {
@@ -2825,7 +2842,7 @@ export function build(K) {
     // Round14 video finishes preserve every round12 cell and every 1F slab.
     // The market ramp is visible in p5QE9cVtWDM_90 but is unlocated: no invented level change.
     K.detail({floor:'B1',y0:y,y1:0,poly:FULL,name:'B1 보행 영상 · 대리석과 마켓 포털'},()=>{
-      K.hpoly('ssg_diamond_gloss',FULL,y+.006,true,[...BASE_CORES.filter(c=>c.door!=='W').map(c=>stairHole(c,1))]);
+      K.hpoly('ssg_diamond_gloss',FULL,y+.006,true,[...BASE_CORES.filter(c=>c.door!=='W').flatMap(c=>stairHoles(c,1))]);
       const [u,v]=[deliEntryU,deliEntryV];
       for(const dv of [-2.58,2.58]){
         box(u,v+dv,.22,.12,y,3.12,0x191b1b,{solid:false});
@@ -7944,6 +7961,16 @@ export function build(K) {
   for(const [id,guide]of Object.entries(upperGuidePlans)){
     const y=LV[id];zone('신세계백화점 강남점',id,upperCats[id],[0,0,UW,145.3],y,LV[nextOf(id)],1);
     for(const c of guide.cells)buildUpperCell(id,c);
+    if(id==='8F'){
+      const shop=guide.cells.find(c=>c.name==='로우로우'),[,,front,farSide]=shop.model.parts[0];
+      const midSide=(shop.model.parts[0][1]+farSide)/2, u=front-2.15;
+      const [x,z]=P(u,midSide);
+      rawrowDisplay(K,x,y,z,FACE.E);
+      for(const [offset,depth] of [[-.73,-.82],[.73,1.29]]){
+        const a=P(u-depth-.88,midSide-offset),b=P(u-depth+.88,midSide-offset);
+        K.phys.addWall(...a,...b,y,y+2.2,.37);
+      }
+    }
     if(id==='6F'){
       const room=upperBuildRect(id,guide.cells.find(c=>c.name==='폴스미스'));
       const u=(room[0]+room[2])/2,v=room[3]-.50;
@@ -14851,6 +14878,10 @@ export function build(K) {
       if (id === '3F' && c.name === '발렌티노' && q !== largest) {
         // Carry the same checked floor across the open interior seam.
         hq(u0+.13,v0+.13,u1+.14,v1-.13,y+.018,palette.floor);
+        continue;
+      }
+      if(id==='8F'&&c.name==='로우로우'){
+        hq(u0+.055,v0+.055,u1-.055,v1-.055,y+.018,{color:0xe0dfd8,gloss:.46});
         continue;
       }
       const vivienneJoin=id==='4F'&&c.name==='비비안 웨스트우드'&&face==='W'&&q===largest&&parts.find(p=>p!==q&&Math.abs(p[0]-u1)<.02&&p[1]<=v0+.02);

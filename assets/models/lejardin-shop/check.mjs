@@ -8,12 +8,12 @@ const br=await chromium.launch({channel:'chromium',args:['--use-angle=metal','--
 const r=Math.atan2(.358,.934),s=Math.sin(r),c=Math.cos(r);
 function world(x,d){return [-46+(52+d)*s+(x-8.5)*c,43.1+(52+d)*c-(x-8.5)*s];}
 function pose(x,d,a,b,pitch=0,y=0){const p=world(x,d),t=world(a,b);return [p[0],y,p[1],Math.atan2(p[0]-t[0],p[1]-t[1]),pitch*Math.PI/180];}
-async function open(floor,eye){
+async function open(path){
   const page=await br.newPage({viewport:{width:1000,height:640}}),requests=[],errors=[];
   await page.addInitScript(()=>sessionStorage.setItem('sky-mode','day'));
   page.on('request',r=>{if(/\/lejardin-shop\/[^?]+\.(glb|webp|json|bin)$/.test(r.url()))requests.push(r.url().split('/').at(-1));});
   page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error'&&/WebGLProgram|SHADER|VALIDATE_STATUS/.test(m.text()))errors.push(m.text());});
-  await page.goto(base+'/?fixedres=1&pos='+eye.slice(0,3).join(',')+'&yaw='+eye[3]*180/Math.PI+'#/centralcity/'+floor);
+  await page.goto(base+path);
   await page.waitForFunction(()=>window.__world?.ready,null,{timeout:110000});await page.waitForTimeout(290);return {page,requests,errors};
 }
 async function look(page,...args){
@@ -39,9 +39,23 @@ try{
     ['mezzanine','1M',pose(.16,1.06,-.8,1.71,0,3.60)],
     ['behind side wall','1F',pose(3.91,1.8,-.84,1.70)],['behind back wall','1F',pose(.85,5.48,-.84,1.70)],
     ['looking away from shop','1F',pose(1.1,-4.45,2,-11)]]){
-    const q=await open(floor,eye);if(label==='mezzanine')assert.ok(Math.abs(await q.page.evaluate(()=>__world.player.y)-3.6)<.07,'standing on the mezzanine slab');assert.deepEqual(q.requests,[],label);assert.deepEqual(q.errors,[]);await q.page.close();
+    const path='/?fixedres=1&pos='+eye.slice(0,3).join(',')+'&yaw='+eye[3]*180/Math.PI+'#/centralcity/'+floor;
+    const q=await open(path);if(label==='mezzanine')assert.ok(Math.abs(await q.page.evaluate(()=>__world.player.y)-3.6)<.07,'standing on the mezzanine slab');assert.deepEqual(q.requests,[],label);assert.deepEqual(q.errors,[]);await q.page.close();
   }
-  const {page,errors,requests}=await open('1F',pose(.95,-5.68,.05,.2));
+  const {page,errors,requests}=await open('/?fixedres=1#/newcore');
+  assert.deepEqual(requests,[]);
+  await page.locator('#start').click();
+  await page.keyboard.press('m');
+  for(const query of ['Le Jardin','르자당']){
+    await page.locator('#map-search').fill(query);
+    assert.equal(await page.locator('.gt-result b').first().innerText(),'르자당 센트럴시티점 입구');
+  }
+  await page.locator('.gt-result').first().click();
+  await page.locator('.gt-teleport').click();
+  await page.waitForFunction(([x,y,z,yaw])=>{
+    const w=window.__world,p=w?.player;
+    return w?.ready && w.area==='in:famille+centralcity' && Math.hypot(p.x-x,p.y-y,p.z-z)<.18 && Math.cos(p.yaw-yaw)>.999;
+  },pose(.95,-5.68,.05,.2),{timeout:110000});
   await page.locator('canvas').first().click({position:{x:500,y:320},force:true});
   await page.waitForFunction(()=>__world.scene.getObjectByName('르자당 트리 · 작은 전구의 빛')?.geometry.attributes.position.count>1500);
   await look(page,-.08,-1.22,-1.07,1.73,-11);

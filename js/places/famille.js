@@ -583,24 +583,15 @@ function buildHall(K) {
   const roof=(u0,u1)=>{
     for(let i=0;i<32;i++){
       const a=i*PI/32,b=(i+1)*PI/32,v0=5.75-5.75*Math.cos(a),v1=5.75-5.75*Math.cos(b),y0=8+3*Math.sin(a),y1=8+3*Math.sin(b);
-      const mat=v0>=3.2&&v1<=8.3?'glass':0xf1eee5;
-      K.quad(mat,[xyz([u0,v0,y0]),xyz([u1,v0,y0]),xyz([u1,v1,y1]),xyz([u0,v1,y1])],[0,-1,0]);
-      if(mat!=='glass')K.quad(0xe3e0d6,[xyz([u0,v0,y0+.1]),xyz([u1,v0,y0+.1]),xyz([u1,v1,y1+.1]),xyz([u0,v1,y1+.1])],[0,1,0]);
+      if(v0>=3.2&&v1<=8.3)continue; // Central rooflight and glazing bars belong to the native bay.
+      K.quad(0xf1eee5,[xyz([u0,v0,y0]),xyz([u1,v0,y0]),xyz([u1,v1,y1]),xyz([u0,v1,y1])],[0,-1,0]);
+      K.quad(0xe3e0d6,[xyz([u0,v0,y0+.1]),xyz([u1,v0,y0+.1]),xyz([u1,v1,y1+.1]),xyz([u0,v1,y1+.1])],[0,1,0]);
     }
     const spans=[];
     for(let u=u0;u<=u1+.01;u+=6.5) {
-      const [x,z]=P(u,5.75); spans.push([x,8,z,R]);
+      const [x,z]=P(u,5.75); spans.push([x,8,z,R,Math.min(1,(u1-u)/6.5)]);
     }
-    placeArchitecture(K,galleryRib,'파미에 갤러리 아치와 벽등',spans);
-    for(const v of [3.2,5.75,8.3]){const y=8+3*Math.sqrt(1-((v-5.75)/5.75)**2);beam([u0,v,y],[u1,v,y],.075,0xc7c7be);}
-    // IDBR's gallery photograph shows several narrow glazed lights between
-    // the large structural arches. The framing follows the existing crown.
-    const crownY=v=>8+3*Math.sqrt(1-((v-5.75)/5.75)**2);
-    for(let u=u0+1.625;u<u1;u+=1.625){
-      for(const [a,b] of [[3.2,5.75],[5.75,8.3]])
-        beam([u,a,crownY(a)+.024],[u,b,crownY(b)+.024],.049,0x999c9a);
-    }
-    beam([u0,5.75,11.045],[u1,5.75,11.045],.09,0xafb0a9);
+    placeArchitecture(K,galleryRib,'파미에 갤러리 아치와 벽등',spans,{skylight:true});
   };roof(22,70.56);
   // Hall north shares the white vault; the escalator bay has the photographed luminous black-grid ceiling.
   for(let v=0;v<8;v+=.5){const y=9.8+.55*Math.sin(v*PI/8);B(13,v+.25,y,18,.53,.12,0xeeeae0);}

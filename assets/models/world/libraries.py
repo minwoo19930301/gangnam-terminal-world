@@ -8,8 +8,18 @@ from mathutils import Vector
 
 
 SHELVES = {
+    "cinema-rotary": "원형 광장 · 카멜커피",
+    "sweet-arcade": "스위트 파크 · 디저트 홀 타일 기둥",
+    "intelligentsia-gangnam": "인텔리젠시아 강남 · 커피 바와 오렌지 선반",
+    "sweet-arabica": "스위트 파크 · %아라비카 입구",
+    "ssg-rawrow": "신세계 8층 · 로우로우 여행가방",
+    "newcore-yucheon": "뉴코아 1관 5층 · 유천냉면",
+    "tailored-front": "경부선 7층 · 신사복 판매 전면",
+    "knit-front": "경부선 8층 · 니트 판매 전면",
+    "ypbooks-rotary": "영풍문고 강남신세계점 · 원형 광장 입구",
     "banpo-apartments": "신반포로 · 아파트 세 단지",
     "megabox-central": "메가박스 센트럴 · B1 매표 로비",
+    "gyeongbu-flower-bank": "경부선 3층 · 생화 절지 진열대",
     "open-stage-coffer": "센트럴시티 1층 · 오픈 스테이지 격자 천장",
     "gyeongbu-waiting-ceiling": "경부선 1층 · 대합실 목재 루버와 매입등",
     "gyeongbu-planted-columns": "경부선 1층 · 대합실 식물 기둥",

@@ -1,5 +1,9 @@
+import {transverseFloor} from '../../assets/models/megabox-central/layout.js';
+import {publicFloorOpening,court,westApron} from '../../assets/models/cinema-rotary/layout.js';
+import {arcadePiers} from '../../assets/models/sweet-arcade/model.js';
+import {arabicaFront} from '../../assets/models/sweet-arabica/model.js';
 import {chefStageSigns} from '../../assets/models/sweet-chefs-stage/model.js';
-import {marketWestReturn} from './shinsegae-b1-plan.js';
+import {marketWestReturn, cinemaAisleMouth} from './shinsegae-b1-plan.js';
 import {placeStageCoffers} from '../../assets/models/open-stage-coffer/model.js';
 import {placeOpenStageLounge} from '../../assets/models/open-stage-lounge/model.js';
 import {galleryLights} from '../../assets/models/famille-atrium/model.js';
@@ -519,10 +523,10 @@ export function build(K) {
 
   // ---- vertical circulation (strip)
   escPair(-1, 9.5, 17.4, YB1, Y1, 'f1', true);          // E1 north: B1 ↔ 1F (신반포로 입구 홀)
-  escPair(34, 44.5, 17.4, YB1, Y1, 'f1', true);           // E2: inferred mid-hall position, clear of the photographed ticket frontage; B1 landing stays in t13..22 link
+  // The 1F operator guide puts the hall escalator between units 5 and 8 (E1).
+  // The B1 guide shows a shopping aisle at the former inferred second pair.
   // Round20: both hall upper flights are now in hallR20 on the GATE 3 axis.
   // Door-front basement/upper flights were unsupported by either official 1F plan; removed.
-  // Existing B1 access remains at the two documented hall cores and the south block core.
   flight(142.2, 148.9, 32.5, Y2, YR, 'rf');
 
   rail(142, 31.3, 148.9, 31.3, YR); rail(142, 33.7, 148.9, 33.7, YR); rail(142, 31.3, 142, 33.7, YR);
@@ -677,7 +681,7 @@ export function build(K) {
   hallFurnish(RECT(-9,5,148,19),()=>{
     let i=0;
     for(let ss=8;ss<=140;ss+=12){
-      // Keep ticket frontage and relocated E2 well/landing clear of bed and foliage.
+      // Keep the ticket frontage and the existing open walking space clear of planting.
       if((ss>=82&&ss<=106)||(ss>=40&&ss<=78)||ss===32||ss===44)continue;
       const t=15.8;
       lbox(ss,t,8.5,2.6,0,.45,{tex:'darkstone',color:0x4c4f50},{top:0x555958});
@@ -1124,7 +1128,19 @@ export function build(K) {
     const nx=(m[0]-c[0])/Math.hypot(m[0]-c[0],m[1]-c[1]),nz=(m[1]-c[1])/Math.hypot(m[0]-c[0],m[1]-c[1]),rot=Math.atan2(nx,nz);
     const box=(u0,v0,u1,v1,y,h,mat,solid=false)=>{const rr=wr(u0,v0,u1,v1);if(!solid||b1Safe(rr))BPrism(rr,YB1+y,h,mat,solid);};
     const cyl=(u,v,y,rad,h,mat)=>{const q=wp(u,v);if(K.pointInPoly(...q,rampClearPoly))return;K.cyl({x:q[0],z:q[1],y:YB1+y,r:rad,h,mat,seg:12,solid:false});};
-    const plinth=superstar?0xc2452d:arabica?0xece6da:{tex:'wood',color:0x6b4226};
+    if(arabica){
+      // The published bay has a single opening between plan y=373 and 411.
+      // Keep the two original solid worktops and their footprint.
+      const barV=Math.min(.4,1.25/dep),barBack=barV+Math.min(.16,.58/dep);
+      K.hpoly({tex:'wood',color:0xd8c6a7},BRect(...r),YB1+.031,true);
+      box(.07,barV,.93,barBack,0,.99,0xe4e5df,true);
+      box(.17,.79,.83,.92,0,.87,0xd2d0c6,true);
+      box(.025,.97,.975,.995,0,3.3,0xe0dfd6);
+      const [entryX,entryZ]=BP(x0,392);
+      arabicaFront(K,entryX+.22*nx,YB1,entryZ+.22*nz,rot);
+      return;
+    }
+    const plinth=superstar?0xc2452d:{tex:'wood',color:0x6b4226};
     K.hpoly(superstar?{tex:'ccHosParquet',gloss:.5}:{tex:'wood',color:0xd4b17b,gloss:.3},BRect(...r),YB1+.031,true);
     // Honey/charcoal rear wall with an amber wash; every fixture remains within its tenant cell.
     box(.025,.97,.975,.995,0,3.3,superstar?0x2b2b2b:'ccHosHoney');
@@ -1148,7 +1164,7 @@ export function build(K) {
       if(b1Safe(wr(.08,barV,.92,barBack))){K.prism(pts,YB1,YB1+.99,{mat:plinth});K.prism(pts,YB1+.99,YB1+1.05,{mat:{tex:'metal',color:0xb1b4b0,gloss:.5},solid:false});}
     }else{
       box(.07,barV,.93,barBack,0,.99,plinth,true);
-      box(.065,barV-.012,.935,barBack+.012,.99,.06,arabica?{tex:'marble',color:0xf5f0e5,gloss:.7}:{tex:'wood',color:0x8f5b31,gloss:.5});
+      box(.065,barV-.012,.935,barBack+.012,.99,.06,{tex:'wood',color:0x8f5b31,gloss:.5});
     }
     if(sushi){
       // U counter flanks the chefs; its open kitchen faces the B1 lounge on the north edge.
@@ -1185,7 +1201,7 @@ export function build(K) {
     // Open cooking worktop, dishes, taps and supported staff behind the bar.
     box(.17,.79,.83,.92,0,.87,{tex:'metal',color:0xaeb0a8},true);
     for(let i=0;i<Math.max(3,Math.floor(len));i++){const u=.2+.6*i/Math.max(3,Math.floor(len));for(let j=0;j<4;j++)cyl(u,.84,.89+j*.018,.08,.014,0xeee9df);}
-    for(const u of [.30,.67]){const q=wp(u,Math.max(barBack+.85/dep,.62));if(!b1Reserved(...q,.32)){K.person(q[0],YB1,q[1],{rotY:rot,shirt:arabica?0xe8e5d8:0xf0ece1});if(!arabica){K.cyl({x:q[0],z:q[1],y:YB1+1.63,r:.12,h:.16,mat:0xf2f0e8,seg:10,solid:false});}}}
+    for(const u of [.30,.67]){const q=wp(u,Math.max(barBack+.85/dep,.62));if(!b1Reserved(...q,.32)){K.person(q[0],YB1,q[1],{rotY:rot,shirt:0xf0ece1});K.cyl({x:q[0],z:q[1],y:YB1+1.63,r:.12,h:.16,mat:0xf2f0e8,seg:10,solid:false});}}
     if(superstar){
       // Three densely stocked orange-backlit bottle shelves, as in photo 07.
       box(.07,.925,.93,.95,1.12,1.65,{tex:'emit',color:0xc46e36});
@@ -1198,13 +1214,10 @@ export function build(K) {
       box(.03,.13,.97,.19,2.68,.62,0x2d2822);
       box(.045,.124,.955,.135,2.72,.54,0xece1c6);
       for(let yy=2.74;yy<3.26;yy+=.055)box(.045,.116,.955,.124,yy,.018,0x393027);
-    }else if(arabica){
-      box(.17,.69,.42,.83,.9,.43,0xe9e9e1);box(.21,.67,.38,.70,1.05,.15,0x303632);
-      for(const u of [.55,.67]){cyl(u,.8,.9,.12,.43,0x414b43);cyl(u,.8,1.33,.085,.17,'glass');}
     }
-    const label=superstar?'Superstar':kibo?'KATSU & TAPAS':arabica?'% Arabica':cell.name;
+    const label=superstar?'Superstar':kibo?'KATSU & TAPAS':cell.name;
     const q=wp(.5,superstar?.03:kibo?.11:.055);
-    sign(label,{x:q[0],z:q[1],y:YB1+(superstar?3.04:kibo?2.99:2.83),w:Math.min(len-.3,superstar?4.6:6),h:superstar?.48:.38,rotY:rot,bg:superstar||arabica?null:kibo?'#e7dcc2':'#443122',fg:kibo?'#2d2822':arabica?'#33372f':'#fff3de',font:superstar?'Georgia,serif':SERIF,italic:superstar,pxPerM:120});
+    sign(label,{x:q[0],z:q[1],y:YB1+(superstar?3.04:kibo?2.99:2.83),w:Math.min(len-.3,superstar?4.6:6),h:superstar?.48:.38,rotY:rot,bg:superstar?null:kibo?'#e7dcc2':'#443122',fg:kibo?'#2d2822':'#fff3de',font:superstar?'Georgia,serif':SERIF,italic:superstar,pxPerM:120});
   };
   const hosB1Finish=()=>{
     const BP=HP,BPst=HPst,BRect=HRect,BPrism=housePrism;
@@ -1735,6 +1748,17 @@ export function build(K) {
     if(key==='sweet') {
       const [s0,t0,s1,t1]=spBounds(area), ns=Math.ceil((s1-s0)/7.6), nt=Math.ceil((t1-t0)/7.6);
       const ds=(s1-s0)/ns, dt=(t1-t0)/nt;
+      // The three spring points along the rear of the first dessert islands
+      // carry the cream tiled piers visible behind the cases in the operator photo.
+      const pierS=s0+3*ds, pierT=t1-2*dt;
+      for(const offset of [-ds,0,ds]){
+        const s=pierS+offset;
+        K.phys.addPolyWalls(RECT(s-.42,pierT-.42,s+.42,pierT+.42),YB1,YB1+3.5,.025,'centralcity');
+      }
+      K.detail({floor:'B1',y0:YB1,y1:0,poly:RECT(pierS-ds-.55,pierT-.55,pierS+ds+.55,pierT+.55),name:'디저트 홀 기둥'},()=>{
+        const [x,z]=P(pierS,pierT);
+        arcadePiers(K,x,YB1,z,R+PI,ds);
+      });
       for(let i=0;i<ns;i++)for(let j=0;j<nt;j++){
         const a=s0+i*ds,b=t0+j*dt;
         if([P(a+ds/2,b+dt/2),P(a+.3,b+.3),P(a+ds-.3,b+dt-.3)].some(q=>b1Reserved(...q,.65)))continue;
@@ -1972,8 +1996,17 @@ export function build(K) {
           const d = Math.abs((q[0] - a[0]) * uz - (q[1] - a[1]) * ux);
           if (d < 2.5 && at > -1 && at < L + 1) ops.push({ at, w, y0: YB1, y1: YB1 + 3.4 });
         }
-        const westA=(a[0]-OX)*EX+(a[1]-OZ)*EZ,westB=(b[0]-OX)*EX+(b[1]-OZ)*EZ;
         const ix = -nsB[i][0] * 0.15, iz = -nsB[i][1] * 0.15;
+        // Opposite the market, the cinema aisle crosses the same edge owned by
+        // the department store. Both sides of the B1 shell must stay open.
+        const {x:mouthX, z:mouthZ, width} = cinemaAisleMouth;
+        const at = atOn(a,b,mouthX-ix,mouthZ-iz);
+        const offset = Math.abs((mouthX-a[0]-ix)*(b[1]-a[1])-(mouthZ-a[1]-iz)*(b[0]-a[0]))/L;
+        if (offset<.45 && at>0 && at<L) ops.push({at,w:width,y0:YB1,y1:YB1+4.45});
+        if(i===5){
+          const crossing=publicFloorOpening(a[0]+ix,a[1]+iz,b[0]+ix,b[1]+iz,[court,westApron]);
+          if(crossing)ops.push({...crossing,y0:YB1,y1:YB1+4.46});
+        }
         K.wall(a[0] + ix, a[1] + iz, b[0] + ix, b[1] + iz, YB1, CB, { mat: M.wallB1, thick: 0.3, openings: ops });
       }
     }
@@ -3247,7 +3280,7 @@ export function build(K) {
         hallFace('ccHallLandscape',sc-.5,11.73,6.1,7.5,2.4);
         lbox(sc+4.05,11.6,1.4,.2,5.1,2.0,0x302b49,{solid:false});
         hallClock(sc+4.05,11.74,6.1,1.35);
-        // The relocated E2 leaves the marble diamond and queue approach unobstructed.
+        // Keep the marble diamond and queue approach unobstructed.
         for(let ss=s0+.6;ss<s1;ss+=2.3){
           lcyl(ss,13.1,0,.18,.04,0x252725,{solid:false});lcyl(ss,13.1,.04,.035,.94,0x252725,{solid:false});
           if(ss+2.3<s1)lbox(ss+1.15,13.1,2.3,.045,.82,.065,0x282b28,{solid:false});
@@ -3353,7 +3386,9 @@ export function build(K) {
   // Close the unused southern B1 floorplate. One eight-metre passage skirts
   // the interior House on its west and rejoins the J7/station approach.
   lwall(63.3,0,63.3,14.6,YB1,CB,{mat:0xe3d8c3});
-  lwall(63.3,22.6,63.3,39,YB1,CB,{mat:0xe3d8c3});
+  // The mall crosses this podium partition along the published café aisle.
+  const cafePassage=publicFloorOpening(...P(63.3,22.6),...P(63.3,39),[transverseFloor]);
+  lwall(63.3,22.6,63.3,39,YB1,CB,{mat:0xe3d8c3,openings:cafePassage?[{...cafePassage,y0:YB1,y1:YB1+4.45}]:[]});
   const linkRuns=[[63.3,14.6,69.6,22.6],[69.6,8.6,78.4,22.6],[78.4,8.6,138.4,16.6],[138.4,8.6,146.4,22.6],[146.4,14.6,169,22.6]];
   for(const[a,b,c,d]of linkRuns){
     const x0=Math.max(a,74.35),z0=Math.max(b,16.4),x1=Math.min(c,77.65),z1=Math.min(d,28.5);
@@ -4255,6 +4290,13 @@ function hallR20(K) {
   lwall(38,-12,38,-5,0,3.24,{mat:0xe1dbd1,thick:.08});
   zone('르자당 센트럴시티점','1F',33,-12,38,-5,0,3.28,'LEJARDIN · 122-1호',14);
   placeLejardin(K,P,R);
+  // The public aisle faces the florist's lettered entrance and flower display.
+  {
+    const [x,z]=P(27.32,-7.55),[doorX,doorZ]=P(33.2,-8.45);
+    K.spawn({name:'르자당 센트럴시티점 입구',destinationId:'lejardin',
+      aliases:['르자당 꽃집','Le Jardin','센트럴시티 꽃집','122-1호'],
+      place:'centralcity',floor:'1F',mapDestination:true,x,y:0,z,yaw:Math.atan2(x-doorX,z-doorZ)});
+  }
   // Units 20/21 are distinct from STARBUCKS central F1. Retain their fitout by the east passage.
   storefront('스타벅스',-11,18,-1,26,'E',0,'cafe');
   storefront('SK텔레콤',5,23,12,29,'E',0,'store');

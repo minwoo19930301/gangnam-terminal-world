@@ -22,3 +22,12 @@ export const marketOutline = [
 const west = marketOutline.slice(5).map(([x,y]) => b1Plan(x,y));
 export const marketWestReturn = [[0,west[0][1]], ...west, [0,west.at(-1)[1]]]
   .map(([u,v]) => departmentPoint(u,v));
+
+// The public aisle between the market and BO&MIE crosses the shared mall
+// boundary at u=0. Both builders need the same opening in their B1 wall.
+export const cinemaAisleSides = [820,840].map(px => b1Plan(px,700)[1]);
+const [start,end] = cinemaAisleSides.map(v => departmentPoint(0,v));
+export const cinemaAisleMouth = {
+  x:(start[0]+end[0])/2, z:(start[1]+end[1])/2,
+  width:Math.hypot(end[0]-start[0],end[1]-start[1]),
+};

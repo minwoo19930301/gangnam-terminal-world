@@ -6,7 +6,8 @@ import { floorArrival } from './floor-arrival.js';
 import { createKit } from './kit.js';
 import { applyRoadEdits } from './blender-roads.js';
 import { drawBlenderBuilding, loadBuildingArea } from './blender-buildings.js';
-import { buildCity, createTraffic } from './city.js';
+import { buildCityWithCover, createTraffic } from './city-scene.js';
+import { loadParcelCover } from './parcel-cover-area.js';
 import { PLACES } from './places/index.js';
 import { createMap } from './map.js';
 import { FONT } from './textures.js';
@@ -57,6 +58,9 @@ async function boot() {
   const exteriorTerrain = !AREA.id.startsWith('in:');
   const shellMargin = exteriorTerrain ? 180 : 110;
   const shellBounds = AREA.box?.map((v,i) => v + (i < 2 ? -shellMargin : shellMargin));
+  const streetBounds = exteriorTerrain ? null : shellBounds;
+  const coverReady = Q.get('city') === '0' ? null : loadParcelCover(streetBounds)
+    .then(cover => ({cover}), error => ({error}));
   const shellsReady = loadBuildingArea(shellBounds).then(() => null, error => error);
   installRelief(THREE, exteriorTerrain);
   if (AREA.id !== 'all') status(`${areaName(AREA.id, META)} 불러오는 중…`);
@@ -144,7 +148,11 @@ async function boot() {
   let roadsInfo = null;
   if (Q.get('city') !== '0') {
     mark('places'); status('도시(OSM) 짓는 중…'); await new Promise(r => setTimeout(r, 0));
-    try { roadsInfo = buildCity(K, osm, { claimedBuildings, claimedRoads, claimedAreas, shellBounds, streetBounds: exteriorTerrain ? null : shellBounds, log: s => console.log(s) }); } catch (e) { fail('city', e); }
+    try {
+      const result = await coverReady;
+      if (result.error) throw result.error;
+      roadsInfo = buildCityWithCover(K, osm, result.cover, { claimedBuildings, claimedRoads, claimedAreas, shellBounds, streetBounds, log: s => console.log(s) });
+    } catch (e) { fail('city', e); }
   }
   // far massing: buildings of place modules this area does not load stand as plain OSM blocks (skyline, walls)
   if (META && AREA.id !== 'all') {
@@ -282,21 +290,18 @@ async function boot() {
     }
   }
   // walked through a door this frame? (segment from the last position crosses the door line, inside its width/height)
-  let lastPos = null; let portalArmed = false;
-  function portalCheck() {
+  function portalCheck(startX, startZ) {
+    if (performance.now() - bootT <= 2500) return;
     const P = { x: player.x, y: player.y, z: player.z };
-    if (!lastPos) { lastPos = P; return; }
-    if (!portalArmed) { if (performance.now() - bootT > 2500) portalArmed = true; lastPos = P; return; }
     for (const p of portals) {
       if (Math.abs(P.y - p.y) > 3.5) continue;
-      const a = (lastPos.x - p.x) * p.nx + (lastPos.z - p.z) * p.nz, b = (P.x - p.x) * p.nx + (P.z - p.z) * p.nz;
+      const a = (startX - p.x) * p.nx + (startZ - p.z) * p.nz, b = (P.x - p.x) * p.nx + (P.z - p.z) * p.nz;
       if (!(a < 0 && b >= 0)) continue; // must cross along the door's direction (into the next page)
-      const t = a / (a - b), cx = lastPos.x + (P.x - lastPos.x) * t, cz = lastPos.z + (P.z - lastPos.z) * t;
+      const t = a / (a - b), cx = startX + (P.x - startX) * t, cz = startZ + (P.z - startZ) * t;
       if (Math.abs((cx - p.x) * p.tx + (cz - p.z) * p.tz) > p.w / 2 + 0.4) continue;
       reloadAt(p.key, P.x + p.nx * 1.5, P.y, P.z + p.nz * 1.5, player.yaw * 180 / Math.PI, areaName(p.target, META));
       return;
     }
-    lastPos = P;
   }
   // ---- 3D pins over the key places (outdoors only) ----
   const pins = [];
@@ -620,6 +625,8 @@ async function boot() {
     // substeps small, and discard elapsed time after tab suspension or a long pause.
     const movementTime = elapsed > 0.5 ? dt : Math.min(elapsed, 0.15);
     const movementSteps = Math.max(1, Math.ceil(movementTime / 0.05));
+    // Map arrivals and floor changes happen between frames. Only sweep the actual walking step.
+    const startX = player.x, startZ = player.z;
     for (let i = 0; i < movementSteps; i++) player.update(movementTime / movementSteps, input);
     camera.position.set(player.x, player.y + player.eye + relief(player.x, player.z), player.z);
     camera.rotation.set(player.pitch, player.yaw, 0, 'YXZ');
@@ -631,7 +638,7 @@ async function boot() {
     currentZone = phys.zoneAt(player.x, player.y + 0.1, player.z);
     // Keep the destination hash until the scheduled area reload reads it.
     if (!leaving) route.update(currentZone);
-    areaWatch(currentZone); portalCheck(); pinUpdate();
+    areaWatch(currentZone); portalCheck(startX, startZ); pinUpdate();
     reLive?.update(camera, performance.now());
     const zname = currentZone ? currentZone.name : (player.y < -2 ? '지하' : '거리');
     updateText(hudZone, zname + (currentZone?.floor ? ` · ${currentZone.floor}` : ''));

@@ -6,4 +6,4 @@
 
 나무의 위치와 높이는 Meta and World Resources Institute (WRI), *Version 2 High Resolution Canopy Height Maps* (2026)에서 추정했습니다. Source imagery for CHM © 2016 Vantor. 2026년 11월 26일 이용했습니다. 수관 높이에서 국소 최댓값을 선택하고 2025년 녹지와 겹치는 지점만 남겼습니다. 나무 한 그루의 줄기 위치나 수종을 측량한 자료는 아닙니다. 최근 재건축한 단지로 식별된 곳에서는 이전 수관을 사용하지 않습니다. [원본 데이터](https://registry.opendata.aws/dataforgood-fb-forestsv2/) · [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
 
-`tools/import_parcel_cover.py`로 `js/parcel_cover.js`를 재생성할 수 있습니다. 원본 위성 영상은 브라우저에서 내려받지 않습니다.
+`tools/import_parcel_cover.py`는 터미널 주변 필지와 그 밖의 필지를 `js/parcel-cover-terminal.js`, `js/parcel-cover-outer.js`로 나누고 터미널 영역 경계를 함께 기록합니다. 블렌더와 지도 검증 도구는 `js/parcel_cover.js`를 통해 전체 자료를 읽습니다.

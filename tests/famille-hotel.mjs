@@ -101,14 +101,22 @@ async function checkTrip(forward) {
   const visits = [];
   try {
     const start = forward ? shops[0] : gallery.at(-1);
-    const firstPlace = forward ? 'famille' : 'jwmarriott';
     const url = new URL(`http://127.0.0.1:${server.address().port}/index.html?q=low&traffic=0`);
-    url.hash = `/${firstPlace}/1F?p=${[start[0],forward ? 0 : 7,start[1],0].join(',')}`;
+    url.hash = forward ? '/centralcity/B1?destination=sweet-park' : `/jwmarriott/1F?p=${[start[0],7,start[1],0].join(',')}`;
     await page.goto(url.href);
     await page.waitForFunction(() => window.__world?.ready, null, {timeout: 120000});
     await page.getByRole('button', {name: '들어가기'}).click();
     if (forward) {
-      await walk(page, shops.slice(1), visits);
+      // A map jump across floors must not activate doors between its endpoints.
+      await page.waitForFunction(() => performance.now() > 2600);
+      const load = await page.evaluate(() => performance.timeOrigin);
+      await page.keyboard.press('m');
+      await page.locator('#map-search').fill('파미에 1층 벽돌 홀');
+      await page.locator('#map-results button').first().click();
+      await page.locator('.gt-teleport').click();
+      await page.waitForFunction(() => document.querySelector('#zone').innerText === '파미에스테이션 · 1F');
+      await walk(page, shops, visits);
+      assert.equal(await page.evaluate(() => performance.timeOrigin), load, 'same-building map trip reloaded');
       await useHouseLift(page, 'L');
       await walk(page, gallery, visits);
     } else {

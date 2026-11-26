@@ -1,3 +1,5 @@
+import {flowerBank} from '../../assets/models/gyeongbu-flower-bank/model.js';
+import {clothingFront} from '../../assets/models/gyeongbu-clothing-fronts/model.js';
 import {placeWaitingCeiling} from '../../assets/models/gyeongbu-waiting-ceiling/model.js';
 import {placeGyeongbuEntrance} from '../../assets/models/gyeongbu-front-entrance/model.js';
 import {placePassengerFinish} from '../../assets/models/gyeongbu-concourse-finish/model.js';
@@ -284,7 +286,7 @@ export function build(K) {
     const lo=westInset[i],hi=75.7-inset[i],c=Math.max(2.5,18-(inset[i]-4)*.72);
     return [[lo,0],[hi,0],[hi,154],[hi-c,159],[lo+c,159],[lo,154]].map(q=>W(...q));
   };
-  const uses=['대합실 · 매표소 · 승차홈','한복 · 혼수 · 커튼 · 홈패션','꽃도매상가 · 생화 · 조화 · 부자재','한복 · 혼수 · 커튼 · 홈패션','입점 준비 중','의류 도매','의류 도매','의류 도매','고속사 사무실','포석정 · 육즙이흐르는각고기 · 고속터미널성당'];
+  const uses=['대합실 · 매표소 · 승차홈','한복 · 혼수 · 커튼 · 홈패션','꽃도매상가 · 생화 · 조화 · 부자재','한복 · 혼수 · 커튼 · 홈패션','입점 준비 중','의류 도매','의류 도매','의류 도매','고속버스회사 사무실 · 판매 매장 없음','포석정 · 육즙이흐르는각고기 · 고속터미널성당'];
   const pent=rect(27,42,50,82);
   const elevs=[
     // Walk Zq_230/1780: real opposing doors, with a continuous corridor between
@@ -2471,6 +2473,20 @@ export function build(K) {
     const wings = [[34.2, 1], [41.8, -1]];
     const centers = [100.5, 109.5, 118.5, 127.5];
     const localAisle=wholesaleAisles[key];
+    const fittedFront=key==='Suits'||key==='Womenswear';
+    const isClothingFront=(u,v)=>fittedFront&&u===wings[1][0]&&v===centers[0];
+    if(fittedFront){
+      const u=wings[1][0],v=centers[0],[x,z]=W(u,v);
+      lzone('의류도매상가 · '+(key==='Suits'?'신사복':'여성복'),floor,
+        '서울고속버스터미널 본관 · '+label,32.82,96.3,43.16,130.3,floorY,floorY+3.1,4);
+      ldetail({floor,y0:floorY,y1:floorY+2.97,poly:rect(u-2.79,v-2.61,u+1.38,v+2.61),name:label+' · 통로 전면'},()=>{
+        clothingFront(K,key,x,floorY,z,ROT);
+        // The source plates are legible as markers, but do not verify a current tenant.
+        for(const [dv,f] of [[-.026,'-v'],[.026,'+v']])
+          lsign(key==='Suits'?'신사복':'여성복',u-2.40,v-1.48+dv,floorY+2.52,.48,.13,f,
+            {bg:null,fg:key==='Suits'?'#393327':'#392e25',pxPerM:250,padding:.015});
+      });
+    }
     const hanbokAt=(u,v)=>key==='Curtains'&&u===wings[0][0]&&v===centers[2];
     const yarnAt=(u,v)=>key==='Children'&&u===wings[0][0]&&v===centers[2];
     if(localAisle){
@@ -2492,6 +2508,14 @@ export function build(K) {
         floorY, d, w, h, 0, {skip:['top','bottom','n','s','e','w']});
       fixture(0,-1.3,5.2,.12,2.96);
       for (const a of [-2.54,2.54]) fixture(a,-.05,.12,2.6,2.96);
+      if(isClothingFront(u,v)){
+        const hidden={skip:['top','bottom','n','s','e','w']};
+        lbox(u-.70,v,floorY,.44,4.56,2.50,0,hidden);
+        lbox(u+.91,v,floorY,.37,4.46,2.38,0,hidden);
+        if(key==='Womenswear')lbox(u-1.06,v-.04,floorY,.38,2.36,1.03,0,hidden);
+        for(const d of [-2.16,2.16])lbox(u-1.07,v+d,floorY,.35,.38,1.90,0,hidden);
+        continue;
+      }
       if(yarnAt(u,v)){
         fixture(1.26,-.74,2.18,.54,2.28);
         fixture(1.24,.62,2.03,.65,1.56);
@@ -2552,7 +2576,7 @@ export function build(K) {
     ldetail({floor, y0:floorY, y1:floorY+3.2, poly:rect(32,97,44,131), name:label}, () => {
       const placements=[];
       for (const [u,side] of wings) for (const v of centers) {
-        if((localAisle&&v===centers[1])||hanbokAt(u,v)||yarnAt(u,v))continue;
+        if((localAisle&&v===centers[1])||hanbokAt(u,v)||yarnAt(u,v)||isClothingFront(u,v))continue;
         if(u!==sampleU || v!==sampleV)placements.push([u,v,floorY,side*PI/2]);
         const curtainSign=key==='Curtains' && u===sampleU && v===sampleV;
         lsign(curtainSign?'R A I N B O W  무지개장식':label,u+side*1.353,v,floorY+2.83,3.7,.26,side>0?'+u':'-u',
@@ -2565,7 +2589,7 @@ export function build(K) {
   function buildUpper(){
     for(let i=1;i<10;i++){
       const p=floorPoly(i),y=ys[i],top=i===9?48:ys[i+1];
-      K.zone({name:i===2?'고속터미널 꽃도매상가':'서울고속버스터미널',floor:`${i+1}F`,sub:uses[i],poly:p,y0:y,y1:top,priority:1});
+      K.zone({name:i===2?'고속터미널 꽃도매상가':i===8?'고속버스회사 사무층':'서울고속버스터미널',floor:`${i+1}F`,sub:uses[i],poly:p,y0:y,y1:top,priority:1});
       upperMarket(i,y);
       if(i<9&&i!==2){
         const voids=[[34,6,66,23],[54,33,62,48],[66,17,75.7,28],[16.4,66,25.2,92]];
@@ -2866,9 +2890,20 @@ export function build(K) {
       }
       placeCutFlowers(K,lots);
     });
+    // The operator's 3F photo shows a bank of horizontal cut foliage beside
+    // the green sales aisle. It does not identify a tenant.
+    const bankU=61.6,bankV=77.8;
+    lbox(bankU-1.10,bankV,fy,1.45,3.78,.35,0,{skip:['top','bottom','n','s','e','w']});
+    ldetail({floor:'3F',y0:fy,y1:fy+1.82,name:'생화상가 · 절지와 열매 진열대',
+      poly:rect(bankU-2.24,bankV-1.94,bankU-.28,bankV+1.94),
+      visibleFrom:(x,eye,z)=>toL(x,z)[0]<bankU-.3},()=>{
+      const [x,z]=W(bankU-1.1,bankV);
+      flowerBank(K,x,fy,z,ROT-PI/2);
+    });
     function fresh(u,v,n){
       stockbox(u,v,fy,.38,3.8,1.5,0x7d6a52,{skip:['n','s']});
       for(const s of [-1,1]){
+        if(s===-1 && u===bankU && v===bankV)continue;
         for(let tier=0;tier<3;tier++){
           const bu=u+s*[1.66,1.25,.85][tier],by=fy+tier*.35;
           if(tier)db(bu,v,fy,.4,3.8,tier*.35,s===-1&&u===cutU&&v===cutV?0x969c99:0x6b5a46);
