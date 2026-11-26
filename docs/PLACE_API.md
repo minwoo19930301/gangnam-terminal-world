@@ -78,6 +78,10 @@ where the surface can occlude the view. Separate canopies and shop ceilings may 
 ranges. The renderer keeps partially visible geometry around stairwells, windows and the edge of the slab.
 Registration only controls drawing. The corresponding `K.slab` supplies the floor and collision.
 
+For a rigid, stationary `THREE.InstancedMesh`, `K.addMesh(mesh,{stationaryInstances:true})` opts the finished
+instance set into the same drawing test. Its transforms and geometry must remain fixed. This includes
+stock already visited on another floor. Transparent shop merchandise can use it with its true bounds.
+
 ## Addresses
 
 Every place/floor has an address `#/<place>/<floor>?p=x,y,z,yaw` (the floor label of the zone you stand in). Walking into

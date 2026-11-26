@@ -482,7 +482,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     const mv = o.move ? [ux * o.move, uz * o.move] : null;
     phys.addRamp(ax, az, bx, bz, w / 2, ya, yb, { move: mv, tag: current });
   }
-  const fixedEscalators = [], indoorEscalators = [];
+  const fixedEscalators = [], indoorEscalators = [], indoorStock = [];
   const drawEscalator = createEscalatorRenderer(THREE, (mesh,moving) => {
     addMesh(mesh);
     if (streetVisibility) {
@@ -657,8 +657,9 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
   function onFrame(fn) { frameFns.push(fn); }
   // Detail batches keep their normal scene parents so place animations retain control of visibility.
   let detailObjects = null;
-  function addMesh(mesh) {
+  function addMesh(mesh, {stationaryInstances = false} = {}) {
     detailObjects?.add(mesh);
+    if (deckVisibility && stationaryInstances) mesh.userData.stationaryInstances = true;
     mesh.userData.owner ??= current;
     if (mesh.isPointLight) mesh.position.y += terrainAt(anchorHeight,mesh.position.x,mesh.position.z);
     scene.add(mesh);
@@ -827,6 +828,7 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
     }
     const deck = deckVisibility?.active ? deckVisibility : null;
     if (deck || deckChanged) {
+      for (const mesh of indoorStock) mesh.visible = !deck || !deck.hides(mesh.userData.deckBounds);
       for (const flight of indoorEscalators) {
         if (deck) flight.bounds ??= staticVisibility.flightBounds(flight.mesh,flight.moving,relief);
         flight.mesh.visible = !deck || !deck.hides(flight.bounds);
@@ -1041,13 +1043,29 @@ export function createKit(THREE, scene, { osm, phys, maxAniso = 8, maxTex = 4096
   function splitModuleInstances() {
     const M = new THREE.Matrix4(), C = new THREE.Color();
     for (const im of detailObjects || scene.children.slice()) {
-      if (im.parent !== scene || !im.isInstancedMesh || im.count < 64 || im.userData.dynamic || im.userData.split) continue;
+      if (im.parent !== scene || !im.isInstancedMesh || im.userData.dynamic || im.userData.split) continue;
+      if (im.count < 64) {
+        if (im.userData.stationaryInstances && !im.userData.deckBounds) {
+          // Area pruning has compacted the final instance set. Small displays
+          // keep their original parent and distance behaviour.
+          im.computeBoundingBox();
+          im.updateWorldMatrix(true,false);
+          im.userData.deckBounds = im.boundingBox.clone().applyMatrix4(im.matrixWorld);
+          indoorStock.push(im);
+        }
+        continue;
+      }
       const e = im.instanceMatrix.array;
       for (const g of groupBy(im.count, i => [e[i * 16 + 12], e[i * 16 + 13], e[i * 16 + 14], im.userData.owner])) {
         const nm = new THREE.InstancedMesh(im.geometry, im.material, g.idx.length);
         g.idx.forEach((src, j) => { im.getMatrixAt(src, M); nm.setMatrixAt(j, M); if (im.instanceColor) { im.getColorAt(src, C); nm.setColorAt(j, C); } });
         nm.instanceMatrix.needsUpdate = true; if (nm.instanceColor) nm.instanceColor.needsUpdate = true;
         nm.frustumCulled = im.frustumCulled; nm.renderOrder = im.renderOrder; nm.userData.split = true; scene.add(nm); track(nm, g.cell);
+        if (im.userData.stationaryInstances) {
+          // Each spatial cell already has an exact bound including all its instances.
+          nm.name = im.name;
+          nm.userData.deckBounds = nm.boundingBox;
+        }
       }
       scene.remove(im);
     }

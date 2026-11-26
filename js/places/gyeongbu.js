@@ -2719,7 +2719,7 @@ export function build(K) {
       mesh.name=`gyeongbu-flower-${name}-${key}`;
       list.forEach(([u,v,y,w,d,h,col],i)=>{const [x,z]=W(u,v);matrix.compose(pos.set(x,y,z),quat,scale.set(w,h,d));mesh.setMatrixAt(i,matrix);mesh.setColorAt(i,colour.setHex(col));});
       mesh.instanceMatrix.needsUpdate=true;if(mesh.instanceColor)mesh.instanceColor.needsUpdate=true;
-      mesh.computeBoundingSphere();K.addMesh(mesh);
+      mesh.computeBoundingSphere();K.addMesh(mesh,{stationaryInstances:true});
     }
       });
     }
