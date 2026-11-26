@@ -1,8 +1,16 @@
 // The arrival must retain the editable front while the full cinema mesh is in flight.
 import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
 import {chromium} from 'playwright';
 import {serve} from './serve.mjs';
 
+const glb=await readFile(new URL('../assets/models/megabox-central/entrance.glb',import.meta.url));
+const scene=JSON.parse(glb.subarray(20,20+glb.readUInt32LE(12)).toString());
+const [surface]=scene.meshes;
+assert.equal(scene.meshes.length,1);
+assert.equal(surface.primitives.length,1);
+const detailIndices=scene.accessors[surface.primitives[0].indices].count;
+assert.ok(detailIndices>3771);
 const server=await serve();
 const browser=await chromium.launch({channel:'chromium',args:['--use-angle=metal','--enable-gpu','--ignore-gpu-blocklist']});
 const page=await browser.newPage({viewport:{width:744,height:464}});
@@ -29,11 +37,11 @@ try{
   release();
   const full=await response;
   assert.equal(full.status(),200);
-  assert.equal((await full.body()).length,148244);
-  await page.waitForFunction(name=>__world.scene.getObjectByName(name)?.geometry.index.count===43422,subject);
+  assert.deepEqual(await full.body(),glb);
+  await page.waitForFunction(([name,count])=>__world.scene.getObjectByName(name)?.geometry.index.count===count,[subject,detailIndices]);
   assert.equal(requests,1);
   assert.deepEqual(errors,[]);
-  console.log('Megabox arrival retained 1,257 front triangles throughout the delayed request, then displayed all 14,474 triangles.');
+  console.log('Megabox arrival retained 1,257 front triangles during the delayed request, then displayed all '+(detailIndices/3).toLocaleString('en-US')+' triangles.');
 }finally{
   release();await browser.close();await new Promise(resolve=>server.close(resolve));
 }
