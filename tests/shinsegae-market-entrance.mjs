@@ -61,6 +61,8 @@ try{
   await cdp.detach();await page.waitForTimeout(80);
   assert.ok(await litLetterPixels(-2.85,-1.34)>35,'English lettering visible before the detailed asset returns');
   await page.waitForTimeout(450);
+  assert.ok(!(await page.locator('#toast.show').allTextContents()).some(t=>t.includes('클릭하면 계속')),
+    'touch movement needs no mouse recovery hint');
   assert.equal(requests,1);
   release();
   await page.waitForFunction(name=>__world.scene.getObjectByName(name)?.geometry.index.count>3000,meshName);

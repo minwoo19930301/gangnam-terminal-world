@@ -428,7 +428,7 @@ async function boot() {
     if (e.code === 'KeyR') { const r = player.respawn; player.teleport(r.x, r.y, r.z, r.yaw); }
   });
   addEventListener('keyup', e => { keys[e.code] = false; });
-  function toast(t) { const el = $('toast'); el.textContent = t; el.classList.add('show'); clearTimeout(toast._t); toast._t = setTimeout(() => el.classList.remove('show'), 1800); }
+  function toast(t, pointerHint = false) { const el = $('toast'); el.classList.toggle('pointer-hint',pointerHint); el.textContent = t; el.classList.add('show'); clearTimeout(toast._t); toast._t = setTimeout(() => el.classList.remove('show'), 1800); }
   window.__toast = toast;
   // The visible left pad moves; a separate finger anywhere outside UI looks.
   const touch = { mx: 0, mz: 0, id: null, lookId: null, lx: 0, ly: 0 };
@@ -724,8 +724,11 @@ async function boot() {
   let hopped = false; try { const h = JSON.parse(sessionStorage.getItem('areaHops') || '[]'); hopped = h.length && Date.now() - h[h.length - 1] < 30000; } catch (e) { }
   if (hopped) {
     $('start').classList.add('hidden');
-    setTimeout(() => {
-      if (!$('toast').classList.contains('show')) toast(`${areaName(AREA.id, META)} · 화면을 클릭하면 계속 걸어요`);
+    // Touch movement resumes on the existing pad. Only a mouse needs to recapture the view.
+    if (!matchMedia('(hover: none) and (pointer: coarse)').matches) setTimeout(() => {
+      if (document.pointerLockElement !== canvas && !$('toast').classList.contains('show')) {
+        toast(`${areaName(AREA.id, META)} · 화면을 클릭하면 계속 걸어요`,true);
+      }
     }, 300);
   }
   // Noto Sans KR is served in unicode-range slices; load the slices for every character the signs use, otherwise
