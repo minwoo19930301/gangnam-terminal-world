@@ -71,7 +71,7 @@ for row in hotel_rows:
     if not (row['library']=='jwmarriott/public-roof.blend' or row['id'].startswith('jwmarriott/herbs/')):
         continue
     anchor=anchors[row['id']]
-    child=next(o for o in anchor.children if COMPONENT in o)
+    child=next(o for o in anchor.children if component in o)
     assert city.objects.get(child.name)==child and city.objects.get(anchor.name)==anchor
     if 'faces' in row:
         mesh=next(iter(child.instance_collection.objects)).data
