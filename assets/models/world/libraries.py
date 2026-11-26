@@ -60,6 +60,7 @@ SHELVES = {
     "open-stage-media": "센트럴시티 1층 · 미디어 기둥 외장",
     "famille-reserve-timber": "파미에파크R 3층 · 목재 기둥과 구형 조명",
     "open-stage-coffer": "센트럴시티 1층 · 오픈 스테이지 격자 천장",
+    "gyeongbu-escalator-directory": "경부선 본관 · 혼수와 홈패션 에스컬레이터",
     "gyeongbu-waiting-ceiling": "경부선 1층 · 대합실 목재 루버와 매입등",
     "gyeongbu-planted-columns": "경부선 1층 · 대합실 식물 기둥",
     "goter-crossing": "신반포로 · 고터사거리 보행 신호주",

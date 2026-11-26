@@ -178,6 +178,7 @@ const sources = [
     const native=label==='승객용 전광판과 안내 케이스'?'중앙차로 승차대 · 승객 전광판과 안내함':name;
     return ['streets','지상','sinbanpo-bus-shelters/shelters.blend',name,native];
   }),
+  ['gyeongbu','1F','gyeongbu-escalator-directory/directory.blend','경부선 1층 에스컬레이터 · 혼수와 홈패션','본관 에스컬레이터 · 혼수와 홈패션'],
   ['gyeongbu','1F','gyeongbu-waiting-ceiling/waiting-ceiling.blend','경부선 대합실 좌석 · 목재 루버와 매입등','1F waiting lounge · editable ceiling sections'],
   ['gyeongbu','1F','gyeongbu-planted-columns/planted-column.blend','경부선 대합실 · 식물 기둥','대합실 · 네 면을 감싼 식물 기둥'],
   ['gyeongbu','1F','gyeongbu-front-entrance/portal.blend','경부선 정문 · 석재 차양과 영문 명판','정문 · 경사 기둥과 영문 채널 문자'],

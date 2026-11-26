@@ -1,3 +1,4 @@
+import {detailModule} from '../detail-module.js';
 import {placeYukgakRestaurant} from '../../assets/models/gyeongbu-yukgak/model.js';
 import {placeHyodoShop} from '../../assets/models/gyeongbu-hyodo/model.js';
 import {placeWicker} from '../../assets/models/gyeongbu-basket-display/model.js';
@@ -89,6 +90,11 @@ const wholesaleAisles={
     [39.40,109.53,.56,5.53,2.43],[36.79,107.26,.58,.65,1.65],[36.69,108.40,.58,.65,1.65],
     [35.31,110.68,.59,3.31,2.37]]}
 };
+
+const directoryURL=new URL('../../assets/models/gyeongbu-escalator-directory/model.js',import.meta.url);
+const escalatorDirectory=detailModule(directoryURL,module=>module.placeDirectory);
+// The headless city baker captures all native placements synchronously.
+if(directoryURL.protocol==='file:')await escalatorDirectory.load();
 
 export function build(K) {
   const { LEVELS } = K, PI = Math.PI;
@@ -864,7 +870,18 @@ export function build(K) {
     lesc(e.u-.85,e.v,e.u-.85,e.v+e.len,{ya:e.ya,yb:e.yb,w:1.1});
     lesc(e.u+.85,e.v,e.u+.85,e.v+e.len,{ya:e.ya,yb:e.yb,w:1.1,dir:'down'});
     lwall(e.u-1.8,e.v,e.u+1.8,e.v,e.yb,e.yb+1,{mat:0x90948e,thick:.08});
-    if(e.yb!==11)lsign(e.yb===0?'매표소 · 승차홈':'2층 · 꽃상가 ↑',e.u,e.v-.3,e.ya+2.82,e.yb===0?2.8:3.3,.36,'-v',{bg:e.yb===0?'#2863a2':'#225a4a',fg:'#fff'});
+    if(e.yb===6){
+      const [x,z]=W(e.u,e.v-.65),name='경부선 1층 에스컬레이터 · 혼수와 홈패션';
+      // The atlas face stays readable at range and during a cold visit.
+      lsign('⌃ 2   혼수 | 홈패션    2·4F',e.u,e.v-.65,2.66,3.07,.68,'-v',
+        {bg:'#817b72',fg:'#fffaf0',pxPerM:180,offset:.021});
+      K.detail({name,floor:'1F',poly:rect(e.u-2.03,e.v-.85,e.u+2.03,e.v-.2),y0:2.30,y1:3.31,
+        resource:escalatorDirectory,visualOnly:true,
+        visibleFrom:(px,py,pz)=>py<5.65&&(px-x)**2+(pz-z)**2<24**2},
+        ()=>escalatorDirectory.value(K,name,x,2.66,z,ROT));
+    }else if(e.yb===11){
+      lsign('3층 꽃도매상가 ↑',e.u,e.v-.3,e.ya+2.72,2.8,.36,'-v',{bg:'#28604b',fg:'#fff'});
+    }
   }
   buildHall();buildPhotoWalk20Hall();buildBasement();buildUpper();buildYards();buildWalk13();buildWalk15Public();buildWalk17Interiors();
   lspawn('경부선 터미널 정문',163,-16,0,0,1);
@@ -1424,7 +1441,7 @@ export function build(K) {
       if(i%5===0)lbox(u+.34,v,.52,.24,.14,.33,0xbaa688,{solid:false});
     }
     for(const [u,v] of [[138,24.5],[160,25],[221,24.8],[286,25],[33,143],[51,142.5],[13,113],[26,124]])lperson(u,v,0,{sit:u===13||u===26});
-    lsign('지하철 · 고투몰 ↓',105,17.5,2.87,4,.5,'+v',{bg:'#8a755b',fg:'#fff'});lsign('3층 꽃도매상가 ↑',20,59.5,2.87,3,.35,'-v',{bg:'#28604b',fg:'#fff'});
+    lsign('지하철 · 고투몰 ↓',105,17.5,2.87,4,.5,'+v',{bg:'#8a755b',fg:'#fff'});
     });
     placeAssembly({from:[25,147.15],to:[62.5,48],angle:-PI/2,sx:.8,sz:1.4},()=>{
     // Photo21: ticket desk left, curved oak ribs and vertical lamps right.
