@@ -1,3 +1,4 @@
+import {placeWaitingCeiling} from '../../assets/models/gyeongbu-waiting-ceiling/model.js';
 import {placeGyeongbuEntrance} from '../../assets/models/gyeongbu-front-entrance/model.js';
 import {placePassengerFinish} from '../../assets/models/gyeongbu-concourse-finish/model.js';
 import {placePharmacy} from '../../assets/models/gyeongbu-pharmacy/model.js';
@@ -1301,7 +1302,8 @@ export function build(K) {
     K.hpoly('gb5_ticket_tile',rect(8,108,34,130),.014);K.hpoly(0xeeebe4,rect(8,108,34,130),4,false);
     for(const [u,v] of [[18,113],[30,124]])lbox(u,v,0,1,1,3.8,0,{skip:['top','bottom','n','s','e','w']});
     furnish(() => {
-    for(let u=8.1;u<34;u+=.25)lbox(u,119,3.8,.06,22,.15,0xc9a77c,{solid:false});for(let u=10;u<33;u+=1.6)lbox(u,119,3.77,.06,18,.03,'emit',{solid:false});
+    const [ceilingX,ceilingZ]=W(69.35,39);
+    placeWaitingCeiling(K,ceilingX,ceilingZ,ROT);
     for(const [u,v,model] of [[13,113,'HallSeatOrange'],[26,113,'HallSeatOrange'],[13,124,'HallSeatOrange'],[26,124,'HallSeatCharcoal']]){
       // The authored cushions follow the previous seat envelope and player collision.
       lbox(u,v,.12,5.4,1,.35,0x485052,{skip:['top','bottom','n','s','e','w']});
@@ -1397,7 +1399,9 @@ export function build(K) {
             K.quad(0x99734e,[point(a,du),point(b,du),inner(b),inner(a)],[du<0?-A[0]:A[0],0,du<0?-A[1]:A[1]]);
           }
         }
-        lbox(u,150.1,3.22,.085,4.5,.08,0xb18c61,{solid:false});
+        // Finish the ticket-aisle return at the edge of the seating canopy.
+        // Its former 6.3m cantilever ran across the lounge's north-south blades.
+        lbox(u,147.94,3.22,.085,.18,.08,0xb18c61,{solid:false});
       }
       for(const u of [26.7,33.9,41.1,47]){
         lbox(u,147.05,.15,.065,.065,2.48,'emit',{solid:false});
