@@ -1,3 +1,4 @@
+import {placeG11Door} from '../../assets/models/gotomall-g11/place.js';
 import {placeExit81Lift} from '../../assets/models/goto-exit81-lift/model.js';
 import {detailModule} from '../detail-module.js';
 const windowPrint=detailModule(new URL('../../assets/models/g12-window-print/model.js',import.meta.url),
@@ -2947,7 +2948,7 @@ export function build(K) {
     bx(u-0.41,u+0.41,v-0.41,v+0.41,FL,0.10,0xb09b69,{solid:false});
     bx(u-0.018,u+0.018,v-0.415,v+0.415,FL+0.1,CY-FL-0.1,0x5c5951,{solid:false});
   }
-  K.zone({name:'중앙광장',floor:'B1',sub:'GOTO ZONE · G11 · G12',poly:R(PLAZA_U0,-9.4,258.7,14.1),y0:FL,y1:CY,priority:4});
+  K.zone({name:'중앙광장',floor:'B1',sub:'다이소 강남고속버스터미널점은 G11 방면 · 맞은편 G12',poly:R(PLAZA_U0,-9.4,258.7,14.1),y0:FL,y1:CY,priority:4});
   K.zone({name:'동편광장',floor:'B1',sub:'G13 · G14 · 엘리베이터',poly:R(350,-8.4,364,13.5),y0:FL,y1:CY,priority:4});
   furnish(252,()=>{
     const ovals=[[251.4,5.8,5.5,2.05],[251.4,-4.9,5.5,2.05]];
@@ -3124,18 +3125,13 @@ export function build(K) {
       K.wall(...F.p(i?w:-w,-len),...F.p(i?w:-w,0.3),FL,AY,{mat:M.wall,thick:0.16});
     }
     // No artificial up/down detour: gyeongbu owns the rise beyond these doors.
-    K.zone({name:'G11 다이소 연결통로',floor:'B1',sub:'중앙광장 · 다이소 4번 출입구',poly:F.poly(-w,-len,w,0.3),y0:FL,y1:CY,priority:4});
-    K.zone({name:'G11 중앙광장 진입홀',floor:'B1',poly:join,y0:FL,y1:CY,priority:4});
+    K.zone({name:'G11 다이소 연결통로',floor:'B1',sub:'G11 문을 지나 계단 위 다이소 4번 출입구',poly:F.poly(-w,-len,w,0.3),y0:FL,y1:CY,priority:4});
+    K.zone({name:'G11 중앙광장 진입홀',floor:'B1',sub:'통로 끝 G11 문을 지나 다이소 4번 출입구로',poly:join,y0:FL,y1:CY,priority:4});
     furnish(G11.u,()=>{
-      // Three bays: two narrow side lights and the paired central door leaves.
-      for(const [a,b] of [[-2.2,-1.12],[-1.12,0],[0,1.12],[1.12,2.2]]) {
-        F.box(a+0.03,b-0.03,-0.025,0.025,FL+0.05,2.35,{tex:'glass',color:0xdde5df},{solid:false});
-        for(const y of [FL+0.025,FL+2.4]) F.box(a,b,-0.05,0.05,y,0.055,0x252827,{solid:false});
+      placeG11Door(K,[G11.door[0],FL,G11.door[1]],F.rot);
+      for (const a of [-1.12,1.12]) {
+        F.sign('G11 출구 | 고속버스터미널',a,-0.105,FL+2.77,2.08,0.26,{sub:'경부·영동선'});
       }
-      for(const a of [-2.22,-1.12,0,1.12,2.22]) F.box(a-0.027,a+0.027,-0.055,0.055,FL+0.02,2.45,0x252827,{solid:false});
-      for(const a of [-0.1,0.1]) F.box(a-0.016,a+0.016,-0.09,-0.06,FL+0.6,1.25,0x343835,{solid:false});
-      F.box(-2.25,2.25,-0.08,0.08,FL+2.45,0.6,0xdf5a78,{solid:false});
-      F.sign('G11 출구 | 고속버스터미널',0,-0.09,FL+2.77,4.25,0.28,{sub:'경부·영동선'});
       F.sign('고투몰에 오신 것을 환영합니다',1.6,0.09,FL+2.77,1.1,0.3,{rotY:F.rot});
       F.sign(['리뉴얼 오픈','고투몰'],-1.65,0.065,FL+1.65,0.8,0.65,{rotY:F.rot,bg:'#f3eee6',fg:'#a64761'});
       F.sign(['서초','요트 모먼트'],1.65,0.068,FL+1.65,0.8,0.65,{rotY:F.rot,bg:'#20232c',fg:'#fff'});
