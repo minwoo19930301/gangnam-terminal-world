@@ -383,6 +383,13 @@ export async function captureIndoorLayout() {
       let captureVehicle=false;
       const kit=createKit(THREE,new THREE.Scene(),{osm,phys:createPhysics(),keep:()=>captureVehicle});
       if(place==='shinsegae'){
+        kit.recordMainLiftReturns=(floor,[x,z],y)=>{
+          const name='MainLiftLanding'+floor,ground=rounded(relief(x,z));
+          result.push({id:'shinsegae/'+name+'/1',place,placeName:meta.name,floor,
+            library:'shinsegae-upper-lift-landing/landings.blend',collections:[name],
+            subject:'본관 '+floor+' 고객 승강장 · 두 문과 양옆 벽',ground,terrain:ground,
+            matrix:new THREE.Matrix4().makeTranslation(x,y,z).toArray().map(rounded)});
+        };
         const placeVehicle=kit.vehicle;
         kit.vehicle=options=>{
           captureVehicle=true;

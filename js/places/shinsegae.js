@@ -1766,13 +1766,14 @@ export function build(K) {
     ['8F',817,644,929,565],
   ]){
     const [front,v]=upperLiftIcons[id].main,y=LV[id];
-    const guide=(x,y)=>upperPlanPoint(id,x*1823/2000,y*1367/1500);
-    const [leftU,leftV]=guide(leftX,leftY),[rightU,rightV]=guide(rightX,rightY);
+    const [leftU,leftV]=sourcePoint(id,leftX,leftY),[rightU,rightV]=sourcePoint(id,rightX,rightY);
     const wallTop=y+clearH(id),finish={mat:0xe3dfd5,thick:.12};
-    wall(front,leftV,front,v-2.55,y,wallTop,finish);
-    wall(front,v+2.55,front,rightV,y,wallTop,finish);
-    wall(front,leftV,leftU,leftV,y,wallTop,finish);
-    wall(front,rightV,rightU,rightV,y,wallTop,finish);
+    const returns=[
+      [P(front,leftV),P(front,v-2.55)], [P(front,v+2.55),P(front,rightV)],
+      [P(front,leftV),P(leftU,leftV)], [P(front,rightV),P(rightU,rightV)],
+    ];
+    for(const [a,b] of returns)K.wall(...a,...b,y,wallTop,finish);
+    K.recordMainLiftReturns?.(id,P(front,v),y,returns,wallTop,finish);
     zone('본관 고객 엘리베이터',id,'본관 화장실 옆',[front-2.2,v-2.55,front,v+2.55],y,wallTop,4);
   }
   {

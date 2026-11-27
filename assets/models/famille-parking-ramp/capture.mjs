@@ -20,7 +20,7 @@ try{
     const {gardenStation,hotelCourtDatum}=await import('/js/places/_gardenGrade.js');
     const {buildFamilleGarageEntry}=await import('/js/places/_familleGarageEntry.js');
     installRelief(THREE,true);
-    const groups=new Map(),images={},pieces=[];
+    const groups=new Map(),images={};
     let surface=null;
     function emit(name,method,args){
       if(!groups.has(name))groups.set(name,createKit(THREE,new THREE.Scene(),{osm:{},phys:createPhysics(),maxTex:1024}));
@@ -52,35 +52,8 @@ try{
         emit(name,'hpoly',[mat,points,...rest]);
       },
     });
-    for(const [name,kit] of groups){
-      for(const mesh of kit._.finalize()){
-        const g=mesh.geometry,{position,uv,color}=g.attributes;
-        const vertices=[],uvs=[],colors=[];
-        const image=mesh.material.map?.image;
-        let texture=null;
-        let u0=0,v0=0,us=1,vs=1;
-        if(image?.getContext){
-          let canvas=image;
-          if(name==='진입 표지'){
-            const u=[],v=[];
-            for(let i=0;i<uv.count;i++){u.push(uv.getX(i));v.push(uv.getY(i));}
-            u0=Math.min(...u);v0=Math.min(...v);us=Math.max(...u)-u0;vs=Math.max(...v)-v0;
-            canvas=document.createElement('canvas');
-            canvas.width=Math.round(image.width*us);canvas.height=Math.round(image.height*vs);
-            canvas.getContext('2d').drawImage(image,u0*image.width,(1-v0-vs)*image.height,canvas.width,canvas.height,0,0,canvas.width,canvas.height);
-          }
-          const data=canvas.toDataURL('image/png');
-          texture=Object.keys(images).find(key=>images[key]===data)??'surface-'+Object.keys(images).length;
-          images[texture]=data;
-        }
-        for(let i=0;i<position.count;i++){
-          vertices.push([position.getX(i),-position.getZ(i),position.getY(i)]);
-          uvs.push([(uv.getX(i)-u0)/us,(uv.getY(i)-v0)/vs]);
-          colors.push(color?[color.getX(i),color.getY(i),color.getZ(i)]:[1,1,1]);
-        }
-        pieces.push({name,texture,vertices,uvs,colors,indices:Array.from(g.index.array)});
-      }
-    }
+    const {captureGroups}=await import('/assets/models/geometry-capture/batches.js');
+    const pieces=captureGroups(groups,images);
     if(verify){
       // Construct the untouched game function a second time, including its adjoining garden.
       // Every exported oriented triangle must exist in this independent full render.
