@@ -193,6 +193,7 @@ const PINK_CEILING_PANELS = [-280,-245,-202];
 const G13_SIGN_COL = [357.6, 12.6]; // uv of the 동편광장 sign column beside the G13 doors (#205/#206)
 
 export function build(K) {
+  const shopArrivals = [];
   const band = K.osmBuilding(1354860678)[0].poly;
   const bandUV = band.map(p => UV(p[0], p[1]));
   const rnd = K.rand(20261106);
@@ -1342,8 +1343,8 @@ export function build(K) {
       }
       lsign(loc,'SALE',W*.50,.11,FL+2.22,.61,.30,outFace(loc),
         {bg:'#ffe994',fg:'#b33d36',box:.012,pxPerM:180});
-      for (const side of [.09,W-.09]) lsign(loc,'ANY TIME',side,-.05,FL+2.37,.51,.19,
-        side<W/2?'-u':'+u',{bg:'#252629',fg:'#faf9ec',box:.035,twoSided:true,pxPerM:180});
+      for (const side of [.16,W-.16]) lsign(loc,'ANY TIME',side,-.10,FL+2.37,.51,.19,outFace(loc),
+        {rotY:FACE[outFace(loc)]+(side < W/2 ? .82 : -.82),bg:'#252629',fg:'#faf9ec',box:.035,twoSided:true,pxPerM:180});
       return;
     }
     const myeong = loc.num === 'A-144' && info.name === '명플라워';
@@ -1475,7 +1476,17 @@ export function build(K) {
     });
     // shop zone (HUD + map)
     const p0 = Lp(loc, 0, 0), p1 = Lp(loc, W, D);
-    K.zone({ name: info.zname || name, floor: 'B1', sub: info.zsub, poly: R(Math.min(p0[0], p1[0]), Math.min(p0[1], p1[1]), Math.max(p0[0], p1[0]), Math.max(p0[1], p1[1])), y0: FL - 0.5, y1: CY, priority: 4 });
+    let mapArrival;
+    if (name === '명플라워' || name === '애니타임') {
+      // Look into the public opening from across the aisle, with room to walk forward.
+      const [x,z] = P(...Lp(loc,W/2+.32,-4.25));
+      const aim = name === '애니타임' ? W/2-.22 : W/2;
+      const [targetX,targetZ] = P(...Lp(loc,aim,.45));
+      mapArrival = {x,y:FL,z,yaw:Math.atan2(x-targetX,z-targetZ),pitchDeg:-3};
+      const brand = name === '애니타임' ? 'ANY TIME' : 'Myeong Flower';
+      shopArrivals.push({name,aliases:[brand,S.num],floor:'B1',mapDestination:true,...mapArrival});
+    }
+    K.zone({ name: info.zname || name, floor: 'B1', sub: info.zsub, mapArrival, poly: R(Math.min(p0[0], p1[0]), Math.min(p0[1], p1[1]), Math.max(p0[0], p1[0]), Math.max(p0[1], p1[1])), y0: FL - 0.5, y1: CY, priority: 4 });
   }
 
   // ---------- sections ----------
@@ -3480,4 +3491,5 @@ export function build(K) {
   sp('사진 의류 · BYC', 164, -5.1, FL, 0, -1);
   sp('사진 동편광장 · 카페', 383.1, 6.6, FL, 0, -1);
   { const X = EXITS.find(e => e.id === '8-1'); const t = X.E(-2.5, 0); sp('고속터미널역 8-1번 출구 (지상)', t[0], t[1], 0, 1, 0); }
+  for (const arrival of shopArrivals) K.spawn(arrival);
 }
