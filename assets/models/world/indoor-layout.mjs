@@ -41,6 +41,7 @@ const sources = [
   ['streets','지상','sinbanpo-public-oaks/pin-oak.blend','반포센트럴자이 앞 신반포로 · 대왕참나무','SinbanpoPublicPinOak'],
   ...[['서쪽 녹청 구체','CentralCityPatinatedSphere'],['가운데 갈색 구체','CentralCityBronzeSphere'],['동쪽 잔물결 구체','CentralCityRippledSphere']]
     .map(([label,collection])=>['centralcity','지상','central-plaza-spheres/spheres.blend','센트럴시티 광장 · '+label,collection]),
+  ['centralcity','1F','honam-gate-coffee/front.blend','호남선 · 1게이트 스타벅스 입면','HonamGateCoffee'],
   ['centralcity','지상','central-plaza-lantern/lantern.blend','센트럴시티 조각 광장 · 두 갈래 보행등','CentralCityTwinLantern'],
   ['gotomall','1F','goto-exit81-lift/lift.blend','고투몰 8-1 · 보도 승강기','GotoExit81Lift'],
   ['gotomall','지상','g12-window-print/print.blend','고투몰 G12 · 지상 유리 점인쇄','G12 유리창 점인쇄'],

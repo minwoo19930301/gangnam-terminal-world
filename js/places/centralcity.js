@@ -40,6 +40,7 @@ import {gelatiShop} from '../../assets/models/gelati/room.js';
 import {seesShop} from '../../assets/models/sees/room.js';
 import { halffCoffee } from '../../assets/models/halff/room.js';
 import { dimDimsum } from '../../assets/models/dimdimsum/restaurant.js';
+import { buildHonamGateCoffee } from '../../assets/models/honam-gate-coffee/model.js';
 import { beanBrothers } from '../../assets/models/bean-brothers/room.js';
 import { OPEN_STAGE_FRONT } from './_junctions.js';
 import { loadArchitecture, placeArchitecture } from '../../assets/models/interior-architecture/model.js';
@@ -2108,7 +2109,7 @@ export function build(K) {
   }
 
   // ================================================================= south block — 파미에스테이션 1F/2F, 하차장, 메가박스 B1
-  // Gate 2 opens onto the 1F arcade. The short Honam-side flight and its
+  // The boarding-hall gate opens onto the 1F arcade. The short Honam-side flight and its
   // level side passage are built at the connector below.
   // South elevator and officialeastescclusterretainupperaccess; B1remainsreachablefromhallcores.
   // OfficialGate5/6westcornercontainstoilets,notflights:removeoldB1/groundandground/upperstairs.
@@ -3161,20 +3162,26 @@ export function build(K) {
   }
   lzone(168.3,-96,203.6,38,{place:'famille',name:'파미에스테이션',floor:'1F',sub:'1층 매장 · 1~7게이트',y0:0,y1:4.65,priority:5});
   lzone(187.8,-92,191.1,34,{place:'famille',name:'파미에스테이션 실내 거리',floor:'1F',sub:'1층 매장 안내',y0:0,y1:8.5,priority:6});
-  const famGates=[[1,170.8,-28.7,'N'],[2,170.8,22,'N'],[4,189.3,-54,'S'],[5,189.3,-96,'W'],[6,178,-86,'W'],[7,171,-70,'N']];
-  // Gate 2 has its own brick frame and head sign below.
-  for(const [id,ss,tt,face]of famGates)if(id!==2)planGate('파미에스테이션 '+id+'게이트',ss,tt,face,4.5);
+  const famGates=[[2,170.8,-28.7,'N'],[1,170.8,22,'N'],[4,189.3,-54,'S'],[5,189.3,-96,'W'],[6,178,-86,'W'],[7,171,-70,'N']];
+  // The boarding-hall entrance has its own brick frame and head sign below.
+  for(const [id,ss,tt,face]of famGates)if(id!==1)planGate('파미에스테이션 '+id+'게이트',ss,tt,face,4.5);
   // The two hall-side portals are genuine framed openings with brick returns and clear glazing.
-  for(const [id,tt]of [[1,-28.7],[2,22]]){
-    const jamb = id===2 ? 4.65 : 3.2;
+  for(const [id,tt]of [[2,-28.7],[1,22]]){
+    const jamb = id===1 ? 4.65 : 3.2;
     for(const d of [-jamb,jamb]){lbox(170.8,tt+d,1.1,1.55,0,4.3,'ccFamBuffBrick');lbox(170.8,tt+d,1.25,1.7,3.35,.2,0xe6dcc8,{solid:false});}
     lbox(170.8,tt,1.1,2*jamb+1.55,3.65,.65,'ccFamBuffBrick',{solid:false});
-    lsign('파미에스테이션 '+id+'게이트',170.18,tt,id===2?3.67:3.24,5.7,.55,'N',{bg:'#324639',fg:'#fff1cd'});
+    if(id===1) {
+      lsign('FAMILLE STATION',170.18,tt,3.67,5.7,.55,'N',{bg:'#151d2b',fg:'#ffffff'});
+      lsign(['1','GATE'],170.17,tt-jamb,1.92,.48,.53,'N',{bg:'#322d2a',fg:'#fff5ea'});
+    } else {
+      lsign('파미에스테이션 2게이트',170.18,tt,3.24,5.7,.55,'N',{bg:'#324639',fg:'#fff1cd'});
+    }
     for(const d of [-(jamb-.83),jamb-.83])lbox(170.8,tt+d,1.0,.035,.1,3.35,'glass',{solid:false});
     for(let i=0;i<16;i++){const a=i*PI/16,b=(i+1)*PI/16;beam([170.12,tt+2.95*Math.cos(a),3.7+1.1*Math.sin(a)],[170.12,tt+2.95*Math.cos(b),3.7+1.1*Math.sin(b)],.16,0xe9dec8);}
     lbox(179.7,tt,17.8,.16,.033,.006,0x9b8257,{solid:false});
     lfloorText('파미에스테이션 ↑',174,tt,.042,3.3,1.0,'S',{fg:'#4c5c47'});
   }
+  buildHonamGateCoffee(K,P,R);
   // The arcade is level. A short stone flight meets the slightly raised
   // Honam landing; the terminal-side approach grades into the hall floor.
   // Use the existing gameplay threshold as the vertical reference.
@@ -3205,14 +3212,14 @@ export function build(K) {
       w:landingWidth,ya:honamLanding,yb:0,mat:0xe4ded2,nosing:0x60564f,rails:false,
     });
   });
-  lsign(['파미에스테이션 ↑','2게이트 · 식당가'],155,21.95,3.15,3.8,.65,'N',{bg:'#324639',fg:'#fff1cd'});
+  lsign(['파미에스테이션 ↑','1게이트 · 식당가'],155,21.95,3.15,3.8,.65,'N',{bg:'#324639',fg:'#fff1cd'});
   lsign(['호남선 터미널 ↑','승차홈 · 매표소'],171.48,22,3.72,4.6,.55,'S',{bg:'#324639',fg:'#fff1cd'});
-  K.detail({name:'파미에 Gate2 · 영상의 짧은 계단과 구형 가로등',floor:'1F',y0:0,y1:4.8,poly:RECT(162.3,18.5,176,27.8)},()=>{
+  K.detail({name:'파미에 1게이트 · 짧은 계단과 구형 가로등',floor:'1F',y0:0,y1:4.8,poly:RECT(162.3,18.5,176,27.8)},()=>{
     for(const t of [18.9,26.5]){
       lbox(166,t,.65,.8,0,4.45,'ccFamBuffBrick');
       lbox(166,t,.85,1,3.5,.22,0xe6dcc8,{solid:false});
     }
-    // Two fanlight windows above the recessed shop backs flank the clear Gate2 lane.
+    // Two fanlight windows above the recessed shop backs flank the clear gate passage.
     for(const t of [18.1,27.0]){
       lbox(175.1,t,.04,3,2.72,.88,'glass',{solid:false});
       lbox(175.08,t,.12,3.35,2.55,.18,0xe6dcc8,{solid:false});
