@@ -30,7 +30,9 @@ export function buildHonamGateCoffee(K, P, rotation) {
   const fittings=[[-1.47,1.98,2.13,2.72,1.95],[-2.80,.52,-2.06,1.13,1.70],[2.02,.52,2.76,1.13,1.70]];
   for(const [a,b,c,d,height] of fittings)K.phys.addPolyWalls(rect(a,b,c,d),landing,height,.02,'centralcity');
 
-  const [x,z]=W(0,0),[approachX,approachZ]=W(-1.96,-6.15),[shopX,shopZ]=W(-1.96,.4);
+  // From the hall the full fascia fits a portrait screen. Aim through the
+  // left-hand door at a near-integer bearing preserved by map transfer URLs.
+  const [x,z]=W(0,0),[approachX,approachZ]=W(-5.23,-18.95),[shopX,shopZ]=W(-1.96,.95);
   const yaw=Math.atan2(approachX-shopX,approachZ-shopZ);
   K.zone({name,floor:'1F',sub:'파미에스테이션 1게이트 옆 · 호남선 승차장',
     poly:rect(-3.23,-2.33,3.23,3.59),y0:-.15,y1:4.18,priority:22,
