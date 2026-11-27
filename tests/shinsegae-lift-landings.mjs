@@ -30,7 +30,11 @@ try {
   await page.keyboard.up('w');
   for(const [floor,height] of [['7F',31],['8F',35.8]]){
     await page.keyboard.press('e');
-    await page.locator('#elev:not(.hidden) .elev-list button').filter({has:page.getByText(floor,{exact:true})}).click();
+    const choices = page.locator('#elev:not(.hidden) .elev-list button');
+    assert.deepEqual(await choices.locator('b').allTextContents(), [
+      '10F','9F','8F','7F','6F','5F','4F','3F','2F','B1'
+    ]);
+    await choices.filter({has:page.getByText(floor,{exact:true})}).click();
     await page.waitForFunction(y=>Math.abs(__world.player.y-y)<.1,height);
     const zone=await page.evaluate(()=>{const {phys,player:p}=__world;return phys.zoneAt(p.x,p.y+.1,p.z)?.name;});
     assert.equal(zone,'본관 고객 엘리베이터');
