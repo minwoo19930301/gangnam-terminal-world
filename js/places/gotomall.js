@@ -1587,7 +1587,7 @@ export function build(K) {
           else if (jewellery) info = { name: '주얼리 하우스', sub: '목걸이·팔찌·반지 · C-083', fx: 'acc', bg: '#3b2a46', fg: '#f3d98b', zsub: 'C-083 · 액세서리' };
           else if (office) info = { ...CAT.office, name: '고투몰 관리사무소', sub: '고객센터 · D-142', zsub: 'D-142 · 고객센터 · 분실물' };
           else { const C = CAT[ck]; info = { name: C.label, sub: num, fx: C.fx, bg: C.bg, fg: C.fg, menu: C.menu, glass: ck === 'cosme' || ck === 'lens', zname: C.label, zsub: num }; }
-          S.num = tenant?.unit || num; S.no = Number(num.slice(2)); S.uc = (S.a0 + S.a1) / 2; S.col = info.bg; S.named = !!tenant || jewellery || office;
+          S.num = tenant?.unit || num; S.uc = (S.a0 + S.a1) / 2; S.col = info.bg; S.named = !!tenant || jewellery || office;
           const documented = directoryBays.find(([row, u]) => row === S.line && u >= S.a0 && u < S.a1);
           if (documented) {
             const [, , unit, name, specialty, bg, fg] = documented;
@@ -1886,7 +1886,22 @@ export function build(K) {
     { u0: 40.6, u1: 359.6, name: '고투몰 EAST ZONE', short: 'EAST ZONE', sub: '여성의류 · 신발 · 가방 · 액세서리' },
     { u0: 359.6, u1: 368.3, name: '고투몰 동편 휴게', short: '동편', sub: '동편 푸드코트 방면' },
   ];
-  const numRange = (line, u0, u1) => { const ns = shops.filter(S => S.line === line && S.uc >= u0 && S.uc < u1).map(S => S.no); if (!ns.length) return null; const f = n => `${line}-${String(n).padStart(3, '0')}`; return `${f(Math.min(...ns))}~${f(Math.max(...ns))}`; };
+  function numRange(line,u0,u1) {
+    const units=new Set();
+    for(const shop of shops){
+      if(shop.line!==line || shop.uc<u0 || shop.uc>=u1)continue;
+      // Use the plates on the current frontages, including shared units like D-069·070.
+      for(const number of shop.num?.match(/\d+/g)??[])units.add(Number(number));
+    }
+    const runs=[];
+    for(const n of [...units].sort((a,b)=>a-b)){
+      const last=runs.at(-1);
+      if(last && n===last[1]+1)last[1]=n;
+      else runs.push([n,n]);
+    }
+    const label=n=>line+'-'+String(n).padStart(3,'0');
+    return runs.map(([a,b])=>a===b?label(a):label(a)+'~'+label(b)).join(' · ');
+  }
   for (const s of SECT) {
     const Ls = lay((s.u0 + s.u1) / 2);
     K.zone({ name: s.name, floor: 'B1', sub: s.sub, poly: R(s.u0, Ls.n - 0.3, s.u1, Ls.s + 0.3), y0: FL - 0.5, y1: CY, priority: 1 });

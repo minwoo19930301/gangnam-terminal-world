@@ -34,6 +34,7 @@ import {placeTerrarium} from '../../assets/models/gyeongbu-terrarium/model.js';
 import {placePlantedColumn} from '../../assets/models/gyeongbu-planted-columns/model.js';
 import { placeWaitingBenches } from '../../assets/models/gyeongbu-seating/model.js';
 import {placeCushionBay} from '../../assets/models/concourse-fixtures/cushions.js';
+import {placePackingCheckout} from '../../assets/models/daiso-checkout/place.js';
 import {registerCeramics} from '../../assets/models/daiso-ceramics/model.js';
 import {homewearRail} from '../../assets/models/daiso-homewear/shelf.js';
 import {homeShelf} from '../../assets/models/daiso-home/shelf.js';
@@ -894,6 +895,8 @@ export function build(K) {
   lspawn('3층 꽃도매상가',35,100,11,0,1);
   lspawn('3층 생화 통로',58.7,74,11,0,-1);
   lspawn('지하 1층 다이소 1번 출입구',171,6.5,-4,1,0);
+  lspawn('다이소 4번 출입구 · 셀프계산대',246.05,-13.14,-4,.05,1.94,{floor:'B1',mapDestination:true,pitchDeg:-10,arrivalType:'매장 내부',aliases:['다이소 계산대','다이소 셀프계산대','포장용 신문지']});
+  lspawn('다이소 홈웨어 · 잠옷 매대',193.3,7.95,-4,0,-1,{floor:'B1',mapDestination:true,pitchDeg:-9,arrivalType:'매장 내부',aliases:['다이소 잠옷','홈웨어']});
   lspawn('다이소 생활용품 매장',230,6.5,-4,-1,0);
   lspawn('다이소 고투몰 쪽 4번 출입구',250,-13,-4,0,1);
   lspawn('경부선 주차장',174,110,6,0,-1);
@@ -2197,7 +2200,7 @@ export function build(K) {
     for(const u of [164,168])lwall(u,11,u,21.4,y,1.05,{mat:doorGlass,thick:.05});
     lzone('다이소 강남고속버스터미널점','B1','문구 · 완구 · 식품 · 반려동물 · 뷰티 · 주방 · 생활용품',170,0,284,30,y,y+3.1,5);
     lzone('다이소 홈·욕실·청소용품','B1','생활용품 벽면 진열',264,-3,284,0,y,y+3.1,6);
-    lzone('다이소 디즈니 · 계산하는 곳','B1','GATE 4 · 고투몰 방면',238,-18,264,4,y,y+3.1,6);
+    lzone('다이소 디즈니 · 계산하는 곳','B1','GATE 4 · 고투몰 방면 · 셀프 계산대',238,-18,264,4,y,y+3.1,6);
     lzone('다이소 1번 출입구','1F','지하 매장 · 승차홈 22~24',164,9,168,12,0,3.3,7);
     lzone('다이소 2번 출입구','1F','지하 매장 입구전용',206.5,22,214.5,25,0,3.3,7);
     lspawn('다이소 GATE 1 매장입구',172,6.5,y,1,0,{floor:'B1',destinationId:'daiso-gate-1'});
@@ -2328,13 +2331,19 @@ export function build(K) {
       const selfCheckouts=[];
       function checkout(u,v,n,face='-v',staff=false){
         if(!staff){
-          selfCheckouts.push([u,v,y,PI]);
+          if(n===1 && (west || v===-11.2)){
+            const [x,z]=W(u,v);
+            placePackingCheckout(K,[x,y,z],ROT);
+            lbox(u-.655,v,y,.34,.45,.92,0,{skip:['top','bottom','n','s','e','w']});
+          }else{
+            selfCheckouts.push([u,v,y,PI]);
+          }
           lbox(u,v,y,.87,.83,.94,0,{skip:['top','bottom','n','s','e','w']});
           lsign(String(n),u,v,y+2.2,.55,.28,face,{bg:'#26333a',fg:'#e5d33b'});
           return;
         }
         lbox(u,v,y,staff?1.45:.82,.85,.93,0xf1f0ea);lbox(u,v,y+.93,staff?1.5:.87,.92,.05,0x969c99,{solid:false});
-        lbox(u-.08,v,y+.98,.46,.28,.75,0xf6f5ee,{solid:false});lsign('셀프 결제',u-.08,v-.16,y+1.48,.38,.43,face,{bg:n%2?'#205fa6':'#b92f3c',fg:'#fff'});
+        lbox(u-.08,v,y+.98,.46,.28,.75,0xf6f5ee,{solid:false});lsign('직원 계산',u-.08,v-.16,y+1.48,.38,.43,face,{bg:n%2?'#205fa6':'#b92f3c',fg:'#fff'});
         lsign(String(n),u,v,y+2.2,.55,.28,face,{bg:'#26333a',fg:'#e5d33b'});
         if(staff){lperson(u,v+.85,y,{rotY:FACE['-v'],shirt:0xbc233c,pants:0x31363c});lsign('₩',u,v,y+2.6,.65,.55,face,{bg:'#252725',fg:'#f5d23f'});}
       }

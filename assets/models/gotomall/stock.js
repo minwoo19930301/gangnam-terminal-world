@@ -68,6 +68,7 @@ export function placeShopStock(K, key, position, yaw, scale, asset) {
   const depthSign = textile ? -1 : 1;
   const display = new T.LOD(), coarse = silhouette(T,key,depthSign);
   display.name = '고투몰 진열 · '+(asset?.name ?? key);
+  if(asset)display.userData.nativePlacementKey='고투몰 진열 · '+key;
   display.position.set(...position); display.rotation.y = yaw; display.scale.set(...scale);
   const material = new T.MeshLambertMaterial({vertexColors:true});
   const item = new T.Mesh(coarse,material);

@@ -44,6 +44,11 @@ const sources = [
     .map(([label,collection])=>['centralcity','지상','central-plaza-spheres/spheres.blend','센트럴시티 광장 · '+label,collection]),
   ['centralcity','1F','honam-gate-coffee/front.blend','호남선 · 1게이트 스타벅스 입면','HonamGateCoffee'],
   ['centralcity','지상','central-plaza-lantern/lantern.blend','센트럴시티 조각 광장 · 두 갈래 보행등','CentralCityTwinLantern'],
+  ...['G11 · 문틀과 당김봉','G11 · 유리문과 고정창'].map(name=>['gotomall','B1','gotomall-g11/g11.blend',name,name]),
+  ['gotomall','B1','gotomall-anytime/anytime.blend','고투몰 진열 · 애니타임','AnytimeApparel'],
+  ['gotomall','B1','gotomall-myeong/myeong.blend','고투몰 진열 · 명플라워','MyeongFlower'],
+  ['gyeongbu','B1','daiso-homewear/homewear.blend','다이소 · 홈웨어 옷걸이와 잠옷 견본','다이소 · 홈웨어 옷걸이와 잠옷 견본'],
+  ['gyeongbu','B1','daiso-checkout/checkout.blend','다이소 · 셀프계산과 포장 봉투','DaisoPackingCheckout'],
   ['gotomall','1F','goto-exit81-lift/lift.blend','고투몰 8-1 · 보도 승강기','GotoExit81Lift'],
   ['gotomall','지상','g12-window-print/print.blend','고투몰 G12 · 지상 유리 점인쇄','G12 유리창 점인쇄'],
   ['streets','지상','sinbanpo-plaza-planters/planter.blend','신반포로 · 석재 화분의 전정 수목','SinbanpoPlazaPlanter'],
@@ -448,13 +453,15 @@ export async function captureIndoorLayout() {
         const placed=addMesh(root);
         for(const [rule,world] of nativeTransforms(root,rules)){
           const [,floor,library,subject,...collections]=rule;
-          const ordinal=counts.get(subject)||0;
-          counts.set(subject,ordinal+1);
+          // The named A-008 and A-144 displays retain their original shop slots.
+          const placementKey=root.userData.nativePlacementKey??subject;
+          const ordinal=counts.get(placementKey)||0;
+          counts.set(placementKey,ordinal+1);
           const [x,y,z]=world.elements.slice(12,15);
           const ground=hotelDatum??rounded(relief(x,z));
           const level=subject==='광장 · 고리형 청동 조명' && y>=4 ? '2F' : floor;
           let anchor=library==='central-plaza-spheres/spheres.blend'?collections[0]:
-            library.startsWith('ssg-')?(legacyRetailId[collections[0]]??collections[0]):subject;
+            library.startsWith('ssg-')?(legacyRetailId[collections[0]]??collections[0]):placementKey;
           let serial=ordinal+1;
           if(library==='sinbanpo-bus-shelters/shelters.blend' && /한강과 서래섬 포스터|차양등과 보도 빛/.test(subject)){
             // Keep the six standing bays and any edits to them when the roadside
@@ -487,7 +494,8 @@ export async function captureIndoorLayout() {
       }
       kit._.buildAllDetail();
       if(kit._.detailErrors.length)throw Error(kit._.detailErrors.join('\n'));
-      for(const [, , , name] of rules)if(!counts.has(name))throw Error('No production placement for '+place+'/'+name);
+      const subjects=new Set(result.filter(row=>row.place===place).map(row=>row.subject));
+      for(const [, , , name] of rules)if(!subjects.has(name))throw Error('No production placement for '+place+'/'+name);
     }
   }finally{
     if(previous===undefined)delete globalThis.__makeCanvas;else globalThis.__makeCanvas=previous;
