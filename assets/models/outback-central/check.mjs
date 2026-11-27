@@ -9,7 +9,7 @@ const server=await serve(0);
 const browser=await chromium.launch({channel:'chromium',args:['--use-angle=metal','--enable-gpu','--ignore-gpu-blocklist']});
 const base='http://127.0.0.1:'+server.address().port+'/';
 const restaurant='아웃백스테이크하우스 센트럴시티점';
-const arrivals=[[171,13.5],[171,-23.85],[170.55,-24.3],[170.1,-24.3],[169.65,-24.75],
+const arrivals=[[167.1,8.4],[171,8.4],[171,-23.85],[170.55,-24.3],[170.1,-24.3],[169.65,-24.75],
   [169.65,-30.15],[168.3,-31.5],[167.4,-31.5],[166.95,-31.95],[166.95,-33.75],
   [167.4,-34.2],[167.4,-34.65],[167.85,-35.1],[167.85,-35.55]];
 const liftApproach=[[167.85,-35.55],[167.85,-33.3],[166.95,-32.4],[166.95,-26.1],
@@ -72,12 +72,25 @@ async function selectFloor(label,floorY,hud) {
 }
 
 try {
-  const [x,z]=terminalPoint(...arrivals[0]);
-  await page.goto(base+'?q=low&fixedres=1&traffic=0#/centralcity/1F?p='+[x,0,z,110].join(','));
+  await page.goto(base+'?q=low&fixedres=1&traffic=0#/newcore/5F');
   await page.waitForFunction(()=>window.__world?.ready);
   await page.locator('#start').click();
+  await page.keyboard.press('m');
+  await page.locator('#map-search').fill('스벅 호남선');
+  const coffee=page.locator('.gt-result').filter({hasText:'스타벅스 센트럴시티점 입구'});
+  assert.equal(await coffee.count(),1);
+  await coffee.click();
+  await page.locator('.gt-teleport').click();
+  await page.waitForFunction(()=>window.__world?.ready && !__world.map.isOpen() && __world.area.includes('centralcity'));
   const navigationStart=await page.evaluate(()=>performance.timeOrigin);
-  await walk('승차장 쪽 보도 → 호남선 하차장',arrivals);
+  await walk('지도 입구 시점 → 스타벅스 문 안',[[171.85,15.15]]);
+  await page.waitForFunction(()=>Math.abs(__world.player.y-.96)<.06 &&
+    document.querySelector('#zone').innerText==='스타벅스 센트럴시티점 · 1F');
+  // Leave through the same open door and descend the café steps before
+  // turning along its frontage. The café side wall is continuous.
+  await walk('스타벅스 문 안 → 대합실 바닥',[[167.1,15.46]]);
+  assert.ok(Math.abs(await page.evaluate(()=>__world.player.y))<.06);
+  await walk('대합실 → 호남선 하차장',arrivals);
   await page.waitForFunction(()=>document.querySelector('#zone').innerText==='호남선 하차장 · 1F');
   assert.ok(!assets.includes('reception.glb'));
   await walk('하차장 → 승강기',liftApproach.slice(1));
