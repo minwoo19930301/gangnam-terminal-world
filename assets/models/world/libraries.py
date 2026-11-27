@@ -84,6 +84,7 @@ SHELVES = {
     "gyeongbu-concourse-finish": "경부선 1층 · 대합실 공동 마감",
     "kims-deli": "뉴코아 2관 지하 1층 · 킴스클럽 델리",
     "gyeongbu-luggage": "경부선 1층 · 짐캐리",
+    "outback-central": "파미에 중층 · 아웃백 센트럴시티점",
     "dimdimsum": "호남선 중층 · 딤딤섬",
     "gyeongbu-childrens-aisle": "경부선 6층 · 아동복 상가",
     "gyeongbu-womens-aisle": "경부선 8층 · 여성복 상가",

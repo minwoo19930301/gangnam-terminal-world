@@ -39,6 +39,7 @@ import {warakuShop} from '../../assets/models/waraku/room.js';
 import {gelatiShop} from '../../assets/models/gelati/room.js';
 import {seesShop} from '../../assets/models/sees/room.js';
 import { halffCoffee } from '../../assets/models/halff/room.js';
+import {outbackFront} from '../../assets/models/outback-central/front.js';
 import { dimDimsum } from '../../assets/models/dimdimsum/restaurant.js';
 import { buildHonamGateCoffee } from '../../assets/models/honam-gate-coffee/model.js';
 import { beanBrothers } from '../../assets/models/bean-brothers/room.js';
@@ -435,7 +436,7 @@ export function build(K) {
     lbox(fp[0], fp[1], axis === 's' ? len - 0.1 : 0.2, axis === 's' ? 0.2 : len - 0.1, fy - 0.4, 0.8, 0x26282b, { solid: false });
     const col = BRAND[name] || KIND_COL[kind] || KIND_COL.food;
     const sp = pt(um, f + dv * 0.24);
-    lsign(name, sp[0], sp[1], fy, Math.min(len - 0.6, o.famille?4.5:7.5), o.famille?.28:.66, face, { bg: o.famille?'#292b29':col[0], fg: o.famille?'#eee7d9':col[1], sub, pxPerM: 100 });
+    if(!o.receptionWidth)lsign(name, sp[0], sp[1], fy, Math.min(len - 0.6, o.famille?4.5:7.5), o.famille?.28:.66, face, { bg: o.famille?'#292b29':col[0], fg: o.famille?'#eee7d9':col[1], sub, pxPerM: 100 });
     // interior fixtures
     const R2 = K.rand(seed * 977 + Math.round(u0 * 13));
     const ip = (u, v) => pt(u, v); // local helper
@@ -469,6 +470,7 @@ export function build(K) {
         const u = u0 + 1.4 + i * (len - 2.8) / Math.max(1, nT - 1) * (nT > 1 ? 1 : 0) + (nT === 1 ? (len - 2.8) / 2 : 0);
         const v = b + dv * (2.6 + j * (o.tableRows?(dep-4.1)/Math.max(1,nV-1):2.4));
         if (Math.abs(v - f) < 1.1) continue;
+        if (o.receptionWidth && Math.abs(u-um)<o.receptionWidth/2 && Math.abs(v-f)<5.2) continue;
         boxAt(u,v,.8,.8,y+.70,.055,pal.top);
         for(const du of [-.29,.29])for(const dv3 of [-.29,.29])boxAt(u+du,v+dv3,.045,.045,y,.70,pal.leg,{solid:false});
         for(const du of [-.21,.21]){
@@ -2120,7 +2122,7 @@ export function build(K) {
   lwall(170.8, -97.4, 182.2, -97.4, YR, YR + 3, { mat: 0xd0ccc4 }); lwall(170.8, -89.4, 182.2, -89.4, YR, YR + 3, { mat: 0xd0ccc4 });
   lwall(170.8, -97.4, 170.8, -89.4, YR, YR + 3, { mat: 0xd0ccc4 }); lwall(182.2, -97.4, 182.2, -89.4, YR, YR + 3, { mat: 0xd0ccc4, openings: [{ at: 4, w: 2.4, y0: YR, y1: YR + 2.4 }] });
   lbox(176.5, -93.4, 11.4, 8, YR + 3, 0.25, 0xbab6ae, { solid: false });
-  const SOUTH_FLOORS = [{ label: 'B1', y: YB1, name: '지하철 7호선 연결통로' }, { label: '1F', y: Y1, name: '파미에스테이션 · 하차장' }, { label: '2F', y: Y2, name: '파미에스테이션 2층 식당가' }, { label: 'R', y: YR, name: '옥상 주차장' }];
+  const SOUTH_FLOORS = [{ label: 'B1', y: YB1, name: '지하철 7호선 연결통로' }, { label: '1F', y: Y1, name: '파미에스테이션 · 하차장' }, { label: '2F', y: Y2, name: '파미에스테이션 2층 식당가 · 중층 식당 연결' }, { label: 'R', y: YR, name: '옥상 주차장' }];
   elev('파미에스테이션 엘리베이터', 160, -6, 'S', SOUTH_FLOORS, ['b1', 'f1', 'f2', 'rf']);
   // Round 10 replaces the guessed Famille 1F bay sequence with the official numbered plan below.
   {
@@ -3556,7 +3558,8 @@ export function build(K) {
   buildGardenGallery(K,{P,RECT,lbox,lwall,lcyl,lsign,lzone,beam,y:Y2});
 
   // Official Famille M1F drawing: Outback long west bar and DimDimSum east corner, not1F shops.
-  officialShop('아웃백',193,-48,202,-5,'N','food',5);
+  officialShop('아웃백',193,-48,202,-5,'N','food',5,{receptionWidth:8});
+  outbackFront(K,{P,R,lbox,lsign,lzone});
   dimDimsum(K,{P,RECT,R,lbox,lwall,lsign,lzone});
   lzone(190,-50,203,20,{name:'파미에스테이션 중층',floor:'1M',sub:'아웃백 · 딤딤섬',y0:5,y1:8.6,priority:8});
   // Round20 famille/L2: the paired 2F↔1F flights are rebuilt at (26,166)→(22,156) by famille.
