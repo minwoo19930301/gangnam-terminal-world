@@ -2,6 +2,8 @@
 
 행사장 주차 안내 사진에서 호텔 앞에 파미에 주차장 입구가 보인다. 기존 모델은 거리뷰에 보이는 흰 측벽과 노랑·검정 중앙분리대로 한 경사로의 두 차로를 나눈다. 두 차로의 흰 화살표는 게임 안에서 내려가는 쪽과 올라가는 쪽을 구별하기 위한 표시다. 위치와 도색은 근사다. 행사장 사진에서 파미에로 표시한 두 곳은 모두 입구로 소개된다. [행사장 안내 사진](https://ihcf.or.kr/uploaded/board/scheduling/_5c5692d73c7394d0c337df2a9c688ef71.pdf) · [2024년 3월 네이버 거리뷰](https://map.naver.com/p?p=nOOQgVZmQWe4Z-qIb--3fg,105,0,80,Float) · [신세계 강남점 주차 안내](https://www.shinsegae.com/store/main.do?storeCd=FC00004)
 
+[경사로 Blender 편집 원본](../../../assets/models/famille-parking-ramp/ramp.blend) · [통합 배치와 재생성 방법](../../../assets/models/famille-parking-ramp/README.md)
+
 ### 하행 차로의 시야
 
 자동 배치된 느티나무 한 그루의 수관이 경사로 안으로 들어와 진행 화살표를 가렸다. 그 배치점을 지운 뒤 같은 게임 주소와 카메라에서 비교했다. 화단의 소나무와 경사로 측벽은 두 화면에 모두 있다.

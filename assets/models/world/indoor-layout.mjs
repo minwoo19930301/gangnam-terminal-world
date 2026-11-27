@@ -1,3 +1,4 @@
+import {garagePlacement} from '../famille-parking-ramp/placement.mjs';
 import {wineParts} from '../house-wine-cellar/model.js';
 import {types as executiveSeatTypes,prefix as seatPrefix} from '../executive-seating/layout.js';
 import {parts as ceramicParts,prefix as ceramicPrefix} from '../daiso-ceramics/layout.js';
@@ -373,7 +374,7 @@ export async function captureIndoorLayout() {
     createLinearGradient:()=>({addColorStop(){}}),createRadialGradient:()=>({addColorStop(){}}),
     createPattern:()=>({}),getImageData:()=>({data:new Uint8ClampedArray(4)}),
   },{get:(obj,key)=>obj[key]??(()=>{})});
-  const result = [];
+  const result = [garagePlacement];
   try {
     globalThis.__makeCanvas=(width,height)=>({width,height,style:{},getContext:()=>context});
     for(const place of new Set(sources.map(row=>row[0]))){
