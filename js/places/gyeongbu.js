@@ -35,6 +35,7 @@ import {placePlantedColumn} from '../../assets/models/gyeongbu-planted-columns/m
 import { placeWaitingBenches } from '../../assets/models/gyeongbu-seating/model.js';
 import {placeCushionBay} from '../../assets/models/concourse-fixtures/cushions.js';
 import {registerCeramics} from '../../assets/models/daiso-ceramics/model.js';
+import {homewearRail} from '../../assets/models/daiso-homewear/shelf.js';
 import {homeShelf} from '../../assets/models/daiso-home/shelf.js';
 import {accessoryShelf} from '../../assets/models/daiso-accessories/shelf.js';
 import {drawAisleFaces} from '../../assets/models/daiso/aisle-stock.js';
@@ -3913,6 +3914,12 @@ export function build(K) {
       ldetail({name:'다이소 '+label+' 매대',floor:'B1',poly:rect(u-.92,v-.31,u+.92,v+.31),y0:y,y1:y+2.16},
         ()=>homeShelf(K,kind,[x,y,z],front===1?ROT+PI:ROT));
     }
+    const wearU=193.3,wearV=4.47,[wearX,wearZ]=W(wearU,wearV);
+    lbox(wearU,wearV,y,2.42,.64,2.12,0,{skip:['top','bottom','n','s','e','w']});
+    ldetail({name:'다이소 홈웨어 매대',floor:'B1',y0:y,y1:y+2.15,poly:rect(wearU-1.22,wearV-.32,wearU+1.22,wearV+.32)},()=>{
+      homewearRail(K,[wearX,y,wearZ],ROT+PI);
+      lsign(['홈웨어','HOME WEAR'],wearU,wearV-.15,y+1.98,1.10,.24,'+v',{fg:'#fff',bg:null,pxPerM:280});
+    });
     const gardenU=225.3,gardenV=4.18,[gardenX,gardenZ]=W(gardenU,gardenV);
     lbox(gardenU,gardenV,y,3.04,.61,1.96,0,{skip:['top','bottom','n','s','e','w']});
     ldetail({floor:'B1',y0:y,y1:y+2.6,poly:rect(gardenU-1.52,gardenV-.32,gardenU+1.52,gardenV+.32),
@@ -3929,7 +3936,7 @@ export function build(K) {
       for(let a=lo;a<hi-2;a+=4.4){
         const b=Math.min(hi,a+3);
         // Dedicated shop models occupy these stretches of the aisle.
-        if(![174,187.2,200.4,223.8,237].some(start=>Math.abs(a-start)<.01)) run(a,b,4.05,1);
+        if(![174,187.2,191.6,200.4,223.8,237].some(start=>Math.abs(a-start)<.01)) run(a,b,4.05,1);
         // The retained PET/pouch, dog-clothing and paint closeups occupy these south faces.
         if(!((a<221&&b>216)||(a<182&&b>179)))run(a,b,8.95,-1);
       }
