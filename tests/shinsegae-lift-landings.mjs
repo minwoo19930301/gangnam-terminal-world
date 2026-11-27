@@ -18,7 +18,7 @@ try {
   await page.locator('#start').click();
   const markers = await page.evaluate(()=>{
     const cars=__world.K._.elevators.filter(e=>e.place==='shinsegae');
-    return Object.fromEntries(['B1','1F','7F','8F','11F'].map(f=>[f,cars.filter(e=>e.floors.some(s=>s.label===f)).map(e=>e.name)]));
+    return Object.fromEntries(['B1','1F','6F','7F','8F','9F','10F','11F'].map(f=>[f,cars.filter(e=>e.floors.some(s=>s.label===f)).map(e=>e.name)]));
   });
   for(const floor of ['7F','8F','11F']){
     assert.equal(markers[floor].filter(n=>n.includes('신관 화장실 옆')).length,2);
@@ -28,7 +28,8 @@ try {
   await page.keyboard.down('w');
   await page.waitForTimeout(150);
   await page.keyboard.up('w');
-  for(const [floor,height] of [['7F',31],['8F',35.8]]){
+  for(const [floor,height] of [['7F',31],['6F',26.2],['9F',40.6],['10F',45.4],['8F',35.8]]){
+    await page.waitForFunction(()=>document.querySelector('#prompt.show')?.textContent.includes('본관 화장실 옆'),null,{timeout:3500});
     await page.keyboard.press('e');
     const choices = page.locator('#elev:not(.hidden) .elev-list button');
     assert.deepEqual(await choices.locator('b').allTextContents(), [
@@ -38,6 +39,23 @@ try {
     await page.waitForFunction(y=>Math.abs(__world.player.y-y)<.1,height);
     const zone=await page.evaluate(()=>{const {phys,player:p}=__world;return phys.zoneAt(p.x,p.y+.1,p.z)?.name;});
     assert.equal(zone,'본관 고객 엘리베이터');
+    if(['6F','9F','10F'].includes(floor)){
+      const origin=await page.evaluate(()=>[__world.player.x,__world.player.z]);
+      // The ride preserves our original heading towards the doors. Back out
+      // to the public aisle, then walk forward and call the same bank again.
+      for(const [key,outward] of [['s',true],['w',false]]){
+        await page.keyboard.down(key);
+        try{
+          await page.waitForFunction(({origin,outward,height})=>{
+            const p=__world.player,d=Math.hypot(p.x-origin[0],p.z-origin[1]);
+            return Math.abs(p.y-height)<.1 && (outward?d>=2.5:d<.16);
+          },{origin,outward,height},{timeout:3500});
+        }finally{await page.keyboard.up(key);}
+      }
+      await page.keyboard.down('w');
+      await page.waitForTimeout(140);
+      await page.keyboard.up('w');
+    }
     console.log(floor,height,zone,'지도 승강기 수',markers[floor].length);
   }
 } finally {

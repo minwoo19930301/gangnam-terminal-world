@@ -1762,8 +1762,11 @@ export function build(K) {
   // In the operator's 2000 × 1500 guides the main bank is recessed between
   // two different returns. The central gap spans the existing pair of cars.
   for(const [id,leftX,leftY,rightX,rightY] of [
+    ['6F',855,588,968,535],
     ['7F',843,588,938,535],
     ['8F',817,644,929,565],
+    ['9F',850,590,963,537],
+    ['10F',887,660,997,609],
   ]){
     const [front,v]=upperLiftIcons[id].main,y=LV[id];
     const [leftU,leftV]=sourcePoint(id,leftX,leftY),[rightU,rightV]=sourcePoint(id,rightX,rightY);
