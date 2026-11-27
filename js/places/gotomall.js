@@ -1330,6 +1330,22 @@ export function build(K) {
     }
     const sx = (W - .22) / 3.6, sz = (D - .15) / 3.0;
     const [x,z] = P(...Lp(loc,W/2,.045));
+    if (loc.num === 'A-008' && info.name === '애니타임') {
+      placeShopStock(K,info.specialty,[x,FL+.02,z],ROT,[sx,1,sz*loc.fr.dv],
+        {file:'../gotomall-anytime/anytime.glb',name:'애니타임'});
+      const footprint = {skip:['top','bottom','n','s','e','w']};
+      // Rack and stand footprints are fitted to this bay in metres.
+      for (const [left,right,near,far] of [[-1.15,-.81,.20,.60],[-1.20,-.32,.86,1.28],
+        [.41,.75,.48,.86],[.84,1.16,.14,.52],[.65,1.07,1.30,3.47],
+        [-1.16,-.48,4.40,5.02],[.48,1.16,4.40,5.02]]) {
+        lbox(loc,W/2+left,W/2+right,near+.045,far+.045,FL,.73,0,footprint);
+      }
+      lsign(loc,'SALE',W*.50,.11,FL+2.22,.61,.30,outFace(loc),
+        {bg:'#ffe994',fg:'#b33d36',box:.012,pxPerM:180});
+      for (const side of [.09,W-.09]) lsign(loc,'ANY TIME',side,-.05,FL+2.37,.51,.19,
+        side<W/2?'-u':'+u',{bg:'#252629',fg:'#faf9ec',box:.035,twoSided:true,pxPerM:180});
+      return;
+    }
     const myeong = loc.num === 'A-144' && info.name === '명플라워';
     placeShopStock(K,info.specialty,[x,FL+.02,z],ROT,[sx,1,sz*loc.fr.dv],
       myeong ? {file:'../gotomall-myeong/myeong.glb',name:'명플라워'} : undefined);
