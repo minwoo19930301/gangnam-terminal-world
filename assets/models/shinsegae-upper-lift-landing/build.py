@@ -1,4 +1,4 @@
-"""Build two editable main-wing lift lobbies at independent, registered floor origins."""
+"""Build editable main-wing lift lobbies at independent, registered floor origins."""
 import json
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -16,8 +16,8 @@ with TemporaryDirectory() as tmp:
     subprocess.run(['node', here / 'capture.mjs', path], check=True)
     packet = json.loads(path.read_text())
     images = capture['load_images'](packet['images'], tmp)
-for floor, data in packet['floors'].items():
-    scene = bpy.context.scene if floor == '7F' else bpy.data.scenes.new('8F')
+for index, (floor, data) in enumerate(packet['floors'].items()):
+    scene = bpy.context.scene if index == 0 else bpy.data.scenes.new(floor)
     scene.name = floor + ' · 신세계 본관 승강장'
     scene.unit_settings.system = 'METRIC'
     collection = bpy.data.collections.new('MainLiftLanding' + floor)

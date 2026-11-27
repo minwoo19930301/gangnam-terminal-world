@@ -21,7 +21,9 @@ with TemporaryDirectory() as tmp:
     packet = json.loads(path.read_text())
     manifest = json.loads(subprocess.check_output(['node', world / 'indoor-layout.mjs']))
     rows = [r for r in manifest if r['library'] == here.name + '/landings.blend']
-    assert sorted(r['floor'] for r in rows) == ['7F', '8F']
+    expected = {'6F', '7F', '8F', '9F', '10F'}
+    assert set(packet['floors']) == expected
+    assert {r['floor'] for r in rows} == expected and len(rows) == len(expected)
     assert any('ssg-lift-directory/' in r['library'] for r in manifest)
     scene = layout['sync_layout'](world, rows)
     bpy.context.window.scene = scene
@@ -60,4 +62,6 @@ with TemporaryDirectory() as tmp:
             used.add(obj)
             count += len(mesh.polygons)
             worst = max(worst, error)
-        print(f'{floor}: two cars, four wall returns, {count} triangles, {len(used)} meshes, maximum {worst:.8f} m')
+        walls = packet['floors'][floor]['wallCount']
+        assert len({p['name'] for p in pieces}) == walls + 2
+        print(f'{floor}: two cars, {walls} wall returns, {count} triangles, {len(used)} meshes, maximum {worst:.8f} m')

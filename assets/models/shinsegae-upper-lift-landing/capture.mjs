@@ -26,7 +26,7 @@ try{
       returns.forEach(([a,b],i)=>{
         const k=kit();k.wall(...a,...b,y,top,finish);groups.set(floor+' · 복원 벽 '+(i+1),k);
       });
-      floors[floor]={groups,frame};
+      floors[floor]={groups,frame,wallCount:returns.length};
     };
     const original=main.elevator;
     main.elevator=o=>{
@@ -41,10 +41,10 @@ try{
     };
     build(main);
     const result={};
-    for(const id of ['7F','8F']){
-      const {groups,frame}=floors[id];
-      if(groups.size!==6)throw Error(id+' requires two cars and four return walls');
-      result[id]={frame,pieces:captureGroups(groups,images)};
+    for(const id of Object.keys(floors).sort((a,b)=>parseInt(a)-parseInt(b))){
+      const {groups,frame,wallCount}=floors[id];
+      if(!wallCount||groups.size!==wallCount+2)throw Error(id+' requires two cars and the registered return walls');
+      result[id]={frame,wallCount,pieces:captureGroups(groups,images)};
     }
     return {floors:result,images};
   });
