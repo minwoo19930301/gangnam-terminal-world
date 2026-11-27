@@ -1329,12 +1329,23 @@ export function build(K) {
     }
     const sx = (W - .22) / 3.6, sz = (D - .15) / 3.0;
     const [x,z] = P(...Lp(loc,W/2,.045));
-    placeShopStock(K,info.specialty,[x,FL+.02,z],ROT,[sx,1,sz*loc.fr.dv]);
-    // The Blender bays have islands against the flanks and a clear customer aisle.
-    const islands = info.specialty === 'tarot' ? [[-1.57,-.26,.81,2.46],[.94,1.6,1.55,2.29]] :
-      [[-1.54,-.69,.41,1.12],[.69,1.54,.43,1.19]];
-    for (const [a,b,c,d] of islands) lbox(loc,W/2+a*sx,W/2+b*sx,c*sz,d*sz,FL,.8,0xffffff,
-      {skip:['top','bottom','n','s','e','w']});
+    const myeong = loc.num === 'A-144' && info.name === '명플라워';
+    placeShopStock(K,info.specialty,[x,FL+.02,z],ROT,[sx,1,sz*loc.fr.dv],
+      myeong ? {file:'../gotomall-myeong/myeong.glb',name:'명플라워'} : undefined);
+    if (myeong) {
+      const footprint = {skip:['top','bottom','n','s','e','w']};
+      for (const side of [-1,1]) {
+        const center = W/2+side*1.08*sx;
+        lbox(loc,center-.50*sx,center+.50*sx,.14*sz,1.39*sz,FL,.98,0,footprint);
+      }
+      lbox(loc,W/2-1.66*sx,W/2+1.66*sx,2.22*sz,2.94*sz,FL,1.45,0,footprint);
+    } else {
+      // The Blender bays have islands against the flanks and a clear customer aisle.
+      const islands = info.specialty === 'tarot' ? [[-1.57,-.26,.81,2.46],[.94,1.6,1.55,2.29]] :
+        [[-1.54,-.69,.41,1.12],[.69,1.54,.43,1.19]];
+      for (const [a,b,c,d] of islands) lbox(loc,W/2+a*sx,W/2+b*sx,c*sz,d*sz,FL,.8,0xffffff,
+        {skip:['top','bottom','n','s','e','w']});
+    }
     if (info.name === '틸다블루') {
       for (let a=.04, i=0; a<W-.03; a+=.19, i++) lbox(loc,a,Math.min(a+.19,W-.03),-.025,.10,FL+2.17,.40,
         i%2 ? 0xeceadf : 0x7599bd,{solid:false});
