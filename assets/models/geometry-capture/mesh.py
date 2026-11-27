@@ -63,4 +63,3 @@ def add_meshes(pieces, frame, images, collection, emissive=()):
         mesh.materials.append(material)
         ob = bpy.data.objects.new(name, mesh)
         collection.objects.link(ob)
-

@@ -8,6 +8,8 @@ from mathutils import Vector
 
 
 SHELVES = {
+    "shinsegae-upper-lift-landing": "신세계 본관 · 6~10층 고객 승강장",
+    "famille-parking-ramp": "파미에주차장 · 상부 경사로",
     "honam-gate-coffee": "호남선 · 파미에 1게이트 스타벅스",
     "oakberry-gangnam": "신세계 델리 · 오크베리 아사이",
     "bake-gangnam": "신세계 스위트 파크 · 베이크 진열장",
