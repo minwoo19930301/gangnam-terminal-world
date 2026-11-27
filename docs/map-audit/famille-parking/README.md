@@ -1,6 +1,6 @@
 # 파미에주차장 상부 입구
 
-행사장 주차 안내 사진에서 호텔 앞에 파미에 주차장 입구가 보인다. 기존 모델은 거리뷰에 보이는 흰 측벽과 노랑·검정 중앙분리대로 한 경사로의 두 차로를 나눈다. 두 차로의 흰 화살표는 게임 안에서 내려가는 쪽과 올라가는 쪽을 구별하기 위한 표시다. 위치와 도색은 근사다. 행사장 사진에서 파미에로 표시한 두 곳은 모두 입구로 소개된다. [행사장 안내 사진](https://ihcf.or.kr/uploaded/board/scheduling/_5c5692d73c7394d0c337df2a9c688ef71.pdf) · [2024년 3월 네이버 거리뷰](https://map.naver.com/p?p=nOOQgVZmQWe4Z-qIb--3fg,105,0,80,Float) · [신세계 강남점 주차 안내](https://www.shinsegae.com/store/main.do?storeCd=FC00004)
+행사장 주차 안내 사진에서 호텔 앞에 파미에 주차장 입구가 보인다. 기존 모델은 거리뷰에 보이는 흰 측벽과 노랑·검정 중앙분리대로 한 경사로의 두 차로를 나눈다. 두 차로의 흰 화살표는 게임 안에서 내려가는 쪽과 올라가는 쪽을 구별하기 위한 표시다. 위치와 도색은 근사다. 신세계 센트럴의 주차 약도는 ①과 ②를 모두 파미에주차장으로 표시한다. 행사장 사진은 두 곳을 각각 입구로 소개한다. 어느 차로가 상행인지는 이 자료로 확인하기 어렵다. [운영사 주차 약도](https://www.shinsegaecentral.com/public/img/about-parking-ko.png) · [행사장 안내 사진](https://ihcf.or.kr/uploaded/board/scheduling/_5c5692d73c7394d0c337df2a9c688ef71.pdf) · [2024년 3월 네이버 거리뷰](https://map.naver.com/p?p=nOOQgVZmQWe4Z-qIb--3fg,105,0,80,Float) · [신세계 강남점 주차 안내](https://www.shinsegae.com/store/main.do?storeCd=FC00004)
 
 [경사로 Blender 편집 원본](../../../assets/models/famille-parking-ramp/ramp.blend) · [통합 배치와 재생성 방법](../../../assets/models/famille-parking-ramp/README.md)
 
