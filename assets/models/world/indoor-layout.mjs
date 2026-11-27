@@ -1,3 +1,4 @@
+import {garagePlacement} from '../famille-parking-ramp/placement.mjs';
 import {wineParts} from '../house-wine-cellar/model.js';
 import {types as executiveSeatTypes,prefix as seatPrefix} from '../executive-seating/layout.js';
 import {parts as ceramicParts,prefix as ceramicPrefix} from '../daiso-ceramics/layout.js';
@@ -41,6 +42,7 @@ const sources = [
   ['streets','지상','sinbanpo-public-oaks/pin-oak.blend','반포센트럴자이 앞 신반포로 · 대왕참나무','SinbanpoPublicPinOak'],
   ...[['서쪽 녹청 구체','CentralCityPatinatedSphere'],['가운데 갈색 구체','CentralCityBronzeSphere'],['동쪽 잔물결 구체','CentralCityRippledSphere']]
     .map(([label,collection])=>['centralcity','지상','central-plaza-spheres/spheres.blend','센트럴시티 광장 · '+label,collection]),
+  ['centralcity','1F','honam-gate-coffee/front.blend','호남선 · 1게이트 스타벅스 입면','HonamGateCoffee'],
   ['centralcity','지상','central-plaza-lantern/lantern.blend','센트럴시티 조각 광장 · 두 갈래 보행등','CentralCityTwinLantern'],
   ['gotomall','1F','goto-exit81-lift/lift.blend','고투몰 8-1 · 보도 승강기','GotoExit81Lift'],
   ['gotomall','지상','g12-window-print/print.blend','고투몰 G12 · 지상 유리 점인쇄','G12 유리창 점인쇄'],
@@ -223,6 +225,8 @@ const sources = [
   ['gyeongbu','10F','gyeongbu-yukgak/shop.blend','경부선 육각고기 · 공개 식당 입구','GB_YukgakRooftopRestaurant'],
   ['gyeongbu','1F','gyeongbu-hyodo/shop.blend','경부선 효도치킨 · 유리 입구와 식당','GB_HyodoDiningFront'],
   ['gyeongbu','1F','gyeongbu-luggage/zimcarry-counter.blend','짐캐리 · 수하물보관과 운송 창구','LuggageCounter','Glass','Lit'],
+  ['centralcity','1M','outback-central/front.blend','아웃백 · 회랑 적색 간판','OutbackCentralGallery'],
+  ['centralcity','1M','outback-central/front.blend','아웃백 · 접수 바와 대기 벤치','OutbackCentralReception'],
   ...['대기 접수대와 유아의자','유리블록과 대나무 조명','목제 식탁과 곡목 의자','찜기 세 가지와 차','피기 커스터드 번'].map(label=>{
     const name='딤딤섬 · '+label;
     return ['centralcity','1M','dimdimsum/restaurant.blend',name,name];
@@ -372,7 +376,7 @@ export async function captureIndoorLayout() {
     createLinearGradient:()=>({addColorStop(){}}),createRadialGradient:()=>({addColorStop(){}}),
     createPattern:()=>({}),getImageData:()=>({data:new Uint8ClampedArray(4)}),
   },{get:(obj,key)=>obj[key]??(()=>{})});
-  const result = [];
+  const result = [garagePlacement];
   try {
     globalThis.__makeCanvas=(width,height)=>({width,height,style:{},getContext:()=>context});
     for(const place of new Set(sources.map(row=>row[0]))){
@@ -381,6 +385,13 @@ export async function captureIndoorLayout() {
       let captureVehicle=false;
       const kit=createKit(THREE,new THREE.Scene(),{osm,phys:createPhysics(),keep:()=>captureVehicle});
       if(place==='shinsegae'){
+        kit.recordMainLiftReturns=(floor,[x,z],y)=>{
+          const name='MainLiftLanding'+floor,ground=rounded(relief(x,z));
+          result.push({id:'shinsegae/'+name+'/1',place,placeName:meta.name,floor,
+            library:'shinsegae-upper-lift-landing/landings.blend',collections:[name],
+            subject:'본관 '+floor+' 고객 승강장 · 두 문과 양옆 벽',ground,terrain:ground,
+            matrix:new THREE.Matrix4().makeTranslation(x,y,z).toArray().map(rounded)});
+        };
         const placeVehicle=kit.vehicle;
         kit.vehicle=options=>{
           captureVehicle=true;

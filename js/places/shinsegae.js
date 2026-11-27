@@ -1634,8 +1634,8 @@ export function build(K) {
       const dest = {B1:MARKET_B1_DEST,'1F':ground,'1M':mezz}[f.label];
       return {...f,...(dest ? {dx:dest[0]-x,dz:dest[1]-z} : ARR)};
     });
-    basement.floors = lowerStops;
-    const basementCall=K._.interactables.find(it=>it.elevator===basement);if(basementCall)basementCall.y=LV.B2;
+    const basementCall=K._.interactables.find(it=>it.elevator===basement);
+    Object.assign(basementCall,{y:LV.B2,elevator:{...basement,floors:lowerStops}});
     const legacyExit = [ux-1.2*SA,uz-1.2*CA];
     function landing(f, atBridge) {
       if (bridgeLiftFront[f.label]) {
@@ -1759,6 +1759,26 @@ export function build(K) {
   {const bank=UPPER_BANKS.find(b=>b.key==='본관 화장실 옆');const y=LV['6F'];
    const [u,v]=mainLiftCentre('6F',bank);
    zone('고객 엘리베이터','6F','본관 화장실 옆',[u-3.8,v-3,u+1.2,v+3],y,y+3.4,4);}
+  // In the operator's 2000 × 1500 guides the main bank is recessed between
+  // two different returns. The central gap spans the existing pair of cars.
+  for(const [id,leftX,leftY,rightX,rightY] of [
+    ['6F',855,588,968,535],
+    ['7F',843,588,938,535],
+    ['8F',817,644,929,565],
+    ['9F',850,590,963,537],
+    ['10F',887,660,997,609],
+  ]){
+    const [front,v]=upperLiftIcons[id].main,y=LV[id];
+    const [leftU,leftV]=sourcePoint(id,leftX,leftY),[rightU,rightV]=sourcePoint(id,rightX,rightY);
+    const wallTop=y+clearH(id),finish={mat:0xe3dfd5,thick:.12};
+    const returns=[
+      [P(front,leftV),P(front,v-2.55)], [P(front,v+2.55),P(front,rightV)],
+      [P(front,leftV),P(leftU,leftV)], [P(front,rightV),P(rightU,rightV)],
+    ];
+    for(const [a,b] of returns)K.wall(...a,...b,y,wallTop,finish);
+    K.recordMainLiftReturns?.(id,P(front,v),y,returns,wallTop,finish);
+    zone('본관 고객 엘리베이터',id,'본관 화장실 옆',[front-2.2,v-2.55,front,v+2.55],y,wallTop,4);
+  }
   {
     // The photographed main-wing bank has a rounded two-column directory.
     // Its mount here is an approximation on the public 8F landing.
@@ -1810,7 +1830,7 @@ export function build(K) {
       }) : floors;
       // Map markers describe the floors at this physical position. The E
       // menu retains every served floor and sends riders to its landing.
-      const menu = byFloor ? {...el} : el;
+      const menu = {...el};
       menu.floors=[...stops,...low.map(f=>{const dest=f.label==='1F'?ground:b1;return {...f,dx:dest[0]-x,dz:dest[1]-z};})];
 
       if(bank.key==='신관 화장실 옆'&&lo===7&&i===1){
@@ -1857,13 +1877,13 @@ export function build(K) {
       const [x,z]=P(e.u,e.v),landing=beautyLiftLanding(e);
       const parking=P(ELV[i].u,ELV[i].v-2.2);
       const stops={'B2':parking,'B1':MARKET_B1_DEST,'1F':landing};
-      const el=K.elevator({name:i===0?"남동 고객 엘리베이터 4호기":"남동 고객 엘리베이터",x,z,rotY:FACE.W,w:e.w,d:e.d,shaft:false,
-        floors:ELV_FLOORS.filter(f=>f.label!=='1M').map(f=>{
+      const floors=ELV_FLOORS.filter(f=>f.label!=='1M').map(f=>{
           const [tx,tz]=stops[f.label] ?? bridgeLanding(f.label,i);
           return {...f,dx:tx-x,dz:tz-z};
-        })});
+        });
+      const el=K.elevator({name:i===0?"남동 고객 엘리베이터 4호기":"남동 고객 엘리베이터",x,z,rotY:FACE.W,w:e.w,d:e.d,shaft:false,floors:floors.filter(f=>f.label==='1F')});
       const [callX,callZ]=P(u-.62,e.v);
-      Object.assign(K._.interactables.find(it=>it.elevator===el),{x:callX,z:callZ,y:0,r:1.5});
+      Object.assign(K._.interactables.find(it=>it.elevator===el),{x:callX,z:callZ,y:0,r:1.5,elevator:{...el,floors}});
       box(u,e.v,.08,1.84,0,2.45,0x575956);
       box(u-.05,e.v,.08,1.64,0,2.37,'metal');
       box(u-.10,e.v,.015,.018,0,2.34,0x575956,{solid:false});
@@ -1879,14 +1899,14 @@ export function build(K) {
     const [x,z]=P(cornerFrontU-1.2,v),ground=cornerGroundLanding(i);
     const corner=UPPER_BANKS.find(b=>b.key==='본관 코너'),parking=P(ELV[i].u,ELV[i].v-2.2),nw=P(36,81);
     const el=K.elevator({name:`북서 고객 엘리베이터 ${i+1}호기`,x,z,rotY:FACE.E,w:2.6,d:2.4,topH:3.1,floors:[{label:'1F',y:0,dx:ground[0]-x,dz:ground[1]-z}]});
-    el.floors=ELV_FLOORS.map(f=>{
+    const floors=ELV_FLOORS.map(f=>{
       const point=f.label==='1F'?ground:f.label==='B2'?parking:f.label==='B1'?MARKET_B1_DEST:
         f.label==='1M'?nw:cornerLiftLanding(f.label,corner,i);
       return {...f,dx:point[0]-x,dz:point[1]-z};
     });
     const call=K._.interactables.find(it=>it.elevator===el);
     const [callX,callZ]=P(cornerFrontU+.55,v);
-    Object.assign(call,{x:callX,z:callZ,y:0,r:1.3});
+    Object.assign(call,{x:callX,z:callZ,y:0,r:1.3,elevator:{...el,floors}});
   });
   {
     const [entryU,sideV]=PLAN(144,968);
@@ -2997,10 +3017,9 @@ export function build(K) {
       // valid parking-level arrival and can trap the player inside a wall.
       const floorList=ELV_FLOORS.map(f=>({...f,...(f.label==='B1'?b1Stop:f.label==='B2'?{dx:parking[0]-x,dz:parking[1]-z}:f.label==='1M'?{dx:mezz[0]-x,dz:mezz[1]-z}:f.label==='1F'?{dx:nw[0]-x,dz:nw[1]-z}:(()=>{const dest=remote(f);return{dx:dest[0]-x,dz:dest[1]-z};})())}));
       const lift=K.elevator({name:c.name,x,z,rotY:market?FACE.N:FACE.W,w:2,d:1.8,topH:3.2,floors:[b1Stop]});
-      lift.floors=floorList;
       // The menu may teleport to a visible remote bank, but this B1 car has no
       // shaft on upper floors. Bound its call prompt to its actual B1 landing.
-      const call=K._.interactables.find(it=>it.elevator===lift);if(call)call.y=y;
+      const call=K._.interactables.find(it=>it.elevator===lift);Object.assign(call,{y,elevator:{...lift,floors:floorList}});
       const apron=market?rect(u-1.3,v-2.4,u+1.3,v+1.2):rect(u-2.4,v-1.3,u+1.2,v+1.3);
       K.slab(apron,y,{mat:'metal',thick:.05,ceil:false,edge:false});
       sign('엘리베이터 · 전층 안내',market?u:u-.95,market?v-1.03:v,y+2.7,market?'N':'W',3.8,.4,{bg:'#373c33',fg:'#f5deb0'});

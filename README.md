@@ -15,6 +15,8 @@ Blender에서는 도시 전경을 열어 건물 외관·도로 선형·표고·�
 
 11월 27일에는 지도에서 공개 장소 2,281개를 열어 낮·밤 네 방향을 확인하고, 호남선 승강기에서 신세계 마켓까지 직접 걸었습니다. [보행·모델 점검 결과](docs/map-audit/overnight-2026-11-27.md) · [장소별 확인표](docs/map-audit/public-directory-2026-11-27.csv)
 
+호남선 12·13번 승차홈에서 파미에스테이션 1번 게이트를 바라보면 오른쪽에 스타벅스가 있습니다. 아웃백 접수대는 파미에 중층에 있습니다. 지도(M)에서 **스벅 호남선** 또는 **아웃백**으로 찾을 수 있습니다. [스타벅스 입구와 반계단](assets/models/honam-gate-coffee/README.md) · [아웃백 중층 입구](assets/models/outback-central/README.md) · [신세계 본관 승강장](docs/map-audit/shinsegae-main-8f-lift.md) · [파미에 주차장 상행·하행](docs/map-audit/famille-parking/README.md)
+
 - 고투몰(강남터미널 지하도상가), 고속터미널역(3·7·9호선)
 - 신세계백화점 강남점, JW 메리어트 호텔 서울, 센트럴시티(호남선·파미에스테이션)
 - 서울고속버스터미널(경부·영동선)과 3층 꽃시장, 다이소

@@ -1,4 +1,13 @@
 {
+  "famille_honam_gate_coffee": {
+    "name": "스타벅스 센트럴시티점",
+    "naver": "https://map.naver.com/p/entry/place/33385525",
+    "naverLonLat": [127.0043284, 37.5034854],
+    "guide": "https://www.shinsegaecentral.com/terminal",
+    "publicPhotos": ["https://gaesung.tistory.com/251", "https://rec-moamoa.tistory.com/30", "https://bigbread.tistory.com/90"],
+    "registration": "The coffee shop shares the brick pier marked 1 GATE on the boarding-hall side. Gate 2 is on the drop-off side. The model fits the entrance beside the public stair. Its door is 10.7 m horizontally from the shop pin. The pin does not identify the door threshold.",
+    "asset": "assets/models/honam-gate-coffee/front.blend"
+  },
  "lejardin_public_20261126": {
   "naver": "https://map.naver.com/p/entry/place/1654024884",
   "photo_gallery": "https://pcmap.place.naver.com/place/1654024884/photo",

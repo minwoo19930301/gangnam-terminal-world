@@ -91,6 +91,18 @@ export function buildFamilleGarageEntry(K) {
     for(let s=mouth+1.6;s<roof-1;s+=1.45){
       for(const side of [-1,1])paving(s,axis(s)+side*.31,s+.23,axis(s)+side*(half-.19),.018,0x8c8d88);
     }
+    // Visitor guidance in the game. Each arrow follows its own side of the
+    // photographed median; its position is illustrative rather than surveyed.
+    for(const station of [mouth+4,roof-4]){
+      for(const direction of [-1,1]){
+        const paint=(outline)=>K.hpoly(0xe7e5dc,outline.map(([along,across])=>{
+          const s=station+direction*along;
+          return P(s,axis(s)+direction*(half/2+across));
+        }),.033);
+        paint([[-1.6,-.12],[.45,-.12],[.45,.12],[-1.6,.12]]);
+        paint([[.45,-.53],[1.6,0],[.45,.53]]);
+      }
+    }
     paving(mouth-.65,axis(mouth)-half,mouth-.45,axis(mouth)+half,.016,black);
     box(mouth,axis(mouth),2.02,.27,2*half+.43,.43,black);
     const [x,z]=P(mouth-.16,axis(mouth));

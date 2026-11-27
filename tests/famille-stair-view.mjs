@@ -1,4 +1,4 @@
-// The finished eight treads, the walking surface and eye-level views of Gate 2.
+// The finished eight treads, the walking surface and eye-level views of Famille Gate 1.
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import path from 'node:path';

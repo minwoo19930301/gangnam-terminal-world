@@ -1,6 +1,6 @@
 // Walkability test: builds every place module + the city with the real kit/physics (no WebGL), then
 //  1) for every junction (and its alsoY levels) searches a walking path from pa to pb,
-//  2) for every elevator floor checks that you can walk out of the car,
+//  2) for every local elevator floor and remote panel destination checks the walk from its landing,
 //  3) for every spawn checks that you can walk at least a few metres.
 // Path search = breadth-first search on a 0.25 m grid. A cell is free when the player capsule fits there
 // (phys.resolve does not push it); stepping to a neighbour may change height by at most the step-up.
@@ -96,11 +96,22 @@ for (const j of JUNCTIONS) {
     }
   }
 }
-for (const el of K._.elevators) for (const f of el.floors) {
+// The map lists local doors. A call panel can offer a separate menu whose
+// destination offsets are relative to the menu's car, not to the panel.
+const physicalCars = new Set(K._.elevators);
+const remoteMenus = new Set(K._.interactables.map(panel => panel.elevator)
+  .filter(menu => menu && !physicalCars.has(menu)));
+const landingChecks = new Map();
+for (const el of [...physicalCars, ...remoteMenus]) for (const f of el.floors) {
   const cx = el.x + (f.dx || 0), cz = el.z + (f.dz || 0);
-  const bb = [cx - 12, cz - 12, cx + 12, cz + 12];
-  const r = search(cx, cz, f.y, (x, z, yy) => Math.hypot(x - cx, z - cz) > 4 && Math.abs(yy - f.y) < 0.7, bb, 60000);
-  (r.ok ? oks : fails).push(`elevator ${el.place} "${el.name}" ${f.label}: ${r.ok ? 'can walk out' : r.why}`);
+  const position = JSON.stringify([cx,f.y,cz]);
+  if (!landingChecks.has(position)) {
+    const bb = [cx - 12, cz - 12, cx + 12, cz + 12];
+    landingChecks.set(position, search(cx, cz, f.y, (x, z, yy) => Math.hypot(x - cx, z - cz) > 4 && Math.abs(yy - f.y) < 0.7, bb, 60000));
+  }
+  const r = landingChecks.get(position);
+  const kind = physicalCars.has(el) ? 'elevator' : 'menu';
+  (r.ok ? oks : fails).push(`${kind} ${el.place} "${el.name}" ${f.label}: ${r.ok ? 'can walk out' : r.why}`);
   if (!r.ok && args.includes('--debug')) {
     const rows = [];
     for (const d of [1.2, 2, 3, 4.5]) for (let k = 0; k < 8; k++) { const a = k / 8 * Math.PI * 2, x = cx + Math.cos(a) * d, z = cz + Math.sin(a) * d; const y = floorAt(x, z, f.y); rows.push(`d${d} a${k * 45}: floor ${isFinite(y) ? y.toFixed(2) : y} free ${isFinite(y) ? free(x, z, y) : '-'}`); }
@@ -156,15 +167,13 @@ for (const rt of controller ? [] : ROUTES) {
   }
 }
 if (controller) {
-  const counts = ['junction','elevator','spawn'].map(kind => {
+  const counts = ['junction','elevator','menu','spawn'].map(kind => {
     const matches = message => message.startsWith(kind+' ');
     const passed = oks.filter(matches).length;
     return `${kind} ${passed}/${passed+fails.filter(matches).length}`;
   });
   console.log('controller replay — '+counts.join(', '));
-  const arrivals = new Set(K._.elevators.flatMap(el => el.floors.map(floor =>
-    JSON.stringify([el.x+(floor.dx||0), floor.y, el.z+(floor.dz||0)]))));
-  console.log(`elevator registry — ${K._.elevators.length} entries, ${arrivals.size} distinct arrival positions`);
+  console.log(`elevator registry — ${physicalCars.size} physical entries, ${remoteMenus.size} separate panel menus, ${landingChecks.size} distinct arrival positions`);
 }
 console.log(`walk: ${oks.length} ok, ${fails.length} blocked`);
 for (const f of fails) console.log('BLOCKED', f);

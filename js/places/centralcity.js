@@ -39,7 +39,9 @@ import {warakuShop} from '../../assets/models/waraku/room.js';
 import {gelatiShop} from '../../assets/models/gelati/room.js';
 import {seesShop} from '../../assets/models/sees/room.js';
 import { halffCoffee } from '../../assets/models/halff/room.js';
+import {outbackFront} from '../../assets/models/outback-central/front.js';
 import { dimDimsum } from '../../assets/models/dimdimsum/restaurant.js';
+import { buildHonamGateCoffee } from '../../assets/models/honam-gate-coffee/model.js';
 import { beanBrothers } from '../../assets/models/bean-brothers/room.js';
 import { OPEN_STAGE_FRONT } from './_junctions.js';
 import { loadArchitecture, placeArchitecture } from '../../assets/models/interior-architecture/model.js';
@@ -434,7 +436,7 @@ export function build(K) {
     lbox(fp[0], fp[1], axis === 's' ? len - 0.1 : 0.2, axis === 's' ? 0.2 : len - 0.1, fy - 0.4, 0.8, 0x26282b, { solid: false });
     const col = BRAND[name] || KIND_COL[kind] || KIND_COL.food;
     const sp = pt(um, f + dv * 0.24);
-    lsign(name, sp[0], sp[1], fy, Math.min(len - 0.6, o.famille?4.5:7.5), o.famille?.28:.66, face, { bg: o.famille?'#292b29':col[0], fg: o.famille?'#eee7d9':col[1], sub, pxPerM: 100 });
+    if(!o.receptionWidth)lsign(name, sp[0], sp[1], fy, Math.min(len - 0.6, o.famille?4.5:7.5), o.famille?.28:.66, face, { bg: o.famille?'#292b29':col[0], fg: o.famille?'#eee7d9':col[1], sub, pxPerM: 100 });
     // interior fixtures
     const R2 = K.rand(seed * 977 + Math.round(u0 * 13));
     const ip = (u, v) => pt(u, v); // local helper
@@ -468,6 +470,7 @@ export function build(K) {
         const u = u0 + 1.4 + i * (len - 2.8) / Math.max(1, nT - 1) * (nT > 1 ? 1 : 0) + (nT === 1 ? (len - 2.8) / 2 : 0);
         const v = b + dv * (2.6 + j * (o.tableRows?(dep-4.1)/Math.max(1,nV-1):2.4));
         if (Math.abs(v - f) < 1.1) continue;
+        if (o.receptionWidth && Math.abs(u-um)<o.receptionWidth/2 && Math.abs(v-f)<5.2) continue;
         boxAt(u,v,.8,.8,y+.70,.055,pal.top);
         for(const du of [-.29,.29])for(const dv3 of [-.29,.29])boxAt(u+du,v+dv3,.045,.045,y,.70,pal.leg,{solid:false});
         for(const du of [-.21,.21]){
@@ -2108,7 +2111,7 @@ export function build(K) {
   }
 
   // ================================================================= south block — 파미에스테이션 1F/2F, 하차장, 메가박스 B1
-  // Gate 2 opens onto the 1F arcade. The short Honam-side flight and its
+  // The boarding-hall gate opens onto the 1F arcade. The short Honam-side flight and its
   // level side passage are built at the connector below.
   // South elevator and officialeastescclusterretainupperaccess; B1remainsreachablefromhallcores.
   // OfficialGate5/6westcornercontainstoilets,notflights:removeoldB1/groundandground/upperstairs.
@@ -2119,7 +2122,7 @@ export function build(K) {
   lwall(170.8, -97.4, 182.2, -97.4, YR, YR + 3, { mat: 0xd0ccc4 }); lwall(170.8, -89.4, 182.2, -89.4, YR, YR + 3, { mat: 0xd0ccc4 });
   lwall(170.8, -97.4, 170.8, -89.4, YR, YR + 3, { mat: 0xd0ccc4 }); lwall(182.2, -97.4, 182.2, -89.4, YR, YR + 3, { mat: 0xd0ccc4, openings: [{ at: 4, w: 2.4, y0: YR, y1: YR + 2.4 }] });
   lbox(176.5, -93.4, 11.4, 8, YR + 3, 0.25, 0xbab6ae, { solid: false });
-  const SOUTH_FLOORS = [{ label: 'B1', y: YB1, name: '지하철 7호선 연결통로' }, { label: '1F', y: Y1, name: '파미에스테이션 · 하차장' }, { label: '2F', y: Y2, name: '파미에스테이션 2층 식당가' }, { label: 'R', y: YR, name: '옥상 주차장' }];
+  const SOUTH_FLOORS = [{ label: 'B1', y: YB1, name: '지하철 7호선 연결통로' }, { label: '1F', y: Y1, name: '파미에스테이션 · 하차장' }, { label: '2F', y: Y2, name: '파미에스테이션 2층 식당가 · 중층 식당 연결' }, { label: 'R', y: YR, name: '옥상 주차장' }];
   elev('파미에스테이션 엘리베이터', 160, -6, 'S', SOUTH_FLOORS, ['b1', 'f1', 'f2', 'rf']);
   // Round 10 replaces the guessed Famille 1F bay sequence with the official numbered plan below.
   {
@@ -3161,20 +3164,26 @@ export function build(K) {
   }
   lzone(168.3,-96,203.6,38,{place:'famille',name:'파미에스테이션',floor:'1F',sub:'1층 매장 · 1~7게이트',y0:0,y1:4.65,priority:5});
   lzone(187.8,-92,191.1,34,{place:'famille',name:'파미에스테이션 실내 거리',floor:'1F',sub:'1층 매장 안내',y0:0,y1:8.5,priority:6});
-  const famGates=[[1,170.8,-28.7,'N'],[2,170.8,22,'N'],[4,189.3,-54,'S'],[5,189.3,-96,'W'],[6,178,-86,'W'],[7,171,-70,'N']];
-  // Gate 2 has its own brick frame and head sign below.
-  for(const [id,ss,tt,face]of famGates)if(id!==2)planGate('파미에스테이션 '+id+'게이트',ss,tt,face,4.5);
+  const famGates=[[2,170.8,-28.7,'N'],[1,170.8,22,'N'],[4,189.3,-54,'S'],[5,189.3,-96,'W'],[6,178,-86,'W'],[7,171,-70,'N']];
+  // The boarding-hall entrance has its own brick frame and head sign below.
+  for(const [id,ss,tt,face]of famGates)if(id!==1)planGate('파미에스테이션 '+id+'게이트',ss,tt,face,4.5);
   // The two hall-side portals are genuine framed openings with brick returns and clear glazing.
-  for(const [id,tt]of [[1,-28.7],[2,22]]){
-    const jamb = id===2 ? 4.65 : 3.2;
+  for(const [id,tt]of [[2,-28.7],[1,22]]){
+    const jamb = id===1 ? 4.65 : 3.2;
     for(const d of [-jamb,jamb]){lbox(170.8,tt+d,1.1,1.55,0,4.3,'ccFamBuffBrick');lbox(170.8,tt+d,1.25,1.7,3.35,.2,0xe6dcc8,{solid:false});}
     lbox(170.8,tt,1.1,2*jamb+1.55,3.65,.65,'ccFamBuffBrick',{solid:false});
-    lsign('파미에스테이션 '+id+'게이트',170.18,tt,id===2?3.67:3.24,5.7,.55,'N',{bg:'#324639',fg:'#fff1cd'});
+    if(id===1) {
+      lsign('FAMILLE STATION',170.18,tt,3.67,5.7,.55,'N',{bg:'#151d2b',fg:'#ffffff'});
+      lsign(['1','GATE'],170.17,tt-jamb,1.92,.48,.53,'N',{bg:'#322d2a',fg:'#fff5ea'});
+    } else {
+      lsign('파미에스테이션 2게이트',170.18,tt,3.24,5.7,.55,'N',{bg:'#324639',fg:'#fff1cd'});
+    }
     for(const d of [-(jamb-.83),jamb-.83])lbox(170.8,tt+d,1.0,.035,.1,3.35,'glass',{solid:false});
     for(let i=0;i<16;i++){const a=i*PI/16,b=(i+1)*PI/16;beam([170.12,tt+2.95*Math.cos(a),3.7+1.1*Math.sin(a)],[170.12,tt+2.95*Math.cos(b),3.7+1.1*Math.sin(b)],.16,0xe9dec8);}
     lbox(179.7,tt,17.8,.16,.033,.006,0x9b8257,{solid:false});
     lfloorText('파미에스테이션 ↑',174,tt,.042,3.3,1.0,'S',{fg:'#4c5c47'});
   }
+  buildHonamGateCoffee(K,P,R);
   // The arcade is level. A short stone flight meets the slightly raised
   // Honam landing; the terminal-side approach grades into the hall floor.
   // Use the existing gameplay threshold as the vertical reference.
@@ -3205,14 +3214,14 @@ export function build(K) {
       w:landingWidth,ya:honamLanding,yb:0,mat:0xe4ded2,nosing:0x60564f,rails:false,
     });
   });
-  lsign(['파미에스테이션 ↑','2게이트 · 식당가'],155,21.95,3.15,3.8,.65,'N',{bg:'#324639',fg:'#fff1cd'});
+  lsign(['파미에스테이션 ↑','1게이트 · 식당가'],155,21.95,3.15,3.8,.65,'N',{bg:'#324639',fg:'#fff1cd'});
   lsign(['호남선 터미널 ↑','승차홈 · 매표소'],171.48,22,3.72,4.6,.55,'S',{bg:'#324639',fg:'#fff1cd'});
-  K.detail({name:'파미에 Gate2 · 영상의 짧은 계단과 구형 가로등',floor:'1F',y0:0,y1:4.8,poly:RECT(162.3,18.5,176,27.8)},()=>{
+  K.detail({name:'파미에 1게이트 · 짧은 계단과 구형 가로등',floor:'1F',y0:0,y1:4.8,poly:RECT(162.3,18.5,176,27.8)},()=>{
     for(const t of [18.9,26.5]){
       lbox(166,t,.65,.8,0,4.45,'ccFamBuffBrick');
       lbox(166,t,.85,1,3.5,.22,0xe6dcc8,{solid:false});
     }
-    // Two fanlight windows above the recessed shop backs flank the clear Gate2 lane.
+    // Two fanlight windows above the recessed shop backs flank the clear gate passage.
     for(const t of [18.1,27.0]){
       lbox(175.1,t,.04,3,2.72,.88,'glass',{solid:false});
       lbox(175.08,t,.12,3.35,2.55,.18,0xe6dcc8,{solid:false});
@@ -3549,7 +3558,8 @@ export function build(K) {
   buildGardenGallery(K,{P,RECT,lbox,lwall,lcyl,lsign,lzone,beam,y:Y2});
 
   // Official Famille M1F drawing: Outback long west bar and DimDimSum east corner, not1F shops.
-  officialShop('아웃백',193,-48,202,-5,'N','food',5);
+  officialShop('아웃백',193,-48,202,-5,'N','food',5,{receptionWidth:8});
+  outbackFront(K,{P,R,lbox,lsign,lzone});
   dimDimsum(K,{P,RECT,R,lbox,lwall,lsign,lzone});
   lzone(190,-50,203,20,{name:'파미에스테이션 중층',floor:'1M',sub:'아웃백 · 딤딤섬',y0:5,y1:8.6,priority:8});
   // Round20 famille/L2: the paired 2F↔1F flights are rebuilt at (26,166)→(22,156) by famille.
