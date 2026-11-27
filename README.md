@@ -17,6 +17,8 @@ Blender에서는 도시 전경을 열어 건물 외관·도로 선형·표고·�
 
 호남선 12·13번 승차홈에서 파미에스테이션 1번 게이트를 바라보면 오른쪽에 스타벅스가 있습니다. 아웃백 접수대는 파미에 중층에 있습니다. 지도(M)에서 **스벅 호남선** 또는 **아웃백**으로 찾을 수 있습니다. [스타벅스 입구와 반계단](assets/models/honam-gate-coffee/README.md) · [아웃백 중층 입구](assets/models/outback-central/README.md) · [신세계 본관 승강장](docs/map-audit/shinsegae-main-8f-lift.md) · [파미에 주차장 상행·하행](docs/map-audit/famille-parking/README.md)
 
+고투몰에서는 A-008 애니타임의 의류 행거 사이와 A-144 명플라워의 꽃다발 진열대 사이로 들어갈 수 있습니다. 중앙광장 G11 유리문을 지나 계단을 오르면 다이소 4번 출입구로 이어집니다. 지도에서 **다이소 홈웨어**와 **다이소 셀프계산대**를 찾을 수 있습니다. [애니타임](assets/models/gotomall-anytime/README.md) · [명플라워](assets/models/gotomall-myeong/README.md) · [G11 유리문](assets/models/gotomall-g11/README.md) · [홈웨어](assets/models/daiso-homewear/README.md) · [셀프계산대](assets/models/daiso-checkout/README.md)
+
 - 고투몰(강남터미널 지하도상가), 고속터미널역(3·7·9호선)
 - 신세계백화점 강남점, JW 메리어트 호텔 서울, 센트럴시티(호남선·파미에스테이션)
 - 서울고속버스터미널(경부·영동선)과 3층 꽃시장, 다이소

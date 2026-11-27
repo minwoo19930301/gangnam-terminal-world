@@ -62,12 +62,13 @@ function loadOnView(mesh, file, key, visible, apply) {
   };
 }
 
-export function placeShopStock(K, key, position, yaw, scale) {
+export function placeShopStock(K, key, position, yaw, scale, asset) {
   const T = K.THREE, textile = key === 'Emet' || key === 'AnHouse';
-  const file = textile ? '../onebailey/west.glb' : './'+key+'.glb';
+  const file = asset?.file ?? (textile ? '../onebailey/west.glb' : './'+key+'.glb');
   const depthSign = textile ? -1 : 1;
   const display = new T.LOD(), coarse = silhouette(T,key,depthSign);
-  display.name = '고투몰 진열 · '+key;
+  display.name = '고투몰 진열 · '+(asset?.name ?? key);
+  if(asset)display.userData.nativePlacementKey='고투몰 진열 · '+key;
   display.position.set(...position); display.rotation.y = yaw; display.scale.set(...scale);
   const material = new T.MeshLambertMaterial({vertexColors:true});
   const item = new T.Mesh(coarse,material);

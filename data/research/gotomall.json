@@ -1,7 +1,26 @@
 {
+ "north_aisle_and_g11_20261127": {
+  "A-008": {
+   "상호": "ANYTIME 고투몰점",
+   "점포사진": "https://gotomall.kr/stores/65e3d4b6-f7ee-4898-bdba-8282f5e004a9",
+   "네이버지도": "https://map.naver.com/p/entry/place/31263946",
+   "모델": "assets/models/gotomall-anytime/anytime.blend"
+  },
+  "A-144": {
+   "상호": "명플라워 고투몰점",
+   "점포사진": "https://gotomall.kr/stores/2262a6d2-4ea7-47c4-97ea-e8ec3f9d95ae",
+   "네이버지도": "https://map.naver.com/p/entry/place/31315154",
+   "모델": "assets/models/gotomall-myeong/myeong.blend"
+  },
+  "G11": {
+   "방문사진": "https://m.blog.naver.com/marketer_jyh/224465977099",
+   "모델": "assets/models/gotomall-g11/g11.blend"
+  },
+  "확인": "두 점포의 네이버 플레이스 주소에서 호수를 확인했다. 점포 사진의 선반과 옷걸이, G11 사진의 손잡이와 분홍색 표지를 판독했다. 통로 체인 길이와 상품·문틀의 치수는 게임 평면에 맞춘 추정이다."
+ },
  "id": "gotomall",
  "name": "강남터미널 지하도상가 (GOTO MALL 고투몰)",
- "updated": "2026-11-26",
+ "updated": "2026-11-27",
  "west_g010_20261126": {
   "운영사_현장사진": "https://gotomall.kr/stores/7cfea3b4-a229-469b-aa7d-222755fd5b3b",
   "공단_점포_구획": "https://www.sisul.or.kr/open_content/com/common/upfiles.do?program=undershop!0923_gosokteomineol_1chabaechido_%281guyeok%29.jpg",

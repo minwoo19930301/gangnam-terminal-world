@@ -199,7 +199,7 @@ export function createMap(opts) {
   // Use the very same walking position and viewing direction as its local spawn.
   for (const [place, entry] of Object.entries(opts.directory || {})) {
     for (const arrival of entry.mapDestinations || []) {
-      addSearch({...arrival, place, group:entry.name, type:'매장 입구', mapDestination:true, exact:true});
+      addSearch({...arrival, place, group:entry.name, type:arrival.arrivalType??'매장 입구', mapDestination:true, exact:true});
       destinationMarks.push({...arrival, place,
         label: label(arrival.name, arrival.x, arrival.z, 12, true),
         compactLabel: label(arrival.name, arrival.x, arrival.z, 10, true)});

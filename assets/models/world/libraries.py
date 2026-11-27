@@ -8,6 +8,11 @@ from mathutils import Vector
 
 
 SHELVES = {
+    "gotomall-anytime": "고투몰 A-008 · 애니타임",
+    "gotomall-g11": "고투몰 · G11 중앙광장 유리문",
+    "daiso-checkout": "다이소 · 셀프계산과 포장 봉투",
+    "daiso-homewear": "다이소 · 홈웨어 매대",
+    "gotomall-myeong": "고투몰 A-144 · 명플라워",
     "shinsegae-upper-lift-landing": "신세계 본관 · 6~10층 고객 승강장",
     "famille-parking-ramp": "파미에주차장 · 상부 경사로",
     "honam-gate-coffee": "호남선 · 파미에 1게이트 스타벅스",

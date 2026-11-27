@@ -151,6 +151,20 @@ def sync_layout(here, rows=None):
         fallback=source_origin(primary,(0,0,0))
         for name in row['collections']:
             child=components.get(name)
+            # These two fixtures replace generic stock at the same permanent
+            # shop slot. Keep the artist's placement, component edits and deletions.
+            original_stock={'AnytimeApparel':'apparel','MyeongFlower':'flowers'}.get(name)
+            if child is None and original_stock in old_components:
+                child=components.get(original_stock)
+                if child is None:
+                    continue
+                child[COMPONENT]=name
+                child.instance_collection=linked[(row['library'],name)]
+                serial=key.rsplit('/',1)[1]
+                if anchor.name=='고투몰 진열 · '+original_stock+' '+serial:
+                    anchor.name=row['subject']+' '+serial
+                if child.name.startswith(original_stock+' · 연결 원본'):
+                    child.name=name+' · 연결 원본'
             if child is None and row['library']=='sinbanpo-bus-shelters/shelters.blend' and name.endswith(' 22-020'):
                 # These three roadside bays gain a separate timed light or print.
                 # Reuse their exact former component so position edits survive.
